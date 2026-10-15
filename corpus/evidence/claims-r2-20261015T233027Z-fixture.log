@@ -1,0 +1,45 @@
+# chousa-shokunin round-2 receipt — fixture
+# utc: 2026-10-15T23:30:27Z
+# seat: receipts-writer | lane: chousa-shokunin | round: 2 (coverage move: claim-vs-source)
+# lane head: 6344569 | gate: tools/research-gate.sh sha256=03a3324455852ea0025115cb0e3ba9c8cdea10da5edc051c4738854a27c14be0
+# fixture: corpus/fixtures/claims-r2.jsonl sha256=23d078cbfd032ec5ee7de5c21de65eba3a3cd2989a78281ff61bc6db62188802
+# method: machine-cut by /home/vgpnk/.cache/chousa-r2/cut-receipts.sh; stdout verbatim; local files only; no network
+# scope: independent cross-check of the pre-registered fixture against the pinned archived inputs
+
+## pinned inputs (sha256)
+23d078cbfd032ec5ee7de5c21de65eba3a3cd2989a78281ff61bc6db62188802  corpus/fixtures/claims-r2.jsonl
+44d8a890406f0802986adb7b92c653c53d2548ffe7976911250f01c76c48e3e7  corpus/fixtures/claims-r2.README.md
+9033857d4625555c7b778dfad6df80e3e1b24ed8bffa3fee2fd445b9c5540b85  research/deep-research-2026-09-28/A-shokunin-tradition.md
+6d8dbddd3e2d2f47dcb153c5a3347cc6321db4afc72cf07da40f0f7fe5022006  research/deep-research-2026-09-28/B-multiagent-knowledge.md
+e48fe70ff92055c217ac6ca6ce68e403aa5689fee8717f3bd0ccf5badc92321b  research/deep-research-2026-09-28/C-rank-taxonomy.md
+
+## fixture inventory
+lines=17
+observed: counts {'supported': 13, 'contradicted': 2, 'unsupported': 2} bad []
+contract (corpus/fixtures/claims-r2.README.md): claims=17 supported=13 contradicted=2 unsupported=2 mismatched=0; CLEAN; exit 0
+
+## command: python3 (fixture README documented byte-check)
+exit: 0
+counts {'supported': 13, 'contradicted': 2, 'unsupported': 2} bad []
+
+## command: python3 /home/vgpnk/.cache/chousa-r2/adapter-spancheck.py <fleet-root> corpus/fixtures/claims-r2.jsonl
+# receipts-writer independent checker: byte-exact span containment, ws-normalized fallback
+exit: 0
+SPANCHECK A01  expect=supported    span=found -> ok
+SPANCHECK A02  expect=supported    span=found -> ok
+SPANCHECK A03  expect=supported    span=found -> ok
+SPANCHECK A04  expect=supported    span=found -> ok
+SPANCHECK A05  expect=contradicted span=found marker=in-span -> ok
+SPANCHECK A06  expect=unsupported  span=ABSENT -> ok
+SPANCHECK B01  expect=supported    span=found -> ok
+SPANCHECK B02  expect=supported    span=found -> ok
+SPANCHECK B03  expect=supported    span=found -> ok
+SPANCHECK B04  expect=supported    span=found -> ok
+SPANCHECK B05  expect=unsupported  span=ABSENT -> ok
+SPANCHECK C01  expect=supported    span=found -> ok
+SPANCHECK C02  expect=supported    span=found -> ok
+SPANCHECK C03  expect=supported    span=found -> ok
+SPANCHECK C04  expect=supported    span=found -> ok
+SPANCHECK C05  expect=supported    span=found -> ok
+SPANCHECK C06  expect=contradicted span=found marker=in-span -> ok
+SPANCHECK_SUMMARY: 17 claims; supported=13 unsupported=2 contradicted=2; ok=17 mismatch=0

@@ -20,6 +20,29 @@
 #   REJECTION_DROPPED REJECTION_REASON_ABSENT NEGATIVE_WITHOUT_SWEEP
 #   OBS_INFERENCE_COLLAPSE EXTERNAL_WITHOUT_APPROVAL SECRET_SHAPED
 #   SESSION_READ RECORD_SCHEMA_INVALID EXPORT_CHROME_PRESENT
+#   CLAIM_RECORD_INVALID CLAIM_SOURCE_EXTERNAL CLAIM_SOURCE_OUT_OF_CORPUS
+#   CLAIM_SOURCE_SESSION CLAIM_SOURCE_EPHEMERAL CLAIM_SOURCE_MISSING
+#   CLAIM_SPAN_NOT_FOUND CLAIM_SPAN_UNEXPECTED CONTRADICTION_MARKER_ABSENT
+#
+# Claims mode: verify-claims <claims-file> checks each claim's verbatim span
+# against its cited source. Blank lines and #-comment lines are ignored; a
+# {"marker_default":…} line sets the default contradiction marker and is not a
+# claim. Every other line is one JSON claim {"id","source","span","expect"} with
+# expect supported|contradicted|unsupported. Sources are local files under the
+# same boundary as verify pointers (canonicalized; session paths denied, URLs
+# refused — never fetched). expect=contradicted additionally needs a marker the
+# fixture names explicitly (per-claim "marker" or the default) to byte-co-occur
+# inside the span's source lines; without it the claim is unproven. A marker on
+# a non-contradicted entry is a fixture violation (CLAIM_RECORD_INVALID).
+# Per claim: CLAIM id=… expected=… observed=… source=… at=… verdict=…
+#   observed: supported|contradicted|unsupported|unproven|refused|invalid
+#   verdict:  match|mismatch|refused|invalid
+# Summary: VERDICT_BEARING_CLAIMS=N/M — N claims whose observed status matched
+# the pre-registered expectation, over the M claims read; CLEAN only when N=M.
+# The RESEARCH_GATE line counts observed dispositions: claims, supported,
+# contradicted, unsupported, mismatched (adjudicated but != expect), unproven,
+# refused, invalid, findings, drift — so a CLEAN run shows claims=Σdispositions,
+# mismatched=refused=invalid=0 and N=M.
 #
 # Secrecy: print path:line class=<name> only — never span.
 # Opens: allowlist metadata only; denylist → SESSION_READ.
@@ -58,9 +81,15 @@ usage() {
   cat <<'EOF'
 usage: research-gate.sh [--selftest] [--help]
        research-gate.sh verify [--record PATH] [--root PATH]
+       research-gate.sh verify-claims [CLAIMS] [--root PATH]
        research-gate.sh [--record PATH] [--root PATH]
 
   RECORD via --record, positional, or CHOUSA_RECORD.
+  CLAIMS via positional or CHOUSA_CLAIMS.
+  Claims file: one JSON object per claim line:
+    {"id":…,"source":…,"span":…,"expect":supported|contradicted|unsupported
+     [,"marker":…]}
+  Spans must appear verbatim in sources; sources are local files only.
 Verdict: RESEARCH_GATE: CLEAN|DRIFT
 Exit:    0 CLEAN | 1 DRIFT | 2 setup/usage
 EOF
@@ -547,14 +576,342 @@ verify_record() {
   return 1
 }
 
+# ---- claims mode: claim-vs-source verification (local files only) ----
+
+json_str() { # LINE KEY -> raw JSON string body on stdout (escapes intact); rc=1 absent
+  local line=$1 key=$2
+  local re="\"${key}\"[[:space:]]*:[[:space:]]*\"((\\\\.|[^\"\\\\])*)\""
+  if [[ $line =~ $re ]]; then
+    printf '%s' "${BASH_REMATCH[1]}"
+    return 0
+  fi
+  return 1
+}
+
+jfield() { json_str "$1" "$2" 2>/dev/null || true; }
+
+json_unescape() { # RAW JSON string body -> decoded bytes on stdout
+  local s=$1 out='' i c hex cp
+  local n=${#s}
+  for ((i = 0; i < n; i++)); do
+    c=${s:i:1}
+    if [[ $c != '\' ]]; then out+=$c; continue; fi
+    i=$((i + 1)); c=${s:i:1}
+    case "$c" in
+      '"') out+='"' ;;
+      '\') out+='\' ;;
+      /) out+='/' ;;
+      b) out+=$'\b' ;;
+      f) out+=$'\f' ;;
+      n) out+=$'\n' ;;
+      r) out+=$'\r' ;;
+      t) out+=$'\t' ;;
+      u)
+        hex=''
+        if ((i + 4 < n)); then hex=${s:i+1:4}; fi
+        if [[ $hex =~ ^[0-9A-Fa-f]{4}$ ]]; then
+          cp=$((16#$hex)); i=$((i + 4))
+          if ((cp < 0x80)); then
+            printf -v c '%b' "\\$(printf '%03o' "$cp")"; out+=$c
+          elif ((cp >= 0xD800 && cp <= 0xDFFF)); then
+            out+='?'
+          elif printf -v c '%b' "\u$hex" 2>/dev/null; then
+            out+=$c
+          else
+            out+='?'
+          fi
+        else
+          out+='\u'
+        fi
+        ;;
+      *) out+='\'; out+=$c ;;
+    esac
+  done
+  printf '%s' "$out"
+}
+
+count_nl() { # STRING -> newline count. Command substitution strips trailing
+  local n=${1//[!$'\n']/}  # newlines, so a $(…|tr|…) count of an all-newline
+  printf '%d' "${#n}"      # match context returns empty; expansion does not.
+}
+
+line_probe() { # HAY NEEDLE -> 1-based line of first needle occurrence; rc=1 none
+  local hay=$1 needle=$2 before
+  [[ -n $needle ]] || return 1
+  [[ $hay == *"$needle"* ]] || return 1
+  before=${hay%%"$needle"*}
+  printf '%d' "$(( $(count_nl "$before") + 1 ))"
+}
+
+longest_token() { # STRING -> its longest whitespace-separated token
+  local s=$1 t best=''
+  local IFS=$' \t'
+  for t in $s; do
+    if [[ ${#t} -gt ${#best} ]]; then best=$t; fi
+  done
+  printf '%s' "$best"
+}
+
+claim_source_path() { # SRC -> rc 0: CLAIM_SRC_PATH; rc 1: CLAIM_REFUSE + CLAIM_REFUSE_OBS
+  local src root_r lane_r cand canon
+  src=$(norm_ptr "$1")
+  CLAIM_REFUSE=''; CLAIM_REFUSE_OBS=''; CLAIM_SRC_PATH=''
+  if is_session_url "$src" || is_denylist_path "$src"; then
+    CLAIM_REFUSE=CLAIM_SOURCE_SESSION
+    CLAIM_REFUSE_OBS="path=$(ptr_file_part "$src") denied (not opened)"
+    return 1
+  fi
+  if is_ephemeral_ptr "$src"; then
+    CLAIM_REFUSE=CLAIM_SOURCE_EPHEMERAL
+    CLAIM_REFUSE_OBS="ptr_class=ephemeral"
+    return 1
+  fi
+  if is_url_ptr "$src"; then
+    CLAIM_REFUSE=CLAIM_SOURCE_EXTERNAL
+    CLAIM_REFUSE_OBS="url source refused (no external fetch)"
+    return 1
+  fi
+  root_r=$(cd -- "$ROOT" 2>/dev/null && pwd -P || printf '%s' "$ROOT")
+  lane_r=$(cd -- "$LANE_ROOT" 2>/dev/null && pwd -P || printf '%s' "$LANE_ROOT")
+  if [[ $src == /* ]]; then
+    cand=$src
+  elif [[ -e $ROOT/$src ]]; then
+    cand=$ROOT/$src
+  elif [[ -e $LANE_ROOT/$src ]]; then
+    cand=$LANE_ROOT/$src
+  else
+    cand=$ROOT/$src
+  fi
+  canon=$(readlink -f -- "$cand" 2>/dev/null || printf '%s' "$cand")
+  case "$canon" in
+    "$root_r"/*|"$lane_r"/*) ;;
+    *)
+      CLAIM_REFUSE=CLAIM_SOURCE_OUT_OF_CORPUS
+      CLAIM_REFUSE_OBS="resolved=$canon outside allowed roots"
+      return 1
+      ;;
+  esac
+  if [[ ! -f $canon || ! -r $canon ]]; then
+    CLAIM_REFUSE=CLAIM_SOURCE_MISSING
+    CLAIM_REFUSE_OBS="not a readable regular file under allowed roots"
+    return 1
+  fi
+  CLAIM_SRC_PATH=$canon
+  return 0
+}
+
+claim_source_sev() {
+  case "$1" in
+    CLAIM_SOURCE_EXTERNAL|CLAIM_SOURCE_SESSION|CLAIM_SOURCE_OUT_OF_CORPUS) printf 'crit' ;;
+    *) printf 'warn' ;;
+  esac
+}
+
+verify_claims() {
+  local claims=$1
+  ROOT=${CHOUSA_ROOT:-$ROOT}
+  [[ -n ${claims:-} ]] || die_usage "claims file required (verify-claims PATH or CHOUSA_CLAIMS)"
+  [[ -e $claims ]] || die_usage "claims file not found: $claims"
+  [[ -f $claims ]] || die_usage "claims file is not a regular file: $claims"
+  [[ -r $claims ]] || die_usage "claims file unreadable: $claims"
+
+  FINDING_LINES=(); N_FINDINGS=0; N_DRIFT=0; ROLL=CLEAN
+
+  local N_CLAIMS=0 N_SUP=0 N_CON=0 N_UNS=0 N_UNP=0 N_MISM=0 N_REFUSED=0 N_INVALID=0
+  local default_marker='' lineno=0 line CLAIM_REFUSE='' CLAIM_REFUSE_OBS='' CLAIM_SRC_PATH=''
+  local -a CLAIM_LINES=()
+  local id src span expect marker observed verdict at bad l
+  local hay before span_nl start_line end_line region m probe nearer tok ctx path show_id show_exp
+
+  scan_secrets "$claims"
+
+  while IFS= read -r line || [[ -n $line ]]; do
+    lineno=$((lineno + 1))
+    [[ -z ${line//[[:space:]]/} ]] && continue
+    [[ $line == \#* ]] && continue
+    while [[ $line == [[:space:]]* ]]; do line=${line#?}; done
+    while [[ $line == *[[:space:]] ]]; do line=${line%?}; done
+    if [[ $line != \{*\} ]]; then
+      N_CLAIMS=$((N_CLAIMS + 1)); N_INVALID=$((N_INVALID + 1))
+      emit_finding CLAIM_RECORD_INVALID warn claims "line=$lineno not a JSON object"
+      CLAIM_LINES+=("CLAIM id=line$lineno expected=- observed=invalid source=- at=- verdict=invalid")
+      continue
+    fi
+    if ! json_str "$line" id >/dev/null 2>&1 && json_str "$line" marker_default >/dev/null 2>&1; then
+      default_marker=$(json_unescape "$(jfield "$line" marker_default)")
+      continue
+    fi
+    N_CLAIMS=$((N_CLAIMS + 1))
+
+    id=$(json_unescape "$(jfield "$line" id)")
+    src=$(json_unescape "$(jfield "$line" source)")
+    span=$(json_unescape "$(jfield "$line" span)"; printf x); span=${span%x}
+    expect=$(json_unescape "$(jfield "$line" expect)")
+    marker=$(json_unescape "$(jfield "$line" marker)")
+    bad=''
+    if [[ -z $id ]]; then bad="missing id"
+    elif [[ -z $src ]]; then bad="missing source"
+    elif [[ -z $span ]]; then bad="missing/empty span"
+    elif [[ -z $expect ]]; then bad="missing expect"
+    else
+      case "$expect" in
+        supported|contradicted|unsupported) ;;
+        *) bad="expect=$expect invalid" ;;
+      esac
+      if [[ -z $bad && $expect != contradicted && -n $marker ]]; then
+        bad="marker present but expect=$expect (fixture violation)"
+      fi
+    fi
+    if [[ -n $bad ]]; then
+      N_INVALID=$((N_INVALID + 1))
+      show_id=${id:-line$lineno}; show_exp=${expect:--}
+      emit_finding CLAIM_RECORD_INVALID warn claims "line=$lineno $bad"
+      CLAIM_LINES+=("CLAIM id=$show_id expected=$show_exp observed=invalid source=${src:--} at=- verdict=invalid")
+      continue
+    fi
+
+    if ! claim_source_path "$src"; then
+      N_REFUSED=$((N_REFUSED + 1))
+      emit_finding "$CLAIM_REFUSE" "$(claim_source_sev "$CLAIM_REFUSE")" claims \
+        "id=$id source=$src obs=$CLAIM_REFUSE_OBS"
+      CLAIM_LINES+=("CLAIM id=$id expected=$expect observed=refused source=$src at=- verdict=refused")
+      continue
+    fi
+    path=$CLAIM_SRC_PATH
+
+    hay=$(cat -- "$path"; printf x)
+    hay=${hay%x}
+    if [[ $hay == *"$span"* ]]; then
+      before=${hay%%"$span"*}
+      start_line=$(( $(count_nl "$before") + 1 ))
+      span_nl=$(count_nl "$span")
+      end_line=$((start_line + span_nl))
+      if [[ $span_nl -eq 0 ]]; then at=line:$start_line; else at=lines:$start_line-$end_line; fi
+      case "$expect" in
+        supported) observed=supported ;;
+        unsupported)
+          observed=supported
+          emit_finding CLAIM_SPAN_UNEXPECTED warn claims "id=$id at=$at span present but expect=unsupported"
+          ;;
+        contradicted)
+          region=$(printf '%s\n' "$hay" | sed -n "${start_line},${end_line}p")
+          m=${marker:-$default_marker}
+          if [[ -z $m ]]; then
+            observed=unproven
+            emit_finding CONTRADICTION_MARKER_ABSENT warn claims "id=$id at=$at no marker defined (per-claim or marker_default)"
+          elif [[ $region == *"$m"* ]]; then
+            observed=contradicted
+          else
+            observed=unproven
+            emit_finding CONTRADICTION_MARKER_ABSENT warn claims "id=$id at=$at declared marker not found within span lines"
+          fi
+          ;;
+      esac
+    else
+      at=-
+      case "$expect" in
+        supported|contradicted)
+          observed=unsupported
+          nearer=''; ctx=''
+          probe=${span%%$'\n'*}
+          nearer=$(line_probe "$hay" "$probe" || true)
+          if [[ -z $nearer ]]; then
+            tok=$(longest_token "$probe")
+            if [[ -n $tok ]]; then
+              nearer=$(printf '%s\n' "$hay" | grep -Fn -m1 -e "$tok" | head -n1 | cut -d: -f1 || true)
+            fi
+          fi
+          if [[ -n $nearer ]]; then
+            ctx=$(printf '%s\n' "$hay" | sed -n "${nearer}p" | tr '\t' ' ')
+            ctx=$(printf '%.80s' "$ctx")
+          fi
+          emit_finding CLAIM_SPAN_NOT_FOUND warn claims "id=$id nearest_line=${nearer:--} context=${ctx:--}"
+          ;;
+        unsupported) observed=unsupported ;;
+      esac
+    fi
+
+    case "$observed" in
+      supported) N_SUP=$((N_SUP + 1)) ;;
+      contradicted) N_CON=$((N_CON + 1)) ;;
+      unsupported) N_UNS=$((N_UNS + 1)) ;;
+      unproven) N_UNP=$((N_UNP + 1)) ;;
+    esac
+    if [[ $observed == "$expect" ]]; then
+      verdict=match
+    else
+      N_MISM=$((N_MISM + 1)); verdict=mismatch
+    fi
+    CLAIM_LINES+=("CLAIM id=$id expected=$expect observed=$observed source=$src at=$at verdict=$verdict")
+  done <"$claims"
+
+  printf 'research-gate %s — ts=%s — mode=claims — claims=%s\n' "$VERSION" "$TS_UTC" "$claims"
+  for l in "${CLAIM_LINES[@]+"${CLAIM_LINES[@]}"}"; do printf '%s\n' "$l"; done
+  for l in "${FINDING_LINES[@]+"${FINDING_LINES[@]}"}"; do printf '%s\n' "$l"; done
+  local N_MATCH=$((N_CLAIMS - N_MISM - N_REFUSED - N_INVALID))
+  if [[ $N_MATCH -ne $N_CLAIMS ]]; then ROLL=DRIFT; fi
+  printf 'VERDICT_BEARING_CLAIMS=%d/%d\n' "$N_MATCH" "$N_CLAIMS"
+  printf 'RESEARCH_GATE: %s (claims=%d supported=%d contradicted=%d unsupported=%d mismatched=%d unproven=%d refused=%d invalid=%d findings=%d drift=%d)\n' \
+    "$ROLL" "$N_CLAIMS" "$N_SUP" "$N_CON" "$N_UNS" "$N_MISM" "$N_UNP" "$N_REFUSED" "$N_INVALID" "$N_FINDINGS" "$N_DRIFT"
+
+  [[ $ROLL == CLEAN ]] && return 0
+  return 1
+}
+
 run_selftest() {
-  local WORK cases=0 failures=0
-  WORK=$(mktemp -d /tmp/chousa-research-gate-selftest.XXXXXX) \
+  local cases=0 failures=0
+  WORK=$(mktemp -d "${TMPDIR:-/tmp}/chousa-research-gate-selftest.XXXXXX") \
     || die_usage "mktemp failed"
-  trap 'rm -rf -- "$WORK"' EXIT
-  mkdir -p "$WORK/lib" "$WORK/noise"
+  trap 'rm -rf -- "${WORK:-}"' EXIT
+  OUTSIDE_FILE=$(mktemp "${TMPDIR:-/tmp}/chousa-gate-outside.XXXXXX") \
+    || die_usage "mktemp failed"
+  # WORK/OUTSIDE_FILE are globals with ${:-} guards: at errexit-exit the EXIT
+  # trap sees function locals as unset (measured), which silently skips the
+  # cleanup, and a quota-limited tmp dir can fail the first fixture write.
+  # Honoring TMPDIR lets a crowded /tmp be swapped for another scratch mount.
+  trap 'rm -rf -- "${WORK:-}" "${OUTSIDE_FILE:-}"' EXIT
+  printf 'outside text\n' >"$OUTSIDE_FILE"
+  mkdir -p "$WORK/lib" "$WORK/noise" "$WORK/claimsrc"
   printf 'line1 primary material\nline2\n' >"$WORK/lib/primary.md"
   printf 'aggregator chrome sources sidebar\n' >"$WORK/noise/chat-export-sources.md"
+  printf 'alpha claim holds\nbeta claim holds CONTRADICTION-MARKER: source disagrees\ngamma claim retracted\n' >"$WORK/claimsrc/ledger.md"
+  printf 'arrow check \xe2\x86\x92 done\n' >"$WORK/claimsrc/arrow.md"
+
+  cat >"$WORK/claims-pass.jsonl" <<'EOF'
+# selftest positive claims
+{"id":"P1","source":"lib/primary.md","span":"line1 primary material","expect":"supported"}
+{"id":"P2","source":"claimsrc/ledger.md","span":"beta claim holds","expect":"contradicted","marker":"CONTRADICTION-MARKER:"}
+{"id":"P3","source":"lib/primary.md","span":"line-nine phantom text","expect":"unsupported"}
+{"id":"P4","source":"claimsrc/arrow.md","span":"arrow check \u2192 done","expect":"supported"}
+EOF
+  cat >"$WORK/claims-fail-tampered.jsonl" <<'EOF'
+{"id":"T1","source":"lib/primary.md","span":"line1 PRIMARY material","expect":"supported"}
+EOF
+  cat >"$WORK/claims-fail-external.jsonl" <<'EOF'
+{"id":"E1","source":"https://example.invalid/research.md","span":"remote text","expect":"supported"}
+EOF
+  cat >"$WORK/claims-fail-session.jsonl" <<'EOF'
+{"id":"S1","source":"./.config/agent-token.txt","span":"token text","expect":"supported"}
+EOF
+  cat >"$WORK/claims-fail-contradicted-unmarked.jsonl" <<'EOF'
+{"id":"K1","source":"claimsrc/ledger.md","span":"beta claim holds","expect":"contradicted"}
+{"id":"K2","source":"claimsrc/ledger.md","span":"beta claim holds","expect":"contradicted","marker":"NOT-IN-SOURCE"}
+EOF
+  cat >"$WORK/claims-fail-counting.jsonl" <<'EOF'
+# exact-counting case
+{"marker_default":"CONTRADICTION-MARKER:"}
+{"id":"C1","source":"lib/primary.md","span":"line1 primary material","expect":"supported"}
+{"id":"C2","source":"claimsrc/ledger.md","span":"beta claim holds","expect":"contradicted"}
+{"id":"C3","source":"lib/primary.md","span":"phantom text never present","expect":"unsupported"}
+{"id":"C4","source":"lib/primary.md","span":"line1 primary materialX","expect":"supported"}
+{"id":"C5","source":"https://example.invalid/x","span":"remote","expect":"supported"}
+not a json object
+EOF
+  cat >"$WORK/claims-fail-stray-marker.jsonl" <<'EOF'
+{"id":"W1","source":"lib/primary.md","span":"line1 primary material","expect":"supported","marker":"STRAY"}
+EOF
+  printf '{"id":"O1","source":"%s","span":"outside text","expect":"supported"}\n' "$OUTSIDE_FILE" >"$WORK/claims-fail-out-of-corpus.jsonl"
+  printf '{"id":"O2","source":"../%s","span":"outside text","expect":"supported"}\n' "$(basename "$OUTSIDE_FILE")" >>"$WORK/claims-fail-out-of-corpus.jsonl"
 
   export CHOUSA_ROOT="$WORK"
   export CHOUSA_NOW_EPOCH="$NOW_EPOCH"
@@ -591,6 +948,32 @@ run_selftest() {
     else
       printf 'FAIL-case %-28s exit=%d want=%d verdicts=%d%s token=%s\n' \
         "$name" "$rc" "$want_rc" "$nverdict" "$leak" "${want[*]-}"
+      printf '%s\n' "$out" | sed 's/^/    | /'
+      failures=$((failures + 1))
+    fi
+  }
+
+  # Claims-mode case runner: same fresh-process discipline as tcase, plus one
+  # VERDICT_BEARING_CLAIMS summary expected per run.
+  tclaims() {
+    local name=$1 want_rc=$2
+    shift 2
+    local -a want=("$@")
+    local tok rc=0 out nverdict nvb ok=1
+    cases=$((cases + 1))
+    out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+      CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+      bash "$SELF" verify-claims "$WORK/$name.jsonl" 2>&1) || rc=$?
+    nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
+    nvb=$(grep -c '^VERDICT_BEARING_CLAIMS=' <<<"$out" || true)
+    for tok in "${want[@]+"${want[@]}"}"; do
+      [[ $out == *"$tok"* ]] || ok=0
+    done
+    if [[ $rc -eq $want_rc && $nverdict -eq 1 && $nvb -eq 1 && $ok -eq 1 ]]; then
+      printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" "$name" "$rc"
+    else
+      printf 'FAIL-case %-28s exit=%d want=%d verdicts=%d vbearing=%d token=%s\n' \
+        "$name" "$rc" "$want_rc" "$nverdict" "$nvb" "${want[*]-}"
       printf '%s\n' "$out" | sed 's/^/    | /'
       failures=$((failures + 1))
     fi
@@ -1018,6 +1401,54 @@ EOF
   tsetup no-record 2 verify
   tsetup missing-file 2 verify "$WORK/no-such-record.md"
 
+  tclaims claims-pass 0 \
+    'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=4/4' \
+    'CLAIM id=P1 expected=supported observed=supported source=lib/primary.md at=line:1 verdict=match' \
+    'CLAIM id=P2 expected=contradicted observed=contradicted source=claimsrc/ledger.md at=line:2 verdict=match' \
+    'CLAIM id=P3 expected=unsupported observed=unsupported source=lib/primary.md at=- verdict=match' \
+    'CLAIM id=P4 expected=supported observed=supported source=claimsrc/arrow.md at=line:1 verdict=match'
+
+  tclaims claims-fail-tampered 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING CLAIM_SPAN_NOT_FOUND' \
+    'nearest_line=1' 'context=line1 primary material' \
+    'observed=unsupported' 'VERDICT_BEARING_CLAIMS=0/1'
+
+  tclaims claims-fail-out-of-corpus 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING CLAIM_SOURCE_OUT_OF_CORPUS severity=crit' \
+    'observed=refused' 'VERDICT_BEARING_CLAIMS=0/2'
+
+  tclaims claims-fail-external 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING CLAIM_SOURCE_EXTERNAL severity=crit' \
+    'VERDICT_BEARING_CLAIMS=0/1'
+
+  tclaims claims-fail-session 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING CLAIM_SOURCE_SESSION severity=crit' \
+    'VERDICT_BEARING_CLAIMS=0/1'
+
+  tclaims claims-fail-contradicted-unmarked 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING CONTRADICTION_MARKER_ABSENT' \
+    'no marker defined (per-claim or marker_default)' \
+    'declared marker not found within span lines' \
+    'observed=unproven' 'VERDICT_BEARING_CLAIMS=0/2' \
+    'claims=2 supported=0 contradicted=0 unsupported=0 mismatched=2 unproven=2 refused=0 invalid=0'
+
+  # A marker on a non-contradicted entry is a fixture violation (drift), and
+  # the counting rule is the observable: N matched of M read, with the exact
+  # per-disposition counters in the closing summary (directive lines, comments
+  # and blanks are not claims).
+  tclaims claims-fail-stray-marker 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING CLAIM_RECORD_INVALID' \
+    'marker present but expect=supported (fixture violation)' \
+    'observed=invalid' 'VERDICT_BEARING_CLAIMS=0/1'
+
+  tclaims claims-fail-counting 1 \
+    'VERDICT_BEARING_CLAIMS=3/6' \
+    'claims=6 supported=1 contradicted=1 unsupported=2 mismatched=1 unproven=0 refused=1 invalid=1' \
+    'FINDING CLAIM_RECORD_INVALID' 'not a JSON object'
+
+  tsetup claims-no-path 2 verify-claims
+  tsetup claims-missing-file 2 verify-claims "$WORK/no-such-claims.jsonl"
+
   if [[ $failures -eq 0 ]]; then
     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases)\n' "$cases"
     exit 0
@@ -1031,6 +1462,7 @@ while [[ $# -gt 0 ]]; do
     -h|--help) usage; exit 0 ;;
     --selftest) MODE=selftest; shift ;;
     verify) MODE=verify; shift ;;
+    verify-claims) MODE=claims; shift ;;
     --record)
       [[ $# -ge 2 ]] || die_usage "--record needs PATH"
       RECORD_ARG=$2; shift 2 ;;
@@ -1050,6 +1482,10 @@ case "$MODE" in
   verify)
     RECORD_PATH=${RECORD_ARG:-${CHOUSA_RECORD:-}}
     verify_record "$RECORD_PATH"
+    ;;
+  claims)
+    CLAIMS_PATH=${RECORD_ARG:-${CHOUSA_CLAIMS:-}}
+    verify_claims "$CLAIMS_PATH"
     ;;
   *) die_usage "unknown mode: $MODE" ;;
 esac
