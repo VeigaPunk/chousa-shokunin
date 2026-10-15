@@ -51,3 +51,23 @@ here because the risk is in the *index*, not the method notes:
   not invent them.
 - Rejected recipients for this material: lore, kotoba, kasegi, kama, kumitate,
   tameshi. Lexical and workshop rows stay unowned.
+
+### Provenance guard (appended 2026-10-15, measured)
+
+`research/README.md:6-8` asserts provenance the dumps do **not** carry: burner Chrome,
+CDP 9222, "fired by L0", "no Deep Research entitlement", and "9/8/10 searches". The
+visible search labels in the exports are **1, 1, and 2**; C's `10 more` is a
+collapsed widget (U+2068/U+2069), not a total. L0 is the operator side channel
+(`MISSION.md:84-88`), not a model, and it is not the commit author. Do not cite the
+README's provenance as fact.
+
+Measured landing: commit **`0863746`** (`integrator <integrator@shokunin.local>`,
+`2026-09-28T22:51:25-03:00`) is the only commit touching `research/` and adds the
+README and A/B/C together; blobs unchanged at HEAD. It is an ancestor of HEAD but
+not on the first-parent line, and `LOG.md`, `l0-questions.md`, and the watchdog log
+covering that minute do not mention the harvest. Filesystem birth `2026-10-13` is
+relaunch materialization, not production time.
+
+**Unknown and to be recorded as unknown:** provider model id, selected effort,
+conversation id, whether the live answers continued past the 5–9 KiB cuts, and which
+process sat behind the integrator identity.
