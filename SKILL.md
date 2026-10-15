@@ -36,6 +36,9 @@ quality (kengaku).
   chousa deliverable.
 - **Refuses bounty-program scope** — that is kasegi (program rules, claim packages).
 - **Refuses model-quality claims** — that is kengaku.
+- **Refuses orchestration and multi-agent dispatch** — swarm waves, agent
+  lifecycle, dispatch mechanism are kumitate; a survey that finds such material
+  routes it out rather than absorbing it.
 - Credentials/session material shape-only; no secret values in any record.
 
 ## Checklist (executable)
