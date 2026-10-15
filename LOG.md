@@ -38,3 +38,20 @@ PASS (17 cases)`** exit 0, and the suite's own secrecy case confirms a planted
 verdict line** — an unchecked `grep` under `set -e` ends the script before the
 summary. Not field-ready; unblock is to `|| true` every non-fatal `grep` and re-run
 the suite plus the real artifact.
+
+### Citation-shift notice (appended 2026-10-15)
+
+The boundary-parity fix inserted **3 lines** into `SKILL.md` at 39–41 (the kumitate
+refusal). Every line number below that point moved by +3: the checklist heading is
+now `SKILL.md:44` and the four rules are `:46`–`:49` (sweep rule at `:47`), where
+the wave's seats cite the pre-edit numbers. **Round-1 citations to `SKILL.md:44` or
+later are pre-edit** and must be re-derived before being trusted — the rules
+themselves are unchanged. This notice also fixed the lane's own guard, which cited
+`SKILL.md:45` for the observation/inference/unknown split; the live line is `:48`.
+
+Also recorded from the same audit: `RuleOrProposal` found several wave-internal
+citations that resolve to the wrong lines (QUALITY item numbers used as line numbers;
+`claim-ledger.sh:45-48` cited for stamp status where the live lines are `:15-16`;
+export chips treated as URLs; `README.md:6-8` credited with a four-tier hierarchy it
+does not state). Those are wave-report defects, not lane defects, and they are the
+reason the corpus landing must re-derive every citation rather than copy one.

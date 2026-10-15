@@ -93,7 +93,7 @@ Requirements for the corpus landing:
 - Twelve solicited questions are absent from the response bodies (`MC-X01`–`MC-X12`);
   **truncation is unknown, not a negative finding**.
 - `B:77`'s observation / interpretation / established-knowledge split is not
-  supported by the ACE case it cites, and already lives at `SKILL.md:45`; `C:126` is
+  supported by the ACE case it cites, and already lives at `SKILL.md:48` (line numbers re-derived after the +3 shift below); `C:126` is
   unlabeled engineering opinion after a dictionary block; `A:88` is a promotion
   metaphor that `PROTOCOL.md:61-67` already forbids.
 
