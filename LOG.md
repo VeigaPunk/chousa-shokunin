@@ -264,3 +264,21 @@ therefore still need operator-owned bindings before a new wave. This is
 next-dispatch debt only; inherited round-1 routes are evidenced separately.
 Reports/continuation remain lane-local. Native sessions, fleet ledgers and
 shared reports are excluded from commits. Nothing is pushed.
+
+### Round-1 publication — lane-local report and continuation
+
+After work HEAD `cfb803a20ba6bf29ba977248bab41b939c7f2ea9` existed,
+the lane wrote `.ufo/reports/round-1/chousa.md`, citing that HEAD and the
+measured gate commit. Report SHA-256:
+`ada72514590414e5daea12c0481c53927498eb0d37740f550969158f3e1aa2b6`.
+`.ufo/continuations/round-1.json` binds the same work/report/evidence and
+records all axes, learning trends, debt owners and concrete unblocks.
+The report lands with this publication entry under the lane identity;
+no shared report or ledger is updated.
+
+Publication does not turn the receipt prerequisite into a pass: no genuine
+receipt could be minted without the authentic queue identity/expected bag,
+and no mint, shape-only validation, Sighting completion or successor launch
+is invented. The integrator must resolve round-1 receipt acceptance first,
+then release one fresh session for round 2. No second actual round was run
+here; the 100-verified-round target remains unchanged.
