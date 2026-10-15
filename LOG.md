@@ -282,3 +282,38 @@ and no mint, shape-only validation, Sighting completion or successor launch
 is invented. The integrator must resolve round-1 receipt acceptance first,
 then release one fresh session for round 2. No second actual round was run
 here; the 100-verified-round target remains unchanged.
+
+## Round 2 — claim-vs-source verification (goal wave)
+
+**Round 2 — goal-wave admission (2026-10-15).** Motivating evidence: the
+round-1 registration (pre-register the local-only claim-verification fixture)
+with routing now supplied by the operator's in-session direct dispatch.
+Landed (evidence commit `c3df458`): gate `03a33244…` with `verify-claims`
+(selftest 30 = +10; corpus-boundary canonicalization; verbatim spans;
+line-aware misses; contradicted marker; exact counting); fixture
+`corpus/fixtures/claims-r2.jsonl` (17 claims, provenance README);
+`corpus/knowledge/claim-verification-r2.md`; lesson; four receipts.
+**Receipt identity remains OPEN** — these receipts are lane-local evidence
+logs, not queue taskKey/expected-receipt bags; proven receipt-backed
+completed rounds remain 0 pending integrator binding (operator surface).
+
+**Parent acceptance (2026-10-15T23:45Z).** selftest 30/30 exit 0;
+`verify-claims corpus/fixtures/claims-r2.jsonl --root ..` →
+`VERDICT_BEARING_CLAIMS=17/17`, `RESEARCH_GATE: CLEAN` exit 0 (13 supported /
+2 contradicted / 2 unsupported); round-1 observable intact (VERDICT_BEARING_
+EXPORTS=3/3). Acceptance note: the fixture sources are fleet-root-relative,
+so the documented run requires `--root ..` — an acceptance run without it
+refuses all sources correctly (boundary working as designed), and the parent
+caught its own omission by reading the refusal lines.
+
+**Verdicts.** ADMIT: coverage/depth/operability **improved**; freshness/
+calibration/adjacency **unchanged**; none harmed. Named residuals: hardlink
+canonicalization bypass; no claim-source size cap; r1 banner string. Round 3
+registered: chain-hop resolution mode.
+
+**Boundaries held.** Zero network (strace-confirmed); research corpus
+read-only; no secrecy reads; seats committed nothing; parent integrated
+under the chousa lane identity.
+
+Round report: `.ufo/round-2/chousa-goalwave.md` (debts section carries the
+receipt-identity note per the mission contract).

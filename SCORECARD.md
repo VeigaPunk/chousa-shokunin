@@ -74,3 +74,47 @@ Debt and concrete unblocks: the continuation records missing receipt identity,
 current role-to-alias bindings needed before a new wave, outside spot-check,
 and absent scope-refusal gate findings. The narrow archive observable is
 exhausted, not the operability axis or province; no saturation is declared.
+
+## Round 2 verdict — 2026-10-15 (goal wave; evidence commit `c3df458`)
+
+Selected axis: **coverage** — the lane's core method (claim-vs-source
+verification), registered in round 1 as "fresh round 2 must pre-register its
+local-only claim-verification fixture." Routing is satisfied by the
+operator's in-session direct dispatch; **receipt identity remains open** (see
+the report's debt section). Wave: one 32-seat flash call, 24/24 reports.
+Report: `.ufo/round-2/chousa-goalwave.md`.
+
+**Before** (gate `0884355…`, selftest 20): the gate validated record
+STRUCTURE only — no claim was ever checked against its source; the claim
+machinery of the declared method was unmeasured.
+
+**After** (gate `03a33244…`, selftest 30 = +10, first 20 byte-identical;
+fixture `corpus/fixtures/claims-r2.jsonl` with 17 provenance-carrying claims;
+parent acceptance 2026-10-15T23:45Z): `verify-claims <file> --root ..`
+verifies each claim's span appears VERBATIM in its source under the corpus
+boundary (canonicalized; out-of-corpus/URL/session paths refused unopened),
+line-aware miss reports, the contradicted structural marker, per-claim
+verdicts + exact counting + the existing CLEAN|DRIFT/exit contract. Fixture:
+`VERDICT_BEARING_CLAIMS=17/17`, `RESEARCH_GATE: CLEAN (13 supported / 2
+contradicted / 2 unsupported)`. Round-1 observable intact: 3/3
+verdict-bearing exports. Boundary escapes refused (absolute, traversal,
+symlink, named pipe); strace-confirmed zero network; the r1 verify path
+byte-stable.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | claim-vs-source verification lands as a verdict-bearing gate mode with a pre-registered 17-claim fixture (provenance README, span-fidelity independently re-verified); the method's core move is now executable and measured. |
+| depth | **improved** | `corpus/knowledge/claim-verification-r2.md`: verbatim-span semantics + the honest limits (does NOT prove semantics, location binding, source truth, external verification); lesson `2026-10-15-claims-span-fidelity.md`. |
+| operability | **improved** | selftest 20 → 30 (+10: positive/tampered/out-of-corpus/external/session/marker/counting); existing cases byte-identical; exit contract 0/1/2 held. |
+| freshness | **unchanged** | four receipts + fixture log at the new SHA; no drift detector (mori-style pins are a sibling lane's pattern, not adopted here). |
+| calibration | **unchanged** | the contradicted marker is structural by design; the note names what the check does not prove. |
+| adjacency | **unchanged** | zero network (strace); research corpus read-only; seats wrote only in-lane; scope-sentinel clean. |
+
+Honest residuals (named in the note + seat reports): in-root hardlinks bypass
+path canonicalization (critic); no size cap on claim-source reads
+(boundary-tester recommendation); the banner still says `research-gate-r1`
+(cosmetic). Admission: **ADMIT** (coverage/depth/operability improved, none
+harmed). No scalar score. Learning trends: expansion/quality **improved**,
+discernment **unchanged** (no outside spot-check exists). Round 3
+registered: chain-hop resolution — each hop's citation must resolve to a real
+corpus location, making citation chaining verdict-bearing.
