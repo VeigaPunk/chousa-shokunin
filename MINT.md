@@ -71,3 +71,28 @@ relaunch materialization, not production time.
 **Unknown and to be recorded as unknown:** provider model id, selected effort,
 conversation id, whether the live answers continued past the 5–9 KiB cuts, and which
 process sat behind the integrator identity.
+
+### Scope guard (appended 2026-10-15, from the meta-craft audit)
+
+The survey contains **three incompatible axis lists**, not one method wearing artisan
+names, and only one has already leaked into the index: `research/README.md:13-14`
+lifts `A-shokunin-tradition.md:54` (competence / independence / improvement /
+transmission) as "usable axes". `B-multiagent-knowledge.md:57` and
+`C-rank-taxonomy.md:67` offer two other lists. **None matches
+`chousa-shokunin/SKILL.md:17-21` or `AXES.md:7-16`.**
+
+Requirements for the corpus landing:
+
+- **One scope tag per sentence** — `general | general-narrow | non-general` — before
+  any survey sentence enters `corpus/knowledge/`. The audit classifies 14 general
+  method-forms (`MC-G01`–`MC-G14`) and 47 non-general rows (`MC-N01`–`MC-N47`),
+  including the English rename Initiate → Grounded → Maintainer → Agentwright.
+- **Do not add a second axis taxonomy.** Where a fleet gate already states a form,
+  the gate is the authority, not the survey.
+- **Do not amend `PROTOCOL.md:21`** (the live `jin'i-ryu` token).
+- Twelve solicited questions are absent from the response bodies (`MC-X01`–`MC-X12`);
+  **truncation is unknown, not a negative finding**.
+- `B:77`'s observation / interpretation / established-knowledge split is not
+  supported by the ACE case it cites, and already lives at `SKILL.md:45`; `C:126` is
+  unlabeled engineering opinion after a dictionary block; `A:88` is a promotion
+  metaphor that `PROTOCOL.md:61-67` already forbids.
