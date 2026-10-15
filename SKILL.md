@@ -20,6 +20,16 @@ quality (kengaku).
 | Verify a claim | claim → source → the source's own evidence | accepting a restatement as the source | verified / contradicted / unresolved |
 | Reuse a finding | cite the artifact + the revision read | citing a memory of it | resolvable pointer |
 
+**Provenance of the table above (appended 2026-10-15).** The primary > secondary >
+aggregator > unsourced tiers are **this lane's own construction**, not a rule
+inherited from another lane and not a statement the survey exports make — an
+independent audit measured zero `proposal` tokens and zero independently cited
+admissions in this skill at mint. Treat the hierarchy as the lane's working
+standard, and any row whose only warrant is this table as a `proposal` until it
+carries a `path:line` from a real artifact. The exports state no tier system; the
+fleet gates state citation *mechanics* (resolvable, pinned, labelled), not this
+ranking.
+
 ## Error patterns
 
 | Observation | Reading |

@@ -55,3 +55,14 @@ citations that resolve to the wrong lines (QUALITY item numbers used as line num
 export chips treated as URLs; `README.md:6-8` credited with a four-tier hierarchy it
 does not state). Those are wave-report defects, not lane defects, and they are the
 reason the corpus landing must re-derive every citation rather than copy one.
+
+### Skill honesty note (appended 2026-10-15)
+
+`HonestyAudit` measured the peer set at 96 admitted / 34 proposal label instances
+and found this skill's own operative rows largely unmarked: **0 `proposal` tokens**
+and **0 independently cited admissions** at mint. The four-tier source hierarchy is
+this lane's construction — no other lane states it and the survey exports do not —
+so it is now marked as a working standard rather than an inherited rule, and any row
+warranted only by it is a `proposal` until a real `path:line` backs it. The audit's
+citation findings match the shift notice above (18 cites do not say what they claim;
+the +3 `SKILL.md` shift moved the checklist).
