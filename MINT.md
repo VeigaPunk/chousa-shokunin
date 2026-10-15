@@ -96,3 +96,28 @@ Requirements for the corpus landing:
   supported by the ACE case it cites, and already lives at `SKILL.md:45`; `C:126` is
   unlabeled engineering opinion after a dictionary block; `A:88` is a promotion
   metaphor that `PROTOCOL.md:61-67` already forbids.
+
+### Secrecy guard (appended 2026-10-15, from the sentinel audit)
+
+Hard refusals for the round-2 fixture and the gate. These are work-queue items that
+must not become grants:
+
+- **Refuse `ApprovalTable` rows M-01 and M-02** (burner-profile read, CDP metadata
+  read). `research/README.md:6` still names CDP 9222; the musketeer profile is absent
+  and `ss` shows zero listeners there. **Never interpolate `9222` into a client.**
+  Pending is not approval.
+- **Never implement an "opens" verb.** `RecordShape.md:147` says a resolved hop
+  *opens*; a hop resolves to a **path**, and nothing in this lane opens, fetches, or
+  executes a resolved target.
+- **Harden the gate's secret screen.** `ResearchGateDesign.md:331`'s `SECRET_SHAPE`
+  matches only `keyword=` / `keyword:` and misses unlabeled `op://`, `sk-`, `ghp_`,
+  `eyJ` and PEM blocks. It must not echo a match (keep the quiet grep) and must
+  cover those forms before it can be trusted as a screen.
+- **No `..` in a resolved path.** `ptr_file_resolves` treats any absolute path as
+  `path-ok` after a `stat`, including `..` — resolution must reject traversal, and
+  a `stat` is not a content read (do not claim one).
+- **Fixture hardening:** serve the docroot only (not a whole tree), pin the client
+  (no overridable `CHOUSA_CURL`), fully unset proxy vars, rename `account.json`,
+  and extend the token grep to `Bearer ` / `eyJ`.
+- Export chrome at lines 1–33 is **session inventory, not a credential value** —
+  cite the line; do not copy the display name or the sidebar titles.
