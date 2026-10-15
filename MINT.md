@@ -121,3 +121,27 @@ must not become grants:
   and extend the token grep to `Bearer ` / `eyJ`.
 - Export chrome at lines 1–33 is **session inventory, not a credential value** —
   cite the line; do not copy the display name or the sidebar titles.
+
+### Chaining guard (appended 2026-10-15)
+
+**Do not inherit a fleet citation gate as the chain walker.**
+`claim-ledger.sh citations` and `anchorcheck.py`, run read-only over the four survey
+files, both return **clean with zero recognized cites** — their matchers do not see
+bare hosts or `+N`, so either would certify a set in which every bibliographic hop is
+unwalkable. chousa's gate must recognize the export citation forms (bare host,
+aggregator chip, `+N` / isolated "N more", author-year search key) and fail closed on
+them, or it inherits the blindness it exists to fix.
+
+**Worked broken hop, for the note and the fixture:** `B-multiagent-knowledge.md:79`
+attributes 18,282 / 122 / 66.7 / 57.1 / 63.7 to ACE; the only nearby furniture is a
+six-work cluster, the host `arxiv.org`, and `+6`. A host is not a document and `+6`
+does not expand to locators. Status: **unresolved, not contradicted** — the export
+ends at `B:81` before any quotation. Searching arXiv to invent the paper would be a
+*new search*, not the next hop. Repairing it from `B:49-51` was rejected: that chip
+shares no identifier with the figures.
+
+**Same content step, both ends on disk:** `research/README.md:12` ("jin'i-ryu is NOT
+an attested artisan rank") names `A-shokunin-tradition.md`, which exists — but
+`A:47`/`A:64` only say the search did not substantiate it. **The filename resolves;
+the closed negative does not.** File existence is not enough: the cited span has to
+be opened, and a summary or another citation is the next hop, not the terminus.
