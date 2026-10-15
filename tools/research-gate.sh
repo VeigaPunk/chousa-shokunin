@@ -8,6 +8,9 @@
 # Verdict: RESEARCH_GATE: CLEAN|DRIFT
 # Exit:    0 CLEAN | 1 DRIFT | 2 setup/usage
 # Selftest: RESEARCH_GATE_SELFTEST: PASS (N cases) | FAIL (fail/N)
+# Severity: warn|crit always drift; info drifts only under CHOUSA_STRICT=1.
+# Recording a finding is never itself fatal, so a pass that gets far enough to
+# evaluate the record always closes with exactly one verdict summary.
 #
 # FINDING <ID> severity=<info|warn|crit> surface=<family> obs=<short>
 #
@@ -73,6 +76,9 @@ emit_finding() { # id severity surface obs
     warn|crit) N_DRIFT=$((N_DRIFT + 1)); ROLL=DRIFT ;;
     info) [[ $STRICT == 1 ]] && { N_DRIFT=$((N_DRIFT + 1)); ROLL=DRIFT; } ;;
   esac
+  # Finding severity affects counters and ROLL, not control flow. A false return
+  # here would abort the CLI under errexit before its deferred verdict prints.
+  return 0
 }
 
 declare -A SEC_BODY=()
@@ -295,11 +301,7 @@ scan_secrets() {
 
 verify_record() {
   local record=$1
-  # ROOT is captured once at load (line 37) from the ambient CHOUSA_ROOT, but the
-  # hermetic selftest exports CHOUSA_ROOT per case and calls this as a FUNCTION, so
-  # the load-time value still pointed at the lane and every `lib/…:N` pointer read
-  # "missing under CHOUSA_ROOT" (measured: the two PASS controls failed, 15/17).
-  # Re-read the env here so both the CLI and the in-process selftest agree.
+  # Honor the verification-time environment; otherwise retain the selected root.
   ROOT=${CHOUSA_ROOT:-$ROOT}
   [[ -n ${record:-} ]] || die_usage "record path required (--record, positional, or CHOUSA_RECORD)"
   [[ -e $record ]] || die_usage "record not found: $record"
@@ -559,21 +561,36 @@ run_selftest() {
 
   write_rec() { cat >"$WORK/$1.md"; }
 
+  # name want_rc [required output substring ... | NAME=VAL env override ...]
+  # Exercise the public CLI with errexit active, not a function under set +e.
+  # Isolate inherited record/strict/aggregator settings and pass the fixture root.
   tcase() {
-    local name=$1 want_rc=$2 want=$3 rc=0 out
+    local name=$1 want_rc=$2
+    shift 2
+    local -a want=() over=()
+    local a rc=0 out nverdict tok ok=1 leak=''
+    for a in "$@"; do
+      if [[ $a =~ ^[A-Z_]+= ]]; then over+=("$a"); else want+=("$a"); fi
+    done
     cases=$((cases + 1))
-    set +e
-    out=$(CHOUSA_ROOT="$WORK" verify_record "$WORK/$name.md" 2>&1)
-    rc=$?
-    set -e
-    if [[ $rc -eq $want_rc && $out == *"$want"* ]]; then
-      if [[ $name == fail-secret-shaped && $out == *'sk-fxdemo_not_real_0000'* ]]; then
-        printf 'FAIL-case %-28s secret span echoed\n' "$name"
-        failures=$((failures + 1)); return
-      fi
+    out=$(env -u CHOUSA_RECORD -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+      "${over[@]+"${over[@]}"}" CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+      bash "$SELF" verify "$WORK/$name.md" 2>&1) || rc=$?
+    nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
+    for tok in "${want[@]+"${want[@]}"}"; do
+      [[ $out == *"$tok"* ]] || ok=0
+    done
+    # Secrecy is asserted before the pass/fail split, so a case that fails for an
+    # unrelated reason still cannot echo the planted span through the dump below.
+    if [[ $out == *'sk-fxdemo_not_real_0000'* ]]; then
+      leak=' secret-span-echoed'
+      out=${out//sk-fxdemo_not_real_0000/[span-redacted]}
+    fi
+    if [[ $rc -eq $want_rc && $nverdict -eq 1 && $ok -eq 1 && -z $leak ]]; then
       printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" "$name" "$rc"
     else
-      printf 'FAIL-case %-28s exit=%d want=%d token=%s\n' "$name" "$rc" "$want_rc" "$want"
+      printf 'FAIL-case %-28s exit=%d want=%d verdicts=%d%s token=%s\n' \
+        "$name" "$rc" "$want_rc" "$nverdict" "$leak" "${want[*]-}"
       printf '%s\n' "$out" | sed 's/^/    | /'
       failures=$((failures + 1))
     fi
@@ -651,6 +668,34 @@ What happens when a hop cannot be opened locally?
 | none | not-required |
 EOF
   tcase pass-hop-marked-unresolved 0 'RESEARCH_GATE: CLEAN'
+
+  # The same informational finding stays CLEAN normally and drifts in strict
+  # mode. Both paths must reach the deferred summary under CLI errexit.
+  sed '1a Skip to content' "$WORK/pass-control.md" >"$WORK/pass-export-chrome.md"
+  cp -- "$WORK/pass-export-chrome.md" "$WORK/fail-export-chrome-strict.md"
+  tcase pass-export-chrome 0 \
+    'RESEARCH_GATE: CLEAN' 'FINDING EXPORT_CHROME_PRESENT severity=info'
+  tcase fail-export-chrome-strict 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING EXPORT_CHROME_PRESENT severity=info' \
+    CHOUSA_STRICT=1
+
+  # A malformed export must not truncate the pass: the info emitter sits ahead of
+  # every structural check, so the later findings still have to be recorded and
+  # exactly one summary has to close the run (tcase counts the verdict lines).
+  write_rec fail-chrome-malformed-export <<'EOF'
+Skip to content
+ChatGPT
+You said:
+random prose without sections
+EOF
+  tcase fail-chrome-malformed-export 1 \
+    'RESEARCH_GATE: DRIFT' \
+    'FINDING EXPORT_CHROME_PRESENT severity=info' \
+    'FINDING RECORD_SCHEMA_INVALID' \
+    'FINDING NO_QUESTION' \
+    'FINDING SOURCE_TABLE_ABSENT' \
+    'FINDING CLAIM_TABLE_ABSENT' \
+    'FINDING REJECTION_DROPPED'
 
   write_rec fail-no-question <<'EOF'
 # research-record v1
@@ -939,33 +984,39 @@ Q?
 EOF
   tcase fail-session-read 1 'FINDING SESSION_READ'
 
+  # Schema drift without export chrome, so this case stays on the schema path and
+  # the chrome-plus-malformed continuation above is not a second test of it.
   write_rec fail-schema <<'EOF'
-Skip to content
-ChatGPT
-You said:
+# untitled capture
 random prose without sections
 EOF
   tcase fail-schema 1 'FINDING RECORD_SCHEMA_INVALID'
 
-  cases=$((cases + 1))
-  set +e
-  out=$(verify_record "" 2>&1); rc=$?
-  set -e
-  if [[ $rc -eq 2 ]]; then
-    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" "setup-no-record" "$rc"
-  else
-    printf 'FAIL-case setup-no-record exit=%d want=2\n' "$rc"; failures=$((failures + 1))
-  fi
-
-  cases=$((cases + 1))
-  set +e
-  out=$(verify_record "$WORK/no-such-record.md" 2>&1); rc=$?
-  set -e
-  if [[ $rc -eq 2 ]]; then
-    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" "setup-missing-file" "$rc"
-  else
-    printf 'FAIL-case setup-missing-file exit=%d want=2\n' "$rc"; failures=$((failures + 1))
-  fi
+  # Setup/usage is asserted the way a consumer sees it: a fresh process, its real
+  # exit code, and an empty stdout — usage text goes to stderr — so exit 2 can
+  # never be mistaken for a verdict-bearing run.
+  tsetup() {
+    local name=$1 want_rc=$2
+    shift 2
+    local rc=0 out err
+    cases=$((cases + 1))
+    # stdout and stderr are captured apart: the counting command the scorecard
+    # uses reads stdout only, so a verdict line could hide inside a merged pipe.
+    out=$(env -u CHOUSA_RECORD -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE \
+      CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+      bash "$SELF" "$@" 2>"$WORK/setup-$name.err") || rc=$?
+    err=$(cat "$WORK/setup-$name.err")
+    if [[ $rc -eq $want_rc && ${#out} -eq 0 && -n $err ]]; then
+      printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" "setup-$name" "$rc"
+    else
+      printf 'FAIL-case setup-%s exit=%d want=%d stdout_bytes=%d stderr_bytes=%d\n' \
+        "$name" "$rc" "$want_rc" "${#out}" "${#err}"
+      printf '%s\n' "$err" | sed 's/^/    | /'
+      failures=$((failures + 1))
+    fi
+  }
+  tsetup no-record 2 verify
+  tsetup missing-file 2 verify "$WORK/no-such-record.md"
 
   if [[ $failures -eq 0 ]]; then
     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases)\n' "$cases"
