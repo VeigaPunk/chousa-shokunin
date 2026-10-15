@@ -1,0 +1,40 @@
+{
+  "schema": "chousa-receipt-prerequisite-blocker-v1",
+  "round": 1,
+  "missionId": "m_9749535a92aa4fe59b6f11bdadec7151",
+  "runId": "shk-chousa-interactive-20261015T050057Z",
+  "sessionId": "shk-chousa-interactive-20261015T050057Z",
+  "measuredGateCommit": "31b46832e56a7f095092a4a6d62b74bfaf6933e8",
+  "localAcceptance": "PASS; see acceptance.json and final-intake.json",
+  "receiptMinted": false,
+  "receiptValidated": false,
+  "sightingCompletionInvoked": false,
+  "observedBindings": {
+    "launchMetadata": "../.ufo/interactive-l1-20261015T050057Z/launch-chousa.json",
+    "launchKeys": ["lane", "cwd", "runId", "sessionId", "missionId", "paneId", "launchedAt"],
+    "wallManifest": "/home/vgpnk/Projects/ufo-fsd-alpha/.ufo/sighting/manifest.json",
+    "wallMissionDispatchKind": "argv",
+    "wallMissionStatusWhenInspected": "running",
+    "wallMissingFields": ["taskKey", "promptSha256", "configSha256", "resultPath", "receiptPath"],
+    "launchPromptPath": "../.ufo/interactive-l1-20261015T050057Z/prompts/chousa.md",
+    "launchConfigPath": "/home/vgpnk/Projects/ufo-fsd-alpha/config/mission-nightcall.yml",
+    "canonicalQueueSetting": "config/ufo.json:77 => .ufo/pending-work.json",
+    "canonicalQueuePath": "/home/vgpnk/Projects/ufo-fsd-alpha/.ufo/pending-work.json",
+    "canonicalQueueObserved": "absent in glob and parent directory read",
+    "canonicalSourceSweep": "No taskKey environment binding found in fleet-dispatcher.mjs, ufo-sighting.mjs or ufo-mission-result.mjs using the documented bounded regex sweep; no environment values read."
+  },
+  "requiredAuthority": {
+    "taskKey": "Authentic dispatcher queue key matching task_ followed by 24 lowercase hexadecimal digits; a missionId is not a taskKey.",
+    "expectedBag": ["taskKey", "runId", "sessionId", "promptSha256", "configSha256", "reportSha256"],
+    "storedDigests": "Dispatch-owned prompt/config digest bindings, not newly invented or retrospectively self-approved values.",
+    "source": "/home/vgpnk/Projects/ufo-fsd-alpha/scripts/ufo-mission-result.mjs:68-73,637-645,698-710,2707-2717"
+  },
+  "unblock": [
+    "Fleet integrator binds this existing mission/identity to an authentic dispatcher task and its expected receipt bag; no replacement L1 or duplicated round-1 wave.",
+    "Use the committed lane report as reportPath with create-receipt --out, then validate-receipt --iterate with all six authentic --expected fields.",
+    "Only after applicable receipt validation may the authorized owner mark Sighting complete and release one fresh-session successor."
+  ],
+  "notClaims": ["Not a receipt", "Not a native Rust verdict", "Not a verified completed-round counter", "Not saturation", "Not a request to rerun the reported Phase 0 failures"],
+  "operatorTargetVerifiedRounds": 100,
+  "provenApplicableReceiptBackedRounds": 0
+}

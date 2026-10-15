@@ -60,22 +60,26 @@ ranking.
 
 ## Gates
 
-`tools/research-gate.sh` — validates a research record against the method
-contract (question declared, sources ranked, chain hops resolved-or-marked,
-claims pointed). `verify` → `RESEARCH_GATE: CLEAN|DRIFT` exit 0/1, `--selftest`
-over fixtures, exit 2 setup/usage.
-
-## Gates
-
 | name | kind | entry | verdict map | self-test | pinned values | write scope | owner |
 |---|---|---|---|---|---|---|---|
-| `research-gate` | gate | `bash tools/research-gate.sh verify <record>` | `0` clean (`RESEARCH_GATE: CLEAN`) · `1` failed (`DRIFT`) · `2` could-not-evaluate (setup/usage) | `bash tools/research-gate.sh --selftest` → `RESEARCH_GATE_SELFTEST: PASS (17 cases)` | hermetic cases in the script (`/tmp/chousa-research-gate-selftest.*`) | live: zero writes; selftest: its own temp dir; no network | chousa |
+| `research-gate` | gate | `bash tools/research-gate.sh verify <record> --root ..` | `0` clean (`RESEARCH_GATE: CLEAN`) · `1` failed (`DRIFT`) · `2` could-not-evaluate (setup/usage) | `bash tools/research-gate.sh --selftest` → `RESEARCH_GATE_SELFTEST: PASS (20 cases)` | expected exits/finding IDs in `tools/research-gate.sh`; archive digests/expected verdicts in `corpus/evidence/round-1/expected.json` | verify: zero writes; selftest: its own temp dir; no network | chousa |
 
-**NOT FIELD-READY — named defect.** The suite is green (17/17) but the gate exits
-**1 with no verdict line** on a real chat-export input: an unchecked `grep` under
-`set -e` terminates the script before the summary prints (reproduced on
-`research/deep-research-2026-09-28/A-shokunin-tradition.md`). Two design bugs were
-already fixed during landing (a `local` unbound-variable abort that killed 13 of 17
-cases, and `ROOT` not honouring `CHOUSA_ROOT` per call). Unblock: guard every `grep`
-whose non-match is not fatal with `|| true`, then re-run the suite **and** the real
-artifact before treating this row as live.
+**Verified scope, not field readiness.** At gate revision
+`31b46832e56a7f095092a4a6d62b74bfaf6933e8`, the real CLI emits exactly one
+DRIFT summary and exits 1 on each pinned A/B/C archive. The locally sourced
+intake emits CLEAN and exits 0. Full output, exit codes and input/script
+digests: `.ufo/evidence/round-1/acceptance.json` and `acceptance.txt`.
+
+The old “unchecked grep” diagnosis is superseded: the non-strict informational
+branch of `emit_finding` returned false under CLI errexit. Recording a finding
+now returns success; counters determine the verdict. Informational findings
+remain non-fatal unless strict mode promotes them; warn/crit findings still
+drift. Selftests invoke fresh CLI processes rather than suppressing errexit
+around a function call (`corpus/lessons/round-1.md`, integration errata).
+
+**Limits.** CLEAN verifies declared record structure and file-pointer identity,
+not source semantics, cited line contents, or domain truth. This gate never
+opens or fetches a resolved source. The documented refused provinces above are
+not yet enforced by scope finding IDs; the original landing requirement is
+named debt in `LOG.md`'s interactive round-1 entry. No non-author corpus
+spot-check or promotion is implied by a passing selftest.

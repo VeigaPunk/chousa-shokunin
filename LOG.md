@@ -187,3 +187,80 @@ entry at the top of this log never landed in the script. A read-tool grep
 header, no scope finding emitter. The documented province refusals are retained,
 but gate enforcement is not claimed. A future single axis move can implement
 the three refused-province findings and symmetric exit/finding fixtures.
+
+## 2026-10-15 — round-1 local acceptance, corpus integration and receipt boundary
+
+Measured committed gate: `31b46832e56a7f095092a4a6d62b74bfaf6933e8`.
+Script SHA-256:
+`08843552378071929c8b6abcd50be6613365691cfae4bf0d74fb03d86eb5b46e`.
+The L1 ran the public CLI with inherited CHOUSA overrides unset, recording
+exact argv/stdout/stderr/exits in `.ufo/evidence/round-1/acceptance.json`
+and `acceptance.txt`:
+
+- `--selftest` → `RESEARCH_GATE_SELFTEST: PASS (20 cases)`, exit 0.
+  Normal info remains CLEAN; strict info DRIFT; malformed-after-info
+  continues to later findings; secrecy and session refusal pass; setup cases
+  retain exit 2 with no stdout verdict.
+- A/B/C archive inputs each matched the committed expected SHA-256 before
+  invocation; each exits 1 with exactly one full DRIFT verdict
+  (`findings=6 drift=5 questions=0 sources=0 chains=0 claims=0 negatives=0
+  rejections=0 approvals=0`). `VERDICT_BEARING_EXPORTS=3/3`; baseline 0/3
+  is the retained prior measurement, not a failure rerun here.
+- The inherited intake draft exits 0 with one CLEAN verdict. After adding
+  opening metadata and append-only errata, its actual CLI recheck also exits
+  0 with `findings=0 drift=0 questions=1 sources=8 chains=8 claims=9
+  negatives=2 rejections=10 approvals=3`. Final input SHA-256:
+  `33deaf93cec381509604db84e1b9c44d8ab3020998bf103eea7b720203fb62ec`;
+  exact output is `.ufo/evidence/round-1/final-intake.json`.
+
+`SKILL.md` now has one gate registry with the observed selftest and limited
+structural guarantee, not the false “unchecked grep” cause or a field-ready
+claim. `corpus/README.md` indexes the actual lesson and knowledge specimen;
+`functions.glob` over `corpus/knowledge/*.md;corpus/lessons/*.md` returns those
+two entries. Opening source/verified-at/recheck fields and append-only
+integration errata preserve the inherited note/lesson rather than erasing
+draft observations.
+
+The L1 remeasured bounded source-form sweeps, saved in `source-sweeps.json`:
+numbered-section regex `^([0-9]+[.]|[(][0-9]+[)])` matches A:74 and B:77;
+HTTP(S)-locator regex has no matches across A/B/C plus README; visible
+search-label regex matches A:42, B:42, C:42 and C:55. The old Markdown-table
+command escaped alternation incorrectly; its executable correction is
+appended to the intake. Numbered-section absence is not proof of every
+answer's absence in prose. Visible labels cannot verify or contradict a
+live search total; the stronger provenance assertion remains unknown.
+No external source was fetched and no native transcript body was read.
+
+**Citation-shift correction to the earlier LOG notice:** the current checklist
+is `SKILL.md:54`, rules `:56-59`; the old `:44` / `:46-49` notice and
+baseline script references are historical. The named superseded-claim grep
+across touched skill/scorecard/log/index/intake/lesson/script found only
+historical statements and explicit corrections, not a live unchecked-grep
+diagnosis. No QUALITY criterion or non-author agree/disagree was invented.
+
+**Verdicts:** operability improved, 0/3 → 3/3; depth, coverage, freshness,
+calibration and adjacency unchanged (no broader measurements claimed).
+Learning: expansion improved by the newly held intake form; quality and
+discernment unchanged. No axis harmed, no scalar substitute, no promotion.
+The old scope-finding requirement remains explicit debt, not a claimed
+preserved executable boundary.
+
+**Receipt prerequisite, not a local-code failure.** Launch metadata and the
+exact Sighting mission entry provide run/session/mission IDs but no taskKey
+or stored expected receipt bag. The configured canonical queue path
+(`ufo-fsd-alpha/config/ufo.json:77`, `.ufo/pending-work.json`) is absent in
+glob and directory read. The receipt API requires an authentic
+`task_[24 lowercase hex]` key and dispatch-owned prompt/config bindings
+(`scripts/ufo-mission-result.mjs:68-73,637-645,698-710,2707-2717`).
+The applicable receipt cannot be truthfully minted by guessing those fields.
+`.ufo/evidence/round-1/receipt-blocker.json` records the exact missing
+authority and integrator unblock. No receipt or Sighting completion is
+fabricated; receipt-backed completed rounds remain 0 pending acceptance.
+The operator target remains at least 100, with no in-session second round.
+
+The current launch overlay contains no role overrides (targeted grep of
+`config/mission-nightcall.yml` found only maxConcurrency); global defaults
+therefore still need operator-owned bindings before a new wave. This is
+next-dispatch debt only; inherited round-1 routes are evidenced separately.
+Reports/continuation remain lane-local. Native sessions, fleet ledgers and
+shared reports are excluded from commits. Nothing is pushed.

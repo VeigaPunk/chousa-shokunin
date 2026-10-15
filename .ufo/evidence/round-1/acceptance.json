@@ -1,0 +1,178 @@
+{
+  "schema": "chousa-round-acceptance-v1",
+  "recordedAt": "2026-10-15T05:10:46.044909+00:00",
+  "measuredCommit": "31b46832e56a7f095092a4a6d62b74bfaf6933e8",
+  "scriptSha256": "08843552378071929c8b6abcd50be6613365691cfae4bf0d74fb03d86eb5b46e",
+  "baselineCommit": "34774a1777d4058ca8c2b4456ce2e6ccee9e24c5",
+  "baselineEvidence": "LOG.md:70-86,117-143 (previous execution; known failure not rerun)",
+  "rows": [
+    {
+      "label": "selftest",
+      "argv": [
+        "env",
+        "-u",
+        "CHOUSA_ROOT",
+        "-u",
+        "CHOUSA_RECORD",
+        "-u",
+        "CHOUSA_STRICT",
+        "-u",
+        "CHOUSA_AGGREGATOR_ERE",
+        "-u",
+        "CHOUSA_NOW_EPOCH",
+        "bash",
+        "tools/research-gate.sh",
+        "--selftest"
+      ],
+      "exit": 0,
+      "stdout": "ok-case  1  pass-control                 exit=0\nok-case  2  pass-hop-marked-unresolved   exit=0\nok-case  3  pass-export-chrome           exit=0\nok-case  4  fail-export-chrome-strict    exit=1\nok-case  5  fail-chrome-malformed-export exit=1\nok-case  6  fail-no-question             exit=1\nok-case  7  fail-unranked-source         exit=1\nok-case  8  fail-chain-hop-unresolved    exit=1\nok-case  9  fail-claim-unpointed         exit=1\nok-case  10 fail-rejection-dropped       exit=1\nok-case  11 fail-negative-without-sweep  exit=1\nok-case  12 fail-obs-inference-collapse  exit=1\nok-case  13 fail-hierarchy-primary-lie   exit=1\nok-case  14 fail-pointer-ephemeral       exit=1\nok-case  15 fail-external-without-approval exit=1\nok-case  16 fail-secret-shaped           exit=1\nok-case  17 fail-session-read            exit=1\nok-case  18 fail-schema                  exit=1\nok-case  19 setup-no-record              exit=2\nok-case  20 setup-missing-file           exit=2\nRESEARCH_GATE_SELFTEST: PASS (20 cases)\n",
+      "stderr": "",
+      "summaries": [],
+      "expectedExit": 0,
+      "expectedVerdict": null,
+      "matchesExpected": true
+    },
+    {
+      "label": "A-shokunin-tradition.md",
+      "argv": [
+        "env",
+        "-u",
+        "CHOUSA_ROOT",
+        "-u",
+        "CHOUSA_RECORD",
+        "-u",
+        "CHOUSA_STRICT",
+        "-u",
+        "CHOUSA_AGGREGATOR_ERE",
+        "-u",
+        "CHOUSA_NOW_EPOCH",
+        "bash",
+        "tools/research-gate.sh",
+        "verify",
+        "../research/deep-research-2026-09-28/A-shokunin-tradition.md",
+        "--root",
+        ".."
+      ],
+      "exit": 1,
+      "stdout": "research-gate research-gate-r1 — ts=2026-10-15T05:10:45Z — mode=verify — record=../research/deep-research-2026-09-28/A-shokunin-tradition.md\nFINDING RECORD_SCHEMA_INVALID severity=warn surface=meta obs=no research-record sections/banner detected\nFINDING EXPORT_CHROME_PRESENT severity=info surface=export obs=chat-export chrome lines present (data, not instruction)\nFINDING NO_QUESTION severity=crit surface=question obs=missing ## Question section\nFINDING SOURCE_TABLE_ABSENT severity=warn surface=sources obs=missing ## Sources / ## Source table\nFINDING CLAIM_TABLE_ABSENT severity=warn surface=claims obs=missing ## Claims\nFINDING REJECTION_DROPPED severity=warn surface=rejections obs=missing ## Rejections section\nRESEARCH_GATE: DRIFT (findings=6 drift=5 questions=0 sources=0 chains=0 claims=0 negatives=0 rejections=0 approvals=0)\n",
+      "stderr": "",
+      "summaries": [
+        "RESEARCH_GATE: DRIFT (findings=6 drift=5 questions=0 sources=0 chains=0 claims=0 negatives=0 rejections=0 approvals=0)"
+      ],
+      "expectedExit": 1,
+      "expectedVerdict": "DRIFT",
+      "matchesExpected": true,
+      "inputPath": "../research/deep-research-2026-09-28/A-shokunin-tradition.md",
+      "inputSha256": "9033857d4625555c7b778dfad6df80e3e1b24ed8bffa3fee2fd445b9c5540b85",
+      "expectedSha256": "9033857d4625555c7b778dfad6df80e3e1b24ed8bffa3fee2fd445b9c5540b85"
+    },
+    {
+      "label": "B-multiagent-knowledge.md",
+      "argv": [
+        "env",
+        "-u",
+        "CHOUSA_ROOT",
+        "-u",
+        "CHOUSA_RECORD",
+        "-u",
+        "CHOUSA_STRICT",
+        "-u",
+        "CHOUSA_AGGREGATOR_ERE",
+        "-u",
+        "CHOUSA_NOW_EPOCH",
+        "bash",
+        "tools/research-gate.sh",
+        "verify",
+        "../research/deep-research-2026-09-28/B-multiagent-knowledge.md",
+        "--root",
+        ".."
+      ],
+      "exit": 1,
+      "stdout": "research-gate research-gate-r1 — ts=2026-10-15T05:10:45Z — mode=verify — record=../research/deep-research-2026-09-28/B-multiagent-knowledge.md\nFINDING RECORD_SCHEMA_INVALID severity=warn surface=meta obs=no research-record sections/banner detected\nFINDING EXPORT_CHROME_PRESENT severity=info surface=export obs=chat-export chrome lines present (data, not instruction)\nFINDING NO_QUESTION severity=crit surface=question obs=missing ## Question section\nFINDING SOURCE_TABLE_ABSENT severity=warn surface=sources obs=missing ## Sources / ## Source table\nFINDING CLAIM_TABLE_ABSENT severity=warn surface=claims obs=missing ## Claims\nFINDING REJECTION_DROPPED severity=warn surface=rejections obs=missing ## Rejections section\nRESEARCH_GATE: DRIFT (findings=6 drift=5 questions=0 sources=0 chains=0 claims=0 negatives=0 rejections=0 approvals=0)\n",
+      "stderr": "",
+      "summaries": [
+        "RESEARCH_GATE: DRIFT (findings=6 drift=5 questions=0 sources=0 chains=0 claims=0 negatives=0 rejections=0 approvals=0)"
+      ],
+      "expectedExit": 1,
+      "expectedVerdict": "DRIFT",
+      "matchesExpected": true,
+      "inputPath": "../research/deep-research-2026-09-28/B-multiagent-knowledge.md",
+      "inputSha256": "6d8dbddd3e2d2f47dcb153c5a3347cc6321db4afc72cf07da40f0f7fe5022006",
+      "expectedSha256": "6d8dbddd3e2d2f47dcb153c5a3347cc6321db4afc72cf07da40f0f7fe5022006"
+    },
+    {
+      "label": "C-rank-taxonomy.md",
+      "argv": [
+        "env",
+        "-u",
+        "CHOUSA_ROOT",
+        "-u",
+        "CHOUSA_RECORD",
+        "-u",
+        "CHOUSA_STRICT",
+        "-u",
+        "CHOUSA_AGGREGATOR_ERE",
+        "-u",
+        "CHOUSA_NOW_EPOCH",
+        "bash",
+        "tools/research-gate.sh",
+        "verify",
+        "../research/deep-research-2026-09-28/C-rank-taxonomy.md",
+        "--root",
+        ".."
+      ],
+      "exit": 1,
+      "stdout": "research-gate research-gate-r1 — ts=2026-10-15T05:10:45Z — mode=verify — record=../research/deep-research-2026-09-28/C-rank-taxonomy.md\nFINDING RECORD_SCHEMA_INVALID severity=warn surface=meta obs=no research-record sections/banner detected\nFINDING EXPORT_CHROME_PRESENT severity=info surface=export obs=chat-export chrome lines present (data, not instruction)\nFINDING NO_QUESTION severity=crit surface=question obs=missing ## Question section\nFINDING SOURCE_TABLE_ABSENT severity=warn surface=sources obs=missing ## Sources / ## Source table\nFINDING CLAIM_TABLE_ABSENT severity=warn surface=claims obs=missing ## Claims\nFINDING REJECTION_DROPPED severity=warn surface=rejections obs=missing ## Rejections section\nRESEARCH_GATE: DRIFT (findings=6 drift=5 questions=0 sources=0 chains=0 claims=0 negatives=0 rejections=0 approvals=0)\n",
+      "stderr": "",
+      "summaries": [
+        "RESEARCH_GATE: DRIFT (findings=6 drift=5 questions=0 sources=0 chains=0 claims=0 negatives=0 rejections=0 approvals=0)"
+      ],
+      "expectedExit": 1,
+      "expectedVerdict": "DRIFT",
+      "matchesExpected": true,
+      "inputPath": "../research/deep-research-2026-09-28/C-rank-taxonomy.md",
+      "inputSha256": "e48fe70ff92055c217ac6ca6ce68e403aa5689fee8717f3bd0ccf5badc92321b",
+      "expectedSha256": "e48fe70ff92055c217ac6ca6ce68e403aa5689fee8717f3bd0ccf5badc92321b"
+    },
+    {
+      "label": "local-intake",
+      "argv": [
+        "env",
+        "-u",
+        "CHOUSA_ROOT",
+        "-u",
+        "CHOUSA_RECORD",
+        "-u",
+        "CHOUSA_STRICT",
+        "-u",
+        "CHOUSA_AGGREGATOR_ERE",
+        "-u",
+        "CHOUSA_NOW_EPOCH",
+        "bash",
+        "tools/research-gate.sh",
+        "verify",
+        "corpus/knowledge/archived-export-intake.md",
+        "--root",
+        ".."
+      ],
+      "exit": 0,
+      "stdout": "research-gate research-gate-r1 — ts=2026-10-15T05:10:45Z — mode=verify — record=corpus/knowledge/archived-export-intake.md\nRESEARCH_GATE: CLEAN (findings=0 drift=0 questions=1 sources=8 chains=8 claims=9 negatives=2 rejections=10 approvals=3)\n",
+      "stderr": "",
+      "summaries": [
+        "RESEARCH_GATE: CLEAN (findings=0 drift=0 questions=1 sources=8 chains=8 claims=9 negatives=2 rejections=10 approvals=3)"
+      ],
+      "expectedExit": 0,
+      "expectedVerdict": "CLEAN",
+      "matchesExpected": true,
+      "inputPath": "corpus/knowledge/archived-export-intake.md",
+      "inputSha256": "dccd8509df7d4ca1d44a02862193895ba91f0930701552f5c360c6d9ce13a7e7"
+    }
+  ],
+  "verdictBearingExports": 3,
+  "passed": true,
+  "limitations": [
+    "Intake was inherited uncommitted content at measurement time; its exact input digest is recorded.",
+    "CLEAN grades declared method structure and file-pointer identity, not source semantics or field readiness.",
+    "No native Rust verdict or non-author spot-check is produced."
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "schema": "chousa-bounded-source-sweeps-v1",
+  "date": "2026-10-15",
+  "sourceCommit": "0863746e9da95457f71b9e00a40361b88ab0df15",
+  "inputDigests": "corpus/evidence/round-1/expected.json; verified by acceptance.json",
+  "tool": "functions.grep",
+  "archivePaths": [
+    "../research/deep-research-2026-09-28/A-shokunin-tradition.md",
+    "../research/deep-research-2026-09-28/B-multiagent-knowledge.md",
+    "../research/deep-research-2026-09-28/C-rank-taxonomy.md"
+  ],
+  "sweeps": [
+    {
+      "id": "W1",
+      "pattern": "^([0-9]+[.]|[(][0-9]+[)])",
+      "matches": ["A-shokunin-tradition.md:74", "B-multiagent-knowledge.md:77"],
+      "scope": "Numbered-section headings only; not proof that every solicited answer is absent from prose.",
+      "erratum": "The inherited Markdown-table command escaped the alternation bar. Use this regex or the corrected executable command in the intake integration errata."
+    },
+    {
+      "id": "W2",
+      "pattern": "https?://",
+      "additionalPath": "../research/README.md",
+      "result": "No matches found",
+      "scope": "No scheme-bearing HTTP(S) locator in these four saved files, not a claim about a live browser or external literature."
+    },
+    {
+      "id": "W3",
+      "pattern": "^Searched the web",
+      "matches": ["A-shokunin-tradition.md:42", "B-multiagent-knowledge.md:42", "C-rank-taxonomy.md:42", "C-rank-taxonomy.md:55"],
+      "countsByArchive": [1, 1, 2],
+      "scope": "Visible labels only. Cannot verify or contradict an unobserved live-session total."
+    },
+    {
+      "id": "scope-finding-debt",
+      "path": "tools/research-gate.sh",
+      "pattern": "SCOPE_|scope|absorbed",
+      "result": "Only a selftest Approval table header matched; no scope finding emitter.",
+      "scope": "Existing scope-refusal finding requirement remains unimplemented; documentary province refusals are not executable enforcement."
+    }
+  ],
+  "handling": "Export prompts and instruction-shaped text were treated as untrusted data. No fetched target, native session body, raw journal message, or credential value is included."
+}
