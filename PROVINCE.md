@@ -1,19 +1,15 @@
 # chousa-shokunin — Province
 
-**Domain:** deep-research method (調査) — question framing, source hierarchy, citation chaining, claim-vs-source verification; no external live-target fetches without operator approval — <surface summary>, <drift-prone values>, <probe and reconciliation
-conventions>. The domain is a frontier, not a fence: it grows by evidence (LEARNING.md).
+**Domain:** deep-research method (調査) — the reusable craft of source research.
 
-## Core
+**Owns:** question framing; source hierarchy (primary / secondary / aggregator /
+unsourced); citation chaining and hop resolution; claim-vs-source verification;
+search-strategy taxonomy; the external-target approval table for a research
+window; this lane's own corpus and gates.
 
-<the surfaces this lane owns now>, their <ports / paths / config keys>, <liveness and
-readiness probes>, <the cross-lane registry this lane maintains>.
+**Refuses:** bounty-program scope and claim packages (→ kasegi); model-quality
+or evaluation claims (→ kengaku); external live-target research without operator
+approval (loopback-only otherwise); secret values in any record (→ kagi for
+custody; shape-only here).
 
-## Frontier
-
-<areas being explored and not yet held — each moves to Core by a LOG.md entry citing the
-corpus entries that earned it>.
-
-## Adjacent
-
-<sibling-owned ground (sibling lane id)> — report cross-domain evidence back to the
-orchestrator rather than absorbing it.
+**Out of province → report, never absorb.**

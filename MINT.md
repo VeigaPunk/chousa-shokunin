@@ -1,50 +1,30 @@
-# MINT.md — chousa-shokunin
+# MINT — chousa-shokunin (2026-10-14)
 
-**Minted by:** <integrator session / operator directive, `YYYY-MM-DD`>, on <evidence basis —
-e.g. aggregator evidence: N independent demand instances of the same unplaceable defect
-class>.
+**Cause:** operator directive (the 12-hour shokunin fleet program, 2026-10-14),
+plus an unowned domain the roster could not absorb.
 
-**Domain claimed:** deep-research method (調査) — question framing, source hierarchy, citation chaining, claim-vs-source verification; no external live-target fetches without operator approval — <surfaces, drift-sensitive values, probe and reconciliation
-concerns; cite real paths / process names / config keys in backticks as they are verified>.
+**Demand instances (evidence):**
 
-## Reasoning and cause
+1. **`~/Projects/shokunin/research/` holds a deep-research pattern with no owning
+   lane.** Three artifacts exist at `research/deep-research-2026-09-28/`
+   (`A-shokunin-tradition.md`, `B-multiagent-knowledge.md`,
+   `C-rank-taxonomy.md`) produced by an operator research pass. They are
+   archived, unindexed, and no lane's province claims the METHOD that produced
+   them. Evidence: the files plus `research/README.md`.
+2. **kasegi does program-specific bounty research only.** Its province is bounty
+   and security programs, program rules and claim packages
+   (`kasegi-shokunin/PROVINCE.md`) — it explicitly refuses general source
+   research. The general method (question framing, source hierarchy, citation
+   chaining, claim verification) is therefore unowned.
 
-<NUMBER> *independent* lanes discovered the same unplaceable defect class, on different
-surfaces, in different rounds:
+**Roster scan (rejected fit):** 17 lanes scanned
+(`.ufo/scopes/shokunin-12h-20261014/mint-roster-scan.json`). kasegi —
+bounty-scoped, refuses general research. kengaku — model evaluation, refuses
+general source research. kumitate — orchestration, refuses. lore — fictional
+canon, not factual research method. No province absorbs the research method.
 
-1. **<lane id> round <N>** (`.ufo/reports/round-<N>/chousa.md`): <demand instance — what
-   was observed, with cited paths, values, and command outputs>.
-2. **<lane id> round <N>** (`.ufo/reports/round-<N>/chousa.md` + <corroborating pointer,
-   e.g. an aggregator routing-table row>): <second demand instance — same defect class,
-   different surface>.
+**Domain boundary:** the method only. Refuses external live-target research
+without operator approval, bounty-program scope (kasegi), and model-quality
+claims (kengaku).
 
-<Optional: any additional drift / absence evidence supporting the same defect class — e.g.
-a path or endpoint a sibling's config cited that no longer resolves.>
-
-## Roster scan (rejected fits)
-
-`MANIFEST.json` roster at mint time, and why none absorb this:
-
-| Lane | Province | Why the demand doesn't fit |
-|---|---|---|
-| <lane id> | <lane province> | <why this lane cannot absorb the demand> |
-| <lane id> | <lane province> | <why this lane cannot absorb the demand> |
-
-<Aggregator rulings: which rounds found the lane mint-eligible, that the surface has no
-owning province, and any standing mint-table row — each dated.>
-
-## Domain boundary (claimed)
-
-**Owns:** <the surfaces this lane owns — processes, their ports/paths, config values
-referenced by consumers, identity-vs-reality reconciliation, probe conventions, drift
-detection, the cross-lane registry of which consumer config points at which surface>.
-
-**Refuses:** <quality/eval concern> (<sibling lane id>), <credential material / auth flows>
-(<sibling lane id>), <dispatch / route mechanism> (<sibling lane id>), <remote surfaces>
-(<sibling lane id>). Boundary rule: chousa answers "<the identity/liveness question this
-lane answers>" — never "<the quality question>" or "<the request-safety question>".
-
-## Probation
-
-Per PROTOCOL.md §Lifecycle "Sibling mint": this lane self-iterates ≥3 verified rounds
-building `corpus/` + `PROVINCE.md` before the operator adds a `MANIFEST.json` roster row.
+**Probation:** >=3 verified rounds before a roster row. Roster row withheld.
