@@ -308,3 +308,42 @@ scalar score. Learning trends: expansion/quality **improved**, discernment
 (`--pin`/`--drift` adapted from the sibling lane's proven pattern) — the
 verification tool's drift becomes detectable.
 
+## Round 8 verdict — 2026-10-16 (goal wave; evidence commit `27b55c3`)
+
+Selected axis: **freshness/operability** — the gate's own drift becomes
+detectable (the mori lane's proven pattern, lineage declared). Wave: one
+32-seat flash call, 23/23 reports. Report: `.ufo/round-8/chousa-goalwave.md`.
+
+**Before** (gate `3ba718bf…`): a gate regression (a mode silently skipped, an
+output field changed) was catchable only by reading receipts after the fact;
+no baseline existed anywhere in the lane.
+
+**After** (gate `46f5ddb3…`, selftest 85 = +11; parent acceptance
+2026-10-16T05:10Z): `--pin` captures a canonical invocation (verify-all on a
+self-built temp fixture, relative paths, byte-stable anywhere) with a declared
+VOLATILE contract (`ts gate_sha256` shape-masked; changing the list is itself
+drift); `--drift` reports `GATE_DRIFT: none` exit 0 / named tokens exit 1 /
+missing-malformed exit 2 — never a false none. Measured catches: a one-field
+mutant names `+finds -findings`; a silently-skipped mode names
+`-REJECTIONS_OK -SECTION:sweeps`; a volatile-list rewrite names
+`volatile_fields`. The lane committed its baseline
+(`corpus/evidence/gate-baseline-r8-20261016T033757Z.json`); the parent's
+drift re-run: `GATE_DRIFT: none` exit 0. All 74 prior cases byte-identical;
+all seven modes byte-stable; hermetic (pin from lane, drift from `/`); zero
+network.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| freshness | **improved** | the verification tool's behavior is now pinned and drift-detecting; the r7 selftest-flake class of surprise has a detector. |
+| operability | **improved** | selftest 74 → 85 (+11); --pin/--drift join the 0/1/2 contract; canonical invocation documented in the header. |
+| depth | **improved** | `corpus/knowledge/gate-baseline-r8.md`: design, the mori lineage, the volatile contract, catches (field/mode/volatile drift) and cannot-catches (semantic drift inside stable fields). |
+| coverage | **unchanged** | no new measured research surface. |
+| calibration | **unchanged** | the volatile list was measured before declared (3-run field diff). |
+| adjacency | **unchanged** | zero network; corpus read-only; sibling-lane files read-only (lineage cited). |
+
+Admission: **ADMIT** (freshness/operability/depth improved, none harmed). No
+scalar score. Learning trends: expansion/quality **improved**, discernment
+**unchanged**. Round 9 registered: fixture-depth coverage — the three archived
+inputs themselves run through verify-all end-to-end as records, with expanded
+claim/hop fixtures where the archives support them.
+

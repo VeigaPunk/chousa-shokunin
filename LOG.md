@@ -430,3 +430,25 @@ parent integrated under the chousa lane identity.
 
 Round report: `.ufo/round-7/chousa-goalwave.md`.
 
+## Round 8 — gate behavioral baseline (goal wave)
+
+**Round 8 — goal-wave admission (2026-10-16).** Motivating evidence: no gate
+baseline; regressions catchable only post-hoc. Landed (evidence commit
+`LOGPEND8`): gate `46f5ddb3…` with `--pin`/`--drift` (selftest 85 = +11) —
+canonical self-built fixture invocation, declared volatile contract
+(ts/gate_sha256 shape-masked), GATE_DRIFT none/named-tokens/missing-malformed
+under 0/1/2; catches measured: field mutant, silently-skipped mode
+(-SECTION:sweeps), volatile-list rewrite. Lane baseline committed
+(`corpus/evidence/gate-baseline-r8-20261016T033757Z.json`); parent drift
+re-run `none` exit 0. Mori lineage declared. Wave: 32-seat flash call, 23/23.
+
+**Verdicts.** ADMIT: freshness/operability/depth **improved**; coverage/
+calibration/adjacency **unchanged**; none harmed. Round 9 registered: the
+archived inputs through verify-all end-to-end + expanded fixtures. Receipt
+identity remains OPEN (operator).
+
+**Boundaries held.** Zero network; corpus read-only; seats committed nothing;
+parent integrated under the chousa lane identity.
+
+Round report: `.ufo/round-8/chousa-goalwave.md`.
+
