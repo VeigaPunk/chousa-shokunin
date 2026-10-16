@@ -150,6 +150,54 @@
 # --json PATH appends (>>, never rewrites) one JSON line: schema, UTC, record
 # and gate SHA-256, per-section state/verdict/tallies, composed verdict.
 #
+# Pin/drift mode: the gate's own behavioral baseline, adapted from
+# mori-shokunin r10 (tools/mori-census.sh --pin/--drift; its contract note
+# corpus/knowledge/drift-pin-r10.md and the lesson
+# 2026-10-15-volatile-contract-behavioral-baselines.md there), sized down to a
+# gate whose canonical output is deterministic per input.
+#   --pin PATH    runs the canonical reference invocation, normalizes it and
+#                 writes a baseline text file to PATH. Exit 0 on success —
+#                 pinning a run that itself rolls DRIFT is still a pin — and
+#                 exit 2 when the capture or the write fails. Prints one
+#                 GATE_PIN: ok path=… gate_sha256=… line.
+#   --drift PATH  re-runs the same invocation, normalizes with the CURRENT
+#                 rules and byte-compares against the baseline body:
+#                   equal  -> GATE_DRIFT: none               exit 0
+#                   differ -> GATE_DRIFT: <tokens>           exit 1
+#                   baseline missing, unreadable, malformed, or the capture
+#                   failing -> message on stderr              exit 2
+#                 Writes nothing. Neither mode prints a RESEARCH_GATE line:
+#                 their contract is the GATE_PIN/GATE_DRIFT line and the exit
+#                 code, so a consumer counting verdict lines cannot mistake a
+#                 baseline operation for a record verdict.
+# The canonical invocation is `verify-all record.md --claims claims.jsonl
+# --json manifest.jsonl --root .` run with cwd = a fresh temp fixture the gate
+# writes itself (the same recipe shape its selftest uses). The fixture's
+# record has four CLEAN sections and one integrity finding, so the capture
+# covers SECTION, FINDING, VERIFY_ALL and composed-verdict lines, and the
+# appended --json line is the receipt the manifest mode writes. Every printed
+# path is relative, so the capture is byte-stable wherever the gate is run;
+# the fixture is written and removed by the capture, never committed.
+# Volatile contract (recorded verbatim in every baseline header; masked values
+# are replaced by <V>):
+#   ts           the header clock and the manifest "ts": the single live input
+#                of the canonical invocation. Masked shape-scoped — only
+#                ts=<YYYY-MM-DDTHH:MM:SSZ> and "ts":"…" match; a malformed
+#                timestamp keeps its bytes and surfaces as drift.
+#   gate_sha256  the manifest's revision stamp: masked so the pin compares
+#                behavior, not revision (mori r10's script_sha256 rule; a
+#                comment-only edit is `none`).
+# Everything else is compared unmasked, including record_sha256 (the fixture
+# bytes are part of the behavior) and every contract word (VERSION, mode=,
+# record=, claims=, root=, state=, verdict=, findings=, drift=, tally=,
+# severity=, surface=, obs=), so editing one is drift.
+# Drift tokens (LC_ALL=C sorted, space-joined): <key> a non-volatile key=value
+# whose value changed; -<key>/+<key> a field a changed line dropped/added;
+# -<id>/+<id> a line removed/added, id in GATE MANIFEST VERIFY_ALL VERDICT
+# SECTION:<name> FINDING:<id> LINE; output-order for a pure reorder;
+# volatile_fields when the baseline's declared volatile list differs from the
+# current one (changing the contract is itself drift).
+#
 # Token boundaries (matching semantics shared by claims spans and chain quote
 # anchors — the substring classes): an occurrence of a span/quote counts only
 # when both of its outer edges sit at a token boundary, i.e. the character
@@ -185,6 +233,9 @@ LANE_ROOT=$(cd -- "$SCRIPT_DIR/.." && pwd)
 
 MODE=verify
 RECORD_ARG=""
+PIN_ARG=""
+DRIFT_ARG=""
+ROOT_ARG_SET=0
 ROOT=${CHOUSA_ROOT:-$PWD}
 STRICT=${CHOUSA_STRICT:-0}
 AGG_ERE=${CHOUSA_AGGREGATOR_ERE:-'aggregator|wikipedia|secondary-summary|chat-export-sources'}
@@ -212,6 +263,8 @@ usage: research-gate.sh [--selftest] [--help]
        research-gate.sh verify-integrity [RECORD] [--root PATH]
        research-gate.sh verify-all [RECORD] [--claims PATH] [--json PATH]
                       [--root PATH]
+       research-gate.sh --pin PATH
+       research-gate.sh --drift PATH
        research-gate.sh [--record PATH] [--root PATH]
 
   RECORD via --record, positional, or CHOUSA_RECORD.
@@ -260,6 +313,14 @@ usage: research-gate.sh [--selftest] [--help]
   the input is its own claims surface. --json PATH appends (never rewrites)
   one JSON line recording UTC, record + gate SHA-256, per-section tallies
   and the composed verdict.
+  Pin/drift: --pin PATH writes a behavioral baseline of the gate's canonical
+  reference run (verify-all over a hermetic fixture the gate writes itself,
+  plus that run's --json manifest line), with the declared volatile contract
+  (ts, gate_sha256) recorded in its header; exit 0, or 2 when the capture or
+  the write fails. --drift PATH re-runs the same invocation and byte-compares
+  the normalized captures: GATE_DRIFT: none exit 0, GATE_DRIFT: <changed
+  tokens> exit 1, baseline missing/unreadable/malformed (or a failed capture)
+  exit 2. Neither mode prints a RESEARCH_GATE line.
 Verdict: RESEARCH_GATE: CLEAN|DRIFT
 Exit:    0 CLEAN | 1 DRIFT | 2 setup/usage
 EOF
@@ -2118,6 +2179,330 @@ verify_all() {
   return 1
 }
 
+# ---- pin/drift: the gate's own behavioral baseline (r8) ----
+#
+# Lineage: mori-shokunin r10 turned its census into a pinned artifact with a
+# declared volatile-field contract (tools/mori-census.sh --pin/--drift, its
+# design note corpus/knowledge/drift-pin-r10.md, lesson
+# 2026-10-15-volatile-contract-behavioral-baselines.md). This lane adapts the
+# pattern to a gate whose canonical output is deterministic per input, so the
+# volatile set is two fields instead of a counter-class list. The full
+# contract (invocation, volatile list, exit codes, token grammar) is in the
+# file header under "Pin/drift mode"; the implementation notes here cover what
+# the header does not.
+#
+# Captures are frozen before anything compares them: the canonical run writes
+# to a file (never a live pipe), the file is normalized into a variable, and
+# the fixture is removed before the drift report prints. The fixture is built,
+# used and removed inside one capture call, so pin and drift always compare
+# the same invocation shape even if the lane tree changes underneath.
+GATE_DRIFT_VOLATILE_FIELDS='ts gate_sha256'
+GATE_BASELINE_MAGIC='# chousa-gate drift baseline v1'
+GATE_BASELINE_MARKER='# --- canonical output follows ---'
+GATE_MANIFEST_MARKER='# --- json manifest line follows ---'
+
+GATE_CAP='' GATE_CAP_RC=0 GATE_CAP_NOTE='' GATE_CAP_DIR=''
+GATE_REPORT=''
+GDRIFT_KEYS=()
+declare -A GDRIFT_KEYVAL=()
+
+gate_drift_normalize() { # PATH -> stdout, volatile values masked to <V>
+  local f=$1 line
+  while IFS= read -r line || [[ -n $line ]]; do
+    line=$(printf '%s' "$line" | sed -E \
+      -e 's/ts=[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z/ts=<V>/g' \
+      -e 's/"ts":"[^"]*"/"ts":"<V>"/g' \
+      -e 's/"gate_sha256":"[^"]*"/"gate_sha256":"<V>"/g') || true
+    printf '%s\n' "$line"
+  done <"$f"
+}
+
+gate_pin_fixture() { # DIR — the canonical hermetic fixture (header contract)
+  local dir=$1
+  mkdir -p "$dir/lib" "$dir/noise" || return 1
+  printf 'line1 primary material\nline2\n' >"$dir/lib/primary.md" || return 1
+  printf 'aggregator chrome sources sidebar\n' >"$dir/noise/chat-export-sources.md" || return 1
+  cat >"$dir/claims.jsonl" <<'PINFIX' || return 1
+{"id":"P1","source":"lib/primary.md","span":"line1 primary material","expect":"supported"}
+PINFIX
+  cat >"$dir/record.md" <<'PINFIX' || return 1
+# research-record v1
+<!-- chousa-record: v1 -->
+## Meta
+| key | value |
+|---|---|
+| window | loopback |
+| fetch | none |
+## Question
+Does a dangling sweep binding drift a composed verdict the four r6 sections pass?
+## Sources
+| id | tier | pointer | notes |
+|---|---|---|---|
+| S1 | primary | lib/primary.md:1 | local fixture |
+## Chain
+| hop | from | to | status | anchor_kind | anchor | notes |
+|---|---|---|---|---|---|---|
+| 1 | C1 | S1 | resolved | quote | line1 primary material | direct |
+## Claims
+| id | kind | text | pointer | status | sweep |
+|---|---|---|---|---|---|
+| C1 | observation | primary file has line1 | lib/primary.md:1 | verified | |
+## Negatives
+| id | text | sweep | status |
+|---|---|---|---|
+| N1 | no fx-only ghost source | SW1 | swept |
+## Sweeps
+| id | claim_id | where | status |
+|---|---|---|---|
+| SW1 | C9 | lib/ghost*.md | swept |
+## Rejections
+| id | ref | reason | flip |
+|---|---|---|---|
+| R1 | noise/chat-export-sources.md | UI chrome is not a primary source | a primary attestation in that file would flip this |
+## Approval
+| target | state |
+|---|---|
+| (none) | not-required |
+PINFIX
+  return 0
+}
+
+gate_canonical_capture() { # -> GATE_CAP | GATE_CAP_RC + GATE_CAP_NOTE
+  local fx rc=0 nv nml nsch vcap mcap
+  GATE_CAP='' GATE_CAP_RC=0 GATE_CAP_NOTE=''
+  fx=$(mktemp -d "${TMPDIR:-/tmp}/chousa-gate-pin.XXXXXX") || {
+    GATE_CAP_RC=2; GATE_CAP_NOTE='mktemp-failed'; return 0; }
+  GATE_CAP_DIR=$fx
+  if ! gate_pin_fixture "$fx"; then
+    GATE_CAP_RC=2 GATE_CAP_NOTE='fixture-write-failed'
+    rm -rf -- "$fx" 2>/dev/null || true
+    GATE_CAP_DIR=''
+    return 0
+  fi
+  ( cd "$fx" || exit 2
+    env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_ROOT \
+      -u CHOUSA_AGGREGATOR_ERE \
+      bash "$SELF" verify-all record.md --claims claims.jsonl \
+      --json manifest.jsonl --root . >capture.txt 2>&1 ) || rc=$?
+  nv=$(grep -c '^RESEARCH_GATE: ' -- "$fx/capture.txt" 2>/dev/null || true)
+  nml=$(grep -c '' -- "$fx/manifest.jsonl" 2>/dev/null || true)
+  nsch=$(grep -c '^{"schema":"chousa-verify-all/v1"' -- "$fx/manifest.jsonl" 2>/dev/null || true)
+  if [[ ( $rc -eq 0 || $rc -eq 1 ) && ${nv:-0} -eq 1 && ${nml:-0} -eq 1 && ${nsch:-0} -eq 1 ]]; then
+    vcap=$(gate_drift_normalize "$fx/capture.txt") || vcap=''
+    mcap=$(gate_drift_normalize "$fx/manifest.jsonl") || mcap=''
+    if [[ -z $vcap || -z $mcap ]]; then
+      GATE_CAP_RC=2 GATE_CAP_NOTE='empty-capture'
+    else
+      GATE_CAP=$(printf '%s\n%s\n%s\n' "$vcap" "$GATE_MANIFEST_MARKER" "$mcap")
+    fi
+  else
+    GATE_CAP_RC=2
+    GATE_CAP_NOTE="rc=$rc verdict-lines=${nv:-0} manifest-lines=${nml:-0} schema-lines=${nsch:-0}"
+  fi
+  rm -rf -- "$fx" 2>/dev/null || true
+  GATE_CAP_DIR=''
+  return 0
+}
+
+gate_drift_line_id() { # LINE -> pairing identity, one whitespace-free token
+  local line=$1 rest
+  case "$line" in
+    SECTION\ *) rest=${line#SECTION }; printf 'SECTION:%s' "${rest%% *}" ;;
+    FINDING\ *) rest=${line#FINDING }; printf 'FINDING:%s' "${rest%% *}" ;;
+    VERIFY_ALL\ *) printf 'VERIFY_ALL' ;;
+    RESEARCH_GATE:*) printf 'VERDICT' ;;
+    '{'*) printf 'MANIFEST' ;;
+    "$GATE_MANIFEST_MARKER") printf 'MANIFEST-MARKER' ;;
+    research-gate\ *) printf 'GATE' ;;
+    *) printf 'LINE' ;;
+  esac
+}
+
+gate_drift_scan() { # LINE -> GDRIFT_KEYS (first-seen order) + GDRIFT_KEYVAL
+  # A token counts only as key=value with a key-shaped key, so the header's
+  # em dashes, the verdict word and JSON punctuation contribute nothing; a
+  # duplicated key's values are concatenated so one occurrence cannot hide
+  # another (mori r10 drift_scan). The manifest line is one compact JSON
+  # object: "key": is rewritten to key= first, so its fields are named too.
+  local line=$1 toks tok key
+  GDRIFT_KEYS=()
+  GDRIFT_KEYVAL=()
+  if [[ $line == '{'* ]]; then
+    line=$(printf '%s' "$line" | sed -E 's/"([A-Za-z0-9_-]+)":/\1=/g; s/,/ /g') || true
+  fi
+  toks=$(printf '%s\n' "$line" | grep -oE '[A-Za-z_][A-Za-z0-9_-]*=[^[:space:]]*' || true)
+  while IFS= read -r tok; do
+    [[ -n $tok ]] || continue
+    key=${tok%%=*}
+    [[ -n ${GDRIFT_KEYVAL[$key]+x} ]] || GDRIFT_KEYS+=("$key")
+    GDRIFT_KEYVAL[$key]="${GDRIFT_KEYVAL[$key]:-}${tok#*=}"
+  done <<<"$toks"
+}
+
+gate_drift_field_report() { # BASE_LINE NEW_LINE ID -> changed field tokens
+  local bl=$1 nl=$2 id=$3 k
+  local -a bkeys=() nkeys=() changed=()
+  local -A bval=() nval=()
+  gate_drift_scan "$bl"
+  bkeys=("${GDRIFT_KEYS[@]}")
+  for k in "${bkeys[@]}"; do bval[$k]=${GDRIFT_KEYVAL[$k]}; done
+  gate_drift_scan "$nl"
+  nkeys=("${GDRIFT_KEYS[@]}")
+  for k in "${nkeys[@]}"; do nval[$k]=${GDRIFT_KEYVAL[$k]}; done
+  for k in "${bkeys[@]}"; do
+    if [[ -z ${nval[$k]+x} ]]; then changed+=("-$k"); continue; fi
+    [[ ${bval[$k]} == "${nval[$k]}" ]] || changed+=("$k")
+  done
+  for k in "${nkeys[@]}"; do
+    [[ -n ${bval[$k]+x} ]] || changed+=("+$k")
+  done
+  # A difference that lives outside key=value tokens (verdict word, a state
+  # sentence) falls back to naming the line's id instead of a silent change.
+  if [[ ${#changed[@]} -eq 0 ]]; then changed+=("$id"); fi
+  printf '%s\n' "${changed[@]}"
+}
+
+gate_drift_report() { # BASELINE_BODY CAPTURE -> GATE_REPORT
+  local body=$1 cap=$2 line
+  local -a base=() new=() b_used=() n_used=() rep=()
+  local i j id matched fields joined sorted
+  while IFS= read -r line; do base+=("$line"); done <<<"$body"
+  while IFS= read -r line; do new+=("$line"); done <<<"$cap"
+  # pass 1 — exact matches (multiset), so a removed/added line is not mispaired
+  # with a same-id sibling and mis-reported as a field change.
+  for i in "${!base[@]}"; do
+    for j in "${!new[@]}"; do
+      [[ ${n_used[$j]:-0} -eq 1 ]] && continue
+      if [[ ${new[$j]} == "${base[$i]}" ]]; then b_used[$i]=1; n_used[$j]=1; break; fi
+    done
+  done
+  # pass 2 — same-id pairing names the changed non-volatile fields.
+  for i in "${!base[@]}"; do
+    [[ ${b_used[$i]:-0} -eq 1 ]] && continue
+    id=$(gate_drift_line_id "${base[$i]}")
+    matched=-1
+    for j in "${!new[@]}"; do
+      [[ ${n_used[$j]:-0} -eq 1 ]] && continue
+      [[ $(gate_drift_line_id "${new[$j]}") == "$id" ]] || continue
+      matched=$j; break
+    done
+    if [[ $matched -ge 0 ]]; then
+      n_used[$matched]=1
+      fields=$(gate_drift_field_report "${base[$i]}" "${new[$matched]}" "$id")
+      while IFS= read -r line; do [[ -n $line ]] && rep+=("$line"); done <<<"$fields"
+    else
+      rep+=("-$id")
+    fi
+  done
+  # pass 3 — anything left on the capture side was added.
+  for j in "${!new[@]}"; do
+    [[ ${n_used[$j]:-0} -eq 1 ]] && continue
+    rep+=("+$(gate_drift_line_id "${new[$j]}")")
+  done
+  # The joined strings differed yet no line or field is named: a pure reorder
+  # (pass 1 is order-independent). Say so instead of a false 'none'.
+  if [[ ${#rep[@]} -eq 0 ]]; then rep+=("output-order"); fi
+  joined=$(printf '%s\n' "${rep[@]}")
+  sorted=$(LC_ALL=C sort -u <<<"$joined")
+  GATE_REPORT=${sorted//$'\n'/ }
+}
+
+run_pin() { # PATH
+  local path=$1 sha text
+  gate_canonical_capture
+  if [[ $GATE_CAP_RC -ne 0 || -z $GATE_CAP ]]; then
+    printf 'research-gate: --pin canonical capture failed (%s): %s\n' \
+      "${GATE_CAP_NOTE:-unknown}" "$path" >&2
+    exit 2
+  fi
+  sha=$(sha256sum -- "$SELF" 2>/dev/null | cut -d' ' -f1) || sha=''
+  if [[ -z $sha ]]; then
+    printf 'research-gate: --pin sha256sum unavailable; baseline not written\n' >&2
+    exit 2
+  fi
+  # The text is staged in a variable and written by ONE simple printf: a
+  # redirection failure on a compound command exits 0 on this bash (measured,
+  # 5.3.15: `{ …; } >/missing/dir/f` prints the error, runs nothing, returns
+  # 0), so `{ …; } >"$path"` would report a phantom success. The simple
+  # command's redirection failure is real and caught.
+  text=''
+  text+="$GATE_BASELINE_MAGIC — written by research-gate.sh --pin"$'\n'
+  text+='# lineage: mori-shokunin r10 pin/drift (tools/mori-census.sh); volatile contract per the gate header'$'\n'
+  text+="# gate_sha256=$sha"$'\n'
+  text+="# pinned_ts=$TS_UTC"$'\n'
+  text+='# canonical: verify-all record.md --claims claims.jsonl --json manifest.jsonl --root . (cwd = a fresh temp fixture written by the gate)'$'\n'
+  text+="# volatile_fields=$GATE_DRIFT_VOLATILE_FIELDS"$'\n'
+  text+='# volatile_note=values of these fields are masked to <V>; --drift re-normalizes with the CURRENT list and reports every changed field. Changing the list is itself drift; gate_sha256 is informational (behavior, not revision, is compared).'$'\n'
+  text+="$GATE_BASELINE_MARKER"$'\n'
+  text+="$GATE_CAP"$'\n'
+  if ! printf '%s' "$text" >"$path" 2>/dev/null; then
+    printf 'research-gate: --pin could not write baseline: %s\n' "$path" >&2
+    exit 2
+  fi
+  printf 'GATE_PIN: ok path=%s gate_sha256=%s\n' "$path" "$sha"
+  exit 0
+}
+
+run_drift() { # PATH
+  local path=$1 line first='' in_block=0 have_vol=0 declared='' body='' vol_token=''
+  [[ -e $path ]] || {
+    printf 'research-gate: --drift baseline missing: %s\n' "$path" >&2
+    exit 2
+  }
+  [[ -f $path && -r $path ]] || {
+    printf 'research-gate: --drift baseline unreadable: %s\n' "$path" >&2
+    exit 2
+  }
+  while IFS= read -r line || [[ -n $line ]]; do
+    [[ -n $first ]] || first=$line
+    if [[ $in_block -eq 1 ]]; then body+="$line"$'\n'; continue; fi
+    if [[ $line == "$GATE_BASELINE_MARKER" ]]; then in_block=1; continue; fi
+    if [[ $line == '# volatile_fields='* ]]; then
+      have_vol=1
+      declared=${line#'# volatile_fields='}
+    fi
+  done <"$path"
+  [[ $first == "$GATE_BASELINE_MAGIC"* ]] || {
+    printf 'research-gate: --drift baseline malformed (magic line absent): %s\n' "$path" >&2
+    exit 2
+  }
+  [[ $in_block -eq 1 ]] || {
+    printf 'research-gate: --drift baseline malformed (canonical marker absent): %s\n' "$path" >&2
+    exit 2
+  }
+  [[ $have_vol -eq 1 ]] || {
+    printf 'research-gate: --drift baseline malformed (volatile_fields contract absent): %s\n' "$path" >&2
+    exit 2
+  }
+  [[ -n $body ]] || {
+    printf 'research-gate: --drift baseline malformed (empty canonical block): %s\n' "$path" >&2
+    exit 2
+  }
+  body=${body%$'\n'}
+  # The declared contract is compared too: a baseline pinned under a DIFFERENT
+  # volatile list is drifting even when nothing in this run exercises the
+  # changed mask (the recorded list is the contract — mori r10's d7710981
+  # refinement).
+  [[ $declared == "$GATE_DRIFT_VOLATILE_FIELDS" ]] || vol_token=volatile_fields
+  gate_canonical_capture
+  if [[ $GATE_CAP_RC -ne 0 || -z $GATE_CAP ]]; then
+    printf 'research-gate: --drift canonical capture failed (%s): %s\n' \
+      "${GATE_CAP_NOTE:-unknown}" "$path" >&2
+    exit 2
+  fi
+  if [[ $body == "$GATE_CAP" ]]; then
+    if [[ -n $vol_token ]]; then
+      printf 'GATE_DRIFT: %s\n' "$vol_token"
+      exit 1
+    fi
+    printf 'GATE_DRIFT: none\n'
+    exit 0
+  fi
+  gate_drift_report "$body" "$GATE_CAP"
+  printf 'GATE_DRIFT: %s%s\n' "${GATE_REPORT:-none}" "${vol_token:+ $vol_token}"
+  exit 1
+}
+
 run_selftest() {
   local cases=0 failures=0
   WORK=$(mktemp -d "${TMPDIR:-/tmp}/chousa-research-gate-selftest.XXXXXX") \
@@ -2125,11 +2510,13 @@ run_selftest() {
   trap 'rm -rf -- "${WORK:-}"' EXIT
   OUTSIDE_FILE=$(mktemp "${TMPDIR:-/tmp}/chousa-gate-outside.XXXXXX") \
     || die_usage "mktemp failed"
-  # WORK/OUTSIDE_FILE are globals with ${:-} guards: at errexit-exit the EXIT
-  # trap sees function locals as unset (measured), which silently skips the
-  # cleanup, and a quota-limited tmp dir can fail the first fixture write.
-  # Honoring TMPDIR lets a crowded /tmp be swapped for another scratch mount.
-  trap 'rm -rf -- "${WORK:-}" "${OUTSIDE_FILE:-}"' EXIT
+  # WORK/OUTSIDE_FILE/GATE_CAP_DIR are globals with ${:-} guards: at
+  # errexit-exit the EXIT trap sees function locals as unset (measured), which
+  # silently skips the cleanup, and a quota-limited tmp dir can fail the first
+  # fixture write. Honoring TMPDIR lets a crowded /tmp be swapped for another
+  # scratch mount. GATE_CAP_DIR is the pin/drift capture fixture: removed at
+  # the end of every capture, and re-swept here if a capture died mid-flight.
+  trap 'rm -rf -- "${WORK:-}" "${OUTSIDE_FILE:-}" "${GATE_CAP_DIR:-}"' EXIT
   printf 'outside text\n' >"$OUTSIDE_FILE"
   mkdir -p "$WORK/lib" "$WORK/noise" "$WORK/claimsrc"
   printf 'line1 primary material\nline2\n' >"$WORK/lib/primary.md"
@@ -3594,6 +3981,113 @@ EOF
     'SECTION sweeps state=run verdict=CLEAN' \
     'VERIFY_ALL sections=5 run=5 absent=0 drift-sections=1 findings=1 drift=1'
 
+  # Pin/drift cases (r8): the gate's own behavioral baseline. Appended after
+  # the r7 cases so cases 1-74 keep their case numbers, names and exits. Every
+  # pin/drift run is a fresh process against the shipped CLI, and each capture
+  # runs the canonical invocation (verify-all over the internal hermetic
+  # fixture plus its --json manifest line) in its own temp fixture.
+  tpin() { # NAME WANT_RC [want-substrings…] — writes $WORK/NAME.baseline
+    local name=$1 want_rc=$2
+    shift 2
+    local -a want=("$@")
+    local rc=0 out n ok=1 tok
+    cases=$((cases + 1))
+    out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_ROOT \
+      -u CHOUSA_AGGREGATOR_ERE CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+      bash "$SELF" --pin "$WORK/$name.baseline" 2>&1) || rc=$?
+    n=$(grep -c '^GATE_PIN: ' <<<"$out" || true)
+    for tok in "${want[@]+"${want[@]}"}"; do
+      [[ $out == *"$tok"* ]] || ok=0
+    done
+    if [[ $rc -eq $want_rc && ${n:-0} -eq 1 && $ok -eq 1 ]]; then
+      printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" "$name" "$rc"
+    else
+      printf 'FAIL-case %-28s exit=%d want=%d pin-lines=%s token=%s\n' \
+        "$name" "$rc" "$want_rc" "${n:-0}" "${want[*]-}"
+      printf '%s\n' "$out" | sed 's/^/    | /'
+      failures=$((failures + 1))
+    fi
+  }
+
+  # Drift cases. DRIVER=PATH runs a different copy of the gate (the mutant
+  # arm); NAME=VALUE tokens are env overrides; everything else is a required
+  # substring. An exit-0/1 run must print exactly one GATE_DRIFT line; an
+  # exit-2 run must print none (its reason is the message, asserted by token).
+  tdrift() { # NAME WANT_RC BASELINE [DRIVER=PATH] [ENV=VAL…] [want…]
+    local name=$1 want_rc=$2 baseline=$3
+    shift 3
+    local -a want=() over=()
+    local a drv="$SELF" rc=0 out n ok=1 tok
+    for a in "$@"; do
+      case "$a" in
+        DRIVER=*) drv=${a#DRIVER=} ;;
+        [A-Z_]*=*) over+=("$a") ;;
+        *) want+=("$a") ;;
+      esac
+    done
+    cases=$((cases + 1))
+    out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_ROOT \
+      -u CHOUSA_AGGREGATOR_ERE CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+      "${over[@]+"${over[@]}"}" \
+      bash "$drv" --drift "$baseline" 2>&1) || rc=$?
+    n=$(grep -c '^GATE_DRIFT: ' <<<"$out" || true)
+    if [[ $want_rc -le 1 ]]; then
+      [[ ${n:-0} -eq 1 ]] || ok=0
+    else
+      [[ ${n:-0} -eq 0 ]] || ok=0
+    fi
+    for tok in "${want[@]+"${want[@]}"}"; do
+      [[ $out == *"$tok"* ]] || ok=0
+    done
+    if [[ $rc -eq $want_rc && $ok -eq 1 ]]; then
+      printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" "$name" "$rc"
+    else
+      printf 'FAIL-case %-28s exit=%d want=%d drift-lines=%s token=%s\n' \
+        "$name" "$rc" "$want_rc" "${n:-0}" "${want[*]-}"
+      printf '%s\n' "$out" | sed 's/^/    | /'
+      failures=$((failures + 1))
+    fi
+  }
+
+  # The canonical run itself rolls DRIFT (one integrity finding by design), so
+  # this pin also proves the documented rule: pinning a DRIFT run is still a
+  # pin (exit 0), the roll lives inside the captured bytes.
+  tpin pin-clean 0 'GATE_PIN: ok'
+  tdrift drift-clean 0 "$WORK/pin-clean.baseline" 'GATE_DRIFT: none'
+
+  # The volatile contract absorbs real churn: the same fixture re-run with a
+  # clock 2 h later moves ts (header and manifest) and nothing else, so the
+  # drift is 'none' because the mask says so, not because the run repeats.
+  tdrift drift-volatile-churn 0 "$WORK/pin-clean.baseline" \
+    CHOUSA_NOW_EPOCH="$((NOW_EPOCH + 7200))" 'GATE_DRIFT: none'
+
+  # A one-field regression in a copy of the gate: the SECTION printers rename
+  # findings= to finds= and nothing else changes. The copy runs as the drift
+  # driver, so the comparison is behavioral (the copy's gate_sha256 differs
+  # and is masked) and the renamed field is named in the report.
+  sed 's/state=run verdict=%s findings=%s/state=run verdict=%s finds=%s/' \
+    "$SELF" >"$WORK/gate-mutant.sh"
+  tdrift drift-one-field-mutant 1 "$WORK/pin-clean.baseline" \
+    "DRIVER=$WORK/gate-mutant.sh" '+finds' '-findings'
+
+  # Absence and malformation are exit 2, never a false 'none': a two-valued
+  # contract would let cannot-compare masquerade as clean (mori r10 lesson,
+  # "The exit contract needs a third value").
+  tdrift drift-missing 2 "$WORK/no-such-baseline.txt" 'baseline missing'
+  printf 'not a baseline\n' >"$WORK/drift-malformed.baseline"
+  tdrift drift-malformed 2 "$WORK/drift-malformed.baseline" 'malformed'
+
+  # A baseline whose declared volatile list differs from the current one is
+  # itself drift: the recorded contract is part of what was pinned.
+  sed 's/^# volatile_fields=.*/# volatile_fields=ts/' \
+    "$WORK/pin-clean.baseline" >"$WORK/drift-vol-list.baseline"
+  tdrift drift-volatile-list 1 "$WORK/drift-vol-list.baseline" 'volatile_fields'
+
+  tsetup pin-no-path 2 --pin
+  tsetup drift-no-path 2 --drift
+  tsetup pin-unwritable 2 --pin "$WORK/no-such-dir/base.txt"
+  tsetup pin-drift-exclusive 2 --pin "$WORK/a.txt" --drift "$WORK/b.txt"
+
   if [[ $failures -eq 0 ]]; then
     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases)\n' "$cases"
     exit 0
@@ -3612,12 +4106,18 @@ while [[ $# -gt 0 ]]; do
     verify-sweeps) MODE=sweeps; shift ;;
     verify-integrity) MODE=integrity; shift ;;
     verify-all) MODE=all; shift ;;
+    --pin)
+      [[ $# -ge 2 ]] || die_usage "--pin needs PATH"
+      MODE=pin; PIN_ARG=$2; shift 2 ;;
+    --drift)
+      [[ $# -ge 2 ]] || die_usage "--drift needs PATH"
+      MODE=drift; DRIFT_ARG=$2; shift 2 ;;
     --record)
       [[ $# -ge 2 ]] || die_usage "--record needs PATH"
       RECORD_ARG=$2; shift 2 ;;
     --root)
       [[ $# -ge 2 ]] || die_usage "--root needs PATH"
-      ROOT=$2; shift 2 ;;
+      ROOT=$2; ROOT_ARG_SET=1; shift 2 ;;
     --claims)
       [[ $# -ge 2 ]] || die_usage "--claims needs PATH"
       CLAIMS_ARG=$2; shift 2 ;;
@@ -3636,8 +4136,25 @@ if [[ $MODE != all && ( -n ${CLAIMS_ARG:-} || -n ${JSON_ARG:-} ) ]]; then
   die_usage "--claims/--json are only valid with verify-all"
 fi
 
+# pin/drift take exactly one baseline path: a record, claims surface, manifest
+# or root would be silently ignored by the canonical invocation, so refusing
+# them keeps the mode fail-closed like the other setup paths. Both baseline
+# flags in one invocation are refused too: mode flags are last-wins, which
+# would silently pin or drift the wrong path.
+if [[ $MODE == pin || $MODE == drift ]]; then
+  [[ -z $RECORD_ARG && -z ${CLAIMS_ARG:-} && -z ${JSON_ARG:-} && $ROOT_ARG_SET -eq 0 ]] \
+    || die_usage "--pin/--drift take only a baseline path"
+  if [[ $MODE == pin ]]; then
+    [[ -z $DRIFT_ARG ]] || die_usage "--pin and --drift are mutually exclusive"
+  else
+    [[ -z $PIN_ARG ]] || die_usage "--pin and --drift are mutually exclusive"
+  fi
+fi
+
 case "$MODE" in
   selftest) run_selftest ;;
+  pin) run_pin "$PIN_ARG" ;;
+  drift) run_drift "$DRIFT_ARG" ;;
   verify)
     RECORD_PATH=${RECORD_ARG:-${CHOUSA_RECORD:-}}
     verify_record "$RECORD_PATH"

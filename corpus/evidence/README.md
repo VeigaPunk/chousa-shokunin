@@ -1,9 +1,10 @@
 # chousa-shokunin — corpus/evidence
 
-Receipts for the chousa moves: rounds 2-7 — claim-vs-source verification
+Receipts for the chousa moves: rounds 2-8 — claim-vs-source verification
 (round 2), chain-hop resolution (round 3), token-boundary matching semantics
 (round 4), rejection/sweep verification (round 5), verify-all composition
-(round 6), reference integrity (round 7). Each
+(round 6), reference integrity (round 7), the gate's own behavioral baseline
+(round 8). Each
 receipt is a machine-cut capture of public-CLI runs: UTC stamp, exact command,
 exit code, pinned gate SHA-256, and the verbatim stdout. Local files only — no
 external fetch, no network.
@@ -573,3 +574,107 @@ bash <(git show 4835426:tools/research-gate.sh) verify-all corpus/fixtures/integ
   (diff EMPTY), and both agree with the fixture README's after-state block.
 - Receipt identity for this round remains a lane-local log; no `task_…` value
   is invented and the round-1 receipt blocker stands (operator-side).
+
+## Round-8 gate-baseline receipts — stamp 20261016T033757Z
+
+The r8 move makes the gate's own drift detectable: `--pin`/`--drift`, adapted
+from the sibling lane mori's r10 pattern (`tools/mori-census.sh`; its
+`corpus/knowledge/drift-pin-r10.md` and the volatile-contract lesson). Before
+this round no baseline existed; a behavioral regression in the gate (a mode
+silently skipped, an output field changed) was only catchable by reading old
+receipts by hand.
+
+Revision under test: `tools/research-gate.sh` sha256
+`46f5ddb39d5fafa220fb584121dba2f4a15e071a91fa42728849f3c7567c6ccd` (lane HEAD
+`848738c`); before-state was the round-7 gate `3ba718bf…`, which rejects both
+flags with exit 2 and writes nothing. The canonical invocation is internal to
+`--pin`/`--drift`: `verify-all record.md --claims claims.jsonl --json
+manifest.jsonl --root .` run with cwd = a fresh temp fixture the gate writes
+itself (never committed). Volatile contract: `ts gate_sha256`, masked `<V>`
+and recorded verbatim in the baseline header.
+
+### The lane baseline (committed artifact)
+
+| fact | value |
+|---|---|
+| path | `corpus/evidence/gate-baseline-r8-20261016T033757Z.json` |
+| baseline sha256 | `1c81a6cb…` (2988 B, 19 lines) |
+| header `pinned_ts` | `2026-10-16T03:38:57Z` |
+| header `gate_sha256` | `46f5ddb3…` |
+| written by | `bash tools/research-gate.sh --pin corpus/evidence/gate-baseline-r8-20261016T033757Z.json` → `GATE_PIN: ok`, exit 0 |
+
+The file is the `chousa-gate drift baseline v1` **text** format (header
+comments, `# --- canonical output follows ---`, the normalized capture, then
+the `--json` manifest line after `# --- json manifest line follows ---`).
+Despite the `.json` suffix, the file as a whole is not JSON (only the manifest
+line is) — a naming observation, as in mori r10. The capture is the canonical
+run's full stdout (five `SECTION` lines, the `FINDING REF_UNRESOLVED` line,
+`VERIFY_ALL`, the composed `RESEARCH_GATE: DRIFT` verdict) plus the manifest
+JSON line; `record_sha256` is unmasked (the fixture bytes are part of the
+behavior) while `ts`/`gate_sha256` are `<V>`.
+
+### Receipts
+
+| Receipt (sha256) | Shows | Key result |
+|---|---|---|
+| `pin-r8-20261016T033757Z-selftest.log` (`6334240b…`) | full `--selftest`; case-line stability vs the round-7 receipt | `RESEARCH_GATE_SELFTEST: PASS (85 cases)`, exit 0; the first 74 case lines are **byte-identical** to the r7 receipt (`cmp` YES); new cases 75-85 = `pin-clean` / `drift-clean` / `drift-volatile-churn` / `drift-one-field-mutant` / `drift-missing` / `drift-malformed` / `drift-volatile-list` / `setup-pin-no-path` / `setup-drift-no-path` / `setup-pin-unwritable` / `setup-pin-drift-exclusive` |
+| `pin-r8-20261016T033757Z-pin.log` (`40abd23d…`) | before-state (0 baselines committed; r7 gate rejects both flags), the committed pin, header + body verbatim, hermetic re-pins, CLI refusals | `GATE_PIN: ok` exit 0; hermetic: pin1 = pin2 bodies and pin1 = pin3 (cut after 75 s of live churn) bodies are `cmp` **IDENTICAL**; refusals: no-path ×2, both flags, unwritable dir — all exit 2 |
+| `pin-r8-20261016T033757Z-drift.log` (`051695ee…`) | drift on the committed baseline, churn absorption, six baseline controls, the mutant-gate arm | `GATE_DRIFT: none` exit 0; after 75 s `none` exit 0; mutant severity → `GATE_DRIFT: severity` exit 1; missing/empty/junk/marker-deleted → exit 2; volatile-list rewrite → `GATE_DRIFT: volatile_fields` exit 1; the sweeps-silently-skipped gate → exit 1 naming `-REJECTIONS_OK -hit -rejections-ok anchor-missing native rejections tallies tally` |
+| `pin-r8-20261016T033757Z-live.log` (`9829ed10…`) | cross-round no-harm, r1 observable, zero network, manifest untouched | 14/14 mode pairs byte-identical (ts-normalized) with matching rc; `VERDICT_BEARING_EXPORTS=3/3`; strace 3759 trace lines, **0 network syscalls**; `verify-all-manifest.jsonl` sha unchanged (`9620946f…`) |
+
+### Controls (recorded in the drift receipt)
+
+| Control | Delta | Result | Exit |
+|---|---|---|---|
+| baseline mutant | FINDING line `severity=warn` → `info` | `GATE_DRIFT: severity` | 1 |
+| missing path | — | `--drift baseline missing` | 2 |
+| empty file | 0 bytes | `malformed (magic line absent)` | 2 |
+| junk bytes | `not a baseline` | `malformed (magic line absent)` | 2 |
+| marker deleted | canonical marker line removed | `malformed (canonical marker absent)` | 2 |
+| volatile rewrite | header `volatile_fields=ts gate_sha256` → `ts` (body untouched) | `GATE_DRIFT: volatile_fields` | 1 |
+| mutant gate | `sweeps) verify_all_section sweeps verify-sweeps "$record"` → `sweeps) : ;;` (sweeps silently skipped; output still claims `state=run verdict=CLEAN`) | `GATE_DRIFT: -REJECTIONS_OK -hit -rejections-ok anchor-missing native rejections tallies tally` | 1 |
+
+### Re-run recipe
+
+From the lane root, local only. Exit contract: 0 CLEAN/equal, 1 DRIFT,
+2 setup/usage. Verified verbatim after the battery, default env.
+
+```bash
+sha256sum tools/research-gate.sh
+#   46f5ddb39d5fafa220fb584121dba2f4a15e071a91fa42728849f3c7567c6ccd is the sha the baseline header records
+sha256sum corpus/evidence/gate-baseline-r8-20261016T033757Z.json
+#   1c81a6cb34543bb99c8797a7a0dd8dfbd1f13e3d86ec5b81aa0c7249381a8426
+bash tools/research-gate.sh --drift corpus/evidence/gate-baseline-r8-20261016T033757Z.json
+#   expect: GATE_DRIFT: none, exit 0 while the gate's canonical behavior is
+#   unchanged; a red result names changed tokens (<key> / -<key> / +<key> /
+#   -<id> / +<id> / output-order / volatile_fields)
+bash tools/research-gate.sh --pin /tmp/<new>.txt   # re-pin deliberately, with a reason
+bash tools/research-gate.sh --selftest
+#   expect: RESEARCH_GATE_SELFTEST: PASS (85 cases), exit 0
+```
+
+### Notes
+
+- The pin compares behavior, not revision: `gate_sha256` is masked, so an edit
+  that changes nothing observable reads `none`; the baseline header records
+  the revision it was cut at (`pinned_ts`, `gate_sha256`) and the volatile
+  list verbatim, so the "none" is auditable.
+- Masked blind spots are contractual: a regression that only moves `ts` or
+  the manifest's revision stamp is invisible by design; everything else is
+  compared unmasked (contract words, section tallies, findings,
+  `record_sha256`).
+- The gate revision moved through at least seven observed landed shas during
+  the wave (first observed `05f076ac…`, pinned `46f5ddb3…`); these receipts
+  were cut only against the pinned revision, and the cut script aborts on a
+  mid-battery gate move (it did not fire; gate sha stable across the battery).
+- Baseline aging is the re-pin policy: a real behavioral change either
+  explains an intended edit (re-pin deliberately, with a reason recorded in
+  the round) or is a regression the round must address; the failure mode to
+  avoid is re-pinning to make a red baseline green.
+- An independent re-check after the battery (default env, lane root):
+  `GATE_DRIFT: none` exit 0; `--selftest` → `PASS (85 cases)`, exit 0.
+- Scratch for this cut lived at `/tmp/chousa-r8-evidence/` (cut script,
+  pin bodies, control copies, strace log, `TMPDIR`); the committed artifacts
+  are the baseline and the four receipts only.
+- Receipt identity for this round remains lane-local; no `task_…` value is
+  invented and the round-1 receipt blocker stands (operator-side).

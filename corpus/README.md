@@ -12,6 +12,7 @@
 | `knowledge/sweeps-rejections-r5.md` | Round-5 note: `verify-sweeps` mode design (rejection reason + flip-condition presence, sweep `where` tokenization classes, local glob/existence re-run with exempt-but-counted non-local/source-id classes, boundary guard, per-item verdicts + `VERIFIED_SWEEPS=N/M REJECTIONS_OK=K/L` under the CLEAN/DRIFT/0-1-2 contract), the measured flip presence-vs-quality class table, what a CLEAN sweep does not prove, receipts and open items | note metadata (gate sha `55adb92d…`, replacing `6b83705b…`); fixtures `sweeps-r5.md`/`sweeps-r5-broken.md`/`sweeps-r5-hit.md` at their pinned shas; `evidence/README.md` and `evidence/sweeps-r5-20261016T011543Z-*.log`; the seat's gate-free flip-class/exempt-class probes |
 | `knowledge/verify-all-r6.md` | Round-6 note: `verify-all` composition mode — per-section applicability (structure always for a Markdown record; claims only when a surface binds via `--claims`, the input itself as a claims JSONL, or a resolving `## Meta` row; chain on `## Chain`; sweeps on `## Sweeps`/`## Negatives`/`## Rejections`), each section executed as a fresh gate subprocess so its tally equals the solo mode's by construction, composed DRIFT iff any run section drifts, absent sections reported (`state=absent`) and never drifting — plus the append-only `--json` lane manifest (`chousa-verify-all/v1`: UTC, record+gate sha256, per-section state/verdict/tallies, composed verdict and counters), the two transient mid-wave revisions, strace-measured zero network, the omission limit named as the r7 candidate, honest limits and open items | note metadata (gate sha `0c3d51ed…`, replacing `55adb92d…`); fixtures `full-r6.md`/`full-r6-broken.md`/`full-r6-absent.md` + claims companions at their pinned shas; `fixtures/full-r6.README.md`; `evidence/README.md` and `evidence/compose-r6-20261016T020330Z-*.log`; the seat's battery (composed runs, manifest append/prefix probes, 64-case selftest) |
 | `knowledge/reference-integrity-r7.md` | Round-7 note: `verify-integrity` mode + fifth composed section — declared-id sets (Sources ids; Claims+Negatives ids; Sweeps ids), the per-section reference cells read (chain `from`/`claim`/`to`; claims `sweep`/`source`/`ref`/`pointer`; negatives `sweep`/`where`; sweeps `claim_id`/`where`; rejections `ref`), one-pass token classification (declared → resolved; undeclared id shape → `REF_UNRESOLVED` drift; non-local → exempt; else not counted), exempt-but-counted classes (non-local namings; the tokens of an exempt-status row), `INTEGRITY refs=N resolved=M unresolved=K` (`refs = resolved + unresolved + exempt`) as the native tally in `sections=5` composed runs, fail-closed semantics under the unchanged 0/1/2 contract, the critic's 29-probe attack catalog dispositioned (caught classes vs named limits, both fail-open and fail-closed directions), the fixture reshape, honest limits and open items | note metadata (gate sha `3ba718bf…`, replacing `0c3d51ed…`, with ten distinct revised shas observed during the wave); fixtures `integrity-r7.md`/`integrity-r7-broken.md` + byte-identical companions at their pinned shas; `fixtures/integrity-r7.README.md`; `evidence/README.md` and `evidence/integrity-r7-20261016T030552Z-*.log`; the seat's battery (fixture pair, selftest stability, regressions, manifest, strace) |
+| `knowledge/gate-baseline-r8.md` | Round-8 note: the gate's own behavioral baseline — `--pin <path>` writes a normalized baseline of a canonical hermetic invocation (`verify-all record.md --claims claims.jsonl --json manifest.jsonl --root .` inside a gate-written temp fixture, removed after capture, every printed path relative; the fixture's record carries one deliberately dangling `C9` binding so the capture covers `SECTION` (CLEAN and DRIFT), `FINDING`, `VERIFY_ALL`, the composed verdict and the manifest line), `--drift <path>` re-runs it and byte-compares the normalized captures (`GATE_DRIFT: none` exit 0 / named changed tokens exit 1 / missing-malformed exit 2; neither mode prints a `RESEARCH_GATE` line), the declared volatile contract `ts gate_sha256` (shape-scoped mask; the masked set travels in the baseline header; a changed list is itself drift) with its measured rationale (live churn is 1 of 16 field tokens, zero when the clock is pinned; the manifest surface is revision-bound where stdout is behavioral), what it catches measured (a mode-skip copy → `-SECTION:integrity` + `-FINDING:REF_UNRESOLVED` + moved counters while every composed verdict line still closed CLEAN at the entering bytes; an output-field rename → `-refs native tally`; a one-field tamper → the key; guards/refusals exit 2), what it cannot (exit-code-only regressions; behavior outside the canonical invocation; oracle strength — weakened assertions and dropped unasserted fields pass byte-identically; per-row movement outside the composed surface; the masked fields), the committed baseline and re-run recipe, honest limits and open items | note metadata (gate sha `46f5ddb3…`, replacing `3ba718bf…`, with ten observed shas during the wave: docs first, then mechanism, then selftest arms); `evidence/gate-baseline-r8-20261016T033757Z.json` and `evidence/pin-r8-20261016T033757Z-*.log`; `evidence/README.md`; the seat's three-arm battery (full at `c1a45a61…`, post at `bbd90e84…`, settled legs at `30d89dbf…`/`46f5ddb3…`); the lessons-distiller's independent surface measurements |
 | `fixtures/claims-r2.jsonl` | Pre-registered 17-claim span fixture (13 supported / 2 contradicted / 2 unsupported) whose spans are verbatim bytes of the three archived inputs, with fixed expected verdicts and an independent byte-check | the three archived inputs at fleet commit `0863746e…`; sha256 pins and provenance table in `fixtures/claims-r2.README.md` |
 | `fixtures/chain-r3.md` + `chain-r3-broken.md` | Pre-registered chain-hop pair built from real chains in the three archived inputs: a 22-hop positive control (17 resolved / 5 exempt → `RESOLVED_HOPS=17/22`, CLEAN) and a tampered 2-hop control (1/2, DRIFT, `CHAIN_ANCHOR_NOT_FOUND`); the round-1 hole live — `verify` closes both CLEAN, exit 0 | the three archived inputs at fleet commit `0863746e…`; sha256 pins, hop provenance table and the gate-free byte-check in `fixtures/chain-r3.README.md` |
 | `fixtures/sweeps-r5.md` + `sweeps-r5-broken.md` (+ `sweeps-r5-hit.md`) | Pre-registered rejection/sweep pair: a positive control (3 kept rejections with reason + flip_condition, W1 local glob set genuinely empty, W2 non-local → `VERIFIED_SWEEPS=1/2 REJECTIONS_OK=3/3`, CLEAN, exit 0) and a tampered control (R1 without flip-condition; W1 naming a planted hit file) that DRIFTs, exit 1, naming `SWEEP_REJECTION_INCOMPLETE` + `SWEEP_CLAIM_FALSE`; the round-1 hole live — r1 `verify` closes both CLEAN, exit 0 | the three archived inputs at fleet commit `0863746e…`; sha256 pins, provenance tables and the gate-free re-run in `fixtures/sweeps-r5.README.md` |
@@ -24,7 +25,9 @@
 | `lessons/2026-10-16-verify-all-composition.md` | Round-6 lesson: a composed CLEAN covers only the run sections — absence is reported, not clean (the only reachable absence for a structurally-CLEAN record is the claims surface; `CHAIN_ABSENT`/`CLAIM_TABLE_ABSENT`/`REJECTION_DROPPED` keep the others from vanishing silently), the manifest only appends (sentinel survives, prefix/inode probes, never read back — not an audit trail), tally equality re-derived key-by-key from manifest tallies vs solo summaries, the transient-revision and companion-alias defects, rejected overclaims, and the omission limit as the named r7 candidate | gate sha `0c3d51ed…`; probes summarized in the lesson; `evidence/README.md` and `evidence/compose-r6-20261016T020330Z-*.log` |
 | `lessons/2026-10-16-reference-integrity.md` | Round-7 lesson: reference integrity — the before-hole probe table (five single-cell dangling variants composing CLEAN at `0c3d51ed…`, the resolved-`to` control already drifting, the exempt-status probe CLEAN), the landed rule (declared sets, reference cells read, one-pass classification, the exempt-status boundary), what an integrity CLEAN does not establish (kind-correctness, referenced-row truth, unscanned cells, the exempt-status relaxation), the fixture reshape, the ≥6-revision writing-window churn after the section first appeared, and the rejected overclaims | gate sha `3ba718bf…`; probes summarized in the lesson; `evidence/README.md` and `evidence/integrity-r7-20261016T030552Z-*.log` |
 
-Count: 14 entries, seven knowledge notes and seven lessons — `functions.glob`
+| `lessons/2026-10-16-gate-behavioral-baseline.md` | Round-8 lesson: a behavioral pin freezes an output surface, not an oracle — the volatile contract is an invocation property (live churn is 1 of 16 tokens (`ts`), zero with `CHOUSA_NOW_EPOCH` pinned; the selftest PASS set has none; the manifest surface is revision-bound via `gate_sha256`), the five scratch mutants on the entering `3ba718bf…` bytes (m1 weakened assertion and m3 dropped header field pass both surfaces byte-identically; m4 renamed tally token and m5 skipped mode keep `CLEAN`/exit 0 while their bytes move; a claim `at=line:1`→`2` shift is invisible to the composed pin but named by solo `verify-claims`), the landed mechanism verified at `30d89dbf…` with spot-checks at `46f5ddb3…`, the two transient fail-closed selftest FAILs under 32-seat `/tmp` load (non-reproduced), and the applying rules (record the invocation; pin surfaces deliberately; pair the drift ritual with a source diff; never export a mask across gates) | gate sha `3ba718bf…` (surface measurements), `30d89dbf…`–`46f5ddb3…` (landed mechanism); probes summarized in the lesson; `evidence/README.md` and `evidence/pin-r8-20261016T033757Z-*.log` |
+
+Count: 16 entries, eight knowledge notes and eight lessons — `functions.glob`
 pattern `corpus/knowledge/*.md;corpus/lessons/*.md`, 2026-10-16. Fixture and
 evidence files are coverage-listed but not additional knowledge entries.
 
@@ -88,6 +91,15 @@ evidence files are coverage-listed but not additional knowledge entries.
 - `evidence/integrity-r7-20261016T030552Z-fixture.log`: inventory and shas, companion `cmp` identical, twin delta = 5 changed lines, the receipts seat's independent checker re-deriving all 16 `REF` lines with reconciliation `diff … EMPTY`, then the positive's composed and solo runs.
 - `evidence/integrity-r7-20261016T030552Z-selftest.log`: `RESEARCH_GATE_SELFTEST: PASS (74 cases)`, exit 0; the first 64 case lines byte-identical to the round-6 receipt (`cmp` YES); new cases 65–74 = `integrity-pass`, `-fail-dangling-claim`, `-fail-dangling-source`, `-fail-dangling-chain-claim`, `-fail-dangling-sweep`, `integrity-exempt-counted`, `integrity-fail-counting`, two setup exits, and the composed `all-dangling.md`.
 
+## Round-8 evidence
+
+- `evidence/README.md`: index extended to round 8 with the pinned gate/baseline shas, the baseline contract table, the six baseline controls and the mutant-gate arm, and a self-contained re-run recipe (`--pin`/`--drift`/`--selftest`).
+- `evidence/gate-baseline-r8-20261016T033757Z.json`: the lane's committed behavioral baseline (sha256 `1c81a6cb…`, 2988 B, 19 lines) — the `chousa-gate drift baseline v1` text format: header (`pinned_ts=2026-10-16T03:38:57Z`; the filename stamp is `20261016T033757Z`; `gate_sha256=46f5ddb3…`; `volatile_fields=ts gate_sha256`; the canonical command line), then the normalized canonical capture (five `SECTION` lines including the deliberate integrity `FINDING REF_UNRESOLVED … id=C9` and the composed DRIFT roll, `ts`/`gate_sha256` masked `<V>`, `record_sha256` unmasked), then the masked `--json` manifest line.
+- `evidence/pin-r8-20261016T033757Z-pin.log`: before-state (0 baselines committed; the r7 gate rejects both flags — exit 2, no file); the committed pin (`GATE_PIN: ok …`, exit 0); the header and body verbatim; hermetic re-pins (`cmp` IDENTICAL for pin1 = pin2 and pin1 = pin3, the latter cut after 75 s of live churn); CLI refusals (no PATH ×2, both flags, unwritable directory) each exit 2.
+- `evidence/pin-r8-20261016T033757Z-drift.log`: `GATE_DRIFT: none` exit 0 on the committed baseline and again after 75 s of live churn; the baseline controls (severity mutant → `GATE_DRIFT: severity` exit 1; missing/empty/junk/marker-deleted → exit 2; volatile-list rewrite → `GATE_DRIFT: volatile_fields` exit 1); the sweeps-silently-skipped mutant gate (its `SECTION sweeps` line still reads `state=run verdict=CLEAN` under a stale tally) → exit 1 naming `-REJECTIONS_OK -hit -rejections-ok anchor-missing native rejections tallies tally`.
+- `evidence/pin-r8-20261016T033757Z-live.log`: cross-round no-harm (14/14 mode pairs byte-identical after ts-normalization with matching rc), `VERDICT_BEARING_EXPORTS=3/3`, zero network (strace: 3759 trace lines, 0 network syscalls under `--pin`), `verify-all-manifest.jsonl` untouched (`9620946f…` before/after), gate sha stable across the battery (`46f5ddb3…` → `46f5ddb3…`).
+- `evidence/pin-r8-20261016T033757Z-selftest.log`: `RESEARCH_GATE_SELFTEST: PASS (85 cases)`, exit 0; the first 74 case lines byte-identical to the round-7 receipt (`cmp` YES); new cases 75–85 = `pin-clean`, `drift-clean`, `drift-volatile-churn`, `drift-one-field-mutant`, `drift-missing`, `drift-malformed`, `drift-volatile-list`, `setup-pin-no-path`, `setup-drift-no-path`, `setup-pin-unwritable`, `setup-pin-drift-exclusive`.
+
 ## Known gaps
 
 - CLEAN is mode-dependent, not semantic: `verify` checks record structure (r1);
@@ -143,6 +155,28 @@ evidence files are coverage-listed but not additional knowledge entries.
   gate, so a later edit to the record falsifies the recorded state
   (`lessons/2026-10-16-verify-all-composition.md`,
   `evidence/verify-all-manifest.jsonl`).
+- The r8 `--pin`/`--drift` baseline is a gate-self check, not a record mode:
+  it freezes the canonical invocation's output (the gate-written fixture's
+  composed `verify-all` bytes plus the manifest line; `ts` and `gate_sha256`
+  masked) and nothing else. Measured blind to exit-code-only regressions (a
+  copy whose `verify_all` always returns 0 reads `none`), behavior outside
+  the canonical invocation (an `AGG_ERE` default edit reads `none`), oracle
+  strength (weakened selftest assertions and dropped unasserted fields pass
+  byte-identically — the PASS set carries case names and exits only), and
+  per-row movement outside the composed surface (a claim `at=line:1`→`2`
+  shift is invisible to the pin while solo `verify-claims` names it); the
+  masked fields are declared blind spots, and a changed volatile list is
+  itself drift. The baseline does not age with the host (the gate reads no
+  host state), so a red result is a gate behavior change: re-pin is a
+  recorded act with a reason, deliberately paired with a source review of
+  the gate at the same SHA (`knowledge/gate-baseline-r8.md`,
+  `lessons/2026-10-16-gate-behavioral-baseline.md`).
+- Two selftest runs during the r8 writing window reported `FAIL (1/84)` at
+  the new pin/drift arms, on different cases with transient signatures (a
+  capture `rc=2` while the wave's `/tmp` was under 32-seat load; an `rc=127`
+  while the gate file was being rewritten mid-run) — both fail-closed,
+  neither reproduced, and the committed receipt reads `PASS (85 cases)`
+  (`lessons/2026-10-16-gate-behavioral-baseline.md` §Limits).
 - The round-4 boundary class is syntactic and ASCII-anchored: an occurrence
   whose outer edge abuts a non-ASCII character (`”`, `’`, `—`, `。`, `→`) is a
   miss even when its bytes are real, `_` is a boundary by decision, and
@@ -272,6 +306,32 @@ case-sensitive, bounded by the extractor's cell list, exempt-but-counted
 behind exempt statuses and non-local namings — so reference integrity stays
 partial by its named limits. The r7 receipts are lane-local logs (no queue
 taskKey), so the receipt-identity debt is unchanged.
+
+Round 8 ran the r7-registered freshness/operability move on the same
+direct-dispatch routing: at `3ba718bf…` no behavioral baseline existed and
+`--pin`/`--drift` were unknown flags (exit 2, no file), so a gate regression (a
+mode silently skipped, an output field changed) was only catchable by reading
+receipts after the fact — while at `46f5ddb3…` the gate pins and re-checks its
+own canonical behavior: `--pin` writes a `chousa-gate drift baseline v1` file
+(header `volatile_fields=ts gate_sha256`, `pinned_ts`, the canonical
+invocation) and `--drift` reports `GATE_DRIFT: none` exit 0 on the committed
+baseline (`1c81a6cb…`) — including after 75 s of live churn — names changed
+tokens exit 1 (a mode-skip copy still closes CLEAN at the verdict line with
+exit 0 while the pin names the vanished `SECTION:integrity`, the vanished
+`FINDING:REF_UNRESOLVED` and the counters that moved; an output-field rename
+names `-refs native tally`; a volatile-list rewrite names `volatile_fields`),
+and exits 2 on missing or malformed baselines; the pinned observables hold
+(selftest 74 → 85 with case lines 1–74 byte-identical; claims 17/17; chain
+17/22; broken control 1/2; sweeps 1/2 `REJECTIONS_OK=3/3`; r1 archives 3/3;
+14/14 cross-round mode pairs byte-identical after ts-normalization; a pin leg
+under strace carries 0 network syscalls). That observable is not saturated
+either: the pin freezes an output surface, not an oracle — exit-code-only
+regressions, behavior outside the canonical invocation, weakened selftest
+assertions, per-row movement outside the composed surface, and the masked
+`ts`/`gate_sha256` fields stay invisible by measurement or by design — so the
+drift ritual pairs with a source review of the gate at the same SHA, and
+re-pin is a recorded act with a reason. The r8 receipts are lane-local logs
+(no queue taskKey), so the receipt-identity debt is unchanged.
 
 Still open and integrator/operator-owned:
 receipt identity for mission acceptance (proven receipt-backed rounds remain 0;
