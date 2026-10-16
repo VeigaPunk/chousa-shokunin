@@ -347,3 +347,41 @@ scalar score. Learning trends: expansion/quality **improved**, discernment
 inputs themselves run through verify-all end-to-end as records, with expanded
 claim/hop fixtures where the archives support them.
 
+## Round 9 verdict — 2026-10-16 (goal wave; evidence commit `ebd04d2`)
+
+Selected axis: **coverage** — the archive corpus gets its first full deep
+verification (fixture-led round; the gate correctly stayed unchanged).
+Wave: one 32-seat flash call, 24/24 reports. Report:
+`.ufo/round-9/chousa-goalwave.md`.
+
+**Before** (gate `46f5ddb3…`): the three archived inputs had only the r1
+structural observable (3/3) and ~17 pointwise fixture claims; no archive had
+ever passed through verify-all as a record.
+
+**After** (parent acceptance 2026-10-16T06:20Z): the three archives exist as
+gate-format records under `corpus/fixtures/archives-r9/` (spans machine-
+extracted from archive bytes, never retyped): verify-all CLEAN on each with
+zero findings — A: 6/7 hops resolved, 13 integrity refs / 0 unresolved, 4/4
+rejections, 1/1 sweeps; B: 6/7, 14/0, 3/3, 1/1; C: 7/8, 15/0, 4/4, 1/1.
+`claims-r9.jsonl` adds 10 new verbatim claims (10/10 CLEAN, 7 supported / 2
+contradicted / 1 unsupported). Premise correction recorded honestly: the
+archives do NOT literally cross-cite — the hops are intra-archive/conceptual,
+authored as such. The reframing risk (record-format distortion of what an
+archive claims) is named and mitigated in the record READMEs. All holds:
+selftest 85/85, `GATE_DRIFT: none` vs the r8 baseline, claims-r2 17/17.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | the lane's whole research corpus is now deep-verifiable end to end; claim coverage grew 17 -> 27 with archive-scale records. |
+| depth | **improved** | `corpus/knowledge/archives-verified-r9.md`: coverage stats, the reframing-risk analysis, honest premise correction. |
+| operability | **unchanged** | the gate unchanged (a fixture-led round as designed); every hold green. |
+| freshness | **unchanged** | receipts + three archive manifest lines at the current SHA. |
+| calibration | **improved narrowly** | the no-cross-citation finding is a calibration of the corpus map (prior records implied inter-archive chains that do not exist). |
+| adjacency | **unchanged** | archives quoted read-only; zero network. |
+
+Admission: **ADMIT** (coverage/depth/calibration improved, none harmed). No
+scalar score. Learning trends: expansion/quality **improved**, discernment
+**unchanged**. Round 10 registered: residual hardening — negative controls at
+archive scale (broken archive records per defect class), the exempt-hop audit,
+and disposition of every r2-r9 named limit.
+

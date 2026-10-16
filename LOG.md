@@ -452,3 +452,24 @@ parent integrated under the chousa lane identity.
 
 Round report: `.ufo/round-8/chousa-goalwave.md`.
 
+## Round 9 — archives verified end-to-end (goal wave)
+
+**Round 9 — goal-wave admission (2026-10-16).** Motivating evidence: no archive
+had passed verify-all; claim coverage ~17. Landed (evidence commit
+`LOGPEND9`): `corpus/fixtures/archives-r9/{A,B,C}-r9.md` + README + claims-r9
+(10 new claims) — verify-all CLEAN on all three (zero findings: A 6/7 hops,
+13 refs/0 unresolved; B 6/7, 14/0; C 7/8, 15/0; rejections 4/4, 3/3, 4/4;
+sweeps 1/1 each). Honest premise correction: archives do not literally
+cross-cite; hops authored intra-archive/conceptual. Gate unchanged (fixture-
+led as designed). Wave: 32-seat flash call, 24/24.
+
+**Verdicts.** ADMIT: coverage/depth/calibration **improved**; operability/
+freshness/adjacency **unchanged**; none harmed. Round 10 registered: residual
+hardening (archive-scale negative controls + exempt-hop audit + r2-r9 limit
+disposition). Receipt identity remains OPEN (operator).
+
+**Boundaries held.** Archives read-only; zero network; seats committed
+nothing; parent integrated under the chousa lane identity.
+
+Round report: `.ufo/round-9/chousa-goalwave.md`.
+
