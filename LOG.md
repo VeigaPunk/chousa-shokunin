@@ -317,3 +317,32 @@ under the chousa lane identity.
 
 Round report: `.ufo/round-2/chousa-goalwave.md` (debts section carries the
 receipt-identity note per the mission contract).
+
+## Round 3 — verify-chain (goal wave)
+
+**Round 3 — goal-wave admission (2026-10-15).** Motivating evidence: round 2's
+named continuation (chain hops verified structurally only). Landed (evidence
+commit `cc9fe8f`): gate `67daf85e…` with `verify-chain` (selftest 40 = +10;
+source-id resolution through the Sources table; heading/quote/line anchors with
+line reporting; exempt-but-counted unresolved hops; refused-unknown-ids);
+fixture `corpus/fixtures/chain-r3.md` + broken control + README;
+`corpus/knowledge/chain-resolution-r3.md`; receipts. Environmental: host /tmp
+per-user quota exhausted by accumulated wave scratch mid-acceptance; parent
+freed 727 MB of declared-ephemeral scratch; battery re-run clean.
+
+**Parent acceptance (2026-10-16T00:15Z).** selftest 40/40 x2;
+`verify-chain corpus/fixtures/chain-r3.md --root ..` -> `RESOLVED_HOPS=17/22`
+CLEAN exit 0 (17 verified / 5 exempt); broken control DRIFT exit 1
+(anchor-missing named); verify-claims 17/17 held byte-identical; r1 observable
+3/3 intact.
+
+**Verdicts.** ADMIT: coverage/depth/operability **improved**; freshness/
+calibration/adjacency **unchanged**; none harmed. Named limit: substring
+anchor semantics (truncated quotes resolve) — round 4 registered for
+token-boundary hardening. Receipt identity remains OPEN (operator side).
+
+**Boundaries held.** Zero network; corpus read-only; seats committed nothing;
+parent integrated under the chousa lane identity.
+
+Round report: `.ufo/round-3/chousa-goalwave.md`.
+

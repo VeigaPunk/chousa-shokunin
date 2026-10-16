@@ -118,3 +118,45 @@ harmed). No scalar score. Learning trends: expansion/quality **improved**,
 discernment **unchanged** (no outside spot-check exists). Round 3
 registered: chain-hop resolution — each hop's citation must resolve to a real
 corpus location, making citation chaining verdict-bearing.
+
+## Round 3 verdict — 2026-10-15 (goal wave; evidence commit `cc9fe8f`)
+
+Selected axis: **coverage** — citation chaining becomes verdict-bearing (the
+round-2-named continuation). Wave: one 32-seat flash call, 24/24 reports.
+Report: `.ufo/round-3/chousa-goalwave.md`. Environmental note: the host's
+per-user /tmp quota exhausted mid-acceptance (all prior waves' scratch);
+the parent freed 727 MB of stale declared-ephemeral scratch and re-ran the
+battery clean — no artifact was affected.
+
+**Before** (gate `03a33244…`, selftest 30): chain hops were checked
+STRUCTURALLY only — a hop could cite an anchor that does not exist in the
+target and still pass.
+
+**After** (gate `67daf85e…`, selftest 40 = +10, first 30 byte-identical;
+parent acceptance 2026-10-16T00:15Z): `verify-chain <record> --root ..`
+verifies each resolved hop's citation — source must be a declared Sources id
+or in-corpus path (same canonicalization as verify-claims; unknown ids and
+out-of-corpus/URL/session sources refused unopened), anchor must exist
+(heading trimmed-equality, quote verbatim line-aware, whole-line) with
+`at=line:N` reporting; unresolved/marked hops stay exempt but counted;
+`RESOLVED_HOPS=N/M` + the CLEAN|DRIFT/0-1-2 contract. Fixture:
+`RESOLVED_HOPS=17/22`, `RESEARCH_GATE: CLEAN` (17 verified / 5 exempt);
+the broken control fixture DRIFTs exit 1 naming `anchor-missing`.
+verify-claims held byte-identical (17/17 CLEAN); the r1 archive observable
+intact (3/3).
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | citation chaining is now resolution-verified end to end (source id or path + anchor existence), the third verdict-bearing mode; per-hop line reporting makes misses actionable. |
+| depth | **improved** | `corpus/knowledge/chain-resolution-r3.md` (anchor semantics, exempt classes, the named limit: anchors are SUBSTRING semantics — a truncated quote still resolves; round-4 hardening candidate). |
+| operability | **improved** | selftest 30 → 40 (+10: positive/missing-anchor/out-of-corpus/unresolved-exempt/counting/exits); all r1+r2 cases byte-identical; three modes compose with one boundary policy. |
+| freshness | **unchanged** | r3 receipts at the new SHA. |
+| calibration | **unchanged** | the substring-semantics limit is documented as a named candidate, not hidden. |
+| adjacency | **unchanged** | zero network; corpus read-only; scope-sentinel clean. |
+
+Admission: **ADMIT** (coverage/depth/operability improved, none harmed). No
+scalar score. Learning trends: expansion/quality **improved**, discernment
+**unchanged**. Round 4 registered: anchor hardening — token-boundary
+semantics so truncated-quote games cannot resolve, plus the claim-span
+truncation class from round 2's note.
+
