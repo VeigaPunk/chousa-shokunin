@@ -422,3 +422,39 @@ scalar score. Learning trends: expansion/quality **improved**, discernment
 evidence chains, receipt integrity, verdict consistency, limit-ledger
 reconciliation, SHONEN readiness, and re-execution of the load-bearing claims.
 
+## Round 11 verdict — 2026-10-16 (capstone audit; evidence commit `2e414ec`)
+
+Selected axis: **calibration** — deep discernment: the chousa capstone audit,
+the lane's final goal round. Wave: one 32-seat flash call, 31/31+ reports.
+Report: `.ufo/round-11/chousa-goalwave.md`; consolidated findings:
+`corpus/knowledge/audit-r11.md`.
+
+**What the audit confirmed (measured, re-executed):** round 2's entire
+evidence chain re-runs at the frozen bytes and matches (15/15 claims
+supported: commits resolve, receipt SHAs match, the 17/17 CLEAN, the boundary
+refusals, strace-zero-network); the per-round auditors verified rounds 2-10's
+chains; the battery at today's bytes: selftest 85/85, `GATE_DRIFT: none`,
+all fixtures/records/controls reproducing their verdicts; the gate
+byte-unchanged through the round.
+
+**Corrections folded at admission:** (1) the wave-seat-count claims in earlier
+reports ("24/24", "32/32") are **unverifiable without wave rosters** — my
+in-session swarms leave no fleet `.ufo/waves/` roster; the audit could only
+verify the ARTIFACTS, not the roster claims — recorded, and future rounds
+should log seat rosters; (2) `audit-r11.md` §5/§7 carries the record-text
+defects with `[PARENT]` markers and recommended moves; (3) SHONEN: 0/4, hold
+promotion — readiness assessed without self-attestation (same conclusion as
+the sibling lane).
+
+| axis | verdict | evidence |
+|---|---|---|
+| calibration | **improved** | the lane knows with measured coverage what is verified (chains re-executed at frozen bytes; receipts match; limits reconciled) and what is not (roster claims, operator-side receipt identity). |
+| depth | **improved** | `audit-r11.md`: findings tables, the final debt register, SHONEN readiness, operator recommendations. |
+| coverage / operability / freshness / adjacency | **unchanged** | the audit measured the measuring; battery green; gate untouched. |
+
+Admission: **ADMIT-with-correction** (calibration/depth improved; corrections
+named; none harmed). No scalar score. Learning trends: expansion/quality
+**improved**, discernment **improved** (the audit is the lane's first
+discernment-product round, externally probed). chousa rounds 2-11: ten
+admitted rounds — the goal's second half complete.
+

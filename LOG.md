@@ -492,3 +492,24 @@ committed nothing; parent integrated under the chousa lane identity.
 
 Round report: `.ufo/round-10/chousa-goalwave.md`.
 
+## Round 11 — capstone audit (goal wave)
+
+**Round 11 — goal-wave admission (2026-10-16).** Motivating evidence: operator
+goal — ten rounds each on mori and chousa; this closes chousa. Landed
+(evidence commit `2e414ec`): `corpus/knowledge/audit-r11.md` — the
+consolidated capstone audit: round 2's chain re-executed 15/15 supported at
+frozen bytes; rounds 2-10 chains verified; the today's-bytes battery green
+(selftest 85, drift none, fixtures/records/controls reproducing); the gate
+byte-unchanged. Corrections folded: wave-seat-count claims unverifiable
+without rosters (recorded; future rounds should log rosters); audit §5/§7
+record-text defects carry [PARENT] markers; SHONEN 0/4 hold (no
+self-attestation). chousa rounds 2-11: ten admitted rounds.
+
+**Verdicts.** ADMIT-with-correction: calibration/depth **improved**; all else
+**unchanged**; none harmed. Discernment trend: **improved**. Carried to the
+operator: receipt identity (open since round 1), named-non-author SHONEN
+verification, the promotion decision, and push (no lane remote exists for
+either lane).
+
+Round report: `.ufo/round-11/chousa-goalwave.md`.
+
