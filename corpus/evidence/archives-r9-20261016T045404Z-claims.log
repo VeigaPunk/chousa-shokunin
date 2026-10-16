@@ -1,0 +1,78 @@
+# chousa-shokunin round-9 receipt — claims surface — claims-r9.jsonl standalone
+# cut stamp: 20261016T045404Z | utc: 2026-10-16T04:54:04Z
+# seat: receipts-writer | lane: chousa-shokunin | round: 9 (fixture-depth coverage: the archives as records)
+# lane head: f11073ab81c3e0900cc37e47ec15a9913166f7aa | gate: tools/research-gate.sh sha256=46f5ddb39d5fafa220fb584121dba2f4a15e071a91fa42728849f3c7567c6ccd
+# gate unchanged vs HEAD blob: 46f5ddb39d5fafa220fb584121dba2f4a15e071a91fa42728849f3c7567c6ccd (git show HEAD:tools/research-gate.sh) | git diff --numstat tools/research-gate.sh: 0 line(s) — fixture-led round
+# method: machine-cut by /home/vgpnk/.cache/chousa-r9-evidence/cut-receipts.sh; stdout verbatim (the gate prints its own ts=); local files only; no network
+# scope: pins, gate-free span re-derivation, reconciliation, live verify-claims, the r2 non-overlap cross-product, contract assertions
+
+## fixture pins (measured at cut time)
+338918fcb8ed5d6c5f15dc64e5eb8a3ae7a005d51b5c03e7e377c1dab9173c78  corpus/fixtures/archives-r9/A-r9.md
+abfa5290deda4d1708ba97028853b8a770f16ecda6f377dddda53d49cb2e3e86  corpus/fixtures/archives-r9/B-r9.md
+97be0e69ccfb8a701bc5556f738553be8e7179c9b41110fe61c4a3cab4f2d1da  corpus/fixtures/archives-r9/C-r9.md
+f6f0d1ab6b6cbd045035951c7eb4653406dc0853234a8077a8685509bfc94ff5  corpus/fixtures/claims-r9.jsonl
+ec312657c3872de77b45d44d135dd350e6b6cb378db621b4f2cbc61b5798a166  corpus/fixtures/archives-r9/README.md
+64b63db670232bffede14bb589363b23017015ffbd8e0bf2643c9977b4847a40  corpus/fixtures/claims-r9.README.md
+9033857d4625555c7b778dfad6df80e3e1b24ed8bffa3fee2fd445b9c5540b85  ../research/deep-research-2026-09-28/A-shokunin-tradition.md
+6d8dbddd3e2d2f47dcb153c5a3347cc6321db4afc72cf07da40f0f7fe5022006  ../research/deep-research-2026-09-28/B-multiagent-knowledge.md
+e48fe70ff92055c217ac6ca6ce68e403aa5689fee8717f3bd0ccf5badc92321b  ../research/deep-research-2026-09-28/C-rank-taxonomy.md
+
+## README-declared vs measured
+record A MATCH
+record B MATCH
+record C MATCH
+claims-r9.jsonl MATCH
+
+## independent gate-free checker: claims spans (receipts-writer r9check.py claims)
+## command: python3 /home/vgpnk/.cache/chousa-r9-evidence/r9check.py claims corpus/fixtures/claims-r9.jsonl .. .
+XCLAIM id=A07 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:54 verdict=match
+XCLAIM id=A08 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:71 verdict=match
+XCLAIM id=A09 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:78 verdict=match
+XCLAIM id=A10 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:82 verdict=match
+XCLAIM id=A11 expected=contradicted observed=contradicted source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:86 verdict=match
+XCLAIM id=B06 expected=supported observed=supported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:57 verdict=match
+XCLAIM id=B07 expected=supported observed=supported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:68 verdict=match
+XCLAIM id=B08 expected=contradicted observed=contradicted source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:75 verdict=match
+XCLAIM id=C07 expected=unsupported observed=unsupported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=- verdict=match
+XCLAIM id=C08 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:92 verdict=match
+XVERDICT_BEARING_CLAIMS=10/10
+XRESEARCH_GATE: CLEAN (claims=10 supported=7 contradicted=2 unsupported=1 mismatched=0 unproven=0 refused=0 invalid=0)
+
+## reconciliation against the gate (solo verify-claims)
+## command: bash tools/research-gate.sh verify-claims corpus/fixtures/claims-r9.jsonl --root ..
+python3 /home/vgpnk/.cache/chousa-r9-evidence/r9check.py reconcile /home/vgpnk/.cache/chousa-r9-evidence/raw-gcl.out /home/vgpnk/.cache/chousa-r9-evidence/check-claims.out
+RECONCILE: EMPTY (gate=10 checker=10 items, core fields identical)
+gate solo exit: 0
+
+## live run: verify-claims (verbatim)
+## command: bash tools/research-gate.sh verify-claims corpus/fixtures/claims-r9.jsonl --root ..
+exit: 0
+research-gate research-gate-r1 — ts=2026-10-16T04:54:09Z — mode=claims — claims=corpus/fixtures/claims-r9.jsonl
+CLAIM id=A07 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:54 verdict=match
+CLAIM id=A08 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:71 verdict=match
+CLAIM id=A09 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:78 verdict=match
+CLAIM id=A10 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:82 verdict=match
+CLAIM id=A11 expected=contradicted observed=contradicted source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:86 verdict=match
+CLAIM id=B06 expected=supported observed=supported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:57 verdict=match
+CLAIM id=B07 expected=supported observed=supported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:68 verdict=match
+CLAIM id=B08 expected=contradicted observed=contradicted source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:75 verdict=match
+CLAIM id=C07 expected=unsupported observed=unsupported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=- verdict=match
+CLAIM id=C08 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:92 verdict=match
+VERDICT_BEARING_CLAIMS=10/10
+RESEARCH_GATE: CLEAN (claims=10 supported=7 contradicted=2 unsupported=1 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)
+
+## the r2 non-overlap cross-product (containment; expect 0 pairs) — 'adds 10 new claims beyond r2'
+## command: python3 /home/vgpnk/.cache/chousa-r9-evidence/r9check.py overlap corpus/fixtures/claims-r9.jsonl corpus/fixtures/claims-r2.jsonl
+OVERLAP new=corpus/fixtures/claims-r9.jsonl (10 claims) old=corpus/fixtures/claims-r2.jsonl (17 claims) containment_pairs=0 []
+claims-r2.jsonl sha256 23d078cbfd032ec5ee7de5c21de65eba3a3cd2989a78281ff61bc6db62188802
+
+## coverage counters (raw, re-derived)
+## command: python3 /home/vgpnk/.cache/chousa-r9-evidence/r9check.py stats corpus/fixtures/claims-r9.jsonl .. .
+STATS claims file=corpus/fixtures/claims-r9.jsonl total=10 by-source A=5 B=3 C=2 by-expect contradicted=2 supported=7 unsupported=1
+STATS claims duplicate-ids=0
+
+## contract assertions (vs corpus/fixtures/claims-r9.README.md)
+PASS: VERDICT_BEARING_CLAIMS=10/10
+PASS: RESEARCH_GATE: CLEAN (claims=10 supported=7 contradicted=2 unsupported=1 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)
+at=line values measured: at=line:54 at=line:71 at=line:78 at=line:82 at=line:86 at=line:57 at=line:68 at=line:75 at=- at=line:92 
+at=line values declared by the README: 54, 71, 78, 82, 86, 57, 68, 75, -, 92

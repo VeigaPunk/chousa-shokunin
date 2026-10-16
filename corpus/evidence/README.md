@@ -1,10 +1,10 @@
 # chousa-shokunin — corpus/evidence
 
-Receipts for the chousa moves: rounds 2-8 — claim-vs-source verification
+Receipts for the chousa moves: rounds 2-9 — claim-vs-source verification
 (round 2), chain-hop resolution (round 3), token-boundary matching semantics
 (round 4), rejection/sweep verification (round 5), verify-all composition
 (round 6), reference integrity (round 7), the gate's own behavioral baseline
-(round 8). Each
+(round 8), the archived inputs as records through verify-all (round 9). Each
 receipt is a machine-cut capture of public-CLI runs: UTC stamp, exact command,
 exit code, pinned gate SHA-256, and the verbatim stdout. Local files only — no
 external fetch, no network.
@@ -467,7 +467,9 @@ bash tools/research-gate.sh verify-all corpus/fixtures/full-r6.md --root .. \
   handling is not part of this round. How fine-grained the omission reporting
   should be is the named r7 candidate.
 - Receipt identity for this round remains a lane-local log; no `task_…` value
-  is invented and the round-1 receipt blocker stands (operator-side).## Round-7 reference-integrity receipts — stamp 20261016T030552Z
+  is invented and the round-1 receipt blocker stands (operator-side).
+
+## Round-7 reference-integrity receipts — stamp 20261016T030552Z
 
 Revision under test: `tools/research-gate.sh` sha256
 `3ba718bf9207eed70c66b8c849ac43b44c76890785e1576eeb5e795a604166b2` (lane HEAD
@@ -678,3 +680,100 @@ bash tools/research-gate.sh --selftest
   are the baseline and the four receipts only.
 - Receipt identity for this round remains lane-local; no `task_…` value is
   invented and the round-1 receipt blocker stands (operator-side).
+
+## Round-9 archive-verification receipts — stamp 20261016T045404Z
+
+Round 9 is fixture-led: the three archived inputs under
+`research/deep-research-2026-09-28/` become gate-format records under
+`corpus/fixtures/archives-r9/`, and each record runs through `verify-all`
+end-to-end with the shared claims surface bound. **No gate file changed** —
+measured, not assumed: the working-tree sha equals
+`git show HEAD:tools/research-gate.sh` (`46f5ddb3…`) and
+`git diff --numstat tools/research-gate.sh` is empty. (A gate change without a
+reported defect would itself be a finding; none exists.) Falsifiable claim
+before → after: before, the archives had only r1's structural 3/3 and the r2/r3
+pointwise fixtures (17 claims, 22 hops) and no record; after, three records
+compose CLEAN (`sections=5 run=5 absent=0`, 0 findings, 0 drift) over
+byte-verbatim spans/anchors, and claim coverage grows: 17 (r2) + 10 (r9 JSONL,
+containment-disjoint from r2) + 19 in-record rows = 46 rows over the archive
+corpus (round-9 delta 29 rows).
+
+Revision under test: `tools/research-gate.sh` sha256
+`46f5ddb39d5fafa220fb584121dba2f4a15e071a91fa42728849f3c7567c6ccd` (lane HEAD
+`f11073a`, the r8-admitted revision). Fixture pins measured at cut time:
+
+| artifact | sha256 |
+|---|---|
+| `corpus/fixtures/archives-r9/A-r9.md` | `338918fc…` |
+| `corpus/fixtures/archives-r9/B-r9.md` | `abfa5290…` |
+| `corpus/fixtures/archives-r9/C-r9.md` | `97be0e69…` |
+| `corpus/fixtures/claims-r9.jsonl` | `f6f0d1ab…` |
+| `corpus/fixtures/archives-r9/README.md` | `ec312657…` |
+| `corpus/fixtures/claims-r9.README.md` | `64b63db6…` |
+| archives (read-only): A / B / C | `9033857d…` / `6d8dbddd…` / `e48fe70f…` |
+
+### Receipts
+
+| Receipt (sha256) | Shows | Key result |
+|---|---|---|
+| `archives-r9-20261016T045404Z-A.log` (`015ea426…`) | record A: gate-free recordspan check (5/5 verbatim + boundary-delimited), chain checker + reconciliation EMPTY, `verify-all` verbatim, its manifest line, README contract assertions | `SECTION` ×5 CLEAN; `RESEARCH_GATE: CLEAN`; exit 0 |
+| `archives-r9-20261016T045404Z-B.log` (`1fa5839b…`) | record B: same battery (recordspans 6/6; chain 6/7 +1 exempt `blocked-no-fetch`) | CLEAN; exit 0 |
+| `archives-r9-20261016T045404Z-C.log` (`1493a729…`) | record C: same battery (recordspans 8/8; chain 7/8 +1 exempt) | CLEAN; exit 0 |
+| `archives-r9-20261016T045404Z-claims.log` (`e4283414…`) | claims-r9 standalone: checker + reconciliation EMPTY, live `verify-claims`, r2 non-overlap cross-product, counters | `VERDICT_BEARING_CLAIMS=10/10`; CLEAN (7 supported / 2 contradicted / 1 unsupported); r2 containment pairs 0; exit 0 |
+| `archives-r9-20261016T045404Z-live.log` (`3044fd4a…`) | before-state (raw archives DRIFT), gate/HEAD identity, selftest 85 (cases 1–85 byte-identical to the r8 receipt), `GATE_DRIFT: none`, r1 observable, prior-fixture no-harm, the three appends, zero-network strace, pin stability | `VERDICT_BEARING_EXPORTS=3/3`; strace 43799 trace lines, **0 network syscalls**; `STABLE: YES` |
+
+### Manifest appends (append-only)
+
+before: 5 lines, sha256 `9620946f…` → after: 8 lines, sha256
+`78627e6d…`; the first 5 lines are preserved byte-for-byte (`cmp` YES) and the
+three appended lines (one per record, `schema chousa-verify-all/v1`,
+`gate_sha256` `46f5ddb3…`, `record_sha256` matching the record pins) each
+carry `verdict=CLEAN sections_run=5` with `structure,claims,chain,sweeps,
+integrity` all `state=run`.
+
+### Controls in the live receipt
+
+| Control | Result | Exit |
+|---|---|---|
+| raw A/B/C archives (not records) through `verify-all` | `DRIFT (sections=5 run=2 absent=3 drift-sections=1 findings=6 drift=5)` each — the before-state | 1 |
+| prior fixtures re-run (claims-r2, chain-r3 ±broken, sweeps-r5 ±broken, full-r6 ×3, integrity-r7 ±broken) | every positive CLEAN and every broken control DRIFT at the tallies their READMEs declare | 0 / 1 |
+| zero-network strace over the full battery (3 × `verify-all` + `verify-claims` + `verify-chain`) | 0 network syscalls | 0 |
+
+### Re-run recipe
+
+```bash
+for r in A B C; do
+  bash tools/research-gate.sh verify-all corpus/fixtures/archives-r9/$r-r9.md \
+    --claims corpus/fixtures/claims-r9.jsonl --root ..
+done
+bash tools/research-gate.sh verify-claims corpus/fixtures/claims-r9.jsonl --root ..
+```
+
+expect `VERIFY_ALL sections=5 run=5 absent=0 drift-sections=0 findings=0
+drift=0` and `RESEARCH_GATE: CLEAN`, exit 0 on each; see
+`corpus/fixtures/archives-r9/README.md` and `corpus/fixtures/claims-r9.README.md`
+for the declared tallies, and the receipts for the cut-time equivalents.
+
+### Notes
+
+- Independent (gate-free) re-derivation: the receipts-writer checker
+  `$HOME/.cache/chousa-r9-evidence/r9check.py` re-implements the documented
+  token-boundary rule and reconciles EMPTY against the gate on every surface
+  (10 claims; 22 chain items across the three records; record Claims-span
+  cells 5/6/8 all verbatim and boundary-delimited).
+- Inter-archive hops: 5 crossings resolve (A→B 1, A→C 1, B→A 1, C→A 1, C→B 1);
+  each record additionally carries one `blocked-no-fetch` external chip
+  (コトバンク / arxiv.org / jstage.jst.go.jp), exempt-but-counted.
+- Observation for auditors (no defect asserted): record A's Claims row `C3`
+  carries pointer `…A-shokunin-tradition.md:76` while its span resolves at
+  `line:86`; the span itself is byte-verbatim and the gate adjudicates spans,
+  not pointer line numbers. The other 18 in-record Claims spans resolve at
+  the line their pointers name.
+- Reframing risk named and mitigated in `corpus/fixtures/archives-r9/README.md`
+  §Reframing risk (record-format distortion; residual distortion named:
+  `text` cells paraphrase, `span` cells are the verbatim surface).
+- Scratch for this cut lived at `$HOME/.cache/chousa-r9-evidence/` (cut
+  script, checker, raw captures; bulky temp cleaned after the cut); `/tmp`
+  was not used (per-user quota).
+- Receipt identity remains lane-local; no `task_…` value is invented and the
+  round-1 receipt blocker stands (operator-side).

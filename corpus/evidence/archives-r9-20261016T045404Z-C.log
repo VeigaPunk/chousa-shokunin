@@ -1,0 +1,82 @@
+# chousa-shokunin round-9 receipt — archive record C — C-r9.md through verify-all
+# cut stamp: 20261016T045404Z | utc: 2026-10-16T04:54:04Z
+# seat: receipts-writer | lane: chousa-shokunin | round: 9 (fixture-depth coverage: the archives as records)
+# lane head: f11073ab81c3e0900cc37e47ec15a9913166f7aa | gate: tools/research-gate.sh sha256=46f5ddb39d5fafa220fb584121dba2f4a15e071a91fa42728849f3c7567c6ccd
+# gate unchanged vs HEAD blob: 46f5ddb39d5fafa220fb584121dba2f4a15e071a91fa42728849f3c7567c6ccd (git show HEAD:tools/research-gate.sh) | git diff --numstat tools/research-gate.sh: 0 line(s) — fixture-led round
+# method: machine-cut by /home/vgpnk/.cache/chousa-r9-evidence/cut-receipts.sh; stdout verbatim (the gate prints its own ts=); local files only; no network
+# scope: record C inventory, gate-free span/anchor re-derivation, reconciliation, the verify-all run with its manifest append, contract assertions
+
+## fixture pins (measured at cut time)
+338918fcb8ed5d6c5f15dc64e5eb8a3ae7a005d51b5c03e7e377c1dab9173c78  corpus/fixtures/archives-r9/A-r9.md
+abfa5290deda4d1708ba97028853b8a770f16ecda6f377dddda53d49cb2e3e86  corpus/fixtures/archives-r9/B-r9.md
+97be0e69ccfb8a701bc5556f738553be8e7179c9b41110fe61c4a3cab4f2d1da  corpus/fixtures/archives-r9/C-r9.md
+f6f0d1ab6b6cbd045035951c7eb4653406dc0853234a8077a8685509bfc94ff5  corpus/fixtures/claims-r9.jsonl
+ec312657c3872de77b45d44d135dd350e6b6cb378db621b4f2cbc61b5798a166  corpus/fixtures/archives-r9/README.md
+64b63db670232bffede14bb589363b23017015ffbd8e0bf2643c9977b4847a40  corpus/fixtures/claims-r9.README.md
+9033857d4625555c7b778dfad6df80e3e1b24ed8bffa3fee2fd445b9c5540b85  ../research/deep-research-2026-09-28/A-shokunin-tradition.md
+6d8dbddd3e2d2f47dcb153c5a3347cc6321db4afc72cf07da40f0f7fe5022006  ../research/deep-research-2026-09-28/B-multiagent-knowledge.md
+e48fe70ff92055c217ac6ca6ce68e403aa5689fee8717f3bd0ccf5badc92321b  ../research/deep-research-2026-09-28/C-rank-taxonomy.md
+
+## README-declared vs measured
+record A MATCH
+record B MATCH
+record C MATCH
+claims-r9.jsonl MATCH
+
+## record C vs its README row
+record C sha 97be0e69ccfb8a701bc5556f738553be8e7179c9b41110fe61c4a3cab4f2d1da vs README-declared 97be0e69ccfb8a701bc5556f738553be8e7179c9b41110fe61c4a3cab4f2d1da → MATCH
+source archive sha measured e48fe70ff92055c217ac6ca6ce68e403aa5689fee8717f3bd0ccf5badc92321b (read-only, fleet root)
+
+## independent gate-free checker: record Claim spans vs archive bytes (receipts-writer r9check.py recordspans)
+## command: python3 /home/vgpnk/.cache/chousa-r9-evidence/r9check.py recordspans corpus/fixtures/archives-r9/C-r9.md
+RECORDSPAN-SPAN id=C1 verbatim=yes boundary=yes at=line:53
+RECORDSPAN-SPAN id=C2 verbatim=yes boundary=yes at=line:65
+RECORDSPAN-SPAN id=C3 verbatim=yes boundary=yes at=line:87
+RECORDSPAN-SPAN id=C4 verbatim=yes boundary=yes at=line:92
+RECORDSPAN-SPAN id=C5 verbatim=yes boundary=yes at=line:85
+RECORDSPAN-SPAN id=C6 verbatim=yes boundary=yes at=line:109
+RECORDSPAN-SPAN id=C7 verbatim=yes boundary=yes at=line:67
+RECORDSPAN-SPAN id=C8 verbatim=yes boundary=yes at=line:102
+RECORDSPAN corpus/fixtures/archives-r9/C-r9.md archive=../research/deep-research-2026-09-28/C-rank-taxonomy.md spans=8 verbatim=8 boundary_delimited=8 bad=0
+
+## independent gate-free checker: chain anchors + reconciliation against the gate (solo verify-chain)
+## command: python3 /home/vgpnk/.cache/chousa-r9-evidence/r9check.py chain corpus/fixtures/archives-r9/C-r9.md .. .   # then reconcile vs bash tools/research-gate.sh verify-chain corpus/fixtures/archives-r9/C-r9.md --root ..
+XCHAIN hop=1 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"Japanese traditions don’t collapse these into one ladder." at=line:53 verdict=match
+XCHAIN hop=2 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"There is no traditional Japanese four-rank ladder that preci" at=line:65 verdict=match
+XCHAIN hop=3 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=line:"Kyū/dan is a grading structure, not an autonomy ladder" at=line:87 verdict=match
+XCHAIN hop=4 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"Rank is conferred through a procedure, not established by a " at=line:92 verdict=match
+XCHAIN hop=5 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"The cultural mistake to avoid is presenting your product’s i" at=line:85 verdict=match
+XCHAIN hop=6 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"I could not substantiate this spelling as an established art" at=line:64 verdict=match
+XCHAIN hop=7 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"Track five axes separately: task competence, retention, evid" at=line:57 verdict=match
+XCHAIN hop=8 status=blocked-no-fetch observed=exempt source=jstage.jst.go.jp anchor=- at=- verdict=exempt
+XRESOLVED_HOPS=7/8
+XRESEARCH_GATE: CLEAN (hops=8 verified=7 exempt=1 anchor-missing=0 refused=0 invalid=0)
+reconciliation: RECONCILE: EMPTY (gate=8 checker=8 items, core fields identical)
+gate solo summary: RESEARCH_GATE: CLEAN (hops=8 verified=7 exempt=1 anchor-missing=0 refused=0 invalid=0 findings=0 drift=0)
+gate solo exit: 0
+
+## live run: verify-all with the manifest append
+## command: bash tools/research-gate.sh verify-all corpus/fixtures/archives-r9/C-r9.md --claims corpus/fixtures/claims-r9.jsonl --json corpus/evidence/verify-all-manifest.jsonl --root ..
+exit: 0
+research-gate research-gate-r1 — ts=2026-10-16T04:54:27Z — mode=verify-all — record=corpus/fixtures/archives-r9/C-r9.md — claims=corpus/fixtures/claims-r9.jsonl — root=..
+SECTION structure state=run verdict=CLEAN findings=0 drift=0
+SECTION claims state=run verdict=CLEAN findings=0 drift=0 tally=VERDICT_BEARING_CLAIMS=10/10
+SECTION chain state=run verdict=CLEAN findings=0 drift=0 tally=RESOLVED_HOPS=7/8
+SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=4/4
+SECTION integrity state=run verdict=CLEAN findings=0 drift=0 tally=INTEGRITY refs=15 resolved=14 unresolved=0
+VERIFY_ALL sections=5 run=5 absent=0 drift-sections=0 findings=0 drift=0
+RESEARCH_GATE: CLEAN (sections=5 run=5 absent=0 drift-sections=0 findings=0 drift=0)
+
+## appended manifest line (verbatim, corpus/evidence/verify-all-manifest.jsonl)
+{"schema":"chousa-verify-all/v1","ts":"2026-10-16T04:54:27Z","record":"corpus/fixtures/archives-r9/C-r9.md","record_sha256":"97be0e69ccfb8a701bc5556f738553be8e7179c9b41110fe61c4a3cab4f2d1da","gate_sha256":"46f5ddb39d5fafa220fb584121dba2f4a15e071a91fa42728849f3c7567c6ccd","sections":[{"name":"structure","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"findings":0,"drift":0,"questions":1,"sources":6,"chains":8,"claims":8,"negatives":1,"rejections":4,"approvals":0}},{"name":"claims","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"claims":10,"supported":7,"contradicted":2,"unsupported":1,"mismatched":0,"unproven":0,"refused":0,"invalid":0,"findings":0,"drift":0},"native":"VERDICT_BEARING_CLAIMS=10/10"},{"name":"chain","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"hops":8,"verified":7,"exempt":1,"anchor-missing":0,"refused":0,"invalid":0,"findings":0,"drift":0},"native":"RESOLVED_HOPS=7/8"},{"name":"sweeps","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"sweeps":1,"verified":1,"exempt":0,"hit":0,"refused":0,"invalid":0,"rejections":4,"rejections-ok":4,"findings":0,"drift":0},"native":"VERIFIED_SWEEPS=1/1 REJECTIONS_OK=4/4"},{"name":"integrity","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"refs":15,"resolved":14,"unresolved":0,"exempt":1,"findings":0,"drift":0},"native":"INTEGRITY refs=15 resolved=14 unresolved=0"}],"verdict":"CLEAN","sections_run":5,"sections_absent":0,"drift_sections":0}
+
+## contract assertions (vs corpus/fixtures/archives-r9/README.md)
+PASS: SECTION structure state=run verdict=CLEAN findings=0 drift=0
+PASS: SECTION claims state=run verdict=CLEAN findings=0 drift=0 tally=VERDICT_BEARING_CLAIMS=10/10
+PASS: SECTION chain state=run verdict=CLEAN findings=0 drift=0 tally=RESOLVED_HOPS=7/8
+PASS: SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=4/4
+PASS: SECTION integrity state=run verdict=CLEAN findings=0 drift=0 tally=INTEGRITY refs=15 resolved=14 unresolved=0
+PASS: VERIFY_ALL sections=5 run=5 absent=0 drift-sections=0 findings=0 drift=0
+PASS: RESEARCH_GATE: CLEAN (sections=5 run=5 absent=0 drift-sections=0 findings=0 drift=0)
+claim-span check: 8 spans, 8 verbatim, 8 boundary-delimited
+no integrity finding surfaced: 0 FINDING lines
