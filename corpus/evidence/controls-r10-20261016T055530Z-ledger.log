@@ -1,0 +1,106 @@
+# chousa-shokunin round-10 receipt — limit-disposition ledger — the r2–r9 limit trail dispositioned in corpus/knowledge/hardening-r10.md
+# cut stamp: 20261016T055530Z | utc: 2026-10-16T05:55:30Z
+# seat: receipts-writer | lane: chousa-shokunin | round: 10 (residual hardening: archive-scale negative controls + final limit-disposition ledger)
+# lane head: d5c99c2084dd972fa33c4e2d35b6b7c281382163 | gate: tools/research-gate.sh sha256=46f5ddb39d5fafa220fb584121dba2f4a15e071a91fa42728849f3c7567c6ccd
+# gate unchanged vs HEAD blob: 46f5ddb39d5fafa220fb584121dba2f4a15e071a91fa42728849f3c7567c6ccd (git show HEAD:tools/research-gate.sh) | git diff --numstat tools/research-gate.sh: 0 line(s)
+# method: machine-cut by /home/vgpnk/.cache/chousa-r10/cut-receipts.sh; stdout verbatim (the gate prints its own ts=); local files only; no network
+# scope: the note pin and its cited pins declared-vs-measured; the full-row inventory re-derived from the note's own §3 tables (numbering, disposition counts, queue arithmetic, gate-free); the one finding re-derived from record+archive bytes; the closed-row evidence re-run in this battery
+
+## fixture pins (measured at cut time)
+338918fcb8ed5d6c5f15dc64e5eb8a3ae7a005d51b5c03e7e377c1dab9173c78  corpus/fixtures/archives-r9/A-r9.md
+abfa5290deda4d1708ba97028853b8a770f16ecda6f377dddda53d49cb2e3e86  corpus/fixtures/archives-r9/B-r9.md
+97be0e69ccfb8a701bc5556f738553be8e7179c9b41110fe61c4a3cab4f2d1da  corpus/fixtures/archives-r9/C-r9.md
+f6f0d1ab6b6cbd045035951c7eb4653406dc0853234a8077a8685509bfc94ff5  corpus/fixtures/claims-r9.jsonl
+ec312657c3872de77b45d44d135dd350e6b6cb378db621b4f2cbc61b5798a166  corpus/fixtures/archives-r9/README.md
+
+## control pins (round-10 archive-scale controls)
+e3490cf4bc9dd778311c19949287be93dd2b17690e1bb7f2d1cf77c38d7e82a0  corpus/fixtures/archives-r9/controls/A-r9-anchor-missing.md
+0edb78ee0040bd77af6b1618ca9888f6676eb8082e9aabb9b4c498016664b126  corpus/fixtures/archives-r9/controls/A-r9-span-not-found.claims.jsonl
+5dedb73b4828f8120b1d7538aea49711dc56b2776bc9490e29727979ff4d7671  corpus/fixtures/archives-r9/controls/A-r9-span-not-found.md
+69b7b08f8b1d3362b7848fe6776fd237226a645589c767c9d5cfe11abad85a47  corpus/fixtures/archives-r9/controls/B-r9-false-sweep.md
+b0d488aae5fbfe5aef6b9eaa5f5cf45ba7381abebf1fc51f77af92509b5a0206  corpus/fixtures/archives-r9/controls/B-r9-rejection-missing-flip.md
+b24be0f0768d6b6848b9fa13fe6f862464007322ae52653b42ef0fac09f986f7  corpus/fixtures/archives-r9/controls/C-r9-dangling-ref.md
+21d77e6c4de99719c557d14b105d2b795147f40bc724f4105d041587107c290c  corpus/fixtures/archives-r9/controls/C-r9-structure-break.md
+23f477225aa290c0c3fdf97887b9d954d9b81ab1bb4364815fcd01b07380a688  corpus/fixtures/archives-r9/controls/README.md
+
+## archive pins (read-only, fleet root)
+9033857d4625555c7b778dfad6df80e3e1b24ed8bffa3fee2fd445b9c5540b85  ../research/deep-research-2026-09-28/A-shokunin-tradition.md
+6d8dbddd3e2d2f47dcb153c5a3347cc6321db4afc72cf07da40f0f7fe5022006  ../research/deep-research-2026-09-28/B-multiagent-knowledge.md
+e48fe70ff92055c217ac6ca6ce68e403aa5689fee8717f3bd0ccf5badc92321b  ../research/deep-research-2026-09-28/C-rank-taxonomy.md
+
+## ledger note pin
+3845709bae62603aa67b8fc56e15c55b20dd0673b0c9f83d160806196a5018d5  corpus/knowledge/hardening-r10.md
+
+## r9 README-declared vs measured
+record A MATCH
+record B MATCH
+record C MATCH
+claims-r9.jsonl MATCH
+
+## cited pins, declared vs measured
+controls README (note cites 23f47722…): MATCH
+gate (note cites 46f5ddb3…): MATCH
+records A/B/C (note cites 338918fc…/abfa5290…/97be0e69…): MATCH/MATCH/MATCH
+claims-r9.jsonl (note cites f6f0d1ab…): MATCH
+fixtures README (r9 row pins, measured in this receipt): ec312657c3872de77b45d44d135dd350e6b6cb378db621b4f2cbc61b5798a166 vs archived README
+
+## the ledger inventory re-derived from the note's own §3 tables (gate-free arithmetic)
+## command: python3 /home/vgpnk/.cache/chousa-r10/r10check.py ledger corpus/knowledge/hardening-r10.md
+exit: 0
+LEDGER rows=71 numbering=1..71
+LEDGER by-design=38 carried=25 closed=3 finding=1 operator=4
+LEDGER claimed rows=71 counts=[38, 25, 3, 1, 4]
+LEDGER counts-vs-rows: MATCH
+LEDGER queue claimed=30 computed=30 (carried+finding+operator)
+LEDGER queue arithmetic: MATCH
+LEDGER queue declared parts=carried 25 / finding 1 / operator 4
+LEDGER oplus-tokens=8 (informational; the notes/lessons/README additions)
+
+## the one finding (row 56) re-derived from record + archive bytes
+## command: python3 /home/vgpnk/.cache/chousa-r10/r10check.py row-lines corpus/fixtures/archives-r9/A-r9.md ../research/deep-research-2026-09-28/A-shokunin-tradition.md
+ROW id=C1 pointer-line=64 span-line=64 MATCH
+ROW id=C2 pointer-line=47 span-line=47 MATCH
+ROW id=C3 pointer-line=76 span-line=86 MISMATCH
+ROW id=C4 pointer-line=88 span-line=88 MATCH
+ROW id=C5 pointer-line=54 span-line=54 MATCH
+ROW-AUDIT record=A-r9.md rows=5 match=4 mismatch=1
+
+## command: python3 /home/vgpnk/.cache/chousa-r10/r10check.py row-lines corpus/fixtures/archives-r9/B-r9.md ../research/deep-research-2026-09-28/B-multiagent-knowledge.md
+ROW id=C1 pointer-line=77 span-line=77 MATCH
+ROW id=C2 pointer-line=79 span-line=79 MATCH
+ROW id=C3 pointer-line=57 span-line=57 MATCH
+ROW id=C4 pointer-line=59 span-line=59 MATCH
+ROW id=C5 pointer-line=47 span-line=47 MATCH
+ROW id=C6 pointer-line=57 span-line=57 MATCH
+ROW-AUDIT record=B-r9.md rows=6 match=6 mismatch=0
+
+## command: python3 /home/vgpnk/.cache/chousa-r10/r10check.py row-lines corpus/fixtures/archives-r9/C-r9.md ../research/deep-research-2026-09-28/C-rank-taxonomy.md
+ROW id=C1 pointer-line=53 span-line=53 MATCH
+ROW id=C2 pointer-line=65 span-line=65 MATCH
+ROW id=C3 pointer-line=87 span-line=87 MATCH
+ROW id=C4 pointer-line=92 span-line=92 MATCH
+ROW id=C5 pointer-line=85 span-line=85 MATCH
+ROW id=C6 pointer-line=109 span-line=109 MATCH
+ROW id=C7 pointer-line=67 span-line=67 MATCH
+ROW id=C8 pointer-line=102 span-line=102 MATCH
+ROW-AUDIT record=C-r9.md rows=8 match=8 mismatch=0
+
+all three records: 19 rows, 18 MATCH / 1 MISMATCH (the single miss is A row C3) — matches the note §2 re-derivation.
+
+## raw byte witness for row 56 (the live finding)
+## command: sed -n '50p' corpus/fixtures/archives-r9/A-r9.md; sed -n '76p;86p' ../research/deep-research-2026-09-28/A-shokunin-tradition.md
+A-r9.md line 50 (row C3):
+| C3 | observation | A separates finishing, competence and independence and records no universal years count or common final examination | There is no universal sacred number of years or common final examination. | research/deep-research-2026-09-28/A-shokunin-tradition.md:76 | verified |
+archive A line 76 (the pointer cell target) and line 86 (the span occurrence):
+The relevant distinction is between finishing an apprenticeship, becoming a competent working artisan, and establishing an independent practice. These can coincide, but should not be collapsed into one event.
+These examples matter because they show that apprenticeship is an economic and social institution as well as a learning process. There is no universal sacred number of years or common final examination.
+
+## closed rows — evidence re-run in this battery
+row 12 closed(r4) — the boundary matcher holds in both modes: claims-r2 VERDICT_BEARING_CLAIMS=17/17; chain-r3 RESOLVED_HOPS=17/22
+row 31 closed(in-wave) — r5 fixture state: sweeps-r5 VERIFIED_SWEEPS=1/2 REJECTIONS_OK=3/3; sweeps-r5-broken exit 1
+row 37 closed(in-wave) — r6 fixtures: full-r6 RESEARCH_GATE: CLEAN (sections=5 run=5 absent=0 drift-sections=0 findings=0 drift=0); full-r6-broken RESEARCH_GATE: DRIFT (sections=5 run=5 absent=0 drift-sections=2 findings=2 drift=2)
+
+## holds at the ledger revision (this battery)
+selftest: PASS (85 cases) (exit 0); gate baseline drift: GATE_DRIFT: none (exit 0)
+evidence receipts this round: controls-r10-20261016T055530Z-controls.log, -exempt.log, -live.log (this cut).
+The ledger note is the round-11 audit starting map; acceptance of the round remains parent-owned.

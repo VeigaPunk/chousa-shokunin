@@ -777,3 +777,111 @@ for the declared tallies, and the receipts for the cut-time equivalents.
   was not used (per-user quota).
 - Receipt identity remains lane-local; no `task_…` value is invented and the
   round-1 receipt blocker stands (operator-side).
+
+## Round-10 negative-control and ledger receipts — stamp 20261016T055530Z
+
+Round 10 is fixture-led and audit-led: six archive-scale negative controls —
+one broken variant of a clean archive record per defect class — land under
+`corpus/fixtures/archives-r9/controls/`, and each DRIFTs `verify-all` naming
+exactly its class (one drifting section, one finding, exit 1); every
+`observed=exempt` item in the three archive records is byte-justified (6/6, 0
+findings); and `corpus/knowledge/hardening-r10.md` carries the final
+limit-disposition ledger (71 rows: by-design 38 · carried 25 · closed 3 ·
+finding 1 · operator 4; 30-item round-11 audit queue). **No gate file
+changed** — measured, not assumed: the working-tree sha equals
+`git show HEAD:tools/research-gate.sh` (`46f5ddb3…`) and
+`git diff --numstat tools/research-gate.sh` is empty.
+
+Falsifiable claim before → after: before, the defect classes existed only as
+small record-level fixtures with no archive-scale control (`controls/` absent
+at HEAD), the records' exempt items were counted but never audited, and the
+r2–r9 named limits had no single disposition ledger; after, the six controls
+each exit 1 with `drift-sections=1 findings=1` and exactly the class's finding
+id, the clean parents stay CLEAN, the exempt audit closes 6/6 justified, and
+the ledger's own arithmetic re-derives (counts and queue match its rows).
+
+Revision under test: `tools/research-gate.sh` sha256
+`46f5ddb39d5fafa220fb584121dba2f4a15e071a91fa42728849f3c7567c6ccd` (lane HEAD
+`d5c99c2`). Fixture pins measured at cut time: records A/B/C
+`338918fc…`/`abfa5290…`/`97be0e69…`, `claims-r9.jsonl` `f6f0d1ab…`, controls
+README `23f47722…`; control pins:
+
+| control | sha256 |
+|---|---|
+| `A-r9-span-not-found.md` (+ `.claims.jsonl`) | `5dedb73b…` (+ `0edb78ee…`) |
+| `A-r9-anchor-missing.md` | `e3490cf4…` |
+| `B-r9-rejection-missing-flip.md` | `b0d488aa…` |
+| `B-r9-false-sweep.md` | `69b7b08f…` |
+| `C-r9-dangling-ref.md` | `b24be0f0…` |
+| `C-r9-structure-break.md` | `21d77e6c…` |
+
+### Receipts
+
+| Receipt (sha256) | Shows | Key result |
+|---|---|---|
+| `controls-r10-20261016T055530Z-controls.log` (`5cf35be5`) | before-state (controls absent at HEAD; pre-r10 negatives were small fixtures), README-declared vs measured pins, per-control diff + verify-all + class assertions, positive parent arm | all six: exit 1, one `RESEARCH_GATE: DRIFT` summary, finding names exactly its class, `drift-sections=1`; parents A/B/C CLEAN |
+| `controls-r10-20261016T055530Z-exempt.log` (`02354279`) | solo `verify-chain`/`verify-integrity` for A/B/C, the gate-free byte justification of all six exempt items, raw archive greps, counted-not-hidden invariants | `EXEMPT-AUDIT` 6/6 justified, 0 findings; chain exempt 1/1/1; integrity exempt 1/1/1 |
+| `controls-r10-20261016T055530Z-ledger.log` (`7084b56f`) | the ledger note pin + cited pins declared vs measured, the 71-row inventory re-derived from the note's own tables, the one finding re-derived from bytes, closed-row evidence | counts/queue MATCH (38/25/3/1/4; queue 30); row-lines 18/19 (A C3 `:76` vs span at `:86`) |
+| `controls-r10-20261016T055530Z-live.log` (`9e3af060`) | no-gate-change evidence, selftest case-line stability, committed drift baseline, r1 observable, prior-fixture no-harm, controls/exempt summaries, manifest untouched, zero-network strace, pin stability | `--selftest` PASS (85 cases), cases 1–85 byte-identical to the r8 selftest receipt (comparator r9 also used; 0 FAIL-case lines); `GATE_DRIFT: none`; `VERDICT_BEARING_EXPORTS=3/3`; manifest sha unchanged |
+
+### Controls (recorded in the controls receipt)
+
+| Control | Class → finding id | Delta (besides the Meta note row) | Tally | Exit |
+|---|---|---|---|---|
+| `A-r9-span-not-found` | span-not-found → `CLAIM_SPAN_NOT_FOUND` | control claims copy: A07 span `four` → `five` (absent from archive A); Meta `claims_file` rebound | claims DRIFT `VERDICT_BEARING_CLAIMS=9/10` | 1 |
+| `A-r9-anchor-missing` | anchor-missing → `CHAIN_ANCHOR_NOT_FOUND` | hop 2 quote `…rank ladder.` → `…certification ladder.` (absent from A) | chain DRIFT `RESOLVED_HOPS=5/7` | 1 |
+| `B-r9-rejection-missing-flip` | rejection-missing-flip → `SWEEP_REJECTION_INCOMPLETE` | R2 `flip_condition` emptied | sweeps DRIFT `REJECTIONS_OK=2/3` | 1 |
+| `B-r9-false-sweep` | false-sweep → `SWEEP_CLAIM_FALSE` | SW1 `where` → `research/deep-research-2026-09-28/*.md` (3 hits) | sweeps DRIFT `VERIFIED_SWEEPS=0/1` | 1 |
+| `C-r9-dangling-ref` | dangling-ref → `REF_UNRESOLVED` | hop 1 `from` `C1` → undeclared `C9` | integrity DRIFT `refs=15 resolved=13 unresolved=1` | 1 |
+| `C-r9-structure-break` | structure-break → `NO_QUESTION` (crit) | `## Question` section removed | structure DRIFT `findings=1` | 1 |
+
+### Exempt audit (recorded in the exempt receipt)
+
+Every exempt item is the same blocked-no-fetch chip row twice: chain hop
+(exempt, counted) and its `from` token in integrity (exempt by row status).
+Byte justification: the chip appears verbatim in the read-only archive at the
+line the row's notes cite.
+
+| Record | Chain exempt | Integrity exempt | Byte evidence |
+|---|---|---|---|
+| A | hop 7 `コトバンク` | `C1` row 7 | archive A:68 (also :72) — cited A:68 |
+| B | hop 7 `arxiv.org` | `C3` row 7 | archive B:51, :72 — cited B:51, B:72 |
+| C | hop 8 `jstage.jst.go.jp` | `C8` row 8 | archive C:103 — cited C:103 |
+
+### Ledger (recorded in the ledger receipt)
+
+`corpus/knowledge/hardening-r10.md` (`3845709b…` at cut time) dispositions the
+r2–r9 limit trail in 71 numbered rows; the receipt re-derives the note's own
+counts from its tables gate-free (by-design 38 · carried 25 · closed 3 ·
+finding 1 · operator 4; queue 30 = 25+1+4 — MATCH) and re-derives the single
+finding from bytes: `A-r9.md:50` (row C3) cites `A:76` while its span occurs
+at `A:86` (19 rows: 18 MATCH / 1 MISMATCH).
+
+### Re-run recipe
+
+```bash
+cd chousa-shokunin
+sha256sum tools/research-gate.sh   # 46f5ddb3…
+for c in A-r9-span-not-found A-r9-anchor-missing B-r9-rejection-missing-flip \
+         B-r9-false-sweep C-r9-dangling-ref C-r9-structure-break; do
+  bash tools/research-gate.sh verify-all corpus/fixtures/archives-r9/controls/$c.md --root .. ; echo "exit=$?"
+done
+# expect: every run DRIFTs, drift-sections=1 findings=1, exit 1, exactly the class's finding id
+```
+
+### Notes
+
+- The controls' verify-all runs pass no `--json`: the append-only manifest is
+  untouched this round (sha preserved; recorded in the live receipt).
+- The ledger receipt pins the note's cut-time sha: the note moved three times
+  during the wave (68 → 71 rows, renumbered); the cut-time revision is the one
+  the receipt's arithmetic checks pass against.
+- A first cut (stamp `20261016T054941Z`) was withdrawn and superseded by this
+  set: its live receipt compared case-line stability against the r9 live
+  receipt, which embeds no case lines (a comparator artifact — the case lines
+  are byte-identical to the r8 selftest receipt, as this set records). The
+  superseded files were removed so the stamped set is internally consistent;
+  the controls/exempt/ledger receipts differed only in run timestamps
+  (verified by normalized diff).
+- Receipt identity remains lane-local; no `task_…` value is invented; the
+  round-1 receipt blocker stands (operator-side).
