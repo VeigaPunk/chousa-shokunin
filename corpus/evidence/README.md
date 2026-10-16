@@ -252,3 +252,114 @@ python3 /tmp/chousa-r4/boundcheck.py "$PWD" /tmp/chousa-r4/att
   the same helper serves both modes, so there is one rule, not two.
 - Receipt identity for this round remains a lane-local log; no `task_…` value
   is invented and the round-1 receipt blocker stands (operator-side).
+
+## Round-5 rejection/sweep receipts — stamp 20261016T011543Z
+
+Revision under test: `tools/research-gate.sh` sha256
+`55adb92d0ba5ac958907fac6c4d5d6b0b50129703e866a5befbd9a32789f2ff2` (lane HEAD
+`45f8f65`; the sha was sampled stable before and after every run in these
+receipts — 26 pinned runs, no mid-run change). Before-state runs use the
+round-4 revision, recoverable from git:
+`git show 45f8f65:tools/research-gate.sh` → sha256
+`6b83705b02fe11e98b8b4aeb43fe718ff9910d21cee16d87366cef648a3960b2`,
+executed from a lane shadow (`/tmp/chousa-r5-evidence/lane-shadow`, symlinks
+`corpus/` → lane corpus and `research/` → fleet research) so the records'
+lane- and fleet-root-relative pointers resolve exactly as they do in place —
+a `/tmp` copy of the gate changes its own `LANE_ROOT` and would misreport
+lane-relative pointers as unresolved. Fixtures: `corpus/fixtures/sweeps-r5.md`
+sha256 `025352b75b7b109147fee8b8eb13b4f74eaa1550489e83166ce1dd59cfb14907`,
+`corpus/fixtures/sweeps-r5-hit.md` sha256
+`89650988074e4c371aada8e1fe77cd02d4fa85bc0c3d0a40dc21e12e1a0f78cd`,
+`corpus/fixtures/sweeps-r5-broken.md` sha256
+`f74ea3247e069e711278bb81addda468045053cfe556d8f5a204f3b9ff7abc0c`; contract
+`corpus/fixtures/sweeps-r5.README.md` sha256
+`e9178651254841b86e46e98ba4566b568df662ed8c541197ae150f5aba1ebbca`.
+Control copies were single-delta rewrites of `sweeps-r5.md` under
+`/tmp/chousa-r5-evidence/ctl/` (sha256 in the live receipt); the independent
+checker is `/tmp/chousa-r5-evidence/sweepcheck.py` (scratch, gate-free).
+
+| Receipt (sha256) | Shows | Key result |
+|---|---|---|
+| `sweeps-r5-20261016T011543Z-selftest.log` (`052b15da…`) | full `--selftest`; case-line stability vs the round-4 selftest stdout | `RESEARCH_GATE_SELFTEST: PASS (54 cases)`, exit 0; the first 44 ok-case lines are **byte-identical** to the round-4 receipt (`cmp` YES); new cases 45–54 = `sweeps-pass`/`-fail-planted-hit`/`-fail-rejection-incomplete`/`-fail-unnamed`/`-fail-out-of-corpus`/`-fail-unresolved-id`/`-fail-counting`/`-pass-cell-command` + two setup exits |
+| `sweeps-r5-20261016T011543Z-fixture.log` (`b00b54ac…`) | fixture inventory (3 rejections + 2 sweeps; 1 + 1 broken); the archive set empty of URLs (`grep` exit 1, zero matches); the record's own W1 re-run by glob from the fleet root (zero hits); the planted hit file on disk with `ghost-sweep-token`; export pins matching the README; a README-vs-record block printing the record's Sweeps rows; independent gate-free re-derivation | independent verdicts `canonical=CLEAN broken=DRIFT`; exports `9033857d…/6d8dbddd…/e48fe70f…` match the README |
+| `sweeps-r5-20261016T011543Z-broken.log` (`061c1d00…`) | the tampered control under the old and the landed revision | r4 `verify` CLEAN exit 0 (the hole, both broken cells invisible) → landed `verify-sweeps` DRIFT exit 1 with `SWEEP_REJECTION_INCOMPLETE` on R1 (`missing=flip`) and `SWEEP_CLAIM_FALSE` on W1 naming `chousa-shokunin/corpus/fixtures/sweeps-r5-hit.md` |
+| `sweeps-r5-20261016T011543Z-live.log` (`c58b309c…`) | before-state (no `verify-sweeps` mode; structural pass on the canonical record), live canonical run, seven negative controls, cross-round byte-stability, zero-network strace | r4 CLI has no `verify-sweeps` (usage, exit 2); r4 `verify` on the canonical record CLEAN exit 0 (the hole); landed canonical `VERIFIED_SWEEPS=1/2 REJECTIONS_OK=3/3`, `RESEARCH_GATE: CLEAN`, exit 0; all seven controls below; claims `17/17` CLEAN and chain `17/22` CLEAN with chain-broken `1/2` DRIFT (all six stdout pairs **byte-identical** to the round-4 gate after ts normalization: YES); archives 3/3 exit 1; `strace -f -e trace=network`: 992 trace lines, **0 network syscalls** |
+
+Before → after in one line: under the round-4 gate the kept rejections passed
+with only a non-empty `reason` (no flip-condition) and negative sweeps were
+never adjudicated at all — both `sweeps-r5.md` and `sweeps-r5-broken.md` closed
+`RESEARCH_GATE: CLEAN`, exit 0, structurally; the landed `verify-sweeps` mode
+requires each kept rejection to carry reason **and** flip-condition and re-runs
+each named local path/glob set, so the canonical record closes CLEAN
+(`verified=1 exempt=1`) while the broken control drifts naming both cells, and
+a record that names nowhere, names a false emptiness, escapes the root, or
+cites an undeclared source id drifts too.
+
+### Negative controls (recorded in the live receipt)
+
+Each control is a single-delta copy of `sweeps-r5.md` (sha256 printed in the
+receipt); every delta is one cell.
+
+| Control | Delta | Result (exit) |
+|---|---|---|
+| `ctl-01-rej-flip-empty` | R1 `flip_condition` emptied | `SWEEP_REJECTION_INCOMPLETE id=R1 missing=flip`, `REJECTIONS_OK=2/3`, DRIFT (1) |
+| `ctl-02-rej-reason-empty` | R2 `reason` emptied | `SWEEP_REJECTION_INCOMPLETE id=R2 missing=reason`, `REJECTIONS_OK=2/3`, DRIFT (1) |
+| `ctl-03-sweep-false-hit` | W1 `where` → the planted hit file | `SWEEP_CLAIM_FALSE … hits=1 first=chousa-shokunin/corpus/fixtures/sweeps-r5-hit.md`, `VERIFIED_SWEEPS=0/2`, DRIFT (1) |
+| `ctl-04-sweep-nonlocal` | W1 `where` → `https://kotobank.jp/` | exempt but counted (`verified=0 exempt=2 hit=0`), CLEAN (0) — a content sweep carries no probe the gate could re-run |
+| `ctl-05-sweep-nowhere` | W1 `where` emptied | `SWEEP_LOCATION_ABSENT id=W1 no location named`, `invalid=1`, DRIFT (1) |
+| `ctl-06-sweep-out-of-corpus` | W1 `where` → `../research/README.md` | `SWEEP_LOCATION_OUT_OF_CORPUS severity=crit … refused unopened`, `refused=1`, DRIFT (1) |
+| `ctl-07-sweep-unresolved-id` | W1 `where` → `S9` (undeclared) | `SWEEP_LOCATION_UNRESOLVED … S9 not in ## Sources`, `refused=1`, DRIFT (1) |
+
+### Re-run recipe
+
+From the lane root, local only. Exit contract for every run: 0 CLEAN,
+1 DRIFT, 2 setup/usage.
+
+```bash
+sha256sum tools/research-gate.sh
+#   55adb92d0ba5ac958907fac6c4d5d6b0b50129703e866a5befbd9a32789f2ff2
+bash tools/research-gate.sh verify-sweeps corpus/fixtures/sweeps-r5.md --root ..
+#   expect: VERIFIED_SWEEPS=1/2 REJECTIONS_OK=3/3; CLEAN (sweeps=2 verified=1 exempt=1
+#   hit=0 refused=0 invalid=0 rejections=3 rejections-ok=3 …); exit 0
+bash tools/research-gate.sh verify-sweeps corpus/fixtures/sweeps-r5-broken.md --root ..
+#   expect: VERIFIED_SWEEPS=0/1 REJECTIONS_OK=0/1; DRIFT with FINDING SWEEP_REJECTION_INCOMPLETE
+#   (id=R1 missing=flip) and FINDING SWEEP_CLAIM_FALSE naming the planted hit; exit 1
+bash tools/research-gate.sh verify corpus/fixtures/sweeps-r5-broken.md --root ..
+#   expect (pre-move hole): CLEAN, exit 0
+bash tools/research-gate.sh --selftest
+#   expect: RESEARCH_GATE_SELFTEST: PASS (54 cases), exit 0
+# before-state gate for the hole pair (round-4 revision, from git):
+git show 45f8f65:tools/research-gate.sh > /tmp/r5/r4-gate.sh   # sha256 6b83705b…
+#   run it from a shadow dir whose corpus/ and research/ resolve to the lane and
+#   fleet roots (a bare /tmp copy changes LANE_ROOT and misreports lane pointers)
+# the fixture README's own gate-free check (see corpus/fixtures/sweeps-r5.README.md §Re-run)
+grep -nE 'https?://' -- ../research/deep-research-2026-09-28/A-shokunin-tradition.md \
+  ../research/deep-research-2026-09-28/B-multiagent-knowledge.md \
+  ../research/deep-research-2026-09-28/C-rank-taxonomy.md ../research/README.md
+#   expect: zero matches, exit 1
+```
+
+### Notes
+
+- Receipts pin gate revision `55adb92d…`; a later gate edit supersedes this
+  stamp — re-run the recipe above and re-cut.
+- Scratch for this cut lived at `/tmp/chousa-r5-evidence/` (cut script,
+  r4-gate snapshot, lane shadow, control copies, `TMPDIR`, strace log). `/tmp`
+  writes succeeded; the `$HOME/.cache/chousa-tmp` fallback was not needed.
+- Cut discipline: the receipts were first cut at stamp `20261016T011103Z`
+  while the fixture author was still converging `sweeps-r5-hit.md` and the
+  fixture README (a pre-convergence `command`-column record then read as
+  `SWEEP_LOCATION_ABSENT`). That set was removed and re-cut at stamp
+  `20261016T011543Z` against the settled bytes; the receipts pin the fixture
+  shas listed above, and a later fixture edit supersedes them — re-run the
+  recipe and re-cut. The fixture README (`e9178651…`) now carries its own
+  Execution record whose verbatim runs agree with these receipts
+  (canonical CLEAN, broken DRIFT with the same two findings, PASS 54).
+- The `verify-sweeps` mode's honest boundaries are its header's
+  (`tools/research-gate.sh:70-98`): a CLEAN sweep proves the named location set
+  re-measured empty by glob, not that the sweep was the right one; non-local
+  sweeps stay exempt-but-counted; a sweep whose named paths do not exist under
+  the root is the verified case by construction, so an emptiness claim cannot
+  be verified beyond its naming.
+- Receipt identity for this round remains a lane-local log; no `task_…` value
+  is invented and the round-1 receipt blocker stands (operator-side).

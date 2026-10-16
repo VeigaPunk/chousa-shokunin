@@ -23,6 +23,8 @@
 #   CLAIM_RECORD_INVALID CLAIM_SOURCE_EXTERNAL CLAIM_SOURCE_OUT_OF_CORPUS
 #   CLAIM_SOURCE_SESSION CLAIM_SOURCE_EPHEMERAL CLAIM_SOURCE_MISSING
 #   CLAIM_SPAN_NOT_FOUND CLAIM_SPAN_UNEXPECTED CONTRADICTION_MARKER_ABSENT
+#   SWEEP_REJECTION_INCOMPLETE SWEEP_LOCATION_ABSENT SWEEP_LOCATION_UNRESOLVED
+#   SWEEP_LOCATION_OUT_OF_CORPUS SWEEP_CLAIM_FALSE
 #
 # Claims mode: verify-claims <claims-file> checks each claim's verbatim span
 # against its cited source. Blank lines and #-comment lines are ignored; a
@@ -64,6 +66,36 @@
 # Extra ids: CHAIN_ABSENT CHAIN_SOURCE_EXTERNAL CHAIN_SOURCE_SESSION
 #   CHAIN_SOURCE_EPHEMERAL CHAIN_SOURCE_OUT_OF_CORPUS CHAIN_SOURCE_MISSING
 #   CHAIN_ANCHOR_NOT_FOUND CHAIN_CITATION_INVALID
+#
+# Sweeps mode: verify-sweeps <record.md> makes kept rejections and negative
+# sweeps verdict-bearing. Every ## Rejections row needs a non-empty reason and
+# a non-empty flip-condition (a flip/flip_condition column, or any column whose
+# name contains flip/falsif/reversal); a rejection missing either is
+# SWEEP_REJECTION_INCOMPLETE and counts incomplete (drift).
+# Every negative sweep — a ## Sweeps row, or a Negatives row carrying a
+# where/looked_at/… column or a clean sweep cell — must name where it looked.
+# A local path set (a whitespace-free comma/semicolon list of paths/globs) is
+# re-run: any glob hit is SWEEP_CLAIM_FALSE naming the hit (zero hits verify).
+# Non-local sets (http(s)://…, local://…, external:…, web:…, session:…) and
+# declared source ids are exempt but counted — a content sweep carries no
+# probe the gate could re-run. A path escaping the corpus boundary is refused
+# unopened (SWEEP_LOCATION_OUT_OF_CORPUS), an undeclared source id is
+# SWEEP_LOCATION_UNRESOLVED, a sweep naming nowhere is SWEEP_LOCATION_ABSENT.
+# A row marked unresolved/blocked-no-fetch/labelled-dead/not-applicable in a
+# status column is exempt like an unresolved hop. Per item:
+#   SWEEP id=… where=… looked=local|source-ids|non-local|exempt|unnamed
+#     hits=… at=… observed=verified|hit|exempt|refused|invalid
+#     verdict=match|mismatch|exempt|refused|invalid
+#   REJECTION id=… ref=… reason=present|absent flip=present|absent
+#     observed=complete|incomplete verdict=match|mismatch
+# Summary: VERIFIED_SWEEPS=N/M REJECTIONS_OK=K/L — N sweeps re-verified empty
+# of M sweep items read (exempt counted); K complete rejections of L read.
+# CLEAN iff verified+exempt=M and K=L and no finding drifts.
+#
+# A where value containing whitespace is read as a command/description: its
+# structured words (URLs, ids, path/glob-shaped tokens) are extracted, other
+# words ignored — so an r1-style `test ! -f lib/ghost.md` cell names
+# lib/ghost.md. Whitespace-free values are split on commas/semicolons only.
 #
 # Token boundaries (matching semantics shared by claims spans and chain quote
 # anchors — the substring classes): an occurrence of a span/quote counts only
@@ -123,6 +155,7 @@ usage: research-gate.sh [--selftest] [--help]
        research-gate.sh verify [--record PATH] [--root PATH]
        research-gate.sh verify-claims [CLAIMS] [--root PATH]
        research-gate.sh verify-chain [RECORD] [--root PATH]
+       research-gate.sh verify-sweeps [RECORD] [--root PATH]
        research-gate.sh [--record PATH] [--root PATH]
 
   RECORD via --record, positional, or CHOUSA_RECORD.
@@ -145,6 +178,14 @@ usage: research-gate.sh [--selftest] [--help]
   apostrophe is not a boundary, so a truncated quote (mid-word), a padded
   extra word running into a longer token, or a possessive join is a miss.
   Multi-line spans are delimited by their first and last character only.
+  Sweeps mode: every ## Rejections row needs a non-empty reason and a
+  non-empty flip-condition (flip/flip_condition column, or any column whose
+  name contains flip/falsif/reversal). Negative sweeps must name where they
+  looked (a where/looked_at column, or a clean sweep cell): local path sets
+  (comma-separated paths/globs) are re-run — any hit is SWEEP_CLAIM_FALSE
+  naming the hit, zero hits verify; URLs, external:/web:/session: names and
+  declared source ids count as exempt; a sweep naming nowhere drifts.
+  Summary: VERIFIED_SWEEPS=N/M REJECTIONS_OK=K/L.
 Verdict: RESEARCH_GATE: CLEAN|DRIFT
 Exit:    0 CLEAN | 1 DRIFT | 2 setup/usage
 EOF
@@ -1246,6 +1287,338 @@ verify_chain() {
   return 1
 }
 
+# ---- sweeps mode: kept rejections + negative sweeps (local re-runs only) ----
+
+sweep_has_bad_char() { # TOKEN -> rc0: carries a byte a path token cannot name
+  local t=$1 c i
+  local bad=$' \t`$"\'(){}<>|&\\;,#!'
+  for ((i = 0; i < ${#t}; i++)); do
+    c=${t:i:1}
+    [[ $bad == *"$c"* ]] && return 0
+  done
+  return 1
+}
+
+sweep_looks_path() { # TOKEN -> rc0: path- or glob-shaped naming
+  local t=$1
+  [[ -n $t ]] || return 1
+  sweep_has_bad_char "$t" && return 1
+  [[ $t == */* || $t == *'*'* || $t == *'?'* ]] && return 0
+  [[ $t =~ \.[A-Za-z0-9]+$ ]] && return 0
+  return 1
+}
+
+sweep_token_class() { # TOKEN -> local|nonlocal|sourceid|junk on stdout
+  local t=$1
+  [[ -n $t ]] || { printf 'junk'; return 0; }
+  if is_url_ptr "$t" || is_ephemeral_ptr "$t"; then printf 'nonlocal'; return 0; fi
+  case "$t" in
+    external|external:*|web|web:*|live|live:*|chat|chat:*|session|session:*|non-local|nonlocal)
+      printf 'nonlocal'; return 0 ;;
+  esac
+  if sweep_looks_path "$t"; then printf 'local'; return 0; fi
+  if [[ $t =~ ^S[A-Za-z0-9_-]+$ ]]; then printf 'sourceid'; return 0; fi
+  printf 'junk'
+}
+
+sweep_trim_token() { # TOKEN -> edge quotations / trailing punctuation stripped
+  local t=$1 guard=0
+  while [[ $t == [[:space:]]* ]]; do t=${t#?}; done
+  while [[ $t == *[[:space:]] ]]; do t=${t%?}; done
+  while :; do
+    guard=$((guard + 1)); [[ $guard -gt 8 ]] && break
+    if [[ $t == \`*\` && ${#t} -ge 2 ]]; then t=${t#?}; t=${t%?}; continue; fi
+    if [[ $t == '"'*'"' && ${#t} -ge 2 ]]; then t=${t#?}; t=${t%?}; continue; fi
+    if [[ $t == "'"*"'" && ${#t} -ge 2 ]]; then t=${t#?}; t=${t%?}; continue; fi
+    if [[ $t == *')' || $t == *',' || $t == *';' ]]; then t=${t%?}; continue; fi
+    break
+  done
+  printf '%s' "$t"
+}
+
+sweep_where_tokens() { # RAW -> location tokens, one per line; empty = unnamed
+  local raw=$1 tok
+  raw=$(sweep_trim_token "$raw")
+  [[ -n $raw ]] || return 0
+  local -a out=() words=()
+  if [[ $raw == *[[:space:]]* ]]; then
+    # command/description form: keep only structured words, ignore the rest
+    read -r -a words <<<"$raw"
+    for tok in "${words[@]+"${words[@]}"}"; do
+      tok=$(sweep_trim_token "$tok")
+      [[ -n $tok ]] || continue
+      [[ $(sweep_token_class "$tok") == junk ]] && continue
+      out+=("$tok")
+    done
+  else
+    # whitespace-free form: a comma/semicolon-separated path set (no globbing)
+    set -f
+    local IFS=',;'
+    for tok in $raw; do
+      tok=$(sweep_trim_token "$tok")
+      [[ -n $tok ]] && out+=("$tok")
+    done
+    set +f
+  fi
+  for tok in "${out[@]+"${out[@]}"}"; do printf '%s\n' "$tok"; done
+}
+
+sweep_row_cell_scan() { # ROW ERE -> first cell whose key matches ERE ('' if none)
+  local row=$1 re=$2 e k v
+  local -a ents=()
+  local IFS=$'\t'
+  read -r -a ents <<<"$row"
+  for e in "${ents[@]+"${ents[@]}"}"; do
+    [[ $e == *'='* ]] || continue
+    k=${e%%=*}; v=${e#*=}
+    if [[ ${k,,} =~ $re ]]; then printf '%s' "$v"; return 0; fi
+  done
+  printf ''
+  return 0
+}
+
+sweep_flip_cell() { # ROW -> flip-condition cell ('' when none)
+  local v
+  v=$(chain_cell "$1" flip flip_condition flip-condition flipcondition would_flip \
+    wouldflip falsifier flip_when flipwhen flip_if flipif flips_if flipsif)
+  [[ -n $v ]] || v=$(sweep_row_cell_scan "$1" 'flip|falsif|reversal|counter')
+  printf '%s' "$v"
+}
+
+sweep_raw_where() { # ROW -> raw named-location string ('' when none)
+  local v
+  v=$(chain_cell "$1" where looked_at "looked at" looked scope searched paths \
+    location targets)
+  [[ -n $v ]] || v=$(sweep_row_cell_scan "$1" 'where|looked|scope|glob|target|locat')
+  [[ -n $v ]] || v=$(cell "$1" sweep)
+  printf '%s' "$v"
+}
+
+sweep_path_guarded() { # PATTERN -> rc0: glob-safe under an allowed root; rc1 refuse
+  local pat=$1 dir base canon comp c i
+  local root_r lane_r
+  root_r=$(cd -- "$ROOT" 2>/dev/null && pwd -P || printf '%s' "$ROOT")
+  lane_r=$(cd -- "$LANE_ROOT" 2>/dev/null && pwd -P || printf '%s' "$LANE_ROOT")
+  local -a comps=()
+  local IFS='/'
+  read -r -a comps <<<"$pat"
+  for comp in "${comps[@]+"${comps[@]}"}"; do
+    [[ $comp == .. ]] && return 1
+  done
+  dir=${pat%/*}
+  [[ $dir == "$pat" ]] && dir=.
+  for ((i = 0; i < ${#dir}; i++)); do
+    c=${dir:i:1}
+    if [[ $c == '*' || $c == '?' || $c == '[' ]]; then dir=${dir:0:i}; break; fi
+  done
+  dir=${dir%/}
+  if [[ -z $dir ]]; then
+    if [[ $pat == /* ]]; then dir=/; else dir=.; fi
+  fi
+  if [[ $dir == /* ]]; then base=$dir; else base="$ROOT/$dir"; fi
+  if [[ -e $base ]]; then
+    canon=$(readlink -f -- "$base" 2>/dev/null || printf '%s' "$base")
+  elif command -v realpath >/dev/null 2>&1; then
+    canon=$(realpath -m -- "$base" 2>/dev/null || printf '%s' "$base")
+  else
+    canon=$(readlink -f -- "$base" 2>/dev/null || printf '%s' "$base")
+  fi
+  case "$canon" in
+    "$root_r"|"$root_r"/*|"$lane_r"|"$lane_r"/*) return 0 ;;
+  esac
+  return 1
+}
+
+sweep_glob_matches() { # PATTERN -> matching paths, one per line ('' when none)
+  local pat=$1 m
+  (
+    cd -- "$ROOT" 2>/dev/null || exit 1
+    # nullglob only nulls words that carry a glob character: a literal path is
+    # echoed back even when nothing is there, so literals take an existence
+    # test instead (measured: `for m in lib/ghost.md` printed the pattern and
+    # made every literal path a phantom hit).
+    if [[ $pat == *'*'* || $pat == *'?'* || $pat == *'['* ]]; then
+      shopt -s nullglob globstar
+      for m in $pat; do
+        [[ $m == . || $m == .. ]] && continue
+        printf '%s\n' "$m"
+      done
+    elif [[ -e $pat || -L $pat ]]; then
+      printf '%s\n' "$pat"
+    fi
+  )
+}
+
+verify_sweeps() {
+  local record=$1
+  ROOT=${CHOUSA_ROOT:-$ROOT}
+  [[ -n ${record:-} ]] || die_usage "record path required (verify-sweeps RECORD, --record, or CHOUSA_RECORD)"
+  [[ -e $record ]] || die_usage "record not found: $record"
+  [[ -f $record ]] || die_usage "record is not a regular file: $record"
+  [[ -r $record ]] || die_usage "record unreadable: $record"
+  [[ -d $ROOT ]] || die_usage "root is not a directory: $ROOT (--root)"
+
+  FINDING_LINES=(); N_FINDINGS=0; N_DRIFT=0; ROLL=CLEAN
+  scan_secrets "$record"
+  load_sections "$record"
+
+  declare -g -A SRC_PTR=()
+  local srow sid sptr
+  if [[ -n ${SEC_BODY[Sources]+x} ]]; then
+    while IFS= read -r srow; do
+      [[ -z $srow ]] && continue
+      sid=$(cell "$srow" id)
+      [[ -z $sid ]] && continue
+      sptr=$(cell "$srow" pointer)
+      SRC_PTR[$sid]=$sptr
+    done < <(table_rows Sources)
+  fi
+
+  local N_SW=0 N_SW_VER=0 N_SW_EX=0 N_SW_HIT=0 N_SW_REF=0 N_SW_INV=0
+  local N_REJ=0 N_REJ_OK=0
+  local -a SWEEP_LINES=() REJECTION_LINES=() SWEEP_ROWS=()
+  local -a tokens=() local_pats=() sid_toks=() hit_list=()
+  local rrow rid rref rreason rflip rp fp miss row nrow rawloc tok cls whr looked st
+  local hits first p m i2 listed l
+  local have_local have_nonlocal have_sid have_junk refused
+
+  if [[ -n ${SEC_BODY[Rejections]+x} ]]; then
+    while IFS= read -r rrow; do
+      [[ -z $rrow ]] && continue
+      N_REJ=$((N_REJ + 1))
+      rid=$(cell "$rrow" id); [[ -z $rid ]] && rid="R$N_REJ"
+      rref=$(cell "$rrow" ref)
+      rreason=$(cell "$rrow" reason)
+      rflip=$(sweep_flip_cell "$rrow")
+      if [[ -n $rreason ]]; then rp=present; else rp=absent; fi
+      if [[ -n $rflip ]]; then fp=present; else fp=absent; fi
+      miss=''
+      [[ $rp == absent ]] && miss=reason
+      [[ $fp == absent ]] && miss="${miss:+$miss,}flip"
+      if [[ -z $miss ]]; then
+        N_REJ_OK=$((N_REJ_OK + 1))
+        REJECTION_LINES+=("REJECTION id=$rid ref=$(chain_disp "$rref") reason=present flip=present observed=complete verdict=match")
+      else
+        emit_finding SWEEP_REJECTION_INCOMPLETE warn sweeps "id=$rid missing=$miss"
+        REJECTION_LINES+=("REJECTION id=$rid ref=$(chain_disp "$rref") reason=$rp flip=$fp observed=incomplete verdict=mismatch")
+      fi
+    done < <(table_rows Rejections)
+  fi
+
+  if [[ -n ${SEC_BODY[Sweeps]+x} ]]; then
+    while IFS= read -r row; do
+      [[ -z $row ]] && continue
+      SWEEP_ROWS+=("$row")
+    done < <(table_rows Sweeps)
+  fi
+  if [[ ${#SWEEP_ROWS[@]} -eq 0 && -n ${SEC_BODY[Negatives]+x} ]]; then
+    while IFS= read -r nrow; do
+      [[ -z $nrow ]] && continue
+      rawloc=$(sweep_raw_where "$nrow")
+      [[ -z $rawloc ]] && continue
+      SWEEP_ROWS+=("$nrow")
+    done < <(table_rows Negatives)
+  fi
+
+  for row in "${SWEEP_ROWS[@]+"${SWEEP_ROWS[@]}"}"; do
+    N_SW=$((N_SW + 1))
+    sid=$(cell "$row" id); [[ -z $sid ]] && sid="SW$N_SW"
+    whr=$(sweep_raw_where "$row")
+    st=$(cell "$row" status | tr 'A-Z' 'a-z')
+    case "$st" in
+      unresolved|blocked-no-fetch|labelled-dead|not-applicable)
+        N_SW_EX=$((N_SW_EX + 1))
+        SWEEP_LINES+=("SWEEP id=$sid where=$(chain_disp "$whr") looked=exempt hits=- at=- observed=exempt verdict=exempt")
+        continue ;;
+    esac
+    tokens=()
+    while IFS= read -r tok; do tokens+=("$tok"); done < <(sweep_where_tokens "$whr")
+    if [[ ${#tokens[@]} -eq 0 ]]; then
+      N_SW_INV=$((N_SW_INV + 1))
+      emit_finding SWEEP_LOCATION_ABSENT warn sweeps "id=$sid no location named"
+      SWEEP_LINES+=("SWEEP id=$sid where=$(chain_disp "$whr") looked=unnamed hits=- at=- observed=invalid verdict=invalid")
+      continue
+    fi
+    # Display the location set the gate actually used, not the raw cell: for a
+    # command-form cell that is the extracted token list.
+    whr=$(printf '%s,' "${tokens[@]}"); whr=${whr%,}
+    have_local=0 have_nonlocal=0 have_sid=0 have_junk=0
+    local_pats=(); sid_toks=()
+    for tok in "${tokens[@]}"; do
+      cls=$(sweep_token_class "$tok")
+      case "$cls" in
+        local) have_local=1; local_pats+=("$tok") ;;
+        nonlocal) have_nonlocal=1 ;;
+        sourceid) have_sid=1; sid_toks+=("$tok") ;;
+        *) have_junk=1 ;;
+      esac
+    done
+    looked=unnamed
+    if [[ $have_local -eq 1 ]]; then looked=local
+    elif [[ $have_sid -eq 1 ]]; then looked=source-ids
+    elif [[ $have_nonlocal -eq 1 ]]; then looked=non-local
+    fi
+    if [[ $have_junk -eq 1 ]]; then
+      N_SW_INV=$((N_SW_INV + 1))
+      emit_finding SWEEP_LOCATION_ABSENT warn sweeps "id=$sid unclassifiable location naming"
+      SWEEP_LINES+=("SWEEP id=$sid where=$(chain_disp "$whr") looked=$looked hits=- at=- observed=invalid verdict=invalid")
+      continue
+    fi
+    refused=0
+    for p in "${local_pats[@]+"${local_pats[@]}"}"; do
+      if ! sweep_path_guarded "$p"; then
+        refused=1
+        emit_finding SWEEP_LOCATION_OUT_OF_CORPUS crit sweeps "id=$sid path=$(chain_disp "$p") refused unopened"
+      fi
+    done
+    for tok in "${sid_toks[@]+"${sid_toks[@]}"}"; do
+      if [[ -z ${SRC_PTR[$tok]+x} ]]; then
+        refused=1
+        emit_finding SWEEP_LOCATION_UNRESOLVED warn sweeps "id=$sid source_id=$tok not in ## Sources"
+      fi
+    done
+    if [[ $refused -eq 1 ]]; then
+      N_SW_REF=$((N_SW_REF + 1))
+      SWEEP_LINES+=("SWEEP id=$sid where=$(chain_disp "$whr") looked=$looked hits=- at=- observed=refused verdict=refused")
+      continue
+    fi
+    if [[ $have_local -eq 1 ]]; then
+      hit_list=()
+      for p in "${local_pats[@]+"${local_pats[@]}"}"; do
+        while IFS= read -r m; do hit_list+=("$m"); done < <(sweep_glob_matches "$p")
+      done
+      hits=${#hit_list[@]}
+      first=-
+      [[ $hits -gt 0 ]] && first=${hit_list[0]}
+      if [[ $hits -gt 0 ]]; then
+        N_SW_HIT=$((N_SW_HIT + 1))
+        listed=''
+        for ((i2 = 0; i2 < hits && i2 < 5; i2++)); do listed+="${hit_list[$i2]} "; done
+        emit_finding SWEEP_CLAIM_FALSE warn sweeps "id=$sid where=$(chain_disp "$whr") hits=$hits first=$first listed=${listed% }"
+        SWEEP_LINES+=("SWEEP id=$sid where=$(chain_disp "$whr") looked=local hits=$hits at=$first observed=hit verdict=mismatch")
+      else
+        N_SW_VER=$((N_SW_VER + 1))
+        SWEEP_LINES+=("SWEEP id=$sid where=$(chain_disp "$whr") looked=local hits=0 at=- observed=verified verdict=match")
+      fi
+      continue
+    fi
+    N_SW_EX=$((N_SW_EX + 1))
+    SWEEP_LINES+=("SWEEP id=$sid where=$(chain_disp "$whr") looked=$looked hits=- at=- observed=exempt verdict=exempt")
+  done
+
+  printf 'research-gate %s — ts=%s — mode=sweeps — record=%s\n' "$VERSION" "$TS_UTC" "$record"
+  for l in "${SWEEP_LINES[@]+"${SWEEP_LINES[@]}"}"; do printf '%s\n' "$l"; done
+  for l in "${REJECTION_LINES[@]+"${REJECTION_LINES[@]}"}"; do printf '%s\n' "$l"; done
+  for l in "${FINDING_LINES[@]+"${FINDING_LINES[@]}"}"; do printf '%s\n' "$l"; done
+  if [[ $((N_SW_VER + N_SW_EX)) -ne $N_SW || $N_REJ_OK -ne $N_REJ ]]; then ROLL=DRIFT; fi
+  printf 'VERIFIED_SWEEPS=%d/%d REJECTIONS_OK=%d/%d\n' "$N_SW_VER" "$N_SW" "$N_REJ_OK" "$N_REJ"
+  printf 'RESEARCH_GATE: %s (sweeps=%d verified=%d exempt=%d hit=%d refused=%d invalid=%d rejections=%d rejections-ok=%d findings=%d drift=%d)\n' \
+    "$ROLL" "$N_SW" "$N_SW_VER" "$N_SW_EX" "$N_SW_HIT" "$N_SW_REF" "$N_SW_INV" "$N_REJ" "$N_REJ_OK" "$N_FINDINGS" "$N_DRIFT"
+
+  [[ $ROLL == CLEAN ]] && return 0
+  return 1
+}
+
 run_selftest() {
   local cases=0 failures=0
   WORK=$(mktemp -d "${TMPDIR:-/tmp}/chousa-research-gate-selftest.XXXXXX") \
@@ -1411,6 +1784,32 @@ EOF
     else
       printf 'FAIL-case %-28s exit=%d want=%d verdicts=%d hops=%d token=%s\n' \
         "$name" "$rc" "$want_rc" "$nverdict" "$nrh" "${want[*]-}"
+      printf '%s\n' "$out" | sed 's/^/    | /'
+      failures=$((failures + 1))
+    fi
+  }
+
+  # Sweeps-mode case runner: same fresh-process discipline as tchain, plus one
+  # VERIFIED_SWEEPS…REJECTIONS_OK summary expected per run.
+  tsweeps() {
+    local name=$1 want_rc=$2
+    shift 2
+    local -a want=("$@")
+    local tok rc=0 out nverdict nsum ok=1
+    cases=$((cases + 1))
+    out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+      CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+      bash "$SELF" verify-sweeps "$WORK/$name.md" 2>&1) || rc=$?
+    nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
+    nsum=$(grep -c '^VERIFIED_SWEEPS=.*REJECTIONS_OK=' <<<"$out" || true)
+    for tok in "${want[@]+"${want[@]}"}"; do
+      [[ $out == *"$tok"* ]] || ok=0
+    done
+    if [[ $rc -eq $want_rc && $nverdict -eq 1 && $nsum -eq 1 && $ok -eq 1 ]]; then
+      printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" "$name" "$rc"
+    else
+      printf 'FAIL-case %-28s exit=%d want=%d verdicts=%d sums=%d token=%s\n' \
+        "$name" "$rc" "$want_rc" "$nverdict" "$nsum" "${want[*]-}"
       printf '%s\n' "$out" | sed 's/^/    | /'
       failures=$((failures + 1))
     fi
@@ -2071,6 +2470,184 @@ EOF
     'nearest_line=1' 'nearest_line=4' 'nearest_line=3' \
     'hops=3 verified=0 exempt=0 anchor-missing=3 refused=0 invalid=0 findings=3 drift=3'
 
+  # Round-5 sweeps cases. The parked target lib/planted-ghost.md is created here,
+  # after every r1-r4 case has already run, so the four earlier suites are
+  # untouched by it; the empty sweeps name lib/ghost*.md, which every case
+  # keeps empty.
+  printf 'planted material\n' >"$WORK/lib/planted-ghost.md"
+
+  write_rec sweeps-pass <<'EOF'
+# research-record v1
+<!-- chousa-record: v1 -->
+## Meta
+| key | value |
+|---|---|
+| window | loopback |
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | lib/primary.md:1 |
+## Sweeps
+| id | claim_id | where | status |
+|---|---|---|---|
+| SW1 | N1 | lib/ghost*.md | swept |
+| SW2 | N2 | https://example.invalid/archive | swept |
+| SW3 | N3 | S1 | swept |
+| SW4 | N4 | | blocked-no-fetch |
+## Negatives
+| id | text | sweep | status |
+|---|---|---|---|
+| N1 | no fx-only ghost source | lib/ghost*.md | swept |
+| N2 | no upstream dictionary attestation | https://example.invalid/ | blocked-no-fetch |
+| N3 | no counterexample inside the primary | S1 | swept |
+## Rejections
+| id | ref | reason | flip |
+|---|---|---|---|
+| R1 | noise/chat-export-sources.md | UI chrome is not a primary source | a primary attestation in that file would flip this |
+EOF
+  tsweeps sweeps-pass 0 \
+    'RESEARCH_GATE: CLEAN' \
+    'VERIFIED_SWEEPS=1/4 REJECTIONS_OK=1/1' \
+    'SWEEP id=SW1 where=lib/ghost*.md looked=local hits=0 at=- observed=verified verdict=match' \
+    'SWEEP id=SW2 where=https://example.invalid/archive looked=non-local hits=- at=- observed=exempt verdict=exempt' \
+    'SWEEP id=SW3 where=S1 looked=source-ids hits=- at=- observed=exempt verdict=exempt' \
+    'SWEEP id=SW4 where=- looked=exempt hits=- at=- observed=exempt verdict=exempt' \
+    'REJECTION id=R1 ref=noise/chat-export-sources.md reason=present flip=present observed=complete verdict=match' \
+    'sweeps=4 verified=1 exempt=3 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=1 findings=0 drift=0'
+
+  write_rec sweeps-fail-planted-hit <<'EOF'
+# research-record v1
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | lib/primary.md:1 |
+## Sweeps
+| id | claim_id | where | status |
+|---|---|---|---|
+| SW1 | N1 | lib/planted*.md | swept |
+## Rejections
+| id | ref | reason | flip |
+|---|---|---|---|
+| R1 | (none) | no source was rejected | a source row appearing would flip this |
+EOF
+  tsweeps sweeps-fail-planted-hit 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING SWEEP_CLAIM_FALSE severity=warn' \
+    'first=lib/planted-ghost.md' \
+    'SWEEP id=SW1 where=lib/planted*.md looked=local hits=1 at=lib/planted-ghost.md observed=hit verdict=mismatch' \
+    'VERIFIED_SWEEPS=0/1 REJECTIONS_OK=1/1'
+
+  write_rec sweeps-fail-rejection-incomplete <<'EOF'
+# research-record v1
+## Rejections
+| id | ref | reason | flip |
+|---|---|---|---|
+| R1 | noise/a.md | reason recorded here | |
+| R2 | noise/b.md | | a fresh attestation would flip this |
+EOF
+  tsweeps sweeps-fail-rejection-incomplete 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING SWEEP_REJECTION_INCOMPLETE severity=warn' \
+    'missing=flip' 'missing=reason' \
+    'REJECTION id=R1 ref=noise/a.md reason=present flip=absent observed=incomplete verdict=mismatch' \
+    'REJECTION id=R2 ref=noise/b.md reason=absent flip=present observed=incomplete verdict=mismatch' \
+    'VERIFIED_SWEEPS=0/0 REJECTIONS_OK=0/2'
+
+  write_rec sweeps-fail-unnamed <<'EOF'
+# research-record v1
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | lib/primary.md:1 |
+## Sweeps
+| id | claim_id | where | status |
+|---|---|---|---|
+| SW1 | N1 | | swept |
+## Rejections
+| id | ref | reason | flip |
+|---|---|---|---|
+| R1 | (none) | no source was rejected | a source row appearing would flip this |
+EOF
+  tsweeps sweeps-fail-unnamed 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING SWEEP_LOCATION_ABSENT severity=warn' \
+    'SWEEP id=SW1 where=- looked=unnamed hits=- at=- observed=invalid verdict=invalid' \
+    'VERIFIED_SWEEPS=0/1 REJECTIONS_OK=1/1'
+
+  printf '# research-record v1\n## Sweeps\n| id | claim_id | where |\n|---|---|---|\n| SW1 | N1 | ../%s |\n## Rejections\n| id | ref | reason | flip |\n|---|---|---|---|\n| R1 | (none) | no source was rejected | a source row appearing would flip this |\n' \
+    "$(basename "$OUTSIDE_FILE")" >"$WORK/sweeps-fail-out-of-corpus.md"
+  tsweeps sweeps-fail-out-of-corpus 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING SWEEP_LOCATION_OUT_OF_CORPUS severity=crit' \
+    'observed=refused verdict=refused' 'VERIFIED_SWEEPS=0/1 REJECTIONS_OK=1/1'
+
+  write_rec sweeps-fail-unresolved-id <<'EOF'
+# research-record v1
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | lib/primary.md:1 |
+## Sweeps
+| id | claim_id | where |
+|---|---|---|
+| SW1 | N1 | S7 |
+## Rejections
+| id | ref | reason | flip |
+|---|---|---|---|
+| R1 | (none) | no source was rejected | a source row appearing would flip this |
+EOF
+  tsweeps sweeps-fail-unresolved-id 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING SWEEP_LOCATION_UNRESOLVED severity=warn' \
+    'source_id=S7 not in ## Sources' \
+    'SWEEP id=SW1 where=S7 looked=source-ids hits=- at=- observed=refused verdict=refused' \
+    'VERIFIED_SWEEPS=0/1 REJECTIONS_OK=1/1'
+
+  write_rec sweeps-fail-counting <<'EOF'
+# research-record v1
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | lib/primary.md:1 |
+## Sweeps
+| id | claim_id | where | status |
+|---|---|---|---|
+| SW1 | N1 | lib/ghost*.md | swept |
+| SW2 | N2 | lib/planted*.md | swept |
+| SW3 | N3 | https://example.invalid/ | swept |
+| SW4 | N4 | S1 | swept |
+| SW5 | N5 | | swept |
+## Rejections
+| id | ref | reason | flip |
+|---|---|---|---|
+| R1 | (none) | no source was rejected | a new source row would flip this |
+| R2 | (none) | no source was rejected | |
+| R3 | (none) | | a new source row would flip this |
+EOF
+  tsweeps sweeps-fail-counting 1 \
+    'VERIFIED_SWEEPS=1/5 REJECTIONS_OK=1/3' \
+    'sweeps=5 verified=1 exempt=2 hit=1 refused=0 invalid=1 rejections=3 rejections-ok=1 findings=4 drift=4' \
+    'FINDING SWEEP_CLAIM_FALSE' 'FINDING SWEEP_LOCATION_ABSENT' \
+    'FINDING SWEEP_REJECTION_INCOMPLETE'
+
+  write_rec sweeps-pass-cell-command <<'EOF'
+# research-record v1
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | lib/primary.md:1 |
+## Negatives
+| id | text | sweep | status |
+|---|---|---|---|
+| N1 | no fx-only ghost source | `test ! -f lib/ghost.md` | swept |
+## Rejections
+| id | ref | reason | flip |
+|---|---|---|---|
+| R1 | (none) | no source was rejected | a new source row would flip this |
+EOF
+  tsweeps sweeps-pass-cell-command 0 \
+    'RESEARCH_GATE: CLEAN' \
+    'SWEEP id=N1 where=lib/ghost.md looked=local hits=0 at=- observed=verified verdict=match' \
+    'VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1'
+
+  tsetup sweeps-no-path 2 verify-sweeps
+  tsetup sweeps-missing-file 2 verify-sweeps "$WORK/no-such-record.md"
+
   if [[ $failures -eq 0 ]]; then
     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases)\n' "$cases"
     exit 0
@@ -2086,6 +2663,7 @@ while [[ $# -gt 0 ]]; do
     verify) MODE=verify; shift ;;
     verify-claims) MODE=claims; shift ;;
     verify-chain) MODE=chain; shift ;;
+    verify-sweeps) MODE=sweeps; shift ;;
     --record)
       [[ $# -ge 2 ]] || die_usage "--record needs PATH"
       RECORD_ARG=$2; shift 2 ;;
@@ -2113,6 +2691,10 @@ case "$MODE" in
   chain)
     CHAIN_PATH=${RECORD_ARG:-${CHOUSA_RECORD:-}}
     verify_chain "$CHAIN_PATH"
+    ;;
+  sweeps)
+    SWEEPS_PATH=${RECORD_ARG:-${CHOUSA_RECORD:-}}
+    verify_sweeps "$SWEEPS_PATH"
     ;;
   *) die_usage "unknown mode: $MODE" ;;
 esac
