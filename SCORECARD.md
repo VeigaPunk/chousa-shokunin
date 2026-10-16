@@ -199,3 +199,40 @@ kept rejections and negative sweeps become verdict-bearing (`verify-sweeps`:
 each rejection cites reason + flip-condition; each sweep names where it
 looked, with local emptiness checkable).
 
+## Round 5 verdict — 2026-10-16 (goal wave; evidence commit `e7ab39a`)
+
+Selected axis: **coverage** — the last r1 structural axis: kept rejections and
+negative sweeps become verdict-bearing. Wave: one 32-seat flash call, 27/27
+reports. Report: `.ufo/round-5/chousa-goalwave.md`.
+
+**Before** (gate `6b83705b…`): rejections and sweeps existed structurally — a
+rejection with no flip-condition passed; a sweep naming nowhere (or a false
+emptiness) passed.
+
+**After** (gate `55adb92d…`, selftest 54 = +10, cases 1-44 byte-identical;
+parent acceptance 2026-10-16T02:00Z): `verify-sweeps <record> --root ..`
+requires every kept rejection to carry a non-empty reason AND flip-condition
+(`SWEEP_REJECTION_INCOMPLETE` on miss), and every sweep to name where it
+looked: local path sets are re-run for emptiness (any hit =
+`SWEEP_CLAIM_FALSE` naming the hit; zero hits = verified), non-local namings
+exempt-but-counted (the unresolved-hop idiom), unnamed = `SWEEP_LOCATION_ABSENT`,
+boundary escapes refused unopened. Fixture: `VERIFIED_SWEEPS=1/2
+REJECTIONS_OK=3/3` CLEAN; broken control DRIFT naming both classes (incomplete
+rejection + a planted hit listed by path). claims 17/17 and chain 17/22 held
+CLEAN; selftest 54/54 x2.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | all four r1 structural axes are now verdict-bearing (structure, claims, chains, rejections+sweeps); every record element that asserts something now gets checked against something. |
+| depth | **improved** | `corpus/knowledge/sweeps-rejections-r5.md`: flip-condition semantics, the local-emptiness re-check, the exempt class, and the named limits (vacuous flip-conditions, narrow-sweep triviality — as exercised by the adversarial seats). |
+| operability | **improved** | selftest 44 → 54 (+10, 1-44 byte-identical); five modes under one boundary + exit contract. |
+| freshness | **unchanged** | receipts at the new SHA. |
+| calibration | **unchanged** | the critic's vacuous-flip and narrow-sweep classes are documented limits, not silently closed. |
+| adjacency | **unchanged** | zero network; corpus read-only; quota held. |
+
+Admission: **ADMIT** (coverage/depth/operability improved, none harmed). No
+scalar score. Learning trends: expansion/quality **improved**, discernment
+**unchanged**. Round 6 registered: composition — a `verify-all` deep mode
+running all four checks as one verdict, plus the fleet-ledger/manifest step
+that records a record's full verification state.
+

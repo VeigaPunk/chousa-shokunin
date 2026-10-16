@@ -367,3 +367,26 @@ parent integrated under the chousa lane identity.
 
 Round report: `.ufo/round-4/chousa-goalwave.md`.
 
+## Round 5 — verify-sweeps (goal wave)
+
+**Round 5 — goal-wave admission (2026-10-16).** Motivating evidence: the last
+unmeasured r1 structural axis (rejections + sweeps structural only). Landed
+(evidence commit `e7ab39a`): gate `55adb92d…` with `verify-sweeps` (selftest 54
+= +10, 1-44 byte-identical) — rejections need reason + flip-condition; local
+sweeps re-run for emptiness with planted hits named by path; exempt-but-counted
+non-local class; fixture CLEAN (1/2 verified, 3/3 rejections), broken control
+DRIFT naming both classes. claims 17/17 and chain 17/22 held. Wave: 32-seat
+flash call, 27/27.
+
+**Verdicts.** ADMIT: coverage/depth/operability **improved**; freshness/
+calibration/adjacency **unchanged**; none harmed. Named limits (critic seats):
+vacuous flip-conditions, narrow-sweep triviality — documented in the note.
+Round 6 registered: `verify-all` composition (one record, one deep verdict
+across all four modes) + the record's verification state lands in the lane's
+manifest. Receipt identity remains OPEN (operator side).
+
+**Boundaries held.** Zero network; corpus read-only; seats committed nothing;
+parent integrated under the chousa lane identity.
+
+Round report: `.ufo/round-5/chousa-goalwave.md`.
+
