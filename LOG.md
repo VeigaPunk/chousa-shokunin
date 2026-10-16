@@ -473,3 +473,22 @@ nothing; parent integrated under the chousa lane identity.
 
 Round report: `.ufo/round-9/chousa-goalwave.md`.
 
+## Round 10 — negative controls + limit ledger (goal wave)
+
+**Round 10 — goal-wave admission (2026-10-16).** Motivating evidence: no
+archive-scale controls; no limit ledger. Landed (evidence commit
+`LOGPEND10`): six controls under corpus/fixtures/archives-r9/controls/, each
+DRIFTing verify-all with exactly one class-named finding (parent re-ran all
+six); exempt audit clean; `corpus/knowledge/hardening-r10.md` = the r2-r9
+limit-disposition ledger. Gate byte-unchanged. Wave: 32-seat flash call, 23/23.
+
+**Verdicts.** ADMIT: calibration/coverage/depth **improved**; operability/
+freshness/adjacency **unchanged**; none harmed. Named non-coverage:
+RECORD_SCHEMA_INVALID fires with companions (documented). Round 11 registered:
+the chousa capstone audit. Receipt identity remains OPEN (operator).
+
+**Boundaries held.** Zero network; corpus read-only; no gate change; seats
+committed nothing; parent integrated under the chousa lane identity.
+
+Round report: `.ufo/round-10/chousa-goalwave.md`.
+

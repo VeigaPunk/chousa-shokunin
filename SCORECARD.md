@@ -385,3 +385,40 @@ scalar score. Learning trends: expansion/quality **improved**, discernment
 archive scale (broken archive records per defect class), the exempt-hop audit,
 and disposition of every r2-r9 named limit.
 
+## Round 10 verdict — 2026-10-16 (goal wave; evidence commit `5f99fa3`)
+
+Selected axis: **hardening/calibration** — archive-scale negative controls +
+the final limit-disposition ledger (the round-11 audit's starting map).
+Wave: one 32-seat flash call, 23/23 reports. Report:
+`.ufo/round-10/chousa-goalwave.md`.
+
+**Before**: defect classes were covered only by small fixtures; the archive
+records' exempt items were unaudited; rounds 2-9's named limits had no single
+disposition ledger.
+
+**After** (parent acceptance 2026-10-16T07:20Z): six archive-scale controls —
+one per class (span-not-found, anchor-missing, rejection-missing-flip,
+false-sweep, dangling-ref, structure-break), each a minimal scripted byte-edit
+of its clean record — every one DRIFTs verify-all with exactly ONE finding
+naming its class (parent re-ran all six verbatim); the clean records stay
+CLEAN; the exempt audit justified every exemption against source bytes;
+`corpus/knowledge/hardening-r10.md` carries the complete r2-r9 limit
+disposition ledger. Gate byte-unchanged (the round's standing rule held).
+Named non-coverage: `RECORD_SCHEMA_INVALID` cannot fire alone (it drags
+companion structural findings) — documented in the controls README.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| calibration | **improved** | the tool's trust is now earned at archive scale: six classes, one finding each, parent-reproduced; every r2-r9 limit dispositioned in one ledger. |
+| coverage | **improved** | negative controls at the scale the lane actually verifies. |
+| depth | **improved** | `hardening-r10.md` = the audit map; the schema-invalid non-coverage documented. |
+| operability | **unchanged** | selftest 85/85; gate unchanged; `GATE_DRIFT: none` held. |
+| freshness | **unchanged** | receipts at the current SHA. |
+| adjacency | **unchanged** | zero network; corpus read-only; quota held. |
+
+Admission: **ADMIT** (calibration/coverage/depth improved, none harmed). No
+scalar score. Learning trends: expansion/quality **improved**, discernment
+**unchanged**. Round 11 registered (capstone): the chousa deep audit —
+evidence chains, receipt integrity, verdict consistency, limit-ledger
+reconciliation, SHONEN readiness, and re-execution of the load-bearing claims.
+
