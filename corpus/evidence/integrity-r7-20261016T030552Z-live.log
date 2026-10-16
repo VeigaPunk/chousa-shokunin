@@ -1,0 +1,156 @@
+# chousa-shokunin round-7 receipt — live battery — before-state, cross-round no-harm, manifest, strace
+# utc: 2026-10-16T03:05:52Z
+# seat: receipts-writer | lane: chousa-shokunin | round: 7 (reference integrity inside verify-all)
+# lane head: 4835426432f9a2f8cf9516400fec8340ec0bf772 | gate: tools/research-gate.sh sha256=3ba718bf9207eed70c66b8c849ac43b44c76890785e1576eeb5e795a604166b2
+# before-state gate: git show 4835426:tools/research-gate.sh sha256=0c3d51ed1a131146ac33eebf24eefe5830ecaaf3e59a1b03e6c91cd8debfd5f8 (round-6 revision)
+# fixtures:
+#   4310ce86aa45f3d7d4b7d04c4ebf480a7b59748510ab0f132c5411dd8acd1b1b  corpus/fixtures/integrity-r7.md
+#   fd4e213f03faf9a76bbca3896b11fe6530878e727fefb974043ffb4a9f9a05b8  corpus/fixtures/integrity-r7-broken.md
+#   8e83b23d04e92961f7781e556d600b94a313e083c79d32a517fcb16ec17dabb3  corpus/fixtures/integrity-r7.claims.jsonl
+#   8e83b23d04e92961f7781e556d600b94a313e083c79d32a517fcb16ec17dabb3  corpus/fixtures/integrity-r7-broken.claims.jsonl
+#   2ef59df319d78072a8fa15d2cca052ca0520c22f4083dcaa3f2343d3bdfc93a2  corpus/fixtures/integrity-r7.README.md
+# method: machine-cut by /home/vgpnk/.cache/chousa-r7-evidence/cut-receipts.sh; stdout verbatim (the gate prints its own ts=); local files only; no network
+# scope: round-6 before-state, landed live runs and regression, r1 archive observable, manifest appends, zero-network strace
+
+## before-state at the round-6 gate (git show 4835426:tools/research-gate.sh)
+0c3d51ed1a131146ac33eebf24eefe5830ecaaf3e59a1b03e6c91cd8debfd5f8  /home/vgpnk/.cache/chousa-r7-evidence/gate-r6.sh
+
+## command: bash gate-r6.sh verify-all corpus/fixtures/integrity-r7.md --root ..
+exit: 0
+research-gate research-gate-r1 — ts=2026-10-16T03:06:51Z — mode=verify-all — record=corpus/fixtures/integrity-r7.md — claims=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/fixtures/integrity-r7.claims.jsonl — root=..
+SECTION structure state=run verdict=CLEAN findings=0 drift=0
+SECTION claims state=run verdict=CLEAN findings=0 drift=0 tally=VERDICT_BEARING_CLAIMS=3/3
+SECTION chain state=run verdict=CLEAN findings=0 drift=0 tally=RESOLVED_HOPS=4/4
+SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=2/3 REJECTIONS_OK=2/2
+VERIFY_ALL sections=4 run=4 absent=0 drift-sections=0 findings=0 drift=0
+RESEARCH_GATE: CLEAN (sections=4 run=4 absent=0 drift-sections=0 findings=0 drift=0)
+
+## command: bash gate-r6.sh verify-all corpus/fixtures/integrity-r7-broken.md --root ..
+exit: 0
+research-gate research-gate-r1 — ts=2026-10-16T03:06:54Z — mode=verify-all — record=corpus/fixtures/integrity-r7-broken.md — claims=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/fixtures/integrity-r7-broken.claims.jsonl — root=..
+SECTION structure state=run verdict=CLEAN findings=0 drift=0
+SECTION claims state=run verdict=CLEAN findings=0 drift=0 tally=VERDICT_BEARING_CLAIMS=3/3
+SECTION chain state=run verdict=CLEAN findings=0 drift=0 tally=RESOLVED_HOPS=4/4
+SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=2/3 REJECTIONS_OK=2/2
+VERIFY_ALL sections=4 run=4 absent=0 drift-sections=0 findings=0 drift=0
+RESEARCH_GATE: CLEAN (sections=4 run=4 absent=0 drift-sections=0 findings=0 drift=0)
+
+## command: bash gate-r6.sh verify-integrity corpus/fixtures/integrity-r7.md --root ..
+exit: 2
+research-gate: multiple record paths
+usage: research-gate.sh [--selftest] [--help]
+       research-gate.sh verify [--record PATH] [--root PATH]
+       research-gate.sh verify-claims [CLAIMS] [--root PATH]
+       research-gate.sh verify-chain [RECORD] [--root PATH]
+       research-gate.sh verify-sweeps [RECORD] [--root PATH]
+       research-gate.sh verify-all [RECORD] [--claims PATH] [--json PATH]
+                      [--root PATH]
+       research-gate.sh [--record PATH] [--root PATH]
+
+  RECORD via --record, positional, or CHOUSA_RECORD.
+  CLAIMS via positional or CHOUSA_CLAIMS.
+  Claims file: one JSON object per claim line:
+    {"id":…,"source":…,"span":…,"expect":supported|contradicted|unsupported
+     [,"marker":…]}
+  Spans must appear verbatim in sources at token boundaries; sources are
+  local files only.
+  Chain mode: each hop with status=resolved must cite a source (a source id
+  from ## Sources, or a local path) plus an anchor — an anchor_kind column
+  (heading|quote|line) with an anchor column, or a to fragment
+  path#kind:text (bare #text = heading). The anchor must appear in the cited
+  source: headings by text, quotes verbatim at token boundaries, lines as
+  whole lines.
+  Unresolved/marked hops stay exempt but counted. Sources obey the same
+  boundary as verify-claims (local, canonicalized, never fetched).
+  A token boundary is a file/line edge, ASCII whitespace or ASCII
+  punctuation at the match's outer edges; a word-internal hyphen or
+  apostrophe is not a boundary, so a truncated quote (mid-word), a padded
+  extra word running into a longer token, or a possessive join is a miss.
+  Multi-line spans are delimited by their first and last character only.
+  Sweeps mode: every ## Rejections row needs a non-empty reason and a
+  non-empty flip-condition (flip/flip_condition column, or any column whose
+  name contains flip/falsif/reversal). Negative sweeps must name where they
+  looked (a where/looked_at column, or a clean sweep cell): local path sets
+  (comma-separated paths/globs) are re-run — any hit is SWEEP_CLAIM_FALSE
+  naming the hit, zero hits verify; URLs, external:/web:/session: names and
+  declared source ids count as exempt; a sweep naming nowhere drifts.
+  Summary: VERIFIED_SWEEPS=N/M REJECTIONS_OK=K/L.
+  verify-all composes structure + claims + chain + sweeps over ONE input:
+  absent sections are reported absent (never drift by themselves); the
+  composed verdict is DRIFT iff any run section drifts, exit 1. --claims
+  binds a claims file to a record; a record may also name one in a ## Meta
+  row (claims/claims_file/claims-file/claimset); a claims JSONL passed as
+  the input is its own claims surface. --json PATH appends (never rewrites)
+  one JSON line recording UTC, record + gate SHA-256, per-section tallies
+  and the composed verdict.
+Verdict: RESEARCH_GATE: CLEAN|DRIFT
+Exit:    0 CLEAN | 1 DRIFT | 2 setup/usage
+
+## cross-round no-harm: solo modes at the landed gate vs the round-6 gate (stdout ts-normalized, rc compared)
+claims   verify-claims  corpus/fixtures/claims-r2.jsonl                      IDENTICAL (rc=0)
+chain    verify-chain   corpus/fixtures/chain-r3.md                          IDENTICAL (rc=0)
+chainb   verify-chain   corpus/fixtures/chain-r3-broken.md                   IDENTICAL (rc=1)
+sweeps   verify-sweeps  corpus/fixtures/sweeps-r5.md                         IDENTICAL (rc=0)
+sweepsb  verify-sweeps  corpus/fixtures/sweeps-r5-broken.md                  IDENTICAL (rc=1)
+struct   verify         corpus/fixtures/full-r6.md                           IDENTICAL (rc=0)
+archA    verify         ../research/deep-research-2026-09-28/A-shokunin-tradition.md IDENTICAL (rc=1)
+archB    verify         ../research/deep-research-2026-09-28/B-multiagent-knowledge.md IDENTICAL (rc=1)
+archC    verify         ../research/deep-research-2026-09-28/C-rank-taxonomy.md IDENTICAL (rc=1)
+
+VERDICT_BEARING_EXPORTS=3/3
+
+## composition regression: the round-6 trio under the landed gate
+
+## command: bash tools/research-gate.sh verify-all corpus/fixtures/full-r6.md --root ..
+exit: 0
+SECTION structure state=run verdict=CLEAN findings=0 drift=0
+SECTION claims state=run verdict=CLEAN findings=0 drift=0 tally=VERDICT_BEARING_CLAIMS=3/3
+SECTION chain state=run verdict=CLEAN findings=0 drift=0 tally=RESOLVED_HOPS=3/3
+SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/2 REJECTIONS_OK=2/2
+SECTION integrity state=run verdict=CLEAN findings=0 drift=0 tally=INTEGRITY refs=13 resolved=12 unresolved=0
+VERIFY_ALL sections=5 run=5 absent=0 drift-sections=0 findings=0 drift=0
+RESEARCH_GATE: CLEAN (sections=5 run=5 absent=0 drift-sections=0 findings=0 drift=0)
+
+## command: bash tools/research-gate.sh verify-all corpus/fixtures/full-r6-fullb.md --root ..
+exit: 1
+SECTION structure state=run verdict=CLEAN findings=0 drift=0
+SECTION claims state=run verdict=CLEAN findings=0 drift=0 tally=VERDICT_BEARING_CLAIMS=3/3
+SECTION chain state=run verdict=DRIFT findings=1 drift=1 tally=RESOLVED_HOPS=2/3
+SECTION sweeps state=run verdict=DRIFT findings=1 drift=1 tally=VERIFIED_SWEEPS=1/2 REJECTIONS_OK=1/2
+SECTION integrity state=run verdict=CLEAN findings=0 drift=0 tally=INTEGRITY refs=13 resolved=12 unresolved=0
+VERIFY_ALL sections=5 run=5 absent=0 drift-sections=2 findings=2 drift=2
+RESEARCH_GATE: DRIFT (sections=5 run=5 absent=0 drift-sections=2 findings=2 drift=2)
+
+## command: bash tools/research-gate.sh verify-all corpus/fixtures/full-r6-absent.md --root ..
+exit: 0
+SECTION structure state=run verdict=CLEAN findings=0 drift=0
+SECTION claims state=absent
+SECTION chain state=run verdict=CLEAN findings=0 drift=0 tally=RESOLVED_HOPS=1/1
+SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=0/0 REJECTIONS_OK=1/1
+SECTION integrity state=run verdict=CLEAN findings=0 drift=0 tally=INTEGRITY refs=2 resolved=2 unresolved=0
+VERIFY_ALL sections=5 run=4 absent=1 drift-sections=0 findings=0 drift=0
+RESEARCH_GATE: CLEAN (sections=5 run=4 absent=1 drift-sections=0 findings=0 drift=0)
+
+## the lane manifest
+before: 3 lines, sha256 2ed28f9ffd772ab9b67690a16ae0127e0ac06b48ec0d1a14c83119c117810ea9
+## command: bash tools/research-gate.sh verify-all corpus/fixtures/integrity-r7.md --root .. --json corpus/evidence/verify-all-manifest.jsonl
+exit: 0
+## command: bash tools/research-gate.sh verify-all corpus/fixtures/integrity-r7-broken.md --root .. --json corpus/evidence/verify-all-manifest.jsonl
+exit: 1
+after: 5 lines; first 3 lines preserved byte-for-byte: YES
+{"schema":"chousa-verify-all/v1","ts":"2026-10-16T03:07:26Z","record":"corpus/fixtures/integrity-r7.md","record_sha256":"4310ce86aa45f3d7d4b7d04c4ebf480a7b59748510ab0f132c5411dd8acd1b1b","gate_sha256":"3ba718bf9207eed70c66b8c849ac43b44c76890785e1576eeb5e795a604166b2","sections":[{"name":"structure","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"findings":0,"drift":0,"questions":1,"sources":4,"chains":4,"claims":3,"negatives":2,"rejections":2,"approvals":1}},{"name":"claims","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"claims":3,"supported":3,"contradicted":0,"unsupported":0,"mismatched":0,"unproven":0,"refused":0,"invalid":0,"findings":0,"drift":0},"native":"VERDICT_BEARING_CLAIMS=3/3"},{"name":"chain","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"hops":4,"verified":4,"exempt":0,"anchor-missing":0,"refused":0,"invalid":0,"findings":0,"drift":0},"native":"RESOLVED_HOPS=4/4"},{"name":"sweeps","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"sweeps":3,"verified":2,"exempt":1,"hit":0,"refused":0,"invalid":0,"rejections":2,"rejections-ok":2,"findings":0,"drift":0},"native":"VERIFIED_SWEEPS=2/3 REJECTIONS_OK=2/2"},{"name":"integrity","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"refs":16,"resolved":15,"unresolved":0,"exempt":1,"findings":0,"drift":0},"native":"INTEGRITY refs=16 resolved=15 unresolved=0"}],"verdict":"CLEAN","sections_run":5,"sections_absent":0,"drift_sections":0}
+{"schema":"chousa-verify-all/v1","ts":"2026-10-16T03:07:31Z","record":"corpus/fixtures/integrity-r7-broken.md","record_sha256":"fd4e213f03faf9a76bbca3896b11fe6530878e727fefb974043ffb4a9f9a05b8","gate_sha256":"3ba718bf9207eed70c66b8c849ac43b44c76890785e1576eeb5e795a604166b2","sections":[{"name":"structure","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"findings":0,"drift":0,"questions":1,"sources":4,"chains":4,"claims":3,"negatives":2,"rejections":2,"approvals":1}},{"name":"claims","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"claims":3,"supported":3,"contradicted":0,"unsupported":0,"mismatched":0,"unproven":0,"refused":0,"invalid":0,"findings":0,"drift":0},"native":"VERDICT_BEARING_CLAIMS=3/3"},{"name":"chain","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"hops":4,"verified":4,"exempt":0,"anchor-missing":0,"refused":0,"invalid":0,"findings":0,"drift":0},"native":"RESOLVED_HOPS=4/4"},{"name":"sweeps","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"sweeps":3,"verified":2,"exempt":1,"hit":0,"refused":0,"invalid":0,"rejections":2,"rejections-ok":2,"findings":0,"drift":0},"native":"VERIFIED_SWEEPS=2/3 REJECTIONS_OK=2/2"},{"name":"integrity","state":"run","verdict":"DRIFT","findings":2,"drift":2,"tallies":{"refs":16,"resolved":13,"unresolved":2,"exempt":1,"findings":2,"drift":2},"native":"INTEGRITY refs=16 resolved=13 unresolved=2"}],"verdict":"DRIFT","sections_run":5,"sections_absent":0,"drift_sections":1}
+
+line ok: record=corpus/fixtures/integrity-r7.md verdict=CLEAN sections_run=5 integrity=run/CLEAN
+line ok: record=corpus/fixtures/integrity-r7-broken.md verdict=DRIFT sections_run=5 integrity=run/DRIFT
+manifest check: OK (5 lines, prefix preserved, both appends parse and pin shas)
+
+## zero-network strace (one composed run)
+command: strace -f -e trace=network -o strace-live.txt bash tools/research-gate.sh verify-all corpus/fixtures/integrity-r7.md --root ..
+trace lines: 8991; network syscall lines: 0 (want 0)
+composed run exit: 0
+RESEARCH_GATE: CLEAN (sections=5 run=5 absent=0 drift-sections=0 findings=0 drift=0)
+
+## sha stability across the battery
+gate 3ba718bf9207eed70c66b8c849ac43b44c76890785e1576eeb5e795a604166b2 → 3ba718bf9207eed70c66b8c849ac43b44c76890785e1576eeb5e795a604166b2
+fixtures 4310ce86aa45f3d7d4b7d04c4ebf480a7b59748510ab0f132c5411dd8acd1b1b/fd4e213f03faf9a76bbca3896b11fe6530878e727fefb974043ffb4a9f9a05b8 → 4310ce86aa45f3d7d4b7d04c4ebf480a7b59748510ab0f132c5411dd8acd1b1b/fd4e213f03faf9a76bbca3896b11fe6530878e727fefb974043ffb4a9f9a05b8

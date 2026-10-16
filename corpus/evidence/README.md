@@ -1,7 +1,9 @@
 # chousa-shokunin — corpus/evidence
 
-Receipts for the chousa moves: round 2 (claim-vs-source verification), round 3
-(chain-hop resolution) and round 4 (token-boundary matching semantics). Each
+Receipts for the chousa moves: rounds 2-7 — claim-vs-source verification
+(round 2), chain-hop resolution (round 3), token-boundary matching semantics
+(round 4), rejection/sweep verification (round 5), verify-all composition
+(round 6), reference integrity (round 7). Each
 receipt is a machine-cut capture of public-CLI runs: UTC stamp, exact command,
 exit code, pinned gate SHA-256, and the verbatim stdout. Local files only — no
 external fetch, no network.
@@ -463,5 +465,111 @@ bash tools/research-gate.sh verify-all corpus/fixtures/full-r6.md --root .. \
   deduplicated, so a replayed line is information, not a rewrite — replay
   handling is not part of this round. How fine-grained the omission reporting
   should be is the named r7 candidate.
+- Receipt identity for this round remains a lane-local log; no `task_…` value
+  is invented and the round-1 receipt blocker stands (operator-side).## Round-7 reference-integrity receipts — stamp 20261016T030552Z
+
+Revision under test: `tools/research-gate.sh` sha256
+`3ba718bf9207eed70c66b8c849ac43b44c76890785e1576eeb5e795a604166b2` (lane HEAD
+`4835426`; the cut script asserts the gate and fixture shas identical before
+and after the whole battery). Before-state gate: the round-6 revision
+`0c3d51ed…`, recoverable from git as `git show 4835426:tools/research-gate.sh`
+→ `0c3d51ed1a131146ac33eebf24eefe5830ecaaf3e59a1b03e6c91cd8debfd5f8`.
+Fixtures: `corpus/fixtures/integrity-r7.md` sha256
+`4310ce86aa45f3d7d4b7d04c4ebf480a7b59748510ab0f132c5411dd8acd1b1b`,
+`integrity-r7-broken.md`
+`fd4e213f03faf9a76bbca3896b11fe6530878e727fefb974043ffb4a9f9a05b8`,
+companions `integrity-r7.claims.jsonl` = `integrity-r7-broken.claims.jsonl`
+`8e83b23d04e92961f7781e556d600b94a313e083c79d32a517fcb16ec17dabb3`; contract
+`corpus/fixtures/integrity-r7.README.md`
+`2ef59df319d78072a8fa15d2cca052ca0520c22f4083dcaa3f2343d3bdfc93a2`.
+
+| Receipt (sha256) | Shows | Key result |
+|---|---|---|
+| `integrity-r7-20261016T030552Z-selftest.log` (`12309c03…`) | full `--selftest`; case-line stability vs the round-6 selftest stdout | `RESEARCH_GATE_SELFTEST: PASS (74 cases)`, exit 0; the first 64 case lines are **byte-identical** to the round-6 receipt (`cmp` YES); new cases 65-74 = `integrity-pass` / `-fail-dangling-claim` / `-fail-dangling-source` / `-fail-dangling-chain-claim` / `-fail-dangling-sweep` / `-exempt-counted` / `-fail-counting` + two setup exits + `all-dangling.md` |
+| `integrity-r7-20261016T030552Z-fixture.log` (`ea0a1a16…`) | inventory, twin delta, independent gate-free checker, reconciliation, positive runs | positive `INTEGRITY refs=16 resolved=15 unresolved=0` CLEAN; composed `SECTION integrity state=run verdict=CLEAN … tally=INTEGRITY refs=16 resolved=15 unresolved=0` and `sections=5 run=5 absent=0 drift-sections=0`, exit 0; twin delta = 5 changed lines (18 diff lines); companion `cmp` identical; the independent checker re-derives all 16 refs and reconciles with the gate (diff EMPTY) |
+| `integrity-r7-20261016T030552Z-broken.log` (`1b2979d8…`) | the two dangling refs, the hole, four single-delta controls | broken `INTEGRITY refs=16 resolved=13 unresolved=2` with exactly two `REF_UNRESOLVED` — `kind=source id=S9 section=chain row=4 cell=from` and `kind=claim id=C9 section=sweeps row=SW3 cell=claim_id`; composed `drift-sections=1 findings=2 drift=2` DRIFT while structure/claims/chain/sweeps stay CLEAN with the positive's tallies (3/3, 4/4, 2/3); all four r1-r6 modes still pass the twin; controls below |
+| `integrity-r7-20261016T030552Z-live.log` (`91a84a6b…`) | before-state, cross-round no-harm, composition regression, archives, manifest, strace | round-6 gate on both fixtures CLEAN `sections=4 run=4` (the hole) and `verify-integrity` absent (usage, exit 2); nine solo-mode pairs (claims/chain/chain-broken/sweeps/sweeps-broken/structure/archives A-C) at r7 vs r6 gate are **byte-identical** after ts normalization with matching rc; `VERDICT_BEARING_EXPORTS=3/3`; manifest 3 → 5 lines, first 3 preserved byte-for-byte, both new lines parse and pin record+gate shas; `strace -f -e trace=network`: 8991 trace lines, **0 network syscalls** |
+
+Before → after in one line: at the round-6 gate both fixtures compose CLEAN
+with four sections — a sweep cell naming an undeclared claim id (`C9`) and a
+hop `from` cell naming an undeclared source id (`S9`) were read by no mode —
+and the landed `integrity` section (the fifth composed section for any record
+with at least one other run section) extracts every cross-section reference
+token and resolves it against the DECLARED rows (Sources ids; Claims and
+Negatives ids; Sweeps ids), so the twin composes DRIFT naming exactly the
+integrity section while the positive composes CLEAN `unresolved=0`, and exempt
+classes (non-local namings; the tokens of an exempt-status row) stay
+exempt-but-counted.
+
+### Negative controls (recorded in the broken receipt)
+
+Each control is a single-delta scratch copy of `integrity-r7.md` (declared
+ephemeral, under `$HOME/.cache/chousa-r7-evidence/ctl/`).
+
+| Control | Delta | Result (exit) |
+|---|---|---|
+| ctl-01 claims-sweep | Claims C1 `sweep` cell → `SW9` (undeclared sweep id) | `REF_UNRESOLVED … kind=sweep id=SW9 section=claims row=C1 cell=sweep`, `refs=17 resolved=15 unresolved=1`, DRIFT (1) |
+| ctl-02 rejection-ref | Rejections R1 `ref` → `S9` (undeclared source id) | `REF_UNRESOLVED … kind=source id=S9 section=rejections row=R1 cell=ref`, `refs=17 resolved=15 unresolved=1`, DRIFT (1) |
+| ctl-03 exempt-dangling | Negatives N2 `sweep` → `SW9`, row status `unresolved` | `REF kind=sweep id=SW9 … observed=exempt verdict=exempt status=unresolved`, `refs=16 resolved=15 unresolved=0`, CLEAN (0) |
+| ctl-04 non-local | Negatives N1 `sweep` → `https://example.invalid/x.md` | `REF kind=location id=https://example.invalid/x.md … observed=exempt verdict=exempt reason=non-local`, `refs=16 resolved=14 unresolved=0`, CLEAN (0) |
+
+### The lane manifest (append point 2)
+
+`corpus/evidence/verify-all-manifest.jsonl` now has 5 lines (sha256
+`9620946f8c2740d28cc908215d4ffd63cd3caabcef7e565cf7189cd799ba54f0`): the three
+round-6 lines are byte-preserved (prefix compare YES) and this cut appended
+two integrity-family lines using the gate's own `--json`:
+
+| line | record | verdict | sections |
+|---:|---|---|---|
+| 4 | `integrity-r7.md` | CLEAN | run=5 absent=0 drift_sections=0; integrity `INTEGRITY refs=16 resolved=15 unresolved=0` |
+| 5 | `integrity-r7-broken.md` | DRIFT | run=5 absent=0 drift_sections=1; integrity `INTEGRITY refs=16 resolved=13 unresolved=2` |
+
+### Re-run recipe
+
+From the lane root, local only. Exit contract: 0 CLEAN, 1 DRIFT, 2 setup/usage.
+
+```bash
+sha256sum tools/research-gate.sh
+#   3ba718bf9207eed70c66b8c849ac43b44c76890785e1576eeb5e795a604166b2
+bash tools/research-gate.sh verify-integrity corpus/fixtures/integrity-r7.md --root ..
+#   expect: INTEGRITY refs=16 resolved=15 unresolved=0; CLEAN, exit 0
+bash tools/research-gate.sh verify-integrity corpus/fixtures/integrity-r7-broken.md --root ..
+#   expect: two REF_UNRESOLVED (S9 chain/from, C9 sweeps/claim_id); DRIFT, exit 1
+bash tools/research-gate.sh verify-all corpus/fixtures/integrity-r7.md --root ..
+#   expect: SECTION integrity tally=INTEGRITY refs=16 resolved=15 unresolved=0;
+#   sections=5 run=5; CLEAN, exit 0
+bash tools/research-gate.sh verify-all corpus/fixtures/integrity-r7-broken.md --root ..
+#   expect: drift-sections=1 findings=2; DRIFT, exit 1
+bash tools/research-gate.sh --selftest
+#   expect: RESEARCH_GATE_SELFTEST: PASS (74 cases), exit 0
+# before-state gate for the hole (round-6 revision, from git):
+bash <(git show 4835426:tools/research-gate.sh) verify-all corpus/fixtures/integrity-r7-broken.md --root ..
+#   expect (pre-move hole): CLEAN sections=4, the dangling refs pass, exit 0
+```
+
+### Notes
+
+- Receipts pin gate revision `3ba718bf…`; a later gate edit supersedes this
+  stamp — re-run the recipe above and re-cut.
+- Scratch for this cut lived at `$HOME/.cache/chousa-r7-evidence/` (cut
+  script, r6-gate snapshot, control copies, `TMPDIR`, strace log, and the
+  receipts-writer independent checker `integcheck.py`); `/tmp` was not
+  required.
+- Cut discipline: the gate revision moved through at least twelve landed shas
+  during the wave (first observed `e9ab5141…`, settled `3ba718bf…`) and the
+  fixture pair was re-shaped mid-wave — its README records that an earlier
+  twin put the source defect behind an exempt hop status, was measured as
+  exempt at the first landed integrity revision, and was re-shaped to
+  non-exempt cells so both dangling ids are verdict-bearing. These receipts
+  were cut only against the settled set.
+- One cosmetic fixture-side observation, not fixed here (not this seat's
+  file): `corpus/fixtures/integrity-r7.README.md:240` carries a stray closing
+  fence after the Re-run block's already-closed fence.
+- The independent checker is
+  `/home/vgpnk/.cache/chousa-r7-evidence/integcheck.py` (scratch, gate-free:
+  re-derives declared ids, token extraction and dispositions from the record
+  bytes); its REF lines reconcile with the gate's on both fixtures
+  (diff EMPTY), and both agree with the fixture README's after-state block.
 - Receipt identity for this round remains a lane-local log; no `task_…` value
   is invented and the round-1 receipt blocker stands (operator-side).

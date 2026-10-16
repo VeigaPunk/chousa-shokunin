@@ -24,7 +24,7 @@
 #   CLAIM_SOURCE_SESSION CLAIM_SOURCE_EPHEMERAL CLAIM_SOURCE_MISSING
 #   CLAIM_SPAN_NOT_FOUND CLAIM_SPAN_UNEXPECTED CONTRADICTION_MARKER_ABSENT
 #   SWEEP_REJECTION_INCOMPLETE SWEEP_LOCATION_ABSENT SWEEP_LOCATION_UNRESOLVED
-#   SWEEP_LOCATION_OUT_OF_CORPUS SWEEP_CLAIM_FALSE
+#   SWEEP_LOCATION_OUT_OF_CORPUS SWEEP_CLAIM_FALSE REF_UNRESOLVED
 #   VERIFY_ALL_CLAIMS_UNRESOLVED VERIFY_ALL_SECTION_UNAVAILABLE
 #
 # Claims mode: verify-claims <claims-file> checks each claim's verbatim span
@@ -98,6 +98,35 @@
 # words ignored — so an r1-style `test ! -f lib/ghost.md` cell names
 # lib/ghost.md. Whitespace-free values are split on commas/semicolons only.
 #
+# Integrity mode: verify-integrity <record> resolves every cross-section
+# reference against the rows that declare it — the r6 hole where a sweep cell
+# could name a claim id no ## Claims row declares, or a hop/rejection a source
+# id no ## Sources row declares, and nothing checked. Declared ids: source ids
+# from ## Sources; claim ids from ## Claims and ## Negatives; sweep ids from
+# ## Sweeps. Reference cells: chain from/to/claim (a to fragment after # is
+# stripped); claims sweep and source/src/ref/cite/pointer; negatives
+# sweep/where; sweeps claim_id and where; rejections ref/reference. Each
+# whitespace/comma/semicolon-separated token of a reference cell is classified
+# once: a token equal to a declared id resolves (kind=source|claim|sweep — any
+# declared id, not only the …<digit> shapes); a token in an undeclared id shape
+# (S<digit>…, C|N<digit>…, SW<digit>…) is REF_UNRESOLVED severity=warn (drift)
+# naming kind, id, section, row and cell; a non-local naming (URLs; local://
+# artifact:// agent:// proc:// history://; external: web: live: chat: session:)
+# is exempt; local paths/globs, prose and sentinels are not integrity tokens
+# and are not counted (the sweeps/claims/chain sections own them). Exempt-but-
+# counted, as in the hop/sweep idioms: a chain row whose status is
+# unresolved|blocked-no-fetch|rejected|labelled-dead|not-applicable, and a
+# sweeps/negatives row whose status is
+# unresolved|blocked-no-fetch|labelled-dead|not-applicable, has its reference
+# tokens counted exempt rather than required to resolve; a non-local naming
+# stays exempt wherever a location is named. Per reference:
+#   REF kind=… id=… section=… row=… cell=… observed=resolved|unresolved|exempt
+#     verdict=match|mismatch|exempt [status=…|reason=non-local]
+# Summary: INTEGRITY refs=N resolved=M unresolved=K — N counts every extracted
+# reference token (exempts included), M resolved, K unresolved; the exempt
+# count is N−M−K. resolved counts each occurrence once; CLEAN iff K=0 and no
+# finding drifts.
+#
 # verify-all mode: verify-all <record> [--claims PATH] [--json PATH] runs every
 # applicable mode over one input as fresh gate calls and composes one verdict.
 # Applicable: structure — always, for a Markdown record; claims — when a claims
@@ -105,14 +134,18 @@
 # lines and at least one JSON-object line; else --claims PATH; else a ## Meta
 # row named claims/claims_file/claims-file/claimset, boundary-checked like a
 # source); chain — when the record declares ## Chain; sweeps — when it declares
-# ## Sweeps, ## Negatives or ## Rejections. An ABSENT section is reported
-# state=absent and never drifts by itself; the composed verdict is DRIFT iff
-# any RUN section drifts. Sections execute the same CLI paths (bash "$SELF"
-# <mode>), so each section tally is that solo mode's tally by construction.
+# ## Sweeps, ## Negatives or ## Rejections; integrity — whenever at least one
+# other section runs (it cross-checks the ids the record declares, so a record
+# with no sections has no reference token and reports refs=0). An ABSENT
+# section is reported state=absent and never drifts by itself; the composed
+# verdict is DRIFT iff any RUN section drifts. Sections execute the same CLI
+# paths (bash "$SELF" <mode>), so each section tally is that solo mode's tally
+# by construction — including integrity's tally, which is the solo mode's
+# INTEGRITY summary.
 #   SECTION <name> state=absent
 #   SECTION <name> state=run verdict=… findings=N drift=N [tally=…]
 # followed by that section's FINDING lines, then
-#   VERIFY_ALL sections=4 run=N absent=N drift-sections=N findings=N drift=N
+#   VERIFY_ALL sections=5 run=N absent=N drift-sections=N findings=N drift=N
 # and one closing RESEARCH_GATE: CLEAN|DRIFT with the same composed counters.
 # --json PATH appends (>>, never rewrites) one JSON line: schema, UTC, record
 # and gate SHA-256, per-section state/verdict/tallies, composed verdict.
@@ -176,6 +209,7 @@ usage: research-gate.sh [--selftest] [--help]
        research-gate.sh verify-claims [CLAIMS] [--root PATH]
        research-gate.sh verify-chain [RECORD] [--root PATH]
        research-gate.sh verify-sweeps [RECORD] [--root PATH]
+       research-gate.sh verify-integrity [RECORD] [--root PATH]
        research-gate.sh verify-all [RECORD] [--claims PATH] [--json PATH]
                       [--root PATH]
        research-gate.sh [--record PATH] [--root PATH]
@@ -208,8 +242,18 @@ usage: research-gate.sh [--selftest] [--help]
   naming the hit, zero hits verify; URLs, external:/web:/session: names and
   declared source ids count as exempt; a sweep naming nowhere drifts.
   Summary: VERIFIED_SWEEPS=N/M REJECTIONS_OK=K/L.
-  verify-all composes structure + claims + chain + sweeps over ONE input:
-  absent sections are reported absent (never drift by themselves); the
+  Integrity mode: every cross-section reference token must resolve to a row
+  that declares it — source ids from ## Sources, claim ids from ## Claims and
+  ## Negatives, sweep ids from ## Sweeps — read from chain from/to/claim,
+  claims sweep/source/src/ref/cite/pointer, negatives sweep/where, sweeps
+  claim_id/where and rejections ref/reference cells. An undeclared id in the
+  S<digit>… / C|N<digit>… / SW<digit>… shapes is REF_UNRESOLVED (drift);
+  declared ids resolve; non-local namings and rows marked
+  unresolved/blocked-no-fetch/labelled-dead/not-applicable/rejected stay
+  exempt but counted; local paths/globs and prose are not integrity tokens.
+  Summary: INTEGRITY refs=N resolved=M unresolved=K (exempt = N−M−K).
+  verify-all composes structure + claims + chain + sweeps + integrity over ONE
+  input: absent sections are reported absent (never drift by themselves); the
   composed verdict is DRIFT iff any run section drifts, exit 1. --claims
   binds a claims file to a record; a record may also name one in a ## Meta
   row (claims/claims_file/claims-file/claimset); a claims JSONL passed as
@@ -1649,6 +1693,195 @@ verify_sweeps() {
   return 1
 }
 
+# ---- integrity mode: cross-section reference resolution (declared rows only) ----
+
+integ_trim() { # TOKEN -> edge decoration stripped (quotes, backticks, brackets)
+  local t=$1 guard=0
+  while :; do
+    guard=$((guard + 1)); if [[ $guard -gt 16 ]]; then break; fi
+    case "$t" in
+      '`'*|'"'*|"'"*|'('*|'['*|'{'*|'<'*|'*'*|'!'*|'?'*) t=${t#?}; continue ;;
+    esac
+    break
+  done
+  while :; do
+    guard=$((guard + 1)); if [[ $guard -gt 32 ]]; then break; fi
+    case "$t" in
+      *'`'|*'"'|*"'"|*')'|*']'|*'}'|*'>'|*','|*';'|*'.'|*':'|*'!'|*'?') t=${t%?}; continue ;;
+    esac
+    break
+  done
+  printf '%s' "$t"
+}
+
+integ_emit_ref() { # KIND ID SECTION ROW CELL DISPO DETAIL -> count + REF line
+  N_IREF=$((N_IREF + 1))
+  local obs verdict extra=''
+  case "$6" in
+    resolved) N_IRES=$((N_IRES + 1)); obs=resolved; verdict=match ;;
+    unresolved) N_IUNRES=$((N_IUNRES + 1)); obs=unresolved; verdict=mismatch ;;
+    *) N_IEXEMPT=$((N_IEXEMPT + 1)); obs=exempt; verdict=exempt; extra=" ${7:-reason=exempt}" ;;
+  esac
+  IREF_LINES+=("REF kind=$1 id=$(chain_disp "$2") section=$3 row=$(chain_disp "$4") cell=$5 observed=$obs verdict=$verdict$extra")
+  if [[ $6 == unresolved ]]; then
+    emit_finding REF_UNRESOLVED warn integrity \
+      "kind=$1 id=$(chain_disp "$2") section=$3 row=$(chain_disp "$4") cell=$5"
+  fi
+  return 0
+}
+
+integ_token() { # SECTION ROW CELL TOKEN EXEMPT_STATUS -> classify + emit
+  local tok=$4 kind='' dispo='' detail=''
+  if [[ -n ${SRC_IDS[$tok]+x} ]]; then kind=source; dispo=resolved
+  elif [[ -n ${CLAIM_IDS[$tok]+x} ]]; then kind=claim; dispo=resolved
+  elif [[ -n ${SWEEP_IDS[$tok]+x} ]]; then kind=sweep; dispo=resolved
+  elif [[ $tok =~ ^[CN][0-9][A-Za-z0-9_-]*$ ]]; then kind=claim; dispo=unresolved
+  elif [[ $tok =~ ^SW[0-9][A-Za-z0-9_-]*$ ]]; then kind=sweep; dispo=unresolved
+  elif [[ $tok =~ ^S[0-9][A-Za-z0-9_-]*$ ]]; then kind=source; dispo=unresolved
+  elif [[ $(sweep_token_class "$tok") == nonlocal ]]; then kind=location; dispo=exempt; detail='reason=non-local'
+  else return 0; fi
+  if [[ $dispo != exempt && -n ${5:-} ]]; then
+    dispo=exempt; detail="status=$5"
+  fi
+  integ_emit_ref "$kind" "$tok" "$1" "$2" "$3" "$dispo" "$detail"
+  return 0
+}
+
+integ_cell() { # SECTION ROW CELL RAW EXEMPT_STATUS -> one REF per id-shaped token
+  local raw=$4 st=${5:-} tok
+  if [[ -z $raw ]]; then return 0; fi
+  local -a toks=()
+  while IFS= read -r tok; do
+    if [[ -n $tok ]]; then toks+=("$tok"); fi
+  done < <(printf '%s\n' "$raw" | tr ',;' '  ' | tr -s '[:space:]' '\n')
+  for tok in "${toks[@]+"${toks[@]}"}"; do
+    tok=$(integ_trim "$tok")
+    if [[ -n $tok ]]; then integ_token "$1" "$2" "$3" "$tok" "$st"; fi
+  done
+  return 0
+}
+
+verify_integrity() {
+  local record=$1
+  ROOT=${CHOUSA_ROOT:-$ROOT}
+  [[ -n ${record:-} ]] || die_usage "record path required (verify-integrity RECORD, --record, or CHOUSA_RECORD)"
+  [[ -e $record ]] || die_usage "record not found: $record"
+  [[ -f $record ]] || die_usage "record is not a regular file: $record"
+  [[ -r $record ]] || die_usage "record unreadable: $record"
+  [[ -d $ROOT ]] || die_usage "root is not a directory: $ROOT (--root)"
+
+  FINDING_LINES=(); N_FINDINGS=0; N_DRIFT=0; ROLL=CLEAN
+  scan_secrets "$record"
+  load_sections "$record"
+
+  declare -g -A SRC_IDS=() CLAIM_IDS=() SWEEP_IDS=()
+  local row rid rrow rowname st exst to n l
+  local -a IREF_LINES=()
+  local N_IREF=0 N_IRES=0 N_IUNRES=0 N_IEXEMPT=0
+
+  while IFS= read -r row; do
+    if [[ -z $row ]]; then continue; fi
+    rid=$(cell "$row" id)
+    if [[ -n $rid ]]; then SRC_IDS[$rid]=1; fi
+  done < <(table_rows Sources)
+  while IFS= read -r row; do
+    if [[ -z $row ]]; then continue; fi
+    rid=$(cell "$row" id)
+    if [[ -n $rid ]]; then CLAIM_IDS[$rid]=1; fi
+  done < <(table_rows Claims)
+  while IFS= read -r row; do
+    if [[ -z $row ]]; then continue; fi
+    rid=$(cell "$row" id)
+    if [[ -n $rid ]]; then CLAIM_IDS[$rid]=1; fi
+  done < <(table_rows Negatives)
+  while IFS= read -r row; do
+    if [[ -z $row ]]; then continue; fi
+    rid=$(cell "$row" id)
+    if [[ -n $rid ]]; then SWEEP_IDS[$rid]=1; fi
+  done < <(table_rows Sweeps)
+
+  # Chain rows: from/claim name the claim, to names the source (fragment cut);
+  # a row whose status is the exempt set has its tokens counted exempt.
+  n=0
+  while IFS= read -r rrow; do
+    if [[ -z $rrow ]]; then continue; fi
+    n=$((n + 1))
+    rowname=$(cell "$rrow" hop)
+    if [[ -z $rowname ]]; then rowname="H$n"; fi
+    st=$(cell "$rrow" status | tr 'A-Z' 'a-z')
+    exst=''
+    case "$st" in
+      unresolved|blocked-no-fetch|rejected|labelled-dead|not-applicable) exst=$st ;;
+    esac
+    integ_cell chain "$rowname" from "$(chain_cell "$rrow" from)" "$exst"
+    integ_cell chain "$rowname" claim "$(chain_cell "$rrow" claim claim_id claim-id)" "$exst"
+    to=$(norm_ptr "$(chain_cell "$rrow" to)")
+    integ_cell chain "$rowname" to "${to%%#*}" "$exst"
+  done < <(table_rows Chain)
+
+  n=0
+  while IFS= read -r rrow; do
+    if [[ -z $rrow ]]; then continue; fi
+    n=$((n + 1))
+    rowname=$(cell "$rrow" id)
+    if [[ -z $rowname ]]; then rowname="C$n"; fi
+    integ_cell claims "$rowname" sweep "$(chain_cell "$rrow" sweep sweeps sweep_id)" ""
+    integ_cell claims "$rowname" source "$(chain_cell "$rrow" source src source_id)" ""
+    integ_cell claims "$rowname" ref "$(chain_cell "$rrow" ref reference cite)" ""
+    integ_cell claims "$rowname" pointer "$(cell "$rrow" pointer)" ""
+  done < <(table_rows Claims)
+
+  n=0
+  while IFS= read -r rrow; do
+    if [[ -z $rrow ]]; then continue; fi
+    n=$((n + 1))
+    rowname=$(cell "$rrow" id)
+    if [[ -z $rowname ]]; then rowname="N$n"; fi
+    st=$(cell "$rrow" status | tr 'A-Z' 'a-z')
+    exst=''
+    case "$st" in
+      unresolved|blocked-no-fetch|labelled-dead|not-applicable) exst=$st ;;
+    esac
+    integ_cell negatives "$rowname" sweep "$(chain_cell "$rrow" sweep sweeps sweep_id)" "$exst"
+    integ_cell negatives "$rowname" where "$(chain_cell "$rrow" where looked_at looked location)" "$exst"
+  done < <(table_rows Negatives)
+
+  n=0
+  while IFS= read -r rrow; do
+    if [[ -z $rrow ]]; then continue; fi
+    n=$((n + 1))
+    rowname=$(cell "$rrow" id)
+    if [[ -z $rowname ]]; then rowname="SW$n"; fi
+    st=$(cell "$rrow" status | tr 'A-Z' 'a-z')
+    exst=''
+    case "$st" in
+      unresolved|blocked-no-fetch|labelled-dead|not-applicable) exst=$st ;;
+    esac
+    integ_cell sweeps "$rowname" claim_id "$(chain_cell "$rrow" claim_id claim-id claim negative_id)" "$exst"
+    integ_cell sweeps "$rowname" where "$(sweep_raw_where "$rrow")" "$exst"
+  done < <(table_rows Sweeps)
+
+  n=0
+  while IFS= read -r rrow; do
+    if [[ -z $rrow ]]; then continue; fi
+    n=$((n + 1))
+    rowname=$(cell "$rrow" id)
+    if [[ -z $rowname ]]; then rowname="R$n"; fi
+    integ_cell rejections "$rowname" ref "$(chain_cell "$rrow" ref reference)" ""
+  done < <(table_rows Rejections)
+
+  printf 'research-gate %s — ts=%s — mode=integrity — record=%s\n' "$VERSION" "$TS_UTC" "$record"
+  for l in "${IREF_LINES[@]+"${IREF_LINES[@]}"}"; do printf '%s\n' "$l"; done
+  for l in "${FINDING_LINES[@]+"${FINDING_LINES[@]}"}"; do printf '%s\n' "$l"; done
+  if [[ $N_IUNRES -ne 0 ]]; then ROLL=DRIFT; fi
+  printf 'INTEGRITY refs=%d resolved=%d unresolved=%d\n' "$N_IREF" "$N_IRES" "$N_IUNRES"
+  printf 'RESEARCH_GATE: %s (refs=%d resolved=%d unresolved=%d exempt=%d findings=%d drift=%d)\n' \
+    "$ROLL" "$N_IREF" "$N_IRES" "$N_IUNRES" "$N_IEXEMPT" "$N_FINDINGS" "$N_DRIFT"
+
+  [[ $ROLL == CLEAN ]] && return 0
+  return 1
+}
+
 # ---- verify-all mode: one input, one composed deep verdict ----
 
 json_escape() { # STRING -> JSON string body (quote, backslash, control bytes)
@@ -1716,6 +1949,7 @@ verify_all_section() { # NAME MODE ARG [ARG…] -> VAS_*; unavailable on rc∉{0
     verify-claims) VAS_NATIVE=$(grep -m1 '^VERDICT_BEARING_CLAIMS=' <<<"$VAS_OUT" || true) ;;
     verify-chain) VAS_NATIVE=$(grep -m1 '^RESOLVED_HOPS=' <<<"$VAS_OUT" || true) ;;
     verify-sweeps) VAS_NATIVE=$(grep -m1 '^VERIFIED_SWEEPS=.*REJECTIONS_OK=' <<<"$VAS_OUT" || true) ;;
+    verify-integrity) VAS_NATIVE=$(grep -m1 '^INTEGRITY refs=' <<<"$VAS_OUT" || true) ;;
   esac
   VAS_FINDINGS=$(grep '^FINDING ' <<<"$VAS_OUT" || true)
   return 0
@@ -1743,7 +1977,7 @@ verify_all() {
     fi
   fi
 
-  local -a VA_ORDER=(structure claims chain sweeps)
+  local -a VA_ORDER=(structure claims chain sweeps integrity)
   local -A SEC_STATE=() SEC_VERDICT=() SEC_FIND=() SEC_DRIFT=() SEC_COUNTS=()
   local -A SEC_NATIVE=() SEC_FINDINGS=()
   local name has_heads json_lines claims_surface='' declared='' crow
@@ -1790,6 +2024,15 @@ verify_all() {
   fi
   if [[ -n $claims_surface ]]; then SEC_STATE[claims]=run; fi
 
+  # Integrity cross-checks the ids the record declares; it needs at least one
+  # other section to have a surface at all. With none (no runnable section) it
+  # is honestly absent rather than a vacuous CLEAN.
+  local n_other=0
+  for name in structure claims chain sweeps; do
+    if [[ ${SEC_STATE[$name]} != absent ]]; then n_other=$((n_other + 1)); fi
+  done
+  if [[ $n_other -ge 1 ]]; then SEC_STATE[integrity]=run; fi
+
   local n_run=0 n_absent=0 n_dsec=0 n_find=0 n_drift=0 roll=CLEAN
   for name in "${VA_ORDER[@]}"; do
     if [[ ${SEC_STATE[$name]} == run && -z ${SEC_VERDICT[$name]:-} ]]; then
@@ -1798,6 +2041,7 @@ verify_all() {
         claims) verify_all_section claims verify-claims "$claims_surface" ;;
         chain) verify_all_section chain verify-chain "$record" ;;
         sweeps) verify_all_section sweeps verify-sweeps "$record" ;;
+        integrity) verify_all_section integrity verify-integrity "$record" ;;
       esac
       SEC_VERDICT[$name]=$VAS_VERDICT
       SEC_FIND[$name]=$VAS_FIND
@@ -1865,10 +2109,10 @@ verify_all() {
     fi
     if [[ -n ${SEC_FINDINGS[$name]:-} ]]; then printf '%s\n' "${SEC_FINDINGS[$name]}"; fi
   done
-  printf 'VERIFY_ALL sections=4 run=%d absent=%d drift-sections=%d findings=%d drift=%d\n' \
-    "$n_run" "$n_absent" "$n_dsec" "$n_find" "$n_drift"
-  printf 'RESEARCH_GATE: %s (sections=4 run=%d absent=%d drift-sections=%d findings=%d drift=%d)\n' \
-    "$roll" "$n_run" "$n_absent" "$n_dsec" "$n_find" "$n_drift"
+  printf 'VERIFY_ALL sections=%d run=%d absent=%d drift-sections=%d findings=%d drift=%d\n' \
+    "${#VA_ORDER[@]}" "$n_run" "$n_absent" "$n_dsec" "$n_find" "$n_drift"
+  printf 'RESEARCH_GATE: %s (sections=%d run=%d absent=%d drift-sections=%d findings=%d drift=%d)\n' \
+    "$roll" "${#VA_ORDER[@]}" "$n_run" "$n_absent" "$n_dsec" "$n_find" "$n_drift"
 
   [[ $roll == CLEAN ]] && return 0
   return 1
@@ -2057,6 +2301,32 @@ EOF
       bash "$SELF" verify-sweeps "$WORK/$name.md" 2>&1) || rc=$?
     nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
     nsum=$(grep -c '^VERIFIED_SWEEPS=.*REJECTIONS_OK=' <<<"$out" || true)
+    for tok in "${want[@]+"${want[@]}"}"; do
+      [[ $out == *"$tok"* ]] || ok=0
+    done
+    if [[ $rc -eq $want_rc && $nverdict -eq 1 && $nsum -eq 1 && $ok -eq 1 ]]; then
+      printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" "$name" "$rc"
+    else
+      printf 'FAIL-case %-28s exit=%d want=%d verdicts=%d sums=%d token=%s\n' \
+        "$name" "$rc" "$want_rc" "$nverdict" "$nsum" "${want[*]-}"
+      printf '%s\n' "$out" | sed 's/^/    | /'
+      failures=$((failures + 1))
+    fi
+  }
+
+  # Integrity-mode case runner: same fresh-process discipline as tsweeps, plus
+  # one INTEGRITY refs=… summary expected per run.
+  tintegrity() {
+    local name=$1 want_rc=$2
+    shift 2
+    local -a want=("$@")
+    local tok rc=0 out nverdict nsum ok=1
+    cases=$((cases + 1))
+    out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+      CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+      bash "$SELF" verify-integrity "$WORK/$name.md" 2>&1) || rc=$?
+    nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
+    nsum=$(grep -c '^INTEGRITY refs=' <<<"$out" || true)
     for tok in "${want[@]+"${want[@]}"}"; do
       [[ $out == *"$tok"* ]] || ok=0
     done
@@ -3027,7 +3297,8 @@ for ln in sys.stdin.read().splitlines():
     'SECTION claims state=run verdict=CLEAN findings=0 drift=0 tally=VERDICT_BEARING_CLAIMS=4/4' \
     'SECTION chain state=run verdict=CLEAN findings=0 drift=0 tally=RESOLVED_HOPS=1/2' \
     'SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1' \
-    'VERIFY_ALL sections=4 run=4 absent=0 drift-sections=0 findings=0 drift=0'
+    'SECTION integrity state=run verdict=CLEAN findings=0 drift=0 tally=INTEGRITY refs=5 resolved=3 unresolved=0' \
+    'VERIFY_ALL sections=5 run=5 absent=0 drift-sections=0 findings=0 drift=0'
 
   tall all-pass.md 1 1 1 claims-fail-tampered.jsonl - - \
     'RESEARCH_GATE: DRIFT' \
@@ -3036,7 +3307,7 @@ for ln in sys.stdin.read().splitlines():
     'SECTION structure state=run verdict=CLEAN' \
     'SECTION chain state=run verdict=CLEAN' \
     'SECTION sweeps state=run verdict=CLEAN' \
-    'VERIFY_ALL sections=4 run=4 absent=0 drift-sections=1'
+    'VERIFY_ALL sections=5 run=5 absent=0 drift-sections=1'
 
   tall all-structure.md 1 1 1 claims-pass.jsonl - - \
     'RESEARCH_GATE: DRIFT' \
@@ -3045,19 +3316,21 @@ for ln in sys.stdin.read().splitlines():
     'SECTION claims state=run verdict=CLEAN' \
     'SECTION chain state=run verdict=CLEAN' \
     'SECTION sweeps state=run verdict=CLEAN' \
-    'VERIFY_ALL sections=4 run=4 absent=0 drift-sections=1'
+    'VERIFY_ALL sections=5 run=5 absent=0 drift-sections=1'
 
   tall all-pass.md 0 1 1 - - - \
     'RESEARCH_GATE: CLEAN' \
     'SECTION claims state=absent' \
     'SECTION structure state=run verdict=CLEAN' \
-    'VERIFY_ALL sections=4 run=3 absent=1 drift-sections=0 findings=0 drift=0'
+    'SECTION integrity state=run verdict=CLEAN findings=0 drift=0 tally=INTEGRITY refs=5 resolved=3 unresolved=0' \
+    'VERIFY_ALL sections=5 run=4 absent=1 drift-sections=0 findings=0 drift=0'
 
   tall claims-pass.jsonl 0 1 1 - - - \
     'RESEARCH_GATE: CLEAN' \
     'SECTION claims state=run verdict=CLEAN findings=0 drift=0 tally=VERDICT_BEARING_CLAIMS=4/4' \
     'SECTION structure state=absent' \
-    'VERIFY_ALL sections=4 run=1 absent=3 drift-sections=0 findings=0 drift=0'
+    'SECTION integrity state=run verdict=CLEAN findings=0 drift=0 tally=INTEGRITY refs=0 resolved=0 unresolved=0' \
+    'VERIFY_ALL sections=5 run=2 absent=3 drift-sections=0 findings=0 drift=0'
 
   tall all-pass.md 0 1 1 claims-pass.jsonl r6-manifest.jsonl 1 \
     'RESEARCH_GATE: CLEAN'
@@ -3074,14 +3347,252 @@ for ln in sys.stdin.read().splitlines():
   tall all-meta.md 0 1 1 - - - \
     'RESEARCH_GATE: CLEAN' \
     'SECTION claims state=run verdict=CLEAN findings=0 drift=0 tally=VERDICT_BEARING_CLAIMS=4/4' \
-    'VERIFY_ALL sections=4 run=4 absent=0 drift-sections=0 findings=0 drift=0'
+    'VERIFY_ALL sections=5 run=5 absent=0 drift-sections=0 findings=0 drift=0'
   tall all-meta-missing.md 1 1 1 - - - \
     'RESEARCH_GATE: DRIFT' \
     'SECTION claims state=run verdict=DRIFT' \
     'FINDING VERIFY_ALL_CLAIMS_UNRESOLVED' \
-    'VERIFY_ALL sections=4 run=4 absent=0 drift-sections=1'
+    'VERIFY_ALL sections=5 run=5 absent=0 drift-sections=1'
 
   tall no-such-record.md 2 0 0 - - -
+
+  # Integrity cases (r7): cross-section references resolve to declared rows or
+  # drift. Appended after the r6 cases so cases 1-64 keep their case numbers,
+  # names and exits; the r6 composition expectations above advanced 4 → 5
+  # sections because integrity is genuinely composed there now.
+  write_rec integrity-pass <<'EOF'
+# research-record v1
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | lib/primary.md:1 |
+| S2 | secondary | lib/primary.md:2 |
+## Chain
+| hop | from | to | status | anchor_kind | anchor |
+|---|---|---|---|---|---|
+| 1 | C1 | S1 | resolved | quote | line1 primary material |
+## Claims
+| id | kind | text | pointer | status | sweep |
+|---|---|---|---|---|---|
+| C1 | observation | primary file has line1 | lib/primary.md:1 | verified | SW1 |
+## Negatives
+| id | text | sweep | status |
+|---|---|---|---|
+| N1 | no fx-only ghost source | SW1 | swept |
+## Sweeps
+| id | claim_id | where | status |
+|---|---|---|---|
+| SW1 | C1 | lib/ghost*.md | swept |
+| SW2 | N1 | S1,S2 | swept |
+## Rejections
+| id | ref | reason | flip |
+|---|---|---|---|
+| R1 | lib/ghost*.md | no source was rejected | a new source row would flip this |
+EOF
+  tintegrity integrity-pass 0 \
+    'RESEARCH_GATE: CLEAN' 'INTEGRITY refs=8 resolved=8 unresolved=0' \
+    'REF kind=claim id=C1 section=chain row=1 cell=from observed=resolved verdict=match' \
+    'REF kind=source id=S1 section=chain row=1 cell=to observed=resolved verdict=match' \
+    'REF kind=sweep id=SW1 section=claims row=C1 cell=sweep observed=resolved verdict=match' \
+    'REF kind=sweep id=SW1 section=negatives row=N1 cell=sweep observed=resolved verdict=match' \
+    'REF kind=claim id=C1 section=sweeps row=SW1 cell=claim_id observed=resolved verdict=match' \
+    'REF kind=claim id=N1 section=sweeps row=SW2 cell=claim_id observed=resolved verdict=match' \
+    'REF kind=source id=S2 section=sweeps row=SW2 cell=where observed=resolved verdict=match' \
+    'RESEARCH_GATE: CLEAN (refs=8 resolved=8 unresolved=0 exempt=0 findings=0 drift=0)'
+
+  write_rec integrity-fail-dangling-claim <<'EOF'
+# research-record v1
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | lib/primary.md:1 |
+## Sweeps
+| id | claim_id | where | status |
+|---|---|---|---|
+| SW1 | C9 | lib/ghost*.md | swept |
+EOF
+  tintegrity integrity-fail-dangling-claim 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING REF_UNRESOLVED severity=warn' \
+    'obs=kind=claim id=C9 section=sweeps row=SW1 cell=claim_id' \
+    'REF kind=claim id=C9 section=sweeps row=SW1 cell=claim_id observed=unresolved verdict=mismatch' \
+    'INTEGRITY refs=1 resolved=0 unresolved=1' \
+    'RESEARCH_GATE: DRIFT (refs=1 resolved=0 unresolved=1 exempt=0 findings=1 drift=1)'
+
+  write_rec integrity-fail-dangling-source <<'EOF'
+# research-record v1
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | lib/primary.md:1 |
+## Chain
+| hop | from | to | status | anchor_kind | anchor |
+|---|---|---|---|---|---|
+| 1 | S1 | S1 | resolved | quote | line1 primary material |
+## Rejections
+| id | ref | reason | flip |
+|---|---|---|---|
+| R1 | S7 | rejected a source id no ## Sources row declares | a declared source row would flip this |
+EOF
+  tintegrity integrity-fail-dangling-source 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING REF_UNRESOLVED severity=warn' \
+    'obs=kind=source id=S7 section=rejections row=R1 cell=ref' \
+    'REF kind=source id=S7 section=rejections row=R1 cell=ref observed=unresolved verdict=mismatch' \
+    'INTEGRITY refs=3 resolved=2 unresolved=1' \
+    'RESEARCH_GATE: DRIFT (refs=3 resolved=2 unresolved=1 exempt=0 findings=1 drift=1)'
+
+  write_rec integrity-fail-dangling-chain-claim <<'EOF'
+# research-record v1
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | lib/primary.md:1 |
+## Chain
+| hop | from | to | status | anchor_kind | anchor |
+|---|---|---|---|---|---|
+| 1 | C9 | S1 | resolved | quote | line1 primary material |
+EOF
+  tintegrity integrity-fail-dangling-chain-claim 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING REF_UNRESOLVED severity=warn' \
+    'obs=kind=claim id=C9 section=chain row=1 cell=from' \
+    'REF kind=claim id=C9 section=chain row=1 cell=from observed=unresolved verdict=mismatch' \
+    'INTEGRITY refs=2 resolved=1 unresolved=1'
+
+  write_rec integrity-fail-dangling-sweep <<'EOF'
+# research-record v1
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | lib/primary.md:1 |
+## Claims
+| id | kind | text | pointer | status | sweep |
+|---|---|---|---|---|---|
+| C1 | observation | primary file has line1 | lib/primary.md:1 | verified | SW9 |
+## Sweeps
+| id | claim_id | where | status |
+|---|---|---|---|
+| SW1 | C1 | lib/ghost*.md | swept |
+EOF
+  tintegrity integrity-fail-dangling-sweep 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING REF_UNRESOLVED severity=warn' \
+    'obs=kind=sweep id=SW9 section=claims row=C1 cell=sweep' \
+    'REF kind=sweep id=SW9 section=claims row=C1 cell=sweep observed=unresolved verdict=mismatch' \
+    'INTEGRITY refs=2 resolved=1 unresolved=1'
+
+  write_rec integrity-exempt-counted <<'EOF'
+# research-record v1
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | lib/primary.md:1 |
+## Chain
+| hop | from | to | status | anchor_kind | anchor |
+|---|---|---|---|---|---|
+| 1 | C9 | S7 | blocked-no-fetch | | |
+## Sweeps
+| id | claim_id | where | status |
+|---|---|---|---|
+| SW1 | S1 | https://example.invalid/archive | swept |
+EOF
+  tintegrity integrity-exempt-counted 0 \
+    'RESEARCH_GATE: CLEAN' 'INTEGRITY refs=4 resolved=1 unresolved=0' \
+    'REF kind=claim id=C9 section=chain row=1 cell=from observed=exempt verdict=exempt status=blocked-no-fetch' \
+    'REF kind=source id=S7 section=chain row=1 cell=to observed=exempt verdict=exempt status=blocked-no-fetch' \
+    'REF kind=source id=S1 section=sweeps row=SW1 cell=claim_id observed=resolved verdict=match' \
+    'REF kind=location id=https://example.invalid/archive section=sweeps row=SW1 cell=where observed=exempt verdict=exempt reason=non-local' \
+    'RESEARCH_GATE: CLEAN (refs=4 resolved=1 unresolved=0 exempt=3 findings=0 drift=0)'
+
+  write_rec integrity-fail-counting <<'EOF'
+# research-record v1
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | lib/primary.md:1 |
+## Chain
+| hop | from | to | status | anchor_kind | anchor |
+|---|---|---|---|---|---|
+| 1 | C1 | S1 | resolved | quote | line1 primary material |
+| 2 | C9 | S7 | unresolved | | |
+## Claims
+| id | kind | text | pointer | status | sweep |
+|---|---|---|---|---|---|
+| C1 | observation | primary file has line1 | lib/primary.md:1 | verified | |
+## Negatives
+| id | text | sweep | status |
+|---|---|---|---|
+| N2 | no fx-only ghost source | SW1 | swept |
+## Sweeps
+| id | claim_id | where | status |
+|---|---|---|---|
+| SW1 | N7 | lib/ghost*.md | swept |
+| SW2 | C1 | https://example.invalid/archive | swept |
+## Rejections
+| id | ref | reason | flip |
+|---|---|---|---|
+| R1 | S9 | rejected an undeclared source id | a declared source row would flip this |
+EOF
+  tintegrity integrity-fail-counting 1 \
+    'RESEARCH_GATE: DRIFT' \
+    'INTEGRITY refs=9 resolved=4 unresolved=2' \
+    'RESEARCH_GATE: DRIFT (refs=9 resolved=4 unresolved=2 exempt=3 findings=2 drift=2)' \
+    'obs=kind=claim id=N7 section=sweeps row=SW1 cell=claim_id' \
+    'obs=kind=source id=S9 section=rejections row=R1 cell=ref' \
+    'REF kind=claim id=C9 section=chain row=2 cell=from observed=exempt verdict=exempt status=unresolved'
+
+  tsetup integrity-no-path 2 verify-integrity
+  tsetup integrity-missing-file 2 verify-integrity "$WORK/no-such-record.md"
+
+  # Composed inclusion (r7): a record the four r6 sections all call CLEAN but
+  # whose sweep binding dangles composes DRIFT through the integrity section
+  # alone — the r6-omission demonstration, now named.
+  write_rec all-dangling <<'EOF'
+# research-record v1
+<!-- chousa-record: v1 -->
+## Meta
+| key | value |
+|---|---|
+| window | loopback |
+| fetch | none |
+## Question
+Does a dangling sweep binding drift a composed verdict the four r6 sections pass?
+## Sources
+| id | tier | pointer | notes |
+|---|---|---|---|
+| S1 | primary | lib/primary.md:1 | local fixture |
+## Chain
+| hop | from | to | status | anchor_kind | anchor | notes |
+|---|---|---|---|---|---|---|
+| 1 | C1 | S1 | resolved | quote | line1 primary material | direct |
+## Claims
+| id | kind | text | pointer | status | sweep |
+|---|---|---|---|---|---|
+| C1 | observation | primary file has line1 | lib/primary.md:1 | verified | |
+## Negatives
+| id | text | sweep | status |
+|---|---|---|---|
+| N1 | no fx-only ghost source | SW1 | swept |
+## Sweeps
+| id | claim_id | where | status |
+|---|---|---|---|
+| SW1 | C9 | lib/ghost*.md | swept |
+## Rejections
+| id | ref | reason | flip |
+|---|---|---|---|
+| R1 | noise/chat-export-sources.md | UI chrome is not a primary source | a primary attestation in that file would flip this |
+## Approval
+| target | state |
+|---|---|
+| (none) | not-required |
+EOF
+  tall all-dangling.md 1 1 1 claims-pass.jsonl - - \
+    'RESEARCH_GATE: DRIFT' \
+    'SECTION integrity state=run verdict=DRIFT findings=1 drift=1 tally=INTEGRITY refs=4 resolved=3 unresolved=1' \
+    'FINDING REF_UNRESOLVED severity=warn' \
+    'obs=kind=claim id=C9 section=sweeps row=SW1 cell=claim_id' \
+    'SECTION structure state=run verdict=CLEAN' \
+    'SECTION claims state=run verdict=CLEAN' \
+    'SECTION chain state=run verdict=CLEAN' \
+    'SECTION sweeps state=run verdict=CLEAN' \
+    'VERIFY_ALL sections=5 run=5 absent=0 drift-sections=1 findings=1 drift=1'
 
   if [[ $failures -eq 0 ]]; then
     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases)\n' "$cases"
@@ -3099,6 +3610,7 @@ while [[ $# -gt 0 ]]; do
     verify-claims) MODE=claims; shift ;;
     verify-chain) MODE=chain; shift ;;
     verify-sweeps) MODE=sweeps; shift ;;
+    verify-integrity) MODE=integrity; shift ;;
     verify-all) MODE=all; shift ;;
     --record)
       [[ $# -ge 2 ]] || die_usage "--record needs PATH"
@@ -3141,6 +3653,10 @@ case "$MODE" in
   sweeps)
     SWEEPS_PATH=${RECORD_ARG:-${CHOUSA_RECORD:-}}
     verify_sweeps "$SWEEPS_PATH"
+    ;;
+  integrity)
+    INTEGRITY_PATH=${RECORD_ARG:-${CHOUSA_RECORD:-}}
+    verify_integrity "$INTEGRITY_PATH"
     ;;
   all)
     ALL_PATH=${RECORD_ARG:-${CHOUSA_RECORD:-}}
