@@ -1,9 +1,9 @@
 # chousa-shokunin — corpus/evidence
 
-Round-2 receipts for the claim-vs-source verification move (round 2, coverage
-axis). Each receipt is a machine-cut capture of public-CLI runs: UTC stamp,
-exact command, exit code, pinned gate SHA-256, and the verbatim stdout. Local
-files only — no external fetch, no network.
+Receipts for the chousa coverage moves: round 2 (claim-vs-source verification)
+and round 3 (chain-hop resolution). Each receipt is a machine-cut capture of
+public-CLI runs: UTC stamp, exact command, exit code, pinned gate SHA-256, and
+the verbatim stdout. Local files only — no external fetch, no network.
 
 ## Round-2 claim-verification receipts — stamp 20261015T233027Z
 
@@ -91,3 +91,72 @@ python3 -c 'import subprocess; names=("A-shokunin-tradition.md","B-multiagent-kn
   `claims-r2-<UTCstamp>-{fixture,selftest,gate,live}.log`, per the
   receipts-writer seat directive. Parent integration can move them, but the
   receipt contents pin their own names.
+
+## Round-3 chain-resolution receipts — stamp 20261015T235623Z
+
+Revision under test: `tools/research-gate.sh` sha256
+`67daf85ecc49c4c7accbee9534c31b0734061b7f329e8de7a98254a57f9d6084`
+(lane HEAD `0aa794d`; the fixtures' README pins the same revision). Fixtures:
+`corpus/fixtures/chain-r3.md` sha256
+`06115f2f8e6db3c60034411dc6be42c4e0887352b09ab9cbd7f760801237ba07`,
+`corpus/fixtures/chain-r3-broken.md` sha256
+`b66222a16d4c5323ee6932839ff5746af5f716f36372af506755aed18e0f5c6a`;
+contract `corpus/fixtures/chain-r3.README.md` sha256
+`72dbee4e1d8c22df898842f2edf406769c8aa7894fcaecdfe5922137f867292a`.
+
+| Receipt (sha256) | Shows | Key result |
+|---|---|---|
+| `chain-r3-20261015T235623Z-fixture.log` (`14f24aa3…`) | fixture inventory, pinned inputs, the README-documented byte-check extracted verbatim, the receipts-writer independent record checker | README check: `chain-r3.md: RESOLVED_HOPS=17/22 bad_hops=[]`, `chain-r3-broken.md: RESOLVED_HOPS=1/2 bad_hops=['2']`; independent checker exit 0 (22 hops re-derived: 17 resolved anchors present, near-miss bytes absent from C, jin'i form present at C:118) |
+| `chain-r3-20261015T235623Z-selftest.log` (`db48f070…`) | full `--selftest` | `RESEARCH_GATE_SELFTEST: PASS (40 cases)`, exit 0; case lines 1–30 byte-identical to the r2 selftest stdout |
+| `chain-r3-20261015T235623Z-gate.log` (`8d29babb…`) | round-1 regression over the three archived inputs + the intake record (frozen clock) | each archived input exits 1 with one `RESEARCH_GATE: DRIFT` summary, all three byte-identical to the frozen r1 baseline; `VERDICT_BEARING_EXPORTS=3/3`; intake `CLEAN`, byte-identical to the r1 acceptance row (ts-normalized) |
+| `chain-r3-20261015T235623Z-live.log` (`8fc99012…`) | before-state (r2 gate on both records), live `verify-chain`, four negative controls, strace, verify-claims byte-stability | live `chain-r3.md`: `RESOLVED_HOPS=17/22` + `RESEARCH_GATE: CLEAN (hops=22 verified=17 exempt=5 anchor-missing=0 refused=0 invalid=0 findings=0 drift=0)`, exit 0; broken control: `RESOLVED_HOPS=1/2` + `CHAIN_ANCHOR_NOT_FOUND`, DRIFT, exit 1; controls as tabulated below; strace: 0 network syscalls; `verify-claims` byte-identical to the r2 stdout after ts normalization |
+
+Before → after in one line: the r2 gate passes both chain records structurally
+(`RESEARCH_GATE: CLEAN`, exit 0) — including the broken one whose hop claims
+`resolved` while citing anchor bytes the target never carries; `verify-chain`
+adjudicates every resolved hop's anchor bytes (line/quote) against its cited
+source under the corpus boundary, reports the miss with
+`nearest_line`/`context`, keeps unresolved/marked hops exempt-but-counted, and
+closes DRIFT.
+
+### Negative controls (recorded in the live receipt)
+
+| Control | Delta | Result (exit) |
+|---|---|---|
+| tampered quote anchor | hop 3 `kiwami semantics` → `kiwami semanticsX` | `CHAIN_ANCHOR_NOT_FOUND` on hop 3, `RESOLVED_HOPS=16/22`, DRIFT (1) |
+| out-of-corpus source | hop 1 `S1` → `/etc/hostname` | `CHAIN_SOURCE_OUT_OF_CORPUS` severity=crit, refused, `RESOLVED_HOPS=16/22`, DRIFT (1) |
+| external URL source | hop 1 `S1` → `https://example.invalid/x.md` | `CHAIN_SOURCE_EXTERNAL` severity=crit, "url source refused (no external fetch)", refused, DRIFT (1) |
+| resolved hop marked unresolved | hop 2 `resolved` → `unresolved` | exempt but counted: `RESOLVED_HOPS=16/22`, `CLEAN (hops=22 verified=16 exempt=6)`, exit 0 |
+
+### Re-run recipe
+
+From the lane root, local only. Exit contract: 0 CLEAN, 1 DRIFT, 2 setup.
+
+```bash
+sha256sum tools/research-gate.sh
+#   67daf85ecc49c4c7accbee9534c31b0734061b7f329e8de7a98254a57f9d6084
+bash tools/research-gate.sh verify-chain corpus/fixtures/chain-r3.md --root ..
+#   expect: RESOLVED_HOPS=17/22; CLEAN (hops=22 verified=17 exempt=5 …); exit 0
+bash tools/research-gate.sh verify-chain corpus/fixtures/chain-r3-broken.md --root ..
+#   expect: RESOLVED_HOPS=1/2; DRIFT (… anchor-missing=1 …); exit 1
+bash tools/research-gate.sh verify corpus/fixtures/chain-r3-broken.md --root ..
+#   expect (pre-move hole): CLEAN, exit 0
+bash tools/research-gate.sh --selftest
+#   expect: RESEARCH_GATE_SELFTEST: PASS (40 cases), exit 0
+# the fixture README's gate-free byte-check (see corpus/fixtures/chain-r3.README.md §Re-run)
+#   expect: chain-r3.md: RESOLVED_HOPS=17/22 bad_hops=[];
+#           chain-r3-broken.md: RESOLVED_HOPS=1/2 bad_hops=['2']
+```
+
+### Notes
+
+- Receipts pin gate revision `67daf85e…`; a later gate edit supersedes them —
+  re-run the recipe above and re-cut.
+- Scratch for this cut lived at `/home/vgpnk/.cache/chousa-r3/` (cut script,
+  control copies, `TMPDIR`) because the host `/tmp` is a quota-limited tmpfs;
+  the receipts' runs resolve all sources inside the fleet root.
+- The receipts-writer independent record checker is
+  `/home/vgpnk/.cache/chousa-r3/adapter-chaincheck.py`, separate from the
+  fixture README's own gate-free checker; both agree on both records.
+- Receipt identity for this round remains a lane-local log; no `task_…` value
+  is invented and the round-1 receipt blocker stands (operator-side).

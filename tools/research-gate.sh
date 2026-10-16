@@ -44,6 +44,27 @@
 # refused, invalid, findings, drift — so a CLEAN run shows claims=Σdispositions,
 # mismatched=refused=invalid=0 and N=M.
 #
+# Chain mode: verify-chain <record.md> resolves each hop's citation — the r1
+# verify path checks hops only structurally, so a resolved hop may cite an
+# anchor the target never contains. A resolved hop must carry a citation:
+# source = a source id declared in ## Sources (any id, not only S…) or a local
+# path (same boundary and canonicalization as verify-claims) plus an anchor
+# the source must contain —
+# heading (a Markdown heading whose trimmed text equals the anchor), quote
+# (verbatim span, line-aware misses), or line (one whole line, trailing
+# whitespace trimmed). Anchor comes from an `anchor_kind`+`anchor` column pair
+# or from a `to` fragment: path#kind:text (a bare #text reads as a heading).
+# Unresolved/marked hops (unresolved blocked-no-fetch rejected labelled-dead
+# not-applicable) stay exempt but counted. Per hop:
+#   CHAIN hop=… status=… observed=… source=… anchor=… at=… verdict=…
+#   observed: verified|anchor-missing|refused|invalid|exempt
+#   verdict:  match|mismatch|refused|invalid|exempt
+# Summary: RESOLVED_HOPS=N/M — N verified hops over M hops read; CLEAN iff
+# every non-exempt hop verified (N = M − exempt) and no finding drifts.
+# Extra ids: CHAIN_ABSENT CHAIN_SOURCE_EXTERNAL CHAIN_SOURCE_SESSION
+#   CHAIN_SOURCE_EPHEMERAL CHAIN_SOURCE_OUT_OF_CORPUS CHAIN_SOURCE_MISSING
+#   CHAIN_ANCHOR_NOT_FOUND CHAIN_CITATION_INVALID
+#
 # Secrecy: print path:line class=<name> only — never span.
 # Opens: allowlist metadata only; denylist → SESSION_READ.
 # research/README CDP 9222 is provenance, not a hop.
@@ -82,6 +103,7 @@ usage() {
 usage: research-gate.sh [--selftest] [--help]
        research-gate.sh verify [--record PATH] [--root PATH]
        research-gate.sh verify-claims [CLAIMS] [--root PATH]
+       research-gate.sh verify-chain [RECORD] [--root PATH]
        research-gate.sh [--record PATH] [--root PATH]
 
   RECORD via --record, positional, or CHOUSA_RECORD.
@@ -90,6 +112,13 @@ usage: research-gate.sh [--selftest] [--help]
     {"id":…,"source":…,"span":…,"expect":supported|contradicted|unsupported
      [,"marker":…]}
   Spans must appear verbatim in sources; sources are local files only.
+  Chain mode: each hop with status=resolved must cite a source (a source id
+  from ## Sources, or a local path) plus an anchor — an anchor_kind column
+  (heading|quote|line) with an anchor column, or a to fragment
+  path#kind:text (bare #text = heading). The anchor must appear in the cited
+  source: headings by text, quotes verbatim, lines as whole lines.
+  Unresolved/marked hops stay exempt but counted. Sources obey the same
+  boundary as verify-claims (local, canonicalized, never fetched).
 Verdict: RESEARCH_GATE: CLEAN|DRIFT
 Exit:    0 CLEAN | 1 DRIFT | 2 setup/usage
 EOF
@@ -858,6 +887,276 @@ verify_claims() {
   return 1
 }
 
+# ---- chain mode: hop-citation resolution (local files only) ----
+
+chain_cell() { # ROW KEY... -> first non-empty cell value ('' if none)
+  local row=$1 k v
+  shift
+  for k in "$@"; do
+    v=$(cell "$row" "$k")
+    if [[ -n $v ]]; then printf '%s' "$v"; return 0; fi
+  done
+  printf ''
+  return 0
+}
+
+chain_disp() { # STRING -> at most 80 chars, '-' when empty
+  local v=${1:-}
+  v=$(printf '%.80s' "$v")
+  [[ -n $v ]] || v=-
+  printf '%s' "$v"
+}
+
+chain_citation() { # ROW -> rc0: CITE_TO CITE_KIND CITE_TEXT; rc1: CITE_ERR
+  local row=$1 to ack ak atext frag fk kind_claim=''
+  CITE_TO='' CITE_KIND='' CITE_TEXT='' CITE_ERR=''
+  to=$(norm_ptr "$(chain_cell "$row" to)")
+  ack=$(chain_cell "$row" anchor_kind kind)
+  ak=$(printf '%s' "$ack" | tr 'A-Z' 'a-z')
+  atext=$(chain_cell "$row" anchor anchor_text span fragment locator)
+  if [[ -n $atext && $atext == *:* ]]; then
+    fk=$(printf '%s' "${atext%%:*}" | tr 'A-Z' 'a-z')
+    case "$fk" in
+      heading|quote|line) kind_claim=$fk; atext=${atext#*:} ;;
+    esac
+  fi
+  if [[ $to == *'#'* ]]; then
+    frag=${to#*#}; to=${to%%#*}
+    [[ -n $atext ]] && { CITE_ERR="both anchor column and to#fragment present"; return 1; }
+    fk=''
+    if [[ $frag == *:* ]]; then
+      fk=$(printf '%s' "${frag%%:*}" | tr 'A-Z' 'a-z')
+      case "$fk" in heading|quote|line) ;; *) fk='' ;; esac
+    fi
+    if [[ -n $fk ]]; then
+      kind_claim=$fk; atext=${frag#*:}
+    else
+      atext=$frag
+      [[ -z $ak ]] && kind_claim=heading
+    fi
+  fi
+  [[ -n $to ]] || { CITE_ERR="resolved hop missing source"; return 1; }
+  [[ -n $atext ]] || { CITE_ERR="resolved hop missing anchor"; return 1; }
+  if [[ -n $ak && -n $kind_claim && $ak != "$kind_claim" ]]; then
+    CITE_ERR="anchor_kind=$ack conflicts with anchor kind prefix=$kind_claim"
+    return 1
+  fi
+  case "$ak" in
+    '') ak=${kind_claim:-quote} ;;
+    heading|quote|line) ;;
+    *) CITE_ERR="anchor_kind=$ack not in heading|quote|line"; return 1 ;;
+  esac
+  CITE_TO=$to CITE_KIND=$ak CITE_TEXT=$atext
+  return 0
+}
+
+chain_anchor_at() { # HAY KIND TEXT -> CITE_AT; rc0 found / rc1 not found
+  local hay=$1 kind=$2 text=$3 line tline before n1 n2 lineno=0
+  CITE_AT=-
+  case "$kind" in
+    heading)
+      while IFS= read -r line || [[ -n $line ]]; do
+        lineno=$((lineno + 1))
+        [[ $line =~ ^#+[[:space:]]+(.*)$ ]] || continue
+        tline=${BASH_REMATCH[1]}
+        while [[ $tline == *[[:space:]] ]]; do tline=${tline%?}; done
+        if [[ $tline == "$text" ]]; then CITE_AT=line:$lineno; return 0; fi
+      done <<<"$hay"
+      return 1
+      ;;
+    quote)
+      [[ $hay == *"$text"* ]] || return 1
+      before=${hay%%"$text"*}
+      n1=$(( $(count_nl "$before") + 1 ))
+      n2=$(( n1 + $(count_nl "$text") ))
+      if [[ $n1 -eq $n2 ]]; then CITE_AT=line:$n1; else CITE_AT=lines:$n1-$n2; fi
+      return 0
+      ;;
+    line)
+      while IFS= read -r line || [[ -n $line ]]; do
+        lineno=$((lineno + 1))
+        tline=$line
+        while [[ $tline == *[[:space:]] ]]; do tline=${tline%?}; done
+        if [[ $tline == "$text" ]]; then CITE_AT=line:$lineno; return 0; fi
+      done <<<"$hay"
+      return 1
+      ;;
+  esac
+  return 1
+}
+
+chain_nearest() { # HAY TEXT -> CHAIN_NEAREST CHAIN_CTX (quote-style probes)
+  local hay=$1 text=$2 probe tok nearer ctx
+  probe=${text%%$'\n'*}
+  nearer=$(line_probe "$hay" "$probe" || true)
+  if [[ -z $nearer ]]; then
+    tok=$(longest_token "$probe")
+    if [[ -n $tok ]]; then
+      nearer=$(printf '%s\n' "$hay" | grep -Fn -m1 -e "$tok" | head -n1 | cut -d: -f1 || true)
+    fi
+  fi
+  ctx=''
+  if [[ -n $nearer ]]; then
+    ctx=$(printf '%s\n' "$hay" | sed -n "${nearer}p" | tr '\t' ' ')
+    ctx=$(printf '%.80s' "$ctx")
+  fi
+  CHAIN_NEAREST=${nearer:--}
+  CHAIN_CTX=${ctx:--}
+  return 0
+}
+
+chain_ref_file() { # REF -> file part; URL/session/ephemeral forms pass untouched
+  local ref=$1
+  if is_url_ptr "$ref" || is_ephemeral_ptr "$ref" || is_session_url "$ref" || is_denylist_path "$ref"; then
+    printf '%s' "$ref"
+  else
+    printf '%s' "$(ptr_file_part "$ref")"
+  fi
+}
+
+chain_refuse_id() { # CLAIM_* refusal -> CHAIN_* finding id
+  case "$1" in
+    CLAIM_SOURCE_EXTERNAL) printf 'CHAIN_SOURCE_EXTERNAL' ;;
+    CLAIM_SOURCE_SESSION) printf 'CHAIN_SOURCE_SESSION' ;;
+    CLAIM_SOURCE_EPHEMERAL) printf 'CHAIN_SOURCE_EPHEMERAL' ;;
+    CLAIM_SOURCE_OUT_OF_CORPUS) printf 'CHAIN_SOURCE_OUT_OF_CORPUS' ;;
+    *) printf 'CHAIN_SOURCE_MISSING' ;;
+  esac
+}
+
+chain_source_sev() {
+  case "$1" in
+    CHAIN_SOURCE_EXTERNAL|CHAIN_SOURCE_SESSION|CHAIN_SOURCE_OUT_OF_CORPUS) printf 'crit' ;;
+    *) printf 'warn' ;;
+  esac
+}
+
+verify_chain() {
+  local record=$1
+  ROOT=${CHOUSA_ROOT:-$ROOT}
+  [[ -n ${record:-} ]] || die_usage "record path required (verify-chain RECORD, --record, or CHOUSA_RECORD)"
+  [[ -e $record ]] || die_usage "record not found: $record"
+  [[ -f $record ]] || die_usage "record is not a regular file: $record"
+  [[ -r $record ]] || die_usage "record unreadable: $record"
+
+  FINDING_LINES=(); N_FINDINGS=0; N_DRIFT=0; ROLL=CLEAN
+  scan_secrets "$record"
+  load_sections "$record"
+
+  local N_HOPS=0 N_VER=0 N_EXEMPT=0 N_MISM=0 N_REFUSED=0 N_INVALID=0
+  local -a CHAIN_LINES=()
+  declare -g -A SRC_PTR=()
+  local srow sid sptr
+  if [[ -n ${SEC_BODY[Sources]+x} ]]; then
+    while IFS= read -r srow; do
+      [[ -z $srow ]] && continue
+      sid=$(cell "$srow" id)
+      [[ -z $sid ]] && continue
+      sptr=$(cell "$srow" pointer)
+      SRC_PTR[$sid]=$sptr
+    done < <(table_rows Sources)
+  fi
+
+  if [[ -z ${SEC_BODY[Chain]+x} ]]; then
+    emit_finding CHAIN_ABSENT warn chain "missing ## Chain section"
+  fi
+
+  local hrow hop st to ref disp path hay obs at verdict l
+  local CITE_TO='' CITE_KIND='' CITE_TEXT='' CITE_ERR=''
+  local CITE_AT='' CHAIN_NEAREST='' CHAIN_CTX=''
+  local CLAIM_REFUSE='' CLAIM_REFUSE_OBS='' CLAIM_SRC_PATH=''
+  if [[ -n ${SEC_BODY[Chain]+x} ]]; then
+    while IFS= read -r hrow; do
+      [[ -z $hrow ]] && continue
+      N_HOPS=$((N_HOPS + 1))
+      hop=$(cell "$hrow" hop); [[ -z $hop ]] && hop="H$N_HOPS"
+      st=$(cell "$hrow" status | tr 'A-Z' 'a-z')
+      case "$st" in
+        resolved)
+          to=$(norm_ptr "$(chain_cell "$hrow" to)")
+          disp=$(chain_disp "$to")
+          if ! chain_citation "$hrow"; then
+            N_INVALID=$((N_INVALID + 1))
+            emit_finding CHAIN_CITATION_INVALID warn chain "hop=$hop status=resolved $CITE_ERR"
+            CHAIN_LINES+=("CHAIN hop=$hop status=resolved observed=invalid source=$disp anchor=- at=- verdict=invalid")
+            continue
+          fi
+          to=$CITE_TO
+          if [[ -n ${SRC_PTR[$to]+x} ]]; then
+            if [[ -z ${SRC_PTR[$to]} ]]; then
+              N_REFUSED=$((N_REFUSED + 1))
+              emit_finding CHAIN_SOURCE_MISSING warn chain "hop=$hop to=$to source row has no pointer"
+              CHAIN_LINES+=("CHAIN hop=$hop status=resolved observed=refused source=$to anchor=- at=- verdict=refused")
+              continue
+            fi
+            ref=${SRC_PTR[$to]}
+          elif [[ $to =~ ^S[A-Za-z0-9_-]+$ ]]; then
+            N_REFUSED=$((N_REFUSED + 1))
+            emit_finding CHAIN_SOURCE_MISSING warn chain "hop=$hop to=$to source_id not in ## Sources"
+            CHAIN_LINES+=("CHAIN hop=$hop status=resolved observed=refused source=$to anchor=- at=- verdict=refused")
+            continue
+          else
+            ref=$to
+          fi
+          ref=$(chain_ref_file "$ref")
+          if ! claim_source_path "$ref"; then
+            N_REFUSED=$((N_REFUSED + 1))
+            local rid; rid=$(chain_refuse_id "$CLAIM_REFUSE")
+            emit_finding "$rid" "$(chain_source_sev "$rid")" chain \
+              "hop=$hop source=$(chain_disp "$ref") obs=$CLAIM_REFUSE_OBS"
+            CHAIN_LINES+=("CHAIN hop=$hop status=resolved observed=refused source=$(chain_disp "$ref") anchor=- at=- verdict=refused")
+            continue
+          fi
+          path=$CLAIM_SRC_PATH
+          disp=$(chain_disp "$ref")
+          hay=$(cat -- "$path"; printf x)
+          hay=${hay%x}
+          CITE_AT='-'; CHAIN_NEAREST='-'; CHAIN_CTX='-'
+          if chain_anchor_at "$hay" "$CITE_KIND" "$CITE_TEXT"; then
+            N_VER=$((N_VER + 1)); obs=verified; verdict=match
+          else
+            N_MISM=$((N_MISM + 1)); obs=anchor-missing; verdict=mismatch
+            if [[ $CITE_KIND == quote ]]; then
+              chain_nearest "$hay" "$CITE_TEXT"
+            fi
+            emit_finding CHAIN_ANCHOR_NOT_FOUND warn chain \
+              "hop=$hop source=$disp anchor=$CITE_KIND:\"$(printf '%.60s' "$CITE_TEXT")\" nearest_line=$CHAIN_NEAREST context=$CHAIN_CTX"
+          fi
+          CHAIN_LINES+=("CHAIN hop=$hop status=resolved observed=$obs source=$disp anchor=$CITE_KIND:\"$(printf '%.60s' "$CITE_TEXT")\" at=$CITE_AT verdict=$verdict")
+          ;;
+        unresolved|blocked-no-fetch|rejected|labelled-dead|not-applicable)
+          N_EXEMPT=$((N_EXEMPT + 1))
+          CHAIN_LINES+=("CHAIN hop=$hop status=$st observed=exempt source=$(chain_disp "$(norm_ptr "$(chain_cell "$hrow" to)")") anchor=- at=- verdict=exempt")
+          ;;
+        "")
+          N_INVALID=$((N_INVALID + 1))
+          emit_finding CHAIN_CITATION_INVALID warn chain "hop=$hop missing status"
+          CHAIN_LINES+=("CHAIN hop=$hop status=- observed=invalid source=- anchor=- at=- verdict=invalid")
+          ;;
+        *)
+          N_INVALID=$((N_INVALID + 1))
+          emit_finding CHAIN_CITATION_INVALID warn chain "hop=$hop status=$st not in allowed set"
+          CHAIN_LINES+=("CHAIN hop=$hop status=$st observed=invalid source=- anchor=- at=- verdict=invalid")
+          ;;
+      esac
+    done < <(table_rows Chain)
+    if [[ $N_HOPS -eq 0 ]]; then
+      emit_finding CHAIN_ABSENT warn chain "no chain hop rows to verify"
+    fi
+  fi
+
+  printf 'research-gate %s — ts=%s — mode=chain — record=%s\n' "$VERSION" "$TS_UTC" "$record"
+  for l in "${CHAIN_LINES[@]+"${CHAIN_LINES[@]}"}"; do printf '%s\n' "$l"; done
+  for l in "${FINDING_LINES[@]+"${FINDING_LINES[@]}"}"; do printf '%s\n' "$l"; done
+  if [[ $((N_VER + N_EXEMPT)) -ne $N_HOPS ]]; then ROLL=DRIFT; fi
+  printf 'RESOLVED_HOPS=%d/%d\n' "$N_VER" "$N_HOPS"
+  printf 'RESEARCH_GATE: %s (hops=%d verified=%d exempt=%d anchor-missing=%d refused=%d invalid=%d findings=%d drift=%d)\n' \
+    "$ROLL" "$N_HOPS" "$N_VER" "$N_EXEMPT" "$N_MISM" "$N_REFUSED" "$N_INVALID" "$N_FINDINGS" "$N_DRIFT"
+
+  [[ $ROLL == CLEAN ]] && return 0
+  return 1
+}
+
 run_selftest() {
   local cases=0 failures=0
   WORK=$(mktemp -d "${TMPDIR:-/tmp}/chousa-research-gate-selftest.XXXXXX") \
@@ -876,6 +1175,7 @@ run_selftest() {
   printf 'aggregator chrome sources sidebar\n' >"$WORK/noise/chat-export-sources.md"
   printf 'alpha claim holds\nbeta claim holds CONTRADICTION-MARKER: source disagrees\ngamma claim retracted\n' >"$WORK/claimsrc/ledger.md"
   printf 'arrow check \xe2\x86\x92 done\n' >"$WORK/claimsrc/arrow.md"
+  printf '# Chain target\nintro line\n## Term table\nalpha row present\nThe craftsman certifies the work\nomega final line\n' >"$WORK/lib/chain_target.md"
 
   cat >"$WORK/claims-pass.jsonl" <<'EOF'
 # selftest positive claims
@@ -974,6 +1274,32 @@ EOF
     else
       printf 'FAIL-case %-28s exit=%d want=%d verdicts=%d vbearing=%d token=%s\n' \
         "$name" "$rc" "$want_rc" "$nverdict" "$nvb" "${want[*]-}"
+      printf '%s\n' "$out" | sed 's/^/    | /'
+      failures=$((failures + 1))
+    fi
+  }
+
+  # Chain-mode case runner: same fresh-process discipline as tclaims, plus one
+  # RESOLVED_HOPS summary expected per run.
+  tchain() {
+    local name=$1 want_rc=$2
+    shift 2
+    local -a want=("$@")
+    local tok rc=0 out nverdict nrh ok=1
+    cases=$((cases + 1))
+    out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+      CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+      bash "$SELF" verify-chain "$WORK/$name.md" 2>&1) || rc=$?
+    nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
+    nrh=$(grep -c '^RESOLVED_HOPS=' <<<"$out" || true)
+    for tok in "${want[@]+"${want[@]}"}"; do
+      [[ $out == *"$tok"* ]] || ok=0
+    done
+    if [[ $rc -eq $want_rc && $nverdict -eq 1 && $nrh -eq 1 && $ok -eq 1 ]]; then
+      printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" "$name" "$rc"
+    else
+      printf 'FAIL-case %-28s exit=%d want=%d verdicts=%d hops=%d token=%s\n' \
+        "$name" "$rc" "$want_rc" "$nverdict" "$nrh" "${want[*]-}"
       printf '%s\n' "$out" | sed 's/^/    | /'
       failures=$((failures + 1))
     fi
@@ -1449,6 +1775,131 @@ EOF
   tsetup claims-no-path 2 verify-claims
   tsetup claims-missing-file 2 verify-claims "$WORK/no-such-claims.jsonl"
 
+  # Chain mode cases: the citation of every resolved hop is resolved against the
+  # real target (heading text, verbatim quote, whole line); unresolved/marked
+  # hops stay exempt but are counted.
+  write_rec chain-pass <<'EOF'
+# research-record v1
+## Meta
+| key | value |
+|---|---|
+| window | loopback |
+## Question
+Do cited chain hops resolve to real corpus locations?
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | lib/chain_target.md |
+| S2 | secondary | lib/primary.md:1 |
+| K1 | secondary | lib/primary.md |
+## Chain
+| hop | from | to | status | anchor_kind | anchor | notes |
+|---|---|---|---|---|---|---|
+| 1 | C1 | S1 | resolved | heading | Term table | direct |
+| 2 | C1 | S1 | resolved | quote | alpha row present | direct |
+| 3 | C1 | lib/chain_target.md#line:omega final line | resolved | | | inline fragment |
+| 4 | C1 | S2 | resolved | quote | line1 primary material | via source id |
+| 5 | C1 | https://example.invalid/x | unresolved | | | blocked-no-fetch |
+| 6 | C1 | K1 | resolved | line | line2 | non-S declared id |
+EOF
+  tchain chain-pass 0 \
+    'RESEARCH_GATE: CLEAN' 'RESOLVED_HOPS=5/6' \
+    'hops=6 verified=5 exempt=1 anchor-missing=0 refused=0 invalid=0' \
+    'CHAIN hop=1 status=resolved observed=verified source=lib/chain_target.md anchor=heading:"Term table" at=line:3 verdict=match' \
+    'CHAIN hop=2 status=resolved observed=verified source=lib/chain_target.md anchor=quote:"alpha row present" at=line:4 verdict=match' \
+    'CHAIN hop=3 status=resolved observed=verified source=lib/chain_target.md anchor=line:"omega final line" at=line:6 verdict=match' \
+    'CHAIN hop=4 status=resolved observed=verified source=lib/primary.md anchor=quote:"line1 primary material" at=line:1 verdict=match' \
+    'CHAIN hop=5 status=unresolved observed=exempt source=https://example.invalid/x anchor=- at=- verdict=exempt' \
+    'CHAIN hop=6 status=resolved observed=verified source=lib/primary.md anchor=line:"line2" at=line:2 verdict=match'
+
+  write_rec chain-fail-tampered <<'EOF'
+# research-record v1
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | lib/chain_target.md |
+## Chain
+| hop | from | to | status | anchor_kind | anchor |
+|---|---|---|---|---|---|
+| 1 | C1 | S1 | resolved | quote | alpha row present but wrong |
+EOF
+  tchain chain-fail-tampered 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING CHAIN_ANCHOR_NOT_FOUND' \
+    'nearest_line=4' 'context=alpha row present' \
+    'observed=anchor-missing' 'at=-' 'RESOLVED_HOPS=0/1' \
+    'hops=1 verified=0 exempt=0 anchor-missing=1 refused=0 invalid=0 findings=1 drift=1'
+
+  write_rec chain-fail-anchor-kinds <<'EOF'
+# research-record v1
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | lib/chain_target.md |
+## Chain
+| hop | from | to | status | anchor_kind | anchor |
+|---|---|---|---|---|---|
+| 1 | C1 | S1 | resolved | heading | Missing heading |
+| 2 | C1 | S1 | resolved | line | not a real line |
+EOF
+  tchain chain-fail-anchor-kinds 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING CHAIN_ANCHOR_NOT_FOUND' \
+    'anchor=heading:"Missing heading"' 'anchor=line:"not a real line"' \
+    'nearest_line=-' 'RESOLVED_HOPS=0/2' \
+    'hops=2 verified=0 exempt=0 anchor-missing=2 refused=0 invalid=0 findings=2 drift=2'
+
+  printf '# research-record v1\n## Chain\n| hop | from | to | status | anchor_kind | anchor |\n|---|---|---|---|---|---|\n| 1 | C1 | %s | resolved | quote | outside text |\n| 2 | C1 | ../%s | resolved | quote | outside text |\n' \
+    "$OUTSIDE_FILE" "$(basename "$OUTSIDE_FILE")" >"$WORK/chain-fail-out-of-corpus.md"
+  tchain chain-fail-out-of-corpus 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING CHAIN_SOURCE_OUT_OF_CORPUS severity=crit' \
+    'observed=refused' 'RESOLVED_HOPS=0/2' \
+    'hops=2 verified=0 exempt=0 anchor-missing=0 refused=2 invalid=0 findings=2 drift=2'
+
+  write_rec chain-fail-external <<'EOF'
+# research-record v1
+## Chain
+| hop | from | to | status | anchor_kind | anchor |
+|---|---|---|---|---|---|
+| 1 | C1 | https://example.invalid/x | resolved | quote | remote text |
+EOF
+  tchain chain-fail-external 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING CHAIN_SOURCE_EXTERNAL severity=crit' \
+    'url source refused (no external fetch)' 'RESOLVED_HOPS=0/1'
+
+  write_rec chain-fail-invalid <<'EOF'
+# research-record v1
+## Chain
+| hop | from | to | status | anchor_kind | anchor |
+|---|---|---|---|---|---|
+| 1 | C1 | S1 | resolved | | |
+| 2 | C1 | S1 | resolved | slug | Heading text |
+| 3 | C1 | S1 | pending | | |
+EOF
+  tchain chain-fail-invalid 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING CHAIN_CITATION_INVALID' \
+    'resolved hop missing anchor' 'anchor_kind=slug not in heading|quote|line' \
+    'status=pending not in allowed set' 'observed=invalid' \
+    'RESOLVED_HOPS=0/3' 'hops=3 verified=0 exempt=0 anchor-missing=0 refused=0 invalid=3 findings=3 drift=3'
+
+  printf '# research-record v1\n## Sources\n| id | tier | pointer |\n|---|---|---|\n| S1 | primary | lib/chain_target.md |\n## Chain\n| hop | from | to | status | anchor_kind | anchor |\n|---|---|---|---|---|---|\n| 1 | C1 | S1 | resolved | heading | Term table |\n| 2 | C1 | S1 | resolved | quote | alpha row present |\n| 3 | C1 | S1 | unresolved | | |\n| 4 | C1 | S1 | labelled-dead | | |\n| 5 | C1 | S1 | resolved | quote | alpha row present but wrong |\n| 6 | C1 | %s | resolved | quote | outside text |\n| 7 | C1 | S1 | resolved | | |\n| 8 | C1 | S1 | pending | | |\n' \
+    "$OUTSIDE_FILE" >"$WORK/chain-fail-counting.md"
+  tchain chain-fail-counting 1 \
+    'RESOLVED_HOPS=2/8' \
+    'hops=8 verified=2 exempt=2 anchor-missing=1 refused=1 invalid=2 findings=4 drift=4' \
+    'observed=exempt' 'FINDING CHAIN_ANCHOR_NOT_FOUND' 'FINDING CHAIN_SOURCE_OUT_OF_CORPUS' \
+    'FINDING CHAIN_CITATION_INVALID' 'FINDING CHAIN_CITATION_INVALID'
+
+  write_rec chain-fail-no-chain <<'EOF'
+# research-record v1
+## Question
+Is there a chain to resolve?
+EOF
+  tchain chain-fail-no-chain 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING CHAIN_ABSENT' \
+    'RESOLVED_HOPS=0/0' 'hops=0 verified=0 exempt=0 anchor-missing=0 refused=0 invalid=0 findings=1 drift=1'
+
+  tsetup chain-no-path 2 verify-chain
+  tsetup chain-missing-file 2 verify-chain "$WORK/no-such-record.md"
+
   if [[ $failures -eq 0 ]]; then
     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases)\n' "$cases"
     exit 0
@@ -1463,6 +1914,7 @@ while [[ $# -gt 0 ]]; do
     --selftest) MODE=selftest; shift ;;
     verify) MODE=verify; shift ;;
     verify-claims) MODE=claims; shift ;;
+    verify-chain) MODE=chain; shift ;;
     --record)
       [[ $# -ge 2 ]] || die_usage "--record needs PATH"
       RECORD_ARG=$2; shift 2 ;;
@@ -1486,6 +1938,10 @@ case "$MODE" in
   claims)
     CLAIMS_PATH=${RECORD_ARG:-${CHOUSA_CLAIMS:-}}
     verify_claims "$CLAIMS_PATH"
+    ;;
+  chain)
+    CHAIN_PATH=${RECORD_ARG:-${CHOUSA_RECORD:-}}
+    verify_chain "$CHAIN_PATH"
     ;;
   *) die_usage "unknown mode: $MODE" ;;
 esac
