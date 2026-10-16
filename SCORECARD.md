@@ -160,3 +160,42 @@ scalar score. Learning trends: expansion/quality **improved**, discernment
 semantics so truncated-quote games cannot resolve, plus the claim-span
 truncation class from round 2's note.
 
+## Round 4 verdict — 2026-10-16 (goal wave; evidence commit `a6f3118`)
+
+Selected axis: **calibration** of the matching semantics — the round-3-named
+truncation limit. Wave: one 32-seat flash call, 25/25 reports. Report:
+`.ufo/round-4/chousa-goalwave.md`.
+
+**Before** (gate `67daf85e…`): anchors and claim spans matched as raw
+substrings — a citation truncated mid-phrase (or padded with an extra word)
+still resolved.
+
+**After** (gate `6b83705b…`, selftest 44 = +4; parent acceptance
+2026-10-16T00:55Z): ONE shared token-boundary matcher serves both verify-claims
+spans and verify-chain quote anchors (the rule cannot drift between modes;
+verified by the cross-mode seat): an occurrence counts only when both outer
+edges are boundaries — file/line edge, ASCII whitespace, ASCII punctuation —
+with `-`/`'` as boundaries only when not joining two word characters, `_`
+punctuation (Markdown emphasis), non-ASCII bytes NOT boundaries (fail closed),
+byte-exact, case-sensitive; misses keep the line-aware reports. All r1-r3
+cases byte-identical PASS (1-40 cmp-clean against the r3 receipt); claims
+17/17 and chain 17/22 still CLEAN; the broken control still DRIFTs naming
+anchor-missing; the r1 observable intact (3/3); the attack seat's
+truncation/padding/glue games all FAIL, controls PASS.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| calibration | **improved** | the matching semantics went from substring (truncation-vulnerable, demonstrated) to documented token boundaries, with the exact character class in the header and shared logic across modes. |
+| depth | **improved** | `corpus/knowledge/anchor-boundaries-r4.md`: the rule, the catches, and what hardening still cannot do (semantic/context limits — a real quote reused in a wrong context still resolves); lesson `2026-10-15-anchor-token-boundaries.md`. |
+| operability | **improved** | selftest 40 → 44 (+4: boundary pass/fail pairs running the SAME fixture bytes through both modes); zero regression across all modes. |
+| coverage | **unchanged** | no new measured surface; both fixtures held. |
+| freshness | **unchanged** | five receipts at the new SHA. |
+| adjacency | **unchanged** | zero network; quota-sentinel-held /tmp; corpus read-only. |
+
+Admission: **ADMIT** (calibration/depth/operability improved, none harmed). No
+scalar score. Learning trends: expansion/quality **improved**, discernment
+**unchanged**. Round 5 registered: the last unmeasured structural axis —
+kept rejections and negative sweeps become verdict-bearing (`verify-sweeps`:
+each rejection cites reason + flip-condition; each sweep names where it
+looked, with local emptiness checkable).
+

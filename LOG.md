@@ -346,3 +346,24 @@ parent integrated under the chousa lane identity.
 
 Round report: `.ufo/round-3/chousa-goalwave.md`.
 
+## Round 4 — anchor token boundaries (goal wave)
+
+**Round 4 — goal-wave admission (2026-10-16).** Motivating evidence: round 3's
+named limit (substring semantics; truncated quotes resolve). Landed (evidence
+commit `a6f3118`): gate `6b83705b…` — one shared token-boundary matcher for
+claims spans + chain quote anchors (char class in the header; `-`/`'`/
+`_`/non-ASCII rules; fail-closed); selftest 44 = +4 with same-bytes-both-modes
+cases; fixtures held (claims 17/17, chain 17/22 CLEAN; broken control DRIFT);
+r1 observable 3/3. Wave: 32-seat flash call, 25/25. Environment: /tmp quota
+held (quota-sentinel, ~700M headroom); seats cleaned scratch.
+
+**Verdicts.** ADMIT: calibration/depth/operability **improved**; coverage/
+freshness/adjacency **unchanged**; none harmed. Round 5 registered:
+verify-sweeps — rejections + negative sweeps verdict-bearing (the last r1
+structural axis). Receipt identity remains OPEN (operator side).
+
+**Boundaries held.** Zero network; corpus read-only; seats committed nothing;
+parent integrated under the chousa lane identity.
+
+Round report: `.ufo/round-4/chousa-goalwave.md`.
+
