@@ -236,3 +236,40 @@ scalar score. Learning trends: expansion/quality **improved**, discernment
 running all four checks as one verdict, plus the fleet-ledger/manifest step
 that records a record's full verification state.
 
+## Round 6 verdict — 2026-10-16 (goal wave; evidence commit `74c533d`)
+
+Selected axis: **operability/composition** — one record, one deep verdict.
+Wave: one 32-seat flash call, 26/26 reports. Report:
+`.ufo/round-6/chousa-goalwave.md`.
+
+**Before** (gate `55adb92d…`): a record's full verification state required
+running four modes manually and eyeballing; no durable manifest.
+
+**After** (gate `0c3d51ed…`, selftest 64 = +10, cases 1-54 byte-identical;
+parent acceptance 2026-10-16T03:20Z): `verify-all <record> [--claims PATH]
+[--json PATH] --root ..` runs every applicable section as a fresh solo-mode
+invocation (section tallies equal the solo runs BY CONSTRUCTION), composes one
+`RESEARCH_GATE: CLEAN|DRIFT` (DRIFT iff any section drifts), reports absent
+sections (claims/chains/sweeps optional; absent != drift — the omission limit
+is a named r7 candidate), and `--json` APPENDS the verification state
+(record+gate SHAs, UTC, per-section tallies, composed verdict) to
+`corpus/evidence/verify-all-manifest.jsonl` (>> only, no rewrite path). Full
+fixture: CLEAN, sections=4 run=4; broken fixture: DRIFT with drift-sections=2
+naming chain + sweeps; strace-confirmed zero network; all solo modes held.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| operability | **improved** | composed verification with solo-equal tallies, absent-not-drift semantics, and a durable append-only manifest — a record's verification state is now one command + one manifest line. |
+| depth | **improved** | `corpus/knowledge/verify-all-r6.md`: composition semantics, the omission limit, the manifest schema; the omission-hunter demonstrated the named hole (claims-heavy record with no ## Claims verifies CLEAN) and the r7 candidate (cross-section reference integrity / record-type obligations). |
+| coverage | **unchanged** | no new measured surface; all five modes intact. |
+| freshness | **improved narrowly** | the manifest is the lane's first durable, append-only verification-state ledger. |
+| calibration | **unchanged** | absent!=drift is a declared semantic, not a hidden relaxation. |
+| adjacency | **unchanged** | zero network; corpus read-only; quota held. |
+
+Admission: **ADMIT** (operability/depth/freshness improved, none harmed). No
+scalar score. Learning trends: expansion/quality **improved**, discernment
+**unchanged**. Round 7 registered: binding integrity — every cross-section
+reference (sweep/companion bindings) must resolve to a declared row or source,
+fail-closed, closing the dangling-claim/unbound-companion class demonstrated
+this round.
+

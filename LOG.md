@@ -390,3 +390,24 @@ parent integrated under the chousa lane identity.
 
 Round report: `.ufo/round-5/chousa-goalwave.md`.
 
+## Round 6 — verify-all composition (goal wave)
+
+**Round 6 — goal-wave admission (2026-10-16).** Motivating evidence: no
+composed verdict; no manifest. Landed (evidence commit `74c533d`): gate
+`0c3d51ed…` with `verify-all` (selftest 64 = +10, 1-54 byte-identical) —
+sections run as fresh solo invocations (tally-equal by construction),
+composed CLEAN|DRIFT, absent!=drift, `--json` append-only manifest at
+`corpus/evidence/verify-all-manifest.jsonl`. Full fixture CLEAN (4/4);
+broken DRIFT with drift-sections=2; zero network (strace). Wave: 32-seat
+flash call, 26/26.
+
+**Verdicts.** ADMIT: operability/depth/freshness **improved**; coverage/
+calibration/adjacency **unchanged**; none harmed. Named limit: absent!=drift
+omission hole — r7 = binding integrity (cross-section references resolve,
+fail-closed). Receipt identity remains OPEN (operator side).
+
+**Boundaries held.** Zero network; corpus read-only; seats committed nothing;
+parent integrated under the chousa lane identity.
+
+Round report: `.ufo/round-6/chousa-goalwave.md`.
+
