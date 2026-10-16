@@ -363,3 +363,105 @@ grep -nE 'https?://' -- ../research/deep-research-2026-09-28/A-shokunin-traditio
   be verified beyond its naming.
 - Receipt identity for this round remains a lane-local log; no `task_…` value
   is invented and the round-1 receipt blocker stands (operator-side).
+
+## Round-6 composition receipts — stamp 20261016T020330Z
+
+Revision under test: `tools/research-gate.sh` sha256
+`0c3d51ed1a131146ac33eebf24eefe5830ecaaf3e59a1b03e6c91cd8debfd5f8`
+(lane HEAD `1d1f56c`). Before-state gate: the round-5 revision
+`55adb92d…` (lane HEAD; `verify-all` absent — it exits 2 with usage text).
+Fixtures: `corpus/fixtures/full-r6.md` sha256 `878c2c50…`,
+`corpus/fixtures/full-r6-broken.md` sha256 `0f7e498c…`,
+`corpus/fixtures/full-r6-absent.md` sha256 `39cdb2d7…`,
+`corpus/fixtures/full-r6.claims.jsonl` = `full-r6-broken.claims.jsonl`
+sha256 `45eb6ac2…`; contract `corpus/fixtures/full-r6.README.md` sha256
+`f56ef337…`.
+
+| Receipt (sha256) | Shows | Key result |
+|---|---|---|
+| `compose-r6-20261016T020330Z-selftest.log` (`e3b94e1c…`) | full `--selftest`; case-line stability vs the round-5 selftest stdout | `RESEARCH_GATE_SELFTEST: PASS (64 cases)`, exit 0; the first 54 case lines are **byte-identical** to the round-5 receipt (`cmp` YES); new cases 55–64 = `all-pass`/`all-structure`/`all-meta`/`all-meta-missing` + the claims-JSONL-as-input case + two setup exits |
+| `compose-r6-20261016T020330Z-full.log` (`c96ac4f5…`) | the four solo modes on `full-r6.md`, then composed `verify-all`, then the side-by-side tally comparison | composed `VERIFY_ALL sections=4 run=4 absent=0 drift-sections=0 findings=0 drift=0` + `RESEARCH_GATE: CLEAN`, exit 0; per-section composed tallies equal the solo summaries (`VERDICT_BEARING_CLAIMS=3/3`, `RESOLVED_HOPS=3/3`, `VERIFIED_SWEEPS=1/2 REJECTIONS_OK=2/2`) |
+| `compose-r6-20261016T020330Z-broken.log` (`83d7aef6…`) | the twin's diff, composed `verify-all`, the solo modes localizing the two defects, the round-5 before-state | composed `drift-sections=2` naming exactly `chain` (`RESOLVED_HOPS=2/3`, `CHAIN_ANCHOR_NOT_FOUND` hop=2) and `sweeps` (`REJECTIONS_OK=1/2`, `SWEEP_REJECTION_INCOMPLETE` id=R2 missing=flip), `structure`/`claims` green; DRIFT exit 1; round-5 `verify` on the twin CLEAN exit 0 (the hole) |
+| `compose-r6-20261016T020330Z-json.log` (`1db37149…`) | manifest before-state (0 lines), the three appended `--json` lines verbatim, append-only prefix compares, JSON well-formedness, boundary refusals | lines 0 → 3; prefix run1==before / run2==after1 / run3==after2 all YES; each line a well-formed JSON `chousa-verify-all/v1` object with ts, record + gate sha256, per-section tallies, composed verdict; missing-dir and dir-as-path controls exit 2 |
+| `compose-r6-20261016T020330Z-live.log` (`ac4d3f8e…`) | composed runs on all three fixtures, the omission probe, the `--claims` binding, cross-round no-harm, the r1 archive observable, setup controls, zero-network strace | full CLEAN (run=4), broken DRIFT (drift-sections=2), absent CLEAN (run=3 absent=1, `SECTION claims state=absent`); `--claims` binding runs all 4 sections CLEAN; r5-gate vs r6-gate stdout **byte-identical** on claims17/chain/chain-broken/sweeps/sweeps-broken/archive-A (frozen clock); `VERDICT_BEARING_EXPORTS=3/3`; `strace -f -e trace=network`: 4237 trace lines, **0 network syscalls** |
+
+Before → after in one line: at the round-5 revision a record's full
+verification state required running up to four modes by hand and eyeballing
+four summaries, and `verify-all` did not exist (exit 2 with usage); the landed
+mode composes ONE verdict over the applicable sections (DRIFT iff a run
+section drifts; an absent section is reported, never drift by itself), and
+`--json` appends the record's state (ts, record + gate sha256, per-section
+tallies, composed verdict) to the lane manifest with `>>` — no rewrite path.
+
+### The lane manifest
+
+`corpus/evidence/verify-all-manifest.jsonl` sha256
+`2ed28f9ffd772ab9b67690a16ae0127e0ac06b48ec0d1a14c83119c117810ea9` — three
+lines, one per fixture run, appended by the cut itself (the first real
+manifest lines in the lane):
+
+| line | record | verdict | sections |
+|---:|---|---|---|
+| 1 | `full-r6.md` | CLEAN | run=4 absent=0 drift-sections=0 |
+| 2 | `full-r6-broken.md` | DRIFT | run=4 absent=0 drift-sections=2 |
+| 3 | `full-r6-absent.md` | CLEAN | run=3 absent=1 drift-sections=0 |
+
+### Omission rule (the round's absent-section claim)
+
+`full-r6-absent.md` carries no `## Sweeps`, no `## Negatives`, no `claims_file`
+Meta row and no companion claims file. Composed: `SECTION claims state=absent`,
+`SECTION sweeps state=run verdict=CLEAN … VERIFIED_SWEEPS=0/0 REJECTIONS_OK=1/1`,
+one CLEAN verdict exit 0 — an omission is reported, not drift. Measured limit
+(fixture README, named r7 candidate): a record cannot compose CLEAN once the
+sections the structure mode demands are gone, and `chain` absent is not
+exercised as a CLEAN case.
+
+### Re-run recipe
+
+From the lane root, local only. Exit contract: 0 CLEAN, 1 DRIFT, 2 setup/usage.
+
+```bash
+sha256sum tools/research-gate.sh
+#   0c3d51ed1a131146ac33eebf24eefe5830ecaaf3e59a1b03e6c91cd8debfd5f8
+bash tools/research-gate.sh verify-all corpus/fixtures/full-r6.md --root ..
+#   expect: SECTION x4 all state=run CLEAN; VERIFY_ALL sections=4 run=4 absent=0
+#   drift-sections=0; CLEAN, exit 0
+bash tools/research-gate.sh verify-all corpus/fixtures/full-r6-broken.md --root ..
+#   expect: SECTION chain DRIFT + SECTION sweeps DRIFT (findings 1+1);
+#   VERIFY_ALL sections=4 run=4 absent=0 drift-sections=2 findings=2; DRIFT, exit 1
+bash tools/research-gate.sh verify-all corpus/fixtures/full-r6-absent.md --root ..
+#   expect: SECTION claims state=absent; run=3 absent=1; CLEAN, exit 0
+bash tools/research-gate.sh --selftest
+#   expect: RESEARCH_GATE_SELFTEST: PASS (64 cases), exit 0
+# manifest append (append-only; adds one line per run):
+bash tools/research-gate.sh verify-all corpus/fixtures/full-r6.md --root .. \
+  --json corpus/evidence/verify-all-manifest.jsonl
+```
+
+### Notes
+
+- Receipts pin gate revision `0c3d51ed…`; a later gate edit supersedes this
+  stamp — re-run the recipe and re-cut.
+- Scratch for this cut lived at `$HOME/.cache/chousa-r6-evidence/` (cut and
+  assembler scripts, captures, `TMPDIR`, frozen r5-gate snapshot). `/tmp` was
+  not required.
+- Cut discipline: the fixture family converged during the wave (the records
+  gained their `claims_file` Meta rows, the README kept being polished); the
+  receipts were re-cut at stamp `20261016T020330Z` against the settled bytes
+  (all fixture shas above re-checked identical before and after the cut), and
+  a pre-settle rehearsal set was discarded. The earlier uncommitted
+  `verify-all-manifest.jsonl` rehearsal lines were replaced by this cut's
+  three lines.
+- The composed run shells out to the same CLI paths (`bash "$SELF" <mode>`), so
+  each section tally is that solo mode's tally by construction; the receipts
+  also measure every solo mode separately for the reader to compare, and the
+  live receipt holds a r5-gate-vs-r6-gate byte-identical comparison (frozen
+  clock) across the six prior-mode/archive runs.
+- Honest boundaries of the new mode: a section that cannot run (rc outside
+  0/1 or an unparsable summary) is `VERIFY_ALL_SECTION_UNAVAILABLE severity=crit`
+  and drifts the composition; a manifest line is appended with `>>` and never
+  deduplicated, so a replayed line is information, not a rewrite — replay
+  handling is not part of this round. How fine-grained the omission reporting
+  should be is the named r7 candidate.
+- Receipt identity for this round remains a lane-local log; no `task_…` value
+  is invented and the round-1 receipt blocker stands (operator-side).

@@ -1,0 +1,66 @@
+# chousa-shokunin round-6 receipt — manifest: first real --json lines, append-only and well-formed
+# utc: 2026-10-16T02:05:29Z
+# seat: receipts-writer | lane: chousa-shokunin | round: 6 (operability/composition move: verify-all composes one verdict + --json manifest)
+# lane head: 1d1f56c | gate: tools/research-gate.sh sha256=0c3d51ed1a131146ac33eebf24eefe5830ecaaf3e59a1b03e6c91cd8debfd5f8
+# before-state gate: tools/research-gate.sh sha256=55adb92d0ba5ac958907fac6c4d5d6b0b50129703e866a5befbd9a32789f2ff2 (round-5 revision, lane HEAD; verify-all absent)
+# fixtures:
+#   878c2c50ec9efba5a103644bbc002a7029c9cbead9b95ec369913760d158212a  corpus/fixtures/full-r6.md
+#   0f7e498cf1f6f6192a2660b14e41a025dbf47972d3c37ffd414df008bb6b320f  corpus/fixtures/full-r6-broken.md
+#   39cdb2d727c5f2e26093c7099f501ab21a8fae6ac9d2fa458161614ad4953d6c  corpus/fixtures/full-r6-absent.md
+#   45eb6ac2cde9e3c33dd4d753e4da2cb660308dad8f00475a382a2881b89ddc40  corpus/fixtures/full-r6.claims.jsonl
+#   45eb6ac2cde9e3c33dd4d753e4da2cb660308dad8f00475a382a2881b89ddc40  corpus/fixtures/full-r6-broken.claims.jsonl
+#   f56ef337aa41137af6db3624066947d29bcf4364a228dfdcdc8cc0e701646216  corpus/fixtures/full-r6.README.md
+# manifest: corpus/evidence/verify-all-manifest.jsonl
+# method: machine-cut by /home/vgpnk/.cache/chousa-r6-evidence/cut-receipts.sh + assemble-receipts.sh; stdout verbatim (the gate prints its own ts=); local files only; no network
+# scope: verify-all --json appends the record's verification state to the lane manifest: three fixture runs, append-only proof, JSON well-formedness, schema
+
+## manifest state before the cut
+
+lines=0
+the manifest path did not exist at cut start (this receipt creates the first real lines)
+
+## appended line 1 — verify-all corpus/fixtures/full-r6.md --json
+## command: bash tools/research-gate.sh verify-all corpus/fixtures/full-r6.md --root .. --json corpus/evidence/verify-all-manifest.jsonl
+exit: 0
+
+{"schema":"chousa-verify-all/v1","ts":"2026-10-16T02:04:09Z","record":"corpus/fixtures/full-r6.md","record_sha256":"878c2c50ec9efba5a103644bbc002a7029c9cbead9b95ec369913760d158212a","gate_sha256":"0c3d51ed1a131146ac33eebf24eefe5830ecaaf3e59a1b03e6c91cd8debfd5f8","sections":[{"name":"structure","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"findings":0,"drift":0,"questions":1,"sources":4,"chains":3,"claims":3,"negatives":2,"rejections":2,"approvals":1}},{"name":"claims","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"claims":3,"supported":3,"contradicted":0,"unsupported":0,"mismatched":0,"unproven":0,"refused":0,"invalid":0,"findings":0,"drift":0},"native":"VERDICT_BEARING_CLAIMS=3/3"},{"name":"chain","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"hops":3,"verified":3,"exempt":0,"anchor-missing":0,"refused":0,"invalid":0,"findings":0,"drift":0},"native":"RESOLVED_HOPS=3/3"},{"name":"sweeps","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"sweeps":2,"verified":1,"exempt":1,"hit":0,"refused":0,"invalid":0,"rejections":2,"rejections-ok":2,"findings":0,"drift":0},"native":"VERIFIED_SWEEPS=1/2 REJECTIONS_OK=2/2"}],"verdict":"CLEAN","sections_run":4,"sections_absent":0,"drift_sections":0}
+
+## appended line 2 — verify-all corpus/fixtures/full-r6-broken.md --json
+## command: bash tools/research-gate.sh verify-all corpus/fixtures/full-r6-broken.md --root .. --json corpus/evidence/verify-all-manifest.jsonl
+exit: 1
+
+{"schema":"chousa-verify-all/v1","ts":"2026-10-16T02:04:12Z","record":"corpus/fixtures/full-r6-broken.md","record_sha256":"0f7e498cf1f6f6192a2660b14e41a025dbf47972d3c37ffd414df008bb6b320f","gate_sha256":"0c3d51ed1a131146ac33eebf24eefe5830ecaaf3e59a1b03e6c91cd8debfd5f8","sections":[{"name":"structure","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"findings":0,"drift":0,"questions":1,"sources":4,"chains":3,"claims":3,"negatives":2,"rejections":2,"approvals":1}},{"name":"claims","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"claims":3,"supported":3,"contradicted":0,"unsupported":0,"mismatched":0,"unproven":0,"refused":0,"invalid":0,"findings":0,"drift":0},"native":"VERDICT_BEARING_CLAIMS=3/3"},{"name":"chain","state":"run","verdict":"DRIFT","findings":1,"drift":1,"tallies":{"hops":3,"verified":2,"exempt":0,"anchor-missing":1,"refused":0,"invalid":0,"findings":1,"drift":1},"native":"RESOLVED_HOPS=2/3"},{"name":"sweeps","state":"run","verdict":"DRIFT","findings":1,"drift":1,"tallies":{"sweeps":2,"verified":1,"exempt":1,"hit":0,"refused":0,"invalid":0,"rejections":2,"rejections-ok":1,"findings":1,"drift":1},"native":"VERIFIED_SWEEPS=1/2 REJECTIONS_OK=1/2"}],"verdict":"DRIFT","sections_run":4,"sections_absent":0,"drift_sections":2}
+
+## appended line 3 — verify-all corpus/fixtures/full-r6-absent.md --json
+## command: bash tools/research-gate.sh verify-all corpus/fixtures/full-r6-absent.md --root .. --json corpus/evidence/verify-all-manifest.jsonl
+exit: 0
+
+{"schema":"chousa-verify-all/v1","ts":"2026-10-16T02:04:14Z","record":"corpus/fixtures/full-r6-absent.md","record_sha256":"39cdb2d727c5f2e26093c7099f501ab21a8fae6ac9d2fa458161614ad4953d6c","gate_sha256":"0c3d51ed1a131146ac33eebf24eefe5830ecaaf3e59a1b03e6c91cd8debfd5f8","sections":[{"name":"structure","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"findings":0,"drift":0,"questions":1,"sources":1,"chains":1,"claims":1,"negatives":0,"rejections":1,"approvals":1}},{"name":"claims","state":"absent"},{"name":"chain","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"hops":1,"verified":1,"exempt":0,"anchor-missing":0,"refused":0,"invalid":0,"findings":0,"drift":0},"native":"RESOLVED_HOPS=1/1"},{"name":"sweeps","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"sweeps":0,"verified":0,"exempt":0,"hit":0,"refused":0,"invalid":0,"rejections":1,"rejections-ok":1,"findings":0,"drift":0},"native":"VERIFIED_SWEEPS=0/0 REJECTIONS_OK=1/1"}],"verdict":"CLEAN","sections_run":3,"sections_absent":1,"drift_sections":0}
+
+## append-only check (line counts and prefix byte-compare)
+
+lines after run 1: 1 | after run 2: 2 | after run 3: 3
+prefix run1 == before: YES
+prefix run2 == after1: YES
+prefix run3 == after2: YES
+
+## completeness of the state recorded per line
+each line carries: schema, ts (UTC), record, record_sha256, gate_sha256, sections[] (per-section state/verdict/findings/drift/tallies/native), verdict, sections_run, sections_absent, drift_sections
+
+## supplementary: a bare claims JSONL as its own claims surface (side manifest, scratch)
+
+{"schema":"chousa-verify-all/v1","ts":"2026-10-16T01:53:46Z","record":"corpus/fixtures/full-r6.claims.jsonl","record_sha256":"45eb6ac2cde9e3c33dd4d753e4da2cb660308dad8f00475a382a2881b89ddc40","gate_sha256":"ea3283f15862d25bbd9913d27d1e7c00a1216d7233024075ed5126bf628e9465","sections":[{"name":"structure","state":"absent"},{"name":"claims","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"claims":3,"supported":3,"contradicted":0,"unsupported":0,"mismatched":0,"unproven":0,"refused":0,"invalid":0,"findings":0,"drift":0},"native":"VERDICT_BEARING_CLAIMS=3/3"},{"name":"chain","state":"absent"},{"name":"sweeps","state":"absent"}],"verdict":"CLEAN","sections_run":1,"sections_absent":3,"drift_sections":0}
+{"schema":"chousa-verify-all/v1","ts":"2026-10-16T02:01:05Z","record":"corpus/fixtures/full-r6.claims.jsonl","record_sha256":"45eb6ac2cde9e3c33dd4d753e4da2cb660308dad8f00475a382a2881b89ddc40","gate_sha256":"0c3d51ed1a131146ac33eebf24eefe5830ecaaf3e59a1b03e6c91cd8debfd5f8","sections":[{"name":"structure","state":"absent"},{"name":"claims","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"claims":3,"supported":3,"contradicted":0,"unsupported":0,"mismatched":0,"unproven":0,"refused":0,"invalid":0,"findings":0,"drift":0},"native":"VERDICT_BEARING_CLAIMS=3/3"},{"name":"chain","state":"absent"},{"name":"sweeps","state":"absent"}],"verdict":"CLEAN","sections_run":1,"sections_absent":3,"drift_sections":0}
+{"schema":"chousa-verify-all/v1","ts":"2026-10-16T02:04:15Z","record":"corpus/fixtures/full-r6.claims.jsonl","record_sha256":"45eb6ac2cde9e3c33dd4d753e4da2cb660308dad8f00475a382a2881b89ddc40","gate_sha256":"0c3d51ed1a131146ac33eebf24eefe5830ecaaf3e59a1b03e6c91cd8debfd5f8","sections":[{"name":"structure","state":"absent"},{"name":"claims","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"claims":3,"supported":3,"contradicted":0,"unsupported":0,"mismatched":0,"unproven":0,"refused":0,"invalid":0,"findings":0,"drift":0},"native":"VERDICT_BEARING_CLAIMS=3/3"},{"name":"chain","state":"absent"},{"name":"sweeps","state":"absent"}],"verdict":"CLEAN","sections_run":1,"sections_absent":3,"drift_sections":0}
+
+## control: the gate refuses a missing manifest directory (exit 2)
+
+## command: bash tools/research-gate.sh verify-all corpus/fixtures/full-r6.md --root .. --json /nonexistent-dir/m.jsonl
+exit: 2
+stderr_first: research-gate: manifest directory not found: /nonexistent-dir (--json)
+
+## control: the gate refuses a manifest path that is a directory (exit 2)
+
+## command: bash tools/research-gate.sh verify-all corpus/fixtures/full-r6.md --root .. --json /home/vgpnk/.cache/chousa-r6-evidence/out
+exit: 2
+stderr_first: research-gate: manifest path is not a regular file: /home/vgpnk/.cache/chousa-r6-evidence/out (--json)

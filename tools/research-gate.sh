@@ -25,6 +25,7 @@
 #   CLAIM_SPAN_NOT_FOUND CLAIM_SPAN_UNEXPECTED CONTRADICTION_MARKER_ABSENT
 #   SWEEP_REJECTION_INCOMPLETE SWEEP_LOCATION_ABSENT SWEEP_LOCATION_UNRESOLVED
 #   SWEEP_LOCATION_OUT_OF_CORPUS SWEEP_CLAIM_FALSE
+#   VERIFY_ALL_CLAIMS_UNRESOLVED VERIFY_ALL_SECTION_UNAVAILABLE
 #
 # Claims mode: verify-claims <claims-file> checks each claim's verbatim span
 # against its cited source. Blank lines and #-comment lines are ignored; a
@@ -97,6 +98,25 @@
 # words ignored — so an r1-style `test ! -f lib/ghost.md` cell names
 # lib/ghost.md. Whitespace-free values are split on commas/semicolons only.
 #
+# verify-all mode: verify-all <record> [--claims PATH] [--json PATH] runs every
+# applicable mode over one input as fresh gate calls and composes one verdict.
+# Applicable: structure — always, for a Markdown record; claims — when a claims
+# surface is bound (the input itself when it is a claims JSONL: no ## section
+# lines and at least one JSON-object line; else --claims PATH; else a ## Meta
+# row named claims/claims_file/claims-file/claimset, boundary-checked like a
+# source); chain — when the record declares ## Chain; sweeps — when it declares
+# ## Sweeps, ## Negatives or ## Rejections. An ABSENT section is reported
+# state=absent and never drifts by itself; the composed verdict is DRIFT iff
+# any RUN section drifts. Sections execute the same CLI paths (bash "$SELF"
+# <mode>), so each section tally is that solo mode's tally by construction.
+#   SECTION <name> state=absent
+#   SECTION <name> state=run verdict=… findings=N drift=N [tally=…]
+# followed by that section's FINDING lines, then
+#   VERIFY_ALL sections=4 run=N absent=N drift-sections=N findings=N drift=N
+# and one closing RESEARCH_GATE: CLEAN|DRIFT with the same composed counters.
+# --json PATH appends (>>, never rewrites) one JSON line: schema, UTC, record
+# and gate SHA-256, per-section state/verdict/tallies, composed verdict.
+#
 # Token boundaries (matching semantics shared by claims spans and chain quote
 # anchors — the substring classes): an occurrence of a span/quote counts only
 # when both of its outer edges sit at a token boundary, i.e. the character
@@ -156,6 +176,8 @@ usage: research-gate.sh [--selftest] [--help]
        research-gate.sh verify-claims [CLAIMS] [--root PATH]
        research-gate.sh verify-chain [RECORD] [--root PATH]
        research-gate.sh verify-sweeps [RECORD] [--root PATH]
+       research-gate.sh verify-all [RECORD] [--claims PATH] [--json PATH]
+                      [--root PATH]
        research-gate.sh [--record PATH] [--root PATH]
 
   RECORD via --record, positional, or CHOUSA_RECORD.
@@ -186,6 +208,14 @@ usage: research-gate.sh [--selftest] [--help]
   naming the hit, zero hits verify; URLs, external:/web:/session: names and
   declared source ids count as exempt; a sweep naming nowhere drifts.
   Summary: VERIFIED_SWEEPS=N/M REJECTIONS_OK=K/L.
+  verify-all composes structure + claims + chain + sweeps over ONE input:
+  absent sections are reported absent (never drift by themselves); the
+  composed verdict is DRIFT iff any run section drifts, exit 1. --claims
+  binds a claims file to a record; a record may also name one in a ## Meta
+  row (claims/claims_file/claims-file/claimset); a claims JSONL passed as
+  the input is its own claims surface. --json PATH appends (never rewrites)
+  one JSON line recording UTC, record + gate SHA-256, per-section tallies
+  and the composed verdict.
 Verdict: RESEARCH_GATE: CLEAN|DRIFT
 Exit:    0 CLEAN | 1 DRIFT | 2 setup/usage
 EOF
@@ -1619,6 +1649,231 @@ verify_sweeps() {
   return 1
 }
 
+# ---- verify-all mode: one input, one composed deep verdict ----
+
+json_escape() { # STRING -> JSON string body (quote, backslash, control bytes)
+  local s=$1 out='' i c hex
+  local LC_ALL=C
+  for ((i = 0; i < ${#s}; i++)); do
+    c=${s:i:1}
+    if [[ $c == '"' ]]; then out+='\"'
+    elif [[ $c == '\' ]]; then out+='\\'
+    elif [[ $c == $'\n' ]]; then out+='\n'
+    elif [[ $c == $'\r' ]]; then out+='\r'
+    elif [[ $c == $'\t' ]]; then out+='\t'
+    elif [[ $c == [[:cntrl:]] ]]; then
+      printf -v hex '%04x' "'$c"
+      out+="\\u$hex"
+    else
+      out+="$c"
+    fi
+  done
+  printf '%s' "$out"
+}
+
+json_counts() { # "k=v k=v …" -> JSON object body (integer values stay bare)
+  local counts=$1 out='' kv k v first=1
+  for kv in $counts; do
+    k=${kv%%=*}; v=${kv#*=}
+    if [[ $first -eq 0 ]]; then out+=','; fi
+    first=0
+    if [[ $v =~ ^-?[0-9]+$ ]]; then
+      out+="\"$(json_escape "$k")\":$v"
+    else
+      out+="\"$(json_escape "$k")\":\"$(json_escape "$v")\""
+    fi
+  done
+  printf '{%s}' "$out"
+}
+
+VAS_OUT='' VAS_RC=0 VAS_VERDICT='' VAS_FIND=0 VAS_DRIFT=0 VAS_COUNTS=''
+VAS_NATIVE='' VAS_FINDINGS=''
+
+verify_all_section() { # NAME MODE ARG [ARG…] -> VAS_*; unavailable on rc∉{0,1}
+  local name=$1 mode=$2
+  shift 2
+  local rc=0 line nverdict
+  VAS_OUT=$(bash "$SELF" "$mode" "$@" --root "$ROOT" 2>&1) || rc=$?
+  VAS_RC=$rc
+  VAS_VERDICT='' VAS_FIND=0 VAS_DRIFT=0 VAS_COUNTS='' VAS_NATIVE='' VAS_FINDINGS=''
+  nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$VAS_OUT" || true)
+  if [[ ( $rc -ne 0 && $rc -ne 1 ) || ${nverdict:-0} -ne 1 ]]; then
+    VAS_VERDICT=DRIFT VAS_FIND=1 VAS_DRIFT=1
+    VAS_FINDINGS="FINDING VERIFY_ALL_SECTION_UNAVAILABLE severity=crit surface=verify-all obs=section=$name rc=$rc verdict-lines=${nverdict:-0}"
+    return 0
+  fi
+  line=$(grep -m1 '^RESEARCH_GATE: ' <<<"$VAS_OUT")
+  if [[ $line =~ ^RESEARCH_GATE:[[:space:]](CLEAN|DRIFT)[[:space:]]\((.*)\)$ ]]; then
+    VAS_VERDICT=${BASH_REMATCH[1]} VAS_COUNTS=${BASH_REMATCH[2]}
+  else
+    VAS_VERDICT=DRIFT VAS_FIND=1 VAS_DRIFT=1
+    VAS_FINDINGS="FINDING VERIFY_ALL_SECTION_UNAVAILABLE severity=crit surface=verify-all obs=section=$name rc=$rc unparsable-verdict"
+    return 0
+  fi
+  if [[ $VAS_COUNTS =~ (^| )findings=([0-9]+) ]]; then VAS_FIND=${BASH_REMATCH[2]}; fi
+  if [[ $VAS_COUNTS =~ (^| )drift=([0-9]+) ]]; then VAS_DRIFT=${BASH_REMATCH[2]}; fi
+  case "$mode" in
+    verify-claims) VAS_NATIVE=$(grep -m1 '^VERDICT_BEARING_CLAIMS=' <<<"$VAS_OUT" || true) ;;
+    verify-chain) VAS_NATIVE=$(grep -m1 '^RESOLVED_HOPS=' <<<"$VAS_OUT" || true) ;;
+    verify-sweeps) VAS_NATIVE=$(grep -m1 '^VERIFIED_SWEEPS=.*REJECTIONS_OK=' <<<"$VAS_OUT" || true) ;;
+  esac
+  VAS_FINDINGS=$(grep '^FINDING ' <<<"$VAS_OUT" || true)
+  return 0
+}
+
+verify_all() {
+  local record=$1
+  ROOT=${CHOUSA_ROOT:-$ROOT}
+  [[ -n ${record:-} ]] || die_usage "record path required (verify-all RECORD, --record, or CHOUSA_RECORD)"
+  [[ -e $record ]] || die_usage "record not found: $record"
+  [[ -f $record ]] || die_usage "record is not a regular file: $record"
+  [[ -r $record ]] || die_usage "record unreadable: $record"
+  [[ -d $ROOT ]] || die_usage "root is not a directory: $ROOT (--root)"
+  if [[ -n ${CLAIMS_ARG:-} ]]; then
+    [[ -e $CLAIMS_ARG ]] || die_usage "claims file not found: $CLAIMS_ARG (--claims)"
+    [[ -f $CLAIMS_ARG ]] || die_usage "claims file is not a regular file: $CLAIMS_ARG (--claims)"
+    [[ -r $CLAIMS_ARG ]] || die_usage "claims file unreadable: $CLAIMS_ARG (--claims)"
+  fi
+  if [[ -n ${JSON_ARG:-} ]]; then
+    local jdir
+    jdir=$(dirname -- "$JSON_ARG")
+    [[ -d $jdir ]] || die_usage "manifest directory not found: $jdir (--json)"
+    if [[ -e $JSON_ARG && ! -f $JSON_ARG ]]; then
+      die_usage "manifest path is not a regular file: $JSON_ARG (--json)"
+    fi
+  fi
+
+  local -a VA_ORDER=(structure claims chain sweeps)
+  local -A SEC_STATE=() SEC_VERDICT=() SEC_FIND=() SEC_DRIFT=() SEC_COUNTS=()
+  local -A SEC_NATIVE=() SEC_FINDINGS=()
+  local name has_heads json_lines claims_surface='' declared='' crow
+  for name in "${VA_ORDER[@]}"; do SEC_STATE[$name]=absent; done
+
+  has_heads=$(grep -c '^##[[:space:]]' -- "$record" || true)
+  json_lines=$(grep -c '^[[:space:]]*{' -- "$record" || true)
+  if [[ ${has_heads:-0} -eq 0 && ${json_lines:-0} -gt 0 ]]; then
+    # The input is itself a claims JSONL: it is its own claims surface.
+    claims_surface=$record
+  else
+    SEC_STATE[structure]=run
+    load_sections "$record"
+    if [[ -n ${SEC_BODY[Chain]+x} ]]; then SEC_STATE[chain]=run; fi
+    if [[ -n ${SEC_BODY[Sweeps]+x} || -n ${SEC_BODY[Negatives]+x} || -n ${SEC_BODY[Rejections]+x} ]]; then
+      SEC_STATE[sweeps]=run
+    fi
+    if [[ -n ${SEC_BODY[Meta]+x} ]]; then
+      # Meta rows are | key | value | (canonical) or key: value lines; the
+      # binding key is claims/claims_file/claims-file/claimset.
+      while IFS= read -r crow; do
+        [[ -z $crow ]] && continue
+        if [[ $crow =~ ^[[:space:]]*\|[[:space:]]*(claims|claims_file|claims-file|claimset)[[:space:]]*\|[[:space:]]*([^|]+)\| ]]; then
+          declared=${BASH_REMATCH[2]}
+        elif [[ $crow =~ ^[[:space:]]*(claims|claims_file|claims-file|claimset)[[:space:]]*:[[:space:]]*([^[:space:]]+) ]]; then
+          declared=${BASH_REMATCH[2]}
+        fi
+        declared=$(printf '%s' "$declared" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+        if [[ -n $declared ]]; then break; fi
+      done <<<"${SEC_BODY[Meta]}"
+    fi
+    if [[ -n ${CLAIMS_ARG:-} ]]; then
+      claims_surface=$CLAIMS_ARG
+    elif [[ -n $declared ]]; then
+      if claim_source_path "$declared"; then
+        claims_surface=$CLAIM_SRC_PATH
+      else
+        SEC_STATE[claims]=run
+        SEC_VERDICT[claims]=DRIFT SEC_FIND[claims]=1 SEC_DRIFT[claims]=1
+        SEC_COUNTS[claims]='findings=1 drift=1'
+        SEC_FINDINGS[claims]="FINDING VERIFY_ALL_CLAIMS_UNRESOLVED severity=warn surface=verify-all obs=declared=$declared reason=$CLAIM_REFUSE"
+      fi
+    fi
+  fi
+  if [[ -n $claims_surface ]]; then SEC_STATE[claims]=run; fi
+
+  local n_run=0 n_absent=0 n_dsec=0 n_find=0 n_drift=0 roll=CLEAN
+  for name in "${VA_ORDER[@]}"; do
+    if [[ ${SEC_STATE[$name]} == run && -z ${SEC_VERDICT[$name]:-} ]]; then
+      case "$name" in
+        structure) verify_all_section structure verify "$record" ;;
+        claims) verify_all_section claims verify-claims "$claims_surface" ;;
+        chain) verify_all_section chain verify-chain "$record" ;;
+        sweeps) verify_all_section sweeps verify-sweeps "$record" ;;
+      esac
+      SEC_VERDICT[$name]=$VAS_VERDICT
+      SEC_FIND[$name]=$VAS_FIND
+      SEC_DRIFT[$name]=$VAS_DRIFT
+      SEC_COUNTS[$name]=$VAS_COUNTS
+      SEC_NATIVE[$name]=$VAS_NATIVE
+      SEC_FINDINGS[$name]=$VAS_FINDINGS
+    fi
+  done
+  for name in "${VA_ORDER[@]}"; do
+    if [[ ${SEC_STATE[$name]} == absent ]]; then n_absent=$((n_absent + 1)); continue; fi
+    n_run=$((n_run + 1))
+    n_find=$((n_find + ${SEC_FIND[$name]:-0}))
+    n_drift=$((n_drift + ${SEC_DRIFT[$name]:-0}))
+    if [[ ${SEC_VERDICT[$name]} == DRIFT ]]; then
+      n_dsec=$((n_dsec + 1)); roll=DRIFT
+    fi
+  done
+
+  if [[ -n ${JSON_ARG:-} ]]; then
+    local line sha_rec sha_gate sec_json='' first=1 cj
+    sha_rec=$(sha256sum -- "$record" 2>/dev/null | cut -d' ' -f1 || true)
+    sha_gate=$(sha256sum -- "$SELF" 2>/dev/null | cut -d' ' -f1 || true)
+    if [[ -z $sha_rec || -z $sha_gate ]]; then
+      printf 'research-gate: sha256sum unavailable; manifest not written\n' >&2
+      exit 2
+    fi
+    for name in "${VA_ORDER[@]}"; do
+      if [[ $first -eq 0 ]]; then sec_json+=','; fi
+      first=0
+      if [[ ${SEC_STATE[$name]} == absent ]]; then
+        sec_json+="{\"name\":\"$name\",\"state\":\"absent\"}"
+      else
+        cj=$(json_counts "${SEC_COUNTS[$name]:-}")
+        sec_json+="{\"name\":\"$name\",\"state\":\"run\",\"verdict\":\"${SEC_VERDICT[$name]}\""
+        sec_json+=",\"findings\":${SEC_FIND[$name]:-0},\"drift\":${SEC_DRIFT[$name]:-0},\"tallies\":$cj"
+        if [[ -n ${SEC_NATIVE[$name]:-} ]]; then
+          sec_json+=",\"native\":\"$(json_escape "${SEC_NATIVE[$name]}")\""
+        fi
+        sec_json+='}'
+      fi
+    done
+    line="{\"schema\":\"chousa-verify-all/v1\",\"ts\":\"$TS_UTC\",\"record\":\"$(json_escape "$record")\""
+    line+=",\"record_sha256\":\"$sha_rec\",\"gate_sha256\":\"$sha_gate\",\"sections\":[$sec_json]"
+    line+=",\"verdict\":\"$roll\",\"sections_run\":$n_run,\"sections_absent\":$n_absent,\"drift_sections\":$n_dsec}"
+    if ! printf '%s\n' "$line" >>"$JSON_ARG"; then
+      printf 'research-gate: manifest append failed: %s\n' "$JSON_ARG" >&2
+      exit 2
+    fi
+  fi
+
+  printf 'research-gate %s — ts=%s — mode=verify-all — record=%s — claims=%s — root=%s\n' \
+    "$VERSION" "$TS_UTC" "$record" "${claims_surface:--}" "$ROOT"
+  for name in "${VA_ORDER[@]}"; do
+    if [[ ${SEC_STATE[$name]} == absent ]]; then
+      printf 'SECTION %s state=absent\n' "$name"
+      continue
+    fi
+    if [[ -n ${SEC_NATIVE[$name]:-} ]]; then
+      printf 'SECTION %s state=run verdict=%s findings=%s drift=%s tally=%s\n' \
+        "$name" "${SEC_VERDICT[$name]}" "${SEC_FIND[$name]:-0}" "${SEC_DRIFT[$name]:-0}" "${SEC_NATIVE[$name]}"
+    else
+      printf 'SECTION %s state=run verdict=%s findings=%s drift=%s\n' \
+        "$name" "${SEC_VERDICT[$name]}" "${SEC_FIND[$name]:-0}" "${SEC_DRIFT[$name]:-0}"
+    fi
+    if [[ -n ${SEC_FINDINGS[$name]:-} ]]; then printf '%s\n' "${SEC_FINDINGS[$name]}"; fi
+  done
+  printf 'VERIFY_ALL sections=4 run=%d absent=%d drift-sections=%d findings=%d drift=%d\n' \
+    "$n_run" "$n_absent" "$n_dsec" "$n_find" "$n_drift"
+  printf 'RESEARCH_GATE: %s (sections=4 run=%d absent=%d drift-sections=%d findings=%d drift=%d)\n' \
+    "$roll" "$n_run" "$n_absent" "$n_dsec" "$n_find" "$n_drift"
+
+  [[ $roll == CLEAN ]] && return 0
+  return 1
+}
+
 run_selftest() {
   local cases=0 failures=0
   WORK=$(mktemp -d "${TMPDIR:-/tmp}/chousa-research-gate-selftest.XXXXXX") \
@@ -2648,6 +2903,186 @@ EOF
   tsetup sweeps-no-path 2 verify-sweeps
   tsetup sweeps-missing-file 2 verify-sweeps "$WORK/no-such-record.md"
 
+  # verify-all composition cases (r6): fresh-process CLI, one composed
+  # RESEARCH_GATE line and one VERIFY_ALL line per run. CLAIMS/JSON are '-' or
+  # names under WORK. With a manifest, WANT_JLINES lines must parse (python3
+  # when present) and carry the schema and both SHA fields; the first line's
+  # hash is memoized so the append run proves line 1 is never rewritten.
+  write_rec all-pass <<'EOF'
+# research-record v1
+<!-- chousa-record: v1 -->
+## Meta
+| key | value |
+|---|---|
+| window | loopback |
+| fetch | none |
+## Question
+Does this fixture pass every applicable mode when composed as one verdict?
+## Sources
+| id | tier | pointer | notes |
+|---|---|---|---|
+| S1 | primary | lib/primary.md:1 | local fixture |
+## Chain
+| hop | from | to | status | anchor_kind | anchor | notes |
+|---|---|---|---|---|---|---|
+| 1 | C1 | S1 | resolved | quote | line1 primary material | direct |
+| 2 | C1 | S1 | unresolved | | | blocked-no-fetch |
+## Claims
+| id | kind | text | pointer | status | sweep |
+|---|---|---|---|---|---|
+| C1 | observation | primary file has line1 | lib/primary.md:1 | verified | |
+## Sweeps
+| id | claim_id | where | status |
+|---|---|---|---|
+| SW1 | C1 | lib/ghost*.md | swept |
+## Rejections
+| id | ref | reason | flip |
+|---|---|---|---|
+| R1 | noise/chat-export-sources.md | UI chrome is not a primary source | a primary attestation in that file would flip this |
+## Approval
+| target | state |
+|---|---|
+| (none) | not-required |
+EOF
+  write_rec all-structure <<'EOF'
+# research-record v1
+## Meta
+| key | value |
+|---|---|
+| window | loopback |
+## Sources
+| id | tier | pointer | notes |
+|---|---|---|---|
+| S1 | primary | lib/primary.md:1 | local fixture |
+## Chain
+| hop | from | to | status | anchor_kind | anchor | notes |
+|---|---|---|---|---|---|---|
+| 1 | C1 | S1 | resolved | quote | line1 primary material | direct |
+## Claims
+| id | kind | text | pointer | status | sweep |
+|---|---|---|---|---|---|
+| C1 | observation | primary file has line1 | lib/primary.md:1 | verified | |
+## Sweeps
+| id | claim_id | where | status |
+|---|---|---|---|
+| SW1 | C1 | lib/ghost*.md | swept |
+## Rejections
+| id | ref | reason | flip |
+|---|---|---|---|
+| R1 | noise/chat-export-sources.md | UI chrome is not a primary source | a primary attestation in that file would flip this |
+EOF
+
+  local TALL_JSON_H1=''
+  tall() { # INPUT WANT_RC WANT_NV WANT_NS CLAIMS|- JSON|- WANT_JLINES|- [tokens…]
+    local input=$1 want_rc=$2 want_nv=$3 want_ns=$4 claims=$5 json=$6 want_jl=$7
+    shift 7
+    local -a want=("$@") extra=()
+    local rc=0 out nverdict nsum ok=1 msg='' tok n h1
+    cases=$((cases + 1))
+    if [[ $claims != - ]]; then extra+=(--claims "$WORK/$claims"); fi
+    if [[ $json != - ]]; then extra+=(--json "$WORK/$json"); fi
+    out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+      CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+      bash "$SELF" verify-all "$WORK/$input" "${extra[@]+"${extra[@]}"}" 2>&1) || rc=$?
+    nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
+    nsum=$(grep -c '^VERIFY_ALL ' <<<"$out" || true)
+    if [[ $rc -ne $want_rc ]]; then ok=0; msg+="rc=$rc/$want_rc "; fi
+    if [[ ${nverdict:-0} -ne $want_nv ]]; then ok=0; msg+="verdicts=$nverdict/$want_nv "; fi
+    if [[ ${nsum:-0} -ne $want_ns ]]; then ok=0; msg+="sums=$nsum/$want_ns "; fi
+    for tok in "${want[@]+"${want[@]}"}"; do
+      if [[ $out != *"$tok"* ]]; then ok=0; msg+="missing:'$tok' "; fi
+    done
+    if [[ $json != - ]]; then
+      n=$(wc -l <"$WORK/$json" 2>/dev/null | tr -d ' ' || true)
+      if [[ ${n:-0} -ne $want_jl ]]; then ok=0; msg+="manifest-lines=${n:-0}/$want_jl "; fi
+      if command -v python3 >/dev/null 2>&1; then
+        python3 -c 'import json,sys
+for ln in sys.stdin.read().splitlines():
+    if ln.strip():
+        json.loads(ln)' <"$WORK/$json" >/dev/null 2>&1 || { ok=0; msg+="json-invalid "; }
+      fi
+      grep -q '"schema":"chousa-verify-all/v1"' -- "$WORK/$json" || { ok=0; msg+="schema-absent "; }
+      grep -qE '"record_sha256":"[0-9a-f]{64}"' -- "$WORK/$json" || { ok=0; msg+="record-sha-absent "; }
+      grep -qE '"gate_sha256":"[0-9a-f]{64}"' -- "$WORK/$json" || { ok=0; msg+="gate-sha-absent "; }
+      grep -q '"verdict":"CLEAN"' -- "$WORK/$json" || { ok=0; msg+="verdict-field "; }
+      h1=$(sed -n 1p -- "$WORK/$json" | sha256sum | cut -d' ' -f1)
+      if [[ -n $TALL_JSON_H1 ]]; then
+        if [[ $h1 != "$TALL_JSON_H1" ]]; then ok=0; msg+="line1-rewritten "; fi
+      else
+        TALL_JSON_H1=$h1
+      fi
+    fi
+    if [[ $ok -eq 1 ]]; then
+      printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" "$input" "$rc"
+    else
+      printf 'FAIL-case %-28s %s\n' "$input" "$msg"
+      printf '%s\n' "$out" | sed 's/^/    | /'
+      failures=$((failures + 1))
+    fi
+  }
+
+  tall all-pass.md 0 1 1 claims-pass.jsonl - - \
+    'RESEARCH_GATE: CLEAN' \
+    'SECTION structure state=run verdict=CLEAN findings=0 drift=0' \
+    'SECTION claims state=run verdict=CLEAN findings=0 drift=0 tally=VERDICT_BEARING_CLAIMS=4/4' \
+    'SECTION chain state=run verdict=CLEAN findings=0 drift=0 tally=RESOLVED_HOPS=1/2' \
+    'SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1' \
+    'VERIFY_ALL sections=4 run=4 absent=0 drift-sections=0 findings=0 drift=0'
+
+  tall all-pass.md 1 1 1 claims-fail-tampered.jsonl - - \
+    'RESEARCH_GATE: DRIFT' \
+    'SECTION claims state=run verdict=DRIFT' \
+    'FINDING CLAIM_SPAN_NOT_FOUND' \
+    'SECTION structure state=run verdict=CLEAN' \
+    'SECTION chain state=run verdict=CLEAN' \
+    'SECTION sweeps state=run verdict=CLEAN' \
+    'VERIFY_ALL sections=4 run=4 absent=0 drift-sections=1'
+
+  tall all-structure.md 1 1 1 claims-pass.jsonl - - \
+    'RESEARCH_GATE: DRIFT' \
+    'SECTION structure state=run verdict=DRIFT' \
+    'FINDING NO_QUESTION' \
+    'SECTION claims state=run verdict=CLEAN' \
+    'SECTION chain state=run verdict=CLEAN' \
+    'SECTION sweeps state=run verdict=CLEAN' \
+    'VERIFY_ALL sections=4 run=4 absent=0 drift-sections=1'
+
+  tall all-pass.md 0 1 1 - - - \
+    'RESEARCH_GATE: CLEAN' \
+    'SECTION claims state=absent' \
+    'SECTION structure state=run verdict=CLEAN' \
+    'VERIFY_ALL sections=4 run=3 absent=1 drift-sections=0 findings=0 drift=0'
+
+  tall claims-pass.jsonl 0 1 1 - - - \
+    'RESEARCH_GATE: CLEAN' \
+    'SECTION claims state=run verdict=CLEAN findings=0 drift=0 tally=VERDICT_BEARING_CLAIMS=4/4' \
+    'SECTION structure state=absent' \
+    'VERIFY_ALL sections=4 run=1 absent=3 drift-sections=0 findings=0 drift=0'
+
+  tall all-pass.md 0 1 1 claims-pass.jsonl r6-manifest.jsonl 1 \
+    'RESEARCH_GATE: CLEAN'
+  tall all-pass.md 0 1 1 claims-pass.jsonl r6-manifest.jsonl 2 \
+    'RESEARCH_GATE: CLEAN'
+
+  # Meta-declared claims binding (r6): the record names its claims surface in
+  # ## Meta (| claims | PATH |); a declaration that cannot resolve under the
+  # corpus boundary is VERIFY_ALL_CLAIMS_UNRESOLVED and drifts the section.
+  sed 's;| fetch | none |;| fetch | none |\n| claims | claims-pass.jsonl |;' \
+    "$WORK/all-pass.md" >"$WORK/all-meta.md"
+  sed 's;| fetch | none |;| fetch | none |\n| claims | no-such-claims.jsonl |;' \
+    "$WORK/all-pass.md" >"$WORK/all-meta-missing.md"
+  tall all-meta.md 0 1 1 - - - \
+    'RESEARCH_GATE: CLEAN' \
+    'SECTION claims state=run verdict=CLEAN findings=0 drift=0 tally=VERDICT_BEARING_CLAIMS=4/4' \
+    'VERIFY_ALL sections=4 run=4 absent=0 drift-sections=0 findings=0 drift=0'
+  tall all-meta-missing.md 1 1 1 - - - \
+    'RESEARCH_GATE: DRIFT' \
+    'SECTION claims state=run verdict=DRIFT' \
+    'FINDING VERIFY_ALL_CLAIMS_UNRESOLVED' \
+    'VERIFY_ALL sections=4 run=4 absent=0 drift-sections=1'
+
+  tall no-such-record.md 2 0 0 - - -
+
   if [[ $failures -eq 0 ]]; then
     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases)\n' "$cases"
     exit 0
@@ -2664,12 +3099,19 @@ while [[ $# -gt 0 ]]; do
     verify-claims) MODE=claims; shift ;;
     verify-chain) MODE=chain; shift ;;
     verify-sweeps) MODE=sweeps; shift ;;
+    verify-all) MODE=all; shift ;;
     --record)
       [[ $# -ge 2 ]] || die_usage "--record needs PATH"
       RECORD_ARG=$2; shift 2 ;;
     --root)
       [[ $# -ge 2 ]] || die_usage "--root needs PATH"
       ROOT=$2; shift 2 ;;
+    --claims)
+      [[ $# -ge 2 ]] || die_usage "--claims needs PATH"
+      CLAIMS_ARG=$2; shift 2 ;;
+    --json)
+      [[ $# -ge 2 ]] || die_usage "--json needs PATH"
+      JSON_ARG=$2; shift 2 ;;
     --) shift; break ;;
     -*) die_usage "unknown flag: $1" ;;
     *)
@@ -2677,6 +3119,10 @@ while [[ $# -gt 0 ]]; do
       RECORD_ARG=$1; shift ;;
   esac
 done
+
+if [[ $MODE != all && ( -n ${CLAIMS_ARG:-} || -n ${JSON_ARG:-} ) ]]; then
+  die_usage "--claims/--json are only valid with verify-all"
+fi
 
 case "$MODE" in
   selftest) run_selftest ;;
@@ -2695,6 +3141,10 @@ case "$MODE" in
   sweeps)
     SWEEPS_PATH=${RECORD_ARG:-${CHOUSA_RECORD:-}}
     verify_sweeps "$SWEEPS_PATH"
+    ;;
+  all)
+    ALL_PATH=${RECORD_ARG:-${CHOUSA_RECORD:-}}
+    verify_all "$ALL_PATH"
     ;;
   *) die_usage "unknown mode: $MODE" ;;
 esac

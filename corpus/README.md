@@ -10,16 +10,19 @@
 | `knowledge/chain-resolution-r3.md` | Round-3 note: `verify-chain` mode design (CLI + hop citation grammar, `heading`/`quote`/`line` anchors, fail-closed source boundary, exempt-but-counted statuses, per-hop verdicts + `RESOLVED_HOPS=N/M` under the CLEAN/DRIFT/exit contract), what anchor existence does not establish, receipts and open items | note metadata (gate sha `67daf85e…`); `fixtures/chain-r3.README.md`; `evidence/README.md` and `evidence/chain-r3-*.log` |
 | `knowledge/anchor-boundaries-r4.md` | Round-4 note: the token-boundary matching semantics now shared by `verify-claims` spans and `verify-chain` quote anchors — one matcher (`tok_span_at`), the documented boundary class (file/line edge, ASCII whitespace, ASCII punctuation; word-internal hyphens/apostrophes not boundaries; non-ASCII fails closed; outer edges only), before→after attack-class measurements, residual limits (token-aligned shortening, non-ASCII neighbours, `_` gluing), receipts and open items | note metadata (gate sha `6b83705b…`, replacing `67daf85e…`); fixtures `claims-r2.jsonl`/`chain-r3.md`/`chain-r3-broken.md` at their pinned shas; `evidence/README.md` and `evidence/boundary-r4-*.log`; the seat's gate-free python re-derivation (86 probes, `INDEPENDENT_CHECK: AGREE`) |
 | `knowledge/sweeps-rejections-r5.md` | Round-5 note: `verify-sweeps` mode design (rejection reason + flip-condition presence, sweep `where` tokenization classes, local glob/existence re-run with exempt-but-counted non-local/source-id classes, boundary guard, per-item verdicts + `VERIFIED_SWEEPS=N/M REJECTIONS_OK=K/L` under the CLEAN/DRIFT/0-1-2 contract), the measured flip presence-vs-quality class table, what a CLEAN sweep does not prove, receipts and open items | note metadata (gate sha `55adb92d…`, replacing `6b83705b…`); fixtures `sweeps-r5.md`/`sweeps-r5-broken.md`/`sweeps-r5-hit.md` at their pinned shas; `evidence/README.md` and `evidence/sweeps-r5-20261016T011543Z-*.log`; the seat's gate-free flip-class/exempt-class probes |
+| `knowledge/verify-all-r6.md` | Round-6 note: `verify-all` composition mode — per-section applicability (structure always for a Markdown record; claims only when a surface binds via `--claims`, the input itself as a claims JSONL, or a resolving `## Meta` row; chain on `## Chain`; sweeps on `## Sweeps`/`## Negatives`/`## Rejections`), each section executed as a fresh gate subprocess so its tally equals the solo mode's by construction, composed DRIFT iff any run section drifts, absent sections reported (`state=absent`) and never drifting — plus the append-only `--json` lane manifest (`chousa-verify-all/v1`: UTC, record+gate sha256, per-section state/verdict/tallies, composed verdict and counters), the two transient mid-wave revisions, strace-measured zero network, the omission limit named as the r7 candidate, honest limits and open items | note metadata (gate sha `0c3d51ed…`, replacing `55adb92d…`); fixtures `full-r6.md`/`full-r6-broken.md`/`full-r6-absent.md` + claims companions at their pinned shas; `fixtures/full-r6.README.md`; `evidence/README.md` and `evidence/compose-r6-20261016T020330Z-*.log`; the seat's battery (composed runs, manifest append/prefix probes, 64-case selftest) |
 | `fixtures/claims-r2.jsonl` | Pre-registered 17-claim span fixture (13 supported / 2 contradicted / 2 unsupported) whose spans are verbatim bytes of the three archived inputs, with fixed expected verdicts and an independent byte-check | the three archived inputs at fleet commit `0863746e…`; sha256 pins and provenance table in `fixtures/claims-r2.README.md` |
 | `fixtures/chain-r3.md` + `chain-r3-broken.md` | Pre-registered chain-hop pair built from real chains in the three archived inputs: a 22-hop positive control (17 resolved / 5 exempt → `RESOLVED_HOPS=17/22`, CLEAN) and a tampered 2-hop control (1/2, DRIFT, `CHAIN_ANCHOR_NOT_FOUND`); the round-1 hole live — `verify` closes both CLEAN, exit 0 | the three archived inputs at fleet commit `0863746e…`; sha256 pins, hop provenance table and the gate-free byte-check in `fixtures/chain-r3.README.md` |
 | `fixtures/sweeps-r5.md` + `sweeps-r5-broken.md` (+ `sweeps-r5-hit.md`) | Pre-registered rejection/sweep pair: a positive control (3 kept rejections with reason + flip_condition, W1 local glob set genuinely empty, W2 non-local → `VERIFIED_SWEEPS=1/2 REJECTIONS_OK=3/3`, CLEAN, exit 0) and a tampered control (R1 without flip-condition; W1 naming a planted hit file) that DRIFTs, exit 1, naming `SWEEP_REJECTION_INCOMPLETE` + `SWEEP_CLAIM_FALSE`; the round-1 hole live — r1 `verify` closes both CLEAN, exit 0 | the three archived inputs at fleet commit `0863746e…`; sha256 pins, provenance tables and the gate-free re-run in `fixtures/sweeps-r5.README.md` |
+| `fixtures/full-r6.md` + `full-r6-broken.md` + `full-r6-absent.md` (+ `full-r6.claims.jsonl`, `full-r6-broken.claims.jsonl`) | Round-6 composition fixture set: a positive all-section record (4 sources; 3 resolved hops quote/quote/line; 3 companion claims; 2 complete rejections; one local and one source-id sweep) that composes CLEAN `run=4` with per-section tallies equal to the solo modes (claims 3/3; chain 3/3; sweeps 1/2 + 2/2); a two-defect twin (padded hop-2 quote → `CHAIN_ANCHOR_NOT_FOUND`, `RESOLVED_HOPS=2/3`; R2 flip-condition emptied → `SWEEP_REJECTION_INCOMPLETE`, `REJECTIONS_OK=1/2`) that composes DRIFT `drift-sections=2` naming exactly `chain`+`sweeps` while structure and claims stay green — both CLEAN under r1 `verify` (the hole); and an omission probe (no claims binding, no Sweeps/Negatives rows) that composes CLEAN `run=3 absent=1` | the three archived inputs at fleet commit `0863746e…`; sha256 pins, the pre-registered expected outputs, the recorded composed runs and a re-run recipe in `fixtures/full-r6.README.md` |
 | `lessons/2026-10-15-claims-span-fidelity.md` | Round-2 lesson: span fidelity is not claim truth — the unchecked `claim` label, strace-measured bounds (no fetch, fail-closed refusals), byte-stable r1 behavior, named debt | gate sha `03a3324455…`; probes summarized in the note; `evidence/claims-r2-*.log` |
 | `lessons/2026-10-15-chain-hop-resolution.md` | Round-3 lesson: `RESOLVED_HOPS`/chain CLEAN counts anchor existence only — a numeral tamper drifts; URL and out-of-corpus sources are refused unopened; exemption is record-declared and never checked (a marked hop can hide a resolvable citation); `nearest_line` is a heuristic; carried cosmetic banner item | gate sha `67daf85e…`; probes summarized in the lesson; `evidence/chain-r3-*.log` |
 | `lessons/2026-10-15-anchor-token-boundaries.md` | Round-4 lesson: a quote is not any substring — before→after probe partitions on byte-identical anchors (claims 18/18 → 8/18; chain 17/17 → 8/17) with identical miss sets across both modes, the first 40 selftest case lines byte-identical, a gate-free analysis showing every matched r2/r3 fixture span/anchor sits on a line-edge/whitespace/ASCII-punctuation edge, and the class choices with visible consequences (non-ASCII fail-closed, `_` boundary, token-aligned shortening still passing) | gate sha `6b83705b…`; probes summarized in the lesson; `evidence/README.md` and `evidence/boundary-r4-*.log` |
 | `lessons/2026-10-16-sweeps-rejections-verdict-bearing.md` | Round-5 lesson: existence is not falsifiability — the structural before-state (both fixtures CLEAN under r1 `verify`), the landed presence/glob checks, what a CLEAN `verify-sweeps` establishes and what it cannot (flip-condition quality, command re-run, rightness of an empty location set), defect notes and named follow-ups | gate sha `55adb92d…`; probes summarized in the lesson; `evidence/sweeps-r5-20261016T011543Z-*.log` |
+| `lessons/2026-10-16-verify-all-composition.md` | Round-6 lesson: a composed CLEAN covers only the run sections — absence is reported, not clean (the only reachable absence for a structurally-CLEAN record is the claims surface; `CHAIN_ABSENT`/`CLAIM_TABLE_ABSENT`/`REJECTION_DROPPED` keep the others from vanishing silently), the manifest only appends (sentinel survives, prefix/inode probes, never read back — not an audit trail), tally equality re-derived key-by-key from manifest tallies vs solo summaries, the transient-revision and companion-alias defects, rejected overclaims, and the omission limit as the named r7 candidate | gate sha `0c3d51ed…`; probes summarized in the lesson; `evidence/README.md` and `evidence/compose-r6-20261016T020330Z-*.log` |
 
-Count: 10 entries, five knowledge notes and five lessons — `functions.glob`
-pattern `corpus/knowledge/*.md;corpus/lessons/*.md`, 2026-10-15. Fixture and
+Count: 12 entries, six knowledge notes and six lessons — `functions.glob`
+pattern `corpus/knowledge/*.md;corpus/lessons/*.md`, 2026-10-16. Fixture and
 evidence files are coverage-listed but not additional knowledge entries.
 
 ## Round-1 evidence
@@ -63,6 +66,16 @@ evidence files are coverage-listed but not additional knowledge entries.
 - `evidence/sweeps-r5-20261016T011543Z-selftest.log`: `RESEARCH_GATE_SELFTEST: PASS (54 cases)`, exit 0; the first 44 ok-case lines byte-identical to the round-4 receipt (`cmp` YES); new cases 45–54 = the eight `sweeps-*` cases plus two setup exits.
 - `evidence/sweeps-r5-20261016T011543Z-fixture.log`: fixture inventory (3 rejections + 2 sweeps; 1 + 1 broken), the archive-set URL emptiness census (zero matches), the record's own W1 glob re-run (zero hits), the planted hit on disk, export pins matching the fixture README, and an independent gate-free re-derivation (`canonical=CLEAN broken=DRIFT`).
 
+## Round-6 evidence
+
+- `evidence/README.md`: index extended to round 6 with pinned gate/fixture shas, the composed-run and manifest receipts and a self-contained re-run recipe.
+- `evidence/verify-all-manifest.jsonl`: the lane's first real manifest (sha256 `2ed28f9f…` when checked) — three appended `chousa-verify-all/v1` lines at gate `0c3d51ed…` (positive CLEAN `run=4`; twin DRIFT `drift-sections=2`; omission probe CLEAN `run=3 absent=1`), each carrying UTC, `record_sha256`/`gate_sha256`, per-section tallies and the composed verdict; written with `>>` only (the cut replaced its own earlier rehearsal lines, no other rewrite path).
+- `evidence/compose-r6-20261016T020330Z-live.log`: composed runs on all three fixtures, the omission probe and the `--claims` binding; r5-gate-vs-r6-gate stdout byte-identical (frozen clock) on claims 17/17, chain 17/22, chain-broken 1/2, sweeps 1/2 + 3/3 and archive A; `VERDICT_BEARING_EXPORTS=3/3`; zero network (`strace`: 0 network syscalls in 4237 trace lines).
+- `evidence/compose-r6-20261016T020330Z-full.log`: the four solo modes, then the composed run on `full-r6.md`, with the side-by-side tally comparison — composed per-section tallies equal the solo summaries (claims 3/3; chain 3/3; sweeps 1/2 + 2/2), CLEAN exit 0.
+- `evidence/compose-r6-20261016T020330Z-broken.log`: the twin's two single-line defects localized by the solo modes, then composed DRIFT naming exactly `chain` (`CHAIN_ANCHOR_NOT_FOUND` hop=2, 2/3) and `sweeps` (`SWEEP_REJECTION_INCOMPLETE` id=R2 `missing=flip`, 1/2), exit 1; r5 `verify` on the twin CLEAN exit 0 (the hole).
+- `evidence/compose-r6-20261016T020330Z-json.log`: manifest before-state (0 lines), the three appended lines verbatim, append-only prefix compares (all YES), JSON well-formedness, and the exit-2 boundary refusals (missing directory; path is a directory).
+- `evidence/compose-r6-20261016T020330Z-selftest.log`: `RESEARCH_GATE_SELFTEST: PASS (64 cases)`, exit 0; the first 54 case lines byte-identical to the round-5 receipt; new cases 55–64 = the `verify-all` family (composed positive; tampered claims; structure-dirty; absent claims surface; claims JSONL as input; two manifest appends with the line-1 hash memo; Meta-bound claims; Meta-declared but missing binding; missing-record exit 2).
+
 ## Known gaps
 
 - CLEAN is mode-dependent, not semantic: `verify` checks record structure (r1);
@@ -77,8 +90,10 @@ evidence files are coverage-listed but not additional knowledge entries.
   source's own truth; chain CLEAN additionally does not prove agreement (hop 6
   resolves across disagreeing statements) or authorship (cross-input hops are
   co-anchors); sweep CLEAN proves the named location set re-measured empty, not
-  that it was the right place to look. No original external source was fetched
-  and none may be.
+  that it was the right place to look. `verify-all` (r6) composes the four
+  under one verdict and appends a manifest line per run; it adds no check of
+  its own, and its CLEAN covers only the sections that ran. No original
+  external source was fetched and none may be.
 - The round-5 sweep/rejection check is presence- and location-level: a
   non-empty but vacuous flip-condition (placeholder, tautology, never-fires,
   vague) passes, the recorded sweep command is never executed and its prose
@@ -87,6 +102,19 @@ evidence files are coverage-listed but not additional knowledge entries.
   CLEAN — section existence stays r1 `verify`'s check. Non-local and
   declared-source-id sweeps stay exempt-but-counted
   (`knowledge/sweeps-rejections-r5.md`).
+- Composed CLEAN inherits every bound above and covers only the RUN sections:
+  an absent section is reported, never asserted to have been needed, and for a
+  structurally-CLEAN record the only reachable absence measured is the claims
+  surface (no binding) — fine-grained omission reporting and the Chain-less
+  case are the named r7 candidate alongside the sweeps-with-only-rejections
+  representation seam (`knowledge/verify-all-r6.md`,
+  `fixtures/full-r6.README.md`).
+- The lane manifest appends by discipline, not construction: one `>>` per run
+  to the named file, pre-existing foreign lines preserved unvalidated, never
+  read back — `record_sha256`/`gate_sha256` bind the recorded bytes and the
+  gate, so a later edit to the record falsifies the recorded state
+  (`lessons/2026-10-16-verify-all-composition.md`,
+  `evidence/verify-all-manifest.jsonl`).
 - The round-4 boundary class is syntactic and ASCII-anchored: an occurrence
   whose outer edge abuts a non-ASCII character (`”`, `’`, `—`, `。`, `→`) is a
   miss even when its bytes are real, `_` is a boundary by decision, and
@@ -174,6 +202,28 @@ not saturated either: flip-condition presence is screened, not quality
 locations, never the recorded command; section absence is still r1's to flag;
 and non-local sweeps stay exempt-but-counted. The r5 receipts are lane-local
 logs (no queue taskKey), so the receipt-identity debt is unchanged.
+
+Round 6 ran the r5-registered composition move on the same direct-dispatch
+routing: at `55adb92d…` no composed verdict and no manifest existed
+(`verify-all` degraded to a record argument, exit 2; `--json` was an unknown
+flag; no manifest file in the lane), while at `0c3d51ed…` the pre-registered
+fixture set composes exactly as registered — the positive all-section record
+CLEAN `run=4` with per-section tallies equal to the solo modes (claims 3/3;
+chain 3/3; sweeps 1/2 + 2/2); the two-defect twin DRIFT `drift-sections=2`
+naming `chain` (`CHAIN_ANCHOR_NOT_FOUND` hop 2, 2/3) and `sweeps`
+(`SWEEP_REJECTION_INCOMPLETE` R2, `REJECTIONS_OK=1/2`) while structure and
+claims stay green (r1 `verify` alone closes both twins CLEAN — the hole); the
+omission probe CLEAN `run=3 absent=1`; the lane manifest holds three appended
+`chousa-verify-all/v1` lines (as of the receipts cut); and the pinned
+observables hold (selftest 54 → 64 with case lines 1–54 identical; claims
+17/17; chain 17/22; broken control 1/2;
+r1 archives 3/3). That observable is not saturated either: composition adds a
+rollup, not a stronger check, the omission limit — no assertion that an absent
+section should have been present; fine-grained omission reporting and the
+Chain-less case — is the named r7 candidate, and the manifest is a local
+append-only jsonl with no read path or audit-trail guarantee. The r6 receipts
+are lane-local logs (no queue taskKey), so the receipt-identity debt is
+unchanged.
 
 Still open and integrator/operator-owned:
 receipt identity for mission acceptance (proven receipt-backed rounds remain 0;
