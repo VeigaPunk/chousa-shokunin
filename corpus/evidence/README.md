@@ -1,9 +1,10 @@
 # chousa-shokunin — corpus/evidence
 
-Receipts for the chousa coverage moves: round 2 (claim-vs-source verification)
-and round 3 (chain-hop resolution). Each receipt is a machine-cut capture of
-public-CLI runs: UTC stamp, exact command, exit code, pinned gate SHA-256, and
-the verbatim stdout. Local files only — no external fetch, no network.
+Receipts for the chousa moves: round 2 (claim-vs-source verification), round 3
+(chain-hop resolution) and round 4 (token-boundary matching semantics). Each
+receipt is a machine-cut capture of public-CLI runs: UTC stamp, exact command,
+exit code, pinned gate SHA-256, and the verbatim stdout. Local files only — no
+external fetch, no network.
 
 ## Round-2 claim-verification receipts — stamp 20261015T233027Z
 
@@ -158,5 +159,96 @@ bash tools/research-gate.sh --selftest
 - The receipts-writer independent record checker is
   `/home/vgpnk/.cache/chousa-r3/adapter-chaincheck.py`, separate from the
   fixture README's own gate-free checker; both agree on both records.
+- Receipt identity for this round remains a lane-local log; no `task_…` value
+  is invented and the round-1 receipt blocker stands (operator-side).
+
+## Round-4 boundary-hardening receipts — stamp 20261016T003332Z
+
+Revision under test: `tools/research-gate.sh` sha256
+`6b83705b02fe11e98b8b4aeb43fe718ff9910d21cee16d87366cef648a3960b2` (lane HEAD
+`09153d1`; a stable revision — sampled unchanged across the cut). Before-state
+runs use the round-3 revision `67daf85e…`, taken as a scratch snapshot that is
+reproducible from git:
+`git show cc9fe8f:tools/research-gate.sh | sha256sum` → `67daf85e…`.
+Fixtures unchanged from round 2/3: `corpus/fixtures/claims-r2.jsonl` sha256
+`23d078cbfd032ec5ee7de5c21de65eba3a3cd2989a78281ff61bc6db62188802`,
+`corpus/fixtures/chain-r3.md` sha256
+`06115f2f8e6db3c60034411dc6be42c4e0887352b09ab9cbd7f760801237ba07`,
+`corpus/fixtures/chain-r3-broken.md` sha256
+`b66222a16d4c5323ee6932839ff5746af5f716f36372af506755aed18e0f5c6a`.
+Attack/legit copies are single-delta scratch rewrites under `/tmp/chousa-r4/att/`
+(sha256 pinned inside each receipt; declared ephemeral scratch).
+
+| Receipt (sha256) | Shows | Key result |
+|---|---|---|
+| `boundary-r4-20261016T003332Z-selftest.log` (`897e969c…`) | full `--selftest`, case-line stability vs the r3 stdout | `RESEARCH_GATE_SELFTEST: PASS (44 cases)`, exit 0; case lines 1–40 byte-identical to the r3 selftest; new cases 41–44 = `claims-boundary-pass`/`-fail`, `chain-pass-boundary`/`-fail` on the gate's own `lib/boundary.md` fixture |
+| `boundary-r4-20261016T003332Z-claims.log` (`b37c2ca5…`) | canonical fixture, three attack controls, two legit controls | canonical `VERDICT_BEARING_CLAIMS=17/17` + `CLEAN` exit 0 (unchanged); each attack DRIFT `16/17` with one `CLAIM_SPAN_NOT_FOUND` at the line-aware report; legit controls `19/19` CLEAN |
+| `boundary-r4-20261016T003332Z-chain.log` (`e3935a26…`) | canonical fixture, broken control, four attack controls, legit control | canonical `RESOLVED_HOPS=17/22` + `CLEAN` exit 0 and broken control `1/2` DRIFT (both unchanged); each attack DRIFT `16/22` with `CHAIN_ANCHOR_NOT_FOUND`/`anchor-missing`; legit control `18/23` CLEAN |
+| `boundary-r4-20261016T003332Z-attacks.log` (`40e02b6b…`) | every attack copy under both gates + shared-rule evidence + gate-free checker | each attack closes CLEAN/exit 0 under the r3 revision and DRIFT/exit 1 under the landed one; helper block `tok_word_char`/`tok_left_ok`/`tok_right_ok`/`tok_span_at` printed verbatim with both call sites (`:907` claims span, `:1060` chain quote); independent checker: all 11 copies classified without the gate, `BOUNDCHECK_SUMMARY: all copies agree`, exit 0 |
+| `boundary-r4-20261016T003332Z-live.log` (`c0d187f9…`) | pre-move structural hole, r1 archive observable, intake, cross-round stability, strace | r3 gate still passes the broken chain record structurally (`RESEARCH_GATE: CLEAN`, exit 0); archives each exit 1, `VERDICT_BEARING_EXPORTS=3/3`, stdout byte-identical to the r3 gate receipt (ts-normalized); intake CLEAN exit 0; claims/chain stdout byte-identical to the r2/r3 live receipts; `strace` 0 network syscalls |
+
+Before → after in one line: under the round-3 substring semantics a citation
+span or quote anchor that is a truncated, padded or glued variant of real source
+text still resolved (seven single-delta demonstrably-CLEAN attack copies); under
+the landed revision both `verify-claims` spans and `verify-chain` quote anchors
+match only at a documented token boundary, so every one of those copies now
+drifts with the line-aware report while the canonical fixtures, the broken
+control, the r1 archive observable and the legit boundary controls are unchanged.
+
+### Attack controls (recorded in the attacks receipt and re-run in claims/chain)
+
+| Control (copy) | Delta | r3 gate (before) | landed gate (after) |
+|---|---|---|---|
+| claims/trunc-midtoken | A03 span cut mid-token: `…for nine yea` | CLEAN 17/17 (0) | DRIFT 16/17 (1), A03 `unsupported`, `nearest_line=81` |
+| claims/glue-pad | A03 span glued both edges: `r carver’s career: … independentl` | CLEAN 17/17 (0) | DRIFT 16/17 (1), A03 `unsupported`, `nearest_line=81` |
+| claims/trunc-hyphen | C06 span ends `…translating “jin’i` (next byte `-`) | CLEAN 17/17 (0) | DRIFT 16/17 (1), C06 `unsupported`, `nearest_line=53` |
+| chain/trunc-midtoken | hop 3 anchor `…kiwami semantic` (one byte dropped) | CLEAN 17/22 (0) | DRIFT 16/22 (1), hop 3 `anchor-missing`, `nearest_line=35` |
+| chain/trunc-hyphen | hop 14 anchor ends `…shokunin → jin’i` | CLEAN 17/22 (0) | DRIFT 16/22 (1), hop 14 `anchor-missing`, `nearest_line=52` |
+| chain/trunc-apostrophe | hop 14 anchor ends `…shokunin → jin` | CLEAN 17/22 (0) | DRIFT 16/22 (1), hop 14 `anchor-missing`, `nearest_line=52` |
+| chain/glue-start | hop 6 anchor prefixed `n. Track …` (glued into `evaluation`) | CLEAN 17/22 (0) | DRIFT 16/22 (1), hop 6 `anchor-missing`, `nearest_line=57` |
+| claims legit L1+L2 | span followed by `,` (B:79) · span bounded by `(` `)` with slashes/apostrophe/hyphen inside (A:35) | CLEAN 19/19 (0) | CLEAN 19/19 (0) |
+| chain legit hop 23 | quote followed by `,` (B:79) | CLEAN 18/23 (0) | CLEAN 18/23 (0) |
+
+### Re-run recipe
+
+From the lane root, local only. Exit contract for every run: 0 CLEAN,
+1 DRIFT, 2 setup/usage.
+
+```bash
+sha256sum tools/research-gate.sh
+#   6b83705b02fe11e98b8b4aeb43fe718ff9910d21cee16d87366cef648a3960b2
+bash tools/research-gate.sh verify-claims corpus/fixtures/claims-r2.jsonl --root ..
+#   expect: 17/17, CLEAN, exit 0
+bash tools/research-gate.sh verify-chain corpus/fixtures/chain-r3.md --root ..
+#   expect: RESOLVED_HOPS=17/22, CLEAN, exit 0
+bash tools/research-gate.sh verify-chain corpus/fixtures/chain-r3-broken.md --root ..
+#   expect: RESOLVED_HOPS=1/2, DRIFT, exit 1
+bash tools/research-gate.sh --selftest
+#   expect: RESEARCH_GATE_SELFTEST: PASS (44 cases), exit 0
+# before-state gate for the attack pairs (round-3 revision, from git):
+git show cc9fe8f:tools/research-gate.sh > /tmp/chousa-r4/research-gate-r3-67daf85e.sh
+sha256sum /tmp/chousa-r4/research-gate-r3-67daf85e.sh
+#   expect: 67daf85ecc49c4c7accbee9534c31b0734061b7f329e8de7a98254a57f9d6084
+# rebuild the single-delta copies and re-derive their classification without the gate:
+python3 /tmp/chousa-r4/make-fixtures.py   # prints each delta and sha256
+python3 /tmp/chousa-r4/boundcheck.py "$PWD" /tmp/chousa-r4/att
+#   expect: BOUNDCHECK_SUMMARY: all copies agree, exit 0
+```
+
+### Notes
+
+- Receipts pin gate revision `6b83705b…`; a later gate edit supersedes this
+  stamp — re-run the recipe above and re-cut.
+- Scratch for this cut lived at `/tmp/chousa-r4/` (generator, checker, the r3
+  snapshot, the single-delta copies, `TMPDIR`): this round's `/tmp` writes
+  succeeded, so no `$HOME/.cache/chousa-tmp` fallback was needed. The receipts
+  are self-contained; the before-state gate is recoverable from git as shown.
+- The gate-free checker `/tmp/chousa-r4/boundcheck.py` re-implements the
+  documented rule independently of the gate; the canonical fixture's expect
+  fields are its ground truth and the attack/legit copies carry explicit
+  expected classifications for their single deltas.
+- The boundary rule and its character class are documented in the gate header
+  and in the helper comment block (`tools/research-gate.sh:68-86, 765-831`);
+  the same helper serves both modes, so there is one rule, not two.
 - Receipt identity for this round remains a lane-local log; no `task_…` value
   is invented and the round-1 receipt blocker stands (operator-side).

@@ -65,6 +65,25 @@
 #   CHAIN_SOURCE_EPHEMERAL CHAIN_SOURCE_OUT_OF_CORPUS CHAIN_SOURCE_MISSING
 #   CHAIN_ANCHOR_NOT_FOUND CHAIN_CITATION_INVALID
 #
+# Token boundaries (matching semantics shared by claims spans and chain quote
+# anchors — the substring classes): an occurrence of a span/quote counts only
+# when both of its outer edges sit at a token boundary, i.e. the character
+# immediately before it and the character immediately after it are each one of
+# {file edge, line edge (newline), ASCII whitespace (space tab CR LF VT FF),
+# ASCII punctuation}. `-` and `'` are boundaries only when they do not join
+# two word characters: a word-internal hyphen/apostrophe is part of its word
+# (`cross-check`, `workers'`), so an occurrence ending or starting mid-word is
+# not a hit. A word character is an ASCII letter, an ASCII digit, or any
+# non-ASCII character; `_` is ASCII punctuation here (Markdown emphasis), so it
+# is a boundary, while `—`, `。` and other non-ASCII bytes are not boundaries —
+# an undecidable edge fails closed. Only the outer edges are checked, so a
+# multi-line span is delimited by its first and last character alone and may
+# cut mid-token inside. Matching stays byte-exact and case-sensitive, and the
+# reported hit is the first delimited occurrence (line:N, or lines:N-M when it
+# spans lines). A substring occurrence glued into a word (a truncated
+# `…kiwami semantic`, a padded extra word running into a longer source token, a
+# possessive) is a miss and takes the existing line-aware not-found report.
+#
 # Secrecy: print path:line class=<name> only — never span.
 # Opens: allowlist metadata only; denylist → SESSION_READ.
 # research/README CDP 9222 is provenance, not a hop.
@@ -111,14 +130,21 @@ usage: research-gate.sh [--selftest] [--help]
   Claims file: one JSON object per claim line:
     {"id":…,"source":…,"span":…,"expect":supported|contradicted|unsupported
      [,"marker":…]}
-  Spans must appear verbatim in sources; sources are local files only.
+  Spans must appear verbatim in sources at token boundaries; sources are
+  local files only.
   Chain mode: each hop with status=resolved must cite a source (a source id
   from ## Sources, or a local path) plus an anchor — an anchor_kind column
   (heading|quote|line) with an anchor column, or a to fragment
   path#kind:text (bare #text = heading). The anchor must appear in the cited
-  source: headings by text, quotes verbatim, lines as whole lines.
+  source: headings by text, quotes verbatim at token boundaries, lines as
+  whole lines.
   Unresolved/marked hops stay exempt but counted. Sources obey the same
   boundary as verify-claims (local, canonicalized, never fetched).
+  A token boundary is a file/line edge, ASCII whitespace or ASCII
+  punctuation at the match's outer edges; a word-internal hyphen or
+  apostrophe is not a boundary, so a truncated quote (mid-word), a padded
+  extra word running into a longer token, or a possessive join is a miss.
+  Multi-line spans are delimited by their first and last character only.
 Verdict: RESEARCH_GATE: CLEAN|DRIFT
 Exit:    0 CLEAN | 1 DRIFT | 2 setup/usage
 EOF
@@ -736,6 +762,74 @@ claim_source_sev() {
   esac
 }
 
+# ---- token-boundary matching (header rule; claims spans and chain quotes) ----
+# TOK_WS and TOK_PUNCT are the two boundary character classes; `-` and `'` are
+# absent from TOK_PUNCT because they are boundaries only when they do not join
+# two word characters. Membership is asked with [[ $SET == *"$c"* ]] so an
+# ASCII-only set is matched against a whole (possibly multibyte) character:
+# every non-ASCII byte misses both sets and is therefore a word character.
+
+TOK_WS=$' \t\n\r\v\f'
+TOK_PUNCT='!"#$%&()*+,./:;<=>?@[\]^_`{|}~'
+
+tok_word_char() { # CHAR -> rc0: word character (ASCII alnum or non-ASCII)
+  local c=$1
+  [[ -n $c ]] || return 1
+  [[ $c == [0-9A-Za-z] ]] && return 0
+  [[ $c == - || $c == "'" ]] && return 1
+  [[ $TOK_WS == *"$c"* || $TOK_PUNCT == *"$c"* ]] && return 1
+  return 0
+}
+
+tok_left_ok() { # BEFORE SPAN -> rc0: the left edge is a token boundary
+  local before=$1 span=$2 c n=''
+  [[ -n $before ]] || return 0                    # start of file / line start
+  c=${before: -1}                                 # last character before the hit
+  if [[ $c == - || $c == "'" ]]; then
+    if [[ ${#before} -ge 2 ]]; then n=${before: -2:1}; fi
+    if tok_word_char "$n" && tok_word_char "${span:0:1}"; then
+      return 1                                    # word-internal joiner
+    fi
+    return 0
+  fi
+  [[ $TOK_WS == *"$c"* || $TOK_PUNCT == *"$c"* ]]
+}
+
+tok_right_ok() { # AFTER SPAN -> rc0: the right edge is a token boundary
+  local after=$1 span=$2 c n=''
+  [[ -n $after ]] || return 0                     # end of file / line end
+  c=${after:0:1}                                  # first character after the hit
+  if [[ $c == - || $c == "'" ]]; then
+    if [[ ${#after} -ge 2 ]]; then n=${after:1:1}; fi
+    if tok_word_char "$n" && tok_word_char "${span: -1}"; then
+      return 1                                    # word-internal joiner
+    fi
+    return 0
+  fi
+  [[ $TOK_WS == *"$c"* || $TOK_PUNCT == *"$c"* ]]
+}
+
+tok_span_at() { # HAY SPAN -> TOK_AT (line:N|lines:N-M) + TOK_L1/TOK_L2
+  # rc0: first boundary-delimited occurrence; rc1: none. Occurrences that are
+  # substrings but glued into a word are skipped, not reported.
+  local hay=$1 span=$2 rest=$hay before after dropped=0
+  TOK_AT=- TOK_L1=0 TOK_L2=0
+  [[ -n $span ]] || return 1
+  while :; do
+    [[ $rest == *"$span"* ]] || return 1
+    before=${rest%%"$span"*}
+    after=${rest#*"$span"}
+    if tok_left_ok "$before" "$span" && tok_right_ok "$after" "$span"; then
+      TOK_L1=$(( dropped + $(count_nl "$before") + 1 ))
+      TOK_L2=$(( TOK_L1 + $(count_nl "$span") ))
+      if [[ $TOK_L1 -eq $TOK_L2 ]]; then TOK_AT=line:$TOK_L1; else TOK_AT=lines:$TOK_L1-$TOK_L2; fi
+      return 0
+    fi
+    dropped=$(( dropped + $(count_nl "$before") + $(count_nl "$span") ))
+    rest=$after
+  done
+}
+
 verify_claims() {
   local claims=$1
   ROOT=${CHOUSA_ROOT:-$ROOT}
@@ -750,7 +844,7 @@ verify_claims() {
   local default_marker='' lineno=0 line CLAIM_REFUSE='' CLAIM_REFUSE_OBS='' CLAIM_SRC_PATH=''
   local -a CLAIM_LINES=()
   local id src span expect marker observed verdict at bad l
-  local hay before span_nl start_line end_line region m probe nearer tok ctx path show_id show_exp
+  local hay start_line end_line region m probe nearer tok ctx path show_id show_exp
 
   scan_secrets "$claims"
 
@@ -810,12 +904,10 @@ verify_claims() {
 
     hay=$(cat -- "$path"; printf x)
     hay=${hay%x}
-    if [[ $hay == *"$span"* ]]; then
-      before=${hay%%"$span"*}
-      start_line=$(( $(count_nl "$before") + 1 ))
-      span_nl=$(count_nl "$span")
-      end_line=$((start_line + span_nl))
-      if [[ $span_nl -eq 0 ]]; then at=line:$start_line; else at=lines:$start_line-$end_line; fi
+    if tok_span_at "$hay" "$span"; then
+      start_line=$TOK_L1
+      end_line=$TOK_L2
+      at=$TOK_AT
       case "$expect" in
         supported) observed=supported ;;
         unsupported)
@@ -951,7 +1043,7 @@ chain_citation() { # ROW -> rc0: CITE_TO CITE_KIND CITE_TEXT; rc1: CITE_ERR
 }
 
 chain_anchor_at() { # HAY KIND TEXT -> CITE_AT; rc0 found / rc1 not found
-  local hay=$1 kind=$2 text=$3 line tline before n1 n2 lineno=0
+  local hay=$1 kind=$2 text=$3 line tline lineno=0
   CITE_AT=-
   case "$kind" in
     heading)
@@ -965,11 +1057,8 @@ chain_anchor_at() { # HAY KIND TEXT -> CITE_AT; rc0 found / rc1 not found
       return 1
       ;;
     quote)
-      [[ $hay == *"$text"* ]] || return 1
-      before=${hay%%"$text"*}
-      n1=$(( $(count_nl "$before") + 1 ))
-      n2=$(( n1 + $(count_nl "$text") ))
-      if [[ $n1 -eq $n2 ]]; then CITE_AT=line:$n1; else CITE_AT=lines:$n1-$n2; fi
+      tok_span_at "$hay" "$text" || return 1
+      CITE_AT=$TOK_AT
       return 0
       ;;
     line)
@@ -1176,6 +1265,12 @@ run_selftest() {
   printf 'alpha claim holds\nbeta claim holds CONTRADICTION-MARKER: source disagrees\ngamma claim retracted\n' >"$WORK/claimsrc/ledger.md"
   printf 'arrow check \xe2\x86\x92 done\n' >"$WORK/claimsrc/arrow.md"
   printf '# Chain target\nintro line\n## Term table\nalpha row present\nThe craftsman certifies the work\nomega final line\n' >"$WORK/lib/chain_target.md"
+  cat >"$WORK/lib/boundary.md" <<'EOF'
+The punctuation case: alpha boundary word, then stops.
+The line-break case: delta boundary word-
+The possessive case: gamma boundary word's outcome.
+The glued case: theta boundary word continuation-suffix here.
+EOF
 
   cat >"$WORK/claims-pass.jsonl" <<'EOF'
 # selftest positive claims
@@ -1212,6 +1307,22 @@ EOF
 EOF
   printf '{"id":"O1","source":"%s","span":"outside text","expect":"supported"}\n' "$OUTSIDE_FILE" >"$WORK/claims-fail-out-of-corpus.jsonl"
   printf '{"id":"O2","source":"../%s","span":"outside text","expect":"supported"}\n' "$(basename "$OUTSIDE_FILE")" >>"$WORK/claims-fail-out-of-corpus.jsonl"
+  cat >"$WORK/claims-boundary-pass.jsonl" <<'EOF'
+# token boundaries: punctuation, a non-word-internal hyphen, a line edge and a
+# multi-line span are all delimited and must still resolve
+{"id":"BP1","source":"lib/boundary.md","span":"alpha boundary word","expect":"supported"}
+{"id":"BP2","source":"lib/boundary.md","span":"delta boundary word","expect":"supported"}
+{"id":"BP3","source":"lib/primary.md","span":"line2","expect":"supported"}
+{"id":"BP4","source":"lib/primary.md","span":"line1 primary material\nline2","expect":"supported"}
+EOF
+  cat >"$WORK/claims-boundary-fail.jsonl" <<'EOF'
+# token boundaries: three substring games that only boundary matching refuses
+# (a mid-token truncation, a padded extra word glued into a hyphenated
+# compound, and a possessive apostrophe join)
+{"id":"BF1","source":"lib/boundary.md","span":"alpha boundary wor","expect":"supported"}
+{"id":"BF2","source":"lib/boundary.md","span":"theta boundary word continuation","expect":"supported"}
+{"id":"BF3","source":"lib/boundary.md","span":"gamma boundary word","expect":"supported"}
+EOF
 
   export CHOUSA_ROOT="$WORK"
   export CHOUSA_NOW_EPOCH="$NOW_EPOCH"
@@ -1899,6 +2010,66 @@ EOF
 
   tsetup chain-no-path 2 verify-chain
   tsetup chain-missing-file 2 verify-chain "$WORK/no-such-record.md"
+
+  # Round-4 token-boundary cases. The claims pair and the chain pair run the
+  # same fixture bytes (lib/boundary.md) through both modes, so the delimited
+  # passes (punctuation edge, non-word-internal hyphen, line edge, multi-line
+  # span) and the glued misses (mid-token truncation, padded extra word into a
+  # hyphenated compound, possessive apostrophe) are evidence that one rule
+  # governs both modes.
+  tclaims claims-boundary-pass 0 \
+    'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=4/4' \
+    'CLAIM id=BP1 expected=supported observed=supported source=lib/boundary.md at=line:1 verdict=match' \
+    'CLAIM id=BP2 expected=supported observed=supported source=lib/boundary.md at=line:2 verdict=match' \
+    'CLAIM id=BP3 expected=supported observed=supported source=lib/primary.md at=line:2 verdict=match' \
+    'CLAIM id=BP4 expected=supported observed=supported source=lib/primary.md at=lines:1-2 verdict=match'
+
+  tclaims claims-boundary-fail 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING CLAIM_SPAN_NOT_FOUND' \
+    'CLAIM id=BF1 expected=supported observed=unsupported source=lib/boundary.md at=- verdict=mismatch' \
+    'CLAIM id=BF2 expected=supported observed=unsupported source=lib/boundary.md at=- verdict=mismatch' \
+    'CLAIM id=BF3 expected=supported observed=unsupported source=lib/boundary.md at=- verdict=mismatch' \
+    'nearest_line=1' 'nearest_line=4' 'nearest_line=3' 'VERDICT_BEARING_CLAIMS=0/3' \
+    'claims=3 supported=0 contradicted=0 unsupported=3 mismatched=3 unproven=0 refused=0 invalid=0'
+
+  write_rec chain-pass-boundary <<'EOF'
+# research-record v1
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | lib/boundary.md |
+## Chain
+| hop | from | to | status | anchor_kind | anchor |
+|---|---|---|---|---|---|
+| 1 | C1 | S1 | resolved | quote | alpha boundary word |
+| 2 | C1 | S1 | resolved | quote | delta boundary word |
+| 3 | C1 | lib/primary.md#line:line2 | resolved | | |
+EOF
+  tchain chain-pass-boundary 0 \
+    'RESEARCH_GATE: CLEAN' 'RESOLVED_HOPS=3/3' \
+    'hops=3 verified=3 exempt=0 anchor-missing=0 refused=0 invalid=0' \
+    'CHAIN hop=1 status=resolved observed=verified source=lib/boundary.md anchor=quote:"alpha boundary word" at=line:1 verdict=match' \
+    'CHAIN hop=2 status=resolved observed=verified source=lib/boundary.md anchor=quote:"delta boundary word" at=line:2 verdict=match' \
+    'CHAIN hop=3 status=resolved observed=verified source=lib/primary.md anchor=line:"line2" at=line:2 verdict=match'
+
+  write_rec chain-fail-boundary <<'EOF'
+# research-record v1
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | lib/boundary.md |
+## Chain
+| hop | from | to | status | anchor_kind | anchor |
+|---|---|---|---|---|---|
+| 1 | C1 | S1 | resolved | quote | alpha boundary wor |
+| 2 | C1 | S1 | resolved | quote | theta boundary word continuation |
+| 3 | C1 | S1 | resolved | quote | gamma boundary word |
+EOF
+  tchain chain-fail-boundary 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING CHAIN_ANCHOR_NOT_FOUND' \
+    'observed=anchor-missing' 'at=-' 'RESOLVED_HOPS=0/3' \
+    'nearest_line=1' 'nearest_line=4' 'nearest_line=3' \
+    'hops=3 verified=0 exempt=0 anchor-missing=3 refused=0 invalid=0 findings=3 drift=3'
 
   if [[ $failures -eq 0 ]]; then
     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases)\n' "$cases"

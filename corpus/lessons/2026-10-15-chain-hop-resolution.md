@@ -6,8 +6,9 @@ working tree carries the uncommitted round-3 change (`git status --short`:
 ` M tools/research-gate.sh` plus the untracked `corpus/fixtures/chain-r3*`). Gate
 revision under test: `tools/research-gate.sh` sha256
 `67daf85ecc49c4c7accbee9534c31b0734061b7f329e8de7a98254a57f9d6084`
-(mode `chain` at `:1034-1156` of that revision; samples identical across my whole
-run window 23:49:31Z–23:54:19Z). Fixtures under test: `corpus/fixtures/chain-r3.md`
+(mode `chain` at `:1034-1156` of that revision; samples identical from
+23:49:31Z through the poll window's end 00:07:02Z — ~18 minutes of consecutive
+30-second samples spanning my whole run battery). Fixtures under test: `corpus/fixtures/chain-r3.md`
 sha256 `06115f2f8e6db3c60034411dc6be42c4e0887352b09ab9cbd7f760801237ba07`,
 `corpus/fixtures/chain-r3-broken.md` sha256
 `b66222a16d4c5323ee6932839ff5746af5f716f36372af506755aed18e0f5c6a`, contract
