@@ -411,3 +411,22 @@ parent integrated under the chousa lane identity.
 
 Round report: `.ufo/round-6/chousa-goalwave.md`.
 
+## Round 7 — verify-integrity (goal wave)
+
+**Round 7 — goal-wave admission (2026-10-16).** Motivating evidence: round 6's
+demonstrated dangling-reference hole. Landed (evidence commit `a1948c3`):
+gate `3ba718bf…` with `verify-integrity` (selftest 74 = +10) — reference cells
+across chain/claims/negatives/sweeps/rejections resolve against declared ids
+fail-closed; exempt classes counted; fifth verify-all section. Fixture 16 refs
+/ 15 resolved / 0 unresolved CLEAN; broken control DRIFT naming S9 + C9.
+Wave: 32-seat flash call, 24/24.
+
+**Verdicts.** ADMIT: coverage/depth/operability **improved**; freshness/
+calibration/adjacency **unchanged**; none harmed. Round 8 registered: gate
+behavioral baseline (--pin/--drift). Receipt identity remains OPEN (operator).
+
+**Boundaries held.** Zero network; corpus read-only; seats committed nothing;
+parent integrated under the chousa lane identity.
+
+Round report: `.ufo/round-7/chousa-goalwave.md`.
+

@@ -273,3 +273,38 @@ reference (sweep/companion bindings) must resolve to a declared row or source,
 fail-closed, closing the dangling-claim/unbound-companion class demonstrated
 this round.
 
+## Round 7 verdict — 2026-10-16 (goal wave; evidence commit `a1948c3`)
+
+Selected axis: **coverage-of-integrity** — the round-6 demonstrated hole:
+dangling cross-section references. Wave: one 32-seat flash call, 24/24
+reports. Report: `.ufo/round-7/chousa-goalwave.md`.
+
+**Before** (gate `0c3d51ed…`): a record's sweep cell could name a claim id no
+`## Claims` row declares, a hop could cite an undeclared source id — and every
+mode passed it (demonstrated: `CLEAN` on a record with 3 dangling refs).
+
+**After** (gate `3ba718bf…`, selftest 74 = +10; parent acceptance
+2026-10-16T04:15Z): seventh mode `verify-integrity`, composed as verify-all's
+fifth section: every reference token (claim/source/sweep ids in chain, claims,
+negatives, sweeps, rejections cells) must resolve to a declared id —
+`REF_UNRESOLVED` (drift) when not, resolved counted, exempt classes
+(non-local namings, blocked-no-fetch) exempt-but-counted. Fixture: 16 refs /
+15 resolved / 0 unresolved CLEAN; broken control DRIFT naming exactly
+`S9` (chain from-cell) and `C9` (sweeps claim_id). Solo holds intact
+(claims 17/17, chain 17/22); quota-sentinel clean 28 samples.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | every cross-section reference is now resolution-checked; the record's internal consistency is as verdict-bearing as its external citations. |
+| depth | **improved** | `corpus/knowledge/reference-integrity-r7.md`: the reference model (declared ids, reference cells, token splitting), fail-closed semantics, exempt classes, the critic's extraction limits (substring-looking ids, quoted-span tokens) dispositioned. |
+| operability | **improved** | selftest 64 → 74 (+10); seven modes; verify-all now runs five sections as fresh solo invocations (tally-equal by construction). |
+| freshness | **unchanged** | receipts + manifest lines at the new SHA. |
+| calibration | **unchanged** | warn-severity REF findings drift the record (visibility) — severity semantics documented. |
+| adjacency | **unchanged** | zero network; corpus read-only; quota held. |
+
+Admission: **ADMIT** (coverage/depth/operability improved, none harmed). No
+scalar score. Learning trends: expansion/quality **improved**, discernment
+**unchanged**. Round 8 registered: the gate's own behavioral baseline
+(`--pin`/`--drift` adapted from the sibling lane's proven pattern) — the
+verification tool's drift becomes detectable.
+
