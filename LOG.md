@@ -518,3 +518,16 @@ Round report: `.ufo/round-11/chousa-goalwave.md`.
 **Operator rollout (2026-10-16 protocol amendment, fleet-root `84bade0`) — not a craft round.** Already present as recordable sections: axes (`## Axes`), planned (`## Planned`), retired (`## Retired`). Added by this rollout additively at file end: `## Capabilities` (repertoire-table scaffold, `— none yet —` row) and `## Saturation` (line + stagnation window N deferred to the lane's next round per `AXES.md` §The stagnation nudge).
 
 No axis claim was made, no score moved, no verdict changed, no number invented; existing `SCORECARD.md` bytes unchanged (original 30128-byte prefix byte-identical, `sha256 2e802345c72f31197f83d400958816544d9cc0df7c365d2658687685d519c373`).
+
+## 2026-10-17 — first-class README (not a craft round)
+
+**Evidence.** This repository either had no root `README.md` or only the
+generic 22-line lane stub (`A **shokunin lane** — an expert agent for one
+domain…`). A new agent landing here had to reconstruct the province from
+`PROVINCE.md`, `SKILL.md` (when present), the directory listing, and
+`LOG.md`. Wrote `README.md` from those sources: owned domain and refusals
+from `PROVINCE.md`, start-here commands from files that exist in-tree
+(`tools/`, `scripts/`, `verifiers/`, `corpus/`), and fleet links to
+`VeigaPunk/shokunin`. No axis claim. No Devin wiki URL was added or
+rewritten (the only in-tree Devin wiki link remains the fleet-root
+`README.md` line).
