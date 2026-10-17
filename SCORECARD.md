@@ -458,3 +458,14 @@ named; none harmed). No scalar score. Learning trends: expansion/quality
 discernment-product round, externally probed). chousa rounds 2-11: ten
 admitted rounds — the goal's second half complete.
 
+## Capabilities
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| — none yet — | | | |
+
+Rows enter only through a round that demonstrates the capability running (`AXES.md` §Capabilities); none enter through this rollout.
+
+## Saturation
+
+The lane's saturation line and stagnation window N are to be declared by the lane on its next round per `AXES.md` §The stagnation nudge; not asserted by this conformance change.
