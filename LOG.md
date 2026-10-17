@@ -518,3 +518,13 @@ Round report: `.ufo/round-11/chousa-goalwave.md`.
 **Operator rollout (2026-10-16 protocol amendment, fleet-root `84bade0`) — not a craft round.** Already present as recordable sections: axes (`## Axes`), planned (`## Planned`), retired (`## Retired`). Added by this rollout additively at file end: `## Capabilities` (repertoire-table scaffold, `— none yet —` row) and `## Saturation` (line + stagnation window N deferred to the lane's next round per `AXES.md` §The stagnation nudge).
 
 No axis claim was made, no score moved, no verdict changed, no number invented; existing `SCORECARD.md` bytes unchanged (original 30128-byte prefix byte-identical, `sha256 2e802345c72f31197f83d400958816544d9cc0df7c365d2658687685d519c373`).
+
+## 2026-10-17 — root README
+
+Motivating evidence: this repository had no root `README.md` (`ls` of the
+repo root). A reader landing on the GitHub page had `PROVINCE.md` and
+`SKILL.md` and no front door. The new README points at files that exist:
+`PROVINCE.md` (domain, refusals), `SKILL.md` (the hierarchy is this lane's
+own standard), `tools/research-gate.sh` (header: `RESEARCH_GATE: CLEAN|DRIFT`,
+exits 0/1/2), `SHONEN.md` (four open boxes). No domain claim was added beyond
+those files. No Devin wiki URL exists in this repo; none was invented.
