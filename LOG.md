@@ -518,3 +518,10 @@ Round report: `.ufo/round-11/chousa-goalwave.md`.
 **Operator rollout (2026-10-16 protocol amendment, fleet-root `84bade0`) — not a craft round.** Already present as recordable sections: axes (`## Axes`), planned (`## Planned`), retired (`## Retired`). Added by this rollout additively at file end: `## Capabilities` (repertoire-table scaffold, `— none yet —` row) and `## Saturation` (line + stagnation window N deferred to the lane's next round per `AXES.md` §The stagnation nudge).
 
 No axis claim was made, no score moved, no verdict changed, no number invented; existing `SCORECARD.md` bytes unchanged (original 30128-byte prefix byte-identical, `sha256 2e802345c72f31197f83d400958816544d9cc0df7c365d2658687685d519c373`).
+
+## 2026-10-17 — repository README
+
+- **Trigger.** The repository root had no `README.md` (`git ls-files README.md` empty; `ls` of the root shows `PROVINCE.md`, `SKILL.md`, `tools/research-gate.sh`, `corpus/`).
+- **Evidence.** Domain sentence is `PROVINCE.md` lines 1–15. Gate usage is the header of `tools/research-gate.sh` (`--selftest`, verdict `RESEARCH_GATE: CLEAN|DRIFT`, exit 0/1/2). Ran `bash tools/research-gate.sh --selftest` on 2026-10-17: `RESEARCH_GATE_SELFTEST: PASS (85 cases)`, exit 0.
+- **Action.** Added `README.md` as the front door. `corpus/README.md` was not edited. No Devin wiki URL was present.
+- **Outcome.** No axis claim; no score moved.
