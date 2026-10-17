@@ -518,3 +518,8 @@ Round report: `.ufo/round-11/chousa-goalwave.md`.
 **Operator rollout (2026-10-16 protocol amendment, fleet-root `84bade0`) — not a craft round.** Already present as recordable sections: axes (`## Axes`), planned (`## Planned`), retired (`## Retired`). Added by this rollout additively at file end: `## Capabilities` (repertoire-table scaffold, `— none yet —` row) and `## Saturation` (line + stagnation window N deferred to the lane's next round per `AXES.md` §The stagnation nudge).
 
 No axis claim was made, no score moved, no verdict changed, no number invented; existing `SCORECARD.md` bytes unchanged (original 30128-byte prefix byte-identical, `sha256 2e802345c72f31197f83d400958816544d9cc0df7c365d2658687685d519c373`).
+## 2026-10-17 — root README added
+
+- **Trigger.** Operator request for a repository front door. This checkout had no root `README.md` (`ls` of the repo root: AGENTS.md, LOG.md, MINT.md, PROVINCE.md, SCORECARD.md, SHONEN.md, SKILL.md, corpus/, tools/).
+- **Action.** Added `README.md` from `PROVINCE.md` (domain 調査, owns/refusals), `tools/research-gate.sh` header (verdict line, exit 0/1/2, `--selftest` / `--help` at the usage line), and the corpus layout (`knowledge/`, `lessons/`, `fixtures/`, `evidence/`). Fleet rank is shonen because `SHONEN.md` is present; the fleet `MANIFEST.json` mint note withholds the roster row.
+- **Non-claims.** No Devin wiki URL existed in this repo and none was added. No axis claim, no score change, no gate edit. Not a craft round.
