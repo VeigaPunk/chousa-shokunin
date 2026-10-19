@@ -757,3 +757,9 @@ The current r12 baseline was re-derived before measuring: `bash tools/research-g
 - **Verdicts** (SCORECARD §Round 20): coverage/operability/depth/calibration(narrow) **improved**; freshness/adjacency **unchanged**; none harmed. **ADMIT.** Capabilities +1. Round 21 registered (curriculum round 10: devin deepseek-v4.1-flash, 32–64 seats — fallback ladder per the standing record).
 
 **Boundaries held.** Zero network; research corpus read-only; seats read-only; lane-identity pathspec-limited commits; no pushes. Receipt identity still OPEN (L0 row from round 12 unanswered — routed around). Round report: `.ufo/reports/round-20/chousa.md` (seat roster lands there).
+
+## 2026-10-19 — round-21 opening: claims, before-receipts, dispatch
+
+- **Claims** (curriculum loop 1 round 10): coverage/operability = the `ptr_resolves_meta` boundary gap (round-20 named debt): relative pointer paths check `-f "$ROOT/$f"` or `-f "$LANE_ROOT/$f"` without canonicalization — a `../../etc/passwd` or a symlink to outside passes if the file exists under the raw path. The fix must canonicalize relative pointers the same way `claim_source_path` does, then check `in_root`. depth = the pointer-boundary mechanics note + the denylist `.config` bypass disposition.
+- **Before-receipts**: selftest `PASS (124 cases, 0 skipped)`; drift `none` vs the r12 baseline; r1 `3/3`; gate `49b36759…`; HEAD `83b806a`.
+- **Wave**: one batched AgentSwarm call, 32 seats (curriculum 32–64), **devin deepseek-v4-1-flash-high** (fallback ladder per the standing record: opencode-go-6 → token-plan → devin; the user's directive says use opencode-go-6 for deepseek waves, but R10's assigned provider is devin — trying devin first, fallback to opencode-go-6 if it fails). Seat roster lands in the round-21 report.
