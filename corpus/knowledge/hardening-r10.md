@@ -488,3 +488,28 @@ the §6 text stands otherwise. Revision trail: `3845709b…` → `46534902…`
 (r12 §6) → this revision. Gate `91a01695…` → `${GSHA}…`. Sites naming
 `46534902…` (audit-r11 erratum table, corpus/README) carry the r12
 revision; update on next touch or cite this addendum.
+
+### Round-14 addendum (2026-10-19, append-only)
+
+E3 — the bind-mount item carried inside E2 closes: **cross-device mount
+aliases are now refused unread** at the shared chokepoint
+(`CLAIM_SOURCE_CROSS_DEVICE` / `CHAIN_SOURCE_CROSS_DEVICE`, crit; one
+`stat -c '%s %h %d'` probe, device compared against the RESOLVING root —
+longest-prefix rule, per the live sweeps-r5 S4 lane-fallback case). Live
+before/after receipts `evidence/mount-r14-20261019T125621Z-bypass-
+{before,after}.log`; selftest cases 103–106 (0 skipped on this host; 105 is
+the same-device true-positive control, 106 the lane-fallback control that
+defeats a naive ROOT-only compare). Same-device binds stay a named limit
+(stat-invisible — only mountinfo path-walking could see them; r15+
+candidate).
+
+Counts at this revision (71 rows, numbering unchanged): **by-design 38 ·
+carried 21 · closed 9 · finding 0 · operator 3**; round-11 queue **25 →
+25** (bind item out; the discovered `--root /` boundary dead-arm — `case
+"$canon" in "$root_r"/*` becomes `//*`, every source refuses — enters the
+queue; fix `"${root_r%/}"/*` named, not landed: outside the r14 claim).
+
+This supersedes the E2 carried list's bind bullet; E2/E1 stand otherwise.
+Revision trail: `46534902…` (r12 §6) → `16f93821…` (r13) → this revision.
+Gate `6b17e50c…` → `d8bbd0bf…`. Sites naming `16f93821…` carry the r13
+revision; update on next touch or cite this addendum.

@@ -672,3 +672,60 @@ receipt-runbook automation), pre-registered at the round-14 opening.
 | Capability | What it can now do | Evidence pointer | First-working round |
 |---|---|---|---|
 | hardlink-alias refusal | refuses multi-linked claim/chain sources unread before any read | selftest cases 99–102; `corpus/knowledge/hardlink-alias-r13.md` | 13 |
+
+## Round 14 verdict — 2026-10-19 (goal wave; evidence commit this landing)
+
+Selected claims (LOG.md round-14 opening): coverage/operability = the
+mount-alias (bind) boundary — refuse sources whose st_dev differs from the
+resolving root's device; depth = the mount/alias note + registry sweep.
+Wave: one 64-seat AgentSwarm call on **alibaba-token-plan /
+deepseek-v4.1-flash** (operator directive: token-plan lanes for the
+deepseek-v4.1-flash waves), 63/64 seat reports — seat 54 (OverflowScout)
+failed on a provider content-filter 400; the deficit is recorded here and in
+the report, not backfilled. The wave validated the fixture unprivileged on
+this host (user+mount namespace tmpfs forge; a repo bind inside the ns is
+refused, rc=2, measured) and BLOCKed the mount-free "absolute-path"
+fallback as unsound.
+
+**Before** (gate `6b17e50c…`): `grep -c CROSS_DEVICE tools/research-gate.sh`
+→ 0; device logic absent; the bypass live — a tmpfs mounted over an in-root
+dir read `observed=supported` CLEAN (receipt
+`mount-r14-20261019T132025Z-bypass-before.log`); selftest 102; drift none vs
+the r12 baseline; r1 3/3.
+
+**After** (gate `d8bbd0bf…`, selftest `PASS (106 cases, 0 skipped)`,
+cases 1–102 `cmp` byte-identical): the chokepoint tracks the RESOLVING root
+(longest prefix — a ROOT-only compare would false-refuse the live sweeps-r5
+S4 lane-fallback and the selftest itself, devices 57 vs 30 measured), one
+`stat -c '%s %h %d'` probe serves nlink → size → device (a combined source
+reports the earliest class), refusing `CLAIM_SOURCE_CROSS_DEVICE` /
+`CHAIN_SOURCE_CROSS_DEVICE` (crit) unread. Cases 103–106: ns-mounted
+claims/chain refusal, same-device true-positive control, and the
+lane-fallback control that defeats a naive implementation. Bypass after:
+crit refusal (receipt `-bypass-after.log`). Battery: r1 3/3; drift `none`
+vs the r12 baseline (no re-pin); masked battery vs the pre-round gate
+(LANE_ROOT intact) ALL IDENTICAL (receipt `mount-r14-20261019T132025Z-battery.log`).
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | the bind-alias class is closed at the one content-read chokepoint: before CLEAN `1/1` on a mounted alias → after crit refusal `0/1`, both live; claims + chain + verify-all binding refuse alike |
+| operability | **improved** | selftest 102 → 106 (1–102 byte-identical); one probe serves three checks; namespace fixtures run unprivileged with zero host residue; no re-pin |
+| depth | **improved** | `corpus/knowledge/mount-alias-r14.md`: the bind gap, the resolving-root rule, the probe order, and five measured named limits (same-device binds, overlay roots, TOCTOU, unmeasurable-stat, legit subtree trade) + the discovered `--root /` dead-arm (queued) |
+| freshness | **unchanged** | the r12 baseline holds unchanged (no re-pin needed); no stale pins moved this round |
+| calibration | **improved narrowly** | the claim landed exactly as narrowed (cross-device only) with the same-device-bind limit stated verbatim; the unsound mount-free fixture was BLOCKed, not fudged; the seat-54 deficit is recorded, not backfilled |
+| adjacency | **unchanged** | zero network; sweeps' unclaimed glob surface named as a limit, not absorbed; no sibling/fleet writes beyond the recorded queue rows |
+
+Admission: **ADMIT** (coverage/operability/depth/calibration(narrow)
+improved; none harmed). No scalar score. Learning trends: expansion
+improved, quality improved, discernment unchanged. Round 15 registered:
+curriculum round 4 — **zai glm-5.3-flash**, 32–64 seats (fallback ladder per
+the standing directives: token-plan deepseek → devin deepseek → opencode-go-
+6); claims from the r14 queue (the `--root /` boundary dead-arm fix and/or
+the same-device-bind mountinfo candidate), pre-registered at the round-15
+opening.
+
+## Capabilities (addition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| cross-device refusal | refuses sources whose st_dev differs from the resolving root's device (bind aliases) | selftest cases 103–106; `corpus/knowledge/mount-alias-r14.md` | 14 |

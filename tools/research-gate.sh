@@ -32,6 +32,9 @@
 #   CLAIM_SOURCE_MULTILINKED (r13: hardlink alias of possibly out-of-corpus
 #   content; a symlink's true path is re-checked, a hardlink's partners are
 #   not soundly enumerable — refused unread)
+#   CLAIM_SOURCE_CROSS_DEVICE (r14: source st_dev differs from the resolving
+#   root's device — a bind alias keeps its path and nlink but not its
+#   superblock device; same-device binds stay invisible — refused unread)
 #
 # Claims mode: verify-claims <claims-file> checks each claim's verbatim span
 # against its cited source. Blank lines and #-comment lines are ignored; a
@@ -50,7 +53,13 @@
 # CLAIM_SOURCE_MULTILINKED (crit, drift; CHAIN_SOURCE_MULTILINKED in chain
 # mode): an in-root hardlink alias can name out-of-corpus content that
 # readlink -f cannot see. The refusal is nlink-based, so a legit in-root
-# multi-link family refuses too (named limit).
+# multi-link family refuses too (named limit). A source whose st_dev differs
+# from the resolving root's device is refused unread —
+# CLAIM_SOURCE_CROSS_DEVICE (crit, drift; CHAIN_SOURCE_CROSS_DEVICE in chain
+# mode): a bind alias keeps its in-root path and its nlink but not its
+# superblock device. Same-device binds are stat-invisible and stay a named
+# limit (mount-alias-r14.md). Probe order at the chokepoint is nlink, then
+# size, then device — a combined source reports the earliest class.
 # Per claim: CLAIM id=… expected=… observed=… source=… at=… verdict=…
 #   observed: supported|contradicted|unsupported|unproven|refused|invalid
 #   verdict:  match|mismatch|refused|invalid
@@ -82,6 +91,7 @@
 #   CHAIN_SOURCE_EPHEMERAL CHAIN_SOURCE_OUT_OF_CORPUS CHAIN_SOURCE_MISSING
 #   CHAIN_SOURCE_READ_TOO_LARGE
 #   CHAIN_SOURCE_MULTILINKED (r13)
+#   CHAIN_SOURCE_CROSS_DEVICE (r14)
 #   CHAIN_ANCHOR_NOT_FOUND CHAIN_CITATION_INVALID
 #
 # Sweeps mode: verify-sweeps <record.md> makes kept rejections and negative
@@ -314,7 +324,11 @@ usage: research-gate.sh [--selftest] [--help]
   Sources over 8 MiB are refused unread (CLAIM_SOURCE_READ_TOO_LARGE;
   CHAIN_SOURCE_READ_TOO_LARGE in chain mode). Multi-linked sources are
   refused unread (CLAIM_SOURCE_MULTILINKED; CHAIN_SOURCE_MULTILINKED in
-  chain mode) — a hardlink alias can name out-of-corpus content.
+  chain mode) — a hardlink alias can name out-of-corpus content. Cross-device
+  sources are refused unread (CLAIM_SOURCE_CROSS_DEVICE;
+  CHAIN_SOURCE_CROSS_DEVICE in chain mode) — a bind alias keeps its path and
+  nlink but not its superblock device; the comparison is against the
+  resolving root's device.
   A token boundary is a file/line edge, ASCII whitespace or ASCII
   punctuation at the match's outer edges; a word-internal hyphen or
   apostrophe is not a boundary, so a truncated quote (mid-word), a padded
@@ -997,7 +1011,7 @@ longest_token() { # STRING -> its longest whitespace-separated token
 }
 
 claim_source_path() { # SRC -> rc 0: CLAIM_SRC_PATH; rc 1: CLAIM_REFUSE + CLAIM_REFUSE_OBS
-  local src root_r lane_r cand canon
+  local src root_r lane_r cand canon src_root
   src=$(norm_ptr "$1")
   CLAIM_REFUSE=''; CLAIM_REFUSE_OBS=''; CLAIM_SRC_PATH=''
   if is_session_url "$src" || is_denylist_path "$src"; then
@@ -1027,30 +1041,36 @@ claim_source_path() { # SRC -> rc 0: CLAIM_SRC_PATH; rc 1: CLAIM_REFUSE + CLAIM_
     cand=$ROOT/$src
   fi
   canon=$(readlink -f -- "$cand" 2>/dev/null || printf '%s' "$cand")
-  case "$canon" in
-    "$root_r"/*|"$lane_r"/*) ;;
-    *)
-      CLAIM_REFUSE=CLAIM_SOURCE_OUT_OF_CORPUS
-      CLAIM_REFUSE_OBS="resolved=$canon outside allowed roots"
-      return 1
-      ;;
-  esac
+  # WHICH allowed root resolved the source is kept (src_root): the two roots
+  # can sit on different filesystems (a tmpfs corpus root against a disk lane
+  # root, or the corpus on a mounted volume), so the device probe below must
+  # compare against the resolving root, never a fixed one. Both prefixes
+  # match only when one root nests inside the other; the longer (more
+  # specific) prefix is the resolving root — a corpus root that is itself a
+  # mount refutes nothing: the declared root IS the boundary.
+  if [[ $canon == "$lane_r"/* && $canon == "$root_r"/* ]]; then
+    if (( ${#lane_r} >= ${#root_r} )); then src_root=$lane_r; else src_root=$root_r; fi
+  elif [[ $canon == "$lane_r"/* ]]; then
+    src_root=$lane_r
+  elif [[ $canon == "$root_r"/* ]]; then
+    src_root=$root_r
+  else
+    CLAIM_REFUSE=CLAIM_SOURCE_OUT_OF_CORPUS
+    CLAIM_REFUSE_OBS="resolved=$canon outside allowed roots"
+    return 1
+  fi
   if [[ ! -f $canon || ! -r $canon ]]; then
     CLAIM_REFUSE=CLAIM_SOURCE_MISSING
     CLAIM_REFUSE_OBS="not a readable regular file under allowed roots"
     return 1
   fi
-  # Alias + size probes before the read (r13 + r12): this single chokepoint
-  # serves claims, chain and verify-all's declared-claims resolution, so all
-  # three refuse alike. A multi-linked source is refused unread — an in-root
-  # hardlink alias can name out-of-corpus content that readlink -f cannot see
-  # (a symlink's true path is re-checked by canon; a hardlink's partners are
-  # not soundly enumerable — knowledge/hardlink-alias-r13.md). The refusal is
-  # nlink-based, so a legit in-root multi-link family refuses too (named
-  # limit). An oversized source is likewise refused unread — never slurped,
-  # never partially searched.
-  local size nlink
-  if read -r size nlink < <(stat -c '%s %h' -- "$canon" 2>/dev/null); then
+  # Probe before the read (r12 cap, r13 alias, r14 device): this single
+  # chokepoint serves claims, chain and verify-all's declared-claims
+  # resolution, so all three refuse alike. One stat serves all three arms;
+  # the order is identity-class (nlink), volume-class (size), then
+  # mount-boundary (device) — a combined source reports the earliest class.
+  local size nlink dev root_dev
+  if read -r size nlink dev < <(stat -c '%s %h %d' -- "$canon" 2>/dev/null); then
     if [[ $nlink =~ ^[0-9]+$ ]] && (( nlink != 1 )); then
       CLAIM_REFUSE=CLAIM_SOURCE_MULTILINKED
       CLAIM_REFUSE_OBS="nlink=$nlink multi-linked source refused (possible hardlink alias of out-of-corpus content; not read)"
@@ -1061,9 +1081,25 @@ claim_source_path() { # SRC -> rc 0: CLAIM_SRC_PATH; rc 1: CLAIM_REFUSE + CLAIM_
       CLAIM_REFUSE_OBS="size=$size cap=$SOURCE_READ_MAX_BYTES exceeded (not read)"
       return 1
     fi
+    # Device probe (r14): a bind alias keeps its in-root path (readlink -f
+    # follows symlinks, never mounts) and its nlink (a bind is not a link),
+    # so st_dev is the one identity signal it cannot keep — a source on
+    # another filesystem than the resolving root is refused unread. Same-
+    # device binds are stat-invisible and stay a named limit
+    # (mount-alias-r14.md). A root whose device is unmeasurable fails open
+    # here (documented residual): stat(root) needs no permission the file
+    # read did not already need.
+    if [[ $dev =~ ^[0-9]+$ ]] \
+        && root_dev=$(stat -c '%d' -- "$src_root" 2>/dev/null) \
+        && [[ $root_dev =~ ^[0-9]+$ ]] && [[ $dev != "$root_dev" ]]; then
+      CLAIM_REFUSE=CLAIM_SOURCE_CROSS_DEVICE
+      CLAIM_REFUSE_OBS="dev=$dev root_dev=$root_dev root=$src_root cross-device source refused (possible bind alias of out-of-corpus content; not read)"
+      return 1
+    fi
   elif size=$(file_size_bytes "$canon") && (( size > SOURCE_READ_MAX_BYTES )); then
-    # Probe fallback: the alias check needs %h and is skipped when stat is
-    # unmeasurable (documented residual); the r12 cap semantics hold.
+    # Probe fallback: the alias and device checks need %h/%d and are skipped
+    # when stat is unmeasurable (documented residual); the r12 cap semantics
+    # hold.
     CLAIM_REFUSE=CLAIM_SOURCE_READ_TOO_LARGE
     CLAIM_REFUSE_OBS="size=$size cap=$SOURCE_READ_MAX_BYTES exceeded (not read)"
     return 1
@@ -1074,7 +1110,7 @@ claim_source_path() { # SRC -> rc 0: CLAIM_SRC_PATH; rc 1: CLAIM_REFUSE + CLAIM_
 
 claim_source_sev() {
   case "$1" in
-    CLAIM_SOURCE_EXTERNAL|CLAIM_SOURCE_SESSION|CLAIM_SOURCE_OUT_OF_CORPUS|CLAIM_SOURCE_MULTILINKED) printf 'crit' ;;
+    CLAIM_SOURCE_EXTERNAL|CLAIM_SOURCE_SESSION|CLAIM_SOURCE_OUT_OF_CORPUS|CLAIM_SOURCE_MULTILINKED|CLAIM_SOURCE_CROSS_DEVICE) printf 'crit' ;;
     *) printf 'warn' ;;
   esac
 }
@@ -1428,13 +1464,14 @@ chain_refuse_id() { # CLAIM_* refusal -> CHAIN_* finding id
     CLAIM_SOURCE_OUT_OF_CORPUS) printf 'CHAIN_SOURCE_OUT_OF_CORPUS' ;;
     CLAIM_SOURCE_READ_TOO_LARGE) printf 'CHAIN_SOURCE_READ_TOO_LARGE' ;;
     CLAIM_SOURCE_MULTILINKED) printf 'CHAIN_SOURCE_MULTILINKED' ;;
+    CLAIM_SOURCE_CROSS_DEVICE) printf 'CHAIN_SOURCE_CROSS_DEVICE' ;;
     *) printf 'CHAIN_SOURCE_MISSING' ;;
   esac
 }
 
 chain_source_sev() {
   case "$1" in
-    CHAIN_SOURCE_EXTERNAL|CHAIN_SOURCE_SESSION|CHAIN_SOURCE_OUT_OF_CORPUS|CHAIN_SOURCE_MULTILINKED) printf 'crit' ;;
+    CHAIN_SOURCE_EXTERNAL|CHAIN_SOURCE_SESSION|CHAIN_SOURCE_OUT_OF_CORPUS|CHAIN_SOURCE_MULTILINKED|CHAIN_SOURCE_CROSS_DEVICE) printf 'crit' ;;
     *) printf 'warn' ;;
   esac
 }
@@ -4392,8 +4429,105 @@ EOF
   tclaims claims-single-link 0 'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=1/1' \
     'CLAIM id=H3 expected=supported observed=supported source=lib/primary.md at=line:1 verdict=match'
 
+  # ---- r14: cross-device (mount-alias) source refusal (cases 103-106) ----
+  # A cross-device source can exist in-root only through a mount; the only
+  # unprivileged forge on this host is a tmpfs mounted inside one ephemeral
+  # `unshare --user --mount` child (a bind of the repo is refused there,
+  # measured rc=2). Mount, fixture write and gate run share that child;
+  # nothing reaches the host and cases 1-102 keep their bytes. No userns =>
+  # the ns cases are skipped BY NAME and the skip is counted in the summary.
+  NS_STATE='' NS_WHY='' SKIPPED=0
+  ns_probe() { # silent; sets NS_STATE=yes|no once
+    [[ -n $NS_STATE ]] && return 0
+    command -v unshare >/dev/null 2>&1 || { NS_STATE=no NS_WHY='unshare absent'; return 0; }
+    mkdir -p "$WORK/nsprobe"
+    if unshare --user --map-root-user --mount --propagation private bash -c '
+         mount -t tmpfs none "$1" 2>/dev/null || exit 1
+         [[ $(stat -c %d "$1") != $(stat -c %d "$2") ]]' _ "$WORK/nsprobe" "$WORK" 2>/dev/null
+    then NS_STATE=yes; else NS_STATE=no NS_WHY='no unprivileged user+mount namespace'; fi
+    return 0
+  }
+  ns_run() { # MODE FILE FIXDIR FIXNAME FIXBODY [ENV=V…] -> gate out; rc = gate rc
+    local mode=$1 file=$2 fixdir=$3 fixname=$4 fixbody=$5
+    shift 5
+    local -a extra=("$@")
+    NS_MODE=$mode NS_FILE=$file NS_FIXDIR=$fixdir NS_FIXNAME=$fixname NS_FIXBODY=$fixbody \
+      NS_SELF=$SELF NS_ROOT=$WORK NS_NOW=$NOW_EPOCH
+    export NS_MODE NS_FILE NS_FIXDIR NS_FIXNAME NS_FIXBODY NS_SELF NS_ROOT NS_NOW
+    unshare --user --map-root-user --mount --propagation private bash -c '
+      mount -t tmpfs none "$NS_FIXDIR" || exit 97
+      printf "%s\n" "$NS_FIXBODY" >"$NS_FIXDIR/$NS_FIXNAME" || exit 98
+      exec env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE \
+        CHOUSA_STRICT=0 CHOUSA_ROOT="$NS_ROOT" CHOUSA_NOW_EPOCH="$NS_NOW" \
+        "$@" bash "$NS_SELF" "$NS_MODE" "$NS_FILE"' _ "${extra[@]+"${extra[@]}"}" 2>&1
+  }
+  tnscase() { # NAME WANT_RC MODE TARGET SUMPFX FIXDIR FIXNAME FIXBODY [want…|ENV=V…]
+    local name=$1 want_rc=$2 mode=$3 target=$4 sum=$5 fixdir=$6 fixname=$7 fixbody=$8
+    shift 8
+    local -a want=() extra=()
+    local a rc=0 out nverdict nsum=0 ok=1 tok
+    for a in "$@"; do case "$a" in [A-Z_]*=*) extra+=("$a") ;; *) want+=("$a") ;; esac; done
+    ns_probe
+    cases=$((cases + 1))
+    if [[ $NS_STATE != yes ]]; then
+      SKIPPED=$((SKIPPED + 1))
+      printf 'skip-case %-2d %-26s reason=%s\n' "$cases" "$name" "$NS_WHY"
+      return 0
+    fi
+    out=$(ns_run "$mode" "$target" "$fixdir" "$fixname" "$fixbody" "${extra[@]+"${extra[@]}"}") || rc=$?
+    nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
+    if [[ -n $sum ]]; then nsum=$(grep -c "^$sum" <<<"$out" || true); else nsum=1; fi
+    for tok in "${want[@]+"${want[@]}"}"; do [[ $out == *"$tok"* ]] || ok=0; done
+    if [[ $rc -eq $want_rc && $nverdict -eq 1 && $nsum -eq 1 && $ok -eq 1 ]]; then
+      printf 'ok-case  %-2d %-26s exit=%d\n' "$cases" "$name" "$rc"
+    else
+      printf 'FAIL-case %-26s exit=%d want=%d verdicts=%d sums=%d token=%s\n' \
+        "$name" "$rc" "$want_rc" "$nverdict" "$nsum" "${want[*]-}"
+      printf '%s\n' "$out" | sed 's/^/    | /'
+      failures=$((failures + 1))
+    fi
+  }
+  # 103/104: the canonical path is in-root but its st_dev differs from the
+  # resolving root's device (tmpfs mounted over $WORK/crossdev inside the ns)
+  # => mount alias of another filesystem, refused unread. 105: same path and
+  # bytes WITHOUT the mount must read (true-positive control). 106: a
+  # LANE_ROOT source (repo device) cited with CHOUSA_ROOT=$WORK (tmpfs) must
+  # stay CLEAN — the only case that catches a naive compare-to-CHOUSA_ROOT
+  # implementation; it pins PROVINCE.md's span `deep-research method`
+  # (line 3, nlink=1), so a text change makes it FAIL loudly.
+  mkdir -p "$WORK/crossdev"
+  printf '{"id":"D1","source":"crossdev/cross.md","span":"cross-device content here","expect":"supported"}\n' >"$WORK/claims-cross-device.jsonl"
+  printf '{"id":"D2","source":"crossdev/cross.md","span":"cross-device content here","expect":"supported"}\n' >"$WORK/claims-cross-device-control.jsonl"
+  printf '{"id":"L1","source":"PROVINCE.md","span":"deep-research method","expect":"supported"}\n' >"$WORK/claims-lane-fallback.jsonl"
+  write_rec chain-cross-device <<'EOF'
+# research-record v1
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | crossdev/cross.md |
+## Chain
+| hop | from | to | status | anchor_kind | anchor |
+|---|---|---|---|---|---|
+| 1 | C1 | S1 | resolved | quote | cross-device content here |
+EOF
+  tnscase claims-cross-device 1 verify-claims "$WORK/claims-cross-device.jsonl" 'VERDICT_BEARING_CLAIMS=' \
+    "$WORK/crossdev" cross.md 'cross-device content here' \
+    'RESEARCH_GATE: DRIFT' 'FINDING CLAIM_SOURCE_CROSS_DEVICE severity=crit surface=claims' \
+    'CLAIM id=D1 expected=supported observed=refused source=crossdev/cross.md at=- verdict=refused' \
+    'VERDICT_BEARING_CLAIMS=0/1'
+  tnscase chain-cross-device 1 verify-chain "$WORK/chain-cross-device.md" 'RESOLVED_HOPS=' \
+    "$WORK/crossdev" cross.md 'cross-device content here' \
+    'RESEARCH_GATE: DRIFT' 'FINDING CHAIN_SOURCE_CROSS_DEVICE severity=crit surface=chain' \
+    'CHAIN hop=1 status=resolved observed=refused source=crossdev/cross.md anchor=- at=- verdict=refused' \
+    'RESOLVED_HOPS=0/1'
+  printf 'cross-device content here\n' >"$WORK/crossdev/cross.md"
+  tclaims claims-cross-device-control 0 'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=1/1' \
+    'CLAIM id=D2 expected=supported observed=supported source=crossdev/cross.md at=line:1 verdict=match'
+  tclaims claims-lane-fallback 0 'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=1/1' \
+    'CLAIM id=L1 expected=supported observed=supported source=PROVINCE.md at=line:3 verdict=match'
+
   if [[ $failures -eq 0 ]]; then
-    printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases)\n' "$cases"
+    printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"
     exit 0
   fi
   printf 'RESEARCH_GATE_SELFTEST: FAIL (%d/%d cases)\n' "$failures" "$cases"
