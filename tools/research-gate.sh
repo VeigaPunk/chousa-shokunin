@@ -1516,8 +1516,24 @@ chain_anchor_at() { # HAY KIND TEXT -> CITE_AT; rc0 found / rc1 not found
   CITE_AT=-
   case "$kind" in
     heading)
+      # r23: a # heading inside a fenced code block is literal text, not a
+      # heading — the raw ^#+ matcher must not match it. Track fence state
+      # (same char must close, closing length >= opening, 0-3 literal-space
+      # indent; unclosed = literal to EOF, fail closed).
+      local fence_char='' fence_len=0 c l
       while IFS= read -r line || [[ -n $line ]]; do
         lineno=$((lineno + 1))
+        if [[ -n $fence_char ]]; then
+          if [[ $line =~ ^\ {0,3}(\`{3,}|~{3,})[[:space:]]*$ ]]; then
+            c=${BASH_REMATCH[1]:0:1}; l=${#BASH_REMATCH[1]}
+            [[ $c == "$fence_char" && $l -ge $fence_len ]] && fence_char=''
+          fi
+          continue
+        fi
+        if [[ $line =~ ^\ {0,3}(\`{3,}|~{3,})(.*)$ ]]; then
+          fence_char=${BASH_REMATCH[1]:0:1}; fence_len=${#BASH_REMATCH[1]}
+          continue
+        fi
         [[ $line =~ ^#+[[:space:]]+(.*)$ ]] || continue
         tline=${BASH_REMATCH[1]}
         while [[ $tline == *[[:space:]] ]]; do tline=${tline%?}; done
@@ -5054,6 +5070,25 @@ EOF
 EOF
   tcase ptr-deny-symlink 1 'RESEARCH_GATE: DRIFT' \
     'FINDING POINTER_UNRESOLVED severity=warn surface=sources'
+
+  # 133 (r23): the fenced-heading anchor — chain `heading` anchors scanned
+  # raw lines with ^#+ and matched headings inside fences (false positive).
+  # The fix tracks fence state in chain_anchor_at — a # heading inside a
+  # fence is literal, not an anchor target.
+  mkdir -p "$WORK/lib"
+  cat >"$WORK/lib/fence-target.md" <<'EOF'
+# real heading
+some text
+```
+## Phantom Heading
+this is inside a fence
+```
+EOF
+  printf '# research-record v1\n## Sources\n| id | tier | pointer |\n|---|---|---|---|\n| S1 | primary | lib/fence-target.md |\n## Chain\n| hop | from | to | status | anchor_kind | anchor |\n|---|---|---|---|---|---|\n| 1 | C1 | S1 | resolved | heading | Phantom Heading |\n' \
+    >"$WORK/chain-fence-anchor.md"
+  tchain chain-fence-anchor 1 'RESEARCH_GATE: DRIFT' \
+    'FINDING CHAIN_ANCHOR_NOT_FOUND severity=warn surface=chain' \
+    'CHAIN hop=1 status=resolved observed=anchor-missing' 'RESOLVED_HOPS=0/1'
 
   # 129-132 (r22): the .config/.omp/.local-state path-start denylist — the
   # */X/* patterns need a leading component; bare-start forms '.config/foo',
