@@ -619,3 +619,9 @@ Operator directive: **use the token-plan lanes for the deepseek-v4.1-flash swarm
 - **Verdicts** (SCORECARD §Round 15): coverage/operability/depth/calibration(narrow) **improved**; freshness/adjacency **unchanged**; none harmed. **ADMIT.** Capabilities +1. Round 16 registered (curriculum round 5: gpt-6-luna-max, 64 seats — verification wave re-auditing loop-1 rounds 1–4).
 
 **Boundaries held.** Zero network; research corpus read-only; seats read-only; lane-identity pathspec-limited commits; no pushes. Receipt identity still OPEN (L0 row from round 12 unanswered — routed around). Round report: `.ufo/reports/round-15/chousa.md` (seat roster lands there, per the r11 correction).
+
+## 2026-10-19 — round-16 opening: claims, before-receipts, dispatch
+
+- **Claims** (curriculum loop 1 round 5 — verification wave): coverage/calibration = adversarially re-audit the current loop's rounds 1–4 (lane rounds 12–15) for correctness defects and missed coverage; every finding lands as a dispositioned item (fix, absorb, or named debt). The audit surface: the boundary stack (scope refusal cases 86–92, size cap 95–98, hardlink 99–102, cross-device 103–106, root-slash 107–110), the gate's refusal/finding registry, the knowledge notes' measured claims, and the selftest harness itself. operability = the audit's own receipts.
+- **Before-receipts**: selftest `PASS (110 cases, 0 skipped)`; drift `none` vs the r12 baseline; r1 `3/3`; gate `dd0951d7…`; HEAD `58cf0b9`.
+- **Wave**: one batched AgentSwarm call, 64 seats (curriculum 64), **openai-codex gpt-6-luna-max** (liveness-probed alive this opening; fallback ladder per the standing record: devin → token-plan → opencode-go-6). Seat roster lands in the round-16 report.
