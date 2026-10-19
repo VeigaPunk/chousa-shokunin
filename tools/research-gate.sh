@@ -589,22 +589,36 @@ is_denylist_path() {
 }
 
 ptr_resolves_meta() {
-  local p f
+  # r21: relative pointers were checked with raw -f — a 'lib/../../etc/x'
+  # or a symlink to outside passed if the file existed under the raw path.
+  # Canonicalize the candidate the same way claim_source_path does, then
+  # check in_root against BOTH roots. The absolute arm also checks both
+  # roots — the r15 single-root check refused valid lane-root pointers.
+  # The denylist applies to the canonical target too: a benign symlink to
+  # .config/passwd must not pass because the citation itself was clean.
+  local p f root_r lane_r cand canon
   p=$(norm_ptr "$1")
   is_ephemeral_ptr "$p" && return 1
   is_url_ptr "$p" && return 1
   is_denylist_path "$p" && return 1
   f=$(ptr_file_part "$p")
   [[ -z $f ]] && return 1
-  if [[ $f != /* ]]; then
-    [[ -f $ROOT/$f || -f $LANE_ROOT/$f ]] && return 0
+  root_r=$(cd -- "$ROOT" 2>/dev/null && pwd -P || printf '%s' "$ROOT")
+  lane_r=$(cd -- "$LANE_ROOT" 2>/dev/null && pwd -P || printf '%s' "$LANE_ROOT")
+  if [[ $f == /* ]]; then
+    cand=$f
+  elif [[ -e $ROOT/$f || -L $ROOT/$f ]]; then
+    cand=$ROOT/$f
+  elif [[ -e $LANE_ROOT/$f || -L $LANE_ROOT/$f ]]; then
+    cand=$LANE_ROOT/$f
+  else
     return 1
   fi
-  local root_r
-  root_r=$(cd -- "$ROOT" 2>/dev/null && pwd -P || printf '%s' "$ROOT")
-  # r15: in_root normalizes the prefix (raw "$root_r"/* is //* with --root /);
-  # the -f test still refuses the root directory itself.
-  if in_root "$f" "$root_r" && [[ -f $f ]]; then return 0; fi
+  canon=$(readlink -f -- "$cand" 2>/dev/null || printf '%s' "$cand")
+  is_denylist_path "$canon" && return 1
+  if in_root "$canon" "$root_r" || in_root "$canon" "$lane_r"; then
+    [[ -f $canon ]] && return 0
+  fi
   return 1
 }
 
@@ -4947,6 +4961,95 @@ EOF
 EOF
   tcase scope-comment-shadow 1 'RESEARCH_GATE: DRIFT' \
     'FINDING SCOPE_BOUNTY_ABSORBED severity=warn surface=scope' 'findings=1 drift=1'
+
+  # 125-128 (r21): ptr_resolves_meta boundary — relative pointers were
+  # checked with raw -f (no canonicalization), so 'lib/../../etc/passwd'
+  # and symlinks to outside passed; absolute pointers checked root_r only
+  # (lane-root pointers refused). The fix canonicalizes the candidate and
+  # checks in_root against both roots; the denylist applies to the
+  # canonical target too.
+  # 125: traversal — lib/../../etc/passwd where the file exists under the
+  # raw path but canonicalizes outside (pre-fix: accepted).
+  mkdir -p "$WORK/lib"
+  printf 'x\n' >"$WORK/../chousa-outside-r21.txt"
+  write_rec ptr-traversal <<'EOF'
+# research-record v1
+## Meta
+| key | value |
+|---|---|
+| window | loopback |
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | lib/../../chousa-outside-r21.txt |
+EOF
+  tcase ptr-traversal 1 'RESEARCH_GATE: DRIFT' \
+    'FINDING POINTER_UNRESOLVED severity=warn surface=sources'
+  # 126: symlink pointer — lib/link.md -> outside file (pre-fix: -f passed).
+  mkdir -p "$WORK/lib"
+  ln -s "$WORK/../chousa-outside-r21.txt" "$WORK/lib/link.md"
+  write_rec ptr-symlink <<'EOF'
+# research-record v1
+## Meta
+| key | value |
+|---|---|
+| window | loopback |
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | lib/link.md |
+EOF
+  tcase ptr-symlink 1 'RESEARCH_GATE: DRIFT' \
+    'FINDING POINTER_UNRESOLVED severity=warn surface=sources'
+  # 127: absolute lane-root pointer — an absolute path under LANE_ROOT
+  # (pre-fix: refused because only root_r was checked). The fixture uses
+  # PROVINCE.md (a real lane-root file) so the pointer resolves.
+  write_rec ptr-lane-abs <<'EOF'
+# research-record v1
+## Meta
+| key | value |
+|---|---|
+| window | loopback |
+## Question
+Do the local claims resolve?
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | PLACEHOLDER_LANE_ABS |
+## Chain
+| hop | from | to | status | notes |
+|---|---|---|---|---|
+| 1 | C1 | S1 | resolved | direct |
+## Claims
+| id | kind | text | pointer | status |
+|---|---|---|---|---|
+| C1 | observation | primary file has line1 | S1 | verified |
+## Rejections
+| id | ref | reason | flip |
+|---|---|---|---|
+| R1 | n/a | none-recorded | a source row would flip this |
+EOF
+  sed "s|PLACEHOLDER_LANE_ABS|$LANE_ROOT/PROVINCE.md|" "$WORK/ptr-lane-abs.md" >"$WORK/ptr-lane-abs2.md"
+  mv "$WORK/ptr-lane-abs2.md" "$WORK/ptr-lane-abs.md"
+  tcase ptr-lane-abs 0 'RESEARCH_GATE: CLEAN' 'findings=0 drift=0'
+  # 128: .config denylist via canonical target — a benign symlink to a
+  # .config file (pre-fix: the citation was clean, target unchecked).
+  mkdir -p "$WORK/lib" "$WORK/../chousa-config-r21/.config"
+  printf 'secret\n' >"$WORK/../chousa-config-r21/.config/agent-token.txt"
+  ln -s "$WORK/../chousa-config-r21/.config/agent-token.txt" "$WORK/lib/benign.md"
+  write_rec ptr-deny-symlink <<'EOF'
+# research-record v1
+## Meta
+| key | value |
+|---|---|
+| window | loopback |
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | lib/benign.md |
+EOF
+  tcase ptr-deny-symlink 1 'RESEARCH_GATE: DRIFT' \
+    'FINDING POINTER_UNRESOLVED severity=warn surface=sources'
 
   if [[ $failures -eq 0 ]]; then
     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"
