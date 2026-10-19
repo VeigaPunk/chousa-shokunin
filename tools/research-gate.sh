@@ -691,7 +691,12 @@ file_size_bytes() { # PATH -> stdout byte size; rc 1 when no probe can measure
 # drifts (exit 1); a record with no declaration row takes the old path
 # byte-identically.
 SCOPE_BOUNTY='bug bounty|bounty program|bounty programs|bounty hunt|bounty hunting|bounty scope|claim package|claim packages|kasegi'
-SCOPE_KENGAKU='model quality|model evaluation|model evaluations|model eval|model benchmark|model benchmarks|model scoring|llm quality|llm evaluation|llm eval|language model quality|language model evaluation|kengaku'
+# r18: llm benchmark(s) and llm scoring were missing despite the model-
+# quality boundary (the wave's adversary seats confirmed they are refused-
+# province phrases; ai benchmark(s) stays out — too broad for AI-methodology
+# research, named debt). The plural form needs a separate entry: scope_hit
+# matches literal phrases, never stems.
+SCOPE_KENGAKU='model quality|model evaluation|model evaluations|model eval|model benchmark|model benchmarks|model scoring|llm quality|llm evaluation|llm eval|llm benchmark|llm benchmarks|llm scoring|language model quality|language model evaluation|kengaku'
 SCOPE_KUMITATE='orchestration|dispatch mechanism|multi agent dispatch|multiagent dispatch|agent dispatch|swarm wave|swarm waves|swarm call|swarm calls|swarm dispatch|swarm orchestration|fleet dispatch|agent lifecycle|agent lifecycles|agent roster|agent rosters|kumitate'
 scope_norm() { # VALUE -> lowercase, punctuation runs -> single spaces, trimmed
   local v=$1
@@ -4794,6 +4799,25 @@ Do the local claims resolve?
 EOF
   tcase scope-fence-unclosed 1 'RESEARCH_GATE: DRIFT' \
     'FINDING SCOPE_BOUNTY_ABSORBED severity=warn surface=scope'
+
+  # 117-119 (r18): the SCOPE_KENGAKU phrase gap — llm benchmark(s) and
+  # llm scoring were missing despite the model-quality boundary. The
+  # plural form needs a separate entry (scope_hit matches literal phrases,
+  # never stems). ai benchmark(s) stays out — too broad (AI-methodology
+  # research is not model-quality scope).
+  add_scope_row scope-fail-llm-benchmarks domain 'LLM benchmarks'
+  tcase scope-fail-llm-benchmarks 1 'RESEARCH_GATE: DRIFT' \
+    'FINDING SCOPE_MODEL_QUALITY_ABSORBED severity=warn surface=scope' \
+    'declared=domain match=llm benchmarks route=kengaku' 'findings=1 drift=1'
+  add_scope_row scope-fail-llm-scoring domain 'llm scoring'
+  tcase scope-fail-llm-scoring 1 'RESEARCH_GATE: DRIFT' \
+    'FINDING SCOPE_MODEL_QUALITY_ABSORBED severity=warn surface=scope' \
+    'declared=domain match=llm scoring route=kengaku' 'findings=1 drift=1'
+  # control: benchmark terms in prose only (not a Meta declaration) must
+  # stay CLEAN — the screen reads only Meta domain/scope rows.
+  sed 's#^Do the local claims resolve?$#Prose mentions LLM benchmarks, llm scoring and ai benchmarks here — never in a ## Meta declaration row.#' \
+    "$WORK/scope-base.md" >"$WORK/scope-pass-benchmark-prose.md"
+  tcase scope-pass-benchmark-prose 0 'RESEARCH_GATE: CLEAN' 'findings=0 drift=0'
 
   if [[ $failures -eq 0 ]]; then
     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"
