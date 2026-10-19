@@ -792,3 +792,57 @@ the round-16 opening. Claims pre-registered at the round-16 opening from the
 named-limit queue: candidates — verify-sweeps' mount-alias-blind glob
 surface (r14 note), the same-device-bind mountinfo walk, the overlay-fstype
 guard. Seats: 64; roster logged in the round-16 report.
+
+## Round 16 verdict — 2026-10-19 (goal wave; evidence commit this landing)
+
+Selected claims (LOG.md round-16 opening): coverage/calibration =
+adversarially re-audit loop-1 rounds 1–4 (lane rounds 12–15) for correctness
+defects and missed coverage; every finding lands as a dispositioned item
+(fix, absorb, or named debt). Wave: one 64-seat AgentSwarm call on
+**openai-codex gpt-6-luna-max**, 64/64 seat reports. Seat roster: the
+round-16 report.
+
+**Before** (gate `dd0951d7…`, selftest 110): the boundary stack as landed
+through rounds 12–15, unaudited by an independent model. The r15 battery
+receipt carried wrong fixture paths (A/B/C-r9 under `corpus/fixtures/` not
+`archives-r9/`; `--root .` vs `--root ..`). The `--root //` spelling still
+refused in-corpus absolute paths (`in_root` stripped only one `/`).
+
+**After** (gate `<FILL>…`, selftest `PASS (111 cases, 0 skipped)`, cases
+1–110 `cmp` byte-identical): two fixes landed — `in_root` strips all
+trailing slashes (`//` → `/` → `""`, `""/*` renders `/*`); the r15 battery
+receipt re-run with correct fixture paths (`archives-r9/`, `--root ..`) and
+replaced. ~15 findings absorbed as record corrections (the `wc -c` fallback
+pre-read claim, the scope-refusal coverage overstatement, the full-r6
+README sweeps-absent claim, the mount-alias "queued" item now closed, the
+stale hardlink status in older notes, the hardening-r10 count phantom).
+~12 findings named as debt for round 17 (scope-screen fenced-heading
+shadow, `LLM benchmarks` phrase gap, sweeps symlink-escape, `--drift`
+truncated-baseline ambiguity, `--json` delimiter edge, manifest timestamp
+mask breadth, secret-scan source coverage, URI-like citation
+classification, `--` delimiter handling, TOCTOU readability, bash-3
+portability, 8 unasserted finding IDs). The full disposition table is
+`corpus/knowledge/verification-r16.md`.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **unchanged** | the audit found no out-of-corpus read; two fixes landed (`--root //` healed, battery receipt corrected) but the boundary's refusal classes are unchanged — the wave verified coverage, it did not expand it |
+| operability | **improved** | selftest 110 → 111 (1–110 byte-identical); the `//` edge is now pinned; the battery receipt is honest |
+| depth | **improved** | `corpus/knowledge/verification-r16.md`: the full disposition table with seat citations; the `wc -c` pre-read correction; the corrected battery |
+| freshness | **unchanged** | the r12 baseline holds (no re-pin); no stale pins moved |
+| calibration | **improved** | the audit measured every claim against live behavior; the `//` defect was found because the wave tested what the r15 note claimed but didn't verify; every finding has a named disposition |
+| adjacency | **unchanged** | zero network; corpus read-only; no sibling/fleet writes beyond the recorded queue rows |
+
+Admission: **ADMIT** (operability/depth/calibration improved; none harmed).
+No scalar score. Learning trends: expansion improved, quality improved,
+discernment improved. Round 17 registered: curriculum round 6 —
+§Planned below.
+
+## Planned — round 17 (pre-registered 2026-10-19, at the round-16 landing)
+
+Wave per the curriculum (loop 1, round 6): one 32–64-seat AgentSwarm call,
+**xai-oauth grok-4.7-fast**. Claims pre-registered at the round-17 opening
+from the named-debt queue: candidates — the scope-screen fenced-heading
+shadow fix, the `LLM benchmarks` phrase gap, the sweeps symlink-escape
+guard, the `--drift` truncated-baseline detection. Seats: 32–64; roster
+logged in the round-17 report.

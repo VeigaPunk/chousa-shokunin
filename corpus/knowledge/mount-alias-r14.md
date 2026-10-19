@@ -48,6 +48,9 @@ moves).
 - **TOCTOU** (probe-to-read mount swap) — same standing decision as r12/r13.
 - **Unmeasurable stat**: the fallback path keeps only the r12 cap semantics;
   alias and device checks need %h/%d and are skipped (documented residual).
+  The `wc -c` fallback reads the file to measure it (not to search content);
+  "refused unread" holds for the primary stat path only. If all measurement
+  fails the source is accepted — a fail-open, not a bypass.
 - **Legit cross-device subtrees** inside the corpus root now refuse (the
   case-101-style trade: re-root at that filesystem instead).
 - **verify-sweeps' glob surface is unclaimed**: sweeps re-measures named
@@ -55,4 +58,5 @@ moves).
   invisible to it (r15+ candidate).
 - **Latent, discovered this wave (not r14 scope)**: `--root /` dead-arms
   the boundary case (`"$root_r"/*` becomes `//*`, matching nothing), so
-  every source refuses OUT_OF_CORPUS. Fix: `"${root_r%/}"/*` — queued.
+  every source refuses OUT_OF_CORPUS. Fix: `in_root()` helper — closed
+  round 15 (`corpus/knowledge/root-slash-boundary-r15.md`).

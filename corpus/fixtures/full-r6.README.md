@@ -165,10 +165,12 @@ whose composed verdict differs falsifies this fixture's contract):
   `chain` and `sweeps` (with the two findings above); `structure` and `claims`
   reported clean. A composed verdict that reports DRIFT without naming both
   dirty sections, or that fails the positive control, is a mismatch.
-- `full-r6-absent.md` → one composed verdict CLEAN, exit 0; `claims` and
-  `sweeps` reported absent (no claims surface is bound, no sweep or negative
-  rows exist) while `structure` and `chain` run CLEAN. A composed verdict that
-  turns either omission into DRIFT is a mismatch against the round's rule.
+- `full-r6-absent.md` → one composed verdict CLEAN, exit 0; `claims`
+  reported absent (no claims surface is bound) while `structure`, `chain`,
+  `sweeps` and `integrity` run CLEAN — `## Rejections` makes sweeps
+  applicable (`VERIFIED_SWEEPS=0/0 REJECTIONS_OK=1/1`). A composed verdict
+  that turns the claims omission into DRIFT is a mismatch against the
+  round's rule. (Round-16 correction: sweeps is run, not absent.)
 - `chain` absent is NOT exercised as a CLEAN case: measured, a Chain-less
   record drifts at the structure level the moment it carries any claim row (and
   the chain mode's own `CHAIN_ABSENT` fires regardless), so no such record can

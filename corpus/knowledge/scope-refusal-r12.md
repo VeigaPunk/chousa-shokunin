@@ -58,5 +58,6 @@ identical gate teeth, with one symmetric selftest fixture per province").
   drifts the committed r12 baseline.
 - **A `note` Meta cell naming refused words is not scanned** (key-triggered
   surface only), and the pass-control Approval table's `scope` **column** is
-  untouched because only `## Meta` rows are read — both pinned by selftest
-  fixtures.
+  untouched because only `## Meta` rows are read — the code implements this;
+  the selftest fixtures exercise the Meta `domain`/`scope` row forms, not
+  the `note` or Approval surface explicitly (corrected round 16).
