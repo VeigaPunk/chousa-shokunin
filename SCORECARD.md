@@ -808,7 +808,7 @@ receipt carried wrong fixture paths (A/B/C-r9 under `corpus/fixtures/` not
 `archives-r9/`; `--root .` vs `--root ..`). The `--root //` spelling still
 refused in-corpus absolute paths (`in_root` stripped only one `/`).
 
-**After** (gate `<FILL>…`, selftest `PASS (111 cases, 0 skipped)`, cases
+**After** (gate `2b64a1c8…`, selftest `PASS (111 cases, 0 skipped)`, cases
 1–110 `cmp` byte-identical): two fixes landed — `in_root` strips all
 trailing slashes (`//` → `/` → `""`, `""/*` renders `/*`); the r15 battery
 receipt re-run with correct fixture paths (`archives-r9/`, `--root ..`) and

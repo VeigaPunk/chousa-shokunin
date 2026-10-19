@@ -1,7 +1,7 @@
 # Verification wave — round 16 (loop 1 round 5)
 
 source: 64-seat AgentSwarm wave on openai-codex/gpt-6-luna-max, 2026-10-19; every finding below carries the seat number and its evidence pointer
-verified-at: 2026-10-19 (round 16, landed; selftest PASS (111 cases, 0 skipped); gate sha <FILL>)
+verified-at: 2026-10-19 (round 16, landed; selftest PASS (111 cases, 0 skipped); gate sha `2b64a1c8…`)
 recheck: `bash tools/research-gate.sh --selftest` (cases 1–110 byte-identical vs r15 receipt; case 111 pins `--root //`)
 
 ## Disposition table
