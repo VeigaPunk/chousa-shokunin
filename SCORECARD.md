@@ -846,3 +846,59 @@ from the named-debt queue: candidates — the scope-screen fenced-heading
 shadow fix, the `LLM benchmarks` phrase gap, the sweeps symlink-escape
 guard, the `--drift` truncated-baseline detection. Seats: 32–64; roster
 logged in the round-17 report.
+
+## Round 17 verdict — 2026-10-19 (goal wave; evidence commit this landing)
+
+Selected claims (LOG.md round-17 opening): coverage/operability = fix the
+scope-screen fenced-heading shadow (round-16 named debt): `load_sections`
+resets on every `## ` line without recognizing fenced code blocks, so a
+fenced `## Meta` shadows the real declaration — the scope screen checks the
+wrong body. depth = the fenced-heading mechanics note + the `LLM
+benchmarks` phrase-gap disposition. Wave: one 32-seat AgentSwarm call on
+**opencode-go / deepseek-v4.1-flash** (fallback from xai-oauth 403 — all
+48 seats failed on quota; provider deviation recorded in LOG.md), 27/32
+seat reports (5 failed on provider 400 `reasoning_content` errors; deficit
+recorded, not backfilled). Seat roster: the round-17 report.
+
+**Before** (gate `2b64a1c8…`, selftest 111): `load_sections` splits on every
+`## ` line — a fenced `## Meta` inside a code block resets the real Meta
+body. A record whose real Meta declares `domain: bounty program scope` but
+carries a fenced `## Meta` with `domain: deep-research method` passes
+CLEAN (receipt `fence-r17-20261019T171200Z-demo.log`, before half).
+
+**After** (gate `c2915f24…`, selftest `PASS (116 cases, 0 skipped)`, cases
+1–109 `cmp` byte-identical vs the r15 receipt — r16 inserted case 110, so
+the cmp boundary is 109): `load_sections` pairs fences in two passes —
+same char must close, closing length >= opening, 0–3 literal-space indent;
+an unclosed opener IS a fence (fail closed — everything after it is
+literal). Cases 112–116 pin the five shadow variants: simple shadow,
+fenced-only phantom (no real Meta → CLEAN by the declaration-only
+contract), nested 4-backtick, indented closer, unclosed fence. The naive
+`^``` ` toggle fixes only the simple shadow (measured shape matrix in
+`corpus/knowledge/fenced-heading-r17.md`). Masked battery vs the
+pre-round gate: ALL IDENTICAL. Drift `none` vs the r12 baseline (no
+re-pin); r1 `3/3`.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | the fenced-heading shadow class is closed at the parser: before CLEAN on a shadowed refused domain → after `SCOPE_BOUNTY_ABSORBED` warn + DRIFT (receipts live); five variants pinned |
+| operability | **improved** | selftest 111 → 116 (1–109 byte-identical); two-pass fence pairing is deterministic; no re-pin needed |
+| depth | **improved** | `corpus/knowledge/fenced-heading-r17.md`: the shadow mechanics, the naive-vs-two-pass shape matrix, the call-site audit, the named limits |
+| freshness | **unchanged** | the r12 baseline holds (no re-pin); no stale pins moved |
+| calibration | **improved narrowly** | the fix landed at the discovered class only; the `LLM benchmarks` phrase gap stays named debt (not silently absorbed); the provider fallback is recorded, not hidden |
+| adjacency | **unchanged** | zero network; corpus read-only; no sibling/fleet writes beyond the recorded queue rows |
+
+Admission: **ADMIT** (coverage/operability/depth/calibration(narrow)
+improved; none harmed). No scalar score. Learning trends: expansion
+improved, quality improved, discernment improved. Round 18 registered:
+curriculum round 7 — §Planned below.
+
+## Planned — round 18 (pre-registered 2026-10-19, at the round-17 landing)
+
+Wave per the curriculum (loop 1, round 7): one 16–32-seat AgentSwarm call,
+**zai glm-5.3-flash** (fallback ladder per the standing doctrine: devin →
+token-plan → opencode-go-6). Claims pre-registered at the round-18 opening
+from the named-debt queue: candidates — the `LLM benchmarks` phrase gap,
+the sweeps symlink-escape guard, the `--drift` truncated-baseline
+detection, the fenced-data-row `approved` suppression. Seats: 16–32;
+roster logged in the round-18 report.
