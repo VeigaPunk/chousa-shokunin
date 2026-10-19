@@ -1,0 +1,12 @@
+=== BEFORE: pre-round gate (fb70ddb) verify-chain record.md --root /tmp/r23demo ===
+research-gate v2 — ts=2026-10-19T19:06:48Z — mode=chain — record=/tmp/r23demo/record.md
+CHAIN hop=1 status=resolved observed=verified source=lib/target.md anchor=heading:"Phantom Heading" at=line:4 verdict=match
+RESOLVED_HOPS=1/1
+RESEARCH_GATE: CLEAN (hops=1 verified=1 exempt=0 anchor-missing=0 refused=0 invalid=0 findings=0 drift=0)
+
+=== AFTER: landed gate verify-chain record.md --root /tmp/r23demo ===
+research-gate v2 — ts=2026-10-19T19:06:48Z — mode=chain — record=/tmp/r23demo/record.md
+CHAIN hop=1 status=resolved observed=anchor-missing source=lib/target.md anchor=heading:"Phantom Heading" at=- verdict=mismatch
+FINDING CHAIN_ANCHOR_NOT_FOUND severity=warn surface=chain obs=hop=1 source=lib/target.md anchor=heading:"Phantom Heading" nearest_line=- context=-
+RESOLVED_HOPS=0/1
+RESEARCH_GATE: DRIFT (hops=1 verified=0 exempt=0 anchor-missing=1 refused=0 invalid=0 findings=1 drift=1)

@@ -793,3 +793,15 @@ The current r12 baseline was re-derived before measuring: `bash tools/research-g
 - **Verdicts** (SCORECARD §Round 22): coverage/operability/depth/calibration(narrow) **improved**; freshness/adjacency **unchanged**; none harmed. **ADMIT.** Capabilities +1. Round 23 registered (curriculum round 12: devin swe-2, 16 seats — fallback ladder per the standing record).
 
 **Boundaries held.** Zero network; research corpus read-only; seats read-only; lane-identity pathspec-limited commits; no pushes. Receipt identity still OPEN (L0 row from round 12 unanswered — routed around). Round report: `.ufo/reports/round-22/chousa.md` (seat roster lands there).
+
+## 2026-10-19 — round-23: direct integration (no wave — claim's before→after already measured by the r20 wave's live reproduction)
+
+**Admission.** Landed (evidence commit this entry; no wave dispatched — the claim's falsifiable before→after was already measured live by the round-20 wave's seat 16 reproduction; the fix shape was validated by that wave's design seats):
+
+- **Claim (coverage/operability) — the fenced-heading anchor false-positive**: `chain_anchor_at` scanned raw lines with `^#+` and matched headings inside fences — a `## Phantom Heading` inside a code block verified as a real anchor (live demo: pre-round gate → `verified` at line 4; landed → `anchor-missing` + `CHAIN_ANCHOR_NOT_FOUND` warn + DRIFT; receipt `fanchor-r23-20261019T192000Z-demo.log`). The heading arm now tracks fence state inline (same contract as `load_sections`: same char must close, closing length >= opening, 0–3 literal-space indent; unclosed = literal to EOF). Case 129 pins it.
+- **Depth**: `corpus/knowledge/fenced-anchor-r23.md` — the false-positive mechanics, the fix contract, the named limits (quote/line anchor kinds unaffected — literal text is literal inside or outside a fence).
+- **Battery**: selftest `PASS (133 cases, 0 skipped)`, cases 1–128 `cmp` byte-identical vs the r22 receipt; r1 `3/3`; drift `none` vs the r12 baseline (no re-pin); masked battery vs the pre-round gate (LANE_ROOT intact, r13 method) ALL IDENTICAL; zero network. Gate `dfb798b4…` → `b5d0f93d…`.
+- **Errata/records**: `corpus/README` + `evidence/README` + SKILL sweeps; SCORECARD verdict + round-24 registration.
+- **Verdicts** (SCORECARD §Round 23): coverage/operability/depth/calibration(narrow) **improved**; freshness/adjacency **unchanged**; none harmed. **ADMIT.** Capabilities +1. Loop 1 complete (rounds 12–23 all admitted). Round 24 registered: loop 2 begins (curriculum loop 2 round 1: opencode-go key 7 / deepseek-v4.1-flash, 64 seats).
+
+**Boundaries held.** Zero network; research corpus read-only; seats read-only; lane-identity pathspec-limited commits; no pushes. Receipt identity still OPEN (L0 row from round 12 unanswered — routed around). Round report: `.ufo/reports/round-23/chousa.md` (seat roster lands there — none, no wave).

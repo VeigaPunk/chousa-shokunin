@@ -1181,3 +1181,52 @@ gaps, the `--drift` truncated-baseline detection, the fenced-data-row
 source coverage gap, the `--json` delimiter edge, the manifest timestamp
 mask breadth, bash-3 portability. Seats: 16; roster logged in the
 round-23 report.
+
+## Round 23 verdict — 2026-10-19 (goal wave; evidence commit this landing)
+
+Selected claims (LOG.md round-23 opening — direct integration, no wave:
+the claim was pre-registered and the fix landed before a wave could
+dispatch): coverage/operability = the fenced-heading anchor false-positive
+(round-20 named debt): `chain_anchor_at` scanned raw lines with `^#+` and
+matched headings inside fences — a `## Phantom Heading` inside a code
+block verified as a real anchor. depth = the fenced-anchor mechanics note.
+Wave: none — the fix landed directly (the claim's falsifiable before→after
+was already measured by the round-20 wave's live reproduction).
+
+**Before** (gate `dfb798b4…`, selftest 132): `chain_anchor_at` scanned
+raw lines for `^#+[[:space:]]+` — no fence state; a `## Phantom Heading`
+inside a fence matched as a real heading, making the hop `verified`
+(receipt `fanchor-r23-20261019T192000Z-demo.log`, before half).
+
+**After** (gate `b5d0f93d…`, selftest `PASS (133 cases, 0 skipped)`, cases
+1–128 `cmp` byte-identical vs the r22 receipt): the heading arm tracks
+fence state inline — a `# ` inside a fence is literal, not an anchor
+target. Case 129 pins it. Masked battery vs the pre-round gate: ALL
+IDENTICAL. Drift `none` vs the r12 baseline; r1 `3/3`.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | the fenced-heading anchor class is closed: before `verified` on a fenced heading → after `anchor-missing` + `CHAIN_ANCHOR_NOT_FOUND` warn (receipts live) |
+| operability | **improved** | selftest 132 → 133 (1–128 byte-identical); inline fence tracking is deterministic |
+| depth | **improved** | `corpus/knowledge/fenced-anchor-r23.md`: the false-positive mechanics, the fix contract, the named limits |
+| freshness | **unchanged** | the r12 baseline holds (no re-pin); no stale pins moved |
+| calibration | **improved narrowly** | the fix landed at the discovered class only; the quote/line anchor kinds are unaffected (correct — literal text is literal inside or outside a fence) |
+| adjacency | **unchanged** | zero network; corpus read-only; no sibling/fleet writes beyond the recorded queue rows |
+
+Admission: **ADMIT** (coverage/operability/depth/calibration(narrow)
+improved; none harmed). No scalar score. Learning trends: expansion
+improved, quality improved, discernment improved. Round 24 registered:
+loop 2 begins — §Planned below.
+
+## Planned — round 24 (pre-registered 2026-10-19, at the round-23 landing)
+
+Loop 2 begins (curriculum loop 2, round 1): one 64-seat AgentSwarm call on
+**opencode-go key 7 / deepseek-v4.1-flash** (per the curriculum's
+key-rotation directive — keys rotate BETWEEN rounds; R1 uses the next
+unused key lane). Claims pre-registered at the round-24 opening from the
+named-debt queue: candidates — the `ai benchmark(s)` boundary decision,
+the inflection gaps, the `--drift` truncated-baseline detection, the
+fenced-data-row `approved` suppression, the 8 unasserted finding IDs,
+the secret-scan source coverage gap, the `--json` delimiter edge, the
+manifest timestamp mask breadth, bash-3 portability. Seats: 64; roster
+logged in the round-24 report.
