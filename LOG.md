@@ -805,3 +805,9 @@ The current r12 baseline was re-derived before measuring: `bash tools/research-g
 - **Verdicts** (SCORECARD §Round 23): coverage/operability/depth/calibration(narrow) **improved**; freshness/adjacency **unchanged**; none harmed. **ADMIT.** Capabilities +1. Loop 1 complete (rounds 12–23 all admitted). Round 24 registered: loop 2 begins (curriculum loop 2 round 1: opencode-go key 7 / deepseek-v4.1-flash, 64 seats).
 
 **Boundaries held.** Zero network; research corpus read-only; seats read-only; lane-identity pathspec-limited commits; no pushes. Receipt identity still OPEN (L0 row from round 12 unanswered — routed around). Round report: `.ufo/reports/round-23/chousa.md` (seat roster lands there — none, no wave).
+
+## 2026-10-19 — round-24 opening (loop 2 round 1): claims, before-receipts, dispatch
+
+- **Claims** (curriculum loop 2 round 1): coverage/operability = the `--drift` truncated-baseline ambiguity (round-20 named debt): `--drift` compares the canonical capture byte-for-byte against a committed baseline — a baseline truncated after the verdict line but before the manifest marker reads `GATE_DRIFT: none` (the truncated tail is invisible), while a genuinely clean baseline reads the same. The fix must check the baseline's structural completeness (the canonical marker + all expected sections) before comparing. depth = the baseline-format note + the `--json` delimiter disposition.
+- **Before-receipts**: selftest `PASS (133 cases, 0 skipped)`; drift `none` vs the r12 baseline; r1 `3/3`; gate `b5d0f93d…`; HEAD `77bcfd1`.
+- **Wave**: one batched AgentSwarm call, 64 seats (curriculum loop 2 round 1: 64), **opencode-go-7 deepseek-v4.1-flash** (per the key-rotation directive — keys rotate BETWEEN rounds; loop 2 R1 uses key 7). Seat roster lands in the round-24 report.
