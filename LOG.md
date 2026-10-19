@@ -528,3 +528,7 @@ No axis claim was made, no score moved, no verdict changed, no number invented; 
 ### Round-12 dispatch deviation (2026-10-19, operator directive)
 
 The first round-12 wave (opencode-go key 1, 64 seats) was interrupted before any seat reported. Operator directive: move to another opencode-go key and stay on it until it fails. Round 12's wave re-dispatches on **opencode-go-2 / deepseek-v4.1-flash**, and subsequent rounds stay on opencode-go-2 (deviation from the between-round key rotation recorded here and in the round-12 report; the directive supersedes the rotation).
+
+### Round-12 dispatch deviation 2 (2026-10-19, operator directive)
+
+The key-2 wave (opencode-go-2, 64 seats) was also interrupted before any seat reported. Operator directive: move to the next opencode-go key and stay on it. Round 12's wave now re-dispatches on **opencode-go-3 / deepseek-v4.1-flash**, and per the standing directive subsequent rounds stay on opencode-go-3 until it fails. Two aborted 64-seat dispatches (keys 1 and 2) produced zero seat reports; the roster in the round-12 report records this honestly.
