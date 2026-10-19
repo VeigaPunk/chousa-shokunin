@@ -780,4 +780,16 @@ The current r12 baseline was re-derived before measuring: `bash tools/research-g
 
 - **Claims** (curriculum loop 1 round 11): coverage/operability = the `.config` path-start denylist bypass (round-20 named debt): `is_denylist_path` uses `*/.config/*` which requires a leading path component — `.config/foo` (no `./` prefix) passes CLEAN while `./.config/foo` is refused SESSION_READ crit. The fix must also match path-start forms (`.config/`, `.omp/`, `.local/state/`). depth = the denylist-pattern note + the fenced-heading anchor disposition.
 - **Before-receipts**: selftest `PASS (128 cases, 0 skipped)`; drift `none` vs the r12 baseline; r1 `3/3`; gate `bfc291ef…`; HEAD `07c425e`.
-- **Wave**: one batched AgentSwarm call, 32 seats (curriculum 32–64), **antigravity gemini-3.8-flash** (liveness-probed alive this opening; fallback ladder per the standing record: devin → token-plan → opencode-go-6). Seat roster lands in the round-22 report.
+- **Wave**: one batched AgentSwarm call, 32 seats (curriculum 32–64), **openai-codex gpt-6-luna-max** — antigravity gemini-3.8-flash failed 24 seats on provider errors + 8 aborted; luna per the fallback ladder. Seat roster lands in the round-22 report.
+
+## Round 22 — goal wave (2026-10-19)
+
+**Admission.** Landed (evidence commit this entry; wave: one 32-seat AgentSwarm call on **openai-codex gpt-6-luna-max** per the fallback ladder, 32/32 seat reports — zero deficit):
+
+- **Claim 1 (coverage/operability) — the .config path-start denylist bypass**: `is_denylist_path` uses `*/.config/*` which needs a leading component — `.config/foo` (no `./` prefix) passed CLEAN while `./.config/foo` refused `CLAIM_SOURCE_SESSION` crit (live demo: pre-round gate → CLEAN; landed → `CLAIM_SOURCE_SESSION` crit + refused; receipt `deny-r22-20261019T190000Z-demo.log`). The fix adds bare-start alternatives `'.config/'*`, `'.omp/'*`, `'.local/state/'*` alongside the existing `*/X/*` forms — all three path-start forms now refuse identically. Cases 129–132 pin the class + the `.config-adjacent` over-refusal control.
+- **Claim 2 (depth)**: `corpus/knowledge/denylist-r22.md` — the path-start bypass mechanics, the fix contract, the named limits (the r21 canonical-target check covers symlinks but not the raw path-start form; `.config-adjacent` is not a denylist hit; other patterns use `*` not `*/X/*` and already match bare-start).
+- **Battery**: selftest `PASS (132 cases, 0 skipped)`, cases 1–128 `cmp` byte-identical vs the r21 receipt; r1 `3/3`; drift `none` vs the r12 baseline (no re-pin); masked battery vs the pre-round gate (LANE_ROOT intact, r13 method) ALL IDENTICAL; zero network. Gate `bfc291ef…` → `dfb798b4…`.
+- **Errata/records**: `corpus/README` + `evidence/README` + SKILL sweeps; SCORECARD verdict + round-23 registration. Provider deviation recorded (antigravity gemini failed → luna).
+- **Verdicts** (SCORECARD §Round 22): coverage/operability/depth/calibration(narrow) **improved**; freshness/adjacency **unchanged**; none harmed. **ADMIT.** Capabilities +1. Round 23 registered (curriculum round 12: devin swe-2, 16 seats — fallback ladder per the standing record).
+
+**Boundaries held.** Zero network; research corpus read-only; seats read-only; lane-identity pathspec-limited commits; no pushes. Receipt identity still OPEN (L0 row from round 12 unanswered — routed around). Round report: `.ufo/reports/round-22/chousa.md` (seat roster lands there).

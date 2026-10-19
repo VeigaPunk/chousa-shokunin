@@ -1,0 +1,12 @@
+=== BEFORE: pre-round gate (10083e1) verify-claims claims.jsonl --root /tmp/r22demo ===
+research-gate v2 — ts=2026-10-19T19:02:48Z — mode=claims — claims=/tmp/r22demo/claims.jsonl
+CLAIM id=S1 expected=supported observed=supported source=.config/agent-token.txt at=line:1 verdict=match
+VERDICT_BEARING_CLAIMS=1/1
+RESEARCH_GATE: CLEAN (claims=1 supported=1 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)
+
+=== AFTER: landed gate verify-claims claims.jsonl --root /tmp/r22demo ===
+research-gate v2 — ts=2026-10-19T19:02:48Z — mode=claims — claims=/tmp/r22demo/claims.jsonl
+CLAIM id=S1 expected=supported observed=refused source=.config/agent-token.txt at=- verdict=refused
+FINDING CLAIM_SOURCE_SESSION severity=crit surface=claims obs=id=S1 source=.config/agent-token.txt obs=path=.config/agent-token.txt denied (not opened)
+VERDICT_BEARING_CLAIMS=0/1
+RESEARCH_GATE: DRIFT (claims=1 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=1 invalid=0 findings=1 drift=1)

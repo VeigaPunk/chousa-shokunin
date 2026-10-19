@@ -1126,3 +1126,58 @@ the `--drift` truncated-baseline detection, the fenced-data-row `approved`
 suppression, the 8 unasserted finding IDs, the secret-scan source coverage
 gap, the `--json` delimiter edge, the manifest timestamp mask breadth,
 bash-3 portability. Seats: 32–64; roster logged in the round-22 report.
+
+## Round 22 verdict — 2026-10-19 (goal wave; evidence commit this landing)
+
+Selected claims (LOG.md round-22 opening): coverage/operability = the
+`.config` path-start denylist bypass (round-20 named debt):
+`is_denylist_path` uses `*/.config/*` which requires a leading component —
+`.config/foo` (no `./` prefix) passes CLEAN while `./.config/foo` is
+refused `CLAIM_SOURCE_SESSION` crit. depth = the denylist-pattern note +
+the fenced-heading anchor disposition. Wave: one 32-seat AgentSwarm call
+on **openai-codex gpt-6-luna-max** (antigravity gemini-3.8-flash failed
+24 seats on provider errors + 8 aborted; luna per the fallback ladder),
+32/32 seat reports. Seat roster: the round-22 report.
+
+**Before** (gate `bfc291ef…`, selftest 128): `is_denylist_path` uses
+`*/.config/*`, `*/.omp/*`, `*/.local/state/*` — the `*/X/*` pattern needs
+a leading path component; bare-start forms (`.config/foo`, `.omp/foo`,
+`.local/state/foo`) pass CLEAN while `./.config/foo` refuses (live demo:
+pre-round gate → CLEAN on `.config/agent-token.txt`; landed →
+`CLAIM_SOURCE_SESSION` crit + refused; receipt
+`deny-r22-20261019T190000Z-demo.log`).
+
+**After** (gate `dfb798b4…`, selftest `PASS (132 cases, 0 skipped)`, cases
+1–128 `cmp` byte-identical vs the r21 receipt): `is_denylist_path` gains
+bare-start alternatives `'.config/'*`, `'.omp/'*`, `'.local/state/'*` —
+checked after the existing `*/X/*` forms. Cases 129–132 pin the
+path-start class (`.config` start, `.omp` start, `.local/state` start,
+`.config-adjacent` over-refusal control). Masked battery vs the pre-round
+gate: ALL IDENTICAL. Drift `none` vs the r12 baseline; r1 `3/3`.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | the denylist path-start class is closed: before CLEAN on `.config/foo` (no `./` prefix) → after `CLAIM_SOURCE_SESSION` crit + refused (receipts live); `.omp/` and `.local/state/` share the fix |
+| operability | **improved** | selftest 128 → 132 (1–128 byte-identical); the `.config-adjacent` over-refusal control proves the fix doesn't over-reach |
+| depth | **improved** | `corpus/knowledge/denylist-r22.md`: the path-start bypass mechanics, the fix contract, the named limits |
+| freshness | **unchanged** | the r12 baseline holds (no re-pin); no stale pins moved |
+| calibration | **improved narrowly** | the fix landed at the discovered class only; the `.config-adjacent` control proves the boundary is precise; the fenced-heading anchor stays named debt |
+| adjacency | **unchanged** | zero network; corpus read-only; no sibling/fleet writes beyond the recorded queue rows |
+
+Admission: **ADMIT** (coverage/operability/depth/calibration(narrow)
+improved; none harmed). No scalar score. Learning trends: expansion
+improved, quality improved, discernment improved. Round 23 registered:
+curriculum round 12 — §Planned below.
+
+## Planned — round 23 (pre-registered 2026-10-19, at the round-22 landing)
+
+Wave per the curriculum (loop 1, round 12): one 16-seat AgentSwarm call,
+**devin swe-2** (fallback ladder per the standing record: devin exhausted
+→ token-plan → opencode-go-6). Claims pre-registered at the round-23
+opening from the named-debt queue: candidates — the fenced-heading anchor
+false-positive, the `ai benchmark(s)` boundary decision, the inflection
+gaps, the `--drift` truncated-baseline detection, the fenced-data-row
+`approved` suppression, the 8 unasserted finding IDs, the secret-scan
+source coverage gap, the `--json` delimiter edge, the manifest timestamp
+mask breadth, bash-3 portability. Seats: 16; roster logged in the
+round-23 report.
