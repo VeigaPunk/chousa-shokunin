@@ -1,0 +1,414 @@
+research-gate: record not found: corpus/fixtures/A-r9.md
+usage: research-gate.sh [--selftest] [--help]
+       research-gate.sh verify [--record PATH] [--root PATH]
+       research-gate.sh verify-claims [CLAIMS] [--root PATH]
+       research-gate.sh verify-chain [RECORD] [--root PATH]
+       research-gate.sh verify-sweeps [RECORD] [--root PATH]
+       research-gate.sh verify-integrity [RECORD] [--root PATH]
+       research-gate.sh verify-all [RECORD] [--claims PATH] [--json PATH]
+                      [--root PATH]
+       research-gate.sh --pin PATH
+       research-gate.sh --drift PATH
+       research-gate.sh [--record PATH] [--root PATH]
+
+  RECORD via --record, positional, or CHOUSA_RECORD.
+  CLAIMS via positional or CHOUSA_CLAIMS.
+  Claims file: one JSON object per claim line:
+    {"id":…,"source":…,"span":…,"expect":supported|contradicted|unsupported
+     [,"marker":…]}
+  Spans must appear verbatim in sources at token boundaries; sources are
+  local files only.
+  Chain mode: each hop with status=resolved must cite a source (a source id
+  from ## Sources, or a local path) plus an anchor — an anchor_kind column
+  (heading|quote|line) with an anchor column, or a to fragment
+  path#kind:text (bare #text = heading). The anchor must appear in the cited
+  source: headings by text, quotes verbatim at token boundaries, lines as
+  whole lines.
+  Unresolved/marked hops stay exempt but counted. Sources obey the same
+  boundary as verify-claims (local, canonicalized, never fetched).
+  Sources over 8 MiB are refused unread (CLAIM_SOURCE_READ_TOO_LARGE;
+  CHAIN_SOURCE_READ_TOO_LARGE in chain mode). Multi-linked sources are
+  refused unread (CLAIM_SOURCE_MULTILINKED; CHAIN_SOURCE_MULTILINKED in
+  chain mode) — a hardlink alias can name out-of-corpus content. Cross-device
+  sources are refused unread (CLAIM_SOURCE_CROSS_DEVICE;
+  CHAIN_SOURCE_CROSS_DEVICE in chain mode) — a bind alias keeps its path and
+  nlink but not its superblock device; the comparison is against the
+  resolving root's device.
+  A token boundary is a file/line edge, ASCII whitespace or ASCII
+  punctuation at the match's outer edges; a word-internal hyphen or
+  apostrophe is not a boundary, so a truncated quote (mid-word), a padded
+  extra word running into a longer token, or a possessive join is a miss.
+  Multi-line spans are delimited by their first and last character only.
+  Sweeps mode: every ## Rejections row needs a non-empty reason and a
+  non-empty flip-condition (flip/flip_condition column, or any column whose
+  name contains flip/falsif/reversal). Negative sweeps must name where they
+  looked (a where/looked_at column, or a clean sweep cell): local path sets
+  (comma-separated paths/globs) are re-run — any hit is SWEEP_CLAIM_FALSE
+  naming the hit, zero hits verify; URLs, external:/web:/session: names and
+  declared source ids count as exempt; a sweep naming nowhere drifts.
+  Summary: VERIFIED_SWEEPS=N/M REJECTIONS_OK=K/L.
+  Integrity mode: every cross-section reference token must resolve to a row
+  that declares it — source ids from ## Sources, claim ids from ## Claims and
+  ## Negatives, sweep ids from ## Sweeps — read from chain from/to/claim,
+  claims sweep/source/src/ref/cite/pointer, negatives sweep/where, sweeps
+  claim_id/where and rejections ref/reference cells. An undeclared id in the
+  S<digit>… / C|N<digit>… / SW<digit>… shapes is REF_UNRESOLVED (drift);
+  declared ids resolve; non-local namings and rows marked
+  unresolved/blocked-no-fetch/labelled-dead/not-applicable/rejected stay
+  exempt but counted; local paths/globs and prose are not integrity tokens.
+  Summary: INTEGRITY refs=N resolved=M unresolved=K (exempt = N−M−K).
+  verify-all composes structure + claims + chain + sweeps + integrity over ONE
+  input: absent sections are reported absent (never drift by themselves); the
+  composed verdict is DRIFT iff any run section drifts, exit 1. --claims
+  binds a claims file to a record; a record may also name one in a ## Meta
+  row (claims/claims_file/claims-file/claimset); a claims JSONL passed as
+  the input is its own claims surface. --json PATH appends (never rewrites)
+  one JSON line recording UTC, record + gate SHA-256, per-section tallies
+  and the composed verdict.
+  Pin/drift: --pin PATH writes a behavioral baseline of the gate's canonical
+  reference run (verify-all over a hermetic fixture the gate writes itself,
+  plus that run's --json manifest line), with the declared volatile contract
+  (ts, gate_sha256) recorded in its header; exit 0, or 2 when the capture or
+  the write fails. --drift PATH re-runs the same invocation and byte-compares
+  the normalized captures: GATE_DRIFT: none exit 0, GATE_DRIFT: <changed
+  tokens> exit 1, baseline missing/unreadable/malformed (or a failed capture)
+  exit 2. Neither mode prints a RESEARCH_GATE line.
+Verdict: RESEARCH_GATE: CLEAN|DRIFT
+Exit:    0 CLEAN | 1 DRIFT | 2 setup/usage
+research-gate: record not found: corpus/fixtures/B-r9.md
+usage: research-gate.sh [--selftest] [--help]
+       research-gate.sh verify [--record PATH] [--root PATH]
+       research-gate.sh verify-claims [CLAIMS] [--root PATH]
+       research-gate.sh verify-chain [RECORD] [--root PATH]
+       research-gate.sh verify-sweeps [RECORD] [--root PATH]
+       research-gate.sh verify-integrity [RECORD] [--root PATH]
+       research-gate.sh verify-all [RECORD] [--claims PATH] [--json PATH]
+                      [--root PATH]
+       research-gate.sh --pin PATH
+       research-gate.sh --drift PATH
+       research-gate.sh [--record PATH] [--root PATH]
+
+  RECORD via --record, positional, or CHOUSA_RECORD.
+  CLAIMS via positional or CHOUSA_CLAIMS.
+  Claims file: one JSON object per claim line:
+    {"id":…,"source":…,"span":…,"expect":supported|contradicted|unsupported
+     [,"marker":…]}
+  Spans must appear verbatim in sources at token boundaries; sources are
+  local files only.
+  Chain mode: each hop with status=resolved must cite a source (a source id
+  from ## Sources, or a local path) plus an anchor — an anchor_kind column
+  (heading|quote|line) with an anchor column, or a to fragment
+  path#kind:text (bare #text = heading). The anchor must appear in the cited
+  source: headings by text, quotes verbatim at token boundaries, lines as
+  whole lines.
+  Unresolved/marked hops stay exempt but counted. Sources obey the same
+  boundary as verify-claims (local, canonicalized, never fetched).
+  Sources over 8 MiB are refused unread (CLAIM_SOURCE_READ_TOO_LARGE;
+  CHAIN_SOURCE_READ_TOO_LARGE in chain mode). Multi-linked sources are
+  refused unread (CLAIM_SOURCE_MULTILINKED; CHAIN_SOURCE_MULTILINKED in
+  chain mode) — a hardlink alias can name out-of-corpus content. Cross-device
+  sources are refused unread (CLAIM_SOURCE_CROSS_DEVICE;
+  CHAIN_SOURCE_CROSS_DEVICE in chain mode) — a bind alias keeps its path and
+  nlink but not its superblock device; the comparison is against the
+  resolving root's device.
+  A token boundary is a file/line edge, ASCII whitespace or ASCII
+  punctuation at the match's outer edges; a word-internal hyphen or
+  apostrophe is not a boundary, so a truncated quote (mid-word), a padded
+  extra word running into a longer token, or a possessive join is a miss.
+  Multi-line spans are delimited by their first and last character only.
+  Sweeps mode: every ## Rejections row needs a non-empty reason and a
+  non-empty flip-condition (flip/flip_condition column, or any column whose
+  name contains flip/falsif/reversal). Negative sweeps must name where they
+  looked (a where/looked_at column, or a clean sweep cell): local path sets
+  (comma-separated paths/globs) are re-run — any hit is SWEEP_CLAIM_FALSE
+  naming the hit, zero hits verify; URLs, external:/web:/session: names and
+  declared source ids count as exempt; a sweep naming nowhere drifts.
+  Summary: VERIFIED_SWEEPS=N/M REJECTIONS_OK=K/L.
+  Integrity mode: every cross-section reference token must resolve to a row
+  that declares it — source ids from ## Sources, claim ids from ## Claims and
+  ## Negatives, sweep ids from ## Sweeps — read from chain from/to/claim,
+  claims sweep/source/src/ref/cite/pointer, negatives sweep/where, sweeps
+  claim_id/where and rejections ref/reference cells. An undeclared id in the
+  S<digit>… / C|N<digit>… / SW<digit>… shapes is REF_UNRESOLVED (drift);
+  declared ids resolve; non-local namings and rows marked
+  unresolved/blocked-no-fetch/labelled-dead/not-applicable/rejected stay
+  exempt but counted; local paths/globs and prose are not integrity tokens.
+  Summary: INTEGRITY refs=N resolved=M unresolved=K (exempt = N−M−K).
+  verify-all composes structure + claims + chain + sweeps + integrity over ONE
+  input: absent sections are reported absent (never drift by themselves); the
+  composed verdict is DRIFT iff any run section drifts, exit 1. --claims
+  binds a claims file to a record; a record may also name one in a ## Meta
+  row (claims/claims_file/claims-file/claimset); a claims JSONL passed as
+  the input is its own claims surface. --json PATH appends (never rewrites)
+  one JSON line recording UTC, record + gate SHA-256, per-section tallies
+  and the composed verdict.
+  Pin/drift: --pin PATH writes a behavioral baseline of the gate's canonical
+  reference run (verify-all over a hermetic fixture the gate writes itself,
+  plus that run's --json manifest line), with the declared volatile contract
+  (ts, gate_sha256) recorded in its header; exit 0, or 2 when the capture or
+  the write fails. --drift PATH re-runs the same invocation and byte-compares
+  the normalized captures: GATE_DRIFT: none exit 0, GATE_DRIFT: <changed
+  tokens> exit 1, baseline missing/unreadable/malformed (or a failed capture)
+  exit 2. Neither mode prints a RESEARCH_GATE line.
+Verdict: RESEARCH_GATE: CLEAN|DRIFT
+Exit:    0 CLEAN | 1 DRIFT | 2 setup/usage
+research-gate: record not found: corpus/fixtures/C-r9.md
+usage: research-gate.sh [--selftest] [--help]
+       research-gate.sh verify [--record PATH] [--root PATH]
+       research-gate.sh verify-claims [CLAIMS] [--root PATH]
+       research-gate.sh verify-chain [RECORD] [--root PATH]
+       research-gate.sh verify-sweeps [RECORD] [--root PATH]
+       research-gate.sh verify-integrity [RECORD] [--root PATH]
+       research-gate.sh verify-all [RECORD] [--claims PATH] [--json PATH]
+                      [--root PATH]
+       research-gate.sh --pin PATH
+       research-gate.sh --drift PATH
+       research-gate.sh [--record PATH] [--root PATH]
+
+  RECORD via --record, positional, or CHOUSA_RECORD.
+  CLAIMS via positional or CHOUSA_CLAIMS.
+  Claims file: one JSON object per claim line:
+    {"id":…,"source":…,"span":…,"expect":supported|contradicted|unsupported
+     [,"marker":…]}
+  Spans must appear verbatim in sources at token boundaries; sources are
+  local files only.
+  Chain mode: each hop with status=resolved must cite a source (a source id
+  from ## Sources, or a local path) plus an anchor — an anchor_kind column
+  (heading|quote|line) with an anchor column, or a to fragment
+  path#kind:text (bare #text = heading). The anchor must appear in the cited
+  source: headings by text, quotes verbatim at token boundaries, lines as
+  whole lines.
+  Unresolved/marked hops stay exempt but counted. Sources obey the same
+  boundary as verify-claims (local, canonicalized, never fetched).
+  Sources over 8 MiB are refused unread (CLAIM_SOURCE_READ_TOO_LARGE;
+  CHAIN_SOURCE_READ_TOO_LARGE in chain mode). Multi-linked sources are
+  refused unread (CLAIM_SOURCE_MULTILINKED; CHAIN_SOURCE_MULTILINKED in
+  chain mode) — a hardlink alias can name out-of-corpus content. Cross-device
+  sources are refused unread (CLAIM_SOURCE_CROSS_DEVICE;
+  CHAIN_SOURCE_CROSS_DEVICE in chain mode) — a bind alias keeps its path and
+  nlink but not its superblock device; the comparison is against the
+  resolving root's device.
+  A token boundary is a file/line edge, ASCII whitespace or ASCII
+  punctuation at the match's outer edges; a word-internal hyphen or
+  apostrophe is not a boundary, so a truncated quote (mid-word), a padded
+  extra word running into a longer token, or a possessive join is a miss.
+  Multi-line spans are delimited by their first and last character only.
+  Sweeps mode: every ## Rejections row needs a non-empty reason and a
+  non-empty flip-condition (flip/flip_condition column, or any column whose
+  name contains flip/falsif/reversal). Negative sweeps must name where they
+  looked (a where/looked_at column, or a clean sweep cell): local path sets
+  (comma-separated paths/globs) are re-run — any hit is SWEEP_CLAIM_FALSE
+  naming the hit, zero hits verify; URLs, external:/web:/session: names and
+  declared source ids count as exempt; a sweep naming nowhere drifts.
+  Summary: VERIFIED_SWEEPS=N/M REJECTIONS_OK=K/L.
+  Integrity mode: every cross-section reference token must resolve to a row
+  that declares it — source ids from ## Sources, claim ids from ## Claims and
+  ## Negatives, sweep ids from ## Sweeps — read from chain from/to/claim,
+  claims sweep/source/src/ref/cite/pointer, negatives sweep/where, sweeps
+  claim_id/where and rejections ref/reference cells. An undeclared id in the
+  S<digit>… / C|N<digit>… / SW<digit>… shapes is REF_UNRESOLVED (drift);
+  declared ids resolve; non-local namings and rows marked
+  unresolved/blocked-no-fetch/labelled-dead/not-applicable/rejected stay
+  exempt but counted; local paths/globs and prose are not integrity tokens.
+  Summary: INTEGRITY refs=N resolved=M unresolved=K (exempt = N−M−K).
+  verify-all composes structure + claims + chain + sweeps + integrity over ONE
+  input: absent sections are reported absent (never drift by themselves); the
+  composed verdict is DRIFT iff any run section drifts, exit 1. --claims
+  binds a claims file to a record; a record may also name one in a ## Meta
+  row (claims/claims_file/claims-file/claimset); a claims JSONL passed as
+  the input is its own claims surface. --json PATH appends (never rewrites)
+  one JSON line recording UTC, record + gate SHA-256, per-section tallies
+  and the composed verdict.
+  Pin/drift: --pin PATH writes a behavioral baseline of the gate's canonical
+  reference run (verify-all over a hermetic fixture the gate writes itself,
+  plus that run's --json manifest line), with the declared volatile contract
+  (ts, gate_sha256) recorded in its header; exit 0, or 2 when the capture or
+  the write fails. --drift PATH re-runs the same invocation and byte-compares
+  the normalized captures: GATE_DRIFT: none exit 0, GATE_DRIFT: <changed
+  tokens> exit 1, baseline missing/unreadable/malformed (or a failed capture)
+  exit 2. Neither mode prints a RESEARCH_GATE line.
+Verdict: RESEARCH_GATE: CLEAN|DRIFT
+Exit:    0 CLEAN | 1 DRIFT | 2 setup/usage
+research-gate v2 — ts=2026-10-19T15:20:39Z — mode=claims — claims=corpus/fixtures/claims-r2.jsonl
+CLAIM id=A01 expected=supported observed=refused source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=- verdict=refused
+CLAIM id=A02 expected=supported observed=refused source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=- verdict=refused
+CLAIM id=A03 expected=supported observed=refused source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=- verdict=refused
+CLAIM id=A04 expected=supported observed=refused source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=- verdict=refused
+CLAIM id=A05 expected=contradicted observed=refused source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=- verdict=refused
+CLAIM id=A06 expected=unsupported observed=refused source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=- verdict=refused
+CLAIM id=B01 expected=supported observed=refused source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=- verdict=refused
+CLAIM id=B02 expected=supported observed=refused source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=- verdict=refused
+CLAIM id=B03 expected=supported observed=refused source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=- verdict=refused
+CLAIM id=B04 expected=supported observed=refused source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=- verdict=refused
+CLAIM id=B05 expected=unsupported observed=refused source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=- verdict=refused
+CLAIM id=C01 expected=supported observed=refused source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=- verdict=refused
+CLAIM id=C02 expected=supported observed=refused source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=- verdict=refused
+CLAIM id=C03 expected=supported observed=refused source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=- verdict=refused
+CLAIM id=C04 expected=supported observed=refused source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=- verdict=refused
+CLAIM id=C05 expected=supported observed=refused source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=- verdict=refused
+CLAIM id=C06 expected=contradicted observed=refused source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=- verdict=refused
+FINDING CLAIM_SOURCE_OUT_OF_CORPUS severity=crit surface=claims obs=id=A01 source=research/deep-research-2026-09-28/A-shokunin-tradition.md obs=resolved=./research/deep-research-2026-09-28/A-shokunin-tradition.md outside allowed roots
+FINDING CLAIM_SOURCE_OUT_OF_CORPUS severity=crit surface=claims obs=id=A02 source=research/deep-research-2026-09-28/A-shokunin-tradition.md obs=resolved=./research/deep-research-2026-09-28/A-shokunin-tradition.md outside allowed roots
+FINDING CLAIM_SOURCE_OUT_OF_CORPUS severity=crit surface=claims obs=id=A03 source=research/deep-research-2026-09-28/A-shokunin-tradition.md obs=resolved=./research/deep-research-2026-09-28/A-shokunin-tradition.md outside allowed roots
+FINDING CLAIM_SOURCE_OUT_OF_CORPUS severity=crit surface=claims obs=id=A04 source=research/deep-research-2026-09-28/A-shokunin-tradition.md obs=resolved=./research/deep-research-2026-09-28/A-shokunin-tradition.md outside allowed roots
+FINDING CLAIM_SOURCE_OUT_OF_CORPUS severity=crit surface=claims obs=id=A05 source=research/deep-research-2026-09-28/A-shokunin-tradition.md obs=resolved=./research/deep-research-2026-09-28/A-shokunin-tradition.md outside allowed roots
+FINDING CLAIM_SOURCE_OUT_OF_CORPUS severity=crit surface=claims obs=id=A06 source=research/deep-research-2026-09-28/A-shokunin-tradition.md obs=resolved=./research/deep-research-2026-09-28/A-shokunin-tradition.md outside allowed roots
+FINDING CLAIM_SOURCE_OUT_OF_CORPUS severity=crit surface=claims obs=id=B01 source=research/deep-research-2026-09-28/B-multiagent-knowledge.md obs=resolved=./research/deep-research-2026-09-28/B-multiagent-knowledge.md outside allowed roots
+FINDING CLAIM_SOURCE_OUT_OF_CORPUS severity=crit surface=claims obs=id=B02 source=research/deep-research-2026-09-28/B-multiagent-knowledge.md obs=resolved=./research/deep-research-2026-09-28/B-multiagent-knowledge.md outside allowed roots
+FINDING CLAIM_SOURCE_OUT_OF_CORPUS severity=crit surface=claims obs=id=B03 source=research/deep-research-2026-09-28/B-multiagent-knowledge.md obs=resolved=./research/deep-research-2026-09-28/B-multiagent-knowledge.md outside allowed roots
+FINDING CLAIM_SOURCE_OUT_OF_CORPUS severity=crit surface=claims obs=id=B04 source=research/deep-research-2026-09-28/B-multiagent-knowledge.md obs=resolved=./research/deep-research-2026-09-28/B-multiagent-knowledge.md outside allowed roots
+FINDING CLAIM_SOURCE_OUT_OF_CORPUS severity=crit surface=claims obs=id=B05 source=research/deep-research-2026-09-28/B-multiagent-knowledge.md obs=resolved=./research/deep-research-2026-09-28/B-multiagent-knowledge.md outside allowed roots
+FINDING CLAIM_SOURCE_OUT_OF_CORPUS severity=crit surface=claims obs=id=C01 source=research/deep-research-2026-09-28/C-rank-taxonomy.md obs=resolved=./research/deep-research-2026-09-28/C-rank-taxonomy.md outside allowed roots
+FINDING CLAIM_SOURCE_OUT_OF_CORPUS severity=crit surface=claims obs=id=C02 source=research/deep-research-2026-09-28/C-rank-taxonomy.md obs=resolved=./research/deep-research-2026-09-28/C-rank-taxonomy.md outside allowed roots
+FINDING CLAIM_SOURCE_OUT_OF_CORPUS severity=crit surface=claims obs=id=C03 source=research/deep-research-2026-09-28/C-rank-taxonomy.md obs=resolved=./research/deep-research-2026-09-28/C-rank-taxonomy.md outside allowed roots
+FINDING CLAIM_SOURCE_OUT_OF_CORPUS severity=crit surface=claims obs=id=C04 source=research/deep-research-2026-09-28/C-rank-taxonomy.md obs=resolved=./research/deep-research-2026-09-28/C-rank-taxonomy.md outside allowed roots
+FINDING CLAIM_SOURCE_OUT_OF_CORPUS severity=crit surface=claims obs=id=C05 source=research/deep-research-2026-09-28/C-rank-taxonomy.md obs=resolved=./research/deep-research-2026-09-28/C-rank-taxonomy.md outside allowed roots
+FINDING CLAIM_SOURCE_OUT_OF_CORPUS severity=crit surface=claims obs=id=C06 source=research/deep-research-2026-09-28/C-rank-taxonomy.md obs=resolved=./research/deep-research-2026-09-28/C-rank-taxonomy.md outside allowed roots
+VERDICT_BEARING_CLAIMS=0/17
+RESEARCH_GATE: DRIFT (claims=17 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=17 invalid=0 findings=17 drift=17)
+research-gate v2 — ts=2026-10-19T15:20:39Z — mode=chain — record=corpus/fixtures/chain-r3.md
+CHAIN hop=1 status=resolved observed=refused source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=- at=- verdict=refused
+CHAIN hop=2 status=resolved observed=refused source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=- at=- verdict=refused
+CHAIN hop=3 status=resolved observed=refused source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=- at=- verdict=refused
+CHAIN hop=4 status=resolved observed=refused source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=- at=- verdict=refused
+CHAIN hop=5 status=resolved observed=refused source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=- at=- verdict=refused
+CHAIN hop=6 status=resolved observed=refused source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=- at=- verdict=refused
+CHAIN hop=7 status=resolved observed=refused source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=- at=- verdict=refused
+CHAIN hop=8 status=resolved observed=refused source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=- at=- verdict=refused
+CHAIN hop=9 status=resolved observed=refused source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=- at=- verdict=refused
+CHAIN hop=10 status=resolved observed=refused source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=- at=- verdict=refused
+CHAIN hop=11 status=resolved observed=refused source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=- at=- verdict=refused
+CHAIN hop=12 status=resolved observed=refused source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=- at=- verdict=refused
+CHAIN hop=13 status=resolved observed=refused source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=- at=- verdict=refused
+CHAIN hop=14 status=resolved observed=refused source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=- at=- verdict=refused
+CHAIN hop=15 status=resolved observed=refused source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=- at=- verdict=refused
+CHAIN hop=16 status=resolved observed=refused source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=- at=- verdict=refused
+CHAIN hop=17 status=resolved observed=refused source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=- at=- verdict=refused
+CHAIN hop=18 status=blocked-no-fetch observed=exempt source=https://kotobank.jp/ anchor=- at=- verdict=exempt
+CHAIN hop=19 status=blocked-no-fetch observed=exempt source=https://arxiv.org/ anchor=- at=- verdict=exempt
+CHAIN hop=20 status=unresolved observed=exempt source=S3 anchor=- at=- verdict=exempt
+CHAIN hop=21 status=unresolved observed=exempt source=S2 anchor=- at=- verdict=exempt
+CHAIN hop=22 status=unresolved observed=exempt source=S1 anchor=- at=- verdict=exempt
+FINDING CHAIN_SOURCE_OUT_OF_CORPUS severity=crit surface=chain obs=hop=1 source=research/deep-research-2026-09-28/A-shokunin-tradition.md obs=resolved=./research/deep-research-2026-09-28/A-shokunin-tradition.md outside allowed roots
+FINDING CHAIN_SOURCE_OUT_OF_CORPUS severity=crit surface=chain obs=hop=2 source=research/deep-research-2026-09-28/A-shokunin-tradition.md obs=resolved=./research/deep-research-2026-09-28/A-shokunin-tradition.md outside allowed roots
+FINDING CHAIN_SOURCE_OUT_OF_CORPUS severity=crit surface=chain obs=hop=3 source=research/deep-research-2026-09-28/A-shokunin-tradition.md obs=resolved=./research/deep-research-2026-09-28/A-shokunin-tradition.md outside allowed roots
+FINDING CHAIN_SOURCE_OUT_OF_CORPUS severity=crit surface=chain obs=hop=4 source=research/deep-research-2026-09-28/C-rank-taxonomy.md obs=resolved=./research/deep-research-2026-09-28/C-rank-taxonomy.md outside allowed roots
+FINDING CHAIN_SOURCE_OUT_OF_CORPUS severity=crit surface=chain obs=hop=5 source=research/deep-research-2026-09-28/C-rank-taxonomy.md obs=resolved=./research/deep-research-2026-09-28/C-rank-taxonomy.md outside allowed roots
+FINDING CHAIN_SOURCE_OUT_OF_CORPUS severity=crit surface=chain obs=hop=6 source=research/deep-research-2026-09-28/B-multiagent-knowledge.md obs=resolved=./research/deep-research-2026-09-28/B-multiagent-knowledge.md outside allowed roots
+FINDING CHAIN_SOURCE_OUT_OF_CORPUS severity=crit surface=chain obs=hop=7 source=research/deep-research-2026-09-28/B-multiagent-knowledge.md obs=resolved=./research/deep-research-2026-09-28/B-multiagent-knowledge.md outside allowed roots
+FINDING CHAIN_SOURCE_OUT_OF_CORPUS severity=crit surface=chain obs=hop=8 source=research/deep-research-2026-09-28/B-multiagent-knowledge.md obs=resolved=./research/deep-research-2026-09-28/B-multiagent-knowledge.md outside allowed roots
+FINDING CHAIN_SOURCE_OUT_OF_CORPUS severity=crit surface=chain obs=hop=9 source=research/deep-research-2026-09-28/B-multiagent-knowledge.md obs=resolved=./research/deep-research-2026-09-28/B-multiagent-knowledge.md outside allowed roots
+FINDING CHAIN_SOURCE_OUT_OF_CORPUS severity=crit surface=chain obs=hop=10 source=research/deep-research-2026-09-28/A-shokunin-tradition.md obs=resolved=./research/deep-research-2026-09-28/A-shokunin-tradition.md outside allowed roots
+FINDING CHAIN_SOURCE_OUT_OF_CORPUS severity=crit surface=chain obs=hop=11 source=research/deep-research-2026-09-28/C-rank-taxonomy.md obs=resolved=./research/deep-research-2026-09-28/C-rank-taxonomy.md outside allowed roots
+FINDING CHAIN_SOURCE_OUT_OF_CORPUS severity=crit surface=chain obs=hop=12 source=research/deep-research-2026-09-28/C-rank-taxonomy.md obs=resolved=./research/deep-research-2026-09-28/C-rank-taxonomy.md outside allowed roots
+FINDING CHAIN_SOURCE_OUT_OF_CORPUS severity=crit surface=chain obs=hop=13 source=research/deep-research-2026-09-28/C-rank-taxonomy.md obs=resolved=./research/deep-research-2026-09-28/C-rank-taxonomy.md outside allowed roots
+FINDING CHAIN_SOURCE_OUT_OF_CORPUS severity=crit surface=chain obs=hop=14 source=research/deep-research-2026-09-28/A-shokunin-tradition.md obs=resolved=./research/deep-research-2026-09-28/A-shokunin-tradition.md outside allowed roots
+FINDING CHAIN_SOURCE_OUT_OF_CORPUS severity=crit surface=chain obs=hop=15 source=research/deep-research-2026-09-28/A-shokunin-tradition.md obs=resolved=./research/deep-research-2026-09-28/A-shokunin-tradition.md outside allowed roots
+FINDING CHAIN_SOURCE_OUT_OF_CORPUS severity=crit surface=chain obs=hop=16 source=research/deep-research-2026-09-28/B-multiagent-knowledge.md obs=resolved=./research/deep-research-2026-09-28/B-multiagent-knowledge.md outside allowed roots
+FINDING CHAIN_SOURCE_OUT_OF_CORPUS severity=crit surface=chain obs=hop=17 source=research/deep-research-2026-09-28/C-rank-taxonomy.md obs=resolved=./research/deep-research-2026-09-28/C-rank-taxonomy.md outside allowed roots
+RESOLVED_HOPS=0/22
+RESEARCH_GATE: DRIFT (hops=22 verified=0 exempt=5 anchor-missing=0 refused=17 invalid=0 findings=17 drift=17)
+research-gate v2 — ts=2026-10-19T15:20:39Z — mode=sweeps — record=corpus/fixtures/sweeps-r5.md
+SWEEP id=W1 where=research/deep-research-2026-09-28/kotobank-*,research/deep-research-2026-09-28/s looked=local hits=0 at=- observed=verified verdict=match
+SWEEP id=W2 where=https://kotobank.jp/ looked=non-local hits=- at=- observed=exempt verdict=exempt
+REJECTION id=R1 ref=research/README.md:12 reason=present flip=present observed=complete verdict=match
+REJECTION id=R2 ref=research/deep-research-2026-09-28/B-multiagent-knowledge.md:79 reason=present flip=present observed=complete verdict=match
+REJECTION id=R3 ref=research/deep-research-2026-09-28/B-multiagent-knowledge.md:63 reason=present flip=present observed=complete verdict=match
+VERIFIED_SWEEPS=1/2 REJECTIONS_OK=3/3
+RESEARCH_GATE: CLEAN (sweeps=2 verified=1 exempt=1 hit=0 refused=0 invalid=0 rejections=3 rejections-ok=3 findings=0 drift=0)
+research-gate v2 — ts=2026-10-19T15:20:39Z — mode=integrity — record=corpus/fixtures/integrity-r7.md
+REF kind=claim id=C1 section=chain row=1 cell=from observed=resolved verdict=match
+REF kind=source id=S1 section=chain row=1 cell=to observed=resolved verdict=match
+REF kind=claim id=C2 section=chain row=2 cell=from observed=resolved verdict=match
+REF kind=source id=S2 section=chain row=2 cell=to observed=resolved verdict=match
+REF kind=claim id=C3 section=chain row=3 cell=from observed=resolved verdict=match
+REF kind=source id=S3 section=chain row=3 cell=to observed=resolved verdict=match
+REF kind=claim id=C3 section=chain row=4 cell=from observed=resolved verdict=match
+REF kind=source id=S4 section=chain row=4 cell=to observed=resolved verdict=match
+REF kind=sweep id=SW1 section=negatives row=N1 cell=sweep observed=resolved verdict=match
+REF kind=sweep id=SW2 section=negatives row=N2 cell=sweep observed=exempt verdict=exempt status=unresolved
+REF kind=claim id=N1 section=sweeps row=SW1 cell=claim_id observed=resolved verdict=match
+REF kind=claim id=N2 section=sweeps row=SW2 cell=claim_id observed=resolved verdict=match
+REF kind=source id=S1 section=sweeps row=SW2 cell=where observed=resolved verdict=match
+REF kind=source id=S2 section=sweeps row=SW2 cell=where observed=resolved verdict=match
+REF kind=source id=S3 section=sweeps row=SW2 cell=where observed=resolved verdict=match
+REF kind=claim id=C2 section=sweeps row=SW3 cell=claim_id observed=resolved verdict=match
+INTEGRITY refs=16 resolved=15 unresolved=0
+RESEARCH_GATE: CLEAN (refs=16 resolved=15 unresolved=0 exempt=1 findings=0 drift=0)
+research-gate: record not found: corpus/fixtures/full-r6/record.md
+usage: research-gate.sh [--selftest] [--help]
+       research-gate.sh verify [--record PATH] [--root PATH]
+       research-gate.sh verify-claims [CLAIMS] [--root PATH]
+       research-gate.sh verify-chain [RECORD] [--root PATH]
+       research-gate.sh verify-sweeps [RECORD] [--root PATH]
+       research-gate.sh verify-integrity [RECORD] [--root PATH]
+       research-gate.sh verify-all [RECORD] [--claims PATH] [--json PATH]
+                      [--root PATH]
+       research-gate.sh --pin PATH
+       research-gate.sh --drift PATH
+       research-gate.sh [--record PATH] [--root PATH]
+
+  RECORD via --record, positional, or CHOUSA_RECORD.
+  CLAIMS via positional or CHOUSA_CLAIMS.
+  Claims file: one JSON object per claim line:
+    {"id":…,"source":…,"span":…,"expect":supported|contradicted|unsupported
+     [,"marker":…]}
+  Spans must appear verbatim in sources at token boundaries; sources are
+  local files only.
+  Chain mode: each hop with status=resolved must cite a source (a source id
+  from ## Sources, or a local path) plus an anchor — an anchor_kind column
+  (heading|quote|line) with an anchor column, or a to fragment
+  path#kind:text (bare #text = heading). The anchor must appear in the cited
+  source: headings by text, quotes verbatim at token boundaries, lines as
+  whole lines.
+  Unresolved/marked hops stay exempt but counted. Sources obey the same
+  boundary as verify-claims (local, canonicalized, never fetched).
+  Sources over 8 MiB are refused unread (CLAIM_SOURCE_READ_TOO_LARGE;
+  CHAIN_SOURCE_READ_TOO_LARGE in chain mode). Multi-linked sources are
+  refused unread (CLAIM_SOURCE_MULTILINKED; CHAIN_SOURCE_MULTILINKED in
+  chain mode) — a hardlink alias can name out-of-corpus content. Cross-device
+  sources are refused unread (CLAIM_SOURCE_CROSS_DEVICE;
+  CHAIN_SOURCE_CROSS_DEVICE in chain mode) — a bind alias keeps its path and
+  nlink but not its superblock device; the comparison is against the
+  resolving root's device.
+  A token boundary is a file/line edge, ASCII whitespace or ASCII
+  punctuation at the match's outer edges; a word-internal hyphen or
+  apostrophe is not a boundary, so a truncated quote (mid-word), a padded
+  extra word running into a longer token, or a possessive join is a miss.
+  Multi-line spans are delimited by their first and last character only.
+  Sweeps mode: every ## Rejections row needs a non-empty reason and a
+  non-empty flip-condition (flip/flip_condition column, or any column whose
+  name contains flip/falsif/reversal). Negative sweeps must name where they
+  looked (a where/looked_at column, or a clean sweep cell): local path sets
+  (comma-separated paths/globs) are re-run — any hit is SWEEP_CLAIM_FALSE
+  naming the hit, zero hits verify; URLs, external:/web:/session: names and
+  declared source ids count as exempt; a sweep naming nowhere drifts.
+  Summary: VERIFIED_SWEEPS=N/M REJECTIONS_OK=K/L.
+  Integrity mode: every cross-section reference token must resolve to a row
+  that declares it — source ids from ## Sources, claim ids from ## Claims and
+  ## Negatives, sweep ids from ## Sweeps — read from chain from/to/claim,
+  claims sweep/source/src/ref/cite/pointer, negatives sweep/where, sweeps
+  claim_id/where and rejections ref/reference cells. An undeclared id in the
+  S<digit>… / C|N<digit>… / SW<digit>… shapes is REF_UNRESOLVED (drift);
+  declared ids resolve; non-local namings and rows marked
+  unresolved/blocked-no-fetch/labelled-dead/not-applicable/rejected stay
+  exempt but counted; local paths/globs and prose are not integrity tokens.
+  Summary: INTEGRITY refs=N resolved=M unresolved=K (exempt = N−M−K).
+  verify-all composes structure + claims + chain + sweeps + integrity over ONE
+  input: absent sections are reported absent (never drift by themselves); the
+  composed verdict is DRIFT iff any run section drifts, exit 1. --claims
+  binds a claims file to a record; a record may also name one in a ## Meta
+  row (claims/claims_file/claims-file/claimset); a claims JSONL passed as
+  the input is its own claims surface. --json PATH appends (never rewrites)
+  one JSON line recording UTC, record + gate SHA-256, per-section tallies
+  and the composed verdict.
+  Pin/drift: --pin PATH writes a behavioral baseline of the gate's canonical
+  reference run (verify-all over a hermetic fixture the gate writes itself,
+  plus that run's --json manifest line), with the declared volatile contract
+  (ts, gate_sha256) recorded in its header; exit 0, or 2 when the capture or
+  the write fails. --drift PATH re-runs the same invocation and byte-compares
+  the normalized captures: GATE_DRIFT: none exit 0, GATE_DRIFT: <changed
+  tokens> exit 1, baseline missing/unreadable/malformed (or a failed capture)
+  exit 2. Neither mode prints a RESEARCH_GATE line.
+Verdict: RESEARCH_GATE: CLEAN|DRIFT
+Exit:    0 CLEAN | 1 DRIFT | 2 setup/usage

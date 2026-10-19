@@ -729,3 +729,66 @@ opening.
 | Capability | What it can now do | Evidence pointer | First-working round |
 |---|---|---|---|
 | cross-device refusal | refuses sources whose st_dev differs from the resolving root's device (bind aliases) | selftest cases 103–106; `corpus/knowledge/mount-alias-r14.md` | 14 |
+
+## Round 15 verdict — 2026-10-19 (goal wave; evidence commit this landing)
+
+Selected claims (LOG.md round-15 opening): coverage/operability = the
+`--root /` boundary dead-arm (r14 discovery): `"$root_r"/*` renders `//*`
+when the root resolves to `/`, matching nothing, so every absolute in-`/`
+source refuses `CLAIM_SOURCE_OUT_OF_CORPUS` crit; depth = the
+root-normalization note + registry sweep. Wave: one 48-seat AgentSwarm call
+on **zai glm-5.3-flash** (curriculum loop 1, round 4), 48/48 seat reports.
+Seat roster: the round-15 report.
+
+**Before** (gate `d8bbd0bf…`, selftest 106): the prefix tests at
+`tools/research-gate.sh:1051/:1055` (claims chokepoint), `:548`
+(`ptr_resolves_meta`), and `:1742` (sweeps resolver) all render `//*` under
+`--root /`. A claim citing `/etc/hostname` (dev 31 = `stat -c %d /`, nlink 1,
+9 B — a legitimate read) refuses `OUT_OF_CORPUS` crit (receipt
+`root-r15-20261019T152000Z-demo.log`, before half). Selftest `PASS (106
+cases, 0 skipped)`; drift `none` vs the r12 baseline; r1 `3/3`.
+
+**After** (gate `dd0951d7…`, selftest `PASS (110 cases, 0 skipped)`, cases
+1–106 `cmp` byte-identical vs `mount-r14-20261019T132025Z-selftest.log`): the
+`in_root()` helper (`tools/research-gate.sh` ~:612) strips the trailing slash
+for the prefix test only — `${r%/}` on `/` yields `""`, `""/*` renders `/*`,
+which matches `/` and every descendant. All three same-class sites converted
+(`claim_source_path`, `ptr_resolves_meta`, `sweep_path_guarded`); `src_root`
+keeps the un-normalized root so the r14 device probe still stats the declared
+root. The materialized helper is mandatory — inline
+`case "$canon" in "${root_r%/}"/*)` is itself dead when the expansion strips
+to empty (measured, bash 5.3.15). Cases 107–110 pin the healed arm:
+ghost-missing (`/chousa-r15-absent`), `/etc/hostname` read (span derived
+from the file's first line), tmpfs cross-device (`$WORK` dev 57 ≠ 31),
+sweeps absolute glob (`/chousa-r15-absent/*.md`). The `CHOUSA_ROOT=` override
+rides a new harness channel — six runners gained a `^CHOUSA_[A-Z_]+=`
+env-override classifier; `tcase`'s override placement corrected to last-wins.
+Receipts `root-r15-20261019T152000Z-{demo,selftest,battery,drift}.log`.
+Masked battery vs the pre-round gate: ALL IDENTICAL.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | before `OUT_OF_CORPUS` crit on a legitimate /-root absolute read → after `CLEAN` `1/1` through all three probe arms (receipts live); the `ptr_resolves_meta` and `sweep_path_guarded` same-class sites also healed |
+| operability | **improved** | selftest 106 → 110 (1–106 byte-identical); six runners gained the `CHOUSA_`-prefixed env-override channel; no re-pin needed |
+| depth | **improved** | `corpus/knowledge/root-slash-boundary-r15.md`: the `//*` glob mechanics (measured), the four-outcome pre-fix table, the `in_root` contract, the 3-site registry, the inline-strip quirk |
+| freshness | **unchanged** | the r12 baseline holds unchanged (no re-pin needed — the canonical invocation uses a non-/ temp root where normalization is a no-op); no stale pins moved |
+| calibration | **improved narrowly** | the fix landed exactly at the discovered class; the `ptr_resolves_meta` third site was found by this round's own audit, not the pre-registered claim — dispositioned explicitly; the `17 B`→`9 B` stat erratum corrected in receipts |
+| adjacency | **unchanged** | zero network; corpus read-only; /-root reads confined to the named fixture paths; no sibling/fleet writes beyond the recorded queue rows |
+
+Admission: **ADMIT** (coverage/operability/depth/calibration(narrow)
+improved; none harmed). No scalar score. Learning trends: expansion
+improved, quality improved, discernment unchanged. Round 16 registered:
+curriculum round 5 — §Planned below.
+
+## Planned — round 16 (pre-registered 2026-10-19, at the round-15 landing)
+
+Wave per the curriculum (loop 1, round 5): one 64-seat AgentSwarm call,
+**gpt-6-luna-max** — a verification wave: adversarially re-audit the current
+loop's rounds 1–4 (lane rounds 12–15) for correctness defects and missed
+coverage; every finding lands as a dispositioned item (fix, absorb, or named
+debt). Provider liveness probed before spending the wave; fallback ladder
+per the standing doctrine (devin → token-plan → opencode-go-6), recorded at
+the round-16 opening. Claims pre-registered at the round-16 opening from the
+named-limit queue: candidates — verify-sweeps' mount-alias-blind glob
+surface (r14 note), the same-device-bind mountinfo walk, the overlay-fstype
+guard. Seats: 64; roster logged in the round-16 report.

@@ -516,3 +516,51 @@ revision; update on next touch or cite this addendum.
 (E3 correction, same round: the bypass receipt files are
 `evidence/mount-r14-20261019T132025Z-bypass-{before,after}.log` — the
 `125621Z` stamp above is a typo; the file names on disk are authoritative.)
+
+### Round-15 addendum (2026-10-19, append-only)
+
+E4 — the `--root /` queue item (entered E3) closes: **absolute paths under
+`--root /` are matched again.** Root cause (measured, bash 5.3.15): with
+`root_r=/` the prefix pattern renders `//*`, which matches nothing, so every
+root-resolved source refused `CLAIM_SOURCE_OUT_OF_CORPUS` crit (demo: a
+claim citing `/etc/hostname` — dev 31 = / dev 31, nlink 1, a legitimate
+read — refused unread; lane-resolved relative sources were unaffected,
+falling to `CLAIM_SOURCE_MISSING` on genuinely absent paths). The fix
+normalizes the prefix TEST only, never the stat'ed root: a single
+`in_root()` helper (`tools/research-gate.sh` ~:612) strips the trailing
+slash before composing the glob — `${r%/}` on `/` yields the empty string,
+`""/*` renders `/*`, which matches `/` itself and every descendant. The
+materialized helper is mandatory: **inline `case "$canon" in
+"${root_r%/}"/*)` is itself dead when the expansion strips to empty**
+(measured — a quoted `${var%/}` that expands empty quashes the trailing
+unquoted glob). Three same-class sites, all converted: `claim_source_path`
+(:1044-1075), `ptr_resolves_meta` (:546-551 — the third site, found by this
+round's symmetric audit, not named in the opening), `sweep_path_guarded`
+(:1750-1756). `src_root` stays the original root, so the r14 device probe
+still stats `/` (the closure cannot weaken CROSS_DEVICE at the / boundary).
+Selftest cases 107–110 pin the healed arm (ghost-missing, /etc/hostname
+read, tmpfs cross-device, sweeps absolute glob); the CHOUSA_ROOT=/
+selftest override rides a new harness channel (six runners gained a
+`^CHOUSA_[A-Z_]+=` env-override classifier, tcase's override placement
+corrected to last-wins). Receipts
+`evidence/root-r15-20261019T152000Z-{demo,selftest,battery,drift}.log`;
+gate sha `d8bbd0bf…` → `dd0951d7…`.
+
+Counts at this revision (71 rows, numbering unchanged): **by-design 38 ·
+carried 21 · closed 10 · finding 0 · operator 3**; round-11 audit queue
+**25 → 24** (the dead-arm named item out). The dead-arm closure is a
+queue-item closure, not a row closure — the item occupied no §3 row (same
+class as the E3 bind item), so row counts move only on the closed side
+(9→10 records the carried-9 row's own closure in this round's commit).
+Continuity note: E3's counts line (21/9, queue 25) counted the bind item
+as a carried→closed row, but E2 recorded it "carried INSIDE the closure,
+not new rows" — it occupies no §3 row; the same phantom would recur if
+the dead-arm (also not a row) were counted as one. Row-true counts have
+been 38·22·8·0·3 since E2; queue-true was 26 at E3 (25 committed).
+
+This supersedes E3's counts line and its "fix … named, not landed" clause,
+and supersedes `knowledge/mount-alias-r14.md:56-58` ("queued" → closed).
+E1/E2 stand otherwise. Revision trail: `46534902…` (r12 §6) →
+`16f93821…` (r13) → `00bf8418…` (r14 E3) → this revision. Sites naming
+`00bf8418…` carry the r14 revision; update on next touch or cite this
+addendum.
