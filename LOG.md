@@ -658,3 +658,9 @@ Operator directive: **use the token-plan lanes for the deepseek-v4.1-flash swarm
 - **Verdicts** (SCORECARD §Round 17): coverage/operability/depth/calibration(narrow) **improved**; freshness/adjacency **unchanged**; none harmed. **ADMIT.** Capabilities +1. Round 18 registered (curriculum round 7: zai glm-5.3-flash, 16–32 seats; fallback ladder per the standing record).
 
 **Boundaries held.** Zero network; research corpus read-only; seats read-only; lane-identity pathspec-limited commits; no pushes. Receipt identity still OPEN (L0 row from round 12 unanswered — routed around). Round report: `.ufo/reports/round-17/chousa.md` (seat roster lands there).
+
+## 2026-10-19 — round-18 opening: claims, before-receipts, dispatch
+
+- **Claims** (curriculum loop 1 round 7): coverage = close the `LLM benchmarks` phrase gap (round-16 named debt): `SCOPE_KENGAKU` has `model benchmark(s)` but not `llm benchmark(s)`/`llm scoring`/`ai benchmark(s)` — a record declaring `domain: LLM benchmarks` passes CLEAN despite the model-quality boundary. The fix adds the missing phrases to `SCOPE_KENGAKU`; the wave audits the other two province lists for the same class. operability = the phrase-gap selftest cases.
+- **Before-receipts**: selftest `PASS (116 cases, 0 skipped)`; drift `none` vs the r12 baseline; r1 `3/3`; gate `c2915f24…`; HEAD `02b70c0`.
+- **Wave**: one batched AgentSwarm call, 16 seats (curriculum 16–32), **zai glm-5.3-flash** (liveness-probed alive this opening; fallback ladder per the standing record: devin → token-plan → opencode-go-6). Seat roster lands in the round-18 report.
