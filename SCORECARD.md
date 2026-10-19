@@ -1007,3 +1007,68 @@ the fenced-data-row `approved` suppression, the 8 unasserted finding IDs,
 the secret-scan source coverage gap, the `--json` delimiter edge, the
 manifest timestamp mask breadth, bash-3 portability. Seats: 64–128; roster
 logged in the round-20 report.
+
+## Round 20 verdict — 2026-10-19 (goal wave; evidence commit this landing)
+
+Selected claims (LOG.md round-20 opening): coverage/calibration =
+adversarially re-audit the expanded boundary stack (rounds 15–19's fixes)
+for correctness defects, missed coverage, and interactions. operability =
+the audit's own receipts + any fixes that land. Wave: one 64-seat AgentSwarm
+call on **openai-codex gpt-6-luna-max** (zai exhaustion directive), 64/64
+seat reports. Seat roster: the round-20 report.
+
+**Before** (gate `9f163807…`, selftest 122): the boundary stack as landed
+through rounds 15–19. The wave found a new same-class defect the r17 fix
+missed: `load_sections` has no HTML-comment state — a `## Meta` inside
+`<!-- -->` still shadows the real Meta (live demo: pre-round gate → CLEAN;
+landed → `SCOPE_BOUNTY_ABSORBED` + DRIFT; receipt
+`verify-r20-20261019T180000Z-demo.log`).
+
+**After** (gate `49b36759…`, selftest `PASS (124 cases, 0 skipped)`, cases
+1–119 `cmp` byte-identical vs the r18 receipt): `load_sections` now tracks
+`in_comment` alongside `fence_char` — comment state checked after fence
+state, before heading; a `## ` inside `<!-- -->` is literal. Case 124 pins
+the HTML-comment arm. The wave's other findings dispositioned: the
+`ptr_resolves_meta` boundary gap (relative paths check `-f` without
+canonicalization — `..` traversal and symlinks escape), the denylist
+bypass (`.config/foo` at path start misses `*/.config/*`; benign symlink
+to `.config` target passes), the fenced-heading anchor (chain `heading`
+anchors match headings inside fences), and ~10 more scope/inflection gaps
+(`workflow dispatch`, `security bounty`, `vulnerability disclosure`,
+`responsible disclosure`, `bug bounties`, `llm evaluations`, `dispatch
+mechanisms`, `language model benchmark(s)`, `llmbenchmark`, `ai
+benchmark(s)`) — all named debt for round 21. The uncommitted
+`tok_span_at` performance rewrite (grep PCRE — fixes a 240s stall on
+8MiB sources) and `claims-cap-eof` case 123 from a prior session are
+absorbed and recorded. Masked battery vs the pre-round gate: ALL
+IDENTICAL. Drift `none` vs the r12 baseline; r1 `3/3`.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | the HTML-comment shadow class is closed at the parser: before CLEAN on a shadowed refused domain → after `SCOPE_BOUNTY_ABSORBED` warn + DRIFT (receipts live); the wave confirmed no out-of-corpus read |
+| operability | **improved** | selftest 122 → 124 (1–119 byte-identical); the `tok_span_at` rewrite lands a measured performance fix; case 124 pins the new arm |
+| depth | **improved** | `corpus/knowledge/html-comment-r20.md`: the shadow class generalized (fence → comment), the fix contract, the named limits |
+| freshness | **unchanged** | the r12 baseline holds (no re-pin); no stale pins moved |
+| calibration | **improved narrowly** | the fix landed at the discovered class only; the `ptr_resolves_meta` and denylist findings are named debt, not silently absorbed |
+| adjacency | **unchanged** | zero network; corpus read-only; no sibling/fleet writes beyond the recorded queue rows |
+
+Admission: **ADMIT** (coverage/operability/depth/calibration(narrow)
+improved; none harmed). No scalar score. Learning trends: expansion
+improved, quality improved, discernment improved. Round 21 registered:
+curriculum round 10 — §Planned below.
+
+## Planned — round 21 (pre-registered 2026-10-19, at the round-20 landing)
+
+Wave per the curriculum (loop 1, round 10): one 32–64-seat AgentSwarm call,
+**devin deepseek-v4.1-flash** (fallback ladder per the standing doctrine:
+opencode-go-6 → token-plan → devin). Claims pre-registered at the round-21
+opening from the named-debt queue: candidates — the `ptr_resolves_meta`
+boundary gap, the denylist `.config` bypass, the fenced-heading anchor
+false-positive, the `ai benchmark(s)` boundary decision, the `bug
+bounties`/`dispatch mechanisms`/`llm evaluations`/`workflow dispatch`/
+`security bounty`/`vulnerability disclosure`/`responsible disclosure`/
+`language model benchmark(s)`/`llmbenchmark` inflection gaps, the `--drift`
+truncated-baseline detection, the fenced-data-row `approved` suppression,
+the 8 unasserted finding IDs, the secret-scan source coverage gap, the
+`--json` delimiter edge, the manifest timestamp mask breadth, bash-3
+portability. Seats: 32–64; roster logged in the round-21 report.

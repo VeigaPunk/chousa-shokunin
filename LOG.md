@@ -700,3 +700,60 @@ Operator directive: **use the token-plan lanes for the deepseek-v4.1-flash swarm
 - **Claims** (curriculum loop 1 round 9 — the second verification-scale wave): coverage/calibration = adversarially re-audit the expanded boundary stack (rounds 15–19's fixes: in_root, fence-aware load_sections, SCOPE_KENGAKU phrase expansion, per-match sweeps canonicalization) for correctness defects, missed coverage, and interactions the earlier rounds didn't test. The audit surface: the 122 selftest cases' assertion quality, the named limits' honesty, the dispositioned findings' actual status, and the interaction matrix between the four boundary mechanisms. operability = the audit's own receipts + any fixes that land.
 - **Before-receipts**: selftest `PASS (122 cases, 0 skipped)`; drift `none` vs the r12 baseline; r1 `3/3`; gate `9f163807…`; HEAD `2bb556b`.
 - **Wave**: one batched AgentSwarm call, 64 seats (curriculum 64–128), **openai-codex gpt-6-luna-max** (zai exhaustion directive). Seat roster lands in the round-20 report.
+
+## 2026-10-19 — independent closure recheck (rows 8–10, 56, 70)
+
+Current gate `tools/research-gate.sh` SHA-256:
+`9f1638076915d9bf6ffb5816e342204081cc1ab07bc803fc7cb402147954c2ba`.
+`bash tools/research-gate.sh --selftest` → `RESEARCH_GATE_SELFTEST: PASS
+(122 cases, 0 skipped)`; relevant case groups all report `ok-case`: row 70
+86–92 and later scope cases 112–119; row 10 93–94; row 9 95–98; row 8 99–102.
+`bash tools/research-gate.sh --drift
+corpus/evidence/gate-baseline-r12-20261019T115519Z.json` →
+`GATE_DRIFT: none`, exit 0. `VERSION=v2` at `tools/research-gate.sh:260`;
+the six banner emitters use `$VERSION` at `:987, :1389, :1660, :2011, :2201,
+:2425`.
+
+Rows 8, 9, 10 and 70 are re-confirmed at their recorded scope. Row 9 remains
+partial; its stated 8 MiB cap passes cases 95–98 and its record-read / explicit
+verify-all claims-surface residuals are preserved, not retested or claimed
+closed. Row 8 remains the hardlink class only; its documented limits are
+unchanged. Row 70 remains a declared-Meta screen, not a general prose detector;
+the current phrase/fence test cases also pass.
+
+Row 56 is a **partial independent recheck**. The current
+`corpus/fixtures/archives-r9/A-r9.md` is 73 lines / 7,210 bytes and hashes to
+`dfd2ae1a149b7c87f8ff399522f99c3461570c5ba06ba9d6b18254b15a3c3b9d`, the
+recorded post-fix hash; line 50 points C3 at `:86`. The original archive
+`research/deep-research-2026-09-28/A-shokunin-tradition.md` is not present in
+this repo (`**/A-shokunin-tradition.md` glob: no matches; repo-relative read:
+missing). Because `PROVINCE.md` limits work to this repo, no `--root ..` run
+was made. The 19/19 source-span re-derivation and corrected-byte `verify-all`
+therefore remain unverified in this independent pass; the recorded correction
+is confirmed, not its underlying source-line match. No detection claim is
+added. See `corpus/knowledge/hardening-r10.md` independent closure recheck.
+
+## 2026-10-19 — large-input token matcher audit and correction
+
+The current r12 baseline was re-derived before measuring: `bash tools/research-gate.sh --selftest` → `PASS (122 cases, 0 skipped)` in 22.916 s; `--drift corpus/evidence/gate-baseline-r12-20261019T115519Z.json` → `GATE_DRIFT: none`, exit 0 (0.733 s). The claims and chain modes both call `tok_span_at`; the 8 MiB limit is inclusive at 8,388,608 bytes (`tools/research-gate.sh:262-266`).
+
+**Motivating failure.** A disposable 8,388,608-byte source with a valid boundary-delimited claim span at EOF did not complete within a 240 s timeout. The same 8,388,609-byte source refused as designed in 0.014 s; 1,000 claims over a small shared source completed CLEAN (`1000/1000`) in 14.412 s, and 100 resolved chain hops completed CLEAN (`100/100`) in 3.517 s. Isolation located the stall in the old Bash removal `${rest#*"$span"}`: at 100 KB it took 3.042 s; at 1 MB it exceeded 15 s, while the ordinary glob existence check took 0.007 s at 1 MB. A GNU grep PCRE fixed-byte probe located an 8 MiB EOF match in 0.007 s and handled single-line, multi-line, Unicode and repeated occurrences.
+
+**Change.** `tok_span_at` now encodes the requested bytes as literal `\xNN` escapes and uses `grep -a -z -b -o -P` to enumerate non-overlapping byte offsets. It checks candidates in order with the existing left/right boundary helpers and computes line positions from the original prefix. `LC_ALL=C` keeps byte offsets, Bash slices and the documented ASCII/non-ASCII boundary classification aligned. Selftest case 123 places the exact-cap claim span at EOF; existing boundary, multiline, cap and over-cap cases remain.
+
+**Verification at the changed bytes** (gate SHA-256 `76f25105f4e22a984ebe8572fe61f5c118df7347d47c198228884b709477c193`): `bash -n tools/research-gate.sh` passed; selftest `PASS (123 cases, 0 skipped)` in 17.548 s; r12 `--drift` remained `GATE_DRIFT: none`, exit 0 (0.590 s). The same disposable runs completed: 1,000 claims CLEAN in 12.280 s; exact-cap EOF source (8,388,608 bytes) CLEAN in 0.329 s; over-cap (8,388,609 bytes) refused in 0.015 s; 100 resolved chain hops CLEAN in 3.700 s. An additional Unicode-edge probe confirmed three non-ASCII-adjacent spans remain unsupported and a punctuation-delimited span supported (`4/4` CLEAN). All benchmark fixtures were under a temporary root and removed after each run. No baseline re-pin was needed.
+
+**Fail-closed grep capability guard and final rerun.** Review found that `grep -P` is optional on some GNU grep builds; claims and chain now probe the exact `-a -z -b -o -P` option set before processing and return setup exit 2 if unavailable, rather than converting a missing matcher into a false span miss. A temporary `PATH` shim whose `grep` exits 2 verified both modes return exit 2, print the diagnostic, and emit no stdout verdict. Final gate SHA-256: `1abd7eee2e5b093fd2ecdd6d60632be0f6745055d929b6cedf03cede2972dc61`. At these bytes, `bash -n` passed; selftest `PASS (123 cases, 0 skipped)` in 16.400 s; r12 drift `GATE_DRIFT: none` exit 0 in 0.535 s; the same disposable runs completed with 1,000 claims CLEAN in 10.260 s, exact-cap EOF CLEAN in 0.328 s, over-cap refused in 0.014 s, and 100 resolved chain hops CLEAN in 3.211 s. `git diff --check` passed.
+
+## Round 20 — goal wave (2026-10-19)
+
+**Admission.** Landed (evidence commit this entry; wave: one 64-seat AgentSwarm call on **openai-codex gpt-6-luna-max** per the zai-exhaustion directive, 64/64 seat reports — zero deficit):
+
+- **Claim 1 (coverage/calibration) — the HTML-comment heading shadow**: same class as the fenced-heading shadow (r17) but through `<!-- -->` — a `## Meta` inside an HTML comment still shadowed the real Meta (live demo: pre-round gate → CLEAN; landed → `SCOPE_BOUNTY_ABSORBED` warn + DRIFT; receipt `verify-r20-20261019T180000Z-demo.log`). `load_sections` now tracks `in_comment` alongside `fence_char`: comment state checked after fence state (a `<!--` inside a fence is content, not a comment), before heading (a `## ` inside a comment is literal). Case 124 pins it.
+- **Claim 2 (operability) — absorbed prior-session work**: the `tok_span_at` performance rewrite (grep PCRE — fixes a measured 240s stall on 8MiB sources), `claims-cap-eof` case 123, and the independent closure recheck (hardening-r10 rows 8–10, 56, 70) are recorded and verified.
+- **Dispositions**: the `ptr_resolves_meta` boundary gap (relative paths check `-f` without canonicalization — `..` traversal and symlinks escape), the denylist `.config` bypass (path-start `.config` misses `*/.config/*`; benign symlink to `.config` target passes), the fenced-heading anchor (chain `heading` anchors match headings inside fences — false positive), and ~10 scope/inflection gaps (`workflow dispatch`, `security bounty`, `vulnerability disclosure`, `responsible disclosure`, `bug bounties`, `llm evaluations`, `dispatch mechanisms`, `language model benchmark(s)`, `llmbenchmark`, `ai benchmark(s)`) — all named debt for round 21.
+- **Battery**: selftest `PASS (124 cases, 0 skipped)`, cases 1–119 `cmp` byte-identical vs the r18 receipt; r1 `3/3`; drift `none` vs the r12 baseline (no re-pin); masked battery vs the pre-round gate (LANE_ROOT intact, r13 method) ALL IDENTICAL; zero network. Gate `9f163807…` → `49b36759…`.
+- **Errata/records**: `corpus/knowledge/html-comment-r20.md` (the shadow class generalized); `corpus/README` + `evidence/README` + SKILL sweeps; SCORECARD verdict + round-21 registration.
+- **Verdicts** (SCORECARD §Round 20): coverage/operability/depth/calibration(narrow) **improved**; freshness/adjacency **unchanged**; none harmed. **ADMIT.** Capabilities +1. Round 21 registered (curriculum round 10: devin deepseek-v4.1-flash, 32–64 seats — fallback ladder per the standing record).
+
+**Boundaries held.** Zero network; research corpus read-only; seats read-only; lane-identity pathspec-limited commits; no pushes. Receipt identity still OPEN (L0 row from round 12 unanswered — routed around). Round report: `.ufo/reports/round-20/chousa.md` (seat roster lands there).
