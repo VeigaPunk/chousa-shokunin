@@ -536,3 +536,7 @@ The key-2 wave (opencode-go-2, 64 seats) was also interrupted before any seat re
 ### Round-12 dispatch deviation 3 (2026-10-19, measured failure)
 
 The key-3 wave (opencode-go-3, 64 seats) failed instantly and completely: every seat returned `402 Upstream request failed: Insufficient account funds` (64/64, no seat started). Key 3 is out of funds — a measured provider failure, not an interruption. Per the standing operator directive (move to the next opencode-go key, stick with it), round 12 re-dispatches on **opencode-go-4 / deepseek-v4.1-flash**.
+
+### Round-12 dispatch deviation 4 (2026-10-19, measured failure)
+
+The key-4 wave (opencode-go-4, 64 seats) failed instantly and completely: every seat returned `402 Upstream request failed: Insufficient account funds` (64/64). Keys 3 and 4 are both out of funds. Per the standing directive the lane probes the remaining opencode-go keys with a single cheap liveness agent before spending another 64-seat wave; the wave re-dispatches on the first key that answers and stays there.
