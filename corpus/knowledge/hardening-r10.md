@@ -564,3 +564,37 @@ E1/E2 stand otherwise. Revision trail: `46534902…` (r12 §6) →
 `16f93821…` (r13) → `00bf8418…` (r14 E3) → this revision. Sites naming
 `00bf8418…` carry the r14 revision; update on next touch or cite this
 addendum.
+
+### Independent closure recheck (2026-10-19; current gate `9f163807…`)
+
+The current selftest passes (122 cases, 0 skipped); relevant cases pass for row
+70 (86–92, 112–119), row 10 (93–94), row 9 (95–98), and row 8 (99–102).
+The current `--drift` run against the r12 baseline reports `GATE_DRIFT: none`
+(exit 0).
+
+- **Row 9:** the 8 MiB claim/chain source-read cap is re-confirmed by the
+  inclusive-boundary and over-cap cases. Keep the recorded `closed(r12,
+  partial)` status and its record-read / explicit verify-all claims-surface
+  residuals unchanged; this recheck tests no broader cap claim.
+- **Row 10:** `VERSION=v2` remains, all six banner emitters use it, cases 93–94
+  pass, and the current r12-baseline drift check is clean.
+- **Row 8:** the claims and chain hardlink-refusal cases and both link-count
+  controls pass. This confirms the hardlink class only; the recorded TOCTOU,
+  same-device-bind, and unmeasurable-stat limits remain.
+- **Row 70:** the three refused-province cases and declaration/prose controls
+  pass; later fenced-heading and literal-phrase cases also pass. The screen
+  remains declaration-only, not a general prose scope detector.
+- **Row 56 — partial independent recheck:** the in-repo A-r9 record is 73 lines
+  / 7,210 bytes with SHA-256
+  `dfd2ae1a149b7c87f8ff399522f99c3461570c5ba06ba9d6b18254b15a3c3b9d`, matching
+  the recorded post-fix hash; its C3 pointer at line 50 is `:86`. The original
+  `research/deep-research-2026-09-28/A-shokunin-tradition.md` is absent from
+  this repository (repo-wide glob found no copy, and the repo-relative read
+  failed). Under `PROVINCE.md` scope, no `--root ..` verification was run.
+  Therefore this recheck cannot independently reproduce the 19/19 source-span
+  audit or corrected-byte `verify-all CLEAN`; record the fixture correction as
+  confirmed, but this independent recheck remains partial. The pointer/span
+  detection class remains named non-coverage.
+
+No historical erratum or disposition counts were rewritten. The command
+receipts and case-level outcomes are appended to `LOG.md`.

@@ -419,6 +419,10 @@ load_sections() {
   # r17: an unclosed opener IS a fence — everything after it is literal
   # (fail closed: a `## ` inside an unclosed fence cannot shadow a real
   # heading). The opener itself is consumed as fence content.
+  # r20: the same shadow class exists through HTML comments — a `## ` inside
+  # <!-- --> is literal text, not a heading. Track comment state alongside
+  # fence state; a heading inside either is literal.
+  local in_comment=0
   fence_char=''; fence_len=0
   for ((i = 0; i < n; i++)); do
     line=${LINES[$i]}
@@ -431,8 +435,20 @@ load_sections() {
       SEC_BODY[$sec]+="$line"$'\n'
       continue
     fi
+    if [[ $in_comment -eq 1 ]]; then
+      [[ $line == *'-->'* ]] && in_comment=0
+      [[ -z $sec ]] && continue
+      SEC_BODY[$sec]+="$line"$'\n'
+      continue
+    fi
     if [[ $line =~ ^\ {0,3}(\`{3,}|~{3,})(.*)$ ]]; then
       fence_char=${BASH_REMATCH[1]:0:1}; fence_len=${#BASH_REMATCH[1]}
+      [[ -z $sec ]] && continue
+      SEC_BODY[$sec]+="$line"$'\n'
+      continue
+    fi
+    if [[ $line == *'<!--'* ]]; then
+      [[ $line != *'-->'* ]] && in_comment=1
       [[ -z $sec ]] && continue
       SEC_BODY[$sec]+="$line"$'\n'
       continue
@@ -1232,22 +1248,36 @@ tok_right_ok() { # AFTER SPAN -> rc0: the right edge is a token boundary
 tok_span_at() { # HAY SPAN -> TOK_AT (line:N|lines:N-M) + TOK_L1/TOK_L2
   # rc0: first boundary-delimited occurrence; rc1: none. Occurrences that are
   # substrings but glued into a word are skipped, not reported.
-  local hay=$1 span=$2 rest=$hay before after dropped=0
+  local LC_ALL=C
+  export LC_ALL
+  local hay=$1 span=$2 before after occurrence offset regex='' i c hex
   TOK_AT=- TOK_L1=0 TOK_L2=0
   [[ -n $span ]] || return 1
-  while :; do
-    [[ $rest == *"$span"* ]] || return 1
-    before=${rest%%"$span"*}
-    after=${rest#*"$span"}
+  # Hex escapes keep the PCRE pattern byte-exact and literal. NUL-delimited
+  # grep records let -z search multi-line spans and preserve match offsets.
+  for ((i = 0; i < ${#span}; i++)); do
+    c=${span:i:1}
+    printf -v hex '%02x' "'$c"
+    regex+="\\x$hex"
+  done
+  while IFS= read -r -d '' occurrence; do
+    offset=${occurrence%%:*}
+    before=${hay:0:offset}
+    after=${hay:offset+${#span}}
     if tok_left_ok "$before" "$span" && tok_right_ok "$after" "$span"; then
-      TOK_L1=$(( dropped + $(count_nl "$before") + 1 ))
+      TOK_L1=$(( $(count_nl "$before") + 1 ))
       TOK_L2=$(( TOK_L1 + $(count_nl "$span") ))
       if [[ $TOK_L1 -eq $TOK_L2 ]]; then TOK_AT=line:$TOK_L1; else TOK_AT=lines:$TOK_L1-$TOK_L2; fi
       return 0
     fi
-    dropped=$(( dropped + $(count_nl "$before") + $(count_nl "$span") ))
-    rest=$after
-  done
+  done < <(printf '%s' "$hay" | grep -a -z -b -o -P -- "$regex")
+  return 1
+}
+
+token_matcher_require() {
+  if printf 'x' | grep -a -z -b -o -P -- 'x' >/dev/null 2>&1; then return 0; fi
+  printf 'research-gate: GNU grep with -z/-P support is required for claims and chain token matching\n' >&2
+  return 1
 }
 
 verify_claims() {
@@ -1257,6 +1287,7 @@ verify_claims() {
   [[ -e $claims ]] || die_usage "claims file not found: $claims"
   [[ -f $claims ]] || die_usage "claims file is not a regular file: $claims"
   [[ -r $claims ]] || die_usage "claims file unreadable: $claims"
+  token_matcher_require || return 2
 
   FINDING_LINES=(); N_FINDINGS=0; N_DRIFT=0; ROLL=CLEAN
 
@@ -1550,6 +1581,7 @@ verify_chain() {
   [[ -e $record ]] || die_usage "record not found: $record"
   [[ -f $record ]] || die_usage "record is not a regular file: $record"
   [[ -r $record ]] || die_usage "record unreadable: $record"
+  token_matcher_require || return 2
 
   FINDING_LINES=(); N_FINDINGS=0; N_DRIFT=0; ROLL=CLEAN
   scan_secrets "$record"
@@ -4890,6 +4922,31 @@ EOF
 EOF
   tsweeps sweeps-inroot-symlink 1 'RESEARCH_GATE: DRIFT' \
     'SWEEP_CLAIM_FALSE' 'observed=hit verdict=mismatch'
+
+  # 123: the exact-cap source's only match is at EOF, exercising the long-prefix
+  # path through the shared token-boundary matcher without committing binary data.
+  { head -c $((SOURCE_READ_MAX_BYTES - ${#cap_span} - 1)) /dev/zero | tr '\0' a; printf ' %s' "$cap_span"; } >"$WORK/claimsrc/cap-eof.md"
+  printf '{"id":"Z3","source":"claimsrc/cap-eof.md","span":"%s","expect":"supported"}\n' \
+    "$cap_span" >"$WORK/claims-cap-eof.jsonl"
+  tclaims claims-cap-eof 0 'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=1/1' \
+    'CLAIM id=Z3 expected=supported observed=supported source=claimsrc/cap-eof.md at=line:1 verdict=match'
+
+  # 124 (r20): the HTML-comment heading shadow — a `## ` inside <!-- --> is
+  # literal text, not a heading. Same class as the fenced-heading shadow
+  # (r17): a `## Meta` inside an HTML comment must not reset the real Meta
+  # body. The parser now tracks comment state alongside fence state.
+  add_scope_row scope-comment-shadow domain 'bounty program scope and claim packages'
+  cat >>"$WORK/scope-comment-shadow.md" <<'EOF'
+## Notes
+<!--
+## Meta
+| key | value |
+|---|---|
+| domain | deep-research method |
+-->
+EOF
+  tcase scope-comment-shadow 1 'RESEARCH_GATE: DRIFT' \
+    'FINDING SCOPE_BOUNTY_ABSORBED severity=warn surface=scope' 'findings=1 drift=1'
 
   if [[ $failures -eq 0 ]]; then
     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"
