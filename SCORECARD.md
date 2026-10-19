@@ -1072,3 +1072,57 @@ truncated-baseline detection, the fenced-data-row `approved` suppression,
 the 8 unasserted finding IDs, the secret-scan source coverage gap, the
 `--json` delimiter edge, the manifest timestamp mask breadth, bash-3
 portability. Seats: 32–64; roster logged in the round-21 report.
+
+## Round 21 verdict — 2026-10-19 (goal wave; evidence commit this landing)
+
+Selected claims (LOG.md round-21 opening): coverage/operability = the
+`ptr_resolves_meta` boundary gap (round-20 named debt): relative pointer
+paths check `-f` without canonicalization — `..` traversal and symlinks
+escape. depth = the pointer-boundary mechanics note + the denylist `.config`
+bypass disposition. Wave: one 32-seat AgentSwarm call on **opencode-go-6 /
+deepseek-v4.1-flash** (devin 502 quota fallback per the standing record),
+32/32 seat reports. Seat roster: the round-21 report.
+
+**Before** (gate `49b36759…`, selftest 124): `ptr_resolves_meta` checks
+`-f "$ROOT/$f"` or `-f "$LANE_ROOT/$f"` without canonicalization — a
+`lib/../../etc/passwd` or a symlink to outside passes if the file exists
+under the raw path (live demo: pre-round gate → CLEAN; landed →
+`POINTER_UNRESOLVED` warn + DRIFT; receipt `ptr-r21-20261019T184000Z-demo.log`).
+
+**After** (gate `bfc291ef…`, selftest `PASS (128 cases, 0 skipped)`, cases
+1–124 `cmp` byte-identical vs the r20 receipt): the candidate is
+canonicalized with `readlink -f` (resolving `..` and symlinks), then checked
+with `in_root` against BOTH roots. The denylist applies to the canonical
+target too — a benign symlink to `.config/passwd` is refused. Cases 125–128
+pin the escape class (traversal, symlink, lane-root absolute pointer,
+`.config` symlink). Masked battery vs the pre-round gate: ALL IDENTICAL.
+Drift `none` vs the r12 baseline; r1 `3/3`.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | the pointer-boundary escape class is closed: before CLEAN on a traversal pointer → after `POINTER_UNRESOLVED` warn + DRIFT (receipts live); the `.config` canonical-target check closes the benign-symlink arm |
+| operability | **improved** | selftest 124 → 128 (1–124 byte-identical); canonicalization is deterministic; no re-pin needed |
+| depth | **improved** | `corpus/knowledge/pointer-boundary-r21.md`: the escape mechanics, the fix contract, the named limits |
+| freshness | **unchanged** | the r12 baseline holds (no re-pin); no stale pins moved |
+| calibration | **improved narrowly** | the fix landed at the discovered class only; the denylist `.config` path-start form and the fenced-heading anchor are named debt, not silently absorbed |
+| adjacency | **unchanged** | zero network; corpus read-only; no sibling/fleet writes beyond the recorded queue rows |
+
+Admission: **ADMIT** (coverage/operability/depth/calibration(narrow)
+improved; none harmed). No scalar score. Learning trends: expansion
+improved, quality improved, discernment improved. Round 22 registered:
+curriculum round 11 — §Planned below.
+
+## Planned — round 22 (pre-registered 2026-10-19, at the round-21 landing)
+
+Wave per the curriculum (loop 1, round 11): one 32–64-seat AgentSwarm call,
+**antigravity gemini-3.8-flash**. Claims pre-registered at the round-22
+opening from the named-debt queue: candidates — the `.config` path-start
+denylist bypass (direct citation, not through a symlink), the fenced-heading
+anchor false-positive, the `ai benchmark(s)` boundary decision, the
+inflection gaps (`bug bounties`, `dispatch mechanisms`, `llm evaluations`,
+`workflow dispatch`, `security bounty`, `vulnerability disclosure`,
+`responsible disclosure`, `language model benchmark(s)`, `llmbenchmark`),
+the `--drift` truncated-baseline detection, the fenced-data-row `approved`
+suppression, the 8 unasserted finding IDs, the secret-scan source coverage
+gap, the `--json` delimiter edge, the manifest timestamp mask breadth,
+bash-3 portability. Seats: 32–64; roster logged in the round-22 report.

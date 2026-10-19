@@ -763,3 +763,15 @@ The current r12 baseline was re-derived before measuring: `bash tools/research-g
 - **Claims** (curriculum loop 1 round 10): coverage/operability = the `ptr_resolves_meta` boundary gap (round-20 named debt): relative pointer paths check `-f "$ROOT/$f"` or `-f "$LANE_ROOT/$f"` without canonicalization — a `../../etc/passwd` or a symlink to outside passes if the file exists under the raw path. The fix must canonicalize relative pointers the same way `claim_source_path` does, then check `in_root`. depth = the pointer-boundary mechanics note + the denylist `.config` bypass disposition.
 - **Before-receipts**: selftest `PASS (124 cases, 0 skipped)`; drift `none` vs the r12 baseline; r1 `3/3`; gate `49b36759…`; HEAD `83b806a`.
 - **Wave**: one batched AgentSwarm call, 32 seats (curriculum 32–64), **opencode-go-6 deepseek-v4.1-flash** — devin deepseek-v4-1-flash-high failed on 502 quota for all 32 seats; the user's directive routes deepseek waves to opencode-go key 6. Seat roster lands in the round-21 report.
+
+## Round 21 — goal wave (2026-10-19)
+
+**Admission.** Landed (evidence commit this entry; wave: one 32-seat AgentSwarm call on **opencode-go-6 / deepseek-v4.1-flash** per the operator's directive, 32/32 seat reports — zero deficit):
+
+- **Claim 1 (coverage/operability) — the ptr_resolves_meta boundary gap**: relative pointer paths checked raw `-f` without canonicalization — `lib/../../etc/passwd` and symlinks to outside passed if the file existed under the raw path (live demo: pre-round gate → CLEAN; landed → `POINTER_UNRESOLVED` warn + DRIFT; receipt `ptr-r21-20261019T184000Z-demo.log`). The candidate is now canonicalized with `readlink -f` (resolving `..` and symlinks), then checked with `in_root` against BOTH roots — the absolute-path arm's lane-root false-refusal is also closed. The denylist applies to the canonical target too: a benign symlink to `.config/passwd` is refused.
+- **Claim 2 (depth)**: `corpus/knowledge/pointer-boundary-r21.md` — the escape mechanics, the fix contract, the named limits (the `.config` path-start bypass is closed by the canonical check; the fenced-heading anchor false-positive is a different function — named debt).
+- **Battery**: selftest `PASS (128 cases, 0 skipped)`, cases 1–124 `cmp` byte-identical vs the r20 receipt; r1 `3/3`; drift `none` vs the r12 baseline (no re-pin); masked battery vs the pre-round gate (LANE_ROOT intact, r13 method) ALL IDENTICAL; zero network. Gate `49b36759…` → `bfc291ef…`.
+- **Errata/records**: `corpus/README` + `evidence/README` + SKILL sweeps; SCORECARD verdict + round-22 registration.
+- **Verdicts** (SCORECARD §Round 21): coverage/operability/depth/calibration(narrow) **improved**; freshness/adjacency **unchanged**; none harmed. **ADMIT.** Capabilities +1. Round 22 registered (curriculum round 11: antigravity gemini-3.8-flash, 32–64 seats).
+
+**Boundaries held.** Zero network; research corpus read-only; seats read-only; lane-identity pathspec-limited commits; no pushes. Receipt identity still OPEN (L0 row from round 12 unanswered — routed around). Round report: `.ufo/reports/round-21/chousa.md` (seat roster lands there).
