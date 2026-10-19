@@ -640,3 +640,9 @@ Operator directive: **use the token-plan lanes for the deepseek-v4.1-flash swarm
 - **Verdicts** (SCORECARD §Round 16): operability/depth/calibration **improved**; coverage/freshness/adjacency **unchanged**; none harmed. **ADMIT.** Capabilities +0 (verification round — no new capability, the existing stack verified). Round 17 registered (curriculum round 6: xai-oauth grok-4.7-fast, 32–64 seats).
 
 **Boundaries held.** Zero network; research corpus read-only; seats read-only; lane-identity pathspec-limited commits; no pushes. Receipt identity still OPEN (L0 row from round 12 unanswered — routed around). Round report: `.ufo/reports/round-16/chousa.md` (seat roster lands there).
+
+## 2026-10-19 — round-17 opening: claims, before-receipts, dispatch
+
+- **Claims** (curriculum loop 1 round 6): coverage/operability = fix the scope-screen fenced-heading shadow (round-16 named debt): `load_sections` resets on every `## ` line without recognizing fenced code blocks, so a `## Meta` inside a fence shadows the real declaration — the scope screen then checks the wrong body. Fix: recognize fenced blocks and skip headings inside them. depth = the fenced-heading mechanics note + the `LLM benchmarks` phrase gap disposition.
+- **Before-receipts**: selftest `PASS (111 cases, 0 skipped)`; drift `none` vs the r12 baseline; r1 `3/3`; gate `2b64a1c8…`; HEAD `0a2d7ce`.
+- **Wave**: one batched AgentSwarm call, 32–64 seats (curriculum 32–64), **xai-oauth grok-4.7-fast** (liveness-probed alive this opening; fallback ladder per the standing record: devin → token-plan → opencode-go-6). Seat roster lands in the round-17 report.
