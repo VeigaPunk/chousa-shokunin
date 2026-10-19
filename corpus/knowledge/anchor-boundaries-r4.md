@@ -287,3 +287,6 @@ therefore still a word character — the same answer either way.
   field-readiness claim, or admission verdict.
 - By design, not debt: semantic support, source truth, transitive chaining and
   external-source verification stay outside the mode.
+
+
+Round-12 disposition (2026-10-19, append-only): any r2-carried residual this note names — the banner `research-gate-r1` and the absent source-read size cap — landed at round 12 (`VERSION=v2`, r12 baseline re-pinned, `knowledge/gate-baseline-r12.md`; 8 MiB cap `CLAIM_SOURCE_READ_TOO_LARGE`/`CHAIN_SOURCE_READ_TOO_LARGE` at the shared chokepoint). In-root hardlinks remain carried. This note's own claims are otherwise unchanged.

@@ -26,6 +26,9 @@
 #   SWEEP_REJECTION_INCOMPLETE SWEEP_LOCATION_ABSENT SWEEP_LOCATION_UNRESOLVED
 #   SWEEP_LOCATION_OUT_OF_CORPUS SWEEP_CLAIM_FALSE REF_UNRESOLVED
 #   VERIFY_ALL_CLAIMS_UNRESOLVED VERIFY_ALL_SECTION_UNAVAILABLE
+#   SCOPE_BOUNTY_ABSORBED SCOPE_MODEL_QUALITY_ABSORBED
+#   SCOPE_ORCHESTRATION_ABSORBED
+#   CLAIM_SOURCE_READ_TOO_LARGE (r12: source over SOURCE_READ_MAX_BYTES)
 #
 # Claims mode: verify-claims <claims-file> checks each claim's verbatim span
 # against its cited source. Blank lines and #-comment lines are ignored; a
@@ -37,6 +40,9 @@
 # fixture names explicitly (per-claim "marker" or the default) to byte-co-occur
 # inside the span's source lines; without it the claim is unproven. A marker on
 # a non-contradicted entry is a fixture violation (CLAIM_RECORD_INVALID).
+# A source larger than SOURCE_READ_MAX_BYTES (8 MiB, inclusive boundary) is
+# refused BEFORE any read — CLAIM_SOURCE_READ_TOO_LARGE (warn, drift;
+# CHAIN_SOURCE_READ_TOO_LARGE in chain mode) — never partially searched.
 # Per claim: CLAIM id=… expected=… observed=… source=… at=… verdict=…
 #   observed: supported|contradicted|unsupported|unproven|refused|invalid
 #   verdict:  match|mismatch|refused|invalid
@@ -66,6 +72,7 @@
 # every non-exempt hop verified (N = M − exempt) and no finding drifts.
 # Extra ids: CHAIN_ABSENT CHAIN_SOURCE_EXTERNAL CHAIN_SOURCE_SESSION
 #   CHAIN_SOURCE_EPHEMERAL CHAIN_SOURCE_OUT_OF_CORPUS CHAIN_SOURCE_MISSING
+#   CHAIN_SOURCE_READ_TOO_LARGE
 #   CHAIN_ANCHOR_NOT_FOUND CHAIN_CITATION_INVALID
 #
 # Sweeps mode: verify-sweeps <record.md> makes kept rejections and negative
@@ -224,7 +231,20 @@
 set -euo pipefail
 shopt -s extglob
 
-VERSION=research-gate-r1
+# Banner contract (r12): the version token is the revision alone and never
+# repeats the program name — v1 rendered the stutter "research-gate
+# research-gate-r1" at every banner site. v2 = this corrected generation.
+# The version token is a declared contract word (NOT in volatile_fields), so
+# changing it is gate drift by design and requires a recorded re-pin. The
+# baseline file-format magic "# chousa-gate drift baseline v1" is a separate
+# counter and is not bumped.
+VERSION=v2
+
+# Claim/chain source read cap (r12). A source larger than this is refused
+# BEFORE any read, so an oversized file is neither slurped into a shell
+# variable nor partially searched. 8 MiB = 8388608; the boundary is
+# inclusive (size == cap reads; size == cap+1 refuses).
+SOURCE_READ_MAX_BYTES=$((8 * 1024 * 1024))
 SELF=$(readlink -f -- "${BASH_SOURCE[0]}" 2>/dev/null || {
   p=$0; case "$p" in /*) printf '%s' "$p" ;; *) printf '%s' "$PWD/$p" ;; esac
 })
@@ -282,6 +302,8 @@ usage: research-gate.sh [--selftest] [--help]
   whole lines.
   Unresolved/marked hops stay exempt but counted. Sources obey the same
   boundary as verify-claims (local, canonicalized, never fetched).
+  Sources over 8 MiB are refused unread (CLAIM_SOURCE_READ_TOO_LARGE;
+  CHAIN_SOURCE_READ_TOO_LARGE in chain mode).
   A token boundary is a file/line edge, ASCII whitespace or ASCII
   punctuation at the match's outer edges; a word-internal hyphen or
   apostrophe is not a boundary, so a truncated quote (mid-word), a padded
@@ -559,6 +581,77 @@ scan_secrets() {
   done <"$file"
 }
 
+file_size_bytes() { # PATH -> stdout byte size; rc 1 when no probe can measure
+  local n                        # it. stat is the pre-read probe (no data
+  if n=$(stat -c '%s' -- "$1" 2>/dev/null); then printf '%s' "$n"; return 0; fi
+  if n=$(stat -f '%z' -- "$1" 2>/dev/null); then printf '%s' "$n"; return 0; fi
+  if n=$(wc -c <"$1" 2>/dev/null); then
+    n=${n//[[:space:]]/}
+    [[ $n =~ ^[0-9]+$ ]] && { printf '%s' "$n"; return 0; }
+  fi
+  return 1
+}
+
+# ---- structure: declared-scope refusal screen (round 12) ----
+# Only the DECLARED surface is read: rows of the record's own ## Meta section
+# whose key cell is `domain` or `scope` — both the Meta table row
+# `| scope | value |` and the `scope: value` line row. Prose, ## Question
+# text, note cells, source/archive pointers and every other section are never
+# keyword-scanned: the r9 B archive names multi-agent knowledge in prose and
+# its record stays CLEAN. One finding per matched refused province per
+# declaration row, provinces in the fixed order bounty → model-quality →
+# orchestration, so multi-province declarations pin reproducible line order.
+# Deliberately NOT triggers: bare bounty/agent/swarm/dispatch/eval(uation)/
+# quality/benchmark/model — they carry legitimate research senses (the
+# B-archive vocabulary) and negations are not parsed (named limit). warn
+# drifts (exit 1); a record with no declaration row takes the old path
+# byte-identically.
+SCOPE_BOUNTY='bug bounty|bounty program|bounty programs|bounty hunt|bounty hunting|bounty scope|claim package|claim packages|kasegi'
+SCOPE_KENGAKU='model quality|model evaluation|model evaluations|model eval|model benchmark|model benchmarks|model scoring|llm quality|llm evaluation|llm eval|language model quality|language model evaluation|kengaku'
+SCOPE_KUMITATE='orchestration|dispatch mechanism|multi agent dispatch|multiagent dispatch|agent dispatch|swarm wave|swarm waves|swarm call|swarm calls|swarm dispatch|swarm orchestration|fleet dispatch|agent lifecycle|agent lifecycles|agent roster|agent rosters|kumitate'
+scope_norm() { # VALUE -> lowercase, punctuation runs -> single spaces, trimmed
+  local v=$1
+  v=$(printf '%s' "$v" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' \
+        | sed -E 's/^["\x27\x60]//;s/["\x27\x60]$//')
+  printf '%s' "$v" | tr 'A-Z' 'a-z' \
+    | LC_ALL=C sed 's/[^a-z0-9][^a-z0-9]*/ /g;s/^ //;s/ $//'
+}
+scope_hit() { # NORMED LIST(|-separated phrases) -> first phrase contained, or ''
+  local v=" $1 " p
+  local IFS='|'
+  for p in $2; do
+    if [[ $v == *" $p "* ]]; then printf '%s' "$p"; return 0; fi
+  done
+  printf ''
+}
+scope_decl_screen() { # screens SEC_BODY[Meta]; emits SCOPE_* warn per refused row
+  local row mk mv hit id prov
+  while IFS= read -r row; do
+    [[ -z $row ]] && continue
+    mk='' mv=''
+    if [[ $row =~ ^[[:space:]]*\|[[:space:]]*([A-Za-z_][A-Za-z0-9_-]*)[[:space:]]*:?[[:space:]]*\|[[:space:]]*([^|]*)\| ]]; then
+      mk=${BASH_REMATCH[1]}; mv=${BASH_REMATCH[2]}
+    elif [[ $row =~ ^[[:space:]]*([A-Za-z_][A-Za-z0-9_-]*)[[:space:]]*:[[:space:]]*(.*)$ ]]; then
+      mk=${BASH_REMATCH[1]}; mv=${BASH_REMATCH[2]}
+    else
+      continue
+    fi
+    mk=$(printf '%s' "$mk" | tr 'A-Z' 'a-z')
+    [[ $mk == domain || $mk == scope ]] || continue
+    mv=$(scope_norm "$mv")
+    [[ -n $mv ]] || continue
+    for prov in bounty kengaku kumitate; do
+      case $prov in
+        bounty)   id=SCOPE_BOUNTY_ABSORBED        hit=$(scope_hit "$mv" "$SCOPE_BOUNTY") ;;
+        kengaku)  id=SCOPE_MODEL_QUALITY_ABSORBED hit=$(scope_hit "$mv" "$SCOPE_KENGAKU") ;;
+        kumitate) id=SCOPE_ORCHESTRATION_ABSORBED hit=$(scope_hit "$mv" "$SCOPE_KUMITATE") ;;
+      esac
+      [[ -n $hit ]] && emit_finding "$id" warn scope \
+        "declared=$mk match=$hit route=$prov action=report-never-absorb"
+    done
+  done <<<"${SEC_BODY[Meta]-}"
+}
+
 verify_record() {
   local record=$1
   # Honor the verification-time environment; otherwise retain the selected root.
@@ -625,6 +718,13 @@ verify_record() {
   fi
   if [[ $WINDOW_EXTERNAL -eq 1 && $APPROVAL_GRANTED -eq 0 ]]; then
     emit_finding EXTERNAL_WITHOUT_APPROVAL crit approval "external/live window without approval state=approved|granted"
+  fi
+
+  # Declared-scope refusal (r12): a ## Meta domain/scope row naming a refused
+  # province (kasegi/kengaku/kumitate) drifts; no declaration row = the old
+  # bytes exactly.
+  if [[ $HAS_META -eq 1 ]]; then
+    scope_decl_screen
   fi
 
   scan_secrets "$record"
@@ -861,9 +961,11 @@ json_unescape() { # RAW JSON string body -> decoded bytes on stdout
   printf '%s' "$out"
 }
 
-count_nl() { # STRING -> newline count. Command substitution strips trailing
-  local n=${1//[!$'\n']/}  # newlines, so a $(…|tr|…) count of an all-newline
-  printf '%d' "${#n}"      # match context returns empty; expansion does not.
+count_nl() { # STRING -> newline count (linear in bytes). The previous
+  local n                        # negated-class expansion was quadratic in the
+  n=$(printf '%s' "$1" | tr -dc '\n' | wc -c)  # string length — measured
+  n=${n//[[:space:]]/}           # >60 s at the 8 MiB source the r12 cap
+  printf '%d' "$n"               # admits; tr|wc -c is ~3 ms there.
 }
 
 line_probe() { # HAY NEEDLE -> 1-based line of first needle occurrence; rc=1 none
@@ -925,6 +1027,16 @@ claim_source_path() { # SRC -> rc 0: CLAIM_SRC_PATH; rc 1: CLAIM_REFUSE + CLAIM_
   if [[ ! -f $canon || ! -r $canon ]]; then
     CLAIM_REFUSE=CLAIM_SOURCE_MISSING
     CLAIM_REFUSE_OBS="not a readable regular file under allowed roots"
+    return 1
+  fi
+  # Cap before the read: this single chokepoint serves claims, chain and
+  # verify-all's declared-claims resolution, so all three refuse alike. An
+  # oversized source is refused unread — never slurped, never partially
+  # searched.
+  local size
+  if size=$(file_size_bytes "$canon") && (( size > SOURCE_READ_MAX_BYTES )); then
+    CLAIM_REFUSE=CLAIM_SOURCE_READ_TOO_LARGE
+    CLAIM_REFUSE_OBS="size=$size cap=$SOURCE_READ_MAX_BYTES exceeded (not read)"
     return 1
   fi
   CLAIM_SRC_PATH=$canon
@@ -1285,6 +1397,7 @@ chain_refuse_id() { # CLAIM_* refusal -> CHAIN_* finding id
     CLAIM_SOURCE_SESSION) printf 'CHAIN_SOURCE_SESSION' ;;
     CLAIM_SOURCE_EPHEMERAL) printf 'CHAIN_SOURCE_EPHEMERAL' ;;
     CLAIM_SOURCE_OUT_OF_CORPUS) printf 'CHAIN_SOURCE_OUT_OF_CORPUS' ;;
+    CLAIM_SOURCE_READ_TOO_LARGE) printf 'CHAIN_SOURCE_READ_TOO_LARGE' ;;
     *) printf 'CHAIN_SOURCE_MISSING' ;;
   esac
 }
@@ -2233,6 +2346,7 @@ PINFIX
 |---|---|
 | window | loopback |
 | fetch | none |
+| domain | deep-research method |
 ## Question
 Does a dangling sweep binding drift a composed verdict the four r6 sections pass?
 ## Sources
@@ -4087,6 +4201,123 @@ EOF
   tsetup drift-no-path 2 --drift
   tsetup pin-unwritable 2 --pin "$WORK/no-such-dir/base.txt"
   tsetup pin-drift-exclusive 2 --pin "$WORK/a.txt" --drift "$WORK/b.txt"
+
+  # ---- r12: declared-scope refusal screen (cases 86-92) ----
+  # Base record is CLEAN (window loopback, one source/chain/claim/rejection).
+  # Each fail fixture adds ONE ## Meta declaration row naming exactly one
+  # refused province; the pass fixtures pin both declaration grammars
+  # (table row and `key: value` line), prose-not-scanned, and the B-archive
+  # vocabulary declared in-province (near-miss). Appended after case 85 so
+  # cases 1-85 keep their numbers.
+  write_rec scope-base <<'EOF'
+# research-record v1
+## Meta
+| key | value |
+|---|---|
+| window | loopback |
+## Question
+Do the local claims resolve?
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | lib/primary.md:1 |
+## Chain
+| hop | from | to | status | notes |
+|---|---|---|---|---|
+| 1 | C1 | S1 | resolved | direct |
+## Claims
+| id | kind | text | pointer | status |
+|---|---|---|---|---|
+| C1 | observation | primary file has line1 | S1 | verified |
+## Rejections
+| id | ref | reason | flip |
+|---|---|---|---|
+| R1 | n/a | none-recorded | a source row would flip this |
+EOF
+  printf 'line1 primary material\nline2\n' >"$WORK/lib/primary.md"
+  add_scope_row() { sed "s#^| window | loopback |#| window | loopback |\n| $2 | $3 |#" \
+    "$WORK/scope-base.md" >"$WORK/$1.md"; }
+  add_scope_row scope-fail-bounty domain 'bounty program scope and claim packages'
+  add_scope_row scope-fail-model-quality domain 'model-quality evaluation claims'
+  add_scope_row scope-fail-orchestration scope 'orchestration and multi-agent dispatch'
+  add_scope_row scope-pass-declared-table domain 'deep-research method'
+  add_scope_row scope-pass-near-miss domain 'multi-agent knowledge; specialist evaluation of knowledge bases'
+  sed "s#^| window | loopback |#| window | loopback |\nscope: deep-research method#" \
+    "$WORK/scope-base.md" >"$WORK/scope-pass-declared-line.md"
+  sed 's#^Do the local claims resolve?$#Prose decoy: bounty-program scope, model-quality evaluation claims and orchestration/dispatch of agents appear only here in prose, never in a ## Meta declaration row.#' \
+    "$WORK/scope-base.md" >"$WORK/scope-pass-prose-decoy.md"
+  tcase scope-fail-bounty 1 'RESEARCH_GATE: DRIFT' \
+    'FINDING SCOPE_BOUNTY_ABSORBED severity=warn surface=scope' \
+    'declared=domain match=bounty program route=bounty' 'findings=1 drift=1'
+  tcase scope-fail-model-quality 1 'RESEARCH_GATE: DRIFT' \
+    'FINDING SCOPE_MODEL_QUALITY_ABSORBED severity=warn surface=scope' \
+    'declared=domain match=model quality route=kengaku' 'findings=1 drift=1'
+  tcase scope-fail-orchestration 1 'RESEARCH_GATE: DRIFT' \
+    'FINDING SCOPE_ORCHESTRATION_ABSORBED severity=warn surface=scope' \
+    'declared=scope match=orchestration route=kumitate' 'findings=1 drift=1'
+  tcase scope-pass-declared-table 0 'RESEARCH_GATE: CLEAN (findings=0 drift=0'
+  tcase scope-pass-declared-line 0 'RESEARCH_GATE: CLEAN (findings=0 drift=0'
+  tcase scope-pass-near-miss 0 'RESEARCH_GATE: CLEAN (findings=0 drift=0'
+  tcase scope-pass-prose-decoy 0 'RESEARCH_GATE: CLEAN (findings=0 drift=0'
+
+  # ---- r12 2a: banner contract (cases 93-94) ----
+  # The version literal is pinned at two sites (the variable and this case),
+  # so renaming VERSION takes a deliberate second edit. The mutant copy proves
+  # the banner is drift-bearing: the version token is not a key=value field,
+  # so the report names the line id GATE.
+  cp "$WORK/pass-control.md" "$WORK/banner-pin.md"
+  tcase banner-pin 0 'research-gate v2 ' 'mode=verify'
+  sed 's/^VERSION=.*/VERSION=v9/' "$SELF" >"$WORK/gate-banner-mutant.sh"
+  tdrift drift-banner-version 1 "$WORK/pin-clean.baseline" \
+    "DRIVER=$WORK/gate-banner-mutant.sh" 'GATE_DRIFT: GATE'
+
+  # ---- r12 2b: 8 MiB source-read cap (cases 95-98) ----
+  # Boundary pair straddles the first refused size (8388608 reads, 8388609
+  # refuses). The over-cap span sits on line 1: a partial read or post-read
+  # clamp would report observed=supported, so observed=refused at=- proves the
+  # source was never searched. Generated in $WORK at run time — no binary is
+  # committed.
+  mkdir -p "$WORK/claimsrc"
+  cap_span='size cap boundary span holds'
+  { printf '%s\n' "$cap_span"; head -c $((SOURCE_READ_MAX_BYTES - ${#cap_span} - 1)) /dev/zero | tr '\0' a; } >"$WORK/claimsrc/cap-at.md"
+  { printf '%s\n' "$cap_span"; head -c $((SOURCE_READ_MAX_BYTES - ${#cap_span})) /dev/zero | tr '\0' a; } >"$WORK/claimsrc/cap-over.md"
+  printf '{"id":"Z1","source":"claimsrc/cap-at.md","span":"%s","expect":"supported"}\n' "$cap_span" >"$WORK/claims-cap-at.jsonl"
+  printf '{"id":"Z2","source":"claimsrc/cap-over.md","span":"%s","expect":"supported"}\n' "$cap_span" >"$WORK/claims-cap-over.jsonl"
+  write_rec chain-cap-at <<EOF
+# research-record v1
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | claimsrc/cap-at.md |
+## Chain
+| hop | from | to | status | anchor_kind | anchor |
+|---|---|---|---|---|---|
+| 1 | C1 | S1 | resolved | quote | $cap_span |
+EOF
+  write_rec chain-cap-over <<EOF
+# research-record v1
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | claimsrc/cap-over.md |
+## Chain
+| hop | from | to | status | anchor_kind | anchor |
+|---|---|---|---|---|---|
+| 1 | C1 | S1 | resolved | quote | $cap_span |
+EOF
+  tclaims claims-cap-at 0 'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=1/1' \
+    'CLAIM id=Z1 expected=supported observed=supported source=claimsrc/cap-at.md at=line:1 verdict=match'
+  tclaims claims-cap-over 1 'RESEARCH_GATE: DRIFT' \
+    'FINDING CLAIM_SOURCE_READ_TOO_LARGE severity=warn surface=claims' \
+    'CLAIM id=Z2 expected=supported observed=refused source=claimsrc/cap-over.md at=- verdict=refused' \
+    'VERDICT_BEARING_CLAIMS=0/1'
+  tchain chain-cap-at 0 'RESEARCH_GATE: CLEAN' 'RESOLVED_HOPS=1/1' \
+    'CHAIN hop=1 status=resolved observed=verified source=claimsrc/cap-at.md' \
+    'at=line:1 verdict=match'
+  tchain chain-cap-over 1 'RESEARCH_GATE: DRIFT' \
+    'FINDING CHAIN_SOURCE_READ_TOO_LARGE severity=warn surface=chain' \
+    'CHAIN hop=1 status=resolved observed=refused source=claimsrc/cap-over.md anchor=- at=- verdict=refused' \
+    'RESOLVED_HOPS=0/1'
 
   if [[ $failures -eq 0 ]]; then
     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases)\n' "$cases"

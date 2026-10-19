@@ -468,7 +468,31 @@ Rows enter only through a round that demonstrates the capability running (`AXES.
 
 ## Saturation
 
-The lane's saturation line and stagnation window N are to be declared by the lane on its next round per `AXES.md` §The stagnation nudge; not asserted by this conformance change.
+Saturation line: **8.0 on this Scorecard's six axes** (0–10 scale; a threshold,
+never a score). Rationale: fleet precedent `../souji-shokunin/SCORECARD.md:44`
+("Saturation line: 8 per axis; stagnation window 3 rounds"); this lane has no
+rubric of its own that derives 8.0, and none is claimed.
+
+Stagnation window: **N = 3 landed lane rounds** — rounds that produced an
+admitted report, never dispatch attempts (the 2026-10-19 key-1/2 interruptions
+and key-3/4/5 402s produced zero reports; LOG.md round-12 opening). Declared
+prospectively at round 12 (kotoba reading, `../SCORECARD.md:172-174`): the
+Capabilities table entered this file at the 2026-10-16 conformance rollout and
+held no row before this round, so the clock starts at this declaration round;
+no retroactive window is claimed.
+
+Computability (fail closed) — the `AXES.md` §The stagnation nudge predicate is
+decidable from this file alone:
+1. "Every axis sits at or above 8.0": operability is the only scored axis — 3
+   (round 1, SCORECARD.md:7); the other five are deliberately unscored
+   (:9-13; rounds 2–11 all refuse a scalar score). An unscored axis is NOT
+   counted as at/above the line, so condition 1 fails.
+2. "No capability entered within N=3": three capability rows entered this
+   round (below), so the window resets at round 12.
+Nudge verdict: **dormant** — the waiver does not apply, the lowest-axis
+obligation stands, and by the only recorded score the lowest non-retired axis
+is operability, which round 12 claim 2 works. This declaration creates or
+changes no axis score and asserts no axis saturated.
 
 ## Planned — round 12 (pre-registered 2026-10-19, goal turn 1)
 
@@ -478,4 +502,114 @@ Wave: one 64-seat AgentSwarm call, opencode-go key 1 / deepseek-v4.1-flash (curr
 2. **operability — r2-carried residuals**: (a) `VERSION=research-gate-r1` corrected to a mode-agnostic version string with a selftest case pinning the banner; (b) claim/chain source reads gain a size cap (8 MiB default; oversized source → named refusal `SOURCE_READ_TOO_LARGE`, refused never partially read) with just-under/over boundary fixtures. Observable: selftest grows by the landed case count; every prior case byte-identical (cmp against `corpus/evidence/pin-r8-20261016T033757Z-selftest.log`); `--drift` vs the r8 baseline stays `none` or a re-pin lands with a recorded reason.
 3. **calibration — close the r11 open finding**: A-r9.md row C3 citation `:76` → `:86` (span re-verified at `:86` 2026-10-19); `hardening-r10.md` ledger row dispositioned closed; append-only errata to `audit-r11.md` and the ledger naming the superseded text. Observable: the ledger's one open finding → 0 open; verify-all on A-r9 CLEAN at the corrected bytes; no other A/B/C-r9 row carries the same cite-vs-span mismatch (mechanically swept).
 
-Conformance (not an axis claim): §Saturation below declares the line + window the 2026-10-16 rollout deferred to this round.
+Conformance (not an axis claim): §Saturation (SCORECARD.md:469) is amended at this landing to declare the line + window the 2026-10-16 rollout deferred to this round; the declaration creates or changes no axis score.
+
+## Round 12 verdict — 2026-10-19 (goal wave; evidence commits this landing)
+
+Selected claims (pre-registered, SCORECARD.md §Planned — round 12): coverage =
+scope-refusal teeth (the r1 landing requirement); operability = the two
+r2-carried residuals (banner + source-read size cap); calibration = close the
+r11 open finding. Wave: one 64-seat AgentSwarm call on **opencode-go-6 /
+deepseek-v4.1-flash** (operator directive: stick with the first working key;
+keys 1–2 interrupted pre-report, keys 3/4/5 dead 402 insufficient funds — all
+recorded in LOG.md), 64/64 seat reports. Reports: the wave output file
+(session tool-results, 64 seats); consolidated verdicts this block. Seat
+roster: the round-12 report (`.ufo/reports/round-12/chousa.md`) — the r11
+correction (seat counts unverifiable without rosters) is satisfied.
+
+**Before** (gate `46f5ddb3…`, re-measured 2026-10-19 after the /tmp quota
+unblock): `grep -c SCOPE_ tools/research-gate.sh` → 0 (no scope machinery);
+`VERSION=research-gate-r1` at `tools/research-gate.sh:227`; no size cap on
+claim/chain source reads; the r11 audit's one open finding live (A-r9.md C3
+cites `A:76`, span verified at `A:86`); selftest `PASS (85 cases)`;
+`GATE_DRIFT: none` vs the r8 baseline; r1 observable `3/3`.
+
+**After** (gate `91a01695…`, selftest `PASS (98 cases)` = 85+13, cases 1–85
+byte-identical per `cmp` against `pin-r8-…-selftest.log`):
+- scope screen: `scope_decl_screen` reads only `## Meta` rows keyed
+  `domain`/`scope` (table + `key: value` forms); refused-province declarations
+  emit `SCOPE_BOUNTY_ABSORBED` / `SCOPE_MODEL_QUALITY_ABSORBED` /
+  `SCOPE_ORCHESTRATION_ABSORBED` at warn (drift, exit 1), one finding per
+  matched province per declaration row; cases 86–92 (3 provinces, both clean
+  grammars, declared near-miss, prose decoy). Observable:
+  `grep -c 'id=SCOPE_' tools/research-gate.sh` → 3 (the three emitting
+  assignments; the pre-registered bare `grep -c SCOPE_` over-counts header/
+  fixture mentions after documentation — amendment recorded, conformance
+  reviewer D3); canary: `verify B-r9 --root ..` → 0 `SCOPE_` findings.
+- banner: `VERSION=v2` (revision token alone; six banner sites), pinned by
+  cases 93–94 (literal + `GATE_DRIFT: GATE` mutant arm). Forced consequence,
+  pre-registered: `--drift` vs the r8 baseline reads `GATE_DRIFT: GATE
+  record_sha256` exit 1 (version token + the pin fixture's new clean domain
+  row, both unmasked by design); ONE recorded re-pin at final bytes:
+  `corpus/evidence/gate-baseline-r12-20261019T115519Z.json`, `GATE_DRIFT:
+  none` at pin time.
+- size cap: `SOURCE_READ_MAX_BYTES` = 8 MiB (inclusive) at the shared
+  `claim_source_path` chokepoint (claims + chain + verify-all claims binding);
+  `CLAIM_SOURCE_READ_TOO_LARGE` / `CHAIN_SOURCE_READ_TOO_LARGE` (warn),
+  refused before any read — the pre-registered bare id `SOURCE_READ_TOO_LARGE`
+  was namespaced to the mode idiom (amendment recorded, seats 18/36); cases
+  95–98 straddle 8388608/8388609 with the over-cap span on line 1 (a partial
+  read would have matched — `observed=refused at=-` proves it was never
+  searched). Companion deviation (recorded): `count_nl` was quadratic
+  (>60 s at 8 MiB — the cap would be operability theatre); now linear via
+  `tr -dc '\n' | wc -c` (~3 ms), behavior-identical.
+- A-r9 C3: pointer `:76` → `:86` (one cell; new sha `dfd2ae1a…` exactly as
+  the wave predicted); post-fix `verify-all` CLEAN (receipt
+  `scope-r12-20261019T115519Z-A-fix.log`); parent re-sweep 19/19; the two
+  A-derived controls stay byte-copies of the pre-fix base (desync note in
+  `controls/README.md`); append-only errata to `audit-r11.md` and
+  `hardening-r10.md` §6 (rows 9/10/56/70 dispositioned; 71 rows now
+  38·23·7·0·3, queue 26); the class (pointer-line vs span-line) stays a named
+  non-coverage.
+- battery: r1 `3/3`; selftest PASS; fixture battery (A/B/C-r9, r6 trio, r7
+  pair, claims-r2, chain-r3, sweeps-r5, six controls) byte-identical vs the
+  pre-round gate modulo the masked banner/ts (receipt
+  `scope-r12-20261019T115519Z-battery.log`); zero network throughout.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | the r1 scope-teeth requirement lands: declared out-of-province scope is verdict-bearing (0 emitting sites → 3; 7 selftest cases; B-archive canary clean); A-r9's corpus is corrected (19/19 cite-vs-span) |
+| operability | **improved** | selftest 85 → 98 with 1–85 byte-identical; the two r2-carried residuals land (banner pinned by a drift arm; 8 MiB cap with boundary + never-partially-read teeth); `count_nl` linear; re-pin battery green at HEAD |
+| freshness | **improved narrowly** | the lane's behavioral baseline is re-pinned at the round's final bytes with the reason recorded; the stale A-r9 pin cascade (2 READMEs, 2 notes, index) is corrected same-commit |
+| depth | **improved** | `corpus/knowledge/scope-refusal-r12.md` (contract, phrase lists, not-triggers, disposition rule, limits) + `gate-baseline-r12.md` (re-pin reason) |
+| calibration | **unchanged (debt closure, per the wave reviewers)** | the finding closed is bookkeeping the r11 audit already surfaced; the gate stays blind to the class (pointer-line vs span-line), now a named non-coverage; claiming "improved" here would double-count the audit's discernment (seats 45/56) |
+| adjacency | **unchanged** | the screen ROUTES to kasegi/kengaku/kumitate rather than absorbing; zero network; fleet research corpus read-only; no sibling files touched (the MANIFEST/L0 appends are integrator-queue rows, recorded below) |
+
+Honest residuals (named by the wave, dispositioned): solo verify-claims/
+chain/sweeps/integrity modes lack scope teeth (enforcement via verify/
+verify-all only); declaration-only detection cannot catch undeclared absorbed
+scope; negations unparsed; record + claims-surface reads uncapped (row 9
+partial); unmeasurable-size stat failure silently bypasses the cap
+(documented); the pin baseline covers only the canonical invocation (a
+pattern-widening regression outside the clean-path fixture stays invisible —
+the r12 pin fixture's domain row closes this for the screen itself).
+Admission: **ADMIT** (coverage/operability/freshness/depth improved;
+calibration unchanged as debt-closure; none harmed). No scalar score.
+Learning trends: expansion **improved** (two knowledge notes, three
+capability rows, seven receipt files), quality **improved** (corrections
+sweep across SKILL/corpus README/notes; errata append-only), discernment
+**unchanged** (L2 reviews remain author-lane evidence; no non-author
+spot-check exists). Round 13 registered: closure of the last r2 residual —
+in-root hardlink canonicalization (ledger row 8) — plus receipt-runbook
+automation if the operator answers the re-filed receipt-identity L0 row.
+
+## Capabilities
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| scope-refusal screening | refuses declared out-of-province scope (`## Meta` domain/scope rows) with three named warn findings, exit 1 | selftest cases 86–92; `corpus/knowledge/scope-refusal-r12.md` | 12 |
+| source-read size cap | refuses claim/chain sources over 8 MiB before any read, never partially searched | selftest cases 95–98 | 12 |
+| banner drift contract | the version token is non-volatile; renaming it drifts the baseline (`GATE_DRIFT: GATE`) | selftest cases 93–94 | 12 |
+
+## Planned — round 13 (pre-registered 2026-10-19)
+
+Wave per the curriculum (loop 1, round 2): one 64-seat AgentSwarm call,
+**opencode-go-6 / deepseek-v4.1-flash** (standing operator directive: stick
+with key 6 until it fails). Registered claim: **operability/coverage — in-root
+hardlink canonicalization** (ledger row 8, the last open r2 residual): a
+claims/chain source reachable in-root via a hardlink alias is canonicalized
+to its inode-true path (or refused), so the r2 critic's bypass class closes;
+before: `grep -c samefile tools/research-gate.sh` → 0 with a demonstrated
+bypass; after: bypass refused/canonicalized + symmetric selftest fixtures +
+hold battery green. Secondary (only if the operator answers the L0 row):
+receipt-runbook automation. Seats: 64, roster logged in the round-13 report.

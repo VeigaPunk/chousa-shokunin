@@ -295,3 +295,5 @@ r1–r6 limits the previous notes name.
   scratch (declared ephemeral, cleaned) are its only outputs. A later revision
   that changes the extraction rule should re-derive this note's after-state
   from the record bytes and the fixture README's contract.
+
+Round-12 disposition (2026-10-19, append-only): any r2-carried residual this note names — the banner `research-gate-r1` and the absent source-read size cap — landed at round 12 (`VERSION=v2`, r12 baseline re-pinned, `knowledge/gate-baseline-r12.md`; 8 MiB cap `CLAIM_SOURCE_READ_TOO_LARGE`/`CHAIN_SOURCE_READ_TOO_LARGE` at the shared chokepoint). In-root hardlinks remain carried. This note's own claims are otherwise unchanged.

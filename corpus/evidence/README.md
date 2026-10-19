@@ -599,6 +599,12 @@ and recorded verbatim in the baseline header.
 
 | fact | value |
 |---|---|
+| path | `corpus/evidence/gate-baseline-r12-20261019T115519Z.json` |
+| --- | --- |
+| reason | round-12 re-pin: VERSION v2 banner contract + pin-fixture clean domain row (`knowledge/gate-baseline-r12.md`); r8 baseline kept as history — drift vs it names `GATE record_sha256` exit 1 by design |
+| written by | `bash tools/research-gate.sh --pin corpus/evidence/gate-baseline-r12-20261019T115519Z.json` → `GATE_PIN: ok`, exit 0 |
+| verified | immediate `--drift` re-run → `GATE_DRIFT: none` exit 0 |
+
 | path | `corpus/evidence/gate-baseline-r8-20261016T033757Z.json` |
 | baseline sha256 | `1c81a6cb…` (2988 B, 19 lines) |
 | header `pinned_ts` | `2026-10-16T03:38:57Z` |
@@ -620,6 +626,9 @@ behavior) while `ts`/`gate_sha256` are `<V>`.
 | Receipt (sha256) | Shows | Key result |
 |---|---|---|
 | `pin-r8-20261016T033757Z-selftest.log` (`6334240b…`) | full `--selftest`; case-line stability vs the round-7 receipt | `RESEARCH_GATE_SELFTEST: PASS (85 cases)`, exit 0; the first 74 case lines are **byte-identical** to the r7 receipt (`cmp` YES); new cases 75-85 = `pin-clean` / `drift-clean` / `drift-volatile-churn` / `drift-one-field-mutant` / `drift-missing` / `drift-malformed` / `drift-volatile-list` / `setup-pin-no-path` / `setup-drift-no-path` / `setup-pin-unwritable` / `setup-pin-drift-exclusive` |
+| `scope-r12-20261019T115519Z-selftest.log` | r12 acceptance: `PASS (98 cases)`; cases 1–85 `cmp` byte-identical vs `pin-r8-…-selftest.log` |
+| `scope-r12-20261019T115519Z-A-fix.log` | A-r9 post-fix `verify-all` CLEAN at `dfd2ae1a…` (run without `--json`; manifest untouched) |
+| `scope-r12-20261019T115519Z-drift-r8.log` | `--drift` vs the r8 baseline → `GATE_DRIFT: GATE record_sha256`, exit 1 (recorded reason) |
 | `pin-r8-20261016T033757Z-pin.log` (`40abd23d…`) | before-state (0 baselines committed; r7 gate rejects both flags), the committed pin, header + body verbatim, hermetic re-pins, CLI refusals | `GATE_PIN: ok` exit 0; hermetic: pin1 = pin2 bodies and pin1 = pin3 (cut after 75 s of live churn) bodies are `cmp` **IDENTICAL**; refusals: no-path ×2, both flags, unwritable dir — all exit 2 |
 | `pin-r8-20261016T033757Z-drift.log` (`051695ee…`) | drift on the committed baseline, churn absorption, six baseline controls, the mutant-gate arm | `GATE_DRIFT: none` exit 0; after 75 s `none` exit 0; mutant severity → `GATE_DRIFT: severity` exit 1; missing/empty/junk/marker-deleted → exit 2; volatile-list rewrite → `GATE_DRIFT: volatile_fields` exit 1; the sweeps-silently-skipped gate → exit 1 naming `-REJECTIONS_OK -hit -rejections-ok anchor-missing native rejections tallies tally` |
 | `pin-r8-20261016T033757Z-live.log` (`9829ed10…`) | cross-round no-harm, r1 observable, zero network, manifest untouched | 14/14 mode pairs byte-identical (ts-normalized) with matching rc; `VERDICT_BEARING_EXPORTS=3/3`; strace 3759 trace lines, **0 network syscalls**; `verify-all-manifest.jsonl` sha unchanged (`9620946f…`) |
@@ -704,7 +713,7 @@ Revision under test: `tools/research-gate.sh` sha256
 
 | artifact | sha256 |
 |---|---|
-| `corpus/fixtures/archives-r9/A-r9.md` | `338918fc…` |
+| `corpus/fixtures/archives-r9/A-r9.md` | `dfd2ae1a…` (round-12 revision; pre-fix `338918fc…`) |
 | `corpus/fixtures/archives-r9/B-r9.md` | `abfa5290…` |
 | `corpus/fixtures/archives-r9/C-r9.md` | `97be0e69…` |
 | `corpus/fixtures/claims-r9.jsonl` | `f6f0d1ab…` |

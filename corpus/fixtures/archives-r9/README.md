@@ -12,7 +12,7 @@ round-8 admitted gate), from the lane root with `--root ..`, on 2026-10-16.
 
 | record | source archive (read-only) | source sha256 | record sha256 |
 |---|---|---|---|
-| `A-r9.md` | `research/deep-research-2026-09-28/A-shokunin-tradition.md` | `9033857d4625555c7b778dfad6df80e3e1b24ed8bffa3fee2fd445b9c5540b85` | `338918fcb8ed5d6c5f15dc64e5eb8a3ae7a005d51b5c03e7e377c1dab9173c78` |
+| `A-r9.md` | `research/deep-research-2026-09-28/A-shokunin-tradition.md` | `9033857d4625555c7b778dfad6df80e3e1b24ed8bffa3fee2fd445b9c5540b85` | `dfd2ae1a149b7c87f8ff399522f99c3461570c5ba06ba9d6b18254b15a3c3b9d` (round-12 revision: row C3 pointer `:76`→`:86`; pre-fix `338918fc…`) |
 | `B-r9.md` | `research/deep-research-2026-09-28/B-multiagent-knowledge.md` | `6d8dbddd3e2d2f47dcb153c5a3347cc6321db4afc72cf07da40f0f7fe5022006` | `abfa5290deda4d1708ba97028853b8a770f16ecda6f377dddda53d49cb2e3e86` |
 | `C-r9.md` | `research/deep-research-2026-09-28/C-rank-taxonomy.md` | `e48fe70ff92055c217ac6ca6ce68e403aa5689fee8717f3bd0ccf5badc92321b` | `97be0e69ccfb8a701bc5556f738553be8e7179c9b41110fe61c4a3cab4f2d1da` |
 

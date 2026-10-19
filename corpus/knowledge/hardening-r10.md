@@ -408,3 +408,61 @@ disposition of what rounds 2–10 already named.
 - This note is the round-11 audit's starting map: the controls map (§1), the
   audited exemption set (§2), and the disposition ledger with its 30-item
   queue (§3).
+## 6. Errata — append-only (round 12, 2026-10-19)
+
+E1 — four rows dispositioned by round-12 work, none by a gate check where the
+row names detection. Superseded cells (quoted, with their §3 line):
+
+- Row 9 (`:204`) "no size cap on source reads … carried … no size cap in the
+  gate" → **closed(r12, partial)**: claim/chain source reads are now capped at
+  8 MiB (`SOURCE_READ_MAX_BYTES`; `CLAIM_SOURCE_READ_TOO_LARGE` /
+  `CHAIN_SOURCE_READ_TOO_LARGE`, refused before any read, at the shared
+  `claim_source_path` chokepoint, selftest cases 95–98). The residual the cell
+  also names — record reads (`load_sections`, `scan_secrets`) and the
+  verify-all claims-surface binding — stay uncapped and are carried here in
+  the closure text, not a new row: a claims-surface read over the cap degrades
+  to `VERIFY_ALL_CLAIMS_UNRESOLVED` by construction, and record reads are
+  bounded by the operator's own corpus.
+- Row 10 (`:205`) "banner still reads `research-gate-r1` (cosmetic) …
+  `VERSION=research-gate-r1` at `tools/research-gate.sh:227`" → **closed(r12)**:
+  `VERSION=v2` (revision token alone; the r1–r11 stutter removed from all six
+  banner sites), pinned by selftest cases 93–94 including a drift-mutant arm
+  (`GATE_DRIFT: GATE`); the r8 behavioral baseline was re-pinned at the final
+  bytes as `corpus/evidence/gate-baseline-r12-20261019T115519Z.json` with the
+  reason recorded (see `knowledge/gate-baseline-r12.md`).
+- Row 56 (`:281`) "**finding** (still live at `338918fc…`; 18/19 re-derived
+  here; fix-or-absorb pending, fixtures seat)" → **closed(r12,
+  fixture-correction; no check added)**: A-r9.md line 50 pointer `:76` → `:86`
+  (one cell; 7210 B / 73 lines unchanged); record sha `338918fc…` →
+  `dfd2ae1a…`; post-fix sweep 19/19, `verify-all` CLEAN at the corrected
+  bytes. The class the row's second clause names — no mode pairs a row's
+  `path:line` with its span's occurrence line — stays true and remains a
+  named non-coverage; the round-11 queue's "decide whether the class ever
+  deserves a gate check" is answered "not this round". Closure must not be
+  read as detection. The two A-derived controls stay byte-copies of the
+  pre-fix base (`controls/README.md` carries the desync note).
+- Row 70 (`:300`) "scope-refusal finding IDs never landed … operator" →
+  **closed(r12)**: the structure check screens a record's DECLARED scope
+  (`## Meta` `domain`/`scope` rows only — both table and `key: value` forms;
+  prose never keyword-scanned) and emits `SCOPE_BOUNTY_ABSORBED` /
+  `SCOPE_MODEL_QUALITY_ABSORBED` / `SCOPE_ORCHESTRATION_ABSORBED` at warn
+  (drift, exit 1), one finding per matched refused province per declaration
+  row; selftest cases 86–92 pin the three provinces, both clean grammars,
+  the near-miss declared vocabulary, and the prose decoy.
+
+Counts at this revision (71 rows, numbering unchanged): **by-design 38 ·
+carried 23 · closed 7 · finding 0 · operator 3**; round-11 queue **30 → 26**
+(items 9, 10, 56, 70 out). This supersedes §3.9's "Counts (71 rows):
+by-design 38 · carried 25 · closed 3 · finding 1 · operator 4" and its
+30-item queue line; §3.9's other reconciliation stands. Revision trail:
+`f5dc8889…` (interim) → `3845709b…` (71 / 38·25·3·1·4 / 30) → this revision
+(71 / 38·23·7·0·3 / 26).
+
+This file's sha moves off `3845709b…`; sites naming it must cite this
+revision or carry a superseded mark: `audit-r11.md` (`:9`, `:307`),
+`corpus/README.md:17`, `evidence/README.md:853`, `audit-r11.md:80,152,224`
+(D5 lesson reconciliation now maps to this revision). Lessons
+`2026-10-16-archive-scale-controls-and-ledger.md` (`:17`, `:165`, `:203`) and
+`2026-10-16-verifying-conversion-not-original.md` (`:19`) keep pre-fix pins as
+round-dated history and are superseded by this erratum. Gate revision
+`91a01695…` (was `46f5ddb3…`).

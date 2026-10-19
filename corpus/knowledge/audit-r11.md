@@ -304,8 +304,41 @@ parent lands the D2–D5 records corrections and the D1 regeneration; (4) the
 | gate (unchanged; == HEAD blob) | `46f5ddb39d5fafa220fb584121dba2f4a15e071a91fa42728849f3c7567c6ccd` |
 | baseline `gate-baseline-r8-20261016T033757Z.json` | `1c81a6cb34543bb99c8797a7a0dd8dfbd1f13e3d86ec5b81aa0c7249381a8426` (2988 B) |
 | manifest `verify-all-manifest.jsonl` (8 lines) | `78627e6da14c4bcf1b49c8725a763b9c6ed998b56f03460c1c7d843c15d0814d` |
-| ledger `hardening-r10.md` (71 rows / queue 30) | `3845709bae62603aa67b8fc56e15c55b20dd0673b0c9f83d160806196a5018d5` |
+| ledger `hardening-r10.md` (71 rows / queue 30) | `3845709bae62603aa67b8fc56e15c55b20dd0673b0c9f83d160806196a5018d5` (superseded round 12 by `46534902…`, §6 erratum: 71 / 38·23·7·0·3 / queue 26) |
 | `SKILL.md` worktree / HEAD blob | `9a6d2719…` / `66277c8a…` (uncommitted; D4) |
-| records A/B/C | `338918fc…` / `abfa5290…` / `97be0e69…` |
+| records A/B/C | `dfd2ae1a…` (A, round-12 revision; pre-fix `338918fc…`) / `abfa5290…` / `97be0e69…` |
 | archive sources A/B/C | `9033857d…` / `6d8dbddd…` / `e48fe70f…` |
 | control shas | `5dedb73b…`(+`0edb78ee…`) · `e3490cf4…` · `b0d488aa…` · `69b7b08f…` · `b24be0f0…` · `21d77e6c…`; controls README `23f47722…` |
+## Errata (append-only; round 12, 2026-10-19)
+
+F1 / the §3 carried bullet is closed by fixture correction. Superseded lines
+(measurements stand for the pre-fix revision `338918fc…`; only present-tense
+status is superseded):
+
+| line | superseded fragment | superseded how |
+|---|---|---|
+| :70 | "supported (still live) … 18 MATCH / 1 MISMATCH" | finding closed; 18/19 is the pre-fix measurement |
+| :165-167 | "Ledger row 56 (single live `finding`) … fix-or-absorb pending; any fix moves the record's sha and its pins" | fix applied; sha moved as predicted |
+| :194 | "19-row pointer audit → 18 MATCH / 1 MISMATCH" | post-fix sweep 19/19 (parent re-measured 2026-10-19) |
+| :228 | "\| F1 \| … \| queue item 1 … fix-or-absorb" | closed(r12) |
+| :261 | "(4) the `A-r9.md:50` fix-or-absorb decision" | decided: fix |
+| :280-281 | "6. **`A-r9.md:50` fix-or-absorb** … re-pin the record sha" | executed |
+| :8-9, :307 | ledger sha `3845709b…` | superseded by `46534902…` (hardening-r10 §6) |
+| :47, :73 | "ledger 71 / … finding 1 … queue 30" | true of `3845709b…`; current: 71 / 38·23·7·0·3 / 26 |
+| :309 | "records A/B/C \| `338918fc…`" | A = `dfd2ae1a…`; B/C unchanged |
+
+Correction: A-r9.md line 50 pointer `…A-shokunin-tradition.md:76` → `:86`;
+only cell changed; 7210 B / 73 lines unchanged; sha256 `338918fc…` →
+`dfd2ae1a149b7c87f8ff399522f99c3461570c5ba06ba9d6b18254b15a3c3b9d`.
+claims-r9.jsonl A11 carries no line suffix; claims-r9.README.md already
+pins A:86 — neither moves. Gate moved `46f5ddb3…` → `91a01695…` (round 12:
+scope screen, size cap, banner, linear count_nl); the class row 56 names
+("no mode pairs a row's path:line with its span's occurrence line") remains
+uncovered — only the instance is closed. Verdict-neutrality confirmed by
+re-run: `verify-all A-r9 --claims claims-r9.jsonl --root ..` → CLEAN
+`sections=5 run=5 absent=0 drift-sections=0 findings=0` at the corrected
+bytes (receipt `corpus/evidence/scope-r12-20261019T115519Z-A-fix.log`).
+
+Controls: A-r9-span-not-found.md / A-r9-anchor-missing.md keep `:76` — they
+are byte-copies of the pre-fix base `338918fc…`, not of the corrected
+revision (`controls/README.md` carries the desync note).

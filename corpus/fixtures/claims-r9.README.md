@@ -103,8 +103,9 @@ this file as their claims surface (`## Meta` → `claims_file |
 chousa-shokunin/corpus/fixtures/claims-r9.jsonl`), resolved under the fleet root
 by the same boundary as every span source. Measured 2026-10-16T04:35:37Z (A),
 04:35:46Z (B), 04:35:55Z (C), one fresh `verify-all … --root ..` per record at
-the gate and lane HEAD above; record sha256 `338918fc…` (A), `abfa5290…` (B),
-`97be0e69…` (C). Each composed verdict carried:
+the gate and lane HEAD above; record sha256 `dfd2ae1a…` (A, corrected round 12 —
+row C3 pointer `:76` → `:86`; pre-fix revision pinned below at `338918fc…`),
+`abfa5290…` (B), `97be0e69…` (C). Each composed verdict carried:
 
 ```text
 SECTION claims state=run verdict=CLEAN findings=0 drift=0 tally=VERDICT_BEARING_CLAIMS=10/10

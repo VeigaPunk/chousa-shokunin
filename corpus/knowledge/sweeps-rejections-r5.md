@@ -274,3 +274,6 @@ header.
   runs, not queue taskKey/expected-receipt bags; no `task_…` value may be
   invented and no Sighting is claimed. No scalar score, no promotion, no
   field-readiness claim. No commits by this seat.
+
+
+Round-12 disposition (2026-10-19, append-only): any r2-carried residual this note names — the banner `research-gate-r1` and the absent source-read size cap — landed at round 12 (`VERSION=v2`, r12 baseline re-pinned, `knowledge/gate-baseline-r12.md`; 8 MiB cap `CLAIM_SOURCE_READ_TOO_LARGE`/`CHAIN_SOURCE_READ_TOO_LARGE` at the shared chokepoint). In-root hardlinks remain carried. This note's own claims are otherwise unchanged.

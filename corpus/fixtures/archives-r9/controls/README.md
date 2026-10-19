@@ -168,7 +168,11 @@ uses `NO_QUESTION` (severity crit) as its structure class.
 | `C-r9-structure-break.md` | `21d77e6c4de99719c557d14b105d2b795147f40bc724f4105d041587107c290c` |
 
 Bases at authoring: `A-r9.md`
-`338918fcb8ed5d6c5f15dc64e5eb8a3ae7a005d51b5c03e7e377c1dab9173c78`,
+`338918fcb8ed5d6c5f15dc64e5eb8a3ae7a005d51b5c03e7e377c1dab9173c78` (the pre-fix
+revision; round 12 corrected A-r9 row C3's pointer `:76`→`:86`, moving the live
+record to `dfd2ae1a…` — these controls stay byte-copies of the pre-fix base,
+and their `:76` C3 cell is outside every gate check; the desync from the
+current record is exactly that one cell),
 `B-r9.md` `abfa5290deda4d1708ba97028853b8a770f16ecda6f377dddda53d49cb2e3e86`,
 `C-r9.md` `97be0e69ccfb8a701bc5556f738553be8e7179c9b41110fe61c4a3cab4f2d1da`;
 shared claims surface `claims-r9.jsonl`
