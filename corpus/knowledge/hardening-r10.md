@@ -466,3 +466,25 @@ revision or carry a superseded mark: `audit-r11.md` (`:9`, `:307`),
 `2026-10-16-verifying-conversion-not-original.md` (`:19`) keep pre-fix pins as
 round-dated history and are superseded by this erratum. Gate revision
 `91a01695…` (was `46f5ddb3…`).
+
+### Round-13 addendum (2026-10-19, append-only)
+
+E2 — row 8 (`:203`) "in-root hardlinks bypass path canonicalization …
+carried … no inode/nlink/`-samefile` logic in the gate" → **closed(r13,
+hardlink class)**: the shared `claim_source_path` chokepoint now refuses
+multi-linked sources unread (`CLAIM_SOURCE_MULTILINKED` /
+`CHAIN_SOURCE_MULTILINKED`, crit, one `stat -c '%s %h'` probe before any
+read); live bypass receipts `evidence/alias-r13-20261019T123621Z-bypass-
+{before,after}.log`; selftest cases 99–102. Carried INSIDE the closure, not
+new rows: TOCTOU (stat-then-read), same-device bind mounts (nlink=1,
+stat-invisible mounts), unmeasurable-stat fallback, and legit in-root
+multi-link families refusing (`knowledge/hardlink-alias-r13.md` — the r13
+claim closes the hardlink class only, per the round-13 reviewers).
+
+Counts at this revision (71 rows, numbering unchanged): **by-design 38 ·
+carried 22 · closed 8 · finding 0 · operator 3**; round-11 queue **26 → 25**
+(item 8 out). This supersedes the §6 counts line (71 / 38·23·7·0·3 / 26);
+the §6 text stands otherwise. Revision trail: `3845709b…` → `46534902…`
+(r12 §6) → this revision. Gate `91a01695…` → `${GSHA}…`. Sites naming
+`46534902…` (audit-r11 erratum table, corpus/README) carry the r12
+revision; update on next touch or cite this addendum.

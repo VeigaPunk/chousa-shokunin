@@ -29,6 +29,9 @@
 #   SCOPE_BOUNTY_ABSORBED SCOPE_MODEL_QUALITY_ABSORBED
 #   SCOPE_ORCHESTRATION_ABSORBED
 #   CLAIM_SOURCE_READ_TOO_LARGE (r12: source over SOURCE_READ_MAX_BYTES)
+#   CLAIM_SOURCE_MULTILINKED (r13: hardlink alias of possibly out-of-corpus
+#   content; a symlink's true path is re-checked, a hardlink's partners are
+#   not soundly enumerable — refused unread)
 #
 # Claims mode: verify-claims <claims-file> checks each claim's verbatim span
 # against its cited source. Blank lines and #-comment lines are ignored; a
@@ -43,6 +46,11 @@
 # A source larger than SOURCE_READ_MAX_BYTES (8 MiB, inclusive boundary) is
 # refused BEFORE any read — CLAIM_SOURCE_READ_TOO_LARGE (warn, drift;
 # CHAIN_SOURCE_READ_TOO_LARGE in chain mode) — never partially searched.
+# A multi-linked source is likewise refused unread —
+# CLAIM_SOURCE_MULTILINKED (crit, drift; CHAIN_SOURCE_MULTILINKED in chain
+# mode): an in-root hardlink alias can name out-of-corpus content that
+# readlink -f cannot see. The refusal is nlink-based, so a legit in-root
+# multi-link family refuses too (named limit).
 # Per claim: CLAIM id=… expected=… observed=… source=… at=… verdict=…
 #   observed: supported|contradicted|unsupported|unproven|refused|invalid
 #   verdict:  match|mismatch|refused|invalid
@@ -73,6 +81,7 @@
 # Extra ids: CHAIN_ABSENT CHAIN_SOURCE_EXTERNAL CHAIN_SOURCE_SESSION
 #   CHAIN_SOURCE_EPHEMERAL CHAIN_SOURCE_OUT_OF_CORPUS CHAIN_SOURCE_MISSING
 #   CHAIN_SOURCE_READ_TOO_LARGE
+#   CHAIN_SOURCE_MULTILINKED (r13)
 #   CHAIN_ANCHOR_NOT_FOUND CHAIN_CITATION_INVALID
 #
 # Sweeps mode: verify-sweeps <record.md> makes kept rejections and negative
@@ -303,7 +312,9 @@ usage: research-gate.sh [--selftest] [--help]
   Unresolved/marked hops stay exempt but counted. Sources obey the same
   boundary as verify-claims (local, canonicalized, never fetched).
   Sources over 8 MiB are refused unread (CLAIM_SOURCE_READ_TOO_LARGE;
-  CHAIN_SOURCE_READ_TOO_LARGE in chain mode).
+  CHAIN_SOURCE_READ_TOO_LARGE in chain mode). Multi-linked sources are
+  refused unread (CLAIM_SOURCE_MULTILINKED; CHAIN_SOURCE_MULTILINKED in
+  chain mode) — a hardlink alias can name out-of-corpus content.
   A token boundary is a file/line edge, ASCII whitespace or ASCII
   punctuation at the match's outer edges; a word-internal hyphen or
   apostrophe is not a boundary, so a truncated quote (mid-word), a padded
@@ -1029,12 +1040,30 @@ claim_source_path() { # SRC -> rc 0: CLAIM_SRC_PATH; rc 1: CLAIM_REFUSE + CLAIM_
     CLAIM_REFUSE_OBS="not a readable regular file under allowed roots"
     return 1
   fi
-  # Cap before the read: this single chokepoint serves claims, chain and
-  # verify-all's declared-claims resolution, so all three refuse alike. An
-  # oversized source is refused unread — never slurped, never partially
-  # searched.
-  local size
-  if size=$(file_size_bytes "$canon") && (( size > SOURCE_READ_MAX_BYTES )); then
+  # Alias + size probes before the read (r13 + r12): this single chokepoint
+  # serves claims, chain and verify-all's declared-claims resolution, so all
+  # three refuse alike. A multi-linked source is refused unread — an in-root
+  # hardlink alias can name out-of-corpus content that readlink -f cannot see
+  # (a symlink's true path is re-checked by canon; a hardlink's partners are
+  # not soundly enumerable — knowledge/hardlink-alias-r13.md). The refusal is
+  # nlink-based, so a legit in-root multi-link family refuses too (named
+  # limit). An oversized source is likewise refused unread — never slurped,
+  # never partially searched.
+  local size nlink
+  if read -r size nlink < <(stat -c '%s %h' -- "$canon" 2>/dev/null); then
+    if [[ $nlink =~ ^[0-9]+$ ]] && (( nlink != 1 )); then
+      CLAIM_REFUSE=CLAIM_SOURCE_MULTILINKED
+      CLAIM_REFUSE_OBS="nlink=$nlink multi-linked source refused (possible hardlink alias of out-of-corpus content; not read)"
+      return 1
+    fi
+    if [[ $size =~ ^[0-9]+$ ]] && (( size > SOURCE_READ_MAX_BYTES )); then
+      CLAIM_REFUSE=CLAIM_SOURCE_READ_TOO_LARGE
+      CLAIM_REFUSE_OBS="size=$size cap=$SOURCE_READ_MAX_BYTES exceeded (not read)"
+      return 1
+    fi
+  elif size=$(file_size_bytes "$canon") && (( size > SOURCE_READ_MAX_BYTES )); then
+    # Probe fallback: the alias check needs %h and is skipped when stat is
+    # unmeasurable (documented residual); the r12 cap semantics hold.
     CLAIM_REFUSE=CLAIM_SOURCE_READ_TOO_LARGE
     CLAIM_REFUSE_OBS="size=$size cap=$SOURCE_READ_MAX_BYTES exceeded (not read)"
     return 1
@@ -1045,7 +1074,7 @@ claim_source_path() { # SRC -> rc 0: CLAIM_SRC_PATH; rc 1: CLAIM_REFUSE + CLAIM_
 
 claim_source_sev() {
   case "$1" in
-    CLAIM_SOURCE_EXTERNAL|CLAIM_SOURCE_SESSION|CLAIM_SOURCE_OUT_OF_CORPUS) printf 'crit' ;;
+    CLAIM_SOURCE_EXTERNAL|CLAIM_SOURCE_SESSION|CLAIM_SOURCE_OUT_OF_CORPUS|CLAIM_SOURCE_MULTILINKED) printf 'crit' ;;
     *) printf 'warn' ;;
   esac
 }
@@ -1398,13 +1427,14 @@ chain_refuse_id() { # CLAIM_* refusal -> CHAIN_* finding id
     CLAIM_SOURCE_EPHEMERAL) printf 'CHAIN_SOURCE_EPHEMERAL' ;;
     CLAIM_SOURCE_OUT_OF_CORPUS) printf 'CHAIN_SOURCE_OUT_OF_CORPUS' ;;
     CLAIM_SOURCE_READ_TOO_LARGE) printf 'CHAIN_SOURCE_READ_TOO_LARGE' ;;
+    CLAIM_SOURCE_MULTILINKED) printf 'CHAIN_SOURCE_MULTILINKED' ;;
     *) printf 'CHAIN_SOURCE_MISSING' ;;
   esac
 }
 
 chain_source_sev() {
   case "$1" in
-    CHAIN_SOURCE_EXTERNAL|CHAIN_SOURCE_SESSION|CHAIN_SOURCE_OUT_OF_CORPUS) printf 'crit' ;;
+    CHAIN_SOURCE_EXTERNAL|CHAIN_SOURCE_SESSION|CHAIN_SOURCE_OUT_OF_CORPUS|CHAIN_SOURCE_MULTILINKED) printf 'crit' ;;
     *) printf 'warn' ;;
   esac
 }
@@ -4318,6 +4348,49 @@ EOF
     'FINDING CHAIN_SOURCE_READ_TOO_LARGE severity=warn surface=chain' \
     'CHAIN hop=1 status=resolved observed=refused source=claimsrc/cap-over.md anchor=- at=- verdict=refused' \
     'RESOLVED_HOPS=0/1'
+
+  # ---- r13: multi-linked source refusal (cases 99-102) ----
+  # 99/100: a claim/chain source cited through an in-root hardlink alias of
+  # an OUT-OF-ROOT original is refused unread — the r2 residual: readlink -f
+  # resolves the alias in-root so the boundary check alone passes (a symlink's
+  # true path is re-checked; a hardlink's partners are not soundly
+  # enumerable). 101: two in-root aliases of one in-root file refuse too —
+  # the refusal is nlink-based (the legit-family false positive is a named
+  # limit, knowledge/hardlink-alias-r13.md). 102: a single-link control
+  # reads. Generated in $WORK at run time; no repo fixture.
+  printf 'out-of-root content\n' >"$WORK/alias-outside.txt"
+  mkdir -p "$WORK/aliasroot"
+  ln "$WORK/alias-outside.txt" "$WORK/aliasroot/alias-in.md"
+  printf '{"id":"H1","source":"aliasroot/alias-in.md","span":"out-of-root content","expect":"supported"}\n' >"$WORK/claims-hardlink-alias.jsonl"
+  write_rec chain-hardlink-alias <<'EOF'
+# research-record v1
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | aliasroot/alias-in.md |
+## Chain
+| hop | from | to | status | anchor_kind | anchor |
+|---|---|---|---|---|---|
+| 1 | C1 | S1 | resolved | quote | out-of-root content |
+EOF
+  printf 'alias original content\n' >"$WORK/alias-orig.txt"
+  ln "$WORK/alias-orig.txt" "$WORK/aliasroot/family-a.md"
+  ln "$WORK/alias-orig.txt" "$WORK/aliasroot/family-b.md"
+  printf '{"id":"H2","source":"aliasroot/family-a.md","span":"alias original content","expect":"supported"}\n' >"$WORK/claims-hardlink-family.jsonl"
+  printf '{"id":"H3","source":"lib/primary.md","span":"line1 primary material","expect":"supported"}\n' >"$WORK/claims-single-link.jsonl"
+  tclaims claims-hardlink-alias 1 'RESEARCH_GATE: DRIFT' \
+    'FINDING CLAIM_SOURCE_MULTILINKED severity=crit surface=claims' \
+    'CLAIM id=H1 expected=supported observed=refused source=aliasroot/alias-in.md at=- verdict=refused' \
+    'VERDICT_BEARING_CLAIMS=0/1'
+  tchain chain-hardlink-alias 1 'RESEARCH_GATE: DRIFT' \
+    'FINDING CHAIN_SOURCE_MULTILINKED severity=crit surface=chain' \
+    'CHAIN hop=1 status=resolved observed=refused source=aliasroot/alias-in.md anchor=- at=- verdict=refused' \
+    'RESOLVED_HOPS=0/1'
+  tclaims claims-hardlink-family 1 'RESEARCH_GATE: DRIFT' \
+    'FINDING CLAIM_SOURCE_MULTILINKED severity=crit surface=claims' \
+    'CLAIM id=H2 expected=supported observed=refused source=aliasroot/family-a.md at=- verdict=refused'
+  tclaims claims-single-link 0 'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=1/1' \
+    'CLAIM id=H3 expected=supported observed=supported source=lib/primary.md at=line:1 verdict=match'
 
   if [[ $failures -eq 0 ]]; then
     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases)\n' "$cases"

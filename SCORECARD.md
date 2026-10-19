@@ -613,3 +613,62 @@ before: `grep -c samefile tools/research-gate.sh` → 0 with a demonstrated
 bypass; after: bypass refused/canonicalized + symmetric selftest fixtures +
 hold battery green. Secondary (only if the operator answers the L0 row):
 receipt-runbook automation. Seats: 64, roster logged in the round-13 report.
+
+## Round 13 verdict — 2026-10-19 (goal wave; evidence commit this landing)
+
+Selected claims (SCORECARD.md §Planned — round 13): coverage = close the last
+r2 residual (ledger row 8), the in-root hardlink canonicalization bypass;
+depth = the alias-semantics knowledge note + SKILL sweep. Wave: one 64-seat
+AgentSwarm call on opencode-go-6 / deepseek-v4.1-flash, 64/64 seat reports
+(roster: the round-13 report). The wave BLOCKed partner enumeration as
+unsound (two independent seats) and the reviewers re-scoped the claim: the
+landing is a one-probe `nlink != 1` refusal — the HARDLINK class closes; bind
+mounts, TOCTOU and legit in-root families are named limits, not silently
+closed.
+
+**Before** (gate `91a01695…`, re-measured at opening `0b0a133`): no inode
+logic (`grep -c samefile tools/research-gate.sh` → 0); 0 multi-linked files
+across corpus/tools/research (so no fixture could perturb); the bypass live:
+a claim through an in-root hardlink alias of an out-of-root file read
+`observed=supported` CLEAN (receipt `alias-r13-20261019T123621Z-bypass-before.log`);
+selftest 98; drift none vs the r12 baseline; r1 3/3.
+
+**After** (gate `6b17e50cc9b61dda…`, selftest `PASS (102 cases)` = 98+4,
+cases 1–98 `cmp` byte-identical vs `scope-r12-…-selftest.log`): one
+`stat -c '%s %h'` probe at the shared `claim_source_path` chokepoint (claims,
+chain, verify-all's claims binding alike) refuses `nlink != 1` unread —
+`CLAIM_SOURCE_MULTILINKED` / `CHAIN_SOURCE_MULTILINKED`, crit, per-item
+`observed=refused`; the same probe serves the r12 size cap unchanged. Cases
+99–102: claims-alias refused, chain-alias refused (CHAIN id + crit severity
+arms), in-root two-alias family refused (case 101 pins the named trade),
+single-link control CLEAN. Bypass after: crit refusal (receipt
+`-bypass-after.log`). Battery: r1 3/3; drift `none` vs the r12 baseline (no
+re-pin — the canonical invocation is unchanged); masked battery (banner/ts)
+vs the pre-round gate with LANE_ROOT intact (temp copy inside `tools/` —
+the /tmp-copy form breaks lane-root-relative pointers, a recorded method
+artifact): A/B/C-r9, full-r6, integrity-r7, claims-r2, chain-r3, sweeps-r5,
+six controls ALL IDENTICAL (receipt `alias-r13-20261019T123621Z-battery.log`).
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | the r2 bypass class is closed at the one content-read chokepoint: before CLEAN `1/1` on an out-of-root alias → after crit refusal `0/1` (both live receipts); 4 symmetric cases |
+| operability | **improved** | selftest 98 → 102 with 1–98 byte-identical; one probe serves two checks (no double stat); no re-pin needed; the gate's failure modes refuse rather than read |
+| depth | **improved** | `corpus/knowledge/hardlink-alias-r13.md`: the symlink/hardlink asymmetry, the refusal semantics, why enumeration was rejected, four named limits; lesson `2026-10-19-hardlink-alias-boundary.md` |
+| freshness | **improved narrowly** | the r12-baseline drift check stays green at the r13 gate (behavior-pinned); the r2-residual documentation chain (ledger row 8, corpus README, 5 note dispositions) is corrected same-landing |
+| calibration | **unchanged** | the claim was honestly narrowed by the wave (hardlink class only; bind mounts/TOCTOU/families named); no overclaim made or admitted |
+| adjacency | **unchanged** | zero network; read-only wave; sweeps confirmed content-free (no scope creep into sweeps mode); no sibling/fleet writes beyond the recorded MANIFEST/L0 queue rows |
+
+Admission: **ADMIT** (coverage/operability/depth/freshness improved; none
+harmed; the case-101 family refusal is a pinned, documented trade, not a
+hidden one). No scalar score. Learning trends: expansion improved (note +
+lesson + capability row + 4 receipts), quality improved (battery artifact
+recorded; errata append-only), discernment unchanged. Round 14 registered:
+curriculum round 3 (zai glm-5.3-flash per the curriculum; key 6 fallback if
+zai is out); claim TBD from the named-limit queue (bind-mount boundary or
+receipt-runbook automation), pre-registered at the round-14 opening.
+
+## Capabilities (addition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| hardlink-alias refusal | refuses multi-linked claim/chain sources unread before any read | selftest cases 99–102; `corpus/knowledge/hardlink-alias-r13.md` | 13 |
