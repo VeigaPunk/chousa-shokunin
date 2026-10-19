@@ -614,7 +614,12 @@ in_root() { # CANON ROOT -> rc 0 when CANON is ROOT itself or under it
   # decisions (claim_source_path's device probe stats the declared root,
   # r14 contract). A materialized helper, not an inline "${root%/}" in a
   # case word — the empty expansion inside a case pattern still dead-arms.
-  local c=$1 r=${2%/}
+  local c=$1 r=$2
+  # r16: strip ALL trailing slashes — pwd -P preserves '//' (measured:
+  # 'cd // && pwd -P' → '//'), so a single ${r%/} leaves '/' which still
+  # renders '//*'. The loop collapses '//' → '/' → ''.
+  while [[ $r == */ && $r != / ]]; do r=${r%/}; done
+  [[ $r == / ]] && r=
   [[ $c == "$r" || $c == "$r"/* ]]
 }
 
@@ -4599,6 +4604,19 @@ EOF
     'FINDING CLAIM_SOURCE_CROSS_DEVICE severity=crit surface=claims' \
     'CLAIM id=R3 expected=supported observed=refused' \
     'VERDICT_BEARING_CLAIMS=0/1' CHOUSA_ROOT=/
+  # 111 (r16): --root // — pwd -P preserves '//' so in_root must strip ALL
+  # trailing slashes, not just one (the r15 single-strip left '/' which still
+  # rendered '//*'). Same /etc/hostname read, same expected CLEAN.
+  if [[ -r /etc/hostname ]] && read -r _hspan </etc/hostname && [[ -n $_hspan ]]; then
+    printf '{"id":"R4","source":"/etc/hostname","span":"%s","expect":"supported"}\n' "$_hspan" \
+      >"$WORK/claims-root-dslash.jsonl"
+    tclaims claims-root-dslash 0 'RESEARCH_GATE: CLEAN' \
+      'CLAIM id=R4 expected=supported observed=supported source=/etc/hostname at=line:1 verdict=match' \
+      'VERDICT_BEARING_CLAIMS=1/1' CHOUSA_ROOT=//
+  else
+    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" claims-root-dslash '/etc/hostname unreadable'
+  fi
   # 110: sweeps symmetric arm — an absolute in-/ location glob resolves
   # through the healed guard (pre-fix: SWEEP_LOCATION_OUT_OF_CORPUS crit).
   # The glob names only; a nonexistent /-rooted dir verifies with zero rows.
