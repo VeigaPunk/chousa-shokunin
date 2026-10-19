@@ -544,9 +544,9 @@ ptr_resolves_meta() {
   fi
   local root_r
   root_r=$(cd -- "$ROOT" 2>/dev/null && pwd -P || printf '%s' "$ROOT")
-  case "$f" in
-    "$root_r"/*) [[ -f $f ]] && return 0 ;;
-  esac
+  # r15: in_root normalizes the prefix (raw "$root_r"/* is //* with --root /);
+  # the -f test still refuses the root directory itself.
+  if in_root "$f" "$root_r" && [[ -f $f ]]; then return 0; fi
   return 1
 }
 
@@ -604,6 +604,18 @@ scan_secrets() {
       emit_finding SECRET_SHAPED crit secrecy "path=$file:$lineno class=$class"
     fi
   done <"$file"
+}
+
+in_root() { # CANON ROOT -> rc 0 when CANON is ROOT itself or under it
+  # r15 root-slash boundary: the prefix test must survive ROOT=/ — the raw
+  # form "$root"/* renders //* there and matches nothing (measured), refusing
+  # every absolute source OUT_OF_CORPUS. The trailing slash is stripped for
+  # the PREFIX TEST ONLY: callers keep the un-normalized root for identity
+  # decisions (claim_source_path's device probe stats the declared root,
+  # r14 contract). A materialized helper, not an inline "${root%/}" in a
+  # case word — the empty expansion inside a case pattern still dead-arms.
+  local c=$1 r=${2%/}
+  [[ $c == "$r" || $c == "$r"/* ]]
 }
 
 file_size_bytes() { # PATH -> stdout byte size; rc 1 when no probe can measure
@@ -1048,11 +1060,14 @@ claim_source_path() { # SRC -> rc 0: CLAIM_SRC_PATH; rc 1: CLAIM_REFUSE + CLAIM_
   # match only when one root nests inside the other; the longer (more
   # specific) prefix is the resolving root — a corpus root that is itself a
   # mount refutes nothing: the declared root IS the boundary.
-  if [[ $canon == "$lane_r"/* && $canon == "$root_r"/* ]]; then
+  # r15: in_root normalizes for the PREFIX test only; with --root / the raw
+  # "$root_r"/* rendered //* and refused every absolute source OUT_OF_CORPUS.
+  # src_root stays un-normalized: the device probe stats the declared root.
+  if in_root "$canon" "$lane_r" && in_root "$canon" "$root_r"; then
     if (( ${#lane_r} >= ${#root_r} )); then src_root=$lane_r; else src_root=$root_r; fi
-  elif [[ $canon == "$lane_r"/* ]]; then
+  elif in_root "$canon" "$lane_r"; then
     src_root=$lane_r
-  elif [[ $canon == "$root_r"/* ]]; then
+  elif in_root "$canon" "$root_r"; then
     src_root=$root_r
   else
     CLAIM_REFUSE=CLAIM_SOURCE_OUT_OF_CORPUS
@@ -1738,9 +1753,9 @@ sweep_path_guarded() { # PATTERN -> rc0: glob-safe under an allowed root; rc1 re
   else
     canon=$(readlink -f -- "$base" 2>/dev/null || printf '%s' "$base")
   fi
-  case "$canon" in
-    "$root_r"|"$root_r"/*|"$lane_r"|"$lane_r"/*) return 0 ;;
-  esac
+  # r15: same dead-arm class (raw case rendered // and //* with --root /,
+  # refusing every absolute sweep location); in_root normalizes the prefix.
+  if in_root "$canon" "$root_r" || in_root "$canon" "$lane_r"; then return 0; fi
   return 1
 }
 
@@ -2782,7 +2797,8 @@ EOF
     done
     cases=$((cases + 1))
     out=$(env -u CHOUSA_RECORD -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
-      "${over[@]+"${over[@]}"}" CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+      CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+      "${over[@]+"${over[@]}"}" \
       bash "$SELF" verify "$WORK/$name.md" 2>&1) || rc=$?
     nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
     for tok in "${want[@]+"${want[@]}"}"; do
@@ -2809,11 +2825,17 @@ EOF
   tclaims() {
     local name=$1 want_rc=$2
     shift 2
-    local -a want=("$@")
-    local tok rc=0 out nverdict nvb ok=1
+    local -a want=() over=()
+    local a tok rc=0 out nverdict nvb ok=1
+    # r15: CHOUSA_-prefixed args are env overrides (never want-tokens — the
+    # bare ^[A-Z_]+= classifier would hijack VERDICT_BEARING_CLAIMS= etc.).
+    for a in "$@"; do
+      if [[ $a =~ ^CHOUSA_[A-Z_]+= ]]; then over+=("$a"); else want+=("$a"); fi
+    done
     cases=$((cases + 1))
     out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
       CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+      "${over[@]+"${over[@]}"}" \
       bash "$SELF" verify-claims "$WORK/$name.jsonl" 2>&1) || rc=$?
     nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
     nvb=$(grep -c '^VERDICT_BEARING_CLAIMS=' <<<"$out" || true)
@@ -2835,11 +2857,15 @@ EOF
   tchain() {
     local name=$1 want_rc=$2
     shift 2
-    local -a want=("$@")
-    local tok rc=0 out nverdict nrh ok=1
+    local -a want=() over=()
+    local a tok rc=0 out nverdict nrh ok=1
+    for a in "$@"; do
+      if [[ $a =~ ^CHOUSA_[A-Z_]+= ]]; then over+=("$a"); else want+=("$a"); fi
+    done
     cases=$((cases + 1))
     out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
       CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+      "${over[@]+"${over[@]}"}" \
       bash "$SELF" verify-chain "$WORK/$name.md" 2>&1) || rc=$?
     nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
     nrh=$(grep -c '^RESOLVED_HOPS=' <<<"$out" || true)
@@ -2861,11 +2887,15 @@ EOF
   tsweeps() {
     local name=$1 want_rc=$2
     shift 2
-    local -a want=("$@")
-    local tok rc=0 out nverdict nsum ok=1
+    local -a want=() over=()
+    local a tok rc=0 out nverdict nsum ok=1
+    for a in "$@"; do
+      if [[ $a =~ ^CHOUSA_[A-Z_]+= ]]; then over+=("$a"); else want+=("$a"); fi
+    done
     cases=$((cases + 1))
     out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
       CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+      "${over[@]+"${over[@]}"}" \
       bash "$SELF" verify-sweeps "$WORK/$name.md" 2>&1) || rc=$?
     nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
     nsum=$(grep -c '^VERIFIED_SWEEPS=.*REJECTIONS_OK=' <<<"$out" || true)
@@ -2887,11 +2917,15 @@ EOF
   tintegrity() {
     local name=$1 want_rc=$2
     shift 2
-    local -a want=("$@")
-    local tok rc=0 out nverdict nsum ok=1
+    local -a want=() over=()
+    local a tok rc=0 out nverdict nsum ok=1
+    for a in "$@"; do
+      if [[ $a =~ ^CHOUSA_[A-Z_]+= ]]; then over+=("$a"); else want+=("$a"); fi
+    done
     cases=$((cases + 1))
     out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
       CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+      "${over[@]+"${over[@]}"}" \
       bash "$SELF" verify-integrity "$WORK/$name.md" 2>&1) || rc=$?
     nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
     nsum=$(grep -c '^INTEGRITY refs=' <<<"$out" || true)
@@ -3814,13 +3848,17 @@ EOF
   tall() { # INPUT WANT_RC WANT_NV WANT_NS CLAIMS|- JSON|- WANT_JLINES|- [tokens…]
     local input=$1 want_rc=$2 want_nv=$3 want_ns=$4 claims=$5 json=$6 want_jl=$7
     shift 7
-    local -a want=("$@") extra=()
-    local rc=0 out nverdict nsum ok=1 msg='' tok n h1
+    local -a want=() over=() extra=()
+    local a rc=0 out nverdict nsum ok=1 msg='' tok n h1
+    for a in "$@"; do
+      if [[ $a =~ ^CHOUSA_[A-Z_]+= ]]; then over+=("$a"); else want+=("$a"); fi
+    done
     cases=$((cases + 1))
     if [[ $claims != - ]]; then extra+=(--claims "$WORK/$claims"); fi
     if [[ $json != - ]]; then extra+=(--json "$WORK/$json"); fi
     out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
       CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+      "${over[@]+"${over[@]}"}" \
       bash "$SELF" verify-all "$WORK/$input" "${extra[@]+"${extra[@]}"}" 2>&1) || rc=$?
     nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
     nsum=$(grep -c '^VERIFY_ALL ' <<<"$out" || true)
@@ -4525,6 +4563,55 @@ EOF
     'CLAIM id=D2 expected=supported observed=supported source=crossdev/cross.md at=line:1 verdict=match'
   tclaims claims-lane-fallback 0 'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=1/1' \
     'CLAIM id=L1 expected=supported observed=supported source=PROVINCE.md at=line:3 verdict=match'
+
+  # 107-110 (r15): the --root / dead-arm — raw "$root_r"/* rendered //* and
+  # matched nothing, refusing every absolute source OUT_OF_CORPUS. in_root()
+  # normalizes the prefix; src_root keeps the declared root for the device
+  # probe. The CHOUSA_ROOT=/ override rides the r15 harness channel.
+  # 107: deterministic ghost — an absent absolute path passes the healed
+  # boundary and fails the -f probe (pre-fix: OUT_OF_CORPUS crit).
+  printf '{"id":"R1","source":"/chousa-r15-absent/absent.md","span":"never present","expect":"unsupported"}\n' \
+    >"$WORK/claims-root-slash-absent.jsonl"
+  tclaims claims-root-slash-absent 1 'RESEARCH_GATE: DRIFT' \
+    'FINDING CLAIM_SOURCE_MISSING severity=warn surface=claims' \
+    'CLAIM id=R1 expected=unsupported observed=refused source=/chousa-r15-absent/absent.md' \
+    'VERDICT_BEARING_CLAIMS=0/1' CHOUSA_ROOT=/
+  # 108: read arm — an existing in-/ absolute source reads CLEAN (this host:
+  # /etc/hostname dev 31 == / dev 31, nlink 1, 9 B — the span is the file's
+  # own first line, measured at case-build). The device probe still stats
+  # the declared root (/) — a cross-device in-/ source must still refuse.
+  # 109: that refusal — $WORK is tmpfs (dev 57 != 31) so the absolute path
+  # passes the prefix test and dies at the device arm (pre-fix: OUT_OF_CORPUS).
+  if [[ -r /etc/hostname ]] && read -r _hspan </etc/hostname && [[ -n $_hspan ]]; then
+    printf '{"id":"R2","source":"/etc/hostname","span":"%s","expect":"supported"}\n' "$_hspan" \
+      >"$WORK/claims-root-slash-read.jsonl"
+    tclaims claims-root-slash-read 0 'RESEARCH_GATE: CLEAN' \
+      'CLAIM id=R2 expected=supported observed=supported source=/etc/hostname at=line:1 verdict=match' \
+      'VERDICT_BEARING_CLAIMS=1/1' CHOUSA_ROOT=/
+  else
+    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" claims-root-slash-read '/etc/hostname unreadable'
+  fi
+  printf 'cross-device content here\n' >"$WORK/rootdev.md"
+  printf '{"id":"R3","source":"%s","span":"cross-device content here","expect":"supported"}\n' "$WORK/rootdev.md" \
+    >"$WORK/claims-root-slash-xdev.jsonl"
+  tclaims claims-root-slash-xdev 1 'RESEARCH_GATE: DRIFT' \
+    'FINDING CLAIM_SOURCE_CROSS_DEVICE severity=crit surface=claims' \
+    'CLAIM id=R3 expected=supported observed=refused' \
+    'VERDICT_BEARING_CLAIMS=0/1' CHOUSA_ROOT=/
+  # 110: sweeps symmetric arm — an absolute in-/ location glob resolves
+  # through the healed guard (pre-fix: SWEEP_LOCATION_OUT_OF_CORPUS crit).
+  # The glob names only; a nonexistent /-rooted dir verifies with zero rows.
+  write_rec sweeps-root-slash <<'EOF'
+# research-record v1
+## Sweeps
+| id | where | query | expected |
+|---|---|---|---|
+| W1 | /chousa-r15-absent/*.md | absent-dir-sweep | no hits |
+EOF
+  tsweeps sweeps-root-slash 0 'RESEARCH_GATE: CLEAN' \
+    'SWEEP id=W1 where=/chousa-r15-absent/*.md' 'observed=verified verdict=match' \
+    'VERIFIED_SWEEPS=1/1' CHOUSA_ROOT=/
 
   if [[ $failures -eq 0 ]]; then
     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"
