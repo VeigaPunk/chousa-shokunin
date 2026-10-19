@@ -394,7 +394,49 @@ declare -a SEC_ORDER=()
 load_sections() {
   local file=$1 line sec=""
   SEC_BODY=(); SEC_ORDER=()
-  while IFS= read -r line || [[ -n $line ]]; do
+  # r17: a `## ` line inside a fenced code block is literal text, not a
+  # heading — a fenced `## Meta` must not reset the real Meta body. Two
+  # passes: first pair fences (same char, closing length >= opening, 0-3
+  # literal-space indent; an unclosed opener is plain text = fail closed),
+  # then skip `## ` lines inside paired fences.
+  local -a LINES=()
+  local fence_char='' fence_len=0 unclosed=-1
+  local i n c l
+  while IFS= read -r line || [[ -n $line ]]; do LINES+=("$line"); done <"$file"
+  n=${#LINES[@]}
+  for ((i = 0; i < n; i++)); do
+    line=${LINES[$i]}
+    if [[ -n $fence_char ]]; then
+      if [[ $line =~ ^\ {0,3}(\`{3,}|~{3,})[[:space:]]*$ ]]; then
+        c=${BASH_REMATCH[1]:0:1}; l=${#BASH_REMATCH[1]}
+        [[ $c == "$fence_char" && $l -ge $fence_len ]] && fence_char=''
+      fi
+    elif [[ $line =~ ^\ {0,3}(\`{3,}|~{3,})(.*)$ ]]; then
+      fence_char=${BASH_REMATCH[1]:0:1}; fence_len=${#BASH_REMATCH[1]}; unclosed=$i
+    fi
+  done
+  [[ -n $fence_char ]] || unclosed=-1
+  # r17: an unclosed opener IS a fence — everything after it is literal
+  # (fail closed: a `## ` inside an unclosed fence cannot shadow a real
+  # heading). The opener itself is consumed as fence content.
+  fence_char=''; fence_len=0
+  for ((i = 0; i < n; i++)); do
+    line=${LINES[$i]}
+    if [[ -n $fence_char ]]; then
+      if [[ $line =~ ^\ {0,3}(\`{3,}|~{3,})[[:space:]]*$ ]]; then
+        c=${BASH_REMATCH[1]:0:1}; l=${#BASH_REMATCH[1]}
+        [[ $c == "$fence_char" && $l -ge $fence_len ]] && fence_char=''
+      fi
+      [[ -z $sec ]] && continue
+      SEC_BODY[$sec]+="$line"$'\n'
+      continue
+    fi
+    if [[ $line =~ ^\ {0,3}(\`{3,}|~{3,})(.*)$ ]]; then
+      fence_char=${BASH_REMATCH[1]:0:1}; fence_len=${#BASH_REMATCH[1]}
+      [[ -z $sec ]] && continue
+      SEC_BODY[$sec]+="$line"$'\n'
+      continue
+    fi
     if [[ $line =~ ^##[[:space:]]+(.*)$ ]]; then
       sec=$(printf '%s' "${BASH_REMATCH[1]}" | sed 's/[[:space:]]*$//')
       case "$sec" in
@@ -408,7 +450,7 @@ load_sections() {
     fi
     [[ -z $sec ]] && continue
     SEC_BODY[$sec]+="$line"$'\n'
-  done <"$file"
+  done
 }
 
 table_rows() {
@@ -4630,6 +4672,128 @@ EOF
   tsweeps sweeps-root-slash 0 'RESEARCH_GATE: CLEAN' \
     'SWEEP id=W1 where=/chousa-r15-absent/*.md' 'observed=verified verdict=match' \
     'VERIFIED_SWEEPS=1/1' CHOUSA_ROOT=/
+
+  # 112-116 (r17): the fenced-heading shadow — a `## ` line inside a fenced
+  # code block is literal text, not a heading. A fenced `## Meta` must not
+  # reset the real Meta body. The two-pass parser pairs fences (same char,
+  # closing length >= opening, 0-3 literal-space indent; unclosed opener =
+  # plain text, fail closed).
+  # 112: the bypass — real Meta declares refused province, fenced `## Meta`
+  # declares in-province (pre-fix: CLEAN, the fenced copy shadowed the real).
+  add_scope_row scope-fence-shadow domain 'bounty program scope and claim packages'
+  cat >>"$WORK/scope-fence-shadow.md" <<'EOF'
+## Notes
+```text
+## Meta
+| key | value |
+|---|---|
+| domain | deep-research method |
+```
+EOF
+  tcase scope-fence-shadow 1 'RESEARCH_GATE: DRIFT' \
+    'FINDING SCOPE_BOUNTY_ABSORBED severity=warn surface=scope' 'findings=1 drift=1'
+  # 113: the phantom — no real Meta, only a fenced `## Meta` (pre-fix: the
+  # phantom Meta's refused phrase drifted; post-fix: no Meta → no domain →
+  # CLEAN by the declaration-only contract).
+  cat >"$WORK/scope-fence-only.md" <<'EOF'
+# research-record v1
+## Question
+Do the local claims resolve?
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | lib/primary.md:1 |
+## Chain
+| hop | from | to | status | notes |
+|---|---|---|---|---|
+| 1 | C1 | S1 | resolved | direct |
+## Claims
+| id | kind | text | pointer | status |
+|---|---|---|---|---|
+| C1 | observation | primary file has line1 | S1 | verified |
+## Rejections
+| id | ref | reason | flip |
+|---|---|---|---|
+| R1 | n/a | none-recorded | a source row would flip this |
+## Notes
+```text
+## Meta
+| key | value |
+|---|---|
+| domain | bounty program scope and claim packages |
+```
+EOF
+  tcase scope-fence-only 0 'RESEARCH_GATE: CLEAN' 'findings=0 drift=0'
+  # 114: nested 4-backtick fence — the inner 3-backtick `## Meta` is content
+  # under the outer fence; the single-toggle fix would close early and let
+  # the fenced Meta through (pre-fix AND naive-toggle: CLEAN).
+  add_scope_row scope-fence-nested domain 'bounty program scope and claim packages'
+  cat >>"$WORK/scope-fence-nested.md" <<'EOF'
+## Notes
+````text
+```
+## Meta
+| key | value |
+|---|---|
+| domain | deep-research method |
+```
+````
+EOF
+  tcase scope-fence-nested 1 'RESEARCH_GATE: DRIFT' \
+    'FINDING SCOPE_BOUNTY_ABSORBED severity=warn surface=scope' 'findings=1 drift=1'
+  # 115: indented closer inside a fence — the 4-space-indented ``` is content,
+  # not a closer; the naive toggle treats it as a close (pre-fix AND naive:
+  # CLEAN). The real Meta's refused phrase must still refuse.
+  add_scope_row scope-fence-indented domain 'bounty program scope and claim packages'
+  cat >>"$WORK/scope-fence-indented.md" <<'EOF'
+## Notes
+```text
+    ```
+## Meta
+| key | value |
+|---|---|
+| domain | deep-research method |
+```
+EOF
+  tcase scope-fence-indented 1 'RESEARCH_GATE: DRIFT' \
+    'FINDING SCOPE_BOUNTY_ABSORBED severity=warn surface=scope' 'findings=1 drift=1'
+  # 116: unclosed fence after all sections — the fenced `## Meta` is the last
+  # section; the unclosed opener is plain text (fail closed), so the real
+  # Meta's refused phrase must still refuse (pre-fix AND naive: CLEAN).
+  cat >"$WORK/scope-fence-unclosed.md" <<'EOF'
+# research-record v1
+## Meta
+| key | value |
+|---|---|
+| window | loopback |
+| domain | bounty program scope and claim packages |
+## Question
+Do the local claims resolve?
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | lib/primary.md:1 |
+## Chain
+| hop | from | to | status | notes |
+|---|---|---|---|---|
+| 1 | C1 | S1 | resolved | direct |
+## Claims
+| id | kind | text | pointer | status |
+|---|---|---|---|---|
+| C1 | observation | primary file has line1 | S1 | verified |
+## Rejections
+| id | ref | reason | flip |
+|---|---|---|---|
+| R1 | n/a | none-recorded | a source row would flip this |
+## Notes
+```text
+## Meta
+| key | value |
+|---|---|
+| domain | deep-research method |
+EOF
+  tcase scope-fence-unclosed 1 'RESEARCH_GATE: DRIFT' \
+    'FINDING SCOPE_BOUNTY_ABSORBED severity=warn surface=scope'
 
   if [[ $failures -eq 0 ]]; then
     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"
