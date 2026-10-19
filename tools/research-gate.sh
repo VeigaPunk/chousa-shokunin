@@ -1969,10 +1969,30 @@ verify_sweeps() {
       for p in "${local_pats[@]+"${local_pats[@]}"}"; do
         while IFS= read -r m; do hit_list+=("$m"); done < <(sweep_glob_matches "$p")
       done
+      # r19: the base check alone is not enough — a wildcard inside an
+      # in-root directory can match a symlink whose target is outside the
+      # allowed roots. Canonicalize every expanded match and refuse the
+      # whole sweep if any match resolves outside root_r/lane_r.
+      local root_r lane_r match_canon match_escape=0
+      root_r=$(cd -- "$ROOT" 2>/dev/null && pwd -P || printf '%s' "$ROOT")
+      lane_r=$(cd -- "$LANE_ROOT" 2>/dev/null && pwd -P || printf '%s' "$LANE_ROOT")
+      for m in "${hit_list[@]+"${hit_list[@]}"}"; do
+        [[ $m == /* ]] || m=$ROOT/$m
+        match_canon=$(readlink -f -- "$m" 2>/dev/null || printf '%s' "$m")
+        if ! in_root "$match_canon" "$root_r" && ! in_root "$match_canon" "$lane_r"; then
+          match_escape=1
+          break
+        fi
+      done
       hits=${#hit_list[@]}
       first=-
       [[ $hits -gt 0 ]] && first=${hit_list[0]}
-      if [[ $hits -gt 0 ]]; then
+      if [[ $match_escape -eq 1 ]]; then
+        N_SW_REF=$((N_SW_REF + 1))
+        emit_finding SWEEP_LOCATION_OUT_OF_CORPUS crit sweeps \
+          "id=$sid where=$(chain_disp "$whr") match=$(chain_disp "$match_canon") refused (symlink escape; not opened)"
+        SWEEP_LINES+=("SWEEP id=$sid where=$(chain_disp "$whr") looked=local hits=- at=- observed=refused verdict=refused")
+      elif [[ $hits -gt 0 ]]; then
         N_SW_HIT=$((N_SW_HIT + 1))
         listed=''
         for ((i2 = 0; i2 < hits && i2 < 5; i2++)); do listed+="${hit_list[$i2]} "; done
@@ -4818,6 +4838,58 @@ EOF
   sed 's#^Do the local claims resolve?$#Prose mentions LLM benchmarks, llm scoring and ai benchmarks here — never in a ## Meta declaration row.#' \
     "$WORK/scope-base.md" >"$WORK/scope-pass-benchmark-prose.md"
   tcase scope-pass-benchmark-prose 0 'RESEARCH_GATE: CLEAN' 'findings=0 drift=0'
+
+  # 120-122 (r19): the sweeps symlink escape — the base check canonicalizes
+  # the glob's literal directory but not each match, so a wildcard inside
+  # an in-root dir can match a symlink whose target is outside the allowed
+  # roots. The fix canonicalizes every expanded match; any escape refuses
+  # the whole sweep.
+  # 120: outside leaf symlink — sweepdir/escape.md -> OUTSIDE_FILE (outside
+  # $WORK); sweepdir/*.md must refuse (pre-fix: SWEEP_CLAIM_FALSE hit).
+  mkdir -p "$WORK/sweepdir"
+  ln -s "$OUTSIDE_FILE" "$WORK/sweepdir/escape.md"
+  write_rec sweeps-symlink-escape <<'EOF'
+# research-record v1
+## Sweeps
+| id | where | query | expected |
+|---|---|---|---|
+| W1 | sweepdir/*.md | escape-check | no hits |
+EOF
+  tsweeps sweeps-symlink-escape 1 'RESEARCH_GATE: DRIFT' \
+    'FINDING SWEEP_LOCATION_OUT_OF_CORPUS severity=crit surface=sweeps' \
+    'observed=refused verdict=refused'
+  # 121: outside dir symlink — sweepdir2/linkdir -> a dir outside $WORK;
+  # sweepdir2/*/*.md traverses the symlink to outside files (pre-fix:
+  # SWEEP_CLAIM_FALSE hit). The outside dir is created as a sibling of WORK
+  # so it shares the filesystem but is outside the allowed root.
+  mkdir -p "$WORK/../chousa-outside-r19" "$WORK/sweepdir2"
+  printf 'nested outside\n' >"$WORK/../chousa-outside-r19/nested.md"
+  ln -s "$WORK/../chousa-outside-r19" "$WORK/sweepdir2/linkdir"
+  write_rec sweeps-symlink-dir <<'EOF'
+# research-record v1
+## Sweeps
+| id | where | query | expected |
+|---|---|---|---|
+| W1 | sweepdir2/*/*.md | dir-escape-check | no hits |
+EOF
+  tsweeps sweeps-symlink-dir 1 'RESEARCH_GATE: DRIFT' \
+    'FINDING SWEEP_LOCATION_OUT_OF_CORPUS severity=crit surface=sweeps' \
+    'observed=refused verdict=refused'
+  # 122: in-root symlink control — safe/alias.md -> target/inside.md (both
+  # in-root); safe/*.md must NOT refuse the boundary (the symlink resolves
+  # inside the allowed root — normal hit semantics still apply).
+  mkdir -p "$WORK/safe" "$WORK/target"
+  printf 'in-root content\n' >"$WORK/target/inside.md"
+  ln -s "$WORK/target/inside.md" "$WORK/safe/alias.md"
+  write_rec sweeps-inroot-symlink <<'EOF'
+# research-record v1
+## Sweeps
+| id | where | query | expected |
+|---|---|---|---|
+| W1 | safe/*.md | inroot-check | no hits |
+EOF
+  tsweeps sweeps-inroot-symlink 1 'RESEARCH_GATE: DRIFT' \
+    'SWEEP_CLAIM_FALSE' 'observed=hit verdict=mismatch'
 
   if [[ $failures -eq 0 ]]; then
     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"
