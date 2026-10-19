@@ -584,7 +584,11 @@ is_denylist_path() {
     *op.env|*.env|*server.token*|*credentials/*|*/oauth/*) return 0 ;;
   esac
   [[ $f == *chrome-profile* || $f == *Cookies* || $f == *"Login Data"* ]] && return 0
+  # r22: the path-start forms also deny — a citation '.config/foo' (no './'
+  # prefix) must refuse the same as './.config/foo'. The */X/* patterns need
+  # a leading component; bare-start forms have none.
   [[ $f == *'/.omp/'* || $f == *'/.config/'* || $f == *'/.local/state/'* ]] && return 0
+  [[ $f == '.omp/'* || $f == '.config/'* || $f == '.local/state/'* ]] && return 0
   return 1
 }
 
@@ -5050,6 +5054,38 @@ EOF
 EOF
   tcase ptr-deny-symlink 1 'RESEARCH_GATE: DRIFT' \
     'FINDING POINTER_UNRESOLVED severity=warn surface=sources'
+
+  # 129-132 (r22): the .config/.omp/.local-state path-start denylist — the
+  # */X/* patterns need a leading component; bare-start forms '.config/foo',
+  # '.omp/foo', '.local/state/foo' (no './' prefix) passed CLEAN while
+  # './.config/foo' refused. The fix adds bare-start patterns.
+  # 129: .config path-start — must refuse SESSION_READ.
+  printf '{"id":"S1","source":".config/agent-token.txt","span":"secret","expect":"supported"}\n' \
+    >"$WORK/claims-config-start.jsonl"
+  mkdir -p "$WORK/.config" && printf 'secret\n' >"$WORK/.config/agent-token.txt"
+  tclaims claims-config-start 1 'RESEARCH_GATE: DRIFT' \
+    'FINDING CLAIM_SOURCE_SESSION severity=crit surface=claims' \
+    'CLAIM id=S1 expected=supported observed=refused' 'VERDICT_BEARING_CLAIMS=0/1'
+  # 130: .omp path-start — must refuse SESSION_READ.
+  printf '{"id":"S1","source":".omp/token.txt","span":"secret","expect":"supported"}\n' \
+    >"$WORK/claims-omp-start.jsonl"
+  mkdir -p "$WORK/.omp" && printf 'secret\n' >"$WORK/.omp/token.txt"
+  tclaims claims-omp-start 1 'RESEARCH_GATE: DRIFT' \
+    'FINDING CLAIM_SOURCE_SESSION severity=crit surface=claims' \
+    'CLAIM id=S1 expected=supported observed=refused' 'VERDICT_BEARING_CLAIMS=0/1'
+  # 131: .local/state path-start — must refuse SESSION_READ.
+  printf '{"id":"S1","source":".local/state/cred.txt","span":"secret","expect":"supported"}\n' \
+    >"$WORK/claims-localstate-start.jsonl"
+  mkdir -p "$WORK/.local/state" && printf 'secret\n' >"$WORK/.local/state/cred.txt"
+  tclaims claims-localstate-start 1 'RESEARCH_GATE: DRIFT' \
+    'FINDING CLAIM_SOURCE_SESSION severity=crit surface=claims' \
+    'CLAIM id=S1 expected=supported observed=refused' 'VERDICT_BEARING_CLAIMS=0/1'
+  # 132: benign .config-adjacent path — NOT a denylist hit (the path-start
+  # patterns must not over-refuse).
+  mkdir -p "$WORK/.config-adjacent" && printf 'line1\n' >"$WORK/.config-adjacent/file.md"
+  printf '{"id":"S1","source":".config-adjacent/file.md","span":"line1","expect":"supported"}\n' \
+    >"$WORK/claims-config-adjacent.jsonl"
+  tclaims claims-config-adjacent 0 'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=1/1'
 
   if [[ $failures -eq 0 ]]; then
     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"
