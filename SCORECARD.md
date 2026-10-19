@@ -954,3 +954,56 @@ candidates — the `ai benchmark(s)` boundary decision, `bug bounties`/
 symlink-escape guard, the `--drift` truncated-baseline detection, the
 fenced-data-row `approved` suppression, the 8 unasserted finding IDs.
 Seats: 16–32; roster logged in the round-19 report.
+
+## Round 19 verdict — 2026-10-19 (goal wave; evidence commit this landing)
+
+Selected claims (LOG.md round-19 opening): coverage/operability = the
+sweeps symlink-escape guard (round-16 named debt): `sweep_path_guarded`
+canonicalizes the glob's BASE but not each match, so a wildcard inside an
+in-root dir can match a symlink whose target is outside the allowed roots.
+depth = the symlink-escape mechanics note + the remaining named-debt
+dispositions. Wave: one 16-seat AgentSwarm call on **openai-codex
+gpt-6-luna-max** (zai exhaustion directive), 16/16 seat reports. Seat
+roster: the round-19 report.
+
+**Before** (gate `6e694881…`, selftest 119): the guard canonicalizes only
+the glob's base — `dir/*.md` matching an outside leaf symlink or
+`dir/*/*.md` traversing an outside dir symlink reports `SWEEP_CLAIM_FALSE`
+hit, not a boundary refusal (receipt `symlink-r19-20261019T174500Z-demo.log`,
+before half).
+
+**After** (gate `9f163807…`, selftest `PASS (122 cases, 0 skipped)`, cases
+1–119 `cmp` byte-identical vs the r18 receipt): `verify_sweeps` now
+canonicalizes every glob match and refuses the whole sweep if any match
+resolves outside both allowed roots — `SWEEP_LOCATION_OUT_OF_CORPUS` crit,
+`observed=refused`, no match paths reported. Cases 120–122 pin the escape
+class (outside leaf symlink, outside dir symlink, in-root symlink control
+unaffected). Masked battery vs the pre-round gate: ALL IDENTICAL. Drift
+`none` vs the r12 baseline; r1 `3/3`.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | the symlink-escape class is closed at the match level: before `SWEEP_CLAIM_FALSE` hit on an outside symlink → after `SWEEP_LOCATION_OUT_OF_CORPUS` crit + refused (receipts live) |
+| operability | **improved** | selftest 119 → 122 (1–119 byte-identical); per-match canonicalization is deterministic; no re-pin needed |
+| depth | **improved** | `corpus/knowledge/sweep-symlink-r19.md`: the escape mechanics (leaf + dir shapes), the fix contract, the named limits (post-expansion check, TOCTOU) |
+| freshness | **unchanged** | the r12 baseline holds (no re-pin); no stale pins moved |
+| calibration | **improved narrowly** | the fix landed at the discovered class only (match-level, not the guard's base contract); the remaining named debts are recorded |
+| adjacency | **unchanged** | zero network; corpus read-only; no sibling/fleet writes beyond the recorded queue rows |
+
+Admission: **ADMIT** (coverage/operability/depth/calibration(narrow)
+improved; none harmed). No scalar score. Learning trends: expansion
+improved, quality improved, discernment improved. Round 20 registered:
+curriculum round 9 — §Planned below.
+
+## Planned — round 20 (pre-registered 2026-10-19, at the round-19 landing)
+
+Wave per the curriculum (loop 1, round 9): one 64–128-seat AgentSwarm call,
+**openai-codex gpt-6-luna-max** (zai exhaustion directive). Claims
+pre-registered at the round-20 opening from the named-debt queue:
+candidates — the `ai benchmark(s)` boundary decision, `bug bounties`/
+`dispatch mechanisms`/`llm evaluations`/`llmbenchmark`/`language model
+benchmark(s)` inflection gaps, the `--drift` truncated-baseline detection,
+the fenced-data-row `approved` suppression, the 8 unasserted finding IDs,
+the secret-scan source coverage gap, the `--json` delimiter edge, the
+manifest timestamp mask breadth, bash-3 portability. Seats: 64–128; roster
+logged in the round-20 report.

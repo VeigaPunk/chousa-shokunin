@@ -682,3 +682,15 @@ Operator directive: **use the token-plan lanes for the deepseek-v4.1-flash swarm
 - **Claims** (curriculum loop 1 round 8): coverage/operability = the sweeps symlink-escape guard (round-16 named debt): `sweep_path_guarded` canonicalizes the glob's BASE directory but a wildcard inside a symlinked dir can match files outside the allowed roots — the guard sees the symlink's target (inside root) while the glob expands to the target's children (which may be outside). The fix must canonicalize each glob MATCH, not just the base. depth = the symlink-escape mechanics note + the remaining named-debt dispositions.
 - **Before-receipts**: selftest `PASS (119 cases, 0 skipped)`; drift `none` vs the r12 baseline; r1 `3/3`; gate `6e694881…`; HEAD `71b0b5f`.
 - **Wave**: one batched AgentSwarm call, 16 seats (curriculum 16–32), **openai-codex gpt-6-luna-max** (zai exhaustion directive). Seat roster lands in the round-19 report.
+
+## Round 19 — goal wave (2026-10-19)
+
+**Admission.** Landed (evidence commit this entry; wave: one 16-seat AgentSwarm call on **openai-codex gpt-6-luna-max** per the zai-exhaustion directive, 16/16 seat reports — zero deficit):
+
+- **Claim 1 (coverage/operability) — the sweeps symlink escape**: `sweep_path_guarded` canonicalizes the glob's literal BASE but not each match — a wildcard inside an in-root dir can match a symlink whose target is outside both roots (live demo: pre-round gate → `SWEEP_CLAIM_FALSE` hit on an outside symlink; landed → `SWEEP_LOCATION_OUT_OF_CORPUS` crit + refused; receipt `symlink-r19-20261019T174500Z-demo.log`). Two escape shapes closed: leaf symlink (`dir/*.md`) and directory symlink (`dir/*/*.md`). The fix canonicalizes every expanded match against `in_root` for both roots; any escape refuses the whole sweep.
+- **Claim 2 (depth)**: `corpus/knowledge/sweep-symlink-r19.md` — the escape mechanics, the fix contract, the named limits (post-expansion check — bash already traversed the symlinked dir during glob expansion; TOCTOU; `--root /` vacuous by declaration).
+- **Battery**: selftest `PASS (122 cases, 0 skipped)`, cases 1–119 `cmp` byte-identical vs the r18 receipt; r1 `3/3`; drift `none` vs the r12 baseline (no re-pin); masked battery vs the pre-round gate (LANE_ROOT intact, r13 method) ALL IDENTICAL; zero network. Gate `6e694881…` → `9f163807…`.
+- **Errata/records**: `corpus/README` + `evidence/README` + SKILL sweeps; SCORECARD verdict + round-20 registration.
+- **Verdicts** (SCORECARD §Round 19): coverage/operability/depth/calibration(narrow) **improved**; freshness/adjacency **unchanged**; none harmed. **ADMIT.** Capabilities +1. Round 20 registered (curriculum round 9: openai-codex gpt-6-luna-max, 64–128 seats — zai exhaustion directive).
+
+**Boundaries held.** Zero network; research corpus read-only; seats read-only; lane-identity pathspec-limited commits; no pushes. Receipt identity still OPEN (L0 row from round 12 unanswered — routed around). Round report: `.ufo/reports/round-19/chousa.md` (seat roster lands there).
