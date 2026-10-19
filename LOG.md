@@ -519,6 +519,13 @@ Round report: `.ufo/round-11/chousa-goalwave.md`.
 
 No axis claim was made, no score moved, no verdict changed, no number invented; existing `SCORECARD.md` bytes unchanged (original 30128-byte prefix byte-identical, `sha256 2e802345c72f31197f83d400958816544d9cc0df7c365d2658687685d519c373`).
 
+## 2026-10-17 — README: Devin wiki link
+
+- Operator directive (2026-10-17): insert the Devin wiki link into the README header of every repository with a generated wiki.
+- Change: `README.md` created (lane-header convention) with a `**Wiki:**` link to https://app.devin.ai/org/veigapunk/wiki/VeigaPunk/chousa-shokunin?branch=master.
+- Evidence: the org's Devin wiki index lists this repo's generated wiki; sibling lane READMEs carry the same `**Wiki:**` header.
+- Documentation-only change; no round run, no axis moved, no verdict changed.
+
 ## 2026-10-19 — round-12 opening: environment unblock, before-receipts, claim registration
 
 - **Battery unblock.** `--selftest` failed with `cat: write error: Disk quota exceeded` — the host per-user /tmp quota (same class as round 3's mid-acceptance exhaustion; the tmpfs itself had 3.1G free). Freed 6.4G of stale declared-ephemeral wave scratch under /tmp: 14 dirs (`d23` 2.2G, `P1` 484M, `p6` 443M, `c1` 348M, `m1h24` 294M, `f2` 268M, `m5-probe` 258M, `h24-H8` 251M, `f4` 230M, `f2f-scout` 211M, `h6` 200M, `h11` 177M, `s6` 147M, `s2-opencode` 147M), each verified zero open handles (`lsof +D`) and untouched >60 min before deletion. After: tmpfs 6.6G/16G used; `RESEARCH_GATE_SELFTEST: PASS (85 cases)` exit 0; `GATE_DRIFT: none` exit 0 vs `corpus/evidence/gate-baseline-r8-20261016T033757Z.json`; r1 counting command `VERDICT_BEARING_EXPORTS=3/3`.
