@@ -513,3 +513,6 @@ This supersedes the E2 carried list's bind bullet; E2/E1 stand otherwise.
 Revision trail: `46534902…` (r12 §6) → `16f93821…` (r13) → this revision.
 Gate `6b17e50c…` → `d8bbd0bf…`. Sites naming `16f93821…` carry the r13
 revision; update on next touch or cite this addendum.
+(E3 correction, same round: the bypass receipt files are
+`evidence/mount-r14-20261019T132025Z-bypass-{before,after}.log` — the
+`125621Z` stamp above is a typo; the file names on disk are authoritative.)
