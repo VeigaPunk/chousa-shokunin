@@ -902,3 +902,55 @@ from the named-debt queue: candidates — the `LLM benchmarks` phrase gap,
 the sweeps symlink-escape guard, the `--drift` truncated-baseline
 detection, the fenced-data-row `approved` suppression. Seats: 16–32;
 roster logged in the round-18 report.
+
+## Round 18 verdict — 2026-10-19 (goal wave; evidence commit this landing)
+
+Selected claims (LOG.md round-18 opening): coverage = close the `LLM
+benchmarks` phrase gap (round-16 named debt): `SCOPE_KENGAKU` has `model
+benchmark(s)` but not `llm benchmark(s)`/`llm scoring`/`ai benchmark(s)` —
+a record declaring `domain: LLM benchmarks` passes CLEAN despite the
+model-quality boundary. operability = the phrase-gap selftest cases. Wave:
+one 16-seat AgentSwarm call on **openai-codex gpt-6-luna-max** (zai glm-5.3-
+flash quota exhausted; operator directed codex luna max for all zai-assigned
+rounds until tomorrow), 16/16 seat reports. Seat roster: the round-18
+report.
+
+**Before** (gate `c2915f24…`, selftest 116): `SCOPE_KENGAKU` has `model
+benchmark(s)` and `model scoring` but not `llm benchmark(s)`/`llm
+scoring` — a record declaring `domain: LLM benchmarks` passes CLEAN
+(receipt `scope-r18-20261019T173000Z-demo.log`, before half).
+
+**After** (gate `6e694881…`, selftest `PASS (119 cases, 0 skipped)`, cases
+1–116 `cmp` byte-identical vs the r17 receipt): `SCOPE_KENGAKU` gains `llm
+benchmark|llm benchmarks|llm scoring` — the conservative 3-phrase set the
+wave's adversary seats validated. `ai benchmark(s)` stays named debt (too
+broad — "AI benchmark methodology research" is not model-quality scope).
+The plural form needs a separate entry (`scope_hit` matches literal phrases,
+never stems). Cases 117–119 pin the new phrases (llm-benchmarks refusal,
+llm-scoring refusal, prose-only control CLEAN). Masked battery vs the
+pre-round gate: ALL IDENTICAL. Drift `none` vs the r12 baseline; r1 `3/3`.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | the `llm benchmark(s)`/`llm scoring` gap is closed: before CLEAN on `domain: LLM benchmarks` → after `SCOPE_MODEL_QUALITY_ABSORBED` warn + DRIFT (receipts live) |
+| operability | **improved** | selftest 116 → 119 (1–116 byte-identical); the plural-form rule (literal-phrase match, no stemming) is now pinned |
+| depth | **improved** | `corpus/knowledge/scope-phrase-gap-r18.md`: the gap mechanics, the conservative-vs-broad fix boundary, the audit's other inflection findings dispositioned |
+| freshness | **unchanged** | the r12 baseline holds (no re-pin); no stale pins moved |
+| calibration | **improved narrowly** | the fix landed exactly the validated set (3 phrases, not 5 — `ai benchmark(s)` kept as named debt per the wave's adversary measurement); the provider deviation (zai → luna) is recorded |
+| adjacency | **unchanged** | zero network; corpus read-only; no sibling/fleet writes beyond the recorded queue rows |
+
+Admission: **ADMIT** (coverage/operability/depth/calibration(narrow)
+improved; none harmed). No scalar score. Learning trends: expansion
+improved, quality improved, discernment improved. Round 19 registered:
+curriculum round 8 — §Planned below.
+
+## Planned — round 19 (pre-registered 2026-10-19, at the round-18 landing)
+
+Wave per the curriculum (loop 1, round 8): one 16–32-seat AgentSwarm call,
+**openai-codex gpt-6-luna-max** (zai exhaustion directive). Claims
+pre-registered at the round-19 opening from the named-debt queue:
+candidates — the `ai benchmark(s)` boundary decision, `bug bounties`/
+`dispatch mechanisms`/`llm evaluations` inflection gaps, the sweeps
+symlink-escape guard, the `--drift` truncated-baseline detection, the
+fenced-data-row `approved` suppression, the 8 unasserted finding IDs.
+Seats: 16–32; roster logged in the round-19 report.
