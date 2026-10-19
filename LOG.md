@@ -578,3 +578,13 @@ Liveness probes (single agent, reply "alive"): opencode-go-5 → `402 Insufficie
 - **Verdicts** (SCORECARD §Round 13 verdict): coverage/operability/depth/freshness(narrow) **improved**; calibration/adjacency **unchanged**; none harmed. **ADMIT.** Capabilities +1 (hardlink-alias refusal). Learning: expansion/quality improved, discernment unchanged. Round 14 registered (curriculum round 3: zai glm-5.3-flash; fallback key 6 if zai is out; claim from the named-limit queue, pre-registered at opening).
 
 **Boundaries held.** Zero network; research corpus read-only; seats read-only; lane-identity pathspec-limited commits; no pushes (8 → 11 local commits; push remains operator/integrator-owned). Receipt identity still OPEN (L0 row filed at round 12, unanswered — routed around).
+
+### Round-14 provider deviation (2026-10-19, operator directive)
+
+Operator directive: **use the token-plan lanes for the deepseek-v4.1-flash swarms** instead of opencode-go. Standing assignment from round 14: deepseek-v4.1-flash waves run on **alibaba-token-plan** (keys -2/-3 are the overflow ladder; stick with the first working key per the standing doctrine, probing liveness before each wave). Round 13 and earlier ran on opencode-go-6 (recorded history, unchanged).
+
+## 2026-10-19 — round-14 opening: claims, before-receipts, dispatch
+
+- **Claims** (curriculum loop 1 round 3): coverage/operability = the mount-alias (bind) boundary — refuse claim/chain sources whose `st_dev` differs from the resolving root's device (`CLAIM_SOURCE_CROSS_DEVICE` / `CHAIN_SOURCE_CROSS_DEVICE`), closing the named residual the r13 reviewers carved out (same-device binds remain a named limit — stat cannot see them); the wave validates the unprivileged fixture strategy (user-namespace bind if available on this host; otherwise an absolute-path cross-device fixture) and BLOCKs to a documented named-limit if no sound check exists. depth = the mount/alias note (device semantics, why %d, the same-device-bind honesty) + registry sweep. Before: `grep -c CROSS_DEVICE tools/research-gate.sh` → 0; device logic absent.
+- **Before-receipts**: selftest `PASS (102 cases)`; drift `none` vs the r12 baseline; r1 `3/3`; st_dev probes absent (to be re-measured by the wave).
+- **Wave**: one batched AgentSwarm call, 64 seats, **alibaba-token-plan / deepseek-v4.1-flash** (operator directive above). Seat roster lands in the round-14 report.
