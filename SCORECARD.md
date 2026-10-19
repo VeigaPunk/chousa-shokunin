@@ -1230,3 +1230,74 @@ fenced-data-row `approved` suppression, the 8 unasserted finding IDs,
 the secret-scan source coverage gap, the `--json` delimiter edge, the
 manifest timestamp mask breadth, bash-3 portability. Seats: 64; roster
 logged in the round-24 report.
+
+## Round 24 verdict — 2026-10-19 (kaika campaign landing; self-verdicts pending non-author verification)
+
+Disposition of the pre-registration (round-24 criterion 11): planned one
+64-seat AgentSwarm call on opencode-go key 7; the round-24 opening
+(`LOG.md` :816-820) recorded opencode-go-7 interrupted at 17 seats and a
+64-seat luna dispatch. That dispatch produced no seat report in this lane or
+in the fleet `.ufo/reports/round-24/` — nothing from it is used here. This
+landing ran under the orchestrator's kaika binding (tower worktree
+`kaika/round`): one batched 10-member L2 call (planner, connector, scout,
+4 executors, scribe, reviewer, critic; models by the session route table,
+none passed). The first attempt was refused whole by the session's
+100-job cap and retried unchanged as one batch; 10/10 completed.
+
+Selected claims: the pre-registered `--json` delimiter edge (operability)
+first; the pre-registered depth slot (the manifest-format note) lands as
+claim 1's record and is NOT separately claimed — its before→after is claim
+1's, so a separate depth claim would not be causally separable (round
+critic, finding 7). Campaign slots: coverage (source registry + three
+current-art method entries, one claim) and calibration (mistakes → criteria).
+
+| # | axis | claim | counting command | before (ab19cff) | after | verdict |
+|---|---|---|---|---|---|---|
+| 1 | operability (lowest scored) | `--json` append onto a manifest whose last byte is not `\n` glued two objects; the write-only and NUL variants found mid-round | `bash corpus/evidence/round24-measure.sh <tree>` §claim 1 (also verbatim in `json-r24-20261019T213117Z-demo.log`) | `MANIFEST_LINES=1 INVALID_JSON_LINES=1` | `MANIFEST_LINES=2 INVALID_JSON_LINES=0`; selftest 133 → 136 (1–133 byte-identical); mutants m1/m2/m3 killed | **improved** |
+| 2 | coverage + capability `source registry` | `corpus/SOURCES.md` (contract v1) and 3 method entries admitted through it | `bash corpus/evidence/round24-measure.sh <tree>` §claim 2: per-entry header + every cited row `mined` with `used-by` naming the entry + coverage-map row; then the 7 contract census commands | `EXPANSION_ADMITTED=0/3`; registry absent | `EXPANSION_ADMITTED=3/3`; 18 rows, malformed 0, A=14 B=1 C=3, mined=8 queued=7 rejected=3, no dup/enum/missing, 4/4 sections | **improved** |
+| 3 | calibration | the lane's own 14 mistake classes mined; unlearned classes get a criterion citing its lesson | `bash corpus/evidence/round24-measure.sh <tree> [<bar>]` §claim 3 over `corpus/lessons/round-24.md` | 3/14 captured (bar `ab19cff:corpus/QUALITY.md`) | 13/14 (M-8 stays `none`, by reason) | **improved** |
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** (claim 1) | receipts `json-r24-20261019T213117Z-*`; score re-derived per criterion 12: round-1 counting command → `VERDICT_BEARING_EXPORTS=3/3` → **3**, unchanged (the score measures a narrow 3/10 construct, not this round's arm) |
+| coverage | **improved** (claim 2) | first method entries since round 2 off gate-hardening ground; `corpus/README.md` coverage rows + Frontier round-24 paragraph |
+| calibration | **improved** (claim 3) | `corpus/lessons/round-24.md` `## Mistakes`; `corpus/QUALITY.md` criteria 6–12 |
+| depth | **unchanged** (not claimed) | the manifest note and method entries add detail, but no depth before→after was measured |
+| freshness | **unchanged** | drift `none` vs the r12 baseline (no re-pin); README count re-derived as an appended correction |
+| adjacency | **unchanged** | benchmark results in S006/S007 kept out of admitted knowledge (kengaku); routed in the report |
+
+No axis harmed: battery ALL IDENTICAL, drift `none`, r1 `3/3`, cases 1–133
+byte-identical. Admission is the operator's after non-author verification.
+
+## Capabilities (round-24 addition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| source registry | keeps where the lane learns as opened, scope-tiered rows with kept rejections, study paths and a search log; every contract census command runs clean | `corpus/SOURCES.md`; census outputs in the round-24 report | 24 |
+
+Not backfilled here: the 8 capability acquisitions `LOG.md` claims for
+rounds 15 and 17–23 still have no row (`lessons/round-24.md` M-14) —
+queued below.
+
+## Planned — round 25 (pre-registered 2026-10-19, at the round-24 landing)
+
+Claims, 1–3, distinct axes, each falsifiable; wave per the binding in force
+at dispatch:
+
+1. **operability — metadata screen.** A gate check for the `source:` /
+   `verified-at:` / `recheck:` header (`QUALITY.md` 6). Before: the 3 legacy
+   notes lacking `recheck:` (`archives-verified-r9.md`, `audit-r11.md`,
+   `gate-baseline-r8.md`) are invisible to every mode; after: each names
+   its finding, the 28 others stay clean, selftest cases 1–136 byte-identical.
+2. **freshness — re-derive the indexes and ledgers.** Index the 2 unindexed
+   files, add Frontier rows r11–r23 and evidence-index sections r12–r23,
+   backfill the 8 capability rows. Before/after by the commands in
+   `corpus/README.md` (round-24 correction) and `lessons/round-24.md` M-12, M-14.
+3. **calibration — close stale restatements append-only.** `SKILL.md`'s
+   open A-r9 C3 finding, the three divergent ledger totals, the `${GSHA}`
+   placeholder, hardening addenda r16–r23 (M-3, M-4, M-5, M-6).
+
+Remaining round-20 named debt, unclaimed: manifest concurrency (`flock`),
+manifest timestamp mask breadth, `ai benchmark(s)` boundary, inflection
+gaps, fenced-data-row `approved` suppression, 8 unasserted finding IDs,
+secret-scan source coverage, bash-3 portability.

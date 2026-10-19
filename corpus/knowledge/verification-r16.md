@@ -75,3 +75,13 @@ The r15 battery receipt is replaced: `corpus/evidence/root-r15-20261019T152000Z-
 `${r%/}` left `/` — which still rendered `//*`. The loop collapses `//` → `/`
 → `""`; `""/*` renders `/*` which matches `/` and every descendant. Selftest
 case 111 pins it (`/etc/hostname` read under `CHOUSA_ROOT=//`).
+
+## Round-24 disposition addendum (appended 2026-10-19; rows above unchanged)
+
+| finding | seat | r24 disposition |
+|---|---|---|
+| `--json` manifest append doesn't ensure delimiter before new object | 24 | **closed r24** — the append prefixes `\n` when the manifest's last byte (read as hex) is not `0a`, and a non-empty unreadable manifest is refused before any write; selftest cases 134–136; `corpus/knowledge/json-delimiter-r24.md` |
+| `--drift` can't distinguish truncated baseline from valid drift | 26 | **closed r24 as not a defect** — re-measured at the round-24 opening: every truncation form exits 1 with `GATE_DRIFT: <tokens>` (`LOG.md` round-24 opening, commit `098f5e6`) |
+
+The other named-debt rows above keep their round-17 queue disposition; the
+open queue is restated only in `SCORECARD.md` `## Planned — round 25`.

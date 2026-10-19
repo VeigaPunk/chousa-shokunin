@@ -46,10 +46,23 @@
 
 | `lessons/2026-10-16-verifying-conversion-not-original.md` | Round-9 lesson: verifying a conversion is not verifying the original — six measurements (the same bytes DRIFT raw and CLEAN converted; the conversion authors structure the source cannot supply — zero `#`/pipe-table lines in the archives vs 9 headings + 44/45/48 table rows per record, so only `quote`/`line` anchors can resolve; the chain of custody stops at the export — zero `http` strings, citation chips as exempt `blocked-no-fetch` hops; coverage is a selection — 27 gate-checked spans over 23 distinct source lines, union 31 of 109 prose lines; row anchors only partially checked — a nonexistent-line pointer probe composes CLEAN, and the round's own `A-r9.md:50` row C3 misses its line (18/19 audit); derived structure adds claims the source never made and cuts remove answers), the durable rules (ship the raw-DRIFT control beside any conversion-CLEAN; report spans-over-lines; record which anchor kinds the source supports; selection is the conversion's unchecked act; pair row anchors with span companions; keep derived artifacts at their true tier) | gate sha `46f5ddb3…` (unchanged); probes summarized in the lesson; fixture pins in `fixtures/archives-r9/README.md`; `evidence/archives-r9-20261016T045404Z-*.log` |
 | `lessons/2026-10-16-archive-scale-controls-and-ledger.md` | Round-10 lesson: a defect class is proven at the scale you certify — six measurements (the production-shape mutants, with the silence of the other four sections as part of the evidence — `drift-sections=1 findings=1` is two-sided; minimal shape-preserving mutations shipped with their provenance trio — parent sha, control sha, byte-delta, same-window CLEAN re-derivation; the counted-but-never-verified exempt set audited instance-by-instance against source bytes (6/6), class-level limit kept named; the ledger as terminal disposition so carried residuals stop being re-narrated; when the canonical finding cannot fire alone, pick the smallest edit that isolates one finding — `NO_QUESTION` over `RECORD_SCHEMA_INVALID`) and the durable rules (mutate a production record, one defect per control; keep mutations minimal and shape-preserving; enumerate the counted-but-never-verified items; give every limit a terminal disposition in ONE ledger; a hardening round should end by producing the next audit's starting map) | gate sha `46f5ddb3…` (unchanged); probes summarized in the lesson; control/record/archive pins in `fixtures/archives-r9/controls/README.md`; the lesson pins the note's interim revision (`f5dc8889…`, 68 rows / 27-item queue) and the note's §5 maps its spot-check rows to the final (71/30); see Round-10 evidence |
+| `knowledge/json-delimiter-r24.md` | Round-24 note: the `verify-all --json` delimiter edge — an append onto a manifest whose last byte is not `\n` glued two objects onto one invalid line; the hex last-byte probe, the unreadable-manifest refusal, cases 134–136, controls, three killed mutants, the measured single-writer limit | `S001`, `S013` (`corpus/SOURCES.md`); `evidence/json-r24-20261019T213117Z-{demo,selftest,battery,drift}.log` |
+| `knowledge/claim-support-states-r24.md` | Round-24 method note (current art): access, relevance, support at a named anchor and truth are four separately failable observations; `verified` needs support, truth needs more than support; the gate's span check is support at byte granularity only | `S006` §3.3, `S007` §2.1; this file's §"Known gaps" |
+| `knowledge/citation-chain-fidelity-r24.md` | Round-24 method note (current art): a resolved hop proves a locator exists, not that the relay is faithful; the five-item per-hop comparison (proposition, scope, quantity, hedge, date) and the altered-qualifier disposition | `S005` §4, §6, Fig. 1 fn 1; `S003` "Trace claims…"; `knowledge/chain-resolution-r3.md:133` |
+| `knowledge/contextual-source-admission-r24.md` | Round-24 method note (current art): source priority is decided per claim — the per-source admission row; the primary > secondary > aggregator ladder stays the default ordering, overridden with a stated reason | `S002` Principle #2, `S004` §24.2.1.3, `S003` "Investigate the source" |
+| `lessons/round-24.md` | Round-24 lesson: the lane's own mistakes M-1..M-14 (class · re-verified pointer · capturing criterion · fix), the criteria 6–12 they motivated, the round's source Gate | STATE dossier §4/§5; `corpus/QUALITY.md` |
+| `SOURCES.md` | Where the lane learns (contract v1): 18 opened rows with scoped A/B/C tiers, 3 kept rejections with flips, study paths, a bounded search log, unopened leads | `kaika/SOURCES-CONTRACT-v1.md`; each row's own anchor |
 
 Count: 20 entries, ten knowledge notes and ten lessons — `functions.glob`
 pattern `corpus/knowledge/*.md;corpus/lessons/*.md`, 2026-10-16. Fixture and
 evidence files are coverage-listed but not additional knowledge entries.
+
+Round-24 correction (appended; the count above is the dated 2026-10-16
+snapshot): 40 entries — 28 knowledge notes and 12 lessons
+(`ls corpus/knowledge/*.md | wc -l` → 28; `ls corpus/lessons/*.md | wc -l`
+→ 12, 2026-10-19). Two older files are still unindexed above
+(`knowledge/audit-r11.md`, `lessons/2026-10-19-hardlink-alias-boundary.md`) —
+queued for round 25.
 
 ## Round-1 evidence
 
@@ -474,3 +487,19 @@ is unchanged.
 Still open and integrator/operator-owned:
 receipt identity for mission acceptance (proven receipt-backed rounds remain 0; operator target at least 100), the non-author admit/reject spot-check, and frozen-replay conformance. The scope-refusal gate findings landed at round 12 (`knowledge/scope-refusal-r12.md`). Semantic and
 external-source verification remain out of scope by design.
+
+Round 24 (loop 2, round 1) closed the `--json` delimiter edge (round-20
+named debt, seat 24): on `full-r6.md` with a manifest ending `{"prior":true}`
+and no final newline, the pre-round gate measured `MANIFEST_LINES=1
+INVALID_JSON_LINES=1` and the landed gate `MANIFEST_LINES=2
+INVALID_JSON_LINES=0`; the L2 reviewer's write-only and NUL variants were
+closed in the same landing (cases 134–136; `knowledge/json-delimiter-r24.md`).
+It also moved the frontier off gate-hardening for the first time since
+round 2: three method notes from opened current art — claim-support states,
+citation-chain fidelity, contextual source admission — each admitted through
+`QUALITY.md` and citing `mined` rows of the new `SOURCES.md`. These notes
+govern the analyst's method; no gate mode checks semantic support, fidelity
+or suitability, and none is claimed. Still open: concurrent appenders to one
+manifest (one blank line in 1 of 3 sixteen-writer runs), the remaining
+round-20 named debt (SCORECARD `## Planned — round 25`), and the queued
+SOURCES rows S008–S012, S017, S018 waiting for an entry that mines them.

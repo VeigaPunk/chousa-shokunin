@@ -2369,6 +2369,12 @@ verify_all() {
     if [[ -e $JSON_ARG && ! -f $JSON_ARG ]]; then
       die_usage "manifest path is not a regular file: $JSON_ARG (--json)"
     fi
+    # The append below must read the manifest's last byte to keep JSONL
+    # delimiting; a non-empty manifest it cannot read is refused before any
+    # write rather than appended to blind (r24).
+    if [[ -s $JSON_ARG && ! -r $JSON_ARG ]]; then
+      die_usage "manifest unreadable: $JSON_ARG (--json; its last byte decides the delimiter)"
+    fi
   fi
 
   local -a VA_ORDER=(structure claims chain sweeps integrity)
@@ -2481,6 +2487,20 @@ verify_all() {
     line="{\"schema\":\"chousa-verify-all/v1\",\"ts\":\"$TS_UTC\",\"record\":\"$(json_escape "$record")\""
     line+=",\"record_sha256\":\"$sha_rec\",\"gate_sha256\":\"$sha_gate\",\"sections\":[$sec_json]"
     line+=",\"verdict\":\"$roll\",\"sections_run\":$n_run,\"sections_absent\":$n_absent,\"drift_sections\":$n_dsec}"
+    # A manifest whose last byte is not '\n' (hand-edited, truncated, or
+    # written by another tool) would glue this object onto its last line —
+    # `{"prior":true}{"schema":...}` — invalid JSONL. Terminate it first;
+    # an empty or newline-terminated manifest is appended to unchanged (r24).
+    # The last byte is read as hex: a bare $(tail -c1) drops NUL bytes and
+    # would miss a NUL-terminated manifest. (Unreadable + non-empty is
+    # refused at setup, before any write.)
+    local jlast=''
+    if [[ -s $JSON_ARG ]]; then
+      jlast=$(tail -c1 -- "$JSON_ARG" 2>/dev/null | od -An -tx1 | tr -d ' \n' || true)
+    fi
+    if [[ -n $jlast && $jlast != 0a ]]; then
+      line=$'\n'$line
+    fi
     if ! printf '%s\n' "$line" >>"$JSON_ARG"; then
       printf 'research-gate: manifest append failed: %s\n' "$JSON_ARG" >&2
       exit 2
@@ -5121,6 +5141,59 @@ EOF
   printf '{"id":"S1","source":".config-adjacent/file.md","span":"line1","expect":"supported"}\n' \
     >"$WORK/claims-config-adjacent.jsonl"
   tclaims claims-config-adjacent 0 'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=1/1'
+
+  # 134–136 (r24): the --json manifest delimiter edge — an append onto a
+  # manifest whose last byte is not '\n' glued the new object onto the prior
+  # line (`{"prior":true}{"schema":...}`). The fix terminates the prior line
+  # first; the prior bytes stay byte-identical (append-only) and no blank line
+  # is written. 135: a NUL last byte (a bare $(tail -c1) drops NUL and misses
+  # it). 136: a non-empty manifest whose last byte cannot be read is refused
+  # before any write (a write-only manifest would otherwise be glued).
+  r24_case() { # NAME PRIOR(printf fmt) WANT_RC WANT_LINES PRIOR_IS_JSON [TOKEN]
+    local name=$1 prior=$2 want_rc=$3 want_lines=$4 pj=$5 tok=${6:-}
+    local f="$WORK/$1.jsonl" rc=0 out msg='' n
+    cases=$((cases + 1))
+    printf "$prior" >"$f"
+    if [[ $name == *unreadable* ]]; then chmod 200 "$f"; fi
+    out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+      CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+      bash "$SELF" verify-all "$WORK/all-pass.md" --claims "$WORK/claims-pass.jsonl" \
+      --json "$f" 2>&1) || rc=$?
+    chmod 600 "$f"
+    [[ $rc -eq $want_rc ]] || msg+="rc=$rc/$want_rc "
+    n=$(wc -l <"$f" | tr -d ' ')
+    [[ $n -eq $want_lines ]] || msg+="manifest-lines=$n/$want_lines "
+    # -a: GNU grep treats a NUL as a line break in a binary file (case 135).
+    [[ $(grep -a -c '^$' -- "$f" || true) -eq 0 ]] || msg+="blank-line "
+    if [[ $want_lines -eq 2 ]]; then
+      sed -n 2p -- "$f" | grep -q '^{"schema":"chousa-verify-all/v1"' || msg+="schema-not-own-line "
+    fi
+    if [[ $pj -eq 1 ]]; then
+      [[ $(sed -n 1p -- "$f") == '{"prior":true}' ]] || msg+="prior-line-altered "
+      if command -v python3 >/dev/null 2>&1; then
+        python3 -c 'import json,sys
+for ln in sys.stdin.read().splitlines():
+    if ln.strip():
+        json.loads(ln)' <"$f" >/dev/null 2>&1 || msg+="json-invalid "
+      fi
+    fi
+    if [[ -n $tok && $out != *"$tok"* ]]; then msg+="missing:'$tok' "; fi
+    if [[ -z $msg ]]; then
+      printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" "$name" "$rc"
+    else
+      printf 'FAIL-case %-28s %s\n' "$name" "$msg"
+      printf '%s\n' "$out" | sed 's/^/    | /'
+      failures=$((failures + 1))
+    fi
+  }
+  r24_case json-unterminated-manifest '{"prior":true}' 0 2 1
+  r24_case json-nul-terminated-manifest '{"prior":true}\0' 0 2 0
+  if [[ $(id -u) -ne 0 ]]; then
+    r24_case json-unreadable-manifest '{"prior":true}' 2 0 1 'manifest unreadable'
+  else
+    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" json-unreadable-manifest 'root reads any file'
+  fi
 
   if [[ $failures -eq 0 ]]; then
     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"
