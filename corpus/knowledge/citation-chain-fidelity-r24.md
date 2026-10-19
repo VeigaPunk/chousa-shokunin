@@ -47,3 +47,41 @@ Relation to `SKILL.md:19`: the decision row's output — "chain with each hop's 
 
 - Rejected: "anchor found = claim faithfully relayed." Reason: S005 Figure 1 keeps an anchor — the cited letter exists and is quoted — while the relay drops the population qualifier; the lane's fixture hop 6 resolves over disagreeing statements. Flip: accept if the gate gains a per-hop comparison arm AND a labelled set shows `resolved` and `faithful` agreeing ~1:1.
 - Rejected: "citing the review that cites the original is equivalent to citing the original." Reason: S005 §6 measures lower fidelity under intermediary engagement, correlated with the intermediary's own fidelity. Flip: accept for a specific claim if that intermediary's relay is itself verified faithful against the original at that claim.
+
+## Erratum (round 24, post-review; appended 2026-10-19 — line 9 left as written)
+
+Line 9's "Falsifier" is mislabelled. A `resolved` hop whose relay alters the
+source (S005 Figure 1; fixture `chain-r3.md` hop 6) is a confirming instance
+of the claim, not a refuting one. The claim has two parts, and each is refuted
+by a different observation:
+
+- **Part A — "`resolved` does not establish fidelity."** Refuted if a check
+  that compares only locators shows it catches altered hops: on a labelled
+  hop set that includes relays which alter proposition, scope, quantity,
+  hedge or date while the anchor still resolves, `verify-chain` (or any
+  resolution-only check) returns non-`resolved` for every altered hop, and
+  `resolved` for every faithful hop — that is, resolution and fidelity
+  agree on all labelled hops. If that held, resolving would carry fidelity
+  and this entry would be wrong. Today `chain-r3.md` hop 6 already resolves
+  over disagreeing statements (`chain-resolution-r3.md:133-136`), so Part A
+  stands; it is falsifiable, not refuted.
+- **Part B — "a `faithful` disposition needs the per-hop comparison."**
+  Refuted if dispositions made without the five-item comparison
+  (proposition, scope, quantity, hedge, date) agree with dispositions made
+  with it on a labelled hop set as often as two independent comparisons
+  agree with each other. Then the comparison would add nothing, and the
+  rule would be ceremony. This is unmeasured locally (§Limits, "Unknown").
+
+Re-check against `corpus/QUALITY.md` after this erratum:
+
+| criterion | status |
+|---|---|
+| 1 falsifiable | now met — Parts A and B each name a refuting observation |
+| 2 sourced anchor | met — `source:` line 3 |
+| 3 observation / inference / unknown separate | met — §Limits; Part B is marked unmeasured |
+| 4 errata append-only | met — this block; line 9 unchanged |
+| 5 rejection kept | met — §Rejected |
+| 6 metadata header | met — `source:` S005, S003 (both `mined`, `used-by` names this entry), `verified-at:`, `recheck: 90d` |
+| 7 scoped tier | met — S005 for its measured scholarly corpus; web transfer labelled inference (line 42) |
+| 8 support states distinct | met — `resolved` (locator exists) is kept apart from `faithful` |
+| 9–12 | not applicable — no restated count, placeholder, plan or score |
