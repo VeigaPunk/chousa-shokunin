@@ -694,3 +694,9 @@ Operator directive: **use the token-plan lanes for the deepseek-v4.1-flash swarm
 - **Verdicts** (SCORECARD §Round 19): coverage/operability/depth/calibration(narrow) **improved**; freshness/adjacency **unchanged**; none harmed. **ADMIT.** Capabilities +1. Round 20 registered (curriculum round 9: openai-codex gpt-6-luna-max, 64–128 seats — zai exhaustion directive).
 
 **Boundaries held.** Zero network; research corpus read-only; seats read-only; lane-identity pathspec-limited commits; no pushes. Receipt identity still OPEN (L0 row from round 12 unanswered — routed around). Round report: `.ufo/reports/round-19/chousa.md` (seat roster lands there).
+
+## 2026-10-19 — round-20 opening: claims, before-receipts, dispatch
+
+- **Claims** (curriculum loop 1 round 9 — the second verification-scale wave): coverage/calibration = adversarially re-audit the expanded boundary stack (rounds 15–19's fixes: in_root, fence-aware load_sections, SCOPE_KENGAKU phrase expansion, per-match sweeps canonicalization) for correctness defects, missed coverage, and interactions the earlier rounds didn't test. The audit surface: the 122 selftest cases' assertion quality, the named limits' honesty, the dispositioned findings' actual status, and the interaction matrix between the four boundary mechanisms. operability = the audit's own receipts + any fixes that land.
+- **Before-receipts**: selftest `PASS (122 cases, 0 skipped)`; drift `none` vs the r12 baseline; r1 `3/3`; gate `9f163807…`; HEAD `2bb556b`.
+- **Wave**: one batched AgentSwarm call, 64 seats (curriculum 64–128), **openai-codex gpt-6-luna-max** (zai exhaustion directive). Seat roster lands in the round-20 report.
