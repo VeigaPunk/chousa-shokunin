@@ -676,3 +676,9 @@ Operator directive: **use the token-plan lanes for the deepseek-v4.1-flash swarm
 - **Verdicts** (SCORECARD §Round 18): coverage/operability/depth/calibration(narrow) **improved**; freshness/adjacency **unchanged**; none harmed. **ADMIT.** Capabilities +1. Round 19 registered (curriculum round 8: openai-codex gpt-6-luna-max, 16–32 seats — zai exhaustion directive).
 
 **Boundaries held.** Zero network; research corpus read-only; seats read-only; lane-identity pathspec-limited commits; no pushes. Receipt identity still OPEN (L0 row from round 12 unanswered — routed around). Round report: `.ufo/reports/round-18/chousa.md` (seat roster lands there).
+
+## 2026-10-19 — round-19 opening: claims, before-receipts, dispatch
+
+- **Claims** (curriculum loop 1 round 8): coverage/operability = the sweeps symlink-escape guard (round-16 named debt): `sweep_path_guarded` canonicalizes the glob's BASE directory but a wildcard inside a symlinked dir can match files outside the allowed roots — the guard sees the symlink's target (inside root) while the glob expands to the target's children (which may be outside). The fix must canonicalize each glob MATCH, not just the base. depth = the symlink-escape mechanics note + the remaining named-debt dispositions.
+- **Before-receipts**: selftest `PASS (119 cases, 0 skipped)`; drift `none` vs the r12 baseline; r1 `3/3`; gate `6e694881…`; HEAD `71b0b5f`.
+- **Wave**: one batched AgentSwarm call, 16 seats (curriculum 16–32), **openai-codex gpt-6-luna-max** (zai exhaustion directive). Seat roster lands in the round-19 report.
