@@ -52,6 +52,13 @@
 | `knowledge/contextual-source-admission-r24.md` | Round-24 method note (current art): source priority is decided per claim — the per-source admission row; the primary > secondary > aggregator ladder stays the default ordering, overridden with a stated reason | `S002` Principle #2, `S004` §24.2.1.3, `S003` "Investigate the source" |
 | `lessons/round-24.md` | Round-24 lesson: the lane's own mistakes M-1..M-14 (class · re-verified pointer · capturing criterion · fix), the criteria 6–12 they motivated, the round's source Gate | STATE dossier §4/§5; `corpus/QUALITY.md` |
 | `SOURCES.md` | Where the lane learns (contract v1): 18 opened rows with scoped A/B/C tiers, 3 kept rejections with flips, study paths, a bounded search log, unopened leads | `kaika/SOURCES-CONTRACT-v1.md`; each row's own anchor |
+| `knowledge/audit-r11.md` | Round-11 capstone audit, a dated snapshot (2026-10-16, HEAD `44cbad6`): findings A1–A28 with verdicts and pins, defects D1–D5 with dispositions, the final debt register, SHONEN readiness ("NOT promotion-eligible"). Its pins are as-of that date: gate `46f5ddb3…` is superseded, and the ledger `3845709b…` is superseded by `hardening-r10.md` §6 and its addenda (counts owner from round 25: the round-25 erratum). Its header has no `recheck:` key (`verify-metadata` → `META_RECHECK_ABSENT`) | `knowledge/audit-r11.md` `:299-344` (pins, errata); `knowledge/hardening-r10.md` §6 + round-25 erratum |
+| `lessons/2026-10-19-hardlink-alias-boundary.md` | Round-13 lesson: the hardlink-alias boundary — one `stat -c '%s %h'` probe serves the r12 size cap and the r13 alias check; refuse-on-count chosen over partner enumeration (both enumeration designs BLOCKed as unsound); carry-forwards named (TOCTOU, same-device bind mounts, unmeasurable stat). Gate `6b17e50c…` is the r13 gate, superseded at r14 by `d8bbd0bf…` | `evidence/alias-r13-20261019T123621Z-{selftest,bypass-before,bypass-after,battery}.log`; `knowledge/hardlink-alias-r13.md`; `knowledge/hardening-r10.md` Round-13 addendum |
+| `lessons/round-24-verifier-spotcheck.md` | Outside check on round 24, written by the integrator (not lane-owned; never edited here): admit/reject spot-check (4/4 admits, 3/3 rejects agree), ADMITTED after erratum `095b90c`; named debts — concurrent-append blank-line residual, citation-chain recheck needs the fleet root as `--root`, the lesson template should carry a spot-check slot (dispositioned in `lessons/round-25.md` `## Spot-check intake`) | fleet `.ufo/waves/kaika-w3/chousa-review.md`, `chousa-critic.md` |
+| `knowledge/metadata-screen-r25.md` | Round-25 note: the `verify-metadata` mode — header-region grammar, the `META_*` finding set and severities, the round-25 entry refusals, `METADATA_COMPLETE=N/M`; the lane-corpus result (25/28; the three legacy entries lacking `recheck:`) and its named limits (key presence and date shape, not criterion-6 compliance) | `evidence/round25-claims.md` claim 1; `evidence/round25-measure-after.log`; selftest cases 137–154; `fixtures/metadata-r25/`; `SOURCES.md` S019 |
+| `fixtures/metadata-r25/*` (+ `README.md`) | Round-25 metadata-screen fixture set: 18 single-defect mutants, 6 edge cases and 3 clean controls derived from real entry headers, with a hand-derived expectation table (one row corrected after the differential) | `evidence/round25-meta-differential.{sh,log}` (`AGREE=54/54`); `evidence/round25-meta-oracle.py` |
+| `lessons/round-25.md` | Round-25 lesson: mined mistakes (class · pointer · captured-by · fix shown able to fail), the round-24 spot-check intake, the sources opened this round | `evidence/round25-measure-{before,after}.log`; `QUALITY.md` criteria 13–14 |
+| `evidence/round25-*` | Round-25 pre-registration (`round25-claims.md`), counting script and its before/after outputs (`round25-measure.sh`, `-before.log`, `-after.log`), the metadata oracle and differential, the ledger recount (`round25-ledger-recount.py`) | `SCORECARD.md` `## Round 25 verdict` |
 
 Count: 20 entries, ten knowledge notes and ten lessons — `functions.glob`
 pattern `corpus/knowledge/*.md;corpus/lessons/*.md`, 2026-10-16. Fixture and
@@ -63,6 +70,14 @@ snapshot): 40 entries — 28 knowledge notes and 12 lessons
 → 12, 2026-10-19). Two older files are still unindexed above
 (`knowledge/audit-r11.md`, `lessons/2026-10-19-hardlink-alias-boundary.md`) —
 queued for round 25.
+
+Round-25 correction (appended 2026-10-21; supersedes the round-24 count
+as current at this landing): 43 entries — 29 knowledge notes and 14 lessons
+(`ls corpus/knowledge/*.md | wc -l` → 29;
+`ls corpus/lessons/*.md | wc -l` → 14). The count now includes the
+integrator's round-24 verifier spot-check (a new file after the r24 count).
+The two older files named above are indexed, along with that spot-check and
+the round-25 entry/lesson; no unindexed base file remains.
 
 ## Round-1 evidence
 
@@ -484,6 +499,278 @@ receipt gap flagged for the capstone audit; see Known gaps). The r10
 receipts are lane-local logs (no queue taskKey), so the receipt-identity debt
 is unchanged.
 
+Rounds 11–23 (paragraphs appended at round 25; each drafted by a round-25 seat
+from that round's `SCORECARD.md` verdict, `LOG.md` entry, knowledge note,
+receipts and read-only git, with a path:line citation for every number in
+`.ufo/waves/round-25/build/Frontier*.md`; the integrator kept each draft's
+limits, including receipt gaps the drafts found).
+
+Round 11 ran the capstone audit that round 10 registered
+(SCORECARD.md:421-423), on the in-session wave routing: one 32-seat flash
+call, which the scorecard records as "31/31+ reports" and the wave report as
+32 audit seats; the seat count is unverifiable without rosters and was folded
+in at admission as a correction. The move re-executed rather than changed
+anything: every admitted round's evidence commits and gate blobs were resolved
+by command, the battery was re-run at today's bytes, the 71-row limit ledger
+and its 30-item queue were re-parsed, and SHONEN readiness was assessed
+without self-attestation. The before→after observable on the gate is flat:
+gate `46f5ddb3…` at HEAD `44cbad6…` before and after the battery, selftest
+`PASS (85 cases)`, `GATE_DRIFT: none` against the r8 baseline `1c81a6cb…`, and
+the r1 counting command at `VERDICT_BEARING_EXPORTS=3/3`. What moved is the
+record: 28 re-audited findings rows (A1–A28), five audit-layer defects
+(D1–D5), and a verdict of ADMIT-with-correction with calibration and depth
+improved and freshness unchanged. Holds: selftest case lines identical to the
+r8 receipt, the verify-all manifest at 8 lines with sha `78627e6d…` equal to
+HEAD, zero network syscalls in the re-run trace, and the fixtures, records and
+controls reproducing their verdicts. That observable is not saturated: the
+note re-ran the commit, gate and verdict surfaces, but round 2–10 chain
+verification is attributed to per-round auditors whose reports the note could
+not see, so the 15/15 chain re-execution covers round 2 alone; receipt
+identity stays open for the operator at 0 of 10 receipt-backed rounds; SHONEN
+is 0/4 with no named non-author verifier; no round-11-named receipt exists
+under `corpus/evidence/`, so the battery lives verbatim in the note and the 39
+logs it counts are the r2–r10 families; D1, D2, D4 and D5 were open when the
+audit landed (D3 closed at round 12), and this paragraph does not verify their
+later status. The gate itself moved after this round (round 12, `46f5ddb3…` →
+`91a01695…`), so the after-sha here is the round-11 end state only.
+
+Round 12 ran the scope-refusal, operability and calibration move its opening
+registered, on one 64-seat AgentSwarm wave (opencode-go-6 /
+deepseek-v4.1-flash, 64/64 seat reports). At `46f5ddb3…` the gate had no scope
+machinery (`grep -c SCOPE_` → 0), `VERSION=research-gate-r1`, no source-read
+cap, and selftest `PASS (85 cases)`; at `91a01695…` the declared-scope screen
+emits three `SCOPE_*` warn findings (`grep -c 'id=SCOPE_'` → 3), the banner
+reads `VERSION=v2`, claim and chain sources over 8 MiB are refused before any
+read, and selftest reads `PASS (98 cases)` with cases 1–85 identical to the
+round-8 receipt's case lines. The baseline was re-pinned once at final bytes
+with the reason recorded: before the re-pin `--drift` read `GATE_DRIFT: GATE
+record_sha256` exit 1 by design, and after it reads `GATE_DRIFT: none` exit 0.
+The pinned observables hold: r1 `3/3`, the fixture battery byte-identical
+modulo banner and ts, and the A-r9 post-fix `verify-all` CLEAN with
+`sections=5`. That observable is not saturated either: the scope screen reads
+only declared `## Meta` rows, so undeclared absorbed scope passes and the solo
+modes carry no scope teeth; the size cap is bypassed when the stat itself
+fails; and the pointer-line versus span-line class stays a named non-coverage.
+Receipt identity remains OPEN.
+
+Round 13 ran the coverage and depth move its opening registered — closure of
+the last round-2 residual, the in-root hardlink-alias bypass (ledger row 8) —
+on one 64-seat AgentSwarm wave (opencode-go-6 / deepseek-v4.1-flash, 64/64
+seat reports). Two seats BLOCKed partner enumeration as unsound, so the claim
+was re-scoped to a one-probe `nlink != 1` refusal. Before (`91a01695…`, `grep
+-c samefile tools/research-gate.sh` → 0), a claim through an in-root hardlink
+alias of an out-of-root file read `observed=supported` CLEAN with rc=0; after
+(`6b17e50c…`) the same fixture refuses with `CLAIM_SOURCE_MULTILINKED`
+severity=crit, `observed=refused`, rc=1. Selftest moved 98 → 102 with cases
+1–98 byte-identical to the round-12 receipt, the masked fixture battery was
+ALL IDENTICAL against the pre-round gate, drift against the round-12 baseline
+stayed `GATE_DRIFT: none` without a re-pin, and r1 held `3/3`. That observable
+is not saturated either: the check refuses on link count, so a legitimate
+in-root multi-link family refuses too (pinned by case 101 as a named trade);
+bind mounts present nlink=1 and stay invisible to stat; TOCTOU and an
+unmeasurable stat (alias check skipped) remain named limits. Receipt identity
+remains OPEN.
+
+Round 14 ran the bind-alias move its opening registered: the claim and chain
+chokepoint now refuses a source whose st_dev differs from the resolving root's
+device (`CLAIM_SOURCE_CROSS_DEVICE` / `CHAIN_SOURCE_CROSS_DEVICE`, crit), and
+one `stat -c '%s %h %d'` probe serves nlink, size and device. The wave was one
+64-seat call on alibaba-token-plan / deepseek-v4.1-flash, 63/64 reports (seat
+54 failed on a provider content-filter 400; recorded, not backfilled). The
+observable moves on the live bypass pair: a tmpfs mounted over an in-root
+directory reads `observed=supported` CLEAN (`VERDICT_BEARING_CLAIMS=1/1`,
+rc=0) at the pre-round gate `6b17e50c…`, and `observed=refused` with
+`CLAIM_SOURCE_CROSS_DEVICE` crit (`0/1`, rc=1) at the landed gate `d8bbd0bf…`.
+The selftest moves 102 → 106 (`PASS (106 cases, 0 skipped)`). The r12 drift
+baseline and r1 `3/3` are recorded as holding, but the round's own receipts
+for those two holds are not on disk. That observable is not saturated: the
+bypass pair is `mode=claims` only; the class is cross-device aliases only, so
+same-device binds (stat-invisible), overlay roots, the probe-to-read TOCTOU
+window and the unmeasurable-stat fail-open remain named limits; freshness is
+unchanged.
+
+Round 15 ran the `--root /` dead-arm fix the round-14 wave queued:
+`"$root_r"/*` rendered `//*` at `root_r=/`, so every absolute in-`/` source
+refused `CLAIM_SOURCE_OUT_OF_CORPUS` crit. The fix is an `in_root()` helper
+(`tools/research-gate.sh` ~:612) with a materialized local, applied at the
+three same-class sites (`claim_source_path`, `ptr_resolves_meta`,
+`sweep_path_guarded`); the opening's one-token form was measured dead on bash
+5.3.15 and the pre-registration was corrected before the wave. The wave was
+one 48-seat call on zai glm-5.3-flash, 48/48 reports. The observable moves on
+the `/etc/hostname` demo under `CHOUSA_ROOT=/`: the pre-round gate `d8bbd0bf…`
+refuses `OUT_OF_CORPUS` crit (`0/1`, DRIFT); the landed gate `dd0951d7…` reads
+it CLEAN `1/1`. The selftest moves 106 → 110 with cases 1–106 byte-identical
+to the r14 receipt, and `--drift` reads `GATE_DRIFT: none`. The r15 battery
+receipt on disk does not carry a green hold: it is a `root=.` verify-all run
+that reports DRIFT (`drift-sections=3 findings=13`), and it has no identity
+line. That observable is not saturated: the fix covers the pattern arm only,
+the sweeps guard is vacuous at `/` by declaration, and the r14 limits carry
+over; freshness is unchanged.
+
+Round 16 ran the verification move round 15 registered: one 64-seat audit call
+on openai-codex gpt-6-luna-max (64/64 seat reports, zero deficit) re-audited
+the boundary stack of rounds 12–15 for correctness defects and missed
+coverage, and every finding was dispositioned as fix, absorb, or named debt.
+The before→after observable is the gate at `dd0951d7…` with selftest 110
+versus `2b64a1c8…` with `PASS (111 cases, 0 skipped)`: `in_root` now strips
+every trailing slash, so `--root //` no longer refuses in-corpus paths (case
+111 pins it), and the r15 battery receipt was re-run with the correct fixture
+paths and `--root ..`. The disposition table holds the two fixes, the absorbed
+record corrections, and the named debts queued for round 17. The holds are
+drift `none` against the r12 baseline with no re-pin, and the r1 archive
+observable at three CLEAN verify lines. That observable is not saturated: the
+wave verified the refusal classes rather than extending them, so coverage is
+unchanged; the case-111 pin covers the `//` edge but not the
+`ptr_resolves_meta` root-slash site; the claimed cases 1–110 byte-identity
+holds only for 1–109 in the receipts; and the round left no r16-stamped
+selftest, drift, or pre-round battery receipt, so its holds rest on the LOG
+and SCORECARD statements.
+
+Round 17 ran the round-16 named debt the verification wave had queued:
+`load_sections` reset a section on every `## ` line without fence state, so a
+fenced `## Meta` could shadow the real declaration and the scope screen
+checked the wrong body. The wave was one 32-seat call on opencode-go /
+deepseek-v4.1-flash, after xai-oauth failed on quota for all 48 seats and zai
+glm-5.3-flash was interrupted at 14/48; it landed 27/32 seat reports, with
+five provider-400 `reasoning_content` failures recorded and not backfilled.
+The before→after observable is the demo record with a real `domain: bounty
+program scope` and a fenced `## Meta` declaring `deep-research method`: at
+`2b64a1c8…` it verifies CLEAN, and at `c2915f24…` it raises
+`SCOPE_BOUNTY_ABSORBED` (warn) and DRIFT. The two-pass fence pairing (same
+character must close, closing length at least the opening, 0–3 spaces of
+indent, an unclosed opener fails closed) is pinned by cases 112–116; the
+selftest is `PASS (116 cases, 0 skipped)` with cases 1–109 byte-identical to
+the r15 receipt, drift `none` against the r12 baseline, and the r1 archive
+observable at three CLEAN verify lines. The `LLM benchmarks` phrase gap stays
+named debt. That observable is not saturated: the parser is not a Markdown
+renderer, fenced data rows inside a real section are still trusted, and the
+round's "masked battery ALL IDENTICAL" compares two runs that both carry DRIFT
+(claims `0/17`, chain `0/22`, verify-all `drift-sections=3 findings=13` under
+`root=.`), so the battery's pinned claims and chain observables do not hold in
+the receipts.
+
+Round 18 (loop 1, round 7) ran the phrase-gap move that round 16 left as named
+debt, on one 16-seat AgentSwarm wave routed to openai-codex gpt-6-luna-max
+after the zai glm-5.3-flash quota was exhausted (operator directive; 16/16
+seat reports). `SCOPE_KENGAKU` covered `model benchmark(s)` and `model
+scoring` but not `llm benchmark(s)` or `llm scoring`, so a record declaring
+`domain: LLM benchmarks` passed CLEAN. On the demo record the pre-round gate
+(commit `e3c556e`, gate `c2915f24…`) returns CLEAN; the landed gate
+(`6e694881…`) adds `llm benchmark|llm benchmarks|llm scoring` and returns a
+`SCOPE_MODEL_QUALITY_ABSORBED` warn with DRIFT. Selftest moves 116 → 119,
+cases 1–116 byte-identical to the r17 receipt, cases 117–119 pinning the new
+phrases and a prose-only control; `--drift` against the r12 baseline reports
+`GATE_DRIFT: none` with no re-pin. The r1 archive counting command is recorded
+at `VERDICT_BEARING_EXPORTS=3/3` in the round notes, but no r18 receipt
+carries that line, so it is asserted here, not receipted. The battery receipt
+is an output-identity record over the archive and claim fixtures; its claims,
+chain and verify-all sections read DRIFT in that run context, and the round's
+"ALL IDENTICAL vs pre-round gate" has no diff in the receipt. That observable
+is not saturated: the screen reads only Meta `domain`/`scope` rows, so prose
+is never scanned (case 119); `ai benchmark(s)` stays out as too broad; the
+inflection gaps (`bug bounties`, `dispatch mechanisms`, `llm evaluations`) and
+the camel-case `llmbenchmark` form stay named debt; and the matcher is literal
+phrase match, not a judgment that a record is in model-quality scope.
+
+Round 19 (loop 1, round 8) ran the sweep-symlink escape move that round 16
+left as named debt, on one 16-seat AgentSwarm wave routed to openai-codex
+gpt-6-luna-max under the zai exhaustion directive (16/16 seat reports).
+`sweep_path_guarded` canonicalized a sweep glob's literal base but not each
+expanded match, so `dir/*.md` matching an outside leaf symlink, or
+`dir/*/*.md` traversing an outside directory symlink, reported
+`SWEEP_CLAIM_FALSE` instead of a boundary refusal. On the demo the pre-round
+gate (commit `5499cef`, gate `6e694881…`) reports a `SWEEP_CLAIM_FALSE` hit
+and DRIFT; the landed gate (`9f163807…`) canonicalizes every match against
+both allowed roots and refuses the whole sweep with
+`SWEEP_LOCATION_OUT_OF_CORPUS` (crit, `observed=refused`, match not opened).
+Selftest moves 119 → 122, cases 1–119 byte-identical to the r18 receipt, cases
+120–122 pinning the leaf-symlink, directory-symlink and in-root-symlink
+control; `--drift` reports `GATE_DRIFT: none`; the battery receipt is
+byte-identical to r18 after timestamp normalization (same DRIFT sections, same
+reason). That observable is not saturated: the check runs after bash has
+already expanded the glob, so a symlinked directory is traversed (names only,
+never content) before the refusal; a check-to-use race remains; `--root /`
+makes the guard vacuous by declaration; and no r19 receipt carries a strace,
+so "zero network" is asserted in the round notes, not receipted.
+
+Round 20 ran an adversarial re-audit of the boundary stack that rounds 15–19
+had landed, as one 64-seat AgentSwarm call on openai-codex gpt-6-luna-max
+(64/64 seat reports). Its finding was the HTML-comment heading shadow:
+`load_sections` parsed a `## Meta` inside `<!-- -->` as a real heading, so a
+record whose real Meta declared a refused province plus a commented
+in-province Meta closed CLEAN. The before→after observable is the demo pair:
+at the pre-round gate `2bb556b` (blob `9f163807…`) the shadowed record closes
+`RESEARCH_GATE: CLEAN`; at the landed gate (blob `49b36759…`) it refuses
+`SCOPE_BOUNTY_ABSORBED` (warn) and closes `DRIFT (findings=1 drift=1 …)`. The
+fix tracks `in_comment` beside `fence_char`, checking fence state first and
+comment state before the heading arm. The holds: selftest `PASS (124 cases, 0
+skipped)`, up from 122, with cases 1–119 byte-identical to the r18 receipt and
+case 124 pinning the new arm; `--drift` against the r12 baseline `GATE_DRIFT:
+none` with no re-pin; r1 `VERDICT_BEARING_EXPORTS=3/3`; and the masked
+battery, which the round reports identical to the pre-round gate. That
+observable is not saturated: the fix closes the comment arm at the class the
+wave found and nothing wider — the parser is not a Markdown renderer, so
+CDATA, processing instructions and other HTML constructs stay outside the
+declared-record contract. The `ptr_resolves_meta` escape, the `.config`
+path-start denylist bypass, the fenced-heading chain anchor and about ten
+scope/inflection gaps were dispositioned as named debt for round 21, not
+closed, and the drift ritual proves the output surface only.
+
+Round 21 ran the round-20 named-debt move on the pointer boundary, as one
+32-seat AgentSwarm call on opencode-go-6 / deepseek-v4.1-flash (32/32 seat
+reports). `ptr_resolves_meta` tested relative pointers with a raw `-f`, so
+`lib/../../r21-outside.txt` passed CLEAN whenever the file existed under the
+raw path. The before→after observable is the demo pair: the pre-round gate
+`b057245` (blob `49b36759…`) closes CLEAN on the traversal pointer; the landed
+gate (blob `bfc291ef…`) refuses it with `POINTER_UNRESOLVED` (warn) and closes
+DRIFT. The fix canonicalizes the candidate with `readlink -f`, checks
+`in_root` against both roots, and applies the denylist to the canonical
+target, so a benign symlink to `.config/passwd` is refused; cases 125–128 pin
+traversal, symlink, lane-root absolute pointer (now exit 0) and the `.config`
+symlink. The holds: selftest `PASS (128 cases, 0 skipped)`, up from 124, with
+cases 1–124 byte-identical to the r20 receipt; `--drift` `GATE_DRIFT: none`
+with no re-pin; r1 `VERDICT_BEARING_EXPORTS=3/3`; and the masked battery,
+which the round reports identical to the pre-round gate. That observable is
+not saturated: canonicalization shows that a pointer resolves to a readable
+file inside a root and outside the denylist, not that the file is the cited
+source or supports the claim. The `.config` path-start form stayed open at r21
+— the r21 note states it as closed in one bullet and still bypassing in the
+next — and round 22 closed it (`knowledge/denylist-r22.md`); the
+fenced-heading chain anchor stayed named debt until round 23
+(`knowledge/fenced-anchor-r23.md`). The round's demo is one traversal
+instance, not a measured fraction of the pointer space.
+
+Round 22 (loop 1, round 11) ran the move registered at the round-21 landing:
+one 32-seat AgentSwarm call, which fell back from antigravity gemini-3.8-flash
+(24 seats on provider errors, 8 aborted) to openai-codex gpt-6-luna-max and
+returned 32/32 seat reports, on the claim that `is_denylist_path` misses
+path-start citations of `.config/`, `.omp/` and `.local/state/`. Before (gate
+`bfc291ef`, selftest 128), `.config/agent-token.txt` closed CLEAN; after (gate
+`dfb798b4`), the same citation refuses with `CLAIM_SOURCE_SESSION` crit, the
+bare-start alternatives sitting after the existing `*/X/*` forms. The
+observables hold: selftest 128 → 132 with cases 1–128 byte-identical to the
+r21 receipt, `GATE_DRIFT: none` against the r12 baseline (freshness unchanged,
+no re-pin), and the r1 archive observable at `VERDICT_BEARING_EXPORTS=3/3`.
+That observable is not saturated: the denylist remains a pattern list, the r21
+canonical-target check covers symlink indirection but not the raw path-start
+form, and the fix closes only the bare-start class of these three directories;
+`.config-adjacent` stays a non-hit by design (case 132).
+
+Round 23 (loop 1, round 12) ran the fenced-heading anchor move directly, with
+no wave: the falsifiable before→after had already been measured by the
+round-20 reproduction. Before (gate `dfb798b4`), `chain_anchor_at` matched a
+`## Phantom Heading` inside a fenced block as a real anchor and verified the
+hop at line 4; after (gate `b5d0f93d`), the heading arm tracks fence state
+inline, and the same record refuses with `anchor-missing`, a
+`CHAIN_ANCHOR_NOT_FOUND` warn, `RESOLVED_HOPS=0/1`, and DRIFT. Selftest 132 →
+133 with cases 1–128 byte-identical to the r22 receipt and case 129 pinning
+the fenced arm; the r22 path-start cases are renumbered to 130–133. Drift
+stays `GATE_DRIFT: none` against the r12 baseline, and the r23 masked battery
+receipt is byte-identical to the r22 one. That observable is not saturated:
+only the `heading` anchor kind is fence-aware (the `quote` and `line` kinds
+match literal text by design), fence state resets per call, and the selftest
+counts fixtures, not the defect space.
+
 Still open and integrator/operator-owned:
 receipt identity for mission acceptance (proven receipt-backed rounds remain 0; operator target at least 100), the non-author admit/reject spot-check, and frozen-replay conformance. The scope-refusal gate findings landed at round 12 (`knowledge/scope-refusal-r12.md`). Semantic and
 external-source verification remain out of scope by design.
@@ -503,3 +790,13 @@ or suitability, and none is claimed. Still open: concurrent appenders to one
 manifest (one blank line in 1 of 3 sixteen-writer runs), the remaining
 round-20 named debt (SCORECARD `## Planned — round 25`), and the queued
 SOURCES rows S008–S012, S017, S018 waiting for an entry that mines them.
+
+
+Round-25 index errata (2026-10-21, append-only): the round-22 denylist
+coverage row's cases 129–132 are historical at r22; after r23 inserted the
+fenced-anchor case at 129, the denylist cases are 130–133. Re-derive:
+`bash tools/research-gate.sh --selftest`. The r15–r23 battery receipts often
+record DRIFT under `root=.`; "ALL IDENTICAL" in their descriptions is an
+output-identity assertion, not a CLEAN claim. The new Frontier paragraphs
+preserve each receipt gap; the round-25 hold battery uses the explicit fleet
+root and is independent of those old assertions.

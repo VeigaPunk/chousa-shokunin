@@ -1,0 +1,24 @@
+# Round 25 connector axis plan
+
+## Evidence and findings
+
+- **Lowest axis / nudge:** `SCORECARD.md:3-13` scores only operability, **3/10**; the other five axes are explicitly unscored. `SCORECARD.md:32-34` says none are retired. Its nudge rule is saturation at 8.0 on every owned axis plus no capability within N=3 (`SCORECARD.md:469-489`; `AXES.md:66-72`). An unscored axis does not satisfy the first condition; the recorded verdict is dormant (`SCORECARD.md:492-495`). Thus operability is the lowest non-retired scored axis and the nudge does not waive it.
+- **Trend mapping:** `AXES.md:20-23` / `LEARNING.md:82-88`: expansion ↔ coverage + adjacency; quality ↔ depth + freshness + operability; discernment ↔ calibration.
+- **Recorded trend history:** the explicit SCORECARD trend lines for r16–r23 each say all three improved: r16 `:836-838`, r17 `:891-893`, r18 `:942-944`, r19 `:993-995`, r20 `:1055-1057`, r21 `:1110-1112`, r22 `:1167-1169`, r23 `:1216-1218`. R24 is headed “self-verdicts pending non-author verification” (`SCORECARD.md:1234`) and its axis table ends at `:1262-1267` without trend verdicts. Under `LEARNING.md:26-35`, trend verdicts are categorical, not scalar. **Therefore no unique furthest-behind trend can be established from the recorded trend verdicts; r24 is missing/awaiting, not “unchanged.”**
+- **Axis-level tension, not a trend ranking:** across r16–r24, freshness is unchanged each time (`SCORECARD.md:832, 887, 938, 989, 1051, 1106, 1163, 1212, 1266`), while adjacency is also unchanged each time (`:834, 889, 940, 991, 1053, 1108, 1165, 1214, 1267`). Coverage improves r17–r24, calibration improves r16–r24, and operability improves r16–r24. This makes freshness (quality) and adjacency (expansion) persistent lag signals, but the composite trends have unequal constituent axes and no authorized scalar comparison. The recorded all-improved trend verdicts do not resolve that tension.
+- **Round-25 claim mapping:** preregistration `corpus/evidence/round25-claims.md:10-50,52-79` targets C1 operability → quality; C2 freshness → quality; C3 calibration → discernment. C1’s verify-metadata capability can also bear on expansion; C2’s Frontier/index backfill is expansion-adjacent but its declared axis is freshness. It does not, by itself, establish new admitted ground.
+- **Qualification:** `LEARNING.md:33` lists an admitted capability among expansion observables, but defines `improved` as net-new admitted entries on uncovered ground with coverage-map rows. Do not silently treat the capability or index backfill alone as a proven expansion verdict. C3 maps to discernment, but `LEARNING.md:35,40-45` requires an outside spot-check of at least one admit and one reject for that trend; calibration cleanup alone is insufficient evidence.
+
+## Proposed move
+
+Keep the frozen C2 denominator and claim separation intact, but add a separately identified, re-derivable coverage-map pointer for C1’s new metadata-method entry, joined to its mined `SOURCES.md` row. At landing, call expansion improved only if that entry is newly admitted on uncovered ground and the pointer resolves; otherwise record expansion as unchanged/unproven rather than counting index repair as growth. This is the bounded C1+C2 synthesis: C1 supplies the new capability/entry, C2 supplies the discoverable map, without altering the registered historical population.
+
+**Affected axes:** chiefly calibration (evidence-calibrated trend attribution); supports coverage/expansion only if the new-entry conditions hold; does not replace C1 operability or C2 freshness evidence. The claims nominally cover quality and discernment; the formal history does not support selecting a single lagging trend.
+
+**Risks:** counting the C1 entry inside C2’s frozen denominator would compromise separability; a source row without a coverage-map row does not meet the cited expansion criterion; no qualifying external spot-check leaves discernment unverified. Keep the cross-reference out of the frozen count and report these cases explicitly.
+
+**Verification:** resolve the new entry’s coverage-map pointer and `SOURCES.md` row; check it is newly admitted on previously uncovered ground and passes `QUALITY.md`; separately verify C3’s round lesson records a non-author spot-check of one admit and one reject with reasons. Preserve ordinal trend verdicts and leave r24’s absent trend verdict unfilled absent evidence.
+
+Installations/updates: none.
+
+VERDICT: Operability remains the lowest non-retired scored axis; the stagnation nudge is dormant. No trend is uniquely furthest behind in the recorded r16–r23 trend verdicts, and r24 has no trend verdict; round-25 claims directly target quality and discernment, with expansion support conditional on the C1+C2 evidence join.

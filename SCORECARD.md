@@ -1301,3 +1301,83 @@ Remaining round-20 named debt, unclaimed: manifest concurrency (`flock`),
 manifest timestamp mask breadth, `ai benchmark(s)` boundary, inflection
 gaps, fenced-data-row `approved` suppression, 8 unasserted finding IDs,
 secret-scan source coverage, bash-3 portability.
+
+## Capabilities (round-25 reconciliation of earlier LOG claims)
+
+These eight rows reconcile `LOG.md`'s `Capabilities +1` claims for rounds 15
+and 17–23 (round-24 lesson M-14). First-working rounds are the historical
+rounds, not new acquisitions in round 25. Each demonstration was re-run at
+`b820e4e` this round (`--selftest` PASS 136 cases; the case-level outputs and
+row review are `.ufo/waves/round-25/build/CapRowR{15,17..23}.md`); the final
+landing selftest also carries the same cases byte-identically.
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| root-slash source resolution | reads a same-device absolute claim source under `--root /` rather than falsely refusing it as out-of-corpus | round-15 receipt cases 107–110, current cases 107–109 and 111; `corpus/knowledge/root-slash-boundary-r15.md` | 15 |
+| fence-aware scope screening | ignores fenced `## Meta` headings while parsing sections, so a fake in-province declaration cannot shadow the real refused domain | selftest cases 112–116; `corpus/knowledge/fenced-heading-r17.md` | 17 |
+| LLM benchmark-phrase scope screening | flags declared `llm benchmark(s)` / `llm scoring` scope with `SCOPE_MODEL_QUALITY_ABSORBED` warn; prose-only control stays CLEAN | selftest cases 117–119; `corpus/knowledge/scope-phrase-gap-r18.md` | 18 |
+| sweep symlink-escape refusal | refuses the whole sweep when an expanded match canonicalizes outside both allowed roots | selftest cases 120–122; `corpus/knowledge/sweep-symlink-r19.md` | 19 |
+| HTML-comment heading-shadow detection | treats headings inside HTML comments as literal text, so a fake `## Meta` cannot shadow the real scope declaration | selftest case 124 (`scope-comment-shadow`); `corpus/knowledge/html-comment-r20.md` | 20 |
+| canonical pointer-boundary screening | canonicalizes pointer targets and checks both roots, refusing traversal/symlink escapes and denylisted canonical targets | selftest cases 125–128; `corpus/knowledge/pointer-boundary-r21.md` | 21 |
+| denylist path-start refusal | refuses claim sources beginning `.config/`, `.omp/`, or `.local/state/`, while allowing `.config-adjacent/` | selftest cases 130–133 (current; round-22 receipt 129–132); `corpus/knowledge/denylist-r22.md` | 22 |
+| fenced-heading chain anchors | rejects a heading inside a fenced block as a chain `heading` anchor, reporting missing-anchor drift | selftest case 129; `corpus/knowledge/fenced-anchor-r23.md` | 23 |
+
+## Capabilities (round-25 acquisition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| knowledge-entry metadata screen | names absent source/verified-at/recheck keys and undated verification values, reports command-only and parent-root rechecks as info, and refuses denylisted/oversized/NUL-bearing entries | `bash tools/research-gate.sh verify-metadata corpus/knowledge --root .`; selftest cases 137–154; `corpus/knowledge/metadata-screen-r25.md` | 25 |
+
+## Round 25 verdict — 2026-10-21 (recovery attempt 2, pending outside closure)
+
+Claims and frozen populations: `corpus/evidence/round25-claims.md`, registered
+at `b820e4e` against base `d730ae4` before implementation. Counting command:
+`bash corpus/evidence/round25-measure.sh <tree-root>` (from any cwd); receipts
+`corpus/evidence/round25-measure-{before,after}.log`. The measured integration
+revision is the round-25 checkpoint carrying this section (its landed hash is
+recorded in the fleet report); a commit cannot embed its own hash. Attempt 1
+left no output and spawned 0 seats; no dead identity was respawned.
+
+| claim / canonical axis | before → after | verdict / score delta |
+|---|---|---|
+| C1 operability — metadata-screen capability | mode absent, rc 2 and no named legacy-header findings → rc 1, `METADATA_COMPLETE=25/28`, exactly `archives-verified-r9`, `audit-r11`, `gate-baseline-r8` each `META_RECHECK_ABSENT`; 27-fixture differential 54/54; cases 1–136 identical | **improved** (syntactic screen, not full QUALITY 6); operability score **3→3, delta 0** on its original r1 construct, re-derived 3/3 this landing; capability row above |
+| C2 freshness — re-derived indexes | `STALE_INDEX_ITEMS=66` (2 unindexed +13 Frontier gaps +43 misfiled receipt rows +8 missing capability rows) → 0 | **improved** (index freshness, not a coverage score); no numeric freshness score invented |
+| C3 calibration — stale restatements | `STALE_RESTATEMENTS=15` → 0 (one closed finding, three stale tuples, two queue sizes, one template slot, eight missing addenda) | **improved**, qualified: lexical count plus cited replacements, not semantic proof of mistake→criterion mapping; no numeric calibration score invented |
+
+C3 also found the owning ledger's E4 tuple was wrong (sum 72 over 71 rows),
+so `hardening-r10.md` has an append-only erratum and a reproducible recount:
+`python3 corpus/evidence/round25-ledger-recount.py` → rows=71, 38/22/8/0/3,
+queue_committed=24 versus queue_true=25. SKILL now points to that owner and
+command instead of duplicating totals. The r13 template substitution is
+recorded in the same erratum; history is not silently rewritten.
+
+Holds at the integration checkpoint: `PASS (154 cases, 0 skipped)` (136→154),
+`GATE_DRIFT: none` versus the r12 baseline, r1 `VERDICT_BEARING_EXPORTS=3/3`.
+The explicit-root hold battery and final suite are recorded separately at the
+round-25 landing. Depth and adjacency: **unchanged** (no claim). Coverage:
+**unchanged** as a measured axis; a new entry/capability supports the qualified
+expansion trend, not an invented domain-coverage fraction. Freshness and
+calibration remain unscored (only operability has a numeric construct).
+
+Trends (lane assessment, outside closure remains separate): **expansion
+improved** — `metadata-screen-r25.md` is uncovered metadata-screen ground,
+mined S019/S020, indexed; **quality improved** — stale index/ledger claims
+reconciled, relative-root recheck superseded, legacy headers made visible;
+**discernment improved** — prior outside-check debts become shown-to-fail
+criteria 13/14 and the S006 quote error is corrected. Neither source-row growth
+nor `STALE_INDEX_ITEMS=0` by itself is an expansion verdict. SHONEN stays `[~]`
+(no self-attested `[x]`). No historic misrooted-battery hold is relabelled green.
+
+## Planned — round 26 (not started)
+
+1. **operability (lowest measured, 3/10):** serialize cooperating `--json`
+   appenders across the EOF probe plus append (`flock` candidate remains
+   unlanded in r25 wave evidence); reproduce seeded-unterminated race before,
+   then ≥10×16-writer same-precondition runs with no blank/invalid lines.
+2. **freshness:** compute due dates from verified-at + recheck cadence with
+   an explicit as-of date; before no due-date output, after one planted
+   past-due control caught and current entries reported with due/unknown.
+3. **calibration:** a criterion-6 verifier (not the r25 syntax screen) checks
+   each cited S-id exists, is mined and used-by names the entry, plus the
+   what-was-checked text; freeze r24+ population and semantic negative controls
+   before implementation. Legacy entries remain distinct from prospective bar.

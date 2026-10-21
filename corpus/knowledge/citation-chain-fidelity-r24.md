@@ -85,3 +85,13 @@ Re-check against `corpus/QUALITY.md` after this erratum:
 | 7 scoped tier | met — S005 for its measured scholarly corpus; web transfer labelled inference (line 42) |
 | 8 support states distinct | met — `resolved` (locator exists) is kept apart from `faithful` |
 | 9–12 | not applicable — no restated count, placeholder, plan or score |
+
+## Recheck placement erratum (round 25, 2026-10-21; append-only)
+
+The header's `--root ..` assumes the lane is a direct child of the fleet.
+In a clone under `/tmp`, that command reports DRIFT (17 refused hops);
+with the explicit fleet root it reports CLEAN, exit 0
+(`.ufo/waves/round-25/build/ReviewRecheckRoot.md`). From the **lane cwd**,
+set `SHOKUNIN_ROOT` to the fleet root and use
+`bash tools/research-gate.sh verify-chain corpus/fixtures/chain-r3.md --root "$SHOKUNIN_ROOT"`.
+This supersedes the header's relative-root command, not the source or claim.

@@ -26,6 +26,16 @@ its author opened the source and judged its tier for the stated scope only.
 | S016 | Wikipedia, Hierarchy of evidence — https://en.wikipedia.org/wiki/Hierarchy_of_evidence | community | C | any claim needing an authoritative evidence-hierarchy source | Criticism section; page as served 2026-10-19 | REJECTED: tertiary community-edited synthesis, never sole support and never tier A; flip: use as a lead index once each cited primary source is opened | rejected | 2026-10-19 | 365d | — |
 | S017 | PRISMA 2020 statement — https://www.prisma-statement.org/prisma-2020 | spec | A | reporting standard for systematic-review search transparency | PRISMA 2020 checklist and flow diagram links; statement paper DOI 10.1136/bmj.n71 | Report searches with flow counts and checklist items so identification, screening, and inclusion stay auditable | queued | 2026-10-19 | on-release | — |
 | S018 | Schreieder, Schopf, Farber, Attribution, Citation, and Quotation survey — https://aclanthology.org/2026.acl-long.1430/ | paper | B | the taxonomy and metric map of evidence-based generation | Abstract; ACL 2026, pages 30956-31000, DOI 10.18653/v1/2026.acl-long.1430 | A survey of 134 papers and 300 metrics across seven dimensions — a lead index to primary sources, never sole support for a claim | queued | 2026-10-19 | 365d | — |
+| S019 | Cochrane Handbook ch. IV, Updating a review — https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-iv | docs | A | the Handbook's own guidance on periodically deciding whether and how to update a Cochrane review | Chapter IV Key Points and sections IV.1-IV.2; last updated August 2023, Handbook v6.5 | A review's currency is assessed on a schedule, not only when someone notices; deciding to update is a recorded, periodic act | mined | 2026-10-21 | on-release | corpus/knowledge/metadata-screen-r25.md |
+| S020 | PROV-O: The PROV Ontology, W3C Recommendation 2013-04-30 — https://www.w3.org/TR/2013/REC-prov-o-20130430/ | spec | A | PROV terms for derivation (prov:wasDerivedFrom) and entity generation/invalidation times; not a recheck or verification policy | section 3.1 Starting Point Terms (prov:wasDerivedFrom); section 3.2 Expanded Terms, entity-lifetime paragraph | Provenance is recorded as a derivation link plus time bounds on an entity's validity, so source and as-of time are separate recorded facts | mined | 2026-10-21 | 365d | corpus/knowledge/metadata-screen-r25.md |
+| S021 | Shojania et al. 2007, How quickly do systematic reviews go out of date? A survival analysis — https://pubmed.ncbi.nlm.nih.gov/17638714/ | paper | A | the study's measured update-signal timing in its sample of 100 quantitative systematic reviews; not a rule for all records | Abstract, Results (PubMed record; Ann Intern Med 2007;147(4):224-233) | Findings that need updating appear early for a sizable minority of reviews (23% within 2 years), so recheck intervals matter | queued | 2026-10-21 | 365d | — |
+| S022 | Elliott et al. 2017, Living systematic review: 1. Introduction — https://pubmed.ncbi.nlm.nih.gov/28912002/ | paper | A | the paper's own living-systematic-review definition and rationale; not metadata design | Abstract, LSR definition clause (J Clin Epidemiol 2017;91:23-30, DOI 10.1016/j.jclinepi.2017.08.010) | A living review is continually updated as new evidence appears, the limit case of a short recheck cadence | queued | 2026-10-21 | 365d | — |
+| S023 | DCMI Metadata Terms — https://www.dublincore.org/specifications/dublin-core/dcmi-terms/ | spec | A | DCMI's definitions of dcterms:source, dcterms:modified and dcterms:valid; not a freshness or verification policy | section 2, /terms/ namespace entries source, modified, valid; DCMI Recommendation issued 2020-01-20 | Source (what a resource derives from) and its dates (modified, valid) are distinct metadata properties | queued | 2026-10-21 | 365d | — |
+| S024 | Schema.org property lastReviewed — https://schema.org/lastReviewed | spec | A | Schema.org's own definition and declared use of lastReviewed | page heading lastReviewed, definition paragraph | A last-reviewed date for accuracy is a property separate from publication or modification dates | queued | 2026-10-21 | 365d | — |
+| S025 | RFC 9111, HTTP Caching — https://www.rfc-editor.org/rfc/rfc9111 | spec | C | a general rule for research-record staleness or knowledge-entry metadata policy | section 4.2 Freshness; Standards Track, June 2022 | REJECTED: a standard for HTTP-cache freshness, not authority for research-record validity; flip: use as an explicitly labelled analogy and pair it with a directly relevant method source | rejected | 2026-10-21 | on-release | — |
+| S026 | GO FAIR Foundation, R1.2 (meta)data are associated with detailed provenance — https://www.gofair.foundation/r1-2 | docs | A | the Foundation's own interpretation of FAIR sub-principle R1.2 | Interpretation of R1.2, first paragraph | Detailed provenance names how, why, by whom and under what conditions a resource was generated | queued | 2026-10-21 | 180d | — |
+| S027 | Wikipedia:As of — https://en.wikipedia.org/wiki/Wikipedia:As_of | community | C | Wikipedia editors' guidance for dating time-sensitive statements; never sole support | Usage guidelines section; revision 1342587259 as served 2026-10-21 | Date time-sensitive statements and, when the next update is predictable, mark when it is due | queued | 2026-10-21 | 90d | — |
+| S028 | Crossref Crossmark — https://www.crossref.org/services/crossmark/ | docs | A | Crossref's own description of the Crossmark update/correction/retraction status service | introductory text before Benefits of Crossmark | A cited work's update, correction or retraction status is published metadata a reader can check, a recheck trigger | queued | 2026-10-21 | 180d | — |
 
 ## Paths
 
@@ -42,6 +52,10 @@ its author opened the source and judged its tier for the stated scope only.
   under evidence, and report the search so the sweep itself is auditable.
 - Lane mechanics — S001 → S013: the gate's own append rule and the JSON Lines
   requirement it implements, read together.
+- Keeping records current — S019 → S021 → S020 → S023: schedule the currency
+  check (a recheck is a periodic, recorded act), expect early staleness for a
+  real minority of findings, and record provenance as a derivation link plus
+  separate time facts. S025 is kept as a rejected analogy (lifetime vs age), not authority here.
 
 ## Search log
 
@@ -68,6 +82,25 @@ its author opened the source and judged its tier for the stated scope only.
   Schreieder et al. survey), screened 2, included 2 as queued rows (S017, S018),
   excluded 0. Stopped within the four-row cap; deeper mining waits for a
   knowledge entry that cites them.
+- Freshness and provenance sweep (round 25, 2026-10-21): question — which
+  opened sources ground a scheduled `recheck:` and separate `source:` /
+  `verified-at:` facts for a knowledge entry. Where: 11 pre-assigned URLs (one
+  round-25 scout seat each; reports `.ufo/waves/round-25/build/Src*.md`).
+  Identified 11, screened 11, included 10 (S019-S028: 2 mined, 7 queued, 1 rejected),
+  excluded 1: Garner et al. 2016 BMJ "When and how to update systematic
+  reviews" (https://www.bmj.com/content/354/bmj.i3507) returned HTTP 403
+  behind a Cloudflare challenge, so no text was inspected and no row is written
+  (flip: re-open an accessible full text and quote its checklist). Stopped at
+  the pre-assigned set; every included row is at most partial support for the
+  compound claim, so the entry cites S019 and S020 for separate parts.
+
+- Correction to the round-24 rejected-candidate sweep's stop rationale
+  (appended round 25): an assignment quota is not an epistemic stopping
+  condition. That search is only a bounded three-candidate convenience
+  sample, not saturation of rejection reasons. New sweeps stop when the
+  stated question's candidate set is exhausted or another candidate cannot
+  change the admitted distinction, and say which. This historical defect is
+  retained, not rewritten (outside review D-6; SOURCES rule 5).
 
 ## Leads (unopened)
 
@@ -81,3 +114,5 @@ its author opened the source and judged its tier for the stated scope only.
   benchmark mixing web and private knowledge.
 - OCEBM Levels background document — the longer document behind S014, for the
   scoped reading only.
+- Garner et al. 2016, BMJ 354:i3507 — https://www.bmj.com/content/354/bmj.i3507 —
+  update consensus and checklist; blocked (HTTP 403) on 2026-10-21.

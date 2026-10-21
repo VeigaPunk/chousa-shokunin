@@ -53,3 +53,23 @@ the admitted entry that motivates it. Tier definitions live in
     a landing is re-measured there by the counting command its row names, or
     is marked `frozen at rN` with the reason and the round that will
     re-measure it. — M-11.
+
+## Round-25 additions (appended 2026-10-21; criteria 1–12 unchanged)
+
+13. **Runnable recheck.** A new `recheck:` command states its cwd and names
+    the research root by role (`--root "$SHOKUNIN_ROOT"`, the fleet root),
+    or explicitly states the checkout layout a relative root assumes. A bare
+    `--root ..` is not placement-independent. — `lessons/round-25.md` R25-M2;
+    `lessons/round-24-verifier-spotcheck.md:17`. Shown able to fail:
+    `! grep -nE '^recheck:.*--root +"?[^/$"]' corpus/knowledge/citation-chain-fidelity-r24.md`
+    exits 1 on the base line; the clone re-run with `--root ..` is DRIFT,
+    with the explicit fleet root CLEAN (`.ufo/waves/round-25/build/ReviewRecheckRoot.md`).
+    This syntax check sees only the `--root` argument, not command runnability;
+    a reviewer checks the command in a clone outside the assumed layout.
+14. **Spot-check intake.** A `lessons/round-<N>.md` landed from round 25 on
+    carries `## Spot-check intake`, one row per debt or disagreement in the
+    previous verifier spot-check, each fixed (pointer), carried (criterion or
+    round), or refused (reason). — `lessons/round-25.md` R25-M3;
+    `lessons/round-24-verifier-spotcheck.md:17`. Shown able to fail:
+    `grep -qx '## Spot-check intake' corpus/lessons/round-24.md` exits 1 at
+    the base; the round-25 lesson exits 0 (the per-debt rows need a reviewer).

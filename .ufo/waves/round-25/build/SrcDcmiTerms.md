@@ -1,0 +1,14 @@
+# DCMI Metadata Terms — source scout
+
+- **Opened:** 2026-10-21. Requested URL: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/ . Final URL actually opened: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/ (no redirect). **HTTP outcome:** 200 OK (`curl -sS -L -o /dev/null -w ...` reported `http_code=200` and that final URL); `read` returned text/markdown by content negotiation.
+- **Authority and anchors:** The page identifies itself as a DCMI Recommendation (document metadata; Date Issued 2020-01-20; latest version is the canonical URL). Section 2, “Properties in the `/terms/` namespace,” entries `source`, `modified`, and `valid`: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#source ; `#modified` ; `#valid`.
+- **Verbatim quote (10 words):** “A related resource from which the described resource is derived.” — Section 2 → Properties in the `/terms/` namespace → `source` → Definition.
+- **Observed content:** `dcterms:source` denotes a related resource from which the described resource derives; its comment recommends identifying that resource by URI or a formally identifying string. `dcterms:modified` denotes the date the resource changed. `dcterms:valid` denotes the date, often a range, of resource validity. These are term definitions, not a re-verification procedure.
+- **Proposed SOURCES.md row (not written to registry; S018 was the last observed ID):**
+
+  | S019 | DCMI Metadata Terms — https://www.dublincore.org/specifications/dublin-core/dcmi-terms/ | spec | A | DCMI's definitions of `dcterms:source`, `dcterms:modified`, and `dcterms:valid`, not an operational freshness or verification policy | Section 2, `/terms/` namespace: `source`, `modified`, `valid`; DCMI Recommendation, Date Issued 2020-01-20, latest version at canonical URL | Distinguish a derivation/source relation, a resource-change date, and a resource-validity date; source identification is recommended via URI or formal identifier | queued | 2026-10-21 | on-release | — |
+
+- **Claim fit: partial.** The `source` definition and identifier recommendation inform the provenance half; `modified` and `valid` define relevant date metadata. The page does not specify scheduled rechecks by date/cadence, define a staleness computation, mention `verified-at`, or require provenance as a precondition to re-verification. It therefore does not establish the combined operational claim. See the three term anchors above.
+- **Recommendation:** Admit as `queued`, strictly scoped to DCMI's own metadata-term meanings; do not cite it as proof of the recheck/verification rule. This is an opened, authoritative standard source that can clarify the metadata screen's vocabulary.
+- **Installs/updates:** None.
+VERDICT: Opened; recommend S019 queued (spec, tier A, narrowly scoped); partial for the compound recheck/provenance claim; installs: none.

@@ -829,3 +829,50 @@ The current r12 baseline was re-derived before measuring: `bash tools/research-g
 - **Critic findings acted on before commit:** claims restructured for separability; C2 counter strengthened (mined row + `used-by` + coverage row); an S006 model-evaluation result removed from admitted knowledge (kengaku province); S006/S007 scopes narrowed; QUALITY 9/10/12 made checkable, 13 folded into 11; rejection-quota attribution corrected.
 - **Records:** SCORECARD round-24 verdict + capabilities row + `## Planned — round 25`; `corpus/README.md` coverage rows, count correction, Frontier; `corpus/evidence/README.md` round-24 section; measurement script + before/after logs. Operability score re-derived (criterion 12): 3/3 → 3.
 - **Boundaries held:** documentation-only web reading by L2 executors (kaika §6.5); no live-target contact; no credential material; lane-identity pathspec-limited commit; no push (operator rule "No push" overrides MISSION.md commit-then-push). Report: fleet-ledger `.ufo/reports/round-24/chousa.md`.
+
+## Round 25 — recovery attempt 2 integration (2026-10-21)
+
+- Motivation: `SCORECARD.md` planned r25 (from r24), r24 lesson M-3/M-4/M-5/
+  M-6/M-12/M-13/M-14, and `corpus/lessons/round-24-verifier-spotcheck.md`.
+  Base `d730ae4`; pre-registration `b820e4e` (claims, frozen populations,
+  counting script, before receipt). Attempt 1 left no output, 0 seats; reused
+  only the existing r24 plan and prior outside review. No dead seat replaced.
+- C1 operability: `tools/research-gate.sh verify-metadata` added per spec v1;
+  a syntactic header screen, not criterion-6 semantic compliance. Before mode
+  absent rc2 → after 25/28 complete, three named `META_RECHECK_ABSENT` warn
+  entries, rc1. 30 info findings remain (21 unscheduled, 9 parent-root).
+  Post-registration hardening: denylisted/oversized entries refused unread,
+  NUL-bearing entries refused unparsed; key continuation bug fixed; cases
+  137–154. Differential initially 50/54 exposed a table mistake and oracle
+  tokenizer bug; adjudicated against the frozen spec → 54/54. New capability
+  entered in SCORECARD. Numeric operability score remains 3 (re-derived r1 3/3).
+- C2 freshness: two base files indexed, plus the unindexed integrator spot-check
+  (outside the frozen base list); Frontier r11–r23 paragraphs appended with
+  their source seats' honest receipt gaps; 43 rows moved from r8 to their own
+  round headings; eight historical capability rows demonstrated and reconciled
+  (r15, r17–r23). `STALE_INDEX_ITEMS=66→0`.
+- C3 calibration: SKILL ledger restatements replaced by an owner pointer and
+  recount command; C3 finding marked instance-closed/class-uncovered; r13 gate
+  template filled as `6b17e50c…` with append-only erratum; r16–r23 ledger addenda
+  appended. Owning E4 tuple also wrong (72/71), corrected append-only to
+  row-true 38/22/8/0/3 (sum71), committed queue24 vs queue-true25.
+  `STALE_RESTATEMENTS=15→0`; not a semantic proof of every old disposition.
+- Frontier: S019–S028 opened by source scouts, 2 mined/7 queued/1 rejected;
+  S019/S020 cite the new knowledge entry. Garner BMJ blocked (403), no row;
+  source-search exclusion retained. Prior S006 paraphrase corrected as an
+  append-only located quote. QUALITY13/14 mined from the prior outside review,
+  each shown to fail a base file; all review debts dispositioned in the r25
+  lesson. SHONEN report/file mismatch reconciled to `[~]`, never `[x]`.
+- Unclaimed concurrency debt reproduced separately: 2/6 seeded sixteen-writer
+  runs with a blank line (0/6 empty controls), invalid JSON=0; unlanded flock
+  candidate retained in wave evidence, no closure claim.
+- Checks at integration: selftest 154/154 (cases1–136 byte-identical), drift
+  none, r1 3/3; metadata differential54/54. Commands and before/after receipts
+  live under `corpus/evidence/round25-*`; wave reports/specs/registries under
+  `.ufo/waves/round-25/`. Final smoke and non-author closure are separate.
+- Historical errata (outside frozen counts): LOG r16's `→ <FILL>` denotes
+  gate `2b64a1c8…`; r15–r23 battery "ALL IDENTICAL" does not imply CLEAN (the
+  receipts use `root=.`); the new Frontier paragraphs mark those qualifications.
+  No old LOG entry rewritten. Source/checked-what semantic checks, remaining
+  parent-root rechecks, historic placeholder and receipt gaps stay named debt
+  under QUALITY2/4/9/10, not silently absorbed into this round's counts.

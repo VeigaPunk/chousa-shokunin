@@ -1,0 +1,585 @@
+{
+ "wave": "chousa-r25-build",
+ "reportDir": ".ufo/waves/round-25/build",
+ "axes": [
+  "operability",
+  "freshness",
+  "calibration"
+ ],
+ "milestone": "Build metadata screen, re-derive indexes, close stale restatements, open sources",
+ "context": "# Goal\nchousa round 25 ONLY (hyaku block 25–34, recovery attempt 2; never work any later round). Lane repo /home/vgpnk/Projects/shokunin/chousa-shokunin (jj-colocated; branch master; pre-registration LANDED at b820e4e = /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round25-claims.md — read it FIRST: claims, frozen populations, spec v1 of the new `verify-metadata` mode, predictions). Counting script /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round25-measure.sh (before-output /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round25-measure-before.log). Domain: deep-research method (調査) — question framing, source hierarchy, citation chaining, claim-vs-source verification. Lane gate: /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh (bash, 5290 lines; selftest `bash tools/research-gate.sh --selftest` → PASS (136 cases), ~21 s).\nClaims: C1 operability — `verify-metadata` screen for the source:/verified-at:/recheck: header (QUALITY.md criterion 6); C2 freshness — re-derive indexes/ledgers (corpus/README.md coverage map + Frontier r11–r23, corpus/evidence/README.md misfiled r12–r23 rows, 8 missing SCORECARD capability rows r15,r17–r23); C3 calibration — close stale restatements (SKILL.md open A-r9 C3 finding, ledger tuples/queue sizes, `${GSHA}` slot in corpus/knowledge/hardening-r10.md:488, missing hardening addenda r16–r23). Frontier step: curate /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md (contract v1, /home/vgpnk/Projects/shokunin/CORPUS.md §SOURCES.md), mine mistakes into corpus/lessons/round-25.md. Prior outside check: /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-24-verifier-spotcheck.md. Admission bar: /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md.\n# Contract\nEvery `Report:` trailer path is relative to /home/vgpnk/Projects/shokunin/chousa-shokunin — write it at /home/vgpnk/Projects/shokunin/chousa-shokunin/<that path>. Tools start at the fleet root /home/vgpnk/Projects/shokunin: use ABSOLUTE paths always; a relative write lands in the fleet repo and is a misroot.\nYou may write ONLY (a) your own report file and (b) if your item says WRITER, files inside your private clone /tmp/chousa-r25-<YourSeatName> created with `git clone -q --no-hardlinks /home/vgpnk/Projects/shokunin/chousa-shokunin /tmp/chousa-r25-<YourSeatName> && git -C /tmp/chousa-r25-<YourSeatName> switch -q -c r25-<YourSeatName> b820e4e40ce52deedf53b191140cd7b08ddda929` (record the observed base hash). Seats that must RUN the gate or selftest do so inside such a private clone (selftest writes temp fixtures), never in the live lane. Integration owner is ChousaR25Recovery (L1) alone. NEVER write the live lane tree, its jj state or Git index (no git/jj mutation in /home/vgpnk/Projects/shokunin/chousa-shokunin), the fleet repo, sibling repos, MANIFEST.json, .ufo/state, watchdog, fleet scripts/templates/config, ~/.omp config, or host config. Read-only seats return findings in their report only.\nExternal: reading public web documentation pages for source research is allowed (open, quote, cite); no live-target probing, no logins, no secrets/credential reads, no services/boot/package transactions. Tooling: read /home/vgpnk/.omp/agent/RULES.md first; you may install or upgrade useful tools from official channels and must record tool/version/channel/reason in your report. pacman guard: ALL pacman transactions are PAUSED host-wide — use uv tool / npx / an official binary in ~/.local/bin; never -Sy/-Syu/-U/-R, never restart a host service. Scratch in /tmp only.\nNo delegation (an executor may spawn at most one read-only labrat probe). Skip builds/lint/formatters mid-flight; run only the commands your item assigns. Message peers only by exact id, never agent://all.\nHonesty: an unrun check has not passed; mark observation vs inference; every finding carries path:line or command+output. Quotes from web sources are verbatim and ≤25 words with their location.\nReport format: ≤60 lines; findings each with path:line or command+output; end with `VERDICT: <one line>` and any installs. Writers also list every file they wrote in their clone with sha256.",
+ "items": [
+  {
+   "name": "ExecMetaMode",
+   "role": "executor",
+   "axes": [
+    "operability"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nWRITER. In your clone implement `verify-metadata PATH [--root PATH]` in tools/research-gate.sh EXACTLY per spec v1 in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round25-claims.md (Claim 1): mode dispatch, usage text lines, the FINDING ids/severities, per-entry `META entry=…` lines, `METADATA_COMPLETE=N/M`, one `RESEARCH_GATE:` summary line in the gate's existing format, exits 0/1/2, CHOUSA_STRICT semantics reused. Reuse existing helpers (emit_finding, fence handling as in load_sections). Add selftest cases 137+ (≥12: clean entry; each absent key; undated verified-at; unscheduled recheck clean non-strict but drift under CHOUSA_STRICT=1; root-parent info; key inside a header fence ignored; key after first `## ` ignored; CRLF; directory order + METADATA_COMPLETE; missing path exit 2; dir without .md exit 2). Cases 1–136 must stay byte-identical (diff the case lines vs a base-clone selftest log). Then run in the clone: `bash corpus/evidence/round25-measure.sh /tmp/chousa-r25-ExecMetaMode` and paste the claim-1 block + holds. Deliver `git -C <clone> diff b820e4e > /tmp/chousa-r25-ExecMetaMode/r25-meta.patch` (path + sha256 in report)."
+  },
+  {
+   "name": "ExecMetaOracle",
+   "role": "executor",
+   "axes": [
+    "operability"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nWRITER. Independent oracle: from the spec v1 text ONLY (do not read any new bash implementation), write stdlib python3 /tmp/chousa-r25-ExecMetaOracle/corpus/evidence/round25-meta-oracle.py implementing verify-metadata spec v1 (same per-entry `META entry=… source=… verified_at=… recheck=… verdict=…` lines, FINDING lines `FINDING <ID> severity=<sev> surface=metadata obs=entry=<basename>`, `METADATA_COMPLETE=N/M`, exit 0/1/2, CHOUSA_STRICT env). Run it over the frozen 28-entry population (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/*.md at b820e4e) normal and strict; paste outputs; state whether the pre-registered prediction (25/28; drift = archives-verified-r9, audit-r11, gate-baseline-r8, META_RECHECK_ABSENT only) holds under the oracle. List every spec ambiguity you had to resolve and how."
+  },
+  {
+   "name": "ExecMetaMutants",
+   "role": "executor",
+   "axes": [
+    "operability"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nWRITER. Build a mutant fixture set in your clone under corpus/fixtures/metadata-r25/: ≥18 single-defect mutants derived from real entries in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/ (copy header + first `## ` heading only, ≤40 lines each) — one per spec-v1 finding class and edge (absent source/verified-at/recheck, undated verified-at, `recheck (from …):` no-colon form, command-only recheck, `--root ..` recheck, key indented by one space, key inside ```fence in header, key below first `## `, CRLF file, BOM-prefixed first line, empty value with continuation line, `recheck:` with ISO date, with `90d`, with `on-release`), plus 3 clean controls. Write corpus/fixtures/metadata-r25/README.md: table file → expected META line + expected FINDING ids + expected exit for that single file (normal and CHOUSA_STRICT=1), derived from spec v1 by hand. Deliver file list + sha256."
+  },
+  {
+   "name": "ExecHoldsBaseline",
+   "role": "executor",
+   "axes": [
+    "operability"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nWRITER. In a clone at b820e4e capture the hold battery byte-exact for later comparison: `bash tools/research-gate.sh --selftest` full log; `--drift corpus/evidence/gate-baseline-r12-20261019T115519Z.json`; `verify-all` (no --json) over corpus/fixtures/archives-r9/A-r9.md, B-r9.md, C-r9.md, full-r6.md, full-r6-broken.md, integrity-r7.md, integrity-r7-broken.md, sweeps-r5.md, chain-r3.md each with `--root /home/vgpnk/Projects/shokunin` (and the cases' own claims files per how corpus/evidence/README.md re-run recipe does it — read its `## Re-run recipe`); `verify-claims corpus/fixtures/claims-r2.jsonl --root /home/vgpnk/Projects/shokunin`. Save each output with its exit code to /tmp/chousa-r25-ExecHoldsBaseline/holds/<name>.log, plus a `battery.sh` that re-runs the identical list given a tree root and diffs against these logs (masking only lines containing `ts=`/gate sha). Report sha256 of every log and the exact command list."
+  },
+  {
+   "name": "ScoutGateHarness",
+   "role": "scout",
+   "axes": [
+    "operability"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRead-only map of /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh for the integrator: (1) run_selftest structure — how a case is declared/numbered, helper fns, fixture temp dirs, the `ok-case N name exit=` line format, the PASS summary; (2) mode dispatch (arg loop + final case) insertion points for a new `verify-metadata` mode; (3) emit_finding format and how CHOUSA_STRICT turns info into drift; (4) the RESEARCH_GATE summary line format of verify_sweeps or verify_integrity as a template; (5) load_sections fence handling to reuse. Give exact line numbers and short quotes."
+  },
+  {
+   "name": "ScoutHeaderShapes",
+   "role": "scout",
+   "axes": [
+    "operability"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRead-only: for each of the 28 files /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/*.md, record the header region per spec v1 (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round25-claims.md): line of first `## ` outside fences, key lines (source:/verified-at:/recheck:) with line numbers, continuation extent, any fence inside the header, CRLF/BOM/NUL bytes (use `grep -c $'\\r'`, `head -c3 | xxd`, `grep -caP '\\x00'`). Predict each entry's spec-v1 META line and findings (incl. info ones). Table of 28 rows + totals; flag any entry where the spec is ambiguous."
+  },
+  {
+   "name": "CriticClaim1",
+   "role": "critic",
+   "axes": [
+    "operability"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nAttack Claim 1 as pre-registered in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round25-claims.md: is the prediction failure-capable; can the mode pass vacuously (e.g. a header with keys but empty values; keys in prose); does `info` severity for unscheduled rechecks hide criterion-6 violations in r24+ entries (check /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md criterion 6 wording); is `verify-metadata` an operability move or a calibration one under /home/vgpnk/Projects/shokunin/AXES.md; is the claim separable from C2/C3. Rank attacks by severity with a concrete counterexample file text for each."
+  },
+  {
+   "name": "SentinelMetaPaths",
+   "role": "sentinel",
+   "axes": [
+    "operability"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nSecurity review of spec v1 for `verify-metadata` (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round25-claims.md) against the gate's existing boundary rules (/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh: claim_source_path chokepoint, in_root, is_denylist_path, session-path refusal, SOURCE_READ_MAX_BYTES). Which of those should apply to PATH and to directory children (symlink to out-of-root file, symlinked dir, hardlinked entry, FIFO, huge file, NUL bytes, filenames with newlines/spaces, `--root /`)? Recommend minimal, consistent rules with line refs. Read-only."
+  },
+  {
+   "name": "ReviewRecheckRoot",
+   "role": "reviewer",
+   "axes": [
+    "operability",
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nVerify the round-24 spot-check debt 'citation-chain recheck needs the fleet root as --root' (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-24-verifier-spotcheck.md:17). Make a private clone /tmp/chousa-r25-ReviewRecheckRoot at b820e4e (its parent is /tmp, so `..` = /tmp). From the clone root run the recheck command written at /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/citation-chain-fidelity-r24.md:5 exactly as written, then rerun it with `--root /home/vgpnk/Projects/shokunin`; paste both outputs and exit codes. Then count every `--root ..` inside a `recheck:` value across /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/*.md (command + list). Conclude whether `--root ..` makes a recheck placement-dependent."
+  },
+  {
+   "name": "ScribeMetaEntry",
+   "role": "scribe",
+   "axes": [
+    "operability"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nDraft (in your report, not in the lane) the knowledge entry corpus/knowledge/metadata-screen-r25.md in the house shape of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/json-delimiter-r24.md and claim-support-states-r24.md: header `source:` (gate path + the spec + a `S###` placeholder clearly marked `S0xx-TO-ASSIGN` for the L1), `verified-at:`, `recheck: 90d (…command…)`; sections Claim / The move / Evidence / Limits (what the screen does NOT check: value truth, S### row status, recheck runnability beyond `--root ..`, entries outside knowledge/). Mark every number the L1 must fill as `<<L1:…>>`. Obey /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md 1–12."
+  },
+  {
+   "name": "ConnectorMetaSiblings",
+   "role": "connector",
+   "axes": [
+    "operability",
+    "adjacency"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nSibling-overlap scan (read-only) across /home/vgpnk/Projects/shokunin/*-shokunin/ (tools/, scripts/, plans/, corpus/QUALITY.md): which lanes already machine-check knowledge-entry metadata headers (source/verified-at/recheck or equivalents), freshness cadences, or overdue rechecks? Name file:line, the pattern, and whether chousa's spec v1 (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round25-claims.md) duplicates, conflicts with, or should reuse it. Also flag any sibling province (PROVINCE.md) that owns 'freshness/drift of records' so chousa reports rather than absorbs."
+  },
+  {
+   "name": "RevengerCriterion6",
+   "role": "revenger",
+   "axes": [
+    "operability",
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nReconstruct the intent of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md criterion 6 and how round 24 checked it: /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round24-measure.sh (EXPANSION_ADMITTED block), /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-24.md M-13, git history (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin log -p --follow corpus/QUALITY.md`, read-only). What did r24's check enforce that spec v1 does not (S### row mined + used-by), and vice versa? Recommend whether spec v1's scope is a faithful first screen of criterion 6 and name the residual explicitly."
+  },
+  {
+   "name": "ScribeIndexRows",
+   "role": "scribe",
+   "axes": [
+    "freshness",
+    "coverage"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nDraft coverage-map rows (house style of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/README.md `## Coverage map`) for `knowledge/audit-r11.md` and `lessons/2026-10-19-hardlink-alias-boundary.md` after reading both files fully; also draft rows for the round-25 new files (`knowledge/metadata-screen-r25.md`, `lessons/round-25.md`, `evidence/round25-*`) as templates. Re-derive the README entry count (`ls /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/*.md | wc -l`, lessons likewise) and draft an appended dated correction line naming the command (criterion 9)."
+  },
+  {
+   "name": "FrontierR11",
+   "role": "scribe",
+   "axes": [
+    "freshness"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nDraft the missing `## Frontier` paragraph(s) of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/README.md for round 11, in the house style of the existing Round 2–10 and Round 24 paragraphs (read /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/README.md lines 319–505): what the round ran, the before→after observable with gate shas, the holds (selftest counts, drift, r1 3/3), and 'That observable is not saturated …' limits. Ground EVERY number in /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md (the round's `## Round N verdict` section), /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md (its round entry), the round's knowledge note in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/ and its receipts in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/ — cite path:line for each number after the paragraph. Paragraph must start exactly `Round N ` (N the round number). No placeholders; if a number cannot be grounded, say so rather than invent."
+  },
+  {
+   "name": "FrontierR12R13",
+   "role": "scribe",
+   "axes": [
+    "freshness"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nDraft the missing `## Frontier` paragraph(s) of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/README.md for round 12 and round 13, in the house style of the existing Round 2–10 and Round 24 paragraphs (read /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/README.md lines 319–505): what the round ran, the before→after observable with gate shas, the holds (selftest counts, drift, r1 3/3), and 'That observable is not saturated …' limits. Ground EVERY number in /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md (the round's `## Round N verdict` section), /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md (its round entry), the round's knowledge note in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/ and its receipts in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/ — cite path:line for each number after the paragraph. Paragraph must start exactly `Round N ` (N the round number). No placeholders; if a number cannot be grounded, say so rather than invent."
+  },
+  {
+   "name": "FrontierR14R15",
+   "role": "scribe",
+   "axes": [
+    "freshness"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nDraft the missing `## Frontier` paragraph(s) of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/README.md for round 14 and round 15, in the house style of the existing Round 2–10 and Round 24 paragraphs (read /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/README.md lines 319–505): what the round ran, the before→after observable with gate shas, the holds (selftest counts, drift, r1 3/3), and 'That observable is not saturated …' limits. Ground EVERY number in /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md (the round's `## Round N verdict` section), /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md (its round entry), the round's knowledge note in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/ and its receipts in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/ — cite path:line for each number after the paragraph. Paragraph must start exactly `Round N ` (N the round number). No placeholders; if a number cannot be grounded, say so rather than invent."
+  },
+  {
+   "name": "FrontierR16R17",
+   "role": "scribe",
+   "axes": [
+    "freshness"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nDraft the missing `## Frontier` paragraph(s) of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/README.md for round 16 and round 17, in the house style of the existing Round 2–10 and Round 24 paragraphs (read /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/README.md lines 319–505): what the round ran, the before→after observable with gate shas, the holds (selftest counts, drift, r1 3/3), and 'That observable is not saturated …' limits. Ground EVERY number in /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md (the round's `## Round N verdict` section), /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md (its round entry), the round's knowledge note in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/ and its receipts in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/ — cite path:line for each number after the paragraph. Paragraph must start exactly `Round N ` (N the round number). No placeholders; if a number cannot be grounded, say so rather than invent."
+  },
+  {
+   "name": "FrontierR18R19",
+   "role": "scribe",
+   "axes": [
+    "freshness"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nDraft the missing `## Frontier` paragraph(s) of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/README.md for round 18 and round 19, in the house style of the existing Round 2–10 and Round 24 paragraphs (read /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/README.md lines 319–505): what the round ran, the before→after observable with gate shas, the holds (selftest counts, drift, r1 3/3), and 'That observable is not saturated …' limits. Ground EVERY number in /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md (the round's `## Round N verdict` section), /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md (its round entry), the round's knowledge note in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/ and its receipts in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/ — cite path:line for each number after the paragraph. Paragraph must start exactly `Round N ` (N the round number). No placeholders; if a number cannot be grounded, say so rather than invent."
+  },
+  {
+   "name": "FrontierR20R21",
+   "role": "scribe",
+   "axes": [
+    "freshness"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nDraft the missing `## Frontier` paragraph(s) of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/README.md for round 20 and round 21, in the house style of the existing Round 2–10 and Round 24 paragraphs (read /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/README.md lines 319–505): what the round ran, the before→after observable with gate shas, the holds (selftest counts, drift, r1 3/3), and 'That observable is not saturated …' limits. Ground EVERY number in /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md (the round's `## Round N verdict` section), /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md (its round entry), the round's knowledge note in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/ and its receipts in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/ — cite path:line for each number after the paragraph. Paragraph must start exactly `Round N ` (N the round number). No placeholders; if a number cannot be grounded, say so rather than invent."
+  },
+  {
+   "name": "FrontierR22R23",
+   "role": "scribe",
+   "axes": [
+    "freshness"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nDraft the missing `## Frontier` paragraph(s) of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/README.md for round 22 and round 23, in the house style of the existing Round 2–10 and Round 24 paragraphs (read /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/README.md lines 319–505): what the round ran, the before→after observable with gate shas, the holds (selftest counts, drift, r1 3/3), and 'That observable is not saturated …' limits. Ground EVERY number in /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md (the round's `## Round N verdict` section), /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md (its round entry), the round's knowledge note in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/ and its receipts in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/ — cite path:line for each number after the paragraph. Paragraph must start exactly `Round N ` (N the round number). No placeholders; if a number cannot be grounded, say so rather than invent."
+  },
+  {
+   "name": "EvidenceIdxR12R15",
+   "role": "scout",
+   "axes": [
+    "freshness"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRead-only. /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/README.md files 43 round-stamped r12–r23 receipt rows (lines ~629–671) under `## Round-8 gate-baseline receipts`. For rounds [12, 13, 14, 15]: list each row (line, filename) belonging to that round, confirm each named file exists in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/ (ls + sha256 prefix), and draft a `## Round-N <move> receipts — stamp <stamp>` section per round (heading wording from that round's knowledge note / SCORECARD verdict; one-paragraph intro naming gate sha before→after and the selftest count) holding exactly those rows verbatim. Note any receipt file on disk that no row indexes, and whether round 16 (if in range) has receipts."
+  },
+  {
+   "name": "EvidenceIdxR17R20",
+   "role": "scout",
+   "axes": [
+    "freshness"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRead-only. /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/README.md files 43 round-stamped r12–r23 receipt rows (lines ~629–671) under `## Round-8 gate-baseline receipts`. For rounds [17, 18, 19, 20]: list each row (line, filename) belonging to that round, confirm each named file exists in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/ (ls + sha256 prefix), and draft a `## Round-N <move> receipts — stamp <stamp>` section per round (heading wording from that round's knowledge note / SCORECARD verdict; one-paragraph intro naming gate sha before→after and the selftest count) holding exactly those rows verbatim. Note any receipt file on disk that no row indexes, and whether round 16 (if in range) has receipts."
+  },
+  {
+   "name": "EvidenceIdxR21R23",
+   "role": "scout",
+   "axes": [
+    "freshness"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRead-only. /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/README.md files 43 round-stamped r12–r23 receipt rows (lines ~629–671) under `## Round-8 gate-baseline receipts`. For rounds [21, 22, 23]: list each row (line, filename) belonging to that round, confirm each named file exists in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/ (ls + sha256 prefix), and draft a `## Round-N <move> receipts — stamp <stamp>` section per round (heading wording from that round's knowledge note / SCORECARD verdict; one-paragraph intro naming gate sha before→after and the selftest count) holding exactly those rows verbatim. Note any receipt file on disk that no row indexes, and whether round 16 (if in range) has receipts."
+  },
+  {
+   "name": "CapRowR15",
+   "role": "reviewer",
+   "axes": [
+    "freshness",
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nCapability row backfill for round 15. /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md claims `Capabilities +1` in its Round 15 entry (grep `SCORECARD §Round 15`), but /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md has no capabilities-table row with first-working round 15. (1) Quote the LOG claim and the SCORECARD round-15 verdict text naming the capability. (2) In a private clone /tmp/chousa-r25-CapRowR15 at b820e4e re-run its demonstration NOW: run `bash tools/research-gate.sh --selftest` and paste the `ok-case` lines of that round's cases, or the round's demo recipe from /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/README.md. (3) Draft the row `| <capability> | <what it can now do, one line> | <evidence pointer: selftest cases a–b; knowledge note path> | 15 |`. If the demonstration fails or no capability is identifiable, say so: the row must not be pre-claimed."
+  },
+  {
+   "name": "CapRowR17",
+   "role": "reviewer",
+   "axes": [
+    "freshness",
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nCapability row backfill for round 17. /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md claims `Capabilities +1` in its Round 17 entry (grep `SCORECARD §Round 17`), but /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md has no capabilities-table row with first-working round 17. (1) Quote the LOG claim and the SCORECARD round-17 verdict text naming the capability. (2) In a private clone /tmp/chousa-r25-CapRowR17 at b820e4e re-run its demonstration NOW: run `bash tools/research-gate.sh --selftest` and paste the `ok-case` lines of that round's cases, or the round's demo recipe from /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/README.md. (3) Draft the row `| <capability> | <what it can now do, one line> | <evidence pointer: selftest cases a–b; knowledge note path> | 17 |`. If the demonstration fails or no capability is identifiable, say so: the row must not be pre-claimed."
+  },
+  {
+   "name": "CapRowR18",
+   "role": "reviewer",
+   "axes": [
+    "freshness",
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nCapability row backfill for round 18. /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md claims `Capabilities +1` in its Round 18 entry (grep `SCORECARD §Round 18`), but /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md has no capabilities-table row with first-working round 18. (1) Quote the LOG claim and the SCORECARD round-18 verdict text naming the capability. (2) In a private clone /tmp/chousa-r25-CapRowR18 at b820e4e re-run its demonstration NOW: run `bash tools/research-gate.sh --selftest` and paste the `ok-case` lines of that round's cases, or the round's demo recipe from /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/README.md. (3) Draft the row `| <capability> | <what it can now do, one line> | <evidence pointer: selftest cases a–b; knowledge note path> | 18 |`. If the demonstration fails or no capability is identifiable, say so: the row must not be pre-claimed."
+  },
+  {
+   "name": "CapRowR19",
+   "role": "reviewer",
+   "axes": [
+    "freshness",
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nCapability row backfill for round 19. /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md claims `Capabilities +1` in its Round 19 entry (grep `SCORECARD §Round 19`), but /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md has no capabilities-table row with first-working round 19. (1) Quote the LOG claim and the SCORECARD round-19 verdict text naming the capability. (2) In a private clone /tmp/chousa-r25-CapRowR19 at b820e4e re-run its demonstration NOW: run `bash tools/research-gate.sh --selftest` and paste the `ok-case` lines of that round's cases, or the round's demo recipe from /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/README.md. (3) Draft the row `| <capability> | <what it can now do, one line> | <evidence pointer: selftest cases a–b; knowledge note path> | 19 |`. If the demonstration fails or no capability is identifiable, say so: the row must not be pre-claimed."
+  },
+  {
+   "name": "CapRowR20",
+   "role": "reviewer",
+   "axes": [
+    "freshness",
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nCapability row backfill for round 20. /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md claims `Capabilities +1` in its Round 20 entry (grep `SCORECARD §Round 20`), but /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md has no capabilities-table row with first-working round 20. (1) Quote the LOG claim and the SCORECARD round-20 verdict text naming the capability. (2) In a private clone /tmp/chousa-r25-CapRowR20 at b820e4e re-run its demonstration NOW: run `bash tools/research-gate.sh --selftest` and paste the `ok-case` lines of that round's cases, or the round's demo recipe from /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/README.md. (3) Draft the row `| <capability> | <what it can now do, one line> | <evidence pointer: selftest cases a–b; knowledge note path> | 20 |`. If the demonstration fails or no capability is identifiable, say so: the row must not be pre-claimed."
+  },
+  {
+   "name": "CapRowR21",
+   "role": "reviewer",
+   "axes": [
+    "freshness",
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nCapability row backfill for round 21. /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md claims `Capabilities +1` in its Round 21 entry (grep `SCORECARD §Round 21`), but /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md has no capabilities-table row with first-working round 21. (1) Quote the LOG claim and the SCORECARD round-21 verdict text naming the capability. (2) In a private clone /tmp/chousa-r25-CapRowR21 at b820e4e re-run its demonstration NOW: run `bash tools/research-gate.sh --selftest` and paste the `ok-case` lines of that round's cases, or the round's demo recipe from /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/README.md. (3) Draft the row `| <capability> | <what it can now do, one line> | <evidence pointer: selftest cases a–b; knowledge note path> | 21 |`. If the demonstration fails or no capability is identifiable, say so: the row must not be pre-claimed."
+  },
+  {
+   "name": "CapRowR22",
+   "role": "reviewer",
+   "axes": [
+    "freshness",
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nCapability row backfill for round 22. /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md claims `Capabilities +1` in its Round 22 entry (grep `SCORECARD §Round 22`), but /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md has no capabilities-table row with first-working round 22. (1) Quote the LOG claim and the SCORECARD round-22 verdict text naming the capability. (2) In a private clone /tmp/chousa-r25-CapRowR22 at b820e4e re-run its demonstration NOW: run `bash tools/research-gate.sh --selftest` and paste the `ok-case` lines of that round's cases, or the round's demo recipe from /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/README.md. (3) Draft the row `| <capability> | <what it can now do, one line> | <evidence pointer: selftest cases a–b; knowledge note path> | 22 |`. If the demonstration fails or no capability is identifiable, say so: the row must not be pre-claimed."
+  },
+  {
+   "name": "CapRowR23",
+   "role": "reviewer",
+   "axes": [
+    "freshness",
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nCapability row backfill for round 23. /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md claims `Capabilities +1` in its Round 23 entry (grep `SCORECARD §Round 23`), but /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md has no capabilities-table row with first-working round 23. (1) Quote the LOG claim and the SCORECARD round-23 verdict text naming the capability. (2) In a private clone /tmp/chousa-r25-CapRowR23 at b820e4e re-run its demonstration NOW: run `bash tools/research-gate.sh --selftest` and paste the `ok-case` lines of that round's cases, or the round's demo recipe from /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/README.md. (3) Draft the row `| <capability> | <what it can now do, one line> | <evidence pointer: selftest cases a–b; knowledge note path> | 23 |`. If the demonstration fails or no capability is identifiable, say so: the row must not be pre-claimed."
+  },
+  {
+   "name": "CriticClaim2",
+   "role": "critic",
+   "axes": [
+    "freshness"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nAttack Claim 2's counting block (2a–2d) in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round25-measure.sh and the pre-registration: can STALE_INDEX_ITEMS reach 0 vacuously (e.g. a one-word `Round 11 ` paragraph, a heading without moved rows, a capability row with an unverifiable pointer)? Are the regexes failure-capable and not gameable? Propose concrete tightened checks (exact code) that the L1 can add WITHOUT changing the frozen before numbers, and the qualitative acceptance each new paragraph/row must meet."
+  },
+  {
+   "name": "ScoutReadmeCount",
+   "role": "scout",
+   "axes": [
+    "freshness",
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRead-only criterion-9 sweep of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/README.md and /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/README.md: list every restated count/total (entry counts, selftest case counts, row counts, manifest line counts) that a reader could take as current, with path:line, its owning file, and the command that re-derives it now; mark each current/stale/dated-snapshot. Do not include Frontier paragraphs r2–r10 historical numbers unless they claim currency."
+  },
+  {
+   "name": "ReviewC3Closure",
+   "role": "reviewer",
+   "axes": [
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nVerify that the A-r9 C3 finding SKILL.md restates as open (/home/vgpnk/Projects/shokunin/chousa-shokunin/SKILL.md ~:437-439 'remains open pending fix-or-absorb') is closed: read /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/audit-r11.md:~320, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/README.md:~162 ('corrected at round 12'), /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/fixtures/archives-r9/A-r9.md row C3 now, and read-only git log for the fix commit. Quote each. Draft the replacement SKILL.md sentence(s) per /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md criterion 9: name the owning file + revision and the command that re-derives the state; minimal diff."
+  },
+  {
+   "name": "ReviewLedgerTotals",
+   "role": "reviewer",
+   "axes": [
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRe-derive the hardening ledger counts in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/hardening-r10.md at its latest revision by COUNTING, not by reading the counts lines: tally dispositions of rows 1–71 (by-design/carried/closed/finding/operator) applying every addendum (r12 §6, r13, r14, r15) in order; confirm or refute the last counts line (by-design 38 · carried 21 · closed 10 · finding 0 · operator 3; queue 24). Give a reproducible python3/awk command and its output. Then list each SKILL.md restatement (/home/vgpnk/Projects/shokunin/chousa-shokunin/SKILL.md ~:381-384, ~:435-436) and draft criterion-9-conformant replacement text (pointer to the owning revision + the command)."
+  },
+  {
+   "name": "RevengerGSHA",
+   "role": "revenger",
+   "axes": [
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRecover the value the unfilled `${GSHA}` slot at /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/hardening-r10.md:488 should hold (round-13 addendum: 'Gate `91a01695…` → `${GSHA}…`'). Read-only git: find the round-13 landing commit(s) (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin log --oneline --all -- tools/research-gate.sh`), `git show <c>:tools/research-gate.sh | sha256sum` for the r12 and r13 landings, cross-check against the r14 addendum's 'Gate `6b17e50c…` → `d8bbd0bf…`' and /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/hardlink-alias-r13.md + evidence logs. State the 8-hex prefix with proof, and any inconsistency in the trail (e.g. 91a01695 vs 6b17e50c)."
+  },
+  {
+   "name": "LedgerAddR16",
+   "role": "scout",
+   "axes": [
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nDraft the missing `### Round-16 addendum (2026-10-19, append-only)` for /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/hardening-r10.md, in the exact style of its Round-13/14/15 addenda (lines ~470–600). Determine from /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md `## Round 16 verdict`, /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md Round 16 entry, that round's knowledge note in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/, and read-only git (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin log --oneline` around the round-16 landing; gate blob sha256 before/after via `git show <c>:tools/research-gate.sh | sha256sum`): which ledger rows (by number, quoting the row from §§1–6) or round-11 queue items the round closed/changed/added, if any; the gate sha before→after; selftest cases. If the round changed no ledger row, the addendum says so explicitly with evidence. Do NOT compute running totals (the L1 chains them); list only the row/queue deltas with proof."
+  },
+  {
+   "name": "LedgerAddR17",
+   "role": "scout",
+   "axes": [
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nDraft the missing `### Round-17 addendum (2026-10-19, append-only)` for /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/hardening-r10.md, in the exact style of its Round-13/14/15 addenda (lines ~470–600). Determine from /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md `## Round 17 verdict`, /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md Round 17 entry, that round's knowledge note in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/, and read-only git (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin log --oneline` around the round-17 landing; gate blob sha256 before/after via `git show <c>:tools/research-gate.sh | sha256sum`): which ledger rows (by number, quoting the row from §§1–6) or round-11 queue items the round closed/changed/added, if any; the gate sha before→after; selftest cases. If the round changed no ledger row, the addendum says so explicitly with evidence. Do NOT compute running totals (the L1 chains them); list only the row/queue deltas with proof."
+  },
+  {
+   "name": "LedgerAddR18",
+   "role": "revenger",
+   "axes": [
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nDraft the missing `### Round-18 addendum (2026-10-19, append-only)` for /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/hardening-r10.md, in the exact style of its Round-13/14/15 addenda (lines ~470–600). Determine from /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md `## Round 18 verdict`, /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md Round 18 entry, that round's knowledge note in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/, and read-only git (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin log --oneline` around the round-18 landing; gate blob sha256 before/after via `git show <c>:tools/research-gate.sh | sha256sum`): which ledger rows (by number, quoting the row from §§1–6) or round-11 queue items the round closed/changed/added, if any; the gate sha before→after; selftest cases. If the round changed no ledger row, the addendum says so explicitly with evidence. Do NOT compute running totals (the L1 chains them); list only the row/queue deltas with proof."
+  },
+  {
+   "name": "LedgerAddR19",
+   "role": "revenger",
+   "axes": [
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nDraft the missing `### Round-19 addendum (2026-10-19, append-only)` for /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/hardening-r10.md, in the exact style of its Round-13/14/15 addenda (lines ~470–600). Determine from /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md `## Round 19 verdict`, /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md Round 19 entry, that round's knowledge note in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/, and read-only git (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin log --oneline` around the round-19 landing; gate blob sha256 before/after via `git show <c>:tools/research-gate.sh | sha256sum`): which ledger rows (by number, quoting the row from §§1–6) or round-11 queue items the round closed/changed/added, if any; the gate sha before→after; selftest cases. If the round changed no ledger row, the addendum says so explicitly with evidence. Do NOT compute running totals (the L1 chains them); list only the row/queue deltas with proof."
+  },
+  {
+   "name": "LedgerAddR20",
+   "role": "revenger",
+   "axes": [
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nDraft the missing `### Round-20 addendum (2026-10-19, append-only)` for /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/hardening-r10.md, in the exact style of its Round-13/14/15 addenda (lines ~470–600). Determine from /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md `## Round 20 verdict`, /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md Round 20 entry, that round's knowledge note in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/, and read-only git (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin log --oneline` around the round-20 landing; gate blob sha256 before/after via `git show <c>:tools/research-gate.sh | sha256sum`): which ledger rows (by number, quoting the row from §§1–6) or round-11 queue items the round closed/changed/added, if any; the gate sha before→after; selftest cases. If the round changed no ledger row, the addendum says so explicitly with evidence. Do NOT compute running totals (the L1 chains them); list only the row/queue deltas with proof."
+  },
+  {
+   "name": "LedgerAddR21",
+   "role": "revenger",
+   "axes": [
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nDraft the missing `### Round-21 addendum (2026-10-19, append-only)` for /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/hardening-r10.md, in the exact style of its Round-13/14/15 addenda (lines ~470–600). Determine from /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md `## Round 21 verdict`, /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md Round 21 entry, that round's knowledge note in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/, and read-only git (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin log --oneline` around the round-21 landing; gate blob sha256 before/after via `git show <c>:tools/research-gate.sh | sha256sum`): which ledger rows (by number, quoting the row from §§1–6) or round-11 queue items the round closed/changed/added, if any; the gate sha before→after; selftest cases. If the round changed no ledger row, the addendum says so explicitly with evidence. Do NOT compute running totals (the L1 chains them); list only the row/queue deltas with proof."
+  },
+  {
+   "name": "LedgerAddR22",
+   "role": "scout",
+   "axes": [
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nDraft the missing `### Round-22 addendum (2026-10-19, append-only)` for /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/hardening-r10.md, in the exact style of its Round-13/14/15 addenda (lines ~470–600). Determine from /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md `## Round 22 verdict`, /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md Round 22 entry, that round's knowledge note in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/, and read-only git (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin log --oneline` around the round-22 landing; gate blob sha256 before/after via `git show <c>:tools/research-gate.sh | sha256sum`): which ledger rows (by number, quoting the row from §§1–6) or round-11 queue items the round closed/changed/added, if any; the gate sha before→after; selftest cases. If the round changed no ledger row, the addendum says so explicitly with evidence. Do NOT compute running totals (the L1 chains them); list only the row/queue deltas with proof."
+  },
+  {
+   "name": "LedgerAddR23",
+   "role": "scout",
+   "axes": [
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nDraft the missing `### Round-23 addendum (2026-10-19, append-only)` for /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/hardening-r10.md, in the exact style of its Round-13/14/15 addenda (lines ~470–600). Determine from /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md `## Round 23 verdict`, /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md Round 23 entry, that round's knowledge note in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/, and read-only git (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin log --oneline` around the round-23 landing; gate blob sha256 before/after via `git show <c>:tools/research-gate.sh | sha256sum`): which ledger rows (by number, quoting the row from §§1–6) or round-11 queue items the round closed/changed/added, if any; the gate sha before→after; selftest cases. If the round changed no ledger row, the addendum says so explicitly with evidence. Do NOT compute running totals (the L1 chains them); list only the row/queue deltas with proof."
+  },
+  {
+   "name": "ScoutPlaceholderSweep",
+   "role": "scout",
+   "axes": [
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRead-only criterion-10 sweep: run `grep -rnE '\\$\\{[A-Z_]+\\}|\\bTODO\\b|\\bTBD\\b|LANE_HASH|\\[record ' /home/vgpnk/Projects/shokunin/chousa-shokunin/SKILL.md /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus --include='*.md'` and classify every hit: data-in-backticks (allowed per /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md 10) vs shipped placeholder. Also look for `<…>` template slots and `XXX`. Table + counts."
+  },
+  {
+   "name": "ScoutRestatementSweep",
+   "role": "scout",
+   "axes": [
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRead-only criterion-9 sweep of /home/vgpnk/Projects/shokunin/chousa-shokunin/SKILL.md: every restated number, total, open finding, or 'current' state (selftest case counts, ledger tuples, queue sizes, mode lists, round numbers, 'open' findings). For each: line, the owning file, the command that re-derives it, current value, verdict current/stale. Separate the 5 pre-registered stale items (round25-claims.md Claim 3) from any NEW ones (report new ones as out-of-population findings)."
+  },
+  {
+   "name": "CriticClaim3",
+   "role": "critic",
+   "axes": [
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nAttack Claim 3 (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round25-claims.md, measure block 3a–3d): can STALE_RESTATEMENTS reach 0 by deletion instead of correction; does an in-place substitution of the `${GSHA}` slot violate /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md criterion 4 (errata append-only) and how should it be recorded; is replacing restated numbers by pointers a calibration improvement or merely churn (AXES.md calibration: 'SHONEN/SCORECARD entries match observed repo state'); separability from C2. Propose acceptance conditions."
+  },
+  {
+   "name": "SimplifierSkillMd",
+   "role": "simplifier",
+   "axes": [
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nPropose the minimal diff to /home/vgpnk/Projects/shokunin/chousa-shokunin/SKILL.md (as a unified diff in your report; do not write the lane) that removes stale restated ledger counts/queue sizes and the 'remains open' finding sentence (lines ~376-439) in favor of one pointer to /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/hardening-r10.md's latest counts line plus a re-deriving command, preserving every other sentence. Keep it the smallest correct change."
+  },
+  {
+   "name": "SrcGarnerBMJ",
+   "role": "scout",
+   "axes": [
+    "coverage",
+    "freshness"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nOpen ONE source for the lane's SOURCES.md (contract v1: /home/vgpnk/Projects/shokunin/CORPUS.md §'SOURCES.md — where a shokunin learns'; registry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md — read its header and rows first): Garner et al. 2016 'When and how to update systematic reviews: consensus and checklist' (BMJ) — https://www.bmj.com/content/354/bmj.i3507. Return: final URL actually opened, access date 2026-10-21, HTTP outcome, ONE verbatim quote ≤25 words with its exact location (section/heading), proposed kind/tier(A/B/C)/scope/teaches per the contract's columns, and whether it supports the claim 'a scheduled recheck (date or cadence) makes a record's staleness computable; provenance metadata (source, verified-at) is a precondition of re-verification' — supports/partial/no, with reason. Recommend admit (status queued/mined) or reject with reason + flip condition. If the page is paywalled/blocked, say so and give the outcome; never quote from memory."
+  },
+  {
+   "name": "SrcCochraneUpdate",
+   "role": "scout",
+   "axes": [
+    "coverage",
+    "freshness"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nOpen ONE source for the lane's SOURCES.md (contract v1: /home/vgpnk/Projects/shokunin/CORPUS.md §'SOURCES.md — where a shokunin learns'; registry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md — read its header and rows first): Cochrane Handbook chapter IV 'Updating a review' — https://training.cochrane.org/handbook/current/chapter-iv. Return: final URL actually opened, access date 2026-10-21, HTTP outcome, ONE verbatim quote ≤25 words with its exact location (section/heading), proposed kind/tier(A/B/C)/scope/teaches per the contract's columns, and whether it supports the claim 'a scheduled recheck (date or cadence) makes a record's staleness computable; provenance metadata (source, verified-at) is a precondition of re-verification' — supports/partial/no, with reason. Recommend admit (status queued/mined) or reject with reason + flip condition. If the page is paywalled/blocked, say so and give the outcome; never quote from memory."
+  },
+  {
+   "name": "SrcElliottLSR",
+   "role": "scout",
+   "axes": [
+    "coverage",
+    "freshness"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nOpen ONE source for the lane's SOURCES.md (contract v1: /home/vgpnk/Projects/shokunin/CORPUS.md §'SOURCES.md — where a shokunin learns'; registry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md — read its header and rows first): Elliott et al. 2017 'Living systematic review: 1. Introduction' (J Clin Epidemiol) — https://pubmed.ncbi.nlm.nih.gov/28912002/. Return: final URL actually opened, access date 2026-10-21, HTTP outcome, ONE verbatim quote ≤25 words with its exact location (section/heading), proposed kind/tier(A/B/C)/scope/teaches per the contract's columns, and whether it supports the claim 'a scheduled recheck (date or cadence) makes a record's staleness computable; provenance metadata (source, verified-at) is a precondition of re-verification' — supports/partial/no, with reason. Recommend admit (status queued/mined) or reject with reason + flip condition. If the page is paywalled/blocked, say so and give the outcome; never quote from memory."
+  },
+  {
+   "name": "SrcShojania2007",
+   "role": "scout",
+   "axes": [
+    "coverage",
+    "freshness"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nOpen ONE source for the lane's SOURCES.md (contract v1: /home/vgpnk/Projects/shokunin/CORPUS.md §'SOURCES.md — where a shokunin learns'; registry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md — read its header and rows first): Shojania et al. 2007 'How quickly do systematic reviews go out of date?' (Ann Intern Med) — https://pubmed.ncbi.nlm.nih.gov/17638714/. Return: final URL actually opened, access date 2026-10-21, HTTP outcome, ONE verbatim quote ≤25 words with its exact location (section/heading), proposed kind/tier(A/B/C)/scope/teaches per the contract's columns, and whether it supports the claim 'a scheduled recheck (date or cadence) makes a record's staleness computable; provenance metadata (source, verified-at) is a precondition of re-verification' — supports/partial/no, with reason. Recommend admit (status queued/mined) or reject with reason + flip condition. If the page is paywalled/blocked, say so and give the outcome; never quote from memory."
+  },
+  {
+   "name": "SrcProvO",
+   "role": "scout",
+   "axes": [
+    "coverage",
+    "freshness"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nOpen ONE source for the lane's SOURCES.md (contract v1: /home/vgpnk/Projects/shokunin/CORPUS.md §'SOURCES.md — where a shokunin learns'; registry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md — read its header and rows first): W3C PROV-O (prov:generatedAtTime, prov:wasDerivedFrom, prov:invalidatedAtTime) — https://www.w3.org/TR/prov-o/. Return: final URL actually opened, access date 2026-10-21, HTTP outcome, ONE verbatim quote ≤25 words with its exact location (section/heading), proposed kind/tier(A/B/C)/scope/teaches per the contract's columns, and whether it supports the claim 'a scheduled recheck (date or cadence) makes a record's staleness computable; provenance metadata (source, verified-at) is a precondition of re-verification' — supports/partial/no, with reason. Recommend admit (status queued/mined) or reject with reason + flip condition. If the page is paywalled/blocked, say so and give the outcome; never quote from memory."
+  },
+  {
+   "name": "SrcDcmiTerms",
+   "role": "scout",
+   "axes": [
+    "coverage",
+    "freshness"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nOpen ONE source for the lane's SOURCES.md (contract v1: /home/vgpnk/Projects/shokunin/CORPUS.md §'SOURCES.md — where a shokunin learns'; registry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md — read its header and rows first): DCMI Metadata Terms (dcterms:source, dcterms:modified, dcterms:valid) — https://www.dublincore.org/specifications/dublin-core/dcmi-terms/. Return: final URL actually opened, access date 2026-10-21, HTTP outcome, ONE verbatim quote ≤25 words with its exact location (section/heading), proposed kind/tier(A/B/C)/scope/teaches per the contract's columns, and whether it supports the claim 'a scheduled recheck (date or cadence) makes a record's staleness computable; provenance metadata (source, verified-at) is a precondition of re-verification' — supports/partial/no, with reason. Recommend admit (status queued/mined) or reject with reason + flip condition. If the page is paywalled/blocked, say so and give the outcome; never quote from memory."
+  },
+  {
+   "name": "SrcSchemaReviewed",
+   "role": "scout",
+   "axes": [
+    "coverage",
+    "freshness"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nOpen ONE source for the lane's SOURCES.md (contract v1: /home/vgpnk/Projects/shokunin/CORPUS.md §'SOURCES.md — where a shokunin learns'; registry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md — read its header and rows first): schema.org lastReviewed / reviewedBy — https://schema.org/lastReviewed. Return: final URL actually opened, access date 2026-10-21, HTTP outcome, ONE verbatim quote ≤25 words with its exact location (section/heading), proposed kind/tier(A/B/C)/scope/teaches per the contract's columns, and whether it supports the claim 'a scheduled recheck (date or cadence) makes a record's staleness computable; provenance metadata (source, verified-at) is a precondition of re-verification' — supports/partial/no, with reason. Recommend admit (status queued/mined) or reject with reason + flip condition. If the page is paywalled/blocked, say so and give the outcome; never quote from memory."
+  },
+  {
+   "name": "SrcRfc9111",
+   "role": "scout",
+   "axes": [
+    "coverage",
+    "freshness"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nOpen ONE source for the lane's SOURCES.md (contract v1: /home/vgpnk/Projects/shokunin/CORPUS.md §'SOURCES.md — where a shokunin learns'; registry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md — read its header and rows first): RFC 9111 HTTP Caching §4.2 freshness lifetime / stale — https://www.rfc-editor.org/rfc/rfc9111. Return: final URL actually opened, access date 2026-10-21, HTTP outcome, ONE verbatim quote ≤25 words with its exact location (section/heading), proposed kind/tier(A/B/C)/scope/teaches per the contract's columns, and whether it supports the claim 'a scheduled recheck (date or cadence) makes a record's staleness computable; provenance metadata (source, verified-at) is a precondition of re-verification' — supports/partial/no, with reason. Recommend admit (status queued/mined) or reject with reason + flip condition. If the page is paywalled/blocked, say so and give the outcome; never quote from memory."
+  },
+  {
+   "name": "SrcFairR12",
+   "role": "scout",
+   "axes": [
+    "coverage",
+    "freshness"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nOpen ONE source for the lane's SOURCES.md (contract v1: /home/vgpnk/Projects/shokunin/CORPUS.md §'SOURCES.md — where a shokunin learns'; registry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md — read its header and rows first): GO FAIR principle R1.2 (detailed provenance) — https://www.go-fair.org/fair-principles/r1-2-metadata-associated-detailed-provenance/. Return: final URL actually opened, access date 2026-10-21, HTTP outcome, ONE verbatim quote ≤25 words with its exact location (section/heading), proposed kind/tier(A/B/C)/scope/teaches per the contract's columns, and whether it supports the claim 'a scheduled recheck (date or cadence) makes a record's staleness computable; provenance metadata (source, verified-at) is a precondition of re-verification' — supports/partial/no, with reason. Recommend admit (status queued/mined) or reject with reason + flip condition. If the page is paywalled/blocked, say so and give the outcome; never quote from memory."
+  },
+  {
+   "name": "SrcWikiAsOf",
+   "role": "scout",
+   "axes": [
+    "coverage",
+    "freshness"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nOpen ONE source for the lane's SOURCES.md (contract v1: /home/vgpnk/Projects/shokunin/CORPUS.md §'SOURCES.md — where a shokunin learns'; registry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md — read its header and rows first): Wikipedia:As of (dating time-sensitive statements; community tier) — https://en.wikipedia.org/wiki/Wikipedia:As_of. Return: final URL actually opened, access date 2026-10-21, HTTP outcome, ONE verbatim quote ≤25 words with its exact location (section/heading), proposed kind/tier(A/B/C)/scope/teaches per the contract's columns, and whether it supports the claim 'a scheduled recheck (date or cadence) makes a record's staleness computable; provenance metadata (source, verified-at) is a precondition of re-verification' — supports/partial/no, with reason. Recommend admit (status queued/mined) or reject with reason + flip condition. If the page is paywalled/blocked, say so and give the outcome; never quote from memory."
+  },
+  {
+   "name": "SrcCrossmark",
+   "role": "scout",
+   "axes": [
+    "coverage",
+    "freshness"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nOpen ONE source for the lane's SOURCES.md (contract v1: /home/vgpnk/Projects/shokunin/CORPUS.md §'SOURCES.md — where a shokunin learns'; registry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md — read its header and rows first): Crossref Crossmark (update/retraction status of cited works) — https://www.crossref.org/services/crossmark/. Return: final URL actually opened, access date 2026-10-21, HTTP outcome, ONE verbatim quote ≤25 words with its exact location (section/heading), proposed kind/tier(A/B/C)/scope/teaches per the contract's columns, and whether it supports the claim 'a scheduled recheck (date or cadence) makes a record's staleness computable; provenance metadata (source, verified-at) is a precondition of re-verification' — supports/partial/no, with reason. Recommend admit (status queued/mined) or reject with reason + flip condition. If the page is paywalled/blocked, say so and give the outcome; never quote from memory."
+  },
+  {
+   "name": "ReviewSourcesRecheck",
+   "role": "reviewer",
+   "axes": [
+    "freshness"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRecheck census of the existing registry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md (S001–S018): compute for each row whether its `recheck` is due as of 2026-10-21 (show the command). Then re-open S006 (https://arxiv.org/html/2605.06635v1) and S007 (https://arxiv.org/html/2601.08536v3) — check for newer arXiv versions (abs page version list) and whether the quotes in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-24.md Gate still appear verbatim at their locations. Report per row: unchanged/changed with evidence."
+  },
+  {
+   "name": "ScribeLessonMistakes",
+   "role": "scribe",
+   "axes": [
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nDraft `## Mistakes` rows for /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-25.md (shape: id · class · evidence pointer · captured-by · fix — see /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-24.md) from: (a) round-25 attempt 1 ended without report (/home/vgpnk/Projects/shokunin/.ufo/watchdog.log lines containing 'chousa round=25'); (b) the round-24 spot-check debts (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-24-verifier-spotcheck.md:17: concurrent-append blank line; citation-chain recheck needs fleet root as --root; lesson template lacks a spot-check slot); (c) any M-row of round-24.md whose fix was 'queued r25'. For each: what criterion should have caught it (or none), and a fix that can be SHOWN able to fail (name the check and the base file it fails on). Mark inference vs observation."
+  },
+  {
+   "name": "ScribeQualityCriteria",
+   "role": "scribe",
+   "axes": [
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nDraft appended /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md criteria 13 and 14 (house style of its 'Round-24 additions' block; do not rewrite 1–12): 13 = a `recheck:` command is runnable as written independent of checkout placement (no `--root ..`; name the root by role, e.g. `$SHOKUNIN_ROOT`, or state the layout it assumes) — backed by the r24 spot-check debt; 14 = every round lesson carries a `## Spot-check intake` section dispositioning each debt of the previous verifier spot-check — backed by the same file. Each criterion cites its motivating evidence and gives a one-line check command that FAILS on a named base file (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/citation-chain-fidelity-r24.md, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-24.md); run both commands read-only and paste outputs."
+  },
+  {
+   "name": "ExecAppendRace",
+   "role": "executor",
+   "axes": [
+    "operability"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nWRITER. Reproduce the round-24 debt 'concurrent appenders to one manifest: one blank line in 1 of 3 sixteen-writer runs' in your clone: 16 parallel `bash tools/research-gate.sh verify-all corpus/fixtures/full-r6.md --json /tmp/chousa-r25-ExecAppendRace/m.jsonl --root /home/vgpnk/Projects/shokunin` writers, 6 runs, count blank lines and invalid JSON lines per run (python3 json). Then read the gate's --json append code (grep json_counts / JSON_ARG) and state the root-cause hypothesis (e.g. separate write() calls for delimiter and body; PIPE_BUF) with line refs, and the minimal fix (e.g. single printf of delimiter+body, or flock) — do NOT land; deliver the measured k/n and a candidate patch file only."
+  },
+  {
+   "name": "ConnectorSpotcheckMap",
+   "role": "connector",
+   "axes": [
+    "calibration",
+    "adjacency"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nMap every debt and disagreement from the round-24 outside checks to a round-25 disposition: /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-24-verifier-spotcheck.md, /home/vgpnk/Projects/shokunin/.ufo/waves/kaika-w3/chousa-review.md and chousa-critic.md (fleet repo, read-only), any /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/operator-*.md. Table: debt · source line · proposed disposition (fix in claim N / QUALITY criterion / carried with reason) · check that shows it."
+  },
+  {
+   "name": "ConnectorSeparability",
+   "role": "connector",
+   "axes": [
+    "operability",
+    "freshness",
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nCheck causal separability of the 3 claims in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round25-claims.md using /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round25-measure.sh: which files each counting block reads; whether landing any one claim alone moves another's count; shared-file risks (SCORECARD.md read by 2d and edited for verdicts; SKILL.md). Recommend landing order and any measure-script guard so each claim verifies with the others reverted."
+  },
+  {
+   "name": "ConnectorAxisPlan",
+   "role": "connector",
+   "axes": [
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nPlanning data-walk for the L1-held planner seat: from /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md axes table + verdict history, confirm the lowest-scoring non-retired axis (only operability is scored, 3/10; others unscored) and whether the stagnation nudge (/home/vgpnk/Projects/shokunin/AXES.md) applies; map C1–C3 to the three LEARNING trends (expansion ↔ coverage+adjacency; quality ↔ depth+freshness+operability; discernment ↔ calibration); identify the trend furthest behind from the r16–r24 verdict rows and whether this round's claims address it."
+  },
+  {
+   "name": "CriticAxisHarm",
+   "role": "critic",
+   "axes": [
+    "adjacency",
+    "depth"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nEnumerate concrete ways this round could HARM an axis (depth: SKILL.md detail removed when replacing restatements; adjacency: new sources/metadata concepts belonging to sibling provinces, see /home/vgpnk/Projects/shokunin/*-shokunin/PROVINCE.md; operability: selftest/battery drift; freshness: new restatements introduced by the Frontier paragraphs). For each, a pre-registered harm check command the L1 can run at landing."
+  },
+  {
+   "name": "ScribePlanned26",
+   "role": "scribe",
+   "axes": [
+    "calibration"
+   ],
+   "prompt": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nDraft the SCORECARD `## Planned — round 26` candidates (1–3 claims, distinct axes, each with a before→after counting idea) from the remaining named debt listed at the end of /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md (round-20 debt list) plus the round-25 new debts (3 legacy entries lacking recheck:, concurrent-append residual, S### row check absent from verify-metadata). Prefer the lowest axis and the trend furthest behind. ≤20 lines."
+  }
+ ]
+}

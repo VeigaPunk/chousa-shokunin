@@ -1,0 +1,25 @@
+# Round 25 — `verify-metadata` path-boundary review
+
+Scope: read-only review of spec v1 (`corpus/evidence/round25-claims.md:20-40`) against existing gate rules. Axis: operability. No gate/selftest run; no files other than this report written.
+
+## Finding — MEDIUM: canonical denylist bypass in the closest existing chokepoint
+
+- Exploit path: a directory contains `alias.md` symlinked to an in-root denied target such as `.config/private.md`; the benign alias path passes the raw denylist, canonicalizes in-root, then proceeds to file checks/read.
+- Evidence: `claim_source_path` checks `is_session_url`/`is_denylist_path` only on raw `$src` (`tools/research-gate.sh:1111-18`), then canonicalizes and checks roots (`1141-66`) without rechecking denylist. By contrast, `ptr_resolves_meta` checks both raw and canonical paths (`595-626`, especially `621-24`). Denylist patterns include `.config`, `.omp`, credentials, tokens and browser data (`581-92`).
+- Impact: copying `claim_source_path` verbatim for metadata files can read a denied file through an in-root symlink. The metadata report need not print contents for this to violate the intended read boundary.
+- Smallest remediation: use a directory-aware wrapper, not a direct call on the directory; apply `is_denylist_path` to the caller path and each canonical file target before any read. Keep failed/unsafe candidates visible as refusals; never silently omit them from `N/M`.
+
+## Minimal consistent rules
+
+- `PATH` file: resolve canonically; accept only a readable regular file within `ROOT` or `LANE_ROOT` (same dual-root rule as `claim_source_path`, `1130-66`). Check raw and canonical denylist; reject URL/session endpoint input before filesystem access and never fetch. For files, reuse the source checks: `nlink == 1`, max `SOURCE_READ_MAX_BYTES` (8 MiB, inclusive), and source/root device check (`262-66`, `1173-1207`). Reject unreadable, missing, unresolved, or non-regular inputs before opening (`1163-66`).
+- `PATH` directory: require a readable/searchable directory whose canonical target is within an allowed root. An in-root symlinked directory may be accepted after canonicalization; an out-of-root symlinked directory must be refused. Enumerate only the specified direct `*.md` children (no recursive or symlink-directory traversal). File-size and hardlink tests apply to each file, not the directory inode.
+- Each child: canonicalize and independently enforce root membership and raw+canonical denylist before reading. An out-of-root symlink target is refused; an in-root file symlink can follow the existing source-file model, subject to target checks. Refuse hardlinked files (`nlink != 1`; the existing rule intentionally rejects legitimate multi-link families too, `1111-18`, header lines 32-34). Refuse FIFO/device/socket entries without opening; require regular readable files first (`1163-66`).
+- Oversized child: refuse unread before parsing at `size > 8 MiB`; exact-cap files remain admissible (`262-66`, `1179-84`). Apply the same cap to a file supplied as `PATH`. A directory itself has no content-size check.
+- NUL bytes: add a text-format check; `claim_source_path` does not reject NULs. Spec v1 parses line-oriented text (`round25-claims.md:24-28`), while the gate explicitly treats NUL as an edge case in its own byte handling (`research-gate.sh:2493-95`, `5149-67`). Reject NUL-containing files before header parsing, or use a byte-preserving parser; do not let shell text handling silently normalize them.
+- Spaces/newlines in names: preserve names as single path elements (quoted arrays/glob or NUL-delimited enumeration); do not split a textual `find`/newline list. Spaces are valid and should work. Escape/encode the basename in `FINDING` and `META` fields: raw spaces break the `key=value` record shape, and a newline can inject a counterfeit finding or `RESEARCH_GATE:` line (`round25-claims.md:29-40`).
+- Session-path refusal: preserve the existing no-session/no-fetch policy for the supplied `PATH` (`is_session_url`, `572-75`; source refusal at `1115-18`). Child entries are local filenames, not URLs; never fetch them. Applying the string heuristic indiscriminately to local child names can reject legitimate paths containing `:9222/` (and the `/json` suffix rule can false-positive a directory named `json`).
+- `--root /`: do not special-case it as invalid or build a raw `//` prefix. `in_root` explicitly handles `/` and `//` (`685-700`); source checks likewise preserve this root (`1149-52`), and selftests exercise reads/refusals under `/` (`4725-63`). Treat `/` as the operator-selected broad boundary, not a bypass: still enforce canonical paths, denylist, regular-file, hardlink, device, cap and NUL rules. Explain that it intentionally broadens eligible local files.
+
+Installs: none.
+
+VERDICT: Spec v1 needs explicit canonical-target screening, per-child source guards, binary/name-safe output, and fail-closed reporting before it is safe to implement; the rules above preserve existing boundaries without rejecting in-root symlinks or valid spaced names.
