@@ -1562,3 +1562,26 @@ Trends: **expansion unchanged; quality harmed; discernment unchanged**
 (no self-awarded outside admit/reject spot-check). No promotion or round28.
 Wave accounting: inherited build64 + falsify64 + new residual8 =136 seats;
 7 inherited no-report dead seats, none replaced.
+
+## Round28 — DERIVED full-claim honest negative
+
+One full proposed C1 targeted operability, the lowest active measured
+axis: canonical claim-source ancestor over-refusal plus actual complete
+denied-path attribution, preserving original consumer/usage/legacy/
+no-harm obligations. It is **not achieved / unprovable**.
+`corpus/evidence/round28-safe/claims.md` retains its full negative scope.
+
+Parent did not approve the proposed default/nested-root relaxation;
+denylist not waived. No implementation or new measurement was authorised.
+There is no after value, new scalar/delta, capability, Core graduation,
+promotion or admission. Prior metric and original187/legacy161 ordinals
+are held, not repinned or remeasured. The original R27 C3 clause, controls
+and rejected-harmed result remain unchanged.
+
+The only before is the old committed grouped receipt; cb→BASE transfer
+is explicitly inferential. Procedural native counts and two VOID
+contributions are qualified in `corpus/evidence/round28-safe/native-seats.json`
+and `corpus/evidence/round28-safe/qualifiers.md`, not behaviour/no-harm proof.
+Full raw/private bodies and the unapproved executable are excluded from
+the safe Git set; custody is in `corpus/evidence/round28-safe/provenance.json`.
+No Root report/end census or continuation is authorised at this stage.

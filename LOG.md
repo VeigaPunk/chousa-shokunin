@@ -1143,3 +1143,38 @@ installed official PyPI cmarkgfm2025.10.22, markdown-it-py4.2.0
 Bounded oracle bundle is retained; round-owned /tmp and /fast scratch is
 removed at landing. No live-target/network research, host-secret probe,
 domain-source write, fleet MANIFEST/state/routing edit or sibling edit.
+
+## Round28 — DERIVED honest-negative publication record (2026-10-21)
+
+Trigger: the previous non-author verifier retained R27 rejected-harmed
+and the complete-path-versus-prefix policy conflict. One full proposed
+C1 targeted canonical claim-source ancestor over-refusal plus actual
+complete denied-path attribution, on the lowest active operability axis.
+The full target remains **not achieved / unprovable**.
+
+Parent did not approve the proposed default/nested-root relaxation;
+denylist not waived. No production implementation or new measurement
+was authorised. No smaller diagnostic-only pass, new scalar/capability,
+Core graduation, promotion or admission is substituted. The old R27
+receipt is the only before authority; transfer to BASE is inferential.
+Production/original controls and prior metric/ordinals remain held.
+
+Actual procedural cohort: proposal64 plus ordinary5, all69 terminal;
+two behavioural contributions are VOID. No replacement/reissue or new
+ask followed the stop. Counts do not certify behaviour or conformance.
+Per-native original-report hashes, roles, terminal status and separately
+hashed DERIVED metadata are in `corpus/evidence/round28-safe/native-seats.json`.
+`corpus/evidence/round28-safe/qualifiers.md` retains bounded categories and byte limits.
+
+Full raw reports/distillation/review/tool bodies and the unapproved
+ruler/oracle remain private under original hashes, not live teaching.
+This publication is separately DERIVED, with mappings/exclusions in
+`corpus/evidence/round28-safe/provenance.json`. No shallow safety scan is claimed.
+S044–S045 were opened for scoped API/historical discussion; NEW S045
+was corrected before publication to state historical/rejected diagnosis,
+policy unapproved and denylist not waived. Old SOURCE rows/cells are fixed.
+
+No end census or Root report has been produced at this publication stage.
+Parent must approve/push the safe record set and issue census scope first.
+Outside closure, report-LAST publication and continuation are Parent-owned.
+This author never mutates VCS/MANIFEST or advances a round.

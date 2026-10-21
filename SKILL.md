@@ -547,3 +547,23 @@ substitute for a dependency failure. Final immutable receipts are
 The inherited requirement for at least three delimiter dashes and raw
 versus rendered Markdown cell-text limitations remain explicit; this is
 not a complete GFM parser.
+
+### Round28 DERIVED honest-negative status — no policy change
+
+Full C1, canonical claim-source ancestor over-refusal plus actual complete
+denied-path attribution and its original holds, is **not achieved /
+unprovable**. Parent did not approve the proposed default/nested-root
+relaxation; denylist not waived. No implementation or new measurement
+was authorised, and no smaller passing clause replaces the target.
+
+Production/original controls and the prior metric/ordinals remain held.
+The original R27 C3 clause/current red is not reversed. No new scalar,
+capability, Core graduation, promotion or admission is claimed.
+`corpus/evidence/round28-safe/claims.md` and the round28 lesson record the
+negative scope. S045 is historical/rejected diagnosis, not an instruction
+to exempt/select roots. Raw report/tool bodies, the proposed oracle and
+the unexecuted/unapproved ruler remain private, not live teaching.
+Only separately hashed DERIVED metadata/summaries are proposed for
+publication; custody/exclusions are in `corpus/evidence/round28-safe/provenance.json`.
+Seat spending is not a read-only, source-behaviour or safety certificate.
+Outside closure and later census/report/continuation remain Parent-owned.

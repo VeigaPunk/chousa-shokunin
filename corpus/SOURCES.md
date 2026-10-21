@@ -51,6 +51,8 @@ its author opened the source and judged its tier for the stated scope only.
 | S041 | Date-input regression diagnoses — .ufo/waves/round-26/falsify/FDateAsOfUsage.md and FDateHugeCadence.md | own-work | A | this lane's reported locale-dependent date validation and recursive zero-normalization failures; not generic freshness policy | base 64eec5d41c7cf7f17f5ce1e968e28b3769952596; FDateAsOfUsage lines75–86; FDateHugeCadence lines34–44, opened2026-10-21 | Validate ASCII input in the same representation arithmetic accepts; normalize decimal magnitude without a recursive match on the zero prefix | mined | 2026-10-21 | on-release | corpus/lessons/round-27.md |
 | S042 | Registry relationship regression diagnoses — .ufo/waves/round-26/falsify/FRegistryHeaderless.md, FRegistryIdBoundary.md and FRegistryRegistryDeny.md | own-work | A | this lane's reported stale header state, false S-id rescan and filesystem-path versus citation-pointer mismatch | base 64eec5d41c7cf7f17f5ce1e968e28b3769952596; headerless lines41–49, ID boundary lines28–45, registry deny lines23–30, opened2026-10-21 | Reset parser state at boundaries, retain occurrence identity, and distinguish filesystem paths from citation pointers before checking declared relationships | mined | 2026-10-21 | on-release | corpus/lessons/round-27.md |
 | S043 | Round27 falsify-wave counterexamples — .ufo/waves/round-27/falsify/FC3ValidTable27.md, IntegTokenCost.md, FC2Allzero128K07.md and FC1CorrectUsageWithHelp00.md | own-work | A | this lane's falsifier reports against checkpoint dd72641e574679c4f7882dd43de072b4c8892d6f: escaped-pipe width over-rejection, per-token cost, long-line CR strip, usage-matcher fail-open; not outside admission | FC3ValidTable27 line59; IntegTokenCost line20; FC2Allzero128K07 line18; FC1CorrectUsageWithHelp00 line7, opened2026-10-21 | Measure table width in GFM cells, filter tokens before a per-item shell loop, strip a trailing byte without a suffix-pattern scan, and fail closed when a matcher errors | mined | 2026-10-21 | on-release | corpus/lessons/round-27.md |
+| S044 | Python os.path documentation — https://docs.python.org/3/library/os.path.html | docs | A | Python component-aware commonpath and canonical-path API semantics only; not a shell-equivalence or denylist-policy authority | documentation served Python3.15.1, commonpath/commonprefix/realpath sections, opened2026-10-21 | Distinguish a valid common path from a character prefix, and keep canonical-path computation separate from an application's policy judgment | mined | 2026-10-21 | on-release | corpus/lessons/round-28.md |
+| S045 | Round27 canonical ancestor refusal diagnosis — .ufo/waves/round-27/residual/ResNoHarm.md | own-work | A | recorded finite nine-ancestor claims over-refusal and actual denied-path diagnostic mismatch; not an implemented round28 repair or universal read-safety claim | BASE 11d7c5da1ee7f6a4e01b1661d14a9d08fb8de01a, ResNoHarm lines53–69, opened2026-10-21 | Historical/rejected repair diagnosis only: the proposed root exemption is unapproved; denylist not waived; no current instruction to select or exempt roots | mined | 2026-10-21 | on-release | corpus/lessons/round-28.md |
 
 ## Paths
 
@@ -74,6 +76,21 @@ its author opened the source and judged its tier for the stated scope only.
   S025 is a rejected HTTP analogy, not authority for research-record validity.
 
 ## Search log
+
+- DERIVED round28 negative-publication curation (2026-10-21): Python path-API
+  documentation and the prior committed diagnosis were opened as S044–S045.
+  Their scopes are API semantics and historical diagnosis, not authority for
+  a privacy-policy relaxation. Parent did not approve the proposed default/
+  nested-root exemption; denylist not waived. The new S045 teaching cell was
+  corrected before publication under CURRENT_MAIN_DIRECTIVE
+  C28_NEGATIVE_PUBLICATION_v2; v1/new-row hashes and history remain private.
+  Two selected GNU manual requests timed out before opening and produced no
+  source rows or behavioural evidence. No raw new probe output is admitted.
+  Question: which opened authority distinguishes API identity from policy
+  approval? Selected locations: Python docs, two GNU manuals, old diagnosis.
+  Identified4/screened4/included2/excluded2 (unopened timeouts); these are
+  curation-event counts, not behaviour. Stop after scoped API and historical
+  authority were available; no privacy-policy inference was admitted.
 
 - Round27 local repair curation (2026-10-21): question — which reported r26
   failures falsify the actual usage/date/registry contracts? Where: the six

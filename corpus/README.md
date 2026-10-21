@@ -904,3 +904,25 @@ including a new canonical claims alias refusal; no new capability or
 province/frontier area is admitted. Grammar, races, source truth, semantic
 QUALITY6 verification and outside discernment remain outside these controls.
 Previous round26 frontier admission correction and carried debts stay in force.
+
+## Round28 DERIVED honest-negative frontier status
+
+The full C1 operability target is **not achieved / unprovable**.
+Parent did not approve the proposed default/nested-root relaxation;
+denylist not waived. No implementation or new measurement occurred.
+Original production/oracles/controls, prior metric and ordinals remain
+held; no new scalar, capability, Core graduation or promotion is claimed.
+
+`lessons/round-28.md` and `evidence/round28-safe/claims.md` retain the full
+negative scope. Opened S044–S045 are scoped API semantics and historical/
+rejected diagnosis only; neither authorises the unapproved exception.
+Original SOURCE rows/cells are untouched. V1/new-row hashes remain private.
+
+`evidence/round28-safe/native-seats.json` holds per-native-ID terminal,
+role, original-report-SHA and separate derived-record metadata.
+`evidence/round28-safe/qualifiers.md` preserves VOID categories and available-byte
+limits. Full raw report/distillation/tool bodies and executable draft
+are private, not committed full bodies or live corpus/gate authority.
+`evidence/round28-safe/provenance.json` records original→derived exclusions; no
+universal content-safety or conformance certification is made.
+Parent alone reviews publication, outside closure and later census/report.
