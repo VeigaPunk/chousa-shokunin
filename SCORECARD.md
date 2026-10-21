@@ -1436,3 +1436,9 @@ from `c2a6e338`; this was caught by QUALITY15's actual blob comparison,
 not assumed from the helper's success. A gate-only helper retry landed
 `c125d8bc` with all11 hashes matching. Cause unresolved; no direct VCS
 mutation or blind repeated retry was used (lesson R25-M15).
+
+Baseline comparability recheck: the exact final counting probe, run over
+`git archive d730ae4c33989ad9c8535764d4cae77b4db869f6` in an isolated tree,
+records the same absent-mode rc2, 66 stale index items and 15 unresolved
+restatements (`round25-final-before.log`, probe exit0). Thus the later
+anti-deletion guards do not manufacture the before→after reduction.

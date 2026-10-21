@@ -1089,3 +1089,4 @@ receipts remain history, not final proof for later reader corrections.
 | `round25-landed-measure.log` | After all residual counter fixes: C1 25/28, C2 0, C3 0/raw-slot1; selftest161, r1 3/3, drift none; probe exit0 |
 | `round25-landed-differential.log` | Final exact27-unique-fixture population: agreement54/54, exit0 |
 | `round25-measured-revision.json` | All11 measured input hashes match helper-landed `c125d8bc20e5433947df26fe0af3d3b58d0b37d3`; records prior `c2a6e338` gate omission rather than treating helper success as byte proof |
+| `round25-final-before.log` | Exact final counting-probe code over isolated `git archive d730ae4`: absent metadata mode rc2, stale indexes66, unresolved restatements15/raw-slot1, selftest136, drift none, r1 3/3; probe exit0 |

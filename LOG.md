@@ -953,3 +953,9 @@ QUALITY15 caught the mismatch. Orchestrator-approved gate-only helper retry
 landed `c125d8bc` and all11 hashes matched; lesson R25-M15 records the red
 and green identity checks. No helper/fleet source was edited; cause
 unresolved. This append and final receipt index are bookkeeping only.
+
+Final-probe baseline receipt `corpus/evidence/round25-final-before.log`
+re-runs the exact landed counting code over an isolated archive of base
+`d730ae4`: absent metadata rc2, stale indexes66, stale restatements15,
+raw slot1, selftest136, drift none, r1 3/3. This preserves comparability
+after the residual anti-deletion guards; no production bytes changed.
