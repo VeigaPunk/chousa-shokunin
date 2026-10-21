@@ -2285,12 +2285,27 @@ verify_integrity() {
 
 # ---- metadata mode: bounded header screen for knowledge-entry metadata ----
 
+metadata_iso_date() {
+  [[ $1 =~ ^([0-9]{4})-([0-9]{2})-([0-9]{2})$ ]] || return 1
+  local year=$((10#${BASH_REMATCH[1]})) month=$((10#${BASH_REMATCH[2]}))
+  local day=$((10#${BASH_REMATCH[3]})) maxday=31
+  ((year >= 1 && month >= 1 && month <= 12 && day >= 1)) || return 1
+  case "$month" in
+    4|6|9|11) maxday=30 ;;
+    2)
+      maxday=28
+      if ((year % 400 == 0 || (year % 4 == 0 && year % 100 != 0))); then maxday=29; fi
+      ;;
+  esac
+  ((day <= maxday))
+}
+
 verify_metadata() {
   local path=${1:-} file base line fence_char='' fence_len=0 fence_c fence_l
   local key rest active_key='' source_state verified_state recheck_state
   local has_source has_verified has_recheck verified_value recheck_value
   local recheck_first entry_drift_start entry_complete complete=0
-  local canon refuse fsize
+  local canon refuse fsize links meta_fd fdpath fdcanon probe content read_rc
   local LC_ALL=C
   local -a files=() candidates=() lines=() metadata_lines=()
   local had_nullglob=0 candidate
@@ -2320,20 +2335,45 @@ verify_metadata() {
 
   FINDING_LINES=(); N_FINDINGS=0; N_DRIFT=0; ROLL=CLEAN
   for file in "${files[@]}"; do
-    base=${file##*/}
-    # r25 hardening (post-registration, disclosed): a screened entry is read
-    # only after denylist/size screening; its header is parsed only after — raw and
-    # canonical denylist (an in-root symlink alias must not reach a denied
-    # target), the 8 MiB read cap, and NUL bytes (not line text). A refused
-    # entry stays visible in N/M as drift, never silently omitted.
+    printf -v base '%q' "${file##*/}"
+    # Bind all metadata probes and parsing to one opened object, not repeated
+    # pathname opens. Refuse multi-linked entries like the source chokepoint.
+    # No wc fallback: an unavailable stat must not read an oversized file.
     canon=$(readlink -f -- "$file" 2>/dev/null || printf '%s' "$file")
-    refuse=''
+    refuse=''; content=''
     if is_denylist_path "$file" || is_denylist_path "$canon"; then
       refuse=denylist
-    elif ! fsize=$(file_size_bytes "$file") || ((fsize > SOURCE_READ_MAX_BYTES)); then
-      refuse=size
-    elif (( $(tr -d '\000' <"$file" | wc -c) != fsize )); then
-      refuse=nul
+    elif ! exec {meta_fd}<"$canon"; then
+      refuse=unreadable
+    else
+      fdpath="/proc/$$/fd/$meta_fd"
+      fdcanon=$(readlink -f -- "$fdpath" 2>/dev/null || true)
+      if [[ -z $fdcanon ]] || is_denylist_path "$fdcanon"; then
+        refuse=denylist
+      elif [[ ! -f $fdpath ]] || ! probe=$(stat -Lc '%s %h' -- "$fdpath" 2>/dev/null) \
+        || [[ ! $probe =~ ^([0-9]+)[[:space:]]+([0-9]+)$ ]]; then
+        refuse=stat
+      else
+        fsize=${BASH_REMATCH[1]}; links=${BASH_REMATCH[2]}
+        if ((links != 1)); then
+          refuse=multilink
+        elif ((fsize > SOURCE_READ_MAX_BYTES)); then
+          refuse=size
+        else
+          # One bounded read creates the exact snapshot later parsed. `-d ''`
+          # stops at NUL; -n also bounds growth after stat to cap+1 bytes.
+          read_rc=0
+          IFS= read -r -d '' -n "$((SOURCE_READ_MAX_BYTES + 1))" content <&"$meta_fd" || read_rc=$?
+          if ((${#content} > SOURCE_READ_MAX_BYTES)); then
+            refuse=size
+          elif ((read_rc == 0)); then
+            refuse=nul
+          elif ((read_rc != 1)); then
+            refuse=read
+          fi
+        fi
+      fi
+      exec {meta_fd}<&-
     fi
     if [[ -n $refuse ]]; then
       emit_finding META_ENTRY_REFUSED crit metadata "entry=$base reason=$refuse unparsed"
@@ -2344,7 +2384,7 @@ verify_metadata() {
     while IFS= read -r line || [[ -n $line ]]; do
       line=${line%$'\r'}
       lines+=("$line")
-    done <"$file"
+    done <<<"$content"
 
     fence_char='' fence_len=0 active_key=''
     has_source=0 has_verified=0 has_recheck=0
@@ -2371,7 +2411,7 @@ verify_metadata() {
         fence_char=${BASH_REMATCH[1]:0:1}; fence_len=${#BASH_REMATCH[1]}
         continue
       fi
-      [[ $line =~ ^##[[:space:]]+ ]] && break
+      [[ $line == '## '* ]] && break
       if [[ $line =~ ^[[:space:]]*$ ]]; then active_key=''; continue; fi
       if [[ $line =~ ^(source|verified-at|recheck):(.*)$ ]]; then
         key=${BASH_REMATCH[1]}; rest=${BASH_REMATCH[2]}
@@ -2420,14 +2460,13 @@ verify_metadata() {
       else
         recheck_first=''
       fi
-      if [[ $recheck_first =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ \
-         || $recheck_first =~ ^[0-9]+d$ \
-         || $recheck_first == on-release ]]; then
+      if metadata_iso_date "$recheck_first" \
+         || [[ $recheck_first =~ ^[0-9]+d$ || $recheck_first == on-release ]]; then
         recheck_state=scheduled
       else
         recheck_state=unscheduled
         emit_finding META_RECHECK_UNSCHEDULED info metadata \
-          "entry=$base key=recheck first-token=${recheck_first:--}"
+          "entry=$base key=recheck unscheduled"
       fi
       if [[ $recheck_value =~ $ROOT_PARENT_RE ]]; then
         emit_finding META_RECHECK_ROOT_PARENT info metadata \
@@ -2445,7 +2484,7 @@ verify_metadata() {
     fi
   done
 
-  printf 'research-gate %s — ts=%s — mode=verify-metadata — path=%s — root=%s\n' \
+  printf 'research-gate %s — ts=%s — mode=verify-metadata — path=%q — root=%q\n' \
     "$VERSION" "$TS_UTC" "$path" "$ROOT"
   for line in "${metadata_lines[@]+"${metadata_lines[@]}"}"; do printf '%s\n' "$line"; done
   for line in "${FINDING_LINES[@]+"${FINDING_LINES[@]}"}"; do printf '%s\n' "$line"; done
@@ -5563,6 +5602,60 @@ EOF
   metadata_case metadata-nonkey-continuation "$WORK/meta-continuation.md" 0 \
     'FINDING META_RECHECK_ROOT_PARENT severity=info surface=metadata obs=entry=meta-continuation.md' \
     'METADATA_COMPLETE=1/1'
+
+  ln -s "$WORK/meta-clean.md" "$WORK/meta-safe-link.md"
+  metadata_case metadata-safe-symlink "$WORK/meta-safe-link.md" 0 \
+    'METADATA_COMPLETE=1/1' 'findings=0 drift=0'
+  cp "$WORK/meta-clean.md" "$WORK/meta-hard-seed.md"
+  ln "$WORK/meta-hard-seed.md" "$WORK/meta-hard-alias.md"
+  metadata_case metadata-hardlink-refused "$WORK/meta-hard-alias.md" 1 \
+    'reason=multilink unparsed' 'METADATA_COMPLETE=0/1'
+
+  mkdir -p "$WORK/meta-stat-fail"
+  printf '#!/usr/bin/env bash\nexit 1\n' >"$WORK/meta-stat-fail/stat"
+  chmod +x "$WORK/meta-stat-fail/stat"
+  metadata_case metadata-stat-unavailable "$WORK/meta-clean.md" 1 \
+    'reason=stat unparsed' 'METADATA_COMPLETE=0/1' \
+    "PATH=$WORK/meta-stat-fail:$PATH"
+
+  printf 'source: S001\nverified-at: 2026-10-20 checked\nrecheck: 2026-02-30\n' \
+    >"$WORK/meta-invalid-date.md"
+  metadata_case metadata-invalid-calendar "$WORK/meta-invalid-date.md" 0 \
+    'META_RECHECK_UNSCHEDULED' 'recheck=unscheduled verdict=clean'
+  printf 'source: S001\nverified-at: 2026-10-20 checked\n##\tLiteral\nrecheck: 90d\n' \
+    >"$WORK/meta-tab-heading.md"
+  metadata_case metadata-literal-heading "$WORK/meta-tab-heading.md" 0 \
+    'recheck=scheduled verdict=clean' 'METADATA_COMPLETE=1/1'
+
+  printf 'source: S001\nverified-at: 2026-10-20 checked\nrecheck: FAKE_TOKEN_MUST_NOT_ECHO\n' \
+    >"$WORK/meta-noecho.md"
+  cases=$((cases + 1)); rc=0
+  out=$(CHOUSA_STRICT=0 bash "$SELF" verify-metadata "$WORK/meta-noecho.md" --root "$WORK" 2>&1) || rc=$?
+  if [[ $rc -eq 0 && $out == *META_RECHECK_UNSCHEDULED* && $out != *FAKE_TOKEN_MUST_NOT_ECHO* ]]; then
+    printf 'ok-case  %-2d %-28s exit=0\n' "$cases" metadata-no-content-echo
+  else
+    printf 'FAIL-case %-28s token echoed or finding lost\n' metadata-no-content-echo
+    failures=$((failures + 1))
+  fi
+
+  # Swap the caller pathname after stat: parsing must still use the originally
+  # opened inode, not re-open the replacement denylisted symlink.
+  mkdir -p "$WORK/meta-stat-swap" "$WORK/credentials"
+  cp "$WORK/meta-clean.md" "$WORK/meta-race.md"
+  cp "$WORK/meta-noecho.md" "$WORK/credentials/fake.md"
+  cat >"$WORK/meta-stat-swap/stat" <<'EOF'
+#!/usr/bin/env bash
+/usr/bin/stat "$@" || exit $?
+if [[ -n ${META_RACE_PATH:-} ]]; then
+  rm -- "$META_RACE_PATH"
+  ln -s "$META_RACE_TARGET" "$META_RACE_PATH"
+fi
+EOF
+  chmod +x "$WORK/meta-stat-swap/stat"
+  metadata_case metadata-stable-object "$WORK/meta-race.md" 0 \
+    'findings=0 drift=0' 'METADATA_COMPLETE=1/1' \
+    "PATH=$WORK/meta-stat-swap:$PATH" \
+    "META_RACE_PATH=$WORK/meta-race.md" "META_RACE_TARGET=$WORK/credentials/fake.md"
 
   cases=$((cases + 1))
   out=$(bash "$SELF" --help 2>&1) || rc=$?
