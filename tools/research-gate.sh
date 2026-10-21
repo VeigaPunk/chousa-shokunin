@@ -2381,9 +2381,9 @@ metadata_registry_load() {
   local path=$1 canon fdpath fdcanon probe refuse='' registry_fd read_rc=0
   local content='' fsize links line row cell i header_candidate=0 header_found=0 header_width=0
   local id_col=-1 status_col=-1 usedby_col=-1 is_separator
-  local row_id row_status row_usedby
+  local row_id row_status row_usedby split_row
   local LC_ALL=C
-  local -a cells=() width_cells=()
+  local -a cells=()
 
   [[ -n $path ]] || die_usage "--registry needs PATH"
   [[ -e $path ]] || die_usage "metadata registry not found"
@@ -2440,8 +2440,12 @@ metadata_registry_load() {
     row=${row#"${row%%[![:space:]]*}"}
     row=${row%"${row##*[![:space:]]}"}
     [[ $row == '|'* ]] && row=${row#|}
-    [[ $row == *'|' ]] && row=${row%|}
-    IFS='|' read -r -a cells <<<"${row}|__chousa_registry_end__"
+    [[ $row == *'|' && $row != *'\|' ]] && row=${row%|}
+    # Let read honor escaped pipes, but preserve every other literal backslash.
+    # Header indexes, delimiter width, and body cells must use the same split.
+    split_row=${row//\\/\\\\}
+    split_row=${split_row//'\\|'/'\|'}
+    IFS='|' read -a cells <<<"${split_row}|__chousa_registry_end__"
     cells=("${cells[@]:0:${#cells[@]}-1}")
     for i in "${!cells[@]}"; do
       cell=${cells[$i]}
@@ -2488,9 +2492,7 @@ metadata_registry_load() {
     done
     if ((id_col >= 0 && status_col >= 0 && usedby_col >= 0)); then
       header_candidate=1
-      # Width counts GFM cells: an escaped pipe (\|) is cell content, not a boundary.
-      IFS='|' read -r -a width_cells <<<"${row//'\|'/}|__chousa_registry_end__"
-      header_width=$((${#width_cells[@]} - 1))
+      header_width=${#cells[@]}
     else
       id_col=-1; status_col=-1; usedby_col=-1
       header_width=0
@@ -2501,9 +2503,22 @@ metadata_registry_load() {
 
 metadata_registry_check_source() {
   local source_value=$1 entry_path=$2 entry_base=$3
-  local source_id found_id=0 used_by token matched i
+  local source_id source_tokens source_ids='' scan_rc=0 found_id=0 used_by token matched i
   local LC_ALL=C
   local -a used_by_tokens=()
+  # Keep byte-oriented ASCII token boundaries independent of grep -w's Unicode
+  # interpretation. Capture stages separately: pipefail would hide an early
+  # scanner error (2) behind the final filter's ordinary no-match status (1).
+  source_tokens=$(printf '%s\n' "$source_value" | LC_ALL=C grep -oE '[[:alnum:]_]+') || scan_rc=$?
+  if ((scan_rc == 0)); then
+    source_ids=$(printf '%s\n' "$source_tokens" | LC_ALL=C grep -xE 'S[0-9]{3,}') || scan_rc=$?
+  fi
+  unset source_tokens
+  if ((scan_rc > 1)); then
+    emit_finding META_SOURCE_SCAN_FAILED crit metadata \
+      "entry=$entry_base source-id scanner failed; registry relationship unknown"
+    return 0
+  fi
   while IFS= read -r source_id; do
     [[ $source_id =~ ^S[0-9]{3,}$ ]] || continue
     found_id=1
@@ -2529,8 +2544,7 @@ metadata_registry_check_source() {
           "entry=$entry_base source_id=$source_id used-by does not name entry"
       fi
     fi
-  done < <(printf '%s\n' "$source_value" | LC_ALL=C grep -oE '[[:alnum:]_]+' \
-    | LC_ALL=C grep -xE 'S[0-9]{3,}' || true)
+  done <<<"$source_ids"
   ((found_id)) || emit_finding META_SOURCE_NO_ROW_ID info metadata \
     "entry=$entry_base source has no S-id"
 }

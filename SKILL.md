@@ -514,3 +514,26 @@ Any earlier “bounded registry” wording means an input-byte snapshot cap,
 not a resource budget. SCORECARD's Round26 recovery section owns the observed
 counts, no-harm failure and remaining verification gaps. No new capability
 or SHONEN promotion is claimed.
+
+### Round27 repair/status correction — 2026-10-21
+
+Round26's rejected verdict remains historical, not retrospectively admitted.
+Round27 repairs the usage-record predicate, ASCII date parsing, nonrecursive
+leading-zero cadence normalization, registry header reset/width and S-id
+occurrence scanning. Full selftest at checkpoint cb895a2 is
+`PASS (215 cases, 0 skipped)` under the host UTF-8 locale; original187
+identities and legacy161 output are retained. SCORECARD's Round27 section
+owns final revisions and receipts; local synthetic passes are not an
+outside closure or general source-verification guarantee.
+
+**C3 remains partially falsified.** The filesystem predicate still checks a
+citation-normalized prefix beside the complete path. That over-refuses some
+benign colon/backtick filenames; the new canonical claims check extends the
+over-refusal to a benign alias. The frozen requirement to use complete
+filesystem paths, not citation prefixes, is not met. Original negative
+controls were retained rather than weakened. See
+`.ufo/waves/round-27/residual/ResC3Clause.md`, the round27 lesson and L0.
+No registry/knowledge capability is newly admitted; manual QUALITY checks
+remain required. The full selftest also retains inherited locale dependence:
+exported `LC_ALL=C` breaks ten claims/verify-all cases on both round27
+checkpoints; use the host UTF-8 locale for the recorded selftest comparison.

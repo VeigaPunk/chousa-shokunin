@@ -140,6 +140,10 @@ with tempfile.TemporaryDirectory(prefix='chousa-r27-falsify-controls-') as direc
         ('delimiter-after-blank', 'FC3HeaderBreakBlank28', '| id | status | used-by |\n\n|---|---|---|\n' + row, 2),
         ('valid-table-consulted', 'FC3ValidTable27', '| id | status | used-by |\n|---|---|---|\n' + row, 0),
         ('valid-table-queued-twin', 'FC3ValidTable27', '| id | status | used-by |\n|---|---|---|\n' + row.replace('mined', 'queued'), 1),
+        ('escaped-before-status-queued', 'residual/ResControlsSuite', '| id | note \\| x | status | used-by |\n|---|---|---|---|\n' + f'| S001 | n | queued | mined | {relative} |\n', 1),
+        ('escaped-before-status-mined', 'residual/ResControlsSuite', '| id | note \\| x | status | used-by |\n|---|---|---|---|\n' + f'| S001 | n | mined | {relative} |\n', 0),
+        ('escaped-body-cell-before-status', 'residual/ResControlsSuite', '| id | note \\| x | status | used-by |\n|---|---|---|---|\n' + f'| S001 | n \\| queued | mined | {relative} |\n', 0),
+        ('escaped-final-header-cell-no-outer-pipe', 'residual/ResWidthFix', '| id | status | used-by | note \\|\n|---|---|---|---|\n' + f'| S001 | mined | {relative} | n |\n', 0),
     ]
     for name, report, table, rc in tables:
         registry.write_text(table)
@@ -175,6 +179,29 @@ with tempfile.TemporaryDirectory(prefix='chousa-r27-falsify-controls-') as direc
     observe('C3', 'claims-raw-leg-only', 'FC3ClaimsRawColonDenied55',
             call(['bash', str(gate), 'verify-claims', str(claims), '--root', str(root)], root), 1,
             ('FINDING CLAIM_SOURCE_SESSION',), ('observed=supported',), {VERDICT: 1})
+
+    # A scanner dependency fault cannot turn a queued source into informational
+    # "no S-id" and CLEAN. Fault only scanner-specific options; other grep uses
+    # remain real, so this is not a generic setup-failure witness.
+    import shlex
+    import shutil
+    real_grep = shutil.which('grep')
+    if real_grep is None:
+        parser.error('grep executable is required')
+    entry_text(source='S002')
+    registry.write_text('| id | status | used-by |\n|---|---|---|\n'
+                        + f'| S002 | queued | {relative} |\n')
+    for scanner_option in ('-oE', '-xE'):
+        (faulty / 'grep').write_text(
+            '#!/bin/sh\nfor arg do\ncase "$arg" in ' + scanner_option
+            + ') exit 2;; esac\ndone\nexec ' + shlex.quote(real_grep) + ' "$@"\n')
+        observe('C3', 'source-scanner-fault-' + scanner_option,
+                '../residual/ResTokenPrefilter',
+                call(['bash', str(gate), 'verify-metadata', str(entry), '--root', str(root),
+                      '--registry', str(registry)], root,
+                     {'PATH': str(faulty) + ':' + env.get('PATH', '')}), 1,
+                ('META_SOURCE_SCAN_FAILED',), ('META_SOURCE_NO_ROW_ID',),
+                {VERDICT: 1, r'^FINDING META_SOURCE_SCAN_FAILED\b': 1, r'^FINDING ': 1})
 
 summary = {'gate_sha256': hashlib.sha256(gate.read_bytes()).hexdigest(),
            'script_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),

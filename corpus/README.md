@@ -887,3 +887,19 @@ SCORECARD's Round26 recovery section is the current owner of those verdicts.
 Registry rows39 and knowledge files32 are inventory counts, not admission
 counts. No new capability, province expansion, outside spot-check or
 promotion is inferred from them. Existing carried debts above remain open.
+
+## Round27 frontier disposition (2026-10-21)
+
+Bounded repairs and independently challenged controls are recorded in
+`lessons/round-27.md`, `evidence/round27-claims.md`,
+`evidence/round27-falsify-controls.py` and SCORECARD's Round27 section.
+Opened own-work rows S040–S043 teach usage-record grammar, date input
+representation, registry state/occurrence identity and post-falsification
+parser/cost corrections. Four added source rows are not admitted expansion.
+
+The round26 candidate notes remain withdrawn/qualified. C3's frozen
+filesystem-path clause remains partially falsified by prefix over-refusal,
+including a new canonical claims alias refusal; no new capability or
+province/frontier area is admitted. Grammar, races, source truth, semantic
+QUALITY6 verification and outside discernment remain outside these controls.
+Previous round26 frontier admission correction and carried debts stay in force.

@@ -129,3 +129,20 @@ the admitted entry that motivates it. Tier definitions live in
     occurrences. — `lessons/round-27.md` R27-M2–M6; S041/S042; the committed
     r26 counterexamples show each distinction able to fail. This criterion
     does not claim complete Markdown semantics or whole-parser resource bounds.
+
+21. **A parser repair preserves positive syntax and bounded work.** Width
+    assertions include escaped-pipe and mixed-outer-pipe tables, a consulted
+    mined row and its queued twin. Token scans measure both id-dense and
+    non-id-token-dense inputs; filtering before a shell loop must preserve
+    occurrence counts. A long-line normalization names its measured size and
+    timeout, rather than inferring scale safety from a small fixture. —
+    `lessons/round-27.md` R27-M10/M11/M13; S043;
+    `post-falsify/fc-before.stdout` shows escaped-width and 4 MiB controls
+    failing at dd72641e, while the corresponding after receipt passes.
+    Receipt paths are under `.ufo/waves/round-27/`.
+22. **Matcher failure is not zero matches.** A verification predicate
+    distinguishes the matcher's documented no-match exit from execution
+    failure, and injects a matcher fault as a negative control. —
+    `lessons/round-27.md` R27-M12; S043; control
+    `matcher-fault-fails-closed` accepts incorrectly at dd72641e and rejects
+    at cb895a2; selftest case215 preserves that distinction.

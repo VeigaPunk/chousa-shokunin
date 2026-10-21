@@ -157,3 +157,164 @@ working copy, not the bytes now in the lane; only the helper-landed blob
 (ca39d14d…, verified equal to the archived measured tree) is cited.
 ReviewDateCalendar's fleet-root write is seat-scope debt (R27-M9), not a
 lane-authored file at the fleet root.
+
+## Host crash and replacement coordinator (same attempt)
+
+The host omp session froze and was killed (SIGHUP, 2026-10-21 13:10:51 -03).
+ChousaR27 and every live seat died with it; ChousaR27's last tool call
+(16:10:53Z) was a falsify-collection wait. Replacement L1 `ChousaR27-2`
+(session 3) inherited the held claim27/attempt1 and reconstructed state only
+from durable evidence: lane tip `dd72641e…` (pushed, ahead0), the untracked
+falsify-wave files, the build/falsify registries and seat transcripts.
+
+Seat accounting (registries vs report files): build64 = 58 reports + 6 dead
+no-report (ReviewDateUnknown, ReviewRegistryBreak, ReviewPathSynthetic,
+ScribeQuality, ScribeScorecard, ConnectSibling); falsify64 = 63 reports + 1
+dead (IntegSourceGate, scribe; its transcript ends `Request was aborted` at
+the host kill). The falsify task call was cap-refused ten times
+(12:00–12:27 -03) and spawned all 64 on attempt 11; refusals spent no seats.
+The 73 `ChousaR27R2.*-4` transcripts all carry a `Kotodama round 50` goal
+(that identity's later assignment), so ChousaR27R2 spent no chousa seats.
+Dead seats were neither replaced nor re-issued. Round total so far 128.
+
+Inherited and re-verified: dd72641e (gate ca39d14d…, re-hashed), its
+landed-measurement receipts (selftest PASS210 reproduced in a fresh archive),
+63 falsify reports (read and triaged below). Inherited and moved out, not
+committed: `.ufo/waves/round-27/work/` (three executor nested-git clone
+sandboxes, 28 MB) → `/tmp/chousa-r27-work-archive`, with HEAD/sha manifest
+`.ufo/waves/round-27/work-manifest.json`. Discarded: nothing else.
+
+## Falsify-wave dispositions (63 reports at dd72641e)
+
+Landed-gate counterexamples, all repaired at `cb895a2bdd259eb38bec29ef70011d8211a508b5`
+(gate sha a6bc2855…2386); each repair has a control red on dd72641e and green after
+(`.ufo/waves/round-27/post-falsify/fc-before.stdout` 4/26 mismatches →
+`fc-after.stdout` 0/26):
+
+| id | class | evidence pointer | captured-by | fix / shown-to-fail basis |
+|---|---|---|---|---|
+| R27-M10 | introduced regression: width-equality repair counted `\|`-split fields, so a GFM-valid escaped-pipe header was refused (and a 4/5 table accepted) | FC3ValidTable27 §3A/B (S043) | QUALITY17 positive no-trade controls had no escaped-pipe shape; captured only by the falsify wave | width counts cells after removing `\|`; controls `escaped-pipe-width`/`-overwide` red on dd72641e (exit2/exit0), selftest 211–212 |
+| R27-M11 | introduced cost regression: per-token bash loop over every alphanumeric token (12–34× on token-dense sources) | IntegTokenCost §3 (S043) | none (no cost control); falsify wave | `grep -xE 'S[0-9]{3,}'` prefilter before the loop; end-to-end dense 4 MiB entry 68240 ms → 409 ms, base 64eec5d timed out at 300 s (`post-falsify/timing.log`) |
+| R27-M12 | fail-open: usage helper accepted when its record matcher errored | FC1CorrectUsageWithHelp00 line7 (S043) | none; falsify wave | fail closed on grep exit>1, one shared predicate; control `matcher-fault-fails-closed` red on dd72641e (exit0), selftest 215 |
+| R27-M13 | inherited quadratic: `${line%$'\r'}` on unbounded lines made admissible 4 MiB cadences take >60 s | FC2Allzero128K07 line18, FC2HugeMagnitude08 §3 (S043) | C2 "without termination" read only at 128 KiB | test-then-substring strip at both read loops; `scale-4mib-leading-zeros` red on dd72641e (timeout124), 827 ms after |
+
+Control-strength findings (no landed-gate counterexample; about 40 reports):
+vacuous or non-discriminating controls (C-locale date tokens, leap rows, max/overflow
+spans, positive tables, single-leg denylist sites, C1 mutants). Accepted as coverage
+debt; 22 of the 26 new controls in `corpus/evidence/round27-falsify-controls.py`
+encode their killing inputs (mixed outer pipes, delimiter after blank, consulted-row
+twin, Gregorian-invalid `--as-of`, one-significant-digit and 8–19-digit cadences,
+raw-leg-only registry/entry/claims refusals with `reason=denylist`, indented and
+column-0 non-verdict records, different-diagnostic and exit0 rejections). Those 22
+pass on dd72641e too: they strengthen the suite, they are not repair evidence.
+`round27-regressions.py` is unchanged (sha 5afea786…).
+
+Open, not repaired — C3 clause conflict: FC3ColonDeniedSuffix46,
+FC3LegacyEnvAnchorRefusal47, FC3ClaimsLegacyEnvAnchorR57, FC3PlainDeniedComponent44
+(C-A) and FC3EntryColonDeniedCompon50 (CX4) show `is_denylist_fs_path` keeps the
+citation-prefix arm (`ptr_file_part`) beside the new complete-path arm, so
+`notes.env:v2/registry.md` and `synthetic.env:1` are still refused by prefix. The
+frozen clause says "inspect complete filesystem paths, not citation-anchor prefixes".
+The r26 failure class (an earlier colon hiding a denylisted complete path) is closed;
+the raw-prefix over-refusal is base-identical. Residual reviewer ResC3Clause
+later found a new claims-canonical prefix refusal (see below). Dropping the
+arm narrows the inherited refusal set; that does not by itself prove a
+secret-path exposure. The L1 retained the frozen negative controls.
+C3's negative clause is therefore **not met**; filed as an L0 question, not redefined.
+
+Other residuals recorded, not silently treated as fixes: BOM-prefixed registry
+now exits2 (was1; GFM oracle finds no table) is an intentional evaluation-class
+change; `|-|` short delimiters, fenced tables and body-row headers are
+base-identical grammar limitations (FC3ValidTable27 §3C). The full selftest is locale-sensitive —
+with `LC_ALL=C` exported, 10 claims/verify-all cases fail on dd72641e and on
+cb895a2 alike (`post-falsify/selftest-before-here.log` was rerun under UTF-8 and
+passed 210). R27-M14 (L1 tooling slip): a first gate edit used offsets from a
+stale window and displaced two hunks; the edit result display showed it and the
+next edit restored them before any run; `bash -n` and `git diff` confirmed.
+
+## Gate (post-falsify source row)
+
+| row | source path / located quote (≤25 words) | scope |
+|---|---|---|
+| S043 | `.ufo/waves/round-27/falsify/FC3ValidTable27.md:59`: “so the header counts 5 cells against 4 delimiter cells.” | escaped-pipe width regression; also IntegTokenCost.md:20, FC2Allzero128K07.md:18, FC1CorrectUsageWithHelp00.md:7 (cost, CR strip, matcher-error reports) |
+
+S043 is a new tierA own-work row opened 2026-10-21, status mined, used-by this
+lesson; no existing row's status/recheck/used-by changed. Census
+`sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa`: start exit0
+(39 rows; A33 B1 C5; mined16 queued19 rejected4) → end exit0 (43 rows; A37 B1 C5;
+mined20 queued19 rejected4).
+
+## Residual review and final repair dispositions
+
+The post-crash integrated work exposed fewer than64 distinct new attack items.
+One ordinary batched call of8 read-only seats (5 reviewer,3 critic) therefore
+covered the four repairs and their controls, rather than padding a new wave.
+It was cap-refused15 times and spawned8 on attempt16
+(`.ufo/waves/round-27/residual/attempts.log`, `dispatch.json`).
+This makes136 dispatched seats total, not a new64-seat wave. No dead item was
+reissued. Their immutable reports target cb895a2; follow-up checks explicitly
+name candidate digests and do not silently turn that checkpoint green.
+
+| id | class | evidence | captured-by | fix / shown-to-fail basis |
+|---|---|---|---|---|
+| R27-M15 | width-only correction left header/body indexes on the naive split: escaped pipe before status could turn queued into mined and emit false CLEAN | ResControlsSuite §5, ResWidthFix F1–F3 | criterion21 positive syntax was incomplete; residual reviewers | one shared escape-preserving split now owns indexes, width and body cells; added queued/mined twins, escaped body and terminal-header controls; original cb895a2 stays recorded as falsified |
+| R27-M16 | prefilter introduced another scanner-failure point; suppressed grep faults became informational NO_ROW_ID and false CLEAN | ResTokenPrefilter F1/F2 and follow-up | criterion22 initially covered usage only; residual reviewer | capture/check tokenizer and filter separately, return exactly one META_SOURCE_SCAN_FAILED crit on either fault; two independent option-specific fault controls, no NO_ROW_ID emitted on fault |
+
+Shared split: double literal backslashes, reduce only the escaped-pipe
+sequence, then `read -a` without `-r`; optional terminal outer pipe is not
+removed when escaped. This preserves raw non-pipe backslashes while making
+header and data column indexes agree. ResWidthFix tested2256 exhaustive
+rows and51 fixtures against cmarkgfm2025.10.22/markdown-it-py4.2.0:
+the candidate matches cell count/text; one-dash delimiter remains an
+explicit inherited limitation, not a claim of full GFM parsing.
+The bounded122 KiB bundle is preserved at
+`.ufo/waves/round-27/residual/width-oracle-bundle/` before scratch cleanup.
+
+The single-stage `grep -w` alternative was rejected before landing:
+ResTokenPrefilter showed GNU and the agent-shell Rust grep disagree on Unicode
+word boundaries even with LC_ALL=C. Separate byte-oriented stages keep the
+old boundaries and make both exit statuses observable. A pipeline alone can
+hide first-stage error2 behind last-stage no-match1. Follow-up evidence
+`residual/scanner-followup.json` binds gate ac1315dd…;1005 source values
+retain identical findings and exits, tokenizer/filter/missing-grep faults
+each produce one crit. Token capture is8 MiB-input-bounded, not a whole-process
+RSS budget. Dense2 MiB cost224.75 ms vs cb895a2 209.25 ms is a disclosed7.4%
+trade relative to the faulty intermediate, while dd72641e took16253.01 ms.
+
+ResC3Clause confirms C3 is partially falsified, including a **new** over-refusal:
+claims alias `plain.md -> k.env:1` read at base but refused by the new canonical
+prefix arm. The earlier paragraph calling prefix behavior wholly inherited
+is superseded by this finding. Removal would narrow the base refusal set,
+not prove a secret-file exposure; nevertheless changing the frozen negative
+controls to erase this result is not this round's resolution. C3 stays
+not met and no-harm is not established. ResNoHarm also records new canonical
+ancestor-sensitive claims refusals; these are disclosed, not called unchanged.
+
+ResControlsSuite reproduces26/4 mismatches at dd72641e and26/0 at cb895a2.
+Three are deterministic correctness failures; the fourth (4 MiB cadence)
+is a60-second timeout, not a wrong computed result: with600 seconds it
+completed correctly in67.38 seconds. Timing depends on host load; the final
+control is a scale/operability witness, not an invariant4-failure baseline.
+ResReceipts independently reproduces all checkpoint commands, but flags
+historical `corpus/evidence/round27-*-after.*` as dd72641e receipts. They are
+retained unchanged; final evidence is separately pinned under
+`.ufo/waves/round-27/final/`. Its timing disagreement (base completes in64 s
+versus L1's observed300-second timeout) is preserved, not silently corrected.
+
+Tooling: ResWidthFix installed cmarkgfm2025.10.22, markdown-it-py4.2.0
+(dependencies cffi2.1.1, pycparser3.11, mdurl0.1.2) and uv-managed CPython3.15.0
+via official PyPI/uv `uv run --with`, for independent GFM oracles.
+Other residual seats and the replacement L1 installed nothing.
+The host /tmp ENOSPC notice led to moving the executor archive onward to
+`/fast/scratch/hyaku/chousa-r27/work-archive`; the historical manifest's first
+destination remains unchanged. Round-owned scratch is removed at landing.
+
+R27-M17 — coordinator scope debt: the residual ResControlsSuite item asked
+for a base run of the new suite, contrary to the frozen measurement
+clarification's instruction not to rerun reported base failures through a
+new wrapper. The critic's instrumented25-control base run (long-token crash
+case skipped) is retained as an out-of-contract diagnostic, not admitted
+before evidence. Captured-by: comparing the item with
+`round27-claims.md:25–36`, not a green tally. The report's before side remains
+the accepted r26 receipts and non-executing mechanism count; no baseline
+failure rerun can replace that authority.

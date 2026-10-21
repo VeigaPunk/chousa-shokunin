@@ -1,0 +1,17 @@
+{
+  "seat": "ChousaR27-2.ResTokenPrefilter-16",
+  "provenance": "Direct follow-up message to coordinator after the seat's immutable cb895a2 report; sandbox check, no production edits",
+  "reviewed_gate_sha256": "ac1315ddaa12e79b68069d1a9866b9b1b55e3a43efef3ba0cb5ca5e665835765",
+  "verdict": "NO OBJECTION; tokenizer/filter fault false-CLEAN closed on reviewed working-tree bytes",
+  "faults": {
+    "tokenizer_exit_2": "exit1 DRIFT; exactly one META_SOURCE_SCAN_FAILED crit, no META_SOURCE_NO_ROW_ID",
+    "filter_exit_2": "exit1 DRIFT; exactly one META_SOURCE_SCAN_FAILED crit, no META_SOURCE_NO_ROW_ID",
+    "grep_exit_127": "exit1 DRIFT; exactly one META_SOURCE_SCAN_FAILED crit, no META_SOURCE_NO_ROW_ID"
+  },
+  "comparison_gate": "cb895a2 returns exit0 CLEAN with informational NO_ROW_ID on these three faults",
+  "equivalence": "1005 synthetic source values, dd72641e/cb895a2/reviewed working gate: zero FINDING/META/verdict/exit differences",
+  "controls": {"total": 32, "mismatches": 0, "C1": 5, "C2": 8, "C3": 19, "exit": 0},
+  "selftest": "PASS (215 cases, 0 skipped), exit0, full-tree sandbox",
+  "cost_min_of_three_ms": {"dense_2mib_working": 224.75, "dense_2mib_dd72641e": 16253.01, "dense_2mib_cb895a2": 209.25, "ids_8192_working": 172.66, "ids_64k_working": 1207.93, "prose_working": 20.29},
+  "limits": "Dense input is about 7.4% slower than cb895a2 due to captured token list; no universal resource or time claim. Single grep -w alternative was rejected before landing because non-GNU Unicode word boundaries differed under LC_ALL=C."
+}
