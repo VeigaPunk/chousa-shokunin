@@ -1,0 +1,176 @@
+diff --git a/tools/research-gate.sh b/tools/research-gate.sh
+index 8b65c72..c33bad0 100755
+--- a/tools/research-gate.sh
++++ b/tools/research-gate.sh
+@@ -592,8 +592,8 @@ DEAD_MARK_RE='ephemeral|scratch|historical|unresolved|lost-tree|lost-base|former
+ 
+ line_has_mark() { grep -qiE "$DEAD_MARK_RE" <<<"$1"; }
+ 
+-is_denylist_path() {
+-  local f; f=$(ptr_file_part "$1")
++is_denylist_path_value() {
++  local f=$1
+   case "$f" in
+     *op.env|*.env|*server.token*|*credentials/*|*/oauth/*) return 0 ;;
+   esac
+@@ -606,6 +606,16 @@ is_denylist_path() {
+   return 1
+ }
+ 
++is_denylist_fs_path() {
++  local f=$1
++  is_denylist_path_value "$f" && return 0
++  is_denylist_path_value "$(ptr_file_part "$f")"
++}
++
++is_denylist_path() {
++  is_denylist_path_value "$(ptr_file_part "$1")"
++}
++
+ ptr_resolves_meta() {
+   # r21: relative pointers were checked with raw -f — a 'lib/../../etc/x'
+   # or a symlink to outside passed if the file existed under the raw path.
+@@ -633,7 +643,7 @@ ptr_resolves_meta() {
+     return 1
+   fi
+   canon=$(readlink -f -- "$cand" 2>/dev/null || printf '%s' "$cand")
+-  is_denylist_path "$canon" && return 1
++  is_denylist_fs_path "$canon" && return 1
+   if in_root "$canon" "$root_r" || in_root "$canon" "$lane_r"; then
+     [[ -f $canon ]] && return 0
+   fi
+@@ -1126,7 +1136,7 @@ claim_source_path() { # SRC -> rc 0: CLAIM_SRC_PATH; rc 1: CLAIM_REFUSE + CLAIM_
+   local src root_r lane_r cand canon src_root
+   src=$(norm_ptr "$1")
+   CLAIM_REFUSE=''; CLAIM_REFUSE_OBS=''; CLAIM_SRC_PATH=''
+-  if is_session_url "$src" || is_denylist_path "$src"; then
++  if is_session_url "$src" || is_denylist_fs_path "$src"; then
+     CLAIM_REFUSE=CLAIM_SOURCE_SESSION
+     CLAIM_REFUSE_OBS="path=$(ptr_file_part "$src") denied (not opened)"
+     return 1
+@@ -1153,6 +1163,11 @@ claim_source_path() { # SRC -> rc 0: CLAIM_SRC_PATH; rc 1: CLAIM_REFUSE + CLAIM_
+     cand=$ROOT/$src
+   fi
+   canon=$(readlink -f -- "$cand" 2>/dev/null || printf '%s' "$cand")
++  if is_denylist_fs_path "$canon"; then
++    CLAIM_REFUSE=CLAIM_SOURCE_SESSION
++    CLAIM_REFUSE_OBS="path=$(ptr_file_part "$src") denied (not opened)"
++    return 1
++  fi
+   # WHICH allowed root resolved the source is kept (src_root): the two roots
+   # can sit on different filesystems (a tmpfs corpus root against a disk lane
+   # root, or the corpus on a mounted volume), so the device probe below must
+@@ -2360,7 +2375,7 @@ metadata_add_days() { # VALID_DATE DECIMAL_DAYS -> META_DATE_RESULT; out of rang
+ 
+ metadata_registry_load() {
+   local path=$1 canon fdpath fdcanon probe refuse='' registry_fd read_rc=0
+-  local content='' fsize links line row cell i header_candidate=0 header_found=0
++  local content='' fsize links line row cell i header_candidate=0 header_found=0 header_width=0
+   local id_col=-1 status_col=-1 usedby_col=-1 is_separator
+   local row_id row_status row_usedby
+   local LC_ALL=C
+@@ -2372,14 +2387,14 @@ metadata_registry_load() {
+   [[ -f $path ]] || die_usage "metadata registry is not a regular file"
+ 
+   canon=$(readlink -f -- "$path" 2>/dev/null || printf '%s' "$path")
+-  if is_denylist_path "$path" || is_denylist_path "$canon"; then
++  if is_denylist_fs_path "$path" || is_denylist_fs_path "$canon"; then
+     refuse=denylist
+   elif ! exec {registry_fd}<"$canon"; then
+     refuse=unreadable
+   else
+     fdpath="/proc/$$/fd/$registry_fd"
+     fdcanon=$(readlink -f -- "$fdpath" 2>/dev/null || true)
+-    if [[ -z $fdcanon ]] || is_denylist_path "$fdcanon"; then
++    if [[ -z $fdcanon ]] || is_denylist_fs_path "$fdcanon"; then
+       refuse=denylist
+     elif [[ ! -f $fdpath ]] || ! probe=$(stat -Lc '%s %h' -- "$fdpath" 2>/dev/null) \
+       || [[ ! $probe =~ ^([0-9]+)[[:space:]]+([0-9]+)$ ]]; then
+@@ -2412,6 +2427,8 @@ metadata_registry_load() {
+     if [[ $line != *'|'*'|'* ]]; then
+       ((header_found)) && break
+       header_candidate=0
++      id_col=-1; status_col=-1; usedby_col=-1
++      header_width=0
+       continue
+     fi
+     row=$line
+@@ -2442,9 +2459,12 @@ metadata_registry_load() {
+ 
+     if ((header_candidate)); then
+       is_separator=1
+-      for cell in "${cells[@]}"; do
+-        [[ $cell =~ ^:?-{3,}:?$ ]] || { is_separator=0; break; }
+-      done
++      (( ${#cells[@]} == header_width )) || is_separator=0
++      if ((is_separator)); then
++        for cell in "${cells[@]}"; do
++          [[ $cell =~ ^:?-{3,}:?$ ]] || { is_separator=0; break; }
++        done
++      fi
+       if ((is_separator)); then
+         header_found=1
+         header_candidate=0
+@@ -2452,6 +2472,7 @@ metadata_registry_load() {
+       fi
+       header_candidate=0
+       id_col=-1; status_col=-1; usedby_col=-1
++      header_width=0
+     fi
+     for i in "${!cells[@]}"; do
+       case "${cells[$i]}" in
+@@ -2462,8 +2483,10 @@ metadata_registry_load() {
+     done
+     if ((id_col >= 0 && status_col >= 0 && usedby_col >= 0)); then
+       header_candidate=1
++      header_width=${#cells[@]}
+     else
+       id_col=-1; status_col=-1; usedby_col=-1
++      header_width=0
+     fi
+   done <<<"$content"
+   ((header_found)) || die_usage "metadata registry has no table with id, status, and used-by columns"
+@@ -2471,12 +2494,11 @@ metadata_registry_load() {
+ 
+ metadata_registry_check_source() {
+   local source_value=$1 entry_path=$2 entry_base=$3
+-  local source_scan=$1 source_id_re='(^|[^[:alnum:]_])(S[0-9]{3,})([^[:alnum:]_]|$)'
+-  local source_id source_match found_id=0 used_by token matched i
++  local source_id found_id=0 used_by token matched i
++  local LC_ALL=C
+   local -a used_by_tokens=()
+-  while [[ $source_scan =~ $source_id_re ]]; do
+-    source_id=${BASH_REMATCH[2]}
+-    source_match=${BASH_REMATCH[0]}
++  while IFS= read -r source_id; do
++    [[ $source_id =~ ^S[0-9]{3,}$ ]] || continue
+     found_id=1
+     if [[ -z ${META_REGISTRY_STATUS[$source_id]+x} ]]; then
+       emit_finding META_SOURCE_ROW_MISSING warn metadata \
+@@ -2500,8 +2522,7 @@ metadata_registry_check_source() {
+           "entry=$entry_base source_id=$source_id used-by does not name entry"
+       fi
+     fi
+-    source_scan=${source_scan#*"$source_match"}
+-  done
++  done < <(printf '%s\n' "$source_value" | LC_ALL=C grep -oE '[[:alnum:]_]+' || true)
+   ((found_id)) || emit_finding META_SOURCE_NO_ROW_ID info metadata \
+     "entry=$entry_base source has no S-id"
+ }
+@@ -2581,14 +2602,14 @@ verify_metadata() {
+     # No wc fallback: an unavailable stat must not read an oversized file.
+     canon=$(readlink -f -- "$file" 2>/dev/null || printf '%s' "$file")
+     refuse=''; content=''
+-    if is_denylist_path "$file" || is_denylist_path "$canon"; then
++    if is_denylist_fs_path "$file" || is_denylist_fs_path "$canon"; then
+       refuse=denylist
+     elif ! exec {meta_fd}<"$canon"; then
+       refuse=unreadable
+     else
+       fdpath="/proc/$$/fd/$meta_fd"
+       fdcanon=$(readlink -f -- "$fdpath" 2>/dev/null || true)
+-      if [[ -z $fdcanon ]] || is_denylist_path "$fdcanon"; then
++      if [[ -z $fdcanon ]] || is_denylist_fs_path "$fdcanon"; then
+         refuse=denylist
+       elif [[ ! -f $fdpath ]] || ! probe=$(stat -Lc '%s %h' -- "$fdpath" 2>/dev/null) \
+         || [[ ! $probe =~ ^([0-9]+)[[:space:]]+([0-9]+)$ ]]; then

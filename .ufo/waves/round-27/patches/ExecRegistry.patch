@@ -1,0 +1,333 @@
+diff --git a/tools/research-gate.sh b/tools/research-gate.sh
+index 8b65c72..c33bad0 100755
+--- a/tools/research-gate.sh
++++ b/tools/research-gate.sh
+@@ -592,8 +592,8 @@ DEAD_MARK_RE='ephemeral|scratch|historical|unresolved|lost-tree|lost-base|former
+ 
+ line_has_mark() { grep -qiE "$DEAD_MARK_RE" <<<"$1"; }
+ 
+-is_denylist_path() {
+-  local f; f=$(ptr_file_part "$1")
++is_denylist_path_value() {
++  local f=$1
+   case "$f" in
+     *op.env|*.env|*server.token*|*credentials/*|*/oauth/*) return 0 ;;
+   esac
+@@ -606,6 +606,16 @@ is_denylist_path() {
+   return 1
+ }
+ 
++is_denylist_fs_path() {
++  local f=$1
++  is_denylist_path_value "$f" && return 0
++  is_denylist_path_value "$(ptr_file_part "$f")"
++}
++
++is_denylist_path() {
++  is_denylist_path_value "$(ptr_file_part "$1")"
++}
++
+ ptr_resolves_meta() {
+   # r21: relative pointers were checked with raw -f — a 'lib/../../etc/x'
+   # or a symlink to outside passed if the file existed under the raw path.
+@@ -633,7 +643,7 @@ ptr_resolves_meta() {
+     return 1
+   fi
+   canon=$(readlink -f -- "$cand" 2>/dev/null || printf '%s' "$cand")
+-  is_denylist_path "$canon" && return 1
++  is_denylist_fs_path "$canon" && return 1
+   if in_root "$canon" "$root_r" || in_root "$canon" "$lane_r"; then
+     [[ -f $canon ]] && return 0
+   fi
+@@ -1126,7 +1136,7 @@ claim_source_path() { # SRC -> rc 0: CLAIM_SRC_PATH; rc 1: CLAIM_REFUSE + CLAIM_
+   local src root_r lane_r cand canon src_root
+   src=$(norm_ptr "$1")
+   CLAIM_REFUSE=''; CLAIM_REFUSE_OBS=''; CLAIM_SRC_PATH=''
+-  if is_session_url "$src" || is_denylist_path "$src"; then
++  if is_session_url "$src" || is_denylist_fs_path "$src"; then
+     CLAIM_REFUSE=CLAIM_SOURCE_SESSION
+     CLAIM_REFUSE_OBS="path=$(ptr_file_part "$src") denied (not opened)"
+     return 1
+@@ -1153,6 +1163,11 @@ claim_source_path() { # SRC -> rc 0: CLAIM_SRC_PATH; rc 1: CLAIM_REFUSE + CLAIM_
+     cand=$ROOT/$src
+   fi
+   canon=$(readlink -f -- "$cand" 2>/dev/null || printf '%s' "$cand")
++  if is_denylist_fs_path "$canon"; then
++    CLAIM_REFUSE=CLAIM_SOURCE_SESSION
++    CLAIM_REFUSE_OBS="path=$(ptr_file_part "$src") denied (not opened)"
++    return 1
++  fi
+   # WHICH allowed root resolved the source is kept (src_root): the two roots
+   # can sit on different filesystems (a tmpfs corpus root against a disk lane
+   # root, or the corpus on a mounted volume), so the device probe below must
+@@ -2360,7 +2375,7 @@ metadata_add_days() { # VALID_DATE DECIMAL_DAYS -> META_DATE_RESULT; out of rang
+ 
+ metadata_registry_load() {
+   local path=$1 canon fdpath fdcanon probe refuse='' registry_fd read_rc=0
+-  local content='' fsize links line row cell i header_candidate=0 header_found=0
++  local content='' fsize links line row cell i header_candidate=0 header_found=0 header_width=0
+   local id_col=-1 status_col=-1 usedby_col=-1 is_separator
+   local row_id row_status row_usedby
+   local LC_ALL=C
+@@ -2372,14 +2387,14 @@ metadata_registry_load() {
+   [[ -f $path ]] || die_usage "metadata registry is not a regular file"
+ 
+   canon=$(readlink -f -- "$path" 2>/dev/null || printf '%s' "$path")
+-  if is_denylist_path "$path" || is_denylist_path "$canon"; then
++  if is_denylist_fs_path "$path" || is_denylist_fs_path "$canon"; then
+     refuse=denylist
+   elif ! exec {registry_fd}<"$canon"; then
+     refuse=unreadable
+   else
+     fdpath="/proc/$$/fd/$registry_fd"
+     fdcanon=$(readlink -f -- "$fdpath" 2>/dev/null || true)
+-    if [[ -z $fdcanon ]] || is_denylist_path "$fdcanon"; then
++    if [[ -z $fdcanon ]] || is_denylist_fs_path "$fdcanon"; then
+       refuse=denylist
+     elif [[ ! -f $fdpath ]] || ! probe=$(stat -Lc '%s %h' -- "$fdpath" 2>/dev/null) \
+       || [[ ! $probe =~ ^([0-9]+)[[:space:]]+([0-9]+)$ ]]; then
+@@ -2412,6 +2427,8 @@ metadata_registry_load() {
+     if [[ $line != *'|'*'|'* ]]; then
+       ((header_found)) && break
+       header_candidate=0
++      id_col=-1; status_col=-1; usedby_col=-1
++      header_width=0
+       continue
+     fi
+     row=$line
+@@ -2442,9 +2459,12 @@ metadata_registry_load() {
+ 
+     if ((header_candidate)); then
+       is_separator=1
+-      for cell in "${cells[@]}"; do
+-        [[ $cell =~ ^:?-{3,}:?$ ]] || { is_separator=0; break; }
+-      done
++      (( ${#cells[@]} == header_width )) || is_separator=0
++      if ((is_separator)); then
++        for cell in "${cells[@]}"; do
++          [[ $cell =~ ^:?-{3,}:?$ ]] || { is_separator=0; break; }
++        done
++      fi
+       if ((is_separator)); then
+         header_found=1
+         header_candidate=0
+@@ -2452,6 +2472,7 @@ metadata_registry_load() {
+       fi
+       header_candidate=0
+       id_col=-1; status_col=-1; usedby_col=-1
++      header_width=0
+     fi
+     for i in "${!cells[@]}"; do
+       case "${cells[$i]}" in
+@@ -2462,8 +2483,10 @@ metadata_registry_load() {
+     done
+     if ((id_col >= 0 && status_col >= 0 && usedby_col >= 0)); then
+       header_candidate=1
++      header_width=${#cells[@]}
+     else
+       id_col=-1; status_col=-1; usedby_col=-1
++      header_width=0
+     fi
+   done <<<"$content"
+   ((header_found)) || die_usage "metadata registry has no table with id, status, and used-by columns"
+@@ -2471,12 +2494,11 @@ metadata_registry_load() {
+ 
+ metadata_registry_check_source() {
+   local source_value=$1 entry_path=$2 entry_base=$3
+-  local source_scan=$1 source_id_re='(^|[^[:alnum:]_])(S[0-9]{3,})([^[:alnum:]_]|$)'
+-  local source_id source_match found_id=0 used_by token matched i
++  local source_id found_id=0 used_by token matched i
++  local LC_ALL=C
+   local -a used_by_tokens=()
+-  while [[ $source_scan =~ $source_id_re ]]; do
+-    source_id=${BASH_REMATCH[2]}
+-    source_match=${BASH_REMATCH[0]}
++  while IFS= read -r source_id; do
++    [[ $source_id =~ ^S[0-9]{3,}$ ]] || continue
+     found_id=1
+     if [[ -z ${META_REGISTRY_STATUS[$source_id]+x} ]]; then
+       emit_finding META_SOURCE_ROW_MISSING warn metadata \
+@@ -2500,8 +2522,7 @@ metadata_registry_check_source() {
+           "entry=$entry_base source_id=$source_id used-by does not name entry"
+       fi
+     fi
+-    source_scan=${source_scan#*"$source_match"}
+-  done
++  done < <(printf '%s\n' "$source_value" | LC_ALL=C grep -oE '[[:alnum:]_]+' || true)
+   ((found_id)) || emit_finding META_SOURCE_NO_ROW_ID info metadata \
+     "entry=$entry_base source has no S-id"
+ }
+@@ -2581,14 +2602,14 @@ verify_metadata() {
+     # No wc fallback: an unavailable stat must not read an oversized file.
+     canon=$(readlink -f -- "$file" 2>/dev/null || printf '%s' "$file")
+     refuse=''; content=''
+-    if is_denylist_path "$file" || is_denylist_path "$canon"; then
++    if is_denylist_fs_path "$file" || is_denylist_fs_path "$canon"; then
+       refuse=denylist
+     elif ! exec {meta_fd}<"$canon"; then
+       refuse=unreadable
+     else
+       fdpath="/proc/$$/fd/$meta_fd"
+       fdcanon=$(readlink -f -- "$fdpath" 2>/dev/null || true)
+-      if [[ -z $fdcanon ]] || is_denylist_path "$fdcanon"; then
++      if [[ -z $fdcanon ]] || is_denylist_fs_path "$fdcanon"; then
+         refuse=denylist
+       elif [[ ! -f $fdpath ]] || ! probe=$(stat -Lc '%s %h' -- "$fdpath" 2>/dev/null) \
+         || [[ ! $probe =~ ^([0-9]+)[[:space:]]+([0-9]+)$ ]]; then
+@@ -6235,6 +6256,159 @@ EOF
+   metadata_registry_case metadata-registry-refused-nul \
+     "$WORK/corpus/knowledge/meta-reg-missing.md" "$WORK/meta-registry-nul.md" 2 \
+     'metadata registry refused: nul'
++  metadata_registry_finding_count_case() { # NAME ENTRY REGISTRY WANT_RC FINDING COUNT [OTHER_FINDING OTHER_COUNT]
++    local name=$1 path=$2 registry=$3 want_rc=$4 finding=$5 want_count=$6
++    local other_finding=${7:-} other_count=${8:-}
++    local rc=0 out nverdict actual_count actual_other msg=''
++    cases=$((cases + 1))
++    out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE \
++      CHOUSA_STRICT=0 CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
++      bash "$SELF" verify-metadata "$path" --root "$WORK" --registry "$registry" \
++      2>&1) || rc=$?
++    nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
++    actual_count=$(grep -Fxc -- "$finding" <<<"$out" || true)
++    [[ $actual_count -eq $want_count ]] \
++      || msg+="finding-lines=$actual_count/$want_count "
++    if [[ -n $other_finding ]]; then
++      actual_other=$(grep -Fxc -- "$other_finding" <<<"$out" || true)
++      [[ $actual_other -eq $other_count ]] \
++        || msg+="other-finding-lines=$actual_other/$other_count "
++    fi
++    if [[ $want_rc -eq 2 ]]; then
++      [[ ${nverdict:-0} -eq 0 ]] || msg+="verdict-lines=$nverdict/0 "
++    else
++      [[ ${nverdict:-0} -eq 1 ]] || msg+="verdict-lines=$nverdict/1 "
++    fi
++    if [[ $rc -eq $want_rc && -z $msg ]]; then
++      printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" "$name" "$rc"
++    else
++      printf 'FAIL-case %-28s rc=%d/%d %s\n' "$name" "$rc" "$want_rc" "$msg"
++      printf '%s\n' "$out" | sed 's/^/    | /'
++      failures=$((failures + 1))
++    fi
++  }
++
++  # C3 regressions use only files and links created under this selftest's
++  # temporary WORK directory.
++  cat >"$WORK/meta-registry-header-break-blank.md" <<'EOF'
++| id | status | used-by |
++
++| S999 | mined | corpus/knowledge/meta-reg-missing.md |
++|---|---|---|
++| S999 | mined | corpus/knowledge/meta-reg-missing.md |
++EOF
++  metadata_registry_case metadata-registry-header-break-blank \
++    "$WORK/corpus/knowledge/meta-reg-missing.md" "$WORK/meta-registry-header-break-blank.md" 2 \
++    'metadata registry has no table with id, status, and used-by columns'
++
++  cat >"$WORK/meta-registry-header-break-prose.md" <<'EOF'
++| id | status | used-by |
++Registry note between tables.
++| S999 | mined | corpus/knowledge/meta-reg-missing.md |
++|---|---|---|
++| S999 | mined | corpus/knowledge/meta-reg-missing.md |
++EOF
++  metadata_registry_case metadata-registry-header-break-prose \
++    "$WORK/corpus/knowledge/meta-reg-missing.md" "$WORK/meta-registry-header-break-prose.md" 2 \
++    'metadata registry has no table with id, status, and used-by columns'
++
++  cat >"$WORK/meta-registry-width-short.md" <<'EOF'
++| id | status | used-by |
++|---|---|
++| S999 | mined | corpus/knowledge/meta-reg-missing.md |
++EOF
++  metadata_registry_case metadata-registry-width-short \
++    "$WORK/corpus/knowledge/meta-reg-missing.md" "$WORK/meta-registry-width-short.md" 2 \
++    'metadata registry has no table with id, status, and used-by columns'
++
++  cat >"$WORK/meta-registry-width-long.md" <<'EOF'
++| id | status | used-by |
++|---|---|---|---|
++| S999 | mined | corpus/knowledge/meta-reg-missing.md |
++EOF
++  metadata_registry_case metadata-registry-width-long \
++    "$WORK/corpus/knowledge/meta-reg-missing.md" "$WORK/meta-registry-width-long.md" 2 \
++    'metadata registry has no table with id, status, and used-by columns'
++
++  cat >"$WORK/meta-registry-column-reorder.md" <<'EOF'
++Registry prose before the table.
++| used-by | id | status |
++|---|---|---|
++| corpus/knowledge/meta-reg-column-reorder.md | S001 | mined |
++EOF
++  cat >"$WORK/corpus/knowledge/meta-reg-column-reorder.md" <<'EOF'
++source: S001
++verified-at: 2026-10-20 checked
++recheck: 90d
++EOF
++  metadata_registry_case metadata-registry-column-reorder \
++    "$WORK/corpus/knowledge/meta-reg-column-reorder.md" "$WORK/meta-registry-column-reorder.md" 0 \
++    'META entry=meta-reg-column-reorder.md source=present verified_at=dated recheck=scheduled verdict=clean' \
++    'findings=0 drift=0'
++
++  printf 'source: xS999 S999\nverified-at: 2026-10-20 checked\nrecheck: 90d\n' \
++    >"$WORK/corpus/knowledge/meta-reg-glued-before-standalone.md"
++  metadata_registry_finding_count_case metadata-registry-glued-before-standalone \
++    "$WORK/corpus/knowledge/meta-reg-glued-before-standalone.md" "$WORK/meta-registry.md" 1 \
++    'FINDING META_SOURCE_ROW_MISSING severity=warn surface=metadata obs=entry=meta-reg-glued-before-standalone.md source_id=S999 registry row missing' 1
++
++  printf 'source: S002,S002\nverified-at: 2026-10-20 checked\nrecheck: 90d\n' \
++    >"$WORK/corpus/knowledge/meta-reg-duplicate-occurrences.md"
++  metadata_registry_finding_count_case metadata-registry-duplicate-occurrences \
++    "$WORK/corpus/knowledge/meta-reg-duplicate-occurrences.md" "$WORK/meta-registry.md" 1 \
++    'FINDING META_SOURCE_NOT_MINED severity=warn surface=metadata obs=entry=meta-reg-duplicate-occurrences.md source_id=S002 registry row is not mined' 2
++
++  printf 'source: xS002 S002x _S002 S002_\nverified-at: 2026-10-20 checked\nrecheck: 90d\n' \
++    >"$WORK/corpus/knowledge/meta-reg-nonstandalone.md"
++  metadata_registry_finding_count_case metadata-registry-nonstandalone-ASCII \
++    "$WORK/corpus/knowledge/meta-reg-nonstandalone.md" "$WORK/meta-registry.md" 0 \
++    'FINDING META_SOURCE_NO_ROW_ID severity=info surface=metadata obs=entry=meta-reg-nonstandalone.md source has no S-id' 1 \
++    'FINDING META_SOURCE_NOT_MINED severity=warn surface=metadata obs=entry=meta-reg-nonstandalone.md source_id=S002 registry row is not mined' 0
++
++  mkdir -p "$WORK/registry:synthetic/credentials"
++  cat >"$WORK/registry:synthetic/credentials/source-table.md" <<'EOF'
++| id | status | used-by |
++|---|---|---|
++| S001 | mined | corpus/knowledge/meta-reg-bare.md |
++EOF
++  metadata_registry_case metadata-registry-colon-denylist \
++    "$WORK/corpus/knowledge/meta-reg-bare.md" "$WORK/registry:synthetic/credentials/source-table.md" 2 \
++    'metadata registry refused: denylist'
++
++  mkdir -p "$WORK/entry:synthetic/credentials"
++  cat >"$WORK/entry:synthetic/credentials/entry.md" <<'EOF'
++source: S001
++verified-at: 2026-10-20 checked
++recheck: 90d
++EOF
++  metadata_case metadata-entry-colon-denylist \
++    "$WORK/entry:synthetic/credentials/entry.md" 1 \
++    'FINDING META_ENTRY_REFUSED severity=crit surface=metadata obs=entry=entry.md reason=denylist unparsed' \
++    'METADATA_COMPLETE=0/1'
++
++  printf 'source: S001\nverified-at: 2026-10-20 checked\nrecheck: 90d\n' \
++    >"$WORK/metadata.env:1.md"
++  metadata_case metadata-colon-anchor-denylist-compat "$WORK/metadata.env:1.md" 1 \
++    'FINDING META_ENTRY_REFUSED severity=crit surface=metadata obs=entry=metadata.env:1.md reason=denylist unparsed' \
++    'METADATA_COMPLETE=0/1'
++
++  printf 'source: S001\nverified-at: 2026-10-20 checked\nrecheck: 90d\n' \
++    >"$WORK/metadata:synthetic.md"
++  metadata_case metadata-ordinary-colon-allowed "$WORK/metadata:synthetic.md" 0 \
++    'META entry=metadata:synthetic.md source=present verified_at=dated recheck=scheduled verdict=clean' \
++    'findings=0 drift=0'
++
++  mkdir -p "$WORK/claim:synthetic/credentials"
++  printf 'Synthetic content not opened by the denylist control.\n' \
++    >"$WORK/claim:synthetic/credentials/source.md"
++  ln -s "$WORK/claim:synthetic/credentials/source.md" \
++    "$WORK/claim:synthetic/alias.md"
++  printf '{"id":"FS1","source":"claim:synthetic/alias.md","span":"Synthetic content","expect":"supported"}\n' \
++    >"$WORK/claims-registry-colon-deny.jsonl"
++  tclaims claims-registry-colon-deny 1 \
++    'FINDING CLAIM_SOURCE_SESSION severity=crit surface=claims' \
++    'CLAIM id=FS1 expected=supported observed=refused' \
++    'VERDICT_BEARING_CLAIMS=0/1'

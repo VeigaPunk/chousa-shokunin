@@ -1,0 +1,74 @@
+diff --git a/tools/research-gate.sh b/tools/research-gate.sh
+index 8b65c72..9cffb36 100755
+--- a/tools/research-gate.sh
++++ b/tools/research-gate.sh
+@@ -6007,20 +6007,42 @@ EOF
+       failures=$((failures + 1))
+     fi
+   }
++  metadata_asof_usage_accepts() { # RC EXPECTED OUTPUT
++    local rc=$1 expected=$2 out=$3 nverdict
++    nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
++    [[ $rc -eq 2 && $out == *"$expected"* && ${nverdict:-0} -eq 0 ]]
++  }
+   metadata_asof_usage_case() { # NAME EXPECTED [CLI args ...]
+     local name=$1 expected=$2
+     shift 2
+-    local rc=0 out
++    local rc=0 out nverdict
+     cases=$((cases + 1))
+     out=$(bash "$SELF" "$@" 2>&1) || rc=$?
+-    if [[ $rc -eq 2 && $out == *"$expected"* && $out != *'RESEARCH_GATE: '* ]]; then
++    nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
++    if [[ $rc -eq 2 && $out == *"$expected"* && ${nverdict:-0} -eq 0 ]]; then
+       printf 'ok-case  %-2d %-28s exit=2\n' "$cases" "$name"
+     else
+-      printf 'FAIL-case %-28s rc=%d expected=%s\n' "$name" "$rc" "$expected"
++      printf 'FAIL-case %-28s rc=%d expected=%s verdicts=%s\n' \
++        "$name" "$rc" "$expected" "${nverdict:-0}"
+       printf '%s\n' "$out" | sed 's/^/    | /'
+       failures=$((failures + 1))
+     fi
+   }
++  metadata_asof_usage_control_case() { # NAME WANT_ACCEPT RC EXPECTED OUTPUT
++    local name=$1 want_accept=$2 rc=$3 expected=$4 synthetic_out=$5 accepted=0 helper_out
++    local SELF="$WORK/meta-asof/usage-stub.sh"
++    cases=$((cases + 1))
++    helper_out=$(FAKE_RC="$rc" FAKE_OUTPUT="$synthetic_out" \
++      metadata_asof_usage_case "$name" "$expected")
++    [[ $helper_out == 'ok-case  '* ]] && accepted=1
++    if [[ $accepted -eq $want_accept ]]; then
++      printf 'ok-case  %-2d %-28s accepted=%d\n' "$cases" "$name" "$accepted"
++    else
++      printf 'FAIL-case %-28s accepted=%d want=%d\n' "$name" "$accepted" "$want_accept"
++      printf '%s\n' "$helper_out" | sed 's/^/    | /'
++      failures=$((failures + 1))
++    fi
++  }
+ 
+   mkdir -p "$WORK/meta-asof"
+   cat >"$WORK/meta-asof/overdue.md" <<'EOF'
+@@ -6235,3 +6257,23 @@ EOF
+   metadata_registry_case metadata-registry-refused-nul \
+     "$WORK/corpus/knowledge/meta-reg-missing.md" "$WORK/meta-registry-nul.md" 2 \
+     'metadata registry refused: nul'
++  cat >"$WORK/meta-asof/usage-stub.sh" <<'EOF'
++#!/usr/bin/env bash
++printf '%s\n' "$FAKE_OUTPUT"
++exit "$FAKE_RC"
++EOF
++  metadata_asof_usage_control_case metadata-asof-usage-help-control 1 2 \
++    'synthetic usage diagnostic' \
++    $'synthetic usage diagnostic\nusage: fixture\nVerdict: RESEARCH_GATE: CLEAN|DRIFT'
++  metadata_asof_usage_control_case metadata-asof-usage-clean-control 0 2 \
++    'synthetic usage diagnostic' \
++    $'RESEARCH_GATE: CLEAN\nsynthetic usage diagnostic\nVerdict: RESEARCH_GATE: CLEAN|DRIFT'
++  metadata_asof_usage_control_case metadata-asof-usage-drift-control 0 2 \
++    'synthetic usage diagnostic' \
++    $'RESEARCH_GATE: DRIFT\nsynthetic usage diagnostic\nVerdict: RESEARCH_GATE: CLEAN|DRIFT'
++  metadata_asof_usage_control_case metadata-asof-usage-exit-control 0 1 \
++    'synthetic usage diagnostic' \
++    $'synthetic usage diagnostic\nusage: fixture\nVerdict: RESEARCH_GATE: CLEAN|DRIFT'
++  metadata_asof_usage_control_case metadata-asof-usage-diagnostic-control 0 2 \
++    'synthetic usage diagnostic' \
++    $'usage: fixture\nVerdict: RESEARCH_GATE: CLEAN|DRIFT'

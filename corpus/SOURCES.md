@@ -47,6 +47,9 @@ its author opened the source and judged its tier for the stated scope only.
 | S037 | Guidance for Cochrane living systematic reviews — https://resources.cochrane.org/sites/resources.cochrane.org/files/uploads/inline-files/Transform/201912_LSR_Revised_Guidance.pdf | docs | A | Cochrane intervention LSR guidance on evidence-search versus review-update cadence | section4.3.4 p19; Version December2019 | Review updates may follow a protocol-specified fixed interval approved by the editorial team; this is separate from ongoing evidence searches | mined | 2026-10-21 | 180d | corpus/knowledge/recheck-due-r26.md |
 | S038 | Python datetime documentation — https://docs.python.org/3/library/datetime.html | docs | A | Python date proleptic-Gregorian ordinals, calendar-day arithmetic and year limits used by the independent oracle; not a generic freshness policy | Python3.15.0 documentation served 2026-10-21; date.toordinal, date arithmetic note1 and MINYEAR/MAXYEAR | Date arithmetic uses the proleptic Gregorian calendar; adding timedelta days moves the date by that many calendar days within years1–9999 | mined | 2026-10-21 | on-release | corpus/knowledge/recheck-due-r26.md |
 | S039 | PROV-DM: The PROV Data Model — https://www.w3.org/TR/2013/REC-prov-dm-20130430/ | spec | A | PROV-DM's derivation model and optional generation/usage detail; not a registry or verification requirement | section5.2.1 Derivation, term-Derivation; W3C Recommendation2013-04-30 | PROV-DM permits explicit generation and usage details for entities in a derivation | mined | 2026-10-21 | 365d | corpus/knowledge/registry-link-r26.md |
+| S040 | Usage selftest record-grammar diagnosis — .ufo/waves/round-26/falsify/FNoTrade.md | own-work | A | the reported three r26 usage-harness failures and their help-text versus verdict-record cause; not whole-gate correctness | base 64eec5d41c7cf7f17f5ce1e968e28b3769952596; FNoTrade lines115–137, opened2026-10-21 | Count verdict records by their record grammar, not a phrase also present in usage documentation; preserve expected exit and diagnostic assertions | mined | 2026-10-21 | on-release | corpus/lessons/round-27.md |
+| S041 | Date-input regression diagnoses — .ufo/waves/round-26/falsify/FDateAsOfUsage.md and FDateHugeCadence.md | own-work | A | this lane's reported locale-dependent date validation and recursive zero-normalization failures; not generic freshness policy | base 64eec5d41c7cf7f17f5ce1e968e28b3769952596; FDateAsOfUsage lines75–86; FDateHugeCadence lines34–44, opened2026-10-21 | Validate ASCII input in the same representation arithmetic accepts; normalize decimal magnitude without a recursive match on the zero prefix | mined | 2026-10-21 | on-release | corpus/lessons/round-27.md |
+| S042 | Registry relationship regression diagnoses — .ufo/waves/round-26/falsify/FRegistryHeaderless.md, FRegistryIdBoundary.md and FRegistryRegistryDeny.md | own-work | A | this lane's reported stale header state, false S-id rescan and filesystem-path versus citation-pointer mismatch | base 64eec5d41c7cf7f17f5ce1e968e28b3769952596; headerless lines41–49, ID boundary lines28–45, registry deny lines23–30, opened2026-10-21 | Reset parser state at boundaries, retain occurrence identity, and distinguish filesystem paths from citation pointers before checking declared relationships | mined | 2026-10-21 | on-release | corpus/lessons/round-27.md |
 
 ## Paths
 
@@ -70,6 +73,14 @@ its author opened the source and judged its tier for the stated scope only.
   S025 is a rejected HTTP analogy, not authority for research-record validity.
 
 ## Search log
+
+- Round27 local repair curation (2026-10-21): question — which reported r26
+  failures falsify the actual usage/date/registry contracts? Where: the six
+  named committed falsifier reports in S040–S042 and their matching gate
+  functions at base64eec5d4. Identified6 reports, screened6, included6 grouped
+  into3 scoped own-work rows; excluded0 reports. No external source or live
+  target was fetched. Stopped after every routed failure class had a located
+  report and production site; no exhaustive whole-parser correctness claim.
 
 - Round26 scheduling and declaration-link curation (2026-10-21): question —
   which opened sources support the distinction between declared deadlines,

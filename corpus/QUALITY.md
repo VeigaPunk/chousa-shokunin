@@ -111,3 +111,21 @@ the admitted entry that motivates it. Tier definitions live in
     `bash corpus/evidence/round26-measure.sh <base-tree> c1` yields
     `C1_AMPLIFIED=4/4` at `ba333325`; same probe and frozen shapes evaluate
     the replacement. The probe exit0 is completion only; compare its values.
+
+## Round27 additions (criteria1–18 unchanged)
+
+19. **A diagnostic phrase is not a verdict record.** Test output with the
+    consumer's record grammar; help prose may quote the same phrase. Keep
+    expected exit, required diagnostic and forbidden-verdict checks separate.
+    Negative controls must reject wrong exits, absent diagnostics and real
+    verdict records, not merely accept the repaired happy path. —
+    `lessons/round-27.md` R27-M1; S040; r26 shared FAIL3/187 proves the old
+    predicate failed its own intended usage cases.
+20. **Preserve the input representation at a verification boundary.** When
+    a provenance checker crosses date-text/arithmetic, table-candidate/table,
+    token/match or filesystem-path/citation-pointer boundaries, controls
+    exercise the two representations separately, including finding
+    multiplicity. A code-set comparison cannot detect invented duplicate
+    occurrences. — `lessons/round-27.md` R27-M2–M6; S041/S042; the committed
+    r26 counterexamples show each distinction able to fail. This criterion
+    does not claim complete Markdown semantics or whole-parser resource bounds.

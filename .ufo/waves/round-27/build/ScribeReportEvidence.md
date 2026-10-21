@@ -1,0 +1,27 @@
+# Draft evidence map and honesty wording — round27 attempt1
+
+This is a scoped report section for L1’s final report, not an admission or final verdict. Axes are **operability (C1), freshness (C2), calibration (C3)**. The canonical contract is `corpus/evidence/round27-claims.md:1–23`, pinned to base master `64eec5d41c7cf7f17f5ce1e968e28b3769952596` and attempt1 only.
+
+## Evidence map
+
+| Axis | Contract / expected behavior | Local source and accepted prior evidence | Required after-evidence (not established here) |
+|---|---|---|---|
+| C1 operability | Keep the three usage cases, expected exit 2, and required diagnostics. Verdict records are anchored `^RESEARCH_GATE: ` lines. Add independent controls for valid usage, exit 1, missing diagnostic, and actual CLEAN/DRIFT verdicts; retain all 187 original case identities. | Static source snapshot: `tools/research-gate.sh:303–390, 6010–6022`; helper currently rejects any output containing the unanchored `RESEARCH_GATE: ` substring, although the usage text contains a verdict-format example. Accepted r26 report: `.ufo/waves/round-26/falsify/FNoTrade.md:115–137` records FAIL3/187 and names `metadata-asof-invalid`, `metadata-asof-missing`, `metadata-asof-wrong-mode`; do not reproduce those failures. Synthetic control definitions are in `corpus/evidence/round27-regressions.py:69–90`. | L1’s single integrated `bash tools/research-gate.sh --selftest` receipt with PASS, case count, and preserved identities; also the independent synthetic suite result. Static code and expected controls are not execution evidence. |
+| C2 freshness | ASCII-only `YYYY-MM-DD` under inherited locales; decimal cadence normalization must not recurse or terminate on long leading-zero input; retain calendar, strict overdue, plain-mode, representable-range, and overflow behavior. | Static source snapshot: `tools/research-gate.sh:2295–2359, 2714–2763`. Accepted prior reports: `.ufo/waves/round-26/falsify/FDateAsOfUsage.md:5–14` and `FDateHugeCadence.md:1–13`. The latter’s unsafe crash reproduction is accepted ground truth and must not be rerun. Synthetic expectations are defined in `corpus/evidence/round27-regressions.py:92–119` (including 128-KiB zero prefixes, all-zero, maximum span, overflow, leap cases, and Unicode digits). | Observed final regression output and the applicable date differential/frozen metadata receipts, with exact exits. Report unknown or mismatched cases; do not infer a pass from the helper implementation or these test definitions. |
+| C3 calibration | Reset registry-header state across non-table breaks; require a fresh named header and matching delimiter width; count only actual standalone ASCII S-ids once; check complete filesystem paths for registry denylist refusal while preserving citation-pointer behavior. Report broader parser/resource/grammar limits rather than whole-gate safety. | Static source snapshot: `tools/research-gate.sh:574–606, 2361–2507`. Accepted prior reports: `.ufo/waves/round-26/falsify/FRegistryHeaderless.md:5–13`, `FRegistryIdBoundary.md:5–13`, and `FRegistryRegistryDeny.md:5–8`. Synthetic controls are defined in `corpus/evidence/round27-regressions.py:121–167`. | Observed final synthetic and registry-differential receipts; include only the tested grammar and path cases. No host path, secret, `/proc`, live-process, or syscall-probe claim is supported by this seat. |
+
+## Gates, outcomes, and honest wording
+
+The registered final gates are specified in `corpus/evidence/round27-claims.md:17–23`: `python3 corpus/evidence/round27-regressions.py --gate tools/research-gate.sh` on an isolated base archive and the integrated final tree; one final `bash tools/research-gate.sh --selftest`; the existing date/registry differential scripts and frozen metadata checks on isolated copies as applicable; source census and recorded exits. The baseline long-token crash reproduction is explicitly skipped and supported only by its accepted committed r26 receipt; the default final synthetic suite exercises long tokens. Do not describe that baseline crash as rerun evidence.
+
+**Safe status wording for this section:** “Round26 falsification reports are accepted pre-fix evidence, not round27 after-evidence. This seat inspected local contract, source, and synthetic-control definitions only. It did not execute the regression suite, selftest, differential scripts, or frozen checks, and has no after-run receipt; therefore it makes no pass claim. Final status depends on L1’s observed integrated receipts and remains unestablished here.”
+
+Do not promote the report’s source inspection, a fixture definition, or a planned command into proof that an assertion passed. Do not claim full criterion-6 semantic verification, broad registry-parser correctness, general resource safety, or public-source admission from these three repairs.
+
+## Touched surfaces, provenance, and limits
+
+- Only this assigned report was written: `.ufo/waves/round-27/build/ScribeReportEvidence.md`.
+- Read-only local evidence: `corpus/evidence/round27-claims.md`, `corpus/evidence/round27-regressions.py`, `tools/research-gate.sh`, the cited round26 falsification reports, and current round27 build reports `ScribeSourceUsage.md` and `ScoutSourceCensus.md`.
+- No product/test/fixture edits; no lane Git/jj/index writes; no verification commands; no network, external target, host-secret, `/proc`, strace, mount, namespace, or debugger probe; no tool installation/update.
+
+Report: `.ufo/waves/round-27/build/ScribeReportEvidence.md`

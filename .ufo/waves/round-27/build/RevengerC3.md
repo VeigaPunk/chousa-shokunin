@@ -1,0 +1,28 @@
+# RevengerC3 — C3 static reconstruction (round 27 attempt 1)
+
+**Assigned surface:** registry parser state, S-id occurrence identity, and filesystem-path denylist checks. Static only; no production edits or runtime checks performed.
+
+## Reconstructed contract and state machine
+
+The preregistered requirement is “fresh named headers after breaks” (`corpus/evidence/round27-claims.md:15`). The round-26 correction fixes S-ids at `S` plus three or more digits with standalone ASCII alphanumeric/underscore boundaries, and `used-by` as an exact root-relative entry path with only leading `./` normalized (`corpus/evidence/round26-claims.md:132-141`). The current registry is an 11-column `SOURCES.md` table (`corpus/SOURCES.md:9-10`); the checker’s supported table projection is the named `id`, `status`, and `used-by` columns.
+
+`metadata_registry_load` (`tools/research-gate.sh:2361-2469`) implements a compact three-state reader:
+
+1. **Seek header:** inspect pipe rows for exact `id`, `status`, and `used-by` cell names, in any order.
+2. **Await delimiter:** only the immediately following pipe row can qualify as the separator; every cell must match the existing dash/alignment rule. A qualifying separator sets `header_found`.
+3. **Read table rows:** use the captured column indices; the first row for a duplicate S-id wins. The first non-pipe line after acceptance terminates scanning, so this is first-qualifying-table behavior.
+
+The state invariant needed between states 1 and 2 is that the three indices and candidate flag describe one contiguous header row only. Current code violates it: a pre-header non-pipe line clears `header_candidate` but leaves `id_col`, `status_col`, and `usedby_col` intact. Later pipe rows can complete those stale indices without containing all three names together. Also, the separator is checked cell-by-cell but its cell count is not compared with the candidate header width. These match the reported `FRegistryHeaderless` failures (including stale-column misbinding and wrong-width separators).
+
+## Minimal corrections; avoid parser redesign
+
+- On every non-pipe line before a header is accepted, reset `header_candidate`, all three column indices, and any stored candidate width. Keep the existing reset when a candidate is followed by a non-separator pipe row; that row may be considered afresh as a header. Capture the candidate row’s parsed cell count and accept the delimiter only when its count matches and its existing separator predicate holds. A malformed candidate/delimiter pair must not become a header; if no valid pair remains, retain the existing exit-2/no-verdict failure.
+- Keep the existing split/trim rules, exact header labels, first-qualifying-table behavior, and data-row/duplicate policy. There is no C3 requirement to add fence awareness, escaped-pipe parsing, blockquote support, a general Markdown parser, or body-row width validation; those would be unnecessary grammar redesign.
+- In `metadata_registry_check_source` (`tools/research-gate.sh:2472-2507`), the regex is followed by `source_scan=${source_scan#*"$source_match"}`. This removes the first literal copy of match text, not the actual matched span. When a terminal valid ID repeats the prefix of an earlier glued token, rescanning can start inside that token and invent an ID; it can also emit the same real occurrence again. This is the reported `FRegistryIdBoundary` counterexample. Advance by the exact match offset/span on the original value, or tokenize the value once under the existing ASCII/C-locale boundary rule. Preserve every genuine standalone occurrence exactly once; do not globally deduplicate equal IDs when they are separate occurrences. Keep the `S` + 3-or-more-digit rule.
+- `ptr_file_part` (`tools/research-gate.sh:573-576`) deliberately cuts at the first colon for citation anchors, and `is_denylist_path` (`:595-606`) applies its denylist to that shortened pointer path. The registry passes filesystem paths to it at `:2374-2383`; the metadata-entry reader does so at `:2582-2592`. A colon before a denylisted component therefore hides the remainder (as in the synthetic `a:b/.config/reg.md` class in `FRegistryRegistryDeny`). Add/use a filesystem-path check that matches the complete path for filesystem arguments, including raw, canonical, and opened-fd canonical paths before reading. Retain the current pointer helper for citation-pointer callers; changing its global colon semantics would break the separate pointer contract. The entry-reader call sites share the same path-vs-pointer bug and should use the filesystem form as well.
+
+Existing semantics to hold are visible in `metadata_registry_check_source` and `metadata_registry_entry_path` (`tools/research-gate.sh:2488-2521`): only leading `./` is normalized before exact `used-by` comparison against the entry path relative to `--root`. Existing selftests cover reordered columns plus a source-ID continuation, and first-duplicate-row wins (`tools/research-gate.sh:6229-6256`); preserve these.
+
+## Evidence, confidence, and unrun checks
+
+Failure receipts: `.ufo/waves/round-26/falsify/FRegistryHeaderless.md`, `FRegistryIdBoundary.md`, and `FRegistryRegistryDeny.md`; their reported commands and outcomes are accepted ground truth and were not rerun. Code locations above were directly read. No LSP device is mounted (`xd://lsp` returned “No such tool”); literal search was used only to locate code, not as semantic proof. No selftest, differential, build, lint, formatter, or runtime probe was run, and no tool was installed. Confidence is **high** for the three local root causes and the minimal state/reset requirements; broader Markdown grammar and whole-gate safety are not inferred.

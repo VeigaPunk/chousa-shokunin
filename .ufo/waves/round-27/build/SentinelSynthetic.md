@@ -1,0 +1,23 @@
+# SentinelSynthetic — round 27 attempt 1
+
+**Axes:** operability (test-harness boundaries only), freshness (not in assigned surface), calibration (C3). Static review only; no fixture, gate, selftest, build, lint, formatter, syscall, `/proc`, host-file, network, or live-process probe was run. No tools installed.
+
+## C3 raw-path boundary — high / denylist refusal is bypassable
+
+**Exploit path:** a local registry pathname such as synthetic `$WORK/a:b/.config/reg.md` contains a colon before the denylisted component. `ptr_file_part` truncates at the first colon (`tools/research-gate.sh:573-576`); `is_denylist_path` applies its deny patterns to that truncated value (`:595-606`). `metadata_registry_load` calls it with the raw registry path and canonical path at `:2374-2377`, and with the opened descriptor's canonical path at `:2380-2384`. The first two checks can therefore miss the protected suffix; the descriptor check also uses the same pointer-oriented helper.
+
+**Evidence / impact:** this exact input class is accepted ground truth in `.ufo/waves/round-26/falsify/FRegistryRegistryDeny.md:59-75,83-95`: B1–B6 used colon-prefixed synthetic paths, and the valid synthetic registry was opened/read and could yield CLEAN. Current source retains the helper boundary above. This permits denylisted bytes to be consumed as registry data; no claim about any host path was tested or made here.
+
+**Smallest remediation:** preserve the pointer-aware `ptr_file_part` behavior for citation-pointer inputs. Introduce/use a separate denylist predicate for raw filesystem paths that normalizes without splitting on `:`. Apply it to raw registry arguments, canonical filesystem paths, and the post-open descriptor canonical path before any content read. Keep citation handling explicit: extract a pointer's file component first, then check that resulting filesystem path; never globally change pointer parsing to fix raw-path checks. The analogous raw-path call sites in the metadata entry reader are `:2582-2587` and `:2589-2597`; use the same distinction there. Keep the descriptor check before its read.
+
+**Safe synthetic control:** in the selftest's private `$WORK` only, create a benign positive registry and a valid, harmless registry under a path with a colon before `.config/` (optionally a synthetic symlink to that target). Use only fake `S001`/`mined`/`used-by` content and an in-tree synthetic metadata entry. Require the positive control to retain its expected CLEAN result and the denylisted case to exit 2 with the denylist refusal and no `RESEARCH_GATE:` verdict. A valid table is important: if the path check regresses and parsing proceeds, it makes the bypass observable without secret-shaped content. Keep all fixture bytes synthetic. Do not use `strace`, `/proc`, real user paths, mounts, credentials, or external targets. The output assertion alone cannot establish absence of reads; source ordering must show raw/canonical denial before open and descriptor denial before read. No such test was run here.
+
+## C3 registry grammar and S-id controls
+
+Current `metadata_registry_load` clears `header_candidate` on non-table lines but retains column indices (`:2410-2415`); delimiter recognition checks each delimiter cell but does not compare delimiter width with header width (`:2443-2467`). Current selftests shown at `:6138-6237` exercise positive/semantic registry cases but not the reported headerless-break or colon-path refusals. Keep a synthetic valid-table control, then add: (1) a named header followed by blank/prose/fence break and a same-width headerless table, requiring usage exit 2/no verdict; (2) exact-width reordered-header positive behavior; (3) shorter and longer delimiter rows, rejected as no valid table. These isolate state reset and width equality without touching the host registry.
+
+`metadata_registry_check_source` still advances with a literal substring removal (`:2472-2504`), the issue covered by `.ufo/waves/round-26/falsify/FRegistryIdBoundary.md:30-46,76-82`. Add synthetic source cases where a glued token (`S001S002`) precedes a real standalone `S001` at end-of-value, plus ASCII boundary controls and a Unicode-digit lookalike. Assert the exact source IDs/finding multiplicity: only standalone ASCII IDs may be considered, and consumed text must not be rescanned to invent or duplicate an occurrence. Keep the existing exact `used-by` rule and all prior selftest identities/assertions intact.
+
+## Scope and checks
+
+This is scoped defensive advice, not a verification claim. C1 and C2 behavior were not assessed. No production source or sibling artifact was edited. Main should run the assigned synthetic regressions and full verification once after integration; this seat has no observed pass/fail result.
