@@ -1,0 +1,24 @@
+{
+  "gate_sha256": "ca39d14db907ec3fcf41ff0593658b4d6831fa82452944fe1f58463364992f84",
+  "script_sha256": "8d841d6af11eeeedd7aceb094f1d73e2ef1da81911f7730b022811c89f6c4093",
+  "total": 26,
+  "mismatches": 4,
+  "claims": {
+    "C1": {
+      "total": 5,
+      "mismatches": 1
+    },
+    "C2": {
+      "total": 8,
+      "mismatches": 1
+    },
+    "C3": {
+      "total": 13,
+      "mismatches": 2
+    }
+  }
+}
+MISMATCH C1 matcher-fault-fails-closed FC1CorrectUsageWithHelp00 exit 0 != 1
+MISMATCH C2 scale-4mib-leading-zeros FC2Allzero128K07 exit 124 != 0; missing 'due=2026-04-02 freshness=current'; count '^RESEARCH_GATE: ': 0 != 1; count '^META entry=': 0 != 1
+MISMATCH C3 escaped-pipe-width FC3ValidTable27 exit 2 != 0; missing 'findings=0 drift=0'; count '^RESEARCH_GATE: ': 0 != 1
+MISMATCH C3 escaped-pipe-overwide FC3ValidTable27 exit 0 != 2; missing 'metadata registry has no table'; count '^RESEARCH_GATE: ': 1 != 0

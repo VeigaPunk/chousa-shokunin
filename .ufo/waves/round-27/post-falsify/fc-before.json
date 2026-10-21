@@ -1,0 +1,297 @@
+{
+  "gate_sha256": "ca39d14db907ec3fcf41ff0593658b4d6831fa82452944fe1f58463364992f84",
+  "script_sha256": "8d841d6af11eeeedd7aceb094f1d73e2ef1da81911f7730b022811c89f6c4093",
+  "total": 26,
+  "mismatches": 4,
+  "claims": {
+    "C1": {
+      "total": 5,
+      "mismatches": 1
+    },
+    "C2": {
+      "total": 8,
+      "mismatches": 1
+    },
+    "C3": {
+      "total": 13,
+      "mismatches": 2
+    }
+  },
+  "results": [
+    {
+      "claim": "C1",
+      "name": "matcher-fault-fails-closed",
+      "report": "FC1CorrectUsageWithHelp00",
+      "expected_exit": 1,
+      "actual_exit": 0,
+      "errors": [
+        "exit 0 != 1"
+      ],
+      "stdout": "ok-case  1  fixture                      exit=2\n",
+      "stderr": ""
+    },
+    {
+      "claim": "C1",
+      "name": "indented-mention-is-not-record",
+      "report": "FC1NonrecordMentionIsNotV05",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "errors": [],
+      "stdout": "ok-case  1  fixture                      exit=2\n",
+      "stderr": ""
+    },
+    {
+      "claim": "C1",
+      "name": "column0-other-record-rejected",
+      "report": "FC1NonrecordMentionIsNotV05",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "errors": [],
+      "stdout": "FAIL-case fixture                      rc=2 expected=expected diagnostic verdicts=1\n    | expected diagnostic\n    | usage: fixture\n    | Verdict: RESEARCH_GATE: CLEAN|DRIFT\n    | RESEARCH_GATE: PENDING\n",
+      "stderr": ""
+    },
+    {
+      "claim": "C1",
+      "name": "different-diagnostic-rejected",
+      "report": "FC1RejectMissingDiagnosti04",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "errors": [],
+      "stdout": "FAIL-case fixture                      rc=2 expected=expected diagnostic verdicts=0\n    | other diagnostic\n    | usage: fixture\n",
+      "stderr": ""
+    },
+    {
+      "claim": "C1",
+      "name": "exit-zero-rejected",
+      "report": "FC1RejectWrongExit03",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "errors": [],
+      "stdout": "FAIL-case fixture                      rc=0 expected=expected diagnostic verdicts=0\n    | expected diagnostic\n    | usage: fixture\n    | Verdict: RESEARCH_GATE: CLEAN|DRIFT\n",
+      "stderr": ""
+    },
+    {
+      "claim": "C2",
+      "name": "as-of-invalid-leap-2100-02-29",
+      "report": "FC2Leap210019",
+      "expected_exit": 2,
+      "actual_exit": 2,
+      "errors": [],
+      "stdout": "",
+      "stderr": "ust appear verbatim in sources at token boundaries; sources are\n  local files only.\n  Chain mode: each hop with status=resolved must cite a source (a source id\n  from ## Sources, or a local path) plus an anchor — an anchor_kind column\n  (heading|quote|line) with an anchor column, or a to fragment\n  path#kind:text (bare #text = heading). The anchor must appear in the cited\n  source: headings by text, quotes verbatim at token boundaries, lines as\n  whole lines.\n  Unresolved/marked hops stay exempt but counted. Sources obey the same\n  boundary as verify-claims (local, canonicalized, never fetched).\n  Sources over 8 MiB are refused unread (CLAIM_SOURCE_READ_TOO_LARGE;\n  CHAIN_SOURCE_READ_TOO_LARGE in chain mode). Multi-linked sources are\n  refused unread (CLAIM_SOURCE_MULTILINKED; CHAIN_SOURCE_MULTILINKED in\n  chain mode) — a hardlink alias can name out-of-corpus content. Cross-device\n  sources are refused unread (CLAIM_SOURCE_CROSS_DEVICE;\n  CHAIN_SOURCE_CROSS_DEVICE in chain mode) — a bind alias keeps its path and\n  nlink but not its superblock device; the comparison is against the\n  resolving root's device.\n  A token boundary is a file/line edge, ASCII whitespace or ASCII\n  punctuation at the match's outer edges; a word-internal hyphen or\n  apostrophe is not a boundary, so a truncated quote (mid-word), a padded\n  extra word running into a longer token, or a possessive join is a miss.\n  Multi-line spans are delimited by their first and last character only.\n  Sweeps mode: every ## Rejections row needs a non-empty reason and a\n  non-empty flip-condition (flip/flip_condition column, or any column whose\n  name contains flip/falsif/reversal). Negative sweeps must name where they\n  looked (a where/looked_at column, or a clean sweep cell): local path sets\n  (comma-separated paths/globs) are re-run — any hit is SWEEP_CLAIM_FALSE\n  naming the hit, zero hits verify; URLs, external:/web:/session: names and\n  declared source ids count as exempt; a sweep naming nowhere drifts.\n  Summary: VERIFIED_SWEEPS=N/M REJECTIONS_OK=K/L.\n  Integrity mode: every cross-section reference token must resolve to a row\n  that declares it — source ids from ## Sources, claim ids from ## Claims and\n  ## Negatives, sweep ids from ## Sweeps — read from chain from/to/claim,\n  claims sweep/source/src/ref/cite/pointer, negatives sweep/where, sweeps\n  claim_id/where and rejections ref/reference cells. An undeclared id in the\n  S<digit>… / C|N<digit>… / SW<digit>… shapes is REF_UNRESOLVED (drift);\n  declared ids resolve; non-local namings and rows marked\n  unresolved/blocked-no-fetch/labelled-dead/not-applicable/rejected stay\n  exempt but counted; local paths/globs and prose are not integrity tokens.\n  Summary: INTEGRITY refs=N resolved=M unresolved=K (exempt = N−M−K).\n  verify-all composes structure + claims + chain + sweeps + integrity over ONE\n  input: absent sections are reported absent (never drift by themselves); the\n  composed verdict is DRIFT iff any run section drifts, exit 1. --claims\n  binds a claims file to a record; a record may also name one in a ## Meta\n  row (claims/claims_file/claims-file/claimset); a claims JSONL passed as\n  the input is its own claims surface. --json PATH appends (never rewrites)\n  one JSON line recording UTC, record + gate SHA-256, per-section tallies\n  and the composed verdict.\n  Pin/drift: --pin PATH writes a behavioral baseline of the gate's canonical\n  reference run (verify-all over a hermetic fixture the gate writes itself,\n  plus that run's --json manifest line), with the declared volatile contract\n  (ts, gate_sha256) recorded in its header; exit 0, or 2 when the capture or\n  the write fails. --drift PATH re-runs the same invocation and byte-compares\n  the normalized captures: GATE_DRIFT: none exit 0, GATE_DRIFT: <changed\n  tokens> exit 1, baseline missing/unreadable/malformed (or a failed capture)\n  exit 2. Neither mode prints a RESEARCH_GATE line.\nVerdict: RESEARCH_GATE: CLEAN|DRIFT\nExit:    0 CLEAN | 1 DRIFT | 2 setup/usage\n"
+    },
+    {
+      "claim": "C2",
+      "name": "as-of-invalid-leap-1900-02-29",
+      "report": "FC2Leap190016",
+      "expected_exit": 2,
+      "actual_exit": 2,
+      "errors": [],
+      "stdout": "",
+      "stderr": "ust appear verbatim in sources at token boundaries; sources are\n  local files only.\n  Chain mode: each hop with status=resolved must cite a source (a source id\n  from ## Sources, or a local path) plus an anchor — an anchor_kind column\n  (heading|quote|line) with an anchor column, or a to fragment\n  path#kind:text (bare #text = heading). The anchor must appear in the cited\n  source: headings by text, quotes verbatim at token boundaries, lines as\n  whole lines.\n  Unresolved/marked hops stay exempt but counted. Sources obey the same\n  boundary as verify-claims (local, canonicalized, never fetched).\n  Sources over 8 MiB are refused unread (CLAIM_SOURCE_READ_TOO_LARGE;\n  CHAIN_SOURCE_READ_TOO_LARGE in chain mode). Multi-linked sources are\n  refused unread (CLAIM_SOURCE_MULTILINKED; CHAIN_SOURCE_MULTILINKED in\n  chain mode) — a hardlink alias can name out-of-corpus content. Cross-device\n  sources are refused unread (CLAIM_SOURCE_CROSS_DEVICE;\n  CHAIN_SOURCE_CROSS_DEVICE in chain mode) — a bind alias keeps its path and\n  nlink but not its superblock device; the comparison is against the\n  resolving root's device.\n  A token boundary is a file/line edge, ASCII whitespace or ASCII\n  punctuation at the match's outer edges; a word-internal hyphen or\n  apostrophe is not a boundary, so a truncated quote (mid-word), a padded\n  extra word running into a longer token, or a possessive join is a miss.\n  Multi-line spans are delimited by their first and last character only.\n  Sweeps mode: every ## Rejections row needs a non-empty reason and a\n  non-empty flip-condition (flip/flip_condition column, or any column whose\n  name contains flip/falsif/reversal). Negative sweeps must name where they\n  looked (a where/looked_at column, or a clean sweep cell): local path sets\n  (comma-separated paths/globs) are re-run — any hit is SWEEP_CLAIM_FALSE\n  naming the hit, zero hits verify; URLs, external:/web:/session: names and\n  declared source ids count as exempt; a sweep naming nowhere drifts.\n  Summary: VERIFIED_SWEEPS=N/M REJECTIONS_OK=K/L.\n  Integrity mode: every cross-section reference token must resolve to a row\n  that declares it — source ids from ## Sources, claim ids from ## Claims and\n  ## Negatives, sweep ids from ## Sweeps — read from chain from/to/claim,\n  claims sweep/source/src/ref/cite/pointer, negatives sweep/where, sweeps\n  claim_id/where and rejections ref/reference cells. An undeclared id in the\n  S<digit>… / C|N<digit>… / SW<digit>… shapes is REF_UNRESOLVED (drift);\n  declared ids resolve; non-local namings and rows marked\n  unresolved/blocked-no-fetch/labelled-dead/not-applicable/rejected stay\n  exempt but counted; local paths/globs and prose are not integrity tokens.\n  Summary: INTEGRITY refs=N resolved=M unresolved=K (exempt = N−M−K).\n  verify-all composes structure + claims + chain + sweeps + integrity over ONE\n  input: absent sections are reported absent (never drift by themselves); the\n  composed verdict is DRIFT iff any run section drifts, exit 1. --claims\n  binds a claims file to a record; a record may also name one in a ## Meta\n  row (claims/claims_file/claims-file/claimset); a claims JSONL passed as\n  the input is its own claims surface. --json PATH appends (never rewrites)\n  one JSON line recording UTC, record + gate SHA-256, per-section tallies\n  and the composed verdict.\n  Pin/drift: --pin PATH writes a behavioral baseline of the gate's canonical\n  reference run (verify-all over a hermetic fixture the gate writes itself,\n  plus that run's --json manifest line), with the declared volatile contract\n  (ts, gate_sha256) recorded in its header; exit 0, or 2 when the capture or\n  the write fails. --drift PATH re-runs the same invocation and byte-compares\n  the normalized captures: GATE_DRIFT: none exit 0, GATE_DRIFT: <changed\n  tokens> exit 1, baseline missing/unreadable/malformed (or a failed capture)\n  exit 2. Neither mode prints a RESEARCH_GATE line.\nVerdict: RESEARCH_GATE: CLEAN|DRIFT\nExit:    0 CLEAN | 1 DRIFT | 2 setup/usage\n"
+    },
+    {
+      "claim": "C2",
+      "name": "as-of-valid-leap-2000-02-29",
+      "report": "FC2Leap200017",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "errors": [],
+      "stdout": "research-gate v2 — ts=2026-10-21T16:34:18Z — mode=verify-metadata — path=/tmp/chousa-r27-falsify-controls-1qk6lmst/corpus/knowledge/entry.md — root=/tmp/chousa-r27-falsify-controls-1qk6lmst\nMETA entry=entry.md source=present verified_at=dated recheck=scheduled due=2000-05-01 freshness=current verdict=clean\nMETADATA_COMPLETE=1/1\nRESEARCH_GATE: CLEAN (entries=1 complete=1 findings=0 drift=0)\n",
+      "stderr": ""
+    },
+    {
+      "claim": "C2",
+      "name": "one-significant-after-zeros",
+      "report": "FC2Leading128KZeros06",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "errors": [],
+      "stdout": "research-gate v2 — ts=2026-10-21T16:34:18Z — mode=verify-metadata — path=/tmp/chousa-r27-falsify-controls-1qk6lmst/corpus/knowledge/entry.md — root=/tmp/chousa-r27-falsify-controls-1qk6lmst\nMETA entry=entry.md source=present verified_at=dated recheck=scheduled due=2026-01-08 freshness=current verdict=clean\nMETADATA_COMPLETE=1/1\nRESEARCH_GATE: CLEAN (entries=1 complete=1 findings=0 drift=0)\n",
+      "stderr": ""
+    },
+    {
+      "claim": "C2",
+      "name": "twenty-char-value-seven",
+      "report": "FC2Leading128KZeros06",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "errors": [],
+      "stdout": "research-gate v2 — ts=2026-10-21T16:34:18Z — mode=verify-metadata — path=/tmp/chousa-r27-falsify-controls-1qk6lmst/corpus/knowledge/entry.md — root=/tmp/chousa-r27-falsify-controls-1qk6lmst\nMETA entry=entry.md source=present verified_at=dated recheck=scheduled due=2026-01-08 freshness=current verdict=clean\nMETADATA_COMPLETE=1/1\nRESEARCH_GATE: CLEAN (entries=1 complete=1 findings=0 drift=0)\n",
+      "stderr": ""
+    },
+    {
+      "claim": "C2",
+      "name": "eight-digit-unknown",
+      "report": "FC2HugeMagnitude08",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "errors": [],
+      "stdout": "research-gate v2 — ts=2026-10-21T16:34:19Z — mode=verify-metadata — path=/tmp/chousa-r27-falsify-controls-1qk6lmst/corpus/knowledge/entry.md — root=/tmp/chousa-r27-falsify-controls-1qk6lmst\nMETA entry=entry.md source=present verified_at=dated recheck=scheduled due=unknown freshness=unknown verdict=clean\nMETADATA_COMPLETE=1/1\nRESEARCH_GATE: CLEAN (entries=1 complete=1 findings=0 drift=0)\n",
+      "stderr": ""
+    },
+    {
+      "claim": "C2",
+      "name": "nineteen-digit-unknown",
+      "report": "FC2HugeMagnitude08",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "errors": [],
+      "stdout": "research-gate v2 — ts=2026-10-21T16:34:19Z — mode=verify-metadata — path=/tmp/chousa-r27-falsify-controls-1qk6lmst/corpus/knowledge/entry.md — root=/tmp/chousa-r27-falsify-controls-1qk6lmst\nMETA entry=entry.md source=present verified_at=dated recheck=scheduled due=unknown freshness=unknown verdict=clean\nMETADATA_COMPLETE=1/1\nRESEARCH_GATE: CLEAN (entries=1 complete=1 findings=0 drift=0)\n",
+      "stderr": ""
+    },
+    {
+      "claim": "C2",
+      "name": "scale-4mib-leading-zeros",
+      "report": "FC2Allzero128K07",
+      "expected_exit": 0,
+      "actual_exit": 124,
+      "errors": [
+        "exit 124 != 0",
+        "missing 'due=2026-04-02 freshness=current'",
+        "count '^RESEARCH_GATE: ': 0 != 1",
+        "count '^META entry=': 0 != 1"
+      ],
+      "stdout": "",
+      "stderr": "control timed out after 60s"
+    },
+    {
+      "claim": "C3",
+      "name": "escaped-pipe-width",
+      "report": "FC3ValidTable27",
+      "expected_exit": 0,
+      "actual_exit": 2,
+      "errors": [
+        "exit 2 != 0",
+        "missing 'findings=0 drift=0'",
+        "count '^RESEARCH_GATE: ': 0 != 1"
+      ],
+      "stdout": "",
+      "stderr": "ust appear verbatim in sources at token boundaries; sources are\n  local files only.\n  Chain mode: each hop with status=resolved must cite a source (a source id\n  from ## Sources, or a local path) plus an anchor — an anchor_kind column\n  (heading|quote|line) with an anchor column, or a to fragment\n  path#kind:text (bare #text = heading). The anchor must appear in the cited\n  source: headings by text, quotes verbatim at token boundaries, lines as\n  whole lines.\n  Unresolved/marked hops stay exempt but counted. Sources obey the same\n  boundary as verify-claims (local, canonicalized, never fetched).\n  Sources over 8 MiB are refused unread (CLAIM_SOURCE_READ_TOO_LARGE;\n  CHAIN_SOURCE_READ_TOO_LARGE in chain mode). Multi-linked sources are\n  refused unread (CLAIM_SOURCE_MULTILINKED; CHAIN_SOURCE_MULTILINKED in\n  chain mode) — a hardlink alias can name out-of-corpus content. Cross-device\n  sources are refused unread (CLAIM_SOURCE_CROSS_DEVICE;\n  CHAIN_SOURCE_CROSS_DEVICE in chain mode) — a bind alias keeps its path and\n  nlink but not its superblock device; the comparison is against the\n  resolving root's device.\n  A token boundary is a file/line edge, ASCII whitespace or ASCII\n  punctuation at the match's outer edges; a word-internal hyphen or\n  apostrophe is not a boundary, so a truncated quote (mid-word), a padded\n  extra word running into a longer token, or a possessive join is a miss.\n  Multi-line spans are delimited by their first and last character only.\n  Sweeps mode: every ## Rejections row needs a non-empty reason and a\n  non-empty flip-condition (flip/flip_condition column, or any column whose\n  name contains flip/falsif/reversal). Negative sweeps must name where they\n  looked (a where/looked_at column, or a clean sweep cell): local path sets\n  (comma-separated paths/globs) are re-run — any hit is SWEEP_CLAIM_FALSE\n  naming the hit, zero hits verify; URLs, external:/web:/session: names and\n  declared source ids count as exempt; a sweep naming nowhere drifts.\n  Summary: VERIFIED_SWEEPS=N/M REJECTIONS_OK=K/L.\n  Integrity mode: every cross-section reference token must resolve to a row\n  that declares it — source ids from ## Sources, claim ids from ## Claims and\n  ## Negatives, sweep ids from ## Sweeps — read from chain from/to/claim,\n  claims sweep/source/src/ref/cite/pointer, negatives sweep/where, sweeps\n  claim_id/where and rejections ref/reference cells. An undeclared id in the\n  S<digit>… / C|N<digit>… / SW<digit>… shapes is REF_UNRESOLVED (drift);\n  declared ids resolve; non-local namings and rows marked\n  unresolved/blocked-no-fetch/labelled-dead/not-applicable/rejected stay\n  exempt but counted; local paths/globs and prose are not integrity tokens.\n  Summary: INTEGRITY refs=N resolved=M unresolved=K (exempt = N−M−K).\n  verify-all composes structure + claims + chain + sweeps + integrity over ONE\n  input: absent sections are reported absent (never drift by themselves); the\n  composed verdict is DRIFT iff any run section drifts, exit 1. --claims\n  binds a claims file to a record; a record may also name one in a ## Meta\n  row (claims/claims_file/claims-file/claimset); a claims JSONL passed as\n  the input is its own claims surface. --json PATH appends (never rewrites)\n  one JSON line recording UTC, record + gate SHA-256, per-section tallies\n  and the composed verdict.\n  Pin/drift: --pin PATH writes a behavioral baseline of the gate's canonical\n  reference run (verify-all over a hermetic fixture the gate writes itself,\n  plus that run's --json manifest line), with the declared volatile contract\n  (ts, gate_sha256) recorded in its header; exit 0, or 2 when the capture or\n  the write fails. --drift PATH re-runs the same invocation and byte-compares\n  the normalized captures: GATE_DRIFT: none exit 0, GATE_DRIFT: <changed\n  tokens> exit 1, baseline missing/unreadable/malformed (or a failed capture)\n  exit 2. Neither mode prints a RESEARCH_GATE line.\nVerdict: RESEARCH_GATE: CLEAN|DRIFT\nExit:    0 CLEAN | 1 DRIFT | 2 setup/usage\n"
+    },
+    {
+      "claim": "C3",
+      "name": "escaped-pipe-overwide",
+      "report": "FC3ValidTable27",
+      "expected_exit": 2,
+      "actual_exit": 0,
+      "errors": [
+        "exit 0 != 2",
+        "missing 'metadata registry has no table'",
+        "count '^RESEARCH_GATE: ': 1 != 0"
+      ],
+      "stdout": "research-gate v2 — ts=2026-10-21T16:35:19Z — mode=verify-metadata — path=/tmp/chousa-r27-falsify-controls-1qk6lmst/corpus/knowledge/entry.md — root=/tmp/chousa-r27-falsify-controls-1qk6lmst\nMETA entry=entry.md source=present verified_at=dated recheck=scheduled verdict=clean\nMETADATA_COMPLETE=1/1\nRESEARCH_GATE: CLEAN (entries=1 complete=1 findings=0 drift=0)\n",
+      "stderr": ""
+    },
+    {
+      "claim": "C3",
+      "name": "mixed-header-outer-only",
+      "report": "FC3ValidTable27",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "errors": [],
+      "stdout": "research-gate v2 — ts=2026-10-21T16:35:19Z — mode=verify-metadata — path=/tmp/chousa-r27-falsify-controls-1qk6lmst/corpus/knowledge/entry.md — root=/tmp/chousa-r27-falsify-controls-1qk6lmst\nMETA entry=entry.md source=present verified_at=dated recheck=scheduled verdict=clean\nMETADATA_COMPLETE=1/1\nRESEARCH_GATE: CLEAN (entries=1 complete=1 findings=0 drift=0)\n",
+      "stderr": ""
+    },
+    {
+      "claim": "C3",
+      "name": "mixed-delimiter-outer-only",
+      "report": "FC3ValidTable27",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "errors": [],
+      "stdout": "research-gate v2 — ts=2026-10-21T16:35:19Z — mode=verify-metadata — path=/tmp/chousa-r27-falsify-controls-1qk6lmst/corpus/knowledge/entry.md — root=/tmp/chousa-r27-falsify-controls-1qk6lmst\nMETA entry=entry.md source=present verified_at=dated recheck=scheduled verdict=clean\nMETADATA_COMPLETE=1/1\nRESEARCH_GATE: CLEAN (entries=1 complete=1 findings=0 drift=0)\n",
+      "stderr": ""
+    },
+    {
+      "claim": "C3",
+      "name": "mixed-lead-pipe-header",
+      "report": "FC3ValidTable27",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "errors": [],
+      "stdout": "research-gate v2 — ts=2026-10-21T16:35:19Z — mode=verify-metadata — path=/tmp/chousa-r27-falsify-controls-1qk6lmst/corpus/knowledge/entry.md — root=/tmp/chousa-r27-falsify-controls-1qk6lmst\nMETA entry=entry.md source=present verified_at=dated recheck=scheduled verdict=clean\nMETADATA_COMPLETE=1/1\nRESEARCH_GATE: CLEAN (entries=1 complete=1 findings=0 drift=0)\n",
+      "stderr": ""
+    },
+    {
+      "claim": "C3",
+      "name": "mixed-lead-pipe-delimiter",
+      "report": "FC3ValidTable27",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "errors": [],
+      "stdout": "research-gate v2 — ts=2026-10-21T16:35:19Z — mode=verify-metadata — path=/tmp/chousa-r27-falsify-controls-1qk6lmst/corpus/knowledge/entry.md — root=/tmp/chousa-r27-falsify-controls-1qk6lmst\nMETA entry=entry.md source=present verified_at=dated recheck=scheduled verdict=clean\nMETADATA_COMPLETE=1/1\nRESEARCH_GATE: CLEAN (entries=1 complete=1 findings=0 drift=0)\n",
+      "stderr": ""
+    },
+    {
+      "claim": "C3",
+      "name": "mixed-trail-pipe-delimiter",
+      "report": "FC3ValidTable27",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "errors": [],
+      "stdout": "research-gate v2 — ts=2026-10-21T16:35:19Z — mode=verify-metadata — path=/tmp/chousa-r27-falsify-controls-1qk6lmst/corpus/knowledge/entry.md — root=/tmp/chousa-r27-falsify-controls-1qk6lmst\nMETA entry=entry.md source=present verified_at=dated recheck=scheduled verdict=clean\nMETADATA_COMPLETE=1/1\nRESEARCH_GATE: CLEAN (entries=1 complete=1 findings=0 drift=0)\n",
+      "stderr": ""
+    },
+    {
+      "claim": "C3",
+      "name": "delimiter-after-blank",
+      "report": "FC3HeaderBreakBlank28",
+      "expected_exit": 2,
+      "actual_exit": 2,
+      "errors": [],
+      "stdout": "",
+      "stderr": "ust appear verbatim in sources at token boundaries; sources are\n  local files only.\n  Chain mode: each hop with status=resolved must cite a source (a source id\n  from ## Sources, or a local path) plus an anchor — an anchor_kind column\n  (heading|quote|line) with an anchor column, or a to fragment\n  path#kind:text (bare #text = heading). The anchor must appear in the cited\n  source: headings by text, quotes verbatim at token boundaries, lines as\n  whole lines.\n  Unresolved/marked hops stay exempt but counted. Sources obey the same\n  boundary as verify-claims (local, canonicalized, never fetched).\n  Sources over 8 MiB are refused unread (CLAIM_SOURCE_READ_TOO_LARGE;\n  CHAIN_SOURCE_READ_TOO_LARGE in chain mode). Multi-linked sources are\n  refused unread (CLAIM_SOURCE_MULTILINKED; CHAIN_SOURCE_MULTILINKED in\n  chain mode) — a hardlink alias can name out-of-corpus content. Cross-device\n  sources are refused unread (CLAIM_SOURCE_CROSS_DEVICE;\n  CHAIN_SOURCE_CROSS_DEVICE in chain mode) — a bind alias keeps its path and\n  nlink but not its superblock device; the comparison is against the\n  resolving root's device.\n  A token boundary is a file/line edge, ASCII whitespace or ASCII\n  punctuation at the match's outer edges; a word-internal hyphen or\n  apostrophe is not a boundary, so a truncated quote (mid-word), a padded\n  extra word running into a longer token, or a possessive join is a miss.\n  Multi-line spans are delimited by their first and last character only.\n  Sweeps mode: every ## Rejections row needs a non-empty reason and a\n  non-empty flip-condition (flip/flip_condition column, or any column whose\n  name contains flip/falsif/reversal). Negative sweeps must name where they\n  looked (a where/looked_at column, or a clean sweep cell): local path sets\n  (comma-separated paths/globs) are re-run — any hit is SWEEP_CLAIM_FALSE\n  naming the hit, zero hits verify; URLs, external:/web:/session: names and\n  declared source ids count as exempt; a sweep naming nowhere drifts.\n  Summary: VERIFIED_SWEEPS=N/M REJECTIONS_OK=K/L.\n  Integrity mode: every cross-section reference token must resolve to a row\n  that declares it — source ids from ## Sources, claim ids from ## Claims and\n  ## Negatives, sweep ids from ## Sweeps — read from chain from/to/claim,\n  claims sweep/source/src/ref/cite/pointer, negatives sweep/where, sweeps\n  claim_id/where and rejections ref/reference cells. An undeclared id in the\n  S<digit>… / C|N<digit>… / SW<digit>… shapes is REF_UNRESOLVED (drift);\n  declared ids resolve; non-local namings and rows marked\n  unresolved/blocked-no-fetch/labelled-dead/not-applicable/rejected stay\n  exempt but counted; local paths/globs and prose are not integrity tokens.\n  Summary: INTEGRITY refs=N resolved=M unresolved=K (exempt = N−M−K).\n  verify-all composes structure + claims + chain + sweeps + integrity over ONE\n  input: absent sections are reported absent (never drift by themselves); the\n  composed verdict is DRIFT iff any run section drifts, exit 1. --claims\n  binds a claims file to a record; a record may also name one in a ## Meta\n  row (claims/claims_file/claims-file/claimset); a claims JSONL passed as\n  the input is its own claims surface. --json PATH appends (never rewrites)\n  one JSON line recording UTC, record + gate SHA-256, per-section tallies\n  and the composed verdict.\n  Pin/drift: --pin PATH writes a behavioral baseline of the gate's canonical\n  reference run (verify-all over a hermetic fixture the gate writes itself,\n  plus that run's --json manifest line), with the declared volatile contract\n  (ts, gate_sha256) recorded in its header; exit 0, or 2 when the capture or\n  the write fails. --drift PATH re-runs the same invocation and byte-compares\n  the normalized captures: GATE_DRIFT: none exit 0, GATE_DRIFT: <changed\n  tokens> exit 1, baseline missing/unreadable/malformed (or a failed capture)\n  exit 2. Neither mode prints a RESEARCH_GATE line.\nVerdict: RESEARCH_GATE: CLEAN|DRIFT\nExit:    0 CLEAN | 1 DRIFT | 2 setup/usage\n"
+    },
+    {
+      "claim": "C3",
+      "name": "valid-table-consulted",
+      "report": "FC3ValidTable27",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "errors": [],
+      "stdout": "research-gate v2 — ts=2026-10-21T16:35:19Z — mode=verify-metadata — path=/tmp/chousa-r27-falsify-controls-1qk6lmst/corpus/knowledge/entry.md — root=/tmp/chousa-r27-falsify-controls-1qk6lmst\nMETA entry=entry.md source=present verified_at=dated recheck=scheduled verdict=clean\nMETADATA_COMPLETE=1/1\nRESEARCH_GATE: CLEAN (entries=1 complete=1 findings=0 drift=0)\n",
+      "stderr": ""
+    },
+    {
+      "claim": "C3",
+      "name": "valid-table-queued-twin",
+      "report": "FC3ValidTable27",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "errors": [],
+      "stdout": "research-gate v2 — ts=2026-10-21T16:35:19Z — mode=verify-metadata — path=/tmp/chousa-r27-falsify-controls-1qk6lmst/corpus/knowledge/entry.md — root=/tmp/chousa-r27-falsify-controls-1qk6lmst\nMETA entry=entry.md source=present verified_at=dated recheck=scheduled verdict=drift\nFINDING META_SOURCE_NOT_MINED severity=warn surface=metadata obs=entry=entry.md source_id=S001 registry row is not mined\nMETADATA_COMPLETE=1/1\nRESEARCH_GATE: DRIFT (entries=1 complete=1 findings=1 drift=1)\n",
+      "stderr": ""
+    },
+    {
+      "claim": "C3",
+      "name": "registry-raw-leg-only",
+      "report": "FC3RegistryColonDeniedCan48",
+      "expected_exit": 2,
+      "actual_exit": 2,
+      "errors": [],
+      "stdout": "",
+      "stderr": "ust appear verbatim in sources at token boundaries; sources are\n  local files only.\n  Chain mode: each hop with status=resolved must cite a source (a source id\n  from ## Sources, or a local path) plus an anchor — an anchor_kind column\n  (heading|quote|line) with an anchor column, or a to fragment\n  path#kind:text (bare #text = heading). The anchor must appear in the cited\n  source: headings by text, quotes verbatim at token boundaries, lines as\n  whole lines.\n  Unresolved/marked hops stay exempt but counted. Sources obey the same\n  boundary as verify-claims (local, canonicalized, never fetched).\n  Sources over 8 MiB are refused unread (CLAIM_SOURCE_READ_TOO_LARGE;\n  CHAIN_SOURCE_READ_TOO_LARGE in chain mode). Multi-linked sources are\n  refused unread (CLAIM_SOURCE_MULTILINKED; CHAIN_SOURCE_MULTILINKED in\n  chain mode) — a hardlink alias can name out-of-corpus content. Cross-device\n  sources are refused unread (CLAIM_SOURCE_CROSS_DEVICE;\n  CHAIN_SOURCE_CROSS_DEVICE in chain mode) — a bind alias keeps its path and\n  nlink but not its superblock device; the comparison is against the\n  resolving root's device.\n  A token boundary is a file/line edge, ASCII whitespace or ASCII\n  punctuation at the match's outer edges; a word-internal hyphen or\n  apostrophe is not a boundary, so a truncated quote (mid-word), a padded\n  extra word running into a longer token, or a possessive join is a miss.\n  Multi-line spans are delimited by their first and last character only.\n  Sweeps mode: every ## Rejections row needs a non-empty reason and a\n  non-empty flip-condition (flip/flip_condition column, or any column whose\n  name contains flip/falsif/reversal). Negative sweeps must name where they\n  looked (a where/looked_at column, or a clean sweep cell): local path sets\n  (comma-separated paths/globs) are re-run — any hit is SWEEP_CLAIM_FALSE\n  naming the hit, zero hits verify; URLs, external:/web:/session: names and\n  declared source ids count as exempt; a sweep naming nowhere drifts.\n  Summary: VERIFIED_SWEEPS=N/M REJECTIONS_OK=K/L.\n  Integrity mode: every cross-section reference token must resolve to a row\n  that declares it — source ids from ## Sources, claim ids from ## Claims and\n  ## Negatives, sweep ids from ## Sweeps — read from chain from/to/claim,\n  claims sweep/source/src/ref/cite/pointer, negatives sweep/where, sweeps\n  claim_id/where and rejections ref/reference cells. An undeclared id in the\n  S<digit>… / C|N<digit>… / SW<digit>… shapes is REF_UNRESOLVED (drift);\n  declared ids resolve; non-local namings and rows marked\n  unresolved/blocked-no-fetch/labelled-dead/not-applicable/rejected stay\n  exempt but counted; local paths/globs and prose are not integrity tokens.\n  Summary: INTEGRITY refs=N resolved=M unresolved=K (exempt = N−M−K).\n  verify-all composes structure + claims + chain + sweeps + integrity over ONE\n  input: absent sections are reported absent (never drift by themselves); the\n  composed verdict is DRIFT iff any run section drifts, exit 1. --claims\n  binds a claims file to a record; a record may also name one in a ## Meta\n  row (claims/claims_file/claims-file/claimset); a claims JSONL passed as\n  the input is its own claims surface. --json PATH appends (never rewrites)\n  one JSON line recording UTC, record + gate SHA-256, per-section tallies\n  and the composed verdict.\n  Pin/drift: --pin PATH writes a behavioral baseline of the gate's canonical\n  reference run (verify-all over a hermetic fixture the gate writes itself,\n  plus that run's --json manifest line), with the declared volatile contract\n  (ts, gate_sha256) recorded in its header; exit 0, or 2 when the capture or\n  the write fails. --drift PATH re-runs the same invocation and byte-compares\n  the normalized captures: GATE_DRIFT: none exit 0, GATE_DRIFT: <changed\n  tokens> exit 1, baseline missing/unreadable/malformed (or a failed capture)\n  exit 2. Neither mode prints a RESEARCH_GATE line.\nVerdict: RESEARCH_GATE: CLEAN|DRIFT\nExit:    0 CLEAN | 1 DRIFT | 2 setup/usage\n"
+    },
+    {
+      "claim": "C3",
+      "name": "entry-raw-leg-only-reason",
+      "report": "FC3EntryColonDeniedCompon50",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "errors": [],
+      "stdout": "research-gate v2 — ts=2026-10-21T16:35:19Z — mode=verify-metadata — path=/tmp/chousa-r27-falsify-controls-1qk6lmst/synthetic:fixture/.config/entry-link.md — root=/tmp/chousa-r27-falsify-controls-1qk6lmst\nMETA entry=entry-link.md source=refused verified_at=refused recheck=refused verdict=drift\nFINDING META_ENTRY_REFUSED severity=crit surface=metadata obs=entry=entry-link.md reason=denylist unparsed\nMETADATA_COMPLETE=0/1\nRESEARCH_GATE: DRIFT (entries=1 complete=0 findings=1 drift=1)\n",
+      "stderr": ""
+    },
+    {
+      "claim": "C3",
+      "name": "claims-raw-leg-only",
+      "report": "FC3ClaimsRawColonDenied55",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "errors": [],
+      "stdout": "research-gate v2 — ts=2026-10-21T16:35:19Z — mode=claims — claims=/tmp/chousa-r27-falsify-controls-1qk6lmst/claims.jsonl\nCLAIM id=C1 expected=supported observed=refused source=/tmp/chousa-r27-falsify-controls-1qk6lmst/synthetic:fixture/.config/source-link.md at=- verdict=refused\nFINDING CLAIM_SOURCE_SESSION severity=crit surface=claims obs=id=C1 source=/tmp/chousa-r27-falsify-controls-1qk6lmst/synthetic:fixture/.config/source-link.md obs=path=/tmp/chousa-r27-falsify-controls-1qk6lmst/synthetic denied (not opened)\nVERDICT_BEARING_CLAIMS=0/1\nRESEARCH_GATE: DRIFT (claims=1 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=1 invalid=0 findings=1 drift=1)\n",
+      "stderr": ""
+    }
+  ]
+}

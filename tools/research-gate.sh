@@ -2383,7 +2383,7 @@ metadata_registry_load() {
   local id_col=-1 status_col=-1 usedby_col=-1 is_separator
   local row_id row_status row_usedby
   local LC_ALL=C
-  local -a cells=()
+  local -a cells=() width_cells=()
 
   [[ -n $path ]] || die_usage "--registry needs PATH"
   [[ -e $path ]] || die_usage "metadata registry not found"
@@ -2427,7 +2427,8 @@ metadata_registry_load() {
   declare -gA META_REGISTRY_STATUS=() META_REGISTRY_USEDBY=()
 
   while IFS= read -r line || [[ -n $line ]]; do
-    line=${line%$'\r'}
+    # Strip one trailing CR without the suffix-pattern scan that is quadratic on long lines.
+    if [[ $line == *$'\r' ]]; then line=${line:0:${#line}-1}; fi
     if [[ $line != *'|'*'|'* ]]; then
       ((header_found)) && break
       header_candidate=0
@@ -2487,7 +2488,9 @@ metadata_registry_load() {
     done
     if ((id_col >= 0 && status_col >= 0 && usedby_col >= 0)); then
       header_candidate=1
-      header_width=${#cells[@]}
+      # Width counts GFM cells: an escaped pipe (\|) is cell content, not a boundary.
+      IFS='|' read -r -a width_cells <<<"${row//'\|'/}|__chousa_registry_end__"
+      header_width=$((${#width_cells[@]} - 1))
     else
       id_col=-1; status_col=-1; usedby_col=-1
       header_width=0
@@ -2526,7 +2529,8 @@ metadata_registry_check_source() {
           "entry=$entry_base source_id=$source_id used-by does not name entry"
       fi
     fi
-  done < <(printf '%s\n' "$source_value" | LC_ALL=C grep -oE '[[:alnum:]_]+' || true)
+  done < <(printf '%s\n' "$source_value" | LC_ALL=C grep -oE '[[:alnum:]_]+' \
+    | LC_ALL=C grep -xE 'S[0-9]{3,}' || true)
   ((found_id)) || emit_finding META_SOURCE_NO_ROW_ID info metadata \
     "entry=$entry_base source has no S-id"
 }
@@ -2654,7 +2658,7 @@ verify_metadata() {
     if ((REGISTRY_ARG_SET)); then source_value=''; fi
     verified_value='' recheck_value=''
     while IFS= read -r line || [[ -n $line ]]; do
-      line=${line%$'\r'}
+      if [[ $line == *$'\r' ]]; then line=${line:0:${#line}-1}; fi
       if [[ $line =~ ^[[:space:]]*$ ]]; then active_key=''; fi
       if [[ -n $fence_char ]]; then
         case "$active_key" in
@@ -6034,9 +6038,10 @@ EOF
     fi
   }
   metadata_asof_usage_accepts() { # RC EXPECTED OUTPUT
-    local rc=$1 expected=$2 out=$3 nverdict
-    nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
-    [[ $rc -eq 2 && $out == *"$expected"* && ${nverdict:-0} -eq 0 ]]
+    local rc=$1 expected=$2 out=$3 nverdict grc=0
+    nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out") || grc=$?
+    # grep exits 1 on zero matches; any other status is a matcher fault, never acceptance.
+    ((grc <= 1)) && [[ $rc -eq 2 && $out == *"$expected"* && $nverdict -eq 0 ]]
   }
   metadata_asof_usage_case() { # NAME EXPECTED [CLI args ...]
     local name=$1 expected=$2
@@ -6045,7 +6050,7 @@ EOF
     cases=$((cases + 1))
     out=$(bash "$SELF" "$@" 2>&1) || rc=$?
     nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
-    if [[ $rc -eq 2 && $out == *"$expected"* && ${nverdict:-0} -eq 0 ]]; then
+    if metadata_asof_usage_accepts "$rc" "$expected" "$out"; then
       printf 'ok-case  %-2d %-28s exit=2\n' "$cases" "$name"
     else
       printf 'FAIL-case %-28s rc=%d expected=%s verdicts=%s\n' \
@@ -6515,6 +6520,39 @@ EOF
     "$zero_prefix" >"$WORK/meta-asof/zero-cadence.md"
   metadata_asof_case metadata-asof-all-zero-cadence "$WORK/meta-asof/zero-cadence.md" 2026-01-02 0 \
     'META entry=zero-cadence.md source=present verified_at=dated recheck=scheduled due=2026-01-02 freshness=current verdict=clean'
+
+  # r27 falsify repairs: GFM cell width with escaped pipes, mixed outer pipes,
+  # no header across a blank line, and a usage-record matcher fault.
+  printf 'source: S001\nverified-at: 2026-10-20 checked\nrecheck: 90d\n' \
+    >"$WORK/corpus/knowledge/meta-reg-gfm.md"
+  printf '| id | status | used-by | note \\| alt |\n|---|---|---|---|\n| S001 | mined | corpus/knowledge/meta-reg-gfm.md | x |\n' \
+    >"$WORK/meta-registry-escaped.md"
+  metadata_registry_case metadata-registry-escaped-pipe-width \
+    "$WORK/corpus/knowledge/meta-reg-gfm.md" "$WORK/meta-registry-escaped.md" 0 \
+    'findings=0 drift=0'
+  printf '| id | status | used-by | note \\| alt |\n|---|---|---|---|---|\n| S001 | mined | corpus/knowledge/meta-reg-gfm.md | x |\n' \
+    >"$WORK/meta-registry-escaped-wide.md"
+  metadata_registry_case metadata-registry-escaped-pipe-overwide \
+    "$WORK/corpus/knowledge/meta-reg-gfm.md" "$WORK/meta-registry-escaped-wide.md" 2 \
+    'metadata registry has no table'
+  printf '| id | status | used-by |\n---|---|---\n| S001 | mined | corpus/knowledge/meta-reg-gfm.md |\n' \
+    >"$WORK/meta-registry-mixed-pipes.md"
+  metadata_registry_case metadata-registry-mixed-outer-pipes \
+    "$WORK/corpus/knowledge/meta-reg-gfm.md" "$WORK/meta-registry-mixed-pipes.md" 0 \
+    'findings=0 drift=0'
+  printf '| id | status | used-by |\n\n|---|---|---|\n| S001 | mined | corpus/knowledge/meta-reg-gfm.md |\n' \
+    >"$WORK/meta-registry-blank-delimiter.md"
+  metadata_registry_case metadata-registry-delimiter-after-blank \
+    "$WORK/corpus/knowledge/meta-reg-gfm.md" "$WORK/meta-registry-blank-delimiter.md" 2 \
+    'metadata registry has no table'
+  cases=$((cases + 1))
+  if ( grep() { return 2; }; metadata_asof_usage_accepts 2 'expected diagnostic' \
+      $'expected diagnostic\nusage: fixture' ); then
+    printf 'FAIL-case %-28s matcher fault accepted\n' metadata-asof-usage-matcher-fault
+    failures=$((failures + 1))
+  else
+    printf 'ok-case  %-2d %-28s accepted=0\n' "$cases" metadata-asof-usage-matcher-fault
+  fi
 
   if [[ $failures -eq 0 ]]; then
     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"

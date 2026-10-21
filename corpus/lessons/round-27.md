@@ -144,3 +144,16 @@ tree (`ExecUsage.patch` context at6235; `ExecRegistry.patch` corrupt at
 its line334), so the clone trees, not the patch files, are the integration
 inputs. The original L1's earlier dev-tree run (gate sha3e26c746…) is not a
 receipt for the committed bytes.
+
+Parent correction (Main IRC, 2026-10-21): ChousaR27 did die at about
+15m50s on a Devin weekly-quota stream error and was revived as the same
+identity; it did not observe the gap from inside its own session. Main had
+already spawned ChousaR27R2 before seeing the revival, so the two-writer
+overlap is parent-caused, not an R2 or seat fault. R2's union merge
+(sha256 ca39d14d…92f84) overwrote ChousaR27's partial in-tree usage edit.
+ChousaR27's earlier citation of gate sha3e26c746… described a transient
+working copy, not the bytes now in the lane; only the helper-landed blob
+`dd72641e574679c4f7882dd43de072b4c8892d6f:tools/research-gate.sh`
+(ca39d14d…, verified equal to the archived measured tree) is cited.
+ReviewDateCalendar's fleet-root write is seat-scope debt (R27-M9), not a
+lane-authored file at the fleet root.
