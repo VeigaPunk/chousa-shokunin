@@ -105,3 +105,29 @@ The orchestrator's fresh non-author verifier owns closure. Wave-2 seats are
 advisory lane-dispatched workers, not the outside discernment check
 (LEARNING.md). Prior sample: r24 outside verifier agreed on 4/4 admits and
 3/3 rejects (`round-24-verifier-spotcheck.md`).
+
+## Falsify-wave packaging correction (round 25, same attempt)
+
+R25-M13 — **landing / reference-drift**: the L1 omitted
+`tools/research-gate.sh` from the helper's integration path list. Checkpoint
+`0fc037e6b07f3820ead8c9207a8034ac854197a1` contained prose claiming 154 cases
+but gate SHA `752e4e38…` with 136. The fresh mutation seats caught this before
+any round report. QUALITY 11 and protocol measured-revision duty should have
+caught it; now criterion 15 names the content-digest check explicitly.
+
+Fix: helper-landed `d8c8cff3923f10481ac9ced66d0af7c41d38130c` includes the
+gate and canonical SHONEN form. `git show <rev>:tools/research-gate.sh |
+sha256sum` differs from the measured gate for `0fc037e`, matches for `d8c8cff`.
+The same 68 live falsify seats were sent an additive checkpoint correction
+(`.ufo/waves/round-25/falsify-checkpoint-correction.json`); none respawned.
+Reports must distinguish the failed initial packaging from corrected-checkpoint
+measurements. No result observed only in the working tree counts as committed
+proof. The original falsify spec remains unchanged as dispatch history.
+
+The same defect also omitted `corpus/evidence/README.md` from `0fc037e` and
+`d8c8cff`; FxScribeEvidence caught the unchanged blob before the final report.
+Thus d8c8cff is a corrected **gate** checkpoint, not yet a complete C2
+checkpoint. The next helper landing includes the evidence index and all
+current errata, and is the authoritative full integration pin. Criterion15
+must cover every changed production path, not just the executable. Both
+omissions remain recorded; repeated packaging correction is not two claims.

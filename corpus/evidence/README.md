@@ -626,49 +626,6 @@ behavior) while `ts`/`gate_sha256` are `<V>`.
 | Receipt (sha256) | Shows | Key result |
 |---|---|---|
 | `pin-r8-20261016T033757Z-selftest.log` (`6334240b…`) | full `--selftest`; case-line stability vs the round-7 receipt | `RESEARCH_GATE_SELFTEST: PASS (85 cases)`, exit 0; the first 74 case lines are **byte-identical** to the r7 receipt (`cmp` YES); new cases 75-85 = `pin-clean` / `drift-clean` / `drift-volatile-churn` / `drift-one-field-mutant` / `drift-missing` / `drift-malformed` / `drift-volatile-list` / `setup-pin-no-path` / `setup-drift-no-path` / `setup-pin-unwritable` / `setup-pin-drift-exclusive` |
-| `scope-r12-20261019T115519Z-selftest.log` | r12 acceptance: `PASS (98 cases)`; cases 1–85 `cmp` byte-identical vs `pin-r8-…-selftest.log` |
-| `scope-r12-20261019T115519Z-A-fix.log` | A-r9 post-fix `verify-all` CLEAN at `dfd2ae1a…` (run without `--json`; manifest untouched) |
-| `scope-r12-20261019T115519Z-drift-r8.log` | `--drift` vs the r8 baseline → `GATE_DRIFT: GATE record_sha256`, exit 1 (recorded reason) |
-| `alias-r13-20261019T123621Z-selftest.log` | r13: `PASS (102 cases)`; cases 1–98 `cmp` byte-identical vs `scope-r12-…-selftest.log` |
-| `alias-r13-20261019T123621Z-bypass-before.log` | the r2 residual reproduced live: a claim through an in-root hardlink alias of an out-of-root file reads `observed=supported` CLEAN at the pre-round gate (rc=0) |
-| `alias-r13-20261019T123621Z-bypass-after.log` | same fixture at the landed gate: `CLAIM_SOURCE_MULTILINKED` crit, `observed=refused` (rc=1) |
-| `mount-r14-20261019T132025Z-selftest.log` | r14: `PASS (106 cases, 0 skipped)`; cases 1–102 `cmp` byte-identical |
-| `mount-r14-20261019T132025Z-bypass-before.log` | a tmpfs mounted over an in-root dir (unprivileged userns): the claim reads `observed=supported` CLEAN at the pre-round gate (rc=0) |
-| `mount-r14-20261019T132025Z-bypass-after.log` | same fixture at the landed gate: `CLAIM_SOURCE_CROSS_DEVICE` crit, `observed=refused` (rc=1) |
-| `mount-r14-20261019T132025Z-battery.log` | masked battery vs the pre-round gate, LANE_ROOT intact: ALL IDENTICAL; records the ns-fixture recipe |
-| `alias-r13-20261019T123621Z-battery.log` | masked battery (banner/ts) vs the pre-round gate, run with LANE_ROOT intact (temp copy inside `tools/`): A/B/C-r9, r6, r7, claims-r2, chain-r3, sweeps-r5, six controls — ALL IDENTICAL; records the /tmp-copy LANE_ROOT artifact |
-| `root-r15-20261019T152000Z-selftest.log` | r15: `PASS (110 cases, 0 skipped)`; cases 1–106 `cmp` byte-identical vs `mount-r14-…-selftest.log` |
-| `root-r15-20261019T152000Z-demo.log` | before/after pair: pre-round gate (`aabf7f4`) refuses `/etc/hostname` `OUT_OF_CORPUS` crit at `CHOUSA_ROOT=/`; landed gate reads it `CLEAN` `1/1` |
-| `root-r15-20261019T152000Z-battery.log` | masked battery (banner/ts) vs the pre-round gate: A/B/C-r9, claims-r2, chain-r3, sweeps-r5, integrity-r7, full-r6 — ALL IDENTICAL |
-| `root-r15-20261019T152000Z-drift.log` | `--drift` vs the r12 baseline → `GATE_DRIFT: none`, exit 0 (no re-pin needed — no banner/VERSION/canonical-surface change) |
-| `fence-r17-20261019T171200Z-selftest.log` | r17: `PASS (116 cases, 0 skipped)`; cases 1–109 `cmp` byte-identical vs `root-r15-…-selftest.log` |
-| `fence-r17-20261019T171200Z-demo.log` | before/after pair: pre-round gate (`eaa3bbd`) passes CLEAN on a fenced-shadow record; landed gate refuses `SCOPE_BOUNTY_ABSORBED` warn |
-| `fence-r17-20261019T171200Z-battery.log` | masked battery (banner/ts) vs the pre-round gate: A/B/C-r9, claims-r2, chain-r3, sweeps-r5, integrity-r7, full-r6 — ALL IDENTICAL |
-| `fence-r17-20261019T171200Z-drift.log` | `--drift` vs the r12 baseline → `GATE_DRIFT: none`, exit 0 (no re-pin needed) |
-| `scope-r18-20261019T173000Z-selftest.log` | r18: `PASS (119 cases, 0 skipped)`; cases 1–116 `cmp` byte-identical vs `fence-r17-…-selftest.log` |
-| `scope-r18-20261019T173000Z-demo.log` | before/after pair: pre-round gate (`e3c556e`) passes CLEAN on `domain: LLM benchmarks`; landed gate refuses `SCOPE_MODEL_QUALITY_ABSORBED` warn |
-| `scope-r18-20261019T173000Z-battery.log` | masked battery (banner/ts) vs the pre-round gate: A/B/C-r9, claims-r2, chain-r3, sweeps-r5, integrity-r7, full-r6 — ALL IDENTICAL |
-| `scope-r18-20261019T173000Z-drift.log` | `--drift` vs the r12 baseline → `GATE_DRIFT: none`, exit 0 (no re-pin needed) |
-| `symlink-r19-20261019T174500Z-selftest.log` | r19: `PASS (122 cases, 0 skipped)`; cases 1–119 `cmp` byte-identical vs `scope-r18-…-selftest.log` |
-| `symlink-r19-20261019T174500Z-demo.log` | before/after pair: pre-round gate (`5499cef`) reports `SWEEP_CLAIM_FALSE` hit on an outside symlink; landed gate refuses `SWEEP_LOCATION_OUT_OF_CORPUS` crit |
-| `symlink-r19-20261019T174500Z-battery.log` | masked battery (banner/ts) vs the pre-round gate: A/B/C-r9, claims-r2, chain-r3, sweeps-r5, integrity-r7, full-r6 — ALL IDENTICAL |
-| `symlink-r19-20261019T174500Z-drift.log` | `--drift` vs the r12 baseline → `GATE_DRIFT: none`, exit 0 (no re-pin needed) |
-| `verify-r20-20261019T180000Z-selftest.log` | r20: `PASS (124 cases, 0 skipped)`; cases 1–119 `cmp` byte-identical vs `scope-r18-…-selftest.log` |
-| `verify-r20-20261019T180000Z-demo.log` | before/after pair: pre-round gate (`2bb556b`) passes CLEAN on an HTML-comment shadow; landed gate refuses `SCOPE_BOUNTY_ABSORBED` warn |
-| `verify-r20-20261019T180000Z-battery.log` | masked battery (banner/ts) vs the pre-round gate: A/B/C-r9, claims-r2, chain-r3, sweeps-r5, integrity-r7, full-r6 — ALL IDENTICAL |
-| `verify-r20-20261019T180000Z-drift.log` | `--drift` vs the r12 baseline → `GATE_DRIFT: none`, exit 0 (no re-pin needed) |
-| `ptr-r21-20261019T184000Z-selftest.log` | r21: `PASS (128 cases, 0 skipped)`; cases 1–124 `cmp` byte-identical vs `verify-r20-…-selftest.log` |
-| `ptr-r21-20261019T184000Z-demo.log` | before/after pair: pre-round gate (`b057245`) passes CLEAN on a traversal pointer; landed gate refuses `POINTER_UNRESOLVED` warn |
-| `ptr-r21-20261019T184000Z-battery.log` | masked battery (banner/ts) vs the pre-round gate: A/B/C-r9, claims-r2, chain-r3, sweeps-r5, integrity-r7, full-r6 — ALL IDENTICAL |
-| `ptr-r21-20261019T184000Z-drift.log` | `--drift` vs the r12 baseline → `GATE_DRIFT: none`, exit 0 (no re-pin needed) |
-| `deny-r22-20261019T190000Z-selftest.log` | r22: `PASS (132 cases, 0 skipped)`; cases 1–128 `cmp` byte-identical vs `ptr-r21-…-selftest.log` |
-| `deny-r22-20261019T190000Z-demo.log` | before/after pair: pre-round gate (`10083e1`) passes CLEAN on `.config/agent-token.txt` (no `./` prefix); landed gate refuses `CLAIM_SOURCE_SESSION` crit |
-| `deny-r22-20261019T190000Z-battery.log` | masked battery (banner/ts) vs the pre-round gate: A/B/C-r9, claims-r2, chain-r3, sweeps-r5, integrity-r7, full-r6 — ALL IDENTICAL |
-| `deny-r22-20261019T190000Z-drift.log` | `--drift` vs the r12 baseline → `GATE_DRIFT: none`, exit 0 (no re-pin needed) |
-| `fanchor-r23-20261019T192000Z-selftest.log` | r23: `PASS (133 cases, 0 skipped)`; cases 1–128 `cmp` byte-identical vs `deny-r22-…-selftest.log` |
-| `fanchor-r23-20261019T192000Z-demo.log` | before/after pair: pre-round gate (`fb70ddb`) verifies a fenced heading as a real anchor; landed gate refuses `CHAIN_ANCHOR_NOT_FOUND` warn |
-| `fanchor-r23-20261019T192000Z-battery.log` | masked battery (banner/ts) vs the pre-round gate: A/B/C-r9, claims-r2, chain-r3, sweeps-r5, integrity-r7, full-r6 — ALL IDENTICAL |
-| `fanchor-r23-20261019T192000Z-drift.log` | `--drift` vs the r12 baseline → `GATE_DRIFT: none`, exit 0 (no re-pin needed) |
 | `pin-r8-20261016T033757Z-pin.log` (`40abd23d…`) | before-state (0 baselines committed; r7 gate rejects both flags), the committed pin, header + body verbatim, hermetic re-pins, CLI refusals | `GATE_PIN: ok` exit 0; hermetic: pin1 = pin2 bodies and pin1 = pin3 (cut after 75 s of live churn) bodies are `cmp` **IDENTICAL**; refusals: no-path ×2, both flags, unwritable dir — all exit 2 |
 | `pin-r8-20261016T033757Z-drift.log` (`051695ee…`) | drift on the committed baseline, churn absorption, six baseline controls, the mutant-gate arm | `GATE_DRIFT: none` exit 0; after 75 s `none` exit 0; mutant severity → `GATE_DRIFT: severity` exit 1; missing/empty/junk/marker-deleted → exit 2; volatile-list rewrite → `GATE_DRIFT: volatile_fields` exit 1; the sweeps-silently-skipped gate → exit 1 naming `-REJECTIONS_OK -hit -rejections-ok anchor-missing native rejections tallies tally` |
 | `pin-r8-20261016T033757Z-live.log` (`9829ed10…`) | cross-round no-harm, r1 observable, zero network, manifest untouched | 14/14 mode pairs byte-identical (ts-normalized) with matching rc; `VERDICT_BEARING_EXPORTS=3/3`; strace 3759 trace lines, **0 network syscalls**; `verify-all-manifest.jsonl` sha unchanged (`9620946f…`) |
@@ -934,6 +891,160 @@ done
   (verified by normalized diff).
 - Receipt identity remains lane-local; no `task_…` value is invented; the
   round-1 receipt blocker stands (operator-side).
+
+## Round-12 scope-refusal screening receipts — stamp 20261019T115519Z
+
+Gate sha256 prefixes `46f5ddb3… → 91a01695…`; selftest `PASS (98 cases)`
+(85→98; `SCORECARD.md:520-528`). Rows moved at round 25 from the round-8
+receipts table, where they had been appended (`lessons/round-24.md` M-12); row
+text unchanged.
+
+| Receipt | Shows |
+|---|---|
+| `scope-r12-20261019T115519Z-selftest.log` | r12 acceptance: `PASS (98 cases)`; cases 1–85 `cmp` byte-identical vs `pin-r8-…-selftest.log` |
+| `scope-r12-20261019T115519Z-A-fix.log` | A-r9 post-fix `verify-all` CLEAN at `dfd2ae1a…` (run without `--json`; manifest untouched) |
+| `scope-r12-20261019T115519Z-drift-r8.log` | `--drift` vs the r8 baseline → `GATE_DRIFT: GATE record_sha256`, exit 1 (recorded reason) |
+| `scope-r12-20261019T115519Z-battery.log` | r12 fixture battery (fixed clock, banner/ts masked) vs the pre-round gate `26b556e`: A/B/C-r9, full-r6 trio, integrity-r7 pair, claims-r2, chain-r3, sweeps-r5, six archive controls → `ALL IDENTICAL` — a 2-line summary, not the raw outputs (indexed at round 25; cited by `SCORECARD.md:567`) |
+
+## Round-13 hardlink-alias boundary receipts — stamp 20261019T123621Z
+
+Gate sha256 prefixes `91a01695… → 6b17e50cc9b61dda…`; selftest `PASS (102
+cases)` (98→102; `SCORECARD.md:629-637`). Rows moved at round 25 from the
+round-8 receipts table, where they had been appended (`lessons/round-24.md`
+M-12); row text unchanged.
+
+| Receipt | Shows |
+|---|---|
+| `alias-r13-20261019T123621Z-selftest.log` | r13: `PASS (102 cases)`; cases 1–98 `cmp` byte-identical vs `scope-r12-…-selftest.log` |
+| `alias-r13-20261019T123621Z-bypass-before.log` | the r2 residual reproduced live: a claim through an in-root hardlink alias of an out-of-root file reads `observed=supported` CLEAN at the pre-round gate (rc=0) |
+| `alias-r13-20261019T123621Z-bypass-after.log` | same fixture at the landed gate: `CLAIM_SOURCE_MULTILINKED` crit, `observed=refused` (rc=1) |
+| `alias-r13-20261019T123621Z-battery.log` | masked battery (banner/ts) vs the pre-round gate, run with LANE_ROOT intact (temp copy inside `tools/`): A/B/C-r9, r6, r7, claims-r2, chain-r3, sweeps-r5, six controls — ALL IDENTICAL; records the /tmp-copy LANE_ROOT artifact |
+
+## Round-14 mount-alias (cross-device) boundary receipts — stamp 20261019T132025Z
+
+Gate sha256 prefixes `6b17e50c… → d8bbd0bf…`; selftest `PASS (106 cases, 0
+skipped)` (102→106; `SCORECARD.md:690-697`). Rows moved at round 25 from the
+round-8 receipts table, where they had been appended (`lessons/round-24.md`
+M-12); row text unchanged.
+
+| Receipt | Shows |
+|---|---|
+| `mount-r14-20261019T132025Z-selftest.log` | r14: `PASS (106 cases, 0 skipped)`; cases 1–102 `cmp` byte-identical |
+| `mount-r14-20261019T132025Z-bypass-before.log` | a tmpfs mounted over an in-root dir (unprivileged userns): the claim reads `observed=supported` CLEAN at the pre-round gate (rc=0) |
+| `mount-r14-20261019T132025Z-bypass-after.log` | same fixture at the landed gate: `CLAIM_SOURCE_CROSS_DEVICE` crit, `observed=refused` (rc=1) |
+| `mount-r14-20261019T132025Z-battery.log` | masked battery vs the pre-round gate, LANE_ROOT intact: ALL IDENTICAL; records the ns-fixture recipe |
+
+## Round-15 root-slash boundary dead-arm receipts — stamp 20261019T152000Z
+
+Gate sha256 prefixes `d8bbd0bf… → dd0951d7…`; selftest `PASS (110 cases, 0
+skipped)` (106→110; `SCORECARD.md:743-752`). Rows moved at round 25 from the
+round-8 receipts table, where they had been appended (`lessons/round-24.md`
+M-12); row text unchanged.
+
+| Receipt | Shows |
+|---|---|
+| `root-r15-20261019T152000Z-selftest.log` | r15: `PASS (110 cases, 0 skipped)`; cases 1–106 `cmp` byte-identical vs `mount-r14-…-selftest.log` |
+| `root-r15-20261019T152000Z-demo.log` | before/after pair: pre-round gate (`aabf7f4`) refuses `/etc/hostname` `OUT_OF_CORPUS` crit at `CHOUSA_ROOT=/`; landed gate reads it `CLEAN` `1/1` |
+| `root-r15-20261019T152000Z-battery.log` | masked battery (banner/ts) vs the pre-round gate: A/B/C-r9, claims-r2, chain-r3, sweeps-r5, integrity-r7, full-r6 — ALL IDENTICAL |
+| `root-r15-20261019T152000Z-drift.log` | `--drift` vs the r12 baseline → `GATE_DRIFT: none`, exit 0 (no re-pin needed — no banner/VERSION/canonical-surface change) |
+
+## Round-17 fenced-heading shadow receipts — stamp 20261019T171200Z
+
+Gate SHA prefix `2b64a1c8…` → `c2915f24…`; selftest 111 → 116 cases, landed
+`PASS (116 cases, 0 skipped)` (`SCORECARD.md:863–870`; note `knowledge/fenced-
+heading-r17.md:4`). Rows moved at round 25 from the round-8 receipts table,
+where they had been appended (`lessons/round-24.md` M-12); row text unchanged.
+
+| Receipt | Shows |
+|---|---|
+| `fence-r17-20261019T171200Z-selftest.log` | r17: `PASS (116 cases, 0 skipped)`; cases 1–109 `cmp` byte-identical vs `root-r15-…-selftest.log` |
+| `fence-r17-20261019T171200Z-demo.log` | before/after pair: pre-round gate (`eaa3bbd`) passes CLEAN on a fenced-shadow record; landed gate refuses `SCOPE_BOUNTY_ABSORBED` warn |
+| `fence-r17-20261019T171200Z-battery.log` | masked battery (banner/ts) vs the pre-round gate: A/B/C-r9, claims-r2, chain-r3, sweeps-r5, integrity-r7, full-r6 — ALL IDENTICAL |
+| `fence-r17-20261019T171200Z-drift.log` | `--drift` vs the r12 baseline → `GATE_DRIFT: none`, exit 0 (no re-pin needed) |
+
+## Round-18 scope phrase gap receipts — stamp 20261019T173000Z
+
+Gate SHA prefix `c2915f24…` → `6e694881…`; selftest 116 → 119 cases, landed
+`PASS (119 cases, 0 skipped)` (`SCORECARD.md:918–924`; note `knowledge/scope-
+phrase-gap-r18.md:4`). Rows moved at round 25 from the round-8 receipts table,
+where they had been appended (`lessons/round-24.md` M-12); row text unchanged.
+
+| Receipt | Shows |
+|---|---|
+| `scope-r18-20261019T173000Z-selftest.log` | r18: `PASS (119 cases, 0 skipped)`; cases 1–116 `cmp` byte-identical vs `fence-r17-…-selftest.log` |
+| `scope-r18-20261019T173000Z-demo.log` | before/after pair: pre-round gate (`e3c556e`) passes CLEAN on `domain: LLM benchmarks`; landed gate refuses `SCOPE_MODEL_QUALITY_ABSORBED` warn |
+| `scope-r18-20261019T173000Z-battery.log` | masked battery (banner/ts) vs the pre-round gate: A/B/C-r9, claims-r2, chain-r3, sweeps-r5, integrity-r7, full-r6 — ALL IDENTICAL |
+| `scope-r18-20261019T173000Z-drift.log` | `--drift` vs the r12 baseline → `GATE_DRIFT: none`, exit 0 (no re-pin needed) |
+
+## Round-19 sweep symlink escape receipts — stamp 20261019T174500Z
+
+Gate SHA prefix `6e694881…` → `9f163807…`; selftest 119 → 122 cases, landed
+`PASS (122 cases, 0 skipped)` (`SCORECARD.md:969–976`; note `knowledge/sweep-
+symlink-r19.md:4`). Rows moved at round 25 from the round-8 receipts table,
+where they had been appended (`lessons/round-24.md` M-12); row text unchanged.
+
+| Receipt | Shows |
+|---|---|
+| `symlink-r19-20261019T174500Z-selftest.log` | r19: `PASS (122 cases, 0 skipped)`; cases 1–119 `cmp` byte-identical vs `scope-r18-…-selftest.log` |
+| `symlink-r19-20261019T174500Z-demo.log` | before/after pair: pre-round gate (`5499cef`) reports `SWEEP_CLAIM_FALSE` hit on an outside symlink; landed gate refuses `SWEEP_LOCATION_OUT_OF_CORPUS` crit |
+| `symlink-r19-20261019T174500Z-battery.log` | masked battery (banner/ts) vs the pre-round gate: A/B/C-r9, claims-r2, chain-r3, sweeps-r5, integrity-r7, full-r6 — ALL IDENTICAL |
+| `symlink-r19-20261019T174500Z-drift.log` | `--drift` vs the r12 baseline → `GATE_DRIFT: none`, exit 0 (no re-pin needed) |
+
+## Round-20 HTML-comment heading shadow receipts — stamp 20261019T180000Z
+
+Gate SHA prefix `9f163807…` → `49b36759…`; selftest 122 → 124 cases, landed
+`PASS (124 cases, 0 skipped)` (`SCORECARD.md:1020–1028`; note `knowledge/html-
+comment-r20.md:4`). Rows moved at round 25 from the round-8 receipts table,
+where they had been appended (`lessons/round-24.md` M-12); row text unchanged.
+
+| Receipt | Shows |
+|---|---|
+| `verify-r20-20261019T180000Z-selftest.log` | r20: `PASS (124 cases, 0 skipped)`; cases 1–119 `cmp` byte-identical vs `scope-r18-…-selftest.log` |
+| `verify-r20-20261019T180000Z-demo.log` | before/after pair: pre-round gate (`2bb556b`) passes CLEAN on an HTML-comment shadow; landed gate refuses `SCOPE_BOUNTY_ABSORBED` warn |
+| `verify-r20-20261019T180000Z-battery.log` | masked battery (banner/ts) vs the pre-round gate: A/B/C-r9, claims-r2, chain-r3, sweeps-r5, integrity-r7, full-r6 — ALL IDENTICAL |
+| `verify-r20-20261019T180000Z-drift.log` | `--drift` vs the r12 baseline → `GATE_DRIFT: none`, exit 0 (no re-pin needed) |
+
+## Round-21 pointer-boundary receipts — stamp 20261019T184000Z
+
+SCORECARD.md lines 1086–1099 report gate SHA `49b36759…` before → `bfc291ef…`
+after and selftest `PASS (128 cases, 0 skipped)` (cases 1–124 unchanged). Rows
+moved at round 25 from the round-8 receipts table, where they had been
+appended (`lessons/round-24.md` M-12); row text unchanged.
+
+| Receipt | Shows |
+|---|---|
+| `ptr-r21-20261019T184000Z-selftest.log` | r21: `PASS (128 cases, 0 skipped)`; cases 1–124 `cmp` byte-identical vs `verify-r20-…-selftest.log` |
+| `ptr-r21-20261019T184000Z-demo.log` | before/after pair: pre-round gate (`b057245`) passes CLEAN on a traversal pointer; landed gate refuses `POINTER_UNRESOLVED` warn |
+| `ptr-r21-20261019T184000Z-battery.log` | masked battery (banner/ts) vs the pre-round gate: A/B/C-r9, claims-r2, chain-r3, sweeps-r5, integrity-r7, full-r6 — ALL IDENTICAL |
+| `ptr-r21-20261019T184000Z-drift.log` | `--drift` vs the r12 baseline → `GATE_DRIFT: none`, exit 0 (no re-pin needed) |
+
+## Round-22 denylist-path-start-bypass receipts — stamp 20261019T190000Z
+
+SCORECARD.md lines 1142–1156 report gate SHA `bfc291ef…` before → `dfb798b4…`
+after and selftest `PASS (132 cases, 0 skipped)` (cases 1–128 unchanged). Rows
+moved at round 25 from the round-8 receipts table, where they had been
+appended (`lessons/round-24.md` M-12); row text unchanged.
+
+| Receipt | Shows |
+|---|---|
+| `deny-r22-20261019T190000Z-selftest.log` | r22: `PASS (132 cases, 0 skipped)`; cases 1–128 `cmp` byte-identical vs `ptr-r21-…-selftest.log` |
+| `deny-r22-20261019T190000Z-demo.log` | before/after pair: pre-round gate (`10083e1`) passes CLEAN on `.config/agent-token.txt` (no `./` prefix); landed gate refuses `CLAIM_SOURCE_SESSION` crit |
+| `deny-r22-20261019T190000Z-battery.log` | masked battery (banner/ts) vs the pre-round gate: A/B/C-r9, claims-r2, chain-r3, sweeps-r5, integrity-r7, full-r6 — ALL IDENTICAL |
+| `deny-r22-20261019T190000Z-drift.log` | `--drift` vs the r12 baseline → `GATE_DRIFT: none`, exit 0 (no re-pin needed) |
+
+## Round-23 fenced-heading-anchor-false-positive receipts — stamp 20261019T192000Z
+
+SCORECARD.md lines 1196–1205 report gate SHA `dfb798b4…` before → `b5d0f93d…`
+after and selftest `PASS (133 cases, 0 skipped)` (cases 1–128 unchanged). Rows
+moved at round 25 from the round-8 receipts table, where they had been
+appended (`lessons/round-24.md` M-12); row text unchanged.
+
+| Receipt | Shows |
+|---|---|
+| `fanchor-r23-20261019T192000Z-selftest.log` | r23: `PASS (133 cases, 0 skipped)`; cases 1–128 `cmp` byte-identical vs `deny-r22-…-selftest.log` |
+| `fanchor-r23-20261019T192000Z-demo.log` | before/after pair: pre-round gate (`fb70ddb`) verifies a fenced heading as a real anchor; landed gate refuses `CHAIN_ANCHOR_NOT_FOUND` warn |
+| `fanchor-r23-20261019T192000Z-battery.log` | masked battery (banner/ts) vs the pre-round gate: A/B/C-r9, claims-r2, chain-r3, sweeps-r5, integrity-r7, full-r6 — ALL IDENTICAL |
+| `fanchor-r23-20261019T192000Z-drift.log` | `--drift` vs the r12 baseline → `GATE_DRIFT: none`, exit 0 (no re-pin needed) |
 
 ## Round-24 `--json` delimiter receipts — stamp 20261019T213117Z
 

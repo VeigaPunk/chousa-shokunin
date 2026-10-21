@@ -73,3 +73,12 @@ the admitted entry that motivates it. Tier definitions live in
     `lessons/round-24-verifier-spotcheck.md:17`. Shown able to fail:
     `grep -qx '## Spot-check intake' corpus/lessons/round-24.md` exits 1 at
     the base; the round-25 lesson exits 0 (the per-debt rows need a reviewer).
+
+15. **Measured bytes must be in the cited commit.** Before a report or a
+    falsify wave pins a revision, the executable's digest from
+    `git show "$REV":tools/research-gate.sh | sha256sum` must equal the
+    measured working-tree digest (and every changed production path is in the
+    helper's path list). A successful helper landing proves only its named
+    paths landed. — `lessons/round-25.md` R25-M13: the first integration
+    checkpoint omitted the gate, so prose said 154 cases while its gate had
+    136. This check failed on `0fc037e` and matched at `d8c8cff`.

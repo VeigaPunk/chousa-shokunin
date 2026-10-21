@@ -876,3 +876,21 @@ The current r12 baseline was re-derived before measuring: `bash tools/research-g
   No old LOG entry rewritten. Source/checked-what semantic checks, remaining
   parent-root rechecks, historic placeholder and receipt gaps stay named debt
   under QUALITY2/4/9/10, not silently absorbed into this round's counts.
+
+### Round-25 falsify checkpoint correction (2026-10-21, append-only)
+
+The integration checkpoint `0fc037e` omitted tools/research-gate.sh from the
+helper path list (L1 error), so its prose/receipts did not describe its gate
+bytes (136, not 154 cases). Fresh mutation seats found this. Corrected helper
+landing `d8c8cff3923f10481ac9ced66d0af7c41d38130c` carries the actual gate and
+canonical SHONEN form. All 68 same-seat falsifiers received the corrected
+pin; no seat respawned. QUALITY15 and lesson R25-M13 record the red-before
+content-digest check. Earlier “integration checkpoint” measurements refer to
+the working-tree gate only until this correction; report proof is pinned to
+the corrected/final landing, not `0fc037e`.
+
+The falsify scribe additionally found the evidence index had been omitted
+from both intermediate checkpoints (same helper-path-list error), so C2's
+43→0 move existed only in the working tree until the next full checkpoint.
+That index now lands explicitly with the errata. Neither intermediate pin
+is claimed as the final complete delivered tree.

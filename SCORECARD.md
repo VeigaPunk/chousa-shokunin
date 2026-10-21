@@ -1381,3 +1381,13 @@ nor `STALE_INDEX_ITEMS=0` by itself is an expansion verdict. SHONEN stays `[~]`
    each cited S-id exists, is mined and used-by names the entry, plus the
    what-was-checked text; freeze r24+ population and semantic negative controls
    before implementation. Legacy entries remain distinct from prospective bar.
+
+### Round-25 measured-revision erratum (2026-10-21)
+
+The initial `0fc037e` checkpoint had prose/fixtures but omitted the gate from
+the helper path list: old gate SHA752e4e38/selftest136. The corrected measured
+checkpoint is `d8c8cff3923f10481ac9ced66d0af7c41d38130c` (gate landed, 154
+cases); original working-tree counts are not proof for `0fc037e`. Fresh
+falsifiers were steered to the corrected commit, same identities. Final
+measurement receipts and the fleet report cite the final helper landing.
+See lesson R25-M13 and QUALITY15; no numeric score changes from this erratum.
