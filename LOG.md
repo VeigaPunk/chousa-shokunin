@@ -936,3 +936,20 @@ the final corrections, not replacements for the dead seats.
   is frozen at27 unique table/file matches and rejects a deleted table row.
   `round25-measure.sh` is explicitly a counting probe: rc0 means execution
   completed, not admission; actual outputs and content review are required.
+
+### Round-25 measured revision and packaging result (2026-10-21)
+
+Final C1/C2/C3 measurement commit:
+`c125d8bc20e5433947df26fe0af3d3b58d0b37d3`; exact11 input-blob match in
+`corpus/evidence/round25-measured-revision.json`, with outputs in
+`round25-landed-measure.log` and `round25-landed-differential.log`.
+All three claimed values remain as above; selftest161/0skipped, r1 3/3,
+drift none, differential54/54. Final counter controls are persisted with
+their exact programs. These are measured values, not an inference from rc0.
+
+The first replacement helper landing `c2a6e338` included the documents and
+evidence but silently retained gate63a39282 despite its explicit path.
+QUALITY15 caught the mismatch. Orchestrator-approved gate-only helper retry
+landed `c125d8bc` and all11 hashes matched; lesson R25-M15 records the red
+and green identity checks. No helper/fleet source was edited; cause
+unresolved. This append and final receipt index are bookkeeping only.

@@ -244,3 +244,20 @@ exit0 only means it ran; compare the recorded 25/28, exact three drift
 names, zero counters and 3/3 hold to the frozen predictions. C2 syntax
 counts still require the retained per-entry/receipt/capability reviews.
 The differential is documented from the lane root, not an arbitrary cwd.
+
+### Landing identity check — R25-M15
+
+Class **landing**; evidence `corpus/evidence/round25-measured-revision.json`;
+captured-by QUALITY15 (worked). The replacement explicitly named
+`tools/research-gate.sh` in the helper's path list, but helper success
+`landed c2a6e338bb29cf183c32e8f2263a98aae5bdcd1d` still retained gate
+`63a39282…` instead of measured `985a6320…`. The other10 measured blobs
+matched; this is not the earlier L1 omitted-path incident.
+
+After reporting the discrepancy to the orchestrator, one approved gate-only
+helper retry returned
+`landed c125d8bc20e5433947df26fe0af3d3b58d0b37d3`.
+The same content-binding comparison then matched11/11, including the gate.
+The read-only comparison of each `git show <revision>:<path>` SHA with
+the persisted measurement pin was red before and green after. No direct
+git/jj writes; no helper code change within this lane; cause unresolved.

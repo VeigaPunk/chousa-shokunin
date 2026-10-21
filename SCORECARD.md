@@ -1420,3 +1420,19 @@ deletions; `round25-final-counter-controls.json` preserves failing controls.
 C2 remains a bounded syntax/population count, not a complete semantic index
 validator. README's old handoff tuple is explicitly dated, outside the
 frozen C3 population rather than silently counted as an original claim item.
+
+**Measured commit for all three final claims:**
+`c125d8bc20e5433947df26fe0af3d3b58d0b37d3`.
+`corpus/evidence/round25-measured-revision.json` binds all 11 measured
+executable/counting/index/ledger input blobs to that landed revision.
+Final counting receipt: `round25-landed-measure.log`; final differential:
+`round25-landed-differential.log`. C1 improved, score3→3/delta0; C2 freshness
+improved, 66→0; C3 calibration improved with lexical/content-review limits,
+15→0 unresolved (historical raw slot1 retained). No other numeric score
+is invented. The following bookkeeping landing does not change the gate.
+
+Packaging erratum: explicit helper path selection still omitted the gate
+from `c2a6e338`; this was caught by QUALITY15's actual blob comparison,
+not assumed from the helper's success. A gate-only helper retry landed
+`c125d8bc` with all11 hashes matching. Cause unresolved; no direct VCS
+mutation or blind repeated retry was used (lesson R25-M15).

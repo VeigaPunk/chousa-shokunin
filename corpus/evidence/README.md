@@ -1086,3 +1086,6 @@ receipts remain history, not final proof for later reader corrections.
 | `round25-retained-final-selftest.log` | Prior coordinator's complete161-case stdout preserved byte-for-byte from its last exercised run; the replacement's final measure and legacy battery independently pass the same executable |
 | `round25-final-pin.json` | Exact final executable/counting/oracle/battery digests, observed verification exits, retained wave role counts, original sixteen failure texts and zero replacements |
 | `round25-final-counter-controls.json` | Exact isolated C3 and fixture-population check programs, with clean0 and deletion/relocation/empty-body failures1; counting-probe exit0 is not itself admission |
+| `round25-landed-measure.log` | After all residual counter fixes: C1 25/28, C2 0, C3 0/raw-slot1; selftest161, r1 3/3, drift none; probe exit0 |
+| `round25-landed-differential.log` | Final exact27-unique-fixture population: agreement54/54, exit0 |
+| `round25-measured-revision.json` | All11 measured input hashes match helper-landed `c125d8bc20e5433947df26fe0af3d3b58d0b37d3`; records prior `c2a6e338` gate omission rather than treating helper success as byte proof |
