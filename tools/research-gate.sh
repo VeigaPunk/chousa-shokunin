@@ -28,6 +28,9 @@
 #   VERIFY_ALL_CLAIMS_UNRESOLVED VERIFY_ALL_SECTION_UNAVAILABLE
 #   SCOPE_BOUNTY_ABSORBED SCOPE_MODEL_QUALITY_ABSORBED
 #   SCOPE_ORCHESTRATION_ABSORBED
+#   META_SOURCE_ABSENT META_VERIFIED_AT_ABSENT META_VERIFIED_AT_UNDATED
+#   META_RECHECK_ABSENT META_RECHECK_UNSCHEDULED META_RECHECK_ROOT_PARENT
+#   META_ENTRY_REFUSED (r25: denylisted/oversized/NUL entry, refused unparsed)
 #   CLAIM_SOURCE_READ_TOO_LARGE (r12: source over SOURCE_READ_MAX_BYTES)
 #   CLAIM_SOURCE_MULTILINKED (r13: hardlink alias of possibly out-of-corpus
 #   content; a symlink's true path is re-checked, a hardlink's partners are
@@ -300,6 +303,7 @@ usage: research-gate.sh [--selftest] [--help]
        research-gate.sh verify-chain [RECORD] [--root PATH]
        research-gate.sh verify-sweeps [RECORD] [--root PATH]
        research-gate.sh verify-integrity [RECORD] [--root PATH]
+       research-gate.sh verify-metadata PATH [--root PATH]
        research-gate.sh verify-all [RECORD] [--claims PATH] [--json PATH]
                       [--root PATH]
        research-gate.sh --pin PATH
@@ -308,6 +312,9 @@ usage: research-gate.sh [--selftest] [--help]
 
   RECORD via --record, positional, or CHOUSA_RECORD.
   CLAIMS via positional or CHOUSA_CLAIMS.
+  Metadata mode checks source, verified-at and recheck in the Markdown header.
+  PATH is one .md file or a directory of direct .md children; a recheck using
+  --root .. reports META_RECHECK_ROOT_PARENT (info).
   Claims file: one JSON object per claim line:
     {"id":…,"source":…,"span":…,"expect":supported|contradicted|unsupported
      [,"marker":…]}
@@ -2275,6 +2282,181 @@ verify_integrity() {
   [[ $ROLL == CLEAN ]] && return 0
   return 1
 }
+
+# ---- metadata mode: bounded header screen for knowledge-entry metadata ----
+
+verify_metadata() {
+  local path=${1:-} file base line fence_char='' fence_len=0 fence_c fence_l
+  local key rest active_key='' source_state verified_state recheck_state
+  local has_source has_verified has_recheck verified_value recheck_value
+  local recheck_first entry_drift_start entry_complete complete=0
+  local canon refuse fsize
+  local LC_ALL=C
+  local -a files=() candidates=() lines=() metadata_lines=()
+  local had_nullglob=0 candidate
+  local ROOT_PARENT_RE='(^|[^[:alnum:]_-])--root[[:space:]]+\.\.($|[^[:alnum:]_./-])'
+
+  [[ -n $path ]] || die_usage "metadata path required (verify-metadata PATH)"
+  [[ -e $path ]] || die_usage "metadata path not found: $path"
+  [[ -r $path ]] || die_usage "metadata path unreadable: $path"
+  [[ -d $ROOT ]] || die_usage "root is not a directory: $ROOT (--root)"
+
+  if [[ -d $path ]]; then
+    shopt -q nullglob && had_nullglob=1
+    shopt -s nullglob
+    candidates=("$path"/*.md)
+    if (( had_nullglob == 0 )); then shopt -u nullglob; fi
+    for candidate in "${candidates[@]}"; do
+      [[ -f $candidate ]] || continue
+      [[ -r $candidate ]] || die_usage "metadata entry unreadable: $candidate"
+      files+=("$candidate")
+    done
+    ((${#files[@]} > 0)) || die_usage "metadata directory has no .md files: $path"
+  else
+    [[ -f $path && $path == *.md ]] \
+      || die_usage "metadata path is not a .md file or directory: $path"
+    files=("$path")
+  fi
+
+  FINDING_LINES=(); N_FINDINGS=0; N_DRIFT=0; ROLL=CLEAN
+  for file in "${files[@]}"; do
+    base=${file##*/}
+    # r25 hardening (post-registration, disclosed): a screened entry is read
+    # only after denylist/size screening; its header is parsed only after — raw and
+    # canonical denylist (an in-root symlink alias must not reach a denied
+    # target), the 8 MiB read cap, and NUL bytes (not line text). A refused
+    # entry stays visible in N/M as drift, never silently omitted.
+    canon=$(readlink -f -- "$file" 2>/dev/null || printf '%s' "$file")
+    refuse=''
+    if is_denylist_path "$file" || is_denylist_path "$canon"; then
+      refuse=denylist
+    elif ! fsize=$(file_size_bytes "$file") || ((fsize > SOURCE_READ_MAX_BYTES)); then
+      refuse=size
+    elif (( $(tr -d '\000' <"$file" | wc -c) != fsize )); then
+      refuse=nul
+    fi
+    if [[ -n $refuse ]]; then
+      emit_finding META_ENTRY_REFUSED crit metadata "entry=$base reason=$refuse unparsed"
+      metadata_lines+=("META entry=$base source=refused verified_at=refused recheck=refused verdict=drift")
+      continue
+    fi
+    lines=()
+    while IFS= read -r line || [[ -n $line ]]; do
+      line=${line%$'\r'}
+      lines+=("$line")
+    done <"$file"
+
+    fence_char='' fence_len=0 active_key=''
+    has_source=0 has_verified=0 has_recheck=0
+    verified_value='' recheck_value=''
+    for line in "${lines[@]}"; do
+      if [[ $line =~ ^[[:space:]]*$ ]]; then active_key=''; fi
+      if [[ -n $fence_char ]]; then
+        case "$active_key" in
+          verified-at) verified_value+=$'\n'"$line" ;;
+          recheck) recheck_value+=$'\n'"$line" ;;
+        esac
+        if [[ $line =~ ^\ {0,3}(\`{3,}|~{3,})[[:space:]]*$ ]]; then
+          fence_c=${BASH_REMATCH[1]:0:1}; fence_l=${#BASH_REMATCH[1]}
+          [[ $fence_c == "$fence_char" && $fence_l -ge $fence_len ]] \
+            && fence_char=''
+        fi
+        continue
+      fi
+      if [[ $line =~ ^\ {0,3}(\`{3,}|~{3,})(.*)$ ]]; then
+        case "$active_key" in
+          verified-at) verified_value+=$'\n'"$line" ;;
+          recheck) recheck_value+=$'\n'"$line" ;;
+        esac
+        fence_char=${BASH_REMATCH[1]:0:1}; fence_len=${#BASH_REMATCH[1]}
+        continue
+      fi
+      [[ $line =~ ^##[[:space:]]+ ]] && break
+      if [[ $line =~ ^[[:space:]]*$ ]]; then active_key=''; continue; fi
+      if [[ $line =~ ^(source|verified-at|recheck):(.*)$ ]]; then
+        key=${BASH_REMATCH[1]}; rest=${BASH_REMATCH[2]}
+        active_key=''
+        case "$key" in
+          source) has_source=1; active_key=source ;;
+          verified-at)
+            has_verified=1; active_key=verified-at; verified_value=$rest
+            ;;
+          recheck)
+            has_recheck=1; active_key=recheck; recheck_value=$rest
+            ;;
+        esac
+        continue
+      fi
+      case "$active_key" in
+        verified-at) verified_value+=$'\n'"$line" ;;
+        recheck) recheck_value+=$'\n'"$line" ;;
+      esac
+    done
+
+    entry_drift_start=$N_DRIFT
+    entry_complete=1
+    if (( has_source )); then
+      source_state=present
+    else
+      source_state=absent; entry_complete=0
+      emit_finding META_SOURCE_ABSENT warn metadata "entry=$base key=source absent"
+    fi
+    if (( has_verified )); then
+      if [[ $verified_value =~ ^[[:space:]]*[0-9]{4}-[0-9]{2}-[0-9]{2} ]]; then
+        verified_state=dated
+      else
+        verified_state=undated; entry_complete=0
+        emit_finding META_VERIFIED_AT_UNDATED warn metadata \
+          "entry=$base key=verified-at does not begin YYYY-MM-DD"
+      fi
+    else
+      verified_state=absent; entry_complete=0
+      emit_finding META_VERIFIED_AT_ABSENT warn metadata \
+        "entry=$base key=verified-at absent"
+    fi
+    if (( has_recheck )); then
+      if [[ $recheck_value =~ ^[[:space:]]*([^[:space:]]+) ]]; then
+        recheck_first=${BASH_REMATCH[1]}
+      else
+        recheck_first=''
+      fi
+      if [[ $recheck_first =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ \
+         || $recheck_first =~ ^[0-9]+d$ \
+         || $recheck_first == on-release ]]; then
+        recheck_state=scheduled
+      else
+        recheck_state=unscheduled
+        emit_finding META_RECHECK_UNSCHEDULED info metadata \
+          "entry=$base key=recheck first-token=${recheck_first:--}"
+      fi
+      if [[ $recheck_value =~ $ROOT_PARENT_RE ]]; then
+        emit_finding META_RECHECK_ROOT_PARENT info metadata \
+          "entry=$base recheck uses --root .."
+      fi
+    else
+      recheck_state=absent; entry_complete=0
+      emit_finding META_RECHECK_ABSENT warn metadata "entry=$base key=recheck absent"
+    fi
+    (( entry_complete )) && complete=$((complete + 1))
+    if (( N_DRIFT > entry_drift_start )); then
+      metadata_lines+=("META entry=$base source=$source_state verified_at=$verified_state recheck=$recheck_state verdict=drift")
+    else
+      metadata_lines+=("META entry=$base source=$source_state verified_at=$verified_state recheck=$recheck_state verdict=clean")
+    fi
+  done
+
+  printf 'research-gate %s — ts=%s — mode=verify-metadata — path=%s — root=%s\n' \
+    "$VERSION" "$TS_UTC" "$path" "$ROOT"
+  for line in "${metadata_lines[@]+"${metadata_lines[@]}"}"; do printf '%s\n' "$line"; done
+  for line in "${FINDING_LINES[@]+"${FINDING_LINES[@]}"}"; do printf '%s\n' "$line"; done
+  printf 'METADATA_COMPLETE=%d/%d\n' "$complete" "${#files[@]}"
+  printf 'RESEARCH_GATE: %s (entries=%d complete=%d findings=%d drift=%d)\n' \
+    "$ROLL" "${#files[@]}" "$complete" "$N_FINDINGS" "$N_DRIFT"
+
+  [[ $ROLL == CLEAN ]] && return 0
+  return 1
+}
+
 
 # ---- verify-all mode: one input, one composed deep verdict ----
 
@@ -5195,6 +5377,202 @@ for ln in sys.stdin.read().splitlines():
     printf 'skip-case %-2d %-26s reason=%s\n' "$cases" json-unreadable-manifest 'root reads any file'
   fi
 
+  metadata_case() { # NAME PATH WANT_RC [expected output ... | ENV=VALUE | @order=a,b]
+    local name=$1 path=$2 want_rc=$3
+    shift 3
+    local -a want=() over=()
+    local arg rc=0 out nverdict expected_order='' actual_order msg='' tok
+    for arg in "$@"; do
+      if [[ $arg == @order=* ]]; then
+        expected_order=${arg#@order=}
+      elif [[ $arg =~ ^[A-Z_]+= ]]; then
+        over+=("$arg")
+      else
+        want+=("$arg")
+      fi
+    done
+    cases=$((cases + 1))
+    out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE \
+      CHOUSA_STRICT=0 CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+      "${over[@]+"${over[@]}"}" \
+      bash "$SELF" verify-metadata "$path" --root "$WORK" 2>&1) || rc=$?
+    nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
+    for tok in "${want[@]+"${want[@]}"}"; do
+      [[ $out == *"$tok"* ]] || msg+="missing:'$tok' "
+    done
+    if [[ $want_rc -eq 2 ]]; then
+      [[ ${nverdict:-0} -eq 0 ]] || msg+="verdict-lines=$nverdict/0 "
+    else
+      [[ ${nverdict:-0} -eq 1 ]] || msg+="verdict-lines=$nverdict/1 "
+    fi
+    if [[ -n $expected_order ]]; then
+      actual_order=$(printf '%s\n' "$out" \
+        | sed -n 's/^META entry=\([^ ]*\) .*/\1/p' | paste -sd, -)
+      [[ $actual_order == "$expected_order" ]] \
+        || msg+="meta-order=$actual_order/$expected_order "
+    fi
+    if [[ $rc -eq $want_rc && -z $msg ]]; then
+      printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" "$name" "$rc"
+    else
+      printf 'FAIL-case %-28s rc=%d/%d %s\n' "$name" "$rc" "$want_rc" "$msg"
+      printf '%s\n' "$out" | sed 's/^/    | /'
+      failures=$((failures + 1))
+    fi
+  }
+
+  cat >"$WORK/meta-clean.md" <<'EOF'
+source: S001 https://example.invalid/source#anchor
+verified-at: 2026-10-20 checked the claim
+recheck: 90d (re-open the source)
+## Claim
+The body is outside the metadata header.
+EOF
+  metadata_case metadata-clean "$WORK/meta-clean.md" 0 \
+    'META entry=meta-clean.md source=present verified_at=dated recheck=scheduled verdict=clean' \
+    'METADATA_COMPLETE=1/1' \
+    'RESEARCH_GATE: CLEAN (entries=1 complete=1 findings=0 drift=0)'
+
+  cat >"$WORK/meta-no-source.md" <<'EOF'
+verified-at: 2026-10-20 checked
+recheck: 90d
+EOF
+  metadata_case metadata-no-source "$WORK/meta-no-source.md" 1 \
+    'FINDING META_SOURCE_ABSENT severity=warn surface=metadata obs=entry=meta-no-source.md' \
+    'META entry=meta-no-source.md source=absent verified_at=dated recheck=scheduled verdict=drift' \
+    'METADATA_COMPLETE=0/1'
+  cat >"$WORK/meta-no-verified.md" <<'EOF'
+source: S001
+recheck: 90d
+EOF
+  metadata_case metadata-no-verified "$WORK/meta-no-verified.md" 1 \
+    'FINDING META_VERIFIED_AT_ABSENT severity=warn surface=metadata obs=entry=meta-no-verified.md' \
+    'META entry=meta-no-verified.md source=present verified_at=absent recheck=scheduled verdict=drift' \
+    'METADATA_COMPLETE=0/1'
+  cat >"$WORK/meta-no-recheck.md" <<'EOF'
+source: S001
+verified-at: 2026-10-20 checked
+EOF
+  metadata_case metadata-no-recheck "$WORK/meta-no-recheck.md" 1 \
+    'FINDING META_RECHECK_ABSENT severity=warn surface=metadata obs=entry=meta-no-recheck.md' \
+    'META entry=meta-no-recheck.md source=present verified_at=dated recheck=absent verdict=drift' \
+    'METADATA_COMPLETE=0/1'
+
+  cat >"$WORK/meta-undated.md" <<'EOF'
+source: S001
+verified-at: sometime yesterday
+recheck: on-release
+EOF
+  metadata_case metadata-undated "$WORK/meta-undated.md" 1 \
+    'FINDING META_VERIFIED_AT_UNDATED severity=warn surface=metadata obs=entry=meta-undated.md' \
+    'verified_at=undated recheck=scheduled verdict=drift'
+
+  cat >"$WORK/meta-unscheduled.md" <<'EOF'
+source: S001
+verified-at: 2026-10-20 checked
+recheck: when-needed (command follows)
+EOF
+  metadata_case metadata-unscheduled "$WORK/meta-unscheduled.md" 0 \
+    'FINDING META_RECHECK_UNSCHEDULED severity=info surface=metadata obs=entry=meta-unscheduled.md' \
+    'recheck=unscheduled verdict=clean' 'RESEARCH_GATE: CLEAN (entries=1 complete=1 findings=1 drift=0)'
+  metadata_case metadata-unscheduled-strict "$WORK/meta-unscheduled.md" 1 \
+    'FINDING META_RECHECK_UNSCHEDULED severity=info surface=metadata obs=entry=meta-unscheduled.md' \
+    'recheck=unscheduled verdict=drift' 'RESEARCH_GATE: DRIFT (entries=1 complete=1 findings=1 drift=1)' \
+    CHOUSA_STRICT=1
+
+  cat >"$WORK/meta-root-parent.md" <<'EOF'
+source: S001
+verified-at: 2026-10-20 checked
+recheck: 90d (`bash tools/research-gate.sh verify-chain corpus/fixtures/chain-r3.md --root ..`)
+EOF
+  metadata_case metadata-root-parent "$WORK/meta-root-parent.md" 0 \
+    'FINDING META_RECHECK_ROOT_PARENT severity=info surface=metadata obs=entry=meta-root-parent.md' \
+    'recheck=scheduled verdict=clean' 'RESEARCH_GATE: CLEAN (entries=1 complete=1 findings=1 drift=0)'
+
+  cat >"$WORK/meta-fenced.md" <<'EOF'
+```yaml
+source: S001
+verified-at: 2026-10-20 checked
+recheck: 90d
+```
+## Claim
+EOF
+  metadata_case metadata-fenced "$WORK/meta-fenced.md" 1 \
+    'FINDING META_SOURCE_ABSENT severity=warn surface=metadata obs=entry=meta-fenced.md' \
+    'FINDING META_VERIFIED_AT_ABSENT severity=warn surface=metadata obs=entry=meta-fenced.md' \
+    'FINDING META_RECHECK_ABSENT severity=warn surface=metadata obs=entry=meta-fenced.md' \
+    'METADATA_COMPLETE=0/1'
+
+  cat >"$WORK/meta-after-heading.md" <<'EOF'
+source: S001
+verified-at: 2026-10-20 checked
+## Claim
+recheck: 90d
+EOF
+  metadata_case metadata-after-heading "$WORK/meta-after-heading.md" 1 \
+    'FINDING META_RECHECK_ABSENT severity=warn surface=metadata obs=entry=meta-after-heading.md' \
+    'recheck=absent verdict=drift' 'METADATA_COMPLETE=0/1'
+
+  printf 'source: S001\r\nverified-at: 2026-10-20 checked\r\nrecheck: 365d\r\n## Claim\r\n' \
+    >"$WORK/meta-crlf.md"
+  metadata_case metadata-crlf "$WORK/meta-crlf.md" 0 \
+    'META entry=meta-crlf.md source=present verified_at=dated recheck=scheduled verdict=clean' \
+    'METADATA_COMPLETE=1/1' 'RESEARCH_GATE: CLEAN (entries=1 complete=1 findings=0 drift=0)'
+
+  mkdir -p "$WORK/meta-directory"
+  cat >"$WORK/meta-directory/z.md" <<'EOF'
+source: S001
+verified-at: 2026-10-20 checked
+EOF
+  cat >"$WORK/meta-directory/a.md" <<'EOF'
+source: S001
+verified-at: 2026-10-20 checked
+recheck: 180d
+EOF
+  metadata_case metadata-directory "$WORK/meta-directory" 1 \
+    'METADATA_COMPLETE=1/2' \
+    'META entry=a.md source=present verified_at=dated recheck=scheduled verdict=clean' \
+    'META entry=z.md source=present verified_at=dated recheck=absent verdict=drift' \
+    '@order=a.md,z.md'
+
+  metadata_case metadata-missing-path "$WORK/meta-missing.md" 2 \
+    'metadata path not found'
+  mkdir -p "$WORK/meta-empty-directory"
+  metadata_case metadata-empty-directory "$WORK/meta-empty-directory" 2 \
+    'metadata directory has no .md files'
+
+  printf 'source: S001\nverified-at: 2026-10-20 checked\nrecheck: 90d\x00\n' \
+    >"$WORK/meta-nul.md"
+  metadata_case metadata-nul-refused "$WORK/meta-nul.md" 1 \
+    'FINDING META_ENTRY_REFUSED severity=crit surface=metadata obs=entry=meta-nul.md reason=nul unparsed' \
+    'META entry=meta-nul.md source=refused verified_at=refused recheck=refused verdict=drift' \
+    'METADATA_COMPLETE=0/1'
+  mkdir -p "$WORK/.config" "$WORK/meta-alias"
+  printf 'source: S001\nverified-at: 2026-10-20 checked\nrecheck: 90d\n' \
+    >"$WORK/.config/private.md"
+  ln -s "$WORK/.config/private.md" "$WORK/meta-alias/alias.md"
+  metadata_case metadata-denylist-alias "$WORK/meta-alias" 1 \
+    'FINDING META_ENTRY_REFUSED severity=crit surface=metadata obs=entry=alias.md reason=denylist unparsed' \
+    'METADATA_COMPLETE=0/1'
+  cat >"$WORK/meta-continuation.md" <<'EOF'
+source: S001
+verified-at: 2026-10-20 checked
+recheck: 90d
+note: `bash tools/research-gate.sh verify-chain x.md --root ..`
+## Claim
+EOF
+  metadata_case metadata-nonkey-continuation "$WORK/meta-continuation.md" 0 \
+    'FINDING META_RECHECK_ROOT_PARENT severity=info surface=metadata obs=entry=meta-continuation.md' \
+    'METADATA_COMPLETE=1/1'
+
+  cases=$((cases + 1))
+  out=$(bash "$SELF" --help 2>&1) || rc=$?
+  if [[ ${rc:-0} -eq 0 && $out == *'verify-metadata PATH [--root PATH]'* ]]; then
+    printf 'ok-case  %-2d %-28s exit=0\n' "$cases" metadata-usage
+  else
+    printf 'FAIL-case %-28s usage entry missing or --help failed\n' metadata-usage
+    failures=$((failures + 1))
+  fi
+
   if [[ $failures -eq 0 ]]; then
     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"
     exit 0
@@ -5212,6 +5590,7 @@ while [[ $# -gt 0 ]]; do
     verify-chain) MODE=chain; shift ;;
     verify-sweeps) MODE=sweeps; shift ;;
     verify-integrity) MODE=integrity; shift ;;
+    verify-metadata) MODE=metadata; shift ;;
     verify-all) MODE=all; shift ;;
     --pin)
       [[ $# -ge 2 ]] || die_usage "--pin needs PATH"
@@ -5281,6 +5660,10 @@ case "$MODE" in
   integrity)
     INTEGRITY_PATH=${RECORD_ARG:-${CHOUSA_RECORD:-}}
     verify_integrity "$INTEGRITY_PATH"
+    ;;
+  metadata)
+    METADATA_PATH=${RECORD_ARG:-}
+    verify_metadata "$METADATA_PATH"
     ;;
   all)
     ALL_PATH=${RECORD_ARG:-${CHOUSA_RECORD:-}}
