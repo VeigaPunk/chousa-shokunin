@@ -1442,3 +1442,59 @@ Baseline comparability recheck: the exact final counting probe, run over
 records the same absent-mode rc2, 66 stale index items and 15 unresolved
 restatements (`round25-final-before.log`, probe exit0). Thus the later
 anti-deletion guards do not manufacture the before→after reduction.
+
+## Round26 recovery verdict — 2026-10-21, same attempt1
+
+**NOT ADMITTED.** This closes the author-lane record, not the fleet's outside
+closure. The earlier `Planned — round 26 (not started)` heading is historical:
+the actual preregistration is `f361d12e44687841e30ec35710ddb366c6f795e0`
+against base `ba3333254dd337658a4f25e7a9471f9cf4e4567e`. Its appender-race
+item was carried, not implemented or claimed. C1 instead exercised the
+round25 closure's reader-allocation risk on the lowest measured axis.
+
+Measured production revision: `0e9784bd52eca456b24d0bc40921480a47f91a2b`;
+gate SHA-256 `c2c813f1b425bc4e74625a2607eaca1b97addf9898f834e88af8f1fe2143abc6`.
+Command: `bash corpus/evidence/round26-measure.sh TREE all`, with TREE an
+isolated archive of that revision. The inherited author-lane critic actually
+executed it; its exact output is retained in
+`corpus/evidence/round26-inherited-after.log`, with command/record provenance
+and the seat's verification-scope violation in
+`round26-inherited-measurement.json`. Recovery did not repeat failed checks.
+Before: the identical probe at the base, `round26-measure-before.log`.
+
+| claim / axis | before → after observed | final author-lane verdict |
+|---|---|---|
+| C1 operability — metadata entry-reader allocation | `C1_AMPLIFIED=4/4 → 0/4`; frozen29 SHA `3f83ba4844cac8d2057b47661be225f84a5945fc7c1db739ec2070b6aa2a4a37`, rc1 unchanged | **improved narrowly**, but not verified under the complete claim contract: shared PASS hold fails and 31 falsifier seats returned no report |
+| C2 freshness — computed due dates | classified `0/29 → 29/29`, oracle `0/29 → 29/29`, controls `0/6 → 6/6` | **harmed / falsified** beyond frozen controls: cadence-input termination and locale-dependent usage exit; `FDateHugeCadence.md`, `FDateAsOfUsage.md` |
+| C3 calibration — registry relationships | controls `0/5 → 5/5`, positive `0/1 → 1/1`, frozen r24+ clean `0/5 → 5/5` | **harmed / falsified**: stale table-header state, incorrect source-token rescan and refused-path guarantee failure; `FRegistryHeaderless.md`, `FRegistryIdBoundary.md`, `FRegistryRegistryDeny.md` |
+
+All named falsifier reports are under `.ufo/waves/round-26/falsify/`.
+No frozen threshold or oracle was relaxed to erase those counterexamples.
+The registry comparator's set-of-finding-code comparison misses some
+occurrence/whitespace differences; frozen agreement is not grammar equivalence.
+
+Shared hold: base `PASS (161 cases, 0 skipped)` → target
+`FAIL (3/187 cases)`, exit1. Legacy161 case SHA remains
+`5eac4a7e2af964f6e81631f66990426e5c8ef58fb41ba6ec6d0054ef819e01cb`;
+drift remains none, rc0; archived-input observable remains3/3.
+`FNoTrade.md:115-137` explains the three new unsatisfiable usage assertions.
+Probe exit0 is not a PASS. The operability scalar stays **3→3, delta0**
+on the original narrow r1 construct; the inherited probe used its explicit
+fleet-root equivalent, and FNoTrade also exercised the original sibling-layout
+form. Neither form measures resource safety or general field readiness.
+
+No round26 capability is admitted to the repertoire table. The three new
+knowledge files are retained with explicit candidate/withdrawal qualifications;
+their presence and six mined source rows do not count as admitted expansion.
+Trends: **expansion unchanged; quality harmed; discernment unchanged**.
+The lane recorded and learned from falsification but has no outside round26
+admit/reject judgment. No new numeric freshness/calibration score is invented.
+
+Wave accounting: inherited build64 + falsify68 = **132 distinct seats**.
+Final reconciliation: build39 reports/25 no-report; falsify37 reports/31
+aborted no-report. Every seat transcript is terminal. Earlier death manifests
+describe earlier recovery snapshots; errors and reports can coexist.
+`build-final-reconciliation.json` and `falsify-final-reconciliation.json`
+retain per-seat report hashes, last errors, terminal records and dispositions.
+Recovery spawned/resumed/replaced zero seats. It does not claim full
+falsification, no-harm, promotion, or admission.

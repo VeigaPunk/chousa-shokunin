@@ -38,3 +38,20 @@ readers are not repaired by this change. Source identity, fd races, and
 semantic claim support remain separate boundaries (see the metadata-screen
 round25 note and the hardening ledger). Final C1 measurements are owned by
 `SCORECARD.md`'s Round26 row, not restated here before they exist.
+
+## Recovery qualification — 2026-10-21 (append-only)
+
+The final Round26 SCORECARD section now exists. At measured production
+revision `0e9784bd52eca456b24d0bc40921480a47f91a2b`, the inherited
+`round26-measure.sh TREE all` run records `C1_AMPLIFIED=0/4` with the frozen
+plain-output hash/rc unchanged (`evidence/round26-inherited-after.log`).
+`falsify/FMutateC1Killed.md` independently demonstrates an RSS detector's
+0→1→0 response to restoring the old array representation in a private copy.
+
+This is a narrow measured improvement, **not admission**: the cumulative
+gate's selftest fails3/187, and31 falsifier seats returned no report.
+`falsify/FNoTrade.md` also finds allocation amplification in the new
+registry parser, which C1's plain metadata-entry shapes do not exercise.
+All falsifier paths here are under `.ufo/waves/round-26/`.
+This note remains a qualified candidate; no universal resource-bound claim
+or new admitted capability is supported.

@@ -496,3 +496,21 @@ and very long-line/continuation inputs retain time risks, and other gate
 readers are not repaired. See `corpus/knowledge/reader-allocation-r26.md`
 and QUALITY18. The operability scalar remains the original r1 construct,
 not a resource-safety or readiness score.
+
+### Round26 recovery safety/status correction — 2026-10-21
+
+The options above describe the intended policy, **not a verified current
+capability**. At production revision
+`0e9784bd52eca456b24d0bc40921480a47f91a2b`, the cumulative selftest is
+`FAIL (3/187 cases)`, exit1; do not read the old passing tally or a counting
+probe's exit0 as current PASS. C2's new mode has input-domain failures; C3's
+new mode has table/tokenization/refusal defects. Their knowledge notes carry
+withdrawal addenda and exact falsifier pointers. They are not reliable
+automated admission/freshness decisions; manual QUALITY checks remain needed.
+
+C1's four plain-reader shapes improve4/4→0/4 amplified, but the round is
+**not admitted**, and the new registry parser separately amplifies allocation.
+Any earlier “bounded registry” wording means an input-byte snapshot cap,
+not a resource budget. SCORECARD's Round26 recovery section owns the observed
+counts, no-harm failure and remaining verification gaps. No new capability
+or SHONEN promotion is claimed.

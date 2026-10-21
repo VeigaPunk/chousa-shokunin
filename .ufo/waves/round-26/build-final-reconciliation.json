@@ -1,0 +1,2130 @@
+{
+  "schema": "chousa-round26-recovery-reconciliation-v1",
+  "observed_at": "2026-10-21T14:18:15.031005+00:00",
+  "coordinator": "ChousaR26R3",
+  "summary": {
+    "round": 26,
+    "attempt": 1,
+    "wave": "build",
+    "seats": 64,
+    "roles": {
+      "executor": 10,
+      "sentinel": 2,
+      "simplifier": 1,
+      "scout": 21,
+      "connector": 2,
+      "reviewer": 12,
+      "revenger": 4,
+      "critic": 6,
+      "scribe": 6
+    },
+    "reports": 39,
+    "no_report": 25,
+    "terminal_exits": 64,
+    "last_errors": {
+      "Request was aborted": 7,
+      "Retry budget exhausted after 5 retries: Codex error event: Codex is at capacity, please try again later (code=turn_rate_limit_exceeded)": 12,
+      "none": 3,
+      "Cursor PRO_USER_RATE_LIMIT_EXCEEDED: Rate limit exceeded.: You've reached the rate limit. Please wait a bit before trying again.": 1,
+      "429 Rate limit reached for requests\nRate limit reached for requests (type=1302)": 28,
+      "Retry budget exhausted after 5 retries: 429 Rate limit reached for requests\nRate limit reached for requests (type=1302)": 5,
+      "Cloud Code Assist API error (429): {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 95h46m56s.\",\n    \"status\": \"RESOURCE_EXHAUSTED\",\n    \"details\": [\n      {\n        \"@type\": \"type.googleapis.com/google.rpc.ErrorInfo\",\n        \"reason\": \"QUOTA_EXHAUSTED\",\n        \"domain\": \"cloudcode-pa.googleapis.com\",\n        \"metadata\": {\n          \"uiMessage\": \"true\",\n          \"model\": \"gemini-3.8-flash-high\",\n          \"quotaResetDelay\": \"95h46m56.681021498s\",\n          \"quotaResetTimeStamp\": \"2026-10-25T11:37:24Z\"\n        }\n      },\n      {\n        \"@type\": \"type.googleapis.com/google.rpc.RetryInfo\",\n        \"retryDelay\": \"344816.681021498s\"\n      }\n    ]\n  }\n}\n": 1,
+      "Cloud Code Assist API error (429): {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 95h46m57s.\",\n    \"status\": \"RESOURCE_EXHAUSTED\",\n    \"details\": [\n      {\n        \"@type\": \"type.googleapis.com/google.rpc.ErrorInfo\",\n        \"reason\": \"QUOTA_EXHAUSTED\",\n        \"domain\": \"cloudcode-pa.googleapis.com\",\n        \"metadata\": {\n          \"uiMessage\": \"true\",\n          \"model\": \"gemini-3.8-flash-high\",\n          \"quotaResetDelay\": \"95h46m57.960968943s\",\n          \"quotaResetTimeStamp\": \"2026-10-25T11:37:24Z\"\n        }\n      },\n      {\n        \"@type\": \"type.googleapis.com/google.rpc.RetryInfo\",\n        \"retryDelay\": \"344817.960968943s\"\n      }\n    ]\n  }\n}\n": 1,
+      "429 {\"type\":\"error\",\"error\":{\"type\":\"rate_limit_error\",\"message\":\"This request would exceed your account's rate limit. Please try again later.\"},\"request_id\":\"req_011CgFLEVAdVfsN6gfmgMMcX\"} retry-after-ms=10775000": 1,
+      "429 {\"type\":\"error\",\"error\":{\"type\":\"rate_limit_error\",\"message\":\"This request would exceed your account's rate limit. Please try again later.\"},\"request_id\":\"req_011CgFLEVBstiNfdfNgoFRrD\"} retry-after-ms=10775000": 1,
+      "429 {\"type\":\"error\",\"error\":{\"type\":\"rate_limit_error\",\"message\":\"This request would exceed your account's rate limit. Please try again later.\"},\"request_id\":\"req_011CgFLEVE6sYakrRyfwng2K\"} retry-after-ms=10775000": 1,
+      "429 {\"type\":\"error\",\"error\":{\"type\":\"rate_limit_error\",\"message\":\"This request would exceed your account's rate limit. Please try again later.\"},\"request_id\":\"req_011CgFLEVE6neDw5idh5eRbF\"} retry-after-ms=10775000": 1,
+      "429 {\"type\":\"error\",\"error\":{\"type\":\"rate_limit_error\",\"message\":\"This request would exceed your account's rate limit. Please try again later.\"},\"request_id\":\"req_011CgFLEVBcu6pzZodanyR2W\"} retry-after-ms=10775000": 1,
+      "429 {\"type\":\"error\",\"error\":{\"type\":\"rate_limit_error\",\"message\":\"This request would exceed your account's rate limit. Please try again later.\"},\"request_id\":\"req_011CgFLEWQo8D5EYrj2mPLr8\"} retry-after-ms=10774000": 1
+    }
+  },
+  "seats": [
+    {
+      "name": "ExecC1Stream",
+      "kind": "spawn",
+      "agentId": "ChousaR26.ExecC1Stream-3",
+      "role": "executor",
+      "item": null,
+      "axes": [
+        "operability"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/ExecC1Stream.md",
+      "report_sha256": "e69c9bdc3f783e7f91ef595870e9e45a8c66d5e148c27ae614b87245f69b0f7d",
+      "report_bytes": 2989,
+      "report_headings_and_verdicts": [
+        "# Round 26 — ExecC1Stream",
+        "## Implementation",
+        "## C1 evidence",
+        "## Holds evidence",
+        "## Risks / blockers",
+        "VERDICT: C1 operability result matches the registered prediction (0/4 amplified); frozen output, cases 1–161, drift, and verdict-bearing exports hold."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:03:45.908Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:56:45.750Z",
+        "provider": "openai-codex",
+        "model": "gpt-6-luna",
+        "error": "Request was aborted",
+        "stopReason": "aborted"
+      },
+      "transcript_sha256": "2da8c764a8ecf7fb37df61392c232de99face8bf569e9b0bd32a1761d6881368",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "ExecC1Prefix",
+      "kind": "spawn",
+      "agentId": "ChousaR26.ExecC1Prefix-3",
+      "role": "executor",
+      "item": null,
+      "axes": [
+        "operability"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": null,
+      "report_sha256": null,
+      "report_bytes": 0,
+      "report_headings_and_verdicts": [],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T11:57:39.733Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:50:39.712Z",
+        "provider": "openai-codex",
+        "model": "gpt-6-luna",
+        "error": "Retry budget exhausted after 5 retries: Codex error event: Codex is at capacity, please try again later (code=turn_rate_limit_exceeded)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "e95cbb78188298e532395ce6951758f43fd6d3109cf8d934679fee4aa464eb7c",
+      "disposition": "Incomplete; no result inferred and no identity replaced."
+    },
+    {
+      "name": "ExecC2Due",
+      "kind": "spawn",
+      "agentId": "ChousaR26.ExecC2Due-3",
+      "role": "executor",
+      "item": null,
+      "axes": [
+        "freshness"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/ExecC2Due.md",
+      "report_sha256": "838a59cab3e8c584181d813f0df3cd971906079cf1b5408d2b64fd0bfd1cf6cf",
+      "report_bytes": 1997,
+      "report_headings_and_verdicts": [
+        "# ExecC2Due — round 26 Claim 2",
+        "## Implementation",
+        "## Retained evidence",
+        "VERDICT: C2 implementation and patch are complete; candidate verification is deferred per L1 handoff."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:50:52.872Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T12:03:45.915Z",
+        "provider": "openai-codex",
+        "model": "gpt-6-luna",
+        "error": "Request was aborted",
+        "stopReason": "aborted"
+      },
+      "transcript_sha256": "52c6c89df70d60caacdd18a894fcffe0b36e041467a800889463a42d9841518e",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "ExecC2DateDiff",
+      "kind": "spawn",
+      "agentId": "ChousaR26.ExecC2DateDiff-3",
+      "role": "executor",
+      "item": null,
+      "axes": [
+        "freshness"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/ExecC2DateDiff.md",
+      "report_sha256": "414369a49748d43535be32b14b1b4529035f274ccdddd833ab02719db459b7fe",
+      "report_bytes": 2066,
+      "report_headings_and_verdicts": [
+        "# ExecC2DateDiff — round 26 attempt 1",
+        "## Scoped artifact",
+        "## Execution and limits",
+        "VERDICT: Differential script and patch are retained in the private clone; required runtime evidence is outstanding per the L1 stop instruction."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:50:51.529Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:56:45.751Z",
+        "provider": "openai-codex",
+        "model": "gpt-6-luna",
+        "error": "Request was aborted",
+        "stopReason": "aborted"
+      },
+      "transcript_sha256": "76d9286dbd6ba3d28123a8e2df716873fbdd505d08c972b388cb2d5736e382af",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "ExecC3Registry",
+      "kind": "spawn",
+      "agentId": "ChousaR26.ExecC3Registry-3",
+      "role": "executor",
+      "item": null,
+      "axes": [
+        "calibration"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/ExecC3Registry.md",
+      "report_sha256": "8bd720a05b6552b26b2aa10259537f2f316d39a40c31ee4184fa34082014a392",
+      "report_bytes": 4272,
+      "report_headings_and_verdicts": [
+        "# Round 26 — Claim 3 registry implementation",
+        "## Behavior implemented",
+        "## Evidence, checks, risks",
+        "VERDICT: C3 implementation and patch complete; C3 probe and holds intentionally unrun per L1 instruction; no installs."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T13:11:50.834Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:56:45.751Z",
+        "provider": "openai-codex",
+        "model": "gpt-6-luna",
+        "error": "Request was aborted",
+        "stopReason": "aborted"
+      },
+      "transcript_sha256": "418a3d7d20d46259392b96cf54816fbecea6750249b6eddbb998197d78c87b96",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "ExecC3Oracle",
+      "kind": "spawn",
+      "agentId": "ChousaR26.ExecC3Oracle-3",
+      "role": "executor",
+      "item": null,
+      "axes": [
+        "calibration"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/ExecC3Oracle.md",
+      "report_sha256": "8687d25e5516bf92308741a17b2ba508332f5b9617301d958f3eb08412bed496",
+      "report_bytes": 4276,
+      "report_headings_and_verdicts": [
+        "# ExecC3Oracle — round 26 advisory",
+        "## Files and behavior",
+        "## Evidence and results",
+        "## Risks and blockers",
+        "VERDICT: Oracle and differential are tightened against the four reported falsifiers; no corrected-run or broken-copy result is claimed."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T13:15:10.685Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:56:45.751Z",
+        "provider": "openai-codex",
+        "model": "gpt-6-luna",
+        "error": "Request was aborted",
+        "stopReason": "aborted"
+      },
+      "transcript_sha256": "ae3d8333e425bc9755bb0a92c02972fa4906ce8e2b9616057ed2d635815007ce",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "ExecReaderCensus",
+      "kind": "spawn",
+      "agentId": "ChousaR26.ExecReaderCensus-3",
+      "role": "executor",
+      "item": null,
+      "axes": [
+        "operability"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/ExecReaderCensus.md",
+      "report_sha256": "f19861475e15218e1491b5c996901a187faeab220eb3ac981e25078beecca118",
+      "report_bytes": 5593,
+      "report_headings_and_verdicts": [
+        "# Round 26 — ExecReaderCensus",
+        "## Out-of-C1 reader debt (base line references)",
+        "VERDICT: The C1 allocation is confirmed by the requested 1 MiB measurement; distinct whole-record, section-copy, cited-source, and drift-buffer paths remain out-of-scope debt, with 8 MiB values explicitly extrapolated only."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:56:11.067Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:56:45.943Z",
+        "provider": "openai-codex",
+        "model": "gpt-6-luna",
+        "error": "Request was aborted",
+        "stopReason": "aborted"
+      },
+      "transcript_sha256": "6d24afe8ec9b76db9646022ad046d58ed6552d428e647fad8811304d3845b9ec",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "ExecC1Scaling",
+      "kind": "spawn",
+      "agentId": "ChousaR26.ExecC1Scaling-3",
+      "role": "executor",
+      "item": null,
+      "axes": [
+        "operability"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": null,
+      "report_sha256": null,
+      "report_bytes": 0,
+      "report_headings_and_verdicts": [],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T11:57:39.100Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:50:39.083Z",
+        "provider": "openai-codex",
+        "model": "gpt-6-luna",
+        "error": "Retry budget exhausted after 5 retries: Codex error event: Codex is at capacity, please try again later (code=turn_rate_limit_exceeded)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "663b5df80a1a55b50e1d07c220a83fa208bcb7840b2802bf79c97273d95f9f8a",
+      "disposition": "Incomplete; no result inferred and no identity replaced."
+    },
+    {
+      "name": "ExecHeaderGolden",
+      "kind": "spawn",
+      "agentId": "ChousaR26.ExecHeaderGolden-3",
+      "role": "executor",
+      "item": null,
+      "axes": [
+        "operability"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": null,
+      "report_sha256": null,
+      "report_bytes": 0,
+      "report_headings_and_verdicts": [],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T11:57:39.692Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:50:39.673Z",
+        "provider": "openai-codex",
+        "model": "gpt-6-luna",
+        "error": "Retry budget exhausted after 5 retries: Codex error event: Codex is at capacity, please try again later (code=turn_rate_limit_exceeded)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "00c8917b980793c7328b006e6c12386879b10911d02b42d737bb9e6ac3f33bfe",
+      "disposition": "Incomplete; no result inferred and no identity replaced."
+    },
+    {
+      "name": "ExecProbeAttack",
+      "kind": "spawn",
+      "agentId": "ChousaR26.ExecProbeAttack-3",
+      "role": "executor",
+      "item": null,
+      "axes": [
+        "calibration"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/ExecProbeAttack.md",
+      "report_sha256": "0b95f213ea61596eb99ed9a93602a0b7fe28ec6e2f7c130ecd8bd94e94ffe077",
+      "report_bytes": 5316,
+      "report_headings_and_verdicts": [
+        "# Round 26 — counting-probe attack (ExecProbeAttack-3)",
+        "## Results",
+        "## Vacuous-zero check and limits",
+        "## Retained artifacts",
+        "VERDICT: C2/C3 targeted controls detect the tested semantic mutants, but the C2 no-`--as-of` compatibility blind spot can let an incorrect gate score the full after-vector; failed option parsing also produces success-status zero counters. C1's hash hold catches skip-header output drift, but its amplification value alone can false-pass."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:50:52.578Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:56:45.751Z",
+        "provider": "openai-codex",
+        "model": "gpt-6-luna",
+        "error": "Request was aborted",
+        "stopReason": "aborted"
+      },
+      "transcript_sha256": "c1a2ae463e1d25a7c1484d79321cc6dfb98f10d422250873395f49c9273518fd",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "SentinelC2C3Args",
+      "kind": "spawn",
+      "agentId": "ChousaR26.SentinelC2C3Args-3",
+      "role": "sentinel",
+      "item": null,
+      "axes": [
+        "freshness",
+        "calibration"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": null,
+      "report_sha256": null,
+      "report_bytes": 0,
+      "report_headings_and_verdicts": [],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T11:57:38.597Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:50:38.581Z",
+        "provider": "openai-codex",
+        "model": "gpt-6-luna",
+        "error": "Retry budget exhausted after 5 retries: Codex error event: Codex is at capacity, please try again later (code=turn_rate_limit_exceeded)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "f47b7bdec96797aac412143c0d3d31f9cae50947d63f32c6b0a5f04a8431abe0",
+      "disposition": "Incomplete; no result inferred and no identity replaced."
+    },
+    {
+      "name": "SentinelReaderBounds",
+      "kind": "spawn",
+      "agentId": "ChousaR26.SentinelReaderBounds-3",
+      "role": "sentinel",
+      "item": null,
+      "axes": [
+        "operability"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/SentinelReaderBounds.md",
+      "report_sha256": "d17a5a1ba7e925c1eb6a0db308dc2ee38568be87c80ceeaf6c6e291e92015dc8",
+      "report_bytes": 4443,
+      "report_headings_and_verdicts": [
+        "# C1 reader bounds — adversarial review",
+        "## Findings",
+        "## Three additional shape families",
+        "VERDICT: C1 is a real availability defect: the registered shapes expose array amplification but miss a superlinear single-line CPU path and direct fence/value-continuation coverage. No installs."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:03:35.393Z"
+      },
+      "last_assistant_error": null,
+      "transcript_sha256": "f6ce9ecfb90ef7e343e9aa0eedf41b03dec0509db1a557921f7a91fc4af9ece9",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "SimplifierReader",
+      "kind": "spawn",
+      "agentId": "ChousaR26.SimplifierReader-3",
+      "role": "simplifier",
+      "item": null,
+      "axes": [
+        "operability"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/SimplifierReader.md",
+      "report_sha256": "e4cfccca35203709bef7a371dcf053219579c4656d9334bb2d8f1d057903b023",
+      "report_bytes": 4657,
+      "report_headings_and_verdicts": [
+        "# Round 26 — SimplifierReader (WRITER)",
+        "## Smallest proposal",
+        "## Preserved contract and stopping point",
+        "## Evidence and limits",
+        "## Every written clone artifact (SHA256)",
+        "VERDICT: Minimal array-deletion proposal preserves all 161 existing cases; bounded-reader population/RSS acceptance remains unmeasured here."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T11:59:01.411Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:50:29.414Z",
+        "provider": "cursor",
+        "model": "composer-2.5-fast",
+        "error": "Cursor PRO_USER_RATE_LIMIT_EXCEEDED: Rate limit exceeded.: You've reached the rate limit. Please wait a bit before trying again.",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "bc32ed54e6c7b6a5fe7572b259b341bbc072645599baf073ef609e255c03baf3",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "SrcCochraneLSR",
+      "kind": "spawn",
+      "agentId": "ChousaR26.SrcCochraneLSR-3",
+      "role": "scout",
+      "item": null,
+      "axes": [
+        "freshness"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/SrcCochraneLSR.md",
+      "report_sha256": "5f7ef622c099d8cd9a7c1c6a23828925662d96380b014ca8b4ff55685b5790dc",
+      "report_bytes": 4769,
+      "report_headings_and_verdicts": [
+        "# Cochrane LSR cadence source — round 26",
+        "## Opened source and outcome",
+        "## Findings",
+        "## Proposed registry row (contract v1 column order)",
+        "## Duplicate check and limits",
+        "VERDICT: Official Cochrane guidance supports declared, protocol-specified LSR update cadence while separating it from monthly search cadence; its scope is Cochrane LSR methods, not general metadata freshness."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:01:20.529Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:52:12.751Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "56642d2680f048e6d82ff5e5acd53b27b561c267e6385900212810873bbf036c",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "SrcGarner2016",
+      "kind": "spawn",
+      "agentId": "ChousaR26.SrcGarner2016-3",
+      "role": "scout",
+      "item": null,
+      "axes": [
+        "freshness"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/SrcGarner2016.md",
+      "report_sha256": "a0a58d760a02ee12442ead8d6f2d811eec030b22c801dcc44ee7f689e1ec4ac2",
+      "report_bytes": 3579,
+      "report_headings_and_verdicts": [
+        "# Garner et al. 2016 — source opening (round 26)",
+        "## Access and duplicate check",
+        "## Located quote",
+        "## Proposed SOURCES.md contract-v1 row",
+        "## Scope limits / what this source does not support"
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T13:02:00.349Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T12:52:30.568Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "9c1bb6a9ccd3ac07a7bcca0f78366e1bb34fd201d551c61e2c75d1a939e7269a",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "SrcBashir2018",
+      "kind": "spawn",
+      "agentId": "ChousaR26.SrcBashir2018-3",
+      "role": "scout",
+      "item": null,
+      "axes": [
+        "freshness"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/SrcBashir2018.md",
+      "report_sha256": "05324adb4aa1a8fce554a6ba70500cc9b3d249d7d9cc9b57dcf1f9978288fa09",
+      "report_bytes": 4190,
+      "report_headings_and_verdicts": [
+        "# Bashir et al. 2018 source opening — C2",
+        "## Observed",
+        "## Proposed row (not added to SOURCES.md)",
+        "## Limits / support states",
+        "VERDICT: Opened primary source; scoped A-tier support for a sample-specific measured update interval, not for a metadata due-date policy. Installs: none."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:02:09.000Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:53:40.994Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "8e3667bee82a1e889c080d569339f1b132996931a43a026b5500a119b69fd70d",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "SrcAhrqSignals",
+      "kind": "spawn",
+      "agentId": "ChousaR26.SrcAhrqSignals-3",
+      "role": "scout",
+      "item": null,
+      "axes": [
+        "freshness"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/SrcAhrqSignals.md",
+      "report_sha256": "43f7da432e6af584a57a3a63c35ddb9257a46bda545d710994f87dce82d694ae",
+      "report_bytes": 4888,
+      "report_headings_and_verdicts": [
+        "# SrcAhrqSignals — AHRQ/Shekelle signal-detection source opening (round 26, C2)",
+        "## HTTP outcomes (observed)",
+        "## (1) Verbatim located quotes (each ≤25 words)",
+        "## (2) Proposed registry row (contract v1 column order; id TBD → S034, next unused after S033, L1 confirms)",
+        "## (3) Scope limits — what this source does NOT support (QUALITY 7/8)",
+        "## Duplicate check",
+        "## Fit to C2 (overdue vs event-triggered rechecks)",
+        "VERDICT: Opened Shekelle 2014 via SpringerOpen (HTTP 200) after NCBI/AHRQ bot-blocks; propose queued tier-A row S034 grounding signal-triggered triage over calendar-only rechecks."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:55:55.786Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T12:47:48.624Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "5b93c2edd1179daa2711bc6f18447bd6105f611b6dcfc2478aaa272ce04edecd",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "SrcRfc3339",
+      "kind": "spawn",
+      "agentId": "ChousaR26.SrcRfc3339-3",
+      "role": "scout",
+      "item": null,
+      "axes": [
+        "freshness"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/SrcRfc3339.md",
+      "report_sha256": "628e99b9acb07b4252487acc4dac785b8e94e28efe16c908bc7b4f3d6e676312",
+      "report_bytes": 3831,
+      "report_headings_and_verdicts": [
+        "# RFC 3339 source finding — C2",
+        "## Observed",
+        "## Proposed SOURCES.md row (contract v1 column order; not written)",
+        "## Scope limits / epistemic boundary",
+        "## Inference and unresolved",
+        "VERDICT: Official RFC text opened (HTTP 200); no duplicate RFC 3339 registry row observed; proposed S034 is queued and narrowly scoped."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:02:20.196Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:54:07.518Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "ba87e3a03f873805fe1fdede1b90bdc56a1203d3fec54da5a0e500cbe040b9cf",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "SrcPythonDatetime",
+      "kind": "spawn",
+      "agentId": "ChousaR26.SrcPythonDatetime-3",
+      "role": "scout",
+      "item": null,
+      "axes": [
+        "freshness"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/SrcPythonDatetime.md",
+      "report_sha256": "091959e9fc3d3aa6ec76c3d7fd4e93c52a1e64a075b0ba4748b9269ff916f7e0",
+      "report_bytes": 3773,
+      "report_headings_and_verdicts": [
+        "# SrcPythonDatetime — Python datetime.date calendar (round 26, C2 oracle)",
+        "## Opening",
+        "## (1) Verbatim located quote (23 words ≤25)",
+        "## (2) Proposed registry row — contract v1 column order, next id S034",
+        "## (3) What this source does NOT support (QUALITY 7/8 scope limits)",
+        "VERDICT: Page opened HTTP 200 2026-10-21; proleptic-Gregorian quote located at anchor datetime.date; S034 queued tier-A row proposed, no duplicate; bash-side calendar source remains unopened."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:54:49.364Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T12:47:02.265Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "c8d731f694931c9079f5700d948b23db219f493591018c21f3b441ee4966b485",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "SrcCwe770",
+      "kind": "spawn",
+      "agentId": "ChousaR26.SrcCwe770-3",
+      "role": "scout",
+      "item": null,
+      "axes": [
+        "operability"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": null,
+      "report_sha256": null,
+      "report_bytes": 0,
+      "report_headings_and_verdicts": [],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:57:22.600Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T12:50:22.589Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "Retry budget exhausted after 5 retries: 429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "782b8acb0558e4ce57a60f368f25b41a1ab89c8b644218562bb73a3f2fcc5b45",
+      "disposition": "Incomplete; no result inferred and no identity replaced."
+    },
+    {
+      "name": "SrcCwe400",
+      "kind": "spawn",
+      "agentId": "ChousaR26.SrcCwe400-3",
+      "role": "scout",
+      "item": null,
+      "axes": [
+        "operability"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/SrcCwe400.md",
+      "report_sha256": "67373d53dd5d6cf09fff658fce1d0b2e93a95c9222d0bf267e9f99d787eae5a3",
+      "report_bytes": 3529,
+      "report_headings_and_verdicts": [
+        "# CWE-400 source opening — round 26",
+        "## Observed",
+        "## Proposed SOURCES.md row (contract v1 order)",
+        "## Scope limits",
+        "VERDICT: Opened official primary page (HTTP 200); useful for the CWE-400/CWE-770 taxonomy distinction only, with no duplicate registry row."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:51:07.056Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T12:40:10.571Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "d3ccc0608c10c629df1ec71128c16ce5d291f67eefa0d6f15f7d276930b02bb7",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "SrcBashRead",
+      "kind": "spawn",
+      "agentId": "ChousaR26.SrcBashRead-3",
+      "role": "scout",
+      "item": null,
+      "axes": [
+        "operability"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/SrcBashRead.md",
+      "report_sha256": "0bf776e4ab942388e6e8eb29677bddd7ce85eb5d3d44da1725739f0d4c4071c1",
+      "report_bytes": 3996,
+      "report_headings_and_verdicts": [
+        "# Round 26 source opening — GNU Bash Reference Manual",
+        "## Access and source identity",
+        "## Located evidence",
+        "## C1 applicability and limits",
+        "## Proposed SOURCES.md row (contract v1 order)",
+        "VERDICT: Opened and located the official Bash 5.3 manual via the upstream release archive; useful for C1 reader semantics only, not allocation or RSS evidence."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T13:09:16.232Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T12:52:31.107Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "95e285e256015ef0e34cba4a26121fd076547da1d5cd101a9d76c2dc9bca4abc",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "SrcCito",
+      "kind": "spawn",
+      "agentId": "ChousaR26.SrcCito-3",
+      "role": "scout",
+      "item": null,
+      "axes": [
+        "freshness",
+        "calibration"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/SrcCito.md",
+      "report_sha256": "13165995aa59e566102aabc7f5625ba451f851766e45f2d8a8eae15cff5a4cec",
+      "report_bytes": 3760,
+      "report_headings_and_verdicts": [
+        "# CiTO source opening — SrcCito-3",
+        "## Opened source and findings",
+        "## Proposed `corpus/SOURCES.md` row (not written to registry)",
+        "## Limits",
+        "VERDICT: Tier A for CiTO's own typed citation-relation definitions; queued pending a knowledge entry. No mirror needed; primary page answered. Installs: none."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:01:37.461Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:52:09.950Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "8a941893335bf40cd648e4b4c13bd2f23ecd8a47a0160f81ce3deaab9152e7ac",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "SrcWikidataP813",
+      "kind": "spawn",
+      "agentId": "ChousaR26.SrcWikidataP813-3",
+      "role": "scout",
+      "item": null,
+      "axes": [
+        "freshness",
+        "calibration"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": null,
+      "report_sha256": null,
+      "report_bytes": 0,
+      "report_headings_and_verdicts": [],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:57:21.782Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T12:50:21.769Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "Retry budget exhausted after 5 retries: 429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "53b48a2628ff2ccccdf98e5dc06922d8e397f74013d9fdffcf5e05dbe387d65c",
+      "disposition": "Incomplete; no result inferred and no identity replaced."
+    },
+    {
+      "name": "SrcCopeRetraction",
+      "kind": "spawn",
+      "agentId": "ChousaR26.SrcCopeRetraction-3",
+      "role": "scout",
+      "item": null,
+      "axes": [
+        "freshness"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/SrcCopeRetraction.md",
+      "report_sha256": "0b7b7fa0ab54fae7432b3a073a5d208170e50af5f270630ec72f919c8ab01f8c",
+      "report_bytes": 3891,
+      "report_headings_and_verdicts": [
+        "# COPE Retraction Guidelines — source opening",
+        "## Access and located text",
+        "## Registry check and proposed v1 row",
+        "## What this source does not support",
+        "VERDICT: Useful tier-A evidence for COPE's editorial advice on timely retraction notices; only indirect, explicitly labelled support for event-triggered metadata rechecks. No duplicate registry row found; direct HTTP access returned 403 and the official PDF mirror also returned 403."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:02:44.141Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:53:50.174Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "db374d0bd6190a08991210105bd21bae0228b9af0611cdd31e33048050babd44",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "SrcRetractionWatchCrossref",
+      "kind": "spawn",
+      "agentId": "ChousaR26.SrcRetractionWatchCrossref-3",
+      "role": "scout",
+      "item": null,
+      "axes": [
+        "freshness"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/SrcRetractionWatchCrossref.md",
+      "report_sha256": "cd627683cb872a424dc7637e3d1ec30b89fe0b0a98a0edd7d6620894d411f357",
+      "report_bytes": 5564,
+      "report_headings_and_verdicts": [
+        "# SrcRetractionWatchCrossref — round 26 source opening (C2 event triggers)",
+        "## 1. What answered (observed, 2026-10-21)",
+        "## 2. Quotes (verbatim, located)",
+        "## 3. Proposed SOURCES.md rows (contract v1 column order; ids TBD — table ends at S033, SOURCES.md:43, but sibling seats also propose rows; L1 assigns)",
+        "## 4. What these sources do NOT support (QUALITY 7/8)",
+        "## 5. Duplication check",
+        "## 6. Search-log note (SOURCES rule 5, for the round lesson)",
+        "## 7. Bounds",
+        "VERDICT: Both Crossref pages opened successfully (numeric status unavailable); two tier-A rows proposed with verbatim ≤25-word quotes grounding C2's \"event triggers are machine-checkable metadata\"; no existing row duplicated."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:55:21.642Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T12:47:07.929Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "826e016e3ae254b12a6e75134d448ec5d0b2f0f038b565061992fabeee8f5c0a",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "SrcSchemaExpires",
+      "kind": "spawn",
+      "agentId": "ChousaR26.SrcSchemaExpires-3",
+      "role": "scout",
+      "item": null,
+      "axes": [
+        "freshness"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": null,
+      "report_sha256": null,
+      "report_bytes": 0,
+      "report_headings_and_verdicts": [],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:51:01.885Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T12:44:01.874Z",
+        "provider": "openai-codex",
+        "model": "gpt-6-luna",
+        "error": "Retry budget exhausted after 5 retries: Codex error event: Codex is at capacity, please try again later (code=turn_rate_limit_exceeded)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "b55dc72f7abe9f0defd413c46c206af54d98e37cb2aa1d6ce4bd171ec5922565",
+      "disposition": "Incomplete; no result inferred and no identity replaced."
+    },
+    {
+      "name": "SrcNisoJav",
+      "kind": "spawn",
+      "agentId": "ChousaR26.SrcNisoJav-3",
+      "role": "scout",
+      "item": null,
+      "axes": [
+        "freshness",
+        "calibration"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/SrcNisoJav.md",
+      "report_sha256": "46a349eefb9f055bb549215bce28b30256add3203c45fdd7f55ca4f295cf4c87",
+      "report_bytes": 4020,
+      "report_headings_and_verdicts": [
+        "# SrcNisoJav-3 — NISO JAV source opening (round 26)",
+        "## Opened source and located quote",
+        "## Proposed SOURCES.md row (contract v1 order)",
+        "## C2/C3 use and limits (QUALITY 7/8)",
+        "VERDICT: Opened the official NISO page and practice; candidate row is narrowly useful for identifying correction/enhancement version signals, but does not itself prescribe freshness checks."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T13:04:59.691Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T12:54:57.349Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "694622939ad52d7fffdd491b91be0c17d060391d517b34fffabac51b50c89fcc",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "SrcProvDmDerivation",
+      "kind": "spawn",
+      "agentId": "ChousaR26.SrcProvDmDerivation-3",
+      "role": "scout",
+      "item": null,
+      "axes": [
+        "freshness",
+        "calibration"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/SrcProvDmDerivation.md",
+      "report_sha256": "dcc004d7c94b98fd9a530e73ebcf7497282ab7b6b7b83e2cfe6ad2ebebc9dcc6",
+      "report_bytes": 2827,
+      "report_headings_and_verdicts": [
+        "# W3C PROV-DM derivation — source opening",
+        "VERDICT: Opened the W3C primary source successfully; it supports the narrow derivation-model claim, not the C3 registry policy or truth of linked claims."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:00:43.970Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:51:55.445Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "dc7eceb25038896a1a7588769ec067d71e6cd186cd4258a442fb9c2c068049b8",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "ScoutHeaderTable",
+      "kind": "spawn",
+      "agentId": "ChousaR26.ScoutHeaderTable-3",
+      "role": "scout",
+      "item": null,
+      "axes": [
+        "freshness"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": null,
+      "report_sha256": null,
+      "report_bytes": 0,
+      "report_headings_and_verdicts": [],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:57:23.037Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T12:50:23.024Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "Retry budget exhausted after 5 retries: 429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "444c8c3690e1df45bff7e401fcd6b634fd6769cdee422c76ff6d8a0ef4961310",
+      "disposition": "Incomplete; no result inferred and no identity replaced."
+    },
+    {
+      "name": "ScoutRegistryWalk",
+      "kind": "spawn",
+      "agentId": "ChousaR26.ScoutRegistryWalk-3",
+      "role": "scout",
+      "item": null,
+      "axes": [
+        "calibration"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/ScoutRegistryWalk.md",
+      "report_sha256": "51e1e01e63bb9e8c34802846b7df6a832a3b961815be9187a5552f4cd1b2ec29",
+      "report_bytes": 3035,
+      "report_headings_and_verdicts": [
+        "# Round 26 — C3 registry walk",
+        "VERDICT: No scoped C3 data defect or reverse-link curation defect found at the registered base."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:02:59.942Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:54:02.011Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "3388d766e1741e1448bb29ffcf4fc717ddcf8091d43f3e4c9a33bd3d30f48da8",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "ScoutMistakeSweep",
+      "kind": "spawn",
+      "agentId": "ChousaR26.ScoutMistakeSweep-3",
+      "role": "scout",
+      "item": null,
+      "axes": [
+        "calibration"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/ScoutMistakeSweep.md",
+      "report_sha256": "8db93fda5fb7a9142570cfb4cd6e41aaac8e95b0cc9d792b50a23d4cfaf0c906",
+      "report_bytes": 5335,
+      "report_headings_and_verdicts": [
+        "# Round-25 mistake sweep",
+        "## Findings",
+        "## Reconciliations / non-findings",
+        "VERDICT: Three named round-25 mistakes (M13–M15) are absent from the lesson's `## Mistakes` table; M7/M11 capture cells contradict their own append-only corrections, and M12's table proof must preserve its independence caveat. No installs."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:55:59.754Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T12:45:23.741Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "7fb9f788843bfc10c00c1abb7907ed833c8650da2e95c5ff8cad8d2e0d664734",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "ScoutCarriedDebt",
+      "kind": "spawn",
+      "agentId": "ChousaR26.ScoutCarriedDebt-3",
+      "role": "scout",
+      "item": null,
+      "axes": [
+        "calibration"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/ScoutCarriedDebt.md",
+      "report_sha256": "23e5db80c76a01ecda3431519dc68af8d36cf9d6ed9f4ee3b7604546bf5c05c5",
+      "report_bytes": 6001,
+      "report_headings_and_verdicts": [
+        "# ScoutCarriedDebt — open/carried named debt at base ba333325 (round 26, attempt 1)",
+        "## A. Debts this round's claims touch",
+        "## B. hardening-r10 ledger queue (live counts owner hardening-r10.md:685-696)",
+        "## C. Carried inside closures (no §3 row)",
+        "## D. round-25 lesson out-of-population paragraph (round-25.md:50-57) — all carried, none touched",
+        "## E. Spot-check intake carried rows (round-25.md:18-31)",
+        "## F. Staleness flags — stated carrying criterion still exists?",
+        "## G. Adjacent (outside the five named sources)",
+        "VERDICT: C1 touches closure-routed reader amplification; C2 touches overdue computability but not missing legacy rechecks; C3 touches criterion-6 screening. The D-11 appender race, 22 carried ledger rows, 3 operator debts, 4 out-of-population findings and closure-text residuals remain. Queue count remains 24 committed / 25 true with its documented discrepancy; no stated QUALITY carry criterion is absent."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:55:50.566Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T12:45:23.219Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "771df7119c6a01ca496afe43258b8c398edd72b12faf3918c443453ac0e660d1",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "ScoutSkillGates",
+      "kind": "spawn",
+      "agentId": "ChousaR26.ScoutSkillGates-3",
+      "role": "scout",
+      "item": null,
+      "axes": [
+        "operability"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/ScoutSkillGates.md",
+      "report_sha256": "15bfd4782a80387202c351db387681b957f583fa18947e4712b3b579f72390df",
+      "report_bytes": 5507,
+      "report_headings_and_verdicts": [
+        "# ScoutSkillGates — round 26 documentation map",
+        "## Observed statement map",
+        "## Exact disposition once C1–C3 land",
+        "## Evidence limits",
+        "VERDICT: map complete; update the current gate index row, append the missing round-26 corpus count correction and evidence receipt index, and preserve r25 errata/history."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T13:01:37.305Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T12:52:39.598Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "9f4e9c85d57fc71f9a3b2fb23510dc4f3e01a163b1ad9ab54a7830f251f01743",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "ConnSiblingOverlap",
+      "kind": "spawn",
+      "agentId": "ChousaR26.ConnSiblingOverlap-3",
+      "role": "connector",
+      "item": null,
+      "axes": [
+        "freshness",
+        "calibration"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": null,
+      "report_sha256": null,
+      "report_bytes": 0,
+      "report_headings_and_verdicts": [],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T11:57:27.864Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:50:27.850Z",
+        "provider": "google-antigravity",
+        "model": "gemini-3.8-flash",
+        "error": "Cloud Code Assist API error (429): {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 95h46m56s.\",\n    \"status\": \"RESOURCE_EXHAUSTED\",\n    \"details\": [\n      {\n        \"@type\": \"type.googleapis.com/google.rpc.ErrorInfo\",\n        \"reason\": \"QUOTA_EXHAUSTED\",\n        \"domain\": \"cloudcode-pa.googleapis.com\",\n        \"metadata\": {\n          \"uiMessage\": \"true\",\n          \"model\": \"gemini-3.8-flash-high\",\n          \"quotaResetDelay\": \"95h46m56.681021498s\",\n          \"quotaResetTimeStamp\": \"2026-10-25T11:37:24Z\"\n        }\n      },\n      {\n        \"@type\": \"type.googleapis.com/google.rpc.RetryInfo\",\n        \"retryDelay\": \"344816.681021498s\"\n      }\n    ]\n  }\n}\n",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "9d3ded5f3a8d3e117cfa9ca55227fbe36c5d326f6613bcdfd8fed80166764371",
+      "disposition": "Incomplete; no result inferred and no identity replaced."
+    },
+    {
+      "name": "ConnClosureIntake",
+      "kind": "spawn",
+      "agentId": "ChousaR26.ConnClosureIntake-3",
+      "role": "connector",
+      "item": null,
+      "axes": [
+        "calibration"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": null,
+      "report_sha256": null,
+      "report_bytes": 0,
+      "report_headings_and_verdicts": [],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T11:57:26.571Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:50:26.543Z",
+        "provider": "google-antigravity",
+        "model": "gemini-3.8-flash",
+        "error": "Cloud Code Assist API error (429): {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 95h46m57s.\",\n    \"status\": \"RESOURCE_EXHAUSTED\",\n    \"details\": [\n      {\n        \"@type\": \"type.googleapis.com/google.rpc.ErrorInfo\",\n        \"reason\": \"QUOTA_EXHAUSTED\",\n        \"domain\": \"cloudcode-pa.googleapis.com\",\n        \"metadata\": {\n          \"uiMessage\": \"true\",\n          \"model\": \"gemini-3.8-flash-high\",\n          \"quotaResetDelay\": \"95h46m57.960968943s\",\n          \"quotaResetTimeStamp\": \"2026-10-25T11:37:24Z\"\n        }\n      },\n      {\n        \"@type\": \"type.googleapis.com/google.rpc.RetryInfo\",\n        \"retryDelay\": \"344817.960968943s\"\n      }\n    ]\n  }\n}\n",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "5465a81ce0c1589549ee9f9638950fc4bd46a94a8d276c1d507d116753975719",
+      "disposition": "Incomplete; no result inferred and no identity replaced."
+    },
+    {
+      "name": "RevPreregC1",
+      "kind": "spawn",
+      "agentId": "ChousaR26.RevPreregC1-3",
+      "role": "reviewer",
+      "item": null,
+      "axes": [
+        "operability"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": null,
+      "report_sha256": null,
+      "report_bytes": 0,
+      "report_headings_and_verdicts": [],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:02:46.761Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:55:46.747Z",
+        "provider": "openai-codex",
+        "model": "gpt-6-luna",
+        "error": "Retry budget exhausted after 5 retries: Codex error event: Codex is at capacity, please try again later (code=turn_rate_limit_exceeded)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "832bc4ec322f18ef179fea78e3e34d16f320e2fb43cbc27007eab2bfe6305bfd",
+      "disposition": "Incomplete; no result inferred and no identity replaced."
+    },
+    {
+      "name": "RevPreregC2",
+      "kind": "spawn",
+      "agentId": "ChousaR26.RevPreregC2-3",
+      "role": "reviewer",
+      "item": null,
+      "axes": [
+        "freshness"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/RevPreregC2.md",
+      "report_sha256": "d2bd11af817f766161f13efc8ba9fd110c3100e28b43cc2edc4b5b3cbf302786",
+      "report_bytes": 6855,
+      "report_headings_and_verdicts": [
+        "# RevPreregC2 — Claim 2 pre-registration falsification review (read-only)",
+        "## Findings",
+        "## Residual risk / verification gaps",
+        "VERDICT: No falsifier of the C2 pre-registration found — spec v1, oracle, and controls agree on every branch the probe can reach (strict-after boundary, on-release, unknown, refusal); but FRESHNESS_CLASSIFIED is individually vacuous and `<N>d`-without-V, calendar-invalid dates, and repeated/equals `--as-of` are unenforced by the frozen probe, so \"after 29/29\" must not be read as implementation evidence without C2_ORACLE_AGREE=29/29 and C2_CONTROLS_CAUGHT=6/6."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T13:04:35.851Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T12:53:34.698Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "451dda0f6adf519522dff7f69d62ba925173ec75bc4b5fb07f57fa2300c4738c",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "RevPreregC3",
+      "kind": "spawn",
+      "agentId": "ChousaR26.RevPreregC3-3",
+      "role": "reviewer",
+      "item": null,
+      "axes": [
+        "calibration"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/RevPreregC3.md",
+      "report_sha256": "d0555179f7a50c29c602e7959c50cb762d0c0f9229e951f301d2b940ca50fb7f",
+      "report_bytes": 6724,
+      "report_headings_and_verdicts": [
+        "# RevPreregC3 — C3 falsification (registry link). Seat ChousaR26.RevPreregC3-3, 2026-10-21",
+        "## Findings",
+        "## Calibration vs operability — verdict on the claim label",
+        "## Residual risk / gaps",
+        "VERDICT: C3's operability core is sound and spec-faithful on refusals/exits/legacy, but the landed"
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T13:08:26.643Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T12:53:30.604Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "01508fd795e52f653398d34c6d071e37801c25391ee1aa7de91eddeb270315e4",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "RevProbeShell",
+      "kind": "spawn",
+      "agentId": "ChousaR26.RevProbeShell-3",
+      "role": "reviewer",
+      "item": null,
+      "axes": [
+        "calibration"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": null,
+      "report_sha256": null,
+      "report_bytes": 0,
+      "report_headings_and_verdicts": [],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:57:34.854Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T12:50:34.831Z",
+        "provider": "openai-codex",
+        "model": "gpt-6-luna",
+        "error": "Retry budget exhausted after 5 retries: Codex error event: Codex is at capacity, please try again later (code=turn_rate_limit_exceeded)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "7223710b3e9e3c3a1ccca89349564d5016e14553730be3a975829c92e1b791ab",
+      "disposition": "Incomplete; no result inferred and no identity replaced."
+    },
+    {
+      "name": "RevSeparability",
+      "kind": "spawn",
+      "agentId": "ChousaR26.RevSeparability-3",
+      "role": "reviewer",
+      "item": null,
+      "axes": [
+        "calibration"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/RevSeparability.md",
+      "report_sha256": "c8d701738afc073c4604500ea3d4d66048fe0b1cdbdd77509def53fbe9ca0f2e",
+      "report_bytes": 6121,
+      "report_headings_and_verdicts": [
+        "# Round 26 — separability and axis-harm review",
+        "## Finding — medium: separable claims, shared execution substrate",
+        "## Cross-axis harm exposure",
+        "## Integration order and holds",
+        "## Verification gaps / basis",
+        "VERDICT: Claims are individually falsifiable, but the pre-registration’s single-feature probes do not prove cumulative non-harm; use the staged order and add the explicit refusal, no-flag, runtime, usage, and combined-flag holds above before admission."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:03:30.433Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:54:12.304Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "022e93a190e5d9e237d2568562a4e7f5f85034830a9b65828c4cb1db8f487aa4",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "RevEntryCitationChainFidelityR24",
+      "kind": "spawn",
+      "agentId": "ChousaR26.RevEntryCitationChainFidelityR24-3",
+      "role": "reviewer",
+      "item": null,
+      "axes": [
+        "freshness"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/RevEntryCitationChainFidelityR24.md",
+      "report_sha256": "943088f375acb5127fad6df03ccd923df076cdcb07a7ceebff936e1cf91cc8fe",
+      "report_bytes": 5672,
+      "report_headings_and_verdicts": [
+        "# RevEntryCitationChainFidelityR24 — freshness re-verification (round 26, 2026-10-21)",
+        "## A. Recheck run (QUALITY 13) — PASS, matches entry's round-25 erratum",
+        "## B. Web anchors re-opened 2026-10-21 — all quotes present verbatim",
+        "## C. Claims vs cited rows/anchors (QUALITY 2, 7, 8)",
+        "## Findings",
+        "VERDICT: re-verifies — recheck CLEAN exit 0 at base with explicit fleet root (base-line `--root ..` DRIFT control matches erratum), all web quotes verbatim 2026-10-21, claims match mined tier-A rows and local anchors."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T13:01:11.035Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T12:52:52.035Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "62a21458433d83850577e89e77efcca740043c1dd8224845c8b9ef2a1e215d40",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "RevEntryClaimSupportStatesR24",
+      "kind": "spawn",
+      "agentId": "ChousaR26.RevEntryClaimSupportStatesR24-3",
+      "role": "reviewer",
+      "item": null,
+      "axes": [
+        "freshness"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/RevEntryClaimSupportStatesR24.md",
+      "report_sha256": "08c3ec6815ddf411527f07ed5f52f3d173419056f582a5492cccb3373c3ffce8",
+      "report_bytes": 3423,
+      "report_headings_and_verdicts": [
+        "# Freshness re-verification — `claim-support-states-r24.md`",
+        "## Recheck (clone; cwd `/tmp/chousa-r26-RevEntryClaimSupportStatesR24`)",
+        "## Source and claim check (opened 2026-10-21)",
+        "## Finding — low severity, stale local locator",
+        "## Residual risk and gaps",
+        "VERDICT: STALE — entry lines 51-52 (and adjacent lines 53-54) have incorrect/missing local anchors; the cited external quotes and substantive distinctions reverify. Installs: none."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:03:07.134Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:53:30.387Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "5fc49d4350c1c405d0564fcc6dbe57752abc2871c900c9bcc4dd5cca64c20e70",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "RevEntryContextualSourceAdmissio",
+      "kind": "spawn",
+      "agentId": "ChousaR26.RevEntryContextualSourceAdmissio-3",
+      "role": "reviewer",
+      "item": null,
+      "axes": [
+        "freshness"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/RevEntryContextualSourceAdmissio.md",
+      "report_sha256": "12b42d6da39363d5d031c8880872bd3faa6857055c60d15959e6701580e6d5ed",
+      "report_bytes": 4217,
+      "report_headings_and_verdicts": [
+        "# Freshness re-verification — contextual-source-admission-r24",
+        "## Reopened source anchors (accessed 2026-10-21)",
+        "## Claim audit",
+        "## Findings, residual risk, verification gaps",
+        "VERDICT: re-verifies — all cited anchors remain present verbatim and the entry’s scoped claims match their rows/anchors as of 2026-10-21."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:56:38.442Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T12:45:32.939Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "45d58fc331648e13c7370aedd156e6e492a096ff11a79626510253eab20bd380",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "RevEntryJsonDelimiterR24",
+      "kind": "spawn",
+      "agentId": "ChousaR26.RevEntryJsonDelimiterR24-3",
+      "role": "reviewer",
+      "item": null,
+      "axes": [
+        "freshness"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/RevEntryJsonDelimiterR24.md",
+      "report_sha256": "4f3e24ce611d4cd8376ce2fed707afaf0f02195c6118992d5373dd21114f8126",
+      "report_bytes": 3605,
+      "report_headings_and_verdicts": [
+        "# Freshness review — `json-delimiter-r24.md`",
+        "## Source and claim checks",
+        "## Findings",
+        "## Residual risk and verification gaps",
+        "VERDICT: re-verifies — cited source text and gate behavior remain current; no stale or false claim identified."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T13:01:15.304Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T12:52:27.015Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "7be2731ad77f387a17b14e4e1f3796108365e143bd725db60b3cd59e5f3676cc",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "RevEntryMetadataScreenR25",
+      "kind": "spawn",
+      "agentId": "ChousaR26.RevEntryMetadataScreenR25-3",
+      "role": "reviewer",
+      "item": null,
+      "axes": [
+        "freshness"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/RevEntryMetadataScreenR25.md",
+      "report_sha256": "5cb1cf15612f47a0476617f12c23294358f8701f1635211ddd4f1742bed6d40f",
+      "report_bytes": 4067,
+      "report_headings_and_verdicts": [
+        "# Freshness re-verification — `metadata-screen-r25.md`",
+        "## Recheck commands",
+        "## Source and claim checks",
+        "## Findings, residual risk, gaps",
+        "VERDICT: re-verifies — commands pass at the preregistered base, cited S029/S033 anchors remain present, and the entry’s claims stay within their cited scopes."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T13:07:46.434Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T12:52:41.571Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "ae1f40a83b8ee1b26b0c98b24cb523e91a759eecceaac49ecb03d8246493f94f",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "RevSkillOverreach",
+      "kind": "spawn",
+      "agentId": "ChousaR26.RevSkillOverreach-3",
+      "role": "reviewer",
+      "item": null,
+      "axes": [
+        "calibration"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": null,
+      "report_sha256": null,
+      "report_bytes": 0,
+      "report_headings_and_verdicts": [],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:57:38.476Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T12:50:38.460Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "Retry budget exhausted after 5 retries: 429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "be4ee6457325875ad9ddb28b085eb609d8f19a362a475e57d518f5f9f810c57d",
+      "disposition": "Incomplete; no result inferred and no identity replaced."
+    },
+    {
+      "name": "RevSourcesConformance",
+      "kind": "spawn",
+      "agentId": "ChousaR26.RevSourcesConformance-3",
+      "role": "reviewer",
+      "item": null,
+      "axes": [
+        "calibration"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": null,
+      "report_sha256": null,
+      "report_bytes": 0,
+      "report_headings_and_verdicts": [],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T11:59:27.848Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:52:27.815Z",
+        "provider": "openai-codex",
+        "model": "gpt-6-luna",
+        "error": "Retry budget exhausted after 5 retries: Codex error event: Codex is at capacity, please try again later (code=turn_rate_limit_exceeded)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "390dcef659f1c15d3d57d74d32ac72ea0f54576fc9bdee2f15dc3a2cfe164ae8",
+      "disposition": "Incomplete; no result inferred and no identity replaced."
+    },
+    {
+      "name": "RevengeReaderArray",
+      "kind": "spawn",
+      "agentId": "ChousaR26.RevengeReaderArray-3",
+      "role": "revenger",
+      "item": null,
+      "axes": [
+        "operability"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": null,
+      "report_sha256": null,
+      "report_bytes": 0,
+      "report_headings_and_verdicts": [],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:57:26.393Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T12:50:26.380Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "Retry budget exhausted after 5 retries: 429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "a33334ab147adf0b3f82ff7e68bb3c1d509290f55ba90c6dbdce113906c2c21d",
+      "disposition": "Incomplete; no result inferred and no identity replaced."
+    },
+    {
+      "name": "RevengeRecheckGrammar",
+      "kind": "spawn",
+      "agentId": "ChousaR26.RevengeRecheckGrammar-3",
+      "role": "revenger",
+      "item": null,
+      "axes": [
+        "freshness"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/RevengeRecheckGrammar.md",
+      "report_sha256": "f4efa01fb0400dba03a15032f5f8577838711f3b5dc1c8241b0a73d42978307c",
+      "report_bytes": 4922,
+      "report_headings_and_verdicts": [
+        "# Recheck grammar and “overdue”: round-24 intent",
+        "## Evidence chain",
+        "## Reconstructed contract and divergence",
+        "VERDICT: Round 24 specified machine-checkable recheck shapes and warned that command-only rechecks make overdue status uncomputable; it did not choose `verified-at` or `opened` as the cadence origin. Claim 2 adds the `verified-at + Nd` rule without contradicting recorded r24 intent, and treats `on-release` as event-based."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T13:01:27.486Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T12:52:16.757Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "797a89813bcf00d9530d3e49dd721ede182ae95a2ec9d0905f1683837691b6a6",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "RevengeUsedByFormat",
+      "kind": "spawn",
+      "agentId": "ChousaR26.RevengeUsedByFormat-3",
+      "role": "revenger",
+      "item": null,
+      "axes": [
+        "calibration"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/RevengeUsedByFormat.md",
+      "report_sha256": "559bf90a645966146488e6e8c29e1f74643287295d35fefc93f8a93d4f67ad5c",
+      "report_bytes": 3629,
+      "report_headings_and_verdicts": [
+        "# Round 26 — `used-by` format reconnaissance",
+        "## Scope and evidence",
+        "## Reconstructed forms",
+        "## Superseded rows and apparent exceptions",
+        "## Claim 3 adjudication",
+        "VERDICT: Historical cells are uniformly comma-separated exact `corpus/knowledge/` paths or `—`; v0 parses all observed cells, but basename equality is semantically weaker than the corrected exact-path contract. Installs: none."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T13:06:07.998Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T12:54:36.073Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "5aad672e2d8536aab376c55914d045579bcba5b015046b3beb44c2b38605152c",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "RevengeLandingOmission",
+      "kind": "spawn",
+      "agentId": "ChousaR26.RevengeLandingOmission-3",
+      "role": "revenger",
+      "item": null,
+      "axes": [
+        "calibration"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/RevengeLandingOmission.md",
+      "report_sha256": "592ee38aa2b0b822261d10dc31ec4f7abf1120b3c17b1c8c6e99b260fa10b305",
+      "report_bytes": 5046,
+      "report_headings_and_verdicts": [
+        "# R25-M15 landing-omission review — ChousaR26.RevengeLandingOmission-3",
+        "## Evidence and divergence",
+        "## Falsifiable causes (cause remains UNKNOWN)",
+        "## Read-only pre/post check for L1",
+        "# Now invoke the normal helper. Copy REV from its `landed <REV>` line.",
+        "VERDICT: Landing identity check caught and corrected the R25-M15 stale gate blob; cause remains unresolved. No installs."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:58:18.218Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T12:49:00.823Z",
+        "provider": "zai",
+        "model": "glm-5.3-flash",
+        "error": "429 Rate limit reached for requests\nRate limit reached for requests (type=1302)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "913fb4be9bc9ba69ffea5fa17f04734f159c8e6ec80c3c86ffb859f5ae280227",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "CriticC1",
+      "kind": "spawn",
+      "agentId": "ChousaR26.CriticC1-3",
+      "role": "critic",
+      "item": null,
+      "axes": [
+        "operability"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": null,
+      "report_sha256": null,
+      "report_bytes": 0,
+      "report_headings_and_verdicts": [],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T11:57:38.772Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:50:38.758Z",
+        "provider": "openai-codex",
+        "model": "gpt-6-luna",
+        "error": "Retry budget exhausted after 5 retries: Codex error event: Codex is at capacity, please try again later (code=turn_rate_limit_exceeded)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "0cbfd3a95fdedf1f0919065372204ac8aa4d8484d991ff27b245cb55acc2bfb4",
+      "disposition": "Incomplete; no result inferred and no identity replaced."
+    },
+    {
+      "name": "CriticC2",
+      "kind": "spawn",
+      "agentId": "ChousaR26.CriticC2-3",
+      "role": "critic",
+      "item": null,
+      "axes": [
+        "freshness"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": null,
+      "report_sha256": null,
+      "report_bytes": 0,
+      "report_headings_and_verdicts": [],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T11:57:38.959Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:50:38.941Z",
+        "provider": "openai-codex",
+        "model": "gpt-6-luna",
+        "error": "Retry budget exhausted after 5 retries: Codex error event: Codex is at capacity, please try again later (code=turn_rate_limit_exceeded)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "bb9f62c3f0cc6b669ddfe2d4c5efa433bc2590598c6ef9cbcefa9c51d19788f2",
+      "disposition": "Incomplete; no result inferred and no identity replaced."
+    },
+    {
+      "name": "CriticC3",
+      "kind": "spawn",
+      "agentId": "ChousaR26.CriticC3-3",
+      "role": "critic",
+      "item": null,
+      "axes": [
+        "calibration"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": null,
+      "report_sha256": null,
+      "report_bytes": 0,
+      "report_headings_and_verdicts": [],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T11:57:39.245Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:50:39.232Z",
+        "provider": "openai-codex",
+        "model": "gpt-6-luna",
+        "error": "Retry budget exhausted after 5 retries: Codex error event: Codex is at capacity, please try again later (code=turn_rate_limit_exceeded)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "c8aaf76fecd80885502bad788d7f43ed21d77125b04beee5d8f0bfb923f8dce5",
+      "disposition": "Incomplete; no result inferred and no identity replaced."
+    },
+    {
+      "name": "CriticTrends",
+      "kind": "spawn",
+      "agentId": "ChousaR26.CriticTrends-3",
+      "role": "critic",
+      "item": null,
+      "axes": [
+        "calibration"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": null,
+      "report_sha256": null,
+      "report_bytes": 0,
+      "report_headings_and_verdicts": [],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T11:57:39.255Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:50:39.242Z",
+        "provider": "openai-codex",
+        "model": "gpt-6-luna",
+        "error": "Retry budget exhausted after 5 retries: Codex error event: Codex is at capacity, please try again later (code=turn_rate_limit_exceeded)",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "dca06d6534982c516726637bc46a2746be23a9047ebc856fc2a824d32f66ebca",
+      "disposition": "Incomplete; no result inferred and no identity replaced."
+    },
+    {
+      "name": "CriticSourcedClaim",
+      "kind": "spawn",
+      "agentId": "ChousaR26.CriticSourcedClaim-3",
+      "role": "critic",
+      "item": null,
+      "axes": [
+        "freshness"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/CriticSourcedClaim.md",
+      "report_sha256": "82a206becba7f179d6368919af50bbe96696207fa11e7e7aae0815fcdcc1896a",
+      "report_bytes": 4399,
+      "report_headings_and_verdicts": [
+        "# Round 26 sourced-claim critique",
+        "## Axes",
+        "## Counterexample and evidence",
+        "## Smallest safe correction",
+        "VERDICT: Python date arithmetic is a defensible, narrow sourced subclaim; no inspected source validates C2's generic due-date or event policy. Round-26 opening, row, Gate quote, and scoped citation are still required for §2b.4."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:01:33.888Z"
+      },
+      "last_assistant_error": null,
+      "transcript_sha256": "a4fb57eb1e42a282afb71c75c38f0a79c2142225667da2adf788ed44e511310d",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "CriticScopeHarm",
+      "kind": "spawn",
+      "agentId": "ChousaR26.CriticScopeHarm-3",
+      "role": "critic",
+      "item": null,
+      "axes": [
+        "operability",
+        "freshness",
+        "calibration"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": ".ufo/waves/round-26/build/CriticScopeHarm.md",
+      "report_sha256": "81c5808cade2c7bb3c6a5ed4e3068c0177909e5f2bbd860f4e35078f62c466a4",
+      "report_bytes": 5727,
+      "report_headings_and_verdicts": [
+        "# Round 26 whole-round harm critique",
+        "VERDICT: Main risks are the untested tail-NUL interaction and C3's legacy/path-identity false-clean or false-drift cases; add the listed discriminating checks before accepting the affected axes. Installs: none."
+      ],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T12:00:10.171Z"
+      },
+      "last_assistant_error": null,
+      "transcript_sha256": "0f60b6a13121793ef49fac18db23367f718e73f3ab0d02d6167df3309a34f96b",
+      "disposition": "Inherited report retained; draft patches/row IDs are advisory, not final proof. Later falsify evidence supersedes any broader pass claim."
+    },
+    {
+      "name": "ScribeEntryC1",
+      "kind": "spawn",
+      "agentId": "ChousaR26.ScribeEntryC1-3",
+      "role": "scribe",
+      "item": null,
+      "axes": [
+        "operability"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": null,
+      "report_sha256": null,
+      "report_bytes": 0,
+      "report_headings_and_verdicts": [],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T11:57:25.002Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:50:24.968Z",
+        "provider": "anthropic",
+        "model": "claude-haiku-5-5",
+        "error": "429 {\"type\":\"error\",\"error\":{\"type\":\"rate_limit_error\",\"message\":\"This request would exceed your account's rate limit. Please try again later.\"},\"request_id\":\"req_011CgFLEVAdVfsN6gfmgMMcX\"} retry-after-ms=10775000",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "b1c795dbdc08717bf0559ebb028e8a237994109b5d3c1ef6ed2da485190e669e",
+      "disposition": "Incomplete; no result inferred and no identity replaced."
+    },
+    {
+      "name": "ScribeEntryC2",
+      "kind": "spawn",
+      "agentId": "ChousaR26.ScribeEntryC2-3",
+      "role": "scribe",
+      "item": null,
+      "axes": [
+        "freshness"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": null,
+      "report_sha256": null,
+      "report_bytes": 0,
+      "report_headings_and_verdicts": [],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T11:57:25.026Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:50:24.969Z",
+        "provider": "anthropic",
+        "model": "claude-haiku-5-5",
+        "error": "429 {\"type\":\"error\",\"error\":{\"type\":\"rate_limit_error\",\"message\":\"This request would exceed your account's rate limit. Please try again later.\"},\"request_id\":\"req_011CgFLEVBstiNfdfNgoFRrD\"} retry-after-ms=10775000",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "ed29a3fa73cf091bb6a0ab3f9a7f960278a22f47e03eea4ce41039d8f66fa0c4",
+      "disposition": "Incomplete; no result inferred and no identity replaced."
+    },
+    {
+      "name": "ScribeEntryC3",
+      "kind": "spawn",
+      "agentId": "ChousaR26.ScribeEntryC3-3",
+      "role": "scribe",
+      "item": null,
+      "axes": [
+        "calibration"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": null,
+      "report_sha256": null,
+      "report_bytes": 0,
+      "report_headings_and_verdicts": [],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T11:57:25.015Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:50:24.969Z",
+        "provider": "anthropic",
+        "model": "claude-haiku-5-5",
+        "error": "429 {\"type\":\"error\",\"error\":{\"type\":\"rate_limit_error\",\"message\":\"This request would exceed your account's rate limit. Please try again later.\"},\"request_id\":\"req_011CgFLEVE6sYakrRyfwng2K\"} retry-after-ms=10775000",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "560ff23f5fecf0cb3c106b6f479e0fc1d1d75e7eb27d68eaa7d379851608cd38",
+      "disposition": "Incomplete; no result inferred and no identity replaced."
+    },
+    {
+      "name": "ScribeQualityDraft",
+      "kind": "spawn",
+      "agentId": "ChousaR26.ScribeQualityDraft-3",
+      "role": "scribe",
+      "item": null,
+      "axes": [
+        "calibration"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": null,
+      "report_sha256": null,
+      "report_bytes": 0,
+      "report_headings_and_verdicts": [],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T11:57:25.020Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:50:24.969Z",
+        "provider": "anthropic",
+        "model": "claude-haiku-5-5",
+        "error": "429 {\"type\":\"error\",\"error\":{\"type\":\"rate_limit_error\",\"message\":\"This request would exceed your account's rate limit. Please try again later.\"},\"request_id\":\"req_011CgFLEVE6neDw5idh5eRbF\"} retry-after-ms=10775000",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "b63b665be43bde7cb0dacc280f473fd389a6052590379216ffd5245adb0a0cd6",
+      "disposition": "Incomplete; no result inferred and no identity replaced."
+    },
+    {
+      "name": "ScribeLessonDraft",
+      "kind": "spawn",
+      "agentId": "ChousaR26.ScribeLessonDraft-3",
+      "role": "scribe",
+      "item": null,
+      "axes": [
+        "calibration"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": null,
+      "report_sha256": null,
+      "report_bytes": 0,
+      "report_headings_and_verdicts": [],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T11:57:25.009Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:50:24.969Z",
+        "provider": "anthropic",
+        "model": "claude-haiku-5-5",
+        "error": "429 {\"type\":\"error\",\"error\":{\"type\":\"rate_limit_error\",\"message\":\"This request would exceed your account's rate limit. Please try again later.\"},\"request_id\":\"req_011CgFLEVBcu6pzZodanyR2W\"} retry-after-ms=10775000",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "f0b311af004bbc10f94af911ef6c6446fc008abea5f846f5474874de50b4dcd9",
+      "disposition": "Incomplete; no result inferred and no identity replaced."
+    },
+    {
+      "name": "ScribeIndexRows",
+      "kind": "spawn",
+      "agentId": "ChousaR26.ScribeIndexRows-3",
+      "role": "scribe",
+      "item": null,
+      "axes": [
+        "freshness"
+      ],
+      "milestone": "Bounded metadata reader, due dates, registry link; open sources; first falsifiers",
+      "report": null,
+      "report_sha256": null,
+      "report_bytes": 0,
+      "report_headings_and_verdicts": [],
+      "terminal_exit": {
+        "reason": "dispose",
+        "kind": "normal",
+        "recordedAt": "2026-10-21T11:57:25.285Z"
+      },
+      "last_assistant_error": {
+        "timestamp": "2026-10-21T11:50:25.267Z",
+        "provider": "anthropic",
+        "model": "claude-haiku-5-5",
+        "error": "429 {\"type\":\"error\",\"error\":{\"type\":\"rate_limit_error\",\"message\":\"This request would exceed your account's rate limit. Please try again later.\"},\"request_id\":\"req_011CgFLEWQo8D5EYrj2mPLr8\"} retry-after-ms=10774000",
+        "stopReason": "error"
+      },
+      "transcript_sha256": "61e089c77dae02516790615abd107e11f13b1320a0a79b57592fda56abface81",
+      "disposition": "Incomplete; no result inferred and no identity replaced."
+    }
+  ],
+  "new_seats": 0,
+  "replacements": 0,
+  "process_observation": "proc:// listed no Chousa build/falsify jobs; each existing transcript has a session_exit. Empty .md session artifacts are not task reports. No new wake/dispatch performed."
+}

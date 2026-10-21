@@ -42,3 +42,22 @@ is not the re-verification (QUALITY6/8). Do not change a cadence solely to
 turn an overdue report green. The frozen29 distribution and controls are
 owned by the final measurement receipt; no row-count increase is asserted
 as expanded domain understanding by itself.
+
+## Withdrawal of implementation admission — 2026-10-21 (append-only)
+
+The source-grounded distinction and declared policy above remain proposals
+with explicit scope, but **the Round26 implementation is not admitted**.
+Its measured target is `0e9784bd52eca456b24d0bc40921480a47f91a2b`.
+The inherited frozen run matches29/29 oracle cases and6/6 controls
+(`evidence/round26-inherited-after.log`); these do not cover the independent
+input-domain counterexamples in `.ufo/waves/round-26/falsify/`:
+`FDateHugeCadence.md` records process termination rather than unknown;
+`FDateAsOfUsage.md` records locale-dependent invalid-argument exit1 instead
+of setup/usage exit2. Repeated-option behavior is separately observed in
+`FDateExplicitDate.md`, not silently adopted as a new specification.
+
+The shared selftest also fails3/187 (`FNoTrade.md`). No failed check was
+rerun merely to confirm it during recovery. Do not use this candidate mode's
+absence of findings as a reliable freshness verdict. SCORECARD records C2
+harmed/falsified and the round not admitted; source-row mining is not
+implementation validation or truth certification.

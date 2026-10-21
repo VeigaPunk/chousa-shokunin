@@ -875,3 +875,15 @@ legacy rechecks, receipt gaps, and pairing a span's occurrence with a named
 pointer line. No promotion, outside spot-check or province expansion beyond
 deep-research method is self-awarded here. Other build source candidates
 remain advisory leads unless an actual registry row says otherwise.
+
+### Round26 frontier admission correction — 2026-10-21
+
+The preceding “new held ground” wording is superseded: the three indexed
+round26 notes are **qualified/withdrawn candidates, not admitted expansion**.
+C1's narrow allocation result is measured, but the shared selftest fails;
+C2 and C3 are independently falsified outside the frozen controls. Each note
+now has a recovery qualification naming the unsafe implementation and reports.
+SCORECARD's Round26 recovery section is the current owner of those verdicts.
+Registry rows39 and knowledge files32 are inventory counts, not admission
+counts. No new capability, province expansion, outside spot-check or
+promotion is inferred from them. Existing carried debts above remain open.

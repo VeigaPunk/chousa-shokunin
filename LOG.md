@@ -1030,3 +1030,43 @@ note with old→new logged in the lesson. SKILL/README document/index the new
 options and explicit limits. This checkpoint records implemented work only:
 final counts, capability admission, score re-derivation and no-harm verdicts
 come from the integrated post-wave run, never from this paragraph.
+
+### Round26 final recovery disposition — 2026-10-21 (append-only)
+
+`ChousaR26R3` recovered the same held claim26/attempt1. Contrary to the
+initial recovery summary, retained artifacts prove the first replacement
+had integrated and pushed `0e9784bd52eca456b24d0bc40921480a47f91a2b` and
+dispatched falsify68 after build64. No new dispatch, wake, replacement or
+route change occurred in this recovery. All132 child transcripts have
+terminal exits; proc state showed no still-running Chousa build/falsify job.
+The inherited `r26-falsify` reservation was released.
+
+Both waves and every existing report/patch are retained. Final build report
+count39 supersedes the earlier reconciliation's30; 25 seats have no report.
+Falsify has37 reports and31 aborted no-report seats. Per-seat evidence and
+exact terminal errors live in `.ufo/waves/round-26/*-final-reconciliation.json`.
+Provider failures are not inferred from missing reports: original coordinator
+ended on Devin weekly quota, R's last recorded assistant error was
+`cyber_policy`, and R2's was Opus429. Exact records are preserved in
+`corpus/evidence/round26-inherited-measurement.json`; no denied workflow was
+retried or policy/runtime setting altered.
+
+**Final disposition: NOT ADMITTED.** The inherited critic's actual complete
+counting output is preserved as `round26-inherited-after.log`, not invented
+or relabelled as a new L1 run. C1's registered allocation count improves4/4→0/4
+with frozen plain output/rc unchanged. C2's frozen counts29/29,29/29,6/6 and
+C3's5/5,1/1,5/5 do not defeat the independent falsifiers: C2 has input-domain
+termination/locale errors; C3 has header-state/tokenization/refusal defects.
+The shared selftest fails3/187 while legacy161 lines, r12 drift and r1
+observable remain unchanged. The critic exceeded its bounded verification
+contract by running the full probe/selftest and background shell jobs; this
+scope defect is recorded, not endorsed as independent verification.
+
+The executable and frozen probes are intentionally not rewritten in this
+recovery to manufacture a pass. Existing reported failures are ground truth;
+the three new notes and current skill/index now mark the unsafe implementation
+and withheld admission. SCORECARD owns the measured values, score3→3/delta0,
+no acquired capability, and trends unchanged/harmed/unchanged.
+The round lesson records every decisive counterexample and residual class.
+No production domain tree, fleet closure state, MANIFEST, claim/outcome/next
+state or sibling repo was changed. No tool was installed or updated.

@@ -1090,3 +1090,16 @@ receipts remain history, not final proof for later reader corrections.
 | `round25-landed-differential.log` | Final exact27-unique-fixture population: agreement54/54, exit0 |
 | `round25-measured-revision.json` | All11 measured input hashes match helper-landed `c125d8bc20e5433947df26fe0af3d3b58d0b37d3`; records prior `c2a6e338` gate omission rather than treating helper success as byte proof |
 | `round25-final-before.log` | Exact final counting-probe code over isolated `git archive d730ae4`: absent metadata mode rc2, stale indexes66, unresolved restatements15/raw-slot1, selftest136, drift none, r1 3/3; probe exit0 |
+
+## Round26 recovery evidence — 2026-10-21
+
+| File | Evidence and limit |
+|---|---|
+| `round26-claims.md`, `round26-measure.sh`, `round26-measure-before.log` | Preregistration at f361d12e, base ba333325; frozen29/five r24+ entries and unchanged predictions; counting probe, not admission gate |
+| `round26-measured-revision.json` | Original13-input identity pin for helper-landed0e9784bd, before final falsifier results; not a PASS record |
+| `round26-inherited-after.log` | Exact inherited critic tool-result output: C1 0/4, C2 29/29+29/29+6/6, C3 5/5+1/1+5/5, selftest FAIL3/187, legacy161 SHA unchanged, drift none, r1 3/3 |
+| `round26-inherited-measurement.json` | Exact source record/command/digest, coordinator terminal errors, and critic verification-scope violation; no recovery rerun or outside-judge attribution |
+| `round26-date-differential.sh`, `round26-registry-{oracle.py,differential.sh}` | Retained comparators, not proof of general correctness; falsifiers expose locale/whitespace/table/occurrence coverage gaps |
+| `../lessons/round-26.md` | Previous outside-check intake, source quotes and old→new bookkeeping, mined mistakes and final non-admission |
+| `../../.ufo/waves/round-26/*-final-reconciliation.json` | All132 inherited seats: role, report hash/headings, last error, terminal record and disposition; build39/falsify37 reports, no replacements |
+| `../../.ufo/waves/round-26/recovery-dispatch-provenance.json` | Existing validator/payload identity and reservation release; no new task call |

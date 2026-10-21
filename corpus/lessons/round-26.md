@@ -94,3 +94,145 @@ The replacement's fleet-root misroot sweep (`git -C
 /home/vgpnk/Projects/shokunin status --porcelain`, 2026-10-21) found only
 tracked driver-runtime modifications and no untracked files from this lane.
 No fleet-root file was moved or removed. No tools were installed.
+
+## Build-review reconciliation
+
+`build/ExecReaderCensus.md` flagged two C1 before numbers. They describe two
+different original-coordinator probes at the same base: the initial one-off
+newline run was 2,240,704KiB/86.9s (the preregistration's motivating
+observation); the four-shape counting receipt is 2,238,736KiB/90.6s.
+The latter, `evidence/round26-measure-before.log`, is the canonical
+before→after comparator. Neither number is rewritten or silently substituted
+for the other, and elapsed time is recorded rather than claimed.
+
+`build/ScoutMistakeSweep.md` also found that round25's later mistakes were
+prose addenda, absent from its original Mistakes table. This round retains
+the old lesson and supplies the correction index below; it does not invent
+new runtime proof or rewrite captured-by history.
+
+| prior item | class / evidence | captured-by correction | disposition |
+|---|---|---|---|
+| R25-M13 | landing; `lessons/round-25.md` measured-revision omission addendum | none at first; now QUALITY15 | retained red/green blob-match evidence; round26 explicitly checks all selected input blobs after helper landing |
+| R25-M14 | vacuous/stale-premise counter; round25 final-counter-controls addendum | QUALITY2/9 | historical counter controls retained; round26 probe exit0 remains completion only |
+| R25-M15 | landing identity mismatch; round25 packaging addendum | QUALITY15 caught it | unresolved helper cause carried; gate/receipt identity must be observed, not inferred from helper success |
+| R25-M7 | number-drift; original tuple sums72 over71 rows | none at that time, superseding the original table's QUALITY2/9 attribution; now QUALITY16 | append-only recount/correction retained; no new ledger closure claimed |
+| R25-M11 | vacuous shared-oracle blind spot | none at that time, superseding original QUALITY2 attribution; now QUALITY17 | require independent final-code failing controls; no synthetic adapter relabelled as a final-code mutation |
+| R25-M12 | attribution/misroot comparison | wave-path contract; independent historical byte equality unavailable | original integrator observation stays qualified, not newly certified; this replacement found no misroot to copy |
+
+The broader load_sections, section-copy, cited-source, drift-buffer and
+output-buffer allocation paths in `build/ExecReaderCensus.md` are named
+out-of-C1 limits. No whole-gate resource budget is inferred from fixing the
+metadata array. `build/ScoutCarriedDebt.md` enumerates the still-carried
+ledger/receipt/parent-root/appender classes; these claims do not close them.
+
+## Final recovery and falsification disposition — 2026-10-21
+
+**NOT ADMITTED; no claim progression.** This is still the original
+round26/attempt1, recovered by ChousaR26R3. The first replacement did more
+than the recovery request initially knew: it pushed the production checkpoint
+`0e9784bd52eca456b24d0bc40921480a47f91a2b` and dispatched falsify68.
+Build64 + falsify68 =132 distinct seats, not a new wave in this recovery.
+The existing falsify wave exceeds64 but pre-existed the recovery's optional
+≤64 allowance; no additional seats were dispatched or resumed.
+
+All132 existing seat transcripts have terminal session_exit records and no
+Chousa child remained in the observed proc list. Build39 reports/25 no-report;
+falsify37 reports/31 aborted no-report. Earlier build-death manifests reflect
+earlier observations and can overlap later reports. Exact report hashes and
+last errors are retained in `.ufo/waves/round-26/*-final-reconciliation.json`.
+Four build reports had been revised in place after the checkpoint; recovery
+retained the checkpoint bytes as their prefix and appended the complete late
+revision. `append-only-report-preservation.json` embeds those exact late
+versions and supplies the final combined-file hashes, superseding the
+initial-recovery report hashes for those four paths only.
+
+Coordinator chronology correction: ChousaR26's last assistant error is Devin
+weekly quota; ChousaR26R's is Codex `cyber_policy`; ChousaR26R2's is Opus429.
+`evidence/round26-inherited-measurement.json` retains exact error text/model/
+timestamp. No denied operation was retried and no runtime policy changed.
+The task's quota-only summary is not used as terminal evidence.
+
+### Actual measurements, not a new successful run
+
+The inherited author-lane critic FNoTrade ran the unchanged counting probe
+against the pinned checkpoint. Its exact tool output is now durable in
+`evidence/round26-inherited-after.log`; provenance names the command, result
+record, digest and production target. C1's count4/4→0/4 and frozen plain
+hash/rc agree with prediction; C2's frozen29/29 + oracle29/29 + controls6/6
+and C3's5/5 + positive1/1 + population5/5 also reproduce. Those observations
+do **not** establish admission: the cumulative selftest fails3/187, and
+independent counterexamples below falsify both new opt-in modes.
+
+FNoTrade ran the full probe/selftests and background shell jobs despite its
+bounded-seat verification contract. That procedural defect is preserved
+alongside the observations, not relabelled as authorized L1 verification or
+an outside spot-check. Recovery accepted reported failures as ground truth
+and did not rerun them to confirm. Full falsification is incomplete because
+31 assigned seats returned no report. No missing finding is inferred clean.
+
+### Additional mistakes and explicit dispositions
+
+| id | class | evidence pointer | captured-by | disposition / demonstrated failure |
+|---|---|---|---|---|
+| R26-M5 | wrong-layer selftest assertion | `falsify/FNoTrade.md:115-137` | registered shared PASS hold; QUALITY17 | three new usage tests mistake a help-text substring for a verdict; observed FAIL3/187; unresolved, not suppressed or called green |
+| R26-M6 | input-domain / locale | `falsify/FDateAsOfUsage.md`, `FDateHugeCadence.md` | C2 spec and decimal/range addendum; QUALITY17/18 | invalid locale-sensitive date shapes produce the wrong exit; a long cadence token terminates the process instead of unknown; C2 falsified, implementation admission withdrawn |
+| R26-M7 | stale parser state | `falsify/FRegistryHeaderless.md:41-83` | C3 named-header/setup contract; QUALITY17 | stale column indices accept a headerless table or misbind columns; demonstrated false positives/negatives, no checker fix credited |
+| R26-M8 | token identity / rescan | `falsify/FRegistryIdBoundary.md`, `FRegistryAbsentRow.md` | C3 standalone-ID grammar; QUALITY17 | consumed-text rescan invents IDs from glued text; frozen controls lack this shape; C3 falsified |
+| R26-M9 | boundary reuse | `falsify/FRegistryRegistryDeny.md` | C3 refusal contract; QUALITY17 | a citation-pointer helper was reused for filesystem-path refusal; its advertised guarantee fails on a path class; inherited entry-reader residual also stays open |
+| R26-M10 | resource claim overreach | `falsify/FNoTrade.md:141-177`, `FOverlap.md`, `FRegistryIdWidth.md` | QUALITY18 | registry cell/token processing amplifies allocation/time despite the byte cap; “bounded registry” corrected to input-byte bound only; no universal resource-safety claim |
+| R26-M11 | oracle agreement overreach | `falsify/FRegistryBareVerified.md`, `FRegistryHeaderless.md`, `FDateInvalidVerified.md` | QUALITY3/17 | C/Python whitespace and table grammars differ; finding-code sets omit occurrence identity; frozen agreement retained only for its actual shapes |
+| R26-M12 | dispatch/verification scope | `evidence/round26-inherited-measurement.json`; falsify context | wave's explicit bounded verification contract | critic's full-probe/selftest/background runs exceeded assignment; retained as observed evidence with this defect, not an authorized outside judgment |
+| R26-M13 | record/prefix preservation | `append-only-report-preservation.json` | append-only evidence requirement | four inherited late report rewrites preserved after their immutable checkpoint prefixes; nothing discarded and no dead seat replaced |
+
+All falsify paths in that table are under `.ufo/waves/round-26/`; the report
+preservation manifest lives directly in that round directory. No new
+criterion is counted as a fixed behavior merely because it was written down.
+C1's demonstrated representation improvement remains narrow; C2/C3 are
+withdrawn implementation candidates, not capabilities or admitted expansion.
+Current safety/status addenda in their notes, SKILL, README and SCORECARD
+supersede earlier unqualified implementation/held-ground language.
+
+### Smaller findings and source disposition
+
+- `RevEntryClaimSupportStatesR24` flags a stale SKILL line locator in an
+  earlier admitted note. The base text's topic is still held, but that locator
+  is stale; the report is durable and no broader re-verification is claimed.
+- `RevEntryJsonDelimiterR24` asks that the appender inference be labelled;
+  it does not falsify the delimiter result. The source/body-vs-policy
+  distinction is retained rather than presented as an external requirement.
+- FNoTrade's “original command” wording correction is accepted: the counting
+  probe uses an explicit fleet-root equivalent of the original sibling-layout
+  r1 command. The critic exercised both forms at3/3; neither is a resource
+  score. The appender-race pointers belong to the r24 delimiter note/demo and
+  r25 lesson/ExecAppendRace report, **not** a dedicated hardening-ledger row.
+- FSourcePython reopens the exact located quote and a3.15.0 tagged source;
+  FNoTrade observes a later served3.15.1 title. These are distinct source
+  observations, not proof the originally accessed version was misstated.
+  The mutable URL/version drift remains a recheck limit; no immutable row
+  field is silently changed to reconcile it.
+- FSourceCochrane and FSourceProv corroborate their narrow quotes.
+  FSourceRejection agrees S025's HTTP-cache scope is unsuitable as authority
+  for generic research freshness, but flags the earlier quote as insufficient
+  to ground the rejection reason. This is an advisory source-review result,
+  not an outside admit/reject judgment for round26.
+
+### Sources, final sweep and reservations
+
+`corpus/SOURCES.md` remains33→39 rows, A27→33/B1→1/C5→5;
+mined10→16/queued19→19/rejected4→4. Six new rows S034–S039 are mined because
+they are cited by retained notes; that status means cited, not claim admission.
+Only pre-existing row change is S029's used-by addition recorded above.
+Exact end command:
+`/home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa`
+prints `chousa<TAB>ok<TAB>/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md`,
+exit0, as does the inherited start result (`round26-census-before.json`).
+End rows/histograms and command output are in `round26-census-end.json`.
+
+Recovery's full fleet-root `git status --porcelain` sweep found only tracked
+driver runtime modifications, no untracked lane reports. No misroot copy or
+deletion was necessary. Slot status observed live46/recent0/cap240; recovery
+released `chousa r26-falsify`. Original validation and dispatch payloads stay
+unchanged; the recorded schema adapter adds solutionSpace metadata only.
+No tool was installed or updated. Receipt-identity L0 and the shared host
+recovery decision remain operator-owned and nonblocking; no new question
+was necessary. No fleet closure/claim/outcome/next state was touched.

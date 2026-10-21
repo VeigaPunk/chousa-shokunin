@@ -39,3 +39,28 @@ This screen does not check source scope/tier, URL/path+anchor completeness,
 source opening, support or truth; it is **not the whole criterion6 verifier**.
 QUALITY7/8 and a reviewer still judge those. A `used-by` edit is bookkeeping,
 not new knowledge; only an actual opened/supported entry can justify mining.
+
+## Withdrawal of implementation admission — 2026-10-21 (append-only)
+
+**The Round26 checker is not admitted.** The intended local relation above
+is not reliably established by measured implementation
+`0e9784bd52eca456b24d0bc40921480a47f91a2b`. Its five frozen positive entry
+results and five negative controls reproduce, but concrete counterexamples
+survive outside them (`evidence/round26-inherited-after.log`).
+
+Reports under `.ufo/waves/round-26/falsify/` own the failures:
+`FRegistryHeaderless.md` — stale header columns can accept an unnamed table
+or misbind real columns, hiding or inventing findings;
+`FRegistryIdBoundary.md` / `FRegistryAbsentRow.md` — occurrence rescanning
+can invent standalone IDs from glued text;
+`FRegistryRegistryDeny.md` — the advertised refusal guarantee fails on a
+filesystem-path class inherited from the pointer-oriented helper.
+`FNoTrade.md` / `FOverlap.md` also expose registry parsing/token-scan
+resource amplification. The 8MiB snapshot cap bounds input bytes only,
+not parser memory/time. The oracle itself differs on whitespace and some
+table shapes (`FRegistryBareVerified.md`, `FRegistryHeaderless.md`).
+
+No absence of these findings establishes correct metadata, source support,
+or safety. This file is retained as a withdrawn implementation candidate
+and falsifiable method proposal, not admitted expansion or a capability.
+No control population or declared threshold was weakened to report green.
