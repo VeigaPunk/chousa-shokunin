@@ -98,3 +98,16 @@ the admitted entry that motivates it. Tier definitions live in
     — lesson R25-M11 (captured-by none); `FxMutateMissing.md` kills the missing
     source/recheck arms, `FxMutateRefusal.md` kills canonical/NUL guards;
     `round25-meta-differential.sh` now exits1 on any table/oracle disagreement.
+
+## Round-26 additions (appended 2026-10-21; criteria 1–17 unchanged)
+
+18. **A bound names its unit.** A byte-read cap is not a memory or time
+    budget: downstream representations can amplify a bounded input. Before
+    calling a reader resource-bounded, exercise a newline-dense input and
+    record peak RSS and elapsed time against a small control. Scope the
+    conclusion to the measured shapes; keep time/memory limits distinct.
+    — `lessons/round-26.md` R26-M1 (captured-by none): the 8 MiB reader
+    allocated over2 GiB before parsing. Shown able to fail:
+    `bash corpus/evidence/round26-measure.sh <base-tree> c1` yields
+    `C1_AMPLIFIED=4/4` at `ba333325`; same probe and frozen shapes evaluate
+    the replacement. The probe exit0 is completion only; compare its values.

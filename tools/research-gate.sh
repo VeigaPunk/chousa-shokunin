@@ -29,6 +29,8 @@
 #   SCOPE_BOUNTY_ABSORBED SCOPE_MODEL_QUALITY_ABSORBED
 #   SCOPE_ORCHESTRATION_ABSORBED
 #   META_SOURCE_ABSENT META_VERIFIED_AT_ABSENT META_VERIFIED_AT_UNDATED
+#   META_SOURCE_NO_ROW_ID META_SOURCE_ROW_MISSING META_SOURCE_NOT_MINED
+#   META_SOURCE_USEDBY_MISSING META_VERIFIED_AT_BARE META_RECHECK_OVERDUE
 #   META_RECHECK_ABSENT META_RECHECK_UNSCHEDULED META_RECHECK_ROOT_PARENT
 #   META_ENTRY_REFUSED (r25: denylisted/oversized/NUL entry, refused unparsed)
 #   CLAIM_SOURCE_READ_TOO_LARGE (r12: source over SOURCE_READ_MAX_BYTES)
@@ -275,9 +277,12 @@ LANE_ROOT=$(cd -- "$SCRIPT_DIR/.." && pwd)
 
 MODE=verify
 RECORD_ARG=""
+REGISTRY_ARG=''
+REGISTRY_ARG_SET=0
 PIN_ARG=""
 DRIFT_ARG=""
 ROOT_ARG_SET=0
+AS_OF_ARG_SET=0 AS_OF_ARG=''
 ROOT=${CHOUSA_ROOT:-$PWD}
 STRICT=${CHOUSA_STRICT:-0}
 AGG_ERE=${CHOUSA_AGGREGATOR_ERE:-'aggregator|wikipedia|secondary-summary|chat-export-sources'}
@@ -303,7 +308,7 @@ usage: research-gate.sh [--selftest] [--help]
        research-gate.sh verify-chain [RECORD] [--root PATH]
        research-gate.sh verify-sweeps [RECORD] [--root PATH]
        research-gate.sh verify-integrity [RECORD] [--root PATH]
-       research-gate.sh verify-metadata PATH [--root PATH]
+       research-gate.sh verify-metadata PATH [--root PATH] [--as-of YYYY-MM-DD] [--registry FILE]
        research-gate.sh verify-all [RECORD] [--claims PATH] [--json PATH]
                       [--root PATH]
        research-gate.sh --pin PATH
@@ -313,6 +318,8 @@ usage: research-gate.sh [--selftest] [--help]
   RECORD via --record, positional, or CHOUSA_RECORD.
   CLAIMS via positional or CHOUSA_CLAIMS.
   Metadata mode checks source, verified-at and recheck in the Markdown header.
+  Metadata --as-of computes each entry's recheck due date and freshness.
+  Metadata --registry FILE checks source S-ids against a bounded SOURCES.md table.
   PATH is one .md file or a directory of direct .md children; a recheck using
   --root .. reports META_RECHECK_ROOT_PARENT (info).
   Claims file: one JSON object per claim line:
@@ -2300,14 +2307,237 @@ metadata_iso_date() {
   ((day <= maxday))
 }
 
+metadata_days_from_civil() { # YEAR MONTH DAY -> META_DAYS (days since 1970-01-01)
+  local year=$1 month=$2 day=$3 era yoe doy doe
+  if ((month <= 2)); then year=$((year - 1)); fi
+  if ((year >= 0)); then era=$((year / 400)); else era=$(((year - 399) / 400)); fi
+  yoe=$((year - era * 400))
+  if ((month > 2)); then
+    doy=$(((153 * (month - 3) + 2) / 5 + day - 1))
+  else
+    doy=$(((153 * (month + 9) + 2) / 5 + day - 1))
+  fi
+  doe=$((yoe * 365 + yoe / 4 - yoe / 100 + doy))
+  META_DAYS=$((era * 146097 + doe - 719468))
+}
+
+metadata_civil_from_days() { # META_DAYS -> META_DATE_RESULT (YYYY-MM-DD)
+  local z=$(( $1 + 719468 )) era doe yoe year doy mp month day
+  if ((z >= 0)); then era=$((z / 146097)); else era=$(((z - 146096) / 146097)); fi
+  doe=$((z - era * 146097))
+  yoe=$(((doe - doe / 1460 + doe / 36524 - doe / 146096) / 365))
+  year=$((yoe + era * 400))
+  doy=$((doe - (365 * yoe + yoe / 4 - yoe / 100)))
+  mp=$(((5 * doy + 2) / 153))
+  day=$((doy - (153 * mp + 2) / 5 + 1))
+  if ((mp < 10)); then month=$((mp + 3)); else month=$((mp - 9)); fi
+  if ((month <= 2)); then year=$((year + 1)); fi
+  printf -v META_DATE_RESULT '%04d-%02d-%02d' "$year" "$month" "$day"
+}
+
+metadata_days_from_iso() { # YYYY-MM-DD -> META_DAYS
+  local year=${1:0:4} month=${1:5:2} day=${1:8:2}
+  metadata_days_from_civil "$((10#$year))" "$((10#$month))" "$((10#$day))"
+}
+
+metadata_add_days() { # VALID_DATE DECIMAL_DAYS -> META_DATE_RESULT; out of range = 1
+  local date=$1 digits=$2 year month day start last_day amount
+  metadata_iso_date "$date" || return 1
+  [[ $digits =~ ^[0-9]+$ ]] || return 1
+  # Normalize decimal text before bounding; only supported-sized values reach arithmetic.
+  digits=${digits##+(0)}
+  [[ -n $digits ]] || digits=0
+  (( ${#digits} <= 7 )) || return 1
+  amount=$((10#$digits))
+  year=${date:0:4}; month=${date:5:2}; day=${date:8:2}
+  metadata_days_from_civil "$((10#$year))" "$((10#$month))" "$((10#$day))"
+  start=$META_DAYS
+  metadata_days_from_civil 9999 12 31
+  last_day=$META_DAYS
+  ((amount <= last_day - start)) || return 1
+  metadata_civil_from_days "$((start + amount))"
+}
+
+metadata_registry_load() {
+  local path=$1 canon fdpath fdcanon probe refuse='' registry_fd read_rc=0
+  local content='' fsize links line row cell i header_candidate=0 header_found=0
+  local id_col=-1 status_col=-1 usedby_col=-1 is_separator
+  local row_id row_status row_usedby
+  local LC_ALL=C
+  local -a cells=()
+
+  [[ -n $path ]] || die_usage "--registry needs PATH"
+  [[ -e $path ]] || die_usage "metadata registry not found"
+  [[ -r $path ]] || die_usage "metadata registry unreadable"
+  [[ -f $path ]] || die_usage "metadata registry is not a regular file"
+
+  canon=$(readlink -f -- "$path" 2>/dev/null || printf '%s' "$path")
+  if is_denylist_path "$path" || is_denylist_path "$canon"; then
+    refuse=denylist
+  elif ! exec {registry_fd}<"$canon"; then
+    refuse=unreadable
+  else
+    fdpath="/proc/$$/fd/$registry_fd"
+    fdcanon=$(readlink -f -- "$fdpath" 2>/dev/null || true)
+    if [[ -z $fdcanon ]] || is_denylist_path "$fdcanon"; then
+      refuse=denylist
+    elif [[ ! -f $fdpath ]] || ! probe=$(stat -Lc '%s %h' -- "$fdpath" 2>/dev/null) \
+      || [[ ! $probe =~ ^([0-9]+)[[:space:]]+([0-9]+)$ ]]; then
+      refuse=stat
+    else
+      fsize=${BASH_REMATCH[1]}; links=${BASH_REMATCH[2]}
+      if ((links != 1)); then
+        refuse=multilink
+      elif ((fsize > SOURCE_READ_MAX_BYTES)); then
+        refuse=size
+      else
+        IFS= read -r -d '' -n "$((SOURCE_READ_MAX_BYTES + 1))" content \
+          <&"$registry_fd" || read_rc=$?
+        if ((${#content} > SOURCE_READ_MAX_BYTES)); then
+          refuse=size
+        elif ((read_rc == 0)); then
+          refuse=nul
+        elif ((read_rc != 1)); then
+          refuse=read
+        fi
+      fi
+    fi
+    exec {registry_fd}<&-
+  fi
+  [[ -z $refuse ]] || die_usage "metadata registry refused: $refuse"
+  declare -gA META_REGISTRY_STATUS=() META_REGISTRY_USEDBY=()
+
+  while IFS= read -r line || [[ -n $line ]]; do
+    line=${line%$'\r'}
+    if [[ $line != *'|'*'|'* ]]; then
+      ((header_found)) && break
+      header_candidate=0
+      continue
+    fi
+    row=$line
+    row=${row#"${row%%[![:space:]]*}"}
+    row=${row%"${row##*[![:space:]]}"}
+    [[ $row == '|'* ]] && row=${row#|}
+    [[ $row == *'|' ]] && row=${row%|}
+    IFS='|' read -r -a cells <<<"${row}|__chousa_registry_end__"
+    cells=("${cells[@]:0:${#cells[@]}-1}")
+    for i in "${!cells[@]}"; do
+      cell=${cells[$i]}
+      cell=${cell#"${cell%%[![:space:]]*}"}
+      cell=${cell%"${cell##*[![:space:]]}"}
+      cells[$i]=$cell
+    done
+
+    if ((header_found)); then
+      row_id=${cells[$id_col]-}
+      if [[ $row_id =~ ^S[0-9]{3,}$ ]] \
+          && [[ -z ${META_REGISTRY_STATUS[$row_id]+x} ]]; then
+        row_status=${cells[$status_col]-}
+        row_usedby=${cells[$usedby_col]-}
+        META_REGISTRY_STATUS[$row_id]=$row_status
+        META_REGISTRY_USEDBY[$row_id]=$row_usedby
+      fi
+      continue
+    fi
+
+    if ((header_candidate)); then
+      is_separator=1
+      for cell in "${cells[@]}"; do
+        [[ $cell =~ ^:?-{3,}:?$ ]] || { is_separator=0; break; }
+      done
+      if ((is_separator)); then
+        header_found=1
+        header_candidate=0
+        continue
+      fi
+      header_candidate=0
+      id_col=-1; status_col=-1; usedby_col=-1
+    fi
+    for i in "${!cells[@]}"; do
+      case "${cells[$i]}" in
+        id) if ((id_col < 0)); then id_col=$i; fi ;;
+        status) if ((status_col < 0)); then status_col=$i; fi ;;
+        used-by) if ((usedby_col < 0)); then usedby_col=$i; fi ;;
+      esac
+    done
+    if ((id_col >= 0 && status_col >= 0 && usedby_col >= 0)); then
+      header_candidate=1
+    else
+      id_col=-1; status_col=-1; usedby_col=-1
+    fi
+  done <<<"$content"
+  ((header_found)) || die_usage "metadata registry has no table with id, status, and used-by columns"
+}
+
+metadata_registry_check_source() {
+  local source_value=$1 entry_path=$2 entry_base=$3
+  local source_scan=$1 source_id_re='(^|[^[:alnum:]_])(S[0-9]{3,})([^[:alnum:]_]|$)'
+  local source_id source_match found_id=0 used_by token matched i
+  local -a used_by_tokens=()
+  while [[ $source_scan =~ $source_id_re ]]; do
+    source_id=${BASH_REMATCH[2]}
+    source_match=${BASH_REMATCH[0]}
+    found_id=1
+    if [[ -z ${META_REGISTRY_STATUS[$source_id]+x} ]]; then
+      emit_finding META_SOURCE_ROW_MISSING warn metadata \
+        "entry=$entry_base source_id=$source_id registry row missing"
+    elif [[ ${META_REGISTRY_STATUS[$source_id]} != mined ]]; then
+      emit_finding META_SOURCE_NOT_MINED warn metadata \
+        "entry=$entry_base source_id=$source_id registry row is not mined"
+    else
+      used_by=${META_REGISTRY_USEDBY[$source_id]}
+      IFS=',' read -r -a used_by_tokens <<<"$used_by"
+      matched=0
+      for i in "${!used_by_tokens[@]}"; do
+        token=${used_by_tokens[$i]}
+        token=${token#"${token%%[![:space:]]*}"}
+        token=${token%"${token##*[![:space:]]}"}
+        while [[ $token == ./* ]]; do token=${token#./}; done
+        [[ -n $entry_path && $token == "$entry_path" ]] && matched=1
+      done
+      if ((matched == 0)); then
+        emit_finding META_SOURCE_USEDBY_MISSING warn metadata \
+          "entry=$entry_base source_id=$source_id used-by does not name entry"
+      fi
+    fi
+    source_scan=${source_scan#*"$source_match"}
+  done
+  ((found_id)) || emit_finding META_SOURCE_NO_ROW_ID info metadata \
+    "entry=$entry_base source has no S-id"
+}
+
+metadata_registry_entry_path() {
+  local file=$1 root=$2 entry_path
+  if [[ $root == / ]]; then
+    [[ $file == /* ]] || { printf ''; return 0; }
+    entry_path=${file#/}
+  elif [[ $file == "$root/"* ]]; then
+    entry_path=${file#"$root"/}
+  else
+    printf ''
+    return 0
+  fi
+  printf '%s' "$entry_path"
+}
+
+metadata_verified_at_bare() {
+  local value=$1 rest
+  [[ $value =~ ^[[:space:]]*([0-9]{4}-[0-9]{2}-[0-9]{2}) ]] || return 1
+  rest=${value#*"${BASH_REMATCH[1]}"}
+  [[ ! $rest =~ [^[:space:]] ]]
+}
+
 verify_metadata() {
   local path=${1:-} file base line fence_char='' fence_len=0 fence_c fence_l
   local key rest active_key='' source_state verified_state recheck_state
-  local has_source has_verified has_recheck verified_value recheck_value
+  local has_source has_verified has_recheck source_value verified_value recheck_value
   local recheck_first entry_drift_start entry_complete complete=0
+  local due_date freshness cadence_days verified_first freshness_fields asof_days due_days
+  local asof_year asof_month asof_day
   local canon refuse fsize links meta_fd fdpath fdcanon probe content read_rc
+  local registry_root entry_path
   local LC_ALL=C
-  local -a files=() candidates=() lines=() metadata_lines=()
+  local -a files=() candidates=() metadata_lines=()
   local had_nullglob=0 candidate
   local ROOT_PARENT_RE='(^|[^[:alnum:]_-])--root[[:space:]]+\.\.($|[^[:alnum:]_./-])'
 
@@ -2315,6 +2545,11 @@ verify_metadata() {
   [[ -e $path ]] || die_usage "metadata path not found: $path"
   [[ -r $path ]] || die_usage "metadata path unreadable: $path"
   [[ -d $ROOT ]] || die_usage "root is not a directory: $ROOT (--root)"
+  if (( AS_OF_ARG_SET )); then
+    asof_year=${AS_OF_ARG:0:4}; asof_month=${AS_OF_ARG:5:2}; asof_day=${AS_OF_ARG:8:2}
+    metadata_days_from_civil "$((10#$asof_year))" "$((10#$asof_month))" "$((10#$asof_day))"
+    asof_days=$META_DAYS
+  fi
 
   if [[ -d $path ]]; then
     shopt -q nullglob && had_nullglob=1
@@ -2331,6 +2566,11 @@ verify_metadata() {
     [[ -f $path && $path == *.md ]] \
       || die_usage "metadata path is not a .md file or directory: $path"
     files=("$path")
+  fi
+  if ((REGISTRY_ARG_SET)); then
+    metadata_registry_load "$REGISTRY_ARG"
+    registry_root=$(cd -- "$ROOT" 2>/dev/null && pwd -P) \
+      || die_usage "root is not a directory: $ROOT (--root)"
   fi
 
   FINDING_LINES=(); N_FINDINGS=0; N_DRIFT=0; ROLL=CLEAN
@@ -2377,22 +2617,23 @@ verify_metadata() {
     fi
     if [[ -n $refuse ]]; then
       emit_finding META_ENTRY_REFUSED crit metadata "entry=$base reason=$refuse unparsed"
-      metadata_lines+=("META entry=$base source=refused verified_at=refused recheck=refused verdict=drift")
+      freshness_fields=''
+      if (( AS_OF_ARG_SET )); then
+        freshness_fields=' due=refused freshness=refused'
+      fi
+      metadata_lines+=("META entry=$base source=refused verified_at=refused recheck=refused${freshness_fields} verdict=drift")
       continue
     fi
-    lines=()
-    while IFS= read -r line || [[ -n $line ]]; do
-      line=${line%$'\r'}
-      lines+=("$line")
-    done <<<"$content"
-
     fence_char='' fence_len=0 active_key=''
     has_source=0 has_verified=0 has_recheck=0
+    if ((REGISTRY_ARG_SET)); then source_value=''; fi
     verified_value='' recheck_value=''
-    for line in "${lines[@]}"; do
+    while IFS= read -r line || [[ -n $line ]]; do
+      line=${line%$'\r'}
       if [[ $line =~ ^[[:space:]]*$ ]]; then active_key=''; fi
       if [[ -n $fence_char ]]; then
         case "$active_key" in
+          source) source_value+=$'\n'"$line" ;;
           verified-at) verified_value+=$'\n'"$line" ;;
           recheck) recheck_value+=$'\n'"$line" ;;
         esac
@@ -2405,6 +2646,7 @@ verify_metadata() {
       fi
       if [[ $line =~ ^\ {0,3}(\`{3,}|~{3,})(.*)$ ]]; then
         case "$active_key" in
+          source) source_value+=$'\n'"$line" ;;
           verified-at) verified_value+=$'\n'"$line" ;;
           recheck) recheck_value+=$'\n'"$line" ;;
         esac
@@ -2417,7 +2659,12 @@ verify_metadata() {
         key=${BASH_REMATCH[1]}; rest=${BASH_REMATCH[2]}
         active_key=''
         case "$key" in
-          source) has_source=1; active_key=source ;;
+          source)
+            has_source=1
+            if ((REGISTRY_ARG_SET)); then
+              active_key=source; source_value=$rest
+            fi
+            ;;
           verified-at)
             has_verified=1; active_key=verified-at; verified_value=$rest
             ;;
@@ -2428,11 +2675,13 @@ verify_metadata() {
         continue
       fi
       case "$active_key" in
+        source) source_value+=$'\n'"$line" ;;
         verified-at) verified_value+=$'\n'"$line" ;;
         recheck) recheck_value+=$'\n'"$line" ;;
       esac
-    done
+    done <<<"$content"
 
+    recheck_first=''
     entry_drift_start=$N_DRIFT
     entry_complete=1
     if (( has_source )); then
@@ -2440,6 +2689,10 @@ verify_metadata() {
     else
       source_state=absent; entry_complete=0
       emit_finding META_SOURCE_ABSENT warn metadata "entry=$base key=source absent"
+    fi
+    if (( REGISTRY_ARG_SET )); then
+      entry_path=$(metadata_registry_entry_path "$fdcanon" "$registry_root")
+      metadata_registry_check_source "$source_value" "$entry_path" "$base"
     fi
     if (( has_verified )); then
       if [[ $verified_value =~ ^[[:space:]]*[0-9]{4}-[0-9]{2}-[0-9]{2} ]]; then
@@ -2453,6 +2706,10 @@ verify_metadata() {
       verified_state=absent; entry_complete=0
       emit_finding META_VERIFIED_AT_ABSENT warn metadata \
         "entry=$base key=verified-at absent"
+    fi
+    if (( REGISTRY_ARG_SET )) && metadata_verified_at_bare "$verified_value"; then
+      emit_finding META_VERIFIED_AT_BARE warn metadata \
+        "entry=$base key=verified-at has date only"
     fi
     if (( has_recheck )); then
       if [[ $recheck_value =~ ^[[:space:]]*([^[:space:]]+) ]]; then
@@ -2476,11 +2733,39 @@ verify_metadata() {
       recheck_state=absent; entry_complete=0
       emit_finding META_RECHECK_ABSENT warn metadata "entry=$base key=recheck absent"
     fi
+    freshness_fields=''
+    if (( AS_OF_ARG_SET )); then
+      due_date=unknown; freshness=unknown
+      if metadata_iso_date "$recheck_first"; then
+        due_date=$recheck_first; freshness=current
+      elif [[ $recheck_first =~ ^([0-9]+)d$ ]]; then
+        cadence_days=${BASH_REMATCH[1]}
+        verified_first=''
+        if [[ $verified_value =~ ^[[:space:]]*([0-9]{4}-[0-9]{2}-[0-9]{2}) ]]; then
+          verified_first=${BASH_REMATCH[1]}
+        fi
+        if metadata_iso_date "$verified_first" \
+           && metadata_add_days "$verified_first" "$cadence_days"; then
+          due_date=$META_DATE_RESULT; freshness=current
+        fi
+      elif [[ $recheck_first == on-release ]]; then
+        due_date=on-release; freshness=event
+      fi
+      if [[ $freshness == current ]]; then
+        metadata_days_from_iso "$due_date"; due_days=$META_DAYS
+        if ((asof_days > due_days)); then freshness=overdue; fi
+        if [[ $freshness == overdue ]]; then
+          emit_finding META_RECHECK_OVERDUE warn metadata \
+            "entry=$base due=$due_date as_of=$AS_OF_ARG"
+        fi
+      fi
+      freshness_fields=" due=$due_date freshness=$freshness"
+    fi
     (( entry_complete )) && complete=$((complete + 1))
     if (( N_DRIFT > entry_drift_start )); then
-      metadata_lines+=("META entry=$base source=$source_state verified_at=$verified_state recheck=$recheck_state verdict=drift")
+      metadata_lines+=("META entry=$base source=$source_state verified_at=$verified_state recheck=$recheck_state${freshness_fields} verdict=drift")
     else
-      metadata_lines+=("META entry=$base source=$source_state verified_at=$verified_state recheck=$recheck_state verdict=clean")
+      metadata_lines+=("META entry=$base source=$source_state verified_at=$verified_state recheck=$recheck_state${freshness_fields} verdict=clean")
     fi
   done
 
@@ -5665,6 +5950,293 @@ EOF
     printf 'FAIL-case %-28s usage entry missing or --help failed\n' metadata-usage
     failures=$((failures + 1))
   fi
+  printf 'source: S001\nverified-at: 2026-10-20 checked\nrecheck: 90d' \
+    >"$WORK/meta-no-final-newline.md"
+  metadata_case metadata-no-final-newline "$WORK/meta-no-final-newline.md" 0 \
+    'META entry=meta-no-final-newline.md source=present verified_at=dated recheck=scheduled verdict=clean' \
+    'METADATA_COMPLETE=1/1'
+
+  cat >"$WORK/meta-fenced-heading.md" <<'EOF'
+```markdown
+## Fenced body heading
+```
+source: S001
+verified-at: 2026-10-20 checked
+recheck: 90d
+EOF
+  metadata_case metadata-fenced-heading "$WORK/meta-fenced-heading.md" 0 \
+    'META entry=meta-fenced-heading.md source=present verified_at=dated recheck=scheduled verdict=clean' \
+    'METADATA_COMPLETE=1/1'
+
+  cat >"$WORK/meta-heading-boundary.md" <<'EOF'
+source: S001
+verified-at: 2026-10-20 checked
+recheck: never
+recheck: 90d
+## Claim
+recheck: never
+EOF
+  metadata_case metadata-heading-boundary "$WORK/meta-heading-boundary.md" 0 \
+    'META entry=meta-heading-boundary.md source=present verified_at=dated recheck=scheduled verdict=clean' \
+    'METADATA_COMPLETE=1/1'
+
+  metadata_asof_case() { # NAME PATH AS_OF WANT_RC [expected output ...]
+    local name=$1 path=$2 asof=$3 want_rc=$4
+    shift 4
+    local -a want=()
+    local tok rc=0 out nverdict msg=''
+    want=("$@")
+    cases=$((cases + 1))
+    out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE \
+      CHOUSA_STRICT=0 CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+      bash "$SELF" verify-metadata "$path" --root "$WORK" --as-of "$asof" 2>&1) || rc=$?
+    nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
+    for tok in "${want[@]+"${want[@]}"}"; do
+      [[ $out == *"$tok"* ]] || msg+="missing:'$tok' "
+    done
+    if [[ $want_rc -eq 2 ]]; then
+      [[ ${nverdict:-0} -eq 0 ]] || msg+="verdict-lines=$nverdict/0 "
+    else
+      [[ ${nverdict:-0} -eq 1 ]] || msg+="verdict-lines=$nverdict/1 "
+    fi
+    if [[ $rc -eq $want_rc && -z $msg ]]; then
+      printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" "$name" "$rc"
+    else
+      printf 'FAIL-case %-28s rc=%d/%d %s\n' "$name" "$rc" "$want_rc" "$msg"
+      printf '%s\n' "$out" | sed 's/^/    | /'
+      failures=$((failures + 1))
+    fi
+  }
+  metadata_asof_usage_case() { # NAME EXPECTED [CLI args ...]
+    local name=$1 expected=$2
+    shift 2
+    local rc=0 out
+    cases=$((cases + 1))
+    out=$(bash "$SELF" "$@" 2>&1) || rc=$?
+    if [[ $rc -eq 2 && $out == *"$expected"* && $out != *'RESEARCH_GATE: '* ]]; then
+      printf 'ok-case  %-2d %-28s exit=2\n' "$cases" "$name"
+    else
+      printf 'FAIL-case %-28s rc=%d expected=%s\n' "$name" "$rc" "$expected"
+      printf '%s\n' "$out" | sed 's/^/    | /'
+      failures=$((failures + 1))
+    fi
+  }
+
+  mkdir -p "$WORK/meta-asof"
+  cat >"$WORK/meta-asof/overdue.md" <<'EOF'
+source: S001 fixture
+verified-at: 2026-01-02 checked fixture
+recheck: 90d
+
+## Body
+EOF
+  metadata_asof_case metadata-asof-overdue "$WORK/meta-asof/overdue.md" 2026-10-21 1 \
+    'META entry=overdue.md source=present verified_at=dated recheck=scheduled due=2026-04-02 freshness=overdue verdict=drift' \
+    'FINDING META_RECHECK_OVERDUE severity=warn surface=metadata obs=entry=overdue.md due=2026-04-02 as_of=2026-10-21'
+  cat >"$WORK/meta-asof/current.md" <<'EOF'
+source: S001 fixture
+verified-at: 2026-10-01 checked fixture
+recheck: 90d
+
+## Body
+EOF
+  metadata_asof_case metadata-asof-current "$WORK/meta-asof/current.md" 2026-10-21 0 \
+    'META entry=current.md source=present verified_at=dated recheck=scheduled due=2026-12-30 freshness=current verdict=clean'
+  cat >"$WORK/meta-asof/date-past.md" <<'EOF'
+source: S001 fixture
+verified-at: 2026-01-02 checked fixture
+recheck: 2026-03-01
+
+## Body
+EOF
+  metadata_asof_case metadata-asof-date-past "$WORK/meta-asof/date-past.md" 2026-10-21 1 \
+    'META entry=date-past.md source=present verified_at=dated recheck=scheduled due=2026-03-01 freshness=overdue verdict=drift' \
+    'FINDING META_RECHECK_OVERDUE severity=warn surface=metadata obs=entry=date-past.md due=2026-03-01 as_of=2026-10-21'
+  cat >"$WORK/meta-asof/event.md" <<'EOF'
+source: S001 fixture
+verified-at: 2026-01-02 checked fixture
+recheck: on-release
+
+## Body
+EOF
+  metadata_asof_case metadata-asof-event "$WORK/meta-asof/event.md" 2026-10-21 0 \
+    'META entry=event.md source=present verified_at=dated recheck=scheduled due=on-release freshness=event verdict=clean'
+  cat >"$WORK/meta-asof/unknown.md" <<'EOF'
+source: S001 fixture
+verified-at: 2026-01-02 checked fixture
+recheck: bash tools/x.sh
+
+## Body
+EOF
+  metadata_asof_case metadata-asof-unknown "$WORK/meta-asof/unknown.md" 2026-10-21 0 \
+    'META entry=unknown.md source=present verified_at=dated recheck=unscheduled due=unknown freshness=unknown verdict=clean'
+  cat >"$WORK/meta-asof/boundary.md" <<'EOF'
+source: S001 fixture
+verified-at: 2026-07-23 checked fixture
+recheck: 90d
+
+## Body
+EOF
+  metadata_asof_case metadata-asof-boundary "$WORK/meta-asof/boundary.md" 2026-10-21 0 \
+    'META entry=boundary.md source=present verified_at=dated recheck=scheduled due=2026-10-21 freshness=current verdict=clean'
+
+  metadata_asof_usage_case metadata-asof-invalid '--as-of must be a valid YYYY-MM-DD date' \
+    verify-metadata "$WORK/meta-asof/current.md" --root "$WORK" --as-of 2026-02-30
+  metadata_asof_usage_case metadata-asof-missing '--as-of needs YYYY-MM-DD' \
+    verify-metadata "$WORK/meta-asof/current.md" --root "$WORK" --as-of
+  metadata_asof_usage_case metadata-asof-wrong-mode '--as-of is only valid with verify-metadata' \
+    verify "$WORK/all-pass.md" --as-of 2026-10-21
+
+  cat >"$WORK/meta-asof/leap-2028.md" <<'EOF'
+source: S001 fixture
+verified-at: 2028-02-28 checked fixture
+recheck: 0001d
+
+## Body
+EOF
+  metadata_asof_case metadata-asof-leap-2028 "$WORK/meta-asof/leap-2028.md" 2028-02-29 0 \
+    'META entry=leap-2028.md source=present verified_at=dated recheck=scheduled due=2028-02-29 freshness=current verdict=clean'
+  cat >"$WORK/meta-asof/leap-2027.md" <<'EOF'
+source: S001 fixture
+verified-at: 2027-02-28 checked fixture
+recheck: 1d
+
+## Body
+EOF
+  metadata_asof_case metadata-asof-leap-2027 "$WORK/meta-asof/leap-2027.md" 2027-03-01 0 \
+    'META entry=leap-2027.md source=present verified_at=dated recheck=scheduled due=2027-03-01 freshness=current verdict=clean'
+  cat >"$WORK/meta-asof/large-cadence.md" <<'EOF'
+source: S001 fixture
+verified-at: 2026-01-02 checked fixture
+recheck: 999999999999999999999999999999999999d
+
+## Body
+EOF
+  metadata_asof_case metadata-asof-large-cadence "$WORK/meta-asof/large-cadence.md" 2026-10-21 0 \
+    'META entry=large-cadence.md source=present verified_at=dated recheck=scheduled due=unknown freshness=unknown verdict=clean'
+  cat >"$WORK/meta-asof/date-overflow.md" <<'EOF'
+source: S001 fixture
+verified-at: 9999-12-31 checked fixture
+recheck: 1d
+
+## Body
+EOF
+  metadata_asof_case metadata-asof-date-overflow "$WORK/meta-asof/date-overflow.md" 9999-12-31 0 \
+    'META entry=date-overflow.md source=present verified_at=dated recheck=scheduled due=unknown freshness=unknown verdict=clean'
+  cat >"$WORK/meta-asof/invalid-verified-date.md" <<'EOF'
+source: S001 fixture
+verified-at: 2026-02-30 checked fixture
+recheck: 1d
+
+## Body
+EOF
+  metadata_asof_case metadata-asof-invalid-verified-date "$WORK/meta-asof/invalid-verified-date.md" 2026-10-21 0 \
+    'META entry=invalid-verified-date.md source=present verified_at=dated recheck=scheduled due=unknown freshness=unknown verdict=clean'
+  metadata_asof_case metadata-asof-refused "$WORK/meta-nul.md" 2026-10-21 1 \
+    'META entry=meta-nul.md source=refused verified_at=refused recheck=refused due=refused freshness=refused verdict=drift'
+
+  metadata_registry_case() { # NAME ENTRY REGISTRY WANT_RC [expected output ...]
+    local name=$1 path=$2 registry=$3 want_rc=$4
+    shift 4
+    local rc=0 out nverdict msg='' tok
+    local -a wants=("$@")
+    cases=$((cases + 1))
+    out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE \
+      CHOUSA_STRICT=0 CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+      bash "$SELF" verify-metadata "$path" --root "$WORK" --registry "$registry" \
+      2>&1) || rc=$?
+    nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
+    for tok in "${wants[@]}"; do
+      [[ $out == *"$tok"* ]] || msg+="missing:'$tok' "
+    done
+    if [[ $want_rc -eq 2 ]]; then
+      [[ ${nverdict:-0} -eq 0 ]] || msg+="verdict-lines=$nverdict/0 "
+    else
+      [[ ${nverdict:-0} -eq 1 ]] || msg+="verdict-lines=$nverdict/1 "
+    fi
+    if [[ $rc -eq $want_rc && -z $msg ]]; then
+      printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" "$name" "$rc"
+    else
+      printf 'FAIL-case %-28s rc=%d/%d %s\n' "$name" "$rc" "$want_rc" "$msg"
+      printf '%s\n' "$out" | sed 's/^/    | /'
+      failures=$((failures + 1))
+    fi
+  }
+
+  mkdir -p "$WORK/corpus/knowledge"
+  cat >"$WORK/meta-registry.md" <<'EOF'
+| id | status | used-by |
+|---|---|---|
+| S001 | mined | corpus/knowledge/meta-reg-bare.md |
+| S002 | queued | corpus/knowledge/meta-reg-queued.md |
+| S003 | mined | meta-reg-usedby.md |
+EOF
+  printf 'source: S999\nverified-at: 2026-10-20 checked\nrecheck: 90d\n' \
+    >"$WORK/corpus/knowledge/meta-reg-missing.md"
+  metadata_registry_case metadata-registry-missing-row \
+    "$WORK/corpus/knowledge/meta-reg-missing.md" "$WORK/meta-registry.md" 1 \
+    'FINDING META_SOURCE_ROW_MISSING severity=warn surface=metadata obs=entry=meta-reg-missing.md source_id=S999'
+
+  printf 'source: S002\nverified-at: 2026-10-20 checked\nrecheck: 90d\n' \
+    >"$WORK/corpus/knowledge/meta-reg-queued.md"
+  metadata_registry_case metadata-registry-not-mined \
+    "$WORK/corpus/knowledge/meta-reg-queued.md" "$WORK/meta-registry.md" 1 \
+    'FINDING META_SOURCE_NOT_MINED severity=warn surface=metadata obs=entry=meta-reg-queued.md source_id=S002'
+
+  printf 'source: S003\nverified-at: 2026-10-20 checked\nrecheck: 90d\n' \
+    >"$WORK/corpus/knowledge/meta-reg-usedby.md"
+  metadata_registry_case metadata-registry-used-by-path \
+    "$WORK/corpus/knowledge/meta-reg-usedby.md" "$WORK/meta-registry.md" 1 \
+    'FINDING META_SOURCE_USEDBY_MISSING severity=warn surface=metadata obs=entry=meta-reg-usedby.md source_id=S003'
+
+  printf 'source: S001\nverified-at: 2026-10-20\nrecheck: 90d\n' \
+    >"$WORK/corpus/knowledge/meta-reg-bare.md"
+  metadata_registry_case metadata-registry-verified-at-bare \
+    "$WORK/corpus/knowledge/meta-reg-bare.md" "$WORK/meta-registry.md" 1 \
+    'FINDING META_VERIFIED_AT_BARE severity=warn surface=metadata obs=entry=meta-reg-bare.md'
+
+  printf 'source: xS001 S001a\nverified-at: 2026-10-20 checked\nrecheck: 90d\n' \
+    >"$WORK/corpus/knowledge/meta-reg-noid.md"
+  metadata_registry_case metadata-registry-no-token-id \
+    "$WORK/corpus/knowledge/meta-reg-noid.md" "$WORK/meta-registry.md" 0 \
+    'FINDING META_SOURCE_NO_ROW_ID severity=info surface=metadata obs=entry=meta-reg-noid.md'
+
+  cat >"$WORK/meta-registry-positive.md" <<'EOF'
+| used-by | source | status | id |
+|---|---|---|---|
+| ./corpus/knowledge/meta-reg-positive.md | fixture | mined | S0001 |
+EOF
+  cat >"$WORK/corpus/knowledge/meta-reg-positive.md" <<'EOF'
+source: citation continuation
+  S0001
+verified-at: 2026-10-20
+  checked the claim
+recheck: 90d
+EOF
+  metadata_registry_case metadata-registry-positive-continuations \
+    "$WORK/corpus/knowledge/meta-reg-positive.md" "$WORK/meta-registry-positive.md" 0 \
+    'META entry=meta-reg-positive.md source=present verified_at=dated recheck=scheduled verdict=clean' \
+    'findings=0 drift=0'
+
+  cat >"$WORK/meta-registry-duplicate.md" <<'EOF'
+| id | status | used-by |
+|---|---|---|
+| S0999 | queued | corpus/knowledge/meta-reg-duplicate.md |
+| S0999 | mined | corpus/knowledge/meta-reg-duplicate.md |
+EOF
+  printf 'source: S0999\nverified-at: 2026-10-20 checked\nrecheck: 90d\n' \
+    >"$WORK/corpus/knowledge/meta-reg-duplicate.md"
+  metadata_registry_case metadata-registry-duplicate-first-row \
+    "$WORK/corpus/knowledge/meta-reg-duplicate.md" "$WORK/meta-registry-duplicate.md" 1 \
+    'FINDING META_SOURCE_NOT_MINED severity=warn surface=metadata obs=entry=meta-reg-duplicate.md source_id=S0999'
+
+  printf '| id | status | used-by |\n|---|---|---|\n\x00' \
+    >"$WORK/meta-registry-nul.md"
+  metadata_registry_case metadata-registry-refused-nul \
+    "$WORK/corpus/knowledge/meta-reg-missing.md" "$WORK/meta-registry-nul.md" 2 \
+    'metadata registry refused: nul'
+
+
 
   if [[ $failures -eq 0 ]]; then
     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"
@@ -5697,12 +6269,18 @@ while [[ $# -gt 0 ]]; do
     --root)
       [[ $# -ge 2 ]] || die_usage "--root needs PATH"
       ROOT=$2; ROOT_ARG_SET=1; shift 2 ;;
+    --registry)
+      [[ $# -ge 2 ]] || die_usage "--registry needs PATH"
+      REGISTRY_ARG=$2; REGISTRY_ARG_SET=1; shift 2 ;;
     --claims)
       [[ $# -ge 2 ]] || die_usage "--claims needs PATH"
       CLAIMS_ARG=$2; shift 2 ;;
     --json)
       [[ $# -ge 2 ]] || die_usage "--json needs PATH"
       JSON_ARG=$2; shift 2 ;;
+    --as-of)
+      [[ $# -ge 2 ]] || die_usage "--as-of needs YYYY-MM-DD"
+      AS_OF_ARG_SET=1; AS_OF_ARG=$2; shift 2 ;;
     --) shift; break ;;
     -*) die_usage "unknown flag: $1" ;;
     *)
@@ -5713,6 +6291,13 @@ done
 
 if [[ $MODE != all && ( -n ${CLAIMS_ARG:-} || -n ${JSON_ARG:-} ) ]]; then
   die_usage "--claims/--json are only valid with verify-all"
+fi
+if (( AS_OF_ARG_SET )); then
+  [[ $MODE == metadata ]] || die_usage "--as-of is only valid with verify-metadata"
+  metadata_iso_date "$AS_OF_ARG" || die_usage "--as-of must be a valid YYYY-MM-DD date"
+fi
+if ((REGISTRY_ARG_SET)) && [[ $MODE != metadata ]]; then
+  die_usage "--registry is only valid with verify-metadata"
 fi
 
 # pin/drift take exactly one baseline path: a record, claims surface, manifest

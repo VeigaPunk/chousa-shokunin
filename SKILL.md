@@ -456,3 +456,43 @@ for a span at `A:86`; ledger row 56) was closed at round 12 by correcting the
 record (`hardening-r10.md` E1; receipt
 `corpus/evidence/scope-r12-20261019T115519Z-A-fix.log`); the class stays
 uncovered — no mode pairs a row's `path:line` with its span's occurrence line.
+
+## Round26 metadata options and resource qualification
+
+The existing `verify-metadata` gate is extended, not replaced:
+
+```sh
+# cwd: this lane root. All reads remain local; no entry text is executed.
+bash tools/research-gate.sh verify-metadata corpus/knowledge --root . \
+  --as-of 2026-10-21 --registry corpus/SOURCES.md
+```
+
+Both flags are optional and metadata-only; missing/invalid option arguments
+or a refused/headerless registry are setup/usage exit2. Without either flag,
+the round25 output contract remains in force. With both flags, both sets of
+observations/findings apply to one verdict; neither option is ignored.
+The existing gate registry's code map, zero-write verification scope, owner
+and shared `--selftest` command remain unchanged. Round26's exact suite tally
+and landed executable are owned by `SCORECARD.md`'s Round26 measurement.
+
+| Option / observation | Interpretation and limit | Source |
+|---|---|---|
+| `--as-of YYYY-MM-DD` | Add `due=` and `freshness=` before the entry verdict. Calendar-valid explicit dates or verified-at plus decimal Nd define deadlines; equality is current, strictly later is overdue. `on-release` is event; unavailable/out-of-range computation is unknown. | `corpus/knowledge/recheck-due-r26.md`; frozen spec `corpus/evidence/round26-claims.md` C2 |
+| `META_RECHECK_OVERDUE` warn | The declared assessment deadline passed. It does not establish that the entry is false, nor that a current/event entry was actually rechecked. | same note, source-grounded distinction and limits |
+| `--registry FILE` | Check standalone S+three-or-more-digit IDs against the first table with id/status/used-by columns; first duplicate ID wins. Require a mined row whose comma-separated used-by token names the exact rooted entry path (leading `./` normalized). | `corpus/knowledge/registry-link-r26.md`; C3 contract correction |
+| `META_SOURCE_ROW_MISSING`, `META_SOURCE_NOT_MINED`, `META_SOURCE_USEDBY_MISSING`, `META_VERIFIED_AT_BARE` warn | Local declaration errors; the last means a leading dated verified-at value says nothing nonblank about what was checked. `META_SOURCE_NO_ROW_ID` is legacy-compatible info, promoted only in strict mode. | registry-link note, disposition table |
+
+Apply the prospective criterion6 rollup only to r24+ entries; a manual scan
+of legacy notes can emit findings without retroactively declaring their
+original admission invalid. This screen is not complete criterion6:
+URL/anchor sufficiency, source tier/scope, actual opening, citation support
+and truth still require QUALITY6–8 and a reviewer.
+
+The metadata header now traverses the fd-bound bounded snapshot directly,
+without a whole-snapshot per-line array. Full-file NUL/size/refusal checks
+precede header cutoff and must not be replaced by a prefix-only read.
+The four-shape RSS result is not a universal memory/time budget: headerless
+and very long-line/continuation inputs retain time risks, and other gate
+readers are not repaired. See `corpus/knowledge/reader-allocation-r26.md`
+and QUALITY18. The operability scalar remains the original r1 construct,
+not a resource-safety or readiness score.

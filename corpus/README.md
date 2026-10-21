@@ -59,6 +59,11 @@
 | `fixtures/metadata-r25/*` (+ `README.md`) | Round-25 metadata-screen fixture set: 18 single-defect mutants, 6 edge cases and 3 clean controls derived from real entry headers, with a hand-derived expectation table (one row corrected after the differential) | `evidence/round25-meta-differential.{sh,log}` (`AGREE=54/54`); `evidence/round25-meta-oracle.py` |
 | `lessons/round-25.md` | Round-25 lesson: mined mistakes (class · pointer · captured-by · fix shown able to fail), the round-24 spot-check intake, the sources opened this round | `evidence/round25-measure-{before,after}.log`; `QUALITY.md` criteria 13–14 |
 | `evidence/round25-*` | Round-25 pre-registration (`round25-claims.md`), counting script and its before/after outputs (`round25-measure.sh`, `-before.log`, `-after.log`), the metadata oracle and differential, the ledger recount (`round25-ledger-recount.py`) | `SCORECARD.md` `## Round 25 verdict` |
+| `knowledge/reader-allocation-r26.md` | Resource-bound method: distinguish input bytes from downstream object allocation, vary shape, and require resource plus output-identity holds; scoped to the metadata reader | `S034`; `evidence/round26-claims.md` C1; `SCORECARD.md` Round26 |
+| `knowledge/recheck-due-r26.md` | Schedule-derived deadline semantics, explicit as-of date, event/unknown classifications and the distinction between a due assessment and source truth | `S035`, `S037`, `S038`, reopened `S029`; `evidence/round26-claims.md` C2 |
+| `knowledge/registry-link-r26.md` | Local registry identity/status/exact-rooted backlink checks and descriptive verified-at text; a declaration relation is not semantic citation support | `S036`, `S039`; `evidence/round26-claims.md` C3 and contract correction |
+| `lessons/round-26.md` | Prior closure intake, allocation-amplification mistake, corrected registry contract, inherited-wave continuity and located source Gate quotes | `evidence/round26-measure-before.log`; `QUALITY.md` criterion18; `.ufo/waves/round-26/` |
+| `evidence/round26-*` | Frozen-population pre-registration, baseline and final counting receipts plus independent date/registry differentials | `SCORECARD.md` Round26 owns the final measurements and revision |
 
 Count: 20 entries, ten knowledge notes and ten lessons — `functions.glob`
 pattern `corpus/knowledge/*.md;corpus/lessons/*.md`, 2026-10-16. Fixture and
@@ -850,3 +855,23 @@ record DRIFT under `root=.`; "ALL IDENTICAL" in their descriptions is an
 output-identity assertion, not a CLEAN claim. The new Frontier paragraphs
 preserve each receipt gap; the round-25 hold battery uses the explicit fleet
 root and is independent of those old assertions.
+
+## Round26 frontier disposition (2026-10-21)
+
+New held ground: shape-sensitive resource verification of the lane's metadata
+reader, computed assessment deadlines, and a local registry-link screen.
+The three indexed notes cite mined S034–S039 and, for periodic review, reopened
+S029. Their gate results and exact measured revision are owned by SCORECARD's
+Round26 section, not inferred from source-row growth.
+
+The generic schedule and registry policy are the lane's design, not Cochrane,
+Python or PROV requirements. C2 does not reopen sources or certify truth;
+C3 does not judge tier/scope, source support, complete URL/anchor metadata,
+or whether recorded verification actually happened. Legacy pre-r24 notes
+are outside the prospective criterion6 admission rollup.
+
+Still unclosed: concurrent JSON appenders, filesystem races, parent-root
+legacy rechecks, receipt gaps, and pairing a span's occurrence with a named
+pointer line. No promotion, outside spot-check or province expansion beyond
+deep-research method is self-awarded here. Other build source candidates
+remain advisory leads unless an actual registry row says otherwise.

@@ -959,3 +959,74 @@ re-runs the exact landed counting code over an isolated archive of base
 `d730ae4`: absent metadata rc2, stale indexes66, stale restatements15,
 raw slot1, selftest136, drift none, r1 3/3. This preserves comparability
 after the residual anti-deletion guards; no production bytes changed.
+
+## Round 26 — inherited build and bounded metadata work (2026-10-21)
+
+Declared claims, registered at `f361d12e44687841e30ec35710ddb366c6f795e0`
+against base `ba3333254dd337658a4f25e7a9471f9cf4e4567e`:
+C1 operability — remove metadata-reader per-line allocation amplification;
+C2 freshness — compute schedule-derived due dates with explicit `--as-of`;
+C3 calibration — check local registry ID/status/exact used-by relationships
+and descriptive verification text, not semantic source support.
+The lowest measured axis is operability3/10 on its unchanged r1 construct.
+Concurrent JSON-appender serialization is carried debt, not a second
+operability claim or an implied repair.
+
+Motivation: round25 outside closure `MANIFEST.json rounds[395]` routed the
+reader-allocation risk; `corpus/evidence/round26-measure-before.log`
+exercises it at four frozen shapes (`C1_AMPLIFIED=4/4`), while C2/C3 flags
+are absent and their counters are zero. The same receipt pins frozen29 plain
+output, legacy161 case lines, r12 drift and r1 archived-input observable.
+
+Replacement `ChousaR26R` retains the same held round26/attempt1, original
+build64 and its dead identities; unfinished original identities continue
+their own assignments. `.ufo/waves/round-26/recovery-inheritance.json` owns
+the inherited state, initial reports and provider errors. No inherited
+checkpoint is silently counted as the delivered result.
+
+Integrated C1's minimal streamed header parser from `ExecC1Stream`, corroborated
+by `SimplifierReader`: the fd-bound snapshot and full-file refusal checks are
+unchanged; the whole-snapshot `lines` array is removed, and three small
+header-compatibility cases are appended after legacy161. Selected patch is
+preserved at `.ufo/waves/round-26/build/patches/ExecC1Stream.patch`.
+The old representation is the shown failing control for new QUALITY18:
+a byte cap is not a practical allocation/time budget. The scalar score
+remains tied to its original archived-input counting command.
+
+The inherited source/knowledge drafts and QUALITY18 are retained pending
+final integration measurement. Their provenance rows are added only after
+opening, and the lesson's Gate records located quotes and scoped inference.
+`corpus/lessons/round-26.md` takes in every previous closure debt and retains
+the historical battery154→final161 supersession as an appended comment.
+No tool installs, domain-source writes, external live-target actions or
+changes to PROVINCE are made.
+
+### Round26 production checkpoint — before fresh falsification
+
+The original C2/C3 implementation identities completed their private patches
+under the replacement; they intentionally ran no further checks, reserving
+integrated verification for L1. Their reports and selected patches are retained
+under `.ufo/waves/round-26/build/`.
+
+C2 adds pure-Bash Gregorian calendar-day conversion with decimal/range
+guards, an opt-in as-of deadline/classification branch and its small CLI
+controls. C3 adds a bounded fd-snapshot registry reader, three-or-more-digit
+standalone IDs, first-row duplicate policy, exact canonical-rooted backlinks
+and descriptive verification checking. A review caught the relative-path
+identity error before integration; the final patch uses the opened metadata
+fd's canonical identity. Blank registry lines are skipped before cell
+trimming, and source continuations are retained only with `--registry`.
+
+Both original patches are integrated without replacing C1's streamed header
+loop or modifying legacy161 case definitions. C2 and C3 controls are appended
+after C1's three cases. The independent date differential and the corrected
+registry oracle/differential are retained in `corpus/evidence/round26-*`.
+The registry comparator's pre-fix18/48 result is explicitly invalid, not an
+implementation failure or a passing measurement; the corrected comparator
+requires all frozen suites and exact populations.
+
+S034–S039 are the scoped opened sources; S029's backlink adds the new due-date
+note with old→new logged in the lesson. SKILL/README document/index the new
+options and explicit limits. This checkpoint records implemented work only:
+final counts, capability admission, score re-derivation and no-harm verdicts
+come from the integrated post-wave run, never from this paragraph.

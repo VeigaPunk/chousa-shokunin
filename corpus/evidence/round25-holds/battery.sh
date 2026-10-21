@@ -89,3 +89,8 @@ run_and_diff verify-claims-r2 bash "$GATE" verify-claims corpus/fixtures/claims-
   --root "$ANALYSIS_ROOT"
 
 exit "$failed"
+
+# Round-26 append-only supersession (outside r25 closure routed this):
+# line55's "154-case" describes the initial checkpoint, not the final r25
+# suite. Final r25 =161 cases (round25-retained-final-selftest.log). The
+# comparison above intentionally freezes cases1..136 and their exit only.

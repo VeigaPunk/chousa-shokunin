@@ -1,0 +1,430 @@
+diff --git c/tools/research-gate.sh w/tools/research-gate.sh
+index 1ac35d3..5edff5c 100755
+--- c/tools/research-gate.sh
++++ w/tools/research-gate.sh
+@@ -28,7 +28,8 @@
+ #   VERIFY_ALL_CLAIMS_UNRESOLVED VERIFY_ALL_SECTION_UNAVAILABLE
+ #   SCOPE_BOUNTY_ABSORBED SCOPE_MODEL_QUALITY_ABSORBED
+ #   SCOPE_ORCHESTRATION_ABSORBED
+-#   META_SOURCE_ABSENT META_VERIFIED_AT_ABSENT META_VERIFIED_AT_UNDATED
++#   META_SOURCE_ABSENT META_SOURCE_NO_ROW_ID META_SOURCE_ROW_MISSING
++#   META_SOURCE_NOT_MINED META_SOURCE_USEDBY_MISSING META_VERIFIED_AT_BARE
+ #   META_RECHECK_ABSENT META_RECHECK_UNSCHEDULED META_RECHECK_ROOT_PARENT
+ #   META_ENTRY_REFUSED (r25: denylisted/oversized/NUL entry, refused unparsed)
+ #   CLAIM_SOURCE_READ_TOO_LARGE (r12: source over SOURCE_READ_MAX_BYTES)
+@@ -275,6 +276,8 @@ LANE_ROOT=$(cd -- "$SCRIPT_DIR/.." && pwd)
+ 
+ MODE=verify
+ RECORD_ARG=""
++REGISTRY_ARG=''
++REGISTRY_ARG_SET=0
+ PIN_ARG=""
+ DRIFT_ARG=""
+ ROOT_ARG_SET=0
+@@ -303,7 +306,7 @@ usage: research-gate.sh [--selftest] [--help]
+        research-gate.sh verify-chain [RECORD] [--root PATH]
+        research-gate.sh verify-sweeps [RECORD] [--root PATH]
+        research-gate.sh verify-integrity [RECORD] [--root PATH]
+-       research-gate.sh verify-metadata PATH [--root PATH]
++       research-gate.sh verify-metadata PATH [--root PATH] [--registry FILE]
+        research-gate.sh verify-all [RECORD] [--claims PATH] [--json PATH]
+                       [--root PATH]
+        research-gate.sh --pin PATH
+@@ -313,6 +316,7 @@ usage: research-gate.sh [--selftest] [--help]
+   RECORD via --record, positional, or CHOUSA_RECORD.
+   CLAIMS via positional or CHOUSA_CLAIMS.
+   Metadata mode checks source, verified-at and recheck in the Markdown header.
++  Metadata --registry FILE checks source S-ids against a bounded SOURCES.md table.
+   PATH is one .md file or a directory of direct .md children; a recheck using
+   --root .. reports META_RECHECK_ROOT_PARENT (info).
+   Claims file: one JSON object per claim line:
+@@ -2300,12 +2304,182 @@ metadata_iso_date() {
+   ((day <= maxday))
+ }
+ 
++metadata_registry_load() {
++  local path=$1 canon fdpath fdcanon probe refuse='' registry_fd read_rc=0
++  local content='' fsize links line row cell i header_candidate=0 header_found=0
++  local id_col=-1 status_col=-1 usedby_col=-1 is_separator
++  local row_id row_status row_usedby
++  local LC_ALL=C
++  local -a cells=()
++
++  [[ -n $path ]] || die_usage "--registry needs PATH"
++  [[ -e $path ]] || die_usage "metadata registry not found"
++  [[ -r $path ]] || die_usage "metadata registry unreadable"
++  [[ -f $path ]] || die_usage "metadata registry is not a regular file"
++
++  canon=$(readlink -f -- "$path" 2>/dev/null || printf '%s' "$path")
++  if is_denylist_path "$path" || is_denylist_path "$canon"; then
++    refuse=denylist
++  elif ! exec {registry_fd}<"$canon"; then
++    refuse=unreadable
++  else
++    fdpath="/proc/$$/fd/$registry_fd"
++    fdcanon=$(readlink -f -- "$fdpath" 2>/dev/null || true)
++    if [[ -z $fdcanon ]] || is_denylist_path "$fdcanon"; then
++      refuse=denylist
++    elif [[ ! -f $fdpath ]] || ! probe=$(stat -Lc '%s %h' -- "$fdpath" 2>/dev/null) \
++      || [[ ! $probe =~ ^([0-9]+)[[:space:]]+([0-9]+)$ ]]; then
++      refuse=stat
++    else
++      fsize=${BASH_REMATCH[1]}; links=${BASH_REMATCH[2]}
++      if ((links != 1)); then
++        refuse=multilink
++      elif ((fsize > SOURCE_READ_MAX_BYTES)); then
++        refuse=size
++      else
++        IFS= read -r -d '' -n "$((SOURCE_READ_MAX_BYTES + 1))" content \
++          <&"$registry_fd" || read_rc=$?
++        if ((${#content} > SOURCE_READ_MAX_BYTES)); then
++          refuse=size
++        elif ((read_rc == 0)); then
++          refuse=nul
++        elif ((read_rc != 1)); then
++          refuse=read
++        fi
++      fi
++    fi
++    exec {registry_fd}<&-
++  fi
++  [[ -z $refuse ]] || die_usage "metadata registry refused: $refuse"
++  declare -gA META_REGISTRY_STATUS=() META_REGISTRY_USEDBY=()
++
++  while IFS= read -r line || [[ -n $line ]]; do
++    line=${line%$'\r'}
++    if [[ $line != *'|'*'|'* ]]; then
++      ((header_found)) && break
++      header_candidate=0
++      continue
++    fi
++    row=$line
++    row=${row#"${row%%[![:space:]]*}"}
++    row=${row%"${row##*[![:space:]]}"}
++    [[ $row == '|'* ]] && row=${row#|}
++    [[ $row == *'|' ]] && row=${row%|}
++    IFS='|' read -r -a cells <<<"${row}|__chousa_registry_end__"
++    cells=("${cells[@]:0:${#cells[@]}-1}")
++    for i in "${!cells[@]}"; do
++      cell=${cells[$i]}
++      cell=${cell#"${cell%%[![:space:]]*}"}
++      cell=${cell%"${cell##*[![:space:]]}"}
++      cells[$i]=$cell
++    done
++
++    if ((header_found)); then
++      row_id=${cells[$id_col]-}
++      if [[ $row_id =~ ^S[0-9]{3,}$ ]] \
++          && [[ -z ${META_REGISTRY_STATUS[$row_id]+x} ]]; then
++        row_status=${cells[$status_col]-}
++        row_usedby=${cells[$usedby_col]-}
++        META_REGISTRY_STATUS[$row_id]=$row_status
++        META_REGISTRY_USEDBY[$row_id]=$row_usedby
++      fi
++      continue
++    fi
++
++    if ((header_candidate)); then
++      is_separator=1
++      for cell in "${cells[@]}"; do
++        [[ $cell =~ ^:?-{3,}:?$ ]] || { is_separator=0; break; }
++      done
++      if ((is_separator)); then
++        header_found=1
++        header_candidate=0
++        continue
++      fi
++      header_candidate=0
++      id_col=-1; status_col=-1; usedby_col=-1
++    fi
++    for i in "${!cells[@]}"; do
++      case "${cells[$i]}" in
++        id) if ((id_col < 0)); then id_col=$i; fi ;;
++        status) if ((status_col < 0)); then status_col=$i; fi ;;
++        used-by) if ((usedby_col < 0)); then usedby_col=$i; fi ;;
++      esac
++    done
++    if ((id_col >= 0 && status_col >= 0 && usedby_col >= 0)); then
++      header_candidate=1
++    else
++      id_col=-1; status_col=-1; usedby_col=-1
++    fi
++  done <<<"$content"
++  ((header_found)) || die_usage "metadata registry has no table with id, status, and used-by columns"
++}
++
++metadata_registry_check_source() {
++  local source_value=$1 entry_path=$2 entry_base=$3
++  local source_scan=$1 source_id_re='(^|[^[:alnum:]_])(S[0-9]{3,})([^[:alnum:]_]|$)'
++  local source_id source_match found_id=0 used_by token matched i
++  local -a used_by_tokens=()
++  while [[ $source_scan =~ $source_id_re ]]; do
++    source_id=${BASH_REMATCH[2]}
++    source_match=${BASH_REMATCH[0]}
++    found_id=1
++    if [[ -z ${META_REGISTRY_STATUS[$source_id]+x} ]]; then
++      emit_finding META_SOURCE_ROW_MISSING warn metadata \
++        "entry=$entry_base source_id=$source_id registry row missing"
++    elif [[ ${META_REGISTRY_STATUS[$source_id]} != mined ]]; then
++      emit_finding META_SOURCE_NOT_MINED warn metadata \
++        "entry=$entry_base source_id=$source_id registry row is not mined"
++    else
++      used_by=${META_REGISTRY_USEDBY[$source_id]}
++      IFS=',' read -r -a used_by_tokens <<<"$used_by"
++      matched=0
++      for i in "${!used_by_tokens[@]}"; do
++        token=${used_by_tokens[$i]}
++        token=${token#"${token%%[![:space:]]*}"}
++        token=${token%"${token##*[![:space:]]}"}
++        while [[ $token == ./* ]]; do token=${token#./}; done
++        [[ -n $entry_path && $token == "$entry_path" ]] && matched=1
++      done
++      if ((matched == 0)); then
++        emit_finding META_SOURCE_USEDBY_MISSING warn metadata \
++          "entry=$entry_base source_id=$source_id used-by does not name entry"
++      fi
++    fi
++    source_scan=${source_scan#*"$source_match"}
++  done
++  ((found_id)) || emit_finding META_SOURCE_NO_ROW_ID info metadata \
++    "entry=$entry_base source has no S-id"
++}
++
++metadata_registry_entry_path() {
++  local file=$1 root=$2 entry_path
++  if [[ $root == / ]]; then
++    [[ $file == /* ]] || { printf ''; return 0; }
++    entry_path=${file#/}
++  elif [[ $file == "$root/"* ]]; then
++    entry_path=${file#"$root"/}
++  else
++    printf ''
++    return 0
++  fi
++  printf '%s' "$entry_path"
++}
++
++metadata_verified_at_bare() {
++  local value=$1 rest
++  [[ $value =~ ^[[:space:]]*([0-9]{4}-[0-9]{2}-[0-9]{2}) ]] || return 1
++  rest=${value#*"${BASH_REMATCH[1]}"}
++  [[ ! $rest =~ [^[:space:]] ]]
++}
++
+ verify_metadata() {
+   local path=${1:-} file base line fence_char='' fence_len=0 fence_c fence_l
+   local key rest active_key='' source_state verified_state recheck_state
+-  local has_source has_verified has_recheck verified_value recheck_value
++  local has_source has_verified has_recheck source_value verified_value recheck_value
+   local recheck_first entry_drift_start entry_complete complete=0
+   local canon refuse fsize links meta_fd fdpath fdcanon probe content read_rc
++  local registry_root entry_path
+   local LC_ALL=C
+   local -a files=() candidates=() lines=() metadata_lines=()
+   local had_nullglob=0 candidate
+@@ -2332,6 +2506,11 @@ verify_metadata() {
+       || die_usage "metadata path is not a .md file or directory: $path"
+     files=("$path")
+   fi
++  if ((REGISTRY_ARG_SET)); then
++    metadata_registry_load "$REGISTRY_ARG"
++    registry_root=$(cd -- "$ROOT" 2>/dev/null && pwd -P) \
++      || die_usage "root is not a directory: $ROOT (--root)"
++  fi
+ 
+   FINDING_LINES=(); N_FINDINGS=0; N_DRIFT=0; ROLL=CLEAN
+   for file in "${files[@]}"; do
+@@ -2388,11 +2567,13 @@ verify_metadata() {
+ 
+     fence_char='' fence_len=0 active_key=''
+     has_source=0 has_verified=0 has_recheck=0
++    if ((REGISTRY_ARG_SET)); then source_value=''; fi
+     verified_value='' recheck_value=''
+     for line in "${lines[@]}"; do
+       if [[ $line =~ ^[[:space:]]*$ ]]; then active_key=''; fi
+       if [[ -n $fence_char ]]; then
+         case "$active_key" in
++          source) source_value+=$'\n'"$line" ;;
+           verified-at) verified_value+=$'\n'"$line" ;;
+           recheck) recheck_value+=$'\n'"$line" ;;
+         esac
+@@ -2405,6 +2586,7 @@ verify_metadata() {
+       fi
+       if [[ $line =~ ^\ {0,3}(\`{3,}|~{3,})(.*)$ ]]; then
+         case "$active_key" in
++          source) source_value+=$'\n'"$line" ;;
+           verified-at) verified_value+=$'\n'"$line" ;;
+           recheck) recheck_value+=$'\n'"$line" ;;
+         esac
+@@ -2417,7 +2599,12 @@ verify_metadata() {
+         key=${BASH_REMATCH[1]}; rest=${BASH_REMATCH[2]}
+         active_key=''
+         case "$key" in
+-          source) has_source=1; active_key=source ;;
++          source)
++            has_source=1
++            if ((REGISTRY_ARG_SET)); then
++              active_key=source; source_value=$rest
++            fi
++            ;;
+           verified-at)
+             has_verified=1; active_key=verified-at; verified_value=$rest
+             ;;
+@@ -2428,6 +2615,7 @@ verify_metadata() {
+         continue
+       fi
+       case "$active_key" in
++        source) source_value+=$'\n'"$line" ;;
+         verified-at) verified_value+=$'\n'"$line" ;;
+         recheck) recheck_value+=$'\n'"$line" ;;
+       esac
+@@ -2441,6 +2629,10 @@ verify_metadata() {
+       source_state=absent; entry_complete=0
+       emit_finding META_SOURCE_ABSENT warn metadata "entry=$base key=source absent"
+     fi
++    if (( REGISTRY_ARG_SET )); then
++      entry_path=$(metadata_registry_entry_path "$fdcanon" "$registry_root")
++      metadata_registry_check_source "$source_value" "$entry_path" "$base"
++    fi
+     if (( has_verified )); then
+       if [[ $verified_value =~ ^[[:space:]]*[0-9]{4}-[0-9]{2}-[0-9]{2} ]]; then
+         verified_state=dated
+@@ -2454,6 +2646,10 @@ verify_metadata() {
+       emit_finding META_VERIFIED_AT_ABSENT warn metadata \
+         "entry=$base key=verified-at absent"
+     fi
++    if (( REGISTRY_ARG_SET )) && metadata_verified_at_bare "$verified_value"; then
++      emit_finding META_VERIFIED_AT_BARE warn metadata \
++        "entry=$base key=verified-at has date only"
++    fi
+     if (( has_recheck )); then
+       if [[ $recheck_value =~ ^[[:space:]]*([^[:space:]]+) ]]; then
+         recheck_first=${BASH_REMATCH[1]}
+@@ -5666,6 +5862,107 @@ EOF
+     failures=$((failures + 1))
+   fi
+ 
++  metadata_registry_case() { # NAME ENTRY REGISTRY WANT_RC [expected output ...]
++    local name=$1 path=$2 registry=$3 want_rc=$4
++    shift 4
++    local rc=0 out nverdict msg='' tok
++    local -a wants=("$@")
++    cases=$((cases + 1))
++    out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE \
++      CHOUSA_STRICT=0 CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
++      bash "$SELF" verify-metadata "$path" --root "$WORK" --registry "$registry" \
++      2>&1) || rc=$?
++    nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
++    for tok in "${wants[@]}"; do
++      [[ $out == *"$tok"* ]] || msg+="missing:'$tok' "
++    done
++    if [[ $want_rc -eq 2 ]]; then
++      [[ ${nverdict:-0} -eq 0 ]] || msg+="verdict-lines=$nverdict/0 "
++    else
++      [[ ${nverdict:-0} -eq 1 ]] || msg+="verdict-lines=$nverdict/1 "
++    fi
++    if [[ $rc -eq $want_rc && -z $msg ]]; then
++      printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" "$name" "$rc"
++    else
++      printf 'FAIL-case %-28s rc=%d/%d %s\n' "$name" "$rc" "$want_rc" "$msg"
++      printf '%s\n' "$out" | sed 's/^/    | /'
++      failures=$((failures + 1))
++    fi
++  }
++
++  mkdir -p "$WORK/corpus/knowledge"
++  cat >"$WORK/meta-registry.md" <<'EOF'
++| id | status | used-by |
++|---|---|---|
++| S001 | mined | corpus/knowledge/meta-reg-bare.md |
++| S002 | queued | corpus/knowledge/meta-reg-queued.md |
++| S003 | mined | meta-reg-usedby.md |
++EOF
++  printf 'source: S999\nverified-at: 2026-10-20 checked\nrecheck: 90d\n' \
++    >"$WORK/corpus/knowledge/meta-reg-missing.md"
++  metadata_registry_case metadata-registry-missing-row \
++    "$WORK/corpus/knowledge/meta-reg-missing.md" "$WORK/meta-registry.md" 1 \
++    'FINDING META_SOURCE_ROW_MISSING severity=warn surface=metadata obs=entry=meta-reg-missing.md source_id=S999'
++
++  printf 'source: S002\nverified-at: 2026-10-20 checked\nrecheck: 90d\n' \
++    >"$WORK/corpus/knowledge/meta-reg-queued.md"
++  metadata_registry_case metadata-registry-not-mined \
++    "$WORK/corpus/knowledge/meta-reg-queued.md" "$WORK/meta-registry.md" 1 \
++    'FINDING META_SOURCE_NOT_MINED severity=warn surface=metadata obs=entry=meta-reg-queued.md source_id=S002'
++
++  printf 'source: S003\nverified-at: 2026-10-20 checked\nrecheck: 90d\n' \
++    >"$WORK/corpus/knowledge/meta-reg-usedby.md"
++  metadata_registry_case metadata-registry-used-by-path \
++    "$WORK/corpus/knowledge/meta-reg-usedby.md" "$WORK/meta-registry.md" 1 \
++    'FINDING META_SOURCE_USEDBY_MISSING severity=warn surface=metadata obs=entry=meta-reg-usedby.md source_id=S003'
++
++  printf 'source: S001\nverified-at: 2026-10-20\nrecheck: 90d\n' \
++    >"$WORK/corpus/knowledge/meta-reg-bare.md"
++  metadata_registry_case metadata-registry-verified-at-bare \
++    "$WORK/corpus/knowledge/meta-reg-bare.md" "$WORK/meta-registry.md" 1 \
++    'FINDING META_VERIFIED_AT_BARE severity=warn surface=metadata obs=entry=meta-reg-bare.md'
++
++  printf 'source: xS001 S001a\nverified-at: 2026-10-20 checked\nrecheck: 90d\n' \
++    >"$WORK/corpus/knowledge/meta-reg-noid.md"
++  metadata_registry_case metadata-registry-no-token-id \
++    "$WORK/corpus/knowledge/meta-reg-noid.md" "$WORK/meta-registry.md" 0 \
++    'FINDING META_SOURCE_NO_ROW_ID severity=info surface=metadata obs=entry=meta-reg-noid.md'
++
++  cat >"$WORK/meta-registry-positive.md" <<'EOF'
++| used-by | source | status | id |
++|---|---|---|---|
++| ./corpus/knowledge/meta-reg-positive.md | fixture | mined | S0001 |
++EOF
++  cat >"$WORK/corpus/knowledge/meta-reg-positive.md" <<'EOF'
++source: citation continuation
++  S0001
++verified-at: 2026-10-20
++  checked the claim
++recheck: 90d
++EOF
++  metadata_registry_case metadata-registry-positive-continuations \
++    "$WORK/corpus/knowledge/meta-reg-positive.md" "$WORK/meta-registry-positive.md" 0 \
++    'META entry=meta-reg-positive.md source=present verified_at=dated recheck=scheduled verdict=clean' \
++    'findings=0 drift=0'
++
++  cat >"$WORK/meta-registry-duplicate.md" <<'EOF'
++| id | status | used-by |
++|---|---|---|
++| S0999 | queued | corpus/knowledge/meta-reg-duplicate.md |
++| S0999 | mined | corpus/knowledge/meta-reg-duplicate.md |
++EOF
++  printf 'source: S0999\nverified-at: 2026-10-20 checked\nrecheck: 90d\n' \
++    >"$WORK/corpus/knowledge/meta-reg-duplicate.md"
++  metadata_registry_case metadata-registry-duplicate-first-row \
++    "$WORK/corpus/knowledge/meta-reg-duplicate.md" "$WORK/meta-registry-duplicate.md" 1 \
++    'FINDING META_SOURCE_NOT_MINED severity=warn surface=metadata obs=entry=meta-reg-duplicate.md source_id=S0999'
++
++  printf '| id | status | used-by |\n|---|---|---|\n\x00' \
++    >"$WORK/meta-registry-nul.md"
++  metadata_registry_case metadata-registry-refused-nul \
++    "$WORK/corpus/knowledge/meta-reg-missing.md" "$WORK/meta-registry-nul.md" 2 \
++    'metadata registry refused: nul'
++
+   if [[ $failures -eq 0 ]]; then
+     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"
+     exit 0
+@@ -5697,6 +5994,9 @@ while [[ $# -gt 0 ]]; do
+     --root)
+       [[ $# -ge 2 ]] || die_usage "--root needs PATH"
+       ROOT=$2; ROOT_ARG_SET=1; shift 2 ;;
++    --registry)
++      [[ $# -ge 2 ]] || die_usage "--registry needs PATH"
++      REGISTRY_ARG=$2; REGISTRY_ARG_SET=1; shift 2 ;;
+     --claims)
+       [[ $# -ge 2 ]] || die_usage "--claims needs PATH"
+       CLAIMS_ARG=$2; shift 2 ;;
+@@ -5714,6 +6014,9 @@ done
+ if [[ $MODE != all && ( -n ${CLAIMS_ARG:-} || -n ${JSON_ARG:-} ) ]]; then
+   die_usage "--claims/--json are only valid with verify-all"
+ fi
++if ((REGISTRY_ARG_SET)) && [[ $MODE != metadata ]]; then
++  die_usage "--registry is only valid with verify-metadata"
++fi
+ 
+ # pin/drift take exactly one baseline path: a record, claims surface, manifest
+ # or root would be silently ignored by the canonical invocation, so refusing

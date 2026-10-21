@@ -1,0 +1,19 @@
+# ExecC3Oracle — round 26 advisory
+
+## Files and behavior
+- Private clone base observed: `f361d12e44687841e30ec35710ddb366c6f795e0`; clone: `/tmp/chousa-r26-ExecC3Oracle-3`.
+- Added `/tmp/chousa-r26-ExecC3Oracle-3/corpus/evidence/round26-registry-oracle.py` (SHA-256 `6b2d135c01a8f41b914fb248af35567828336a1a69190560c5df4a07b40f1d78`). It applies the L1 ID/token and exact root-relative used-by rules, parses contract-valid pipe tables literally, retains first duplicate IDs, and parses fence-aware header values/continuations (`:12-18`, `:21-61`, `:64-144`).
+- Added `/tmp/chousa-r26-ExecC3Oracle-3/corpus/evidence/round26-registry-differential.sh` (SHA-256 `852a764870f71e7247005f2b91d6864cbe0ba6527098f2c35536466117e676e9`). It compares the base-frozen five, all 29 entries, and 14 generated valid adversarial entries; it guards suite presence and 5/29/14 counts, rejects empty oracle results, gate rc>1, oracle rc!=0, and non-exact output entries (`:31-57`, `:97-165`, `:174-265`). Optional first argument selects the gate tree.
+- Patch: `/tmp/chousa-r26-ExecC3Oracle-3/r26-ExecC3Oracle-3.patch`, SHA-256 `0ca86d18a313a71785159bc4d841bc7868c01816d99a363dc7730898cb75bcc9`.
+
+## Evidence and results
+- The registered C3 spec is `corpus/evidence/round26-claims.md:90-105`. L1's later addendum supersedes conflicting v1 details: IDs are `S` + 3-or-more digits with ASCII alnum/underscore boundaries (`S0001` valid, `xS001` not); `used-by` must equal the entry's root-relative path after trimming comma tokens and normalizing leading `./` only. The oracle and valid fixtures follow that addendum.
+- **Pre-run scope correction for the corrected differential (not a response to observed gate behavior):** `CORPUS.md:89` says “No `|` inside any cell.” The requested escaped-pipe cell `escaped\|pipe` is outside supported registry grammar, so it is excluded from the core differential. The valid core table uses `pipe-token` (`round26-registry-differential.sh:97-129`). A separate out-of-contract registry/entry is retained only in scratch generation and never compared (`:150-164`). Oracle table parsing now uses literal splitting per the contract (`round26-registry-oracle.py:21-26`).
+- Earlier run command: `bash /tmp/chousa-r26-ExecC3Oracle-3/corpus/evidence/round26-registry-differential.sh /tmp/chousa-r26-ExecC3Registry-3`. Recorded output was `r24plus 5/5`, `pop29 5/29`, `adversarial 8/14`, `REGISTRY_DIFF_AGREE=18/48`, exit 1. **Invalid, not a gate verdict:** this run preceded the comparator-regex fix and the contract scope correction; its `finding_re` used doubled `\\b`/`\\s` escapes, so it failed to collect finding lines. Its escaped-pipe fixture was outside the supported grammar and is no evidence about gate behavior. The current comparator is `round26-registry-differential.sh:175-181`; no post-correction run was made.
+- Oracle predictions for the five frozen entries with the base registry: `citation-chain-fidelity-r24.md=[]` (header `:3`; rows `S003/S005` in `corpus/SOURCES.md:13,15`); `claim-support-states-r24.md=[]` (header `:3`; `S006/S007` at `:16-17`); `contextual-source-admission-r24.md=[]` (header `:2`; `S002-S004` at `:12-14`); `json-delimiter-r24.md=[]` (header `:3`; `S001/S013` at `:11,23`); `metadata-screen-r25.md=[]` (header `:3`; `S029/S033` at `:39,43`). These empty sets are inferred from the implementation plus the cited header/registry rows; per-entry JSON was cleaned from the earlier run.
+
+## Risks and blockers
+- The intentional broken-gate-copy demonstration was not run. L1 instructed finalization without further test/build/formatter runs; rerun the corrected core differential and a deliberately broken gate copy after integration. Do not treat the earlier 18/48 output as calibrated evidence.
+- No tools installed or updated.
+
+VERDICT: Scope-corrected oracle and differential artifacts are present; five-entry base prediction is clean, but corrected differential and broken-copy behavior remain unverified.

@@ -1,0 +1,23 @@
+# C1 reader bounds — adversarial review
+
+Axes: operability (RSS, time, correct header/refusal behavior). Read-only; no remediation. Private clone base: `f361d12e44687841e30ec35710ddb366c6f795e0`; gate SHA-256 `985a63200ca4c5712806d8752ba27a8f3448b026f773659079e71ca602e56ef7`. Each run invoked `bash tools/research-gate.sh verify-metadata ENTRY --root DIR`, with fresh Python subprocess `RUSAGE_CHILDREN` RSS. All files <=1,048,576 bytes; no custom 8 MiB run.
+
+## Findings
+
+1. **HIGH — newline-heavy input amplifies memory / verifier DoS.** At 1 MiB newline-only: 283,372 KiB RSS / 11.487 s; at 64 KiB: 22,632 KiB / 0.729 s (16x input, 12.5x RSS and 15.8x time). Registered 8,388,000-byte s1: 2,238,736 KiB / 90.6 s. `tools/research-gate.sh:2383-2387` builds `lines[]` for the entire snapshot before the header loop at `:2392` can stop at `## `. Probe coverage: direct (`s1-newlines`). Impact: input-controlled memory exhaustion in verifier/CI. Smallest fix: parse incrementally; never retain body lines. Evidence: `corpus/evidence/round26-claims.md:28-43`; `corpus/evidence/round26-measure-before.log:3-8`.
+
+2. **HIGH — one unterminated line is a distinct CPU risk.** `x` with no newline: 64 KiB 0.019 s / 11,896 KiB; 128 KiB 0.050 s; 256 KiB 0.161 s; 512 KiB 0.568 s; 1 MiB 2.208 s / 14,784 KiB. 16x input produced 116x time (superlinear observed); no 8 MiB run, so larger impact is unknown. Probe coverage: none; s1 is many empty lines. `tools/research-gate.sh:2363-2387` reads and matches this as one line. Impact: CPU denial/timeout despite low RSS. Smallest fix: stream/classify without repeatedly scanning or growing a giant line; measure linear scaling. Evidence: command+output above; registered shapes `corpus/evidence/round26-measure.sh:51-77`.
+
+3. **MODERATE — fences + mixed CR endings are not covered.** Probe s3 is uniformly CRLF and no shape has fences. My 1 MiB alternating opener/closer fixture (` ```\r\n```\n ` repeated) had 116,508 fence pairs, 67,680 KiB / 3.109 s; 64 KiB had 12,152 KiB / 0.206 s (16x input, 15.1x time; no superlinear trend observed). At the 8 MiB cap, four-byte fence lines permit about 2.1 million records. Parser state is in `tools/research-gate.sh:2393-2414`; current `lines[]` remains the memory risk. Smallest fix: retain only fence state while streaming. Evidence: `corpus/evidence/round26-measure.sh:57-66` and command+output above.
+
+4. **MODERATE — continuation strings and duplicate keys need explicit coverage; bounded tests did not show superlinear cost.** s4 blanks `active_key` before its body; no probe shape has continuation appends or repeated `recheck:` keys. `verified-at` continuations: 16 KiB 0.141 s / 11,880 KiB; 256 KiB 2.111 s / 40,268 KiB; 1 MiB 9.284 s / 145,040 KiB. `recheck` continuations: 16 KiB 0.135 s / 11,884 KiB; 256 KiB 2.131 s / 40,536 KiB; 1 MiB 9.531 s / 145,456 KiB. Duplicate rechecks: 16 KiB 0.040 s / 11,876 KiB; 256 KiB 0.463 s / 11,888 KiB; 1 MiB 1.827 s / 29,848 KiB. Observed scaling is roughly linear; do not call `+=` quadratic on these data. Appends: `tools/research-gate.sh:2396-2411,2431-2433`; each key overwrites at `:2416-2426` (last wins). Impact: fixed code can retain up to the full 8 MiB header value if it keeps these strings. Smallest fix: retain only date/first recheck token and incremental `ROOT_PARENT_RE` state. Evidence: command+output above.
+
+## Three additional shape families
+
+- `maxline-noLF`: 64/128/256/512 KiB and 1 MiB single unterminated lines. Expected O(n) time and bounded auxiliary memory; preserve existing 8 MiB refusal/snapshot semantics.
+- `fence-mixed-CR`: 1 MiB alternating LF/CRLF fence opener/closer lines plus a non-fenced mixed-ending control. Expected O(n) time, O(1) parser state; report cap-level record arithmetic without running 8 MiB here.
+- `hot-metadata-values`: separate 1 MiB verified-at continuation, recheck continuation, and repeated-key inputs. Expected O(n) time, O(1) retained value state, last-key-wins and unchanged findings; keep subfixtures separate to avoid masking.
+
+Header with no `## ` is directly covered by s4. Alternating CR is only partially covered (uniform CRLF). The measured 8 MiB amplification is the registered base observation; no 8 MiB adversarial inputs were run here.
+
+VERDICT: C1 is a real availability defect: the registered shapes expose array amplification but miss a superlinear single-line CPU path and direct fence/value-continuation coverage. No installs.

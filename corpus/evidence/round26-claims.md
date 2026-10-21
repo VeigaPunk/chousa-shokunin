@@ -128,3 +128,44 @@ lost refusal, a slower or less bounded mode) voids admission.
 
 Claim 2's knowledge entry must cite at least one `SOURCES.md` row opened in
 round 26 (registry rows written only after opening, with Gate quote).
+
+## Spec-v1 correction — 2026-10-21, during build (append-only)
+
+The SOURCE contract v1 (`../CORPUS.md:89,107`) overrides two original C3
+design choices above: ids are `S` + **three or more** digits (standalone
+ASCII alphanumeric/underscore boundaries), and `used-by` is an **exact
+repo-relative entry path**, derived relative to `--root` (only leading `./`
+is normalized), not a matching basename. The basename rule would falsely
+approve a same-named file under another directory. These changes do not alter
+the frozen control expectations; S0001 is a valid id (the initial oracle
+seat's example saying non-id is superseded).
+
+C2 arithmetic is decimal (strip leading zeros before conversion), never
+evaluates user text as a Bash arithmetic expression, and never wraps an
+integer. A cadence whose computed date falls outside 0001-01-01 through
+9999-12-31, or whose magnitude exceeds safe computation, yields
+`due=unknown freshness=unknown`; it does not terminate the process. Existing
+six controls and frozen29 predictions remain unchanged. These are input
+domain clarifications, not relaxed acceptance thresholds.
+
+## Composition and recovery clarification — same round26 attempt1
+
+When both opt-in metadata flags are given, both independent screens apply:
+the per-entry due/freshness fields are retained, registry findings are also
+retained, and a single entry/final verdict reflects the union of findings.
+Neither flag is silently ignored. With neither flag, the frozen plain-output
+hash/rc is still mandatory after cumulative integration, not only after C1.
+This composition clarification does not change any frozen control expectation.
+
+The counting script is a probe, not an admission gate: after-values must all
+match their registered predictions, the plain-output hash and legacy holds
+must agree, and each flag's behavior must withstand independent failing
+controls. A standalone `C1_AMPLIFIED=0/4`, classified-entry count, or exit0
+does not establish a pass. The build probe-attack report demonstrates these
+counterexamples. Its C2/C3 synthetic adapters are not final-code mutations.
+
+Replacement coordinator `ChousaR26R` inherits the original build64 and
+pre-registration at `f361d12e`; no new claim or build wave is introduced.
+Original unfinished identities may finish their original work, but provider
+deaths are retained and never replaced. All final measurements identify the
+helper-landed executable bytes; inherited prose is not substituted for runs.
