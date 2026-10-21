@@ -1,0 +1,25 @@
+# FxLedgerR21 — Round-21 ledger-history attack
+
+Audited full pin `e93ac711f885a10d44fdd80a1734997419595b5a` in private clone `/tmp/chousa-r25-FxLedgerR21` (`git rev-parse HEAD` matched). Findings below refer to that pin, not later live-worktree edits.
+
+## Verified Round-21 addendum (E10)
+
+- Gate transition is exact: `git show edcffba:tools/research-gate.sh | sha256sum` → `49b36759…`; `git show 8a21559:tools/research-gate.sh | sha256sum` → `bfc291ef…`. R20/R21 records and report commits retain those respective blobs. E10 names this transition correctly (`corpus/knowledge/hardening-r10.md:652-654`; round records `LOG.md:762,780`).
+- Attribution is correct: R20 selftest case 124 is `scope-comment-shadow`; R21 receipt cases 125–128 are `ptr-traversal`, `ptr-symlink`, `ptr-lane-abs`, `ptr-deny-symlink`, then `PASS (128 cases, 0 skipped)` (`corpus/evidence/verify-r20-20261019T180000Z-selftest.log:124-125`; `corpus/evidence/ptr-r21-20261019T184000Z-selftest.log:125-129`). R21 LOG reports 1–124 byte-identical and the same transition (`LOG.md:778-780`; `SCORECARD.md:1092-1104`).
+- The no-ledger-row/no-round-11-queue claim is true: read-only `git log --oneline 83b806a..07c425e -- corpus/knowledge/hardening-r10.md corpus/knowledge/audit-r11.md` returned empty; `git diff --stat 83b806a 07c425e -- corpus/knowledge/` lists only new `pointer-boundary-r21.md`. Row 56 remains the distinct pointer/span-pairing class E1 left as a fixture correction, with no check added (`hardening-r10.md:433-441,652-655`; `LOG.md:770-781`). E10's pinned “No row/queue delta” is terse; evidence supports the precise “no §3-row/round-11-queue delta” wording now present in the unpinned worktree.
+- Distinction: R21 closes a R20 named debt (`LOG.md:770`), not a §3.9 item. R19 is likewise a named-debt closure, not an original ledger-row closure: R19 LOG calls the sweeps escape a “round-16 named debt” (`LOG.md:689`); R16 seat 20 records it as named debt (`knowledge/verification-r16.md:33`); E8 explicitly says no §3 row or §3.9 queue item moved (`hardening-r10.md:636-639`). Original §3.3 rows 26–30 are different r5 sweeps limits (`hardening-r10.md:231-235`). Thus neither R19 nor R21 should be counted as an original ledger-row closure.
+
+## Findings
+
+- **E5 case attribution off by one in the pin.** E5 says R16 `--root //` is case 111 (`hardening-r10.md:612-613`), but the R15 receipt has existing case 110 `sweeps-root-slash` (`root-r15-20261019T152000Z-selftest.log:107-111`); the R17 receipt shows newly inserted case 110 `claims-root-dslash` and shifted old case 111 `sweeps-root-slash` (`fence-r17-20261019T171200Z-selftest.log:110-117`). SCORECARD R17 independently states R16 inserted case 110 and cmp boundary is 109 (`SCORECARD.md:869-871`). Correct E5 to case 110. R16 LOG/note also say 111 (`LOG.md:641`; `knowledge/verification-r16.md:4-5`), but the later receipt establishes the index. The current unpinned worktree already changes E5 to case 110.
+- **False reconstruction-method statement in the pin.** Round-16 addendum says “None of these rounds edited this file” (`hardening-r10.md:609-610`), but read-only `git log --oneline eaa3bbd..bfa48b9 -- corpus/knowledge/hardening-r10.md` returns `edcffba round-20: HTML-comment heading shadow fix ...`; `git show --stat edcffba -- corpus/knowledge/hardening-r10.md` shows 34 appended lines (the independent closure recheck). The path-log assertion is false, although the recheck made no disposition delta. The current unpinned worktree replaces this with an accurate statement; e93ac71 remains the audited pin.
+
+## Append-only and checkpoint provenance
+
+- In `b820e4e..0fc037e`, hardening-r10 has exactly two hunks: one disclosed in-place `${GSHA}` fill at line 488 and a tail append (`git diff --stat`: 94 insertions, 1 deletion; hunks `@@ -485,7 +485,7` and `@@ -598,3 +598,96`). `git show 5993dc4:tools/research-gate.sh | sha256sum` → `6b17e50c…`, matching the filled slot. The E10 section is ordered between R20 and R22 addenda (lines 640–656). No later pinned commit through e93ac71 touched this file.
+- Packaging failures confirmed: `0fc037e..d8c8cff` adds only `tools/research-gate.sh` and `SHONEN.md`; gate blob hashes are `0fc037e=752e4e38…`, `d8c8cff=63a39282…`. `d8c8cff..e93ac71` adds `corpus/evidence/README.md` (and other integration records); d8c8cff was still missing that evidence-index change. Gate bytes remain `63a39282…` at d8c8cff/e93ac71.
+- The live lane worktree now differs from e93ac71: it corrects the two findings above and restores the GSHA placeholder with an appended preservation correction. I made no lane edits; this report stays pinned to e93ac71.
+
+`round25-ledger-recount.py` in the private clone output: `rows=71 by-design=38 carried=22 closed=8 finding=0 operator=3 sum=71 queue_committed=24 queue_true=25`. No gate selftest/build/lint was run; inspected retained receipts only. Installs: none.
+
+VERDICT: E10’s gate, case range, and no-§3/round-11-queue delta are supported; correct E5 to case 110 and reject the pinned Round-16 path-log claim. R19 is a named-debt closure, not a §3-row closure.

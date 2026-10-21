@@ -1,0 +1,17 @@
+# FxSrcCochrane — source review
+
+## Finding — minor quote-location error
+- `corpus/lessons/round-25.md:68` labels the S019 quote as “Key Points”: “All Cochrane reviews should be assessed periodically to determine whether an update is needed.” (14 words). On the opened Cochrane chapter IV page, the Key Points bullet instead reads “Cochrane reviews should be assessed periodically to determine whether an update is needed.” The exact 14-word quote appears in §IV.1, not in Key Points. The URL in the Gate redirects to the canonical Cochrane page; the chapter citation confirms last updated August 2023, Handbook v6.5, and §§IV.1–IV.2 exist.
+- The same locator imprecision carries into `corpus/knowledge/metadata-screen-r25.md:3,20-23`: its source line points S019 to Key Points while the quoted “All …” wording is from §IV.1. The inference remains supported by the Key Points wording. Correct by locating the existing quote at §IV.1, or quote the Key Points sentence exactly. This is a traceability/calibration defect, not a reason to reject S019.
+
+## Decision audit
+- **S019 mined — agree.** `corpus/SOURCES.md:29`: `docs` / tier A is suitable for the Handbook's own guidance; scope is appropriately limited to periodically deciding whether/how to update Cochrane reviews. Anchor includes Key Points and §§IV.1–IV.2 plus the correct version/date. The source supports periodic assessment and the update-decision framework; `mined` and `used-by` correctly point to the extant `corpus/knowledge/metadata-screen-r25.md`.
+- **S020 mined — agree.** `corpus/SOURCES.md:30` correctly treats PROV-O as an authoritative specification for derivation and entity time bounds, explicitly not a recheck policy; §§3.1/3.2 anchor and `used-by` are defensible. Gate quote at `corpus/lessons/round-25.md:69` is verbatim in §3.2 (19 words). `metadata-screen-r25.md:20-27` explicitly labels the key mapping an inference and says neither source prescribes the header: no full-header endorsement is claimed.
+- **S025 rejected — agree; flip is meaningful.** `corpus/SOURCES.md:35` identifies an HTTP-cache standard as unsuitable authority for research-record validity; tier C and rejected status fit that out-of-scope use, with no `used-by`. RFC 9111 §4.2 states `response_is_fresh = (freshness_lifetime > current_age)` (RFC text line 621), so the stated lifetime/age analogy is grounded, not policy authority. `corpus/SOURCES.md:55-58` and `corpus/lessons/round-25.md:79-81` keep it labelled as an analogy and pair it with method/provenance sources.
+
+## Checkpoint and residual risk
+- Source review used a private clone: initial observed base `d8c8cff3923f10481ac9ced66d0af7c41d38130c`, then full pin `e93ac711f885a10d44fdd80a1734997419595b5a`. The three reviewed source/knowledge files are unchanged between those pins; the lesson adds the packaging errata. Preserve both failures: `0fc037e` omitted `tools/research-gate.sh`, and `d8c8cff` also omitted `corpus/evidence/README.md` (lesson `round-25.md:111-133`). No gate/selftest was run by this source-only seat; no outside closure is implied.
+
+VERDICT: Agree with S019/S020 mined and S025 rejected; recommend the small S019 Gate/entry quote-locator correction. Advisory only; not outside closure.
+
+Installs/updates: none.

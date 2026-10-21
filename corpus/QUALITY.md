@@ -82,3 +82,19 @@ the admitted entry that motivates it. Tier definitions live in
     paths landed. — `lessons/round-25.md` R25-M13: the first integration
     checkpoint omitted the gate, so prose said 154 cases while its gate had
     136. This check failed on `0fc037e` and matched at `d8c8cff`.
+
+16. **An owning total must reconcile.** A disposition tuple names the row
+    population, counts those rows and applies explicit addendum deltas; its
+    components must sum to the row count. Queue-item counts stay separate
+    from row dispositions. — lesson R25-M7 (captured-by none before this rule):
+    E4's sum72 over71 fails, row-true38/22/8/0/3 sum71 passes. Re-derive with
+    `python3 corpus/evidence/round25-ledger-recount.py`; an owner pointer
+    alone is not validation of the owner's arithmetic.
+17. **A new runnable screen needs an independent failing control.** Derive
+    at least one negative fixture from the declared contract independently
+    of the implementation; disable its targeted check in an isolated clone
+    and show the detector fails for that reason, not a parse error. A printed
+    tally without a nonzero mismatch exit is a probe, not a passing gate.
+    — lesson R25-M11 (captured-by none); `FxMutateMissing.md` kills the missing
+    source/recheck arms, `FxMutateRefusal.md` kills canonical/NUL guards;
+    `round25-meta-differential.sh` now exits1 on any table/oracle disagreement.

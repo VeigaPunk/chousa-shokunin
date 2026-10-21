@@ -485,7 +485,7 @@ Counts at this revision (71 rows, numbering unchanged): **by-design 38 ·
 carried 22 · closed 8 · finding 0 · operator 3**; round-11 queue **26 → 25**
 (item 8 out). This supersedes the §6 counts line (71 / 38·23·7·0·3 / 26);
 the §6 text stands otherwise. Revision trail: `3845709b…` → `46534902…`
-(r12 §6) → this revision. Gate `91a01695…` → `6b17e50c…`. Sites naming
+(r12 §6) → this revision. Gate `91a01695…` → `${GSHA}…`. Sites naming
 `46534902…` (audit-r11 erratum table, corpus/README) carry the r12
 revision; update on next touch or cite this addendum.
 
@@ -606,10 +606,11 @@ M-6). Each Round-16 … Round-23 addendum was reconstructed at round 25 from tha
 `SCORECARD.md` verdict, its `LOG.md` entry, its knowledge note and read-only
 git (`git show <commit>:tools/research-gate.sh | sha256sum`); the per-round
 seat drafts with full citations are
-`.ufo/waves/round-25/build/LedgerAddR{16..23}.md`. None of these rounds edited
-this file (path-scoped `git log` between the round landings is empty).
+`.ufo/waves/round-25/build/LedgerAddR{16..23}.md`. These addenda do not change the original §3 row dispositions; round 20 did
+append the Independent closure recheck above, without a disposition delta.
 
-E5 — (`--root //`): gate `dd0951d7…` → `2b64a1c8…`; case 111.
+E5 — (`--root //`): gate `dd0951d7…` → `2b64a1c8…`; case 110
+at the round-16 landing (the old sweeps-absolute case shifted to 111).
 No §3 row and no round-11 queue item moved; the `mount-alias-r14.md`
 "queued" → closed wording restates E4's dead-arm closure, not a new one.
 
@@ -618,7 +619,7 @@ No §3 row and no round-11 queue item moved; the `mount-alias-r14.md`
 Reconstructed at round 25 (see the Round-16 addendum for method).
 
 E6 — (fenced-heading scope shadow): gate `2b64a1c8…` →
-`c2915f24…`; cases 112–116. No row/queue delta; row 70 stays `closed(r12)`
+`c2915f24…`; cases 112–116. No §3-row/round-11-queue delta; row 70 stays `closed(r12)`
 (E1) — the fix hardens an already-landed screen.
 
 ### Round-18 addendum (appended 2026-10-21 at round 25, append-only)
@@ -626,7 +627,7 @@ E6 — (fenced-heading scope shadow): gate `2b64a1c8…` →
 Reconstructed at round 25 (see the Round-16 addendum for method).
 
 E7 — (`SCOPE_KENGAKU` phrase gap): gate `c2915f24…` →
-`6e694881…`; cases 117–119. No row/queue delta.
+`6e694881…`; cases 117–119. No §3-row/round-11-queue delta.
 
 ### Round-19 addendum (appended 2026-10-21 at round 25, append-only)
 
@@ -642,7 +643,7 @@ round-16 named debt (`knowledge/verification-r16.md`, seat 20 — that row's
 Reconstructed at round 25 (see the Round-16 addendum for method).
 
 E9 — (HTML-comment heading shadow): gate `9f163807…` →
-`49b36759…`; case 124. No row/queue delta; row 70 stays `closed(r12)`. The
+`49b36759…`; case 124. No §3-row/round-11-queue delta; row 70 stays `closed(r12)`. The
 round's independent closure recheck (above) rewrote no disposition.
 
 ### Round-21 addendum (appended 2026-10-21 at round 25, append-only)
@@ -650,7 +651,7 @@ round's independent closure recheck (above) rewrote no disposition.
 Reconstructed at round 25 (see the Round-16 addendum for method).
 
 E10 — (`ptr_resolves_meta` boundary): gate `49b36759…` →
-`bfc291ef…`; cases 125–128. No row/queue delta; row 56 (pointer/span
+`bfc291ef…`; cases 125–128. No §3-row/round-11-queue delta; row 56 (pointer/span
 pairing) is a different class and stays as E1 left it.
 
 ### Round-22 addendum (appended 2026-10-21 at round 25, append-only)
@@ -666,7 +667,9 @@ row/queue delta; row 5 stays by-design.
 Reconstructed at round 25 (see the Round-16 addendum for method).
 
 E12 — (fenced chain `heading` anchor): gate `dfb798b4…` →
-`b5d0f93d…`; case 129. No row/queue delta; row 22 is not re-dispositioned.
+`b5d0f93d…`; case 129. No §3-row/round-11-queue delta; row 22 is not re-dispositioned.
+
+### Round-24 addendum (appended 2026-10-21 at round 25, append-only)
 
 Round 24 (`--json` delimiter, gate `b5d0f93d…` → `752e4e38…`, cases 134–136)
 closed round-20 named debt, not a §3 row or queue item.
@@ -691,3 +694,22 @@ closed round-20 named debt, not a §3 row or queue item.
    from the lane root → `rows=71 by-design=38 carried=22 closed=8 finding=0
    operator=3 sum=71 queue_committed=24 queue_true=25`. This line is the
    counts owner from round 25 on; E4's line stands as history.
+
+### Round-25 append-only preservation correction (after fresh falsification)
+
+The first round-25 integration substituted the Round-13 template slot in
+place, then appended a disclosure. FxCritC3 correctly noted QUALITY4 requires
+preserving an erratum's filed bytes, not merely disclosing their alteration.
+The original Round-13 line is therefore restored byte-for-byte; the earlier
+round-25 “filled in place” instruction is superseded by this paragraph.
+
+R25-GSHA-DISPOSITION: superseded by gate 6b17e50c
+
+That is the proven gate blob at `5993dc4` (re-derive `git show
+5993dc4:tools/research-gate.sh | sha256sum`). The historic template token now
+remains as superseded data, not an unresolved current hash. The counting
+script reports raw historical slots separately from unresolved slots; before
+raw=1/unresolved=1, after raw=1/unresolved=0. All pre-round ledger bytes are
+preserved; the addenda and corrections are appended. The old literal-token
+zero prediction was incompatible with append-only preservation and is
+explicitly corrected, not silently redefined as a raw-count pass.

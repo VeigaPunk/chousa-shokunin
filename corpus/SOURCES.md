@@ -26,8 +26,8 @@ its author opened the source and judged its tier for the stated scope only.
 | S016 | Wikipedia, Hierarchy of evidence — https://en.wikipedia.org/wiki/Hierarchy_of_evidence | community | C | any claim needing an authoritative evidence-hierarchy source | Criticism section; page as served 2026-10-19 | REJECTED: tertiary community-edited synthesis, never sole support and never tier A; flip: use as a lead index once each cited primary source is opened | rejected | 2026-10-19 | 365d | — |
 | S017 | PRISMA 2020 statement — https://www.prisma-statement.org/prisma-2020 | spec | A | reporting standard for systematic-review search transparency | PRISMA 2020 checklist and flow diagram links; statement paper DOI 10.1136/bmj.n71 | Report searches with flow counts and checklist items so identification, screening, and inclusion stay auditable | queued | 2026-10-19 | on-release | — |
 | S018 | Schreieder, Schopf, Farber, Attribution, Citation, and Quotation survey — https://aclanthology.org/2026.acl-long.1430/ | paper | B | the taxonomy and metric map of evidence-based generation | Abstract; ACL 2026, pages 30956-31000, DOI 10.18653/v1/2026.acl-long.1430 | A survey of 134 papers and 300 metrics across seven dimensions — a lead index to primary sources, never sole support for a claim | queued | 2026-10-19 | 365d | — |
-| S019 | Cochrane Handbook ch. IV, Updating a review — https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-iv | docs | A | the Handbook's own guidance on periodically deciding whether and how to update a Cochrane review | Chapter IV Key Points and sections IV.1-IV.2; last updated August 2023, Handbook v6.5 | A review's currency is assessed on a schedule, not only when someone notices; deciding to update is a recorded, periodic act | mined | 2026-10-21 | on-release | corpus/knowledge/metadata-screen-r25.md |
-| S020 | PROV-O: The PROV Ontology, W3C Recommendation 2013-04-30 — https://www.w3.org/TR/2013/REC-prov-o-20130430/ | spec | A | PROV terms for derivation (prov:wasDerivedFrom) and entity generation/invalidation times; not a recheck or verification policy | section 3.1 Starting Point Terms (prov:wasDerivedFrom); section 3.2 Expanded Terms, entity-lifetime paragraph | Provenance is recorded as a derivation link plus time bounds on an entity's validity, so source and as-of time are separate recorded facts | mined | 2026-10-21 | 365d | corpus/knowledge/metadata-screen-r25.md |
+| S019 | Cochrane Handbook ch. IV, Updating a review — https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-iv | docs | A | the Handbook's own guidance on periodically deciding whether and how to update a Cochrane review | Chapter IV Key Points and sections IV.1-IV.2; last updated August 2023, Handbook v6.5 | A review's currency is assessed on a schedule, not only when someone notices; deciding to update is a recorded, periodic act | queued | 2026-10-21 | on-release | — |
+| S020 | PROV-O: The PROV Ontology, W3C Recommendation 2013-04-30 — https://www.w3.org/TR/2013/REC-prov-o-20130430/ | spec | A | PROV terms for derivation (prov:wasDerivedFrom) and entity generation/invalidation times; not a recheck or verification policy | section 3.1 Starting Point Terms (prov:wasDerivedFrom); section 3.2 Expanded Terms, entity-lifetime paragraph | Provenance is recorded as a derivation link plus time bounds on an entity's validity, so source and as-of time are separate recorded facts | queued | 2026-10-21 | 365d | — |
 | S021 | Shojania et al. 2007, How quickly do systematic reviews go out of date? A survival analysis — https://pubmed.ncbi.nlm.nih.gov/17638714/ | paper | A | the study's measured update-signal timing in its sample of 100 quantitative systematic reviews; not a rule for all records | Abstract, Results (PubMed record; Ann Intern Med 2007;147(4):224-233) | Findings that need updating appear early for a sizable minority of reviews (23% within 2 years), so recheck intervals matter | queued | 2026-10-21 | 365d | — |
 | S022 | Elliott et al. 2017, Living systematic review: 1. Introduction — https://pubmed.ncbi.nlm.nih.gov/28912002/ | paper | A | the paper's own living-systematic-review definition and rationale; not metadata design | Abstract, LSR definition clause (J Clin Epidemiol 2017;91:23-30, DOI 10.1016/j.jclinepi.2017.08.010) | A living review is continually updated as new evidence appears, the limit case of a short recheck cadence | queued | 2026-10-21 | 365d | — |
 | S023 | DCMI Metadata Terms — https://www.dublincore.org/specifications/dublin-core/dcmi-terms/ | spec | A | DCMI's definitions of dcterms:source, dcterms:modified and dcterms:valid; not a freshness or verification policy | section 2, /terms/ namespace entries source, modified, valid; DCMI Recommendation issued 2020-01-20 | Source (what a resource derives from) and its dates (modified, valid) are distinct metadata properties | queued | 2026-10-21 | 365d | — |
@@ -36,6 +36,11 @@ its author opened the source and judged its tier for the stated scope only.
 | S026 | GO FAIR Foundation, R1.2 (meta)data are associated with detailed provenance — https://www.gofair.foundation/r1-2 | docs | A | the Foundation's own interpretation of FAIR sub-principle R1.2 | Interpretation of R1.2, first paragraph | Detailed provenance names how, why, by whom and under what conditions a resource was generated | queued | 2026-10-21 | 180d | — |
 | S027 | Wikipedia:As of — https://en.wikipedia.org/wiki/Wikipedia:As_of | community | C | Wikipedia editors' guidance for dating time-sensitive statements; never sole support | Usage guidelines section; revision 1342587259 as served 2026-10-21 | Date time-sensitive statements and, when the next update is predictable, mark when it is due | queued | 2026-10-21 | 90d | — |
 | S028 | Crossref Crossmark — https://www.crossref.org/services/crossmark/ | docs | A | Crossref's own description of the Crossmark update/correction/retraction status service | introductory text before Benefits of Crossmark | A cited work's update, correction or retraction status is published metadata a reader can check, a recheck trigger | queued | 2026-10-21 | 180d | — |
+| S029 | Cochrane Handbook ch. IV, Updating a review — https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-iv | docs | A | the Handbook's own guidance on periodically deciding whether and how to update a Cochrane review | Chapter IV section IV.1 Introduction; Handbook v6.5, August 2023 | supersedes S019 — Cochrane reviews should be assessed periodically to decide whether an update is needed; this sentence does not prescribe a recorded schedule | mined | 2026-10-21 | on-release | corpus/knowledge/metadata-screen-r25.md |
+| S030 | Elliott et al. 2017, Living systematic review: 1. Introduction — https://pubmed.ncbi.nlm.nih.gov/28912002/ | paper | A | the paper's own living-systematic-review definition and rationale; not metadata design | Abstract, living-systematic-review definition; J Clin Epidemiol 2017;91:23-30 | supersedes S022 — defines living systematic reviews as continually updated to incorporate relevant new evidence as it becomes available; recheck-cadence comparison is a lane inference | queued | 2026-10-21 | 365d | — |
+| S031 | Schema.org property lastReviewed — https://schema.org/lastReviewed | spec | A | Schema.org's own definition and declared use of lastReviewed | lastReviewed property definition paragraph; Schema.org page served 2026-10-21 | supersedes S024 — lastReviewed records the date a web page was last reviewed for accuracy and/or completeness; no comparison to other date properties claimed | queued | 2026-10-21 | 365d | — |
+| S032 | Shojania et al. 2007, How quickly do systematic reviews go out of date? A survival analysis — https://pubmed.ncbi.nlm.nih.gov/17638714/ | paper | A | the study's measured update-signal timing in its sample of 100 quantitative systematic reviews; not a rule for all records | Abstract Results; Ann Intern Med 2007;147(4):224-233 | supersedes S021 — in this study a signal potentially warranting an update occurred within 2 years for 23% of reviews; a signal is not itself an update | queued | 2026-10-21 | 365d | — |
+| S033 | PROV-O: The PROV Ontology, W3C Recommendation 2013-04-30 — https://www.w3.org/TR/2013/REC-prov-o-20130430/ | spec | A | PROV terms for derivation (prov:wasDerivedFrom) and entity generation/invalidation times; not a recheck or verification policy | section 3.1 Starting Point Terms (prov:wasDerivedFrom); section 3.2 Expanded Terms, entity-lifetime paragraph | supersedes S020 — PROV-O records derivation and entity generation/invalidation times separately; these are entity-lifetime facts, not verification time or truth-validity | mined | 2026-10-21 | 365d | corpus/knowledge/metadata-screen-r25.md |
 
 ## Paths
 
@@ -52,10 +57,11 @@ its author opened the source and judged its tier for the stated scope only.
   under evidence, and report the search so the sweep itself is auditable.
 - Lane mechanics — S001 → S013: the gate's own append rule and the JSON Lines
   requirement it implements, read together.
-- Keeping records current — S019 → S021 → S020 → S023: schedule the currency
-  check (a recheck is a periodic, recorded act), expect early staleness for a
-  real minority of findings, and record provenance as a derivation link plus
-  separate time facts. S025 is kept as a rejected analogy (lifetime vs age), not authority here.
+- Keeping records current — S029 → S032 → S033 → S023: periodic currency
+  assessment, then measured update signals (not actual updates), then separate
+  derivation and entity-time properties. Scheduling and recording the next
+  verification is the lane's inference, not a Cochrane or PROV requirement.
+  S025 is a rejected HTTP analogy, not authority for research-record validity.
 
 ## Search log
 
@@ -116,3 +122,15 @@ its author opened the source and judged its tier for the stated scope only.
   scoped reading only.
 - Garner et al. 2016, BMJ 354:i3507 — https://www.bmj.com/content/354/bmj.i3507 —
   update consensus and checklist; blocked (HTTP 403) on 2026-10-21.
+
+
+Round-25 falsify curation correction: S029–S032 supersede S019/S022/S024/S021
+for the locator and teaching precision flagged by fresh source re-openers.
+They reuse the same actually re-opened sources this round; no extra search
+or quota is claimed. S019 mined→queued and used-by metadata-screen-r25.md→—;
+the entry now cites S029. Other old row cells unchanged. Original broader
+teachings remain as superseded history, not unmarked current advice.
+
+S033 also supersedes S020: entity lifetime is not verification validity. S020
+mined→queued and used-by metadata-screen-r25.md→—; the entry now cites S033
+and labels the source/date mapping as a lane inference.

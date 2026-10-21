@@ -1,0 +1,51 @@
+{
+  "execution": "Exact extracted counting/parser programs executed by subprocess in isolated temporary copies; no live lane mutation. C3 adds the shown zero-assertion because its normal CLI is a counting probe.",
+  "programs": {
+    "c3": "import re\nsk = open(\"SKILL.md\", encoding=\"utf-8\").read()\nhr = open(\"corpus/knowledge/hardening-r10.md\", encoding=\"utf-8\").read()\nassert len(sk)>1000 and \"corpus/knowledge/hardening-r10.md\" in sk, \"SKILL population/owner pointer missing\"\nassert len(re.findall(r\"^\\|\\s*\\d+\\s*\\|\", hr, re.M)) == 71, \"ledger row population changed\"\na = re.sub(r\"\\s+\", \" \", sk).count(\"remains open pending fix-or-absorb\")\nowner_ready = \"python3 corpus/evidence/round25-ledger-recount.py\" in sk\nif not a and not owner_ready:\n    a = 1  # Deleting the old phrase without the promised recount is not closure.\nT = r\"by-design (\\d+) \u00b7 carried (\\d+) \u00b7 closed (\\d+) \u00b7 finding (\\d+) \u00b7 operator (\\d+)\"\nflat = lambda s: re.sub(r\"\\s+\", \" \", s.replace(\"**\", \"\"))\nled = re.findall(T, flat(hr)); latest = led[-1] if led else None\nsk_t = re.findall(T, flat(sk))\nb = sum(1 for t in sk_t if t != latest)\nq_led = re.findall(r\"queue (\\d+) \u2192 (\\d+)\", flat(hr)); qlatest = q_led[-1][1] if q_led else None\nsk_q = re.findall(r\"(\\d+)-item round-11\", flat(sk))\nbq = sum(1 for q in sk_q if q != qlatest)\nraw_slots = hr.count(\"${GSHA}\")\ndisposition = hr.split(\"### Round-25 append-only preservation correction\", 1)\nc = int(not (raw_slots == 1\n    and 'Gate `91a01695\u2026` \u2192 `${GSHA}\u2026`.' in hr\n    and len(disposition) == 2\n    and \"R25-GSHA-DISPOSITION: superseded by gate 6b17e50c\" in disposition[1]))\nadd = dict(re.findall(r\"^### Round-(\\d+) addendum[^\\n]*\\n(.*?)(?=^### |\\Z)\", hr, re.M | re.S))\nd = [n for n in range(16, 24) if str(n) not in add\n     or len(add[str(n)].strip()) < 80\n     or not re.search(r\"\\bE\\d+\\b\", add[str(n)])\n     or not re.search(r\"\\bcases?\\b\", add[str(n)])]\nprint(\"3a SKILL_OPEN_CLOSED_FINDING=%d\" % a)\nprint(\"3b SKILL_LEDGER_TUPLES_STALE=%d of %d (latest ledger %s) QUEUE_STALE=%d of %d (latest queue %s)\" % (b, len(sk_t), \"\u00b7\".join(latest or ()), bq, len(sk_q), qlatest))\nprint(\"3c PLACEHOLDER_GSHA_UNRESOLVED=%d (historical raw slots=%d)\" % (c, raw_slots))\nprint(\"3d LEDGER_ADDENDA_MISSING=%d rounds=%s\" % (len(d), d))\nprint(\"STALE_RESTATEMENTS=%d\" % (a + b + bq + c + len(d)))\nassert a + b + bq + c + len(d) == 0, \"STALE_RESTATEMENTS_NONZERO\"\n",
+    "fixture_population": "import re, subprocess, sys, os\nF = sys.argv[1]\nrows = {}\nfor l in open(os.path.join(F, \"README.md\"), encoding=\"utf-8\"):\n    c = [x.strip() for x in l.strip().strip(\"|\").split(\"|\")]\n    if len(c) == 4 and c[0].startswith(\"`\") and c[0].endswith(\".md`\"):\n        name = c[0].strip(\"`\")\n        assert name not in rows, \"duplicate fixture row: \" + name\n        metas = re.findall(r\"`(META [^`]+)`\", c[1])\n        normal = metas[0]; strict = metas[1] if len(metas) > 1 else normal\n        ids = set(re.findall(r\"META_[A-Z_]+\", c[2]))\n        en, es = [int(x) for x in re.findall(r\"\\d\", c[3])[:2]]\n        rows[name] = {\"0\": (normal, ids, en), \"1\": (strict, ids, es)}\nassert len(rows) == 27, \"frozen fixture population must contain 27 rows\"\nassert set(rows) == {n for n in os.listdir(F) if n.endswith(\".md\") and n != \"README.md\"}, \"fixture table/file population mismatch\""
+  },
+  "cases": [
+    {
+      "case": "clean",
+      "exit": 0,
+      "expected": 0,
+      "output": "3a SKILL_OPEN_CLOSED_FINDING=0\n3b SKILL_LEDGER_TUPLES_STALE=0 of 0 (latest ledger 38\u00b722\u00b78\u00b70\u00b73) QUEUE_STALE=0 of 0 (latest queue 24)\n3c PLACEHOLDER_GSHA_UNRESOLVED=0 (historical raw slots=1)\n3d LEDGER_ADDENDA_MISSING=0 rounds=[]\nSTALE_RESTATEMENTS=0\n"
+    },
+    {
+      "case": "delete-historic-slot",
+      "exit": 1,
+      "expected": 1,
+      "output": "3a SKILL_OPEN_CLOSED_FINDING=0\n3b SKILL_LEDGER_TUPLES_STALE=0 of 0 (latest ledger 38\u00b722\u00b78\u00b70\u00b73) QUEUE_STALE=0 of 0 (latest queue 24)\n3c PLACEHOLDER_GSHA_UNRESOLVED=1 (historical raw slots=0)\n3d LEDGER_ADDENDA_MISSING=0 rounds=[]\nSTALE_RESTATEMENTS=1\nTraceback (most recent call last):\n  File \"<string>\", line 34, in <module>\n    assert a + b + bq + c + len(d) == 0, \"STALE_RESTATEMENTS_NONZERO\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: STALE_RESTATEMENTS_NONZERO\n"
+    },
+    {
+      "case": "marker-outside-correction",
+      "exit": 1,
+      "expected": 1,
+      "output": "3a SKILL_OPEN_CLOSED_FINDING=0\n3b SKILL_LEDGER_TUPLES_STALE=0 of 0 (latest ledger 38\u00b722\u00b78\u00b70\u00b73) QUEUE_STALE=0 of 0 (latest queue 24)\n3c PLACEHOLDER_GSHA_UNRESOLVED=1 (historical raw slots=1)\n3d LEDGER_ADDENDA_MISSING=0 rounds=[]\nSTALE_RESTATEMENTS=1\nTraceback (most recent call last):\n  File \"<string>\", line 34, in <module>\n    assert a + b + bq + c + len(d) == 0, \"STALE_RESTATEMENTS_NONZERO\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: STALE_RESTATEMENTS_NONZERO\n"
+    },
+    {
+      "case": "empty-addendum",
+      "exit": 1,
+      "expected": 1,
+      "output": "3a SKILL_OPEN_CLOSED_FINDING=0\n3b SKILL_LEDGER_TUPLES_STALE=0 of 0 (latest ledger 38\u00b722\u00b78\u00b70\u00b73) QUEUE_STALE=0 of 0 (latest queue 24)\n3c PLACEHOLDER_GSHA_UNRESOLVED=0 (historical raw slots=1)\n3d LEDGER_ADDENDA_MISSING=1 rounds=[17]\nSTALE_RESTATEMENTS=1\nTraceback (most recent call last):\n  File \"<string>\", line 34, in <module>\n    assert a + b + bq + c + len(d) == 0, \"STALE_RESTATEMENTS_NONZERO\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: STALE_RESTATEMENTS_NONZERO\n"
+    },
+    {
+      "case": "delete-recount",
+      "exit": 1,
+      "expected": 1,
+      "output": "3a SKILL_OPEN_CLOSED_FINDING=1\n3b SKILL_LEDGER_TUPLES_STALE=0 of 0 (latest ledger 38\u00b722\u00b78\u00b70\u00b73) QUEUE_STALE=0 of 0 (latest queue 24)\n3c PLACEHOLDER_GSHA_UNRESOLVED=0 (historical raw slots=1)\n3d LEDGER_ADDENDA_MISSING=0 rounds=[]\nSTALE_RESTATEMENTS=1\nTraceback (most recent call last):\n  File \"<string>\", line 34, in <module>\n    assert a + b + bq + c + len(d) == 0, \"STALE_RESTATEMENTS_NONZERO\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: STALE_RESTATEMENTS_NONZERO\n"
+    },
+    {
+      "case": "fixture-population-clean",
+      "exit": 0,
+      "expected": 0,
+      "output": ""
+    },
+    {
+      "case": "fixture-table-row-deleted",
+      "exit": 1,
+      "expected": 1,
+      "output": "Traceback (most recent call last):\n  File \"<string>\", line 14, in <module>\n    assert len(rows) == 27, \"frozen fixture population must contain 27 rows\"\n           ^^^^^^^^^^^^^^^\nAssertionError: frozen fixture population must contain 27 rows\n"
+    }
+  ]
+}

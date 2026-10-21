@@ -1,0 +1,26 @@
+# FxCritC3 — Claim 3 advisory falsification
+
+Axis: **calibration** (primary). Freshness is implicated only by the uncounted README restatement below. This is advisory; L1 retains judgment.
+
+## Pin and measurements
+
+- At the initially named `0fc037e6b07f3820ead8c9207a8034ac854197a1`, private-clone `bash corpus/evidence/round25-measure.sh <clone>` observed gate `752e4e38`, selftest `PASS (136 cases)`, and C3 `STALE_RESTATEMENTS=0`. That pin omitted the gate despite claiming 154 cases; it is not authoritative. `lessons/round-25.md:109-125,127-133` and `QUALITY.md:77-84` record the omission and correction.
+- `d8c8cff3923f10481ac9ced66d0af7c41d38130c` fixed the gate but omitted `corpus/evidence/README.md`; my same-script run there still counted `EVIDENCE_MISFILED_ROWS=43`. `lessons/round-25.md:127-133` and `LOG.md:892-896` record this second packaging omission.
+- Final private pin measured: `e93ac711f885a10d44fdd80a1734997419595b5a` (observed `git rev-parse HEAD`); `bash /tmp/chousa-r25-FxCritC3/corpus/evidence/round25-measure.sh /tmp/chousa-r25-FxCritC3` printed gate `63a39282`, `STALE_INDEX_ITEMS=0`, C3 `3a=0; 3b=0 of 0 (38·22·8·0·3; queue 24); 3c=0; 3d=0; STALE_RESTATEMENTS=0`, selftest `PASS (154 cases, 0 skipped)`, `GATE_DRIFT: none`, `VERDICT_BEARING_EXPORTS=3/3`. This is the complete checkpoint; the final run also clears the intermediate evidence-index discrepancy.
+- Registered base: `round25-measure-before.log:11-16` = 1 + 3 stale tuples + 2 stale queues + 1 `${GSHA}` + 8 missing addenda = 15. Recorded after: `round25-measure-after.log:46-51` = 0. Preregistration: `round25-claims.md:62-79`.
+
+## Decisive counterexamples
+
+1. **The 15→0 counter still misses a current stale restatement.** The C3 block reads only `SKILL.md` and `hardening-r10.md` (`round25-measure.sh:60-78`). Yet the current-state paragraph in `corpus/README.md:269-276` says the ledger “now” has `38/25/3/1/4` and a 30-item queue. The final owner erratum instead reports row-true `38/22/8/0/3`, committed queue 24 / queue-true 25 (`knowledge/hardening-r10.md:682-693`); the private recount reproduced `rows=71 by-design=38 carried=22 closed=8 finding=0 operator=3 sum=71 queue_committed=24 queue_true=25`. Criterion 9 applies to corpus records as well (`QUALITY.md:14-15,33-37`). With the README claim still present, the same C3 script prints zero. If this was meant only as an r10 snapshot, it needs an explicit dated/superseded disposition; otherwise it is an uncounted live stale total. This falsifies whole-lane stale-restatement closure, not merely the acknowledged mapping limitation.
+
+2. **The 3c zero was obtained by rewriting append-only history.** Preregistration requires an appended erratum (`round25-claims.md:67-70`); QUALITY criterion 4 says errata are append-only (`QUALITY.md:4-6`). At `hardening-r10.md:674-681`, the new erratum says the Round-13 slot is “filled in place.” The observed base-to-final diff confirms an actual deletion at the old Round-13 line 488: `-${GSHA}` replaced by `+6b17e50c…`; only after that replacement does `round25-measure.sh:71` count 0. Thus the exact literal-zero acceptance conflicts with preserving history and the landing violates criterion 4. SCORECARD says history was not rewritten (`SCORECARD.md:1351-1352`); the diff contradicts that assertion. Build critic `CriticClaim3.md:11` identified this; the integrated response did not resolve it.
+
+Other critique responses that did land: ledger arithmetic was re-derived from 71 rows and the result matches the erratum (above); SKILL now points to its owner and command (`SKILL.md:434-443`); r16–r23 addenda contain dispositions/evidence (`hardening-r10.md:602-672`). The heading-only 3d detector remains gameable in principle (`CriticClaim3.md:13`), but I did not find empty addenda in the final checkpoint.
+
+## Scoped limit versus violated condition
+
+The A-r9 pointer/span-pairing **class** remains uncovered; the corrected instance is closed, and SKILL explicitly retains that limit (`SKILL.md:439-443`; `build/ReviewC3Closure.md:16`). That is a known scope limit, not a new C3 failure: this round does not claim to add a pointer/span verifier. By contrast, the stale README restatement and in-place Round-13 edit violate the broader criterion-9/append-only acceptance, despite the qualified `improved` row in `SCORECARD.md:1345` and the `15→0` LOG claim at `LOG.md:854-859`.
+
+Smallest safe correction: disposition the README paragraph as a dated historical snapshot or update it with the owner/re-derivation pointer and include it in the C3 population; preserve the original Round-13 bytes and amend the measurement/prediction to distinguish unresolved placeholders from a historical literal. Do not infer a calibration score change: SCORECARD leaves calibration unscored (`SCORECARD.md:1357-1360`). No installs.
+
+VERDICT: Advisory: component cleanup is evidenced and the measured 15→0 reproduces, but Claim 3’s full “improved” acceptance is unsubstantiated at e93 because a live stale total is uncounted and append-only history was changed in place.

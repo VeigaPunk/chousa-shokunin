@@ -1,0 +1,18 @@
+# FxSrcWiki — round-25 source falsification
+
+Axes: freshness, calibration. Reviewed full checkpoint `e93ac711f885a10d44fdd80a1734997419595b5a` (read-only HEAD). No installs.
+
+## Finding — S019 quote location is wrong (medium)
+- `corpus/lessons/round-25.md:68` and `corpus/knowledge/metadata-screen-r25.md:3,22-27` attribute “All Cochrane reviews should be assessed periodically to determine whether an update is needed” to Chapter IV Key Points.
+- Reopened the Cochrane Chapter IV page (2026-10-21): the Key Points bullet reads “Cochrane reviews should be assessed periodically to determine whether an update is needed.” The exact quoted “All Cochrane reviews…” sentence occurs in §IV.1, not Key Points. Thus S019 supports the periodic-currency point, but the specific citation location is inaccurate; correct it to §IV.1 or quote the Key Points wording. This violates the exact-location rule (`/home/vgpnk/Projects/shokunin/CORPUS.md:42-45,112-115`), not the source’s substantive scope. Source: https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-iv
+
+## Decision checks
+- **S027 queued — agree.** Reopened pinned revision 1342587259; the oldid page identifies it as current (edited 2026-03-09). In rendered Usage guidelines, the Gate quote “use the {{Update after}} template to indicate when it should be updated.” is verbatim (12 words); raw wikitext uses `{{tlx|Update after}}` to render that displayed template name. `corpus/SOURCES.md:37` is defensible: kind `community`, tier C and “never sole support” match the scoped-tier contract (`CORPUS.md:91-100`); the anchor and teaching match the section; `queued`/`used-by —` are consistent with no knowledge entry using S027 (the metadata entry cites S019/S020 at its line 3). Source: https://en.wikipedia.org/w/index.php?title=Wikipedia:As_of&oldid=1342587259
+- **S019 mined — agree in substance, with the location correction above. S020 mined — agree.** Registry rows `corpus/SOURCES.md:29-30` scope each to its own guidance/terms and point `used-by` to `metadata-screen-r25.md`. Its lines 20-27 explicitly label the mapping as an inference from each source and say neither prescribes the header. PROV-O §3.2 contains the quoted entity-lifetime sentence; row scope expressly excludes a recheck or verification policy. This is not presented as full-header endorsement.
+- **S025 rejected — agree; flip is meaningful.** `corpus/SOURCES.md:35,55-58` rejects it only as authority for research-record staleness and preserves an explicitly labelled analogy paired with a relevant method source. RFC 9111 is titled “HTTP Caching”; §4.2 “Freshness” contains `response_is_fresh = (freshness_lifetime > current_age)`. The scope mismatch grounds rejection, while the stated narrower analogy is a real alternative use. `corpus/lessons/round-25.md:74,79-84` records the same decision. Source: https://www.rfc-editor.org/rfc/rfc9111
+
+## Checkpoint and residual risk
+- Packaging history: `corpus/lessons/round-25.md:111-125` records that `0fc037e` omitted the gate; `:127-133` records that both `0fc037e` and gate-corrected `d8c8cff` omitted `corpus/evidence/README.md`. Full pin is `e93ac711f885a10d44fdd80a1734997419595b5a`; read-only diff confirmed the reviewed SOURCES/knowledge files unchanged from d8c8cff, while the lesson gained the errata. No gate/selftest rerun: this was a source-only check.
+- Advisory only; fresh public-page checks do not constitute the lane’s outside closure.
+
+VERDICT: Agree with S027 queued and S025 rejected, and with S019/S020 as separately scoped inputs to a labelled inference; correct the S019 Key Points attribution before treating its citation as exact.

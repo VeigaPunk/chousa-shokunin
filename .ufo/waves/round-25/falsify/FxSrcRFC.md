@@ -1,0 +1,23 @@
+# FxSrcRFC — round 25 source falsification
+
+Scope: fresh source audit of S019/S020/S025 and their use in the integrated lane. Read-only lane `HEAD`: `e93ac711f885a10d44fdd80a1734997419595b5a` (`git rev-parse HEAD`). No gate/selftest/count rerun; this is source-only.
+
+## Findings
+
+- **MEDIUM — S019 teach overstates what its anchored guidance records.** `corpus/SOURCES.md:29` anchors Key Points and §§IV.1–IV.2 but teaches that deciding to update is a “recorded, periodic act.” Fresh Cochrane Chapter IV says at Key Points that reviews “should be assessed periodically” and §IV.1 says “All Cochrane reviews should be assessed periodically”; neither cited section says the periodic decision itself is recorded. Chapter IV §IV.5 does discuss documenting changes/justifications when reporting an updated review, a narrower circumstance. Narrow the teach to periodic assessment/decision criteria; keep `mined` only for the supported periodicity inference. Decision: **disagree with S019 row as written**, though the underlying periodicity claim is supported. Source: https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-iv, Key Points and §§IV.1, IV.5; entry labels its application as inference at `corpus/knowledge/metadata-screen-r25.md:20-27`.
+- **LOW — S019 Gate quote has an incorrect stated location.** `corpus/lessons/round-25.md:68` attributes “All Cochrane reviews…” to Key Points. The live Key Points bullet omits “All”; that full verbatim phrase appears in §IV.1. The quote itself is ≤25 words and does occur in the cited chapter, and S019’s row anchor includes IV.1, but the Gate’s location is not accurate.
+- **MEDIUM — `used-by` omits lesson citations for all three rows.** Contract v1 says `used-by` names repo-relative knowledge-entry *or lesson* paths (`/home/vgpnk/Projects/shokunin/CORPUS.md:107-108`). S019/S020 list only the metadata entry (`corpus/SOURCES.md:29-30`) although `corpus/lessons/round-25.md:68-69,79-82` quotes/discusses both. S025 has `—` at `corpus/SOURCES.md:35` although the Gate quotes it at line 74 and discusses the rejection/flip at lines 80-82. Add `corpus/lessons/round-25.md` to each `used-by`; this does not change their status decisions.
+
+## Decisions and source checks
+
+- **S019 — mined: disagree as currently taught;** the periodicity-based `recheck:` inference is reasonable, but the word “recorded” is not grounded by its stated anchor. The Gate’s added “All” is an IV.1 quote, not a Key Points quote.
+- **S020 — mined: agree, narrowly.** `kind=spec`, tier A for PROV-O’s own terms, scope, and §3.1/§3.2 anchor are defensible. The opened W3C Recommendation defines `wasDerivedFrom` as an entity derivation relation and says generated/invalidated times bound an entity’s existence (§§3.1–3.2; exact §3.2 sentence appears in `round-25.md:69`). These are not a recheck or verification policy and generated/invalidated time is not identical to when a reviewer checked a source. The entry labels its mapping to `source:`/`verified-at:` as inference and explicitly says neither source prescribes the header (`metadata-screen-r25.md:20-27`); it does not claim full-header endorsement.
+- **S025 — rejected: agree.** Fresh RFC 9111 §4.2 contains the Gate’s exact quote, `response_is_fresh = (freshness_lifetime > current_age)` (5 whitespace-delimited words; RFC Editor page, §4.2 formula). The same section states freshness applies only to cache operation, confirming that HTTP-cache freshness is not authority for research-record validity. `kind=spec` is correct; tier C is calibrated to the row’s out-of-domain research-record scope; anchor/date are correct. The rejection is grounded, and its flip is meaningful: only a labelled analogy, paired with a domain-relevant method source, rather than authority. The only S025 field defect is the `used-by` omission above.
+
+## Checkpoint and residual risk
+
+The recorded packaging corrections remain relevant: `round-25.md:111-133` says 0fc037e omitted the gate and had old gate SHA 752e4e38 (136 cases vs 154 claimed), then d8c8cff fixed the gate but still omitted `corpus/evidence/README.md`; L1 identifies e93ac7 as the full integration. I used the current read-only HEAD and relied on no gate result. Residual risk: S020 is only conceptual support for separating provenance from time facts, not direct authority that `verified-at:` should encode source-check time.
+
+Verification gaps: no private clone, gate, selftest, or count verification was needed or run for this source-only assignment. Installs: none.
+
+VERDICT: Mixed — agree S020 mined and S025 rejected; disagree with S019’s row wording as written, while its periodicity inference is supportable.

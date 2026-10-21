@@ -17,11 +17,14 @@ for l in open(os.path.join(F, "README.md"), encoding="utf-8"):
     c = [x.strip() for x in l.strip().strip("|").split("|")]
     if len(c) == 4 and c[0].startswith("`") and c[0].endswith(".md`"):
         name = c[0].strip("`")
+        assert name not in rows, "duplicate fixture row: " + name
         metas = re.findall(r"`(META [^`]+)`", c[1])
         normal = metas[0]; strict = metas[1] if len(metas) > 1 else normal
         ids = set(re.findall(r"META_[A-Z_]+", c[2]))
         en, es = [int(x) for x in re.findall(r"\d", c[3])[:2]]
         rows[name] = {"0": (normal, ids, en), "1": (strict, ids, es)}
+assert len(rows) == 27, "frozen fixture population must contain 27 rows"
+assert set(rows) == {n for n in os.listdir(F) if n.endswith(".md") and n != "README.md"}, "fixture table/file population mismatch"
 def run(cmd, strict):
     env = dict(os.environ, CHOUSA_STRICT=strict)
     r = subprocess.run(cmd, capture_output=True, text=True, env=env)
@@ -40,4 +43,5 @@ for name in sorted(rows):
         if not ok:
             print("DISAGREE %s strict=%s want=%s gate=%s oracle=%s" % (name, strict, want, gate, orc))
 print("AGREE=%d/%d (fixtures=%d, modes normal+strict)" % (agree, total, len(rows)))
+sys.exit(0 if total > 0 and agree == total else 1)
 PY

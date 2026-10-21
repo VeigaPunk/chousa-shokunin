@@ -894,3 +894,45 @@ from both intermediate checkpoints (same helper-path-list error), so C2's
 43→0 move existed only in the working tree until the next full checkpoint.
 That index now lands explicitly with the errata. Neither intermediate pin
 is claimed as the final complete delivered tree.
+
+### Round-25 final recovery landing (same attempt, 2026-10-21)
+
+Replacement integration owner `ChousaR25` inherited checkpoint `e93ac711`,
+build68/falsify68 registries and 52 falsify reports, 16 recorded dead seats,
+and the uncommitted final reader/counter/source/ledger corrections. Reused
+after measurement: those corrections, both waves and original receipts.
+Discarded as final proof: checkpoint154 tallies, uncorrected source
+teachings, the in-place template fill, and working-tree-only checkpoint
+claims; historical reports are retained. Three residual reviewers inspect
+the final corrections, not replacements for the dead seats.
+
+- C1: final fd-bound bounded metadata reader and seven new pinning cases;
+  `round25-final-measure.log` → 25/28, exactly the three legacy warnings,
+  selftest161/161, r1 3/3 and r12 drift none. Original differential54/54
+  remains in `round25-final-differential.log`; it is not full QUALITY6.
+- C2: frozen 43 receipt identities now fail on missing/duplicate/misfiled
+  rows; empty population inputs fail instead of vacuous zero. Final stale
+  index items0; `round25-final-holds.log` exits0, legacy cases1–136 identical
+  and all twelve explicit-root controls match their stored outputs/exits.
+- C3: restored the original round13 `${GSHA}` line, with appended explicit
+  disposition (raw1, unresolved0); final stale restatements0. Recount
+  `round25-final-ledger.log`: 71 rows, 38/22/8/0/3, sum71, queue24 vs true25.
+- Frontier: 18→33 rows (A+13/B+0/C+2); S029–S033 are precision corrections.
+  S019/S020 mined→queued and used-by→—; S029/S033 now ground the entry.
+  `round25-final-census.log` has malformed0/duplicates[]/enum[]/missing[].
+  QUALITY16/17 capture owning-total arithmetic and independent failing
+  controls. New final receipt index and current161 registry erratum land
+  with this entry; earlier154 references are historical checkpoint results.
+- Scope unchanged; public documentation only, no live-target probing or
+  domain-source writes. No tool installs by this replacement coordinator.
+  Outside admit/reject closure remains the orchestrator's duty.
+- Residual review `.ufo/waves/round-25/residual-final-measures.md` found a
+  stale README restatement and deletion-sensitive C3 evidence. The README
+  now immediately dates that tuple as the round10 snapshot and points to
+  the current owner. C3 requires the recount pointer, original slot and
+  appended marker, plus substantive E/case-bearing addenda. Isolated controls
+  `round25-final-counter-controls.json` fail on slot deletion, marker
+  relocation, empty addendum and recount deletion. Differential population
+  is frozen at27 unique table/file matches and rejects a deleted table row.
+  `round25-measure.sh` is explicitly a counting probe: rc0 means execution
+  completed, not admission; actual outputs and content review are required.

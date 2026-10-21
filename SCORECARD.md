@@ -1391,3 +1391,32 @@ cases); original working-tree counts are not proof for `0fc037e`. Fresh
 falsifiers were steered to the corrected commit, same identities. Final
 measurement receipts and the fleet report cite the final helper landing.
 See lesson R25-M13 and QUALITY15; no numeric score changes from this erratum.
+
+### Round-25 final recovery measurements (same attempt, 2026-10-21)
+
+Replacement L1 `ChousaR25` inherited the two validated 68-seat waves, their
+landed checkpoints and uncommitted falsifier-driven corrections. No wave was
+rerun and no dead identity replaced. Final counting command remains
+`bash corpus/evidence/round25-measure.sh <lane-tree>`:
+`round25-final-measure.log` records C1 25/28 with exactly the three legacy
+drifts, C2 0 stale index items and C3 0 unresolved stale restatements.
+The historical `${GSHA}` token is restored (raw count 1); its explicit
+append-only disposition makes unresolved count 0. The original raw-zero
+prediction is withdrawn, not fulfilled by editing history.
+
+Final holds: selftest 161/161, legacy cases 1–136 identical, r12 drift none,
+r1 3/3; differential 54/54. See `round25-final-holds.log`,
+`round25-final-differential.log` and `round25-final-ledger.log`.
+Operability score stays 3→3 (delta 0); C1/C2/C3 retain the qualified improved
+verdicts above. The final pushed lane revision is identified by the report's
+helper `landed` hash; these receipts measure its executable/index bytes.
+S029/S033, not superseded S019/S020, are the mined rows grounding the new
+entry. No outside admission or SHONEN verification is self-awarded.
+
+Counter qualification from residual review: `round25-measure.sh` is a probe,
+so exit0 is not a verdict. The actual printed values plus retained content
+reviews support the claims. C3 now rejects slot/marker/addendum/recount
+deletions; `round25-final-counter-controls.json` preserves failing controls.
+C2 remains a bounded syntax/population count, not a complete semantic index
+validator. README's old handoff tuple is explicitly dated, outside the
+frozen C3 population rather than silently counted as an original claim item.

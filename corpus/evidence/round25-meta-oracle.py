@@ -63,9 +63,7 @@ def metadata_values(lines: list[str]) -> dict[str, str]:
         if not match:
             continue
         key, first_value = match.groups()
-        if key in found:
-            # v1 does not define duplicates; use the first occurrence.
-            continue
+        # L1 v1 clarification: recognized duplicate keys use the last value.
         pieces = [first_value]
         cursor = index + 1
         while cursor < end:
@@ -104,7 +102,7 @@ def inspect_entry(path: Path, strict: bool) -> tuple[list[str], bool, bool]:
     verified_value = values.get("verified-at")
     recheck_value = values.get("recheck")
 
-    source_present = source_value is not None and bool(source_value.strip())
+    source_present = source_value is not None  # presence-only contract, even empty
     if source_value is None:
         source_state = "absent"
     else:

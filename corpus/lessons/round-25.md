@@ -131,3 +131,116 @@ checkpoint. The next helper landing includes the evidence index and all
 current errata, and is the authoritative full integration pin. Criterion15
 must cover every changed production path, not just the executable. Both
 omissions remain recorded; repeated packaging correction is not two claims.
+
+## Falsify integration — corrections, not a clean first pass
+
+The fresh wave attacked checkpoint e93ac711 after two packaging omissions
+were corrected. Its reports are `.ufo/waves/round-25/falsify/*.md`; they are
+advisory lane workers, never the outside closure. The following supersedes
+stronger earlier wording in this lesson and the initial checkpoint records:
+
+- **C1 security/grammar:** FxSentinelMeta found hardlink aliases, pathname
+  reopen races, a read-before-cap stat fallback, raw token echo and symlink
+  size misclassification. The final metadata reader binds stat + one bounded
+  NUL-delimited snapshot read to an opened fd, checks its resolved pathname,
+  refuses multilinks/stat failure, then parses the snapshot. It never emits
+  recheck token contents and shell-quotes displayed paths. An exact literal
+  `## ` ends the header (not a tab); recheck dates must be calendar-valid.
+  Duplicate keys are clarified last-key-wins, and an empty source key remains
+  presence-only (not semantic support). Seven added pinning cases cover the
+  symlink, multilink, stat-failure, calendar, tab, token-echo and held-object
+  branches. Original 154-case checkpoint results remain historical.
+- **C2 measurements:** FxCritC2 deleted a receipt row and the old counter
+  stayed zero. The corrected counter freezes the exact 43 receipt identities
+  and counts absent, duplicate or misfiled rows; original before=43/after=0 is
+  unchanged. Empty/missing LOG/index/SKILL/population inputs now fail instead
+  of returning a vacuous zero; set-e/pipefail propagates Python failures.
+- **C3 append-only:** FxCritC3 correctly rejected the in-place GSHA fill.
+  The original Round-13 line is restored; the appended disposition resolves
+  it with gate6b17e50c. Raw historical token count remains1, unresolved1→0.
+  The raw-token-zero prediction is withdrawn as incompatible with the
+  append-only requirement; `STALE_RESTATEMENTS` still measures the same
+  finding, now by explicit unresolved disposition, not deletion of history.
+- **Freshness:** Frontier r12–r23 paragraphs now explicitly qualify raw-r1
+  receipt gaps and DRIFT `root=.` batteries. R16's new case is110, not111
+  (the sweeps case shifted to111); r20's case123 was absorbed prior work.
+  Ledger addenda distinguish §3.9 round11 queue from later named-debt queues,
+  acknowledge r20's independent recheck append, and give r24 its own heading.
+  README's stale18-source count is replaced by its owning registry pointer.
+- **D6/D10 intake precision:** D6's old source-search stop is not retroactively
+  repaired; a new note qualifies it as a convenience sample, never saturation.
+  D10 remains a historical snapshot limitation, not a re-derived commit-window
+  fix; carried under QUALITY10. Neither is counted as a new closed defect.
+- **Captured-by corrections (FxLessonMistakes):** M5/M6 QUALITY9/11 are the
+  current repair policy, not historical capture (they were prospective at r24).
+  M7 was captured by **none**: QUALITY2/9 did not require owning-row arithmetic;
+  new16 does. M9's direct bar is SOURCES contractv1 rule1 (verbatim located
+  quote), not QUALITY2/4 alone. M11 was captured by **none** (a shared oracle
+  blind spot); new17 requires an independent failure-capable control. M12's
+  byte-copy/cmp was observed by the integrator, not independently certified;
+  fresh seats verified the three destination reports exist, not byte equality
+  to now-removed originals. No independent copy proof is invented.
+
+### Gate correction rows — opened again, 2026-10-21
+
+These new rows correct teachings without editing old immutable row cells.
+S019 mined→queued and used-by `corpus/knowledge/metadata-screen-r25.md`→`—`;
+S020 likewise mined→queued and used-by→`—`. S029/S033 now ground the entry.
+Other old status/recheck/used-by cells unchanged. Final rows18→33 (15 added:
+A13/B0/C2); status totals mined10/queued19/rejected4. Old 18→28 statements
+above describe the first integration, not the final census.
+
+| new row / supersedes | URL (access 2026-10-21) | located quote (≤25 words) |
+|---|---|---|
+| S029 / S019 | https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-iv | §IV.1 Introduction: “All Cochrane reviews should be assessed periodically to determine whether an update is needed.” |
+| S030 / S022 | https://pubmed.ncbi.nlm.nih.gov/28912002/ | Abstract: “systematic reviews that are continually updated, incorporating relevant new evidence as it becomes available.” |
+| S031 / S024 | https://schema.org/lastReviewed | Definition: “Date on which the content on this web page was last reviewed for accuracy and/or completeness.” |
+| S032 / S021 | https://pubmed.ncbi.nlm.nih.gov/17638714/ | Abstract Results: “A signal occurred within 2 years for 23% of reviews and within 1 year for 15%.” |
+| S033 / S020 | https://www.w3.org/TR/2013/REC-prov-o-20130430/ | §3.2 entity lifetime: “The properties prov:generatedAtTime and prov:invalidatedAtTime can be used to bound the starting and ending moments of an Entity's existence.” |
+
+S029 was re-opened by FxSrcCochrane and the L1; S030/FxSrcElliott,
+S031/FxSrcSchema and S032/FxSrcShojania; S033's exact HTML sentence was
+re-opened by L1 after FxSrcProvO died. S026 was also re-opened by L1 after
+FxSrcFAIR died; its quoted R1.2 sentence is present. Supersession removes
+unsupported “recorded schedule”, unlabelled cadence comparison, date-property
+comparison and signal→actual-update implications; PROV entity lifetime is
+not verification validity. This is scoped curation, not new medical/HTTP/
+ontology province adoption.
+
+## Replacement-writer reconciliation (same attempt)
+
+`ChousaR25` inherited the verified wave registries (build68, falsify68),
+checkpoint `e93ac711` and uncommitted final corrections after the coordinator
+session ended. Re-measured rather than respawned: final counter, differential,
+ledger and explicit-root hold battery; receipts
+`corpus/evidence/round25-final-{measure,differential,ledger,holds,census}.log`.
+Final selftest161/161 supersedes checkpoint154; original 27-fixture54/54
+still holds. Old raw-token-zero prediction discarded in favor of restoring
+the historical line and resolving its slot append-only (raw1/unresolved0).
+No dead seat was replaced; three residual reviewers check the new corrections.
+
+The final fleet-root misroot sweep (`git -C /home/vgpnk/Projects/shokunin
+status --porcelain`) found only driver runtime (`.ufo/watchdog.log` and
+`.ufo/state/*.report-baseline`), no new chousa seat output to relocate.
+The earlier three-copy incident remains the original integrator's observation,
+not fresh proof of byte equality to removed originals.
+
+### Residual counter review — R25-M14
+
+Class **vacuous / stale-premise**; evidence
+`.ufo/waves/round-25/residual-final-measures.md`; captured-by QUALITY2/9.
+The original C3 counter could reward deletion and README retained an
+undated handoff tuple. The current note explicitly dates that tuple.
+Counter guards require the recount pointer, exact historical slot and
+marker inside its appended correction, and E/case-bearing addendum bodies.
+`corpus/evidence/round25-final-counter-controls.json` preserves exact Python
+programs and observed exits: clean0, slot-deleted1, marker-relocated1,
+empty-addendum1, recount-deleted1. The differential's population parser
+also gives clean0/table-row-deleted1. These guards are shown able to fail;
+they are not semantic proof of every paragraph or index cell.
+
+`round25-measure.sh` is a counting **probe**, not an admission gate. Its
+exit0 only means it ran; compare the recorded 25/28, exact three drift
+names, zero counters and 3/3 hold to the frozen predictions. C2 syntax
+counts still require the retained per-entry/receipt/capability reviews.
+The differential is documented from the lane root, not an arbitrary cwd.

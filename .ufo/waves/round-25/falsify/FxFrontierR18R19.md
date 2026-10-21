@@ -1,0 +1,26 @@
+# FxFrontierR18R19 — round-18/19 Frontier review
+
+Axes: freshness (assigned), factual traceability, calibration of holds.
+Checkpoint: read-only lane `HEAD` observed as `e93ac711f885a10d44fdd80a1734997419595b5a`; this is the full corrected checkpoint, not the initial 0fc037e package. LSP: `read xd://lsp` returned “No such tool”; no LSP status/references/definition/diagnostics were available. I used file reads and only literal receipt-marker searching for absence checks.
+
+## Findings
+
+- **P2 — Round-19 source note overstates what was withheld.** `corpus/knowledge/sweep-symlink-r19.md:26-28` says “no match paths reported”; the actual demo receipt prints `match=/tmp/r19outside/escape.md` at `corpus/evidence/symlink-r19-20261019T174500Z-demo.log:11`. The target was not opened, as that receipt says; the path itself was disclosed. The Frontier’s narrower `corpus/README.md:683-685` wording (“match not opened”) is accurate and should stay distinct from the note’s incorrect “no match paths” claim. The build draft did not call out this receipt/note contradiction.
+- **P2 — Round-18 battery caveat is only partly carried into the integrated paragraph.** `corpus/README.md:665-668` correctly says the battery’s claims, chain, and verify-all sections DRIFT; it omits why. `scope-r18-20261019T173000Z-battery.log:7-43,44-85,113-133` shows the run-root mismatch: claims/chain sources resolve outside allowed roots and verify-all has `POINTER_UNRESOLVED` under `root=.`. Preserve that these are misrooted DRIFT observations—not CLEAN holds and not evidence of a gate regression. The draft’s Finding 4 had this cause, but the integrated paragraph dropped it.
+- **P3 — Receipt-gap caveats are asymmetric across the two summaries.** The draft correctly found that `r1 3/3` is asserted but unreceipted in both rounds; round 18 says so at `corpus/README.md:663-665`, but round 19 omits that SCORECARD/LOG hold (`SCORECARD.md:982`, `LOG.md:699`). Also `SCORECARD.md:940` asserts round-18 zero network, but the round-18 paragraph omits this unsupported hold and its missing-trace caveat; unlike round 19 (`corpus/README.md:693-694`), it does not state that no receipt has a strace. Literal search of all eight r18/r19 receipts for `VERDICT_BEARING_EXPORTS|strace` returned `No matches found`. These omissions do not make the current prose false, but do not fully preserve the draft’s receipt-gap findings; do not present those holds as receipted.
+- **P3 — The draft missed the matching round-19 report label error.** It catches `.ufo/reports/round-18/chousa.md:3` calling gate blob `6e694881…` a “Work commit”, but `.ufo/reports/round-19/chousa.md:3` similarly calls `9f163807…` a “Work commit”. `git show d650872:tools/research-gate.sh | sha256sum` returned `9f1638076915d9bf6ffb5816e342204081cc1ab07bc803fc7cb402147954c2ba`: that value is the gate-file SHA, not a work-commit ID. The Frontier itself correctly labels it as a gate SHA.
+
+## Reconciled line-by-line facts (no numeric or gate-behavior mismatch found)
+
+- `corpus/README.md:652-673` (R18): wave 16/16, gap and CLEAN→warn/DRIFT demo, three added phrases, selftest 116→119 with cases 1–116 retained and 117–119 new, r12 drift `none`, named limits, and unreceipted r1 3/3 all agree with `SCORECARD.md:918-940`, `LOG.md:677-685`, the note, and the receipts/index (`corpus/evidence/README.md:965-977`).
+- `corpus/README.md:675-694` (R19): wave 16/16, both escape shapes, `SWEEP_CLAIM_FALSE`→refused `SWEEP_LOCATION_OUT_OF_CORPUS`, selftest 119→122/cases 1–119 retained and 120–122 new, drift `none`, post-expansion/TOCTOU/root limits, and missing strace agree with `SCORECARD.md:958-991`, `LOG.md:695-703`, the note, and `corpus/evidence/README.md:979-991`.
+- Gate-file SHA checks (`git show <commit>:tools/research-gate.sh | sha256sum`): `e3c556e` and LOG’s `02b70c0` both `c2915f24d73d656ca23b7f6228cbdd502c27a8c07670776fed84c70f278266f8`; `5499cef` and LOG’s `71b0b5f` both `6e69488160199cc1704bd1d17b7523cd39022016ad123ecf43575467b266de0c`; `d650872` is `9f1638076915d9bf6ffb5816e342204081cc1ab07bc803fc7cb402147954c2ba`. Thus the paragraph gate SHAs are right; the differing HEAD/receipt commit labels remain a traceability mismatch, not a gate-byte mismatch.
+- The two already-normalized battery files have identical SHA-256 `3bb217c1f9f4a191d6d09670a60138b09a1a2e7e355d7535e55277ce04d99d99`; both nevertheless contain the root-refusal DRIFT outputs above. The Frontier does not call that battery CLEAN.
+
+## Residual risk and verification gaps
+
+- L1’s two packaging corrections are retained: 0fc037e omitted `tools/research-gate.sh` (old gate blob `752e4e38`); d8c8cff then omitted `corpus/evidence/README.md`; full checkpoint e93ac includes the gate and evidence-index landing. Read-only `git show --stat` confirmed d8c8cff’s gate/SHONEN changes and e93ac’s evidence README/errata changes.
+- No selftest, gate, battery, count, build, or mutation was run; this is receipt/source review only. The commit-label mismatch and the two explicit receipt gaps remain unresolved in source records.
+
+Installs: none.
+VERDICT: The round-18/19 Frontier numbers, gate blobs, before/after behavior, and selftest boundaries are supported; retain the root-misfire and receipt caveats, and correct the r19 note’s path-disclosure claim.

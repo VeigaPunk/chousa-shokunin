@@ -1,8 +1,8 @@
 # `verify-metadata` — the knowledge-entry metadata screen (round 25)
 
-source: S019 https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-iv §"Key Points" (periodic currency assessment → a scheduled `recheck:`); S020 https://www.w3.org/TR/2013/REC-prov-o-20130430/ §3.1 `prov:wasDerivedFrom` and §3.2 entity-lifetime paragraph (derivation and as-of time are separate facts → `source:` and `verified-at:`); gate `tools/research-gate.sh` `verify_metadata` and selftest cases 137–154 at the round-25 landing; spec v1 `corpus/evidence/round25-claims.md` (Claim 1)
-verified-at: 2026-10-21 (round 25; mode run over the frozen 28-entry population and the 27-file fixture set; differential gate vs hand table vs independent oracle `AGREE=54/54`; S019/S020 opened by round-25 scout seats and quoted in `lessons/round-25.md` `## Gate`)
-recheck: 90d (`bash tools/research-gate.sh --selftest` — cases 137–154 pin the arms; `bash corpus/evidence/round25-meta-differential.sh` → `AGREE=54/54`; re-open S019 Key Points on a Handbook release)
+source: S029 https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-iv §IV.1 (periodic currency assessment → a scheduled `recheck:`); S033 https://www.w3.org/TR/2013/REC-prov-o-20130430/ §3.1 `prov:wasDerivedFrom` and §3.2 entity-lifetime paragraph (derivation and as-of time are separate facts → `source:` and `verified-at:`); gate `tools/research-gate.sh` `verify_metadata` and selftest cases 137–154 at the round-25 landing; spec v1 `corpus/evidence/round25-claims.md` (Claim 1)
+verified-at: 2026-10-21 (round 25; mode run over the frozen 28-entry population and the 27-file fixture set; differential gate vs hand table vs independent oracle `AGREE=54/54`; S029/S033 opened by round-25 scout seats and quoted in `lessons/round-25.md` `## Gate`)
+recheck: 90d (`bash tools/research-gate.sh --selftest` — cases 137–154 pin the arms; `bash corpus/evidence/round25-meta-differential.sh` → `AGREE=54/54`; re-open S029 §IV.1 on a Handbook release)
 
 ## Claim
 
@@ -17,13 +17,13 @@ key; on the lane's 28 entries at the round-25 base it reports
 three legacy headers `lessons/round-24.md` M-13 listed. Observation:
 `corpus/evidence/round25-measure-after.log`.
 
-Why these three keys (inference from S019 and S020, each within its row's
-scope): the Cochrane Handbook makes currency a periodic, scheduled assessment
-(S019, "All Cochrane reviews should be assessed periodically to determine
+Why these three keys (inference from S029 and S033, each within its row's
+scope): the Cochrane Handbook calls for periodic currency assessment
+(S029, "All Cochrane reviews should be assessed periodically to determine
 whether an update is needed"), which a record can only support if it says when
 its next check is due; PROV-O records derivation (`prov:wasDerivedFrom`) and
-validity times (`prov:generatedAtTime` / `prov:invalidatedAtTime`) as separate
-facts (S020), which is the split between `source:` and `verified-at:`. Neither
+entity-lifetime times (`prov:generatedAtTime` / `prov:invalidatedAtTime`) as separate
+facts (S033), which is the split between `source:` and `verified-at:`. Neither
 source prescribes this header; the header is the lane's own convention.
 
 ## The move
@@ -81,3 +81,53 @@ source prescribes this header; the header is the lane's own convention.
 - Prose placed in the header at column 0 as `source: …` satisfies the key.
 - `META_RECHECK_ROOT_PARENT` sees only the literal `--root ..`, not other
   placement-dependent forms (`QUALITY.md` criterion 13).
+
+## Source-precision erratum (same round, after the falsify wave)
+
+The initial header cited S019 and located its exact sentence in Key Points.
+Fresh re-openers located it in §IV.1, and found “recorded”/“on a schedule” in
+the old registry teaching stronger than the source. S029 supersedes S019
+with the exact narrower teaching; the current header and source uses now
+name S029. A scheduled recheck remains the lane's labelled inference from
+periodic assessment, not a direct Cochrane requirement. The original S019
+row is retained queued, no longer used-by this entry; the lesson logs the
+old→new status and used-by change.
+
+S033 supersedes S020's teaching: PROV times bound an entity's existence,
+not whether a research claim is true or when an analyst checked it. Using
+separate source/time fields for verification is explicitly a lane inference,
+not PROV-O's definition of verification. S020's historical row remains queued.
+
+## Final-reader correction (same round, after falsification)
+
+The 154-case results above belong to the integration checkpoint. Final
+reader controls are safe symlink154, multilink155, stat failure156,
+calendar157, literal heading158, token non-disclosure159 and held object160;
+the usage case moved to161. Final `PASS (161 cases, 0 skipped)` and the unchanged
+`METADATA_COMPLETE=25/28` are recorded in
+`corpus/evidence/round25-final-measure.log`; the legacy-output battery
+`round25-final-holds.log` exits 0, including cases 1–136 byte-identically.
+The original hand-table/oracle differential is still `AGREE=54/54`
+(`round25-final-differential.log`), not a claim that those 27 fixtures cover
+every new refusal branch.
+
+This supersedes the earlier reader description: canonical path, regular-file
+type, link count and size are checked against an opened fd before one bounded
+snapshot read. Failed stat or multilinked entries are `META_ENTRY_REFUSED`;
+NUL content is refused unparsed. A pathname substitution after opening cannot
+redirect that fd. Concurrent same-inode content writes can still produce an
+inconsistent snapshot, and initial opening/path checks remain subject to
+filesystem races; no general immutable-file or all-races guarantee is made.
+Only literal `## ` ends the header; scheduled recheck dates must be
+calendar-valid (`verified-at` stays date-shape-only). Duplicate keys are
+last-key-wins and empty `source:` remains presence-only.
+The source/time field mapping is a lane inference, not PROV-O's definition
+of verification; the header convention is not prescribed by either source.
+
+Recheck execution context: run the header's two shell commands from the
+chousa lane root (`/home/vgpnk/Projects/shokunin/chousa-shokunin` in this
+deployment). Final selftest coverage is cases 137–161; the header's 137–154
+range names the original checkpoint controls, not the final total.
+Structured-result paths are shell-quoted; shared usage errors and shell open
+diagnostics may still emit raw pathnames. The result-record escaping fix is
+not a universal stderr-sanitization claim (residual-final-meta review).

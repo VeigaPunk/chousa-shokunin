@@ -1063,3 +1063,26 @@ landed gate (sha in `knowledge/json-delimiter-r24.md`); the pre-round gate
 | `round24-measure.sh` | the round's three counting commands in one read-only script (claim 1 delimiter, operability score re-derivation, claim 2 expansion + contract census, claim 3 mistake capture) |
 | `round24-measure-before.log` | the script over `git archive ab19cff` (+ claim 3 against `ab19cff:corpus/QUALITY.md`): `MANIFEST_LINES=1 INVALID_JSON_LINES=1`, `EXPANSION_ADMITTED=0/3`, registry absent, `CAPTURED_BY_CRITERION=3` of 14 |
 | `round24-measure-after.log` | the script over the landing tree: `MANIFEST_LINES=2 INVALID_JSON_LINES=0`, `VERDICT_BEARING_EXPORTS=3/3`, `EXPANSION_ADMITTED=3/3`, census clean (18 rows), `CAPTURED_BY_CRITERION=13` of 14 |
+
+## Round-25 final recovery receipts — 2026-10-21
+
+The `round25-claims.md` pre-registration at `b820e4e` pins base `d730ae4`;
+the report cites the final helper-landed revision. Original checkpoint
+receipts remain history, not final proof for later reader corrections.
+
+| File | Receipt |
+|---|---|
+| `round25-measure.sh` | Read-only C1/C2/C3 counting command; final C2 checks exact receipt identities and C3 preserves history with an explicit unresolved-slot disposition |
+| `round25-measure-before.log` | Base: mode absent rc2, stale index items66, stale restatements15; selftest136, drift none, r1 3/3 |
+| `round25-final-measure.log` | Final: C1 25/28 with exactly three legacy warnings; C2 0; C3 0 unresolved; selftest161, drift none, r1 3/3; command exit0 |
+| `round25-final-differential.log` | Original hand table, oracle and final gate agree54/54 across27 fixtures and normal/strict modes; exit0 |
+| `round25-final-ledger.log` | Owning row recount: 71 rows, 38/22/8/0/3 sum71; queue_committed24 versus queue_true25; exit0 |
+| `round25-final-holds.log` | Twelve explicit-root legacy output/exit comparisons match, including cases1–136; command exit0 (negative controls retain expected exit1) |
+| `round25-final-census.log` | 33 rows; A27/B1/C5; mined10/queued19/rejected4; malformed0, no duplicates/enums/missing used-by paths; exit0 |
+| `round25-meta-{oracle.py,differential.sh}` | Spec-derived independent oracle and disagreement-failing comparator; revised selftest154 plus added155–161 cover final reader/usage branches outside the original54-cell tally |
+| `round25-holds/battery.sh`, `round25-holds/holds/` | Explicit fleet-root comparison runner and stored baseline outputs; not a relabelling of historic `root=.` DRIFT batteries |
+| `round25-driver-census-start.json` | Authentic original round-start CLI result recovered from the prior coordinator's tool result: `chousa ok <registry>`, exit0; same command is recorded at final landing |
+| `round25-driver-census-end.log` | Exact contract CLI at final landing: `chousa ok <registry>`, exit0 |
+| `round25-retained-final-selftest.log` | Prior coordinator's complete161-case stdout preserved byte-for-byte from its last exercised run; the replacement's final measure and legacy battery independently pass the same executable |
+| `round25-final-pin.json` | Exact final executable/counting/oracle/battery digests, observed verification exits, retained wave role counts, original sixteen failure texts and zero replacements |
+| `round25-final-counter-controls.json` | Exact isolated C3 and fixture-population check programs, with clean0 and deletion/relocation/empty-body failures1; counting-probe exit0 is not itself admission |

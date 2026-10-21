@@ -20,7 +20,7 @@ mask_volatile() {
   awk '
     {
       if (index($0, "ts="))
-        gsub(/ts=[^[:space:]]+/, "ts=<MASKED>")
+        gsub(/(^|[[:space:]])ts=[^[:space:]]+/, " ts=<MASKED>")
       if (index($0, "\"ts\""))
         gsub(/"ts"[[:space:]]*:[[:space:]]*"[^"]*"/, "\"ts\":\"<MASKED>\"")
       if (index($0, "gate_sha256") || index($0, "gate sha")) {
