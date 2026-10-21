@@ -1070,3 +1070,76 @@ no acquired capability, and trends unchanged/harmed/unchanged.
 The round lesson records every decisive counterexample and residual class.
 No production domain tree, fleet closure state, MANIFEST, claim/outcome/next
 state or sibling repo was changed. No tool was installed or updated.
+
+## Round27 — rejected-contract repairs and post-crash recovery (2026-10-21)
+
+Same held claim27/attempt1, base64eec5d; never started round28.
+Claims pre-registered in `corpus/evidence/round27-claims.md`: C1 operability
+(lowest measured axis, usage selftests), C2 freshness (ASCII dates and safe
+decimal normalization), C3 calibration (registry state, occurrence identity
+and filesystem-path representation). Accepted r26 failure receipts remain
+the before authority; a non-executing mechanism probe separately counts1/2/5.
+
+### Landed production and evidence
+
+- `dd72641e574679c4f7882dd43de072b4c8892d6f`: original coordinator/R2 union
+  integration, gateca39d14d…, PASS210, original58 controls0 mismatches;
+  S040–S042, QUALITY19/20 and build64 evidence. Coordinator overlap and
+  `ReviewDateCalendar` misroot are recorded in lesson R27-M8/M9.
+- `cb895a2bdd259eb38bec29ef70011d8211a508b5`: replacement ChousaR27-2
+  preserved falsify64 evidence and fixed escaped-header width, token-loop
+  cost, quadratic CR strip and usage matcher faults; added5 selftests and
+  26 controls, S043. Four new controls failed on dd72641e and passed here
+  (one was timeout-dependent). Residual reviewers then falsified this
+  checkpoint's escaped-cell indexes and scanner-failure handling.
+- `4f48419425f5165a8f950e1db4c0a781cf845d40`: shared escape-preserving split
+  for indexes/width/body; separate byte-oriented tokenizer/filter statuses,
+  one crit on scanner failure; final32 controls (original26 plus6).
+  Final gateac1315dd… and measurement identity under
+  `.ufo/waves/round-27/final/identity.json`; no numeric/resource claim is
+  inferred merely from a source-code counter or a green differential.
+- Final recovery records append SCORECARD's Round27 verdict, this LOG,
+  final immutable receipts, source census and the residual dispositions.
+  The chronological lesson owns R27-M10–M17, tooling installs, dead-seat
+  reconciliation, control weaknesses and intentionally unresolved policy.
+
+### Final measured results and honest rejection
+
+At4f484194 in an isolated archive: full selftest PASS215/215,0 skipped;
+original187 preserved, first210 identities identical to dd72641e, first161
+ok-line SHA5eac4a7e…01cb unchanged. Original regressions58/0 mismatches,
+final added controls32/0; date9024/9024, registry48/48, metadata54/54,
+drift none (all rc0). Original archived-input observable3/3 remains3/3,
+operability scalar3→3/delta0. SCORECARD owns every command, exact digest
+and measured revision, not this shorthand.
+
+C1 and C2 improve bounded behavior. **C3 remains partially falsified and
+the round is NOT ADMITTED.** The full-path arm repairs the earlier-colon
+hidden-denylist failure, but the union retains citation-prefix refusal on
+real filesystem names. ResC3Clause independently demonstrates a new
+claims-canonical over-refusal (`plain.md -> k.env:1`) plus inherited raw
+prefix over-refusals. No-harm is not met; frozen negative controls stay.
+An L0 question requests policy adjudication, without blocking landing.
+No knowledge/capability promotion, retrospective r26 admission, source-truth
+guarantee or full-GFM claim is made. Trends unchanged/harmed/unchanged.
+
+### Recovery, frontier and scope
+
+Original build64 (58 reports,6 dead no-report), falsify64 (63 reports,1 dead),
+new residual8 (all reported;15 cap refusals before attempt16) =136 seats.
+Planner is the L1; residual seats are5 reviewers/3 critics, not a padded
+third wave. Historical build/falsify provider errors and report hashes live
+in `.ufo/waves/round-27/inherited-final-reconciliation.json`; dead seats
+were not replaced. Host kill, earlier Devin quota/revival and R2 stand-down
+remain separate events. Residual base rerun scope debt R27-M17 is not
+accepted as before evidence. The lower cap refusals did not spawn seats.
+
+SOURCES39→43; added S040–S043 are scoped own-work tierA/mined, opened
+locally this round, no old row changed. Census exit0→0; no new admitted
+expansion. Round26 candidate notes remain withdrawn. The width reviewer
+installed official PyPI cmarkgfm2025.10.22, markdown-it-py4.2.0
+(cffi2.1.1,pycparser3.11,mdurl0.1.2) and uv-managed CPython3.15.0 through
+`uv run --with` for two GFM oracles; no pacman transaction or other install.
+Bounded oracle bundle is retained; round-owned /tmp and /fast scratch is
+removed at landing. No live-target/network research, host-secret probe,
+domain-source write, fleet MANIFEST/state/routing edit or sibling edit.

@@ -537,3 +537,13 @@ No registry/knowledge capability is newly admitted; manual QUALITY checks
 remain required. The full selftest also retains inherited locale dependence:
 exported `LC_ALL=C` breaks ten claims/verify-all cases on both round27
 checkpoints; use the host UTF-8 locale for the recorded selftest comparison.
+
+Final round27 production revision4f48419425f5165a8f950e1db4c0a781cf845d40
+also uses a single shared escaped-cell split (not just an adjusted width)
+and separately checks both ASCII scanner stages. `META_SOURCE_SCAN_FAILED`
+is a crit finding and yields DRIFT/exit1, never an informational no-S-id
+substitute for a dependency failure. Final immutable receipts are
+`.ufo/waves/round-27/final/`; full selftest215 and controls58+32 pass there.
+The inherited requirement for at least three delimiter dashes and raw
+versus rendered Markdown cell-text limitations remain explicit; this is
+not a complete GFM parser.

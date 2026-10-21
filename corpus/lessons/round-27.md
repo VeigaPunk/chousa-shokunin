@@ -318,3 +318,31 @@ before evidence. Captured-by: comparing the item with
 `round27-claims.md:25–36`, not a green tally. The report's before side remains
 the accepted r26 receipts and non-executing mechanism count; no baseline
 failure rerun can replace that authority.
+
+## Final immutable measurement and landing hygiene
+
+Measured production4f48419425f5165a8f950e1db4c0a781cf845d40,
+gateac1315ddaa12e79b68069d1a9866b9b1b55e3a43efef3ba0cb5ca5e665835765.
+`final/identity.json` (under `.ufo/waves/round-27/`) binds argv, cwd,
+UTF-8 environment, exits and hashes: mechanisms0/0/0; original58 controls
+zero mismatches; final32 controls zero mismatches; selftest PASS215,
+no skips; original210 case identities unchanged, legacy161 SHA unchanged;
+date9024/9024, registry48/48, metadata54/54, drift none, r1 observable3/3.
+The full final suite ran once after all residual seats completed.
+C3 is nevertheless partially falsified; negative prefix controls retained.
+
+Fleet misroot sweep (`git -C /home/vgpnk/Projects/shokunin status --porcelain`,
+no pathspec) found no new chousa report misroot; other lanes' report/state
+and watchdog changes were left alone. The chousa L0 line was concurrently
+swept into fleet72a724b5db6b4a261c0999b64a7fc1ee6d4326a3,
+authored kama-shokunin; that attribution is recorded, not rewritten.
+Build/falsify deaths are7 total; original errors and malformed/truncated
+transcript counts are retained in `inherited-final-reconciliation.json`.
+All8 new residual seats reported, no provider death or replacement.
+
+Cleanup: completed round-owned `/tmp/chousa-r27-*` and
+`/fast/scratch/hyaku/chousa-r27` removed (du before cleanup:1.5 GiB total),
+without touching other lanes. The122 KiB oracle bundle was copied into the
+lane, its manifest cmp-verified, then the duplicate ~/.cache copy removed.
+No claim is made that the now-removed experimental sandbox paths remain
+live; retained scripts/results, reports and pinned git revisions own evidence.

@@ -1498,3 +1498,67 @@ describe earlier recovery snapshots; errors and reports can coexist.
 retain per-seat report hashes, last errors, terminal records and dispositions.
 Recovery spawned/resumed/replaced zero seats. It does not claim full
 falsification, no-harm, promotion, or admission.
+
+## Round27 recovery verdict — 2026-10-21, same attempt1
+
+**NOT ADMITTED: C3 partially falsified; no-harm condition not met.**
+Frozen claims: `corpus/evidence/round27-claims.md`, base
+`64eec5d41c7cf7f17f5ce1e968e28b3769952596`.
+Final measured production revision:
+`4f48419425f5165a8f950e1db4c0a781cf845d40`;
+gate SHA-256 `ac1315ddaa12e79b68069d1a9866b9b1b55e3a43efef3ba0cb5ca5e665835765`.
+The receipt owner is `.ufo/waves/round-27/final/identity.json`, not the
+historical `corpus/evidence/round27-*-after.*` files (dd72641e, PASS210).
+
+| claim / distinct axis | measured before → after | verdict / score delta |
+|---|---|---|
+| C1 operability, lowest measured axis | accepted r26 `FAIL3/187` → `PASS215/215`, no skips; original187 retained and first210 identities unchanged from dd72641e; original161 line SHA unchanged; original C1 controls6/6 plus final added5/5 | **improved bounded repair**; original r1 scalar3→3, delta0, re-derived3/3 (not a general resource/readiness score) |
+| C2 freshness | accepted r26 locale/input-normalization failures → original synthetic21/21 + final added8/8 match; date differential9024/9024; 4 MiB representable cadence completes (timeout-sensitive historical baseline, not a semantic mismatch) | **improved bounded repair**; no invented numerical axis score |
+| C3 calibration | accepted r26 stale-header/rescan/hidden-denylist defects → original31/31 + final added19/19 match, registry differential48/48; complete-path hidden-denylist failure class repaired; frozen negative no-prefix clause still fails | **partially falsified / harmed**: prefix matching retained, including a new claims-canonical over-refusal; no axis score or capability admitted |
+
+Commands (run in an isolated archive of the measured revision; every command
+below exits0):
+
+- `python3 corpus/evidence/round27-regressions.py --gate tools/research-gate.sh`
+  →58 controls,0 mismatches (C1=6,C2=21,C3=31);
+  `final/regressions.json`.
+- `python3 corpus/evidence/round27-falsify-controls.py --gate tools/research-gate.sh`
+  →32 controls,0 mismatches (C1=5,C2=8,C3=19);
+  `final/falsify-controls.json`.
+- `bash tools/research-gate.sh --selftest` →PASS215,0 skipped, host
+  LANG=en_US.UTF-8 and LC_ALL unset; `final/selftest.log`.
+- `python3 corpus/evidence/round27-mechanisms.py tools/research-gate.sh`
+  →C1=0,C2=0,C3=0 versus non-executing base counts1/2/5. This is only a
+  lexical mechanism count, not a behavioral admission gate.
+- `bash corpus/evidence/round26-date-differential.sh TREE/tools/research-gate.sh`
+  →9024/9024;
+  `bash corpus/evidence/round26-registry-differential.sh TREE` →48/48;
+  `bash corpus/evidence/round25-meta-differential.sh` →54/54 (27 fixtures).
+- `bash tools/research-gate.sh --drift corpus/evidence/gate-baseline-r12-20261019T115519Z.json`
+  →`GATE_DRIFT: none`. The r1 explicit-fleet-root A/B/C invocations each
+  exit1 and emit one DRIFT summary →3/3; argv and per-input outcomes in identity.json.
+
+All abbreviated `final/` paths above mean `.ufo/waves/round-27/final/`.
+Legacy161 ok-line SHA remains
+`5eac4a7e2af964f6e81631f66990426e5c8ef58fb41ba6ec6d0054ef819e01cb`.
+Neither suite covers the entire frozen C3 claim: ResC3Clause demonstrates
+that actual filesystem inputs still pass through citation-prefix denial,
+including the new `plain.md -> k.env:1` canonical refusal. The negative
+compatibility expectations were not weakened or deleted to manufacture green.
+
+Post-falsify checkpoints remain distinct: dd72641e PASS210/58 controls;
+cb895a2 PASS215/26 controls but false CLEAN on shifted escaped columns and
+scanner failure; final4f484194 fixes those two counterexamples with shared
+cell splitting and separately checked scanner stages. Source-method
+counts1/2/5→0/0/0 and green frozen suites do not erase that history.
+Residual8 seats independently attacked cb895a2; candidate followups bind
+the exact final gate digest (scanner) and unchanged shared-split form (width).
+
+Sources39→43 (A33→37,B1→1,C5→5; mined16→20,queued19→19,rejected4→4);
+four new own-work rows, no new knowledge/capability admission. Source census
+exit0→0; rows S040–S043, Gate quotes and mistakes are owned by the round27
+lesson. Quality criteria19–22 mine real rejected/falsified behavior.
+Trends: **expansion unchanged; quality harmed; discernment unchanged**
+(no self-awarded outside admit/reject spot-check). No promotion or round28.
+Wave accounting: inherited build64 + falsify64 + new residual8 =136 seats;
+7 inherited no-report dead seats, none replaced.
