@@ -1,0 +1,70 @@
+tree=/tmp/chousa-r26-base gate_sha256=985a63200ca4c5712806d8752ba27a8f3448b026f773659079e71ca602e56ef7 base=ba3333254dd337658a4f25e7a9471f9cf4e4567e as_of=2026-10-21
+== C1 operability: metadata reader allocation (8,388,000-byte shapes; cap 8 MiB)
+ctl rc=0 maxrss_kb=11644 elapsed_s=0.0
+s1-newlines bytes=8388000 rc=1 maxrss_kb=2238736 extra_kb=2227092 elapsed_s=90.6 amplified
+s2-header-body bytes=8388000 rc=0 maxrss_kb=1125328 extra_kb=1113684 elapsed_s=11.7 amplified
+s3-crlf bytes=8388000 rc=1 maxrss_kb=1125008 extra_kb=1113364 elapsed_s=45.7 amplified
+s4-header-noheading bytes=8388000 rc=0 maxrss_kb=1126028 extra_kb=1114384 elapsed_s=63.6 amplified
+C1_AMPLIFIED=4/4
+== C1 hold: plain verify-metadata output over frozen 29 (ts line dropped)
+C1_FROZEN_RC=1 C1_FROZEN_SHA=3f83ba4844cac8d2057b47661be225f84a5945fc7c1db739ec2070b6aa2a4a37
+METADATA_COMPLETE=26/29
+RESEARCH_GATE: DRIFT (entries=29 complete=26 findings=33 drift=3)
+== C2 freshness: due dates with --as-of 2026-10-21
+c2 frozen rc=2
+FRESHNESS_CLASSIFIED=0/29
+oracle-mismatch anchor-boundaries-r4.md want ('unknown', 'unknown') got None
+oracle-mismatch archived-export-intake.md want ('unknown', 'unknown') got None
+oracle-mismatch archives-verified-r9.md want ('unknown', 'unknown') got None
+oracle-mismatch audit-r11.md want ('unknown', 'unknown') got None
+oracle-mismatch chain-resolution-r3.md want ('unknown', 'unknown') got None
+oracle-mismatch citation-chain-fidelity-r24.md want ('2027-01-17', 'current') got None
+oracle-mismatch claim-support-states-r24.md want ('2027-01-17', 'current') got None
+oracle-mismatch claim-verification-r2.md want ('unknown', 'unknown') got None
+oracle-mismatch contextual-source-admission-r24.md want ('on-release', 'event') got None
+oracle-mismatch denylist-r22.md want ('unknown', 'unknown') got None
+oracle-mismatch fenced-anchor-r23.md want ('unknown', 'unknown') got None
+oracle-mismatch fenced-heading-r17.md want ('unknown', 'unknown') got None
+oracle-mismatch gate-baseline-r12.md want ('unknown', 'unknown') got None
+oracle-mismatch gate-baseline-r8.md want ('unknown', 'unknown') got None
+oracle-mismatch hardening-r10.md want ('unknown', 'unknown') got None
+oracle-mismatch hardlink-alias-r13.md want ('unknown', 'unknown') got None
+oracle-mismatch html-comment-r20.md want ('unknown', 'unknown') got None
+oracle-mismatch json-delimiter-r24.md want ('2027-01-17', 'current') got None
+oracle-mismatch metadata-screen-r25.md want ('2027-01-19', 'current') got None
+oracle-mismatch mount-alias-r14.md want ('unknown', 'unknown') got None
+oracle-mismatch pointer-boundary-r21.md want ('unknown', 'unknown') got None
+oracle-mismatch reference-integrity-r7.md want ('unknown', 'unknown') got None
+oracle-mismatch root-slash-boundary-r15.md want ('unknown', 'unknown') got None
+oracle-mismatch scope-phrase-gap-r18.md want ('unknown', 'unknown') got None
+oracle-mismatch scope-refusal-r12.md want ('unknown', 'unknown') got None
+oracle-mismatch sweep-symlink-r19.md want ('unknown', 'unknown') got None
+oracle-mismatch sweeps-rejections-r5.md want ('unknown', 'unknown') got None
+oracle-mismatch verification-r16.md want ('unknown', 'unknown') got None
+oracle-mismatch verify-all-r6.md want ('unknown', 'unknown') got None
+C2_ORACLE_AGREE=0/29
+C2_ORACLE_DIST {'unknown': 24, 'current': 4, 'event': 1}
+control c2-overdue MISS rc=2
+control c2-current MISS rc=2
+control c2-date-past MISS rc=2
+control c2-event MISS rc=2
+control c2-unknown MISS rc=2
+control c2-boundary MISS rc=2
+C2_CONTROLS_CAUGHT=0/6
+== C3 calibration: criterion-6 registry link (--registry)
+control c3-good MISS rc=2
+control c3-missing MISS rc=2
+control c3-queued MISS rc=2
+control c3-usedby MISS rc=2
+control c3-bare MISS rc=2
+control c3-noid MISS rc=2
+C3_CONTROLS_CAUGHT=0/5
+C3_POSITIVE_CLEAN=0/1
+c3 pop24 rc=2
+C3_POP_R24PLUS_CLEAN=0/5
+== holds: selftest, drift vs r12 baseline, r1 archive observable
+RESEARCH_GATE_SELFTEST: PASS (161 cases, 0 skipped)
+LEGACY_CASES_SHA=5eac4a7e2af964f6e81631f66990426e5c8ef58fb41ba6ec6d0054ef819e01cb (first 161 ok-case lines)
+GATE_DRIFT: none
+drift rc=0
+VERDICT_BEARING_EXPORTS=3/3
