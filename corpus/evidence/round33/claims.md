@@ -89,3 +89,52 @@ Data Interchange Format), §4 Objects — names SHOULD be unique; duplicate name
 behaviour unpredictable; object members are name/value pairs and values may themselves be objects
 or arrays. A second row (Python `json` documentation, repeated names) may record that a common
 reader keeps the last value, which is why the gate fails closed instead of picking one.
+
+## Design v2 (before data; supersedes the v1 counter, contract item 2, P1 and kill rule)
+
+Made after the pre-data critic `w1/CriticAxisFit33.md` (F1: the duplicate contract names seven
+keys but v1 counts three; F2: the v1 counter accepted any gate exit 0/1 and the contract carried
+unenumerated "everything else" clauses; F3: "no run" vs "committed run") and before any candidate
+was scored. v1 (`c1-count.py`, `ab6b2ae2…e229`) stays committed and unedited; its control receipts
+remain evidence for v1 only.
+
+**Counter v2.** `python3 corpus/evidence/round33/c1-count-v2.py [--gate PATH] [--seed N]
+[--receipt F] [--keep DIR]` (lane root), SHA-256
+`cb354dd1b5bdf2540e2bf356d945e01cd3ce8207d66e7a1ec76f363650e6a514`. 156 records: v1's classes,
+with the duplicate class widened to 24 records — duplicated top-level `line`, `sha256`, `source`,
+`span`, `expect` (identical and differing values) and `id` (identical values). The gate run must
+exit 1 and print a `RESEARCH_GATE: DRIFT` line (the fixture always holds drifting records);
+otherwise every record scores `none`. Decoy matrix as built: `line`, `sha256`, `source`, `id`,
+`span` each before and after the top-level member in an object, an array and a two-level
+container; `marker` nested only (no top-level marker); `expect` nested before the top-level member.
+
+**Contract item 2 (v2, counted).** A duplicated top-level `line`, `sha256`, `source`, `span`,
+`expect` (identical or differing values) or `id` (identical values) makes the record `invalid`,
+and its CLAIM line carries the record's id. A duplicated `marker`, and an `id` duplicated with
+differing values, are invalid by the implementation but not counted.
+
+**Contract item 4 (v2).** Not part of P1: records without nesting or duplicates keep their base
+verdicts as far as the no-harm battery measures (selftest case lines, claims-r2 17/17, round-31
+counters v3); that battery is separate evidence, not this claim's after-state.
+
+**P1 v2 (frozen predicate).** C1 is met iff, on the landed lane revision, this counter
+(`c1-count-v2.py`) prints `TOPLEVEL_FIELD_MATCH=156/156` (receipt label `predicate_holds=true`) on
+each of two fresh-seed runs, and no run of this counter on that revision in round 33 prints a
+lower count.
+
+Code condition: `holds = matched == TOTAL` with `TOTAL = 156`. Receipt label: `predicate_holds`.
+
+**Kill rule v2.** Every run of `c1-count-v2.py` on a candidate or landed gate is saved as a receipt
+and committed; any such run on the landed revision below 156 is a miss, reported as an honest stop.
+The counter, TOTAL and P1 v2 are never amended after a candidate is scored.
+
+**Before (L1, v2).** Base gate `f4731885…`, seed 3311: `TOPLEVEL_FIELD_MATCH=60/156`
+(duplicates 0/24). Python oracle (feasibility only): 156/156 on seeds 3312 and 3313
+(`.ufo/waves/round-33/controls/L1-design-v2/`). Every v1 control gate the wave committed is
+re-scored under v2 before the first candidate receipt.
+
+**Not claimed (correction to v1's list).** v1 said `verify-all` manifest parsing uses python3; it
+does not (ScoutJsonReaders33: the python3 `json.loads` calls are selftest validity checks only;
+`gate_drift_scan` and the selftest `tall` greps read fields by sed/grep and are outside C1's
+surface). Also not claimed: lines that are not exactly one valid JSON object (the candidate is
+asked to fail closed on them; no fixture class counts it).
