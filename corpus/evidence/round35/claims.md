@@ -252,3 +252,14 @@ predicate is right (the output counter's job).
    diversity; temp-dir-independent keying; closing the `dz-line-bound` slack; and moving the witness
    channel off the gate's stderr onto a counter-owned fd or a per-run secret read from an
    authenticated first call.
+
+12. **The pin-coverage ledger, corrected.** Two modes run no matcher grep at all: `verify-integrity`
+   (ExecPinModeIntegrity) and `verify-sweeps` (ExecPinModeSweeps) — the pre-pin gate behaves
+   identically there, so neither may be cited as pin coverage. Modes that actually exercise the
+   pinned matcher: `verify`, `verify-claims`, `verify-chain` (and the startup path in every mode);
+   `verify-metadata` greps only with `--registry`. The strongest direct count is the wave's
+   `--selftest` run through a `RESEARCH_GATE_GREP` wrapper: 348 `--version` probes and 1781
+   pinned-binary calls, all from the pinned path (RevGrepModesC). The same seat re-confirmed
+   erratum 8a (the echo leaks into `--pin` baselines) and a pre-existing, locale-dependent
+   `\uXXXX` claim-span unescape that makes the selftest fail 10/256 under `env -i` on both gates —
+   a r36 hygiene item (pin a locale for gate, counters and selftest).
