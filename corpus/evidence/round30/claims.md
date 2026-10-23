@@ -50,8 +50,9 @@ Both counters run the candidate inside a loopback harness
 (`corpus/evidence/round30/qr_harness.py`). They fetch nothing from the network, so a
 non-author can re-execute them. Every run draws a fresh 64-bit seed from `os.urandom`; no
 caller can choose a seed (round-29 lesson, design v2 void). All documents, words, ids,
-paths, host names and addresses are generated per run, so no committed byte holds an item
-or a label.
+paths, host names and addresses are generated per run, so no committed byte holds an item.
+Labels follow from each item's class by construction; the class rules are in the counters,
+and the per-item labels exist only in the counter process (CriticClaimDesign30 finding 6).
 
 The rule from the round-29 lesson and addendum §9 binds: a control wave scores the
 do-nothing, junk, all-false, no-reader and shortcut controls on these counters before any
@@ -115,13 +116,19 @@ counter on the round-29 tool: 13/27 at the base (design v3; 9/20 under v2).
 **Predicate (one sentence, frozen, design v3):** C2 holds iff
 `python3 corpus/evidence/round30/c2-count.py`, run from the lane root, prints
 `QUOTE_REOPEN_FETCH_BOUND_MATCH=27/27`: every one of the 27 items gets a verdict equal to its
-label, within its own DEADLINE plus 1.5 s of wall time, with no connection to an address
-outside the validated set.
+label, within its own DEADLINE plus 1.5 s of wall time, with every connection going to a
+global address the harness's name map gives that item (its routed set).
 
 - Counter code: `holds = (n_ok == t == FROZEN_TOTAL)` with `FROZEN_TOTAL = 27`; an item
   matches iff `got == label`, `wall <= bound` (`bound = DEADLINE + SLACK`, `SLACK = 1.5`,
   each item's `DEADLINE` uniform in [2.0, 6.0] s, not killed at `CAP = 20`) and every logged
   connect destination is a routed global address of that item.
+  Wording note (pre-data, CriticClaimDesign30 finding 2): v3 at `7908ce2a` said "outside the
+  validated set"; the code checks the item's routed set, which is every global address the
+  name map can return for that item's hosts, not per-hop provenance. A candidate can learn
+  these addresses only by resolving the names, but a wrong-hop connection to another of the
+  item's own global addresses would pass. The sentence above now states what the code checks;
+  the condition did not change, and per-hop provenance is listed under Not claimed.
 - Receipt label: `QUOTE_REOPEN_FETCH_BOUND_MATCH`; receipt field `predicate_holds`;
   receipt field `design: "v3"`.
 - Before (round-29 tool at base): `QUOTE_REOPEN_FETCH_BOUND_MATCH=13/27`, exit 1, twice
