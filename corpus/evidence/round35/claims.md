@@ -235,3 +235,20 @@ predicate is right (the output counter's job).
    `head` → rc 2; `head` absent from `PATH` → rc 0), but the counter's 9/9 receipts were taken
    before those fixes, so a green receipt alone does not witness the pipeline. The report names the
    two gate generations for exactly this reason.
+
+11. **P2's witness channel is forgeable, so P2 does not prove the mechanism even at routing.**
+   Wave seat ExecC2Fresh1 built three gates that never call the chunk matcher (python-exact
+   shortcut) and print `@@WITNESS@@<gate>:<entry-line>` stamps of their own: with the marker read
+   from the gate's own environment (it is shipped there as `PS4`, and the trace channel is the
+   gate's stderr), one variant hardcodes the marker, one derives it from `PS4` with **zero
+   hardcoding**, and all three score `WITNESS=pass OUTPUT=9/9` with 0 real stamps and 360 forged
+   ones — the full counter then prints the complete P2 pass line, `predicate_holds=true`. So P2 is
+   satisfiable by an engine that never runs the dead-zone mechanism, and the claim's honest scope is
+   even narrower than "routing": the witness is a *speed bump* for engines that do not forge, not a
+   proof. The same seat also showed the K2 control is environment-fragile (a `C2_TMP` outside
+   `/tmp|/fast|/var/tmp` makes K2 inert and P2 fails on the landed gate: 1/2), and that a battery
+   doing no mechanism work passes because P2 does not pin the battery's sha256. The r36 redesign is
+   now fully specified by this round's own seats: per-record attribution; seeded id-length
+   diversity; temp-dir-independent keying; closing the `dz-line-bound` slack; and moving the witness
+   channel off the gate's stderr onto a counter-owned fd or a per-run secret read from an
+   authenticated first call.

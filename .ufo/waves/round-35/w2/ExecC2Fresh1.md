@@ -4,6 +4,34 @@ Round 35, v2 wave, C2 (calibration). Report date 2026-10-23.
 
 ## 0. Method
 
+## 7. Addendum (post-hoc, from peer convergence + own verification) — one-record witness slack
+
+Peer `chousa-r35-w2-ExecC2Fresh2` reported, and I independently reproduced, a one-record slack
+in the witness that the frozen counter does not catch: a candidate that shortcuts exactly ONE
+long-span record (exact python `bytes.find`, never entering the chunk matcher) still gets
+`stamps["chunk"] = 8 >= long_records = 8` → `witness=pass`, and the full counter run reports
+`WITNESS_SEPARATED=2/2 OUTPUT_EQUIV=2/2 LANDED_WITNESS=pass` with `predicate_holds=true`, exit 0.
+
+My reproduction (seed 3547, candidate `slack-1record-gate.sh`: long-span branch shortcuts only
+when the span contains no newline — exactly the single `dz-verbatim-1l` record among the long
+records; all other long spans still call the chunk matcher):
+
+```
+$ python3 tools/mechanism-witness.py --gate .../slack-1record-gate.sh --seed 3547
+WITNESS=pass OUTPUT=9/9 STAMPS chunk=8 direct=1 (long records=8)   # exit 0
+$ python3 corpus/evidence/round35/c2-count.py --gate .../slack-1record-gate.sh --seed 3547 --receipt ...
+WITNESS_SEPARATED=2/2 OUTPUT_EQUIV=2/2 LANDED_WITNESS=pass         # exit 0, predicate_holds=true
+```
+
+Receipts: `c2-slack-s3547.json` (sha256 `1bb2d581…`), `wit-slack-s3547.json`
+(sha256 `98760a9a…`). Mechanism (peer's analysis, consistent with my stamp counts): `dz-line-bound`
+spans appear twice in the source, so `tok_span_at` + `tok_span_all` produce 9 chunk calls for 8
+long records; `stamps["chunk"] >= long_records` (mechanism-witness.py:295) is therefore a
+call-count comparison with one record of slack, not the per-record coverage the docstring claims.
+Two records shortcut → chunk=7 → witness=fail, so the slack is exactly one record. This is a
+strictly stronger bypass than the pre-stated "call for show" limit (claims.md:106-109), and it is
+NOT covered by that limits paragraph. Negative controls (peer): whole-path shortcut and
+fixture-prefix-keyed candidates are both killed (LANDED_WITNESS=fail, exit 1).
 - Cloned lane at wave base `e87c5d7ea2dbf3730b36a3961de3f06261d015e4` into
   `/tmp/hyaku/chousa-r35/w2/ExecC2Fresh1/clone` (unset GIT_DIR/GIT_WORK_TREE/GIT_INDEX_FILE first).
 - Verified by recomputing sha256 (matches both the pinned wave shas and claims.md):

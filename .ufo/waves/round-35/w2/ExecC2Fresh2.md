@@ -153,6 +153,12 @@ K2 arm measures nothing and P2 breaks. **The claim's "environment-independent" f
 understated.** Control: with `C2_TMP`/`TMPDIR` unset (default `gettempdir()` = `/tmp`) the same
 seed gives `WITNESS_SEPARATED=2/2 … LANDED_WITNESS=pass`, exit `0` (`c2-default-3547.json`).
 
+**Independent convergence:** the sibling seat `chousa-r35-w2-ExecC2Fresh1` reports the same
+fragility via a different path (`/var/tmp` → 2/2 pass; `/home/…` → 1/2 fail). Two seats, two
+different non-`/tmp` roots, same failure mode — this is a property of the frozen battery, not of
+one host's layout. Their scoring runs also kept `C2_TMP`/`WITNESS_TMP` under `/tmp`, so both seats'
+passing runs are unaffected.
+
 ### 3.2 The witness passes a gate that shortcuts exactly ONE long record
 
 `k5-skip1-1.sh` (own build; `build-k5.py`, mode `skip1`): the first long-span search is answered by
