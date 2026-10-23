@@ -1,0 +1,50 @@
+== REGISTRY ==
+S999 row present: False
+S999 registry_url(): None
+S001 row present: True | kind: own-work | source cell: 'chousa research gate — tools/research-gate.sh (verify-all --json manifest append)' | http(s) in cell: False | registry_url(): None
+S045 row present: True | kind: own-work | source cell: 'Round27 canonical ancestor refusal diagnosis — .ufo/waves/round-27/residual/ResNoHarm.md' | http(s) in cell: False | registry_url(): None
+positive control S044 registry_url(): https://docs.python.org/3/library/os.path.html
+
+== NO_SOURCE ==
+d3909bba S999 label=NO_SOURCE class=no-source-unregistered-id derived=NO_SOURCE -> LABEL-OK
+76b6a43c S001 label=NO_SOURCE class=no-source-own-work-row derived=NO_SOURCE -> LABEL-OK
+aff4afec S045 label=NO_SOURCE class=no-source-own-work-row derived=NO_SOURCE -> LABEL-OK
+
+== TOO_LONG (word count after frozen normalization) ==
+-- opening S008 https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-02
+  fetch https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-02 -> 200 text/html 150128B in 0.8s (attempt 1)
+   normalized page text: 63895 chars
+-- opening S013 https://jsonlines.org/
+  fetch https://jsonlines.org/ -> 200 text/html 4877B in 0.3s (attempt 1)
+   normalized page text: 2303 chars
+-- opening S019 https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-iv
+  fetch https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-iv -> 200 text/html 116560B in 0.8s (attempt 1)
+   normalized page text: 38514 chars
+-- opening S020 https://www.w3.org/TR/2013/REC-prov-o-20130430/
+  fetch https://www.w3.org/TR/2013/REC-prov-o-20130430/ -> 200 text/html 464179B in 0.1s (attempt 1)
+   normalized page text: 185679 chars
+-- opening S044 https://docs.python.org/3/library/os.path.html
+  fetch https://docs.python.org/3/library/os.path.html -> 200 text/html 90223B in 0.0s (attempt 1)
+   normalized page text: 21371 chars
+5ba0e035 S008 words=34 (>25: True) true-on-page=True label=TOO_LONG -> LABEL-OK
+a66931e8 S013 words=34 (>25: True) true-on-page=True label=TOO_LONG -> LABEL-OK
+e2e2d1ce S019 words=35 (>25: True) true-on-page=True label=TOO_LONG -> LABEL-OK
+
+== ABSENT truncated-token (boundary analysis on live page) ==
+4798287c S008 cut_at=end occurrences=1 boundary_valid=0 cut-side neighbour='w' (isalnum=True) parent-quote VERBATIM-on-page=True label=ABSENT -> LABEL-OK
+   occ@5082 before=' ' after='w' boundary_ok=False ctx='systematic review is to determine its focus. This is best done by clearly framing the questions the review seeks to answer. The focus of any Cochrane review should '
+98406fc4 S013 cut_at=end occurrences=1 boundary_valid=0 cut-side neighbour='u' (isalnum=True) parent-quote VERBATIM-on-page=True label=ABSENT -> LABEL-OK
+   occ@944 before=' ' after='u' boundary_ok=False ctx='eting characters in JSON Lines files is low. Like the JSON standard a byte order mark (U+FEFF) must NOT be included. 2. Each Line is a Valid JSON Value The '
+ad795e73 S044 cut_at=end occurrences=1 boundary_valid=0 cut-side neighbour='h' (isalnum=True) parent-quote VERBATIM-on-page=True label=ABSENT -> LABEL-OK
+   occ@3060 before=' ' after='h' boundary_ok=False ctx='path-like object. os.path.commonpath(paths)¶ Return the longest common sub-path of each pathname in the iterable paths. Raise ValueError if paths contain both ab'
+f98e78ae S020 cut_at=start occurrences=1 boundary_valid=0 cut-side neighbour='T' (isalnum=True) parent-quote VERBATIM-on-page=True label=ABSENT -> LABEL-OK
+   occ@1873 before='T' after=' ' boundary_ok=False ctx='PROV-O terms is http://www.w3.org/ns/prov#. The OWL encoding of the PROV Ontology is available here. Status of This Document This section describ'
+
+== PINNING ==
+cd50965032278c355f780d357c5672f14840fc218bb1b7dc4adaa6993b5c175d /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round29/c1-count.py
+e6305beba9563fe4d37430019831610ddf7a5adf1e35de60869e3b764f939bcc /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/fixtures/quote-reopen-r29/items.tsv
+dda1b3768f6f187736a77e5bce094b41822d8574e4798886d00964267343c7a9 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/fixtures/quote-reopen-r29/labels.tsv
+8bc103823c3a08114e3f787dca96384a6f739931ae3de8c5bdbc64b7225c64b4 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md
+
+wall time: 2.0s
+VERDICTS: {"4798287c": true, "5ba0e035": true, "76b6a43c": true, "98406fc4": true, "a66931e8": true, "ad795e73": true, "aff4afec": true, "d3909bba": true, "e2e2d1ce": true, "f98e78ae": true}

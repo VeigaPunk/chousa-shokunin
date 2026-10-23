@@ -1,0 +1,59 @@
+python 3.14.8
+loopback probe server on http://127.0.0.1:50947
+== 1/2. redirect targets (default opener) ==
+  file:///etc/hostname                                                   urllib.error.HTTPError | OSError=True :: HTTP Error 302: Found - Redirection to url 'file:///etc/hostname' is n
+  data:text/html,hello                                                   urllib.error.HTTPError | OSError=True :: HTTP Error 302: Found - Redirection to url 'data:text/html,hello' is n
+  ftp://127.0.0.1:1/secret                                               urllib.error.URLError | OSError=True :: <urlopen error ftp error: [Errno 111] Connection refused>
+  http://127.0.0.1:1/x                                                   urllib.error.URLError | OSError=True :: <urlopen error [Errno 111] Connection refused>
+  http://[::1]:1/x                                                       urllib.error.URLError | OSError=True :: <urlopen error [Errno 111] Connection refused>
+  http://169.254.169.254/latest/meta-data/                               urllib.error.URLError | OSError=True :: <urlopen error timed out>
+  http://169.254.169.254/latest/meta-data/iam/security-credentials/      urllib.error.URLError | OSError=True :: <urlopen error timed out>
+  http://10.0.0.1/y                                                      urllib.error.URLError | OSError=True :: <urlopen error timed out>
+  https://example.invalid/z                                              urllib.error.URLError | OSError=True :: <urlopen error [Errno -2] Name or service not known>
+== 3. gzip bomb versus the 8 MiB cap ==
+  wire bytes read under the 8 MiB+1 read cap: 203861
+  gzip.decompress of that prefix expands to: 209715200 bytes (200.0 MiB)
+  counter reference inflate ratio: 1029x
+  bounded incremental inflate with max_length=8 MiB+1 stops at: 8388609 bytes
+  => the 8 MiB wire cap does not bound the inflated size; the cap must be applied to the inflated stream
+== 4. socket timeout semantics ==
+  read 20 bytes in 11.4 s wall with socket timeout=2 s
+  => the timeout is a per-socket-operation timeout, not a total fetch deadline
+== 5. oversized headers and exception taxonomy ==
+  /big-header    http.client.LineTooLong | OSError=False :: got more than 65536 bytes when reading header line
+  /many-headers  http.client.HTTPException | OSError=False :: got more than 100 headers
+  caught by (OSError, URLError, ValueError, LookupError)? URLError                     True
+  caught by (OSError, URLError, ValueError, LookupError)? HTTPError                    True
+  caught by (OSError, URLError, ValueError, LookupError)? HTTPException                False
+  caught by (OSError, URLError, ValueError, LookupError)? InvalidURL                   False
+  caught by (OSError, URLError, ValueError, LookupError)? TimeoutError                 True
+  caught by (OSError, URLError, ValueError, LookupError)? SSLError                     True
+  caught by (OSError, URLError, ValueError, LookupError)? UnicodeDecodeError           True
+  caught by (OSError, URLError, ValueError, LookupError)? LookupError                  True
+== 6. credentials in a URL ==
+  Request.host for http://alice:s3cr3t@example.invalid/x          -> 'alice:s3cr3t@example.invalid'
+  http://alice:s3cr3t@example.invalid/x -> http.client.InvalidURL | OSError=False :: nonnumeric port: 's3cr3t@example.invalid'
+  Request.host for https://alice:s3cr3t@example.invalid/x         -> 'alice:s3cr3t@example.invalid'
+  https://alice:s3cr3t@example.invalid/x -> http.client.InvalidURL | OSError=False :: nonnumeric port: 's3cr3t@example.invalid'
+  Request.host for http://alice@example.invalid/x                 -> 'alice@example.invalid'
+  http://alice@example.invalid/x -> urllib.error.URLError | OSError=True :: <urlopen error [Errno -2] Name or service not known>
+  a naive stderr log line would print the secret:
+    FETCH http://alice:s3cr3t@example.invalid/x failed nonnumeric port: 's3cr3t@example.invalid'
+== 7. ambient proxy environment ==
+  request failed urllib.error.URLError | OSError=True :: <urlopen error [Errno 111] Connection refused>
+  => an opener built while http_proxy is set sends the request to the proxy host
+     instead of the named registry host
+  with ProxyHandler({}) the origin is reached directly: status=200
+== 8. direct file:/data: through the default opener ==
+  file:///etc/hostname             read b'plazir27\n'
+  data:text/plain,hello            read b'hello'
+== address classification of the ranges that matter ==
+  127.0.0.1          global=False private=True  loopback=True  linklocal=False
+  169.254.169.254    global=False private=True  loopback=False linklocal=True
+  100.100.100.200    global=False private=False loopback=False linklocal=False
+  10.0.0.1           global=False private=True  loopback=False linklocal=False
+  172.16.0.1         global=False private=True  loopback=False linklocal=False
+  192.168.1.1        global=False private=True  loopback=False linklocal=False
+  ::1                global=False private=True  loopback=True  linklocal=False
+  fd00:ec2::254      global=False private=True  loopback=False linklocal=False
+  8.8.8.8            global=True  private=False loopback=False linklocal=False

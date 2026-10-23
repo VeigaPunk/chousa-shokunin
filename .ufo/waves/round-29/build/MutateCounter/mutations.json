@@ -1,0 +1,57 @@
+{
+  "scope": "Historical design v2 scratch-only counter probes; do not execute while the stop order remains active.",
+  "counter": "corpus/evidence/round29/c1-count.py",
+  "scratch_root": "/fast/scratch/hyaku/chousa-r29/w1/MutateCounter",
+  "pristine_and_restored_sha256": "574ffcad7a78d2fdf04b895445c1aac72537cc548b944cae62012baf4ba4e2dd",
+  "mutants": [
+    {
+      "number": 1,
+      "original_lines": [213, 214],
+      "before": "        cases.append({\"origin\": fid, \"kind\": \"subspan\", \"class\": \"runtime-subspan\", \"source_id\": sid,\n                      \"quote\": \" \".join(toks[start:start + n]), \"label\": \"VERBATIM\"})\n",
+      "after": "",
+      "sha256": "7629efe3022ae394828b5fa3224b3eead8355e3ea5f8cdec4ae80328224ec628"
+    },
+    {
+      "number": 2,
+      "original_lines": [218, 219],
+      "before": "        cases.append({\"origin\": fid, \"kind\": \"transpose\", \"class\": \"runtime-transpose\", \"source_id\": sid,\n                      \"quote\": \" \".join(sw), \"label\": \"ABSENT\"})\n",
+      "after": "",
+      "sha256": "43601267f87754416afb1cdda40d14dd2b68352aaf4970bb15a086bb5281db43"
+    },
+    {
+      "number": 3,
+      "original_lines": [226, 226],
+      "before": "            rid = secrets.token_hex(6)\n",
+      "after": "            rid = c[\"origin\"] if c[\"kind\"] == \"frozen\" else secrets.token_hex(6)\n",
+      "sha256": "d6e6a3106a8ce70ad85cf56bc7270695e1f40cecd8d55db836fe114ab6754260"
+    },
+    {
+      "number": 4,
+      "original_lines": [231, 231],
+      "before": "    random.Random(secrets.randbits(64)).shuffle(cases)\n",
+      "after": "",
+      "sha256": "cfb3d92a5382ed95e3a88aa5be9927a0f77ddd09e790b0899dfb65be0318d8cc"
+    },
+    {
+      "number": 5,
+      "original_lines": [280, 280],
+      "before": "        c[\"match\"] = c[\"verdict\"] == c[\"label\"]\n",
+      "after": "        c[\"match\"] = c[\"verdict\"] in (c[\"label\"], \"<missing>\")\n",
+      "sha256": "b2e0e2cae69e91c3bc0db62bca44a434868d11ce22105f77d79f4738820cc028"
+    },
+    {
+      "number": 6,
+      "original_lines": [280, 280],
+      "before": "        c[\"match\"] = c[\"verdict\"] == c[\"label\"]\n",
+      "after": "        c[\"match\"] = c[\"verdict\"].casefold() == c[\"label\"].casefold()\n",
+      "sha256": "1babf4f8e001b64d87251ba97951c51df304a69aaf93803de6d0d876b50474a4"
+    },
+    {
+      "number": 7,
+      "original_lines": [274, 274],
+      "before": "        if len(parts) >= 3 and parts[0] == \"QUOTE_REOPEN\" and parts[1] not in got:\n",
+      "after": "        if len(parts) >= 3 and parts[0] == \"QUOTE_REOPEN\":\n",
+      "sha256": "4ee1635666a6ad69ec50193c3952065936dd990d98345bac0c376f6aaf5de3a4"
+    }
+  ]
+}

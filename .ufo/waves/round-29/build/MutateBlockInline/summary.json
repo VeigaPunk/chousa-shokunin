@@ -1,0 +1,108 @@
+{
+  "hypothesis_verdict": "FALSIFIED",
+  "axes": [
+    "operability",
+    "coverage",
+    "calibration"
+  ],
+  "changes": {
+    "extra-inline": [
+      {
+        "id": "27c5599c",
+        "source_id": "S013",
+        "baseline": "VERBATIM",
+        "mutant": "ABSENT"
+      },
+      {
+        "id": "db86a0d4",
+        "source_id": "S044",
+        "baseline": "VERBATIM",
+        "mutant": "ABSENT"
+      },
+      {
+        "id": "2cbd5af5",
+        "source_id": "S020",
+        "baseline": "VERBATIM",
+        "mutant": "ABSENT"
+      },
+      {
+        "id": "cee49a8b",
+        "source_id": "S020",
+        "baseline": "VERBATIM",
+        "mutant": "ABSENT"
+      },
+      {
+        "id": "ca473d99",
+        "source_id": "S013",
+        "baseline": "VERBATIM",
+        "mutant": "ABSENT"
+      },
+      {
+        "id": "3406c3dc",
+        "source_id": "S044",
+        "baseline": "VERBATIM",
+        "mutant": "ABSENT"
+      }
+    ],
+    "only-p-br": []
+  },
+  "runs": {
+    "baseline": {
+      "command": "timeout 30s python3 -B probe.py detect baseline",
+      "observed_exit_code": 0,
+      "matched": 40,
+      "total": 40,
+      "extractor_sha256": "1061af7c7aeee8184e765ec8aaf25f247634d6c20d2051de95b6ba6e62ffd643",
+      "elapsed_seconds": 0.129203
+    },
+    "extra-inline": {
+      "command": "timeout 30s python3 -B probe.py detect extra-inline",
+      "observed_exit_code": 1,
+      "matched": 34,
+      "total": 40,
+      "extractor_sha256": "668adade09c8d5713443dcee7f99509209437d79053cf8cddc29cf388b129558",
+      "elapsed_seconds": 0.126242
+    },
+    "restored-after-extra-inline": {
+      "command": "timeout 30s python3 -B probe.py detect restored-after-extra-inline",
+      "observed_exit_code": 0,
+      "matched": 40,
+      "total": 40,
+      "extractor_sha256": "1061af7c7aeee8184e765ec8aaf25f247634d6c20d2051de95b6ba6e62ffd643",
+      "elapsed_seconds": 0.126814
+    },
+    "only-p-br": {
+      "command": "timeout 30s python3 -B probe.py detect only-p-br",
+      "observed_exit_code": 0,
+      "matched": 40,
+      "total": 40,
+      "extractor_sha256": "e485f7771034783ee73bf128b00b67f1b6bf0304f77c55accaaf52e0af1c4734",
+      "elapsed_seconds": 0.14049
+    },
+    "restored": {
+      "command": "timeout 30s python3 -B probe.py detect restored",
+      "observed_exit_code": 0,
+      "matched": 40,
+      "total": 40,
+      "extractor_sha256": "1061af7c7aeee8184e765ec8aaf25f247634d6c20d2051de95b6ba6e62ffd643",
+      "elapsed_seconds": 0.126847
+    }
+  },
+  "mutant_verdicts": {
+    "extra-inline": "killed",
+    "only-p-br": "survived"
+  },
+  "restoration": {
+    "pristine_sha256": "1061af7c7aeee8184e765ec8aaf25f247634d6c20d2051de95b6ba6e62ffd643",
+    "restored_sha256": "1061af7c7aeee8184e765ec8aaf25f247634d6c20d2051de95b6ba6e62ffd643",
+    "current_sha256": "1061af7c7aeee8184e765ec8aaf25f247634d6c20d2051de95b6ba6e62ffd643",
+    "exact_bytes_restored": true,
+    "same_verdicts": true,
+    "same_page_text": true
+  },
+  "frozen_inputs_unchanged": true,
+  "fetch_count": 8,
+  "fetch_elapsed_seconds": 1.009102,
+  "detector_elapsed_seconds": 0.649596,
+  "recorded_at": "2026-10-23T01:27:01.265721+00:00"
+}

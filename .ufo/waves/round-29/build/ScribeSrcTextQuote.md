@@ -1,0 +1,7 @@
+# S046 — W3C Text Quote Selector
+
+| S046 | W3C Web Annotation Data Model Recommendation — https://www.w3.org/TR/annotation-model/#text-quote-selector | spec | A | The Recommendation's Text Quote Selector model for locating text with required exact text and optional prefix/suffix only; not an application matching algorithm or claim validation | Section 4.2.4 “Text Quote Selector,” opening paragraph: “This Selector describes a range of text by copying it, and including some of the text immediately before (a prefix) and after (a suffix) it” | C1's frozen matcher checks normalized exact text and token boundaries but has no prefix/suffix context, so repeated text remains a named disambiguation limit. | mined | 2026-10-23 | 365d | corpus/knowledge/quote-reopen-r29.md |
+
+Quote provenance: copied verbatim from https://www.w3.org/TR/annotation-model/#text-quote-selector, section 4.2.4, accessed 2026-10-23 (25 words). The W3C reader initially returned metadata; the raw HTML opened the cited section. The frozen contract is `corpus/evidence/round29/claims.md` lines 60–99. This Recommendation does not support whether a quoted statement is true or supports a claim.
+
+Touched surface: this report only; `corpus/SOURCES.md` and product code were not changed. No shell command, build, test, or gate was run; no verification verdict is claimed. Out of scope: adding the row to the registry or implementing quote matching. Artifact: `.ufo/waves/round-29/build/ScribeSrcTextQuote.md`.
