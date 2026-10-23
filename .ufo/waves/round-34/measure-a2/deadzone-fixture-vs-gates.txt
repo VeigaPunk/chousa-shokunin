@@ -1,0 +1,15 @@
+Able-to-fail evidence for the lesson row "chunk matcher shipped with no selftest case".
+Fixture: 32766-byte span; DD1 verbatim (expect supported), DD4 line-bound line 3 (expect supported).
+
+== pre-fix gate 772a1d8e (extracted from bf7c931a, sha256 verified):
+grep: regular expression is too large (x2)
+CLAIM id=DD1 expected=supported observed=unsupported source=lib/deadzone.md at=- verdict=mismatch
+CLAIM id=DD4 expected=supported observed=unsupported source=lib/deadztwice.md at=- verdict=mismatch
+
+== landed gate a6307edf (fe0f22e0):
+CLAIM id=DD1 expected=supported observed=supported source=lib/deadzone.md at=line:1 verdict=match
+CLAIM id=DD4 expected=supported observed=supported source=lib/deadztwice.md at=line:3 verdict=match
+VERDICT_BEARING_CLAIMS=2/2
+
+Commands: bash <gate> verify-claims <fixture> --root <fixture root>; fixture rebuilt by the
+selftest cases 254-256 recipe (6*5461-word span). Run 2026-10-23 in /fast/scratch/hyaku/chousa-r34-a2/failcheck.
