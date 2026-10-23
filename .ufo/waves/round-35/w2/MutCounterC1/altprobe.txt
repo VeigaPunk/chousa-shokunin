@@ -1,0 +1,15 @@
+$ sha256sum /usr/bin/grep altbin/gnu-grep; readlink -f altbin/gnu-grep
+19280b0e0714dadf0c100cdbc7f4823d254dd8facba64deeff5ec50d39fecf84  /usr/bin/grep
+19280b0e0714dadf0c100cdbc7f4823d254dd8facba64deeff5ec50d39fecf84  altbin/gnu-grep
+/usr/bin/grep
+
+$ RESEARCH_GATE_GREP=<alt symlink to /usr/bin/grep> CHOUSA_GREP_PIN_ECHO=1 bash <gate> verify-claims <fixture>
+--- landed rc=1
+stderr: GATE_GREP: path=/tmp/hyaku/chousa-r35/w2/MutCounterC1/altbin/gnu-grep source=override version="gnu-grep (GNU grep) 3.12-modified"
+stdout: research-gate v2 — ts=2026-10-23T20:09:56Z — mode=claims — claims=/tmp/hyaku/chousa-r35/w2/MutCounterC1/tmp/altprobe-2w72o_51/claims.jsonl
+CLAIM id=K1 expected=supported observed=supported source=src/ok.md at=line:1 verdict=match
+CLAIM id=K2 expected=supported observed=unsupported source=src/ok.md at=- verdict=mismatch
+CLAIM id=K3 expected=supported observed=unsupported source=src/glued.md at=- verdict=mismatch
+--- W2 rc=2
+stderr: research-gate: GREP_PROVENANCE refused: override is not the pinned binary (candidate=/tmp/hyaku/chousa-r35/w2/MutCounterC1/altbin/gnu-grep)
+stdout: 

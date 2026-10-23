@@ -1,0 +1,108 @@
+## M1
+--- c1-count.intact.py	2026-10-23 17:00:00.849943937 -0300
++++ c1-count.M1.py	2026-10-23 17:07:56.096978601 -0300
+@@ -211,7 +211,7 @@
+         # S1 shim-first PATH
+         old = open(trip1, "w"); old.close()
+         rc, out, err = run_gate(gate, claims, root, path_override=shim_dir + ":" + clean_path)
+-        score("S1-shim-first-path", empty_trip(trip1) and same_as_ref(rc, out),
++        score("S1-shim-first-path", same_as_ref(rc, out),
+               {"tripwire_bytes": os.path.getsize(trip1), "output_matches_reference": same_as_ref(rc, out), "rc": rc},
+               [{"scenario": "S1", "rc": rc, "stderr_tail": err[-600:]}])
+         # S2 BASH_ENV function shim
+## M2
+--- c1-count.intact.py	2026-10-23 17:00:00.849943937 -0300
++++ c1-count.M2.py	2026-10-23 17:07:56.097064111 -0300
+@@ -217,7 +217,7 @@
+         # S2 BASH_ENV function shim
+         open(trip2, "w").close()
+         rc, out, err = run_gate(gate, claims, root, extra_env={"BASH_ENV": bash_env}, path_override=clean_path)
+-        score("S2-bash-env-function", empty_trip(trip2) and same_as_ref(rc, out),
++        score("S2-bash-env-function", same_as_ref(rc, out),
+               {"tripwire_bytes": os.path.getsize(trip2), "output_matches_reference": same_as_ref(rc, out), "rc": rc},
+               [{"scenario": "S2", "rc": rc, "stderr_tail": err[-600:]}])
+         # S3 grep absent from PATH
+## M3
+--- c1-count.intact.py	2026-10-23 17:00:00.849943937 -0300
++++ c1-count.M3.py	2026-10-23 17:07:56.097122041 -0300
+@@ -222,7 +222,7 @@
+               [{"scenario": "S2", "rc": rc, "stderr_tail": err[-600:]}])
+         # S3 grep absent from PATH
+         rc, out, err = run_gate(gate, claims, root, path_override=nogrep_dir)
+-        score("S3-no-grep-on-path", same_as_ref(rc, out) and "not found" not in err,
++        score("S3-no-grep-on-path", "not found" not in err,
+               {"rc": rc, "output_matches_reference": same_as_ref(rc, out), "path_tools": len(made),
+                "stderr_tail": err[-400:]},
+               [{"scenario": "S3", "rc": rc, "stderr_tail": err[-600:]}])
+## M4
+--- c1-count.intact.py	2026-10-23 17:00:00.849943937 -0300
++++ c1-count.M4.py	2026-10-23 17:07:40.553475203 -0300
+@@ -228,13 +228,13 @@
+               [{"scenario": "S3", "rc": rc, "stderr_tail": err[-600:]}])
+         # S4 override relative
+         rc, out, err = run_gate(gate, claims, root, extra_env={"RESEARCH_GATE_GREP": "bin/grep"}, path_override=clean_path)
+-        score("S4-override-relative", rc == 2 and "GREP_PROVENANCE" in err,
++        score("S4-override-relative", rc == 2,
+               {"rc": rc, "marker": "GREP_PROVENANCE" in err, "stderr_tail": err[-400:]},
+               [{"scenario": "S4", "rc": rc, "stderr_tail": err[-600:]}])
+         # S5 override missing
+         rc, out, err = run_gate(gate, claims, root, extra_env={"RESEARCH_GATE_GREP": os.path.join(scratch, "absent-grep")},
+                                 path_override=clean_path)
+-        score("S5-override-missing", rc == 2 and "GREP_PROVENANCE" in err,
++        score("S5-override-missing", rc == 2,
+               {"rc": rc, "marker": "GREP_PROVENANCE" in err, "stderr_tail": err[-400:]},
+               [{"scenario": "S5", "rc": rc, "stderr_tail": err[-600:]}])
+         # S6 override non-GNU stub
+## M5
+--- c1-count.intact.py	2026-10-23 17:00:00.849943937 -0300
++++ c1-count.M5.py	2026-10-23 17:07:40.553529133 -0300
+@@ -241,7 +241,7 @@
+         open(trip3, "w").close()
+         rc, out, err = run_gate(gate, claims, root, extra_env={"RESEARCH_GATE_GREP": stub}, path_override=clean_path)
+         stub_calls = open(trip3).read()
+-        score("S6-override-non-gnu", rc == 2 and "GREP_PROVENANCE" in err,
++        score("S6-override-non-gnu", rc == 2,
+               {"rc": rc, "marker": "GREP_PROVENANCE" in err, "stub_calls": len(stub_calls.splitlines()),
+                "stderr_tail": err[-400:]},
+               [{"scenario": "S6", "rc": rc, "stub_calls": stub_calls[:400], "stderr_tail": err[-600:]}])
+## M6
+--- c1-count.intact.py	2026-10-23 17:00:00.849943937 -0300
++++ c1-count.M6.py	2026-10-23 17:07:40.553599583 -0300
+@@ -251,14 +251,14 @@
+                                 path_override=clean_path)
+         line = next((l for l in err.splitlines() if l.startswith("GATE_GREP: ")), "")
+         score("S7-override-real-echo",
+-              same_as_ref(rc, out) and "path=%s" % REAL_GREP in line and "source=override" in line and "GNU grep" in line,
++              same_as_ref(rc, out),
+               {"rc": rc, "output_matches_reference": same_as_ref(rc, out), "echo_line": line},
+               [{"scenario": "S7", "rc": rc, "echo_line": line, "stderr_tail": err[-600:]}])
+         # S8 default + echo
+         rc, out, err = run_gate(gate, claims, root, extra_env={"CHOUSA_GREP_PIN_ECHO": "1"}, path_override=clean_path)
+         line = next((l for l in err.splitlines() if l.startswith("GATE_GREP: ")), "")
+         score("S8-default-echo",
+-              same_as_ref(rc, out) and "path=%s" % REAL_GREP in line and "source=default" in line and "GNU grep" in line,
++              same_as_ref(rc, out),
+               {"rc": rc, "output_matches_reference": same_as_ref(rc, out), "echo_line": line},
+               [{"scenario": "S8", "rc": rc, "echo_line": line, "stderr_tail": err[-600:]}])
+         # S9 override beats BASH_ENV shim
+@@ -269,7 +269,7 @@
+                                 path_override=clean_path)
+         line = next((l for l in err.splitlines() if l.startswith("GATE_GREP: ")), "")
+         score("S9-override-beats-shim",
+-              empty_trip(trip2) and same_as_ref(rc, out) and "source=override" in line,
++              empty_trip(trip2) and same_as_ref(rc, out),
+               {"tripwire_bytes": os.path.getsize(trip2), "output_matches_reference": same_as_ref(rc, out),
+                "echo_line": line},
+               [{"scenario": "S9", "rc": rc, "stderr_tail": err[-600:]}])
+## M7
+--- c1-count.intact.py	2026-10-23 17:00:00.849943937 -0300
++++ c1-count.M7.py	2026-10-23 17:09:19.673647379 -0300
+@@ -269,7 +269,7 @@
+                                 path_override=clean_path)
+         line = next((l for l in err.splitlines() if l.startswith("GATE_GREP: ")), "")
+         score("S9-override-beats-shim",
+-              empty_trip(trip2) and same_as_ref(rc, out) and "source=override" in line,
++              same_as_ref(rc, out) and "source=override" in line,
+               {"tripwire_bytes": os.path.getsize(trip2), "output_matches_reference": same_as_ref(rc, out),
+                "echo_line": line},
+               [{"scenario": "S9", "rc": rc, "stderr_tail": err[-600:]}])

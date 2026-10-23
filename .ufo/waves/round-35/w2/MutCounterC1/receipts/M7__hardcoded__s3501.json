@@ -1,0 +1,184 @@
+{
+ "elapsed_s": 0.69,
+ "gate": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-35/controls/ctl-c1-hardcoded-grep.sh",
+ "gate_sha256": "05bdf6543858a551852b6b9725d4cd327140f8d94589ae87ce82c5232248a378",
+ "label": "GREP_PIN_MATCH=3/9",
+ "matched": 3,
+ "predicate_holds": false,
+ "reference": {
+  "drift": true,
+  "obs": {
+   "K1": [
+    "supported",
+    "match"
+   ],
+   "K2": [
+    "unsupported",
+    "mismatch"
+   ],
+   "K3": [
+    "unsupported",
+    "mismatch"
+   ]
+  },
+  "rc": 1
+ },
+ "reference_sane": true,
+ "runs": [
+  {
+   "drift": true,
+   "obs": {
+    "K1": [
+     "supported",
+     "match"
+    ],
+    "K2": [
+     "unsupported",
+     "mismatch"
+    ],
+    "K3": [
+     "unsupported",
+     "mismatch"
+    ]
+   },
+   "rc": 1,
+   "scenario": "reference",
+   "stderr_tail": ""
+  },
+  {
+   "rc": 1,
+   "scenario": "S1",
+   "stderr_tail": ""
+  },
+  {
+   "rc": 1,
+   "scenario": "S2",
+   "stderr_tail": ""
+  },
+  {
+   "rc": 1,
+   "scenario": "S3",
+   "stderr_tail": ""
+  },
+  {
+   "rc": 1,
+   "scenario": "S4",
+   "stderr_tail": ""
+  },
+  {
+   "rc": 1,
+   "scenario": "S5",
+   "stderr_tail": ""
+  },
+  {
+   "rc": 1,
+   "scenario": "S6",
+   "stderr_tail": "",
+   "stub_calls": ""
+  },
+  {
+   "echo_line": "",
+   "rc": 1,
+   "scenario": "S7",
+   "stderr_tail": ""
+  },
+  {
+   "echo_line": "",
+   "rc": 1,
+   "scenario": "S8",
+   "stderr_tail": ""
+  },
+  {
+   "rc": 1,
+   "scenario": "S9",
+   "stderr_tail": ""
+  }
+ ],
+ "scenarios": [
+  {
+   "detail": {
+    "output_matches_reference": true,
+    "rc": 1,
+    "tripwire_bytes": 0
+   },
+   "pass": true,
+   "scenario": "S1-shim-first-path"
+  },
+  {
+   "detail": {
+    "output_matches_reference": true,
+    "rc": 1,
+    "tripwire_bytes": 0
+   },
+   "pass": true,
+   "scenario": "S2-bash-env-function"
+  },
+  {
+   "detail": {
+    "output_matches_reference": true,
+    "path_tools": 38,
+    "rc": 1,
+    "stderr_tail": ""
+   },
+   "pass": true,
+   "scenario": "S3-no-grep-on-path"
+  },
+  {
+   "detail": {
+    "marker": false,
+    "rc": 1,
+    "stderr_tail": ""
+   },
+   "pass": false,
+   "scenario": "S4-override-relative"
+  },
+  {
+   "detail": {
+    "marker": false,
+    "rc": 1,
+    "stderr_tail": ""
+   },
+   "pass": false,
+   "scenario": "S5-override-missing"
+  },
+  {
+   "detail": {
+    "marker": false,
+    "rc": 1,
+    "stderr_tail": "",
+    "stub_calls": 0
+   },
+   "pass": false,
+   "scenario": "S6-override-non-gnu"
+  },
+  {
+   "detail": {
+    "echo_line": "",
+    "output_matches_reference": true,
+    "rc": 1
+   },
+   "pass": false,
+   "scenario": "S7-override-real-echo"
+  },
+  {
+   "detail": {
+    "echo_line": "",
+    "output_matches_reference": true,
+    "rc": 1
+   },
+   "pass": false,
+   "scenario": "S8-default-echo"
+  },
+  {
+   "detail": {
+    "echo_line": "",
+    "output_matches_reference": true,
+    "tripwire_bytes": 0
+   },
+   "pass": false,
+   "scenario": "S9-override-beats-shim"
+  }
+ ],
+ "seed": 3501,
+ "total": 9
+}
