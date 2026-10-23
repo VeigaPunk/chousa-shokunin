@@ -311,7 +311,7 @@ the round-25 entry/lesson; no unindexed base file remains.
   resolves; the hardening closes glued truncation/padding, not quoting less
   than the sentence (`knowledge/anchor-boundaries-r4.md`,
   `evidence/boundary-r4-20261016T002701Z-attacks.log`). The r2/r3 marker,
-  uniqueness, exemption-truth and external-source limits stand unchanged.
+  uniqueness, exemption-truth and external-source limits stand unchanged (exemption-truth: see the Round32 disposition).
 - `knowledge/chain-resolution-r3.md` cites the superseded
   `chain-r3-20261015T235411Z-live.log` for its one-byte-truncated-anchor
   example (that cut was removed in-wave; Round-3 evidence above) — the
@@ -325,7 +325,9 @@ the round-25 entry/lesson; no unindexed base file remains.
   first occurrence; transitivity and entailment-level verification remain
   unbuilt, the `verify-claims` `claim` label stays unchecked, and exemption is
   the record's own declaration, never verified
-  (`knowledge/chain-resolution-r3.md`).
+  (`knowledge/chain-resolution-r3.md`). (Round 32 note: for `unresolved`,
+  `blocked-no-fetch` and `labelled-dead` this is no longer true — a locally
+  resolvable hop drifts; `knowledge/exempt-hop-audit-r32.md`.)
 - Carried residuals stand from rounds 2–3: all three landed — in-root hardlinks bypass path canonicalization closed at round 13 (`CLAIM_SOURCE_MULTILINKED` refuse-unread, `knowledge/hardlink-alias-r13.md`), cross-device mount aliases at round 14 (`CLAIM_SOURCE_CROSS_DEVICE` refuse-unread against the resolving root's device, `knowledge/mount-alias-r14.md`), and the other two at round 12: the 8 MiB source-read cap (`CLAIM_SOURCE_READ_TOO_LARGE` / `CHAIN_SOURCE_READ_TOO_LARGE`, refused before any read, at the shared `claim_source_path` chokepoint) and the banner contract (`VERSION=v2`; r12 baseline re-pinned, `knowledge/gate-baseline-r12.md`).
 - Receipt identity for mission acceptance is still open (round 1): no authentic
   queue taskKey or expected receipt bag exists, so proven receipt-backed rounds
@@ -966,3 +968,27 @@ Still open: line binding for records' `## Claims` table pointers (`path:N`) in `
 chain hops, uniqueness, and whether the named line is the right one for the claim's meaning; a
 claim without a pin is not checked for revision. The quote re-open items of rounds 29 and 30 and
 the L0 fetch-scope question stay carried.
+
+## Round32 frontier disposition (2026-10-23)
+
+Moved from frontier to held ground, measured on synthetic fixtures on gate `10f2fe12…`:
+
+- Concurrent `verify-all --json` appenders (carried since round 24): the probe and the append are
+  one `flock -x` critical section on the manifest's own open file; a writer that locks the manifest
+  excludes the gate's probe and append (C1, `APPEND_SERIALIZED` 0/24 → 24/24 under counter v2;
+  `knowledge/manifest-append-lock-r32.md`, S060).
+- Exempt chain hops (round 3: "exemption is record-declared and unverifiable"): hops marked
+  `unresolved`, `blocked-no-fetch` or `labelled-dead` are read with the resolved-hop rules and a
+  resolvable one drifts with `CHAIN_EXEMPT_RESOLVABLE` (C2, `EXEMPT_AUDIT_MATCH` 0/132 → 132/132
+  under counter v2; `knowledge/exempt-hop-audit-r32.md`, S061). `rejected` and `not-applicable`
+  stay unread.
+
+Still open: non-cooperating writers and network filesystems (C1); URL hops, transitive chains and
+whether a local copy is the source the hop meant (C2); nested `"line"`/`"sha256"` keys read as the
+record's own (round-31 carry); line binding for `## Claims` table pointers; the quote re-open items
+of rounds 29 and 30 and the L0 fetch-scope question.
+
+| Entry | What it holds | Evidence |
+|---|---|---|
+| `knowledge/manifest-append-lock-r32.md` | Round-32 note: the round-24 probe/append race closed by one flock-held critical section on the manifest; why the manifest and not a sibling lock file; why the counter delays writes; limits | `S060`; `evidence/round32/claims.md` (design v2); `.ufo/waves/round-32/measure/after-c1-*.json` |
+| `knowledge/exempt-hop-audit-r32.md` | Round-32 note: "could not be followed" audited locally for three statuses; what a `CHAIN_EXEMPT_RESOLVABLE` finding means; the 16 counter classes; limits | `S061`; `evidence/round32/claims.md` (design v2); `.ufo/waves/round-32/measure/after-c2-*.json` |

@@ -3297,8 +3297,26 @@ verify_all() {
       printf 'research-gate: manifest lock failed: %s\n' "$JSON_ARG" >&2
       exit 2
     fi
-    if [[ -s $JSON_ARG ]]; then
-      jlast=$(tail -c1 -- "$JSON_ARG" 2>/dev/null | od -An -tx1 | tr -d ' \n' || true)
+    # Probe the file the locked fd refers to, not the path: if PATH is a
+    # symlink retargeted after the open, a path probe would read another
+    # file's last byte while the append goes to the locked one (SentinelC1After,
+    # round 32). /proc/$$/fd/N reopens the fd's own inode; without /proc the
+    # path is the only handle.
+    local jprobe=$JSON_ARG
+    if [[ -e /proc/$$/fd/$jfd ]]; then
+      jprobe=/proc/$$/fd/$jfd
+    fi
+    if [[ -s $jprobe ]]; then
+      jlast=$(tail -c1 -- "$jprobe" 2>/dev/null | od -An -tx1 | tr -d ' \n' || true)
+      # Non-empty but unreadable now (setup admits an empty unreadable
+      # manifest; a cooperating writer may have filled it before this lock):
+      # the delimiter cannot be decided, so refuse rather than glue
+      # (CriticC1Contract, round 32).
+      if [[ -z $jlast ]]; then
+        exec {jfd}>&-
+        printf 'research-gate: manifest unreadable under lock (its last byte decides the delimiter): %s\n' "$JSON_ARG" >&2
+        exit 2
+      fi
     fi
     if [[ -n $jlast && $jlast != 0a ]]; then
       line=$'\n'$line
@@ -6907,7 +6925,7 @@ EOF
     'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=2/2' \
     'CLAIM id=N1 expected=supported observed=supported source=lib/span.md at=line:1 verdict=match' \
     'CLAIM id=N2 expected=unsupported observed=unsupported source=lib/span.md at=- verdict=match'
-  # ---- r31 C2: revision binding via optional "sha256" (cases 216-228) ----
+  # ---- r31 C2: revision binding via optional "sha256" (cases 220-228) ----
   # A present "sha256" pins the exact bytes of the source file: malformed
   # present values invalidate the record (CLAIM_RECORD_INVALID); a mismatch is
   # observed=stale with CLAIM_SOURCE_REVISION_MISMATCH before and regardless of
@@ -7094,11 +7112,11 @@ EOF
   # ---- round-32 C1 (r32): the --json append is one lock-held critical
   # section (verify_all opens the manifest for append on a dedicated fd, takes
   # a blocking exclusive flock(2) on that fd, then probes the last byte and
-  # writes, then closes). 229: a cooperating holder of LOCK_EX on the manifest
+  # writes, then closes). 233: a cooperating holder of LOCK_EX on the manifest
   # keeps verify-all before its probe — while the gate is blocked the file
   # holds exactly the holder's unterminated fragment — and the append happens
   # only after release, terminating the fragment (two lines, no blank line,
-  # fragment otherwise intact). 230: the lock is gone when the gate returns, so
+  # fragment otherwise intact). 234: the lock is gone when the gate returns, so
   # a second verify-all appends its own line on the same inode.
   printf 'lock source line\n' >"$WORK/c1lk-src.txt"
   printf '{"id":"LK1","source":"c1lk-src.txt","span":"lock source line","expect":"supported"}\n' \

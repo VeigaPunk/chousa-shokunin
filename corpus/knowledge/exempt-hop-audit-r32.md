@@ -13,10 +13,12 @@ A `## Chain` hop records how a citation was followed. Until round 32 `verify-cha
 its cited anchor sat in a local source under the boundary. Round 3 named this: "exemption is
 record-declared and unverifiable".
 
-S061 shows why the label alone says little. A 410 says the resource is no longer available at the
-origin server; neither 404 nor 410 says anything about a copy elsewhere. "Could not be followed" is
-a statement about one access path. Whether the cited text is in a local copy is a separate question
-the gate can answer without a network read.
+S061 (RFC 9110) defines what a server can say about availability: a 410 says the target resource
+is no longer available at the origin server, and a 404 does not say whether an absence is
+temporary or permanent. Both statements are about the origin server. **[INFERENCE]** (lane
+reasoning, not in the RFC): a hop label such as "could not be followed" therefore says something
+about one access path, and whether the cited text sits in a local copy is a separate question the
+gate can answer without a network read.
 
 ## The audit
 

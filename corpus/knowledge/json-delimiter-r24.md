@@ -75,3 +75,8 @@ write-only manifest exits 2 with its bytes unchanged.
 - The `--drift` truncated-baseline item from the round-20 named debt was
   re-measured at the round-24 opening as not a defect (`LOG.md` round-24
   opening): every truncation form exits 1 with `GATE_DRIFT: <tokens>`.
+
+Round 32 update (2026-10-23, appended): the "named debt, not fixed" concurrency observation above
+is closed on gate `10f2fe12…`: the probe and the append now run under one `flock -x` on the
+manifest's open file (`knowledge/manifest-append-lock-r32.md`). The text above is kept as the
+round-24 record.

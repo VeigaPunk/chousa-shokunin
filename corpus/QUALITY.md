@@ -252,15 +252,15 @@ the admitted entry that motivates it. Tier definitions live in
 33. **A detector-kill sentence is receipt-backed.** A lesson sentence saying a named detector
     "killed" or "caught" a named mutant cites that detector's committed receipt for that mutant,
     and for a count-based counter the receipt shows `matched < total`; `matched == total` means
-    the counter did not kill it. Shown able to fail: on the round-31 lesson text the check in
-    `.ufo/waves/round-32/w1/ScribeQualityR1/quality.md` prints `FAIL: round-31.md:98 calls
-    fail-open counter-killed … =120/120` and exits 1. — `lessons/round-32.md`; routed R1.
+    the counter did not kill it. Shown able to fail: `python3 corpus/evidence/round32/q33-check.py` prints `FAIL` and exits 1
+    on the round-31 lesson as committed at `4111607c`, and `PASS` (exit 0) on the lesson with the
+    round-32 correction appended. — `lessons/round-32.md`; routed R1.
 34. **A counter for an ordering or locking claim forces the window it checks.** If a wrong
     implementation's race window is shorter than the harness can observe, the counter widens it
     (delay injection, a held cooperating lock) before counting. Shown able to fail: a gate that
     locks only around the probe scored 24/24 under round-32 C1 v1 and 0/24 under v2, whose only
     change is a 300 ms delay on every write to the manifest
-    (`.ufo/waves/round-32/w1/CtlC1PartialLockB/`, `controls/L1-design-v2/c1-probeonly-s3201.json`).
+    (`.ufo/waves/round-32/w1/CtlC1PartialLockB/b-s3247102{1,2}.json` and `v2/mutated-b-probe-only-s3247202{1,2}.json`, gate `034f786b…`).
     — `lessons/round-32.md`; `evidence/round32/claims.md` Design v2.
 35. **A control gate is scored in the gate's own layout.** The lane gate derives its lane root
     from its own path (`research-gate.sh` `LANE_ROOT`), so a control or oracle gate is placed at

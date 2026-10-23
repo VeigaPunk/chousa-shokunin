@@ -47,9 +47,9 @@ Carried: nested `"line"`/`"sha256"` keys are still read as the record's own (una
 
 | Class | Evidence | Captured-by | Fix |
 |---|---|---|---|
-| A lesson called a mutant counter-killed though both counter receipts are 120/120 | `lessons/round-31.md:97-98`; `.ufo/waves/round-31/falsify/MutC2Hash/failopen.mutated.*.receipt.json` (120/120, `predicate_holds=true`) | none in the lane; the round-31 outside spot-check (R1) | correction appended; QUALITY 33. Shown able to fail: the check in `w1/ScribeQualityR1/quality.md` prints FAIL and exits 1 on the round-31 text |
-| A counter checked final bytes but not whether the lock covered the write, so a probe-only lock met C1 v1 | `w1/CtlC1PartialLockB/b-s32471021.json` 24/24 | the pre-data control wave (round prompt Correction rule) — before any candidate | design v2 (strace write delay); QUALITY 34. Shown able to fail: the same control scores 0/24 under v2 (`controls/L1-design-v2/c1-probeonly-s3201.json`) |
-| A counter de-duplicated findings and ignored the record verdict, so wrong output met C2 v1 | `w1/MutC2CounterB/frozen-duplicate-finding-*` 120/120; `w1/CtlC2NoisyB` duplicate-only 120/120 | QUALITY 32 covers the finding set but not its multiplicity or the record verdict; caught by the control wave | design v2 (counted findings, record checks). Shown able to fail: duplicate-only scores 96/132 under v2 (`controls/L1-design-v2/c2-dup-s322{1,2}.json`) |
+| A lesson called a mutant counter-killed though both counter receipts are 120/120 | `lessons/round-31.md:97-98`; `.ufo/waves/round-31/falsify/MutC2Hash/failopen.mutated.*.receipt.json` (120/120, `predicate_holds=true`) | none in the lane; the round-31 outside spot-check (R1) | correction appended; QUALITY 33. Shown able to fail: `corpus/evidence/round32/q33-check.py` prints FAIL (exit 1) on the round-31 lesson at `4111607c` and PASS (exit 0) after the correction. (The first draft check, `w1/ScribeQualityR1/quality.md`, failed on both texts and could not show the fix; CriticMistakes32) |
+| A counter checked final bytes but not whether the lock covered the write, so a probe-only lock met C1 v1 | `w1/CtlC1PartialLockB/b-s32471021.json` 24/24 | the pre-data control wave (round prompt Correction rule) — before any candidate | design v2 (strace write delay); QUALITY 34. Shown able to fail: the same control (gate `034f786b…`) scores 0/24 under v2 (`w1/CtlC1PartialLockB/v2/mutated-b-probe-only-s3247202{1,2}.json`) |
+| A counter de-duplicated findings and ignored the record verdict, so wrong output met C2 v1 | `w1/MutC2CounterB/frozen-duplicate-finding-*` 120/120; `w1/CtlC2NoisyB` duplicate-only 120/120 | existing QUALITY 19 (negative controls must reject wrong exits and absent verdict records) and 20 (finding multiplicity; "a code-set comparison cannot detect invented duplicate occurrences") should have caught it before v1 froze; the control wave caught it (CriticMistakes32) | design v2 (counted findings, record checks). Shown able to fail: duplicate-only scores 96/132 under v2 (`controls/L1-design-v2/c2-dup-s322{1,2}.json`) |
 | Control gates scored in a flat scratch layout put the out-of-corpus fixture inside the gate's lane root; the L1 also kept four "weak-reader" receipts whose gate bytes had been restored to the base | `w1/CtlC2StatusBlindB.md`, `w1/CtlC2WeakReaderB.md` (E7 0/6 flat); the four L1 receipts carried `gate_sha256` `0bc318b3` and were deleted before commit | none | v2 layout guard; QUALITY 35. Shown able to fail: `C2_TMP` inside the gate's lane root → exit 2 |
 
 ## Gate
@@ -58,10 +58,17 @@ New source rows, opened by ScribeSourceC1 / ScribeSourceC2 and re-opened by the 
 SHA-256, quote found once with `grep -cF`):
 
 - S060 — https://docs.python.org/3/library/fcntl.html, accessed 2026-10-23, HTTP 200, sha256
-  `025727ff…3dda3`. Quote: "Acquire an exclusive lock." Admitted tier A for the call shape only.
+  `025727ff…3dda3` (06:37 UTC footer build; a 07:26 re-GET differs only in that footer line,
+  `0189dd49…1e56`, ReopenS060). Quotes: "Perform the lock operation operation on file descriptor
+  fd" (`fcntl.flock`; found once in the tag-stripped body) and "Acquire an exclusive lock."
+  (`LOCK_EX`, listed under `fcntl.lockf`'s cmd values). Admitted tier A for the call shape only.
+  Corrected in-round after ReopenS060: the first row text read the `LOCK_EX` quote as part of
+  `fcntl.flock` and did not mark the flock(1) link as inference.
 - S061 — https://www.rfc-editor.org/rfc/rfc9110.txt, accessed 2026-10-23, HTTP 200, sha256
   `21c1cdce…47232a`. Quote (§15.5.11): "resource is no longer available at the origin server".
   Admitted tier A for origin-server semantics only; the local-audit rule is lane design.
+  Corrected in-round after ReopenS061: the first `teaches` cell and the knowledge entry stated the
+  "one access path" reading as the RFC's; it is now marked as lane inference.
 
 Status / recheck / used-by changes: none to existing rows (S001–S059 untouched).
 

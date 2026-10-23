@@ -187,3 +187,30 @@ Before any candidate is scored, the control-wave seats re-score their controls u
 counters; their receipts are committed before the first candidate receipt. A control that meets
 P1 v2 or P2 v2 stops data: the claim then lands as a miss or is declared exploratory, never
 re-scaled.
+
+## Post-data notes (appended after the falsify wave; no predicate, counter, class or target changed)
+
+- Correction to "L1 receipts under v2" for C1 above: the four control receipts named append-only,
+  probe-only, cached probe and shared lock were base-gate reruns (gate `0bc318b3…`; the seat had
+  restored its scratch gates). The genuine v2 control receipts are the seat's
+  `.ufo/waves/round-32/w1/CtlC1PartialLockB/v2/mutated-*` (0/24 each, gates `4a39b997…`,
+  `034f786b…`, `59ea2a22…`, `76c4c073…`), committed at `f43dd5a3` before the first candidate
+  receipt. See `.ufo/waves/round-32/controls/L1-design-v2/CORRECTION.md` (found by ReceiptCensus32).
+- Separability under v2: the v1 text above expects "C2 counter on the C1-only build prints 84/120";
+  under v2 the base value is 0/132. SepAudit32 measured C2 v2 on the C1-only gate `3144a46f…` = 0/132
+  and C1 v2 on the C2-only gate `2a21aa43…` = 0/24 (`.ufo/waves/round-32/w2/SepAudit32/`).
+- The C2 v2 counter's docstring paragraph "one record whose `## Chain` table holds 120 hops" is stale
+  (the record holds 132 since change 4); the code (`TOTAL = 132`, the class table) is what counts.
+  The counter is frozen and is not edited.
+- Post-falsify gate repairs (C1 block only; counters, predicates and classes unchanged): the probe
+  reads the locked descriptor's file through `/proc/$$/fd/N` instead of the path (a symlink
+  retargeted after the open made the path probe read another file; SentinelC1After), and a
+  non-empty manifest that cannot be read under the lock is refused with exit 2 instead of being
+  appended to without a delimiter decision (CriticC1Contract). Final gate SHA-256 `f4731885…`;
+  P1 and P2 are re-measured on the revision that carries it. Probe evidence:
+  `.ufo/waves/round-32/measure/post-falsify/c1-fix-probe.{py,out}`.
+- §9 counterexample to C2, found post-data (CriticAxis32): a control that never opens a cited
+  source — it ranks local source files by (mtime, inode) and flags the first 36 — scores
+  `EXEMPT_AUDIT_MATCH=132/132` on two fresh seeds, because the counter writes the 36 resolvable
+  sources before every negative class (`c2-count-v2.py` generate loop). Under the kill rule the
+  counter is not amended; C2 is reported as not verified by its frozen measure.
