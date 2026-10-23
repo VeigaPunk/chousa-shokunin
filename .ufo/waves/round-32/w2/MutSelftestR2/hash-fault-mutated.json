@@ -1,0 +1,30 @@
+{
+  "name": "hash-fault",
+  "phase": "mutated",
+  "command": "timeout --signal=TERM --kill-after=5s 600s bash /fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/hash-fault/lane/tools/research-gate.sh --selftest",
+  "cwd": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/hash-fault/lane",
+  "TMPDIR": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/hash-fault/tmp",
+  "rc": 1,
+  "elapsed_s": 152.306,
+  "output_bound_holds": true,
+  "gate_before_sha256": "091825c346ad1f9796a413ab91e972a8391e2d976443e4258828f070689b6582",
+  "gate_after_sha256": "091825c346ad1f9796a413ab91e972a8391e2d976443e4258828f070689b6582",
+  "log_sha256": "0bbe20523f1ffb3e2b54e4639514c4b0c0a4674049b4032ceffa10b7df1271bb",
+  "log_bytes": 13029,
+  "failing_cases": [
+    "r2-hash-fault-shim"
+  ],
+  "r2_cases": [
+    "ok-case  235 claims-r2-sha-nonstring      exit=1",
+    "ok-case  236 claims-r2-line-nonstring     exit=1",
+    "ok-case  237 claims-r2-endline            exit=1",
+    "ok-case  238 claims-r2-span-stale         exit=1",
+    "ok-case  239 claims-r2-ws-pin             exit=1",
+    "FAIL-case r2-hash-fault-shim           control_rc=0 fault_rc=0",
+    "ok-case  241 claims-r2-nested-string      exit=0"
+  ],
+  "summary": [
+    "RESEARCH_GATE_SELFTEST: FAIL (1/241 cases)"
+  ],
+  "process_group_kill_attempted": true
+}

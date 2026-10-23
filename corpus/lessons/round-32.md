@@ -51,6 +51,8 @@ Carried: nested `"line"`/`"sha256"` keys are still read as the record's own (una
 | A counter checked final bytes but not whether the lock covered the write, so a probe-only lock met C1 v1 | `w1/CtlC1PartialLockB/b-s32471021.json` 24/24 | the pre-data control wave (round prompt Correction rule) — before any candidate | design v2 (strace write delay); QUALITY 34. Shown able to fail: the same control (gate `034f786b…`) scores 0/24 under v2 (`w1/CtlC1PartialLockB/v2/mutated-b-probe-only-s3247202{1,2}.json`) |
 | A counter de-duplicated findings and ignored the record verdict, so wrong output met C2 v1 | `w1/MutC2CounterB/frozen-duplicate-finding-*` 120/120; `w1/CtlC2NoisyB` duplicate-only 120/120 | existing QUALITY 19 (negative controls must reject wrong exits and absent verdict records) and 20 (finding multiplicity; "a code-set comparison cannot detect invented duplicate occurrences") should have caught it before v1 froze; the control wave caught it (CriticMistakes32) | design v2 (counted findings, record checks). Shown able to fail: duplicate-only scores 96/132 under v2 (`controls/L1-design-v2/c2-dup-s322{1,2}.json`) |
 | Control gates scored in a flat scratch layout put the out-of-corpus fixture inside the gate's lane root; the L1 also kept four "weak-reader" receipts whose gate bytes had been restored to the base | `w1/CtlC2StatusBlindB.md`, `w1/CtlC2WeakReaderB.md` (E7 0/6 flat); the four L1 receipts carried `gate_sha256` `0bc318b3` and were deleted before commit | none | v2 layout guard; QUALITY 35. Shown able to fail: `C2_TMP` inside the gate's lane root → exit 2 |
+| A C2 fixture wrote its 36 resolvable sources before every negative class, so file metadata (mtime, inode order) encodes the truth; a control that never opens a source scores 132/132 under P2 v2 | `.ufo/waves/round-32/w2/CriticAxis32/control-metadata-s3232002{1,2}.json`; `c2-count-v2.py` generate loop | none before data (the control wave built label- and id-keyed shortcuts, not metadata-keyed ones); CriticAxis32 post-data | C2 reported not verified; next round's measure must shuffle source creation order and score this exact control before freezing (proposed, not yet shown able to fail) |
+| The L1 scored four seat control gates after the seat had restored them to base bytes and committed the receipts under control names | `controls/L1-design-v2/c1-{appendonly,cached,probeonly,shared}-s3201.json` all gate `0bc318b3`; ReceiptCensus32, MutCounterC1v2 | QUALITY 35's spirit (score a control in a known layout), not its letter; caught post-data | `controls/L1-design-v2/CORRECTION.md`; the seat's own mutated-byte receipts cited instead. Check: every control receipt's `gate_sha256` differs from the base gate's — `jq -r .gate_sha256` on the four files prints `0bc318b3…` (fails), on `w1/CtlC1PartialLockB/v2/mutated-*` prints four other hashes (passes) |
 
 ## Gate
 
@@ -84,3 +86,29 @@ Rejects (real, with reason):
   allowed mutated scratch copies, and the seat ran them.
 - Not opened: `https://en.wikipedia.org/wiki/Link_rot` (lower tier than RFC 9110 for the same point);
   `https://docs.python.org/3/library/os.html` (O_APPEND is not a fact either claim needs).
+
+## Falsify wave findings (33 seats, `.ufo/waves/round-32/w2/`)
+
+- **C1 held.** Every committed counter run on a landed gate printed 24/24 (`10f2fe12` ×18,
+  `f4731885` ×3). Mutants without the lock, with the unlock before the write, a shared lock, the
+  probe before the lock, or a non-blocking lock all score 0/24 (MutC1Gate); writing through a fresh
+  `>>PATH` inside the lock is equivalent and scores 24/24. The selftest alone misses the
+  unlock-before-write and probe-before-lock mutants; the counter catches them.
+- **C1 contract breaks outside the counter, repaired in-round:** a symlinked manifest retargeted
+  after the open made the path probe read another file (SentinelC1After); a cooperating writer
+  filling an empty write-only manifest before the lock made the gate glue its line
+  (CriticC1Contract). Both fixed at `53cf649c`: the probe reads `/proc/$$/fd/N`, and a non-empty
+  manifest unreadable under the lock is refused (exit 2). Before/after:
+  `.ufo/waves/round-32/measure/post-falsify/c1-fix-probe.out`. P1 re-measured on the final gate.
+- **C2 not verified.** P2 v2 is met by the landed gate on every run, and the audit itself held
+  every behavioural attack (ReviewC2Probe32, MutC2Gate 7/7 killed, SentinelC2After, NoHarmCorpus32,
+  CriticAxis32's negative-anchor witness), but CriticAxis32's metadata-order control also scores
+  132/132. Under §9 the counter does not show the claimed reading.
+- Source rows S060 and S061 were over-read in their first text (ReopenS060, ReopenS061); corrected
+  in-round and logged in `## Gate`.
+- Disclosed behaviour change: a host without flock(1) is refused with exit 2 before the report, as
+  the gate already does when sha256sum is missing (NoHarmAfter32).
+
+Round shape: pre-data control + build wave 39 seats (validated v1), falsify wave 33 seats
+(validated v1); round total 72. Holds (safety-filter refusals, ended, not retried): CtlC1ShortcutB,
+CriticPredicateGaps32b, CtlC1JitterB's v2 re-score. Dead seats: none.

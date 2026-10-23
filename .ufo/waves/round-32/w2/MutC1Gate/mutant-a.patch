@@ -1,0 +1,13 @@
+--- pristine/tools/research-gate.sh
++++ mutant-a/tools/research-gate.sh
+@@ -3293,10 +3293,6 @@
+       printf 'research-gate: manifest open failed: %s\n' "$JSON_ARG" >&2
+       exit 2
+     fi
+-    if ! flock -x "$jfd"; then
+-      printf 'research-gate: manifest lock failed: %s\n' "$JSON_ARG" >&2
+-      exit 2
+-    fi
+     if [[ -s $JSON_ARG ]]; then
+       jlast=$(tail -c1 -- "$JSON_ARG" 2>/dev/null | od -An -tx1 | tr -d ' \n' || true)
+     fi

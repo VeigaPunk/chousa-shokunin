@@ -1,0 +1,32 @@
+{
+  "name": "span-before-stale",
+  "phase": "mutated",
+  "command": "timeout --signal=TERM --kill-after=5s 600s bash /fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/span-before-stale/lane/tools/research-gate.sh --selftest",
+  "cwd": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/span-before-stale/lane",
+  "TMPDIR": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/span-before-stale/tmp",
+  "rc": 1,
+  "elapsed_s": 152.397,
+  "output_bound_holds": true,
+  "gate_before_sha256": "409704c16a494949aedfafd437eb8e7978e712be45156fd0b8b44256ec7e959d",
+  "gate_after_sha256": "409704c16a494949aedfafd437eb8e7978e712be45156fd0b8b44256ec7e959d",
+  "log_sha256": "7ee86c475cd5871bb4a1a28183c64bbc1169de8b4bd26ca08dffee713c4223be",
+  "log_bytes": 15691,
+  "failing_cases": [
+    "claims-sha-stale",
+    "claims-r2-span-stale",
+    "r2-hash-fault-shim"
+  ],
+  "r2_cases": [
+    "ok-case  235 claims-r2-sha-nonstring      exit=1",
+    "ok-case  236 claims-r2-line-nonstring     exit=1",
+    "ok-case  237 claims-r2-endline            exit=1",
+    "FAIL-case claims-r2-span-stale         exit=1 want=1 verdicts=1 vbearing=1 token=RESEARCH_GATE: DRIFT FINDING CLAIM_SOURCE_REVISION_MISMATCH severity=warn surface=claims CLAIM id=SB1 expected=supported observed=stale source=claimsrc/sha-src-tampered.txt at=- verdict=mismatch CLAIM id=SB2 expected=supported observed=stale source=claimsrc/sha-src-tampered.txt at=- verdict=mismatch CLAIM id=SB3 expected=supported observed=stale source=claimsrc/sha-src-tampered.txt at=- verdict=mismatch pin=ed82fd71c85e actual=a1b069a5106d VERDICT_BEARING_CLAIMS=0/3 claims=3 supported=0 contradicted=0 unsupported=0 mismatched=3 unproven=0 refused=0 invalid=0 findings=3 drift=3",
+    "ok-case  239 claims-r2-ws-pin             exit=1",
+    "FAIL-case r2-hash-fault-shim           control_rc=0 fault_rc=0",
+    "ok-case  241 claims-r2-nested-string      exit=0"
+  ],
+  "summary": [
+    "RESEARCH_GATE_SELFTEST: FAIL (3/241 cases)"
+  ],
+  "process_group_kill_attempted": true
+}

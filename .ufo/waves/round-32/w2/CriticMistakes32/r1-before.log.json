@@ -1,0 +1,23 @@
+{
+  "name": "r1-before",
+  "command": [
+    "timeout",
+    "--kill-after=5s",
+    "30s",
+    "prlimit",
+    "--nproc=8000",
+    "--fsize=1048576",
+    "--",
+    "python3",
+    "/fast/scratch/hyaku/chousa-r32/w2/CriticMistakes32/r1-check.py"
+  ],
+  "cwd": "/fast/scratch/hyaku/chousa-r32/w2/CriticMistakes32/before",
+  "environment": {
+    "C1_TMP": "/fast/scratch/hyaku/chousa-r32/w2/CriticMistakes32/tmp",
+    "C2_TMP": "/fast/scratch/hyaku/chousa-r32/w2/CriticMistakes32/tmp",
+    "TMPDIR": "/fast/scratch/hyaku/chousa-r32/w2/CriticMistakes32/tmp"
+  },
+  "exit_code": 1,
+  "stdout": "FAIL: round-31.md:98 calls fail-open counter-killed; receipt citations missing; all-match receipts: failopen.mutated.3277349906142620654.receipt.json=120/120, failopen.mutated.9879869915017300514.receipt.json=120/120\n",
+  "stderr": ""
+}

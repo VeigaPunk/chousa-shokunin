@@ -1,0 +1,30 @@
+{
+  "name": "endline",
+  "phase": "mutated",
+  "command": "timeout --signal=TERM --kill-after=5s 600s bash /fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/endline/lane/tools/research-gate.sh --selftest",
+  "cwd": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/endline/lane",
+  "TMPDIR": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/endline/tmp",
+  "rc": 1,
+  "elapsed_s": 152.457,
+  "output_bound_holds": true,
+  "gate_before_sha256": "8cffa223fcd506223d417bef745e12a021525d7183a648f825993f6aa5bd45d2",
+  "gate_after_sha256": "8cffa223fcd506223d417bef745e12a021525d7183a648f825993f6aa5bd45d2",
+  "log_sha256": "3d9846bcb70c419f16b5245dcfe8de44033407616ef5add690f00e2027f6b1bb",
+  "log_bytes": 13116,
+  "failing_cases": [
+    "claims-r2-endline"
+  ],
+  "r2_cases": [
+    "ok-case  235 claims-r2-sha-nonstring      exit=1",
+    "ok-case  236 claims-r2-line-nonstring     exit=1",
+    "FAIL-case claims-r2-endline            exit=0 want=1 verdicts=1 vbearing=1 token=RESEARCH_GATE: DRIFT FINDING CLAIM_LINE_MISMATCH severity=warn surface=claims CLAIM id=EL1 expected=supported observed=mislocated source=lib/span.md at=lines:2-3 verdict=mismatch obs=id=EL1 line=3-3 first_delimited_occurrence=lines:2-3 CLAIM id=EX1 expected=supported observed=supported source=lib/span.md at=line:3 verdict=match VERDICT_BEARING_CLAIMS=1/2 claims=2 supported=1 contradicted=0 unsupported=0 mismatched=1 unproven=0 refused=0 invalid=0 findings=1 drift=1",
+    "ok-case  238 claims-r2-span-stale         exit=1",
+    "ok-case  239 claims-r2-ws-pin             exit=1",
+    "ok-case  240 r2-hash-fault-shim           exit=1",
+    "ok-case  241 claims-r2-nested-string      exit=0"
+  ],
+  "summary": [
+    "RESEARCH_GATE_SELFTEST: FAIL (1/241 cases)"
+  ],
+  "process_group_kill_attempted": true
+}

@@ -1,0 +1,11 @@
+--- pristine/tools/research-gate.sh
++++ mutant-e/tools/research-gate.sh
+@@ -3303,7 +3303,7 @@
+     if [[ -n $jlast && $jlast != 0a ]]; then
+       line=$'\n'$line
+     fi
+-    if ! printf '%s\n' "$line" >&"$jfd"; then
++    if ! printf '%s\n' "$line" >>"$JSON_ARG"; then
+       printf 'research-gate: manifest append failed: %s\n' "$JSON_ARG" >&2
+       exit 2
+     fi

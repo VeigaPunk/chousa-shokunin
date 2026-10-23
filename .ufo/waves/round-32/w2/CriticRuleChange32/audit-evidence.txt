@@ -1,0 +1,90 @@
+CriticRuleChange32 — static kill-rule audit, 2026-10-23
+Axes: C1 operability (manifest append); C2 coverage (exempt-hop audit).
+All paths below are relative to /home/vgpnk/Projects/shokunin/chousa-shokunin unless absolute.
+No counter, gate, selftest, build, mutation, install, network request, or orchestration runtime was run by this seat.
+This file records observed tool results, not a new candidate measurement.
+
+AUTHORITY OPENED
+/home/vgpnk/Projects/shokunin/.ufo/prompts/chousa-round-32.md:343-365
+- :352-356 controls must discriminate before data.
+- :357-360 counter, kill rule, predicate freeze before candidate scoring.
+corpus/evidence/round32/claims.md:99-103
+- v2 permitted before first candidate receipt and must name forcing control.
+corpus/evidence/round32/claims.md:119-189
+- forcing controls and complete v2 change list.
+
+COMMANDS EXECUTED (cwd = lane; every command bounded)
+1. timeout 10 df -h /fast && timeout 10 mkdir -p /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-32/w2/CriticRuleChange32
+Exit 0. /fast: 804G size, 584G used, 220G available, 73% used.
+2. timeout 15 git --no-pager log --format='%h %aI %s' -16
+Exit 0. Used for initial discovery of round-32 commits.
+3. timeout 20 git --no-pager diff 4111607c 3d586d3a -- corpus/evidence/round32/c1-count-v2.py corpus/evidence/round32/c2-count-v2.py
+Exit 0. Both v2 counters added at freeze; inspected their contents.
+4. timeout 15 git --no-pager diff --no-index -- corpus/evidence/round32/c1-count.py corpus/evidence/round32/c1-count-v2.py
+Exit 1 (normal diff result: differences exist). Semantic changes: strace manifest-write delay, delay self-check/availability, writer wrapper; receipt schema and delay metadata; docstring changes. Existing trial checks, 24-trial plan and deadlines unchanged.
+5. timeout 15 git --no-pager diff --no-index -- corpus/evidence/round32/c2-count.py corpus/evidence/round32/c2-count-v2.py
+Exit 1 (normal diff result). Semantic changes: counted findings; record rc/DRIFT/stray-hop checks with record-wide failure; fixture-root guard; E11/E12; total 120 to 132; corresponding receipt and docstring changes. No other semantic change observed.
+6. timeout 15 git --no-pager log -6 --format='%H %aI %cI %s' && timeout 15 git --no-pager diff --exit-code 3d586d3ae2818193e51a4b2d9e6190157165c319 5d8a170795dcf48c3746a4f03dee9cfe32812834 -- corpus/evidence/round32/claims.md corpus/evidence/round32/c1-count.py corpus/evidence/round32/c1-count-v2.py corpus/evidence/round32/c2-count.py corpus/evidence/round32/c2-count-v2.py && timeout 15 sha256sum corpus/evidence/round32/c1-count.py corpus/evidence/round32/c1-count-v2.py corpus/evidence/round32/c2-count.py corpus/evidence/round32/c2-count-v2.py
+Exit 0. Historical diff printed no output: claims and all four counter files unchanged from frozen v2 through landed measurement revision.
+Key history (author time; committer time):
+4111607c857bc29ff31883bc095ae00afb527e50 2026-10-23T02:47:53-03:00 2026-10-23T03:09:40-03:00
+3d586d3ae2818193e51a4b2d9e6190157165c319 2026-10-23T03:59:47-03:00 2026-10-23T03:59:48-03:00
+f43dd5a3a78d33d3d16a56e8a8e90325a094de04 2026-10-23T04:13:17-03:00 2026-10-23T04:13:17-03:00
+a065845a5bdaf803b14dc7c7837a7a947e39c7db 2026-10-23T04:13:17-03:00 2026-10-23T04:20:56-03:00
+0f96bc1c815f6600b5f1b5cae6d41f4a7a4bc28c 2026-10-23T04:20:56-03:00 2026-10-23T04:21:04-03:00
+5d8a170795dcf48c3746a4f03dee9cfe32812834 2026-10-23T04:25:26-03:00 2026-10-23T04:25:26-03:00
+Counter SHA-256 output:
+9e787e80b215f6522335c639d5e1b2e60d0a5812b83a9760daf8be9f78415885  corpus/evidence/round32/c1-count.py
+e6bf95313ad603ff75e03bb64fbe5a2689a9dfe9bc4c0715a21012383508d891  corpus/evidence/round32/c1-count-v2.py
+b6626b2cb81b2aeaf66a8ff11a06c030612bf4e264dc128f290021c4aa71f54c  corpus/evidence/round32/c2-count.py
+8ec1a1ed44f1d3971a73eeace677cbedd0187563bea063ec6b680261dbb23c8a  corpus/evidence/round32/c2-count-v2.py
+
+SPECIALIZED SEARCHES EXECUTED
+G1: functions.grep(pattern='3144a46f|2a21aa43|82470e57', path='/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-32/w1/', case=false, gitignore=false)
+Result: only ExecC1Build.md:12,93; ExecC2Build.md:10; ExecR2Selftest31.md:17,26. No other file hit. Tool has no numeric exit status.
+G2: functions.grep(pattern='3144a46f|2a21aa43|82470e57', path='/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-32/w1/**/*.json', case=false, gitignore=false)
+Result: No matches found. No numeric tool exit status.
+G3: functions.grep(pattern='ExecC1Build|ExecC2Build|ExecR2Selftest31', path='/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-32/w1/**/*.json', case=false, gitignore=false)
+Result: only swarm-registry.json:239,241,250,252,261,263 (seat registration, not counter receipts).
+G4: functions.grep(pattern='c[12]-count(?:-v2)?\\.py|EXEMPT_AUDIT_MATCH|APPEND_SERIALIZED|candidate|before.data|rule.change', path='/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-32/w1/ExecC1Build/;/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-32/w1/ExecC2Build/', case=false, gitignore=false)
+Result: No matches found.
+
+FORCING-CONTROL RECEIPTS AND SOURCE ANCHORS OPENED
+C1 strace-delay change: claims.md:129-134,145-159; c1-count-v2.py:84-105,148-155,298-319.
+- w1/CtlC1PartialLockB/b-probe-only.patch:7-20 unlocks before printf.
+- w1/CtlC1PartialLockB/b-s32471021.json:3-13: v1 counter 9e787e80; gate 034f786b; UTC 06:49:44Z; elapsed 6.320; 24/24.
+- w1/CtlC1PartialLockB/b-s32471022.json:3-13: same identities; UTC 06:50:36Z; elapsed 5.171; 24/24.
+Paths in this and the following sections begin .ufo/waves/round-32/.
+C2 finding multiplicity: claims.md:135-136,163-169; c2-count-v2.py:322-324,339-343.
+- w1/CtlC2NoisyB/bounded-disjoint-duplicate-only-s5239036554333767031.json:3-14: gate 30225fad; UTC 06:53:20Z; elapsed 6.494; 120/120.
+- w1/CtlC2NoisyB/duplicate-audit.json:22-41,64-83: two findings per each of 36 distinct hops, gate rc=1.
+- w1/MutC2CounterB/frozen-duplicate-finding-s320260230271.json:3-14: gate bc038106; UTC 06:51:56Z; elapsed 0.025; 120/120.
+- w1/MutC2CounterB/raw-observations.json:264-292: 72 findings, 120 CHAIN lines on each seed.
+C2 record checks: claims.md:136-138,164-166; c2-count-v2.py:312-343.
+- w1/MutC2CounterB/frozen-no-verdict-s320260230271.json:3-14: gate 447f3801; UTC 06:51:56Z; elapsed 0.024; gate rc=1; 120/120.
+- w1/MutC2CounterB/raw-observations.json:212-232: verdict and summary arrays empty on both seeds.
+- w1/MutC2CounterB/frozen-clean-exit-s320260230271.json:3-14: gate cf0bc25d; UTC 06:51:56Z; elapsed 0.034; gate rc=0; 120/120.
+- w1/MutC2CounterB/raw-observations.json:234-262: CLEAN verdict and rc=0 on both seeds.
+- w1/MutC2CounterB/frozen-stray-unknown-s320260230271.json:3-14: gate 5b503e64; UTC 06:51:55Z; elapsed 0.023; 120/120.
+- w1/MutC2CounterB/raw-observations.json:182-210: 37 findings vs 36 resolvability findings, 120 CHAIN lines; MutC2CounterB.md:14,19 identifies nonexistent hop.
+These controls independently justify record checks; E11/E12 do not serve as their justification.
+C2 layout guard: claims.md:140-141,166; c2-count-v2.py:290-295.
+- w1/CtlC2StatusBlindB/a-s5437890801268762009.json:4-14,26,104-108: flat gate; UTC 06:50:24Z; elapsed 8.988; E7 0/6; h58ab0ff5 truth=exempt, observed=resolvable.
+- w1/CtlC2StatusBlindB.md:149-165: same unchanged bytes moved to tools/research-gate.sh with fixture temp outside lane root; E7 6/6.
+C2 E11/E12 and 132 target: claims.md:138-140,167-175; c2-count-v2.py:74-97,165-172,251-256.
+- w1/CtlC2WeakReaderB/case-insensitive-isolated-mutated-s3908516132.json:3-14 and s1030166489.json:3-14: gate a0eab06c; UTC 06:56:44Z; elapsed 7.895 and 7.913; 120/120 each.
+- w1/CtlC2WeakReaderB/whitespace-collapse-isolated-mutated-s2971276398.json:3-14 and s1506610368.json:3-14: gate 32e03f4f; UTC 06:56:52Z; elapsed 5.847 and 5.896; 120/120 each.
+- w1/CtlC2WeakReaderB.md:253-259 documents case/spacing witnesses where the mutated U reader resolves but the same citation marked resolved is anchor-missing.
+
+EXPOSURE / CHRONOLOGY EVIDENCE OPENED
+- w1/ExecC1Build.md:3-6,105-120 says build-only, no round-32 counter run; SHA 3144a46f at :12.
+- w1/ExecC2Build.md:3-10,99-104 says not scored; SHA 2a21aa43 at :10.
+- w1/ExecR2Selftest31.md:9-17,23-30 identifies selftest-only patch SHA 82470e57; not a frozen C1/C2 receipt.
+- Design v2 commit committer time from command 6 = 2026-10-23T06:59:48Z.
+- Candidate integration commit 0f96bc1c committer time = 2026-10-23T07:21:04Z.
+- measure/after-c2-s32011.json:4-15 = v2 counter 8ec1a1ed, candidate gate 10f2fe12, UTC 07:21:14Z, 132/132.
+- measure/after-c1-s32001.json:5-15 = v2 counter e6bf9531, candidate gate 10f2fe12, UTC 07:21:31Z, 24/24.
+The named forcing control receipts finish before 06:59:48Z when adding their elapsed_s. The opened candidate measurements start later. No named-build hash appears in the W1 receipt sweep.
+
+SCOPED CONCLUSION
+HOLDS: v2 is legal on the inspected recorded evidence. Every semantic change maps to a named pre-freeze control or the exercised control-layout confound; no pre-v2 candidate counter receipt was located. No correction is indicated by this kill-rule audit. It does not admit either claim and cannot prove the absence of unrecorded executions.

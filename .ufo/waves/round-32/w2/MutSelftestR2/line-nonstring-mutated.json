@@ -1,0 +1,31 @@
+{
+  "name": "line-nonstring",
+  "phase": "mutated",
+  "command": "timeout --signal=TERM --kill-after=5s 600s bash /fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/line-nonstring/lane/tools/research-gate.sh --selftest",
+  "cwd": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/line-nonstring/lane",
+  "TMPDIR": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/line-nonstring/tmp",
+  "rc": 1,
+  "elapsed_s": 152.407,
+  "output_bound_holds": true,
+  "gate_before_sha256": "29ef7dde7430a5c61a2521782e2637af3c8c6fdcd9b2c017f66d9fe205a0093b",
+  "gate_after_sha256": "29ef7dde7430a5c61a2521782e2637af3c8c6fdcd9b2c017f66d9fe205a0093b",
+  "log_sha256": "4c12729431d746819e7efad6cb4f554a4b504a3a4226fac5ffe7e0e95f860da6",
+  "log_bytes": 16297,
+  "failing_cases": [
+    "c1-fail-invalid-line",
+    "claims-r2-line-nonstring"
+  ],
+  "r2_cases": [
+    "ok-case  235 claims-r2-sha-nonstring      exit=1",
+    "FAIL-case claims-r2-line-nonstring     exit=0 want=1 verdicts=1 vbearing=1 token=RESEARCH_GATE: DRIFT line not a JSON string observed=invalid CLAIM id=LN1 expected=supported observed=invalid source=lib/span.md at=- verdict=invalid CLAIM id=LN2 expected=supported observed=invalid source=lib/span.md at=- verdict=invalid CLAIM id=LN3 expected=supported observed=invalid source=lib/span.md at=- verdict=invalid VERDICT_BEARING_CLAIMS=0/3 claims=3 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=3 findings=3 drift=3",
+    "ok-case  237 claims-r2-endline            exit=1",
+    "ok-case  238 claims-r2-span-stale         exit=1",
+    "ok-case  239 claims-r2-ws-pin             exit=1",
+    "ok-case  240 r2-hash-fault-shim           exit=1",
+    "ok-case  241 claims-r2-nested-string      exit=0"
+  ],
+  "summary": [
+    "RESEARCH_GATE_SELFTEST: FAIL (2/241 cases)"
+  ],
+  "process_group_kill_attempted": true
+}

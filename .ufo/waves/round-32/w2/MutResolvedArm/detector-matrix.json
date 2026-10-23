@@ -1,0 +1,106 @@
+{
+  "runs": [
+    {
+      "phase": "pristine",
+      "gate_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "results": [
+        {
+          "name": "pristine-selftest",
+          "exit": 0,
+          "output": ".ufo/waves/round-32/w2/MutResolvedArm/pristine-selftest.out",
+          "key_output": [
+            "RESEARCH_GATE_SELFTEST: PASS (241 cases, 0 skipped)"
+          ]
+        },
+        {
+          "name": "pristine-chain-r3",
+          "exit": 0,
+          "output": ".ufo/waves/round-32/w2/MutResolvedArm/pristine-chain-r3.out",
+          "key_output": [
+            "RESOLVED_HOPS=17/22",
+            "RESEARCH_GATE: CLEAN (hops=22 verified=17 exempt=5 anchor-missing=0 refused=0 invalid=0 findings=0 drift=0 resolvable=0)"
+          ]
+        },
+        {
+          "name": "pristine-c2-count-v2",
+          "exit": 0,
+          "output": ".ufo/waves/round-32/w2/MutResolvedArm/pristine-c2-count-v2.out",
+          "key_output": [
+            "EXEMPT_AUDIT_MATCH=132/132",
+            "  RECORD_CHECKS=ok",
+            "  F1_resolved_verifiable 12/12"
+          ]
+        }
+      ]
+    },
+    {
+      "phase": "mutated",
+      "gate_sha256": "86b0ad3397d77c3f85b3a4d3c790ee3711168381b98215e3dfdd2cb5bad6e633",
+      "results": [
+        {
+          "name": "mutated-selftest",
+          "exit": 1,
+          "output": ".ufo/waves/round-32/w2/MutResolvedArm/mutated-selftest.out",
+          "key_output": [
+            "FAIL-case chain-fail-boundary          exit=0 want=1 verdicts=1 hops=1 token=RESEARCH_GATE: DRIFT FINDING CHAIN_ANCHOR_NOT_FOUND observed=anchor-missing at=- RESOLVED_HOPS=0/3 nearest_line=1 nearest_line=4 nearest_line=3 hops=3 verified=0 exempt=0 anchor-missing=3 refused=0 invalid=0 findings=3 drift=3",
+            "RESEARCH_GATE_SELFTEST: FAIL (1/241 cases)"
+          ]
+        },
+        {
+          "name": "mutated-chain-r3",
+          "exit": 0,
+          "output": ".ufo/waves/round-32/w2/MutResolvedArm/mutated-chain-r3.out",
+          "key_output": [
+            "RESOLVED_HOPS=17/22",
+            "RESEARCH_GATE: CLEAN (hops=22 verified=17 exempt=5 anchor-missing=0 refused=0 invalid=0 findings=0 drift=0 resolvable=0)"
+          ]
+        },
+        {
+          "name": "mutated-c2-count-v2",
+          "exit": 0,
+          "output": ".ufo/waves/round-32/w2/MutResolvedArm/mutated-c2-count-v2.out",
+          "key_output": [
+            "EXEMPT_AUDIT_MATCH=132/132",
+            "  RECORD_CHECKS=ok",
+            "  F1_resolved_verifiable 12/12"
+          ]
+        }
+      ]
+    },
+    {
+      "phase": "restored",
+      "gate_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "results": [
+        {
+          "name": "restored-selftest",
+          "exit": 0,
+          "output": ".ufo/waves/round-32/w2/MutResolvedArm/restored-selftest.out",
+          "key_output": [
+            "RESEARCH_GATE_SELFTEST: PASS (241 cases, 0 skipped)"
+          ]
+        },
+        {
+          "name": "restored-chain-r3",
+          "exit": 0,
+          "output": ".ufo/waves/round-32/w2/MutResolvedArm/restored-chain-r3.out",
+          "key_output": [
+            "RESOLVED_HOPS=17/22",
+            "RESEARCH_GATE: CLEAN (hops=22 verified=17 exempt=5 anchor-missing=0 refused=0 invalid=0 findings=0 drift=0 resolvable=0)"
+          ]
+        },
+        {
+          "name": "restored-c2-count-v2",
+          "exit": 0,
+          "output": ".ufo/waves/round-32/w2/MutResolvedArm/restored-c2-count-v2.out",
+          "key_output": [
+            "EXEMPT_AUDIT_MATCH=132/132",
+            "  RECORD_CHECKS=ok",
+            "  F1_resolved_verifiable 12/12"
+          ]
+        }
+      ]
+    }
+  ],
+  "chain_r3_CHAIN_lines_identical_all_phases": true,
+  "counter_unmodified_sha256": "8ec1a1ed44f1d3971a73eeace677cbedd0187563bea063ec6b680261dbb23c8a"
+}

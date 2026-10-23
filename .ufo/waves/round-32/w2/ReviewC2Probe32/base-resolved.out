@@ -1,0 +1,34 @@
+research-gate v2 — ts=2026-10-23T07:31:59Z — mode=chain — record=/fast/scratch/hyaku/chousa-r32/w2/ReviewC2Probe32/fix/rec-resolved.md
+CHAIN hop=A1 status=resolved observed=verified source=lib/target.md anchor=line:"omega final line and more" at=line:6 verdict=match
+CHAIN hop=A2 status=resolved observed=verified source=lib/target.md anchor=quote:"alpha row present" at=line:4 verdict=match
+CHAIN hop=A3 status=resolved observed=verified source=lib/target.md anchor=heading:"Term table" at=line:3 verdict=match
+CHAIN hop=A4 status=resolved observed=verified source=lib/target.md anchor=quote:"alpha row present" at=line:4 verdict=match
+CHAIN hop=A5 status=resolved observed=verified source=lib/target.md anchor=heading:"Term table" at=line:3 verdict=match
+CHAIN hop=B1 status=resolved observed=verified source=lib/target.md anchor=quote:"alpha row present" at=line:4 verdict=match
+CHAIN hop=C1 status=resolved observed=anchor-missing source=lib/target.md anchor=quote:"no such anchor text here" at=- verdict=mismatch
+CHAIN hop=C2 status=resolved observed=verified source=lib/target.md anchor=quote:"UPPER ONLY SENTENCE" at=line:7 verdict=match
+CHAIN hop=C3 status=resolved observed=anchor-missing source=lib/target.md anchor=quote:"upper only sentence" at=- verdict=mismatch
+CHAIN hop=C4 status=resolved observed=anchor-missing source=lib/target.md anchor=quote:"double spaced words here" at=- verdict=mismatch
+CHAIN hop=D1 status=resolved observed=refused source=lib/ghost.md anchor=- at=- verdict=refused
+CHAIN hop=D2 status=resolved observed=refused source=https://example.invalid/x anchor=- at=- verdict=refused
+CHAIN hop=D3 status=resolved observed=refused source=S9 anchor=- at=- verdict=refused
+CHAIN hop=D4 status=resolved observed=refused source=../outside/esc.txt anchor=- at=- verdict=refused
+CHAIN hop=D5 status=resolved observed=refused source=S2 anchor=- at=- verdict=refused
+CHAIN hop=E1 status=resolved observed=invalid source=- anchor=- at=- verdict=invalid
+CHAIN hop=E2 status=resolved observed=invalid source=lib/target.md anchor=- at=- verdict=invalid
+CHAIN hop=E3 status=resolved observed=invalid source=lib/target.md anchor=- at=- verdict=invalid
+CHAIN hop=E4 status=resolved observed=invalid source=lib/target.md#quote:alpha row present anchor=- at=- verdict=invalid
+FINDING CHAIN_ANCHOR_NOT_FOUND severity=warn surface=chain obs=hop=C1 source=lib/target.md anchor=quote:"no such anchor text here" nearest_line=- context=-
+FINDING CHAIN_ANCHOR_NOT_FOUND severity=warn surface=chain obs=hop=C3 source=lib/target.md anchor=quote:"upper only sentence" nearest_line=- context=-
+FINDING CHAIN_ANCHOR_NOT_FOUND severity=warn surface=chain obs=hop=C4 source=lib/target.md anchor=quote:"double spaced words here" nearest_line=8 context=double  spaced words here
+FINDING CHAIN_SOURCE_MISSING severity=warn surface=chain obs=hop=D1 source=lib/ghost.md obs=not a readable regular file under allowed roots
+FINDING CHAIN_SOURCE_EXTERNAL severity=crit surface=chain obs=hop=D2 source=https://example.invalid/x obs=url source refused (no external fetch)
+FINDING CHAIN_SOURCE_MISSING severity=warn surface=chain obs=hop=D3 to=S9 source_id not in ## Sources
+FINDING CHAIN_SOURCE_OUT_OF_CORPUS severity=crit surface=chain obs=hop=D4 source=../outside/esc.txt obs=resolved=/fast/scratch/hyaku/chousa-r32/w2/ReviewC2Probe32/outside/esc.txt outside allowed roots
+FINDING CHAIN_SOURCE_MISSING severity=warn surface=chain obs=hop=D5 to=S2 source row has no pointer
+FINDING CHAIN_CITATION_INVALID severity=warn surface=chain obs=hop=E1 status=resolved resolved hop missing source
+FINDING CHAIN_CITATION_INVALID severity=warn surface=chain obs=hop=E2 status=resolved resolved hop missing anchor
+FINDING CHAIN_CITATION_INVALID severity=warn surface=chain obs=hop=E3 status=resolved anchor_kind=bogus not in heading|quote|line
+FINDING CHAIN_CITATION_INVALID severity=warn surface=chain obs=hop=E4 status=resolved both anchor column and to#fragment present
+RESOLVED_HOPS=7/19
+RESEARCH_GATE: DRIFT (hops=19 verified=7 exempt=0 anchor-missing=3 refused=5 invalid=4 findings=12 drift=12)

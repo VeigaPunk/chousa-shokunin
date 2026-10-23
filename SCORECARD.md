@@ -1802,3 +1802,52 @@ read as the record's (flat-key parser, `falsify/ReviewIntegrationDiff31.md`); fa
 and span-before-stale are killed by the counter but not the selftest (`falsify/MutC2Hash.md`,
 `falsify/MutSelftestNew31.md`). Planned round 32 adds these as fixture classes before data
 (QUALITY 28).
+
+## Round 32 — serialized manifest appends and the exempt-hop audit (two claims)
+
+Base `7a7259f0ad41a68068131bfa422a829db9fd1b55` (gate SHA-256 `0bc318b3…1258`). Frozen design
+`corpus/evidence/round32/claims.md`: v1 `4111607c` (attempt 1), v2 `3d586d3a` (after the pre-data
+control wave broke both v1 counters; before any candidate receipt). Control evidence committed at
+`f43dd5a3` and `a065845a`; candidate `0f96bc1c` (gate `10f2fe12…`); post-falsify C1 repairs
+`53cf649c` (final gate SHA-256 `f4731885ac0f8307…03f0`). `verify-claims` and
+`tools/quote-reopen.py` are not changed by either claim (anti-loop).
+
+| claim / axis | before → after | counting command (lane root) | verdict |
+|---|---|---|---|
+| C1 operability (lowest scored axis): the `verify-all --json` manifest append is one flock-held critical section on the manifest | `APPEND_SERIALIZED=0/24` (base gate, `.ufo/waves/round-32/controls/L1-design-v2/c1-base-s3201.json`) → `24/24` on the final gate, seeds 32101 and 32102 (`.ufo/waves/round-32/measure/final/c1-s3210{1,2}.json`); committed receipts on landed gates: `10f2fe12` ×18, `f4731885` ×3, all 24/24 (plus ×2 on the uncommitted intermediate `d13a76e3`, also 24/24) | `python3 corpus/evidence/round32/c1-count-v2.py --seed N --receipt F` | P1 v2 met; no run of the counter on a landed gate below 24 |
+| C2 coverage: hops marked `unresolved` / `blocked-no-fetch` / `labelled-dead` are read in `verify-chain` | `EXEMPT_AUDIT_MATCH=0/132` (base, record checks fail; raw hop matches 96/132, R1–R3 0/36) → `132/132` on the final gate, seeds 32111 and 32112 (`measure/final/c2-s3211{1,2}.json`) (committed receipts: `10f2fe12` ×36, `f4731885` ×2, all 132/132; ×2 on the uncommitted intermediate `d13a76e3`, also 132/132) | `python3 corpus/evidence/round32/c2-count-v2.py --seed N --receipt F` | **not verified**: P2 v2 is met numerically, but a control that never opens a cited source (ranks source files by mtime/inode) also scores 132/132 on two seeds (`.ufo/waves/round-32/w2/CriticAxis32/control-metadata-s3232002{1,2}.json`), so the frozen counter does not discriminate (§9); found post-data, counter not amended |
+
+The round-1 operability scale is unchanged: score 3 → 3 (delta 0); the C1 observable sits beside
+it, as in rounds 25, 29 and 31. Separability (v2): C2 counter on the C1-only gate 0/132, C1 counter
+on the C2-only gate 0/24 (`.ufo/waves/round-32/w2/SepAudit32/`).
+
+Controls under v2 (`.ufo/waves/round-32/w1/*/v2/`): best C1 non-oracle 12/24 (sibling-file flock,
+lockf, mkdir lock); best C2 pre-data control 126/132 (boundary skip, case-insensitive, whitespace
+collapse); oracles C1 24/24, C2 132/132. Post-data, the metadata-order control above meets P2.
+
+No-harm on the final gate (`measure/final/battery.out`): selftest `PASS (241 cases, 0 skipped)`,
+first 228 case lines byte-identical to base (sha256 `a8873064…`); claims-r2 17/17 CLEAN; chain-r3
+17/22 CLEAN, chain-r3-broken 1/2 DRIFT (`--root` fleet root; summaries gain `resolvable=0`);
+round-1 observable 3/3; round-31 counters v2 120/120 each, v3 132/132 each. No corpus chain record
+changes verdict (NoHarmCorpus32, 19/19). Declared behaviour changes: a host without flock(1) is
+refused with exit 2 before the report (the gate's existing convention when sha256sum is missing);
+a non-empty manifest unreadable under the lock is refused with exit 2.
+
+Sources 59 → 61 rows (S060 Python fcntl, S061 RFC 9110; tier A, mined). QUALITY 33 to 35 added.
+Round-31 routed defects R1–R6 repaired (`corpus/evidence/round32/r31-repairs.md`).
+
+## Capabilities (round-32 change)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| serialized manifest appends (`verify-all --json`) | concurrent `verify-all` runs and any writer that flocks the manifest append without blank or glued lines; the probe reads the locked file even if the path is retargeted | `python3 corpus/evidence/round32/c1-count-v2.py` → 24/24 (`measure/final/`); `corpus/knowledge/manifest-append-lock-r32.md` | 32 |
+| exempt-hop audit (`verify-chain`) | a hop marked "could not be followed" whose local citation resolves drifts with `CHAIN_EXEMPT_RESOLVABLE` | landed and reviewed (ReviewC2Probe32, MutC2Gate, CriticAxis32 witness), but its frozen counter is met by a no-reader control, so no counter verifies it; `corpus/knowledge/exempt-hop-audit-r32.md` | 32 (unverified measure) |
+
+## Planned — round 33 (not started)
+
+Candidates, not commitments: a C2 measure whose fixture decouples file metadata (creation order,
+mtime, inode) from truth, scored against the metadata-order control before freezing; the nested
+`"line"`/`"sha256"` key defect (unanchored `json_str`/`json_has_key`); a selftest case for a NUL
+last byte through the locked-fd probe; the L0 fetch-scope answer. This supersedes the round-32
+planned list above, whose `--json` serialization item is now landed and whose "end-line-only"
+selftest case landed as case 237.

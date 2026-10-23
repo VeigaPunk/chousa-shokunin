@@ -1,0 +1,16 @@
+# Receipts — NoHarmVerifyAll32 (single-writer verify-all --json, base 0bc318b3 vs landed 10f2fe12)
+# All runs: cwd = fresh fixture copy; CHOUSA_NOW_EPOCH=1790000000 (ts pinned, not masked);
+# manifest arg is relative "manifest.jsonl"; gate_sha256 masked as the gate's own volatile field.
+# matrix.tsv       66 runs (records A-E x 6 seed states, plus A/wore, A/dir), rc/size/inode/mode/blank
+# final-summary.txt per-case manifest byte equality + rc base/landed
+# schema-order.txt  per-case top-level/section key order + tally key deltas
+# delimiter-bytes.txt r24 states: bytes, line count, blank count, first bytes (record A, both gates)
+# compare.txt      stdout/stderr/manifest equality for all 30 matrix cases with stdout diffs
+# extra.txt        sequential double append; flock-free host (PATH without flock(1))
+# extra2.txt       non-writable dir create refusal; existing-manifest append in 0500 dir; empty read-only manifest
+# stdout-base-F.txt / stdout-landed-F.txt / manifest-base-F.jsonl / manifest-landed-F.jsonl
+#                  clean record with unresolved-but-resolvable hop: base CLEAN rc0 -> landed DRIFT rc1 (C2 by design)
+# stdout-base-G.txt / stdout-landed-G.txt  same record, anchor absent: both CLEAN rc0
+# strace-landed-append.txt  openat O_APPEND -> flock(10, LOCK_EX) -> probe openat O_RDONLY
+# strace-base-flock-count.txt  base flock call count (0)
+# drive.sh compare.py extra.sh extra2.sh  the scripts that produced the above

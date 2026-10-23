@@ -1,0 +1,13 @@
+== sequential two appends (single writer)
+base rc1=1 rc2=1 inode=2048674508->2048674508 lines=3 blanks=0 stderr=0 bytes=2955
+landed rc1=1 rc2=1 inode=171233371->171233371 lines=3 blanks=0 stderr=0 bytes=2985
+== read-only directory refusal
+base rc=1 same_bytes=no inode_same=yes stderr_first=
+landed rc=1 same_bytes=no inode_same=yes stderr_first=
+== empty read-only manifest
+base rc=2 size=0 stderr_first=/fast/scratch/hyaku/chousa-r32/w2/NoHarmVerifyAll32/base/tools/research-gate.sh: line 3199: manifest.jsonl: Permission denied
+landed rc=2 size=0 stderr_first=/fast/scratch/hyaku/chousa-r32/w2/NoHarmVerifyAll32/landed/tools/research-gate.sh: line 3292: manifest.jsonl: Permission denied
+== flock-free host (deliberate fail-closed difference)
+base rc=0 manifest=1 stderr_first=
+landed rc=2 manifest=absent stderr_first=research-gate: flock(1) unavailable; manifest not written: manifest.jsonl
+DONE

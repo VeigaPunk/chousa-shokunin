@@ -1,0 +1,38 @@
+# CriticC2Contract — round 32 attempt 2, wave 2
+
+**Verdict: HOLDS for the assigned C2 probes.** Axes: **operability, coverage**. No reproducible C2 contract defect or local-consumer regression found. Smallest safe correction: **none established**. This is not an admission or a fleet-wide no-harm judgment.
+
+## Identity and execution
+
+Read `corpus/evidence/round32/claims.md` Design v2 before probing. All candidate executions used an unmodified scratch checkout of `5d8a170795dcf48c3746a4f03dee9cfe32812834`, gate SHA-256 `10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098`. The separate **base control**, never a candidate, was `7a7259f0ad41a68068131bfa422a829db9fd1b55`, gate SHA-256 `0bc318b3e74ac0ad45f4b34154e886d84aebf44673612afab6de5e0b0ff11258`.
+
+Scratch: `/fast/scratch/hyaku/chousa-r32/w2/CriticC2Contract/`; below, `A` means `.ufo/waves/round-32/w2/CriticC2Contract/`. The initial `timeout 15s … df -h /fast` succeeded: 220G available. No installs, network fetches, production edits, lane Git-index changes, or lane jj writes. Probes were synchronous and their harnesses kill their process groups after collection; no background jobs were started.
+
+## Counter runs — every run disclosed
+
+From the scratch candidate lane, both commands used `timeout 900s prlimit --nproc=8000 env C2_TMP=/fast/scratch/hyaku/chousa-r32/w2/CriticC2Contract/tmp TMPDIR=/fast/scratch/hyaku/chousa-r32/w2/CriticC2Contract/tmp python3 corpus/evidence/round32/c2-count-v2.py` followed by:
+
+- `--seed 32423201 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-32/w2/CriticC2Contract/candidate-c2-s32423201.json --keep /fast/scratch/hyaku/chousa-r32/w2/CriticC2Contract/kept-s32423201`: **exit 0**, `EXEMPT_AUDIT_MATCH=132/132`, `RECORD_CHECKS=ok`.
+- `--seed 32423202 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-32/w2/CriticC2Contract/candidate-c2-s32423202.json`: **exit 0**, same output.
+
+Both receipts name counter hash `8ec1a1ed44f1d3971a73eeace677cbedd0187563bea063ec6b680261dbb23c8a`, candidate gate hash above, `gate_rc=1`, `predicate_holds=true`, and no misses. No other counter run was performed by this seat; no C1 counter was run.
+
+## Counterexamples attempted and evidence
+
+The bounded probe drivers are `A/contract-probes.py`, `A/cap-probe.py`, and `A/compose-probe.py`. Executed commands were respectively `timeout --signal=TERM --kill-after=5s 900s`, `240s`, and `360s`, followed by `prlimit --nproc=8000 env -u GIT_DIR -u GIT_WORK_TREE -u GIT_INDEX_FILE python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/<driver path>`; all three exited **0**. Their corresponding JSON files preserve **every leaf command, exit code, stdout, and stderr**, including base controls and the resource-constrained probe described below.
+
+| Attack | Observed evidence | Axis / interpretation |
+|---|---|---|
+| Severity downgrade or strict-mode escape | `contract-probes.json`: `positive-strict-0` and `positive-strict-1` each exit **1**, with three resolvable U hops, exactly three `CHAIN_EXEMPT_RESOLVABLE severity=warn surface=chain` findings, and two exempt judgment hops. | Both axes hold. `warn` is explicitly allowed by the frozen contract; `tools/research-gate.sh:1951-1955` selects it, and `:446-448` makes it drift without strict mode. |
+| Appended `resolvable=N` breaks composition or silently changes its verdict | `compose-probe.json`: complete resolved-only base and candidate both exit **0/CLEAN**; unavailable base exits **0/CLEAN**, candidate **1/DRIFT**, `drift_sections=1`, with only the three chain findings. No section-unavailable diagnostic. | Operability holds. Candidate chain tallies add integer `resolvable` (0 for resolved-only, 3 for unavailable). The tag remains `chousa-verify-all/v1`; this **is an additive tally-shape change**, not unchanged JSON bytes. |
+| Closed/positional `anchor-missing=` consumer breaks | Tool `grep`, pattern `anchor-missing=`, searched candidate `tools/` and `corpus/evidence/`, then executable `*.sh`/`*.py` subsets. Executable matches were only the gate's summary emitter and selftest expectations; evidence matches were logs/README. | No local parser break found. `tools/research-gate.sh:3108-3124` accepts the complete parenthetical summary, `:3077-3090,3254-3256` serializes its arbitrary tally pairs, and `:3834-3835` checks selftest substrings, not a closing-parenthesis suffix. `corpus/knowledge/verify-all-r6.md:136-138` documents dynamic tallies. Unknown external exact-key consumers remain untested. |
+| Symlink escapes boundary; huge source; declared `/dev/zero` | `contract-probes.json`, `boundary-unavailable-traced`: all three U statuses crossed with escape symlink, 8,388,609-byte source containing an initial anchor, declared `/dev/zero`, symlink to `/dev/zero`, and URL: **15 exempt, zero findings, exit 0**. Both resolved controls instead report **15 refused, exit 1**, preserving their refusal classes. `boundary-open.trace`: **0 connect calls and 0 openat calls for the escaped target, oversized source, or `/dev/zero`**. | Both axes hold within the frozen boundary. `/dev/zero` also stayed exempt and returned promptly with `--root /dev`, where its non-regular-file class, rather than out-of-root position, prevents reading (`:1251-1254`). Silence on refused U sources is the explicit C2 tradeoff, not evidence that their availability was validated. |
+| Inclusive size limit incorrectly exempts an available source | `cap-probe.json:7-29`: at exactly **8,388,608 bytes**, candidate U hop is **resolvable + one warn finding, exit 1**; candidate/base resolved controls both verify **1/1, exit 0**. | Coverage holds at the admitted size boundary. |
+| URL audit adds network activity | Exact leaf command includes `strace -f -qq -e trace=connect -o …/url-connect.trace bash <candidate gate> verify-chain <url-only record> --root <scratch root>`: **exit 0**, hop exempt. Tool `grep` for `connect\(` across this trace and `boundary-open.trace`: **No matches found**. The URL trace has SIGCHLD records, not an empty file. | No connect syscall was observed in either traced run. No GET or other intentional network operation was made. |
+| Judgment statuses now read sources | `compose-probe.json`, `judgment-only-read-check`: **exit 0**, two exempt rows, **0 source openat calls** in `judgments-open.trace`, despite an existing verifiable declared source. | Coverage boundary preserved: rejected/not-applicable remain unread. |
+
+## Harness artifacts and limits
+
+The first at-cap probe deliberately inherited the driver's **1 MiB per-file write bound**. Bash could not materialize its larger here-string: stderr reported a temporary-file creation failure, and the U row stayed exempt/CLEAN. This run is retained in `contract-probes.json` as `inclusive-cap-unavailable`; it is **not** an unmodified-counter miss or evidence of normal-size failure. The focused supplement raised only that scratch-file bound to **16 MiB** and obtained the three size-boundary results above (`cap-probe.json:2-5`). The first composition fixtures also omitted a rejection flip condition, so all four initial composed runs exited 1 for that unrelated fixture defect; all are retained in `contract-probes.json`. The complete fixtures in `compose-probe.json` isolate the chain verdict instead.
+
+No full regression/selftest, C1 stress run, transitive citation traversal, TOCTOU race, external consumer, or source-row/remote-content audit was performed. The summary-field addition is documented in `corpus/knowledge/exempt-hop-audit-r32.md:23-30`; no evidence here justifies a schema-version bump or a different severity. All report evidence files are under `A`; the largest raw trace is 408,784 bytes.

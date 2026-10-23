@@ -1,0 +1,36 @@
+{
+  "label": "d-mutated",
+  "gate": "/fast/scratch/hyaku/chousa-r32/w2/MutC2Gate/mutant-d/tools/research-gate.sh",
+  "gate_before": "803a3e04ab7ebff533533ba04a61613d99383559813e0d72175ab938bbfd583f",
+  "counter_sha256": "8ec1a1ed44f1d3971a73eeace677cbedd0187563bea063ec6b680261dbb23c8a",
+  "seed": 3232104,
+  "commands": [
+    {
+      "detector": "counter",
+      "command": "timeout --signal=TERM --kill-after=5s 700s python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round32/c2-count-v2.py --gate /fast/scratch/hyaku/chousa-r32/w2/MutC2Gate/mutant-d/tools/research-gate.sh --seed 3232104 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-32/w2/MutC2Gate/d-mutated.json",
+      "cwd": "/fast/scratch/hyaku/chousa-r32/w2/MutC2Gate/mutant-d",
+      "exit": 1,
+      "elapsed_s": 8.624,
+      "output": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-32/w2/MutC2Gate/d-mutated-counter.txt",
+      "key_output": [
+        "EXEMPT_AUDIT_MATCH=120/132",
+        "  RECORD_CHECKS=ok"
+      ],
+      "size_bytes": 462
+    },
+    {
+      "detector": "selftest",
+      "command": "timeout --signal=TERM --kill-after=5s 900s bash /fast/scratch/hyaku/chousa-r32/w2/MutC2Gate/mutant-d/tools/research-gate.sh --selftest",
+      "cwd": "/fast/scratch/hyaku/chousa-r32/w2/MutC2Gate/mutant-d",
+      "exit": 1,
+      "elapsed_s": 57.538,
+      "output": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-32/w2/MutC2Gate/d-mutated-selftest.txt",
+      "key_output": [
+        "FAIL-case chain-exempt-judgment        exit=1 want=0 verdicts=1 resolvable=2/0 exempt=0/2 findings=2/0 silent-leak=0 token=RESEARCH_GATE: CLEAN RESOLVED_HOPS=0/2 hops=2 verified=0 exempt=2 anchor-missing=0 refused=0 invalid=0 findings=0 drift=0 resolvable=0 CHAIN hop=1 status=rejected observed=exempt source=S1 anchor=- at=- verdict=exempt CHAIN hop=2 status=not-applicable observed=exempt source=S1 anchor=- at=- verdict=exempt",
+        "RESEARCH_GATE_SELFTEST: FAIL (1/241 cases)"
+      ],
+      "size_bytes": 13372
+    }
+  ],
+  "gate_after": "803a3e04ab7ebff533533ba04a61613d99383559813e0d72175ab938bbfd583f"
+}

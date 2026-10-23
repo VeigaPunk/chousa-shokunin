@@ -1,0 +1,30 @@
+{
+  "name": "trimmed-pin",
+  "phase": "mutated",
+  "command": "timeout --signal=TERM --kill-after=5s 600s bash /fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/trimmed-pin/lane/tools/research-gate.sh --selftest",
+  "cwd": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/trimmed-pin/lane",
+  "TMPDIR": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/trimmed-pin/tmp",
+  "rc": 1,
+  "elapsed_s": 152.579,
+  "output_bound_holds": true,
+  "gate_before_sha256": "d9ff23d6f26aaa2ddcd0a37713fb68390399e55ebe0cbaf032df9e44f9a4eee0",
+  "gate_after_sha256": "d9ff23d6f26aaa2ddcd0a37713fb68390399e55ebe0cbaf032df9e44f9a4eee0",
+  "log_sha256": "64c48c3ddcb35b1c024f0c482298dfdb34de51ef0e71ac0f47a6b8fcdfbc9ee8",
+  "log_bytes": 13279,
+  "failing_cases": [
+    "claims-r2-ws-pin"
+  ],
+  "r2_cases": [
+    "ok-case  235 claims-r2-sha-nonstring      exit=1",
+    "ok-case  236 claims-r2-line-nonstring     exit=1",
+    "ok-case  237 claims-r2-endline            exit=1",
+    "ok-case  238 claims-r2-span-stale         exit=1",
+    "FAIL-case claims-r2-ws-pin             exit=0 want=1 verdicts=1 vbearing=1 token=RESEARCH_GATE: DRIFT sha256 malformed (not 64 lowercase hex characters) CLAIM id=WP1 expected=supported observed=invalid source=claimsrc/sha-src.txt at=- verdict=invalid CLAIM id=WP2 expected=supported observed=invalid source=claimsrc/sha-src.txt at=- verdict=invalid CLAIM id=WP3 expected=supported observed=invalid source=claimsrc/sha-src.txt at=- verdict=invalid VERDICT_BEARING_CLAIMS=0/3 claims=3 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=3 findings=3 drift=3",
+    "ok-case  240 r2-hash-fault-shim           exit=1",
+    "ok-case  241 claims-r2-nested-string      exit=0"
+  ],
+  "summary": [
+    "RESEARCH_GATE_SELFTEST: FAIL (1/241 cases)"
+  ],
+  "process_group_kill_attempted": true
+}

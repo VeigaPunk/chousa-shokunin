@@ -1,0 +1,32 @@
+{
+  "child_file_size_limit": 16777216,
+  "prior_probe_file_size_limit": 1048575,
+  "reason": "The first probe imposed a 1 MiB per-file bound, which prevented Bash from materializing its 8 MiB here-string. This supplement removes that harness interference while retaining a bound.",
+  "source_size": 8388608,
+  "runs": [
+    {
+      "name": "candidate-unavailable",
+      "command": "timeout --signal=TERM --kill-after=2s 60s bash /fast/scratch/hyaku/chousa-r32/w2/CriticC2Contract/lane/tools/research-gate.sh verify-chain /fast/scratch/hyaku/chousa-r32/w2/CriticC2Contract/fixtures/inclusive-cap.md --root /fast/scratch/hyaku/chousa-r32/w2/CriticC2Contract/fixtures",
+      "rc": 1,
+      "elapsed_s": 1.961,
+      "stdout": "research-gate v2 \u2014 ts=2025-10-09T08:53:20Z \u2014 mode=chain \u2014 record=/fast/scratch/hyaku/chousa-r32/w2/CriticC2Contract/fixtures/inclusive-cap.md\nCHAIN hop=CAP1 status=unresolved observed=resolvable source=at-cap.md anchor=line:\"exact whole line\" at=line:1 verdict=mismatch\nFINDING CHAIN_EXEMPT_RESOLVABLE severity=warn surface=chain obs=hop=CAP1 status=unresolved source=at-cap.md anchor=line:\"exact whole line\" at=line:1\nRESOLVED_HOPS=0/1\nRESEARCH_GATE: DRIFT (hops=1 verified=0 exempt=0 anchor-missing=0 refused=0 invalid=0 findings=1 drift=1 resolvable=1)\n",
+      "stderr": ""
+    },
+    {
+      "name": "candidate-resolved",
+      "command": "timeout --signal=TERM --kill-after=2s 60s bash /fast/scratch/hyaku/chousa-r32/w2/CriticC2Contract/lane/tools/research-gate.sh verify-chain /fast/scratch/hyaku/chousa-r32/w2/CriticC2Contract/fixtures/inclusive-cap-resolved.md --root /fast/scratch/hyaku/chousa-r32/w2/CriticC2Contract/fixtures",
+      "rc": 0,
+      "elapsed_s": 1.856,
+      "stdout": "research-gate v2 \u2014 ts=2025-10-09T08:53:20Z \u2014 mode=chain \u2014 record=/fast/scratch/hyaku/chousa-r32/w2/CriticC2Contract/fixtures/inclusive-cap-resolved.md\nCHAIN hop=CAP1 status=resolved observed=verified source=at-cap.md anchor=line:\"exact whole line\" at=line:1 verdict=match\nRESOLVED_HOPS=1/1\nRESEARCH_GATE: CLEAN (hops=1 verified=1 exempt=0 anchor-missing=0 refused=0 invalid=0 findings=0 drift=0 resolvable=0)\n",
+      "stderr": ""
+    },
+    {
+      "name": "base-resolved-control",
+      "command": "timeout --signal=TERM --kill-after=2s 60s bash /fast/scratch/hyaku/chousa-r32/w2/CriticC2Contract/base/tools/research-gate.sh verify-chain /fast/scratch/hyaku/chousa-r32/w2/CriticC2Contract/fixtures/inclusive-cap-resolved.md --root /fast/scratch/hyaku/chousa-r32/w2/CriticC2Contract/fixtures",
+      "rc": 0,
+      "elapsed_s": 2.27,
+      "stdout": "research-gate v2 \u2014 ts=2025-10-09T08:53:20Z \u2014 mode=chain \u2014 record=/fast/scratch/hyaku/chousa-r32/w2/CriticC2Contract/fixtures/inclusive-cap-resolved.md\nCHAIN hop=CAP1 status=resolved observed=verified source=at-cap.md anchor=line:\"exact whole line\" at=line:1 verdict=match\nRESOLVED_HOPS=1/1\nRESEARCH_GATE: CLEAN (hops=1 verified=1 exempt=0 anchor-missing=0 refused=0 invalid=0 findings=0 drift=0)\n",
+      "stderr": ""
+    }
+  ]
+}

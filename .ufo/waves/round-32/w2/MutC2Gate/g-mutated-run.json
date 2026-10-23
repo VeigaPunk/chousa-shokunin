@@ -1,0 +1,36 @@
+{
+  "label": "g-mutated",
+  "gate": "/fast/scratch/hyaku/chousa-r32/w2/MutC2Gate/mutant-g/tools/research-gate.sh",
+  "gate_before": "9cdc48037eb71e50140b6f0f5b99aed8d49b391f92d9f2f422e4753393e0c31d",
+  "counter_sha256": "8ec1a1ed44f1d3971a73eeace677cbedd0187563bea063ec6b680261dbb23c8a",
+  "seed": 3232107,
+  "commands": [
+    {
+      "detector": "counter",
+      "command": "timeout --signal=TERM --kill-after=5s 700s python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round32/c2-count-v2.py --gate /fast/scratch/hyaku/chousa-r32/w2/MutC2Gate/mutant-g/tools/research-gate.sh --seed 3232107 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-32/w2/MutC2Gate/g-mutated.json",
+      "cwd": "/fast/scratch/hyaku/chousa-r32/w2/MutC2Gate/mutant-g",
+      "exit": 1,
+      "elapsed_s": 5.587,
+      "output": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-32/w2/MutC2Gate/g-mutated-counter.txt",
+      "key_output": [
+        "EXEMPT_AUDIT_MATCH=120/132",
+        "  RECORD_CHECKS=ok"
+      ],
+      "size_bytes": 460
+    },
+    {
+      "detector": "selftest",
+      "command": "timeout --signal=TERM --kill-after=5s 900s bash /fast/scratch/hyaku/chousa-r32/w2/MutC2Gate/mutant-g/tools/research-gate.sh --selftest",
+      "cwd": "/fast/scratch/hyaku/chousa-r32/w2/MutC2Gate/mutant-g",
+      "exit": 1,
+      "elapsed_s": 39.872,
+      "output": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-32/w2/MutC2Gate/g-mutated-selftest.txt",
+      "key_output": [
+        "FAIL-case chain-exempt-resolvable      exit=1 want=1 verdicts=1 resolvable=5/7 exempt=2/0 findings=5/7 silent-leak=0 token=RESEARCH_GATE: DRIFT RESOLVED_HOPS=0/7 hops=7 verified=0 exempt=0 anchor-missing=0 refused=0 invalid=0 findings=7 drift=7 resolvable=7 FINDING CHAIN_EXEMPT_RESOLVABLE severity=warn surface=chain obs=hop=1 status=unresolved CHAIN hop=1 status=unresolved observed=resolvable source=lib/chain_target.md anchor=quote:\"alpha row present\" at=line:4 verdict=mismatch CHAIN hop=2 status=blocked-no-fetch observed=resolvable source=lib/chain_target.md anchor=line:\"omega final line\" at=line:6 verdict=mismatch CHAIN hop=3 status=labelled-dead observed=resolvable source=lib/chain_target.md anchor=heading:\"Term table\" at=line:3 verdict=mismatch CHAIN hop=7 status=unresolved observed=resolvable source=lib/chain_target.md anchor=quote:\"The craftsman certifies the work\" at=line:5 verdict=mismatch",
+        "RESEARCH_GATE_SELFTEST: FAIL (1/241 cases)"
+      ],
+      "size_bytes": 15028
+    }
+  ],
+  "gate_after": "9cdc48037eb71e50140b6f0f5b99aed8d49b391f92d9f2f422e4753393e0c31d"
+}

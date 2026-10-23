@@ -1,0 +1,83 @@
+{
+  "trace": {
+    "argv": [
+      "strace",
+      "-f",
+      "-qq",
+      "-e",
+      "trace=openat,openat2",
+      "-o",
+      "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-32/w2/CriticAxis32/metadata-open.trace",
+      "bash",
+      "/fast/scratch/hyaku/chousa-r32/w2/CriticAxis32/metadata-control/tools/research-gate.sh",
+      "verify-chain",
+      "/fast/scratch/hyaku/chousa-r32/w2/CriticAxis32/base-c2-fixture/root/r3c4304f9f1.md",
+      "--root",
+      "/fast/scratch/hyaku/chousa-r32/w2/CriticAxis32/base-c2-fixture/root"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "fixture_opens": [
+      "/fast/scratch/hyaku/chousa-r32/w2/CriticAxis32/base-c2-fixture/root/r3c4304f9f1.md"
+    ],
+    "citation_source_open_count": 0,
+    "chain_lines": 132,
+    "resolvable_lines": 36,
+    "findings": 36
+  },
+  "witness": [
+    {
+      "label": "metadata-control",
+      "argv": [
+        "bash",
+        "/fast/scratch/hyaku/chousa-r32/w2/CriticAxis32/metadata-control/tools/research-gate.sh",
+        "verify-chain",
+        "/fast/scratch/hyaku/chousa-r32/w2/CriticAxis32/witness/root/record.md",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r32/w2/CriticAxis32/witness/root"
+      ],
+      "exit": 1,
+      "stdout": "CHAIN hop=witness status=unresolved observed=resolvable source=source.md anchor=- at=- verdict=mismatch\nFINDING CHAIN_EXEMPT_RESOLVABLE severity=warn surface=chain obs=hop=witness\nRESOLVED_HOPS=0/1\nRESEARCH_GATE: DRIFT\n",
+      "stderr": ""
+    },
+    {
+      "label": "landed-candidate",
+      "argv": [
+        "bash",
+        "/fast/scratch/hyaku/chousa-r32/w2/CriticAxis32/candidate/tools/research-gate.sh",
+        "verify-chain",
+        "/fast/scratch/hyaku/chousa-r32/w2/CriticAxis32/witness/root/record.md",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r32/w2/CriticAxis32/witness/root"
+      ],
+      "exit": 0,
+      "stdout": "research-gate v2 \u2014 ts=2026-10-23T07:35:25Z \u2014 mode=chain \u2014 record=/fast/scratch/hyaku/chousa-r32/w2/CriticAxis32/witness/root/record.md\nCHAIN hop=witness status=unresolved observed=exempt source=source.md anchor=- at=- verdict=exempt\nRESOLVED_HOPS=0/1\nRESEARCH_GATE: CLEAN (hops=1 verified=0 exempt=1 anchor-missing=0 refused=0 invalid=0 findings=0 drift=0 resolvable=0)\n",
+      "stderr": ""
+    }
+  ],
+  "baseline": {
+    "frozen_matched": 0,
+    "total": 132,
+    "record_failures": [
+      "gate-rc=0",
+      "drift-summary-lines=0"
+    ],
+    "raw_hop_matches_ignoring_record_check": 96,
+    "raw_misses": 36,
+    "raw_match_classes": {
+      "F1_resolved_verifiable": 12,
+      "E1_U_anchor_absent": 12,
+      "E2_U_missing_file": 6,
+      "E3_U_external_url": 6,
+      "E4_U_no_citation": 6,
+      "E5_J_resolvable": 12,
+      "E6_U_undeclared_id": 6,
+      "E7_U_out_of_corpus": 6,
+      "E8_U_quote_glued": 6,
+      "E9_U_heading_as_plain_line": 6,
+      "E10_U_line_partial": 6,
+      "E11_U_case_only": 6,
+      "E12_U_whitespace_only": 6
+    }
+  }
+}

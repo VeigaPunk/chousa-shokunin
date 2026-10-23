@@ -1,0 +1,57 @@
+{
+  "axes": [
+    "operability",
+    "coverage"
+  ],
+  "candidate": "5d8a170795dcf48c3746a4f03dee9cfe32812834",
+  "mutations": [
+    {
+      "name": "sha-nonstring",
+      "gate": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/sha-nonstring/lane/tools/research-gate.sh",
+      "base_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "mutant_sha256": "a3d8f2ea78fdc70bda700e976b14ef2a688a16a397273cdd58eaa1db5d2dc48d",
+      "expected_failing_case": "claims-r2-sha-nonstring",
+      "unified_diff": "--- a/tools/research-gate.sh\n+++ b/tools/research-gate.sh\n@@ -1468,7 +1468,7 @@\n       fi\n     fi\n     bad=''\n-    if json_has_key \"$line\" sha256; then\n+    if json_str \"$line\" sha256 >/dev/null 2>&1; then\n       # a present non-string value is malformed, never \"absent\" (r31)\n       sha_present=1; sha_pin='-'\n       # decode the JSON string exactly: keep trailing newlines (printf x) and\n"
+    },
+    {
+      "name": "line-nonstring",
+      "gate": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/line-nonstring/lane/tools/research-gate.sh",
+      "base_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "mutant_sha256": "29ef7dde7430a5c61a2521782e2637af3c8c6fdcd9b2c017f66d9fe205a0093b",
+      "expected_failing_case": "claims-r2-line-nonstring",
+      "unified_diff": "--- a/tools/research-gate.sh\n+++ b/tools/research-gate.sh\n@@ -1461,7 +1461,7 @@\n     # detects a present key of ANY value type, so a present empty or non-string\n     # value is distinguishable from an absent key (both are invalid).\n     line_present=0; linef=''; lbad=''\n-    if json_has_key \"$line\" line; then\n+    if json_str \"$line\" line >/dev/null 2>&1; then\n       line_present=1\n       if json_str \"$line\" line >/dev/null 2>&1; then\n         linef=$(json_unescape \"$(jfield \"$line\" line)\")\n"
+    },
+    {
+      "name": "endline",
+      "gate": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/endline/lane/tools/research-gate.sh",
+      "base_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "mutant_sha256": "8cffa223fcd506223d417bef745e12a021525d7183a648f825993f6aa5bd45d2",
+      "expected_failing_case": "claims-r2-endline",
+      "unified_diff": "--- a/tools/research-gate.sh\n+++ b/tools/research-gate.sh\n@@ -1564,7 +1564,7 @@\n         while read -r l1 l2; do\n           # string equality: both sides are leading-zero-free decimals, so it\n           # equals numeric equality without arithmetic on untrusted digits (r31)\n-          if [[ $l1 == \"$line_n\" && $l2 == \"$line_m\" ]]; then\n+          if [[ $l2 == \"$line_m\" ]]; then\n             start_line=$l1\n             end_line=$l2\n             if [[ $l1 -eq $l2 ]]; then at=line:$l1; else at=lines:$l1-$l2; fi\n"
+    },
+    {
+      "name": "span-before-stale",
+      "gate": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/span-before-stale/lane/tools/research-gate.sh",
+      "base_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "mutant_sha256": "409704c16a494949aedfafd437eb8e7978e712be45156fd0b8b44256ec7e959d",
+      "expected_failing_case": "claims-r2-span-stale",
+      "unified_diff": "--- a/tools/research-gate.sh\n+++ b/tools/research-gate.sh\n@@ -1533,7 +1533,7 @@\n     fi\n     path=$CLAIM_SRC_PATH\n \n-    if [[ -n $sha_present ]]; then\n+    if [[ -n $sha_present ]] && ! tok_span_at \"$(cat -- \"$path\")\" \"$span\"; then\n       # hash via stdin: sha256sum escapes file names holding '\\' or a newline\n       # and would prefix its output with '\\' (r31)\n       sha_actual=$(sha256sum < \"$path\" 2>/dev/null | cut -d' ' -f1 || true)\n"
+    },
+    {
+      "name": "trimmed-pin",
+      "gate": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/trimmed-pin/lane/tools/research-gate.sh",
+      "base_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "mutant_sha256": "d9ff23d6f26aaa2ddcd0a37713fb68390399e55ebe0cbaf032df9e44f9a4eee0",
+      "expected_failing_case": "claims-r2-ws-pin",
+      "unified_diff": "--- a/tools/research-gate.sh\n+++ b/tools/research-gate.sh\n@@ -1478,6 +1478,8 @@\n         sha_raw=$(json_str \"$line\" sha256)\n         if [[ ${sha_raw,,} != *'\\u0000'* ]]; then\n           sha_pin=$(json_unescape \"$sha_raw\"; printf x); sha_pin=${sha_pin%x}\n+          while [[ $sha_pin == [[:space:]]* ]]; do sha_pin=${sha_pin#?}; done\n+          while [[ $sha_pin == *[[:space:]] ]]; do sha_pin=${sha_pin%?}; done\n         fi\n       fi\n     fi\n"
+    },
+    {
+      "name": "hash-fault",
+      "gate": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/hash-fault/lane/tools/research-gate.sh",
+      "base_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "mutant_sha256": "091825c346ad1f9796a413ab91e972a8391e2d976443e4258828f070689b6582",
+      "expected_failing_case": "r2-hash-fault-shim",
+      "unified_diff": "--- a/tools/research-gate.sh\n+++ b/tools/research-gate.sh\n@@ -1538,7 +1538,7 @@\n       # and would prefix its output with '\\' (r31)\n       sha_actual=$(sha256sum < \"$path\" 2>/dev/null | cut -d' ' -f1 || true)\n       # fail closed: an unmeasurable source is not a match (r31)\n-      [[ $sha_actual =~ ^[0-9a-f]{64}$ ]] || sha_actual=unreadable\n+      [[ $sha_actual =~ ^[0-9a-f]{64}$ ]] || sha_actual=$sha_pin\n       if [[ $sha_actual != \"$sha_pin\" ]]; then\n         observed=stale\n         at=-\n"
+    }
+  ]
+}

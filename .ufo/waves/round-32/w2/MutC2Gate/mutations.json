@@ -1,0 +1,44 @@
+{
+  "a": {
+    "pristine_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+    "mutant_sha256": "4e90086342270971c46dd1dd1115498615557a50513e23809d9ce7e7093628d2",
+    "gate": "/fast/scratch/hyaku/chousa-r32/w2/MutC2Gate/mutant-a/tools/research-gate.sh",
+    "patch": "--- pristine/tools/research-gate.sh\n+++ mutant-a/tools/research-gate.sh\n@@ -1847,7 +1847,11 @@\n   hay=$(cat -- \"$CLAIM_SRC_PATH\"; printf x)\n   hay=${hay%x}\n   PROBE_HAY=$hay\n-  if chain_anchor_at \"$hay\" \"$PROBE_KIND\" \"$PROBE_TEXT\"; then\n+  local audit_hay=$hay audit_text=$PROBE_TEXT\n+  case \"${st:-}\" in\n+    unresolved|blocked-no-fetch|labelled-dead) audit_hay=${hay,,}; audit_text=${PROBE_TEXT,,} ;;\n+  esac\n+  if chain_anchor_at \"$audit_hay\" \"$PROBE_KIND\" \"$audit_text\"; then\n     PROBE=verified PROBE_AT=$CITE_AT\n   else\n     PROBE=anchor-missing\n"
+  },
+  "b": {
+    "pristine_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+    "mutant_sha256": "35531fd675c92ad8a2947b8bb6e33e7a53aea9f07111305f98d0ba8d4f589121",
+    "gate": "/fast/scratch/hyaku/chousa-r32/w2/MutC2Gate/mutant-b/tools/research-gate.sh",
+    "patch": "--- pristine/tools/research-gate.sh\n+++ mutant-b/tools/research-gate.sh\n@@ -1847,7 +1847,11 @@\n   hay=$(cat -- \"$CLAIM_SRC_PATH\"; printf x)\n   hay=${hay%x}\n   PROBE_HAY=$hay\n-  if chain_anchor_at \"$hay\" \"$PROBE_KIND\" \"$PROBE_TEXT\"; then\n+  local audit_hay=$hay audit_text=$PROBE_TEXT\n+  case \"${st:-}\" in\n+    unresolved|blocked-no-fetch|labelled-dead) audit_hay=${hay//+([[:blank:]])/ }; audit_text=${PROBE_TEXT//+([[:blank:]])/ } ;;\n+  esac\n+  if chain_anchor_at \"$audit_hay\" \"$PROBE_KIND\" \"$audit_text\"; then\n     PROBE=verified PROBE_AT=$CITE_AT\n   else\n     PROBE=anchor-missing\n"
+  },
+  "c": {
+    "pristine_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+    "mutant_sha256": "625df9b83764d46e191570c26ddbcd35e9bd1ad67f63e24715b4193220e99988",
+    "gate": "/fast/scratch/hyaku/chousa-r32/w2/MutC2Gate/mutant-c/tools/research-gate.sh",
+    "patch": "--- pristine/tools/research-gate.sh\n+++ mutant-c/tools/research-gate.sh\n@@ -1243,6 +1243,8 @@\n     src_root=$lane_r\n   elif in_root \"$canon\" \"$root_r\"; then\n     src_root=$root_r\n+  elif [[ ${st:-} == unresolved || ${st:-} == blocked-no-fetch || ${st:-} == labelled-dead ]]; then\n+    src_root=$root_r\n   else\n     CLAIM_REFUSE=CLAIM_SOURCE_OUT_OF_CORPUS\n     CLAIM_REFUSE_OBS=\"resolved=$canon outside allowed roots\"\n"
+  },
+  "d": {
+    "pristine_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+    "mutant_sha256": "803a3e04ab7ebff533533ba04a61613d99383559813e0d72175ab938bbfd583f",
+    "gate": "/fast/scratch/hyaku/chousa-r32/w2/MutC2Gate/mutant-d/tools/research-gate.sh",
+    "patch": "--- pristine/tools/research-gate.sh\n+++ mutant-d/tools/research-gate.sh\n@@ -1941,7 +1941,7 @@\n           fi\n           CHAIN_LINES+=(\"CHAIN hop=$hop status=resolved observed=$obs source=$disp anchor=$PROBE_KIND:\\\"$(printf '%.60s' \"$PROBE_TEXT\")\\\" at=$PROBE_AT verdict=$verdict\")\n           ;;\n-        unresolved|blocked-no-fetch|labelled-dead)\n+        unresolved|blocked-no-fetch|labelled-dead|rejected|not-applicable)\n           # r32 C2: a hop whose status says it could not be followed is still\n           # audited with the same silent probe. A citation that would verify\n           # under the resolved arm is a false unavailability mark:\n"
+  },
+  "e": {
+    "pristine_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+    "mutant_sha256": "35102b0acac32259f659265674fb98d71f8c968e198a7534abe5b2b7d5caf8dc",
+    "gate": "/fast/scratch/hyaku/chousa-r32/w2/MutC2Gate/mutant-e/tools/research-gate.sh",
+    "patch": "--- pristine/tools/research-gate.sh\n+++ mutant-e/tools/research-gate.sh\n@@ -1952,6 +1952,8 @@\n             N_RESOLVABLE=$((N_RESOLVABLE + 1))\n             emit_finding CHAIN_EXEMPT_RESOLVABLE warn chain \\\n               \"hop=$hop status=$st source=$(chain_disp \"$PROBE_REF\") anchor=$PROBE_KIND:\\\"$(printf '%.60s' \"$PROBE_TEXT\")\\\" at=$PROBE_AT\"\n+            emit_finding CHAIN_EXEMPT_RESOLVABLE warn chain \\\n+              \"hop=$hop status=$st source=$(chain_disp \"$PROBE_REF\") anchor=$PROBE_KIND:\\\"$(printf '%.60s' \"$PROBE_TEXT\")\\\" at=$PROBE_AT\"\n             CHAIN_LINES+=(\"CHAIN hop=$hop status=$st observed=resolvable source=$(chain_disp \"$PROBE_REF\") anchor=$PROBE_KIND:\\\"$(printf '%.60s' \"$PROBE_TEXT\")\\\" at=$PROBE_AT verdict=mismatch\")\n           else\n             N_EXEMPT=$((N_EXEMPT + 1))\n"
+  },
+  "f": {
+    "pristine_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+    "mutant_sha256": "15fecf0d241f3ed81d796bd217e7a5644ed546164d2ae7724ec87fdfc1049ba1",
+    "gate": "/fast/scratch/hyaku/chousa-r32/w2/MutC2Gate/mutant-f/tools/research-gate.sh",
+    "patch": "--- pristine/tools/research-gate.sh\n+++ mutant-f/tools/research-gate.sh\n@@ -444,7 +444,7 @@\n   N_FINDINGS=$((N_FINDINGS + 1))\n   FINDING_LINES+=(\"FINDING $id severity=$sev surface=$surface obs=$obs\")\n   case \"$sev\" in\n-    warn|crit) N_DRIFT=$((N_DRIFT + 1)); ROLL=DRIFT ;;\n+    warn|crit) if [[ $id != CHAIN_EXEMPT_RESOLVABLE ]]; then N_DRIFT=$((N_DRIFT + 1)); ROLL=DRIFT; fi ;;\n     info) [[ $STRICT == 1 ]] && { N_DRIFT=$((N_DRIFT + 1)); ROLL=DRIFT; } ;;\n   esac\n   # Finding severity affects counters and ROLL, not control flow. A false return\n"
+  },
+  "g": {
+    "pristine_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+    "mutant_sha256": "9cdc48037eb71e50140b6f0f5b99aed8d49b391f92d9f2f422e4753393e0c31d",
+    "gate": "/fast/scratch/hyaku/chousa-r32/w2/MutC2Gate/mutant-g/tools/research-gate.sh",
+    "patch": "--- pristine/tools/research-gate.sh\n+++ mutant-g/tools/research-gate.sh\n@@ -1941,7 +1941,7 @@\n           fi\n           CHAIN_LINES+=(\"CHAIN hop=$hop status=resolved observed=$obs source=$disp anchor=$PROBE_KIND:\\\"$(printf '%.60s' \"$PROBE_TEXT\")\\\" at=$PROBE_AT verdict=$verdict\")\n           ;;\n-        unresolved|blocked-no-fetch|labelled-dead)\n+        unresolved|labelled-dead)\n           # r32 C2: a hop whose status says it could not be followed is still\n           # audited with the same silent probe. A citation that would verify\n           # under the resolved arm is a false unavailability mark:\n@@ -1958,7 +1958,7 @@\n             CHAIN_LINES+=(\"CHAIN hop=$hop status=$st observed=exempt source=$(chain_disp \"$(norm_ptr \"$(chain_cell \"$hrow\" to)\")\") anchor=- at=- verdict=exempt\")\n           fi\n           ;;\n-        rejected|not-applicable)\n+        blocked-no-fetch|rejected|not-applicable)\n           N_EXEMPT=$((N_EXEMPT + 1))\n           CHAIN_LINES+=(\"CHAIN hop=$hop status=$st observed=exempt source=$(chain_disp \"$(norm_ptr \"$(chain_cell \"$hrow\" to)\")\") anchor=- at=- verdict=exempt\")\n           ;;\n"
+  }
+}

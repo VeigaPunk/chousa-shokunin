@@ -1,0 +1,30 @@
+{
+  "name": "sha-nonstring",
+  "phase": "mutated",
+  "command": "timeout --signal=TERM --kill-after=5s 600s bash /fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/sha-nonstring/lane/tools/research-gate.sh --selftest",
+  "cwd": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/sha-nonstring/lane",
+  "TMPDIR": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/sha-nonstring/tmp",
+  "rc": 1,
+  "elapsed_s": 152.48,
+  "output_bound_holds": true,
+  "gate_before_sha256": "a3d8f2ea78fdc70bda700e976b14ef2a688a16a397273cdd58eaa1db5d2dc48d",
+  "gate_after_sha256": "a3d8f2ea78fdc70bda700e976b14ef2a688a16a397273cdd58eaa1db5d2dc48d",
+  "log_sha256": "cf8e0e3e4f1a7aa19ea32e0c070e07ff26a27fa475062f9276571de053750215",
+  "log_bytes": 13553,
+  "failing_cases": [
+    "claims-r2-sha-nonstring"
+  ],
+  "r2_cases": [
+    "FAIL-case claims-r2-sha-nonstring      exit=0 want=1 verdicts=1 vbearing=1 token=RESEARCH_GATE: DRIFT FINDING CLAIM_RECORD_INVALID severity=warn surface=claims sha256 malformed (not 64 lowercase hex characters) CLAIM id=SN1 expected=supported observed=invalid source=claimsrc/sha-src.txt at=- verdict=invalid CLAIM id=SN2 expected=supported observed=invalid source=claimsrc/sha-src.txt at=- verdict=invalid CLAIM id=SN3 expected=supported observed=invalid source=claimsrc/sha-src.txt at=- verdict=invalid CLAIM id=SN4 expected=supported observed=invalid source=claimsrc/sha-src.txt at=- verdict=invalid VERDICT_BEARING_CLAIMS=0/4 claims=4 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=4 findings=4 drift=4",
+    "ok-case  236 claims-r2-line-nonstring     exit=1",
+    "ok-case  237 claims-r2-endline            exit=1",
+    "ok-case  238 claims-r2-span-stale         exit=1",
+    "ok-case  239 claims-r2-ws-pin             exit=1",
+    "ok-case  240 r2-hash-fault-shim           exit=1",
+    "ok-case  241 claims-r2-nested-string      exit=0"
+  ],
+  "summary": [
+    "RESEARCH_GATE_SELFTEST: FAIL (1/241 cases)"
+  ],
+  "process_group_kill_attempted": true
+}

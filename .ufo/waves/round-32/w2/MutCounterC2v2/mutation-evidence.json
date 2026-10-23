@@ -1,0 +1,34 @@
+{
+  "findings-set": {
+    "before_sha256": "8ec1a1ed44f1d3971a73eeace677cbedd0187563bea063ec6b680261dbb23c8a",
+    "mutated_sha256": "da6588d90ff49b9958828844c89be1f5424628e3cfcb3c5882736041a235a25e",
+    "path": "/fast/scratch/hyaku/chousa-r32/w2/MutCounterC2v2/counters/findings-set/c2-count-v2.py",
+    "diff": "--- pristine/c2-count-v2.py\n+++ findings-set/c2-count-v2.py\n@@ -339,7 +339,7 @@\n         for hid, (cls, t) in truth.items():\n             obs = observed.get(hid, \"none\")\n             want = [FINDING_ID] if t == \"resolvable\" else []\n-            got = sorted(named.get(hid, []))\n+            got = sorted(set(named.get(hid, [])))\n             ok = record_ok and obs == t and got == want\n             if obs == t and got != want:\n                 obs = obs + \"+findings=\" + (\",\".join(got) or \"none\")\n",
+    "restored_sha256": "8ec1a1ed44f1d3971a73eeace677cbedd0187563bea063ec6b680261dbb23c8a",
+    "exact_restoration": true
+  },
+  "record-off": {
+    "before_sha256": "8ec1a1ed44f1d3971a73eeace677cbedd0187563bea063ec6b680261dbb23c8a",
+    "mutated_sha256": "b6d830ac0e0b9880f76feea222ccb117e21f93795204a9573f20732a7514a944",
+    "path": "/fast/scratch/hyaku/chousa-r32/w2/MutCounterC2v2/counters/record-off/c2-count-v2.py",
+    "diff": "--- pristine/c2-count-v2.py\n+++ record-off/c2-count-v2.py\n@@ -334,7 +334,7 @@\n                 record_fails.append(\"stray-finding-hops=%d\" % len(stray))\n         for hid in dup:\n             observed[hid] = \"none\"\n-        record_ok = not record_fails\n+        record_ok = True\n         per_class, misses, matched = {}, [], 0\n         for hid, (cls, t) in truth.items():\n             obs = observed.get(hid, \"none\")\n",
+    "restored_sha256": "8ec1a1ed44f1d3971a73eeace677cbedd0187563bea063ec6b680261dbb23c8a",
+    "exact_restoration": true
+  },
+  "layout-off": {
+    "before_sha256": "8ec1a1ed44f1d3971a73eeace677cbedd0187563bea063ec6b680261dbb23c8a",
+    "mutated_sha256": "feceaaddf18363fc85c5dae71498e07ce90ed21fbd3f052d935abd0175302fe0",
+    "path": "/fast/scratch/hyaku/chousa-r32/w2/MutCounterC2v2/counters/layout-off/c2-count-v2.py",
+    "diff": "--- pristine/c2-count-v2.py\n+++ layout-off/c2-count-v2.py\n@@ -289,7 +289,7 @@\n         return 2\n     lane_root = os.path.realpath(os.path.dirname(os.path.dirname(os.path.realpath(gate))))\n     rtmp = os.path.realpath(tmp)\n-    if rtmp == lane_root or rtmp.startswith(lane_root.rstrip(\"/\") + \"/\"):\n+    if False and (rtmp == lane_root or rtmp.startswith(lane_root.rstrip(\"/\") + \"/\")):\n         print(\"c2-count: fixture dir %s lies inside the gate's lane root %s\" % (rtmp, lane_root), file=sys.stderr)\n         shutil.rmtree(tmp, ignore_errors=True)\n         return 2\n",
+    "restored_sha256": "8ec1a1ed44f1d3971a73eeace677cbedd0187563bea063ec6b680261dbb23c8a",
+    "exact_restoration": true
+  },
+  "negatives-off": {
+    "before_sha256": "8ec1a1ed44f1d3971a73eeace677cbedd0187563bea063ec6b680261dbb23c8a",
+    "mutated_sha256": "ca618b3d1e3f44c82283987c673fea07acfce66022c5a7a99515216745ca0fc5",
+    "path": "/fast/scratch/hyaku/chousa-r32/w2/MutCounterC2v2/counters/negatives-off/c2-count-v2.py",
+    "diff": "--- pristine/c2-count-v2.py\n+++ negatives-off/c2-count-v2.py\n@@ -71,7 +71,7 @@\n import tempfile\n import time\n \n-TOTAL = 132\n+TOTAL = 120\n U = [\"unresolved\", \"blocked-no-fetch\", \"labelled-dead\"]\n J = [\"rejected\", \"not-applicable\"]\n KINDS = [\"heading\", \"quote\", \"line\"]\n@@ -91,8 +91,6 @@\n     (\"E8_U_quote_glued\", 6, \"exempt\"),\n     (\"E9_U_heading_as_plain_line\", 6, \"exempt\"),\n     (\"E10_U_line_partial\", 6, \"exempt\"),\n-    (\"E11_U_case_only\", 6, \"exempt\"),\n-    (\"E12_U_whitespace_only\", 6, \"exempt\"),\n ]\n assert sum(c for _, c, _ in CLASS_COUNTS) == TOTAL\n FINDING_ID = \"CHAIN_EXEMPT_RESOLVABLE\"\n",
+    "restored_sha256": "8ec1a1ed44f1d3971a73eeace677cbedd0187563bea063ec6b680261dbb23c8a",
+    "exact_restoration": true
+  }
+}

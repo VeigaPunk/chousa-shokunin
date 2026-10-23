@@ -1,0 +1,12 @@
+--- pristine-c1-count-v2.py
++++ remove-delay.py
+@@ -89,8 +89,7 @@
+ 
+ def traced(manifest, argv):
+     return [STRACE, "-f", "-qq", "--seccomp-bpf", "-o", "/dev/null", "-P", manifest,
+-            "-e", "trace=" + WRITE_CALLS,
+-            "-e", "inject=%s:delay_enter=%d" % (WRITE_CALLS, DELAY_US)] + argv
++            "-e", "trace=" + WRITE_CALLS] + argv
+ 
+ 
+ def delay_selfcheck(base):

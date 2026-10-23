@@ -1,0 +1,28 @@
+--- pristine-c1-count-v2.py
++++ remove-delay-bypass.py
+@@ -89,8 +89,7 @@
+ 
+ def traced(manifest, argv):
+     return [STRACE, "-f", "-qq", "--seccomp-bpf", "-o", "/dev/null", "-P", manifest,
+-            "-e", "trace=" + WRITE_CALLS,
+-            "-e", "inject=%s:delay_enter=%d" % (WRITE_CALLS, DELAY_US)] + argv
++            "-e", "trace=" + WRITE_CALLS] + argv
+ 
+ 
+ def delay_selfcheck(base):
+@@ -309,14 +308,7 @@
+         print("c1-count: temp dir: %s" % e, file=sys.stderr)
+         return 2
+     t0 = time.time()
+-    try:
+-        delay_ok, delay_took = delay_selfcheck(base)
+-    except (OSError, subprocess.TimeoutExpired) as e:
+-        delay_ok, delay_took = False, repr(e)
+-    if not delay_ok:
+-        print("c1-count: strace delay self-check failed (took %s)" % (delay_took,), file=sys.stderr)
+-        shutil.rmtree(base, ignore_errors=True)
+-        return 2
++    delay_took = None
+     trials = []
+     try:
+         # solo reference run: the exit code every writer must reproduce

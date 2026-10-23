@@ -1,0 +1,18 @@
+--- pristine-c1-count-v2.py
++++ drop-selfcheck.py
+@@ -309,14 +309,7 @@
+         print("c1-count: temp dir: %s" % e, file=sys.stderr)
+         return 2
+     t0 = time.time()
+-    try:
+-        delay_ok, delay_took = delay_selfcheck(base)
+-    except (OSError, subprocess.TimeoutExpired) as e:
+-        delay_ok, delay_took = False, repr(e)
+-    if not delay_ok:
+-        print("c1-count: strace delay self-check failed (took %s)" % (delay_took,), file=sys.stderr)
+-        shutil.rmtree(base, ignore_errors=True)
+-        return 2
++    delay_took = None
+     trials = []
+     try:
+         # solo reference run: the exit code every writer must reproduce

@@ -1,0 +1,14 @@
+== absent manifest in non-writable dir (cannot create)
+base rc=2 file=absent stderr=/fast/scratch/hyaku/chousa-r32/w2/NoHarmVerifyAll32/base/tools/research-gate.sh: line 3199: manifest.jsonl: Permission denied|research-gate: manifest append failed: manifest.jsonl|
+landed rc=2 file=absent stderr=/fast/scratch/hyaku/chousa-r32/w2/NoHarmVerifyAll32/landed/tools/research-gate.sh: line 3292: manifest.jsonl: Permission denied|research-gate: manifest open failed: manifest.jsonl|
+== existing 0644 terminated manifest inside 0500 dir (append allowed by fs)
+base rc=1 lines=2 blanks=0 prefix_kept=yes inode_same=yes
+landed rc=1 lines=2 blanks=0 prefix_kept=yes inode_same=yes
+== empty read-only manifest, full stderr
+-- base:
+   /fast/scratch/hyaku/chousa-r32/w2/NoHarmVerifyAll32/base/tools/research-gate.sh: line 3199: manifest.jsonl: Permission denied
+   research-gate: manifest append failed: manifest.jsonl
+-- landed:
+   /fast/scratch/hyaku/chousa-r32/w2/NoHarmVerifyAll32/landed/tools/research-gate.sh: line 3292: manifest.jsonl: Permission denied
+   research-gate: manifest open failed: manifest.jsonl
+DONE

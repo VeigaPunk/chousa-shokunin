@@ -1,0 +1,79 @@
+#!/usr/bin/env python3
+import hashlib
+import json
+import os
+from pathlib import Path
+import resource
+import selectors
+import shlex
+import signal
+import subprocess
+import sys
+import time
+
+ROOT = Path('/fast/scratch/hyaku/chousa-r32/w2/MutC2Gate')
+ART = Path('/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-32/w2/MutC2Gate')
+COUNTER = Path('/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round32/c2-count-v2.py')
+label, gate_arg, seed_arg = sys.argv[1:]
+gate = Path(gate_arg).resolve()
+seed = int(seed_arg)
+ART.mkdir(parents=True, exist_ok=True)
+tmp = ROOT / 'tmp' / label
+tmp.mkdir(parents=True, exist_ok=True)
+env = {k: v for k, v in os.environ.items() if not k.startswith('CHOUSA_') and k not in ('GIT_DIR', 'GIT_WORK_TREE', 'GIT_INDEX_FILE')}
+env.update(TMPDIR=str(tmp), C1_TMP=str(tmp), C2_TMP=str(tmp))
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+def limits():
+    resource.setrlimit(resource.RLIMIT_FSIZE, (16 * 1024 * 1024, 16 * 1024 * 1024))
+    resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
+
+result = {'label': label, 'gate': str(gate), 'gate_before': sha(gate), 'counter_sha256': sha(COUNTER), 'seed': seed, 'commands': []}
+commands = [
+    ('counter', ['timeout', '--signal=TERM', '--kill-after=5s', '700s', 'python3', str(COUNTER), '--gate', str(gate), '--seed', str(seed), '--receipt', str(ART / (label + '.json'))], 710),
+    ('selftest', ['timeout', '--signal=TERM', '--kill-after=5s', '900s', 'bash', str(gate), '--selftest'], 910),
+]
+for detector, command, deadline in commands:
+    outpath = ART / (label + '-' + detector + '.txt')
+    start = time.monotonic()
+    with outpath.open('wb') as output:
+        proc = subprocess.Popen(command, cwd=gate.parent.parent, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, start_new_session=True, preexec_fn=limits)
+        selector = selectors.DefaultSelector()
+        selector.register(proc.stdout, selectors.EVENT_READ)
+        written = 0
+        try:
+            while selector.get_map():
+                if time.monotonic() - start > deadline:
+                    raise subprocess.TimeoutExpired(command, deadline)
+                for key, _ in selector.select(timeout=1):
+                    chunk = os.read(key.fileobj.fileno(), 16384)
+                    if not chunk:
+                        selector.unregister(key.fileobj)
+                    elif written + len(chunk) < 1048576:
+                        output.write(chunk)
+                        written += len(chunk)
+                    else:
+                        raise RuntimeError('detector output exceeds artifact cap')
+            rc = proc.wait(timeout=5)
+        except (subprocess.TimeoutExpired, RuntimeError):
+            os.killpg(proc.pid, signal.SIGKILL)
+            rc = proc.wait()
+        finally:
+            selector.close()
+            proc.stdout.close()
+            try:
+                os.killpg(proc.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+    lines = outpath.read_text(errors='replace').splitlines()
+    key = [line for line in lines if line.startswith(('EXEMPT_AUDIT_MATCH=', '  RECORD_CHECKS=', 'RESEARCH_GATE_SELFTEST:', 'FAIL-case', 'SKIP-'))]
+    item = {'detector': detector, 'command': shlex.join(command), 'cwd': str(gate.parent.parent), 'exit': rc, 'elapsed_s': round(time.monotonic() - start, 3), 'output': str(outpath), 'key_output': key, 'size_bytes': outpath.stat().st_size}
+    result['commands'].append(item)
+    print(label, detector, 'exit=' + str(rc), 'seconds=' + str(item['elapsed_s']), flush=True)
+    for line in key:
+        print(line, flush=True)
+result['gate_after'] = sha(gate)
+(ART / (label + '-run.json')).write_text(json.dumps(result, indent=2) + '\n')
+print('HASH_UNCHANGED=' + str(result['gate_before'] == result['gate_after']), flush=True)

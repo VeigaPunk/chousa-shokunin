@@ -1236,3 +1236,16 @@ Landed: C1 `c17948a7`, C2 `6d0ae19f`. C1 `LINE_BINDING_MATCH` 50/120 → 120/120
 `REVISION_BINDING_MATCH` 50/120 → 120/120 (receipts `.ufo/waves/round-31/measure/`; falsify
 re-runs in `.ufo/waves/round-31/falsify/Rerun*`). Selftest 215 → 228. Sources S057 to S059;
 QUALITY 30 to 32; D1 to D8 corrections appended. Lesson: `corpus/lessons/round-31.md`.
+
+## Round 32 — 2026-10-23 (serialized manifest appends; exempt-hop audit)
+
+Motivating evidence: the round-31 outside spot-check (`corpus/lessons/round-31-verifier-spotcheck.md:201-234`,
+R1–R6), the anti-loop note (rounds 29–31 all worked `verify-claims`/quote re-open), the round-25
+pre-registered `--json` serialization item (`SCORECARD.md` Planned — round 26, item 1) and the
+round-3 frontier "exemption is record-declared and unverifiable". Base `7a7259f0`. Attempt 1 died
+after committing design v1 (`4111607c`); attempt 2 ran a 39-seat wave (pre-data controls + builds),
+which broke both v1 counters → design v2 `3d586d3a` before data; control receipts `f43dd5a3`,
+`a065845a`; candidate `0f96bc1c`; falsify wave 33 seats; post-falsify C1 repairs `53cf649c`.
+C1 `APPEND_SERIALIZED` 0/24 → 24/24 (final gate `f4731885`); C2 `EXEMPT_AUDIT_MATCH` 0/132 →
+132/132 but not verified (a metadata-order control also scores 132/132; CriticAxis32). Sources
+S060–S061; QUALITY 33–35; R1–R6 repairs. Lesson: `corpus/lessons/round-32.md`.

@@ -1,0 +1,420 @@
+[
+  {
+    "argv": [
+      "timeout",
+      "30s",
+      "git",
+      "-C",
+      "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+      "ls-tree",
+      "-rlz",
+      "5d8a170795dcf48c3746a4f03dee9cfe32812834",
+      "--",
+      ".ufo/waves/round-32/"
+    ],
+    "exit_code": 0,
+    "stdout_bytes": 153231,
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "timeout",
+      "30s",
+      "git",
+      "-C",
+      "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+      "cat-file",
+      "--batch"
+    ],
+    "exit_code": 0,
+    "stdout_bytes": 4874286,
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "timeout",
+      "60s",
+      "jq",
+      "-c",
+      "select(.data|type==\"object\") | select(.data|has(\"counter_sha256\")) | {path,blob,schema:.data.schema,counter_sha256:.data.counter_sha256,gate:.data.gate,gate_sha256:.data.gate_sha256,seed:.data.seed,utc:.data.utc,matched:.data.matched,total:.data.total,predicate_holds:.data.predicate_holds,label:.data.label}"
+    ],
+    "exit_code": 0,
+    "stdout_bytes": 327608,
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "timeout",
+      "30s",
+      "jq",
+      "-s",
+      "group_by(.counter_sha256) | map({counter_sha256:.[0].counter_sha256,receipts:length,gate_hashes:(map(.gate_sha256)|unique|length),totals:(map(.total)|unique),matched_min:(map(.matched)|min),matched_max:(map(.matched)|max),true_labels:(map(select(.predicate_holds==true))|length)})"
+    ],
+    "exit_code": 0,
+    "stdout_bytes": 5975,
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "timeout",
+      "30s",
+      "jq",
+      "-s",
+      "group_by([.schema, (.total|type)]) | map({schema:.[0].schema,total_type:(.[0].total|type),n:length,example:.[0].path})"
+    ],
+    "exit_code": 0,
+    "stdout_bytes": 1546,
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "timeout",
+      "30s",
+      "jq",
+      "-s",
+      "map(select(.gate_sha256==\"10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098\"))"
+    ],
+    "exit_code": 0,
+    "stdout_bytes": 2189,
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "timeout",
+      "30s",
+      "jq",
+      "-s",
+      "map(select((.counter_sha256|startswith(\"e6bf9531\")) or (.counter_sha256|startswith(\"8ec1a1ed\"))) | map(select((.total!=null) and (.matched==.total)))"
+    ],
+    "exit_code": 3,
+    "stdout_bytes": 0,
+    "stderr": "jq: error: syntax error, unexpected end of file, expecting ';' or ')' at <top-level>, line 1, column 149:\n    map(select((.counter_sha256|startswith(\"e6bf9531\")) or (.counter_sha256|startswith(\"8ec1a1ed\"))) | map(select((.total!=null) and (.matched==.total)))\n                                                                                                                                                        ^\njq: 1 compile error\n"
+  },
+  {
+    "argv": [
+      "timeout",
+      "30s",
+      "jq",
+      "-s",
+      "map(select((.counter_sha256|startswith(\"e6bf9531\")) or (.counter_sha256|startswith(\"8ec1a1ed\")))) | map(select((.total!=null) and (.matched==.total)))"
+    ],
+    "exit_code": 0,
+    "stdout_bytes": 9391,
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "timeout",
+      "30s",
+      "jq",
+      "-s",
+      "group_by(.counter_sha256) | map({counter_sha256:.[0].counter_sha256,rows:length,receipts:(map(select(.schema!=null and .matched!=null and .total!=null))|length),metadata:(map(select(.schema==null or .matched==null or .total==null))|length),gates:(map(select(.schema!=null and .matched!=null and .total!=null)|.gate_sha256)|unique|length)})"
+    ],
+    "exit_code": 0,
+    "stdout_bytes": 4031,
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "timeout",
+      "30s",
+      "jq",
+      "--version"
+    ],
+    "exit_code": 0,
+    "stdout_bytes": 9,
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "timeout",
+      "30s",
+      "jq",
+      "-s",
+      "group_by([.counter_sha256,.gate_sha256]) | map(. as $group | {counter_sha256:.[0].counter_sha256,gate_sha256:.[0].gate_sha256,rows:length,receipt_count:(map(select(.schema!=null and .matched!=null and .total!=null))|length),metadata_count:(map(select(.schema==null or .matched==null or .total==null))|length),scores:(map(select(.matched!=null and .total!=null)|((.matched|tostring)+\"/\"+(.total|tostring)))|unique),matched_values:(map(select(.matched!=null)|.matched)|unique|sort),true_labels:(map(select(.predicate_holds==true))|length),schemas:(map(.schema)|unique),utc_min:(map(select(.utc!=null)|.utc)|min),utc_max:(map(select(.utc!=null)|.utc)|max),paths:(map(.path)|sort)})"
+    ],
+    "exit_code": 0,
+    "stdout_bytes": 139611,
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "timeout",
+      "30s",
+      "git",
+      "-C",
+      "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+      "show",
+      "-s",
+      "--format=%H%x09%P%x09%aI%x09%cI",
+      "3d586d3ae2818193e51a4b2d9e6190157165c319",
+      "f43dd5a3a78d33d3d16a56e8a8e90325a094de04",
+      "a065845a5bdaf803b14dc7c7837a7a947e39c7db",
+      "0f96bc1c815f6600b5f1b5cae6d41f4a7a4bc28c",
+      "5d8a170795dcf48c3746a4f03dee9cfe32812834"
+    ],
+    "exit_code": 0,
+    "stdout_bytes": 670,
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "timeout",
+      "30s",
+      "git",
+      "-C",
+      "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+      "merge-base",
+      "--is-ancestor",
+      "3d586d3ae2818193e51a4b2d9e6190157165c319",
+      "f43dd5a3a78d33d3d16a56e8a8e90325a094de04"
+    ],
+    "exit_code": 0,
+    "stdout_bytes": 0,
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "timeout",
+      "30s",
+      "git",
+      "-C",
+      "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+      "merge-base",
+      "--is-ancestor",
+      "f43dd5a3a78d33d3d16a56e8a8e90325a094de04",
+      "a065845a5bdaf803b14dc7c7837a7a947e39c7db"
+    ],
+    "exit_code": 0,
+    "stdout_bytes": 0,
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "timeout",
+      "30s",
+      "git",
+      "-C",
+      "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+      "merge-base",
+      "--is-ancestor",
+      "a065845a5bdaf803b14dc7c7837a7a947e39c7db",
+      "0f96bc1c815f6600b5f1b5cae6d41f4a7a4bc28c"
+    ],
+    "exit_code": 0,
+    "stdout_bytes": 0,
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "timeout",
+      "30s",
+      "git",
+      "-C",
+      "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+      "merge-base",
+      "--is-ancestor",
+      "0f96bc1c815f6600b5f1b5cae6d41f4a7a4bc28c",
+      "5d8a170795dcf48c3746a4f03dee9cfe32812834"
+    ],
+    "exit_code": 0,
+    "stdout_bytes": 0,
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "timeout",
+      "30s",
+      "git",
+      "-C",
+      "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+      "log",
+      "5d8a170795dcf48c3746a4f03dee9cfe32812834",
+      "--reverse",
+      "--diff-filter=A",
+      "--format=%H %cI",
+      "--name-only",
+      "--",
+      ".ufo/waves/round-32/measure/after-c1-s32001.json",
+      ".ufo/waves/round-32/measure/after-c1-s32002.json",
+      ".ufo/waves/round-32/measure/after-c2-s32011.json",
+      ".ufo/waves/round-32/measure/after-c2-s32012.json"
+    ],
+    "exit_code": 0,
+    "stdout_bytes": 264,
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "timeout",
+      "30s",
+      "git",
+      "-C",
+      "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+      "log",
+      "--reverse",
+      "--format=COMMIT %H",
+      "--name-status",
+      "7a7259f0ad41a68068131bfa422a829db9fd1b55..5d8a170795dcf48c3746a4f03dee9cfe32812834",
+      "--",
+      ".ufo/waves/round-32/"
+    ],
+    "exit_code": 0,
+    "stdout_bytes": 84682,
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "timeout",
+      "30s",
+      "git",
+      "-C",
+      "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+      "show",
+      "5d8a170795dcf48c3746a4f03dee9cfe32812834:tools/research-gate.sh"
+    ],
+    "exit_code": 0,
+    "stdout_bytes": 335789,
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "timeout",
+      "30s",
+      "git",
+      "-C",
+      "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+      "show",
+      "5d8a170795dcf48c3746a4f03dee9cfe32812834:corpus/evidence/round32/c1-count.py"
+    ],
+    "exit_code": 0,
+    "stdout_bytes": 12923,
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "timeout",
+      "30s",
+      "git",
+      "-C",
+      "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+      "show",
+      "5d8a170795dcf48c3746a4f03dee9cfe32812834:corpus/evidence/round32/c2-count.py"
+    ],
+    "exit_code": 0,
+    "stdout_bytes": 13848,
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "timeout",
+      "30s",
+      "git",
+      "-C",
+      "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+      "show",
+      "5d8a170795dcf48c3746a4f03dee9cfe32812834:corpus/evidence/round32/c1-count-v2.py"
+    ],
+    "exit_code": 0,
+    "stdout_bytes": 15181,
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "timeout",
+      "30s",
+      "git",
+      "-C",
+      "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+      "show",
+      "5d8a170795dcf48c3746a4f03dee9cfe32812834:corpus/evidence/round32/c2-count-v2.py"
+    ],
+    "exit_code": 0,
+    "stdout_bytes": 17105,
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "timeout",
+      "30s",
+      "git",
+      "-C",
+      "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+      "show",
+      "5d8a170795dcf48c3746a4f03dee9cfe32812834:.ufo/waves/round-32/controls/L1-design/oracle-gate.sh"
+    ],
+    "exit_code": 0,
+    "stdout_bytes": 306687,
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "timeout",
+      "30s",
+      "git",
+      "-C",
+      "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+      "show",
+      "5d8a170795dcf48c3746a4f03dee9cfe32812834:.ufo/waves/round-32/controls/L1-design-v2/c2-oracle-gate.sh"
+    ],
+    "exit_code": 0,
+    "stdout_bytes": 307986,
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "timeout",
+      "30s",
+      "git",
+      "-C",
+      "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+      "show",
+      "5d8a170795dcf48c3746a4f03dee9cfe32812834:.ufo/waves/round-32/controls/L1-design-v2/a-append-only.sh"
+    ],
+    "exit_code": 0,
+    "stdout_bytes": 306617,
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "timeout",
+      "30s",
+      "git",
+      "-C",
+      "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+      "show",
+      "5d8a170795dcf48c3746a4f03dee9cfe32812834:.ufo/waves/round-32/controls/L1-design-v2/c-cached-probe.sh"
+    ],
+    "exit_code": 0,
+    "stdout_bytes": 306617,
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "timeout",
+      "30s",
+      "git",
+      "-C",
+      "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+      "show",
+      "5d8a170795dcf48c3746a4f03dee9cfe32812834:.ufo/waves/round-32/controls/L1-design-v2/d-shared-lock.sh"
+    ],
+    "exit_code": 0,
+    "stdout_bytes": 306617,
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "timeout",
+      "30s",
+      "git",
+      "-C",
+      "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+      "show",
+      "5d8a170795dcf48c3746a4f03dee9cfe32812834:.ufo/waves/round-32/controls/L1-design-v2/c1-probeonly-control-gate.sh"
+    ],
+    "exit_code": 0,
+    "stdout_bytes": 306617,
+    "stderr": ""
+  }
+]

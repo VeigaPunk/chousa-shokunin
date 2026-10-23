@@ -1,0 +1,13 @@
+--- landed/tools/research-gate.sh
++++ mutant/tools/research-gate.sh
+@@ -1847,7 +1847,9 @@
+   hay=$(cat -- "$CLAIM_SRC_PATH"; printf x)
+   hay=${hay%x}
+   PROBE_HAY=$hay
+-  if chain_anchor_at "$hay" "$PROBE_KIND" "$PROBE_TEXT"; then
++  if [[ $st == resolved && $PROBE_KIND == quote && $hay == *"$PROBE_TEXT"* ]]; then
++    PROBE=verified PROBE_AT="line:$(line_probe "$hay" "$PROBE_TEXT")"
++  elif chain_anchor_at "$hay" "$PROBE_KIND" "$PROBE_TEXT"; then
+     PROBE=verified PROBE_AT=$CITE_AT
+   else
+     PROBE=anchor-missing

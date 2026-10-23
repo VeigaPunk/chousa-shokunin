@@ -1,0 +1,1676 @@
+0f96bc1c815f6600b5f1b5cae6d41f4a7a4bc28c 2026-10-23T04:21:04-03:00 round-32: candidate gate — C1 flock-serialized --json append, C2 exempt-hop audit (chain_probe), R2 selftest cases, R4c comment; R1/R4 corrections; S060-S061; knowledge entries; round-31 counters v3; R1-R6 repair record
+
+diff --git a/corpus/evidence/round32/r31-repairs.md b/corpus/evidence/round32/r31-repairs.md
+new file mode 100644
+index 0000000..af864a2
+--- /dev/null
++++ b/corpus/evidence/round32/r31-repairs.md
+@@ -0,0 +1,14 @@
++# Round 32 — repairs routed by the round-31 outside spot-check (R1–R6)
++
++Source: `corpus/lessons/round-31-verifier-spotcheck.md:201-234`. These are repairs, not claims;
++neither round-32 counter reads anything below. Every gate is named by SHA-256.
++
++| Route | Repair | Evidence (re-checked by the L1 this round) |
++|---|---|---|
++| R1 | Named correction appended to `corpus/lessons/round-31.md` (lines 97-98 kept as written) | fail-open receipts 120/120 `predicate_holds=true` (gate `5d52f37c…`); trim-space receipts 118/120 false (gate `f3d88b23…`); `jq '{matched,predicate_holds,gate_sha256}'` on the four files under `.ufo/waves/round-31/falsify/` |
++| R2 counter | Round-31 counters v3 as new files: `corpus/evidence/round31/c1-count-v3.py` (`0efbd172…`), `c2-count-v3.py` (`654183e1…`); v2 files untouched. v3 adds a fixed 12-claim non-string class to each (TOTAL 132) | on the round-31 landed gate `0bc318b3…`: 132/132 twice each; on mutant `85d85a7b…` (non-string `line` read as absent) C1 v3 120/132; on mutant `f9da8257…` (non-string `sha256` read as absent) C2 v3 120/132 (`.ufo/waves/round-32/w1/ExecR2CounterV3/`). Nested-key class not added: the landed gate reads `{"meta":{"line":"9"}}` as the record's own key (`nested-probe.log`), a carried defect, not a counter class |
++| R2 selftest | Seven verify-claims selftest cases (non-string `sha256` and `line`, end-line-only pin, stale-before-span, spaced pins, PATH-shim hash fault → `stale actual=unreadable`, a string value that embeds `"line"`) | `.ufo/waves/round-32/w1/ExecR2Selftest31/` (scratch build `82470e57…` PASS 235); integrated into the round-32 gate |
++| R3 | No-harm battery on the landed round-31 gate `0bc318b3…` (lane `4111607c`) | `.ufo/waves/round-32/w1/ExecNoHarmBase32/`: selftest PASS 228 (case-line list sha256 `a8873064…`), claims-r2 17/17, chain-r3 17/22 CLEAN and chain-r3-broken 1/2 DRIFT (both with `--root` = fleet root), round-1 observable 3/3, round-31 counters v2 120/120 each (seeds 32, 33) |
++| R4 | `SKILL.md` round-25 tally marked historical; `corpus/README.md` Round31 disposition names the final gate; gate comment `cases 216-224` → `216-228` | the three edits in the round-32 commit; cases 216–228 per `.ufo/waves/round-31/falsify/MutC2Parse/m2-trim-space.selftest.stdout` |
++| R5 | `bfc0b02b…` is the SHA-256 of the round-31 v2 MutOracleC1 feasibility oracle, a 199-line python script passed to the frozen counter as `--gate`; it is not a gate build. Its bytes are committed at `.ufo/waves/round-31/controls/MutOracleC1/v2/oracle-c1.sh` | `sha256sum` of that file = `bfc0b02b83f554d1…c617`; 43 files under `.ufo/waves/round-31/` bind it (21 receipts, 21 output echoes, 1 manifest); `.ufo/waves/round-32/w1/RevengerR5Oracle32.md` |
++| R6 | Fleet report wording: the round-32 report names the gate SHA-256 of every run it cites | `.ufo/reports/round-32/chousa.md` (fleet repo) |
+3d586d3ae2818193e51a4b2d9e6190157165c319 2026-10-23T03:59:48-03:00 round-32: design v2 before data (C1 strace write-delay counter; C2 counted findings, record checks, layout guard, case/whitespace negatives); L1 v2 control and oracle receipts
+
+diff --git a/corpus/evidence/round32/c1-count-v2.py b/corpus/evidence/round32/c1-count-v2.py
+new file mode 100755
+index 0000000..f0eb3b6
+--- /dev/null
++++ b/corpus/evidence/round32/c1-count-v2.py
+@@ -0,0 +1,377 @@
++#!/usr/bin/env python3
++"""Round 32 C1 counter, design v2: cooperating `verify-all --json` manifest appenders.
++
++v2 differs from v1 (c1-count.py) in one respect only: every gate writer runs
++under strace(1) with each write-family system call that touches the manifest
++(write, writev, pwrite64, pwritev, pwritev2; path filter -P <manifest>)
++delayed by DELAY_US = 300000 microseconds at syscall entry. The delay widens
++the gap between a writer's last-byte probe and its append, so a gate that
++releases its lock before it writes (lock around the probe only) or writes
++outside its lock lets the next writer probe the same unterminated last line,
++and the manifest checks below fail. The v1 control wave showed that without
++the delay a probe-only lock scores 24/24 (CtlC1PartialLockB, control b). A
++start-up self-check (exit 2 if it fails) confirms on this host that a
++delayed write to a probe file takes at least DELAY_MIN_S.
++
++Frozen predicate (claims.md, P1 v2): C1 is met iff, on the landed lane
++revision, this counter (c1-count-v2.py) prints APPEND_SERIALIZED=24/24
++(receipt label predicate_holds=true) on each of two fresh-seed runs, and no
++run of this counter on that revision in round 32 prints a lower count.
++
++Contract the candidate must meet (claims.md, C1 contract): for
++`verify-all RECORD --root ROOT --json PATH`, the gate opens PATH for append
++(creating it when absent), takes an exclusive flock(2) on that open file,
++and holds it from before it reads the manifest's last byte until after its
++own line is written. A cooperating writer that holds an exclusive flock(2)
++on PATH therefore excludes both the gate's last-byte probe and its append.
++Bytes already in the manifest are never rewritten; the manifest keeps its
++inode; every appended line is one JSON object on its own line.
++
++Trials (24, fixed): each trial writes a fresh temp root holding one opaque
++source and a one-claim claims JSONL used as the record, so every writer runs
++`bash <gate> verify-all <record> --root <root> --json <manifest>` with every
++CHOUSA_* variable removed from its environment.
++
++- L trials (12; manifest seeds empty / terminated / unterminated, 4 each):
++  the counter opens the manifest and takes LOCK_EX, launches W_L=8 writers,
++  and waits until every writer has exited or is listed in /proc/locks as a
++  blocked waiter on the manifest's inode (deadline 180 s). It then checks
++  that the manifest still holds exactly the seed bytes (hold check); on an
++  empty or terminated seed it appends an unterminated cooperating fragment
++  `{"frag":N}` (no newline), and leaves an unterminated seed as it is; it
++  releases the lock and waits for every writer (deadline 300 s).
++- F trials (12; seed unterminated): W_F=16 writers run with no counter lock.
++
++A trial passes iff every check holds: hold check (L only); all writers
++reached the lock or exited within the deadline (L only); every writer exited
++within its deadline with the same exit code as one solo reference run of the
++gate on the same record (0 or 1); the manifest keeps its inode and starts
++with the seed bytes (plus the fragment bytes, L); the bytes after that prefix
++are exactly W lines, each terminated by a newline, each a JSON object whose
++"schema" is "chousa-verify-all/v1"; the prefix itself splits into non-empty
++lines that are JSON objects (an unterminated seed or fragment must have been
++terminated by the next writer, so seed and fragment lines stay their own
++lines); no blank line anywhere; the file ends with a newline.
++
++Exit: 0 iff matched == 24; 1 otherwise; 2 harness error (including a solo
++reference run that exits other than 0 or 1, a host without /proc/locks or
++strace, or a failed delay self-check). No network; writes only its temp dir
++and --receipt.
++"""
++import argparse
++import fcntl
++import hashlib
++import json
++import os
++import random
++import re
++import shutil
++import subprocess
++import sys
++import tempfile
++import time
++
++W_L = 8
++W_F = 16
++L_SEEDS = ["empty"] * 4 + ["terminated"] * 4 + ["unterminated"] * 4
++F_TRIALS = 12
++TOTAL = len(L_SEEDS) + F_TRIALS
++SCHEMA = "chousa-verify-all/v1"
++LOCK_DEADLINE_S = 180
++WRITER_DEADLINE_S = 300
++SYL = ["ka", "ri", "mo", "tu", "se", "na", "lo", "pe", "vi", "da", "gu", "ho", "ze", "bi", "fa", "yo"]
++LOCKS_RE = re.compile(r"^\d+:\s+(->\s+)?FLOCK\s+\S+\s+\S+\s+(\d+)\s+[0-9a-fA-F]+:[0-9a-fA-F]+:(\d+)\s")
++STRACE = shutil.which("strace")
++DELAY_US = 300000
++DELAY_MIN_S = 0.25
++WRITE_CALLS = "write,writev,pwrite64,pwritev,pwritev2"
++
++
++def traced(manifest, argv):
++    return [STRACE, "-f", "-qq", "--seccomp-bpf", "-o", "/dev/null", "-P", manifest,
++            "-e", "trace=" + WRITE_CALLS,
++            "-e", "inject=%s:delay_enter=%d" % (WRITE_CALLS, DELAY_US)] + argv
++
++
++def delay_selfcheck(base):
++    probe = os.path.join(base, "delay-probe.jsonl")
++    open(probe, "wb").close()
++    t = time.time()
++    p = subprocess.run(traced(probe, ["bash", "-c", 'printf "x\\n" >>"$1"', "_", probe]),
++                       capture_output=True, timeout=60)
++    took = time.time() - t
++    with open(probe, "rb") as f:
++        ok = p.returncode == 0 and f.read() == b"x\n" and took >= DELAY_MIN_S
++    return ok, round(took, 3)
++
++
++class Harness(Exception):
++    pass
++
++
++def sha256_file(path):
++    h = hashlib.sha256()
++    with open(path, "rb") as f:
++        for b in iter(lambda: f.read(1 << 16), b""):
++            h.update(b)
++    return h.hexdigest()
++
++
++def phrase(rng, n):
++    return " ".join("".join(rng.choice(SYL) for _ in range(rng.randint(2, 4))) for _ in range(n))
++
++
++def make_root(base, rng, k):
++    root = tempfile.mkdtemp(prefix="t%02d-" % k, dir=base)
++    span = phrase(rng, 3)
++    src = "s%08x.md" % rng.getrandbits(32)
++    with open(os.path.join(root, src), "w") as f:
++        f.write(phrase(rng, 4) + "\n" + phrase(rng, 2) + " " + span + " " + phrase(rng, 2) + "\n")
++    rec = os.path.join(root, "c%08x.jsonl" % rng.getrandbits(32))
++    with open(rec, "w") as f:
++        f.write(json.dumps({"id": "c%06x" % rng.getrandbits(24), "source": src, "span": span,
++                            "expect": "supported"}) + "\n")
++    return root, rec
++
++
++def seed_bytes(kind, rng):
++    if kind == "empty":
++        return b""
++    obj = json.dumps({"seed": rng.getrandbits(30)}).encode()
++    return obj + b"\n" if kind == "terminated" else obj
++
++
++def gate_env():
++    return {k: v for k, v in os.environ.items() if not k.startswith("CHOUSA_")}
++
++
++def launch(gate, rec, root, manifest, n):
++    procs = []
++    for _ in range(n):
++        procs.append(subprocess.Popen(traced(manifest, ["bash", gate, "verify-all", rec, "--root", root,
++                                                        "--json", manifest]),
++                                      cwd=root, env=gate_env(), stdin=subprocess.DEVNULL,
++                                      stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
++                                      start_new_session=True))
++    return procs
++
++
++def kill_all(procs):
++    for p in procs:
++        if p.poll() is None:
++            try:
++                os.killpg(p.pid, 9)
++            except OSError:
++                pass
++            try:
++                p.wait(timeout=10)
++            except subprocess.TimeoutExpired:
++                pass
++
++
++def waiters_on(ino):
++    n = 0
++    with open("/proc/locks") as f:
++        for line in f:
++            m = LOCKS_RE.match(line)
++            if m and m.group(1) and int(m.group(3)) == ino:
++                n += 1
++    return n
++
++
++def wait_exit(procs, deadline):
++    rcs = []
++    for p in procs:
++        left = deadline - time.time()
++        try:
++            rcs.append(p.wait(timeout=max(left, 0.01)))
++        except subprocess.TimeoutExpired:
++            rcs.append(None)
++    return rcs
++
++
++def check_manifest(path, ino, prefix, w):
++    """Return a list of failed check names (empty = pass)."""
++    fails = []
++    st = os.stat(path)
++    if st.st_ino != ino:
++        fails.append("inode-changed")
++    with open(path, "rb") as f:
++        data = f.read()
++    if not data.startswith(prefix):
++        fails.append("prefix-rewritten")
++        return fails
++    if not data.endswith(b"\n"):
++        fails.append("no-final-newline")
++    lines = data.split(b"\n")
++    if lines and lines[-1] == b"":
++        lines = lines[:-1]
++    if any(ln == b"" for ln in lines):
++        fails.append("blank-line")
++    objs = []
++    for ln in lines:
++        try:
++            o = json.loads(ln.decode("utf-8"))
++        except (UnicodeDecodeError, ValueError):
++            fails.append("invalid-json-line")
++            break
++        if not isinstance(o, dict):
++            fails.append("non-object-line")
++            break
++        objs.append(o)
++    else:
++        n_prefix = len([ln for ln in prefix.split(b"\n") if ln != b""])
++        gate_objs = objs[n_prefix:]
++        if len(gate_objs) != w:
++            fails.append("gate-lines=%d/%d" % (len(gate_objs), w))
++        if any(o.get("schema") != SCHEMA for o in gate_objs):
++            fails.append("schema")
++        if any("schema" in o for o in objs[:n_prefix]):
++            fails.append("prefix-glued")
++    return fails
++
++
++def run_trial(gate, base, rng, k, kind, locked, ref_rc):
++    root, rec = make_root(base, rng, k)
++    manifest = os.path.join(root, "m%08x.jsonl" % rng.getrandbits(32))
++    seed = seed_bytes(kind, rng)
++    with open(manifest, "wb") as f:
++        f.write(seed)
++    ino = os.stat(manifest).st_ino
++    prefix = seed
++    fails = []
++    w = W_L if locked else W_F
++    procs = []
++    try:
++        if locked:
++            fd = os.open(manifest, os.O_WRONLY | os.O_APPEND)
++            try:
++                fcntl.flock(fd, fcntl.LOCK_EX)
++                procs = launch(gate, rec, root, manifest, w)
++                deadline = time.time() + LOCK_DEADLINE_S
++                while True:
++                    exited = sum(p.poll() is not None for p in procs)
++                    if exited + waiters_on(ino) >= w:
++                        break
++                    if time.time() > deadline:
++                        fails.append("lock-deadline")
++                        break
++                    time.sleep(0.2)
++                with open(manifest, "rb") as f:
++                    if f.read() != seed:
++                        fails.append("appended-under-cooperating-lock")
++                # the counter is itself a cooperating appender: on an empty or
++                # terminated seed it writes one unterminated fragment under its lock;
++                # an unterminated seed is left as it is. Either way the next writer
++                # finds an unterminated last line once the lock is released.
++                if kind != "unterminated":
++                    frag = json.dumps({"frag": rng.getrandbits(30)}).encode()
++                    os.write(fd, frag)
++                    prefix = seed + frag
++            finally:
++                fcntl.flock(fd, fcntl.LOCK_UN)
++                os.close(fd)
++        else:
++            procs = launch(gate, rec, root, manifest, w)
++        rcs = wait_exit(procs, time.time() + WRITER_DEADLINE_S)
++        if any(r is None for r in rcs):
++            fails.append("writer-deadline")
++        elif any(r != ref_rc for r in rcs):
++            fails.append("writer-rc=%s" % ",".join(str(r) for r in sorted(set(rcs))))
++        fails += check_manifest(manifest, ino, prefix, w)
++    finally:
++        kill_all(procs)
++    return fails
++
++
++def main():
++    ap = argparse.ArgumentParser()
++    ap.add_argument("--gate", default="tools/research-gate.sh")
++    ap.add_argument("--seed", type=int, default=None)
++    ap.add_argument("--receipt", default=None)
++    a = ap.parse_args()
++    seed = a.seed if a.seed is not None else int.from_bytes(os.urandom(8), "big")
++    gate = os.path.abspath(a.gate)
++    if not os.path.isfile(gate):
++        print("c1-count: gate not found: %s" % gate, file=sys.stderr)
++        return 2
++    if not os.path.isfile("/proc/locks"):
++        print("c1-count: /proc/locks unavailable", file=sys.stderr)
++        return 2
++    if not STRACE:
++        print("c1-count: strace unavailable", file=sys.stderr)
++        return 2
++    rng = random.Random(seed)
++    tbase = os.environ.get("C1_TMP") or tempfile.gettempdir()
++    try:
++        base = tempfile.mkdtemp(prefix="chousa-r32-c1-", dir=tbase)
++    except OSError as e:
++        print("c1-count: temp dir: %s" % e, file=sys.stderr)
++        return 2
++    t0 = time.time()
++    try:
++        delay_ok, delay_took = delay_selfcheck(base)
++    except (OSError, subprocess.TimeoutExpired) as e:
++        delay_ok, delay_took = False, repr(e)
++    if not delay_ok:
++        print("c1-count: strace delay self-check failed (took %s)" % (delay_took,), file=sys.stderr)
++        shutil.rmtree(base, ignore_errors=True)
++        return 2
++    trials = []
++    try:
++        # solo reference run: the exit code every writer must reproduce
++        root, rec = make_root(base, rng, 99)
++        try:
++            p = subprocess.run(["bash", gate, "verify-all", rec, "--root", root, "--json",
++                                os.path.join(root, "ref.jsonl")], cwd=root, env=gate_env(),
++                               capture_output=True, timeout=WRITER_DEADLINE_S)
++            ref_rc = p.returncode
++        except subprocess.TimeoutExpired:
++            ref_rc = None
++        if ref_rc not in (0, 1):
++            print("c1-count: solo reference run exited %r" % (ref_rc,), file=sys.stderr)
++            return 2
++        plan = [("L", kind) for kind in L_SEEDS] + [("F", "unterminated")] * F_TRIALS
++        rng.shuffle(plan)
++        for k, (typ, kind) in enumerate(plan):
++            try:
++                fails = run_trial(gate, base, rng, k, kind, typ == "L", ref_rc)
++            except OSError as e:
++                print("c1-count: trial %d harness error: %r" % (k, e), file=sys.stderr)
++                return 2
++            trials.append({"trial": k, "type": typ, "seed_kind": kind, "pass": not fails, "fails": fails})
++    finally:
++        shutil.rmtree(base, ignore_errors=True)
++    matched = sum(t["pass"] for t in trials)
++    holds = matched == TOTAL
++    per = {}
++    for t in trials:
++        key = "%s_%s" % (t["type"], t["seed_kind"])
++        pc = per.setdefault(key, [0, 0])
++        pc[1] += 1
++        pc[0] += t["pass"]
++    print("APPEND_SERIALIZED=%d/%d" % (matched, TOTAL))
++    for key in sorted(per):
++        print("  %s %d/%d" % (key, per[key][0], per[key][1]))
++    if a.receipt:
++        receipt = {
++            "schema": "chousa-r32-c1-receipt/v2", "delay_us": DELAY_US, "delay_selfcheck_s": delay_took,
++            "counter_sha256": sha256_file(os.path.abspath(__file__)),
++            "gate": a.gate, "gate_sha256": sha256_file(gate), "seed": seed, "ref_rc": ref_rc,
++            "utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(t0)), "elapsed_s": round(time.time() - t0, 3),
++            "total": TOTAL, "matched": matched, "label": "APPEND_SERIALIZED=%d/%d" % (matched, TOTAL),
++            "predicate_holds": holds, "per_class": {k: "%d/%d" % tuple(v) for k, v in per.items()},
++            "trials": trials,
++        }
++        try:
++            with open(a.receipt, "w") as f:
++                json.dump(receipt, f, indent=1)
++                f.write("\n")
++        except OSError as e:
++            print("c1-count: --receipt failed: %r" % (e,), file=sys.stderr)
++            return 2
++    return 0 if holds else 1
++
++
++if __name__ == "__main__":
++    sys.exit(main())
+diff --git a/corpus/evidence/round32/c2-count-v2.py b/corpus/evidence/round32/c2-count-v2.py
+new file mode 100755
+index 0000000..69484bd
+--- /dev/null
++++ b/corpus/evidence/round32/c2-count-v2.py
+@@ -0,0 +1,388 @@
++#!/usr/bin/env python3
++"""Round 32 C2 counter, design v2: exempt-hop audit in `research-gate.sh verify-chain`.
++
++v2 differs from v1 (c2-count.py) in four respects, all forced by the
++pre-data control wave (MutC2CounterB: four wrong output controls scored
++120/120 under v1; CtlC2WeakReaderB/CtlC2StatusBlindB: fixture inside the
++gate's lane root):
++1. Findings are counted, not de-duplicated: a resolvable hop matches only
++   when exactly one FINDING line names it and that line is
++   CHAIN_EXEMPT_RESOLVABLE (v1 used a set, so a duplicate passed).
++2. Record checks: the gate exits 1, prints exactly one line starting
++   `RESEARCH_GATE: DRIFT`, and no FINDING line names a hop id outside the
++   record. If any record check fails, no hop matches (the record's verdict
++   is part of the contract: the record drifts).
++3. Layout guard: exit 2 if the fixture temp dir lies inside the gate's lane
++   root (the parent of the gate's directory), where the out-of-corpus
++   sibling would be in corpus.
++4. Two negative classes (6 hops each; TOTAL 120 -> 132): E11, the anchor is
++   in the source only in upper case; E12, the anchor is in the source only
++   with its words separated by two spaces. Both stay exempt (the resolved
++   path does not find them). CtlC2WeakReaderB: case-insensitive and
++   whitespace-collapsing readers scored 120/120 under v1.
++
++Frozen predicate (claims.md, P2 v2): C2 is met iff, on the landed lane
++revision, this counter (c2-count-v2.py) prints EXEMPT_AUDIT_MATCH=132/132
++(receipt label predicate_holds=true) on each of two fresh-seed runs, and no
++run of this counter on that revision in round 32 prints a lower count.
++
++The counter writes a fresh fixture under a temporary directory: a root with
++opaque source files, one directory beside the root (out of corpus), and one
++record whose `## Chain` table holds 120 hops in shuffled order with random
++hop ids. It runs `bash <gate> verify-chain <record> --root <root>` once,
++with every CHOUSA_* variable removed from the gate's environment, and
++compares each hop with its hidden truth.
++
++Contract the candidate must meet (claims.md, C2 contract):
++- U = {unresolved, blocked-no-fetch, labelled-dead} (statuses that say the
++  hop could not be followed). A U hop whose citation the gate would verify
++  if the same row said `resolved` (citation parses; source is a declared id
++  with a pointer or a local path inside the boundary; the anchor is found as
++  the resolved path finds it) prints `observed=resolvable` and exactly one
++  `FINDING CHAIN_EXEMPT_RESOLVABLE severity=warn|crit surface=chain
++  obs=hop=<hop> ...` line, and drifts.
++- Every other U hop (no citation, external URL, missing file, undeclared id,
++  out-of-corpus path, anchor absent) stays `observed=exempt` and no FINDING
++  line names it (obs=hop=<hop>).
++- `rejected` and `not-applicable` hops stay `observed=exempt`, unread, with
++  no finding naming them, whatever their citation.
++- `resolved` hops are unchanged: a resolvable one prints `observed=verified`
++  and no finding names it.
++
++A hop counts as matched only when the record checks hold, exactly one CHAIN
++line names its id, its `observed=` equals the truth, and the list of FINDING
++ids naming it is [CHAIN_EXEMPT_RESOLVABLE] for truth `resolvable` and empty
++otherwise.
++
++Exit: 0 iff matched == 132; 1 otherwise; 2 harness error. A gate run that
++exits other than 0 or 1, or outlives 600 s, scores every hop "none". No
++network (external URLs use the reserved .invalid TLD and are never fetched by
++this counter); writes only its temp dir and --receipt.
++"""
++import argparse
++import hashlib
++import json
++import os
++import random
++import re
++import shutil
++import subprocess
++import sys
++import tempfile
++import time
++
++TOTAL = 132
++U = ["unresolved", "blocked-no-fetch", "labelled-dead"]
++J = ["rejected", "not-applicable"]
++KINDS = ["heading", "quote", "line"]
++# class, count, truth
++CLASS_COUNTS = [
++    ("R1_U_fragment_quote", 12, "resolvable"),
++    ("R2_U_path_anchor_cols", 12, "resolvable"),
++    ("R3_U_declared_id", 12, "resolvable"),
++    ("F1_resolved_verifiable", 12, "verified"),
++    ("E1_U_anchor_absent", 12, "exempt"),
++    ("E2_U_missing_file", 6, "exempt"),
++    ("E3_U_external_url", 6, "exempt"),
++    ("E4_U_no_citation", 6, "exempt"),
++    ("E5_J_resolvable", 12, "exempt"),
++    ("E6_U_undeclared_id", 6, "exempt"),
++    ("E7_U_out_of_corpus", 6, "exempt"),
++    ("E8_U_quote_glued", 6, "exempt"),
++    ("E9_U_heading_as_plain_line", 6, "exempt"),
++    ("E10_U_line_partial", 6, "exempt"),
++    ("E11_U_case_only", 6, "exempt"),
++    ("E12_U_whitespace_only", 6, "exempt"),
++]
++assert sum(c for _, c, _ in CLASS_COUNTS) == TOTAL
++FINDING_ID = "CHAIN_EXEMPT_RESOLVABLE"
++GATE_TIMEOUT_S = 600
++SYL = ["ka", "ri", "mo", "tu", "se", "na", "lo", "pe", "vi", "da", "gu", "ho", "ze", "bi", "fa", "yo"]
++LINE_RE = re.compile(r"^CHAIN hop=(\S+) .*?observed=(\S+)")
++FIND_RE = re.compile(r"^FINDING (\S+) severity=\S+ surface=\S+ obs=hop=(\S+)(?:\s|$)")
++
++
++def sha256_file(path):
++    h = hashlib.sha256()
++    with open(path, "rb") as f:
++        for b in iter(lambda: f.read(1 << 16), b""):
++            h.update(b)
++    return h.hexdigest()
++
++
++class Gen:
++    def __init__(self, rng):
++        self.rng = rng
++        self.used = set()
++
++    def word(self):
++        while True:
++            w = "".join(self.rng.choice(SYL) for _ in range(self.rng.randint(2, 4)))
++            if w not in self.used:
++                self.used.add(w)
++                return w
++
++    def phrase(self, n=None):
++        return " ".join(self.word() for _ in range(n or self.rng.randint(2, 4)))
++
++    def hid(self):
++        while True:
++            h = "h%08x" % self.rng.getrandbits(32)
++            if h not in self.used:
++                self.used.add(h)
++                return h
++
++    def name(self, prefix):
++        while True:
++            n = "%s%010x" % (prefix, self.rng.getrandbits(40))
++            if n not in self.used:
++                self.used.add(n)
++                return n
++
++
++def source_body(gen, kind, anchor, mode):
++    """Lines of a source file. mode: present | absent | glued | plain_heading | partial_line | case | spaced."""
++    lines = [gen.phrase(5) for _ in range(gen.rng.randint(3, 7))]
++    pos = gen.rng.randint(1, len(lines) - 1)
++    if mode == "present":
++        if kind == "heading":
++            ins = "## " + anchor
++        elif kind == "quote":
++            ins = gen.phrase(2) + " " + anchor + " " + gen.phrase(2)
++        else:
++            ins = anchor
++    elif mode == "absent":
++        # near miss: the anchor's first word and a fresh tail, never the anchor itself
++        first = anchor.split(" ")[0]
++        near = first + " " + gen.phrase(2)
++        ins = ("## " + near) if kind == "heading" else near
++    elif mode == "glued":
++        ins = gen.phrase(2) + " x" + anchor + " " + gen.phrase(2)
++    elif mode == "plain_heading":
++        ins = anchor
++    elif mode == "partial_line":
++        ins = anchor + " " + gen.phrase(2)
++    elif mode in ("case", "spaced"):
++        alt = anchor.upper() if mode == "case" else anchor.replace(" ", "  ")
++        if kind == "heading":
++            ins = "## " + alt
++        elif kind == "quote":
++            ins = gen.phrase(2) + " " + alt + " " + gen.phrase(2)
++        else:
++            ins = alt
++    else:
++        raise ValueError(mode)
++    lines.insert(pos, ins)
++    return "\n".join(lines) + "\n"
++
++
++def generate(tmp, seed):
++    rng = random.Random(seed)
++    gen = Gen(rng)
++    root = os.path.join(tmp, "root")
++    outside = os.path.join(tmp, "outside")
++    os.makedirs(root)
++    os.makedirs(outside)
++    hops, truth, sources = [], {}, []
++
++    def put_file(directory, body):
++        n = gen.name("f") + ".md"
++        with open(os.path.join(directory, n), "w") as f:
++            f.write(body)
++        return n
++
++    def add(cls, t, status, to, kind="", anchor=""):
++        hid = gen.hid()
++        frm = "%s:%d" % (gen.name("A"), rng.randint(1, 90))
++        hops.append("| %s | %s | %s | %s | %s | %s | %s |" % (hid, frm, to, kind, anchor, status, gen.phrase(3)))
++        truth[hid] = (cls, t)
++
++    for cls, count, t in CLASS_COUNTS:
++        for i in range(count):
++            ustat = U[i % 3]
++            kind = KINDS[(i // 3) % 3] if count == 12 else KINDS[i % 3]
++            anchor = gen.phrase()
++            if cls == "R1_U_fragment_quote":
++                n = put_file(root, source_body(gen, "quote", anchor, "present"))
++                add(cls, t, ustat, "%s#quote:%s" % (n, anchor))
++            elif cls == "R2_U_path_anchor_cols":
++                n = put_file(root, source_body(gen, kind, anchor, "present"))
++                add(cls, t, ustat, n, kind, anchor)
++            elif cls == "R3_U_declared_id":
++                n = put_file(root, source_body(gen, kind, anchor, "present"))
++                sid = gen.name("S")
++                sources.append((sid, n))
++                add(cls, t, ustat, sid, kind, anchor)
++            elif cls == "F1_resolved_verifiable":
++                n = put_file(root, source_body(gen, kind, anchor, "present"))
++                if i % 2:
++                    sid = gen.name("S")
++                    sources.append((sid, n))
++                    add(cls, t, "resolved", sid, kind, anchor)
++                else:
++                    add(cls, t, "resolved", n, kind, anchor)
++            elif cls == "E1_U_anchor_absent":
++                n = put_file(root, source_body(gen, kind, anchor, "absent"))
++                add(cls, t, ustat, n, kind, anchor)
++            elif cls == "E2_U_missing_file":
++                add(cls, t, ustat, gen.name("f") + ".md", kind, anchor)
++            elif cls == "E3_U_external_url":
++                add(cls, t, ustat, "https://%s.invalid/%s" % (gen.name("h"), gen.word()), kind, anchor)
++            elif cls == "E4_U_no_citation":
++                n = put_file(root, source_body(gen, kind, anchor, "present"))
++                add(cls, t, ustat, n)
++            elif cls == "E5_J_resolvable":
++                n = put_file(root, source_body(gen, kind, anchor, "present"))
++                add(cls, t, J[i % 2], n, kind, anchor)
++            elif cls == "E6_U_undeclared_id":
++                add(cls, t, ustat, gen.name("S"), kind, anchor)
++            elif cls == "E7_U_out_of_corpus":
++                n = put_file(outside, source_body(gen, kind, anchor, "present"))
++                add(cls, t, ustat, "../outside/" + n, kind, anchor)
++            elif cls == "E8_U_quote_glued":
++                n = put_file(root, source_body(gen, "quote", anchor, "glued"))
++                add(cls, t, ustat, n, "quote", anchor)
++            elif cls == "E9_U_heading_as_plain_line":
++                n = put_file(root, source_body(gen, "heading", anchor, "plain_heading"))
++                add(cls, t, ustat, n, "heading", anchor)
++            elif cls == "E10_U_line_partial":
++                n = put_file(root, source_body(gen, "line", anchor, "partial_line"))
++                add(cls, t, ustat, n, "line", anchor)
++            elif cls == "E11_U_case_only":
++                n = put_file(root, source_body(gen, kind, anchor, "case"))
++                add(cls, t, ustat, n, kind, anchor)
++            elif cls == "E12_U_whitespace_only":
++                n = put_file(root, source_body(gen, kind, anchor, "spaced"))
++                add(cls, t, ustat, n, kind, anchor)
++            else:
++                raise ValueError(cls)
++    rng.shuffle(hops)
++    rng.shuffle(sources)
++    rec = ["# %s" % gen.phrase(3), "", "## Sources", "", "| id | pointer | tier |", "|---|---|---|"]
++    rec += ["| %s | %s | A |" % (sid, p) for sid, p in sources]
++    rec += ["", "## Chain", "", "| hop | from | to | anchor_kind | anchor | status | notes |",
++            "|---|---|---|---|---|---|---|"]
++    rec += hops
++    record = os.path.join(root, gen.name("r") + ".md")
++    with open(record, "w") as f:
++        f.write("\n".join(rec) + "\n")
++    return root, record, truth
++
++
++def main():
++    ap = argparse.ArgumentParser()
++    ap.add_argument("--gate", default="tools/research-gate.sh")
++    ap.add_argument("--seed", type=int, default=None)
++    ap.add_argument("--receipt", default=None)
++    ap.add_argument("--keep", default=None, help="copy the fixture here (audit only)")
++    a = ap.parse_args()
++    seed = a.seed if a.seed is not None else int.from_bytes(os.urandom(8), "big")
++    gate = os.path.abspath(a.gate)
++    if not os.path.isfile(gate):
++        print("c2-count: gate not found: %s" % gate, file=sys.stderr)
++        return 2
++    base = os.environ.get("C2_TMP") or tempfile.gettempdir()
++    try:
++        tmp = tempfile.mkdtemp(prefix="chousa-r32-c2-", dir=base)
++    except OSError as e:
++        print("c2-count: temp dir: %s" % e, file=sys.stderr)
++        return 2
++    lane_root = os.path.realpath(os.path.dirname(os.path.dirname(os.path.realpath(gate))))
++    rtmp = os.path.realpath(tmp)
++    if rtmp == lane_root or rtmp.startswith(lane_root.rstrip("/") + "/"):
++        print("c2-count: fixture dir %s lies inside the gate's lane root %s" % (rtmp, lane_root), file=sys.stderr)
++        shutil.rmtree(tmp, ignore_errors=True)
++        return 2
++    t0 = time.time()
++    try:
++        try:
++            root, record, truth = generate(tmp, seed)
++        except Exception as e:
++            print("c2-count: fixture generation failed: %r" % (e,), file=sys.stderr)
++            return 2
++        rc, out, timed_out = None, "", False
++        try:
++            env = {k: v for k, v in os.environ.items() if not k.startswith("CHOUSA_")}
++            p = subprocess.run(["bash", gate, "verify-chain", record, "--root", root], capture_output=True,
++                               env=env, text=True, timeout=GATE_TIMEOUT_S, cwd=root)
++            rc, out = p.returncode, p.stdout
++        except subprocess.TimeoutExpired:
++            timed_out = True
++        observed, dup, named = {}, set(), {}
++        record_fails = []
++        if timed_out or rc not in (0, 1):
++            record_fails.append("gate-rc=%s" % ("timeout" if timed_out else rc))
++        else:
++            if rc != 1:
++                record_fails.append("gate-rc=%d" % rc)
++            n_drift = 0
++            for line in out.splitlines():
++                if line.startswith("RESEARCH_GATE: DRIFT"):
++                    n_drift += 1
++                f = FIND_RE.match(line)
++                if f:
++                    named.setdefault(f.group(2), []).append(f.group(1))
++                m = LINE_RE.match(line)
++                if m and m.group(1) in truth:
++                    if m.group(1) in observed:
++                        dup.add(m.group(1))
++                    observed[m.group(1)] = m.group(2)
++            if n_drift != 1:
++                record_fails.append("drift-summary-lines=%d" % n_drift)
++            stray = sorted(h for h in named if h not in truth)
++            if stray:
++                record_fails.append("stray-finding-hops=%d" % len(stray))
++        for hid in dup:
++            observed[hid] = "none"
++        record_ok = not record_fails
++        per_class, misses, matched = {}, [], 0
++        for hid, (cls, t) in truth.items():
++            obs = observed.get(hid, "none")
++            want = [FINDING_ID] if t == "resolvable" else []
++            got = sorted(named.get(hid, []))
++            ok = record_ok and obs == t and got == want
++            if obs == t and got != want:
++                obs = obs + "+findings=" + (",".join(got) or "none")
++            elif obs == t and not record_ok:
++                obs = obs + "+record-fail"
++            matched += ok
++            pc = per_class.setdefault(cls, [0, 0])
++            pc[1] += 1
++            pc[0] += ok
++            if not ok:
++                misses.append({"hop": hid, "class": cls, "truth": t, "observed": obs})
++        if a.keep:
++            try:
++                shutil.copytree(tmp, a.keep)
++            except OSError as e:
++                print("c2-count: --keep failed: %r" % (e,), file=sys.stderr)
++                return 2
++    finally:
++        shutil.rmtree(tmp, ignore_errors=True)
++    holds = matched == TOTAL
++    print("EXEMPT_AUDIT_MATCH=%d/%d" % (matched, TOTAL))
++    print("  RECORD_CHECKS=%s" % ("ok" if not record_fails else "fail:" + ",".join(record_fails)))
++    for cls, _, _ in CLASS_COUNTS:
++        print("  %s %d/%d" % (cls, per_class[cls][0], per_class[cls][1]))
++    if a.receipt:
++        receipt = {
++            "schema": "chousa-r32-c2-receipt/v2", "record_fails": record_fails,
++            "counter_sha256": sha256_file(os.path.abspath(__file__)),
++            "gate": a.gate, "gate_sha256": sha256_file(gate), "seed": seed,
++            "utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(t0)), "elapsed_s": round(time.time() - t0, 3),
++            "gate_rc": rc, "gate_timed_out": timed_out, "total": TOTAL, "matched": matched,
++            "label": "EXEMPT_AUDIT_MATCH=%d/%d" % (matched, TOTAL), "predicate_holds": holds,
++            "per_class": {k: "%d/%d" % tuple(v) for k, v in per_class.items()}, "misses": misses,
++        }
++        try:
++            with open(a.receipt, "w") as f:
++                json.dump(receipt, f, indent=1)
++                f.write("\n")
++        except OSError as e:
++            print("c2-count: --receipt failed: %r" % (e,), file=sys.stderr)
++            return 2
++    return 0 if holds else 1
++
++
++if __name__ == "__main__":
++    sys.exit(main())
+diff --git a/corpus/evidence/round32/claims.md b/corpus/evidence/round32/claims.md
+index c2344ce..267fc3f 100644
+--- a/corpus/evidence/round32/claims.md
++++ b/corpus/evidence/round32/claims.md
+@@ -115,3 +115,75 @@ lines byte-identical; `verify-claims corpus/fixtures/claims-r2.jsonl` 17/17; `ve
+ corpus/fixtures/chain-r3.md` `RESOLVED_HOPS=17/22` CLEAN; `chain-r3-broken.md` 1/2 DRIFT; the
+ round-1 observable `VERDICT_BEARING_EXPORTS=3/3`; the round-31 counters (`c1-count.py`,
+ `c2-count.py` under `corpus/evidence/round31/`) 120/120 each.
++
++# Design v2 (round 32 attempt 2, before any candidate receipt)
++
++Design v1 above was committed at `4111607c` by attempt 1, which died before any seat ran. Attempt 2
++ran the pre-data control wave (`.ufo/waves/round-32/w1/`) under v1 and it broke both counters
++before any candidate was built into the lane or scored. Under the kill rule above, a later design
++version is legal only before the first candidate receipt and must say what control forced it. No
++candidate receipt exists for either claim at the commit that carries this section.
++
++## What forced v2
++
++- **C1.** `CtlC1PartialLockB` control (b) — lock around the last-byte probe only, `flock -u` before
++  the append — scored `APPEND_SERIALIZED=24/24` on two fresh seeds under v1
++  (`w1/CtlC1PartialLockB/b-s32471021.json`, `b-s32471022.json`, gate `034f786b…`). The append
++  is microseconds after the unlock and the next writer's probe takes milliseconds, so v1 never
++  saw the window. The other C1 controls missed (do-nothing 6–10/24, wrong lock ≤12, jitter ≤12,
++  all-false 0, append-only ≤4, cached probe 0, shared lock ≤11).
++- **C2.** Under v1, a gate that prints each finding twice scored 120/120 (`CtlC2NoisyB`
++  duplicate-only; `MutC2CounterB` duplicate-finding), as did output controls with no DRIFT
++  verdict, CLEAN with exit 0, or a stray finding on an unknown hop (`MutC2CounterB`
++  `frozen-{no-verdict,clean-exit,stray-unknown}-*`); case-insensitive and whitespace-collapsing
++  readers scored 120/120 (`CtlC2WeakReaderB` `*-isolated-mutated-*`), because the fixture has no
++  case-only or whitespace-only negatives. Seats also found a layout hazard: a control gate placed
++  flat in the counter's temp parent puts the out-of-corpus sibling inside the gate's lane root.
++
++## C1 v2
++
++Counter `corpus/evidence/round32/c1-count-v2.py` (v1 unchanged and no longer counted). The only
++change: every gate writer runs under strace(1) with each write-family syscall that touches the
++manifest delayed 300 ms at entry, plus a start-up self-check that the delay works (exit 2
++otherwise). Trials, checks and contract are v1's.
++
++**P1 (frozen predicate, v2).** C1 is met iff, on the landed lane revision, `c1-count-v2.py`
++prints `APPEND_SERIALIZED=24/24` (receipt label `predicate_holds=true`) on each of two fresh-seed
++runs, and no run of this counter on that revision in round 32 prints a lower count.
++
++Code condition: `holds = matched == TOTAL` with `TOTAL = 24`. Receipt label: `predicate_holds`.
++
++L1 receipts under v2 (`.ufo/waves/round-32/controls/L1-design-v2/`, counter `e6bf9531…`): base
++gate 0/24; probe-only control (b) 0/24; append-only (a) 0/24; cached probe (c) 0/24; shared lock
++(d) 0/24; feasibility oracle (`controls/L1-design/oracle-gate.sh`, gate `719d0b92…`) 24/24 on
++seeds 3201 and 3202. Before value for C1 under v2: **0/24** (base gate `0bc318b3`, seed 3201).
++
++## C2 v2
++
++Counter `corpus/evidence/round32/c2-count-v2.py` (v1 unchanged and no longer counted). Changes:
++(1) findings are counted, not de-duplicated; (2) record checks — gate exit 1, exactly one
++`RESEARCH_GATE: DRIFT` line, no FINDING naming a hop id outside the record — and if any fails no
++hop matches; (3) exit 2 when the fixture temp dir lies inside the gate's lane root; (4) two
++negative classes, E11 (anchor present only in upper case) and E12 (anchor words separated by two
++spaces), 6 hops each, so TOTAL is 132. The contract text of C2 is unchanged ("exactly one FINDING
++… and drifts" was already in it).
++
++**P2 (frozen predicate, v2).** C2 is met iff, on the landed lane revision, `c2-count-v2.py`
++prints `EXEMPT_AUDIT_MATCH=132/132` (receipt label `predicate_holds=true`) on each of two
++fresh-seed runs, and no run of this counter on that revision in round 32 prints a lower count.
++
++Code condition: `holds = matched == TOTAL` with `TOTAL = 132`. Receipt label: `predicate_holds`.
++
++L1 receipts under v2 (counter `8ec1a1ed…`): base gate 0/132 (record checks fail: exit 0, no DRIFT
++line; R1–R3 0/36 at hop level) on seeds 3221 and 3222; duplicate-finding control 96/132 (R1–R3
++0/36); feasibility oracle (`OracleC2B` final gate `1e3d02fe…`, copy `c2-oracle-gate.sh`) 132/132
++on both seeds. Truth audit, seed 3223: every status rewritten to `resolved` in the kept fixture,
++the base gate verifies exactly 60 hops (R1–R3, F1, E5) and reports E11/E12 among the 42
++anchor-missing (`c2-truth-audit-s3223-resolved.out`). Before value for C2 under v2: **0/132**.
++
++## Control re-score under v2
++
++Before any candidate is scored, the control-wave seats re-score their controls under the v2
++counters; their receipts are committed before the first candidate receipt. A control that meets
++P1 v2 or P2 v2 stops data: the claim then lands as a miss or is declared exploratory, never
++re-scaled.
+4111607c857bc29ff31883bc095ae00afb527e50 2026-10-23T03:09:40-03:00 round-32: frozen claims design v1 and counters (C1 manifest append lock, C2 exempt-hop audit); L1 do-nothing and oracle receipts
+
+diff --git a/corpus/evidence/round32/c1-count.py b/corpus/evidence/round32/c1-count.py
+new file mode 100755
+index 0000000..3bca24a
+--- /dev/null
++++ b/corpus/evidence/round32/c1-count.py
+@@ -0,0 +1,330 @@
++#!/usr/bin/env python3
++"""Round 32 C1 counter: cooperating `verify-all --json` manifest appenders.
++
++Frozen predicate (claims.md, P1): C1 is met iff, on the landed lane revision,
++this counter prints APPEND_SERIALIZED=24/24 (receipt label
++predicate_holds=true) on each of two fresh-seed runs, and no run of this
++counter on that revision in round 32 prints a lower count.
++
++Contract the candidate must meet (claims.md, C1 contract): for
++`verify-all RECORD --root ROOT --json PATH`, the gate opens PATH for append
++(creating it when absent), takes an exclusive flock(2) on that open file,
++and holds it from before it reads the manifest's last byte until after its
++own line is written. A cooperating writer that holds an exclusive flock(2)
++on PATH therefore excludes both the gate's last-byte probe and its append.
++Bytes already in the manifest are never rewritten; the manifest keeps its
++inode; every appended line is one JSON object on its own line.
++
++Trials (24, fixed): each trial writes a fresh temp root holding one opaque
++source and a one-claim claims JSONL used as the record, so every writer runs
++`bash <gate> verify-all <record> --root <root> --json <manifest>` with every
++CHOUSA_* variable removed from its environment.
++
++- L trials (12; manifest seeds empty / terminated / unterminated, 4 each):
++  the counter opens the manifest and takes LOCK_EX, launches W_L=8 writers,
++  and waits until every writer has exited or is listed in /proc/locks as a
++  blocked waiter on the manifest's inode (deadline 180 s). It then checks
++  that the manifest still holds exactly the seed bytes (hold check); on an
++  empty or terminated seed it appends an unterminated cooperating fragment
++  `{"frag":N}` (no newline), and leaves an unterminated seed as it is; it
++  releases the lock and waits for every writer (deadline 300 s).
++- F trials (12; seed unterminated): W_F=16 writers run with no counter lock.
++
++A trial passes iff every check holds: hold check (L only); all writers
++reached the lock or exited within the deadline (L only); every writer exited
++within its deadline with the same exit code as one solo reference run of the
++gate on the same record (0 or 1); the manifest keeps its inode and starts
++with the seed bytes (plus the fragment bytes, L); the bytes after that prefix
++are exactly W lines, each terminated by a newline, each a JSON object whose
++"schema" is "chousa-verify-all/v1"; the prefix itself splits into non-empty
++lines that are JSON objects (an unterminated seed or fragment must have been
++terminated by the next writer, so seed and fragment lines stay their own
++lines); no blank line anywhere; the file ends with a newline.
++
++Exit: 0 iff matched == 24; 1 otherwise; 2 harness error (including a solo
++reference run that exits other than 0 or 1, or a host without /proc/locks).
++No network; writes only its temp dir and --receipt.
++"""
++import argparse
++import fcntl
++import hashlib
++import json
++import os
++import random
++import re
++import shutil
++import subprocess
++import sys
++import tempfile
++import time
++
++W_L = 8
++W_F = 16
++L_SEEDS = ["empty"] * 4 + ["terminated"] * 4 + ["unterminated"] * 4
++F_TRIALS = 12
++TOTAL = len(L_SEEDS) + F_TRIALS
++SCHEMA = "chousa-verify-all/v1"
++LOCK_DEADLINE_S = 180
++WRITER_DEADLINE_S = 300
++SYL = ["ka", "ri", "mo", "tu", "se", "na", "lo", "pe", "vi", "da", "gu", "ho", "ze", "bi", "fa", "yo"]
++LOCKS_RE = re.compile(r"^\d+:\s+(->\s+)?FLOCK\s+\S+\s+\S+\s+(\d+)\s+[0-9a-fA-F]+:[0-9a-fA-F]+:(\d+)\s")
++
++
++class Harness(Exception):
++    pass
++
++
++def sha256_file(path):
++    h = hashlib.sha256()
++    with open(path, "rb") as f:
++        for b in iter(lambda: f.read(1 << 16), b""):
++            h.update(b)
++    return h.hexdigest()
++
++
++def phrase(rng, n):
++    return " ".join("".join(rng.choice(SYL) for _ in range(rng.randint(2, 4))) for _ in range(n))
++
++
++def make_root(base, rng, k):
++    root = tempfile.mkdtemp(prefix="t%02d-" % k, dir=base)
++    span = phrase(rng, 3)
++    src = "s%08x.md" % rng.getrandbits(32)
++    with open(os.path.join(root, src), "w") as f:
++        f.write(phrase(rng, 4) + "\n" + phrase(rng, 2) + " " + span + " " + phrase(rng, 2) + "\n")
++    rec = os.path.join(root, "c%08x.jsonl" % rng.getrandbits(32))
++    with open(rec, "w") as f:
++        f.write(json.dumps({"id": "c%06x" % rng.getrandbits(24), "source": src, "span": span,
++                            "expect": "supported"}) + "\n")
++    return root, rec
++
++
++def seed_bytes(kind, rng):
++    if kind == "empty":
++        return b""
++    obj = json.dumps({"seed": rng.getrandbits(30)}).encode()
++    return obj + b"\n" if kind == "terminated" else obj
++
++
++def gate_env():
++    return {k: v for k, v in os.environ.items() if not k.startswith("CHOUSA_")}
++
++
++def launch(gate, rec, root, manifest, n):
++    procs = []
++    for _ in range(n):
++        procs.append(subprocess.Popen(["bash", gate, "verify-all", rec, "--root", root, "--json", manifest],
++                                      cwd=root, env=gate_env(), stdin=subprocess.DEVNULL,
++                                      stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
++                                      start_new_session=True))
++    return procs
++
++
++def kill_all(procs):
++    for p in procs:
++        if p.poll() is None:
++            try:
++                os.killpg(p.pid, 9)
++            except OSError:
++                pass
++            try:
++                p.wait(timeout=10)
++            except subprocess.TimeoutExpired:
++                pass
++
++
++def waiters_on(ino):
++    n = 0
++    with open("/proc/locks") as f:
++        for line in f:
++            m = LOCKS_RE.match(line)
++            if m and m.group(1) and int(m.group(3)) == ino:
++                n += 1
++    return n
++
++
++def wait_exit(procs, deadline):
++    rcs = []
++    for p in procs:
++        left = deadline - time.time()
++        try:
++            rcs.append(p.wait(timeout=max(left, 0.01)))
++        except subprocess.TimeoutExpired:
++            rcs.append(None)
++    return rcs
++
++
++def check_manifest(path, ino, prefix, w):
++    """Return a list of failed check names (empty = pass)."""
++    fails = []
++    st = os.stat(path)
++    if st.st_ino != ino:
++        fails.append("inode-changed")
++    with open(path, "rb") as f:
++        data = f.read()
++    if not data.startswith(prefix):
++        fails.append("prefix-rewritten")
++        return fails
++    if not data.endswith(b"\n"):
++        fails.append("no-final-newline")
++    lines = data.split(b"\n")
++    if lines and lines[-1] == b"":
++        lines = lines[:-1]
++    if any(ln == b"" for ln in lines):
++        fails.append("blank-line")
++    objs = []
++    for ln in lines:
++        try:
++            o = json.loads(ln.decode("utf-8"))
++        except (UnicodeDecodeError, ValueError):
++            fails.append("invalid-json-line")
++            break
++        if not isinstance(o, dict):
++            fails.append("non-object-line")
++            break
++        objs.append(o)
++    else:
++        n_prefix = len([ln for ln in prefix.split(b"\n") if ln != b""])
++        gate_objs = objs[n_prefix:]
++        if len(gate_objs) != w:
++            fails.append("gate-lines=%d/%d" % (len(gate_objs), w))
++        if any(o.get("schema") != SCHEMA for o in gate_objs):
++            fails.append("schema")
++        if any("schema" in o for o in objs[:n_prefix]):
++            fails.append("prefix-glued")
++    return fails
++
++
++def run_trial(gate, base, rng, k, kind, locked, ref_rc):
++    root, rec = make_root(base, rng, k)
++    manifest = os.path.join(root, "m%08x.jsonl" % rng.getrandbits(32))
++    seed = seed_bytes(kind, rng)
++    with open(manifest, "wb") as f:
++        f.write(seed)
++    ino = os.stat(manifest).st_ino
++    prefix = seed
++    fails = []
++    w = W_L if locked else W_F
++    procs = []
++    try:
++        if locked:
++            fd = os.open(manifest, os.O_WRONLY | os.O_APPEND)
++            try:
++                fcntl.flock(fd, fcntl.LOCK_EX)
++                procs = launch(gate, rec, root, manifest, w)
++                deadline = time.time() + LOCK_DEADLINE_S
++                while True:
++                    exited = sum(p.poll() is not None for p in procs)
++                    if exited + waiters_on(ino) >= w:
++                        break
++                    if time.time() > deadline:
++                        fails.append("lock-deadline")
++                        break
++                    time.sleep(0.2)
++                with open(manifest, "rb") as f:
++                    if f.read() != seed:
++                        fails.append("appended-under-cooperating-lock")
++                # the counter is itself a cooperating appender: on an empty or
++                # terminated seed it writes one unterminated fragment under its lock;
++                # an unterminated seed is left as it is. Either way the next writer
++                # finds an unterminated last line once the lock is released.
++                if kind != "unterminated":
++                    frag = json.dumps({"frag": rng.getrandbits(30)}).encode()
++                    os.write(fd, frag)
++                    prefix = seed + frag
++            finally:
++                fcntl.flock(fd, fcntl.LOCK_UN)
++                os.close(fd)
++        else:
++            procs = launch(gate, rec, root, manifest, w)
++        rcs = wait_exit(procs, time.time() + WRITER_DEADLINE_S)
++        if any(r is None for r in rcs):
++            fails.append("writer-deadline")
++        elif any(r != ref_rc for r in rcs):
++            fails.append("writer-rc=%s" % ",".join(str(r) for r in sorted(set(rcs))))
++        fails += check_manifest(manifest, ino, prefix, w)
++    finally:
++        kill_all(procs)
++    return fails
++
++
++def main():
++    ap = argparse.ArgumentParser()
++    ap.add_argument("--gate", default="tools/research-gate.sh")
++    ap.add_argument("--seed", type=int, default=None)
++    ap.add_argument("--receipt", default=None)
++    a = ap.parse_args()
++    seed = a.seed if a.seed is not None else int.from_bytes(os.urandom(8), "big")
++    gate = os.path.abspath(a.gate)
++    if not os.path.isfile(gate):
++        print("c1-count: gate not found: %s" % gate, file=sys.stderr)
++        return 2
++    if not os.path.isfile("/proc/locks"):
++        print("c1-count: /proc/locks unavailable", file=sys.stderr)
++        return 2
++    rng = random.Random(seed)
++    tbase = os.environ.get("C1_TMP") or tempfile.gettempdir()
++    try:
++        base = tempfile.mkdtemp(prefix="chousa-r32-c1-", dir=tbase)
++    except OSError as e:
++        print("c1-count: temp dir: %s" % e, file=sys.stderr)
++        return 2
++    t0 = time.time()
++    trials = []
++    try:
++        # solo reference run: the exit code every writer must reproduce
++        root, rec = make_root(base, rng, 99)
++        try:
++            p = subprocess.run(["bash", gate, "verify-all", rec, "--root", root, "--json",
++                                os.path.join(root, "ref.jsonl")], cwd=root, env=gate_env(),
++                               capture_output=True, timeout=WRITER_DEADLINE_S)
++            ref_rc = p.returncode
++        except subprocess.TimeoutExpired:
++            ref_rc = None
++        if ref_rc not in (0, 1):
++            print("c1-count: solo reference run exited %r" % (ref_rc,), file=sys.stderr)
++            return 2
++        plan = [("L", kind) for kind in L_SEEDS] + [("F", "unterminated")] * F_TRIALS
++        rng.shuffle(plan)
++        for k, (typ, kind) in enumerate(plan):
++            try:
++                fails = run_trial(gate, base, rng, k, kind, typ == "L", ref_rc)
++            except OSError as e:
++                print("c1-count: trial %d harness error: %r" % (k, e), file=sys.stderr)
++                return 2
++            trials.append({"trial": k, "type": typ, "seed_kind": kind, "pass": not fails, "fails": fails})
++    finally:
++        shutil.rmtree(base, ignore_errors=True)
++    matched = sum(t["pass"] for t in trials)
++    holds = matched == TOTAL
++    per = {}
++    for t in trials:
++        key = "%s_%s" % (t["type"], t["seed_kind"])
++        pc = per.setdefault(key, [0, 0])
++        pc[1] += 1
++        pc[0] += t["pass"]
++    print("APPEND_SERIALIZED=%d/%d" % (matched, TOTAL))
++    for key in sorted(per):
++        print("  %s %d/%d" % (key, per[key][0], per[key][1]))
++    if a.receipt:
++        receipt = {
++            "schema": "chousa-r32-c1-receipt/v1",
++            "counter_sha256": sha256_file(os.path.abspath(__file__)),
++            "gate": a.gate, "gate_sha256": sha256_file(gate), "seed": seed, "ref_rc": ref_rc,
++            "utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(t0)), "elapsed_s": round(time.time() - t0, 3),
++            "total": TOTAL, "matched": matched, "label": "APPEND_SERIALIZED=%d/%d" % (matched, TOTAL),
++            "predicate_holds": holds, "per_class": {k: "%d/%d" % tuple(v) for k, v in per.items()},
++            "trials": trials,
++        }
++        try:
++            with open(a.receipt, "w") as f:
++                json.dump(receipt, f, indent=1)
++                f.write("\n")
++        except OSError as e:
++            print("c1-count: --receipt failed: %r" % (e,), file=sys.stderr)
++            return 2
++    return 0 if holds else 1
++
++
++if __name__ == "__main__":
++    sys.exit(main())
+diff --git a/corpus/evidence/round32/c2-count.py b/corpus/evidence/round32/c2-count.py
+new file mode 100755
+index 0000000..2798c22
+--- /dev/null
++++ b/corpus/evidence/round32/c2-count.py
+@@ -0,0 +1,328 @@
++#!/usr/bin/env python3
++"""Round 32 C2 counter: exempt-hop audit in `research-gate.sh verify-chain`.
++
++Frozen predicate (claims.md, P2): C2 is met iff, on the landed lane revision,
++this counter prints EXEMPT_AUDIT_MATCH=120/120 (receipt label
++predicate_holds=true) on each of two fresh-seed runs, and no run of this
++counter on that revision in round 32 prints a lower count.
++
++The counter writes a fresh fixture under a temporary directory: a root with
++opaque source files, one directory beside the root (out of corpus), and one
++record whose `## Chain` table holds 120 hops in shuffled order with random
++hop ids. It runs `bash <gate> verify-chain <record> --root <root>` once,
++with every CHOUSA_* variable removed from the gate's environment, and
++compares each hop with its hidden truth.
++
++Contract the candidate must meet (claims.md, C2 contract):
++- U = {unresolved, blocked-no-fetch, labelled-dead} (statuses that say the
++  hop could not be followed). A U hop whose citation the gate would verify
++  if the same row said `resolved` (citation parses; source is a declared id
++  with a pointer or a local path inside the boundary; the anchor is found as
++  the resolved path finds it) prints `observed=resolvable` and exactly one
++  `FINDING CHAIN_EXEMPT_RESOLVABLE severity=warn|crit surface=chain
++  obs=hop=<hop> ...` line, and drifts.
++- Every other U hop (no citation, external URL, missing file, undeclared id,
++  out-of-corpus path, anchor absent) stays `observed=exempt` and no FINDING
++  line names it (obs=hop=<hop>).
++- `rejected` and `not-applicable` hops stay `observed=exempt`, unread, with
++  no finding naming them, whatever their citation.
++- `resolved` hops are unchanged: a resolvable one prints `observed=verified`
++  and no finding names it.
++
++A hop counts as matched only when exactly one CHAIN line names its id, its
++`observed=` equals the truth, and the set of FINDING ids naming it is
++{CHAIN_EXEMPT_RESOLVABLE} for truth `resolvable` and empty otherwise.
++
++Exit: 0 iff matched == 120; 1 otherwise; 2 harness error. A gate run that
++exits other than 0 or 1, or outlives 600 s, scores every hop "none". No
++network (external URLs use the reserved .invalid TLD and are never fetched by
++this counter); writes only its temp dir and --receipt.
++"""
++import argparse
++import hashlib
++import json
++import os
++import random
++import re
++import shutil
++import subprocess
++import sys
++import tempfile
++import time
++
++TOTAL = 120
++U = ["unresolved", "blocked-no-fetch", "labelled-dead"]
++J = ["rejected", "not-applicable"]
++KINDS = ["heading", "quote", "line"]
++# class, count, truth
++CLASS_COUNTS = [
++    ("R1_U_fragment_quote", 12, "resolvable"),
++    ("R2_U_path_anchor_cols", 12, "resolvable"),
++    ("R3_U_declared_id", 12, "resolvable"),
++    ("F1_resolved_verifiable", 12, "verified"),
++    ("E1_U_anchor_absent", 12, "exempt"),
++    ("E2_U_missing_file", 6, "exempt"),
++    ("E3_U_external_url", 6, "exempt"),
++    ("E4_U_no_citation", 6, "exempt"),
++    ("E5_J_resolvable", 12, "exempt"),
++    ("E6_U_undeclared_id", 6, "exempt"),
++    ("E7_U_out_of_corpus", 6, "exempt"),
++    ("E8_U_quote_glued", 6, "exempt"),
++    ("E9_U_heading_as_plain_line", 6, "exempt"),
++    ("E10_U_line_partial", 6, "exempt"),
++]
++assert sum(c for _, c, _ in CLASS_COUNTS) == TOTAL
++FINDING_ID = "CHAIN_EXEMPT_RESOLVABLE"
++GATE_TIMEOUT_S = 600
++SYL = ["ka", "ri", "mo", "tu", "se", "na", "lo", "pe", "vi", "da", "gu", "ho", "ze", "bi", "fa", "yo"]
++LINE_RE = re.compile(r"^CHAIN hop=(\S+) .*?observed=(\S+)")
++FIND_RE = re.compile(r"^FINDING (\S+) severity=\S+ surface=\S+ obs=hop=(\S+)(?:\s|$)")
++
++
++def sha256_file(path):
++    h = hashlib.sha256()
++    with open(path, "rb") as f:
++        for b in iter(lambda: f.read(1 << 16), b""):
++            h.update(b)
++    return h.hexdigest()
++
++
++class Gen:
++    def __init__(self, rng):
++        self.rng = rng
++        self.used = set()
++
++    def word(self):
++        while True:
++            w = "".join(self.rng.choice(SYL) for _ in range(self.rng.randint(2, 4)))
++            if w not in self.used:
++                self.used.add(w)
++                return w
++
++    def phrase(self, n=None):
++        return " ".join(self.word() for _ in range(n or self.rng.randint(2, 4)))
++
++    def hid(self):
++        while True:
++            h = "h%08x" % self.rng.getrandbits(32)
++            if h not in self.used:
++                self.used.add(h)
++                return h
++
++    def name(self, prefix):
++        while True:
++            n = "%s%010x" % (prefix, self.rng.getrandbits(40))
++            if n not in self.used:
++                self.used.add(n)
++                return n
++
++
++def source_body(gen, kind, anchor, mode):
++    """Lines of a source file. mode: present | absent | glued | plain_heading | partial_line."""
++    lines = [gen.phrase(5) for _ in range(gen.rng.randint(3, 7))]
++    pos = gen.rng.randint(1, len(lines) - 1)
++    if mode == "present":
++        if kind == "heading":
++            ins = "## " + anchor
++        elif kind == "quote":
++            ins = gen.phrase(2) + " " + anchor + " " + gen.phrase(2)
++        else:
++            ins = anchor
++    elif mode == "absent":
++        # near miss: the anchor's first word and a fresh tail, never the anchor itself
++        first = anchor.split(" ")[0]
++        near = first + " " + gen.phrase(2)
++        ins = ("## " + near) if kind == "heading" else near
++    elif mode == "glued":
++        ins = gen.phrase(2) + " x" + anchor + " " + gen.phrase(2)
++    elif mode == "plain_heading":
++        ins = anchor
++    elif mode == "partial_line":
++        ins = anchor + " " + gen.phrase(2)
++    else:
++        raise ValueError(mode)
++    lines.insert(pos, ins)
++    return "\n".join(lines) + "\n"
++
++
++def generate(tmp, seed):
++    rng = random.Random(seed)
++    gen = Gen(rng)
++    root = os.path.join(tmp, "root")
++    outside = os.path.join(tmp, "outside")
++    os.makedirs(root)
++    os.makedirs(outside)
++    hops, truth, sources = [], {}, []
++
++    def put_file(directory, body):
++        n = gen.name("f") + ".md"
++        with open(os.path.join(directory, n), "w") as f:
++            f.write(body)
++        return n
++
++    def add(cls, t, status, to, kind="", anchor=""):
++        hid = gen.hid()
++        frm = "%s:%d" % (gen.name("A"), rng.randint(1, 90))
++        hops.append("| %s | %s | %s | %s | %s | %s | %s |" % (hid, frm, to, kind, anchor, status, gen.phrase(3)))
++        truth[hid] = (cls, t)
++
++    for cls, count, t in CLASS_COUNTS:
++        for i in range(count):
++            ustat = U[i % 3]
++            kind = KINDS[(i // 3) % 3] if count == 12 else KINDS[i % 3]
++            anchor = gen.phrase()
++            if cls == "R1_U_fragment_quote":
++                n = put_file(root, source_body(gen, "quote", anchor, "present"))
++                add(cls, t, ustat, "%s#quote:%s" % (n, anchor))
++            elif cls == "R2_U_path_anchor_cols":
++                n = put_file(root, source_body(gen, kind, anchor, "present"))
++                add(cls, t, ustat, n, kind, anchor)
++            elif cls == "R3_U_declared_id":
++                n = put_file(root, source_body(gen, kind, anchor, "present"))
++                sid = gen.name("S")
++                sources.append((sid, n))
++                add(cls, t, ustat, sid, kind, anchor)
++            elif cls == "F1_resolved_verifiable":
++                n = put_file(root, source_body(gen, kind, anchor, "present"))
++                if i % 2:
++                    sid = gen.name("S")
++                    sources.append((sid, n))
++                    add(cls, t, "resolved", sid, kind, anchor)
++                else:
++                    add(cls, t, "resolved", n, kind, anchor)
++            elif cls == "E1_U_anchor_absent":
++                n = put_file(root, source_body(gen, kind, anchor, "absent"))
++                add(cls, t, ustat, n, kind, anchor)
++            elif cls == "E2_U_missing_file":
++                add(cls, t, ustat, gen.name("f") + ".md", kind, anchor)
++            elif cls == "E3_U_external_url":
++                add(cls, t, ustat, "https://%s.invalid/%s" % (gen.name("h"), gen.word()), kind, anchor)
++            elif cls == "E4_U_no_citation":
++                n = put_file(root, source_body(gen, kind, anchor, "present"))
++                add(cls, t, ustat, n)
++            elif cls == "E5_J_resolvable":
++                n = put_file(root, source_body(gen, kind, anchor, "present"))
++                add(cls, t, J[i % 2], n, kind, anchor)
++            elif cls == "E6_U_undeclared_id":
++                add(cls, t, ustat, gen.name("S"), kind, anchor)
++            elif cls == "E7_U_out_of_corpus":
++                n = put_file(outside, source_body(gen, kind, anchor, "present"))
++                add(cls, t, ustat, "../outside/" + n, kind, anchor)
++            elif cls == "E8_U_quote_glued":
++                n = put_file(root, source_body(gen, "quote", anchor, "glued"))
++                add(cls, t, ustat, n, "quote", anchor)
++            elif cls == "E9_U_heading_as_plain_line":
++                n = put_file(root, source_body(gen, "heading", anchor, "plain_heading"))
++                add(cls, t, ustat, n, "heading", anchor)
++            elif cls == "E10_U_line_partial":
++                n = put_file(root, source_body(gen, "line", anchor, "partial_line"))
++                add(cls, t, ustat, n, "line", anchor)
++            else:
++                raise ValueError(cls)
++    rng.shuffle(hops)
++    rng.shuffle(sources)
++    rec = ["# %s" % gen.phrase(3), "", "## Sources", "", "| id | pointer | tier |", "|---|---|---|"]
++    rec += ["| %s | %s | A |" % (sid, p) for sid, p in sources]
++    rec += ["", "## Chain", "", "| hop | from | to | anchor_kind | anchor | status | notes |",
++            "|---|---|---|---|---|---|---|"]
++    rec += hops
++    record = os.path.join(root, gen.name("r") + ".md")
++    with open(record, "w") as f:
++        f.write("\n".join(rec) + "\n")
++    return root, record, truth
++
++
++def main():
++    ap = argparse.ArgumentParser()
++    ap.add_argument("--gate", default="tools/research-gate.sh")
++    ap.add_argument("--seed", type=int, default=None)
++    ap.add_argument("--receipt", default=None)
++    ap.add_argument("--keep", default=None, help="copy the fixture here (audit only)")
++    a = ap.parse_args()
++    seed = a.seed if a.seed is not None else int.from_bytes(os.urandom(8), "big")
++    gate = os.path.abspath(a.gate)
++    if not os.path.isfile(gate):
++        print("c2-count: gate not found: %s" % gate, file=sys.stderr)
++        return 2
++    base = os.environ.get("C2_TMP") or tempfile.gettempdir()
++    try:
++        tmp = tempfile.mkdtemp(prefix="chousa-r32-c2-", dir=base)
++    except OSError as e:
++        print("c2-count: temp dir: %s" % e, file=sys.stderr)
++        return 2
++    t0 = time.time()
++    try:
++        try:
++            root, record, truth = generate(tmp, seed)
++        except Exception as e:
++            print("c2-count: fixture generation failed: %r" % (e,), file=sys.stderr)
++            return 2
++        rc, out, timed_out = None, "", False
++        try:
++            env = {k: v for k, v in os.environ.items() if not k.startswith("CHOUSA_")}
++            p = subprocess.run(["bash", gate, "verify-chain", record, "--root", root], capture_output=True,
++                               env=env, text=True, timeout=GATE_TIMEOUT_S, cwd=root)
++            rc, out = p.returncode, p.stdout
++        except subprocess.TimeoutExpired:
++            timed_out = True
++        observed, dup, named = {}, set(), {}
++        if not timed_out and rc in (0, 1):
++            for line in out.splitlines():
++                f = FIND_RE.match(line)
++                if f:
++                    named.setdefault(f.group(2), set()).add(f.group(1))
++                m = LINE_RE.match(line)
++                if m and m.group(1) in truth:
++                    if m.group(1) in observed:
++                        dup.add(m.group(1))
++                    observed[m.group(1)] = m.group(2)
++        for hid in dup:
++            observed[hid] = "none"
++        per_class, misses, matched = {}, [], 0
++        for hid, (cls, t) in truth.items():
++            obs = observed.get(hid, "none")
++            want = {FINDING_ID} if t == "resolvable" else set()
++            got = named.get(hid, set())
++            ok = obs == t and got == want
++            if obs == t and not ok:
++                obs = obs + "+findings=" + (",".join(sorted(got)) or "none")
++            matched += ok
++            pc = per_class.setdefault(cls, [0, 0])
++            pc[1] += 1
++            pc[0] += ok
++            if not ok:
++                misses.append({"hop": hid, "class": cls, "truth": t, "observed": obs})
++        if a.keep:
++            try:
++                shutil.copytree(tmp, a.keep)
++            except OSError as e:
++                print("c2-count: --keep failed: %r" % (e,), file=sys.stderr)
++                return 2
++    finally:
++        shutil.rmtree(tmp, ignore_errors=True)
++    holds = matched == TOTAL
++    print("EXEMPT_AUDIT_MATCH=%d/%d" % (matched, TOTAL))
++    for cls, _, _ in CLASS_COUNTS:
++        print("  %s %d/%d" % (cls, per_class[cls][0], per_class[cls][1]))
++    if a.receipt:
++        receipt = {
++            "schema": "chousa-r32-c2-receipt/v1",
++            "counter_sha256": sha256_file(os.path.abspath(__file__)),
++            "gate": a.gate, "gate_sha256": sha256_file(gate), "seed": seed,
++            "utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(t0)), "elapsed_s": round(time.time() - t0, 3),
++            "gate_rc": rc, "gate_timed_out": timed_out, "total": TOTAL, "matched": matched,
++            "label": "EXEMPT_AUDIT_MATCH=%d/%d" % (matched, TOTAL), "predicate_holds": holds,
++            "per_class": {k: "%d/%d" % tuple(v) for k, v in per_class.items()}, "misses": misses,
++        }
++        try:
++            with open(a.receipt, "w") as f:
++                json.dump(receipt, f, indent=1)
++                f.write("\n")
++        except OSError as e:
++            print("c2-count: --receipt failed: %r" % (e,), file=sys.stderr)
++            return 2
++    return 0 if holds else 1
++
++
++if __name__ == "__main__":
++    sys.exit(main())
+diff --git a/corpus/evidence/round32/claims.md b/corpus/evidence/round32/claims.md
+new file mode 100644
+index 0000000..c2344ce
+--- /dev/null
++++ b/corpus/evidence/round32/claims.md
+@@ -0,0 +1,117 @@
++# Round 32 — frozen claims (design v1)
++
++Base `7a7259f0ad41a68068131bfa422a829db9fd1b55` (lane `master`). Gate at base:
++`tools/research-gate.sh` SHA-256 `0bc318b3e74ac0ad45f4b34154e886d84aebf44673612afab6de5e0b0ff11258`
++(the landed round-31 gate). Counters (this commit): `corpus/evidence/round32/c1-count.py`,
++`corpus/evidence/round32/c2-count.py`; every receipt records the counter that produced it
++(`counter_sha256`). Only receipts carrying the hashes of the counters in the commit that carries
++this file count for design v1.
++
++Anti-loop: rounds 29–31 worked `verify-claims` and `tools/quote-reopen.py`. Neither claim below
++touches either. The round-31 repairs routed by the outside spot-check (R1–R6) are repairs, not
++claims, and are kept out of both counters.
++
++## C1 — operability (lowest scored axis: the only scored axis, `SCORECARD.md:7`)
++
++**Surface.** The `verify-all … --json PATH` manifest append path. The gate documents that `--json`
++"appends (>>, never rewrites) one JSON line" (`tools/research-gate.sh:196`). Concurrent appenders
++break it at base: the last-byte probe and the append are two operations with no lock, so two
++writers that both see an unterminated last line both prefix a newline and leave a blank line
++(r24 knowledge `corpus/knowledge/json-delimiter-r24.md:67-71`; r25 2/6 seeded runs). The fix was
++pre-registered at round 25 (`SCORECARD.md` Planned — round 26, item 1) and never landed.
++
++**Contract.** For `verify-all RECORD --root ROOT --json PATH`, the gate opens PATH for append
++(creating it when absent), takes an exclusive flock(2) on that open file, and holds it from before
++it reads the manifest's last byte until after its own line is written. A cooperating writer that
++holds an exclusive flock(2) on PATH therefore excludes both the gate's last-byte probe and its
++append. Bytes already in the manifest are never rewritten; the manifest keeps its inode; every
++appended line is one JSON object on its own line. Nothing else in `verify-all` changes.
++
++**Counter.** `python3 corpus/evidence/round32/c1-count.py [--gate PATH] [--seed N] [--receipt F]`
++(lane root). 24 fixed trials: 12 L trials (the counter holds LOCK_EX on the manifest while 8
++writers start; seeds empty / terminated / unterminated, 4 each; hold check; cooperating
++unterminated fragment on empty/terminated seeds) and 12 F trials (16 free writers on an
++unterminated seed). Trial predicate and checks: the counter's docstring (same text).
++
++**P1 (frozen predicate).** C1 is met iff, on the landed lane revision, this counter prints
++`APPEND_SERIALIZED=24/24` (receipt label `predicate_holds=true`) on each of two fresh-seed runs,
++and no run of this counter on that revision in round 32 prints a lower count.
++
++Code condition: `holds = matched == TOTAL` with `TOTAL = 24`. Receipt label: `predicate_holds`.
++
++**Before (do-nothing control, L1, disclosed).** Base gate, seed 11:
++`APPEND_SERIALIZED=8/24` (L 0/12: every writer appended under the cooperating lock; F 8/12: four
++trials with a blank line) — `.ufo/waves/round-32/controls/L1-design/base-s11.json`. Feasibility
++oracle (scratch gate `719d0b92…`, flock around probe + append): 24/24 —
++`controls/L1-design/oracle-s12.json`, gate copy `controls/L1-design/oracle-gate.sh`. The oracle is
++feasibility only, never a candidate.
++
++## C2 — coverage (citation chaining: the exempt-hop class of `verify-chain`)
++
++**Surface.** `verify-chain` reads only `resolved` hops. A hop marked `unresolved`,
++`blocked-no-fetch` or `labelled-dead` is exempt and never read (`tools/research-gate.sh` verify_chain,
++`unresolved|blocked-no-fetch|rejected|labelled-dead|not-applicable)` arm). The round-3 frontier
++names the gap: "exemption is record-declared and unverifiable" (`corpus/README.md` Frontier,
++Round 3 paragraph). A record can therefore mark a hop "could not be followed" while its cited
++anchor sits in a local source under the boundary. This claim moves that edge class from frontier
++(unread) to held ground (read, and a false unavailability mark drifts). The command that would
++show it unmoved: the counter below on the landed gate printing R1–R3 at 0/36.
++
++**Contract.** U = {`unresolved`, `blocked-no-fetch`, `labelled-dead`} (statuses that say the hop
++could not be followed). A U hop whose citation the gate would verify if the same row said
++`resolved` (the citation parses; the source is a declared id with a pointer or a local path inside
++the boundary; the anchor is found as the resolved path finds it) prints `observed=resolvable`
++(verdict `mismatch`) and exactly one `FINDING CHAIN_EXEMPT_RESOLVABLE severity=warn|crit
++surface=chain obs=hop=<hop> …` line, and the record drifts. Every other U hop (no citation,
++external URL, missing file, undeclared id, out-of-corpus path, anchor absent) stays
++`observed=exempt` and no FINDING line names it. `rejected` and `not-applicable` hops stay
++`observed=exempt`, unread, with no finding, whatever their citation (they record a judgment, not
++an unavailability). `resolved` hops are unchanged. No network read is added: a URL source stays
++unread.
++
++**Counter.** `python3 corpus/evidence/round32/c2-count.py [--gate PATH] [--seed N] [--receipt F]
++[--keep DIR]` (lane root). 120 hops in one record, 14 fixed classes (truth resolvable 36,
++verified 12, exempt 72), random hop ids and file names; matching rule in the counter's docstring
++(same text).
++
++**P2 (frozen predicate).** C2 is met iff, on the landed lane revision, this counter prints
++`EXEMPT_AUDIT_MATCH=120/120` (receipt label `predicate_holds=true`) on each of two fresh-seed
++runs, and no run of this counter on that revision in round 32 prints a lower count.
++
++Code condition: `holds = matched == TOTAL` with `TOTAL = 120`. Receipt label: `predicate_holds`.
++
++**Before (do-nothing control, L1, disclosed).** Base gate, seed 21: `EXEMPT_AUDIT_MATCH=84/120`
++(R1–R3 0/36; every other class full) — `controls/L1-design/c2-base-s21.json`. Truth check (L1,
++seed 1, kept fixture): the same 120 hops with every status rewritten to `resolved` verify exactly
++the 60 hops of R1–R3, F1 and E5 on the base gate (anchor-missing 30 = E1+E8+E9+E10, refused 24 =
++E2+E3+E6+E7, invalid 6 = E4), so the hidden truth matches the gate's own resolved semantics.
++Cheap controls the control wave must score under this counter: flag every U hop; flag a U hop
++when its local file exists, without reading it; status-blind (flag any resolvable hop, including
++`rejected`/`not-applicable`); junk labels; a reader that greps the anchor bytes anywhere.
++
++## Separability
++
++C1 changes only the `--json` append block of `verify_all`; the C1 counter's record is a claims
++JSONL (no `## Chain`). C2 changes only the exempt arm of `verify_chain`; its counter runs
++`verify-chain` only. Receipts required before admission: C2 counter on the C1-only build prints
++84/120; C1 counter on the C2-only build prints a count below 24.
++
++## Kill rule
++
++A miss under P1 or P2 is reported as a miss. Neither predicate, counter, class list nor target is
++amended after any candidate has been scored; a later design version is legal only before the
++first candidate receipt and must say what control forced it.
++
++## Sourced claim (frontier step 2b.4)
++
++At least one of C1/C2 cites a `corpus/SOURCES.md` row opened this round, on a host already
++registered in that file (the fetch-scope L0 question `8d77e6c1` is open; no new host is opened).
++The citation is in the claim's knowledge entry; it is not part of P1 or P2.
++
++## No harm
++
++Measured at base and after, on the named gate revision: `--selftest` PASS count with the base case
++lines byte-identical; `verify-claims corpus/fixtures/claims-r2.jsonl` 17/17; `verify-chain
++corpus/fixtures/chain-r3.md` `RESOLVED_HOPS=17/22` CLEAN; `chain-r3-broken.md` 1/2 DRIFT; the
++round-1 observable `VERDICT_BEARING_EXPORTS=3/3`; the round-31 counters (`c1-count.py`,
++`c2-count.py` under `corpus/evidence/round31/`) 120/120 each.

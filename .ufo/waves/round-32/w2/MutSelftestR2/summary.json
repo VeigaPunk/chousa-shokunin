@@ -1,0 +1,615 @@
+{
+  "axes": [
+    "operability",
+    "coverage"
+  ],
+  "candidate": "5d8a170795dcf48c3746a4f03dee9cfe32812834",
+  "baseline_command": [
+    "timeout",
+    "--signal=TERM",
+    "--kill-after=10s",
+    "700s",
+    "python3",
+    "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-32/w2/MutSelftestR2/detect.py",
+    "pristine",
+    "sha-nonstring",
+    "line-nonstring",
+    "endline",
+    "span-before-stale",
+    "trimmed-pin",
+    "hash-fault"
+  ],
+  "baseline_harness_rc": 0,
+  "mutated_restored_command": [
+    "timeout",
+    "--signal=TERM",
+    "--kill-after=10s",
+    "1300s",
+    "python3",
+    "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-32/w2/MutSelftestR2/detect.py",
+    "mutated-restored",
+    "sha-nonstring",
+    "line-nonstring",
+    "endline",
+    "span-before-stale",
+    "trimmed-pin",
+    "hash-fault"
+  ],
+  "mutated_restored_harness_rc": 0,
+  "runs": [
+    {
+      "name": "sha-nonstring",
+      "phase": "pristine",
+      "command": "timeout --signal=TERM --kill-after=5s 600s bash /fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/sha-nonstring/lane/tools/research-gate.sh --selftest",
+      "cwd": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/sha-nonstring/lane",
+      "TMPDIR": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/sha-nonstring/tmp",
+      "rc": 0,
+      "elapsed_s": 77.438,
+      "output_bound_holds": true,
+      "gate_before_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "gate_after_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "log_sha256": "202702b410343f9442378624c87d3fadd9d8c617af48892f782b0051bb05a465",
+      "log_bytes": 12046,
+      "failing_cases": [],
+      "r2_cases": [
+        "ok-case  235 claims-r2-sha-nonstring      exit=1",
+        "ok-case  236 claims-r2-line-nonstring     exit=1",
+        "ok-case  237 claims-r2-endline            exit=1",
+        "ok-case  238 claims-r2-span-stale         exit=1",
+        "ok-case  239 claims-r2-ws-pin             exit=1",
+        "ok-case  240 r2-hash-fault-shim           exit=1",
+        "ok-case  241 claims-r2-nested-string      exit=0"
+      ],
+      "summary": [
+        "RESEARCH_GATE_SELFTEST: PASS (241 cases, 0 skipped)"
+      ],
+      "process_group_kill_attempted": true
+    },
+    {
+      "name": "sha-nonstring",
+      "phase": "mutated",
+      "command": "timeout --signal=TERM --kill-after=5s 600s bash /fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/sha-nonstring/lane/tools/research-gate.sh --selftest",
+      "cwd": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/sha-nonstring/lane",
+      "TMPDIR": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/sha-nonstring/tmp",
+      "rc": 1,
+      "elapsed_s": 152.48,
+      "output_bound_holds": true,
+      "gate_before_sha256": "a3d8f2ea78fdc70bda700e976b14ef2a688a16a397273cdd58eaa1db5d2dc48d",
+      "gate_after_sha256": "a3d8f2ea78fdc70bda700e976b14ef2a688a16a397273cdd58eaa1db5d2dc48d",
+      "log_sha256": "cf8e0e3e4f1a7aa19ea32e0c070e07ff26a27fa475062f9276571de053750215",
+      "log_bytes": 13553,
+      "failing_cases": [
+        "claims-r2-sha-nonstring"
+      ],
+      "r2_cases": [
+        "FAIL-case claims-r2-sha-nonstring      exit=0 want=1 verdicts=1 vbearing=1 token=RESEARCH_GATE: DRIFT FINDING CLAIM_RECORD_INVALID severity=warn surface=claims sha256 malformed (not 64 lowercase hex characters) CLAIM id=SN1 expected=supported observed=invalid source=claimsrc/sha-src.txt at=- verdict=invalid CLAIM id=SN2 expected=supported observed=invalid source=claimsrc/sha-src.txt at=- verdict=invalid CLAIM id=SN3 expected=supported observed=invalid source=claimsrc/sha-src.txt at=- verdict=invalid CLAIM id=SN4 expected=supported observed=invalid source=claimsrc/sha-src.txt at=- verdict=invalid VERDICT_BEARING_CLAIMS=0/4 claims=4 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=4 findings=4 drift=4",
+        "ok-case  236 claims-r2-line-nonstring     exit=1",
+        "ok-case  237 claims-r2-endline            exit=1",
+        "ok-case  238 claims-r2-span-stale         exit=1",
+        "ok-case  239 claims-r2-ws-pin             exit=1",
+        "ok-case  240 r2-hash-fault-shim           exit=1",
+        "ok-case  241 claims-r2-nested-string      exit=0"
+      ],
+      "summary": [
+        "RESEARCH_GATE_SELFTEST: FAIL (1/241 cases)"
+      ],
+      "process_group_kill_attempted": true
+    },
+    {
+      "name": "sha-nonstring",
+      "phase": "restored",
+      "command": "timeout --signal=TERM --kill-after=5s 600s bash /fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/sha-nonstring/lane/tools/research-gate.sh --selftest",
+      "cwd": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/sha-nonstring/lane",
+      "TMPDIR": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/sha-nonstring/tmp",
+      "rc": 0,
+      "elapsed_s": 119.232,
+      "output_bound_holds": true,
+      "gate_before_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "gate_after_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "log_sha256": "202702b410343f9442378624c87d3fadd9d8c617af48892f782b0051bb05a465",
+      "log_bytes": 12046,
+      "failing_cases": [],
+      "r2_cases": [
+        "ok-case  235 claims-r2-sha-nonstring      exit=1",
+        "ok-case  236 claims-r2-line-nonstring     exit=1",
+        "ok-case  237 claims-r2-endline            exit=1",
+        "ok-case  238 claims-r2-span-stale         exit=1",
+        "ok-case  239 claims-r2-ws-pin             exit=1",
+        "ok-case  240 r2-hash-fault-shim           exit=1",
+        "ok-case  241 claims-r2-nested-string      exit=0"
+      ],
+      "summary": [
+        "RESEARCH_GATE_SELFTEST: PASS (241 cases, 0 skipped)"
+      ],
+      "process_group_kill_attempted": true
+    },
+    {
+      "name": "line-nonstring",
+      "phase": "pristine",
+      "command": "timeout --signal=TERM --kill-after=5s 600s bash /fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/line-nonstring/lane/tools/research-gate.sh --selftest",
+      "cwd": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/line-nonstring/lane",
+      "TMPDIR": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/line-nonstring/tmp",
+      "rc": 0,
+      "elapsed_s": 77.467,
+      "output_bound_holds": true,
+      "gate_before_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "gate_after_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "log_sha256": "202702b410343f9442378624c87d3fadd9d8c617af48892f782b0051bb05a465",
+      "log_bytes": 12046,
+      "failing_cases": [],
+      "r2_cases": [
+        "ok-case  235 claims-r2-sha-nonstring      exit=1",
+        "ok-case  236 claims-r2-line-nonstring     exit=1",
+        "ok-case  237 claims-r2-endline            exit=1",
+        "ok-case  238 claims-r2-span-stale         exit=1",
+        "ok-case  239 claims-r2-ws-pin             exit=1",
+        "ok-case  240 r2-hash-fault-shim           exit=1",
+        "ok-case  241 claims-r2-nested-string      exit=0"
+      ],
+      "summary": [
+        "RESEARCH_GATE_SELFTEST: PASS (241 cases, 0 skipped)"
+      ],
+      "process_group_kill_attempted": true
+    },
+    {
+      "name": "line-nonstring",
+      "phase": "mutated",
+      "command": "timeout --signal=TERM --kill-after=5s 600s bash /fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/line-nonstring/lane/tools/research-gate.sh --selftest",
+      "cwd": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/line-nonstring/lane",
+      "TMPDIR": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/line-nonstring/tmp",
+      "rc": 1,
+      "elapsed_s": 152.407,
+      "output_bound_holds": true,
+      "gate_before_sha256": "29ef7dde7430a5c61a2521782e2637af3c8c6fdcd9b2c017f66d9fe205a0093b",
+      "gate_after_sha256": "29ef7dde7430a5c61a2521782e2637af3c8c6fdcd9b2c017f66d9fe205a0093b",
+      "log_sha256": "4c12729431d746819e7efad6cb4f554a4b504a3a4226fac5ffe7e0e95f860da6",
+      "log_bytes": 16297,
+      "failing_cases": [
+        "c1-fail-invalid-line",
+        "claims-r2-line-nonstring"
+      ],
+      "r2_cases": [
+        "ok-case  235 claims-r2-sha-nonstring      exit=1",
+        "FAIL-case claims-r2-line-nonstring     exit=0 want=1 verdicts=1 vbearing=1 token=RESEARCH_GATE: DRIFT line not a JSON string observed=invalid CLAIM id=LN1 expected=supported observed=invalid source=lib/span.md at=- verdict=invalid CLAIM id=LN2 expected=supported observed=invalid source=lib/span.md at=- verdict=invalid CLAIM id=LN3 expected=supported observed=invalid source=lib/span.md at=- verdict=invalid VERDICT_BEARING_CLAIMS=0/3 claims=3 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=3 findings=3 drift=3",
+        "ok-case  237 claims-r2-endline            exit=1",
+        "ok-case  238 claims-r2-span-stale         exit=1",
+        "ok-case  239 claims-r2-ws-pin             exit=1",
+        "ok-case  240 r2-hash-fault-shim           exit=1",
+        "ok-case  241 claims-r2-nested-string      exit=0"
+      ],
+      "summary": [
+        "RESEARCH_GATE_SELFTEST: FAIL (2/241 cases)"
+      ],
+      "process_group_kill_attempted": true
+    },
+    {
+      "name": "line-nonstring",
+      "phase": "restored",
+      "command": "timeout --signal=TERM --kill-after=5s 600s bash /fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/line-nonstring/lane/tools/research-gate.sh --selftest",
+      "cwd": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/line-nonstring/lane",
+      "TMPDIR": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/line-nonstring/tmp",
+      "rc": 0,
+      "elapsed_s": 117.928,
+      "output_bound_holds": true,
+      "gate_before_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "gate_after_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "log_sha256": "202702b410343f9442378624c87d3fadd9d8c617af48892f782b0051bb05a465",
+      "log_bytes": 12046,
+      "failing_cases": [],
+      "r2_cases": [
+        "ok-case  235 claims-r2-sha-nonstring      exit=1",
+        "ok-case  236 claims-r2-line-nonstring     exit=1",
+        "ok-case  237 claims-r2-endline            exit=1",
+        "ok-case  238 claims-r2-span-stale         exit=1",
+        "ok-case  239 claims-r2-ws-pin             exit=1",
+        "ok-case  240 r2-hash-fault-shim           exit=1",
+        "ok-case  241 claims-r2-nested-string      exit=0"
+      ],
+      "summary": [
+        "RESEARCH_GATE_SELFTEST: PASS (241 cases, 0 skipped)"
+      ],
+      "process_group_kill_attempted": true
+    },
+    {
+      "name": "endline",
+      "phase": "pristine",
+      "command": "timeout --signal=TERM --kill-after=5s 600s bash /fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/endline/lane/tools/research-gate.sh --selftest",
+      "cwd": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/endline/lane",
+      "TMPDIR": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/endline/tmp",
+      "rc": 0,
+      "elapsed_s": 77.21,
+      "output_bound_holds": true,
+      "gate_before_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "gate_after_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "log_sha256": "202702b410343f9442378624c87d3fadd9d8c617af48892f782b0051bb05a465",
+      "log_bytes": 12046,
+      "failing_cases": [],
+      "r2_cases": [
+        "ok-case  235 claims-r2-sha-nonstring      exit=1",
+        "ok-case  236 claims-r2-line-nonstring     exit=1",
+        "ok-case  237 claims-r2-endline            exit=1",
+        "ok-case  238 claims-r2-span-stale         exit=1",
+        "ok-case  239 claims-r2-ws-pin             exit=1",
+        "ok-case  240 r2-hash-fault-shim           exit=1",
+        "ok-case  241 claims-r2-nested-string      exit=0"
+      ],
+      "summary": [
+        "RESEARCH_GATE_SELFTEST: PASS (241 cases, 0 skipped)"
+      ],
+      "process_group_kill_attempted": true
+    },
+    {
+      "name": "endline",
+      "phase": "mutated",
+      "command": "timeout --signal=TERM --kill-after=5s 600s bash /fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/endline/lane/tools/research-gate.sh --selftest",
+      "cwd": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/endline/lane",
+      "TMPDIR": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/endline/tmp",
+      "rc": 1,
+      "elapsed_s": 152.457,
+      "output_bound_holds": true,
+      "gate_before_sha256": "8cffa223fcd506223d417bef745e12a021525d7183a648f825993f6aa5bd45d2",
+      "gate_after_sha256": "8cffa223fcd506223d417bef745e12a021525d7183a648f825993f6aa5bd45d2",
+      "log_sha256": "3d9846bcb70c419f16b5245dcfe8de44033407616ef5add690f00e2027f6b1bb",
+      "log_bytes": 13116,
+      "failing_cases": [
+        "claims-r2-endline"
+      ],
+      "r2_cases": [
+        "ok-case  235 claims-r2-sha-nonstring      exit=1",
+        "ok-case  236 claims-r2-line-nonstring     exit=1",
+        "FAIL-case claims-r2-endline            exit=0 want=1 verdicts=1 vbearing=1 token=RESEARCH_GATE: DRIFT FINDING CLAIM_LINE_MISMATCH severity=warn surface=claims CLAIM id=EL1 expected=supported observed=mislocated source=lib/span.md at=lines:2-3 verdict=mismatch obs=id=EL1 line=3-3 first_delimited_occurrence=lines:2-3 CLAIM id=EX1 expected=supported observed=supported source=lib/span.md at=line:3 verdict=match VERDICT_BEARING_CLAIMS=1/2 claims=2 supported=1 contradicted=0 unsupported=0 mismatched=1 unproven=0 refused=0 invalid=0 findings=1 drift=1",
+        "ok-case  238 claims-r2-span-stale         exit=1",
+        "ok-case  239 claims-r2-ws-pin             exit=1",
+        "ok-case  240 r2-hash-fault-shim           exit=1",
+        "ok-case  241 claims-r2-nested-string      exit=0"
+      ],
+      "summary": [
+        "RESEARCH_GATE_SELFTEST: FAIL (1/241 cases)"
+      ],
+      "process_group_kill_attempted": true
+    },
+    {
+      "name": "endline",
+      "phase": "restored",
+      "command": "timeout --signal=TERM --kill-after=5s 600s bash /fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/endline/lane/tools/research-gate.sh --selftest",
+      "cwd": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/endline/lane",
+      "TMPDIR": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/endline/tmp",
+      "rc": 0,
+      "elapsed_s": 119.231,
+      "output_bound_holds": true,
+      "gate_before_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "gate_after_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "log_sha256": "202702b410343f9442378624c87d3fadd9d8c617af48892f782b0051bb05a465",
+      "log_bytes": 12046,
+      "failing_cases": [],
+      "r2_cases": [
+        "ok-case  235 claims-r2-sha-nonstring      exit=1",
+        "ok-case  236 claims-r2-line-nonstring     exit=1",
+        "ok-case  237 claims-r2-endline            exit=1",
+        "ok-case  238 claims-r2-span-stale         exit=1",
+        "ok-case  239 claims-r2-ws-pin             exit=1",
+        "ok-case  240 r2-hash-fault-shim           exit=1",
+        "ok-case  241 claims-r2-nested-string      exit=0"
+      ],
+      "summary": [
+        "RESEARCH_GATE_SELFTEST: PASS (241 cases, 0 skipped)"
+      ],
+      "process_group_kill_attempted": true
+    },
+    {
+      "name": "span-before-stale",
+      "phase": "pristine",
+      "command": "timeout --signal=TERM --kill-after=5s 600s bash /fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/span-before-stale/lane/tools/research-gate.sh --selftest",
+      "cwd": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/span-before-stale/lane",
+      "TMPDIR": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/span-before-stale/tmp",
+      "rc": 0,
+      "elapsed_s": 77.519,
+      "output_bound_holds": true,
+      "gate_before_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "gate_after_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "log_sha256": "202702b410343f9442378624c87d3fadd9d8c617af48892f782b0051bb05a465",
+      "log_bytes": 12046,
+      "failing_cases": [],
+      "r2_cases": [
+        "ok-case  235 claims-r2-sha-nonstring      exit=1",
+        "ok-case  236 claims-r2-line-nonstring     exit=1",
+        "ok-case  237 claims-r2-endline            exit=1",
+        "ok-case  238 claims-r2-span-stale         exit=1",
+        "ok-case  239 claims-r2-ws-pin             exit=1",
+        "ok-case  240 r2-hash-fault-shim           exit=1",
+        "ok-case  241 claims-r2-nested-string      exit=0"
+      ],
+      "summary": [
+        "RESEARCH_GATE_SELFTEST: PASS (241 cases, 0 skipped)"
+      ],
+      "process_group_kill_attempted": true
+    },
+    {
+      "name": "span-before-stale",
+      "phase": "mutated",
+      "command": "timeout --signal=TERM --kill-after=5s 600s bash /fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/span-before-stale/lane/tools/research-gate.sh --selftest",
+      "cwd": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/span-before-stale/lane",
+      "TMPDIR": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/span-before-stale/tmp",
+      "rc": 1,
+      "elapsed_s": 152.397,
+      "output_bound_holds": true,
+      "gate_before_sha256": "409704c16a494949aedfafd437eb8e7978e712be45156fd0b8b44256ec7e959d",
+      "gate_after_sha256": "409704c16a494949aedfafd437eb8e7978e712be45156fd0b8b44256ec7e959d",
+      "log_sha256": "7ee86c475cd5871bb4a1a28183c64bbc1169de8b4bd26ca08dffee713c4223be",
+      "log_bytes": 15691,
+      "failing_cases": [
+        "claims-sha-stale",
+        "claims-r2-span-stale",
+        "r2-hash-fault-shim"
+      ],
+      "r2_cases": [
+        "ok-case  235 claims-r2-sha-nonstring      exit=1",
+        "ok-case  236 claims-r2-line-nonstring     exit=1",
+        "ok-case  237 claims-r2-endline            exit=1",
+        "FAIL-case claims-r2-span-stale         exit=1 want=1 verdicts=1 vbearing=1 token=RESEARCH_GATE: DRIFT FINDING CLAIM_SOURCE_REVISION_MISMATCH severity=warn surface=claims CLAIM id=SB1 expected=supported observed=stale source=claimsrc/sha-src-tampered.txt at=- verdict=mismatch CLAIM id=SB2 expected=supported observed=stale source=claimsrc/sha-src-tampered.txt at=- verdict=mismatch CLAIM id=SB3 expected=supported observed=stale source=claimsrc/sha-src-tampered.txt at=- verdict=mismatch pin=ed82fd71c85e actual=a1b069a5106d VERDICT_BEARING_CLAIMS=0/3 claims=3 supported=0 contradicted=0 unsupported=0 mismatched=3 unproven=0 refused=0 invalid=0 findings=3 drift=3",
+        "ok-case  239 claims-r2-ws-pin             exit=1",
+        "FAIL-case r2-hash-fault-shim           control_rc=0 fault_rc=0",
+        "ok-case  241 claims-r2-nested-string      exit=0"
+      ],
+      "summary": [
+        "RESEARCH_GATE_SELFTEST: FAIL (3/241 cases)"
+      ],
+      "process_group_kill_attempted": true
+    },
+    {
+      "name": "span-before-stale",
+      "phase": "restored",
+      "command": "timeout --signal=TERM --kill-after=5s 600s bash /fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/span-before-stale/lane/tools/research-gate.sh --selftest",
+      "cwd": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/span-before-stale/lane",
+      "TMPDIR": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/span-before-stale/tmp",
+      "rc": 0,
+      "elapsed_s": 118.647,
+      "output_bound_holds": true,
+      "gate_before_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "gate_after_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "log_sha256": "202702b410343f9442378624c87d3fadd9d8c617af48892f782b0051bb05a465",
+      "log_bytes": 12046,
+      "failing_cases": [],
+      "r2_cases": [
+        "ok-case  235 claims-r2-sha-nonstring      exit=1",
+        "ok-case  236 claims-r2-line-nonstring     exit=1",
+        "ok-case  237 claims-r2-endline            exit=1",
+        "ok-case  238 claims-r2-span-stale         exit=1",
+        "ok-case  239 claims-r2-ws-pin             exit=1",
+        "ok-case  240 r2-hash-fault-shim           exit=1",
+        "ok-case  241 claims-r2-nested-string      exit=0"
+      ],
+      "summary": [
+        "RESEARCH_GATE_SELFTEST: PASS (241 cases, 0 skipped)"
+      ],
+      "process_group_kill_attempted": true
+    },
+    {
+      "name": "trimmed-pin",
+      "phase": "pristine",
+      "command": "timeout --signal=TERM --kill-after=5s 600s bash /fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/trimmed-pin/lane/tools/research-gate.sh --selftest",
+      "cwd": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/trimmed-pin/lane",
+      "TMPDIR": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/trimmed-pin/tmp",
+      "rc": 0,
+      "elapsed_s": 77.446,
+      "output_bound_holds": true,
+      "gate_before_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "gate_after_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "log_sha256": "202702b410343f9442378624c87d3fadd9d8c617af48892f782b0051bb05a465",
+      "log_bytes": 12046,
+      "failing_cases": [],
+      "r2_cases": [
+        "ok-case  235 claims-r2-sha-nonstring      exit=1",
+        "ok-case  236 claims-r2-line-nonstring     exit=1",
+        "ok-case  237 claims-r2-endline            exit=1",
+        "ok-case  238 claims-r2-span-stale         exit=1",
+        "ok-case  239 claims-r2-ws-pin             exit=1",
+        "ok-case  240 r2-hash-fault-shim           exit=1",
+        "ok-case  241 claims-r2-nested-string      exit=0"
+      ],
+      "summary": [
+        "RESEARCH_GATE_SELFTEST: PASS (241 cases, 0 skipped)"
+      ],
+      "process_group_kill_attempted": true
+    },
+    {
+      "name": "trimmed-pin",
+      "phase": "mutated",
+      "command": "timeout --signal=TERM --kill-after=5s 600s bash /fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/trimmed-pin/lane/tools/research-gate.sh --selftest",
+      "cwd": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/trimmed-pin/lane",
+      "TMPDIR": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/trimmed-pin/tmp",
+      "rc": 1,
+      "elapsed_s": 152.579,
+      "output_bound_holds": true,
+      "gate_before_sha256": "d9ff23d6f26aaa2ddcd0a37713fb68390399e55ebe0cbaf032df9e44f9a4eee0",
+      "gate_after_sha256": "d9ff23d6f26aaa2ddcd0a37713fb68390399e55ebe0cbaf032df9e44f9a4eee0",
+      "log_sha256": "64c48c3ddcb35b1c024f0c482298dfdb34de51ef0e71ac0f47a6b8fcdfbc9ee8",
+      "log_bytes": 13279,
+      "failing_cases": [
+        "claims-r2-ws-pin"
+      ],
+      "r2_cases": [
+        "ok-case  235 claims-r2-sha-nonstring      exit=1",
+        "ok-case  236 claims-r2-line-nonstring     exit=1",
+        "ok-case  237 claims-r2-endline            exit=1",
+        "ok-case  238 claims-r2-span-stale         exit=1",
+        "FAIL-case claims-r2-ws-pin             exit=0 want=1 verdicts=1 vbearing=1 token=RESEARCH_GATE: DRIFT sha256 malformed (not 64 lowercase hex characters) CLAIM id=WP1 expected=supported observed=invalid source=claimsrc/sha-src.txt at=- verdict=invalid CLAIM id=WP2 expected=supported observed=invalid source=claimsrc/sha-src.txt at=- verdict=invalid CLAIM id=WP3 expected=supported observed=invalid source=claimsrc/sha-src.txt at=- verdict=invalid VERDICT_BEARING_CLAIMS=0/3 claims=3 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=3 findings=3 drift=3",
+        "ok-case  240 r2-hash-fault-shim           exit=1",
+        "ok-case  241 claims-r2-nested-string      exit=0"
+      ],
+      "summary": [
+        "RESEARCH_GATE_SELFTEST: FAIL (1/241 cases)"
+      ],
+      "process_group_kill_attempted": true
+    },
+    {
+      "name": "trimmed-pin",
+      "phase": "restored",
+      "command": "timeout --signal=TERM --kill-after=5s 600s bash /fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/trimmed-pin/lane/tools/research-gate.sh --selftest",
+      "cwd": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/trimmed-pin/lane",
+      "TMPDIR": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/trimmed-pin/tmp",
+      "rc": 0,
+      "elapsed_s": 118.469,
+      "output_bound_holds": true,
+      "gate_before_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "gate_after_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "log_sha256": "202702b410343f9442378624c87d3fadd9d8c617af48892f782b0051bb05a465",
+      "log_bytes": 12046,
+      "failing_cases": [],
+      "r2_cases": [
+        "ok-case  235 claims-r2-sha-nonstring      exit=1",
+        "ok-case  236 claims-r2-line-nonstring     exit=1",
+        "ok-case  237 claims-r2-endline            exit=1",
+        "ok-case  238 claims-r2-span-stale         exit=1",
+        "ok-case  239 claims-r2-ws-pin             exit=1",
+        "ok-case  240 r2-hash-fault-shim           exit=1",
+        "ok-case  241 claims-r2-nested-string      exit=0"
+      ],
+      "summary": [
+        "RESEARCH_GATE_SELFTEST: PASS (241 cases, 0 skipped)"
+      ],
+      "process_group_kill_attempted": true
+    },
+    {
+      "name": "hash-fault",
+      "phase": "pristine",
+      "command": "timeout --signal=TERM --kill-after=5s 600s bash /fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/hash-fault/lane/tools/research-gate.sh --selftest",
+      "cwd": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/hash-fault/lane",
+      "TMPDIR": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/hash-fault/tmp",
+      "rc": 0,
+      "elapsed_s": 77.406,
+      "output_bound_holds": true,
+      "gate_before_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "gate_after_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "log_sha256": "202702b410343f9442378624c87d3fadd9d8c617af48892f782b0051bb05a465",
+      "log_bytes": 12046,
+      "failing_cases": [],
+      "r2_cases": [
+        "ok-case  235 claims-r2-sha-nonstring      exit=1",
+        "ok-case  236 claims-r2-line-nonstring     exit=1",
+        "ok-case  237 claims-r2-endline            exit=1",
+        "ok-case  238 claims-r2-span-stale         exit=1",
+        "ok-case  239 claims-r2-ws-pin             exit=1",
+        "ok-case  240 r2-hash-fault-shim           exit=1",
+        "ok-case  241 claims-r2-nested-string      exit=0"
+      ],
+      "summary": [
+        "RESEARCH_GATE_SELFTEST: PASS (241 cases, 0 skipped)"
+      ],
+      "process_group_kill_attempted": true
+    },
+    {
+      "name": "hash-fault",
+      "phase": "mutated",
+      "command": "timeout --signal=TERM --kill-after=5s 600s bash /fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/hash-fault/lane/tools/research-gate.sh --selftest",
+      "cwd": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/hash-fault/lane",
+      "TMPDIR": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/hash-fault/tmp",
+      "rc": 1,
+      "elapsed_s": 152.306,
+      "output_bound_holds": true,
+      "gate_before_sha256": "091825c346ad1f9796a413ab91e972a8391e2d976443e4258828f070689b6582",
+      "gate_after_sha256": "091825c346ad1f9796a413ab91e972a8391e2d976443e4258828f070689b6582",
+      "log_sha256": "0bbe20523f1ffb3e2b54e4639514c4b0c0a4674049b4032ceffa10b7df1271bb",
+      "log_bytes": 13029,
+      "failing_cases": [
+        "r2-hash-fault-shim"
+      ],
+      "r2_cases": [
+        "ok-case  235 claims-r2-sha-nonstring      exit=1",
+        "ok-case  236 claims-r2-line-nonstring     exit=1",
+        "ok-case  237 claims-r2-endline            exit=1",
+        "ok-case  238 claims-r2-span-stale         exit=1",
+        "ok-case  239 claims-r2-ws-pin             exit=1",
+        "FAIL-case r2-hash-fault-shim           control_rc=0 fault_rc=0",
+        "ok-case  241 claims-r2-nested-string      exit=0"
+      ],
+      "summary": [
+        "RESEARCH_GATE_SELFTEST: FAIL (1/241 cases)"
+      ],
+      "process_group_kill_attempted": true
+    },
+    {
+      "name": "hash-fault",
+      "phase": "restored",
+      "command": "timeout --signal=TERM --kill-after=5s 600s bash /fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/hash-fault/lane/tools/research-gate.sh --selftest",
+      "cwd": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/hash-fault/lane",
+      "TMPDIR": "/fast/scratch/hyaku/chousa-r32/w2/MutSelftestR2/hash-fault/tmp",
+      "rc": 0,
+      "elapsed_s": 118.021,
+      "output_bound_holds": true,
+      "gate_before_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "gate_after_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "log_sha256": "202702b410343f9442378624c87d3fadd9d8c617af48892f782b0051bb05a465",
+      "log_bytes": 12046,
+      "failing_cases": [],
+      "r2_cases": [
+        "ok-case  235 claims-r2-sha-nonstring      exit=1",
+        "ok-case  236 claims-r2-line-nonstring     exit=1",
+        "ok-case  237 claims-r2-endline            exit=1",
+        "ok-case  238 claims-r2-span-stale         exit=1",
+        "ok-case  239 claims-r2-ws-pin             exit=1",
+        "ok-case  240 r2-hash-fault-shim           exit=1",
+        "ok-case  241 claims-r2-nested-string      exit=0"
+      ],
+      "summary": [
+        "RESEARCH_GATE_SELFTEST: PASS (241 cases, 0 skipped)"
+      ],
+      "process_group_kill_attempted": true
+    }
+  ],
+  "restorations": [
+    {
+      "name": "sha-nonstring",
+      "mutant_before_sha256": "a3d8f2ea78fdc70bda700e976b14ef2a688a16a397273cdd58eaa1db5d2dc48d",
+      "backup_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "restored_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "exact_bytes_restored": true
+    },
+    {
+      "name": "line-nonstring",
+      "mutant_before_sha256": "29ef7dde7430a5c61a2521782e2637af3c8c6fdcd9b2c017f66d9fe205a0093b",
+      "backup_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "restored_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "exact_bytes_restored": true
+    },
+    {
+      "name": "endline",
+      "mutant_before_sha256": "8cffa223fcd506223d417bef745e12a021525d7183a648f825993f6aa5bd45d2",
+      "backup_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "restored_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "exact_bytes_restored": true
+    },
+    {
+      "name": "span-before-stale",
+      "mutant_before_sha256": "409704c16a494949aedfafd437eb8e7978e712be45156fd0b8b44256ec7e959d",
+      "backup_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "restored_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "exact_bytes_restored": true
+    },
+    {
+      "name": "trimmed-pin",
+      "mutant_before_sha256": "d9ff23d6f26aaa2ddcd0a37713fb68390399e55ebe0cbaf032df9e44f9a4eee0",
+      "backup_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "restored_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "exact_bytes_restored": true
+    },
+    {
+      "name": "hash-fault",
+      "mutant_before_sha256": "091825c346ad1f9796a413ab91e972a8391e2d976443e4258828f070689b6582",
+      "backup_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "restored_sha256": "10f2fe12043c6f1565c7d7b9446ee0c4dc11e9649aa3350dcab96f8a2ccb4098",
+      "exact_bytes_restored": true
+    }
+  ],
+  "cleanup_command": [
+    "timeout",
+    "10s",
+    "ps",
+    "-eo",
+    "pid,ppid,pgid,args"
+  ],
+  "cleanup_rc": 0,
+  "remaining_own_processes": [],
+  "installs": [],
+  "counter_runs": []
+}
