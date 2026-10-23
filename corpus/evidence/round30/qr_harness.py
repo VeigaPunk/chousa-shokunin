@@ -158,14 +158,16 @@ class Server:
         self.srv.shutdown()
         self.srv.server_close()
 
-    def add(self, path, body, status=200, ctype="text/html; charset=utf-8", extra=(), behavior=None):
-        self.docs[path] = (status, [("Content-Type", ctype)] + list(extra), body)
+    def add(self, path, body, status=200, ctype="text/html; charset=utf-8", extra=(), behavior=None,
+            framing="cl", param=None):
+        """Serve `body` at `path`. framing: "cl" (Content-Length) or "chunked". behavior: None,
+        slow-ok (body in 6 pieces spread over `param` seconds), drip-head (the whole response
+        head one byte per 0.2 s), drip-body (head and 200 body bytes at once, then one byte per
+        0.2 s), drip-steady (4096 bytes per 0.25 s), stall (head and 200 body bytes, then
+        silence). Every behavior uses the same head shape as an ordinary page."""
+        self.docs[path] = (status, [("Content-Type", ctype)] + list(extra), body, framing, param)
         if behavior:
             self.kinds[path] = behavior
-
-    def behave(self, path, behavior):
-        """Serve `path` with a misbehaving pattern: drip-head, drip-body, drip-chunked, stall."""
-        self.kinds[path] = behavior
 
     def _handle(self, s):
         s.settimeout(10)
@@ -200,49 +202,63 @@ class Server:
             s.sendall(bytes([b]))
             time.sleep(every)
 
+    @staticmethod
+    def _frame(body, framing, pieces):
+        """Split the body into wire pieces (chunked framing adds chunk headers)."""
+        if framing != "chunked":
+            return pieces(body)
+        out = [b"%x\r\n%s\r\n" % (len(p), p) for p in pieces(body) if p]
+        out.append(b"0\r\n\r\n")
+        return out
+
     def _serve(self, s, path):
-        kind = self.kinds.get(path.split("?", 1)[0], "")
-        if kind == "drip-head":
-            s.sendall(b"HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nX-Pad: ")
-            self._drip(s, b"a" * 400, 0.2)
-            return
-        if kind == "drip-body":
-            s.sendall(b"HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: 200000\r\n"
-                      b"Connection: close\r\n\r\n<html><body><p>")
-            self._drip(s, b"word " * 100, 0.2)
-            return
-        if kind == "drip-chunked":
-            s.sendall(b"HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nTransfer-Encoding: chunked\r\n"
-                      b"Connection: close\r\n\r\n")
-            end = time.monotonic() + 40
-            while not self.stop.is_set() and time.monotonic() < end:
-                s.sendall(b"1\r\na\r\n")
-                time.sleep(0.2)
-            return
-        if kind == "stall":
-            s.sendall(b"HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: 5000\r\n"
-                      b"Connection: close\r\n\r\n<html><body><p>start")
-            self.stop.wait(40)
-            return
-        doc = self.docs.get(path.split("?", 1)[0])
+        key = path.split("?", 1)[0]
+        kind = self.kinds.get(key, "")
+        doc = self.docs.get(key)
         if doc is None:
             s.sendall(b"HTTP/1.1 404 Not Found\r\nContent-Type: text/plain\r\nContent-Length: 9\r\n"
                       b"Connection: close\r\n\r\nnot found")
             return
-        status, headers, body = doc
-        head = "HTTP/1.1 %d X\r\n" % status
+        status, headers, body, framing, param = doc
+        head = "HTTP/1.1 %d %s\r\n" % (status, {200: "OK", 302: "Found"}.get(status, "X"))
         for k, v in headers:
             head += "%s: %s\r\n" % (k, v)
-        if kind == "slow-ok":
+        if framing == "chunked":
+            head += "Transfer-Encoding: chunked\r\nConnection: close\r\n\r\n"
+        else:
             head += "Content-Length: %d\r\nConnection: close\r\n\r\n" % len(body)
-            s.sendall(head.encode("latin-1"))
-            n = max(1, len(body) // 6)
-            for i in range(0, len(body), n):
-                s.sendall(body[i:i + n])
-                time.sleep(0.3)
+        head = head.encode("latin-1")
+        if kind == "drip-head":
+            self._drip(s, head + b"".join(self._frame(body, framing, lambda b: [b])), 0.2)
             return
-        head += "Content-Length: %d\r\nConnection: close\r\n\r\n" % len(body)
-        s.sendall(head.encode("latin-1") + body)
+        if kind in ("drip-body", "stall"):
+            wire = b"".join(self._frame(body, framing, lambda b: [b[i:i + 1] for i in range(len(b))]))
+            s.sendall(head + wire[:200])
+            if kind == "stall":
+                self.stop.wait(40)
+            else:
+                self._drip(s, wire[200:], 0.2)
+            return
+        if kind == "drip-steady":
+            wire = b"".join(self._frame(body, framing, lambda b: [b[i:i + 4096] for i in range(0, len(b), 4096)]))
+            s.sendall(head)
+            end = time.monotonic() + 40
+            for i in range(0, len(wire), 4096):
+                if self.stop.is_set() or time.monotonic() > end:
+                    return
+                s.sendall(wire[i:i + 4096])
+                time.sleep(0.25)
+            return
+        if kind == "slow-ok":
+            n = max(1, -(-len(body) // 6))
+            wire = self._frame(body, framing, lambda b: [b[i:i + n] for i in range(0, len(b), n)])
+            s.sendall(head)
+            gap = float(param or 1.8) / 6.0
+            for p in wire:
+                time.sleep(gap)
+                s.sendall(p)
+            return
+        s.sendall(head + b"".join(self._frame(body, framing, lambda b: [b])))
 
 
 # ---------------------------------------------------------------- parent helpers

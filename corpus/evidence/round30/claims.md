@@ -87,27 +87,31 @@ resolves the host a second time when it connects, so a host can pass the check w
 global address and then connect to loopback (sentinel T1;
 `.ufo/waves/round-29/falsify/SentinelTool.md`). A command whose stated bound does not hold
 does not produce its stated outcome. The command that shows the surface unmoved is the C2
-counter on the round-29 tool: 9/20 at the base.
+counter on the round-29 tool: 13/27 at the base (design v3; 9/20 under v2).
 
-**Predicate (one sentence, frozen):** C2 holds iff
+**Predicate (one sentence, frozen, design v3):** C2 holds iff
 `python3 corpus/evidence/round30/c2-count.py`, run from the lane root, prints
-`QUOTE_REOPEN_FETCH_BOUND_MATCH=20/20`: every one of the 20 items gets a verdict equal to its
-label, within 5.0 s of wall time, with no connection to an address outside the validated
-set.
+`QUOTE_REOPEN_FETCH_BOUND_MATCH=27/27`: every one of the 27 items gets a verdict equal to its
+label, within its own DEADLINE plus 1.5 s of wall time, with no connection to an address
+outside the validated set.
 
-- Counter code: `holds = (n_ok == t == FROZEN_TOTAL)` with `FROZEN_TOTAL = 20`; an item
-  matches iff `got == label`, `wall <= BOUND` (`BOUND = DEADLINE + 2.0`, `DEADLINE = 3.0`,
-  not killed at `CAP = 15`) and every logged connect destination is a routed global
-  address.
-- Receipt label: `QUOTE_REOPEN_FETCH_BOUND_MATCH`; receipt field `predicate_holds`.
-- Before (round-29 tool at base): `QUOTE_REOPEN_FETCH_BOUND_MATCH=9/20`, exit 1 (receipts
-  `.ufo/waves/round-30/controls/before-c2-run{1,2}.json`). The 6 drip items are killed at
-  15 s; the 5 rebinding items connect to 127.0.0.1 or 10.x.
-- Target after: 20/20, exit 0, on the landed tool.
+- Counter code: `holds = (n_ok == t == FROZEN_TOTAL)` with `FROZEN_TOTAL = 27`; an item
+  matches iff `got == label`, `wall <= bound` (`bound = DEADLINE + SLACK`, `SLACK = 1.5`,
+  each item's `DEADLINE` uniform in [2.0, 6.0] s, not killed at `CAP = 20`) and every logged
+  connect destination is a routed global address of that item.
+- Receipt label: `QUOTE_REOPEN_FETCH_BOUND_MATCH`; receipt field `predicate_holds`;
+  receipt field `design: "v3"`.
+- Before (round-29 tool at base): `QUOTE_REOPEN_FETCH_BOUND_MATCH=13/27`, exit 1, twice
+  (receipts `.ufo/waves/round-30/controls/before-c2-v3-run{1,2}.json`). The drip-head and
+  drip-body items are killed at 20 s; the rebinding items connect to 127.0.0.1 or 10.x; one
+  drip-steady item overshoots its bound in run 1 and not in run 2 (the round-29 tool checks
+  its deadline between 64 KiB reads).
+- Target after: 27/27, exit 0, on the landed tool.
 - Kill rule: as C1.
-- Items: the `c2-count.py` docstring (drip-head, drip-body, drip-chunked, stall-body,
-  rebind-loop, rebind-private, rebind-redirect, stable-present, stable-absent, slow-ok,
-  multi-address, mixed-address, no-resolve, redirect-loop).
+- Items: the `c2-count.py` docstring (drip-head, drip-body, drip-steady, stall-body,
+  mixed-address, no-resolve, redirect-loop labelled UNREACHABLE; rebind-loop,
+  rebind-private, rebind-redirect, stable, slow-ok, multi-address labelled VERBATIM or
+  ABSENT by a fair coin per item).
 
 **Sourced:** the Python documentation of socket timeouts on `docs.python.org` (a registered
 host) is opened this round. It states the per-operation timeout semantics behind T4. It
