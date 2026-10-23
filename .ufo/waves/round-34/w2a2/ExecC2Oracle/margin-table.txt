@@ -1,0 +1,31 @@
+counter: corpus/evidence/round34/c2-count.py  sha256=8c0def4d377cdf1a1e4bd2c9151bb0846216658ff14d725d15ac037c12212173
+landed gate blob: sha256=a6307edf687ac0fb1b0b08bf7f0518b3fbc310fa9924b970aa3654612562995b  (git show 707da818:tools/research-gate.sh)
+pre-fix gate blob: sha256=772a1d8e4d94dbf3a44a64bf850b1324e51546eeb62abcd7b3ec585f0e003e58  (git show bf7c931a:tools/research-gate.sh)
+oracle: /fast/scratch/hyaku/chousa-r34-a2/w2/ExecC2Oracle/oracle.py  sha256=56beec0830d86dfec471adec877c87e5dc64f8a8d1feb2eab3469e9913184632
+
+oracle seeds 9101..9104 labels: ['DEADZONE_MATCH=37/37', 'DEADZONE_MATCH=37/37', 'DEADZONE_MATCH=37/37', 'DEADZONE_MATCH=37/37']
+landed-gate seeds 9101,9102  : ['DEADZONE_MATCH=37/37', 'DEADZONE_MATCH=37/37']
+pre-fix gate seed 9101       : DEADZONE_MATCH=21/37
+
+class                    n   oracle  landed  m(land-oracle)  prefix  m(prefix-oracle)
+dz-verbatim-ml          3    3/3    3/3    +0             0/3    -3
+dz-verbatim-1l          2    2/2    2/2    +0             0/2    -2
+dz-edge                 2    2/2    2/2    +0             0/2    -2
+dz-mut-head             2    2/2    2/2    +0             2/2    +0
+dz-mut-tail             2    2/2    2/2    +0             2/2    +0
+dz-mut-center           2    2/2    2/2    +0             2/2    +0
+dz-decoys               5    5/5    5/5    +0             5/5    +0
+dz-decoys-exact         2    2/2    2/2    +0             0/2    -2
+dz-decoys-line-wrong    2    2/2    2/2    +0             0/2    -2
+dz-split                2    2/2    2/2    +0             2/2    +0
+dz-glued-left           2    2/2    2/2    +0             2/2    +0
+dz-glued-right          2    2/2    2/2    +0             2/2    +0
+dz-glued-then-valid     1    1/1    1/1    +0             0/1    -1
+dz-line-bound           2    2/2    2/2    +0             0/2    -2
+dz-line-wrong           2    2/2    2/2    +0             0/2    -2
+short-verbatim          2    2/2    2/2    +0             2/2    +0
+short-mut               2    2/2    2/2    +0             2/2    +0
+TOTAL                  37   37/37  37/37   +0            21/37  -16
+
+elapsed_s: oracle=[0.406, 0.431, 0.26, 0.221] landed=[19.62, 26.881] prefix=21.466
+gate_rc  : oracle=[1, 1, 1, 1] landed=[1, 1] prefix=1
