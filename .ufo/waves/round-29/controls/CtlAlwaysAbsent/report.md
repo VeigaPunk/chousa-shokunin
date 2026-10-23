@@ -76,3 +76,72 @@ The all-false control does **not** reach 82/82 and does not invalidate the count
 ## Scope and tooling
 
 Only the four assigned artifacts under `.ufo/waves/round-29/controls/CtlAlwaysAbsent/` were written. No network access, git/jj commands, real-tool implementation, or runtime judgment was performed. Both bounded counter processes completed with exit 1; no started process remains running. No tools were installed or updated.
+
+## v2 rescore
+
+The preceding sections preserve the v1 experiment. The rescore assignment identifies the v2 freeze as lane commit `12244431d636bfa615d7e8d3a0a48b85b3cba06f`; the revised predicate is exactly `QUOTE_REOPEN_MATCH=130/130` (`claims.md:31-53`). `control.py` was left unchanged. Both new receipts record counter SHA-256 `574ffcad7a78d2fdf04b895445c1aac72537cc548b944cae62012baf4ba4e2dd`, `predicate_holds: false`, and empty stderr.
+
+Working directory: `/home/vgpnk/Projects/shokunin/chousa-shokunin`. The two independent rescoring commands were run concurrently:
+
+```sh
+timeout 600s python3 corpus/evidence/round29/c1-count.py --seed 2901 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlAlwaysAbsent/receipt-v2.json -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlAlwaysAbsent/control.py
+timeout 600s python3 corpus/evidence/round29/c1-count.py --seed 2902 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlAlwaysAbsent/receipt-v2-seed2.json -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlAlwaysAbsent/control.py
+```
+
+### v2 seed 2901
+
+```text
+class absent-cross-attributed 4/4
+class absent-fabricated 4/4
+class absent-one-word-edit 4/4
+class absent-spliced 4/4
+class absent-truncated-token 4/4
+class no-source-own-work-row 0/2
+class no-source-unregistered-id 0/1
+class runtime-crossattr 14/14
+class runtime-page-transpose 24/24
+class runtime-page-window 0/24
+class runtime-subspan 0/14
+class runtime-transpose 14/14
+class too-long-true-text 0/3
+class verbatim-inline-markup 0/9
+class verbatim-plain 0/3
+class verbatim-typographic-apostrophe 0/2
+seed=2901 tool_exit=1 wall_s=0.02
+QUOTE_REOPEN_MATCH=72/130
+```
+
+Counter exit: **1**. Unchanged control exit: **1**. Receipt: `receipt-v2.json`.
+
+### v2 seed 2902
+
+```text
+class absent-cross-attributed 4/4
+class absent-fabricated 4/4
+class absent-one-word-edit 4/4
+class absent-spliced 4/4
+class absent-truncated-token 4/4
+class no-source-own-work-row 0/2
+class no-source-unregistered-id 0/1
+class runtime-crossattr 14/14
+class runtime-page-transpose 24/24
+class runtime-page-window 0/24
+class runtime-subspan 0/14
+class runtime-transpose 14/14
+class too-long-true-text 0/3
+class verbatim-inline-markup 0/9
+class verbatim-plain 0/3
+class verbatim-typographic-apostrophe 0/2
+seed=2902 tool_exit=1 wall_s=0.02
+QUOTE_REOPEN_MATCH=72/130
+```
+
+Counter exit: **1**. Unchanged control exit: **1**. Receipt: `receipt-v2-seed2.json`.
+
+### v2 review
+
+The expected **72/130** all-false ceiling (`claims.md:141`) is confirmed on both seeds: 48 previous ABSENT matches plus all 24 new page-transpose negatives, with all 24 new page-window positives missed. This control does not reach 130/130 and supplies no reason to alter the v2 predicate. Its impacted claim axis remains operability; partial classification accuracy is not evidence of real quote location.
+
+The v1 public-fixture lookup risk above is now historical: revised `claims.md:3-10` records that `CtlLabelKeyed` actually reached 82/82 and voided v1. [INFERENCE] Adding only NO_SOURCE/TOO_LONG prechecks to this constant control raises its v2 ceiling to 78/130, not 130/130; public fixture/positive-span lookup alone still lacks the 24 page-window positives. No full-score v2 bypass was implemented or observed in this assigned rescore.
+
+The control itself still performs no network access. The v2 counter made the prescribed source-registry GETs to generate page cases. Only the two v2 receipts and this appended report section were written by the rescore; no git/jj writes, control changes, real-tool implementation, tool installation/update, or runtime judgment occurred. Both bounded commands terminated with exit 1; no started process remains running.

@@ -87,3 +87,71 @@ The smallest safe design correction to consider for that separate weakness is ca
 ## Tooling and process cleanup
 
 No tools were installed or updated. Both scored commands and their child controls completed; no services or persistent processes were started. No extra checks or alternative controls were run.
+
+## v2 rescore
+
+The parent supplied frozen v2 commit `12244431d636bfa615d7e8d3a0a48b85b3cba06f`. The v2 claim header records that a different control voided v1 at 82/82; the preceding report remains the historical v1 measurement. This rescore used the existing `control.py` **unchanged**. Only `receipt-v2.json`, `receipt-v2-seed2.json`, and this appended section were added for v2. The earlier four-file/no-network scope statements describe v1: the v2 counter itself now GETs the registry pages to construct 48 additional cases; this constant control still makes no network requests.
+
+Both commands ran concurrently from `/home/vgpnk/Projects/shokunin/chousa-shokunin`, capped at 600 seconds:
+
+```sh
+timeout 600s python3 corpus/evidence/round29/c1-count.py --seed 2901 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlAlwaysVerbatim/receipt-v2.json -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlAlwaysVerbatim/control.py
+
+timeout 600s python3 corpus/evidence/round29/c1-count.py --seed 2902 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlAlwaysVerbatim/receipt-v2-seed2.json -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlAlwaysVerbatim/control.py
+```
+
+Both receipts identify counter SHA-256 `574ffcad7a78d2fdf04b895445c1aac72537cc548b944cae62012baf4ba4e2dd` and timestamp `2026-10-23T01:20:26Z`.
+
+### v2 seed 2901 — verbatim counter stdout
+
+```text
+class absent-cross-attributed 0/4
+class absent-fabricated 0/4
+class absent-one-word-edit 0/4
+class absent-spliced 0/4
+class absent-truncated-token 0/4
+class no-source-own-work-row 0/2
+class no-source-unregistered-id 0/1
+class runtime-crossattr 0/14
+class runtime-page-transpose 0/24
+class runtime-page-window 24/24
+class runtime-subspan 14/14
+class runtime-transpose 0/14
+class too-long-true-text 0/3
+class verbatim-inline-markup 9/9
+class verbatim-plain 3/3
+class verbatim-typographic-apostrophe 2/2
+seed=2901 tool_exit=0 wall_s=0.02
+QUOTE_REOPEN_MATCH=52/130
+```
+
+Counter/timeout command exit: **1**. Control exit: **0**. Receipt: `receipt-v2.json`, `predicate_holds: false`.
+
+### v2 seed 2902 — verbatim counter stdout
+
+```text
+class absent-cross-attributed 0/4
+class absent-fabricated 0/4
+class absent-one-word-edit 0/4
+class absent-spliced 0/4
+class absent-truncated-token 0/4
+class no-source-own-work-row 0/2
+class no-source-unregistered-id 0/1
+class runtime-crossattr 0/14
+class runtime-page-transpose 0/24
+class runtime-page-window 24/24
+class runtime-subspan 14/14
+class runtime-transpose 0/14
+class too-long-true-text 0/3
+class verbatim-inline-markup 9/9
+class verbatim-plain 3/3
+class verbatim-typographic-apostrophe 2/2
+seed=2902 tool_exit=0 wall_s=0.02
+QUOTE_REOPEN_MATCH=52/130
+```
+
+Counter/timeout command exit: **1**. Control exit: **0**. Receipt: `receipt-v2-seed2.json`, `predicate_holds: false`.
+
+The v2 expected ceiling **52/130 is confirmed on both seeds**: the original 28 matches plus 24 page-window positives. The 24 new page transpositions are all mismatches. Constant VERBATIM still cannot satisfy the predicate, regardless of ids, order, or sampled text. No 130/130 shortcut was demonstrated or alternative variant implemented. No correction is needed to reject this specific control; these results do not establish broader counter soundness. The reviewed axes remain operability, calibration, and freshness, not an admission judgment.
+
+No tools were installed or updated. Both bounded v2 commands and their child controls completed; no services or persistent processes were started.

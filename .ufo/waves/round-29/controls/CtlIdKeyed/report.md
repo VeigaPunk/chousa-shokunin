@@ -208,3 +208,125 @@ No path to 82/82 was **exercised** by this assigned id-only control. Changing on
 [INFERENCE] A broader fixture-memorization variant could key on `(source_id, quote)` instead of id and enumerate the public generator's token-aligned subspans, adjacent-token swaps and rotated cross-attributions, using the committed labels. That is a concrete no-network gaming surface despite fresh ids; its collision behavior and an 82/82 result were not tested here. It is outside this assigned control and must not be reported as an observed 82/82 success. The scratch mutation demonstrated a false exit-0 only after deliberately weakening the counter, not a bypass of the committed counter.
 
 Report: .ufo/waves/round-29/controls/CtlIdKeyed/report.md
+
+## v2 rescore
+
+Design v2 freeze supplied by the parent: lane commit `12244431d636bfa615d7e8d3a0a48b85b3cba06f`.
+The new frozen target is `QUOTE_REOPEN_MATCH=130/130`; v1 was voided by the label-keyed control, not by this id-keyed control.
+
+Both existing fallbacks were re-scored **without changing `control.py`**. Its SHA-256 remains `de2857e44c6cd6ff45fa09124f13ef4fee5acee72e9907886a79386b83bbb144`. The v2 counter SHA-256 is `574ffcad7a78d2fdf04b895445c1aac72537cc548b944cae62012baf4ba4e2dd`; v2 `claims.md` SHA-256 is `870664d210549f3b15b8d105d8d300d2084c9cbd73d2cb07ea10b34eb439134e`.
+
+Axes remain operability, calibration/gate integrity, and isolation/reproducibility. All four runs completed successfully as measurements (no counter-side fetch error). The counter performed its prescribed registry-page GETs; this control itself still fetched nothing. No v2 mutation or additional runtime was invoked. No tools were installed or updated.
+
+### Commands and receipts
+
+Each run used this command shape from the lane root, with a 590-second tool deadline, `timeout 580s` on the command, and a 10-second candidate deadline:
+
+```sh
+timeout 580s python3 corpus/evidence/round29/c1-count.py --seed SEED --timeout 10 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlIdKeyed/RECEIPT -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlIdKeyed/control.py --fallback FALLBACK
+```
+
+Actual substitutions and outcomes:
+
+| Fallback | Seed | Receipt | Match line, verbatim | Counter exit | Candidate exit |
+|---|---:|---|---|---:|---:|
+| ABSENT | 2901 | `receipt-v2.json` | `QUOTE_REOPEN_MATCH=72/130` | 1 | 1 |
+| ABSENT | 2902 | `receipt-v2-seed2.json` | `QUOTE_REOPEN_MATCH=72/130` | 1 | 1 |
+| VERBATIM | 2901 | `receipt-v2-verbatim.json` | `QUOTE_REOPEN_MATCH=52/130` | 1 | 0 |
+| VERBATIM | 2902 | `receipt-v2-verbatim-seed2.json` | `QUOTE_REOPEN_MATCH=52/130` | 1 | 0 |
+
+### ABSENT, seed 2901 — actual stdout
+
+```text
+class absent-cross-attributed 4/4
+class absent-fabricated 4/4
+class absent-one-word-edit 4/4
+class absent-spliced 4/4
+class absent-truncated-token 4/4
+class no-source-own-work-row 0/2
+class no-source-unregistered-id 0/1
+class runtime-crossattr 14/14
+class runtime-page-transpose 24/24
+class runtime-page-window 0/24
+class runtime-subspan 0/14
+class runtime-transpose 14/14
+class too-long-true-text 0/3
+class verbatim-inline-markup 0/9
+class verbatim-plain 0/3
+class verbatim-typographic-apostrophe 0/2
+seed=2901 tool_exit=1 wall_s=0.02
+QUOTE_REOPEN_MATCH=72/130
+```
+
+### ABSENT, seed 2902 — actual stdout
+
+```text
+class absent-cross-attributed 4/4
+class absent-fabricated 4/4
+class absent-one-word-edit 4/4
+class absent-spliced 4/4
+class absent-truncated-token 4/4
+class no-source-own-work-row 0/2
+class no-source-unregistered-id 0/1
+class runtime-crossattr 14/14
+class runtime-page-transpose 24/24
+class runtime-page-window 0/24
+class runtime-subspan 0/14
+class runtime-transpose 14/14
+class too-long-true-text 0/3
+class verbatim-inline-markup 0/9
+class verbatim-plain 0/3
+class verbatim-typographic-apostrophe 0/2
+seed=2902 tool_exit=1 wall_s=0.02
+QUOTE_REOPEN_MATCH=72/130
+```
+
+### VERBATIM, seed 2901 — actual stdout
+
+```text
+class absent-cross-attributed 0/4
+class absent-fabricated 0/4
+class absent-one-word-edit 0/4
+class absent-spliced 0/4
+class absent-truncated-token 0/4
+class no-source-own-work-row 0/2
+class no-source-unregistered-id 0/1
+class runtime-crossattr 0/14
+class runtime-page-transpose 0/24
+class runtime-page-window 24/24
+class runtime-subspan 14/14
+class runtime-transpose 0/14
+class too-long-true-text 0/3
+class verbatim-inline-markup 9/9
+class verbatim-plain 3/3
+class verbatim-typographic-apostrophe 2/2
+seed=2901 tool_exit=0 wall_s=0.02
+QUOTE_REOPEN_MATCH=52/130
+```
+
+### VERBATIM, seed 2902 — actual stdout
+
+```text
+class absent-cross-attributed 0/4
+class absent-fabricated 0/4
+class absent-one-word-edit 0/4
+class absent-spliced 0/4
+class absent-truncated-token 0/4
+class no-source-own-work-row 0/2
+class no-source-unregistered-id 0/1
+class runtime-crossattr 0/14
+class runtime-page-transpose 0/24
+class runtime-page-window 24/24
+class runtime-subspan 14/14
+class runtime-transpose 0/14
+class too-long-true-text 0/3
+class verbatim-inline-markup 9/9
+class verbatim-plain 3/3
+class verbatim-typographic-apostrophe 2/2
+seed=2902 tool_exit=0 wall_s=0.02
+QUOTE_REOPEN_MATCH=52/130
+```
+
+All four commands had empty stderr and counter exit 1. Neither unchanged fallback reached 130/130. Fresh ids still defeat the lookup; the 48 page-sampled cases add 24 matches for each constant. The v1 fixture-expansion concern above is historical and does not establish a v2 bypass. No way to reach 130/130 without real verbatim location was exercised here.
+
+Report: .ufo/waves/round-29/controls/CtlIdKeyed/report.md

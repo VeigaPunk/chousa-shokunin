@@ -100,3 +100,86 @@ For a false negative, both receipts show origin `076df58d`, `S038`, `Objects of 
 Smallest safe correction to raw grep itself: use the already-declared HTML extraction, normalization and alphanumeric-boundary rule rather than changing labels to accommodate these misses. However, the independently measured no-fetch 82/82 variant triggers the frozen design's stated void-before-data rule; proceeding to data under this predicate would falsely establish operability and freshness. Preserve the counterexample receipts and refreeze a replacement design using source-backed held-out positives not derivable from committed positive spans. Merely hiding runtime labels or changing IDs/order/seeds cannot fix embedded public-fixture answers. This is a fixable measurement defect, not an admissible speed/accuracy tradeoff. No counter revision, runtime judgment or admission decision was made here.
 
 Report: .ufo/waves/round-29/controls/CtlRawGrep/report.md
+
+## v2 rescore
+
+The parent froze design v2 at lane commit `12244431d636bfa615d7e8d3a0a48b85b3cba06f` after v1 was voided. The new predicate is 130/130, including 24 live-page windows and 24 live-page transpositions. I read the v2 claims and counter, then rescored the **existing `control.py` unchanged** with seeds 2901 and 2902. Both receipts record counter SHA-256 `574ffcad7a78d2fdf04b895445c1aac72537cc548b944cae62012baf4ba4e2dd`. The v1 evidence and conclusions above remain historical; the v1 no-fetch 82/82 result is not a v2 measurement.
+
+### Seed 2901
+
+Command from the lane root:
+
+```sh
+timeout 540s python3 corpus/evidence/round29/c1-count.py --seed 2901 --timeout 90 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlRawGrep/receipt-v2.json -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlRawGrep/control.py
+```
+
+Counter stdout, verbatim:
+
+```text
+class absent-cross-attributed 4/4
+class absent-fabricated 4/4
+class absent-one-word-edit 4/4
+class absent-spliced 4/4
+class absent-truncated-token 3/4
+class no-source-own-work-row 2/2
+class no-source-unregistered-id 1/1
+class runtime-crossattr 14/14
+class runtime-page-transpose 24/24
+class runtime-page-window 12/24
+class runtime-subspan 8/14
+class runtime-transpose 14/14
+class too-long-true-text 3/3
+class verbatim-inline-markup 0/9
+class verbatim-plain 3/3
+class verbatim-typographic-apostrophe 0/2
+seed=2901 tool_exit=1 wall_s=1.07
+QUOTE_REOPEN_MATCH=100/130
+```
+
+Counter/timeout exit: **1**. Control exit: **1**. Receipt: `.ufo/waves/round-29/controls/CtlRawGrep/receipt-v2.json`; `predicate_holds=false`; zero UNREACHABLE verdicts.
+
+### Seed 2902
+
+Command from the lane root, run concurrently with the first rescore:
+
+```sh
+timeout 540s python3 corpus/evidence/round29/c1-count.py --seed 2902 --timeout 90 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlRawGrep/receipt-v2-seed2.json -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlRawGrep/control.py
+```
+
+Counter stdout, verbatim:
+
+```text
+class absent-cross-attributed 4/4
+class absent-fabricated 4/4
+class absent-one-word-edit 4/4
+class absent-spliced 4/4
+class absent-truncated-token 3/4
+class no-source-own-work-row 2/2
+class no-source-unregistered-id 1/1
+class runtime-crossattr 14/14
+class runtime-page-transpose 24/24
+class runtime-page-window 11/24
+class runtime-subspan 8/14
+class runtime-transpose 14/14
+class too-long-true-text 3/3
+class verbatim-inline-markup 0/9
+class verbatim-plain 3/3
+class verbatim-typographic-apostrophe 0/2
+seed=2902 tool_exit=1 wall_s=1.07
+QUOTE_REOPEN_MATCH=99/130
+```
+
+Counter/timeout exit: **1**. Control exit: **1**. Receipt: `.ufo/waves/round-29/controls/CtlRawGrep/receipt-v2-seed2.json`; `predicate_holds=false`; zero UNREACHABLE verdicts.
+
+### v2 counterexample and impacted axes
+
+The unchanged control loses exactly five classes on both seeds: `absent-truncated-token` (3/4), `verbatim-inline-markup` (0/9), `verbatim-typographic-apostrophe` (0/2), `runtime-subspan` (8/14), and `runtime-page-window` (12/24 and 11/24). All other eleven classes match completely. Total mismatches are 30 and 31; they are not network failures.
+
+The prior inside-token false positive persists. A new seed-2901 example is the S013 page window `is not. See json.org for a definition of JSON values. 3. Line`, expected VERBATIM but returned ABSENT. This demonstrates that the raw-byte shortcut also fails source-derived runtime positives, beyond the committed fixture's markup and typography cases.
+
+Impacted axes remain operability and calibration: this cheap command cannot replace the declared verifier, and a partial score must not be presented as the acquired capability. Smallest safe correction remains implementing the declared extraction, normalization and boundary rule rather than weakening the contract. No 130/130 shortcut was measured by this seat, and rejection of this control does not establish general v2 soundness.
+
+Only the two requested v2 receipts and this appended section were added. `control.py` was not changed; no git/jj commands, tool installs, other-runtime invocation or out-of-scope edits occurred. Both scoring processes exited; none remains running.
+
+Report: .ufo/waves/round-29/controls/CtlRawGrep/report.md
+

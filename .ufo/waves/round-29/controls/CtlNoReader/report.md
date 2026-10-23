@@ -245,3 +245,138 @@ The requested no-reader ceiling was reproduced exactly: **54/82** on both seeds.
 Changing only the uniform fallback cannot reach 82/82. **[INFERENCE]** A richer no-reader variant could attempt to exploit the public frozen `items.tsv`/`labels.tsv` plus the counter's disclosed token-subspan, adjacent-transposition and source-rotation constructions, classifying generated items without reopening their source pages. Randomizing IDs and order does not hide these quote/source relationships. That variant was not built or scored here, so no 82/82 bypass is claimed. The observed rejection of these two constant-fallback controls must not be presented as proof that the frozen counter requires real page location.
 
 Writes were confined to this assigned `CtlNoReader` directory. No real `tools/quote-reopen.py`, sibling source, fleet files, git index or jj state was modified; no git/jj write command was invoked.
+
+## v2 rescore
+
+Design v1 was voided: the revised frozen `claims.md` records that `CtlLabelKeyed` reached 82/82 on both seeds without fetching pages. Thus the earlier section's untested fixture-derived shortcut was subsequently demonstrated by another seat. This section records the requested rescore under design v2, assigned freeze commit `12244431d636bfa615d7e8d3a0a48b85b3cba06f`, with target 130/130 and 48 additional live-page-sampled cases.
+
+Both existing controls were run **unchanged** on seeds 2901 and 2902. No new mutation or implementation was introduced. The controls still make zero page fetches; the v2 **counter** now fetches source pages to construct its extra cases. All four measurements completed successfully as measurements and rejected the candidate; none was a counter-side fetch error.
+
+### Commands and receipts
+
+Working directory remained `/home/vgpnk/Projects/shokunin/chousa-shokunin`. Every command had `timeout 590s`, a 20-second candidate timeout, and a 600-second tool deadline. All processes exited; none remained running. No installations, git/jj writes or writes outside this control directory occurred.
+
+```text
+timeout 590s python3 corpus/evidence/round29/c1-count.py --timeout 20 --seed 2901 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlNoReader/receipt-v2.json -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlNoReader/control.py
+timeout 590s python3 corpus/evidence/round29/c1-count.py --timeout 20 --seed 2902 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlNoReader/receipt-v2-seed2.json -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlNoReader/control.py
+timeout 590s python3 corpus/evidence/round29/c1-count.py --timeout 20 --seed 2901 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlNoReader/receipt-v2-verbatim.json -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlNoReader/control-verbatim.py
+timeout 590s python3 corpus/evidence/round29/c1-count.py --timeout 20 --seed 2902 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlNoReader/receipt-v2-verbatim-seed2.json -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlNoReader/control-verbatim.py
+```
+
+| Control | Seed | Receipt | Match | Counter exit | Candidate exit | Predicate |
+|---|---:|---|---|---:|---:|---|
+| no-reader / ABSENT fallback | 2901 | `receipt-v2.json` | 78/130 | 1 | 1 | false |
+| no-reader / ABSENT fallback | 2902 | `receipt-v2-seed2.json` | 78/130 | 1 | 1 | false |
+| no-reader / VERBATIM fallback | 2901 | `receipt-v2-verbatim.json` | 58/130 | 1 | 1 | false |
+| no-reader / VERBATIM fallback | 2902 | `receipt-v2-verbatim-seed2.json` | 58/130 | 1 | 1 | false |
+
+All four receipts have empty `stderr_tail`, receipt time `2026-10-23T01:20:28Z`, and counter SHA-256 `574ffcad7a78d2fdf04b895445c1aac72537cc548b944cae62012baf4ba4e2dd`. The counter's `wall_s` measures only the candidate subprocess, not its earlier page sampling.
+
+### control.py, seed 2901 — stdout verbatim; counter exit 1
+
+```text
+class absent-cross-attributed 4/4
+class absent-fabricated 4/4
+class absent-one-word-edit 4/4
+class absent-spliced 4/4
+class absent-truncated-token 4/4
+class no-source-own-work-row 2/2
+class no-source-unregistered-id 1/1
+class runtime-crossattr 14/14
+class runtime-page-transpose 24/24
+class runtime-page-window 0/24
+class runtime-subspan 0/14
+class runtime-transpose 14/14
+class too-long-true-text 3/3
+class verbatim-inline-markup 0/9
+class verbatim-plain 0/3
+class verbatim-typographic-apostrophe 0/2
+seed=2901 tool_exit=1 wall_s=0.03
+QUOTE_REOPEN_MATCH=78/130
+```
+
+### control.py, seed 2902 — stdout verbatim; counter exit 1
+
+```text
+class absent-cross-attributed 4/4
+class absent-fabricated 4/4
+class absent-one-word-edit 4/4
+class absent-spliced 4/4
+class absent-truncated-token 4/4
+class no-source-own-work-row 2/2
+class no-source-unregistered-id 1/1
+class runtime-crossattr 14/14
+class runtime-page-transpose 24/24
+class runtime-page-window 0/24
+class runtime-subspan 0/14
+class runtime-transpose 14/14
+class too-long-true-text 3/3
+class verbatim-inline-markup 0/9
+class verbatim-plain 0/3
+class verbatim-typographic-apostrophe 0/2
+seed=2902 tool_exit=1 wall_s=0.02
+QUOTE_REOPEN_MATCH=78/130
+```
+
+### control-verbatim.py, seed 2901 — stdout verbatim; counter exit 1
+
+```text
+class absent-cross-attributed 0/4
+class absent-fabricated 0/4
+class absent-one-word-edit 0/4
+class absent-spliced 0/4
+class absent-truncated-token 0/4
+class no-source-own-work-row 2/2
+class no-source-unregistered-id 1/1
+class runtime-crossattr 0/14
+class runtime-page-transpose 0/24
+class runtime-page-window 24/24
+class runtime-subspan 14/14
+class runtime-transpose 0/14
+class too-long-true-text 3/3
+class verbatim-inline-markup 9/9
+class verbatim-plain 3/3
+class verbatim-typographic-apostrophe 2/2
+seed=2901 tool_exit=1 wall_s=0.03
+QUOTE_REOPEN_MATCH=58/130
+```
+
+### control-verbatim.py, seed 2902 — stdout verbatim; counter exit 1
+
+```text
+class absent-cross-attributed 0/4
+class absent-fabricated 0/4
+class absent-one-word-edit 0/4
+class absent-spliced 0/4
+class absent-truncated-token 0/4
+class no-source-own-work-row 2/2
+class no-source-unregistered-id 1/1
+class runtime-crossattr 0/14
+class runtime-page-transpose 0/24
+class runtime-page-window 24/24
+class runtime-subspan 14/14
+class runtime-transpose 0/14
+class too-long-true-text 3/3
+class verbatim-inline-markup 9/9
+class verbatim-plain 3/3
+class verbatim-typographic-apostrophe 2/2
+seed=2902 tool_exit=1 wall_s=0.03
+QUOTE_REOPEN_MATCH=58/130
+```
+
+### Unchanged-byte evidence and conclusion
+
+Before and after the v2 rescore, `timeout 20s sha256sum` returned identical hashes for every input and control:
+
+| Lane-relative path | Before = after SHA-256 |
+|---|---|
+| `.ufo/waves/round-29/controls/CtlNoReader/control.py` | `dc4e925236213ae18f992f2310d648a6d73a5545444ee9aa4af179c3e9bcd568` |
+| `.ufo/waves/round-29/controls/CtlNoReader/control-verbatim.py` | `9127f33a2ba9bcf2d8a8075ec3d5a985394800b888c70f4275e9cbc4e3fb053b` |
+| `corpus/evidence/round29/claims.md` | `870664d210549f3b15b8d105d8d300d2084c9cbd73d2cb07ea10b34eb439134e` |
+| `corpus/evidence/round29/c1-count.py` | `574ffcad7a78d2fdf04b895445c1aac72537cc548b944cae62012baf4ba4e2dd` |
+| `corpus/fixtures/quote-reopen-r29/items.tsv` | `e6305beba9563fe4d37430019831610ddf7a5adf1e35de60869e3b764f939bcc` |
+| `corpus/fixtures/quote-reopen-r29/labels.tsv` | `dda1b3768f6f187736a77e5bce094b41822d8574e4798886d00964267343c7a9` |
+| `corpus/SOURCES.md` | `8bc103823c3a08114e3f787dca96384a6f739931ae3de8c5bdbc64b7225c64b4` |
+
+The no-reader result equals v2's expected 78/130 ceiling: its earlier 54 matches plus 24 page transpositions. The VERBATIM variant gets its earlier 34 matches plus 24 page windows, or 58/130. Neither unchanged control reaches 130/130. This rescore introduces no new mutant and does not turn the v1 baseline-failing mutation probe into a killed mutant. No v2 bypass was demonstrated by this seat.
+

@@ -188,3 +188,76 @@ No measured shortcut in this seat reached 82/82: the assigned mutant was killed 
 [INFERENCE, not run] A quote/source-keyed ABSENT override for exactly the four strings above, with the mutant unchanged otherwise, would turn the four observed misses into matches and rescore these two observed case sets to 82/82 without implementing the real boundary rule. This would be fixture memorization, not a valid contract implementation; it still fetches and searches page text. Also, casefolding with genuine boundary checks may evade this fixture's case-sensitivity coverage because no case-only negatives are declared; that separate variant was not executed. Neither inference is claimed as an observed 82/82 no-location control. The frozen counter and contract were not changed.
 
 Report: .ufo/waves/round-29/controls/CtlCasefoldNoBoundary/report.md
+
+## v2 rescore
+
+Design v1 was voided by the separate label-keyed control, not by this seat's control. Design v2 reference supplied by Main: lane commit `12244431d636bfa615d7e8d3a0a48b85b3cba06f`, target 130/130. The existing casefold/no-boundary `control.py` was re-scored unchanged; its SHA-256 remains `c2b823bf0c1e837bc345a8a1a07de4fd6fabc65e0f98711e063d1b9d4f1b4bc8`, identical to the v1 recorded artifact. The v2 counter SHA-256 measured before execution and recorded in both receipts is `574ffcad7a78d2fdf04b895445c1aac72537cc548b944cae62012baf4ba4e2dd`; v2 claims SHA-256 is `870664d210549f3b15b8d105d8d300d2084c9cbd73d2cb07ea10b34eb439134e`. Fixture items, labels and source-registry hashes still equal the v1 values above.
+
+Only the assigned persisted mutant was executed. The scratch pristine baseline was not re-scored, and no control source, counter, fixture, registry, index or jj state was edited. Both independent seeds ran concurrently from the lane root with an outer 590-second timeout (5-second kill grace), and a 90-second candidate timeout. Both counter subprocesses completed and were reaped. No tools were installed or updated.
+
+### Seed 2901
+
+```sh
+timeout --kill-after=5s 590s python3 corpus/evidence/round29/c1-count.py --seed 2901 --timeout 90 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlCasefoldNoBoundary/receipt-v2.json -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlCasefoldNoBoundary/control.py
+```
+
+```text
+class absent-cross-attributed 4/4
+class absent-fabricated 4/4
+class absent-one-word-edit 4/4
+class absent-spliced 4/4
+class absent-truncated-token 0/4
+class no-source-own-work-row 2/2
+class no-source-unregistered-id 1/1
+class runtime-crossattr 14/14
+class runtime-page-transpose 24/24
+class runtime-page-window 24/24
+class runtime-subspan 14/14
+class runtime-transpose 14/14
+class too-long-true-text 3/3
+class verbatim-inline-markup 9/9
+class verbatim-plain 3/3
+class verbatim-typographic-apostrophe 2/2
+seed=2901 tool_exit=1 wall_s=1.09
+QUOTE_REOPEN_MATCH=126/130
+COUNTER_EXIT=1
+```
+
+Receipt: `receipt-v2.json`; `predicate_holds=false`. Outer command wall time: 5.52 seconds.
+
+### Seed 2902
+
+```sh
+timeout --kill-after=5s 590s python3 corpus/evidence/round29/c1-count.py --seed 2902 --timeout 90 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlCasefoldNoBoundary/receipt-v2-seed2.json -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlCasefoldNoBoundary/control.py
+```
+
+```text
+class absent-cross-attributed 4/4
+class absent-fabricated 4/4
+class absent-one-word-edit 4/4
+class absent-spliced 4/4
+class absent-truncated-token 0/4
+class no-source-own-work-row 2/2
+class no-source-unregistered-id 1/1
+class runtime-crossattr 14/14
+class runtime-page-transpose 24/24
+class runtime-page-window 24/24
+class runtime-subspan 14/14
+class runtime-transpose 14/14
+class too-long-true-text 3/3
+class verbatim-inline-markup 9/9
+class verbatim-plain 3/3
+class verbatim-typographic-apostrophe 2/2
+seed=2902 tool_exit=1 wall_s=1.08
+QUOTE_REOPEN_MATCH=126/130
+COUNTER_EXIT=1
+```
+
+Receipt: `receipt-v2-seed2.json`; `predicate_holds=false`. Outer command wall time: 5.61 seconds.
+
+### v2 finding
+
+The unchanged control remains rejected: 126/130 on both seeds, counter exits 1 and tool exits 1. It loses exactly the same four frozen `absent-truncated-token` origins (`4798287c`, `98406fc4`, `ad795e73`, `f98e78ae`), all ABSENT misclassified as VERBATIM. Every other class is perfect, including both newly sampled page classes (24/24 each). Token-boundary coverage remains load-bearing; this combined mutation still does not isolate independent case-sensitivity coverage.
+
+[INFERENCE, not executed] The same four exact quote/source-keyed ABSENT overrides described for v1 would rescore these two observed v2 case sets to 130/130 without implementing the actual token-boundary rule. This remains a fixture-specific exception scheme that fetches/searches page text, not a measured no-fetch success or a correct verbatim implementation. No additional control variant was run.
+

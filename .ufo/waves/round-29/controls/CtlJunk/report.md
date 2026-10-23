@@ -209,3 +209,137 @@ The binary variant raised the observed scores from 17 to 35 and from 15 to 29 wh
 [INFERENCE] A candidate command is not sandboxed away from the committed fixture labels or counter source, so these random probes do not rule out a label/oracle-assisted variant. That is outside this assigned random-control probe; it was not implemented or scored here. No additional runtime, judging, integration, or shipping action was invoked.
 
 Report: .ufo/waves/round-29/controls/CtlJunk/report.md
+
+## v2 rescore
+
+Design v1 was subsequently voided by CtlLabelKeyed reaching 82/82 without fetching pages, as recorded in the v2 `claims.md` header. Per the rescore assignment, the frozen v2 lane revision is `12244431d636bfa615d7e8d3a0a48b85b3cba06f`; the new predicate is `QUOTE_REOPEN_MATCH=130/130`, including 48 live-page-sampled items. The original four v1 receipts and the preceding report are retained unchanged.
+
+Both controls were rescored **without modification**, still with control RNG seed **290129** and counter seeds **2901** and **2902**. Control SHA-256 values before rescoring match the original/restored bytes:
+
+```text
+f6d64324269677674edb2be36a52edb5368d27bccc0aa97e7532fcab0e129864  control.py
+8e5c6a369303a51aad564274730fbcd4400cf4abb59dc10fa3fb82adbf64f09b  control-binary.py
+574ffcad7a78d2fdf04b895445c1aac72537cc548b944cae62012baf4ba4e2dd  corpus/evidence/round29/c1-count.py
+870664d210549f3b15b8d105d8d300d2084c9cbd73d2cb07ea10b34eb439134e  corpus/evidence/round29/claims.md
+e6305beba9563fe4d37430019831610ddf7a5adf1e35de60869e3b764f939bcc  corpus/fixtures/quote-reopen-r29/items.tsv
+dda1b3768f6f187736a77e5bce094b41822d8574e4798886d00964267343c7a9  corpus/fixtures/quote-reopen-r29/labels.tsv
+```
+
+All four commands ran concurrently from the lane root, using this template:
+
+```sh
+timeout 540s python3 corpus/evidence/round29/c1-count.py --seed SEED --timeout 30 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlJunk/RECEIPT -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlJunk/CONTROL
+```
+
+| Control | Counter seed | Receipt | Counter exit | Tool exit |
+|---|---:|---|---:|---:|
+| control.py | 2901 | receipt-v2.json | 1 | 1 |
+| control.py | 2902 | receipt-v2-seed2.json | 1 | 1 |
+| control-binary.py | 2901 | receipt-v2-binary.json | 1 | 1 |
+| control-binary.py | 2902 | receipt-v2-binary-seed2.json | 1 | 1 |
+
+The outer timeout was 540 s, candidate timeout 30 s, and tool-call timeout 550 s. Each counter completed in under 5 s; all processes exited and none remain running. Unlike v1, the **v2 counter** fetched the fixture source URLs from `corpus/SOURCES.md` to construct its page-sampled cases. The controls themselves still performed no network access and no quote-location work. No tools were installed or updated. No counter, fixture, registry, control, sibling, git-index or jj-state bytes were written by this rescore.
+
+### v2 five-way junk, seed 2901
+
+```text
+class absent-cross-attributed 0/4
+class absent-fabricated 0/4
+class absent-one-word-edit 2/4
+class absent-spliced 1/4
+class absent-truncated-token 2/4
+class no-source-own-work-row 1/2
+class no-source-unregistered-id 0/1
+class runtime-crossattr 3/14
+class runtime-page-transpose 3/24
+class runtime-page-window 5/24
+class runtime-subspan 3/14
+class runtime-transpose 4/14
+class too-long-true-text 1/3
+class verbatim-inline-markup 2/9
+class verbatim-plain 2/3
+class verbatim-typographic-apostrophe 1/2
+seed=2901 tool_exit=1 wall_s=0.02
+QUOTE_REOPEN_MATCH=30/130
+```
+
+Counter exit: 1. Receipt: `receipt-v2.json`.
+
+### v2 five-way junk, seed 2902
+
+```text
+class absent-cross-attributed 0/4
+class absent-fabricated 0/4
+class absent-one-word-edit 2/4
+class absent-spliced 0/4
+class absent-truncated-token 1/4
+class no-source-own-work-row 0/2
+class no-source-unregistered-id 0/1
+class runtime-crossattr 3/14
+class runtime-page-transpose 3/24
+class runtime-page-window 4/24
+class runtime-subspan 3/14
+class runtime-transpose 4/14
+class too-long-true-text 1/3
+class verbatim-inline-markup 1/9
+class verbatim-plain 2/3
+class verbatim-typographic-apostrophe 0/2
+seed=2902 tool_exit=1 wall_s=0.02
+QUOTE_REOPEN_MATCH=24/130
+```
+
+Counter exit: 1. Receipt: `receipt-v2-seed2.json`.
+
+### v2 binary junk, seed 2901
+
+```text
+class absent-cross-attributed 1/4
+class absent-fabricated 1/4
+class absent-one-word-edit 3/4
+class absent-spliced 3/4
+class absent-truncated-token 2/4
+class no-source-own-work-row 0/2
+class no-source-unregistered-id 0/1
+class runtime-crossattr 7/14
+class runtime-page-transpose 10/24
+class runtime-page-window 12/24
+class runtime-subspan 9/14
+class runtime-transpose 6/14
+class too-long-true-text 0/3
+class verbatim-inline-markup 6/9
+class verbatim-plain 2/3
+class verbatim-typographic-apostrophe 1/2
+seed=2901 tool_exit=1 wall_s=0.02
+QUOTE_REOPEN_MATCH=63/130
+```
+
+Counter exit: 1. Receipt: `receipt-v2-binary.json`.
+
+### v2 binary junk, seed 2902
+
+```text
+class absent-cross-attributed 0/4
+class absent-fabricated 2/4
+class absent-one-word-edit 4/4
+class absent-spliced 2/4
+class absent-truncated-token 2/4
+class no-source-own-work-row 0/2
+class no-source-unregistered-id 0/1
+class runtime-crossattr 7/14
+class runtime-page-transpose 8/24
+class runtime-page-window 11/24
+class runtime-subspan 8/14
+class runtime-transpose 4/14
+class too-long-true-text 0/3
+class verbatim-inline-markup 7/9
+class verbatim-plain 0/3
+class verbatim-typographic-apostrophe 0/2
+seed=2902 tool_exit=1 wall_s=0.02
+QUOTE_REOPEN_MATCH=55/130
+```
+
+Counter exit: 1. Receipt: `receipt-v2-binary-seed2.json`.
+
+**v2 observation: both unchanged junk controls were rejected on both seeds; none reached 130/130.** No successful no-location bypass was found in this assigned random-control rescore. As deductions from the v2 label distribution, five-way expected matches are 130/5 = 26; binary expected matches are (52 + 72)/2 = 62, and its hard ceiling is 124/130 because six labels are outside its verdict pool. A lucky five-way all-match trial remains theoretically possible under the uniform-draw model, with probability 5^-130; no seed search or new variant was implemented. This rescore makes no broader counter-soundness claim and performs no new mutation; the earlier mutation-causality verdict remains inconclusive because its pristine baseline failed.
+
+Report: .ufo/waves/round-29/controls/CtlJunk/report.md
