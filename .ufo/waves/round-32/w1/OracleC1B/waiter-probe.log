@@ -1,0 +1,24 @@
+=== gateA ===
+gate=/fast/scratch/hyaku/chousa-r32/w1/OracleC1B/gateA.sh inode=100261567 writer_pid=1596778 writer_alive=yes
+-- raw /proc/locks lines naming inode 100261567:
+   29: FLOCK  ADVISORY  WRITE 1596668 103:05:100261567 0 EOF
+   29: -> FLOCK  ADVISORY  WRITE 1601661 103:05:100261567 0 EOF
+-- c1-count.waiters_on(100261567) = 1
+writer_rc=1 lines=2 final_byte=0a
+probe_exit=0
+=== gateB ===
+gate=/fast/scratch/hyaku/chousa-r32/w1/OracleC1B/gateB.sh inode=708471414 writer_pid=1611531 writer_alive=yes
+-- raw /proc/locks lines naming inode 708471414:
+   47: FLOCK  ADVISORY  WRITE 1611501 103:05:708471414 0 EOF
+   47: -> FLOCK  ADVISORY  WRITE 1615573 103:05:708471414 0 EOF
+-- c1-count.waiters_on(708471414) = 1
+writer_rc=1 lines=2 final_byte=0a
+probe_exit=0
+=== gateC ===
+gate=/fast/scratch/hyaku/chousa-r32/w1/OracleC1B/gateC.sh inode=1780795209 writer_pid=1626016 writer_alive=yes
+-- raw /proc/locks lines naming inode 1780795209:
+   30: FLOCK  ADVISORY  WRITE 1626010 103:05:1780795209 0 EOF
+   30: -> FLOCK  ADVISORY  WRITE 1628450 103:05:1780795209 0 EOF
+-- c1-count.waiters_on(1780795209) = 1
+writer_rc=1 lines=2 final_byte=0a
+probe_exit=0

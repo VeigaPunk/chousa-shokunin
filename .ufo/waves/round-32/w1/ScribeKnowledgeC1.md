@@ -1,0 +1,8 @@
+## Chousa round 32 W1 — C1 knowledge draft
+- **Behavior:** Drafted only `corpus/knowledge/manifest-append-lock-r32.md` at `/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-32/w1/ScribeKnowledgeC1/manifest-append-lock-r32.md`; this report is the other requested artifact. No lane production or registry files were edited.
+- **Inputs:** Opened `corpus/QUALITY.md:17-27,59-68`; patterns `corpus/knowledge/json-delimiter-r24.md:1-77` and `line-binding-r31.md:1-42`; frozen contract `corpus/evidence/round32/claims.md:14-47`; counter docstring `corpus/evidence/round32/c1-count.py:2-20`.
+- **Finding:** The r24 entry records 16 parallel appenders across 3 runs, with a blank line in one run from two prefixes (`json-delimiter-r24.md:66-71`); I did not reproduce it.
+- **Gate:** The draft distinguishes C1 contract from P1 predicate (`claims.md:23-40`); no counter, candidate gate, or control was run, so no candidate verdict/result is claimed.
+- **Citation:** Kept `S0XX-fcntl` as required for L1 assignment. `ScribeSourceC1` reports its Python fcntl page covers `flock(fd, operation)` / `LOCK_EX`, not advisory semantics or NFS; the draft marks those limits/inferences and does not overstate that source.
+- **Out of scope:** No C2 work, source-row edit, product change, tests, installs, or NFS execution. Known admission gap: assigned mined row and `used-by` backlink remain pending (`QUALITY.md:17-27`).
+- **Provenance:** `timeout 30s mkdir -p /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-32/w1/ScribeKnowledgeC1` returned silently without tool error (numeric exit not emitted); `write` reports the draft created, 4348 bytes. No verification command was run.

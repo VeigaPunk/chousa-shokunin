@@ -1,0 +1,14 @@
+Supplemental static evidence received after the report was written once
+
+Axes: operability and coverage; no new execution or judgment.
+
+Gate-location identity caveat, not C1/C2 functional coupling:
+- tools/research-gate.sh:287-291 derives LANE_ROOT from SELF's parent directory.
+- tools/research-gate.sh:1186-1195 resolves against ROOT or LANE_ROOT; :1213-1218 admits a canonical source inside either allowed root.
+- corpus/evidence/round32/c2-count.py:247-249 creates the fixture beneath C2_TMP; :151-154 creates sibling root/outside directories; :208-210 labels ../outside citations E7, hidden truth exempt (:69).
+
+[INFERENCE] If the scratch gate is at /scratch/Seat/tools/base.sh and C2_TMP is /scratch/Seat, the supposedly out-of-corpus E7 file is actually under that gate's LANE_ROOT. An audit reusing the resolved reader can legitimately read it, contrary to this fixture's hidden E7 truth. Gate placement therefore changes the experimental boundary even when bytes are identical. C1-only base still exempts U before resolution (research-gate.sh:1880-1883); this does not overturn the scoped C1-only => C2 baseline inference in the main report.
+
+Smallest safe correction: place the scratch gate under a separate synthetic lane/tools directory whose lane root does not contain the counter fixture tree; record both the gate path and fixture parent. Preserve the production reader and frozen counter. Do not credit gate_sha256 alone as proof of equivalent allowed roots.
+
+Peer evidence (not locally rerun or independently receipt-verified): incoming message from ChousaR32A2.CriticPredicateGaps32b reported a control scoring 114/120, missing only E7, when scratch gate and C2_TMP shared a parent. That observation belongs to that seat's evidence; this seat only traced the cited local code. No candidate/control counter executed here; scratch probe count remains zero.

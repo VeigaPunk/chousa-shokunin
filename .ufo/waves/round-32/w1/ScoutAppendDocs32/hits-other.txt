@@ -1,0 +1,65 @@
+corpus/SOURCES.md:11: | S001 | chousa research gate — tools/research-gate.sh (verify-all --json manifest append) | own-work | A | this lane's gate behavior at the round-24 landing revision (gate sha recorded once, in corpus/knowledge/json-delimiter-r24.md) | setup check "manifest unreadable", manifest-append block opening "A manifest whose 
+corpus/SOURCES.md:23: | S013 | JSON Lines text format — https://jsonlines.org/ | spec | A | the format's stated requirements | requirement 3, Line Terminator is '\n'; undated page, stable since 2013 | A line terminator after every JSON value is recommended, and if one follows the last value it must be the file's last byte | mined | 2026-10-
+corpus/SOURCES.md:84: - Lane mechanics — S001 → S013: the gate's own append rule and the JSON Lines
+corpus/fixtures/claims-r2.README.md:1: # claims-r2.jsonl — pre-registered claim-vs-source fixture (chousa round 2)
+corpus/fixtures/claims-r2.README.md:131: bash tools/research-gate.sh verify-claims corpus/fixtures/claims-r2.jsonl --root ..
+corpus/fixtures/claims-r2.README.md:155: bash tools/research-gate.sh verify-claims corpus/fixtures/claims-r2.jsonl --root ..
+corpus/fixtures/claims-r2.README.md:175: for n, line in enumerate(open("corpus/fixtures/claims-r2.jsonl", encoding="utf-8"), 1):
+corpus/fixtures/chain-r3.README.md:28: The dispatch named `chain-r3.jsonl`; the landed mode reads Markdown records
+corpus/fixtures/chain-r3.README.md:30: fixture is the record `chain-r3.md` and the JSONL pre-draft was superseded and
+corpus/fixtures/chain-r3.README.md:185: `bash tools/research-gate.sh verify-claims corpus/fixtures/claims-r2.jsonl --root ..`
+corpus/fixtures/integrity-r7.README.md:33: | `integrity-r7.claims.jsonl` / `integrity-r7-broken.claims.jsonl` | the bound claims companion, byte-identical to each other; three verbatim spans in the pinned exports, all `expect=supported` |
+corpus/fixtures/integrity-r7.README.md:86: research-gate research-gate-r1 — ts=… — mode=verify-all — record=corpus/fixtures/integrity-r7.md — claims=/…/corpus/fixtures/integrity-r7.claims.jsonl — root=..
+corpus/fixtures/integrity-r7.README.md:96: research-gate research-gate-r1 — ts=… — mode=verify-all — record=corpus/fixtures/integrity-r7-broken.md — claims=/…/corpus/fixtures/integrity-r7-broken.claims.jsonl — root=..
+corpus/fixtures/integrity-r7.README.md:151: research-gate research-gate-r1 — ts=… — mode=verify-all — record=corpus/fixtures/integrity-r7.md — claims=/…/integrity-r7.claims.jsonl — root=..
+corpus/fixtures/integrity-r7.README.md:162: research-gate research-gate-r1 — ts=… — mode=verify-all — record=corpus/fixtures/integrity-r7-broken.md — claims=/…/integrity-r7-broken.claims.jsonl — root=..
+corpus/fixtures/integrity-r7.README.md:217: 8e83b23d04e92961f7781e556d600b94a313e083c79d32a517fcb16ec17dabb3  integrity-r7.claims.jsonl
+corpus/fixtures/integrity-r7.README.md:218: 8e83b23d04e92961f7781e556d600b94a313e083c79d32a517fcb16ec17dabb3  integrity-r7-broken.claims.jsonl
+corpus/fixtures/integrity-r7.README.md:233: bash tools/research-gate.sh verify-claims    corpus/fixtures/integrity-r7.claims.jsonl --root ..
+corpus/fixtures/claims-r9.README.md:1: # claims-r9.jsonl — archive claim-coverage fixture (chousa round 9)
+corpus/fixtures/claims-r9.README.md:37: Identical to claims-r2.jsonl: one JSON object per line with `id`, `claim`,
+corpus/fixtures/claims-r9.README.md:86: $ bash tools/research-gate.sh verify-claims corpus/fixtures/claims-r9.jsonl --root ..
+corpus/fixtures/claims-r9.README.md:87: research-gate research-gate-r1 — ts=2026-10-16T04:31:17Z — mode=claims — claims=corpus/fixtures/claims-r9.jsonl
+corpus/fixtures/claims-r9.README.md:103: chousa-shokunin/corpus/fixtures/claims-r9.jsonl`), resolved under the fleet root
+corpus/fixtures/claims-r9.README.md:137: bash tools/research-gate.sh verify-claims corpus/fixtures/claims-r9.jsonl --root ..
+corpus/fixtures/claims-r9.README.md:157: for n, line in enumerate(open("corpus/fixtures/claims-r9.jsonl", encoding="utf-8"), 1):
+corpus/fixtures/claims-r9.README.md:169: for line in open("corpus/fixtures/claims-r2.jsonl", encoding="utf-8"):
+corpus/fixtures/full-r6.README.md:1: # full-r6.md / full-r6-broken.md / full-r6.claims.jsonl — all-section record + two-defect twin (chousa round 6)
+corpus/fixtures/full-r6.README.md:8: --root PATH` composes ONE verdict (DRIFT iff any section drifts) and `--json
+corpus/fixtures/full-r6.README.md:32: $ bash tools/research-gate.sh verify corpus/fixtures/full-r6.md --json /dev/null --root ..
+corpus/fixtures/full-r6.README.md:33: stderr: research-gate: unknown flag: --json
+corpus/fixtures/full-r6.README.md:45: | `full-r6.claims.jsonl` | the claims companion of `full-r6.md` — 3 claims, all `expect=supported`, all resolving in pinned exports; bound to the record by its `## Meta` `claims_file` row |
+corpus/fixtures/full-r6.README.md:46: | `full-r6-broken.claims.jsonl` | the claims companion of `full-r6-broken.md` — byte-identical to the positive's (claims stay GREEN in the tampered run, by design) |
+corpus/fixtures/full-r6.README.md:177: compose CLEAN — see the omission probe above. The manifest half (`--json`) is
+corpus/fixtures/full-r6.README.md:197: $ bash tools/research-gate.sh verify-claims corpus/fixtures/full-r6.claims.jsonl --root ..
+corpus/fixtures/full-r6.README.md:198: research-gate research-gate-r1 — ts=2026-10-16T01:46:07Z — mode=claims — claims=corpus/fixtures/full-r6.claims.jsonl
+corpus/fixtures/full-r6.README.md:206: $ bash tools/research-gate.sh verify-claims corpus/fixtures/full-r6-broken.claims.jsonl --root ..
+corpus/fixtures/full-r6.README.md:274: research-gate research-gate-r1 — ts=2026-10-16T01:55:53Z — mode=verify-all — record=corpus/fixtures/full-r6.md — claims=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/fixtures/full-r6.claims.jsonl — root=..
+corpus/fixtures/full-r6.README.md:284: research-gate research-gate-r1 — ts=2026-10-16T01:55:56Z — mode=verify-all — record=corpus/fixtures/full-r6-broken.md — claims=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/fixtures/full-r6-broken.claims.jsonl — root=..
+corpus/fixtures/full-r6.README.md:321: (`state=run … 3/3`) and explicit `--claims corpus/fixtures/full-r6.claims.jsonl`
+corpus/fixtures/full-r6.README.md:359: 45eb6ac2cde9e3c33dd4d753e4da2cb660308dad8f00475a382a2881b89ddc40  full-r6.claims.jsonl
+corpus/fixtures/full-r6.README.md:360: 45eb6ac2cde9e3c33dd4d753e4da2cb660308dad8f00475a382a2881b89ddc40  full-r6-broken.claims.jsonl
+corpus/fixtures/full-r6.README.md:379: bash tools/research-gate.sh verify-claims corpus/fixtures/full-r6.claims.jsonl --root ..
+corpus/fixtures/full-r6.README.md:386: `--json <manifest>` may be appended to any `verify-all` line; the lane manifest
+corpus/fixtures/archives-r9/README.md:22: `| claims_file | chousa-shokunin/corpus/fixtures/claims-r9.jsonl |`) is
+corpus/fixtures/archives-r9/README.md:23: `corpus/fixtures/claims-r9.jsonl`, sha256
+corpus/fixtures/archives-r9/README.md:122: --claims corpus/fixtures/claims-r9.jsonl --root .. ; echo "exit=$?"
+corpus/fixtures/archives-r9/README.md:141: (r9 JSONL) + 19 (in-record) = 46 rows; the round-9 delta is 29 new rows.
+corpus/fixtures/archives-r9/controls/README.md:25: rebinds `claims_file` to a per-control copy of `claims-r9.jsonl` that differs
+corpus/fixtures/archives-r9/controls/README.md:28: the copy keeps the shared `claims-r9.jsonl` untouched for every other
+corpus/fixtures/archives-r9/controls/README.md:35: | `A-r9-span-not-found.md` (+ `A-r9-span-not-found.claims.jsonl`) | span-not-found → `CLAIM_SPAN_NOT_FOUND` | `A-r9.md` | Meta `claims_file` → the control claims copy; that copy mutates claim A07's span `keep four axes separate…` → `keep five axes separate…` (absent from archive A) | claims DRIFT; findings=1; `VERDICT_
+corpus/fixtures/archives-r9/controls/README.md:51: research-gate research-gate-r1 — ts=2026-10-16T05:40:48Z — mode=verify-all — record=corpus/fixtures/archives-r9/controls/A-r9-span-not-found.md — claims=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/fixtures/archives-r9/controls/A-r9-span-not-found.claims.jsonl — root=..
+corpus/fixtures/archives-r9/controls/README.md:65: research-gate research-gate-r1 — ts=2026-10-16T05:40:57Z — mode=verify-all — record=corpus/fixtures/archives-r9/controls/A-r9-anchor-missing.md — claims=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/fixtures/claims-r9.jsonl — root=..
+corpus/fixtures/archives-r9/controls/README.md:79: research-gate research-gate-r1 — ts=2026-10-16T05:41:08Z — mode=verify-all — record=corpus/fixtures/archives-r9/controls/B-r9-rejection-missing-flip.md — claims=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/fixtures/claims-r9.jsonl — root=..
+corpus/fixtures/archives-r9/controls/README.md:93: research-gate research-gate-r1 — ts=2026-10-16T05:41:19Z — mode=verify-all — record=corpus/fixtures/archives-r9/controls/B-r9-false-sweep.md — claims=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/fixtures/claims-r9.jsonl — root=..
+corpus/fixtures/archives-r9/controls/README.md:107: research-gate research-gate-r1 — ts=2026-10-16T05:41:30Z — mode=verify-all — record=corpus/fixtures/archives-r9/controls/C-r9-dangling-ref.md — claims=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/fixtures/claims-r9.jsonl — root=..
+corpus/fixtures/archives-r9/controls/README.md:121: research-gate research-gate-r1 — ts=2026-10-16T05:41:42Z — mode=verify-all — record=corpus/fixtures/archives-r9/controls/C-r9-structure-break.md — claims=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/fixtures/claims-r9.jsonl — root=..
+corpus/fixtures/archives-r9/controls/README.md:163: | `A-r9-span-not-found.claims.jsonl` | `0edb78ee0040bd77af6b1618ca9888f6676eb8082e9aabb9b4c498016664b126` |
+corpus/fixtures/archives-r9/controls/README.md:178: shared claims surface `claims-r9.jsonl`
+corpus/fixtures/archives-r9/controls/README.md:195: `--json`, so they write no manifest lines. The false-sweep control's `hits=`
+considerthese/2026-10-20.md:25: citation-fidelity and attribution papers, TREC RAG, JSON Lines, OCEBM rejected as a verification authority),
+considerthese/2026-10-20.md:36: pointer-resolution boundary (`8a21559`); denylist path-start (`a27128e`); `--json` manifest delimiter
+considerthese/2026-10-20.md:37: (`6572827`, cases 134–136). Lesson from round 24: a first fix is a hypothesis. The delimiter fix landed three
+considerthese/2026-10-20.md:47: `recheck` headers, and a concurrent-append blank-line residual (1 in 3 runs at 16 writers).
+considerthese/2026-10-21.md:34: fixed, and the concurrent-append blank line was reproduced again (2/6 seeded runs at 16 writers, 0/6 controls)
+considerthese/2026-10-21.md:35: with a flock patch kept unlanded; round 26 says plainly it is not claiming it. Bonus finding: the owning ledger's

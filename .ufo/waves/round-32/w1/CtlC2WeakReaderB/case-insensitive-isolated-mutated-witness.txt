@@ -1,0 +1,16 @@
+CWD=/home/vgpnk/Projects/shokunin/chousa-shokunin
+ENV C1_TMP=/fast/scratch/hyaku/chousa-r32/w1/CtlC2WeakReaderB C2_TMP=/fast/scratch/hyaku/chousa-r32/w1/CtlC2WeakReaderB TMPDIR=/fast/scratch/hyaku/chousa-r32/w1/CtlC2WeakReaderB; CHOUSA_* removed
+COMMAND=timeout --kill-after=5s 120s prlimit --as=1073741824 --nproc=2000 -- bash /fast/scratch/hyaku/chousa-r32/w1/CtlC2WeakReaderB/gates/case-insensitive/tools/research-gate.sh verify-chain /fast/scratch/hyaku/chousa-r32/w1/CtlC2WeakReaderB/case-witness.md --root /fast/scratch/hyaku/chousa-r32/w1/CtlC2WeakReaderB
+EXIT=1
+STDOUT:
+research-gate v2 — ts=2026-10-23T06:57:10Z — mode=chain — record=/fast/scratch/hyaku/chousa-r32/w1/CtlC2WeakReaderB/case-witness.md
+CHAIN hop=case-u status=unresolved observed=resolvable source=case-witness-source.md anchor=- at=line:1 verdict=mismatch
+CHAIN hop=case-r status=resolved observed=anchor-missing source=case-witness-source.md anchor=quote:"exact case anchor" at=- verdict=mismatch
+FINDING CHAIN_EXEMPT_RESOLVABLE severity=warn surface=chain obs=hop=case-u status=unresolved source=case-witness-source.md
+FINDING CHAIN_ANCHOR_NOT_FOUND severity=warn surface=chain obs=hop=case-r source=case-witness-source.md anchor=quote:"exact case anchor" nearest_line=- context=-
+RESOLVED_HOPS=0/2
+RESEARCH_GATE: DRIFT (hops=2 verified=0 exempt=0 anchor-missing=2 refused=0 invalid=0 findings=2 drift=2)
+STDERR:
+/fast/scratch/hyaku/chousa-r32/w1/CtlC2WeakReaderB/gates/case-insensitive/tools/research-gate.sh: fork: retry: Resource temporarily unavailable
+/fast/scratch/hyaku/chousa-r32/w1/CtlC2WeakReaderB/gates/case-insensitive/tools/research-gate.sh: fork: retry: Resource temporarily unavailable
+/fast/scratch/hyaku/chousa-r32/w1/CtlC2WeakReaderB/gates/case-insensitive/tools/research-gate.sh: fork: retry: Resource temporarily unavailable

@@ -1,0 +1,31 @@
+Observed stdout excerpts, not complete logs. All four final-oracle invocations ran from /home/vgpnk/Projects/shokunin/chousa-shokunin at 2026-10-23T06:53:24Z against /fast/scratch/hyaku/chousa-r32/w1/OracleC2B/gate/tools/oracle-final-gate.sh, SHA-256 1e3d02fef62e3d434a931313a26e7cb5015b672521769bd0fc2e2fe54e1bda26. Exact bounded command prefixes and suffixes appear in ../OracleC2B.md.
+
+Literal requested root: /home/vgpnk/Projects/shokunin/chousa-shokunin
+chain-r3.md, exit 1:
+CHAIN hop=1 status=resolved observed=refused source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=- at=- verdict=refused
+FINDING CHAIN_SOURCE_MISSING severity=warn surface=chain obs=hop=1 source=research/deep-research-2026-09-28/A-shokunin-tradition.md obs=not a readable regular file under allowed roots
+RESOLVED_HOPS=0/22
+RESEARCH_GATE: DRIFT (hops=22 verified=0 exempt=5 anchor-missing=0 refused=17 invalid=0 findings=17 drift=17)
+
+chain-r3-broken.md, exit 1:
+CHAIN hop=1 status=resolved observed=refused source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=- at=- verdict=refused
+FINDING CHAIN_SOURCE_MISSING severity=warn surface=chain obs=hop=1 source=research/deep-research-2026-09-28/A-shokunin-tradition.md obs=not a readable regular file under allowed roots
+RESOLVED_HOPS=0/2
+RESEARCH_GATE: DRIFT (hops=2 verified=0 exempt=0 anchor-missing=0 refused=2 invalid=0 findings=2 drift=2)
+
+Documented fleet root: /home/vgpnk/Projects/shokunin
+chain-r3.md, exit 0:
+CHAIN hop=18 status=blocked-no-fetch observed=exempt source=https://kotobank.jp/ anchor=- at=- verdict=exempt
+CHAIN hop=19 status=blocked-no-fetch observed=exempt source=https://arxiv.org/ anchor=- at=- verdict=exempt
+CHAIN hop=20 status=unresolved observed=exempt source=S3 anchor=- at=- verdict=exempt
+CHAIN hop=21 status=unresolved observed=exempt source=S2 anchor=- at=- verdict=exempt
+CHAIN hop=22 status=unresolved observed=exempt source=S1 anchor=- at=- verdict=exempt
+RESOLVED_HOPS=17/22
+RESEARCH_GATE: CLEAN (hops=22 verified=17 exempt=5 anchor-missing=0 refused=0 invalid=0 findings=0 drift=0)
+
+chain-r3-broken.md, exit 1:
+CHAIN hop=1 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"I could not substantiate this spelling as an established art" at=line:64 verdict=match
+CHAIN hop=2 status=resolved observed=anchor-missing source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"人為 — jin’i-ryū" at=- verdict=mismatch
+FINDING CHAIN_ANCHOR_NOT_FOUND severity=warn surface=chain obs=hop=2 source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"人為 — jin’i-ryū" nearest_line=53 context=The key distinction is between skill, teaching authority, and permission to act.
+RESOLVED_HOPS=1/2
+RESEARCH_GATE: DRIFT (hops=2 verified=1 exempt=0 anchor-missing=1 refused=0 invalid=0 findings=1 drift=1)

@@ -1,0 +1,19 @@
+--- /fast/scratch/hyaku/chousa-r32/w1/CtlC1PartialLockB/pristine-gate.sh	2026-10-23 03:48:08.929798549 -0300
++++ /fast/scratch/hyaku/chousa-r32/w1/CtlC1PartialLockB/a-append-only.sh	2026-10-23 03:49:16.304511188 -0300
+@@ -3196,10 +3196,15 @@
+     if [[ -n $jlast && $jlast != 0a ]]; then
+       line=$'\n'$line
+     fi
+-    if ! printf '%s\n' "$line" >>"$JSON_ARG"; then
++    # CONTROL: probe and delimiter decision precede the append-only lock.
++    local jfd
++    exec {jfd}>>"$JSON_ARG" || exit 2
++    flock -x "$jfd" || exit 2
++    if ! printf '%s\n' "$line" >&"$jfd"; then
+       printf 'research-gate: manifest append failed: %s\n' "$JSON_ARG" >&2
+       exit 2
+     fi
++    exec {jfd}>&-
+   fi
+ 
+   printf 'research-gate %s — ts=%s — mode=verify-all — record=%s — claims=%s — root=%s\n' \

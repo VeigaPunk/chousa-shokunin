@@ -1,0 +1,208 @@
+diff --git i/tools/research-gate.sh w/tools/research-gate.sh
+index e2df74e..6ee2943 100755
+--- i/tools/research-gate.sh
++++ w/tools/research-gate.sh
+@@ -194,7 +194,13 @@
+ #   VERIFY_ALL sections=5 run=N absent=N drift-sections=N findings=N drift=N
+ # and one closing RESEARCH_GATE: CLEAN|DRIFT with the same composed counters.
+ # --json PATH appends (>>, never rewrites) one JSON line: schema, UTC, record
+-# and gate SHA-256, per-section state/verdict/tallies, composed verdict.
++# and gate SHA-256, per-section state/verdict/tallies, composed verdict. The
++# append is one lock-held step (r32 C1): the manifest is opened for append, an
++# exclusive flock(2) is taken on that open file, and the lock covers the
++# last-byte probe and the write, so cooperating appenders serialize and no
++# blank line can appear. The lock is unbounded (a blocking LOCK_EX, released
++# when the gate closes the fd); it needs flock(1), and a host without it
++# refuses to write the manifest rather than append unlocked.
+ #
+ # Pin/drift mode: the gate's own behavioral baseline, adapted from
+ # mori-shokunin r10 (tools/mori-census.sh --pin/--drift; its contract note
+@@ -396,7 +402,10 @@ usage: research-gate.sh [--selftest] [--help]
+   row (claims/claims_file/claims-file/claimset); a claims JSONL passed as
+   the input is its own claims surface. --json PATH appends (never rewrites)
+   one JSON line recording UTC, record + gate SHA-256, per-section tallies
+-  and the composed verdict.
++  and the composed verdict. The append is one critical section: an exclusive
++  flock(2) on the manifest fd the gate opened for append is taken before the
++  last-byte probe and held through the write, so concurrent appenders
++  serialize (a cooperating LOCK_EX holder delays the append until release).
+   Pin/drift: --pin PATH writes a behavioral baseline of the gate's canonical
+   reference run (verify-all over a hermetic fixture the gate writes itself,
+   plus that run's --json manifest line), with the declared volatile contract
+@@ -3189,17 +3198,44 @@ verify_all() {
+     # The last byte is read as hex: a bare $(tail -c1) drops NUL bytes and
+     # would miss a NUL-terminated manifest. (Unreadable + non-empty is
+     # refused at setup, before any write.)
+-    local jlast=''
++    #
++    # The probe and the append are ONE critical section (r32 C1). At base they
++    # were two operations with no lock, so two appenders that both saw an
++    # unterminated last line both prefixed a newline and left a blank line
++    # (r24 delimiter edge). The manifest is opened for append on a dedicated
++    # fd (O_APPEND; created when absent, never truncated, so the inode and the
++    # prior bytes survive), a blocking exclusive flock(2) is taken on THAT open
++    # file description before the last byte is read, and it is held until this
++    # run's line is written; the close then releases it. flock's fd form locks
++    # the shell's own description, so the lock outlives the flock(1) helper
++    # and a cooperating LOCK_EX holder on the manifest excludes both the probe
++    # and the append. The wait is unbounded (LOCK_EX blocks, as the contract
++    # states); a host without flock(1) cannot serialize, so it fails closed
++    # instead of appending unlocked.
++    if ! command -v flock >/dev/null 2>&1; then
++      printf 'research-gate: flock(1) unavailable; manifest not written: %s\n' "$JSON_ARG" >&2
++      exit 2
++    fi
++    local jfd='' jlast=''
++    if ! exec {jfd}>>"$JSON_ARG"; then
++      printf 'research-gate: manifest open failed: %s\n' "$JSON_ARG" >&2
++      exit 2
++    fi
++    if ! flock -x "$jfd"; then
++      printf 'research-gate: manifest lock failed: %s\n' "$JSON_ARG" >&2
++      exit 2
++    fi
+     if [[ -s $JSON_ARG ]]; then
+       jlast=$(tail -c1 -- "$JSON_ARG" 2>/dev/null | od -An -tx1 | tr -d ' \n' || true)
+     fi
+     if [[ -n $jlast && $jlast != 0a ]]; then
+       line=$'\n'$line
+     fi
+-    if ! printf '%s\n' "$line" >>"$JSON_ARG"; then
++    if ! printf '%s\n' "$line" >&"$jfd"; then
+       printf 'research-gate: manifest append failed: %s\n' "$JSON_ARG" >&2
+       exit 2
+     fi
++    exec {jfd}>&-
+   fi
+ 
+   printf 'research-gate %s — ts=%s — mode=verify-all — record=%s — claims=%s — root=%s\n' \
+@@ -6869,6 +6905,129 @@ EOF
+   tclaims claims-sha-crlf 0 'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=1/1' \
+     'CLAIM id=C1 expected=supported observed=supported source=claimsrc/sha-src-crlf.txt at=line:1 verdict=match'
+ 
++  # ---- round-32 C1 (r32): the --json append is one lock-held critical
++  # section (verify_all opens the manifest for append on a dedicated fd, takes
++  # a blocking exclusive flock(2) on that fd, then probes the last byte and
++  # writes, then closes). 229: a cooperating holder of LOCK_EX on the manifest
++  # keeps verify-all before its probe — while the gate is blocked the file
++  # holds exactly the holder's unterminated fragment — and the append happens
++  # only after release, terminating the fragment (two lines, no blank line,
++  # fragment otherwise intact). 230: the lock is gone when the gate returns, so
++  # a second verify-all appends its own line on the same inode.
++  printf 'lock source line\n' >"$WORK/c1lk-src.txt"
++  printf '{"id":"LK1","source":"c1lk-src.txt","span":"lock source line","expect":"supported"}\n' \
++    >"$WORK/c1lk-record.md"
++  c1lk_to=()
++  if command -v timeout >/dev/null 2>&1; then c1lk_to=(timeout 120); fi
++  c1lk_verify() { # MANIFEST OUT -> rc
++    "${c1lk_to[@]}" env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
++      CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
++      bash "$SELF" verify-all "$WORK/c1lk-record.md" --json "$1" >"$2" 2>&1
++  }
++  if [[ -r /proc/locks ]] && command -v flock >/dev/null 2>&1; then
++    cases=$((cases + 1))
++    c1lk_msg='' c1lk_rc=0
++    c1lk_mf="$WORK/c1lk-hold.jsonl"; : >"$c1lk_mf"
++    c1lk_ino=$(stat -c %i -- "$c1lk_mf")
++    c1lk_flag="$WORK/c1lk-release.flag"; rm -f "$c1lk_flag"
++    cat >"$WORK/c1lk-holder.sh" <<'C1LK_HOLDER'
++manifest=$1 flag=$2 frag=$3
++exec {fd}>>"$manifest" || exit 3
++flock -x "$fd" || exit 4
++printf '%s' "$frag" >&"$fd" || exit 5
++i=0
++while [[ ! -e $flag ]]; do
++  i=$((i + 1))
++  if [[ $i -ge 600 ]]; then exit 6; fi
++  sleep 0.1
++done
++C1LK_HOLDER
++    bash "$WORK/c1lk-holder.sh" "$c1lk_mf" "$c1lk_flag" '{"frag":229}' &
++    c1lk_hpid=$!
++    c1lk_seen=0
++    i=0
++    while [[ $i -lt 100 ]]; do
++      if [[ $(cat -- "$c1lk_mf" 2>/dev/null || true) == '{"frag":229}' ]]; then c1lk_seen=1; break; fi
++      i=$((i + 1)); sleep 0.1
++    done
++    [[ $c1lk_seen -eq 1 ]] || c1lk_msg+='holder-fragment-absent '
++    "${c1lk_to[@]}" env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
++      CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
++      bash "$SELF" verify-all "$WORK/c1lk-record.md" --json "$c1lk_mf" \
++      >"$WORK/c1lk-gate-hold.out" 2>&1 &
++    c1lk_gpid=$!
++    c1lk_held=0
++    i=0
++    while [[ $i -lt 200 ]]; do
++      if ! kill -0 "$c1lk_gpid" 2>/dev/null; then break; fi
++      if grep -Eq "^[0-9]+:[[:space:]]+->[[:space:]]+FLOCK[[:space:]]+ADVISORY[[:space:]]+WRITE[[:space:]]+[0-9]+[[:space:]]+[0-9a-fA-F]+:[0-9a-fA-F]+:$c1lk_ino[[:space:]]" /proc/locks; then
++        c1lk_held=1; break
++      fi
++      i=$((i + 1)); sleep 0.1
++    done
++    # The gate must be sitting on the lock (not finished, not past it) and the
++    # manifest must still hold exactly the holder's bytes.
++    if [[ $c1lk_held -eq 1 ]]; then
++      [[ $(cat -- "$c1lk_mf") == '{"frag":229}' ]] || c1lk_msg+='appended-under-holder-lock '
++    else
++      c1lk_msg+='gate-not-blocked-on-lock '
++    fi
++    : >"$c1lk_flag"
++    wait "$c1lk_gpid" || c1lk_rc=$?
++    wait "$c1lk_hpid" || true
++    n=$(wc -l <"$c1lk_mf" | tr -d ' ')
++    [[ $n -eq 2 ]] || c1lk_msg+="manifest-lines=$n/2 "
++    [[ $(sed -n 1p -- "$c1lk_mf") == '{"frag":229}' ]] || c1lk_msg+='fragment-line '
++    sed -n 2p -- "$c1lk_mf" | grep -q '^{"schema":"chousa-verify-all/v1"' || c1lk_msg+='schema-not-own-line '
++    [[ $(grep -a -c '^$' -- "$c1lk_mf" || true) -eq 0 ]] || c1lk_msg+='blank-line '
++    [[ $c1lk_rc -eq 0 ]] || c1lk_msg+="gate-rc=$c1lk_rc/0 "
++    [[ $(stat -c %i -- "$c1lk_mf") == "$c1lk_ino" ]] || c1lk_msg+='inode-changed '
++    if command -v python3 >/dev/null 2>&1; then
++      python3 -c 'import json,sys
++for ln in sys.stdin.read().splitlines():
++    if ln.strip():
++        json.loads(ln)' <"$c1lk_mf" >/dev/null 2>&1 || c1lk_msg+='json-invalid '
++    fi
++    if [[ -z $c1lk_msg ]]; then
++      printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" c1lk-holder-blocks-append "$c1lk_rc"
++    else
++      printf 'FAIL-case %-28s %s\n' c1lk-holder-blocks-append "$c1lk_msg"
++      sed 's/^/    | /' "$WORK/c1lk-gate-hold.out" 2>/dev/null || true
++      failures=$((failures + 1))
++    fi
++  else
++    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
++    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" c1lk-holder-blocks-append 'no /proc/locks or no flock(1)'
++  fi
++  cases=$((cases + 1))
++  c1lk_msg=''
++  c1lk_mf2="$WORK/c1lk-second.jsonl"; : >"$c1lk_mf2"
++  c1lk_ino2=$(stat -c %i -- "$c1lk_mf2")
++  c1lk_rca=0 c1lk_rcb=0
++  c1lk_verify "$c1lk_mf2" "$WORK/c1lk-gate-second-a.out" || c1lk_rca=$?
++  c1lk_verify "$c1lk_mf2" "$WORK/c1lk-gate-second-b.out" || c1lk_rcb=$?
++  n=$(wc -l <"$c1lk_mf2" | tr -d ' ')
++  [[ $n -eq 2 ]] || c1lk_msg+="manifest-lines=$n/2 "
++  [[ $(grep -c '^{"schema":"chousa-verify-all/v1"' -- "$c1lk_mf2" || true) -eq 2 ]] || c1lk_msg+='schema-lines '
++  [[ $(grep -a -c '^$' -- "$c1lk_mf2" || true) -eq 0 ]] || c1lk_msg+='blank-line '
++  [[ $c1lk_rca -eq 0 && $c1lk_rcb -eq 0 ]] || c1lk_msg+="gate-rc=$c1lk_rca,$c1lk_rcb/0,0 "
++  [[ $(stat -c %i -- "$c1lk_mf2") == "$c1lk_ino2" ]] || c1lk_msg+='inode-changed '
++  [[ $(tail -c1 -- "$c1lk_mf2" | od -An -tx1 | tr -d ' \n') == 0a ]] || c1lk_msg+='no-final-newline '
++  if command -v python3 >/dev/null 2>&1; then
++    python3 -c 'import json,sys
++for ln in sys.stdin.read().splitlines():
++    if ln.strip():
++        json.loads(ln)' <"$c1lk_mf2" >/dev/null 2>&1 || c1lk_msg+='json-invalid '
++  fi
++  if [[ -z $c1lk_msg ]]; then
++    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" c1lk-second-append "$c1lk_rcb"
++  else
++    printf 'FAIL-case %-28s %s\n' c1lk-second-append "$c1lk_msg"
++    sed 's/^/    | /' "$WORK/c1lk-gate-second-a.out" 2>/dev/null || true
++    sed 's/^/    | /' "$WORK/c1lk-gate-second-b.out" 2>/dev/null || true
++    failures=$((failures + 1))
++  fi
++
+   if [[ $failures -eq 0 ]]; then
+     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"
+     exit 0

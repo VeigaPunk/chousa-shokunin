@@ -1,0 +1,11 @@
+selftest	bash tools/research-gate.sh --selftest	0	31326ms
+claims-r2	bash tools/research-gate.sh verify-claims corpus/fixtures/claims-r2.jsonl --root /home/vgpnk/Projects/shokunin	0	244ms
+claims-r9	bash tools/research-gate.sh verify-claims corpus/fixtures/claims-r9.jsonl --root /home/vgpnk/Projects/shokunin	0	147ms
+chain-r3	bash tools/research-gate.sh verify-chain corpus/fixtures/chain-r3.md --root /home/vgpnk/Projects/shokunin	0	825ms
+chain-r3-broken	bash tools/research-gate.sh verify-chain corpus/fixtures/chain-r3-broken.md --root /home/vgpnk/Projects/shokunin	1	129ms
+sweeps-r5	bash tools/research-gate.sh verify-sweeps corpus/fixtures/sweeps-r5.md --root /home/vgpnk/Projects/shokunin	0	154ms
+integrity-r7	bash tools/research-gate.sh verify-integrity corpus/fixtures/integrity-r7.md --root /home/vgpnk/Projects/shokunin	0	625ms
+all-r7	bash tools/research-gate.sh verify-all corpus/fixtures/integrity-r7.md --claims corpus/fixtures/integrity-r7.claims.jsonl --root /home/vgpnk/Projects/shokunin	0	1449ms
+drift-r12	bash tools/research-gate.sh --drift corpus/evidence/gate-baseline-r12-20261019T115519Z.json	0	659ms
+drift-r8	bash tools/research-gate.sh --drift corpus/evidence/gate-baseline-r8-20261016T033757Z.json	1	676ms
+observable	python3 -c import subprocess; names=("A-shokunin-tradition.md","B-multiagent-knowledge.md","C-rank-taxonomy.md"); rows=[subprocess.run(["bash","tools/research-gate.sh","verify","../research/deep-research-2026-09-28/"+n,"--root",".."],capture_output=True,text=True) for n in names]; print("VERDICT_BEARING_EXPORTS=%d/3" % sum(r.returncode==1 and sum(s.startswith("RESEARCH_GATE: DRIFT (") for s in r.stdout.splitlines())==1 for r in rows))	0	79ms

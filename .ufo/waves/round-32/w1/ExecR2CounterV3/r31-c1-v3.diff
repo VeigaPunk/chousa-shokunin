@@ -1,0 +1,111 @@
+--- /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py	2026-10-23 01:37:17.673617508 -0300
++++ r31-c1-count-v3.py	2026-10-23 03:54:08.399441792 -0300
+@@ -6,8 +6,23 @@
+ predicate_holds=true) on each of two fresh-seed runs, and no run of this
+ counter on that revision in round 31 prints a lower count.
+ 
++Version 3 (round-32 routed defect R2, new file; the v2 counter stays frozen
++and unedited): v2 plus a fixed non-string "line" class
++I2_nonstring_line_value (12 claims: number, null, true, false, array, object,
++two each). Truth is invalid under contract item 1 ("any other value of a
++present 'line'"). TOTAL is 132 (v2's 120 plus 12), so v3's label reads
++LINE_BINDING_MATCH=n/132. The same 12 values are what the round-31
++MutC1Grammar nonstring-absent mutant (gate 85d85a7b) treats as absent and
++scores supported. No nested-key class: claims.md says unknown keys are
++ignored, but the gate's presence probe is a flat raw-line regex
++(research-gate.sh:1094-1101), so a nested "line" is read as the record's own
++(measured on landed gate 0bc318b3: {"meta":{"line":"9"}} -> mislocated, probe
++in this dir). That is a carried gate defect (CriticEdgeC2 D-C,
++ReviewIntegrationDiff31), not a counter gap; including it would put the
++landed gate below its own total.
++
+ The counter writes a fresh fixture under a temporary root: opaque source
+-files and one claims JSONL with 120 claims. Every claim carries
++files and one claims JSONL with 132 claims. Every claim carries
+ expect=supported (a constant, so the label carries no truth). The hidden
+ truth per claim is one of supported / mislocated / invalid / unsupported and
+ is never written next to the claims. The counter runs
+@@ -33,7 +48,7 @@
+ above, CHOUSA_* environment variables removed from the gate's environment, an
+ id reported twice scores "none", harness errors exit 2.
+ 
+-Exit: 0 iff matched == 120; 1 otherwise; 2 harness error. A gate run that
++Exit: 0 iff matched == TOTAL (132); 1 otherwise; 2 harness error. A gate run that
+ exits other than 0 or 1, or outlives 600 s, scores every claim as observed
+ "none" (not matched). No network; writes only its temp dir and --receipt.
+ """
+@@ -49,7 +64,7 @@
+ import tempfile
+ import time
+ 
+-TOTAL = 120
++TOTAL = 132  # v3: v2's 120 plus the 12 non-string "line" claims
+ CLASS_COUNTS = [
+     ("B1_bound_single", 12, "supported"),
+     ("B2_bound_later_occurrence", 12, "supported"),
+@@ -62,6 +77,7 @@
+     ("M5_beyond_eof", 6, "mislocated"),
+     ("M6_two_occurrences_named_third", 8, "mislocated"),
+     ("I1_invalid_line_value", 12, "invalid"),
++    ("I2_nonstring_line_value", 12, "invalid"),
+     ("U1_absent_span_with_line", 8, "unsupported"),
+ ]
+ assert sum(c for _, c, _ in CLASS_COUNTS) == TOTAL
+@@ -118,14 +134,18 @@
+     "M5_beyond_eof": ["inner"] * 6,
+     "M6_two_occurrences_named_third": ["inner"] * 8,
+     "I1_invalid_line_value": list(INVALID_VALUES),
++    "I2_nonstring_line_value": ["number"] * 2 + ["null"] * 2 + ["true"] * 2
++                               + ["false"] * 2 + ["array"] * 2 + ["object"] * 2,
+     "U1_absent_span_with_line": ["inner"] * 8,
+ }
+ for _cls, _n, _t in CLASS_COUNTS:
+     assert len(SUBVARIANTS[_cls]) == _n, _cls
+ 
++ABSENT = object()  # v3: distinguishes an absent key from a present JSON null
++
+ 
+ def build_item(gen, rng, cls, sub):
+-    """Return (lines, span, line_value or None). lines are without newline."""
++    """Return (lines, span, line_value); ABSENT means the "line" key is absent."""
+     n = rng.randint(14, 30)
+     lines = [gen.filler_line() for _ in range(n)]
+ 
+@@ -160,7 +180,7 @@
+         return lines, mspan, val
+     if cls == "B4_no_line":
+         L = rng.randrange(n); put(L, span)
+-        return lines, span, None
++        return lines, span, ABSENT
+     if cls == "M1_other_line":
+         L = rng.randrange(1, n - 1); put(L, span)
+         if sub == "adjacent_before":
+@@ -201,6 +221,10 @@
+     if cls == "I1_invalid_line_value":
+         L = rng.randrange(n); put(L, span)
+         return lines, span, sub
++    if cls == "I2_nonstring_line_value":  # v3: present, not a JSON string -> invalid
++        L = rng.randrange(n); put(L, span)
++        return lines, span, {"number": 5, "null": None, "true": True, "false": False,
++                             "array": ["5"], "object": {"n": 5}}[sub]
+     if cls == "U1_absent_span_with_line":
+         L = rng.randrange(n)
+         words = span.split(" ")
+@@ -227,7 +251,7 @@
+             f.write("\n".join(lines) + "\n")
+         cid = "c%010x" % rng.getrandbits(40)
+         rec = {"id": cid, "claim": "fixture claim " + cid, "source": rel, "span": span, "expect": "supported"}
+-        if line_value is not None:
++        if line_value is not ABSENT:
+             rec["line"] = line_value
+         keys = list(rec.keys()); rng.shuffle(keys)  # key order carries nothing
+         rows.append(json.dumps({k: rec[k] for k in keys}, ensure_ascii=False))
+@@ -306,7 +330,7 @@
+         print("  %s %d/%d" % (cls, per_class[cls][0], per_class[cls][1]))
+     if a.receipt:
+         receipt = {
+-            "schema": "chousa-r31-c1-receipt/v2",
++            "schema": "chousa-r31-c1-receipt/v3",
+             "counter_sha256": sha256_file(os.path.abspath(__file__)),
+             "gate": a.gate, "gate_sha256": sha256_file(gate), "seed": seed,
+             "utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(t0)), "elapsed_s": round(time.time() - t0, 3),

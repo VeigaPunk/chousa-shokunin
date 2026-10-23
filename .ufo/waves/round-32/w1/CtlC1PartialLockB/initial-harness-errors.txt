@@ -1,0 +1,8 @@
+Initial four-way parallel batch, bounded counter commands used timeout 840s prlimit --nproc=2000 --as=4294967296 and C1_TMP/C2_TMP/TMPDIR=/fast/scratch/hyaku/chousa-r32/w1/CtlC1PartialLockB.
+c-cached-probe.sh seed=32471031, --receipt=c-s32471031.json:
+exit=2
+c1-count: trial 1 harness error: BlockingIOError(11, 'Resource temporarily unavailable')
+d-shared-lock.sh seed=32471041, --receipt=d-s32471041.json:
+exit=2
+c1-count: trial 1 harness error: BlockingIOError(11, 'Resource temporarily unavailable')
+Both harness-error attempts are INCONCLUSIVE, not scored misses and not killed mutants. No complete receipt was emitted. Retry will reduce parallelism and raise the still-bounded nproc ceiling; counter bytes stay unchanged.

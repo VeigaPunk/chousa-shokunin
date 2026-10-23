@@ -1,0 +1,37 @@
+cwd: /home/vgpnk/Projects/shokunin/chousa-shokunin
+env: C1_TMP=C2_TMP=TMPDIR=/fast/scratch/hyaku/chousa-r32/w1/CtlC2NoisyB
+command: timeout --signal=TERM --kill-after=10s 700s prlimit --as=2147483648 --nproc=2000 --fsize=1048576 -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round32/c2-count.py --gate /fast/scratch/hyaku/chousa-r32/w1/CtlC2NoisyB/gates/noisy-observed/tools/research-gate.sh --seed 1969677222076302119 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-32/w1/CtlC2NoisyB/disjoint-noisy-observed-s1969677222076302119.json --keep /fast/scratch/hyaku/chousa-r32/w1/CtlC2NoisyB/fixture-disjoint-noisy-observed-s1969677222076302119
+exit: 1
+stdout:
+stderr:
+Traceback (most recent call last):
+  File "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round32/c2-count.py", line 328, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round32/c2-count.py", line 263, in main
+    p = subprocess.run(["bash", gate, "verify-chain", record, "--root", root], capture_output=True,
+                       env=env, text=True, timeout=GATE_TIMEOUT_S, cwd=root)
+  File "/usr/lib/python3.14/subprocess.py", line 555, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 1039, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        pass_fds, cwd, env,
+                        ^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+                        gid, gids, uid, umask,
+                        ^^^^^^^^^^^^^^^^^^^^^^
+                        start_new_session, process_group)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 1920, in _execute_child
+    self.pid = _fork_exec(
+               ~~~~~~~~~~^
+            args, executable_list,
+            ^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+            process_group, gid, gids, uid, umask,
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            preexec_fn)
+            ^^^^^^^^^^^
+BlockingIOError: [Errno 11] Resource temporarily unavailable

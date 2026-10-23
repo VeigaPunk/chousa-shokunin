@@ -1,0 +1,21 @@
+research-gate v2 — ts=2026-10-23T07:09:41Z — mode=chain — record=rec.md
+CHAIN hop=h1 status=unresolved observed=resolvable source=f1.md anchor=quote:"alpha fragment word" at=line:2 verdict=mismatch
+CHAIN hop=h2 status=blocked-no-fetch observed=resolvable source=f2.md anchor=heading:"Beta Heading" at=line:2 verdict=mismatch
+CHAIN hop=h3 status=labelled-dead observed=resolvable source=f3.md anchor=line:"gamma whole line" at=line:1 verdict=mismatch
+CHAIN hop=h4 status=resolved observed=verified source=f4.md anchor=quote:"delta row present" at=line:2 verdict=match
+CHAIN hop=h5 status=unresolved observed=exempt source=f5.md anchor=- at=- verdict=exempt
+CHAIN hop=h6 status=blocked-no-fetch observed=exempt source=ghost.md anchor=- at=- verdict=exempt
+CHAIN hop=h7 status=labelled-dead observed=exempt source=https://example.invalid/x anchor=- at=- verdict=exempt
+CHAIN hop=h8 status=unresolved observed=exempt source=nofrag.md anchor=- at=- verdict=exempt
+CHAIN hop=h9 status=rejected observed=exempt source=f4.md anchor=- at=- verdict=exempt
+CHAIN hop=h10 status=blocked-no-fetch observed=exempt source=S9 anchor=- at=- verdict=exempt
+CHAIN hop=h11 status=labelled-dead observed=exempt source=../outside/outside-out.md anchor=- at=- verdict=exempt
+CHAIN hop=h12 status=unresolved observed=exempt source=f8.md anchor=- at=- verdict=exempt
+CHAIN hop=h13 status=blocked-no-fetch observed=exempt source=f9.md anchor=- at=- verdict=exempt
+CHAIN hop=h14 status=labelled-dead observed=exempt source=f10.md anchor=- at=- verdict=exempt
+CHAIN hop=h15 status=not-applicable observed=exempt source=f4.md anchor=- at=- verdict=exempt
+FINDING CHAIN_EXEMPT_RESOLVABLE severity=warn surface=chain obs=hop=h1 status=unresolved source=f1.md anchor=quote:"alpha fragment word" at=line:2
+FINDING CHAIN_EXEMPT_RESOLVABLE severity=warn surface=chain obs=hop=h2 status=blocked-no-fetch source=f2.md anchor=heading:"Beta Heading" at=line:2
+FINDING CHAIN_EXEMPT_RESOLVABLE severity=warn surface=chain obs=hop=h3 status=labelled-dead source=f3.md anchor=line:"gamma whole line" at=line:1
+RESOLVED_HOPS=1/15
+RESEARCH_GATE: DRIFT (hops=15 verified=1 exempt=11 anchor-missing=0 refused=0 invalid=0 findings=3 drift=3 resolvable=3)

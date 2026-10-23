@@ -1,0 +1,100 @@
+--- base/tools/research-gate.sh
++++ oracle-A.sh
+@@ -3189,17 +3189,31 @@
+     # The last byte is read as hex: a bare $(tail -c1) drops NUL bytes and
+     # would miss a NUL-terminated manifest. (Unreadable + non-empty is
+     # refused at setup, before any write.)
+-    local jlast=''
++    # Oracle A (feasibility only, never a candidate): one append fd, an
++    # exclusive flock(2) on that open file description, held across the
++    # last-byte probe and the append; released by closing the fd.
++    local jfd jlast=''
++    exec {jfd}>>"$JSON_ARG" || {
++      printf 'research-gate: manifest open failed: %s\n' "$JSON_ARG" >&2
++      exit 2
++    }
++    if ! flock -x "$jfd"; then
++      exec {jfd}>&-
++      printf 'research-gate: manifest lock failed: %s\n' "$JSON_ARG" >&2
++      exit 2
++    fi
+     if [[ -s $JSON_ARG ]]; then
+       jlast=$(tail -c1 -- "$JSON_ARG" 2>/dev/null | od -An -tx1 | tr -d ' \n' || true)
+     fi
+     if [[ -n $jlast && $jlast != 0a ]]; then
+       line=$'\n'$line
+     fi
+-    if ! printf '%s\n' "$line" >>"$JSON_ARG"; then
++    if ! printf '%s\n' "$line" >&"$jfd"; then
++      exec {jfd}>&-
+       printf 'research-gate: manifest append failed: %s\n' "$JSON_ARG" >&2
+       exit 2
+     fi
++    exec {jfd}>&-
+   fi
+ 
+   printf 'research-gate %s — ts=%s — mode=verify-all — record=%s — claims=%s — root=%s\n' \
+--- base/tools/research-gate.sh
++++ oracle-B.sh
+@@ -3189,14 +3189,18 @@
+     # The last byte is read as hex: a bare $(tail -c1) drops NUL bytes and
+     # would miss a NUL-terminated manifest. (Unreadable + non-empty is
+     # refused at setup, before any write.)
+-    local jlast=''
+-    if [[ -s $JSON_ARG ]]; then
+-      jlast=$(tail -c1 -- "$JSON_ARG" 2>/dev/null | od -An -tx1 | tr -d ' \n' || true)
+-    fi
+-    if [[ -n $jlast && $jlast != 0a ]]; then
+-      line=$'\n'$line
+-    fi
+-    if ! printf '%s\n' "$line" >>"$JSON_ARG"; then
++    # Oracle B (feasibility only, never a candidate): flock(1) takes the lock
++    # on PATH and runs the last-byte probe and the append in a child; the lock
++    # lives in the flock process for the child's whole lifetime.
++    if ! CH_LINE=$line CH_PATH=$JSON_ARG flock -x "$JSON_ARG" -c '
++        p=$CH_PATH
++        jlast=""
++        if [[ -s $p ]]; then
++          jlast=$(tail -c1 -- "$p" 2>/dev/null | od -An -tx1 | tr -d " \n" || true)
++        fi
++        if [[ -n $jlast && $jlast != 0a ]]; then printf "\n" >>"$p"; fi
++        printf "%s\n" "$CH_LINE" >>"$p"
++      '; then
+       printf 'research-gate: manifest append failed: %s\n' "$JSON_ARG" >&2
+       exit 2
+     fi
+--- base/tools/research-gate.sh
++++ oracle-C.sh
+@@ -3189,14 +3189,24 @@
+     # The last byte is read as hex: a bare $(tail -c1) drops NUL bytes and
+     # would miss a NUL-terminated manifest. (Unreadable + non-empty is
+     # refused at setup, before any write.)
+-    local jlast=''
+-    if [[ -s $JSON_ARG ]]; then
+-      jlast=$(tail -c1 -- "$JSON_ARG" 2>/dev/null | od -An -tx1 | tr -d ' \n' || true)
+-    fi
+-    if [[ -n $jlast && $jlast != 0a ]]; then
+-      line=$'\n'$line
+-    fi
+-    if ! printf '%s\n' "$line" >>"$JSON_ARG"; then
++    # Oracle C (feasibility only, never a candidate): a python3 fcntl.flock
++    # wrapper holds LOCK_EX on the append fd across the probe and the write.
++    if ! CH_LINE=$line python3 - "$JSON_ARG" <<'PY'
++import fcntl, os, sys
++p = sys.argv[1]
++line = os.environ["CH_LINE"].encode()
++fd = os.open(p, os.O_RDWR | os.O_CREAT | os.O_APPEND, 0o666)
++try:
++    fcntl.flock(fd, fcntl.LOCK_EX)
++    size = os.fstat(fd).st_size
++    last = os.pread(fd, 1, size - 1) if size else b""
++    prefix = b"\n" if last and last != b"\n" else b""
++    os.write(fd, prefix + line + b"\n")
++finally:
++    fcntl.flock(fd, fcntl.LOCK_UN)
++    os.close(fd)
++PY
++    then
+       printf 'research-gate: manifest append failed: %s\n' "$JSON_ARG" >&2
+       exit 2
+     fi

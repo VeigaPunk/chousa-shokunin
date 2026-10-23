@@ -1,0 +1,469 @@
+LOG.md:262: `config/mission-nightcall.yml` found only maxConcurrency); global defaults
+LOG.md:294: `corpus/fixtures/claims-r2.jsonl` (17 claims, provenance README);
+LOG.md:301: `verify-claims corpus/fixtures/claims-r2.jsonl --root ..` →
+LOG.md:399: composed CLEAN|DRIFT, absent!=drift, `--json` append-only manifest at
+LOG.md:400: `corpus/evidence/verify-all-manifest.jsonl`. Full fixture CLEAN (4/4);
+LOG.md:643: - **Absorbs** (~15): `wc -c` fallback reads to measure (not to search) — named limit corrected in mount-alias-r14; scope-refusal coverage overstatement corrected; full-r6 README sweeps-absent corrected; mount-alias "queued" item closed; stale hardlink status in older notes absorbed; hardening-r10 count phantom explaine
+LOG.md:644: - **Named debts** (~12, round-17 queue): scope-screen fenced-heading shadow, `LLM benchmarks` phrase gap, sweeps symlink-escape guard, `--drift` truncated-baseline ambiguity, `--json` delimiter edge, manifest timestamp mask breadth, secret-scan source coverage, bash-3 portability, 8 unasserted finding IDs, TOCTOU reada
+LOG.md:818: - **Claims** (curriculum loop 2 round 1): coverage/operability = the `--json` manifest delimiter edge (round-20 named debt): `verify-all --json PATH` appends `printf '%s\n' "$line"` — the `\n` is a line terminator, not a separator. A manifest not ending with a newline gets the new JSON object concatenated onto the prev
+LOG.md:826: - **Claim 1 (operability, lowest scored axis) — the `--json` delimiter edge.** Motivating evidence: pre-round gate on `full-r6.md` with a manifest ending `{"prior":true}` → `MANIFEST_LINES=1 INVALID_JSON_LINES=1`. Fix in three steps inside the round: bare `$(tail -c1)` probe → hex `od` probe (a NUL last byte was still 
+LOG.md:866: - Unclaimed concurrency debt reproduced separately: 2/6 seeded sixteen-writer
+LOG.md:867: runs with a blank line (0/6 empty controls), invalid JSON=0; unlanded flock
+LOG.md:972: Concurrent JSON-appender serialization is carried debt, not a second
+SCORECARD.md:92: fixture `corpus/fixtures/claims-r2.jsonl` with 17 provenance-carrying claims;
+SCORECARD.md:250: [--json PATH] --root ..` runs every applicable section as a fresh solo-mode
+SCORECARD.md:254: is a named r7 candidate), and `--json` APPENDS the verification state
+SCORECARD.md:256: `corpus/evidence/verify-all-manifest.jsonl` (>> only, no rewrite path). Full
+SCORECARD.md:366: `claims-r9.jsonl` adds 10 new verbatim claims (10/10 CLEAN, 7 supported / 2
+SCORECARD.md:821: truncated-baseline ambiguity, `--json` delimiter edge, manifest timestamp
+SCORECARD.md:823: classification, `--` delimiter handling, TOCTOU readability, bash-3
+SCORECARD.md:1007: the secret-scan source coverage gap, the `--json` delimiter edge, the
+SCORECARD.md:1073: `--json` delimiter edge, the manifest timestamp mask breadth, bash-3
+SCORECARD.md:1127: gap, the `--json` delimiter edge, the manifest timestamp mask breadth,
+SCORECARD.md:1181: source coverage gap, the `--json` delimiter edge, the manifest timestamp
+SCORECARD.md:1230: the secret-scan source coverage gap, the `--json` delimiter edge, the
+SCORECARD.md:1247: Selected claims: the pre-registered `--json` delimiter edge (operability)
+SCORECARD.md:1256: | 1 | operability (lowest scored) | `--json` append onto a manifest whose last byte is not `\n` glued two objects; the write-only and NUL variants found mid-round | `bash corpus/evidence/round24-measure.sh <tree>` §claim 1 (also verbatim in `json-r24-20261019T213117Z-demo.log`) | `MANIFEST_LINES=1 INVALID_JSON_LINES=1`
+SCORECARD.md:1300: Remaining round-20 named debt, unclaimed: manifest concurrency (`flock`),
+SCORECARD.md:1373: 1. **operability (lowest measured, 3/10):** serialize cooperating `--json`
+SCORECARD.md:1374: appenders across the EOF probe plus append (`flock` candidate remains
+SCORECARD.md:1375: unlanded in r25 wave evidence); reproduce seeded-unterminated race before,
+SCORECARD.md:1785: kills but the selftest does not, `falsify/MutC1Binding.md`); `--json` appender serialization
+SKILL.md:67: - Run: `bash tools/research-gate.sh verify-claims <claims.jsonl> --root ..` with a `"sha256"` pin (the SHA-256 of the exact source bytes read) on each claim; a changed source reads `stale` (`CLAIM_SOURCE_REVISION_MISMATCH`). A claim without a pin is not checked for revision.
+SKILL.md:82: | `research-gate verify-all` | gate | `bash tools/research-gate.sh verify-all <record> [--claims PATH] [--json PATH] --root ..` | `0` clean (`RESEARCH_GATE: CLEAN`; composed — every run section clean, absent sections reported) · `1` drift (`DRIFT`; composed — any run section dirty) · `2` could-not-evaluate (setup/usage
+SKILL.md:84: | `research-gate --pin / --drift` | gate | `bash tools/research-gate.sh --pin PATH` · `bash tools/research-gate.sh --drift PATH` | `0` none (`GATE_DRIFT: none` — compared and equal) · `1` drift (`GATE_DRIFT: <changed tokens>`, incl. `volatile_fields` when the baseline's declared contract differs from the current one) ·
+SKILL.md:129: line — `{"id","source","span","expect"[, "marker"]}`; blank lines, `#` comments
+SKILL.md:143: pre-registered `corpus/fixtures/claims-r2.jsonl` emits 17/17 and
+SKILL.md:176: fixtures hold unchanged: `claims-r2.jsonl` 17/17 CLEAN and `chain-r3.md`
+SKILL.md:244: pre-registered `claims-r2.jsonl` 17/17 and `chain-r3.md` 17/22 runs stay
+SKILL.md:249: **Composition mode (round 6).** `verify-all <record> [--claims PATH] [--json
+SKILL.md:254: when it is a claims JSONL (no `##` section line, at least one JSON-object
+SKILL.md:268: `VERIFY_ALL_CLAIMS_UNRESOLVED` (warn — it drifts that section only). `--json
+SKILL.md:269: PATH` appends (`>>`, never rewrites) one JSON line —
+SKILL.md:273: `--claims`/`--json` are refused (exit 2) outside `verify-all`, and companion
+SKILL.md:283: (`claims state=absent`) and `claims-r2.jsonl` passed as the input composes
+SKILL.md:284: `CLEAN run=1 absent=3`. `--json` appended well-formed lines whose `gate_sha256` is
+SKILL.md:290: structure-dirty run, a claims-JSONL input, two manifest appends, the Meta-bound
+SKILL.md:318: runs — its tally is the solo mode's `INTEGRITY` summary, and a claims-JSONL
+SKILL.md:320: findings drift the composition like any other section; the `--json` manifest
+SKILL.md:343: invocation — `verify-all record.md --claims claims.jsonl --json manifest.jsonl
+SKILL.md:556: The inherited requirement for at least three delimiter dashes and raw
+corpus/QUALITY.md:112: `C1_AMPLIFIED=4/4` at `ba333325`; same probe and frozen shapes evaluate
+corpus/README.md:9: | `knowledge/claim-verification-r2.md` | Round-2 note: `verify-claims` mode design (CLI + JSONL schema, fail-closed source boundary, verbatim-span check, structural marker convention), honest limits, receipts and open items | note metadata (gate sha `03a3324455…`); `fixtures/claims-r2.README.md`; `evidence/README.md` a
+corpus/README.md:11: | `knowledge/anchor-boundaries-r4.md` | Round-4 note: the token-boundary matching semantics now shared by `verify-claims` spans and `verify-chain` quote anchors — one matcher (`tok_span_at`), the documented boundary class (file/line edge, ASCII whitespace, ASCII punctuation; word-internal hyphens/apostrophes not bounda
+corpus/README.md:13: | `knowledge/verify-all-r6.md` | Round-6 note: `verify-all` composition mode — per-section applicability (structure always for a Markdown record; claims only when a surface binds via `--claims`, the input itself as a claims JSONL, or a resolving `## Meta` row; chain on `## Chain`; sweeps on `## Sweeps`/`## Negatives`/`
+corpus/README.md:15: | `knowledge/gate-baseline-r8.md` | Round-8 note: the gate's own behavioral baseline — `--pin <path>` writes a normalized baseline of a canonical hermetic invocation (`verify-all record.md --claims claims.jsonl --json manifest.jsonl --root .` inside a gate-written temp fixture, removed after capture, every printed path
+corpus/README.md:29: | `knowledge/archives-verified-r9.md` | Round-9 note: the three archived inputs' first full deep verification — one gate-format record per read-only archive (`A-r9.md`/`B-r9.md`/`C-r9.md`: Meta loopback/fetch-none with archive sha pin + claims binding, Question, Sources with the archive as S1 tier `export` and its name
+corpus/README.md:31: | `fixtures/claims-r2.jsonl` | Pre-registered 17-claim span fixture (13 supported / 2 contradicted / 2 unsupported) whose spans are verbatim bytes of the three archived inputs, with fixed expected verdicts and an independent byte-check | the three archived inputs at fleet commit `0863746e…`; sha256 pins and provenance 
+corpus/README.md:34: | `fixtures/full-r6.md` + `full-r6-broken.md` + `full-r6-absent.md` (+ `full-r6.claims.jsonl`, `full-r6-broken.claims.jsonl`) | Round-6 composition fixture set: a positive all-section record (4 sources; 3 resolved hops quote/quote/line; 3 companion claims; 2 complete rejections; one local and one source-id sweep) that 
+corpus/README.md:35: | `fixtures/integrity-r7.md` + `integrity-r7-broken.md` (+ `integrity-r7.claims.jsonl`, `integrity-r7-broken.claims.jsonl`) | Round-7 reference-integrity fixture pair: the `full-r6.md` bytes plus a reference mix (resolved hop 4 citing declared source `S4` and claim `C3`; sweeps `SW3` bound to declared claim `C2`) that 
+corpus/README.md:36: | `fixtures/archives-r9/{A,B,C}-r9.md` + `README.md` (+ `fixtures/claims-r9.jsonl` + `claims-r9.README.md`) | Round-9 archive-record set (fixture-led; no gate change): each read-only archive converted to `research-record v1` with every span/anchor machine-extracted from the archive bytes, each composing CLEAN `sections
+corpus/README.md:49: | `knowledge/json-delimiter-r24.md` | Round-24 note: the `verify-all --json` delimiter edge — an append onto a manifest whose last byte is not `\n` glued two objects onto one invalid line; the hex last-byte probe, the unreadable-manifest refusal, cases 134–136, controls, three killed mutants, the measured single-writer
+corpus/README.md:57: | `lessons/round-24-verifier-spotcheck.md` | Outside check on round 24, written by the integrator (not lane-owned; never edited here): admit/reject spot-check (4/4 admits, 3/3 rejects agree), ADMITTED after erratum `095b90c`; named debts — concurrent-append blank-line residual, citation-chain recheck needs the fleet ro
+corpus/README.md:133: - `evidence/verify-all-manifest.jsonl`: the lane's first real manifest (sha256 `2ed28f9f…` when checked) — three appended `chousa-verify-all/v1` lines at gate `0c3d51ed…` (positive CLEAN `run=4`; twin DRIFT `drift-sections=2`; omission probe CLEAN `run=3 absent=1`), each carrying UTC, `record_sha256`/`gate_sha256`, per
+corpus/README.md:134: - `evidence/compose-r6-20261016T020330Z-live.log`: composed runs on all three fixtures, the omission probe and the `--claims` binding; r5-gate-vs-r6-gate stdout byte-identical (frozen clock) on claims 17/17, chain 17/22, chain-broken 1/2, sweeps 1/2 + 3/3 and archive A; `VERDICT_BEARING_EXPORTS=3/3`; zero network (`str
+corpus/README.md:138: - `evidence/compose-r6-20261016T020330Z-selftest.log`: `RESEARCH_GATE_SELFTEST: PASS (64 cases)`, exit 0; the first 54 case lines byte-identical to the round-5 receipt; new cases 55–64 = the `verify-all` family (composed positive; tampered claims; structure-dirty; absent claims surface; claims JSONL as input; two manif
+corpus/README.md:143: - `evidence/verify-all-manifest.jsonl`: lines 3 → 5 — the three round-6 lines byte-preserved (prefix compare YES); the two appended `chousa-verify-all/v1` lines (03:07:26Z `integrity-r7.md` CLEAN `run=5` `drift_sections=0`; 03:07:31Z `integrity-r7-broken.md` DRIFT `run=5` `drift_sections=1`) each parse and carry the in
+corpus/README.md:152: - `evidence/gate-baseline-r8-20261016T033757Z.json`: the lane's committed behavioral baseline (sha256 `1c81a6cb…`, 2988 B, 19 lines) — the `chousa-gate drift baseline v1` text format: header (`pinned_ts=2026-10-16T03:38:57Z`; the filename stamp is `20261016T033757Z`; `gate_sha256=46f5ddb3…`; `volatile_fields=ts gate_sh
+corpus/README.md:155: - `evidence/pin-r8-20261016T033757Z-live.log`: cross-round no-harm (14/14 mode pairs byte-identical after ts-normalization with matching rc), `VERDICT_BEARING_EXPORTS=3/3`, zero network (strace: 3759 trace lines, 0 network syscalls under `--pin`), `verify-all-manifest.jsonl` untouched (`9620946f…` before/after), gate s
+corpus/README.md:162: - `evidence/archives-r9-20261016T045404Z-A.log` / `-B.log` / `-C.log`: per-record receipts — README-declared vs measured shas MATCH (record + archive source); a gate-free checker re-derives each record's claim spans (A 5/5, B 6/6, C 8/8 verbatim and boundary-delimited, with occurrence lines) and each chain hop with `RE
+corpus/README.md:164: - `evidence/verify-all-manifest.jsonl`: lines 5 → 8 — the five prior lines byte-preserved (prefix compare YES); the three appended `chousa-verify-all/v1` lines (04:54:11/19/27Z, records A/B/C at their pinned shas, gate `46f5ddb3…`) each parse, pin per-section tallies and compose CLEAN `sections_run=5 sections_absent=0 
+corpus/README.md:172: - `evidence/controls-r10-20261016T055530Z-live.log`: gate == HEAD blob (`46f5ddb3…`; `git diff --numstat` 0 lines); `RESEARCH_GATE_SELFTEST: PASS (85 cases)` exit 0 with case lines 1–85 byte-identical to the r8 selftest receipt (0 FAIL-case lines; re-verified here by an independent byte compare); `GATE_DRIFT: none` exi
+corpus/README.md:223: - The lane manifest appends by discipline, not construction: one `>>` per run
+corpus/README.md:228: `evidence/verify-all-manifest.jsonl`).
+corpus/README.md:303: script's `while IFS… read` loop drops an unterminated final line (bash
+corpus/README.md:395: (`verify-all` degraded to a record argument, exit 2; `--json` was an unknown
+corpus/README.md:411: append-only jsonl with no read path or audit-trail guarantee. The r6 receipts
+corpus/README.md:835: Round 24 (loop 2, round 1) closed the `--json` delimiter edge (round-20
+corpus/README.md:840: closed in the same landing (cases 134–136; `knowledge/json-delimiter-r24.md`).
+corpus/README.md:846: or suitability, and none is claimed. Still open: concurrent appenders to one
+corpus/README.md:847: manifest (one blank line in 1 of 3 sixteen-writer runs), the remaining
+corpus/README.md:875: Still unclosed: concurrent JSON appenders, filesystem races, parent-root
+corpus/knowledge/archived-export-intake.md:49: | S4 | fleet-gate | tools/research-gate.sh:296 | record schema verify_record 296-546, line numbers relative to baseline HEAD 34774a1, GateRuntime edits this file concurrently this wave so spans may shift, resolution here is file identity only |
+corpus/knowledge/claim-verification-r2.md:6: `corpus/fixtures/claims-r2.jsonl` sha256 `23d078cbfd032ec5ee7de5c21de65eba3a3cd2989a78281ff61bc6db62188802`,
+corpus/knowledge/claim-verification-r2.md:11: `bash tools/research-gate.sh verify-claims corpus/fixtures/claims-r2.jsonl --root ..`
+corpus/knowledge/claim-verification-r2.md:40: - Claims file: JSONL. Blank lines and `#`-comment lines are ignored; a
+corpus/knowledge/claim-verification-r2.md:53: by the JSONL loop (`:728-846`) and its secret shapes are screened (`:726`). The
+corpus/knowledge/claim-verification-r2.md:146: corpus/fixtures/claims-r2.jsonl --root ..` → 17/17 `CLAIM … verdict=match`
+corpus/knowledge/gate-baseline-r8.md:37: | guards | `--pin`/`--drift` accept only a baseline path (a record, `--claims`, `--json`, `--root` → usage, exit 2); both modes at once → exit 2 | `:4144-4146`; selftest case `pin-drift-exclusive` `:4089` |
+corpus/knowledge/gate-baseline-r8.md:45: sweep binding (`C9`), `claims.jsonl` with one supported claim, `lib/primary.md`,
+corpus/knowledge/gate-baseline-r8.md:47: `verify-all record.md --claims claims.jsonl --json manifest.jsonl --root .` inside it, then
+corpus/knowledge/gate-baseline-r8.md:51: `--json` manifest line.
+corpus/knowledge/anchor-boundaries-r4.md:10: `corpus/fixtures/claims-r2.jsonl` sha256
+corpus/knowledge/anchor-boundaries-r4.md:17: read-only local opens only; nothing was fetched or executed. Probe and attack
+corpus/knowledge/anchor-boundaries-r4.md:21: `bash tools/research-gate.sh verify-claims corpus/fixtures/claims-r2.jsonl --root ..`
+corpus/knowledge/anchor-boundaries-r4.md:179: corpus/fixtures/claims-r2.jsonl --root ..` → `VERDICT_BEARING_CLAIMS=17/17`,
+corpus/knowledge/archives-verified-r9.md:25: `C-r9.md` ← export C. Each binds `corpus/fixtures/claims-r9.jsonl` through its `## Meta`
+corpus/knowledge/archives-verified-r9.md:38: $ bash tools/research-gate.sh verify-all corpus/fixtures/archives-r9/A-r9.md --claims corpus/fixtures/claims-r9.jsonl --root ..
+corpus/knowledge/archives-verified-r9.md:39: research-gate research-gate-r1 — ts=2026-10-16T04:38:56Z — mode=verify-all — record=corpus/fixtures/archives-r9/A-r9.md — claims=corpus/fixtures/claims-r9.jsonl — root=..
+corpus/knowledge/archives-verified-r9.md:95: `corpus/fixtures/claims-r9.jsonl` adds **10 archive-citing claims beyond round 2's 17**
+corpus/knowledge/archives-verified-r9.md:100: $ bash tools/research-gate.sh verify-claims corpus/fixtures/claims-r9.jsonl --root ..
+corpus/knowledge/archives-verified-r9.md:122: | claim-surface rows over the archive corpus | 17 (r2 JSONL) | **46** = 17 (r2) + 10 (r9 JSONL) + 19 (in-record `span` cells) — delta 29 |
+corpus/knowledge/archives-verified-r9.md:123: | gate-checked claim spans | 17 | 27 (r2 + r9 JSONL), touching 23 distinct source lines (A 10, B 7, C 6) |
+corpus/knowledge/archives-verified-r9.md:196: claims mode reads the JSONL surface, never the record's rows. The lesson's
+corpus/knowledge/archives-verified-r9.md:198: fixtures seat; `claims-r9.jsonl` A11 and the claims README pin A:86.
+corpus/knowledge/archives-verified-r9.md:221: sha256 pins, span byte-presence counts (24/27 JSONL with the 3 by-design probes
+corpus/knowledge/archives-verified-r9.md:248: | `corpus/fixtures/claims-r9.jsonl` (re-derived) | `f6f0d1ab6b6cbd045035951c7eb4653406dc0853234a8077a8685509bfc94ff5` |
+corpus/knowledge/archives-verified-r9.md:259: --claims corpus/fixtures/claims-r9.jsonl --root .. ; echo "exit=$?"
+corpus/knowledge/audit-r11.md:10: manifest `corpus/evidence/verify-all-manifest.jsonl` sha256
+corpus/knowledge/audit-r11.md:48: | pointer/claims audits | 19 in-record rows (18 match / 1 mismatch) · 27 JSONL spans (24 present / 3 by-design absent) | gate-free python on archive + fixture bytes |
+corpus/knowledge/audit-r11.md:74: | A20 | manifest 8 lines, sha unchanged | supported | `78627e6d…` == HEAD blob; battery used no `--json` |
+corpus/knowledge/audit-r11.md:99: loop dropped the unterminated last `controls.tsv` line). Disposition:
+corpus/knowledge/audit-r11.md:195: JSONL span presence           → 27 spans: 24 present / 3 by-design absent (r2 A06, r2 B05, r9 C07)
+corpus/knowledge/audit-r11.md:196: coverage line unions          → JSONL 23 (A10·B7·C6); union 31 (A11·B9·C11)
+corpus/knowledge/audit-r11.md:306: | manifest `verify-all-manifest.jsonl` (8 lines) | `78627e6da14c4bcf1b49c8725a763b9c6ed998b56f03460c1c7d843c15d0814d` |
+corpus/knowledge/audit-r11.md:333: claims-r9.jsonl A11 carries no line suffix; claims-r9.README.md already
+corpus/knowledge/audit-r11.md:338: re-run: `verify-all A-r9 --claims claims-r9.jsonl --root ..` → CLEAN
+corpus/knowledge/chain-resolution-r3.md:43: (receipts below). The fixture dispatch named `chain-r3.jsonl`; the landed
+corpus/knowledge/chain-resolution-r3.md:45: the JSONL pre-draft was superseded and removed rather than kept as a
+corpus/knowledge/chain-resolution-r3.md:205: corpus/fixtures/claims-r2.jsonl --root ..` → `VERDICT_BEARING_CLAIMS=17/17`,
+corpus/knowledge/hardening-r10.md:14: claims surface `corpus/fixtures/claims-r9.jsonl` `f6f0d1ab…`.
+corpus/knowledge/hardening-r10.md:46: | `A-r9-span-not-found.md` `5dedb73b…` (+ `A-r9-span-not-found.claims.jsonl` `0edb78ee…`) | span-not-found | A | `claims_file` → control copy; copy mutates A07 span `keep four axes separate…` → `keep five axes separate…` (absent from A) | claims DRIFT `VERDICT_BEARING_CLAIMS=9/10` | `CLAIM_SPAN_NOT_FOUND` | 1 |
+corpus/knowledge/hardening-r10.md:674: Round 24 (`--json` delimiter, gate `b5d0f93d…` → `752e4e38…`, cases 134–136)
+corpus/knowledge/hardlink-alias-r13.md:42: - **TOCTOU**: stat-then-read; a partner swap between probe and read is not
+corpus/knowledge/reference-integrity-r7.md:24: `integrity-r7.claims.jsonl` / `integrity-r7-broken.claims.jsonl` (byte-identical,
+corpus/knowledge/reference-integrity-r7.md:127: `tallies` in the `--json` manifest line (schema `chousa-verify-all/v1`,
+corpus/knowledge/reference-integrity-r7.md:132: Markdown record → 5 run sections; claims JSONL as input → claims run, integrity
+corpus/knowledge/reference-integrity-r7.md:138: non-JSONL input).
+corpus/knowledge/reference-integrity-r7.md:154: `--claims` outside `verify-all` → 2; `--json` with a missing directory → 2
+corpus/knowledge/reference-integrity-r7.md:251: - **Manifest**: one composed run with `--json` to scratch appends one
+corpus/knowledge/root-slash-boundary-r15.md:5: recheck: `bash tools/research-gate.sh --selftest` (cases 107–110 pin the healed arm); `CHOUSA_ROOT=/ bash tools/research-gate.sh verify-claims <abs-source>.jsonl`
+corpus/knowledge/verify-all-r6.md:27: companions `full-r6.claims.jsonl` / `full-r6-broken.claims.jsonl` (four alias
+corpus/knowledge/verify-all-r6.md:42: · `bash tools/research-gate.sh verify-all corpus/fixtures/full-r6.claims.jsonl --root ..`
+corpus/knowledge/verify-all-r6.md:52: empty stdout — reproduced), `--json` was an unknown flag (exit 2), and no
+corpus/knowledge/verify-all-r6.md:55: After (gate `0c3d51ed…`): `verify-all [RECORD] [--claims PATH] [--json PATH]
+corpus/knowledge/verify-all-r6.md:58: counters — and `--json PATH` appends the record's verification state to a
+corpus/knowledge/verify-all-r6.md:59: lane manifest (append-only JSONL). The composed verdict is DRIFT iff any RUN
+corpus/knowledge/verify-all-r6.md:68: claims JSONL: no `## ` heading lines and at least one line starting `{`,
+corpus/knowledge/verify-all-r6.md:75: r2 policy); else, when the input itself is the claims JSONL, it is its own
+corpus/knowledge/verify-all-r6.md:110: manifest path → 2; `--claims`/`--json` outside verify-all → 2, `:3123-3125`).
+corpus/knowledge/verify-all-r6.md:112: ## The manifest schema (`--json`)
+corpus/knowledge/verify-all-r6.md:123: 2). One run appends exactly one JSON line — schema `chousa-verify-all/v1`:
+corpus/knowledge/verify-all-r6.md:174: - Inputs that are themselves claims JSONL compose `run=1 absent=3` (structure/
+corpus/knowledge/verify-all-r6.md:187: claims file containing non-JSON lines drifts the section too (measured: 13 ×
+corpus/knowledge/verify-all-r6.md:216: research-gate research-gate-r1 — ts=… — mode=verify-all — record=corpus/fixtures/full-r6.md — claims=/…/chousa-shokunin/corpus/fixtures/full-r6.claims.jsonl — root=..
+corpus/knowledge/verify-all-r6.md:227: `--claims corpus/fixtures/full-r6.claims.jsonl` differs only in the header's
+corpus/knowledge/verify-all-r6.md:260: - Manifest append-only: three runs appended three lines; after each append the
+corpus/knowledge/verify-all-r6.md:265: exit 2; `--json` missing its value → exit 2; a bound claims file that is not
+corpus/knowledge/verify-all-r6.md:266: JSONL → claims section DRIFT (13 `CLAIM_RECORD_INVALID`), composed exit 1.
+corpus/knowledge/verify-all-r6.md:274: claims binding (absent), claims JSONL as input, two manifest appends (line
+corpus/knowledge/verify-all-r6.md:281: lane manifest `corpus/evidence/verify-all-manifest.jsonl` holds the first
+corpus/knowledge/json-delimiter-r24.md:1: # `--json` manifest delimiter edge (round 24)
+corpus/knowledge/json-delimiter-r24.md:3: source: S001 tools/research-gate.sh (verify-all setup check "manifest unreadable"; the append block opening `# A manifest whose last byte is not '\n'`; selftest cases 134–136), landed gate sha256 `752e4e38…`; S013 https://jsonlines.org/ §"3. Line Terminator is '\n'" and §"2. Each Line is a Valid JSON Value" (page read 
+corpus/knowledge/json-delimiter-r24.md:9: `verify-all --json PATH` appended `printf '%s\n' "$line" >>PATH`. The `\n`
+corpus/knowledge/json-delimiter-r24.md:11: manifest whose last byte is not `\n` therefore received
+corpus/knowledge/json-delimiter-r24.md:16: Why such a manifest is legitimate input, not operator error: the JSON Lines
+corpus/knowledge/json-delimiter-r24.md:26: write-only manifest (mode 0200) read as "no last byte" and was still
+corpus/knowledge/json-delimiter-r24.md:28: 2. Append: the manifest's last byte is read as hex
+corpus/knowledge/json-delimiter-r24.md:40: Controls (receipt `…-demo.log`, landed gate): last byte `}`, `\r`, NUL → 2
+corpus/knowledge/json-delimiter-r24.md:42: no blank line (S013 §2: "a blank line is not" a valid value); a
+corpus/knowledge/json-delimiter-r24.md:61: - Observation: a last byte of `\r` (a CRLF file truncated mid-terminator) is
+corpus/knowledge/json-delimiter-r24.md:64: - Observation: a NUL last byte gets the `\n` prefix; the prior line was
+corpus/knowledge/json-delimiter-r24.md:66: - Observation (named debt, not fixed): the probe and the append are two
+corpus/knowledge/json-delimiter-r24.md:68: unterminated manifest wrote 16 objects each run and no glued line, but one
+corpus/knowledge/json-delimiter-r24.md:69: run wrote one blank line (two appenders both prefixed) — receipt
+corpus/knowledge/json-delimiter-r24.md:70: `…-demo.log` §concurrency. The gate assumes one writer per manifest; a
+corpus/knowledge/json-delimiter-r24.md:71: `flock` around probe + append is the candidate fix.
+corpus/knowledge/verification-r16.md:30: | `--json` manifest append doesn't ensure delimiter before new object | 24 | **named debt** — the manifest contract is append-only; the delimiter edge is a real defect for hand-edited manifests |
+corpus/knowledge/verification-r16.md:37: | Manifest append outside `--root` succeeds (no containment check on `--json` destination) | 24 | **named debt** — the docs describe `--json PATH` as an output destination; root containment is not claimed |
+corpus/knowledge/verification-r16.md:44: | `--` delimiter shifts once and stops parsing | 43 | **named debt** — arg-parsing edge, not a defect under documented usage |
+corpus/knowledge/verification-r16.md:83: | `--json` manifest append doesn't ensure delimiter before new object | 24 | **closed r24** — the append prefixes `\n` when the manifest's last byte (read as hex) is not `0a`, and a non-empty unreadable manifest is refused before any write; selftest cases 134–136; `corpus/knowledge/json-delimiter-r24.md` |
+corpus/knowledge/metadata-screen-r25.md:33: column 0, outside fences; a value runs to a blank line, another key line or
+corpus/knowledge/metadata-screen-r25.md:118: redirect that fd. Concurrent same-inode content writes can still produce an
+corpus/knowledge/line-binding-r31.md:13: A claims JSONL record may carry `"line"` as a JSON string in either form:
+corpus/lessons/2026-10-15-claims-span-fidelity.md:12: Fixture under test: `corpus/fixtures/claims-r2.jsonl` sha256
+corpus/lessons/2026-10-15-claims-span-fidelity.md:17: concurrent seats' scratch, so several early captures were empty files and were
+corpus/lessons/2026-10-15-claims-span-fidelity.md:41: $ bash tools/research-gate.sh verify-claims corpus/fixtures/claims-r2.jsonl --root ..
+corpus/lessons/2026-10-15-claims-span-fidelity.md:57: $ bash tools/research-gate.sh verify-claims <probe>.jsonl --root ..   # exit 0
+corpus/lessons/2026-10-15-anchor-token-boundaries.md:13: under test: `corpus/fixtures/claims-r2.jsonl` sha256
+corpus/lessons/2026-10-15-anchor-token-boundaries.md:22: `bash tools/research-gate.sh verify-claims corpus/fixtures/claims-r2.jsonl --root ..`
+corpus/lessons/2026-10-15-anchor-token-boundaries.md:27: (`poll.log`, `logs/`, `root/src.md`, `claims-scratch.jsonl` = 18 probe claims,
+corpus/lessons/2026-10-15-anchor-token-boundaries.md:28: `chain-scratch.md` = 17 probe hops, `claims-real.jsonl`, `chain-real.md`,
+corpus/lessons/2026-10-15-anchor-token-boundaries.md:51: $ bash frozen/tools/gate-before.sh verify-claims claims-scratch.jsonl --root <scratch>
+corpus/lessons/2026-10-15-anchor-token-boundaries.md:92: $ bash tools/research-gate.sh verify-claims claims-scratch.jsonl --root <scratch>
+corpus/lessons/2026-10-16-verify-all-composition.md:6: sections reported, never drifting), and `--json PATH` appends the record's
+corpus/lessons/2026-10-16-verify-all-composition.md:7: verification state to a lane manifest (append-only jsonl). Lane HEAD `1d1f56c`
+corpus/lessons/2026-10-16-verify-all-composition.md:23: `full-r6.claims.jsonl` / `full-r6-broken.claims.jsonl` (four alias names, one
+corpus/lessons/2026-10-16-verify-all-composition.md:27: real lane manifest `corpus/evidence/verify-all-manifest.jsonl` (3 lines, gate
+corpus/lessons/2026-10-16-verify-all-composition.md:42: `after-all-absent.out`, `all-claimsjsonl.out`, `all-absent-explicitclaims.out`,
+corpus/lessons/2026-10-16-verify-all-composition.md:43: `all-min2.out`, `rec2.md`/`rec3.md` under `root/`, `manifest.jsonl`,
+corpus/lessons/2026-10-16-verify-all-composition.md:44: `manifest-sentinel.jsonl`, `strace-verify-all.log`, `before-ok-cases.txt`,
+corpus/lessons/2026-10-16-verify-all-composition.md:54: falsifiable claim: **before**, `verify-all` does not exist and `--json` is an
+corpus/lessons/2026-10-16-verify-all-composition.md:59: `--json <path>` appends a well-formed line (record+gate SHA-256, UTC,
+corpus/lessons/2026-10-16-verify-all-composition.md:65: - `bash tools/research-gate.sh verify-all corpus/fixtures/claims-r2.jsonl --root ..`
+corpus/lessons/2026-10-16-verify-all-composition.md:70: - `bash tools/research-gate.sh verify corpus/fixtures/sweeps-r5.md --root .. --json /tmp/m.jsonl`
+corpus/lessons/2026-10-16-verify-all-composition.md:71: → exit 2, stderr `research-gate: unknown flag: --json`.
+corpus/lessons/2026-10-16-verify-all-composition.md:73: `… | grep -c -- "--json"` → 0. No manifest concept exists anywhere in the
+corpus/lessons/2026-10-16-verify-all-composition.md:89: - `structure` — always, for a Markdown record; a claims-JSONL input (no `##`
+corpus/lessons/2026-10-16-verify-all-composition.md:92: claims JSONL, else `--claims PATH`, else a `## Meta` row named
+corpus/lessons/2026-10-16-verify-all-composition.md:113: research-gate research-gate-r1 — ts=2026-10-16T01:57:52Z — mode=verify-all — record=corpus/fixtures/full-r6.md — claims=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/fixtures/full-r6.claims.jsonl — root=..
+corpus/lessons/2026-10-16-verify-all-composition.md:156: | `--json` into nonexistent dir | 2 | `manifest directory not found: … (--json)` |
+corpus/lessons/2026-10-16-verify-all-composition.md:157: | `--json` pointing at a directory | 2 | `manifest path is not a regular file: … (--json)` |
+corpus/lessons/2026-10-16-verify-all-composition.md:158: | `--json` on a solo mode (`verify … --json`) | 2 | `--claims/--json are only valid with verify-all` (`:3123`) |
+corpus/lessons/2026-10-16-verify-all-composition.md:160: Claims-JSONL input composes as claims-only: `verify-all
+corpus/lessons/2026-10-16-verify-all-composition.md:161: corpus/fixtures/claims-r2.jsonl --root ..` → `VERDICT_BEARING_CLAIMS=17/17`,
+corpus/lessons/2026-10-16-verify-all-composition.md:182: `--json PATH` writes one JSON line per run (`:1820-1849`): `schema`
+corpus/lessons/2026-10-16-verify-all-composition.md:205: Verbatim first manifest line (line 1 of `/tmp/chousa-lessons-r6/manifest.jsonl`,
+corpus/lessons/2026-10-16-verify-all-composition.md:212: The receipts seat's lane manifest `corpus/evidence/verify-all-manifest.jsonl`
+corpus/lessons/2026-10-16-verify-all-composition.md:226: `run=3 absent=1` (58), claims-JSONL input `run=1 absent=3` (59), manifest
+corpus/lessons/2026-10-16-verify-all-composition.md:235: --json …` → 0 `socket(`/`connect(`/`sendto(`/`recvfrom(` lines in a
+corpus/lessons/2026-10-16-verify-all-composition.md:256: and sweeps always run, and a claims-JSONL input is the other absent-heavy
+corpus/lessons/2026-10-16-verify-all-composition.md:284: (`full-r6.claims.jsonl`, `full-r6-broken.claims.jsonl` and the two
+corpus/lessons/2026-10-16-verify-all-composition.md:332: - Candidate 3 — overclaim; the manifest appends caller-supplied lines, keeps
+corpus/lessons/2026-10-16-reference-integrity.md:124: at least one other section has a surface (so a claims-JSONL input still
+corpus/lessons/2026-10-16-reference-integrity.md:131: `--json` remain verify-all-only (`:3636`).
+corpus/lessons/2026-10-16-reference-integrity.md:199: Manifest (`--json`, append-only, unchanged schema `chousa-verify-all/v1`):
+corpus/lessons/2026-10-16-gate-behavioral-baseline.md:26: fixture's shape) + `claims-pass.jsonl`, `--root` = the fixture dir; measured:
+corpus/lessons/2026-10-16-gate-behavioral-baseline.md:56: --claims fx/claims-pass.jsonl --root fx      # 3 runs, exit 0, 873 B, 8 lines
+corpus/lessons/2026-10-16-gate-behavioral-baseline.md:88: pinned `--json` appends over one file produced two **byte-identical** lines
+corpus/lessons/2026-10-16-gate-behavioral-baseline.md:143: the `--json` line), runs the canonical invocation inside it with relative
+corpus/lessons/2026-10-16-gate-behavioral-baseline.md:167: | **span shift** per-row move | `claims-pass.jsonl` P1 span `line1 primary material` → `line2` | **IDENTICAL** (tallies unchanged) | not run; solo `verify-claims` names it: `CLAIM id=P1 … at=line:2 …` vs `at=line:1` |
+corpus/lessons/2026-10-16-gate-behavioral-baseline.md:285: `solo-*.out`, `manifest.jsonl`, `mut-m*.sh`) live under
+corpus/lessons/2026-10-16-verifying-conversion-not-original.md:7: `corpus/fixtures/claims-r9.jsonl` adding 10 claims beyond round 2's 17.
+corpus/lessons/2026-10-16-verifying-conversion-not-original.md:20: `97be0e69…`, archives-r9/README.md `ec312657…`, claims-r9.jsonl
+corpus/lessons/2026-10-16-verifying-conversion-not-original.md:27: `bash tools/research-gate.sh verify-claims corpus/fixtures/claims-r9.jsonl --root ..`.
+corpus/lessons/2026-10-16-verifying-conversion-not-original.md:86: from the JSONL (`verify_claims` `:1009`), never the record's rows. Nothing
+corpus/lessons/2026-10-16-verifying-conversion-not-original.md:111: - `verify-claims corpus/fixtures/claims-r9.jsonl` →
+corpus/lessons/2026-10-16-verifying-conversion-not-original.md:145: will not (probe and `A-r9.md:50` are the measured reasons).
+corpus/lessons/2026-10-16-verifying-conversion-not-original.md:155: `claims-r9.jsonl` A11 and `claims-r9.README.md`'s provenance table both pin
+corpus/lessons/2026-10-16-archive-scale-controls-and-ledger.md:19: `5dedb73b…` + `.claims.jsonl` `0edb78ee…`; `A-r9-anchor-missing.md`
+corpus/lessons/2026-10-16-archive-scale-controls-and-ledger.md:30: (no `--json`: it would write manifest lines into the receipts-writer's surface).
+corpus/lessons/2026-10-16-archive-scale-controls-and-ledger.md:220: `--json` (the manifest surface belongs to the receipts-writer).
+corpus/lessons/round-24-verifier-spotcheck.md:17: ADMITTED after the critic-requested erratum `095b90c` (append-only falsifier for `citation-chain-fidelity-r24.md`; line 9 untouched). Per-axis: operability improved (INVALID 1→0, selftest 133→136; score scale unchanged), coverage improved (EXPANSION 0/3→3/3, census clean; 2 of 3 entries on uncovered ground), calibratio
+corpus/lessons/round-24.md:24: | M-13 | metadata registry not machine-checkable | `corpus/knowledge/archives-verified-r9.md`, `audit-r11.md:22` (`recheck (from the lane cwd ...` — no colon), `gate-baseline-r8.md` lack the `^recheck:` key; at dossier time 0 of 21 values were dates, while the four r24 notes now carry ISO/cadence values (e.g. `json-del
+corpus/lessons/round-24.md:48: | S001 | `tools/research-gate.sh` | 2026-10-19 | "A manifest whose last byte is not '\n' (hand-edited, truncated, or written by another tool) would glue this object onto its last line" | append block comment; sha in `knowledge/json-delimiter-r24.md` |
+corpus/lessons/round-24.md:60: | S013 | https://jsonlines.org/ | 2026-10-19 | "If a line terminator follows the last JSON value in a file, it must be the last byte in the file" | Requirement 3 |
+corpus/lessons/round-24.md:76: - A first fix is a hypothesis: the delimiter fix landed three times inside
+corpus/lessons/round-25.md:20: | Concurrent appenders can add a blank line (1/3 runs at 16 writers) | carried, not a claimed fix; independently reproduced 2/6 seeded runs this round, 0/6 empty controls; no pooling of rates | r24 receipt `evidence/json-r24-20261019T213117Z-demo.log:26-29`; r25 `.ufo/waves/round-25/build/ExecAppendRace.md`; QUALITY 2 
+corpus/lessons/round-25.md:31: | D-11 delimiter closure could obscure concurrent-append race | retained as open, separate from r24 delimiter fix | first row; no race patch integrated |
+corpus/lessons/round-26.md:7: round26 output. The planned concurrent-JSON-appender serialization is carried,
+corpus/lessons/round-26.md:23: | Concurrent JSON appender race, parent-root rechecks, receipt gaps, source/span-pairing and filesystem races remain open | carried, not silently repaired by any of C1–C3; round25 lesson and hardening ledger keep their debt pointers | QUALITY3/9; `lessons/round-25.md` Spot-check intake and out-of-population paragraph |
+corpus/lessons/round-26.md:200: - `RevEntryJsonDelimiterR24` asks that the appender inference be labelled;
+corpus/lessons/round-26.md:201: it does not falsify the delimiter result. The source/body-vs-policy
+corpus/lessons/round-26.md:206: score. The appender-race pointers belong to the r24 delimiter note/demo and
+corpus/lessons/round-27.md:38: | R27-M4 | stale parser state crosses table boundary | r26 FRegistryHeaderless41–49 | named-header contract; QUALITY17 | fresh columns after breaks and matching delimiter width; positive/negative reordered-column controls; S042 |
+corpus/lessons/round-27.md:205: encode their killing inputs (mixed outer pipes, delimiter after blank, consulted-row
+corpus/lessons/round-27.md:227: change; `|-|` short delimiters, fenced tables and body-row headers are
+corpus/lessons/round-27.md:239: | S043 | `.ufo/waves/round-27/falsify/FC3ValidTable27.md:59`: “so the header counts 5 cells against 4 delimiter cells.” | escaped-pipe width regression; also IntegTokenCost.md:20, FC2Allzero128K07.md:18, FC1CorrectUsageWithHelp00.md:7 (cost, CR strip, matcher-error reports) |
+corpus/lessons/round-27.md:268: the candidate matches cell count/text; one-dash delimiter remains an
+corpus/lessons/round-27.md:336: and watchdog changes were left alone. The chousa L0 line was concurrently
+corpus/lessons/round-31-verifier-spotcheck.md:146: (`git diff --stat ee1024fd 25c5bb70 -- tools/`: +10/−2). `claims-r2.jsonl` carries no
+corpus/evidence/README.md:16: (lane HEAD `6344569`). Fixture `corpus/fixtures/claims-r2.jsonl` sha256
+corpus/evidence/README.md:64: bash tools/research-gate.sh verify-claims corpus/fixtures/claims-r2.jsonl --root ..
+corpus/evidence/README.md:176: Fixtures unchanged from round 2/3: `corpus/fixtures/claims-r2.jsonl` sha256
+corpus/evidence/README.md:223: bash tools/research-gate.sh verify-claims corpus/fixtures/claims-r2.jsonl --root ..
+corpus/evidence/README.md:379: `corpus/fixtures/full-r6.claims.jsonl` = `full-r6-broken.claims.jsonl`
+corpus/evidence/README.md:385: | `compose-r6-20261016T020330Z-selftest.log` (`e3b94e1c…`) | full `--selftest`; case-line stability vs the round-5 selftest stdout | `RESEARCH_GATE_SELFTEST: PASS (64 cases)`, exit 0; the first 54 case lines are **byte-identical** to the round-5 receipt (`cmp` YES); new cases 55–64 = `all-pass`/`all-structure`/`all-met
+corpus/evidence/README.md:388: | `compose-r6-20261016T020330Z-json.log` (`1db37149…`) | manifest before-state (0 lines), the three appended `--json` lines verbatim, append-only prefix compares, JSON well-formedness, boundary refusals | lines 0 → 3; prefix run1==before / run2==after1 / run3==after2 all YES; each line a well-formed JSON `chousa-verify
+corpus/evidence/README.md:396: `--json` appends the record's state (ts, record + gate sha256, per-section
+corpus/evidence/README.md:401: `corpus/evidence/verify-all-manifest.jsonl` sha256
+corpus/evidence/README.md:439: # manifest append (append-only; adds one line per run):
+corpus/evidence/README.md:441: --json corpus/evidence/verify-all-manifest.jsonl
+corpus/evidence/README.md:456: `verify-all-manifest.jsonl` rehearsal lines were replaced by this cut's
+corpus/evidence/README.md:484: companions `integrity-r7.claims.jsonl` = `integrity-r7-broken.claims.jsonl`
+corpus/evidence/README.md:521: `corpus/evidence/verify-all-manifest.jsonl` now has 5 lines (sha256
+corpus/evidence/README.md:524: two integrity-family lines using the gate's own `--json`:
+corpus/evidence/README.md:593: `--pin`/`--drift`: `verify-all record.md --claims claims.jsonl --json
+corpus/evidence/README.md:594: manifest.jsonl --root .` run with cwd = a fresh temp fixture the gate writes
+corpus/evidence/README.md:616: the `--json` manifest line after `# --- json manifest line follows ---`).
+corpus/evidence/README.md:621: JSON line; `record_sha256` is unmasked (the fixture bytes are part of the
+corpus/evidence/README.md:631: | `pin-r8-20261016T033757Z-live.log` (`9829ed10…`) | cross-round no-harm, r1 observable, zero network, manifest untouched | 14/14 mode pairs byte-identical (ts-normalized) with matching rc; `VERDICT_BEARING_EXPORTS=3/3`; strace 3759 trace lines, **0 network syscalls**; `verify-all-manifest.jsonl` sha unchanged (`962094
+corpus/evidence/README.md:703: byte-verbatim spans/anchors, and claim coverage grows: 17 (r2) + 10 (r9 JSONL,
+corpus/evidence/README.md:716: | `corpus/fixtures/claims-r9.jsonl` | `f6f0d1ab…` |
+corpus/evidence/README.md:731: ### Manifest appends (append-only)
+corpus/evidence/README.md:753: --claims corpus/fixtures/claims-r9.jsonl --root ..
+corpus/evidence/README.md:755: bash tools/research-gate.sh verify-claims corpus/fixtures/claims-r9.jsonl --root ..
+corpus/evidence/README.md:812: `338918fc…`/`abfa5290…`/`97be0e69…`, `claims-r9.jsonl` `f6f0d1ab…`, controls
+corpus/evidence/README.md:817: | `A-r9-span-not-found.md` (+ `.claims.jsonl`) | `5dedb73b…` (+ `0edb78ee…`) |
+corpus/evidence/README.md:880: - The controls' verify-all runs pass no `--json`: the append-only manifest is
+corpus/evidence/README.md:905: | `scope-r12-20261019T115519Z-A-fix.log` | A-r9 post-fix `verify-all` CLEAN at `dfd2ae1a…` (run without `--json`; manifest untouched) |
+corpus/evidence/README.md:1049: ## Round-24 `--json` delimiter receipts — stamp 20261019T213117Z
+corpus/evidence/README.md:1054: landed gate (sha in `knowledge/json-delimiter-r24.md`); the pre-round gate
+corpus/evidence/README.md:1060: | `json-r24-20261019T213117Z-demo.log` | counting command verbatim; before (pre-round gate) `MANIFEST_LINES=1 INVALID_JSON_LINES=1` → after `MANIFEST_LINES=2 INVALID_JSON_LINES=0`; last-byte controls (`}`, `\r`, NUL, empty, `\n`); write-only manifest → exit 2, bytes unchanged; 16-writer concurrency runs (named debt); m
+corpus/evidence/README.md:1063: | `round24-measure.sh` | the round's three counting commands in one read-only script (claim 1 delimiter, operability score re-derivation, claim 2 expansion + contract census, claim 3 mistake capture) |
+corpus/evidence/round24-measure.sh:15: echo "== claim 1 (operability): append onto a manifest whose last byte is not '\n'"
+corpus/evidence/round24-measure.sh:16: T=$(mktemp -d); printf '{"prior":true}' >"$T/m.jsonl"
+corpus/evidence/round24-measure.sh:17: bash tools/research-gate.sh verify-all corpus/fixtures/full-r6.md --json "$T/m.jsonl" --root . >/dev/null 2>&1
+corpus/evidence/round24-measure.sh:24: print("MANIFEST_LINES=%d INVALID_JSON_LINES=%d" % (len(L), bad))' "$T/m.jsonl"; rm -rf "$T"
+corpus/evidence/round25-measure.sh:17: POP1="anchor-boundaries-r4 archived-export-intake archives-verified-r9 audit-r11 chain-resolution-r3 citation-chain-fidelity-r24 claim-support-states-r24 claim-verification-r2 contextual-source-admission-r24 denylist-r22 fenced-anchor-r23 fenced-heading-r17 gate-baseline-r12 gate-baseline-r8 hardening-r10 hardlink-alia
+corpus/evidence/round25-measure.sh:30: base_files = """knowledge/anchor-boundaries-r4.md knowledge/archived-export-intake.md knowledge/archives-verified-r9.md knowledge/audit-r11.md knowledge/chain-resolution-r3.md knowledge/citation-chain-fidelity-r24.md knowledge/claim-support-states-r24.md knowledge/claim-verification-r2.md knowledge/contextual-source-ad
+corpus/evidence/round25-claims.md:28: plus continuation lines until a blank line, another key line, or the header end.
+corpus/evidence/round26-measure.sh:24: json-delimiter-r24.md metadata-screen-r25.md mount-alias-r14.md
+corpus/evidence/round26-measure.sh:29: contextual-source-admission-r24.md json-delimiter-r24.md metadata-screen-r25.md)
+corpus/evidence/round26-claims.md:16: (`--json` appender serialization) is **not** claimed this round: it is the same
+corpus/evidence/round26-registry-differential.sh:38: json-delimiter-r24.md metadata-screen-r25.md mount-alias-r14.md
+corpus/evidence/round26-registry-differential.sh:45: contextual-source-admission-r24.md json-delimiter-r24.md metadata-screen-r25.md
+corpus/evidence/round27-claims.md:15: Repair registry-header state leaking across non-table lines and S-id consumed-text rescanning. Filesystem-path denylist checks must inspect complete filesystem paths, not citation-anchor prefixes; preserve existing citation-pointer semantics. Synthetic temporary fixtures only, no host files or live-process probes. Requ
+corpus/evidence/round27-regressions.py:138: ('delimiter-too-short', '| id | status | used-by |\n|---|---|\n' + row, 2, None),
+corpus/evidence/round27-regressions.py:139: ('delimiter-too-long', '| id | status | used-by |\n|---|---|---|---|\n' + row, 2, None),
+corpus/evidence/round27-regressions.py:211: claims = root / 'claims.jsonl'
+corpus/evidence/round27-falsify-controls.py:127: # blank line, a consulted row (findings=0 and its queued twin), single-leg raw-path refusal.
+corpus/evidence/round27-falsify-controls.py:136: ('mixed-delimiter-outer-only', 'FC3ValidTable27', 'id | status | used-by\n|---|---|---|\n' + row, 0),
+corpus/evidence/round27-falsify-controls.py:138: ('mixed-lead-pipe-delimiter', 'FC3ValidTable27', '| id | status | used-by |\n|---|---|---\n' + row, 0),
+corpus/evidence/round27-falsify-controls.py:139: ('mixed-trail-pipe-delimiter', 'FC3ValidTable27', '| id | status | used-by |\n---|---|---|\n' + row, 0),
+corpus/evidence/round27-falsify-controls.py:140: ('delimiter-after-blank', 'FC3HeaderBreakBlank28', '| id | status | used-by |\n\n|---|---|---|\n' + row, 2),
+corpus/evidence/round27-falsify-controls.py:176: claims = root / 'claims.jsonl'
+corpus/evidence/round25-holds/battery.sh:76: --claims corpus/fixtures/claims-r9.jsonl --root "$ANALYSIS_ROOT"
+corpus/evidence/round25-holds/battery.sh:88: run_and_diff verify-claims-r2 bash "$GATE" verify-claims corpus/fixtures/claims-r2.jsonl \
+corpus/evidence/round28-safe/qualifiers.md:7: The actual cohort is proposal64 plus ordinary5, all69 terminal-completed, with no replacement/reissue and no additional ask after Parent's stop. The planner, connector and complete-proposal distiller were actual native roles, not inferred from counts. Capacity/dispatch facts are procedural metadata in `wave-custody.jso
+corpus/evidence/round30/qr_harness.py:10: - `socket.socket.connect` / `connect_ex` log every destination address to a JSONL file.
+corpus/evidence/round30/qr_harness.py:298: log_p = os.path.join(workdir, "net.jsonl")
+corpus/evidence/round30/c2-count.py:50: import concurrent.futures
+corpus/evidence/round30/c2-count.py:197: with concurrent.futures.ThreadPoolExecutor(max_workers=len(specs)) as ex:
+corpus/evidence/round31/c1-count.py:10: files and one claims JSONL with 120 claims. Every claim carries
+corpus/evidence/round31/c1-count.py:235: claims = os.path.join(root, "claims.jsonl")
+corpus/evidence/round31/c2-count.py:12: files and one claims JSONL with 120 claims, every one with expect=supported
+corpus/evidence/round31/c2-count.py:195: claims = os.path.join(root, "claims.jsonl")
+corpus/evidence/round31/claims.md:74: 1. A claims JSONL record may carry the JSON string field `"line"` with value `"N"` or `"N-M"`:
+corpus/evidence/round31/claims.md:129: - Run: `bash tools/research-gate.sh verify-claims <claims.jsonl> --root ..` with a `"sha256"` pin (the SHA-256 of the exact source bytes read) on each claim; a changed source reads `stale` (`CLAIM_SOURCE_REVISION_MISMATCH`). A claim without a pin is not checked for revision.
+corpus/evidence/round31/claims.md:141: 1. A claims JSONL record may carry the JSON string field `"sha256"`: exactly 64 lowercase
+corpus/evidence/round31/claims.md:192: `verify-claims corpus/fixtures/claims-r2.jsonl --root ..` stays `VERDICT_BEARING_CLAIMS=17/17`
+corpus/evidence/round32/c1-count.py:2: """Round 32 C1 counter: cooperating `verify-all --json` manifest appenders.
+corpus/evidence/round32/c1-count.py:10: `verify-all RECORD --root ROOT --json PATH`, the gate opens PATH for append
+corpus/evidence/round32/c1-count.py:11: (creating it when absent), takes an exclusive flock(2) on that open file,
+corpus/evidence/round32/c1-count.py:12: and holds it from before it reads the manifest's last byte until after its
+corpus/evidence/round32/c1-count.py:13: own line is written. A cooperating writer that holds an exclusive flock(2)
+corpus/evidence/round32/c1-count.py:14: on PATH therefore excludes both the gate's last-byte probe and its append.
+corpus/evidence/round32/c1-count.py:19: source and a one-claim claims JSONL used as the record, so every writer runs
+corpus/evidence/round32/c1-count.py:20: `bash <gate> verify-all <record> --root <root> --json <manifest>` with every
+corpus/evidence/round32/c1-count.py:23: - L trials (12; manifest seeds empty / terminated / unterminated, 4 each):
+corpus/evidence/round32/c1-count.py:28: empty or terminated seed it appends an unterminated cooperating fragment
+corpus/evidence/round32/c1-count.py:29: `{"frag":N}` (no newline), and leaves an unterminated seed as it is; it
+corpus/evidence/round32/c1-count.py:31: - F trials (12; seed unterminated): W_F=16 writers run with no counter lock.
+corpus/evidence/round32/c1-count.py:40: lines that are JSON objects (an unterminated seed or fragment must have been
+corpus/evidence/round32/c1-count.py:42: lines); no blank line anywhere; the file ends with a newline.
+corpus/evidence/round32/c1-count.py:63: L_SEEDS = ["empty"] * 4 + ["terminated"] * 4 + ["unterminated"] * 4
+corpus/evidence/round32/c1-count.py:70: LOCKS_RE = re.compile(r"^\d+:\s+(->\s+)?FLOCK\s+\S+\s+\S+\s+(\d+)\s+[0-9a-fA-F]+:[0-9a-fA-F]+:(\d+)\s")
+corpus/evidence/round32/c1-count.py:95: rec = os.path.join(root, "c%08x.jsonl" % rng.getrandbits(32))
+corpus/evidence/round32/c1-count.py:116: procs.append(subprocess.Popen(["bash", gate, "verify-all", rec, "--root", root, "--json", manifest],
+corpus/evidence/round32/c1-count.py:200: manifest = os.path.join(root, "m%08x.jsonl" % rng.getrandbits(32))
+corpus/evidence/round32/c1-count.py:213: fcntl.flock(fd, fcntl.LOCK_EX)
+corpus/evidence/round32/c1-count.py:228: # terminated seed it writes one unterminated fragment under its lock;
+corpus/evidence/round32/c1-count.py:229: # an unterminated seed is left as it is. Either way the next writer
+corpus/evidence/round32/c1-count.py:230: # finds an unterminated last line once the lock is released.
+corpus/evidence/round32/c1-count.py:231: if kind != "unterminated":
+corpus/evidence/round32/c1-count.py:236: fcntl.flock(fd, fcntl.LOCK_UN)
+corpus/evidence/round32/c1-count.py:278: p = subprocess.run(["bash", gate, "verify-all", rec, "--root", root, "--json",
+corpus/evidence/round32/c1-count.py:279: os.path.join(root, "ref.jsonl")], cwd=root, env=gate_env(),
+corpus/evidence/round32/c1-count.py:287: plan = [("L", kind) for kind in L_SEEDS] + [("F", "unterminated")] * F_TRIALS
+corpus/evidence/round32/claims.md:16: **Surface.** The `verify-all … --json PATH` manifest append path. The gate documents that `--json`
+corpus/evidence/round32/claims.md:17: "appends (>>, never rewrites) one JSON line" (`tools/research-gate.sh:196`). Concurrent appenders
+corpus/evidence/round32/claims.md:18: break it at base: the last-byte probe and the append are two operations with no lock, so two
+corpus/evidence/round32/claims.md:19: writers that both see an unterminated last line both prefix a newline and leave a blank line
+corpus/evidence/round32/claims.md:20: (r24 knowledge `corpus/knowledge/json-delimiter-r24.md:67-71`; r25 2/6 seeded runs). The fix was
+corpus/evidence/round32/claims.md:23: **Contract.** For `verify-all RECORD --root ROOT --json PATH`, the gate opens PATH for append
+corpus/evidence/round32/claims.md:24: (creating it when absent), takes an exclusive flock(2) on that open file, and holds it from before
+corpus/evidence/round32/claims.md:25: it reads the manifest's last byte until after its own line is written. A cooperating writer that
+corpus/evidence/round32/claims.md:26: holds an exclusive flock(2) on PATH therefore excludes both the gate's last-byte probe and its
+corpus/evidence/round32/claims.md:32: writers start; seeds empty / terminated / unterminated, 4 each; hold check; cooperating
+corpus/evidence/round32/claims.md:33: unterminated fragment on empty/terminated seeds) and 12 F trials (16 free writers on an
+corpus/evidence/round32/claims.md:34: unterminated seed). Trial predicate and checks: the counter's docstring (same text).
+corpus/evidence/round32/claims.md:44: trials with a blank line) — `.ufo/waves/round-32/controls/L1-design/base-s11.json`. Feasibility
+corpus/evidence/round32/claims.md:45: oracle (scratch gate `719d0b92…`, flock around probe + append): 24/24 —
+corpus/evidence/round32/claims.md:94: C1 changes only the `--json` append block of `verify_all`; the C1 counter's record is a claims
+corpus/evidence/round32/claims.md:95: JSONL (no `## Chain`). C2 changes only the exempt arm of `verify_chain`; its counter runs
+corpus/evidence/round32/claims.md:114: lines byte-identical; `verify-claims corpus/fixtures/claims-r2.jsonl` 17/17; `verify-chain
+tools/research-gate.sh:47: # against its cited source. Blank lines and #-comment lines are ignored; a
+tools/research-gate.sh:176: # verify-all mode: verify-all <record> [--claims PATH] [--json PATH] runs every
+tools/research-gate.sh:179: # surface is bound (the input itself when it is a claims JSONL: no ## section
+tools/research-gate.sh:196: # --json PATH appends (>>, never rewrites) one JSON line: schema, UTC, record
+tools/research-gate.sh:219: # The canonical invocation is `verify-all record.md --claims claims.jsonl
+tools/research-gate.sh:220: # --json manifest.jsonl --root .` run with cwd = a fresh temp fixture the gate
+tools/research-gate.sh:224: # appended --json line is the receipt the manifest mode writes. Every printed
+tools/research-gate.sh:327: research-gate.sh verify-all [RECORD] [--claims PATH] [--json PATH]
+tools/research-gate.sh:396: row (claims/claims_file/claims-file/claimset); a claims JSONL passed as
+tools/research-gate.sh:397: the input is its own claims surface. --json PATH appends (never rewrites)
+tools/research-gate.sh:398: one JSON line recording UTC, record + gate SHA-256, per-section tallies
+tools/research-gate.sh:402: plus that run's --json manifest line), with the declared volatile contract
+tools/research-gate.sh:2591: # Header indexes, delimiter width, and body cells must use the same split.
+tools/research-gate.sh:3063: [[ -d $jdir ]] || die_usage "manifest directory not found: $jdir (--json)"
+tools/research-gate.sh:3065: die_usage "manifest path is not a regular file: $JSON_ARG (--json)"
+tools/research-gate.sh:3067: # The append below must read the manifest's last byte to keep JSONL
+tools/research-gate.sh:3071: die_usage "manifest unreadable: $JSON_ARG (--json; its last byte decides the delimiter)"
+tools/research-gate.sh:3084: # The input is itself a claims JSONL: it is its own claims surface.
+tools/research-gate.sh:3185: # A manifest whose last byte is not '\n' (hand-edited, truncated, or
+tools/research-gate.sh:3187: # `{"prior":true}{"schema":...}` — invalid JSONL. Terminate it first;
+tools/research-gate.sh:3189: # The last byte is read as hex: a bare $(tail -c1) drops NUL bytes and
+tools/research-gate.sh:3200: printf 'research-gate: manifest append failed: %s\n' "$JSON_ARG" >&2
+tools/research-gate.sh:3273: cat >"$dir/claims.jsonl" <<'PINFIX' || return 1
+tools/research-gate.sh:3334: bash "$SELF" verify-all record.md --claims claims.jsonl \
+tools/research-gate.sh:3335: --json manifest.jsonl --root . >capture.txt 2>&1 ) || rc=$?
+tools/research-gate.sh:3337: nml=$(grep -c '' -- "$fx/manifest.jsonl" 2>/dev/null || true)
+tools/research-gate.sh:3338: nsch=$(grep -c '^{"schema":"chousa-verify-all/v1"' -- "$fx/manifest.jsonl" 2>/dev/null || true)
+tools/research-gate.sh:3341: mcap=$(gate_drift_normalize "$fx/manifest.jsonl") || mcap=''
+tools/research-gate.sh:3482: text+='# canonical: verify-all record.md --claims claims.jsonl --json manifest.jsonl --root . (cwd = a fresh temp fixture written by the gate)'$'\n'
+tools/research-gate.sh:3584: cat >"$WORK/claims-pass.jsonl" <<'EOF'
+tools/research-gate.sh:3591: cat >"$WORK/claims-fail-tampered.jsonl" <<'EOF'
+tools/research-gate.sh:3594: cat >"$WORK/claims-fail-external.jsonl" <<'EOF'
+tools/research-gate.sh:3597: cat >"$WORK/claims-fail-session.jsonl" <<'EOF'
+tools/research-gate.sh:3600: cat >"$WORK/claims-fail-contradicted-unmarked.jsonl" <<'EOF'
+tools/research-gate.sh:3604: cat >"$WORK/claims-fail-counting.jsonl" <<'EOF'
+tools/research-gate.sh:3614: cat >"$WORK/claims-fail-stray-marker.jsonl" <<'EOF'
+tools/research-gate.sh:3617: printf '{"id":"O1","source":"%s","span":"outside text","expect":"supported"}\n' "$OUTSIDE_FILE" >"$WORK/claims-fail-out-of-corpus.jsonl"
+tools/research-gate.sh:3618: printf '{"id":"O2","source":"../%s","span":"outside text","expect":"supported"}\n' "$(basename "$OUTSIDE_FILE")" >>"$WORK/claims-fail-out-of-corpus.jsonl"
+tools/research-gate.sh:3619: cat >"$WORK/claims-boundary-pass.jsonl" <<'EOF'
+tools/research-gate.sh:3627: cat >"$WORK/claims-boundary-fail.jsonl" <<'EOF'
+tools/research-gate.sh:3693: bash "$SELF" verify-claims "$WORK/$name.jsonl" 2>&1) || rc=$?
+tools/research-gate.sh:4267: tsetup claims-missing-file 2 verify-claims "$WORK/no-such-claims.jsonl"
+tools/research-gate.sh:4712: if [[ $json != - ]]; then extra+=(--json "$WORK/$json"); fi
+tools/research-gate.sh:4754: tall all-pass.md 0 1 1 claims-pass.jsonl - - \
+tools/research-gate.sh:4763: tall all-pass.md 1 1 1 claims-fail-tampered.jsonl - - \
+tools/research-gate.sh:4772: tall all-structure.md 1 1 1 claims-pass.jsonl - - \
+tools/research-gate.sh:4788: tall claims-pass.jsonl 0 1 1 - - - \
+tools/research-gate.sh:4795: tall all-pass.md 0 1 1 claims-pass.jsonl r6-manifest.jsonl 1 \
+tools/research-gate.sh:4797: tall all-pass.md 0 1 1 claims-pass.jsonl r6-manifest.jsonl 2 \
+tools/research-gate.sh:4803: sed 's;| fetch | none |;| fetch | none |\n| claims | claims-pass.jsonl |;' \
+tools/research-gate.sh:4805: sed 's;| fetch | none |;| fetch | none |\n| claims | no-such-claims.jsonl |;' \
+tools/research-gate.sh:5046: tall all-dangling.md 1 1 1 claims-pass.jsonl - - \
+tools/research-gate.sh:5061: # fixture plus its --json manifest line) in its own temp fixture.
+tools/research-gate.sh:5243: printf '{"id":"Z1","source":"claimsrc/cap-at.md","span":"%s","expect":"supported"}\n' "$cap_span" >"$WORK/claims-cap-at.jsonl"
+tools/research-gate.sh:5244: printf '{"id":"Z2","source":"claimsrc/cap-over.md","span":"%s","expect":"supported"}\n' "$cap_span" >"$WORK/claims-cap-over.jsonl"
+tools/research-gate.sh:5293: printf '{"id":"H1","source":"aliasroot/alias-in.md","span":"out-of-root content","expect":"supported"}\n' >"$WORK/claims-hardlink-alias.jsonl"
+tools/research-gate.sh:5308: printf '{"id":"H2","source":"aliasroot/family-a.md","span":"alias original content","expect":"supported"}\n' >"$WORK/claims-hardlink-family.jsonl"
+tools/research-gate.sh:5309: printf '{"id":"H3","source":"lib/primary.md","span":"line1 primary material","expect":"supported"}\n' >"$WORK/claims-single-link.jsonl"
+tools/research-gate.sh:5391: printf '{"id":"D1","source":"crossdev/cross.md","span":"cross-device content here","expect":"supported"}\n' >"$WORK/claims-cross-device.jsonl"
+tools/research-gate.sh:5392: printf '{"id":"D2","source":"crossdev/cross.md","span":"cross-device content here","expect":"supported"}\n' >"$WORK/claims-cross-device-control.jsonl"
+tools/research-gate.sh:5393: printf '{"id":"L1","source":"PROVINCE.md","span":"deep-research method","expect":"supported"}\n' >"$WORK/claims-lane-fallback.jsonl"
+tools/research-gate.sh:5405: tnscase claims-cross-device 1 verify-claims "$WORK/claims-cross-device.jsonl" 'VERDICT_BEARING_CLAIMS=' \
+tools/research-gate.sh:5428: >"$WORK/claims-root-slash-absent.jsonl"
+tools/research-gate.sh:5441: >"$WORK/claims-root-slash-read.jsonl"
+tools/research-gate.sh:5451: >"$WORK/claims-root-slash-xdev.jsonl"
+tools/research-gate.sh:5461: >"$WORK/claims-root-dslash.jsonl"
+tools/research-gate.sh:5680: "$cap_span" >"$WORK/claims-cap-eof.jsonl"
+tools/research-gate.sh:5815: >"$WORK/claims-config-start.jsonl"
+tools/research-gate.sh:5822: >"$WORK/claims-omp-start.jsonl"
+tools/research-gate.sh:5829: >"$WORK/claims-localstate-start.jsonl"
+tools/research-gate.sh:5838: >"$WORK/claims-config-adjacent.jsonl"
+tools/research-gate.sh:5841: # 134–136 (r24): the --json manifest delimiter edge — an append onto a
+tools/research-gate.sh:5842: # manifest whose last byte is not '\n' glued the new object onto the prior
+tools/research-gate.sh:5844: # first; the prior bytes stay byte-identical (append-only) and no blank line
+tools/research-gate.sh:5845: # is written. 135: a NUL last byte (a bare $(tail -c1) drops NUL and misses
+tools/research-gate.sh:5846: # it). 136: a non-empty manifest whose last byte cannot be read is refused
+tools/research-gate.sh:5850: local f="$WORK/$1.jsonl" rc=0 out msg='' n
+tools/research-gate.sh:5856: bash "$SELF" verify-all "$WORK/all-pass.md" --claims "$WORK/claims-pass.jsonl" \
+tools/research-gate.sh:5857: --json "$f" 2>&1) || rc=$?
+tools/research-gate.sh:5885: r24_case json-unterminated-manifest '{"prior":true}' 0 2 1
+tools/research-gate.sh:6673: >"$WORK/claims-registry-colon-deny.jsonl"
+tools/research-gate.sh:6685: # no header across a blank line, and a usage-record matcher fault.
+tools/research-gate.sh:6704: >"$WORK/meta-registry-blank-delimiter.md"
+tools/research-gate.sh:6705: metadata_registry_case metadata-registry-delimiter-after-blank \
+tools/research-gate.sh:6706: "$WORK/corpus/knowledge/meta-reg-gfm.md" "$WORK/meta-registry-blank-delimiter.md" 2 \
+tools/research-gate.sh:6738: cat >"$WORK/c1-pass-bound.jsonl" <<'EOF'
+tools/research-gate.sh:6755: cat >"$WORK/c1-fail-mislocated.jsonl" <<'EOF'
+tools/research-gate.sh:6773: cat >"$WORK/c1-fail-invalid-line.jsonl" <<'EOF'
+tools/research-gate.sh:6794: cat >"$WORK/c1-pass-no-line.jsonl" <<'EOF'
+tools/research-gate.sh:6818: >"$WORK/claims-sha-absent.jsonl"
+tools/research-gate.sh:6820: >"$WORK/claims-sha-absent-fail.jsonl"
+tools/research-gate.sh:6822: >"$WORK/claims-sha-match.jsonl"
+tools/research-gate.sh:6824: >"$WORK/claims-sha-match-spanfail.jsonl"
+tools/research-gate.sh:6826: >"$WORK/claims-sha-stale.jsonl"
+tools/research-gate.sh:6828: >>"$WORK/claims-sha-stale.jsonl"
+tools/research-gate.sh:6830: >>"$WORK/claims-sha-stale.jsonl"
+tools/research-gate.sh:6831: cat >"$WORK/claims-sha-invalid.jsonl" <<EOF
+tools/research-gate.sh:6841: >"$WORK/claims-sha-validity.jsonl"
+tools/research-gate.sh:6843: >>"$WORK/claims-sha-validity.jsonl"
+tools/research-gate.sh:6845: >"$WORK/claims-sha-refused.jsonl"
+tools/research-gate.sh:6847: >"$WORK/claims-sha-crlf.jsonl"
+tools/research-gate.sh:6909: --json)
+tools/research-gate.sh:6910: [[ $# -ge 2 ]] || die_usage "--json needs PATH"
+tools/research-gate.sh:6924: die_usage "--claims/--json are only valid with verify-all"

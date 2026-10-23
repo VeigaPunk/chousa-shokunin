@@ -1,0 +1,12 @@
+Before mutation: all scratch copies came from tools/research-gate.sh at SHA-256 0bc318b3e74ac0ad45f4b34154e886d84aebf44673612afab6de5e0b0ff11258; pristine-gate.sh retains these bytes.
+Mutated gates (sha256sum and the scored receipts agree):
+a-append-only.sh 4a39b99728ec559f9d3d0c4140be410dec457f69c65a5a7184bbbcc144cae1ca
+b-probe-only.sh 034f786be1570136b27d72ec630e24be1c6a673ce53434d476af94f4bb5f0340
+c-cached-probe.sh 59ea2a22bc7293715b15eae245046bab71ad541b641fedad4e62169181f9949c
+d-shared-lock.sh 76c4c073bb5990a220e9adf69acc674b907ecc1579d27588954d6652b40c0b78
+Patches: a-append-only.patch, b-probe-only.patch, c-cached-probe.patch, d-shared-lock.patch in this artifact directory preserve the exact experiments; scratch control paths are restored, not still mutated.
+Restoration command, cwd=/home/vgpnk/Projects/shokunin/chousa-shokunin, shell exit=0:
+For each name a-append-only.sh b-probe-only.sh c-cached-probe.sh d-shared-lock.sh, executed timeout 30s cp /fast/scratch/hyaku/chousa-r32/w1/CtlC1PartialLockB/pristine-gate.sh /fast/scratch/hyaku/chousa-r32/w1/CtlC1PartialLockB/NAME, chained with &&; then each timeout 30s cmp PRISTINE CONTROL (all exit=0, no output), chained with &&; then timeout 30s sha256sum /fast/scratch/hyaku/chousa-r32/w1/CtlC1PartialLockB/*.sh.
+Observed final SHA-256 for a-append-only.sh, b-probe-only.sh, c-cached-probe.sh, d-shared-lock.sh, and pristine-gate.sh:
+0bc318b3e74ac0ad45f4b34154e886d84aebf44673612afab6de5e0b0ff11258
+No production gate bytes, counters, Git index, or jj state were written by this seat.

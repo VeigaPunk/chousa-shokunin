@@ -1,0 +1,33 @@
+--- base-gate.sh
++++ file-only-gate.sh
+@@ -1877,7 +1877,29 @@
+           fi
+           CHAIN_LINES+=("CHAIN hop=$hop status=resolved observed=$obs source=$disp anchor=$CITE_KIND:\"$(printf '%.60s' "$CITE_TEXT")\" at=$CITE_AT verdict=$verdict")
+           ;;
+-        unresolved|blocked-no-fetch|rejected|labelled-dead|not-applicable)
++        unresolved|blocked-no-fetch|labelled-dead)
++          # CONTROL: treat declared source IDs as paths, ignoring their pointers.
++          obs=exempt; verdict=exempt; at=-
++          disp=$(chain_disp "$(norm_ptr "$(chain_cell "$hrow" to)")")
++          if chain_citation "$hrow"; then
++            ref=$(chain_ref_file "$CITE_TO")
++            if [[ -n $ref ]] && claim_source_path "$ref"; then
++              path=$CLAIM_SRC_PATH
++              hay=$(cat -- "$path"; printf x); hay=${hay%x}
++              if chain_anchor_at "$hay" "$CITE_KIND" "$CITE_TEXT"; then
++                obs=resolvable; verdict=mismatch; at=$CITE_AT
++              fi
++            fi
++          fi
++          if [[ $obs == resolvable ]]; then
++            N_MISM=$((N_MISM + 1))
++            emit_finding CHAIN_EXEMPT_RESOLVABLE warn chain "hop=$hop status=$st source=$disp"
++          else
++            N_EXEMPT=$((N_EXEMPT + 1))
++          fi
++          CHAIN_LINES+=("CHAIN hop=$hop status=$st observed=$obs source=$disp anchor=- at=$at verdict=$verdict")
++          ;;
++        rejected|not-applicable)
+           N_EXEMPT=$((N_EXEMPT + 1))
+           CHAIN_LINES+=("CHAIN hop=$hop status=$st observed=exempt source=$(chain_disp "$(norm_ptr "$(chain_cell "$hrow" to)")") anchor=- at=- verdict=exempt")
+           ;;

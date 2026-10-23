@@ -1,0 +1,8 @@
+{
+  "command": "timeout 330s prlimit --as=1073741824 --nproc=2000 python3 /fast/scratch/hyaku/chousa-r32/w1/MutC2CounterB/run-probe.py audit-fresh",
+  "exit_code": 1,
+  "failure": "BlockingIOError: [Errno 11] Resource temporarily unavailable",
+  "location": "subprocess.run in run-probe.py:39, attempting the first fresh BASE gate invocation from line 140",
+  "gate_output_produced": false,
+  "interpretation": "INCONCLUSIVE: process launch failed, not a hidden-truth mismatch; RLIMIT_NPROC counts this shared user's processes, so the subsequent attempt uses a still-bounded nproc=8192 cap"
+}

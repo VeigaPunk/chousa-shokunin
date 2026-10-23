@@ -1,0 +1,31 @@
+C2 no-harm recon probe (read-only on the lane). Gate SHA-256 0bc318b3e74ac0ad45f4b34154e886d84aebf44673612afab6de5e0b0ff11258 matches claims.md. No c1-count.py / c2-count.py. No installs.
+
+Corpus ## Chain census: python walk of corpus/**/*.md for a line matching ^## Chain. 19 sections. research/ and top-level fixtures/ are absent (ls: No such file or directory).
+
+Unmodified verify-chain:
+  timeout 120 bash tools/research-gate.sh verify-chain <record> --root /home/vgpnk/Projects/shokunin
+chain-r3.md CLEAN hops=22 verified=17 exempt=5
+  hop 18 blocked-no-fetch observed=exempt source=https://kotobank.jp/
+  hop 19 blocked-no-fetch observed=exempt source=https://arxiv.org/
+  hop 20 unresolved observed=exempt source=S3
+  hop 21 unresolved observed=exempt source=S2
+  hop 22 unresolved observed=exempt source=S1
+sweeps-r5.md CLEAN hops=3 verified=2 exempt=1
+  hop 3 blocked-no-fetch observed=exempt source=https://kotobank.jp/
+archived-export-intake.md DRIFT hops=8 verified=0 exempt=4 invalid=4 findings=4
+  H4 unresolved observed=exempt source=S8
+  H5 unresolved observed=exempt source=arxiv.org
+  H6 blocked-no-fetch observed=exempt source=arxiv.org
+A-r9.md CLEAN 6/7 hop 7 blocked-no-fetch observed=exempt source=コトバンク
+B-r9.md CLEAN 6/7 hop 7 blocked-no-fetch observed=exempt source=arxiv.org
+C-r9.md CLEAN 7/8 hop 8 blocked-no-fetch observed=exempt source=jstage.jst.go.jp
+
+Counterfactual: scratch copies under /fast/scratch/hyaku/chousa-r32/w1/ScoutExemptCorpus32/gate-probe/ with only those U status cells rewritten to resolved, same gate, same --root. None printed observed=verified:
+chain-r3 18 invalid (anchor_kind=-), 19 invalid (anchor_kind=-), 20 anchor-missing quote, 21 anchor-missing line, 22 anchor-missing quote. RESOLVED_HOPS stayed 17/22.
+sweeps-r5 hop 3 invalid (anchor_kind=-). verified stayed 2.
+intake H4 H5 H6 invalid (resolved hop missing anchor).
+A/B/C chip hops invalid (missing anchor). verified stayed 6/6/7.
+
+Control chip rows byte-equal to the parent hop line (equal=True) for:
+controls/A-r9-span-not-found.md, A-r9-anchor-missing.md, B-r9-false-sweep.md, B-r9-rejection-missing-flip.md, C-r9-dangling-ref.md, C-r9-structure-break.md.
+Those six were not re-run.

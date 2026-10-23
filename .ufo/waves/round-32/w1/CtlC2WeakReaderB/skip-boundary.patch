@@ -1,0 +1,63 @@
+--- base-gate.sh
++++ skip-boundary-gate.sh
+@@ -1194,7 +1194,11 @@
+   else
+     cand=$ROOT/$src
+   fi
+-  canon=$(readlink -f -- "$cand" 2>/dev/null || printf '%s' "$cand")
++  if [[ ${C2_SKIP_BOUNDARY:-0} == 1 ]]; then
++    canon=$cand
++  else
++    canon=$(readlink -f -- "$cand" 2>/dev/null || printf '%s' "$cand")
++  fi
+   if is_denylist_fs_path "$canon"; then
+     CLAIM_REFUSE=CLAIM_SOURCE_SESSION
+     CLAIM_REFUSE_OBS="path=$(ptr_file_part "$src") denied (not opened)"
+@@ -1210,7 +1214,9 @@
+   # r15: in_root normalizes for the PREFIX test only; with --root / the raw
+   # "$root_r"/* rendered //* and refused every absolute source OUT_OF_CORPUS.
+   # src_root stays un-normalized: the device probe stats the declared root.
+-  if in_root "$canon" "$lane_r" && in_root "$canon" "$root_r"; then
++  if [[ ${C2_SKIP_BOUNDARY:-0} == 1 ]]; then
++    src_root=$root_r
++  elif in_root "$canon" "$lane_r" && in_root "$canon" "$root_r"; then
+     if (( ${#lane_r} >= ${#root_r} )); then src_root=$lane_r; else src_root=$root_r; fi
+   elif in_root "$canon" "$lane_r"; then
+     src_root=$lane_r
+@@ -1877,7 +1883,35 @@
+           fi
+           CHAIN_LINES+=("CHAIN hop=$hop status=resolved observed=$obs source=$disp anchor=$CITE_KIND:\"$(printf '%.60s' "$CITE_TEXT")\" at=$CITE_AT verdict=$verdict")
+           ;;
+-        unresolved|blocked-no-fetch|rejected|labelled-dead|not-applicable)
++        unresolved|blocked-no-fetch|labelled-dead)
++          # CONTROL: U reads skip canonicalization and allowed-root checks.
++          obs=exempt; verdict=exempt; at=-
++          disp=$(chain_disp "$(norm_ptr "$(chain_cell "$hrow" to)")")
++          if chain_citation "$hrow"; then
++            to=$CITE_TO; ref=''
++            if [[ -n ${SRC_PTR[$to]+x} ]]; then
++              ref=${SRC_PTR[$to]}
++            elif [[ ! $to =~ ^S[A-Za-z0-9_-]+$ ]]; then
++              ref=$to
++            fi
++            ref=$(chain_ref_file "$ref")
++            if [[ -n $ref ]] && C2_SKIP_BOUNDARY=1 claim_source_path "$ref"; then
++              path=$CLAIM_SRC_PATH
++              hay=$(cat -- "$path"; printf x); hay=${hay%x}
++              if chain_anchor_at "$hay" "$CITE_KIND" "$CITE_TEXT"; then
++                obs=resolvable; verdict=mismatch; at=$CITE_AT
++              fi
++            fi
++          fi
++          if [[ $obs == resolvable ]]; then
++            N_MISM=$((N_MISM + 1))
++            emit_finding CHAIN_EXEMPT_RESOLVABLE warn chain "hop=$hop status=$st source=$disp"
++          else
++            N_EXEMPT=$((N_EXEMPT + 1))
++          fi
++          CHAIN_LINES+=("CHAIN hop=$hop status=$st observed=$obs source=$disp anchor=- at=$at verdict=$verdict")
++          ;;
++        rejected|not-applicable)
+           N_EXEMPT=$((N_EXEMPT + 1))
+           CHAIN_LINES+=("CHAIN hop=$hop status=$st observed=exempt source=$(chain_disp "$(norm_ptr "$(chain_cell "$hrow" to)")") anchor=- at=- verdict=exempt")
+           ;;

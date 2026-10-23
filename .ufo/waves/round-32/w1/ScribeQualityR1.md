@@ -1,0 +1,7 @@
+Axes: operability (executable negative guard) and coverage (per-mutant kill attribution).
+Drafted, not applied: `ScribeQualityR1/quality.md` proposes QUALITY 33 after `corpus/QUALITY.md:242-248` and a matching `## Mistakes` row; no lane production edits.
+Evidence: the false grouped attribution is `corpus/lessons/round-31.md:95-100`; both committed receipt blobs (HEAD `4111607c857bc29ff31883bc095ae00afb527e50`) have `matched=120,total=120,predicate_holds=true` at lines 11-14.
+Check: exact one-liner and output are in `quality.md`; run from lane root → `FAIL ...120/120,...120/120`, exit 1. A first same-physical-line probe returned a false PASS on this wrapped sentence and was discarded; final check scans list-item scope.
+Correction/evidence: fail-open survived both (`MutC2Hash.md:5`, `MutSelftestNew31.md:17`); span-before-stale remains counter-killed (`MutC2Hash.md:6`); trim is the omitted counter-killed/selftest-survived mutant (`MutC2Parse.md:4`); R1 is `round-31-verifier-spotcheck.md:203-208`.
+Touched surfaces: only `.ufo/waves/round-32/w1/ScribeQualityR1/quality.md` and `.ufo/waves/round-32/w1/ScribeQualityR1.md`.
+Out of scope/limits: no lane mutation, counters, candidate scoring, tests, git/jj writes, or installs; checker specifically covers the R1 fail-open attribution, not all Markdown semantics.

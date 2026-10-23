@@ -1,0 +1,4 @@
+# gate_sha256=0bc318b3e74ac0ad45f4b34154e886d84aebf44673612afab6de5e0b0ff11258 lane_rev=4111607c857bc29ff31883bc095ae00afb527e50
+# cwd=/fast/scratch/hyaku/chousa-r32/w1/ExecNoHarmBase32/lane
+# cmd: python3 -c import subprocess; names=("A-shokunin-tradition.md","B-multiagent-knowledge.md","C-rank-taxonomy.md"); rows=[subprocess.run(["bash","tools/research-gate.sh","verify","../research/deep-research-2026-09-28/"+n,"--root",".."],capture_output=True,text=True) for n in names]; print("VERDICT_BEARING_EXPORTS=%d/3" % sum(r.returncode==1 and sum(s.startswith("RESEARCH_GATE: DRIFT (") for s in r.stdout.splitlines())==1 for r in rows))
+VERDICT_BEARING_EXPORTS=3/3

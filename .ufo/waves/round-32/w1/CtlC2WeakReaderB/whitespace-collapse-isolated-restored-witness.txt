@@ -1,0 +1,12 @@
+CWD=/home/vgpnk/Projects/shokunin/chousa-shokunin
+ENV C1_TMP=/fast/scratch/hyaku/chousa-r32/w1/CtlC2WeakReaderB C2_TMP=/fast/scratch/hyaku/chousa-r32/w1/CtlC2WeakReaderB TMPDIR=/fast/scratch/hyaku/chousa-r32/w1/CtlC2WeakReaderB; CHOUSA_* removed
+COMMAND=timeout --kill-after=5s 120s prlimit --as=1073741824 --nproc=2000 -- bash /fast/scratch/hyaku/chousa-r32/w1/CtlC2WeakReaderB/gates/whitespace-collapse/tools/research-gate.sh verify-chain /fast/scratch/hyaku/chousa-r32/w1/CtlC2WeakReaderB/whitespace-witness.md --root /fast/scratch/hyaku/chousa-r32/w1/CtlC2WeakReaderB
+EXIT=1
+STDOUT:
+research-gate v2 — ts=2026-10-23T06:58:12Z — mode=chain — record=/fast/scratch/hyaku/chousa-r32/w1/CtlC2WeakReaderB/whitespace-witness.md
+CHAIN hop=whitespace-u status=unresolved observed=exempt source=whitespace-witness-source.md anchor=- at=- verdict=exempt
+CHAIN hop=whitespace-r status=resolved observed=anchor-missing source=whitespace-witness-source.md anchor=quote:"exact spacing anchor" at=- verdict=mismatch
+FINDING CHAIN_ANCHOR_NOT_FOUND severity=warn surface=chain obs=hop=whitespace-r source=whitespace-witness-source.md anchor=quote:"exact spacing anchor" nearest_line=1 context=exact  spacing anchor
+RESOLVED_HOPS=0/2
+RESEARCH_GATE: DRIFT (hops=2 verified=0 exempt=1 anchor-missing=1 refused=0 invalid=0 findings=1 drift=1)
+STDERR:

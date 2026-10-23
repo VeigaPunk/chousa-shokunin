@@ -1,0 +1,148 @@
+diff --git i/tools/research-gate.sh w/tools/research-gate.sh
+index e2df74e..0687ee4 100755
+--- i/tools/research-gate.sh
++++ w/tools/research-gate.sh
+@@ -6869,6 +6869,143 @@ EOF
+   tclaims claims-sha-crlf 0 'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=1/1' \
+     'CLAIM id=C1 expected=supported observed=supported source=claimsrc/sha-src-crlf.txt at=line:1 verdict=match'
+ 
++  # ---- round-32 R2: verify-claims grammar/binding detectors ----
++  # Routed defect R2, selftest half (corpus/lessons/round-31-verifier-spotcheck.md
++  # :209-214): the round-31 mutants survived because the selftest had no case for
++  # these rules. Every case below was measured against the landed gate before it
++  # was asserted; expected outcomes are both the contract and the landed output.
++  # A present non-string "sha256" is malformed, never absent: number, null, array
++  # and object values all invalidate the record before any source is read.
++  printf '{"id":"SN1","source":"claimsrc/sha-src.txt","span":"sha source line one","expect":"supported","sha256":5}\n' \
++    >"$WORK/claims-r2-sha-nonstring.jsonl"
++  printf '{"id":"SN2","source":"claimsrc/sha-src.txt","span":"sha source line one","expect":"supported","sha256":null}\n' \
++    >>"$WORK/claims-r2-sha-nonstring.jsonl"
++  printf '{"id":"SN3","source":"claimsrc/sha-src.txt","span":"sha source line one","expect":"supported","sha256":["%s"]}\n' "$SHA_GOOD" \
++    >>"$WORK/claims-r2-sha-nonstring.jsonl"
++  printf '{"id":"SN4","source":"claimsrc/sha-src.txt","span":"sha source line one","expect":"supported","sha256":{"v":"%s"}}\n' "$SHA_GOOD" \
++    >>"$WORK/claims-r2-sha-nonstring.jsonl"
++  tclaims claims-r2-sha-nonstring 1 \
++    'RESEARCH_GATE: DRIFT' 'FINDING CLAIM_RECORD_INVALID severity=warn surface=claims' \
++    'sha256 malformed (not 64 lowercase hex characters)' \
++    'CLAIM id=SN1 expected=supported observed=invalid source=claimsrc/sha-src.txt at=- verdict=invalid' \
++    'CLAIM id=SN2 expected=supported observed=invalid source=claimsrc/sha-src.txt at=- verdict=invalid' \
++    'CLAIM id=SN3 expected=supported observed=invalid source=claimsrc/sha-src.txt at=- verdict=invalid' \
++    'CLAIM id=SN4 expected=supported observed=invalid source=claimsrc/sha-src.txt at=- verdict=invalid' \
++    'VERDICT_BEARING_CLAIMS=0/4' \
++    'claims=4 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=4 findings=4 drift=4'
++  # Present non-string "line" values the earlier block does not cover: null, an
++  # array and a JSON float. All are "line not a JSON string" (invalid), never
++  # absent and never a binding.
++  cat >"$WORK/claims-r2-line-nonstring.jsonl" <<'EOF'
++{"id":"LN1","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","line":null}
++{"id":"LN2","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","line":["1"]}
++{"id":"LN3","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","line":1.5}
++EOF
++  tclaims claims-r2-line-nonstring 1 \
++    'RESEARCH_GATE: DRIFT' 'line not a JSON string' 'observed=invalid' \
++    'CLAIM id=LN1 expected=supported observed=invalid source=lib/span.md at=- verdict=invalid' \
++    'CLAIM id=LN2 expected=supported observed=invalid source=lib/span.md at=- verdict=invalid' \
++    'CLAIM id=LN3 expected=supported observed=invalid source=lib/span.md at=- verdict=invalid' \
++    'VERDICT_BEARING_CLAIMS=0/3' \
++    'claims=3 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=3 findings=3 drift=3'
++  # End-line-only binding is not supported: a span starting on line 2 and ending
++  # on line 3 is mislocated when only line 3 is named (the pin names a start line
++  # or an exact start-end range, never an end line). EX1 shows the contrast: a
++  # span lying wholly on line 3 does bind to line "3".
++  cat >"$WORK/claims-r2-endline.jsonl" <<'EOF'
++{"id":"EL1","source":"lib/span.md","span":"epsilon zeta eta theta\niota kappa lambda mu","expect":"supported","line":"3"}
++{"id":"EX1","source":"lib/span.md","span":"iota kappa lambda mu","expect":"supported","line":"3"}
++EOF
++  tclaims claims-r2-endline 1 \
++    'RESEARCH_GATE: DRIFT' 'FINDING CLAIM_LINE_MISMATCH severity=warn surface=claims' \
++    'CLAIM id=EL1 expected=supported observed=mislocated source=lib/span.md at=lines:2-3 verdict=mismatch' \
++    'obs=id=EL1 line=3-3 first_delimited_occurrence=lines:2-3' \
++    'CLAIM id=EX1 expected=supported observed=supported source=lib/span.md at=line:3 verdict=match' \
++    'VERDICT_BEARING_CLAIMS=1/2' \
++    'claims=2 supported=1 contradicted=0 unsupported=0 mismatched=1 unproven=0 refused=0 invalid=0 findings=1 drift=1'
++  # Per-claim span-before-stale: a stale pin is decided before the span and the
++  # "line" binding, so a claim whose span is present (or absent, or pinned to a
++  # wrong line) reads stale with at=- and only the revision finding.
++  printf '{"id":"SB1","source":"claimsrc/sha-src-tampered.txt","span":"sha source line two","expect":"supported","line":"1","sha256":"%s"}\n' "$SHA_GOOD" \
++    >"$WORK/claims-r2-span-stale.jsonl"
++  printf '{"id":"SB2","source":"claimsrc/sha-src-tampered.txt","span":"sha source line two","expect":"supported","line":"9","sha256":"%s"}\n' "$SHA_GOOD" \
++    >>"$WORK/claims-r2-span-stale.jsonl"
++  printf '{"id":"SB3","source":"claimsrc/sha-src-tampered.txt","span":"sha source phantom","expect":"supported","line":"1","sha256":"%s"}\n' "$SHA_GOOD" \
++    >>"$WORK/claims-r2-span-stale.jsonl"
++  tclaims claims-r2-span-stale 1 \
++    'RESEARCH_GATE: DRIFT' 'FINDING CLAIM_SOURCE_REVISION_MISMATCH severity=warn surface=claims' \
++    'CLAIM id=SB1 expected=supported observed=stale source=claimsrc/sha-src-tampered.txt at=- verdict=mismatch' \
++    'CLAIM id=SB2 expected=supported observed=stale source=claimsrc/sha-src-tampered.txt at=- verdict=mismatch' \
++    'CLAIM id=SB3 expected=supported observed=stale source=claimsrc/sha-src-tampered.txt at=- verdict=mismatch' \
++    "pin=${SHA_GOOD:0:12} actual=${SHA_TAMPERED:0:12}" \
++    'VERDICT_BEARING_CLAIMS=0/3' \
++    'claims=3 supported=0 contradicted=0 unsupported=0 mismatched=3 unproven=0 refused=0 invalid=0 findings=3 drift=3'
++  # Whitespace around an otherwise 64-hex pin is malformed, never trimmed into a
++  # match (leading, trailing and both sides; the existing block covers the
++  # short-body leading-space shape only).
++  printf '{"id":"WP1","source":"claimsrc/sha-src.txt","span":"sha source line one","expect":"supported","sha256":"%s "}\n' "$SHA_GOOD" \
++    >"$WORK/claims-r2-ws-pin.jsonl"
++  printf '{"id":"WP2","source":"claimsrc/sha-src.txt","span":"sha source line one","expect":"supported","sha256":" %s"}\n' "$SHA_GOOD" \
++    >>"$WORK/claims-r2-ws-pin.jsonl"
++  printf '{"id":"WP3","source":"claimsrc/sha-src.txt","span":"sha source line one","expect":"supported","sha256":" %s "}\n' "$SHA_GOOD" \
++    >>"$WORK/claims-r2-ws-pin.jsonl"
++  tclaims claims-r2-ws-pin 1 \
++    'RESEARCH_GATE: DRIFT' 'sha256 malformed (not 64 lowercase hex characters)' \
++    'CLAIM id=WP1 expected=supported observed=invalid source=claimsrc/sha-src.txt at=- verdict=invalid' \
++    'CLAIM id=WP2 expected=supported observed=invalid source=claimsrc/sha-src.txt at=- verdict=invalid' \
++    'CLAIM id=WP3 expected=supported observed=invalid source=claimsrc/sha-src.txt at=- verdict=invalid' \
++    'VERDICT_BEARING_CLAIMS=0/3' \
++    'claims=3 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=3 findings=3 drift=3'
++  # Hash-read fault injection: sha256sum unavailable through a PATH shim. The
++  # same record reads supported on the normal PATH and must never read supported
++  # once the hash tool is unmeasurable: fail closed to stale with actual=unreadable
++  # (research-gate.sh: fail closed: an unmeasurable source is not a match). The
++  # source-unreadable arm reaches the same sha_actual=unreadable branch; it is a
++  # TOCTOU window (claim_source_path already required -r), so the shim is the
++  # deterministic injection.
++  mkdir -p "$WORK/r2faultbin"
++  printf '#!/bin/sh\nexit 127\n' >"$WORK/r2faultbin/sha256sum"
++  chmod +x "$WORK/r2faultbin/sha256sum"
++  printf '{"id":"HF1","source":"claimsrc/sha-src.txt","span":"sha source line one","expect":"supported","sha256":"%s"}\n' "$SHA_GOOD" \
++    >"$WORK/claims-r2-hash-fault.jsonl"
++  cases=$((cases + 1))
++  r2_ok=1 r2_ctl_rc=0 r2_fault_rc=0
++  r2_ctl_out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
++    CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
++    bash "$SELF" verify-claims "$WORK/claims-r2-hash-fault.jsonl" 2>&1) || r2_ctl_rc=$?
++  [[ $r2_ctl_rc -eq 0 ]] || r2_ok=0
++  [[ $r2_ctl_out == *'CLAIM id=HF1 expected=supported observed=supported'* ]] || r2_ok=0
++  [[ $r2_ctl_out == *'VERDICT_BEARING_CLAIMS=1/1'* ]] || r2_ok=0
++  r2_fault_out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
++    CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
++    PATH="$WORK/r2faultbin:$PATH" \
++    bash "$SELF" verify-claims "$WORK/claims-r2-hash-fault.jsonl" 2>&1) || r2_fault_rc=$?
++  [[ $r2_fault_rc -eq 1 ]] || r2_ok=0
++  [[ $r2_fault_out == *'FINDING CLAIM_SOURCE_REVISION_MISMATCH severity=warn surface=claims'* ]] || r2_ok=0
++  [[ $r2_fault_out == *'actual=unreadable'* ]] || r2_ok=0
++  [[ $r2_fault_out == *'VERDICT_BEARING_CLAIMS=0/1'* ]] || r2_ok=0
++  [[ $r2_fault_out != *'observed=supported'* ]] || r2_ok=0
++  if [[ $r2_ok -eq 1 ]]; then
++    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" r2-hash-fault-shim "$r2_fault_rc"
++  else
++    printf 'FAIL-case %-28s control_rc=%d fault_rc=%d\n' \
++      r2-hash-fault-shim "$r2_ctl_rc" "$r2_fault_rc"
++    printf '%s\n' "$r2_ctl_out" "$r2_fault_out" | sed 's/^/    | /'
++    failures=$((failures + 1))
++  fi
++  # Nested-key contract, half the landed gate honours: a key spelling inside a
++  # STRING value is not a field (json_has_key/json_str: "a key appearing inside a
++  # string value is not seen as a field"). Note the object form {"meta":{"line":
++  # "9"}} is NOT honoured by the landed gate: it is read as the record's own key
++  # (observed line=9-9). That half is a measured contract violation, reported in
++  # .ufo/waves/round-32/w1/ExecR2Selftest31.md and left unfixed here (R2 is the
++  # detector half; a case asserting the contract must wait for the fix).
++  printf '{"id":"NS1","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","note":"{\\"line\\":\\"9\\"}"}\n' \
++    >"$WORK/claims-r2-nested-string.jsonl"
++  tclaims claims-r2-nested-string 0 \
++    'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=1/1' \
++    'CLAIM id=NS1 expected=supported observed=supported source=lib/span.md at=line:1 verdict=match'
++
+   if [[ $failures -eq 0 ]]; then
+     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"
+     exit 0

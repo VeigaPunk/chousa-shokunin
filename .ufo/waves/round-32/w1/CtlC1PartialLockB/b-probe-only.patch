@@ -1,0 +1,27 @@
+--- /fast/scratch/hyaku/chousa-r32/w1/CtlC1PartialLockB/pristine-gate.sh	2026-10-23 03:48:08.929798549 -0300
++++ /fast/scratch/hyaku/chousa-r32/w1/CtlC1PartialLockB/b-probe-only.sh	2026-10-23 03:49:16.306511194 -0300
+@@ -3189,17 +3189,23 @@
+     # The last byte is read as hex: a bare $(tail -c1) drops NUL bytes and
+     # would miss a NUL-terminated manifest. (Unreadable + non-empty is
+     # refused at setup, before any write.)
++    # CONTROL: release the exclusive probe lock before the append.
++    local jfd
++    exec {jfd}>>"$JSON_ARG" || exit 2
++    flock -x "$jfd" || exit 2
+     local jlast=''
+     if [[ -s $JSON_ARG ]]; then
+       jlast=$(tail -c1 -- "$JSON_ARG" 2>/dev/null | od -An -tx1 | tr -d ' \n' || true)
+     fi
++    flock -u "$jfd" || exit 2
+     if [[ -n $jlast && $jlast != 0a ]]; then
+       line=$'\n'$line
+     fi
+-    if ! printf '%s\n' "$line" >>"$JSON_ARG"; then
++    if ! printf '%s\n' "$line" >&"$jfd"; then
+       printf 'research-gate: manifest append failed: %s\n' "$JSON_ARG" >&2
+       exit 2
+     fi
++    exec {jfd}>&-
+   fi
+ 
+   printf 'research-gate %s — ts=%s — mode=verify-all — record=%s — claims=%s — root=%s\n' \
