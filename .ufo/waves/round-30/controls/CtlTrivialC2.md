@@ -1,4 +1,4 @@
-## C2 design v3 — current seat results
+## C2 design v3 — historical seat results (v4 appended below)
 
 | control | what it skips | C1 score run1, run2 | C2 score run1, run2 | receipt paths |
 |---|---|---|---|---|
@@ -66,3 +66,36 @@ qr_harness.py                               06237f36fb777d3e0bedf436be1f99507cc9
 ```
 
 Containment: all counters used `timeout 300`, seat-local `TMPDIR`, and `PYTHONDONTWRITEBYTECODE=1`. Scratch is empty; the final owned-process search found no remaining counter/harness processes. No git/jj writes, source edits, network fetches or tool installations.
+
+## C2 design v4 — current seat results
+
+| control | what it skips | C1 score run1, run2 | C2 score run1, run2 | receipt paths |
+|---|---|---|---|---|
+| always-ABSENT | registry, fetching, text reading and judgment | not run, not run | 14/27, not run | [run1](CtlTrivialC2/receipt-always-absent-c2-run1-v4.json) |
+| always-VERBATIM | registry, fetching, text reading and judgment | not run, not run | 10/27, not run | [run1](CtlTrivialC2/receipt-always-verbatim-c2-run1-v4.json) |
+| always-UNREACHABLE, instant | all fetching; no waiting or source reading | not run, not run | 11/27, not run | [run1](CtlTrivialC2/receipt-always-unreachable-c2-run1-v4.json) |
+| junk five-way random | registry, fetching, text reading and judgment | not run, not run | 4/27, not run | [run1](CtlTrivialC2/receipt-junk-c2-run1-v4.json) |
+| do-nothing, byte-identical round-29 tool | the entire round-30 change | not run, not run | 12/27, not run | [run1](CtlTrivialC2/receipt-do-nothing-c2-run1-v4.json) |
+
+META-CHECK: none met
+
+Exactly one run per control, as requested by the parent's v4 instruction. Detector target: `QUOTE_REOPEN_FETCH_BOUND_MATCH=27/27`. All five counters printed that label with their table score, exited 1 and recorded `predicate_holds: false`; all five fresh seeds differ. No measurement failure. Every no-fetch-control item completed within 0.538 s with `bound_ok` and `validated_only` true.
+
+Do-nothing failures from `receipt-do-nothing-c2-run1-v4.json`:
+- `drip-body` 3 and `drip-head` 2: no verdict, killed at 20.025–20.031 s; `bound_ok: false` (`:75-148`).
+- `drip-steady` 2: correct UNREACHABLE but wall 7.986/7.965 s exceeds bounds 6.36/6.54 s (`:149-178`).
+- `rebind-loop` 4 and `rebind-redirect` 2: correct verdict, but connected to `127.0.0.1` (`:240-307`, `:342-373`).
+- `rebind-private` 2: wrong UNREACHABLE instead of ABSENT, plus connections to `10.93.37.25` and `10.197.73.159` (`:308-341`).
+All twelve other items matched, including both `slow-ok` items (`:390-419`). The v4 source sends the terminal chunk with the sixth body piece (`corpus/evidence/round30/qr_harness.py:252-263`) and uses `DEADLINE - 1.0` (`corpus/evidence/round30/c2-count.py:131-132`), replacing the v3 timing design.
+
+Metadata caveat: the frozen v4 counter still emits the literal `design: v3` (`c2-count.py:218`). These are v4 measurements by their verified counter/harness hashes and `-v4` filenames; no receipt or counter bytes were corrected.
+
+Restoration: original and all five control hashes matched their unchanged values above before and after v4 scoring; the original and do-nothing copy remain byte-identical (`72a3ad479c8eabf7b26a21c44742a6a30e9b0f8a2a2b5e07477866ca18754fea`). No source/control mutation occurred. Formal mutation-kill classification remains inconclusive because pristine fails. Frozen v4 input hashes matched before and after:
+
+```text
+c1-count.py    5b312d84365924779ba8e6fe447cad3467f59c11848083d0967528c7a5e9d6e6
+c2-count.py    0a59e3736fed8ef4cf7b00a75955eccfd0336c8a0ca84bee23402408b727f88f
+qr_harness.py  e2be0dd16da5b2bf03430772831763e56c6ff6dd6a44063bb05c909b284f50d4
+```
+
+All five processes used `timeout 300`, seat-local TMPDIR and disabled bytecode. Scratch is empty and the owned-process search found no remaining counter/harness processes. All 25 versioned receipts are retained. No git/jj writes, source edits, external network fetches or installations.

@@ -1,6 +1,6 @@
-# CriticClaimDesign30 — historical v2 and C2 v3 extension
+# CriticClaimDesign30 — frozen designs v2–v4
 
-The first section preserves the assigned v2 review; its source line references refer to lane commit `6b1c51773ab9352283dcc58a09d461aeac786fd2`. The current C2 v3 extension follows below. Required hashes matched before each version's scoring. No candidate/fix built; only the unchanged tool was scored here, with network-free scorer/framing probes retained separately. No installs, git/jj writes, or tool/counter edits. All launched processes completed, including harness termination of capped children.
+The first section preserves the assigned v2 review; its source line references refer to lane commit `6b1c51773ab9352283dcc58a09d461aeac786fd2`. The v3 and current v4 extensions follow chronologically. Required hashes matched before each version's scoring. No candidate/fix built; only the unchanged tool was scored here, with network-free scorer/framing probes retained separately. No installs, git/jj writes, or tool/counter edits. All launched processes completed, including harness termination of capped children.
 
 Receipt paths below are relative to `.ufo/waves/round-30/controls/`; braces enumerate the four files in each row. The second row is **peer-executed evidence inspected here**, not an execution by this seat.
 
@@ -50,4 +50,28 @@ META-CHECK: none met (the v3 receipts inspected above only; not a claim that eve
 
 The C2 axis and fixture-scoped separability assessment remain unchanged: v3 pages still have closed heads (`c2-count.py:94-101`), and C1 responses use the same fast default server path (`qr_harness.py:261`). No real-network liveness claim was added (`claims.md:187-191`).
 
-DESIGN: defect V3-A, V3-B; hard-coded-cutoff rationale overclaims (finding 12)
+Historical v3 verdict: defect V3-A, V3-B; hard-coded-cutoff rationale overclaims (finding 12).
+
+## Design v4 extension
+
+Reviewed the requested three-file diff `7908ce2a6413522fc6fab63f284327693f70eec6..abfdf93274d0c70e02465e22abcf029dea59efb9`. Before scoring, all supplied SHA-256 values matched: C1 `5b312d84365924779ba8e6fe447cad3467f59c11848083d0967528c7a5e9d6e6`, C2 `0a59e3736fed8ef4cf7b00a75955eccfd0336c8a0ca84bee23402408b727f88f`, harness `e2be0dd16da5b2bf03430772831763e56c6ff6dd6a44063bb05c909b284f50d4`. Each requested counter was rerun once; no second run is claimed.
+
+| control | what it skips | C1 score run1, run2 | C2 score run1, run2 | receipt paths |
+|---|---|---|---|---|
+| unchanged round-29 tool | whole round | 78/106, unrun | 12/27, unrun | `CriticClaimDesign30/receipt-baseline-c1-v4-run1.json`; `CriticClaimDesign30/receipt-baseline-c2-v4-run1.json` |
+
+META-CHECK: none met (the v4 baseline runs performed here only).
+
+13. **Before values and predicate identities agree.** My C1 run printed 78/106, exit 1; C2 printed 12/27, exit 1. Retained `before-c1-v4-run{1,2}.json:240-248` and `before-c2-v4-run{1,2}.json:494-501` match the stated 78 and 12 (`claims.md:22-26`). All identify the same unchanged tool SHA-256 `72a3ad479c8eabf7b26a21c44742a6a30e9b0f8a2a2b5e07477866ca18754fea`. C1 still compares verdicts then `n_ok == t == 106` (`c1-count.py:324-338`); C2 still checks verdict, per-item bound/not-killed, and routed-set destinations then `n_ok == t == 27` (`c2-count.py:164-175,212-218`). The required labels and `predicate_holds` match the new receipts (C1 `:99,242-246`; C2 `:496-501`). No do-nothing target pass or new counter-condition defect was found.
+
+14. **V3-A is fixed, and V3-B's prose is corrected.** The chunked terminator is now appended to the last paced body piece (`qr_harness.py:252-263`); `c2-count.py:130-132` supplies D-1.0. Executed the actual `_serve` path with a byte sink and recorded sleeps, without sockets or sleeping: `CriticClaimDesign30/probe-v4-design.py:18-30` produced six gaps, total 5.0 s at D=6.0, and a valid final terminator for both Content-Length and chunked framing. No seventh delay remains. `claims.md:165-167` now correctly says one drip-steady failure in each v3 run and both failures in the two recorded v4 runs.
+
+15. **V4-A — the new no-shared-word/every-quote wording is too broad (wording only).** `claims.md:10-12` says “every quote 6-12 words” and “no two items of a run share a word”; `c1-count.py:25-26` repeats the latter. Those invariants hold for the 100 ordinary document items, not all 106 items. The order fixtures deliberately reuse exactly `long_true[0]` for a TOO_LONG item and a NO_SOURCE item (`c1-count.py:262,267`), and those quotes have 26-30 words. Executed construction probe `probe-v4-design.py:11-17`: 100 ordinary items, zero shared case-insensitive words, but the two order quotes were identical and 30 words long. **Impact:** evidence/label-opacity description, not a target pass or bad verdict label. **Smallest safe correction:** qualify the invariants as applying to the 100 per-document items, excluding the six verdict-order fixtures; keep those intentional order fixtures unchanged.
+
+16. **Receipt design metadata is ambiguous, not a predicate mismatch.** V4 C2 receipts still say `design: "v3"` (`c2-count.py:218`; new receipt `:70`) while their hashes identify the v4 counter/harness (`:65,72`). `claims.md:160-161` explicitly predicts that field, so it is not a new discrepancy between plan and receipt. Treat it as the inherited C2 predicate version, not the implementation revision; identify v4 evidence by the frozen hashes rather than that field alone. This is a provenance naming tradeoff, not grounds to manufacture a failed target.
+
+17. **The earlier universal cutoff rationale is corrected in v4 prose.** `claims.md:43-45` now says a fixed cutoff fails on “many draws” and explicitly disclaims excluding every fixed cutoff on every draw. That resolves the wording defect from finding 12. Timing-only compatibility with some fixed cutoffs remains a disclosed sampling limitation, not an unreported control pass; no such candidate was built. No stronger universal discrimination claim is justified by the randomized fixture range alone.
+
+The surface/axis names and intended-change separability remain sound (`claims.md:94-99,133-142,179-185`). No new functional regression was found in the reviewed diff. The remaining findings above are wording/provenance limits, not evidence that v4's targets were met by a skip-work control.
+
+DESIGN: defect V4-A (wording only); no new counter-condition defect found

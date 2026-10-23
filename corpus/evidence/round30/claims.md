@@ -7,9 +7,11 @@
    It did not meet the target, but it read labels from item shape: body windows were 6-15
    words while title and script windows were 4-8, the two body windows and the case flip of
    one document could share words, script words were never capitalized, and a case flip
-   always raised an inner lower-case letter. v4 makes every quote 6-12 words, draws the
-   three body-derived windows of a document from disjoint word spans (no two items of a run
-   share a word), capitalizes every run's first word, gives about 15 percent of all words
+   always raised an inner lower-case letter. v4 makes every quote of the 100 document items
+   6-12 words, draws the three body-derived windows of a document from disjoint word spans
+   (no two of those 100 items share a word; the 6 verdict-order items keep their 8- and
+   26-30-word quotes, and two of them repeat one quote), capitalizes every run's first word,
+   gives about 15 percent of all words
    one inner capital, and swaps the case of any one letter in either direction. Body blocks
    grow to 50-60 words so the disjoint spans always fit. Labels, classes and the total (106)
    are unchanged.

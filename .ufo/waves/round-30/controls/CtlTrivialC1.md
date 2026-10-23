@@ -40,3 +40,11 @@ At authorized freeze `7908ce2a6413522fc6fab63f284327693f70eec6`, each unchanged 
 Before/after hashes matched the new freeze: C1 unchanged (`9a0a3bd7...c13131c`), C2 `f68a2abc0139edcb87986334545a2d08711f150342ea77f667e11529fc0e69fe`, harness `16f17d60708952f9ba3d015eae306a075b37691deebf1e5c2c126137c6797ab7`. All five control hashes and the lane tool hash remained exactly as in the earlier ledger; no restoration was needed. Scratch was empty and no seat-specific Python process remained.
 
 META-CHECK: none met
+
+## Design v4 re-score
+
+At authorized freeze `abfdf93274d0c70e02465e22abcf029dea59efb9`, each unchanged control was re-scored once on C1: always-ABSENT **60/106** ([receipt](CtlTrivialC1/receipt-always-absent-c1-v4.json)); always-VERBATIM **40/106** ([receipt](CtlTrivialC1/receipt-always-verbatim-c1-v4.json)); five-way junk **20/106** ([receipt](CtlTrivialC1/receipt-junk-five-way-c1-v4.json)); binary junk **55/106** ([receipt](CtlTrivialC1/receipt-junk-binary-c1-v4.json)); do-nothing **78/106** ([receipt](CtlTrivialC1/receipt-do-nothing-c1-v4.json)). Actual stdout was `QUOTE_REOPEN_HEADLESS_MATCH=<score>`; all five counter exits were 1, `predicate_holds=false`, `tool_killed=false`, and all five seeds were distinct from each other and all earlier runs. C2 remains unrun.
+
+Before/after hashes matched the v4 freeze: C1 `5b312d84365924779ba8e6fe447cad3467f59c11848083d0967528c7a5e9d6e6`, C2 `0a59e3736fed8ef4cf7b00a75955eccfd0336c8a0ca84bee23402408b727f88f`, harness `e2be0dd16da5b2bf03430772831763e56c6ff6dd6a44063bb05c909b284f50d4`. All five control hashes and the lane tool hash remained exactly as in the original ledger; no restoration was needed. Scratch was empty and no seat-specific Python process remained.
+
+META-CHECK: none met
