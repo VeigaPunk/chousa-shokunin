@@ -1,4 +1,27 @@
-# Round 30 — frozen claims (design v2, frozen before any control or data seat)
+# Round 30 — frozen claims (C1 design v2, C2 design v3; frozen before any data seat)
+
+**C2 design v3 (latest).** The pre-data control wave voided C2 v2. Seat CtlShapeKeyed's
+control `dns_header_keyed.py` printed `QUOTE_REOPEN_FETCH_BOUND_MATCH=20/20` on the frozen v2
+counter without doing either claimed change
+(`.ufo/waves/round-30/controls/CtlShapeKeyed/receipt-dns-header-c2-run1.json`). It keyed on
+two leaks: every rebinding item had the label VERBATIM, so a second DNS answer that differed
+from the first told it the answer without a fetch; and the slow responses had their own
+header signatures (an `X-Pad` header, `Content-Length: 200000` or `5000`, chunked framing
+only on drips), so it answered UNREACHABLE from the headers with no total deadline. Under
+this file's rule, C2 is re-designed before data and not re-scaled. v3 changes only the C2
+counter and the harness server: every response has the same head shape (a random extra
+header of random length, Content-Length or chunked framing chosen at random per item, an
+ordinary 2-3 KB HTML body), the rebinding, stable, slow-ok and multi-address items carry a
+fair-coin VERBATIM or ABSENT label, a drip-steady class (about 3 MB at 16 KiB/s) defeats
+minimum-rate rules, and each item draws its own DEADLINE in [2.0, 6.0] s with slow-ok spread
+over DEADLINE - 0.8 s, so a hard-coded cutoff cannot replace the module constant. The C2
+target becomes 27/27 (before 13/27 twice). C1's counter is unchanged; it shares the harness,
+whose new server still serves C1 pages the same way (C1 before 78/106 under the v3 harness,
+`before-c1-v3-run1.json`). SHA-256 at v3: `c1-count.py` `9a0a3bd7…c13131c` (unchanged),
+`c2-count.py` `f68a2abc…c0e69fe`, `qr_harness.py` `16f17d60…6797ab7`. Every C2 control is
+re-scored under v3 before any data seat; the v2 receipts stay as history.
+
+## Design v2 note (C1 still at v2)
 
 **Design v2.** Design v1 was committed at `f42906d7b96e5b219aaa74a5ce4ce407a80cee62`.
 Before any control or data seat ran, the L1's own read of the v1 counters found that item
@@ -176,3 +199,6 @@ and harness SHA-256. Expected ceilings, before scoring:
 | tiny deadline (0.5 s) | the bound | n/a | below 20 |
 | refuse-on-rebind (refuse when lookups differ) | contract item 3 | n/a | below 20 |
 | item-shape keyed shortcut (verdict from quote shape: capitals, length) | reading | below 106 | below 20 |
+
+C2 ceilings above are v2 values; under v3 the total is 27, the do-nothing control scores
+13/27, tool-absent 0/27, and an instant always-UNREACHABLE answer can reach at most 11/27.
