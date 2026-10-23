@@ -8,17 +8,17 @@ touched; artifacts only under `.ufo/waves/round-35/w2/ExecPinModeChain/` and
 
 | gate | sha256 | where |
 |---|---|---|
-| **landed (assigned)** | `1f2fb4f522d9a670b49dd61ad1369f55ee012f3b0d38050654be45a71aaef617` | committed blob at `HEAD` (`git cat-file -p HEAD:tools/research-gate.sh`); extracted to `/tmp/hyaku/chousa-r35/w2/ExecPinModeChain/gate-LANDED-1f2fb4f5.sh`, sha re-verified |
+| **landed (assigned)** | `1f2fb4f522d9a670b49dd61ad1369f55ee012f3b0d38050654be45a71aaef617` | committed blob at wave base `2b2e017` (`git cat-file -p 2b2e017:tools/research-gate.sh`); extracted to `/tmp/hyaku/chousa-r35/w2/ExecPinModeChain/gate-LANDED-1f2fb4f5.sh`, sha re-verified |
 | base (round-34) | `a6307edf687ac0fb1b0b08bf7f0518b3fbc310fa9924b970aa3654612562995b` | `.ufo/waves/round-35/repairs/base-gate.sh`, re-verified |
-| **worktree (drifted, NOT assigned)** | `a47688518e509edbf43b433a5e16e1cf2481233f3acedb5824ba341f7f0c38ad` | `tools/research-gate.sh` working tree, mtime `2026-10-23 17:07:40 -0300`, `git status` = ` M` |
+| **hardened (landed late, HEAD)** | `a47688518e509edbf43b433a5e16e1cf2481233f3acedb5824ba341f7f0c38ad` | committed by a sibling during this wave (`bev04ea`, HEAD `770a69d`); extracted to `gate-HEAD-a4768851.sh` |
 
-**Gate drift observed mid-wave.** At my start `sha256sum tools/research-gate.sh` returned
-`1f2fb4f5…` (matching the committed blob). A sibling seat rewrote the working tree at
-17:07:40. Runs taken 17:00:47–17:06:33 hit `tools/research-gate.sh` while it still hashed
-`1f2fb4f5…`; every run after the drift, and every run cited as a receipt, executed
-`/tmp/hyaku/chousa-r35/w2/ExecPinModeChain/gate-LANDED-1f2fb4f5.sh` — the committed blob
-extracted with `git cat-file`, sha re-verified before and after use. §6 reports the
-uncommitted worktree separately and never mixes it in.
+**Gate drift observed mid-wave, twice.** At my start `sha256sum tools/research-gate.sh`
+returned `1f2fb4f5…` (the wave-base blob). A sibling rewrote the working tree at 17:07:40 and
+then **committed** it: HEAD moved `2b2e017` → `bev04ea` (pin hardened) → `770a69d`
+(erratum 7), and the gate file now hashes `a4768851…`. Runs taken 17:00:47–17:06:33 hit
+`tools/research-gate.sh` while it still hashed `1f2fb4f5…`; every run cited as a receipt
+executed a **pinned extracted copy** whose sha I re-verified before and after use. §6 tests
+the hardened gate separately; the two sha's are never mixed.
 
 ## 1. The committed chain fixture (path correction)
 
@@ -248,20 +248,24 @@ Battery chain rows, landed vs base, `--root "$FLEET"`:
 verdicts are byte-identical to round 34. Both battery assertions
 (`'RESOLVED_HOPS=17/22'`, `'RESEARCH_GATE: CLEAN (hops=22 verified=17 exempt=5'`) hold.
 
-## 6. The uncommitted worktree (`a4768851`) — a sibling's fix, measured, not assigned
+## 6. The hardened gate (`a4768851`, committed at `bev04ea`/HEAD `770a69d`) — measured, not assigned
 
-The working tree rewrote the pin block after my runs (32+/11-, `git diff --stat`). Measured
-against `gate-WORKTREE-a4768851.sh`:
+A sibling rewrote the pin block after my runs (`32+/11-`) and committed it. Measured against
+the extracted HEAD blob `gate-HEAD-a4768851.sh`:
 
-| check | landed `1f2fb4f5` | worktree `a4768851` |
+| check | landed `1f2fb4f5` | hardened `a4768851` |
 |---|---|---|
 | four environments (clean / shim / BASH_ENV fn / no-grep PATH) | rc 0, `17/22`, trip 0,0 | rc 0, `17/22`, trip 0,0 (`out/Q1-Q4`) |
 | F1 dead PATH fallback | dead, refuses a PATH-only GNU grep | fallback **removed** (`grep_pin_init` now says "No PATH consultation at all"); message changed to `no GNU grep at /usr/bin/grep or /bin/grep (set RESEARCH_GATE_GREP to an absolute path)` |
-| F2 forged `head` | **no refusal, `4/22`** | rc **2**, `GREP_PROVENANCE refused: override does not report GNU grep: <no version>` (`receipts/B2-headforge-worktree.err`); replaced `head -n 1` with bash expansion + absolute `timeout` |
-| F3 `command` shadow | 16 interceptions | **0 interceptions** (`out/A4`); wrapper now calls `"$GREP_BIN"` directly via `eval`, plus a `readonly -f grep` refusal |
+| F2 forged `head` | **no refusal, `4/22`** | rc **2**, `GREP_PROVENANCE refused: override does not report GNU grep: <no version>`, stub served **1** call (`out/H1-headforge.*`) |
+| F3 `command` shadow | 16 interceptions | **0 interceptions**, `17/22` (`out/H2-cmdswap.*`) |
 
-The worktree therefore fixes all three findings. It is uncommitted and carries no receipt of
-its own here; I did not score it as the claim's gate, and I did not edit it.
+The hardened gate therefore closes all three findings. Its own commit message claims
+`C1 9/9 + C2 2/2 on the final gate`; my §4 F4 result (`9/9` on the *pre*-hardening blob) is
+the relevant caution: the counter was already green before any of these three holes were
+closed, so the 9/9 is a lower bound on the surface, not proof the pin holds against a
+BASH_ENV caller. I did not score the hardened gate as the claim's measurement and I did not
+edit it.
 
 ## 7. Limits
 
@@ -288,4 +292,7 @@ threat model defeat the pin on the assigned blob (`command` shadow captures ever
 forged `head` passes provenance and makes the gate report `4/22` instead of refusing), and
 the committed 9/9 counter is blind to both because S2 only shadows `grep` and never runs
 `verify-chain`. That is the wave's most useful result: C1's 9/9 measures the right thing for
-shim and PATH environments and **under-covers the verification pipeline it relies on**.
+shim and PATH environments and **under-covers the verification pipeline it relies on**. All
+three findings are closed by the gate that landed at `bev04ea` (`a4768851`), which I measured
+in §6 — but that gate's own `9/9` was green before those holes were fixed, so a 9/9 receipt
+alone does not witness the pipeline.
