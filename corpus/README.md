@@ -926,3 +926,14 @@ are private, not committed full bodies or live corpus/gate authority.
 `evidence/round28-safe/provenance.json` records original→derived exclusions; no
 universal content-safety or conformance certification is made.
 Parent alone reviews publication, outside closure and later census/report.
+
+## Round29 frontier disposition (2026-10-23)
+
+New held ground: re-opening located quotes against their live registered
+source (`knowledge/quote-reopen-r29.md`, `tools/quote-reopen.py`). This is the
+first lane command that reads a source outside the lane corpus. Its scope is
+fixed to `SOURCES.md` URLs, and an L0 question on that scope is open. Open
+edges: pages without `</head>`, 2xx challenge pages, prefix and suffix
+disambiguation, PDF sources, and three surviving mutants
+(`lessons/round-29.md`). The round-26 to round-28 path-denylist debts are
+carried unchanged.

@@ -1,0 +1,153 @@
+{
+  "axes": [
+    "operability",
+    "mutation-detector sensitivity",
+    "exact restoration and lane isolation"
+  ],
+  "pinned_commit": "30c9d24da1815e01e161ed2f52d5f951005cc2b8",
+  "initial_clone_head": "b18b3ec9d8a01f966dd81991615bac27df6d66a1",
+  "environment": {
+    "TMPDIR": "/fast/scratch/hyaku/chousa-r29/w2/MutQuoteMap/.tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "hashes_before": {
+    "command": [
+      "timeout",
+      "--signal=TERM",
+      "--kill-after=5",
+      "30",
+      "sha256sum",
+      "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/quote-reopen.py",
+      "/fast/scratch/hyaku/chousa-r29/w2/MutQuoteMap/tools/quote-reopen.py",
+      "/fast/scratch/hyaku/chousa-r29/w2/MutQuoteMap/corpus/evidence/round29/c1-count.py",
+      "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round29/c1-count.py",
+      "/fast/scratch/hyaku/chousa-r29/w2/MutQuoteMap/corpus/fixtures/quote-reopen-r29/items.tsv",
+      "/fast/scratch/hyaku/chousa-r29/w2/MutQuoteMap/corpus/fixtures/quote-reopen-r29/labels.tsv"
+    ],
+    "exit": 0,
+    "stdout": "72a3ad479c8eabf7b26a21c44742a6a30e9b0f8a2a2b5e07477866ca18754fea  /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/quote-reopen.py\n72a3ad479c8eabf7b26a21c44742a6a30e9b0f8a2a2b5e07477866ca18754fea  /fast/scratch/hyaku/chousa-r29/w2/MutQuoteMap/tools/quote-reopen.py\ncd50965032278c355f780d357c5672f14840fc218bb1b7dc4adaa6993b5c175d  /fast/scratch/hyaku/chousa-r29/w2/MutQuoteMap/corpus/evidence/round29/c1-count.py\ncd50965032278c355f780d357c5672f14840fc218bb1b7dc4adaa6993b5c175d  /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round29/c1-count.py\ne6305beba9563fe4d37430019831610ddf7a5adf1e35de60869e3b764f939bcc  /fast/scratch/hyaku/chousa-r29/w2/MutQuoteMap/corpus/fixtures/quote-reopen-r29/items.tsv\ndda1b3768f6f187736a77e5bce094b41822d8574e4798886d00964267343c7a9  /fast/scratch/hyaku/chousa-r29/w2/MutQuoteMap/corpus/fixtures/quote-reopen-r29/labels.tsv\n",
+    "stderr": ""
+  },
+  "hash_mutant": {
+    "command": [
+      "timeout",
+      "--signal=TERM",
+      "--kill-after=5",
+      "10",
+      "sha256sum",
+      "/fast/scratch/hyaku/chousa-r29/w2/MutQuoteMap/tools/quote-reopen.py"
+    ],
+    "exit": 0,
+    "stdout": "242c48efb880836088329b739f8df3f0cfb26c209a1e34d80dc0353d38e93e02  /fast/scratch/hyaku/chousa-r29/w2/MutQuoteMap/tools/quote-reopen.py\n",
+    "stderr": ""
+  },
+  "diff": {
+    "command": [
+      "timeout",
+      "--signal=TERM",
+      "--kill-after=5",
+      "10",
+      "git",
+      "-C",
+      "/fast/scratch/hyaku/chousa-r29/w2/MutQuoteMap",
+      "diff",
+      "--",
+      "tools/quote-reopen.py"
+    ],
+    "exit": 0,
+    "stdout": "diff --git i/tools/quote-reopen.py w/tools/quote-reopen.py\nindex be0ce00..89de053 100755\n--- i/tools/quote-reopen.py\n+++ w/tools/quote-reopen.py\n@@ -61,9 +61,7 @@ BLOCK = {\"p\", \"div\", \"li\", \"ul\", \"ol\", \"table\", \"tr\", \"td\", \"th\", \"h1\", \"h2\", \"h\n          \"br\", \"section\", \"article\", \"header\", \"footer\", \"nav\", \"pre\", \"blockquote\", \"dt\", \"dd\", \"dl\",\n          \"figure\", \"figcaption\", \"hr\", \"main\", \"aside\"}\n # Typographic quotation marks fold to their ASCII form; soft and zero-width marks vanish.\n-QMAP = str.maketrans({\"\\u2018\": \"'\", \"\\u2019\": \"'\", \"\\u201a\": \"'\", \"\\u201b\": \"'\",\n-                      \"\\u201c\": '\"', \"\\u201d\": '\"', \"\\u201e\": '\"', \"\\u201f\": '\"',\n-                      \"\\u00ad\": None, \"\\u200b\": None, \"\\u200c\": None, \"\\u200d\": None, \"\\ufeff\": None})\n+QMAP = str.maketrans({\"\\u00ad\": None, \"\\u200b\": None, \"\\u200c\": None, \"\\u200d\": None, \"\\ufeff\": None})\n URL_RE = re.compile(r\"https?://\\S+\")\n \n \n",
+    "stderr": ""
+  },
+  "baseline": {
+    "command": [
+      "timeout",
+      "--signal=TERM",
+      "--kill-after=5",
+      "570",
+      "python3",
+      "corpus/evidence/round29/c1-count.py",
+      "--receipt",
+      "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/falsify/MutQuoteMap/receipt-baseline.json",
+      "--",
+      "python3",
+      "tools/quote-reopen.py",
+      "verify"
+    ],
+    "exit": 0,
+    "stdout": "class absent-cross-attributed 4/4\nclass absent-fabricated 4/4\nclass absent-one-word-edit 4/4\nclass absent-spliced 4/4\nclass absent-truncated-token 4/4\nclass no-source-own-work-row 2/2\nclass no-source-unregistered-id 1/1\nclass runtime-crossattr 14/14\nclass runtime-page-transpose 24/24\nclass runtime-page-window 24/24\nclass runtime-subspan 14/14\nclass runtime-transpose 14/14\nclass too-long-true-text 3/3\nclass verbatim-inline-markup 9/9\nclass verbatim-plain 3/3\nclass verbatim-typographic-apostrophe 2/2\nseed=16812408728131377606 tool_exit=1 wall_s=2.36\nQUOTE_REOPEN_MATCH=130/130\n",
+    "stderr": ""
+  },
+  "mutant": {
+    "command": [
+      "timeout",
+      "--signal=TERM",
+      "--kill-after=5",
+      "570",
+      "python3",
+      "corpus/evidence/round29/c1-count.py",
+      "--receipt",
+      "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/falsify/MutQuoteMap/receipt-mutant.json",
+      "--",
+      "python3",
+      "tools/quote-reopen.py",
+      "verify"
+    ],
+    "exit": 1,
+    "stdout": "class absent-cross-attributed 4/4\nclass absent-fabricated 4/4\nclass absent-one-word-edit 4/4\nclass absent-spliced 4/4\nclass absent-truncated-token 4/4\nclass no-source-own-work-row 2/2\nclass no-source-unregistered-id 1/1\nclass runtime-crossattr 14/14\nclass runtime-page-transpose 24/24\nclass runtime-page-window 23/24\nclass runtime-subspan 13/14\nclass runtime-transpose 14/14\nclass too-long-true-text 3/3\nclass verbatim-inline-markup 9/9\nclass verbatim-plain 3/3\nclass verbatim-typographic-apostrophe 0/2\nseed=15948892071251740581 tool_exit=1 wall_s=2.23\nQUOTE_REOPEN_MATCH=126/130\n",
+    "stderr": ""
+  },
+  "restoration": {
+    "command": [
+      "timeout",
+      "--signal=TERM",
+      "--kill-after=5",
+      "5",
+      "git",
+      "-C",
+      "/fast/scratch/hyaku/chousa-r29/w2/MutQuoteMap",
+      "restore",
+      "--source=HEAD",
+      "--worktree",
+      "--",
+      "tools/quote-reopen.py"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "hashes_after": {
+    "command": [
+      "timeout",
+      "--signal=TERM",
+      "--kill-after=5",
+      "5",
+      "sha256sum",
+      "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/quote-reopen.py",
+      "/fast/scratch/hyaku/chousa-r29/w2/MutQuoteMap/tools/quote-reopen.py"
+    ],
+    "exit": 0,
+    "stdout": "72a3ad479c8eabf7b26a21c44742a6a30e9b0f8a2a2b5e07477866ca18754fea  /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/quote-reopen.py\n72a3ad479c8eabf7b26a21c44742a6a30e9b0f8a2a2b5e07477866ca18754fea  /fast/scratch/hyaku/chousa-r29/w2/MutQuoteMap/tools/quote-reopen.py\n",
+    "stderr": ""
+  },
+  "pristine": {
+    "command": [
+      "timeout",
+      "--signal=TERM",
+      "--kill-after=5",
+      "570",
+      "python3",
+      "corpus/evidence/round29/c1-count.py",
+      "--receipt",
+      "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/falsify/MutQuoteMap/receipt-pristine.json",
+      "--",
+      "python3",
+      "tools/quote-reopen.py",
+      "verify"
+    ],
+    "exit": 0,
+    "stdout": "class absent-cross-attributed 4/4\nclass absent-fabricated 4/4\nclass absent-one-word-edit 4/4\nclass absent-spliced 4/4\nclass absent-truncated-token 4/4\nclass no-source-own-work-row 2/2\nclass no-source-unregistered-id 1/1\nclass runtime-crossattr 14/14\nclass runtime-page-transpose 24/24\nclass runtime-page-window 24/24\nclass runtime-subspan 14/14\nclass runtime-transpose 14/14\nclass too-long-true-text 3/3\nclass verbatim-inline-markup 9/9\nclass verbatim-plain 3/3\nclass verbatim-typographic-apostrophe 2/2\nseed=1031361805420515392 tool_exit=1 wall_s=2.25\nQUOTE_REOPEN_MATCH=130/130\n",
+    "stderr": ""
+  },
+  "process_cleanup": "Each subprocess was in an isolated process group; finally sent SIGKILL to the whole group after completion (ProcessLookupError ignored). No background jobs or test servers were started.",
+  "installs": []
+}

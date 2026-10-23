@@ -1589,3 +1589,61 @@ No Root report/end census or continuation is authorised at this stage.
 ### 2026-10-23 correction to the round-28 section (routed defect D3)
 
 The round-28 section says no end census was run at that stage. The fleet witness `.ufo/waves/hyaku/chousa28-negative-records/parent-census.json` (fleet commit `b4b338e9`) records `bash /home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa`, run at 2026-10-22 02:49:09 UTC against lane commit `7c87b9734eb71985e19767af36d57dff89536521`. It exited 0 and printed `chousa ok` for `chousa-shokunin/corpus/SOURCES.md`. This corrects the run-status record only; the earlier text is kept as written. Routed as defect D3 by `corpus/lessons/round-28-verifier-spotcheck.md:50-54,125-126`; witness re-read in round 29 by seat ScribeRepairD3 (`.ufo/waves/round-29/build/ScribeRepairD3.md`).
+
+## Round 29 — quote re-open capability (one claim, C1 operability)
+
+Base `6c5eb1466f2b8abbd3de576389037f435016d07b`. Frozen claim, counter, fixture
+and design history: `corpus/evidence/round29/claims.md` (design v3,
+`aa5e1a3187955fa923de14e11c150bf1c526efc6`). The tool landed at
+`30c9d24da1815e01e161ed2f52d5f951005cc2b8` (tool SHA-256 `72a3ad47…54fea`,
+counter SHA-256 `cd509650…175d`).
+
+| claim / axis | before → after | counting command (lane root) | verdict |
+|---|---|---|---|
+| C1 operability, lowest scored axis; capability acquisition | `QUOTE_REOPEN_MATCH=0/130` (tool absent, `.ufo/waves/round-29/controls/before-do-nothing-v3.json`) → `130/130` twice on `30c9d24d` (`.ufo/waves/round-29/measure/after-run1.json`, `after-run2.json`) | `python3 corpus/evidence/round29/c1-count.py -- python3 tools/quote-reopen.py verify` | measured: met. Re-derived by wave 2: 130/130 in 6 further runs (RerunCounterA, RerunCounterB x2, ScoutFreshnessH x3) |
+
+The round-1 operability scale is unchanged: score 3 → 3. Its counting
+command (lines 28-30) still prints `VERDICT_BEARING_EXPORTS=3/3`, and
+`tools/research-gate.sh` is byte-identical (SHA-256 `ac1315dd…5835765`). The
+new observable sits beside that score and does not replace it.
+
+Pre-data controls under v3 (28 committed receipts, best 126/130 from
+casefold without a boundary; the best no-fetch label cheat reached 115/130)
+are in `.ufo/waves/round-29/controls/`. Designs v1 (a label replay met 82/82)
+and v2 (a seed replay met 130/130) were voided before data; the lesson records
+both as mistakes.
+
+Falsify-wave limits (reported, not re-scaled):
+- The counter does not prove a live fetch. A cache-only verifier built from
+  page snapshots taken 27 minutes earlier scored 130/130 twice
+  (`.ufo/waves/round-29/falsify/CriticClaimDesign.md`). Liveness rests on the
+  loopback harness, which counts server hits (65/65 with only the address
+  guard disabled, `falsify/OfflineConformance.md`), and on code review.
+- Mutants: boundary removal (126), quote-map removal (126) and inline-as-block
+  (117) are killed. Three mutants survive at 130: verdict order, script and
+  head text, and case-insensitive matching. The fixture lacks those classes.
+- Security review: open findings on DNS rebinding between check and connect
+  (T1) and on a slow-drip read that outlasts the 30 s deadline (T4)
+  (`falsify/SentinelTool.md`). The tool fetches only registry URLs.
+- Pages that omit `</head>` (S047, 1 of 32 HTML registry pages) and 2xx
+  challenge pages (S021, S022) read as `ABSENT`.
+
+## Capabilities (round-29 acquisition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| quote re-open | re-opens each located quote against the live URL of its `corpus/SOURCES.md` row and returns `VERBATIM`, `ABSENT`, `TOO_LONG`, `NO_SOURCE` or `UNREACHABLE` | `python3 tools/quote-reopen.py verify --items <tsv>`; `python3 corpus/evidence/round29/c1-count.py -- python3 tools/quote-reopen.py verify` → `QUOTE_REOPEN_MATCH=130/130`; `corpus/knowledge/quote-reopen-r29.md` | 29 |
+
+Sources 45 → 49 rows (tier A 39 → 43; mined 22 → 26). New rows S046 to S049,
+each mined and used by `corpus/knowledge/quote-reopen-r29.md`. QUALITY criteria
+23 to 25 were added. Trends, author view: expansion improved, quality improved,
+discernment unchanged.
+
+## Planned — round 30 (not started)
+
+Candidates, not commitments: close the three surviving mutants with fixture
+classes declared before data (an unreachable over-long item, a hidden-text-only
+item, a case-only edit); handle a missing `</head>` and 2xx challenge pages in
+a new contract version; close sentinel T1 and T4; get the L0 ruling on the
+fetch scope. Round-28 C1 (path-denylist surface) stays open and is
+operator-owned.

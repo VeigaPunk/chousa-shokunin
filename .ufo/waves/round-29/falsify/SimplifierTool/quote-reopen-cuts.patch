@@ -1,0 +1,105 @@
+--- /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/quote-reopen.py	2026-10-22 22:47:31.167642626 -0300
++++ tools/quote-reopen.py	2026-10-22 22:54:39.617800922 -0300
+@@ -291,7 +291,6 @@
+                 if not location:
+                     raise _Refuse("redirect without a location")
+                 current = urllib.parse.urljoin(current, location)
+-                resp.read(0)
+                 continue
+             ctype = ctype_header.split(";")[0].strip().lower()
+             if status < 200 or status >= 300:
+@@ -329,15 +328,13 @@
+     """Fetch one registry URL within the fetch bounds. Returns (status, ctype, text, detail)."""
+     target = url.split("#", 1)[0]
+     deadline = time.monotonic() + DEADLINE
+-    detail = ""
+     for attempt in range(RETRIES + 1):
+-        retryable = False
+         try:
+             status, ctype, text, detail, retryable = _request_once(target, deadline)
+         except _Refuse as e:
+             return None, None, None, e.reason
+-        except (http.client.HTTPException, http.client.InvalidURL, OSError, ValueError,
+-                UnicodeError, ssl.SSLError, zlib.error) as e:
++        except (http.client.HTTPException, OSError, ValueError,
++                UnicodeError, zlib.error) as e:
+             detail = "fetch failed: %s" % type(e).__name__
+             text = None
+             retryable = True
+@@ -345,7 +342,6 @@
+             return status, ctype, text, detail
+         if not retryable or attempt >= RETRIES or (deadline - time.monotonic()) <= 0:
+             return None, None, None, detail or "fetch failed"
+-    return None, None, None, detail or "fetch failed"
+ 
+ 
+ def load_items(path):
+@@ -370,9 +366,6 @@
+     """The registry file to read: the lane's corpus/SOURCES.md unless --registry names one."""
+     if arg is None:
+         return DEFAULT_REGISTRY
+-    for cand in (arg, os.path.join(LANE, arg), os.path.join(LANE, "corpus", arg)):
+-        if os.path.exists(cand):
+-            return cand
+     return arg
+ 
+ 
+@@ -382,7 +375,6 @@
+     items = load_items(items_path)
+     cache = {}
+     counts = {"VERBATIM": 0, "ABSENT": 0, "TOO_LONG": 0, "NO_SOURCE": 0, "UNREACHABLE": 0}
+-    out = []
+     for item_id, source_id, quote in items:
+         cell = rows.get(source_id)
+         url = registry_url(cell)
+@@ -394,12 +386,12 @@
+             verdict = "TOO_LONG"
+             detail = "%d words, limit %d" % (len(norm(quote).split()), MAX_WORDS)
+         else:
+-            if url not in cache:
+-                cache[url] = fetch_page(url)
+-            status, ctype, text, detail = cache[url]
++            key = url.split("#", 1)[0]
++            if key not in cache:
++                cache[key] = fetch_page(url)
++            _, _, text, detail = cache[key]
+             if text is None:
+                 verdict = "UNREACHABLE"
+-                detail = detail or "unreachable"
+             elif found(text, quote):
+                 verdict = "VERBATIM"
+                 detail = "matched in normalized page text"
+@@ -407,9 +399,7 @@
+                 verdict = "ABSENT"
+                 detail = "no match in normalized page text"
+         counts[verdict] += 1
+-        out.append((item_id, verdict, detail))
+-    for item_id, verdict, detail in out:
+-        sys.stdout.write("QUOTE_REOPEN\t%s\t%s\t%s\n" % (item_id, verdict, detail.replace("\t", " ")))
++        sys.stdout.write("QUOTE_REOPEN\t%s\t%s\t%s\n" % (item_id, verdict, detail))
+     sys.stdout.write("QUOTE_REOPEN_SUMMARY verbatim=%d absent=%d too_long=%d no_source=%d unreachable=%d\n"
+                      % (counts["VERBATIM"], counts["ABSENT"], counts["TOO_LONG"],
+                         counts["NO_SOURCE"], counts["UNREACHABLE"]))
+@@ -418,7 +408,7 @@
+ 
+ def main(argv):
+     ap = argparse.ArgumentParser(prog="quote-reopen.py")
+-    sub = ap.add_subparsers(dest="command")
++    sub = ap.add_subparsers(dest="command", required=True)
+     v = sub.add_parser("verify", help="re-open located quotes against the live registry source")
+     v.add_argument("--items", required=True, help="tab-separated items file")
+     v.add_argument("--registry", default=None, help="registry file (default corpus/SOURCES.md)")
+@@ -426,12 +416,9 @@
+         args = ap.parse_args(argv)
+     except SystemExit as e:
+         return e.code if isinstance(e.code, int) else 2
+-    if args.command != "verify":
+-        ap.print_usage(sys.stderr)
+-        return 2
+     try:
+         return verify(args.items, resolve_registry(args.registry))
+-    except (OSError, ValueError, UnicodeDecodeError) as e:
++    except (OSError, ValueError) as e:
+         sys.stderr.write("quote-reopen: %s\n" % type(e).__name__)
+         return 2
+ 

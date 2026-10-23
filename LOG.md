@@ -1182,3 +1182,20 @@ This author never mutates VCS/MANIFEST or advances a round.
 ### 2026-10-23 correction to the round-28 entry (routed defect D3)
 
 The round-28 entry says no end census had been produced. The fleet witness `.ufo/waves/hyaku/chousa28-negative-records/parent-census.json` (fleet commit `b4b338e9`) records `bash /home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa`, run at 2026-10-22 02:49:09 UTC against lane commit `7c87b9734eb71985e19767af36d57dff89536521`. It exited 0 and printed `chousa ok` for `chousa-shokunin/corpus/SOURCES.md`. This corrects the run-status record only; the earlier text is kept as written. Routed as defect D3 by `corpus/lessons/round-28-verifier-spotcheck.md:50-54,125-126`; witness re-read in round 29 by seat ScribeRepairD3 (`.ufo/waves/round-29/build/ScribeRepairD3.md`).
+
+## Round 29 — 2026-10-23 (UTC), hyaku in-session L1, attempt 1
+
+- Claim C1 (operability, capability acquisition): new `tools/quote-reopen.py`.
+  Frozen counter `python3 corpus/evidence/round29/c1-count.py -- python3 tools/quote-reopen.py verify`:
+  0/130 before → 130/130 twice on landed `30c9d24d`, and 130/130 in 6 more wave-2 runs.
+- Pre-data control wave of 8 seats. Design v1 was voided when label replay met
+  82/82. Design v2 was voided when seed replay met 130/130. Under design v3,
+  every control is at most 126/130.
+- Wave 1 build: 32 seats. Wave 2 falsify: 33 seats. Dead seats: 1
+  (CriticPredicate, safety-filter refusal, held).
+- Repairs: round-28 D1 and D2 (prose-check plus QUALITY 23), D3 (dated
+  corrections above), D4 (re-run commands in the report).
+- Freshness by-product: 33 earlier Gate quotes re-opened, 27 `VERBATIM`, 3
+  `ABSENT`, 3 `UNREACHABLE` (`.ufo/waves/round-29/falsify/ScoutFreshnessH.md`).
+- Sources S046 to S049 added. L0 question filed on the fetch scope.
+- Evidence: `corpus/lessons/round-29.md`; SCORECARD.md, section "Round 29".

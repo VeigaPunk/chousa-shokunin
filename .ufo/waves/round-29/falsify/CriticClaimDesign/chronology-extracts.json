@@ -1,0 +1,20 @@
+{
+  "source_transcript": "/home/vgpnk/.omp/agent/sessions/-Projects-shokunin/2026-10-23T00-54-50-959Z_01a16640-e34f-76e4-8a3b-4d245a8bb241/ChousaR29.jsonl",
+  "stop_acknowledgments": [
+    {"at": "2026-10-23T01:27:55.681Z", "from": "ChousaR29.ExecToolB", "text": "No counter/fixture run has happened: I have executed zero c1-count.py invocations, no seeds, no receipts, no QUOTE_REOPEN_MATCH lines yet (only SOURCES.md parsing and 4 registry-URL reachability GETs for S002/S003/S013/S044)."},
+    {"at": "2026-10-23T01:28:00.033Z", "from": "ChousaR29.ExecTool", "text": "ACK STOP-ORDER. I have NOT run corpus/evidence/round29/c1-count.py at all — no seed, no receipt, no QUOTE_REOPEN_MATCH line, no counter invocation of any kind (my only lane reads were claims.md, c1-count.py source, SOURCES.md, the lesson, and the fixture tsv text)."},
+    {"at": "2026-10-23T01:28:35.625Z", "from": "ChousaR29.MutateCounter", "text": "Stopped; no further counter/fixture execution. Already ran scratch-only counter.main() with recorded page cases and fixed entropy, seed 2901 throughout, all on 2026-10-23 UTC; no live measurement/network.", "pristine_at": "2026-10-23T01:25:59Z", "last_restored_at": "2026-10-23T01:27:45Z"}
+  ],
+  "landed_measurement": {
+    "command_record_at": "2026-10-23T01:47:48.522Z",
+    "command": "cd /home/vgpnk/Projects/shokunin/chousa-shokunin && git rev-parse master && git status --porcelain tools corpus/evidence | head -3; mkdir -p .ufo/waves/round-29/measure && for i in 1 2; do timeout 900 python3 corpus/evidence/round29/c1-count.py --receipt .ufo/waves/round-29/measure/after-run$i.json -- python3 tools/quote-reopen.py verify; echo \"counter_exit=$?\"; done",
+    "result_record_at": "2026-10-23T01:48:01.813Z",
+    "printed_revision": "30c9d24da1815e01e161ed2f52d5f951005cc2b8",
+    "status_lines_before_class_output": [],
+    "printed_matches": ["QUOTE_REOPEN_MATCH=130/130", "QUOTE_REOPEN_MATCH=130/130"],
+    "printed_counter_exit_codes": [0, 0],
+    "tool_sha256_at_landed_revision": "72a3ad479c8eabf7b26a21c44742a6a30e9b0f8a2a2b5e07477866ca18754fea"
+  },
+  "correct_control_commit": "66bf1b9300733b24b76efe393646b3037402088e",
+  "misprinted_control_commit_in_ExecTool_report_line5": "66bf1b9300733b24e76efe393646b3037402080e"
+}

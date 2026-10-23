@@ -1,0 +1,14 @@
+diff --git i/tools/quote-reopen.py w/tools/quote-reopen.py
+index be0ce00..7d884bd 100755
+--- i/tools/quote-reopen.py
++++ w/tools/quote-reopen.py
+@@ -111,7 +111,8 @@ def html_to_text(doc):
+ 
+ def found(text, quote):
+     """True iff the normalized quote occurs in the normalized text at a non-alphanumeric boundary."""
+-    q = norm(quote)
++    q = norm(quote).casefold()
++    text = text.casefold()
+     if not q:
+         return False
+     i = 0

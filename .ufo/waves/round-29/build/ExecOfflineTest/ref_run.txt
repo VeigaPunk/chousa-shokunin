@@ -1,6 +1,6 @@
-PASS exit code is 1 for a mixed verdict run  -- rc=1 cmd=python3 /fast/scratch/hyaku/chousa-r29/w1/ExecOfflineTest/ref_quote_reopen.py verify --items /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/build/ExecOfflineTest/quote-reopen-offline-_weg65_g/items.tsv --registry /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/build/ExecOfflineTest/quote-reopen-offline-_weg65_g/SOURCES.md
-PASS one verdict line per item, in input order  -- got 44 lines, expected 44
-PASS every verdict line carries a detail field  -- 44 of 44 lines have a detail field
+PASS exit code is 1 for a mixed verdict run  -- rc=1 cmd=python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/build/ExecOfflineTest/candidates/ref_quote_reopen.py verify --items /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/build/ExecOfflineTest/quote-reopen-offline-z36h9x7g/items.tsv --registry /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/build/ExecOfflineTest/quote-reopen-offline-z36h9x7g/SOURCES.md
+PASS one verdict line per item, in input order  -- got 45 lines, expected 45
+PASS every verdict line carries a detail field  -- 45 of 45 lines have a detail field
 PASS verdict i01 (entity decoded text)  -- expected VERBATIM, got VERBATIM
 PASS verdict i02 (raw entity text is not page text)  -- expected ABSENT, got ABSENT
 PASS verdict i03 (quote spans em and a)  -- expected VERBATIM, got VERBATIM
@@ -45,7 +45,8 @@ PASS verdict i41 (zero width joiner deleted)  -- expected VERBATIM, got VERBATIM
 PASS verdict i42 (byte order mark deleted)  -- expected VERBATIM, got VERBATIM
 PASS verdict i43 (every curly quote maps to straight)  -- expected VERBATIM, got VERBATIM
 PASS verdict i44 (curly quote in the quote maps to straight)  -- expected VERBATIM, got VERBATIM
-PASS summary line counts  -- got {'verbatim': '23', 'absent': '11', 'too_long': '2', 'no_source': '3', 'unreachable': '5'}, want {'verbatim': '23', 'absent': '11', 'too_long': '2', 'no_source': '3', 'unreachable': '5'}
+PASS verdict i45 (trailing paren stripped from url)  -- expected VERBATIM, got VERBATIM
+PASS summary line counts  -- got {'verbatim': '24', 'absent': '11', 'too_long': '2', 'no_source': '3', 'unreachable': '5'}, want {'verbatim': '24', 'absent': '11', 'too_long': '2', 'no_source': '3', 'unreachable': '5'}
 PASS summary line key order  -- got ['verbatim', 'absent', 'too_long', 'no_source', 'unreachable'], want ['verbatim', 'absent', 'too_long', 'no_source', 'unreachable']
 PASS each url fetched once per run (shared url, two items)  -- 1 hits on /shared
 PASS each url fetched once per run (entities url, three items)  -- 1 hits on /entities
@@ -54,9 +55,12 @@ PASS every request used GET  -- methods: ['GET']
 PASS user agent names chousa-quote-reopen  -- agents: ['chousa-quote-reopen/1.0']
 PASS no cookies or credentials sent  -- paths: []
 PASS fragment removed from the request target  -- paths with fragment: []
+PASS no url fetched more than twice per run  -- paths fetched more than twice: []
+PASS second url in a cell is never fetched  -- 0 hits on /second
 PASS no request outside the registry urls  -- paths: []
-PASS exit code is 0 when every item is verbatim  -- rc=0 cmd=python3 /fast/scratch/hyaku/chousa-r29/w1/ExecOfflineTest/ref_quote_reopen.py verify --items /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/build/ExecOfflineTest/quote-reopen-offline-_weg65_g/items2.tsv --registry /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/build/ExecOfflineTest/quote-reopen-offline-_weg65_g/SOURCES.md
+PASS exit code is 0 when every item is verbatim  -- rc=0 cmd=python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/build/ExecOfflineTest/candidates/ref_quote_reopen.py verify --items /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/build/ExecOfflineTest/quote-reopen-offline-z36h9x7g/items2.tsv --registry /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/build/ExecOfflineTest/quote-reopen-offline-z36h9x7g/SOURCES.md
 PASS verdict on the all-verbatim run  -- got VERBATIM
-PASS default registry resolves without --registry  -- got 44 verdict lines, expected 44 (stderr: )
+PASS exit code is 2 on a missing items file  -- rc=2 cmd=python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/build/ExecOfflineTest/candidates/ref_quote_reopen.py verify --items /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/build/ExecOfflineTest/quote-reopen-offline-z36h9x7g/does-not-exist.tsv --registry /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/build/ExecOfflineTest/quote-reopen-offline-z36h9x7g/SOURCES.md
+PASS default registry resolves without --registry  -- got 45 verdict lines, expected 45 (stderr: )
 PASS verdicts with the default registry  -- 0 wrong, first: []
-OFFLINE_TEST_PASS=61/61
+OFFLINE_TEST_PASS=65/65

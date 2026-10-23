@@ -1,0 +1,26 @@
+{
+  "mutant": "Scratch-only MAX_WORDS = 25 -> MAX_WORDS = 26 at tools/quote-reopen.py:55",
+  "scratch_path": "/fast/scratch/hyaku/chousa-r29/w2/DiffToolB/tools/quote-reopen.py",
+  "pristine_sha256": "72a3ad479c8eabf7b26a21c44742a6a30e9b0f8a2a2b5e07477866ca18754fea",
+  "mutated_sha256": "16a09a301b5d8f09f4d33ae1fad9a7fea421b64b361e08a39b8c8bd4fd1e6275",
+  "restored_sha256": "72a3ad479c8eabf7b26a21c44742a6a30e9b0f8a2a2b5e07477866ca18754fea",
+  "same_detector_items_sha256": "bc6a78a1a41e8b12fab532cbf222dfb7464aa72fe2b261abab8c74572f6b7ccf",
+  "same_detector_expected_sha256": "b46380f4e61535156252007f16860e181809605236bbf8d51901bd0b8dd8974a",
+  "pristine_detector": {"match": "73/73", "exit_code": 0, "cli_exit_code": 1},
+  "mutated_detector": {"match": "72/73", "exit_code": 1, "cli_exit_code": 1},
+  "restored_detector": {"match": "73/73", "exit_code": 0, "cli_exit_code": 1},
+  "mutation_verdict": "INCONCLUSIVE; not a killed mutant",
+  "mutation_failure": "Only h14 differed: VERBATIM -> UNREACHABLE. The captured OpenAI response was HTTP 403, unlike the baseline/restored runs. This transport variation does not demonstrate detection of the MAX_WORDS mutation.",
+  "coverage_limit": "The 73 item word counts contain none in 24..33; the threshold-changing mutation is not exercised by a 26-word item. This is a coverage observation, not a contract change.",
+  "restoration_commands": [
+    "timeout 10 sha256sum /fast/scratch/hyaku/chousa-r29/w2/DiffToolB/tools/quote-reopen.py tools/quote-reopen.py .ufo/waves/round-29/build/ExecToolB/quote-reopen-b.py corpus/evidence/round29/claims.md corpus/evidence/round29/c1-count.py corpus/fixtures/quote-reopen-r29/items.tsv corpus/fixtures/quote-reopen-r29/labels.tsv .ufo/waves/round-29/build/ScoutGateQuotes/held-out.tsv corpus/SOURCES.md",
+    "timeout 10 cmp /fast/scratch/hyaku/chousa-r29/w2/DiffToolB/tools/quote-reopen.py tools/quote-reopen.py",
+    "timeout 10 cmp .ufo/waves/round-29/falsify/DiffToolB/pristine.stdout .ufo/waves/round-29/falsify/DiffToolB/restored.stdout"
+  ],
+  "restoration_command_group_exit_code": 0,
+  "scratch_matches_production_exactly": true,
+  "pristine_and_restored_stdout_match_exactly": true,
+  "production_frozen_and_input_hashes_unchanged_at_final_check": true,
+  "process_cleanup": "Every child was communicated with/reaped; killpg(SIGKILL) was attempted afterward for each child process group (ProcessLookupError ignored when already gone). No detached jobs or services were started.",
+  "installs_or_updates": []
+}

@@ -81,6 +81,16 @@ its author opened the source and judged its tier for the stated scope only.
 
 ## Search log
 
+- Round 29 (2026-10-23 UTC): question: what standards and documentation
+  define how a quote is located in a web page and how page text is
+  normalized. Searched: W3C TR, WICG, Unicode reports, Python documentation.
+  Identified 4, screened 4, included 4 (S046 to S049), excluded 0. Stop
+  rationale: each normalization and matching rule of the round-29 tool
+  contract has one primary source. Also re-opened for the C1 fixture, with no
+  row change: S002, S003, S008, S013, S019, S020, S038, S044. Finding: the
+  S047 page omits `</head>`, so the round-29 extractor reads it as empty
+  (`lessons/round-29.md`).
+
 - DERIVED round28 negative-publication curation (2026-10-21): Python path-API
   documentation and the prior committed diagnosis were opened as S044–S045.
   Their scopes are API semantics and historical diagnosis, not authority for

@@ -1,1 +1,67 @@
-OFFLINE_TEST_PASS=42/61
+FAIL exit code is 1 for a mixed verdict run  -- rc=0 cmd=python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/build/ExecOfflineTest/candidates/wrong_casefold.py verify --items /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/build/ExecOfflineTest/quote-reopen-offline-9lnvicgu/items.tsv --registry /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/build/ExecOfflineTest/quote-reopen-offline-9lnvicgu/SOURCES.md
+PASS one verdict line per item, in input order  -- got 45 lines, expected 45
+PASS every verdict line carries a detail field  -- 45 of 45 lines have a detail field
+FAIL verdict i01 (entity decoded text)  -- expected VERBATIM, got ABSENT
+PASS verdict i02 (raw entity text is not page text)  -- expected ABSENT, got ABSENT
+PASS verdict i03 (quote spans em and a)  -- expected VERBATIM, got VERBATIM
+PASS verdict i04 (quote inside inline markup)  -- expected VERBATIM, got VERBATIM
+PASS verdict i05 (newline inside paragraph)  -- expected VERBATIM, got VERBATIM
+PASS verdict i06 (script content not matchable)  -- expected ABSENT, got ABSENT
+PASS verdict i07 (style content not matchable)  -- expected ABSENT, got ABSENT
+PASS verdict i08 (head content not matchable)  -- expected ABSENT, got ABSENT
+PASS verdict i09 (html comment not matchable)  -- expected ABSENT, got ABSENT
+FAIL verdict i10 (soft hyphen deleted)  -- expected VERBATIM, got ABSENT
+FAIL verdict i11 (zero width space deleted)  -- expected VERBATIM, got ABSENT
+PASS verdict i12 (zero width deleted in the quote too)  -- expected VERBATIM, got VERBATIM
+FAIL verdict i13 (curly apostrophe maps to straight)  -- expected VERBATIM, got ABSENT
+FAIL verdict i14 (curly quotes map to straight)  -- expected VERBATIM, got ABSENT
+PASS verdict i15 (NFKC ligature fi)  -- expected VERBATIM, got VERBATIM
+PASS verdict i16 (boundary at start of page text)  -- expected VERBATIM, got VERBATIM
+PASS verdict i17 (boundary at end of page text)  -- expected VERBATIM, got VERBATIM
+FAIL verdict i18 (start boundary violated)  -- expected ABSENT, got VERBATIM
+FAIL verdict i19 (end boundary violated)  -- expected ABSENT, got VERBATIM
+FAIL verdict i20 (match is case sensitive)  -- expected ABSENT, got VERBATIM
+PASS verdict i21 (26 words beats an unreachable url)  -- expected TOO_LONG, got TOO_LONG
+PASS verdict i22 (25 words is not too long)  -- expected UNREACHABLE, got UNREACHABLE
+PASS verdict i23 (id not a registry row)  -- expected NO_SOURCE, got NO_SOURCE
+PASS verdict i24 (no source beats too long)  -- expected NO_SOURCE, got NO_SOURCE
+PASS verdict i25 (row without a url)  -- expected NO_SOURCE, got NO_SOURCE
+PASS verdict i26 (404 status)  -- expected UNREACHABLE, got UNREACHABLE
+FAIL verdict i27 (application/pdf content type)  -- expected UNREACHABLE, got ABSENT
+PASS verdict i28 (redirect to a non http scheme)  -- expected UNREACHABLE, got UNREACHABLE
+FAIL verdict i29 (body over 8 MiB)  -- expected UNREACHABLE, got ABSENT
+PASS verdict i30 (first item on the shared url)  -- expected VERBATIM, got VERBATIM
+PASS verdict i31 (second item on the shared url)  -- expected VERBATIM, got VERBATIM
+PASS verdict i32 (first url in the cell wins)  -- expected VERBATIM, got VERBATIM
+PASS verdict i33 (trailing dot stripped from url)  -- expected VERBATIM, got VERBATIM
+PASS verdict i34 (text/plain is allowed)  -- expected VERBATIM, got VERBATIM
+PASS verdict i35 (plain absent case)  -- expected ABSENT, got ABSENT
+PASS verdict i36 (too long decided on a reachable url)  -- expected TOO_LONG, got TOO_LONG
+PASS verdict i37 (fragment removed from url)  -- expected VERBATIM, got VERBATIM
+PASS verdict i38 (noscript content not matchable)  -- expected ABSENT, got ABSENT
+PASS verdict i39 (template content not matchable)  -- expected ABSENT, got ABSENT
+FAIL verdict i40 (zero width non joiner deleted)  -- expected VERBATIM, got ABSENT
+FAIL verdict i41 (zero width joiner deleted)  -- expected VERBATIM, got ABSENT
+FAIL verdict i42 (byte order mark deleted)  -- expected VERBATIM, got ABSENT
+FAIL verdict i43 (every curly quote maps to straight)  -- expected VERBATIM, got ABSENT
+FAIL verdict i44 (curly quote in the quote maps to straight)  -- expected VERBATIM, got ABSENT
+PASS verdict i45 (trailing paren stripped from url)  -- expected VERBATIM, got VERBATIM
+FAIL summary line counts  -- got {'verbatim': '17', 'absent': '20', 'too_long': '2', 'no_source': '3', 'unreachable': '3'}, want {'verbatim': '24', 'absent': '11', 'too_long': '2', 'no_source': '3', 'unreachable': '5'}
+PASS summary line key order  -- got ['verbatim', 'absent', 'too_long', 'no_source', 'unreachable'], want ['verbatim', 'absent', 'too_long', 'no_source', 'unreachable']
+PASS each url fetched once per run (shared url, two items)  -- 1 hits on /shared
+PASS each url fetched once per run (entities url, three items)  -- 1 hits on /entities
+PASS each url fetched once per run (invisible url, six items)  -- 1 hits on /invisible
+PASS every request used GET  -- methods: ['GET']
+PASS user agent names chousa-quote-reopen  -- agents: ['chousa-quote-reopen/x']
+PASS no cookies or credentials sent  -- paths: []
+PASS fragment removed from the request target  -- paths with fragment: []
+PASS no url fetched more than twice per run  -- paths fetched more than twice: []
+PASS second url in a cell is never fetched  -- 0 hits on /second
+PASS no request outside the registry urls  -- paths: []
+PASS exit code is 0 when every item is verbatim  -- rc=0 cmd=python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/build/ExecOfflineTest/candidates/wrong_casefold.py verify --items /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/build/ExecOfflineTest/quote-reopen-offline-9lnvicgu/items2.tsv --registry /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/build/ExecOfflineTest/quote-reopen-offline-9lnvicgu/SOURCES.md
+PASS verdict on the all-verbatim run  -- got VERBATIM
+FAIL exit code is 2 on a missing items file  -- rc=1 cmd=python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/build/ExecOfflineTest/candidates/wrong_casefold.py verify --items /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/build/ExecOfflineTest/quote-reopen-offline-9lnvicgu/does-not-exist.tsv --registry /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/build/ExecOfflineTest/quote-reopen-offline-9lnvicgu/SOURCES.md
+FAIL default registry resolves without --registry  -- got 0 verdict lines, expected 45 (stderr: Traceback (most recent call last):
+  File "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/build/ExecOfflineTest/quote-reopen-offline-9lnvicgu/fakelane/tools/quote-reopen.py", line 9)
+FAIL verdicts with the default registry  -- 45 wrong, first: [('i01', 'VERBATIM', None), ('i02', 'ABSENT', None), ('i03', 'VERBATIM', None)]
+OFFLINE_TEST_PASS=45/65

@@ -172,6 +172,7 @@ def build_pages():
     PAGES["/second"] = {"body": _page("<p>second page text only</p>")}
     PAGES["/trailing"] = {"body": _page("<p>trailing dot page text</p>")}
     PAGES["/plain"] = {"ctype": "text/plain; charset=utf-8", "body": b"plain text content here"}
+    PAGES["/paren"] = {"body": _page("<p>paren url page text</p>")}
     PAGES["/frag"] = {"body": _page("<p>fragment page text</p>")}
     PAGES["/toolong"] = {"body": _page("<p>toolong page text</p>")}
     PAGES["/exit0"] = {"body": _page("<p>exit zero page text</p>")}
@@ -213,6 +214,7 @@ REGISTRY_ROWS = [
     ("S922", "Loopback fragment page — {b}/frag#sec"),
     ("S923", "Loopback curly all page — {b}/curlyall"),
     ("S924", "Loopback straight page — {b}/straight"),
+    ("S925", "Loopback paren url — ({b}/paren)"),
 ]
 
 
@@ -282,6 +284,7 @@ def items_rows():
         ("i42", "S906", "bomword", "VERBATIM", "byte order mark deleted"),
         ("i43", "S923", CURLY_ALL_STRAIGHT, "VERBATIM", "every curly quote maps to straight"),
         ("i44", "S924", CURLY_ALL_QUOTE, "VERBATIM", "curly quote in the quote maps to straight"),
+        ("i45", "S925", "paren url page text", "VERBATIM", "trailing paren stripped from url"),
     ]
 
 
@@ -485,10 +488,18 @@ def main(argv):
         check("fragment removed from the request target",
               all("#" not in h["path"] for h in hits1),
               "paths with fragment: {}".format([p for p in paths if "#" in p][:3]))
+        by_path = {}
+        for p in paths:
+            by_path[p] = by_path.get(p, 0) + 1
+        over = sorted((p, n) for p, n in by_path.items() if n > 2)
+        check("no url fetched more than twice per run", not over,
+              "paths fetched more than twice: {}".format(over[:5]))
+        check("second url in a cell is never fetched", "/second" not in paths,
+              "{} hits on /second".format(by_path.get("/second", 0)))
         allowed = {"/entities", "/markup", "/newline", "/script", "/comment", "/invisible",
                    "/curly", "/straight", "/curlyall", "/ligature", "/boundary", "/case",
                    "/notfound", "/pdf", "/redirect", "/big", "/shared", "/first", "/second",
-                   "/trailing", "/plain", "/frag", "/toolong", "/exit0"}
+                   "/trailing", "/plain", "/frag", "/toolong", "/exit0", "/paren"}
         outside = sorted({p for p in paths if p.split("#")[0].split("?")[0] not in allowed})
         check("no request outside the registry urls", not outside, "paths: {}".format(outside[:5]))
 
@@ -502,6 +513,15 @@ def main(argv):
               "rc={} cmd={}".format(rc2, shown2))
         check("verdict on the all-verbatim run", v2.get("j01") == "VERBATIM",
               "got {}".format(v2.get("j01")))
+        # A missing items file is an I/O error; the contract wants exit 2.
+        argv_bad = list(cmd)
+        if not argv_bad or argv_bad[-1] != "verify":
+            argv_bad = argv_bad + ["verify"]
+        argv_bad = argv_bad + ["--items", os.path.join(work, "does-not-exist.tsv"),
+                               "--registry", reg_path]
+        rcb, _ob, _eb, shown_b = _spawn(argv_bad, lane_root)
+        check("exit code is 2 on a missing items file", rcb == 2,
+              "rc={} cmd={}".format(rcb, shown_b))
 
         # The frozen counter passes only --items, so the tool must find the
         # default registry (corpus/SOURCES.md under the tool's lane root, the

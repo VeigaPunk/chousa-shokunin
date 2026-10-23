@@ -1,0 +1,32 @@
+global-v6 port 41953 loopback port 38687
+== P1 slow body drip 40B @1B/s                    exit=1 elapsed=40.1s
+     stdout: RSS=21876 | QUOTE_REOPEN	i1	UNREACHABLE	deadline exceeded while reading the body | QUOTE_REOPEN_SUMMARY verbatim=0 absent=0 too_long=0 no_source=0 unreachable=1
+     verdict=DEADLINE-OVERRUN
+== P2 slow headers drip                           exit=1 elapsed=50.6s
+     stdout: RSS=21600 | QUOTE_REOPEN	i1	UNREACHABLE	fetch failed: HTTPException | QUOTE_REOPEN_SUMMARY verbatim=0 absent=0 too_long=0 no_source=0 unreachable=1
+     verdict=DEADLINE-OVERRUN
+== P3 redirect chain 20 hops                      exit=1 elapsed=0.1s
+     stdout: RSS=21832 | QUOTE_REOPEN	i1	UNREACHABLE	url has an invalid port | QUOTE_REOPEN_SUMMARY verbatim=0 absent=0 too_long=0 no_source=0 unreachable=1
+== P4 //127.0.0.1 redirect                        exit=1 elapsed=0.0s
+     stdout: RSS=22344 | QUOTE_REOPEN	i1	UNREACHABLE	host resolves to a non-global address | QUOTE_REOPEN_SUMMARY verbatim=0 absent=0 too_long=0 no_source=0 unreachable=1
+     loopback accepted=0
+== P5 CRLF in Location                            exit=1 elapsed=0.0s
+     stdout: RSS=20904 | QUOTE_REOPEN	i1	UNREACHABLE	host resolves to a non-global address | QUOTE_REOPEN_SUMMARY verbatim=0 absent=0 too_long=0 no_source=0 unreachable=1
+     loopback accepted=0
+== P6 ambient proxy env set                       exit=0 elapsed=0.1s
+     stdout: RSS=21872 | QUOTE_REOPEN	i1	VERBATIM	matched in normalized page text | QUOTE_REOPEN_SUMMARY verbatim=1 absent=0 too_long=0 no_source=0 unreachable=0
+     loopback accepted=0 (proxy used if >0)
+== P7 percent-encoded CRLF in path                exit=1 elapsed=0.1s
+     stdout: RSS=21528 | QUOTE_REOPEN	i1	UNREACHABLE	fetch failed: RemoteDisconnected | QUOTE_REOPEN_SUMMARY verbatim=0 absent=0 too_long=0 no_source=0 unreachable=1
+== P8 multicast 224.0.0.1                         exit=1 elapsed=0.0s
+     stdout: RSS=21312 | QUOTE_REOPEN	i1	UNREACHABLE	fetch failed: OSError | QUOTE_REOPEN_SUMMARY verbatim=0 absent=0 too_long=0 no_source=0 unreachable=1
+== P9 metadata addr 100.100.100.200               exit=1 elapsed=0.0s
+     stdout: RSS=21332 | QUOTE_REOPEN	i1	UNREACHABLE	host resolves to a non-global address | QUOTE_REOPEN_SUMMARY verbatim=0 absent=0 too_long=0 no_source=0 unreachable=1
+== P9 metadata addr 192.0.0.192                   exit=1 elapsed=0.1s
+     stdout: RSS=21552 | QUOTE_REOPEN	i1	UNREACHABLE	host resolves to a non-global address | QUOTE_REOPEN_SUMMARY verbatim=0 absent=0 too_long=0 no_source=0 unreachable=1
+== P9 metadata addr fd00:ec2::254                 exit=1 elapsed=0.1s
+     stdout: RSS=20772 | QUOTE_REOPEN	i1	UNREACHABLE	host resolves to a non-global address | QUOTE_REOPEN_SUMMARY verbatim=0 absent=0 too_long=0 no_source=0 unreachable=1
+== P10 no new files in cwd                        exit=0 elapsed=0.1s
+     stdout: RSS=20780 | QUOTE_REOPEN	i1	VERBATIM	matched in normalized page text | QUOTE_REOPEN_SUMMARY verbatim=1 absent=0 too_long=0 no_source=0 unreachable=0
+     new files: []
+EXIT=0
