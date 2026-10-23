@@ -1,0 +1,247 @@
+# CtlNoReader — round-29 no-reader control
+
+## Axes and scope
+
+- Operability: frozen `QUOTE_REOPEN_MATCH` score, not a claim to have implemented quote location.
+- Calibration: distinguish positive and negative class coverage rather than interpreting every rejected control as a killed mutant.
+- Resource cost: zero page fetches for both controls.
+
+`control.py` reads only the registry and the counter-supplied items. It looks for the first HTTP(S) URL in each registry row's **source cell**, strips trailing `.,;)`, and applies `NO_SOURCE` before the normalized >25-word `TOO_LONG` check. Normalization follows the frozen NFKC, punctuation, invisible-character and whitespace rules. Every remaining item is reported `ABSENT`, with detail `page fetch deliberately skipped`.
+
+`control-verbatim.py` has identical bytes except for the one behavior-bearing constant: `FETCH_VERDICT = "VERBATIM"` instead of `"ABSENT"`. It retains the early checks and reports `VERBATIM` for fetch-needing items.
+
+Both controls deliberately skip HTTP, status/content-type/body checks, HTML extraction, page normalization and verbatim/token-boundary matching. Neither control reads fixture labels, fixture quotes, receipts, sibling output, or any page. Python standard library only; no tools installed or updated. Existing Python: `Python 3.14.8`.
+
+## Detector, commands and receipts
+
+Working directory for every run: `/home/vgpnk/Projects/shokunin/chousa-shokunin`.
+
+Every scoring invocation had a 60-second outer `timeout`, a 20-second candidate timeout, and a 65-second tool deadline. All invocations completed; no services or background processes were started. Counter and candidate exit codes were both **1 in all eight runs**; no timeout or candidate stderr occurred in the four receipts.
+
+The four primary commands were:
+
+```text
+timeout 60s python3 corpus/evidence/round29/c1-count.py --timeout 20 --seed 2901 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlNoReader/receipt.json -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlNoReader/control.py
+timeout 60s python3 corpus/evidence/round29/c1-count.py --timeout 20 --seed 2902 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlNoReader/receipt-seed2.json -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlNoReader/control.py
+timeout 60s python3 corpus/evidence/round29/c1-count.py --timeout 20 --seed 2901 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlNoReader/receipt-verbatim.json -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlNoReader/control-verbatim.py
+timeout 60s python3 corpus/evidence/round29/c1-count.py --timeout 20 --seed 2902 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlNoReader/receipt-verbatim-seed2.json -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlNoReader/control-verbatim.py
+```
+
+| Control | Seed | Receipt | Counter exit | Candidate exit | Predicate |
+|---|---:|---|---:|---:|---|
+| no-reader / ABSENT fallback | 2901 | `receipt.json` | 1 | 1 | false |
+| no-reader / ABSENT fallback | 2902 | `receipt-seed2.json` | 1 | 1 | false |
+| no-reader / VERBATIM fallback | 2901 | `receipt-verbatim.json` | 1 | 1 | false |
+| no-reader / VERBATIM fallback | 2902 | `receipt-verbatim-seed2.json` | 1 | 1 | false |
+
+The receipts preserve individual randomized cases, actual verdicts and labels. All four have counter SHA-256 `fc219ef871ebd24b6ef8aab7c1bb526a9d645839de8ae86557d9289521373051` and receipt time `2026-10-23T01:15:55Z`.
+
+## Primary stdout, verbatim
+
+### control.py, seed 2901 — counter exit 1
+
+```text
+class absent-cross-attributed 4/4
+class absent-fabricated 4/4
+class absent-one-word-edit 4/4
+class absent-spliced 4/4
+class absent-truncated-token 4/4
+class no-source-own-work-row 2/2
+class no-source-unregistered-id 1/1
+class runtime-crossattr 14/14
+class runtime-subspan 0/14
+class runtime-transpose 14/14
+class too-long-true-text 3/3
+class verbatim-inline-markup 0/9
+class verbatim-plain 0/3
+class verbatim-typographic-apostrophe 0/2
+seed=2901 tool_exit=1 wall_s=0.02
+QUOTE_REOPEN_MATCH=54/82
+```
+
+### control.py, seed 2902 — counter exit 1
+
+```text
+class absent-cross-attributed 4/4
+class absent-fabricated 4/4
+class absent-one-word-edit 4/4
+class absent-spliced 4/4
+class absent-truncated-token 4/4
+class no-source-own-work-row 2/2
+class no-source-unregistered-id 1/1
+class runtime-crossattr 14/14
+class runtime-subspan 0/14
+class runtime-transpose 14/14
+class too-long-true-text 3/3
+class verbatim-inline-markup 0/9
+class verbatim-plain 0/3
+class verbatim-typographic-apostrophe 0/2
+seed=2902 tool_exit=1 wall_s=0.02
+QUOTE_REOPEN_MATCH=54/82
+```
+
+### control-verbatim.py, seed 2901 — counter exit 1
+
+```text
+class absent-cross-attributed 0/4
+class absent-fabricated 0/4
+class absent-one-word-edit 0/4
+class absent-spliced 0/4
+class absent-truncated-token 0/4
+class no-source-own-work-row 2/2
+class no-source-unregistered-id 1/1
+class runtime-crossattr 0/14
+class runtime-subspan 14/14
+class runtime-transpose 0/14
+class too-long-true-text 3/3
+class verbatim-inline-markup 9/9
+class verbatim-plain 3/3
+class verbatim-typographic-apostrophe 2/2
+seed=2901 tool_exit=1 wall_s=0.03
+QUOTE_REOPEN_MATCH=34/82
+```
+
+### control-verbatim.py, seed 2902 — counter exit 1
+
+```text
+class absent-cross-attributed 0/4
+class absent-fabricated 0/4
+class absent-one-word-edit 0/4
+class absent-spliced 0/4
+class absent-truncated-token 0/4
+class no-source-own-work-row 2/2
+class no-source-unregistered-id 1/1
+class runtime-crossattr 0/14
+class runtime-subspan 14/14
+class runtime-transpose 0/14
+class too-long-true-text 3/3
+class verbatim-inline-markup 9/9
+class verbatim-plain 3/3
+class verbatim-typographic-apostrophe 2/2
+seed=2902 tool_exit=1 wall_s=0.02
+QUOTE_REOPEN_MATCH=34/82
+```
+
+## Isolated mutation and exact restoration
+
+The initial `control.py` runs above are the pristine scratch baseline. After all four primary runs completed, only line 10 of this owned scratch file was mutated from `FETCH_VERDICT = "ABSENT"` to `FETCH_VERDICT = "VERBATIM"`. The resulting bytes were identical by SHA-256 to the retained `control-verbatim.py` artifact. The same frozen detector was run on the mutated `control.py` for both seeds. Then line 10 was restored exactly and the same detector was run on the restored file for both seeds. These four additional runs omitted only `--receipt`, leaving the four primary receipts intact:
+
+```text
+timeout 60s python3 corpus/evidence/round29/c1-count.py --timeout 20 --seed 2901 -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlNoReader/control.py
+timeout 60s python3 corpus/evidence/round29/c1-count.py --timeout 20 --seed 2902 -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlNoReader/control.py
+```
+
+The expected detector rejects either cheap fallback because neither performs page-based location. The observed scores move 54 -> 34 -> 54 on each seed. **Formal mutation verdict: INCONCLUSIVE, not killed**, because the pristine no-reader baseline itself fails the 82/82 predicate. As a negative control, both versions were rejected as expected; this does not establish counter soundness against other shortcuts.
+
+### Mutated control.py, seed 2901 — counter exit 1
+
+```text
+class absent-cross-attributed 0/4
+class absent-fabricated 0/4
+class absent-one-word-edit 0/4
+class absent-spliced 0/4
+class absent-truncated-token 0/4
+class no-source-own-work-row 2/2
+class no-source-unregistered-id 1/1
+class runtime-crossattr 0/14
+class runtime-subspan 14/14
+class runtime-transpose 0/14
+class too-long-true-text 3/3
+class verbatim-inline-markup 9/9
+class verbatim-plain 3/3
+class verbatim-typographic-apostrophe 2/2
+seed=2901 tool_exit=1 wall_s=0.02
+QUOTE_REOPEN_MATCH=34/82
+```
+
+### Mutated control.py, seed 2902 — counter exit 1
+
+```text
+class absent-cross-attributed 0/4
+class absent-fabricated 0/4
+class absent-one-word-edit 0/4
+class absent-spliced 0/4
+class absent-truncated-token 0/4
+class no-source-own-work-row 2/2
+class no-source-unregistered-id 1/1
+class runtime-crossattr 0/14
+class runtime-subspan 14/14
+class runtime-transpose 0/14
+class too-long-true-text 3/3
+class verbatim-inline-markup 9/9
+class verbatim-plain 3/3
+class verbatim-typographic-apostrophe 2/2
+seed=2902 tool_exit=1 wall_s=0.02
+QUOTE_REOPEN_MATCH=34/82
+```
+
+### Restored control.py, seed 2901 — counter exit 1
+
+```text
+class absent-cross-attributed 4/4
+class absent-fabricated 4/4
+class absent-one-word-edit 4/4
+class absent-spliced 4/4
+class absent-truncated-token 4/4
+class no-source-own-work-row 2/2
+class no-source-unregistered-id 1/1
+class runtime-crossattr 14/14
+class runtime-subspan 0/14
+class runtime-transpose 14/14
+class too-long-true-text 3/3
+class verbatim-inline-markup 0/9
+class verbatim-plain 0/3
+class verbatim-typographic-apostrophe 0/2
+seed=2901 tool_exit=1 wall_s=0.02
+QUOTE_REOPEN_MATCH=54/82
+```
+
+### Restored control.py, seed 2902 — counter exit 1
+
+```text
+class absent-cross-attributed 4/4
+class absent-fabricated 4/4
+class absent-one-word-edit 4/4
+class absent-spliced 4/4
+class absent-truncated-token 4/4
+class no-source-own-work-row 2/2
+class no-source-unregistered-id 1/1
+class runtime-crossattr 14/14
+class runtime-subspan 0/14
+class runtime-transpose 14/14
+class too-long-true-text 3/3
+class verbatim-inline-markup 0/9
+class verbatim-plain 0/3
+class verbatim-typographic-apostrophe 0/2
+seed=2902 tool_exit=1 wall_s=0.02
+QUOTE_REOPEN_MATCH=54/82
+```
+
+### SHA-256 restoration evidence
+
+Measured with `timeout 20s sha256sum` on the named paths, before scoring, after mutation, and after restoration:
+
+| Artifact / state | SHA-256 |
+|---|---|
+| `control.py`, pristine | `dc4e925236213ae18f992f2310d648a6d73a5545444ee9aa4af179c3e9bcd568` |
+| `control.py`, mutated | `9127f33a2ba9bcf2d8a8075ec3d5a985394800b888c70f4275e9cbc4e3fb053b` |
+| `control.py`, restored | `dc4e925236213ae18f992f2310d648a6d73a5545444ee9aa4af179c3e9bcd568` |
+| `control-verbatim.py`, before and after | `9127f33a2ba9bcf2d8a8075ec3d5a985394800b888c70f4275e9cbc4e3fb053b` |
+
+Protected input hashes were identical before and after the probe:
+
+| Lane-relative protected input | Before = after SHA-256 |
+|---|---|
+| `corpus/evidence/round29/claims.md` | `58b3b31b548024c9fecbd15e1b89d299e85c92b7e76bd17c401499683196e1e9` |
+| `corpus/evidence/round29/c1-count.py` | `fc219ef871ebd24b6ef8aab7c1bb526a9d645839de8ae86557d9289521373051` |
+| `corpus/fixtures/quote-reopen-r29/items.tsv` | `e6305beba9563fe4d37430019831610ddf7a5adf1e35de60869e3b764f939bcc` |
+| `corpus/fixtures/quote-reopen-r29/labels.tsv` | `dda1b3768f6f187736a77e5bce094b41822d8574e4798886d00964267343c7a9` |
+| `corpus/SOURCES.md` | `8bc103823c3a08114e3f787dca96384a6f739931ae3de8c5bdbc64b7225c64b4` |
+
+## Findings and further gaming
+
+The requested no-reader ceiling was reproduced exactly: **54/82** on both seeds. The six early-check cases are correct in either version; the remaining 76 labels comprise 48 ABSENT and 28 VERBATIM. Constant ABSENT therefore gets 6+48=54, and constant VERBATIM gets 6+28=34. The VERBATIM variant gains the 28 positive cases but loses the 48 negative cases: it is not a no-harm improvement. No tested control reached 82/82.
+
+Changing only the uniform fallback cannot reach 82/82. **[INFERENCE]** A richer no-reader variant could attempt to exploit the public frozen `items.tsv`/`labels.tsv` plus the counter's disclosed token-subspan, adjacent-transposition and source-rotation constructions, classifying generated items without reopening their source pages. Randomizing IDs and order does not hide these quote/source relationships. That variant was not built or scored here, so no 82/82 bypass is claimed. The observed rejection of these two constant-fallback controls must not be presented as proof that the frozen counter requires real page location.
+
+Writes were confined to this assigned `CtlNoReader` directory. No real `tools/quote-reopen.py`, sibling source, fleet files, git index or jj state was modified; no git/jj write command was invoked.

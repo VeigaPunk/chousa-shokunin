@@ -1,10 +1,21 @@
-# Round 29 — frozen claim, predicate, tool contract and controls
+# Round 29 — frozen claim, predicate, tool contract and controls (design v2)
 
-Frozen on 2026-10-23 before any data seat ran, at lane base
-`6c5eb1466f2b8abbd3de576389037f435016d07b`. This file, `c1-count.py` and the
-fixture `corpus/fixtures/quote-reopen-r29/` land together in one commit before
-the control wave. Nothing in them changes after that commit. A miss under this
-predicate is reported as a miss.
+Design v1 was frozen on 2026-10-23 at lane commit
+`f9fd6d6c0982325c40c1b4a86b698859fdb1def8` (base
+`6c5eb1466f2b8abbd3de576389037f435016d07b`), before any data seat. The
+pre-data control wave then voided it. The label-keyed shortcut control
+(`.ufo/waves/round-29/controls/CtlLabelKeyed/`) reached `QUOTE_REOPEN_MATCH=82/82`
+on seeds 2901 and 2902 without fetching any page, because every v1 item could be
+derived from committed bytes. Under the rule that a design any control meets is
+re-designed before data, design v2 below replaces it. v2 adds 48 page-sampled
+items that the counter draws from the live pages at run time, and it fixes the
+block-element list to an exact list. One more disclosure: while building its
+mutant baseline, the control seat `CtlCasefoldNoBoundary` wrote a
+contract-following scratch implementation, which scored 82/82 under v1. That
+scratch code is not the claim's tool, and v2 is stricter than v1. Design v2 is
+frozen in the commit that lands this text, before any data seat (the wave-1
+executor). From then on, nothing in this file, `c1-count.py` or the fixture
+changes. A miss under the v2 predicate is reported as a miss.
 
 ## Claim C1 — operability (capability acquisition)
 
@@ -17,20 +28,29 @@ Operability is the lowest scored axis (SCORECARD.md line 7, score 3). The claim
 does not touch `tools/research-gate.sh`. It is a different surface from the
 path-denylist and ancestor work of rounds 26 to 28.
 
-**Predicate (one sentence, frozen):** C1 holds iff
+**Predicate (one sentence, frozen, v2):** C1 holds iff
 `python3 corpus/evidence/round29/c1-count.py -- python3 tools/quote-reopen.py verify`,
-run from the lane root, prints `QUOTE_REOPEN_MATCH=82/82`: every one of the 40
-frozen fixture items and the 42 run-time variants gets a verdict equal to its
-label.
+run from the lane root, prints `QUOTE_REOPEN_MATCH=130/130`: every one of the 40
+frozen fixture items, the 42 fixture-derived run-time variants and the 48
+page-sampled run-time items gets a verdict equal to its label.
 
-- Counter code: `n == t == FROZEN_TOTAL` with `FROZEN_TOTAL = 82` in `c1-count.py`.
+- Counter code: `n == t == FROZEN_TOTAL` with `FROZEN_TOTAL = 130` in `c1-count.py`.
 - Receipt label: `QUOTE_REOPEN_MATCH` and the receipt field `predicate_holds`.
-- Before (base `6c5eb146`, tool absent): `QUOTE_REOPEN_MATCH=0/82`, exit 1.
-  Receipt: `.ufo/waves/round-29/controls/before-do-nothing.json` (seed 2901).
-- Target after: `QUOTE_REOPEN_MATCH=82/82`, exit 0, on the landed tool.
-- Kill rule: any other value on the measured lane revision is a miss. The
-  fixture, labels, counter and this contract are not edited after this commit.
-  A network failure that yields `UNREACHABLE` counts as a mismatch.
+- Before (tool absent, counter v2): `QUOTE_REOPEN_MATCH=0/130`, exit 1.
+  Receipt: `.ufo/waves/round-29/controls/before-do-nothing-v2.json` (seed 2901).
+  The v1 before receipt `before-do-nothing.json` (0/82) is kept as history.
+- Target after: `QUOTE_REOPEN_MATCH=130/130`, exit 0, on the landed tool.
+- Kill rule: any other value on the measured lane revision is a miss. A network
+  failure that yields `UNREACHABLE` counts as a mismatch. A counter-side fetch
+  failure (exit 2) is a failed measurement; it is re-run, never scored as a pass.
+- Page-sampled items: for each of the 8 fixture source ids, the counter fetches
+  the registry URL twice and extracts text with the reference functions in
+  `c1-count.py`, which follow this contract. It then samples 3 token windows
+  of 6 to 20 tokens that are present in both fetches (label VERBATIM), and for
+  each window one adjacent-token transposition that is absent from both
+  fetches (label ABSENT). These labels come from the contract's reference
+  functions, not from construction alone. That is the cost of items that
+  cannot be read from committed bytes.
 
 **Sourced:** the fixture quotes come from registry rows S002, S003, S008,
 S013, S019, S020, S038 and S044, which were re-opened on 2026-10-23 for this
@@ -64,10 +84,11 @@ python3 tools/quote-reopen.py verify --items ITEMS.tsv [--registry SOURCES.md]
   contains `chousa-quote-reopen`.
 - HTML to text: Python `html.parser` semantics with character references
   decoded. The content of `script`, `style`, `noscript`, `template` and `head`
-  is dropped, and comments are dropped. Block-level elements (at least `p div
-  li ul ol table tr td th h1-h6 br section article header footer nav pre
-  blockquote dt dd dl figure figcaption hr main aside`) emit one space at start
-  and end. Inline elements emit nothing.
+  is dropped, and comments are dropped. Exactly these block-level elements
+  emit one space at start and end (v2 fixes this list; v1 said "at least"):
+  `p div li ul ol table tr td th h1 h2 h3 h4 h5 h6 br section article header
+  footer nav pre blockquote dt dd dl figure figcaption hr main aside`. Every
+  other element emits nothing.
 - Normalization, applied to page text and quote alike: Unicode NFKC; U+2018,
   U+2019, U+201A and U+201B become `'`; U+201C, U+201D, U+201E and U+201F
   become `"`; U+00AD, U+200B, U+200C, U+200D and U+FEFF are deleted; every
@@ -100,27 +121,34 @@ construction, not by running an implementation:
 | absent-truncated-token | 4 | ABSENT | a true quote cut inside a word (3 at the end, 1 at the start) |
 
 The run-time variants are described in the `c1-count.py` docstring: 14
-sub-spans labeled VERBATIM, 14 adjacent-token transpositions labeled ABSENT and
-14 rotation cross-attributions labeled ABSENT. The ids are fresh and the order
-is shuffled on every run. So a candidate that keys on fixture ids or on the
-committed item order cannot reach 82/82.
+sub-spans labeled VERBATIM, 14 adjacent-token transpositions labeled ABSENT,
+14 rotation cross-attributions labeled ABSENT, and (v2) 24 page windows
+labeled VERBATIM plus 24 page-window transpositions labeled ABSENT. The ids
+are fresh and the order is shuffled on every run. So a candidate that keys on
+fixture ids, on the committed item order or on committed quote text cannot
+reach 130/130.
 
-## Pre-freeze controls (scored by the control wave with this counter)
+## Pre-freeze controls
 
-| control | what it skips | expected ceiling |
-|---|---|---|
-| do-nothing | no tool at all | 0/82 (measured: 0/82 above) |
-| always-VERBATIM | all reading and judging | 28/82 |
-| always-ABSENT (all-false) | all reading and judging | 48/82 |
-| no-reader | never fetches; registry, length and NO_SOURCE logic only, ABSENT otherwise | 54/82 |
-| junk | random verdicts | about 1/4 of 82 |
-| raw-grep shortcut | fetch, then substring search over raw HTML with no text extraction or normalization | below 82 |
-| casefold, no token boundary | normalized text, case-folded substring search with no boundary rule | below 82 |
-| label-keyed shortcut | reads the committed `labels.tsv` and `items.tsv` and answers by quote text | below 82 |
-| id-keyed shortcut | answers from fixture ids | below 82 |
+Design v1 was scored by the control wave (receipts under
+`.ufo/waves/round-29/controls/<Control>/receipt*.json`; the v1 counter SHA-256 is
+`fc219ef871ebd24b6ef8aab7c1bb526a9d645839de8ae86557d9289521373051`):
 
-Any control that reaches 82/82 voids this design before data. The control wave
-commits each receipt under `.ufo/waves/round-29/controls/`.
+| control | what it skips | v1 measured (seeds 2901, 2902) | v2 expected ceiling |
+|---|---|---|---|
+| do-nothing | no tool at all | 0/82 | 0/130 |
+| always-VERBATIM | all reading and judging | 28/82, 28/82 | 52/130 |
+| always-ABSENT (all-false) | all reading and judging | 48/82, 48/82 | 72/130 |
+| no-reader | never fetches; registry, length and NO_SOURCE logic only, ABSENT otherwise | 54/82, 54/82 | 78/130 |
+| junk | random verdicts (five-way; binary variant 35/82, 29/82) | 17/82, 15/82 | about 1/4 |
+| raw-grep shortcut | fetch, then substring search over raw HTML | 64/82, 63/82 (other seed) | below 130 |
+| casefold, no token boundary | case-folded substring search with no boundary rule | 78/82, 78/82 | below 130 |
+| label-keyed shortcut | answers from committed labels and spans of committed positives, no fetch | **82/82, 82/82 — voided v1** | 106/130 |
+| id-keyed shortcut | answers from fixture ids, constant fallback | 48/82 (ABSENT), 28/82 (VERBATIM) | below 130 |
+
+The control wave re-scores every control under the v2 counter before any data
+seat. Those receipts are named `receipt-v2*.json`. Any control that reaches
+130/130 voids v2 too: C1 would then be declared exploratory, never re-scaled.
 
 ## Not claimed
 

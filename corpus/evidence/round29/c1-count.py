@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Round-29 C1 counter (frozen before data; see corpus/evidence/round29/claims.md).
+"""Round-29 C1 counter, design v2 (frozen before data; see corpus/evidence/round29/claims.md).
 
 Usage (cwd: chousa-shokunin lane root):
     python3 corpus/evidence/round29/c1-count.py [--seed N] [--receipt PATH] -- CMD...
@@ -10,32 +10,176 @@ The candidate never sees labels.tsv through the counter: the counter writes only
 the items (fresh random ids, shuffled order) into a private temporary directory.
 
 Predicate (same sentence as claims.md): C1 holds iff this counter prints
-QUOTE_REOPEN_MATCH=82/82, i.e. every one of the 40 frozen fixture items and the
-42 run-time variants gets a verdict equal to its label.
+QUOTE_REOPEN_MATCH=130/130, i.e. every one of the 40 frozen fixture items, the
+42 fixture-derived run-time variants and the 48 page-sampled run-time items gets
+a verdict equal to its label.
 
-Run-time variants, per frozen VERBATIM item (14 items, 3 variants each):
+Fixture-derived run-time variants, per frozen VERBATIM item (14 items, 3 each):
   subspan    - a random whitespace-token-aligned contiguous sub-span of 5..n-1
                tokens of the quote, same source id                -> VERBATIM
   transpose  - the quote with two adjacent distinct tokens swapped  -> ABSENT
   crossattr  - the full quote attributed to the next VERBATIM source id in
                sorted rotation (checked absent before freeze)       -> ABSENT
-Exit: 0 iff matches == total == 82; 1 otherwise; 2 on usage/fixture error.
+Page-sampled run-time items (design v2, added after the v1 control wave showed
+that a no-fetch label-keyed shortcut reached 82/82 on v1): for each of the 8
+fixture source ids the counter itself fetches the registry URL twice, extracts
+text with the frozen contract's rules (reference functions below), and samples
+  page-window     - 3 random token windows of 6..20 tokens present in both
+                    fetches                                       -> VERBATIM
+  page-transpose  - each window with two adjacent distinct tokens swapped,
+                    resampled until absent from both fetches      -> ABSENT
+These cannot be derived from committed bytes, so a candidate must re-open pages.
+Exit: 0 iff matches == total == 130; 1 otherwise; 2 on usage/fixture/fetch error.
 """
 import argparse
+import gzip
 import hashlib
 import json
 import os
 import random
+import re
 import secrets
 import subprocess
 import sys
 import tempfile
 import time
+import unicodedata
+import urllib.request
+import zlib
+from html.parser import HTMLParser
 
 LANE = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 FIXTURE = os.path.join(LANE, "corpus", "fixtures", "quote-reopen-r29")
-FROZEN_TOTAL = 82
+REGISTRY = os.path.join(LANE, "corpus", "SOURCES.md")
+FROZEN_TOTAL = 130
 LABELS = {"VERBATIM", "ABSENT", "TOO_LONG", "NO_SOURCE"}
+PAGE_WINDOWS = 3
+
+# Reference functions: the frozen tool contract (claims.md) made executable for
+# labeling page-sampled items only.
+SKIP = {"script", "style", "noscript", "template", "head"}
+BLOCK = {"p", "div", "li", "ul", "ol", "table", "tr", "td", "th", "h1", "h2", "h3", "h4", "h5", "h6",
+         "br", "section", "article", "header", "footer", "nav", "pre", "blockquote", "dt", "dd", "dl",
+         "figure", "figcaption", "hr", "main", "aside"}
+QMAP = str.maketrans({"\u2018": "'", "\u2019": "'", "\u201a": "'", "\u201b": "'", "\u201c": '"', "\u201d": '"',
+                      "\u201e": '"', "\u201f": '"', "\u00ad": None, "\u200b": None, "\u200c": None,
+                      "\u200d": None, "\ufeff": None})
+
+
+class _Text(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.out, self.skip = [], 0
+
+    def handle_starttag(self, tag, attrs):
+        if tag in SKIP:
+            self.skip += 1
+        elif tag in BLOCK:
+            self.out.append(" ")
+
+    def handle_startendtag(self, tag, attrs):
+        if tag in BLOCK:
+            self.out.append(" ")
+
+    def handle_endtag(self, tag):
+        if tag in SKIP:
+            self.skip = max(0, self.skip - 1)
+        elif tag in BLOCK:
+            self.out.append(" ")
+
+    def handle_data(self, data):
+        if not self.skip:
+            self.out.append(data)
+
+
+def norm(s):
+    return " ".join(unicodedata.normalize("NFKC", s).translate(QMAP).split())
+
+
+def found(text, quote):
+    q, i = norm(quote), 0
+    while q:
+        i = text.find(q, i)
+        if i < 0:
+            return False
+        j = i + len(q)
+        if (i == 0 or not text[i - 1].isalnum()) and (j == len(text) or not text[j].isalnum()):
+            return True
+        i += 1
+    return False
+
+
+def registry_url(sid):
+    with open(REGISTRY, encoding="utf-8") as f:
+        for ln in f:
+            if ln.startswith(f"| {sid} |"):
+                m = re.search(r"https?://\S+", ln.split("|")[2])
+                return m.group(0).rstrip(".,;)") if m else None
+    return None
+
+
+def fetch_text(url):
+    req = urllib.request.Request(url.split("#")[0], headers={"User-Agent": "chousa-quote-reopen-counter/r29",
+                                                             "Accept-Encoding": "gzip"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        body = r.read(8 * 1024 * 1024 + 1)
+        enc = (r.headers.get("Content-Encoding") or "").lower()
+        charset = r.headers.get_content_charset() or "utf-8"
+        ctype = r.headers.get_content_type()
+    if enc == "gzip":
+        body = gzip.decompress(body)
+    elif enc == "deflate":
+        body = zlib.decompress(body)
+    doc = body.decode(charset, "replace")
+    if ctype == "text/plain":
+        return norm(doc)
+    p = _Text()
+    p.feed(doc)
+    p.close()
+    return norm("".join(p.out))
+
+
+def page_cases(sources, rng):
+    cases = []
+    for sid in sources:
+        url = registry_url(sid)
+        if not url:
+            raise ValueError(f"{sid}: no registry URL")
+        t1 = fetch_text(url)
+        t2 = fetch_text(url)
+        toks = t1.split(" ")
+        got = 0
+        for _ in range(400):
+            if got == PAGE_WINDOWS:
+                break
+            n = rng.randint(6, 20)
+            if len(toks) <= n:
+                break
+            s = rng.randint(0, len(toks) - n)
+            win = toks[s:s + n]
+            w = " ".join(win)
+            if sum(any(ch.isalpha() for ch in t) for t in win) < 4 or not (found(t1, w) and found(t2, w)):
+                continue
+            neg = None
+            for _ in range(20):
+                pairs = [i for i in range(n - 1) if win[i] != win[i + 1]]
+                if not pairs:
+                    break
+                i = rng.choice(pairs)
+                cand = " ".join(win[:i] + [win[i + 1], win[i]] + win[i + 2:])
+                if not found(t1, cand) and not found(t2, cand):
+                    neg = cand
+                    break
+            if neg is None:
+                continue
+            cases.append({"origin": f"page:{sid}", "kind": "page-window", "class": "runtime-page-window",
+                          "source_id": sid, "quote": w, "label": "VERBATIM"})
+            cases.append({"origin": f"page:{sid}", "kind": "page-transpose", "class": "runtime-page-transpose",
+                          "source_id": sid, "quote": neg, "label": "ABSENT"})
+            got += 1
+        if got != PAGE_WINDOWS:
+            raise ValueError(f"{sid}: could not sample {PAGE_WINDOWS} page windows")
+    return cases
 
 
 def load_tsv(path, header):
@@ -75,6 +219,7 @@ def build(seed):
                       "quote": " ".join(sw), "label": "ABSENT"})
         cases.append({"origin": fid, "kind": "crossattr", "class": "runtime-crossattr", "source_id": rot[sid],
                       "quote": quote, "label": "ABSENT"})
+    cases.extend(page_cases(vsrc, rng))
     used = set()
     for c in cases:
         while True:
@@ -105,7 +250,7 @@ def main():
     seed = opts.seed if opts.seed is not None else secrets.randbits(32)
     try:
         cases = build(seed)
-    except (OSError, ValueError) as e:
+    except Exception as e:  # fixture, registry or counter-side fetch failure
         print(f"fixture error: {e}", file=sys.stderr)
         return 2
     with tempfile.TemporaryDirectory(prefix="c1count-") as td:
