@@ -1178,3 +1178,7 @@ No end census or Root report has been produced at this publication stage.
 Parent must approve/push the safe record set and issue census scope first.
 Outside closure, report-LAST publication and continuation are Parent-owned.
 This author never mutates VCS/MANIFEST or advances a round.
+
+### 2026-10-23 correction to the round-28 entry (routed defect D3)
+
+The round-28 entry says no end census had been produced. The fleet witness `.ufo/waves/hyaku/chousa28-negative-records/parent-census.json` (fleet commit `b4b338e9`) records `bash /home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa`, run at 2026-10-22 02:49:09 UTC against lane commit `7c87b9734eb71985e19767af36d57dff89536521`. It exited 0 and printed `chousa ok` for `chousa-shokunin/corpus/SOURCES.md`. This corrects the run-status record only; the earlier text is kept as written. Routed as defect D3 by `corpus/lessons/round-28-verifier-spotcheck.md:50-54,125-126`; witness re-read in round 29 by seat ScribeRepairD3 (`.ufo/waves/round-29/build/ScribeRepairD3.md`).

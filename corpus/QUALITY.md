@@ -146,3 +146,32 @@ the admitted entry that motivates it. Tier definitions live in
     `lessons/round-27.md` R27-M12; S043; control
     `matcher-fault-fails-closed` accepts incorrectly at dd72641e and rejects
     at cb895a2; selftest case215 preserves that distinction.
+
+## Round-29 additions (appended 2026-10-23; criteria 1-22 unchanged)
+
+23. **Lane prose keeps digits apart from words and carries no custody
+    vocabulary.** New prose writes `all 69` and `on 2026-10-23`, never the glued
+    forms, and uses only the canonical round vocabulary. Check:
+    `python3 corpus/evidence/round29/prose-check.py <files>` exits 0 on the
+    round's new prose. It fails (exit 1) on `lessons/round-28.md` with 9 glued
+    tokens and 5 custody hits, which shows the check can fail. —
+    `lessons/round-28-verifier-spotcheck.md` D1 and D2; `lessons/round-29.md`.
+24. **Controls are scored before data, and a control that meets the counter
+    re-designs the claim.** Before any data seat runs, the claim's frozen
+    counter scores the cheapest do-nothing, all-false, junk, no-reader, and
+    label- or id-keyed shortcut controls, and the receipts are committed. Any
+    control that meets the counter, including one that replays committed
+    receipts for a seed the caller picked, voids the design before data. A
+    counter that samples at run time draws its own seed. Fails when a control
+    receipt meets the counter and data still runs on that design. —
+    `lessons/round-29.md`; `.ufo/waves/round-29/controls/` (v1 met 82/82 by
+    label replay; v2 met 130/130 by seed replay; v3 best control 126/130).
+25. **A cited web quote is re-opened, and a miss is recorded.** Before a round
+    cites a located quote from a registered web source, run
+    `python3 tools/quote-reopen.py verify --items <tsv>` from the lane root.
+    Record every `ABSENT`, `UNREACHABLE` or `TOO_LONG` verdict with the quote.
+    An `ABSENT` on a page that the extractor cannot read is a tool limit and
+    must be named as one. Example: a page that omits `</head>` yields no text
+    (S047). It is not evidence that the quote is false. Fails when a verdict
+    other than `VERBATIM` is dropped or relabelled. — `lessons/round-29.md`;
+    `knowledge/quote-reopen-r29.md`.
