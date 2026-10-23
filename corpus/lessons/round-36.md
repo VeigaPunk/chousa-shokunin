@@ -104,3 +104,10 @@ One row per routed defect in `corpus/lessons/round-35-verifier-spotcheck.md` §R
 | 7 | Locale seam at `json_unescape` | **fixed** R4 (hand-built UTF-8 in `LC_ALL=C`, cases 257-258); a different seam at `:1015` found and carried (§Erratum 13) |
 | 8 | S068 quote anchor 391-395 vs 390-396 | **refused** — no teaching is wrong and SOURCES rows are append-only; a correction would need a supersede row, not an edit (r37 candidate) |
 | 9 | r35 "lane tip at landing" staleness | **carried** — filed bytes not rewritten; this report cites one lane hash per claim |
+
+**Row errata (non-author re-open, `w1/RevSourcesNew.md`):** S069 and S070 both re-opened
+**VERBATIM** (compressed file SHA-256s match, every quoted word and line exact, `teaches` supported,
+`used-by` resolves). One cosmetic defect recorded, not edited in place (append-only): S070's anchor
+cell labels decompressed lines 19-20 as "SYNOPSIS" while the `-c, --check` text sits under
+DESCRIPTION (SYNOPSIS is lines 5-7). A supersede row is a round-37 candidate; the row's `teaches`
+and scope are unaffected.
