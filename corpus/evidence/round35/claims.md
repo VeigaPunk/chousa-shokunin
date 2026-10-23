@@ -198,3 +198,15 @@ predicate is right (the output counter's job).
    code), but the instrument's discrimination between the landed gate and a shim-routing engine is
    **0 bits**. r36: draw the tripwire path per run outside the gate's environment, scrub
    `C1_TMP`/`TMPDIR` from the gate env, and add the semantic canary.
+
+8. **Two more surviving defects, reported by the wave after the landing (both routed to r36).**
+   (a) `--pin`'s canonical capture body inherits `CHOUSA_GREP_PIN_ECHO=1` (the capture's `env -u`
+   list omits it), so a baseline pinned with the echo on embeds a `GATE_GREP:` line and
+   `--drift` against an unchanged gate reports `GATE_DRIFT: -LINE` (wave seat ExecPinModePinDrift;
+   present in the final gate `a4768851…`). The echo was meant to be receipt-only and never to enter
+   a captured artifact. (b) S7/S9 override with `/usr/bin/grep`, the same path as the default pin,
+   so the counter cannot tell "override honoured" from "override validated then discarded": a
+   one-line mutant that assigns `GREP_BIN=/usr/bin/grep` after validation scores 9/9 while
+   misreporting `source=override` (same seat). r36: an override that differs from the default (a
+   distinct GNU-reporting recorder whose argv is asserted) plus scrubbing the echo flag from the
+   capture environment.
