@@ -93,7 +93,7 @@ def build(rng, srv):
     gpool = H.global_addrs(rng, 3 * len(PLAN) + 4)
     for k, kind in enumerate(PLAN):
         tok = "%016x" % rng.getrandbits(64)
-        host = "q%x-%d.test" % (rng.getrandbits(24), k)
+        host = "q%08x.test" % rng.getrandbits(32)
         g1, g2, g3 = gpool[3 * k], gpool[3 * k + 1], gpool[3 * k + 2]
         text = words(rng, 40)
         quote = " ".join(text[5:5 + rng.randint(6, 12)])
@@ -101,12 +101,13 @@ def build(rng, srv):
                % " ".join(text)).encode("utf-8")
         resolve = {host: [[g1]]}
         routed = [g1]
-        path = "/d/" + tok
-        if kind.startswith("drip-") or kind == "stall-body":
-            path = "/%s/%s" % ({"stall-body": "stall"}.get(kind, kind), tok)
+        path = "/x/" + tok
+        if kind.startswith("drip-"):
+            srv.behave(path, kind)
+        elif kind == "stall-body":
+            srv.behave(path, "stall")
         elif kind == "slow-ok":
-            path = "/slow-ok/" + tok
-            srv.add(path, doc)
+            srv.add(path, doc, behavior="slow-ok")
         else:
             srv.add(path, doc)
         if kind == "stable-absent":
@@ -125,13 +126,11 @@ def build(rng, srv):
         elif kind == "no-resolve":
             resolve = {}
         elif kind in ("rebind-redirect", "redirect-loop"):
-            host2 = "r%x-%d.test" % (rng.getrandbits(24), k)
-            path2 = "/d/" + "%016x" % rng.getrandbits(64)
+            host2 = "q%08x.test" % rng.getrandbits(32)
+            path2 = "/x/%016x" % rng.getrandbits(64)
             srv.add(path2, doc)
-            first_path = "/redir/" + tok
-            srv.add(first_path, b"moved", status=302, ctype="text/plain",
+            srv.add(path, b"moved", status=302, ctype="text/plain",
                     extra=[("Location", "http://%s%s" % (host2, path2))])
-            path = first_path
             if kind == "rebind-redirect":
                 resolve = {host: [[g1]], host2: [[g2], ["127.0.0.1"]]}
                 routed = [g1, g2]

@@ -39,6 +39,9 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 def _boot(map_path, tool_path, argv):
     with open(map_path, encoding="utf-8") as f:
         m = json.load(f)
+    # The candidate never sees the run map: the file is removed and argv shows only the tool call.
+    os.unlink(map_path)
+    sys.argv = [tool_path] + list(argv)
     resolve = m["resolve"]                 # host -> [[addr, ...], ...]
     routed = set(m["routed"])              # global addresses routed to the server
     server_port = int(m["server_port"])
@@ -119,6 +122,7 @@ def _boot(map_path, tool_path, argv):
     spec.loader.exec_module(mod)
     if m.get("deadline") is not None:
         mod.DEADLINE = float(m["deadline"])
+    m = None
     rc = mod.main(argv)
     sys.stdout.flush()
     os._exit(rc if isinstance(rc, int) else 2)
@@ -127,10 +131,11 @@ def _boot(map_path, tool_path, argv):
 # ---------------------------------------------------------------- server
 
 class Server:
-    """Threaded raw HTTP/1.1 server on 127.0.0.1. Routes by path prefix."""
+    """Threaded raw HTTP/1.1 server on 127.0.0.1. Paths are opaque; behavior is looked up by path."""
 
     def __init__(self):
         self.docs = {}            # path -> (status, headers list, body bytes)
+        self.kinds = {}           # path -> misbehavior name (never visible in the URL)
         self.hits = []
         self.stop = threading.Event()
         outer = self
@@ -153,8 +158,14 @@ class Server:
         self.srv.shutdown()
         self.srv.server_close()
 
-    def add(self, path, body, status=200, ctype="text/html; charset=utf-8", extra=()):
+    def add(self, path, body, status=200, ctype="text/html; charset=utf-8", extra=(), behavior=None):
         self.docs[path] = (status, [("Content-Type", ctype)] + list(extra), body)
+        if behavior:
+            self.kinds[path] = behavior
+
+    def behave(self, path, behavior):
+        """Serve `path` with a misbehaving pattern: drip-head, drip-body, drip-chunked, stall."""
+        self.kinds[path] = behavior
 
     def _handle(self, s):
         s.settimeout(10)
@@ -190,7 +201,7 @@ class Server:
             time.sleep(every)
 
     def _serve(self, s, path):
-        kind = path.split("/")[1] if path.count("/") >= 1 else ""
+        kind = self.kinds.get(path.split("?", 1)[0], "")
         if kind == "drip-head":
             s.sendall(b"HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nX-Pad: ")
             self._drip(s, b"a" * 400, 0.2)

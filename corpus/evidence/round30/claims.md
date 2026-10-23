@@ -1,4 +1,21 @@
-# Round 30 — frozen claims, predicates, counters and tool contract v2 (design v1)
+# Round 30 — frozen claims (design v2, frozen before any control or data seat)
+
+**Design v2.** Design v1 was committed at `f42906d7b96e5b219aaa74a5ce4ce407a80cee62`.
+Before any control or data seat ran, the L1's own read of the v1 counters found that item
+URLs showed their class: C2 paths named the server behavior (`/drip-head/`, `/stall/`,
+`/slow-ok/`, `/redir/`), and C1 host names carried the document index while the class plan
+was in a fixed order. A candidate could then key the deadline on the path (round-29
+lesson: a counter met from labels). v2 makes every path `/x/<random hex>`, every host
+`h<hex>.test` or `q<hex>.test`, shuffles the document plan and the registry rows, draws
+registry ids from a shuffled pool, and has the harness child delete its run map before the
+candidate loads. The predicates, items, labels, totals, bounds and contract are unchanged.
+Counter SHA-256 at v2: `c1-count.py` `9a0a3bd7…c13131c`, `c2-count.py` `7823eef5…f1674`,
+`qr_harness.py` `06237f36…f54764`. Before receipts at v2:
+`.ufo/waves/round-30/controls/before-c1-v2-run{1,2}.json` (78/106 twice) and
+`before-c2-v2-run{1,2}.json` (9/20 twice); tool-absent `tool-absent-c{1,2}.json` (0/106,
+0/20). The v1 receipts stay as history.
+
+## Design v1 text (unchanged except where v2 above overrides)
 
 Base `a3a3710e3d0adf2f95882292f17b5093e3baf97c`. Written by the L1 before any data seat.
 This round works only items from the round-29 outside spot-check's routed list

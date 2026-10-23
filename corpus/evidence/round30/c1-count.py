@@ -199,14 +199,13 @@ def build(rng):
     W = Words(rng)
     docs, items, rows = [], [], []
     plan = (["headless-body"] * 5 + ["headless-nobody"] * 5 + ["headless-text"] * 4 + ["closed-head"] * 6)
+    rng.shuffle(plan)
     firsts = FIRST_ELEMENTS[:]
     rng.shuffle(firsts)
-    sid_n = rng.randint(100, 800)
+    sid_pool = rng.sample(range(100, 1000), 40)
 
     def new_sid():
-        nonlocal sid_n
-        sid_n += 1
-        return "S%d" % sid_n
+        return "S%d" % sid_pool.pop()
 
     def new_id():
         return "%016x" % rng.getrandbits(64)
@@ -215,8 +214,8 @@ def build(rng):
     for d, cls in enumerate(plan):
         first = firsts[d % len(firsts)]
         body, blocks, title, script = make_doc(rng, W, cls, first)
-        path = "/d/%016x" % rng.getrandbits(64)
-        host = "h%x.example-%x.test" % (rng.getrandbits(24), d)
+        path = "/x/%016x" % rng.getrandbits(64)
+        host = "h%08x.test" % rng.getrandbits(32)
         sid = new_sid()
         docs.append({"path": path, "body": body, "host": host, "sid": sid, "cls": cls, "first": first})
         rows.append((sid, "http://%s%s" % (host, path)))
@@ -229,8 +228,8 @@ def build(rng):
         items.append((new_id(), sid, " ".join(case_flip(rng, blocks[rng.randrange(len(blocks))])), "ABSENT",
                       cls, "case-flip"))
     # verdict-order items
-    gone_sid, gone_host = new_sid(), "gone%x.test" % rng.getrandbits(24)
-    rows.append((gone_sid, "http://%s/nf/%016x" % (gone_host, rng.getrandbits(64))))
+    gone_sid, gone_host = new_sid(), "h%08x.test" % rng.getrandbits(32)
+    rows.append((gone_sid, "http://%s/x/%016x" % (gone_host, rng.getrandbits(64))))
     src_words = W.run(60)
     reach = docs[rng.randrange(len(docs))]
     long_true = []
@@ -247,6 +246,7 @@ def build(rng):
     items.append((new_id(), gone_sid, " ".join(src_words[:8]), "UNREACHABLE", "order", "unreachable"))
     # too-long true text on a reachable doc: rebuild from that doc's own first block
     items.append((new_id(), reach["sid"], None, "TOO_LONG", "order", "too-long-reachable"))
+    rng.shuffle(rows)
     return docs, items, rows, visible_all, gone_host, reach
 
 
