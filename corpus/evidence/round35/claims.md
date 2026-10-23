@@ -263,3 +263,14 @@ predicate is right (the output counter's job).
    erratum 8a (the echo leaks into `--pin` baselines) and a pre-existing, locale-dependent
    `\uXXXX` claim-span unescape that makes the selftest fail 10/256 under `env -i` on both gates —
    a r36 hygiene item (pin a locale for gate, counters and selftest).
+
+13. **`verify-all --json` trusts unpinned hash tools (pre-existing, live, r36).** Wave seat
+   ExecPinModeAll measured that the manifest's `record_sha256` and `gate_sha256` are produced by
+   `sha256sum | cut` resolved through `PATH` and are validated only for **non-emptiness**
+   (`research-gate.sh:3668-3671`); a shim wrote `0000…0` and even `HOSTILE-CUT-OUTPUT` while the run
+   stayed exit 0 / CLEAN. The claims path already validates `^[0-9a-f]{64}$` (`:1967`); the manifest
+   path does not. This matters because the lane's SCORECARD rows and receipts cite `gate_sha256` as
+   identity. Present on both the round-34 base and the round-35 final gate; not introduced by C1.
+   Fix for r36: the same hex validation (and a pinned or hash-trusted `sha256sum`/`cut`). The same
+   seat also reproduced the `BASH_ENV` `command()` swap against a named regression control
+   (`7afd040f`: 25 calls, 20 matcher-flagged) — the tenth confirmation of the engine-swap class.

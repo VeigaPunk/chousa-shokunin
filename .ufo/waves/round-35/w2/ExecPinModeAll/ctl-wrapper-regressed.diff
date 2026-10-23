@@ -1,0 +1,11 @@
+--- /tmp/hyaku/chousa-r35/w2/ExecPinModeAll/fleet2/chousa-shokunin/tools/research-gate.sh	2026-10-23 17:13:10.991049962 -0300
++++ /tmp/hyaku/chousa-r35/w2/ExecPinModeAll/fleet3/chousa-shokunin/tools/research-gate.sh	2026-10-23 17:22:05.827954584 -0300
+@@ -356,7 +356,7 @@
+ grep_pin_define() {
+   # A caller can make `grep` readonly through BASH_ENV (`readonly -f grep`);
+   # that must refuse with the named error, not die as a bare rc 1.
+-  if ! eval 'grep() { "$GREP_BIN" "$@"; }' 2>/dev/null; then
++  if ! eval 'grep() { command "$GREP_BIN" "$@"; }' 2>/dev/null; then
+     grep_pin_refuse "the grep wrapper cannot be defined (a caller marked it readonly)" "${GREP_BIN:-}"
+   fi
+ }
