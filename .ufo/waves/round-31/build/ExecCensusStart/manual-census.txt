@@ -1,0 +1,31 @@
+Manual census of chousa SOURCES.md — 2026-10-23
+File: /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md
+SOURCES.md last commit: fc97f43b8e4a5cc8797d8c0f7dbf8fd2dfb07872 (date=2026-10-23)
+
+Method: Python parse of the ## Registry section (line 7) replicating the
+maintainer parser (0–3 leading spaces; row-shaped | lines; NF = count of
+pipe-split pieces incl. leading/trailing empties, header contract = 13).
+
+Results (registry data rows only):
+  rows                    = 56
+  malformed (NF!=13)      = 0
+  tier A / B / C          = 50 / 1 / 5
+  status mined/queued/rejected = 33 / 19 / 4  (other = 0)
+  duplicate ids           = none
+  id range                = S001..S056 (no gaps)
+  next free S### id       = S057
+  recheck column values   = on-release:23, 365d:26, 90d:4, 180d:3
+  ISO-date recheck rows   = none
+  rows with recheck date <= 2026-10-23 = 0
+      (no ISO recheck values exist; NNd cadences are due opened+N days,
+       min N=90 with opened>=2026-10-19 -> earliest due 2027-01-16)
+  rows opened after 2026-10-23 = none
+
+Cross-check vs script (both exit 0):
+  census.stdout: chousa rows 56; tier.A 50 tier.B 1 tier.C 5;
+                 status.mined 33 status.queued 19 status.rejected 4;
+                 FLEET mirrors same; tier.invalid 0 status.invalid 0 missing 0
+  validate.stdout: chousa W04 S051 duplicate url www.w3.org/TR/2017/REC-html52-20171214/syntax.html across scopes
+                   chousa W04 S053 duplicate url docs.python.org/3/library/socket.html across scopes
+                   chousa ok /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md
+  validate.stderr / census.stderr: empty

@@ -1,0 +1,197 @@
+# C2 patch: optional sha256 revision binding (r31 build wave 1, ExecC2Impl)
+#
+diff --git c/tools/research-gate.sh w/tools/research-gate.sh
+index 601a6fb..e295de3 100755
+--- c/tools/research-gate.sh
++++ w/tools/research-gate.sh
+@@ -22,7 +22,7 @@
+ #   SESSION_READ RECORD_SCHEMA_INVALID EXPORT_CHROME_PRESENT
+ #   CLAIM_RECORD_INVALID CLAIM_SOURCE_EXTERNAL CLAIM_SOURCE_OUT_OF_CORPUS
+ #   CLAIM_SOURCE_SESSION CLAIM_SOURCE_EPHEMERAL CLAIM_SOURCE_MISSING
+-#   CLAIM_SPAN_NOT_FOUND CLAIM_SPAN_UNEXPECTED CONTRADICTION_MARKER_ABSENT
++#   CLAIM_SOURCE_REVISION_MISMATCH (r31: pinned sha256 differs from source bytes)
+ #   SWEEP_REJECTION_INCOMPLETE SWEEP_LOCATION_ABSENT SWEEP_LOCATION_UNRESOLVED
+ #   SWEEP_LOCATION_OUT_OF_CORPUS SWEEP_CLAIM_FALSE REF_UNRESOLVED
+ #   VERIFY_ALL_CLAIMS_UNRESOLVED VERIFY_ALL_SECTION_UNAVAILABLE
+@@ -50,7 +50,11 @@
+ # refused — never fetched). expect=contradicted additionally needs a marker the
+ # fixture names explicitly (per-claim "marker" or the default) to byte-co-occur
+ # inside the span's source lines; without it the claim is unproven. A marker on
+-# a non-contradicted entry is a fixture violation (CLAIM_RECORD_INVALID).
++# A claim may carry optional "sha256": exactly 64 lowercase hex characters pinning
++# the exact bytes of the source file (r31 C2). A present malformed value makes the
++# record invalid (CLAIM_RECORD_INVALID); a mismatch of the pin against the source
++# bytes is observed=stale with CLAIM_SOURCE_REVISION_MISMATCH (warn, drift),
++# before and regardless of the span check; absent or equal leaves behavior unchanged.
+ # A source larger than SOURCE_READ_MAX_BYTES (8 MiB, inclusive boundary) is
+ # refused BEFORE any read — CLAIM_SOURCE_READ_TOO_LARGE (warn, drift;
+ # CHAIN_SOURCE_READ_TOO_LARGE in chain mode) — never partially searched.
+@@ -66,7 +70,7 @@
+ # limit (mount-alias-r14.md). Probe order at the chokepoint is nlink, then
+ # size, then device — a combined source reports the earliest class.
+ # Per claim: CLAIM id=… expected=… observed=… source=… at=… verdict=…
+-#   observed: supported|contradicted|unsupported|unproven|refused|invalid
++#   observed: supported|contradicted|unsupported|unproven|stale|refused|invalid
+ #   verdict:  match|mismatch|refused|invalid
+ # Summary: VERDICT_BEARING_CLAIMS=N/M — N claims whose observed status matched
+ # the pre-registered expectation, over the M claims read; CLEAN only when N=M.
+@@ -324,7 +328,10 @@ usage: research-gate.sh [--selftest] [--help]
+   --root .. reports META_RECHECK_ROOT_PARENT (info).
+   Claims file: one JSON object per claim line:
+     {"id":…,"source":…,"span":…,"expect":supported|contradicted|unsupported
+-     [,"marker":…]}
++     [,"marker":…][,"sha256":…]}
++  Optional "sha256": exactly 64 lowercase hex characters pinning the exact source
++  bytes; malformed present value makes the record invalid, a mismatch is
++  observed=stale (CLAIM_SOURCE_REVISION_MISMATCH) before the span check.
+   Spans must appear verbatim in sources at token boundaries; sources are
+   local files only.
+   Chain mode: each hop with status=resolved must cite a source (a source id
+@@ -1341,7 +1348,7 @@ verify_claims() {
+   local N_CLAIMS=0 N_SUP=0 N_CON=0 N_UNS=0 N_UNP=0 N_MISM=0 N_REFUSED=0 N_INVALID=0
+   local default_marker='' lineno=0 line CLAIM_REFUSE='' CLAIM_REFUSE_OBS='' CLAIM_SRC_PATH=''
+   local -a CLAIM_LINES=()
+-  local id src span expect marker observed verdict at bad l
++  local id src span expect marker observed verdict at bad l sha_pin='' sha_present='' sha_actual=''
+   local hay start_line end_line region m probe nearer tok ctx path show_id show_exp
+ 
+   scan_secrets "$claims"
+@@ -1362,6 +1369,7 @@ verify_claims() {
+       default_marker=$(json_unescape "$(jfield "$line" marker_default)")
+       continue
+     fi
++    bad=''; observed=''; at=''; sha_present=''; sha_pin=''
+     N_CLAIMS=$((N_CLAIMS + 1))
+ 
+     id=$(json_unescape "$(jfield "$line" id)")
+@@ -1369,7 +1377,10 @@ verify_claims() {
+     span=$(json_unescape "$(jfield "$line" span)"; printf x); span=${span%x}
+     expect=$(json_unescape "$(jfield "$line" expect)")
+     marker=$(json_unescape "$(jfield "$line" marker)")
+-    bad=''
++    if json_str "$line" sha256 >/dev/null 2>&1; then
++      sha_present=1
++      sha_pin=$(json_unescape "$(json_str "$line" sha256)")
++    fi
+     if [[ -z $id ]]; then bad="missing id"
+     elif [[ -z $src ]]; then bad="missing source"
+     elif [[ -z $span ]]; then bad="missing/empty span"
+@@ -1379,6 +1390,9 @@ verify_claims() {
+         supported|contradicted|unsupported) ;;
+         *) bad="expect=$expect invalid" ;;
+       esac
++      if [[ -n $sha_present && ! $sha_pin =~ ^[0-9a-f]{64}$ ]]; then
++        bad="sha256=$sha_pin invalid"
++      fi
+       if [[ -z $bad && $expect != contradicted && -n $marker ]]; then
+         bad="marker present but expect=$expect (fixture violation)"
+       fi
+@@ -1400,9 +1414,20 @@ verify_claims() {
+     fi
+     path=$CLAIM_SRC_PATH
+ 
+-    hay=$(cat -- "$path"; printf x)
+-    hay=${hay%x}
+-    if tok_span_at "$hay" "$span"; then
++    if [[ -n $sha_present ]]; then
++      sha_actual=$(sha256sum -- "$path" 2>/dev/null | cut -d' ' -f1 || true)
++      if [[ -n $sha_actual && $sha_actual != "$sha_pin" ]]; then
++        observed=stale
++        at=-
++        emit_finding CLAIM_SOURCE_REVISION_MISMATCH warn claims \
++          "id=$id pin=${sha_pin:0:12} actual=${sha_actual:0:12}"
++      fi
++    fi
++
++    if [[ -z ${observed:-} ]]; then
++      hay=$(cat -- "$path"; printf x)
++      hay=${hay%x}
++      if tok_span_at "$hay" "$span"; then
+       start_line=$TOK_L1
+       end_line=$TOK_L2
+       at=$TOK_AT
+@@ -1449,6 +1474,7 @@ verify_claims() {
+         unsupported) observed=unsupported ;;
+       esac
+     fi
++    fi
+ 
+     case "$observed" in
+       supported) N_SUP=$((N_SUP + 1)) ;;
+@@ -6568,6 +6594,76 @@ EOF
+     printf 'ok-case  %-2d %-28s accepted=0\n' "$cases" metadata-asof-usage-matcher-fault
+   fi
+ 
++  # ---- r31 C2: revision binding via optional "sha256" (cases 216-224) ----
++  # A present "sha256" pins the exact bytes of the source file: malformed
++  # present values invalidate the record (CLAIM_RECORD_INVALID); a mismatch is
++  # observed=stale with CLAIM_SOURCE_REVISION_MISMATCH before and regardless of
++  # the span check; absent or equal leaves behavior unchanged. Boundary
++  # refusals keep precedence (refused sources are never hashed). CRLF sources
++  # hash as their exact bytes; the span check behaves as today.
++  printf 'sha source line one\n' >"$WORK/claimsrc/sha-src.txt"
++  SHA_GOOD=$(sha256sum -- "$WORK/claimsrc/sha-src.txt" | cut -d' ' -f1)
++  printf 'sha source line one' >"$WORK/claimsrc/sha-src-nonl.txt"
++  printf 'sha source line two\n' >"$WORK/claimsrc/sha-src-tampered.txt"
++  SHA_TAMPERED=$(sha256sum -- "$WORK/claimsrc/sha-src-tampered.txt" | cut -d' ' -f1)
++  printf 'sha source line one\r\n' >"$WORK/claimsrc/sha-src-crlf.txt"
++  SHA_CRLF=$(sha256sum -- "$WORK/claimsrc/sha-src-crlf.txt" | cut -d' ' -f1)
++
++  printf '{"id":"S0","source":"claimsrc/sha-src.txt","span":"sha source line one","expect":"supported"}\n' \
++    >"$WORK/claims-sha-absent.jsonl"
++  printf '{"id":"S1","source":"claimsrc/sha-src.txt","span":"sha source phantom","expect":"supported"}\n' \
++    >"$WORK/claims-sha-absent-fail.jsonl"
++  printf '{"id":"M1","source":"claimsrc/sha-src.txt","span":"sha source line one","expect":"supported","sha256":"%s"}\n' "$SHA_GOOD" \
++    >"$WORK/claims-sha-match.jsonl"
++  printf '{"id":"M2","source":"claimsrc/sha-src.txt","span":"sha source phantom","expect":"supported","sha256":"%s"}\n' "$SHA_GOOD" \
++    >"$WORK/claims-sha-match-spanfail.jsonl"
++  printf '{"id":"T1","source":"claimsrc/sha-src-tampered.txt","span":"sha source line two","expect":"supported","sha256":"%s"}\n' "$SHA_GOOD" \
++    >"$WORK/claims-sha-stale.jsonl"
++  printf '{"id":"T2","source":"claimsrc/sha-src-nonl.txt","span":"sha source phantom","expect":"supported","sha256":"%s"}\n' "$SHA_GOOD" \
++    >>"$WORK/claims-sha-stale.jsonl"
++  printf '{"id":"T3","source":"claimsrc/sha-src-crlf.txt","span":"sha source line one","expect":"supported","sha256":"%s"}\n' "$SHA_GOOD" \
++    >>"$WORK/claims-sha-stale.jsonl"
++  cat >"$WORK/claims-sha-invalid.jsonl" <<EOF
++{"id":"I1","source":"claimsrc/sha-src.txt","span":"sha source line one","expect":"supported","sha256":"A$(printf 'a%.0s' {1..63})"}
++{"id":"I2","source":"claimsrc/sha-src.txt","span":"sha source line one","expect":"supported","sha256":"$(printf 'a%.0s' {1..63})"}
++{"id":"I3","source":"claimsrc/sha-src.txt","span":"sha source line one","expect":"supported","sha256":"$(printf 'a%.0s' {1..65})"}
++{"id":"I4","source":"claimsrc/sha-src.txt","span":"sha source line one","expect":"supported","sha256":"sha256:$(printf 'a%.0s' {1..64})"}
++{"id":"I5","source":"claimsrc/sha-src.txt","span":"sha source line one","expect":"supported","sha256":"$(printf 'g%.0s' {1..64})"}
++{"id":"I6","source":"claimsrc/sha-src.txt","span":"sha source line one","expect":"supported","sha256":" $(printf 'a%.0s' {1..63})"}
++{"id":"I7","source":"claimsrc/sha-src.txt","span":"sha source line one","expect":"supported","sha256":""}
++EOF
++  printf '{"id":"V1","source":"claimsrc/sha-src.txt","span":"sha source line one","expect":"supported","sha256":"%s"}\n' "$SHA_GOOD" \
++    >"$WORK/claims-sha-validity.jsonl"
++  printf '{"id":"V2","source":"claimsrc/sha-src.txt","span":"sha source line one","expect":"supported","sha256":"G$(printf 'a%.0s' {1..63})"}\n' \
++    >>"$WORK/claims-sha-validity.jsonl"
++  printf '{"id":"R1","source":"https://example.invalid/research.md","span":"remote text","expect":"supported","sha256":"%s"}\n' "$SHA_GOOD" \
++    >"$WORK/claims-sha-refused.jsonl"
++  printf '{"id":"C1","source":"claimsrc/sha-src-crlf.txt","span":"sha source line one","expect":"supported","sha256":"%s"}\n' "$SHA_CRLF" \
++    >"$WORK/claims-sha-crlf.jsonl"
++
++  tclaims claims-sha-absent 0 'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=1/1' \
++    'CLAIM id=S0 expected=supported observed=supported source=claimsrc/sha-src.txt at=line:1 verdict=match'
++  tclaims claims-sha-absent-fail 1 'RESEARCH_GATE: DRIFT' 'FINDING CLAIM_SPAN_NOT_FOUND' \
++    'observed=unsupported' 'VERDICT_BEARING_CLAIMS=0/1'
++  tclaims claims-sha-match 0 'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=1/1' \
++    'CLAIM id=M1 expected=supported observed=supported source=claimsrc/sha-src.txt at=line:1 verdict=match'
++  tclaims claims-sha-match-spanfail 1 'RESEARCH_GATE: DRIFT' 'FINDING CLAIM_SPAN_NOT_FOUND' \
++    'observed=unsupported' 'VERDICT_BEARING_CLAIMS=0/1'
++  tclaims claims-sha-stale 1 'RESEARCH_GATE: DRIFT' \
++    'FINDING CLAIM_SOURCE_REVISION_MISMATCH severity=warn surface=claims' \
++    'observed=stale' 'VERDICT_BEARING_CLAIMS=0/3' 'mismatched=3' \
++    "pin=${SHA_GOOD:0:12} actual=${SHA_TAMPERED:0:12}"
++  tclaims claims-sha-invalid 1 'RESEARCH_GATE: DRIFT' 'FINDING CLAIM_RECORD_INVALID' \
++    'observed=invalid' 'VERDICT_BEARING_CLAIMS=0/7' 'invalid=7'
++  tclaims claims-sha-validity 1 'RESEARCH_GATE: DRIFT' 'FINDING CLAIM_RECORD_INVALID' \
++    'CLAIM id=V1 expected=supported observed=supported source=claimsrc/sha-src.txt at=line:1 verdict=match' \
++    'CLAIM id=V2 expected=supported observed=invalid source=claimsrc/sha-src.txt at=- verdict=invalid' \
++    'VERDICT_BEARING_CLAIMS=1/2'
++  tclaims claims-sha-refused 1 'RESEARCH_GATE: DRIFT' 'FINDING CLAIM_SOURCE_EXTERNAL severity=crit' \
++    'observed=refused' 'VERDICT_BEARING_CLAIMS=0/1'
++  tclaims claims-sha-crlf 0 'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=1/1' \
++    'CLAIM id=C1 expected=supported observed=supported source=claimsrc/sha-src-crlf.txt at=line:1 verdict=match'
++
+   if [[ $failures -eq 0 ]]; then
+     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"
+     exit 0

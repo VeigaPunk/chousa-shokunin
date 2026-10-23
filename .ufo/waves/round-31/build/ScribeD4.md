@@ -1,0 +1,7 @@
+# ScribeD4 — routed D4 findings (2026-10-23)
+Scope: read frozen claims, spot-check Routed defects lines 163-205, and cited round-30 evidence; no network sources opened.
+C1: enumeration reports 35 distinct after-receipts (tool `47a657e7…`, counter `5b312d84…`), 32 at 106/106 and 3 at 0/106 under resource caps/inconclusive; `CriticClaimsAfter`'s 14 includes 9 RerunC1 + 2 measure + 3 local C1 runs. Evidence: `ExecD4Rerun.md:22-46`, `enum-output.txt:1-57`.
+C2: RerunC2B has 23 distinct receipts, 20 at 27/27 and 3 at 26/27; the `CriticClaimsAfter.md:31` aggregate remains 41/44. Evidence: `enum-output.txt:167-192`, `RerunC2B.md:21-27,49-52`.
+Provenance: peer report records `cd /home/vgpnk/Projects/shokunin/chousa-shokunin && timeout 600 python3 .ufo/waves/round-31/build/ExecD4Rerun/rerun-after-enum.py .ufo/waves/round-30 > .ufo/waves/round-31/build/ExecD4Rerun/enum-output.txt 2>&1` with exit 0 (`ExecD4Rerun.md:11-18`); I read, did not rerun it.
+Gates/out of scope: I ran no tests, counters, or lane gate; installed no tools and changed no product files, lane Git/JJ state, or index. Only local command run was `timeout 60 mkdir -p .../build/ScribeD4` (successful).
+Artifacts: append-only drafts with exact insertion points at `.ufo/waves/round-31/build/ScribeD4/drafts.md`; this report at `.ufo/waves/round-31/build/ScribeD4.md`.

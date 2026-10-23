@@ -207,3 +207,42 @@ the admitted entry that motivates it. Tier definitions live in
     the same control scores 13/27 and 16/27 under v3 and 16/27 under v4
     (`.ufo/waves/round-30/controls/L1Rescore/`). — `lessons/round-30.md`;
     `evidence/round30/claims.md`.
+
+30. **A Gate quote is verbatim before admission.** Every new located quote in a
+    Gate row is put, exactly as printed, in a TSV item naming its `S###` source
+    and re-opened from the lane root with
+    `python3 tools/quote-reopen.py verify --items <tsv>`. Admit the row only
+    when its result is `VERBATIM`; preserve every other verdict with the quote
+    and its disposition. A tool/input error is not a match. Shown able to fail:
+    the S052 input row is
+    `S052q1<TAB>S052<TAB>In timeout mode, operations fail if they cannot be completed within the timeout specified for the socket.`;
+    the falsify receipt records the exact command
+    `timeout 120 python3 tools/quote-reopen.py verify --items /fast/scratch/hyaku/chousa-r30/w2/AttackRowS052/s052.tsv`
+    from the lane root returning `QUOTE_REOPEN S052q1 ABSENT`,
+    `QUOTE_REOPEN_SUMMARY verbatim=0 absent=1 too_long=0 no_source=0 unreachable=0`,
+    exit 1 (`.ufo/waves/round-30/falsify/AttackRowS052.md:7-13`). The source
+    capture contains `socket (they raise a timeout exception)` rather than the
+    Gate's truncated `socket.` (`https://docs.python.org/3/library/socket.html#socket-timeouts`,
+    opened 2026-10-23 in the round-30 evidence). —
+    `lessons/round-30-verifier-spotcheck.md:190-191`;
+    `lessons/round-30.md:47,77-85`;
+    `.ufo/waves/round-30/falsify/AttackRowS052.md`.
+
+31. **Every sub-variant a counter draws has a fixed count per run.** A class
+    whose sub-kinds (invalid-value kinds, newline variants, CRLF files, named
+    occurrences, wrong-range shapes) are drawn at random lets a tool that
+    mishandles one sub-kind pass every seed that drew none of it. Fix the count
+    of each sub-kind per class before data. Shown able to fail: on round-31 C2
+    design v1 a whitespace-trimming validator printed
+    `REVISION_BINDING_MATCH=120/120` on seed 9002
+    (`.ufo/waves/round-31/controls/ChousaR31.CtlShortcutC2/`); under v2, with
+    two spaced values fixed per run, the same control prints 118/120 on every
+    seed (`controls/ChousaR31.CtlShortcutC2/v2/`). — `lessons/round-31.md`;
+    `evidence/round31/claims.md`.
+32. **A counter checks the finding the contract requires, not only the
+    verdict.** When a contract names a finding for a verdict, the counter
+    matches a claim only if the finding names exactly the claims with that
+    verdict. Shown able to fail: under round-31 C1 v2 the no-reader control
+    scores 88/120 with findings and 30/120 with its findings removed
+    (`.ufo/waves/round-31/controls/CtlNoReaderC1/v2/`). — `lessons/round-31.md`;
+    `evidence/round31/claims.md`.

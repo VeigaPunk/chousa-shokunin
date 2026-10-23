@@ -1,0 +1,8 @@
+# ScribeSrcHashlib — round 31
+- Axes: coverage (digest of fed bytes and hex form); operability (source does not define the lane's lowercase revision-pin format).
+- Read `CORPUS.md`'s SOURCES contract and lane registry header/latest rows S049–S056; opened official Python 3.15.1 docs at `https://docs.python.org/3/library/hashlib.html` on 2026-10-23. No production file changed.
+- Command: `mkdir -p .../ScribeSrcHashlib && timeout 60s curl --silent --show-error --max-redirs 0 --max-time 55 -D .../response.headers -o .../response.body -w 'HTTP_STATUS=%{http_code}\\nCURL_BODY_BYTES=%{size_download}\\n' 'https://docs.python.org/3/library/hashlib.html'`; output `HTTP_STATUS=200`, `CURL_BODY_BYTES=121928`; no redirect followed. Numeric process exit was not separately surfaced by the tool.
+- Command: `sha256sum .../response.body && wc -c .../response.body`; output SHA-256 `553f4f2a9e686e6f051c8b12bd5469e7fdd6cc7116b2f6d2beba68c1a703af10`, `121928` bytes; numeric process exit was not separately surfaced.
+- Verdict: admit S059 as scoped support: `hexdigest()` is a double-length string of hexadecimal digits for the hash object's digest; docs/examples do not make lowercase a requirement. Draft and ≤25-word quote are in `.ufo/waves/round-31/build/ScribeSrcHashlib/drafts.md`.
+- Affected artifacts: `.ufo/waves/round-31/build/ScribeSrcHashlib/drafts.md`, this report, and captured `response.body` / `response.headers` under `.ufo/waves/round-31/build/ScribeSrcHashlib/`. No tools installed; no checks run.
+- Limits: one GET only to the assigned host; this source does not establish C2's exact lowercase validation or the lane's revision-binding contract.

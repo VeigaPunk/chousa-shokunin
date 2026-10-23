@@ -1,0 +1,6 @@
+D2 drafts only: append-only blocks prepared for `corpus/lessons/round-30.md` (after line 128) and `SCORECARD.md` (after line 1707), with spot-check pointer `corpus/lessons/round-30-verifier-spotcheck.md:169-174`; neither production file was edited.
+Evidence read: `RerunC2B.md:45,49-50,57` marks backlog causality `[INFERENCE]` and notes absent per-connection proof; run2/run4 receipts show 26/27, exit 1. Recorded scored command: `timeout 300 python3 corpus/evidence/round30/c2-count.py --receipt …/RerunC2B/run{N}.json`.
+All 18 original `/fast/scratch/hyaku/chousa-r30/w2/RerunC2B/bl/bl{1..18}.json` receipts were read: `n=27,t=27,predicate_holds=true`; this is consistent with but does not prove the backlog hypothesis.
+Drafts require any future C2 counter version setting `request_queue_size` to be declared before data as a new version; frozen v4 bytes stay unchanged. Referenced sibling path only: `.ufo/waves/round-31/build/ExecD2Backlog/bl/` (not inspected or awaited).
+Gates: no tests/counters rerun; no product code, judge, git/jj state, or lane index changed. Tools installed/updated: none. Finding: D2's causal assertion remains inferred, not proven.
+Artifacts: `.ufo/waves/round-31/build/ScribeD2/drafts.md`; report: `.ufo/waves/round-31/build/ScribeD2.md`.

@@ -950,3 +950,7 @@ pages without a `<head>` start tag, 2xx challenge pages, PDF sources, prefix
 and suffix disambiguation, resolver time inside the deadline, IPv6, and the
 L0 fetch-scope question. The round-26 to round-28 path-denylist debts are
 carried unchanged.
+
+### 2026-10-23 correction — Round30 frontier disposition (routed defect D1)
+
+The Round30 held-ground change is limited to pages that omit `</head>` (C1). C2 fetch bounds did not meet their frozen kill rule and are not held ground: `QUOTE_REOPEN_FETCH_BOUND_MATCH` was 26/27 on 3 of 44 fresh-seed runs. The round-30 spot-check's consolidated tally is `corpus/lessons/round-30-verifier-spotcheck.md:109` (this correction was routed at `:165-168`). The three miss receipts record `n=26`, `t=27`, and `predicate_holds=false`: `.ufo/waves/round-30/falsify/RerunC2B/run2.json:478-480`, `.ufo/waves/round-30/falsify/RerunC2B/run4.json:478-480`, and `.ufo/waves/round-30/falsify/RerunC2B/extra16.json:478-480`. The earlier disposition is retained as history.

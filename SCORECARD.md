@@ -1653,6 +1653,13 @@ The receipt records `cwd` `/home/vgpnk/Projects/shokunin/chousa-shokunin`, `exit
 
 The word "live" in the round-29 lesson, knowledge entry, this file and `corpus/README.md` (inventory: `.ufo/waves/round-30/build/ScribeD1Liveness/drafts.md` section B) is read the same way: backed for that one DiffToolB run only, never by the counter. QUALITY criterion 26 now requires this. Routed by `corpus/lessons/round-29-verifier-spotcheck.md:143-147`.
 
+### 2026-10-23 correction — second DiffToolB network run (routed D8)
+
+The D1 correction above says the network evidence is “that one DiffToolB run only”; this omits a second recorded run of the landed tool. `corpus/lessons/round-30-verifier-spotcheck.md:197-198` routes this finding. The `landed-heldout` record in `.ufo/waves/round-29/falsify/DiffToolB/differential-receipt.json` binds the command below to `.ufo/waves/round-29/falsify/DiffToolB/landed-heldout.network.json`; the receipt records exit 1, 33 expected and 33 observed items, and `QUOTE_REOPEN_SUMMARY verbatim=26 absent=3 too_long=0 no_source=0 unreachable=4`:
+
+```text
+timeout --kill-after=5s 590s python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/falsify/DiffToolB/guarded-run.py /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/falsify/DiffToolB/landed-heldout.network.json tools/quote-reopen.py verify --items .ufo/waves/round-29/falsify/DiffToolB/held-out-3col.tsv --registry corpus/SOURCES.md
+
 ### 2026-10-23 correction to the Round 29 re-derivation count (routed defect D2)
 
 The Round 29 table says wave 2 re-derived C1 in 6 further runs. The committed outputs support 5 further runs, each scoring 130/130:
@@ -1700,11 +1707,25 @@ Sources 49 → 56 rows (S050 to S056, tier A, mined, used by
 `corpus/knowledge/quote-reopen-r30.md`). QUALITY criteria 26 to 29 added. Census at the
 end: `chousa ok`, exit 0, with two W04 warnings (two pairs of rows share a page URL).
 
+### 2026-10-23 correction — routed D4
+
+The Round 30 C1 re-derivation is corrected: 32 of 35 distinct committed after-receipts carrying the landed tool SHA `47a657e7…` and frozen C1 counter SHA `5b312d84…` scored 106/106. The other three (`falsify/ConnectorKagiPin/c1-run2.json`, `falsify/MutR29Order/baseline.json`, and `falsify/MutR29SkipScript/baseline.json`) scored 0/106 under resource caps and are inconclusive, not support for 106/106. `CriticClaimsAfter`'s 14/14 is a combined count of its 3 C1 receipts, the 9 `RerunC1A/B/C` receipts, and the 2 measurement receipts; it is not a separate 14-run bucket. `SeparabilityRevs` contributes 2 distinct C1 receipts. This corrects the duplicate count routed by `corpus/lessons/round-30-verifier-spotcheck.md:178-181`.
+
+Evidence: `.ufo/waves/round-31/build/ExecD4Rerun/enum-output.txt:1-57` and `.ufo/waves/round-31/build/ExecD4Rerun.md:11-18,22-46` (recorded command exit 0).
+
 ## Capabilities (round-30 change)
 
 | Capability | What it can now do | Evidence pointer | First-working round |
 |---|---|---|---|
 | quote re-open (contract v2, C1 part) | as round 29, and also reads pages that omit `</head>` (C1 measured). The fetch-layer change (one validated address per hop; one `DEADLINE` over header and body reads) landed, but C2 missed its predicate and the deadline does not cover name resolution or dialing (`falsify/SentinelFetchLayer.md`) | `python3 corpus/evidence/round30/c1-count.py` → 106/106; `python3 corpus/evidence/round30/c2-count.py` → 27/27 (loopback harness); `corpus/knowledge/quote-reopen-r30.md` | 29 (contract v2 in 30) |
+
+### 2026-10-23 correction — capabilities evidence pointer (routed defect D1)
+
+The `27/27` C2 pointer above is not the round's frozen-predicate verdict. Although the two measurement runs scored 27/27, C2 missed its kill rule: 3 of 44 fresh-seed runs printed 26/27 (`corpus/lessons/round-30-verifier-spotcheck.md:109`; this correction was routed at `:165-168`). The three miss receipts record `n=26`, `t=27`, and `predicate_holds=false`: `.ufo/waves/round-30/falsify/RerunC2B/run2.json:478-480`, `.ufo/waves/round-30/falsify/RerunC2B/run4.json:478-480`, and `.ufo/waves/round-30/falsify/RerunC2B/extra16.json:478-480`. Keep the earlier row as history; its C2 evidence must be read as a miss, not as held ground.
+
+### 2026-10-23 correction (round 31, D2)
+
+The backlog-5 explanation in the Round 30 C2 row above is **[INFERENCE]**, not an established cause. `RerunC2B.md:45,57` labels it `[INFERENCE]` and states that no per-connection record shows a dropped or delayed SYN. The 18/18 backlog-128 control is consistent with the explanation but not conclusive (`.ufo/waves/round-30/falsify/RerunC2B.md:49-50`). Round-31 copies: `.ufo/waves/round-31/build/ExecD2Backlog/bl/`. The C2 verdict remains “not met (miss under the kill rule)”; the control does not re-scale it or change the frozen v4 bytes. Any future C2 counter version that sets `request_queue_size` must be declared before data as a new version; never edit the frozen v4 bytes. This append-only correction answers D2 in `corpus/lessons/round-30-verifier-spotcheck.md:169-174`.
 
 ## Planned — round 31 (not started)
 

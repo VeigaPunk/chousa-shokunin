@@ -1,0 +1,6 @@
+D5 (coverage): opened the routed defect at `corpus/lessons/round-30-verifier-spotcheck.md:182-183`; committed v4 C1 maximum is 86/106 (`receipt-skip-nothing-v4.json`), while best no-reader is 84/106 (`receipt-relational-v4-c1-v4-run2.json`); both have `predicate_holds=false`.
+Evidence: `.ufo/waves/round-31/build/ExecD5Controls/tally_v4_receipts.out:1-4,64-77`; receipts at `.ufo/waves/round-30/controls/CtlParseShortcuts/receipt-skip-nothing-v4.json:202-211` and `.ufo/waves/round-30/controls/CtlNoReader/receipt-relational-v4-c1-v4-run2.json:212-221`.
+Drafts with ready-to-paste blocks and exact insertion points: `.ufo/waves/round-31/build/ScribeD5/drafts.md` (control report and round-30 lesson; append-only).
+`SCORECARD.md:1692-1694` is already accurate: it says “best C1 no-reader 84/106”; no scorecard correction proposed.
+No candidate gate/counter command or tests run; product files, lane state and judge untouched. No installs/updates.
+Axes: coverage finding only; operability is out of scope for D5.

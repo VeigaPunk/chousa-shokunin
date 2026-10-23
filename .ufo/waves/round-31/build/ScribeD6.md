@@ -1,0 +1,7 @@
+Axes: coverage, operability; scoped work is D6 append-only repair drafting.
+Read `corpus/lessons/round-30-verifier-spotcheck.md:163-205` and cited evidence: `round-30.md:139-150`, `ReviewQuality30.md:44`, build/falsify specs and dispatches, and `LiveS047After.md:4-10`.
+Drafts at `.ufo/waves/round-31/build/ScribeD6/drafts.md`: append to `corpus/lessons/round-30.md` after line 150 (before `## Census`) and `.ufo/waves/round-30/falsify/ReviewQuality30.md` after line 44 (before residual-risk heading); earlier text retained.
+`timeout 30s git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show --stat abfdf932` → exit 0; commit `abfdf93274d0c70e02465e22abcf029dea59efb9`, 112 files, includes both `CriticHarnessIntegrity` scripts.
+`timeout 30s git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show --format= --name-only abfdf932` → exit 0; exact paths: `.ufo/waves/round-30/controls/CriticHarnessIntegrity/leak-map.py` and `.../metadata-audit.py`; no seat report listed.
+`timeout 10s bash -c 'for p in .../build/CriticHarnessIntegrity.md .../build/CriticHarnessIntegrity; do if test -e "$p"; then printf "PRESENT %s\\n" "$p"; else printf "ABSENT %s\\n" "$p"; fi; done'` → exit 0; both absent (actual absolute paths recorded in drafts).
+Finding: D6 is supported; drafts classify the S047 reissue as a retry and both scripts as unreviewed output of the refused seat. No product files changed; no tests run and no tools installed.

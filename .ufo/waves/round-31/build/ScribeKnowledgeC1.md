@@ -1,0 +1,7 @@
+Behavior/axes: drafted C1 line-binding knowledge entry covering the four frozen contract items, requested examples, state-3 distinction, and “Not claimed” limits; candidate result appears only as “measured by c1-count.py; see SCORECARD Round 31”.
+Evidence/provenance: read `corpus/evidence/round31/claims.md` §C1, `corpus/knowledge/claim-verification-r2.md`, `anchor-boundaries-r4.md`, `claim-support-states-r24.md`, `SKILL.md` verify-metadata row, and `metadata-screen-r25.md`; entry uses `[S057]` by row id only.
+S057 limitation: ScribeSrcRFC5147 reported its permitted GET to RFC 5147 returned HTTP 301 with an empty body and was not followed; the draft marks the RFC 0-based detail unsubstantiated, while the frozen C1 contract supplies the gate’s 1-based line basis. I did not independently fetch the page.
+Artifacts: `.ufo/waves/round-31/build/ScribeKnowledgeC1/drafts.md` (full entry); report: `.ufo/waves/round-31/build/ScribeKnowledgeC1.md`.
+Commands/gates: `timeout 600 mkdir -p /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/build/ScribeKnowledgeC1` completed with no output/error shown (exit status not surfaced); no gate, counter, tests, or candidate implementation were run.
+Touched surfaces: only the assigned draft and this report; no product files, lane index/state, or sibling paths were written. No tools installed or updated.
+Out of scope/limits: draft only; S057’s RFC interpretation still needs a successful source open. No execution result, counter value, or candidate verdict is claimed.

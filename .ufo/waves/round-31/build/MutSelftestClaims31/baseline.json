@@ -1,0 +1,92 @@
+{
+  "label": "baseline",
+  "command": [
+    "timeout",
+    "--signal=TERM",
+    "--kill-after=5s",
+    "1800s",
+    "prlimit",
+    "--as=2147483648",
+    "--nproc=16384",
+    "--",
+    "env",
+    "-u",
+    "GIT_DIR",
+    "-u",
+    "GIT_WORK_TREE",
+    "-u",
+    "GIT_INDEX_FILE",
+    "-u",
+    "CHOUSA_ROOT",
+    "-u",
+    "CHOUSA_RECORD",
+    "-u",
+    "CHOUSA_CLAIMS",
+    "-u",
+    "CHOUSA_AGGREGATOR_ERE",
+    "-u",
+    "CHOUSA_NOW_EPOCH",
+    "-u",
+    "CHOUSA_STRICT",
+    "LC_ALL=C",
+    "TZ=UTC",
+    "TMPDIR=/fast/scratch/hyaku/chousa-r31/w1/MutSelftestClaims31",
+    "bash",
+    "tools/research-gate.sh",
+    "--selftest"
+  ],
+  "cwd": "/fast/scratch/hyaku/chousa-r31/w1/MutSelftestClaims31/repo",
+  "rc": 1,
+  "duration_seconds": 19.785,
+  "before_sha256": "ac1315ddaa12e79b68069d1a9866b9b1b55e3a43efef3ba0cb5ca5e665835765",
+  "after_sha256": "ac1315ddaa12e79b68069d1a9866b9b1b55e3a43efef3ba0cb5ca5e665835765",
+  "summaries": [
+    "RESEARCH_GATE_SELFTEST: FAIL (10/215 cases)"
+  ],
+  "case_output_lines": 215,
+  "failures": [
+    {
+      "case": 21,
+      "line": "FAIL-case claims-pass                  exit=1 want=0 verdicts=1 vbearing=1 token=RESEARCH_GATE: CLEAN VERDICT_BEARING_CLAIMS=4/4 CLAIM id=P1 expected=supported observed=supported source=lib/primary.md at=line:1 verdict=match CLAIM id=P2 expected=contradicted observed=contradicted source=claimsrc/ledger.md at=line:2 verdict=match CLAIM id=P3 expected=unsupported observed=unsupported source=lib/primary.md at=- verdict=match CLAIM id=P4 expected=supported observed=supported source=claimsrc/arrow.md at=line:1 verdict=match"
+    },
+    {
+      "case": 55,
+      "line": "FAIL-case all-pass.md                  rc=1/0 missing:'RESEARCH_GATE: CLEAN' missing:'SECTION claims state=run verdict=CLEAN findings=0 drift=0 tally=VERDICT_BEARING_CLAIMS=4/4' missing:'VERIFY_ALL sections=5 run=5 absent=0 drift-sections=0 findings=0 drift=0' "
+    },
+    {
+      "case": 57,
+      "line": "FAIL-case all-structure.md             missing:'SECTION claims state=run verdict=CLEAN' missing:'VERIFY_ALL sections=5 run=5 absent=0 drift-sections=1' "
+    },
+    {
+      "case": 59,
+      "line": "FAIL-case claims-pass.jsonl            rc=1/0 missing:'RESEARCH_GATE: CLEAN' missing:'SECTION claims state=run verdict=CLEAN findings=0 drift=0 tally=VERDICT_BEARING_CLAIMS=4/4' missing:'VERIFY_ALL sections=5 run=2 absent=3 drift-sections=0 findings=0 drift=0' "
+    },
+    {
+      "case": 60,
+      "line": "FAIL-case all-pass.md                  rc=1/0 missing:'RESEARCH_GATE: CLEAN' "
+    },
+    {
+      "case": 61,
+      "line": "FAIL-case all-pass.md                  rc=1/0 missing:'RESEARCH_GATE: CLEAN' "
+    },
+    {
+      "case": 62,
+      "line": "FAIL-case all-meta.md                  rc=1/0 missing:'RESEARCH_GATE: CLEAN' missing:'SECTION claims state=run verdict=CLEAN findings=0 drift=0 tally=VERDICT_BEARING_CLAIMS=4/4' missing:'VERIFY_ALL sections=5 run=5 absent=0 drift-sections=0 findings=0 drift=0' "
+    },
+    {
+      "case": 74,
+      "line": "FAIL-case all-dangling.md              missing:'SECTION claims state=run verdict=CLEAN' missing:'VERIFY_ALL sections=5 run=5 absent=0 drift-sections=1 findings=1 drift=1' "
+    },
+    {
+      "case": 134,
+      "line": "FAIL-case json-unterminated-manifest   rc=1/0 "
+    },
+    {
+      "case": 135,
+      "line": "FAIL-case json-nul-terminated-manifest rc=1/0 "
+    }
+  ],
+  "skips": [],
+  "process_group_cleanup_needed": false,
+  "harness_error": null
+}

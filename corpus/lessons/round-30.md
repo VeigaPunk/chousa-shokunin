@@ -66,6 +66,10 @@ predicate.
 Status changes: none to existing rows. New rows S050 to S056 enter as `mined`,
 used by `corpus/knowledge/quote-reopen-r30.md`.
 
+### 2026-10-23 correction — ReviewContractV2 pointer (routed D8)
+
+`corpus/lessons/round-30-verifier-spotcheck.md:58-60` identifies the line-57 pointer as wrong: the redirect-follow disclosure is `build/ReviewContractV2.md` finding 13, not finding 7. Finding 7 concerns item 2's wording (`.ufo/waves/round-30/build/ReviewContractV2.md:111-115`); finding 13 records the 301 → 307 → 200 chain and final WHATWG host (`.ufo/waves/round-30/build/ReviewContractV2.md:185-195`), followed by the off-registry GET/HEAD disclosure and deleted bytes (`.ufo/waves/round-30/build/ReviewContractV2.md:237-243`). The report records `curl -sS -L https://www.w3.org/TR/html52/syntax.html` and `curl -I -L https://www.w3.org/TR/html52/syntax.html` for the redirect chain. This is a pointer correction only; the earlier text remains unchanged.
+
 ## Census
 
 Start (base `a3a3710e`): `scripts/sources-census.sh validate --root
@@ -127,6 +131,22 @@ Round 30 and the round report.
   tools (`ReviewQuality30.md`); knowledge-entry defects fixed above
   (`ReviewKnowledge30.md`).
 
+### 2026-10-23 correction (round 31, D2)
+
+The statement above that the frozen harness's listen queue overflowed reports a cause as fact. The backlog explanation is **[INFERENCE]**, not established: `RerunC2B.md:45` labels the diagnosis `[INFERENCE]`, and `:57` says no per-connection record shows a dropped or delayed SYN. The 18/18 backlog-128 control is consistent with, but does not prove, that explanation (`.ufo/waves/round-30/falsify/RerunC2B.md:49-50`). Round-31 copies: `.ufo/waves/round-31/build/ExecD2Backlog/bl/`. The scored C2 misses remain misses under the frozen kill rule; this correction changes neither the result nor the frozen v4 bytes. Any future C2 counter version that sets `request_queue_size` must be declared before data as a new version; never edit the frozen v4 bytes. This append-only correction answers D2 in `corpus/lessons/round-30-verifier-spotcheck.md:169-174`.
+
+### 2026-10-23 correction — routed D4
+
+The C1 re-derivation above is corrected: 32 of 35 distinct committed after-receipts carrying landed tool SHA `47a657e7…` and frozen C1 counter SHA `5b312d84…` scored 106/106. The other three (`falsify/ConnectorKagiPin/c1-run2.json`, `falsify/MutR29Order/baseline.json`, and `falsify/MutR29SkipScript/baseline.json`) scored 0/106 under resource caps and are inconclusive. The stated 14/14 for `CriticClaimsAfter` is the combined count of 3 `CriticClaimsAfter` C1 receipts, 9 `RerunC1A/B/C` receipts, and 2 measurement receipts—not an additional 14 runs. `SeparabilityRevs` contributes 2 distinct receipts. This repairs the count routed by `corpus/lessons/round-30-verifier-spotcheck.md:178-181` without rewriting the earlier finding.
+
+Evidence: `.ufo/waves/round-31/build/ExecD4Rerun/enum-output.txt:1-57` and `.ufo/waves/round-31/build/ExecD4Rerun.md:11-18,22-46` (recorded command exit 0).
+
+### 2026-10-23 correction — routed D4 (`.ufo/waves/round-30/falsify/CriticClaimsAfter.md:31`)
+
+The RerunC2B portion of the 03:43:52Z snapshot above is corrected: it was 20/23 at 27/27, not 17/20. The committed RerunC2B set has 23 distinct receipts: 20 printed 27/27 and 3 printed 26/27. With RerunC2A 5, RerunC2C 5, `measure/after-c2` 2, and this report's 9 C2 runs, the snapshot total remains 41/44. This corrects the defect routed by `corpus/lessons/round-30-verifier-spotcheck.md:178-181`.
+
+Evidence: `.ufo/waves/round-31/build/ExecD4Rerun/enum-output.txt:167-192` and `.ufo/waves/round-30/falsify/RerunC2B.md:21-27,49-52`. The receipt-enumerator command and recorded exit code 0 are at `.ufo/waves/round-31/build/ExecD4Rerun.md:11-18`.
+
 ## Learning
 
 Author view, for the outside check to rule on: expansion improved (C1 moves the
@@ -135,6 +155,12 @@ unchanged by count, with D1 to D6 repaired and one Gate quote (S052) caught by
 the round's own re-open; discernment improved in process (four pre-data design
 changes, each forced by a control) but C2 shows that a counter with a tight
 timing slack can fail a candidate under host load.
+
+### 2026-10-23 correction (D3)
+
+The count in the paragraph above was wrong: the record shows three distinct control findings and two control-forced redesign versions, not four control-forced redesigns. CtlShapeKeyed's C2-v2 shortcut reached 20/20 and forced C2 v3; CtlNoReader's no-reader C1 control reached 104/106; and CtlTrivialC2 together with CriticClaimDesign30 identified the C2 slow-ok chunk-terminator timing defect. The latter two findings led to the C1 and C2 changes in v4, respectively. The earlier v2 redesign came from the L1's own read of exposed URL/host/order features before any control or data seat, not from a control. This is a count/attribution correction; the wording change altered no counter or harness bytes.
+
+Evidence: routed D3, `corpus/lessons/round-30-verifier-spotcheck.md:175-177`; v2/v3/v4 history and L1-read account, `corpus/evidence/round30/claims.md:3-22,32-69`; C2-v2 20/20, `.ufo/waves/round-30/controls/CtlShapeKeyed/receipt-dns-header-c2-run1.json:336-343`; C1 104/106 with zero connections, `.ufo/waves/round-30/controls/CtlNoReader/receipt-relational-c1-h3.json:112-120`; slow-ok mismatch, `.ufo/waves/round-30/controls/CtlTrivialC2/receipt-do-nothing-c2-run1-v3.json:390-404`; timing finding, `.ufo/waves/round-30/controls/CtlTrivialC2.md:15` and `.ufo/waves/round-30/controls/CriticClaimDesign30.md:41`.
 
 ## Seats and holds
 
@@ -148,6 +174,14 @@ the L1 re-scored CtlShapeKeyed's two committed controls itself
 (`controls/L1Rescore/`). ScribeSrcOptionalTags declined a second GET outside its
 assignment; the L1 opened S050 itself. ReviewContractV2 followed one redirect to
 html.spec.whatwg.org (an unregistered host) and disclosed it.
+
+### 2026-10-23 correction to the dead-seat record (routed defect D6)
+
+The preceding “Each is a hold, not retried” statement is not accurate for `CriticS047Live`: after its provider-quota HTTP 429 (“Individual quota reached”), the S047 real-page task was re-issued in the falsify wave as `LiveS047After` under the same `critic` role. Record this as a retry; this correction does not rewrite the earlier account. Evidence: `corpus/lessons/round-30-verifier-spotcheck.md:65-69`; `.ufo/waves/round-30/build-spec.json:147-150` and `falsify-spec.json:122-125`; `.ufo/waves/round-30/build-dispatch.json:323-332` and `falsify-dispatch.json:268-277`; `.ufo/waves/round-30/falsify/LiveS047After.md:4-10`.
+
+### 2026-10-23 correction to the criterion-29 control evidence (routed defect D6; `.ufo/waves/round-30/falsify/ReviewQuality30.md:44`)
+
+`CriticHarnessIntegrity` refused with `code=cyber_policy`; `.ufo/waves/round-30/controls/CriticHarnessIntegrity/leak-map.py` and `metadata-audit.py` are unreviewed output of that refused seat, not reviewed control evidence. Do not rely on the preceding characterization of `leak-map.py` as a keyed control or on the inference that these files may cover item-order or registry-id shortcuts; their coverage remains unverified. The earlier text is retained unchanged. Evidence: `corpus/lessons/round-30.md:143-146`; `timeout 30s git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show --stat abfdf932` and `timeout 30s git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show --format= --name-only abfdf932` (both list the two scripts); the name-only output contains no seat report, and a current-path check found `.ufo/waves/round-30/build/CriticHarnessIntegrity.md` and `.ufo/waves/round-30/build/CriticHarnessIntegrity/` absent.
 
 ## Census (end)
 
@@ -163,3 +197,7 @@ Seat ConnectorKagiPin wrote its report at the fleet root
 lane. The L1 copied it byte-exact to `.ufo/waves/round-30/falsify/ConnectorKagiPin.md` (`cmp`
 exit 0) and deleted the fleet copy. Captured-by: the misroot sweep; fix: the wave context
 already names absolute paths, so the seat's relative write is the cause.
+
+### 2026-10-23 correction to the v4 C1 control result (routed defect D5)
+
+The 79/106 and 84/106 figures above are the strengthened no-reader control's two C1 scores, not the maximum across all v4 C1 controls. The committed all-control tally lists 61 receipts carrying the v4 counter hashes: the overall maximum is 86/106 in `.ufo/waves/round-30/controls/CtlParseShortcuts/receipt-skip-nothing-v4.json` (`n=86`, `t=106`, `predicate_holds=false`, `tool_rc=1`), while the best no-reader result is 84/106 in `.ufo/waves/round-30/controls/CtlNoReader/receipt-relational-v4-c1-v4-run2.json` (`n=84`, `net_connect_events=0`, `predicate_holds=false`). Evidence: `.ufo/waves/round-31/build/ExecD5Controls/tally_v4_receipts.out:1-4,64-77`; routed by `corpus/lessons/round-30-verifier-spotcheck.md:182-183`. This clarification adds the all-control comparison without changing the earlier lesson row.

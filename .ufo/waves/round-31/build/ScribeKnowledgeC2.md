@@ -1,0 +1,5 @@
+- **Behavior:** Drafted the full C2 knowledge entry in `.ufo/waves/round-31/build/ScribeKnowledgeC2/drafts.md`; no production `corpus/knowledge/` file was changed.
+- **Contract evidence opened:** `corpus/evidence/round31/claims.md:62-105`, `SKILL.md:64-67`, `corpus/knowledge/claim-verification-r2.md:82-109`, and `corpus/knowledge/recheck-due-r26.md`; draft covers schema, invalid/refused/stale/span precedence, exact-byte hashing, rationale, and limits.
+- **Command:** `timeout 10s mkdir -p /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/build/ScribeKnowledgeC2` returned no output; tool output did not expose an exit code. Draft write reported success (3094 bytes).
+- **Source provenance:** [S058] and [S059] are referenced by row ID only, as assigned; no external source was reopened or quoted. Registry search for `S058|S059|revision-binding-r31` returned no matches at inspection.
+- **Verdict/limits:** No `c2-count.py` run and no implementation or score claimed; counter result is referred to only as “measured by c2-count.py; see SCORECARD Round 31.” No tools installed. Report: `.ufo/waves/round-31/build/ScribeKnowledgeC2.md`.
