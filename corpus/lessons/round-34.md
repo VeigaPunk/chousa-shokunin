@@ -43,7 +43,8 @@ network; re-opened by the L1 with matching sha256 and each quote found,
 
 - S064 — Linux man-pages execve(2), `/usr/share/man/man2/execve.2.gz` (man-pages 6.19-1, sha256
   `4489dfef…c8eab0dc`); URL recorded https://man7.org/linux/man-pages/man2/execve.2.html, not
-  fetched; accessed 2026-10-23. Quote (20 words): "Additionally, the limit per string is 32 pages
+  fetched; accessed 2026-10-23. Anchor corrected in-round `NOTES` → subsection "Limits on size of
+  arguments and environment" (R34ReopenSources). Quote (20 words): "Additionally, the limit per string is 32 pages
   (the kernel constant MAX_ARG_STRLEN), and the maximum number of strings is 0x7FFFFFFF." Tier A,
   mined.
 - S065 — pcre2limits(3), `/usr/share/man/man3/pcre2limits.3.gz` (pcre2 10.49-1, sha256

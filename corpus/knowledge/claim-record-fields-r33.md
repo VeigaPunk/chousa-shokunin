@@ -101,3 +101,6 @@ and the mask gate scored 156/156 on fresh seed 61111 (twice) while missing on 94
 (`.ufo/waves/round-34/w2/R34ReviewRepairs.md`). Per-seed confusers make the mask miss only when a
 generated confuser happens to break its regex strip; clause 3 still has no counter that every
 lexer-less mask fails.
+
+Round 34 also supersedes the Limits line above that spans of 32 KiB or more "cannot be located at
+all": on gate `772a1d8e…` they can, up to 65536 bytes (`knowledge/long-span-argv-r34.md`).

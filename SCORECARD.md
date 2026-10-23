@@ -1904,3 +1904,56 @@ Sources 61 → 63 rows (S062 RFC 8259, S063 Python `json`; tier A, mined).
 Candidates, not commitments: a counter whose confuser content is generated per seed (QUALITY 40);
 member grammar inside nested values; raw control bytes in strings; spans of 32 KiB or more
 (`tok_span_at` argv limit); the L0 fetch-scope answer.
+
+### 2026-10-23 correction (round 34, routed E1) — round-33 capabilities row
+
+The round-33 capabilities row says clause 3 "rests on the fuzz evidence"; the three fuzz receipts it
+leaned on (`.ufo/waves/round-33/measure/final/fz-9021{2,3,4}.json`) bind gate `b2c07eda…`, which
+matches no committed blob. Re-run on the committed landed bytes `43a1af35…4346`: 650/650 ×3,
+calibration 60/60 (`.ufo/waves/round-34/w1/ExecE1Fuzz/fz-9021{2,3,4}-landed-43a1af35.json`). The
+per-seed confuser counter (`corpus/evidence/round33/c1-count-v3.py`, E2) does not close clause 3: the
+mask gate misses on seeds 9401/9402 (155/156) but meets 156/156 on seed 61111 (R34ReviewRepairs).
+E3: `SKILL.md` metadata range corrected to cases 137–208 and 210–215.
+
+## Round 34 — long claim spans (one claim)
+
+Base `b80539005176ac6ce39bc1c7afb846cb1f2f7c75` (gate `43a1af35…4346`). Frozen design
+`corpus/evidence/round34/claims.md`: v1 `70feb5ea`, v2 `ef16afb1`, v3 `f20aeaa7` (all before any
+candidate receipt). Pre-data control evidence `a92b9f43`; candidate `3026a4e5` (gate
+`772a1d8e4d94dbf3…3e58`); measurement `934d7cb7`.
+
+| claim / axis | before → after | counting command (lane root) | verdict |
+|---|---|---|---|
+| C1 operability (lowest scored axis): `verify-claims` verifies spans of 32768..65536 bytes (surface: `tok_span_at` / `tok_span_all`, the argv/PCRE-limited span matcher) | `LONGSPAN_MATCH=25/42` (base, `LC_ALL=C`, `.ufo/waves/round-34/controls/L1-base-v3/base-v3-C-s3493.json`; 0/42 ×2 by the 1500 s bound in the UTF-8 locale) → `42/42` on seeds 3601, 3602 (`LC_ALL=C`) and 3603 (UTF-8) (`.ufo/waves/round-34/measure/`); 42/42 on five more fresh seeds by R34RerunC1v3 and R34ReviewPatchC; no committed v3 run on the landed gate below 42 | `LC_ALL=C python3 corpus/evidence/round34/c1-count-v3.py --seed N --receipt F` | **unverified (required controls held)** — numerical P1 v3 met; five wave-1 seats ended on provider holds (CtlC1Shortcut, CtlC1Windows, CtlC1Halves, MutC1Counter, CritC1AxisFit), their controls may not be substituted, and the frozen design declared C1 unverified before data (`claims.md`, "Held controls and exclusions") |
+
+The round-1 operability scale is unchanged: score 3 → 3 (delta 0). Non-held controls under v3
+(pre-data): best seat control 40/42 (partial fixes, boundary left-only; `controls/L1-v3-rescore/`);
+L1 diagnostic shapes 33–38/42; feasibility oracle 42/42. Excluded (held-shape re-authoring):
+`controls/L1-keyed/`, `L1-windows/`, window/fraction/halves/shoulder helpers and their receipts.
+
+No-harm on the landed gate: battery PASS, 11 rows (`measure/battery/battery.out`): selftest
+`PASS (253 cases)`, first 251 case lines identical to base (sha256 `46c9c092…` both); claims-r2 17/17;
+chain-r3 17/22; broken 1/2 DRIFT; round-1 observable 3/3; r31 v3 132/132 ×2; r32 C2 v2 and v3
+132/132; r33 C1 v2 156/156. Disclosed: under `LC_ALL=C` the selftest fails on base (11 cases) and
+landed gate (10 cases) alike (`measure/selftest-env/`); the default-locale selftest passes.
+
+Repairs (not claims): E1 (fuzz re-run on committed bytes; corrections above and in
+`knowledge/claim-record-fields-r33.md`), E2 (per-seed confuser counter; not closed), E3 (SKILL range),
+E4 (`w1/ExecE4Census/receipt-binding.py`; QUALITY 42), E5 (QUALITY 43). QUALITY 42–44.
+
+Sources 63 → 66 rows (S064 execve(2), S065 pcre2limits(3), S066 grep(1); tier A, mined; opened
+from installed man pages).
+
+## Capabilities (round-34 change)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| long-span verification (`verify-claims`) | locates and binds spans of 32768..65536 bytes by a 4096-byte probe plus whole-span confirmation, instead of failing on the argv/PCRE pattern limit | `LC_ALL=C python3 corpus/evidence/round34/c1-count-v3.py` → 42/42 (`.ufo/waves/round-34/measure/`); `corpus/knowledge/long-span-argv-r34.md` | 34 (unverified measure: required controls held) |
+
+## Planned — round 35 (not started)
+
+Candidates, not commitments: the PCRE dead zone below the long-span threshold (spans of about
+28000–32767 bytes with escape-diverse content read unsupported; route them through the chunk
+matcher); E2 (a clause-3 counter every lexer-less mask fails on every seed); selftest cases that
+exercise the chunk matcher (cases 252–253 use 29999 bytes); the selftest's `LC_ALL=C` dependence; the
+L0 fetch-scope answer.

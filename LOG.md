@@ -1265,3 +1265,16 @@ S060–S061; QUALITY 33–35; R1–R6 repairs. Lesson: `corpus/lessons/round-32.
   (no-name-signals check). QUALITY 36–41. S062, S063.
 - Motivating evidence: `corpus/lessons/round-32-verifier-spotcheck.md:152-169`;
   `corpus/lessons/round-33.md`.
+
+## Round 34 — 2026-10-23 (hyaku in-session L1, attempt 1)
+
+- Claim C1 operability: `verify-claims` verifies spans of 32768..65536 bytes (the base matcher passed
+  a 4-bytes-per-byte PCRE pattern as one grep argv string: E2BIG at 32768 bytes, PCRE2 size limit
+  from 32765). Design v1 `70feb5ea`, v2 `ef16afb1`, v3 `f20aeaa7` (pre-data; v1 leaves shoulder
+  bands unexamined, CritC1Shapes). Base 25/42 (`LC_ALL=C`) → 42/42 ×3 on gate `772a1d8e`
+  (`934d7cb7`). Verdict unverified: five control seats ended on provider holds; the L1's
+  re-authored held-shape controls are excluded (Main's safety clarification).
+- Repairs E1 (fuzz on committed bytes 1950/1950), E2 (per-seed confusers; not closed: mask 156/156 on
+  seed 61111), E3 (SKILL range), E4 (receipt-binding census), E5 (QUALITY 43). QUALITY 42–44. S064–S066.
+- Motivating evidence: `corpus/lessons/round-33-verifier-spotcheck.md:155-173`;
+  `corpus/lessons/round-34.md`; `.ufo/waves/round-34/controls/L1-probe/out.40000`.

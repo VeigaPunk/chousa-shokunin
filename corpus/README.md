@@ -995,8 +995,17 @@ by a counter whose fixture metadata carries no truth (`evidence/round32/c2-count
 gate 132/132, metadata-order control 96/132). Still open from it: marker_default rows, keys spelled
 with escapes, and the per-character cost of the bash reader on very long lines.
 
+Round 34: spans of 32768..65536 bytes, which the matcher could not search at all (one argv pattern
+of four bytes per span byte: E2BIG at 32768, PCRE2 size limit from 32765), are located by a 4096-byte
+probe and confirmed against the whole span; `json_unescape` is linear (`LONGSPAN_MATCH` 25/42 → 42/42
+under counter v3, `knowledge/long-span-argv-r34.md`, S064–S066). Not moved to held ground: the claim
+is unverified because its required shortcut controls ended on provider holds. Still open: the PCRE
+dead zone below the threshold (about 28000–32767 bytes for escape-diverse spans), spans above 65536
+bytes, and long `verify-chain` quote anchors (now verified too, by R34NoHarm's probe, but not counted).
+
 | Entry | What it holds | Evidence |
 |---|---|---|
 | `knowledge/manifest-append-lock-r32.md` | Round-32 note: the round-24 probe/append race closed by one flock-held critical section on the manifest; why the manifest and not a sibling lock file; why the counter delays writes; limits | `S060`; `evidence/round32/claims.md` (design v2); `.ufo/waves/round-32/measure/after-c1-*.json` |
 | `knowledge/exempt-hop-audit-r32.md` | Round-32 note: "could not be followed" audited locally for three statuses; what a `CHAIN_EXEMPT_RESOLVABLE` finding means; the 16 counter classes; limits | `S061`; `evidence/round32/claims.md` (design v2); `.ufo/waves/round-32/measure/after-c2-*.json` |
 | `knowledge/claim-record-fields-r33.md` | Round-33 note: claim fields come from the top-level JSON object only; nested members ignored; repeated read fields invalid; why fail closed (RFC 8259 §4, Python `json`); limits | `S062`, `S063`; `evidence/round33/claims.md` (design v2); `.ufo/waves/round-33/measure/candidate/` |
+| `knowledge/long-span-argv-r34.md` | Round-34 note: why a 32 KiB+ span failed (argv per-string limit, PCRE2 compiled size, `grep -f` one pattern per line); the probe-and-confirm fix; what counter v3 checks and cannot; limits | `S064`–`S066`; `evidence/round34/claims.md` (design v3); `.ufo/waves/round-34/measure/` |

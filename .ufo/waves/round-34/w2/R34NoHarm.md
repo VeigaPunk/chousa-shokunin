@@ -1,0 +1,22 @@
+# R34NoHarm — no-harm check, landed gate 3026a4e5 (tools/research-gate.sh sha256 772a1d8e…) vs base b8053900 (43a1af35…)
+
+Method: scratch clone `/fast/scratch/hyaku/chousa-r34/w2/R34NoHarm/clone` at `3026a4e5bb4c44c01982fd67bd0140df36384942`; base gate extracted `git show b8053900:tools/research-gate.sh` (sha256 `43a1af35ca668fe535fcef1e68b0c64bbba3eada59c7a23181f591901fca4346` ✔). Battery: `timeout 2400 bash w1/ExecNoHarmBase34/battery.sh <clone>/tools/research-gate.sh <scratch outdir>` (same script sha f1a1591c… as base). Clean env (no LC_ALL export; host default locale; TMPDIR/SCRATCH=scratch). Full run: `battery-landed-clean.out` (artifact). No tools installed.
+
+## 1. Battery (landed) vs archived base — PASS, rows equal, first-251 selftest lines identical
+- Header: counter sha256 (0efbd172…, 654183e1…, 8ec1a1ed…, cb354dd1…, 6f362ece…) and fixture sha256 all identical to base; seeds identical 3801–3805. (lane_revision differs: 934d7cb vs base 70feb5e — lane advanced after base measurement; gate_sha256 differs: 772a1d8e vs 43a1af35 — expected.)
+- Selftest: `RESEARCH_GATE_SELFTEST: PASS (253 cases, 0 skipped)`, exit 0, FAIL_LINES=0. `diff <(head -251 selftest.cases) <archived base selftest.cases>` = EMPTY → first 251 case lines byte-identical; cases 252–253 are the new `claims-longspan`, `claims-longspan-line` (both ok-case). (fresh selftest.cases sha `98813e85eeae4e47816a32dea6d3daa0ce4a68d024b3a49ed043b19d596813d2`).
+- Rows all equal to base expectations: claims-lane-root exit 1 0/17 DRIFT; claims-fleet-root exit 0 17/17 CLEAN; chain-r3 exit 0 17/22 CLEAN; chain-r3-broken exit 1 1/2 DRIFT; observable exit 0 3/3 (log sha identical to base `2ae02592…`); counters r31-c1-v3 LINE_BINDING_MATCH=132/132, r31-c2-v3 REVISION_BINDING_MATCH=132/132, r32-c2-v2 EXEMPT_AUDIT_MATCH=132/132 + RECORD_CHECKS=ok, r33-c1-v2 TOPLEVEL_FIELD_MATCH=156/156, r32-c2-v3 EXEMPT_AUDIT_MATCH=132/132 + RECORD_CHECKS=ok — each receipt `predicate_holds=True matched=total gate_sha256=772a1d8e… counter_sha256=<baseline sha>`; counter log sha256 identical to base run logs (2406fc73…, d2c70fea…, 91ac37bc…, 1eeb8be8…, b0c6f0e8…).
+- `ROWS=11`, `BATTERY_RESULT=PASS`.
+
+## 2. Out-of-claim probes (tok_span_at shared modes): verify-chain quote anchors + verify-all
+Fixture `record-longquote.md`: S1→corpus/x/target.md (under --root) holding a 40,963-byte verbatim quote Q (line 5); hops: (1) anchor=Q verbatim, (2) anchor=Q mutated at byte 16000 (> 4096-probe-chunk), (3) anchor=Q mutated at byte 100 (inside first chunk).
+- Base 43a1af35 (`base-chain.out`): `base/research-gate.sh: line 1553: /usr/bin/grep: Argument list too long` ×3 (E2BIG); all 3 hops observed=anchor-missing incl. the verbatim quote; `RESOLVED_HOPS=0/3`, findings=3. `base-all.out`: chain tally 0/3, findings=5 (structure/integrity sections unchanged).
+- Landed 772a1d8e (`landed-chain.out`): no grep error; hop1 verbatim observed=verified at=line:5; hops 2/3 mutated → anchor-missing (whole-span confirm rejects both chunk-inside and chunk-beyond mutations); `RESOLVED_HOPS=1/3`, findings=2. `landed-all.out`: chain tally 1/3, findings=4; structure (CLAIM_TABLE_ABSENT, REJECTION_DROPPED) and integrity (INTEGRITY refs=3 resolved=3) identical to base.
+- Verdict: disclosed behavior change only for the verbatim long-quote anchor (false-negative E2BIG → verified); mutated quotes stay correctly missing; no other section/row changed → no harm found.
+
+## 3. Environment notes (honesty)
+- With `LC_ALL=C` exported, both gates fail the same ~10 selftest cases (claims-pass, all-*, json-manifest) — harness locale sensitivity, identical on base (b8053900) and landed; isolated probes show identical base/landed refusal-vs-CLEAN behavior. Not candidate-attributable.
+- `claims-lane-fallback` depends on LANE_ROOT=$(dirname $0)/.. (gate location): gate outside the real lane fails it identically on BOTH gates (`refused … not a readable regular file under allowed roots`); with --root=lane both are CLEAN. Archived W1 base ran the gate from inside the lane → passed. One base-only flake observed in a single standalone LC_ALL=C run (11th fail); clean default-locale runs show 0 fails on both gates.
+- Residual risk: battery ran the gate from the scratch clone per assignment; claims-lane-fallback is location-sensitive (documented); no network; no production edits; no git/jj writes.
+
+Artifacts in `.ufo/waves/round-34/w2/R34NoHarm/`: battery-landed-clean.out, base-chain.out, base-all.out, landed-chain.out, landed-all.out, record-longquote.md, selftest.cases.landed.
