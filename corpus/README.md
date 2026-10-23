@@ -984,11 +984,19 @@ Moved from frontier to held ground, measured on synthetic fixtures on gate `10f2
   stay unread.
 
 Still open: non-cooperating writers and network filesystems (C1); URL hops, transitive chains and
-whether a local copy is the source the hop meant (C2); nested `"line"`/`"sha256"` keys read as the
-record's own (round-31 carry); line binding for `## Claims` table pointers; the quote re-open items
-of rounds 29 and 30 and the L0 fetch-scope question.
+whether a local copy is the source the hop meant (C2); line binding for `## Claims` table pointers;
+the quote re-open items of rounds 29 and 30 and the L0 fetch-scope question.
+
+Round 33: the round-31 carry "nested `"line"`/`"sha256"` keys read as the record's own" moved to
+held ground — `verify-claims` reads every field from the top-level object only, and a repeated
+top-level read field is invalid (`TOPLEVEL_FIELD_MATCH` 60/156 → 156/156,
+`knowledge/claim-record-fields-r33.md`, S062, S063). The round-32 exempt-hop audit is now verified
+by a counter whose fixture metadata carries no truth (`evidence/round32/c2-count-v3.py`: landed
+gate 132/132, metadata-order control 96/132). Still open from it: marker_default rows, keys spelled
+with escapes, and the per-character cost of the bash reader on very long lines.
 
 | Entry | What it holds | Evidence |
 |---|---|---|
 | `knowledge/manifest-append-lock-r32.md` | Round-32 note: the round-24 probe/append race closed by one flock-held critical section on the manifest; why the manifest and not a sibling lock file; why the counter delays writes; limits | `S060`; `evidence/round32/claims.md` (design v2); `.ufo/waves/round-32/measure/after-c1-*.json` |
 | `knowledge/exempt-hop-audit-r32.md` | Round-32 note: "could not be followed" audited locally for three statuses; what a `CHAIN_EXEMPT_RESOLVABLE` finding means; the 16 counter classes; limits | `S061`; `evidence/round32/claims.md` (design v2); `.ufo/waves/round-32/measure/after-c2-*.json` |
+| `knowledge/claim-record-fields-r33.md` | Round-33 note: claim fields come from the top-level JSON object only; nested members ignored; repeated read fields invalid; why fail closed (RFC 8259 §4, Python `json`); limits | `S062`, `S063`; `evidence/round33/claims.md` (design v2); `.ufo/waves/round-33/measure/candidate/` |

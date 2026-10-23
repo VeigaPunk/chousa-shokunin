@@ -269,3 +269,38 @@ the admitted entry that motivates it. Tier definitions live in
     fail: `c2-count-v2.py` with `C2_TMP` inside the gate's lane root exits 2 ("fixture dir … lies
     inside the gate's lane root"); under v1 the same layout made strict controls miss E7.
     — `lessons/round-32.md`.
+
+## Round-33 additions (appended 2026-10-23; criteria 1-35 unchanged)
+
+36. **Fixture metadata cannot stand in for reading.** A coverage counter's fixture assigns
+    classes independently of creation order, mtime, inode and name order (shuffle writes across
+    classes; draw mtimes independently). Before the counter is frozen, a metadata-order control
+    and a no-reader control are scored with it and committed; each must score below total.
+    Check: the committed control receipts' `matched` is below `total`. Shown able to fail: the
+    round-32 counter v2 gives the metadata-order control `matched=132/132`
+    (`.ufo/waves/round-32/w2/CriticAxis32/control-metadata-s3232002{1,2}.json`); the round-33 v3
+    counter `corpus/evidence/round32/c2-count-v3.py` gives the same control 96/132 and 95/132 and
+    the no-reader control 78/132 (`.ufo/waves/round-33/w1/ExecD1CounterV3/receipts/`). Routed
+    D1, `lessons/round-32-verifier-spotcheck.md:154-158`.
+
+37. **Every numeric tally carries its counting command.** A count in a report, lesson or
+    SCORECARD row names the command that reproduces it over committed bytes. Check: run the named
+    command and compare. Shown able to fail: `SCORECARD.md` round-32 row says `10f2fe12` ×18; the
+    spot-check said 20; `python3 corpus/evidence/round33/d2-census.py --lane .` prints
+    `C1 receipts on gate 10f2fe12: 21` (the extra receipts were written after the tally was
+    taken). Routed D2, `lessons/round-32-verifier-spotcheck.md:159-162`.
+
+38. **A battery output starts with its revision header.** Every no-harm battery output names
+    `lane_revision=` and `gate_sha256=` before its first result row. Check:
+    `awk '/^=== RUN/{exit} /gate_sha256=/{g=1} /lane_revision=/{r=1} END{print (g&&r)?"HEADER_OK":"HEADER_MISSING"}' <battery.out>`.
+    Shown able to fail: `.ufo/waves/round-32/measure/final/battery.out` → `HEADER_MISSING`;
+    `.ufo/waves/round-33/measure/battery-candidate/battery.out` → `HEADER_OK`. Routed D3,
+    `lessons/round-32-verifier-spotcheck.md:163-165`.
+
+39. **Seats signal only processes they recorded.** No seat selects processes by name or pattern
+    (`pkill`, `killall`, `kill $(pgrep …)`, `pgrep … | xargs kill`) on the shared host; it kills
+    the PID or process group it recorded when it started the process. Check:
+    `bash corpus/evidence/round33/no-name-signals.sh <wave dir>` (exit 1 lists hits; prose that
+    quotes the rule is listed as `[doc; …]` and excluded only by an explicit `--exclude`). Shown able
+    to fail: on `.ufo/waves/round-32` it exits 1 with `w2/RerunC1b.md:31` (`pkill -x sleep`); on
+    `tools/` it exits 0. Routed D5, `lessons/round-32-verifier-spotcheck.md:168-169`.

@@ -47,7 +47,10 @@
 # against its cited source. Blank lines and #-comment lines are ignored; a
 # {"marker_default":…} line sets the default contradiction marker and is not a
 # claim. Every other line is one JSON claim {"id","source","span","expect"} with
-# expect supported|contradicted|unsupported. A claim may also name the source
+# expect supported|contradicted|unsupported. Fields are read from the record's
+# TOP-LEVEL members only (r33): a nested member of the same name is ignored, a
+# repeated top-level read field makes the record invalid, and a line that is not
+# one well-formed JSON object is invalid. A claim may also name the source
 # lines its span must occupy: the optional JSON string field "line" holds "N"
 # or "N-M" (N>=1, M>N, decimal, no leading zeros, no spaces). A present "line"
 # with any other value (empty, non-string, malformed) makes the record invalid.
@@ -359,6 +362,9 @@ usage: research-gate.sh [--selftest] [--help]
   Claims file: one JSON object per claim line:
     {"id":…,"source":…,"span":…,"expect":supported|contradicted|unsupported
      [,"marker":…][,"line":"N"|"N-M"][,"sha256":…]}
+  Fields are read from the top-level object only: a nested member of the same
+  name is ignored; a repeated top-level read field, or a line that is not one
+  well-formed JSON object, makes the record invalid (observed=invalid).
   A present "line" (N>=1, M>N, decimal, no leading zeros, no spaces) pins
   the span to exactly that source line range: bound iff some boundary-delimited
   occurrence spans it (at= set to that occurrence); otherwise observed=

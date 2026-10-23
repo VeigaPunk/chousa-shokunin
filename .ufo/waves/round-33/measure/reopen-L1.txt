@@ -1,0 +1,11 @@
+# L1 re-open of new source rows (2026-10-23, ~08:46Z), scratch /fast/scratch/hyaku/chousa-r33/L1/reopen
+curl -sS --max-time 30 --max-redirs 0 -o rfc8259.txt https://www.rfc-editor.org/rfc/rfc8259.txt  -> HTTP=200
+sha256 rfc8259.txt = 61a5378f4255c720beb2a4b4a63b29540147c140f36988bf086291989b4cd2d7 (same as ScribeSourceRFC8259)
+grep -cF 'The names within an object SHOULD be unique.' rfc8259.txt -> 1   (line 322)
+grep -cF 'unpredictable.  Many implementations report the last name/value pair' rfc8259.txt -> 1   (line 333)
+curl -sS --max-time 30 --max-redirs 0 -o json.html https://docs.python.org/3/library/json.html -> HTTP=200
+sha256 json.html = 5ceeeaf6b0c866bd413ac0a9316f92cd46e03984cfec87cf7ac051ca6235608b; cmp with ScribeSourcePyJson/json-1.html -> identical
+footer: Last updated on Oct 23, 2026 (07:34 UTC).
+html.parser tag-strip (script/style dropped), whitespace runs squeezed (tr -s ' \n' ' '):
+grep -cF 'By default, this module does not raise an exception; instead, it ignores all but the last name-value pair for a given name:' json.norm.txt -> 1
+(without squeezing whitespace this tag-strip gives 0: the paragraph wraps; the seat's json-tag-stripped.txt gives 1)
