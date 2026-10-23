@@ -1,0 +1,27 @@
+--- gate-pristine.sh	2026-10-23 16:00:15.380307633 -0300
++++ gate-P32764.sh	2026-10-23 16:00:39.329821573 -0300
+@@ -1629,15 +1629,19 @@
+   # overlap, the order the one-pattern matcher reports.
+   local LC_ALL=C
+   export LC_ALL
+-  local hay=$1 span=$2 slen=${#span} chunk pattern occurrence offset resume=0
+-  chunk=${span:0:TOK_CHUNK_BYTES}
+-  pattern="$(tok_hex_pattern "${chunk:0:1}")(?=$(tok_hex_pattern "${chunk:1}"))"
++  # CONTROL P32764 (wave-2a2 attack, scratch only): verify only the span's
++  # first 32764 bytes; the match is taken as an occurrence at its start offset
++  # and the boundary/line checks still run at the FULL span extent (the span
++  # length is known).  No whole-span confirmation.
++  local hay=$1 span=$2 slen=${#span} trunc pattern occurrence offset resume=0
++  trunc=${span:0:32764}
++  pattern=$(tok_hex_pattern "$trunc")
+   while IFS= read -r -d '' occurrence; do
+     offset=${occurrence%%:*}
+     (( offset >= resume )) || continue
+-    [[ ${hay:offset:slen} == "$span" ]] || continue
++    (( offset + slen <= ${#hay} )) || continue
+     printf '%s\n' "$offset"
+-    resume=$(( offset + slen ))
++    resume=$(( offset + ${#trunc} ))
+   done < <(printf '%s' "$hay" | grep -a -z -b -o -P -- "$pattern")
+ }
+ 

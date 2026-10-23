@@ -1,0 +1,60 @@
+--- /fast/scratch/hyaku/chousa-r34-a2/w2/MutC2Boundary/gates/landed.sh	2026-10-23 15:58:50.463334933 -0300
++++ /fast/scratch/hyaku/chousa-r34-a2/w2/MutC2Boundary/gates/ctlC-right.sh	2026-10-23 16:00:45.068250029 -0300
+@@ -1641,6 +1641,25 @@
+   done < <(printf '%s' "$hay" | grep -a -z -b -o -P -- "$pattern")
+ }
+ 
++# W2 ATTACK CONTROL (scratch only): every raw exact-substring occurrence,
++# boundary-blind. python bytes.find enumerates all start offsets (overlapping
++# included), left to right. Replaces both matchers; boundaries then filtered
++# by the caller as this control's condition dictates.
++tok_span_offsets_raw() { # HAY SPAN -> stdout: byte offset of each raw occurrence
++  local LC_ALL=C
++  export LC_ALL
++  printf '%s' "$1" | TOKRAW_SPAN=$2 python3 -c '
++import os, sys
++hay = sys.stdin.buffer.read()
++span = os.environ["TOKRAW_SPAN"].encode("utf-8", "surrogateescape")
++if span:
++    i = hay.find(span)
++    while i != -1:
++        sys.stdout.write(str(i) + "\n")
++        i = hay.find(span, i + 1)
++'
++}
++
+ tok_span_at() { # HAY SPAN -> TOK_AT (line:N|lines:N-M) + TOK_L1/TOK_L2
+   # rc0: first boundary-delimited occurrence; rc1: none. Occurrences that are
+   # substrings but glued into a word are skipped, not reported.
+@@ -1652,13 +1671,13 @@
+   while IFS= read -r offset; do
+     before=${hay:0:offset}
+     after=${hay:offset+${#span}}
+-    if tok_left_ok "$before" "$span" && tok_right_ok "$after" "$span"; then
++    if tok_right_ok "$after" "$span"; then
+       TOK_L1=$(( $(count_nl "$before") + 1 ))
+       TOK_L2=$(( TOK_L1 + $(count_nl "$span") ))
+       if [[ $TOK_L1 -eq $TOK_L2 ]]; then TOK_AT=line:$TOK_L1; else TOK_AT=lines:$TOK_L1-$TOK_L2; fi
+       return 0
+     fi
+-  done < <(tok_span_offsets "$hay" "$span")
++  done < <(tok_span_offsets_raw "$hay" "$span")
+   return 1
+ }
+ 
+@@ -1673,13 +1692,13 @@
+   while IFS= read -r offset; do
+     before=${hay:0:offset}
+     after=${hay:offset+${#span}}
+-    if tok_left_ok "$before" "$span" && tok_right_ok "$after" "$span"; then
++    if tok_right_ok "$after" "$span"; then
+       found=1
+       l1=$(( $(count_nl "$before") + 1 ))
+       l2=$(( l1 + $(count_nl "$span") ))
+       printf '%d %d\n' "$l1" "$l2"
+     fi
+-  done < <(tok_span_offsets "$hay" "$span")
++  done < <(tok_span_offsets_raw "$hay" "$span")
+   [[ $found -eq 1 ]]
+ }
+ 

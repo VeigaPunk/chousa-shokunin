@@ -1,0 +1,31 @@
+1633,1634c1633,1637
+<   chunk=${span:0:TOK_CHUNK_BYTES}
+<   pattern="$(tok_hex_pattern "${chunk:0:1}")(?=$(tok_hex_pattern "${chunk:1}"))"
+---
+>   # C2 control C: only the span's first LINE is searched; a hit is never
+>   # confirmed against the rest of the span. A single-line span has no prefix
+>   # shorter than itself, so its 4N-byte pattern still hits the PCRE ceiling.
+>   chunk=${span%%$'\n'*}
+>   pattern="$(tok_hex_pattern "$chunk")"
+1638d1640
+<     [[ ${hay:offset:slen} == "$span" ]] || continue
+1640c1642
+<     resume=$(( offset + slen ))
+---
+>     resume=$(( offset + ${#chunk} ))
+1654a1657,1663
+>     # C2 control C: presence of the first line is enough; no boundary test.
+>     if (( ${#span} >= 32765 )); then
+>       TOK_L1=$(( $(count_nl "$before") + 1 ))
+>       TOK_L2=$(( TOK_L1 + $(count_nl "$span") ))
+>       if [[ $TOK_L1 -eq $TOK_L2 ]]; then TOK_AT=line:$TOK_L1; else TOK_AT=lines:$TOK_L1-$TOK_L2; fi
+>       return 0
+>     fi
+1675a1685,1691
+>     if (( ${#span} >= 32765 )); then
+>       found=1
+>       l1=$(( $(count_nl "$before") + 1 ))
+>       l2=$(( l1 + $(count_nl "$span") ))
+>       printf '%d %d\n' "$l1" "$l2"
+>       continue
+>     fi

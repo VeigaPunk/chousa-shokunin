@@ -1,0 +1,60 @@
+--- /fast/scratch/hyaku/chousa-r34-a2/w2/MutC2Windows/pristine-gate.sh	2026-10-23 15:42:28.700952021 -0300
++++ /fast/scratch/hyaku/chousa-r34-a2/w2/MutC2Windows/ctlC.sh	2026-10-23 15:57:35.282210464 -0300
+@@ -1580,6 +1580,7 @@
+ # and tok_span_all are unchanged.
+ TOK_DIRECT_SPAN_MAX=32764     # span bytes whose 4N-byte pattern fits argv AND PCRE2
+ TOK_CHUNK_BYTES=4096          # probe chunk bytes (4N pattern chars per chunk)
++TOK_WINDOW_BYTES=16384        # CONTROL (MutC2Windows): edge-window bytes for the shortcut matcher
+ 
+ tok_hex_pattern() { # STRING -> PCRE pattern text: one \xHH escape per byte
+   # Byte-identical to the per-character loop of the base matcher (measured
+@@ -1590,6 +1591,40 @@
+   printf '%s' "$hex" | sed 's/../\\x&/g'
+ }
+ 
++# CONTROL (MutC2Windows): shortcut matcher — a span is reported as present at
++# an offset when its FIRST TOK_WINDOW_BYTES-byte window occurs there and its
++# LAST window occurs at the consistent offset (offset + len - W). Bytes between
++# the windows (when any) are never compared. Boundaries and lines unchanged.
++tok_window_offsets() { # HAY WINDOW -> stdout: byte offset of each non-overlapping window occurrence
++  local LC_ALL=C
++  export LC_ALL
++  local hay=$1 w=$2 wlen=${#2} chunk pattern occurrence offset resume=0
++  (( wlen > 0 )) || return 0
++  chunk=${w:0:TOK_CHUNK_BYTES}
++  pattern="$(tok_hex_pattern "${chunk:0:1}")(?=$(tok_hex_pattern "${chunk:1}"))"
++  while IFS= read -r -d '' occurrence; do
++    offset=${occurrence%%:*}
++    (( offset >= resume )) || continue
++    [[ ${hay:offset:wlen} == "$w" ]] || continue
++    printf '%s\n' "$offset"
++    resume=$(( offset + wlen ))
++  done < <(printf '%s' "$hay" | grep -a -z -b -o -P -- "$pattern")
++}
++
++tok_span_offsets_window() { # HAY SPAN -> stdout: head offsets whose tail window sits at len-W
++  local LC_ALL=C
++  export LC_ALL
++  local hay=$1 span=$2 slen=${#2} w=$TOK_WINDOW_BYTES
++  local head tail offset
++  head=${span:0:w}
++  tail=${span: -w}
++  while IFS= read -r offset; do
++    (( offset + slen <= ${#hay} )) || continue
++    [[ ${hay:offset+slen-w:w} == "$tail" ]] || continue
++    printf '%s\n' "$offset"
++  done < <(tok_window_offsets "$hay" "$head")
++}
++
+ tok_span_offsets() { # HAY SPAN -> stdout: byte offset of each occurrence, one per line
+   # LC_ALL=C: the span length and every offset are byte counts, not character
+   # counts (the base matcher measures its pattern in bytes the same way).
+@@ -1597,7 +1632,7 @@
+   export LC_ALL
+   local hay=$1 span=$2
+   if (( ${#span} > TOK_DIRECT_SPAN_MAX )); then
+-    tok_span_offsets_chunk "$hay" "$span"
++    tok_span_offsets_window "$hay" "$span"
+   else
+     tok_span_offsets_direct "$hay" "$span"
+   fi

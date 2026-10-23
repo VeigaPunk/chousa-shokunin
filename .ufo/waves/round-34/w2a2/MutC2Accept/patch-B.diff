@@ -1,0 +1,30 @@
+1633,1634c1633,1636
+<   chunk=${span:0:TOK_CHUNK_BYTES}
+<   pattern="$(tok_hex_pattern "${chunk:0:1}")(?=$(tok_hex_pattern "${chunk:1}"))"
+---
+>   # C2 control B: only the span's first 64 bytes are searched; a hit is never
+>   # confirmed against the rest of the span (the whole-span comparison is gone).
+>   chunk=${span:0:64}
+>   pattern="$(tok_hex_pattern "$chunk")"
+1638d1639
+<     [[ ${hay:offset:slen} == "$span" ]] || continue
+1640c1641
+<     resume=$(( offset + slen ))
+---
+>     resume=$(( offset + 64 ))
+1654a1656,1662
+>     # C2 control B: presence of the first 64 bytes is enough; no boundary test.
+>     if (( ${#span} >= 32765 )); then
+>       TOK_L1=$(( $(count_nl "$before") + 1 ))
+>       TOK_L2=$(( TOK_L1 + $(count_nl "$span") ))
+>       if [[ $TOK_L1 -eq $TOK_L2 ]]; then TOK_AT=line:$TOK_L1; else TOK_AT=lines:$TOK_L1-$TOK_L2; fi
+>       return 0
+>     fi
+1675a1684,1690
+>     if (( ${#span} >= 32765 )); then
+>       found=1
+>       l1=$(( $(count_nl "$before") + 1 ))
+>       l2=$(( l1 + $(count_nl "$span") ))
+>       printf '%d %d\n' "$l1" "$l2"
+>       continue
+>     fi

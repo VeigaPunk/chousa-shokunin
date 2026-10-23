@@ -1,0 +1,7 @@
+1651a1652,1654
+>   # C2 control A (accept-dead-zone): every span of length >= 32765 is reported
+>   # supported with no search of the haystack.
+>   if (( ${#span} >= 32765 )); then TOK_AT=line:1 TOK_L1=1 TOK_L2=1; return 0; fi
+1672a1676,1677
+>   # C2 control A: no search at all, so binding can only ever see phantom line 1.
+>   if (( ${#span} >= 32765 )); then printf '1 1\n'; return 0; fi

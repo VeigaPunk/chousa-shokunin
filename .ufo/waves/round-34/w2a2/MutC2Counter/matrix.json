@@ -1,0 +1,28 @@
+{
+ "scratch": "/fast/scratch/hyaku/chousa-r34-a2/w2/MutC2Counter",
+ "gate_under_test": "a6307edf687ac0fb1b0b08bf7f0518b3fbc310fa9924b970aa3654612562995b",
+ "before_gate": "772a1d8e4d94dbf3a44a64bf850b1324e51546eeb62abcd7b3ec585f0e003e58 (git 3026a4e:tools/research-gate.sh)",
+ "counter": "8c0def4d377cdf1a1e4bd2c9151bb0846216658ff14d725d15ac037c12212173",
+ "seed": 3401,
+ "baseline_committed_counter": {
+  "committed_gate": "37/37 (seed 3401); 37/37 (seed 3402)",
+  "before_gate_772a1d8e": "21/37",
+  "g_accept": "14/37",
+  "g_trunc": "22/37",
+  "g_chunk": "28/37",
+  "g_dup": "0/37",
+  "g_clean": "0/37",
+  "g_nofind": "33/37",
+  "g_lookup": "14/37"
+ },
+ "single_requirement_removals": {
+  "R1 observed equality -> obs != none": {"vs g_trunc": "37/37", "vs g_accept": "33/37", "vs committed gate": "37/37"},
+  "R2 finding-iff clause removed": {"vs g_nofind": "37/37", "vs committed gate": "37/37"},
+  "R3 duplicate-id->none removed": {"vs g_dup": "37/37", "vs committed gate": "37/37"},
+  "R4 rc==1 && DRIFT filter removed": {"vs g_clean": "37/37", "vs committed gate": "37/37"},
+  "R5 per-seed generation -> Random(0)": {"vs g_lookup seeds 222,5011": "37/37, 37/37", "claims.jsonl sha256 seeds 111/222": "7fafe905dfcd81dc7b955bfce04059c87e01497d449e2442237e76b8b2082e8f (identical)", "vs committed gate": "37/37"},
+  "R6 window DZ_MIN/DZ_MAX -> 64..4096": {"vs before gate 772a1d8e": "37/37", "vs committed gate": "37/37"},
+  "R7 class count dz-split 2->0 (assert TOTAL==37 removed)": {"vs g_chunk": "26/35", "vs committed gate": "35/35", "note": "without removing the assert: AssertionError before any run"}
+ },
+ "accept_needs_two_removals": "R1 alone leaves accept at 33/37; the finding-iff clause still rejects the 4 mislocated records"
+}

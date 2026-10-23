@@ -181,7 +181,8 @@ case (found while designing C2; the new cases pin both boundaries).
 
 - "Before (do-nothing control)" predicted a 4/37 ceiling (only the 4 short records pass).
   Both committed before receipts measure 21/37: the 17 long records whose truth is
-  unsupported/mislocated coincidentally pass on the broken gate (every long span reads
+  unsupported (mutations, decoys, split, glued) coincidentally pass on the broken gate; the
+  16-record miss set is the 12 supported and 4 mislocated records (every long span reads
   observed=unsupported when grep refuses the pattern, which matches their truth). The
   do-nothing control still cannot reach 37/37; P2 is unaffected. Found independently by
   wave seats RevC2Receipts (MEDIUM) and ExecC2Rerun (D1).

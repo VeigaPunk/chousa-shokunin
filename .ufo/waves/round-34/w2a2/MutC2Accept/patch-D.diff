@@ -1,0 +1,17 @@
+1651a1652,1654
+>   # C2 control D: every span of length >= 32765 is reported supported with no
+>   # search of the haystack; line binding is decided arithmetically below.
+>   if (( ${#span} >= 32765 )); then TOK_AT=line:1 TOK_L1=1 TOK_L2=1; return 0; fi
+1893a1897,1906
+>         if (( ${#span} >= 32765 )); then
+>           # C2 control D: no occurrence is located; the named range is accepted
+>           # when its width in lines equals the span's own line count.
+>           if (( 10#$line_m - 10#$line_n + 1 == $(count_nl "$span") + 1 )); then
+>             start_line=$line_n
+>             end_line=$line_m
+>             if [[ $line_n == "$line_m" ]]; then at=line:$line_n; else at=lines:$line_n-$line_m; fi
+>             bound=1
+>           fi
+>         else
+1904a1918
+>         fi
