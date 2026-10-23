@@ -92,3 +92,49 @@ with non-ASCII or non-letter content; semantics or truth of a span.
 C1 rests on a `SOURCES.md` row opened this round: the Linux man-pages execve(2) limit on the
 length of a single argument or environment string (`MAX_ARG_STRLEN`, 32 pages), and, if opened,
 pcre2limits(3) on compiled-pattern size (why a long literal PCRE pattern is not a fix either).
+
+## Design v2 (before data; supersedes the v1 counter, TOTAL, P1 and kill rule)
+
+Made after the pre-freeze control wave and before any candidate was scored. Three wave-1 control
+seats ended on provider `cyber_policy` holds (CtlC1Shortcut, CtlC1Windows, CtlC1Halves; also
+MutC1Counter and CritC1AxisFit), so the L1 built those control shapes itself
+(`.ufo/waves/round-34/controls/L1-gates/`, sha256 in `SHA256SUMS`). Under the v1 counter
+(`5ef34787…a565`) three skip-the-middle controls meet the target
+(`controls/L1-v1-meets/`): the shoulder shape CritC1Shapes named (prefix 64 bytes + middle
+[8192:len−8191] + suffix 64 bytes at consistent offsets) 30/30 on seeds 3421 and 3422; a
+three-window 90% compare 30/30 on 3421 and 3422; first/last 16384-byte windows 30/30 on 3421.
+Cause: v1 put each long record's single mutation at 0..63, len−64.., or 8192..len−8192, so a
+gate that never compares some bytes is caught only when a mutation happens to land there. v1 is
+therefore rejected as the P1 counter before data. (An intermediate uncommitted draft with ten
+uniform single-mutation records was itself met by the 90% compare on one of four seeds and was
+discarded unscored; its bytes were not kept, so no receipt of it is cited.)
+
+**Counter v2.** `python3 corpus/evidence/round34/c1-count-v2.py [--gate PATH] [--seed N]
+[--receipt F] [--keep DIR]` (lane root), SHA-256
+`7127246260390a8e33b9597a7726c009dccb0b26935cc1f0889c3b99988376ac`. 40 records in 16 classes:
+v1's classes with long-mut-mid (3) replaced by long-mut-center (2, one letter changed within 64
+bytes of len/2) and three near-copy decoy classes: the source holds 8 copies of the span, each
+with one letter changed at an offset drawn uniformly over the whole span — long-decoys (7, no
+exact copy, `unsupported`), long-decoys-exact (2, one exact copy at a random slot, `supported`),
+long-decoys-line-wrong (2, exact copy present, `"line"` names a decoy's lines, `mislocated`).
+A gate that accepts a copy matching on only a fixed fraction f of the bytes passes long-decoys
+with probability about f^56 per seed. Matching rule, run bound and the other classes unchanged.
+
+**P1 v2 (frozen predicate).** C1 is met iff, on the landed lane revision, this counter prints
+`LONGSPAN_MATCH=40/40` (receipt label `predicate_holds=true`) on each of two fresh-seed runs, and
+no committed run of this counter on the landed gate prints a lower count.
+
+Code condition: `holds = matched == TOTAL` with `TOTAL = 40`. Receipt label: `predicate_holds`.
+
+**Kill rule v2.** Any committed run of counter v2 on the landed gate below 40 is a miss, reported
+as an honest stop; counter v2, TOTAL and P1 v2 are never amended after a candidate is scored.
+
+**Controls under v2 (pre-data, L1; `controls/L1-v2/summary.txt`, seeds 3441–3444).** Best
+non-oracle: 90%/95% three-window compare 34–38/40; shoulder 32–34; 16384 windows 30–31; halves
+(2/4/16 chunks, any or ordered) 29–31; band/line-keyed metadata 29; long-majority 29; record
+order / mtime 11–19; id-hash 7–16. Feasibility oracle (python exact search, never a candidate):
+40/40 on all four seeds. Do-nothing (base gate) under v2: `controls/L1-base/` (committed with the
+v2 receipts or before the first candidate receipt). The seats' v1 control gates are re-scored
+under v2 by the L1 before the first candidate receipt (`controls/L1-v2-rescore/`).
+
+**The command that would show C1 unmoved:** counter v2 on the landed gate printing below 40.
