@@ -2,7 +2,7 @@
 
 source: S029 https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-iv §IV.1 (periodic currency assessment → a scheduled `recheck:`); S033 https://www.w3.org/TR/2013/REC-prov-o-20130430/ §3.1 `prov:wasDerivedFrom` and §3.2 entity-lifetime paragraph (derivation and as-of time are separate facts → `source:` and `verified-at:`); gate `tools/research-gate.sh` `verify_metadata` and selftest cases 137–154 at the round-25 landing; spec v1 `corpus/evidence/round25-claims.md` (Claim 1)
 verified-at: 2026-10-21 (round 25; mode run over the frozen 28-entry population and the 27-file fixture set; differential gate vs hand table vs independent oracle `AGREE=54/54`; S029/S033 opened by round-25 scout seats and quoted in `lessons/round-25.md` `## Gate`)
-recheck: 90d (`bash tools/research-gate.sh --selftest` — cases 137–154 pin the arms; `bash corpus/evidence/round25-meta-differential.sh` → `AGREE=54/54`; re-open S029 §IV.1 on a Handbook release)
+recheck: 90d (`bash tools/research-gate.sh --selftest` — cases 137–208 and 210–215 pin the arms (range corrected round 34, E3); `bash corpus/evidence/round25-meta-differential.sh` → `AGREE=54/54`; re-open S029 §IV.1 on a Handbook release)
 
 ## Claim
 

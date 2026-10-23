@@ -80,3 +80,20 @@ control (duplicates invalid only when values differ) scored 142/156
   located at all (`tok_span_at` argv limit, base too).
 - Other modes read JSON by other means (`gate_drift_scan` and selftest greps); they are outside
   this rule (ScoutJsonReaders33).
+
+## 2026-10-23 correction (round 34, routed E1 and E2)
+
+Lines 65–66 above say the differential fuzz agreed 1950/1950 "on the final gate" with receipts
+`measure/final/fz-9021{2,3,4}.json`. Those three receipts bind gate SHA-256 `b2c07eda…9b4b`, a
+scratch state that matches no committed blob (round-33 outside spot-check E1; listed `UNBOUND` by
+`.ufo/waves/round-34/w1/ExecE4Census/receipt-binding.py`). They are not evidence for the landed gate.
+Re-measured in round 34 on the committed landed bytes (`git show b8053900:tools/research-gate.sh`,
+SHA-256 `43a1af35…4346`): seeds 90212, 90213, 90214 each 650/650, calibration 60/60
+(`.ufo/waves/round-34/w1/ExecE1Fuzz/fz-9021{2,3,4}-landed-43a1af35.json`); the round-33 mask gate
+640/650 (`fz-90215-maskgate.json`).
+
+Clause 3 (string content is never structure) now also has a counter whose confuser content is drawn
+per seed: `corpus/evidence/round33/c1-count-v3.py` (QUALITY 40). Scored in this order: the mask gate
+155/156 on seeds 9401 and 9402 (it misses), the round-32 base 60/156, the landed round-33 gate 156/156
+on seeds 9404 and 9405 (`.ufo/waves/round-34/w1/ExecE2Counter/`). This is a repair re-scoring a rule
+already held, not a new claim; the mask gate misses by one record per seed, so the margin is narrow.
