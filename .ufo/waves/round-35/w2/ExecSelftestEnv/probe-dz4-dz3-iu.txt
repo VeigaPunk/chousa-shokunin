@@ -1,0 +1,36 @@
+### dz4: span=32759 w + \u2192 (JSON escape); FILE holds the LITERAL text \u2192
+-- LC_ALL=C (decoded span stays literal: 32765 bytes -> chunk path)
+research-gate v2 — ts=2026-10-23T20:27:52Z — mode=claims — claims=dz4/claims.jsonl
+CLAIM id=DZ1 expected=supported observed=supported source=lib/dz.md at=line:1 verdict=match
+VERDICT_BEARING_CLAIMS=1/1
+RESEARCH_GATE: CLEAN (claims=1 supported=1 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)
+-- LC_ALL=en_US.UTF-8 (decoded span: 32762 bytes -> direct path)
+research-gate v2 — ts=2026-10-23T20:27:52Z — mode=claims — claims=dz4/claims.jsonl
+CLAIM id=DZ1 expected=supported observed=unsupported source=lib/dz.md at=- verdict=mismatch
+FINDING CLAIM_SPAN_NOT_FOUND severity=warn surface=claims obs=id=DZ1 nearest_line=- context=-
+VERDICT_BEARING_CLAIMS=0/1
+RESEARCH_GATE: DRIFT (claims=1 supported=0 contradicted=0 unsupported=1 mismatched=1 unproven=0 refused=0 invalid=0 findings=1 drift=1)
+
+### dz3: span=32762 w + LITERAL UTF-8 arrow (32765 bytes, dead zone), file holds the arrow
+-- LC_ALL=C
+research-gate v2 — ts=2026-10-23T20:27:53Z — mode=claims — claims=dz3/claims.jsonl
+CLAIM id=DZ1 expected=supported observed=supported source=lib/dz.md at=line:1 verdict=match
+VERDICT_BEARING_CLAIMS=1/1
+RESEARCH_GATE: CLEAN (claims=1 supported=1 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)
+-- LC_ALL=en_US.UTF-8
+research-gate v2 — ts=2026-10-23T20:27:53Z — mode=claims — claims=dz3/claims.jsonl
+CLAIM id=DZ1 expected=supported observed=supported source=lib/dz.md at=line:1 verdict=match
+VERDICT_BEARING_CLAIMS=1/1
+RESEARCH_GATE: CLEAN (claims=1 supported=1 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)
+
+### iu: span = raw invalid UTF-8 bytes \xff\xfe
+-- LC_ALL=C
+research-gate v2 — ts=2026-10-23T20:27:53Z — mode=claims — claims=iu/claims.jsonl
+CLAIM id=I1 expected=supported observed=supported source=lib/iu.md at=line:1 verdict=match
+VERDICT_BEARING_CLAIMS=1/1
+RESEARCH_GATE: CLEAN (claims=1 supported=1 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)
+-- LC_ALL=en_US.UTF-8
+research-gate v2 — ts=2026-10-23T20:27:53Z — mode=claims — claims=iu/claims.jsonl
+CLAIM id=I1 expected=supported observed=supported source=lib/iu.md at=line:1 verdict=match
+VERDICT_BEARING_CLAIMS=1/1
+RESEARCH_GATE: CLEAN (claims=1 supported=1 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)

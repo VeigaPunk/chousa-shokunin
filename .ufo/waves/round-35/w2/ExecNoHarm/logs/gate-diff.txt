@@ -1,0 +1,123 @@
+--- base/tools/research-gate.sh	2026-10-23 17:00:06.819752899 -0300
++++ landed/tools/research-gate.sh	2026-10-23 16:58:39.789312179 -0300
+@@ -329,6 +329,75 @@
+   || date -u -r "$NOW_EPOCH" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null \
+   || date -u +%Y-%m-%dT%H:%M:%SZ)
+ 
++# ---- grep pin (round-35 C1) ------------------------------------------------
++# The matcher shells out to grep(1). Resolving bare `grep` through PATH makes
++# the gate's behaviour a function of the caller's environment: a shim earlier
++# on PATH (this host's interactive shells carry a `pi-uu-grep 0.2.0` uutils
++# grep as a shell builtin/function) answers with the same output while running
++# different code, and a PATH without grep cannot run the gate at all. The gate
++# resolves ONE binary before it evaluates a record, verifies its self-reported
++# provenance (the contract needs GNU grep's -z and -P), and every grep call in
++# this shell runs that absolute path through the wrapper below. An override
++# (RESEARCH_GATE_GREP) must be an absolute path and must pass the same check;
++# a pin that cannot be verified is refused (exit 2, GREP_PROVENANCE) before any
++# record is read, never silently downgraded. CHOUSA_GREP_PIN_ECHO=1 prints
++# `GATE_GREP: path=... source=default|override version="..."` for receipts; it
++# is off by default, so every existing mode keeps its byte-identical output.
++# Provenance is self-reported: a binary that lies about its version is out of
++# this check's reach (round-35 claims.md, C1 limit).
++GREP_BIN=''
++GREP_PIN_SOURCE=''
++GREP_PIN_VERSION=''
++grep() { command "$GREP_BIN" "$@"; }
++
++grep_pin_refuse() { # REASON [CANDIDATE]
++  printf 'research-gate: GREP_PROVENANCE refused: %s (candidate=%s)\n' "$1" "${2:-<none>}" >&2
++  exit 2
++}
++
++grep_pin_verify() { # PATH -> rc0 when the binary reports GNU grep
++  local cand=$1 v
++  [[ -f $cand && -x $cand ]] || return 1
++  v=$("$cand" --version 2>/dev/null | head -n 1 || true)
++  GREP_PIN_VERSION=$v
++  case "$v" in
++    *"GNU grep"*) return 0 ;;
++  esac
++  return 1
++}
++
++grep_pin_init() {
++  local cand='' c=''
++  if [[ -n ${RESEARCH_GATE_GREP:-} ]]; then
++    cand=${RESEARCH_GATE_GREP}
++    GREP_PIN_SOURCE=override
++    case "$cand" in
++      /*) ;;
++      *) grep_pin_refuse "override is not an absolute path" "$cand" ;;
++    esac
++    [[ -f $cand ]] || grep_pin_refuse "override is not a regular file" "$cand"
++    [[ -x $cand ]] || grep_pin_refuse "override is not executable" "$cand"
++    grep_pin_verify "$cand" \
++      || grep_pin_refuse "override does not report GNU grep: ${GREP_PIN_VERSION:-<no version>}" "$cand"
++  else
++    GREP_PIN_SOURCE=default
++    for c in /usr/bin/grep /bin/grep; do
++      if grep_pin_verify "$c"; then cand=$c; break; fi
++    done
++    if [[ -z $cand ]]; then
++      c=$(command -v grep 2>/dev/null || true)
++      case "$c" in
++        /*) if grep_pin_verify "$c"; then cand=$c; fi ;;
++      esac
++    fi
++    [[ -n $cand ]] || grep_pin_refuse "no GNU grep found at /usr/bin/grep, /bin/grep or on PATH" ''
++  fi
++  GREP_BIN=$cand
++  if [[ ${CHOUSA_GREP_PIN_ECHO:-0} == 1 ]]; then
++    printf 'GATE_GREP: path=%s source=%s version="%s"\n' "$GREP_BIN" "$GREP_PIN_SOURCE" "$GREP_PIN_VERSION" >&2
++  fi
++}
++
+ N_FINDINGS=0 N_DRIFT=0 ROLL=CLEAN
+ declare -a FINDING_LINES=()
+ 
+@@ -1629,7 +1698,13 @@
+   # overlap, the order the one-pattern matcher reports.
+   local LC_ALL=C
+   export LC_ALL
+-  local hay=$1 span=$2 slen=${#span} chunk pattern occurrence offset resume=0
++  local hay=$1 span=$2 chunk pattern occurrence offset resume=0
++  # round-35 R1: slen must be read from the parameter, not from the caller's
++  # dynamic scope. `local a=$1 b=${#a}` expands every right-hand side before it
++  # assigns any of them, so the one-statement form read the caller's `span`
++  # (correct only while every caller happened to pass its own `span` unchanged).
++  local slen
++  slen=${#span}
+   chunk=${span:0:TOK_CHUNK_BYTES}
+   pattern="$(tok_hex_pattern "${chunk:0:1}")(?=$(tok_hex_pattern "${chunk:1}"))"
+   while IFS= read -r -d '' occurrence; do
+@@ -7821,7 +7896,7 @@
+     'CLAIM id=PE5 expected=supported observed=supported source=lib/span.md at=line:1 verdict=match' \
+     'claims=5 supported=2 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=3 findings=3 drift=3'
+ 
+-  # ---- round-34 C1 selftest cases (cases 252-254): long spans ----
++  # ---- round-34 C1 selftest cases (cases 252-253): long spans ----
+   # A span of 32768 bytes or more cannot be carried by one PCRE pattern:
+   # the hex pattern needs four argv bytes per span byte, so the exec fails
+   # with E2BIG ("Argument list too long") and the span used to read
+@@ -7854,7 +7929,7 @@
+     'CLAIM id=LS5 expected=supported observed=mislocated source=lib/longtwice.md at=line:1 verdict=mismatch' \
+     'FINDING CLAIM_LINE_MISMATCH'
+ 
+-  # ---- round-34 attempt-2 C2 selftest cases (cases 255-257): the PCRE dead zone ----
++  # ---- round-34 attempt-2 C2 selftest cases (cases 254-256): the PCRE dead zone ----
+   # Spans of 32765..32767 bytes sit between the two ceilings named above: the
+   # 4N-byte pattern still fits one grep argv string, but PCRE2 refuses to
+   # compile it ("regular expression is too large"), so before attempt 2 these
+@@ -7958,6 +8033,11 @@
+   die_usage "--registry is only valid with verify-metadata"
+ fi
+ 
++# Resolve the grep pin before any mode reads a record (round-35 C1): a refused
++# pin exits 2 here, before the mode can produce a verdict with an unverified
++# matcher. usage/--help paths return earlier, so argument errors stay usage.
++grep_pin_init
++
+ # pin/drift take exactly one baseline path: a record, claims surface, manifest
+ # or root would be silently ignored by the canonical invocation, so refusing
+ # them keeps the mode fail-closed like the other setup paths. Both baseline

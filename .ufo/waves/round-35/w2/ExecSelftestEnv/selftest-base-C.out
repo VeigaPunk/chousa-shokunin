@@ -1,0 +1,357 @@
+ok-case  1  pass-control                 exit=0
+ok-case  2  pass-hop-marked-unresolved   exit=0
+ok-case  3  pass-export-chrome           exit=0
+ok-case  4  fail-export-chrome-strict    exit=1
+ok-case  5  fail-chrome-malformed-export exit=1
+ok-case  6  fail-no-question             exit=1
+ok-case  7  fail-unranked-source         exit=1
+ok-case  8  fail-chain-hop-unresolved    exit=1
+ok-case  9  fail-claim-unpointed         exit=1
+ok-case  10 fail-rejection-dropped       exit=1
+ok-case  11 fail-negative-without-sweep  exit=1
+ok-case  12 fail-obs-inference-collapse  exit=1
+ok-case  13 fail-hierarchy-primary-lie   exit=1
+ok-case  14 fail-pointer-ephemeral       exit=1
+ok-case  15 fail-external-without-approval exit=1
+ok-case  16 fail-secret-shaped           exit=1
+ok-case  17 fail-session-read            exit=1
+ok-case  18 fail-schema                  exit=1
+ok-case  19 setup-no-record              exit=2
+ok-case  20 setup-missing-file           exit=2
+FAIL-case claims-pass                  exit=1 want=0 verdicts=1 vbearing=1 token=RESEARCH_GATE: CLEAN VERDICT_BEARING_CLAIMS=4/4 CLAIM id=P1 expected=supported observed=supported source=lib/primary.md at=line:1 verdict=match CLAIM id=P2 expected=contradicted observed=contradicted source=claimsrc/ledger.md at=line:2 verdict=match CLAIM id=P3 expected=unsupported observed=unsupported source=lib/primary.md at=- verdict=match CLAIM id=P4 expected=supported observed=supported source=claimsrc/arrow.md at=line:1 verdict=match
+    | research-gate v2 — ts=2026-10-23T19:58:33Z — mode=claims — claims=/tmp/chousa-research-gate-selftest.YKwzFX/claims-pass.jsonl
+    | CLAIM id=P1 expected=supported observed=supported source=lib/primary.md at=line:1 verdict=match
+    | CLAIM id=P2 expected=contradicted observed=contradicted source=claimsrc/ledger.md at=line:2 verdict=match
+    | CLAIM id=P3 expected=unsupported observed=unsupported source=lib/primary.md at=- verdict=match
+    | CLAIM id=P4 expected=supported observed=unsupported source=claimsrc/arrow.md at=- verdict=mismatch
+    | FINDING CLAIM_SPAN_NOT_FOUND severity=warn surface=claims obs=id=P4 nearest_line=- context=-
+    | VERDICT_BEARING_CLAIMS=3/4
+    | RESEARCH_GATE: DRIFT (claims=4 supported=1 contradicted=1 unsupported=2 mismatched=1 unproven=0 refused=0 invalid=0 findings=1 drift=1)
+ok-case  22 claims-fail-tampered         exit=1
+ok-case  23 claims-fail-out-of-corpus    exit=1
+ok-case  24 claims-fail-external         exit=1
+ok-case  25 claims-fail-session          exit=1
+ok-case  26 claims-fail-contradicted-unmarked exit=1
+ok-case  27 claims-fail-stray-marker     exit=1
+ok-case  28 claims-fail-counting         exit=1
+ok-case  29 setup-claims-no-path         exit=2
+ok-case  30 setup-claims-missing-file    exit=2
+ok-case  31 chain-pass                   exit=0
+ok-case  32 chain-fail-tampered          exit=1
+ok-case  33 chain-fail-anchor-kinds      exit=1
+ok-case  34 chain-fail-out-of-corpus     exit=1
+ok-case  35 chain-fail-external          exit=1
+ok-case  36 chain-fail-invalid           exit=1
+ok-case  37 chain-fail-counting          exit=1
+ok-case  38 chain-fail-no-chain          exit=1
+ok-case  39 setup-chain-no-path          exit=2
+ok-case  40 setup-chain-missing-file     exit=2
+ok-case  41 claims-boundary-pass         exit=0
+ok-case  42 claims-boundary-fail         exit=1
+ok-case  43 chain-pass-boundary          exit=0
+ok-case  44 chain-fail-boundary          exit=1
+ok-case  45 sweeps-pass                  exit=0
+ok-case  46 sweeps-fail-planted-hit      exit=1
+ok-case  47 sweeps-fail-rejection-incomplete exit=1
+ok-case  48 sweeps-fail-unnamed          exit=1
+ok-case  49 sweeps-fail-out-of-corpus    exit=1
+ok-case  50 sweeps-fail-unresolved-id    exit=1
+ok-case  51 sweeps-fail-counting         exit=1
+ok-case  52 sweeps-pass-cell-command     exit=0
+ok-case  53 setup-sweeps-no-path         exit=2
+ok-case  54 setup-sweeps-missing-file    exit=2
+FAIL-case all-pass.md                  rc=1/0 missing:'RESEARCH_GATE: CLEAN' missing:'SECTION claims state=run verdict=CLEAN findings=0 drift=0 tally=VERDICT_BEARING_CLAIMS=4/4' missing:'VERIFY_ALL sections=5 run=5 absent=0 drift-sections=0 findings=0 drift=0' 
+    | research-gate v2 — ts=2026-10-23T19:58:33Z — mode=verify-all — record=/tmp/chousa-research-gate-selftest.YKwzFX/all-pass.md — claims=/tmp/chousa-research-gate-selftest.YKwzFX/claims-pass.jsonl — root=/tmp/chousa-research-gate-selftest.YKwzFX
+    | SECTION structure state=run verdict=CLEAN findings=0 drift=0
+    | SECTION claims state=run verdict=DRIFT findings=1 drift=1 tally=VERDICT_BEARING_CLAIMS=3/4
+    | FINDING CLAIM_SPAN_NOT_FOUND severity=warn surface=claims obs=id=P4 nearest_line=- context=-
+    | SECTION chain state=run verdict=CLEAN findings=0 drift=0 tally=RESOLVED_HOPS=1/2
+    | SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+    | SECTION integrity state=run verdict=CLEAN findings=0 drift=0 tally=INTEGRITY refs=5 resolved=3 unresolved=0
+    | VERIFY_ALL sections=5 run=5 absent=0 drift-sections=1 findings=1 drift=1
+    | RESEARCH_GATE: DRIFT (sections=5 run=5 absent=0 drift-sections=1 findings=1 drift=1)
+ok-case  56 all-pass.md                  exit=1
+FAIL-case all-structure.md             missing:'SECTION claims state=run verdict=CLEAN' missing:'VERIFY_ALL sections=5 run=5 absent=0 drift-sections=1' 
+    | research-gate v2 — ts=2026-10-23T19:58:33Z — mode=verify-all — record=/tmp/chousa-research-gate-selftest.YKwzFX/all-structure.md — claims=/tmp/chousa-research-gate-selftest.YKwzFX/claims-pass.jsonl — root=/tmp/chousa-research-gate-selftest.YKwzFX
+    | SECTION structure state=run verdict=DRIFT findings=1 drift=1
+    | FINDING NO_QUESTION severity=crit surface=question obs=missing ## Question section
+    | SECTION claims state=run verdict=DRIFT findings=1 drift=1 tally=VERDICT_BEARING_CLAIMS=3/4
+    | FINDING CLAIM_SPAN_NOT_FOUND severity=warn surface=claims obs=id=P4 nearest_line=- context=-
+    | SECTION chain state=run verdict=CLEAN findings=0 drift=0 tally=RESOLVED_HOPS=1/1
+    | SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+    | SECTION integrity state=run verdict=CLEAN findings=0 drift=0 tally=INTEGRITY refs=3 resolved=3 unresolved=0
+    | VERIFY_ALL sections=5 run=5 absent=0 drift-sections=2 findings=2 drift=2
+    | RESEARCH_GATE: DRIFT (sections=5 run=5 absent=0 drift-sections=2 findings=2 drift=2)
+ok-case  58 all-pass.md                  exit=0
+FAIL-case claims-pass.jsonl            rc=1/0 missing:'RESEARCH_GATE: CLEAN' missing:'SECTION claims state=run verdict=CLEAN findings=0 drift=0 tally=VERDICT_BEARING_CLAIMS=4/4' missing:'VERIFY_ALL sections=5 run=2 absent=3 drift-sections=0 findings=0 drift=0' 
+    | research-gate v2 — ts=2026-10-23T19:58:33Z — mode=verify-all — record=/tmp/chousa-research-gate-selftest.YKwzFX/claims-pass.jsonl — claims=/tmp/chousa-research-gate-selftest.YKwzFX/claims-pass.jsonl — root=/tmp/chousa-research-gate-selftest.YKwzFX
+    | SECTION structure state=absent
+    | SECTION claims state=run verdict=DRIFT findings=1 drift=1 tally=VERDICT_BEARING_CLAIMS=3/4
+    | FINDING CLAIM_SPAN_NOT_FOUND severity=warn surface=claims obs=id=P4 nearest_line=- context=-
+    | SECTION chain state=absent
+    | SECTION sweeps state=absent
+    | SECTION integrity state=run verdict=CLEAN findings=0 drift=0 tally=INTEGRITY refs=0 resolved=0 unresolved=0
+    | VERIFY_ALL sections=5 run=2 absent=3 drift-sections=1 findings=1 drift=1
+    | RESEARCH_GATE: DRIFT (sections=5 run=2 absent=3 drift-sections=1 findings=1 drift=1)
+FAIL-case all-pass.md                  rc=1/0 missing:'RESEARCH_GATE: CLEAN' 
+    | research-gate v2 — ts=2026-10-23T19:58:33Z — mode=verify-all — record=/tmp/chousa-research-gate-selftest.YKwzFX/all-pass.md — claims=/tmp/chousa-research-gate-selftest.YKwzFX/claims-pass.jsonl — root=/tmp/chousa-research-gate-selftest.YKwzFX
+    | SECTION structure state=run verdict=CLEAN findings=0 drift=0
+    | SECTION claims state=run verdict=DRIFT findings=1 drift=1 tally=VERDICT_BEARING_CLAIMS=3/4
+    | FINDING CLAIM_SPAN_NOT_FOUND severity=warn surface=claims obs=id=P4 nearest_line=- context=-
+    | SECTION chain state=run verdict=CLEAN findings=0 drift=0 tally=RESOLVED_HOPS=1/2
+    | SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+    | SECTION integrity state=run verdict=CLEAN findings=0 drift=0 tally=INTEGRITY refs=5 resolved=3 unresolved=0
+    | VERIFY_ALL sections=5 run=5 absent=0 drift-sections=1 findings=1 drift=1
+    | RESEARCH_GATE: DRIFT (sections=5 run=5 absent=0 drift-sections=1 findings=1 drift=1)
+FAIL-case all-pass.md                  rc=1/0 missing:'RESEARCH_GATE: CLEAN' 
+    | research-gate v2 — ts=2026-10-23T19:58:33Z — mode=verify-all — record=/tmp/chousa-research-gate-selftest.YKwzFX/all-pass.md — claims=/tmp/chousa-research-gate-selftest.YKwzFX/claims-pass.jsonl — root=/tmp/chousa-research-gate-selftest.YKwzFX
+    | SECTION structure state=run verdict=CLEAN findings=0 drift=0
+    | SECTION claims state=run verdict=DRIFT findings=1 drift=1 tally=VERDICT_BEARING_CLAIMS=3/4
+    | FINDING CLAIM_SPAN_NOT_FOUND severity=warn surface=claims obs=id=P4 nearest_line=- context=-
+    | SECTION chain state=run verdict=CLEAN findings=0 drift=0 tally=RESOLVED_HOPS=1/2
+    | SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+    | SECTION integrity state=run verdict=CLEAN findings=0 drift=0 tally=INTEGRITY refs=5 resolved=3 unresolved=0
+    | VERIFY_ALL sections=5 run=5 absent=0 drift-sections=1 findings=1 drift=1
+    | RESEARCH_GATE: DRIFT (sections=5 run=5 absent=0 drift-sections=1 findings=1 drift=1)
+FAIL-case all-meta.md                  rc=1/0 missing:'RESEARCH_GATE: CLEAN' missing:'SECTION claims state=run verdict=CLEAN findings=0 drift=0 tally=VERDICT_BEARING_CLAIMS=4/4' missing:'VERIFY_ALL sections=5 run=5 absent=0 drift-sections=0 findings=0 drift=0' 
+    | research-gate v2 — ts=2026-10-23T19:58:33Z — mode=verify-all — record=/tmp/chousa-research-gate-selftest.YKwzFX/all-meta.md — claims=/tmp/chousa-research-gate-selftest.YKwzFX/claims-pass.jsonl — root=/tmp/chousa-research-gate-selftest.YKwzFX
+    | SECTION structure state=run verdict=CLEAN findings=0 drift=0
+    | SECTION claims state=run verdict=DRIFT findings=1 drift=1 tally=VERDICT_BEARING_CLAIMS=3/4
+    | FINDING CLAIM_SPAN_NOT_FOUND severity=warn surface=claims obs=id=P4 nearest_line=- context=-
+    | SECTION chain state=run verdict=CLEAN findings=0 drift=0 tally=RESOLVED_HOPS=1/2
+    | SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+    | SECTION integrity state=run verdict=CLEAN findings=0 drift=0 tally=INTEGRITY refs=5 resolved=3 unresolved=0
+    | VERIFY_ALL sections=5 run=5 absent=0 drift-sections=1 findings=1 drift=1
+    | RESEARCH_GATE: DRIFT (sections=5 run=5 absent=0 drift-sections=1 findings=1 drift=1)
+ok-case  63 all-meta-missing.md          exit=1
+ok-case  64 no-such-record.md            exit=2
+ok-case  65 integrity-pass               exit=0
+ok-case  66 integrity-fail-dangling-claim exit=1
+ok-case  67 integrity-fail-dangling-source exit=1
+ok-case  68 integrity-fail-dangling-chain-claim exit=1
+ok-case  69 integrity-fail-dangling-sweep exit=1
+ok-case  70 integrity-exempt-counted     exit=0
+ok-case  71 integrity-fail-counting      exit=1
+ok-case  72 setup-integrity-no-path      exit=2
+ok-case  73 setup-integrity-missing-file exit=2
+FAIL-case all-dangling.md              missing:'SECTION claims state=run verdict=CLEAN' missing:'VERIFY_ALL sections=5 run=5 absent=0 drift-sections=1 findings=1 drift=1' 
+    | research-gate v2 — ts=2026-10-23T19:58:33Z — mode=verify-all — record=/tmp/chousa-research-gate-selftest.YKwzFX/all-dangling.md — claims=/tmp/chousa-research-gate-selftest.YKwzFX/claims-pass.jsonl — root=/tmp/chousa-research-gate-selftest.YKwzFX
+    | SECTION structure state=run verdict=CLEAN findings=0 drift=0
+    | SECTION claims state=run verdict=DRIFT findings=1 drift=1 tally=VERDICT_BEARING_CLAIMS=3/4
+    | FINDING CLAIM_SPAN_NOT_FOUND severity=warn surface=claims obs=id=P4 nearest_line=- context=-
+    | SECTION chain state=run verdict=CLEAN findings=0 drift=0 tally=RESOLVED_HOPS=1/1
+    | SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+    | SECTION integrity state=run verdict=DRIFT findings=1 drift=1 tally=INTEGRITY refs=4 resolved=3 unresolved=1
+    | FINDING REF_UNRESOLVED severity=warn surface=integrity obs=kind=claim id=C9 section=sweeps row=SW1 cell=claim_id
+    | VERIFY_ALL sections=5 run=5 absent=0 drift-sections=2 findings=2 drift=2
+    | RESEARCH_GATE: DRIFT (sections=5 run=5 absent=0 drift-sections=2 findings=2 drift=2)
+ok-case  75 pin-clean                    exit=0
+ok-case  76 drift-clean                  exit=0
+ok-case  77 drift-volatile-churn         exit=0
+ok-case  78 drift-one-field-mutant       exit=1
+ok-case  79 drift-missing                exit=2
+ok-case  80 drift-malformed              exit=2
+ok-case  81 drift-volatile-list          exit=1
+ok-case  82 setup-pin-no-path            exit=2
+ok-case  83 setup-drift-no-path          exit=2
+ok-case  84 setup-pin-unwritable         exit=2
+ok-case  85 setup-pin-drift-exclusive    exit=2
+ok-case  86 scope-fail-bounty            exit=1
+ok-case  87 scope-fail-model-quality     exit=1
+ok-case  88 scope-fail-orchestration     exit=1
+ok-case  89 scope-pass-declared-table    exit=0
+ok-case  90 scope-pass-declared-line     exit=0
+ok-case  91 scope-pass-near-miss         exit=0
+ok-case  92 scope-pass-prose-decoy       exit=0
+ok-case  93 banner-pin                   exit=0
+ok-case  94 drift-banner-version         exit=1
+ok-case  95 claims-cap-at                exit=0
+ok-case  96 claims-cap-over              exit=1
+ok-case  97 chain-cap-at                 exit=0
+ok-case  98 chain-cap-over               exit=1
+ok-case  99 claims-hardlink-alias        exit=1
+ok-case  100 chain-hardlink-alias         exit=1
+ok-case  101 claims-hardlink-family       exit=1
+ok-case  102 claims-single-link           exit=0
+ok-case  103 claims-cross-device        exit=1
+ok-case  104 chain-cross-device         exit=1
+ok-case  105 claims-cross-device-control  exit=0
+FAIL-case claims-lane-fallback         exit=1 want=0 verdicts=1 vbearing=1 token=RESEARCH_GATE: CLEAN VERDICT_BEARING_CLAIMS=1/1 CLAIM id=L1 expected=supported observed=supported source=PROVINCE.md at=line:3 verdict=match
+    | research-gate v2 — ts=2026-10-23T19:58:33Z — mode=claims — claims=/tmp/chousa-research-gate-selftest.YKwzFX/claims-lane-fallback.jsonl
+    | CLAIM id=L1 expected=supported observed=refused source=PROVINCE.md at=- verdict=refused
+    | FINDING CLAIM_SOURCE_MISSING severity=warn surface=claims obs=id=L1 source=PROVINCE.md obs=not a readable regular file under allowed roots
+    | VERDICT_BEARING_CLAIMS=0/1
+    | RESEARCH_GATE: DRIFT (claims=1 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=1 invalid=0 findings=1 drift=1)
+ok-case  107 claims-root-slash-absent     exit=1
+ok-case  108 claims-root-slash-read       exit=0
+ok-case  109 claims-root-slash-xdev       exit=1
+ok-case  110 claims-root-dslash           exit=0
+ok-case  111 sweeps-root-slash            exit=0
+ok-case  112 scope-fence-shadow           exit=1
+ok-case  113 scope-fence-only             exit=0
+ok-case  114 scope-fence-nested           exit=1
+ok-case  115 scope-fence-indented         exit=1
+ok-case  116 scope-fence-unclosed         exit=1
+ok-case  117 scope-fail-llm-benchmarks    exit=1
+ok-case  118 scope-fail-llm-scoring       exit=1
+ok-case  119 scope-pass-benchmark-prose   exit=0
+ok-case  120 sweeps-symlink-escape        exit=1
+ok-case  121 sweeps-symlink-dir           exit=1
+ok-case  122 sweeps-inroot-symlink        exit=1
+ok-case  123 claims-cap-eof               exit=0
+ok-case  124 scope-comment-shadow         exit=1
+ok-case  125 ptr-traversal                exit=1
+ok-case  126 ptr-symlink                  exit=1
+FAIL-case ptr-lane-abs                 exit=1 want=0 verdicts=1 token=RESEARCH_GATE: CLEAN findings=0 drift=0
+    | research-gate v2 — ts=2026-10-23T19:58:33Z — mode=verify — record=/tmp/chousa-research-gate-selftest.YKwzFX/ptr-lane-abs.md
+    | FINDING POINTER_UNRESOLVED severity=warn surface=sources obs=ctx=source:S1 ptr=/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-35/PROVINCE.md missing under CHOUSA_ROOT
+    | RESEARCH_GATE: DRIFT (findings=1 drift=1 questions=1 sources=1 chains=1 claims=1 negatives=0 rejections=1 approvals=0)
+ok-case  128 ptr-deny-symlink             exit=1
+ok-case  129 chain-fence-anchor           exit=1
+ok-case  130 claims-config-start          exit=1
+ok-case  131 claims-omp-start             exit=1
+ok-case  132 claims-localstate-start      exit=1
+ok-case  133 claims-config-adjacent       exit=0
+FAIL-case json-unterminated-manifest   rc=1/0 
+    | research-gate v2 — ts=2026-10-23T19:58:33Z — mode=verify-all — record=/tmp/chousa-research-gate-selftest.YKwzFX/all-pass.md — claims=/tmp/chousa-research-gate-selftest.YKwzFX/claims-pass.jsonl — root=/tmp/chousa-research-gate-selftest.YKwzFX
+    | SECTION structure state=run verdict=CLEAN findings=0 drift=0
+    | SECTION claims state=run verdict=DRIFT findings=1 drift=1 tally=VERDICT_BEARING_CLAIMS=3/4
+    | FINDING CLAIM_SPAN_NOT_FOUND severity=warn surface=claims obs=id=P4 nearest_line=- context=-
+    | SECTION chain state=run verdict=CLEAN findings=0 drift=0 tally=RESOLVED_HOPS=1/2
+    | SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+    | SECTION integrity state=run verdict=CLEAN findings=0 drift=0 tally=INTEGRITY refs=5 resolved=3 unresolved=0
+    | VERIFY_ALL sections=5 run=5 absent=0 drift-sections=1 findings=1 drift=1
+    | RESEARCH_GATE: DRIFT (sections=5 run=5 absent=0 drift-sections=1 findings=1 drift=1)
+FAIL-case json-nul-terminated-manifest rc=1/0 
+    | research-gate v2 — ts=2026-10-23T19:58:33Z — mode=verify-all — record=/tmp/chousa-research-gate-selftest.YKwzFX/all-pass.md — claims=/tmp/chousa-research-gate-selftest.YKwzFX/claims-pass.jsonl — root=/tmp/chousa-research-gate-selftest.YKwzFX
+    | SECTION structure state=run verdict=CLEAN findings=0 drift=0
+    | SECTION claims state=run verdict=DRIFT findings=1 drift=1 tally=VERDICT_BEARING_CLAIMS=3/4
+    | FINDING CLAIM_SPAN_NOT_FOUND severity=warn surface=claims obs=id=P4 nearest_line=- context=-
+    | SECTION chain state=run verdict=CLEAN findings=0 drift=0 tally=RESOLVED_HOPS=1/2
+    | SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+    | SECTION integrity state=run verdict=CLEAN findings=0 drift=0 tally=INTEGRITY refs=5 resolved=3 unresolved=0
+    | VERIFY_ALL sections=5 run=5 absent=0 drift-sections=1 findings=1 drift=1
+    | RESEARCH_GATE: DRIFT (sections=5 run=5 absent=0 drift-sections=1 findings=1 drift=1)
+ok-case  136 json-unreadable-manifest     exit=2
+ok-case  137 metadata-clean               exit=0
+ok-case  138 metadata-no-source           exit=1
+ok-case  139 metadata-no-verified         exit=1
+ok-case  140 metadata-no-recheck          exit=1
+ok-case  141 metadata-undated             exit=1
+ok-case  142 metadata-unscheduled         exit=0
+ok-case  143 metadata-unscheduled-strict  exit=1
+ok-case  144 metadata-root-parent         exit=0
+ok-case  145 metadata-fenced              exit=1
+ok-case  146 metadata-after-heading       exit=1
+ok-case  147 metadata-crlf                exit=0
+ok-case  148 metadata-directory           exit=1
+ok-case  149 metadata-missing-path        exit=2
+ok-case  150 metadata-empty-directory     exit=2
+ok-case  151 metadata-nul-refused         exit=1
+ok-case  152 metadata-denylist-alias      exit=1
+ok-case  153 metadata-nonkey-continuation exit=0
+ok-case  154 metadata-safe-symlink        exit=0
+ok-case  155 metadata-hardlink-refused    exit=1
+ok-case  156 metadata-stat-unavailable    exit=1
+ok-case  157 metadata-invalid-calendar    exit=0
+ok-case  158 metadata-literal-heading     exit=0
+ok-case  159 metadata-no-content-echo     exit=0
+ok-case  160 metadata-stable-object       exit=0
+ok-case  161 metadata-usage               exit=0
+ok-case  162 metadata-no-final-newline    exit=0
+ok-case  163 metadata-fenced-heading      exit=0
+ok-case  164 metadata-heading-boundary    exit=0
+ok-case  165 metadata-asof-overdue        exit=1
+ok-case  166 metadata-asof-current        exit=0
+ok-case  167 metadata-asof-date-past      exit=1
+ok-case  168 metadata-asof-event          exit=0
+ok-case  169 metadata-asof-unknown        exit=0
+ok-case  170 metadata-asof-boundary       exit=0
+ok-case  171 metadata-asof-invalid        exit=2
+ok-case  172 metadata-asof-missing        exit=2
+ok-case  173 metadata-asof-wrong-mode     exit=2
+ok-case  174 metadata-asof-leap-2028      exit=0
+ok-case  175 metadata-asof-leap-2027      exit=0
+ok-case  176 metadata-asof-large-cadence  exit=0
+ok-case  177 metadata-asof-date-overflow  exit=0
+ok-case  178 metadata-asof-invalid-verified-date exit=0
+ok-case  179 metadata-asof-refused        exit=1
+ok-case  180 metadata-registry-missing-row exit=1
+ok-case  181 metadata-registry-not-mined  exit=1
+ok-case  182 metadata-registry-used-by-path exit=1
+ok-case  183 metadata-registry-verified-at-bare exit=1
+ok-case  184 metadata-registry-no-token-id exit=0
+ok-case  185 metadata-registry-positive-continuations exit=0
+ok-case  186 metadata-registry-duplicate-first-row exit=1
+ok-case  187 metadata-registry-refused-nul exit=2
+ok-case  188 metadata-asof-usage-help-control accepted=1
+ok-case  189 metadata-asof-usage-clean-control accepted=0
+ok-case  190 metadata-asof-usage-drift-control accepted=0
+ok-case  191 metadata-asof-usage-exit-control accepted=0
+ok-case  192 metadata-asof-usage-diagnostic-control accepted=0
+metadata-asof-unicode-date-locale=en_US.utf8
+ok-case  193 metadata-asof-unicode-date-locale exit=2
+ok-case  194 metadata-asof-unicode-date-C exit=2
+ok-case  195 metadata-asof-128k-zero-prefix exit=1
+ok-case  196 metadata-asof-128k-zero-prefix-plain exit=0
+ok-case  197 metadata-registry-header-break-blank exit=2
+ok-case  198 metadata-registry-header-break-prose exit=2
+ok-case  199 metadata-registry-width-short exit=2
+ok-case  200 metadata-registry-width-long exit=2
+ok-case  201 metadata-registry-column-reorder exit=0
+ok-case  202 metadata-registry-glued-before-standalone exit=1
+ok-case  203 metadata-registry-duplicate-occurrences exit=1
+ok-case  204 metadata-registry-nonstandalone-ASCII exit=0
+ok-case  205 metadata-registry-colon-denylist exit=2
+ok-case  206 metadata-entry-colon-denylist exit=1
+ok-case  207 metadata-colon-anchor-denylist-compat exit=1
+ok-case  208 metadata-ordinary-colon-allowed exit=0
+ok-case  209 claims-registry-colon-deny   exit=1
+ok-case  210 metadata-asof-all-zero-cadence exit=0
+ok-case  211 metadata-registry-escaped-pipe-width exit=0
+ok-case  212 metadata-registry-escaped-pipe-overwide exit=2
+ok-case  213 metadata-registry-mixed-outer-pipes exit=0
+ok-case  214 metadata-registry-delimiter-after-blank exit=2
+ok-case  215 metadata-asof-usage-matcher-fault accepted=0
+ok-case  216 c1-pass-bound                exit=0
+ok-case  217 c1-fail-mislocated           exit=1
+ok-case  218 c1-fail-invalid-line         exit=1
+ok-case  219 c1-pass-no-line              exit=0
+ok-case  220 claims-sha-absent            exit=0
+ok-case  221 claims-sha-absent-fail       exit=1
+ok-case  222 claims-sha-match             exit=0
+ok-case  223 claims-sha-match-spanfail    exit=1
+ok-case  224 claims-sha-stale             exit=1
+ok-case  225 claims-sha-invalid           exit=1
+ok-case  226 claims-sha-validity          exit=1
+ok-case  227 claims-sha-refused           exit=1
+ok-case  228 claims-sha-crlf              exit=0
+ok-case  229 chain-exempt-resolvable      exit=1
+ok-case  230 chain-exempt-unresolvable    exit=0
+ok-case  231 chain-exempt-judgment        exit=0
+ok-case  232 chain-exempt-mixed           exit=1
+ok-case  233 c1lk-holder-blocks-append    exit=0
+ok-case  234 c1lk-second-append           exit=0
+ok-case  235 claims-r2-sha-nonstring      exit=1
+ok-case  236 claims-r2-line-nonstring     exit=1
+ok-case  237 claims-r2-endline            exit=1
+ok-case  238 claims-r2-span-stale         exit=1
+ok-case  239 claims-r2-ws-pin             exit=1
+ok-case  240 r2-hash-fault-shim           exit=1
+ok-case  241 claims-r2-nested-string      exit=0
+ok-case  242 r33-top-nested-line          exit=0
+ok-case  243 r33-top-nested-sha           exit=0
+ok-case  244 r33-top-nested-id            exit=0
+ok-case  245 r33-top-dup-line             exit=1
+ok-case  246 r33-top-confuser-flat        exit=0
+ok-case  247 r33-top-confuser-nested      exit=0
+ok-case  248 r33-top-dup-id               exit=1
+ok-case  249 r33-post-literals            exit=1
+ok-case  250 r33-post-nul-dup             exit=1
+ok-case  251 r33-post-escapes             exit=1
+ok-case  252 claims-longspan              exit=1
+ok-case  253 claims-longspan-line         exit=1
+ok-case  254 claims-deadzone              exit=1
+ok-case  255 claims-deadzone-line         exit=1
+ok-case  256 claims-deadzone-edge         exit=1
+RESEARCH_GATE_SELFTEST: FAIL (12/256 cases)

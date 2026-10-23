@@ -6,7 +6,9 @@ witness's discriminating power. Read-only on all lane production files; no git/j
 no subagents spawned; no installs performed (nothing needed).
 
 **Verdict: C2 MEETS as frozen (P2 holds on both fresh seeds), but the witness is materially weaker than
-the frozen claim text states — three bypasses still pass P2.** Details below.
+the frozen claim text states. Four bypasses still pass P2, and the strongest one (§3.5) makes the
+chunk matcher's body execute ZERO times while the counter still prints `LANDED_WITNESS=pass` and
+`predicate_holds: true`, exit 0, on both fresh seeds.** Details below.
 
 ---
 
@@ -235,9 +237,79 @@ per-record property the docstring claims.** [INFERENCE] The per-record property 
 asserts would need per-record attribution of stamps (e.g. correlating the traced span length or
 the claim id with the matcher entry), not a bare count.
 
----
+### 3.5 STRONGEST: a forged-stamp engine passes P2 while the chunk matcher never executes
 
-## 4. Repair R1 — slen probe re-measured (in-scope cross-check)
+`k10-forge.sh` (own build; `build-k10.py`). It needs **no hardcoded knowledge**. At runtime it:
+
+- locates its own chunk-matcher entry line by parsing its **own source** (the same algorithm
+  `mechanism-witness.matcher_entry_lines` uses: first non-comment, non-blank, non-`}` body line of
+  `tok_span_offsets_chunk`);
+- derives the trace marker from **`$PS4`** (`${PS4%%\$\{BASH_SOURCE\}*}` → `@@WITNESS@@`), with the
+  literal marker only as a fallback;
+- computes its own absolute path the way the witness does (`os.path.abspath` semantics);
+- writes a forged stamp line to **stderr** — the same fd `bash -x` writes its trace to.
+
+For every long span it writes the forged stamp and answers from the exact python helper. It **never
+calls the chunk matcher**.
+
+```
+python3 clone/tools/mechanism-witness.py --gate k10-forge.sh --seed 3547 --json k10-forge.json
+→ WITNESS=pass OUTPUT=9/9 STAMPS chunk=9 direct=1 (long records=8)    (exit 0)
+```
+
+**Proof the chunk matcher never runs:** I instrumented the chunk function's own body (inserted a
+`printf` immediately after its first executable line, `k10-forge-inst.sh` line 1717) and ran the
+witness:
+
+```
+WITNESS=pass OUTPUT=9/9 STAMPS chunk=9 direct=1 (long records=8)   (witness rc=0)
+chunk body executions: 0
+```
+
+**Zero** executions of the chunk matcher's body, while the witness reports `chunk=9` and passes.
+
+**And the frozen counter reports a clean P2 pass — on both fresh seeds:**
+
+```
+python3 clone/corpus/evidence/round35/c2-count.py --gate k10-forge.sh \
+  --battery clone/tools/mechanism-witness.py --seed 3547 --receipt .../c2-attack-k10.json
+→ exit 0
+WITNESS_SEPARATED=2/2 OUTPUT_EQUIV=2/2 LANDED_WITNESS=pass
+  K1-python-exact  output=9/9 witness=fail stamps={'chunk': 0, 'direct': 1}
+  K2-root-keyed    output=9/9 witness=fail stamps={'chunk': 0, 'direct': 1}
+```
+
+seed 3559 identical (`c2-attack-k10-3559.json`, exit 0). In both receipts:
+`landed.stamps = {chunk: 9, direct: 1}`, `landed.long_records = 8`, `landed.output_full: true`,
+`predicate_holds: true`.
+
+**Why this is worse than the pre-declared limit.** `claims.md` §C2 "Limit stated before data" says:
+"A trace witness cannot distinguish an engine that knows it is traced, or that calls the chunk matcher
+once for show and ignores its result. The witness rules out fingerprint-and-shortcut engines, never
+active anti-instrumentation." That limit correctly predicts the *witness* can be fooled by an
+anti-instrumentation engine. What it does not predict is that the **counter's separation predicate
+still reports `WITNESS_SEPARATED=2/2`** for such an engine. P2 conjoins two arms:
+
+- `landed.witness == "pass"` — defeated by the forgery (the engine writes the stamps);
+- `separated == 2` (each built variant `output_full` **and** `witness == "fail"`) — defeated by a
+  one-line self-source check: the counter builds its variants by patching the candidate, and the
+  patch embeds the counter's helper name `span_search.py`; the candidate greps **its own file** for
+  that string and simply does not forge when it is present.
+
+So both arms of P2 are satisfiable **by construction** by an engine that never runs the mechanism
+under test. P2 is therefore not evidence that the dead-zone mechanism ran: `LANDED_WITNESS=pass`
+only proves that *something* wrote lines of the right shape to stderr.
+
+The forgery needs nothing secret: `MARK = "@@WITNESS@@"` is a module constant in the committed
+witness (`mechanism-witness.py:60`), the stamp format is `WITNESS@@<path>:<lineno> `
+(`mechanism-witness.py:288`), and the required line number is derivable from the gate's own source.
+[INFERENCE] Two hardening directions follow from the measurements: attribute stamps to a record
+identity the gate cannot read (so an engine cannot know what to forge), and have the counter verify
+that its built variants differ from the candidate only at the intended site (so a self-source check
+cannot invert the comparison). I did not implement either — this seat is read-only on lane
+production files.
+
+
 
 ```
 bash .ufo/waves/round-35/repairs/slen-probe.sh clone/tools/research-gate.sh
@@ -259,22 +331,33 @@ none. R1 confirmed: base `0` offsets / landed `1`. Gate shas as pinned in §0.
   bash versions or `set -x` variants.
 - §3.1 depends on the host's `/tmp` layout; a host with a `/tmp`-shaped default temp root (as here)
   hides it, which is presumably why the L1's own run passed.
-- §3.2/§3.3 bypass candidates are my own constructions, not committed lane controls; they are
-  reproducible from `build-k5.py` / `build-k7.py` in the artifact dir (builders are deterministic —
-  re-running them reproduced the identical gate sha256s).
+- §3.2/§3.3/§3.5 bypass candidates are my own constructions, not committed lane controls; they are
+  reproducible from `build-k5.py` / `build-k7.py` / `build-k9.py` / `build-k10.py` in the artifact
+  dir (builders are deterministic — re-running them reproduced identical gate sha256s).
+- §3.5's engine detects the counter's own patch (it greps its source for `span_search.py`). That is
+  a legitimate engine capability under the frozen text (which places active anti-instrumentation
+  outside the witness's remit) but it means the separation arm of P2 is not a mechanism measurement
+  for such an engine. The forgery arm needs no patch detection at all and defeats `LANDED_WITNESS
+  =pass` on its own (proved: chunk body executed 0 times, witness pass).
+- I did not test whether the witness could be made robust (no writes to lane production files); the
+  hardening directions in §3.5 are inference, not measured fixes.
 - `long_records` counts *claims* whose class is not `short-verbatim`, not records that actually
   routed long; for this fixture the two coincide (9 long-routed calls ≥ 8 claims), but that is a
   coincidence of the class table, not a property of the witness.
 
-## 6. Artifacts (all in `.ufo/waves/round-35/w2/ExecC2Fresh2/`, 1.5 MB total)
+## 6. Artifacts (all in `.ufo/waves/round-35/w2/ExecC2Fresh2/`, 2.6 MB total; largest file 372 KB)
 
 Receipts: `c2-s3547.json`, `c2-s3559.json`, `witness-3547.json`, `witness-3559.json`,
-`c2-s3547-shm.json`, `c2-default-3547.json`, `c2-attack-skip1.json`, `c2-attack-kshow.json`,
-`c2-attack-kall.json`, `c2-attack-k8.json`, `k5-skip1-1.json`, `k7-show.json`.
+`c2-s3547-shm.json`, `c2-default-3547.json`, `c2-attack-skip1.json`, `c2-attack-skip1-3559.json`,
+`c2-attack-kshow.json`, `c2-attack-kall.json`, `c2-attack-k8.json`, `c2-attack-k9.json`,
+`c2-attack-k10.json`, `c2-attack-k10-3559.json`, `k5-skip1-1.json`, `k7-show.json`,
+`k9-forge.json`, `k10-forge.json`, `k10-inst.json`.
 Stdout captures: `c2-s3547.out`, `c2-s3559.out`, `witness-3547.out`.
-Builders/mechanisms: `build-k5.py`, `build-k7.py`, `census.py`; candidate gates `k5-skip1-1.sh`
-(sha `72c2ccaf288e4ee1…`), `k7-show.sh` (`b13b9f7af37ea413…`), `k5-all.sh`
-(`21906c626505b9fd…`), `k8-fixprefix.sh` (`69253ea195913521…`).
+Builders/mechanisms: `build-k5.py`, `build-k7.py`, `build-k9.py`, `build-k10.py`, `census.py`.
+Candidate gates: `k5-skip1-1.sh` (sha `72c2ccaf288e4ee1…`), `k7-show.sh` (`b13b9f7af37ea413…`),
+`k5-all.sh` (`21906c626505b9fd…`), `k8-fixprefix.sh` (`69253ea195913521…`), `k9-forge.sh`
+(`39708aac3c265ef1…`), `k10-forge.sh` (`ed246fdb4d6f2bd0…`), `k10-forge-inst.sh` (instrumented
+chunk body, for the zero-execution proof).
 
-Scratch (large, `/tmp`): `/tmp/hyaku/chousa-r35/w2/ExecC2Fresh2/` — clone, per-seed receipts,
-`ctl-*.json` control receipts.
+Scratch (large, `/tmp`): `/tmp/hyaku/chousa-r35/w2/ExecC2Fresh2/` — clone, the witness's own
+per-seed fixtures, `ctl-*.json` control receipts, `census.py` call logs.

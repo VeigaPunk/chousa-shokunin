@@ -1,0 +1,139 @@
+# round-35 W2 no-harm battery (ExecNoHarm)
+lane_clone=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed
+lane_clone_revision=e87c5d7ea2dbf3730b36a3961de3f06261d015e4
+gate=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/tools/research-gate.sh
+gate_sha256=1f2fb4f522d9a670b49dd61ad1369f55ee012f3b0d38050654be45a71aaef617
+fleet_root=/home/vgpnk/Projects/shokunin
+counter=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/corpus/evidence/round31/c1-count-v3.py sha256=0efbd172bbd89bd44c2cca0ececf933b662f556fc71ad3983a69f3529b36efb6
+counter=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/corpus/evidence/round31/c2-count-v3.py sha256=654183e17adc22162d54025a34f4ec2aa9099f2d1118ee07f5b2a9358ea736a8
+counter=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/corpus/evidence/round31/c1-count.py sha256=c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427
+counter=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/corpus/evidence/round31/c2-count.py sha256=1064fdb356e25440c64bb4d4d5363acb9c1bbc32c687c8ea50096d74c849d500
+counter=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/corpus/evidence/round32/c2-count-v2.py sha256=8ec1a1ed44f1d3971a73eeace677cbedd0187563bea063ec6b680261dbb23c8a
+counter=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/corpus/evidence/round33/c1-count-v2.py sha256=cb354dd1b5bdf2540e2bf356d945e01cd3ce8207d66e7a1ec76f363650e6a514
+counter=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/corpus/evidence/round32/c2-count-v3.py sha256=6f362ece2e5e04c92212ee5a3547a69a6742c5658fd7ebc41688b68043e5a9fa
+counter=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/corpus/evidence/round34/c2-count.py sha256=8c0def4d377cdf1a1e4bd2c9151bb0846216658ff14d725d15ac037c12212173
+fixture=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/corpus/fixtures/claims-r2.jsonl sha256=23d078cbfd032ec5ee7de5c21de65eba3a3cd2989a78281ff61bc6db62188802
+fixture=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/corpus/fixtures/chain-r3.md sha256=06115f2f8e6db3c60034411dc6be42c4e0887352b09ab9cbd7f760801237ba07
+fixture=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/corpus/fixtures/chain-r3-broken.md sha256=b66222a16d4c5323ee6932839ff5746af5f716f36372af506755aed18e0f5c6a
+battery_script=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/battery.sh sha256=23051023db635087e4608ce9bb8fd19f0aaae65dfa133600f47eba724c3b5d24
+utc=2026-10-23T20:08:02Z
+hostname=plazir27
+scratch=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/tmp
+seeds=r31-c1-v3:3901 r31-c2-v3:3902 r32-c2-v2:3903 r33-c1-v2:3904 r32-c2-v3:3905 r34-c2:3906 r31-c1-v1:3907 r31-c2-v1:3908
+
+=== RUN selftest
+cmd=bash /tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/tools/research-gate.sh --selftest (cwd=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed timeout=1800s)
+exit=0 want=0 wall_ms=35477 log=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/selftest.log sha256=5311643cc95e6358a9fd513ec8ba67b944617e7d7da2f8df1c4d33d1f0c75c12
+  RESEARCH_GATE_SELFTEST: PASS (256 cases, 0 skipped)
+SELFTEST_CASES=256 cases_sha256=f39309655fa554bb501c14f02b2a5aec7f2bb9f29171de33ffb3908037266e8d file=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/selftest.cases
+SELFTEST_FAIL_LINES=0
+CHECK selftest ok: RESEARCH_GATE_SELFTEST: PASS
+
+=== RUN claims-lane-root
+cmd=bash /tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/tools/research-gate.sh verify-claims corpus/fixtures/claims-r2.jsonl --root . (cwd=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed timeout=900s)
+exit=1 want=1 wall_ms=206 log=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/claims-lane-root.log sha256=1c18e5730af76bc7edc5949d88de76eb46d46f5ed3be053c5113494bafa5d9d8
+  VERDICT_BEARING_CLAIMS=0/17
+  RESEARCH_GATE: DRIFT (claims=17 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=17 invalid=0 findings=17 drift=17)
+
+=== RUN claims-fleet-root
+cmd=bash /tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/tools/research-gate.sh verify-claims corpus/fixtures/claims-r2.jsonl --root /home/vgpnk/Projects/shokunin (cwd=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed timeout=900s)
+exit=0 want=0 wall_ms=369 log=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/claims-fleet-root.log sha256=6e2e9972a3b27b0dca81dd9d91d172846a449e582283da33aaeabcb1aa9b933b
+  VERDICT_BEARING_CLAIMS=17/17
+  RESEARCH_GATE: CLEAN (claims=17 supported=13 contradicted=2 unsupported=2 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)
+CHECK claims-fleet-root ok: VERDICT_BEARING_CLAIMS=17/17
+CHECK claims-fleet-root ok: RESEARCH_GATE: CLEAN (claims=17 supported=13 contradicted=2 unsupported=2
+
+=== RUN chain-r3
+cmd=bash /tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/tools/research-gate.sh verify-chain corpus/fixtures/chain-r3.md --root /home/vgpnk/Projects/shokunin (cwd=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed timeout=900s)
+exit=0 want=0 wall_ms=1207 log=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/chain-r3.log sha256=679589ef696f2105fcd4fb9940cbdfacf813493c20e267f8a0ecb141b6b0db27
+  RESOLVED_HOPS=17/22
+  RESEARCH_GATE: CLEAN (hops=22 verified=17 exempt=5 anchor-missing=0 refused=0 invalid=0 findings=0 drift=0 resolvable=0)
+CHECK chain-r3 ok: RESOLVED_HOPS=17/22
+CHECK chain-r3 ok: RESEARCH_GATE: CLEAN (hops=22 verified=17 exempt=5
+
+=== RUN chain-r3-broken
+cmd=bash /tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/tools/research-gate.sh verify-chain corpus/fixtures/chain-r3-broken.md --root /home/vgpnk/Projects/shokunin (cwd=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed timeout=900s)
+exit=1 want=1 wall_ms=166 log=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/chain-r3-broken.log sha256=6e947ee157d88ec749d7dae11357a370dae2f00c70acc4e6b935fe175b0fbbfe
+  RESOLVED_HOPS=1/2
+  RESEARCH_GATE: DRIFT (hops=2 verified=1 exempt=0 anchor-missing=1 refused=0 invalid=0 findings=1 drift=1 resolvable=0)
+CHECK chain-r3-broken ok: RESOLVED_HOPS=1/2
+CHECK chain-r3-broken ok: RESEARCH_GATE: DRIFT (hops=2 verified=1
+
+observable_source=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/SCORECARD.md ## Planned (bash block)
+observable_cmd=python3 -c 'import subprocess; names=("A-shokunin-tradition.md","B-multiagent-knowledge.md","C-rank-taxonomy.md"); rows=[subprocess.run(["bash","tools/research-gate.sh","verify","../research/deep-research-2026-09-28/"+n,"--root",".."],capture_output=True,text=True) for n in names]; print("VERDICT_BEARING_EXPORTS=%d/3" % sum(r.returncode==1 and sum(s.startswith("RESEARCH_GATE: DRIFT (") for s in r.stdout.splitlines())==1 for r in rows))'
+
+=== RUN observable
+cmd=bash -c python3\ -c\ \'import\ subprocess\;\ names=\(\"A-shokunin-tradition.md\"\,\"B-multiagent-knowledge.md\"\,\"C-rank-taxonomy.md\"\)\;\ rows=\[subprocess.run\(\[\"bash\"\,\"tools/research-gate.sh\"\,\"verify\"\,\"../research/deep-research-2026-09-28/\"+n\,\"--root\"\,\"..\"\]\,capture_output=True\,text=True\)\ for\ n\ in\ names\]\;\ print\(\"VERDICT_BEARING_EXPORTS=%d/3\"\ %\ sum\(r.returncode==1\ and\ sum\(s.startswith\(\"RESEARCH_GATE:\ DRIFT\ \(\"\)\ for\ s\ in\ r.stdout.splitlines\(\)\)==1\ for\ r\ in\ rows\)\)\' (cwd=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/obsroot/chousa-shokunin timeout=900s)
+exit=0 want=0 wall_ms=91 log=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/observable.log sha256=2ae02592089b0215340ce5cd2d43f1c28f7ed5cc4eff34004b724ffb5c762e3f
+  VERDICT_BEARING_EXPORTS=3/3
+CHECK observable ok: VERDICT_BEARING_EXPORTS=3/3
+
+=== RUN r31-c1-v3
+cmd=python3 /tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/corpus/evidence/round31/c1-count-v3.py --gate /tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/tools/research-gate.sh --seed 3901 --receipt /tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/r31-c1-v3.json (cwd=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed timeout=900s)
+exit=0 want=0 wall_ms=3471 log=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/r31-c1-v3.log sha256=2406fc73b54bcf063d4235820f1e064f25a5b9d00a83313b7252475c0cd975f1
+  LINE_BINDING_MATCH=132/132
+CHECK r31-c1-v3 ok: LINE_BINDING_MATCH=132/132
+receipt=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/r31-c1-v3.json
+RECEIPT r31-c1-v3 ok
+
+=== RUN r31-c2-v3
+cmd=python3 /tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/corpus/evidence/round31/c2-count-v3.py --gate /tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/tools/research-gate.sh --seed 3902 --receipt /tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/r31-c2-v3.json (cwd=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed timeout=900s)
+exit=0 want=0 wall_ms=2818 log=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/r31-c2-v3.log sha256=d2c70fea47abdcb368b8bbd03d11c4aa5b808b8c6de91814db2b4bf8982230c4
+  REVISION_BINDING_MATCH=132/132
+CHECK r31-c2-v3 ok: REVISION_BINDING_MATCH=132/132
+receipt=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/r31-c2-v3.json
+RECEIPT r31-c2-v3 ok
+
+=== RUN r32-c2-v2
+cmd=python3 /tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/corpus/evidence/round32/c2-count-v2.py --gate /tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/tools/research-gate.sh --seed 3903 --receipt /tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/r32-c2-v2.json (cwd=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed timeout=900s)
+exit=0 want=0 wall_ms=8696 log=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/r32-c2-v2.log sha256=91ac37bca7d5d429ae36727ae58dce5706f12ecac286dd78fca9af45a077099a
+  EXEMPT_AUDIT_MATCH=132/132
+CHECK r32-c2-v2 ok: EXEMPT_AUDIT_MATCH=132/132
+CHECK r32-c2-v2 ok: RECORD_CHECKS=ok
+receipt=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/r32-c2-v2.json
+RECEIPT r32-c2-v2 ok
+
+=== RUN r33-c1-v2
+cmd=python3 /tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/corpus/evidence/round33/c1-count-v2.py --gate /tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/tools/research-gate.sh --seed 3904 --receipt /tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/r33-c1-v2.json (cwd=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed timeout=900s)
+exit=0 want=0 wall_ms=3580 log=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/r33-c1-v2.log sha256=1eeb8be8062e53154648a1561adc741386d679d7a21ab05ae895e9a4936c31ab
+  TOPLEVEL_FIELD_MATCH=156/156
+CHECK r33-c1-v2 ok: TOPLEVEL_FIELD_MATCH=156/156
+receipt=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/r33-c1-v2.json
+RECEIPT r33-c1-v2 ok
+
+=== RUN r32-c2-v3
+cmd=python3 /tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/corpus/evidence/round32/c2-count-v3.py --gate /tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/tools/research-gate.sh --seed 3905 --receipt /tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/r32-c2-v3.json (cwd=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed timeout=900s)
+exit=0 want=0 wall_ms=6405 log=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/r32-c2-v3.log sha256=b0c6f0e846115355feefbc00a804672fa55b6c249ed0d26ec1404a94a6a056aa
+  COUNTER c2-count-v3 schema=chousa-r32-c2-receipt/v3 metadata_decoupled: true
+  EXEMPT_AUDIT_MATCH=132/132
+CHECK r32-c2-v3 ok: EXEMPT_AUDIT_MATCH=132/132
+CHECK r32-c2-v3 ok: RECORD_CHECKS=ok
+receipt=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/r32-c2-v3.json
+RECEIPT r32-c2-v3 ok
+
+=== RUN r34-c2
+cmd=python3 /tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/corpus/evidence/round34/c2-count.py --gate /tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/tools/research-gate.sh --seed 3906 --receipt /tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/r34-c2.json (cwd=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed timeout=900s)
+exit=0 want=0 wall_ms=26129 log=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/r34-c2.log sha256=30e3d576f96cf5f3f2634b67072fc95dff131cbb54933450a474776ab658d542
+  DEADZONE_MATCH=37/37
+CHECK r34-c2 ok: DEADZONE_MATCH=37/37
+receipt=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/r34-c2.json
+RECEIPT r34-c2 ok
+
+=== RUN r31-c1-v1
+cmd=python3 /tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/corpus/evidence/round31/c1-count.py --gate /tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/tools/research-gate.sh --seed 3907 --receipt /tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/r31-c1-v1.json (cwd=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed timeout=900s)
+exit=0 want=0 wall_ms=2923 log=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/r31-c1-v1.log sha256=1eea862fcb43408175be28481ef66d00318abdb4f5302b868d2a5e484b12a0cd
+  LINE_BINDING_MATCH=120/120
+CHECK r31-c1-v1 ok: LINE_BINDING_MATCH=120/120
+receipt=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/r31-c1-v1.json
+RECEIPT r31-c1-v1 ok
+
+=== RUN r31-c2-v1
+cmd=python3 /tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/corpus/evidence/round31/c2-count.py --gate /tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed/tools/research-gate.sh --seed 3908 --receipt /tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/r31-c2-v1.json (cwd=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/landed timeout=900s)
+exit=0 want=0 wall_ms=2001 log=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/r31-c2-v1.log sha256=741b3dcbd0fee0500f7d42e86073dbcdbc114b0cf36d4970e5e862d9b124d21d
+  REVISION_BINDING_MATCH=120/120
+CHECK r31-c2-v1 ok: REVISION_BINDING_MATCH=120/120
+receipt=/tmp/hyaku/chousa-r35/w2/ExecNoHarm/out/r31-c2-v1.json
+RECEIPT r31-c2-v1 ok
+
+ROWS=14
+BATTERY_RESULT=PASS
