@@ -198,3 +198,80 @@ Two records shortcut → chunk=7 → witness=fail, so the slack is exactly one r
 strictly stronger bypass than the pre-stated "call for show" limit (claims.md:106-109), and it is
 NOT covered by that limits paragraph. Negative controls (peer): whole-path shortcut and
 fixture-prefix-keyed candidates are both killed (LANDED_WITNESS=fail, exit 1).
+
+## 8. Addendum 2 — the forge survives the pin hardening (verified on the final gate)
+
+The lane advanced past the wave base while this seat was finishing. `tools/research-gate.sh` in the
+working tree is now `a47688518e509edbf43b433a5e16e1cf2481233f3acedb5824ba341f7f0c38ad`
+(recorded as erratum 4 in `corpus/evidence/round35/claims.md`), not the `1f2fb4f5…` blob this seat
+scored in §§1-3. I rebuilt my PS4-derived forge from the current gate (`head/spoof5-head.sh`,
+sha256 `bf9f7090…`) and measured both gate generations myself:
+
+| gate | sha256 | witness | output | chunk entry line | REAL chunk-body exec stamps | forged stamps |
+|---|---|---|---|---|---|---|
+| landed, hardened | `a4768851…` | pass | 9/9 | 1720 | 9 | 0 |
+| forged from hardened gate | `bf9f7090…` | pass | 9/9 | 1737 | 0 | 360 |
+
+Full counter on the same seed 3547:
+
+- landed hardened gate → `WITNESS_SEPARATED=2/2 OUTPUT_EQUIV=2/2 LANDED_WITNESS=pass`, exit 0
+  (`c2-landed-head-3547.json`, sha256 `3fd8b77e…`).
+- forged candidate from the hardened gate → `WITNESS_SEPARATED=2/2 OUTPUT_EQUIV=2/2
+  LANDED_WITNESS=pass`, `predicate_holds=true`, exit 0 (`c2-forge-head-3547.json`, sha256
+  `3c9c2750…`; witness receipt `wit-forge-head-3547.json`, sha256 `632ad490…`).
+
+Zero real chunk-body executions on the forged candidate, verified the same way as §2 (trace lines at
+the chunk entry line carrying a trailing command vs. bare stamps). **The hardening does not mitigate
+this class**: it touched grep provenance/refusal and the version probe, not the trace channel. This
+independently reproduces peer ExecC2Fresh2's claim (3) on the same final blob.
+
+Crossnotes on the lane's own record: erratum 11 in `corpus/evidence/round35/claims.md` (commit
+`8a96711`) already carries this seat's three findings verbatim — forge class with 0 real / 360
+forged stamps and `predicate_holds=true`, the K2 environment fragility (1/2 outside
+`/tmp|/fast|/var/tmp`), and the unpinned battery — and names the r36 redesign. Erratum 3 lists the
+one-record slack from §7. My §1 fresh-seed numbers were taken on the pre-hardening blob the wave
+contract pinned (`1f2fb4f5…`); the lane's erratum 4 re-measurement on the final bytes (C2 2/2,
+landed witness pass) is consistent with my §8 landed run.
+
+## 9. r36 hand-off — self-contained reproducer, and the git-index gap
+
+**(a) Reproducer shipped in-lane.** `.ufo/waves/round-35/w2/ExecC2Fresh1/build-forge.py`
+(sha256 `75462ae0…`) regenerates a working forged candidate from *any* gate revision:
+
+```
+python3 build-forge.py --gate tools/research-gate.sh --out /tmp/spoof.sh
+```
+
+It inserts the PS4-derived forgery branch as the first statement of `tok_span_offsets`' body and
+creates the python exact-search helper if absent. The chunk entry line is computed **at gate
+runtime** by the candidate itself (awk over its own source, mirroring `matcher_entry_lines`), so no
+patched 372 KB gate needs shipping and the candidate keeps working across revisions.
+
+Verified on the hardened blob `a4768851…`, seed 3547:
+
+- rebuilt candidate: `WITNESS=pass OUTPUT=9/9 STAMPS chunk=360 direct=1 (long records=8)`;
+  `WITNESS_SEPARATED=2/2 OUTPUT_EQUIV=2/2 LANDED_WITNESS=pass`, exit 0.
+- chunk entry line 1736, **REAL chunk-body exec stamps 0**, forged 360.
+- Receipts `wit-rebuild-3547.json` (`564ba25c…`), `c2-rebuild-3547.json` (`daa0cde2…`).
+
+Honest caveat on reproducibility: the rebuild is **not byte-identical** to the §8 candidate
+`spoof5-head.sh` (`bf9f7090…`) — the inline snippet carries a one-line comment where `forgery5.sh`
+carried two, so line numbers shift (entry 1736 vs 1737). It is *behaviourally* identical (same
+witness verdict, same stamp count, same counter exit) because the entry line is resolved at runtime
+rather than baked in. Reproducibility here means "regenerates a candidate with the same measured
+behaviour", not "same file bytes".
+
+**(b) Git-index gap — needs the lane owner, not this seat.** This seat is read-only on the lane Git
+index by contract (no git/jj write commands), so I cannot stage anything. Verified read-only with
+`git ls-files --error-unmatch`:
+
+- still UNTRACKED in peer `ExecC2Fresh2/`: `head-wit-3547.json`, `head-c2-3547.json`,
+  `k10-head-wit.json`, `c2-attack-k10-head.json`, `k10-head.sh` (their §3.5/§3.6 reproducers; the
+  other seven are already tracked).
+- still UNTRACKED in mine: `c2-forge-head-3547.json`, `c2-landed-head-3547.json`,
+  `wit-forge-head-3547.json`, `wit-landed-head-3547.json`, `wit-rebuild-3547.json`,
+  `c2-rebuild-3547.json`, `build-forge.py`, `forgery5.sh`, `span_search.py`, plus the modified
+  `ExecC2Fresh1.md` itself.
+
+My §1-§7 receipts were already swept in by the lane's erratum-11 commit (`8a96711`); the §8/§9
+artifacts need a `git add` from whoever owns the lane index if they should survive into r36.

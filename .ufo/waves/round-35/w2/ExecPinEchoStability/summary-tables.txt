@@ -1,0 +1,43 @@
+# Axis A: landed gate (1f2fb4f5, CHOUSA_GREP_PIN_ECHO unset) vs base-gate.sh (a6307edf) vs base+pin (fa2fc738)
+MODE               base_rc  basepin_rc land_rc  base==land   basepin==land  basepin==base
+verify             0        0        0        SAME         SAME           SAME        
+verify-drift       0        0        0        SAME         SAME           SAME        
+claims             0        0        0        SAME         SAME           SAME        
+chain              0        0        0        SAME         SAME           SAME        
+sweeps             0        0        0        SAME         SAME           SAME        
+integrity          0        0        0        SAME         SAME           SAME        
+metadata           1        1        1        SAME         SAME           SAME        
+all                0        0        0        SAME         SAME           SAME        
+help               0        0        0        SAME         SAME           SAME        
+usage-bad          2        2        2        SAME         SAME           SAME        
+usage-norec        2        2        2        SAME         SAME           SAME        
+drift-missing      2        2        2        SAME         SAME           SAME        
+pin                0        0        0        DIFF         DIFF           DIFF        
+drift-self         0        0        0        SAME         SAME           SAME        
+drift-vs-land      0        0        0        SAME         SAME           SAME        
+noargs             2        2        2        SAME         SAME           SAME        
+recordflag         0        0        0        SAME         SAME           SAME        
+claimsjsonl        0        0        0        SAME         SAME           SAME        
+meta-asof          0        0        0        SAME         SAME           SAME        
+meta-registry      2        2        2        SAME         SAME           SAME        
+meta-bad-asof      2        2        2        SAME         SAME           SAME        
+json               0        0        0        SAME         SAME           SAME        
+claims-missing     2        2        2        SAME         SAME           SAME        
+verify-missing     2        2        2        SAME         SAME           SAME        
+
+# Axis B: landed gate, CHOUSA_GREP_PIN_ECHO=1 vs unset
+MODE               off_rc   on_rc    STDOUT       STDERR       DELTA
+verify             0        0        identical    DIFF         +1 stderr line GATE_GREP (85 B)
+verify-drift       0        0        identical    DIFF         +1 stderr line GATE_GREP (85 B)
+claims             0        0        identical    DIFF         +1 stderr line GATE_GREP (85 B)
+chain              0        0        identical    DIFF         +1 stderr line GATE_GREP (85 B)
+sweeps             0        0        identical    DIFF         +1 stderr line GATE_GREP (85 B)
+integrity          0        0        identical    DIFF         +1 stderr line GATE_GREP (85 B)
+metadata           1        1        identical    DIFF         +1 stderr line GATE_GREP (85 B)
+all                0        0        identical    DIFF         +1 stderr line GATE_GREP (85 B)
+help               0        0        identical    identical    
+usage-bad          2        2        identical    identical    
+usage-norec        2        2        identical    DIFF         +1 stderr line GATE_GREP (85 B)
+drift-missing      2        2        identical    DIFF         +1 stderr line GATE_GREP (85 B)
+pin                0        0        DIFF         DIFF         +1 stderr line GATE_GREP (85 B)
+json               0        0        identical    DIFF         +1 stderr line GATE_GREP (85 B)

@@ -1,0 +1,18 @@
+drift_offbase_echooff    rc=0
+   stdout: GATE_DRIFT: none|
+   stderr: 
+drift_offbase_echoon     rc=1
+   stdout: GATE_DRIFT: +LINE|
+   stderr: GATE_GREP: path=/usr/bin/grep source=default version="grep (GNU grep) 3.12-modified"|
+drift_onbase_echooff     rc=1
+   stdout: GATE_DRIFT: -LINE|
+   stderr: 
+drift_onbase_echoon      rc=0
+   stdout: GATE_DRIFT: none|
+   stderr: GATE_GREP: path=/usr/bin/grep source=default version="grep (GNU grep) 3.12-modified"|
+off.pin                  rc=0
+   stdout: GATE_PIN: ok path=/tmp/hyaku/chousa-r35/w2/ExecPinEchoStability/out-drift/off.baseline gate_sha256=1f2fb4f522d9a670b49dd61ad1369f55ee012f3b0d38050654be45a71aaef617|
+   stderr: 
+on.pin                   rc=0
+   stdout: GATE_PIN: ok path=/tmp/hyaku/chousa-r35/w2/ExecPinEchoStability/out-drift/on.baseline gate_sha256=1f2fb4f522d9a670b49dd61ad1369f55ee012f3b0d38050654be45a71aaef617|
+   stderr: GATE_GREP: path=/usr/bin/grep source=default version="grep (GNU grep) 3.12-modified"|

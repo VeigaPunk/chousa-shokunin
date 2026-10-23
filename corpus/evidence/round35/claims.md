@@ -274,3 +274,17 @@ predicate is right (the output counter's job).
    Fix for r36: the same hex validation (and a pinned or hash-trusted `sha256sum`/`cut`). The same
    seat also reproduced the `BASH_ENV` `command()` swap against a named regression control
    (`7afd040f`: 25 calls, 20 matcher-flagged) — the tenth confirmation of the engine-swap class.
+
+14. **The locale defect has an exact seam, and it is independent of the pin.** Wave seat
+   ExecSelftestEnv characterized it: `json_unescape` (`research-gate.sh:1398-1449`) lacks the
+   `LC_ALL=C` scope the span matchers carry (`:1665`, `:1699`), so a `\uXXXX` span near the 32764-byte
+   boundary routes to the direct or the chunk matcher **by locale** and flips supported↔unsupported in
+   both directions (dz2/dz4 probes). The pin changes neither the count nor the failing set:
+   `LC_ALL=C --selftest` fails 10/256 on the landed gate and 12/256 for `repairs/base-gate.sh` at its
+   committed path (the two extras track `PROVINCE.md` beside the blob via `LANE_ROOT`, `:313`; the
+   readable base in-tree gives the same 10), and a `PATH` shim intercepted 1443 base calls vs 0 on the
+   landed gate with an identical failing set. The round-34 "base 11 vs landed 10" disclosure is a
+   **readability artifact** (unreadable `PROVINCE.md` → 11), not a base-vs-landed difference. No
+   selftest case is locale-dependent (252–256 pass in both locales on every blob); the routing is.
+   r36 hygiene (already routed): pin `LC_ALL=C.UTF-8` for gate + counters + selftest and add a
+   C-locale selftest arm.

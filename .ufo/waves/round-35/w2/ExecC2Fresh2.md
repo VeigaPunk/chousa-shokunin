@@ -16,7 +16,8 @@ chunk matcher's body execute ZERO times while the counter still prints `LANDED_W
 
 | artifact | sha256 | note |
 |---|---|---|
-| `tools/research-gate.sh` (lane working tree) | `1f2fb4f522d9a670b49dd61ad1369f55ee012f3b0d38050654be45a71aaef617` | matches the round's declared landed gate sha |
+| `tools/research-gate.sh` at measurement time (lane tree and wave-base clone) | `1f2fb4f522d9a670b49dd61ad1369f55ee012f3b0d38050654be45a71aaef617` | matched the round's declared landed gate sha; **the lane has since advanced** — see §3.6 |
+| `tools/research-gate.sh` at `HEAD` after the wave (post-`beb04ea`) | `a47688518e509edbf43b433a5e16e1cf2481233f3acedb5824ba341f7f0c38ad` | pin-hardening commit; C2 re-checked on it in §3.6 |
 | clone at wave base `e87c5d7ea2dbf3730b36a3961de3f06261d015e4` → `clone/tools/research-gate.sh` | `1f2fb4f522d9a670b49dd61ad1369f55ee012f3b0d38050654be45a71aaef617` | identical to lane tree |
 | `clone/tools/mechanism-witness.py` | `9f537bfde0dd53f2240af149e1b7a03fd0a0f372ee1fa1a32e94044115a252b3` | battery |
 | `clone/corpus/evidence/round35/c2-count.py` | `557fdbf0bd793a6589fcb28fbc0a589db9145be0ae3c92790041fe8ebd907171` | counter |
@@ -306,10 +307,53 @@ witness (`mechanism-witness.py:60`), the stamp format is `WITNESS@@<path>:<linen
 [INFERENCE] Two hardening directions follow from the measurements: attribute stamps to a record
 identity the gate cannot read (so an engine cannot know what to forge), and have the counter verify
 that its built variants differ from the candidate only at the intended site (so a self-source check
-cannot invert the comparison). I did not implement either — this seat is read-only on lane
+cannot invert the comparison. I did not implement either — this seat is read-only on lane
 production files.
 
+### 3.6 The forge survives the pin-hardening, and C2 still holds on the final gate
 
+While I was measuring, the lane advanced: commit `beb04ea` ("round-35: pin hardened
+(command/head/PATH-fallback/readonly/bounded probe); C1 9/9 + C2 2/2 on the final gate") rewrote
+`tools/research-gate.sh` (`git diff --stat e87c5d7 HEAD -- tools/research-gate.sh` → 32 insertions,
+11 deletions). The gate at `HEAD` is sha256
+`a47688518e509edbf43b433a5e16e1cf2481233f3acedb5824ba341f7f0c38ad`. All my scored runs above used
+the wave-base clone (`1f2fb4f5…`), as the contract directs; below I re-ran the two decisive checks
+against the current gate.
+
+```
+# git cat-file -p HEAD:tools/research-gate.sh > headgate/research-gate.sh   (sha a4768851…)
+python3 clone/tools/mechanism-witness.py --gate headgate/research-gate.sh --seed 3547
+→ WITNESS=pass OUTPUT=9/9 STAMPS chunk=9 direct=1 (long records=8)          (exit 0)
+python3 corpus/evidence/round35/c2-count.py --gate headgate/research-gate.sh --seed 3547
+→ WITNESS_SEPARATED=2/2 OUTPUT_EQUIV=2/2 LANDED_WITNESS=pass                (exit 0)
+```
+
+And the forged candidate rebuilt from that same gate (`build-k10.py headgate/research-gate.sh
+k10-head.sh …`, sha `fb13d85fbfb97530…`):
+
+```
+python3 clone/tools/mechanism-witness.py --gate k10-head.sh --seed 3547
+→ WITNESS=pass OUTPUT=9/9 STAMPS chunk=9 direct=1 (long records=8)          (exit 0)
+python3 corpus/evidence/round35/c2-count.py --gate k10-head.sh --seed 3547
+→ WITNESS_SEPARATED=2/2 OUTPUT_EQUIV=2/2 LANDED_WITNESS=pass                (exit 0)
+```
+
+So: C2 holds on the final gate as well, and the forged-stamp bypass (§3.5) is **unaffected** by
+the pin hardening — that commit hardened the *grep provenance* channel, not the *trace* channel.
+Receipts: `head-wit-3547.json`, `head-c2-3547.json`, `k10-head-wit.json`,
+`c2-attack-k10-head.json`.
+
+**Independent corroboration by a second method.** Seat `chousa-r35-w2-ExecC2Fresh1` reproduced the
+same result on the same hardened blob (`a4768851…`), seed 3547, using *trailing-command
+discrimination* on the trace lines rather than body instrumentation: landed gate → chunk entry line
+1720, 9 real stamps, 0 forged; their forge rebuilt from the hardened gate (`spoof5-head.sh`) →
+witness `chunk=360`, counter `2/2/2 … predicate_holds=true`, exit 0, with **0 real chunk-body
+executions and 360 forged stamps**. Two different instrumentation methods (my body printf in
+`k10-forge-inst.sh`, their trailing-command discrimination) agree that the chunk matcher's body
+never executes while the witness reports a pass. Their receipts: `c2-landed-head-3547.json`
+(`3fd8b77e…`), `c2-forge-head-3547.json` (`3c9c2750…`), `wit-forge-head-3547.json` (`632ad490…`).
+
+## 4. Repair R1 — slen probe re-measured (in-scope cross-check)
 
 ```
 bash .ufo/waves/round-35/repairs/slen-probe.sh clone/tools/research-gate.sh
@@ -331,9 +375,15 @@ none. R1 confirmed: base `0` offsets / landed `1`. Gate shas as pinned in §0.
   bash versions or `set -x` variants.
 - §3.1 depends on the host's `/tmp` layout; a host with a `/tmp`-shaped default temp root (as here)
   hides it, which is presumably why the L1's own run passed.
-- §3.2/§3.3/§3.5 bypass candidates are my own constructions, not committed lane controls; they are
+- §3.2/§3.3/§3.5 bypass candidates are my own constructions, not committed lane controls. They are
   reproducible from `build-k5.py` / `build-k7.py` / `build-k9.py` / `build-k10.py` in the artifact
-  dir (builders are deterministic — re-running them reproduced identical gate sha256s).
+  dir. Reproducibility is **per fixed arguments**, and I measured it: building `build-k10.py` twice
+  with the same (gate, helper path) gives byte-identical output (`7e5d420a…` twice); changing only
+  the helper path changes the bytes (`afe4c243…`) while the behaviour is unchanged (`WITNESS=pass
+  OUTPUT=9/9 STAMPS chunk=9 direct=1`, exit 0) because the chunk entry line is resolved at runtime.
+  So: **reproducibility-of-bytes at fixed args, reproducibility-of-behaviour across gate revisions
+  and helper paths** — not byte-identity across either. `k10-forge.sh` (`ed246fdb…`) was built with
+  `helper-k10.py`, which is why it differs byte-wise from a rebuild with a different helper path.
 - §3.5's engine detects the counter's own patch (it greps its source for `span_search.py`). That is
   a legitimate engine capability under the frozen text (which places active anti-instrumentation
   outside the witness's remit) but it means the separation arm of P2 is not a mechanism measurement
@@ -361,3 +411,17 @@ chunk body, for the zero-execution proof).
 
 Scratch (large, `/tmp`): `/tmp/hyaku/chousa-r35/w2/ExecC2Fresh2/` — clone, the witness's own
 per-seed fixtures, `ctl-*.json` control receipts, `census.py` call logs.
+
+**Untracked at the time of writing** (this seat is read-only on git; the L1 must `git add` them if
+they are to survive into r36): `head-wit-3547.json`, `head-c2-3547.json`, `k10-head-wit.json`,
+`c2-attack-k10-head.json`, `k10-head.sh`. The §3.5 reproducers (`k10-forge.sh`,
+`k10-forge-inst.sh`, `build-k10.py`, `k10-forge.json`, `k10-inst.json`,
+`c2-attack-k10.json`, `c2-attack-k10-3559.json`) were already tracked when this note was written.
+Seat `chousa-r35-w2-ExecC2Fresh1` confirms it is likewise read-only on the git index and also has
+uncommitted artifacts; **neither executor seat can close the staging gap — it needs an L1 action.**
+
+**Reproducibility note for r36.** `build-k10.py` regenerates a forged candidate from
+(gate, helper path) with no patched gate shipped. Measured: same args twice → byte-identical
+(`7e5d420a…`); a different helper path → different bytes (`afe4c243…`), same behaviour
+(`WITNESS=pass chunk=9`, exit 0); a different gate revision → different bytes, same behaviour,
+because the chunk entry line is resolved at runtime from the gate's own source.
