@@ -223,3 +223,15 @@ predicate is right (the output counter's job).
    (760,543 tripwire bytes) while the landed gate logs zero and holds 42/42. Also noted: the round-34
    counter strips only `CHOUSA_*` from the gate environment, so an ambient `RESEARCH_GATE_GREP`
    silently flips it (the round-35 counters strip both prefixes).
+
+10. **Mode coverage is not uniform, and a `9/9` receipt does not witness the pipeline.**
+   Wave seat ExecPinModeIntegrity measured that `verify-integrity` **never runs a matcher grep** — it
+   calls grep only for the pin's own `--version` probe (one exec; `strace -f execve` = 1 on
+   `1f2fb4f5…`, 0 on the base gate) — so that mode discriminates nothing about the pin and must not
+   be cited as pin coverage. `verify-chain` and `verify/verify-claims` do grep; `verify-metadata`
+   greps only with `--registry`. The same seat showed the pre-hardening blob's provenance check
+   could be forged through an unpinned `head` and that the counter's own S6 never exercises the
+   refusal text (its stub prints to stderr); both are closed in the final gate `a4768851…` (forged
+   `head` → rc 2; `head` absent from `PATH` → rc 0), but the counter's 9/9 receipts were taken
+   before those fixes, so a green receipt alone does not witness the pipeline. The report names the
+   two gate generations for exactly this reason.
