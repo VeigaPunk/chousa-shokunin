@@ -82,3 +82,35 @@ binding, which misses the four wrong ranges that keep the true start on every se
 ranges keep the true start (start-only 112). The L1 kept v2: no control meets 120/120, the class
 counts are fixed, so a start-only binder misses the same four claims on every seed and P1 rejects
 it every time; a third version after the re-score would only widen the margin.
+
+## Falsify wave findings (34 seats, `.ufo/waves/round-31/falsify/`)
+
+- P1 and P2 hold: 120/120 on every re-run of the landed gate (RerunC1A/B, RerunC2A/B 5 seeds
+  each; RerunSeedSweep31 25 fresh plus 5 edge seeds per counter, 0 misses). Separability
+  reproduces (SeparabilityAudit31: 50/120 both cross cells, 120/120 own cells). No harm against
+  the base battery (NoHarmAfter31); verify-all composition holds (ReviewVerifyAllComposition31).
+- Contract violations outside the fixture space (CriticEdgeC2): escaped trailing newline or NUL in
+  a pin decoded into a match; file names with `\` or a newline read stale. Fixed in this round
+  (SCORECARD, post-falsify gate revisions) and re-measured 120/120 twice on the final gate.
+- Survivors, carried to round 32 as fixture classes (QUALITY 28): non-string `"line"`/`"sha256"`
+  treated as absent scores 120/120 on both counters (MutC1Grammar, MutC2Parse,
+  CriticClaimsAfter31); fail-open hashing (MutC2Hash) and span-before-stale (MutSelftestNew31) are
+  killed by the counter but not by the selftest; end-line-only binding likewise (MutC1Binding);
+  nested keys read as the record's own (ReviewIntegrationDiff31, CriticEdgeC2); the counter never
+  reads `at=` (RerunC1A).
+- Chronology (CriticChronology31): the first candidate receipt is after v2 and the v2 control
+  commit; five omissions in the v2 note are corrected at the end of `claims.md`.
+- Rejected finding: ReviewQuality31 said QUALITY 32's 88/30 figures use a non-frozen counter; the
+  receipts under `controls/CtlNoReaderC1/v2/` bind `c3aca35d…`, the frozen v2 C1 counter (88 and
+  30). The criterion stands.
+- Sources: S057, S058 and S059 re-opened by AttackRow seats, each quote verbatim and `VERBATIM` in
+  `tools/quote-reopen.py`. On-release own-work rows S001, S034-S036, S040-S043, S045 still accurate
+  (ScoutOnReleaseRows31); no status change.
+- Cancelled at the settle deadline: CriticEdgeC1 and CriticKnowledgeOverclaim31 (no final report).
+
+## Seats and holds
+
+Control wave 10 seats (ordinary task call: 7 critic, 3 mutation-tester), re-scored under v2 by
+resuming 7 of them (not new seats); build wave 33 (validated v1); falsify wave 34 (validated v1):
+77 seats. Dead seats: none. Refusals: none. Cancelled: 2 (above). No task was re-sent to another
+seat. CriticSeparability31's edit reached the lane gate and was restored (Mistakes).
