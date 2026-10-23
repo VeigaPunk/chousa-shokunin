@@ -261,3 +261,74 @@ The unchanged control remains rejected: 126/130 on both seeds, counter exits 1 a
 
 [INFERENCE, not executed] The same four exact quote/source-keyed ABSENT overrides described for v1 would rescore these two observed v2 case sets to 130/130 without implementing the actual token-boundary rule. This remains a fixture-specific exception scheme that fetches/searches page text, not a measured no-fetch success or a correct verbatim implementation. No additional control variant was run.
 
+
+## v3 rescore
+
+Design v3 reference supplied by Main: lane commit `aa5e1a3187955fa923de14e11c150bf1c526efc6`. The counter now chooses a fresh 64-bit seed internally; neither run supplied a seed. The existing casefold/no-boundary control was executed unchanged, with SHA-256 `c2b823bf0c1e837bc345a8a1a07de4fd6fabc65e0f98711e063d1b9d4f1b4bc8`, identical to the original v1 artifact. The counter SHA-256 measured before execution and recorded in both receipts is `cd50965032278c355f780d357c5672f14840fc218bb1b7dc4adaa6993b5c175d`; v3 claims SHA-256 is `19ea5fbe2d52e42eff8c96096f543b818c37cf773fdfd22af6011fbf1cf47cfc`.
+
+The two independent runs executed concurrently from the lane root. Only the persisted assigned mutant was run; no scratch baseline or additional variant was executed. No control source, frozen input, index or jj state was modified. Both subprocesses completed and were reaped; no service remains. No tool installations or updates.
+
+### Fresh run 1
+
+```sh
+timeout --kill-after=5s 590s python3 corpus/evidence/round29/c1-count.py --timeout 90 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlCasefoldNoBoundary/receipt-v3.json -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlCasefoldNoBoundary/control.py
+```
+
+```text
+class absent-cross-attributed 4/4
+class absent-fabricated 4/4
+class absent-one-word-edit 4/4
+class absent-spliced 4/4
+class absent-truncated-token 0/4
+class no-source-own-work-row 2/2
+class no-source-unregistered-id 1/1
+class runtime-crossattr 14/14
+class runtime-page-transpose 24/24
+class runtime-page-window 24/24
+class runtime-subspan 14/14
+class runtime-transpose 14/14
+class too-long-true-text 3/3
+class verbatim-inline-markup 9/9
+class verbatim-plain 3/3
+class verbatim-typographic-apostrophe 2/2
+seed=18264250428295358083 tool_exit=1 wall_s=1.1
+QUOTE_REOPEN_MATCH=126/130
+COUNTER_EXIT=1
+```
+
+Receipt: `receipt-v3.json`; `predicate_holds=false`. Outer command wall time: 5.65 seconds.
+
+### Fresh run 2
+
+```sh
+timeout --kill-after=5s 590s python3 corpus/evidence/round29/c1-count.py --timeout 90 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlCasefoldNoBoundary/receipt-v3-run2.json -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlCasefoldNoBoundary/control.py
+```
+
+```text
+class absent-cross-attributed 4/4
+class absent-fabricated 4/4
+class absent-one-word-edit 4/4
+class absent-spliced 4/4
+class absent-truncated-token 0/4
+class no-source-own-work-row 2/2
+class no-source-unregistered-id 1/1
+class runtime-crossattr 14/14
+class runtime-page-transpose 24/24
+class runtime-page-window 24/24
+class runtime-subspan 14/14
+class runtime-transpose 14/14
+class too-long-true-text 3/3
+class verbatim-inline-markup 9/9
+class verbatim-plain 3/3
+class verbatim-typographic-apostrophe 2/2
+seed=2168582547392939914 tool_exit=1 wall_s=1.08
+QUOTE_REOPEN_MATCH=126/130
+COUNTER_EXIT=1
+```
+
+Receipt: `receipt-v3-run2.json`; `predicate_holds=false`. Outer command wall time: 5.61 seconds.
+
+### v3 finding
+
+The unchanged control remains rejected on both fresh seeds: 126/130, counter exit 1, tool exit 1. The only lost class is `absent-truncated-token` (0/4), with origins `4798287c`, `98406fc4`, `ad795e73` and `f98e78ae` all incorrectly marked VERBATIM instead of ABSENT. Every other class, including both page-sampled classes, is perfect. No 130/130 shortcut was executed by this seat. The earlier quote/source-keyed-override possibility remains an unexecuted inference; it is not promoted to an observed result.
+

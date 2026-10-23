@@ -155,3 +155,71 @@ Counter/timeout command exit: **1**. Control exit: **0**. Receipt: `receipt-v2-s
 The v2 expected ceiling **52/130 is confirmed on both seeds**: the original 28 matches plus 24 page-window positives. The 24 new page transpositions are all mismatches. Constant VERBATIM still cannot satisfy the predicate, regardless of ids, order, or sampled text. No 130/130 shortcut was demonstrated or alternative variant implemented. No correction is needed to reject this specific control; these results do not establish broader counter soundness. The reviewed axes remain operability, calibration, and freshness, not an admission judgment.
 
 No tools were installed or updated. Both bounded v2 commands and their child controls completed; no services or persistent processes were started.
+
+## v3 rescore
+
+The parent supplied frozen v3 commit `aa5e1a3187955fa923de14e11c150bf1c526efc6`. The v3 claim header records that a warmed label-keyed control voided v2 by replaying its fixed seeds; v3 removes caller-selected seeds. This rescore again used `control.py` **unchanged**, twice with counter-generated fresh 64-bit seeds. Only `receipt-v3.json`, `receipt-v3-run2.json`, and this appended section were added for v3.
+
+Both commands ran concurrently from `/home/vgpnk/Projects/shokunin/chousa-shokunin`, each capped at 600 seconds. No `--seed` argument was supplied.
+
+```sh
+timeout 600s python3 corpus/evidence/round29/c1-count.py --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlAlwaysVerbatim/receipt-v3.json -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlAlwaysVerbatim/control.py
+
+timeout 600s python3 corpus/evidence/round29/c1-count.py --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlAlwaysVerbatim/receipt-v3-run2.json -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlAlwaysVerbatim/control.py
+```
+
+Both receipts identify counter SHA-256 `cd50965032278c355f780d357c5672f14840fc218bb1b7dc4adaa6993b5c175d` and timestamp `2026-10-23T01:28:47Z`.
+
+### v3 run 1 — verbatim counter stdout
+
+```text
+class absent-cross-attributed 0/4
+class absent-fabricated 0/4
+class absent-one-word-edit 0/4
+class absent-spliced 0/4
+class absent-truncated-token 0/4
+class no-source-own-work-row 0/2
+class no-source-unregistered-id 0/1
+class runtime-crossattr 0/14
+class runtime-page-transpose 0/24
+class runtime-page-window 24/24
+class runtime-subspan 14/14
+class runtime-transpose 0/14
+class too-long-true-text 0/3
+class verbatim-inline-markup 9/9
+class verbatim-plain 3/3
+class verbatim-typographic-apostrophe 2/2
+seed=13420497715945431227 tool_exit=0 wall_s=0.02
+QUOTE_REOPEN_MATCH=52/130
+```
+
+Counter/timeout command exit: **1**. Control exit: **0**. Receipt: `receipt-v3.json`, `predicate_holds: false`.
+
+### v3 run 2 — verbatim counter stdout
+
+```text
+class absent-cross-attributed 0/4
+class absent-fabricated 0/4
+class absent-one-word-edit 0/4
+class absent-spliced 0/4
+class absent-truncated-token 0/4
+class no-source-own-work-row 0/2
+class no-source-unregistered-id 0/1
+class runtime-crossattr 0/14
+class runtime-page-transpose 0/24
+class runtime-page-window 24/24
+class runtime-subspan 14/14
+class runtime-transpose 0/14
+class too-long-true-text 0/3
+class verbatim-inline-markup 9/9
+class verbatim-plain 3/3
+class verbatim-typographic-apostrophe 2/2
+seed=13044509948402031303 tool_exit=0 wall_s=0.02
+QUOTE_REOPEN_MATCH=52/130
+```
+
+Counter/timeout command exit: **1**. Control exit: **0**. Receipt: `receipt-v3-run2.json`, `predicate_holds: false`.
+
+The constant control remains at **52/130** for both fresh seeds: 14 frozen positives, 14 fixture subspans, and 24 page windows. The counter rejects all 78 false-positive cases. No 130/130 bypass was demonstrated by this control, and no variant was implemented. No correction is required for rejecting this specific control; broader counter soundness is not established by these runs. Reviewed axes remain operability, calibration, and freshness.
+
+The counter fetched registry pages to generate its cases; this unchanged control fetched nothing. No tools were installed or updated. Both bounded commands and their child controls completed; no services or persistent processes were started.

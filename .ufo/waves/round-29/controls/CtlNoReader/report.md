@@ -380,3 +380,137 @@ Before and after the v2 rescore, `timeout 20s sha256sum` returned identical hash
 
 The no-reader result equals v2's expected 78/130 ceiling: its earlier 54 matches plus 24 page transpositions. The VERBATIM variant gets its earlier 34 matches plus 24 page windows, or 58/130. Neither unchanged control reaches 130/130. This rescore introduces no new mutant and does not turn the v1 baseline-failing mutation probe into a killed mutant. No v2 bypass was demonstrated by this seat.
 
+## v3 rescore
+
+Design v3 is assigned frozen commit `aa5e1a3187955fa923de14e11c150bf1c526efc6`. Its `claims.md` records that the v2 label-keyed warmed variant reached 130/130 by replaying receipts for caller-selected seeds, voiding v2. The v3 counter removes `--seed` and selects a fresh 64-bit seed for each run. Its 130-case predicate and sampling rules are otherwise unchanged.
+
+Both controls were rescored twice **without changing their bytes**. No caller-selected seed or receipt-replay logic was used. The controls still fetch no pages; only the counter performs page sampling. All four runs completed, each with counter exit **1**, candidate exit **1**, empty candidate stderr and `predicate_holds: false`. No counter-side fetch error occurred.
+
+### Commands, seeds and receipts
+
+Working directory: `/home/vgpnk/Projects/shokunin/chousa-shokunin`. Each command had a 590-second outer timeout, a 20-second candidate timeout and a 600-second tool deadline. All processes exited; no services or background processes remained. No installations or git/jj writes occurred.
+
+```text
+timeout 590s python3 corpus/evidence/round29/c1-count.py --timeout 20 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlNoReader/receipt-v3.json -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlNoReader/control.py
+timeout 590s python3 corpus/evidence/round29/c1-count.py --timeout 20 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlNoReader/receipt-v3-run2.json -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlNoReader/control.py
+timeout 590s python3 corpus/evidence/round29/c1-count.py --timeout 20 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlNoReader/receipt-v3-verbatim.json -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlNoReader/control-verbatim.py
+timeout 590s python3 corpus/evidence/round29/c1-count.py --timeout 20 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlNoReader/receipt-v3-verbatim-run2.json -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlNoReader/control-verbatim.py
+```
+
+| Control / run | Fresh seed printed by counter | Receipt | Match | Counter exit | Candidate exit |
+|---|---:|---|---|---:|---:|
+| no-reader 1 | 11232930774115120281 | `receipt-v3.json` | 78/130 | 1 | 1 |
+| no-reader 2 | 6091423367872663604 | `receipt-v3-run2.json` | 78/130 | 1 | 1 |
+| VERBATIM variant 1 | 17119390874933931641 | `receipt-v3-verbatim.json` | 58/130 | 1 | 1 |
+| VERBATIM variant 2 | 6999734400005532175 | `receipt-v3-verbatim-run2.json` | 58/130 | 1 | 1 |
+
+All four receipts have counter SHA-256 `cd50965032278c355f780d357c5672f14840fc218bb1b7dc4adaa6993b5c175d` and receipt time `2026-10-23T01:28:54Z`.
+
+### control.py, run 1 — stdout verbatim; counter exit 1
+
+```text
+class absent-cross-attributed 4/4
+class absent-fabricated 4/4
+class absent-one-word-edit 4/4
+class absent-spliced 4/4
+class absent-truncated-token 4/4
+class no-source-own-work-row 2/2
+class no-source-unregistered-id 1/1
+class runtime-crossattr 14/14
+class runtime-page-transpose 24/24
+class runtime-page-window 0/24
+class runtime-subspan 0/14
+class runtime-transpose 14/14
+class too-long-true-text 3/3
+class verbatim-inline-markup 0/9
+class verbatim-plain 0/3
+class verbatim-typographic-apostrophe 0/2
+seed=11232930774115120281 tool_exit=1 wall_s=0.03
+QUOTE_REOPEN_MATCH=78/130
+```
+
+### control.py, run 2 — stdout verbatim; counter exit 1
+
+```text
+class absent-cross-attributed 4/4
+class absent-fabricated 4/4
+class absent-one-word-edit 4/4
+class absent-spliced 4/4
+class absent-truncated-token 4/4
+class no-source-own-work-row 2/2
+class no-source-unregistered-id 1/1
+class runtime-crossattr 14/14
+class runtime-page-transpose 24/24
+class runtime-page-window 0/24
+class runtime-subspan 0/14
+class runtime-transpose 14/14
+class too-long-true-text 3/3
+class verbatim-inline-markup 0/9
+class verbatim-plain 0/3
+class verbatim-typographic-apostrophe 0/2
+seed=6091423367872663604 tool_exit=1 wall_s=0.03
+QUOTE_REOPEN_MATCH=78/130
+```
+
+### control-verbatim.py, run 1 — stdout verbatim; counter exit 1
+
+```text
+class absent-cross-attributed 0/4
+class absent-fabricated 0/4
+class absent-one-word-edit 0/4
+class absent-spliced 0/4
+class absent-truncated-token 0/4
+class no-source-own-work-row 2/2
+class no-source-unregistered-id 1/1
+class runtime-crossattr 0/14
+class runtime-page-transpose 0/24
+class runtime-page-window 24/24
+class runtime-subspan 14/14
+class runtime-transpose 0/14
+class too-long-true-text 3/3
+class verbatim-inline-markup 9/9
+class verbatim-plain 3/3
+class verbatim-typographic-apostrophe 2/2
+seed=17119390874933931641 tool_exit=1 wall_s=0.03
+QUOTE_REOPEN_MATCH=58/130
+```
+
+### control-verbatim.py, run 2 — stdout verbatim; counter exit 1
+
+```text
+class absent-cross-attributed 0/4
+class absent-fabricated 0/4
+class absent-one-word-edit 0/4
+class absent-spliced 0/4
+class absent-truncated-token 0/4
+class no-source-own-work-row 2/2
+class no-source-unregistered-id 1/1
+class runtime-crossattr 0/14
+class runtime-page-transpose 0/24
+class runtime-page-window 24/24
+class runtime-subspan 14/14
+class runtime-transpose 0/14
+class too-long-true-text 3/3
+class verbatim-inline-markup 9/9
+class verbatim-plain 3/3
+class verbatim-typographic-apostrophe 2/2
+seed=6999734400005532175 tool_exit=1 wall_s=0.03
+QUOTE_REOPEN_MATCH=58/130
+```
+
+### Unchanged-byte evidence and conclusion
+
+Before and after the v3 runs, `timeout 20s sha256sum` returned the same hashes:
+
+| Lane-relative path | Before = after SHA-256 |
+|---|---|
+| `.ufo/waves/round-29/controls/CtlNoReader/control.py` | `dc4e925236213ae18f992f2310d648a6d73a5545444ee9aa4af179c3e9bcd568` |
+| `.ufo/waves/round-29/controls/CtlNoReader/control-verbatim.py` | `9127f33a2ba9bcf2d8a8075ec3d5a985394800b888c70f4275e9cbc4e3fb053b` |
+| `corpus/evidence/round29/claims.md` | `19ea5fbe2d52e42eff8c96096f543b818c37cf773fdfd22af6011fbf1cf47cfc` |
+| `corpus/evidence/round29/c1-count.py` | `cd50965032278c355f780d357c5672f14840fc218bb1b7dc4adaa6993b5c175d` |
+| `corpus/fixtures/quote-reopen-r29/items.tsv` | `e6305beba9563fe4d37430019831610ddf7a5adf1e35de60869e3b764f939bcc` |
+| `corpus/fixtures/quote-reopen-r29/labels.tsv` | `dda1b3768f6f187736a77e5bce094b41822d8574e4798886d00964267343c7a9` |
+| `corpus/SOURCES.md` | `8bc103823c3a08114e3f787dca96384a6f739931ae3de8c5bdbc64b7225c64b4` |
+
+Both unchanged controls remain below 130/130 on both fresh-seed runs. This is another negative-control rejection, not a newly killed mutant; no v3 bypass was demonstrated by this seat. The controls and previous receipts were retained unchanged; only the four new v3 receipts and this appended section were written.
+

@@ -233,3 +233,141 @@ Under the already-frozen v2 rule at `claims.md:149-151`, this full-score control
 The rescore adds only `control-v2.py`, `receipt-v2.json`, `receipt-v2-seed2.json`, `receipt-v2-warmed.json`, `receipt-v2-warmed-seed2.json`, and this appended section, all inside the assigned control directory. `control.py` was left unchanged. No git/jj commands, installs, updates, services, or background jobs were used. Each scoring command had a 180-second external timeout and completed. Seed pairs were run concurrently; warm runs followed the necessary receipt-producing baseline runs. No process started for this rescore remains running.
 
 Report: .ufo/waves/round-29/controls/CtlLabelKeyed/report.md
+
+## v3 rescore
+
+**Best measured no-fetch score: 115/130. No v3 run in this review reached 130/130.** The unchanged fixture-only control and the unchanged two-seed receipt-warmed control each scored 106/130 twice on fresh seeds. A stronger committed-receipt lookup plus paired-transposition contrast cheat scored 111/130 and 115/130. These are different fresh samples, not paired measurements on identical items.
+
+V3 revision: `aa5e1a3187955fa923de14e11c150bf1c526efc6`.
+Counter SHA-256: `cd50965032278c355f780d357c5672f14840fc218bb1b7dc4adaa6993b5c175d`.
+The counter no longer accepts `--seed`; every command below omitted it. All counter exits and all candidate exits were **1**. Counter-side page fetches still occur; no candidate fetches pages.
+
+### Exact commands and printed results
+
+All commands ran from `/home/vgpnk/Projects/shokunin/chousa-shokunin` with the following form, substituting the receipt and control paths from the table:
+
+```sh
+timeout 180s python3 corpus/evidence/round29/c1-count.py --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlLabelKeyed/RECEIPT -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlLabelKeyed/CONTROL
+```
+
+| Run | CONTROL | RECEIPT | Counter exit | Candidate exit |
+|---|---|---|---|---|
+| Original 1 | control.py | receipt-v3.json | 1 | 1 |
+| Original 2 | control.py | receipt-v3-run2.json | 1 | 1 |
+| Warmed 1 | control-v2.py | receipt-v3-warmed.json | 1 | 1 |
+| Warmed 2 | control-v2.py | receipt-v3-warmed-run2-corrected.json | 1 | 1 |
+| Stronger contrast 1 | control-v3.py | receipt-v3-contrast.json | 1 | 1 |
+| Stronger contrast 2 | control-v3.py | receipt-v3-contrast-run2.json | 1 | 1 |
+
+Original 1, verbatim:
+
+```text
+seed=12187084370757010200 tool_exit=1 wall_s=0.03
+QUOTE_REOPEN_MATCH=106/130
+```
+
+Original 2, verbatim:
+
+```text
+seed=15029045972482942506 tool_exit=1 wall_s=0.03
+QUOTE_REOPEN_MATCH=106/130
+```
+
+Warmed 1, verbatim:
+
+```text
+seed=13147126367667633711 tool_exit=1 wall_s=0.03
+QUOTE_REOPEN_MATCH=106/130
+```
+
+Warmed 2, verbatim:
+
+```text
+seed=11845952919065769099 tool_exit=1 wall_s=0.03
+QUOTE_REOPEN_MATCH=106/130
+```
+
+Stronger contrast 1, verbatim:
+
+```text
+seed=2334536872557442231 tool_exit=1 wall_s=0.16
+QUOTE_REOPEN_MATCH=111/130
+```
+
+Stronger contrast 2, verbatim:
+
+```text
+seed=1299540907271872818 tool_exit=1 wall_s=0.16
+QUOTE_REOPEN_MATCH=115/130
+```
+
+One extra invocation was retained honestly: `receipt-v3-warmed-run2.json` was accidentally produced with `control.py`, not `control-v2.py`. It is an additional original-control run, not evidence for the warmed variant; the correctly invoked second warmed run is the separately named `receipt-v3-warmed-run2-corrected.json` above. The accidental invocation also exited counter 1 / candidate 1 and printed:
+
+```text
+seed=9915015428490296762 tool_exit=1 wall_s=0.03
+QUOTE_REOPEN_MATCH=106/130
+```
+
+### Per-class output
+
+Every v3 run above, including the retained accidental original-control run, printed these common per-class lines:
+
+```text
+class absent-cross-attributed 4/4
+class absent-fabricated 4/4
+class absent-one-word-edit 4/4
+class absent-spliced 4/4
+class absent-truncated-token 4/4
+class no-source-own-work-row 2/2
+class no-source-unregistered-id 1/1
+class runtime-crossattr 14/14
+class runtime-subspan 14/14
+class runtime-transpose 14/14
+class too-long-true-text 3/3
+class verbatim-inline-markup 9/9
+class verbatim-plain 3/3
+class verbatim-typographic-apostrophe 2/2
+```
+
+Both original runs, both correctly invoked warmed runs, and the accidental extra original-control run printed:
+
+```text
+class runtime-page-transpose 24/24
+class runtime-page-window 0/24
+```
+
+Stronger contrast run 1 printed:
+
+```text
+class runtime-page-transpose 22/24
+class runtime-page-window 7/24
+```
+
+Stronger contrast run 2 printed:
+
+```text
+class runtime-page-transpose 24/24
+class runtime-page-window 9/24
+```
+
+### Stronger no-fetch control: what it uses and skips
+
+`control-v3.py` reads all receipt-named JSON and before-do-nothing JSON artifacts committed under `.ufo/` at the fixed v3 revision, using read-only, timeout-bounded `git ls-tree` and `git show`. It never loads the new uncommitted v3 receipts or follows a moving HEAD. It builds exact `(source_id, quote) -> label` keys and source-bound positive token-span membership from those historical labels, including the committed receipt of L1's fresh-seed test.
+
+It then exploits the batch construction: a positive window and its adjacent-token transposition have the same source, token count and token multiset. For two incoming quotes differing by one adjacent swap, a known label can orient the pair. Otherwise receipt-derived 2–4-gram frequencies, learned positive-versus-transposed contrast counts, and a small fixed list of common English bigrams guess which ordering is positive. Unsupported or tied unknowns default to ABSENT. Exact known answers are not overridden by the contrast guesses.
+
+This control still skips registry validation, every candidate-side GET, page extraction, normalization against page bytes, source freshness checks, and actual verbatim location. Its diagnostic details describe label lookup, known spans, or contrast guesses rather than invented page provenance. It does not import the counter's reference implementation, inspect another process, modify the counter, or run a real verifier.
+
+### Counterexample status, axes and smallest safe correction
+
+V3 defeats the measured two-seed replay shortcut on fresh draws: its score dropped from the v2 warmed 130/130 to 106/130 twice. The strongest added no-fetch attempt reached 115/130, not the target. Thus this review supplies no full-score v3 counterexample and makes no admission or native-judge decision.
+
+The remaining distinction is still on **operability**, **freshness**, and **calibration**: matching labels is not direct evidence that the candidate reopened current sources. [INFERENCE] Receipt accumulation can increase source-text coverage, and paired positive/negative samples expose an orientation problem that a sufficiently strong offline model or cache could solve without live source verification. The measured contrast control demonstrates partial exploitation, not complete saturation.
+
+The smallest safe handling of these results is to preserve the misses as misses and describe the measured capability narrowly; do not call 115/130 a pass or call a no-fetch guesser a verifier. If actual candidate-side reopening is to be proven in a future measurement, it needs independently observable provenance or controlled fresh content rather than answer equality alone. No counter, predicate, axis, route, or judgment was edited here.
+
+### V3 scope and tooling
+
+New writes were limited to this directory: `control-v3.py`, the seven named `receipt-v3*.json` artifacts, and this appended section. Existing `control.py` and `control-v2.py` were unchanged. Only read-only git commands were used; no git/jj writes, installs, updates, services, or background jobs were used. Independent rescores were launched concurrently. Every scoring command was capped at 180 seconds, and every control-side git command at 10 seconds. All started commands completed; no process remains running.
+
+Report: .ufo/waves/round-29/controls/CtlLabelKeyed/report.md

@@ -343,3 +343,137 @@ Counter exit: 1. Receipt: `receipt-v2-binary-seed2.json`.
 **v2 observation: both unchanged junk controls were rejected on both seeds; none reached 130/130.** No successful no-location bypass was found in this assigned random-control rescore. As deductions from the v2 label distribution, five-way expected matches are 130/5 = 26; binary expected matches are (52 + 72)/2 = 62, and its hard ceiling is 124/130 because six labels are outside its verdict pool. A lucky five-way all-match trial remains theoretically possible under the uniform-draw model, with probability 5^-130; no seed search or new variant was implemented. This rescore makes no broader counter-soundness claim and performs no new mutation; the earlier mutation-causality verdict remains inconclusive because its pristine baseline failed.
 
 Report: .ufo/waves/round-29/controls/CtlJunk/report.md
+
+## v3 rescore
+
+Requested frozen revision: `aa5e1a3187955fa923de14e11c150bf1c526efc6`. The v3 `claims.md` header records that warmed receipt replay voided v2. v3 removes the caller's `--seed` option and draws a fresh 64-bit seed per run; the target remains `QUOTE_REOPEN_MATCH=130/130`.
+
+Both controls were rescored **unchanged**, twice each, with their original fixed control RNG seed **290129**. The counter generated the four fresh seeds printed below. Before these runs, bounded `sha256sum` returned:
+
+```text
+f6d64324269677674edb2be36a52edb5368d27bccc0aa97e7532fcab0e129864  control.py
+8e5c6a369303a51aad564274730fbcd4400cf4abb59dc10fa3fb82adbf64f09b  control-binary.py
+cd50965032278c355f780d357c5672f14840fc218bb1b7dc4adaa6993b5c175d  corpus/evidence/round29/c1-count.py
+19ea5fbe2d52e42eff8c96096f543b818c37cf773fdfd22af6011fbf1cf47cfc  corpus/evidence/round29/claims.md
+e6305beba9563fe4d37430019831610ddf7a5adf1e35de60869e3b764f939bcc  corpus/fixtures/quote-reopen-r29/items.tsv
+dda1b3768f6f187736a77e5bce094b41822d8574e4798886d00964267343c7a9  corpus/fixtures/quote-reopen-r29/labels.tsv
+```
+
+All four commands ran concurrently from the lane root:
+
+```sh
+timeout 540s python3 corpus/evidence/round29/c1-count.py --timeout 30 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlJunk/RECEIPT -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlJunk/CONTROL
+```
+
+| Control/run | Fresh counter seed | Receipt | Counter exit | Tool exit |
+|---|---:|---|---:|---:|
+| control.py / 1 | 5716921685326678964 | receipt-v3.json | 1 | 1 |
+| control.py / 2 | 17578985954694161403 | receipt-v3-run2.json | 1 | 1 |
+| control-binary.py / 1 | 17755967212285402607 | receipt-v3-binary.json | 1 | 1 |
+| control-binary.py / 2 | 18014907881398986420 | receipt-v3-binary-run2.json | 1 | 1 |
+
+### v3 five-way junk, run 1
+
+```text
+class absent-cross-attributed 0/4
+class absent-fabricated 0/4
+class absent-one-word-edit 1/4
+class absent-spliced 1/4
+class absent-truncated-token 2/4
+class no-source-own-work-row 0/2
+class no-source-unregistered-id 1/1
+class runtime-crossattr 3/14
+class runtime-page-transpose 7/24
+class runtime-page-window 4/24
+class runtime-subspan 5/14
+class runtime-transpose 2/14
+class too-long-true-text 1/3
+class verbatim-inline-markup 1/9
+class verbatim-plain 0/3
+class verbatim-typographic-apostrophe 0/2
+seed=5716921685326678964 tool_exit=1 wall_s=0.02
+QUOTE_REOPEN_MATCH=28/130
+```
+
+Counter exit: 1. Receipt: `receipt-v3.json`.
+
+### v3 five-way junk, run 2
+
+```text
+class absent-cross-attributed 2/4
+class absent-fabricated 0/4
+class absent-one-word-edit 2/4
+class absent-spliced 1/4
+class absent-truncated-token 0/4
+class no-source-own-work-row 0/2
+class no-source-unregistered-id 0/1
+class runtime-crossattr 4/14
+class runtime-page-transpose 4/24
+class runtime-page-window 6/24
+class runtime-subspan 3/14
+class runtime-transpose 4/14
+class too-long-true-text 0/3
+class verbatim-inline-markup 3/9
+class verbatim-plain 2/3
+class verbatim-typographic-apostrophe 0/2
+seed=17578985954694161403 tool_exit=1 wall_s=0.02
+QUOTE_REOPEN_MATCH=31/130
+```
+
+Counter exit: 1. Receipt: `receipt-v3-run2.json`.
+
+### v3 binary junk, run 1
+
+```text
+class absent-cross-attributed 1/4
+class absent-fabricated 1/4
+class absent-one-word-edit 4/4
+class absent-spliced 2/4
+class absent-truncated-token 1/4
+class no-source-own-work-row 0/2
+class no-source-unregistered-id 0/1
+class runtime-crossattr 4/14
+class runtime-page-transpose 13/24
+class runtime-page-window 10/24
+class runtime-subspan 7/14
+class runtime-transpose 8/14
+class too-long-true-text 0/3
+class verbatim-inline-markup 7/9
+class verbatim-plain 3/3
+class verbatim-typographic-apostrophe 1/2
+seed=17755967212285402607 tool_exit=1 wall_s=0.02
+QUOTE_REOPEN_MATCH=62/130
+```
+
+Counter exit: 1. Receipt: `receipt-v3-binary.json`.
+
+### v3 binary junk, run 2
+
+```text
+class absent-cross-attributed 2/4
+class absent-fabricated 2/4
+class absent-one-word-edit 3/4
+class absent-spliced 2/4
+class absent-truncated-token 2/4
+class no-source-own-work-row 0/2
+class no-source-unregistered-id 0/1
+class runtime-crossattr 8/14
+class runtime-page-transpose 11/24
+class runtime-page-window 13/24
+class runtime-subspan 9/14
+class runtime-transpose 8/14
+class too-long-true-text 0/3
+class verbatim-inline-markup 6/9
+class verbatim-plain 3/3
+class verbatim-typographic-apostrophe 1/2
+seed=18014907881398986420 tool_exit=1 wall_s=0.02
+QUOTE_REOPEN_MATCH=70/130
+```
+
+Counter exit: 1. Receipt: `receipt-v3-binary-run2.json`.
+
+**v3 observation: both unchanged controls were rejected in both fresh-seed runs; none reached 130/130.** The binary variant still has a hard ceiling of 124/130 because it cannot emit the six TOO_LONG/NO_SOURCE labels. No successful no-location bypass, new variant, seed search, or new mutation was produced by this rescore. The earlier formal mutation-test verdict remains inconclusive because the pristine junk baseline failed.
+
+All four counters completed in under 5 s and exited; no started process remains running. Only the counter fetched the source URLs; the unchanged controls made no network requests. Bounds remained 540 s outer / 30 s candidate / 550 s tool call. No installs or updates, source/control edits, git/jj writes, sibling writes, runtime invocation, judging or integration occurred. Only the four new receipts and this appended report section were written.
+
+Report: .ufo/waves/round-29/controls/CtlJunk/report.md

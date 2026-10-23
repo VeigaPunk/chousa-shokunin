@@ -183,3 +183,81 @@ Only the two requested v2 receipts and this appended section were added. `contro
 
 Report: .ufo/waves/round-29/controls/CtlRawGrep/report.md
 
+## v3 rescore
+
+The parent froze design v3 at lane commit `aa5e1a3187955fa923de14e11c150bf1c526efc6`, removing caller-selected seeds after the v2 warmed-receipt shortcut reached 130/130. I read the v3 header and invocation contract, then rescored the **existing `control.py` unchanged** twice, concurrently. Neither invocation supplied a seed; both seeds below were generated and printed by the counter. Earlier sections remain historical measurements of their named designs.
+
+### Run 1 — seed 9666967667187893005
+
+Command from the lane root:
+
+```sh
+timeout 540s python3 corpus/evidence/round29/c1-count.py --timeout 90 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlRawGrep/receipt-v3.json -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlRawGrep/control.py
+```
+
+Counter stdout, verbatim:
+
+```text
+class absent-cross-attributed 4/4
+class absent-fabricated 4/4
+class absent-one-word-edit 4/4
+class absent-spliced 4/4
+class absent-truncated-token 3/4
+class no-source-own-work-row 2/2
+class no-source-unregistered-id 1/1
+class runtime-crossattr 14/14
+class runtime-page-transpose 24/24
+class runtime-page-window 9/24
+class runtime-subspan 9/14
+class runtime-transpose 14/14
+class too-long-true-text 3/3
+class verbatim-inline-markup 0/9
+class verbatim-plain 3/3
+class verbatim-typographic-apostrophe 0/2
+seed=9666967667187893005 tool_exit=1 wall_s=1.07
+QUOTE_REOPEN_MATCH=98/130
+```
+
+Counter/timeout exit: **1**. Control exit: **1**. Receipt: `.ufo/waves/round-29/controls/CtlRawGrep/receipt-v3.json`.
+
+### Run 2 — seed 3111698841853131484
+
+Command from the lane root:
+
+```sh
+timeout 540s python3 corpus/evidence/round29/c1-count.py --timeout 90 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlRawGrep/receipt-v3-run2.json -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlRawGrep/control.py
+```
+
+Counter stdout, verbatim:
+
+```text
+class absent-cross-attributed 4/4
+class absent-fabricated 4/4
+class absent-one-word-edit 4/4
+class absent-spliced 4/4
+class absent-truncated-token 3/4
+class no-source-own-work-row 2/2
+class no-source-unregistered-id 1/1
+class runtime-crossattr 14/14
+class runtime-page-transpose 24/24
+class runtime-page-window 6/24
+class runtime-subspan 7/14
+class runtime-transpose 14/14
+class too-long-true-text 3/3
+class verbatim-inline-markup 0/9
+class verbatim-plain 3/3
+class verbatim-typographic-apostrophe 0/2
+seed=3111698841853131484 tool_exit=1 wall_s=1.06
+QUOTE_REOPEN_MATCH=93/130
+```
+
+Counter/timeout exit: **1**. Control exit: **1**. Receipt: `.ufo/waves/round-29/controls/CtlRawGrep/receipt-v3-run2.json`.
+
+### v3 result
+
+Both fresh-seed runs reject this raw-grep shortcut. It loses exactly `absent-truncated-token` (3/4 in both), `verbatim-inline-markup` (0/9 in both), `verbatim-typographic-apostrophe` (0/2 in both), `runtime-subspan` (9/14 and 7/14), and `runtime-page-window` (9/24 and 6/24). All other eleven classes match completely. The raw-substring boundary false positive and extraction/normalization false negatives remain relevant to operability and calibration; the smallest safe correction remains the declared match contract, not weaker expected labels. No 130/130 v3 shortcut was measured by this seat, and these two rejected controls do not prove general counter soundness.
+
+Only the two requested v3 receipts and this appended section were added. The control was unchanged; no tool installation, git/jj operation, other-runtime invocation or out-of-scope write occurred. Both scoring processes exited; none remains running.
+
+Report: .ufo/waves/round-29/controls/CtlRawGrep/report.md
+

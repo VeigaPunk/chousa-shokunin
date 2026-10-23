@@ -145,3 +145,72 @@ The expected **72/130** all-false ceiling (`claims.md:141`) is confirmed on both
 The v1 public-fixture lookup risk above is now historical: revised `claims.md:3-10` records that `CtlLabelKeyed` actually reached 82/82 and voided v1. [INFERENCE] Adding only NO_SOURCE/TOO_LONG prechecks to this constant control raises its v2 ceiling to 78/130, not 130/130; public fixture/positive-span lookup alone still lacks the 24 page-window positives. No full-score v2 bypass was implemented or observed in this assigned rescore.
 
 The control itself still performs no network access. The v2 counter made the prescribed source-registry GETs to generate page cases. Only the two v2 receipts and this appended report section were written by the rescore; no git/jj writes, control changes, real-tool implementation, tool installation/update, or runtime judgment occurred. Both bounded commands terminated with exit 1; no started process remains running.
+
+## v3 rescore
+
+The v3 assignment identifies the freeze as lane commit `aa5e1a3187955fa923de14e11c150bf1c526efc6`. The counter now draws its own fresh 64-bit seed and no longer accepts `--seed`; the predicate remains exactly 130/130. `control.py` remains unchanged. Both new receipts record counter SHA-256 `cd50965032278c355f780d357c5672f14840fc218bb1b7dc4adaa6993b5c175d`, `predicate_holds: false`, and empty stderr.
+
+Working directory: `/home/vgpnk/Projects/shokunin/chousa-shokunin`. The two independent runs were started concurrently, without any seed override:
+
+```sh
+timeout 600s python3 corpus/evidence/round29/c1-count.py --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlAlwaysAbsent/receipt-v3.json -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlAlwaysAbsent/control.py
+timeout 600s python3 corpus/evidence/round29/c1-count.py --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlAlwaysAbsent/receipt-v3-run2.json -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/controls/CtlAlwaysAbsent/control.py
+```
+
+### v3 run 1
+
+```text
+class absent-cross-attributed 4/4
+class absent-fabricated 4/4
+class absent-one-word-edit 4/4
+class absent-spliced 4/4
+class absent-truncated-token 4/4
+class no-source-own-work-row 0/2
+class no-source-unregistered-id 0/1
+class runtime-crossattr 14/14
+class runtime-page-transpose 24/24
+class runtime-page-window 0/24
+class runtime-subspan 0/14
+class runtime-transpose 14/14
+class too-long-true-text 0/3
+class verbatim-inline-markup 0/9
+class verbatim-plain 0/3
+class verbatim-typographic-apostrophe 0/2
+seed=3871257233662363416 tool_exit=1 wall_s=0.02
+QUOTE_REOPEN_MATCH=72/130
+```
+
+Counter exit: **1**. Control exit: **1**. Receipt: `receipt-v3.json`.
+
+### v3 run 2
+
+```text
+class absent-cross-attributed 4/4
+class absent-fabricated 4/4
+class absent-one-word-edit 4/4
+class absent-spliced 4/4
+class absent-truncated-token 4/4
+class no-source-own-work-row 0/2
+class no-source-unregistered-id 0/1
+class runtime-crossattr 14/14
+class runtime-page-transpose 24/24
+class runtime-page-window 0/24
+class runtime-subspan 0/14
+class runtime-transpose 14/14
+class too-long-true-text 0/3
+class verbatim-inline-markup 0/9
+class verbatim-plain 0/3
+class verbatim-typographic-apostrophe 0/2
+seed=17511954584760813018 tool_exit=1 wall_s=0.02
+QUOTE_REOPEN_MATCH=72/130
+```
+
+Counter exit: **1**. Control exit: **1**. Receipt: `receipt-v3-run2.json`.
+
+### v3 review and scope
+
+Both fresh seeds confirm the unchanged all-false ceiling of **72/130**: every ABSENT class matches, but all 52 VERBATIM cases and the six NO_SOURCE/TOO_LONG cases fail. This control does not meet the v3 predicate and reveals no new full-score bypass. The impacted claim axis remains operability; no correction follows from this constant control alone.
+
+The preceding v2 assessment is historical: current `claims.md:3-18` records that warmed receipt replay reached 130/130 for the publicly selectable v2 seeds, prompting v3's fresh-seed-only interface. No replay variant was implemented in this seat.
+
+Only the two v3 receipts and this appended section were written for the rescore. The unchanged control made no network requests; the counter made its prescribed source-registry GETs. Both bounded commands completed with exit 1, and no started process remains running. No git/jj writes, tool installs/updates, real-tool implementation, or runtime judgment occurred.
