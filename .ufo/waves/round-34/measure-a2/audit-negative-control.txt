@@ -1,0 +1,5 @@
+Negative control (scratch, 2026-10-23): two lies injected into a copied audit set
+(commit prefix deadbeef; gate digest 0*64). Tool run with --lane <lane> --set <scratch set> --dispositions <scratch file>.
+Expected and observed: SELF_AUDIT_MISMATCHES=2; with disposition key commit-b8053900 present,
+SELF_AUDIT_UNDISPOSITIONED=1; without it, 2. Real (unmodified) set: SELF_AUDIT_MISMATCHES=0,
+SELF_AUDIT_UNDISPOSITIONED=0 (audit-first-run.txt). Tool exit 0 in all runs (it counts, never gates).
