@@ -42,3 +42,15 @@ No tools installed (vanilla `bash` + `python3`); no pacman/uv/npx actions. No ne
 ## Verdict
 
 **design holds** — no-reader controls cannot approach 120/120 (max 86/120, deterministic); the C2 core (hashing exact source bytes) is not skippable without reading files. The fixture does leak 86/120 to a claims-only reader via the two structural leaks above, so the counter is a weak discriminator against weak controls; that is a fixture/tester concern for the axis critic, not a break of the claim's contract.
+
+## v2 re-score
+
+Updated the no-reader control to emit `FINDING CLAIM_SOURCE_REVISION_MISMATCH severity=warn surface=claims obs=id=<id>` for each claim it labels `stale`, satisfying v2's claim-specific finding check. It still reads only the claims JSONL and never opens files under `--root`.
+
+| control | counter | seed | score | receipt |
+|---|---|---|---|---|
+| no-reader c2 | `c2-count.py` v2 | 9101 | 86/120 | `controls/CtlNoReaderC2/v2/receipt-seed9101.json` |
+| no-reader c2 | `c2-count.py` v2 | 9102 | 86/120 | `controls/CtlNoReaderC2/v2/receipt-seed9102.json` |
+| no-reader c2 | `c2-count.py` v2 | 9103 | 86/120 | `controls/CtlNoReaderC2/v2/receipt-seed9103.json` |
+
+All three receipts record `counter_sha256=1064fdb356e25440c64bb4d4d5363acb9c1bbc32c687c8ea50096d74c849d500`, matching the frozen v2 counter. **Maximum v2 C2 score: 86/120.**

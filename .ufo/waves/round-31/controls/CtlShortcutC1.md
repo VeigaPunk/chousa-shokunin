@@ -183,3 +183,78 @@ only) scores 116–117 because only half of `M4`'s items keep the true start lin
 8-item endpoint-intact interior-damaged class and making every `M4` item keep the true start
 line drops the maximum of all ten controls to 112/120 with the predicate, TOTAL and the
 do-nothing baseline unchanged.
+
+## v2 re-score (commit `8070f92b…`, counter `c3aca35d…`)
+
+Design v2 froze fixed sub-variants (M3 `prefix` 4 / `mid_sub` 4 / `mid_swap` 4; M4
+`start`·`wide`·`end`·`early` ×2; B1 2/2/8; B2 6/3/3; M1 3+3/6; M2 6/6), the finding rule,
+`CHOUSA_*` scrubbing and the duplicate-line rule; the gate is unchanged (`ac1315…`).
+
+All twelve controls now print, for every claim they label `mislocated` (and only those),
+`FINDING CLAIM_LINE_MISMATCH severity=warn surface=claims obs=id=<id> at=<at> control=<mode>`;
+the counter's `FINDING_RE` parses it. Harness: the v2 counter on the frozen gate still
+gives **50/120** (seed 933011), and the controls' shared base layer reproduces the frozen
+gate's 120 CLAIM lines byte-identically on that v2 fixture (B1 first/last-line, M3
+mid_sub/mid_swap and M4 end/early included).
+
+Counter v2 `c3aca35d…`; seeds 934011 / 934012 / 934013; receipts
+`CtlShortcutC1/v2/<control>-seed<seed>.json`. **All 40 receipts in `v2/` carry
+`counter_sha256=c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427`**
+(36 scored + 3 diagnostic + 1 harness).
+
+| control | rule (sources read; base occurrence check kept; finding for own mislocated) | scores | receipt |
+|---|---|---|---|
+| `first-occ` | bind only the first delimited occurrence | 108 / 108 / 108 | `v2/first-occ-seed9340{11,12,13}.json` |
+| `raw-substr` | span is a raw substring of lines N..M | 104 / 104 / 104 | `v2/raw-substr-seed9340{11,12,13}.json` |
+| `first-token` | first span token delimited somewhere in N..M | 96 / 96 / 96 | `v2/first-token-seed9340{11,12,13}.json` |
+| `first2-token` | first two span tokens delimited somewhere in N..M | 97 / 96 / 98 | `v2/first2-token-seed9340{11,12,13}.json` |
+| `occur-in-file` | span occurs delimited anywhere and N..M inside the file | 68 / 68 / 68 | `v2/occur-in-file-seed9340{11,12,13}.json` |
+| `count-ge2` | ≥2 delimited occurrences ⇒ supported | 112 / 112 / 112 | `v2/count-ge2-seed9340{11,12,13}.json` |
+| **`range-ignored`** | **`"N-M"`: check only the start line N, end ignored** | **116 / 116 / 116** | `v2/range-ignored-seed9340{11,12,13}.json` |
+| `endpoint-exact` | first token line == N and last token line == M | 112 / 112 / 112 | `v2/endpoint-exact-seed9340{11,12,13}.json` |
+| `endpoint-contain` | first and last token delimited somewhere in N..M | 108 / 108 / 108 | `v2/endpoint-contain-seed9340{11,12,13}.json` |
+| `end-only` | last token delimited on line M (single: N) | 102 / 102 / 102 | `v2/end-only-seed9340{11,12,13}.json` |
+| `bag-of-words` | every span token delimited somewhere in N..M, order ignored | 112 / 112 / 112 | `v2/bag-of-words-seed9340{11,12,13}.json` |
+| `line30-leak` | named line > 30 ⇒ mislocated, else base result | 66 / 68 / 68 | `v2/line30-leak-seed9340{11,12,13}.json` |
+| *diagnostic* `endpoint-exact` **without findings** | same classifier, finding suppressed | 62 / 62 / 62 | `v2/_diagnostic-endpoint-exact-nofind-seed9340{11,12,13}.json` |
+
+### What v2 fixed, and what it did not
+
+1. **The v1 120 is closed.** `endpoint-exact` drops 120 → **112/112/112**. M3's
+   `mid_sub` + `mid_swap` (8 items) keep both endpoint tokens on the named line, so the
+   endpoint-pair binder misses all 8 and is now capped by class M3, not by luck.
+2. **v2 still admits 116.** `range-ignored` (start-line-only) scores **116/116/116**.
+   M4's eight items split 4 start-keeping (`start`, `wide`) + 4 end-keeping
+   (`end`, `early`); a check that compares only N passes `start`/`wide` (prints
+   `supported`, truth `mislocated`) and fails `end`/`early`. M4 is the *only* class that
+   catches a start-only binder (M1/M5/M6 move the start line; M2/M3 break endpoints or the
+   span), so the ceiling is 120 − 4 = 116. The mirror orientation is harmless: `end-only`
+   = 102 (M2 `prefix` 6, M3 `prefix`+`mid_*` 12, M4 `end`/`early` 4).
+3. `bag-of-words` = 112 (M3 `mid_swap` 4 — all tokens present, order ignored — plus M4
+   `wide`+`early` 4). `count-ge2` 112 (M6). `first-occ` 108 (the named B2 occurrence is
+   never the first). Everything else ≤ 108.
+4. **The finding rule bites when ignored and is free when obeyed.** The same endpoint-exact
+   classifier with findings suppressed scores **62/120** (all 58 mislocated claims fail),
+   while emitting the finding for its own `mislocated` verdicts costs nothing: no shortcut's
+   score changed relative to its observed classification. It forces the `CLAIM_LINE_MISMATCH`
+   drift line, it does not make the line check harder — so the remaining leak is unchanged
+   by it.
+
+### Smallest safe correction (v2.1 — one line)
+
+In `SUBVARIANTS`, `"M4_multiline_wrong_range": ["start", "wide"] * 4` (all eight items keep
+the true start line). A start-only check then fails all 8 → 112; `end-only` stays 106 (it is
+already caught by M2 `prefix` and M3 `mid_*`); every other control is unchanged. The
+"named equals the true end line" shape disappears, but the end orientation is already tested
+twice while the start orientation is tested only by M4.
+
+Simulated with a sandbox copy of the v2 counter (`c1-count-v2sim2.py`, sha256
+`afe30505…7d9`; one-line `SUBVARIANTS` edit, no lane edit), seeds 934011–13: max across the
+twelve controls **112/120** on every seed (`range-ignored` 112, `endpoint-exact` 112,
+`bag-of-words` 112, `count-ge2` 112, `end-only` 106, rest ≤ 108); base gate still 50/120;
+labels unchanged (bound 36 + no-line 6, mislocated 58, invalid 12, absent 8).
+
+**v2 verdict**: **still broken at 116/120** — start-line-only binding stays above the 115
+bar because M4 keeps the true start line on only 4 of its 8 items; the one-line M4 change
+(`["start","wide"]*4`) drops the maximum to 112/120 with the finding rule, the 50/120
+baseline and the label counts untouched.

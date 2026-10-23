@@ -133,3 +133,28 @@ A candidate scoring below ~86 would be doing worse than not reading the sources 
 **design holds** — the strongest claims-file-only control reaches 86/120 (max 92 on one seed
 with a gamble that loses in the mean), 34 below the predicate, and every point it earns comes
 from `line` format/absence and newline-in-span class shape, never from source bytes.
+
+## v2 re-score
+
+Frozen v2: lane commit `8070f92bac6ba1f2dfb6c29d66303d60a1e7dac7`; `c1-count.py` SHA-256
+`c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427` (pinned copy
+`CtlNoReaderC1/v2/c1-count-v2-c3aca35d.py`). Every receipt below was verified to carry exactly
+that `counter_sha256`; the earlier `81fe5015` rows are the pre-freeze draft and are kept only as
+the drift record.
+
+| control | counter | seeds | score | receipt |
+|---|---|---|---|---|
+| `control_noreader.sh` | v2 `c3aca35d` | 730001–730003 | 88, 88, 88 | `v2/control_noreader-seed-73000{1..3}.json` |
+| `control_noreader_maxsel.sh` | v2 `c3aca35d` | 730001–730003 | 91, 86, 85 (mean 87.3) | `v2/control_noreader_maxsel-seed-73000{1..3}.json` |
+| `control_noreader_nofind.sh` | v2 `c3aca35d` | 730001–730003 | 30, 30, 30 | `v2/control_noreader_nofind-seed-73000{1..3}.json` |
+
+New max: **91/120** (one seed, count-gamble variant); the stable no-reader control is
+**88/120** on every seed (was 86 under the pre-freeze draft). Why it rose: frozen v2 removed
+M4's width-2 `late` variant (M4 is now `start`/`wide`/`end`/`early`, all mislocated under the
+rule, so M4 goes 8/8 instead of 6/8) and every width-2 newline range is now exactly B3, so rule 3
+is 12/12 without a guard. The 32 remaining misses are unchanged in kind: B1 12 + B2 12 supported
+(one-line) and U1 8 unsupported — i.e. exactly the claims that need the source bytes. The
+`nofind` ablation still shows the finding rule costs 58 claims (88 → 30) when findings are
+omitted; it adds no resistance beyond that formatting requirement.
+
+**v2 verdict: design holds — C1 no-reader max 91/120 (stable 88/120), 29 below the predicate.**

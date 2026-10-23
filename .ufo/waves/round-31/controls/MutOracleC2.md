@@ -41,3 +41,25 @@ All edits were isolated to `/fast/scratch/hyaku/chousa-r31/MutOracleC2/active.sh
 59 counter runs total, each from the lane root, wrapped in `timeout 900`, limited to 512 MiB address space, 90 CPU seconds and 4096 UID processes, with one counter at a time. Each detector subprocess had a separate process group, cleaned after completion; no background services remain. No network, git/jj writes, lane source/counter edits, or tool installations/updates. Reproduction supervisor and fixture-audit source are archived beside the receipts; [campaign](MutOracleC2/campaign.json) freezes seeds, inputs and limits.
 
 design broken: randomized invalid-pin subtypes omit whitespace cases, letting a whitespace-trimming control reach 120/120 on seed 1158866592272045467.
+
+## v2 re-score
+
+The preceding sections and receipts are preserved v1 evidence. Re-scored all seven frozen controls under design v2, commit `8070f92bac6ba1f2dfb6c29d66303d60a1e7dac7`. Every one of the **24 new counter receipts** was checked against C2 SHA-256 `1064fdb356e25440c64bb4d4d5363acb9c1bbc32c687c8ea50096d74c849d500`. All scripts are byte-identical to their v1 artifacts: they already emit the required revision-mismatch finding exactly for their own stale verdicts, so no finding-only repair was needed.
+
+Three fresh, pre-drawn seeds shared across controls: F=`2015044819141004956`, G=`3568399740835207276`, H=`6840692661700775995`. The oracle was run first on all three seeds and again after the mutants, scoring 120/120 throughout.
+
+| Control | Counter | Seeds | Scores F/G/H | Counter receipts | Verdict |
+|---|---|---|---|---|---|
+| Full-contract feasibility oracle | C2 v2 | F/G/H | 120/120 each | [F](MutOracleC2/v2/oracle-rescore-seed2015044819141004956.json), [G](MutOracleC2/v2/oracle-rescore-seed3568399740835207276.json), [H](MutOracleC2/v2/oracle-rescore-seed6840692661700775995.json) | Feasible, not a candidate |
+| Case-insensitive | C2 v2 | F/G/H | 117/120 each | [F](MutOracleC2/v2/case-insensitive-rescore-seed2015044819141004956.json), [G](MutOracleC2/v2/case-insensitive-rescore-seed3568399740835207276.json), [H](MutOracleC2/v2/case-insensitive-rescore-seed6840692661700775995.json) | K/K/K |
+| Strip/normalize line ends | C2 v2 | F/G/H | 83/120 each | [F](MutOracleC2/v2/normalized-eol-rescore-seed2015044819141004956.json), [G](MutOracleC2/v2/normalized-eol-rescore-seed3568399740835207276.json), [H](MutOracleC2/v2/normalized-eol-rescore-seed6840692661700775995.json) | K/K/K |
+| Span before stale | C2 v2 | F/G/H | 110/120 each | [F](MutOracleC2/v2/span-before-stale-rescore-seed2015044819141004956.json), [G](MutOracleC2/v2/span-before-stale-rescore-seed3568399740835207276.json), [H](MutOracleC2/v2/span-before-stale-rescore-seed6840692661700775995.json) | K/K/K |
+| Accept `sha256:` prefix | C2 v2 | F/G/H | 117/120 each | [F](MutOracleC2/v2/accept-prefix-rescore-seed2015044819141004956.json), [G](MutOracleC2/v2/accept-prefix-rescore-seed3568399740835207276.json), [H](MutOracleC2/v2/accept-prefix-rescore-seed6840692661700775995.json) | K/K/K |
+| Trim whitespace | C2 v2 | F/G/H | **118/120 each** | [F](MutOracleC2/v2/trim-value-rescore-seed2015044819141004956.json), [G](MutOracleC2/v2/trim-value-rescore-seed3568399740835207276.json), [H](MutOracleC2/v2/trim-value-rescore-seed6840692661700775995.json) | K/K/K |
+| Bash `$(cat)` bytes | C2 v2 | F/G/H | 83/120 each | [F](MutOracleC2/v2/bash-cat-rescore-seed2015044819141004956.json), [G](MutOracleC2/v2/bash-cat-rescore-seed3568399740835207276.json), [H](MutOracleC2/v2/bash-cat-rescore-seed6840692661700775995.json) | K/K/K |
+
+**New defective-control maximum: 118/120**, whitespace trimming, on all three seeds; including the disclosed feasibility reference, the maximum is 120/120. No mutant survives (18 seeded kills, zero inconclusive). v2's fixed subtype counts close the observed v1 omission: every run exposes two spaced pins, three uppercase pins and three prefixed pins. The highest score is still close to 120 because a whitespace-only defect affects only two fixtures, but it consistently fails the frozen 120/120 threshold.
+
+[v2 kill matrix](MutOracleC2/v2/kill-matrix.json) records every score, expected baseline/restored receipt, miss and full gate hash. [v2 restoration evidence](MutOracleC2/v2/restoration.json) records all v1 artifact/receipt hashes unchanged, identical frozen gate bytes, stable per-run hashes, all 24 verified counter hashes, and three post-mutant oracle passes. Scratch bytes remain exactly restored at SHA-256 `96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656`. Each new receipt has its actual stdout/stderr and bounded command in the neighboring `.execution.json`; bounds/process-group cleanup match v1. No network, candidate runs, source edits, git/jj writes or tool installations/updates.
+
+design holds for the assigned v2 mutation probes: oracle 120/120 on three fresh seeds; all six defective controls below 120/120 on every seed.

@@ -1,0 +1,11 @@
+--- v1/oracle-c1.sh
++++ v2/oracle-c1.sh
+@@ -189,7 +189,7 @@
+             print('CLAIM id=%s expected=%s observed=%s source=%s at=%s verdict=%s' %
+                   (cid, expected, observed, source, at, verdict))
+             if finding:
+-                print('FINDING %s severity=warn surface=claims id=%s' % (finding, cid))
++                print('FINDING %s severity=warn surface=claims obs=id=%s at=%s' % (finding, cid, at))
+             failed |= verdict != 'match'
+     return int(failed)
+ 

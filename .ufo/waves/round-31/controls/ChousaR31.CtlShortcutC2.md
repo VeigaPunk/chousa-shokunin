@@ -52,3 +52,29 @@ reached 120/120.
 **design broken: the C2 counter's I1 invalid class (14 claims split across six rare sub-kinds)
 lets a gate that tolerates any single malformed sha form score 116–120, and a whitespace-
 trimming validator scored exactly 120/120 (predicate_holds=true) on seed 9002.**
+
+## v2 re-score
+
+Re-ran every v1 control with one `CLAIM_SOURCE_REVISION_MISMATCH severity=warn surface=claims obs=id=<id>` finding for each claim the control labels `stale`, and no such finding for other verdicts. Three seeds each; all 39 receipts have schema `v2` and counter hash `1064fdb356e25440c64bb4d4d5363acb9c1bbc32c687c8ea50096d74c849d500`.
+
+| Control | Seed 9001 | Seed 9002 | Seed 9003 | Receipts (`controls/ChousaR31.CtlShortcutC2/v2/`) |
+|---|---:|---:|---:|---|
+| M1 uppercase | 117 | 117 | 117 | `uppercase-seed900{1,2,3}.json` |
+| M2 CRLF→LF before hash | 110 | 110 | 110 | `crlf-norm-seed900{1,2,3}.json` |
+| M3 `$(cat)` trailing-LF hash | 83 | 83 | 83 | `cat-hash-seed900{1,2,3}.json` |
+| M4 span-only hash | 76 | 76 | 76 | `span-hash-seed900{1,2,3}.json` |
+| M5 membership in fixture hashes | 112 | 112 | 112 | `membership-seed900{1,2,3}.json` |
+| M6 format-only, skip hashing | 64 | 64 | 64 | `format-only-seed900{1,2,3}.json` |
+| M7 exact hash, skip span | 110 | 110 | 110 | `skip-span-seed900{1,2,3}.json` |
+| O1 CRLF normalize + strip final LF | 83 | 83 | 83 | `relaxed-norm-seed900{1,2,3}.json` |
+| O2 CRLF-share prior | 70 | 70 | 70 | `crlf-prior-seed900{1,2,3}.json` |
+| O3 valid sha → stale | 86 | 86 | 86 | `majority-stale-seed900{1,2,3}.json` |
+| O4 accept ± one trailing newline | 113 | 113 | 113 | `newline-tolerant-seed900{1,2,3}.json` |
+| O5 trim whitespace around sha | **118** | **118** | **118** | `trim-spaced-seed900{1,2,3}.json` |
+| O6 strip `sha256:` prefix | 117 | 117 | 117 | `strip-prefix-seed900{1,2,3}.json` |
+
+**v2 maximum: 118/120** (O5, all seeds). The fixed invalid-kind counts prevent v1's 120/120
+miss, but whitespace tolerance still passes both fixed `spaced` cases and misses only those
+two invalid claims. Uppercase and prefix tolerance each score 117 by passing their three fixed
+invalid examples. No v2 control reached 120/120; the highest shortcut remains close and is
+specifically attributable to accepting malformed sha forms.

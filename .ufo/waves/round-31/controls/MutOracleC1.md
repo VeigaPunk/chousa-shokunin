@@ -49,3 +49,27 @@ All scores are actual `LINE_BINDING_MATCH=k/120` outputs of the frozen C1 counte
 - Initial RLIMIT_NPROC=64 setup attempts exited 125 before the counter could fork because the shared UID already had more tasks; they are recorded as inconclusive setup failures, never mutant kills. The corrected bounded runs above used 4096. No tools installed; no network, candidate, VCS writes, or other runtime used. All started detector process groups were reaped/terminated.
 
 design holds
+
+## v2 re-score
+
+Frozen design `8070f92bac6ba1f2dfb6c29d66303d60a1e7dac7`; every one of the **39** new counter receipts was checked against C1 SHA-256 `c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427`. V1 artifacts/receipts are unchanged. Same bounds as above; only isolated v2 scratch bytes were mutated.
+
+Fresh seeds: **V2S1**=`1974160508405359465`, **V2S2**=`6996389439849219100`, **V2S3**=`5268895580782469426`.
+
+The v2 oracle and every mutant now emit `FINDING CLAIM_LINE_MISMATCH severity=warn surface=claims obs=id=<id> at=<at>` exactly for their **own** `mislocated` verdicts; this strengthens the controls rather than killing them for missing findings. The only shared v1→v2 source change is the [finding-emitter format](MutOracleC1/v2/oracle-v1-to-v2.diff). The oracle remains a disclosed feasibility reference, not a candidate.
+
+| Control | Counter | Seeds | Score(s) | Expected detector / verdict | Receipts |
+|---|---|---|---|---|---|
+| Full-contract oracle | C1 | V2S1–V2S3 | 120/120 each | feasible 3/3 | [1](MutOracleC1/v2/oracle-s1.json), [2](MutOracleC1/v2/oracle-s2.json), [3](MutOracleC1/v2/oracle-s3.json) |
+| `no-strict-grammar` | C1 | V2S1–V2S3 | 116/120 each | I1 8/12; killed 3/3 | [1](MutOracleC1/v2/no-strict-grammar-s1.json), [2](MutOracleC1/v2/no-strict-grammar-s2.json), [3](MutOracleC1/v2/no-strict-grammar-s3.json) |
+| `first-occurrence-only` | C1 | V2S1–V2S3 | 108/120 each | B2 0/12; killed 3/3 | [1](MutOracleC1/v2/first-occurrence-only-s1.json), [2](MutOracleC1/v2/first-occurrence-only-s2.json), [3](MutOracleC1/v2/first-occurrence-only-s3.json) |
+| `substring-no-boundaries` | C1 | V2S1–V2S3 | 108/120 each | M2 0/12; killed 3/3 | [1](MutOracleC1/v2/substring-no-boundaries-s1.json), [2](MutOracleC1/v2/substring-no-boundaries-s2.json), [3](MutOracleC1/v2/substring-no-boundaries-s3.json) |
+| `range-start-only` | C1 | V2S1–V2S3 | 116/120 each | M4 4/8; killed 3/3 | [1](MutOracleC1/v2/range-start-only-s1.json), [2](MutOracleC1/v2/range-start-only-s2.json), [3](MutOracleC1/v2/range-start-only-s3.json) |
+| `mislocated-before-unsupported` | C1 | V2S1–V2S3 | 112/120 each | U1 0/8; killed 3/3 | [1](MutOracleC1/v2/mislocated-before-unsupported-s1.json), [2](MutOracleC1/v2/mislocated-before-unsupported-s2.json), [3](MutOracleC1/v2/mislocated-before-unsupported-s3.json) |
+| `off-by-one-lines` | C1 | V2S1–V2S3 | 81/120, 78/120, 80/120 | B1/B2/B3 and shifted-location false positives; killed 3/3 | [1](MutOracleC1/v2/off-by-one-lines-s1.json), [2](MutOracleC1/v2/off-by-one-lines-s2.json), [3](MutOracleC1/v2/off-by-one-lines-s3.json) |
+
+- **New wrong-control max: 116/120**, tied by grammar relaxation and start-only binding. Fixed M4 sub-variants now force four range-mutant misses on every seed (v1 max was 117/120). No assigned mutant reaches P1; all 18 mutant trials are killed. The complete oracle reaches 120/120 on all three seeds, including the finding rule.
+- Every mutation was restored in `finally`, then the identical detector/seeds were rerun: all **18 restored runs scored 120/120**. Exact pristine/before/restored/final SHA-256: `bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617`.
+- Oracle, six mutant scripts/diffs, actual outputs, all counter pins, before/mutated/restored hashes, and explicit restoration receipts: [v2 manifest](MutOracleC1/v2/probe-manifest.json), [v2 kill matrix](MutOracleC1/v2/kill-matrix.json). All started detector process groups were reaped/terminated; no tools installed, network, VCS writes, or candidate runs.
+
+design holds

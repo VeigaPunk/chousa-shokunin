@@ -1,0 +1,11 @@
+--- oracle-c1.sh
++++ mislocated-before-unsupported.sh
+@@ -140,7 +140,7 @@
+         return 'refused', '-', refusal
+     hits = occurrences(hay, span)
+     at = format_at(hits[0]) if hits else '-'
+-    if not hits:
++    if not hits and target is None:
+         return 'unsupported', at, ('CLAIM_SPAN_NOT_FOUND' if record['expect'] != 'unsupported' else None)
+     if target is not None:
+         bound = [hit for hit in hits if location_matches(hit, target)]

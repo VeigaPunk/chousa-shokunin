@@ -1,0 +1,3462 @@
+{
+  "schema": "chousa-r31-c1-mutation-probe/v2",
+  "role": "disclosed feasibility reference, not candidate",
+  "design_commit": "8070f92bac6ba1f2dfb6c29d66303d60a1e7dac7",
+  "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+  "seeds": {
+    "V2S1": 1974160508405359465,
+    "V2S2": 6996389439849219100,
+    "V2S3": 5268895580782469426
+  },
+  "bounds": {
+    "counter_timeout_s": 900,
+    "kill_after_s": 5,
+    "memory_bytes": 1073741824,
+    "cpu_s": 120,
+    "process_limit": 4096,
+    "max_concurrent_counters": 1
+  },
+  "finding_rule": "Emit CLAIM_LINE_MISMATCH severity=warn surface=claims obs=id=<id> exactly for the control own mislocated verdicts.",
+  "baseline": [
+    {
+      "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/oracle-s1.json",
+      "seed_index": "V2S1",
+      "seed": 1974160508405359465,
+      "command": [
+        "timeout",
+        "--kill-after=5",
+        "900",
+        "python3",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+        "--gate",
+        "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+        "--seed",
+        "1974160508405359465",
+        "--receipt",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/oracle-s1.json"
+      ],
+      "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+      "returncode": 0,
+      "supervisor_killed": false,
+      "elapsed_s": 0.112,
+      "stdout": "LINE_BINDING_MATCH=120/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+      "stderr": "",
+      "schema": "chousa-r31-c1-receipt/v2",
+      "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+      "matched": 120,
+      "total": 120,
+      "gate_rc": 1,
+      "gate_timed_out": false,
+      "gate_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+      "per_class": {
+        "M3_partial_on_named_line": "12/12",
+        "M5_beyond_eof": "6/6",
+        "B2_bound_later_occurrence": "12/12",
+        "B3_bound_multiline": "12/12",
+        "M4_multiline_wrong_range": "8/8",
+        "B1_bound_single": "12/12",
+        "M2_glued_on_named_line": "12/12",
+        "I1_invalid_line_value": "12/12",
+        "M6_two_occurrences_named_third": "8/8",
+        "B4_no_line": "6/6",
+        "M1_other_line": "12/12",
+        "U1_absent_span_with_line": "8/8"
+      },
+      "misses": [],
+      "counter_pin_verified": true
+    },
+    {
+      "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/oracle-s2.json",
+      "seed_index": "V2S2",
+      "seed": 6996389439849219100,
+      "command": [
+        "timeout",
+        "--kill-after=5",
+        "900",
+        "python3",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+        "--gate",
+        "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+        "--seed",
+        "6996389439849219100",
+        "--receipt",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/oracle-s2.json"
+      ],
+      "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+      "returncode": 0,
+      "supervisor_killed": false,
+      "elapsed_s": 0.107,
+      "stdout": "LINE_BINDING_MATCH=120/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+      "stderr": "",
+      "schema": "chousa-r31-c1-receipt/v2",
+      "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+      "matched": 120,
+      "total": 120,
+      "gate_rc": 1,
+      "gate_timed_out": false,
+      "gate_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+      "per_class": {
+        "I1_invalid_line_value": "12/12",
+        "M3_partial_on_named_line": "12/12",
+        "B3_bound_multiline": "12/12",
+        "M2_glued_on_named_line": "12/12",
+        "M4_multiline_wrong_range": "8/8",
+        "B2_bound_later_occurrence": "12/12",
+        "M5_beyond_eof": "6/6",
+        "B4_no_line": "6/6",
+        "B1_bound_single": "12/12",
+        "M6_two_occurrences_named_third": "8/8",
+        "U1_absent_span_with_line": "8/8",
+        "M1_other_line": "12/12"
+      },
+      "misses": [],
+      "counter_pin_verified": true
+    },
+    {
+      "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/oracle-s3.json",
+      "seed_index": "V2S3",
+      "seed": 5268895580782469426,
+      "command": [
+        "timeout",
+        "--kill-after=5",
+        "900",
+        "python3",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+        "--gate",
+        "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+        "--seed",
+        "5268895580782469426",
+        "--receipt",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/oracle-s3.json"
+      ],
+      "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+      "returncode": 0,
+      "supervisor_killed": false,
+      "elapsed_s": 0.109,
+      "stdout": "LINE_BINDING_MATCH=120/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+      "stderr": "",
+      "schema": "chousa-r31-c1-receipt/v2",
+      "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+      "matched": 120,
+      "total": 120,
+      "gate_rc": 1,
+      "gate_timed_out": false,
+      "gate_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+      "per_class": {
+        "M5_beyond_eof": "6/6",
+        "M1_other_line": "12/12",
+        "M4_multiline_wrong_range": "8/8",
+        "B3_bound_multiline": "12/12",
+        "U1_absent_span_with_line": "8/8",
+        "M2_glued_on_named_line": "12/12",
+        "B2_bound_later_occurrence": "12/12",
+        "M3_partial_on_named_line": "12/12",
+        "M6_two_occurrences_named_third": "8/8",
+        "B4_no_line": "6/6",
+        "I1_invalid_line_value": "12/12",
+        "B1_bound_single": "12/12"
+      },
+      "misses": [],
+      "counter_pin_verified": true
+    }
+  ],
+  "mutants": [
+    {
+      "control": "no-strict-grammar",
+      "defect": "Normalize leading zeroes/outer whitespace and accept equal range endpoints ('07', ' 4', '4-4').",
+      "expected_detector_classes": [
+        "I1_invalid_line_value"
+      ],
+      "before_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+      "mutated_sha256": "1520a3c1bfc2ae333f19fb42f67aa6efb1d1fb902a99f23e7d7567b99ac8959f",
+      "artifact": ".ufo/waves/round-31/controls/MutOracleC1/v2/no-strict-grammar.sh",
+      "mutated_runs": [
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/no-strict-grammar-s1.json",
+          "seed_index": "V2S1",
+          "seed": 1974160508405359465,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "1974160508405359465",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/no-strict-grammar-s1.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 1,
+          "supervisor_killed": false,
+          "elapsed_s": 0.11,
+          "stdout": "LINE_BINDING_MATCH=116/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 8/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 116,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "1520a3c1bfc2ae333f19fb42f67aa6efb1d1fb902a99f23e7d7567b99ac8959f",
+          "per_class": {
+            "M3_partial_on_named_line": "12/12",
+            "M5_beyond_eof": "6/6",
+            "B2_bound_later_occurrence": "12/12",
+            "B3_bound_multiline": "12/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B1_bound_single": "12/12",
+            "M2_glued_on_named_line": "12/12",
+            "I1_invalid_line_value": "8/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "B4_no_line": "6/6",
+            "M1_other_line": "12/12",
+            "U1_absent_span_with_line": "8/8"
+          },
+          "misses": [
+            {
+              "id": "c5b4364f842",
+              "class": "I1_invalid_line_value",
+              "truth": "invalid",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c7d3c6a7570",
+              "class": "I1_invalid_line_value",
+              "truth": "invalid",
+              "observed": "mislocated"
+            },
+            {
+              "id": "ca0f8e33d10",
+              "class": "I1_invalid_line_value",
+              "truth": "invalid",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c43c8bcc429",
+              "class": "I1_invalid_line_value",
+              "truth": "invalid",
+              "observed": "mislocated"
+            }
+          ],
+          "counter_pin_verified": true
+        },
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/no-strict-grammar-s2.json",
+          "seed_index": "V2S2",
+          "seed": 6996389439849219100,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "6996389439849219100",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/no-strict-grammar-s2.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 1,
+          "supervisor_killed": false,
+          "elapsed_s": 0.107,
+          "stdout": "LINE_BINDING_MATCH=116/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 8/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 116,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "1520a3c1bfc2ae333f19fb42f67aa6efb1d1fb902a99f23e7d7567b99ac8959f",
+          "per_class": {
+            "I1_invalid_line_value": "8/12",
+            "M3_partial_on_named_line": "12/12",
+            "B3_bound_multiline": "12/12",
+            "M2_glued_on_named_line": "12/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B2_bound_later_occurrence": "12/12",
+            "M5_beyond_eof": "6/6",
+            "B4_no_line": "6/6",
+            "B1_bound_single": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "U1_absent_span_with_line": "8/8",
+            "M1_other_line": "12/12"
+          },
+          "misses": [
+            {
+              "id": "c0f5b2cbf5e",
+              "class": "I1_invalid_line_value",
+              "truth": "invalid",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c9ed456cd66",
+              "class": "I1_invalid_line_value",
+              "truth": "invalid",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c1094d2da67",
+              "class": "I1_invalid_line_value",
+              "truth": "invalid",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c305c318b59",
+              "class": "I1_invalid_line_value",
+              "truth": "invalid",
+              "observed": "mislocated"
+            }
+          ],
+          "counter_pin_verified": true
+        },
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/no-strict-grammar-s3.json",
+          "seed_index": "V2S3",
+          "seed": 5268895580782469426,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "5268895580782469426",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/no-strict-grammar-s3.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 1,
+          "supervisor_killed": false,
+          "elapsed_s": 0.104,
+          "stdout": "LINE_BINDING_MATCH=116/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 8/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 116,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "1520a3c1bfc2ae333f19fb42f67aa6efb1d1fb902a99f23e7d7567b99ac8959f",
+          "per_class": {
+            "M5_beyond_eof": "6/6",
+            "M1_other_line": "12/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B3_bound_multiline": "12/12",
+            "U1_absent_span_with_line": "8/8",
+            "M2_glued_on_named_line": "12/12",
+            "B2_bound_later_occurrence": "12/12",
+            "M3_partial_on_named_line": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "B4_no_line": "6/6",
+            "I1_invalid_line_value": "8/12",
+            "B1_bound_single": "12/12"
+          },
+          "misses": [
+            {
+              "id": "c749f8b2dbf",
+              "class": "I1_invalid_line_value",
+              "truth": "invalid",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cc951f191cb",
+              "class": "I1_invalid_line_value",
+              "truth": "invalid",
+              "observed": "mislocated"
+            },
+            {
+              "id": "ccf9e2bc529",
+              "class": "I1_invalid_line_value",
+              "truth": "invalid",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c6ee8a99c92",
+              "class": "I1_invalid_line_value",
+              "truth": "invalid",
+              "observed": "mislocated"
+            }
+          ],
+          "counter_pin_verified": true
+        }
+      ],
+      "restored_runs": [
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/restored-no-strict-grammar-s1.json",
+          "seed_index": "V2S1",
+          "seed": 1974160508405359465,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "1974160508405359465",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/restored-no-strict-grammar-s1.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 0,
+          "supervisor_killed": false,
+          "elapsed_s": 0.107,
+          "stdout": "LINE_BINDING_MATCH=120/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 120,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+          "per_class": {
+            "M3_partial_on_named_line": "12/12",
+            "M5_beyond_eof": "6/6",
+            "B2_bound_later_occurrence": "12/12",
+            "B3_bound_multiline": "12/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B1_bound_single": "12/12",
+            "M2_glued_on_named_line": "12/12",
+            "I1_invalid_line_value": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "B4_no_line": "6/6",
+            "M1_other_line": "12/12",
+            "U1_absent_span_with_line": "8/8"
+          },
+          "misses": [],
+          "counter_pin_verified": true
+        },
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/restored-no-strict-grammar-s2.json",
+          "seed_index": "V2S2",
+          "seed": 6996389439849219100,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "6996389439849219100",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/restored-no-strict-grammar-s2.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 0,
+          "supervisor_killed": false,
+          "elapsed_s": 0.107,
+          "stdout": "LINE_BINDING_MATCH=120/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 120,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+          "per_class": {
+            "I1_invalid_line_value": "12/12",
+            "M3_partial_on_named_line": "12/12",
+            "B3_bound_multiline": "12/12",
+            "M2_glued_on_named_line": "12/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B2_bound_later_occurrence": "12/12",
+            "M5_beyond_eof": "6/6",
+            "B4_no_line": "6/6",
+            "B1_bound_single": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "U1_absent_span_with_line": "8/8",
+            "M1_other_line": "12/12"
+          },
+          "misses": [],
+          "counter_pin_verified": true
+        },
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/restored-no-strict-grammar-s3.json",
+          "seed_index": "V2S3",
+          "seed": 5268895580782469426,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "5268895580782469426",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/restored-no-strict-grammar-s3.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 0,
+          "supervisor_killed": false,
+          "elapsed_s": 0.104,
+          "stdout": "LINE_BINDING_MATCH=120/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 120,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+          "per_class": {
+            "M5_beyond_eof": "6/6",
+            "M1_other_line": "12/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B3_bound_multiline": "12/12",
+            "U1_absent_span_with_line": "8/8",
+            "M2_glued_on_named_line": "12/12",
+            "B2_bound_later_occurrence": "12/12",
+            "M3_partial_on_named_line": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "B4_no_line": "6/6",
+            "I1_invalid_line_value": "12/12",
+            "B1_bound_single": "12/12"
+          },
+          "misses": [],
+          "counter_pin_verified": true
+        }
+      ],
+      "restored_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+      "restored_exact_bytes": true,
+      "verdict_by_seed": {
+        "V2S1": "killed",
+        "V2S2": "killed",
+        "V2S3": "killed"
+      }
+    },
+    {
+      "control": "first-occurrence-only",
+      "defect": "Discard all but the first boundary-delimited occurrence before binding.",
+      "expected_detector_classes": [
+        "B2_bound_later_occurrence"
+      ],
+      "before_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+      "mutated_sha256": "c5ff0f7685566bacead5e353a6a0d10ea996552e723420f92d0f0125b56eebb5",
+      "artifact": ".ufo/waves/round-31/controls/MutOracleC1/v2/first-occurrence-only.sh",
+      "mutated_runs": [
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/first-occurrence-only-s1.json",
+          "seed_index": "V2S1",
+          "seed": 1974160508405359465,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "1974160508405359465",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/first-occurrence-only-s1.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 1,
+          "supervisor_killed": false,
+          "elapsed_s": 0.108,
+          "stdout": "LINE_BINDING_MATCH=108/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 0/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 108,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "c5ff0f7685566bacead5e353a6a0d10ea996552e723420f92d0f0125b56eebb5",
+          "per_class": {
+            "M3_partial_on_named_line": "12/12",
+            "M5_beyond_eof": "6/6",
+            "B2_bound_later_occurrence": "0/12",
+            "B3_bound_multiline": "12/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B1_bound_single": "12/12",
+            "M2_glued_on_named_line": "12/12",
+            "I1_invalid_line_value": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "B4_no_line": "6/6",
+            "M1_other_line": "12/12",
+            "U1_absent_span_with_line": "8/8"
+          },
+          "misses": [
+            {
+              "id": "c26f4f78848",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c847a5014b2",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cdbefbdd934",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c3bc6eaa789",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c1440846b6a",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "ccd6b846b21",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c2f341e5519",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c2124727a1f",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c20f692b267",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c50e26adcd9",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "ca30ed77353",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c6acde387bd",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            }
+          ],
+          "counter_pin_verified": true
+        },
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/first-occurrence-only-s2.json",
+          "seed_index": "V2S2",
+          "seed": 6996389439849219100,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "6996389439849219100",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/first-occurrence-only-s2.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 1,
+          "supervisor_killed": false,
+          "elapsed_s": 0.106,
+          "stdout": "LINE_BINDING_MATCH=108/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 0/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 108,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "c5ff0f7685566bacead5e353a6a0d10ea996552e723420f92d0f0125b56eebb5",
+          "per_class": {
+            "I1_invalid_line_value": "12/12",
+            "M3_partial_on_named_line": "12/12",
+            "B3_bound_multiline": "12/12",
+            "M2_glued_on_named_line": "12/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B2_bound_later_occurrence": "0/12",
+            "M5_beyond_eof": "6/6",
+            "B4_no_line": "6/6",
+            "B1_bound_single": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "U1_absent_span_with_line": "8/8",
+            "M1_other_line": "12/12"
+          },
+          "misses": [
+            {
+              "id": "c4c6ef48468",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c9d2f23629b",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c519b1afda9",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c599d78b8ad",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c6c4685448d",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cda500c5608",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "ca9ec2b15cd",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c8df6e2f137",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c40b26ffb02",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c92e93d23d3",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c66af7e21de",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c74ac9d110e",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            }
+          ],
+          "counter_pin_verified": true
+        },
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/first-occurrence-only-s3.json",
+          "seed_index": "V2S3",
+          "seed": 5268895580782469426,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "5268895580782469426",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/first-occurrence-only-s3.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 1,
+          "supervisor_killed": false,
+          "elapsed_s": 0.106,
+          "stdout": "LINE_BINDING_MATCH=108/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 0/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 108,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "c5ff0f7685566bacead5e353a6a0d10ea996552e723420f92d0f0125b56eebb5",
+          "per_class": {
+            "M5_beyond_eof": "6/6",
+            "M1_other_line": "12/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B3_bound_multiline": "12/12",
+            "U1_absent_span_with_line": "8/8",
+            "M2_glued_on_named_line": "12/12",
+            "B2_bound_later_occurrence": "0/12",
+            "M3_partial_on_named_line": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "B4_no_line": "6/6",
+            "I1_invalid_line_value": "12/12",
+            "B1_bound_single": "12/12"
+          },
+          "misses": [
+            {
+              "id": "c9824a10228",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c2f2d65e6e3",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c30f77336c0",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c052c9bd75f",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c2512465bd8",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "ce05449c887",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c3f8db57be6",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c9d93773990",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cbf8a8d7b58",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c82e72bfcd9",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cd40c62e380",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cb8d3c8b715",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            }
+          ],
+          "counter_pin_verified": true
+        }
+      ],
+      "restored_runs": [
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/restored-first-occurrence-only-s1.json",
+          "seed_index": "V2S1",
+          "seed": 1974160508405359465,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "1974160508405359465",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/restored-first-occurrence-only-s1.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 0,
+          "supervisor_killed": false,
+          "elapsed_s": 0.106,
+          "stdout": "LINE_BINDING_MATCH=120/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 120,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+          "per_class": {
+            "M3_partial_on_named_line": "12/12",
+            "M5_beyond_eof": "6/6",
+            "B2_bound_later_occurrence": "12/12",
+            "B3_bound_multiline": "12/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B1_bound_single": "12/12",
+            "M2_glued_on_named_line": "12/12",
+            "I1_invalid_line_value": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "B4_no_line": "6/6",
+            "M1_other_line": "12/12",
+            "U1_absent_span_with_line": "8/8"
+          },
+          "misses": [],
+          "counter_pin_verified": true
+        },
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/restored-first-occurrence-only-s2.json",
+          "seed_index": "V2S2",
+          "seed": 6996389439849219100,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "6996389439849219100",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/restored-first-occurrence-only-s2.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 0,
+          "supervisor_killed": false,
+          "elapsed_s": 0.11,
+          "stdout": "LINE_BINDING_MATCH=120/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 120,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+          "per_class": {
+            "I1_invalid_line_value": "12/12",
+            "M3_partial_on_named_line": "12/12",
+            "B3_bound_multiline": "12/12",
+            "M2_glued_on_named_line": "12/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B2_bound_later_occurrence": "12/12",
+            "M5_beyond_eof": "6/6",
+            "B4_no_line": "6/6",
+            "B1_bound_single": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "U1_absent_span_with_line": "8/8",
+            "M1_other_line": "12/12"
+          },
+          "misses": [],
+          "counter_pin_verified": true
+        },
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/restored-first-occurrence-only-s3.json",
+          "seed_index": "V2S3",
+          "seed": 5268895580782469426,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "5268895580782469426",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/restored-first-occurrence-only-s3.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 0,
+          "supervisor_killed": false,
+          "elapsed_s": 0.125,
+          "stdout": "LINE_BINDING_MATCH=120/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 120,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+          "per_class": {
+            "M5_beyond_eof": "6/6",
+            "M1_other_line": "12/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B3_bound_multiline": "12/12",
+            "U1_absent_span_with_line": "8/8",
+            "M2_glued_on_named_line": "12/12",
+            "B2_bound_later_occurrence": "12/12",
+            "M3_partial_on_named_line": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "B4_no_line": "6/6",
+            "I1_invalid_line_value": "12/12",
+            "B1_bound_single": "12/12"
+          },
+          "misses": [],
+          "counter_pin_verified": true
+        }
+      ],
+      "restored_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+      "restored_exact_bytes": true,
+      "verdict_by_seed": {
+        "V2S1": "killed",
+        "V2S2": "killed",
+        "V2S3": "killed"
+      }
+    },
+    {
+      "control": "substring-no-boundaries",
+      "defect": "Accept raw substring occurrences without testing either token boundary.",
+      "expected_detector_classes": [
+        "M2_glued_on_named_line"
+      ],
+      "before_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+      "mutated_sha256": "6ff3531d5eacd197ca65c7d0aa4605a29a2c4a456f4a2a5f1183e541d4fd5edc",
+      "artifact": ".ufo/waves/round-31/controls/MutOracleC1/v2/substring-no-boundaries.sh",
+      "mutated_runs": [
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/substring-no-boundaries-s1.json",
+          "seed_index": "V2S1",
+          "seed": 1974160508405359465,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "1974160508405359465",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/substring-no-boundaries-s1.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 1,
+          "supervisor_killed": false,
+          "elapsed_s": 0.11,
+          "stdout": "LINE_BINDING_MATCH=108/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 0/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 108,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "6ff3531d5eacd197ca65c7d0aa4605a29a2c4a456f4a2a5f1183e541d4fd5edc",
+          "per_class": {
+            "M3_partial_on_named_line": "12/12",
+            "M5_beyond_eof": "6/6",
+            "B2_bound_later_occurrence": "12/12",
+            "B3_bound_multiline": "12/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B1_bound_single": "12/12",
+            "M2_glued_on_named_line": "0/12",
+            "I1_invalid_line_value": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "B4_no_line": "6/6",
+            "M1_other_line": "12/12",
+            "U1_absent_span_with_line": "8/8"
+          },
+          "misses": [
+            {
+              "id": "ce8de9aa119",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c98cf7f2197",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c06a3636407",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c6a8615ca4e",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "ca7729765cd",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c803247088b",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "cf1f301dd27",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "cca6a59ca68",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "ca85a9128a8",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c3b8eeb892b",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c474c206ff9",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "ca3072e16fd",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            }
+          ],
+          "counter_pin_verified": true
+        },
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/substring-no-boundaries-s2.json",
+          "seed_index": "V2S2",
+          "seed": 6996389439849219100,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "6996389439849219100",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/substring-no-boundaries-s2.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 1,
+          "supervisor_killed": false,
+          "elapsed_s": 0.111,
+          "stdout": "LINE_BINDING_MATCH=108/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 0/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 108,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "6ff3531d5eacd197ca65c7d0aa4605a29a2c4a456f4a2a5f1183e541d4fd5edc",
+          "per_class": {
+            "I1_invalid_line_value": "12/12",
+            "M3_partial_on_named_line": "12/12",
+            "B3_bound_multiline": "12/12",
+            "M2_glued_on_named_line": "0/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B2_bound_later_occurrence": "12/12",
+            "M5_beyond_eof": "6/6",
+            "B4_no_line": "6/6",
+            "B1_bound_single": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "U1_absent_span_with_line": "8/8",
+            "M1_other_line": "12/12"
+          },
+          "misses": [
+            {
+              "id": "ca8cc796c97",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c0abf449248",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c958208c83a",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c089311c5cd",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c0224430670",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "cab7ec5b514",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "cee6d716139",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c7e56f96e1e",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "cfe8006bbc0",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c5d646e8a22",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "cb81d0274d3",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c0ca664c5f4",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            }
+          ],
+          "counter_pin_verified": true
+        },
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/substring-no-boundaries-s3.json",
+          "seed_index": "V2S3",
+          "seed": 5268895580782469426,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "5268895580782469426",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/substring-no-boundaries-s3.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 1,
+          "supervisor_killed": false,
+          "elapsed_s": 0.105,
+          "stdout": "LINE_BINDING_MATCH=108/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 0/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 108,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "6ff3531d5eacd197ca65c7d0aa4605a29a2c4a456f4a2a5f1183e541d4fd5edc",
+          "per_class": {
+            "M5_beyond_eof": "6/6",
+            "M1_other_line": "12/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B3_bound_multiline": "12/12",
+            "U1_absent_span_with_line": "8/8",
+            "M2_glued_on_named_line": "0/12",
+            "B2_bound_later_occurrence": "12/12",
+            "M3_partial_on_named_line": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "B4_no_line": "6/6",
+            "I1_invalid_line_value": "12/12",
+            "B1_bound_single": "12/12"
+          },
+          "misses": [
+            {
+              "id": "cfaa667b6d1",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "cdb625f5118",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c4d97fc9015",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c24bfbe8bea",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c6ad4ef9794",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "cf436ac17d3",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c24c17f9f13",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c3238b01d96",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c14a32288a2",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c1b2017df28",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c86c64e69ce",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c4b4679e7a6",
+              "class": "M2_glued_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            }
+          ],
+          "counter_pin_verified": true
+        }
+      ],
+      "restored_runs": [
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/restored-substring-no-boundaries-s1.json",
+          "seed_index": "V2S1",
+          "seed": 1974160508405359465,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "1974160508405359465",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/restored-substring-no-boundaries-s1.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 0,
+          "supervisor_killed": false,
+          "elapsed_s": 0.11,
+          "stdout": "LINE_BINDING_MATCH=120/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 120,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+          "per_class": {
+            "M3_partial_on_named_line": "12/12",
+            "M5_beyond_eof": "6/6",
+            "B2_bound_later_occurrence": "12/12",
+            "B3_bound_multiline": "12/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B1_bound_single": "12/12",
+            "M2_glued_on_named_line": "12/12",
+            "I1_invalid_line_value": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "B4_no_line": "6/6",
+            "M1_other_line": "12/12",
+            "U1_absent_span_with_line": "8/8"
+          },
+          "misses": [],
+          "counter_pin_verified": true
+        },
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/restored-substring-no-boundaries-s2.json",
+          "seed_index": "V2S2",
+          "seed": 6996389439849219100,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "6996389439849219100",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/restored-substring-no-boundaries-s2.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 0,
+          "supervisor_killed": false,
+          "elapsed_s": 0.107,
+          "stdout": "LINE_BINDING_MATCH=120/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 120,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+          "per_class": {
+            "I1_invalid_line_value": "12/12",
+            "M3_partial_on_named_line": "12/12",
+            "B3_bound_multiline": "12/12",
+            "M2_glued_on_named_line": "12/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B2_bound_later_occurrence": "12/12",
+            "M5_beyond_eof": "6/6",
+            "B4_no_line": "6/6",
+            "B1_bound_single": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "U1_absent_span_with_line": "8/8",
+            "M1_other_line": "12/12"
+          },
+          "misses": [],
+          "counter_pin_verified": true
+        },
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/restored-substring-no-boundaries-s3.json",
+          "seed_index": "V2S3",
+          "seed": 5268895580782469426,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "5268895580782469426",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/restored-substring-no-boundaries-s3.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 0,
+          "supervisor_killed": false,
+          "elapsed_s": 0.104,
+          "stdout": "LINE_BINDING_MATCH=120/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 120,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+          "per_class": {
+            "M5_beyond_eof": "6/6",
+            "M1_other_line": "12/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B3_bound_multiline": "12/12",
+            "U1_absent_span_with_line": "8/8",
+            "M2_glued_on_named_line": "12/12",
+            "B2_bound_later_occurrence": "12/12",
+            "M3_partial_on_named_line": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "B4_no_line": "6/6",
+            "I1_invalid_line_value": "12/12",
+            "B1_bound_single": "12/12"
+          },
+          "misses": [],
+          "counter_pin_verified": true
+        }
+      ],
+      "restored_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+      "restored_exact_bytes": true,
+      "verdict_by_seed": {
+        "V2S1": "killed",
+        "V2S2": "killed",
+        "V2S3": "killed"
+      }
+    },
+    {
+      "control": "range-start-only",
+      "defect": "Bind only the occurrence start line, ignoring its end and the range endpoint.",
+      "expected_detector_classes": [
+        "M4_multiline_wrong_range"
+      ],
+      "before_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+      "mutated_sha256": "817b3f2e5c4a5bd5b2b66d31d2723d91e5d10066290a6fee3d8a48ad87e1c4b0",
+      "artifact": ".ufo/waves/round-31/controls/MutOracleC1/v2/range-start-only.sh",
+      "mutated_runs": [
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/range-start-only-s1.json",
+          "seed_index": "V2S1",
+          "seed": 1974160508405359465,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "1974160508405359465",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/range-start-only-s1.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 1,
+          "supervisor_killed": false,
+          "elapsed_s": 0.108,
+          "stdout": "LINE_BINDING_MATCH=116/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 4/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 116,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "817b3f2e5c4a5bd5b2b66d31d2723d91e5d10066290a6fee3d8a48ad87e1c4b0",
+          "per_class": {
+            "M3_partial_on_named_line": "12/12",
+            "M5_beyond_eof": "6/6",
+            "B2_bound_later_occurrence": "12/12",
+            "B3_bound_multiline": "12/12",
+            "M4_multiline_wrong_range": "4/8",
+            "B1_bound_single": "12/12",
+            "M2_glued_on_named_line": "12/12",
+            "I1_invalid_line_value": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "B4_no_line": "6/6",
+            "M1_other_line": "12/12",
+            "U1_absent_span_with_line": "8/8"
+          },
+          "misses": [
+            {
+              "id": "cae01cfe910",
+              "class": "M4_multiline_wrong_range",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "cd0a803078c",
+              "class": "M4_multiline_wrong_range",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c730fab37fe",
+              "class": "M4_multiline_wrong_range",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "ce6e644a434",
+              "class": "M4_multiline_wrong_range",
+              "truth": "mislocated",
+              "observed": "supported"
+            }
+          ],
+          "counter_pin_verified": true
+        },
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/range-start-only-s2.json",
+          "seed_index": "V2S2",
+          "seed": 6996389439849219100,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "6996389439849219100",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/range-start-only-s2.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 1,
+          "supervisor_killed": false,
+          "elapsed_s": 0.106,
+          "stdout": "LINE_BINDING_MATCH=116/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 4/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 116,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "817b3f2e5c4a5bd5b2b66d31d2723d91e5d10066290a6fee3d8a48ad87e1c4b0",
+          "per_class": {
+            "I1_invalid_line_value": "12/12",
+            "M3_partial_on_named_line": "12/12",
+            "B3_bound_multiline": "12/12",
+            "M2_glued_on_named_line": "12/12",
+            "M4_multiline_wrong_range": "4/8",
+            "B2_bound_later_occurrence": "12/12",
+            "M5_beyond_eof": "6/6",
+            "B4_no_line": "6/6",
+            "B1_bound_single": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "U1_absent_span_with_line": "8/8",
+            "M1_other_line": "12/12"
+          },
+          "misses": [
+            {
+              "id": "cbdd8512809",
+              "class": "M4_multiline_wrong_range",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c288611b246",
+              "class": "M4_multiline_wrong_range",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "cdb8fa1c8c1",
+              "class": "M4_multiline_wrong_range",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c89cd7c7c61",
+              "class": "M4_multiline_wrong_range",
+              "truth": "mislocated",
+              "observed": "supported"
+            }
+          ],
+          "counter_pin_verified": true
+        },
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/range-start-only-s3.json",
+          "seed_index": "V2S3",
+          "seed": 5268895580782469426,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "5268895580782469426",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/range-start-only-s3.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 1,
+          "supervisor_killed": false,
+          "elapsed_s": 0.108,
+          "stdout": "LINE_BINDING_MATCH=116/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 4/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 116,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "817b3f2e5c4a5bd5b2b66d31d2723d91e5d10066290a6fee3d8a48ad87e1c4b0",
+          "per_class": {
+            "M5_beyond_eof": "6/6",
+            "M1_other_line": "12/12",
+            "M4_multiline_wrong_range": "4/8",
+            "B3_bound_multiline": "12/12",
+            "U1_absent_span_with_line": "8/8",
+            "M2_glued_on_named_line": "12/12",
+            "B2_bound_later_occurrence": "12/12",
+            "M3_partial_on_named_line": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "B4_no_line": "6/6",
+            "I1_invalid_line_value": "12/12",
+            "B1_bound_single": "12/12"
+          },
+          "misses": [
+            {
+              "id": "c166b847b4b",
+              "class": "M4_multiline_wrong_range",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "cc9106d4a47",
+              "class": "M4_multiline_wrong_range",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c55c0bbbd36",
+              "class": "M4_multiline_wrong_range",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "ce8b8f46dcd",
+              "class": "M4_multiline_wrong_range",
+              "truth": "mislocated",
+              "observed": "supported"
+            }
+          ],
+          "counter_pin_verified": true
+        }
+      ],
+      "restored_runs": [
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/restored-range-start-only-s1.json",
+          "seed_index": "V2S1",
+          "seed": 1974160508405359465,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "1974160508405359465",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/restored-range-start-only-s1.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 0,
+          "supervisor_killed": false,
+          "elapsed_s": 0.11,
+          "stdout": "LINE_BINDING_MATCH=120/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 120,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+          "per_class": {
+            "M3_partial_on_named_line": "12/12",
+            "M5_beyond_eof": "6/6",
+            "B2_bound_later_occurrence": "12/12",
+            "B3_bound_multiline": "12/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B1_bound_single": "12/12",
+            "M2_glued_on_named_line": "12/12",
+            "I1_invalid_line_value": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "B4_no_line": "6/6",
+            "M1_other_line": "12/12",
+            "U1_absent_span_with_line": "8/8"
+          },
+          "misses": [],
+          "counter_pin_verified": true
+        },
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/restored-range-start-only-s2.json",
+          "seed_index": "V2S2",
+          "seed": 6996389439849219100,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "6996389439849219100",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/restored-range-start-only-s2.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 0,
+          "supervisor_killed": false,
+          "elapsed_s": 0.106,
+          "stdout": "LINE_BINDING_MATCH=120/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 120,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+          "per_class": {
+            "I1_invalid_line_value": "12/12",
+            "M3_partial_on_named_line": "12/12",
+            "B3_bound_multiline": "12/12",
+            "M2_glued_on_named_line": "12/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B2_bound_later_occurrence": "12/12",
+            "M5_beyond_eof": "6/6",
+            "B4_no_line": "6/6",
+            "B1_bound_single": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "U1_absent_span_with_line": "8/8",
+            "M1_other_line": "12/12"
+          },
+          "misses": [],
+          "counter_pin_verified": true
+        },
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/restored-range-start-only-s3.json",
+          "seed_index": "V2S3",
+          "seed": 5268895580782469426,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "5268895580782469426",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/restored-range-start-only-s3.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 0,
+          "supervisor_killed": false,
+          "elapsed_s": 0.106,
+          "stdout": "LINE_BINDING_MATCH=120/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 120,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+          "per_class": {
+            "M5_beyond_eof": "6/6",
+            "M1_other_line": "12/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B3_bound_multiline": "12/12",
+            "U1_absent_span_with_line": "8/8",
+            "M2_glued_on_named_line": "12/12",
+            "B2_bound_later_occurrence": "12/12",
+            "M3_partial_on_named_line": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "B4_no_line": "6/6",
+            "I1_invalid_line_value": "12/12",
+            "B1_bound_single": "12/12"
+          },
+          "misses": [],
+          "counter_pin_verified": true
+        }
+      ],
+      "restored_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+      "restored_exact_bytes": true,
+      "verdict_by_seed": {
+        "V2S1": "killed",
+        "V2S2": "killed",
+        "V2S3": "killed"
+      }
+    },
+    {
+      "control": "mislocated-before-unsupported",
+      "defect": "Let a missing span with a named line fall through to line mismatch before unsupported.",
+      "expected_detector_classes": [
+        "U1_absent_span_with_line"
+      ],
+      "before_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+      "mutated_sha256": "b7b6a472b1253aacea83840e3c1a9a409bcd7acf5186e0f20a1074b3975236d4",
+      "artifact": ".ufo/waves/round-31/controls/MutOracleC1/v2/mislocated-before-unsupported.sh",
+      "mutated_runs": [
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/mislocated-before-unsupported-s1.json",
+          "seed_index": "V2S1",
+          "seed": 1974160508405359465,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "1974160508405359465",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/mislocated-before-unsupported-s1.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 1,
+          "supervisor_killed": false,
+          "elapsed_s": 0.109,
+          "stdout": "LINE_BINDING_MATCH=112/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 0/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 112,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "b7b6a472b1253aacea83840e3c1a9a409bcd7acf5186e0f20a1074b3975236d4",
+          "per_class": {
+            "M3_partial_on_named_line": "12/12",
+            "M5_beyond_eof": "6/6",
+            "B2_bound_later_occurrence": "12/12",
+            "B3_bound_multiline": "12/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B1_bound_single": "12/12",
+            "M2_glued_on_named_line": "12/12",
+            "I1_invalid_line_value": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "B4_no_line": "6/6",
+            "M1_other_line": "12/12",
+            "U1_absent_span_with_line": "0/8"
+          },
+          "misses": [
+            {
+              "id": "c3de9c501ed",
+              "class": "U1_absent_span_with_line",
+              "truth": "unsupported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cb1ce4e97e9",
+              "class": "U1_absent_span_with_line",
+              "truth": "unsupported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c70be03d847",
+              "class": "U1_absent_span_with_line",
+              "truth": "unsupported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c821cd5c200",
+              "class": "U1_absent_span_with_line",
+              "truth": "unsupported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c9e9de48407",
+              "class": "U1_absent_span_with_line",
+              "truth": "unsupported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c13f5d95cd9",
+              "class": "U1_absent_span_with_line",
+              "truth": "unsupported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c79ce62f834",
+              "class": "U1_absent_span_with_line",
+              "truth": "unsupported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c571b172e71",
+              "class": "U1_absent_span_with_line",
+              "truth": "unsupported",
+              "observed": "mislocated"
+            }
+          ],
+          "counter_pin_verified": true
+        },
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/mislocated-before-unsupported-s2.json",
+          "seed_index": "V2S2",
+          "seed": 6996389439849219100,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "6996389439849219100",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/mislocated-before-unsupported-s2.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 1,
+          "supervisor_killed": false,
+          "elapsed_s": 0.105,
+          "stdout": "LINE_BINDING_MATCH=112/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 0/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 112,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "b7b6a472b1253aacea83840e3c1a9a409bcd7acf5186e0f20a1074b3975236d4",
+          "per_class": {
+            "I1_invalid_line_value": "12/12",
+            "M3_partial_on_named_line": "12/12",
+            "B3_bound_multiline": "12/12",
+            "M2_glued_on_named_line": "12/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B2_bound_later_occurrence": "12/12",
+            "M5_beyond_eof": "6/6",
+            "B4_no_line": "6/6",
+            "B1_bound_single": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "U1_absent_span_with_line": "0/8",
+            "M1_other_line": "12/12"
+          },
+          "misses": [
+            {
+              "id": "ca51ad157b6",
+              "class": "U1_absent_span_with_line",
+              "truth": "unsupported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c8f45e5aada",
+              "class": "U1_absent_span_with_line",
+              "truth": "unsupported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c34f2fd4a58",
+              "class": "U1_absent_span_with_line",
+              "truth": "unsupported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c74711513fb",
+              "class": "U1_absent_span_with_line",
+              "truth": "unsupported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cd67dea550e",
+              "class": "U1_absent_span_with_line",
+              "truth": "unsupported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c84b8862f40",
+              "class": "U1_absent_span_with_line",
+              "truth": "unsupported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cb320ddaf93",
+              "class": "U1_absent_span_with_line",
+              "truth": "unsupported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "caf7971c17a",
+              "class": "U1_absent_span_with_line",
+              "truth": "unsupported",
+              "observed": "mislocated"
+            }
+          ],
+          "counter_pin_verified": true
+        },
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/mislocated-before-unsupported-s3.json",
+          "seed_index": "V2S3",
+          "seed": 5268895580782469426,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "5268895580782469426",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/mislocated-before-unsupported-s3.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 1,
+          "supervisor_killed": false,
+          "elapsed_s": 0.101,
+          "stdout": "LINE_BINDING_MATCH=112/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 0/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 112,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "b7b6a472b1253aacea83840e3c1a9a409bcd7acf5186e0f20a1074b3975236d4",
+          "per_class": {
+            "M5_beyond_eof": "6/6",
+            "M1_other_line": "12/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B3_bound_multiline": "12/12",
+            "U1_absent_span_with_line": "0/8",
+            "M2_glued_on_named_line": "12/12",
+            "B2_bound_later_occurrence": "12/12",
+            "M3_partial_on_named_line": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "B4_no_line": "6/6",
+            "I1_invalid_line_value": "12/12",
+            "B1_bound_single": "12/12"
+          },
+          "misses": [
+            {
+              "id": "c638b17e108",
+              "class": "U1_absent_span_with_line",
+              "truth": "unsupported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "ce6f26c7da0",
+              "class": "U1_absent_span_with_line",
+              "truth": "unsupported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c2035e0a25c",
+              "class": "U1_absent_span_with_line",
+              "truth": "unsupported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cba18ada146",
+              "class": "U1_absent_span_with_line",
+              "truth": "unsupported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cc5e81beefd",
+              "class": "U1_absent_span_with_line",
+              "truth": "unsupported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c55eb7dfc5c",
+              "class": "U1_absent_span_with_line",
+              "truth": "unsupported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "ce49320f794",
+              "class": "U1_absent_span_with_line",
+              "truth": "unsupported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cb0c8f8b9ac",
+              "class": "U1_absent_span_with_line",
+              "truth": "unsupported",
+              "observed": "mislocated"
+            }
+          ],
+          "counter_pin_verified": true
+        }
+      ],
+      "restored_runs": [
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/restored-mislocated-before-unsupported-s1.json",
+          "seed_index": "V2S1",
+          "seed": 1974160508405359465,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "1974160508405359465",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/restored-mislocated-before-unsupported-s1.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 0,
+          "supervisor_killed": false,
+          "elapsed_s": 0.105,
+          "stdout": "LINE_BINDING_MATCH=120/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 120,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+          "per_class": {
+            "M3_partial_on_named_line": "12/12",
+            "M5_beyond_eof": "6/6",
+            "B2_bound_later_occurrence": "12/12",
+            "B3_bound_multiline": "12/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B1_bound_single": "12/12",
+            "M2_glued_on_named_line": "12/12",
+            "I1_invalid_line_value": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "B4_no_line": "6/6",
+            "M1_other_line": "12/12",
+            "U1_absent_span_with_line": "8/8"
+          },
+          "misses": [],
+          "counter_pin_verified": true
+        },
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/restored-mislocated-before-unsupported-s2.json",
+          "seed_index": "V2S2",
+          "seed": 6996389439849219100,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "6996389439849219100",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/restored-mislocated-before-unsupported-s2.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 0,
+          "supervisor_killed": false,
+          "elapsed_s": 0.105,
+          "stdout": "LINE_BINDING_MATCH=120/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 120,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+          "per_class": {
+            "I1_invalid_line_value": "12/12",
+            "M3_partial_on_named_line": "12/12",
+            "B3_bound_multiline": "12/12",
+            "M2_glued_on_named_line": "12/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B2_bound_later_occurrence": "12/12",
+            "M5_beyond_eof": "6/6",
+            "B4_no_line": "6/6",
+            "B1_bound_single": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "U1_absent_span_with_line": "8/8",
+            "M1_other_line": "12/12"
+          },
+          "misses": [],
+          "counter_pin_verified": true
+        },
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/restored-mislocated-before-unsupported-s3.json",
+          "seed_index": "V2S3",
+          "seed": 5268895580782469426,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "5268895580782469426",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/restored-mislocated-before-unsupported-s3.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 0,
+          "supervisor_killed": false,
+          "elapsed_s": 0.109,
+          "stdout": "LINE_BINDING_MATCH=120/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 120,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+          "per_class": {
+            "M5_beyond_eof": "6/6",
+            "M1_other_line": "12/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B3_bound_multiline": "12/12",
+            "U1_absent_span_with_line": "8/8",
+            "M2_glued_on_named_line": "12/12",
+            "B2_bound_later_occurrence": "12/12",
+            "M3_partial_on_named_line": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "B4_no_line": "6/6",
+            "I1_invalid_line_value": "12/12",
+            "B1_bound_single": "12/12"
+          },
+          "misses": [],
+          "counter_pin_verified": true
+        }
+      ],
+      "restored_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+      "restored_exact_bytes": true,
+      "verdict_by_seed": {
+        "V2S1": "killed",
+        "V2S2": "killed",
+        "V2S3": "killed"
+      }
+    },
+    {
+      "control": "off-by-one-lines",
+      "defect": "Report zero-based rather than one-based start/end line numbers.",
+      "expected_detector_classes": [
+        "B1_bound_single",
+        "B2_bound_later_occurrence",
+        "B3_bound_multiline",
+        "M1_other_line",
+        "M4_multiline_wrong_range",
+        "M6_two_occurrences_named_third"
+      ],
+      "before_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+      "mutated_sha256": "a6aabaf4633a84139972ab7536142c45a4b0247422b4313b722e2e8e114e5a1b",
+      "artifact": ".ufo/waves/round-31/controls/MutOracleC1/v2/off-by-one-lines.sh",
+      "mutated_runs": [
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/off-by-one-lines-s1.json",
+          "seed_index": "V2S1",
+          "seed": 1974160508405359465,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "1974160508405359465",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/off-by-one-lines-s1.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 1,
+          "supervisor_killed": false,
+          "elapsed_s": 0.11,
+          "stdout": "LINE_BINDING_MATCH=81/120\n  B1_bound_single 0/12\n  B2_bound_later_occurrence 0/12\n  B3_bound_multiline 0/12\n  B4_no_line 6/6\n  M1_other_line 9/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 81,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "a6aabaf4633a84139972ab7536142c45a4b0247422b4313b722e2e8e114e5a1b",
+          "per_class": {
+            "M3_partial_on_named_line": "12/12",
+            "M5_beyond_eof": "6/6",
+            "B2_bound_later_occurrence": "0/12",
+            "B3_bound_multiline": "0/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B1_bound_single": "0/12",
+            "M2_glued_on_named_line": "12/12",
+            "I1_invalid_line_value": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "B4_no_line": "6/6",
+            "M1_other_line": "9/12",
+            "U1_absent_span_with_line": "8/8"
+          },
+          "misses": [
+            {
+              "id": "c26f4f78848",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "ce4ec13a23e",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cb19b5cd2ce",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c847a5014b2",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cdbefbdd934",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c3bc6eaa789",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cf1b22d7e83",
+              "class": "M1_other_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c1440846b6a",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "ce7b0de6d0b",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cddce85dd4c",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c804964a27e",
+              "class": "M1_other_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "ce526034084",
+              "class": "M1_other_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c86a31fc52d",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "ce63f282dd4",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "ccd6b846b21",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c2f341e5519",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cf55f2ff17c",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c9170adec34",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c2124727a1f",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c20f692b267",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c50e26adcd9",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c01c7ef7736",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c75899dfd8e",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c17118aefa7",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "ca8d7e02df0",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c46836e0834",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c3ec41704b7",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cdfafa557da",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c7ae2c337b5",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cf1a8a409ce",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c18c88dc07b",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c178a707109",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "ca30ed77353",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c6acde387bd",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c723d9c388a",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c0c72c0309f",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c520e80bc90",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c19a8af3de8",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c9782301175",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            }
+          ],
+          "counter_pin_verified": true
+        },
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/off-by-one-lines-s2.json",
+          "seed_index": "V2S2",
+          "seed": 6996389439849219100,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "6996389439849219100",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/off-by-one-lines-s2.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 1,
+          "supervisor_killed": false,
+          "elapsed_s": 0.107,
+          "stdout": "LINE_BINDING_MATCH=78/120\n  B1_bound_single 0/12\n  B2_bound_later_occurrence 0/12\n  B3_bound_multiline 0/12\n  B4_no_line 6/6\n  M1_other_line 9/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 10/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 7/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 78,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "a6aabaf4633a84139972ab7536142c45a4b0247422b4313b722e2e8e114e5a1b",
+          "per_class": {
+            "I1_invalid_line_value": "12/12",
+            "M3_partial_on_named_line": "10/12",
+            "B3_bound_multiline": "0/12",
+            "M2_glued_on_named_line": "12/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B2_bound_later_occurrence": "0/12",
+            "M5_beyond_eof": "6/6",
+            "B4_no_line": "6/6",
+            "B1_bound_single": "0/12",
+            "M6_two_occurrences_named_third": "7/8",
+            "U1_absent_span_with_line": "8/8",
+            "M1_other_line": "9/12"
+          },
+          "misses": [
+            {
+              "id": "c2384130a9a",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c4c6ef48468",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c9d2f23629b",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c199957fdd4",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c81cb7a8fc1",
+              "class": "M3_partial_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "cf15dd186de",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c519b1afda9",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c49764bb13a",
+              "class": "M1_other_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c1c3b925650",
+              "class": "M1_other_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c599d78b8ad",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c015a17ec50",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c51bc4cd5ea",
+              "class": "M3_partial_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "cdc099691c1",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c6c4685448d",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c90efa22652",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c56b076d62a",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c4ec8c633b2",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c3b93911b01",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c35cd41b345",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cd8eba3566e",
+              "class": "M6_two_occurrences_named_third",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "cda500c5608",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c25dd9595e4",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "ca9ec2b15cd",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c8df6e2f137",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c40b26ffb02",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c816aed023d",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "ca6063d4a39",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cccbfffcdcb",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c254e65e3dc",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cadd2167d39",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cac93dc36fe",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c92e93d23d3",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c66af7e21de",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c3445d95c91",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c733a0dd7fb",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c54a448aa84",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c1f826e49e4",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c223551c31c",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cf7f0d9deda",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c74ac9d110e",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c96b171fa9e",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c562040ec63",
+              "class": "M1_other_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            }
+          ],
+          "counter_pin_verified": true
+        },
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/off-by-one-lines-s3.json",
+          "seed_index": "V2S3",
+          "seed": 5268895580782469426,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "5268895580782469426",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/off-by-one-lines-s3.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 1,
+          "supervisor_killed": false,
+          "elapsed_s": 0.104,
+          "stdout": "LINE_BINDING_MATCH=80/120\n  B1_bound_single 0/12\n  B2_bound_later_occurrence 1/12\n  B3_bound_multiline 0/12\n  B4_no_line 6/6\n  M1_other_line 9/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 11/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 7/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 80,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "a6aabaf4633a84139972ab7536142c45a4b0247422b4313b722e2e8e114e5a1b",
+          "per_class": {
+            "M5_beyond_eof": "6/6",
+            "M1_other_line": "9/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B3_bound_multiline": "0/12",
+            "U1_absent_span_with_line": "8/8",
+            "M2_glued_on_named_line": "12/12",
+            "B2_bound_later_occurrence": "1/12",
+            "M3_partial_on_named_line": "11/12",
+            "M6_two_occurrences_named_third": "7/8",
+            "B4_no_line": "6/6",
+            "I1_invalid_line_value": "12/12",
+            "B1_bound_single": "0/12"
+          },
+          "misses": [
+            {
+              "id": "c3acbf48a1d",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c9824a10228",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cc80a40bb30",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c2f2d65e6e3",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c70c7fa94c4",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c7d6f446650",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c30f77336c0",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c052c9bd75f",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c47a5a638a9",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c2512465bd8",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "ce05449c887",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c47a3ef3b32",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c3f8db57be6",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c9d93773990",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c14047f6f57",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cef6d5b9343",
+              "class": "M6_two_occurrences_named_third",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c9791713744",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c4dbc723e87",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c64d1a15654",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "ce0969f5a0b",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c31a41fa152",
+              "class": "M3_partial_on_named_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c708328611a",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cae4c331037",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c860405a331",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cfdde7b299e",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c5a2c06da5c",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "ce30f40de79",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c1201df872e",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "ce27e742249",
+              "class": "M1_other_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "cbfd85bb4f5",
+              "class": "M1_other_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c7c5ea38c4a",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c82e72bfcd9",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c6df3f9adfd",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c42b352cc3f",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cfe384ba626",
+              "class": "M1_other_line",
+              "truth": "mislocated",
+              "observed": "supported"
+            },
+            {
+              "id": "c886042d8f6",
+              "class": "B1_bound_single",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "c65c4ce244b",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "ca668a4c8a2",
+              "class": "B3_bound_multiline",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cd40c62e380",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            },
+            {
+              "id": "cb8d3c8b715",
+              "class": "B2_bound_later_occurrence",
+              "truth": "supported",
+              "observed": "mislocated"
+            }
+          ],
+          "counter_pin_verified": true
+        }
+      ],
+      "restored_runs": [
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/restored-off-by-one-lines-s1.json",
+          "seed_index": "V2S1",
+          "seed": 1974160508405359465,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "1974160508405359465",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/restored-off-by-one-lines-s1.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 0,
+          "supervisor_killed": false,
+          "elapsed_s": 0.107,
+          "stdout": "LINE_BINDING_MATCH=120/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 120,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+          "per_class": {
+            "M3_partial_on_named_line": "12/12",
+            "M5_beyond_eof": "6/6",
+            "B2_bound_later_occurrence": "12/12",
+            "B3_bound_multiline": "12/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B1_bound_single": "12/12",
+            "M2_glued_on_named_line": "12/12",
+            "I1_invalid_line_value": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "B4_no_line": "6/6",
+            "M1_other_line": "12/12",
+            "U1_absent_span_with_line": "8/8"
+          },
+          "misses": [],
+          "counter_pin_verified": true
+        },
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/restored-off-by-one-lines-s2.json",
+          "seed_index": "V2S2",
+          "seed": 6996389439849219100,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "6996389439849219100",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/restored-off-by-one-lines-s2.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 0,
+          "supervisor_killed": false,
+          "elapsed_s": 0.106,
+          "stdout": "LINE_BINDING_MATCH=120/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 120,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+          "per_class": {
+            "I1_invalid_line_value": "12/12",
+            "M3_partial_on_named_line": "12/12",
+            "B3_bound_multiline": "12/12",
+            "M2_glued_on_named_line": "12/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B2_bound_later_occurrence": "12/12",
+            "M5_beyond_eof": "6/6",
+            "B4_no_line": "6/6",
+            "B1_bound_single": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "U1_absent_span_with_line": "8/8",
+            "M1_other_line": "12/12"
+          },
+          "misses": [],
+          "counter_pin_verified": true
+        },
+        {
+          "receipt": ".ufo/waves/round-31/controls/MutOracleC1/v2/restored-off-by-one-lines-s3.json",
+          "seed_index": "V2S3",
+          "seed": 5268895580782469426,
+          "command": [
+            "timeout",
+            "--kill-after=5",
+            "900",
+            "python3",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count.py",
+            "--gate",
+            "/fast/scratch/hyaku/chousa-r31/MutOracleC1/v2/work-c1.sh",
+            "--seed",
+            "5268895580782469426",
+            "--receipt",
+            "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC1/v2/restored-off-by-one-lines-s3.json"
+          ],
+          "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+          "returncode": 0,
+          "supervisor_killed": false,
+          "elapsed_s": 0.107,
+          "stdout": "LINE_BINDING_MATCH=120/120\n  B1_bound_single 12/12\n  B2_bound_later_occurrence 12/12\n  B3_bound_multiline 12/12\n  B4_no_line 6/6\n  M1_other_line 12/12\n  M2_glued_on_named_line 12/12\n  M3_partial_on_named_line 12/12\n  M4_multiline_wrong_range 8/8\n  M5_beyond_eof 6/6\n  M6_two_occurrences_named_third 8/8\n  I1_invalid_line_value 12/12\n  U1_absent_span_with_line 8/8\n",
+          "stderr": "",
+          "schema": "chousa-r31-c1-receipt/v2",
+          "counter_sha256": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+          "matched": 120,
+          "total": 120,
+          "gate_rc": 1,
+          "gate_timed_out": false,
+          "gate_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+          "per_class": {
+            "M5_beyond_eof": "6/6",
+            "M1_other_line": "12/12",
+            "M4_multiline_wrong_range": "8/8",
+            "B3_bound_multiline": "12/12",
+            "U1_absent_span_with_line": "8/8",
+            "M2_glued_on_named_line": "12/12",
+            "B2_bound_later_occurrence": "12/12",
+            "M3_partial_on_named_line": "12/12",
+            "M6_two_occurrences_named_third": "8/8",
+            "B4_no_line": "6/6",
+            "I1_invalid_line_value": "12/12",
+            "B1_bound_single": "12/12"
+          },
+          "misses": [],
+          "counter_pin_verified": true
+        }
+      ],
+      "restored_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+      "restored_exact_bytes": true,
+      "verdict_by_seed": {
+        "V2S1": "killed",
+        "V2S2": "killed",
+        "V2S3": "killed"
+      }
+    }
+  ],
+  "installs": [],
+  "pristine_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+  "v1_reference_sha256": "c1ebbf61e4efaf9168cce0812f0bfb8368e2acdf492a2bc4fccab64b270bf078",
+  "all_receipts_v2_pin_verified": true,
+  "total_detector_runs": 39,
+  "counter_sha256_after": "c3aca35da30ee47edc3402daa559f43320e44a82d3a0143b5ea283ec8c49b427",
+  "final_work_sha256": "bfc0b02b83f554d134c6bb2c87610963a743f2e917a7d325611d844addf8c617",
+  "all_exact_restorations": true,
+  "wrong_control_max": 116,
+  "reference_max": 120
+}
