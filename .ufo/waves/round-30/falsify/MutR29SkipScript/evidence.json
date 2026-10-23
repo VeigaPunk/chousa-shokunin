@@ -1,0 +1,137 @@
+{
+  "verdict": "KILLED",
+  "axes": ["coverage", "operability"],
+  "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+  "detector": "corpus/evidence/round30/c1-count.py",
+  "target": "QUOTE_REOPEN_HEADLESS_MATCH=106/106",
+  "mutation": {
+    "path": "/fast/scratch/hyaku/chousa-r30/w2/MutR29SkipScript/mutant.py",
+    "line": 66,
+    "before": "SKIP = {\"script\", \"style\", \"noscript\", \"template\", \"title\"}",
+    "after": "SKIP = {\"style\", \"noscript\", \"template\"}",
+    "patch": "mutant.patch",
+    "expected_detection": "Title and script windows labelled ABSENT become VERBATIM. Both mutant scores must fall below 106, with successful unmodified comparison runs."
+  },
+  "runs": [
+    {
+      "phase": "initial baseline, inconclusive",
+      "command": "timeout 300 prlimit --as=1073741824 --nproc=4096 env PYTHONDONTWRITEBYTECODE=1 TMPDIR=/fast/scratch/hyaku/chousa-r30/w2/MutR29SkipScript/tmp python3 corpus/evidence/round30/c1-count.py --tool /fast/scratch/hyaku/chousa-r30/w2/MutR29SkipScript/mutant.py --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-30/falsify/MutR29SkipScript/baseline.json",
+      "exit_code": 1,
+      "stdout": "QUOTE_REOPEN_HEADLESS_MATCH=0/106\n",
+      "receipt": "baseline.json",
+      "seed": 4048493946761488881,
+      "tool_rc": 1,
+      "tool_killed": false,
+      "wall_s": 0.058,
+      "note": "All verdicts were missing. This failed baseline is not evidence of a killed mutant; the cause was not established."
+    },
+    {
+      "phase": "baseline with adjusted resource caps",
+      "command": "timeout 300 prlimit --as=8589934592 --nproc=16384 env PYTHONDONTWRITEBYTECODE=1 TMPDIR=/fast/scratch/hyaku/chousa-r30/w2/MutR29SkipScript/tmp python3 corpus/evidence/round30/c1-count.py --tool /fast/scratch/hyaku/chousa-r30/w2/MutR29SkipScript/mutant.py --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-30/falsify/MutR29SkipScript/baseline2.json",
+      "exit_code": 0,
+      "stdout": "QUOTE_REOPEN_HEADLESS_MATCH=106/106\n",
+      "receipt": "baseline2.json",
+      "seed": 10530643080160663139,
+      "tool_rc": 1,
+      "tool_killed": false,
+      "wall_s": 0.051
+    },
+    {
+      "phase": "mutant, run 1",
+      "command": "timeout 300 prlimit --as=8589934592 --nproc=16384 env PYTHONDONTWRITEBYTECODE=1 TMPDIR=/fast/scratch/hyaku/chousa-r30/w2/MutR29SkipScript/tmp python3 corpus/evidence/round30/c1-count.py --tool /fast/scratch/hyaku/chousa-r30/w2/MutR29SkipScript/mutant.py --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-30/falsify/MutR29SkipScript/run1.json",
+      "exit_code": 1,
+      "stdout": "QUOTE_REOPEN_HEADLESS_MATCH=66/106\n",
+      "receipt": "run1.json",
+      "seed": 12890399587773936245,
+      "tool_rc": 1,
+      "tool_killed": false,
+      "wall_s": 0.05
+    },
+    {
+      "phase": "mutant, run 2",
+      "command": "timeout 300 prlimit --as=8589934592 --nproc=16384 env PYTHONDONTWRITEBYTECODE=1 TMPDIR=/fast/scratch/hyaku/chousa-r30/w2/MutR29SkipScript/tmp python3 corpus/evidence/round30/c1-count.py --tool /fast/scratch/hyaku/chousa-r30/w2/MutR29SkipScript/mutant.py --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-30/falsify/MutR29SkipScript/run2.json",
+      "exit_code": 1,
+      "stdout": "QUOTE_REOPEN_HEADLESS_MATCH=66/106\n",
+      "receipt": "run2.json",
+      "seed": 4624390625047377748,
+      "tool_rc": 1,
+      "tool_killed": false,
+      "wall_s": 0.05
+    },
+    {
+      "phase": "restored",
+      "command": "timeout 300 prlimit --as=8589934592 --nproc=16384 env PYTHONDONTWRITEBYTECODE=1 TMPDIR=/fast/scratch/hyaku/chousa-r30/w2/MutR29SkipScript/tmp python3 corpus/evidence/round30/c1-count.py --tool /fast/scratch/hyaku/chousa-r30/w2/MutR29SkipScript/mutant.py --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-30/falsify/MutR29SkipScript/restored.json",
+      "exit_code": 0,
+      "stdout": "QUOTE_REOPEN_HEADLESS_MATCH=106/106\n",
+      "receipt": "restored.json",
+      "seed": 15854913635204277752,
+      "tool_rc": 1,
+      "tool_killed": false,
+      "wall_s": 0.079
+    }
+  ],
+  "mutant_misses_each_run": {
+    "closed-head/script-window": 6,
+    "closed-head/title-window": 6,
+    "headless-body/script-window": 5,
+    "headless-body/title-window": 5,
+    "headless-nobody/script-window": 5,
+    "headless-nobody/title-window": 5,
+    "headless-text/script-window": 4,
+    "headless-text/title-window": 4
+  },
+  "mutant_miss_labels": {"expected": "ABSENT", "actual": "VERBATIM"},
+  "mutant_misses_per_kind_each_run": {"script-window": 20, "title-window": 20},
+  "other_items_correct_each_mutant_run": 66,
+  "comparison_profile": {"address_space_bytes": 8589934592, "process_limit": 16384, "timeout_seconds": 300},
+  "before_sha256": "47a657e72f38f9424748a000b3bd218e26b6a601192b68e06a916471222a1201",
+  "mutant_sha256": "36ba284102d5a952c12d4fb640cbdcaee240c899f8390b0f26b9c07a811f014f",
+  "restored_sha256": "47a657e72f38f9424748a000b3bd218e26b6a601192b68e06a916471222a1201",
+  "lane_tool_before_and_after_sha256": "47a657e72f38f9424748a000b3bd218e26b6a601192b68e06a916471222a1201",
+  "frozen_input_hashes_checked_before_and_after": {
+    "corpus/evidence/round30/c1-count.py": "5b312d84365924779ba8e6fe447cad3467f59c11848083d0967528c7a5e9d6e6",
+    "corpus/evidence/round30/c2-count.py": "0a59e3736fed8ef4cf7b00a75955eccfd0336c8a0ca84bee23402408b727f88f",
+    "corpus/evidence/round30/qr_harness.py": "e2be0dd16da5b2bf03430772831763e56c6ff6dd6a44063bb05c909b284f50d4"
+  },
+  "supporting_commands": [
+    {
+      "command": "timeout 20 prlimit --as=1073741824 --nproc=4096 sha256sum tools/quote-reopen.py corpus/evidence/round30/c1-count.py corpus/evidence/round30/c2-count.py corpus/evidence/round30/qr_harness.py",
+      "exit_code": 0,
+      "result": "All four hashes matched the assigned values before scoring."
+    },
+    {
+      "command": "timeout 20 prlimit --as=8589934592 --nproc=16384 diff -u --label a/tools/quote-reopen.py --label b/tools/quote-reopen.py /fast/scratch/hyaku/chousa-r30/w2/MutR29SkipScript/pristine.py /fast/scratch/hyaku/chousa-r30/w2/MutR29SkipScript/mutant.py",
+      "exit_code": 1,
+      "result": "The single-line difference is saved in mutant.patch."
+    },
+    {
+      "command": "timeout 20 prlimit --as=8589934592 --nproc=16384 sha256sum /fast/scratch/hyaku/chousa-r30/w2/MutR29SkipScript/pristine.py /fast/scratch/hyaku/chousa-r30/w2/MutR29SkipScript/mutant.py",
+      "exit_code": 0,
+      "result": "Recorded the unchanged copy and mutant hashes above."
+    },
+    {
+      "command": "timeout 20 prlimit --as=8589934592 --nproc=16384 cp /fast/scratch/hyaku/chousa-r30/w2/MutR29SkipScript/pristine.py /fast/scratch/hyaku/chousa-r30/w2/MutR29SkipScript/mutant.py && timeout 20 prlimit --as=8589934592 --nproc=16384 sha256sum /fast/scratch/hyaku/chousa-r30/w2/MutR29SkipScript/mutant.py tools/quote-reopen.py corpus/evidence/round30/c1-count.py corpus/evidence/round30/c2-count.py corpus/evidence/round30/qr_harness.py",
+      "exit_code": 0,
+      "result": "Scratch bytes restored exactly; lane tool and all three frozen input hashes unchanged."
+    },
+    {
+      "command": "timeout 20 prlimit --as=8589934592 --nproc=16384 pkill --signal KILL --full '[/]fast/scratch/hyaku/chousa-r30/w2/MutR29SkipScript/(mutant.py|tmp/)'",
+      "exit_code": 1,
+      "result": "No matching probe processes; no output."
+    }
+  ],
+  "diagnostic_command_failures": [
+    {
+      "command": "timeout 20 prlimit --as=1073741824 --nproc=4096 prlimit --pid 0",
+      "exit_code": 1,
+      "output": "prlimit: invalid PID argument: '0': Numerical result out of range"
+    },
+    {
+      "command": "timeout 20 prlimit --as=1073741824 --nproc=4096 ps -u vgpnk -o nlwp= | timeout 20 prlimit --as=1073741824 --nproc=4096 numsum",
+      "exit_code": 127,
+      "output": "prlimit: failed to execute numsum: No such file or directory"
+    }
+  ],
+  "scope": "Only the assigned C1 mutation probe was scored; no C2 result is claimed. Counters and harness were not edited. No production source, index or jj state was changed. Detector traffic was loopback only; no network fetch was performed.",
+  "tools_installed_or_updated": []
+}

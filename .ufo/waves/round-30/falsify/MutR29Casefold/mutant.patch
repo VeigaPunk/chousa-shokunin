@@ -1,0 +1,12 @@
+--- pristine.py
++++ mutant.py
+@@ -160,7 +160,8 @@
+ 
+ def found(text, quote):
+     """True iff the normalized quote occurs in the normalized text at a non-alphanumeric boundary."""
+-    q = norm(quote)
++    q = norm(quote).casefold()
++    text = text.casefold()
+     if not q:
+         return False
+     i = 0

@@ -1,0 +1,16 @@
+--- tools/quote-reopen.py
++++ mutant.py
+@@ -353,13 +353,6 @@
+         except (http.client.HTTPException, OSError, ValueError):
+             raise _Refuse("body read failed")
+         if not chunk:
+-            # An end of stream is a complete body only if it came before the deadline (the
+-            # watchdog's shutdown also reads as end of stream) and no declared length is
+-            # still outstanding.
+-            if time.monotonic() >= deadline:
+-                raise _Refuse("deadline exceeded while reading the body")
+-            if getattr(resp, "length", None):
+-                raise _Refuse("body truncated")
+             break
+         total += len(chunk)
+         if total > MAX_BODY:

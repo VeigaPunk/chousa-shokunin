@@ -1,0 +1,19 @@
+--- a/tools/quote-reopen.py
++++ b/tools/quote-reopen.py
+@@ -53,6 +53,7 @@
+ 
+ MAX_BODY = 8 * 1024 * 1024
+ DEADLINE = 30.0
++_FETCH_DEADLINE = DEADLINE
+ RETRIES = 1
+ MAX_REDIRECTS = 10
+ CHUNK = 65536
+@@ -444,7 +445,7 @@
+ def fetch_page(url):
+     """Fetch one registry URL within the fetch bounds. Returns (status, ctype, text, detail)."""
+     target = url.split("#", 1)[0]
+-    deadline = time.monotonic() + float(DEADLINE)
++    deadline = time.monotonic() + float(_FETCH_DEADLINE)
+     detail = ""
+     for attempt in range(RETRIES + 1):
+         retryable = False

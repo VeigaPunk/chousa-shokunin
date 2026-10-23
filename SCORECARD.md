@@ -1673,3 +1673,42 @@ item, a case-only edit); handle a missing `</head>` and 2xx challenge pages in
 a new contract version; close sentinel T1 and T4; get the L0 ruling on the
 fetch scope. Round-28 C1 (path-denylist surface) stays open and is
 operator-owned.
+
+## Round 30 — quote re-open head boundary and fetch bounds (two claims; D-list only)
+
+Base `a3a3710e3d0adf2f95882292f17b5093e3baf97c`. Frozen design:
+`corpus/evidence/round30/claims.md` (design v4 at `abfdf93274d0c70e02465e22abcf029dea59efb9`;
+earlier designs were changed before data after the control wave found leaks, see the
+lesson). Landed tool `49b2aa3006d3c44a29b171ab30df09776c21405d` (tool SHA-256 `47a657e7…1201`).
+
+| claim / axis | before → after | counting command (lane root) | verdict |
+|---|---|---|---|
+| C1 coverage: edge class of pages that omit `</head>` | `QUOTE_REOPEN_HEADLESS_MATCH=78/106` (round-29 tool, `.ufo/waves/round-30/controls/before-c1-v4-run{1,2}.json`) → `106/106` twice on `49b2aa30` (`.ufo/waves/round-30/measure/after-c1-run{1,2}.json`) | `python3 corpus/evidence/round30/c1-count.py` | measured: met; re-derived 106/106 in every falsify-wave run (RerunC1A/B/C 9 runs, SeparabilityRevs, CriticClaimsAfter) |
+| C2 operability (lowest scored axis): stated fetch bounds hold under slow senders and DNS rebinding | `QUOTE_REOPEN_FETCH_BOUND_MATCH=12/27` (`before-c2-v4-run{1,2}.json`) → `27/27` twice on `49b2aa30` (`measure/after-c2-run{1,2}.json`); revision `33dd643f` scored 24/27 once and was fixed at `bd43bd53` | `python3 corpus/evidence/round30/c2-count.py` | **not met (miss under the kill rule)**: the landed tool printed 26/27 on 3 of 44 fresh-seed runs (`.ufo/waves/round-30/falsify/RerunC2B/run2.json`, `run4.json`, `extra16.json`); each miss is a slow-ok item refused about 0.07 s after its own DEADLINE. The seat's diagnosis points at the frozen harness's listen queue (backlog 5), not the tool; the counter is not re-scaled and the claim is reported as a miss |
+
+The round-1 operability scale is unchanged: score 3 → 3; `tools/research-gate.sh` is not
+touched by this round. The C2 observable sits beside that score.
+
+Controls (all under `.ufo/waves/round-30/controls/`): C2 v2 was met 20/20 by a DNS- and
+header-keyed shortcut and re-designed before data; under v4 no control met either
+counter (best C1 no-reader 84/106, best C2 control 18/27, a fixed 3.8 s cutoff).
+
+Not claimed: liveness, TLS (counters are plain HTTP), per-hop address provenance,
+resolver time, IPv6, pages without a `<head>` start tag, 2xx challenge pages, PDFs.
+
+Sources 49 → 56 rows (S050 to S056, tier A, mined, used by
+`corpus/knowledge/quote-reopen-r30.md`). QUALITY criteria 26 to 29 added. Census at the
+end: `chousa ok`, exit 0, with two W04 warnings (two pairs of rows share a page URL).
+
+## Capabilities (round-30 change)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| quote re-open (contract v2, C1 part) | as round 29, and also reads pages that omit `</head>` (C1 measured). The fetch-layer change (one validated address per hop; one `DEADLINE` over header and body reads) landed, but C2 missed its predicate and the deadline does not cover name resolution or dialing (`falsify/SentinelFetchLayer.md`) | `python3 corpus/evidence/round30/c1-count.py` → 106/106; `python3 corpus/evidence/round30/c2-count.py` → 27/27 (loopback harness); `corpus/knowledge/quote-reopen-r30.md` | 29 (contract v2 in 30) |
+
+## Planned — round 31 (not started)
+
+Candidates, not commitments: pages without a `<head>` start tag; 2xx challenge pages;
+resolver time inside `DEADLINE`; a TLS case in the harness; per-hop address provenance;
+IPv6; the L0 fetch-scope answer. Round-28 C1 (path-denylist surface) stays open and
+operator-owned.

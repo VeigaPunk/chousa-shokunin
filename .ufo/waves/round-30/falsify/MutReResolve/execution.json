@@ -1,0 +1,247 @@
+{
+  "axes": {
+    "coverage": "not scored",
+    "operability": "bounded detector scored"
+  },
+  "diff": {
+    "command": [
+      "timeout",
+      "10",
+      "prlimit",
+      "--as=1073741824",
+      "--nproc=4096",
+      "--",
+      "diff",
+      "-u",
+      "--label",
+      "tools/quote-reopen.py",
+      "--label",
+      "mutant.py",
+      "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/quote-reopen.py",
+      "/fast/scratch/hyaku/chousa-r30/w2/MutReResolve/mutant.py"
+    ],
+    "rc": 1,
+    "stderr": "",
+    "stdout": "--- tools/quote-reopen.py\n+++ mutant.py\n@@ -273,7 +273,7 @@\n         sock = socket.socket(af, socket.SOCK_STREAM)\n         try:\n             sock.settimeout(connect_timeout)\n-            sock.connect((a, port))\n+            sock.connect(socket.getaddrinfo(server_hostname, port, type=socket.SOCK_STREAM)[0][4])\n             sock.settimeout(timeout)\n             if context is not None:\n                 sock = context.wrap_socket(sock, server_hostname=server_hostname)\n"
+  },
+  "expected_detector": "QUOTE_REOPEN_FETCH_BOUND_MATCH=27/27 on pristine and restored bytes; both mutant scores below 27/27 mean KILLED.",
+  "hashes": {
+    "frozen_inputs": {
+      "c1-count.py": "5b312d84365924779ba8e6fe447cad3467f59c11848083d0967528c7a5e9d6e6",
+      "c2-count.py": "0a59e3736fed8ef4cf7b00a75955eccfd0336c8a0ca84bee23402408b727f88f",
+      "qr_harness.py": "e2be0dd16da5b2bf03430772831763e56c6ff6dd6a44063bb05c909b284f50d4"
+    },
+    "mutant_sha256": "16c11530ac97b47ed1dd336d0cd99cc6d0e3784adc1c11421cb546f10d07bdfd",
+    "pristine_sha256": "47a657e72f38f9424748a000b3bd218e26b6a601192b68e06a916471222a1201",
+    "restored_sha256": "47a657e72f38f9424748a000b3bd218e26b6a601192b68e06a916471222a1201"
+  },
+  "installs": [],
+  "mutation": "Only line 276 changed: socket.connect now uses socket.getaddrinfo(server_hostname, port, type=socket.SOCK_STREAM)[0][4] instead of (a, port).",
+  "receipt_findings": {
+    "baseline": "27/27, exit 0",
+    "both_mutant_runs": {
+      "bound_misses": 0,
+      "misses_by_kind": {
+        "rebind-loop": 4,
+        "rebind-private": 2,
+        "rebind-redirect": 2
+      },
+      "other_matched": 19,
+      "unvalidated_destination_items": 8,
+      "wrong_verdict_items": 2
+    },
+    "restored": "27/27, exit 0"
+  },
+  "restoration": {
+    "command": [
+      "timeout",
+      "10",
+      "prlimit",
+      "--as=1073741824",
+      "--nproc=4096",
+      "--",
+      "cp",
+      "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/quote-reopen.py",
+      "/fast/scratch/hyaku/chousa-r30/w2/MutReResolve/mutant.py"
+    ],
+    "rc": 0,
+    "sha256": "47a657e72f38f9424748a000b3bd218e26b6a601192b68e06a916471222a1201",
+    "stderr": "",
+    "stdout": ""
+  },
+  "runs": [
+    {
+      "command": [
+        "timeout",
+        "300",
+        "python3",
+        "corpus/evidence/round30/c2-count.py",
+        "--tool",
+        "/fast/scratch/hyaku/chousa-r30/w2/MutReResolve/mutant.py",
+        "--receipt",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-30/falsify/MutReResolve/baseline.json"
+      ],
+      "counter_hashes_before": {
+        "c1-count.py": "5b312d84365924779ba8e6fe447cad3467f59c11848083d0967528c7a5e9d6e6",
+        "c2-count.py": "0a59e3736fed8ef4cf7b00a75955eccfd0336c8a0ca84bee23402408b727f88f",
+        "qr_harness.py": "e2be0dd16da5b2bf03430772831763e56c6ff6dd6a44063bb05c909b284f50d4"
+      },
+      "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+      "env": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "TMPDIR": "/fast/scratch/hyaku/chousa-r30/w2/MutReResolve/tmp"
+      },
+      "executed": [
+        "prlimit",
+        "--as=4294967296",
+        "--nproc=4096",
+        "--",
+        "timeout",
+        "300",
+        "python3",
+        "corpus/evidence/round30/c2-count.py",
+        "--tool",
+        "/fast/scratch/hyaku/chousa-r30/w2/MutReResolve/mutant.py",
+        "--receipt",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-30/falsify/MutReResolve/baseline.json"
+      ],
+      "phase": "baseline",
+      "process_group_cleanup": "no remaining process group",
+      "rc": 0,
+      "stderr": "",
+      "stdout": "QUOTE_REOPEN_FETCH_BOUND_MATCH=27/27\n",
+      "tool_sha256_before": "47a657e72f38f9424748a000b3bd218e26b6a601192b68e06a916471222a1201",
+      "wall_s": 6.197
+    },
+    {
+      "command": [
+        "timeout",
+        "300",
+        "python3",
+        "corpus/evidence/round30/c2-count.py",
+        "--tool",
+        "/fast/scratch/hyaku/chousa-r30/w2/MutReResolve/mutant.py",
+        "--receipt",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-30/falsify/MutReResolve/run1.json"
+      ],
+      "counter_hashes_before": {
+        "c1-count.py": "5b312d84365924779ba8e6fe447cad3467f59c11848083d0967528c7a5e9d6e6",
+        "c2-count.py": "0a59e3736fed8ef4cf7b00a75955eccfd0336c8a0ca84bee23402408b727f88f",
+        "qr_harness.py": "e2be0dd16da5b2bf03430772831763e56c6ff6dd6a44063bb05c909b284f50d4"
+      },
+      "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+      "env": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "TMPDIR": "/fast/scratch/hyaku/chousa-r30/w2/MutReResolve/tmp"
+      },
+      "executed": [
+        "prlimit",
+        "--as=4294967296",
+        "--nproc=4096",
+        "--",
+        "timeout",
+        "300",
+        "python3",
+        "corpus/evidence/round30/c2-count.py",
+        "--tool",
+        "/fast/scratch/hyaku/chousa-r30/w2/MutReResolve/mutant.py",
+        "--receipt",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-30/falsify/MutReResolve/run1.json"
+      ],
+      "phase": "run1",
+      "process_group_cleanup": "no remaining process group",
+      "rc": 1,
+      "stderr": "",
+      "stdout": "QUOTE_REOPEN_FETCH_BOUND_MATCH=19/27\n",
+      "tool_sha256_before": "16c11530ac97b47ed1dd336d0cd99cc6d0e3784adc1c11421cb546f10d07bdfd",
+      "wall_s": 6.246
+    },
+    {
+      "command": [
+        "timeout",
+        "300",
+        "python3",
+        "corpus/evidence/round30/c2-count.py",
+        "--tool",
+        "/fast/scratch/hyaku/chousa-r30/w2/MutReResolve/mutant.py",
+        "--receipt",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-30/falsify/MutReResolve/run2.json"
+      ],
+      "counter_hashes_before": {
+        "c1-count.py": "5b312d84365924779ba8e6fe447cad3467f59c11848083d0967528c7a5e9d6e6",
+        "c2-count.py": "0a59e3736fed8ef4cf7b00a75955eccfd0336c8a0ca84bee23402408b727f88f",
+        "qr_harness.py": "e2be0dd16da5b2bf03430772831763e56c6ff6dd6a44063bb05c909b284f50d4"
+      },
+      "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+      "env": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "TMPDIR": "/fast/scratch/hyaku/chousa-r30/w2/MutReResolve/tmp"
+      },
+      "executed": [
+        "prlimit",
+        "--as=4294967296",
+        "--nproc=4096",
+        "--",
+        "timeout",
+        "300",
+        "python3",
+        "corpus/evidence/round30/c2-count.py",
+        "--tool",
+        "/fast/scratch/hyaku/chousa-r30/w2/MutReResolve/mutant.py",
+        "--receipt",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-30/falsify/MutReResolve/run2.json"
+      ],
+      "phase": "run2",
+      "process_group_cleanup": "no remaining process group",
+      "rc": 1,
+      "stderr": "",
+      "stdout": "QUOTE_REOPEN_FETCH_BOUND_MATCH=19/27\n",
+      "tool_sha256_before": "16c11530ac97b47ed1dd336d0cd99cc6d0e3784adc1c11421cb546f10d07bdfd",
+      "wall_s": 5.752
+    },
+    {
+      "command": [
+        "timeout",
+        "300",
+        "python3",
+        "corpus/evidence/round30/c2-count.py",
+        "--tool",
+        "/fast/scratch/hyaku/chousa-r30/w2/MutReResolve/mutant.py",
+        "--receipt",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-30/falsify/MutReResolve/restored.json"
+      ],
+      "counter_hashes_before": {
+        "c1-count.py": "5b312d84365924779ba8e6fe447cad3467f59c11848083d0967528c7a5e9d6e6",
+        "c2-count.py": "0a59e3736fed8ef4cf7b00a75955eccfd0336c8a0ca84bee23402408b727f88f",
+        "qr_harness.py": "e2be0dd16da5b2bf03430772831763e56c6ff6dd6a44063bb05c909b284f50d4"
+      },
+      "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+      "env": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "TMPDIR": "/fast/scratch/hyaku/chousa-r30/w2/MutReResolve/tmp"
+      },
+      "executed": [
+        "prlimit",
+        "--as=4294967296",
+        "--nproc=4096",
+        "--",
+        "timeout",
+        "300",
+        "python3",
+        "corpus/evidence/round30/c2-count.py",
+        "--tool",
+        "/fast/scratch/hyaku/chousa-r30/w2/MutReResolve/mutant.py",
+        "--receipt",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-30/falsify/MutReResolve/restored.json"
+      ],
+      "phase": "restored",
+      "process_group_cleanup": "no remaining process group",
+      "rc": 0,
+      "stderr": "",
+      "stdout": "QUOTE_REOPEN_FETCH_BOUND_MATCH=27/27\n",
+      "tool_sha256_before": "47a657e72f38f9424748a000b3bd218e26b6a601192b68e06a916471222a1201",
+      "wall_s": 6.31
+    }
+  ],
+  "verdict": "KILLED"
+}

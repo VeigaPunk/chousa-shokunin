@@ -56,7 +56,7 @@ and routes every connection to a local server. Every run draws a fresh seed.
 | counter | what one item checks | before (round-29 tool) | after (landed) |
 |---|---|---|---|
 | `c1-count.py` → `QUOTE_REOPEN_HEADLESS_MATCH` | verdict equals its construction label on 100 generated document items (5 kinds of head shape) plus 6 verdict-order items | 78/106 | 106/106 twice |
-| `c2-count.py` → `QUOTE_REOPEN_FETCH_BOUND_MATCH` | verdict equals label, wall time within that item's DEADLINE + 1.5 s, every connection to a routed global address | 12/27 | 27/27 twice |
+| `c2-count.py` → `QUOTE_REOPEN_FETCH_BOUND_MATCH` | verdict equals label, wall time within that item's DEADLINE + 1.5 s, every connection to a routed global address | 12/27 | 27/27 on 41 of 44 fresh-seed runs; 26/27 on 3 (a slow-ok item refused about 0.07 s after its DEADLINE), so the C2 predicate is not met |
 
 The after values were measured on lane revision `49b2aa3006d3c44a29b171ab30df09776c21405d`
 (receipts `.ufo/waves/round-30/measure/after-c{1,2}-run{1,2}.json`).
@@ -68,10 +68,12 @@ What the counters do not show:
   separate real-page run.
 - Per-hop address provenance. C2 checks that each connection goes to a global
   address of the item's own name map, not that each hop uses its own lookup.
-- Name-resolution time. The harness answers lookups at once. [INFERENCE] A slow
-  resolver is not bounded by `DEADLINE`, because the lookup is a blocking
-  `getaddrinfo` call with no timeout (`.ufo/waves/round-30/build/ReviewContractV2.md`
-  finding 4 measured 10.01 s for one failed lookup with the round-29 tool).
+- Name resolution and dialing. The harness answers lookups at once and every
+  routed address connects. In the landed tool the lookup is a blocking
+  `getaddrinfo` before the deadline check, each address reuses one connect
+  timeout, and the timer starts only after dialing, so a slow resolver or a
+  silent first address overruns `DEADLINE` (`.ufo/waves/round-30/falsify/SentinelFetchLayer.md`;
+  a probe measured 6.0 s at DEADLINE 3, `falsify/ReviewKnowledge30.md`).
 - IPv6, pages without a `<head>` start tag, 2xx challenge pages (S021, S022 on
   PubMed), PDFs and pages rendered by JavaScript.
 - Support or truth. A `VERBATIM` verdict locates a quote; it does not show that

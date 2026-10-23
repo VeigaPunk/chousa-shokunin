@@ -1,0 +1,56 @@
+Axes: coverage, operability. Scope: the assigned round-29 fetch-before-length mutation only. C 2 was not scored.
+All detector commands below ran from /home/vgpnk/Projects/shokunin/chousa-shokunin, with no chosen seed. No counter, harness or production tool was changed.
+
+Initial baseline, virtual-memory cap 1 GiB:
+timeout 300 bash -c 'ulimit -v 1048576; ulimit -u 16384; export PYTHONDONTWRITEBYTECODE=1 TMPDIR=/fast/scratch/hyaku/chousa-r30/w2/MutR29Order; timeout 300 python3 corpus/evidence/round30/c1-count.py --tool /fast/scratch/hyaku/chousa-r30/w2/MutR29Order/mutant.py --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-30/falsify/MutR29Order/baseline.json'
+stdout: QUOTE_REOPEN_HEADLESS_MATCH=0/106
+counter exit: 1
+Receipt: tool_rc=1, tool_killed=false, wall_s=0.068, net_connect_events=20. All 106 verdicts were missing; the first 40 receipt misses have got=null. This baseline is inconclusive, not a killed mutant. The child stderr is not present in the receipt, so no cause is asserted.
+
+Pristine baseline, virtual-memory cap 8 GiB:
+timeout 300 bash -c 'ulimit -v 8388608; ulimit -u 16384; export PYTHONDONTWRITEBYTECODE=1 TMPDIR=/fast/scratch/hyaku/chousa-r30/w2/MutR29Order; timeout 300 python3 corpus/evidence/round30/c1-count.py --tool /fast/scratch/hyaku/chousa-r30/w2/MutR29Order/mutant.py --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-30/falsify/MutR29Order/baseline-wide.json'
+stdout: QUOTE_REOPEN_HEADLESS_MATCH=106/106
+counter exit: 0
+Receipt: seed=15019252255870873330, tool_rc=1, tool_killed=false, wall_s=0.05, misses_first40=[].
+
+Applied exactly the branch move in mutant.patch to the scratch candidate, leaving NO_SOURCE first and checking fetch/UNREACHABLE before TOO_LONG.
+Mutant run 1:
+timeout 300 bash -c 'ulimit -v 8388608; ulimit -u 16384; export PYTHONDONTWRITEBYTECODE=1 TMPDIR=/fast/scratch/hyaku/chousa-r30/w2/MutR29Order; timeout 300 python3 corpus/evidence/round30/c1-count.py --tool /fast/scratch/hyaku/chousa-r30/w2/MutR29Order/mutant.py --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-30/falsify/MutR29Order/run1.json'
+stdout: QUOTE_REOPEN_HEADLESS_MATCH=104/106
+counter exit: 1
+Receipt: seed=2523631305859291045, tool_rc=1, tool_killed=false, wall_s=0.09.
+
+Mutant run 2:
+timeout 300 bash -c 'ulimit -v 8388608; ulimit -u 16384; export PYTHONDONTWRITEBYTECODE=1 TMPDIR=/fast/scratch/hyaku/chousa-r30/w2/MutR29Order; timeout 300 python3 corpus/evidence/round30/c1-count.py --tool /fast/scratch/hyaku/chousa-r30/w2/MutR29Order/mutant.py --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-30/falsify/MutR29Order/run2.json'
+stdout: QUOTE_REOPEN_HEADLESS_MATCH=104/106
+counter exit: 1
+Receipt: seed=1782902106900598896, tool_rc=1, tool_killed=false, wall_s=0.101.
+Both mutant receipts: only order/too-long-unreachable misses, 0/2 matched; expected TOO_LONG, got UNREACHABLE twice per run. Every other class/kind matched. Verdict: KILLED, since both runs scored below 106 and the passing baseline used the same detector, candidate path and resource bounds.
+
+Restored the exact scratch bytes by reversing the branch move before this command:
+timeout 300 bash -c 'ulimit -v 8388608; ulimit -u 16384; export PYTHONDONTWRITEBYTECODE=1 TMPDIR=/fast/scratch/hyaku/chousa-r30/w2/MutR29Order; timeout 300 python3 corpus/evidence/round30/c1-count.py --tool /fast/scratch/hyaku/chousa-r30/w2/MutR29Order/mutant.py --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-30/falsify/MutR29Order/restored.json'
+stdout: QUOTE_REOPEN_HEADLESS_MATCH=106/106
+counter exit: 0
+Receipt: seed=5786656521092444264, tool_rc=1, tool_killed=false, wall_s=0.056, misses_first40=[].
+
+Exact-byte check and hashes:
+timeout 30 bash -c 'ulimit -v 8388608; ulimit -u 16384; cmp /fast/scratch/hyaku/chousa-r30/w2/MutR29Order/pristine.py /fast/scratch/hyaku/chousa-r30/w2/MutR29Order/mutant.py && cmp tools/quote-reopen.py /fast/scratch/hyaku/chousa-r30/w2/MutR29Order/mutant.py && printf "EXACT_BYTES_RESTORED=True\n" && sha256sum /fast/scratch/hyaku/chousa-r30/w2/MutR29Order/pristine.py /fast/scratch/hyaku/chousa-r30/w2/MutR29Order/mutant.py tools/quote-reopen.py corpus/evidence/round30/c1-count.py corpus/evidence/round30/c2-count.py corpus/evidence/round30/qr_harness.py'
+exit: 0
+stdout: EXACT_BYTES_RESTORED=True
+SHA-256 of retained pristine copy, scratch before mutation, restored scratch, and lane tool before and after: 47a657e72f38f9424748a000b3bd218e26b6a601192b68e06a916471222a1201
+SHA-256 of mutant, measured before restoration and recorded in both mutant receipts: 6855d84b6c062a28de4c0fe8ecc851990b6528cea2d0d8e7e39cc115d8a0a5df
+SHA-256 of c1-count.py, matched supplied value before scoring and at restoration: 5b312d84365924779ba8e6fe447cad3467f59c11848083d0967528c7a5e9d6e6
+SHA-256 of c2-count.py, matched supplied value before scoring and at restoration: 0a59e3736fed8ef4cf7b00a75955eccfd0336c8a0ca84bee23402408b727f88f
+SHA-256 of qr_harness.py, matched supplied value before scoring and at restoration: e2be0dd16da5b2bf03430772831763e56c6ff6dd6a44063bb05c909b284f50d4
+
+Diff generation:
+timeout 30 bash -c 'ulimit -v 8388608; ulimit -u 16384; sha256sum /fast/scratch/hyaku/chousa-r30/w2/MutR29Order/pristine.py /fast/scratch/hyaku/chousa-r30/w2/MutR29Order/mutant.py tools/quote-reopen.py corpus/evidence/round30/c1-count.py corpus/evidence/round30/c2-count.py corpus/evidence/round30/qr_harness.py && diff -u --label a/tools/quote-reopen.py --label b/tools/quote-reopen.py /fast/scratch/hyaku/chousa-r30/w2/MutR29Order/pristine.py /fast/scratch/hyaku/chousa-r30/w2/MutR29Order/mutant.py'
+exit: 1 (diff found the intended change). The displayed diff was saved as mutant.patch with the write tool.
+
+Preparation issue:
+timeout 30 bash -c 'ulimit -v 1048576; ulimit -u 128; mkdir -p /fast/scratch/hyaku/chousa-r30/w2/MutR29Order /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-30/falsify/MutR29Order && cp /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/quote-reopen.py /fast/scratch/hyaku/chousa-r30/w2/MutR29Order/pristine.py && cp /fast/scratch/hyaku/chousa-r30/w2/MutR29Order/pristine.py /fast/scratch/hyaku/chousa-r30/w2/MutR29Order/mutant.py && cmp /fast/scratch/hyaku/chousa-r30/w2/MutR29Order/pristine.py /fast/scratch/hyaku/chousa-r30/w2/MutR29Order/mutant.py && sha256sum /fast/scratch/hyaku/chousa-r30/w2/MutR29Order/pristine.py /fast/scratch/hyaku/chousa-r30/w2/MutR29Order/mutant.py'
+exit: 254
+stderr: bash: fork: retry: Resource temporarily unavailable (4 times), then bash: fork: Resource temporarily unavailable.
+Preparation succeeded with exit 0 after changing only the process cap to 16384. That cap was retained for all detector runs.
+
+Every foreground detector command returned, with candidate tool_killed=false. No background job, subagent, or external network fetch was started. No tool was installed or updated. Scratch mutant.py now contains the original landed bytes; mutant.patch records the tested defect.

@@ -1,0 +1,22 @@
+--- a/tools/quote-reopen.py
++++ b/tools/quote-reopen.py
+@@ -506,9 +506,6 @@
+             detail = ("no registry row %s" % source_id if cell is None
+                       else "registry row %s has no http(s) URL" % source_id)
+             verdict = "NO_SOURCE"
+-        elif len(norm(quote).split()) > MAX_WORDS:
+-            verdict = "TOO_LONG"
+-            detail = "%d words, limit %d" % (len(norm(quote).split()), MAX_WORDS)
+         else:
+             if url not in cache:
+                 cache[url] = fetch_page(url)
+@@ -516,6 +513,9 @@
+             if text is None:
+                 verdict = "UNREACHABLE"
+                 detail = detail or "unreachable"
++            elif len(norm(quote).split()) > MAX_WORDS:
++                verdict = "TOO_LONG"
++                detail = "%d words, limit %d" % (len(norm(quote).split()), MAX_WORDS)
+             elif found(text, quote):
+                 verdict = "VERBATIM"
+                 detail = "matched in normalized page text"

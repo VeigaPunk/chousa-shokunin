@@ -1,0 +1,94 @@
+{
+  "axes": ["coverage", "operability"],
+  "measured_axis": "operability",
+  "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+  "mutation": "Capture DEADLINE at import as _FETCH_DEADLINE, initially 30.0 seconds; use that private value when computing the fetch deadline, ignoring later assignments to DEADLINE.",
+  "patch": ".ufo/waves/round-30/falsify/MutIgnoreDeadlineConst/mutant.patch",
+  "expected_detector": "QUOTE_REOPEN_FETCH_BOUND_MATCH=27/27 on unchanged bytes; a lower score on each of the two mutant runs kills the mutant when the unchanged baseline succeeds.",
+  "checked_sha256_before_scoring": {
+    "tools/quote-reopen.py": "47a657e72f38f9424748a000b3bd218e26b6a601192b68e06a916471222a1201",
+    "corpus/evidence/round30/c1-count.py": "5b312d84365924779ba8e6fe447cad3467f59c11848083d0967528c7a5e9d6e6",
+    "corpus/evidence/round30/c2-count.py": "0a59e3736fed8ef4cf7b00a75955eccfd0336c8a0ca84bee23402408b727f88f",
+    "corpus/evidence/round30/qr_harness.py": "e2be0dd16da5b2bf03430772831763e56c6ff6dd6a44063bb05c909b284f50d4"
+  },
+  "hash_command": "timeout 15 bash -c 'ulimit -v 2097152; ulimit -u 4096; sha256sum tools/quote-reopen.py corpus/evidence/round30/c1-count.py corpus/evidence/round30/c2-count.py corpus/evidence/round30/qr_harness.py'",
+  "hash_command_exit_code": 0,
+  "candidate_sha256": {
+    "before": "47a657e72f38f9424748a000b3bd218e26b6a601192b68e06a916471222a1201",
+    "mutated": "74e07e6ec40f3d11170dfcc10ab0ac52a67fc043e63898845c63e7f3970ff736",
+    "restored": "47a657e72f38f9424748a000b3bd218e26b6a601192b68e06a916471222a1201",
+    "lane_tool_after_restoration": "47a657e72f38f9424748a000b3bd218e26b6a601192b68e06a916471222a1201"
+  },
+  "successful_measurement_limits": {
+    "outer_command": "timeout 310 bash -c '<limits; environment; detector; exit-code print>'",
+    "address_space_limit_kib": 8388608,
+    "process_limit": 32768,
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "MALLOC_ARENA_MAX": "2",
+      "TMPDIR": "/fast/scratch/hyaku/chousa-r30/w2/MutIgnoreDeadlineConst/tmp"
+    },
+    "detector_timeout_s": 300,
+    "per_item_harness_cap_s": 20
+  },
+  "initial_baseline_attempt": {
+    "command": "timeout 300 python3 corpus/evidence/round30/c2-count.py --tool /fast/scratch/hyaku/chousa-r30/w2/MutIgnoreDeadlineConst/mutant.py --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-30/falsify/MutIgnoreDeadlineConst/baseline.json",
+    "address_space_limit_kib": 2097152,
+    "process_limit": 32768,
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "TMPDIR": "/fast/scratch/hyaku/chousa-r30/w2/MutIgnoreDeadlineConst/tmp"
+    },
+    "stdout": "QUOTE_REOPEN_FETCH_BOUND_MATCH=18/27\nEXIT_CODE=1\n",
+    "stderr_observations": ["MemoryError", "RuntimeError: can't start new thread"],
+    "exit_code": 1,
+    "verdict": "inconclusive; excluded from mutant scoring because the unchanged baseline encountered harness resource errors"
+  },
+  "baseline": {
+    "command": "timeout 300 python3 corpus/evidence/round30/c2-count.py --tool /fast/scratch/hyaku/chousa-r30/w2/MutIgnoreDeadlineConst/mutant.py --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-30/falsify/MutIgnoreDeadlineConst/baseline-valid.json",
+    "stdout": "QUOTE_REOPEN_FETCH_BOUND_MATCH=27/27\nEXIT_CODE=0\n",
+    "exit_code": 0,
+    "seed": 5586079008223480255
+  },
+  "run_1": {
+    "command": "timeout 300 python3 corpus/evidence/round30/c2-count.py --tool /fast/scratch/hyaku/chousa-r30/w2/MutIgnoreDeadlineConst/mutant.py --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-30/falsify/MutIgnoreDeadlineConst/run1.json",
+    "stdout": "QUOTE_REOPEN_FETCH_BOUND_MATCH=19/27\nEXIT_CODE=1\n",
+    "exit_code": 1,
+    "seed": 2853834706917417488,
+    "misses_by_kind": {"drip-head": 2, "drip-body": 3, "drip-steady": 2, "stall-body": 1},
+    "misses_other_kinds": 0,
+    "miss_wall_s_range": [20.022, 20.030],
+    "miss_bound_s_range": [3.70, 7.32],
+    "all_misses": {"got": null, "label": "UNREACHABLE", "bound_ok": false, "killed": true, "rc": -9, "validated_only": true}
+  },
+  "run_2": {
+    "command": "timeout 300 python3 corpus/evidence/round30/c2-count.py --tool /fast/scratch/hyaku/chousa-r30/w2/MutIgnoreDeadlineConst/mutant.py --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-30/falsify/MutIgnoreDeadlineConst/run2.json",
+    "stdout": "QUOTE_REOPEN_FETCH_BOUND_MATCH=19/27\nEXIT_CODE=1\n",
+    "exit_code": 1,
+    "seed": 13160673632289755972,
+    "misses_by_kind": {"drip-head": 2, "drip-body": 3, "drip-steady": 2, "stall-body": 1},
+    "misses_other_kinds": 0,
+    "miss_wall_s_range": [20.022, 20.039],
+    "miss_bound_s_range": [3.82, 7.29],
+    "all_misses": {"got": null, "label": "UNREACHABLE", "bound_ok": false, "killed": true, "rc": -9, "validated_only": true}
+  },
+  "restoration": {
+    "copy_command": "cp /fast/scratch/hyaku/chousa-r30/w2/MutIgnoreDeadlineConst/original.py /fast/scratch/hyaku/chousa-r30/w2/MutIgnoreDeadlineConst/mutant.py",
+    "compare_command": "cmp -s /fast/scratch/hyaku/chousa-r30/w2/MutIgnoreDeadlineConst/original.py /fast/scratch/hyaku/chousa-r30/w2/MutIgnoreDeadlineConst/mutant.py",
+    "compare_exit_code": 0,
+    "hash_command": "sha256sum /fast/scratch/hyaku/chousa-r30/w2/MutIgnoreDeadlineConst/original.py /fast/scratch/hyaku/chousa-r30/w2/MutIgnoreDeadlineConst/mutant.py tools/quote-reopen.py",
+    "command": "timeout 300 python3 corpus/evidence/round30/c2-count.py --tool /fast/scratch/hyaku/chousa-r30/w2/MutIgnoreDeadlineConst/mutant.py --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-30/falsify/MutIgnoreDeadlineConst/restored.json",
+    "stdout": "RESTORE_CMP_EXIT_CODE=0\nQUOTE_REOPEN_FETCH_BOUND_MATCH=27/27\nEXIT_CODE=0\n",
+    "exit_code": 0,
+    "seed": 1544174210603009715
+  },
+  "cleanup": {
+    "command": "timeout 15 bash -c 'ulimit -v 8388608; ulimit -u 32768; pgrep -af \"[q]r_harness.py boot /fast/scratch/hyaku/chousa-r30/w2/MutIgnoreDeadlineConst/tmp/|[p]ython3 corpus/evidence/round30/c2-count.py --tool /fast/scratch/hyaku/chousa-r30/w2/MutIgnoreDeadlineConst/mutant.py\"; rc=$?; printf \"PROCESS_SCAN_EXIT_CODE=%s\\n\" \"$rc\"; test \"$rc\" -eq 1'",
+    "stdout": "PROCESS_SCAN_EXIT_CODE=1\n",
+    "pgrep_exit_code": 1,
+    "command_exit_code": 0,
+    "matching_processes": 0
+  },
+  "installs_or_updates": [],
+  "verdict": "KILLED"
+}

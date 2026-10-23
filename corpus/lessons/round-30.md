@@ -73,3 +73,85 @@ Start (base `a3a3710e`): `scripts/sources-census.sh validate --root
 rows, 0 malformed, tier A 43 B 1 C 5, status mined 26 queued 19 rejected 4
 (`.ufo/waves/round-30/build/ScoutCensus.md`). The end census is in SCORECARD.md
 Round 30 and the round report.
+
+### 2026-10-23 corrections to the Gate above (falsify wave)
+
+- S052: the quote is not verbatim. The page reads "In timeout mode, operations
+  fail if they cannot be completed within the timeout specified for the socket
+  (they raise a timeout exception) or if the system returns an error." The
+  located quote is "In timeout mode, operations fail if they cannot be completed
+  within the timeout specified for the socket" (18 words); the landed tool read
+  the Gate version as `ABSENT` (`.ufo/waves/round-30/falsify/AttackRowS052.md`).
+  The row's teaching is unchanged.
+- S055: the teaches cell said "when the socket is connected to a validated
+  address", which the page does not say; corrected in `SOURCES.md`
+  (`falsify/AttackRowS055.md`). S050: its scope said "superseded", which the
+  page does not say; corrected (`falsify/AttackRowS050.md`).
+- The other five Gate quotes were re-opened and the landed tool read each as
+  `VERBATIM` (`falsify/AttackRowS05{0,1,3,4,6}.md`).
+
+## Falsify wave findings (37 seats, `.ufo/waves/round-30/falsify/`)
+
+- C1 holds: 106/106 in every re-run (RerunC1A, B, C: 9 runs; SeparabilityRevs;
+  CriticClaimsAfter 14 runs). The N-version differential agrees on 200 of 200
+  counter documents; 29 disagreements on hand-made shapes the counter does not
+  generate (`DiffC1NVersion.md`). On the real S047 page the round-29 tool reads
+  3 quotes `ABSENT` and the landed tool `VERBATIM` (`LiveS047After.md`).
+- C2 is a miss: 26/27 on 3 of 44 fresh-seed runs of the landed tool
+  (`RerunC2B.md`, `CriticClaimsAfter.md`). Each miss is a slow-ok item refused
+  about 0.07 s after its DEADLINE. RerunC2B's diagnosis: the frozen harness
+  server's listen queue (backlog 5) overflowed on loaded runs, delaying the
+  connection; a scratch copy with backlog 128 scored 27/27 in 18 of 18 runs. The
+  frozen counter is not changed and the claim is not re-scaled.
+- Mutants: killed 9 of 10. Round-29 MutOrder 104, MutSkipScript 66, MutCasefold
+  86 (routed D3 closed on the landed tool); MutHeadBodyOnly 88, MutTitleKept 86;
+  MutNoWatchdog 25/27, MutReResolve 19/27, MutTruncAsFull 25-26/27,
+  MutIgnoreDeadlineConst 19/27. Survivor: MutHeadNoText (text in head does not
+  end it) scores 106/106, because in every headless-text document the inline
+  markup or the next block start tag also ends the head. A coverage gap for a
+  later counter.
+- Separability holds: C2-only revision 78/106 and 27/27; C1-only build 106/106
+  and 12-14/27 (`SeparabilityRevs.md`).
+- No harm: the round-29 counter scored `QUOTE_REOPEN_MATCH=130/130` on the
+  landed tool; `research-gate.sh` unchanged; round-1 command
+  `VERDICT_BEARING_EXPORTS=3/3` (`NoHarmR29Counter.md`). TLS certificate and host
+  name checks still refuse a self-signed or wrong-name certificate
+  (`TlsCertCheck.md`).
+- Security (`SentinelFetchLayer.md`): one validated resolution and TLS identity
+  hold; the total deadline does not cover name resolution or dialing (medium);
+  hop timers are not cancelled (low). Not claimed by C2's counter; carried.
+- Reviews: corrections D1, D2, D4, D5 hold with low findings
+  (`ReviewCorrections.md`: the D1 block understates a second DiffToolB network
+  run; the D4 quote came through NCBI E-utilities, PubMed itself answers 203);
+  QUALITY 26 to 29 pass their cited checks, with two defects in the evidence
+  tools (`ReviewQuality30.md`); knowledge-entry defects fixed above
+  (`ReviewKnowledge30.md`).
+
+## Learning
+
+Author view, for the outside check to rule on: expansion improved (C1 moves the
+missing-`</head>` page class into held ground, with S050 to S056); quality
+unchanged by count, with D1 to D6 repaired and one Gate quote (S052) caught by
+the round's own re-open; discernment improved in process (four pre-data design
+changes, each forced by a control) but C2 shows that a counter with a tight
+timing slack can fail a candidate under host load.
+
+## Seats and holds
+
+Control wave 8 seats (ordinary task call: 4 critic, 4 mutation-tester), build
+wave 32 (validated v1), falsify wave 37 (validated v1): 77 seats. Dead seats:
+CriticHarnessIntegrity (critic) refused with `code=cyber_policy`; CtlShapeKeyed
+(critic) refused on its v3 follow-up ("triggered restrictions on violative
+cyber content"), after its v2 result; CriticS047Live (critic) died on a provider
+quota error (HTTP 429, "Individual quota reached"). Each is a hold, not retried;
+the L1 re-scored CtlShapeKeyed's two committed controls itself
+(`controls/L1Rescore/`). ScribeSrcOptionalTags declined a second GET outside its
+assignment; the L1 opened S050 itself. ReviewContractV2 followed one redirect to
+html.spec.whatwg.org (an unregistered host) and disclosed it.
+
+## Census (end)
+
+`scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa`
+→ `chousa ok`, exit 0, with two W04 warnings (S051 and S050 share a page URL;
+S053 and S052 share a page URL). Rows 49 → 56; tier A 43 → 50; status mined
+26 → 33, queued 19, rejected 4.

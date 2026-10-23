@@ -1203,3 +1203,17 @@ The round-28 entry says no end census had been produced. The fleet witness `.ufo
 ### 2026-10-23 correction to the Round 29 run count (routed defect D2)
 
 The Round 29 entry says there were 6 more wave-2 runs. Committed evidence supports 5 further runs at 130/130: `.ufo/waves/round-29/falsify/RerunCounterA/receipt.json` (seed `16442982337510174646`); `.ufo/waves/round-29/falsify/RerunCounterB/receipt-1.json` (seed `5392061795029416258`) and `receipt-2.json` (seed `1932010155184684229`); `.ufo/waves/round-29/falsify/ScoutFreshnessH/rederive-receipt.json` with `rederive.out` (run 1, seed `13173258806708832500`); and `ScoutFreshnessH/rederive3.out` (run 3, seed `3497534629407128034`). The ScoutFreshnessH report's run 2 row gives seed `12970099299958901445` but points to `rederive3.out`, whose output records run 3's seed; no separate committed output or receipt for the run 2 seed was located. The count is corrected without changing the underlying scores or historical text. Routed by `corpus/lessons/round-29-verifier-spotcheck.md:148-150`.
+
+## Round 30 — 2026-10-23 (quote re-open head boundary and fetch bounds)
+
+Motivating evidence: the round-29 outside spot-check's routed list
+(`corpus/lessons/round-29-verifier-spotcheck.md:141-163`): the missing-`</head>` limit,
+sentinel findings T1 (DNS rebinding) and T4 (slow-drip read), three surviving mutants,
+and repairs D1, D2, D4, D5, D6. Base `a3a3710e`. Design v1 `f42906d7`, v2 `6b1c5177`,
+C2 v3 `7908ce2a`, v4 `abfdf932` (each change made before data, after a control or the
+L1's own read found a leak). Control wave 8 seats; build wave 32; falsify wave 37.
+Landed: C2 fetch layer `33dd643f`, end-of-stream fix `bd43bd53`, C1 head boundary
+`49b2aa30`. C1 78/106 → 106/106; C2 12/27 → 27/27 (receipts
+`.ufo/waves/round-30/measure/`). Sources S050 to S056; QUALITY 26 to 29; corrections for
+D1, D2 (SCORECARD, this file), D4 (`lessons/round-25.md`), D5 (`lessons/round-29.md`);
+D6 code under `.ufo/waves/round-30/build/ExecD6Snapshot/`. Lesson: `corpus/lessons/round-30.md`.

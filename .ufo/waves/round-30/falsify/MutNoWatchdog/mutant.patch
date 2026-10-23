@@ -1,0 +1,12 @@
+--- a/tools/quote-reopen.py
++++ b/tools/quote-reopen.py
+@@ -391,9 +391,6 @@
+             conn = _dial(addrs, port, min(remaining, 5.0), timeout=remaining,
+                          context=ctx, server_hostname=host)
+             holder[0] = conn.sock
+-            watchdog = threading.Timer(remaining, _kill(holder))
+-            watchdog.daemon = True
+-            watchdog.start()
+             conn.request("GET", target, headers={"User-Agent": USER_AGENT,
+                                                   "Accept-Encoding": "gzip",
+                                                   "Accept": "*/*",

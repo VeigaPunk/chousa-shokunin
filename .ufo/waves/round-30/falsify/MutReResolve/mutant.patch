@@ -1,0 +1,11 @@
+--- tools/quote-reopen.py
++++ mutant.py
+@@ -273,7 +273,7 @@
+         sock = socket.socket(af, socket.SOCK_STREAM)
+         try:
+             sock.settimeout(connect_timeout)
+-            sock.connect((a, port))
++            sock.connect(socket.getaddrinfo(server_hostname, port, type=socket.SOCK_STREAM)[0][4])
+             sock.settimeout(timeout)
+             if context is not None:
+                 sock = context.wrap_socket(sock, server_hostname=server_hostname)
