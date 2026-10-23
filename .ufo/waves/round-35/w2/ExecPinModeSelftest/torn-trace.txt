@@ -1,0 +1,357 @@
++ set -euo pipefail
++ shopt -s extglob
++ VERSION=v2
++ SOURCE_READ_MAX_BYTES=8388608
+++ readlink -f -- tools/research-gate.sh
++ SELF=/tmp/hyaku/chousa-r35/w2/ExecPinModeSelftest/clone/tools/research-gate.sh
++++ dirname -- /tmp/hyaku/chousa-r35/w2/ExecPinModeSelftest/clone/tools/research-gate.sh
+++ cd -- /tmp/hyaku/chousa-r35/w2/ExecPinModeSelftest/clone/tools
+++ pwd
++ SCRIPT_DIR=/tmp/hyaku/chousa-r35/w2/ExecPinModeSelftest/clone/tools
+++ cd -- /tmp/hyaku/chousa-r35/w2/ExecPinModeSelftest/clone/tools/..
+++ pwd
++ LANE_ROOT=/tmp/hyaku/chousa-r35/w2/ExecPinModeSelftest/clone
++ MODE=verify
++ RECORD_ARG=
++ REGISTRY_ARG=
++ REGISTRY_ARG_SET=0
++ PIN_ARG=
++ DRIFT_ARG=
++ ROOT_ARG_SET=0
++ AS_OF_ARG_SET=0
++ AS_OF_ARG=
++ ROOT=/tmp/hyaku/chousa-r35/w2/ExecPinModeSelftest/clone
++ STRICT=0
++ AGG_ERE='aggregator|wikipedia|secondary-summary|chat-export-sources'
++ NOW_EPOCH=
++ [[ -n '' ]]
+++ date +%s
++ NOW_EPOCH=1792787762
+++ date -u -d @1792787762 +%Y-%m-%dT%H:%M:%SZ
++ TS_UTC=2026-10-23T20:36:02Z
++ GREP_BIN=
++ GREP_PIN_SOURCE=
++ GREP_PIN_VERSION=
++ N_FINDINGS=0
++ N_DRIFT=0
++ ROLL=CLEAN
++ FINDING_LINES=()
++ declare -a FINDING_LINES
++ N_Q=0
++ N_SRC=0
++ N_CH=0
++ N_CL=0
++ N_NEG=0
++ N_REJ=0
++ N_APPR=0
++ HAS_META=0
++ HAS_SOURCES_SEC=0
++ HAS_CHAIN_SEC=0
++ HAS_CLAIMS_SEC=0
++ HAS_REJ_SEC=0
++ HAS_NEG_SEC=0
++ HAS_APPROVAL_SEC=0
++ HAS_SWEEP_SEC=0
++ SCHEMA_HINT=0
++ WINDOW_EXTERNAL=0
++ APPROVAL_GRANTED=0
++ REJECT_MARKERS=0
++ SEC_BODY=()
++ declare -A SEC_BODY
++ SEC_ORDER=()
++ declare -a SEC_ORDER
++ DEAD_MARK_RE='ephemeral|scratch|historical|unresolved|lost-tree|lost-base|formerly|removed|relocat|labelled-dead|blocked-no-fetch|proposal'
++ SCOPE_BOUNTY='bug bounty|bounty program|bounty programs|bounty hunt|bounty hunting|bounty scope|claim package|claim packages|kasegi'
++ SCOPE_KENGAKU='model quality|model evaluation|model evaluations|model eval|model benchmark|model benchmarks|model scoring|llm quality|llm evaluation|llm eval|llm benchmark|llm benchmarks|llm scoring|language model quality|language model evaluation|kengaku'
++ SCOPE_KUMITATE='orchestration|dispatch mechanism|multi agent dispatch|multiagent dispatch|agent dispatch|swarm wave|swarm waves|swarm call|swarm calls|swarm dispatch|swarm orchestration|fleet dispatch|agent lifecycle|agent lifecycles|agent roster|agent rosters|kumitate'
++ JSON_PRESENT=()
++ JSON_STR=()
++ JSON_DUP=()
++ JSON_DUPDIFF=()
++ declare -A JSON_PRESENT JSON_STR JSON_DUP JSON_DUPDIFF
++ JSON_SCAN_LINE=
++ JSON_SCAN_RC=1
++ TOK_WS=$' \t\n\r\v\f'
++ TOK_PUNCT='!"#$%&()*+,./:;<=>?@[\]^_`{|}~'
++ TOK_DIRECT_SPAN_MAX=32764
++ TOK_CHUNK_BYTES=4096
++ VAS_OUT=
++ VAS_RC=0
++ VAS_VERDICT=
++ VAS_FIND=0
++ VAS_DRIFT=0
++ VAS_COUNTS=
++ VAS_NATIVE=
++ VAS_FINDINGS=
++ GATE_DRIFT_VOLATILE_FIELDS='ts gate_sha256'
++ GATE_BASELINE_MAGIC='# chousa-gate drift baseline v1'
++ GATE_BASELINE_MARKER='# --- canonical output follows ---'
++ GATE_MANIFEST_MARKER='# --- json manifest line follows ---'
++ GATE_CAP=
++ GATE_CAP_RC=0
++ GATE_CAP_NOTE=
++ GATE_CAP_DIR=
++ GATE_REPORT=
++ GDRIFT_KEYS=()
++ GDRIFT_KEYVAL=()
++ declare -A GDRIFT_KEYVAL
++ [[ 2 -gt 0 ]]
++ case "$1" in
++ MODE=verify
++ shift
++ [[ 1 -gt 0 ]]
++ case "$1" in
++ [[ -z '' ]]
++ RECORD_ARG=/tmp/hyaku/chousa-r35/w2/ExecPinModeSelftest/rec.md
++ shift
++ [[ 0 -gt 0 ]]
++ [[ verify != all ]]
++ [[ -n '' ]]
++ [[ -n '' ]]
++ ((  AS_OF_ARG_SET  ))
++ (( REGISTRY_ARG_SET ))
++ grep_pin_init
++ local cand= c=
++ [[ -n '' ]]
++ GREP_PIN_SOURCE=default
++ for c in /usr/bin/grep /bin/grep
++ grep_pin_verify /usr/bin/grep
++ local cand=/usr/bin/grep v
++ [[ -f /usr/bin/grep ]]
++ [[ -x /usr/bin/grep ]]
+++ /usr/bin/grep --version
+++ head -n 1
++ v='grep (GNU grep) 3.12-modified'
++ GREP_PIN_VERSION='grep (GNU grep) 3.12-modified'
++ case "$v" in
++ return 0
++ cand=/usr/bin/grep
++ break
++ [[ -z /usr/bin/grep ]]
++ [[ -n /usr/bin/grep ]]
++ GREP_BIN=/usr/bin/grep
++ [[ 0 == 1 ]]
++ [[ verify == pin ]]
++ [[ verify == drift ]]
++ case "$MODE" in
++ RECORD_PATH=/tmp/hyaku/chousa-r35/w2/ExecPinModeSelftest/rec.md
++ verify_record /tmp/hyaku/chousa-r35/w2/ExecPinModeSelftest/rec.md
++ local record=/tmp/hyaku/chousa-r35/w2/ExecPinModeSelftest/rec.md
++ ROOT=/tmp/hyaku/chousa-r35/w2/ExecPinModeSelftest/clone
++ [[ -n /tmp/hyaku/chousa-r35/w2/ExecPinModeSelftest/rec.md ]]
++ [[ -e /tmp/hyaku/chousa-r35/w2/ExecPinModeSelftest/rec.md ]]
++ [[ -f /tmp/hyaku/chousa-r35/w2/ExecPinModeSelftest/rec.md ]]
++ [[ -r /tmp/hyaku/chousa-r35/w2/ExecPinModeSelftest/rec.md ]]
++ FINDING_LINES=()
++ N_FINDINGS=0
++ N_DRIFT=0
++ ROLL=CLEAN
++ N_Q=0
++ N_SRC=0
++ N_CH=0
++ N_CL=0
++ N_NEG=0
++ N_REJ=0
++ N_APPR=0
++ HAS_META=0
++ HAS_SOURCES_SEC=0
++ HAS_CHAIN_SEC=0
++ HAS_CLAIMS_SEC=0
++ HAS_REJ_SEC=0
++ HAS_NEG_SEC=0
++ HAS_APPROVAL_SEC=0
++ HAS_SWEEP_SEC=0
++ SCHEMA_HINT=0
++ WINDOW_EXTERNAL=0
++ APPROVAL_GRANTED=0
++ REJECT_MARKERS=0
++ head -n 5 -- /tmp/hyaku/chousa-r35/w2/ExecPinModeSelftest/rec.md
++ grep -qE 'research-record v1|chousa-record: v1'
++ command /usr/bin/grep -qE 'research-record v1|chousa-record: v1'
++ builtin command /usr/bin/grep -qE 'research-record v1|chousa-record: v1'
++ load_sections /tmp/hyaku/chousa-r35/w2/ExecPinModeSelftest/rec.md
++ local file=/tmp/hyaku/chousa-r35/w2/ExecPinModeSelftest/rec.md line sec=
++ SEC_BODY=()
++ SEC_ORDER=()
++ LINES=()
++ local -a LINES
++ local fence_char= fence_len=0 unclosed=-1
++ local i n c l
++ IFS=
++ read -r line
++ LINES+=("$line")
++ IFS=
++ read -r line
++ LINES+=("$line")
++ IFS=
++ read -r line
++ LINES+=("$line")
++ IFS=
++ read -r line
++ LINES+=("$line")
++ IFS=
++ read -r line
++ LINES+=("$line")
++ IFS=
++ read -r line
++ LINES+=("$line")
++ IFS=
++ read -r line
++ LINES+=("$line")
++ IFS=
++ read -r line
++ LINES+=("$line")
++ IFS=
++ read -r line
++ [[ -n '' ]]
++ n=8
++ (( i = 0 ))
++ (( i < n ))
++ line='# Test'
++ [[ -n '' ]]
++ [[ # Test =~ ^ {0,3}(`{3,}|~{3,})(.*)$ ]]
++ (( i++ ))
++ (( i < n ))
++ line='## Question'
++ [[ -n '' ]]
++ [[ ## Question =~ ^ {0,3}(`{3,}|~{3,})(.*)$ ]]
++ (( i++ ))
++ (( i < n ))
++ line=q
++ [[ -n '' ]]
++ [[ q =~ ^ {0,3}(`{3,}|~{3,})(.*)$ ]]
++ (( i++ ))
++ (( i < n ))
++ line='## Sources'
++ [[ -n '' ]]
++ [[ ## Sources =~ ^ {0,3}(`{3,}|~{3,})(.*)$ ]]
++ (( i++ ))
++ (( i < n ))
++ line=
++ [[ -n '' ]]
++ [[ '' =~ ^ {0,3}(`{3,}|~{3,})(.*)$ ]]
++ (( i++ ))
++ (( i < n ))
++ line='| id | path | tier |'
++ [[ -n '' ]]
++ [[ | id | path | tier | =~ ^ {0,3}(`{3,}|~{3,})(.*)$ ]]
++ (( i++ ))
++ (( i < n ))
++ line='|---|---|---|'
++ [[ -n '' ]]
++ [[ |---|---|---| =~ ^ {0,3}(`{3,}|~{3,})(.*)$ ]]
++ (( i++ ))
++ (( i < n ))
++ line='| S001 | lib/primary.md | primary |'
++ [[ -n '' ]]
++ [[ | S001 | lib/primary.md | primary | =~ ^ {0,3}(`{3,}|~{3,})(.*)$ ]]
++ (( i++ ))
++ (( i < n ))
++ [[ -n '' ]]
++ unclosed=-1
++ local in_comment=0
++ fence_char=
++ fence_len=0
++ (( i = 0 ))
++ (( i < n ))
++ line='# Test'
++ [[ -n '' ]]
++ [[ 0 -eq 1 ]]
++ [[ # Test =~ ^ {0,3}(`{3,}|~{3,})(.*)$ ]]
++ [[ # Test == *<\!\-\-* ]]
++ [[ # Test =~ ^##[[:space:]]+(.*)$ ]]
++ [[ -z '' ]]
++ continue
++ (( i++ ))
++ (( i < n ))
++ line='## Question'
++ [[ -n '' ]]
++ [[ 0 -eq 1 ]]
++ [[ ## Question =~ ^ {0,3}(`{3,}|~{3,})(.*)$ ]]
++ [[ ## Question == *<\!\-\-* ]]
++ [[ ## Question =~ ^##[[:space:]]+(.*)$ ]]
+++ printf %s Question
+++ sed 's/[[:space:]]*$//'
++ sec=Question
++ case "$sec" in
++ SEC_ORDER+=("$sec")
++ SEC_BODY[$sec]=
++ continue
++ (( i++ ))
++ (( i < n ))
++ line=q
++ [[ -n '' ]]
++ [[ 0 -eq 1 ]]
++ [[ q =~ ^ {0,3}(`{3,}|~{3,})(.*)$ ]]
++ [[ q == *<\!\-\-* ]]
++ [[ q =~ ^##[[:space:]]+(.*)$ ]]
++ [[ -z Question ]]
++ SEC_BODY[$sec]+=$'q\n'
++ (( i++ ))
++ (( i < n ))
++ line='## Sources'
++ [[ -n '' ]]
++ [[ 0 -eq 1 ]]
++ [[ ## Sources =~ ^ {0,3}(`{3,}|~{3,})(.*)$ ]]
++ [[ ## Sources == *<\!\-\-* ]]
++ [[ ## Sources =~ ^##[[:space:]]+(.*)$ ]]
+++ printf %s Sources
+++ sed 's/[[:space:]]*$//'
++ sec=Sources
++ case "$sec" in
++ SEC_ORDER+=("$sec")
++ SEC_BODY[$sec]=
++ continue
++ (( i++ ))
++ (( i < n ))
++ line=
++ [[ -n '' ]]
++ [[ 0 -eq 1 ]]
++ [[ '' =~ ^ {0,3}(`{3,}|~{3,})(.*)$ ]]
++ [[ '' == *<\!\-\-* ]]
++ [[ '' =~ ^##[[:space:]]+(.*)$ ]]
++ [[ -z Sources ]]
++ SEC_BODY[$sec]+=$'\n'
++ (( i++ ))
++ (( i < n ))
++ line='| id | path | tier |'
++ [[ -n '' ]]
++ [[ 0 -eq 1 ]]
++ [[ | id | path | tier | =~ ^ {0,3}(`{3,}|~{3,})(.*)$ ]]
++ [[ | id | path | tier | == *<\!\-\-* ]]
++ [[ | id | path | tier | =~ ^##[[:space:]]+(.*)$ ]]
++ [[ -z Sources ]]
++ SEC_BODY[$sec]+=$'| id | path | tier |\n'
++ (( i++ ))
++ (( i < n ))
++ line='|---|---|---|'
++ [[ -n '' ]]
++ [[ 0 -eq 1 ]]
++ [[ |---|---|---| =~ ^ {0,3}(`{3,}|~{3,})(.*)$ ]]
++ [[ |---|---|---| == *<\!\-\-* ]]
++ [[ |---|---|---| =~ ^##[[:space:]]+(.*)$ ]]
++ [[ -z Sources ]]
++ SEC_BODY[$sec]+=$'|---|---|---|\n'
++ (( i++ ))
++ (( i < n ))
++ line='| S001 | lib/primary.md | primary |'
++ [[ -n '' ]]
++ [[ 0 -eq 1 ]]
++ [[ | S001 | lib/primary.md | primary | =~ ^ {0,3}(`{3,}|~{3,})(.*)$ ]]
++ [[ | S001 | lib/primary.md | primary | == *<\!\-\-* ]]
++ [[ | S001 | lib/primary.md | primary | =~ ^##[[:space:]]+(.*)$ ]]
++ [[ -z Sources ]]
++ SEC_BODY[$sec]+=$'| S001 | lib/primary.md | primary |\n'
++ (( i++ ))
++ (( i < n ))
++ local s
++ for s in "${SEC_ORDER[@]+"${SEC_ORDER[@]}"}"
++ case "$s" in
++ for s in "${SEC_ORDER[@]+"${SEC_ORDER[@]}"}"
++ case "$s" in
++ HAS_SOURCES_SEC=1
++ [[ 0 -eq 0 ]]
++ [[ 1 -eq 0 ]]
++ grep -qE '^(Skip to content|ChatGPT|You said:)' /tmp/hyaku/chousa-r35/w2/ExecPinModeSelftest/rec.md
++ command /usr/bin/grep -qE '^(Skip to content|ChatGPT|You said:)' /tmp/hyaku/chousa-r35/w2/ExecPinModeSelftest/rec.md
++ builtin command /usr/bin/grep -qE '^(Skip to content|ChatGPT|You said:)' /tmp/hyaku/chousa-r35/w2/ExecPinModeSelftest/rec.md
