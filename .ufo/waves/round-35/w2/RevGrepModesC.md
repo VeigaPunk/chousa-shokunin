@@ -30,6 +30,12 @@ bash tools/research-gate.sh --drift $S/out/$ENV/baseline.txt      # ECHO=0
 bash tools/research-gate.sh --selftest                            # ECHO=1
 ```
 
+PUT 54.=54.:
+2. **Refused override exits 2 before case 1.** `--selftest` with `RESEARCH_GATE_GREP` ∈ {`/bin/false`, `binenv/notgnu` (prints `pi-uu-grep 0.2.0`), `relative/path`, `/nonexistent/grep`} → each `rc=2`, stdout **0 bytes**, `0` `ok-case`/`FAIL-case` lines; stderr exactly `research-gate: GREP_PROVENANCE refused: …` (four distinct reasons). `grep_pin_init` runs before `run_selftest`'s first `mktemp`, so nothing of the battery starts. `--pin` is likewise fail-closed: `RESEARCH_GATE_GREP=/bin/false bash gate --pin X` → `rc=2`, refusal message, **no baseline written** — the parent's `grep_pin_init` (:8039) refuses before `run_pin` spawns its inner child (which would refuse identically, since every child re-runs the pin).
+
+**Cross-env drift, echo off (measured).** `--drift out/e0/baseline.txt` under ea/eb/ec with `CHOUSA_GREP_PIN_ECHO` unset: `GATE_DRIFT: none`, rc=0 in all three. With echo set it reports `GATE_DRIFT: +LINE` rc=1 — see F1.
+**Refused pin mode (measured).** `RESEARCH_GATE_GREP=/bin/false bash tools/research-gate.sh --pin X` → rc 2, `research-gate: GREP_PROVENANCE refused: override does not report GNU grep: false (GNU coreutils) 9.12`, and no baseline file written — the parent's `grep_pin_init` (:8039) refuses before `run_pin`/its inner child runs, so pin/drift are fail-closed before fixture creation.
+
 Per-env rc file: `out/{e0,ea,eb,ec}/rcs.txt` — identical in all four envs:
 
 | mode | rc (all envs) | verdict tail |
@@ -42,7 +48,6 @@ Per-env rc file: `out/{e0,ea,eb,ec}/rcs.txt` — identical in all four envs:
 
 **Byte-identity (the pin question).** For every mode, stdout is `cmp`-identical to e0 in ea/eb/ec; stderr is identical except the `GATE_GREP:` echo line (which differs only in `source=default` vs `source=override` for ec). `m.jsonl` and `baseline.txt` are byte-identical across all four envs (baseline sha256 `028a64ed…`; m.jsonl `cbb38a90…`). Tripwires: `logs/shim-tripwire.log` and `logs/bashenv-tripwire.log` **never existed** after all runs — neither the PATH shim nor the BASH_ENV function was invoked once, in any mode, including every selftest child.
 
-**Cross-env drift.** `bash tools/research-gate.sh --drift out/e0/baseline.txt` under ea/eb/ec → `GATE_DRIFT: none`… see caveat F1 below (that command was first run with `CHOUSA_GREP_PIN_ECHO=1`, where it reports `GATE_DRIFT: +LINE`; with echo off it is `none`).
 
 ## --selftest: the important mode
 

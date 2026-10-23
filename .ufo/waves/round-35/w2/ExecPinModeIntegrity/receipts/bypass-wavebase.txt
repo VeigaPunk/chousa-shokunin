@@ -1,0 +1,59 @@
+
+=== V0-stub-alone-refused (integ) ===
+exit=2
+integrity_line=NONE
+claim_line=NONE
+claims_summary=NONE
+verdict_line=NONE
+refusal=research-gate: GREP_PROVENANCE refused: override does not report GNU grep: <no version> (candidate=/tmp/hyaku/chousa-r35/w2/ExecPinModeIntegrity/logs/bypass/stub-grep)
+grep_line=NONE
+
+=== V1-path-head-shim (integ) ===
+exit=0
+integrity_line=INTEGRITY refs=16 resolved=15 unresolved=0
+claim_line=NONE
+claims_summary=NONE
+verdict_line=RESEARCH_GATE: CLEAN (refs=16 resolved=15 unresolved=0 exempt=1 findings=0 drift=0)
+refusal=NONE
+grep_line=GATE_GREP: path=/tmp/hyaku/chousa-r35/w2/ExecPinModeIntegrity/logs/bypass/stub-grep source=override version="grep (GNU grep) 9.99-SPOOFED"
+
+=== V2-bashenv-head-shim (integ) ===
+exit=0
+integrity_line=INTEGRITY refs=16 resolved=15 unresolved=0
+claim_line=NONE
+claims_summary=NONE
+verdict_line=RESEARCH_GATE: CLEAN (refs=16 resolved=15 unresolved=0 exempt=1 findings=0 drift=0)
+refusal=NONE
+grep_line=GATE_GREP: path=/tmp/hyaku/chousa-r35/w2/ExecPinModeIntegrity/logs/bypass/stub-grep source=override version="grep (GNU grep) 9.99-SPOOFED"
+
+=== V3-path-head-shim-claims (claims) ===
+exit=1
+integrity_line=NONE
+claim_line=CLAIM id=K1 expected=supported observed=unsupported source=corpus/fixtures/integrity-r7.md at=- verdict=mismatch
+claims_summary=VERDICT_BEARING_CLAIMS=0/1
+verdict_line=RESEARCH_GATE: DRIFT (claims=1 supported=0 contradicted=0 unsupported=1 mismatched=1 unproven=0 refused=0 invalid=0 findings=1 drift=1)
+refusal=NONE
+grep_line=GATE_GREP: path=/tmp/hyaku/chousa-r35/w2/ExecPinModeIntegrity/logs/bypass/stub-grep source=override version="grep (GNU grep) 9.99-SPOOFED"
+
+=== V4-real-grep-path-head-shim (claims) ===
+exit=0
+integrity_line=NONE
+claim_line=CLAIM id=K1 expected=supported observed=supported source=corpus/fixtures/integrity-r7.md at=line:1 verdict=match
+claims_summary=VERDICT_BEARING_CLAIMS=1/1
+verdict_line=RESEARCH_GATE: CLEAN (claims=1 supported=1 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)
+refusal=NONE
+grep_line=GATE_GREP: path=/usr/bin/grep source=override version="grep (GNU grep) 9.99-SPOOFED"
+
+=== V5-logging-stub-bypass (claims) ===
+exit=1
+integrity_line=NONE
+claim_line=CLAIM id=K1 expected=supported observed=unsupported source=corpus/fixtures/integrity-r7.md at=- verdict=mismatch
+claims_summary=VERDICT_BEARING_CLAIMS=0/1
+verdict_line=RESEARCH_GATE: DRIFT (claims=1 supported=0 contradicted=0 unsupported=1 mismatched=1 unproven=0 refused=0 invalid=0 findings=1 drift=1)
+refusal=NONE
+grep_line=GATE_GREP: path=/tmp/hyaku/chousa-r35/w2/ExecPinModeIntegrity/logs/bypass/stub-logging-grep source=override version="grep (GNU grep) 9.99-SPOOFED"
+
+=== V5 stub call log (proves the stub ran as the matcher) ===
+--version
+-a -z -b -o -P -- x
+-a -z -b -o -P -- \x72\x65\x73\x65\x61\x72\x63\x68\x2d\x72\x65\x63\x6f\x72\x64\x20\x76\x31
