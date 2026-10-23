@@ -22,7 +22,8 @@
 #   SESSION_READ RECORD_SCHEMA_INVALID EXPORT_CHROME_PRESENT
 #   CLAIM_RECORD_INVALID CLAIM_SOURCE_EXTERNAL CLAIM_SOURCE_OUT_OF_CORPUS
 #   CLAIM_SOURCE_SESSION CLAIM_SOURCE_EPHEMERAL CLAIM_SOURCE_MISSING
-#   CLAIM_SPAN_NOT_FOUND CLAIM_SPAN_UNEXPECTED CONTRADICTION_MARKER_ABSENT
+#   CLAIM_SPAN_NOT_FOUND CLAIM_SPAN_UNEXPECTED CLAIM_LINE_MISMATCH
+#   CONTRADICTION_MARKER_ABSENT
 #   SWEEP_REJECTION_INCOMPLETE SWEEP_LOCATION_ABSENT SWEEP_LOCATION_UNRESOLVED
 #   SWEEP_LOCATION_OUT_OF_CORPUS SWEEP_CLAIM_FALSE REF_UNRESOLVED
 #   VERIFY_ALL_CLAIMS_UNRESOLVED VERIFY_ALL_SECTION_UNAVAILABLE
@@ -45,7 +46,16 @@
 # against its cited source. Blank lines and #-comment lines are ignored; a
 # {"marker_default":…} line sets the default contradiction marker and is not a
 # claim. Every other line is one JSON claim {"id","source","span","expect"} with
-# expect supported|contradicted|unsupported. Sources are local files under the
+# expect supported|contradicted|unsupported. A claim may also name the source
+# lines its span must occupy: the optional JSON string field "line" holds "N"
+# or "N-M" (N>=1, M>N, decimal, no leading zeros, no spaces). A present "line"
+# with any other value (empty, non-string, malformed) makes the record invalid.
+# When "line" is present and the span has a boundary-delimited occurrence, the
+# claim is bound iff some delimited occurrence starts on line N and ends on
+# line N or M; bound claims keep the existing verdict (at= set to that
+# occurrence), unbound claims report observed=mislocated with
+# CLAIM_LINE_MISMATCH (warn, drift). Span absent with "line" present behaves as
+# today (observed=unsupported). Sources are local files under the
 # same boundary as verify pointers (canonicalized; session paths denied, URLs
 # refused — never fetched). expect=contradicted additionally needs a marker the
 # fixture names explicitly (per-claim "marker" or the default) to byte-co-occur
@@ -66,7 +76,7 @@
 # limit (mount-alias-r14.md). Probe order at the chokepoint is nlink, then
 # size, then device — a combined source reports the earliest class.
 # Per claim: CLAIM id=… expected=… observed=… source=… at=… verdict=…
-#   observed: supported|contradicted|unsupported|unproven|refused|invalid
+#   observed: supported|contradicted|unsupported|unproven|refused|invalid|mislocated
 #   verdict:  match|mismatch|refused|invalid
 # Summary: VERDICT_BEARING_CLAIMS=N/M — N claims whose observed status matched
 # the pre-registered expectation, over the M claims read; CLEAN only when N=M.
@@ -324,7 +334,12 @@ usage: research-gate.sh [--selftest] [--help]
   --root .. reports META_RECHECK_ROOT_PARENT (info).
   Claims file: one JSON object per claim line:
     {"id":…,"source":…,"span":…,"expect":supported|contradicted|unsupported
-     [,"marker":…]}
+     [,"marker":…][,"line":"N"|"N-M"]}
+  A present "line" (N>=1, M>N, decimal, no leading zeros, no spaces) pins
+  the span to exactly that source line range: bound iff some boundary-delimited
+  occurrence spans it (at= set to that occurrence); otherwise observed=
+  mislocated with FINDING CLAIM_LINE_MISMATCH (warn, drift). Any other present
+  "line" value makes the record invalid (observed=invalid).
   Spans must appear verbatim in sources at token boundaries; sources are
   local files only.
   Chain mode: each hop with status=resolved must cite a source (a source id
@@ -1068,6 +1083,15 @@ json_str() { # LINE KEY -> raw JSON string body on stdout (escapes intact); rc=1
 
 jfield() { json_str "$1" "$2" 2>/dev/null || true; }
 
+json_has_key() { # LINE KEY -> rc0: KEY appears as a JSON object key (any value type)
+  # json_str only matches string values; presence is detected independently so a
+  # present non-string value (number, bool, null, …) is distinguishable from an
+  # absent key. Same shape as json_str (flat record objects), so a key appearing
+  # inside a string value is not seen as a field.
+  local re="\"${2}\"[[:space:]]*:"
+  [[ $1 =~ $re ]]
+}
+
 json_unescape() { # RAW JSON string body -> decoded bytes on stdout
   local s=$1 out='' i c hex cp
   local n=${#s}
@@ -1321,6 +1345,33 @@ tok_span_at() { # HAY SPAN -> TOK_AT (line:N|lines:N-M) + TOK_L1/TOK_L2
   return 1
 }
 
+tok_span_all() { # HAY SPAN -> stdout: "L1 L2" per boundary-delimited occurrence
+  # rc0: at least one delimited occurrence; rc1: none. Same matcher and
+  # boundary rules as tok_span_at, but every delimited occurrence is emitted
+  # (tok_span_at stops at the first) with its 1-based start and end lines.
+  local LC_ALL=C
+  export LC_ALL
+  local hay=$1 span=$2 before after occurrence offset regex='' i c hex l1 l2 found=0
+  [[ -n $span ]] || return 1
+  for ((i = 0; i < ${#span}; i++)); do
+    c=${span:i:1}
+    printf -v hex '%02x' "'$c"
+    regex+="\\x$hex"
+  done
+  while IFS= read -r -d '' occurrence; do
+    offset=${occurrence%%:*}
+    before=${hay:0:offset}
+    after=${hay:offset+${#span}}
+    if tok_left_ok "$before" "$span" && tok_right_ok "$after" "$span"; then
+      found=1
+      l1=$(( $(count_nl "$before") + 1 ))
+      l2=$(( l1 + $(count_nl "$span") ))
+      printf '%d %d\n' "$l1" "$l2"
+    fi
+  done < <(printf '%s' "$hay" | grep -a -z -b -o -P -- "$regex")
+  [[ $found -eq 1 ]]
+}
+
 token_matcher_require() {
   if printf 'x' | grep -a -z -b -o -P -- 'x' >/dev/null 2>&1; then return 0; fi
   printf 'research-gate: GNU grep with -z/-P support is required for claims and chain token matching\n' >&2
@@ -1343,6 +1394,7 @@ verify_claims() {
   local -a CLAIM_LINES=()
   local id src span expect marker observed verdict at bad l
   local hay start_line end_line region m probe nearer tok ctx path show_id show_exp
+  local linef='' line_n=0 line_m=0 line_present=0 lbad='' bound l1 l2
 
   scan_secrets "$claims"
 
@@ -1369,6 +1421,16 @@ verify_claims() {
     span=$(json_unescape "$(jfield "$line" span)"; printf x); span=${span%x}
     expect=$(json_unescape "$(jfield "$line" expect)")
     marker=$(json_unescape "$(jfield "$line" marker)")
+    # C1: optional "line" field. json_str reads string values; json_has_key
+    # detects a present key of ANY value type, so a present empty or non-string
+    # value is distinguishable from an absent key (both are invalid).
+    line_present=0; linef=''; lbad=''
+    if json_has_key "$line" line; then
+      line_present=1
+      if json_str "$line" line >/dev/null 2>&1; then
+        linef=$(json_unescape "$(jfield "$line" line)")
+      fi
+    fi
     bad=''
     if [[ -z $id ]]; then bad="missing id"
     elif [[ -z $src ]]; then bad="missing source"
@@ -1381,6 +1443,25 @@ verify_claims() {
       esac
       if [[ -z $bad && $expect != contradicted && -n $marker ]]; then
         bad="marker present but expect=$expect (fixture violation)"
+      fi
+    fi
+    if [[ -z $bad && $line_present -eq 1 ]]; then
+      if [[ -z $linef ]]; then
+        bad="line not a JSON string"
+      elif [[ $linef =~ ^[1-9][0-9]*$ ]]; then
+        line_n=$linef; line_m=$linef
+      elif [[ $linef =~ ^([1-9][0-9]*)-([1-9][0-9]*)$ ]]; then
+        line_n=${BASH_REMATCH[1]}; line_m=${BASH_REMATCH[2]}
+        # Decimal compare without arithmetic: same-length leading-zero-free
+        # digit strings compare lexicographically == numerically; M<=N is
+        # rejected (equality, shorter, or lexicographically smaller).
+        if [[ $line_m == "$line_n" ]] \
+           || [[ ${#line_m} -lt ${#line_n} ]] \
+           || { [[ ${#line_m} -eq ${#line_n} && $line_m < $line_n ]]; }; then
+          bad="line range M<=N"
+        fi
+      else
+        bad="line value malformed"
       fi
     fi
     if [[ -n $bad ]]; then
@@ -1406,26 +1487,50 @@ verify_claims() {
       start_line=$TOK_L1
       end_line=$TOK_L2
       at=$TOK_AT
-      case "$expect" in
-        supported) observed=supported ;;
-        unsupported)
-          observed=supported
-          emit_finding CLAIM_SPAN_UNEXPECTED warn claims "id=$id at=$at span present but expect=unsupported"
-          ;;
-        contradicted)
-          region=$(printf '%s\n' "$hay" | sed -n "${start_line},${end_line}p")
-          m=${marker:-$default_marker}
-          if [[ -z $m ]]; then
-            observed=unproven
-            emit_finding CONTRADICTION_MARKER_ABSENT warn claims "id=$id at=$at no marker defined (per-claim or marker_default)"
-          elif [[ $region == *"$m"* ]]; then
-            observed=contradicted
-          else
-            observed=unproven
-            emit_finding CONTRADICTION_MARKER_ABSENT warn claims "id=$id at=$at declared marker not found within span lines"
+      bound=1
+      if [[ $line_present -eq 1 ]]; then
+        # C1: bind iff some boundary-delimited occurrence spans exactly the
+        # named line range. tok_span_at stops at the first occurrence, so all
+        # delimited occurrences are enumerated and compared; at= follows the
+        # bound occurrence (or stays the first when none binds).
+        bound=0
+        while read -r l1 l2; do
+          # string equality: both sides are leading-zero-free decimals, so it
+          # equals numeric equality without arithmetic on untrusted digits (r31)
+          if [[ $l1 == "$line_n" && $l2 == "$line_m" ]]; then
+            start_line=$l1
+            end_line=$l2
+            if [[ $l1 -eq $l2 ]]; then at=line:$l1; else at=lines:$l1-$l2; fi
+            bound=1
+            break
           fi
-          ;;
-      esac
+        done < <(tok_span_all "$hay" "$span")
+      fi
+      if [[ $bound -eq 1 ]]; then
+        case "$expect" in
+          supported) observed=supported ;;
+          unsupported)
+            observed=supported
+            emit_finding CLAIM_SPAN_UNEXPECTED warn claims "id=$id at=$at span present but expect=unsupported"
+            ;;
+          contradicted)
+            region=$(printf '%s\n' "$hay" | sed -n "${start_line},${end_line}p")
+            m=${marker:-$default_marker}
+            if [[ -z $m ]]; then
+              observed=unproven
+              emit_finding CONTRADICTION_MARKER_ABSENT warn claims "id=$id at=$at no marker defined (per-claim or marker_default)"
+            elif [[ $region == *"$m"* ]]; then
+              observed=contradicted
+            else
+              observed=unproven
+              emit_finding CONTRADICTION_MARKER_ABSENT warn claims "id=$id at=$at declared marker not found within span lines"
+            fi
+            ;;
+        esac
+      else
+        observed=mislocated
+        emit_finding CLAIM_LINE_MISMATCH warn claims "id=$id line=$line_n-$line_m first_delimited_occurrence=$TOK_AT"
+      fi
     else
       at=-
       case "$expect" in
@@ -6567,6 +6672,92 @@ EOF
   else
     printf 'ok-case  %-2d %-28s accepted=0\n' "$cases" metadata-asof-usage-matcher-fault
   fi
+
+  # ---- round-31 C1 selftest cases (after the r27 matcher-fault case): ----
+  # optional "line" field (claim location binding). The fixture source has
+  # delimited occurrences of named spans on specific lines, a glued copy and a
+  # prefix on other lines, and a multi-line span; every contract rule gets a
+  # pass and a fail case.
+  mkdir -p "$WORK/lib"
+  cat >"$WORK/lib/span.md" <<'EOF'
+alpha beta gamma delta
+epsilon zeta eta theta
+iota kappa lambda mu
+nu xi omicron pi
+rho sigma tau upsilon
+phi chi psi omega
+trailing gamma delta
+epsilon zeta leading
+omega phi chi psi
+iota kappa lambda muX appended
+iota kappa lambda mu again
+EOF
+  # bound: single line, later delimited occurrence (enumeration), multi-line
+  # ranges, and span absent with "line" present (unsupported, unchanged).
+  cat >"$WORK/c1-pass-bound.jsonl" <<'EOF'
+{"id":"L1","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","line":"1"}
+{"id":"B1","source":"lib/span.md","span":"iota kappa lambda mu","expect":"supported","line":"11"}
+{"id":"ML1","source":"lib/span.md","span":"gamma delta\nepsilon zeta","expect":"supported","line":"7-8"}
+{"id":"ML2","source":"lib/span.md","span":"zeta eta theta\niota","expect":"supported","line":"2-3"}
+{"id":"U1","source":"lib/span.md","span":"never present anywhere","expect":"unsupported","line":"3"}
+EOF
+  tclaims c1-pass-bound 0 \
+    'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=5/5' \
+    'CLAIM id=L1 expected=supported observed=supported source=lib/span.md at=line:1 verdict=match' \
+    'CLAIM id=B1 expected=supported observed=supported source=lib/span.md at=line:11 verdict=match' \
+    'CLAIM id=ML1 expected=supported observed=supported source=lib/span.md at=lines:7-8 verdict=match' \
+    'CLAIM id=ML2 expected=supported observed=supported source=lib/span.md at=lines:2-3 verdict=match' \
+    'CLAIM id=U1 expected=unsupported observed=unsupported source=lib/span.md at=- verdict=match'
+  # mislocated: wrong line, glued copy on named line, prefix on named line,
+  # wrong multi-line range, past EOF, and two real occurrences with a third
+  # line named.
+  cat >"$WORK/c1-fail-mislocated.jsonl" <<'EOF'
+{"id":"M1","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","line":"4"}
+{"id":"G1","source":"lib/span.md","span":"iota kappa lambda mu","expect":"supported","line":"10"}
+{"id":"P1","source":"lib/span.md","span":"phi chi psi omega","expect":"supported","line":"9"}
+{"id":"MR1","source":"lib/span.md","span":"gamma delta\nepsilon zeta","expect":"supported","line":"7-9"}
+{"id":"E1","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","line":"99"}
+{"id":"T1","source":"lib/span.md","span":"iota kappa lambda mu","expect":"supported","line":"5"}
+EOF
+  tclaims c1-fail-mislocated 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING CLAIM_LINE_MISMATCH severity=warn surface=claims' \
+    'obs=id=E1 line=99-99 first_delimited_occurrence=line:1' \
+    'obs=id=G1 line=10-10 first_delimited_occurrence=line:3' \
+    'obs=id=MR1 line=7-9 first_delimited_occurrence=lines:1-2' \
+    'obs=id=T1 line=5-5 first_delimited_occurrence=line:3' \
+    'observed=mislocated' 'VERDICT_BEARING_CLAIMS=0/6' \
+    'claims=6 supported=0 contradicted=0 unsupported=0 mismatched=6 unproven=0 refused=0 invalid=0 findings=6 drift=6'
+  # invalid present "line" values: leading zero, zero, M<=N, spaces, dangling
+  # dash, non-decimal, en-dash, empty string, and a non-string value.
+  cat >"$WORK/c1-fail-invalid-line.jsonl" <<'EOF'
+{"id":"I0","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","line":"0"}
+{"id":"I07","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","line":"07"}
+{"id":"I53","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","line":"5-3"}
+{"id":"I44","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","line":"4-4"}
+{"id":"Is","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","line":" 4"}
+{"id":"It","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","line":"4 "}
+{"id":"Id","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","line":"4-"}
+{"id":"Im","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","line":"-4"}
+{"id":"Ix","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","line":"x7"}
+{"id":"Ids","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","line":"1.5"}
+{"id":"Ie","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","line":"4–5"}
+{"id":"Ie2","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","line":""}
+{"id":"In","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","line":5}
+EOF
+  tclaims c1-fail-invalid-line 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING CLAIM_RECORD_INVALID' \
+    'line range M<=N' 'line value malformed' 'line not a JSON string' \
+    'observed=invalid' 'VERDICT_BEARING_CLAIMS=0/13' \
+    'claims=13 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=13 findings=13 drift=13'
+  # "line" absent: behaviour unchanged.
+  cat >"$WORK/c1-pass-no-line.jsonl" <<'EOF'
+{"id":"N1","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported"}
+{"id":"N2","source":"lib/span.md","span":"never present anywhere","expect":"unsupported"}
+EOF
+  tclaims c1-pass-no-line 0 \
+    'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=2/2' \
+    'CLAIM id=N1 expected=supported observed=supported source=lib/span.md at=line:1 verdict=match' \
+    'CLAIM id=N2 expected=unsupported observed=unsupported source=lib/span.md at=- verdict=match'
 
   if [[ $failures -eq 0 ]]; then
     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"
