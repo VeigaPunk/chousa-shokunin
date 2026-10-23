@@ -1,0 +1,69 @@
+research-gate v2 — ts=2026-10-23T09:06:25Z — mode=claims — claims=root/claims.jsonl
+CLAIM id=S1 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=S2 expected=supported observed=mislocated source=src/a.md at=line:2 verdict=mismatch
+CLAIM id=S3 expected=supported observed=stale source=src/a.md at=- verdict=mismatch
+CLAIM id=nested expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=A2 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=A3 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=A4 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=A5 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=A6 expected=supported observed=invalid source=- at=- verdict=invalid
+CLAIM id=A7 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=A8 expected=- observed=invalid source=src/a.md at=- verdict=invalid
+CLAIM id=A9 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=B1 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=B2 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=B3 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=B4 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=B5 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=B6 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=B7 expected=supported observed=invalid source=src/a.md at=- verdict=invalid
+CLAIM id=B8 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=zz expected=contradicted observed=refused source=nope.md at=- verdict=refused
+CLAIM id=C2 expected=supported observed=invalid source=src/a.md at=- verdict=invalid
+CLAIM id=zz expected=contradicted observed=refused source=nope.md at=- verdict=refused
+CLAIM id=C4 expected=supported observed=mislocated source=src/a.md at=line:2 verdict=mismatch
+CLAIM id=D1 expected=supported observed=stale source=src/a.md at=- verdict=mismatch
+CLAIM id=D2 expected=supported observed=mislocated source=src/a.md at=line:2 verdict=mismatch
+CLAIM id=D3 expected=supported observed=unsupported source=src/a.md at=- verdict=mismatch
+CLAIM id=E1 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=E2 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=E3 expected=supported observed=invalid source=src/a.md at=- verdict=invalid
+CLAIM id=E4 expected=supported observed=invalid source=- at=- verdict=invalid
+CLAIM id=line32 expected=supported observed=invalid source=src/a.md at=- verdict=invalid
+CLAIM id=E6 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=E7 expected=- observed=invalid source=src/a.md at=- verdict=invalid
+CLAIM id=E8 expected=supported observed=invalid source=src/a.md at=- verdict=invalid
+CLAIM id=E9 expected=supported observed=invalid source=src/a.md at=- verdict=invalid
+CLAIM id=zz expected=contradicted observed=refused source=nope.md at=- verdict=refused
+CLAIM id=F2 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=fake expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=F4 expected=supported observed=unsupported source=src/b.md at=- verdict=mismatch
+CLAIM id=F5 expected=supported observed=mislocated source=src/a.md at=line:2 verdict=mismatch
+CLAIM id=F6 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=G1 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=G2 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=G3 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+FINDING CLAIM_LINE_MISMATCH severity=warn surface=claims obs=id=S2 line=3-3 first_delimited_occurrence=line:2
+FINDING CLAIM_SOURCE_REVISION_MISMATCH severity=warn surface=claims obs=id=S3 pin=4c1e8334ba9c actual=98248b903e7b
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=9 missing source
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=11 missing expect
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=19 marker present but expect=supported (fixture violation)
+FINDING CLAIM_SOURCE_MISSING severity=warn surface=claims obs=id=zz source=nope.md obs=not a readable regular file under allowed roots
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=22 marker present but expect=supported (fixture violation)
+FINDING CLAIM_SOURCE_MISSING severity=warn surface=claims obs=id=zz source=nope.md obs=not a readable regular file under allowed roots
+FINDING CLAIM_LINE_MISMATCH severity=warn surface=claims obs=id=C4 line=9-9 first_delimited_occurrence=line:2
+FINDING CLAIM_SOURCE_REVISION_MISMATCH severity=warn surface=claims obs=id=D1 pin=4c1e8334ba9c actual=98248b903e7b
+FINDING CLAIM_LINE_MISMATCH severity=warn surface=claims obs=id=D2 line=9-9 first_delimited_occurrence=line:2
+FINDING CLAIM_SPAN_NOT_FOUND severity=warn surface=claims obs=id=D3 nearest_line=- context=-
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=30 missing/empty span
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=31 missing source
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=32 missing id
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=34 missing expect
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=35 line not a JSON string
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=36 sha256 malformed (not 64 lowercase hex characters)
+FINDING CLAIM_SOURCE_MISSING severity=warn surface=claims obs=id=zz source=nope.md obs=not a readable regular file under allowed roots
+FINDING CLAIM_SPAN_NOT_FOUND severity=warn surface=claims obs=id=F4 nearest_line=- context=-
+FINDING CLAIM_LINE_MISMATCH severity=warn surface=claims obs=id=F5 line=9-9 first_delimited_occurrence=line:2
+VERDICT_BEARING_CLAIMS=24/45
+RESEARCH_GATE: DRIFT (claims=45 supported=24 contradicted=0 unsupported=2 mismatched=8 unproven=0 refused=3 invalid=10 findings=21 drift=21)

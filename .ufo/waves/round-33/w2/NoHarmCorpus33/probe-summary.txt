@@ -1,0 +1,27 @@
+probe set (probe-root/claims-probe.jsonl): records=45 twins=27
+  twin-equivalence check: landed probe vs landed twin, field-identical CLAIM lines
+  claims printed: probe=45 twin=27 sha256 probe-landed=6692544a229a3919bbf0c0b51ae8506f93904e9ac4a6fa81e91e6bd74b837899 twin-landed=15e136ddfc1c6b20dd7e2eb990076a6ead7ddff1a86b1650ce7dab62f33572bd
+  base vs landed probe diff lines (body): see probe-base.out vs probe-landed.out
+
+fuzz-nested.jsonl records=120 (flat twins fuzz-twins.jsonl) -> landed CLAIM lines differ: 0
+  sha256 fuzz-nested.landed=cd928323057eb75b5cbecd7b8007cef02f8d3a4f43db99d3e2412fe32f9604e8 fuzz-twins.landed=a214ed9fd98aa1c57e946c15195835d1559720aa6ddded142ea74d260a61021a
+fuzz-flat.jsonl records=120 (no nesting/dup) -> base vs landed CLAIM diff: 0; rc 1/1
+  sha256 fuzz-flat.base=080fd2d3e668e8be8dbb784a6b9efc6ba9479beab6a777a6c1a004825ade9d18 fuzz-flat.landed=04f9274fa8fb6fd380b5abda9f5490938cb0ee17bf71ab682b3195bf7134d319
+fuzz-valid.jsonl records=400 random valid JSON objects (nested decoys) -> RESEARCH_GATE: CLEAN, supported=400, invalid=0
+  sha256 fuzz-valid.landed=0327375b537cd4ad7a4312c9b9a7f8b3d683e24dcc25f9943d6c8161a62254be
+
+dup-probe.jsonl lines=18 -> landed claims=17 (one marker_default row consumed): invalid=14 (12 duplicate read keys, duplicate marker, duplicate marker_default), valid=3
+  sha256 dup.landed=9a9d91e2ee460cbfc6f9f129d7ff53a728dc14f0eb9f7b2be4ab818193d8e529 dup.base=42808203577dff76dcc5b0b2445f70da54619c6b33c190f05d8b940dcc227dbf
+missing-nested.jsonl lines=13 -> landed: invalid=8 (missing top-level read fields / non-string line/sha256), supported=4, unproven=1
+  sha256 missing-nested.landed=e35908f21c9519ebe261308a70896a775f64254590f03882b0203c0741250826
+valid-edge.jsonl lines=14 -> landed CLEAN 14/14; base DRIFT 13/14 (V11 nested sha256 decoy)
+  sha256 valid-edge.landed=e5236241e1df8043b90f9cbb85851a0743d2628d73ddc44f7f9fc6b3272775ac valid-edge.base=ca3d1f932413e273a3439358abebadcaa02d21882e81ed34add62d35041d650c
+malformed.jsonl lines=5 -> landed invalid=5/5; base invalid=1/5 (base accepted 4 non-objects)
+  sha256 mal-landed=9e79c94d843478b9f362c61851793691f02a283cad639e93e0426a4c6e8af34c mal-base=99a618b63e9539f7f256c7a0586a06460ebcf691ef6dee2c0fd0ff74b23a0b5a
+mal-smuggle.jsonl lines=16 -> landed invalid=9, accepted-as-valid-but-not-JSON=7; base invalid=5
+  sha256 mal-smuggle.landed=cecd9b6b8fac944a380b66f972da122d2715a642054c5eb3ac89d43f1480bb92 mal-smuggle.base=cedf0a69674c2e7eaa2f4d7df39bc1775723606a1e0b498be8fb62767e8c0296
+bom.jsonl / empty-obj.jsonl -> base and landed identical (bom sha aaebcab988c09fe304fcf528af176da8046d20ea8f059e7ab6d573c1b2588eae)
+claims-r2-crlf: base rc/landed rc equal, body diff 0, VERDICT_BEARING_CLAIMS=17/17
+claims-r2-ws: base rc/landed rc equal, body diff 0, VERDICT_BEARING_CLAIMS=17/17
+claims-r2-comments: base rc/landed rc equal, body diff 0, VERDICT_BEARING_CLAIMS=17/17
+claims-r2-nonewline: base rc/landed rc equal, body diff 0, VERDICT_BEARING_CLAIMS=17/17

@@ -90,8 +90,10 @@ Same control bytes, same fixture classes; only the counter differs. This is the 
    `positive_paths = {path for _, _, path in sorted(entries)[:36]}` over
    `(st_mtime_ns, st_ino, realpath)` (`metadata-control.sh:35-37`) and calls a hop `resolvable`
    only when its status is in `{unresolved, blocked-no-fetch, labelled-dead}` **and** its target is
-   in those 36 (`:49`). It never opens a cited source (header `:2`; the fixture audit in
-   `.ufo/waves/round-33/w1/ExecD1CounterV3/fixture-audit.out` agrees).
+   in those 36 (`:49`). It never opens a cited source (header `:2`), and says so itself:
+   "This is a fixture-order shortcut, not anchor verification." (`:36`). The independent fixture
+   audit `.ufo/waves/round-33/w1/ExecD1CounterV3/fixture-audit.out:2-3` measures the same thing on
+   v3 seeds 7331/7332: `positives_in_top36=13/36` and `12/36`, `same_set_as_positives=False`.
 2. v2 writes each source inside its class loop and never touches timestamps
    (`c2-count-v2.py:188-192`), so mtime/atime/ctime order = R1→R2→R3→…→E12 class order.
 3. v3 plans bodies first (`c2-count-v3.py:210`), shuffles the write plan (`:283`) and stamps each
@@ -100,7 +102,7 @@ Same control bytes, same fixture classes; only the counter differs. This is the 
    identical to the `--keep` copies) and classified the control's first-36 set against the hidden
    class labels:
 
-| fixture | R files in first 36 (of 36) | E-U files in first 36 (of 72 slots) | E-J | F1 | predicted match | receipt match |
+| fixture | R files in first 36 (of 36) | E-U files in first 36 (48 such files in root) | E-J | F1 | predicted match | receipt match |
 |---|---|---|---|---|---|---|
 | v2 seed 33881203 | **36/36** | 0 | 0 | 0 | 132 | **132** |
 | v3 seed 33881201 | 15/36 | 13 | 5 | 3 | 132−21−13 = 98 | **98** |

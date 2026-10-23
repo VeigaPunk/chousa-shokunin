@@ -1,0 +1,29 @@
+research-gate v2 — ts=2026-10-23T09:08:06Z — mode=claims — claims=root/claims2.jsonl
+CLAIM id=a expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=H2 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=H3 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=H4 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=nope expected=contradicted observed=refused source=nope.md at=- verdict=refused
+CLAIM id=H6 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=H7 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=H8 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=H9 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=H10 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=line11 expected=supported observed=invalid source=src/a.md at=- verdict=invalid
+CLAIM id=H12 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=H13 expected=supported observed=mislocated source=src/a.md at=line:2 verdict=mismatch
+CLAIM id=H14 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=H15 expected=supported observed=unsupported source=src/a.md at=- verdict=mismatch
+CLAIM id=H16 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=H17 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=H18 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=H19 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=H19 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=x expected=contradicted observed=refused source=y at=- verdict=refused
+FINDING CLAIM_SOURCE_MISSING severity=warn surface=claims obs=id=nope source=nope.md obs=not a readable regular file under allowed roots
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=11 missing id
+FINDING CLAIM_LINE_MISMATCH severity=warn surface=claims obs=id=H13 line=1-2 first_delimited_occurrence=line:2
+FINDING CLAIM_SPAN_NOT_FOUND severity=warn surface=claims obs=id=H15 nearest_line=- context=-
+FINDING CLAIM_SOURCE_MISSING severity=warn surface=claims obs=id=x source=y obs=not a readable regular file under allowed roots
+VERDICT_BEARING_CLAIMS=16/21
+RESEARCH_GATE: DRIFT (claims=21 supported=16 contradicted=0 unsupported=1 mismatched=2 unproven=0 refused=2 invalid=1 findings=5 drift=5)

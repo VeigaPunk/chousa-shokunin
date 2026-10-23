@@ -1,0 +1,71 @@
+idx	landed_id	landed	base	oracle	contract_expect	note
+01	line1	invalid	invalid	invalid	invalid	id=7 number -> missing id (base same)
+02	line2	invalid	invalid	invalid	invalid	id=true -> missing id (base same)
+03	line3	invalid	invalid	invalid	invalid	id=null -> missing id (base same)
+04	line4	invalid	invalid	invalid	invalid	id=["p04"] array -> missing id (base same)
+05	line5	invalid	invalid	invalid	invalid	id={"v":"p05"} object -> missing id (base same)
+06	p06	invalid	invalid	invalid	invalid	source=7 -> missing source (base same)
+07	p07	invalid	invalid	invalid	invalid	source array -> missing source (base same)
+08	p08	invalid	invalid	invalid	invalid	span=null -> missing span (base same)
+09	p09	invalid	invalid	invalid	invalid	span object -> missing span (base same)
+10	p10	invalid	invalid	invalid	invalid	expect=true -> missing expect (base same)
+11	p11	invalid	invalid	invalid	invalid	expect array -> missing expect (base same)
+12	line12	invalid	invalid	invalid	invalid	empty id (base same)
+13	p13	invalid	invalid	invalid	invalid	empty source (base same)
+14	p14	invalid	invalid	invalid	invalid	empty span (base same)
+15	p15	invalid	invalid	invalid	invalid	empty expect (base same)
+16	p16	invalid	invalid	invalid	invalid	empty line string (base same)
+17	p17	invalid	invalid	invalid	invalid	empty sha256 string -> malformed (base same)
+18	p18	supported	supported	supported	supported	empty marker string = absent (base same)
+19	p19	invalid	invalid	invalid	invalid	line {} (base same)
+20	p20	invalid	invalid	invalid	invalid	line [] (base same)
+21	p21	invalid	invalid	invalid	invalid	line 2 number (base same)
+22	p22	invalid	invalid	invalid	invalid	line true (base same)
+23	p23	invalid	invalid	invalid	invalid	line null (base same)
+24	p24	invalid	invalid	invalid	invalid	sha256 {} (base same)
+25	p25	invalid	invalid	invalid	invalid	sha256 [] (base same)
+26	p26	invalid	invalid	invalid	invalid	sha256 123 (base same)
+27	p27	invalid	invalid	invalid	invalid	sha256 true (base same)
+28	p28	supported	supported	supported	supported	flat valid record; base same
+29	p29	supported	supported	supported	supported	flat valid record; base same
+30	p30	supported	supported	supported	supported	flat valid record; base same
+31	p31	supported	supported	supported	supported	flat valid record; base same
+32	p32	supported	supported	invalid	undecided	undecided: not valid JSON (not claimed; contract asks fail closed); landed=supported base=supported oracle=invalid
+33	p33	supported	supported	invalid	undecided	undecided: not valid JSON (not claimed; contract asks fail closed); landed=supported base=supported oracle=invalid
+34	p34	supported	supported	supported	undecided	undecided: NaN not JSON per RFC 8259; python oracle accepts it too; landed=supported base=supported oracle=supported
+35	p35	supported	supported	invalid	undecided	undecided: not valid JSON (not claimed; contract asks fail closed); landed=supported base=supported oracle=invalid
+36	line36	invalid	supported	invalid	undecided	undecided: not valid JSON (not claimed; contract asks fail closed); landed=invalid base=supported oracle=invalid
+37	p37	supported	supported	invalid	undecided	undecided: not valid JSON (not claimed; contract asks fail closed); landed=supported base=supported oracle=invalid
+38	line38	invalid	supported	invalid	undecided	undecided: not valid JSON (not claimed; contract asks fail closed); landed=invalid base=supported oracle=invalid
+39	p39	supported	supported	supported	supported	flat valid record; base same
+40	p40	supported	mislocated	supported	supported	item 1: nested line inside an array ignored; base mislocated
+41	p41	invalid	supported	invalid	invalid	item 1: nested line ignored; top-level line is a container -> present non-string
+42	p42	invalid	supported	invalid	invalid	item 1: nested sha ignored; top-level sha256 container -> malformed
+43	p43	supported	invalid	supported	supported	item 1: nested marker ignored; base read it as a fixture violation
+44	p44	unproven	contradicted	unproven	unproven	item 1: nested marker ignored; top-level marker container -> no marker
+45	p45	invalid	supported	invalid	invalid	item 2: duplicated line (string then number)
+46	p46	invalid	supported	invalid	invalid	item 2: duplicated id, identical values; CLAIM carries id p46
+47	p47	invalid	supported	invalid	invalid	item 2: duplicated source (string then array)
+48	p48	supported	supported	supported	supported	duplicated unknown key x: not a read field (base same)
+49	p49	supported	supported	supported	supported	top-level line "2" binds span on line 2
+50	p50	supported	supported	supported	supported	string confuser {\"line\": \"9\"} is content (base same)
+51	p51	supported	supported	supported	supported	trailing escaped backslash in a string is content (base same)
+52	p52	invalid	invalid	invalid	invalid	marker present with expect=supported (base same)
+53	p53	contradicted	contradicted	contradicted	contradicted	marker M co-occurs in the span line (base same)
+54	line54	invalid	supported	invalid	undecided	undecided: not one well-formed object (not claimed; contract asks fail closed); landed=invalid base=supported oracle=invalid
+55	line55	invalid	supported	invalid	undecided	undecided: not one well-formed object (not claimed; contract asks fail closed); landed=invalid base=supported oracle=invalid
+56	line56	invalid	supported	invalid	undecided	undecided: not one well-formed object (not claimed; contract asks fail closed); landed=invalid base=supported oracle=invalid
+57	p57	invalid	supported	invalid	invalid	item 2: duplicated line, identical values
+58	p58	supported	supported	supported	supported	correct sha256 pin (base same)
+59	p59	supported	supported	supported	supported	correct pin + line 2 (base same)
+60	p60	invalid	invalid	invalid	invalid	marker + expect=supported fixture violation (base same)
+61	p61	supported	supported	supported	supported	flat valid record; base same
+62	p62	supported	supported	supported	supported	flat valid record; base same
+63	p63	supported	supported	supported	supported	flat valid record; base same
+64	p64	supported	supported	supported	supported	flat valid record; base same
+65	p65	supported	supported	supported	supported	marker null = absent (base same)
+66	p66	unproven	unproven	unproven	unproven	marker array = absent -> no marker (base same)
+67	p67	invalid	supported	invalid	invalid	item 2: duplicated id, identical values; CLAIM carries id p67
+68	p68	invalid	supported	invalid	invalid	item 2: duplicated line, differing values
+69	p69	invalid	supported	invalid	invalid	item 2: duplicated line, first non-string
+70	p70	invalid	invalid	invalid	invalid	duplicated marker: implementation-invalid, not counted (claims.md:113-114)

@@ -1,0 +1,13 @@
+{
+  "axes": ["operability: C1 top-level reader", "detector sensitivity", "exact-byte restoration"],
+  "scope": "Only five nesting/cache/trailing-garbage mutation probes; no lane integration or contract changes.",
+  "pristine_gate_sha256": "94a7be5a54dd5cebd9532f2417c4eaedc401c9a0646029dcca8acc445378506e",
+  "counter_sha256": "cb354dd1b5bdf2540e2bf356d945e01cd3ce8207d66e7a1ec76f363650e6a514",
+  "mutations": {
+    "a": {"original_line":1190,"original":"    elif [[ $c == '{' || $c == '[' ]]; then","replacement":"    elif [[ $c == '{' ]]; then","meaning":"Array-valued top-level members do not enter nested bracket tracking.","expected_detector":"Counter N1-N11 array variants; existing selftest array-valued line/sha fields."},
+    "b": {"original_lines":"1208-1212","original":"if closer matches stack top: pop; else return 1","replacement":"            stk=${stk%?}","meaning":"Every closing bracket pops regardless of bracket type.","expected_detector":"A mismatched-bracket record must be invalid; counted fixture only generates valid JSON, so counter survival is expected."},
+    "c": {"original_line":1205,"original":"          '{'|'[') stk+=$c ;;","replacement":"          '{'|'[') : ;;","meaning":"A skipped nested value does not push inner openers, so skipping stops at its first matching closer.","expected_detector":"Counter deep-container variants."},
+    "d": {"original_line":1138,"original":"  if [[ $s == \"$JSON_SCAN_LINE\" ]]; then return \"$JSON_SCAN_RC\"; fi","replacement":"  if [[ -n $JSON_SCAN_LINE ]]; then return \"$JSON_SCAN_RC\"; fi","meaning":"Once any line is cached, every later record reuses its parse result and tables without comparing the current line.","expected_detector":"Counter identity/uniqueness matcher and multi-record selftests."},
+    "e": {"original_lines":[1156,1250],"original":"      (( i == n )) || return 1","replacement":"      :","meaning":"Both successful object-close paths accept unconsumed trailing bytes.","expected_detector":"A complete claim object followed by an extra closing brace must be invalid; the outer brace-pattern guard still allows this witness."}
+  }
+}

@@ -1,0 +1,72 @@
+[
+ {
+  "label": "M1_nested_trailing_comma",
+  "json": "invalid-json: JSONDecodeError",
+  "line": "{\"meta\":{\"a\":1,},\"id\":\"M1\",\"source\":\"src/a.md\",\"span\":\"needle span words here\",\"expect\":\"supported\"}"
+ },
+ {
+  "label": "M2_nested_missing_comma",
+  "json": "invalid-json: JSONDecodeError",
+  "line": "{\"meta\":{\"a\":1\"b\":2},\"id\":\"M2\",\"source\":\"src/a.md\",\"span\":\"needle span words here\",\"expect\":\"supported\"}"
+ },
+ {
+  "label": "M3_nested_unquoted_key",
+  "json": "invalid-json: JSONDecodeError",
+  "line": "{\"meta\":{a:1},\"id\":\"M3\",\"source\":\"src/a.md\",\"span\":\"needle span words here\",\"expect\":\"supported\"}"
+ },
+ {
+  "label": "M4_nested_missing_colon",
+  "json": "invalid-json: JSONDecodeError",
+  "line": "{\"meta\":{\"a\" 1},\"id\":\"M4\",\"source\":\"src/a.md\",\"span\":\"needle span words here\",\"expect\":\"supported\"}"
+ },
+ {
+  "label": "M5_nested_bare_word_value",
+  "json": "invalid-json: JSONDecodeError",
+  "line": "{\"meta\":{\"a\":bare},\"id\":\"M5\",\"source\":\"src/a.md\",\"span\":\"needle span words here\",\"expect\":\"supported\"}"
+ },
+ {
+  "label": "M6_nested_trailing_garbage",
+  "json": "invalid-json: JSONDecodeError",
+  "line": "{\"meta\":{\"a\":1} x,\"id\":\"M6\",\"source\":\"src/a.md\",\"span\":\"needle span words here\",\"expect\":\"supported\"}"
+ },
+ {
+  "label": "T1_top_trailing_comma",
+  "json": "invalid-json: JSONDecodeError",
+  "line": "{\"id\":\"T1\",\"source\":\"src/a.md\",\"span\":\"needle span words here\",\"expect\":\"supported\",}"
+ },
+ {
+  "label": "T2_top_missing_comma",
+  "json": "invalid-json: JSONDecodeError",
+  "line": "{\"id\":\"T2\" \"source\":\"src/a.md\",\"span\":\"needle span words here\",\"expect\":\"supported\"}"
+ },
+ {
+  "label": "T3_top_trailing_garbage",
+  "json": "invalid-json: JSONDecodeError",
+  "line": "{\"id\":\"T3\",\"source\":\"src/a.md\",\"span\":\"needle span words here\",\"expect\":\"supported\"} x"
+ },
+ {
+  "label": "T4_top_unquoted_key",
+  "json": "invalid-json: JSONDecodeError",
+  "line": "{\"id\":\"T4\",source:\"src/a.md\",\"span\":\"needle span words here\",\"expect\":\"supported\"}"
+ },
+ {
+  "label": "T5_top_array",
+  "json": "VALID-JSON",
+  "line": "[\"id\",\"T5\"]"
+ },
+ {
+  "label": "T6_top_two_objects",
+  "json": "invalid-json: JSONDecodeError",
+  "line": "{\"id\":\"T6a\"} {\"id\":\"T6b\"}"
+ },
+ {
+  "label": "T7_top_unbalanced",
+  "json": "invalid-json: JSONDecodeError",
+  "line": "{\"id\":\"T7\",\"source\":\"src/a.md\",\"span\":\"needle span words here\",\"expect\":\"supported\""
+ },
+ {
+  "label": "T8_top_bracket_mismatch",
+  "json": "invalid-json: JSONDecodeError",
+  "line": "{\"id\":\"T8\",\"meta\":[},\"source\":\"src/a.md\"}"
+ }
+]

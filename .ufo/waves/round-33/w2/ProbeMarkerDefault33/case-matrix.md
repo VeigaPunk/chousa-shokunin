@@ -1,4 +1,4 @@
-| case | base gate f4731885 | landed gate 94a7be5a | oracle 930a2075 |
+| case | base f4731885 (rc) | landed 94a7be5a (rc) | oracle 930a2075 (rc) |
 |---|---|---|---|
 | a-flat-plain | rc0 id=a1=supported | rc0 id=a1=supported | rc0 id=a1=supported |
 | aa-default-nonstring-id-dup-line | rc0 id=aa1=contradicted | rc0 id=aa1=contradicted | rc0 id=aa1=contradicted |
@@ -25,8 +25,8 @@
 | r-default-dup-sha | rc0 id=r1=contradicted | rc0 id=r1=contradicted | rc0 id=r1=contradicted |
 | s-default-dup-expect | rc0 id=s1=contradicted | rc0 id=s1=contradicted | rc0 id=s1=contradicted |
 | t-default-dup-marker | rc0 id=t1=contradicted | rc0 id=t1=contradicted | rc0 id=t1=contradicted |
-| u-claim-dup-default | rc0 id=u1=supported | rc0 id=u1=invalid [CLAIM_RECORD_INVALID] | rc0 id=u1=supported |
-| v-default-dup-marker-key | rc0 id=v1=contradicted | rc0 id=line1=invalid; id=v1=unproven [CLAIM_RECORD_INVALID,CONTRADICTION_MARKER_ABSENT] | rc1 id=v1=unproven [CONTRADICTION_MARKER_ABSENT] |
+| u-claim-dup-default | rc0 id=u1=supported | rc1 id=u1=invalid [CLAIM_RECORD_INVALID] | rc0 id=u1=supported |
+| v-default-dup-marker-key | rc0 id=v1=contradicted | rc1 id=line1=invalid; id=v1=unproven [CLAIM_RECORD_INVALID,CONTRADICTION_MARKER_ABSENT] | rc1 id=v1=unproven [CONTRADICTION_MARKER_ABSENT] |
 | w-asymmetry | rc0 id=x1=contradicted | rc1 id=x1=invalid [CLAIM_RECORD_INVALID] | rc1 id=x1=invalid [CLAIM_RECORD_INVALID] |
 | x-dup-id-diff | rc0 id=x2=supported | rc1 id=line1=invalid [CLAIM_RECORD_INVALID] | rc1 id=x3=invalid [CLAIM_RECORD_INVALID] |
 | y-dup-marker-claim | rc0 id=y1=contradicted | rc1 id=y1=invalid [CLAIM_RECORD_INVALID] | rc1 id=y1=invalid [CLAIM_RECORD_INVALID] |

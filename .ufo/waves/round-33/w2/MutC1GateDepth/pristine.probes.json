@@ -1,0 +1,135 @@
+{
+  "phase": "pristine",
+  "gate": "/fast/scratch/hyaku/chousa-r33/w2/MutC1GateDepth/repo/tools/research-gate.sh",
+  "gate_sha256": "94a7be5a54dd5cebd9532f2417c4eaedc401c9a0646029dcca8acc445378506e",
+  "cases": {
+    "a": {
+      "input": "/fast/scratch/hyaku/chousa-r33/w2/MutC1GateDepth/cases/a.jsonl",
+      "json_validation": "valid JSON object(s)",
+      "command": [
+        "timeout",
+        "--kill-after=2",
+        "15",
+        "prlimit",
+        "--nproc=2000",
+        "--as=4000000000",
+        "--",
+        "bash",
+        "/fast/scratch/hyaku/chousa-r33/w2/MutC1GateDepth/repo/tools/research-gate.sh",
+        "verify-claims",
+        "/fast/scratch/hyaku/chousa-r33/w2/MutC1GateDepth/cases/a.jsonl",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r33/w2/MutC1GateDepth/cases"
+      ],
+      "exit": 0,
+      "stdout": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutC1GateDepth/pristine.probe-a.stdout",
+      "key_output": [
+        "CLAIM id=A expected=supported observed=supported source=s at=line:1 verdict=match",
+        "RESEARCH_GATE: CLEAN (claims=1 supported=1 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)"
+      ]
+    },
+    "b": {
+      "input": "/fast/scratch/hyaku/chousa-r33/w2/MutC1GateDepth/cases/b.jsonl",
+      "json_validation": "Expecting value: line 1 column 70 (char 69)",
+      "command": [
+        "timeout",
+        "--kill-after=2",
+        "15",
+        "prlimit",
+        "--nproc=2000",
+        "--as=4000000000",
+        "--",
+        "bash",
+        "/fast/scratch/hyaku/chousa-r33/w2/MutC1GateDepth/repo/tools/research-gate.sh",
+        "verify-claims",
+        "/fast/scratch/hyaku/chousa-r33/w2/MutC1GateDepth/cases/b.jsonl",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r33/w2/MutC1GateDepth/cases"
+      ],
+      "exit": 1,
+      "stdout": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutC1GateDepth/pristine.probe-b.stdout",
+      "key_output": [
+        "CLAIM id=line1 expected=- observed=invalid source=- at=- verdict=invalid",
+        "FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=1 not one well-formed JSON object",
+        "RESEARCH_GATE: DRIFT (claims=1 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=1 findings=1 drift=1)"
+      ]
+    },
+    "c": {
+      "input": "/fast/scratch/hyaku/chousa-r33/w2/MutC1GateDepth/cases/c.jsonl",
+      "json_validation": "valid JSON object(s)",
+      "command": [
+        "timeout",
+        "--kill-after=2",
+        "15",
+        "prlimit",
+        "--nproc=2000",
+        "--as=4000000000",
+        "--",
+        "bash",
+        "/fast/scratch/hyaku/chousa-r33/w2/MutC1GateDepth/repo/tools/research-gate.sh",
+        "verify-claims",
+        "/fast/scratch/hyaku/chousa-r33/w2/MutC1GateDepth/cases/c.jsonl",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r33/w2/MutC1GateDepth/cases"
+      ],
+      "exit": 0,
+      "stdout": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutC1GateDepth/pristine.probe-c.stdout",
+      "key_output": [
+        "CLAIM id=C expected=supported observed=supported source=s at=line:1 verdict=match",
+        "RESEARCH_GATE: CLEAN (claims=1 supported=1 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)"
+      ]
+    },
+    "d": {
+      "input": "/fast/scratch/hyaku/chousa-r33/w2/MutC1GateDepth/cases/d.jsonl",
+      "json_validation": "valid JSON object(s)",
+      "command": [
+        "timeout",
+        "--kill-after=2",
+        "15",
+        "prlimit",
+        "--nproc=2000",
+        "--as=4000000000",
+        "--",
+        "bash",
+        "/fast/scratch/hyaku/chousa-r33/w2/MutC1GateDepth/repo/tools/research-gate.sh",
+        "verify-claims",
+        "/fast/scratch/hyaku/chousa-r33/w2/MutC1GateDepth/cases/d.jsonl",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r33/w2/MutC1GateDepth/cases"
+      ],
+      "exit": 0,
+      "stdout": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutC1GateDepth/pristine.probe-d.stdout",
+      "key_output": [
+        "CLAIM id=D1 expected=supported observed=supported source=s at=line:1 verdict=match",
+        "CLAIM id=D2 expected=supported observed=supported source=s at=line:1 verdict=match",
+        "RESEARCH_GATE: CLEAN (claims=2 supported=2 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)"
+      ]
+    },
+    "e": {
+      "input": "/fast/scratch/hyaku/chousa-r33/w2/MutC1GateDepth/cases/e.jsonl",
+      "json_validation": "Extra data: line 1 column 65 (char 64)",
+      "command": [
+        "timeout",
+        "--kill-after=2",
+        "15",
+        "prlimit",
+        "--nproc=2000",
+        "--as=4000000000",
+        "--",
+        "bash",
+        "/fast/scratch/hyaku/chousa-r33/w2/MutC1GateDepth/repo/tools/research-gate.sh",
+        "verify-claims",
+        "/fast/scratch/hyaku/chousa-r33/w2/MutC1GateDepth/cases/e.jsonl",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r33/w2/MutC1GateDepth/cases"
+      ],
+      "exit": 1,
+      "stdout": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutC1GateDepth/pristine.probe-e.stdout",
+      "key_output": [
+        "CLAIM id=line1 expected=- observed=invalid source=- at=- verdict=invalid",
+        "FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=1 not one well-formed JSON object",
+        "RESEARCH_GATE: DRIFT (claims=1 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=1 findings=1 drift=1)"
+      ]
+    }
+  }
+}

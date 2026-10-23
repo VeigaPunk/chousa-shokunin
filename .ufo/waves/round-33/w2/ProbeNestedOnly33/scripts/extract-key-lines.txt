@@ -1,0 +1,72 @@
+A1_id_nested_only_obj
+  input : {"meta":{"id":"nested"},"source":"src/a.md","span":"needle span words here","expect":"supported"}
+  base  : CLAIM id=nested expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+  landed: CLAIM id=line4 expected=supported observed=invalid source=src/a.md at=- verdict=invalid
+A2_source_nested_only_obj
+  input : {"meta":{"source":"src/a.md"},"id":"A2","span":"needle span words here","expect":"supported"}
+  base  : CLAIM id=A2 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+  landed: CLAIM id=A2 expected=supported observed=invalid source=- at=- verdict=invalid
+A3_span_nested_only_obj
+  input : {"meta":{"span":"needle span words here"},"id":"A3","source":"src/a.md","expect":"supported"}
+  base  : CLAIM id=A3 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+  landed: CLAIM id=A3 expected=supported observed=invalid source=src/a.md at=- verdict=invalid
+A4_expect_nested_only_obj
+  input : {"meta":{"expect":"supported"},"id":"A4","source":"src/a.md","span":"needle span words here"}
+  base  : CLAIM id=A4 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+  landed: CLAIM id=A4 expected=- observed=invalid source=src/a.md at=- verdict=invalid
+A5_all_nested_only
+  input : {"meta":{"id":"A5","source":"src/a.md","span":"needle span words here","expect":"supported"}}
+  base  : CLAIM id=A5 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+  landed: CLAIM id=line8 expected=- observed=invalid source=- at=- verdict=invalid
+A7_all_nested_depth6
+  input : {"a":{"b":{"c":{"d":{"e":{"f":{"id":"A7","source":"src/a.md","span":"needle span words here","expect":"supported"}}}}}}}
+  base  : CLAIM id=A7 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+  landed: CLAIM id=line10 expected=- observed=invalid source=- at=- verdict=invalid
+B1_id_container_self
+  input : {"id":{"id":"B1"},"source":"src/a.md","span":"needle span words here","expect":"supported"}
+  base  : CLAIM id=B1 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+  landed: CLAIM id=line13 expected=supported observed=invalid source=src/a.md at=- verdict=invalid
+B2_source_container_self
+  input : {"id":"B2","source":{"source":"src/a.md"},"span":"needle span words here","expect":"supported"}
+  base  : CLAIM id=B2 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+  landed: CLAIM id=B2 expected=supported observed=invalid source=- at=- verdict=invalid
+B3_span_container_self
+  input : {"id":"B3","source":"src/a.md","span":{"span":"needle span words here"},"expect":"supported"}
+  base  : CLAIM id=B3 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+  landed: CLAIM id=B3 expected=supported observed=invalid source=src/a.md at=- verdict=invalid
+B4_expect_container_self
+  input : {"id":"B4","source":"src/a.md","span":"needle span words here","expect":{"expect":"supported"}}
+  base  : CLAIM id=B4 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+  landed: CLAIM id=B4 expected=- observed=invalid source=src/a.md at=- verdict=invalid
+B5_line_container_self
+  input : {"id":"B5","source":"src/a.md","span":"needle span words here","expect":"supported","line":{"line":"2"}}
+  base  : CLAIM id=B5 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+  landed: CLAIM id=B5 expected=supported observed=invalid source=src/a.md at=- verdict=invalid
+B6_sha_container_self
+  input : {"id":"B6","source":"src/a.md","span":"needle span words here","expect":"supported","sha256":{"sha256":"98248b903e7bb076fa27ed86c2e5f2e4b533988a7c2b9f231e54236760b54dae"}}
+  base  : CLAIM id=B6 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+  landed: CLAIM id=B6 expected=supported observed=invalid source=src/a.md at=- verdict=invalid
+B7_marker_container_self
+  input : {"id":"B7","source":"src/a.md","span":"needle span words here","expect":"supported","marker":{"marker":"m"}}
+  base  : CLAIM id=B7 expected=supported observed=invalid source=src/a.md at=- verdict=invalid
+  landed: CLAIM id=B7 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+C1_three_decoys_before
+  input : {"d1":{"id":"zz","source":"nope.md","span":"nope","expect":"contradicted","marker":"m","line":"9","sha256":"4c1e8334ba9cde9d6b15ea4aebb2d18fe0bfaa1edabdfee734ea8dc409051bd4"},"d2":[{"id":"zz","source":"nope.md","span":"nope","expect":"contradicted","marker":"m","line":"9","sha256":"4c1e8334ba9cde9d6b15ea4aebb2d18fe0bfaa1edabdfee734ea8dc409051bd4"}],"d3":{"k":{"id":"zz","source":"nope.md","span":"nope","expect":"contradicted","marker":"m","line":"9","sha256":"4c1e8334ba9cde9d6b15ea4aebb2d18fe0bfaa1edabdfee734ea8dc409051bd4"}},"id":"C1","source":"src/a.md","span":"needle span words here","expect":"supported","line":"2"}
+  base  : CLAIM id=zz expected=contradicted observed=refused source=nope.md at=- verdict=refused
+  landed: CLAIM id=C1 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+C2_three_decoys_after
+  input : {"id":"C2","source":"src/a.md","span":"needle span words here","expect":"supported","line":"2","d1":{"id":"zz","source":"nope.md","span":"nope","expect":"contradicted","marker":"m","line":"9","sha256":"4c1e8334ba9cde9d6b15ea4aebb2d18fe0bfaa1edabdfee734ea8dc409051bd4"},"d2":[{"id":"zz","source":"nope.md","span":"nope","expect":"contradicted","marker":"m","line":"9","sha256":"4c1e8334ba9cde9d6b15ea4aebb2d18fe0bfaa1edabdfee734ea8dc409051bd4"}],"d3":{"k":{"id":"zz","source":"nope.md","span":"nope","expect":"contradicted","marker":"m","line":"9","sha256":"4c1e8334ba9cde9d6b15ea4aebb2d18fe0bfaa1edabdfee734ea8dc409051bd4"}}}
+  base  : CLAIM id=C2 expected=supported observed=invalid source=src/a.md at=- verdict=invalid
+  landed: CLAIM id=C2 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+D1_depth5_line_sha
+  input : {"k1":{"k2":{"k3":{"k4":{"k5":{"line":"9","sha256":"4c1e8334ba9cde9d6b15ea4aebb2d18fe0bfaa1edabdfee734ea8dc409051bd4"}}}}},"id":"D1","source":"src/a.md","span":"needle span words here","expect":"supported"}
+  base  : CLAIM id=D1 expected=supported observed=stale source=src/a.md at=- verdict=mismatch
+  landed: CLAIM id=D1 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+F1_dup_line_identical_with_decoy
+  input : {"d":{"id":"zz","source":"nope.md","span":"nope","expect":"contradicted","marker":"m","line":"9","sha256":"4c1e8334ba9cde9d6b15ea4aebb2d18fe0bfaa1edabdfee734ea8dc409051bd4"},"id":"F1","source":"src/a.md","span":"needle span words here","expect":"supported","line":"2","line":"2"}
+  base  : CLAIM id=zz expected=contradicted observed=refused source=nope.md at=- verdict=refused
+  landed: CLAIM id=F1 expected=supported observed=invalid source=src/a.md at=- verdict=invalid
+F2_dup_span_container_second
+  input : {"id":"F2","source":"src/a.md","span":"needle span words here","expect":"supported","span":{"span":"x"}}
+  base  : CLAIM id=F2 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+  landed: CLAIM id=F2 expected=supported observed=invalid source=src/a.md at=- verdict=invalid

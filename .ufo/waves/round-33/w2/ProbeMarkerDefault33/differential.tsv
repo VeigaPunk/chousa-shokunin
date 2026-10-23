@@ -1,31 +1,32 @@
-case	base_rc	landed_rc	base_claims	landed_claims	base_findings	landed_findings	oracle_rc	oracle_claims
-a-flat-plain	0	0	id=a1:supported	id=a1:supported	-	-	0	id=a1:supported
-b-flat-default-contradicted	0	0	id=b1:contradicted	id=b1:contradicted	-	-	0	id=b1:contradicted
-c-nested-default-obj	0	1	id=c1:contradicted	id=line1:invalid; id=c1:unproven	-	CLAIM_RECORD_INVALID[line=1 missing id]; CONTRADICTION_MARKER_ABSENT[id=c1 at=line:2 no marker defined (per-claim or marker_default)]	1	id=line1:invalid; id=c1:unproven
-c2-nested-default-arr	0	1	id=c2:contradicted	id=line1:invalid; id=c2:unproven	-	CLAIM_RECORD_INVALID[line=1 missing id]; CONTRADICTION_MARKER_ABSENT[id=c2 at=line:2 no marker defined (per-claim or marker_default)]	1	id=line1:invalid; id=c2:unproven
-c3-nested-default-deep	0	1	id=c3:contradicted	id=line1:invalid; id=c3:unproven	-	CLAIM_RECORD_INVALID[line=1 missing id]; CONTRADICTION_MARKER_ABSENT[id=c3 at=line:2 no marker defined (per-claim or marker_default)]	1	id=line1:invalid; id=c3:unproven
-c4-default-in-string	1	1	id=line1:invalid; id=c4:unproven	id=line1:invalid; id=c4:unproven	CLAIM_RECORD_INVALID[line=1 missing id]; CONTRADICTION_MARKER_ABSENT[id=c4 at=line:2 no marker defined (per-claim or marker_default)]	CLAIM_RECORD_INVALID[line=1 missing id]; CONTRADICTION_MARKER_ABSENT[id=c4 at=line:2 no marker defined (per-claim or marker_default)]	1	id=line1:invalid; id=c4:unproven
-c5-nested-id-array	1	0	id=nested:invalid; id=c5:unproven	id=c5:contradicted	CLAIM_RECORD_INVALID[line=1 missing source]; CONTRADICTION_MARKER_ABSENT[id=c5 at=line:2 no marker defined (per-claim or marker_default)]	-	0	id=c5:contradicted
-d-dup-default-same	0	1	id=d1:contradicted	id=line1:invalid; id=d1:unproven	-	CLAIM_RECORD_INVALID[line=1 duplicate top-level key marker_default]; CONTRADICTION_MARKER_ABSENT[id=d1 at=line:2 no marker defined (per-claim or marker_default)]	0	id=d1:contradicted
-e-dup-default-diff	1	1	id=e1:unproven	id=line1:invalid; id=e1:unproven	CONTRADICTION_MARKER_ABSENT[id=e1 at=line:2 declared marker not found within span lines]	CLAIM_RECORD_INVALID[line=1 duplicate top-level key marker_default]; CONTRADICTION_MARKER_ABSENT[id=e1 at=line:2 no marker defined (per-claim or marker_default)]	0	id=e1:contradicted
-f-both-id-and-default	1	1	id=f1:supported; id=f2:unproven	id=f1:supported; id=f2:unproven	CONTRADICTION_MARKER_ABSENT[id=f2 at=line:2 no marker defined (per-claim or marker_default)]	CONTRADICTION_MARKER_ABSENT[id=f2 at=line:2 no marker defined (per-claim or marker_default)]	1	id=f1:supported; id=f2:unproven
-g-default-own-marker	1	1	id=g1:contradicted; id=g2:unproven; id=g3:unproven	id=g1:contradicted; id=g2:unproven; id=g3:unproven	CONTRADICTION_MARKER_ABSENT[id=g2 at=line:2 declared marker not found within span lines]; CONTRADICTION_MARKER_ABSENT[id=g3 at=line:2 declared marker not found within span lines]	CONTRADICTION_MARKER_ABSENT[id=g2 at=line:2 declared marker not found within span lines]; CONTRADICTION_MARKER_ABSENT[id=g3 at=line:2 declared marker not found within span lines]	1	id=g1:contradicted; id=g2:unproven; id=g3:unproven
-h-nested-before-top	1	0	id=h1:unproven	id=h1:contradicted	CONTRADICTION_MARKER_ABSENT[id=h1 at=line:2 declared marker not found within span lines]	-	0	id=h1:contradicted
-i-default-dup-line	0	0	id=i1:contradicted	id=i1:contradicted	-	-	0	id=i1:contradicted
-j-default-dup-id	1	1	id=x:invalid; id=j1:unproven	id=x:invalid; id=j1:unproven	CLAIM_RECORD_INVALID[line=1 missing source]; CONTRADICTION_MARKER_ABSENT[id=j1 at=line:2 no marker defined (per-claim or marker_default)]	CLAIM_RECORD_INVALID[line=1 duplicate top-level key id]; CONTRADICTION_MARKER_ABSENT[id=j1 at=line:2 no marker defined (per-claim or marker_default)]	1	id=x:invalid; id=j1:unproven
-k-default-trailing-garbage	0	1	id=k1:contradicted	id=line1:invalid; id=k1:unproven	-	CLAIM_RECORD_INVALID[line=1 not one well-formed JSON object]; CONTRADICTION_MARKER_ABSENT[id=k1 at=line:2 no marker defined (per-claim or marker_default)]	1	id=line1:invalid; id=k1:unproven
-l-default-bracket-marker	0	0	id=l1:contradicted	id=l1:contradicted	-	-	0	id=l1:contradicted
-m-nested-id-default	1	0	id=nested:invalid; id=m1:unproven	id=m1:contradicted	CLAIM_RECORD_INVALID[line=1 missing source]; CONTRADICTION_MARKER_ABSENT[id=m1 at=line:2 no marker defined (per-claim or marker_default)]	-	0	id=m1:contradicted
-n-default-then-nested-override	1	1	id=n1:unproven	id=line2:invalid; id=n1:contradicted	CONTRADICTION_MARKER_ABSENT[id=n1 at=line:2 declared marker not found within span lines]	CLAIM_RECORD_INVALID[line=2 missing id]	1	id=line2:invalid; id=n1:contradicted
-o-default-dup-span	0	0	id=o1:contradicted	id=o1:contradicted	-	-	0	id=o1:contradicted
-p-default-nonstring	1	1	id=line1:invalid; id=p1:unproven	id=line1:invalid; id=p1:unproven	CLAIM_RECORD_INVALID[line=1 missing id]; CONTRADICTION_MARKER_ABSENT[id=p1 at=line:2 no marker defined (per-claim or marker_default)]	CLAIM_RECORD_INVALID[line=1 missing id]; CONTRADICTION_MARKER_ABSENT[id=p1 at=line:2 no marker defined (per-claim or marker_default)]	1	id=line1:invalid; id=p1:unproven
-q-nested-after-top	0	0	id=q1:contradicted	id=q1:contradicted	-	-	0	id=q1:contradicted
-r-default-dup-sha	0	0	id=r1:contradicted	id=r1:contradicted	-	-	0	id=r1:contradicted
-s-default-dup-expect	0	0	id=s1:contradicted	id=s1:contradicted	-	-	0	id=s1:contradicted
-t-default-dup-marker	0	0	id=t1:contradicted	id=t1:contradicted	-	-	0	id=t1:contradicted
-u-claim-dup-default	0	0	id=u1:supported	id=u1:invalid	-	CLAIM_RECORD_INVALID[line=1 duplicate top-level key marker_default]	0	id=u1:supported
-v-default-dup-marker-key	0	0	id=v1:contradicted	id=line1:invalid; id=v1:unproven	-	CLAIM_RECORD_INVALID[line=1 duplicate top-level key marker_default]; CONTRADICTION_MARKER_ABSENT[id=v1 at=line:2 no marker defined (per-claim or marker_default)]	1	id=v1:unproven
-w-asymmetry	0	1	id=x1:contradicted	id=x1:invalid	-	CLAIM_RECORD_INVALID[line=2 duplicate top-level key line]	1	id=x1:invalid
-x-dup-id-diff	0	1	id=x2:supported	id=line1:invalid	-	CLAIM_RECORD_INVALID[line=1 duplicate top-level key id]	1	id=x3:invalid
-y-dup-marker-claim	0	1	id=y1:contradicted	id=y1:invalid	-	CLAIM_RECORD_INVALID[line=1 duplicate top-level key marker]	1	id=y1:invalid
-z-default-after-claim	1	1	id=z1:unproven; id=z2:contradicted	id=z1:unproven; id=z2:contradicted	CONTRADICTION_MARKER_ABSENT[id=z1 at=line:2 no marker defined (per-claim or marker_default)]	CONTRADICTION_MARKER_ABSENT[id=z1 at=line:2 no marker defined (per-claim or marker_default)]	1	id=z1:unproven; id=z2:contradicted
+case	base_rc	base_verdict	base_claims	base_findings	landed_rc	landed_verdict	landed_claims	landed_findings	oracle_rc	oracle_verdict	oracle_claims	oracle_findings
+a-flat-plain	0	CLEAN	id=a1=supported	-	0	CLEAN	id=a1=supported	-	0	CLEAN	id=a1=supported	-
+aa-default-nonstring-id-dup-line	0	CLEAN	id=aa1=contradicted	-	0	CLEAN	id=aa1=contradicted	-	0	CLEAN	id=aa1=contradicted	-
+b-flat-default-contradicted	0	CLEAN	id=b1=contradicted	-	0	CLEAN	id=b1=contradicted	-	0	CLEAN	id=b1=contradicted	-
+c-nested-default-obj	0	CLEAN	id=c1=contradicted	-	1	DRIFT	id=line1=invalid; id=c1=unproven	CLAIM_RECORD_INVALID,CONTRADICTION_MARKER_ABSENT	1	DRIFT	id=line1=invalid; id=c1=unproven	CLAIM_RECORD_INVALID,CONTRADICTION_MARKER_ABSENT
+c2-nested-default-arr	0	CLEAN	id=c2=contradicted	-	1	DRIFT	id=line1=invalid; id=c2=unproven	CLAIM_RECORD_INVALID,CONTRADICTION_MARKER_ABSENT	1	DRIFT	id=line1=invalid; id=c2=unproven	CLAIM_RECORD_INVALID,CONTRADICTION_MARKER_ABSENT
+c3-nested-default-deep	0	CLEAN	id=c3=contradicted	-	1	DRIFT	id=line1=invalid; id=c3=unproven	CLAIM_RECORD_INVALID,CONTRADICTION_MARKER_ABSENT	1	DRIFT	id=line1=invalid; id=c3=unproven	CLAIM_RECORD_INVALID,CONTRADICTION_MARKER_ABSENT
+c4-default-in-string	1	DRIFT	id=line1=invalid; id=c4=unproven	CLAIM_RECORD_INVALID,CONTRADICTION_MARKER_ABSENT	1	DRIFT	id=line1=invalid; id=c4=unproven	CLAIM_RECORD_INVALID,CONTRADICTION_MARKER_ABSENT	1	DRIFT	id=line1=invalid; id=c4=unproven	CLAIM_RECORD_INVALID,CONTRADICTION_MARKER_ABSENT
+c5-nested-id-array	1	DRIFT	id=nested=invalid; id=c5=unproven	CLAIM_RECORD_INVALID,CONTRADICTION_MARKER_ABSENT	0	CLEAN	id=c5=contradicted	-	0	CLEAN	id=c5=contradicted	-
+d-dup-default-same	0	CLEAN	id=d1=contradicted	-	1	DRIFT	id=line1=invalid; id=d1=unproven	CLAIM_RECORD_INVALID,CONTRADICTION_MARKER_ABSENT	0	CLEAN	id=d1=contradicted	-
+e-dup-default-diff	1	DRIFT	id=e1=unproven	CONTRADICTION_MARKER_ABSENT	1	DRIFT	id=line1=invalid; id=e1=unproven	CLAIM_RECORD_INVALID,CONTRADICTION_MARKER_ABSENT	0	CLEAN	id=e1=contradicted	-
+f-both-id-and-default	1	DRIFT	id=f1=supported; id=f2=unproven	CONTRADICTION_MARKER_ABSENT	1	DRIFT	id=f1=supported; id=f2=unproven	CONTRADICTION_MARKER_ABSENT	1	DRIFT	id=f1=supported; id=f2=unproven	CONTRADICTION_MARKER_ABSENT
+g-default-own-marker	1	DRIFT	id=g1=contradicted; id=g2=unproven; id=g3=unproven	CONTRADICTION_MARKER_ABSENT,CONTRADICTION_MARKER_ABSENT	1	DRIFT	id=g1=contradicted; id=g2=unproven; id=g3=unproven	CONTRADICTION_MARKER_ABSENT,CONTRADICTION_MARKER_ABSENT	1	DRIFT	id=g1=contradicted; id=g2=unproven; id=g3=unproven	CONTRADICTION_MARKER_ABSENT,CONTRADICTION_MARKER_ABSENT
+h-nested-before-top	1	DRIFT	id=h1=unproven	CONTRADICTION_MARKER_ABSENT	0	CLEAN	id=h1=contradicted	-	0	CLEAN	id=h1=contradicted	-
+i-default-dup-line	0	CLEAN	id=i1=contradicted	-	0	CLEAN	id=i1=contradicted	-	0	CLEAN	id=i1=contradicted	-
+j-default-dup-id	1	DRIFT	id=x=invalid; id=j1=unproven	CLAIM_RECORD_INVALID,CONTRADICTION_MARKER_ABSENT	1	DRIFT	id=x=invalid; id=j1=unproven	CLAIM_RECORD_INVALID,CONTRADICTION_MARKER_ABSENT	1	DRIFT	id=x=invalid; id=j1=unproven	CLAIM_RECORD_INVALID,CONTRADICTION_MARKER_ABSENT
+k-default-trailing-garbage	0	CLEAN	id=k1=contradicted	-	1	DRIFT	id=line1=invalid; id=k1=unproven	CLAIM_RECORD_INVALID,CONTRADICTION_MARKER_ABSENT	1	DRIFT	id=line1=invalid; id=k1=unproven	CLAIM_RECORD_INVALID,CONTRADICTION_MARKER_ABSENT
+l-default-bracket-marker	0	CLEAN	id=l1=contradicted	-	0	CLEAN	id=l1=contradicted	-	0	CLEAN	id=l1=contradicted	-
+m-nested-id-default	1	DRIFT	id=nested=invalid; id=m1=unproven	CLAIM_RECORD_INVALID,CONTRADICTION_MARKER_ABSENT	0	CLEAN	id=m1=contradicted	-	0	CLEAN	id=m1=contradicted	-
+n-default-then-nested-override	1	DRIFT	id=n1=unproven	CONTRADICTION_MARKER_ABSENT	1	DRIFT	id=line2=invalid; id=n1=contradicted	CLAIM_RECORD_INVALID	1	DRIFT	id=line2=invalid; id=n1=contradicted	CLAIM_RECORD_INVALID
+o-default-dup-span	0	CLEAN	id=o1=contradicted	-	0	CLEAN	id=o1=contradicted	-	0	CLEAN	id=o1=contradicted	-
+p-default-nonstring	1	DRIFT	id=line1=invalid; id=p1=unproven	CLAIM_RECORD_INVALID,CONTRADICTION_MARKER_ABSENT	1	DRIFT	id=line1=invalid; id=p1=unproven	CLAIM_RECORD_INVALID,CONTRADICTION_MARKER_ABSENT	1	DRIFT	id=line1=invalid; id=p1=unproven	CLAIM_RECORD_INVALID,CONTRADICTION_MARKER_ABSENT
+q-nested-after-top	0	CLEAN	id=q1=contradicted	-	0	CLEAN	id=q1=contradicted	-	0	CLEAN	id=q1=contradicted	-
+r-default-dup-sha	0	CLEAN	id=r1=contradicted	-	0	CLEAN	id=r1=contradicted	-	0	CLEAN	id=r1=contradicted	-
+s-default-dup-expect	0	CLEAN	id=s1=contradicted	-	0	CLEAN	id=s1=contradicted	-	0	CLEAN	id=s1=contradicted	-
+t-default-dup-marker	0	CLEAN	id=t1=contradicted	-	0	CLEAN	id=t1=contradicted	-	0	CLEAN	id=t1=contradicted	-
+u-claim-dup-default	0	CLEAN	id=u1=supported	-	1	DRIFT	id=u1=invalid	CLAIM_RECORD_INVALID	0	CLEAN	id=u1=supported	-
+v-default-dup-marker-key	0	CLEAN	id=v1=contradicted	-	1	DRIFT	id=line1=invalid; id=v1=unproven	CLAIM_RECORD_INVALID,CONTRADICTION_MARKER_ABSENT	1	DRIFT	id=v1=unproven	CONTRADICTION_MARKER_ABSENT
+w-asymmetry	0	CLEAN	id=x1=contradicted	-	1	DRIFT	id=x1=invalid	CLAIM_RECORD_INVALID	1	DRIFT	id=x1=invalid	CLAIM_RECORD_INVALID
+x-dup-id-diff	0	CLEAN	id=x2=supported	-	1	DRIFT	id=line1=invalid	CLAIM_RECORD_INVALID	1	DRIFT	id=x3=invalid	CLAIM_RECORD_INVALID
+y-dup-marker-claim	0	CLEAN	id=y1=contradicted	-	1	DRIFT	id=y1=invalid	CLAIM_RECORD_INVALID	1	DRIFT	id=y1=invalid	CLAIM_RECORD_INVALID
+z-default-after-claim	1	DRIFT	id=z1=unproven; id=z2=contradicted	CONTRADICTION_MARKER_ABSENT	1	DRIFT	id=z1=unproven; id=z2=contradicted	CONTRADICTION_MARKER_ABSENT	1	DRIFT	id=z1=unproven; id=z2=contradicted	CONTRADICTION_MARKER_ABSENT

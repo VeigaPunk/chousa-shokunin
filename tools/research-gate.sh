@@ -1117,18 +1117,22 @@ verify_record() {
 # TOP-LEVEL members only (corpus/evidence/round33/claims.md). claim_scan walks
 # the line once in the C locale with string state (quotes, backslash escapes,
 # including an escaped backslash before a closing quote) and bracket depth over
-# {} and [] outside strings, and records depth-1 members in three tables:
+# {} and [] outside strings, and records depth-1 members in four tables:
 #   JSON_PRESENT[K]  K is a top-level member (any value type)
 #   JSON_STR[K]      K's raw string body (escapes intact: what json_str returned)
 #   JSON_DUP[K]      K occurs more than once among the top-level members
+#   JSON_DUPDIFF[K]  some repeat of K is not a string with the first raw body
 # A member of the same name inside a nested object or array is inside a skipped
 # value and never lands in a table; characters inside a string value are never
 # structure. A line that is not one well-formed object (unbalanced or mismatched
-# brackets, trailing garbage, a member name that is not a string) fails closed:
-# rc=1 and no tables. First occurrence wins in the value tables; a repeat is
-# only flagged, so a duplicated read field is refused by the caller. The last
-# scanned line is cached, so the accessors scan once per record.
-declare -A JSON_PRESENT=() JSON_STR=() JSON_DUP=() JSON_DUPSTR=() JSON_DUPNONSTR=()
+# brackets, trailing garbage, a member name that is not a string, whitespace
+# other than space/tab/CR/LF, a bare token that is not a JSON literal or number)
+# fails closed: rc=1 and no tables. Not checked (as at base): raw control bytes
+# inside strings, and the member/element grammar inside nested values beyond
+# bracket balance and bare tokens. First occurrence wins in the value tables; a
+# repeat is only flagged, so a duplicated read field is refused by the caller.
+# The last scanned line is cached, so the accessors scan once per record.
+declare -A JSON_PRESENT=() JSON_STR=() JSON_DUP=() JSON_DUPDIFF=()
 JSON_SCAN_LINE=''
 JSON_SCAN_RC=1
 
@@ -1138,21 +1142,27 @@ claim_scan() { # LINE -> JSON_* tables + JSON_SCAN_RC; rc0: one well-formed obje
   if [[ $s == "$JSON_SCAN_LINE" ]]; then return "$JSON_SCAN_RC"; fi
   JSON_SCAN_LINE=$s
   JSON_SCAN_RC=1
-  JSON_PRESENT=(); JSON_STR=(); JSON_DUP=(); JSON_DUPSTR=(); JSON_DUPNONSTR=()
-  local n=${#s} i=0 c key val stk top is_str esc in_str
+  JSON_PRESENT=(); JSON_STR=(); JSON_DUP=(); JSON_DUPDIFF=()
+  local n=${#s} i=0 c key val stk top is_str esc in_str tok
+  # JSON whitespace only (space, tab, CR, LF): a form feed or vertical tab is not
+  # whitespace in RFC 8259 and makes the line malformed (r33 post-falsify:
+  # ProbeWhitespace33). A scalar is one RFC 8259 literal or number (r33
+  # post-falsify: ProbeFlatBehaviour33, ProbeMalformed33, CriticClaim33).
+  local ws=$' \t\r\n'
+  local lit='^(true|false|null|-?(0|[1-9][0-9]*)(\.[0-9]+)?([eE][+-]?[0-9]+)?)$'
   # leading whitespace, then the single opening brace
-  while (( i < n )); do c=${s:i:1}; [[ $c == [[:space:]] ]] || break; i=$((i + 1)); done
+  while (( i < n )); do c=${s:i:1}; [[ $c == [$ws] ]] || break; i=$((i + 1)); done
   (( i < n )) && [[ ${s:i:1} == '{' ]] || return 1
   i=$((i + 1))
   local allow_close=1   # only an empty object may close before a member
   while :; do
-    while (( i < n )); do c=${s:i:1}; [[ $c == [[:space:]] ]] || break; i=$((i + 1)); done
+    while (( i < n )); do c=${s:i:1}; [[ $c == [$ws] ]] || break; i=$((i + 1)); done
     (( i < n )) || return 1
     c=${s:i:1}
     if [[ $c == '}' ]]; then
       (( allow_close )) || return 1        # a trailing comma is not a member
       i=$((i + 1))
-      while (( i < n )); do c=${s:i:1}; [[ $c == [[:space:]] ]] || break; i=$((i + 1)); done
+      while (( i < n )); do c=${s:i:1}; [[ $c == [$ws] ]] || break; i=$((i + 1)); done
       (( i == n )) || return 1             # trailing garbage
       JSON_SCAN_RC=0
       return 0
@@ -1170,10 +1180,10 @@ claim_scan() { # LINE -> JSON_* tables + JSON_SCAN_RC; rc0: one well-formed obje
       key+=$c; i=$((i + 1))
     done
     # colon
-    while (( i < n )); do c=${s:i:1}; [[ $c == [[:space:]] ]] || break; i=$((i + 1)); done
+    while (( i < n )); do c=${s:i:1}; [[ $c == [$ws] ]] || break; i=$((i + 1)); done
     (( i < n )) && [[ ${s:i:1} == ':' ]] || return 1
     i=$((i + 1))
-    while (( i < n )); do c=${s:i:1}; [[ $c == [[:space:]] ]] || break; i=$((i + 1)); done
+    while (( i < n )); do c=${s:i:1}; [[ $c == [$ws] ]] || break; i=$((i + 1)); done
     (( i < n )) || return 1
     c=${s:i:1}; val=''; is_str=0
     if [[ $c == '"' ]]; then
@@ -1188,8 +1198,9 @@ claim_scan() { # LINE -> JSON_* tables + JSON_SCAN_RC; rc0: one well-formed obje
         val+=$c; i=$((i + 1))
       done
     elif [[ $c == '{' || $c == '[' ]]; then
-      # nested value: skip to its matching close, strings honoured
-      stk=$c; i=$((i + 1)); esc=0; in_str=0
+      # nested value: skip to its matching close, strings honoured; every bare
+      # token outside strings must be one JSON literal or number
+      stk=$c; i=$((i + 1)); esc=0; in_str=0; tok=''
       while [[ -n $stk ]]; do
         (( i < n )) || return 1
         c=${s:i:1}
@@ -1201,6 +1212,14 @@ claim_scan() { # LINE -> JSON_* tables + JSON_SCAN_RC; rc0: one well-formed obje
           i=$((i + 1)); continue
         fi
         case "$c" in
+          '"'|'{'|'['|'}'|']'|','|':'|' '|$'\t'|$'\r'|$'\n')
+            if [[ -n $tok ]]; then
+              [[ $tok =~ $lit ]] || return 1  # not a JSON literal or number
+              tok=''
+            fi
+            ;;
+        esac
+        case "$c" in
           '"') in_str=1 ;;
           '{'|'[') stk+=$c ;;
           '}'|']')
@@ -1211,28 +1230,31 @@ claim_scan() { # LINE -> JSON_* tables + JSON_SCAN_RC; rc0: one well-formed obje
               return 1                     # mismatched bracket
             fi
             ;;
+          ','|':'|' '|$'\t'|$'\r'|$'\n') ;;
+          *) tok+=$c ;;
         esac
         i=$((i + 1))
       done
     else
-      # number, true, false, null: up to a delimiter
+      # number, true, false, null: up to a delimiter, then one RFC 8259 literal
       while (( i < n )); do
         c=${s:i:1}
         case "$c" in
-          [[:space:]]|','|'}'|']') break ;;
+          ','|'}'|']'|' '|$'\t'|$'\r'|$'\n') break ;;
         esac
         val+=$c; i=$((i + 1))
       done
-      [[ -n $val ]] || return 1
+      [[ $val =~ $lit ]] || return 1
     fi
     # an empty member name cannot be an associative-array subscript (bash 5.3
     # rejects ""); no read key is empty, so the table simply skips it.
     if [[ -n $key ]]; then
       if [[ -n ${JSON_PRESENT["$key"]+x} ]]; then
-        # keep the SECOND occurrence's value so the caller can tell an agreeing
-        # duplicate from a conflicting one
-        if [[ -z ${JSON_DUP["$key"]+x} ]]; then
-          if (( is_str )); then JSON_DUPSTR["$key"]=$val; else JSON_DUPNONSTR["$key"]=1; fi
+        # flag the key when ANY repeat is not a string whose raw body equals the
+        # first occurrence's (r33 post-falsify: three or more repeats,
+        # ReviewKnowledge33), so the caller can tell agreeing repeats apart
+        if (( ! is_str )) || [[ -z ${JSON_STR["$key"]+x} || $val != "${JSON_STR["$key"]}" ]]; then
+          JSON_DUPDIFF["$key"]=1
         fi
         JSON_DUP["$key"]=1
       else
@@ -1241,12 +1263,12 @@ claim_scan() { # LINE -> JSON_* tables + JSON_SCAN_RC; rc0: one well-formed obje
       fi
     fi
     # after a value only ',' (another member) or the closing brace may follow
-    while (( i < n )); do c=${s:i:1}; [[ $c == [[:space:]] ]] || break; i=$((i + 1)); done
+    while (( i < n )); do c=${s:i:1}; [[ $c == [$ws] ]] || break; i=$((i + 1)); done
     (( i < n )) || return 1
     c=${s:i:1}
     if [[ $c == '}' ]]; then
       i=$((i + 1))
-      while (( i < n )); do c=${s:i:1}; [[ $c == [[:space:]] ]] || break; i=$((i + 1)); done
+      while (( i < n )); do c=${s:i:1}; [[ $c == [$ws] ]] || break; i=$((i + 1)); done
       (( i == n )) || return 1
       JSON_SCAN_RC=0
       return 0
@@ -1580,7 +1602,7 @@ verify_claims() {
   local id src span expect marker observed verdict at bad l sha_pin='' sha_present='' sha_actual=''
   local hay start_line end_line region m probe nearer tok ctx path show_id show_exp
   local linef='' line_n=0 line_m=0 line_present=0 lbad='' bound l1 l2
-  local dup='' dupk='' show_src='' id2=''
+  local dup='' dupk='' show_src='' nulk=''
 
   scan_secrets "$claims"
 
@@ -1605,23 +1627,25 @@ verify_claims() {
       CLAIM_LINES+=("CLAIM id=line$lineno expected=- observed=invalid source=- at=- verdict=invalid")
       continue
     fi
-    # C1: a marker-default row has a top-level "marker_default" string and no
-    # top-level "id" string; a duplicated read field is never such a row.
-    if ! json_dup "$line" id && ! json_dup "$line" marker_default \
-       && ! json_str "$line" id >/dev/null 2>&1 && json_str "$line" marker_default >/dev/null 2>&1; then
+    # C1: a read field repeated among the top-level members makes the record
+    # invalid (RFC 8259 §4: duplicate names make receiver behaviour
+    # unpredictable), whether or not the values agree. The first duplicate in a
+    # fixed order names the reason. Computed before the marker-default test so
+    # a marker-default row with any repeated read field is refused, never
+    # silently taken (r33 post-falsify: RerunC1a F1, RerunC1b G2).
+    dup=''
+    for dupk in id source span expect marker line sha256 marker_default; do
+      if json_dup "$line" "$dupk"; then dup=$dupk; break; fi
+    done
+    # a marker-default row has a top-level "marker_default" string, no top-level
+    # "id" string and no repeated read field
+    if [[ -z $dup ]] && ! json_str "$line" id >/dev/null 2>&1 \
+       && json_str "$line" marker_default >/dev/null 2>&1; then
       default_marker=$(json_unescape "$(jfield "$line" marker_default)")
       continue
     fi
     bad=''; observed=''; at=''; sha_present=''; sha_pin=''
     N_CLAIMS=$((N_CLAIMS + 1))
-    # C1: a read field repeated among the top-level members makes the record
-    # invalid (RFC 8259 §4: duplicate names make receiver behaviour
-    # unpredictable), whether or not the values agree. The first duplicate in a
-    # fixed order names the reason; a duplicated "id" leaves no id to print.
-    dup=''
-    for dupk in id source span expect marker line sha256 marker_default; do
-      if json_dup "$line" "$dupk"; then dup=$dupk; break; fi
-    done
     if [[ -n $dup ]]; then
       N_INVALID=$((N_INVALID + 1))
       id=$(json_unescape "$(jfield "$line" id)")
@@ -1629,14 +1653,11 @@ verify_claims() {
       src=$(json_unescape "$(jfield "$line" source)")
       show_id=${id:-line$lineno}; show_exp=${expect:--}; show_src=${src:--}
       if [[ $dup == id ]]; then
-        # a duplicated id prints that id only when the two values are
-        # byte-identical (decoded); differing or non-string values leave the id
-        # unreadable, exactly as for any other unreadable id
+        # a duplicated id prints that id only when every repeat is a string with
+        # the same raw body as the first; otherwise the id is as unreadable as
+        # any other and the line number stands in
         show_id=line$lineno
-        if [[ -n $id && -z ${JSON_DUPNONSTR[id]+x} && -n ${JSON_DUPSTR[id]+x} ]]; then
-          id2=$(json_unescape "${JSON_DUPSTR[id]}")
-          if [[ $id2 == "$id" ]]; then show_id=$id; fi
-        fi
+        if [[ -n $id && -z ${JSON_DUPDIFF[id]+x} ]]; then show_id=$id; fi
       fi
       [[ $dup == expect ]] && show_exp=-
       [[ $dup == source ]] && show_src=-
@@ -1674,7 +1695,19 @@ verify_claims() {
         fi
       fi
     fi
-    if [[ -z $id ]]; then bad="missing id"
+    # an escaped NUL in any read string field would be dropped by the decoder
+    # (bash cannot hold NUL), so "al\u0000pha" would verify as "alpha": refuse
+    # it as sha256 already is (r33 post-falsify: ProbeMalformed33 F4)
+    # (escaped backslash pairs are removed first, so a literal "\\u0000" text is
+    # not mistaken for one; the tables are this record's: claim_scan ran above)
+    nulk=''
+    for dupk in id source span expect marker line; do
+      [[ -n ${JSON_STR[$dupk]+x} ]] || continue
+      sha_raw=${JSON_STR[$dupk]//\\\\/}
+      if [[ ${sha_raw,,} == *'\u0000'* ]]; then nulk=$dupk; break; fi
+    done
+    if [[ -n $nulk ]]; then bad="$nulk holds an escaped NUL (\\u0000)"
+    elif [[ -z $id ]]; then bad="missing id"
     elif [[ -z $src ]]; then bad="missing source"
     elif [[ -z $span ]]; then bad="missing/empty span"
     elif [[ -z $expect ]]; then bad="missing expect"
@@ -7628,6 +7661,41 @@ EOF
     'CLAIM id=line2 expected=supported observed=invalid source=lib/span.md at=- verdict=invalid' \
     'VERDICT_BEARING_CLAIMS=0/2' \
     'claims=2 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=2 findings=2 drift=2'
+  # ---- round-33 post-falsify repairs (wave 2): fail closed on what the reader
+  # still accepted. A bare token that is not a JSON literal or number (at the
+  # top level or inside a nested value) and a form feed between members make
+  # the line malformed; the counted C1 classes never contain either.
+  printf '%s\n' \
+    '{"id":"PF1","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","x":tru}' \
+    '{"id":"PF2","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","x":{"y":xyz}}' \
+    '{"id":"PF3","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","x":[1,-2.5e3,true,null,"q"]}' \
+    >"$WORK/r33-post-literals.jsonl"
+  printf '{"id":"PF4",\f"source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported"}\n' \
+    >>"$WORK/r33-post-literals.jsonl"
+  tclaims r33-post-literals 1 \
+    'RESEARCH_GATE: DRIFT' \
+    'CLAIM id=line1 expected=- observed=invalid source=- at=- verdict=invalid' \
+    'CLAIM id=line2 expected=- observed=invalid source=- at=- verdict=invalid' \
+    'CLAIM id=PF3 expected=supported observed=supported source=lib/span.md at=line:1 verdict=match' \
+    'CLAIM id=line4 expected=- observed=invalid source=- at=- verdict=invalid' \
+    'claims=4 supported=1 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=3 findings=3 drift=3'
+  # An escaped NUL in a read string field would decode away ("al\u0000pha" ->
+  # "alpha"); it is refused as sha256 already was. A marker-default row with a
+  # repeated read field is refused, and three id repeats print the id only when
+  # every repeat agrees.
+  printf '%s\n' \
+    '{"id":"PN1","source":"lib/span.md","span":"al\u0000pha beta gamma delta","expect":"supported"}' \
+    '{"marker_default":"M","line":"1","line":"2"}' \
+    '{"id":"PN3","id":"PN3","id":"PN9","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported"}' \
+    '{"id":"PN4","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","note":"literal \\u0000 text"}' \
+    >"$WORK/r33-post-nul-dup.jsonl"
+  tclaims r33-post-nul-dup 1 \
+    'RESEARCH_GATE: DRIFT' 'span holds an escaped NUL' \
+    'CLAIM id=PN1 expected=supported observed=invalid source=lib/span.md at=- verdict=invalid' \
+    'CLAIM id=line2 expected=- observed=invalid source=- at=- verdict=invalid' \
+    'CLAIM id=line3 expected=supported observed=invalid source=lib/span.md at=- verdict=invalid' \
+    'CLAIM id=PN4 expected=supported observed=supported source=lib/span.md at=line:1 verdict=match' \
+    'claims=4 supported=1 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=3 findings=3 drift=3'
 
   if [[ $failures -eq 0 ]]; then
     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"
