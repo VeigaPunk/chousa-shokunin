@@ -181,6 +181,9 @@ revisions.
 
 ## Not claimed
 
+Per-hop address provenance: C2 checks that every connection goes to a global address of the
+item's own name map, not that each hop connects to the address its own lookup returned.
+
 Liveness: neither counter shows that the tool reaches the real network; both run on
 loopback. Pages that omit the `<head>` start tag itself, 2xx challenge pages (S021, S022),
 PDF sources, prefix and suffix disambiguation and pages rendered by JavaScript stay out of
