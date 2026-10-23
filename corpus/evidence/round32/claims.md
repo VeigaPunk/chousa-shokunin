@@ -115,3 +115,75 @@ lines byte-identical; `verify-claims corpus/fixtures/claims-r2.jsonl` 17/17; `ve
 corpus/fixtures/chain-r3.md` `RESOLVED_HOPS=17/22` CLEAN; `chain-r3-broken.md` 1/2 DRIFT; the
 round-1 observable `VERDICT_BEARING_EXPORTS=3/3`; the round-31 counters (`c1-count.py`,
 `c2-count.py` under `corpus/evidence/round31/`) 120/120 each.
+
+# Design v2 (round 32 attempt 2, before any candidate receipt)
+
+Design v1 above was committed at `4111607c` by attempt 1, which died before any seat ran. Attempt 2
+ran the pre-data control wave (`.ufo/waves/round-32/w1/`) under v1 and it broke both counters
+before any candidate was built into the lane or scored. Under the kill rule above, a later design
+version is legal only before the first candidate receipt and must say what control forced it. No
+candidate receipt exists for either claim at the commit that carries this section.
+
+## What forced v2
+
+- **C1.** `CtlC1PartialLockB` control (b) — lock around the last-byte probe only, `flock -u` before
+  the append — scored `APPEND_SERIALIZED=24/24` on two fresh seeds under v1
+  (`w1/CtlC1PartialLockB/b-s32471021.json`, `b-s32471022.json`, gate `034f786b…`). The append
+  is microseconds after the unlock and the next writer's probe takes milliseconds, so v1 never
+  saw the window. The other C1 controls missed (do-nothing 6–10/24, wrong lock ≤12, jitter ≤12,
+  all-false 0, append-only ≤4, cached probe 0, shared lock ≤11).
+- **C2.** Under v1, a gate that prints each finding twice scored 120/120 (`CtlC2NoisyB`
+  duplicate-only; `MutC2CounterB` duplicate-finding), as did output controls with no DRIFT
+  verdict, CLEAN with exit 0, or a stray finding on an unknown hop (`MutC2CounterB`
+  `frozen-{no-verdict,clean-exit,stray-unknown}-*`); case-insensitive and whitespace-collapsing
+  readers scored 120/120 (`CtlC2WeakReaderB` `*-isolated-mutated-*`), because the fixture has no
+  case-only or whitespace-only negatives. Seats also found a layout hazard: a control gate placed
+  flat in the counter's temp parent puts the out-of-corpus sibling inside the gate's lane root.
+
+## C1 v2
+
+Counter `corpus/evidence/round32/c1-count-v2.py` (v1 unchanged and no longer counted). The only
+change: every gate writer runs under strace(1) with each write-family syscall that touches the
+manifest delayed 300 ms at entry, plus a start-up self-check that the delay works (exit 2
+otherwise). Trials, checks and contract are v1's.
+
+**P1 (frozen predicate, v2).** C1 is met iff, on the landed lane revision, `c1-count-v2.py`
+prints `APPEND_SERIALIZED=24/24` (receipt label `predicate_holds=true`) on each of two fresh-seed
+runs, and no run of this counter on that revision in round 32 prints a lower count.
+
+Code condition: `holds = matched == TOTAL` with `TOTAL = 24`. Receipt label: `predicate_holds`.
+
+L1 receipts under v2 (`.ufo/waves/round-32/controls/L1-design-v2/`, counter `e6bf9531…`): base
+gate 0/24; probe-only control (b) 0/24; append-only (a) 0/24; cached probe (c) 0/24; shared lock
+(d) 0/24; feasibility oracle (`controls/L1-design/oracle-gate.sh`, gate `719d0b92…`) 24/24 on
+seeds 3201 and 3202. Before value for C1 under v2: **0/24** (base gate `0bc318b3`, seed 3201).
+
+## C2 v2
+
+Counter `corpus/evidence/round32/c2-count-v2.py` (v1 unchanged and no longer counted). Changes:
+(1) findings are counted, not de-duplicated; (2) record checks — gate exit 1, exactly one
+`RESEARCH_GATE: DRIFT` line, no FINDING naming a hop id outside the record — and if any fails no
+hop matches; (3) exit 2 when the fixture temp dir lies inside the gate's lane root; (4) two
+negative classes, E11 (anchor present only in upper case) and E12 (anchor words separated by two
+spaces), 6 hops each, so TOTAL is 132. The contract text of C2 is unchanged ("exactly one FINDING
+… and drifts" was already in it).
+
+**P2 (frozen predicate, v2).** C2 is met iff, on the landed lane revision, `c2-count-v2.py`
+prints `EXEMPT_AUDIT_MATCH=132/132` (receipt label `predicate_holds=true`) on each of two
+fresh-seed runs, and no run of this counter on that revision in round 32 prints a lower count.
+
+Code condition: `holds = matched == TOTAL` with `TOTAL = 132`. Receipt label: `predicate_holds`.
+
+L1 receipts under v2 (counter `8ec1a1ed…`): base gate 0/132 (record checks fail: exit 0, no DRIFT
+line; R1–R3 0/36 at hop level) on seeds 3221 and 3222; duplicate-finding control 96/132 (R1–R3
+0/36); feasibility oracle (`OracleC2B` final gate `1e3d02fe…`, copy `c2-oracle-gate.sh`) 132/132
+on both seeds. Truth audit, seed 3223: every status rewritten to `resolved` in the kept fixture,
+the base gate verifies exactly 60 hops (R1–R3, F1, E5) and reports E11/E12 among the 42
+anchor-missing (`c2-truth-audit-s3223-resolved.out`). Before value for C2 under v2: **0/132**.
+
+## Control re-score under v2
+
+Before any candidate is scored, the control-wave seats re-score their controls under the v2
+counters; their receipts are committed before the first candidate receipt. A control that meets
+P1 v2 or P2 v2 stops data: the claim then lands as a miss or is declared exploratory, never
+re-scaled.
