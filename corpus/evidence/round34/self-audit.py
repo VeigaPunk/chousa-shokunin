@@ -16,12 +16,15 @@ whatever K is. Check kinds (enumerated in audit-set.json):
 - sha256       {"path": ..., "expect": ...}  file digest equals the pinned digest
 - receipt_binding {"receipt": ..., "commit": ...}  the committed JSON receipt's
               gate_sha256 equals the digest of tools/research-gate.sh at <commit>
+- receipt_gate_file {"receipt": ..., "gate_file": ...}  a control receipt binds a
+              non-lane gate committed as a file (mask/control gates)
 - grep_assert  {"path": ..., "pattern": ..., "present": true|false}  a named text
               assertion holds (regex search, per line)
 
 Usage: python3 corpus/evidence/round34/self-audit.py [--set PATH]
           [--lane PATH] [--dispositions PATH]
-No network; writes nothing (stdout only).
+All audited file reads resolve COMMITTED bytes at HEAD via `git show HEAD:<path>` (a dirty
+worktree cannot move the count); untracked paths fail closed. No network; writes nothing.
 """
 import argparse
 import hashlib
@@ -54,6 +57,13 @@ def git_commit_exists(lane, prefix):
     return p.returncode == 0, p.stdout.strip() if p.returncode == 0 else ""
 
 
+def head_bytes(lane, path):
+    """Committed bytes of path at HEAD (None if not tracked there)."""
+    p = subprocess.run(["git", "-C", lane, "show", "HEAD:%s" % path],
+                       capture_output=True)
+    return p.stdout if p.returncode == 0 else None
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--set", default="corpus/evidence/round34/audit-set.json")
@@ -72,6 +82,9 @@ def main():
                 if "|" in line and not line.startswith("#"):
                     cid = line.split("|", 1)[0].strip()
                     dispositions[cid] = line.split("|", 1)[1].strip()
+    import hashlib as _hl
+    with open(os.path.join(lane, a.set), "rb") as _sf:
+        print("SET_SHA256=%s" % _hl.sha256(_sf.read()).hexdigest())
     mismatches = []
     for chk in checks:
         cid, kind = chk["id"], chk["kind"]
@@ -82,24 +95,23 @@ def main():
                 ok, full = git_commit_exists(lane, chk["prefix"])
                 detail = "resolves %s" % full[:12] if ok else "prefix %s does not resolve" % chk["prefix"]
             elif kind == "path":
-                p = os.path.join(lane, chk["path"])
-                ok = os.path.exists(p)
-                detail = "exists" if ok else "missing: %s" % chk["path"]
+                raw = head_bytes(lane, chk["path"])
+                ok = raw is not None
+                detail = "tracked at HEAD" if ok else "missing or untracked at HEAD: %s" % chk["path"]
             elif kind == "sha256":
-                p = os.path.join(lane, chk["path"])
-                if not os.path.isfile(p):
-                    ok, detail = False, "missing: %s" % chk["path"]
+                raw = head_bytes(lane, chk["path"])
+                if raw is None:
+                    ok, detail = False, "not tracked at HEAD: %s" % chk["path"]
                 else:
-                    got = sha256_file(p)
+                    got = hashlib.sha256(raw).hexdigest()
                     ok = got == chk["expect"]
                     detail = "digest %s" % got[:16] if ok else "digest %s != pinned %s" % (got[:16], chk["expect"][:16])
             elif kind == "receipt_binding":
-                rp = os.path.join(lane, chk["receipt"])
-                if not os.path.isfile(rp):
-                    ok, detail = False, "missing receipt: %s" % chk["receipt"]
+                raw = head_bytes(lane, chk["receipt"])
+                if raw is None:
+                    ok, detail = False, "not tracked at HEAD: %s" % chk["receipt"]
                 else:
-                    with open(rp) as f:
-                        r = json.load(f)
+                    r = json.loads(raw.decode("utf-8", "replace"))
                     got = r.get("gate_sha256", "")
                     want = git_show_blob_sha(lane, chk["commit"], "tools/research-gate.sh")
                     if want is None:
@@ -108,13 +120,28 @@ def main():
                         ok = got == want
                         detail = ("binds %s@%s" % (got[:12], chk["commit"][:8]) if ok
                                   else "receipt gate %s != %s@%s" % (got[:12], want[:12], chk["commit"][:8]))
-            elif kind == "grep_assert":
-                p = os.path.join(lane, chk["path"])
-                if not os.path.isfile(p):
-                    ok, detail = False, "missing: %s" % chk["path"]
+            elif kind == "receipt_gate_file":
+                # a CONTROL receipt legitimately binds a non-lane gate committed as a file.
+                raw = head_bytes(lane, chk["receipt"])
+                graw = head_bytes(lane, chk["gate_file"])
+                if raw is None:
+                    ok, detail = False, "not tracked at HEAD: %s" % chk["receipt"]
+                elif graw is None:
+                    ok, detail = False, "not tracked at HEAD: %s" % chk["gate_file"]
                 else:
-                    with open(p, encoding="utf-8", errors="replace") as f:
-                        found = any(re.search(chk["pattern"], line) for line in f)
+                    r = json.loads(raw.decode("utf-8", "replace"))
+                    got = r.get("gate_sha256", "")
+                    want = hashlib.sha256(graw).hexdigest()
+                    ok = got == want
+                    detail = ("binds %s" % chk["gate_file"] if ok
+                              else "receipt gate %s != %s (%s)" % (got[:12], want[:12], chk["gate_file"]))
+            elif kind == "grep_assert":
+                raw = head_bytes(lane, chk["path"])
+                if raw is None:
+                    ok, detail = False, "not tracked at HEAD: %s" % chk["path"]
+                else:
+                    found = any(re.search(chk["pattern"], line)
+                                for line in raw.decode("utf-8", "replace").splitlines())
                     ok = found == chk.get("present", True)
                     detail = "pattern %s %s" % (chk["pattern"], "present" if found else "absent")
             else:

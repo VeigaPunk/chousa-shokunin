@@ -108,3 +108,23 @@ declares two new claims, design v4 `corpus/evidence/round34/claims-a2.md`:
   C2 probe. Status unchanged (`mined`); used-by adds `corpus/knowledge/dead-zone-pcre-r34.md`.
 - No new rows; no other status/recheck/used-by changes (S001–S063, S064, S066 untouched this
   attempt). C2 rests on S065 as its opened-this-round source row.
+
+## Wave 2a2 outcomes (attempt 2; 20 of 33 seats returned by the integration cutoff)
+
+New mistake/limit rows (fix routed unless stated):
+
+| Class | Evidence | Captured-by | Fix |
+|---|---|---|---|
+| A calibration claim whose set is shallow is reachable by a shallow-audit do-nothing: identical 0/0 under planted drift (false SCORECARD count + broken SHONEN pointer both uncounted) | `w2a2/CritC3Claim.md` | wave critic | C3 reshaped in-round to the bounded acquisition (deepened set, before/after count, assessment-derived controls); QUALITY-class lesson: a counted claim must demonstrate the count MOVES on real drift, not only that it prints a number |
+| Output-only counters cannot exclude a fixture-keyed engine that implements the exact semantics (it is output-equivalent); pure lookups without semantics ARE caught | `w2a2/MutC2Keyed.md` (ctl4/ctl6 37/37; tracer 39 firings) | wave mutation-tester | r35: work-proof battery (tracer/strace invocation-class checks; kake `lookup_control_check.py` template as the committed check); C2 verdict unaffected (gate-scoped predicate; the landed gate is not keyed — RevGateDiff diff) |
+| At dead-zone lengths, positional 16384-byte edge windows overlap and are byte-equivalent to the exact matcher; the counter correctly admits them and rejects sub-span windows | `w2a2/MutC2Windows.md` (ctlB caught by decoys; ctlC meets as an exact equivalent; W=4096 positional caught) | wave mutation-tester | none needed (correct admission); arithmetic recorded in the report |
+| The LC_ALL=C selftest failures are ONE byte: `\u2192` decodes via printf %b only in a UTF-8 locale; all 10 failing blocks carry `CLAIM_SPAN_NOT_FOUND obs=id=P4` | `w2a2/ExecSelftestEnv.md`; `research-gate.sh:4045` | wave executor | r35: json_unescape locale-independent `\uXXXX` decode; until then every LC_ALL=C run discloses the P4 class |
+| The host's `/usr/bin/grep` self-reports pi-uu-grep 0.2.0 while pacman owns grep 3.12-2; the gate resolves bare `grep` via PATH (research-gate.sh:1618/1641/1687); the 32764/32765 boundary measured identically in every in-round run | `w2a2/RevGateDiff.md` ENV HAZARD; this attempt's shells | wave reviewer | r35: pin the grep binary path in runbooks and verify `grep --version` provenance; S066 pins the GNU man page, not the binary |
+| `tok_span_offsets_chunk` binds `slen` from its local `span` at declaration; renaming the local would fall back to the caller's dynamic `span` and silently mis-confirm | `w2a2/MutC2Windows.md` latent-hazard note; `research-gate.sh:1631` | wave mutation-tester | r35: `slen=${#2}` (decoupled from the local name) |
+| An auditor that reads the worktree can be moved by uncommitted bytes; the deepened auditor reads HEAD bytes via `git show` | `w2a2/RevC3Set.md` F1 | wave reviewer | landed: HEAD-byte reads + SET_SHA256 print in self-audit.py |
+| Selftest-case comment numbering (252-254 / 255-257) vs the actual run (252-256) | `w2a2/ScoutSkillTally.md`; `w2a2/ExecC2Rerun.md` D2 | wave seats | r35 (comment-only edit would churn the gate digest) |
+
+Gate (wave): no SOURCES rows opened or changed by the wave; ScoutSourcesA2 re-opened S064+S066
+(pins hold, census exit 0). Dispositions/rejects this attempt: see the SCORECARD rows and the
+report; the 13 unreturned seats are named in the report (queued behind the host job clamp at
+the integration cutoff, not dead).

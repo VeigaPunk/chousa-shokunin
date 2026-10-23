@@ -12,8 +12,8 @@ sha256 `a3ea2c67…74bd6`; re-opened 2026-10-23, pins unchanged).
    the pattern for a span of 32768 bytes is 131072 argv bytes, so exec fails with E2BIG
    ("Argument list too long"). Round 34 C1's surface (S064).
 2. **PCRE2 compiled-pattern ceiling** — "approximately 64 thousand code units" for the 8/16-bit
-   libraries (S065). The `\xHH` escapes compile to code units at roughly two per span byte, so
-   this ceiling binds at a span of about 32765 bytes — **before** the argv ceiling.
+   libraries (S065). On this host the ceiling binds at a span of 32765 bytes — **before** the
+   argv ceiling. The per-byte code-unit ratio is build-specific and not claimed (ExecC2Rerun D3).
 
 Measured on this host (2026-10-23, gate `772a1d8e`, probes in
 `/fast/scratch/hyaku/chousa-r34-a2/probe/`): a pattern for a **32764-byte** span compiles and

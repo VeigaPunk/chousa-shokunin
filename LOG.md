@@ -1298,3 +1298,16 @@ claims, design v4 `corpus/evidence/round34/claims-a2.md` (`7c7eb3a6`, frozen bef
   wiring read the pristine set).
 - Motivating evidence: SCORECARD planned-r35 dead-zone row; `corpus/lessons/round-34.md`;
   R34ReviewRepairs SKILL-tally finding; watchdog `lane-dead-no-report chousa round=34`.
+
+- Wave 2a2 (33-seat falsify/verify, 20 reports returned by the integration cutoff; 13 seats
+  queued/unreturned, named in the round report): C2 re-derived and attacked — P2 holds
+  (ExecC2Rerun fresh seeds 7311/7417/7589; RevC2Receipts; MutC2Counter ablation R1-R7
+  load-bearing; MutC2Halves/Windows/Accept/Boundary/NoReader/Trunc controls miss except the
+  semantically-exact window class; MutC2Keyed 2/6 fixture-keyed engines meet 37/37 — the
+  output-only counter limit, routed r35); C3 first written form falsified by CritC3Claim
+  (shallow-set do-nothing), reshaped in-round to the bounded structural-audit acquisition
+  (62 checks, HEAD-byte reads, before 3 -> after 1-dispositioned; MutC3Inject 5/5,
+  MutC3Bypass, RevC3Set); ScoutSkillTally banner finding fixed; RevGateDiff confirms the gate
+  diff is one functional line; ExecSelftestEnv root-causes the LC_ALL=C fails to the \u2192
+  json_unescape locale byte; ScoutSourcesA2 pins hold, census exit 0; RevShonenA2 extensive
+  (boxes land [~], its evidence named); ConnectorOverlap: C2 fleet-unique, no contradiction.

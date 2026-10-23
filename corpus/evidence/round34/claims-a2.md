@@ -176,3 +176,12 @@ hypothesis vs the measured 3-byte window (C2 surface paragraph) — planned entr
 are hypotheses until measured; and C1 selftest cases 252-253 use a 29999-byte span,
 which exercises the DIRECT path, so the chunk matcher shipped r34 with no selftest
 case (found while designing C2; the new cases pin both boundaries).
+
+## Erratum (post-data; evidence pointers only — counter, TOTAL, P2 and the kill rule unchanged)
+
+- "Before (do-nothing control)" predicted a 4/37 ceiling (only the 4 short records pass).
+  Both committed before receipts measure 21/37: the 17 long records whose truth is
+  unsupported/mislocated coincidentally pass on the broken gate (every long span reads
+  observed=unsupported when grep refuses the pattern, which matches their truth). The
+  do-nothing control still cannot reach 37/37; P2 is unaffected. Found independently by
+  wave seats RevC2Receipts (MEDIUM) and ExecC2Rerun (D1).
