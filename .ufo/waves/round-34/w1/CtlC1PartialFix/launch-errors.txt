@@ -1,0 +1,20 @@
+Access date: 2026-10-23
+
+Initial launch (both seeds 6241037426710223 and 6241037426710224):
+timeout 1800s prlimit --as=2147483648 --nproc=2000 -- env C1_TMP=/fast/scratch/hyaku/chousa-r34/w1/CtlC1PartialFix TMPDIR=/fast/scratch/hyaku/chousa-r34/w1/CtlC1PartialFix python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round34/c1-count.py --gate /fast/scratch/hyaku/chousa-r34/w1/CtlC1PartialFix/base.sh --seed <SEED> --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-34/w1/CtlC1PartialFix/pristine-s<SEED>.json
+Tool job IDs: bg_7503, bg_7504. Both completed with exit code 1; neither produced a receipt. The counter reached subprocess.run at c1-count.py:275, then failed before launching the gate:
+BlockingIOError: [Errno 11] Resource temporarily unavailable
+These attempts are inconclusive, not detector kills. Their OS PIDs were not exposed by proc:// after completion.
+
+Observed process limit:
+$ timeout 20s prlimit --nproc
+RESOURCE DESCRIPTION               SOFT   HARD UNITS
+NPROC    max number of processes 122865 122865 processes
+
+A diagnostic using `timeout 20s ps -u vgpnk -L --no-headers | wc -l` printed `ps: unsupported option '-L'` and then 0. The 0 is not a valid process count.
+
+Two later bash-tool submissions (pristine second seed, at-only first seed) did not launch and returned:
+Background job limit reached (100). Wait for running jobs to finish or cancel one.
+They were subsequently run in a foreground Python executor with two workers. Actual successful-run commands, PIDs, return codes and stdout are in foreground-first-results.json. All subsequent bounded runs cap address space at 2147483648 bytes and NPROC at 65536.
+
+The Python eval cell that waited on those two executor results returned '(no output)' despite print calls. A subsequent cell retrieved the completed results; issue reported to xd://report_issue. No counter edits were made.

@@ -1,0 +1,9 @@
+(a) argv single-string ceiling (pattern = 4 x span bytes):
+  span= 32000 pattern= 128000 bytes -> rc=0 
+  span= 32700 pattern= 130800 bytes -> rc=0 
+  span= 32766 pattern= 131064 bytes -> rc=2 grep: regular expression is too large
+  span= 32767 pattern= 131068 bytes -> rc=2 grep: regular expression is too large
+  span= 32768 pattern= 131072 bytes -> rc=OSError [Errno 7] Argument list too long: 'grep'
+(b) PCRE2 compiled-pattern ceiling (same pattern, via -f file):
+  max span compiling as -P -f: 32764 bytes (pattern 131056 bytes)
+  next size (32765) -> rc=2 grep: regular expression is too large

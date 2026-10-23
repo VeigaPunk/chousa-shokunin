@@ -1,0 +1,24 @@
+{
+ "access_date": "2026-10-23",
+ "deadline_action_utc": "2026-10-23T11:39:14Z",
+ "reason": "Binding 40-minute seat limit; individual completed counters took 795.027..1170.521 seconds, not the estimated 3..6 minutes. Retain partial measured evidence; never fabricate remaining receipt or score.",
+ "cancelled": [
+  {"name": "suffix8192-s349102", "outer_pid": 4079899, "outer_pgid": 4079899, "inner_pid": 4081953, "inner_pgid": 4081953, "returncode": -2, "stdout": "RUN_PID=4081953 RUN_PGID=4081953\n", "stderr_key_output": "KeyboardInterrupt", "counter_result": "no LONGSPAN_MATCH output; no frozen receipt", "process_reaped": true},
+  {"name": "restored-s349101", "outer_pid": 891723, "outer_pgid": 891723, "inner_pid": 894124, "inner_pgid": 894124, "returncode": -2, "stdout": "RUN_PID=894124 RUN_PGID=894124\n", "stderr_key_output": "KeyboardInterrupt", "counter_result": "no LONGSPAN_MATCH output; no frozen receipt", "process_reaped": true}
+ ],
+ "cancellation_method": "os.killpg(recorded_outer_pgid, signal.SIGINT); collect subprocess output via the already-running communicate future; run-control.py catches BaseException and kills/waits its recorded inner process group. No process-name or pattern signalling.",
+ "cleanup_command": "timeout 15s /usr/bin/ps --sid 4081953,894124,4079899,891723 -o pid,ppid,pgid,stat,args --cols 300",
+ "cleanup_exit_code": 1,
+ "cleanup_stdout": "    PID    PPID    PGID STAT COMMAND\n",
+ "cleanup_observed": "No remaining process rows in any of the four own cancelled sessions.",
+ "restoration_method": "After all own counter processes exited, run four timeout 15s cp commands from scratch/base-gate.sh to scratch/prefix32767.sh, prefix8192.sh, suffix32767.sh, suffix8192.sh; then timeout 15s sha256sum scratch/*.sh and the frozen counter. Combined command exited 0.",
+ "scratch": "/fast/scratch/hyaku/chousa-r34/w1/CtlC1Truncate",
+ "original_sha256": "43a1af35ca668fe535fcef1e68b0c64bbba3eada59c7a23181f591901fca4346",
+ "restored_files": ["base-gate.sh", "prefix32767.sh", "prefix8192.sh", "restored-gate.sh", "suffix32767.sh", "suffix8192.sh"],
+ "every_restored_file_sha256": "43a1af35ca668fe535fcef1e68b0c64bbba3eada59c7a23181f591901fca4346",
+ "counter_sha256_after": "5ef347874960b52561a1cfa517f3f3fc0d1763830e3580c44b993f8394c0a565",
+ "archival_control_copies": "The four .ufo/waves/round-34/w1/CtlC1Truncate/*.sh mutation artifacts retain the actual scored mutant bytes and construction.json hashes; only the scratch experiments were restored.",
+ "artifact_bound_command": "timeout 15s wc -c /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-34/w1/CtlC1Truncate/*",
+ "largest_artifact_bytes_observed": 357659,
+ "formal_mutation_verdict": "INCONCLUSIVE: pristine counter already fails 19/30; controls missing 30/30 are not killed mutants. Restored-byte behavioral rerun also cancelled; exact byte restoration is established by sha256."
+}

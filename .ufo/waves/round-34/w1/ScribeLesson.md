@@ -1,0 +1,7 @@
+# Round 34 — ScribeLesson
+Behavior: Drafted the round-34 `## Mistakes` E1/E5 table and proposed QUALITY 42/43 text; source provenance is `corpus/lessons/round-33-verifier-spotcheck.md:157-173` and `corpus/lessons/round-33.md:115-119`.
+Gates: Read-only census used `timeout 90 git -C /home/vgpnk/Projects/shokunin/chousa-shokunin log --all --format=%H -- tools/research-gate.sh`, then `timeout 90 git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show <revision>:tools/research-gate.sh`; census detail/output: `.ufo/waves/round-34/w1/ScribeLesson/census.md:3-16`.
+Outcome: 86 gate revisions / 40 unique SHA-256s; the census marked each round-33 fuzz receipt `fz-90212/3/4.json` `UNMATCHED` (`gate_sha256=b2c07eda…`). Eval completed without error; its tool result did not expose a numeric exit code.
+E5 evidence: spot-check says the SentinelParser33 `cmp` statement has no committed output (`corpus/lessons/round-33-verifier-spotcheck.md:172-173`); the prior lesson records copy then fleet deletion (`corpus/lessons/round-33.md:115-119`).
+Touched: this report plus `.ufo/waves/round-34/w1/ScribeLesson/{mistakes.md,quality.md,census.md}` only; no lane production file, judge, or Git state changed; no installs.
+Limits/out of scope: QUALITY 42/43 are drafts, not merged; no E5 pair-file check was run; no C1 counter or candidate gate was run. Census covers gate revisions reachable via `git log --all`, not unreachable Git objects.

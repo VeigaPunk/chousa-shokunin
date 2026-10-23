@@ -1,0 +1,8 @@
+2026-10-23, first pristine detector attempt.
+Command: timeout 1700s prlimit --as=2147483648 --nproc=2000 -- env C1_TMP=/fast/scratch/hyaku/chousa-r34/w1/CtlC1Halves TMPDIR=/fast/scratch/hyaku/chousa-r34/w1/CtlC1Halves python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round34/c1-count.py --gate /fast/scratch/hyaku/chousa-r34/w1/CtlC1Halves/pristine-gate.sh --seed 3487310 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-34/w1/CtlC1Halves/pristine-s3487310.json
+Tool job: bg_7527; command exit 1. No receipt emitted.
+Key actual output:
+  File "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round34/c1-count.py", line 275, in main
+    p = subprocess.run(["bash", gate, "verify-claims", claims, "--root", root], capture_output=True, env=env,
+BlockingIOError: [Errno 11] Resource temporarily unavailable
+Interpretation: harness launch failure, inconclusive. Repeat with a process cap above this shared user's current task count, not a changed counter or gate.

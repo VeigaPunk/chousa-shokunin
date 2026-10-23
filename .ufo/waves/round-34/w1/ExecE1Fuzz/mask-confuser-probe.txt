@@ -1,0 +1,26 @@
+# Mask-gate confuser probe (round-34 E1) — 2026-10-23T11:16:33Z
+# mask gate: .ufo/waves/round-33/w2/L1ShortcutMask/mask-gate.sh sha256 ae7d4bfc7ac1d262590dd5014e8abdbbea102266551891b4910666116440e0cd
+# landed gate: git show b80539005176ac6ce39bc1c7afb846cb1f2f7c75:tools/research-gate.sh sha256 43a1af35ca668fe535fcef1e68b0c64bbba3eada59c7a23181f591901fca4346
+== AB_brace  (record: {"id": "ab1", "source": "src/a.md", "span": "horitu", "expect": "supported", "nest": {"note": "trailing \\\\ two backslashes then }", "marker": "m", "expect": "contradicted"}})
+-- mask:
+CLAIM id=ab1 expected=supported observed=invalid source=src/a.md at=- verdict=invalid
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=1 duplicate top-level key
+-- landed:
+CLAIM id=ab1 expected=supported observed=supported source=src/a.md at=line:12 verdict=match
+== AB_nobrace  (record: {"id": "ab2", "source": "src/a.md", "span": "horitu", "expect": "supported", "nest": {"note": "trailing X two backslashes then Y", "marker": "m", "expect": "contradicted"}})
+-- mask:
+CLAIM id=ab2 expected=supported observed=supported source=src/a.md at=line:12 verdict=match
+-- landed:
+CLAIM id=ab2 expected=supported observed=supported source=src/a.md at=line:12 verdict=match
+== R1  (record: {"id": "r1", "source": "src/a.md", "span": "horitu", "expect": "supported", "nest": {"note": "trailing \\\\ two backslashes then }", "marker": "m", "expect": "contradicted"}})
+-- mask:
+CLAIM id=r1 expected=supported observed=invalid source=src/a.md at=- verdict=invalid
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=1 duplicate top-level key
+-- landed:
+CLAIM id=r1 expected=supported observed=supported source=src/a.md at=line:12 verdict=match
+== R2  (record: {"id": "r2", "source": "src/a.md", "span": "horitu", "expect": "supported", "nest": {"note": "trailing \\\\ two backslashes then }", "marker": "m"}})
+-- mask:
+CLAIM id=r2 expected=supported observed=invalid source=src/a.md at=- verdict=invalid
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=1 marker present but expect=supported (fixture violation)
+-- landed:
+CLAIM id=r2 expected=supported observed=supported source=src/a.md at=line:12 verdict=match

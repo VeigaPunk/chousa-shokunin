@@ -1,0 +1,22 @@
+Initial pristine attempts (2026-10-23):
+Command template (two invocations, seeds 587244602119 and 587244602137):
+timeout 1770s prlimit --as=2147483648 --nproc=2000 env C1_TMP=/fast/scratch/hyaku/chousa-r34/w1/CtlC1AcceptLong TMPDIR=/fast/scratch/hyaku/chousa-r34/w1/CtlC1AcceptLong python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round34/c1-count.py --gate /fast/scratch/hyaku/chousa-r34/w1/CtlC1AcceptLong/base-gate.sh --seed SEED --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-34/w1/CtlC1AcceptLong/pristine-sSEED.json
+Tool jobs: bg_7507 and bg_7508. Both counter exit codes: 1.
+Key traceback:
+  File "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round34/c1-count.py", line 275, in main
+    p = subprocess.run(["bash", gate, "verify-claims", claims, "--root", root], capture_output=True, env=env,
+  File "/usr/lib/python3.14/subprocess.py", line 1920, in _execute_child
+    self.pid = _fork_exec(
+BlockingIOError: [Errno 11] Resource temporarily unavailable
+No receipt was produced in either attempt. These are harness failures, not behavioral scores. Subsequent launches raised the shared-user RLIMIT_NPROC cap to 65536 while retaining a 2 GiB address-space cap.
+
+Three async launches were rejected with:
+Background job limit reached (100). Wait for running jobs to finish or cancel one.
+They were pristine seed 587244602137 and control-a seeds 587244602119/587244602137. They were not started by those rejected calls; the bounded queue subsequently launched them.
+An additional async restored-a launch was rejected with the same message; the following non-async call launched it as bg_7682.
+
+Initial df -h /fast (exit 0):
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/nvme1n1p2  804G  716G   88G  90% /fast
+
+No installs, network, lane/fleet production edits, or Git/jj write commands were used.

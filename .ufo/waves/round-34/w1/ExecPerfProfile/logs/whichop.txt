@@ -1,0 +1,16 @@
+== which per-byte operation is superlinear (span 16384 bytes) ==
+  read span into a var only                                   0.003 s
+  A: substring read only  c=${s:i:1}                          0.497 s
+  B: append only  out+=$c                                     0.023 s
+  C: substring + append (both)                                0.479 s
+  D: full json_unescape shape (substring + case + append)     0.480 s
+  E: hex pattern build (printf -v hex + regex+=)              0.506 s
+  F: hex pattern build WITHOUT printf (constant hex)          0.027 s
+== which per-byte operation is superlinear (span 65536 bytes) ==
+  read span into a var only                                   0.003 s
+  A: substring read only  c=${s:i:1}                          9.323 s
+  B: append only  out+=$c                                     0.090 s
+  C: substring + append (both)                                9.456 s
+  D: full json_unescape shape (substring + case + append)     9.039 s
+  E: hex pattern build (printf -v hex + regex+=)              8.534 s
+  F: hex pattern build WITHOUT printf (constant hex)          0.092 s

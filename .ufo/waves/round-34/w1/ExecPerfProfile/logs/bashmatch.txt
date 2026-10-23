@@ -1,0 +1,10 @@
+== bash-native / chunked candidate primitives, span 16384 bytes ==
+  bash [[ $hay == *"$needle"* ]] (whole-span glob)     rc=0     0.008 s
+  bash [[ $hay == *"$needle"* ]] with 64-byte needle   rc=0     0.004 s
+  grep -F first 4 KiB of span (anchor), then python verify rc=0     0.006 s
+  python3 full matcher (all occurrences + boundary)    rc=0     0.028 s
+== bash-native / chunked candidate primitives, span 65536 bytes ==
+  bash [[ $hay == *"$needle"* ]] (whole-span glob)     rc=0     0.012 s
+  bash [[ $hay == *"$needle"* ]] with 64-byte needle   rc=0     0.005 s
+  grep -F first 4 KiB of span (anchor), then python verify rc=0     0.004 s
+  python3 full matcher (all occurrences + boundary)    rc=0     0.042 s

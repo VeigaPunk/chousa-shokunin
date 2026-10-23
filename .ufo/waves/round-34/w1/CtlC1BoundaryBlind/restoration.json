@@ -1,0 +1,18 @@
+{
+ "access_date": "2026-10-23",
+ "base_sha256": "43a1af35ca668fe535fcef1e68b0c64bbba3eada59c7a23181f591901fca4346",
+ "scratch_directory": "/fast/scratch/hyaku/chousa-r34/w1/CtlC1BoundaryBlind",
+ "operation": "timeout 30 cp -- <scratch>/base.sh <scratch>/<file>",
+ "hash_command": "timeout 15 sha256sum <scratch>/base.sh <scratch>/ignore-both.sh <scratch>/left-only.sh <scratch>/right-only.sh <scratch>/ignore-both-seed2.sh",
+ "restoration_command_rc": 0,
+ "files": {
+  "ignore-both.sh": {"mutant_sha256": "6d6863e72c70f2da8d2a8554e7c49cba03b098d33836d939c525889328550117", "restored_sha256": "43a1af35ca668fe535fcef1e68b0c64bbba3eada59c7a23181f591901fca4346"},
+  "left-only.sh": {"mutant_sha256": "af8b79f2b6a83da104a4bb9ee50104278ce189580686fbf399898a6b4066bfa4", "restored_sha256": "43a1af35ca668fe535fcef1e68b0c64bbba3eada59c7a23181f591901fca4346"},
+  "right-only.sh": {"mutant_sha256": "ad7b0cc479ee2dee6b5ef44425d0359aa394b95273e0490ae8a13387a5635398", "restored_sha256": "43a1af35ca668fe535fcef1e68b0c64bbba3eada59c7a23181f591901fca4346"},
+  "ignore-both-seed2.sh": {"mutant_sha256": "6d6863e72c70f2da8d2a8554e7c49cba03b098d33836d939c525889328550117", "restored_sha256": "43a1af35ca668fe535fcef1e68b0c64bbba3eada59c7a23181f591901fca4346"}
+ },
+ "archival_mutant_copies": "The three gate .sh files in the lane artifact directory intentionally retain scored mutant bytes; scratch operational copies were restored.",
+ "restored_detector": {"label": "restored", "seed": 84931023, "gate": "ignore-both.sh", "evidence": "run-restored-s84931023.json", "outcome": "inconclusive: time-box TERM sent only to owned detector PGID 3543208 after 1110.842 seconds; counter rc -15, supervisor rc 241; no LONGSPAN_MATCH output or frozen receipt", "supervisor_pid": 3543074, "detector_pgid": 3543208},
+ "all_recorded_supervisors": "Collected all six mutant runs and the pristine run; restored supervisor also exited after its owned detector group was terminated. No detector left intentionally running.",
+ "mutation_verdict": "INCONCLUSIVE for killed/survived attribution because the pristine frozen detector already fails at 19/30; all three negative controls nevertheless MISSES the 30/30 target on both scored seeds."
+}

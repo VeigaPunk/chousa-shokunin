@@ -1,0 +1,9 @@
+# ScribeSrcPcre2 — Round 34 W1
+- Opened local `pcre2limits(3)` and `grep(1)` via `man -w` paths; relevant anchors/quotes are recorded with access date in `.../ScribeSrcPcre2/rows.md` and exact command/output provenance in `.../ScribeSrcPcre2/evidence.md`.
+- `pacman -Q pcre2 grep`: `pcre2 10.49-1`, `grep 3.12-2`; man-file SHA-256s: `a3ea2c67c102af649be069fd31bb6b658c2170f15bc1a1728f464fd8e5974bd6` and `9b027d022ae9533ff3e140ba8d96ccd58955bdf9d1c818c327fd992e575c85ba`.
+- PCRE2 quote: “The maximum size of a compiled pattern is approximately 64 thousand code units for the 8-bit and 16-bit libraries” (`pcre2limits(3)`, SIZE AND OTHER LIMITATIONS); grep quote: “Obtain patterns from FILE, one per line.” (`grep(1)`, Matching Control, `-f`), both opened 2026-10-23.
+- Bounded `/usr/bin/grep -P -f` probe: largest repeated `\x41` span compiling here was 32,764 bytes; 32,765 failed with `regular expression is too large`; per-size grep exit codes and exact command are in `evidence.md` (grep 1 = no match/compiled, 2 = error).
+- Draft S065/S066 rows are in `.../ScribeSrcPcre2/rows.md` as docs/A/queued, opened 2026-10-23; shape follows `corpus/SOURCES.md:9–10,70–73` and fleet `CORPUS.md:64–114`.
+- The requested `corpus/knowledge/long-span-argv-r34.md` was absent when checked; its `used-by` cell is explicitly provisional, so rows are not ready to land as mined. The supplied lane-root `CORPUS.md` path was absent; fleet-root guidance was used.
+- Touched only this seat’s rows/evidence/report artifacts; probe files are under `/fast/scratch/hyaku/chousa-r34/w1/ScribeSrcPcre2/`. No lane production files, C1 counter, candidate gate, build, or test suite were run; no installs/updates occurred.
+- Limits: observed ceiling is this host’s repeated-ASCII literal shape, not a universal PCRE2 limit; wrapper output did not expose separate outer exit codes. No network used.

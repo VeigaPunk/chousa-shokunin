@@ -1,0 +1,6 @@
+## Mistakes
+
+| Class | Evidence | Captured-by | Fix |
+|---|---|---|---|
+| E1 — fuzz measurements were represented as final-gate evidence although their receipts bind to a scratch gate | `corpus/lessons/round-33-verifier-spotcheck.md:157-162`; `.ufo/waves/round-33/measure/final/fz-90212.json:34`, `fz-90213.json:34`, `fz-90214.json:34` (all record `b2c07eda…`) | Round-33 outside verifier spot-check, routed finding E1 (`corpus/lessons/round-33-verifier-spotcheck.md:157-162`) | Draft QUALITY 42: census receipt `gate_sha256` values against SHA-256s of committed `tools/research-gate.sh` blobs and list each unmatched receipt. Able to fail: the executed census listed all three receipts as `UNMATCHED` (details: `ScribeLesson/census.md:12-15`). |
+| E5 — a misrooted fleet copy was deleted without committed byte-identity proof | `corpus/lessons/round-33-verifier-spotcheck.md:172-173`; `corpus/lessons/round-33.md:115-119` | Round-33 outside verifier spot-check, routed finding E5 (`corpus/lessons/round-33-verifier-spotcheck.md:172-173`) | Draft QUALITY 43: require a committed SHA-256 pair file, naming both copies, before deletion. Able to fail: the spot-check records that SentinelParser33's `cmp` statement had no committed output (`corpus/lessons/round-33-verifier-spotcheck.md:172-173`). |

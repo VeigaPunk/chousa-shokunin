@@ -1,0 +1,6 @@
+Initial pristine runs, seed 34273111 (tool job bg_7512) and seed 34273112 (bg_7513), both exited 1 before launching the gate and produced no receipt.
+Command template (cwd /home/vgpnk/Projects/shokunin/chousa-shokunin):
+C1_TMP=/fast/scratch/hyaku/chousa-r34/w1/CtlC1LineGame TMPDIR=/fast/scratch/hyaku/chousa-r34/w1/CtlC1LineGame timeout 1700s prlimit --as=2147483648 --nproc=2000 python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round34/c1-count.py --gate /fast/scratch/hyaku/chousa-r34/w1/CtlC1LineGame/base.sh --seed SEED --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-34/w1/CtlC1LineGame/pristine-sSEED.json
+Actual final traceback line, identical in both outputs:
+BlockingIOError: [Errno 11] Resource temporarily unavailable
+The exception arose at c1-count.py:275, subprocess.run, before any gate output. These attempts are inconclusive harness errors, not mutant kills. Subsequent runs use --nproc=65536, keeping a finite per-user process ceiling while avoiding the lower 2000 ceiling that prevented process creation on this shared host.

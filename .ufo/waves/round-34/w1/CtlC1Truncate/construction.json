@@ -1,0 +1,19 @@
+{
+ "axis": "operability",
+ "access_date": "2026-10-23",
+ "frozen_tip": "70feb5eacc959eb98071461fe89f0b892c0810d8",
+ "base_gate_sha256": "43a1af35ca668fe535fcef1e68b0c64bbba3eada59c7a23181f591901fca4346",
+ "counter_sha256": "5ef347874960b52561a1cfa517f3f3fc0d1763830e3580c44b993f8394c0a565",
+ "scratch": "/fast/scratch/hyaku/chousa-r34/w1/CtlC1Truncate",
+ "detector": "frozen c1-count.py, seed 349101 and seed 349102",
+ "mutations": {
+  "prefix32767": {"sha256": "403d592f84e7966fca04a77dcbdb0e5e5784daf586e4fd33c4c2cbde06590a11", "bytes": 357659, "inserted_at_lines": [1559,1590], "statement": "if [[ ${#span} -gt 32767 ]]; then span=${span:0:32767}; fi"},
+  "prefix8192": {"sha256": "92a462636b422e7f3cc1f8805f6808e09165f8e5f5c492b2083ce801068003de", "bytes": 357655, "inserted_at_lines": [1559,1590], "statement": "if [[ ${#span} -gt 8192 ]]; then span=${span:0:8192}; fi"},
+  "suffix32767": {"sha256": "692c0dc4872bf906bcadeb105fe914abacd30ec3114b5a740c3c0f059013da7e", "bytes": 357659, "inserted_at_lines": [1559,1590], "statement": "if [[ ${#span} -gt 32767 ]]; then span=${span: -32767}; fi"},
+  "suffix8192": {"sha256": "f85d2f25a00e12df81f2b6854d884ab616aabd43f45b062d709a0ef064f1b799", "bytes": 357655, "inserted_at_lines": [1559,1590], "statement": "if [[ ${#span} -gt 8192 ]]; then span=${span: -8192}; fi"}
+ },
+ "construction": "Copy base gate; insert the listed statement once in tok_span_at and once in tok_span_all, immediately after local span initialization. Existing matching, boundary checks, and line accounting consume truncated span. Everything else unchanged. All short fixture spans (<8192 bytes) unchanged.",
+ "expected_detector": "Each control should miss the 30/30 target: it omits span bytes, checks the artificial truncation boundary, and derives line binding from the truncated span. Actual per-class outcomes must come from receipts, not this expectation.",
+ "pristine_background_handle": "bg_7499",
+ "installs": []
+}

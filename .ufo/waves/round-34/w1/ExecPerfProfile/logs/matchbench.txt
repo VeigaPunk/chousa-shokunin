@@ -1,0 +1,12 @@
+== span 16384 bytes ==
+grep -a -z -b -o -F (pattern in file)          rc=0  0.006 s
+grep -a -z -b -o -P (pattern in file)          rc=2  0.006 s
+python3 bytes.find                             rc=0  0.022 s
+bash hex-loop (4 bytes/byte, as in tok_span_at) rc=0  5.143 s
+bash json_unescape-equivalent (per-byte append) rc=0  4.316 s
+== span 65536 bytes ==
+grep -a -z -b -o -F (pattern in file)          rc=0  0.017 s
+grep -a -z -b -o -P (pattern in file)          rc=2  0.007 s
+python3 bytes.find                             rc=0  0.025 s
+bash hex-loop (4 bytes/byte, as in tok_span_at) rc=0  82.146 s
+bash json_unescape-equivalent (per-byte append) rc=0  68.405 s

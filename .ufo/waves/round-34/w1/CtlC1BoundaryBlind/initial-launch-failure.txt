@@ -1,0 +1,9 @@
+Access date: 2026-10-23
+Tool job: bg_7524
+Command (cwd /home/vgpnk/Projects/shokunin/chousa-shokunin):
+timeout --signal=TERM --kill-after=10s 1700s prlimit --as=2147483648 --nproc=2000 --fsize=16777216 env C1_TMP=/fast/scratch/hyaku/chousa-r34/w1/CtlC1BoundaryBlind TMPDIR=/fast/scratch/hyaku/chousa-r34/w1/CtlC1BoundaryBlind python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round34/c1-count.py --gate /fast/scratch/hyaku/chousa-r34/w1/CtlC1BoundaryBlind/base.sh --seed 84931023 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-34/w1/CtlC1BoundaryBlind/pristine-s84931023.json
+Observed exit code: 1. No receipt was produced by this launch.
+Observed traceback location: c1-count.py:275 calls subprocess.run; Python subprocess.py:1920 calls _fork_exec.
+Final exception: BlockingIOError: [Errno 11] Resource temporarily unavailable
+Verdict: inconclusive (gate did not start). [INFERENCE] The per-user --nproc=2000 cap was below the shared UID's process load. Subsequent launches use the same memory/file caps and --nproc=65536; the frozen counter is unchanged.
+Tool background-job cap prevented two further async tool launches: Background job limit reached (100). Their bounded supervisors were launched directly through Python eval instead; PIDs are recorded in run evidence.
