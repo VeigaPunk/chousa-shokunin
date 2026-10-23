@@ -1,0 +1,25 @@
+=== pinned (1f2fb4f522d9a670) ===
+rc=2
+stderr=research-gate: GREP_PROVENANCE refused: no GNU grep found at /usr/bin/grep, /bin/grep or on PATH (candidate=<none>)|
+stdout_bytes=0
+summary=
+
+=== drift-worktree (a47688518e509edb) ===
+rc=2
+stderr=research-gate: GREP_PROVENANCE refused: no GNU grep at /usr/bin/grep or /bin/grep (set RESEARCH_GATE_GREP to an absolute path) (candidate=<none>)|
+stdout_bytes=0
+summary=
+
+### control: same namespace, real /usr/bin/grep (no stub bind-mount)
+rc=0 stderr=
+summary=VERIFIED_SWEEPS=1/2 REJECTIONS_OK=3/3
+
+### proof that the function shadows the PATH lookup (pinned gate lines 348-352)
+GREP_BIN=''
+GREP_PIN_SOURCE=''
+GREP_PIN_VERSION=''
+grep() { command "$GREP_BIN" "$@"; }
+
+--- effect:
+command -v grep -> [grep]
+absolute-path arm NOT taken -> PATH fallback unreachable

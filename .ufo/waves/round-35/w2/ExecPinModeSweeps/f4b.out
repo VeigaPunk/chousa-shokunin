@@ -1,0 +1,28 @@
+########## committed sweep fixture (corpus/fixtures/sweeps-r5.md) ##########
+=== committed-clean
+  exit=0
+  summary=VERIFIED_SWEEPS=1/2 REJECTIONS_OK=3/3
+  verdict=RESEARCH_GATE: CLEAN (sweeps=2 verified=1 exempt=1 hit=0 refused=0 invalid=0 rejections=3 rejections-ok=3 findings=0 drift=0)
+  findings=
+  stderr=
+=== committed-realpath-root
+  exit=1
+  summary=VERIFIED_SWEEPS=0/2 REJECTIONS_OK=3/3
+  verdict=RESEARCH_GATE: DRIFT (sweeps=2 verified=0 exempt=1 hit=0 refused=1 invalid=0 rejections=3 rejections-ok=3 findings=2 drift=2)
+  findings=FINDING SWEEP_LOCATION_OUT_OF_CORPUS severity=crit surface=sweeps obs=id=W1 path=research/deep-research-2026-09-28/kotobank-* refused unopened
+FINDING SWEEP_LOCATION_OUT_OF_CORPUS severity=crit surface=sweeps obs=id=W1 path=research/deep-research-2026-09-28/saved-* refused unopened
+  stderr=
+
+########## out-of-corpus fixture (own directory) ##########
+=== outside-clean
+  exit=1
+  summary=VERIFIED_SWEEPS=0/1 REJECTIONS_OK=1/1
+  verdict=RESEARCH_GATE: DRIFT (sweeps=1 verified=0 exempt=0 hit=0 refused=1 invalid=0 rejections=1 rejections-ok=1 findings=1 drift=1)
+  findings=FINDING SWEEP_LOCATION_OUT_OF_CORPUS severity=crit surface=sweeps obs=id=W1 path=/etc/hyaku-no-such-file-xyz refused unopened
+  stderr=
+=== outside-readlink-root
+  exit=0
+  summary=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+  verdict=RESEARCH_GATE: CLEAN (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=1 findings=0 drift=0)
+  findings=
+  stderr=

@@ -1,0 +1,11 @@
+### refusal ordering: bad override + a record that does not exist
+  1f2fb4f5   rc=2 stderr=research-gate: GREP_PROVENANCE refused: override is not an absolute path (candidate=bin/grep)|
+  a6307edf   rc=2 stderr=research-gate: record not found: /tmp/hyaku/chousa-r35/w2/ExecPinModeSweeps/no-such-record.md|usage: research-gate.sh [--selftest] [--help]|
+
+### refusal ordering: bad override + usage error (missing record arg)
+  1f2fb4f5   rc=2 stderr=research-gate: GREP_PROVENANCE refused: override is not an absolute path (candidate=bin/grep)|
+  a6307edf   rc=2 stderr=research-gate: record path required (verify-sweeps RECORD, --record, or CHOUSA_RECORD)|usage: research-gate.sh [--selftest] [--help]|       
+
+### corrected sweeps-mode C1 analogue (S9 now sets CHOUSA_GREP_PIN_ECHO=1)
+  1f2fb4f5         SWEEPS_PIN_MATCH=9/9 fails: none
+  a6307edf         SWEEPS_PIN_MATCH=3/9 fails: S4(rc=0) S5(rc=0) S6(rc=0) S7(rc=0 err=) S8(rc=0 err=) S9(tf=0 tp=0 rc=0)

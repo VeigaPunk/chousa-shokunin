@@ -1,0 +1,79 @@
+===== PINS =====
+1f2fb4f522d9a670b49dd61ad1369f55ee012f3b0d38050654be45a71aaef617  /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-35/w2/ExecPinModeSweeps/pinned/tools/research-gate.sh
+a6307edf687ac0fb1b0b08bf7f0518b3fbc310fa9924b970aa3654612562995b  /tmp/hyaku/chousa-r35/w2/ExecPinModeSweeps/clone/tools/research-gate.sh
+025352b75b7b109147fee8b8eb13b4f74eaa1550489e83166ce1dd59cfb14907  /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/fixtures/sweeps-r5.md
+pinned_gate_is_landed_blob_1f2fb4f5: YES
+
+===== FOUR ENVIRONMENTS (PINNED LANDED GATE) =====
+--- E1-clean
+  exit=0
+  summary=VERIFIED_SWEEPS=1/2 REJECTIONS_OK=3/3
+  verdict=RESEARCH_GATE: CLEAN (sweeps=2 verified=1 exempt=1 hit=0 refused=0 invalid=0 rejections=3 rejections-ok=3 findings=0 drift=0)
+  tripwire_path_bytes=0 tripwire_fn_bytes=0
+  stderr=
+  stdout_sha_norm=263a11519823d874b7df1d5ade6833b200285408a02c5ba436aa101d415f2eab
+--- E2-shim-first-PATH
+  exit=0
+  summary=VERIFIED_SWEEPS=1/2 REJECTIONS_OK=3/3
+  verdict=RESEARCH_GATE: CLEAN (sweeps=2 verified=1 exempt=1 hit=0 refused=0 invalid=0 rejections=3 rejections-ok=3 findings=0 drift=0)
+  tripwire_path_bytes=0 tripwire_fn_bytes=0
+  stderr=
+  stdout_sha_norm=263a11519823d874b7df1d5ade6833b200285408a02c5ba436aa101d415f2eab
+--- E3-BASH_ENV-function
+  exit=0
+  summary=VERIFIED_SWEEPS=1/2 REJECTIONS_OK=3/3
+  verdict=RESEARCH_GATE: CLEAN (sweeps=2 verified=1 exempt=1 hit=0 refused=0 invalid=0 rejections=3 rejections-ok=3 findings=0 drift=0)
+  tripwire_path_bytes=0 tripwire_fn_bytes=0
+  stderr=
+  stdout_sha_norm=263a11519823d874b7df1d5ade6833b200285408a02c5ba436aa101d415f2eab
+--- E4-no-grep-on-PATH
+  exit=0
+  summary=VERIFIED_SWEEPS=1/2 REJECTIONS_OK=3/3
+  verdict=RESEARCH_GATE: CLEAN (sweeps=2 verified=1 exempt=1 hit=0 refused=0 invalid=0 rejections=3 rejections-ok=3 findings=0 drift=0)
+  tripwire_path_bytes=0 tripwire_fn_bytes=0
+  stderr=
+  stdout_sha_norm=263a11519823d874b7df1d5ade6833b200285408a02c5ba436aa101d415f2eab
+
+===== SAME FOUR, BASE GATE (round-34 blob a6307edf…, NO pin) =====
+--- B1-clean
+  exit=0
+  summary=VERIFIED_SWEEPS=1/2 REJECTIONS_OK=3/3
+  verdict=RESEARCH_GATE: CLEAN (sweeps=2 verified=1 exempt=1 hit=0 refused=0 invalid=0 rejections=3 rejections-ok=3 findings=0 drift=0)
+  tripwire_path_bytes=0 tripwire_fn_bytes=0
+  stderr=
+  stdout_sha_norm=263a11519823d874b7df1d5ade6833b200285408a02c5ba436aa101d415f2eab
+--- B2-shim-first-PATH
+  exit=0
+  summary=VERIFIED_SWEEPS=1/2 REJECTIONS_OK=3/3
+  verdict=RESEARCH_GATE: CLEAN (sweeps=2 verified=1 exempt=1 hit=0 refused=0 invalid=0 rejections=3 rejections-ok=3 findings=0 drift=0)
+  tripwire_path_bytes=0 tripwire_fn_bytes=0
+  stderr=
+  stdout_sha_norm=263a11519823d874b7df1d5ade6833b200285408a02c5ba436aa101d415f2eab
+--- B3-BASH_ENV-function
+  exit=0
+  summary=VERIFIED_SWEEPS=1/2 REJECTIONS_OK=3/3
+  verdict=RESEARCH_GATE: CLEAN (sweeps=2 verified=1 exempt=1 hit=0 refused=0 invalid=0 rejections=3 rejections-ok=3 findings=0 drift=0)
+  tripwire_path_bytes=0 tripwire_fn_bytes=0
+  stderr=
+  stdout_sha_norm=263a11519823d874b7df1d5ade6833b200285408a02c5ba436aa101d415f2eab
+--- B4-no-grep-on-PATH
+  exit=0
+  summary=VERIFIED_SWEEPS=1/2 REJECTIONS_OK=3/3
+  verdict=RESEARCH_GATE: CLEAN (sweeps=2 verified=1 exempt=1 hit=0 refused=0 invalid=0 rejections=3 rejections-ok=3 findings=0 drift=0)
+  tripwire_path_bytes=0 tripwire_fn_bytes=0
+  stderr=
+  stdout_sha_norm=263a11519823d874b7df1d5ade6833b200285408a02c5ba436aa101d415f2eab
+
+===== REFUSED OVERRIDE (PINNED LANDED GATE) =====
+  RESEARCH_GATE_GREP=bin/grep                    exit=2 stdout_bytes=0
+    refusal=research-gate: GREP_PROVENANCE refused: override is not an absolute path (candidate=bin/grep)|
+  RESEARCH_GATE_GREP=/nonexistent/x              exit=2 stdout_bytes=0
+    refusal=research-gate: GREP_PROVENANCE refused: override is not a regular file (candidate=/nonexistent/x)|
+  RESEARCH_GATE_GREP=/tmp/hyaku/chousa-r35/w2/ExecPinModeSweeps/run/stub-grep exit=2 stdout_bytes=0
+    refusal=research-gate: GREP_PROVENANCE refused: override does not report GNU grep: <no version> (candidate=/tmp/hyaku/chousa-r35/w2/ExecPinModeSweeps/run/stub-grep)|
+
+===== ACCEPTED OVERRIDE + ECHO (PINNED LANDED GATE) =====
+  RESEARCH_GATE_GREP=/usr/bin/grep               exit=0 summary=VERIFIED_SWEEPS=1/2 REJECTIONS_OK=3/3
+    stderr=
+  CHOUSA_GREP_PIN_ECHO=1                         exit=0 summary=VERIFIED_SWEEPS=1/2 REJECTIONS_OK=3/3
+    stderr=GATE_GREP: path=/usr/bin/grep source=default version="grep (GNU grep) 3.12-modified"|
