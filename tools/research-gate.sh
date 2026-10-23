@@ -1444,8 +1444,10 @@ verify_claims() {
     if json_has_key "$line" sha256; then
       # a present non-string value is malformed, never "absent" (r31)
       sha_present=1; sha_pin='-'
+      # the RAW JSON string body is validated: a valid pin needs no escapes, so
+      # an escaped newline or NUL can never be decoded away into a match (r31)
       if json_str "$line" sha256 >/dev/null 2>&1; then
-        sha_pin=$(json_unescape "$(json_str "$line" sha256)")
+        sha_pin=$(json_str "$line" sha256)
       fi
     fi
     if [[ -z $id ]]; then bad="missing id"
@@ -1501,7 +1503,9 @@ verify_claims() {
     path=$CLAIM_SRC_PATH
 
     if [[ -n $sha_present ]]; then
-      sha_actual=$(sha256sum -- "$path" 2>/dev/null | cut -d' ' -f1 || true)
+      # hash via stdin: sha256sum escapes file names holding '\' or a newline
+      # and would prefix its output with '\' (r31)
+      sha_actual=$(sha256sum < "$path" 2>/dev/null | cut -d' ' -f1 || true)
       # fail closed: an unmeasurable source is not a match (r31)
       [[ $sha_actual =~ ^[0-9a-f]{64}$ ]] || sha_actual=unreadable
       if [[ $sha_actual != "$sha_pin" ]]; then
