@@ -1,0 +1,11 @@
+--- /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh	2026-10-23 16:49:07.247551313 -0300
++++ variant-c2-literal.sh	2026-10-23 16:59:06.066976144 -0300
+@@ -1704,7 +1704,7 @@
+   # assigns any of them, so the one-statement form read the caller's `span`
+   # (correct only while every caller happened to pass its own `span` unchanged).
+   local slen
+-  slen=${#span}
++  slen=$2
+   chunk=${span:0:TOK_CHUNK_BYTES}
+   pattern="$(tok_hex_pattern "${chunk:0:1}")(?=$(tok_hex_pattern "${chunk:1}"))"
+   while IFS= read -r -d '' occurrence; do

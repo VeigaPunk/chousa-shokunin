@@ -1311,3 +1311,18 @@ claims, design v4 `corpus/evidence/round34/claims-a2.md` (`7c7eb3a6`, frozen bef
   diff is one functional line; ExecSelftestEnv root-causes the LC_ALL=C fails to the \u2192
   json_unescape locale byte; ScoutSourcesA2 pins hold, census exit 0; RevShonenA2 extensive
   (boxes land [~], its evidence named); ConnectorOverlap: C2 fleet-unique, no contradiction.
+
+## Round 35 — 2026-10-23 — the pinned binary and the routing witness
+
+Two claims (operability, calibration), four repairs. Base `08be4c9e` (gate `a6307edf…2995b`);
+freeze `0e167649` (claims.md v1 + two counters + the witness tool + five pre-data control receipts);
+first landing `e87c5d7e` (gate `1f2fb4f5…c617`); final gate `a4768851…c38ad` after the wave's three
+vector reports (`command` shadow, `head` forge, dead PATH fallback). Measurements on the final bytes:
+C1 `GREP_PIN_MATCH=9/9` (seeds 3529/3539), C2 `WITNESS_SEPARATED=2/2 OUTPUT_EQUIV=2/2
+LANDED_WITNESS=pass` (seeds 3529/3539), selftest `PASS (256 cases, 0 skipped)`, slen probe
+`offsets=1 first=5`. Evidence under `.ufo/waves/round-35/{controls,measure,final,repairs}/`;
+frozen design + erratum `corpus/evidence/round35/claims.md`; knowledge
+`corpus/knowledge/{grep-pin-r35,keyed-engine-output-equivalence-r35,bash-local-expansion-r35}.md`;
+QUALITY 45–49; sources 66 → 68 (S067 exec(3), S068 bash(1)); lesson `corpus/lessons/round-35.md`.
+Wave: one v2 wave, 65 seats (27 attack), one dead seat (CritWitnessBlind, provider `cyber_policy`
+refusal). Report `.ufo/reports/round-35/chousa.md`.

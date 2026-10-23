@@ -1,0 +1,98 @@
+{
+ "argv": [
+  "timeout",
+  "60s",
+  "bash",
+  "/tmp/hyaku/chousa-r35/w2/CritGrepClaimScope/landed.sh",
+  "verify-all",
+  "/tmp/hyaku/chousa-r35/w2/CritGrepClaimScope/manifest-fixture/claims.jsonl",
+  "--root",
+  "/tmp/hyaku/chousa-r35/w2/CritGrepClaimScope/manifest-fixture",
+  "--json",
+  "/tmp/hyaku/chousa-r35/w2/CritGrepClaimScope/manifest-fixture/manifest.jsonl"
+ ],
+ "echo_lines": [
+  "GATE_GREP: path=/usr/bin/grep source=default version=\"grep (GNU grep) 3.12-modified\""
+ ],
+ "exit": 1,
+ "gate_sha256": "1f2fb4f522d9a670b49dd61ad1369f55ee012f3b0d38050654be45a71aaef617",
+ "manifest": [
+  {
+   "drift_sections": 1,
+   "gate_sha256": "1f2fb4f522d9a670b49dd61ad1369f55ee012f3b0d38050654be45a71aaef617",
+   "record": "/tmp/hyaku/chousa-r35/w2/CritGrepClaimScope/manifest-fixture/claims.jsonl",
+   "record_sha256": "8ca39794fc82cbb6fcb40e6942cafc91405776188fa03e51dc9981580c200b7e",
+   "schema": "chousa-verify-all/v1",
+   "sections": [
+    {
+     "name": "structure",
+     "state": "absent"
+    },
+    {
+     "drift": 2,
+     "findings": 2,
+     "name": "claims",
+     "native": "VERDICT_BEARING_CLAIMS=1/3",
+     "state": "run",
+     "tallies": {
+      "claims": 3,
+      "contradicted": 0,
+      "drift": 2,
+      "findings": 2,
+      "invalid": 0,
+      "mismatched": 2,
+      "refused": 0,
+      "supported": 1,
+      "unproven": 0,
+      "unsupported": 2
+     },
+     "verdict": "DRIFT"
+    },
+    {
+     "name": "chain",
+     "state": "absent"
+    },
+    {
+     "name": "sweeps",
+     "state": "absent"
+    },
+    {
+     "drift": 0,
+     "findings": 0,
+     "name": "integrity",
+     "native": "INTEGRITY refs=0 resolved=0 unresolved=0",
+     "state": "run",
+     "tallies": {
+      "drift": 0,
+      "exempt": 0,
+      "findings": 0,
+      "refs": 0,
+      "resolved": 0,
+      "unresolved": 0
+     },
+     "verdict": "CLEAN"
+    }
+   ],
+   "sections_absent": 3,
+   "sections_run": 2,
+   "ts": "2026-10-23T20:07:14Z",
+   "verdict": "DRIFT"
+  }
+ ],
+ "manifest_keys": [
+  [
+   "drift_sections",
+   "gate_sha256",
+   "record",
+   "record_sha256",
+   "schema",
+   "sections",
+   "sections_absent",
+   "sections_run",
+   "ts",
+   "verdict"
+  ]
+ ],
+ "stderr": "GATE_GREP: path=/usr/bin/grep source=default version=\"grep (GNU grep) 3.12-modified\"\n",
+ "stdout": "research-gate v2 \u2014 ts=2026-10-23T20:07:14Z \u2014 mode=verify-all \u2014 record=/tmp/hyaku/chousa-r35/w2/CritGrepClaimScope/manifest-fixture/claims.jsonl \u2014 claims=/tmp/hyaku/chousa-r35/w2/CritGrepClaimScope/manifest-fixture/claims.jsonl \u2014 root=/tmp/hyaku/chousa-r35/w2/CritGrepClaimScope/manifest-fixture\nSECTION structure state=absent\nSECTION claims state=run verdict=DRIFT findings=2 drift=2 tally=VERDICT_BEARING_CLAIMS=1/3\nFINDING CLAIM_SPAN_NOT_FOUND severity=warn surface=claims obs=id=K2 nearest_line=1 context=lead alpha bravo charlie delta echo foxtrot golf hotel india juliett tail\nFINDING CLAIM_SPAN_NOT_FOUND severity=warn surface=claims obs=id=K3 nearest_line=1 context=leadQalpha bravo charlie delta echo foxtrot golf hotel india juliett tail\nSECTION chain state=absent\nSECTION sweeps state=absent\nSECTION integrity state=run verdict=CLEAN findings=0 drift=0 tally=INTEGRITY refs=0 resolved=0 unresolved=0\nVERIFY_ALL sections=5 run=2 absent=3 drift-sections=1 findings=2 drift=2\nRESEARCH_GATE: DRIFT (sections=5 run=2 absent=3 drift-sections=1 findings=2 drift=2)\n"
+}

@@ -1979,3 +1979,53 @@ Candidates, not commitments: E2 (a clause-3 counter every lexer-less mask fails 
 the selftest's `LC_ALL=C` dependence; the L0 fetch-scope answer. (Landed by round 34 attempt 2
 and removed from this list: the PCRE dead zone — measured as exactly the 3 lengths 32765–32767,
 not "about 28000–32767", C2; chunk-matcher selftest cases 254–256.)
+
+## Round 35 — the pinned binary and the routing witness (two claims)
+
+Base `08be4c9e3a4ebe55d915ce4761c81854286c23ae` (gate `a6307edf…2995b`). Frozen design
+`corpus/evidence/round35/claims.md` (`0e167649`, P1/P2 + kill rules + pre-data controls;
+post-data §Erratum is append-only). First landing `e87c5d7e` (gate `1f2fb4f5…c617`); the pin was
+then hardened on the three vectors the wave reported (`command`-keyword dispatch, `head` in the
+version probe, the dead `command -v grep` fallback) and the final gate is
+`a47688518e509edbf43b433a5e16e1cf2481233f3acedb5824ba341f7f0c38ad`; both claims re-measured on the
+final bytes (`.ufo/waves/round-35/final/`).
+
+| claim / axis | before → after | counting command (lane root) | verdict |
+|---|---|---|---|
+| C1 operability (lowest scored axis): `research-gate.sh` resolves, verifies and pins ONE absolute grep binary at startup and refuses an unverifiable pin with a named exit-2 refusal, instead of resolving bare `grep` through `PATH` at each matcher call | `GREP_PIN_MATCH=0/9` (base gate `a6307edf`, `controls/c1-base-s3501.json`) → `9/9` on seeds 3529 and 3539 on the final gate (`final/c1-s3529.json`, `final/c1-s3539.json`); cheapest non-oracle control (hardcoded pin, no provenance/override/echo) 3/9 (`controls/c1-hardcoded-s3501.json`) | `python3 corpus/evidence/round35/c1-count.py --gate tools/research-gate.sh --seed N` | **met under P1; reading narrowed** — the counter proves path+version pinning, refusal shape and output equality. It does **not** measure per-call engine identity: a read-before-refusal mutant (`147ded03…`), correct-output engines replacing `tok_span_offsets_direct` (`fd6d5a8e…`, `9040dcba…`) and a `BASH_ENV` `command()` swap all score 9/9 (wave seats MutPinRefusals, MutGrepPinEngines, MutGrepShimEnv; claims.md §Erratum 3). The ordering claim rests on strace (0 opens vs 2). |
+| C2 calibration: the lane's receipts can separate an output-equivalent keyed engine from the landed dead-zone routing (mechanism witness), where output counters cannot | `WITNESS_SEPARATED=0/2 battery=absent` (base tree; `controls/c2-before-s3501.json`) → `WITNESS_SEPARATED=2/2 OUTPUT_EQUIV=2/2 LANDED_WITNESS=pass` on seeds 3529 and 3539 (`final/c2-s3529.json`, `final/c2-s3539.json`); witness stubs fail both ways (`controls/c2-stub-{pass,fail}-s3501.json`) | `python3 corpus/evidence/round35/c2-count.py --seed N` | **met under P2 as a ROUTING witness** — it proves the routed matcher was entered, not that its body ran: a one-record shortcut (8 stamps for 8 records), a length-keyed engine (6/31 seeds), a chunk call with a discarded result and a body-replaced matcher (`3e5648b8…`) all pass (wave seats MutC2KeyedBattery, MutWitnessBypass1/2, MutWitnessThreshold; QUALITY 49 is the r36 requirement). Axis caveat recorded (wave critic CritC2AxisFit): P2 measures receipt strength, not the lane's self-assessment accuracy. |
+
+The round-1 operability scale is unchanged: score 3 → 3 (delta 0); the C1 observable sits beside
+it, as in rounds 25, 29, 31–34.
+
+Repairs (not claims): R1 `slen` reads its own parameter (probe: base `offsets=0` / landed
+`offsets=1 first=5`; `repairs/slen-probe.sh`, wave seats MutSlenScope and RevSlenSweep re-derived);
+R2 case-range comments 252-253 and 254-256 (all 14 gate case-number comments verified by
+RevCaseRanges); R3 round-34 wave-debris count reconciled (26 tracked `w2a2/*.md`; the three
+`ExecC2Oracle` texts tracked since `6a3cc32`); R4 runbook rows in `SKILL.md` + three knowledge
+entries with metadata headers.
+
+No-harm on the final gate: `RESEARCH_GATE_SELFTEST: PASS (256 cases, 0 skipped)`; case ranges
+252-253/254-256 confirmed from the run's own `ok-case` labels; the wave re-derived C1 9/9 on the
+pre-hardening landed gate (ExecC1Fresh1) and the prior counters were exercised in the wave.
+Wave: one v2 wave, 65 seats (attack 27 = 42%), `1f2fb4f5` attacked, final gate re-measured;
+one dead seat (CritWitnessBlind, provider `cyber_policy` refusal, not retried).
+Sources 66 → 68 rows (S067 exec(3), S068 bash(1); tier A, both opened 2026-10-23). QUALITY 45–49
+added.
+
+## Capabilities (round-35 change)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| pinned-binary resolution (`research-gate.sh`) | resolves ONE absolute grep (`/usr/bin/grep` → `/bin/grep`; `RESEARCH_GATE_GREP` override, absolute + GNU-reporting), refuses an unverifiable pin with `GREP_PROVENANCE` and exit 2 before reading a record, runs every grep call through a direct-path wrapper (never `command`, never `head`), and can name the pin for a receipt (`CHOUSA_GREP_PIN_ECHO=1`) | `python3 corpus/evidence/round35/c1-count.py` → 9/9 (`final/c1-s*.json`); `corpus/knowledge/grep-pin-r35.md` | 35 (scope: path + version, not engine identity) |
+| output-vs-routing witness (`tools/mechanism-witness.py`) | scores a candidate gate on output AND on whether the routed matcher function was entered, with a per-seed randomized fixture; separates two output-equivalent keyed engines while the landed gate passes both, and reports the trace-stamp counts | `python3 corpus/evidence/round35/c2-count.py` → 2/2 separated (`final/c2-s*.json`); `corpus/knowledge/keyed-engine-output-equivalence-r35.md` (survivor table) | 35 (scope: routing, not computation) |
+
+## Planned — round 36 (not started)
+
+Candidates, not commitments: a **semantic canary** that belongs to both counters — a pinned needle
+set whose match results differ between a correct matcher and an exact-search substitute (or a
+verified GNU-reporting recorder that must log ≥1 `-z -P` 4N-hex query) — the class three wave seats
+converged on (QUALITY 45, 49); per-record witness attribution + per-record fixture id-shape
+diversity; C1 receipt `counter_sha256` binding; witness tolerance to a matcher rename (currently
+`WITNESS=unparseable` → a spurious C2 kill); the `chousa`-root key class; the L0 fetch-scope answer;
+the carried C1 debt (spans ≥ 32768, `unverified (required controls held)`) stays open.

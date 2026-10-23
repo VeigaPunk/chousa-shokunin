@@ -1,0 +1,33 @@
+### M1 --pin clean env
+M1
+  exit=0
+  stdout=GATE_PIN: ok path=/tmp/hyaku/chousa-r35/w2/ExecPinModePinDrift/work/m1.baseline gate_sha256=a47688518e509edbf43b433a5e16e1cf2481233f3acedb5824ba341f7f0c38ad
+  stderr=<empty>
+  file: -rw-r--r-- 1 vgpnk vgpnk 2989 Oct 23 17:09 /tmp/hyaku/chousa-r35/w2/ExecPinModePinDrift/work/m1.baseline
+### M2 --pin refused relative override
+M2
+  exit=2
+  stdout=<empty>
+  stderr=research-gate: GREP_PROVENANCE refused: override is not an absolute path (candidate=bin/grep)
+  file: ls: cannot access '/tmp/hyaku/chousa-r35/w2/ExecPinModePinDrift/work/m2.baseline': No such file or directory
+### M3 --pin refused non-GNU override
+M3
+  exit=2
+  stdout=<empty>
+  stderr=research-gate: GREP_PROVENANCE refused: override does not report GNU grep: grep (pi-uu-grep) 0.2.0 (candidate=/tmp/hyaku/chousa-r35/w2/ExecPinModePinDrift/nongnu-banner)
+  file: ls: cannot access '/tmp/hyaku/chousa-r35/w2/ExecPinModePinDrift/work/m3.baseline': No such file or directory
+### M4 --drift clean env (baseline from M1)
+M4
+  exit=0
+  stdout=GATE_DRIFT: none
+  stderr=<empty>
+### M5 --drift refused relative override
+M5
+  exit=2
+  stdout=<empty>
+  stderr=research-gate: GREP_PROVENANCE refused: override is not an absolute path (candidate=bin/grep)
+### M6 --drift refused non-GNU override
+M6
+  exit=2
+  stdout=<empty>
+  stderr=research-gate: GREP_PROVENANCE refused: override does not report GNU grep: grep (pi-uu-grep) 0.2.0 (candidate=/tmp/hyaku/chousa-r35/w2/ExecPinModePinDrift/nongnu-banner)

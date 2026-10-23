@@ -348,7 +348,18 @@ TS_UTC=$(date -u -d "@$NOW_EPOCH" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null \
 GREP_BIN=''
 GREP_PIN_SOURCE=''
 GREP_PIN_VERSION=''
-grep() { command "$GREP_BIN" "$@"; }
+# The wrapper is defined by grep_pin_define AFTER the pin resolves: it calls the
+# absolute path directly, never through `command` (an imported BASH_ENV function
+# named `command` would otherwise receive every pinned call and could serve the
+# match from any engine — the round-35 wave measured exactly that swap).
+
+grep_pin_define() {
+  # A caller can make `grep` readonly through BASH_ENV (`readonly -f grep`);
+  # that must refuse with the named error, not die as a bare rc 1.
+  if ! eval 'grep() { "$GREP_BIN" "$@"; }' 2>/dev/null; then
+    grep_pin_refuse "the grep wrapper cannot be defined (a caller marked it readonly)" "${GREP_BIN:-}"
+  fi
+}
 
 grep_pin_refuse() { # REASON [CANDIDATE]
   printf 'research-gate: GREP_PROVENANCE refused: %s (candidate=%s)\n' "$1" "${2:-<none>}" >&2
@@ -356,9 +367,18 @@ grep_pin_refuse() { # REASON [CANDIDATE]
 }
 
 grep_pin_verify() { # PATH -> rc0 when the binary reports GNU grep
-  local cand=$1 v
+  local cand=$1 v to=''
   [[ -f $cand && -x $cand ]] || return 1
-  v=$("$cand" --version 2>/dev/null | head -n 1 || true)
+  # The probe runs the candidate's own `--version`, bounded by an absolute
+  # timeout(1) when one exists, and cuts the first line with bash expansion:
+  # `head` and `command` are shell builtins a caller can shadow through
+  # BASH_ENV, and a forged head(1) was measured pinning a non-GNU stub in this
+  # round's wave. An override that never answers must not hang the gate.
+  if [[ -x /usr/bin/timeout ]]; then to=/usr/bin/timeout
+  elif [[ -x /bin/timeout ]]; then to=/bin/timeout; fi
+  if [[ -n $to ]]; then v=$("$to" 10 "$cand" --version 2>/dev/null || true)
+  else v=$("$cand" --version 2>/dev/null || true); fi
+  v=${v%%$'\n'*}
   GREP_PIN_VERSION=$v
   case "$v" in
     *"GNU grep"*) return 0 ;;
@@ -381,18 +401,19 @@ grep_pin_init() {
       || grep_pin_refuse "override does not report GNU grep: ${GREP_PIN_VERSION:-<no version>}" "$cand"
   else
     GREP_PIN_SOURCE=default
+    # No PATH consultation at all: the round-35 wave measured that a
+    # `command -v grep` fallback resolves this script's own grep() function and
+    # is therefore dead code, and S067/S068 are exactly why PATH is not a
+    # trustworthy resolver. A host whose grep lives elsewhere sets the override.
     for c in /usr/bin/grep /bin/grep; do
       if grep_pin_verify "$c"; then cand=$c; break; fi
     done
-    if [[ -z $cand ]]; then
-      c=$(command -v grep 2>/dev/null || true)
-      case "$c" in
-        /*) if grep_pin_verify "$c"; then cand=$c; fi ;;
-      esac
-    fi
-    [[ -n $cand ]] || grep_pin_refuse "no GNU grep found at /usr/bin/grep, /bin/grep or on PATH" ''
+    [[ -n $cand ]] || grep_pin_refuse "no GNU grep at /usr/bin/grep or /bin/grep (set RESEARCH_GATE_GREP to an absolute path)" ''
   fi
-  GREP_BIN=$cand
+  if ! GREP_BIN=$cand 2>/dev/null; then
+    grep_pin_refuse "the pin variable cannot be assigned (a caller marked it readonly)" "$cand"
+  fi
+  grep_pin_define
   if [[ ${CHOUSA_GREP_PIN_ECHO:-0} == 1 ]]; then
     printf 'GATE_GREP: path=%s source=%s version="%s"\n' "$GREP_BIN" "$GREP_PIN_SOURCE" "$GREP_PIN_VERSION" >&2
   fi

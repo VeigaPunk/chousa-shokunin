@@ -1,0 +1,230 @@
+[
+ {
+  "cand_opens": 0,
+  "case": "P1-unset-control",
+  "claim_lines": 3,
+  "claims_opens": 2,
+  "echo": "GATE_GREP: path=/usr/bin/grep source=default version=\"grep (GNU grep) 3.12-modified\"",
+  "elapsed": 0.66,
+  "override": null,
+  "rc": 1,
+  "refusal": "",
+  "stderr_lines": [
+   "GATE_GREP: path=/usr/bin/grep source=default version=\"grep (GNU grep) 3.12-modified\""
+  ],
+  "stdout_bytes": 692,
+  "stdout_head": [
+   "research-gate v2 \u2014 ts=2026-10-23T19:59:46Z \u2014 mode=claims \u2014 claims=/tmp/hyaku/chousa-r35/w2/MutPinRefusals/work/root/claims.jsonl",
+   "CLAIM id=K1 expected=supported observed=supported source=src/ok.md at=line:1 verdict=match"
+  ],
+  "strace": true
+ },
+ {
+  "cand_opens": 0,
+  "case": "P2-valid-override",
+  "claim_lines": 3,
+  "claims_opens": 2,
+  "echo": "GATE_GREP: path=/usr/bin/grep source=override version=\"grep (GNU grep) 3.12-modified\"",
+  "elapsed": 0.52,
+  "override": "/usr/bin/grep",
+  "rc": 1,
+  "refusal": "",
+  "stderr_lines": [
+   "GATE_GREP: path=/usr/bin/grep source=override version=\"grep (GNU grep) 3.12-modified\""
+  ],
+  "stdout_bytes": 692,
+  "stdout_head": [
+   "research-gate v2 \u2014 ts=2026-10-23T19:59:47Z \u2014 mode=claims \u2014 claims=/tmp/hyaku/chousa-r35/w2/MutPinRefusals/work/root/claims.jsonl",
+   "CLAIM id=K1 expected=supported observed=supported source=src/ok.md at=line:1 verdict=match"
+  ],
+  "strace": true
+ },
+ {
+  "cand_opens": 0,
+  "case": "A-empty",
+  "claim_lines": 3,
+  "claims_opens": 2,
+  "echo": "GATE_GREP: path=/usr/bin/grep source=default version=\"grep (GNU grep) 3.12-modified\"",
+  "elapsed": 0.3,
+  "override": "<empty>",
+  "rc": 1,
+  "refusal": "",
+  "stderr_lines": [
+   "GATE_GREP: path=/usr/bin/grep source=default version=\"grep (GNU grep) 3.12-modified\""
+  ],
+  "stdout_bytes": 692,
+  "stdout_head": [
+   "research-gate v2 \u2014 ts=2026-10-23T19:59:47Z \u2014 mode=claims \u2014 claims=/tmp/hyaku/chousa-r35/w2/MutPinRefusals/work/root/claims.jsonl",
+   "CLAIM id=K1 expected=supported observed=supported source=src/ok.md at=line:1 verdict=match"
+  ],
+  "strace": true
+ },
+ {
+  "cand_opens": 57,
+  "case": "B-comma",
+  "claim_lines": 0,
+  "claims_opens": 0,
+  "echo": "",
+  "elapsed": 0.03,
+  "override": ",",
+  "rc": 2,
+  "refusal": "research-gate: GREP_PROVENANCE refused: override is not an absolute path (candidate=,)",
+  "stderr_lines": [
+   "research-gate: GREP_PROVENANCE refused: override is not an absolute path (candidate=,)"
+  ],
+  "stdout_bytes": 0,
+  "stdout_head": [],
+  "strace": true
+ },
+ {
+  "cand_opens": 49,
+  "case": "C-slash",
+  "claim_lines": 0,
+  "claims_opens": 0,
+  "echo": "",
+  "elapsed": 0.03,
+  "override": "/",
+  "rc": 2,
+  "refusal": "research-gate: GREP_PROVENANCE refused: override is not a regular file (candidate=/)",
+  "stderr_lines": [
+   "research-gate: GREP_PROVENANCE refused: override is not a regular file (candidate=/)"
+  ],
+  "stdout_bytes": 0,
+  "stdout_head": [],
+  "strace": true
+ },
+ {
+  "cand_opens": 0,
+  "case": "D-directory",
+  "claim_lines": 0,
+  "claims_opens": 0,
+  "echo": "",
+  "elapsed": 0.04,
+  "override": "/tmp/hyaku/chousa-r35/w2/MutPinRefusals/work/cand/a-directory",
+  "rc": 2,
+  "refusal": "research-gate: GREP_PROVENANCE refused: override is not a regular file (candidate=/tmp/hyaku/chousa-r35/w2/MutPinRefusals/work/cand/a-directory)",
+  "stderr_lines": [
+   "research-gate: GREP_PROVENANCE refused: override is not a regular file (candidate=/tmp/hyaku/chousa-r35/w2/MutPinRefusals/work/cand/a-directory)"
+  ],
+  "stdout_bytes": 0,
+  "stdout_head": [],
+  "strace": true
+ },
+ {
+  "cand_opens": 0,
+  "case": "E-fifo",
+  "claim_lines": 0,
+  "claims_opens": 0,
+  "echo": "",
+  "elapsed": 0.03,
+  "override": "/tmp/hyaku/chousa-r35/w2/MutPinRefusals/work/cand/fifo",
+  "rc": 2,
+  "refusal": "research-gate: GREP_PROVENANCE refused: override is not a regular file (candidate=/tmp/hyaku/chousa-r35/w2/MutPinRefusals/work/cand/fifo)",
+  "stderr_lines": [
+   "research-gate: GREP_PROVENANCE refused: override is not a regular file (candidate=/tmp/hyaku/chousa-r35/w2/MutPinRefusals/work/cand/fifo)"
+  ],
+  "stdout_bytes": 0,
+  "stdout_head": [],
+  "strace": true
+ },
+ {
+  "cand_opens": 0,
+  "case": "F-0byte",
+  "claim_lines": 0,
+  "claims_opens": 0,
+  "echo": "",
+  "elapsed": 0.03,
+  "override": "/tmp/hyaku/chousa-r35/w2/MutPinRefusals/work/cand/zero-byte",
+  "rc": 2,
+  "refusal": "research-gate: GREP_PROVENANCE refused: override is not executable (candidate=/tmp/hyaku/chousa-r35/w2/MutPinRefusals/work/cand/zero-byte)",
+  "stderr_lines": [
+   "research-gate: GREP_PROVENANCE refused: override is not executable (candidate=/tmp/hyaku/chousa-r35/w2/MutPinRefusals/work/cand/zero-byte)"
+  ],
+  "stdout_bytes": 0,
+  "stdout_head": [],
+  "strace": true
+ },
+ {
+  "cand_opens": 1,
+  "case": "F2-0byte-exec",
+  "claim_lines": 0,
+  "claims_opens": 0,
+  "echo": "",
+  "elapsed": 0.04,
+  "override": "/tmp/hyaku/chousa-r35/w2/MutPinRefusals/work/cand/zero-byte-exec",
+  "rc": 2,
+  "refusal": "research-gate: GREP_PROVENANCE refused: override does not report GNU grep: <no version> (candidate=/tmp/hyaku/chousa-r35/w2/MutPinRefusals/work/cand/zero-byte-exec)",
+  "stderr_lines": [
+   "research-gate: GREP_PROVENANCE refused: override does not report GNU grep: <no version> (candidate=/tmp/hyaku/chousa-r35/w2/MutPinRefusals/work/cand/zero-byte-exec)"
+  ],
+  "stdout_bytes": 0,
+  "stdout_head": [],
+  "strace": true
+ },
+ {
+  "cand_opens": 0,
+  "case": "X-trailing-slash",
+  "claim_lines": 0,
+  "claims_opens": 0,
+  "echo": "",
+  "elapsed": 0.03,
+  "override": "/usr/bin/grep/",
+  "rc": 2,
+  "refusal": "research-gate: GREP_PROVENANCE refused: override is not a regular file (candidate=/usr/bin/grep/)",
+  "stderr_lines": [
+   "research-gate: GREP_PROVENANCE refused: override is not a regular file (candidate=/usr/bin/grep/)"
+  ],
+  "stdout_bytes": 0,
+  "stdout_head": [],
+  "strace": true
+ },
+ {
+  "cand_opens": 2,
+  "case": "X-devnull",
+  "claim_lines": 0,
+  "claims_opens": 0,
+  "echo": "",
+  "elapsed": 0.04,
+  "override": "/dev/null",
+  "rc": 2,
+  "refusal": "research-gate: GREP_PROVENANCE refused: override is not a regular file (candidate=/dev/null)",
+  "stderr_lines": [
+   "research-gate: GREP_PROVENANCE refused: override is not a regular file (candidate=/dev/null)"
+  ],
+  "stdout_bytes": 0,
+  "stdout_head": [],
+  "strace": true
+ },
+ {
+  "cand_opens": 0,
+  "case": "X-true-symlink",
+  "claim_lines": 0,
+  "claims_opens": 0,
+  "echo": "",
+  "elapsed": 0.05,
+  "override": "/tmp/hyaku/chousa-r35/w2/MutPinRefusals/work/cand/true-link",
+  "rc": 2,
+  "refusal": "research-gate: GREP_PROVENANCE refused: override does not report GNU grep: true (GNU coreutils) 9.12 (candidate=/tmp/hyaku/chousa-r35/w2/MutPinRefusals/work/cand/true-link)",
+  "stderr_lines": [
+   "research-gate: GREP_PROVENANCE refused: override does not report GNU grep: true (GNU coreutils) 9.12 (candidate=/tmp/hyaku/chousa-r35/w2/MutPinRefusals/work/cand/true-link)"
+  ],
+  "stdout_bytes": 0,
+  "stdout_head": [],
+  "strace": true
+ },
+ {
+  "cand_opens": 0,
+  "case": "X-no-version-answer",
+  "claim_lines": 0,
+  "claims_opens": 0,
+  "echo": "",
+  "elapsed": 5.0,
+  "override": "/tmp/hyaku/chousa-r35/w2/MutPinRefusals/work/cand/sleeper",
+  "rc": 124,
+  "refusal": "",
+  "stderr_lines": [],
+  "stdout_bytes": 0,
+  "stdout_head": [],
+  "strace": false
+ }
+]

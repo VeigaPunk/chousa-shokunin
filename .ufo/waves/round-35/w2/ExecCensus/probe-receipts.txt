@@ -1,0 +1,13 @@
+== probe5: MINED row in Registry with dangling used-by (expect E11, exit 1)
+chousa	W04	S051 duplicate url www.w3.org/TR/2017/REC-html52-20171214/syntax.html across scopes
+chousa	W04	S053 duplicate url docs.python.org/3/library/socket.html across scopes
+chousa	E11	S067 missing used-by corpus/knowledge/nonexistent-r35.md
+exit=1
+
+== probe6: QUEUED row with dangling used-by (expect no E11, exit 0)
+chousa	W04	S051 duplicate url www.w3.org/TR/2017/REC-html52-20171214/syntax.html across scopes
+chousa	W04	S053 duplicate url docs.python.org/3/library/socket.html across scopes
+chousa	ok	/tmp/hyaku/chousa-r35/w2/ExecCensus/probe6/chousa-shokunin/corpus/SOURCES.md
+exit=0
+
+== probe6 also had corpus/knowledge/probe-dangling-sid.md citing S999 (no row) -> still exit 0

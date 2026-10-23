@@ -69,6 +69,8 @@ Where the lane learns: `corpus/SOURCES.md` (opened rows, scoped A/B/C tiers, stu
 - [ ] Observation, inference and unknown stay separate.
 - [ ] A rejected source is kept with its rejection reason and flip-condition.
 - [ ] Every web quote a round cites was re-opened with `python3 tools/quote-reopen.py verify` and every non-`VERBATIM` verdict is recorded with its quote (an `ABSENT` on a page whose text the tool cannot extract, such as one without `</head>`, is a tool limit).
+- [ ] The gate ran against a named, absolute grep binary, not the caller's `PATH` (round 35).
+  - Run: `CHOUSA_GREP_PIN_ECHO=1 bash tools/research-gate.sh --selftest 2>&1 | grep -m1 '^GATE_GREP: '` → `GATE_GREP: path=/usr/bin/grep source=default version="grep (GNU grep) 3.12-modified"` on this host. An override (`RESEARCH_GATE_GREP`) must be an absolute path whose `--version` names GNU grep; anything else exits 2 with `research-gate: GREP_PROVENANCE refused:` before a record is read. Re-check a receipt's claim with `python3 corpus/evidence/round35/c1-count.py --seed N` (`GREP_PIN_MATCH=9/9`). A shell whose `type -a grep` shows a builtin (this host's interactive shells carry `pi-uu-grep 0.2.0`) measures a different program unless the command is run by absolute path.
 
 ## Gates
 
@@ -88,6 +90,8 @@ Where the lane learns: `corpus/SOURCES.md` (opened rows, scoped A/B/C tiers, stu
 | research-gate round-33 counters | gate | `python3 corpus/evidence/round33/c1-count-v2.py` · `python3 corpus/evidence/round32/c2-count-v3.py` (lane root; `--gate PATH`, `--seed N`, `--receipt OUT.json`) | `TOPLEVEL_FIELD_MATCH=156/156` · `EXEMPT_AUDIT_MATCH=132/132` exit `0`; any other count exit `1`; harness error exit `2` | before on the round-32 gate `f4731885`: 60/156 (C1); the v3 exempt-hop counter decouples fixture mtime/inode/creation order from truth (round-32 metadata-order control 132/132 under v2, 96/132 under v3) | contract `corpus/evidence/round33/claims.md` (design v2) | temp dirs only (keep `C2_TMP` outside the gate's lane root); no network | chousa |
 | research-gate round-34 counter | gate | `python3 corpus/evidence/round34/c1-count-v3.py` (lane root; `--gate PATH`, `--seed N`, `--receipt OUT.json`; run with `LC_ALL=C` on a loaded host) | `LONGSPAN_MATCH=42/42` exit `0`; any other count exit `1`; harness error exit `2` | before on the round-33 gate `43a1af35`: 25/42 (`LC_ALL=C`), 0/42 by the 1500 s bound in a UTF-8 locale; on gate `772a1d8e` (attempt-1 landed, pre-C2): 42/42 ×3; re-run on the C2-landed gate `a6307edf`: 42/42 ×4, seeds 4601-4603 (`LC_ALL=C`) and 4604 (UTF-8) (`w2a2/ExecC1RerunA2`, receipts in its dir) | contract `corpus/evidence/round34/claims.md` (design v3); v1/v2 counters kept frozen and superseded | temp dirs only; no network | chousa |
 | research-gate round-34 attempt-2 counter | gate | `python3 corpus/evidence/round34/c2-count.py` (lane root; `--gate PATH`, `--seed N`, `--receipt OUT.json`; run with `LC_ALL=C`) | `DEADZONE_MATCH=37/37` exit `0`; any other count exit `1`; harness error exit `2` | before on gate `772a1d8e` (dead zone open): 21/37 on seeds 5011/5023; landed `a6307edf`: 37/37 ×4 (seeds 5011, 5023, 5033, 5047) | contract `corpus/evidence/round34/claims-a2.md` (design v4, C2) | temp dirs only; no network | chousa |
+| research-gate round-35 counters | gate | `python3 corpus/evidence/round35/c1-count.py` · `python3 corpus/evidence/round35/c2-count.py` (lane root; `--gate PATH`, `--seed N`, `--receipt OUT.json`; C2 also `--battery PATH`) | `GREP_PIN_MATCH=9/9` · `WITNESS_SEPARATED=2/2 OUTPUT_EQUIV=2/2 LANDED_WITNESS=pass` exit `0`; any other count exit `1`; harness error exit `2` | before on gate `a6307edf`: 0/9 and 0/2 (C2 with no battery); the hardcoded-pin control scores 3/9; witness stubs score 0/2 and landed-fail | contract `corpus/evidence/round35/claims.md` (design v1 + erratum) | temp dirs only (`C1_TMP`/`C2_TMP`); the C2 counter writes two patched engine copies and one helper in its temp dir; no network | chousa |
+| `mechanism-witness` (r35) | tool | `python3 tools/mechanism-witness.py --gate PATH [--seed N] [--json OUT] [--tmp DIR]` | `WITNESS=pass|fail|unparseable|timeout OUTPUT=n/9 STAMPS chunk=N direct=M`; exit `0` only when the witness passes and output is full | witness pass on the landed gate (9 chunk stamps for 8 long records), fail on both keyed engines and on a `set +x`/`chunk-once` bypass; threshold attack in the round-35 wave | `corpus/evidence/round35/claims.md` (design v1 + erratum: aggregate threshold, per-record coverage NOT measured); `.ufo/waves/round-34/w2a2/MutC2Keyed.md` (the class) | its own temp dir; trace file bounded by the fixture (9 records with 32 KiB spans); no network | chousa |
 
 **Historical — Round-25 final registry correction.** (Round 31: the rows above now read `PASS (228 cases)`; round 32: `PASS (241 cases)`; round 33: `PASS (251 cases)`; round 34: they now read `PASS (256 cases, 0 skipped)`; the rest of this paragraph is the round-25 tally, not the current one.) The shared `154 cases` tally in the
 rows above recorded checkpoint `d8c8cff`; the final round-25 shared selftest was
@@ -589,3 +593,34 @@ Only separately hashed DERIVED metadata/summaries are proposed for
 publication; custody/exclusions are in `corpus/evidence/round28-safe/provenance.json`.
 Seat spending is not a read-only, source-behaviour or safety certificate.
 Outside closure and later census/report/continuation remain Parent-owned.
+
+### Round 35 — the pinned binary, the routing witness, and two survivors (2026-10-23)
+
+Two claims and four repairs; the report is `.ufo/reports/round-35/chousa.md`.
+
+- **The gate pins its grep (C1).** `grep_pin_init` resolves ONE absolute binary at startup
+  (`/usr/bin/grep`, then `/bin/grep`; no `PATH` lookup, S067/S068), verifies that its own
+  `--version` first line names GNU grep, and refuses an unverifiable pin with
+  `research-gate: GREP_PROVENANCE refused: <reason> (candidate=<path>)` and exit 2 before any record
+  is read. `RESEARCH_GATE_GREP` overrides it and must be an absolute, GNU-reporting path.
+  `CHOUSA_GREP_PIN_ECHO=1` prints `GATE_GREP: path=… source=default|override version="…"`; off by
+  default, so every mode's output is byte-identical without it. The wrapper calls the absolute path
+  directly — never through `command`, which a caller can shadow with a `BASH_ENV` function — and the
+  version probe cuts its line in bash, never through `head`, for the same reason. Counter:
+  `GREP_PIN_MATCH=9/9` (base gate 0/9; hardcoded-pin control 3/9).
+- **The routing witness (C2).** `tools/mechanism-witness.py` runs a gate under `bash -x` with a
+  private `PS4`, counts matcher-function entry stamps, and reports `WITNESS=pass|fail OUTPUT=n/9
+  STAMPS chunk=N direct=M`. It separates two output-equivalent keyed engines (python exact search
+  for long spans; the same branch keyed on `ROOT` under a temp dir) that every output counter scores
+  9/9. **It proves routing, not computation**: a one-record shortcut, a length-keyed engine, a
+  chunk call whose result is discarded, and a body-replaced chunk matcher all still pass (the
+  surviving-control table in `corpus/knowledge/keyed-engine-output-equivalence-r35.md`; QUALITY 49
+  carries the r36 requirement).
+- **Repairs.** `slen` reads its own parameter (`local slen; slen=${#span}` — the one-statement form
+  read the caller's dynamic scope; probe base `offsets=0` / landed `offsets=1`); selftest case-range
+  comments 252-253 and 254-256 now match the run; `corpus/README.md`'s dead-zone sentence is
+  corrected; the round-34 wave-debris count is reconciled in the report.
+- **What is NOT claimed.** C1's counter cannot see a read-before-refusal mutant or a correct-output
+  engine swap (the pin's path/version are verified, the matcher's identity is not); C2's witness is
+  name-coupled (a matcher rename reads `unparseable`) and its threshold is a global sum. Both
+  narrowings and both survivor sets are in `corpus/evidence/round35/claims.md` §Erratum.

@@ -1,0 +1,184 @@
+{
+ "elapsed_s": 0.9,
+ "gate": "/tmp/hyaku/chousa-r35/w2/MutGrepPinEngines/vB-awk-pin-unused.sh",
+ "gate_sha256": "9040dcba3fdb1f6948dad28d04fcc8ef190e505a7166e954876883c9f8f07772",
+ "label": "GREP_PIN_MATCH=9/9",
+ "matched": 9,
+ "predicate_holds": true,
+ "reference": {
+  "drift": true,
+  "obs": {
+   "K1": [
+    "supported",
+    "match"
+   ],
+   "K2": [
+    "unsupported",
+    "mismatch"
+   ],
+   "K3": [
+    "unsupported",
+    "mismatch"
+   ]
+  },
+  "rc": 1
+ },
+ "reference_sane": true,
+ "runs": [
+  {
+   "drift": true,
+   "obs": {
+    "K1": [
+     "supported",
+     "match"
+    ],
+    "K2": [
+     "unsupported",
+     "mismatch"
+    ],
+    "K3": [
+     "unsupported",
+     "mismatch"
+    ]
+   },
+   "rc": 1,
+   "scenario": "reference",
+   "stderr_tail": ""
+  },
+  {
+   "rc": 1,
+   "scenario": "S1",
+   "stderr_tail": ""
+  },
+  {
+   "rc": 1,
+   "scenario": "S2",
+   "stderr_tail": ""
+  },
+  {
+   "rc": 1,
+   "scenario": "S3",
+   "stderr_tail": ""
+  },
+  {
+   "rc": 2,
+   "scenario": "S4",
+   "stderr_tail": "research-gate: GREP_PROVENANCE refused: override is not an absolute path (candidate=bin/grep)\n"
+  },
+  {
+   "rc": 2,
+   "scenario": "S5",
+   "stderr_tail": "research-gate: GREP_PROVENANCE refused: override is not a regular file (candidate=/tmp/hyaku/chousa-r35/w2/MutGrepPinEngines/tmp/w35c1-00000dc1-51h7sd3i/_shim/absent-grep)\n"
+  },
+  {
+   "rc": 2,
+   "scenario": "S6",
+   "stderr_tail": "research-gate: GREP_PROVENANCE refused: override does not report GNU grep: <no version> (candidate=/tmp/hyaku/chousa-r35/w2/MutGrepPinEngines/tmp/w35c1-00000dc1-51h7sd3i/_shim/stub-grep)\n",
+   "stub_calls": "stub --version\n"
+  },
+  {
+   "echo_line": "GATE_GREP: path=/usr/bin/grep source=override version=\"grep (GNU grep) 3.12-modified\"",
+   "rc": 1,
+   "scenario": "S7",
+   "stderr_tail": "GATE_GREP: path=/usr/bin/grep source=override version=\"grep (GNU grep) 3.12-modified\"\n"
+  },
+  {
+   "echo_line": "GATE_GREP: path=/usr/bin/grep source=default version=\"grep (GNU grep) 3.12-modified\"",
+   "rc": 1,
+   "scenario": "S8",
+   "stderr_tail": "GATE_GREP: path=/usr/bin/grep source=default version=\"grep (GNU grep) 3.12-modified\"\n"
+  },
+  {
+   "rc": 1,
+   "scenario": "S9",
+   "stderr_tail": "GATE_GREP: path=/usr/bin/grep source=override version=\"grep (GNU grep) 3.12-modified\"\n"
+  }
+ ],
+ "scenarios": [
+  {
+   "detail": {
+    "output_matches_reference": true,
+    "rc": 1,
+    "tripwire_bytes": 0
+   },
+   "pass": true,
+   "scenario": "S1-shim-first-path"
+  },
+  {
+   "detail": {
+    "output_matches_reference": true,
+    "rc": 1,
+    "tripwire_bytes": 0
+   },
+   "pass": true,
+   "scenario": "S2-bash-env-function"
+  },
+  {
+   "detail": {
+    "output_matches_reference": true,
+    "path_tools": 38,
+    "rc": 1,
+    "stderr_tail": ""
+   },
+   "pass": true,
+   "scenario": "S3-no-grep-on-path"
+  },
+  {
+   "detail": {
+    "marker": true,
+    "rc": 2,
+    "stderr_tail": "research-gate: GREP_PROVENANCE refused: override is not an absolute path (candidate=bin/grep)\n"
+   },
+   "pass": true,
+   "scenario": "S4-override-relative"
+  },
+  {
+   "detail": {
+    "marker": true,
+    "rc": 2,
+    "stderr_tail": "research-gate: GREP_PROVENANCE refused: override is not a regular file (candidate=/tmp/hyaku/chousa-r35/w2/MutGrepPinEngines/tmp/w35c1-00000dc1-51h7sd3i/_shim/absent-grep)\n"
+   },
+   "pass": true,
+   "scenario": "S5-override-missing"
+  },
+  {
+   "detail": {
+    "marker": true,
+    "rc": 2,
+    "stderr_tail": "research-gate: GREP_PROVENANCE refused: override does not report GNU grep: <no version> (candidate=/tmp/hyaku/chousa-r35/w2/MutGrepPinEngines/tmp/w35c1-00000dc1-51h7sd3i/_shim/stub-grep)\n",
+    "stub_calls": 1
+   },
+   "pass": true,
+   "scenario": "S6-override-non-gnu"
+  },
+  {
+   "detail": {
+    "echo_line": "GATE_GREP: path=/usr/bin/grep source=override version=\"grep (GNU grep) 3.12-modified\"",
+    "output_matches_reference": true,
+    "rc": 1
+   },
+   "pass": true,
+   "scenario": "S7-override-real-echo"
+  },
+  {
+   "detail": {
+    "echo_line": "GATE_GREP: path=/usr/bin/grep source=default version=\"grep (GNU grep) 3.12-modified\"",
+    "output_matches_reference": true,
+    "rc": 1
+   },
+   "pass": true,
+   "scenario": "S8-default-echo"
+  },
+  {
+   "detail": {
+    "echo_line": "GATE_GREP: path=/usr/bin/grep source=override version=\"grep (GNU grep) 3.12-modified\"",
+    "output_matches_reference": true,
+    "tripwire_bytes": 0
+   },
+   "pass": true,
+   "scenario": "S9-override-beats-shim"
+  }
+ ],
+ "seed": 3521,
+ "total": 9
+}

@@ -1,0 +1,129 @@
++L292 set -euo pipefail
++L293 shopt -s extglob
++L302 VERSION=v2
++L308 SOURCE_READ_MAX_BYTES=8388608
+++L311 readlink -f -- /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh
++L311 SELF=/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh
++++L312 dirname -- /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh
+++L312 cd -- /home/vgpnk/Projects/shokunin/chousa-shokunin/tools
+++L312 pwd
++L312 SCRIPT_DIR=/home/vgpnk/Projects/shokunin/chousa-shokunin/tools
+++L313 cd -- /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/..
+++L313 pwd
++L313 LANE_ROOT=/home/vgpnk/Projects/shokunin/chousa-shokunin
++L315 MODE=verify
++L316 RECORD_ARG=
++L317 REGISTRY_ARG=
++L318 REGISTRY_ARG_SET=0
++L319 PIN_ARG=
++L320 DRIFT_ARG=
++L321 ROOT_ARG_SET=0
++L322 AS_OF_ARG_SET=0
++L322 AS_OF_ARG=
++L323 ROOT=/tmp/hyaku/chousa-r35/w2/RevScenarioS3S4S5/fixA
++L324 STRICT=0
++L325 AGG_ERE='aggregator|wikipedia|secondary-summary|chat-export-sources'
++L326 NOW_EPOCH=
++L327 [[ -n '' ]]
+++L327 date +%s
++L327 NOW_EPOCH=1792785695
+++L330 date -u -d @1792785695 +%Y-%m-%dT%H:%M:%SZ
++L330 TS_UTC=2026-10-23T20:01:35Z
++L348 GREP_BIN=
++L349 GREP_PIN_SOURCE=
++L350 GREP_PIN_VERSION=
++L401 N_FINDINGS=0
++L401 N_DRIFT=0
++L401 ROLL=CLEAN
++L402 FINDING_LINES=()
++L402 declare -a FINDING_LINES
++L404 N_Q=0
++L404 N_SRC=0
++L404 N_CH=0
++L404 N_CL=0
++L404 N_NEG=0
++L404 N_REJ=0
++L404 N_APPR=0
++L405 HAS_META=0
++L405 HAS_SOURCES_SEC=0
++L405 HAS_CHAIN_SEC=0
++L405 HAS_CLAIMS_SEC=0
++L406 HAS_REJ_SEC=0
++L406 HAS_NEG_SEC=0
++L406 HAS_APPROVAL_SEC=0
++L406 HAS_SWEEP_SEC=0
++L407 SCHEMA_HINT=0
++L407 WINDOW_EXTERNAL=0
++L407 APPROVAL_GRANTED=0
++L407 REJECT_MARKERS=0
++L530 SEC_BODY=()
++L530 declare -A SEC_BODY
++L531 SEC_ORDER=()
++L531 declare -a SEC_ORDER
++L716 DEAD_MARK_RE='ephemeral|scratch|historical|unresolved|lost-tree|lost-base|formerly|removed|relocat|labelled-dead|blocked-no-fetch|proposal'
++L876 SCOPE_BOUNTY='bug bounty|bounty program|bounty programs|bounty hunt|bounty hunting|bounty scope|claim package|claim packages|kasegi'
++L882 SCOPE_KENGAKU='model quality|model evaluation|model evaluations|model eval|model benchmark|model benchmarks|model scoring|llm quality|llm evaluation|llm eval|llm benchmark|llm benchmarks|llm scoring|language model quality|language model evaluation|kengaku'
++L883 SCOPE_KUMITATE='orchestration|dispatch mechanism|multi agent dispatch|multiagent dispatch|agent dispatch|swarm wave|swarm waves|swarm call|swarm calls|swarm dispatch|swarm orchestration|fleet dispatch|agent lifecycle|agent lifecycles|agent roster|agent rosters|kumitate'
++L1204 JSON_PRESENT=()
++L1204 JSON_STR=()
++L1204 JSON_DUP=()
++L1204 JSON_DUPDIFF=()
++L1204 declare -A JSON_PRESENT JSON_STR JSON_DUP JSON_DUPDIFF
++L1205 JSON_SCAN_LINE=
++L1206 JSON_SCAN_RC=1
++L1595 TOK_WS=$' \t\n\r\v\f'
++L1596 TOK_PUNCT='!"#$%&()*+,./:;<=>?@[\]^_`{|}~'
++L1650 TOK_DIRECT_SPAN_MAX=32764
++L1651 TOK_CHUNK_BYTES=4096
++L3497 VAS_OUT=
++L3497 VAS_RC=0
++L3497 VAS_VERDICT=
++L3497 VAS_FIND=0
++L3497 VAS_DRIFT=0
++L3497 VAS_COUNTS=
++L3498 VAS_NATIVE=
++L3498 VAS_FINDINGS=
++L3778 GATE_DRIFT_VOLATILE_FIELDS='ts gate_sha256'
++L3779 GATE_BASELINE_MAGIC='# chousa-gate drift baseline v1'
++L3780 GATE_BASELINE_MARKER='# --- canonical output follows ---'
++L3781 GATE_MANIFEST_MARKER='# --- json manifest line follows ---'
++L3783 GATE_CAP=
++L3783 GATE_CAP_RC=0
++L3783 GATE_CAP_NOTE=
++L3783 GATE_CAP_DIR=
++L3784 GATE_REPORT=
++L3785 GDRIFT_KEYS=()
++L3786 GDRIFT_KEYVAL=()
++L3786 declare -A GDRIFT_KEYVAL
++L7982 [[ 4 -gt 0 ]]
++L7983 case "$1" in
++L7987 MODE=claims
++L7987 shift
++L7982 [[ 3 -gt 0 ]]
++L7983 case "$1" in
++L8020 [[ -z '' ]]
++L8021 RECORD_ARG=claims.jsonl
++L8021 shift
++L7982 [[ 2 -gt 0 ]]
++L7983 case "$1" in
++L8003 [[ 2 -ge 2 ]]
++L8004 ROOT=.
++L8004 ROOT_ARG_SET=1
++L8004 shift 2
++L7982 [[ 0 -gt 0 ]]
++L8025 [[ claims != all ]]
++L8025 [[ -n '' ]]
++L8025 [[ -n '' ]]
++L8028 ((  AS_OF_ARG_SET  ))
++L8032 (( REGISTRY_ARG_SET ))
++L8039 grep_pin_init
++L370 local cand= c=
++L371 [[ -n /tmp/hyaku/chousa-r35/w2/RevScenarioS3S4S5/absent-grep ]]
++L372 cand=/tmp/hyaku/chousa-r35/w2/RevScenarioS3S4S5/absent-grep
++L373 GREP_PIN_SOURCE=override
++L374 case "$cand" in
++L378 [[ -f /tmp/hyaku/chousa-r35/w2/RevScenarioS3S4S5/absent-grep ]]
++L378 grep_pin_refuse 'override is not a regular file' /tmp/hyaku/chousa-r35/w2/RevScenarioS3S4S5/absent-grep
++L354 printf 'research-gate: GREP_PROVENANCE refused: %s (candidate=%s)\n' 'override is not a regular file' /tmp/hyaku/chousa-r35/w2/RevScenarioS3S4S5/absent-grep
+research-gate: GREP_PROVENANCE refused: override is not a regular file (candidate=/tmp/hyaku/chousa-r35/w2/RevScenarioS3S4S5/absent-grep)
++L355 exit 2

@@ -1,0 +1,410 @@
+{
+ "fixture": "/tmp/hyaku/chousa-r35/w2/MutGrepShimEnv/w35mut-rjh1xa47",
+ "gate": "/tmp/hyaku/chousa-r35/w2/MutGrepShimEnv/gate-landed.sh",
+ "gate_sha256": "1f2fb4f522d9a670b49dd61ad1369f55ee012f3b0d38050654be45a71aaef617",
+ "real_grep_sha256": "19280b0e0714dadf0c100cdbc7f4823d254dd8facba64deeff5ec50d39fecf84",
+ "scenarios": [
+  {
+   "claims": [
+    "match",
+    "mismatch",
+    "mismatch"
+   ],
+   "drift": true,
+   "gate_grep_line": "",
+   "name": "P0-baseline",
+   "note": "",
+   "rc": 1,
+   "refusal": false,
+   "stderr_head": [],
+   "stdout_head": [
+    "research-gate v2 \u2014 ts=2026-10-23T20:00:17Z \u2014 mode=claims \u2014 claims=/tmp/hyaku/chousa-r35/w2/MutGrepShimEnv/w35mut-rjh1xa47/claims.jsonl",
+    "CLAIM id=K1 expected=supported observed=supported source=src/ok.md at=line:1 verdict=match",
+    "CLAIM id=K2 expected=supported observed=unsupported source=src/ok.md at=- verdict=mismatch"
+   ],
+   "trips": {
+    "alias": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    },
+    "cmd": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    },
+    "fn": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    }
+   }
+  },
+  {
+   "claims": [
+    "match",
+    "mismatch",
+    "mismatch"
+   ],
+   "drift": true,
+   "gate_grep_line": "",
+   "name": "P1-BASH_ENV-grep-fn",
+   "note": "",
+   "rc": 1,
+   "refusal": false,
+   "stderr_head": [],
+   "stdout_head": [
+    "research-gate v2 \u2014 ts=2026-10-23T20:00:17Z \u2014 mode=claims \u2014 claims=/tmp/hyaku/chousa-r35/w2/MutGrepShimEnv/w35mut-rjh1xa47/claims.jsonl",
+    "CLAIM id=K1 expected=supported observed=supported source=src/ok.md at=line:1 verdict=match",
+    "CLAIM id=K2 expected=supported observed=unsupported source=src/ok.md at=- verdict=mismatch"
+   ],
+   "trips": {
+    "alias": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    },
+    "cmd": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    },
+    "fn": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    }
+   }
+  },
+  {
+   "claims": [
+    "match",
+    "mismatch",
+    "mismatch"
+   ],
+   "drift": true,
+   "gate_grep_line": "",
+   "name": "P2-exported-fn-grep",
+   "note": "",
+   "rc": 1,
+   "refusal": false,
+   "stderr_head": [],
+   "stdout_head": [
+    "research-gate v2 \u2014 ts=2026-10-23T20:00:17Z \u2014 mode=claims \u2014 claims=/tmp/hyaku/chousa-r35/w2/MutGrepShimEnv/w35mut-rjh1xa47/claims.jsonl",
+    "CLAIM id=K1 expected=supported observed=supported source=src/ok.md at=line:1 verdict=match",
+    "CLAIM id=K2 expected=supported observed=unsupported source=src/ok.md at=- verdict=mismatch"
+   ],
+   "trips": {
+    "alias": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    },
+    "cmd": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    },
+    "fn": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    }
+   }
+  },
+  {
+   "claims": [],
+   "drift": false,
+   "gate_grep_line": "",
+   "name": "P3-BASH_ENV-fn+readonly-f",
+   "note": "",
+   "rc": 1,
+   "refusal": false,
+   "stderr_head": [
+    "/tmp/hyaku/chousa-r35/w2/MutGrepShimEnv/gate-landed.sh: line 351: grep: readonly function"
+   ],
+   "stdout_head": [],
+   "trips": {
+    "alias": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    },
+    "cmd": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    },
+    "fn": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    }
+   }
+  },
+  {
+   "claims": [],
+   "drift": false,
+   "gate_grep_line": "",
+   "name": "P4-exported-fn+BASH_ENV-readonly",
+   "note": "",
+   "rc": 1,
+   "refusal": false,
+   "stderr_head": [
+    "/tmp/hyaku/chousa-r35/w2/MutGrepShimEnv/gate-landed.sh: line 351: grep: readonly function"
+   ],
+   "stdout_head": [],
+   "trips": {
+    "alias": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    },
+    "cmd": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    },
+    "fn": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    }
+   }
+  },
+  {
+   "claims": [],
+   "drift": false,
+   "gate_grep_line": "",
+   "name": "P5-BASH_ENV-alias",
+   "note": "",
+   "rc": 2,
+   "refusal": false,
+   "stderr_head": [
+    "/tmp/hyaku/chousa-r35/w2/MutGrepShimEnv/gate-landed.sh: line 351: syntax error near unexpected token `('"
+   ],
+   "stdout_head": [],
+   "trips": {
+    "alias": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    },
+    "cmd": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    },
+    "fn": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    }
+   }
+  },
+  {
+   "claims": [
+    "match",
+    "mismatch",
+    "mismatch"
+   ],
+   "drift": true,
+   "gate_grep_line": "",
+   "name": "P6-BASH_ENV-command-shim",
+   "note": "",
+   "rc": 1,
+   "refusal": false,
+   "stderr_head": [],
+   "stdout_head": [
+    "research-gate v2 \u2014 ts=2026-10-23T20:00:17Z \u2014 mode=claims \u2014 claims=/tmp/hyaku/chousa-r35/w2/MutGrepShimEnv/w35mut-rjh1xa47/claims.jsonl",
+    "CLAIM id=K1 expected=supported observed=supported source=src/ok.md at=line:1 verdict=match",
+    "CLAIM id=K2 expected=supported observed=unsupported source=src/ok.md at=- verdict=mismatch"
+   ],
+   "trips": {
+    "alias": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    },
+    "cmd": {
+     "bytes": 35,
+     "first": [
+      "cmd %s",
+      "cmd %s"
+     ],
+     "lines": 5
+    },
+    "fn": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    }
+   }
+  },
+  {
+   "claims": [
+    "match",
+    "mismatch",
+    "mismatch"
+   ],
+   "drift": true,
+   "gate_grep_line": "",
+   "name": "P7-exported-command-shim",
+   "note": "",
+   "rc": 1,
+   "refusal": false,
+   "stderr_head": [],
+   "stdout_head": [
+    "research-gate v2 \u2014 ts=2026-10-23T20:00:17Z \u2014 mode=claims \u2014 claims=/tmp/hyaku/chousa-r35/w2/MutGrepShimEnv/w35mut-rjh1xa47/claims.jsonl",
+    "CLAIM id=K1 expected=supported observed=supported source=src/ok.md at=line:1 verdict=match",
+    "CLAIM id=K2 expected=supported observed=unsupported source=src/ok.md at=- verdict=mismatch"
+   ],
+   "trips": {
+    "alias": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    },
+    "cmd": {
+     "bytes": 50,
+     "first": [
+      "expcmd %s",
+      "expcmd %s"
+     ],
+     "lines": 5
+    },
+    "fn": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    }
+   }
+  },
+  {
+   "claims": [],
+   "drift": false,
+   "gate_grep_line": "",
+   "name": "P8-head-forge-nongnu-override",
+   "note": "stub prints pi-uu-grep on stdout",
+   "rc": 2,
+   "refusal": false,
+   "stderr_head": [
+    "research-gate: GNU grep with -z/-P support is required for claims and chain token matching"
+   ],
+   "stdout_head": [],
+   "trips": {
+    "alias": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    },
+    "cmd": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    },
+    "fn": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    }
+   }
+  },
+  {
+   "claims": [],
+   "drift": false,
+   "gate_grep_line": "",
+   "name": "P8b-nongnu-override-noshim",
+   "note": "",
+   "rc": 2,
+   "refusal": true,
+   "stderr_head": [
+    "research-gate: GREP_PROVENANCE refused: override does not report GNU grep: pi-uu-grep 0.2.0 (candidate=/tmp/hyaku/chousa-r35/w2/MutGrepShimEnv/stub-pi-uu-grep)"
+   ],
+   "stdout_head": [],
+   "trips": {
+    "alias": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    },
+    "cmd": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    },
+    "fn": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    }
+   }
+  },
+  {
+   "claims": [
+    "match",
+    "mismatch",
+    "mismatch"
+   ],
+   "drift": true,
+   "gate_grep_line": "",
+   "name": "P9-ENV-sh",
+   "note": "",
+   "rc": 1,
+   "refusal": false,
+   "stderr_head": [],
+   "stdout_head": [
+    "research-gate v2 \u2014 ts=2026-10-23T20:00:17Z \u2014 mode=claims \u2014 claims=/tmp/hyaku/chousa-r35/w2/MutGrepShimEnv/w35mut-rjh1xa47/claims.jsonl",
+    "CLAIM id=K1 expected=supported observed=supported source=src/ok.md at=line:1 verdict=match",
+    "CLAIM id=K2 expected=supported observed=unsupported source=src/ok.md at=- verdict=mismatch"
+   ],
+   "trips": {
+    "alias": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    },
+    "cmd": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    },
+    "fn": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    }
+   }
+  },
+  {
+   "claims": [],
+   "drift": false,
+   "gate_grep_line": "",
+   "name": "P10-BASH_ENV-readonly-GREP_BIN",
+   "note": "",
+   "rc": 1,
+   "refusal": false,
+   "stderr_head": [
+    "/tmp/hyaku/chousa-r35/w2/MutGrepShimEnv/gate-landed.sh: line 348: GREP_BIN: readonly variable"
+   ],
+   "stdout_head": [],
+   "trips": {
+    "alias": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    },
+    "cmd": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    },
+    "fn": {
+     "bytes": 0,
+     "first": [],
+     "lines": 0
+    }
+   }
+  }
+ ]
+}

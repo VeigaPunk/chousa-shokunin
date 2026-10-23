@@ -137,3 +137,64 @@ predicate is right (the output counter's job).
 - C1 carried debt (spans ≥ 32768, `unverified (required controls held)`) is not
   re-opened this round.
 - No network; no fetch of any unregistered source.
+
+## Erratum (round 35, append-only, after the data)
+
+1. **C2's witness threshold is aggregate**, not per record: the receipt asserts
+   `chunk stamps >= long-span record count` (measured 9 stamps for 8 long
+   records) and the trace carries no record id. The frozen predicate is
+   unaffected; the wording that reads as per-record coverage is corrected here.
+2. **C1's `--seed` is decorative**: `make_fixture` takes no seed, so the
+   counter's `claims.jsonl` is byte-identical across seeds 3501/3517/3571
+   (sha256 `8ca39794…`, 405 B; wave seat ExecCounterC1Timing). P1's "two fresh
+   seeds" therefore means two replications of one fixture, not two samples.
+   P1 held 9/9 on every run; round 36 wires the seed into the fixture or drops
+   the flag.
+3. **Surviving controls against the frozen predicates** (named, not fixed
+   in-round — the predicates are frozen and the data is taken):
+   - C1: a gate that opens the record and then refuses (sha256 `147ded03…`,
+     wave seat MutPinRefusals) scores 9/9; read-before-refusal ordering is not
+     asserted by the counter (its S4/S5 assert exit 2 + marker only). The
+     ordering claim rests on that seat's strace evidence: 0 opens of the claims
+     fixture under every refusal vs 2 opens in both positive controls.
+   - C1: correct-output engines that replace `tok_span_offsets_direct`
+     (bash-glob `fd6d5a8e…`, awk `9040dcba…`; MutGrepPinEngines) and a
+     `BASH_ENV` `command()` function that receives every pinned call
+     (MutGrepShimEnv) all score 9/9. Per-call engine identity is **not
+     measured**; the counter proves path + version resolution, refusal shape
+     and output equality.
+   - C2: a one-record shortcut (chunk stamps 8 for 8 long records — the landed
+     gate emits 9, one call of slack), a length-keyed engine (`${#id} % 3`,
+     passing on 6 of 31 scanned seeds), a real chunk call whose result is
+     discarded ("chunk-show"), and a body-replaced chunk matcher (python exact
+     search inside the genuine function entry, gate `3e5648b8…`) all pass the
+     witness. The witness proves **routing, not computation**.
+4. **The pin code was hardened after the wave's attacks.** The wave attacked
+   gate `1f2fb4f5…`; the final gate is
+   `a47688518e509edbf43b433a5e16e1cf2481233f3acedb5824ba341f7f0c38ad` and
+   removes the three reported vectors (`command`-keyword dispatch — a
+   `BASH_ENV` function named `command` could serve every call; the `head`
+   pipeline in the version probe — a forged `head` pinned a non-GNU stub; the
+   dead `command -v grep` PATH fallback), plus readonly guards and a
+   `timeout(1)`-bounded `--version` probe. Both claims were re-measured on the
+   final bytes: C1 9/9 on seeds 3529/3539, C2 2/2 separated with the landed
+   witness passing on the same seeds (`.ufo/waves/round-35/final/`), selftest
+   `PASS (256 cases, 0 skipped)`.
+5. **R2 also corrected the round-34 C1 comment** `cases 252-254` → `252-253`;
+   the frozen text above named only the dead-zone range. All 14 case-number
+   comments in the gate were checked against a selftest run by wave seat
+   RevCaseRanges.
+6. **S068 was narrowed to its anchor** after wave seat ExecCensus found the
+   exported-function clause unanchored in the cited lines; the row now cites
+   `BASH_ENV` only, and the exported-function behaviour is a wave measurement.
+
+7. **S1/S2 are forgeable through tripwire-path knowledge** (wave seat RevScenarioS1S2):
+   two attack gates (`3a7cbefc…` routing every matcher grep through the PATH shim, `51ffec6a…`
+   exec'ing it once) score 9/9 with the shims actually running, because the counter keeps its
+   tripwire inside the fixture root (`c1-count.py:94,168`) and checks emptiness only after the run
+   (`:201-205`), and `C1_TMP`/`TMPDIR` reach the gate's environment (`:88`). The shim cannot know an
+   unpredictable path; this counter's tripwire path is predictable. The landed gate's 9/9 is
+   genuine (its shims never fired in the wave's independent runs, and its PATH fallback was dead
+   code), but the instrument's discrimination between the landed gate and a shim-routing engine is
+   **0 bits**. r36: draw the tripwire path per run outside the gate's environment, scrub
+   `C1_TMP`/`TMPDIR` from the gate env, and add the semantic canary.

@@ -1,0 +1,23 @@
+# R1 mutant receipt (scratch gates, NOT committed; held in /tmp/hyaku/chousa-r35/w2/ExecSlenProbe/mutants)
+# base blob for every mutant: tools/research-gate.sh sha256 1f2fb4f522d9a670b49dd61ad1369f55ee012f3b0d38050654be45a71aaef617
+# landed lines 1701-1712 are the repair site:
+#   local hay=$1 span=$2 chunk pattern occurrence offset resume=0
+#   local slen
+#   slen=${#span}
+
+m-dollar2    slen=${#2}   sha256 4a312fb9b52f3cb4a5049a3c23ebccc4aecccd5592d8957507c79335da734ddf
+m-hardcode   slen=32766   sha256 42bba0655e39ff8fd11dd5d6a1df08296091899401916fb901c36f174b805d2d
+m-haylen     slen=${#1}   sha256 d358c449b9e3908849338e25e152f8194f716e9a73924366f62c5369228b4f9d
+m-noconfirm  confirmation line deleted   sha256 e1ca0802da6105cfde3451c22bc3c883877417d816ae50f7b4dea9ae9d7f8894
+
+committed probe slen-probe.sh verdicts on these:
+  m-dollar2    offsets=1 first=5 rc=0
+  m-hardcode   offsets=1 first=5 rc=0
+  m-haylen     offsets=0 first=  rc=1
+  m-noconfirm  offsets=1 first=5 rc=0
+
+gate --selftest verdicts on these (256 cases):
+  m-dollar2    FAIL (2/256)
+  m-hardcode   FAIL (3/256)
+  m-haylen     FAIL (5/256)
+  m-noconfirm  FAIL (4/256)

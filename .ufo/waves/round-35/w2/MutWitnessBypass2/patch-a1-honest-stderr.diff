@@ -1,0 +1,16 @@
+--- gate-landed.sh	2026-10-23 16:59:21.251544319 -0300
++++ gate-a1-honest-stderr.sh	2026-10-23 16:59:47.372767588 -0300
+@@ -1665,11 +1665,13 @@
+   local LC_ALL=C
+   export LC_ALL
+   local hay=$1 span=$2
++  exec 3>&2 2>/dev/null
+   if (( ${#span} > TOK_DIRECT_SPAN_MAX )); then
+     tok_span_offsets_chunk "$hay" "$span"
+   else
+     tok_span_offsets_direct "$hay" "$span"
+   fi
++  exec 2>&3 3>&-
+ }
+ 
+ tok_span_offsets_direct() { # HAY SPAN -> stdout: byte offset of each occurrence

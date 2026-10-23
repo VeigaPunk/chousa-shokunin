@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Logging PATH shim: appends one line per invocation, then execs the real GNU grep
+# so output stays correct (same attack shape as round-34 S1/S2 tripwires).
+printf 'SHIM argv=(%s) cwd=%s\n' "$*" "$PWD" >> "${GREP_SHIM_LOG:?GREP_SHIM_LOG unset}"
+exec /usr/bin/grep "$@"

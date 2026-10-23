@@ -1,0 +1,40 @@
+== GATE IDENTITY ==
+clone HEAD: e87c5d7ea2dbf3730b36a3961de3f06261d015e4
+1f2fb4f522d9a670b49dd61ad1369f55ee012f3b0d38050654be45a71aaef617  /tmp/hyaku/chousa-r35/w2/ExecPinModeVerify/clone/tools/research-gate.sh
+a6307edf687ac0fb1b0b08bf7f0518b3fbc310fa9924b970aa3654612562995b  /tmp/hyaku/chousa-r35/w2/ExecPinModeVerify/clone/.ufo/waves/round-35/repairs/base-gate.sh
+
+== F2 PROOF: the gate's own grep() function shadows command -v grep ==
+grep() { command "$GREP_BIN" "$@"; }
+    done
+    if [[ -z $cand ]]; then
+      c=$(command -v grep 2>/dev/null || true)
+      case "$c" in
+        /*) if grep_pin_verify "$c"; then cand=$c; fi ;;
+      esac
+    fi
+    [[ -n $cand ]] || grep_pin_refuse "no GNU grep found at /usr/bin/grep, /bin/grep or on PATH" ''
+  fi
+--- direct shell proof (gate defines grep() at 351; grep_pin_init runs at 8039) ---
+command -v grep => [grep]
+  /* branch NOT TAKEN -> PATH fallback at line 389-391 is DEAD CODE
+
+== F1 PROOF: the provenance check resolves head through PATH ==
+grep_pin_verify() { # PATH -> rc0 when the binary reports GNU grep
+  local cand=$1 v
+  [[ -f $cand && -x $cand ]] || return 1
+  v=$("$cand" --version 2>/dev/null | head -n 1 || true)
+  GREP_PIN_VERSION=$v
+  case "$v" in
+    *"GNU grep"*) return 0 ;;
+  esac
+  return 1
+}
+
+== COUNTER S6 STUB: version goes to STDERR, so S6 never exercises a stdout banner ==
+def write_stub_non_gnu(path, tripwire):
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("#!/bin/sh\nprintf '%s\\n' \"stub $*\" >>\"%s\" 2>/dev/null\n"
+                "case \"$1\" in --version|-V) printf '%s\\n' >&2; exit 0;; esac\n"
+                "exit 0\n" % ("%s", tripwire, SHIM_VERSION))
+    os.chmod(path, 0o755)
+

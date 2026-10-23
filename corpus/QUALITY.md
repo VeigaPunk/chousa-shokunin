@@ -342,3 +342,56 @@ the admitted entry that motivates it. Tier definitions live in
     receipt. Shown able to fail: round-34 commit `ef16afb1` carried L1-built controls for the held
     CtlC1Shortcut/Windows/Halves shapes with no exclusion record (added in `f20aeaa7`, before the
     candidate receipts of `934d7cb7`). — `lessons/round-34.md`.
+
+45. **A claim that names a mechanism carries a mechanism witness, not only output equality.** Two
+    engines that implement the same contract print the same verdicts, so an output counter can never
+    kill a fingerprint-and-shortcut engine (killing a correct implementation is a false negative). A
+    claim whose text names a mechanism (a matcher, a routing, a code path) is met only when its
+    receipt also witnesses, out of band, that the mechanism ran — and the witness separates at least
+    one output-equivalent control while the landed gate passes both. Check:
+    `python3 corpus/evidence/round35/c2-count.py --seed N` prints `WITNESS_SEPARATED=2/2
+    OUTPUT_EQUIV=2/2 LANDED_WITNESS=pass`. Shown able to fail: the two keyed engines K1/K2 score
+    9/9 output and witness-fail, while the round-34 output counter gave the same class 37/37
+    (`MutC2Keyed.md`, ctl4/ctl6); a witness stub that always says pass separates 0/2, one that
+    always says fail fails the landed gate. — `lessons/round-35.md`.
+
+46. **A tool the gate executes is resolved to one absolute, verified binary.** A command resolved
+    through `PATH` (or an imported shell function via `BASH_ENV`, S068) makes the gate's behaviour a
+    function of the caller's environment; the substitution is invisible in output. The gate resolves
+    one absolute candidate, verifies its self-reported provenance, refuses an unverifiable pin before
+    reading any record (exit 2, `GREP_PROVENANCE`), and can name the pin for a receipt
+    (`CHOUSA_GREP_PIN_ECHO=1` → `GATE_GREP: path=… source=… version=…`). Check:
+    `python3 corpus/evidence/round35/c1-count.py --seed N` prints `GREP_PIN_MATCH=9/9`. Shown able to
+    fail: the round-34 gate scores 0/9 (PATH shim and `BASH_ENV` function tripwires both fire;
+    no-grep `PATH` exits 2), and a hardcoded-wrapper control without provenance/override/echo scores
+    3/9. — `lessons/round-35.md`.
+
+47. **A derived value never shares one `local` statement with the name it derives from.**
+    `local a=$1 b=${#a}` expands every right-hand side before assigning any name, so `b` reads the
+    caller's dynamic scope, not `$2`; `set -u` does not catch it and the public path may never
+    expose it. Check: `.ufo/waves/round-35/repairs/slen-probe.sh <gate>` prints `offsets=1` for a
+    repaired matcher and `offsets=0` for the coupled form. Shown able to fail: the round-34 gate
+    (`a6307edf…`) prints `offsets=0` while its selftest passes 256 cases; the landed gate
+    (`1f2fb4f5…`) prints `offsets=1 first=5`. Sweep: `grep -nE 'local [^#]*(\$\{[#%]|\$\(\()'` over
+    the script, reading each hit. — `lessons/round-35.md`.
+
+48. **A refusal claim asserts ordering, not only the exit code and the marker.** "Refuses before
+    it reads a record" is an ordering property: a gate that opens the record and then refuses
+    prints the same exit 2 and the same marker. A refusal receipt carries an open-ordering witness
+    (strace/ptrace `openat` count, or a canary file the refusal must not touch) alongside the exit
+    code, and the ordering is checked on the same run as the refusal. Check: every refusal scenario
+    states the observed open count (0 vs the positive control's). Shown able to fail: a mutant that
+    opens the record then refuses (sha256 `147ded03…`) scores `GREP_PIN_MATCH=9/9` under the round-35
+    C1 counter while the strace evidence separates it (0 vs 2 opens). — `lessons/round-35.md`,
+    `.ufo/waves/round-35/w2/MutPinRefusals.md`.
+
+49. **A mechanism witness attributes per record; a global stamp sum is not coverage.** A count over
+    a whole run cannot see one record answered elsewhere: the round-35 witness threshold
+    (`chunk stamps >= long records`) admitted a one-record shortcut (8 stamps for 8 records, because
+    the landed gate itself emits 9), a length-keyed engine whose key is constant inside a fixture,
+    and a body-replaced matcher that keeps the witnessed entry line. A witness that asserts coverage
+    binds stamps to record ids (or to a per-record side channel) and seeds diversity into every key
+    the fixture exposes. Check: each fixture record's own witness line, not a run total. Shown able
+    to fail: `.ufo/waves/round-35/w2/MutC2KeyedBattery.md` (controls C and D),
+    `MutWitnessBypass2.md` (body-replaced chunk matcher, gate `3e5648b8…`, `WITNESS=pass` 9/9). —
+    `lessons/round-35.md`.

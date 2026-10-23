@@ -1,0 +1,79 @@
+CritC2AxisFit — observed command record, access date 2026-10-23
+All counter commands were invoked from /tmp/hyaku/chousa-r35/w2/CritC2AxisFit.
+Below, L=/home/vgpnk/Projects/shokunin/chousa-shokunin,
+T=/tmp/hyaku/chousa-r35/w2/CritC2AxisFit,
+A=$L/.ufo/waves/round-35/w2/CritC2AxisFit.
+These variables abbreviate the expanded absolute paths in the actual calls.
+Every Python invocation used the following literal environment values:
+PYTHONDONTWRITEBYTECODE=1
+C1_TMP=/tmp/hyaku/chousa-r35/w2/CritC2AxisFit
+C2_TMP=/tmp/hyaku/chousa-r35/w2/CritC2AxisFit
+WITNESS_TMP=/tmp/hyaku/chousa-r35/w2/CritC2AxisFit
+TMPDIR=/tmp/hyaku/chousa-r35/w2/CritC2AxisFit
+Let E abbreviate `env` followed by those five assignments.
+
+1. timeout 30s sha256sum $L/tools/research-gate.sh $L/.ufo/waves/round-35/repairs/base-gate.sh
+exit 0
+1f2fb4f522d9a670b49dd61ad1369f55ee012f3b0d38050654be45a71aaef617  landed gate
+a6307edf687ac0fb1b0b08bf7f0518b3fbc310fa9924b970aa3654612562995b  base gate
+
+2. timeout 1800s E python3 $L/corpus/evidence/round35/c2-count.py --gate $L/tools/research-gate.sh --battery $T/identity-only-battery.py --seed 3581 --receipt $A/identity-s3581.json
+exit 0; wall 16.05 seconds
+WITNESS_SEPARATED=2/2 OUTPUT_EQUIV=2/2 LANDED_WITNESS=pass
+  K1-python-exact  output=9/9 witness=fail stamps={'chunk': 0, 'direct': 0}
+  K2-root-keyed    output=9/9 witness=fail stamps={'chunk': 0, 'direct': 0}
+
+3. timeout 1800s E python3 $L/corpus/evidence/round35/c2-count.py --gate $L/tools/research-gate.sh --battery $T/identity-only-battery.py --seed 3583 --receipt $A/identity-s3583.json
+exit 0; wall 13.19 seconds
+WITNESS_SEPARATED=2/2 OUTPUT_EQUIV=2/2 LANDED_WITNESS=pass
+  K1-python-exact  output=9/9 witness=fail stamps={'chunk': 0, 'direct': 0}
+  K2-root-keyed    output=9/9 witness=fail stamps={'chunk': 0, 'direct': 0}
+
+4. timeout 1800s E python3 $L/corpus/evidence/round35/c2-count.py --gate $L/tools/research-gate.sh --battery $L/.ufo/waves/round-35/controls/ctl-c2-stub-fail.py --seed 3581 --receipt $A/stub-fail-s3581.json
+exit 1
+WITNESS_SEPARATED=2/2 OUTPUT_EQUIV=2/2 LANDED_WITNESS=fail
+  K1-python-exact  output=9/9 witness=fail stamps={'chunk': 99, 'direct': 0}
+  K2-root-keyed    output=9/9 witness=fail stamps={'chunk': 99, 'direct': 0}
+
+5. timeout 1800s E python3 $L/corpus/evidence/round35/c2-count.py --gate $L/tools/research-gate.sh --battery $L/.ufo/waves/round-35/controls/ctl-c2-stub-pass.py --seed 3581 --receipt $A/stub-pass-s3581.json
+exit 1
+WITNESS_SEPARATED=0/2 OUTPUT_EQUIV=2/2 LANDED_WITNESS=pass
+  K1-python-exact  output=9/9 witness=pass stamps={'chunk': 99, 'direct': 0}
+  K2-root-keyed    output=9/9 witness=pass stamps={'chunk': 99, 'direct': 0}
+
+6. timeout 1800s E python3 $L/corpus/evidence/round35/c2-count.py --gate $L/tools/research-gate.sh --battery $L/tools/mechanism-witness.py --seed 3581 --receipt $A/real-witness-s3581.json
+exit 0; wall 18.18 seconds
+WITNESS_SEPARATED=2/2 OUTPUT_EQUIV=2/2 LANDED_WITNESS=pass
+  K1-python-exact  output=9/9 witness=fail stamps={'chunk': 0, 'direct': 1}
+  K2-root-keyed    output=9/9 witness=fail stamps={'chunk': 0, 'direct': 1}
+
+7. timeout 30s sha256sum $T/neutral-comment.sh $T/broken-boundary.sh
+exit 0, before scoring these named controls
+32f1a66ca78558696157f0c94d973f5e175174d8551a427a29c8a1e66170043b  neutral-comment.sh
+18814c7325cea103592f44a3d8e4941c423d8ea0e0391ba4c5f6b775689df3c8  broken-boundary.sh
+Controls copied into A before their scored runs. neutral-comment.sh adds a comment after the shebang; broken-boundary.sh inserts `return 1` at entry to tok_left_ok.
+
+8. timeout 900s E python3 $T/identity-only-battery.py --gate $T/neutral-comment.sh --seed 3581 --tmp $T --json $A/neutral-identity-s3581.json
+exit 1; wall 5.05 seconds
+WITNESS=fail OUTPUT=9/9 METHOD=identity-only-no-trace
+
+9. timeout 1800s E python3 $L/tools/mechanism-witness.py --gate $T/neutral-comment.sh --seed 3581 --tmp $T --json $A/neutral-real-s3581.json
+exit 0; wall 5.69 seconds
+WITNESS=pass OUTPUT=9/9 STAMPS chunk=9 direct=1 (long records=8)
+
+10. timeout 1800s E python3 $L/corpus/evidence/round35/c2-count.py --gate $T/broken-boundary.sh --battery $L/tools/mechanism-witness.py --seed 3581 --receipt $A/broken-output-s3581.json
+exit 1; wall 15.25 seconds
+WITNESS_SEPARATED=0/2 OUTPUT_EQUIV=0/2 LANDED_WITNESS=pass
+  K1-python-exact  output=3/9 witness=fail stamps={'chunk': 0, 'direct': 1}
+  K2-root-keyed    output=3/9 witness=fail stamps={'chunk': 0, 'direct': 1}
+
+11. timeout 30s sha256sum $L/corpus/evidence/round35/c2-count.py $L/tools/mechanism-witness.py $A/identity-only-battery.py $L/.ufo/waves/round-34/w2a2/MutC2Keyed/ctl4-fixedkey.sh $L/.ufo/waves/round-34/w2a2/MutC2Keyed/ctl6-claimshape.sh
+exit 0
+557fdbf0bd793a6589fcb28fbc0a589db9145be0ae3c92790041fe8ebd907171  c2-count.py
+9f537bfde0dd53f2240af149e1b7a03fd0a0f372ee1fa1a32e94044115a252b3  mechanism-witness.py
+3eb3e16c2acd820b17fc2c8af9821fc51ca5835b9097f1668c1a91d810e82e53  identity-only-battery.py
+92ed87c94abf24c2e4d12e07f8d980ffb496ddf64e332dc644dae623383c8275  ctl4-fixedkey.sh (opened, not run)
+5ca84192160f20a425dc264a3d7a3f54dab2004c23227b88ff3c916069da970a  ctl6-claimshape.sh (opened, not run)
+
+Tool-only sweep: glob /home/vgpnk/Projects/shokunin/.ufo/reports/round-35/*chousa* -> No files found matching pattern, at review time. No new round-35 report was available to inspect. SCORECARD.md:1976 still labels round 35 planned/not started.
+Setup exceptions: five async launch requests were refused before execution by the global background-job cap; all five substantive commands then ran synchronously above. One malformed multi-destination cp command exited 1 before copying; a directory read showed only identity-only-battery.py, then separate bounded cp commands succeeded. No network, package installs, production edits, Git/JJ writes, canonical judging, or runtime orchestration.

@@ -1,0 +1,17 @@
+--- /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh	2026-10-23 16:49:07.247551313 -0300
++++ variant-a-prefix.sh	2026-10-23 16:59:06.048716384 -0300
+@@ -1698,13 +1698,7 @@
+   # overlap, the order the one-pattern matcher reports.
+   local LC_ALL=C
+   export LC_ALL
+-  local hay=$1 span=$2 chunk pattern occurrence offset resume=0
+-  # round-35 R1: slen must be read from the parameter, not from the caller's
+-  # dynamic scope. `local a=$1 b=${#a}` expands every right-hand side before it
+-  # assigns any of them, so the one-statement form read the caller's `span`
+-  # (correct only while every caller happened to pass its own `span` unchanged).
+-  local slen
+-  slen=${#span}
++  local hay=$1 span=$2 slen=${#span} chunk pattern occurrence offset resume=0
+   chunk=${span:0:TOK_CHUNK_BYTES}
+   pattern="$(tok_hex_pattern "${chunk:0:1}")(?=$(tok_hex_pattern "${chunk:1}"))"
+   while IFS= read -r -d '' occurrence; do

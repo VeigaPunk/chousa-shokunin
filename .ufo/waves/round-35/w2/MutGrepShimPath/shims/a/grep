@@ -1,0 +1,4 @@
+#!/bin/sh
+# scenario (a): logging passthrough
+printf '%s\n' "$*" >>"${SHIM_LOG:-/tmp/hyaku/chousa-r35/w2/MutGrepShimPath/trip-a.log}" 2>/dev/null
+exec /usr/bin/grep "$@"

@@ -1,0 +1,74 @@
+line | enclosing function | shell context | text
+364 | grep_pin_verify | plain | *"GNU grep"*) return 0 ;;
+384 | grep_pin_init | plain | for c in /usr/bin/grep /bin/grep; do
+388 | grep_pin_init | cmd-subst | c=$(command -v grep 2>/dev/null || true)
+688 | section_nonempty_prose | cmd-subst | n=$(table_rows "$sec" | grep -c . || true)
+718 | line_has_mark | herestring | line_has_mark() { grep -qiE "$DEAD_MARK_RE" <<<"$1"; }
+942 | verify_record | plain | if head -n 5 -- "$record" | grep -qE 'research-record v1|chousa-record: v1'; then
+966 | verify_record | plain | if grep -qE '^(Skip to content|ChatGPT|You said:)' "$record"; then
+971 | verify_record | herestring | if grep -qiE 'window_mode:[[:space:]]*external|fetch:[[:space:]]*(external|live)|origin=external-live' <<<"${SEC_BODY[Meta]}"; then
+975 | verify_record | plain | if grep -qiE 'fetch=external|window=live-external|origin=external-live|window_mode[[:space:]]*[|][[:space:]]*external' "$record"; then
+1039 | verify_record | herestring | if grep -qiE "$AGG_ERE" <<<"$fpart $srow"; then
+1687 | tok_span_offsets_direct | process-subst+pipeline-stage | done < <(printf '%s' "$hay" | grep -a -z -b -o -P -- "$regex")
+1716 | tok_span_offsets_chunk | process-subst+pipeline-stage | done < <(printf '%s' "$hay" | grep -a -z -b -o -P -- "$pattern")
+1762 | token_matcher_require | pipeline-stage | if printf 'x' | grep -a -z -b -o -P -- 'x' >/dev/null 2>&1; then return 0; fi
+1763 | token_matcher_require | plain | printf 'research-gate: GNU grep with -z/-P support is required for claims and chain token matching\n' >&2
+2017 | verify_claims | cmd-subst | nearer=$(printf '%s\n' "$hay" | grep -Fn -m1 -e "$tok" | head -n1 | cut -d: -f1 || true)
+2176 | chain_nearest | cmd-subst | nearer=$(printf '%s\n' "$hay" | grep -Fn -m1 -e "$tok" | head -n1 | cut -d: -f1 || true)
+3144 | metadata_registry_check_source | cmd-subst | source_tokens=$(printf '%s\n' "$source_value" | LC_ALL=C grep -oE '[[:alnum:]_]+') || scan_rc=$?
+3146 | metadata_registry_check_source | cmd-subst | source_ids=$(printf '%s\n' "$source_tokens" | LC_ALL=C grep -xE 'S[0-9]{3,}') || scan_rc=$?
+3507 | verify_all_section | herestring+cmd-subst | nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$VAS_OUT" || true)
+3513 | verify_all_section | herestring+cmd-subst | line=$(grep -m1 '^RESEARCH_GATE: ' <<<"$VAS_OUT")
+3524 | verify_all_section | herestring+cmd-subst | verify-claims) VAS_NATIVE=$(grep -m1 '^VERDICT_BEARING_CLAIMS=' <<<"$VAS_OUT" || true) ;;
+3525 | verify_all_section | herestring+cmd-subst | verify-chain) VAS_NATIVE=$(grep -m1 '^RESOLVED_HOPS=' <<<"$VAS_OUT" || true) ;;
+3526 | verify_all_section | herestring+cmd-subst | verify-sweeps) VAS_NATIVE=$(grep -m1 '^VERIFIED_SWEEPS=.*REJECTIONS_OK=' <<<"$VAS_OUT" || true) ;;
+3527 | verify_all_section | herestring+cmd-subst | verify-integrity) VAS_NATIVE=$(grep -m1 '^INTEGRITY refs=' <<<"$VAS_OUT" || true) ;;
+3529 | verify_all_section | herestring+cmd-subst | VAS_FINDINGS=$(grep '^FINDING ' <<<"$VAS_OUT" || true)
+3567 | verify_all | cmd-subst | has_heads=$(grep -c '^##[[:space:]]' -- "$record" || true)
+3568 | verify_all | cmd-subst | json_lines=$(grep -c '^[[:space:]]*{' -- "$record" || true)
+3867 | gate_canonical_capture | cmd-subst | nv=$(grep -c '^RESEARCH_GATE: ' -- "$fx/capture.txt" 2>/dev/null || true)
+3868 | gate_canonical_capture | cmd-subst | nml=$(grep -c '' -- "$fx/manifest.jsonl" 2>/dev/null || true)
+3869 | gate_canonical_capture | cmd-subst | nsch=$(grep -c '^{"schema":"chousa-verify-all/v1"' -- "$fx/manifest.jsonl" 2>/dev/null || true)
+3913 | gate_drift_scan | cmd-subst | toks=$(printf '%s\n' "$line" | grep -oE '[A-Za-z_][A-Za-z0-9_-]*=[^[:space:]]*' || true)
+4188 | tcase | herestring+cmd-subst | nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
+4225 | tclaims | herestring+cmd-subst | nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
+4226 | tclaims | herestring+cmd-subst | nvb=$(grep -c '^VERDICT_BEARING_CLAIMS=' <<<"$out" || true)
+4255 | tchain | herestring+cmd-subst | nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
+4256 | tchain | herestring+cmd-subst | nrh=$(grep -c '^RESOLVED_HOPS=' <<<"$out" || true)
+4285 | tsweeps | herestring+cmd-subst | nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
+4286 | tsweeps | herestring+cmd-subst | nsum=$(grep -c '^VERIFIED_SWEEPS=.*REJECTIONS_OK=' <<<"$out" || true)
+4315 | tintegrity | herestring+cmd-subst | nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
+4316 | tintegrity | herestring+cmd-subst | nsum=$(grep -c '^INTEGRITY refs=' <<<"$out" || true)
+5248 | tall | herestring+cmd-subst | nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
+5249 | tall | herestring+cmd-subst | nsum=$(grep -c '^VERIFY_ALL ' <<<"$out" || true)
+5265 | tall | plain | grep -q '"schema":"chousa-verify-all/v1"' -- "$WORK/$json" || { ok=0; msg+="schema-absent "; }
+5266 | tall | plain | grep -qE '"record_sha256":"[0-9a-f]{64}"' -- "$WORK/$json" || { ok=0; msg+="record-sha-absent "; }
+5267 | tall | plain | grep -qE '"gate_sha256":"[0-9a-f]{64}"' -- "$WORK/$json" || { ok=0; msg+="gate-sha-absent "; }
+5268 | tall | plain | grep -q '"verdict":"CLEAN"' -- "$WORK/$json" || { ok=0; msg+="verdict-field "; }
+5602 | tpin | herestring+cmd-subst | n=$(grep -c '^GATE_PIN: ' <<<"$out" || true)
+5637 | tdrift | herestring+cmd-subst | n=$(grep -c '^GATE_DRIFT: ' <<<"$out" || true)
+5901 | tnscase | herestring+cmd-subst | nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
+5902 | tnscase | herestring+cmd-subst | if [[ -n $sum ]]; then nsum=$(grep -c "^$sum" <<<"$out" || true); else nsum=1; fi
+6394 | r24_case | cmd-subst | [[ $(grep -a -c '^$' -- "$f" || true) -eq 0 ]] || msg+="blank-line "
+6396 | r24_case | plain | sed -n 2p -- "$f" | grep -q '^{"schema":"chousa-verify-all/v1"' || msg+="schema-not-own-line "
+6444 | metadata_case | herestring+cmd-subst | nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
+6714 | metadata_asof_case | herestring+cmd-subst | nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
+6733 | metadata_asof_usage_accepts | herestring+cmd-subst | nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out") || grc=$?
+6743 | metadata_asof_usage_case | herestring+cmd-subst | nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
+6892 | metadata_registry_case | herestring+cmd-subst | nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
+7042 | metadata_registry_case | herestring+cmd-subst | plain_fields=$(grep -E -c '^META entry=.*( due=| freshness=)' <<<"$plain_out" || true)
+7043 | metadata_registry_case | herestring+cmd-subst | plain_verdicts=$(grep -c '^RESEARCH_GATE: ' <<<"$plain_out" || true)
+7065 | metadata_registry_finding_count_case | herestring+cmd-subst | nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
+7066 | metadata_registry_finding_count_case | herestring+cmd-subst | actual_count=$(grep -Fxc -- "$finding" <<<"$out" || true)
+7070 | metadata_registry_finding_count_case | herestring+cmd-subst | actual_other=$(grep -Fxc -- "$other_finding" <<<"$out" || true)
+7240 | metadata_registry_finding_count_case | subshell-stub | if ( grep() { return 2; }; metadata_asof_usage_accepts 2 'expected diagnostic' \
+7424 | tchain_audit | herestring+cmd-subst | nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
+7425 | tchain_audit | herestring+cmd-subst | got_res=$(grep -c '^CHAIN hop=.* observed=resolvable ' <<<"$out" || true)
+7426 | tchain_audit | herestring+cmd-subst | got_ex=$(grep -c '^CHAIN hop=.* observed=exempt ' <<<"$out" || true)
+7427 | tchain_audit | herestring+cmd-subst | got_find=$(grep -c '^FINDING CHAIN_EXEMPT_RESOLVABLE severity=warn surface=chain obs=hop=' <<<"$out" || true)
+7428 | tchain_audit | herestring+cmd-subst | got_other=$(grep -cE '^FINDING CHAIN_(SOURCE|ANCHOR|CITATION)_' <<<"$out" || true)
+7572 | c1lk_verify | plain | if grep -Eq "^[0-9]+:[[:space:]]+->[[:space:]]+FLOCK[[:space:]]+ADVISORY[[:space:]]+WRITE[[:space:]]+[0-9]+[[:space:]]+[0-9a-fA-F]+:[0-9a-fA-F]+:$c1lk_ino[[:space:]]" /proc/locks; then
+7590 | c1lk_verify | plain | sed -n 2p -- "$c1lk_mf" | grep -q '^{"schema":"chousa-verify-all/v1"' || c1lk_msg+='schema-not-own-line '
+7591 | c1lk_verify | cmd-subst | [[ $(grep -a -c '^$' -- "$c1lk_mf" || true) -eq 0 ]] || c1lk_msg+='blank-line '
+7620 | c1lk_verify | cmd-subst | [[ $(grep -c '^{"schema":"chousa-verify-all/v1"' -- "$c1lk_mf2" || true) -eq 2 ]] || c1lk_msg+='schema-lines '
+7621 | c1lk_verify | cmd-subst | [[ $(grep -a -c '^$' -- "$c1lk_mf2" || true) -eq 0 ]] || c1lk_msg+='blank-line '

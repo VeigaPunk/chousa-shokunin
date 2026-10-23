@@ -999,9 +999,20 @@ Round 34: spans of 32768..65536 bytes, which the matcher could not search at all
 of four bytes per span byte: E2BIG at 32768, PCRE2 size limit from 32765), are located by a 4096-byte
 probe and confirmed against the whole span; `json_unescape` is linear (`LONGSPAN_MATCH` 25/42 → 42/42
 under counter v3, `knowledge/long-span-argv-r34.md`, S064–S066). Not moved to held ground: the claim
-is unverified because its required shortcut controls ended on provider holds. Still open: the PCRE
-dead zone below the threshold (about 28000–32767 bytes for escape-diverse spans), spans above 65536
-bytes, and long `verify-chain` quote anchors (now verified too, by R34NoHarm's probe, but not counted).
+is unverified because its required shortcut controls ended on provider holds. The PCRE dead zone
+below the 4N-pattern threshold is **closed**: attempt 2 measured it as exactly the three lengths
+32765–32767 bytes and routed them through the chunk matcher (`knowledge/dead-zone-pcre-r34.md`,
+S065; the earlier "about 28000–32767" was the pre-data hypothesis, not a measurement). Still open:
+spans above 65536 bytes, and long `verify-chain` quote anchors (now verified too, by R34NoHarm's
+probe, but not counted).
+
+Round 35: the gate's greps run against one pinned, verified absolute binary
+(`knowledge/grep-pin-r35.md`, S067–S068; `GREP_PIN_MATCH` 0/9 → 9/9), the lane gains an
+output-vs-routing witness for the keyed-engine class (`knowledge/keyed-engine-output-equivalence-r35.md`;
+routing only — the entry's survivor table is the limit), and the `local a=$1 b=${#a}` dynamic-scope
+read that shipped in round 34 is repaired with a probe that fails on the old bytes
+(`knowledge/bash-local-expansion-r35.md`). It closes no row above; the engine-swap canary, per-record
+witness attribution, `verify-chain` count and the fetch-scope answer stay open.
 
 | Entry | What it holds | Evidence |
 |---|---|---|
@@ -1010,3 +1021,6 @@ bytes, and long `verify-chain` quote anchors (now verified too, by R34NoHarm's p
 | `knowledge/claim-record-fields-r33.md` | Round-33 note: claim fields come from the top-level JSON object only; nested members ignored; repeated read fields invalid; why fail closed (RFC 8259 §4, Python `json`); limits | `S062`, `S063`; `evidence/round33/claims.md` (design v2); `.ufo/waves/round-33/measure/candidate/` |
 | `knowledge/long-span-argv-r34.md` | Round-34 note: why a 32 KiB+ span failed (argv per-string limit, PCRE2 compiled size, `grep -f` one pattern per line); the probe-and-confirm fix; what counter v3 checks and cannot; limits | `S064`–`S066`; `evidence/round34/claims.md` (design v3); `.ufo/waves/round-34/measure/` |
 | `knowledge/dead-zone-pcre-r34.md` | Round-34 attempt-2 note: the two ceilings of the one-pattern span matcher (argv per-string vs PCRE2 compiled size); the measured 32765–32767-byte window; why the planned "about 28000–32767" hypothesis shrank to three lengths; limits | `S065`; `evidence/round34/claims-a2.md` (design v4); `.ufo/waves/round-34/measure-a2/` |
+| `knowledge/grep-pin-r35.md` | Round-35 note: why a PATH-resolved grep is a behaviour contract hole (PATH shim, `BASH_ENV` function, host `pi-uu-grep` builtin); the pin's resolution/refusal/echo contract; what self-reported provenance cannot prove | `S067`, `S068`; `evidence/round35/claims.md` §C1 + erratum; `.ufo/waves/round-35/{controls,measure,final}/` |
+| `knowledge/keyed-engine-output-equivalence-r35.md` | Round-35 note: the keyed-engine class (fixture-shape, location and label keys); why no output counter can kill a correct alternative engine; fixture unpredictability + trace witness + the stated limit; the three measured survivors and the r36 canary family | `.ufo/waves/round-34/w2a2/MutC2Keyed.md`; `evidence/round35/claims.md` §C2 + erratum; `.ufo/waves/round-35/final/c2-s*.json`; `.ufo/waves/round-35/w2/` (survivor seats) |
+| `knowledge/bash-local-expansion-r35.md` | Round-35 note: `local` evaluates every RHS before assigning, so a derived value in the same statement reads the caller's dynamic scope; the shipped `slen` case, the probe, the sweep rule | `tools/research-gate.sh`; `.ufo/waves/round-35/repairs/slen-probe.sh`; `evidence/round35/claims.md` §R1 |
