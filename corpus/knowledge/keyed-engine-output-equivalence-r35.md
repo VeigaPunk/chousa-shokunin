@@ -83,6 +83,13 @@ survivals on seeds where the frozen P2 still printed `2/2`:
 | C — length-keyed engine | `${#id} % 3` picks the engine | passes on 6 of 31 scanned seeds | the fixture draws one id width per seed, so the key is constant inside a fixture; a two-seed check misses it ~65% of the time |
 | body-replaced chunk matcher | keeps the function entry, replaces the grep/confirm body with a python exact search | `WITNESS=pass OUTPUT=9/9` | the witness counts entry stamps; it does not observe what the body ran |
 
+Two further survivals (wave seat RevWitnessCode): a column-0 decoy definition
+of the matcher placed earlier in the file captures the parser's "first
+occurrence", so the witness stamps a function that never runs; and the gate can
+print the marker format to stderr itself (static forgery — the marker is a
+constant). The witness trusts the candidate's own source layout and stderr, and
+its trace file is large (~310 MB per 9-record run).
+
 So the honest scope of this witness is **routing**, not computation: it shows
 the routed function was entered, never that the body did the work. The r36
 hardening family, agreed by three independent wave seats: per-record

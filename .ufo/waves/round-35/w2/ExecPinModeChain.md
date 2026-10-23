@@ -14,9 +14,11 @@ touched; artifacts only under `.ufo/waves/round-35/w2/ExecPinModeChain/` and
 
 **Gate drift observed mid-wave.** At my start `sha256sum tools/research-gate.sh` returned
 `1f2fb4f5…` (matching the committed blob). A sibling seat rewrote the working tree at
-17:07:40. Every measurement below except §6 was taken 17:00:47–17:06:33, i.e. before that
-mtime, and every receipt here is a run against the **extracted committed blob**, so the
-sha is exact. §6 reports the uncommitted worktree separately and never mixes it in.
+17:07:40. Runs taken 17:00:47–17:06:33 hit `tools/research-gate.sh` while it still hashed
+`1f2fb4f5…`; every run after the drift, and every run cited as a receipt, executed
+`/tmp/hyaku/chousa-r35/w2/ExecPinModeChain/gate-LANDED-1f2fb4f5.sh` — the committed blob
+extracted with `git cat-file`, sha re-verified before and after use. §6 reports the
+uncommitted worktree separately and never mixes it in.
 
 ## 1. The committed chain fixture (path correction)
 
@@ -167,13 +169,28 @@ RESOLVED_HOPS=4/22        <- truth is 17/22
 stderr: (empty — NO GREP_PROVENANCE refusal)
 ```
 
+Full verdict line (`receipts/B4-headforge-e0.out`):
+
+```
+RESOLVED_HOPS=4/22
+RESEARCH_GATE: DRIFT (hops=22 verified=4 exempt=5 anchor-missing=13 refused=0 invalid=0 findings=13 drift=13 resolvable=0)
+```
+
 The stub-exec log (`receipts/stub-exec-headforge.log`) shows the **entire** chain matcher
-ran on the stub — 1 `--version` + 18 `-a -z -b -o -P` calls served by the stub. `4/22` is
-exactly the four `line`-kind hops (pure bash); all 13 quote-resolved hops flipped, and the
-gate reported `DRIFT` instead of refusing. This breaks C1's own contract ("refuses a pin it
-cannot verify with a named exit-2 refusal") from inside the C1 threat model — `claims.md`
-declares BASH_ENV-function shims in scope (scenario S2), and its stated limit only excuses
-a *binary that lies about its own version*, not a forged verification **pipeline**.
+ran on the stub — 17 calls served: 1 `--version` + **16 × `-a -z -b -o -P`**, exactly the
+matcher surface of §3. `4/22` is exactly the four `line`-kind hops (pure bash); all 13
+quote-resolved hops flipped to `anchor-missing`. **Control:** the same stub *without* the
+forged `head` is refused — rc 2, `GREP_PROVENANCE refused: override does not report GNU
+grep: <no version>` (`receipts/B5-nohead.err`). So the forgery, not the stub, is what
+disables the check.
+
+This breaks C1's own contract ("refuses a pin it cannot verify with a named exit-2 refusal")
+from inside the C1 threat model — `claims.md` declares BASH_ENV-function shims in scope
+(scenario S2), and its stated limit only excuses a *binary that lies about its own version*,
+not a forged verification **pipeline**. A stub that answers the capability probe with
+`exit 0` (as a hostile engine would) is enough; a stub that honestly fails the probe is
+still caught by `token_matcher_require` (`out/B3-headforge-landed.*`, rc 2), so the residual
+defence is the probe, not the pin.
 
 ### F3 (soundness) — a `command` shadow receives every pinned call
 

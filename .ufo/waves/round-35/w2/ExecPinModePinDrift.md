@@ -255,7 +255,13 @@ discrimination claimed for C1 is therefore weaker than the record states.
   (`.ufo/waves/round-35/w2/ExecPinModePinDrift/`) and in /tmp.
 * No network. No `pacman`. Only `/tmp` writes (plus my own wave-2 directory).
 * The lane gate file changed under me mid-run (§ "Gates measured"); every result above was
-  re-verified on both versions, but a *third* revision may land after this report.
+  re-verified on both versions, and §2e re-verifies the load-bearing ones against the
+  **final** lane bytes `a4768851…` — but a *further* revision may land after this report.
+* Erratum item 3 in `claims.md` lists other seats' surviving C1 controls; my 2a mutant is
+  additional and distinct (§2d). It does not contradict theirs; it adds a receipt-falsehood
+  case to the same family.
+* The echo-leak (2b) is **still present in the final gate bytes** `a4768851…` — it is not
+  covered by erratum item 4's list of removed vectors.
 * The mutant in 2a is a single-line mutation of the gate's own pin code; it demonstrates a
   **counter blind spot**, not a defect in the landed gate. The landed gate does honour the
   override (33 recorded calls) and does refuse bad pins.
