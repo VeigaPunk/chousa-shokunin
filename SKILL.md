@@ -64,6 +64,7 @@ Where the lane learns: `corpus/SOURCES.md` (opened rows, scoped A/B/C tiers, stu
 ## Checklist (executable)
 
 - [ ] Every claim carries a resolvable pointer to the artifact and revision read.
+  - Run: `bash tools/research-gate.sh verify-claims <claims.jsonl> --root ..` with a `"sha256"` pin (the SHA-256 of the exact source bytes read) on each claim; a changed source reads `stale` (`CLAIM_SOURCE_REVISION_MISMATCH`). A claim without a pin is not checked for revision.
 - [ ] A negative claim carries its search sweep, naming where it looked.
 - [ ] Observation, inference and unknown stay separate.
 - [ ] A rejected source is kept with its rejection reason and flip-condition.
