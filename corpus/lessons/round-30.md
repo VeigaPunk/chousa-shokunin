@@ -155,3 +155,11 @@ html.spec.whatwg.org (an unregistered host) and disclosed it.
 → `chousa ok`, exit 0, with two W04 warnings (S051 and S050 share a page URL;
 S053 and S052 share a page URL). Rows 49 → 56; tier A 43 → 50; status mined
 26 → 33, queued 19, rejected 4.
+
+### Misroot (2026-10-23)
+
+Seat ConnectorKagiPin wrote its report at the fleet root
+(`/home/vgpnk/Projects/shokunin/.ufo/waves/round-30/falsify/ConnectorKagiPin.md`) instead of the
+lane. The L1 copied it byte-exact to `.ufo/waves/round-30/falsify/ConnectorKagiPin.md` (`cmp`
+exit 0) and deleted the fleet copy. Captured-by: the misroot sweep; fix: the wave context
+already names absolute paths, so the seat's relative write is the cause.
