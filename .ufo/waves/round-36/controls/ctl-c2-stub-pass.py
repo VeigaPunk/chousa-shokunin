@@ -1,0 +1,14 @@
+#!/usr/bin/env python3
+"""Control: a per-record witness that always answers pass (skips all work)."""
+import argparse, json, sys
+ap = argparse.ArgumentParser()
+ap.add_argument("--gate"); ap.add_argument("--seed", type=int); ap.add_argument("--json")
+ap.add_argument("--tmp")
+a = ap.parse_args()
+rec = {"witness": "pass", "output_match": 9, "output_total": 9, "output_full": True,
+       "attribution": {"stub%d" % i: "chunk" for i in range(9)}, "unattributed": [],
+       "matcher_calls": 9}
+if a.json:
+    json.dump(rec, open(a.json, "w"))
+print("WITNESS=pass OUTPUT=9/9 ATTRIB=9/9 (stub)")
+sys.exit(0)
