@@ -1563,23 +1563,22 @@ tok_right_ok() { # AFTER SPAN -> rc0: the right edge is a token boundary
   [[ $TOK_WS == *"$c"* || $TOK_PUNCT == *"$c"* ]]
 }
 
-# ---- long-span matching (round-34 C1) -------------------------------------
+# ---- long-span matching (round-34 C1; dead zone closed round-34 attempt 2, C2) ----
 # A span of N bytes needs a PCRE pattern of four bytes per span byte (one
-# \xHH escape each), so a span of 32768 bytes or more needs a 128 KiB argv
-# string: execve(2) then fails with E2BIG ("Argument list too long"), and
-# PCRE2 refuses a pattern of that size anyway ("regular expression is too
-# large"). The occurrence is then never reported and a span that sits in the
-# source verbatim reads observed=unsupported.
-#
-# Spans whose pattern still fits keep the one-pattern matcher of the base
-# gate, byte for byte. A longer span is matched in two steps: the span's
-# first chunk (a pattern that fits both ceilings) locates the candidate
-# offsets, and every candidate is confirmed by comparing the hay bytes at
-# that offset with the WHOLE span. The confirmed offsets are reported with
-# the same left-to-right, non-overlapping order the one-pattern matcher
-# reports, so the boundary rules and the line numbers of tok_span_at and
-# tok_span_all are unchanged.
-TOK_DIRECT_SPAN_MAX=32767     # span bytes whose 4N-byte pattern still fits argv
+# \xHH escape each). Two ceilings bound the one-pattern matcher: execve(2)'s
+# per-string limit (span >= 32768 -> E2BIG, C1's surface) and PCRE2's
+# compiled-pattern ceiling ("approximately 64 thousand code units",
+# pcre2limits(3), row S065). On this host the second binds first: a pattern
+# for a 32764-byte span compiles; 32765 fails with "regular expression is
+# too large". Spans whose pattern still fits keep the one-pattern matcher of
+# the base gate, byte for byte. A longer span is matched in two steps: the
+# span's first chunk (a pattern that fits both ceilings) locates the
+# candidate offsets, and every candidate is confirmed by comparing the hay
+# bytes at that offset with the WHOLE span. The confirmed offsets are
+# reported with the same left-to-right, non-overlapping order the one-pattern
+# matcher reports, so the boundary rules and the line numbers of tok_span_at
+# and tok_span_all are unchanged.
+TOK_DIRECT_SPAN_MAX=32764     # span bytes whose 4N-byte pattern fits argv AND PCRE2
 TOK_CHUNK_BYTES=4096          # probe chunk bytes (4N pattern chars per chunk)
 
 tok_hex_pattern() { # STRING -> PCRE pattern text: one \xHH escape per byte
@@ -7854,6 +7853,48 @@ EOF
     'CLAIM id=LS4 expected=supported observed=supported source=lib/longtwice.md at=line:3 verdict=match' \
     'CLAIM id=LS5 expected=supported observed=mislocated source=lib/longtwice.md at=line:1 verdict=mismatch' \
     'FINDING CLAIM_LINE_MISMATCH'
+
+  # ---- round-34 attempt-2 C2 selftest cases (cases 255-257): the PCRE dead zone ----
+  # Spans of 32765..32767 bytes sit between the two ceilings named above: the
+  # 4N-byte pattern still fits one grep argv string, but PCRE2 refuses to
+  # compile it ("regular expression is too large"), so before attempt 2 these
+  # spans read observed=unsupported even when held verbatim. They now route
+  # through the chunk matcher. These cases pin the window: verbatim at 32766
+  # bytes (supported), one byte changed (unsupported), glued to a word
+  # character (unsupported), line binding on the second of two occurrences
+  # (supported) or on none (mislocated), and the two window edges 32765 and
+  # 32767 themselves.
+  dz_span=$(printf 'w%04d ' {1..5461})   # exactly 32766 bytes
+  printf 'lead %s tail\n' "$dz_span" >"$WORK/lib/deadzone.md"
+  printf 'lead%s tail\n' "$dz_span" >"$WORK/lib/deadzglued.md"
+  printf 'lead %s tail\nmid\nlead %s tail\n' "$dz_span" "$dz_span" >"$WORK/lib/deadztwice.md"
+  dz_mut="${dz_span:0:16000}Q${dz_span:16001}"
+  printf '{"id":"DD1","source":"lib/deadzone.md","span":"%s","expect":"supported"}\n' "$dz_span" >"$WORK/claims-deadzone.jsonl"
+  printf '{"id":"DD2","source":"lib/deadzone.md","span":"%s","expect":"supported"}\n' "$dz_mut" >>"$WORK/claims-deadzone.jsonl"
+  printf '{"id":"DD3","source":"lib/deadzglued.md","span":"%s","expect":"supported"}\n' "$dz_span" >>"$WORK/claims-deadzone.jsonl"
+  tclaims claims-deadzone 1 \
+    'RESEARCH_GATE: DRIFT' 'VERDICT_BEARING_CLAIMS=1/3' \
+    'CLAIM id=DD1 expected=supported observed=supported source=lib/deadzone.md at=line:1 verdict=match' \
+    'CLAIM id=DD2 expected=supported observed=unsupported source=lib/deadzone.md at=- verdict=mismatch' \
+    'CLAIM id=DD3 expected=supported observed=unsupported source=lib/deadzglued.md at=- verdict=mismatch'
+  printf '{"id":"DD4","source":"lib/deadztwice.md","span":"%s","expect":"supported","line":"3"}\n' "$dz_span" >"$WORK/claims-deadzone-line.jsonl"
+  printf '{"id":"DD5","source":"lib/deadztwice.md","span":"%s","expect":"supported","line":"9"}\n' "$dz_span" >>"$WORK/claims-deadzone-line.jsonl"
+  tclaims claims-deadzone-line 1 \
+    'RESEARCH_GATE: DRIFT' 'VERDICT_BEARING_CLAIMS=1/2' \
+    'CLAIM id=DD4 expected=supported observed=supported source=lib/deadztwice.md at=line:3 verdict=match' \
+    'CLAIM id=DD5 expected=supported observed=mislocated source=lib/deadztwice.md at=line:1 verdict=mismatch' \
+    'FINDING CLAIM_LINE_MISMATCH'
+  dz_low=$(printf 'w%04d ' {1..5460})'wwwww'     # exactly 32765 bytes
+  dz_high=$(printf 'w%04d ' {1..5460})'wwwwwww' # exactly 32767 bytes
+  printf 'lead %s tail\n' "$dz_low" >"$WORK/lib/deadzedge-low.md"
+  printf 'lead %s tail\n' "$dz_high" >"$WORK/lib/deadzedge-high.md"
+  dz_high_mut="${dz_high:0:16000}Q${dz_high:16001}"
+  printf '{"id":"DD6","source":"lib/deadzedge-low.md","span":"%s","expect":"supported"}\n' "$dz_low" >"$WORK/claims-deadzone-edge.jsonl"
+  printf '{"id":"DD7","source":"lib/deadzedge-high.md","span":"%s","expect":"supported"}\n' "$dz_high_mut" >>"$WORK/claims-deadzone-edge.jsonl"
+  tclaims claims-deadzone-edge 1 \
+    'RESEARCH_GATE: DRIFT' 'VERDICT_BEARING_CLAIMS=1/2' \
+    'CLAIM id=DD6 expected=supported observed=supported source=lib/deadzedge-low.md at=line:1 verdict=match' \
+    'CLAIM id=DD7 expected=supported observed=unsupported source=lib/deadzedge-high.md at=- verdict=mismatch'
 
   if [[ $failures -eq 0 ]]; then
     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"

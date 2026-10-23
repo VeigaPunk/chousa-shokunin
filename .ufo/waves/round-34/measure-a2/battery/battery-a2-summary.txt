@@ -1,0 +1,17 @@
+No-harm battery on the C2-landed gate, attempt 2 (2026-10-23).
+Gate: tools/research-gate.sh sha256 a6307edf687ac0fb1b0b08bf7f0518b3fbc310fa9924b970aa3654612562995b
+Script: .ufo/waves/round-34/w1/ExecNoHarmBase34/battery.sh (sha f1a1591c, same as base run)
+Env: default locale; TMPDIR/SCRATCH=/fast/scratch/hyaku/chousa-r34-a2/tmp
+Live stdout showed ROWS=11 BATTERY_RESULT=PASS; per-row evidence in this directory:
+- selftest.log            RESEARCH_GATE_SELFTEST: PASS (256 cases, 0 skipped)  [was 253 before C2]
+- claims-lane-root.log    exit 1 DRIFT, VERDICT_BEARING_CLAIMS=0/17 (all refused, same as base)
+- claims-fleet-root.log   exit 0 CLEAN, VERDICT_BEARING_CLAIMS=17/17
+- chain-r3.log            exit 0 CLEAN, RESOLVED_HOPS=17/22
+- chain-r3-broken.log     exit 1 DRIFT, RESOLVED_HOPS=1/2
+- observable.log          VERDICT_BEARING_EXPORTS=3/3
+- r31-c1-v3.json          LINE_BINDING_MATCH=132/132 predicate_holds=True
+- r31-c2-v3.json          REVISION_BINDING_MATCH=132/132 predicate_holds=True
+- r32-c2-v2.json          EXEMPT_AUDIT_MATCH=132/132 predicate_holds=True
+- r32-c2-v3.json          EXEMPT_AUDIT_MATCH=132/132 predicate_holds=True
+- r33-c1-v2.json          TOPLEVEL_FIELD_MATCH=156/156 predicate_holds=True
+Every .json receipt records gate_sha256 a6307edf687ac0fb.
