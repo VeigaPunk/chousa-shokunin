@@ -1,0 +1,16 @@
+HIT fixtures/dirty/data/receipt.json:1 [doc; xargs-kill] {"note":"receipt replay","command":"pgrep -f gate.sh | xargs -r kill"}
+HIT fixtures/dirty/reports/seat.md:2 [doc; pkill] - Cleanup: `pkill -x sleep` after the probe.
+HIT fixtures/dirty/reports/seat.md:3 [doc; killall] - Fallback: killall -9 python3.
+HIT fixtures/dirty/reports/seat.md:4 [doc; killall] - Host-wide: killall5.
+HIT fixtures/dirty/reports/seat.md:5 [doc; kill-cmdsub] - Command substitution: kill -9 $(pgrep -f 'research-gate.sh').
+HIT fixtures/dirty/reports/seat.md:6 [doc; kill-cmdsub] - Quoted substitution: kill -TERM "$(pgrep -f research-gate.sh)".
+HIT fixtures/dirty/reports/seat.md:7 [doc; kill-cmdsub] - pidof: kill -s TERM $(pidof python3).
+HIT fixtures/dirty/reports/seat.md:8 [doc; kill-cmdsub] - Backticks: kill `pgrep -f research-gate.sh`.
+HIT fixtures/dirty/reports/seat.md:9 [doc; xargs-kill] - Pipeline: pgrep -f gate.sh | xargs -r kill.
+HIT fixtures/dirty/reports/seat.md:10 [doc; xargs-kill] - ps pipeline: ps -C python3 -o pid= | xargs kill.
+HIT fixtures/dirty/reports/seat.md:11 [doc; kill-ps-name] - ps name: kill $(ps -C python3 -o pid=)
+HIT fixtures/dirty/scripts/run.sh:3 [code; pkill] pkill -f 'research-gate.sh'
+HIT fixtures/dirty/scripts/run.sh:4 [code; killall] killall python3 || true
+HIT fixtures/dirty/scripts/run.sh:5 [code; kill-cmdsub] kill -TERM $(pidof python3)
+no-name-signals.sh: 14 hit(s), 3 candidate file(s), 3 scanned file(s), 0 large file(s) skipped (> 16777216 B)
+no-name-signals.sh: RESULT DIRTY (exit 1)

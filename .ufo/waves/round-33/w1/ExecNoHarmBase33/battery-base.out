@@ -1,0 +1,117 @@
+# round-33 W1 no-harm battery (D3 revision-bound header)
+lane=/home/vgpnk/Projects/shokunin/chousa-shokunin
+lane_revision=e3e24ec86449e50b089845fef563b7e15c927b40
+gate=/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh
+gate_sha256=f4731885ac0f83076210be364fd443a4378ac88c3b3ef94b5bf1c9e380f003f0
+gate_tree_revision=e3e24ec86449e50b089845fef563b7e15c927b40
+counter=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count-v3.py sha256=0efbd172bbd89bd44c2cca0ececf933b662f556fc71ad3983a69f3529b36efb6
+counter=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c2-count-v3.py sha256=654183e17adc22162d54025a34f4ec2aa9099f2d1118ee07f5b2a9358ea736a8
+counter=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round32/c2-count-v2.py sha256=8ec1a1ed44f1d3971a73eeace677cbedd0187563bea063ec6b680261dbb23c8a
+fixture=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/fixtures/claims-r2.jsonl sha256=23d078cbfd032ec5ee7de5c21de65eba3a3cd2989a78281ff61bc6db62188802
+fixture=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/fixtures/chain-r3.md sha256=06115f2f8e6db3c60034411dc6be42c4e0887352b09ab9cbd7f760801237ba07
+fixture=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/fixtures/chain-r3-broken.md sha256=b66222a16d4c5323ee6932839ff5746af5f716f36372af506755aed18e0f5c6a
+battery_script=/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w1/ExecNoHarmBase33/battery.sh sha256=f24c56cc9d7db3f502d22d56feda2790bbad6bbff31d2a615a23b73f57e0cf37
+utc=2026-10-23T08:36:30Z
+hostname=plazir27
+scratch=/fast/scratch/hyaku/chousa-r33/w1/ExecNoHarmBase33
+seeds=r31-c1:3601,3602 r31-c2:3611,3612 r32-c2:3621,3622
+
+=== RUN selftest
+cmd=bash /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh --selftest (cwd=/home/vgpnk/Projects/shokunin/chousa-shokunin timeout=1800s)
+exit=0 want=0 wall_ms=28921 log=/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w1/ExecNoHarmBase33/selftest.log sha256=202702b410343f9442378624c87d3fadd9d8c617af48892f782b0051bb05a465
+  RESEARCH_GATE_SELFTEST: PASS (241 cases, 0 skipped)
+SELFTEST_CASES=241 cases_sha256=7ee6b24c03eaa1e9cbdc9da30241a8792d1c3b47645dd300b7cf974b3cf43daa file=/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w1/ExecNoHarmBase33/selftest.cases
+SELFTEST_FAIL_LINES=0
+CHECK selftest ok: RESEARCH_GATE_SELFTEST: PASS
+
+=== RUN claims-lane-root
+cmd=bash /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh verify-claims corpus/fixtures/claims-r2.jsonl --root . (cwd=/home/vgpnk/Projects/shokunin/chousa-shokunin timeout=900s)
+exit=1 want=1 wall_ms=154 log=/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w1/ExecNoHarmBase33/claims-lane-root.log sha256=1983f400e52afc0a1d0d2a2905ea2ef74b00de36a9b26b504f71c804be0457b4
+  VERDICT_BEARING_CLAIMS=0/17
+  RESEARCH_GATE: DRIFT (claims=17 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=17 invalid=0 findings=17 drift=17)
+
+=== RUN claims-fleet-root
+cmd=bash /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh verify-claims corpus/fixtures/claims-r2.jsonl --root /home/vgpnk/Projects/shokunin (cwd=/home/vgpnk/Projects/shokunin/chousa-shokunin timeout=900s)
+exit=0 want=0 wall_ms=246 log=/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w1/ExecNoHarmBase33/claims-fleet-root.log sha256=732643017f5526a43aac2fe85cc92034486a5cf5571a925e4d36d5813f0304b5
+  VERDICT_BEARING_CLAIMS=17/17
+  RESEARCH_GATE: CLEAN (claims=17 supported=13 contradicted=2 unsupported=2 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)
+CHECK claims-fleet-root ok: VERDICT_BEARING_CLAIMS=17/17
+CHECK claims-fleet-root ok: RESEARCH_GATE: CLEAN (claims=17 supported=13 contradicted=2 unsupported=2
+
+=== RUN chain-r3
+cmd=bash /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh verify-chain corpus/fixtures/chain-r3.md --root /home/vgpnk/Projects/shokunin (cwd=/home/vgpnk/Projects/shokunin/chousa-shokunin timeout=900s)
+exit=0 want=0 wall_ms=921 log=/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w1/ExecNoHarmBase33/chain-r3.log sha256=e18b71eeb0fa2798d17568579eacbd83bd9448bc6b9319b98516359fd144c68d
+  RESOLVED_HOPS=17/22
+  RESEARCH_GATE: CLEAN (hops=22 verified=17 exempt=5 anchor-missing=0 refused=0 invalid=0 findings=0 drift=0 resolvable=0)
+CHECK chain-r3 ok: RESOLVED_HOPS=17/22
+CHECK chain-r3 ok: RESEARCH_GATE: CLEAN (hops=22 verified=17 exempt=5
+
+=== RUN chain-r3-broken
+cmd=bash /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh verify-chain corpus/fixtures/chain-r3-broken.md --root /home/vgpnk/Projects/shokunin (cwd=/home/vgpnk/Projects/shokunin/chousa-shokunin timeout=900s)
+exit=1 want=1 wall_ms=126 log=/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w1/ExecNoHarmBase33/chain-r3-broken.log sha256=159d56aa2e3b8c76e345789ae5b159c73c4d0d09e15e0ee43b2c8e94c02e4204
+  RESOLVED_HOPS=1/2
+  RESEARCH_GATE: DRIFT (hops=2 verified=1 exempt=0 anchor-missing=1 refused=0 invalid=0 findings=1 drift=1 resolvable=0)
+CHECK chain-r3-broken ok: RESOLVED_HOPS=1/2
+CHECK chain-r3-broken ok: RESEARCH_GATE: DRIFT (hops=2 verified=1
+
+observable_source=/home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md ## Planned (bash block)
+observable_cmd=python3 -c 'import subprocess; names=("A-shokunin-tradition.md","B-multiagent-knowledge.md","C-rank-taxonomy.md"); rows=[subprocess.run(["bash","tools/research-gate.sh","verify","../research/deep-research-2026-09-28/"+n,"--root",".."],capture_output=True,text=True) for n in names]; print("VERDICT_BEARING_EXPORTS=%d/3" % sum(r.returncode==1 and sum(s.startswith("RESEARCH_GATE: DRIFT (") for s in r.stdout.splitlines())==1 for r in rows))'
+
+=== RUN observable
+cmd=bash -c python3\ -c\ \'import\ subprocess\;\ names=\(\"A-shokunin-tradition.md\"\,\"B-multiagent-knowledge.md\"\,\"C-rank-taxonomy.md\"\)\;\ rows=\[subprocess.run\(\[\"bash\"\,\"tools/research-gate.sh\"\,\"verify\"\,\"../research/deep-research-2026-09-28/\"+n\,\"--root\"\,\"..\"\]\,capture_output=True\,text=True\)\ for\ n\ in\ names\]\;\ print\(\"VERDICT_BEARING_EXPORTS=%d/3\"\ %\ sum\(r.returncode==1\ and\ sum\(s.startswith\(\"RESEARCH_GATE:\ DRIFT\ \(\"\)\ for\ s\ in\ r.stdout.splitlines\(\)\)==1\ for\ r\ in\ rows\)\)\' (cwd=/home/vgpnk/Projects/shokunin/chousa-shokunin timeout=900s)
+exit=0 want=0 wall_ms=81 log=/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w1/ExecNoHarmBase33/observable.log sha256=2ae02592089b0215340ce5cd2d43f1c28f7ed5cc4eff34004b724ffb5c762e3f
+  VERDICT_BEARING_EXPORTS=3/3
+CHECK observable ok: VERDICT_BEARING_EXPORTS=3/3
+
+=== RUN r31-c1-v3-a
+cmd=python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count-v3.py --gate /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh --seed 3601 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w1/ExecNoHarmBase33/r31-c1-v3-a.json (cwd=/home/vgpnk/Projects/shokunin/chousa-shokunin timeout=900s)
+exit=0 want=0 wall_ms=2394 log=/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w1/ExecNoHarmBase33/r31-c1-v3-a.log sha256=2406fc73b54bcf063d4235820f1e064f25a5b9d00a83313b7252475c0cd975f1
+  LINE_BINDING_MATCH=132/132
+CHECK r31-c1-v3-a ok: LINE_BINDING_MATCH=132/132
+receipt=/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w1/ExecNoHarmBase33/r31-c1-v3-a.json
+RECEIPT r31-c1-v3-a ok predicate_holds=True matched=132/132 gate_sha256=f4731885ac0f counter_sha256=0efbd172bbd8
+
+=== RUN r31-c1-v3-b
+cmd=python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c1-count-v3.py --gate /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh --seed 3602 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w1/ExecNoHarmBase33/r31-c1-v3-b.json (cwd=/home/vgpnk/Projects/shokunin/chousa-shokunin timeout=900s)
+exit=0 want=0 wall_ms=2126 log=/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w1/ExecNoHarmBase33/r31-c1-v3-b.log sha256=2406fc73b54bcf063d4235820f1e064f25a5b9d00a83313b7252475c0cd975f1
+  LINE_BINDING_MATCH=132/132
+CHECK r31-c1-v3-b ok: LINE_BINDING_MATCH=132/132
+receipt=/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w1/ExecNoHarmBase33/r31-c1-v3-b.json
+RECEIPT r31-c1-v3-b ok predicate_holds=True matched=132/132 gate_sha256=f4731885ac0f counter_sha256=0efbd172bbd8
+
+=== RUN r31-c2-v3-a
+cmd=python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c2-count-v3.py --gate /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh --seed 3611 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w1/ExecNoHarmBase33/r31-c2-v3-a.json (cwd=/home/vgpnk/Projects/shokunin/chousa-shokunin timeout=900s)
+exit=0 want=0 wall_ms=1560 log=/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w1/ExecNoHarmBase33/r31-c2-v3-a.log sha256=d2c70fea47abdcb368b8bbd03d11c4aa5b808b8c6de91814db2b4bf8982230c4
+  REVISION_BINDING_MATCH=132/132
+CHECK r31-c2-v3-a ok: REVISION_BINDING_MATCH=132/132
+receipt=/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w1/ExecNoHarmBase33/r31-c2-v3-a.json
+RECEIPT r31-c2-v3-a ok predicate_holds=True matched=132/132 gate_sha256=f4731885ac0f counter_sha256=654183e17adc
+
+=== RUN r31-c2-v3-b
+cmd=python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round31/c2-count-v3.py --gate /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh --seed 3612 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w1/ExecNoHarmBase33/r31-c2-v3-b.json (cwd=/home/vgpnk/Projects/shokunin/chousa-shokunin timeout=900s)
+exit=0 want=0 wall_ms=1586 log=/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w1/ExecNoHarmBase33/r31-c2-v3-b.log sha256=d2c70fea47abdcb368b8bbd03d11c4aa5b808b8c6de91814db2b4bf8982230c4
+  REVISION_BINDING_MATCH=132/132
+CHECK r31-c2-v3-b ok: REVISION_BINDING_MATCH=132/132
+receipt=/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w1/ExecNoHarmBase33/r31-c2-v3-b.json
+RECEIPT r31-c2-v3-b ok predicate_holds=True matched=132/132 gate_sha256=f4731885ac0f counter_sha256=654183e17adc
+
+=== RUN r32-c2-v2-a
+cmd=python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round32/c2-count-v2.py --gate /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh --seed 3621 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w1/ExecNoHarmBase33/r32-c2-v2-a.json (cwd=/home/vgpnk/Projects/shokunin/chousa-shokunin timeout=900s)
+exit=0 want=0 wall_ms=4894 log=/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w1/ExecNoHarmBase33/r32-c2-v2-a.log sha256=91ac37bca7d5d429ae36727ae58dce5706f12ecac286dd78fca9af45a077099a
+  EXEMPT_AUDIT_MATCH=132/132
+CHECK r32-c2-v2-a ok: EXEMPT_AUDIT_MATCH=132/132
+CHECK r32-c2-v2-a ok: RECORD_CHECKS=ok
+receipt=/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w1/ExecNoHarmBase33/r32-c2-v2-a.json
+RECEIPT r32-c2-v2-a ok predicate_holds=True matched=132/132 gate_sha256=f4731885ac0f counter_sha256=8ec1a1ed44f1
+
+=== RUN r32-c2-v2-b
+cmd=python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round32/c2-count-v2.py --gate /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh --seed 3622 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w1/ExecNoHarmBase33/r32-c2-v2-b.json (cwd=/home/vgpnk/Projects/shokunin/chousa-shokunin timeout=900s)
+exit=0 want=0 wall_ms=5109 log=/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w1/ExecNoHarmBase33/r32-c2-v2-b.log sha256=91ac37bca7d5d429ae36727ae58dce5706f12ecac286dd78fca9af45a077099a
+  EXEMPT_AUDIT_MATCH=132/132
+CHECK r32-c2-v2-b ok: EXEMPT_AUDIT_MATCH=132/132
+CHECK r32-c2-v2-b ok: RECORD_CHECKS=ok
+receipt=/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w1/ExecNoHarmBase33/r32-c2-v2-b.json
+RECEIPT r32-c2-v2-b ok predicate_holds=True matched=132/132 gate_sha256=f4731885ac0f counter_sha256=8ec1a1ed44f1
+
+ROWS=12
+BATTERY_RESULT=PASS

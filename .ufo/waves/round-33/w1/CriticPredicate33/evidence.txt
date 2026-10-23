@@ -1,0 +1,58 @@
+CriticPredicate33 — read-only evidence, 2026-10-23
+Lane: /home/vgpnk/Projects/shokunin/chousa-shokunin
+Frozen revision: 3b528b9a926dd53001a1f1da5df6be1c63fca3ca
+No counter, candidate, mutant, gate selftest, or judge was executed.
+
+Commands below completed successfully (exit 0). File reads used the read tool; line citations are in ../CriticPredicate33.md. These are copied key outputs, not complete command logs.
+
+1. timeout 45s git -C /home/vgpnk/Projects/shokunin/chousa-shokunin ls-tree -r --long 3b528b9a926dd53001a1f1da5df6be1c63fca3ca .ufo/waves/round-33/ && printf 'FROZEN_ROUND_TREE_EXIT=0\n'
+Output:
+100644 blob 813560f3536fe45b8896e0a541ffa9df1fc6fa1b   11295 .ufo/waves/round-33/controls/L1-design/c1-base-s3301.json
+100644 blob 72263ec31619fce1fa2c4752a4eb13ad36c357d2    1109 .ufo/waves/round-33/controls/L1-design/c1-oracle-s3302.json
+100644 blob d26843b763df52fdbed212c2b2feb696bb8868b2    1109 .ufo/waves/round-33/controls/L1-design/c1-oracle-s3303.json
+100755 blob f98062d677ee813c155489ad47ed3f298823a82e    1634 .ufo/waves/round-33/controls/L1-design/mk-oracle.py
+100644 blob 60c995d822c812969d77a4e38aca19efbc7f3d0d  336926 .ufo/waves/round-33/controls/L1-design/oracle-gate.sh
+FROZEN_ROUND_TREE_EXIT=0
+
+2. timeout 45s git -C /home/vgpnk/Projects/shokunin/chousa-shokunin diff --exit-code 3b528b9a926dd53001a1f1da5df6be1c63fca3ca -- corpus/evidence/round33/claims.md corpus/evidence/round33/c1-count.py .ufo/waves/round-33/controls/L1-design/c1-base-s3301.json .ufo/waves/round-33/controls/L1-design/c1-oracle-s3302.json .ufo/waves/round-33/controls/L1-design/c1-oracle-s3303.json && printf 'FROZEN_EVIDENCE_DIFF_EXIT=0\n'
+Output: FROZEN_EVIDENCE_DIFF_EXIT=0 (no diff).
+
+3. timeout 45s bash -o pipefail -c 'git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 3b528b9a926dd53001a1f1da5df6be1c63fca3ca:corpus/evidence/round33/c1-count.py | sha256sum'
+Output: ab6b2ae24f6b402e66b583fa0021742204f12bdb4f1b056f8598cd63dc43e229  -
+
+4. timeout 45s bash -o pipefail -c 'git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 3b528b9a926dd53001a1f1da5df6be1c63fca3ca:tools/research-gate.sh | sha256sum'
+Output: f4731885ac0f83076210be364fd443a4378ac88c3b3ef94b5bf1c9e380f003f0  -
+
+5. timeout 45s bash -o pipefail -c 'git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 3b528b9a926dd53001a1f1da5df6be1c63fca3ca:.ufo/waves/round-33/controls/L1-design/oracle-gate.sh | sha256sum' && printf 'FROZEN_ORACLE_HASH_EXIT=0\n'
+Output:
+930a20755418eed3277a893c5b8a96bffd93f2ea90a79fd79bc122426e5677a9  -
+FROZEN_ORACLE_HASH_EXIT=0
+
+6. timeout 45s git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show --no-patch --format=fuller 3b528b9a926dd53001a1f1da5df6be1c63fca3ca
+Key output:
+commit 3b528b9a926dd53001a1f1da5df6be1c63fca3ca
+CommitDate: Fri Oct 23 05:23:29 2026 -0300
+    round-33: design v1 before data (C1 operability: verify-claims top-level field reader; counter c1-count.py 144 records); L1 base 60/144 and python oracle 144/144 receipts
+
+7. timeout 45s sha256sum /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round33/claims.md /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round33/c1-count.py /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/controls/L1-design/c1-base-s3301.json /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/controls/L1-design/c1-oracle-s3302.json /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/controls/L1-design/c1-oracle-s3303.json
+Output hashes in argument order:
+9e1273772aa32ad5d682b3afc44d277ae176a568cc3592bf0e262412eb193f4f
+ab6b2ae24f6b402e66b583fa0021742204f12bdb4f1b056f8598cd63dc43e229
+f4731885ac0f83076210be364fd443a4378ac88c3b3ef94b5bf1c9e380f003f0
+f59068aa2f0a0a9d13862aab0b0cd49621e0b11d0141dce089942fe65f3aa653
+1541fd04beac30bb7035661f65e2fcff1497d7d04bda9290dc9000a0639418ac
+798d6c9dc3e0bba045ca9ca0f8fa82e2f565b90c5e4cbd8e59c07d3951c3527f
+
+8. timeout 45s git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 3b528b9a926dd53001a1f1da5df6be1c63fca3ca:.ufo/waves/round-33/controls/L1-design/c1-oracle-s3302.json
+Key output: counter_sha256=ab6b2ae2..., gate_sha256=930a2075..., seed=3302, gate_rc=1, gate_timed_out=false, total=144, matched=144, label=TOPLEVEL_FIELD_MATCH=144/144, predicate_holds=true, misses=[].
+
+9. timeout 45s git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 3b528b9a926dd53001a1f1da5df6be1c63fca3ca:.ufo/waves/round-33/controls/L1-design/c1-base-s3301.json
+Key output: counter_sha256=ab6b2ae2..., gate_sha256=f4731885..., seed=3301, gate_rc=1, gate_timed_out=false, total=144, matched=60, label=TOPLEVEL_FIELD_MATCH=60/144, predicate_holds=false.
+
+10. timeout 45s git -C /home/vgpnk/Projects/shokunin/chousa-shokunin ls-tree -r --long 3b528b9a926dd53001a1f1da5df6be1c63fca3ca corpus/evidence/round33/ .ufo/waves/round-33/controls/L1-design/
+Additional key entries: counter blob=9bc858d2222d8b78abfe1eac3e9b3d9fc80b4d03, 19037 bytes; claims blob=680b414b2eef624ec80c0ecbc2a0431c2a16430f, 6417 bytes.
+
+11. timeout 20s mkdir -p /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w1/CriticPredicate33
+No output; successful.
+
+Safety: no installs, network access, git/jj writes, production-file edits, or process signals. Two read-only tool calls were automatically backgrounded as bg_2843/bg_2844 and both delivered completion before this artifact was written; no deliberate background jobs were started.

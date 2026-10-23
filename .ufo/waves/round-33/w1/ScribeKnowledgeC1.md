@@ -1,0 +1,8 @@
+# ScribeKnowledgeC1 — scoped findings
+- **Axis / behavior:** Operability; drafted `claim-record-fields-r33.md` at `.ufo/waves/round-33/w1/ScribeKnowledgeC1/`, covering top-level-only reads, nested metadata, duplicate read keys, and C1 limits (`corpus/evidence/round33/claims.md:18-40,80-83`).
+- **Evidence read:** QUALITY admission criteria (`corpus/QUALITY.md:17-32,59-67`); gate reader/callers (`tools/research-gate.sh:1109-1128,1448-1483`); carried round-31 note (`corpus/evidence/round31/c1-count-v3.py:16-22`).
+- **Provenance:** Frozen contract describes RFC 8259 §4 and Python `json` repeated-name source slots (`corpus/evidence/round33/claims.md:85-91`); `SOURCES.md` search for RFC 8259, Python json, S0XX, round33 returned “No matches found” (registry rows read at `corpus/SOURCES.md:64-71`). Draft retains `S0XX-rfc8259` / `S0XX-pyjson`; L1 must assign rows/IDs before admission.
+- **Gates / limits:** No counter, candidate, test, or source page was run/opened; the text is contract-only, not implementation evidence (`corpus/evidence/round33/claims.md:42-59`). Its limits follow `claims.md:80-83`.
+- **Command and outcome:** `timeout 20 mkdir -p /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w1/ScribeKnowledgeC1` — returned success, no output. No install, product-code edit, or Git/JJ write command.
+- **Touched surfaces / out of scope:** New draft artifact and this report only; no lane production files, scorecard, evidence contract, judge, or sibling lane edited. Report path: `.ufo/waves/round-33/w1/ScribeKnowledgeC1.md`.
+- **Verdict:** Knowledge draft complete for handoff; admission remains pending L1 source-row IDs and the required mined/used-by metadata (QUALITY `corpus/QUALITY.md:17-23`).

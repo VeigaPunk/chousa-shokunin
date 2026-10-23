@@ -1,0 +1,92 @@
+--- /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round32/c2-count-v2.py	2026-10-23 03:58:17.081317371 -0300
++++ /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w1/ExecD1CounterV3/c2-count-v3.py	2026-10-23 05:29:42.760197482 -0300
+@@ -1,5 +1,23 @@
+ #!/usr/bin/env python3
+-"""Round 32 C2 counter, design v2: exempt-hop audit in `research-gate.sh verify-chain`.
++"""Round 32 C2 counter, design v3: exempt-hop audit in `research-gate.sh verify-chain`.
++
++v3 = v2 with the fixture metadata decoupled from the hidden truth (lane
++repair D1, corpus/lessons/round-32-verifier-spotcheck.md:152-158). Under v2
++`generate()` wrote the 36 resolvable sources first, so a control that ranked
++files by mtime/inode (w2/CriticAxis32/metadata-control.sh) scored 132/132
++without opening a source: creation order was class order. v3:
++- every source body and name is built first, and files are written in an
++  order shuffled across classes (write order, hence inode order, carries no
++  class signal);
++- each file's atime/mtime is drawn from a class-independent random range and
++  applied with os.utime after its bytes are written, so sorted-by-mtime order
++  is a random subset of all classes;
++- the counter prints `metadata_decoupled: true` as its first line and records
++  it in the receipt.
++Class counts, TOTAL, the matching rule, the record checks and the label
++EXEMPT_AUDIT_MATCH=n/132 are unchanged from v2; the receipt schema is v3.
++Because the fixture draws change, the same seed yields a different fixture
++than v2 (that is the point: v2's order encoded the truth).
+ 
+ v2 differs from v1 (c2-count.py) in four respects, all forced by the
+ pre-data control wave (MutC2CounterB: four wrong output controls scored
+@@ -183,12 +201,13 @@
+     outside = os.path.join(tmp, "outside")
+     os.makedirs(root)
+     os.makedirs(outside)
+-    hops, truth, sources = [], {}, []
++    hops, truth, sources, planned = [], {}, [], []
+ 
+     def put_file(directory, body):
++        # v3: name and body are fixed now; the write happens after every class
++        # has been planned, in an order shuffled across classes (D1).
+         n = gen.name("f") + ".md"
+-        with open(os.path.join(directory, n), "w") as f:
+-            f.write(body)
++        planned.append((directory, n, body))
+         return n
+ 
+     def add(cls, t, status, to, kind="", anchor=""):
+@@ -258,6 +277,22 @@
+                 raise ValueError(cls)
+     rng.shuffle(hops)
+     rng.shuffle(sources)
++    # v3 (D1): write every planned source in an order shuffled across classes,
++    # then stamp atime/mtime from a class-independent range. Bodies are already
++    # complete, so neither write order nor timestamps carry the class label.
++    rng.shuffle(planned)
++    stamp_lo = 1_577_836_800 * 10**9  # 2020-01-01T00:00:00Z
++    stamp_hi = 1_800_000_000 * 10**9  # 2027-01-15T08:00:00Z
++    used_mtime = set()
++    for directory, n, body in planned:
++        path = os.path.join(directory, n)
++        with open(path, "w") as f:
++            f.write(body)
++        mtime = rng.randrange(stamp_lo, stamp_hi)
++        while mtime in used_mtime:
++            mtime = rng.randrange(stamp_lo, stamp_hi)
++        used_mtime.add(mtime)
++        os.utime(path, ns=(rng.randrange(stamp_lo, stamp_hi), mtime))
+     rec = ["# %s" % gen.phrase(3), "", "## Sources", "", "| id | pointer | tier |", "|---|---|---|"]
+     rec += ["| %s | %s | A |" % (sid, p) for sid, p in sources]
+     rec += ["", "## Chain", "", "| hop | from | to | anchor_kind | anchor | status | notes |",
+@@ -266,6 +301,7 @@
+     record = os.path.join(root, gen.name("r") + ".md")
+     with open(record, "w") as f:
+         f.write("\n".join(rec) + "\n")
++    os.utime(record, ns=(rng.randrange(stamp_lo, stamp_hi), rng.randrange(stamp_lo, stamp_hi)))
+     return root, record, truth
+ 
+ 
+@@ -360,13 +396,15 @@
+     finally:
+         shutil.rmtree(tmp, ignore_errors=True)
+     holds = matched == TOTAL
++    print("COUNTER c2-count-v3 schema=chousa-r32-c2-receipt/v3 metadata_decoupled: true")
+     print("EXEMPT_AUDIT_MATCH=%d/%d" % (matched, TOTAL))
+     print("  RECORD_CHECKS=%s" % ("ok" if not record_fails else "fail:" + ",".join(record_fails)))
+     for cls, _, _ in CLASS_COUNTS:
+         print("  %s %d/%d" % (cls, per_class[cls][0], per_class[cls][1]))
+     if a.receipt:
+         receipt = {
+-            "schema": "chousa-r32-c2-receipt/v2", "record_fails": record_fails,
++            "schema": "chousa-r32-c2-receipt/v3", "record_fails": record_fails,
++            "metadata_decoupled": True, "write_order_shuffled": True,
+             "counter_sha256": sha256_file(os.path.abspath(__file__)),
+             "gate": a.gate, "gate_sha256": sha256_file(gate), "seed": seed,
+             "utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(t0)), "elapsed_s": round(time.time() - t0, 3),

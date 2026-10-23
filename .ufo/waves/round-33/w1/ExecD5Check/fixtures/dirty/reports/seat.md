@@ -1,0 +1,11 @@
+# Dirty fixture — each bullet is a name/pattern signal (must be listed)
+- Cleanup: `pkill -x sleep` after the probe.
+- Fallback: killall -9 python3.
+- Host-wide: killall5.
+- Command substitution: kill -9 $(pgrep -f 'research-gate.sh').
+- Quoted substitution: kill -TERM "$(pgrep -f research-gate.sh)".
+- pidof: kill -s TERM $(pidof python3).
+- Backticks: kill `pgrep -f research-gate.sh`.
+- Pipeline: pgrep -f gate.sh | xargs -r kill.
+- ps pipeline: ps -C python3 -o pid= | xargs kill.
+- ps name: kill $(ps -C python3 -o pid=)

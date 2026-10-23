@@ -1,0 +1,24 @@
+--- base-gate.sh
++++ after-last-close.sh
+@@ -1108,6 +1108,8 @@
+ 
+ json_str() { # LINE KEY -> raw JSON string body on stdout (escapes intact); rc=1 absent
+   local line=$1 key=$2
++  line=${line##*\}}
++  line=${line##*\]}
+   local re="\"${key}\"[[:space:]]*:[[:space:]]*\"((\\\\.|[^\"\\\\])*)\""
+   if [[ $line =~ $re ]]; then
+     printf '%s' "${BASH_REMATCH[1]}"
+@@ -1123,8 +1125,11 @@
+   # present non-string value (number, bool, null, …) is distinguishable from an
+   # absent key. Same shape as json_str (flat record objects), so a key appearing
+   # inside a string value is not seen as a field.
++  local line=$1
++  line=${line##*\}}
++  line=${line##*\]}
+   local re="\"${2}\"[[:space:]]*:"
+-  [[ $1 =~ $re ]]
++  [[ $line =~ $re ]]
+ }
+ 
+ json_unescape() { # RAW JSON string body -> decoded bytes on stdout

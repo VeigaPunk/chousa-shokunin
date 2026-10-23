@@ -1,0 +1,7 @@
+Drafted S063 for Python 3.15.1 `json` docs, scoped to Python's duplicate-object-name behavior and `object_pairs_hook`, not normative JSON rules; row: `.ufo/waves/round-33/w1/ScribeSourcePyJson/row.md`.
+Contract: `/home/vgpnk/Projects/shokunin/CORPUS.md:86-115`; registry before additions ended S061 (`corpus/SOURCES.md:69-71`); coordinated S063 after RFC scribe's S062.
+Two bounded GETs to the registered URL each returned HTTP 200 and 115104 bytes; both SHA-256 `5ceeeaf6b0c866bd413ac0a9316f92cd46e03984cfec87cf7ac051ca6235608b`, `cmp` exit 0; both footer clocks `07:34 UTC` (no variance observed). Exact commands and output files: `row.md`.
+Quote from “Repeated Names Within an Object”: “By default, this module does not raise an exception; instead, it ignores all but the last name-value pair for a given name:” (22 words).
+`timeout 30 grep -cF 'By default, this module does not raise an exception; instead, it ignores all but the last name-value pair for a given name:' /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w1/ScribeSourcePyJson/json-tag-stripped.txt` → `1`.
+The requested `corpus/knowledge/claim-record-fields-r33.md` did not exist when checked; row status is `queued`, with that requested used-by path pending its creation.
+Gates/touched surfaces: source fetch and quote count only; no research gate/build/tests, installs, or product corpus/code edits. Artifacts: `row.md`, `json-1.html`, `json-2.html`, both `.headers`, and `json-tag-stripped.txt` in `.ufo/waves/round-33/w1/ScribeSourcePyJson/`; no RFC opened.

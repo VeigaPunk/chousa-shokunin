@@ -1,0 +1,28 @@
+# round-33 C1 selftest case-line diff (base 241 vs candidate 248)
+
+## base tail
+ok-case  240 r2-hash-fault-shim           exit=1
+ok-case  241 claims-r2-nested-string      exit=0
+
+## candidate tail
+ok-case  241 claims-r2-nested-string      exit=0
+ok-case  242 r33-top-nested-line          exit=0
+ok-case  243 r33-top-nested-sha           exit=0
+ok-case  244 r33-top-nested-id            exit=0
+ok-case  245 r33-top-dup-line             exit=1
+ok-case  246 r33-top-confuser-flat        exit=0
+ok-case  247 r33-top-confuser-nested      exit=0
+ok-case  248 r33-top-dup-id               exit=1
+
+## first-241 comparison
+first 241 case lines byte-identical to base (diff empty)
+
+## full diff (base vs candidate, case lines only)
+241a242,248
+> ok-case  242 r33-top-nested-line          exit=0
+> ok-case  243 r33-top-nested-sha           exit=0
+> ok-case  244 r33-top-nested-id            exit=0
+> ok-case  245 r33-top-dup-line             exit=1
+> ok-case  246 r33-top-confuser-flat        exit=0
+> ok-case  247 r33-top-confuser-nested      exit=0
+> ok-case  248 r33-top-dup-id               exit=1

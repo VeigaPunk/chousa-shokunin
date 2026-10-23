@@ -1,0 +1,6 @@
+Opened RFC 8259 by one GET to `https://www.rfc-editor.org/rfc/rfc8259.txt` (no redirect): HTTP 200, 28,360 bytes; `sha256sum` = `61a5378f4255c720beb2a4b4a63b29540147c140f36988bf086291989b4cd2d7` (curl/hash/count commands and outputs in the row artifact).
+§4 quote, body line 322: “The names within an object SHOULD be unique.” `grep -cF` exact quote command returned `1` (exit 0). §4 quote, line 333: “unpredictable.  Many implementations report the last name/value pair” (8 words); `grep -cF` exact quote command returned `1` (exit 0).
+Draft S062: spec, tier A, scope §4 object/name-value semantics (with §3 value grammar), status `mined`, recheck `365d`, used-by `corpus/knowledge/claim-record-fields-r33.md`; full row/evidence: `.ufo/waves/round-33/w1/ScribeSourceRFC8259/row.md`.
+Anchors: fetched body §3 lines 296–308 and §4 lines 316–333, 343–344; frozen C1 contract: `corpus/evidence/round33/claims.md:29-38`.
+Touched only this report plus own-directory `row.md` and fetched `rfc8259.txt`; did not edit `corpus/SOURCES.md` or knowledge/product files, and did not run the C1 counter, candidate, or gate.
+Limit: `corpus/knowledge/claim-record-fields-r33.md` was absent at inspection, so the requested mined/used-by linkage is drafted but not yet observed; RFC semantics do not prescribe the lane's reader schema or implementation.

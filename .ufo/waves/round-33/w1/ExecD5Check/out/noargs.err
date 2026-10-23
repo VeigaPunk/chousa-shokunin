@@ -1,0 +1,12 @@
+usage: no-name-signals.sh [options] DIR...
+
+Scan DIR... recursively for *.md *.sh *.py *.txt *.json that signal processes
+by name or pattern (pkill / killall / kill $(pgrep ...) / pgrep ... | xargs kill).
+
+options:
+  --code-only        scan only *.sh and *.py (skips prose and receipts)
+  --exclude PATH     skip PATH (file or directory subtree); repeatable
+  --max-bytes N      skip files larger than N bytes (default 16777216)
+  -h, --help         this help
+
+exit: 0 clean, 1 hits listed, 2 usage or I/O error
