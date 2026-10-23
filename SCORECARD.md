@@ -1659,6 +1659,9 @@ The D1 correction above says the network evidence is “that one DiffToolB run o
 
 ```text
 timeout --kill-after=5s 590s python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/falsify/DiffToolB/guarded-run.py /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/falsify/DiffToolB/landed-heldout.network.json tools/quote-reopen.py verify --items .ufo/waves/round-29/falsify/DiffToolB/held-out-3col.tsv --registry corpus/SOURCES.md
+```
+
+The bound network record contains 32 allowed GETs and 2 refused GET requests; its responses are 27 HTTP 200, 2 HTTP 203, 2 HTTP 301 and 1 HTTP 403 (`.ufo/waves/round-30/falsify/ReviewCorrections.md:25`). This is a second bounded network observation, not evidence that the counter itself fetches or that every registered URL is reachable. The recorded exit is not characterized as a pass. The earlier text remains intact.
 
 ### 2026-10-23 correction to the Round 29 re-derivation count (routed defect D2)
 
@@ -1733,3 +1736,69 @@ Candidates, not commitments: pages without a `<head>` start tag; 2xx challenge p
 resolver time inside `DEADLINE`; a TLS case in the harness; per-hop address provenance;
 IPv6; the L0 fetch-scope answer. Round-28 C1 (path-denylist surface) stays open and
 operator-owned.
+
+## Round 31 — claim location binding and revision pin (two claims)
+
+Base `be7b8d8d54962286417465a305fd9a1a7b3b1525`. Frozen design `corpus/evidence/round31/claims.md`
+(v1 `d78d1889`, v2 `8070f92b`; v2 was frozen after the control wave and before any candidate was
+scored; v2 control re-score committed at `86188116`). Landed: C1 at
+`c17948a776ad0389d47f2f15ec68f204adad5c8d` (gate SHA-256 `3b5279eb…bc3b`), C2 on top at
+`6d0ae19f240c1b5c0e62dffc06e57d28a2af1efd` (gate SHA-256 `c23d7537…823c`). `tools/quote-reopen.py`
+is not touched (anti-loop: rounds 29 and 30 worked it).
+
+| claim / axis | before → after | counting command (lane root) | verdict |
+|---|---|---|---|
+| C1 coverage: edge class "a claim names a line or range" in `verify-claims` (frontier item: pairing a span's occurrence with a named pointer line, README Round26 disposition) | `LINE_BINDING_MATCH=50/120` (base gate, `.ufo/waves/round-31/controls/CtlBaselineJunk/c1_base_seed*.json`) → `120/120` twice on `c17948a7` (`.ufo/waves/round-31/measure/after-c1-run{1,2}.json`) and twice on `6d0ae19f` (`after-c1-run{3,4}-tip.json`) | `python3 corpus/evidence/round31/c1-count.py` | measured: met under P1 |
+| C2 operability (lowest scored axis: the only scored axis, `SCORECARD.md:7`): `SKILL.md` checklist item 1's revision clause made runnable for every claim that carries a `"sha256"` pin | `REVISION_BINDING_MATCH=50/120` (base gate, `controls/CtlBaselineJunk/c2_base_seed*.json`) → `120/120` twice on `6d0ae19f` (`measure/after-c2-run{1,2}.json`) | `python3 corpus/evidence/round31/c2-count.py` | measured: met under P2 |
+
+The round-1 operability scale is unchanged: score 3 → 3 (delta 0); the C2 observable sits beside
+it, as in rounds 25 and 29. Separability: the C2 counter on the C1-only build prints 50/120
+(`measure/sep-c2-on-c1only.json`), the C1 counter on the C2-only build prints 50/120
+(`measure/sep-c1-on-c2only.json`).
+
+Controls (v2, all under `.ufo/waves/round-31/controls/`): no control met either counter. Best C1
+control 116/120 (start-line-only binding), best C2 control 118/120 (whitespace-trimming
+validator); no-reader C1 88/120, C2 86/120; do-nothing 50/120 each; disclosed full-contract
+oracles 120/120 (feasibility only). v1 was broken by three control findings before data
+(`corpus/lessons/round-31.md`, Design history).
+
+Selftest: `RESEARCH_GATE_SELFTEST: PASS (228 cases)` (base 215; C1 cases 216–219, C2 cases
+220–228). Not claimed: semantics or truth of a span; that the named line is the right line for
+the meaning; that every claim carries a pin; git-revision binding; `## Claims` table pointers in
+`verify`; chain hops; races between hashing and reading.
+
+Sources 56 → 59 rows (S057 RFC 5147, S058 W3C SRI, S059 Python hashlib; tier A, mined, used by
+`corpus/knowledge/line-binding-r31.md` and `revision-binding-r31.md`). QUALITY criteria 30 to 32
+added. Routed defects D1 to D8 of the round-30 outside spot-check are repaired append-only (see
+the lesson's intake table).
+
+## Capabilities (round-31 change)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| claim location and revision binding (`verify-claims`) | a claim may name the line or line range its span sits on (`"line"`) and the SHA-256 of the exact source bytes it was made against (`"sha256"`); a span found elsewhere reads `mislocated`, a changed source reads `stale` | `python3 corpus/evidence/round31/c1-count.py` → 120/120; `python3 corpus/evidence/round31/c2-count.py` → 120/120; `corpus/knowledge/line-binding-r31.md`, `corpus/knowledge/revision-binding-r31.md` | 31 |
+
+## Planned — round 32 (not started)
+
+Candidates, not commitments: line binding for records' `## Claims` table pointers (`path:N`) in
+`verify` mode (the C1 residual); a selftest case for end-line-only binding (a mutant the counter
+kills but the selftest does not, `falsify/MutC1Binding.md`); `--json` appender serialization
+(Planned26); the L0 fetch-scope answer. Round-28 C1 (path-denylist surface) stays open and
+operator-owned.
+
+### Round 31 — post-falsify gate revisions (same round)
+
+The falsify wave found C2 contract violations outside the counter's fixture space
+(`.ufo/waves/round-31/falsify/CriticEdgeC2.md`): a pin with an escaped trailing newline or NUL
+decoded into a match, and a source whose file name holds `\` or a newline read `stale` because
+`sha256sum` escapes such names. Fixed at `65d00cfc` (hash via stdin) and in the round's final gate
+commit (exact JSON decoding that keeps trailing newlines; an escaped NUL is malformed), final gate
+SHA-256 `0bc318b3…1258`. On the final gate both counters print 120/120 twice
+(`.ufo/waves/round-31/measure/after-c{1,2}-run{7,8}-final.json`) and the selftest prints
+`PASS (228 cases)`. Open, not fixed: a present non-string `"line"` or `"sha256"` treated as absent
+would still score 120/120 on both counters (no fixture class; `falsify/MutC1Grammar.md`,
+`falsify/MutC2Parse.md`, `falsify/CriticClaimsAfter31.md`); nested `"line"`/`"sha256"` keys are
+read as the record's (flat-key parser, `falsify/ReviewIntegrationDiff31.md`); fail-open hashing
+and span-before-stale are killed by the counter but not the selftest (`falsify/MutC2Hash.md`,
+`falsify/MutSelftestNew31.md`). Planned round 32 adds these as fixture classes before data
+(QUALITY 28).

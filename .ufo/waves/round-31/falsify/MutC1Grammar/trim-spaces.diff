@@ -1,0 +1,11 @@
+--- pristine/tools/research-gate.sh
++++ trim-spaces/tools/research-gate.sh
+@@ -1438,6 +1438,8 @@
+       line_present=1
+       if json_str "$line" line >/dev/null 2>&1; then
+         linef=$(json_unescape "$(jfield "$line" line)")
++        while [[ $linef == [[:space:]]* ]]; do linef=${linef#?}; done
++        while [[ $linef == *[[:space:]] ]]; do linef=${linef%?}; done
+       fi
+     fi
+     bad=''

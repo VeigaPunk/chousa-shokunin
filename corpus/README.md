@@ -954,3 +954,15 @@ carried unchanged.
 ### 2026-10-23 correction — Round30 frontier disposition (routed defect D1)
 
 The Round30 held-ground change is limited to pages that omit `</head>` (C1). C2 fetch bounds did not meet their frozen kill rule and are not held ground: `QUOTE_REOPEN_FETCH_BOUND_MATCH` was 26/27 on 3 of 44 fresh-seed runs. The round-30 spot-check's consolidated tally is `corpus/lessons/round-30-verifier-spotcheck.md:109` (this correction was routed at `:165-168`). The three miss receipts record `n=26`, `t=27`, and `predicate_holds=false`: `.ufo/waves/round-30/falsify/RerunC2B/run2.json:478-480`, `.ufo/waves/round-30/falsify/RerunC2B/run4.json:478-480`, and `.ufo/waves/round-30/falsify/RerunC2B/extra16.json:478-480`. The earlier disposition is retained as history.
+
+## Round31 frontier disposition (2026-10-23)
+
+Moved from frontier to held ground, measured on a synthetic fixture: a claim that names the line
+or line range its span sits on (`"line"`; C1, `LINE_BINDING_MATCH` 50/120 to 120/120) and a claim
+pinned to the SHA-256 of the exact source bytes it was made against (`"sha256"`; C2,
+`REVISION_BINDING_MATCH` 50/120 to 120/120), both in `verify-claims` at lane revision `6d0ae19f`;
+`knowledge/line-binding-r31.md`, `knowledge/revision-binding-r31.md`, sources S057 to S059.
+Still open: line binding for records' `## Claims` table pointers (`path:N`) in `verify` mode,
+chain hops, uniqueness, and whether the named line is the right one for the claim's meaning; a
+claim without a pin is not checked for revision. The quote re-open items of rounds 29 and 30 and
+the L0 fetch-scope question stay carried.

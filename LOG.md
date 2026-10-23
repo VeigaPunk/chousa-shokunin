@@ -1217,3 +1217,22 @@ Landed: C2 fetch layer `33dd643f`, end-of-stream fix `bd43bd53`, C1 head boundar
 `.ufo/waves/round-30/measure/`). Sources S050 to S056; QUALITY 26 to 29; corrections for
 D1, D2 (SCORECARD, this file), D4 (`lessons/round-25.md`), D5 (`lessons/round-29.md`);
 D6 code under `.ufo/waves/round-30/build/ExecD6Snapshot/`. Lesson: `corpus/lessons/round-30.md`.
+
+### 2026-10-23 correction to the Round 30 entry (routed defect D1, round 31)
+
+The Round 30 entry above says "C2 12/27 → 27/27". Those are the two measurement runs only; C2
+missed its frozen kill rule (26/27 on 3 of 44 fresh-seed runs, `corpus/lessons/round-30-verifier-spotcheck.md:109`).
+The earlier text is kept as written.
+
+## Round 31 — 2026-10-23 (claim location binding and revision pin)
+
+Motivating evidence: the round-30 outside spot-check's routed list
+(`corpus/lessons/round-30-verifier-spotcheck.md:163-205`), the anti-loop note (rounds 29 and 30
+both worked `tools/quote-reopen.py`), and the open frontier item "pairing a span's occurrence
+with a named pointer line" (`corpus/README.md` Round26 disposition). Base `be7b8d8d`. Design v1
+`d78d1889`, v2 `8070f92b` (after a ten-seat control wave broke v1 three ways, before any
+candidate was scored); v2 control re-score `86188116`. Build wave 33 seats, falsify wave 34.
+Landed: C1 `c17948a7`, C2 `6d0ae19f`. C1 `LINE_BINDING_MATCH` 50/120 → 120/120; C2
+`REVISION_BINDING_MATCH` 50/120 → 120/120 (receipts `.ufo/waves/round-31/measure/`; falsify
+re-runs in `.ufo/waves/round-31/falsify/Rerun*`). Selftest 215 → 228. Sources S057 to S059;
+QUALITY 30 to 32; D1 to D8 corrections appended. Lesson: `corpus/lessons/round-31.md`.

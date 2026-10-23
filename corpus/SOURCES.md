@@ -91,6 +91,14 @@ its author opened the source and judged its tier for the stated scope only.
 
 ## Search log
 
+- Round 31 (2026-10-23 UTC): question: how does a citation name a line or line
+  range inside a text resource, and how does a check pin the exact bytes a claim
+  was made against? Searched only registered hosts (www.rfc-editor.org,
+  www.w3.org, docs.python.org), as the open L0 fetch-scope question asks.
+  Identified 4, screened 4, included 3 (S057 to S059), excluded 1: the
+  extensionless `https://www.rfc-editor.org/rfc/rfc5147` fetch answered 301 with
+  an empty body and was not followed; the same RFC was opened as `.txt` on the
+  same host (S057).
 - Round 30 (2026-10-23 UTC): question: what defines where an HTML head ends
   when `</head>` is omitted, and why a socket timeout does not bound a whole
   fetch or pin the address that was checked. Searched only registered hosts

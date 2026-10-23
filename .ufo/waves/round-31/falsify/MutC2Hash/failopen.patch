@@ -1,0 +1,11 @@
+--- pristine/tools/research-gate.sh
++++ failopen/tools/research-gate.sh
+@@ -1503,7 +1503,7 @@
+     if [[ -n $sha_present ]]; then
+       sha_actual=$(sha256sum -- "$path" 2>/dev/null | cut -d' ' -f1 || true)
+       # fail closed: an unmeasurable source is not a match (r31)
+-      [[ $sha_actual =~ ^[0-9a-f]{64}$ ]] || sha_actual=unreadable
++      [[ $sha_actual =~ ^[0-9a-f]{64}$ ]] || sha_actual=$sha_pin
+       if [[ $sha_actual != "$sha_pin" ]]; then
+         observed=stale
+         at=-

@@ -1,0 +1,5 @@
+Attack: SKILL.md C2 checklist/Gates changes, base be7b8d8d → tip ee1024fd (reviewed 2026-10-23).
+Evidence: SKILL.md:67 run-line payload matches claims.md:129 byte-for-byte after removing Markdown embedding indentation (2 vs 4 spaces); checklist item 1 is byte-identical base→tip.
+Evidence: On scratch clone at ee1024fd, `timeout 1200s prlimit --as=4294967296 --nproc=4096 --cpu=1200 -- bash tools/research-gate.sh --selftest` exited 0: `RESEARCH_GATE_SELFTEST: PASS (228 cases, 0 skipped)`; cases 216–219 are c1 line-binding, 220–228 claims-sha; all shared Gates totals match.
+LOW — SKILL.md:88–90 says the “shared 154 cases tally” is in rows above, but those rows now show 228; stale cross-reference. The listed 161-case result remains historical.
+Verdict: C2 landing checks hold; one stale nearby Gates-table note. No other checked table discrepancy or verification gap.

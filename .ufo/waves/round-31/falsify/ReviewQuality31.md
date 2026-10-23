@@ -1,0 +1,6 @@
+# ReviewQuality31 — QUALITY 30–32
+- 30 — **holds**: the committed S052 receipt records the exact truncated quote, `ABSENT`, summary `verbatim=0 absent=1`, exit 1 (`.ufo/waves/round-30/falsify/AttackRowS052.md:7-13`); QUALITY includes the TSV row so a non-author can reconstruct and rerun. Lesson citations present.
+- 31 — **holds**: v1 trim control is 120/120 on seed 9002; v2 receipts for 9001–9003 are each 118/120 (`.ufo/waves/round-31/controls/ChousaR31.CtlShortcutC2.md:23,73-79`, `.../v2/trim-spaced-seed900{1,2,3}.json`). Lesson citation present.
+- 32 — **broken (P2, evidence mismatch)**: QUALITY says 88/120 with findings, but that receipt uses counter SHA `c3aca35d…`; frozen C1 v2 hash is `81fe5015…` (`corpus/evidence/round31/claims.md:45-48`, `controls/CtlNoReaderC1/summary.json:32-36`). Frozen-hash receipts show 86/120 with findings and 30/120 without (`v2f-seed-910001.json`, `nofind-v2f-seed-910001.json`); lesson citation is present, but update the stated score/evidence.
+- Checkability: all three cite lessons; 30’s row is reconstructible, 31/32 receipts and counter-hash provenance are committed. Residual risk: 30’s original TSV path is external scratch; quote was not rerun (used committed receipt as assigned).
+- Verification gap: `xd://lsp` is unavailable; reviewed committed diff/receipts directly (grep used only to locate); no installs or tests run.

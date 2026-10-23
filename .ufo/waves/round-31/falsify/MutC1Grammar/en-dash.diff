@@ -1,0 +1,11 @@
+--- pristine/tools/research-gate.sh
++++ en-dash/tools/research-gate.sh
+@@ -1469,7 +1469,7 @@
+         bad="line not a JSON string"
+       elif [[ $linef =~ ^[1-9][0-9]*$ ]]; then
+         line_n=$linef; line_m=$linef
+-      elif [[ $linef =~ ^([1-9][0-9]*)-([1-9][0-9]*)$ ]]; then
++      elif [[ $linef =~ ^([1-9][0-9]*)[-–]([1-9][0-9]*)$ ]]; then
+         line_n=${BASH_REMATCH[1]}; line_m=${BASH_REMATCH[2]}
+         # Decimal compare without arithmetic: same-length leading-zero-free
+         # digit strings compare lexicographically == numerically; M<=N is

@@ -1,0 +1,11 @@
+--- pristine/tools/research-gate.sh
++++ catbytes/tools/research-gate.sh
+@@ -1501,7 +1501,7 @@
+     path=$CLAIM_SRC_PATH
+ 
+     if [[ -n $sha_present ]]; then
+-      sha_actual=$(sha256sum -- "$path" 2>/dev/null | cut -d' ' -f1 || true)
++      sha_actual=$(printf '%s' "$(cat -- "$path")" | sha256sum | cut -d' ' -f1 || true)
+       # fail closed: an unmeasurable source is not a match (r31)
+       [[ $sha_actual =~ ^[0-9a-f]{64}$ ]] || sha_actual=unreadable
+       if [[ $sha_actual != "$sha_pin" ]]; then

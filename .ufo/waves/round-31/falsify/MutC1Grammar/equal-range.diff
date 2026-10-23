@@ -1,0 +1,12 @@
+--- pristine/tools/research-gate.sh
++++ equal-range/tools/research-gate.sh
+@@ -1474,8 +1474,7 @@
+         # Decimal compare without arithmetic: same-length leading-zero-free
+         # digit strings compare lexicographically == numerically; M<=N is
+         # rejected (equality, shorter, or lexicographically smaller).
+-        if [[ $line_m == "$line_n" ]] \
+-           || [[ ${#line_m} -lt ${#line_n} ]] \
++        if [[ ${#line_m} -lt ${#line_n} ]] \
+            || { [[ ${#line_m} -eq ${#line_n} && $line_m < $line_n ]]; }; then
+           bad="line range M<=N"
+         fi

@@ -1,0 +1,53 @@
+/fast/scratch/hyaku/chousa-r31/w2/CriticEdgeC2/clone/tools/research-gate.sh: line 1516: warning: command substitution: ignored null byte in input
+research-gate v2 — ts=2026-10-23T04:54:21Z — mode=claims — claims=claims.jsonl
+CLAIM id=E01_empty_pin expected=supported observed=unsupported source=src/empty.txt at=- verdict=mismatch
+CLAIM id=E02_nul_pin expected=supported observed=supported source=src/nul.txt at=line:1 verdict=match
+CLAIM id=E03_nul_stripped_pin expected=supported observed=stale source=src/nul.txt at=- verdict=mismatch
+CLAIM id=E04_over_cap expected=supported observed=refused source=src/over.txt at=- verdict=refused
+CLAIM id=E05_at_cap expected=supported observed=supported source=src/at.txt at=line:1 verdict=match
+CLAIM id=E06_url expected=supported observed=refused source=https://example.invalid/research.md at=- verdict=refused
+CLAIM id=E07_link_in expected=supported observed=supported source=src/link-in.txt at=line:1 verdict=match
+CLAIM id=E08_link_out expected=supported observed=refused source=src/link-out.txt at=- verdict=refused
+CLAIM id=E09_hard expected=supported observed=refused source=src/hard.txt at=- verdict=refused
+CLAIM id=E26_nl_filename expected=supported observed=stale source=src/nl
+name.txt at=- verdict=mismatch
+CLAIM id=E27_bs_filename expected=supported observed=stale source=src/back\slash.txt at=- verdict=mismatch
+CLAIM id=E28_sp_filename expected=supported observed=supported source=src/with space.txt at=line:1 verdict=match
+CLAIM id=E10_unread expected=supported observed=refused source=src/unread.txt at=- verdict=refused
+CLAIM id=E11_num expected=supported observed=invalid source=src/plain.txt at=- verdict=invalid
+CLAIM id=E12_null expected=supported observed=invalid source=src/plain.txt at=- verdict=invalid
+CLAIM id=E13_true expected=supported observed=invalid source=src/plain.txt at=- verdict=invalid
+CLAIM id=E14_false expected=supported observed=invalid source=src/plain.txt at=- verdict=invalid
+CLAIM id=E15_dup_ok_first expected=supported observed=supported source=src/plain.txt at=line:1 verdict=match
+CLAIM id=E16_dup_bad_first expected=supported observed=invalid source=src/plain.txt at=- verdict=invalid
+CLAIM id=E17_dup_stale_first expected=supported observed=stale source=src/plain.txt at=- verdict=mismatch
+CLAIM id=E18_nl_pin expected=supported observed=supported source=src/plain.txt at=line:1 verdict=match
+CLAIM id=E19_nl2_pin expected=supported observed=supported source=src/plain.txt at=line:1 verdict=match
+CLAIM id=E20_space_pin expected=supported observed=invalid source=src/plain.txt at=- verdict=invalid
+CLAIM id=E21_cr_pin expected=supported observed=invalid source=src/plain.txt at=- verdict=invalid
+CLAIM id=E22_dup_id_key expected=supported observed=supported source=src/plain.txt at=line:1 verdict=match
+CLAIM id=E23_line_and_stale expected=supported observed=stale source=src/plain.txt at=- verdict=mismatch
+CLAIM id=E24_line_and_match expected=supported observed=mislocated source=src/plain.txt at=line:1 verdict=mismatch
+CLAIM id=E25_dir_source expected=supported observed=refused source=src at=- verdict=refused
+FINDING CLAIM_SPAN_NOT_FOUND severity=warn surface=claims obs=id=E01_empty_pin nearest_line=- context=-
+FINDING CLAIM_SOURCE_REVISION_MISMATCH severity=warn surface=claims obs=id=E03_nul_stripped_pin pin=daae1942c24b actual=5d92c531d53f
+FINDING CLAIM_SOURCE_READ_TOO_LARGE severity=warn surface=claims obs=id=E04_over_cap source=src/over.txt obs=size=8388609 cap=8388608 exceeded (not read)
+FINDING CLAIM_SOURCE_EXTERNAL severity=crit surface=claims obs=id=E06_url source=https://example.invalid/research.md obs=url source refused (no external fetch)
+FINDING CLAIM_SOURCE_OUT_OF_CORPUS severity=crit surface=claims obs=id=E08_link_out source=src/link-out.txt obs=resolved=/fast/scratch/hyaku/chousa-r31/w2/CriticEdgeC2/outside-target.txt outside allowed roots
+FINDING CLAIM_SOURCE_MULTILINKED severity=crit surface=claims obs=id=E09_hard source=src/hard.txt obs=nlink=2 multi-linked source refused (possible hardlink alias of out-of-corpus content; not read)
+FINDING CLAIM_SOURCE_REVISION_MISMATCH severity=warn surface=claims obs=id=E26_nl_filename pin=b4034355043e actual=unreadable
+FINDING CLAIM_SOURCE_REVISION_MISMATCH severity=warn surface=claims obs=id=E27_bs_filename pin=b4034355043e actual=unreadable
+FINDING CLAIM_SOURCE_MISSING severity=warn surface=claims obs=id=E10_unread source=src/unread.txt obs=not a readable regular file under allowed roots
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=14 sha256 malformed (not 64 lowercase hex characters)
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=15 sha256 malformed (not 64 lowercase hex characters)
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=16 sha256 malformed (not 64 lowercase hex characters)
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=17 sha256 malformed (not 64 lowercase hex characters)
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=19 sha256 malformed (not 64 lowercase hex characters)
+FINDING CLAIM_SOURCE_REVISION_MISMATCH severity=warn surface=claims obs=id=E17_dup_stale_first pin=d9298a10d1b0 actual=b4034355043e
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=23 sha256 malformed (not 64 lowercase hex characters)
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=24 sha256 malformed (not 64 lowercase hex characters)
+FINDING CLAIM_SOURCE_REVISION_MISMATCH severity=warn surface=claims obs=id=E23_line_and_stale pin=d9298a10d1b0 actual=b4034355043e
+FINDING CLAIM_LINE_MISMATCH severity=warn surface=claims obs=id=E24_line_and_match line=7-7 first_delimited_occurrence=line:1
+FINDING CLAIM_SOURCE_MISSING severity=warn surface=claims obs=id=E25_dir_source source=src obs=not a readable regular file under allowed roots
+VERDICT_BEARING_CLAIMS=8/28
+RESEARCH_GATE: DRIFT (claims=28 supported=8 contradicted=0 unsupported=1 mismatched=7 unproven=0 refused=6 invalid=7 findings=20 drift=20)

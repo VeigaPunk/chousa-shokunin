@@ -268,11 +268,6 @@ Original pointer: `corpus/lessons/round-25.md:70` (S021). The quote has a casing
 
 Meaning changes: no; this is quote-fidelity only. The admission decision does not change: S021 remains queued as recorded in `corpus/SOURCES.md:31`. That row is superseded by S032 at `corpus/SOURCES.md:42`, which is also queued.
 
-## 3. `corpus/lessons/round-25.md`
-
-**Insertion point:** after current line 269, at the end of the existing append-only correction to the round-25 Gate.
-
-```md
 ### 2026-10-23 correction — provenance of the round-25 quote correction (routed D8)
 
 The quote correction above is not verified by a retained fetch from a registered source. The seat report says the reader returned the PubMed abstract via NCBI E-utilities (`.ufo/waves/round-30/build/ScribeD4H20.md:3`); the routed finding is `corpus/lessons/round-30-verifier-spotcheck.md:199`. The review records `git grep -i eutils a9d3a05a -- corpus/SOURCES.md` as finding zero rows, and states that no response bytes or hash were kept for that E-utilities retrieval (`.ufo/waves/round-30/falsify/ReviewCorrections.md:26`). A separate GET to the registered PubMed URL did not verify the quote: `.ufo/waves/round-30/falsify/ReviewCorrections/receipt-pubmed-17638714.json` records the GET command, exit 0, HTTP 203, a cookie-gate body, zero quote matches and no redirects. The quote therefore remains unconfirmed by retained registered-source bytes; this provenance correction does not change the S021 or S032 admission statuses. The earlier text remains unchanged.

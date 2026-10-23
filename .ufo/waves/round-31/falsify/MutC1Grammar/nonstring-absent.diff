@@ -1,0 +1,11 @@
+--- pristine/tools/research-gate.sh
++++ nonstring-absent/tools/research-gate.sh
+@@ -1434,7 +1434,7 @@
+     # detects a present key of ANY value type, so a present empty or non-string
+     # value is distinguishable from an absent key (both are invalid).
+     line_present=0; linef=''; lbad=''
+-    if json_has_key "$line" line; then
++    if json_str "$line" line >/dev/null 2>&1; then
+       line_present=1
+       if json_str "$line" line >/dev/null 2>&1; then
+         linef=$(json_unescape "$(jfield "$line" line)")

@@ -1,0 +1,38 @@
+--- pristine/tools/research-gate.sh
++++ spanfirst/tools/research-gate.sh
+@@ -1500,17 +1500,6 @@
+     fi
+     path=$CLAIM_SRC_PATH
+ 
+-    if [[ -n $sha_present ]]; then
+-      sha_actual=$(sha256sum -- "$path" 2>/dev/null | cut -d' ' -f1 || true)
+-      # fail closed: an unmeasurable source is not a match (r31)
+-      [[ $sha_actual =~ ^[0-9a-f]{64}$ ]] || sha_actual=unreadable
+-      if [[ $sha_actual != "$sha_pin" ]]; then
+-        observed=stale
+-        at=-
+-        emit_finding CLAIM_SOURCE_REVISION_MISMATCH warn claims \
+-          "id=$id pin=${sha_pin:0:12} actual=${sha_actual:0:12}"
+-      fi
+-    fi
+ 
+     if [[ -z ${observed:-} ]]; then
+       hay=$(cat -- "$path"; printf x)
+@@ -1586,6 +1575,17 @@
+         unsupported) observed=unsupported ;;
+       esac
+     fi
++    fi
++    if [[ -n $sha_present && $observed != unsupported ]]; then
++      sha_actual=$(sha256sum -- "$path" 2>/dev/null | cut -d' ' -f1 || true)
++      # fail closed: an unmeasurable source is not a match (r31)
++      [[ $sha_actual =~ ^[0-9a-f]{64}$ ]] || sha_actual=unreadable
++      if [[ $sha_actual != "$sha_pin" ]]; then
++        observed=stale
++        at=-
++        emit_finding CLAIM_SOURCE_REVISION_MISMATCH warn claims \
++          "id=$id pin=${sha_pin:0:12} actual=${sha_actual:0:12}"
++      fi
+     fi
+ 
+     case "$observed" in

@@ -214,3 +214,26 @@ git-revision binding (the pin is a content hash of the bytes read, not a commit)
 hashing and reading a file that changes during the run. *(v2)* That every claim carries a
 revision pin (`"sha256"` is optional and its absence is not drift); that the first occurrence
 is the cited one.
+
+## 2026-10-23 correction to the Design v2 note (after data; CriticChronology31)
+
+Appended after the falsify wave; predicates, counters and contracts are unchanged.
+`.ufo/waves/round-31/falsify/CriticChronology31.md` (inventory of 761 receipts) found the first
+candidate-data receipt at 04:43:33Z (`measure/after-c1-run1.json`, gate `3b5279eb`), after v2
+(`8070f92b`, 04:37:44Z) and after the v2 control receipts (`86188116`, 04:43:18Z). The v2 note
+above is incomplete in five places:
+
+1. "Every control is re-scored under v2" is false for one seat: `controls/CtlDeterminism31/` was
+   not re-scored; its 98 receipts bind v1 hashes, and six of them score 120/120 (a truth-fed
+   replay and a duplicate-line replay, harness checks rather than shortcuts).
+2. CriticSeparability31's scratch sketches scored 120/120 on both v1 counters at about
+   04:26-04:28Z (its report section 2). The disclosure (a) says the runs happened but not the
+   scores.
+3. Item 1 names only C2 leaks. The C1 v1 counter was also met: `controls/CtlShortcutC1/endpoint-exact-seed93101{1,2,3}.json`
+   scored 120/120 at 04:32:30Z (binding by the span's first and last tokens only). v2 closed it
+   with M3 inner-word damage and M4 ranges that keep the true start or end line (lesson, Design
+   history).
+4. The L1's 84/120 run (disclosure (b)) left no receipt.
+5. Five draft counter hashes (`d201ef4b`, `ce7f844b`, `c0a0908c`, `e26c7751`, `81fe5015`) were
+   used by control seats between v1 and v2 and are in no commit; receipts bind them by
+   `counter_sha256`, and none of those receipts is counted for v2.

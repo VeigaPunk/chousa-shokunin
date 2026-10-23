@@ -1444,10 +1444,14 @@ verify_claims() {
     if json_has_key "$line" sha256; then
       # a present non-string value is malformed, never "absent" (r31)
       sha_present=1; sha_pin='-'
-      # the RAW JSON string body is validated: a valid pin needs no escapes, so
-      # an escaped newline or NUL can never be decoded away into a match (r31)
+      # decode the JSON string exactly: keep trailing newlines (printf x) and
+      # treat an escaped NUL (bash drops NULs) as malformed, so neither can be
+      # decoded away into a match (r31)
       if json_str "$line" sha256 >/dev/null 2>&1; then
-        sha_pin=$(json_str "$line" sha256)
+        sha_raw=$(json_str "$line" sha256)
+        if [[ ${sha_raw,,} != *'\u0000'* ]]; then
+          sha_pin=$(json_unescape "$sha_raw"; printf x); sha_pin=${sha_pin%x}
+        fi
       fi
     fi
     if [[ -z $id ]]; then bad="missing id"
