@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
-"""Round-29 C1 counter, design v2 (frozen before data; see corpus/evidence/round29/claims.md).
+"""Round-29 C1 counter, design v3 (frozen before data; see corpus/evidence/round29/claims.md).
 
 Usage (cwd: chousa-shokunin lane root):
-    python3 corpus/evidence/round29/c1-count.py [--seed N] [--receipt PATH] -- CMD...
+    python3 corpus/evidence/round29/c1-count.py [--receipt PATH] -- CMD...
+
+Design v3 (before data): the caller can no longer choose the seed. Every run draws a
+fresh 64-bit seed, so committed receipts of earlier seeds cannot be replayed.
 
 CMD is the candidate verifier, for example `python3 tools/quote-reopen.py verify`.
 The counter appends `--items <tmp>/items.tsv` to CMD and runs it from the lane root.
@@ -235,11 +238,10 @@ def build(seed):
 def main():
     argv = sys.argv[1:]
     if "--" not in argv:
-        print("usage: c1-count.py [--seed N] [--receipt PATH] -- CMD...", file=sys.stderr)
+        print("usage: c1-count.py [--receipt PATH] -- CMD...", file=sys.stderr)
         return 2
     k = argv.index("--")
     ap = argparse.ArgumentParser()
-    ap.add_argument("--seed", type=int, default=None)
     ap.add_argument("--receipt", default=None)
     ap.add_argument("--timeout", type=int, default=900)
     opts = ap.parse_args(argv[:k])
@@ -247,7 +249,7 @@ def main():
     if not cmd:
         print("usage: empty CMD", file=sys.stderr)
         return 2
-    seed = opts.seed if opts.seed is not None else secrets.randbits(32)
+    seed = secrets.randbits(64)
     try:
         cases = build(seed)
     except Exception as e:  # fixture, registry or counter-side fetch failure

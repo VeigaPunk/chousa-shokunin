@@ -1,4 +1,22 @@
-# Round 29 — frozen claim, predicate, tool contract and controls (design v2)
+# Round 29 — frozen claim, predicate, tool contract and controls (design v3)
+
+**Design v3 (latest; frozen before data).** The v2 control rescore found one
+more way to meet the counter. The label-keyed seat's "warmed" variant replays
+the labels stored in the committed v2 control receipts for seeds 2901 and
+2902. With `--seed 2901` or `--seed 2902` it printed
+`QUOTE_REOPEN_MATCH=130/130` and exited 0, without fetching anything
+(`controls/CtlLabelKeyed/receipt-v2-warmed*.json`). With a fresh seed it scored
+106/130. Under this file's own rule, any control that meets the counter voids
+the design. The L1 first read the seed-pinned runs as outside the predicate
+command, which passes no seed, and committed the receipts at `8026fe60`. That
+reading was wrong, and it is recorded as a mistake in the round-29 lesson.
+Before any data seat had run the counter (both executor seats confirmed this
+in writing), v3 removed the `--seed` option. The caller can no longer choose a
+seed; every run draws a fresh 64-bit seed. Nothing else changes: the
+predicate, items, labels, contract and `FROZEN_TOTAL = 130` are the same. The
+control wave re-scores every control under v3 (receipts `receipt-v3*.json`)
+before data.
+
 
 Design v1 was frozen on 2026-10-23 at lane commit
 `f9fd6d6c0982325c40c1b4a86b698859fdb1def8` (base
