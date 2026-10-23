@@ -30,8 +30,6 @@ bash tools/research-gate.sh --drift $S/out/$ENV/baseline.txt      # ECHO=0
 bash tools/research-gate.sh --selftest                            # ECHO=1
 ```
 
-PUT 54.=54.:
-2. **Refused override exits 2 before case 1.** `--selftest` with `RESEARCH_GATE_GREP` ∈ {`/bin/false`, `binenv/notgnu` (prints `pi-uu-grep 0.2.0`), `relative/path`, `/nonexistent/grep`} → each `rc=2`, stdout **0 bytes**, `0` `ok-case`/`FAIL-case` lines; stderr exactly `research-gate: GREP_PROVENANCE refused: …` (four distinct reasons). `grep_pin_init` runs before `run_selftest`'s first `mktemp`, so nothing of the battery starts. `--pin` is likewise fail-closed: `RESEARCH_GATE_GREP=/bin/false bash gate --pin X` → `rc=2`, refusal message, **no baseline written** — the parent's `grep_pin_init` (:8039) refuses before `run_pin` spawns its inner child (which would refuse identically, since every child re-runs the pin).
 
 **Cross-env drift, echo off (measured).** `--drift out/e0/baseline.txt` under ea/eb/ec with `CHOUSA_GREP_PIN_ECHO` unset: `GATE_DRIFT: none`, rc=0 in all three. With echo set it reports `GATE_DRIFT: +LINE` rc=1 — see F1.
 **Refused pin mode (measured).** `RESEARCH_GATE_GREP=/bin/false bash tools/research-gate.sh --pin X` → rc 2, `research-gate: GREP_PROVENANCE refused: override does not report GNU grep: false (GNU coreutils) 9.12`, and no baseline file written — the parent's `grep_pin_init` (:8039) refuses before `run_pin`/its inner child runs, so pin/drift are fail-closed before fixture creation.

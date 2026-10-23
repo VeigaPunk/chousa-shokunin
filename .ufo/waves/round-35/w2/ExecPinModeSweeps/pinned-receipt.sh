@@ -32,7 +32,7 @@ run4() { # LABEL GATE PATH ENVSPEC
     ${envspec:+$(printf '%s' "$envspec" | tr '|' ' ')} \
     "$TIMEOUT" 600 bash "$gate" verify-sweeps "$FIXTURE" --root "$REPO" \
     >"$dir/out" 2>"$dir/err" || rc=$?
-  printf '--- %s\n' "$label"
+  printf -- '--- %s\n' "$label"
   printf '  exit=%s\n' "$rc"
   printf '  summary=%s\n' "$(grep -m1 '^VERIFIED_SWEEPS=' "$dir/out" || true)"
   printf '  verdict=%s\n' "$(grep -m1 '^RESEARCH_GATE: ' "$dir/out" || true)"
