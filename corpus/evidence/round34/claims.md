@@ -138,3 +138,55 @@ v2 receipts or before the first candidate receipt). The seats' v1 control gates 
 under v2 by the L1 before the first candidate receipt (`controls/L1-v2-rescore/`).
 
 **The command that would show C1 unmoved:** counter v2 on the landed gate printing below 40.
+
+## Design v3 (before data; supersedes counter v2, TOTAL, P1 v2 and kill rule v2)
+
+Made before any candidate was scored, after CritC1Shapes (`.ufo/waves/round-34/w1/CritC1Shapes.md`,
+a completed seat) named gate shapes no v2 class distinguishes — order-insensitive fingerprints,
+whitespace-normalising and case-insensitive comparison, first-raw-occurrence-only matching — and
+after CritC1AxisFit's in-flight note (sent by IRC; the seat itself ended on a provider hold, so the
+note is recorded, not relied on) that no generated span exceeded 65009 bytes.
+
+**Counter v3.** `python3 corpus/evidence/round34/c1-count-v3.py [--gate PATH] [--seed N]
+[--receipt F] [--keep DIR]` (lane root), SHA-256
+`970cf9a709d72ed8b3ec91eeabc2b1778831f695b5ea18b40f026489f7f2da2a`. 42 records in 17 classes (the
+docstring lists them): v2's classes, each near-copy decoy now carrying one edit of a kind drawn per
+decoy (substitution, adjacent transposition, upper-casing, separator swap); long-decoys holds 24
+near-copies; new class long-glued-then-valid (2, `supported`); long spans drawn up to 65536 bytes.
+
+**P1 v3 (frozen predicate).** C1 is met iff, on the landed lane revision, this counter prints
+`LONGSPAN_MATCH=42/42` (receipt label `predicate_holds=true`) on each of two fresh-seed runs, and
+no committed run of this counter on the landed gate prints a lower count.
+
+Code condition: `holds = matched == TOTAL` with `TOTAL = 42`. Receipt label: `predicate_holds` is
+the per-run condition; P1 needs two receipts with it and no committed landed-gate receipt without it.
+
+**Kill rule v3.** Any committed run of counter v3 on the landed gate below 42 is a miss, reported as
+an honest stop; counter v3, TOTAL and P1 v3 are never amended after a candidate is scored.
+
+**Held controls and exclusions (orchestrator safety clarification, 2026-10-23 ~11:20Z).** Five
+wave-1 seats ended on provider `cyber_policy` holds: CtlC1Shortcut, CtlC1Windows, CtlC1Halves,
+MutC1Counter, CritC1AxisFit. Before the clarification the L1 re-authored the held control shapes
+itself; under the clarification that is a bypass of the hold. Those artifacts are therefore
+**excluded from evidence** and are not cited for any verdict: `controls/L1-keyed/` (record
+order/mtime, id-hash, length-band/line-keyed and long-majority controls, the CtlC1Shortcut shape),
+`controls/L1-windows/` and the window/fraction controls (`window_ctl.py`, `window_frac.py`,
+`ctl-win*`, `ctl-frac*`, the CtlC1Windows shape), the halves controls (`halves_ctl.py`,
+`ctl-halves*`, the CtlC1Halves shape), their receipts in `controls/L1-v1-meets/` and
+`controls/L1-v2/`, and their v3 scores (kept uncommitted in scratch). They stay in the history as
+committed by `ef16afb1`; this paragraph is their exclusion record. The v2 design paragraph above
+cites them as its motivation; the v2 and v3 counter designs stand as frozen before data, but no
+claim of shortcut resistance rests on those excluded receipts.
+
+**Consequence for C1 (declared before data).** The round prompt §6.9 and the pre-freeze control
+rule require the cheapest shortcut controls (fixture-keyed, window, independent-chunk) to be scored
+before freezing. Those controls are held and may not be substituted, so C1 **cannot verify this
+round whatever the measurement shows**: it is reported `unverified (required controls held)`. The
+candidate is still built, landed and measured with counter v3 as independent operability work.
+
+**Non-held controls under v3 (L1, `controls/L1-v3/`, seeds 3461–3464).** Feasibility oracle
+(python exact search; never a candidate) 42/42 ×4; shapes from CritC1Shapes: case-insensitive
+33–35/42, whitespace-blind 34–35, order-blind histogram with anchors 35, first raw occurrence only
+38, shoulder-blind three-region compare 34–35. The do-nothing control (base gate) under v3 and the
+wave-1 seats' own control gates (non-held seats) are scored by the L1 before the first candidate
+receipt (`controls/L1-base/`, `controls/L1-v3-rescore/`).
