@@ -1327,26 +1327,39 @@ json_dup() { # LINE KEY -> rc0: KEY occurs more than once among the TOP-LEVEL me
 }
 
 json_unescape() { # RAW JSON string body -> decoded bytes on stdout
-  local s=$1 out='' i c hex cp
+  # Runs of ordinary characters are consumed with one regex match each, not
+  # one ${s:i:1} per byte: a substring costs time in the body length, so a
+  # byte loop is quadratic in it (r33 post-falsify: ProbeLongLines33; r34 C1:
+  # a 64 KiB span body cost 58 s per claim). The decoded bytes are the same
+  # as the per-byte loop: the same characters in the same order, and the same
+  # escape decoding, including a malformed \u and a trailing lone backslash.
+  local s=$1 out='' i=0 c hex cp run
+  local strrun='^[^\\]+'            # ordinary characters, up to a backslash
   local n=${#s}
-  for ((i = 0; i < n; i++)); do
+  while (( i < n )); do
+    if [[ ${s:i} =~ $strrun ]]; then
+      run=${BASH_REMATCH[0]}
+      out+=$run
+      i=$((i + ${#run}))
+      continue
+    fi
     c=${s:i:1}
-    if [[ $c != '\' ]]; then out+=$c; continue; fi
+    if [[ $c != '\' ]]; then out+=$c; i=$((i + 1)); continue; fi
     i=$((i + 1)); c=${s:i:1}
     case "$c" in
-      '"') out+='"' ;;
-      '\') out+='\' ;;
-      /) out+='/' ;;
-      b) out+=$'\b' ;;
-      f) out+=$'\f' ;;
-      n) out+=$'\n' ;;
-      r) out+=$'\r' ;;
-      t) out+=$'\t' ;;
+      '"') out+='"'; i=$((i + 1)) ;;
+      '\') out+='\'; i=$((i + 1)) ;;
+      /) out+='/'; i=$((i + 1)) ;;
+      b) out+=$'\b'; i=$((i + 1)) ;;
+      f) out+=$'\f'; i=$((i + 1)) ;;
+      n) out+=$'\n'; i=$((i + 1)) ;;
+      r) out+=$'\r'; i=$((i + 1)) ;;
+      t) out+=$'\t'; i=$((i + 1)) ;;
       u)
         hex=''
         if ((i + 4 < n)); then hex=${s:i+1:4}; fi
         if [[ $hex =~ ^[0-9A-Fa-f]{4}$ ]]; then
-          cp=$((16#$hex)); i=$((i + 4))
+          cp=$((16#$hex)); i=$((i + 5))
           if ((cp < 0x80)); then
             printf -v c '%b' "\\$(printf '%03o' "$cp")"; out+=$c
           elif ((cp >= 0xD800 && cp <= 0xDFFF)); then
@@ -1357,10 +1370,10 @@ json_unescape() { # RAW JSON string body -> decoded bytes on stdout
             out+='?'
           fi
         else
-          out+='\u'
+          out+='\u'; i=$((i + 1))
         fi
         ;;
-      *) out+='\'; out+=$c ;;
+      *) out+='\'; out+=$c; i=$((i + 1)) ;;
     esac
   done
   printf '%s' "$out"
@@ -1550,23 +1563,94 @@ tok_right_ok() { # AFTER SPAN -> rc0: the right edge is a token boundary
   [[ $TOK_WS == *"$c"* || $TOK_PUNCT == *"$c"* ]]
 }
 
+# ---- long-span matching (round-34 C1) -------------------------------------
+# A span of N bytes needs a PCRE pattern of four bytes per span byte (one
+# \xHH escape each), so a span of 32768 bytes or more needs a 128 KiB argv
+# string: execve(2) then fails with E2BIG ("Argument list too long"), and
+# PCRE2 refuses a pattern of that size anyway ("regular expression is too
+# large"). The occurrence is then never reported and a span that sits in the
+# source verbatim reads observed=unsupported.
+#
+# Spans whose pattern still fits keep the one-pattern matcher of the base
+# gate, byte for byte. A longer span is matched in two steps: the span's
+# first chunk (a pattern that fits both ceilings) locates the candidate
+# offsets, and every candidate is confirmed by comparing the hay bytes at
+# that offset with the WHOLE span. The confirmed offsets are reported with
+# the same left-to-right, non-overlapping order the one-pattern matcher
+# reports, so the boundary rules and the line numbers of tok_span_at and
+# tok_span_all are unchanged.
+TOK_DIRECT_SPAN_MAX=32767     # span bytes whose 4N-byte pattern still fits argv
+TOK_CHUNK_BYTES=4096          # probe chunk bytes (4N pattern chars per chunk)
+
+tok_hex_pattern() { # STRING -> PCRE pattern text: one \xHH escape per byte
+  # Byte-identical to the per-character loop of the base matcher (measured
+  # equal for every byte value 01..ff) but linear: that loop is quadratic
+  # in the span length, which is what makes a long span slow to prepare.
+  local hex
+  hex=$(printf '%s' "$1" | od -An -v -tx1 | tr -d ' \n')
+  printf '%s' "$hex" | sed 's/../\\x&/g'
+}
+
+tok_span_offsets() { # HAY SPAN -> stdout: byte offset of each occurrence, one per line
+  # LC_ALL=C: the span length and every offset are byte counts, not character
+  # counts (the base matcher measures its pattern in bytes the same way).
+  local LC_ALL=C
+  export LC_ALL
+  local hay=$1 span=$2
+  if (( ${#span} > TOK_DIRECT_SPAN_MAX )); then
+    tok_span_offsets_chunk "$hay" "$span"
+  else
+    tok_span_offsets_direct "$hay" "$span"
+  fi
+}
+
+tok_span_offsets_direct() { # HAY SPAN -> stdout: byte offset of each occurrence
+  # The base matcher: one hex pattern for the whole span, matched literally.
+  local LC_ALL=C
+  export LC_ALL
+  local hay=$1 span=$2 occurrence offset regex=''
+  # Hex escapes keep the PCRE pattern byte-exact and literal. NUL-delimited
+  # grep records let -z search multi-line spans and preserve match offsets.
+  # The pattern is built with one linear pass (the base per-character loop
+  # was quadratic in the span length); the pattern TEXT is the same.
+  regex=$(tok_hex_pattern "$span")
+  while IFS= read -r -d '' occurrence; do
+    printf '%s\n' "${occurrence%%:*}"
+  done < <(printf '%s' "$hay" | grep -a -z -b -o -P -- "$regex")
+}
+
+tok_span_offsets_chunk() { # HAY SPAN -> stdout: byte offset of each occurrence
+  # The chunk matcher: the span's first TOK_CHUNK_BYTES bytes are matched as
+  # one literal byte plus a lookahead over the rest of the chunk, so every
+  # start offset of the chunk is a candidate (a plain -o reports only
+  # non-overlapping matches and could skip a real occurrence). Each candidate
+  # is then confirmed against the WHOLE span: a chunk match alone is not the
+  # span, and the confirmation is what makes a mutated or split span read as
+  # absent. The confirmed offsets are reported left to right and never
+  # overlap, the order the one-pattern matcher reports.
+  local LC_ALL=C
+  export LC_ALL
+  local hay=$1 span=$2 slen=${#span} chunk pattern occurrence offset resume=0
+  chunk=${span:0:TOK_CHUNK_BYTES}
+  pattern="$(tok_hex_pattern "${chunk:0:1}")(?=$(tok_hex_pattern "${chunk:1}"))"
+  while IFS= read -r -d '' occurrence; do
+    offset=${occurrence%%:*}
+    (( offset >= resume )) || continue
+    [[ ${hay:offset:slen} == "$span" ]] || continue
+    printf '%s\n' "$offset"
+    resume=$(( offset + slen ))
+  done < <(printf '%s' "$hay" | grep -a -z -b -o -P -- "$pattern")
+}
+
 tok_span_at() { # HAY SPAN -> TOK_AT (line:N|lines:N-M) + TOK_L1/TOK_L2
   # rc0: first boundary-delimited occurrence; rc1: none. Occurrences that are
   # substrings but glued into a word are skipped, not reported.
   local LC_ALL=C
   export LC_ALL
-  local hay=$1 span=$2 before after occurrence offset regex='' i c hex
+  local hay=$1 span=$2 before after offset
   TOK_AT=- TOK_L1=0 TOK_L2=0
   [[ -n $span ]] || return 1
-  # Hex escapes keep the PCRE pattern byte-exact and literal. NUL-delimited
-  # grep records let -z search multi-line spans and preserve match offsets.
-  for ((i = 0; i < ${#span}; i++)); do
-    c=${span:i:1}
-    printf -v hex '%02x' "'$c"
-    regex+="\\x$hex"
-  done
-  while IFS= read -r -d '' occurrence; do
-    offset=${occurrence%%:*}
+  while IFS= read -r offset; do
     before=${hay:0:offset}
     after=${hay:offset+${#span}}
     if tok_left_ok "$before" "$span" && tok_right_ok "$after" "$span"; then
@@ -1575,7 +1659,7 @@ tok_span_at() { # HAY SPAN -> TOK_AT (line:N|lines:N-M) + TOK_L1/TOK_L2
       if [[ $TOK_L1 -eq $TOK_L2 ]]; then TOK_AT=line:$TOK_L1; else TOK_AT=lines:$TOK_L1-$TOK_L2; fi
       return 0
     fi
-  done < <(printf '%s' "$hay" | grep -a -z -b -o -P -- "$regex")
+  done < <(tok_span_offsets "$hay" "$span")
   return 1
 }
 
@@ -1585,15 +1669,9 @@ tok_span_all() { # HAY SPAN -> stdout: "L1 L2" per boundary-delimited occurrence
   # (tok_span_at stops at the first) with its 1-based start and end lines.
   local LC_ALL=C
   export LC_ALL
-  local hay=$1 span=$2 before after occurrence offset regex='' i c hex l1 l2 found=0
+  local hay=$1 span=$2 before after offset l1 l2 found=0
   [[ -n $span ]] || return 1
-  for ((i = 0; i < ${#span}; i++)); do
-    c=${span:i:1}
-    printf -v hex '%02x' "'$c"
-    regex+="\\x$hex"
-  done
-  while IFS= read -r -d '' occurrence; do
-    offset=${occurrence%%:*}
+  while IFS= read -r offset; do
     before=${hay:0:offset}
     after=${hay:offset+${#span}}
     if tok_left_ok "$before" "$span" && tok_right_ok "$after" "$span"; then
@@ -1602,7 +1680,7 @@ tok_span_all() { # HAY SPAN -> stdout: "L1 L2" per boundary-delimited occurrence
       l2=$(( l1 + $(count_nl "$span") ))
       printf '%d %d\n' "$l1" "$l2"
     fi
-  done < <(printf '%s' "$hay" | grep -a -z -b -o -P -- "$regex")
+  done < <(tok_span_offsets "$hay" "$span")
   [[ $found -eq 1 ]]
 }
 
@@ -7743,6 +7821,39 @@ EOF
     'CLAIM id=PE4 expected=supported observed=supported source=lib/span.md at=line:1 verdict=match' \
     'CLAIM id=PE5 expected=supported observed=supported source=lib/span.md at=line:1 verdict=match' \
     'claims=5 supported=2 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=3 findings=3 drift=3'
+
+  # ---- round-34 C1 selftest cases (cases 252-254): long spans ----
+  # A span of 32768 bytes or more cannot be carried by one PCRE pattern:
+  # the hex pattern needs four argv bytes per span byte, so the exec fails
+  # with E2BIG ("Argument list too long") and the span used to read
+  # observed=unsupported even when the source holds it verbatim. The
+  # long-span matcher probes with the span's first chunk and confirms every
+  # candidate offset against the whole span. These cases pin the contract
+  # rules on a span above the limit: verbatim (supported), one byte changed
+  # (unsupported), glued to a word character (unsupported), and the "line"
+  # binding on the second of two occurrences (supported) or on no occurrence
+  # (mislocated).
+  ls_span=$(printf 'w%04d ' {1..4999})
+  ls_span="$ls_span"w0500
+  printf 'lead %s tail\n' "$ls_span" >"$WORK/lib/longspan.md"
+  printf 'lead%s tail\n' "$ls_span" >"$WORK/lib/longglued.md"
+  printf 'lead %s tail\nmid\nlead %s tail\n' "$ls_span" "$ls_span" >"$WORK/lib/longtwice.md"
+  ls_mut="${ls_span:0:16000}Q${ls_span:16001}"
+  printf '{"id":"LS1","source":"lib/longspan.md","span":"%s","expect":"supported"}\n' "$ls_span" >"$WORK/claims-longspan.jsonl"
+  printf '{"id":"LS2","source":"lib/longspan.md","span":"%s","expect":"supported"}\n' "$ls_mut" >>"$WORK/claims-longspan.jsonl"
+  printf '{"id":"LS3","source":"lib/longglued.md","span":"%s","expect":"supported"}\n' "$ls_span" >>"$WORK/claims-longspan.jsonl"
+  tclaims claims-longspan 1 \
+    'RESEARCH_GATE: DRIFT' 'VERDICT_BEARING_CLAIMS=1/3' \
+    'CLAIM id=LS1 expected=supported observed=supported source=lib/longspan.md at=line:1 verdict=match' \
+    'CLAIM id=LS2 expected=supported observed=unsupported source=lib/longspan.md at=- verdict=mismatch' \
+    'CLAIM id=LS3 expected=supported observed=unsupported source=lib/longglued.md at=- verdict=mismatch'
+  printf '{"id":"LS4","source":"lib/longtwice.md","span":"%s","expect":"supported","line":"3"}\n' "$ls_span" >"$WORK/claims-longspan-line.jsonl"
+  printf '{"id":"LS5","source":"lib/longtwice.md","span":"%s","expect":"supported","line":"9"}\n' "$ls_span" >>"$WORK/claims-longspan-line.jsonl"
+  tclaims claims-longspan-line 1 \
+    'RESEARCH_GATE: DRIFT' 'VERDICT_BEARING_CLAIMS=1/2' \
+    'CLAIM id=LS4 expected=supported observed=supported source=lib/longtwice.md at=line:3 verdict=match' \
+    'CLAIM id=LS5 expected=supported observed=mislocated source=lib/longtwice.md at=line:1 verdict=mismatch' \
+    'FINDING CLAIM_LINE_MISMATCH'
 
   if [[ $failures -eq 0 ]]; then
     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"
