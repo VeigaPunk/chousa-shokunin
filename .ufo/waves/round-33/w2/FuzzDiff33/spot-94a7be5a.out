@@ -1,0 +1,29 @@
+rc=1
+S1   want=supported   got=supported   S1 nested decoy before top-level line, top right
+      CLAIM id=s1 expected=supported observed=supported source=src/spot.md at=line:2 verdict=match
+S2   want=mislocated  got=mislocated  S2 nested line right, top-level line wrong
+      CLAIM id=s2 expected=supported observed=mislocated source=src/spot.md at=line:2 verdict=mismatch
+S3   want=invalid     got=invalid     S3 duplicated top-level span, identical values
+      CLAIM id=s3 expected=supported observed=invalid source=src/spot.md at=- verdict=invalid
+S4   want=invalid     got=invalid     S4 top-level line is an object holding the right line
+      CLAIM id=s4 expected=supported observed=invalid source=src/spot.md at=- verdict=invalid
+S5   want=supported   got=supported   S5 depth-4 nesting holding all seven keys, none top-level except the four required
+      CLAIM id=s5 expected=supported observed=supported source=src/spot.md at=line:2 verdict=match
+S6   want=mislocated  got=mislocated  S6 string value carries fake members before a wrong top-level line
+      CLAIM id=s6 expected=supported observed=mislocated source=src/spot.md at=line:2 verdict=mismatch
+S7   want=invalid     got=invalid     S7 duplicated top-level id, identical values
+      CLAIM id=s7 expected=supported observed=invalid source=src/spot.md at=- verdict=invalid
+S8   want=invalid     got=invalid     S8 duplicated top-level id, differing values
+      CLAIM id=line8 expected=supported observed=invalid source=src/spot.md at=- verdict=invalid
+S9   want=invalid     got=invalid     S9 top-level id is a number
+      CLAIM id=line9 expected=supported observed=invalid source=src/spot.md at=- verdict=invalid
+S10  want=invalid     got=invalid     S10 duplicated top-level expect, identical values
+      CLAIM id=s10 expected=- observed=invalid source=src/spot.md at=- verdict=invalid
+finds=6
+  FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=3 duplicate top-level key span
+  FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=4 line not a JSON string
+  FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=7 duplicate top-level key id
+  FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=8 duplicate top-level key id
+  FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=9 missing id
+  FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=10 duplicate top-level key expect
+SPOT_OK=10/10

@@ -304,3 +304,16 @@ the admitted entry that motivates it. Tier definitions live in
     quotes the rule is listed as `[doc; …]` and excluded only by an explicit `--exclude`). Shown able
     to fail: on `.ufo/waves/round-32` it exits 1 with `w2/RerunC1b.md:31` (`pkill -x sleep`); on
     `tools/` it exits 0. Routed D5, `lessons/round-32-verifier-spotcheck.md:168-169`.
+
+40. **Adversarial fixture content is not a fixed list.** A counter whose classes test "content is
+    never structure" draws that content per seed (random brace/bracket/quote/backslash mixes),
+    and a control that masks the counter's literal fixture strings is scored before freezing; it
+    must score below total. Shown able to fail: `.ufo/waves/round-33/w2/L1ShortcutMask/mask-gate.sh`
+    masks the six `CONFUSERS` of `corpus/evidence/round33/c1-count-v2.py` and scores 156/156
+    (`mask-s3391.json`, `mask-s3392.json`). — `lessons/round-33.md`.
+
+41. **Repairs are not edited into a gate that seats are scoring.** Post-falsify gate changes are
+    built and tested in a scratch copy and installed after the wave settles; every receipt names
+    the gate SHA-256 it measured. Check: no committed counter receipt names a gate SHA-256 that
+    matches no committed revision. Shown able to fail: `.ufo/waves/round-33/w2/ReviewC1Diff/c1-v2-s4117.json`
+    (gate `b808e9b5…`, 0/156, a half-written edit). — `lessons/round-33.md`.

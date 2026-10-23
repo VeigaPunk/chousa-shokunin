@@ -1,0 +1,62 @@
+== q01_id_escape_same  id "c1" and "\u00631" (decodes to c1)
+   in : {"id": "c1", "id": "\u00631", "source": "src/a.txt", "span": "beta gamma", "expect": "supported", "line": "2"}
+   base   rc=0 claims=['CLAIM id=c1 expected=supported observed=supported source=src/a.txt at=line:2 verdict=match'] findings=-
+   landed rc=1 claims=['CLAIM id=line1 expected=supported observed=invalid source=src/a.txt at=- verdict=invalid'] findings=['FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=1 duplicate top-level key id']
+   oracle rc=1 claims=['CLAIM id=c1 expected=supported observed=invalid source=src/a.txt at=- verdict=invalid'] findings=['FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=1 duplicate top-level key']
+== q02_id_nul_tail  id "c1" and "c1\u0000" (differ by NUL)
+   in : {"id": "c1", "id": "c1\u0000", "source": "src/a.txt", "span": "beta gamma", "expect": "supported", "line": "2"}
+   base   rc=0 claims=['CLAIM id=c1 expected=supported observed=supported source=src/a.txt at=line:2 verdict=match'] findings=-
+   landed rc=1 claims=['CLAIM id=line1 expected=supported observed=invalid source=src/a.txt at=- verdict=invalid'] findings=['FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=1 duplicate top-level key id']
+   oracle rc=1 claims=['CLAIM id=c1 expected=supported observed=invalid source=src/a.txt at=- verdict=invalid'] findings=['FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=1 duplicate top-level key']
+== q03_num_swallow  number token swallows a duplicate-looking id (invalid JSON)
+   in : {"id": "c1", "note": 1"id": "c2", "source": "src/a.txt", "span": "beta gamma", "expect": "supported", "line": "2"}
+   base   rc=0 claims=['CLAIM id=c1 expected=supported observed=supported source=src/a.txt at=line:2 verdict=match'] findings=-
+   landed rc=1 claims=['CLAIM id=line1 expected=- observed=invalid source=- at=- verdict=invalid'] findings=['FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=1 not one well-formed JSON object']
+   oracle rc=1 claims=['CLAIM id=line1 expected=- observed=invalid source=- at=- verdict=invalid'] findings=['FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=1 missing id']
+== q04_bad_literal  value tru (not JSON)
+   in : {"id": "c1", "note": tru, "source": "src/a.txt", "span": "beta gamma", "expect": "supported", "line": "2"}
+   base   rc=0 claims=['CLAIM id=c1 expected=supported observed=supported source=src/a.txt at=line:2 verdict=match'] findings=-
+   landed rc=1 claims=['CLAIM id=line1 expected=- observed=invalid source=- at=- verdict=invalid'] findings=['FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=1 not one well-formed JSON object']
+   oracle rc=1 claims=['CLAIM id=line1 expected=- observed=invalid source=- at=- verdict=invalid'] findings=['FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=1 missing id']
+== q05_dash_number  value - (not JSON)
+   in : {"id": "c1", "note": -, "source": "src/a.txt", "span": "beta gamma", "expect": "supported", "line": "2"}
+   base   rc=0 claims=['CLAIM id=c1 expected=supported observed=supported source=src/a.txt at=line:2 verdict=match'] findings=-
+   landed rc=1 claims=['CLAIM id=line1 expected=- observed=invalid source=- at=- verdict=invalid'] findings=['FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=1 not one well-formed JSON object']
+   oracle rc=1 claims=['CLAIM id=line1 expected=- observed=invalid source=- at=- verdict=invalid'] findings=['FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=1 missing id']
+== q06_dup_id_and_source  id c1,c2 and source x2 (identical)
+   in : {"id": "c1", "id": "c2", "source": "src/a.txt", "source": "src/a.txt", "span": "beta gamma", "expect": "supported", "line": "2"}
+   base   rc=0 claims=['CLAIM id=c1 expected=supported observed=supported source=src/a.txt at=line:2 verdict=match'] findings=-
+   landed rc=1 claims=['CLAIM id=line1 expected=supported observed=invalid source=src/a.txt at=- verdict=invalid'] findings=['FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=1 duplicate top-level key id']
+   oracle rc=1 claims=['CLAIM id=c2 expected=supported observed=invalid source=src/a.txt at=- verdict=invalid'] findings=['FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=1 duplicate top-level key']
+== q07_dup_line_null  line "2" then null
+   in : {"id": "c1", "source": "src/a.txt", "span": "beta gamma", "expect": "supported", "line": "2", "line": null}
+   base   rc=0 claims=['CLAIM id=c1 expected=supported observed=supported source=src/a.txt at=line:2 verdict=match'] findings=-
+   landed rc=1 claims=['CLAIM id=c1 expected=supported observed=invalid source=src/a.txt at=- verdict=invalid'] findings=['FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=1 duplicate top-level key line']
+   oracle rc=1 claims=['CLAIM id=c1 expected=supported observed=invalid source=src/a.txt at=- verdict=invalid'] findings=['FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=1 duplicate top-level key']
+== q08_md_dup_nonstring  marker_default string then 5
+   in : {"marker_default": "delta", "marker_default": 5}
+   base   rc=0 claims=- findings=-
+   landed rc=1 claims=['CLAIM id=line1 expected=- observed=invalid source=- at=- verdict=invalid'] findings=['FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=1 duplicate top-level key marker_default']
+   oracle rc=1 claims=['CLAIM id=line1 expected=- observed=invalid source=- at=- verdict=invalid'] findings=['FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=1 missing id']
+== q09_md_dup_then_supported  duplicated marker_default row then a supported claim
+   in : {"marker_default": "delta", "marker_default": "nope"}
+   in : {"id": "c9", "source": "src/a.txt", "span": "beta gamma", "expect": "supported", "line": "2"}
+   base   rc=0 claims=['CLAIM id=c9 expected=supported observed=supported source=src/a.txt at=line:2 verdict=match'] findings=-
+   landed rc=1 claims=['CLAIM id=line1 expected=- observed=invalid source=- at=- verdict=invalid', 'CLAIM id=c9 expected=supported observed=supported source=src/a.txt at=line:2 verdict=match'] findings=['FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=1 duplicate top-level key marker_default']
+   oracle rc=0 claims=['CLAIM id=c9 expected=supported observed=supported source=src/a.txt at=line:2 verdict=match'] findings=-
+== q10_same_line_twice  the same duplicated-id line twice in one file
+   in : {"id": "c1", "id": "c2", "source": "src/a.txt", "span": "beta gamma", "expect": "supported", "line": "2"}
+   in : {"id": "c1", "id": "c2", "source": "src/a.txt", "span": "beta gamma", "expect": "supported", "line": "2"}
+   base   rc=0 claims=['CLAIM id=c1 expected=supported observed=supported source=src/a.txt at=line:2 verdict=match', 'CLAIM id=c1 expected=supported observed=supported source=src/a.txt at=line:2 verdict=match'] findings=-
+   landed rc=1 claims=['CLAIM id=line1 expected=supported observed=invalid source=src/a.txt at=- verdict=invalid', 'CLAIM id=line2 expected=supported observed=invalid source=src/a.txt at=- verdict=invalid'] findings=['FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=1 duplicate top-level key id', 'FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=2 duplicate top-level key id']
+   oracle rc=1 claims=['CLAIM id=c2 expected=supported observed=invalid source=src/a.txt at=- verdict=invalid', 'CLAIM id=c2 expected=supported observed=invalid source=src/a.txt at=- verdict=invalid'] findings=['FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=1 duplicate top-level key', 'FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=2 duplicate top-level key']
+== q11_nested_id_dup_top_ok  nested id twice inside one container, one top-level id
+   in : {"id": "c1", "source": "src/a.txt", "span": "beta gamma", "expect": "supported", "line": "2", "meta": {"id": "z1", "id": "z2"}}
+   base   rc=0 claims=['CLAIM id=c1 expected=supported observed=supported source=src/a.txt at=line:2 verdict=match'] findings=-
+   landed rc=0 claims=['CLAIM id=c1 expected=supported observed=supported source=src/a.txt at=line:2 verdict=match'] findings=-
+   oracle rc=0 claims=['CLAIM id=c1 expected=supported observed=supported source=src/a.txt at=line:2 verdict=match'] findings=-
+== q12_dup_span_escaped_body  span twice, second body with escaped quote and brace
+   in : {"id": "c1", "source": "src/a.txt", "span": "beta gamma", "span": "a\"}b", "expect": "supported", "line": "2"}
+   base   rc=0 claims=['CLAIM id=c1 expected=supported observed=supported source=src/a.txt at=line:2 verdict=match'] findings=-
+   landed rc=1 claims=['CLAIM id=c1 expected=supported observed=invalid source=src/a.txt at=- verdict=invalid'] findings=['FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=1 duplicate top-level key span']
+   oracle rc=1 claims=['CLAIM id=c1 expected=supported observed=invalid source=src/a.txt at=- verdict=invalid'] findings=['FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=1 duplicate top-level key']

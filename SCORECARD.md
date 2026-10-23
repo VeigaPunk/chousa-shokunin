@@ -1851,3 +1851,56 @@ mtime, inode) from truth, scored against the metadata-order control before freez
 last byte through the locked-fd probe; the L0 fetch-scope answer. This supersedes the round-32
 planned list above, whose `--json` serialization item is now landed and whose "end-line-only"
 selftest case landed as case 237.
+
+### 2026-10-23 correction (round 33, routed D2)
+
+The round-32 C1 row above says committed receipts on `10f2fe12` ×18; the outside spot-check said
+20. The count is **21**, all `APPEND_SERIALIZED=24/24`, counter `e6bf9531…`:
+`python3 corpus/evidence/round33/d2-census.py --lane .` prints `C1 receipts on gate 10f2fe12: 21`
+(and 3 on `f4731885`). The receipts that take the count from 18 to 21 are RerunC1b's load runs
+(`w2/RerunC1b/rerunc1b-landed-load{1,2}.json`, 07:51:22Z) and its tmpfs run
+(`rerunc1b-landed-fs.json`, 07:56:21Z), not critic re-scores. The C1 verdict does not change.
+Evidence: `.ufo/waves/round-33/w1/ExecD2Census.md`, re-run by ReviewRepairsD2D3D5 (jq recount
+identical).
+
+## Round 33 — claim fields from the top-level object only (one claim)
+
+Base `2b9cc73aed30c2e2c95699db6617d9531ef49fb2` (gate SHA-256 `f4731885…03f0`). Frozen design
+`corpus/evidence/round33/claims.md`: v1 `3b528b9a`, v2 `e3e24ec8` (after the pre-data critic,
+before any candidate receipt). Controls committed `96be7925`; candidate `eb179ec3` (gate
+`52f07c74…`); integration `0fb300b5` (`94a7be5a…`); post-falsify repairs `0cad05eb` (`165acd5f…`)
+and the final gate `43a1af35ca668fe5…4346`.
+
+| claim / axis | before → after | counting command (lane root) | verdict |
+|---|---|---|---|
+| C1 operability (lowest scored axis): `verify-claims` reads claim fields from the record's top-level JSON object only; nested members ignored; repeated top-level read fields invalid; string content never structure | `TOPLEVEL_FIELD_MATCH=60/156` (base, `.ufo/waves/round-33/controls/L1-design-v2/c1v2-base-s3311.json`) → `156/156` on every committed v2 run on a landed gate (`52f07c74` ×2, `94a7be5a` many, `165acd5f`, `43a1af35` seeds 3701/3702 in `measure/final/`; none below, ReceiptCensus33) | `python3 corpus/evidence/round33/c1-count-v2.py --seed N --receipt F` | **P1 v2 met; not verified by its counter for clause 3**: a gate that masks the counter's six fixed confuser literals, regex-strips nested containers and counts repeats also scores 156/156 (`.ufo/waves/round-33/w2/L1ShortcutMask/mask-s339{1,2}.json`, post-data). Non-counter evidence on the reader: differential fuzz 1950/1950 on the final gate (`measure/final/fz-9021{2,3,4}.json`), base 313/750 |
+
+The round-1 operability scale is unchanged: score 3 → 3 (delta 0); the C1 observable sits beside
+it. Controls under v2 (pre-data): best non-oracle 142/156; do-nothing 60/156; oracles 156/156.
+
+Repairs (not claims): D1 exempt-hop counter v3 (`corpus/evidence/round32/c2-count-v3.py`): the
+round-32 metadata-order control 132/132 under v2 → 87–98/132 under v3; landed audit 132/132 on
+`f4731885`, `94a7be5a`, `165acd5f`, `43a1af35`. D2 above. D3 battery revision header
+(`measure/final/battery.out`). D5 `corpus/evidence/round33/no-name-signals.sh`. QUALITY 36–41.
+
+No-harm on the final gate: selftest `PASS (251 cases, 0 skipped)`, first 241 case lines identical
+to base; claims-r2 17/17 CLEAN; chain-r3 17/22 CLEAN; broken 1/2 DRIFT; round-1 observable 3/3;
+round-31 counters v3 132/132; round-32 C2 v2 132/132 (`measure/final/battery.out`). 35 committed
+claims JSONL files: exit codes identical to base, every changed line a nested or duplicate record
+(NoHarmCorpus33). Declared behaviour changes (fail closed): malformed lines (bare non-JSON tokens,
+FF/VT whitespace, invalid escapes, unbalanced brackets, trailing bytes), an escaped NUL in a read
+string field, and marker_default rows with repeated read fields now read `invalid`.
+
+Sources 61 → 63 rows (S062 RFC 8259, S063 Python `json`; tier A, mined).
+
+## Capabilities (round-33 change)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| top-level claim-field reader (`verify-claims`) | reads claim fields from the record's top-level object only, refuses repeated read fields and malformed lines | `python3 corpus/evidence/round33/c1-count-v2.py` → 156/156 (counter met by a fixture-literal shortcut too, so clause 3 rests on the fuzz evidence); `corpus/knowledge/claim-record-fields-r33.md` | 33 |
+
+## Planned — round 34 (not started)
+
+Candidates, not commitments: a counter whose confuser content is generated per seed (QUALITY 40);
+member grammar inside nested values; raw control bytes in strings; spans of 32 KiB or more
+(`tok_span_at` argv limit); the L0 fetch-scope answer.

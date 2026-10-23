@@ -1,0 +1,369 @@
+diff --git a/tools/research-gate.sh b/tools/research-gate.sh
+index ad21f5c..87a7b27 100755
+--- a/tools/research-gate.sh
++++ b/tools/research-gate.sh
+@@ -47,7 +47,10 @@
+ # against its cited source. Blank lines and #-comment lines are ignored; a
+ # {"marker_default":…} line sets the default contradiction marker and is not a
+ # claim. Every other line is one JSON claim {"id","source","span","expect"} with
+-# expect supported|contradicted|unsupported. A claim may also name the source
++# expect supported|contradicted|unsupported. Fields are read from the record's
++# TOP-LEVEL members only (r33): a nested member of the same name is ignored, a
++# repeated top-level read field makes the record invalid, and a line that is not
++# one well-formed JSON object is invalid. A claim may also name the source
+ # lines its span must occupy: the optional JSON string field "line" holds "N"
+ # or "N-M" (N>=1, M>N, decimal, no leading zeros, no spaces). A present "line"
+ # with any other value (empty, non-string, malformed) makes the record invalid.
+@@ -359,6 +362,9 @@ usage: research-gate.sh [--selftest] [--help]
+   Claims file: one JSON object per claim line:
+     {"id":…,"source":…,"span":…,"expect":supported|contradicted|unsupported
+      [,"marker":…][,"line":"N"|"N-M"][,"sha256":…]}
++  Fields are read from the top-level object only: a nested member of the same
++  name is ignored; a repeated top-level read field, or a line that is not one
++  well-formed JSON object, makes the record invalid (observed=invalid).
+   A present "line" (N>=1, M>N, decimal, no leading zeros, no spaces) pins
+   the span to exactly that source line range: bound iff some boundary-delimited
+   occurrence spans it (at= set to that occurrence); otherwise observed=
+@@ -1106,25 +1112,169 @@ verify_record() {
+ 
+ # ---- claims mode: claim-vs-source verification (local files only) ----
+ 
+-json_str() { # LINE KEY -> raw JSON string body on stdout (escapes intact); rc=1 absent
+-  local line=$1 key=$2
+-  local re="\"${key}\"[[:space:]]*:[[:space:]]*\"((\\\\.|[^\"\\\\])*)\""
+-  if [[ $line =~ $re ]]; then
+-    printf '%s' "${BASH_REMATCH[1]}"
+-    return 0
+-  fi
+-  return 1
++# C1 (round 33): a claim record is one JSON object per line and the gate reads
++# id/source/span/expect/marker/line/sha256 (and marker_default) from ITS
++# TOP-LEVEL members only (corpus/evidence/round33/claims.md). claim_scan walks
++# the line once in the C locale with string state (quotes, backslash escapes,
++# including an escaped backslash before a closing quote) and bracket depth over
++# {} and [] outside strings, and records depth-1 members in three tables:
++#   JSON_PRESENT[K]  K is a top-level member (any value type)
++#   JSON_STR[K]      K's raw string body (escapes intact: what json_str returned)
++#   JSON_DUP[K]      K occurs more than once among the top-level members
++# A member of the same name inside a nested object or array is inside a skipped
++# value and never lands in a table; characters inside a string value are never
++# structure. A line that is not one well-formed object (unbalanced or mismatched
++# brackets, trailing garbage, a member name that is not a string) fails closed:
++# rc=1 and no tables. First occurrence wins in the value tables; a repeat is
++# only flagged, so a duplicated read field is refused by the caller. The last
++# scanned line is cached, so the accessors scan once per record.
++declare -A JSON_PRESENT=() JSON_STR=() JSON_DUP=() JSON_DUPSTR=() JSON_DUPNONSTR=()
++JSON_SCAN_LINE=''
++JSON_SCAN_RC=1
++
++claim_scan() { # LINE -> JSON_* tables + JSON_SCAN_RC; rc0: one well-formed object
++  local LC_ALL=C
++  local s=$1
++  if [[ $s == "$JSON_SCAN_LINE" ]]; then return "$JSON_SCAN_RC"; fi
++  JSON_SCAN_LINE=$s
++  JSON_SCAN_RC=1
++  JSON_PRESENT=(); JSON_STR=(); JSON_DUP=(); JSON_DUPSTR=(); JSON_DUPNONSTR=()
++  local n=${#s} i=0 c key val stk top is_str esc in_str
++  # leading whitespace, then the single opening brace
++  while (( i < n )); do c=${s:i:1}; [[ $c == [[:space:]] ]] || break; i=$((i + 1)); done
++  (( i < n )) && [[ ${s:i:1} == '{' ]] || return 1
++  i=$((i + 1))
++  local allow_close=1   # only an empty object may close before a member
++  while :; do
++    while (( i < n )); do c=${s:i:1}; [[ $c == [[:space:]] ]] || break; i=$((i + 1)); done
++    (( i < n )) || return 1
++    c=${s:i:1}
++    if [[ $c == '}' ]]; then
++      (( allow_close )) || return 1        # a trailing comma is not a member
++      i=$((i + 1))
++      while (( i < n )); do c=${s:i:1}; [[ $c == [[:space:]] ]] || break; i=$((i + 1)); done
++      (( i == n )) || return 1             # trailing garbage
++      JSON_SCAN_RC=0
++      return 0
++    fi
++    [[ $c == '"' ]] || return 1            # a member name is a JSON string
++    # member name: raw text, escapes intact, so a key spelled with an escape
++    # (the not-claimed "l\u0069ne") is not read as the plain key
++    key=''; i=$((i + 1)); esc=0
++    while :; do
++      (( i < n )) || return 1
++      c=${s:i:1}
++      if (( esc )); then key+=$c; esc=0; i=$((i + 1)); continue; fi
++      if [[ $c == '\' ]]; then key+=$c; esc=1; i=$((i + 1)); continue; fi
++      if [[ $c == '"' ]]; then i=$((i + 1)); break; fi
++      key+=$c; i=$((i + 1))
++    done
++    # colon
++    while (( i < n )); do c=${s:i:1}; [[ $c == [[:space:]] ]] || break; i=$((i + 1)); done
++    (( i < n )) && [[ ${s:i:1} == ':' ]] || return 1
++    i=$((i + 1))
++    while (( i < n )); do c=${s:i:1}; [[ $c == [[:space:]] ]] || break; i=$((i + 1)); done
++    (( i < n )) || return 1
++    c=${s:i:1}; val=''; is_str=0
++    if [[ $c == '"' ]]; then
++      # string value: raw body with escapes intact
++      is_str=1; i=$((i + 1)); esc=0
++      while :; do
++        (( i < n )) || return 1
++        c=${s:i:1}
++        if (( esc )); then val+=$c; esc=0; i=$((i + 1)); continue; fi
++        if [[ $c == '\' ]]; then val+=$c; esc=1; i=$((i + 1)); continue; fi
++        if [[ $c == '"' ]]; then i=$((i + 1)); break; fi
++        val+=$c; i=$((i + 1))
++      done
++    elif [[ $c == '{' || $c == '[' ]]; then
++      # nested value: skip to its matching close, strings honoured
++      stk=$c; i=$((i + 1)); esc=0; in_str=0
++      while [[ -n $stk ]]; do
++        (( i < n )) || return 1
++        c=${s:i:1}
++        if (( in_str )); then
++          if (( esc )); then esc=0
++          elif [[ $c == '\' ]]; then esc=1
++          elif [[ $c == '"' ]]; then in_str=0
++          fi
++          i=$((i + 1)); continue
++        fi
++        case "$c" in
++          '"') in_str=1 ;;
++          '{'|'[') stk+=$c ;;
++          '}'|']')
++            top=${stk: -1}
++            if [[ $c == '}' && $top == '{' ]] || [[ $c == ']' && $top == '[' ]]; then
++              stk=${stk%?}
++            else
++              return 1                     # mismatched bracket
++            fi
++            ;;
++        esac
++        i=$((i + 1))
++      done
++    else
++      # number, true, false, null: up to a delimiter
++      while (( i < n )); do
++        c=${s:i:1}
++        case "$c" in
++          [[:space:]]|','|'}'|']') break ;;
++        esac
++        val+=$c; i=$((i + 1))
++      done
++      [[ -n $val ]] || return 1
++    fi
++    # an empty member name cannot be an associative-array subscript (bash 5.3
++    # rejects ""); no read key is empty, so the table simply skips it.
++    if [[ -n $key ]]; then
++      if [[ -n ${JSON_PRESENT["$key"]+x} ]]; then
++        # keep the SECOND occurrence's value so the caller can tell an agreeing
++        # duplicate from a conflicting one
++        if [[ -z ${JSON_DUP["$key"]+x} ]]; then
++          if (( is_str )); then JSON_DUPSTR["$key"]=$val; else JSON_DUPNONSTR["$key"]=1; fi
++        fi
++        JSON_DUP["$key"]=1
++      else
++        JSON_PRESENT["$key"]=1
++        if (( is_str )); then JSON_STR["$key"]=$val; fi
++      fi
++    fi
++    # after a value only ',' (another member) or the closing brace may follow
++    while (( i < n )); do c=${s:i:1}; [[ $c == [[:space:]] ]] || break; i=$((i + 1)); done
++    (( i < n )) || return 1
++    c=${s:i:1}
++    if [[ $c == '}' ]]; then
++      i=$((i + 1))
++      while (( i < n )); do c=${s:i:1}; [[ $c == [[:space:]] ]] || break; i=$((i + 1)); done
++      (( i == n )) || return 1
++      JSON_SCAN_RC=0
++      return 0
++    fi
++    [[ $c == ',' ]] || return 1
++    i=$((i + 1)); allow_close=0
++  done
++}
++
++json_str() { # LINE KEY -> raw JSON string body of the TOP-LEVEL member; rc=1 absent/non-string
++  claim_scan "$1" || return 1
++  [[ -n ${JSON_STR["$2"]+x} ]] || return 1
++  printf '%s' "${JSON_STR["$2"]}"
+ }
+ 
+ jfield() { json_str "$1" "$2" 2>/dev/null || true; }
+ 
+-json_has_key() { # LINE KEY -> rc0: KEY appears as a JSON object key (any value type)
+-  # json_str only matches string values; presence is detected independently so a
+-  # present non-string value (number, bool, null, …) is distinguishable from an
+-  # absent key. Same shape as json_str (flat record objects), so a key appearing
+-  # inside a string value is not seen as a field.
+-  local re="\"${2}\"[[:space:]]*:"
+-  [[ $1 =~ $re ]]
++json_has_key() { # LINE KEY -> rc0: KEY is a TOP-LEVEL member of the record (any value type)
++  # presence is tracked separately from json_str so a present non-string value
++  # (number, bool, null, …) is distinguishable from an absent key, and a member
++  # inside a nested object or a key spelling inside a string value is not seen.
++  claim_scan "$1" || return 1
++  [[ -n ${JSON_PRESENT["$2"]+x} ]]
++}
++
++json_dup() { # LINE KEY -> rc0: KEY occurs more than once among the TOP-LEVEL members
++  claim_scan "$1" || return 1
++  [[ -n ${JSON_DUP["$2"]+x} ]]
+ }
+ 
+ json_unescape() { # RAW JSON string body -> decoded bytes on stdout
+@@ -1430,6 +1580,7 @@ verify_claims() {
+   local id src span expect marker observed verdict at bad l sha_pin='' sha_present='' sha_actual=''
+   local hay start_line end_line region m probe nearer tok ctx path show_id show_exp
+   local linef='' line_n=0 line_m=0 line_present=0 lbad='' bound l1 l2
++  local dup='' dupk='' show_src='' id2=''
+ 
+   scan_secrets "$claims"
+ 
+@@ -1445,12 +1596,54 @@ verify_claims() {
+       CLAIM_LINES+=("CLAIM id=line$lineno expected=- observed=invalid source=- at=- verdict=invalid")
+       continue
+     fi
+-    if ! json_str "$line" id >/dev/null 2>&1 && json_str "$line" marker_default >/dev/null 2>&1; then
++    # C1: one well-formed JSON object per record. A line the reader cannot parse
++    # (unbalanced or mismatched brackets, trailing garbage, a member name that is
++    # not a string) fails closed as invalid instead of being read by regex.
++    if ! claim_scan "$line"; then
++      N_CLAIMS=$((N_CLAIMS + 1)); N_INVALID=$((N_INVALID + 1))
++      emit_finding CLAIM_RECORD_INVALID warn claims "line=$lineno not one well-formed JSON object"
++      CLAIM_LINES+=("CLAIM id=line$lineno expected=- observed=invalid source=- at=- verdict=invalid")
++      continue
++    fi
++    # C1: a marker-default row has a top-level "marker_default" string and no
++    # top-level "id" string; a duplicated read field is never such a row.
++    if ! json_dup "$line" id && ! json_dup "$line" marker_default \
++       && ! json_str "$line" id >/dev/null 2>&1 && json_str "$line" marker_default >/dev/null 2>&1; then
+       default_marker=$(json_unescape "$(jfield "$line" marker_default)")
+       continue
+     fi
+     bad=''; observed=''; at=''; sha_present=''; sha_pin=''
+     N_CLAIMS=$((N_CLAIMS + 1))
++    # C1: a read field repeated among the top-level members makes the record
++    # invalid (RFC 8259 §4: duplicate names make receiver behaviour
++    # unpredictable), whether or not the values agree. The first duplicate in a
++    # fixed order names the reason; a duplicated "id" leaves no id to print.
++    dup=''
++    for dupk in id source span expect marker line sha256 marker_default; do
++      if json_dup "$line" "$dupk"; then dup=$dupk; break; fi
++    done
++    if [[ -n $dup ]]; then
++      N_INVALID=$((N_INVALID + 1))
++      id=$(json_unescape "$(jfield "$line" id)")
++      expect=$(json_unescape "$(jfield "$line" expect)")
++      src=$(json_unescape "$(jfield "$line" source)")
++      show_id=${id:-line$lineno}; show_exp=${expect:--}; show_src=${src:--}
++      if [[ $dup == id ]]; then
++        # a duplicated id prints that id only when the two values are
++        # byte-identical (decoded); differing or non-string values leave the id
++        # unreadable, exactly as for any other unreadable id
++        show_id=line$lineno
++        if [[ -n $id && -z ${JSON_DUPNONSTR[id]+x} && -n ${JSON_DUPSTR[id]+x} ]]; then
++          id2=$(json_unescape "${JSON_DUPSTR[id]}")
++          if [[ $id2 == "$id" ]]; then show_id=$id; fi
++        fi
++      fi
++      [[ $dup == expect ]] && show_exp=-
++      [[ $dup == source ]] && show_src=-
++      emit_finding CLAIM_RECORD_INVALID warn claims "line=$lineno duplicate top-level key $dup"
++      CLAIM_LINES+=("CLAIM id=$show_id expected=$show_exp observed=invalid source=$show_src at=- verdict=invalid")
++      continue
++    fi
+ 
+     id=$(json_unescape "$(jfield "$line" id)")
+     src=$(json_unescape "$(jfield "$line" source)")
+@@ -7355,18 +7548,86 @@ EOF
+     printf '%s\n' "$r2_ctl_out" "$r2_fault_out" | sed 's/^/    | /'
+     failures=$((failures + 1))
+   fi
+-  # Nested-key contract, half the landed gate honours: a key spelling inside a
+-  # STRING value is not a field (json_has_key/json_str: "a key appearing inside a
+-  # string value is not seen as a field"). Note the object form {"meta":{"line":
+-  # "9"}} is NOT honoured by the landed gate: it is read as the record's own key
+-  # (observed line=9-9). That half is a measured contract violation, reported in
+-  # .ufo/waves/round-32/w1/ExecR2Selftest31.md and left unfixed here (R2 is the
+-  # detector half; a case asserting the contract must wait for the fix).
++  # Nested-key contract, string half: a key spelling inside a STRING value is not
++  # a field. The object half ({"meta":{"line":"9"}} read as the record's own key
++  # until round 32, .ufo/waves/round-32/w1/ExecR2Selftest31.md) is fixed by the
++  # round-33 top-level reader (claim_scan) and asserted by the r33-top-* cases
++  # at the end of the selftest.
+   printf '{"id":"NS1","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","note":"{\\"line\\":\\"9\\"}"}\n' \
+     >"$WORK/claims-r2-nested-string.jsonl"
+   tclaims claims-r2-nested-string 0 \
+     'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=1/1' \
+     'CLAIM id=NS1 expected=supported observed=supported source=lib/span.md at=line:1 verdict=match'
++  # ---- round-33 C1 selftest cases (top-level field reader) ----
++  # A claim's read fields are members of its top-level object only: a member of
++  # the same name inside a nested object or array changes nothing, characters
++  # inside a string value are never structure, and a read field repeated among
++  # the top-level members makes the record invalid (corpus/evidence/round33/
++  # claims.md, C1 contract). Each case below was measured on the landed gate
++  # (the nested decoy reads as the record's field there) and on this reader.
++  cat >"$WORK/r33-top-nested-line.jsonl" <<'EOF'
++{"id":"NB1","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","meta":{"line":"9"},"line":"1"}
++EOF
++  tclaims r33-top-nested-line 0 \
++    'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=1/1' \
++    'CLAIM id=NB1 expected=supported observed=supported source=lib/span.md at=line:1 verdict=match'
++  # nested-only sha256 names a wrong pin: with no top-level sha256 the claim has
++  # no pin and reads supported (a nested member is never the record's field).
++  cat >"$WORK/r33-top-nested-sha.jsonl" <<'EOF'
++{"id":"NB2","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","meta":{"sha256":"0000000000000000000000000000000000000000000000000000000000000000"}}
++EOF
++  tclaims r33-top-nested-sha 0 \
++    'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=1/1' \
++    'CLAIM id=NB2 expected=supported observed=supported source=lib/span.md at=line:1 verdict=match'
++  # nested "id" decoy before the top-level id: the CLAIM line names the
++  # top-level id, never the nested one.
++  cat >"$WORK/r33-top-nested-id.jsonl" <<'EOF'
++{"meta":{"id":"FAKEID"},"id":"NB3","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported"}
++EOF
++  tclaims r33-top-nested-id 0 \
++    'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=1/1' \
++    'CLAIM id=NB3 expected=supported observed=supported source=lib/span.md at=line:1 verdict=match'
++  # duplicated top-level "line" (agreeing or not): invalid, top-level id kept.
++  cat >"$WORK/r33-top-dup-line.jsonl" <<'EOF'
++{"id":"DP1","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","line":"1","line":"9"}
++EOF
++  tclaims r33-top-dup-line 1 \
++    'RESEARCH_GATE: DRIFT' 'FINDING CLAIM_RECORD_INVALID severity=warn surface=claims' \
++    'duplicate top-level key line' \
++    'CLAIM id=DP1 expected=supported observed=invalid source=lib/span.md at=- verdict=invalid' \
++    'VERDICT_BEARING_CLAIMS=0/1' \
++    'claims=1 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=1 findings=1 drift=1'
++  # flat string confuser: braces, a bracket, a comma and a trailing escaped
++  # backslash inside a string value are string content; the string ends at the
++  # quote after \\, so the top-level "line" is still read.
++  cat >"$WORK/r33-top-confuser-flat.jsonl" <<'EOF'
++{"id":"FC1","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","note":"open { brace [ bracket , ends with a backslash \\","line":"1"}
++EOF
++  tclaims r33-top-confuser-flat 0 \
++    'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=1/1' \
++    'CLAIM id=FC1 expected=supported observed=supported source=lib/span.md at=line:1 verdict=match'
++  # nested confuser container (a string holding } and ] then a wrong nested
++  # "line") before the top-level "line": the container is skipped whole.
++  cat >"$WORK/r33-top-confuser-nested.jsonl" <<'EOF'
++{"id":"FC2","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","meta":{"note":"close } brace ] bracket { open","line":"9"},"line":"1"}
++EOF
++  tclaims r33-top-confuser-nested 0 \
++    'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=1/1' \
++    'CLAIM id=FC2 expected=supported observed=supported source=lib/span.md at=line:1 verdict=match'
++  # duplicated "id": both records are invalid; the CLAIM line keeps the id when
++  # the two values are byte-identical and falls back to id=line<N> when they
++  # differ (the id is then as unreadable as any other).
++  cat >"$WORK/r33-top-dup-id.jsonl" <<'EOF'
++{"id":"DI1","id":"DI1","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported"}
++{"id":"DI2","id":"DI3","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported"}
++EOF
++  tclaims r33-top-dup-id 1 \
++    'RESEARCH_GATE: DRIFT' 'FINDING CLAIM_RECORD_INVALID severity=warn surface=claims' \
++    'duplicate top-level key id' \
++    'CLAIM id=DI1 expected=supported observed=invalid source=lib/span.md at=- verdict=invalid' \
++    'CLAIM id=line2 expected=supported observed=invalid source=lib/span.md at=- verdict=invalid' \
++    'VERDICT_BEARING_CLAIMS=0/2' \
++    'claims=2 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=2 findings=2 drift=2'
+ 
+   if [[ $failures -eq 0 ]]; then
+     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"

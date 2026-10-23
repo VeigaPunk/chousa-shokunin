@@ -1,0 +1,25 @@
+research-gate v2 — ts=2026-10-23T09:09:28Z — mode=claims — claims=probe-root/missing-nested.jsonl
+CLAIM id=line1 expected=supported observed=invalid source=src/a.md at=- verdict=invalid
+CLAIM id=G2 expected=supported observed=invalid source=- at=- verdict=invalid
+CLAIM id=G3 expected=supported observed=invalid source=src/a.md at=- verdict=invalid
+CLAIM id=G4 expected=- observed=invalid source=src/a.md at=- verdict=invalid
+CLAIM id=G5 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=G6 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=G7 expected=contradicted observed=unproven source=src/a.md at=line:3 verdict=mismatch
+CLAIM id=G8 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=G9 expected=supported observed=invalid source=src/a.md at=- verdict=invalid
+CLAIM id=G10 expected=supported observed=invalid source=src/a.md at=- verdict=invalid
+CLAIM id=G11 expected=supported observed=supported source=src/a.md at=line:2 verdict=match
+CLAIM id=G12 expected=supported observed=invalid source=src/a.md at=- verdict=invalid
+CLAIM id=G13 expected=supported observed=invalid source=src/a.md at=- verdict=invalid
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=1 missing id
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=2 missing source
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=3 missing/empty span
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=4 missing expect
+FINDING CONTRADICTION_MARKER_ABSENT severity=warn surface=claims obs=id=G7 at=line:3 no marker defined (per-claim or marker_default)
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=9 line not a JSON string
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=10 sha256 malformed (not 64 lowercase hex characters)
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=12 line not a JSON string
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=13 sha256 malformed (not 64 lowercase hex characters)
+VERDICT_BEARING_CLAIMS=4/13
+RESEARCH_GATE: DRIFT (claims=13 supported=4 contradicted=0 unsupported=0 mismatched=1 unproven=1 refused=0 invalid=8 findings=9 drift=9)

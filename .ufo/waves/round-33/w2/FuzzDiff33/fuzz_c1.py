@@ -389,12 +389,22 @@ def ref_verdict(line, root):
     idxs = occurrences(text, span)
     if not idxs:
         return "unsupported"
+    starts = [text.count("\n", 0, i) + 1 for i in idxs]
+    ends = [text.count("\n", 0, i + len(span)) + 1 for i in idxs]
     if line_range is not None:
-        starts = [text.count("\n", 0, i) + 1 for i in idxs]
-        ends = [text.count("\n", 0, i + len(span)) + 1 for i in idxs]
-        if any(a == line_range[0] and b == line_range[1] for a, b in zip(starts, ends)):
-            return "supported"
-        return "mislocated"
+        hit = [i for i, (a, b) in enumerate(zip(starts, ends))
+               if a == line_range[0] and b == line_range[1]]
+        if not hit:
+            return "mislocated"
+        k = hit[0]
+    else:
+        k = 0
+    if exp == "contradicted":   # base behaviour, only reachable from minimized lines
+        region = "\n".join(text.split("\n")[starts[k] - 1:ends[k]])
+        m = d.get("marker")
+        if isinstance(m, str) and m and m in region:
+            return "contradicted"
+        return "unproven"
     return "supported"
 
 
@@ -436,6 +446,15 @@ def observe_one(ctx, line):
     return got, out
 
 
+def deep_obj(v):
+    """Pairs -> Obj recursively, so re-serialization keeps objects as objects."""
+    if isinstance(v, Pairs):
+        return Obj([(k, deep_obj(x)) for k, x in v])
+    if isinstance(v, list):
+        return [deep_obj(x) for x in v]
+    return v
+
+
 def minimize(ctx, line):
     cur = line
 
@@ -444,8 +463,8 @@ def minimize(ctx, line):
 
     if not disagree(cur):
         return cur
-    obj = json.loads(cur, object_pairs_hook=Pairs)
-    cur_obj = Obj(list(obj))
+    obj = deep_obj(json.loads(cur, object_pairs_hook=Pairs))
+    cur_obj = Obj(list(obj.pairs))
     # 1) drop top-level members except one string id
     changed = True
     guard = 0
@@ -454,7 +473,7 @@ def minimize(ctx, line):
         guard += 1
         base = ser(cur_obj, ctx["rng"], bare=True)
         if not disagree(base):
-            cur_obj = Obj(obj)  # restore (should not happen)
+            cur_obj = Obj(list(obj.pairs))  # restore (should not happen)
             break
         for i in range(len(cur_obj.pairs) - 1, -1, -1):
             if cur_obj.pairs[i][0] == "id":
@@ -475,9 +494,8 @@ def minimize(ctx, line):
                     cur_obj = cand
                     break
     cur = ser(cur_obj, ctx["rng"], bare=True)
-    # 3) collapse whitespace / duplicates left by serialization
-    if disagree(cur):
-        pass
+    if not disagree(cur):  # never report a reduction that stopped disagreeing
+        return ser(deep_obj(json.loads(line, object_pairs_hook=Pairs)), ctx["rng"], bare=True)
     return cur
 
 
@@ -489,6 +507,7 @@ def main():
     ap.add_argument("--n", type=int, default=650)
     ap.add_argument("--flat", type=int, default=60, help="flat calibration records (no nesting/dups)")
     ap.add_argument("--out", required=True)
+    ap.add_argument("--max-min", type=int, default=8, help="delta-minimize at most this many mismatches")
     a = ap.parse_args()
     rng = random.Random(a.seed)
     gen = Gen(rng)
@@ -629,7 +648,7 @@ def main():
             mismatches.append({"n": idx, "id": cid, "kind": kind, "ref": ref, "gate": got,
                                "nclaim": n, "line": line, "gate_id_label": src_label})
 
-    for mm in mismatches:
+    for mm in mismatches[:a.max_min]:
         try:
             mm["minimal"] = minimize(ctx, mm["line"])
             mm["minimal_ref"] = ref_verdict(mm["minimal"], root)

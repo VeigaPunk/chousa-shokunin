@@ -1150,6 +1150,15 @@ claim_scan() { # LINE -> JSON_* tables + JSON_SCAN_RC; rc0: one well-formed obje
   # post-falsify: ProbeFlatBehaviour33, ProbeMalformed33, CriticClaim33).
   local ws=$' \t\r\n'
   local lit='^(true|false|null|-?(0|[1-9][0-9]*)(\.[0-9]+)?([eE][+-]?[0-9]+)?)$'
+  # Runs are consumed with one regex match each, not one ${s:i:1} per byte: a
+  # substring costs time in the line length, so a byte loop is quadratic in it
+  # (r33 post-falsify: ProbeLongLines33, 64 KiB unread member 0.07 s -> 4.7 s).
+  local strrun='^[^"\\]+'                      # string body up to " or backslash
+  local tokrun=$'^[^][{}",: \t\r\n]+'          # bare token inside a nested value
+  local wsrun=$'^[ \t\r\n]+'
+  # an escape is one of \" \\ \/ \b \f \n \r \t or \u + four hex digits (RFC 8259
+  # §7); anything else is malformed (r33 post-falsify: MutC1GateString, "\q")
+  local escok='^\\(["\\/bfnrt]|u[0-9A-Fa-f]{4})'
   # leading whitespace, then the single opening brace
   while (( i < n )); do c=${s:i:1}; [[ $c == [$ws] ]] || break; i=$((i + 1)); done
   (( i < n )) && [[ ${s:i:1} == '{' ]] || return 1
@@ -1170,14 +1179,18 @@ claim_scan() { # LINE -> JSON_* tables + JSON_SCAN_RC; rc0: one well-formed obje
     [[ $c == '"' ]] || return 1            # a member name is a JSON string
     # member name: raw text, escapes intact, so a key spelled with an escape
     # (the not-claimed "l\u0069ne") is not read as the plain key
-    key=''; i=$((i + 1)); esc=0
+    key=''; i=$((i + 1))
     while :; do
       (( i < n )) || return 1
+      if [[ ${s:i} =~ $strrun ]]; then
+        key+=${BASH_REMATCH[0]}; i=$((i + ${#BASH_REMATCH[0]})); continue
+      fi
       c=${s:i:1}
-      if (( esc )); then key+=$c; esc=0; i=$((i + 1)); continue; fi
-      if [[ $c == '\' ]]; then key+=$c; esc=1; i=$((i + 1)); continue; fi
-      if [[ $c == '"' ]]; then i=$((i + 1)); break; fi
-      key+=$c; i=$((i + 1))
+      if [[ $c == '\' ]]; then
+        [[ ${s:i:6} =~ $escok ]] || return 1
+        key+=${s:i:2}; i=$((i + 2)); continue
+      fi
+      i=$((i + 1)); break                   # the closing quote
     done
     # colon
     while (( i < n )); do c=${s:i:1}; [[ $c == [$ws] ]] || break; i=$((i + 1)); done
@@ -1188,29 +1201,43 @@ claim_scan() { # LINE -> JSON_* tables + JSON_SCAN_RC; rc0: one well-formed obje
     c=${s:i:1}; val=''; is_str=0
     if [[ $c == '"' ]]; then
       # string value: raw body with escapes intact
-      is_str=1; i=$((i + 1)); esc=0
+      is_str=1; i=$((i + 1))
       while :; do
         (( i < n )) || return 1
+        if [[ ${s:i} =~ $strrun ]]; then
+          val+=${BASH_REMATCH[0]}; i=$((i + ${#BASH_REMATCH[0]})); continue
+        fi
         c=${s:i:1}
-        if (( esc )); then val+=$c; esc=0; i=$((i + 1)); continue; fi
-        if [[ $c == '\' ]]; then val+=$c; esc=1; i=$((i + 1)); continue; fi
-        if [[ $c == '"' ]]; then i=$((i + 1)); break; fi
-        val+=$c; i=$((i + 1))
+        if [[ $c == '\' ]]; then
+          [[ ${s:i:6} =~ $escok ]] || return 1
+          val+=${s:i:2}; i=$((i + 2)); continue
+        fi
+        i=$((i + 1)); break                 # the closing quote
       done
     elif [[ $c == '{' || $c == '[' ]]; then
       # nested value: skip to its matching close, strings honoured; every bare
       # token outside strings must be one JSON literal or number
-      stk=$c; i=$((i + 1)); esc=0; in_str=0; tok=''
+      stk=$c; i=$((i + 1)); in_str=0; tok=''
       while [[ -n $stk ]]; do
         (( i < n )) || return 1
-        c=${s:i:1}
         if (( in_str )); then
-          if (( esc )); then esc=0
-          elif [[ $c == '\' ]]; then esc=1
-          elif [[ $c == '"' ]]; then in_str=0
+          if [[ ${s:i} =~ $strrun ]]; then i=$((i + ${#BASH_REMATCH[0]})); continue; fi
+          c=${s:i:1}
+          if [[ $c == '\' ]]; then
+            [[ ${s:i:6} =~ $escok ]] || return 1
+            i=$((i + 2)); continue
           fi
-          i=$((i + 1)); continue
+          in_str=0; i=$((i + 1)); continue  # the closing quote
         fi
+        if [[ ${s:i} =~ $tokrun ]]; then
+          tok+=${BASH_REMATCH[0]}; i=$((i + ${#BASH_REMATCH[0]})); continue
+        fi
+        if [[ ${s:i} =~ $wsrun ]]; then
+          i=$((i + ${#BASH_REMATCH[0]}))     # before the literal test reuses BASH_REMATCH
+          [[ -z $tok || $tok =~ $lit ]] || return 1
+          tok=''; continue
+        fi
+        c=${s:i:1}
         case "$c" in
           '"'|'{'|'['|'}'|']'|','|':'|' '|$'\t'|$'\r'|$'\n')
             if [[ -n $tok ]]; then
@@ -7696,6 +7723,26 @@ EOF
     'CLAIM id=line3 expected=supported observed=invalid source=lib/span.md at=- verdict=invalid' \
     'CLAIM id=PN4 expected=supported observed=supported source=lib/span.md at=line:1 verdict=match' \
     'claims=4 supported=1 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=3 findings=3 drift=3'
+  # An escape outside RFC 8259 §7 ("\q", "\x", a short "\u12") is malformed in a
+  # member name, a string value or a nested string; valid escapes (including a
+  # surrogate pair) and a 20 KiB unread member still verify (the reader consumes
+  # runs with one regex match each, r33 post-falsify).
+  printf '%s\n' \
+    '{"id":"PE1","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","n":"a\q"}' \
+    '{"id":"PE2","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","m":["\x"]}' \
+    '{"id":"PE3","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","n":"\u12"}' \
+    '{"id":"PE4","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","n":"a\u00e9\n\t\/\\\"z","m":{"k":"\uD83D\uDE00"}}' \
+    >"$WORK/r33-post-escapes.jsonl"
+  printf '{"id":"PE5","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","pad":"%s"}\n' \
+    "$(printf '%*s' 20480 '' | tr ' ' w)" >>"$WORK/r33-post-escapes.jsonl"
+  tclaims r33-post-escapes 1 \
+    'RESEARCH_GATE: DRIFT' \
+    'CLAIM id=line1 expected=- observed=invalid source=- at=- verdict=invalid' \
+    'CLAIM id=line2 expected=- observed=invalid source=- at=- verdict=invalid' \
+    'CLAIM id=line3 expected=- observed=invalid source=- at=- verdict=invalid' \
+    'CLAIM id=PE4 expected=supported observed=supported source=lib/span.md at=line:1 verdict=match' \
+    'CLAIM id=PE5 expected=supported observed=supported source=lib/span.md at=line:1 verdict=match' \
+    'claims=5 supported=2 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=3 findings=3 drift=3'
 
   if [[ $failures -eq 0 ]]; then
     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"

@@ -21,15 +21,19 @@ LAND = "94a7be5a54dd5cebd9532f2417c4eaedc401c9a0646029dcca8acc445378506e"
 
 
 def walk(obj, ptr, out):
-    if isinstance(obj, dict):
-        lab = obj.get("label")
-        if isinstance(lab, str) and lab.startswith("TOPLEVEL_FIELD_MATCH"):
-            out.append((ptr or "/", obj))
-        for k, v in obj.items():
-            walk(v, ptr + "/" + str(k), out)
-    elif isinstance(obj, list):
-        for i, v in enumerate(obj):
-            walk(v, ptr + "/" + str(i), out)
+    """Iterative walk: committed hostile fixtures include 10-000-deep JSON."""
+    stack = [(obj, ptr)]
+    while stack:
+        o, p = stack.pop()
+        if isinstance(o, dict):
+            lab = o.get("label")
+            if isinstance(lab, str) and lab.startswith("TOPLEVEL_FIELD_MATCH"):
+                out.append((p or "/", o))
+            for k, v in o.items():
+                stack.append((v, p + "/" + str(k)))
+        elif isinstance(o, list):
+            for i, v in enumerate(o):
+                stack.append((v, p + "/" + str(i)))
 
 
 def main():
@@ -48,10 +52,17 @@ def main():
             unparsable.append((rel, "READ:" + str(e)))
             continue
         found = []
+        if not rel.endswith(".json"):
+            # Fixtures (.jsonl, .out, ...) are never receipts; record label
+            # lines as text hits only.
+            if b"TOPLEVEL_FIELD_MATCH" in raw:
+                for n, line in enumerate(raw.splitlines(), 1):
+                    if b"TOPLEVEL_FIELD_MATCH" in line:
+                        text_hits.append((rel, n, line.decode("utf-8", "replace")[:200]))
+            continue
         try:
             data = json.loads(raw)
         except Exception:
-            data = None
             if b"TOPLEVEL_FIELD_MATCH" in raw:
                 for n, line in enumerate(raw.splitlines(), 1):
                     if b"TOPLEVEL_FIELD_MATCH" in line:

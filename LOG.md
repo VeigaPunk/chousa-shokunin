@@ -1249,3 +1249,19 @@ which broke both v1 counters → design v2 `3d586d3a` before data; control recei
 C1 `APPEND_SERIALIZED` 0/24 → 24/24 (final gate `f4731885`); C2 `EXEMPT_AUDIT_MATCH` 0/132 →
 132/132 but not verified (a metadata-order control also scores 132/132; CriticAxis32). Sources
 S060–S061; QUALITY 33–35; R1–R6 repairs. Lesson: `corpus/lessons/round-32.md`.
+
+## Round 33 — 2026-10-23 (hyaku in-session L1, attempt 1)
+
+- Claim C1 operability: `verify-claims` reads claim fields from the top-level JSON object only
+  (round-31 carry, round-32 D4). Design v1 `3b528b9a`, v2 `e3e24ec8` (pre-data critic found a
+  three-of-seven-key duplicate class and an unchecked exit). Base 60/156 → 156/156 on every
+  landed-gate run. Post-data, a gate keyed on the counter's six fixed confuser strings also
+  scored 156/156 (`w2/L1ShortcutMask`), so the counter does not verify clause 3; the counter was
+  not changed. Differential fuzz 1950/1950 on the final gate.
+- Falsify wave repairs: bare-token, FF/VT, invalid-escape and escaped-NUL fail-opens; marker_default
+  rows with repeats; three-repeat id display; quadratic cost on long members (64 KiB unread member
+  4.7 s → 0.11 s). Final gate `43a1af35…`, selftest 251.
+- Repairs D1 (exempt-hop counter v3), D2 (census: 21, not 18 or 20), D3 (battery header), D5
+  (no-name-signals check). QUALITY 36–41. S062, S063.
+- Motivating evidence: `corpus/lessons/round-32-verifier-spotcheck.md:152-169`;
+  `corpus/lessons/round-33.md`.

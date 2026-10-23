@@ -1,0 +1,37 @@
+# ProbeDupVariants33 artifact manifest
+
+provenance: probes/*.base.out = base gate f4731885; probes/*.landed.out = pinned landed 94a7be5a
+            probes/*.oracle.out = .ufo/waves/round-33/controls/L1-design/oracle-gate.sh (read-only)
+            probes2/ same, second battery (12 probes)
+            summary-pinned.txt / summary2-pinned.txt = the pinned-run tables reproduced in the report
+            summary-wt-*.txt / summary-wt2-*.txt = later working-tree snapshots (context only)
+
+gates (sha256):
+f4731885ac0f83076210be364fd443a4378ac88c3b3ef94b5bf1c9e380f003f0  base-gate.sh
+94a7be5a54dd5cebd9532f2417c4eaedc401c9a0646029dcca8acc445378506e  landed-gate-94a7be5a.sh
+154f7d3d82a9a4ffdc2c21470d5cf8c97bfbdfda7dd45f0a6944a45f42d1b4ec  wt-gate-154f7d3d.sh
+165acd5f6cebfb1d0a179f75572315ae6458ae330fdfc1f1ac412c36478a3563  wt2-gate.sh
+
+lane drift during wave: start tip 0fb300b (gate 94a7be5a, 7742 lines); then tip 4c076a0 with a dirty gate at b808e9b5e6d3…e55e4 (mtime 06:10:45, 351298 bytes) and 154f7d3d82a9…b4ec seconds later (7763 lines); at report time tip 0cad05e and gate 165acd5f6ceb…3563 (354607 bytes)
+
+counter receipts (landed gate 94a7be5a only):
+9dcaf4f9f2a083007d8f63203ee20504b1a84ce3f9f5539df07150991e857f97  /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/ProbeDupVariants33/c1-landed-s4401.json
+8824db472feacab054fcf262ecb092ddb636040a01f04c80de0facac9f4f0653  /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/ProbeDupVariants33/c1-landed-s4402.json
+
+tables/drivers:
+bcb6d10e1a1155ecaa44310c3b9a4815c9d27a99ea675e95f87a6c0d587ecf3b  summary-pinned.txt
+750896b4600c2a5cceb9334d1db1f6f6dabdaf6ee3ebad120eb5103774b96c66  summary2-pinned.txt
+b6df5369e4001877149072a5e4cbf68c9042f537d8147e8f1068ae1de84f6316  summary-wt-154f7d3d.txt
+855fffd8f49794f0189d93d75610d3e383733191cc4a4f96f035a9224adddf53  summary2-wt-154f7d3d.txt
+b6df5369e4001877149072a5e4cbf68c9042f537d8147e8f1068ae1de84f6316  summary-wt2-165acd5f.txt
+855fffd8f49794f0189d93d75610d3e383733191cc4a4f96f035a9224adddf53  summary2-wt2-165acd5f.txt
+a9bd6f1a18031d15cdfccda06d8a6dd83cd05f0a3a57dd6d68c11ead30cb0f2e  drive.py
+91082af3032e8ae4983ec2b198ef7aa2b3510851932f0e6221a2f3c89deeb36b  drive2.py
+
+run commands:
+  git -C LANE show 2b9cc73aed30c2e2c95699db6617d9531ef49fb2:tools/research-gate.sh > base-gate.sh
+  git -C LANE show 0fb300b5c27900ab8bb3abeb5f54776d71e04beb:tools/research-gate.sh > landed-gate-94a7be5a.sh
+  LANDED_GATE=$PWD/landed-gate-94a7be5a.sh python3 drive.py   (and drive2.py)
+  LANDED_GATE=$PWD/wt-gate-154f7d3d.sh python3 drive.py        (and drive2.py)
+  LANDED_GATE=$PWD/wt2-gate.sh python3 drive.py               (and drive2.py)
+  bash <gate> verify-claims probes/<p>.jsonl --root root

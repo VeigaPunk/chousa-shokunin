@@ -1,0 +1,30 @@
+{
+  "scratch_backup": "/fast/scratch/hyaku/chousa-r33/w2/MutC1GateDepth/research-gate.sh",
+  "scratch_restored": "/fast/scratch/hyaku/chousa-r33/w2/MutC1GateDepth/repo/tools/research-gate.sh",
+  "backup_and_restored_sha256": "94a7be5a54dd5cebd9532f2417c4eaedc401c9a0646029dcca8acc445378506e",
+  "exact_byte_comparison": {
+    "command": "timeout 10 cmp -- /fast/scratch/hyaku/chousa-r33/w2/MutC1GateDepth/research-gate.sh /fast/scratch/hyaku/chousa-r33/w2/MutC1GateDepth/repo/tools/research-gate.sh",
+    "exit": 0,
+    "stdout": ""
+  },
+  "subsequent_live_lane_comparison": {
+    "command": "timeout 10 cmp -- /fast/scratch/hyaku/chousa-r33/w2/MutC1GateDepth/repo/tools/research-gate.sh /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh",
+    "exit": 1,
+    "stdout": "/fast/scratch/hyaku/chousa-r33/w2/MutC1GateDepth/repo/tools/research-gate.sh /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh differ: char 54728, line 1120",
+    "live_lane_sha256_observed_after_comparison": "165acd5f6cebfb1d0a179f75572315ae6458ae330fdfc1f1ac412c36478a3563",
+    "note": "The lane gate changed during the probe. This seat never wrote lane tools/. The scratch gate is restored to the assigned original target, not overwritten with the later lane revision; the later revision was not scored here."
+  },
+  "restored_detector_runs": ["a-restored-b-before", "b-restored-c-before", "c-restored-d-before", "d-restored-e-before", "e-restored"],
+  "restored_detector_result": "Each run has gate_sha256_before == gate_sha256_after == the assigned pristine hash, counter 156/156 exit 0, selftest PASS (248 cases, 0 skipped) exit 0; see the corresponding .run.json and .counter.json files.",
+  "base_extraction": {
+    "command": "timeout 30 git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 2b9cc73aed30c2e2c95699db6617d9531ef49fb2:tools/research-gate.sh",
+    "stdout_file": "/fast/scratch/hyaku/chousa-r33/w2/MutC1GateDepth/base-gate.sh",
+    "exit": 0,
+    "bytes": 336677,
+    "sha256": "f4731885ac0f83076210be364fd443a4378ac88c3b3ef94b5bf1c9e380f003f0"
+  },
+  "installs_or_updates": [],
+  "network_requests": 0,
+  "intentional_background_jobs": 0,
+  "tool_automatic_background_jobs": {"bg_4229":"completed", "bg_4321":"completed", "bg_4356":"completed"}
+}
