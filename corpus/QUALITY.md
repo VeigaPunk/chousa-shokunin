@@ -317,3 +317,28 @@ the admitted entry that motivates it. Tier definitions live in
     the gate SHA-256 it measured. Check: no committed counter receipt names a gate SHA-256 that
     matches no committed revision. Shown able to fail: `.ufo/waves/round-33/w2/ReviewC1Diff/c1-v2-s4117.json`
     (gate `b808e9b5…`, 0/156, a half-written edit). — `lessons/round-33.md`.
+
+42. **Measurements are bound to committed gate bytes.** A receipt supports a claim about a committed
+    gate only when its `gate_sha256` equals the SHA-256 of a committed `tools/research-gate.sh` blob
+    (or a committed control script); otherwise it is re-run on the intended bytes or labelled
+    non-revision evidence. Check: `python3 .ufo/waves/round-34/w1/ExecE4Census/receipt-binding.py
+    <wave dir>` lists every `UNBOUND` receipt and exits 1 when one is labelled landed/final. Shown
+    able to fail: on `.ufo/waves/round-33` it exits 1 and lists `measure/final/fz-9021{2,3,4}.json`
+    (`b2c07eda…`) and five wave-2 `c1-landed` receipts. Routed E1/E4,
+    `lessons/round-33-verifier-spotcheck.md:157-171`. — `lessons/round-34.md`.
+
+43. **A misrooted copy has committed byte-identity proof before deletion.** Before deleting a
+    fleet-root copy moved into the lane, commit a file naming both paths with each copy's SHA-256;
+    that commit precedes the deletion. Check: the deletion's round has a committed pair file; none
+    fails. Shown able to fail: round 33's SentinelParser33 move has only a prose `cmp` statement
+    (`lessons/round-33.md`, misroot paragraph). Routed E5. — `lessons/round-34.md`.
+
+44. **A held control is never re-authored; its claim is declared unverified before data.** When a
+    required control seat ends on a provider safety hold, nobody (the L1 included) rebuilds that
+    control or a substantially equivalent one; the claim that needed it is recorded as unverified in
+    the frozen design before any candidate receipt, and any artifact already re-authored is listed
+    as excluded. Check: every held seat named in the round's registry has no re-authored control
+    cited as evidence, and the claims file carries the exclusion record before the first candidate
+    receipt. Shown able to fail: round-34 commit `ef16afb1` carried L1-built controls for the held
+    CtlC1Shortcut/Windows/Halves shapes with no exclusion record (added in `f20aeaa7`, before the
+    candidate receipts of `934d7cb7`). — `lessons/round-34.md`.

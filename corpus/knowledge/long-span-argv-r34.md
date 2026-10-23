@@ -34,7 +34,13 @@ and 18.1 s building the hex pattern, both quadratic in the span length (bash `${
   round-31 line binding works on long spans.
 - `json_unescape` and the hex-pattern build consume runs per regex match instead of one byte per
   step (linear; byte-identical on 615 differential inputs in the builder's probe).
-- Selftest cases 252–253: long verbatim/mutated/glued spans and long-span `"line"` binding.
+- Selftest cases 252–253 use a 29999-byte span, so they exercise the direct path only, not the
+  chunk matcher (R34ReviewPatchC); the long path's evidence is counter v3 (42/42 ×3 by the L1,
+  ×5 more by R34RerunC1v3 and R34ReviewPatchC on fresh seeds).
+- Open defect below the claim floor: the direct path still compiles a whole-span PCRE pattern, and
+  PCRE2's ceiling is content-dependent — spans of about 32762–32767 bytes (and, per ExecC1BuildC,
+  from about 28000 bytes for escape-diverse content) fail with "regular expression is too large"
+  and read `unsupported`, as at base. Routed to the next round.
 
 ## What the round-34 counter checks, and what it cannot
 

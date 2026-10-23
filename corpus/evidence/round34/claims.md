@@ -190,3 +190,23 @@ candidate is still built, landed and measured with counter v3 as independent ope
 38, shoulder-blind three-region compare 34–35. The do-nothing control (base gate) under v3 and the
 wave-1 seats' own control gates (non-held seats) are scored by the L1 before the first candidate
 receipt (`controls/L1-base/`, `controls/L1-v3-rescore/`).
+
+## Erratum (after data; evidence pointers only — counter v3, TOTAL, P1 v3 and the verdict rule unchanged)
+
+Found by R34CritClaim (`.ufo/waves/round-34/w2/R34CritClaim.md`):
+- The v2 section's sentence that a v2 do-nothing receipt (`controls/L1-base/`) and v2 seat
+  re-scores (`controls/L1-v2-rescore/`) would be committed before the first candidate receipt was
+  never fulfilled: v2 was superseded by v3 before those runs were made. `controls/L1-base/` holds
+  only the v1 receipt (19/30). The v3 do-nothing receipts are in `controls/L1-base-v3/` (25/42
+  under `LC_ALL=C`; 0/42 ×2 by timeout in the UTF-8 locale), not `controls/L1-base/` as the v3
+  paragraph says; the v3 seat re-scores are in `controls/L1-v3-rescore/`.
+- The L1 control receipts bind the wrapper script (`ctl-*.sh`), which `exec`s a python helper at a
+  scratch path; `L1-gates/SHA256SUMS` hashes the helpers, but no receipt proves which helper bytes
+  ran. The L1 control scores are diagnostic, not independent proof of control closure.
+- `shoulder_ctl.py` was derived from `window_frac.py` (an excluded window-family helper). It is
+  moved to the exclusion list with the window family. Counter v3's docstring still names held-seat
+  material in its design history (CritC1AxisFit's note; v2's held-control motivation); CritC1Shapes
+  (`w1/CritC1Shapes.md`, completed) independently records the 65009-byte bound.
+- Two counter-v3 receipts at 42/42 on the landed gate (`measure/c1v3-s3601.json`,
+  `c1v3-s3602.json`) meet the numerical P1 v3; C1 stays `unverified (required controls held)` as
+  declared before data.

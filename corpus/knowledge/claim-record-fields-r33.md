@@ -96,4 +96,8 @@ Clause 3 (string content is never structure) now also has a counter whose confus
 per seed: `corpus/evidence/round33/c1-count-v3.py` (QUALITY 40). Scored in this order: the mask gate
 155/156 on seeds 9401 and 9402 (it misses), the round-32 base 60/156, the landed round-33 gate 156/156
 on seeds 9404 and 9405 (`.ufo/waves/round-34/w1/ExecE2Counter/`). This is a repair re-scoring a rule
-already held, not a new claim; the mask gate misses by one record per seed, so the margin is narrow.
+already held, not a new claim. **It does not close E2:** R34ReviewRepairs re-ran the same counter
+and the mask gate scored 156/156 on fresh seed 61111 (twice) while missing on 9401
+(`.ufo/waves/round-34/w2/R34ReviewRepairs.md`). Per-seed confusers make the mask miss only when a
+generated confuser happens to break its regex strip; clause 3 still has no counter that every
+lexer-less mask fails.
