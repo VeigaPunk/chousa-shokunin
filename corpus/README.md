@@ -960,7 +960,7 @@ The Round30 held-ground change is limited to pages that omit `</head>` (C1). C2 
 Moved from frontier to held ground, measured on a synthetic fixture: a claim that names the line
 or line range its span sits on (`"line"`; C1, `LINE_BINDING_MATCH` 50/120 to 120/120) and a claim
 pinned to the SHA-256 of the exact source bytes it was made against (`"sha256"`; C2,
-`REVISION_BINDING_MATCH` 50/120 to 120/120), both in `verify-claims` at lane revision `6d0ae19f`;
+`REVISION_BINDING_MATCH` 50/120 to 120/120), both in `verify-claims` (round 32 correction, R4: first landed at `6d0ae19f`, superseded by the C2 fixes; the final round-31 gate is at `23536590`/`25c5bb70`, gate SHA-256 `0bc318b3…1258`);
 `knowledge/line-binding-r31.md`, `knowledge/revision-binding-r31.md`, sources S057 to S059.
 Still open: line binding for records' `## Claims` table pointers (`path:N`) in `verify` mode,
 chain hops, uniqueness, and whether the named line is the right one for the claim's meaning; a

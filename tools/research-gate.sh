@@ -101,18 +101,31 @@
 # whitespace trimmed). Anchor comes from an `anchor_kind`+`anchor` column pair
 # or from a `to` fragment: path#kind:text (a bare #text reads as a heading).
 # Unresolved/marked hops (unresolved blocked-no-fetch rejected labelled-dead
-# not-applicable) stay exempt but counted. Per hop:
+# not-applicable) are exempt from resolution but counted. A hop whose status
+# says it could not be followed (unresolved blocked-no-fetch labelled-dead) is
+# audited against the same citation/source/boundary/anchor rules the resolved
+# arm applies, silently: when its citation would verify as if the row said
+# resolved, the hop prints observed=resolvable (verdict mismatch) with exactly
+# one CHAIN_EXEMPT_RESOLVABLE (warn, drift) — a false unavailability mark —
+# never a CHAIN_SOURCE_*/CHAIN_ANCHOR_*/CHAIN_CITATION_* finding. A hop whose
+# citation would not verify (no citation, external URL, missing file,
+# undeclared id, out-of-corpus path, anchor absent) stays observed=exempt with
+# no finding. rejected/not-applicable record a judgment, not an
+# unavailability: they stay exempt and unread whatever their citation.
+# Per hop:
 #   CHAIN hop=… status=… observed=… source=… anchor=… at=… verdict=…
-#   observed: verified|anchor-missing|refused|invalid|exempt
+#   observed: verified|anchor-missing|refused|invalid|resolvable|exempt
 #   verdict:  match|mismatch|refused|invalid|exempt
 # Summary: RESOLVED_HOPS=N/M — N verified hops over M hops read; CLEAN iff
-# every non-exempt hop verified (N = M − exempt) and no finding drifts.
+# every non-exempt hop verified (N = M − exempt − resolvable) and no finding
+# drifts.
 # Extra ids: CHAIN_ABSENT CHAIN_SOURCE_EXTERNAL CHAIN_SOURCE_SESSION
 #   CHAIN_SOURCE_EPHEMERAL CHAIN_SOURCE_OUT_OF_CORPUS CHAIN_SOURCE_MISSING
 #   CHAIN_SOURCE_READ_TOO_LARGE
 #   CHAIN_SOURCE_MULTILINKED (r13)
 #   CHAIN_SOURCE_CROSS_DEVICE (r14)
 #   CHAIN_ANCHOR_NOT_FOUND CHAIN_CITATION_INVALID
+#   CHAIN_EXEMPT_RESOLVABLE (r32; warn, drift)
 #
 # Sweeps mode: verify-sweeps <record.md> makes kept rejections and negative
 # sweeps verdict-bearing. Every ## Rejections row needs a non-empty reason and
@@ -194,7 +207,13 @@
 #   VERIFY_ALL sections=5 run=N absent=N drift-sections=N findings=N drift=N
 # and one closing RESEARCH_GATE: CLEAN|DRIFT with the same composed counters.
 # --json PATH appends (>>, never rewrites) one JSON line: schema, UTC, record
-# and gate SHA-256, per-section state/verdict/tallies, composed verdict.
+# and gate SHA-256, per-section state/verdict/tallies, composed verdict. The
+# append is one lock-held step (r32 C1): the manifest is opened for append, an
+# exclusive flock(2) is taken on that open file, and the lock covers the
+# last-byte probe and the write, so cooperating appenders serialize and no
+# blank line can appear. The lock is unbounded (a blocking LOCK_EX, released
+# when the gate closes the fd); it needs flock(1), and a host without it
+# refuses to write the manifest rather than append unlocked.
 #
 # Pin/drift mode: the gate's own behavioral baseline, adapted from
 # mori-shokunin r10 (tools/mori-census.sh --pin/--drift; its contract note
@@ -356,8 +375,13 @@ usage: research-gate.sh [--selftest] [--help]
   path#kind:text (bare #text = heading). The anchor must appear in the cited
   source: headings by text, quotes verbatim at token boundaries, lines as
   whole lines.
-  Unresolved/marked hops stay exempt but counted. Sources obey the same
-  boundary as verify-claims (local, canonicalized, never fetched).
+  Unresolved/marked hops stay exempt but counted. A hop that says it could
+  not be followed (unresolved|blocked-no-fetch|labelled-dead) is still
+  audited: a citation that would verify as if the row said resolved prints
+  observed=resolvable with one CHAIN_EXEMPT_RESOLVABLE warning and drifts;
+  any other such hop stays exempt. rejected/not-applicable stay unread.
+  Sources obey the same boundary as verify-claims (local, canonicalized,
+  never fetched).
   Sources over 8 MiB are refused unread (CLAIM_SOURCE_READ_TOO_LARGE;
   CHAIN_SOURCE_READ_TOO_LARGE in chain mode). Multi-linked sources are
   refused unread (CLAIM_SOURCE_MULTILINKED; CHAIN_SOURCE_MULTILINKED in
@@ -396,7 +420,10 @@ usage: research-gate.sh [--selftest] [--help]
   row (claims/claims_file/claims-file/claimset); a claims JSONL passed as
   the input is its own claims surface. --json PATH appends (never rewrites)
   one JSON line recording UTC, record + gate SHA-256, per-section tallies
-  and the composed verdict.
+  and the composed verdict. The append is one critical section: an exclusive
+  flock(2) on the manifest fd the gate opened for append is taken before the
+  last-byte probe and held through the write, so concurrent appenders
+  serialize (a cooperating LOCK_EX holder delays the append until release).
   Pin/drift: --pin PATH writes a behavioral baseline of the gate's canonical
   reference run (verify-all over a hermetic fixture the gate writes itself,
   plus that run's --json manifest line), with the declared volatile contract
@@ -1783,6 +1810,51 @@ chain_source_sev() {
   esac
 }
 
+chain_probe() { # ROW -> PROBE=verified|anchor-missing|refused|invalid (silent)
+  # The one citation resolution both chain arms use: chain_citation parses the
+  # row, the source is a declared id or a path under the same boundary as
+  # verify-claims (claim_source_path: local, canonicalized, never fetched),
+  # and chain_anchor_at finds the anchor in those bytes. Emits nothing and
+  # reads no network: the resolved arm turns PROBE into its own findings, the
+  # exempt arm audits a hop that claims it could not be followed.
+  local row=$1 to ref hay
+  PROBE=invalid PROBE_CITE_ERR='' PROBE_TO='' PROBE_REF='' PROBE_WHY=''
+  PROBE_REFUSE_ID='' PROBE_REFUSE_OBS='' PROBE_KIND='' PROBE_TEXT='' PROBE_AT='-'
+  PROBE_HAY=''
+  chain_citation "$row" || { PROBE_CITE_ERR=$CITE_ERR; return 0; }
+  PROBE_TO=$CITE_TO PROBE_KIND=$CITE_KIND PROBE_TEXT=$CITE_TEXT
+  to=$CITE_TO
+  if [[ -n ${SRC_PTR[$to]+x} ]]; then
+    if [[ -z ${SRC_PTR[$to]} ]]; then
+      PROBE=refused PROBE_WHY=pointer-empty
+      return 0
+    fi
+    ref=${SRC_PTR[$to]}
+  elif [[ $to =~ ^S[A-Za-z0-9_-]+$ ]]; then
+    PROBE=refused PROBE_WHY=undeclared-id
+    return 0
+  else
+    ref=$to
+  fi
+  ref=$(chain_ref_file "$ref")
+  PROBE_REF=$ref
+  if ! claim_source_path "$ref"; then
+    PROBE=refused PROBE_WHY=boundary
+    PROBE_REFUSE_ID=$(chain_refuse_id "$CLAIM_REFUSE")
+    PROBE_REFUSE_OBS=$CLAIM_REFUSE_OBS
+    return 0
+  fi
+  hay=$(cat -- "$CLAIM_SRC_PATH"; printf x)
+  hay=${hay%x}
+  PROBE_HAY=$hay
+  if chain_anchor_at "$hay" "$PROBE_KIND" "$PROBE_TEXT"; then
+    PROBE=verified PROBE_AT=$CITE_AT
+  else
+    PROBE=anchor-missing
+  fi
+  return 0
+}
+
 verify_chain() {
   local record=$1
   ROOT=${CHOUSA_ROOT:-$ROOT}
@@ -1797,6 +1869,7 @@ verify_chain() {
   load_sections "$record"
 
   local N_HOPS=0 N_VER=0 N_EXEMPT=0 N_MISM=0 N_REFUSED=0 N_INVALID=0
+  local N_RESOLVABLE=0
   local -a CHAIN_LINES=()
   declare -g -A SRC_PTR=()
   local srow sid sptr
@@ -1814,10 +1887,13 @@ verify_chain() {
     emit_finding CHAIN_ABSENT warn chain "missing ## Chain section"
   fi
 
-  local hrow hop st to ref disp path hay obs at verdict l
+  local hrow hop st to disp obs at verdict l
   local CITE_TO='' CITE_KIND='' CITE_TEXT='' CITE_ERR=''
-  local CITE_AT='' CHAIN_NEAREST='' CHAIN_CTX=''
+  local CHAIN_NEAREST='' CHAIN_CTX=''
   local CLAIM_REFUSE='' CLAIM_REFUSE_OBS='' CLAIM_SRC_PATH=''
+  local PROBE='' PROBE_CITE_ERR='' PROBE_TO='' PROBE_REF='' PROBE_WHY=''
+  local PROBE_REFUSE_ID='' PROBE_REFUSE_OBS='' PROBE_KIND='' PROBE_TEXT=''
+  local PROBE_AT='-' PROBE_HAY=''
   if [[ -n ${SEC_BODY[Chain]+x} ]]; then
     while IFS= read -r hrow; do
       [[ -z $hrow ]] && continue
@@ -1828,56 +1904,61 @@ verify_chain() {
         resolved)
           to=$(norm_ptr "$(chain_cell "$hrow" to)")
           disp=$(chain_disp "$to")
-          if ! chain_citation "$hrow"; then
+          chain_probe "$hrow"
+          if [[ $PROBE == invalid ]]; then
             N_INVALID=$((N_INVALID + 1))
-            emit_finding CHAIN_CITATION_INVALID warn chain "hop=$hop status=resolved $CITE_ERR"
+            emit_finding CHAIN_CITATION_INVALID warn chain "hop=$hop status=resolved $PROBE_CITE_ERR"
             CHAIN_LINES+=("CHAIN hop=$hop status=resolved observed=invalid source=$disp anchor=- at=- verdict=invalid")
             continue
           fi
-          to=$CITE_TO
-          if [[ -n ${SRC_PTR[$to]+x} ]]; then
-            if [[ -z ${SRC_PTR[$to]} ]]; then
-              N_REFUSED=$((N_REFUSED + 1))
-              emit_finding CHAIN_SOURCE_MISSING warn chain "hop=$hop to=$to source row has no pointer"
-              CHAIN_LINES+=("CHAIN hop=$hop status=resolved observed=refused source=$to anchor=- at=- verdict=refused")
-              continue
-            fi
-            ref=${SRC_PTR[$to]}
-          elif [[ $to =~ ^S[A-Za-z0-9_-]+$ ]]; then
+          if [[ $PROBE == refused ]]; then
             N_REFUSED=$((N_REFUSED + 1))
-            emit_finding CHAIN_SOURCE_MISSING warn chain "hop=$hop to=$to source_id not in ## Sources"
-            CHAIN_LINES+=("CHAIN hop=$hop status=resolved observed=refused source=$to anchor=- at=- verdict=refused")
-            continue
-          else
-            ref=$to
-          fi
-          ref=$(chain_ref_file "$ref")
-          if ! claim_source_path "$ref"; then
-            N_REFUSED=$((N_REFUSED + 1))
-            local rid; rid=$(chain_refuse_id "$CLAIM_REFUSE")
-            emit_finding "$rid" "$(chain_source_sev "$rid")" chain \
-              "hop=$hop source=$(chain_disp "$ref") obs=$CLAIM_REFUSE_OBS"
-            CHAIN_LINES+=("CHAIN hop=$hop status=resolved observed=refused source=$(chain_disp "$ref") anchor=- at=- verdict=refused")
+            case "$PROBE_WHY" in
+              pointer-empty)
+                emit_finding CHAIN_SOURCE_MISSING warn chain "hop=$hop to=$PROBE_TO source row has no pointer"
+                CHAIN_LINES+=("CHAIN hop=$hop status=resolved observed=refused source=$PROBE_TO anchor=- at=- verdict=refused") ;;
+              undeclared-id)
+                emit_finding CHAIN_SOURCE_MISSING warn chain "hop=$hop to=$PROBE_TO source_id not in ## Sources"
+                CHAIN_LINES+=("CHAIN hop=$hop status=resolved observed=refused source=$PROBE_TO anchor=- at=- verdict=refused") ;;
+              *)
+                emit_finding "$PROBE_REFUSE_ID" "$(chain_source_sev "$PROBE_REFUSE_ID")" chain \
+                  "hop=$hop source=$(chain_disp "$PROBE_REF") obs=$PROBE_REFUSE_OBS"
+                CHAIN_LINES+=("CHAIN hop=$hop status=resolved observed=refused source=$(chain_disp "$PROBE_REF") anchor=- at=- verdict=refused") ;;
+            esac
             continue
           fi
-          path=$CLAIM_SRC_PATH
-          disp=$(chain_disp "$ref")
-          hay=$(cat -- "$path"; printf x)
-          hay=${hay%x}
-          CITE_AT='-'; CHAIN_NEAREST='-'; CHAIN_CTX='-'
-          if chain_anchor_at "$hay" "$CITE_KIND" "$CITE_TEXT"; then
+          disp=$(chain_disp "$PROBE_REF")
+          CHAIN_NEAREST='-'; CHAIN_CTX='-'
+          if [[ $PROBE == verified ]]; then
             N_VER=$((N_VER + 1)); obs=verified; verdict=match
           else
             N_MISM=$((N_MISM + 1)); obs=anchor-missing; verdict=mismatch
-            if [[ $CITE_KIND == quote ]]; then
-              chain_nearest "$hay" "$CITE_TEXT"
+            if [[ $PROBE_KIND == quote ]]; then
+              chain_nearest "$PROBE_HAY" "$PROBE_TEXT"
             fi
             emit_finding CHAIN_ANCHOR_NOT_FOUND warn chain \
-              "hop=$hop source=$disp anchor=$CITE_KIND:\"$(printf '%.60s' "$CITE_TEXT")\" nearest_line=$CHAIN_NEAREST context=$CHAIN_CTX"
+              "hop=$hop source=$disp anchor=$PROBE_KIND:\"$(printf '%.60s' "$PROBE_TEXT")\" nearest_line=$CHAIN_NEAREST context=$CHAIN_CTX"
           fi
-          CHAIN_LINES+=("CHAIN hop=$hop status=resolved observed=$obs source=$disp anchor=$CITE_KIND:\"$(printf '%.60s' "$CITE_TEXT")\" at=$CITE_AT verdict=$verdict")
+          CHAIN_LINES+=("CHAIN hop=$hop status=resolved observed=$obs source=$disp anchor=$PROBE_KIND:\"$(printf '%.60s' "$PROBE_TEXT")\" at=$PROBE_AT verdict=$verdict")
           ;;
-        unresolved|blocked-no-fetch|rejected|labelled-dead|not-applicable)
+        unresolved|blocked-no-fetch|labelled-dead)
+          # r32 C2: a hop whose status says it could not be followed is still
+          # audited with the same silent probe. A citation that would verify
+          # under the resolved arm is a false unavailability mark:
+          # observed=resolvable, exactly one FINDING, drift. Every other such
+          # hop stays exempt with no finding — the silence is the contract.
+          chain_probe "$hrow"
+          if [[ $PROBE == verified ]]; then
+            N_RESOLVABLE=$((N_RESOLVABLE + 1))
+            emit_finding CHAIN_EXEMPT_RESOLVABLE warn chain \
+              "hop=$hop status=$st source=$(chain_disp "$PROBE_REF") anchor=$PROBE_KIND:\"$(printf '%.60s' "$PROBE_TEXT")\" at=$PROBE_AT"
+            CHAIN_LINES+=("CHAIN hop=$hop status=$st observed=resolvable source=$(chain_disp "$PROBE_REF") anchor=$PROBE_KIND:\"$(printf '%.60s' "$PROBE_TEXT")\" at=$PROBE_AT verdict=mismatch")
+          else
+            N_EXEMPT=$((N_EXEMPT + 1))
+            CHAIN_LINES+=("CHAIN hop=$hop status=$st observed=exempt source=$(chain_disp "$(norm_ptr "$(chain_cell "$hrow" to)")") anchor=- at=- verdict=exempt")
+          fi
+          ;;
+        rejected|not-applicable)
           N_EXEMPT=$((N_EXEMPT + 1))
           CHAIN_LINES+=("CHAIN hop=$hop status=$st observed=exempt source=$(chain_disp "$(norm_ptr "$(chain_cell "$hrow" to)")") anchor=- at=- verdict=exempt")
           ;;
@@ -1901,10 +1982,10 @@ verify_chain() {
   printf 'research-gate %s — ts=%s — mode=chain — record=%s\n' "$VERSION" "$TS_UTC" "$record"
   for l in "${CHAIN_LINES[@]+"${CHAIN_LINES[@]}"}"; do printf '%s\n' "$l"; done
   for l in "${FINDING_LINES[@]+"${FINDING_LINES[@]}"}"; do printf '%s\n' "$l"; done
-  if [[ $((N_VER + N_EXEMPT)) -ne $N_HOPS ]]; then ROLL=DRIFT; fi
+  if [[ $((N_VER + N_EXEMPT + N_RESOLVABLE)) -ne $N_HOPS ]]; then ROLL=DRIFT; fi
   printf 'RESOLVED_HOPS=%d/%d\n' "$N_VER" "$N_HOPS"
-  printf 'RESEARCH_GATE: %s (hops=%d verified=%d exempt=%d anchor-missing=%d refused=%d invalid=%d findings=%d drift=%d)\n' \
-    "$ROLL" "$N_HOPS" "$N_VER" "$N_EXEMPT" "$N_MISM" "$N_REFUSED" "$N_INVALID" "$N_FINDINGS" "$N_DRIFT"
+  printf 'RESEARCH_GATE: %s (hops=%d verified=%d exempt=%d anchor-missing=%d refused=%d invalid=%d findings=%d drift=%d resolvable=%d)\n' \
+    "$ROLL" "$N_HOPS" "$N_VER" "$N_EXEMPT" "$N_MISM" "$N_REFUSED" "$N_INVALID" "$N_FINDINGS" "$N_DRIFT" "$N_RESOLVABLE"
 
   [[ $ROLL == CLEAN ]] && return 0
   return 1
@@ -3189,17 +3270,44 @@ verify_all() {
     # The last byte is read as hex: a bare $(tail -c1) drops NUL bytes and
     # would miss a NUL-terminated manifest. (Unreadable + non-empty is
     # refused at setup, before any write.)
-    local jlast=''
+    #
+    # The probe and the append are ONE critical section (r32 C1). At base they
+    # were two operations with no lock, so two appenders that both saw an
+    # unterminated last line both prefixed a newline and left a blank line
+    # (r24 delimiter edge). The manifest is opened for append on a dedicated
+    # fd (O_APPEND; created when absent, never truncated, so the inode and the
+    # prior bytes survive), a blocking exclusive flock(2) is taken on THAT open
+    # file description before the last byte is read, and it is held until this
+    # run's line is written; the close then releases it. flock's fd form locks
+    # the shell's own description, so the lock outlives the flock(1) helper
+    # and a cooperating LOCK_EX holder on the manifest excludes both the probe
+    # and the append. The wait is unbounded (LOCK_EX blocks, as the contract
+    # states); a host without flock(1) cannot serialize, so it fails closed
+    # instead of appending unlocked.
+    if ! command -v flock >/dev/null 2>&1; then
+      printf 'research-gate: flock(1) unavailable; manifest not written: %s\n' "$JSON_ARG" >&2
+      exit 2
+    fi
+    local jfd='' jlast=''
+    if ! exec {jfd}>>"$JSON_ARG"; then
+      printf 'research-gate: manifest open failed: %s\n' "$JSON_ARG" >&2
+      exit 2
+    fi
+    if ! flock -x "$jfd"; then
+      printf 'research-gate: manifest lock failed: %s\n' "$JSON_ARG" >&2
+      exit 2
+    fi
     if [[ -s $JSON_ARG ]]; then
       jlast=$(tail -c1 -- "$JSON_ARG" 2>/dev/null | od -An -tx1 | tr -d ' \n' || true)
     fi
     if [[ -n $jlast && $jlast != 0a ]]; then
       line=$'\n'$line
     fi
-    if ! printf '%s\n' "$line" >>"$JSON_ARG"; then
+    if ! printf '%s\n' "$line" >&"$jfd"; then
       printf 'research-gate: manifest append failed: %s\n' "$JSON_ARG" >&2
       exit 2
     fi
+    exec {jfd}>&-
   fi
 
   printf 'research-gate %s — ts=%s — mode=verify-all — record=%s — claims=%s — root=%s\n' \
@@ -6799,7 +6907,7 @@ EOF
     'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=2/2' \
     'CLAIM id=N1 expected=supported observed=supported source=lib/span.md at=line:1 verdict=match' \
     'CLAIM id=N2 expected=unsupported observed=unsupported source=lib/span.md at=- verdict=match'
-  # ---- r31 C2: revision binding via optional "sha256" (cases 216-224) ----
+  # ---- r31 C2: revision binding via optional "sha256" (cases 216-228) ----
   # A present "sha256" pins the exact bytes of the source file: malformed
   # present values invalidate the record (CLAIM_RECORD_INVALID); a mismatch is
   # observed=stale with CLAIM_SOURCE_REVISION_MISMATCH before and regardless of
@@ -6868,6 +6976,379 @@ EOF
     'observed=refused' 'VERDICT_BEARING_CLAIMS=0/1'
   tclaims claims-sha-crlf 0 'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=1/1' \
     'CLAIM id=C1 expected=supported observed=supported source=claimsrc/sha-src-crlf.txt at=line:1 verdict=match'
+
+  # ---- exempt-hop audit (r32 C2) -------------------------------------------
+  # A hop whose status says it could not be followed (unresolved,
+  # blocked-no-fetch, labelled-dead) is audited with the resolved arm's own
+  # citation/source/boundary/anchor probe, silently. A citation that would
+  # verify there is a false unavailability mark: observed=resolvable, exactly
+  # one CHAIN_EXEMPT_RESOLVABLE warning naming the hop, drift. Every other
+  # such hop — and every rejected/not-applicable hop, which records a judgment
+  # — stays observed=exempt with no finding. tchain_audit asserts what the
+  # substring runner cannot: the resolvable/exempt/finding totals and the
+  # absence of any resolved-arm finding from the silent arm.
+  printf 'glued case: qalpha row present here\nplain intro line\nomega final line and more\n' \
+    >"$WORK/lib/chain_near.md"
+  tchain_audit() { # NAME WANT_RC N_RESOLVABLE N_EXEMPT [want substring …]
+    local name=$1 want_rc=$2 want_res=$3 want_ex=$4
+    shift 4
+    local -a want=("$@")
+    local rc=0 out tok ok=1 got_res got_ex got_find got_other nverdict
+    cases=$((cases + 1))
+    out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+      CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+      bash "$SELF" verify-chain "$WORK/$name.md" 2>&1) || rc=$?
+    nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
+    got_res=$(grep -c '^CHAIN hop=.* observed=resolvable ' <<<"$out" || true)
+    got_ex=$(grep -c '^CHAIN hop=.* observed=exempt ' <<<"$out" || true)
+    got_find=$(grep -c '^FINDING CHAIN_EXEMPT_RESOLVABLE severity=warn surface=chain obs=hop=' <<<"$out" || true)
+    got_other=$(grep -cE '^FINDING CHAIN_(SOURCE|ANCHOR|CITATION)_' <<<"$out" || true)
+    for tok in "${want[@]+"${want[@]}"}"; do
+      [[ $out == *"$tok"* ]] || ok=0
+    done
+    if [[ $rc -eq $want_rc && $nverdict -eq 1 && $ok -eq 1 \
+        && $got_res -eq $want_res && $got_ex -eq $want_ex \
+        && $got_find -eq $want_res && $got_other -eq 0 ]]; then
+      printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" "$name" "$rc"
+    else
+      printf 'FAIL-case %-28s exit=%d want=%d verdicts=%d resolvable=%s/%d exempt=%s/%d findings=%s/%d silent-leak=%s token=%s\n' \
+        "$name" "$rc" "$want_rc" "$nverdict" "$got_res" "$want_res" "$got_ex" "$want_ex" \
+        "$got_find" "$want_res" "$got_other" "${want[*]-}"
+      printf '%s\n' "$out" | sed 's/^/    | /'
+      failures=$((failures + 1))
+    fi
+  }
+
+  write_rec chain-exempt-resolvable <<'EOF'
+# research-record v1
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | lib/chain_target.md |
+## Chain
+| hop | from | to | status | anchor_kind | anchor |
+|---|---|---|---|---|---|
+| 1 | C1 | lib/chain_target.md#quote:alpha row present | unresolved | | |
+| 2 | C1 | S1 | blocked-no-fetch | line | omega final line |
+| 3 | C1 | S1 | labelled-dead | heading | Term table |
+| 4 | C1 | S1 | unresolved | quote | alpha row present |
+| 5 | C1 | lib/chain_target.md#heading:Term table | blocked-no-fetch | | |
+| 6 | C1 | S1 | labelled-dead | line | intro line |
+| 7 | C1 | lib/chain_target.md | unresolved | quote | The craftsman certifies the work |
+EOF
+  tchain_audit chain-exempt-resolvable 1 7 0 \
+    'RESEARCH_GATE: DRIFT' 'RESOLVED_HOPS=0/7' \
+    'hops=7 verified=0 exempt=0 anchor-missing=0 refused=0 invalid=0 findings=7 drift=7 resolvable=7' \
+    'FINDING CHAIN_EXEMPT_RESOLVABLE severity=warn surface=chain obs=hop=1 status=unresolved' \
+    'CHAIN hop=1 status=unresolved observed=resolvable source=lib/chain_target.md anchor=quote:"alpha row present" at=line:4 verdict=mismatch' \
+    'CHAIN hop=2 status=blocked-no-fetch observed=resolvable source=lib/chain_target.md anchor=line:"omega final line" at=line:6 verdict=mismatch' \
+    'CHAIN hop=3 status=labelled-dead observed=resolvable source=lib/chain_target.md anchor=heading:"Term table" at=line:3 verdict=mismatch' \
+    'CHAIN hop=7 status=unresolved observed=resolvable source=lib/chain_target.md anchor=quote:"The craftsman certifies the work" at=line:5 verdict=mismatch'
+
+  printf '# research-record v1\n## Sources\n| id | tier | pointer |\n|---|---|---|\n| S1 | primary | lib/chain_target.md |\n## Chain\n| hop | from | to | status | anchor_kind | anchor |\n|---|---|---|---|---|---|\n| 1 | C1 | S1 | unresolved | quote | absent anchor text |\n| 2 | C1 | lib/ghost.md | blocked-no-fetch | line | intro line |\n| 3 | C1 | https://example.invalid/x | labelled-dead | quote | remote text |\n| 4 | C1 | S1 | unresolved | | |\n| 5 | C1 | S9 | blocked-no-fetch | line | intro line |\n| 6 | C1 | ../%s | labelled-dead | line | outside text |\n| 7 | C1 | lib/chain_near.md | unresolved | quote | alpha row present |\n| 8 | C1 | lib/chain_near.md | blocked-no-fetch | heading | plain intro line |\n| 9 | C1 | lib/chain_near.md | labelled-dead | line | omega final line |\n' \
+    "$(basename "$OUTSIDE_FILE")" >"$WORK/chain-exempt-unresolvable.md"
+  tchain_audit chain-exempt-unresolvable 0 0 9 \
+    'RESEARCH_GATE: CLEAN' 'RESOLVED_HOPS=0/9' \
+    'hops=9 verified=0 exempt=9 anchor-missing=0 refused=0 invalid=0 findings=0 drift=0 resolvable=0' \
+    'CHAIN hop=3 status=labelled-dead observed=exempt source=https://example.invalid/x anchor=- at=- verdict=exempt' \
+    'CHAIN hop=6 status=labelled-dead observed=exempt' \
+    'CHAIN hop=7 status=unresolved observed=exempt source=lib/chain_near.md'
+
+  write_rec chain-exempt-judgment <<'EOF'
+# research-record v1
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | lib/chain_target.md |
+## Chain
+| hop | from | to | status | anchor_kind | anchor |
+|---|---|---|---|---|---|
+| 1 | C1 | S1 | rejected | quote | alpha row present |
+| 2 | C1 | S1 | not-applicable | heading | Term table |
+EOF
+  tchain_audit chain-exempt-judgment 0 0 2 \
+    'RESEARCH_GATE: CLEAN' 'RESOLVED_HOPS=0/2' \
+    'hops=2 verified=0 exempt=2 anchor-missing=0 refused=0 invalid=0 findings=0 drift=0 resolvable=0' \
+    'CHAIN hop=1 status=rejected observed=exempt source=S1 anchor=- at=- verdict=exempt' \
+    'CHAIN hop=2 status=not-applicable observed=exempt source=S1 anchor=- at=- verdict=exempt'
+
+  write_rec chain-exempt-mixed <<'EOF'
+# research-record v1
+## Sources
+| id | tier | pointer |
+|---|---|---|
+| S1 | primary | lib/chain_target.md |
+## Chain
+| hop | from | to | status | anchor_kind | anchor |
+|---|---|---|---|---|---|
+| 1 | C1 | S1 | resolved | quote | alpha row present |
+| 2 | C1 | S1 | unresolved | line | omega final line |
+| 3 | C1 | S1 | unresolved | line | omega final line extra |
+EOF
+  tchain_audit chain-exempt-mixed 1 1 1 \
+    'RESEARCH_GATE: DRIFT' 'RESOLVED_HOPS=1/3' \
+    'hops=3 verified=1 exempt=1 anchor-missing=0 refused=0 invalid=0 findings=1 drift=1 resolvable=1' \
+    'CHAIN hop=1 status=resolved observed=verified source=lib/chain_target.md anchor=quote:"alpha row present" at=line:4 verdict=match' \
+    'FINDING CHAIN_EXEMPT_RESOLVABLE severity=warn surface=chain obs=hop=2 status=unresolved' \
+    'CHAIN hop=3 status=unresolved observed=exempt source=S1 anchor=- at=- verdict=exempt'
+  # ---- round-32 C1 (r32): the --json append is one lock-held critical
+  # section (verify_all opens the manifest for append on a dedicated fd, takes
+  # a blocking exclusive flock(2) on that fd, then probes the last byte and
+  # writes, then closes). 229: a cooperating holder of LOCK_EX on the manifest
+  # keeps verify-all before its probe — while the gate is blocked the file
+  # holds exactly the holder's unterminated fragment — and the append happens
+  # only after release, terminating the fragment (two lines, no blank line,
+  # fragment otherwise intact). 230: the lock is gone when the gate returns, so
+  # a second verify-all appends its own line on the same inode.
+  printf 'lock source line\n' >"$WORK/c1lk-src.txt"
+  printf '{"id":"LK1","source":"c1lk-src.txt","span":"lock source line","expect":"supported"}\n' \
+    >"$WORK/c1lk-record.md"
+  c1lk_to=()
+  if command -v timeout >/dev/null 2>&1; then c1lk_to=(timeout 120); fi
+  c1lk_verify() { # MANIFEST OUT -> rc
+    "${c1lk_to[@]}" env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+      CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+      bash "$SELF" verify-all "$WORK/c1lk-record.md" --json "$1" >"$2" 2>&1
+  }
+  if [[ -r /proc/locks ]] && command -v flock >/dev/null 2>&1; then
+    cases=$((cases + 1))
+    c1lk_msg='' c1lk_rc=0
+    c1lk_mf="$WORK/c1lk-hold.jsonl"; : >"$c1lk_mf"
+    c1lk_ino=$(stat -c %i -- "$c1lk_mf")
+    c1lk_flag="$WORK/c1lk-release.flag"; rm -f "$c1lk_flag"
+    cat >"$WORK/c1lk-holder.sh" <<'C1LK_HOLDER'
+manifest=$1 flag=$2 frag=$3
+exec {fd}>>"$manifest" || exit 3
+flock -x "$fd" || exit 4
+printf '%s' "$frag" >&"$fd" || exit 5
+i=0
+while [[ ! -e $flag ]]; do
+  i=$((i + 1))
+  if [[ $i -ge 600 ]]; then exit 6; fi
+  sleep 0.1
+done
+C1LK_HOLDER
+    bash "$WORK/c1lk-holder.sh" "$c1lk_mf" "$c1lk_flag" '{"frag":229}' &
+    c1lk_hpid=$!
+    c1lk_seen=0
+    i=0
+    while [[ $i -lt 100 ]]; do
+      if [[ $(cat -- "$c1lk_mf" 2>/dev/null || true) == '{"frag":229}' ]]; then c1lk_seen=1; break; fi
+      i=$((i + 1)); sleep 0.1
+    done
+    [[ $c1lk_seen -eq 1 ]] || c1lk_msg+='holder-fragment-absent '
+    "${c1lk_to[@]}" env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+      CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+      bash "$SELF" verify-all "$WORK/c1lk-record.md" --json "$c1lk_mf" \
+      >"$WORK/c1lk-gate-hold.out" 2>&1 &
+    c1lk_gpid=$!
+    c1lk_held=0
+    i=0
+    while [[ $i -lt 200 ]]; do
+      if ! kill -0 "$c1lk_gpid" 2>/dev/null; then break; fi
+      if grep -Eq "^[0-9]+:[[:space:]]+->[[:space:]]+FLOCK[[:space:]]+ADVISORY[[:space:]]+WRITE[[:space:]]+[0-9]+[[:space:]]+[0-9a-fA-F]+:[0-9a-fA-F]+:$c1lk_ino[[:space:]]" /proc/locks; then
+        c1lk_held=1; break
+      fi
+      i=$((i + 1)); sleep 0.1
+    done
+    # The gate must be sitting on the lock (not finished, not past it) and the
+    # manifest must still hold exactly the holder's bytes.
+    if [[ $c1lk_held -eq 1 ]]; then
+      [[ $(cat -- "$c1lk_mf") == '{"frag":229}' ]] || c1lk_msg+='appended-under-holder-lock '
+    else
+      c1lk_msg+='gate-not-blocked-on-lock '
+    fi
+    : >"$c1lk_flag"
+    wait "$c1lk_gpid" || c1lk_rc=$?
+    wait "$c1lk_hpid" || true
+    n=$(wc -l <"$c1lk_mf" | tr -d ' ')
+    [[ $n -eq 2 ]] || c1lk_msg+="manifest-lines=$n/2 "
+    [[ $(sed -n 1p -- "$c1lk_mf") == '{"frag":229}' ]] || c1lk_msg+='fragment-line '
+    sed -n 2p -- "$c1lk_mf" | grep -q '^{"schema":"chousa-verify-all/v1"' || c1lk_msg+='schema-not-own-line '
+    [[ $(grep -a -c '^$' -- "$c1lk_mf" || true) -eq 0 ]] || c1lk_msg+='blank-line '
+    [[ $c1lk_rc -eq 0 ]] || c1lk_msg+="gate-rc=$c1lk_rc/0 "
+    [[ $(stat -c %i -- "$c1lk_mf") == "$c1lk_ino" ]] || c1lk_msg+='inode-changed '
+    if command -v python3 >/dev/null 2>&1; then
+      python3 -c 'import json,sys
+for ln in sys.stdin.read().splitlines():
+    if ln.strip():
+        json.loads(ln)' <"$c1lk_mf" >/dev/null 2>&1 || c1lk_msg+='json-invalid '
+    fi
+    if [[ -z $c1lk_msg ]]; then
+      printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" c1lk-holder-blocks-append "$c1lk_rc"
+    else
+      printf 'FAIL-case %-28s %s\n' c1lk-holder-blocks-append "$c1lk_msg"
+      sed 's/^/    | /' "$WORK/c1lk-gate-hold.out" 2>/dev/null || true
+      failures=$((failures + 1))
+    fi
+  else
+    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" c1lk-holder-blocks-append 'no /proc/locks or no flock(1)'
+  fi
+  cases=$((cases + 1))
+  c1lk_msg=''
+  c1lk_mf2="$WORK/c1lk-second.jsonl"; : >"$c1lk_mf2"
+  c1lk_ino2=$(stat -c %i -- "$c1lk_mf2")
+  c1lk_rca=0 c1lk_rcb=0
+  c1lk_verify "$c1lk_mf2" "$WORK/c1lk-gate-second-a.out" || c1lk_rca=$?
+  c1lk_verify "$c1lk_mf2" "$WORK/c1lk-gate-second-b.out" || c1lk_rcb=$?
+  n=$(wc -l <"$c1lk_mf2" | tr -d ' ')
+  [[ $n -eq 2 ]] || c1lk_msg+="manifest-lines=$n/2 "
+  [[ $(grep -c '^{"schema":"chousa-verify-all/v1"' -- "$c1lk_mf2" || true) -eq 2 ]] || c1lk_msg+='schema-lines '
+  [[ $(grep -a -c '^$' -- "$c1lk_mf2" || true) -eq 0 ]] || c1lk_msg+='blank-line '
+  [[ $c1lk_rca -eq 0 && $c1lk_rcb -eq 0 ]] || c1lk_msg+="gate-rc=$c1lk_rca,$c1lk_rcb/0,0 "
+  [[ $(stat -c %i -- "$c1lk_mf2") == "$c1lk_ino2" ]] || c1lk_msg+='inode-changed '
+  [[ $(tail -c1 -- "$c1lk_mf2" | od -An -tx1 | tr -d ' \n') == 0a ]] || c1lk_msg+='no-final-newline '
+  if command -v python3 >/dev/null 2>&1; then
+    python3 -c 'import json,sys
+for ln in sys.stdin.read().splitlines():
+    if ln.strip():
+        json.loads(ln)' <"$c1lk_mf2" >/dev/null 2>&1 || c1lk_msg+='json-invalid '
+  fi
+  if [[ -z $c1lk_msg ]]; then
+    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" c1lk-second-append "$c1lk_rcb"
+  else
+    printf 'FAIL-case %-28s %s\n' c1lk-second-append "$c1lk_msg"
+    sed 's/^/    | /' "$WORK/c1lk-gate-second-a.out" 2>/dev/null || true
+    sed 's/^/    | /' "$WORK/c1lk-gate-second-b.out" 2>/dev/null || true
+    failures=$((failures + 1))
+  fi
+  # ---- round-32 R2: verify-claims grammar/binding detectors ----
+  # Routed defect R2, selftest half (corpus/lessons/round-31-verifier-spotcheck.md
+  # :209-214): the round-31 mutants survived because the selftest had no case for
+  # these rules. Every case below was measured against the landed gate before it
+  # was asserted; expected outcomes are both the contract and the landed output.
+  # A present non-string "sha256" is malformed, never absent: number, null, array
+  # and object values all invalidate the record before any source is read.
+  printf '{"id":"SN1","source":"claimsrc/sha-src.txt","span":"sha source line one","expect":"supported","sha256":5}\n' \
+    >"$WORK/claims-r2-sha-nonstring.jsonl"
+  printf '{"id":"SN2","source":"claimsrc/sha-src.txt","span":"sha source line one","expect":"supported","sha256":null}\n' \
+    >>"$WORK/claims-r2-sha-nonstring.jsonl"
+  printf '{"id":"SN3","source":"claimsrc/sha-src.txt","span":"sha source line one","expect":"supported","sha256":["%s"]}\n' "$SHA_GOOD" \
+    >>"$WORK/claims-r2-sha-nonstring.jsonl"
+  printf '{"id":"SN4","source":"claimsrc/sha-src.txt","span":"sha source line one","expect":"supported","sha256":{"v":"%s"}}\n' "$SHA_GOOD" \
+    >>"$WORK/claims-r2-sha-nonstring.jsonl"
+  tclaims claims-r2-sha-nonstring 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING CLAIM_RECORD_INVALID severity=warn surface=claims' \
+    'sha256 malformed (not 64 lowercase hex characters)' \
+    'CLAIM id=SN1 expected=supported observed=invalid source=claimsrc/sha-src.txt at=- verdict=invalid' \
+    'CLAIM id=SN2 expected=supported observed=invalid source=claimsrc/sha-src.txt at=- verdict=invalid' \
+    'CLAIM id=SN3 expected=supported observed=invalid source=claimsrc/sha-src.txt at=- verdict=invalid' \
+    'CLAIM id=SN4 expected=supported observed=invalid source=claimsrc/sha-src.txt at=- verdict=invalid' \
+    'VERDICT_BEARING_CLAIMS=0/4' \
+    'claims=4 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=4 findings=4 drift=4'
+  # Present non-string "line" values the earlier block does not cover: null, an
+  # array and a JSON float. All are "line not a JSON string" (invalid), never
+  # absent and never a binding.
+  cat >"$WORK/claims-r2-line-nonstring.jsonl" <<'EOF'
+{"id":"LN1","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","line":null}
+{"id":"LN2","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","line":["1"]}
+{"id":"LN3","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","line":1.5}
+EOF
+  tclaims claims-r2-line-nonstring 1 \
+    'RESEARCH_GATE: DRIFT' 'line not a JSON string' 'observed=invalid' \
+    'CLAIM id=LN1 expected=supported observed=invalid source=lib/span.md at=- verdict=invalid' \
+    'CLAIM id=LN2 expected=supported observed=invalid source=lib/span.md at=- verdict=invalid' \
+    'CLAIM id=LN3 expected=supported observed=invalid source=lib/span.md at=- verdict=invalid' \
+    'VERDICT_BEARING_CLAIMS=0/3' \
+    'claims=3 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=3 findings=3 drift=3'
+  # End-line-only binding is not supported: a span starting on line 2 and ending
+  # on line 3 is mislocated when only line 3 is named (the pin names a start line
+  # or an exact start-end range, never an end line). EX1 shows the contrast: a
+  # span lying wholly on line 3 does bind to line "3".
+  cat >"$WORK/claims-r2-endline.jsonl" <<'EOF'
+{"id":"EL1","source":"lib/span.md","span":"epsilon zeta eta theta\niota kappa lambda mu","expect":"supported","line":"3"}
+{"id":"EX1","source":"lib/span.md","span":"iota kappa lambda mu","expect":"supported","line":"3"}
+EOF
+  tclaims claims-r2-endline 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING CLAIM_LINE_MISMATCH severity=warn surface=claims' \
+    'CLAIM id=EL1 expected=supported observed=mislocated source=lib/span.md at=lines:2-3 verdict=mismatch' \
+    'obs=id=EL1 line=3-3 first_delimited_occurrence=lines:2-3' \
+    'CLAIM id=EX1 expected=supported observed=supported source=lib/span.md at=line:3 verdict=match' \
+    'VERDICT_BEARING_CLAIMS=1/2' \
+    'claims=2 supported=1 contradicted=0 unsupported=0 mismatched=1 unproven=0 refused=0 invalid=0 findings=1 drift=1'
+  # Per-claim span-before-stale: a stale pin is decided before the span and the
+  # "line" binding, so a claim whose span is present (or absent, or pinned to a
+  # wrong line) reads stale with at=- and only the revision finding.
+  printf '{"id":"SB1","source":"claimsrc/sha-src-tampered.txt","span":"sha source line two","expect":"supported","line":"1","sha256":"%s"}\n' "$SHA_GOOD" \
+    >"$WORK/claims-r2-span-stale.jsonl"
+  printf '{"id":"SB2","source":"claimsrc/sha-src-tampered.txt","span":"sha source line two","expect":"supported","line":"9","sha256":"%s"}\n' "$SHA_GOOD" \
+    >>"$WORK/claims-r2-span-stale.jsonl"
+  printf '{"id":"SB3","source":"claimsrc/sha-src-tampered.txt","span":"sha source phantom","expect":"supported","line":"1","sha256":"%s"}\n' "$SHA_GOOD" \
+    >>"$WORK/claims-r2-span-stale.jsonl"
+  tclaims claims-r2-span-stale 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING CLAIM_SOURCE_REVISION_MISMATCH severity=warn surface=claims' \
+    'CLAIM id=SB1 expected=supported observed=stale source=claimsrc/sha-src-tampered.txt at=- verdict=mismatch' \
+    'CLAIM id=SB2 expected=supported observed=stale source=claimsrc/sha-src-tampered.txt at=- verdict=mismatch' \
+    'CLAIM id=SB3 expected=supported observed=stale source=claimsrc/sha-src-tampered.txt at=- verdict=mismatch' \
+    "pin=${SHA_GOOD:0:12} actual=${SHA_TAMPERED:0:12}" \
+    'VERDICT_BEARING_CLAIMS=0/3' \
+    'claims=3 supported=0 contradicted=0 unsupported=0 mismatched=3 unproven=0 refused=0 invalid=0 findings=3 drift=3'
+  # Whitespace around an otherwise 64-hex pin is malformed, never trimmed into a
+  # match (leading, trailing and both sides; the existing block covers the
+  # short-body leading-space shape only).
+  printf '{"id":"WP1","source":"claimsrc/sha-src.txt","span":"sha source line one","expect":"supported","sha256":"%s "}\n' "$SHA_GOOD" \
+    >"$WORK/claims-r2-ws-pin.jsonl"
+  printf '{"id":"WP2","source":"claimsrc/sha-src.txt","span":"sha source line one","expect":"supported","sha256":" %s"}\n' "$SHA_GOOD" \
+    >>"$WORK/claims-r2-ws-pin.jsonl"
+  printf '{"id":"WP3","source":"claimsrc/sha-src.txt","span":"sha source line one","expect":"supported","sha256":" %s "}\n' "$SHA_GOOD" \
+    >>"$WORK/claims-r2-ws-pin.jsonl"
+  tclaims claims-r2-ws-pin 1 \
+    'RESEARCH_GATE: DRIFT' 'sha256 malformed (not 64 lowercase hex characters)' \
+    'CLAIM id=WP1 expected=supported observed=invalid source=claimsrc/sha-src.txt at=- verdict=invalid' \
+    'CLAIM id=WP2 expected=supported observed=invalid source=claimsrc/sha-src.txt at=- verdict=invalid' \
+    'CLAIM id=WP3 expected=supported observed=invalid source=claimsrc/sha-src.txt at=- verdict=invalid' \
+    'VERDICT_BEARING_CLAIMS=0/3' \
+    'claims=3 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=3 findings=3 drift=3'
+  # Hash-read fault injection: sha256sum unavailable through a PATH shim. The
+  # same record reads supported on the normal PATH and must never read supported
+  # once the hash tool is unmeasurable: fail closed to stale with actual=unreadable
+  # (research-gate.sh: fail closed: an unmeasurable source is not a match). The
+  # source-unreadable arm reaches the same sha_actual=unreadable branch; it is a
+  # TOCTOU window (claim_source_path already required -r), so the shim is the
+  # deterministic injection.
+  mkdir -p "$WORK/r2faultbin"
+  printf '#!/bin/sh\nexit 127\n' >"$WORK/r2faultbin/sha256sum"
+  chmod +x "$WORK/r2faultbin/sha256sum"
+  printf '{"id":"HF1","source":"claimsrc/sha-src.txt","span":"sha source line one","expect":"supported","sha256":"%s"}\n' "$SHA_GOOD" \
+    >"$WORK/claims-r2-hash-fault.jsonl"
+  cases=$((cases + 1))
+  r2_ok=1 r2_ctl_rc=0 r2_fault_rc=0
+  r2_ctl_out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+    CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+    bash "$SELF" verify-claims "$WORK/claims-r2-hash-fault.jsonl" 2>&1) || r2_ctl_rc=$?
+  [[ $r2_ctl_rc -eq 0 ]] || r2_ok=0
+  [[ $r2_ctl_out == *'CLAIM id=HF1 expected=supported observed=supported'* ]] || r2_ok=0
+  [[ $r2_ctl_out == *'VERDICT_BEARING_CLAIMS=1/1'* ]] || r2_ok=0
+  r2_fault_out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+    CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+    PATH="$WORK/r2faultbin:$PATH" \
+    bash "$SELF" verify-claims "$WORK/claims-r2-hash-fault.jsonl" 2>&1) || r2_fault_rc=$?
+  [[ $r2_fault_rc -eq 1 ]] || r2_ok=0
+  [[ $r2_fault_out == *'FINDING CLAIM_SOURCE_REVISION_MISMATCH severity=warn surface=claims'* ]] || r2_ok=0
+  [[ $r2_fault_out == *'actual=unreadable'* ]] || r2_ok=0
+  [[ $r2_fault_out == *'VERDICT_BEARING_CLAIMS=0/1'* ]] || r2_ok=0
+  [[ $r2_fault_out != *'observed=supported'* ]] || r2_ok=0
+  if [[ $r2_ok -eq 1 ]]; then
+    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" r2-hash-fault-shim "$r2_fault_rc"
+  else
+    printf 'FAIL-case %-28s control_rc=%d fault_rc=%d\n' \
+      r2-hash-fault-shim "$r2_ctl_rc" "$r2_fault_rc"
+    printf '%s\n' "$r2_ctl_out" "$r2_fault_out" | sed 's/^/    | /'
+    failures=$((failures + 1))
+  fi
+  # Nested-key contract, half the landed gate honours: a key spelling inside a
+  # STRING value is not a field (json_has_key/json_str: "a key appearing inside a
+  # string value is not seen as a field"). Note the object form {"meta":{"line":
+  # "9"}} is NOT honoured by the landed gate: it is read as the record's own key
+  # (observed line=9-9). That half is a measured contract violation, reported in
+  # .ufo/waves/round-32/w1/ExecR2Selftest31.md and left unfixed here (R2 is the
+  # detector half; a case asserting the contract must wait for the fix).
+  printf '{"id":"NS1","source":"lib/span.md","span":"alpha beta gamma delta","expect":"supported","note":"{\\"line\\":\\"9\\"}"}\n' \
+    >"$WORK/claims-r2-nested-string.jsonl"
+  tclaims claims-r2-nested-string 0 \
+    'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=1/1' \
+    'CLAIM id=NS1 expected=supported observed=supported source=lib/span.md at=line:1 verdict=match'
 
   if [[ $failures -eq 0 ]]; then
     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"

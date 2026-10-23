@@ -114,3 +114,16 @@ Control wave 10 seats (ordinary task call: 7 critic, 3 mutation-tester), re-scor
 resuming 7 of them (not new seats); build wave 33 (validated v1); falsify wave 34 (validated v1):
 77 seats. Dead seats: none. Refusals: none. Cancelled: 2 (above). No task was re-sent to another
 seat. CriticSeparability31's edit reached the lane gate and was restored (Mistakes).
+
+## Correction appended in round 32 (routed defect R1, `round-31-verifier-spotcheck.md:203-208`)
+
+The `## Falsify wave findings` lines 97-98 above say fail-open hashing (MutC2Hash) is "killed by
+the counter but not by the selftest". That is false. Fail-open hashing survived both detectors:
+its two counter receipts each read `REVISION_BINDING_MATCH=120/120` with `predicate_holds=true`
+(`.ufo/waves/round-31/falsify/MutC2Hash/failopen.mutated.3277349906142620654.receipt.json`,
+`failopen.mutated.9879869915017300514.receipt.json`, gate `5d52f37c…`), and `MutC2Hash.md`
+records it as "SURVIVED BOTH". The third mutant the counter caught and the selftest missed is
+whitespace trimming of the pin, `MutC2Parse/m2-trim-space`: `118/120` with `predicate_holds=false`
+on both seeds (`m2-trim-space.seed{1,2}.receipt.json`, gate `f3d88b23…`) while its selftest passed
+228 cases. The lines above are kept as written. Round 32 re-opened all four receipts
+(`jq '{matched,predicate_holds,gate_sha256}'`).

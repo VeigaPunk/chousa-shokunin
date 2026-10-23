@@ -67,6 +67,8 @@ its author opened the source and judged its tier for the stated scope only.
 | S057 | RFC 5147, URI Fragment Identifiers for the text/plain Media Type — https://www.rfc-editor.org/rfc/rfc5147.txt | spec | A | how a fragment names a line position or line range inside a text/plain entity, counted from zero between lines; not the lane gate's 1-based `at=` lines, claims-file syntax, or that a named line carries the claim's meaning | §2.2.3 "Line Position" and §2.2.4 "Line Range" (RFC text as served 2026-10-23, SHA-256 `c8fff6f2…24f4`) | A citation can name a line range, not only a file; RFC 5147 counts line positions from zero between lines, so the gate's 1-based line numbers are a different convention that must be stated | mined | 2026-10-23 | 365d | corpus/knowledge/line-binding-r31.md |
 | S058 | W3C, Subresource Integrity — https://www.w3.org/TR/2016/REC-SRI-20160623/ (Recommendation, 2016-06-23) | spec | A | Browser Subresource Integrity response-digest validation (tier A: the primary W3C Recommendation for this mechanism); does not establish this lane gate's exact local-file byte contract, claim-schema validation, or read/hash race behavior | sections 3.3.1 “Apply algorithm to response” and 3.3.5 “Does response match metadataList”, dated Recommendation 2016-06-23 | Hash the response representation, compare the resulting digest with expected metadata, and return false when no expected value matches | mined | 2026-10-23 | 365d | corpus/knowledge/revision-binding-r31.md |
 | S059 | Python hashlib documentation — https://docs.python.org/3/library/hashlib.html | docs | A | Python hashlib's SHA-256 digest and hexadecimal representation for bytes fed to a hash object; not a general SHA-256 text-encoding standard, lowercase-output requirement, or the lane's revision-pin contract | `Hash algorithms` and `Hash Objects`: `hashlib.hash.digest_size`, `.update()`, `.digest()`, `.hexdigest()`; Python 3.15.1 documentation, page as served 2026-10-23 | A `sha256()` object digests the concatenation of data fed through `update()`; `hexdigest()` returns a string twice the digest's byte length with hexadecimal digits, but the docs do not specify output letter case | mined | 2026-10-23 | on-release | corpus/knowledge/revision-binding-r31.md |
+| S060 | Python `fcntl` documentation — https://docs.python.org/3/library/fcntl.html | docs | A | Python's documented `fcntl.flock()` interface on a file descriptor and the meaning of `LOCK_EX`; not flock(2) lock lifetime, advisory semantics or NFS behaviour | `fcntl.flock(fd, operation)` and `fcntl.LOCK_EX`; Python 3.15.1 documentation as served 2026-10-23 (HTTP 200, body sha256 `025727ff…3dda3`) | `flock()` takes a file descriptor (or an object with `fileno()`); `LOCK_EX` acquires an exclusive lock — the call the round-32 C1 counter and oracles use | mined | 2026-10-23 | on-release | corpus/knowledge/manifest-append-lock-r32.md |
+| S061 | RFC 9110, HTTP Semantics — https://www.rfc-editor.org/rfc/rfc9110.txt | spec | A | HTTP 404/410 status semantics at the origin server; not local-copy availability and not a rule that a researcher must check a local copy | §15.5.5 "404 Not Found" and §15.5.11 "410 Gone"; RFC 9110 (June 2022), body as served 2026-10-23 (HTTP 200, sha256 `21c1cdce…47232a`) | A 410 says the resource is no longer available at the origin server; neither 404 nor 410 says anything about a local copy, so "could not be followed" is a claim about one access path — the gap the round-32 exempt-hop audit checks locally | mined | 2026-10-23 | 365d | corpus/knowledge/exempt-hop-audit-r32.md |
 
 ## Paths
 
@@ -91,6 +93,18 @@ its author opened the source and judged its tier for the stated scope only.
 
 ## Search log
 
+- Round 32 (2026-10-23 UTC): questions: (C1) what call takes an exclusive lock
+  on an open file descriptor, so two appenders of one manifest can serialize
+  their last-byte probe and append; (C2) what does "could not be followed" say
+  about a source — does an origin-server unavailability status say anything
+  about a local copy? Searched only registered hosts (docs.python.org,
+  www.rfc-editor.org), as the open L0 fetch-scope question asks. Identified 2,
+  screened 2, included 2 (S060, S061), excluded 0. Both bodies were fetched by
+  a scribe seat and re-fetched by the L1 (same SHA-256, each quote found once).
+  Not opened: `https://docs.python.org/3/library/os.html#os.open` (O_APPEND),
+  `https://en.wikipedia.org/wiki/Link_rot` (lower tier than the RFC for the
+  same point). Stop rationale: each claim's contract has one primary source
+  for the one external fact it uses; the rest of each contract is lane design.
 - Round 31 (2026-10-23 UTC): question: how does a citation name a line or line
   range inside a text resource, and how does a check pin the exact bytes a claim
   was made against? Searched only registered hosts (www.rfc-editor.org,

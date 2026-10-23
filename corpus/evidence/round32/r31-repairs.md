@@ -1,0 +1,14 @@
+# Round 32 — repairs routed by the round-31 outside spot-check (R1–R6)
+
+Source: `corpus/lessons/round-31-verifier-spotcheck.md:201-234`. These are repairs, not claims;
+neither round-32 counter reads anything below. Every gate is named by SHA-256.
+
+| Route | Repair | Evidence (re-checked by the L1 this round) |
+|---|---|---|
+| R1 | Named correction appended to `corpus/lessons/round-31.md` (lines 97-98 kept as written) | fail-open receipts 120/120 `predicate_holds=true` (gate `5d52f37c…`); trim-space receipts 118/120 false (gate `f3d88b23…`); `jq '{matched,predicate_holds,gate_sha256}'` on the four files under `.ufo/waves/round-31/falsify/` |
+| R2 counter | Round-31 counters v3 as new files: `corpus/evidence/round31/c1-count-v3.py` (`0efbd172…`), `c2-count-v3.py` (`654183e1…`); v2 files untouched. v3 adds a fixed 12-claim non-string class to each (TOTAL 132) | on the round-31 landed gate `0bc318b3…`: 132/132 twice each; on mutant `85d85a7b…` (non-string `line` read as absent) C1 v3 120/132; on mutant `f9da8257…` (non-string `sha256` read as absent) C2 v3 120/132 (`.ufo/waves/round-32/w1/ExecR2CounterV3/`). Nested-key class not added: the landed gate reads `{"meta":{"line":"9"}}` as the record's own key (`nested-probe.log`), a carried defect, not a counter class |
+| R2 selftest | Seven verify-claims selftest cases (non-string `sha256` and `line`, end-line-only pin, stale-before-span, spaced pins, PATH-shim hash fault → `stale actual=unreadable`, a string value that embeds `"line"`) | `.ufo/waves/round-32/w1/ExecR2Selftest31/` (scratch build `82470e57…` PASS 235); integrated into the round-32 gate |
+| R3 | No-harm battery on the landed round-31 gate `0bc318b3…` (lane `4111607c`) | `.ufo/waves/round-32/w1/ExecNoHarmBase32/`: selftest PASS 228 (case-line list sha256 `a8873064…`), claims-r2 17/17, chain-r3 17/22 CLEAN and chain-r3-broken 1/2 DRIFT (both with `--root` = fleet root), round-1 observable 3/3, round-31 counters v2 120/120 each (seeds 32, 33) |
+| R4 | `SKILL.md` round-25 tally marked historical; `corpus/README.md` Round31 disposition names the final gate; gate comment `cases 216-224` → `216-228` | the three edits in the round-32 commit; cases 216–228 per `.ufo/waves/round-31/falsify/MutC2Parse/m2-trim-space.selftest.stdout` |
+| R5 | `bfc0b02b…` is the SHA-256 of the round-31 v2 MutOracleC1 feasibility oracle, a 199-line python script passed to the frozen counter as `--gate`; it is not a gate build. Its bytes are committed at `.ufo/waves/round-31/controls/MutOracleC1/v2/oracle-c1.sh` | `sha256sum` of that file = `bfc0b02b83f554d1…c617`; 43 files under `.ufo/waves/round-31/` bind it (21 receipts, 21 output echoes, 1 manifest); `.ufo/waves/round-32/w1/RevengerR5Oracle32.md` |
+| R6 | Fleet report wording: the round-32 report names the gate SHA-256 of every run it cites | `.ufo/reports/round-32/chousa.md` (fleet repo) |
