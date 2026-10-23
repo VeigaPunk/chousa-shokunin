@@ -275,3 +275,16 @@ index by contract (no git/jj write commands), so I cannot stage anything. Verifi
 
 My §1-§7 receipts were already swept in by the lane's erratum-11 commit (`8a96711`); the §8/§9
 artifacts need a `git add` from whoever owns the lane index if they should survive into r36.
+
+**(c) Determinism, measured (peer compared builders; I applied the same standard to mine).**
+`build-forge.py` is a pure function of (gate bytes, absolute helper path):
+
+- same args twice → byte-identical: `507d940f…` twice (`verify/det-1.sh`, `verify/det-2.sh`).
+- different helper path only → different bytes (`0296157a…`) but identical behaviour:
+  `WITNESS=pass OUTPUT=9/9 STAMPS chunk=360 direct=1 (long records=8)`, exit 0
+  (`wit-det-alt-3547.json`).
+
+So the honest property statement for both seats' builders is: **reproducibility-of-bytes at fixed
+args, reproducibility-of-behaviour across gate revisions and helper paths** — never byte identity
+across revisions. Peer `ExecC2Fresh2` measured the same property for `build-k10.py` and corrected
+their earlier framing accordingly (their `det-helper-path.json`).

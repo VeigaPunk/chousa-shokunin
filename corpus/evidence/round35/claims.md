@@ -288,3 +288,21 @@ predicate is right (the output counter's job).
    selftest case is locale-dependent (252–256 pass in both locales on every blob); the routing is.
    r36 hygiene (already routed): pin `LC_ALL=C.UTF-8` for gate + counters + selftest and add a
    C-locale selftest arm.
+
+15. **The echo leak's exact seam, and the pin's output-neutrality measured over 24 invocations.**
+   Wave seat ExecPinEchoStability: off the echo path the landed gate is **byte-identical**
+   (stdout + stderr + rc) to the base gate on all 24 invocations tested — `--help`, `--selftest`
+   (256/256, 12 781 bytes identical), `verify`, `--drift` none/missing, `verify-claims`,
+   `verify-chain`, `verify-sweeps`, `verify-integrity`, `verify-metadata` (incl. `--as-of` /
+   `--registry`), `verify-all` (incl. `--json`; manifest differs only in `gate_sha256`), no-args,
+   unknown flag, missing inputs — and `--pin` differs only in the gate's own sha256 stamp. So R1 and
+   the pin block are output-neutral by default. The echo leak (erratum 8a) has its mechanism now:
+   `gate_canonical_capture` runs the nested `verify-all` with `2>&1` and its `env -u` list omits
+   `CHOUSA_GREP_PIN_ECHO` (`research-gate.sh:3862-3866`), so the baseline grows 2989 B → 3074 B with
+   the line at position 9, and a later `--drift` at the other flag state reports a false
+   `GATE_DRIFT: ±LINE` exit 1 (all four cells measured); the drift diagnostic prints only `LINE`
+   because `gate_drift_line_id` (`:3888-3900`) has no `GATE_GREP` case. Also measured: `--help` and
+   unknown-flag exit before `grep_pin_init` (`:8039`) and emit no echo line, while post-parse errors
+   do; and with grep absent from `PATH` the base gate **silently degrades** (verify rc 0 plus a 232 B
+   "grep: command not found"; claims rc 2) where the landed gate is byte-identical to its clean run —
+   the intended C1 delta, stated so the claim is not overstated.

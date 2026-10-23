@@ -412,16 +412,28 @@ chunk body, for the zero-execution proof).
 Scratch (large, `/tmp`): `/tmp/hyaku/chousa-r35/w2/ExecC2Fresh2/` — clone, the witness's own
 per-seed fixtures, `ctl-*.json` control receipts, `census.py` call logs.
 
-**Untracked at the time of writing** (this seat is read-only on git; the L1 must `git add` them if
-they are to survive into r36): `head-wit-3547.json`, `head-c2-3547.json`, `k10-head-wit.json`,
-`c2-attack-k10-head.json`, `k10-head.sh`. The §3.5 reproducers (`k10-forge.sh`,
-`k10-forge-inst.sh`, `build-k10.py`, `k10-forge.json`, `k10-inst.json`,
-`c2-attack-k10.json`, `c2-attack-k10-3559.json`) were already tracked when this note was written.
-Seat `chousa-r35-w2-ExecC2Fresh1` confirms it is likewise read-only on the git index and also has
-uncommitted artifacts; **neither executor seat can close the staging gap — it needs an L1 action.**
+**Staging state (verified read-only, after the lane's straggler commits `19fd749` / `038543b`).**
+All 40 artifacts in this directory are **tracked** (`git ls-files` = 40; `git status --porcelain` on
+the directory = 0 lines), including every §3.5/§3.6 reproducer and the six I had earlier listed as
+untracked (`head-wit-3547.json`, `head-c2-3547.json`, `k10-head-wit.json`,
+`c2-attack-k10-head.json`, `k10-head.sh`, `det-helper-path.json`). The only uncommitted change from
+this seat is this report file itself (working tree ahead of `HEAD` by the determinism/staging
+paragraphs). Earlier drafts of this section asked for a staging action that is now a no-op; this
+paragraph supersedes them.
+
+**Stamp-count note.** The forged-stamp totals differ between the two seats' forges — mine reports
+`chunk=9`, seat `chousa-r35-w2-ExecC2Fresh1`'s reports `chunk=360` — because the two engines emit
+stamps at different rates (one per long search vs many per run). Both are forged counts; the
+load-bearing measurement in both is **real chunk-body executions = 0**.
 
 **Reproducibility note for r36.** `build-k10.py` regenerates a forged candidate from
 (gate, helper path) with no patched gate shipped. Measured: same args twice → byte-identical
 (`7e5d420a…`); a different helper path → different bytes (`afe4c243…`), same behaviour
 (`WITNESS=pass chunk=9`, exit 0); a different gate revision → different bytes, same behaviour,
-because the chunk entry line is resolved at runtime from the gate's own source.
+because the chunk entry line is resolved at runtime from the gate's own source. Seat
+`chousa-r35-w2-ExecC2Fresh1`'s `build-forge.py` was measured to have the same property (same args →
+byte-identical `507d940f…` twice; helper path changed → `0296157a…`, identical behaviour), so **both
+builders are the same class**: reproducibility-of-bytes at fixed args, reproducibility-of-behaviour
+across gate revisions and helper paths, never byte identity across either. Any apparent byte-hash
+discrepancy between a shipped forged gate and a fresh rebuild is the embedded helper path, not a
+behavioural difference.
