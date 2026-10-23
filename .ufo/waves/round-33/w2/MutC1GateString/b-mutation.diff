@@ -1,0 +1,11 @@
+--- pristine-gate.sh
++++ b-mutant-gate.sh
+@@ -1164,8 +1164,6 @@
+     while :; do
+       (( i < n )) || return 1
+       c=${s:i:1}
+-      if (( esc )); then key+=$c; esc=0; i=$((i + 1)); continue; fi
+-      if [[ $c == '\' ]]; then key+=$c; esc=1; i=$((i + 1)); continue; fi
+       if [[ $c == '"' ]]; then i=$((i + 1)); break; fi
+       key+=$c; i=$((i + 1))
+     done

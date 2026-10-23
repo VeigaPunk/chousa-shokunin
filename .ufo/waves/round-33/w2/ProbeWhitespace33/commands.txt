@@ -1,0 +1,17 @@
+# ProbeWhitespace33 command log (2026-10-23). Scratch: /fast/scratch/hyaku/chousa-r33/w2/ProbeWhitespace33
+# base gate:  git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 2b9cc73aed30c2e2c95699db6617d9531ef49fb2:tools/research-gate.sh > base-gate.sh   (sha256 f4731885ac0f83076210be364fd443a4378ac88c3b3ef94b5bf1c9e380f003f0)
+# landed gate: cp /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh landed-gate.sh  (sha256 94a7be5a54dd5cebd9532f2417c4eaedc401c9a0646029dcca8acc445378506e)
+# oracle: /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/controls/L1-design/oracle-gate.sh (sha256 930a20755418eed3277a893c5b8a96bffd93f2ea90a79fd79bc122426e5677a9)
+# fixture root: root/SRC.md sha256 abec6741a6b02969a6d80720290140c110a96cbbfd07481091d9cdb10069d127
+# per case:
+#   timeout 120 bash landed-gate.sh verify-claims cases/<case>.jsonl --root "$PWD/root" > out/<case>.landed.txt 2>&1
+#   timeout 120 bash base-gate.sh   verify-claims cases/<case>.jsonl --root "$PWD/root" > out/<case>.base.txt   2>&1
+# counter (kill rule: --receipt into own dir, stdout to a file, fresh seeds 3411/3412):
+#   C1_TMP=<scratch>/tmp TMPDIR=<scratch>/tmp timeout 900 python3 corpus/evidence/round33/c1-count-v2.py \
+#     --gate tools/research-gate.sh --seed 3411 \
+#     --receipt .ufo/waves/round-33/w2/ProbeWhitespace33/c1v2-seed3411.json > <scratch>/out/c1v2-seed3411.stdout.txt 2>&1
+#   same with seed 3412. Both rc=0, both TOPLEVEL_FIELD_MATCH=156/156.
+# oracle runs:
+#   timeout 120 bash <oracle-gate.sh> verify-claims cases/<case>.jsonl --root "$PWD/root" > out/<case>.oracle.txt 2>&1
+# python validity oracle:
+#   python3 -c 'import json; [json.loads(ln) for ln in open(path,"rb").read().split(b"\n") if ln.strip()]'

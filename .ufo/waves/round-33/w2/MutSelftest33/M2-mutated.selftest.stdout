@@ -1,0 +1,17 @@
+ok-case  242 r33-top-nested-line          exit=0
+ok-case  243 r33-top-nested-sha           exit=0
+ok-case  244 r33-top-nested-id            exit=0
+FAIL-case r33-top-dup-line             exit=0 want=1 verdicts=1 vbearing=1 token=RESEARCH_GATE: DRIFT FINDING CLAIM_RECORD_INVALID severity=warn surface=claims duplicate top-level key line CLAIM id=DP1 expected=supported observed=invalid source=lib/span.md at=- verdict=invalid VERDICT_BEARING_CLAIMS=0/1 claims=1 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=1 findings=1 drift=1
+    | research-gate v2 — ts=2026-10-23T00:00:00Z — mode=claims — claims=/fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M2-mutated.selftest-fixture/r33-top-dup-line.jsonl
+    | CLAIM id=DP1 expected=supported observed=supported source=lib/span.md at=line:1 verdict=match
+    | VERDICT_BEARING_CLAIMS=1/1
+    | RESEARCH_GATE: CLEAN (claims=1 supported=1 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)
+ok-case  246 r33-top-confuser-flat        exit=0
+ok-case  247 r33-top-confuser-nested      exit=0
+FAIL-case r33-top-dup-id               exit=0 want=1 verdicts=1 vbearing=1 token=RESEARCH_GATE: DRIFT FINDING CLAIM_RECORD_INVALID severity=warn surface=claims duplicate top-level key id CLAIM id=DI1 expected=supported observed=invalid source=lib/span.md at=- verdict=invalid CLAIM id=line2 expected=supported observed=invalid source=lib/span.md at=- verdict=invalid VERDICT_BEARING_CLAIMS=0/2 claims=2 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=2 findings=2 drift=2
+    | research-gate v2 — ts=2026-10-23T00:00:00Z — mode=claims — claims=/fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M2-mutated.selftest-fixture/r33-top-dup-id.jsonl
+    | CLAIM id=DI1 expected=supported observed=supported source=lib/span.md at=line:1 verdict=match
+    | CLAIM id=DI2 expected=supported observed=supported source=lib/span.md at=line:1 verdict=match
+    | VERDICT_BEARING_CLAIMS=2/2
+    | RESEARCH_GATE: CLEAN (claims=2 supported=2 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)
+R33_TARGETED_SELFTEST: failures=2 cases=7 original=242-248

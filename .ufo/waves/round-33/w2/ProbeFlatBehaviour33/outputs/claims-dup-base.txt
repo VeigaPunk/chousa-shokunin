@@ -1,0 +1,21 @@
+research-gate v2 — ts=2026-10-23T09:05:17Z — mode=claims — claims=claims-dup.jsonl
+CLAIM id=m3_0 expected=supported observed=supported source=source3.txt at=lines:1-2 verdict=match
+CLAIM id=m3_1 expected=supported observed=supported source=source3.txt at=lines:3-4 verdict=match
+CLAIM id=m3_2 expected=supported observed=mislocated source=source3.txt at=lines:1-2 verdict=mismatch
+CLAIM id=m3_3 expected=supported observed=supported source=source3.txt at=line:2 verdict=match
+CLAIM id=m3_4 expected=supported observed=supported source=source3.txt at=line:4 verdict=match
+CLAIM id=m3_5 expected=supported observed=mislocated source=source3.txt at=line:2 verdict=mismatch
+CLAIM id=q01 expected=contradicted observed=unproven source=source.txt at=line:2 verdict=mismatch
+CLAIM id=q02 expected=supported observed=supported source=source.txt at=line:2 verdict=match
+CLAIM id=q03 expected=supported observed=supported source=source.txt at=line:2 verdict=match
+CLAIM id=a expected=supported observed=supported source=source.txt at=line:2 verdict=match
+CLAIM id=q05 expected=supported observed=supported source=source.txt at=line:2 verdict=match
+CLAIM id=q06 expected=supported observed=supported source=source.txt at=line:2 verdict=match
+CLAIM id=q07 expected=supported observed=supported source=source.txt at=line:2 verdict=match
+CLAIM id=q08 expected=unsupported observed=stale source=source.txt at=- verdict=mismatch
+FINDING CLAIM_LINE_MISMATCH severity=warn surface=claims obs=id=m3_2 line=2-3 first_delimited_occurrence=lines:1-2
+FINDING CLAIM_LINE_MISMATCH severity=warn surface=claims obs=id=m3_5 line=1-1 first_delimited_occurrence=line:2
+FINDING CONTRADICTION_MARKER_ABSENT severity=warn surface=claims obs=id=q01 at=line:2 declared marker not found within span lines
+FINDING CLAIM_SOURCE_REVISION_MISMATCH severity=warn surface=claims obs=id=q08 pin=000000000000 actual=54dd769e5262
+VERDICT_BEARING_CLAIMS=10/14
+RESEARCH_GATE: DRIFT (claims=14 supported=10 contradicted=0 unsupported=0 mismatched=4 unproven=1 refused=0 invalid=0 findings=4 drift=4)

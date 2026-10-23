@@ -1,0 +1,39 @@
+Normalized differential (ts= masked); case / landed-vs-base output / landed observed / base observed
+01-flat-plain        SAME supported supported   no spaces
+02-spaced            SAME supported supported   spaces around : and ,
+03-tabs              SAME supported supported   tabs as separators
+04-mixed             SAME supported supported   spaces+tabs
+05-leadtrail         SAME supported supported   leading/trailing spaces+tabs
+06-crlf              SAME supported supported   CRLF line ending
+07-cr-inside         SAME supported supported   CR between members (JSON ws)
+08-ff-between        SAME supported supported   FF between members (NOT JSON ws)
+09-vt-between        SAME supported supported   VT between members (NOT JSON ws)
+10-ff-colon          SAME supported supported   FF around colon
+11-vt-colon          SAME supported supported   VT around colon
+12-ff-trailing       SAME supported supported   trailing FF stripped by prestrip
+13-vt-leading        SAME supported supported   leading VT stripped by prestrip
+14-nbsp-between      DIFF invalid  supported   NBSP separator (not JSON ws)
+15-pinned-spaced     SAME supported supported   line+sha256 pins, spaces
+16-pinned-crlf       SAME supported supported   line+sha256 pins, CRLF
+17-pinned-ff         SAME supported supported   line+sha256 pins, FF separators
+18-bom               SAME invalid  invalid     BOM prefix
+19-string-space      SAME supported supported   space inside a string value
+20-multi-flat        SAME supported supported   4 valid records, mixed ws, no final LF
+21-cr-only           DIFF invalid  supported   CR-only record separators
+22-empty-obj         SAME invalid  invalid     {}
+23-empty-obj-spaced  SAME invalid  invalid     {  }
+24-trailing-comma    DIFF invalid  supported   trailing comma (invalid JSON)
+25-scalar-members    SAME supported supported   number/exp/neg/bool/null members
+26-string-escapes    SAME supported supported   escaped {[,:}] and \" in strings
+27-backslash-end     SAME supported supported   string ending in escaped backslash
+28-esc-ws-id         SAME supported supported   \t escape inside id
+29-empty-containers  SAME supported supported   [] and {} values
+30-crlf-blank        SAME supported supported   CRLF with blank CRLF line
+31-ff-space-mix      SAME supported supported   FF after { / VT before keys / FF before }
+32-pinned-line2      SAME supported supported   line=2 pin + sha256, CRLF
+33-rawff-in-string   SAME supported supported   raw FF inside id string (invalid JSON)
+34-rawtab-in-string  SAME supported supported   raw TAB inside id string (invalid JSON)
+35-ff-no-comma       DIFF invalid  supported   FF in place of a comma (invalid JSON)
+
+Every valid-JSON case (01-07, 15-16, 19-20, 25-32) is byte-identical after ts masking: item 4 holds on this axis.
+All FF/VT-accepting lines are rejected by python3 json.loads and by the L1 oracle gate (out/<case>.oracle.txt).

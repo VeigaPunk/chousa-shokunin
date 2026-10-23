@@ -1,0 +1,140 @@
+{
+ "description": "Leave escape state set after consuming an escaped character (1185).",
+ "before_sha256": "94a7be5a54dd5cebd9532f2417c4eaedc401c9a0646029dcca8acc445378506e",
+ "mutant_sha256": "b57da4e7d529f80ebfe5dc0bd7796a7c3140b41dd58d5203bce2b6f28a7521a4",
+ "mutated": {
+  "label": "M3-mutated",
+  "gate": "/fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M3/gate.sh",
+  "gate_sha256": "b57da4e7d529f80ebfe5dc0bd7796a7c3140b41dd58d5203bce2b6f28a7521a4",
+  "seed": 863330000006,
+  "environment": {
+   "C1_TMP": "/fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M3-mutated.tmp",
+   "C2_TMP": "/fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M3-mutated.tmp",
+   "TMPDIR": "/fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M3-mutated.tmp"
+  },
+  "selftest": {
+   "command": "timeout --kill-after=5s 180s prlimit --nproc=2000 --as=4000000000 --fsize=900000 -- bash /fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/targeted-selftest.sh /fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M3/gate.sh /fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M3-mutated.selftest-fixture > /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M3-mutated.selftest.stdout 2> /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M3-mutated.selftest.stderr",
+   "pid": 1374656,
+   "exit_code": 1,
+   "elapsed_s": 0.386,
+   "stdout": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M3-mutated.selftest.stdout",
+   "stdout_sha256": "25ec35f80aa7b5e102108c533d6fd80e76b3060289d9537ef39cba122d9eb78b",
+   "stderr": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M3-mutated.selftest.stderr",
+   "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "failed_cases": [
+    "r33-top-confuser-flat"
+   ],
+   "passed_cases": [
+    "r33-top-nested-line",
+    "r33-top-nested-sha",
+    "r33-top-nested-id",
+    "r33-top-dup-line",
+    "r33-top-confuser-nested",
+    "r33-top-dup-id"
+   ],
+   "summary": "R33_TARGETED_SELFTEST: failures=1 cases=7 original=242-248"
+  },
+  "counter": {
+   "command": "timeout --kill-after=5s 700s prlimit --nproc=2000 --as=4000000000 --fsize=900000 -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round33/c1-count-v2.py --gate /fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M3/gate.sh --seed 863330000006 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M3-mutated.json > /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M3-mutated.counter.stdout 2> /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M3-mutated.counter.stderr",
+   "pid": 1380431,
+   "exit_code": 1,
+   "elapsed_s": 7.998,
+   "stdout": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M3-mutated.counter.stdout",
+   "stdout_sha256": "42a213218688920e6d115fa50a8b5bd2b693cc7f89582628b8ff8d00c920f7e4",
+   "stderr": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M3-mutated.counter.stderr",
+   "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "summary": "TOPLEVEL_FIELD_MATCH=148/156",
+   "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M3-mutated.json",
+   "matched": 148,
+   "total": 156,
+   "gate_rc": 1,
+   "gate_timed_out": false,
+   "predicate_holds": false,
+   "per_class": {
+    "D1_duplicate_top_level": "24/24",
+    "S2_nested_confusers": "6/6",
+    "N8_nested_source_decoy_uns": "6/6",
+    "N5_nested_sha_only": "12/12",
+    "S1_flat_confusers": "4/12",
+    "N3_top_line_wrong_nested_right": "12/12",
+    "N10_nested_span_decoy": "6/6",
+    "N4_nested_sha_decoy": "12/12",
+    "N7_nested_source_decoy_sup": "6/6",
+    "N6_top_sha_stale_nested_right": "12/12",
+    "F1_flat_plain": "12/12",
+    "N2_nested_line_only": "12/12",
+    "N9_nested_id_decoy": "6/6",
+    "N1_nested_line_decoy": "12/12",
+    "N11_nested_marker_expect_decoy": "6/6"
+   }
+  }
+ },
+ "restored_sha256": "94a7be5a54dd5cebd9532f2417c4eaedc401c9a0646029dcca8acc445378506e",
+ "exact_bytes_restored": true,
+ "restored": {
+  "label": "M3-restored",
+  "gate": "/fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M3/gate.sh",
+  "gate_sha256": "94a7be5a54dd5cebd9532f2417c4eaedc401c9a0646029dcca8acc445378506e",
+  "seed": 863330000007,
+  "environment": {
+   "C1_TMP": "/fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M3-restored.tmp",
+   "C2_TMP": "/fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M3-restored.tmp",
+   "TMPDIR": "/fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M3-restored.tmp"
+  },
+  "selftest": {
+   "command": "timeout --kill-after=5s 180s prlimit --nproc=2000 --as=4000000000 --fsize=900000 -- bash /fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/targeted-selftest.sh /fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M3/gate.sh /fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M3-restored.selftest-fixture > /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M3-restored.selftest.stdout 2> /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M3-restored.selftest.stderr",
+   "pid": 1500836,
+   "exit_code": 0,
+   "elapsed_s": 0.991,
+   "stdout": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M3-restored.selftest.stdout",
+   "stdout_sha256": "7bd4227f58e12efb9f16b7f2022670e7717d2c6a7b5f037fcf207708bc698bc7",
+   "stderr": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M3-restored.selftest.stderr",
+   "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "failed_cases": [],
+   "passed_cases": [
+    "r33-top-nested-line",
+    "r33-top-nested-sha",
+    "r33-top-nested-id",
+    "r33-top-dup-line",
+    "r33-top-confuser-flat",
+    "r33-top-confuser-nested",
+    "r33-top-dup-id"
+   ],
+   "summary": "R33_TARGETED_SELFTEST: failures=0 cases=7 original=242-248"
+  },
+  "counter": {
+   "command": "timeout --kill-after=5s 700s prlimit --nproc=2000 --as=4000000000 --fsize=900000 -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round33/c1-count-v2.py --gate /fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M3/gate.sh --seed 863330000007 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M3-restored.json > /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M3-restored.counter.stdout 2> /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M3-restored.counter.stderr",
+   "pid": 1511047,
+   "exit_code": 0,
+   "elapsed_s": 13.898,
+   "stdout": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M3-restored.counter.stdout",
+   "stdout_sha256": "1eeb8be8062e53154648a1561adc741386d679d7a21ab05ae895e9a4936c31ab",
+   "stderr": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M3-restored.counter.stderr",
+   "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "summary": "TOPLEVEL_FIELD_MATCH=156/156",
+   "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M3-restored.json",
+   "matched": 156,
+   "total": 156,
+   "gate_rc": 1,
+   "gate_timed_out": false,
+   "predicate_holds": true,
+   "per_class": {
+    "N9_nested_id_decoy": "6/6",
+    "S1_flat_confusers": "12/12",
+    "N3_top_line_wrong_nested_right": "12/12",
+    "S2_nested_confusers": "6/6",
+    "N8_nested_source_decoy_uns": "6/6",
+    "N5_nested_sha_only": "12/12",
+    "N2_nested_line_only": "12/12",
+    "D1_duplicate_top_level": "24/24",
+    "N1_nested_line_decoy": "12/12",
+    "N6_top_sha_stale_nested_right": "12/12",
+    "N4_nested_sha_decoy": "12/12",
+    "N10_nested_span_decoy": "6/6",
+    "F1_flat_plain": "12/12",
+    "N7_nested_source_decoy_sup": "6/6",
+    "N11_nested_marker_expect_decoy": "6/6"
+   }
+  }
+ }
+}

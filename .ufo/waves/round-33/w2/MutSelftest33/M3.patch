@@ -1,0 +1,11 @@
+--- landed-gate.sh
++++ M3/gate.sh
+@@ -1182,7 +1182,7 @@
+       while :; do
+         (( i < n )) || return 1
+         c=${s:i:1}
+-        if (( esc )); then val+=$c; esc=0; i=$((i + 1)); continue; fi
++        if (( esc )); then val+=$c; esc=1; i=$((i + 1)); continue; fi
+         if [[ $c == '\' ]]; then val+=$c; esc=1; i=$((i + 1)); continue; fi
+         if [[ $c == '"' ]]; then i=$((i + 1)); break; fi
+         val+=$c; i=$((i + 1))

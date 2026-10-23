@@ -1,0 +1,22 @@
+FAIL-case r33-top-nested-line          exit=1 want=0 verdicts=1 vbearing=1 token=RESEARCH_GATE: CLEAN VERDICT_BEARING_CLAIMS=1/1 CLAIM id=NB1 expected=supported observed=supported source=lib/span.md at=line:1 verdict=match
+    | research-gate v2 — ts=2026-10-23T00:00:00Z — mode=claims — claims=/fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M7-mutated.selftest-fixture/r33-top-nested-line.jsonl
+    | CLAIM id=NB1 expected=supported observed=mislocated source=lib/span.md at=line:1 verdict=mismatch
+    | FINDING CLAIM_LINE_MISMATCH severity=warn surface=claims obs=id=NB1 line=9-9 first_delimited_occurrence=line:1
+    | VERDICT_BEARING_CLAIMS=0/1
+    | RESEARCH_GATE: DRIFT (claims=1 supported=0 contradicted=0 unsupported=0 mismatched=1 unproven=0 refused=0 invalid=0 findings=1 drift=1)
+ok-case  243 r33-top-nested-sha           exit=0
+FAIL-case r33-top-nested-id            exit=0 want=0 verdicts=1 vbearing=1 token=RESEARCH_GATE: CLEAN VERDICT_BEARING_CLAIMS=1/1 CLAIM id=NB3 expected=supported observed=supported source=lib/span.md at=line:1 verdict=match
+    | research-gate v2 — ts=2026-10-23T00:00:00Z — mode=claims — claims=/fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M7-mutated.selftest-fixture/r33-top-nested-id.jsonl
+    | CLAIM id=FAKEID expected=supported observed=supported source=lib/span.md at=line:1 verdict=match
+    | VERDICT_BEARING_CLAIMS=1/1
+    | RESEARCH_GATE: CLEAN (claims=1 supported=1 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)
+ok-case  245 r33-top-dup-line             exit=1
+ok-case  246 r33-top-confuser-flat        exit=0
+FAIL-case r33-top-confuser-nested      exit=1 want=0 verdicts=1 vbearing=1 token=RESEARCH_GATE: CLEAN VERDICT_BEARING_CLAIMS=1/1 CLAIM id=FC2 expected=supported observed=supported source=lib/span.md at=line:1 verdict=match
+    | research-gate v2 — ts=2026-10-23T00:00:00Z — mode=claims — claims=/fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M7-mutated.selftest-fixture/r33-top-confuser-nested.jsonl
+    | CLAIM id=FC2 expected=supported observed=mislocated source=lib/span.md at=line:1 verdict=mismatch
+    | FINDING CLAIM_LINE_MISMATCH severity=warn surface=claims obs=id=FC2 line=9-9 first_delimited_occurrence=line:1
+    | VERDICT_BEARING_CLAIMS=0/1
+    | RESEARCH_GATE: DRIFT (claims=1 supported=0 contradicted=0 unsupported=0 mismatched=1 unproven=0 refused=0 invalid=0 findings=1 drift=1)
+ok-case  248 r33-top-dup-id               exit=1
+R33_TARGETED_SELFTEST: failures=3 cases=7 original=242-248

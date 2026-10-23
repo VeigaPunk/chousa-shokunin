@@ -1,0 +1,140 @@
+{
+ "description": "Regress the field-presence accessor to raw regex search (1272).",
+ "before_sha256": "94a7be5a54dd5cebd9532f2417c4eaedc401c9a0646029dcca8acc445378506e",
+ "mutant_sha256": "fb8598db1dfe26abfcb967351288edf7afac926994c91abda9636b3411bbe63e",
+ "mutated": {
+  "label": "M8-mutated",
+  "gate": "/fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M8/gate.sh",
+  "gate_sha256": "fb8598db1dfe26abfcb967351288edf7afac926994c91abda9636b3411bbe63e",
+  "seed": 863330000016,
+  "environment": {
+   "C1_TMP": "/fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M8-mutated.tmp",
+   "C2_TMP": "/fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M8-mutated.tmp",
+   "TMPDIR": "/fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M8-mutated.tmp"
+  },
+  "selftest": {
+   "command": "timeout --kill-after=5s 180s prlimit --nproc=2000 --as=4000000000 --fsize=900000 -- bash /fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/targeted-selftest.sh /fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M8/gate.sh /fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M8-mutated.selftest-fixture > /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M8-mutated.selftest.stdout 2> /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M8-mutated.selftest.stderr",
+   "pid": 1707370,
+   "exit_code": 1,
+   "elapsed_s": 0.62,
+   "stdout": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M8-mutated.selftest.stdout",
+   "stdout_sha256": "994eb4c7266b46f2339e1c5932b932df36fb4edef5c0c220e71e2eff6581f38d",
+   "stderr": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M8-mutated.selftest.stderr",
+   "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "failed_cases": [
+    "r33-top-nested-sha"
+   ],
+   "passed_cases": [
+    "r33-top-nested-line",
+    "r33-top-nested-id",
+    "r33-top-dup-line",
+    "r33-top-confuser-flat",
+    "r33-top-confuser-nested",
+    "r33-top-dup-id"
+   ],
+   "summary": "R33_TARGETED_SELFTEST: failures=1 cases=7 original=242-248"
+  },
+  "counter": {
+   "command": "timeout --kill-after=5s 700s prlimit --nproc=2000 --as=4000000000 --fsize=900000 -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round33/c1-count-v2.py --gate /fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M8/gate.sh --seed 863330000016 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M8-mutated.json > /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M8-mutated.counter.stdout 2> /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M8-mutated.counter.stderr",
+   "pid": 1717788,
+   "exit_code": 1,
+   "elapsed_s": 9.17,
+   "stdout": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M8-mutated.counter.stdout",
+   "stdout_sha256": "e260bc5d7b5472ae32d818f3f675c16113ead38cd1b17a9f5d1fea63d988bfef",
+   "stderr": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M8-mutated.counter.stderr",
+   "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "summary": "TOPLEVEL_FIELD_MATCH=132/156",
+   "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M8-mutated.json",
+   "matched": 132,
+   "total": 156,
+   "gate_rc": 1,
+   "gate_timed_out": false,
+   "predicate_holds": false,
+   "per_class": {
+    "N10_nested_span_decoy": "6/6",
+    "N5_nested_sha_only": "0/12",
+    "N3_top_line_wrong_nested_right": "12/12",
+    "D1_duplicate_top_level": "24/24",
+    "S2_nested_confusers": "6/6",
+    "F1_flat_plain": "12/12",
+    "N6_top_sha_stale_nested_right": "12/12",
+    "N8_nested_source_decoy_uns": "6/6",
+    "N4_nested_sha_decoy": "12/12",
+    "S1_flat_confusers": "12/12",
+    "N2_nested_line_only": "0/12",
+    "N1_nested_line_decoy": "12/12",
+    "N9_nested_id_decoy": "6/6",
+    "N11_nested_marker_expect_decoy": "6/6",
+    "N7_nested_source_decoy_sup": "6/6"
+   }
+  }
+ },
+ "restored_sha256": "94a7be5a54dd5cebd9532f2417c4eaedc401c9a0646029dcca8acc445378506e",
+ "exact_bytes_restored": true,
+ "restored": {
+  "label": "M8-restored",
+  "gate": "/fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M8/gate.sh",
+  "gate_sha256": "94a7be5a54dd5cebd9532f2417c4eaedc401c9a0646029dcca8acc445378506e",
+  "seed": 863330000017,
+  "environment": {
+   "C1_TMP": "/fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M8-restored.tmp",
+   "C2_TMP": "/fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M8-restored.tmp",
+   "TMPDIR": "/fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M8-restored.tmp"
+  },
+  "selftest": {
+   "command": "timeout --kill-after=5s 180s prlimit --nproc=2000 --as=4000000000 --fsize=900000 -- bash /fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/targeted-selftest.sh /fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M8/gate.sh /fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M8-restored.selftest-fixture > /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M8-restored.selftest.stdout 2> /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M8-restored.selftest.stderr",
+   "pid": 1856385,
+   "exit_code": 0,
+   "elapsed_s": 0.793,
+   "stdout": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M8-restored.selftest.stdout",
+   "stdout_sha256": "7bd4227f58e12efb9f16b7f2022670e7717d2c6a7b5f037fcf207708bc698bc7",
+   "stderr": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M8-restored.selftest.stderr",
+   "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "failed_cases": [],
+   "passed_cases": [
+    "r33-top-nested-line",
+    "r33-top-nested-sha",
+    "r33-top-nested-id",
+    "r33-top-dup-line",
+    "r33-top-confuser-flat",
+    "r33-top-confuser-nested",
+    "r33-top-dup-id"
+   ],
+   "summary": "R33_TARGETED_SELFTEST: failures=0 cases=7 original=242-248"
+  },
+  "counter": {
+   "command": "timeout --kill-after=5s 700s prlimit --nproc=2000 --as=4000000000 --fsize=900000 -- python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round33/c1-count-v2.py --gate /fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M8/gate.sh --seed 863330000017 --receipt /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M8-restored.json > /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M8-restored.counter.stdout 2> /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M8-restored.counter.stderr",
+   "pid": 1867996,
+   "exit_code": 0,
+   "elapsed_s": 10.56,
+   "stdout": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M8-restored.counter.stdout",
+   "stdout_sha256": "1eeb8be8062e53154648a1561adc741386d679d7a21ab05ae895e9a4936c31ab",
+   "stderr": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M8-restored.counter.stderr",
+   "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "summary": "TOPLEVEL_FIELD_MATCH=156/156",
+   "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-33/w2/MutSelftest33/M8-restored.json",
+   "matched": 156,
+   "total": 156,
+   "gate_rc": 1,
+   "gate_timed_out": false,
+   "predicate_holds": true,
+   "per_class": {
+    "N4_nested_sha_decoy": "12/12",
+    "N9_nested_id_decoy": "6/6",
+    "D1_duplicate_top_level": "24/24",
+    "N5_nested_sha_only": "12/12",
+    "N1_nested_line_decoy": "12/12",
+    "N2_nested_line_only": "12/12",
+    "N6_top_sha_stale_nested_right": "12/12",
+    "S1_flat_confusers": "12/12",
+    "N3_top_line_wrong_nested_right": "12/12",
+    "N7_nested_source_decoy_sup": "6/6",
+    "N10_nested_span_decoy": "6/6",
+    "F1_flat_plain": "12/12",
+    "S2_nested_confusers": "6/6",
+    "N11_nested_marker_expect_decoy": "6/6",
+    "N8_nested_source_decoy_uns": "6/6"
+   }
+  }
+ }
+}

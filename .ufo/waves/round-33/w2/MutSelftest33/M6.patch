@@ -1,0 +1,11 @@
+--- landed-gate.sh
++++ M6/gate.sh
+@@ -1635,7 +1635,7 @@
+         show_id=line$lineno
+         if [[ -n $id && -z ${JSON_DUPNONSTR[id]+x} && -n ${JSON_DUPSTR[id]+x} ]]; then
+           id2=$(json_unescape "${JSON_DUPSTR[id]}")
+-          if [[ $id2 == "$id" ]]; then show_id=$id; fi
++          if [[ -n $id2 ]]; then show_id=$id; fi
+         fi
+       fi
+       [[ $dup == expect ]] && show_exp=-

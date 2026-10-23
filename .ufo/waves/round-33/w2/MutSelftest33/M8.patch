@@ -1,0 +1,11 @@
+--- landed-gate.sh
++++ M8/gate.sh
+@@ -1269,7 +1269,7 @@
+   # (number, bool, null, …) is distinguishable from an absent key, and a member
+   # inside a nested object or a key spelling inside a string value is not seen.
+   claim_scan "$1" || return 1
+-  [[ -n ${JSON_PRESENT["$2"]+x} ]]
++  [[ $1 =~ \"$2\"[[:space:]]*: ]]
+ }
+ 
+ json_dup() { # LINE KEY -> rc0: KEY occurs more than once among the TOP-LEVEL members

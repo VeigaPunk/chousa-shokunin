@@ -1,0 +1,11 @@
+--- landed-gate.sh
++++ M5/gate.sh
+@@ -1619,7 +1619,7 @@
+     # unpredictable), whether or not the values agree. The first duplicate in a
+     # fixed order names the reason; a duplicated "id" leaves no id to print.
+     dup=''
+-    for dupk in id source span expect marker line sha256 marker_default; do
++    for dupk in id source expect marker line sha256 marker_default; do
+       if json_dup "$line" "$dupk"; then dup=$dupk; break; fi
+     done
+     if [[ -n $dup ]]; then

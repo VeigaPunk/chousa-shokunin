@@ -1,0 +1,14 @@
+--- landed-gate.sh
++++ M7/gate.sh
+@@ -1258,8 +1258,9 @@
+ 
+ json_str() { # LINE KEY -> raw JSON string body of the TOP-LEVEL member; rc=1 absent/non-string
+   claim_scan "$1" || return 1
+-  [[ -n ${JSON_STR["$2"]+x} ]] || return 1
+-  printf '%s' "${JSON_STR["$2"]}"
++  local re="\"$2\"[[:space:]]*:[[:space:]]*\"([^\"]*)\""
++  [[ $1 =~ $re ]] || return 1
++  printf '%s' "${BASH_REMATCH[1]}"
+ }
+ 
+ jfield() { json_str "$1" "$2" 2>/dev/null || true; }

@@ -1,0 +1,13 @@
+ok-case  242 r33-top-nested-line          exit=0
+ok-case  243 r33-top-nested-sha           exit=0
+ok-case  244 r33-top-nested-id            exit=0
+ok-case  245 r33-top-dup-line             exit=1
+ok-case  246 r33-top-confuser-flat        exit=0
+FAIL-case r33-top-confuser-nested      exit=1 want=0 verdicts=1 vbearing=1 token=RESEARCH_GATE: CLEAN VERDICT_BEARING_CLAIMS=1/1 CLAIM id=FC2 expected=supported observed=supported source=lib/span.md at=line:1 verdict=match
+    | research-gate v2 — ts=2026-10-23T00:00:00Z — mode=claims — claims=/fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M4-mutated.selftest-fixture/r33-top-confuser-nested.jsonl
+    | CLAIM id=line1 expected=- observed=invalid source=- at=- verdict=invalid
+    | FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=1 not one well-formed JSON object
+    | VERDICT_BEARING_CLAIMS=0/1
+    | RESEARCH_GATE: DRIFT (claims=1 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=1 findings=1 drift=1)
+ok-case  248 r33-top-dup-id               exit=1
+R33_TARGETED_SELFTEST: failures=1 cases=7 original=242-248

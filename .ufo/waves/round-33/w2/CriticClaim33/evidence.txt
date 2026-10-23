@@ -1,0 +1,66 @@
+CriticClaim33 — static/committed-evidence review; 2026-10-23
+Lane: /home/vgpnk/Projects/shokunin/chousa-shokunin
+Pinned tip: 0fb300b5c27900ab8bb3abeb5f54776d71e04beb
+All commands below were read-only, foreground, and completed successfully (exit 0). No counter, gate, selftest, mutant, judge or evaluation runtime was executed by this seat. File/range reads are cited directly in the report. No installs or network requests.
+
+1. Command:
+timeout 30s git -C /home/vgpnk/Projects/shokunin/chousa-shokunin log -16 --format='%H %aI %cI %s' 0fb300b5c27900ab8bb3abeb5f54776d71e04beb
+Key output (committer dates):
+e3e24ec86449e50b089845fef563b7e15c927b40 2026-10-23T05:35:29-03:00 round-33: design v2 before data
+96be79255f8a3bb7d9252e03dd050a1b8b08ac10 2026-10-23T05:40:56-03:00 round-33: wave-1 control, audit, repair and build evidence; L1 re-score of every C1 control gate under counter v2 (best non-oracle 142/156; no candidate scored)
+eb179ec3844f9dff3f938801f5cf2b798052b69d 2026-10-23T05:41:10-03:00 round-33: C1 candidate
+7f6aeb70741a05560bd54c217f5620bc8eaa69c8 2026-10-23T05:43:17-03:00 round-33: measurement on candidate gate 52f07c74
+0fb300b5c27900ab8bb3abeb5f54776d71e04beb 2026-10-23T05:47:52-03:00 round-33: integration (gate 94a7be5a)
+Descriptions above are shortened; hashes and timestamps are copied exactly.
+
+2. Command:
+timeout 30s git -C /home/vgpnk/Projects/shokunin/chousa-shokunin log --reverse --format='%H %cI %s' --name-status 2b9cc73aed30c2e2c95699db6617d9531ef49fb2..0fb300b5c27900ab8bb3abeb5f54776d71e04beb -- .ufo/waves/round-33/measure
+Key output:
+96be7925 adds measure/census-start.txt only.
+7f6aeb70 adds measure/candidate/c1v2-s3351.json, c1v2-s3351.out, c1v2-s3352.json, c1v2-s3352.out, plus no-harm and D1 evidence.
+0fb300b5 adds measure/integrated/c1v2-s3371.json, c1v2-s3371.out, c1v2-s3372.json, c1v2-s3372.out, plus c2v3-s3373 and selftest evidence.
+
+3. Command:
+timeout 30s git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show --format=fuller --no-ext-diff --no-renames e3e24ec86449e50b089845fef563b7e15c927b40 -- corpus/evidence/round33/claims.md
+Key output:
+AuthorDate: Fri Oct 23 05:35:28 2026 -0300
+CommitDate: Fri Oct 23 05:35:29 2026 -0300
+The diff appends the entire Design v2 section, including counter identity, counted duplicate scope, separate no-harm clause, P1 v2, all-runs receipt kill rule, and uncounted malformed-input exclusion.
+
+4. Command:
+timeout 30s git -C /home/vgpnk/Projects/shokunin/chousa-shokunin log --format='%H %cI %s' e3e24ec86449e50b089845fef563b7e15c927b40..0fb300b5c27900ab8bb3abeb5f54776d71e04beb -- corpus/evidence/round33/claims.md corpus/evidence/round33/c1-count-v2.py
+Output: empty. No later committed change to either file in that pinned range.
+
+5. Command:
+timeout 30s git -C /home/vgpnk/Projects/shokunin/chousa-shokunin ls-tree -r --long e3e24ec86449e50b089845fef563b7e15c927b40 -- .ufo/waves/round-33/ corpus/evidence/round33/
+Key output:
+The tree contains three L1-design-v2 receipts (base seed 3311, oracle seeds 3312/3313), three L1-design v1 receipts, mk-oracle.py, oracle-gate.sh, c1-count.py, c1-count-v2.py, claims.md. No candidate receipt appears in that round-33 tree at freeze.
+
+6. Command:
+timeout 30s git -C /home/vgpnk/Projects/shokunin/chousa-shokunin ls-tree -r --name-only 0fb300b5c27900ab8bb3abeb5f54776d71e04beb -- .ufo/waves/round-33/w1/ExecC1Build .ufo/waves/round-33/measure/candidate .ufo/waves/round-33/measure/integrated .ufo/waves/round-33/controls/L1-mistake
+Key output:
+Candidate receipts 3351/3352 and integrated receipts 3371/3372 are present. ExecC1Build contains a patch, candidate gate, selftest outputs/case comparisons, and two probe JSONL files, but no counter receipt. No L1-mistake artifact is present at the pinned tip (its later worktree listing was not used as committed evidence).
+
+7. Command:
+timeout 30s git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show e3e24ec86449e50b089845fef563b7e15c927b40:corpus/evidence/round33/c1-count-v2.py | timeout 30s sha256sum
+Output:
+cb354dd1b5bdf2540e2bf356d945e01cd3ce8207d66e7a1ec76f363650e6a514  -
+
+8. Command:
+timeout 30s git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 0fb300b5c27900ab8bb3abeb5f54776d71e04beb:tools/research-gate.sh | timeout 30s sha256sum
+Output:
+94a7be5a54dd5cebd9532f2417c4eaedc401c9a0646029dcca8acc445378506e  -
+
+9. Command:
+timeout 30s git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 2b9cc73aed30c2e2c95699db6617d9531ef49fb2:README.md
+Key output:
+# chousa-shokunin
+The README title used in the static malformed-record illustration already exists at base; current README.md:1 has the same title.
+
+10. Command:
+timeout 30s git -C /home/vgpnk/Projects/shokunin/chousa-shokunin log --format='%H %cI %s' --name-status 2b9cc73aed30c2e2c95699db6617d9531ef49fb2..0fb300b5c27900ab8bb3abeb5f54776d71e04beb -- corpus/evidence/round33/claims.md corpus/evidence/round33/c1-count-v2.py .ufo/waves/round-33/measurements .ufo/waves/round-33/controls/L1-v2-rescore
+Key output:
+96be7925 adds all L1-v2-rescore receipts/outputs, rescore.sh and summary.txt.
+e3e24ec8 adds c1-count-v2.py and modifies claims.md.
+3b528b9a initially adds claims.md.
+Note: 'measurements' was an initially unproductive path selector; the actual measure directory was discovered with read and queried in command 2. No conclusion relies on that empty selector.

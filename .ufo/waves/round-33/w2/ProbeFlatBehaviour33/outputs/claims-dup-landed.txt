@@ -1,0 +1,22 @@
+research-gate v2 — ts=2026-10-23T09:05:18Z — mode=claims — claims=claims-dup.jsonl
+CLAIM id=m3_0 expected=supported observed=supported source=source3.txt at=lines:1-2 verdict=match
+CLAIM id=m3_1 expected=supported observed=supported source=source3.txt at=lines:3-4 verdict=match
+CLAIM id=m3_2 expected=supported observed=mislocated source=source3.txt at=lines:1-2 verdict=mismatch
+CLAIM id=m3_3 expected=supported observed=supported source=source3.txt at=line:2 verdict=match
+CLAIM id=m3_4 expected=supported observed=supported source=source3.txt at=line:4 verdict=match
+CLAIM id=m3_5 expected=supported observed=mislocated source=source3.txt at=line:2 verdict=mismatch
+CLAIM id=q01 expected=contradicted observed=invalid source=source.txt at=- verdict=invalid
+CLAIM id=line8 expected=supported observed=invalid source=source.txt at=- verdict=invalid
+CLAIM id=q03 expected=supported observed=supported source=source.txt at=line:2 verdict=match
+CLAIM id=q04 expected=supported observed=supported source=source.txt at=line:2 verdict=match
+CLAIM id=q05 expected=supported observed=supported source=source.txt at=line:2 verdict=match
+CLAIM id=q06 expected=supported observed=supported source=source.txt at=line:2 verdict=match
+CLAIM id=q07 expected=supported observed=supported source=source.txt at=line:2 verdict=match
+CLAIM id=q08 expected=unsupported observed=stale source=source.txt at=- verdict=mismatch
+FINDING CLAIM_LINE_MISMATCH severity=warn surface=claims obs=id=m3_2 line=2-3 first_delimited_occurrence=lines:1-2
+FINDING CLAIM_LINE_MISMATCH severity=warn surface=claims obs=id=m3_5 line=1-1 first_delimited_occurrence=line:2
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=7 duplicate top-level key marker
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=8 duplicate top-level key id
+FINDING CLAIM_SOURCE_REVISION_MISMATCH severity=warn surface=claims obs=id=q08 pin=000000000000 actual=54dd769e5262
+VERDICT_BEARING_CLAIMS=9/14
+RESEARCH_GATE: DRIFT (claims=14 supported=9 contradicted=0 unsupported=0 mismatched=3 unproven=0 refused=0 invalid=2 findings=5 drift=5)

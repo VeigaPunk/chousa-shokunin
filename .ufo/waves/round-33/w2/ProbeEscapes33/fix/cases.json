@@ -1,0 +1,292 @@
+{
+ "E01_bmp_u_span": {
+  "note": "BMP \\u00e9 in span decodes to the UTF-8 e-acute present in the source",
+  "line": "2",
+  "spec_span": "caf\u00e9 au lait",
+  "span_present": true,
+  "span_line": 3,
+  "spec_truth": "mislocated",
+  "source_file": "src/e01.txt",
+  "sha256_spec": null
+ },
+ "E02_bmp_u_ascii": {
+  "note": "\\u0041 decodes to 'A'",
+  "line": "2",
+  "spec_span": "ALPHA",
+  "span_present": true,
+  "span_line": 3,
+  "spec_truth": "mislocated",
+  "source_file": "src/e02.txt",
+  "sha256_spec": null
+ },
+ "E03_surrogate_pair": {
+  "note": "RFC 8259 surrogate pair = one astral char (U+1F600) present in the source",
+  "line": "2",
+  "spec_span": "smile \ud83d\ude00 here",
+  "span_present": true,
+  "span_line": 3,
+  "spec_truth": "mislocated",
+  "source_file": "src/e03.txt",
+  "sha256_spec": null
+ },
+ "E03b_surrogate_pair_question": {
+  "note": "spec: span absent (source has 'smile ?? here'); a '?'-substituting reader sees a match",
+  "line": "2",
+  "spec_span": "smile \ud83d\ude00 here",
+  "span_present": false,
+  "span_line": 3,
+  "spec_truth": "mislocated",
+  "source_file": "src/e03b.txt",
+  "sha256_spec": null
+ },
+ "E04_lone_surrogate": {
+  "note": "lone surrogate escape: no scalar; absent from source",
+  "line": "2",
+  "spec_span": "x\ud800y",
+  "span_present": false,
+  "span_line": 3,
+  "spec_truth": "mislocated",
+  "source_file": "src/e04.txt",
+  "sha256_spec": null
+ },
+ "E05_solidus_span": {
+  "note": "\\/ decodes to /",
+  "line": "2",
+  "spec_span": "path/to/file",
+  "span_present": true,
+  "span_line": 3,
+  "spec_truth": "mislocated",
+  "source_file": "src/e05.txt",
+  "sha256_spec": null
+ },
+ "E06_backslash_span": {
+  "note": "\\\\ decodes to one backslash; source holds C:\\dir\\file literally",
+  "line": "2",
+  "spec_span": "C:\\dir\\file",
+  "span_present": true,
+  "span_line": 3,
+  "spec_truth": "mislocated",
+  "source_file": "src/e06.txt",
+  "sha256_spec": null
+ },
+ "E07_quotes_span": {
+  "note": "escaped quotes are string content, decoded",
+  "line": "2",
+  "spec_span": "he said \"stop\" loudly",
+  "span_present": true,
+  "span_line": 3,
+  "spec_truth": "mislocated",
+  "source_file": "src/e07.txt",
+  "sha256_spec": null
+ },
+ "E08_quote_id": {
+  "note": "id with an escaped quote: the printed id decodes",
+  "line": "2",
+  "spec_span": "bravo charlie",
+  "span_present": true,
+  "span_line": 3,
+  "spec_truth": "mislocated",
+  "source_file": "src/e08.txt",
+  "sha256_spec": null
+ },
+ "E09_solidus_source": {
+  "note": "source path with \\/ decodes to src/e09.txt",
+  "line": "2",
+  "spec_span": "delta echo",
+  "span_present": true,
+  "span_line": 3,
+  "spec_truth": "mislocated",
+  "source_file": "src/e09.txt",
+  "sha256_spec": null
+ },
+ "E10_raw_utf8_span": {
+  "note": "raw UTF-8 in the JSON string value",
+  "line": "2",
+  "spec_span": "na\u00efve fa\u00e7ade",
+  "span_present": true,
+  "span_line": 3,
+  "spec_truth": "mislocated",
+  "source_file": "src/e10.txt",
+  "sha256_spec": null
+ },
+ "E11_escaped_line_key": {
+  "note": "member name l\\u0069ne decodes to 'line'=9; span is on line 2 (claims.md: keys with escapes are NOT claimed)",
+  "line": "9",
+  "spec_span": "alpha bravo",
+  "span_present": true,
+  "span_line": 3,
+  "spec_truth": "mislocated",
+  "source_file": "src/e11.txt",
+  "sha256_spec": null
+ },
+ "E12_tab_span": {
+  "note": "\\t decodes to a tab present in the source",
+  "line": "2",
+  "spec_span": "a\tb",
+  "span_present": true,
+  "span_line": 3,
+  "spec_truth": "mislocated",
+  "source_file": "src/e12.txt",
+  "sha256_spec": null
+ },
+ "E13_flat_confuser": {
+  "note": "string content that looks like a member (item 3); no top-level line",
+  "line": null,
+  "spec_span": "foxtrot golf",
+  "span_present": true,
+  "span_line": 3,
+  "spec_truth": "supported",
+  "source_file": "src/e13.txt",
+  "sha256_spec": null
+ },
+ "E14_nul_span": {
+  "note": "spec: span is a,NUL,b (absent); a reader that drops NUL sees 'ab' (present)",
+  "line": "2",
+  "spec_span": "a\u0000b",
+  "span_present": false,
+  "span_line": 3,
+  "spec_truth": "mislocated",
+  "source_file": "src/e14.txt",
+  "sha256_spec": null
+ },
+ "E15_trailing_backslash": {
+  "note": "span 'trail\\\\' decodes to trail<backslash>",
+  "line": "2",
+  "spec_span": "trail\\",
+  "span_present": true,
+  "span_line": 3,
+  "spec_truth": "mislocated",
+  "source_file": "src/e15.txt",
+  "sha256_spec": null
+ },
+ "E16_u_braces": {
+  "note": "\\u007b/\\u007d decode to braces",
+  "line": "2",
+  "spec_span": "{x}",
+  "span_present": true,
+  "span_line": 3,
+  "spec_truth": "mislocated",
+  "source_file": "src/e16.txt",
+  "sha256_spec": null
+ },
+ "E17_sha_u_escape": {
+  "note": "sha pin where the first hex digit is \\u0036; decoded pin must equal the file sha",
+  "line": "2",
+  "spec_span": "hotel india",
+  "span_present": true,
+  "span_line": 3,
+  "spec_truth": "mislocated",
+  "source_file": "src/e17.txt",
+  "sha256_spec": "36178ffc0a19bc73f0eded5b060798ead1f85eb86dfdd3cc2352079cab433594"
+ },
+ "E18_quote_source": {
+  "note": "source path decodes to src/qu\"ote.txt",
+  "line": "2",
+  "spec_span": "juliett kilo",
+  "span_present": true,
+  "span_line": 3,
+  "spec_truth": "mislocated",
+  "source_file": "src/qu\"ote.txt",
+  "sha256_spec": null
+ },
+ "E19_mixed_span": {
+  "note": "mixed escapes decode to a\"b/c\\\\d (quote, slash, one backslash)",
+  "line": "2",
+  "spec_span": "a\"b/c\\\\d",
+  "span_present": true,
+  "span_line": 3,
+  "spec_truth": "mislocated",
+  "source_file": "src/e19.txt",
+  "sha256_spec": null
+ },
+ "E20_quote_comma_note": {
+  "note": "escaped quote + comma + braces inside a string value before the read keys",
+  "line": "2",
+  "spec_span": "november oscar",
+  "span_present": true,
+  "span_line": 3,
+  "spec_truth": "mislocated",
+  "source_file": "src/e20.txt",
+  "sha256_spec": null
+ },
+ "E21_empty_key": {
+  "note": "empty member name is valid JSON and must not disturb the scan",
+  "line": "2",
+  "spec_span": "papa quebec",
+  "span_present": true,
+  "span_line": 3,
+  "spec_truth": "mislocated",
+  "source_file": "src/e21.txt",
+  "sha256_spec": null
+ },
+ "E22_line_number": {
+  "note": "line is a number: invalid both before and after (r31 rule)",
+  "line": 2,
+  "spec_span": "romeo sierra",
+  "span_present": true,
+  "span_line": 3,
+  "spec_truth": "mislocated",
+  "source_file": "src/e22.txt",
+  "sha256_spec": null
+ },
+ "E23_u_quote_span": {
+  "note": "\\u0022 decodes to a quote inside the span",
+  "line": "2",
+  "spec_span": "say \"hi\"",
+  "span_present": true,
+  "span_line": 3,
+  "spec_truth": "mislocated",
+  "source_file": "src/e23.txt",
+  "sha256_spec": null
+ },
+ "E24_u_line_value": {
+  "note": "line value ('2') spelled with \\u0032",
+  "line": "2",
+  "spec_span": "tango uniform",
+  "span_present": true,
+  "span_line": 3,
+  "spec_truth": "mislocated",
+  "source_file": "src/e24.txt",
+  "sha256_spec": null
+ },
+ "E25_note_trailing_backslash": {
+  "note": "note body ends with \\\\ before the closing quote; scanner must not swallow the quote",
+  "line": "2",
+  "spec_span": "victor whiskey",
+  "span_present": true,
+  "span_line": 3,
+  "spec_truth": "mislocated",
+  "source_file": "src/e25.txt",
+  "sha256_spec": null
+ },
+ "E26_u_backslash_span": {
+  "note": "\\u005c decodes to one backslash (source holds a\\b)",
+  "line": "2",
+  "spec_span": "a\\b",
+  "span_present": true,
+  "span_line": 3,
+  "spec_truth": "mislocated",
+  "source_file": "src/e26.txt",
+  "sha256_spec": null
+ },
+ "E27_note_u_quotes": {
+  "note": "value containing the escaped spelling of a member: still string content",
+  "line": "2",
+  "spec_span": "xray yankee",
+  "span_present": true,
+  "span_line": 3,
+  "spec_truth": "mislocated",
+  "source_file": "src/e27.txt",
+  "sha256_spec": null
+ },
+ "E28_raw_astral_span": {
+  "note": "raw UTF-8 astral character in the value, source holds the same bytes",
+  "line": "2",
+  "spec_span": "smile \ud83d\ude00 here",
+  "span_present": true,
+  "span_line": 3,
+  "spec_truth": "mislocated",
+  "source_file": "src/e28.txt",
+  "sha256_spec": null
+ }
+}

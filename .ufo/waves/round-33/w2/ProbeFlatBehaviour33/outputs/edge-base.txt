@@ -1,0 +1,31 @@
+research-gate v2 — ts=2026-10-23T09:03:22Z — mode=claims — claims=claims-edge.jsonl
+CLAIM id=x expected=supported observed=supported source=source.txt at=line:2 verdict=match
+CLAIM id=e02 expected=supported observed=stale source=source.txt at=- verdict=mismatch
+CLAIM id=e03 expected=supported observed=supported source=source.txt at=line:2 verdict=match
+CLAIM id=e04 expected=contradicted observed=unproven source=source.txt at=line:4 verdict=mismatch
+CLAIM id=e05 expected=contradicted observed=unproven source=source.txt at=line:4 verdict=mismatch
+CLAIM id=line7 expected=- observed=invalid source=- at=- verdict=invalid
+CLAIM id=e06 expected=contradicted observed=unproven source=source.txt at=line:4 verdict=mismatch
+CLAIM id=e07 expected=supported observed=supported source=source.txt at=line:2 verdict=match
+CLAIM id=e08 expected=supported observed=supported source=source.txt at=line:2 verdict=match
+CLAIM id=e09 expected=supported observed=supported source=source.txt at=line:2 verdict=match
+CLAIM id=e10 expected=supported observed=supported source=source.txt at=line:2 verdict=match
+CLAIM id=line13 expected=- observed=invalid source=- at=- verdict=invalid
+CLAIM id=line14 expected=- observed=invalid source=- at=- verdict=invalid
+CLAIM id=line15 expected=- observed=invalid source=- at=- verdict=invalid
+CLAIM id=e11 expected=supported observed=supported source=source.txt at=line:2 verdict=match
+CLAIM id=e12 expected=supported observed=unsupported source=source.txt at=- verdict=mismatch
+CLAIM id=e13 expected=supported observed=supported source=source.txt at=line:2 verdict=match
+CLAIM id=e14 expected=supported observed=mislocated source=source.txt at=line:2 verdict=mismatch
+FINDING CLAIM_SOURCE_REVISION_MISMATCH severity=warn surface=claims obs=id=e02 pin=000000000000 actual=54dd769e5262
+FINDING CONTRADICTION_MARKER_ABSENT severity=warn surface=claims obs=id=e04 at=line:4 declared marker not found within span lines
+FINDING CONTRADICTION_MARKER_ABSENT severity=warn surface=claims obs=id=e05 at=line:4 declared marker not found within span lines
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=7 missing id
+FINDING CONTRADICTION_MARKER_ABSENT severity=warn surface=claims obs=id=e06 at=line:4 declared marker not found within span lines
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=13 missing id
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=14 missing id
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=15 missing id
+FINDING CLAIM_SPAN_NOT_FOUND severity=warn surface=claims obs=id=e12 nearest_line=- context=-
+FINDING CLAIM_LINE_MISMATCH severity=warn surface=claims obs=id=e14 line=9-9 first_delimited_occurrence=line:2
+VERDICT_BEARING_CLAIMS=8/18
+RESEARCH_GATE: DRIFT (claims=18 supported=8 contradicted=0 unsupported=1 mismatched=6 unproven=3 refused=0 invalid=4 findings=10 drift=10)

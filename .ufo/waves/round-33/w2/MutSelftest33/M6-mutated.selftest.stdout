@@ -1,0 +1,15 @@
+ok-case  242 r33-top-nested-line          exit=0
+ok-case  243 r33-top-nested-sha           exit=0
+ok-case  244 r33-top-nested-id            exit=0
+ok-case  245 r33-top-dup-line             exit=1
+ok-case  246 r33-top-confuser-flat        exit=0
+ok-case  247 r33-top-confuser-nested      exit=0
+FAIL-case r33-top-dup-id               exit=1 want=1 verdicts=1 vbearing=1 token=RESEARCH_GATE: DRIFT FINDING CLAIM_RECORD_INVALID severity=warn surface=claims duplicate top-level key id CLAIM id=DI1 expected=supported observed=invalid source=lib/span.md at=- verdict=invalid CLAIM id=line2 expected=supported observed=invalid source=lib/span.md at=- verdict=invalid VERDICT_BEARING_CLAIMS=0/2 claims=2 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=2 findings=2 drift=2
+    | research-gate v2 — ts=2026-10-23T00:00:00Z — mode=claims — claims=/fast/scratch/hyaku/chousa-r33/w2/MutSelftest33/M6-mutated.selftest-fixture/r33-top-dup-id.jsonl
+    | CLAIM id=DI1 expected=supported observed=invalid source=lib/span.md at=- verdict=invalid
+    | CLAIM id=DI2 expected=supported observed=invalid source=lib/span.md at=- verdict=invalid
+    | FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=1 duplicate top-level key id
+    | FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=2 duplicate top-level key id
+    | VERDICT_BEARING_CLAIMS=0/2
+    | RESEARCH_GATE: DRIFT (claims=2 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=2 findings=2 drift=2)
+R33_TARGETED_SELFTEST: failures=1 cases=7 original=242-248

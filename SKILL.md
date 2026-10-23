@@ -128,13 +128,14 @@ drift. Selftests invoke fresh CLI processes rather than suppressing errexit
 around a function call (`corpus/lessons/round-1.md`, integration errata).
 
 **Claims mode (round 2).** `verify-claims <claims-file>` reads one JSON claim per
-line — `{"id","source","span","expect"[, "marker"]}`; blank lines, `#` comments
+line — `{"id","source","span","expect"[, "marker"][, "line"][, "sha256"]}` (`line` since round 31,
+`sha256` since round 31); blank lines, `#` comments
 and a `{"marker_default":…}` line are allowed — and matches each `span` as a
 byte-exact occurrence of its cited local source delimited at token boundaries
 (a substring glued into a longer word is a miss with the line-aware
 `nearest_line` report). Per claim it prints
 `CLAIM id=… expected=… observed=… source=… at=… verdict=…` (`observed`
-supported|contradicted|unsupported|unproven|refused|invalid; `verdict`
+supported|contradicted|unsupported|unproven|mislocated|stale|refused|invalid; `verdict`
 match|mismatch|refused|invalid), then `VERDICT_BEARING_CLAIMS=N/M` and the
 verdict summary. `contradicted` is structural, never semantic: the named
 `marker` must co-occur inside the span's source lines or the claim reads

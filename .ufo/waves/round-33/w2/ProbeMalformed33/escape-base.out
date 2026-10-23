@@ -1,0 +1,20 @@
+research-gate v2 — ts=2026-10-23T09:03:55Z — mode=claims — claims=/fast/scratch/hyaku/chousa-r33/w2/ProbeMalformed33/fe/root/claims.jsonl
+CLAIM id=u1 expected=supported observed=supported source=src.txt at=line:1 verdict=match
+CLAIM id=u2 expected=unsupported observed=supported source=src.txt at=line:1 verdict=mismatch
+CLAIM id=u3 expected=supported observed=supported source=src.txt at=line:1 verdict=match
+CLAIM id=u4 expected=supported observed=supported source=src.txt at=line:1 verdict=match
+CLAIM id=u5 expected=supported observed=supported source=src.txt at=line:1 verdict=match
+CLAIM id=u6 expected=supported observed=mislocated source=src.txt at=line:1 verdict=mismatch
+CLAIM id=u7 expected=supported observed=supported source=src.txt at=line:1 verdict=match
+CLAIM id=u8 expected=supported observed=supported source=src.txt at=line:1 verdict=match
+CLAIM id=u9 expected=supported observed=invalid source=src.txt at=- verdict=invalid
+CLAIM id=u10 expected=supported observed=unsupported source=src.txt at=- verdict=mismatch
+CLAIM id=u11 expected=supported observed=unsupported source=src.txt at=- verdict=mismatch
+CLAIM id=u12 expected=supported observed=supported source=src.txt at=line:1 verdict=match
+FINDING CLAIM_SPAN_UNEXPECTED severity=warn surface=claims obs=id=u2 at=line:1 span present but expect=unsupported
+FINDING CLAIM_LINE_MISMATCH severity=warn surface=claims obs=id=u6 line=2-2 first_delimited_occurrence=line:1
+FINDING CLAIM_RECORD_INVALID severity=warn surface=claims obs=line=9 sha256 malformed (not 64 lowercase hex characters)
+FINDING CLAIM_SPAN_NOT_FOUND severity=warn surface=claims obs=id=u10 nearest_line=- context=-
+FINDING CLAIM_SPAN_NOT_FOUND severity=warn surface=claims obs=id=u11 nearest_line=- context=-
+VERDICT_BEARING_CLAIMS=7/12
+RESEARCH_GATE: DRIFT (claims=12 supported=8 contradicted=0 unsupported=2 mismatched=4 unproven=0 refused=0 invalid=1 findings=5 drift=5)

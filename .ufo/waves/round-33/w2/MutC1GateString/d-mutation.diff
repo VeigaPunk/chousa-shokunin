@@ -1,0 +1,10 @@
+--- pristine-gate.sh
++++ d-mutant-gate.sh
+@@ -1227,6 +1227,7 @@
+     fi
+     # an empty member name cannot be an associative-array subscript (bash 5.3
+     # rejects ""); no read key is empty, so the table simply skips it.
++    key=$(json_unescape "$key")
+     if [[ -n $key ]]; then
+       if [[ -n ${JSON_PRESENT["$key"]+x} ]]; then
+         # keep the SECOND occurrence's value so the caller can tell an agreeing

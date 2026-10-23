@@ -1,0 +1,10 @@
+--- landed-gate.sh
++++ M1/gate.sh
+@@ -1189,6 +1189,7 @@
+       done
+     elif [[ $c == '{' || $c == '[' ]]; then
+       # nested value: skip to its matching close, strings honoured
++      return 1
+       stk=$c; i=$((i + 1)); esc=0; in_str=0
+       while [[ -n $stk ]]; do
+         (( i < n )) || return 1
