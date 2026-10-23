@@ -429,13 +429,24 @@ grep_pin_init() {
 # stamping a poison value. The claims path already fails closed on an
 # unmeasurable hash (sha_actual=unreadable); this gives the manifest the same
 # hex contract it validates on claims.
+sha256_pin_bin() { # -> absolute sha256sum path on stdout; rc 1 when none is executable
+  local bin=''
+  for bin in /usr/bin/sha256sum /bin/sha256sum; do
+    [[ -x $bin ]] && { printf '%s' "$bin"; return 0; }
+  done
+  return 1
+}
+sha256_hex_stream() { # stdin -> 64 lowercase hex on stdout; rc 1 otherwise
+  local bin='' out=''
+  bin=$(sha256_pin_bin) || return 1
+  out=$("$bin" 2>/dev/null) || return 1
+  out=${out%%[ $'\t']*}
+  [[ $out =~ ^[0-9a-f]{64}$ ]] || return 1
+  printf '%s' "$out"
+}
 sha256_hex_file() { # FILE -> 64 lowercase hex on stdout; rc 1 otherwise
   local f=$1 bin='' out=''
-  for bin in /usr/bin/sha256sum /bin/sha256sum; do
-    [[ -x $bin ]] && break
-    bin=''
-  done
-  [[ -n $bin ]] || return 1
+  bin=$(sha256_pin_bin) || return 1
   out=$("$bin" -- "$f" 2>/dev/null) || return 1
   out=${out%%[ $'\t']*}
   [[ $out =~ ^[0-9a-f]{64}$ ]] || return 1
@@ -1998,9 +2009,12 @@ verify_claims() {
 
     if [[ -n $sha_present ]]; then
       # hash via stdin: sha256sum escapes file names holding '\' or a newline
-      # and would prefix its output with '\' (r31)
-      sha_actual=$(sha256sum < "$path" 2>/dev/null | cut -d' ' -f1 || true)
+      # and would prefix its output with '\' (r31). The binary is the PINNED
+      # absolute one (r37): a PATH `sha256sum` shim that prints the pinned
+      # digest made a stale source read current, and `cut` was a second PATH
+      # lookup. One resolution serves the manifest and the claim pin.
       # fail closed: an unmeasurable source is not a match (r31)
+      sha_actual=$( { sha256_hex_stream < "$path"; } 2>/dev/null ) || sha_actual=unreadable
       [[ $sha_actual =~ ^[0-9a-f]{64}$ ]] || sha_actual=unreadable
       if [[ $sha_actual != "$sha_pin" ]]; then
         observed=stale
@@ -3919,7 +3933,7 @@ gate_canonical_capture() { # -> GATE_CAP | GATE_CAP_RC + GATE_CAP_NOTE
   fi
   ( cd "$fx" || exit 2
     env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_ROOT \
-      -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_GREP_PIN_ECHO \
+      -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_GREP_PIN_ECHO -u BASH_ENV \
       bash "$SELF" verify-all record.md --claims claims.jsonl \
       --json manifest.jsonl --root . >capture.txt 2>&1 ) || rc=$?
   nv=$(grep -c '^RESEARCH_GATE: ' -- "$fx/capture.txt" 2>/dev/null || true)
@@ -7782,13 +7796,15 @@ EOF
     'CLAIM id=WP3 expected=supported observed=invalid source=claimsrc/sha-src.txt at=- verdict=invalid' \
     'VERDICT_BEARING_CLAIMS=0/3' \
     'claims=3 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=3 findings=3 drift=3'
-  # Hash-read fault injection: sha256sum unavailable through a PATH shim. The
-  # same record reads supported on the normal PATH and must never read supported
-  # once the hash tool is unmeasurable: fail closed to stale with actual=unreadable
-  # (research-gate.sh: fail closed: an unmeasurable source is not a match). The
-  # source-unreadable arm reaches the same sha_actual=unreadable branch; it is a
-  # TOCTOU window (claim_source_path already required -r), so the shim is the
-  # deterministic injection.
+  # Hash-read fault injection, re-based on the pinned binary (r37): the claim
+  # pin now hashes through the pinned absolute sha256sum, so a PATH shim can no
+  # longer make the hash unmeasurable — that arm is covered by case 262/263.
+  # The same record reads supported on the normal PATH and must never read
+  # supported once the pinned tool is unmeasurable: fail closed to stale with
+  # actual=unreadable (research-gate.sh: fail closed: an unmeasurable source is
+  # not a match). The injection binds a failing stub over /usr/bin/sha256sum
+  # inside an unprivileged user+mount namespace (the r14 ns harness); without a
+  # userns the case is skipped BY NAME and the skip is counted, never passed.
   mkdir -p "$WORK/r2faultbin"
   printf '#!/bin/sh\nexit 127\n' >"$WORK/r2faultbin/sha256sum"
   chmod +x "$WORK/r2faultbin/sha256sum"
@@ -7802,22 +7818,29 @@ EOF
   [[ $r2_ctl_rc -eq 0 ]] || r2_ok=0
   [[ $r2_ctl_out == *'CLAIM id=HF1 expected=supported observed=supported'* ]] || r2_ok=0
   [[ $r2_ctl_out == *'VERDICT_BEARING_CLAIMS=1/1'* ]] || r2_ok=0
-  r2_fault_out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
-    CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
-    PATH="$WORK/r2faultbin:$PATH" \
-    bash "$SELF" verify-claims "$WORK/claims-r2-hash-fault.jsonl" 2>&1) || r2_fault_rc=$?
-  [[ $r2_fault_rc -eq 1 ]] || r2_ok=0
-  [[ $r2_fault_out == *'FINDING CLAIM_SOURCE_REVISION_MISMATCH severity=warn surface=claims'* ]] || r2_ok=0
-  [[ $r2_fault_out == *'actual=unreadable'* ]] || r2_ok=0
-  [[ $r2_fault_out == *'VERDICT_BEARING_CLAIMS=0/1'* ]] || r2_ok=0
-  [[ $r2_fault_out != *'observed=supported'* ]] || r2_ok=0
-  if [[ $r2_ok -eq 1 ]]; then
-    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" r2-hash-fault-shim "$r2_fault_rc"
+  ns_probe
+  if [[ $NS_STATE != yes ]]; then
+    SKIPPED=$((SKIPPED + 1))
+    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" r2-hash-fault-pinned "$NS_WHY"
   else
-    printf 'FAIL-case %-28s control_rc=%d fault_rc=%d\n' \
-      r2-hash-fault-shim "$r2_ctl_rc" "$r2_fault_rc"
-    printf '%s\n' "$r2_ctl_out" "$r2_fault_out" | sed 's/^/    | /'
-    failures=$((failures + 1))
+    r2_fault_out=$(unshare --user --map-root-user --mount --propagation private bash -c '
+      mount --bind "$1/r2faultbin/sha256sum" /usr/bin/sha256sum || exit 97
+      exec env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE -u BASH_ENV \
+        CHOUSA_STRICT=0 CHOUSA_ROOT="$1" CHOUSA_NOW_EPOCH="$2" \
+        bash "$3" verify-claims "$1/claims-r2-hash-fault.jsonl"' _ "$WORK" "$NOW_EPOCH" "$SELF" 2>&1) || r2_fault_rc=$?
+    [[ $r2_fault_rc -eq 1 ]] || r2_ok=0
+    [[ $r2_fault_out == *'FINDING CLAIM_SOURCE_REVISION_MISMATCH severity=warn surface=claims'* ]] || r2_ok=0
+    [[ $r2_fault_out == *'actual=unreadable'* ]] || r2_ok=0
+    [[ $r2_fault_out == *'VERDICT_BEARING_CLAIMS=0/1'* ]] || r2_ok=0
+    [[ $r2_fault_out != *'observed=supported'* ]] || r2_ok=0
+    if [[ $r2_ok -eq 1 ]]; then
+      printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" r2-hash-fault-pinned "$r2_fault_rc"
+    else
+      printf 'FAIL-case %-28s control_rc=%d fault_rc=%d\n' \
+        r2-hash-fault-pinned "$r2_ctl_rc" "$r2_fault_rc"
+      printf '%s\n' "$r2_ctl_out" "$r2_fault_out" | sed 's/^/    | /'
+      failures=$((failures + 1))
+    fi
   fi
   # Nested-key contract, string half: a key spelling inside a STRING value is not
   # a field. The object half ({"meta":{"line":"9"}} read as the record's own key
@@ -8137,6 +8160,143 @@ EOF
   else
     printf 'FAIL-case %-28s drift_rc=%d\n' pin-drift-grep-token "$p36_drc"
     printf '%s\n' "$p36_out" "$p36_dout" | sed 's/^/    | /'
+    failures=$((failures + 1))
+  fi
+
+  # ---- round-37 claim-pin hashing (cases 262-264) ----
+  # verify-claims hashed a pinned source through `sha256sum < FILE | cut -d' '
+  # -f1`: both names resolved through PATH, so a shim printing the pinned
+  # digest made a stale source read current, and `cut` was a second lookup.
+  # The gate now hashes through the same pinned absolute binary the manifest
+  # uses, with no `cut`. Case 262 is the sha256sum shim, 263 the cut shim, 264
+  # the contract hold (a correct pin on the untouched stdin path).
+  mkdir -p "$WORK/lib" "$WORK/r37pinbin" "$WORK/r37cutbin"
+  printf 'pin r37 content\n' >"$WORK/lib/sha-r37.md"
+  r37_pin=$(sha256_hex_file "$WORK/lib/sha-r37.md") || r37_pin=''
+  printf 'pin r37 content\nTAMPERED after the pin\n' >>"$WORK/lib/sha-r37.md"
+  printf '{"id":"P1","source":"lib/sha-r37.md","span":"pin r37 content","expect":"supported","sha256":"%s"}\n' \
+    "$r37_pin" >"$WORK/claims-sha37-path.jsonl"
+  cat >"$WORK/r37pinbin/sha256sum" <<EOF
+#!/bin/sh
+cat >/dev/null 2>/dev/null
+printf '%s  -\\n' '$r37_pin'
+exit 0
+EOF
+  chmod +x "$WORK/r37pinbin/sha256sum"
+  r37_ok=1 r37_rc=0 r37_out=''
+  r37_out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+    CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+    PATH="$WORK/r37pinbin:$PATH" \
+    bash "$SELF" verify-claims "$WORK/claims-sha37-path.jsonl" 2>&1) || r37_rc=$?
+  cases=$((cases + 1))
+  [[ $r37_rc -eq 1 ]] || r37_ok=0
+  [[ $r37_out == *'RESEARCH_GATE: DRIFT'* ]] || r37_ok=0
+  [[ $r37_out == *'CLAIM_SOURCE_REVISION_MISMATCH'* ]] || r37_ok=0
+  [[ $r37_out == *'CLAIM id=P1 expected=supported observed=stale'* ]] || r37_ok=0
+  if [[ $r37_ok -eq 1 ]]; then
+    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" claims-sha-path-shim "$r37_rc"
+  else
+    printf 'FAIL-case %-28s exit=%d\n' claims-sha-path-shim "$r37_rc"
+    printf '%s\n' "$r37_out" | sed 's/^/    | /'
+    failures=$((failures + 1))
+  fi
+  cat >"$WORK/r37cutbin/cut" <<EOF
+#!/bin/sh
+cat >/dev/null 2>/dev/null
+printf '%s\\n' '$r37_pin'
+exit 0
+EOF
+  chmod +x "$WORK/r37cutbin/cut"
+  r37_ok=1 r37_rc=0 r37_out=''
+  r37_out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+    CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+    PATH="$WORK/r37cutbin:$PATH" \
+    bash "$SELF" verify-claims "$WORK/claims-sha37-path.jsonl" 2>&1) || r37_rc=$?
+  cases=$((cases + 1))
+  [[ $r37_rc -eq 1 ]] || r37_ok=0
+  [[ $r37_out == *'RESEARCH_GATE: DRIFT'* ]] || r37_ok=0
+  [[ $r37_out == *'CLAIM_SOURCE_REVISION_MISMATCH'* ]] || r37_ok=0
+  if [[ $r37_ok -eq 1 ]]; then
+    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" claims-sha-cut-shim "$r37_rc"
+  else
+    printf 'FAIL-case %-28s exit=%d\n' claims-sha-cut-shim "$r37_rc"
+    printf '%s\n' "$r37_out" | sed 's/^/    | /'
+    failures=$((failures + 1))
+  fi
+  printf 'pin r37 hold content\n' >"$WORK/lib/sha-r37-hold.md"
+  r37_hold=$(sha256_hex_file "$WORK/lib/sha-r37-hold.md") || r37_hold=''
+  printf '{"id":"H1","source":"lib/sha-r37-hold.md","span":"pin r37 hold content","expect":"supported","sha256":"%s"}\n' \
+    "$r37_hold" >"$WORK/claims-sha37-hold.jsonl"
+  r37_ok=1 r37_rc=0 r37_out=''
+  r37_out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+    CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+    bash "$SELF" verify-claims "$WORK/claims-sha37-hold.jsonl" 2>&1) || r37_rc=$?
+  cases=$((cases + 1))
+  [[ $r37_rc -eq 0 ]] || r37_ok=0
+  [[ $r37_out == *'RESEARCH_GATE: CLEAN'* ]] || r37_ok=0
+  [[ $r37_out == *'CLAIM id=H1 expected=supported observed=supported'* ]] || r37_ok=0
+  [[ $r37_out == *'verdict=match'* ]] || r37_ok=0
+  if [[ $r37_ok -eq 1 ]]; then
+    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" claims-sha-stdin-hold "$r37_rc"
+  else
+    printf 'FAIL-case %-28s exit=%d\n' claims-sha-stdin-hold "$r37_rc"
+    printf '%s\n' "$r37_out" | sed 's/^/    | /'
+    failures=$((failures + 1))
+  fi
+
+  # ---- round-37 pin capture environment (cases 265-267) ----
+  # --pin's capture scrubbed the named CHOUSA_* variables but not BASH_ENV: the
+  # child bash re-sourced the caller's startup file, which re-exported a scrubbed
+  # variable (or moved CHOUSA_ROOT), so the pinned baseline embedded a GATE_GREP
+  # line and a plain --drift reported a phantom drift (-GATE_GREP / +GATE_GREP)
+  # on an unchanged gate. The capture now scrubs BASH_ENV too. Named limit: the
+  # gate process itself already sourced BASH_ENV before its body ran.
+  printf 'export CHOUSA_GREP_PIN_ECHO=1\n' >"$WORK/r37-echo.env"
+  rm -f "$WORK/r37-pin-env.txt" "$WORK/r37-pin-env2.txt" "$WORK/r37-pin-root.txt"
+  e37_ok=1 e37_rc=0 e37_drc=0 e37_out='' e37_dout=''
+  e37_out=$(BASH_ENV="$WORK/r37-echo.env" bash "$SELF" --pin "$WORK/r37-pin-env.txt" 2>&1) || e37_rc=$?
+  e37_dout=$(env -u BASH_ENV -u CHOUSA_GREP_PIN_ECHO bash "$SELF" --drift "$WORK/r37-pin-env.txt" 2>&1) || e37_drc=$?
+  cases=$((cases + 1))
+  [[ $e37_rc -eq 0 ]] || e37_ok=0
+  [[ $e37_drc -eq 0 ]] || e37_ok=0
+  [[ $e37_dout == 'GATE_DRIFT: none' ]] || e37_ok=0
+  grep -q '^GATE_GREP: ' -- "$WORK/r37-pin-env.txt" && e37_ok=0
+  if [[ $e37_ok -eq 1 ]]; then
+    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" pin-bashenv-echo "$e37_drc"
+  else
+    printf 'FAIL-case %-28s pin_rc=%d drift_rc=%d\n' pin-bashenv-echo "$e37_rc" "$e37_drc"
+    printf '%s\n' "$e37_out" "$e37_dout" | sed 's/^/    | /'
+    failures=$((failures + 1))
+  fi
+  e37_ok=1 e37_drc=0 e37_out='' e37_dout=''
+  e37_out=$(env -u BASH_ENV bash "$SELF" --pin "$WORK/r37-pin-env2.txt" 2>&1)
+  e37_dout=$(BASH_ENV="$WORK/r37-echo.env" bash "$SELF" --drift "$WORK/r37-pin-env2.txt" 2>&1) || e37_drc=$?
+  cases=$((cases + 1))
+  [[ $e37_drc -eq 0 ]] || e37_ok=0
+  # the drift run's own receipt echo is allowed; the verdict is its last line
+  [[ $(printf '%s\n' "$e37_dout" | tail -n1) == 'GATE_DRIFT: none' ]] || e37_ok=0
+  if [[ $e37_ok -eq 1 ]]; then
+    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" drift-bashenv-echo "$e37_drc"
+  else
+    printf 'FAIL-case %-28s drift_rc=%d\n' drift-bashenv-echo "$e37_drc"
+    printf '%s\n' "$e37_out" "$e37_dout" | sed 's/^/    | /'
+    failures=$((failures + 1))
+  fi
+  printf 'export CHOUSA_ROOT=%s\n' "$WORK/r37-foreign-root" >"$WORK/r37-root.env"
+  mkdir -p "$WORK/r37-foreign-root"
+  e37_ok=1 e37_rc=0 e37_drc=0 e37_out='' e37_dout=''
+  e37_out=$(BASH_ENV="$WORK/r37-root.env" bash "$SELF" --pin "$WORK/r37-pin-root.txt" 2>&1) || e37_rc=$?
+  e37_dout=$(env -u BASH_ENV bash "$SELF" --drift "$WORK/r37-pin-root.txt" 2>&1) || e37_drc=$?
+  cases=$((cases + 1))
+  [[ $e37_rc -eq 0 ]] || e37_ok=0
+  [[ -f $WORK/r37-pin-root.txt ]] || e37_ok=0
+  [[ $e37_drc -eq 0 ]] || e37_ok=0
+  [[ $e37_dout == 'GATE_DRIFT: none' ]] || e37_ok=0
+  if [[ $e37_ok -eq 1 ]]; then
+    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" pin-bashenv-root "$e37_drc"
+  else
+    printf 'FAIL-case %-28s pin_rc=%d drift_rc=%d\n' pin-bashenv-root "$e37_rc" "$e37_drc"
+    printf '%s\n' "$e37_out" "$e37_dout" | sed 's/^/    | /'
     failures=$((failures + 1))
   fi
 
