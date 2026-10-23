@@ -1,0 +1,11 @@
+--- /tmp/hyaku/chousa-r36/w1/MutC1Arm/c1-pristine.py	2026-10-23 18:25:19.462648623 -0300
++++ /tmp/hyaku/chousa-r36/w1/MutC1Arm/c1-mut-a.py	2026-10-23 18:25:36.023531747 -0300
+@@ -606,7 +606,7 @@
+                       and man["record_sha256"] == true_rec and man["gate_sha256"] == true_gate)
+         except (OSError, ValueError, IndexError):
+             man_ok = False
+-        score("S11-manifest-hash-shim", rc == 0 and man_ok,
++        score("S11-manifest-hash-shim", True,  # MUTANT-A: S11 arm disabled (constant pass)
+               {"rc": rc, "manifest_ok": man_ok, "true_record_sha": true_rec, "true_gate_sha": true_gate,
+                "stderr_tail": err[-300:]},
+               {"scenario": "S11", "rc": rc, "manifest_ok": man_ok, "stderr_tail": err[-400:]})

@@ -2029,3 +2029,60 @@ converged on (QUALITY 45, 49); per-record witness attribution + per-record fixtu
 diversity; C1 receipt `counter_sha256` binding; witness tolerance to a matcher rename (currently
 `WITNESS=unparseable` → a spurious C2 kill); the `chousa`-root key class; the L0 fetch-scope answer;
 the carried C1 debt (spans ≥ 32768, `unverified (required controls held)`) stays open.
+
+## Round 36 — the engine-swap canary and per-record attribution (two claims)
+
+Gate bytes landed at `700bd5fcbf9abc118a6a0f078d51a2e7460c2878` (inherited attempt-1 freeze:
+counters, witness, gate edits, controls, receipts), gate
+`a7d3922c768a217a2dcedf347b4de438b8dda4108e1335f5a39af6117e1f54e8`; before-state control
+`.ufo/waves/round-36/controls/base-gate-r36.sh`
+(`a47688518e509edbf43b433a5e16e1cf2481233f3acedb5824ba341f7f0c38ad`). Frozen design
+`corpus/evidence/round36/claims.md` (P1/P2 + kill rules + limits; §Erratum appended after the
+data, 6 entries).
+
+| claim / axis | before → after | counting command (lane root) | verdict |
+|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10): the gate and its counter separate an output-equivalent engine swap in fourteen scenarios — pin resolution and refusals, distinct-path override honoured and observed, live `--version` identity, per-record argv attribution, manifest hash identity under a hostile `sha256sum`, C-locale decode, and the two pin echo/drift cells | `ENGINE_SWAP_CANARY=10/14` (base gate, `measure/c1-before-s36001.json`, re-derived seed 36321 by `w1/ExecC1BaseCtl`) → `14/14` `predicate_holds=true` on seeds 36001/36011 (construction, `measure/c1-after-s36001.json`, `c1-after-s36011.json`) and 36301/36311/36331/36341/36351/36361 (wave + L1: `w1/*/c1-*.json`, `measure-l1/c1-s36361.json`) | `python3 corpus/evidence/round36/c1-count.py --gate tools/research-gate.sh --seed N --receipt F` | **met under P1; reading narrowed** — the four failures (S11-S14) are this round's separations; S1-S10 also pass on the base control, S7-S9 assert the echo/refusal contract rather than per-call engine identity (QUALITY 52), and S10 is what keeps a no-call gate from scoring 14/14 (§Erratum 5) |
+| C2 calibration: the lane's per-record witness separates the five output-equivalent engines the round-35 witness admitted, through the pinned engine's out-of-band argv channel, while a renamed matcher passes | `WITNESS_PER_RECORD=2/5 OUTPUT_EQUIV=5/5 LANDED_ATTRIB=absent RENAMED=fail` (base gate + `tools/mechanism-witness.py`, `measure/c2-before-legacy-s36001.json`, re-derived seed 36321 by `w1/ExecC2LegacyCtl`) → `5/5 OUTPUT_EQUIV=5/5 LANDED_ATTRIB=pass RENAMED=pass` on seeds 36001/36011 (construction) and 36301/36311/36371 (wave + L1: `w1/*/c2-*.json`, `measure-l1/c2-s36371.json`); witness stubs fail 0/5 and landed-fail | `python3 corpus/evidence/round36/c2-count.py --gate tools/research-gate.sh --witness tools/argv-witness.py --seed N --receipt F` | **met under P2 as a query witness** — it proves the pinned matcher was queried per record, not that the answer was used; the call-for-show and read-the-recorder limits are stated (§Limits, §Erratum 2-3) |
+
+The round-1 operability scale is unchanged: score 3 → 3 (delta 0); the C1 observable sits beside
+it, as in rounds 25, 29, 31-35.
+
+Repairs (not claims): R1 `--pin` capture environment scrubs `CHOUSA_GREP_PIN_ECHO`; R2 the drift
+diagnostic names `GATE_GREP`; R3 one absolute `sha256sum` with a 64-lowercase-hex contract for
+`verify-all --json` and `--pin` (S070); R4 `json_unescape` decodes UTF-8 by hand in a `LC_ALL=C`
+scope; R5 selftest cases 257-261 (256 → 261); R6 pin-coverage ledger in `SKILL.md` (verified:
+`verify-integrity`/`verify-sweeps` make 1 recorder call, `--version`, 0 matcher calls —
+`w1/ExecModeCoverage/`); R7 both counters' docstring counts corrected to their receipts.
+
+No-harm on the landed gate: `RESEARCH_GATE_SELFTEST: PASS (261 cases, 0 skipped)` under default,
+`LC_ALL=C` and a scratch `TMPDIR` (`w1/ExecSelftest/`); pinned observables unchanged — claims
+17/17, chain 17/22, broken control 1/2, archives 3/3 (`w1/SentNoHarm.md`); the wave's
+scenario-isolation probe found no falsification (`w1/LabScenarioIsolation.md`, 14/14 twice on
+seed 36351).
+
+Wave: one v1 wave, 36 seats (attack roles 10 = 28%; planner seat held by the L1, its data-walk on
+the LabScenarioIsolation seat), one dead seat (`CritC1Swap`, provider `cyber_policy` refusal, not
+retried). Sources 68 → 70 rows (S069 grep(1) `-o`+`-b`, S070 sha256sum(1); tier A, both opened
+2026-10-23). QUALITY 50-52 added. Lesson `corpus/lessons/round-36.md`.
+
+## Capabilities (round-36 change)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| engine-swap canary (`corpus/evidence/round36/c1-count.py`) | scores a candidate gate on fourteen swap/contract scenarios with per-scenario fixtures and receipts, separating the round-35 gate's four open holes (manifest hash shim, C-locale decode, pin echo isolation, drift token) | `python3 corpus/evidence/round36/c1-count.py` → 14/14 (`measure/c1-*.json`, `measure-l1/c1-s36361.json`); `corpus/knowledge/engine-swap-canary-r36.md` | 36 (scope: fourteen asserted behaviours, four newly discriminated) |
+| per-record argv attribution (`tools/argv-witness.py`) | separates output-equivalent engines per record through the pinned engine's NUL-delimited argv log, writes the channel outside the gate's environment, and does not false-kill a renamed matcher | `python3 corpus/evidence/round36/c2-count.py` → 5/5 + renamed pass (`measure/c2-*.json`, `measure-l1/c2-s36371.json`); `corpus/knowledge/per-record-argv-attribution-r36.md` | 36 (scope: query, not use) |
+
+## Planned — round 37 (not started)
+
+Candidates, not commitments: the claim-body `sha256` pin at `research-gate.sh:2002` still resolves
+`sha256sum | cut` through `PATH` (a 64-hex lie passes) — the obvious next arm, with the drift-id
+header comment at 264-265; the `BASH_ENV` re-export hole in the `--pin` capture (R1 incomplete,
+`-u BASH_ENV` at 3921; claims §Erratum 7); the prefix-64 attribution bypass (a stricter span rule
+plus a V7 prefix-query variant; §Erratum 8); per-scenario counter assertions tightened to their
+names (S7-S9, QUALITY 52); three dead fields in `tools/argv-witness.py` (`_stderr.log` write,
+`fixture_root_prefix`, `channel` — SimpDiff D1-D3); the verdict-flipping locale seam in the
+metadata screener (`research-gate.sh:1015`, 1019, 762/1083 — `[[:space:]]`/`-i` under the caller's
+locale; claims §Erratum 13); `counter_sha256` bound into every receipt
+(carried debt); a call-for-show engine measurement (the stated C2 limit, §Erratum 9); the carried
+C1 debt (spans ≥ 32768) stays open.

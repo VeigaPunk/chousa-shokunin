@@ -1,0 +1,39 @@
+Round 36 C1 S12 (R4) locale-decoding evidence
+Access date: 2026-10-23
+Lane tip (`git rev-parse master`): 700bd5fcbf9abc118a6a0f078d51a2e7460c2878
+Landed gate SHA-256: a7d3922c768a217a2dcedf347b4de438b8dda4108e1335f5a39af6117e1f54e8
+Base control gate SHA-256: a47688518e509edbf43b433a5e16e1cf2481233f3acedb5824ba341f7f0c38ad
+
+Fixture source: `café` followed by LF. Initial one-record JSONL:
+{"id":"C-UTF8","source":"source.md","span":"caf\u00e9","expect":"supported"}
+Visible-output one-record JSONL:
+{"id":"C-\u00e9","source":"source.md","span":"caf\u00e9","expect":"supported"}
+
+C-locale landed run (initial fixture), exit 0:
+CLAIM id=C-UTF8 expected=supported observed=supported source=source.md at=line:1 verdict=match
+RESEARCH_GATE: CLEAN (claims=1 supported=1 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)
+
+C-locale base run (initial fixture), exit 1:
+CLAIM id=C-UTF8 expected=supported observed=unsupported source=source.md at=- verdict=mismatch
+FINDING CLAIM_SPAN_NOT_FOUND severity=warn surface=claims obs=id=C-UTF8 nearest_line=- context=-
+RESEARCH_GATE: DRIFT (claims=1 supported=0 contradicted=0 unsupported=1 mismatched=1 unproven=0 refused=0 invalid=0 findings=1 drift=1)
+
+Landed run with LC_ALL, LC_CTYPE, and LANG unset (initial fixture), exit 0:
+CLAIM id=C-UTF8 expected=supported observed=supported source=source.md at=line:1 verdict=match
+RESEARCH_GATE: CLEAN (claims=1 supported=1 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)
+
+Visible-output landed C-locale run, exit 0:
+CLAIM id=C-é expected=supported observed=supported source=source.md at=line:1 verdict=match
+RESEARCH_GATE: CLEAN (claims=1 supported=1 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)
+
+Visible-output base C-locale run, exit 1:
+CLAIM id=C-\u00E9 expected=supported observed=unsupported source=source.md at=- verdict=mismatch
+FINDING CLAIM_SPAN_NOT_FOUND severity=warn surface=claims obs=id=C-\u00E9 nearest_line=- context=-
+RESEARCH_GATE: DRIFT (claims=1 supported=0 contradicted=0 unsupported=1 mismatched=1 unproven=0 refused=0 invalid=0 findings=1 drift=1)
+
+Visible-output landed run with LC_ALL, LC_CTYPE, and LANG unset, exit 0:
+CLAIM id=C-é expected=supported observed=supported source=source.md at=line:1 verdict=match
+RESEARCH_GATE: CLEAN (claims=1 supported=1 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)
+
+Byte proof command: `timeout 10s bash -o pipefail -c "LC_ALL=C printf 'é' | od -An -tx1"` (exit 0)
+Output: ` c3 a9`

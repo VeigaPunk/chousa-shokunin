@@ -1,0 +1,226 @@
+--- /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/controls/base-gate-r36.sh	2026-10-23 17:53:08.096096172 -0300
++++ /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh	2026-10-23 17:51:34.197061284 -0300
+@@ -419,6 +419,29 @@
+   fi
+ }
+ 
++# ---- hash pin (round-36) ---------------------------------------------------
++# The verify-all manifest's record_sha256/gate_sha256 are cited as identity, but
++# they were produced by `sha256sum | cut` resolved through PATH and validated
++# only for non-emptiness: a PATH shim wrote "HOSTILE-CUT-OUTPUT" into both
++# fields while the run stayed exit 0 / CLEAN (round-35 erratum 13). Hash with
++# ONE absolute binary and accept only 64 lowercase hex characters; an
++# unmeasurable or non-hex hash refuses the manifest (exit 2) instead of
++# stamping a poison value. The claims path already fails closed on an
++# unmeasurable hash (sha_actual=unreadable); this gives the manifest the same
++# hex contract it validates on claims.
++sha256_hex_file() { # FILE -> 64 lowercase hex on stdout; rc 1 otherwise
++  local f=$1 bin='' out=''
++  for bin in /usr/bin/sha256sum /bin/sha256sum; do
++    [[ -x $bin ]] && break
++    bin=''
++  done
++  [[ -n $bin ]] || return 1
++  out=$("$bin" -- "$f" 2>/dev/null) || return 1
++  out=${out%%[ $'\t']*}
++  [[ $out =~ ^[0-9a-f]{64}$ ]] || return 1
++  printf '%s' "$out"
++}
++
+ N_FINDINGS=0 N_DRIFT=0 ROLL=CLEAN
+ declare -a FINDING_LINES=()
+ 
+@@ -1423,6 +1446,16 @@
+   # a 64 KiB span body cost 58 s per claim). The decoded bytes are the same
+   # as the per-byte loop: the same characters in the same order, and the same
+   # escape decoding, including a malformed \u and a trailing lone backslash.
++  #
++  # Round-36 locale pin: the decoded BYTES must not depend on the caller's
++  # locale. bash's printf %b decodes \uXXXX through the locale — under
++  # LC_ALL=C it emits the six-byte literal `\u00E9` (measured), so the same
++  # claims file decoded to a different span and the 32764-byte direct/chunk
++  # route flipped with the caller's environment (round-35 erratum 14). The
++  # decoder therefore encodes UTF-8 by hand and runs in the same byte scope
++  # the span matchers carry.
++  local LC_ALL=C
++  export LC_ALL
+   local s=$1 out='' i=0 c hex cp run
+   local strrun='^[^\\]+'            # ordinary characters, up to a backslash
+   local n=${#s}
+@@ -1454,10 +1487,14 @@
+             printf -v c '%b' "\\$(printf '%03o' "$cp")"; out+=$c
+           elif ((cp >= 0xD800 && cp <= 0xDFFF)); then
+             out+='?'
+-          elif printf -v c '%b' "\u$hex" 2>/dev/null; then
++          elif ((cp < 0x800)); then
++            # Two-byte UTF-8 (U+0080..U+07FF), byte-exact under any locale.
++            printf -v c '%b' "\\$(printf '%03o' $((0xC0 | (cp >> 6))))\\$(printf '%03o' $((0x80 | (cp & 0x3F))))"
+             out+=$c
+           else
+-            out+='?'
++            # Three-byte UTF-8 (U+0800..U+FFFF, surrogates excluded above).
++            printf -v c '%b' "\\$(printf '%03o' $((0xE0 | (cp >> 12))))\\$(printf '%03o' $((0x80 | ((cp >> 6) & 0x3F))))\\$(printf '%03o' $((0x80 | (cp & 0x3F))))"
++            out+=$c
+           fi
+         else
+           out+='\u'; i=$((i + 1))
+@@ -3665,10 +3702,10 @@
+ 
+   if [[ -n ${JSON_ARG:-} ]]; then
+     local line sha_rec sha_gate sec_json='' first=1 cj
+-    sha_rec=$(sha256sum -- "$record" 2>/dev/null | cut -d' ' -f1 || true)
+-    sha_gate=$(sha256sum -- "$SELF" 2>/dev/null | cut -d' ' -f1 || true)
++    sha_rec=$(sha256_hex_file "$record") || sha_rec=''
++    sha_gate=$(sha256_hex_file "$SELF") || sha_gate=''
+     if [[ -z $sha_rec || -z $sha_gate ]]; then
+-      printf 'research-gate: sha256sum unavailable; manifest not written\n' >&2
++      printf 'research-gate: sha256sum unavailable or returned a non-hex value; manifest not written\n' >&2
+       exit 2
+     fi
+     for name in "${VA_ORDER[@]}"; do
+@@ -3882,7 +3919,7 @@
+   fi
+   ( cd "$fx" || exit 2
+     env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_ROOT \
+-      -u CHOUSA_AGGREGATOR_ERE \
++      -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_GREP_PIN_ECHO \
+       bash "$SELF" verify-all record.md --claims claims.jsonl \
+       --json manifest.jsonl --root . >capture.txt 2>&1 ) || rc=$?
+   nv=$(grep -c '^RESEARCH_GATE: ' -- "$fx/capture.txt" 2>/dev/null || true)
+@@ -3912,6 +3949,7 @@
+     FINDING\ *) rest=${line#FINDING }; printf 'FINDING:%s' "${rest%% *}" ;;
+     VERIFY_ALL\ *) printf 'VERIFY_ALL' ;;
+     RESEARCH_GATE:*) printf 'VERDICT' ;;
++    GATE_GREP:*) printf 'GATE_GREP' ;;
+     '{'*) printf 'MANIFEST' ;;
+     "$GATE_MANIFEST_MARKER") printf 'MANIFEST-MARKER' ;;
+     research-gate\ *) printf 'GATE' ;;
+@@ -4016,9 +4054,9 @@
+       "${GATE_CAP_NOTE:-unknown}" "$path" >&2
+     exit 2
+   fi
+-  sha=$(sha256sum -- "$SELF" 2>/dev/null | cut -d' ' -f1) || sha=''
++  sha=$(sha256_hex_file "$SELF") || sha=''
+   if [[ -z $sha ]]; then
+-    printf 'research-gate: --pin sha256sum unavailable; baseline not written\n' >&2
++    printf 'research-gate: sha256sum unavailable or returned a non-hex value; baseline not written\n' >&2
+     exit 2
+   fi
+   # The text is staged in a variable and written by ONE simple printf: a
+@@ -7992,6 +8030,116 @@
+     'CLAIM id=DD6 expected=supported observed=supported source=lib/deadzedge-low.md at=line:1 verdict=match' \
+     'CLAIM id=DD7 expected=supported observed=unsupported source=lib/deadzedge-high.md at=- verdict=mismatch'
+ 
++  # ---- round-36 locale cases (cases 257-258): \u decoding is locale-independent ----
++  # bash's printf %b decodes \uXXXX through the caller's locale: under
++  # LC_ALL=C it emits the six-byte literal `\u00E9` (round-35 erratum 14,
++  # measured). The decoder now encodes UTF-8 by hand in a C byte scope, so a
++  # `\uXXXX` span reads supported under every locale. Case 258 crosses the
++  # 32764-byte direct/chunk boundary with multibyte content (16383 x U+00E9
++  # = 32766 decoded bytes) and must stay supported, which pins byte-length
++  # routing as locale-free.
++  printf 'lead caf\303\251 tail\n' >"$WORK/lib/locale-c.md"
++  printf '{"id":"LC1","source":"lib/locale-c.md","span":"caf\\u00e9","expect":"supported"}\n' \
++    >"$WORK/claims-locale-c.jsonl"
++  lc_ok=1 lc_rc=0 lc_out=''
++  lc_out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
++    CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" LC_ALL=C LANG=C \
++    bash "$SELF" verify-claims "$WORK/claims-locale-c.jsonl" 2>&1) || lc_rc=$?
++  cases=$((cases + 1))
++  [[ $lc_rc -eq 0 ]] || lc_ok=0
++  [[ $lc_out == *'CLAIM id=LC1 expected=supported observed=supported source=lib/locale-c.md at=line:1 verdict=match'* ]] || lc_ok=0
++  [[ $lc_out == *'RESEARCH_GATE: CLEAN'* ]] || lc_ok=0
++  if [[ $lc_ok -eq 1 ]]; then
++    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" claims-locale-c "$lc_rc"
++  else
++    printf 'FAIL-case %-28s exit=%d\n' claims-locale-c "$lc_rc"
++    printf '%s\n' "$lc_out" | sed 's/^/    | /'
++    failures=$((failures + 1))
++  fi
++  printf 'lead %s tail\n' "$(printf '\303\251%.0s' {1..16383})" >"$WORK/lib/locale-b.md"
++  printf '{"id":"LC2","source":"lib/locale-b.md","span":"%s","expect":"supported"}\n' \
++    "$(printf '\\u00e9%.0s' {1..16383})" >"$WORK/claims-locale-b.jsonl"
++  lc_ok=1 lc_rc=0 lc_out=''
++  lc_out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
++    CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" LC_ALL=C LANG=C \
++    bash "$SELF" verify-claims "$WORK/claims-locale-b.jsonl" 2>&1) || lc_rc=$?
++  cases=$((cases + 1))
++  [[ $lc_rc -eq 0 ]] || lc_ok=0
++  [[ $lc_out == *'CLAIM id=LC2 expected=supported observed=supported source=lib/locale-b.md at=line:1 verdict=match'* ]] || lc_ok=0
++  if [[ $lc_ok -eq 1 ]]; then
++    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" claims-locale-boundary "$lc_rc"
++  else
++    printf 'FAIL-case %-28s exit=%d\n' claims-locale-boundary "$lc_rc"
++    printf '%s\n' "$lc_out" | sed 's/^/    | /'
++    failures=$((failures + 1))
++  fi
++
++  # ---- round-36 hash pin (case 259): a PATH shim cannot poison the manifest ----
++  # The manifest's record_sha256/gate_sha256 are cited as identity. At base a
++  # PATH `sha256sum` shim wrote HOSTILE-CUT-OUTPUT into both fields and the run
++  # stayed exit 0/CLEAN (round-35 erratum 13). The gate now hashes with one
++  # absolute binary and refuses a non-hex result; the shim must be ignored.
++  mkdir -p "$WORK/r36hashbin"
++  printf '#!/bin/sh\nprintf "HOSTILE-CUT-OUTPUT  -\\n"\nexit 0\n' >"$WORK/r36hashbin/sha256sum"
++  chmod +x "$WORK/r36hashbin/sha256sum"
++  rm -f "$WORK/r36-manifest.jsonl"
++  h36_ok=1 h36_rc=0 h36_out=''
++  h36_out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
++    CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
++    PATH="$WORK/r36hashbin:$PATH" \
++    bash "$SELF" verify-all "$WORK/all-pass.md" --json "$WORK/r36-manifest.jsonl" 2>&1) || h36_rc=$?
++  cases=$((cases + 1))
++  [[ $h36_rc -eq 0 ]] || h36_ok=0
++  [[ -s $WORK/r36-manifest.jsonl ]] || h36_ok=0
++  grep -qE '"record_sha256":"[0-9a-f]{64}"' -- "$WORK/r36-manifest.jsonl" || h36_ok=0
++  grep -qE '"gate_sha256":"[0-9a-f]{64}"' -- "$WORK/r36-manifest.jsonl" || h36_ok=0
++  grep -q 'HOSTILE-CUT-OUTPUT' -- "$WORK/r36-manifest.jsonl" && h36_ok=0
++  if [[ $h36_ok -eq 1 ]]; then
++    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" all-manifest-hash-shim "$h36_rc"
++  else
++    printf 'FAIL-case %-28s exit=%d\n' all-manifest-hash-shim "$h36_rc"
++    printf '%s\n' "$h36_out" "$(cat "$WORK/r36-manifest.jsonl" 2>/dev/null)" | sed 's/^/    | /'
++    failures=$((failures + 1))
++  fi
++
++  # ---- round-36 pin echo isolation (cases 260-261) ----
++  # CHOUSA_GREP_PIN_ECHO is receipt-only: a baseline pinned with the echo on
++  # embedded a GATE_GREP line and --drift against the unchanged gate reported
++  # a false drift (round-35 erratum 8a). The capture environment now scrubs
++  # the flag, and a GATE_GREP line pairs under its own token, not LINE.
++  rm -f "$WORK/r36-pin.txt" "$WORK/r36-pin2.txt"
++  p36_ok=1 p36_rc=0 p36_drc=0 p36_out='' p36_dout=''
++  p36_out=$(CHOUSA_GREP_PIN_ECHO=1 bash "$SELF" --pin "$WORK/r36-pin.txt" 2>&1) || p36_rc=$?
++  p36_dout=$(env -u CHOUSA_GREP_PIN_ECHO bash "$SELF" --drift "$WORK/r36-pin.txt" 2>&1) || p36_drc=$?
++  cases=$((cases + 1))
++  [[ $p36_rc -eq 0 ]] || p36_ok=0
++  [[ $p36_drc -eq 0 ]] || p36_ok=0
++  [[ $p36_dout == 'GATE_DRIFT: none' ]] || p36_ok=0
++  [[ $p36_out == *'GATE_PIN: ok path='* ]] || p36_ok=0
++  grep -q '^GATE_GREP: ' -- "$WORK/r36-pin.txt" && p36_ok=0
++  if [[ $p36_ok -eq 1 ]]; then
++    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" pin-echo-isolation "$p36_drc"
++  else
++    printf 'FAIL-case %-28s pin_rc=%d drift_rc=%d\n' pin-echo-isolation "$p36_rc" "$p36_drc"
++    printf '%s\n' "$p36_out" "$p36_dout" | sed 's/^/    | /'
++    failures=$((failures + 1))
++  fi
++  p36_ok=1 p36_out='' p36_dout=''
++  p36_out=$(bash "$SELF" --pin "$WORK/r36-pin2.txt" 2>&1)
++  sed -i "/^# --- canonical output follows ---$/a GATE_GREP: path=/usr/bin/grep source=default version=\"x\"" "$WORK/r36-pin2.txt"
++  p36_drc=0
++  p36_dout=$(env -u CHOUSA_GREP_PIN_ECHO bash "$SELF" --drift "$WORK/r36-pin2.txt" 2>&1) || p36_drc=$?
++  cases=$((cases + 1))
++  [[ $p36_drc -eq 1 ]] || p36_ok=0
++  [[ $p36_dout == *'GATE_DRIFT: -GATE_GREP'* ]] || p36_ok=0
++  if [[ $p36_ok -eq 1 ]]; then
++    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" pin-drift-grep-token "$p36_drc"
++  else
++    printf 'FAIL-case %-28s drift_rc=%d\n' pin-drift-grep-token "$p36_drc"
++    printf '%s\n' "$p36_out" "$p36_dout" | sed 's/^/    | /'
++    failures=$((failures + 1))
++  fi
++
+   if [[ $failures -eq 0 ]]; then
+     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"
+     exit 0

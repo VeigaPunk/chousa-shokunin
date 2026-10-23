@@ -35,8 +35,10 @@ prints the same nine verdicts — and one legitimate refactor:
 
 Before (base tree): the r35 battery has no per-record attribution, so the same
 counter on `tools/mechanism-witness.py` reports landed attribution absent and
-separates only 3/5 (V3 and V5 pass it). A witness stub that always says pass
-separates 0/5; one that always says fail fails the landed gate.
+separates only 2/5 (V1 and V4; V2, V3 and V5 pass it — receipt
+`.ufo/waves/round-36/measure/c2-before-legacy-s36001.json`, re-derived on seed
+36321 in `.ufo/waves/round-36/w1/ExecC2LegacyCtl/`). A witness stub that always
+says pass separates 0/5; one that always says fail fails the landed gate.
 
 Exit: 0 iff holds; 1 otherwise; 2 harness error.
 No network; writes only its temp dir (C2_TMP or TMPDIR) and --receipt.

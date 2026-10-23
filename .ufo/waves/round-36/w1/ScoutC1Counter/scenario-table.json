@@ -1,0 +1,125 @@
+{
+  "source": "corpus/evidence/round36/c1-count.py",
+  "source_sha256": "3fefffe745ed10d2fd06c4c3cc9073ab7bfb46dd82e32c166976fd3aaf4c35be",
+  "source_lines": 681,
+  "access_date": "2026-10-23",
+  "scenarios": [
+    {
+      "id": "S1",
+      "name": "S1-shim-first-path",
+      "lines": "448-454",
+      "fixture": "A (make_fixture_a 89-109); PATH=shim_dir:clean_path; write_shim 200-204 logs to trip1 then execs /usr/bin/grep",
+      "assertion": "PATH shim never fires and verify-claims matches reference A",
+      "pass": "trip_empty(trip1) and same_as_a(rc, out)"
+    },
+    {
+      "id": "S2",
+      "name": "S2-bash-env-function",
+      "lines": "455-461",
+      "fixture": "A; BASH_ENV=bash_env.sh (write_bash_env 215-218 defines grep()); PATH=clean_path",
+      "assertion": "imported grep() never receives a call and output matches reference A",
+      "pass": "trip_empty(trip2) and same_as_a(rc, out)"
+    },
+    {
+      "id": "S3",
+      "name": "S3-no-grep-on-path",
+      "lines": "462-482",
+      "fixture": "A; PATH=nogrep symlink farm of listed tools, grep omitted (465-477)",
+      "assertion": "absolute pin needs no PATH lookup",
+      "pass": "same_as_a(rc, out) and 'not found' not in err"
+    },
+    {
+      "id": "S4",
+      "name": "S4-override-relative",
+      "lines": "483-488",
+      "fixture": "A; RESEARCH_GATE_GREP=bin/grep (relative); PATH=clean_path",
+      "assertion": "relative override refused",
+      "pass": "rc == 2 and 'GREP_PROVENANCE' in err"
+    },
+    {
+      "id": "S5",
+      "name": "S5-override-missing",
+      "lines": "489-495",
+      "fixture": "A; RESEARCH_GATE_GREP=<scratch>/absent-grep; PATH=clean_path",
+      "assertion": "missing override refused",
+      "pass": "rc == 2 and 'GREP_PROVENANCE' in err"
+    },
+    {
+      "id": "S6",
+      "name": "S6-override-non-gnu",
+      "lines": "496-505",
+      "fixture": "A; RESEARCH_GATE_GREP=stub (write_stub_non_gnu 207-212, version on stderr, exit 0)",
+      "assertion": "non-GNU stub refused after exactly one --version probe",
+      "pass": "rc == 2 and 'GREP_PROVENANCE' in err and stub_version_only (501: one log line whose argv tail is ['--version'])"
+    },
+    {
+      "id": "S7",
+      "name": "S7-override-distinct-path",
+      "lines": "506-520",
+      "fixture": "A; RESEARCH_GATE_GREP=recorder A (221-237); CHOUSA_GREP_PIN_ECHO=1",
+      "assertion": "distinct-path override honoured: output equal, echo fullmatch, recorder received matcher calls",
+      "pass": "same_as_a(rc, out) and echo == want and len(rec_matches) >= 1"
+    },
+    {
+      "id": "S8",
+      "name": "S8-default-echo",
+      "lines": "521-531",
+      "fixture": "A; no override; CHOUSA_GREP_PIN_ECHO=1; default_grep=/usr/bin/grep else /bin/grep",
+      "assertion": "default pin echo names path, source=default, and a live --version",
+      "pass": "same_as_a(rc, out) and echo == want (527-528)"
+    },
+    {
+      "id": "S9",
+      "name": "S9-override-beats-shim",
+      "lines": "532-545",
+      "fixture": "A; BASH_ENV + RESEARCH_GATE_GREP=recorder A + CHOUSA_GREP_PIN_ECHO=1; rlog_a truncated (534) and not read",
+      "assertion": "docstring 29-31: function shim receives nothing AND the recorder receives the matches",
+      "pass": "trip_empty(trip2) and same_as_a(rc, out) and echo == want9"
+    },
+    {
+      "id": "S10",
+      "name": "S10-semantic-canary",
+      "lines": "546-584",
+      "fixture": "B (make_fixture_b 112-136, seeded length 32765..32767 + short span); landed recorder B; patched k1 gate (365-377, 560-566)",
+      "assertion": "every record's span or 4096-byte chunk is a matcher argv on the landed recorder; output-equivalent exact-search attributes no long record",
+      "pass": "ref_b and len(landed_attr)==len(spans_b) and k1_long_missing and k1_same and syntax.returncode==0"
+    },
+    {
+      "id": "S11",
+      "name": "S11-manifest-hash-shim",
+      "lines": "585-612",
+      "fixture": "D (189-197); PATH=hostile sha256sum (590-591) then clean_path; verify-all --json",
+      "assertion": "both manifest sha fields are 64-hex and equal hashlib of the record and the gate",
+      "pass": "rc == 0 and man_ok (604-606)"
+    },
+    {
+      "id": "S12",
+      "name": "S12-locale-c",
+      "lines": "613-625",
+      "fixture": "C (139-147): file bytes caf\\xc3\\xa9; claim span U+00E9, json.dumps ensure_ascii so \\\\u00e9",
+      "assertion": "docstring 40-41: the claim decodes byte-exactly under LC_ALL=C",
+      "pass": "ref_c (utf-8 rc==0, no drift, L1 supported/match) and rc_c==rc_utf and parse(out_c)==parse(out_utf)"
+    },
+    {
+      "id": "S13",
+      "name": "S13-pin-echo-isolation",
+      "lines": "626-641",
+      "fixture": "cwd=fixture D dir; --pin with CHOUSA_GREP_PIN_ECHO=1; --drift via raw subprocess (633), not run_gate",
+      "assertion": "baseline does not embed GATE_GREP and drift against the unchanged gate is none",
+      "pass": "rc_pin==0 and dr.returncode==0 and dr.stdout.strip()=='GATE_DRIFT: none' and not baseline_has_echo"
+    },
+    {
+      "id": "S14",
+      "name": "S14-pin-drift-token",
+      "lines": "642-657",
+      "fixture": "cwd=fixture D dir; --pin; inject one GATE_GREP line after the canonical-output marker (647-651); --drift",
+      "assertion": "injected GATE_GREP line pairs as -GATE_GREP, not -LINE",
+      "pass": "rc_pin2==0 and dr2.returncode==1 and '-GATE_GREP' in dr2.stdout and '-LINE' not in dr2.stdout"
+    }
+  ],
+  "guards": {
+    "reference_a": "435-446: rc==1, a RESEARCH_GATE: DRIFT line, K1/K2/K3 verdicts. Failure raises RuntimeError.",
+    "reference_b": "552-553: rc==0, no DRIFT, every seeded id supported/match. Required by S10 (577) and holds (660).",
+    "holds": "660: passed==TOTAL and ref_a and ref_b. Exception path 668-671 forces predicate_holds false."
+  }
+}

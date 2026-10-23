@@ -1,0 +1,20 @@
+# chousa-gate drift baseline v1 — written by research-gate.sh --pin
+# lineage: mori-shokunin r10 pin/drift (tools/mori-census.sh); volatile contract per the gate header
+# gate_sha256=a7d3922c768a217a2dcedf347b4de438b8dda4108e1335f5a39af6117e1f54e8
+# pinned_ts=2026-10-23T21:26:12Z
+# canonical: verify-all record.md --claims claims.jsonl --json manifest.jsonl --root . (cwd = a fresh temp fixture written by the gate)
+# volatile_fields=ts gate_sha256
+# volatile_note=values of these fields are masked to <V>; --drift re-normalizes with the CURRENT list and reports every changed field. Changing the list is itself drift; gate_sha256 is informational (behavior, not revision, is compared).
+# --- canonical output follows ---
+GATE_GREP: path=/usr/bin/grep source=default version="injected"
+research-gate v2 — ts=<V> — mode=verify-all — record=record.md — claims=claims.jsonl — root=.
+SECTION structure state=run verdict=CLEAN findings=0 drift=0
+SECTION claims state=run verdict=CLEAN findings=0 drift=0 tally=VERDICT_BEARING_CLAIMS=1/1
+SECTION chain state=run verdict=CLEAN findings=0 drift=0 tally=RESOLVED_HOPS=1/1
+SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+SECTION integrity state=run verdict=DRIFT findings=1 drift=1 tally=INTEGRITY refs=4 resolved=3 unresolved=1
+FINDING REF_UNRESOLVED severity=warn surface=integrity obs=kind=claim id=C9 section=sweeps row=SW1 cell=claim_id
+VERIFY_ALL sections=5 run=5 absent=0 drift-sections=1 findings=1 drift=1
+RESEARCH_GATE: DRIFT (sections=5 run=5 absent=0 drift-sections=1 findings=1 drift=1)
+# --- json manifest line follows ---
+{"schema":"chousa-verify-all/v1","ts":"<V>","record":"record.md","record_sha256":"c22a6c3d8acf345a4b2a5b9b8ece388c596648cee84c7f9ba3002a75a95f3f84","gate_sha256":"<V>","sections":[{"name":"structure","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"findings":0,"drift":0,"questions":1,"sources":1,"chains":1,"claims":1,"negatives":1,"rejections":1,"approvals":1}},{"name":"claims","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"claims":1,"supported":1,"contradicted":0,"unsupported":0,"mismatched":0,"unproven":0,"refused":0,"invalid":0,"findings":0,"drift":0},"native":"VERDICT_BEARING_CLAIMS=1/1"},{"name":"chain","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"hops":1,"verified":1,"exempt":0,"anchor-missing":0,"refused":0,"invalid":0,"findings":0,"drift":0,"resolvable":0},"native":"RESOLVED_HOPS=1/1"},{"name":"sweeps","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"sweeps":1,"verified":1,"exempt":0,"hit":0,"refused":0,"invalid":0,"rejections":1,"rejections-ok":1,"findings":0,"drift":0},"native":"VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1"},{"name":"integrity","state":"run","verdict":"DRIFT","findings":1,"drift":1,"tallies":{"refs":4,"resolved":3,"unresolved":1,"exempt":0,"findings":1,"drift":1},"native":"INTEGRITY refs=4 resolved=3 unresolved=1"}],"verdict":"DRIFT","sections_run":5,"sections_absent":0,"drift_sections":1}

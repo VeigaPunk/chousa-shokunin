@@ -395,3 +395,34 @@ the admitted entry that motivates it. Tier definitions live in
     to fail: `.ufo/waves/round-35/w2/MutC2KeyedBattery.md` (controls C and D),
     `MutWitnessBypass2.md` (body-replaced chunk matcher, gate `3e5648b8…`, `WITNESS=pass` 9/9). —
     `lessons/round-35.md`.
+
+50. **A tool's stated count is a claim and must trace to a committed receipt.** A docstring
+    sentence like "separates only 3/5" is a measurement with no counting command, and nobody
+    re-derives it because the tool's printed label excludes the before-count. Every numeric claim
+    in a tool's own prose names the receipt field that yields it, or it is not evidence. Check: for
+    each number in the docstring, name the receipt path + field; a number with no field is
+    unverified. Shown able to fail: round-36 `c2-count.py` said the round-35 battery "separates
+    only 3/5 (V3 and V5 pass it)" while `.ufo/waves/round-36/measure/c2-before-legacy-s36001.json`
+    reports `matched: 2` with `V2-env-keyed`, `V3-witness-forge` and `V5-body-replaced` all
+    `witness: pass`. —
+    `lessons/round-36.md`.
+
+51. **A witness channel the candidate can write to is not a witness channel.** A channel the engine
+    under test can emit on (the gate's own stderr / PS4) can be forged without doing the work: the
+    round-35 trace battery scored `WITNESS=pass` on 360 forged stamps and zero real chunk
+    executions. A witness design names (a) who writes the channel, (b) where the per-run marker
+    comes from, and (c) what a candidate that READS the harness could still forge. Check: show the
+    writer and the marker source in code, and separate a forging engine. Shown able to fail:
+    `V3-witness-forge` passes the round-35 battery and fails the round-36 witness
+    (`corpus/evidence/round36/c2-count.py`, receipts under `.ufo/waves/round-36/measure/`). —
+    `lessons/round-36.md`.
+
+52. **A scenario's assertion must match the behaviour its name claims.** A scenario named for a
+    mechanism ("the override beats an imported shim") that asserts only an echo string and a
+    reference output passes without the mechanism, and its PASS inflates the count. Each scenario
+    quotes the assertion that would fail if the named behaviour were absent, and a scenario whose
+    assertion is a weaker proxy is renamed or re-asserted. Check: read each scenario's assertion
+    next to its name; a mismatch is a survivor. Shown able to fail: round-36 C1 S9 truncates the
+    recorder log and never reads it again, S8 reads no matcher argv, and S7 accepts one argv
+    (`.ufo/waves/round-36/w1/ScoutC1Counter.md` §Vacuity candidates); the 14/14 still holds
+    because S10 requires every record attributed. — `lessons/round-36.md`.

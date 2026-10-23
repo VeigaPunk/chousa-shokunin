@@ -1,0 +1,15 @@
+ENGINE_SWAP_CANARY=14/14
+  S1-shim-first-path           PASS  {"output_matches_reference": true, "rc": 1, "tripwire_bytes": 0}
+  S2-bash-env-function         PASS  {"output_matches_reference": true, "rc": 1, "tripwire_bytes": 0}
+  S3-no-grep-on-path           PASS  {"output_matches_reference": true, "path_tools": 38, "rc": 1, "stderr_tail": ""}
+  S4-override-relative         PASS  {"marker": true, "rc": 2, "stderr_tail": "research-gate: GREP_PROVENANCE refused: override is not an absolute path (candidate=bin/grep)\n"}
+  S5-override-missing          PASS  {"marker": true, "rc": 2, "stderr_tail": "research-gate: GREP_PROVENANCE refused: override is not a regular file (candidate=/tmp/hyaku/chousa-r36/w1/MutC1Arm/c1tmp/r36c1-00008df5-zvd7doyr/_scratch/absent-grep)\n"}
+  S6-override-non-gnu          PASS  {"marker": true, "rc": 2, "stderr_tail": "research-gate: GREP_PROVENANCE refused: override does not report GNU grep: <no version> (candidate=/tmp/hyaku/chousa-r36/w1/MutC1Arm/c1tmp/r36c1-00008df5-zvd7doyr/_scratch/stub-grep)\n", "stub_calls": ["stub --version"
+  S7-override-distinct-path    PASS  {"echo_fullmatch": true, "echo_line": "GATE_GREP: path=/tmp/hyaku/chousa-r36/w1/MutC1Arm/c1tmp/r36c1-00008df5-zvd7doyr/_scratch/rec-a/grep-recorder source=override version=\"grep (GNU grep) 3.12-modified\"", "matcher_calls": 4, "output_matches_reference": true
+  S8-default-echo              PASS  {"echo_fullmatch": true, "echo_line": "GATE_GREP: path=/usr/bin/grep source=default version=\"grep (GNU grep) 3.12-modified\"", "output_matches_reference": true, "rc": 1}
+  S9-override-beats-shim       PASS  {"echo_fullmatch": true, "echo_line": "GATE_GREP: path=/tmp/hyaku/chousa-r36/w1/MutC1Arm/c1tmp/r36c1-00008df5-zvd7doyr/_scratch/rec-a/grep-recorder source=override version=\"grep (GNU grep) 3.12-modified\"", "output_matches_reference": true, "tripwire_bytes": 
+  S10-semantic-canary          PASS  {"k1_attributed": [["C-SHORT", "direct"]], "k1_gate_sha256": "19e471742faf0754fd463730a48423b99b9112530933be5b066a1c06ff4b0272", "k1_long_missing": true, "k1_output_equivalent": true, "landed_attributed": [["C-LONG-32765", "chunk"], ["C-SHORT", "direct"]], "lo
+  S11-manifest-hash-shim       PASS  {"manifest_ok": true, "rc": 0, "stderr_tail": "", "true_gate_sha": "a7d3922c768a217a2dcedf347b4de438b8dda4108e1335f5a39af6117e1f54e8", "true_record_sha": "721d2837dfeeba3a88405a42053c818ae7233ae5e8b1b452d27ac0f00b854fde"}
+  S12-locale-c                 PASS  {"c_obs": {"L1": ["supported", "match"]}, "c_rc": 0, "stderr_tail": "", "utf8_obs": {"L1": ["supported", "match"]}, "utf8_rc": 0}
+  S13-pin-echo-isolation       PASS  {"baseline_echo": false, "drift_out": "GATE_DRIFT: none", "drift_rc": 0, "pin_rc": 0, "stderr_tail": "GATE_GREP: path=/usr/bin/grep source=default version=\"grep (GNU grep) 3.12-modified\"\n"}
+  S14-pin-drift-token          PASS  {"drift_out": "GATE_DRIFT: -GATE_GREP", "drift_rc": 1, "pin_rc": 0}

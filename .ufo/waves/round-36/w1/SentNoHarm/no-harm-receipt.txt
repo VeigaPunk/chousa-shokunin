@@ -1,0 +1,43 @@
+Round-36 wave-1 no-harm receipt
+Date: 2026-10-23
+Lane revision: git rev-parse master -> 700bd5fcbf9abc118a6a0f078d51a2e7460c2878
+Lane cwd: /home/vgpnk/Projects/shokunin/chousa-shokunin
+Gate: tools/research-gate.sh
+Gate sha256 before all observable runs: a7d3922c768a217a2dcedf347b4de438b8dda4108e1335f5a39af6117e1f54e8
+Gate sha256 after all observable runs:  a7d3922c768a217a2dcedf347b4de438b8dda4108e1335f5a39af6117e1f54e8
+Archive fixtures (before and after):
+9033857d4625555c7b778dfad6df80e3e1b24ed8bffa3fee2fd445b9c5540b85  ../research/deep-research-2026-09-28/A-shokunin-tradition.md
+6d8dbddd3e2d2f47dcb153c5a3347cc6321db4afc72cf07da40f0f7fe5022006  ../research/deep-research-2026-09-28/B-multiagent-knowledge.md
+e48fe70ff92055c217ac6ca6ce68e403aa5689fee8717f3bd0ccf5badc92321b  ../research/deep-research-2026-09-28/C-rank-taxonomy.md
+
+1) Claims (run from lane cwd)
+Command run verbatim:
+timeout 900s bash -c 'bash tools/research-gate.sh verify-claims corpus/fixtures/claims-r2.jsonl --root ..; rc=$?; printf "EXIT_CODE=%d\n" "$rc"'
+Deciding output:
+VERDICT_BEARING_CLAIMS=17/17
+RESEARCH_GATE: CLEAN (claims=17 supported=13 contradicted=2 unsupported=2 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)
+EXIT_CODE=0
+
+2) Positive chain fixture (run from lane cwd)
+Command run verbatim:
+timeout 900s bash -c 'bash tools/research-gate.sh verify-chain corpus/fixtures/chain-r3.md --root ..; rc=$?; printf "EXIT_CODE=%d\n" "$rc"'
+Deciding output:
+RESOLVED_HOPS=17/22
+RESEARCH_GATE: CLEAN (hops=22 verified=17 exempt=5 anchor-missing=0 refused=0 invalid=0 findings=0 drift=0 resolvable=0)
+EXIT_CODE=0
+
+3) Broken chain control (run from lane cwd)
+Command run verbatim:
+timeout 900s bash -c 'bash tools/research-gate.sh verify-chain corpus/fixtures/chain-r3-broken.md --root ..; rc=$?; printf "EXIT_CODE=%d\n" "$rc"'
+Deciding output:
+FINDING CHAIN_ANCHOR_NOT_FOUND severity=warn surface=chain obs=hop=2 source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"人為 — jin’i-ryū" nearest_line=53 context=The key distinction is between skill, teaching authority, and permission to act.
+RESOLVED_HOPS=1/2
+RESEARCH_GATE: DRIFT (hops=2 verified=1 exempt=0 anchor-missing=1 refused=0 invalid=0 findings=1 drift=1 resolvable=0)
+EXIT_CODE=1
+
+4) Round-1 archive count (exact SCORECARD.md counting command; run from lane cwd)
+Command run verbatim:
+timeout 900s python3 -c 'import subprocess; names=("A-shokunin-tradition.md","B-multiagent-knowledge.md","C-rank-taxonomy.md"); rows=[subprocess.run(["bash","tools/research-gate.sh","verify","../research/deep-research-2026-09-28/"+n,"--root",".."],capture_output=True,text=True) for n in names]; print("VERDICT_BEARING_EXPORTS=%d/3" % sum(r.returncode==1 and sum(s.startswith("RESEARCH_GATE: DRIFT (") for s in r.stdout.splitlines())==1 for r in rows))'; rc=$?; printf 'EXIT_CODE=%d\n' "$rc"
+Deciding output:
+VERDICT_BEARING_EXPORTS=3/3
+EXIT_CODE=0

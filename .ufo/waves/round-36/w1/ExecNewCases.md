@@ -1,0 +1,69 @@
+# Round 36 W1 — ExecNewCases
+
+Access date: 2026-10-23. Axes: operability, calibration. Scope: R5 selftest cases 257–261 and their red-before state only.
+
+## Verdict
+
+**RED-BEFORE CONFIRMED: all five landed test bodies fail individually when transplanted, one at a time, into a named scratch copy of the base control gate. None of cases 257–261 exists in the unmodified base gate; its selftest ends at case 256.** No output-equivalent bypass was found in this scoped run.
+
+The original base control gate SHA256 is `a47688518e509edbf43b433a5e16e1cf2481233f3acedb5824ba341f7f0c38ad`; landed `tools/research-gate.sh` SHA256 is `a7d3922c768a217a2dcedf347b4de438b8dda4108e1335f5a39af6117e1f54e8`.
+
+## Red-before table
+
+| Case | Landed assertion (source lines) | Exists on base? | Fails on base? — observed evidence |
+|---|---|---:|---|
+| 257 `claims-locale-c` | `tools/research-gate.sh:8041–8058`: under `LC_ALL=C LANG=C`, `LC1` (`caf\\u00e9`) must be supported, match line 1, and produce CLEAN with exit 0. | No | **Yes.** `case-257-selftest.log:327–332`: `FAIL-case claims-locale-c exit=1`; LC1 was `observed=unsupported`, `CLAIM_SPAN_NOT_FOUND`, DRIFT. |
+| 258 `claims-locale-boundary` | `:8059–8075`: 16,383 `\\u00e9` escapes (32,766 decoded bytes) must remain supported across the direct/chunk boundary under C locale; LC2 must match line 1 with exit 0. | No | **Yes.** `case-258-selftest.log:327–332`: `FAIL-case claims-locale-boundary exit=1`; LC2 was `observed=unsupported`, `CLAIM_SPAN_NOT_FOUND`, DRIFT. |
+| 259 `all-manifest-hash-shim` | `:8077–8103`: a hostile PATH `sha256sum` must not poison either manifest field; require successful verify-all, nonempty manifest, both 64-character lowercase-hex hashes, and no hostile token. | No | **Yes.** `case-259-selftest.log:327,336`: `FAIL-case all-manifest-hash-shim exit=0`; verify-all itself returned 0, but both manifest hashes were `HOSTILE-CUT-OUTPUT`. |
+| 260 `pin-echo-isolation` | `:8105–8126`: pin with `CHOUSA_GREP_PIN_ECHO=1`, then drift with it unset; pin must succeed, baseline must contain no `GATE_GREP`, and unchanged drift must be exactly `GATE_DRIFT: none` with exit 0. | No | **Yes.** `case-260-selftest.log:327–330`: `FAIL-case pin-echo-isolation pin_rc=0 drift_rc=1`; output was `GATE_DRIFT: -LINE`. |
+| 261 `pin-drift-grep-token` | `:8127–8141`: after injecting a `GATE_GREP:` line into the baseline, drift must exit 1 and identify `GATE_DRIFT: -GATE_GREP`. | No | **Yes.** `case-261-selftest.log:327–330`: `FAIL-case pin-drift-grep-token drift_rc=1`; output was `GATE_DRIFT: -LINE`, not the required token. |
+
+### Base inventory
+
+Command `timeout 900s env TMPDIR=/tmp/hyaku/chousa-r36/w1/ExecNewCases bash .ufo/waves/round-36/controls/base-gate-r36.sh --selftest` (cwd `/home/vgpnk/Projects/shokunin/chousa-shokunin`) returned **1**. Retained `base-selftest.log:259–266` names cases 250–256 as `r33-post-nul-dup`, `r33-post-escapes`, `claims-longspan`, `claims-longspan-line`, `claims-deadzone`, `claims-deadzone-line`, `claims-deadzone-edge`, then `RESEARCH_GATE_SELFTEST: FAIL (2/256 cases)`. A search of that log for `257|258|259|260|261` returned no matches. Base source lines `7990–8001` likewise goes from case 256 directly to the selftest summary.
+
+The two unrelated failures in the unmodified base run were `claims-lane-fallback` (log line 106; PROVINCE.md was refused as unreadable) and `ptr-lane-abs` (line 132; absolute PROVINCE.md pointer unresolved). Thus the base suite is not wholly green in this environment; the verdict above relies on each named R5 assertion's explicit FAIL output, not the whole-suite status.
+
+## Commands and outcomes
+
+All selftest commands were bounded by `timeout 900s`. For the five scratch variants, the shell wrapper returns 0 after printing the captured child status; each captured selftest child returned 1 and printed its case-specific FAIL line above.
+
+1. `sha256sum /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/controls/base-gate-r36.sh` — exit 0; produced the two gate hashes stated above.
+2. `mkdir -p /tmp/hyaku/chousa-r36/w1/ExecNewCases /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/w1/ExecNewCases` — exit 0.
+3. `timeout 900s env TMPDIR=/tmp/hyaku/chousa-r36/w1/ExecNewCases bash /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/controls/base-gate-r36.sh --selftest` (cwd `/home/vgpnk/Projects/shokunin`) — exit 1; output had the same two unrelated failures and `FAIL (2/256 cases)`.
+4. `timeout 900s env TMPDIR=/tmp/hyaku/chousa-r36/w1/ExecNewCases bash .ufo/waves/round-36/controls/base-gate-r36.sh --selftest` (cwd lane root) — exit 1; same two unrelated failures.
+5. `cp /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/controls/base-gate-r36.sh /tmp/hyaku/chousa-r36/w1/ExecNewCases/case-257.sh && cp /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/controls/base-gate-r36.sh /tmp/hyaku/chousa-r36/w1/ExecNewCases/case-258.sh && cp /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/controls/base-gate-r36.sh /tmp/hyaku/chousa-r36/w1/ExecNewCases/case-259.sh && cp /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/controls/base-gate-r36.sh /tmp/hyaku/chousa-r36/w1/ExecNewCases/case-260.sh && cp /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/controls/base-gate-r36.sh /tmp/hyaku/chousa-r36/w1/ExecNewCases/case-261.sh` — exit 0.
+6. `timeout 900s env TMPDIR=/tmp/hyaku/chousa-r36/w1/ExecNewCases bash /tmp/hyaku/chousa-r36/w1/ExecNewCases/case-257.sh --selftest > /tmp/hyaku/chousa-r36/w1/ExecNewCases/result-257.log 2>&1; rc=$?; printf 'CASE257_FULL_SELFTEST_EXIT=%d\\n' "$rc"` — wrapper exit 0, child exit 1; deciding line `result-257.log:327`.
+7. `timeout 900s env TMPDIR=/tmp/hyaku/chousa-r36/w1/ExecNewCases bash /tmp/hyaku/chousa-r36/w1/ExecNewCases/case-258.sh --selftest > /tmp/hyaku/chousa-r36/w1/ExecNewCases/result-258.log 2>&1; rc=$?; printf 'CASE258_FULL_SELFTEST_EXIT=%d\\n' "$rc"` — wrapper exit 0, child exit 1; deciding line `result-258.log:327`.
+8. `timeout 900s env TMPDIR=/tmp/hyaku/chousa-r36/w1/ExecNewCases bash /tmp/hyaku/chousa-r36/w1/ExecNewCases/case-259.sh --selftest > /tmp/hyaku/chousa-r36/w1/ExecNewCases/result-259.log 2>&1; rc=$?; printf 'CASE259_FULL_SELFTEST_EXIT=%d\\n' "$rc"` — wrapper exit 0, child exit 1; deciding lines `result-259.log:327,336`.
+9. `timeout 900s env TMPDIR=/tmp/hyaku/chousa-r36/w1/ExecNewCases bash /tmp/hyaku/chousa-r36/w1/ExecNewCases/case-260.sh --selftest > /tmp/hyaku/chousa-r36/w1/ExecNewCases/result-260.log 2>&1; rc=$?; printf 'CASE260_FULL_SELFTEST_EXIT=%d\\n' "$rc"` — wrapper exit 0, child exit 1; deciding lines `result-260.log:327–330`.
+10. `timeout 900s env TMPDIR=/tmp/hyaku/chousa-r36/w1/ExecNewCases bash /tmp/hyaku/chousa-r36/w1/ExecNewCases/case-261.sh --selftest > /tmp/hyaku/chousa-r36/w1/ExecNewCases/result-261.log 2>&1; rc=$?; printf 'CASE261_FULL_SELFTEST_EXIT=%d\\n' "$rc"` — wrapper exit 0, child exit 1; deciding lines `result-261.log:327–330`.
+11. `timeout 900s env TMPDIR=/tmp/hyaku/chousa-r36/w1/ExecNewCases bash .ufo/waves/round-36/controls/base-gate-r36.sh --selftest > /tmp/hyaku/chousa-r36/w1/ExecNewCases/result-base.log 2>&1; rc=$?; printf 'BASE_SELFTEST_EXIT=%d\\n' "$rc"` (cwd lane root) — wrapper exit 0, child exit 1; deciding lines `result-base.log:259–266`.
+12. `cp /tmp/hyaku/chousa-r36/w1/ExecNewCases/result-base.log /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/w1/ExecNewCases/base-selftest.log && cp /tmp/hyaku/chousa-r36/w1/ExecNewCases/result-257.log /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/w1/ExecNewCases/case-257-selftest.log && cp /tmp/hyaku/chousa-r36/w1/ExecNewCases/result-258.log /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/w1/ExecNewCases/case-258-selftest.log && cp /tmp/hyaku/chousa-r36/w1/ExecNewCases/result-259.log /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/w1/ExecNewCases/case-259-selftest.log && cp /tmp/hyaku/chousa-r36/w1/ExecNewCases/result-260.log /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/w1/ExecNewCases/case-260-selftest.log && cp /tmp/hyaku/chousa-r36/w1/ExecNewCases/result-261.log /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/w1/ExecNewCases/case-261-selftest.log && cp /tmp/hyaku/chousa-r36/w1/ExecNewCases/case-257.sh /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/w1/ExecNewCases/base-plus-case-257.sh && cp /tmp/hyaku/chousa-r36/w1/ExecNewCases/case-258.sh /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/w1/ExecNewCases/base-plus-case-258.sh && cp /tmp/hyaku/chousa-r36/w1/ExecNewCases/case-259.sh /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/w1/ExecNewCases/base-plus-case-259.sh && cp /tmp/hyaku/chousa-r36/w1/ExecNewCases/case-260.sh /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/w1/ExecNewCases/base-plus-case-260.sh && cp /tmp/hyaku/chousa-r36/w1/ExecNewCases/case-261.sh /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/w1/ExecNewCases/base-plus-case-261.sh` — exit 0.
+13. `sha256sum /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/w1/ExecNewCases/base-selftest.log /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/w1/ExecNewCases/case-257-selftest.log /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/w1/ExecNewCases/case-258-selftest.log /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/w1/ExecNewCases/case-259-selftest.log /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/w1/ExecNewCases/case-260-selftest.log /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/w1/ExecNewCases/case-261-selftest.log /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/w1/ExecNewCases/base-plus-case-257.sh /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/w1/ExecNewCases/base-plus-case-258.sh /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/w1/ExecNewCases/base-plus-case-259.sh /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/w1/ExecNewCases/base-plus-case-260.sh /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/w1/ExecNewCases/base-plus-case-261.sh && stat -c '%n %s bytes' /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-36/w1/ExecNewCases/*` — exit 0; hashes and sizes below.
+
+The case bodies were inserted individually at the base selftest tail, with only a preceding counter assignment (`cases=N−1`) to retain the intended printed label. No gate implementation code was changed. The five appended scratch selftests have additional unrelated whole-suite failures; I rely only on their explicit case-specific `FAIL-case` output and body assertions. **[INFERENCE]** Those aggregate failures may be affected by the copied gate resolving `SELF` from `/tmp`; the named R5 failure output itself directly demonstrates each base behavior.
+
+## Retained artifacts (all under 1 MiB)
+
+Paths below are relative to the lane root. Variant files are base-gate copies with exactly one landed case body inserted; their digests identify the controls used.
+
+| Artifact | Size | SHA256 |
+|---|---:|---|
+| `.ufo/waves/round-36/w1/ExecNewCases/base-selftest.log` | 14,083 B | `a6872fdda69e9f6b1c8d83537e61d4e29e2217dd57979c6ed270a7b313ed3179` |
+| `.ufo/waves/round-36/w1/ExecNewCases/case-257-selftest.log` | 23,776 B | `146d4e782f59b537377be5ff8fc5f1f97aafe89b8cd02c35d27f5e1bf8da6421` |
+| `.ufo/waves/round-36/w1/ExecNewCases/case-258-selftest.log` | 23,776 B | `c388a232a8676c3e7876d8a18f3e11b1012c8858b75c96b47e71bdbec190f664` |
+| `.ufo/waves/round-36/w1/ExecNewCases/case-259-selftest.log` | 25,325 B | `ac471a615955add88d308d17346e3f080bcc88c4a351a03c8c7427020baee2c3` |
+| `.ufo/waves/round-36/w1/ExecNewCases/case-260-selftest.log` | 23,538 B | `61ef51270c3475f350331d3780d3e0bea376f34323b427e46983b060e7bf9a9e` |
+| `.ufo/waves/round-36/w1/ExecNewCases/case-261-selftest.log` | 23,439 B | `c90028c6d4a39e4f98a90e1f1565485628dc8480c49a027cc0d168e5cbd29a3d` |
+| `.ufo/waves/round-36/w1/ExecNewCases/base-plus-case-257.sh` | 373,637 B | `177a969b33109c775f931c426b42dde7beba52d615ba3c2239f829767e78824e` |
+| `.ufo/waves/round-36/w1/ExecNewCases/base-plus-case-258.sh` | 373,654 B | `07c0f7e6a511f2098430d0f555b40fc68324919520c15410873e7262df58f019` |
+| `.ufo/waves/round-36/w1/ExecNewCases/base-plus-case-259.sh` | 373,865 B | `24d6542758247a19c0874ef7aab2c517a4eb43896db25959da298fac0e2f900d` |
+| `.ufo/waves/round-36/w1/ExecNewCases/base-plus-case-260.sh` | 373,537 B | `3f42a6be06657a942b6fdcab26ab77a585a422e463534e5608924bcee6d96e31` |
+| `.ufo/waves/round-36/w1/ExecNewCases/base-plus-case-261.sh` | 373,421 B | `c3a4ab8140386d2bea89cfbe71db3c15e9cbf32c8d521942ba7611d029c6d2f9` |
+
+## Files opened
+
+All accesses were on 2026-10-23: the validated brief `.ufo/waves/round-36/w1-briefs/ExecNewCases.md`; `corpus/evidence/round36/claims.md`, `c1-count.py`, `c2-count.py`; `tools/argv-witness.py`, `tools/mechanism-witness.py`, `tools/research-gate.sh`; and `.ufo/waves/round-36/controls/base-gate-r36.sh`. The `.ufo/waves/round-36/measure/` directory was listed; no receipt contents were opened. The five retained scratch variants and six retained logs are listed above.
+
+No production file, fleet/sibling lane file, lane Git index, or jj state was written. No install, build, lint, formatter, counter, or unrelated test was run. The only modifications are this report and its scoped evidence artifacts.

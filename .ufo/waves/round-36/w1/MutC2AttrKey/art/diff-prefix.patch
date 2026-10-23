@@ -1,0 +1,24 @@
+--- wit-pristine.py	2026-10-23 18:25:20.936037119 -0300
++++ wit-prefix.py	2026-10-23 18:25:29.811534324 -0300
+@@ -273,17 +273,15 @@
+ 
+ 
+ def attribute(calls, truth):
+-    """-> {id: 'direct'|'chunk'}: every record whose own span/chunk was queried."""
++    """MUTANT B (prefix): only the first 64 bytes of a span need prefix a queried argv."""
+     got = {}
+     pats = [d for d in (decode_matcher_pattern(p) for p in matcher_patterns(calls)) if d is not None]
+     for cid, meta in truth.items():
+         span = meta["span"].encode("utf-8", "surrogateescape")
++        head = span[:64]
+         for kind, decoded in pats:
+-            if kind == "direct" and decoded == span:
+-                got[cid] = "direct"
+-                break
+-            if kind == "chunk" and decoded == span[:4096]:
+-                got[cid] = "chunk"
++            if decoded.startswith(head):
++                got[cid] = "prefix64"
+                 break
+     return got
+ 

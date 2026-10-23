@@ -1,0 +1,7 @@
+| id | source | kind | tier | scope | anchor | teaches | status | opened | recheck | used-by |
+|---|---|---|---|---|---|---|---|---|---|---|
+| S069 | GNU `grep(1)` manual — `/usr/share/man/man1/grep.1.gz` | docs | A | GNU grep's documented `-b` offset semantics with `-o`, `-o` only-matching output, and `-a` binary-as-text behavior; not a per-record argv attribution method or this lane's matcher contract | “OPTIONS / General Output Control” (`-o`, decompressed lines 289–368); “OPTIONS / Output Line Prefix Control” (`-b`, lines 382–391); “OPTIONS / File and Directory Selection” (`-a`, lines 507–512). GNU grep 3.12-modified (2025-03-21), installed `grep 3.12-2`; local file SHA-256 `9b027d022ae9533ff3e140ba8d96ccd58955bdf9d1c818c327fd992e575c85ba` | `-o` emits each nonempty matched part on its own output line; with `-b`, the byte offset refers to that matched part; `-a` processes binary input as text. | mined | 2026-10-23 | on-release | corpus/knowledge/per-record-argv-attribution-r36.md |
+
+## Gate
+
+- Path: `/usr/share/man/man1/grep.1.gz`; opened locally 2026-10-23. Decompressed section “OPTIONS / Output Line Prefix Control,” lines 387–391: “If -o (--only-matching) is specified, print the offset of the matching part itself.” The page documents GNU grep option output semantics; it does not say anything about per-record argv attribution as a method, which is a lane-specific method/design rather than this manual's claim.

@@ -1,0 +1,26 @@
+--- wit-pristine.py	2026-10-23 18:25:20.936037119 -0300
++++ wit-global.py	2026-10-23 18:25:29.808534325 -0300
+@@ -273,19 +273,11 @@
+ 
+ 
+ def attribute(calls, truth):
+-    """-> {id: 'direct'|'chunk'}: every record whose own span/chunk was queried."""
+-    got = {}
++    """MUTANT A (global count): any matcher argv attributes every record."""
+     pats = [d for d in (decode_matcher_pattern(p) for p in matcher_patterns(calls)) if d is not None]
+-    for cid, meta in truth.items():
+-        span = meta["span"].encode("utf-8", "surrogateescape")
+-        for kind, decoded in pats:
+-            if kind == "direct" and decoded == span:
+-                got[cid] = "direct"
+-                break
+-            if kind == "chunk" and decoded == span[:4096]:
+-                got[cid] = "chunk"
+-                break
+-    return got
++    if not pats:
++        return {}
++    return {cid: "global" for cid in truth}
+ 
+ 
+ def main():

@@ -1326,3 +1326,41 @@ frozen design + erratum `corpus/evidence/round35/claims.md`; knowledge
 QUALITY 45–49; sources 66 → 68 (S067 exec(3), S068 bash(1)); lesson `corpus/lessons/round-35.md`.
 Wave: one v2 wave, 65 seats (27 attack), one dead seat (CritWitnessBlind, provider `cyber_policy`
 refusal). Report `.ufo/reports/round-35/chousa.md`.
+
+## Round 36 — 2026-10-23 — the engine-swap canary and per-record attribution
+
+Two claims (operability, calibration), seven repairs. Attempt 1 (inherited; `.ufo/watchdog.log`
+line 980 `lane-dead-no-report chousa round=36`) froze `corpus/evidence/round36/claims.md` and landed
+the gate edits at `700bd5fcbf9abc118a6a0f078d51a2e7460c2878` — `sha256_hex_file` for
+`verify-all --json`/`--pin` (S11), `json_unescape` in a `LC_ALL=C` scope with hand-built UTF-8
+(S12), the `CHOUSA_GREP_PIN_ECHO` scrub in the capture environment (S13), the `GATE_GREP` drift
+token (S14), selftest cases 257-261 (256 → 261). Before-state control committed byte-exact
+`.ufo/waves/round-36/controls/base-gate-r36.sh` (`a4768851…c38ad`).
+
+- C1 operability (lowest scored axis, 3/10) — `ENGINE_SWAP_CANARY=14/14` on seeds 36001, 36011,
+  36301, 36311, 36331, 36341, 36351, 36361 against gate `a7d3922c…f54e8`; before `10/14` on
+  the base control (S11-S14). Narrowed reading: four newly discriminated behaviours, ten
+  contract behaviours that also pass the control (MutC1Arm: S11/S12 worth one point each;
+  ScoutC1Counter: S7-S9 assert the contract, not per-call engine identity).
+- C2 calibration — `WITNESS_PER_RECORD=5/5 OUTPUT_EQUIV=5/5 LANDED_ATTRIB=pass RENAMED=pass` on
+  seeds 36001, 36011, 36301, 36311, 36371; before `2/5` with the round-35 witness on the base
+  gate (V1/V4 separated; V2/V3/V5 admitted; renamed matcher killed).
+- Repairs R1-R7: pin-echo scrub, drift token, absolute `sha256sum` + 64-hex contract, C-locale
+  UTF-8 decode, selftest 257-261, pin-coverage ledger in `SKILL.md` (measured: 1 recorder call,
+  `--version`, 0 matcher calls for `verify-integrity`/`verify-sweeps`), both counter docstring
+  counts corrected to their receipts.
+- No-harm: selftest PASS 261 under default, `LC_ALL=C`, scratch `TMPDIR`; claims 17/17, chain
+  17/22, broken control 1/2, archives 3/3; scenario isolation probe not falsified.
+- Inherited state: `corpus/evidence/round36/__pycache__` (one pyc, predates the freeze commit)
+  discarded, `corpus/**/__pycache__/` gitignored; tracked counters/claims byte-identical to
+  `700bd5f` (ScoutInherited).
+- Frontier: sources 68 → 70 (S069 GNU grep(1) `-o`+`-b`; S070 coreutils sha256sum(1); tier A,
+  opened 2026-10-23, census exit 0 with the two standing W04 warnings); knowledge
+  `engine-swap-canary-r36.md`, `per-record-argv-attribution-r36.md`; QUALITY 50-52; lesson
+  `corpus/lessons/round-36.md` (4 mistakes: docstring number-drift, crash debris, dispatch-count
+  drift, scenario-assertion survivor).
+- Wave: one v1 wave, 36 seats (attack 10 = 28%; 1 dead seat CritC1Swap, provider `cyber_policy`),
+  specs and briefs `.ufo/waves/round-36/{w1-spec.json,w1-dispatch.json,w1-briefs/}`, seat reports
+  `.ufo/waves/round-36/w1/`.
+- Motivating evidence: r35 spot-check routed defects 1-9; `corpus/evidence/round35/claims.md`
+  §Erratum; SCORECARD planned-r36 candidates; watchdog `lane-dead-no-report chousa round=36`.

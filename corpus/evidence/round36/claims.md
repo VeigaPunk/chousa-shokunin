@@ -155,3 +155,74 @@ pass for everything: `WITNESS_PER_RECORD=0/5`. The always-fail stub separates
   open.
 
 ## Erratum (round 36, append-only, after the data)
+
+1. **P1's prose count was wrong (number-drift).** `c1-count.py`'s docstring said fourteen
+   scenarios were "the ten demonstrations of `.ufo/waves/round-35/` plus the three routed gate
+   defects" (10 + 3 = 13); the frozen `before` receipt names FOUR routed defects (S11-S14). The
+   count is 14 and the docstring now says so. No scoring code changed.
+2. **P2's code is one conjunct stricter than its prose (F3).** `c2-count.py`'s `holds` also
+   requires `landed.witness == "pass"`, which the P2 sentence and kill rule do not name. The
+   printed four-field signature cannot express it. The code is stricter, never looser; the
+   conjunction is unexercised by any committed receipt (a landed witness failure would also drop
+   `five separated` only if attribution vanished). Reading: P2 is met as printed AND the landed
+   witness passes.
+3. **P2's kill rule excludes its own controls (F4).** "any run below 5/5 kills C2" read literally
+   condemns the committed `ctl-c2-stub-pass.py` control (`0/5`). Controls are not claim
+   measurements: a run of a DIFFERENT witness is a control by construction. Kill rule scope is
+   runs of the claim's witness against the landed gate.
+4. **C2's own docstring count corrected (F1, repair R7).** It said the round-35 battery "separates
+   only 3/5 (V3 and V5 pass it)"; the committed receipt is 2/5 with V2, V3 and V5 passing. Prose
+   only; counter sha256 changes (`3c699aab…4362` → `67c33fe4…c97f`). Receipts do not bind the
+   counter's hash (carried debt), so no receipt is invalidated.
+5. **C1's four separations are the round's only new ones.** Wave seat MutC1Arm showed S11 and S12
+   are each worth exactly one point against the base control (10/14 → 11/14 in their own cell),
+   and ScoutC1Counter showed S7-S9 assert the echo/refusal contract, not per-call engine
+   identity. "14/14" is fourteen asserted behaviours with four newly discriminated by the named
+   cheapest control; it is not fourteen independent engine swaps.
+6. **Two gate spots the round did not fix (named, not claimed).** `research-gate.sh:2002` still
+   builds a claim-body `sha256` through PATH `sha256sum | cut` (hex-checked after, so a 64-hex lie
+   still poisons a claim pin), and the drift-id header comment at lines 264-265 omits the
+   `GATE_GREP` token that R2 emits. Both are ScoutGateDiff findings; neither is in this round's
+   claimed surface.
+7. **R1's scrub is incomplete (wave finding, not fixed post-data).** The `--pin` capture runs
+   `env -u CHOUSA_GREP_PIN_ECHO … bash "$SELF"`, but the inner bash still sources `BASH_ENV`, so a
+   one-line `export CHOUSA_GREP_PIN_ECHO=1` in that file re-introduces the echo and embeds a
+   `GATE_GREP:` line in the baseline (`w1/RevPinContract.md` F1, reproduced). No counter arm sets a
+   `BASH_ENV` exporter, so neither claim's measurement is affected; the gate is NOT edited after the
+   data (a post-measurement gate change would void every `gate_sha256` receipt). Fix `-u BASH_ENV`
+   at `research-gate.sh:3921` is a round-37 candidate.
+8. **C2's exact-span attribution is not load-bearing (wave mutant B).** A witness that requires only
+   the span's first 64 bytes still scores `5/5 OUTPUT_EQUIV=5/5 LANDED_ATTRIB=pass RENAMED=pass`
+   (`w1/MutC2AttrKey/art/wit-prefix.py`, receipts `rec-prefix-s*.json`): attribution sets are
+   byte-identical to the pristine witness on every variant. A prefix-query call-for-show engine
+   would therefore pass P2 [INFERENCE, not built]. The committed witness is unchanged (its bytes
+   are bound by the receipts' `witness_sha256`); a V7 variant and a stricter span rule are
+   round-37 candidates.
+9. **C1's S10 does not reject a call-for-show engine (stated limit, now measured).** A gate that
+   queries the recorder per record and answers by exact search scores
+   `ENGINE_SWAP_CANARY=14/14` (`w1/RevCounterHonesty/c1-forshow3-s36371.json`, gate `02392327…`,
+   `predicate_holds=true`). This is exactly §Limits' first bullet — the canary proves the query,
+   not the use — so it narrows nothing further; it is recorded because a MEETS-class result
+   deserves its receipt.
+10. **P1's kill-rule sentence 2 is auditor discipline, not a counter check (H2).** The receipt's
+    `gate_sha256` is computed from the `--gate` argument, so it can never differ from itself; a
+    comment-only byte-different gate scored `14/14` with `predicate_holds=true`
+    (`w1/RevCounterHonesty/c1-commentpatch-s36321.json`). Binding a receipt to the frozen gate is a
+    re-derivation duty (hash the file independently), not something the counter can enforce.
+11. **S9 does not observe the override engine (H3, measured).** A gate whose wrapper never execs the
+    pinned engine scored `12/14` with S9 PASS (`w1/RevCounterHonesty/c1-pinnaming-s36351.json`,
+    gate `5c028fed…`): S9 asserts the tripwire, output equality and the echo, as its code has always
+    said; S7 and S10 are the arms that catch a non-executing pin. This is QUALITY 52's case with a
+    receipt.
+12. **A third docstring number corrected (H4).** S10's docstring said the output-equivalent python
+    engine "attributes 0/2"; the code requires the long record to be missing, and the engine still
+    attributes the direct short record. Wording corrected; no scoring change.
+13. **A verdict-flipping locale seam outside `json_unescape` (wave finding, outside the claimed
+    surface).** On the landed gate the same record with `window_mode:　external` (U+3000) plus an
+    approved URL pointer reads `EXTERNAL_WITHOUT_APPROVAL crit` / DRIFT / rc 1 under `LC_ALL=C` and
+    CLEAN / rc 0 under `en_US.utf8`: `research-gate.sh:1015`'s `[[:space:]]` runs through the pinned
+    grep wrapper under the caller's locale (0 vs 2 pinned-grep hits). The same class sits at 1019
+    and, in principle, in the `-i` folding at 762/1083; none are covered by a selftest
+    (`w1/RevLocaleSeam.md`). This is the locale arm's stated limit made live — the arm pins decode
+    bytes, not the screener — so no C1/C2 receipt moves; scheduling the fix and its selftest is a
+    round-37 item.

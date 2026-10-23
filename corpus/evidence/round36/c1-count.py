@@ -11,8 +11,8 @@ Receipt label: predicate_holds.
 Surface: one gate resolves/verifies/pins ONE grep binary, and the receipt can
 say WHICH engine answered WHICH record. The fourteen scenarios each separate a
 different output-equivalent engine swap that the round-35 counter left alive
-(the ten demonstrations of `.ufo/waves/round-35/` plus the three routed gate
-defects). Every scenario names its engine or its gate contract:
+(the ten pin-contract demonstrations of `.ufo/waves/round-35/` plus the FOUR
+routed gate defects S11-S14). Every scenario names its engine or its gate contract:
 
   S1  PATH shim first on PATH        a shim that logs and execs real grep never fires
   S2  BASH_ENV grep() function       an imported shell function never receives a call
@@ -33,7 +33,9 @@ defects). Every scenario names its engine or its gate contract:
                                      span (or its 4096-byte chunk) appears as a
                                      `-a -z -b -o -P` argv on the pinned recorder,
                                      and an output-equivalent python exact-search
-                                     engine attributes 0/2 (separation proven)
+                                     engine misses its LONG record (it still
+                                     attributes the direct short one; separation
+                                     is the long id's absence, not a count of 0)
   S11 manifest hash shim            a PATH sha256sum shim cannot poison the
                                      manifest: both sha fields are 64-hex and
                                      equal the true hashes

@@ -1,0 +1,9 @@
+#!/bin/bash
+set -u
+log="${BASH_SOURCE[0]}.calls"
+{
+  printf 'CALL\n'
+  for arg in "$@"; do printf '%s\0' "$arg"; done
+  printf '\n'
+} >>"$log"
+exec /usr/bin/grep "$@"

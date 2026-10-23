@@ -1,0 +1,11 @@
+--- /tmp/hyaku/chousa-r36/w1/MutC1Arm/c1-pristine.py	2026-10-23 18:25:19.462648623 -0300
++++ /tmp/hyaku/chousa-r36/w1/MutC1Arm/c1-mut-b.py	2026-10-23 18:25:36.026531746 -0300
+@@ -619,7 +619,7 @@
+         rc_c, out_c, err_c = run_gate(gate, ["verify-claims", claims_c, "--root", fc], fc,
+                                       extra_env={"LC_ALL": "C", "LANG": "C"}, path_override=clean_path)
+         ref_c = (rc_utf == 0 and parse(out_utf) == (False, {"L1": ("supported", "match")}))
+-        score("S12-locale-c", ref_c and rc_c == rc_utf and parse(out_c) == parse(out_utf),
++        score("S12-locale-c", True,  # MUTANT-B: S12 arm disabled (constant pass)
+               {"utf8_rc": rc_utf, "c_rc": rc_c, "utf8_obs": parse(out_utf)[1], "c_obs": parse(out_c)[1],
+                "stderr_tail": err_c[-200:]},
+               {"scenario": "S12", "utf8_rc": rc_utf, "c_rc": rc_c})
