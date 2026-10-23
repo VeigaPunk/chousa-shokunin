@@ -1,4 +1,31 @@
-# Round 30 — frozen claims (C1 design v2, C2 design v3; frozen before any data seat)
+# Round 30 — frozen claims (design v4 for both counters; frozen before any data seat)
+
+**Design v4 (latest).** Two more pre-data control findings, both on design v3 (C1 at v2):
+
+1. C1: seat CtlNoReader's `relational.py` reached `QUOTE_REOPEN_HEADLESS_MATCH=104/106`
+   without opening any page (`.ufo/waves/round-30/controls/CtlNoReader/receipt-relational-c1-h3.json`).
+   It did not meet the target, but it read labels from item shape: body windows were 6-15
+   words while title and script windows were 4-8, the two body windows and the case flip of
+   one document could share words, script words were never capitalized, and a case flip
+   always raised an inner lower-case letter. v4 makes every quote 6-12 words, draws the
+   three body-derived windows of a document from disjoint word spans (no two items of a run
+   share a word), capitalizes every run's first word, gives about 15 percent of all words
+   one inner capital, and swaps the case of any one letter in either direction. Body blocks
+   grow to 50-60 words so the disjoint spans always fit. Labels, classes and the total (106)
+   are unchanged.
+2. C2: seats CtlTrivialC2 and CriticClaimDesign30 found that a chunked slow-ok response
+   waited seven gaps (the chunk terminator had its own gap), so it finished after DEADLINE
+   whenever DEADLINE > 5.6 s, and a correct tool would answer UNREACHABLE against a VERBATIM
+   or ABSENT label (`qr_harness.py` v3 lines 205-212, 252-259). v4 sends the terminator with
+   the sixth piece and spreads the six pieces over DEADLINE - 1.0 s.
+
+Before at v4: C1 78/106 twice (`before-c1-v4-run{1,2}.json`, all 28 misses headless body
+windows), C2 12/27 twice (`before-c2-v4-run{1,2}.json`); tool-absent 0/106 and 0/27. SHA-256
+at v4: `c1-count.py` `5b312d84…9d6e6`, `c2-count.py` `0a59e373…f88f`, `qr_harness.py`
+`e2be0dd1…50d4`. Every control is re-scored under v4 before any data seat. Predicates,
+totals and bounds are as stated below (C1 106/106; C2 27/27 with the v3 sentence).
+
+## Design v3 note (C2)
 
 **C2 design v3 (latest).** The pre-data control wave voided C2 v2. Seat CtlShapeKeyed's
 control `dns_header_keyed.py` printed `QUOTE_REOPEN_FETCH_BOUND_MATCH=20/20` on the frozen v2
@@ -14,7 +41,8 @@ header of random length, Content-Length or chunked framing chosen at random per 
 ordinary 2-3 KB HTML body), the rebinding, stable, slow-ok and multi-address items carry a
 fair-coin VERBATIM or ABSENT label, a drip-steady class (about 3 MB at 16 KiB/s) defeats
 minimum-rate rules, and each item draws its own DEADLINE in [2.0, 6.0] s with slow-ok spread
-over DEADLINE - 0.8 s, so a hard-coded cutoff cannot replace the module constant. The C2
+over DEADLINE - 0.8 s, so a hard-coded cutoff fails on many draws (it does not exclude every
+fixed cutoff on every draw; CriticClaimDesign30 finding 3). The C2
 target becomes 27/27 (before 13/27 twice). C1's counter is unchanged; it shares the harness,
 whose new server still serves C1 pages the same way (C1 before 78/106 under the v3 harness,
 `before-c1-v3-run1.json`). SHA-256 at v3: `c1-count.py` `9a0a3bd7…c13131c` (unchanged),
@@ -131,11 +159,12 @@ global address the harness's name map gives that item (its routed set).
   the condition did not change, and per-hop provenance is listed under Not claimed.
 - Receipt label: `QUOTE_REOPEN_FETCH_BOUND_MATCH`; receipt field `predicate_holds`;
   receipt field `design: "v3"`.
-- Before (round-29 tool at base): `QUOTE_REOPEN_FETCH_BOUND_MATCH=13/27`, exit 1, twice
-  (receipts `.ufo/waves/round-30/controls/before-c2-v3-run{1,2}.json`). The drip-head and
-  drip-body items are killed at 20 s; the rebinding items connect to 127.0.0.1 or 10.x; one
-  drip-steady item overshoots its bound in run 1 and not in run 2 (the round-29 tool checks
-  its deadline between 64 KiB reads).
+- Before (round-29 tool at base): `QUOTE_REOPEN_FETCH_BOUND_MATCH=12/27`, exit 1, twice at v4
+  (`.ufo/waves/round-30/controls/before-c2-v4-run{1,2}.json`; 13/27 twice at v3). The
+  drip-head and drip-body items are killed at 20 s; the rebinding items connect to 127.0.0.1
+  or 10.x; at v4 both drip-steady items overshoot their bound in both runs (at v3, one of the
+  two did in each run), because the round-29 tool checks its deadline only between 64 KiB
+  reads.
 - Target after: 27/27, exit 0, on the landed tool.
 - Kill rule: as C1.
 - Items: the `c2-count.py` docstring (drip-head, drip-body, drip-steady, stall-body,

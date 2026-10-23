@@ -250,12 +250,16 @@ class Server:
                 time.sleep(0.25)
             return
         if kind == "slow-ok":
+            # Six body pieces, each sent after one pacing gap; a chunked terminator follows the
+            # sixth piece with no extra gap, so the body completes `param` seconds after the head.
             n = max(1, -(-len(body) // 6))
-            wire = self._frame(body, framing, lambda b: [b[i:i + n] for i in range(0, len(b), n)])
+            pieces = [body[i:i + n] for i in range(0, len(body), n)]
             s.sendall(head)
-            gap = float(param or 1.8) / 6.0
-            for p in wire:
+            gap = float(param or 1.8) / len(pieces)
+            for k, p in enumerate(pieces):
                 time.sleep(gap)
+                if framing == "chunked":
+                    p = b"%x\r\n%s\r\n" % (len(p), p) + (b"0\r\n\r\n" if k == len(pieces) - 1 else b"")
                 s.sendall(p)
             return
         s.sendall(head + b"".join(self._frame(body, framing, lambda b: [b])))

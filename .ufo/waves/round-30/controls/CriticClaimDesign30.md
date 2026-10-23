@@ -1,6 +1,6 @@
-# CriticClaimDesign30 — frozen v2 review
+# CriticClaimDesign30 — historical v2 and C2 v3 extension
 
-Scope: the assigned v2 claims/counters only; no v3 result is asserted. All three required SHA-256 values matched before scoring. No candidate/fix built; only the unchanged tool was scored here. A separate 16-line, network-free scorer probe is retained. No installs, git/jj writes, or tool/counter edits. All launched processes completed, including harness termination of capped children.
+The first section preserves the assigned v2 review; its source line references refer to lane commit `6b1c51773ab9352283dcc58a09d461aeac786fd2`. The current C2 v3 extension follows below. Required hashes matched before each version's scoring. No candidate/fix built; only the unchanged tool was scored here, with network-free scorer/framing probes retained separately. No installs, git/jj writes, or tool/counter edits. All launched processes completed, including harness termination of capped children.
 
 Receipt paths below are relative to `.ufo/waves/round-30/controls/`; braces enumerate the four files in each row. The second row is **peer-executed evidence inspected here**, not an execution by this seat.
 
@@ -25,4 +25,29 @@ META-CHECK: MET by DNS/header keyed — `.ufo/waves/round-30/controls/CtlShapeKe
 
 7. **D3 — generation wording overclaims; liveness does not.** “All documents, words … generated per run, so no committed byte holds … a label” (`claims.md:29-31`) is literally false: class labels are committed in `c2-count.py:83-87`, and the page's title word `t` is fixed at lines 100-101. **Impact:** evidence/provenance wording, not a separate measured-axis failure. **Smallest safe correction:** say item-specific identifiers/content windows are generated, while templates and class→verdict rules are committed. Also distinguish the finite C2 observation from proof of the whole fetch contract: the scorer accepts wall 4.9 s with `DEADLINE=3.0` (executed probe:14-16), intentionally measuring ≤5.0 s including process overhead, and the fixture plan has no retry/cumulative-slow-redirect case (`c2-count.py:80-87`). This is not a numerical-predicate mismatch; do not promote 20/20 into a universal deadline/TLS/retry guarantee. Real-network liveness is correctly excluded at `claims.md:150-154`.
 
-DESIGN: defect D1, D2, D3
+Historical v2 verdict: defect D1, D2, D3.
+
+## C2 v3 extension
+
+Reviewed frozen counter/harness at `7908ce2a6413522fc6fab63f284327693f70eec6` and subsequent live wording clarifications. Verified before scoring: C2 SHA-256 `f68a2abc0139edcb87986334545a2d08711f150342ea77f667e11529fc0e69fe`, harness `16f17d60708952f9ba3d015eae306a075b37691deebf1e5c2c126137c6797ab7`, C1 unchanged `9a0a3bd7174be5772b9ea5af1667e6ec59e1583572f0776f93dac2a80c13131c`. No later design is covered.
+
+| control | what it skips | C1 score run1, run2 | C2 score run1, run2 | receipt paths |
+|---|---|---|---|---|
+| unchanged round-29 tool | whole round | not rerun here under v3 harness | 13/27, unrun (one run requested) | `CriticClaimDesign30/receipt-baseline-c2-v3-run1.json` |
+| relational no-reader (peer-executed, inspected) | all fetching | not paired here | 11/27, 11/27 | `CtlNoReader/receipt-relational-c2-v3-run{1,2}.json` |
+
+META-CHECK: none met (the v3 receipts inspected above only; not a claim that every control has finished).
+
+8. **V3-A — chunked “slow-ok” can finish after its deadline.** `qr_harness.py:205-212` appends a zero-chunk as a seventh wire piece. Its slow-ok branch sleeps `(DEADLINE - 0.8)/6` before **every** piece (`:252-259`); `c2-count.py:119,126,130-132` permits a deadline up to 6.0 and labels this class VERBATIM/ABSENT. For chunked framing, completion therefore takes `7*(D-0.8)/6`, exceeding D whenever D > 5.6. Executed the network-free `CriticClaimDesign30/probe-v3-timing.py:9-14`: at D=6, Content-Length has six pieces/completes at 5.2 s; chunked has seven/completes at 6.0666667 s, even before processing overhead. A fetch that actually stops at D must return UNREACHABLE on this purportedly successful fixture. This contradicts “inside the deadline” (`c2-count.py:43`) and `claims.md:16-17`. **Impact:** C2 operability/counter correctness; a correct implementation can be penalized. **Smallest safe correction:** send the zero-chunk without a seventh pacing delay, retaining six paced body pieces, then refreeze the changed harness and rescore dependent evidence. This is a fixable fixture defect, not a reason to weaken the tool deadline contract.
+
+9. **V3 predicate identity now matches the disclosed measurement.** Live `claims.md:118-133` says `QUOTE_REOPEN_FETCH_BOUND_MATCH=27/27`, per-item deadline+1.5 s, and the item's name-map/routed global set; `c2-count.py:164-175,212-218` implements those conditions and records the exact label plus `design: "v3"`. New receipt: `CriticClaimDesign30/receipt-baseline-c2-v3-run1.json:496-501`. The earlier validated/per-hop wording was explicitly clarified, and per-hop provenance is now excluded (`claims.md:126-131,184-185`). The probe still accepts wrong-hop/no-resolution events (`probe-v3-timing.py:15-22`), but under the clarified predicate this is a disclosed measurement boundary, not a remaining identity mismatch. It must not be presented as proof of the full one-resolution/TLS contract. D3's “no committed label” wording has also been corrected (`claims.md:52-55`).
+
+10. **V3 before totals match and reproduce.** Both retained `before-c2-v3-run{1,2}.json:494-501` say 13/27, `predicate_holds:false`, with the same unchanged tool SHA-256 as the new receipt. My requested single re-run printed `QUOTE_REOPEN_FETCH_BOUND_MATCH=13/27`, exit 1, in 20.74 s; receipt `CriticClaimDesign30/receipt-baseline-c2-v3-run1.json:497-503`. There is no do-nothing target pass.
+
+11. **V3-B — the baseline failure narrative is inaccurate.** `claims.md:137-138` says one drip-steady item overshoots in run 1 “and not in run 2”. Both receipts have one success and one bound failure: run1 `:148-175` has 4.246≤4.6 and 8.336>7.09; run2 `:148-175` has 4.169>3.81 and 4.079≤4.17. **Impact:** evidence/provenance wording only, not the 13/27 totals. **Smallest safe correction:** say one of the two drip-steady items overshoots its bound in each recorded run.
+
+12. **The hard-coded-cutoff sentence remains stronger than the construction.** `claims.md:16-17` says random per-item deadlines mean a hard-coded cutoff “cannot replace” the constant. This is not guaranteed by the sampled ranges: a fixed 3.4 s cutoff is below every possible bound (minimum 3.5 s), while two slow-ok items with D near 2.8 finish by about 2.0 s (Content-Length) or 2.333 s (current chunked pacing). Such draws are allowed by `c2-count.py:119,130-132`; their timing constraints alone do not distinguish that fixed cutoff. This is a static counterexample to the universal rationale, **not a built candidate or 27/27 receipt**. **Smallest safe correction:** describe randomization as exercising the constant, not guaranteeing exclusion; if guaranteed cutoff discrimination is required, stratify fixture deadlines so a slow successful item must outlast a short-bound failure item.
+
+The C2 axis and fixture-scoped separability assessment remain unchanged: v3 pages still have closed heads (`c2-count.py:94-101`), and C1 responses use the same fast default server path (`qr_harness.py:261`). No real-network liveness claim was added (`claims.md:187-191`).
+
+DESIGN: defect V3-A, V3-B; hard-coded-cutoff rationale overclaims (finding 12)

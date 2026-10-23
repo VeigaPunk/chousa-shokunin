@@ -22,12 +22,13 @@ Per run, FROZEN_TOTAL = 106 items:
     closed-head       6 docs  regular `<head>…</head><body>` (regression class)
   The first body element of a headless document rotates over
     p div h1 section span a img table ul (and bare text for headless-text).
-  Items per document:
-    body-window       2  VERBATIM  6-15 consecutive words of one body block; one is from the
+  Items per document (every quote is 6-12 words; no two items of a run share a word; about
+  15 percent of all generated words carry one inner capital letter):
+    body-window       2  VERBATIM  consecutive words of one body block; one is from the
                                     first body block
-    title-window      1  ABSENT    4-8 words of the head <title>
-    script-window     1  ABSENT    4-8 words of a JS string in a <script> (head or body)
-    case-flip         1  ABSENT    a body window with one inner letter's case flipped
+    title-window      1  ABSENT    words of the head <title>
+    script-window     1  ABSENT    words of a JS string in a <script> (head or body)
+    case-flip         1  ABSENT    a body window with one letter's case swapped
 
   6 verdict-order items:
     TOO_LONG     2  26-30 true body words; source answers 404 (length before fetch)
@@ -81,14 +82,16 @@ class Words:
             w = "".join(self.rng.choice(CONS) + self.rng.choice(VOWS) for _ in range(self.rng.randint(2, 4)))
             if self.rng.random() < 0.3:
                 w += self.rng.choice(CONS)
-            if w not in self.used:
-                self.used.add(w)
+            if self.rng.random() < 0.15:
+                i = self.rng.randrange(1, len(w))
+                w = w[:i] + w[i].upper() + w[i + 1:]
+            if w.lower() not in self.used:
+                self.used.add(w.lower())
                 return w
 
-    def run(self, n, capitalize_first=True):
+    def run(self, n):
         ws = [self.one() for _ in range(n)]
-        if capitalize_first:
-            ws[0] = ws[0][0].upper() + ws[0][1:]
+        ws[0] = ws[0][0].upper() + ws[0][1:]
         return ws
 
 
@@ -142,10 +145,10 @@ def block(rng, tag, words):
 
 def make_doc(rng, W, cls, first):
     """Return (html_bytes, body_blocks [list of word lists], title_words, script_words)."""
-    title = W.run(rng.randint(6, 10))
-    script = W.run(rng.randint(6, 10), capitalize_first=False)
+    title = W.run(rng.randint(10, 14))
+    script = W.run(rng.randint(10, 14))
     style_word = W.one()
-    blocks = [W.run(rng.randint(30, 42)) for _ in range(rng.randint(2, 3))]
+    blocks = [W.run(rng.randint(50, 60)) for _ in range(rng.randint(2, 3))]
     script_in_head = rng.random() < 0.5
     js = '<script>var note = "%s";</script>' % " ".join(script)
     head = ['<meta charset="utf-8">', "<title>%s</title>" % " ".join(title),
@@ -183,15 +186,33 @@ def window(rng, words, lo, hi):
     return words[s:s + n]
 
 
-def case_flip(rng, words):
-    """Flip the case of one inner lowercase letter of one word in a window."""
-    w = window(rng, words, 6, 12)
+class Spans:
+    """Disjoint windows over a document's body blocks, so no two items share a word."""
+
+    def __init__(self, rng, blocks):
+        self.rng = rng
+        self.blocks = blocks
+        self.used = [set() for _ in blocks]
+
+    def take(self, b, lo=6, hi=12):
+        words = self.blocks[b]
+        for _ in range(1000):
+            n = self.rng.randint(lo, hi)
+            s = self.rng.randint(0, len(words) - n)
+            span = set(range(s, s + n))
+            if not span & self.used[b]:
+                self.used[b] |= span
+                return words[s:s + n]
+        raise RuntimeError("no disjoint window")
+
+
+def case_flip(rng, w):
+    """Flip the case of one letter (either direction) of one word in a window."""
+    w = list(w)
     k = rng.randrange(len(w))
     word = w[k]
-    pos = [i for i in range(1, len(word)) if word[i].islower()]
-    i = rng.choice(pos)
-    w = list(w)
-    w[k] = word[:i] + word[i].upper() + word[i + 1:]
+    i = rng.randrange(len(word))
+    w[k] = word[:i] + word[i].swapcase() + word[i + 1:]
     return w
 
 
@@ -220,12 +241,13 @@ def build(rng):
         docs.append({"path": path, "body": body, "host": host, "sid": sid, "cls": cls, "first": first})
         rows.append((sid, "http://%s%s" % (host, path)))
         visible_all.append(" ".join(" ".join(b) for b in blocks))
-        items.append((new_id(), sid, " ".join(window(rng, blocks[0], 6, 15)), "VERBATIM", cls, "body-window"))
-        other = blocks[rng.randrange(len(blocks))]
-        items.append((new_id(), sid, " ".join(window(rng, other, 6, 15)), "VERBATIM", cls, "body-window"))
-        items.append((new_id(), sid, " ".join(window(rng, title, 4, 8)), "ABSENT", cls, "title-window"))
-        items.append((new_id(), sid, " ".join(window(rng, script, 4, 8)), "ABSENT", cls, "script-window"))
-        items.append((new_id(), sid, " ".join(case_flip(rng, blocks[rng.randrange(len(blocks))])), "ABSENT",
+        sp = Spans(rng, blocks)
+        items.append((new_id(), sid, " ".join(sp.take(0)), "VERBATIM", cls, "body-window"))
+        items.append((new_id(), sid, " ".join(sp.take(rng.randrange(len(blocks)))), "VERBATIM", cls,
+                      "body-window"))
+        items.append((new_id(), sid, " ".join(window(rng, title, 6, 12)), "ABSENT", cls, "title-window"))
+        items.append((new_id(), sid, " ".join(window(rng, script, 6, 12)), "ABSENT", cls, "script-window"))
+        items.append((new_id(), sid, " ".join(case_flip(rng, sp.take(rng.randrange(len(blocks))))), "ABSENT",
                       cls, "case-flip"))
     # verdict-order items
     gone_sid, gone_host = new_sid(), "h%08x.test" % rng.getrandbits(32)

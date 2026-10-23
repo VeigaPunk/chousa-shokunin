@@ -40,7 +40,7 @@ FROZEN_TOTAL = 27 items:
     rebind-private 2  first lookup global, later lookups 10.x.y.z
     rebind-redirect 2 a stable host redirects to a host that rebinds to 127.0.0.1
     stable 4          ordinary page
-    slow-ok 2         body in 6 pieces spread over DEADLINE - 0.8 s, inside the deadline
+    slow-ok 2         body in 6 pieces, the last one DEADLINE - 1.0 s after the head
     multi-address 2   host resolves to two global addresses
 
 The predicate (frozen, round-30 claims.md): C2 holds iff this command prints
@@ -129,7 +129,7 @@ def build(rng, srv):
         doc = page(rng, text, big=(kind == "drip-steady"))
         framing = rng.choice(["cl", "chunked"])
         srv.add(path, doc, extra=head_extra(rng), behavior=BEHAVIOR.get(kind), framing=framing,
-                param=(deadline - 0.8) if kind == "slow-ok" else None)
+                param=(deadline - 1.0) if kind == "slow-ok" else None)
         resolve = {host: [[g1]]}
         routed = [g1]
         if kind == "rebind-loop":

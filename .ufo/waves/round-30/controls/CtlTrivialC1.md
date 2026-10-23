@@ -32,3 +32,11 @@ The three frozen SHA-256 values matched the assignment before scoring and after 
 | `CtlTrivialC1/junk-binary.py` | `a14b0fa4b7823b0d785184118ccbdfb5e3178f9a31c0ce8cde437f89665469ec` |
 
 Containment: scoring used `TMPDIR=/fast/scratch/hyaku/chousa-r30/CtlTrivialC1` and `PYTHONDONTWRITEBYTECODE=1`; scratch was empty afterward. All bounded scoring processes exited, and the final seat-specific Python process search returned no matches. No git/jj writes, network fetches, or tool installs/updates.
+
+## Shared harness v3 re-score
+
+At authorized freeze `7908ce2a6413522fc6fab63f284327693f70eec6`, each unchanged control was re-scored once on C1: always-ABSENT **60/106** ([receipt](CtlTrivialC1/receipt-always-absent-c1-h3.json)); always-VERBATIM **40/106** ([receipt](CtlTrivialC1/receipt-always-verbatim-c1-h3.json)); five-way junk **18/106** ([receipt](CtlTrivialC1/receipt-junk-five-way-c1-h3.json)); binary junk **51/106** ([receipt](CtlTrivialC1/receipt-junk-binary-c1-h3.json)); do-nothing **78/106** ([receipt](CtlTrivialC1/receipt-do-nothing-c1-h3.json)). Actual stdout retained the same `QUOTE_REOPEN_HEADLESS_MATCH=<score>` form; all five counter exits were 1, `predicate_holds=false`, `tool_killed=false`, and seeds were distinct from each other and all earlier runs. C2 remains unrun.
+
+Before/after hashes matched the new freeze: C1 unchanged (`9a0a3bd7...c13131c`), C2 `f68a2abc0139edcb87986334545a2d08711f150342ea77f667e11529fc0e69fe`, harness `16f17d60708952f9ba3d015eae306a075b37691deebf1e5c2c126137c6797ab7`. All five control hashes and the lane tool hash remained exactly as in the earlier ledger; no restoration was needed. Scratch was empty and no seat-specific Python process remained.
+
+META-CHECK: none met
