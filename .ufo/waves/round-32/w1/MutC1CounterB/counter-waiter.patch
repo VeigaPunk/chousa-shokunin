@@ -1,0 +1,11 @@
+--- /fast/scratch/hyaku/chousa-r32/w1/MutC1CounterB/counter-pristine.py	2026-10-23 03:49:22.706627332 -0300
++++ /fast/scratch/hyaku/chousa-r32/w1/MutC1CounterB/counter-waiter.py	2026-10-23 03:55:43.761770645 -0300
+@@ -215,7 +215,7 @@
+                 deadline = time.time() + LOCK_DEADLINE_S
+                 while True:
+                     exited = sum(p.poll() is not None for p in procs)
+-                    if exited + waiters_on(ino) >= w:
++                    if True:
+                         break
+                     if time.time() > deadline:
+                         fails.append("lock-deadline")

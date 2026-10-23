@@ -1,0 +1,11 @@
+--- /fast/scratch/hyaku/chousa-r32/w1/MutC1CounterB/counter-pristine.py	2026-10-23 03:49:22.706627332 -0300
++++ /fast/scratch/hyaku/chousa-r32/w1/MutC1CounterB/counter-schema.py	2026-10-23 03:55:43.764770656 -0300
+@@ -188,7 +188,7 @@
+         gate_objs = objs[n_prefix:]
+         if len(gate_objs) != w:
+             fails.append("gate-lines=%d/%d" % (len(gate_objs), w))
+-        if any(o.get("schema") != SCHEMA for o in gate_objs):
++        if False and any(o.get("schema") != SCHEMA for o in gate_objs):
+             fails.append("schema")
+         if any("schema" in o for o in objs[:n_prefix]):
+             fails.append("prefix-glued")

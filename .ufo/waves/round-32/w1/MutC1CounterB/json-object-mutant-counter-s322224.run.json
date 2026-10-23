@@ -1,0 +1,33 @@
+{
+  "name": "json-object-mutant-counter-s322224",
+  "command": [
+    "timeout",
+    "--kill-after=5s",
+    "900s",
+    "prlimit",
+    "--nproc=16384",
+    "--as=4294967296",
+    "--",
+    "python3",
+    "/fast/scratch/hyaku/chousa-r32/w1/MutC1CounterB/counter-json-object.py",
+    "--gate",
+    "/fast/scratch/hyaku/chousa-r32/w1/MutC1CounterB/gate-json-object.sh",
+    "--seed",
+    "322224",
+    "--receipt",
+    "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-32/w1/MutC1CounterB/json-object-mutant-counter-s322224.json"
+  ],
+  "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+  "env": {
+    "C1_TMP": "/fast/scratch/hyaku/chousa-r32/w1/MutC1CounterB",
+    "C2_TMP": "/fast/scratch/hyaku/chousa-r32/w1/MutC1CounterB",
+    "TMPDIR": "/fast/scratch/hyaku/chousa-r32/w1/MutC1CounterB"
+  },
+  "exit": 1,
+  "elapsed_s": 0.581,
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/fast/scratch/hyaku/chousa-r32/w1/MutC1CounterB/counter-json-object.py\", line 330, in <module>\n    sys.exit(main())\n             ~~~~^^\n  File \"/fast/scratch/hyaku/chousa-r32/w1/MutC1CounterB/counter-json-object.py\", line 291, in main\n    fails = run_trial(gate, base, rng, k, kind, typ == \"L\", ref_rc)\n  File \"/fast/scratch/hyaku/chousa-r32/w1/MutC1CounterB/counter-json-object.py\", line 245, in run_trial\n    fails += check_manifest(manifest, ino, prefix, w)\n             ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/fast/scratch/hyaku/chousa-r32/w1/MutC1CounterB/counter-json-object.py\", line 191, in check_manifest\n    if any(o.get(\"schema\") != SCHEMA for o in gate_objs):\n       ^^^\n  File \"/fast/scratch/hyaku/chousa-r32/w1/MutC1CounterB/counter-json-object.py\", line 191, in <genexpr>\n    if any(o.get(\"schema\") != SCHEMA for o in gate_objs):\n           ^^^^^\nAttributeError: 'list' object has no attribute 'get'\n",
+  "counter_sha256": "4bde79515bb0fed125196718ea5908c20c67cb14753c571c459a143d21aa38d9",
+  "gate_sha256": "e712c76c57232889f06d9564e329bdf806de19b2bcb65d31c75ed1ce6658d7b7",
+  "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-32/w1/MutC1CounterB/json-object-mutant-counter-s322224.json"
+}

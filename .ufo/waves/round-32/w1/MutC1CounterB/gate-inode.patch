@@ -1,0 +1,29 @@
+--- /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh	2026-10-23 02:22:25.991144359 -0300
++++ /fast/scratch/hyaku/chousa-r32/w1/MutC1CounterB/gate-inode.sh	2026-10-23 03:54:59.770617735 -0300
+@@ -3189,6 +3189,15 @@
+     # The last byte is read as hex: a bare $(tail -c1) drops NUL bytes and
+     # would miss a NUL-terminated manifest. (Unreadable + non-empty is
+     # refused at setup, before any write.)
++    local manifest_fd
++    exec {manifest_fd}>>"$JSON_ARG" || exit 2
++    flock -x "$manifest_fd" || exit 2
++    local serial_fd
++    exec {serial_fd}>>"$JSON_ARG.serial" || exit 2
++    flock -x "$serial_fd" || exit 2
++    [[ -e $JSON_ARG.original ]] || ln -- "$JSON_ARG" "$JSON_ARG.original" || exit 2
++    cp -- "$JSON_ARG" "$JSON_ARG.$$.new" || exit 2
++    mv -- "$JSON_ARG.$$.new" "$JSON_ARG" || exit 2
+     local jlast=''
+     if [[ -s $JSON_ARG ]]; then
+       jlast=$(tail -c1 -- "$JSON_ARG" 2>/dev/null | od -An -tx1 | tr -d ' \n' || true)
+@@ -3200,6 +3209,10 @@
+       printf 'research-gate: manifest append failed: %s\n' "$JSON_ARG" >&2
+       exit 2
+     fi
++    flock -u "$serial_fd"
++    exec {serial_fd}>&-
++    flock -u "$manifest_fd"
++    exec {manifest_fd}>&-
+   fi
+ 
+   printf 'research-gate %s — ts=%s — mode=verify-all — record=%s — claims=%s — root=%s\n' \

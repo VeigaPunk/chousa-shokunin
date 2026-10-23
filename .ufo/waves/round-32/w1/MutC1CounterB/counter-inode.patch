@@ -1,0 +1,11 @@
+--- /fast/scratch/hyaku/chousa-r32/w1/MutC1CounterB/counter-pristine.py	2026-10-23 03:49:22.706627332 -0300
++++ /fast/scratch/hyaku/chousa-r32/w1/MutC1CounterB/counter-inode.py	2026-10-23 03:55:43.762770649 -0300
+@@ -158,7 +158,7 @@
+     """Return a list of failed check names (empty = pass)."""
+     fails = []
+     st = os.stat(path)
+-    if st.st_ino != ino:
++    if False and st.st_ino != ino:
+         fails.append("inode-changed")
+     with open(path, "rb") as f:
+         data = f.read()

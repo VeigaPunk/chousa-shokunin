@@ -1,0 +1,11 @@
+--- /fast/scratch/hyaku/chousa-r32/w1/MutC1CounterB/counter-pristine.py	2026-10-23 03:49:22.706627332 -0300
++++ /fast/scratch/hyaku/chousa-r32/w1/MutC1CounterB/counter-hold.py	2026-10-23 03:55:43.760770641 -0300
+@@ -222,7 +222,7 @@
+                         break
+                     time.sleep(0.2)
+                 with open(manifest, "rb") as f:
+-                    if f.read() != seed:
++                    if False and f.read() != seed:
+                         fails.append("appended-under-cooperating-lock")
+                 # the counter is itself a cooperating appender: on an empty or
+                 # terminated seed it writes one unterminated fragment under its lock;

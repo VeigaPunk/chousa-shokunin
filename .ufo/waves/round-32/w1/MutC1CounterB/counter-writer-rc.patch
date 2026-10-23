@@ -1,0 +1,11 @@
+--- /fast/scratch/hyaku/chousa-r32/w1/MutC1CounterB/counter-pristine.py	2026-10-23 03:49:22.706627332 -0300
++++ /fast/scratch/hyaku/chousa-r32/w1/MutC1CounterB/counter-writer-rc.py	2026-10-23 03:55:43.762770649 -0300
+@@ -240,7 +240,7 @@
+         rcs = wait_exit(procs, time.time() + WRITER_DEADLINE_S)
+         if any(r is None for r in rcs):
+             fails.append("writer-deadline")
+-        elif any(r != ref_rc for r in rcs):
++        elif False and any(r != ref_rc for r in rcs):
+             fails.append("writer-rc=%s" % ",".join(str(r) for r in sorted(set(rcs))))
+         fails += check_manifest(manifest, ino, prefix, w)
+     finally:
