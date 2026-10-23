@@ -1278,3 +1278,23 @@ S060–S061; QUALITY 33–35; R1–R6 repairs. Lesson: `corpus/lessons/round-32.
   seed 61111), E3 (SKILL range), E4 (receipt-binding census), E5 (QUALITY 43). QUALITY 42–44. S064–S066.
 - Motivating evidence: `corpus/lessons/round-33-verifier-spotcheck.md:155-173`;
   `corpus/lessons/round-34.md`; `.ufo/waves/round-34/controls/L1-probe/out.40000`.
+
+## Round 34 — 2026-10-23 (hyaku in-session L1, attempt 2; attempt 1 died lane-dead-no-report)
+
+Attempt 2 inherited attempt 1's committed work; C1 stands with verdict `unverified
+(required controls held)` per the frozen exclusion (claims.md v1–v3 + erratum). Two new
+claims, design v4 `corpus/evidence/round34/claims-a2.md` (`7c7eb3a6`, frozen before data):
+
+- C2 operability — spans of 32765..32767 bytes (PCRE "regular expression is too large" dead
+  zone, S065): `TOK_DIRECT_SPAN_MAX` 32767→32764. Do-nothing 21/37 (seeds 5011/5023,
+  `2592f9da`) → 37/37 on seeds 5011, 5023, 5033, 5047 on gate `a6307edf…` (`fe0f22e0`);
+  selftest cases 254–256 (PASS 256); no-harm battery 11 rows PASS (`measure-a2/battery/`).
+- C3 calibration — self-audit: `self-audit.py` + `audit-set.json` (43 checks) +
+  `audit-dispositions.md`; first counted run 0 mismatches / 0 undispositioned
+  (`0af0844c`); negative control 2 injected lies → 2 counted (`measure-a2/`).
+- Frontier: S065 re-opened (pins unchanged; 32765 boundary re-confirmed); no new rows;
+  knowledge `dead-zone-pcre-r34.md`; lesson round-34.md attempt-2 sections (3 mistakes:
+  planned-hypothesis-as-measured, chunk matcher shipped with no selftest case, negative-control
+  wiring read the pristine set).
+- Motivating evidence: SCORECARD planned-r35 dead-zone row; `corpus/lessons/round-34.md`;
+  R34ReviewRepairs SKILL-tally finding; watchdog `lane-dead-no-report chousa round=34`.

@@ -1944,16 +1944,38 @@ E4 (`w1/ExecE4Census/receipt-binding.py`; QUALITY 42), E5 (QUALITY 43). QUALITY 
 Sources 63 → 66 rows (S064 execve(2), S065 pcre2limits(3), S066 grep(1); tier A, mined; opened
 from installed man pages).
 
+## Round 34 attempt 2 — dead zone + self-audit (two claims)
+
+Attempt 1 died lane-dead-no-report after its commits landed; attempt 2 inherits C1 unchanged
+(verdict `unverified (required controls held)` stands — the frozen exclusion is not re-opened)
+and declares two new claims on distinct axes. Frozen design v4
+`corpus/evidence/round34/claims-a2.md` (`7c7eb3a6`), before any attempt-2 candidate receipt.
+
+| claim / axis | before → after | counting command (lane root) | verdict |
+|---|---|---|---|
+| C2 operability (lowest scored axis): `verify-claims` verifies spans of 32765..32767 bytes (the PCRE dead zone: the 4N-byte pattern fits argv but PCRE2 refuses it, "regular expression is too large", S065) | `DEADZONE_MATCH=21/37` (unfixed gate `772a1d8e`, seeds 5011/5023, `measure-a2/c2-before-s*.json`) → `37/37` on seeds 5011, 5023, 5033, 5047 on gate `a6307edf…` (`measure-a2/c2-after-s*.json`); no committed run below 37 | `LC_ALL=C python3 corpus/evidence/round34/c2-count.py --seed N --receipt F` | **verified (measured)** — do-nothing 21/37, two fresh-seed receipts at 37/37, no-harm battery 11 rows PASS (`measure-a2/battery/`), selftest cases 254–256 (PASS 256) |
+| C3 calibration: self-assessment text vs observed repo state, counted | no committed count existed (E4/E5 were point repairs) → first counted run prints `SELF_AUDIT_MISMATCHES=0` / `SELF_AUDIT_UNDISPOSITIONED=0` over 43 checks, reproduced by re-run (`measure-a2/audit-first-run.txt`); negative control: 2 injected lies → 2 counted, disposition key verified | `python3 corpus/evidence/round34/self-audit.py` | **verified (measured)** — the count is the claim; every counted mismatch carries a committed disposition; the do-nothing control (no audit) cannot produce the receipt |
+
+Per-axis: operability improved (C2: three span lengths moved from false-unsupported to
+verdict-bearing; C1's capability stands unverified); calibration improved (C3: the lane's
+round-34 self-description is now machine-audited, 43 checks, count-committed). No axis harmed:
+the no-harm battery holds every prior row (selftest 256 with first 253 case lines identical,
+claims 17/17, chain 17/22, broken 1/2, observable 3/3, five counters hold). The disclosed
+behaviour change: 32765..32767-byte quote anchors in `verify-chain` now resolve instead of
+reading `anchor-missing` (same class as C1's false-negative closure). Depth improved
+(`corpus/knowledge/dead-zone-pcre-r34.md`); freshness improved narrowly (S065 re-opened, pins
+unchanged); adjacency unchanged.
+
 ## Capabilities (round-34 change)
 
 | Capability | What it can now do | Evidence pointer | First-working round |
 |---|---|---|---|
 | long-span verification (`verify-claims`) | locates and binds spans of 32768..65536 bytes by a 4096-byte probe plus whole-span confirmation, instead of failing on the argv/PCRE pattern limit | `LC_ALL=C python3 corpus/evidence/round34/c1-count-v3.py` → 42/42 (`.ufo/waves/round-34/measure/`); `corpus/knowledge/long-span-argv-r34.md` | 34 (unverified measure: required controls held) |
+| dead-zone span verification (`verify-claims`) | locates and binds spans of 32765..32767 bytes — between the PCRE2 compiled-pattern ceiling and the argv per-string limit — via the same probe-and-confirm matcher | `LC_ALL=C python3 corpus/evidence/round34/c2-count.py` → 37/37 ×4 seeds (`.ufo/waves/round-34/measure-a2/`); `corpus/knowledge/dead-zone-pcre-r34.md` | 34 (attempt 2, verified) |
 
 ## Planned — round 35 (not started)
 
-Candidates, not commitments: the PCRE dead zone below the long-span threshold (spans of about
-28000–32767 bytes with escape-diverse content read unsupported; route them through the chunk
-matcher); E2 (a clause-3 counter every lexer-less mask fails on every seed); selftest cases that
-exercise the chunk matcher (cases 252–253 use 29999 bytes); the selftest's `LC_ALL=C` dependence; the
-L0 fetch-scope answer.
+Candidates, not commitments: E2 (a clause-3 counter every lexer-less mask fails on every seed);
+the selftest's `LC_ALL=C` dependence; the L0 fetch-scope answer. (Landed by round 34 attempt 2
+and removed from this list: the PCRE dead zone — measured as exactly the 3 lengths 32765–32767,
+not "about 28000–32767", C2; chunk-matcher selftest cases 254–256.)

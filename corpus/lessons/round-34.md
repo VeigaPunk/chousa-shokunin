@@ -70,3 +70,41 @@ Rejects (real, with reason):
   gate 156/156 on seed 61111).
 - Not opened: man7.org (host not registered; the fetch-scope L0 question is open) — the installed
   copies of the same pages were opened instead.
+
+---
+
+# Round 34 — attempt 2 (2026-10-23, launched 15:04 -03)
+
+Attempt 1 died with the phase-4 orchestrator after committing its work (`f20aeaa7`…`bf7c931a`)
+with no report; watchdog logged `lane-dead-no-report chousa round=34`. Attempt 2 inherits C1
+unchanged (verdict stays `unverified (required controls held)` per the frozen exclusion) and
+declares two new claims, design v4 `corpus/evidence/round34/claims-a2.md`:
+
+- **C2 operability** — spans of 32765..32767 bytes (the PCRE dead zone under the argv limit):
+  `TOK_DIRECT_SPAN_MAX` 32767 → 32764 routes them onto the chunk matcher. Before 21/37
+  (seeds 5011/5023, receipts `measure-a2/c2-before-s*.json`); after 37/37 on seeds
+  5011, 5023, 5033, 5047 on gate `a6307edf…` (`fe0f22e0`). Selftest cases 254–256; battery
+  11 rows PASS (`measure-a2/battery/`).
+- **C3 calibration** — counted self-audit: `self-audit.py` + `audit-set.json` (43 checks)
+  + `audit-dispositions.md`; first counted run `SELF_AUDIT_MISMATCHES=0`,
+  `SELF_AUDIT_UNDISPOSITIONED=0` (`measure-a2/audit-first-run.txt`); negative control: two
+  injected lies → 2 counted, disposition key verified (`measure-a2/audit-negative-control.txt`).
+
+## Mistakes (attempt 2)
+
+| Class | Evidence | Captured-by | Fix |
+|---|---|---|---|
+| A planned-entry hypothesis was carried as if measured: planned-r35 said the PCRE dead zone spans "about 28000–32767 bytes"; the measured window is exactly 32765–32767 (length-only, all content classes) | planned row in `SCORECARD.md`; probe `/fast/scratch/hyaku/chousa-r34-a2/probe/` (20 lengths × 5 content classes) | L1 probe before freezing design v4 | C2 claims only the measured 3-length window; the planned row is corrected when r35 plans are next edited; this entry |
+| C1's selftest cases 252–253 use a 29999-byte span — the DIRECT path — so the chunk matcher shipped r34 with no selftest case | `tools/research-gate.sh` ls_span construction (6 × 4999 words + 5 = 29999); case count 252–253 | L1, while designing the C2 cases | cases 254–256 pin the chunk path at 32765/32766/32767 (verbatim, mutated, glued, line-bound, line-wrong) |
+| An audit-set negative control was first run with the set path resolving to the pristine lane copy (no lie was actually read) | control run 2026-10-23 ~16:10Z printed 0 mismatches against a corrupted scratch set | re-run with absolute `--set` | control re-run correctly (`measure-a2/audit-negative-control.txt`); control wiring must bind the corrupted bytes, not the lane |
+
+## Gate (attempt 2)
+
+- S065 re-opened 2026-10-23 (attempt 2): file SHA-256 `a3ea2c67…74bd6` unchanged, package
+  `pcre2 10.49-1` unchanged, both gate quotes verbatim at decompressed lines 10–11 and 23
+  ("The maximum size of a compiled pattern is approximately 64 thousand code units / for the
+  8-bit and 16-bit libraries"; "The maximum length of a source pattern string is essentially
+  unlimited"). The row's host note (32764 compiles / 32765 rejects) was re-confirmed by the
+  C2 probe. Status unchanged (`mined`); used-by adds `corpus/knowledge/dead-zone-pcre-r34.md`.
+- No new rows; no other status/recheck/used-by changes (S001–S063, S064, S066 untouched this
+  attempt). C2 rests on S065 as its opened-this-round source row.
