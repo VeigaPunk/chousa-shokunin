@@ -1,0 +1,9 @@
+# C1 source row and evidence
+
+| S0NN | HTML 5.2, W3C Recommendation — https://www.w3.org/TR/2017/REC-html52-20171214/syntax.html#the-in-head-insertion-mode | spec | A | HTML 5.2 tree-construction rules for the “in head” insertion mode; C1 head boundary only, not fetch behavior or quote verification | section 8.2.5.4.4, “The "in head" insertion mode”, W3C Recommendation dated 2017-12-14 | The in-head algorithm inserts whitespace, handles the base/basefont/bgsound/link/meta/noframes/noscript/script/style/template/title start tags in dedicated branches, and uses the anything-else branch to pop head, switch to after head, and reprocess the token | queued | 2026-10-23 | 365d | — |
+
+Quote (18 words): “Anything else Pop the current node (which will be the head element) off the stack of open elements.” Section 8.2.5.4.4, “The “in head” insertion mode”; https://www.w3.org/TR/2017/REC-html52-20171214/syntax.html#the-in-head-insertion-mode; accessed 2026-10-23.
+
+The in-head mode also handles the `html` start tag using in-body rules; the `noscript` branches depend on the scripting flag. Whitespace character tokens are inserted, while non-whitespace characters reach the anything-else branch after the explicit cases; that branch pops head, switches to after head, and reprocesses the token. This supports C1 and tool contract v2 item 1, not C2. Captured page: `html52-snapshot.html`; one direct GET via `curl` returned HTTP 200 from the dated W3C URL without following redirects. The static reader followed the legacy URL to WHATWG and returned W3C API metadata for the dated URL, so the direct response was captured and read locally.
+
+The requested `used-by` target, `corpus/knowledge/quote-reopen-r30.md`, was absent when checked. `CORPUS.md` defines `mined` as cited by at least one `used-by` path, so this draft is `queued` with `—`; change those cells only after that knowledge entry actually cites the row.

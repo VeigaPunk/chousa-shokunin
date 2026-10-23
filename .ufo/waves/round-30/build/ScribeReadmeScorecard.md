@@ -1,0 +1,7 @@
+# Round 30 README and scorecard scribe
+
+- Axes: coverage (C1) and operability (C2). Drafted the coverage row, frontier paragraph, scorecard skeleton, capability text, and round 31 candidates in `.ufo/waves/round-30/build/ScribeReadmeScorecard/README-SCORECARD-drafts.md`; neither product document was changed.
+- Evidence opened: frozen `corpus/evidence/round30/claims.md`; `corpus/README.md`; `SCORECARD.md:1593-1649`; `corpus/SOURCES.md`; `corpus/lessons/round-29-verifier-spotcheck.md:141-163`; and the local `ScribeKnowledge/quote-reopen-r30.md` draft.
+- Conflict, verbatim: request says “claims table (C1 coverage, C2 operability; before 78/106 and 9/20; after `<measured>`)”; frozen claims say “Before at v4: C1 78/106 twice (`before-c1-v4-run{1,2}.json`, all 28 misses headless body windows), C2 12/27 twice (`before-c2-v4-run{1,2}.json`); tool-absent 0/106 and 0/27.” Draft labels 9/20 as historical v2, not the v4 baseline.
+- The knowledge draft marks its source pages unopened and source IDs unassigned; it contains no measurements. C1/C2 counters were not run here, no external sources were fetched, and no verdict is claimed. D1-D7 repair or falsifier dispositions were not assessed.
+- Command: `timeout 10s mkdir -p /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-30/build/ScribeReadmeScorecard` returned no output; subsequent draft write succeeded. No installs or updates.

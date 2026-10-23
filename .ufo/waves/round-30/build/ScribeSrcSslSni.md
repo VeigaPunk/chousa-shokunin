@@ -1,0 +1,7 @@
+# Source report
+- Drafted one row with 11 cells using the `S0NN` placeholder for C2, contract v2 item 3 only; no C1 claim.
+- Opened https://docs.python.org/3/library/ssl.html#ssl.SSLContext.wrap_socket; reader returned Python 3.15.1 `ssl — TLS/SSL wrapper for socket objects` documentation. All URL access was on `docs.python.org`; the reader exposes no HTTP status or method evidence.
+- Located quote (21 words, two verbatim excerpts): “server_hostname to be passed, even if OpenSSL does not have SNI”; “pass server_hostname to wrap_socket() in order to match the hostname.” Sections: `SSLContext.wrap_socket` (Changed in version 3.5 note) and `SSLContext.check_hostname`; opened 2026-10-23.
+- Artifact: `.ufo/waves/round-30/build/ScribeSrcSslSni/row.md`. `corpus/SOURCES.md` was not edited.
+- Command run: `timeout 10s mkdir -p /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-30/build/ScribeSrcSslSni` — no output; shell tool did not expose an exit code. No installs or counters/build/tests/linters were run.
+- Limit: Python documents the hostname argument and matching behavior; applying that API behavior to a socket connected to a validated IP is [INFERENCE]. No counter or network-fetch evidence is claimed.

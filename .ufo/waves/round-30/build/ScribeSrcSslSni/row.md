@@ -1,0 +1,5 @@
+| S0NN | Python ssl documentation, “ssl — TLS/SSL wrapper for socket objects” — https://docs.python.org/3/library/ssl.html#ssl.SSLContext.wrap_socket | docs | A | Python client TLS `server_hostname` and certificate-hostname matching semantics; not DNS resolution or destination-address validation | `SSLContext.wrap_socket` (including Changed in version 3.5 note) and `SSLContext.check_hostname`; Python 3.15.1 documentation | Pass the service hostname as `server_hostname` to retain SNI and certificate-hostname matching when the socket connects to a validated IP address | mined | 2026-10-23 | on-release | corpus/knowledge/quote-reopen-r30.md |
+
+Located quote (21 words total, two verbatim excerpts): “server_hostname to be passed, even if OpenSSL does not have SNI”; “pass server_hostname to wrap_socket() in order to match the hostname.”
+
+Sections: `SSLContext.wrap_socket` (Changed in version 3.5 note) and `SSLContext.check_hostname`. URL: https://docs.python.org/3/library/ssl.html#ssl.SSLContext.wrap_socket. Opened 2026-10-23.

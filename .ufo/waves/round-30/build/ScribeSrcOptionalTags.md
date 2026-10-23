@@ -1,0 +1,7 @@
+- Behavior: drafted an 11-cell provisional row and quote in `.ufo/waves/round-30/build/ScribeSrcOptionalTags/row.md`; did not edit `corpus/SOURCES.md` or product files.
+- Evidence: read `corpus/evidence/round30/claims.md` (C1; contract v2 item 1) and `CORPUS.md` § “SOURCES.md — where a shokunin learns”; read `SOURCES.md` rows S046–S049 (11-cell shape).
+- Source attempt: `read https://www.w3.org/TR/html52/syntax.html#optional-tags` returned `URL: https://html.spec.whatwg.org/multipage/syntax.html` (tool output); this violated the requested www.w3.org-only redirect boundary, so no further GET was made.
+- Located redirect-response quote, section 13.1.2.4 “Optional tags”: “A head element's end tag may be omitted if the head element is not immediately followed by ASCII whitespace or a comment.” (22 words; not W3C HTML 5.2 evidence.)
+- Verdict: the observed rule supports C1 / contract v2 item 1 only as redirect-response evidence; no W3C source admission and no C2 evidence. Row status is intentionally `queued`, not the requested `mined`, because the named W3C page was not observed.
+- Gates and limits: no counters, tests, builds, or additional network requests; no tools installed. C2 fetch bounds and D1–D7 are out of scope for this seat.
+- Artifacts: `.ufo/waves/round-30/build/ScribeSrcOptionalTags.md`; `.ufo/waves/round-30/build/ScribeSrcOptionalTags/row.md`.

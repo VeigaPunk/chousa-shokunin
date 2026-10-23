@@ -1,0 +1,8 @@
+# ScribeSrcSocketTimeout — round 30
+
+- Opened `https://docs.python.org/3/library/socket.html#socket-timeouts` once with `read`; it returned Python 3.15.1 documentation. In “Notes on socket timeouts”: “In timeout mode, operations fail if they cannot be completed within the timeout specified for the socket.” The page read exposed no HTTP status or command exit code; the quote is in the opened page at lines 1977–1979 of its captured text.
+- Supports C2, contract v2 item 2 (total deadline), as rationale for T4; the docs describe timeout-mode operations, not a whole-transfer bound. The broader implication in the draft is marked [INFERENCE]. C1 is not supported by this source.
+- Draft artifact: `.ufo/waves/round-30/build/ScribeSrcSocketTimeout/row.md` contains one 11-cell row with requested `S0NN` placeholder, `mined`, opened date, and used-by path. Located quote and claim/item attribution are included.
+- Read `corpus/SOURCES.md` rows S046–S049 and the fleet `CORPUS.md` SOURCES contract (section lines 64–147). The specified lane-root `CORPUS.md` path was not found; the contract was read at `/home/vgpnk/Projects/shokunin/CORPUS.md`.
+- The requested `corpus/knowledge/quote-reopen-r30.md` was not found when checked; therefore the `mined`/used-by relation is not independently verified and needs integration confirmation. No lane production file was edited.
+- Setup command: `timeout 5s mkdir -p /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-30/build/ScribeSrcSocketTimeout` returned no output; the tool exposed no exit code. No counters, tests, or tool installs were run; only the documentation GET was made.

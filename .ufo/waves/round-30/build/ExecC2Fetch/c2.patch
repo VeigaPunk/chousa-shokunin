@@ -1,0 +1,144 @@
+--- tools/quote-reopen.py	2026-10-22 22:47:31.167642626 -0300
++++ .ufo/waves/round-30/build/ExecC2Fetch/quote-reopen.py	2026-10-23 00:26:04.373015842 -0300
+@@ -21,9 +21,12 @@
+ 
+ Fetch bounds: registry URLs only, GET only, http and https only for the request and
+ for every redirect hop, a fragment removed, no userinfo, no cookies and no
+-credentials, a 30 s total deadline per URL shared with the single retry, and a cap of
+-8 MiB on both the wire bytes and the inflated bytes. Page text is kept in memory only;
+-nothing is written to disk.
++credentials, a `DEADLINE`-second total deadline per URL (default 30) shared with the
++single retry and enforced by a watchdog that shuts the socket down when it passes,
++and a cap of 8 MiB on both the wire bytes and the inflated bytes. Each hop's host is
++resolved once; if any returned address is not global the hop is refused, otherwise
++the connection goes to a validated address while the host name is still used for the
++Host header and TLS. Page text is kept in memory only; nothing is written to disk.
+ 
+ Python 3 standard library only.
+ """
+@@ -36,6 +39,7 @@
+ import ssl
+ import sys
+ import time
++import threading
+ import unicodedata
+ import urllib.parse
+ import zlib
+@@ -184,7 +188,9 @@
+ 
+ 
+ def _check_address(host, port):
+-    """Refuse a host that resolves to any non-global address (loopback, private, link-local)."""
++    """Resolve a hop's host once and refuse any non-global address. Returns the
++    validated address strings; the caller connects to one of them directly, so the
++    name is never resolved a second time and the peer is never re-checked."""
+     try:
+         infos = socket.getaddrinfo(host, port, type=socket.SOCK_STREAM)
+     except (socket.gaierror, UnicodeError, OSError):
+@@ -203,6 +209,60 @@
+             raise _Refuse("host resolves to an unusable address")
+         if not addr.is_global:
+             raise _Refuse("host resolves to a non-global address")
++    return addrs
++
++
++def _dial(addrs, port, connect_timeout, timeout=None, context=None, server_hostname=None):
++    """Open a TCP connection to one of the validated numeric `addrs` and return the
++    HTTP(S) connection bound to it. The host name is not resolved here; it is used
++    only for the Host header and, on https, for TLS via `server_hostname` on an
++    `ssl.create_default_context()` wrap, so certificate and hostname checks stay on."""
++    conn_cls = http.client.HTTPSConnection if context is not None else http.client.HTTPConnection
++    kw = {"timeout": timeout}
++    if context is not None:
++        kw["context"] = context
++    conn = conn_cls(server_hostname or addrs[0], port, **kw)
++    last = None
++    for a in addrs:
++        af = socket.AF_INET6 if ipaddress.ip_address(a.split("%", 1)[0]).version == 6 else socket.AF_INET
++        sock = socket.socket(af, socket.SOCK_STREAM)
++        try:
++            sock.settimeout(connect_timeout)
++            sock.connect((a, port))
++            sock.settimeout(timeout)
++            if context is not None:
++                sock = context.wrap_socket(sock, server_hostname=server_hostname)
++            conn.sock = sock
++            return conn
++        except OSError as e:
++            last = e
++            try:
++                sock.close()
++            except OSError:
++                pass
++    if last is not None:
++        raise last
++    raise _Refuse("no validated address to connect to")
++
++
++def _kill(holder):
++    """Watchdog trip function: shut the captured socket down so a blocked send or
++    receive fails at the deadline instead of waiting out the sender. The socket
++    object is captured at dial time: http.client clears `conn.sock` when the
++    response is connection-close, but the socket's descriptor stays alive while
++    the response file object refers to it, and shutdown(2) still trips it."""
++    def trip():
++        sock = holder[0]
++        if sock is not None:
++            try:
++                sock.shutdown(socket.SHUT_RDWR)
++            except OSError:
++                pass
++            try:
++                sock.close()
++            except OSError:
++                pass
++    return trip
+ 
+ 
+ def _inflate_stream(chunks, encoding):
+@@ -244,7 +304,7 @@
+             except OSError:
+                 pass
+         try:
+-            chunk = resp.read(CHUNK)
++            chunk = resp.read1(CHUNK)
+         except (http.client.HTTPException, OSError, ValueError):
+             raise _Refuse("body read failed")
+         if not chunk:
+@@ -267,17 +327,21 @@
+     current = url
+     for _ in range(MAX_REDIRECTS + 1):
+         scheme, host, port, target = _check_url(current)
+-        _check_address(host, port)
++        addrs = _check_address(host, port)
+         remaining = deadline - time.monotonic()
+         if remaining <= 0:
+             raise _Refuse("deadline exceeded")
+         conn = None
++        holder = [None]
++        watchdog = None
+         try:
+-            if scheme == "https":
+-                conn = http.client.HTTPSConnection(host, port, timeout=remaining,
+-                                                   context=ssl.create_default_context())
+-            else:
+-                conn = http.client.HTTPConnection(host, port, timeout=remaining)
++            ctx = ssl.create_default_context() if scheme == "https" else None
++            conn = _dial(addrs, port, min(remaining, 5.0), timeout=remaining,
++                         context=ctx, server_hostname=host)
++            holder[0] = conn.sock
++            watchdog = threading.Timer(remaining, _kill(holder))
++            watchdog.daemon = True
++            watchdog.start()
+             conn.request("GET", target, headers={"User-Agent": USER_AGENT,
+                                                   "Accept-Encoding": "gzip",
+                                                   "Accept": "*/*",
+@@ -328,7 +392,7 @@
+ def fetch_page(url):
+     """Fetch one registry URL within the fetch bounds. Returns (status, ctype, text, detail)."""
+     target = url.split("#", 1)[0]
+-    deadline = time.monotonic() + DEADLINE
++    deadline = time.monotonic() + float(DEADLINE)
+     detail = ""
+     for attempt in range(RETRIES + 1):
+         retryable = False

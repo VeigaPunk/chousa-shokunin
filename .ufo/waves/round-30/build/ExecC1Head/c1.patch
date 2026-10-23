@@ -1,0 +1,103 @@
+--- tools/quote-reopen.py	2026-10-22 22:47:31.167642626 -0300
++++ .ufo/waves/round-30/build/ExecC1Head/quote-reopen.py	2026-10-23 00:21:15.140043932 -0300
+@@ -7,7 +7,9 @@
+ The tool reads a tab-separated item file with the header `id<TAB>source_id<TAB>quote`,
+ looks each `source_id` up in the lane registry (`corpus/SOURCES.md` by default, that is
+ the file named by `--registry`), fetches each registry URL once per run, extracts the
+-page text and reports one verdict per item:
++page text (the head ends at `</head>`, `<body>`, the first start tag that cannot appear
++in `head`, or character data that is not only whitespace; `title`, `script`, `style`,
++`noscript` and `template` content is dropped) and reports one verdict per item:
+ 
+     QUOTE_REOPEN<TAB><id><TAB><VERDICT><TAB><detail>
+ 
+@@ -54,8 +56,15 @@
+ ALLOWED_TYPES = {"text/html", "application/xhtml+xml", "text/plain"}
+ MAX_WORDS = 25
+ 
+-# Content of these elements is dropped, and comments are dropped.
+-SKIP = {"script", "style", "noscript", "template", "head"}
++# Content of these elements is dropped wherever it appears; comments are dropped too.
++# The head element is not in this set: it ends at the head boundary, not only at its
++# own end tag.
++SKIP = {"script", "style", "noscript", "template", "title"}
++# Start tags that may appear inside head. Any other start tag, or character data that is
++# not only whitespace and lies outside those elements, ends the head. Of these only
++# `noframes` can carry content that SKIP does not already cover.
++HEAD_ELEMENTS = {"base", "basefont", "bgsound", "link", "meta",
++                 "noframes", "noscript", "script", "style", "template", "title"}
+ # These elements emit one space at start and at end; every other element emits nothing.
+ BLOCK = {"p", "div", "li", "ul", "ol", "table", "tr", "td", "th", "h1", "h2", "h3", "h4", "h5", "h6",
+          "br", "section", "article", "header", "footer", "nav", "pre", "blockquote", "dt", "dd", "dl",
+@@ -73,31 +82,67 @@
+ 
+ 
+ class _Text(HTMLParser):
+-    """Page HTML to text: skipped element content dropped, block elements emit a space."""
++    """Page HTML to text: the head ends at `</head>`, at the first start tag outside
++    HEAD_ELEMENTS, or at non-whitespace character data outside those elements (that
++    data is page text); skipped element content is dropped; block elements emit a
++    space."""
+ 
+     def __init__(self):
+         super().__init__(convert_charrefs=True)
+         self.out = []
++        self.head = False
+         self.skip = 0
++        self.hdeep = 0
+ 
+     def handle_starttag(self, tag, attrs):
+-        if tag in SKIP:
++        if self.head:
++            if self.skip:
++                if tag in SKIP:
++                    self.skip += 1
++                return
++            if self.hdeep:
++                if tag == "noframes":
++                    self.hdeep += 1
++                elif tag in SKIP:
++                    self.skip += 1
++                return
++            if tag in HEAD_ELEMENTS:
++                if tag in SKIP:
++                    self.skip += 1
++                elif tag == "noframes":
++                    self.hdeep += 1
++                return
++            self.head = False
++        if tag == "head":
++            self.head = True
++        elif tag in SKIP:
+             self.skip += 1
+         elif tag in BLOCK:
+             self.out.append(" ")
+ 
+     def handle_startendtag(self, tag, attrs):
++        if self.head:
++            if self.skip or self.hdeep or tag in HEAD_ELEMENTS:
++                return
++            self.head = False
+         if tag in BLOCK:
+             self.out.append(" ")
+ 
+     def handle_endtag(self, tag):
+-        if tag in SKIP:
++        if tag == "head":
++            self.head = False
++            self.hdeep = 0
++        elif tag == "noframes":
++            self.hdeep = max(0, self.hdeep - 1)
++        elif tag in SKIP:
+             self.skip = max(0, self.skip - 1)
+         elif tag in BLOCK:
+             self.out.append(" ")
+ 
+     def handle_data(self, data):
+-        if not self.skip:
++        if self.head and data.strip() and not self.skip and not self.hdeep:
++            self.head = False
++        if not self.head and not self.skip:
+             self.out.append(data)
+ 
+ 

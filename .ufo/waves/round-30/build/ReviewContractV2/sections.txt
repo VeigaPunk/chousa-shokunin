@@ -1,0 +1,407 @@
+=====the-in-head-insertion-mode=====
+id="the-in-head-insertion-mode">8.2.5.4.4. The "in head" insertion mode
+When the user agent is to apply the rules for the "in head" insertion mode, the user agent
+ must handle the token as follows:
+A character token that is one of U+0009 CHARACTER TABULATION, U+000A LINE FEED (LF), U+000C
+FORM FEED (FF), U+000D CARRIAGE RETURN (CR), or U+0020 SPACE
+Insert the character.
+A comment token
+Insert a comment.
+A DOCTYPE token
+Parse error.
+A start tag whose tag name is "html"
+Process the token using the rules for the "in body" insertion mode.
+A start tag whose tag name is one of: "base", "basefont", "bgsound", "link"
+Insert an HTML element for the token. Immediately pop the current node off the stack of open elements.
+Acknowledge the token’s *self-closing flag*, if it is set.
+A start tag whose tag name is "meta"
+Insert an HTML element for the token. Immediately pop the current node off the stack of open elements.
+Acknowledge the token’s *self-closing flag*, if it is set.
+If the element has a charset attribute, and getting an encoding from its value results in an encoding, and the confidence is
+currently tentative, then change the encoding to the resulting encoding.
+Otherwise, if the element has an http-equiv attribute whose value is an ASCII case-insensitive match for the string "Content-Type", and the element has a content attribute, and applying the algorithm for extracting a character encoding from a meta element to that attribute’s
+value returns an encoding, and the confidence is currently tentative, then change the encoding to the extracted encoding.
+A start tag whose tag name is "title"
+Follow the generic RCDATA element parsing algorithm.
+A start tag whose tag name is "noscript", if the scripting flag is enabled
+A start tag whose tag name is one of: "noframes", "style"
+Follow the generic raw text element parsing algorithm.
+A start tag whose tag name is "noscript", if the scripting flag is disabled
+Insert an HTML element for the token.
+Switch the insertion mode to "in head noscript".
+A start tag whose tag name is "script"
+Run these steps:
+Let the adjusted insertion location be the appropriate place for inserting a node.
+Create an element for the token in the HTML namespace, with the intended parent
+being the element in which the adjusted insertion location finds itself.
+Mark the element as being "parser-inserted" and unset the element’s
+"non-blocking" flag.
+This ensures that, if the script is external, any document.write() calls in the script will execute in-line, instead
+of blowing the document away, as would happen in most other cases. It also prevents the
+script from executing until the end tag is seen.
+If the parser was originally created for the HTML fragment parsing algorithm, then
+mark the script element as "already started". (fragment case)
+Insert the newly created element at the adjusted insertion location.
+Push the element onto the stack of open elements so that it is the new current node.
+Switch the tokenizer to the script data state.
+Let the original insertion mode be the current insertion mode.
+Switch the insertion mode to "text".
+An end tag whose tag name is "head"
+Pop the current node (which will be the head element) off the stack of open elements.
+Switch the insertion mode to "after head".
+An end tag whose tag name is one of: "body", "html", "br"
+Act as described in the "anything else" entry below.
+A start tag whose tag name is "template"
+Insert an HTML element for the token.
+Insert a marker at the end of the list of active formatting elements.
+Set the frameset-ok flag to "not ok".
+Switch the insertion mode to "in template".
+Push "in template" onto the stack of template insertion modes so that it is the new current template insertion mode.
+An end tag whose tag name is "template"
+If there is no template element on the stack of open elements, then this is a parse error; ignore the token.
+Otherwise, run these steps:
+Generate all implied end tags thoroughly.
+If the current node is not a template element, then this is a parse error.
+Pop elements from the stack of open elements until a template element has been
+popped from the stack.
+Clear the list of active formatting elements up to the last marker.
+Pop the current template insertion mode off the stack of template insertion modes.
+Reset the insertion mode appropriately.
+A start tag whose tag name is "head"
+Any other end tag
+Parse error.
+Anything else
+Pop the current node (which will be the head element) off the stack of open elements.
+Switch the insertion mode to "after head".
+Reprocess the token.
+ 
+=====the-in-head-noscript-insertion-mode=====
+id="the-in-head-noscript-insertion-mode">8.2.5.4.5. The "in head noscript" insertion mode
+When the user agent is to apply the rules for the "in head noscript" insertion mode, the
+ user agent must handle the token as follows:
+A DOCTYPE token
+Parse error.
+A start tag whose tag name is "html"
+Process the token using the rules for the "in body" insertion mode.
+An end tag whose tag name is "noscript"
+Pop the current node (which will be a noscript element) from the stack of open elements; the new current node will be a head element.
+Switch the insertion mode to "in head".
+A character token that is one of U+0009 CHARACTER TABULATION, U+000A LINE FEED (LF), U+000C
+FORM FEED (FF), U+000D CARRIAGE RETURN (CR), or U+0020 SPACE
+A comment token
+A start tag whose tag name is one of: "basefont", "bgsound", "link", "meta", "noframes",
+"style"
+Process the token using the rules for the "in head" insertion mode.
+An end tag whose tag name is "br"
+Act as described in the "anything else" entry below.
+A start tag whose tag name is one of: "head", "noscript"
+Any other end tag
+Parse error.
+Anything else
+Parse error.
+Pop the current node (which will be a noscript element) from the stack of open elements; the new current node will be a head element.
+Switch the insertion mode to "in head".
+Reprocess the token.
+ 
+=====the-after-head-insertion-mode=====
+id="the-after-head-insertion-mode">8.2.5.4.6. The "after head" insertion mode
+When the user agent is to apply the rules for the "after head" insertion mode, the user
+ agent must handle the token as follows:
+A character token that is one of U+0009 CHARACTER TABULATION, U+000A LINE FEED (LF), U+000C
+FORM FEED (FF), U+000D CARRIAGE RETURN (CR), or U+0020 SPACE
+Insert the character.
+A comment token
+Insert a comment.
+A DOCTYPE token
+Parse error.
+A start tag whose tag name is "html"
+Process the token using the rules for the "in body" insertion mode.
+A start tag whose tag name is "body"
+Insert an HTML element for the token.
+Set the frameset-ok flag to "not ok".
+Switch the insertion mode to "in body".
+A start tag whose tag name is "frameset"
+Insert an HTML element for the token.
+Switch the insertion mode to "in frameset".
+A start tag whose tag name is one of: "base", "basefont", "bgsound", "link", "meta",
+"noframes", "script", "style", "template", "title"
+Parse error.
+Push the node pointed to by the head element pointer onto the stack of open elements.
+Process the token using the rules for the "in head" insertion mode.
+Remove the node pointed to by the head element pointer from the stack of open elements. (It might not be the current node at this point.)
+The head element pointer cannot be null at this point.
+An end tag whose tag name is "template"
+Process the token using the rules for the "in head" insertion mode.
+An end tag whose tag name is one of: "body", "html", "br"
+Act as described in the "anything else" entry below.
+A start tag whose tag name is "head"
+Any other end tag
+Parse error.
+Anything else
+Insert an HTML element for a "body" start tag token with no attributes.
+Switch the insertion mode to "in body".
+Reprocess the current token.
+ 
+=====the-before-head-insertion-mode=====
+id="the-before-head-insertion-mode">8.2.5.4.3. The "before head" insertion mode
+When the user agent is to apply the rules for the "before head" insertion mode, the user
+ agent must handle the token as follows:
+A character token that is one of U+0009 CHARACTER TABULATION, U+000A LINE FEED (LF), U+000C
+FORM FEED (FF), U+000D CARRIAGE RETURN (CR), or U+0020 SPACE
+Ignore the token.
+A comment token
+Insert a comment.
+A DOCTYPE token
+Parse error.
+A start tag whose tag name is "html"
+Process the token using the rules for the "in body" insertion mode.
+A start tag whose tag name is "head"
+Insert an HTML element for the token.
+Set the head element pointer to the newly created head element.
+Switch the insertion mode to "in head".
+An end tag whose tag name is one of: "head", "body", "html", "br"
+Act as described in the "anything else" entry below.
+Any other end tag
+Parse error.
+Anything else
+Insert an HTML element for a "head" start tag token with no attributes.
+Set the head element pointer to the newly created head element.
+Switch the insertion mode to "in head".
+Reprocess the current token.
+ 
+=====optional-tags=====
+id="optional-tags">8.1.2.4. Optional tags
+Certain tags can be omitted.
+Omitting an element’s start tag in the situations described below does not
+ mean the element is not present; it is implied, but it is still there. For example, an HTML
+ document always has a root html element, even if the string <html> doesn’t
+ appear anywhere in the markup.
+An html element’s start tag may be omitted if the first thing inside the html element
+ is not a comment.
+ For example, in the following case it’s ok to remove the "<html>" tag: 
+<!DOCTYPE HTML>
+<html>
+<head>
+ <title>Hello</title>
+</head>
+<body>
+ <p>Welcome to this example.</p>
+</body>
+</html>
+Doing so would make the document look like this:
+<!DOCTYPE HTML>
+<head>
+ <title>Hello</title>
+</head>
+<body>
+ <p>Welcome to this example.</p>
+</body>
+</html>
+This has the exact same DOM. In particular, note that white space around the document element is ignored by the parser. The following example would also have the exact
+ same DOM:
+<!DOCTYPE HTML><head>
+ <title>Hello</title>
+</head>
+<body>
+ <p>Welcome to this example.</p>
+</body>
+</html>
+However, in the following example, removing the start tag moves the comment to before the html element:
+<!DOCTYPE HTML>
+<html>
+<!-- where is this comment in the DOM? -->
+<head>
+ <title>Hello</title>
+</head>
+<body>
+ <p>Welcome to this example.</p>
+</body>
+</html>
+With the tag removed, the document actually turns into the same as this:
+<!DOCTYPE HTML>
+<!-- where is this comment in the DOM? -->
+<html>
+<head>
+ <title>Hello</title>
+</head>
+<body>
+ <p>Welcome to this example.</p>
+</body>
+</html>
+This is why the tag can only be removed if it is not followed by a comment: removing the tag
+ when there is a comment there changes the document’s resulting parse tree. Of course, if the
+ position of the comment does not matter, then the tag can be omitted, as if the comment had been
+ moved to before the start tag in the first place.
+An html element’s end tag may be omitted if the html element is not immediately
+ followed by a comment.
+A head element’s start tag may be omitted if the element is empty, or if the first thing
+ inside the head element is an element.
+A head element’s end tag may be omitted if the head element is not immediately
+ followed by a space character or a comment.
+A body element’s start tag may be omitted if the element is empty, or if the first thing
+ inside the body element is not a space character or a comment, except if the first
+ thing inside the body element is a meta, link, script, style, or template element.
+A body element’s end tag may be omitted if the body element is not immediately
+ followed by a comment.
+ Note that in the example above, the head element start and end tags, and the body element start tag, can’t be omitted, because they are surrounded by white space: 
+<!DOCTYPE HTML>
+<html>
+ <head>
+ <title>Hello</title>
+ </head>
+ <body>
+ <p>Welcome to this example.</p>
+ </body>
+</html>
+(The body and html element end tags could be omitted without trouble; any spaces after
+ those get parsed into the body element anyway.)
+Usually, however, white space isn’t an issue. If we first remove the white space we don’t care
+ about:
+<!DOCTYPE HTML><html><head><title>Hello</title></head><body><p>Welcome to this example.</p></body></html>
+Then we can omit a number of tags without affecting the DOM:
+<!DOCTYPE HTML><title>Hello</title><p>Welcome to this example.</p>
+At that point, we can also add some white space back:
+<!DOCTYPE HTML>
+<title>Hello</title>
+<p>Welcome to this example.</p>
+This would be equivalent to this document, with the omitted tags shown in their parser-implied
+ positions; the only white space text node that results from this is the newline at the end of
+ the head element:
+<!DOCTYPE HTML>
+<html><head><title>Hello</title>
+</head><body><p>Welcome to this example.</p></body></html>
+An li element’s end tag may be omitted if the li element is immediately followed by
+ another li element or if there is no more content in the parent element.
+A dt element’s end tag may be omitted if the dt element is immediately followed by
+ another dt element or a dd element.
+A dd element’s end tag may be omitted if the dd element is immediately followed by
+ another dd element or a dt element, or if there is no more content in the parent element.
+A p element’s end tag may be omitted if the p element is immediately followed by an address, article, aside, blockquote, details, div, dl, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hr, main, nav, ol, p, pre, section, table,
+ or ul element, or if there is no more content in the parent element and the parent element is
+ an HTML element that is not an a, audio, del, ins, map, noscript, or video element, or an autonomous custom element.
+ We can thus simplify the earlier example further: 
+<!DOCTYPE HTML><title>Hello</title><p>Welcome to this example.</p>
+An rt element’s end tag may be omitted if the rt element is immediately followed by an rt or rp element, or if there is no more content in the parent element.
+An rp element’s end tag may be omitted if the rp element is immediately followed by an rt or rp element, or if there is no more content in the parent element.
+An optgroup element’s end tag may be omitted if the optgroup element is immediately
+ followed by another optgroup element, or if there is no more content in the parent element.
+An option element’s end tag may be omitted if the option element is immediately
+ followed by another option element, or if it is immediately followed by an optgroup element, or if there is no more content in the parent element.
+A colgroup element’s start tag may be omitted if the first thing inside the colgroup element is a col element, and if the element is not immediately preceded by another colgroup element whose end tag has been omitted. (It can’t be omitted if the element is
+ empty.)
+A colgroup element’s end tag may be omitted if the colgroup element is not immediately
+ followed by a space character or a comment.
+A caption element’s end tag may be omitted if the caption element is not immediately
+ followed by a space character or a comment.
+A thead element’s end tag may be omitted if the thead element is immediately followed
+ by a tbody or tfoot element.
+A tbody element’s start tag may be omitted if the first thing inside the tbody element
+ is a tr element, and if the element is not immediately preceded by a tbody, thead, or tfoot element whose end tag has been omitted. (It can’t be omitted if the element is
+ empty.)
+A tbody element’s end tag may be omitted if the tbody element is immediately followed
+ by a tbody or tfoot element, or if there is no more content in the parent element.
+A tfoot element’s end tag may be omitted if there is no more content in the parent
+ element.
+A tr element’s end tag may be omitted if the tr element is immediately followed by
+ another tr element, or if there is no more content in the parent element.
+A td element’s end tag may be omitted if the td element is immediately followed by a td or th element, or if there is no more content in the parent element.
+A th element’s end tag may be omitted if the th element is immediately followed by a td or th element, or if there is no more content in the parent element.
+ The ability to omit all these table-related tags makes table markup much terser. 
+Take this example:
+<table>
+<caption>37547 TEE Electric Powered Rail Car Train Functions (Abbreviated)</caption>
+<colgroup><col><col><col></colgroup>
+<thead>
+<tr>
+ <th>Function</th>
+ <th>Control Unit</th>
+ <th>Central Station</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+ <td>Headlights</td>
+ <td>✔</td>
+ <td>✔</td>
+</tr>
+<tr>
+ <td>Interior Lights</td>
+ <td>✔</td>
+ <td>✔</td>
+</tr>
+<tr>
+ <td>Electric locomotive operating sounds</td>
+ <td>✔</td>
+ <td>✔</td>
+</tr>
+<tr>
+ <td>Engineer’s cab lighting</td>
+ <td></td>
+ <td>✔</td>
+</tr>
+<tr>
+ <td>Station Announcements - Swiss</td>
+ <td></td>
+ <td>✔</td>
+</tr>
+</tbody>
+</table>
+The exact same table, modulo some white space differences, could be marked up as follows:
+<table>
+<caption>37547 TEE Electric Powered Rail Car Train Functions (Abbreviated)
+<colgroup><col><col><col>
+<thead>
+<tr>
+ <th>Function
+ <th>Control Unit
+ <th>Central Station
+<tbody>
+<tr>
+ <td>Headlights
+ <td>✔
+ <td>✔
+<tr>
+ <td>Interior Lights
+ <td>✔
+ <td>✔
+<tr>
+ <td>Electric locomotive operating sounds
+ <td>✔
+ <td>✔
+<tr>
+ <td>Engineer’s cab lighting
+ <td>
+ <td>✔
+<tr>
+ <td>Station Announcements - Swiss
+ <td>
+ <td>✔
+</table>
+Since the cells take up much less room this way, this can be made even terser by having each row
+ on one line:
+<table>
+<caption>37547 TEE Electric Powered Rail Car Train Functions (Abbreviated)
+<colgroup><col><col><col>
+<thead>
+<tr> <th>Function <th>Control Unit <th>Central Station
+<tbody>
+<tr> <td>Headlights <td>✔ <td>✔
+<tr> <td>Interior Lights <td>✔ <td>✔
+<tr> <td>Electric locomotive operating sounds <td>✔ <td>✔
+<tr> <td>Engineer’s cab lighting <td> <td>✔
+<tr> <td>Station Announcements - Swiss <td> <td>✔
+</table>
+The only differences between these tables, at the DOM level, is with the precise position of the
+ (in any case semantically-neutral) white space.
+However, a start tag must never be omitted if it has any attributes.
+ Returning to the earlier example with all the white space removed and then all the optional tags
+ removed: 
+<!DOCTYPE HTML><title>Hello</title><p>Welcome to this example.
+If the body element in this example had to have a class attribute and the html element had to have a lang attribute, the markup would have to become:
+<!DOCTYPE HTML><html lang="en"><title>Hello</title><body class="demo"><p>Welcome to this example.
+This section assumes that the document is conforming, in particular, that there
+ are no content model violations. Omitting tags in the fashion described in this section in a
+ document that does not conform to the content models described in this specification is likely
+ to result in unexpected DOM differences (this is, in part, what the content models are designed to
+ avoid).
+ 

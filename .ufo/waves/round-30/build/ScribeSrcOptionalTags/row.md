@@ -1,0 +1,7 @@
+Provisional draft only — do not merge as a mined row. The named W3C URL did not return a W3C page: the reader returned `https://html.spec.whatwg.org/multipage/syntax.html`. The fetched text supports the rule, but it is not evidence opened on the requested host.
+
+| id | source | kind | tier | scope | anchor | teaches | status | opened | recheck | used-by |
+|---|---|---|---|---|---|---|---|---|---|---|
+| S0NN | HTML 5.2, W3C Recommendation — https://www.w3.org/TR/html52/syntax.html#optional-tags | spec | A | W3C HTML 5.2's optional end-tag rule for `head`; no broader parsing claim | section 8.1.2.4 Optional tags (not reached; reader returned HTML Standard at https://html.spec.whatwg.org/multipage/syntax.html) | No teaching claim is admitted because the requested W3C page was not observed; reopen on www.w3.org before mining | queued | 2026-10-23 | 365d | corpus/knowledge/quote-reopen-r30.md |
+
+Observed quote from the redirect response, section 13.1.2.4 “Optional tags” (HTML Standard, not W3C HTML 5.2): “A head element's end tag may be omitted if the head element is not immediately followed by ASCII whitespace or a comment.” It is 22 words. This supports C1, contract v2 item 1 only as redirect-response evidence; it does not support C2.
