@@ -65,6 +65,7 @@
 | `knowledge/registry-link-r26.md` | Local registry identity/status/exact-rooted backlink checks and descriptive verified-at text; a declaration relation is not semantic citation support | `S036`, `S039`; `evidence/round26-claims.md` C3 and contract correction |
 | `lessons/round-26.md` | Prior closure intake, allocation-amplification mistake, corrected registry contract, inherited-wave continuity and located source Gate quotes | `evidence/round26-measure-before.log`; `QUALITY.md` criterion18; `.ufo/waves/round-26/` |
 | `evidence/round26-*` | Frozen-population pre-registration, baseline and final counting receipts plus independent date/registry differentials | `SCORECARD.md` Round26 owns the final measurements and revision |
+| `knowledge/quote-reopen-r30.md` | Round-30 note: `tools/quote-reopen.py` contract v2 — the HTML head ends without `</head>` (C1) and one total `DEADLINE` plus one validated DNS resolution per hop bound each fetch (C2); the loopback counters, their before and after, and what they do not show (liveness, TLS, per-hop provenance, resolver time, IPv6) | `S050`-`S056`; `evidence/round30/claims.md`; `SCORECARD.md` Round 30 |
 
 Count: 20 entries, ten knowledge notes and ten lessons — `functions.glob`
 pattern `corpus/knowledge/*.md;corpus/lessons/*.md`, 2026-10-16. Fixture and
@@ -936,4 +937,16 @@ fixed to `SOURCES.md` URLs, and an L0 question on that scope is open. Open
 edges: pages without `</head>`, 2xx challenge pages, prefix and suffix
 disambiguation, PDF sources, and three surviving mutants
 (`lessons/round-29.md`). The round-26 to round-28 path-denylist debts are
+carried unchanged.
+
+## Round30 frontier disposition (2026-10-23)
+
+Moved from frontier to held ground, measured on loopback only: pages that omit
+`</head>` (C1, `QUOTE_REOPEN_HEADLESS_MATCH` 78/106 to 106/106) and the
+quote re-open fetch bounds under slow senders and DNS rebinding (C2,
+`QUOTE_REOPEN_FETCH_BOUND_MATCH` 12/27 to 27/27), both at lane revision
+`49b2aa30`; `knowledge/quote-reopen-r30.md`, sources S050 to S056. Still open:
+pages without a `<head>` start tag, 2xx challenge pages, PDF sources, prefix
+and suffix disambiguation, resolver time inside the deadline, IPv6, and the
+L0 fetch-scope question. The round-26 to round-28 path-denylist debts are
 carried unchanged.

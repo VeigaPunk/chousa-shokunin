@@ -1199,3 +1199,7 @@ The round-28 entry says no end census had been produced. The fleet witness `.ufo
   `ABSENT`, 3 `UNREACHABLE` (`.ufo/waves/round-29/falsify/ScoutFreshnessH.md`).
 - Sources S046 to S049 added. L0 question filed on the fetch scope.
 - Evidence: `corpus/lessons/round-29.md`; SCORECARD.md, section "Round 29".
+
+### 2026-10-23 correction to the Round 29 run count (routed defect D2)
+
+The Round 29 entry says there were 6 more wave-2 runs. Committed evidence supports 5 further runs at 130/130: `.ufo/waves/round-29/falsify/RerunCounterA/receipt.json` (seed `16442982337510174646`); `.ufo/waves/round-29/falsify/RerunCounterB/receipt-1.json` (seed `5392061795029416258`) and `receipt-2.json` (seed `1932010155184684229`); `.ufo/waves/round-29/falsify/ScoutFreshnessH/rederive-receipt.json` with `rederive.out` (run 1, seed `13173258806708832500`); and `ScoutFreshnessH/rederive3.out` (run 3, seed `3497534629407128034`). The ScoutFreshnessH report's run 2 row gives seed `12970099299958901445` but points to `rederive3.out`, whose output records run 3's seed; no separate committed output or receipt for the run 2 seed was located. The count is corrected without changing the underlying scores or historical text. Routed by `corpus/lessons/round-29-verifier-spotcheck.md:148-150`.

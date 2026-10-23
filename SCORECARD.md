@@ -1639,6 +1639,32 @@ each mined and used by `corpus/knowledge/quote-reopen-r29.md`. QUALITY criteria
 23 to 25 were added. Trends, author view: expansion improved, quality improved,
 discernment unchanged.
 
+### 2026-10-23 correction — capabilities-row wording (routed defect D1)
+
+The phrase “live URL” in the round 29 capabilities row is not shown by the round 29 counter. The counter can be met without a network fetch: the cache-only verifier described in `.ufo/waves/round-29/falsify/CriticClaimDesign.md` scored 130/130. Separate network evidence is `.ufo/waves/round-29/falsify/DiffToolB/landed-fixture.network.json`, bound by `.ufo/waves/round-29/falsify/DiffToolB/differential-receipt.json`: the `landed-fixture` network record has 8 allowed request events with `"method": "GET"` and 8 response entries with `"status": 200`. The bound run records `"production_bytes_unchanged": true`, 40 expected and 40 observed items, and the command and exit shown below. Its verdict summary is `verbatim=14 absent=20 too_long=3 no_source=3 unreachable=0`. This is evidence for those GETs and HTTP 200 responses in that one fixture run, not evidence that the counter itself fetches or that every registered URL is reachable. [INFERENCE] Keep the row's counter result distinct from this bounded network observation.
+
+Recorded command (from `differential-receipt.json`; not rerun by this seat):
+
+```text
+timeout --kill-after=5s 590s python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/falsify/DiffToolB/guarded-run.py /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/falsify/DiffToolB/landed-fixture.network.json tools/quote-reopen.py verify --items corpus/fixtures/quote-reopen-r29/items.tsv --registry corpus/SOURCES.md
+```
+
+The receipt records `cwd` `/home/vgpnk/Projects/shokunin/chousa-shokunin`, `exit_code` 1, `expected_count` 40, `observed_count` 40, and `production_bytes_unchanged` true. The exit and mixed verdict summary are reported as recorded, not interpreted as a pass.
+
+The word "live" in the round-29 lesson, knowledge entry, this file and `corpus/README.md` (inventory: `.ufo/waves/round-30/build/ScribeD1Liveness/drafts.md` section B) is read the same way: backed for that one DiffToolB run only, never by the counter. QUALITY criterion 26 now requires this. Routed by `corpus/lessons/round-29-verifier-spotcheck.md:143-147`.
+
+### 2026-10-23 correction to the Round 29 re-derivation count (routed defect D2)
+
+The Round 29 table says wave 2 re-derived C1 in 6 further runs. The committed outputs support 5 further runs, each scoring 130/130:
+
+- `.ufo/waves/round-29/falsify/RerunCounterA/receipt.json` — seed `16442982337510174646`.
+- `.ufo/waves/round-29/falsify/RerunCounterB/receipt-1.json` — seed `5392061795029416258`.
+- `.ufo/waves/round-29/falsify/RerunCounterB/receipt-2.json` — seed `1932010155184684229`.
+- `.ufo/waves/round-29/falsify/ScoutFreshnessH/rederive-receipt.json` and `rederive.out` — run 1, seed `13173258806708832500`.
+- `.ufo/waves/round-29/falsify/ScoutFreshnessH/rederive3.out` — run 3, seed `3497534629407128034`.
+
+`ScoutFreshnessH.md` labels run 2 with seed `12970099299958901445` but cites `rederive3.out`; that file records seed `3497534629407128034` (run 3). No separate committed output or receipt for the run 2 seed is in the falsify artifacts, so it is not included in the count of 5. This corrects the count and its evidence trail only; the earlier text is retained. Routed by `corpus/lessons/round-29-verifier-spotcheck.md:148-150`.
+
 ## Planned — round 30 (not started)
 
 Candidates, not commitments: close the three surviving mutants with fixture

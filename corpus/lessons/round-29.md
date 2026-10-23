@@ -120,3 +120,7 @@ Control wave 8, build wave 32, falsify wave 33: 73 seats in total. One seat
 died: CriticPredicate (critic), refused with "This content was flagged for
 possible cybersecurity risk" (`code=cyber_policy`). Its item is a hold. It was
 not retried, and nothing it wrote after the refusal is used.
+
+### 2026-10-23 correction to the chronology wording (routed defect D5)
+
+The frozen `corpus/evidence/round29/claims.md:13-14` says “Before any data seat had run the counter”. The supported wording is “before either primary executor scored its candidate”; it does not mean no wave-1 seat had executed counter machinery. Before the v3 freeze, the CtlCasefoldNoBoundary control produced a contract-following scratch reference baseline of 82/82 under v1 (`.ufo/waves/round-29/controls/CtlCasefoldNoBoundary/report.md`, pristine output at lines 123-145). The adjacent `receipt.json` is the mutant result of 78/82, not the reference baseline. MutateCounter also replayed scratch `counter.main()` with recorded page cases and fixed entropy: receipts span 01:25:59 to 01:27:45 UTC, before the v3 freeze at 01:28:23 (`.ufo/waves/round-29/build/MutateCounter.md:11,43-45`; chronology corroboration: `.ufo/waves/round-29/falsify/CriticClaimDesign.md:13-28`). These were a reference baseline and counter-mutation replays, not measurements of either primary executor's candidate. The frozen claims file remains unchanged. Routed by `corpus/lessons/round-29-verifier-spotcheck.md:156-159`.

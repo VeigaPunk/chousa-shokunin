@@ -175,3 +175,35 @@ the admitted entry that motivates it. Tier definitions live in
     (S047). It is not evidence that the quote is false. Fails when a verdict
     other than `VERBATIM` is dropped or relabelled. — `lessons/round-29.md`;
     `knowledge/quote-reopen-r29.md`.
+
+## Round-30 additions (appended 2026-10-23; criteria 1-25 unchanged)
+
+26. **An adjective on a claim surface has its own evidence.** A word such as
+    "live" in a capability row, claim or knowledge entry is backed by its own
+    predicate or a cited receipt, or it is not written. Fails when
+    `grep -nwi live <file>` finds the word in round prose that cites neither.
+    Shown able to fail: the command finds 5 lines in `lessons/round-29.md`
+    (routed D1) and none in `knowledge/quote-reopen-r30.md` or
+    `evidence/round30/claims.md`. — `lessons/round-30.md`;
+    `lessons/round-29-verifier-spotcheck.md:143-147`.
+27. **A stated re-run count equals the committed receipts.** A report or
+    scorecard that says N further runs names N committed receipts with distinct
+    seeds. Check: `python3 corpus/evidence/round30/rerun-check.py --stated N
+    <receipts>`. Shown able to fail: on the round-29 re-run evidence it prints
+    `RERUN_RECEIPTS=5/6` and exits 1 against the stated 6, and exits 0 against
+    5 (routed D2). — `lessons/round-30.md`; `.ufo/waves/round-30/build/ExecRerunCount.md`.
+28. **A surviving mutant becomes a fixture class before data.** When a mutant
+    of a landed tool survives a counter, the next design adds the class that
+    breaks it before any data seat runs. Shown able to fail: the three round-29
+    survivors score 76, 66 and 72 on the round-30 C1 counter, below the round-29
+    tool's 78/106 (`.ufo/waves/round-30/build/CriticD3Classes.md`, routed D3). —
+    `lessons/round-30.md`; `evidence/round30/claims.md`.
+29. **Nothing a candidate can see reveals an item's class or label.** Item URLs,
+    ids, host names, order, response heads and quote shapes are drawn so that
+    they carry no class or label, and the control wave tries a shortcut keyed on
+    each. Shown able to fail: on round-30 C2 design v2 a DNS- and header-keyed
+    control met `QUOTE_REOPEN_FETCH_BOUND_MATCH=20/20`
+    (`.ufo/waves/round-30/controls/CtlShapeKeyed/receipt-dns-header-c2-run1.json`);
+    the same control scores 13/27 and 16/27 under v3 and 16/27 under v4
+    (`.ufo/waves/round-30/controls/L1Rescore/`). — `lessons/round-30.md`;
+    `evidence/round30/claims.md`.
