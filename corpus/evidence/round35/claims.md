@@ -210,3 +210,16 @@ predicate is right (the output counter's job).
    misreporting `source=override` (same seat). r36: an override that differs from the default (a
    distinct GNU-reporting recorder whose argv is asserted) plus scrubbing the echo flag from the
    capture environment.
+
+9. **A round-34 figure no longer reproduces, and a round-34 counter cannot corroborate round 35.**
+   Wave seat ExecR34C1V3 ran the committed round-34 long-span counter on fresh seeds 3593/3607:
+   `LONGSPAN_MATCH=42/42` on the round-35 gate (19.9 s / 29.0 s) **and 42/42 on the round-34 base
+   gate `a6307edf`** (23.8 s) — so that counter re-confirms round-34 debt and is blind to round 35's
+   work. Consequence: `SCORECARD.md:1927`'s "0/42 ×2 by the 1500 s bound in the UTF-8 locale" no
+   longer reproduces (both gates finish in 36–38 s under a UTF-8 locale); the frozen round-34 text is
+   not edited, and this note is the correction of record. The same seat shows the pin is load-bearing
+   through that independent counter: under a corrupting PATH `grep` the landed gate holds 42/42 while
+   the base gate collapses to 0/42, and under a `BASH_ENV` `grep()` the base's matcher is intercepted
+   (760,543 tripwire bytes) while the landed gate logs zero and holds 42/42. Also noted: the round-34
+   counter strips only `CHOUSA_*` from the gate environment, so an ambient `RESEARCH_GATE_GREP`
+   silently flips it (the round-35 counters strip both prefixes).
