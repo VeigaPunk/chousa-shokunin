@@ -19,9 +19,19 @@ Contract the candidate must meet (claims.md, C1 contract):
   leading zero, no spaces); any other value of a present "line" -> invalid.
 - span absent (no boundary-delimited occurrence) -> unsupported, as today.
 - span present, "line" present: bound iff some boundary-delimited occurrence
-  of the span starts on line N and ends on line N ("N") or starts on N and
-  ends on M ("N-M"); bound -> supported; not bound -> mislocated.
-- "line" absent -> unchanged behaviour.
+  of the span (not necessarily the first) starts on line N and ends on line N
+  ("N") or starts on N and ends on M ("N-M"); line numbers are 1-based,
+  counted by newlines as in the gate's at=; bound -> supported; not bound ->
+  mislocated, and the gate prints
+  "FINDING CLAIM_LINE_MISMATCH severity=warn|crit surface=claims obs=id=<id> ..."
+  for that claim; no such finding names any other claim.
+- "line" absent -> unchanged behaviour; unknown JSON keys are ignored, as at base.
+
+Design v2 (claims.md): fixed sub-variant counts per class (M3 includes
+inner-word damage with both endpoint tokens intact; M4 wrong ranges keep the
+true start line or the true end line), the finding rule
+above, CHOUSA_* environment variables removed from the gate's environment, an
+id reported twice scores "none", harness errors exit 2.
 
 Exit: 0 iff matched == 120; 1 otherwise; 2 harness error. A gate run that
 exits other than 0 or 1, or outlives 600 s, scores every claim as observed
@@ -59,6 +69,11 @@ INVALID_VALUES = ["0", "-3", "x7", "5-3", "07", "4-4", " 4", "4 ", "4-", "-4", "
 SYL = ["ka", "ri", "mo", "tu", "se", "na", "lo", "pe", "vi", "da", "gu", "ho", "ze", "bi", "fa", "yo"]
 GATE_TIMEOUT_S = 600
 LINE_RE = re.compile(r"^CLAIM id=(\S+) .*?observed=(\S+)")
+# design v2: the claim-level finding must name the claim (obs=id=<id>), and only for
+# claims whose truth is mislocated.
+FINDING_ID = "CLAIM_LINE_MISMATCH"
+FINDING_TRUTH = "mislocated"
+FINDING_RE = re.compile(r"^FINDING " + FINDING_ID + r" severity=(?:warn|crit) surface=claims obs=id=(\S+)(?:\s|$)")
 
 
 def sha256_file(path):
@@ -88,7 +103,28 @@ class Gen:
         return " ".join(self.word() for _ in range(self.rng.randint(4, 7)))
 
 
-def build_item(gen, rng, cls):
+# Sub-variant counts are fixed per class (design v2): a gate that mishandles one
+# sub-variant must miss it on every seed, never only on the seeds that happen to
+# draw it.
+SUBVARIANTS = {
+    "B1_bound_single": ["first_line"] * 2 + ["last_line"] * 2 + ["inner"] * 8,
+    "B2_bound_later_occurrence": ["k2_second"] * 6 + ["k3_second"] * 3 + ["k3_third"] * 3,
+    "B3_bound_multiline": ["inner"] * 12,
+    "B4_no_line": ["inner"] * 6,
+    "M1_other_line": ["adjacent_before"] * 3 + ["adjacent_after"] * 3 + ["far"] * 6,
+    "M2_glued_on_named_line": ["prefix"] * 6 + ["suffix"] * 6,
+    "M3_partial_on_named_line": ["prefix"] * 4 + ["mid_sub"] * 4 + ["mid_swap"] * 4,
+    "M4_multiline_wrong_range": ["start", "wide", "end", "early"] * 2,
+    "M5_beyond_eof": ["inner"] * 6,
+    "M6_two_occurrences_named_third": ["inner"] * 8,
+    "I1_invalid_line_value": list(INVALID_VALUES),
+    "U1_absent_span_with_line": ["inner"] * 8,
+}
+for _cls, _n, _t in CLASS_COUNTS:
+    assert len(SUBVARIANTS[_cls]) == _n, _cls
+
+
+def build_item(gen, rng, cls, sub):
     """Return (lines, span, line_value or None). lines are without newline."""
     n = rng.randint(14, 30)
     lines = [gen.filler_line() for _ in range(n)]
@@ -98,43 +134,63 @@ def build_item(gen, rng, cls):
 
     span = gen.span()
     if cls == "B1_bound_single":
-        L = rng.randrange(n); put(L, span)
+        L = {"first_line": 0, "last_line": n - 1}.get(sub, None)
+        if L is None:
+            L = rng.randrange(1, n - 1)
+        put(L, span)
         return lines, span, str(L + 1)
     if cls == "B2_bound_later_occurrence":
-        k = rng.choice([2, 3]); idxs = sorted(rng.sample(range(n), k))
+        k = 2 if sub == "k2_second" else 3
+        idxs = sorted(rng.sample(range(n), k))
         for i in idxs: put(i, span)
-        return lines, span, str(rng.choice(idxs[1:]) + 1)
+        named = idxs[2] if sub == "k3_third" else idxs[1]
+        return lines, span, str(named + 1)
     if cls in ("B3_bound_multiline", "M4_multiline_wrong_range"):
         words = span.split(" "); cut = rng.randint(1, len(words) - 1)
-        a = rng.randrange(n - 3)
+        a = rng.randrange(1, n - 3)
         first, second = " ".join(words[:cut]), " ".join(words[cut:])
         lines[a] = gen.word() + " " + gen.word() + " " + first
         lines[a + 1] = second + ", " + gen.word() + " " + gen.word() + "."
         mspan = first + "\n" + second
         if cls == "B3_bound_multiline":
             return lines, mspan, "%d-%d" % (a + 1, a + 2)
-        wrong = rng.choice(["start", "end", "wide", "late"])
-        val = {"start": str(a + 1), "end": str(a + 2), "wide": "%d-%d" % (a + 1, a + 3),
-               "late": "%d-%d" % (a + 2, a + 3)}[wrong]
+        # start/wide keep the true start line, end/early keep the true end line (v2)
+        val = {"start": str(a + 1), "wide": "%d-%d" % (a + 1, a + 3), "end": str(a + 2),
+               "early": "%d-%d" % (a, a + 2)}[sub]
         return lines, mspan, val
     if cls == "B4_no_line":
         L = rng.randrange(n); put(L, span)
         return lines, span, None
     if cls == "M1_other_line":
-        L, O = rng.sample(range(n), 2); put(L, span)
+        L = rng.randrange(1, n - 1); put(L, span)
+        if sub == "adjacent_before":
+            O = L - 1
+        elif sub == "adjacent_after":
+            O = L + 1
+        else:
+            O = rng.choice([i for i in range(n) if abs(i - L) > 1])
         return lines, span, str(O + 1)
     if cls == "M2_glued_on_named_line":
         L, O = rng.sample(range(n), 2); put(L, span)
-        glue = rng.choice(["prefix", "suffix"])
-        if glue == "prefix":
+        if sub == "prefix":
             lines[O] = gen.word() + " " + gen.word() + span + " " + gen.word() + "."
         else:
             lines[O] = gen.word() + " " + span + gen.word() + " " + gen.word() + "."
         return lines, span, str(O + 1)
     if cls == "M3_partial_on_named_line":
         L, O = rng.sample(range(n), 2); put(L, span)
-        words = span.split(" "); k = rng.randint(2, len(words) - 1)
-        lines[O] = gen.word() + " " + " ".join(words[:k]) + " " + gen.word() + " " + gen.word() + "."
+        words = span.split(" ")
+        if sub == "prefix":
+            k = rng.randint(2, len(words) - 1)
+            text = " ".join(words[:k]) + " " + gen.word()
+        elif sub == "mid_sub":  # both endpoint tokens intact, one inner word replaced (v2)
+            j = rng.randint(1, len(words) - 2)
+            text = " ".join(words[:j] + [gen.word()] + words[j + 1:])
+        else:  # mid_swap: endpoints intact, two inner words swapped (v2)
+            j = rng.randint(1, len(words) - 3) if len(words) >= 4 else 1
+            w = list(words); w[j], w[j + 1] = w[j + 1], w[j]
+            text = " ".join(w)
+        lines[O] = gen.word() + " " + text + ". " + gen.word() + "."
         return lines, span, str(O + 1)
     if cls == "M5_beyond_eof":
         L = rng.randrange(n); put(L, span)
@@ -144,7 +200,7 @@ def build_item(gen, rng, cls):
         return lines, span, str(O + 1)
     if cls == "I1_invalid_line_value":
         L = rng.randrange(n); put(L, span)
-        return lines, span, None  # value assigned by caller
+        return lines, span, sub
     if cls == "U1_absent_span_with_line":
         L = rng.randrange(n)
         words = span.split(" ")
@@ -160,14 +216,11 @@ def generate(root, seed):
     os.makedirs(os.path.join(root, "src"))
     plan = []
     for cls, count, truth in CLASS_COUNTS:
-        plan += [(cls, truth)] * count
+        plan += [(cls, truth, sub) for sub in SUBVARIANTS[cls]]
     rng.shuffle(plan)
-    inv = list(INVALID_VALUES); rng.shuffle(inv); inv_i = 0
     rows, truth_map = [], {}
-    for cls, truth in plan:
-        lines, span, line_value = build_item(gen, rng, cls)
-        if cls == "I1_invalid_line_value":
-            line_value = inv[inv_i % len(inv)]; inv_i += 1
+    for cls, truth, sub in plan:
+        lines, span, line_value = build_item(gen, rng, cls, sub)
         fid = "%016x" % rng.getrandbits(64)
         rel = "src/%s.md" % fid
         with open(os.path.join(root, rel), "w", encoding="utf-8", newline="\n") as f:
@@ -203,30 +256,48 @@ def main():
         print("c1-count: temp dir: %s" % e, file=sys.stderr); return 2
     t0 = time.time()
     try:
-        claims, truth = generate(root, seed)
+        try:
+            claims, truth = generate(root, seed)
+        except Exception as e:  # design v2: harness errors exit 2, never 1
+            print("%s: fixture generation failed: %r" % (os.path.basename(__file__), e), file=sys.stderr)
+            return 2
         rc, out, err, timed_out = None, "", "", False
         try:
-            p = subprocess.run(["bash", gate, "verify-claims", claims, "--root", root], capture_output=True,
+            env = {k: v for k, v in os.environ.items() if not k.startswith("CHOUSA_")}  # design v2
+            p = subprocess.run(["bash", gate, "verify-claims", claims, "--root", root], capture_output=True, env=env,
                                text=True, timeout=GATE_TIMEOUT_S, cwd=root)
             rc, out, err = p.returncode, p.stdout, p.stderr
         except subprocess.TimeoutExpired:
             timed_out = True
-        observed = {}
+        observed, dup, flagged = {}, set(), set()
         if not timed_out and rc in (0, 1):
             for line in out.splitlines():
+                f = FINDING_RE.match(line)
+                if f:
+                    flagged.add(f.group(1))
                 m = LINE_RE.match(line)
-                if m and m.group(1) in truth and m.group(1) not in observed:
+                if m and m.group(1) in truth:
+                    if m.group(1) in observed:
+                        dup.add(m.group(1))
                     observed[m.group(1)] = m.group(2)
+        for cid in dup:  # design v2: an id reported twice is ambiguous and scores "none"
+            observed[cid] = "none"
         per_class, misses, matched = {}, [], 0
         for cid, (cls, t) in truth.items():
             obs = observed.get(cid, "none")
-            ok = obs == t
+            ok = obs == t and ((cid in flagged) == (t == FINDING_TRUTH))
+            if obs == t and not ok:
+                obs = obs + ("+no-finding" if t == FINDING_TRUTH else "+stray-finding")
             matched += ok
             pc = per_class.setdefault(cls, [0, 0]); pc[1] += 1; pc[0] += ok
             if not ok:
                 misses.append({"id": cid, "class": cls, "truth": t, "observed": obs})
         if a.keep:
-            shutil.copytree(root, a.keep)
+            try:
+                shutil.copytree(root, a.keep)
+            except OSError as e:
+                print("%s: --keep failed: %r" % (os.path.basename(__file__), e), file=sys.stderr)
+                return 2
     finally:
         shutil.rmtree(root, ignore_errors=True)
     holds = matched == TOTAL
@@ -235,7 +306,7 @@ def main():
         print("  %s %d/%d" % (cls, per_class[cls][0], per_class[cls][1]))
     if a.receipt:
         receipt = {
-            "schema": "chousa-r31-c1-receipt/v1",
+            "schema": "chousa-r31-c1-receipt/v2",
             "counter_sha256": sha256_file(os.path.abspath(__file__)),
             "gate": a.gate, "gate_sha256": sha256_file(gate), "seed": seed,
             "utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(t0)), "elapsed_s": round(time.time() - t0, 3),
@@ -243,9 +314,13 @@ def main():
             "label": "LINE_BINDING_MATCH=%d/%d" % (matched, TOTAL), "predicate_holds": holds,
             "per_class": {k: "%d/%d" % tuple(v) for k, v in per_class.items()}, "misses": misses,
         }
-        with open(a.receipt, "w") as f:
-            json.dump(receipt, f, indent=1)
-            f.write("\n")
+        try:
+            with open(a.receipt, "w") as f:
+                json.dump(receipt, f, indent=1)
+                f.write("\n")
+        except OSError as e:
+            print("%s: --receipt failed: %r" % (os.path.basename(__file__), e), file=sys.stderr)
+            return 2
     return 0 if holds else 1
 
 

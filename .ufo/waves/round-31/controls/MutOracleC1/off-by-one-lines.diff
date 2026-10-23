@@ -1,0 +1,11 @@
+--- oracle-c1.sh
++++ off-by-one-lines.sh
+@@ -48,7 +48,7 @@
+     offset = hay.find(span)
+     while offset != -1:
+         if tok_left_ok(hay, span, offset) and tok_right_ok(hay, span, offset):
+-            start = hay.count(b'\n', 0, offset) + 1
++            start = hay.count(b'\n', 0, offset)
+             found.append((start, start + span.count(b'\n')))
+         # Include overlapping occurrences; C1 quantifies over ALL occurrences.
+         offset = hay.find(span, offset + 1)

@@ -1,0 +1,57 @@
+{
+ "schema": "chousa-r31-harness-mutation/v1",
+ "seat": "CtlDeterminism31",
+ "seed": 31,
+ "sandbox": "/fast/scratch/hyaku/chousa-r31/CtlDeterminism31",
+ "mutant": {
+  "file": "/fast/scratch/hyaku/chousa-r31/CtlDeterminism31/trivial-stub.py",
+  "line": 21,
+  "pristine": "    for observed in observations:",
+  "mutated": "    for observed in (*observations, 'invalid'):",
+  "effect": "Append a second CLAIM line with observed=invalid for every id, without reading any source file.",
+  "pristine_sha256": "becc5b758839f0f00fdffeda881467114e6d5a6bc2db6e98442c0d23bc768057",
+  "mutated_sha256": "3f36d4391a8705700ec33dccf533e9714ea49c2a409d5064219b4286c95f3e08",
+  "restored_sha256": "becc5b758839f0f00fdffeda881467114e6d5a6bc2db6e98442c0d23bc768057",
+  "restored_exact_bytes": true
+ },
+ "detector": {
+  "entry": "timeout --kill-after=5 900 python3 corpus/evidence/round31/cN-count.py --gate /fast/scratch/hyaku/chousa-r31/CtlDeterminism31/stub-wrapper.sh --seed 31 --receipt OUT.json",
+  "cwd": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+  "c1_counter_sha256": "154e09e7f73bebaf0afc2eed4d6c4c4ed8cb47d42518f764560a81fbcd7b555d",
+  "c2_counter_sha256": "20ed105bf93081468934eea4265028cb1274d0115058b35cec72c9cd5694bf72",
+  "expected_output_integrity_detector": "A detector rejecting duplicate or contradictory CLAIM results would reject the mutant. The frozen counters instead score only the first result for an id."
+ },
+ "actual": {
+  "c1_constant_supported": {
+   "pristine": {"label": "LINE_BINDING_MATCH=42/120", "exit": 1, "receipt": "c1-mutation-pristine.json"},
+   "mutated": {"label": "LINE_BINDING_MATCH=42/120", "exit": 1, "receipt": "c1-mutation-mutated.json"},
+   "restored": {"label": "LINE_BINDING_MATCH=42/120", "exit": 1, "receipt": "c1-mutation-restored.json"}
+  },
+  "c2_constant_supported": {
+   "pristine": {"label": "REVISION_BINDING_MATCH=40/120", "exit": 1, "receipt": "c2-mutation-pristine.json"},
+   "mutated": {"label": "REVISION_BINDING_MATCH=40/120", "exit": 1, "receipt": "c2-mutation-mutated.json"},
+   "restored": {"label": "REVISION_BINDING_MATCH=40/120", "exit": 1, "receipt": "c2-mutation-restored.json"}
+  },
+  "c1_external_truth_replay": {
+   "pristine": {"label": "LINE_BINDING_MATCH=120/120", "exit": 0, "receipt": "c1-exit0-external-truth-replay.json"},
+   "mutated": {"label": "LINE_BINDING_MATCH=120/120", "exit": 0, "receipt": "c1-duplicate-replay-mutated.json"},
+   "restored": {"label": "LINE_BINDING_MATCH=120/120", "exit": 0, "receipt": "c1-duplicate-replay-restored.json"}
+  },
+  "c2_external_truth_replay": {
+   "pristine": {"label": "REVISION_BINDING_MATCH=120/120", "exit": 0, "receipt": "c2-exit0-external-truth-replay.json"},
+   "mutated": {"label": "REVISION_BINDING_MATCH=120/120", "exit": 0, "receipt": "c2-duplicate-replay-mutated.json"},
+   "restored": {"label": "REVISION_BINDING_MATCH=120/120", "exit": 0, "receipt": "c2-duplicate-replay-restored.json"}
+  }
+ },
+ "verdict": "survived duplicate-output integrity probe; no killed mutant",
+ "interpretation": "The constant-output baselines already fail the 120/120 claim predicate, so they cannot support a killed-mutant verdict. The passing replay baseline is a trivial externally truth-fed stub used only to exercise exit 0 and duplicate parsing; it is not an admissible claim control, oracle implementation, or candidate, and its score does not demonstrate a fixture truth leak.",
+ "final_source_hashes": {
+  "tools/research-gate.sh": "ac1315ddaa12e79b68069d1a9866b9b1b55e3a43efef3ba0cb5ca5e665835765",
+  "corpus/evidence/round31/c1-count.py": "154e09e7f73bebaf0afc2eed4d6c4c4ed8cb47d42518f764560a81fbcd7b555d",
+  "corpus/evidence/round31/c2-count.py": "20ed105bf93081468934eea4265028cb1274d0115058b35cec72c9cd5694bf72",
+  "corpus/evidence/round31/claims.md": "08c879a68fd374100a1bb2a08d3be911249c64803fa2bacac0051dc5dd12c824"
+ },
+ "lane_sources_unchanged_from_initial_hashes": true,
+ "active_process_groups_after_cleanup": [],
+ "tool_installs_or_updates": []
+}

@@ -1,0 +1,11 @@
+--- oracle-c1.sh
++++ first-occurrence-only.sh
+@@ -52,7 +52,7 @@
+             found.append((start, start + span.count(b'\n')))
+         # Include overlapping occurrences; C1 quantifies over ALL occurrences.
+         offset = hay.find(span, offset + 1)
+-    return found
++    return found[:1]
+ 
+ 
+ def parse_line(value):

@@ -1,0 +1,3209 @@
+{
+  "schema": "chousa-r31-c2-kill-matrix/v1",
+  "disclosure": "Full-contract Python feasibility reference only; not a candidate implementation.",
+  "counter_sha256": "20ed105bf93081468934eea4265028cb1274d0115058b35cec72c9cd5694bf72",
+  "oracle": {
+    "artifact": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/oracle.sh",
+    "sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+    "runs": [
+      {
+        "seed": 957710451340456525,
+        "score": "REVISION_BINDING_MATCH=120/120",
+        "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/oracle-feasibility-seed957710451340456525.json",
+        "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/oracle-feasibility-seed957710451340456525.execution.json",
+        "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656"
+      },
+      {
+        "seed": 1158866592272045467,
+        "score": "REVISION_BINDING_MATCH=120/120",
+        "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/oracle-feasibility-seed1158866592272045467.json",
+        "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/oracle-feasibility-seed1158866592272045467.execution.json",
+        "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656"
+      },
+      {
+        "seed": 6871766983261281141,
+        "score": "REVISION_BINDING_MATCH=120/120",
+        "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/oracle-feasibility-seed6871766983261281141.json",
+        "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/oracle-feasibility-seed6871766983261281141.execution.json",
+        "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656"
+      },
+      {
+        "seed": 7173473380861898692,
+        "score": "REVISION_BINDING_MATCH=120/120",
+        "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/oracle-feasibility-seed7173473380861898692.json",
+        "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/oracle-feasibility-seed7173473380861898692.execution.json",
+        "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656"
+      },
+      {
+        "seed": 1742427719550887417,
+        "score": "REVISION_BINDING_MATCH=120/120",
+        "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/oracle-feasibility-seed1742427719550887417.json",
+        "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/oracle-feasibility-seed1742427719550887417.execution.json",
+        "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656"
+      }
+    ]
+  },
+  "mutants": [
+    {
+      "control": "case-insensitive",
+      "dropped_rule": "Fold supplied string to lowercase before strict shape validation and equality; uppercase hashes become accepted.",
+      "artifact": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/case-insensitive.sh",
+      "pristine_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+      "mutated_sha256": "78f7d096173cf6b004eae89b949dece3c38a89a16e3e59b3ec338fe9552b7d9d",
+      "expected_detector": "Frozen c2-count.py: pristine=120/120, mutated<120/120, restored=120/120 on the same seed.",
+      "expected_exposed_classes": [
+        "I1_invalid_sha_value"
+      ],
+      "runs": [
+        {
+          "seed": 957710451340456525,
+          "verdict": "killed",
+          "restored_exact": true,
+          "phases": {
+            "pristine": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/case-insensitive-pristine-seed957710451340456525.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/case-insensitive-pristine-seed957710451340456525.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "R1_match_span_present": "24/24",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S1_one_byte_elsewhere": "16/16",
+                "I1_invalid_sha_value": "14/14",
+                "S4_mismatch_span_absent": "10/10",
+                "S2_newline_variant": "12/12",
+                "N1_no_sha": "16/16",
+                "R2_match_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10"
+              },
+              "misses": []
+            },
+            "mutated": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/case-insensitive-mutated-seed957710451340456525.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/case-insensitive-mutated-seed957710451340456525.execution.json",
+              "score": "REVISION_BINDING_MATCH=117/120",
+              "matched": 117,
+              "counter_exit": 1,
+              "gate_exit": 1,
+              "gate_sha256": "78f7d096173cf6b004eae89b949dece3c38a89a16e3e59b3ec338fe9552b7d9d",
+              "gate_sha256_after": "78f7d096173cf6b004eae89b949dece3c38a89a16e3e59b3ec338fe9552b7d9d",
+              "per_class": {
+                "R1_match_span_present": "24/24",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S1_one_byte_elsewhere": "16/16",
+                "I1_invalid_sha_value": "11/14",
+                "S4_mismatch_span_absent": "10/10",
+                "S2_newline_variant": "12/12",
+                "N1_no_sha": "16/16",
+                "R2_match_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10"
+              },
+              "misses": [
+                {
+                  "id": "cb0deda8502",
+                  "class": "I1_invalid_sha_value",
+                  "truth": "invalid",
+                  "observed": "supported"
+                },
+                {
+                  "id": "cfd3fdf0543",
+                  "class": "I1_invalid_sha_value",
+                  "truth": "invalid",
+                  "observed": "supported"
+                },
+                {
+                  "id": "cfb6ed98b83",
+                  "class": "I1_invalid_sha_value",
+                  "truth": "invalid",
+                  "observed": "supported"
+                }
+              ]
+            },
+            "restored": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/case-insensitive-restored-seed957710451340456525.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/case-insensitive-restored-seed957710451340456525.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "R1_match_span_present": "24/24",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S1_one_byte_elsewhere": "16/16",
+                "I1_invalid_sha_value": "14/14",
+                "S4_mismatch_span_absent": "10/10",
+                "S2_newline_variant": "12/12",
+                "N1_no_sha": "16/16",
+                "R2_match_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10"
+              },
+              "misses": []
+            }
+          }
+        },
+        {
+          "seed": 1158866592272045467,
+          "verdict": "killed",
+          "restored_exact": true,
+          "phases": {
+            "pristine": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/case-insensitive-pristine-seed1158866592272045467.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/case-insensitive-pristine-seed1158866592272045467.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "I1_invalid_sha_value": "14/14",
+                "R1_match_span_present": "24/24",
+                "S1_one_byte_elsewhere": "16/16",
+                "S4_mismatch_span_absent": "10/10",
+                "R2_match_span_absent": "10/10",
+                "N1_no_sha": "16/16",
+                "S3_hash_of_span_only": "10/10",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S2_newline_variant": "12/12"
+              },
+              "misses": []
+            },
+            "mutated": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/case-insensitive-mutated-seed1158866592272045467.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/case-insensitive-mutated-seed1158866592272045467.execution.json",
+              "score": "REVISION_BINDING_MATCH=116/120",
+              "matched": 116,
+              "counter_exit": 1,
+              "gate_exit": 1,
+              "gate_sha256": "78f7d096173cf6b004eae89b949dece3c38a89a16e3e59b3ec338fe9552b7d9d",
+              "gate_sha256_after": "78f7d096173cf6b004eae89b949dece3c38a89a16e3e59b3ec338fe9552b7d9d",
+              "per_class": {
+                "I1_invalid_sha_value": "10/14",
+                "R1_match_span_present": "24/24",
+                "S1_one_byte_elsewhere": "16/16",
+                "S4_mismatch_span_absent": "10/10",
+                "R2_match_span_absent": "10/10",
+                "N1_no_sha": "16/16",
+                "S3_hash_of_span_only": "10/10",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S2_newline_variant": "12/12"
+              },
+              "misses": [
+                {
+                  "id": "cccc550b493",
+                  "class": "I1_invalid_sha_value",
+                  "truth": "invalid",
+                  "observed": "supported"
+                },
+                {
+                  "id": "c747188d6ca",
+                  "class": "I1_invalid_sha_value",
+                  "truth": "invalid",
+                  "observed": "supported"
+                },
+                {
+                  "id": "ce6b141bb69",
+                  "class": "I1_invalid_sha_value",
+                  "truth": "invalid",
+                  "observed": "supported"
+                },
+                {
+                  "id": "c43142ee133",
+                  "class": "I1_invalid_sha_value",
+                  "truth": "invalid",
+                  "observed": "supported"
+                }
+              ]
+            },
+            "restored": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/case-insensitive-restored-seed1158866592272045467.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/case-insensitive-restored-seed1158866592272045467.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "I1_invalid_sha_value": "14/14",
+                "R1_match_span_present": "24/24",
+                "S1_one_byte_elsewhere": "16/16",
+                "S4_mismatch_span_absent": "10/10",
+                "R2_match_span_absent": "10/10",
+                "N1_no_sha": "16/16",
+                "S3_hash_of_span_only": "10/10",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S2_newline_variant": "12/12"
+              },
+              "misses": []
+            }
+          }
+        },
+        {
+          "seed": 6871766983261281141,
+          "verdict": "killed",
+          "restored_exact": true,
+          "phases": {
+            "pristine": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/case-insensitive-pristine-seed6871766983261281141.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/case-insensitive-pristine-seed6871766983261281141.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "N1_no_sha": "16/16",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "R1_match_span_present": "24/24",
+                "S2_newline_variant": "12/12",
+                "I1_invalid_sha_value": "14/14",
+                "R2_match_span_absent": "10/10",
+                "S4_mismatch_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10",
+                "S1_one_byte_elsewhere": "16/16"
+              },
+              "misses": []
+            },
+            "mutated": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/case-insensitive-mutated-seed6871766983261281141.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/case-insensitive-mutated-seed6871766983261281141.execution.json",
+              "score": "REVISION_BINDING_MATCH=115/120",
+              "matched": 115,
+              "counter_exit": 1,
+              "gate_exit": 1,
+              "gate_sha256": "78f7d096173cf6b004eae89b949dece3c38a89a16e3e59b3ec338fe9552b7d9d",
+              "gate_sha256_after": "78f7d096173cf6b004eae89b949dece3c38a89a16e3e59b3ec338fe9552b7d9d",
+              "per_class": {
+                "N1_no_sha": "16/16",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "R1_match_span_present": "24/24",
+                "S2_newline_variant": "12/12",
+                "I1_invalid_sha_value": "9/14",
+                "R2_match_span_absent": "10/10",
+                "S4_mismatch_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10",
+                "S1_one_byte_elsewhere": "16/16"
+              },
+              "misses": [
+                {
+                  "id": "c3ba8bdf32b",
+                  "class": "I1_invalid_sha_value",
+                  "truth": "invalid",
+                  "observed": "supported"
+                },
+                {
+                  "id": "c487de04671",
+                  "class": "I1_invalid_sha_value",
+                  "truth": "invalid",
+                  "observed": "supported"
+                },
+                {
+                  "id": "c79fe33eaa5",
+                  "class": "I1_invalid_sha_value",
+                  "truth": "invalid",
+                  "observed": "supported"
+                },
+                {
+                  "id": "c397ef1e1ed",
+                  "class": "I1_invalid_sha_value",
+                  "truth": "invalid",
+                  "observed": "supported"
+                },
+                {
+                  "id": "cee7bc4bd11",
+                  "class": "I1_invalid_sha_value",
+                  "truth": "invalid",
+                  "observed": "supported"
+                }
+              ]
+            },
+            "restored": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/case-insensitive-restored-seed6871766983261281141.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/case-insensitive-restored-seed6871766983261281141.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "N1_no_sha": "16/16",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "R1_match_span_present": "24/24",
+                "S2_newline_variant": "12/12",
+                "I1_invalid_sha_value": "14/14",
+                "R2_match_span_absent": "10/10",
+                "S4_mismatch_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10",
+                "S1_one_byte_elsewhere": "16/16"
+              },
+              "misses": []
+            }
+          }
+        }
+      ],
+      "scores": [
+        117,
+        116,
+        115
+      ],
+      "verdicts": [
+        "killed",
+        "killed",
+        "killed"
+      ]
+    },
+    {
+      "control": "normalized-eol",
+      "dropped_rule": "Normalize CRLF and CR to LF and remove trailing LF bytes before hashing, instead of hashing exact source bytes.",
+      "artifact": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/normalized-eol.sh",
+      "pristine_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+      "mutated_sha256": "bddccf99bc81f879d04a72191e1ed4f4716c8512c7d8f576ce2e7f4b3fceb3e7",
+      "expected_detector": "Frozen c2-count.py: pristine=120/120, mutated<120/120, restored=120/120 on the same seed.",
+      "expected_exposed_classes": [
+        "R1_match_span_present",
+        "R2_match_span_absent",
+        "S2_newline_variant"
+      ],
+      "runs": [
+        {
+          "seed": 957710451340456525,
+          "verdict": "killed",
+          "restored_exact": true,
+          "phases": {
+            "pristine": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/normalized-eol-pristine-seed957710451340456525.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/normalized-eol-pristine-seed957710451340456525.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "R1_match_span_present": "24/24",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S1_one_byte_elsewhere": "16/16",
+                "I1_invalid_sha_value": "14/14",
+                "S4_mismatch_span_absent": "10/10",
+                "S2_newline_variant": "12/12",
+                "N1_no_sha": "16/16",
+                "R2_match_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10"
+              },
+              "misses": []
+            },
+            "mutated": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/normalized-eol-mutated-seed957710451340456525.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/normalized-eol-mutated-seed957710451340456525.execution.json",
+              "score": "REVISION_BINDING_MATCH=84/120",
+              "matched": 84,
+              "counter_exit": 1,
+              "gate_exit": 1,
+              "gate_sha256": "bddccf99bc81f879d04a72191e1ed4f4716c8512c7d8f576ce2e7f4b3fceb3e7",
+              "gate_sha256_after": "bddccf99bc81f879d04a72191e1ed4f4716c8512c7d8f576ce2e7f4b3fceb3e7",
+              "per_class": {
+                "R1_match_span_present": "0/24",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S1_one_byte_elsewhere": "16/16",
+                "I1_invalid_sha_value": "14/14",
+                "S4_mismatch_span_absent": "10/10",
+                "S2_newline_variant": "10/12",
+                "N1_no_sha": "16/16",
+                "R2_match_span_absent": "0/10",
+                "S3_hash_of_span_only": "10/10"
+              },
+              "misses": [
+                {
+                  "id": "c6defd38fd1",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c80bf4429d5",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c702890ae38",
+                  "class": "S2_newline_variant",
+                  "truth": "stale",
+                  "observed": "supported"
+                },
+                {
+                  "id": "c2f182d76bc",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cfa8a8e59c5",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c652b0219c2",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c86ff82ffe1",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cb879dbb510",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c2694f35102",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ccaeb18548e",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c6bd0c7ee9a",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c40eaa45542",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c15525b703c",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ca6d3ba68fa",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c4382c9f7d3",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ccadf3aa104",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c19ff803275",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cd93504f189",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c984c42bc93",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c295ed8dfbf",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cf1cc2c0447",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ce366906fbf",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c31e2061dd0",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c760457aa0b",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c0d54ca8af5",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ceefa1533b5",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c102dd98b86",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cfdb202e7e7",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ca9f4c79b6c",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c0efd2eba8f",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c213c0a0dd7",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c4930851e79",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ceead7b9cda",
+                  "class": "S2_newline_variant",
+                  "truth": "stale",
+                  "observed": "supported"
+                },
+                {
+                  "id": "cdc8bcfb75f",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cfa04e33063",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c03efdb1864",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                }
+              ]
+            },
+            "restored": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/normalized-eol-restored-seed957710451340456525.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/normalized-eol-restored-seed957710451340456525.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "R1_match_span_present": "24/24",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S1_one_byte_elsewhere": "16/16",
+                "I1_invalid_sha_value": "14/14",
+                "S4_mismatch_span_absent": "10/10",
+                "S2_newline_variant": "12/12",
+                "N1_no_sha": "16/16",
+                "R2_match_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10"
+              },
+              "misses": []
+            }
+          }
+        },
+        {
+          "seed": 1158866592272045467,
+          "verdict": "killed",
+          "restored_exact": true,
+          "phases": {
+            "pristine": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/normalized-eol-pristine-seed1158866592272045467.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/normalized-eol-pristine-seed1158866592272045467.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "I1_invalid_sha_value": "14/14",
+                "R1_match_span_present": "24/24",
+                "S1_one_byte_elsewhere": "16/16",
+                "S4_mismatch_span_absent": "10/10",
+                "R2_match_span_absent": "10/10",
+                "N1_no_sha": "16/16",
+                "S3_hash_of_span_only": "10/10",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S2_newline_variant": "12/12"
+              },
+              "misses": []
+            },
+            "mutated": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/normalized-eol-mutated-seed1158866592272045467.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/normalized-eol-mutated-seed1158866592272045467.execution.json",
+              "score": "REVISION_BINDING_MATCH=83/120",
+              "matched": 83,
+              "counter_exit": 1,
+              "gate_exit": 1,
+              "gate_sha256": "bddccf99bc81f879d04a72191e1ed4f4716c8512c7d8f576ce2e7f4b3fceb3e7",
+              "gate_sha256_after": "bddccf99bc81f879d04a72191e1ed4f4716c8512c7d8f576ce2e7f4b3fceb3e7",
+              "per_class": {
+                "I1_invalid_sha_value": "14/14",
+                "R1_match_span_present": "0/24",
+                "S1_one_byte_elsewhere": "16/16",
+                "S4_mismatch_span_absent": "10/10",
+                "R2_match_span_absent": "0/10",
+                "N1_no_sha": "16/16",
+                "S3_hash_of_span_only": "10/10",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S2_newline_variant": "9/12"
+              },
+              "misses": [
+                {
+                  "id": "c4ba298dc23",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c0ded035daa",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cc3dc020a97",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cca9536596a",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cf15034f81e",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cfefe11f156",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cdde7e85c36",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ce1ac656cc4",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cdd6ed28562",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c9a3db1067c",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c833e0ee02a",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ca7bf1eaa8c",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ce1d0b7b804",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cb170e88556",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cd1abe9a19a",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cf62f068de4",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ca66441dad0",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cc0813a625c",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cb84eb2eb90",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cb780bf31d7",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c163e94accb",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cdd6c92a953",
+                  "class": "S2_newline_variant",
+                  "truth": "stale",
+                  "observed": "supported"
+                },
+                {
+                  "id": "c6eb1572e35",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c88d8318f3a",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c0ef2828a80",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cc9767a7eae",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c6ec98de30f",
+                  "class": "S2_newline_variant",
+                  "truth": "stale",
+                  "observed": "supported"
+                },
+                {
+                  "id": "c6bfdd5f0bc",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c7eeaeccfd4",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c82f6e04e69",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c2fe78612cf",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c31d7e139f1",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cff48130d48",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ce30e77cc67",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c5bce7de1ca",
+                  "class": "S2_newline_variant",
+                  "truth": "stale",
+                  "observed": "supported"
+                },
+                {
+                  "id": "c0c896811a7",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c81e298f602",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                }
+              ]
+            },
+            "restored": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/normalized-eol-restored-seed1158866592272045467.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/normalized-eol-restored-seed1158866592272045467.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "I1_invalid_sha_value": "14/14",
+                "R1_match_span_present": "24/24",
+                "S1_one_byte_elsewhere": "16/16",
+                "S4_mismatch_span_absent": "10/10",
+                "R2_match_span_absent": "10/10",
+                "N1_no_sha": "16/16",
+                "S3_hash_of_span_only": "10/10",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S2_newline_variant": "12/12"
+              },
+              "misses": []
+            }
+          }
+        },
+        {
+          "seed": 6871766983261281141,
+          "verdict": "killed",
+          "restored_exact": true,
+          "phases": {
+            "pristine": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/normalized-eol-pristine-seed6871766983261281141.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/normalized-eol-pristine-seed6871766983261281141.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "N1_no_sha": "16/16",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "R1_match_span_present": "24/24",
+                "S2_newline_variant": "12/12",
+                "I1_invalid_sha_value": "14/14",
+                "R2_match_span_absent": "10/10",
+                "S4_mismatch_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10",
+                "S1_one_byte_elsewhere": "16/16"
+              },
+              "misses": []
+            },
+            "mutated": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/normalized-eol-mutated-seed6871766983261281141.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/normalized-eol-mutated-seed6871766983261281141.execution.json",
+              "score": "REVISION_BINDING_MATCH=82/120",
+              "matched": 82,
+              "counter_exit": 1,
+              "gate_exit": 1,
+              "gate_sha256": "bddccf99bc81f879d04a72191e1ed4f4716c8512c7d8f576ce2e7f4b3fceb3e7",
+              "gate_sha256_after": "bddccf99bc81f879d04a72191e1ed4f4716c8512c7d8f576ce2e7f4b3fceb3e7",
+              "per_class": {
+                "N1_no_sha": "16/16",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "R1_match_span_present": "0/24",
+                "S2_newline_variant": "8/12",
+                "I1_invalid_sha_value": "14/14",
+                "R2_match_span_absent": "0/10",
+                "S4_mismatch_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10",
+                "S1_one_byte_elsewhere": "16/16"
+              },
+              "misses": [
+                {
+                  "id": "c17dcaf20d7",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c0efe2e9d26",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ca8f928ae09",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cff5bb9b6e8",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c9b1ccd2848",
+                  "class": "S2_newline_variant",
+                  "truth": "stale",
+                  "observed": "supported"
+                },
+                {
+                  "id": "cad44994bb7",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c2664383048",
+                  "class": "S2_newline_variant",
+                  "truth": "stale",
+                  "observed": "supported"
+                },
+                {
+                  "id": "c8530a52b62",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c62f23af47a",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cb8507354db",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c0175a746be",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cbfb016cd8c",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c7baa21afff",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cc7b4debaab",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cfcb2d0ea3d",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cf2f752d979",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cbc161df644",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c92b29b9772",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c3e1f682bd7",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c702b4ebc0f",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c062a550ff4",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c045233b9a9",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c0810c60fac",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c85b6fc7040",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ce4c35cae23",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c693d1d97eb",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ca51289070b",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ce0025b08f2",
+                  "class": "S2_newline_variant",
+                  "truth": "stale",
+                  "observed": "supported"
+                },
+                {
+                  "id": "cf1cad673f8",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c057df70b9d",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ce92c8150c4",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cf3b0349cb9",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c937cf02cbb",
+                  "class": "S2_newline_variant",
+                  "truth": "stale",
+                  "observed": "supported"
+                },
+                {
+                  "id": "ccf259ce802",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c71e37ab8fb",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c51df559aac",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c75a8fa1f68",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c619faa7e74",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                }
+              ]
+            },
+            "restored": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/normalized-eol-restored-seed6871766983261281141.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/normalized-eol-restored-seed6871766983261281141.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "N1_no_sha": "16/16",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "R1_match_span_present": "24/24",
+                "S2_newline_variant": "12/12",
+                "I1_invalid_sha_value": "14/14",
+                "R2_match_span_absent": "10/10",
+                "S4_mismatch_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10",
+                "S1_one_byte_elsewhere": "16/16"
+              },
+              "misses": []
+            }
+          }
+        }
+      ],
+      "scores": [
+        84,
+        83,
+        82
+      ],
+      "verdicts": [
+        "killed",
+        "killed",
+        "killed"
+      ]
+    },
+    {
+      "control": "span-before-stale",
+      "dropped_rule": "Return unsupported for an absent boundary-delimited span before checking whether the source hash is stale.",
+      "artifact": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/span-before-stale.sh",
+      "pristine_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+      "mutated_sha256": "297dcda833d3cf5f5fb2da97f08dfc4f03f38fa3a4ba50351d6542a66e69e13a",
+      "expected_detector": "Frozen c2-count.py: pristine=120/120, mutated<120/120, restored=120/120 on the same seed.",
+      "expected_exposed_classes": [
+        "S4_mismatch_span_absent"
+      ],
+      "runs": [
+        {
+          "seed": 957710451340456525,
+          "verdict": "killed",
+          "restored_exact": true,
+          "phases": {
+            "pristine": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/span-before-stale-pristine-seed957710451340456525.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/span-before-stale-pristine-seed957710451340456525.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "R1_match_span_present": "24/24",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S1_one_byte_elsewhere": "16/16",
+                "I1_invalid_sha_value": "14/14",
+                "S4_mismatch_span_absent": "10/10",
+                "S2_newline_variant": "12/12",
+                "N1_no_sha": "16/16",
+                "R2_match_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10"
+              },
+              "misses": []
+            },
+            "mutated": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/span-before-stale-mutated-seed957710451340456525.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/span-before-stale-mutated-seed957710451340456525.execution.json",
+              "score": "REVISION_BINDING_MATCH=110/120",
+              "matched": 110,
+              "counter_exit": 1,
+              "gate_exit": 1,
+              "gate_sha256": "297dcda833d3cf5f5fb2da97f08dfc4f03f38fa3a4ba50351d6542a66e69e13a",
+              "gate_sha256_after": "297dcda833d3cf5f5fb2da97f08dfc4f03f38fa3a4ba50351d6542a66e69e13a",
+              "per_class": {
+                "R1_match_span_present": "24/24",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S1_one_byte_elsewhere": "16/16",
+                "I1_invalid_sha_value": "14/14",
+                "S4_mismatch_span_absent": "0/10",
+                "S2_newline_variant": "12/12",
+                "N1_no_sha": "16/16",
+                "R2_match_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10"
+              },
+              "misses": [
+                {
+                  "id": "c26452b0700",
+                  "class": "S4_mismatch_span_absent",
+                  "truth": "stale",
+                  "observed": "unsupported"
+                },
+                {
+                  "id": "cc822c6db80",
+                  "class": "S4_mismatch_span_absent",
+                  "truth": "stale",
+                  "observed": "unsupported"
+                },
+                {
+                  "id": "c79f3d479fc",
+                  "class": "S4_mismatch_span_absent",
+                  "truth": "stale",
+                  "observed": "unsupported"
+                },
+                {
+                  "id": "c68e453bf6d",
+                  "class": "S4_mismatch_span_absent",
+                  "truth": "stale",
+                  "observed": "unsupported"
+                },
+                {
+                  "id": "c39b4e8b1e2",
+                  "class": "S4_mismatch_span_absent",
+                  "truth": "stale",
+                  "observed": "unsupported"
+                },
+                {
+                  "id": "c5b468ec8b9",
+                  "class": "S4_mismatch_span_absent",
+                  "truth": "stale",
+                  "observed": "unsupported"
+                },
+                {
+                  "id": "c649d4ee192",
+                  "class": "S4_mismatch_span_absent",
+                  "truth": "stale",
+                  "observed": "unsupported"
+                },
+                {
+                  "id": "c3430a2fc8d",
+                  "class": "S4_mismatch_span_absent",
+                  "truth": "stale",
+                  "observed": "unsupported"
+                },
+                {
+                  "id": "c5613339ba9",
+                  "class": "S4_mismatch_span_absent",
+                  "truth": "stale",
+                  "observed": "unsupported"
+                },
+                {
+                  "id": "c445f4e6f94",
+                  "class": "S4_mismatch_span_absent",
+                  "truth": "stale",
+                  "observed": "unsupported"
+                }
+              ]
+            },
+            "restored": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/span-before-stale-restored-seed957710451340456525.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/span-before-stale-restored-seed957710451340456525.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "R1_match_span_present": "24/24",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S1_one_byte_elsewhere": "16/16",
+                "I1_invalid_sha_value": "14/14",
+                "S4_mismatch_span_absent": "10/10",
+                "S2_newline_variant": "12/12",
+                "N1_no_sha": "16/16",
+                "R2_match_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10"
+              },
+              "misses": []
+            }
+          }
+        },
+        {
+          "seed": 1158866592272045467,
+          "verdict": "killed",
+          "restored_exact": true,
+          "phases": {
+            "pristine": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/span-before-stale-pristine-seed1158866592272045467.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/span-before-stale-pristine-seed1158866592272045467.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "I1_invalid_sha_value": "14/14",
+                "R1_match_span_present": "24/24",
+                "S1_one_byte_elsewhere": "16/16",
+                "S4_mismatch_span_absent": "10/10",
+                "R2_match_span_absent": "10/10",
+                "N1_no_sha": "16/16",
+                "S3_hash_of_span_only": "10/10",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S2_newline_variant": "12/12"
+              },
+              "misses": []
+            },
+            "mutated": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/span-before-stale-mutated-seed1158866592272045467.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/span-before-stale-mutated-seed1158866592272045467.execution.json",
+              "score": "REVISION_BINDING_MATCH=110/120",
+              "matched": 110,
+              "counter_exit": 1,
+              "gate_exit": 1,
+              "gate_sha256": "297dcda833d3cf5f5fb2da97f08dfc4f03f38fa3a4ba50351d6542a66e69e13a",
+              "gate_sha256_after": "297dcda833d3cf5f5fb2da97f08dfc4f03f38fa3a4ba50351d6542a66e69e13a",
+              "per_class": {
+                "I1_invalid_sha_value": "14/14",
+                "R1_match_span_present": "24/24",
+                "S1_one_byte_elsewhere": "16/16",
+                "S4_mismatch_span_absent": "0/10",
+                "R2_match_span_absent": "10/10",
+                "N1_no_sha": "16/16",
+                "S3_hash_of_span_only": "10/10",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S2_newline_variant": "12/12"
+              },
+              "misses": [
+                {
+                  "id": "cfc6f1dbbc0",
+                  "class": "S4_mismatch_span_absent",
+                  "truth": "stale",
+                  "observed": "unsupported"
+                },
+                {
+                  "id": "ce971c7ab5d",
+                  "class": "S4_mismatch_span_absent",
+                  "truth": "stale",
+                  "observed": "unsupported"
+                },
+                {
+                  "id": "cb6d0670c18",
+                  "class": "S4_mismatch_span_absent",
+                  "truth": "stale",
+                  "observed": "unsupported"
+                },
+                {
+                  "id": "c740bb7e825",
+                  "class": "S4_mismatch_span_absent",
+                  "truth": "stale",
+                  "observed": "unsupported"
+                },
+                {
+                  "id": "ca96d6fadaa",
+                  "class": "S4_mismatch_span_absent",
+                  "truth": "stale",
+                  "observed": "unsupported"
+                },
+                {
+                  "id": "cfab21bc967",
+                  "class": "S4_mismatch_span_absent",
+                  "truth": "stale",
+                  "observed": "unsupported"
+                },
+                {
+                  "id": "c90334e9566",
+                  "class": "S4_mismatch_span_absent",
+                  "truth": "stale",
+                  "observed": "unsupported"
+                },
+                {
+                  "id": "c19ea740c4c",
+                  "class": "S4_mismatch_span_absent",
+                  "truth": "stale",
+                  "observed": "unsupported"
+                },
+                {
+                  "id": "c9922f3b3fd",
+                  "class": "S4_mismatch_span_absent",
+                  "truth": "stale",
+                  "observed": "unsupported"
+                },
+                {
+                  "id": "c733c458d55",
+                  "class": "S4_mismatch_span_absent",
+                  "truth": "stale",
+                  "observed": "unsupported"
+                }
+              ]
+            },
+            "restored": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/span-before-stale-restored-seed1158866592272045467.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/span-before-stale-restored-seed1158866592272045467.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "I1_invalid_sha_value": "14/14",
+                "R1_match_span_present": "24/24",
+                "S1_one_byte_elsewhere": "16/16",
+                "S4_mismatch_span_absent": "10/10",
+                "R2_match_span_absent": "10/10",
+                "N1_no_sha": "16/16",
+                "S3_hash_of_span_only": "10/10",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S2_newline_variant": "12/12"
+              },
+              "misses": []
+            }
+          }
+        },
+        {
+          "seed": 6871766983261281141,
+          "verdict": "killed",
+          "restored_exact": true,
+          "phases": {
+            "pristine": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/span-before-stale-pristine-seed6871766983261281141.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/span-before-stale-pristine-seed6871766983261281141.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "N1_no_sha": "16/16",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "R1_match_span_present": "24/24",
+                "S2_newline_variant": "12/12",
+                "I1_invalid_sha_value": "14/14",
+                "R2_match_span_absent": "10/10",
+                "S4_mismatch_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10",
+                "S1_one_byte_elsewhere": "16/16"
+              },
+              "misses": []
+            },
+            "mutated": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/span-before-stale-mutated-seed6871766983261281141.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/span-before-stale-mutated-seed6871766983261281141.execution.json",
+              "score": "REVISION_BINDING_MATCH=110/120",
+              "matched": 110,
+              "counter_exit": 1,
+              "gate_exit": 1,
+              "gate_sha256": "297dcda833d3cf5f5fb2da97f08dfc4f03f38fa3a4ba50351d6542a66e69e13a",
+              "gate_sha256_after": "297dcda833d3cf5f5fb2da97f08dfc4f03f38fa3a4ba50351d6542a66e69e13a",
+              "per_class": {
+                "N1_no_sha": "16/16",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "R1_match_span_present": "24/24",
+                "S2_newline_variant": "12/12",
+                "I1_invalid_sha_value": "14/14",
+                "R2_match_span_absent": "10/10",
+                "S4_mismatch_span_absent": "0/10",
+                "S3_hash_of_span_only": "10/10",
+                "S1_one_byte_elsewhere": "16/16"
+              },
+              "misses": [
+                {
+                  "id": "ce2450cbe0e",
+                  "class": "S4_mismatch_span_absent",
+                  "truth": "stale",
+                  "observed": "unsupported"
+                },
+                {
+                  "id": "c87553c1e51",
+                  "class": "S4_mismatch_span_absent",
+                  "truth": "stale",
+                  "observed": "unsupported"
+                },
+                {
+                  "id": "c8521274283",
+                  "class": "S4_mismatch_span_absent",
+                  "truth": "stale",
+                  "observed": "unsupported"
+                },
+                {
+                  "id": "c6c1271d73a",
+                  "class": "S4_mismatch_span_absent",
+                  "truth": "stale",
+                  "observed": "unsupported"
+                },
+                {
+                  "id": "c14a5dd9b56",
+                  "class": "S4_mismatch_span_absent",
+                  "truth": "stale",
+                  "observed": "unsupported"
+                },
+                {
+                  "id": "c82ddf09af8",
+                  "class": "S4_mismatch_span_absent",
+                  "truth": "stale",
+                  "observed": "unsupported"
+                },
+                {
+                  "id": "c4312c30551",
+                  "class": "S4_mismatch_span_absent",
+                  "truth": "stale",
+                  "observed": "unsupported"
+                },
+                {
+                  "id": "c2f627fc7b8",
+                  "class": "S4_mismatch_span_absent",
+                  "truth": "stale",
+                  "observed": "unsupported"
+                },
+                {
+                  "id": "c8802b46d8e",
+                  "class": "S4_mismatch_span_absent",
+                  "truth": "stale",
+                  "observed": "unsupported"
+                },
+                {
+                  "id": "c7852b1c8cb",
+                  "class": "S4_mismatch_span_absent",
+                  "truth": "stale",
+                  "observed": "unsupported"
+                }
+              ]
+            },
+            "restored": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/span-before-stale-restored-seed6871766983261281141.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/span-before-stale-restored-seed6871766983261281141.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "N1_no_sha": "16/16",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "R1_match_span_present": "24/24",
+                "S2_newline_variant": "12/12",
+                "I1_invalid_sha_value": "14/14",
+                "R2_match_span_absent": "10/10",
+                "S4_mismatch_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10",
+                "S1_one_byte_elsewhere": "16/16"
+              },
+              "misses": []
+            }
+          }
+        }
+      ],
+      "scores": [
+        110,
+        110,
+        110
+      ],
+      "verdicts": [
+        "killed",
+        "killed",
+        "killed"
+      ]
+    },
+    {
+      "control": "accept-prefix",
+      "dropped_rule": "Remove one 'sha256:' prefix from the supplied string before strict validation and equality.",
+      "artifact": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/accept-prefix.sh",
+      "pristine_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+      "mutated_sha256": "21c5a63c39b9fb57179da3df7c3b5a04f6eff5f3198b5ae6c0b04c94974ffeff",
+      "expected_detector": "Frozen c2-count.py: pristine=120/120, mutated<120/120, restored=120/120 on the same seed.",
+      "expected_exposed_classes": [
+        "I1_invalid_sha_value"
+      ],
+      "runs": [
+        {
+          "seed": 957710451340456525,
+          "verdict": "killed",
+          "restored_exact": true,
+          "phases": {
+            "pristine": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/accept-prefix-pristine-seed957710451340456525.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/accept-prefix-pristine-seed957710451340456525.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "R1_match_span_present": "24/24",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S1_one_byte_elsewhere": "16/16",
+                "I1_invalid_sha_value": "14/14",
+                "S4_mismatch_span_absent": "10/10",
+                "S2_newline_variant": "12/12",
+                "N1_no_sha": "16/16",
+                "R2_match_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10"
+              },
+              "misses": []
+            },
+            "mutated": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/accept-prefix-mutated-seed957710451340456525.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/accept-prefix-mutated-seed957710451340456525.execution.json",
+              "score": "REVISION_BINDING_MATCH=116/120",
+              "matched": 116,
+              "counter_exit": 1,
+              "gate_exit": 1,
+              "gate_sha256": "21c5a63c39b9fb57179da3df7c3b5a04f6eff5f3198b5ae6c0b04c94974ffeff",
+              "gate_sha256_after": "21c5a63c39b9fb57179da3df7c3b5a04f6eff5f3198b5ae6c0b04c94974ffeff",
+              "per_class": {
+                "R1_match_span_present": "24/24",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S1_one_byte_elsewhere": "16/16",
+                "I1_invalid_sha_value": "10/14",
+                "S4_mismatch_span_absent": "10/10",
+                "S2_newline_variant": "12/12",
+                "N1_no_sha": "16/16",
+                "R2_match_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10"
+              },
+              "misses": [
+                {
+                  "id": "c309de510a0",
+                  "class": "I1_invalid_sha_value",
+                  "truth": "invalid",
+                  "observed": "supported"
+                },
+                {
+                  "id": "ce2f1f5ccd7",
+                  "class": "I1_invalid_sha_value",
+                  "truth": "invalid",
+                  "observed": "supported"
+                },
+                {
+                  "id": "c2c6792fffc",
+                  "class": "I1_invalid_sha_value",
+                  "truth": "invalid",
+                  "observed": "supported"
+                },
+                {
+                  "id": "c67f6bda7f7",
+                  "class": "I1_invalid_sha_value",
+                  "truth": "invalid",
+                  "observed": "supported"
+                }
+              ]
+            },
+            "restored": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/accept-prefix-restored-seed957710451340456525.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/accept-prefix-restored-seed957710451340456525.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "R1_match_span_present": "24/24",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S1_one_byte_elsewhere": "16/16",
+                "I1_invalid_sha_value": "14/14",
+                "S4_mismatch_span_absent": "10/10",
+                "S2_newline_variant": "12/12",
+                "N1_no_sha": "16/16",
+                "R2_match_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10"
+              },
+              "misses": []
+            }
+          }
+        },
+        {
+          "seed": 1158866592272045467,
+          "verdict": "killed",
+          "restored_exact": true,
+          "phases": {
+            "pristine": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/accept-prefix-pristine-seed1158866592272045467.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/accept-prefix-pristine-seed1158866592272045467.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "I1_invalid_sha_value": "14/14",
+                "R1_match_span_present": "24/24",
+                "S1_one_byte_elsewhere": "16/16",
+                "S4_mismatch_span_absent": "10/10",
+                "R2_match_span_absent": "10/10",
+                "N1_no_sha": "16/16",
+                "S3_hash_of_span_only": "10/10",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S2_newline_variant": "12/12"
+              },
+              "misses": []
+            },
+            "mutated": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/accept-prefix-mutated-seed1158866592272045467.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/accept-prefix-mutated-seed1158866592272045467.execution.json",
+              "score": "REVISION_BINDING_MATCH=113/120",
+              "matched": 113,
+              "counter_exit": 1,
+              "gate_exit": 1,
+              "gate_sha256": "21c5a63c39b9fb57179da3df7c3b5a04f6eff5f3198b5ae6c0b04c94974ffeff",
+              "gate_sha256_after": "21c5a63c39b9fb57179da3df7c3b5a04f6eff5f3198b5ae6c0b04c94974ffeff",
+              "per_class": {
+                "I1_invalid_sha_value": "7/14",
+                "R1_match_span_present": "24/24",
+                "S1_one_byte_elsewhere": "16/16",
+                "S4_mismatch_span_absent": "10/10",
+                "R2_match_span_absent": "10/10",
+                "N1_no_sha": "16/16",
+                "S3_hash_of_span_only": "10/10",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S2_newline_variant": "12/12"
+              },
+              "misses": [
+                {
+                  "id": "cfce54051db",
+                  "class": "I1_invalid_sha_value",
+                  "truth": "invalid",
+                  "observed": "supported"
+                },
+                {
+                  "id": "c123c80cccd",
+                  "class": "I1_invalid_sha_value",
+                  "truth": "invalid",
+                  "observed": "supported"
+                },
+                {
+                  "id": "c7e571be92c",
+                  "class": "I1_invalid_sha_value",
+                  "truth": "invalid",
+                  "observed": "supported"
+                },
+                {
+                  "id": "ced8c8d4bbe",
+                  "class": "I1_invalid_sha_value",
+                  "truth": "invalid",
+                  "observed": "supported"
+                },
+                {
+                  "id": "cf978f14a2b",
+                  "class": "I1_invalid_sha_value",
+                  "truth": "invalid",
+                  "observed": "supported"
+                },
+                {
+                  "id": "c442483a831",
+                  "class": "I1_invalid_sha_value",
+                  "truth": "invalid",
+                  "observed": "supported"
+                },
+                {
+                  "id": "cd47f41bf14",
+                  "class": "I1_invalid_sha_value",
+                  "truth": "invalid",
+                  "observed": "supported"
+                }
+              ]
+            },
+            "restored": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/accept-prefix-restored-seed1158866592272045467.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/accept-prefix-restored-seed1158866592272045467.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "I1_invalid_sha_value": "14/14",
+                "R1_match_span_present": "24/24",
+                "S1_one_byte_elsewhere": "16/16",
+                "S4_mismatch_span_absent": "10/10",
+                "R2_match_span_absent": "10/10",
+                "N1_no_sha": "16/16",
+                "S3_hash_of_span_only": "10/10",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S2_newline_variant": "12/12"
+              },
+              "misses": []
+            }
+          }
+        },
+        {
+          "seed": 6871766983261281141,
+          "verdict": "killed",
+          "restored_exact": true,
+          "phases": {
+            "pristine": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/accept-prefix-pristine-seed6871766983261281141.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/accept-prefix-pristine-seed6871766983261281141.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "N1_no_sha": "16/16",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "R1_match_span_present": "24/24",
+                "S2_newline_variant": "12/12",
+                "I1_invalid_sha_value": "14/14",
+                "R2_match_span_absent": "10/10",
+                "S4_mismatch_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10",
+                "S1_one_byte_elsewhere": "16/16"
+              },
+              "misses": []
+            },
+            "mutated": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/accept-prefix-mutated-seed6871766983261281141.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/accept-prefix-mutated-seed6871766983261281141.execution.json",
+              "score": "REVISION_BINDING_MATCH=119/120",
+              "matched": 119,
+              "counter_exit": 1,
+              "gate_exit": 1,
+              "gate_sha256": "21c5a63c39b9fb57179da3df7c3b5a04f6eff5f3198b5ae6c0b04c94974ffeff",
+              "gate_sha256_after": "21c5a63c39b9fb57179da3df7c3b5a04f6eff5f3198b5ae6c0b04c94974ffeff",
+              "per_class": {
+                "N1_no_sha": "16/16",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "R1_match_span_present": "24/24",
+                "S2_newline_variant": "12/12",
+                "I1_invalid_sha_value": "13/14",
+                "R2_match_span_absent": "10/10",
+                "S4_mismatch_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10",
+                "S1_one_byte_elsewhere": "16/16"
+              },
+              "misses": [
+                {
+                  "id": "c3633f71115",
+                  "class": "I1_invalid_sha_value",
+                  "truth": "invalid",
+                  "observed": "supported"
+                }
+              ]
+            },
+            "restored": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/accept-prefix-restored-seed6871766983261281141.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/accept-prefix-restored-seed6871766983261281141.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "N1_no_sha": "16/16",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "R1_match_span_present": "24/24",
+                "S2_newline_variant": "12/12",
+                "I1_invalid_sha_value": "14/14",
+                "R2_match_span_absent": "10/10",
+                "S4_mismatch_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10",
+                "S1_one_byte_elsewhere": "16/16"
+              },
+              "misses": []
+            }
+          }
+        }
+      ],
+      "scores": [
+        116,
+        113,
+        119
+      ],
+      "verdicts": [
+        "killed",
+        "killed",
+        "killed"
+      ]
+    },
+    {
+      "control": "trim-value",
+      "dropped_rule": "Trim whitespace from the supplied hash string before strict validation and equality.",
+      "artifact": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/trim-value.sh",
+      "pristine_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+      "mutated_sha256": "d44840be15191588599f824c938b0b10b4221bb71cd7d6d3428c53d9c7e646be",
+      "expected_detector": "Frozen c2-count.py: pristine=120/120, mutated<120/120, restored=120/120 on the same seed.",
+      "expected_exposed_classes": [
+        "I1_invalid_sha_value"
+      ],
+      "runs": [
+        {
+          "seed": 957710451340456525,
+          "verdict": "killed",
+          "restored_exact": true,
+          "phases": {
+            "pristine": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/trim-value-pristine-seed957710451340456525.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/trim-value-pristine-seed957710451340456525.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "R1_match_span_present": "24/24",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S1_one_byte_elsewhere": "16/16",
+                "I1_invalid_sha_value": "14/14",
+                "S4_mismatch_span_absent": "10/10",
+                "S2_newline_variant": "12/12",
+                "N1_no_sha": "16/16",
+                "R2_match_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10"
+              },
+              "misses": []
+            },
+            "mutated": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/trim-value-mutated-seed957710451340456525.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/trim-value-mutated-seed957710451340456525.execution.json",
+              "score": "REVISION_BINDING_MATCH=117/120",
+              "matched": 117,
+              "counter_exit": 1,
+              "gate_exit": 1,
+              "gate_sha256": "d44840be15191588599f824c938b0b10b4221bb71cd7d6d3428c53d9c7e646be",
+              "gate_sha256_after": "d44840be15191588599f824c938b0b10b4221bb71cd7d6d3428c53d9c7e646be",
+              "per_class": {
+                "R1_match_span_present": "24/24",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S1_one_byte_elsewhere": "16/16",
+                "I1_invalid_sha_value": "11/14",
+                "S4_mismatch_span_absent": "10/10",
+                "S2_newline_variant": "12/12",
+                "N1_no_sha": "16/16",
+                "R2_match_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10"
+              },
+              "misses": [
+                {
+                  "id": "c422ef39c2d",
+                  "class": "I1_invalid_sha_value",
+                  "truth": "invalid",
+                  "observed": "supported"
+                },
+                {
+                  "id": "c660447e5bf",
+                  "class": "I1_invalid_sha_value",
+                  "truth": "invalid",
+                  "observed": "supported"
+                },
+                {
+                  "id": "cd0b7d32b9c",
+                  "class": "I1_invalid_sha_value",
+                  "truth": "invalid",
+                  "observed": "supported"
+                }
+              ]
+            },
+            "restored": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/trim-value-restored-seed957710451340456525.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/trim-value-restored-seed957710451340456525.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "R1_match_span_present": "24/24",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S1_one_byte_elsewhere": "16/16",
+                "I1_invalid_sha_value": "14/14",
+                "S4_mismatch_span_absent": "10/10",
+                "S2_newline_variant": "12/12",
+                "N1_no_sha": "16/16",
+                "R2_match_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10"
+              },
+              "misses": []
+            }
+          }
+        },
+        {
+          "seed": 1158866592272045467,
+          "verdict": "survived",
+          "restored_exact": true,
+          "phases": {
+            "pristine": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/trim-value-pristine-seed1158866592272045467.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/trim-value-pristine-seed1158866592272045467.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "I1_invalid_sha_value": "14/14",
+                "R1_match_span_present": "24/24",
+                "S1_one_byte_elsewhere": "16/16",
+                "S4_mismatch_span_absent": "10/10",
+                "R2_match_span_absent": "10/10",
+                "N1_no_sha": "16/16",
+                "S3_hash_of_span_only": "10/10",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S2_newline_variant": "12/12"
+              },
+              "misses": []
+            },
+            "mutated": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/trim-value-mutated-seed1158866592272045467.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/trim-value-mutated-seed1158866592272045467.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "d44840be15191588599f824c938b0b10b4221bb71cd7d6d3428c53d9c7e646be",
+              "gate_sha256_after": "d44840be15191588599f824c938b0b10b4221bb71cd7d6d3428c53d9c7e646be",
+              "per_class": {
+                "I1_invalid_sha_value": "14/14",
+                "R1_match_span_present": "24/24",
+                "S1_one_byte_elsewhere": "16/16",
+                "S4_mismatch_span_absent": "10/10",
+                "R2_match_span_absent": "10/10",
+                "N1_no_sha": "16/16",
+                "S3_hash_of_span_only": "10/10",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S2_newline_variant": "12/12"
+              },
+              "misses": []
+            },
+            "restored": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/trim-value-restored-seed1158866592272045467.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/trim-value-restored-seed1158866592272045467.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "I1_invalid_sha_value": "14/14",
+                "R1_match_span_present": "24/24",
+                "S1_one_byte_elsewhere": "16/16",
+                "S4_mismatch_span_absent": "10/10",
+                "R2_match_span_absent": "10/10",
+                "N1_no_sha": "16/16",
+                "S3_hash_of_span_only": "10/10",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S2_newline_variant": "12/12"
+              },
+              "misses": []
+            }
+          }
+        },
+        {
+          "seed": 6871766983261281141,
+          "verdict": "killed",
+          "restored_exact": true,
+          "phases": {
+            "pristine": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/trim-value-pristine-seed6871766983261281141.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/trim-value-pristine-seed6871766983261281141.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "N1_no_sha": "16/16",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "R1_match_span_present": "24/24",
+                "S2_newline_variant": "12/12",
+                "I1_invalid_sha_value": "14/14",
+                "R2_match_span_absent": "10/10",
+                "S4_mismatch_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10",
+                "S1_one_byte_elsewhere": "16/16"
+              },
+              "misses": []
+            },
+            "mutated": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/trim-value-mutated-seed6871766983261281141.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/trim-value-mutated-seed6871766983261281141.execution.json",
+              "score": "REVISION_BINDING_MATCH=119/120",
+              "matched": 119,
+              "counter_exit": 1,
+              "gate_exit": 1,
+              "gate_sha256": "d44840be15191588599f824c938b0b10b4221bb71cd7d6d3428c53d9c7e646be",
+              "gate_sha256_after": "d44840be15191588599f824c938b0b10b4221bb71cd7d6d3428c53d9c7e646be",
+              "per_class": {
+                "N1_no_sha": "16/16",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "R1_match_span_present": "24/24",
+                "S2_newline_variant": "12/12",
+                "I1_invalid_sha_value": "13/14",
+                "R2_match_span_absent": "10/10",
+                "S4_mismatch_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10",
+                "S1_one_byte_elsewhere": "16/16"
+              },
+              "misses": [
+                {
+                  "id": "cf7f9ba2d54",
+                  "class": "I1_invalid_sha_value",
+                  "truth": "invalid",
+                  "observed": "supported"
+                }
+              ]
+            },
+            "restored": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/trim-value-restored-seed6871766983261281141.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/trim-value-restored-seed6871766983261281141.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "N1_no_sha": "16/16",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "R1_match_span_present": "24/24",
+                "S2_newline_variant": "12/12",
+                "I1_invalid_sha_value": "14/14",
+                "R2_match_span_absent": "10/10",
+                "S4_mismatch_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10",
+                "S1_one_byte_elsewhere": "16/16"
+              },
+              "misses": []
+            }
+          }
+        }
+      ],
+      "scores": [
+        117,
+        120,
+        119
+      ],
+      "verdicts": [
+        "killed",
+        "survived",
+        "killed"
+      ]
+    },
+    {
+      "control": "bash-cat",
+      "dropped_rule": "Hash bash-$(cat)-equivalent bytes: discard NUL bytes and all trailing LF bytes, preserving any CR byte.",
+      "artifact": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/bash-cat.sh",
+      "pristine_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+      "mutated_sha256": "c17ccbe0c60d344e75744c179b0442bb2517fa8db25603e8cc6064cbcf0bb4af",
+      "expected_detector": "Frozen c2-count.py: pristine=120/120, mutated<120/120, restored=120/120 on the same seed.",
+      "expected_exposed_classes": [
+        "R1_match_span_present",
+        "R2_match_span_absent",
+        "S2_newline_variant"
+      ],
+      "runs": [
+        {
+          "seed": 957710451340456525,
+          "verdict": "killed",
+          "restored_exact": true,
+          "phases": {
+            "pristine": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/bash-cat-pristine-seed957710451340456525.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/bash-cat-pristine-seed957710451340456525.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "R1_match_span_present": "24/24",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S1_one_byte_elsewhere": "16/16",
+                "I1_invalid_sha_value": "14/14",
+                "S4_mismatch_span_absent": "10/10",
+                "S2_newline_variant": "12/12",
+                "N1_no_sha": "16/16",
+                "R2_match_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10"
+              },
+              "misses": []
+            },
+            "mutated": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/bash-cat-mutated-seed957710451340456525.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/bash-cat-mutated-seed957710451340456525.execution.json",
+              "score": "REVISION_BINDING_MATCH=84/120",
+              "matched": 84,
+              "counter_exit": 1,
+              "gate_exit": 1,
+              "gate_sha256": "c17ccbe0c60d344e75744c179b0442bb2517fa8db25603e8cc6064cbcf0bb4af",
+              "gate_sha256_after": "c17ccbe0c60d344e75744c179b0442bb2517fa8db25603e8cc6064cbcf0bb4af",
+              "per_class": {
+                "R1_match_span_present": "0/24",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S1_one_byte_elsewhere": "16/16",
+                "I1_invalid_sha_value": "14/14",
+                "S4_mismatch_span_absent": "10/10",
+                "S2_newline_variant": "10/12",
+                "N1_no_sha": "16/16",
+                "R2_match_span_absent": "0/10",
+                "S3_hash_of_span_only": "10/10"
+              },
+              "misses": [
+                {
+                  "id": "c6defd38fd1",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c80bf4429d5",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c702890ae38",
+                  "class": "S2_newline_variant",
+                  "truth": "stale",
+                  "observed": "supported"
+                },
+                {
+                  "id": "c2f182d76bc",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cfa8a8e59c5",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c652b0219c2",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c86ff82ffe1",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cb879dbb510",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c2694f35102",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ccaeb18548e",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c6bd0c7ee9a",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c40eaa45542",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c15525b703c",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ca6d3ba68fa",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c4382c9f7d3",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ccadf3aa104",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c19ff803275",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cd93504f189",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c984c42bc93",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c295ed8dfbf",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cf1cc2c0447",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ce366906fbf",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c31e2061dd0",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c760457aa0b",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c0d54ca8af5",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ceefa1533b5",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c102dd98b86",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cfdb202e7e7",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ca9f4c79b6c",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c0efd2eba8f",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c213c0a0dd7",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c4930851e79",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ceead7b9cda",
+                  "class": "S2_newline_variant",
+                  "truth": "stale",
+                  "observed": "supported"
+                },
+                {
+                  "id": "cdc8bcfb75f",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cfa04e33063",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c03efdb1864",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                }
+              ]
+            },
+            "restored": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/bash-cat-restored-seed957710451340456525.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/bash-cat-restored-seed957710451340456525.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "R1_match_span_present": "24/24",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S1_one_byte_elsewhere": "16/16",
+                "I1_invalid_sha_value": "14/14",
+                "S4_mismatch_span_absent": "10/10",
+                "S2_newline_variant": "12/12",
+                "N1_no_sha": "16/16",
+                "R2_match_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10"
+              },
+              "misses": []
+            }
+          }
+        },
+        {
+          "seed": 1158866592272045467,
+          "verdict": "killed",
+          "restored_exact": true,
+          "phases": {
+            "pristine": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/bash-cat-pristine-seed1158866592272045467.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/bash-cat-pristine-seed1158866592272045467.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "I1_invalid_sha_value": "14/14",
+                "R1_match_span_present": "24/24",
+                "S1_one_byte_elsewhere": "16/16",
+                "S4_mismatch_span_absent": "10/10",
+                "R2_match_span_absent": "10/10",
+                "N1_no_sha": "16/16",
+                "S3_hash_of_span_only": "10/10",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S2_newline_variant": "12/12"
+              },
+              "misses": []
+            },
+            "mutated": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/bash-cat-mutated-seed1158866592272045467.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/bash-cat-mutated-seed1158866592272045467.execution.json",
+              "score": "REVISION_BINDING_MATCH=83/120",
+              "matched": 83,
+              "counter_exit": 1,
+              "gate_exit": 1,
+              "gate_sha256": "c17ccbe0c60d344e75744c179b0442bb2517fa8db25603e8cc6064cbcf0bb4af",
+              "gate_sha256_after": "c17ccbe0c60d344e75744c179b0442bb2517fa8db25603e8cc6064cbcf0bb4af",
+              "per_class": {
+                "I1_invalid_sha_value": "14/14",
+                "R1_match_span_present": "0/24",
+                "S1_one_byte_elsewhere": "16/16",
+                "S4_mismatch_span_absent": "10/10",
+                "R2_match_span_absent": "0/10",
+                "N1_no_sha": "16/16",
+                "S3_hash_of_span_only": "10/10",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S2_newline_variant": "9/12"
+              },
+              "misses": [
+                {
+                  "id": "c4ba298dc23",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c0ded035daa",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cc3dc020a97",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cca9536596a",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cf15034f81e",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cfefe11f156",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cdde7e85c36",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ce1ac656cc4",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cdd6ed28562",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c9a3db1067c",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c833e0ee02a",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ca7bf1eaa8c",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ce1d0b7b804",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cb170e88556",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cd1abe9a19a",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cf62f068de4",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ca66441dad0",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cc0813a625c",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cb84eb2eb90",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cb780bf31d7",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c163e94accb",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cdd6c92a953",
+                  "class": "S2_newline_variant",
+                  "truth": "stale",
+                  "observed": "supported"
+                },
+                {
+                  "id": "c6eb1572e35",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c88d8318f3a",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c0ef2828a80",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cc9767a7eae",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c6ec98de30f",
+                  "class": "S2_newline_variant",
+                  "truth": "stale",
+                  "observed": "supported"
+                },
+                {
+                  "id": "c6bfdd5f0bc",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c7eeaeccfd4",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c82f6e04e69",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c2fe78612cf",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c31d7e139f1",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cff48130d48",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ce30e77cc67",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c5bce7de1ca",
+                  "class": "S2_newline_variant",
+                  "truth": "stale",
+                  "observed": "supported"
+                },
+                {
+                  "id": "c0c896811a7",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c81e298f602",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                }
+              ]
+            },
+            "restored": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/bash-cat-restored-seed1158866592272045467.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/bash-cat-restored-seed1158866592272045467.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "I1_invalid_sha_value": "14/14",
+                "R1_match_span_present": "24/24",
+                "S1_one_byte_elsewhere": "16/16",
+                "S4_mismatch_span_absent": "10/10",
+                "R2_match_span_absent": "10/10",
+                "N1_no_sha": "16/16",
+                "S3_hash_of_span_only": "10/10",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "S2_newline_variant": "12/12"
+              },
+              "misses": []
+            }
+          }
+        },
+        {
+          "seed": 6871766983261281141,
+          "verdict": "killed",
+          "restored_exact": true,
+          "phases": {
+            "pristine": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/bash-cat-pristine-seed6871766983261281141.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/bash-cat-pristine-seed6871766983261281141.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "N1_no_sha": "16/16",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "R1_match_span_present": "24/24",
+                "S2_newline_variant": "12/12",
+                "I1_invalid_sha_value": "14/14",
+                "R2_match_span_absent": "10/10",
+                "S4_mismatch_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10",
+                "S1_one_byte_elsewhere": "16/16"
+              },
+              "misses": []
+            },
+            "mutated": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/bash-cat-mutated-seed6871766983261281141.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/bash-cat-mutated-seed6871766983261281141.execution.json",
+              "score": "REVISION_BINDING_MATCH=82/120",
+              "matched": 82,
+              "counter_exit": 1,
+              "gate_exit": 1,
+              "gate_sha256": "c17ccbe0c60d344e75744c179b0442bb2517fa8db25603e8cc6064cbcf0bb4af",
+              "gate_sha256_after": "c17ccbe0c60d344e75744c179b0442bb2517fa8db25603e8cc6064cbcf0bb4af",
+              "per_class": {
+                "N1_no_sha": "16/16",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "R1_match_span_present": "0/24",
+                "S2_newline_variant": "8/12",
+                "I1_invalid_sha_value": "14/14",
+                "R2_match_span_absent": "0/10",
+                "S4_mismatch_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10",
+                "S1_one_byte_elsewhere": "16/16"
+              },
+              "misses": [
+                {
+                  "id": "c17dcaf20d7",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c0efe2e9d26",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ca8f928ae09",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cff5bb9b6e8",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c9b1ccd2848",
+                  "class": "S2_newline_variant",
+                  "truth": "stale",
+                  "observed": "supported"
+                },
+                {
+                  "id": "cad44994bb7",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c2664383048",
+                  "class": "S2_newline_variant",
+                  "truth": "stale",
+                  "observed": "supported"
+                },
+                {
+                  "id": "c8530a52b62",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c62f23af47a",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cb8507354db",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c0175a746be",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cbfb016cd8c",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c7baa21afff",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cc7b4debaab",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cfcb2d0ea3d",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cf2f752d979",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cbc161df644",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c92b29b9772",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c3e1f682bd7",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c702b4ebc0f",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c062a550ff4",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c045233b9a9",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c0810c60fac",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c85b6fc7040",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ce4c35cae23",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c693d1d97eb",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ca51289070b",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ce0025b08f2",
+                  "class": "S2_newline_variant",
+                  "truth": "stale",
+                  "observed": "supported"
+                },
+                {
+                  "id": "cf1cad673f8",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c057df70b9d",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "ce92c8150c4",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "cf3b0349cb9",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c937cf02cbb",
+                  "class": "S2_newline_variant",
+                  "truth": "stale",
+                  "observed": "supported"
+                },
+                {
+                  "id": "ccf259ce802",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c71e37ab8fb",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c51df559aac",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c75a8fa1f68",
+                  "class": "R1_match_span_present",
+                  "truth": "supported",
+                  "observed": "stale"
+                },
+                {
+                  "id": "c619faa7e74",
+                  "class": "R2_match_span_absent",
+                  "truth": "unsupported",
+                  "observed": "stale"
+                }
+              ]
+            },
+            "restored": {
+              "receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/bash-cat-restored-seed6871766983261281141.json",
+              "execution": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/bash-cat-restored-seed6871766983261281141.execution.json",
+              "score": "REVISION_BINDING_MATCH=120/120",
+              "matched": 120,
+              "counter_exit": 0,
+              "gate_exit": 1,
+              "gate_sha256": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "gate_sha256_after": "96d63bcd3fb4f832e518730f52b2519fb1242c8bf7bb57a2e90f44d5e1cd2656",
+              "per_class": {
+                "N1_no_sha": "16/16",
+                "S5_hash_of_other_fixture_file": "8/8",
+                "R1_match_span_present": "24/24",
+                "S2_newline_variant": "12/12",
+                "I1_invalid_sha_value": "14/14",
+                "R2_match_span_absent": "10/10",
+                "S4_mismatch_span_absent": "10/10",
+                "S3_hash_of_span_only": "10/10",
+                "S1_one_byte_elsewhere": "16/16"
+              },
+              "misses": []
+            }
+          }
+        }
+      ],
+      "scores": [
+        84,
+        83,
+        82
+      ],
+      "verdicts": [
+        "killed",
+        "killed",
+        "killed"
+      ]
+    }
+  ],
+  "restoration_receipt": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/restoration.json",
+  "fixture_audit": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-31/controls/MutOracleC2/fixture-subtypes.json",
+  "seeded_verdict_totals": {
+    "killed": 17,
+    "survived": 1,
+    "inconclusive": 0
+  },
+  "maximum_defective_score": 120
+}

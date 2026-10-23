@@ -1,0 +1,34 @@
+== contract truth (output of the frozen C1 contract on these three records) ==
+demo-a span='kari motu senu dava' named='2' occurrences(lines)=[(4, 4)] -> mislocated (at=-)
+demo-b span='kari motu senu dava' named='2-4' occurrences(lines)=[(5, 5)] -> mislocated (at=-)
+demo-c span='kari motu\nsenu dava' named='4-7' occurrences(lines)=[(4, 5)] -> mislocated (at=-)
+
+== frozen base gate (ac1315) ==
+CLAIM id=demo-a expected=supported observed=supported source=src/demo-a.md at=line:4 verdict=match
+CLAIM id=demo-b expected=supported observed=supported source=src/demo-b.md at=line:5 verdict=match
+CLAIM id=demo-c expected=supported observed=supported source=src/demo-c.md at=lines:4-5 verdict=match
+
+== control endpoint-exact ==
+CLAIM id=demo-a expected=supported observed=supported source=src/demo-a.md at=- verdict=match
+CLAIM id=demo-b expected=supported observed=supported source=src/demo-b.md at=- verdict=match
+CLAIM id=demo-c expected=supported observed=mislocated source=src/demo-c.md at=- verdict=mismatch
+
+== control endpoint-contain ==
+CLAIM id=demo-a expected=supported observed=supported source=src/demo-a.md at=- verdict=match
+CLAIM id=demo-b expected=supported observed=supported source=src/demo-b.md at=- verdict=match
+CLAIM id=demo-c expected=supported observed=supported source=src/demo-c.md at=- verdict=match
+
+== control range-ignored ==
+CLAIM id=demo-a expected=supported observed=mislocated source=src/demo-a.md at=- verdict=mismatch
+CLAIM id=demo-b expected=supported observed=mislocated source=src/demo-b.md at=- verdict=mismatch
+CLAIM id=demo-c expected=supported observed=supported source=src/demo-c.md at=lines:4-5 verdict=match
+
+== control first-occ ==
+CLAIM id=demo-a expected=supported observed=mislocated source=src/demo-a.md at=line:4 verdict=mismatch
+CLAIM id=demo-b expected=supported observed=mislocated source=src/demo-b.md at=line:5 verdict=mismatch
+CLAIM id=demo-c expected=supported observed=mislocated source=src/demo-c.md at=lines:4-5 verdict=mismatch
+
+== control count-ge2 ==
+CLAIM id=demo-a expected=supported observed=mislocated source=src/demo-a.md at=line:4 verdict=mismatch
+CLAIM id=demo-b expected=supported observed=mislocated source=src/demo-b.md at=line:5 verdict=mismatch
+CLAIM id=demo-c expected=supported observed=mislocated source=src/demo-c.md at=lines:4-5 verdict=mismatch

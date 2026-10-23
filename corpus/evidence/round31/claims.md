@@ -1,4 +1,55 @@
-# Round 31 — frozen claims (design v1, frozen before any data seat)
+# Round 31 — frozen claims (design v2, frozen before any candidate is scored)
+
+**Design v2 (latest).** Changed before any round-31 candidate (ExecC1Impl, ExecC2Impl) was
+scored, after the pre-data control wave (`.ufo/waves/round-31/controls/`):
+
+1. C2 sub-variant leak. CtlShortcutC2's trim-whitespace validator printed
+   `REVISION_BINDING_MATCH=120/120` on seed 9002 (`controls/ChousaR31.CtlShortcutC2/`), and
+   MutOracleC2's trim mutant did the same on seed 1158866592272045467
+   (`controls/MutOracleC2.md`): v1 drew invalid-value kinds, newline variants and CRLF files at
+   random, so a gate that mishandles one kind passed every seed that drew none of it. v2 fixes
+   the count of every sub-variant per class (C2: invalid kinds 3/2/2/3/2/2, newline variants
+   4/4/4, every fourth item of each class CRLF; C1: B1 first/last/inner lines 2/2/8, B2 named
+   occurrence 6/3/3, M1 adjacent/far 3+3/6, M2 prefix/suffix 6/6, M4 start/end/wide/late 2 each;
+   the 12 C1 invalid values were already one each).
+2. Contract wording (CriticClaimDesign31 F1): v1 said the line numbers "are the ones the gate
+   already reports in `at=`", but `at=` reports the first occurrence only; a tool reading that
+   literally scores 108/120 on the later-occurrence class. v2: line numbers are 1-based and
+   counted by newlines as in `at=`; the bound occurrence need not be the first.
+3. Findings (CriticClaimDesign31 F2): v1 read only `observed=`, so a candidate could score
+   120/120 without printing the new finding. v2 counts a claim as matched only when its
+   `observed=` equals the truth **and** a `FINDING <ID> severity=warn|crit surface=claims
+   obs=id=<claim id> …` line exists exactly for the claims whose truth is `mislocated` (C1,
+   `CLAIM_LINE_MISMATCH`) or `stale` (C2, `CLAIM_SOURCE_REVISION_MISMATCH`). The
+   `obs=id=<id>` shape is the existing claims-finding convention (`CLAIM_SPAN_NOT_FOUND`,
+   `tools/research-gate.sh` verify_claims).
+4. Environment (CriticClaimDesign31 F4): the gate honours `CHOUSA_ROOT`, which overrode the
+   counter's `--root` (0/120). v2 removes every `CHOUSA_*` variable from the gate's environment.
+   Harness errors (fixture generation, `--keep`, `--receipt`) exit 2 (CtlDeterminism31); an id
+   reported on two CLAIM lines scores `none` (CtlDeterminism31's duplicate-line survivor).
+5. Separability (CriticSeparability31): v1 did not say what a candidate does with the other
+   claim's field. v2 states in both contracts that unknown JSON keys are ignored, as at base.
+6. C2 wording (CriticAxisFit31): v1 said the claim makes checklist item 1's revision clause
+   runnable. v2: it makes the clause runnable for every claim that carries a revision pin; a
+   claim without a pin is unchanged and stays a named limit. The SKILL.md landing text is frozen
+   below.
+
+Disclosures (before v2 was frozen): (a) CriticSeparability31, a build-wave critic, built its
+own scratch C1 and C2 sketches and ran the v1 counters on them at 04:26-04:28Z (one-sided
+separability probes, not round-31 candidates; `.ufo/waves/round-31/build/CriticSeparability31.md`).
+Its edit tool followed a path into the lane gate: `tools/research-gate.sh` held its C1 sketch
+from about 04:26:19Z until the seat restored the base bytes at 04:26:45.9Z (`cmp` equal; SHA-256
+`ac1315dd…` since). (b) In that window the L1 ran an uncommitted v2 draft of `c1-count.py`
+(seed 1) on the lane gate and saw 84/120; the same counter on the base gate prints 50/120. No
+design change in v2 responds to either run: items 1-6 come from control findings above.
+(c) The counters were edited in the working tree during the control wave; receipts bind the
+counter that produced them by `counter_sha256`. Only receipts carrying the v2 hashes (in the
+commit that carries this note) count for v2; every control is re-scored under v2 before any
+candidate is scored.
+
+Base `be7b8d8d54962286417465a305fd9a1a7b3b1525`. v1 frozen at `d78d18893849cecb710f3b691ec986e1321d39ee`.
+
+# Design v1 text, as amended by v2
 
 Base `be7b8d8d54962286417465a305fd9a1a7b3b1525`. Gate at base: `tools/research-gate.sh`
 SHA-256 `ac1315ddaa12e79b68069d1a9866b9b1b55e3a43efef3ba0cb5ca5e665835765`.
@@ -29,7 +80,11 @@ from frontier to held ground.
    ends on line M (`"N-M"`); the line numbers are the ones the gate already reports in `at=`.
    Bound → the existing verdict (`supported` for `expect=supported`). Not bound →
    `observed=mislocated` with a new drift finding `CLAIM_LINE_MISMATCH`.
-4. `"line"` absent: behaviour unchanged.
+   *(v2)* Line numbers are 1-based and counted by newlines, as in `at=`; the bound
+   occurrence need not be the first one (`at=` reports only the first). The finding line is
+   `FINDING CLAIM_LINE_MISMATCH severity=warn|crit surface=claims obs=id=<claim id> …` and is
+   printed exactly for the mislocated claims.
+4. `"line"` absent: behaviour unchanged. *(v2)* Unknown JSON keys are ignored, as at base.
 
 **Counter.** `python3 corpus/evidence/round31/c1-count.py [--gate PATH] [--seed S]
 [--receipt OUT.json]` (lane root). It writes a fresh temporary root with opaque source files
@@ -61,6 +116,18 @@ prints 50/120.
 
 ## C2 — operability (lowest scored axis): checklist item 1's revision clause becomes runnable
 
+*(v2)* Lowest-axis basis: operability is the only scored axis (3, `SCORECARD.md:7`), no axis
+is retired (`SCORECARD.md:34`), and the stagnation nudge is dormant (`SCORECARD.md:488-494`).
+The score is recorded 3 → 3 (delta 0) with this observable beside it, as rounds 25 and 29 did.
+*(v2)* Scope: the claim makes the revision clause runnable **for every claim that carries a
+revision pin**; a claim without `"sha256"` is unchanged and stays a named limit. Why not
+freshness: no existing claim is re-verified (the fixture is synthetic). Why not coverage: the
+moved surface is the pre-existing checklist obligation (`SKILL.md:66`, present since mint), not
+the new field. *(v2)* Frozen SKILL.md landing text: one new line directly under checklist
+item 1, item 1's bytes unchanged:
+
+    - Run: `bash tools/research-gate.sh verify-claims <claims.jsonl> --root ..` with a `"sha256"` pin (the SHA-256 of the exact source bytes read) on each claim; a changed source reads `stale` (`CLAIM_SOURCE_REVISION_MISMATCH`). A claim without a pin is not checked for revision.
+
 **Surface.** `SKILL.md` "Checklist (executable)" item 1 reads "Every claim carries a resolvable
 pointer to the artifact **and revision read**." No lane command can run the revision clause:
 `verify-claims` resolves the path and the span, never which bytes the claim was made against.
@@ -76,10 +143,12 @@ wave's axis critic rules on this before data.)
    (`observed=invalid`, `CLAIM_RECORD_INVALID`).
 2. `"sha256"` present and different from the SHA-256 of the exact bytes of the claim's source
    file → `observed=stale` with a new drift finding `CLAIM_SOURCE_REVISION_MISMATCH`, before
-   and regardless of the span check.
+   and regardless of the span check. *(v2)* The finding line is `FINDING
+   CLAIM_SOURCE_REVISION_MISMATCH severity=warn|crit surface=claims obs=id=<claim id> …` and is
+   printed exactly for the stale claims.
 3. `"sha256"` equal → the existing span verdict (`supported` / `unsupported`).
 4. `"sha256"` absent: behaviour unchanged. Boundary refusals keep precedence (refused sources
-   are never read or hashed).
+   are never read or hashed). *(v2)* Unknown JSON keys are ignored, as at base.
 
 **Counter.** `python3 corpus/evidence/round31/c2-count.py [--gate PATH] [--seed S]
 [--receipt OUT.json]` (lane root). 120 claims in 9 classes, same opacity rules as C1, about a
@@ -119,7 +188,7 @@ and the C2 counter on a C1-only build must print their before values (50/120).
 
 ## No harm (checked after landing; not part of P1 or P2)
 
-`bash tools/research-gate.sh --selftest` PASS (154 cases at base, plus the new cases);
+`bash tools/research-gate.sh --selftest` PASS (215 cases at base, measured by ExecNoHarmBase — *(v2)* the SKILL.md rows that say 154 are stale — plus the new cases);
 `verify-claims corpus/fixtures/claims-r2.jsonl --root ..` stays `VERDICT_BEARING_CLAIMS=17/17`
 CLEAN; `verify-chain corpus/fixtures/chain-r3.md --root ..` stays `RESOLVED_HOPS=17/22`; the
 round-1 observable stays `VERDICT_BEARING_EXPORTS=3/3`; `tools/quote-reopen.py` is unchanged.
@@ -142,4 +211,6 @@ control meets is re-designed before data, as a new version, or declared explorat
 Semantics or truth of a span; that a named line is the *right* line for the claim's meaning;
 git-revision binding (the pin is a content hash of the bytes read, not a commit); records'
 `## Claims` table pointers (`path:N`) in `verify` mode; `verify-chain` hops; races between
-hashing and reading a file that changes during the run.
+hashing and reading a file that changes during the run. *(v2)* That every claim carries a
+revision pin (`"sha256"` is optional and its absence is not drift); that the first occurrence
+is the cited one.

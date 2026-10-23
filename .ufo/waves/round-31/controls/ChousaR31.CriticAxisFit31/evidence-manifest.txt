@@ -1,0 +1,240 @@
+citation manifest — ChousaR31.CriticAxisFit31 — 2026-10-23T04:25:17Z
+lane tip: d78d18893849cecb710f3b691ec986e1321d39ee
+frozen design commit: d78d18893849cecb710f3b691ec986e1321d39ee
+
+== sha256 of cited lane files (at tip) ==
+08c879a68fd374100a1bb2a08d3be911249c64803fa2bacac0051dc5dd12c824  chousa-shokunin/corpus/evidence/round31/claims.md
+154e09e7f73bebaf0afc2eed4d6c4c4ed8cb47d42518f764560a81fbcd7b555d  chousa-shokunin/corpus/evidence/round31/c1-count.py
+20ed105bf93081468934eea4265028cb1274d0115058b35cec72c9cd5694bf72  chousa-shokunin/corpus/evidence/round31/c2-count.py
+230ddfe76cb9193818b5afadd25804c5a1e951dd27df42436a7cc6612651baa6  chousa-shokunin/SKILL.md
+ff793982df80c58e6cb7fd64e4ffe377542bcf736f018b66b00b1c070e2b57bf  chousa-shokunin/SCORECARD.md
+4d5c959cf1d87238601c2c1502755fc3ec9ba25e88bd27d17b42b2f4d43355b7  chousa-shokunin/corpus/README.md
+cf7826a43aaab7c00708ab54bb46577217e7a67ab44a43a33e17ee2a58c1bbec  chousa-shokunin/PROVINCE.md
+04ea5c9e89c91cef645536ab56863ebb014dce617e7083e54968092968a7d993  AXES.md
+
+== AXES.md ==
+AXES.md:12: | **coverage** | Fraction of the domain's real surfaces the skill governs (repo paths, tools, edge classes) | PROVINCE.md lists every surface; none unexplored without reason |
+AXES.md:13: | **operability** | Runnable artifacts: checklists that are executable, commands that exist, scripts that run | A checklist item can be run and produces the stated outcome |
+AXES.md:14: | **freshness** | Drift detection — skill claims re-verified against live surfaces; stale items flagged or fixed | Each round LOG entry includes a re-verification result |
+AXES.md:20: The axes are the unit of work; the learning signal is `LEARNING.md`'s three
+AXES.md:21: trends. Expansion ↔ `coverage` + `adjacency`; quality ↔ `depth` + `freshness`
+AXES.md:22: + `operability`; discernment ↔ `calibration`. Pick the round's axis from the
+AXES.md:31: **causally separable** — each verifiable without the others having landed —
+AXES.md:32: and name **distinct axes**; two claims on one axis in one round count as one
+AXES.md:33: claim. At least one claim works the lane's **lowest-scoring non-retired axis**,
+AXES.md:34: except when the stagnation nudge (below) waives it. A round is admitted only if
+
+== prompt ==
+.ufo/prompts/chousa-round-31.md:343: 9. **Claim sizing** (fleet lesson from the 12 rejections):
+.ufo/prompts/chousa-round-31.md:361:    - Name the axis by the surface the round changes, not by the number it produces (kaidoku r29).
+.ufo/prompts/chousa-round-31.md:362:      Re-scoring a rule the lane already holds on new inputs, or counting rows a sourceless
+.ufo/prompts/chousa-round-31.md:363:      fixture also counts, is quality work, never coverage or depth. A coverage claim names the
+.ufo/prompts/chousa-round-31.md:364:      surface it moves (frontier → core, a new tool, operation or edge class) and the command that
+
+== SCORECARD.md ==
+SCORECARD.md:7: | operability | 3 | Gate commit `31b46832e56a7f095092a4a6d62b74bfaf6933e8`: A/B/C each exit 1 with exactly one full DRIFT summary; `.ufo/evidence/round-1/acceptance.json`; baseline `34774a1777d4058ca8c2b4456ce2e6ccee9e24c5` was 0/3 | 1 |
+SCORECARD.md:34: None. The unmeasured axes are not retired or asserted saturated.
+SCORECARD.md:468: 
+SCORECARD.md:471: Saturation line: **8.0 on this Scorecard's six axes** (0–10 scale; a threshold,
+SCORECARD.md:488:    (:9-13; rounds 2–11 all refuse a scalar score). An unscored axis is NOT
+SCORECARD.md:489:    counted as at/above the line, so condition 1 fails.
+SCORECARD.md:490: 2. "No capability entered within N=3": three capability rows entered this
+SCORECARD.md:492: Nudge verdict: **dormant** — the waiver does not apply, the lowest-axis
+SCORECARD.md:493: obligation stands, and by the only recorded score the lowest non-retired axis
+SCORECARD.md:494: is operability, which round 12 claim 2 works. This declaration creates or
+SCORECARD.md:1256: | 1 | operability (lowest scored) | `--json` append onto a manifest whose last byte is not `\n` glued two objects; the write-only and NUL variants found mid-round | `bash corpus/evidence/round24-measure.sh <tree>` §claim 1 (also verbatim in `json-r24-20261019T213117Z-demo.log`) | `MANIFEST_LINES=1 INVALID_JSON_LINES=1` | `MANIFEST_LINES=2 INVALID_JSON_LINES=0`; selftest 133 → 136 (1–133 byte-identical); mutants m1/m2/m3 killed | **improved** |
+SCORECARD.md:1343: | C1 operability — metadata-screen capability | mode absent, rc 2 and no named legacy-header findings → rc 1, `METADATA_COMPLETE=25/28`, exactly `archives-verified-r9`, `audit-r11`, `gate-baseline-r8` each `META_RECHECK_ABSENT`; 27-fixture differential 54/54; cases 1–136 identical | **improved** (syntactic screen, not full QUALITY 6); operability score **3→3, delta 0** on its original r1 construct, re-derived 3/3 this landing; capability row above |
+SCORECARD.md:1373: 1. **operability (lowest measured, 3/10):** serialize cooperating `--json`
+SCORECARD.md:1515: | C1 operability, lowest measured axis | accepted r26 `FAIL3/187` → `PASS215/215`, no skips; original187 retained and first210 identities unchanged from dd72641e; original161 line SHA unchanged; original C1 controls6/6 plus final added5/5 | **improved bounded repair**; original r1 scalar3→3, delta0, re-derived3/3 (not a general resource/readiness score) |
+SCORECARD.md:1603: | C1 operability, lowest scored axis; capability acquisition | `QUOTE_REOPEN_MATCH=0/130` (tool absent, `.ufo/waves/round-29/controls/before-do-nothing-v3.json`) → `130/130` twice on `30c9d24d` (`.ufo/waves/round-29/measure/after-run1.json`, `after-run2.json`) | `python3 corpus/evidence/round29/c1-count.py -- python3 tools/quote-reopen.py verify` | measured: met. Re-derived by wave 2: 130/130 in 6 further runs (RerunCounterA, RerunCounterB x2, ScoutFreshnessH x3) |
+SCORECARD.md:1686: | C1 coverage: edge class of pages that omit `</head>` | `QUOTE_REOPEN_HEADLESS_MATCH=78/106` (round-29 tool, `.ufo/waves/round-30/controls/before-c1-v4-run{1,2}.json`) → `106/106` twice on `49b2aa30` (`.ufo/waves/round-30/measure/after-c1-run{1,2}.json`) | `python3 corpus/evidence/round30/c1-count.py` | measured: met; re-derived 106/106 in every falsify-wave run (RerunC1A/B/C 9 runs, SeparabilityRevs, CriticClaimsAfter) |
+SCORECARD.md:1687: | C2 operability (lowest scored axis): stated fetch bounds hold under slow senders and DNS rebinding | `QUOTE_REOPEN_FETCH_BOUND_MATCH=12/27` (`before-c2-v4-run{1,2}.json`) → `27/27` twice on `49b2aa30` (`measure/after-c2-run{1,2}.json`); revision `33dd643f` scored 24/27 once and was fixed at `bd43bd53` | `python3 corpus/evidence/round30/c2-count.py` | **not met (miss under the kill rule)**: the landed tool printed 26/27 on 3 of 44 fresh-seed runs (`.ufo/waves/round-30/falsify/RerunC2B/run2.json`, `run4.json`, `extra16.json`); each miss is a slow-ok item refused about 0.07 s after its own DEADLINE. The seat's diagnosis points at the frozen harness's listen queue (backlog 5), not the tool; the counter is not re-scaled and the claim is reported as a miss |
+
+== SKILL.md ==
+SKILL.md:64: ## Checklist (executable)
+SKILL.md:66: - [ ] Every claim carries a resolvable pointer to the artifact and revision read.
+SKILL.md:67: - [ ] A negative claim carries its search sweep, naming where it looked.
+SKILL.md:70: - [ ] Every web quote a round cites was re-opened with `python3 tools/quote-reopen.py verify` and every non-`VERBATIM` verdict is recorded with its quote (an `ABSENT` on a page whose text the tool cannot extract, such as one without `</head>`, is a tool limit).
+SKILL.md at mint 02a615a:43: - [ ] Every claim carries a resolvable pointer to the artifact and revision read.
+SKILL.md at frozen base be7b8d8:66: - [ ] Every claim carries a resolvable pointer to the artifact and revision read.
+
+== corpus/README.md ==
+corpus/README.md:186:   requirement (r7). None of the five proves semantic support, location binding,
+corpus/README.md:260:   `A:86` (closed at round 12: the pointer was corrected and the live record sha moved to `dfd2ae1a…`; the class — no mode pairs a pointer line with its span's occurrence line — stays a named non-coverage)
+corpus/README.md:346: ## Frontier
+corpus/README.md:375: stays partial and location binding, uniqueness and semantics remain
+corpus/README.md:565: fails; and the pointer-line versus span-line class stays a named non-coverage.
+corpus/README.md:861: ## Round26 frontier disposition (2026-10-21)
+corpus/README.md:875: Still unclosed: concurrent JSON appenders, filesystem races, parent-root
+corpus/README.md:876: legacy rechecks, receipt gaps, and pairing a span's occurrence with a named
+corpus/README.md:877: pointer line. No promotion, outside spot-check or province expansion beyond
+
+== claims.md ==
+corpus/evidence/round31/claims.md:13: ## C1 — coverage: a claim's named line range (edge class)
+corpus/evidence/round31/claims.md:15: **Surface.** `verify-claims` checks that a claim's span occurs, boundary-delimited, somewhere
+corpus/evidence/round31/claims.md:16: in its source. It never checks *where*. A claim that names a line (as the lane's own records
+corpus/evidence/round31/claims.md:17: do: `…A-shokunin-tradition.md:64`) passes when the span sits on any other line. Frontier item:
+corpus/evidence/round31/claims.md:18: `corpus/README.md` Round26 disposition, "pairing a span's occurrence with a named pointer line"
+corpus/evidence/round31/claims.md:19: (still unclosed); round 4 named "location binding" unverified. This claim moves that edge class
+corpus/evidence/round31/claims.md:20: from frontier to held ground.
+corpus/evidence/round31/claims.md:22: **Contract (candidate must meet).**
+corpus/evidence/round31/claims.md:23: 1. A claims JSONL record may carry the JSON string field `"line"` with value `"N"` or `"N-M"`:
+corpus/evidence/round31/claims.md:24:    decimal, `N >= 1`, no leading zero, no spaces, and for `"N-M"` `M > N`. Any other value of
+corpus/evidence/round31/claims.md:25:    a present `"line"` makes the record invalid (`observed=invalid`, `CLAIM_RECORD_INVALID`).
+corpus/evidence/round31/claims.md:26: 2. Span absent (no boundary-delimited occurrence): `observed=unsupported`, as today.
+corpus/evidence/round31/claims.md:27: 3. Span present and `"line"` present: the claim is **bound** iff some boundary-delimited
+corpus/evidence/round31/claims.md:28:    occurrence of the span starts on line N and ends on line N (`"N"`), or starts on line N and
+corpus/evidence/round31/claims.md:29:    ends on line M (`"N-M"`); the line numbers are the ones the gate already reports in `at=`.
+corpus/evidence/round31/claims.md:30:    Bound → the existing verdict (`supported` for `expect=supported`). Not bound →
+corpus/evidence/round31/claims.md:31:    `observed=mislocated` with a new drift finding `CLAIM_LINE_MISMATCH`.
+corpus/evidence/round31/claims.md:32: 4. `"line"` absent: behaviour unchanged.
+corpus/evidence/round31/claims.md:44: **Predicate P1 (frozen; the same sentence is in the `c1-count.py` docstring, where "this
+corpus/evidence/round31/claims.md:45: counter" is `c1-count.py`; receipt label `predicate_holds`).** "C1 is met iff, on the landed
+corpus/evidence/round31/claims.md:46: lane revision, this counter prints LINE_BINDING_MATCH=120/120 (receipt label
+corpus/evidence/round31/claims.md:47: predicate_holds=true) on each of two fresh-seed runs, and no run of this counter on that
+corpus/evidence/round31/claims.md:48: revision in round 31 prints a lower count." Code condition: `holds = matched == TOTAL` with
+corpus/evidence/round31/claims.md:49: `TOTAL = 120`, written to the receipt as `predicate_holds`.
+corpus/evidence/round31/claims.md:54: **Before (do-nothing control, base gate).** `LINE_BINDING_MATCH=50/120` (L1 smoke runs, seeds
+corpus/evidence/round31/claims.md:55: 1 and 2; the committed control receipts come from the control wave). The base gate ignores
+corpus/evidence/round31/claims.md:56: `"line"`, so every supported and unsupported item matches and every mislocated and invalid item
+corpus/evidence/round31/claims.md:57: misses.
+corpus/evidence/round31/claims.md:59: **Command that would show C1 unmoved:** the same counter on a revision without the change
+corpus/evidence/round31/claims.md:60: prints 50/120.
+corpus/evidence/round31/claims.md:62: ## C2 — operability (lowest scored axis): checklist item 1's revision clause becomes runnable
+corpus/evidence/round31/claims.md:64: **Surface.** `SKILL.md` "Checklist (executable)" item 1 reads "Every claim carries a resolvable
+corpus/evidence/round31/claims.md:65: pointer to the artifact **and revision read**." No lane command can run the revision clause:
+corpus/evidence/round31/claims.md:66: `verify-claims` resolves the path and the span, never which bytes the claim was made against.
+corpus/evidence/round31/claims.md:67: AXES.md defines operability by "A checklist item can be run and produces the stated outcome";
+corpus/evidence/round31/claims.md:68: this claim makes that item's revision clause runnable. The landing also names the command on
+corpus/evidence/round31/claims.md:69: the checklist line. (The check also flags stale claims, which overlaps freshness; the surface
+corpus/evidence/round31/claims.md:70: moved is the checklist item's runnability, so the claim is filed on operability. The control
+corpus/evidence/round31/claims.md:71: wave's axis critic rules on this before data.)
+corpus/evidence/round31/claims.md:73: **Contract (candidate must meet).**
+corpus/evidence/round31/claims.md:74: 1. A claims JSONL record may carry the JSON string field `"sha256"`: exactly 64 lowercase
+corpus/evidence/round31/claims.md:75:    hexadecimal characters. Any other value of a present `"sha256"` makes the record invalid
+corpus/evidence/round31/claims.md:76:    (`observed=invalid`, `CLAIM_RECORD_INVALID`).
+corpus/evidence/round31/claims.md:77: 2. `"sha256"` present and different from the SHA-256 of the exact bytes of the claim's source
+corpus/evidence/round31/claims.md:78:    file → `observed=stale` with a new drift finding `CLAIM_SOURCE_REVISION_MISMATCH`, before
+corpus/evidence/round31/claims.md:79:    and regardless of the span check.
+corpus/evidence/round31/claims.md:80: 3. `"sha256"` equal → the existing span verdict (`supported` / `unsupported`).
+corpus/evidence/round31/claims.md:81: 4. `"sha256"` absent: behaviour unchanged. Boundary refusals keep precedence (refused sources
+corpus/evidence/round31/claims.md:82:    are never read or hashed).
+corpus/evidence/round31/claims.md:84: **Counter.** `python3 corpus/evidence/round31/c2-count.py [--gate PATH] [--seed S]
+corpus/evidence/round31/claims.md:85: [--receipt OUT.json]` (lane root). 120 claims in 9 classes, same opacity rules as C1, about a
+corpus/evidence/round31/claims.md:86: quarter of the source files with CRLF line ends. Hidden truth: 40 supported, 10 unsupported,
+corpus/evidence/round31/claims.md:87: 56 stale, 14 invalid. Stale classes: one byte changed on another line, a newline variant
+corpus/evidence/round31/claims.md:88: (final newline stripped or added, CRLF and LF swapped), the hash of the span alone, a mismatch
+corpus/evidence/round31/claims.md:89: with the span absent, and the hash of another fixture file. Invalid: uppercase, 63 or 65
+corpus/evidence/round31/claims.md:90: characters, a `sha256:` prefix, a non-hex character, a leading space.
+corpus/evidence/round31/claims.md:92: **Predicate P2 (frozen; the same sentence is in the `c2-count.py` docstring, where "this
+corpus/evidence/round31/claims.md:93: counter" is `c2-count.py`; receipt label `predicate_holds`).** "C2 is met iff, on the landed
+corpus/evidence/round31/claims.md:94: lane revision, this counter prints REVISION_BINDING_MATCH=120/120 (receipt label
+corpus/evidence/round31/claims.md:95: predicate_holds=true) on each of two fresh-seed runs, and no run of this counter on that
+corpus/evidence/round31/claims.md:96: revision in round 31 prints a lower count." Code condition: `holds = matched == TOTAL` with
+corpus/evidence/round31/claims.md:97: `TOTAL = 120`, written to the receipt as `predicate_holds`.
+corpus/evidence/round31/claims.md:101: **Before (do-nothing control, base gate).** `REVISION_BINDING_MATCH=50/120` (L1 smoke runs,
+corpus/evidence/round31/claims.md:102: seeds 1 and 2).
+corpus/evidence/round31/claims.md:104: **Command that would show C2 unmoved:** the same counter on a revision without the change
+corpus/evidence/round31/claims.md:105: prints 50/120.
+corpus/evidence/round31/claims.md:114: ## Separability
+corpus/evidence/round31/claims.md:115: 
+corpus/evidence/round31/claims.md:116: C1 adds only the `"line"` field; C2 adds only `"sha256"`. Neither counter's fixture carries the
+corpus/evidence/round31/claims.md:117: other field. Each lands as its own commit. Separability check: the C1 counter on a C2-only build
+corpus/evidence/round31/claims.md:118: and the C2 counter on a C1-only build must print their before values (50/120).
+corpus/evidence/round31/claims.md:140: ## Not claimed
+corpus/evidence/round31/claims.md:141: 
+corpus/evidence/round31/claims.md:142: Semantics or truth of a span; that a named line is the *right* line for the claim's meaning;
+corpus/evidence/round31/claims.md:143: git-revision binding (the pin is a content hash of the bytes read, not a commit); records'
+corpus/evidence/round31/claims.md:144: `## Claims` table pointers (`path:N`) in `verify` mode; `verify-chain` hops; races between
+corpus/evidence/round31/claims.md:145: hashing and reading a file that changes during the run.
+
+== c1-count.py ==
+corpus/evidence/round31/c1-count.py:2: """Round 31 C1 counter: claim location binding in `research-gate.sh verify-claims`.
+corpus/evidence/round31/c1-count.py:3: 
+corpus/evidence/round31/c1-count.py:4: Frozen predicate (claims.md, C1): C1 is met iff, on the landed lane revision,
+corpus/evidence/round31/c1-count.py:5: this counter prints LINE_BINDING_MATCH=120/120 (receipt label
+corpus/evidence/round31/c1-count.py:6: predicate_holds=true) on each of two fresh-seed runs, and no run of this
+corpus/evidence/round31/c1-count.py:7: counter on that revision in round 31 prints a lower count.
+corpus/evidence/round31/c1-count.py:8: 
+corpus/evidence/round31/c1-count.py:9: The counter writes a fresh fixture under a temporary root: opaque source
+corpus/evidence/round31/c1-count.py:10: files and one claims JSONL with 120 claims. Every claim carries
+corpus/evidence/round31/c1-count.py:11: expect=supported (a constant, so the label carries no truth). The hidden
+
+== c2-count.py ==
+corpus/evidence/round31/c2-count.py:2: """Round 31 C2 counter: the revision clause of SKILL.md checklist item 1
+corpus/evidence/round31/c2-count.py:3: ("Every claim carries a resolvable pointer to the artifact and revision read")
+corpus/evidence/round31/c2-count.py:4: as a runnable check in `research-gate.sh verify-claims`.
+corpus/evidence/round31/c2-count.py:5: 
+corpus/evidence/round31/c2-count.py:6: Frozen predicate (claims.md, C2): C2 is met iff, on the landed lane revision,
+corpus/evidence/round31/c2-count.py:7: this counter prints REVISION_BINDING_MATCH=120/120 (receipt label
+corpus/evidence/round31/c2-count.py:8: predicate_holds=true) on each of two fresh-seed runs, and no run of this
+corpus/evidence/round31/c2-count.py:9: counter on that revision in round 31 prints a lower count.
+corpus/evidence/round31/c2-count.py:10: 
+corpus/evidence/round31/c2-count.py:11: The counter writes a fresh fixture under a temporary root: opaque source
+corpus/evidence/round31/c2-count.py:12: files and one claims JSONL with 120 claims, every one with expect=supported
+corpus/evidence/round31/c2-count.py:13: (a constant). The hidden truth per claim is supported / unsupported / stale /
+corpus/evidence/round31/c2-count.py:14: invalid. It runs `bash <gate> verify-claims <claims> --root <tmp>` once and
+corpus/evidence/round31/c2-count.py:15: compares each `CLAIM id=<id> ... observed=<obs>` line with the hidden truth.
+corpus/evidence/round31/c2-count.py:16: 
+corpus/evidence/round31/c2-count.py:17: Contract the candidate must meet (claims.md, C2 contract):
+corpus/evidence/round31/c2-count.py:18: - optional JSON string field "sha256": exactly 64 lowercase hex characters;
+corpus/evidence/round31/c2-count.py:19:   any other value of a present "sha256" -> invalid.
+corpus/evidence/round31/c2-count.py:20: - "sha256" present and not equal to the SHA-256 of the exact bytes of the
+corpus/evidence/round31/c2-count.py:21:   source file -> stale (before and regardless of the span check).
+corpus/evidence/round31/c2-count.py:22: - "sha256" equal -> the existing span behaviour (supported / unsupported).
+corpus/evidence/round31/c2-count.py:23: - "sha256" absent -> unchanged behaviour.
+corpus/evidence/round31/c2-count.py:44:     ("R2_match_span_absent", 10, "unsupported"),
+corpus/evidence/round31/c2-count.py:45:     ("S1_one_byte_elsewhere", 16, "stale"),
+corpus/evidence/round31/c2-count.py:46:     ("S2_newline_variant", 12, "stale"),
+corpus/evidence/round31/c2-count.py:47:     ("S3_hash_of_span_only", 10, "stale"),
+corpus/evidence/round31/c2-count.py:48:     ("S4_mismatch_span_absent", 10, "stale"),
+corpus/evidence/round31/c2-count.py:49:     ("S5_hash_of_other_fixture_file", 8, "stale"),
+corpus/evidence/round31/c2-count.py:50:     ("I1_invalid_sha_value", 14, "invalid"),
+corpus/evidence/round31/c2-count.py:51:     ("N1_no_sha", 16, "supported"),
+corpus/evidence/round31/c2-count.py:52: ]
+
+== chousa r30 spotcheck (closest C2-operability precedent) ==
+corpus/lessons/round-30-verifier-spotcheck.md:19: C1 (coverage: pages that omit `</head>`) verifies on its frozen predicate. C2 (operability: fetch
+corpus/lessons/round-30-verifier-spotcheck.md:23: outcome. No axis is harmed. The admission rule is that every claim verifies, so the round is not
+corpus/lessons/round-30-verifier-spotcheck.md:120: | coverage | improved | C1 verifies: 78/106 → 106/106 on 14 landed runs under the frozen v4 predicate, with the frozen bytes unchanged after `60d51f79` |
+corpus/lessons/round-30-verifier-spotcheck.md:121: | operability | unchanged | C2 missed its frozen predicate (26/27 on 3 of 44). The round-1 scale is 3 → 3. No harm: `research-gate.sh` unchanged, round-29 counter 130/130 |
+corpus/lessons/round-30-verifier-spotcheck.md:122: | depth | unchanged | not claimed; new knowledge entry and SKILL rows, insertions only |
+
+== kaidoku r29 spotcheck (fleet axis-naming rule) ==
+kaidoku-shokunin/corpus/lessons/round-29-verifier-spotcheck.md:50: - **Axis ruling (the dead `CriticAxisFit` question): misfit.** AXES.md defines coverage as the fraction of the domain's real surfaces the skill governs. No surface, tool, operation or edge class entered governance this round:
+kaidoku-shokunin/corpus/lessons/round-29-verifier-spotcheck.md:51:   - The lane's own `PROVINCE.md:95` reads "Frontier status unchanged".
+kaidoku-shokunin/corpus/lessons/round-29-verifier-spotcheck.md:52:   - The coverage row is unchanged ("Owned axes rows above are unchanged").
+kaidoku-shokunin/corpus/lessons/round-29-verifier-spotcheck.md:55:   - What C1 adds is a replication of an already-held rule on new author-picked inputs. That is quality evidence, and the round-28 entry already held a held-out score of the same rule (137/137/0). This matches the round-28 closure's reading that a frontier bullet "annotated, not moved" leaves coverage `unchanged`.
+kaidoku-shokunin/corpus/lessons/round-29-verifier-spotcheck.md:56: - Verdict: the frozen statement verifies as measured, but as a coverage axis-move it **does not verify** (coverage `unchanged`).
+kaidoku-shokunin/corpus/lessons/round-29-verifier-spotcheck.md:67: - Axis ruling: **fit.** A mechanism read from opened code (S084/S087 `filterResponse`) predicts a live flag on never-fetched selectors, and the bar can fail. Depth is tied lowest at 10, so the lowest-axis obligation is met (`SCORECARD.md:23-25`; no axis retired; the stagnation waiver does not apply because a capability entered in round 27).
+kaidoku-shokunin/corpus/lessons/round-29-verifier-spotcheck.md:123: 1. C1 axis misfit. A re-score of an already-held rule on new author-built inputs is not a coverage move. Mine this as a lesson with a grounded `QUALITY.md` criterion. A future coverage claim must move a surface (frontier → core, or a new tool/operation/edge class) under a bar that can fail.
+
+== git provenance (read-only) ==
+claims.md first commit: d78d18893849cecb710f3b691ec986e1321d39ee
+c1-count.py first commit: d78d18893849cecb710f3b691ec986e1321d39ee
+c2-count.py first commit: d78d18893849cecb710f3b691ec986e1321d39ee
+SKILL.md item-1 history (oldest): 02a615a
+
+== counter identity audit (appended 2026-10-23T04:30:09Z) ==
+frozen design commit d78d1889: c1-count.py 154e09e7f73bebaf0afc2eed4d6c4c4ed8cb47d42518f764560a81fbcd7b555d
+frozen design commit d78d1889: c2-count.py 20ed105bf93081468934eea4265028cb1274d0115058b35cec72c9cd5694bf72
+working tree now:
+c0a0908c88b902a7800900e731b5152981d89bf838e9046c65fa269be028f56a  chousa-shokunin/corpus/evidence/round31/c1-count.py
+e26c7751193d81efc147d4035d4f5719aa7228536a134693444e3ebc498282c7  chousa-shokunin/corpus/evidence/round31/c2-count.py
+mtime:
+chousa-shokunin/corpus/evidence/round31/c1-count.py 12697 bytes 2026-10-23 01:29:06.339923805 -0300
+chousa-shokunin/corpus/evidence/round31/c2-count.py 11345 bytes 2026-10-23 01:29:06.340044285 -0300
+git diff --stat d78d1889 -- c1-count.py c2-count.py:
+ corpus/evidence/round31/c1-count.py | 91 +++++++++++++++++++++++++++----------
+ corpus/evidence/round31/c2-count.py | 59 +++++++++++++++++-------
+ 2 files changed, 110 insertions(+), 40 deletions(-)
+v2 self-label in working tree (first occurrence):
+91:# Sub-variant counts are fixed per class (design v2): a gate that mishandles one
+235:        except Exception as e:  # design v2: harness errors exit 2, never 1
+my receipt counter_sha256 values:
+frozen-v1-c1-seed31.json 154e09e7f73bebaf0afc2eed4d6c4c4ed8cb47d42518f764560a81fbcd7b555d seed 31 matched 50/120 gate ac1315ddaa12e79b68069d1a9866b9b1b55e3a43efef3ba0cb5ca5e665835765
+frozen-v1-c1-seed32.json 154e09e7f73bebaf0afc2eed4d6c4c4ed8cb47d42518f764560a81fbcd7b555d seed 32 matched 50/120 gate ac1315ddaa12e79b68069d1a9866b9b1b55e3a43efef3ba0cb5ca5e665835765
+frozen-v1-c2-seed31.json 20ed105bf93081468934eea4265028cb1274d0115058b35cec72c9cd5694bf72 seed 31 matched 50/120 gate ac1315ddaa12e79b68069d1a9866b9b1b55e3a43efef3ba0cb5ca5e665835765
+frozen-v1-c2-seed32.json 20ed105bf93081468934eea4265028cb1274d0115058b35cec72c9cd5694bf72 seed 32 matched 50/120 gate ac1315ddaa12e79b68069d1a9866b9b1b55e3a43efef3ba0cb5ca5e665835765
+working-v2-c1-seed31.json d201ef4ba5cf96375eb662442bf112dc379e61704dd46dcfb5dded5294bf5a8d seed 31 matched 50/120 gate ac1315ddaa12e79b68069d1a9866b9b1b55e3a43efef3ba0cb5ca5e665835765
+working-v2-c1-seed32.json d201ef4ba5cf96375eb662442bf112dc379e61704dd46dcfb5dded5294bf5a8d seed 32 matched 50/120 gate ac1315ddaa12e79b68069d1a9866b9b1b55e3a43efef3ba0cb5ca5e665835765

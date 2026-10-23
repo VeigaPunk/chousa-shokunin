@@ -18,9 +18,17 @@ Contract the candidate must meet (claims.md, C2 contract):
 - optional JSON string field "sha256": exactly 64 lowercase hex characters;
   any other value of a present "sha256" -> invalid.
 - "sha256" present and not equal to the SHA-256 of the exact bytes of the
-  source file -> stale (before and regardless of the span check).
+  source file -> stale (before and regardless of the span check), and the gate
+  prints "FINDING CLAIM_SOURCE_REVISION_MISMATCH severity=warn|crit
+  surface=claims obs=id=<id> ..." for that claim; no such finding names any
+  other claim.
 - "sha256" equal -> the existing span behaviour (supported / unsupported).
-- "sha256" absent -> unchanged behaviour.
+- "sha256" absent -> unchanged behaviour; unknown JSON keys are ignored, as at
+  base.
+
+Design v2 (claims.md): fixed sub-variant counts and CRLF files per class, the
+finding rule above, CHOUSA_* environment variables removed from the gate's
+environment, an id reported twice scores "none", harness errors exit 2.
 
 Exit: 0 iff matched == 120; 1 otherwise; 2 harness error. A gate run that
 exits other than 0 or 1, or outlives 600 s, scores every claim as observed
@@ -51,9 +59,25 @@ CLASS_COUNTS = [
     ("N1_no_sha", 16, "supported"),
 ]
 assert sum(c for _, c, _ in CLASS_COUNTS) == TOTAL
+# Sub-variant counts and CRLF files are fixed per class (design v2): a gate that
+# mishandles one sub-variant misses it on every seed, never only on the seeds
+# that happen to draw it. Every fourth item of each class (index % 4 == 1) has
+# CRLF line ends.
+SUBVARIANTS = {
+    "S2_newline_variant": ["strip_final"] * 4 + ["add_final"] * 4 + ["swap_eol"] * 4,
+    "I1_invalid_sha_value": ["upper"] * 3 + ["short"] * 2 + ["long"] * 2 + ["prefixed"] * 3
+                            + ["nonhex"] * 2 + ["spaced"] * 2,
+}
+for _cls, _n, _t in CLASS_COUNTS:
+    assert len(SUBVARIANTS.get(_cls, ["-"] * _n)) == _n, _cls
 SYL = ["ka", "ri", "mo", "tu", "se", "na", "lo", "pe", "vi", "da", "gu", "ho", "ze", "bi", "fa", "yo"]
 GATE_TIMEOUT_S = 600
 LINE_RE = re.compile(r"^CLAIM id=(\S+) .*?observed=(\S+)")
+# design v2: the claim-level finding must name the claim (obs=id=<id>), and only for
+# claims whose truth is stale.
+FINDING_ID = "CLAIM_SOURCE_REVISION_MISMATCH"
+FINDING_TRUTH = "stale"
+FINDING_RE = re.compile(r"^FINDING " + FINDING_ID + r" severity=(?:warn|crit) surface=claims obs=id=(\S+)(?:\s|$)")
 
 
 def sha256_bytes(b):
@@ -84,7 +108,7 @@ class Gen:
         return " ".join(self.word() for _ in range(self.rng.randint(4, 7)))
 
 
-def make_file(gen, rng, span, present):
+def make_file(gen, rng, span, present, crlf):
     n = rng.randint(10, 24)
     lines = [gen.filler_line() for _ in range(n)]
     L = rng.randrange(n)
@@ -93,7 +117,6 @@ def make_file(gen, rng, span, present):
     else:
         words = span.split(" ")
         lines[L] = gen.word() + " " + " ".join(words[:-1] + [gen.word()]) + ". " + gen.word() + "."
-    crlf = rng.random() < 0.25
     nl = "\r\n" if crlf else "\n"
     data = (nl.join(lines) + nl).encode("utf-8")
     return data, lines, L, nl
@@ -117,18 +140,19 @@ def generate(root, seed):
     os.makedirs(os.path.join(root, "src"))
     plan = []
     for cls, count, truth in CLASS_COUNTS:
-        plan += [(cls, truth)] * count
+        subs = SUBVARIANTS.get(cls, ["-"] * count)
+        plan += [(cls, truth, subs[j], j % 4 == 1) for j in range(count)]
     rng.shuffle(plan)
     items = []
-    for cls, truth in plan:
+    for cls, truth, sub, crlf in plan:
         span = gen.span()
         present = cls not in ("R2_match_span_absent", "S4_mismatch_span_absent")
-        data, lines, L, nl = make_file(gen, rng, span, present)
+        data, lines, L, nl = make_file(gen, rng, span, present, crlf)
         fid = "%016x" % rng.getrandbits(64)
         rel = "src/%s.md" % fid
         with open(os.path.join(root, rel), "wb") as f:
             f.write(data)
-        items.append({"cls": cls, "truth": truth, "span": span, "rel": rel, "data": data, "lines": lines,
+        items.append({"cls": cls, "truth": truth, "sub": sub, "span": span, "rel": rel, "data": data, "lines": lines,
                       "L": L, "nl": nl})
     rows, truth_map = [], {}
     for idx, it in enumerate(items):
@@ -140,7 +164,7 @@ def generate(root, seed):
         elif cls in ("S1_one_byte_elsewhere", "S4_mismatch_span_absent"):
             sha = sha256_bytes(one_byte_elsewhere(data, it["lines"], it["L"], it["nl"]))
         elif cls == "S2_newline_variant":
-            variant = rng.choice(["strip_final", "add_final", "swap_eol"])
+            variant = it["sub"]
             if variant == "strip_final":
                 v = data[:-len(it["nl"])]
             elif variant == "add_final":
@@ -155,7 +179,7 @@ def generate(root, seed):
             j = (idx + 1 + rng.randrange(len(items) - 1)) % len(items)
             sha = sha256_bytes(items[j]["data"])
         elif cls == "I1_invalid_sha_value":
-            kind = rng.choice(["upper", "short", "long", "prefixed", "nonhex", "spaced", "upper", "prefixed"])
+            kind = it["sub"]
             sha = {"upper": real.upper(), "short": real[:63], "long": real + "0",
                    "prefixed": "sha256:" + real, "nonhex": real[:63] + "g", "spaced": " " + real}[kind]
         elif cls == "N1_no_sha":
@@ -192,30 +216,48 @@ def main():
         print("c2-count: temp dir: %s" % e, file=sys.stderr); return 2
     t0 = time.time()
     try:
-        claims, truth = generate(root, seed)
+        try:
+            claims, truth = generate(root, seed)
+        except Exception as e:  # design v2: harness errors exit 2, never 1
+            print("%s: fixture generation failed: %r" % (os.path.basename(__file__), e), file=sys.stderr)
+            return 2
         rc, out, timed_out = None, "", False
         try:
-            p = subprocess.run(["bash", gate, "verify-claims", claims, "--root", root], capture_output=True,
+            env = {k: v for k, v in os.environ.items() if not k.startswith("CHOUSA_")}  # design v2
+            p = subprocess.run(["bash", gate, "verify-claims", claims, "--root", root], capture_output=True, env=env,
                                text=True, timeout=GATE_TIMEOUT_S, cwd=root)
             rc, out = p.returncode, p.stdout
         except subprocess.TimeoutExpired:
             timed_out = True
-        observed = {}
+        observed, dup, flagged = {}, set(), set()
         if not timed_out and rc in (0, 1):
             for line in out.splitlines():
+                f = FINDING_RE.match(line)
+                if f:
+                    flagged.add(f.group(1))
                 m = LINE_RE.match(line)
-                if m and m.group(1) in truth and m.group(1) not in observed:
+                if m and m.group(1) in truth:
+                    if m.group(1) in observed:
+                        dup.add(m.group(1))
                     observed[m.group(1)] = m.group(2)
+        for cid in dup:  # design v2: an id reported twice is ambiguous and scores "none"
+            observed[cid] = "none"
         per_class, misses, matched = {}, [], 0
         for cid, (cls, t) in truth.items():
             obs = observed.get(cid, "none")
-            ok = obs == t
+            ok = obs == t and ((cid in flagged) == (t == FINDING_TRUTH))
+            if obs == t and not ok:
+                obs = obs + ("+no-finding" if t == FINDING_TRUTH else "+stray-finding")
             matched += ok
             pc = per_class.setdefault(cls, [0, 0]); pc[1] += 1; pc[0] += ok
             if not ok:
                 misses.append({"id": cid, "class": cls, "truth": t, "observed": obs})
         if a.keep:
-            shutil.copytree(root, a.keep)
+            try:
+                shutil.copytree(root, a.keep)
+            except OSError as e:
+                print("%s: --keep failed: %r" % (os.path.basename(__file__), e), file=sys.stderr)
+                return 2
     finally:
         shutil.rmtree(root, ignore_errors=True)
     holds = matched == TOTAL
@@ -224,7 +266,7 @@ def main():
         print("  %s %d/%d" % (cls, per_class[cls][0], per_class[cls][1]))
     if a.receipt:
         receipt = {
-            "schema": "chousa-r31-c2-receipt/v1",
+            "schema": "chousa-r31-c2-receipt/v2",
             "counter_sha256": sha256_file(os.path.abspath(__file__)),
             "gate": a.gate, "gate_sha256": sha256_file(gate), "seed": seed,
             "utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(t0)), "elapsed_s": round(time.time() - t0, 3),
@@ -232,9 +274,13 @@ def main():
             "label": "REVISION_BINDING_MATCH=%d/%d" % (matched, TOTAL), "predicate_holds": holds,
             "per_class": {k: "%d/%d" % tuple(v) for k, v in per_class.items()}, "misses": misses,
         }
-        with open(a.receipt, "w") as f:
-            json.dump(receipt, f, indent=1)
-            f.write("\n")
+        try:
+            with open(a.receipt, "w") as f:
+                json.dump(receipt, f, indent=1)
+                f.write("\n")
+        except OSError as e:
+            print("%s: --receipt failed: %r" % (os.path.basename(__file__), e), file=sys.stderr)
+            return 2
     return 0 if holds else 1
 
 
