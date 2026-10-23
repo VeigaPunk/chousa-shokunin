@@ -54,7 +54,7 @@ standing W04 warnings for S051/S053). Both opened locally on 2026-10-23; no netw
 - **S069** GNU `grep(1)` manual, `-b`/`--byte-offset` under `-o` —
   `/usr/share/man/man1/grep.1.gz`, decompressed lines 382–391, quote at 387–391; GNU grep
   3.12-modified (2025-03-21), installed `grep 3.12-2`; file SHA-256 `9b027d02…85ba`. Located
-  quote (15 words): "If -o (--only-matching) is specified, print the offset of the matching part
+  quote (13 words by `printf '%s\n' '<quote>' | wc -w`): "If -o (--only-matching) is specified, print the offset of the matching part
   itself." The page states the offset semantics; it says nothing about attributing records to argv,
   which is the lane's method [INFERENCE].
 - **S070** GNU coreutils `sha256sum(1)` — `/usr/share/man/man1/sha256sum.1.gz`, decompressed lines
@@ -70,10 +70,37 @@ standing W04 warnings for S051/S053). Both opened locally on 2026-10-23; no netw
   selftest case, not a documented norm; a row would overclaim.
 - **Status / recheck / used-by changes:** none in place. S069/S070 enter `mined` with their
   `used-by` set at creation (no old→new transition).
-- **Spot-check pointer:** this round's own wave cross-checks — `w1/ScribeSrcGrep.md` and
+- **Census receipt (this round):** `sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa`
+  → exit 0, `rows 70` (A 64 / B 1 / C 5; mined 47 / queued 19 / rejected 4), warnings W04 ×2
+  (S051, S053); `census` → `chousa rows 70`. Before: exit 0, `rows 68` (A 62 / B 1 / C 5; mined 45 /
+  queued 19 / rejected 4).
+- **Knowledge admission candidates:** `engine-swap-canary-r36.md` and
+  `per-record-argv-attribution-r36.md` were drafted by wave scribes, then admitted by the L1 after
+  the wave's audits (`w1/CritLessonGate.md`, `w1/ScoutC1Counter.md`, `w1/ScoutC2Counter.md`) and the
+  corrections it demanded (heading overclaim, V1/V4 admission wording, S070 policy labelling, S11
+  refusal observation) landed before the commit.
+- **Spot-check pointer (pending, not satisfied):** the non-author round-36 spot-check is the hyaku
+  closure's; its verdict is not this lesson's to write. Marked **pending**, not satisfied. Wave
+  cross-checks — `w1/ScribeSrcGrep.md` and
   `w1/ScribeSrcSha.md` (row drafts), `w1/ExecC2LegacyCtl.md` (before-state re-derivation),
   `w1/ScoutC2Counter.md` (channel and patch audit). The non-author round-36 spot-check is the
   hyaku closure's; its verdict is not this lesson's to write.
 
 Sourced claim: C2 rests on S069 (opened this round); C1's S11 arm rests on S070 (opened this
 round).
+
+## Spot-check intake
+
+One row per routed defect in `corpus/lessons/round-35-verifier-spotcheck.md` §Routed defects 1-9:
+
+| # | Debt / disagreement | Disposition |
+|---|---|---|
+| 1 | Lesson `## Gate` incomplete (no rejects, no spot-check) | **fixed** — this lesson's `## Gate` carries the three rejected source candidates and marks the spot-check duty pending |
+| 2 | r35 report's wave-return figure stale (60/65 vs 62) | **carried** — the filed r35 report is never rewritten; this report states its own counts (34 of 36) with the counting command |
+| 3 | `CHOUSA_GREP_PIN_ECHO` inherited by the `--pin` capture | **fixed** R1 (`-u CHOUSA_GREP_PIN_ECHO`); residual `BASH_ENV` re-export hole named in `claims.md` §Erratum 7 and planned-r37 |
+| 4 | `verify-all --json` hashes via PATH `sha256sum \| cut`, non-empty only | **fixed** R3 (`sha256_hex_file`, 64-lowercase-hex, exit 2); the claim-body hash at `:2002` remains open (planned r37) |
+| 5 | C1 cannot see per-call engine identity; receipts lack `counter_sha256` | **partly fixed** — S10's per-record canary + S7/S10 receipts; `counter_sha256` still absent (carried, planned r37) |
+| 6 | C2 witness limits (global threshold, forgeable PS4, body-replaced, one-call) | **fixed** — new argv witness separates all five (V2/V3/V5 were admitted); prefix-64 bypass found and recorded (§Erratum 8) |
+| 7 | Locale seam at `json_unescape` | **fixed** R4 (hand-built UTF-8 in `LC_ALL=C`, cases 257-258); a different seam at `:1015` found and carried (§Erratum 13) |
+| 8 | S068 quote anchor 391-395 vs 390-396 | **refused** — no teaching is wrong and SOURCES rows are append-only; a correction would need a supersede row, not an edit (r37 candidate) |
+| 9 | r35 "lane tip at landing" staleness | **carried** — filed bytes not rewritten; this report cites one lane hash per claim |

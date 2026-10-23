@@ -1,4 +1,4 @@
-# The engine-swap canary — fourteen scenarios that separate a substituted matcher
+# The engine-swap canary — fourteen pin/contract scenarios, four new separations
 
 Lane: chousa. Round 36 (C1, operability). Surface: `tools/research-gate.sh` and
 `corpus/evidence/round36/c1-count.py`.
@@ -27,7 +27,7 @@ measured on seed 36001 (`.ufo/waves/round-36/measure/c1-before-s36001.json`).
 | S2 | `bash-env-function` | a `grep()` function planted through `BASH_ENV` is not executed | PASS |
 | S3 | `no-grep-on-path` | the gate runs with no `grep` on `PATH` (38 path tools) | PASS |
 | S4 | `override-relative` | a relative `RESEARCH_GATE_GREP` is refused (exit 2, `GREP_PROVENANCE`) | PASS |
-| S5 | `override-missing` | a missing override path is refused before any record read | PASS |
+| S5 | `override-missing` | a missing override path is refused (exit 2 + `GREP_PROVENANCE`); the before-read ordering is a code reading, not an open-count receipt (QUALITY 48) | PASS |
 | S6 | `override-non-gnu` | an override that does not report GNU grep is refused; the stub sees exactly one call (`--version`) | PASS |
 | S7 | `override-distinct-path` | a distinct-path GNU-reporting recorder is honoured, named in the echo, and observed receiving the matcher calls (4) | PASS |
 | S8 | `default-echo` | the default pin names itself with a LIVE `--version` (`/usr/bin/grep`, GNU grep 3.12-modified) | PASS |
