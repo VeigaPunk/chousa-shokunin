@@ -143,3 +143,54 @@ counted when no userns exists.
 `sha256sum` for claim pins, `sha256_hex_stream`) are inherited and re-verified
 here: they are C1's landed fix. The BASH_ENV scrub and the three selftest cases
 265-267 are C2's landed fix.
+
+**Erratum 4 (post-receipt, receipt audit).** The counters' `--seed` namespaces only the
+fixture temp dirs: C2's seed is entirely inert and C1's receipts are byte-identical across
+seeds, so seed distinctness is label-level, not content-level (receipt audit
+`.ufo/waves/round-37/residual/RevReceiptAudit.md` finding L2). The wave's landed
+re-derivations on seeds 37111/37133 (C1) and 37211/37311 (C2) persisted receipts only under
+`/tmp`, which is gone; their evidence is the seat reports' verbatim quoted outputs
+(cross-checked against the committed receipts by the audit). The claim's P1/P2 "two fresh
+seeds" clause rests on the committed after-receipts: 37901/37921 + 37701 (C1) and 37941/37961
++ 37721 (C2).
+
+**Erratum 5 (post-receipt, residual falsification).** The C2 opening sentence
+("A `--pin` baseline is independent of the caller's `BASH_ENV`") holds for the
+claim's enumerated vectors — a startup file re-exporting a scrubbed variable
+(`CHOUSA_GREP_PIN_ECHO`, `CHOUSA_STRICT`) or moving `CHOUSA_ROOT` cannot change
+the pinned capture (all seven counter cells pass on every committed after-receipt).
+It does NOT hold for function exports: a startup file run by the gate process
+itself (the named §Limits channel — the gate sourced the caller's `BASH_ENV`
+before its body ran) can `export -f date`; bash delivers exported functions to
+children through `BASH_FUNC_date%%`, which the capture child's `env -u BASH_ENV`
+scrub does not remove, so the capture child runs the function and the baseline
+embeds a `GATE_GREP:` receipt line with phantom `-GATE_GREP` drift on the
+unchanged gate (demonstrated on the landed gate by
+`.ufo/waves/round-37/residual/RevC2FreshSeed.md`; reproduced independently
+through the parent-environment side by `residual/CritC2Kill.md` finding 1).
+The frozen predicate P2 is unaffected (its `env-fn-echo-pin` cell never exported
+its function through the harness environment — a counter defect: the scenario's
+name overclaims its mechanism, QUALITY 52 class). Narrowed reading: C2 asserts
+VARIABLE re-export independence, not function-export hermeticity; the
+`BASH_FUNC_*` channel and the counter's `env-fn-echo-pin` scenario are carried
+debt (fix direction: scrub `BASH_FUNC_*`/use a minimal `env -i` capture
+environment, and re-assert the scenario with a genuinely exported function).
+
+**Erratum 6 (post-receipt, residual kill).** C1's claim text overreached: "no PATH shim
+can move a pin verdict in either direction" is measured and holds (seven cells, every
+committed after-receipt), but the broader property a reader derives — the pin verdict is a
+function of the source bytes under the pinned binary — is FALSE through the caller's
+loader environment. `tools/research-gate.sh:442` executes the pinned `/usr/bin/sha256sum`
+with the caller's environment intact; this host's coreutils 9.12 `sha256sum` dynamically
+imports OpenSSL `SHA256_Update`; an unprivileged `LD_PRELOAD` interposer active only for
+`/usr/bin/sha256sum` strips or flips input bytes before OpenSSL sees them. Demonstrated
+on the landed gate by `.ufo/waves/round-37/residual/CritC1Kill.md` (C27: forge direction,
+`CLAIM_PIN_PROVENANCE_MATCH=4/7` exit 1, receipt `gate_sha256=9fcac047…`; C18: false-stale
+direction, 3/7, same gate hash). This is NOT the named root/mount-namespace limit
+(§Limits bullet 1): the binary file and absolute path are untouched and no privilege is
+needed. Narrowed reading: C1 asserts PATH-independence of the pin digest channel, not
+loader-environment hermeticity; hostile `TMPDIR`, exported `sha256sum` functions, and
+tested locales remained 7/7. Carried debt (r38): execute the pin child with a scrubbed
+loader environment (`env -u LD_PRELOAD -u LD_LIBRARY_PATH …` or a minimal `env -i`
+channel) and add an LD_PRELOAD counter cell. The defect pre-exists this round — the base
+gate is equally vulnerable — so no axis is harmed by the round's changes.

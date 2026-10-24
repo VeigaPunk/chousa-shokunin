@@ -1014,6 +1014,15 @@ read that shipped in round 34 is repaired with a probe that fails on the old byt
 (`knowledge/bash-local-expansion-r35.md`). It closes no row above; the engine-swap canary, per-record
 witness attribution, `verify-chain` count and the fetch-scope answer stay open.
 
+Round 37 (the round-36 canary/witness round's continuation): the claim `sha256` pin is hashed
+through one pinned absolute `sha256sum` (`knowledge/claim-pin-provenance-r37.md`,
+`CLAIM_PIN_PROVENANCE_MATCH` 2/7 → 7/7 on six seeds, three independent runners), and the
+`--pin` capture child scrubs `BASH_ENV` with `env -u` (`knowledge/pin-capture-env-r37.md`,
+S071 opened this round; `PIN_CAPTURE_ENV_MATCH` 3/7 → 7/7 on six seeds). Both observables sit
+beside the round-1 scale (operability 3/10, delta 0). Still open: the prefix-64 attribution
+bypass, the `argv-witness` dead fields, the metadata-screener locale seam, `counter_sha256`
+in receipts, and the carried spans-≥-32768 debt.
+
 | Entry | What it holds | Evidence |
 |---|---|---|
 | `knowledge/manifest-append-lock-r32.md` | Round-32 note: the round-24 probe/append race closed by one flock-held critical section on the manifest; why the manifest and not a sibling lock file; why the counter delays writes; limits | `S060`; `evidence/round32/claims.md` (design v2); `.ufo/waves/round-32/measure/after-c1-*.json` |
@@ -1024,3 +1033,7 @@ witness attribution, `verify-chain` count and the fetch-scope answer stay open.
 | `knowledge/grep-pin-r35.md` | Round-35 note: why a PATH-resolved grep is a behaviour contract hole (PATH shim, `BASH_ENV` function, host `pi-uu-grep` builtin); the pin's resolution/refusal/echo contract; what self-reported provenance cannot prove | `S067`, `S068`; `evidence/round35/claims.md` §C1 + erratum; `.ufo/waves/round-35/{controls,measure,final}/` |
 | `knowledge/keyed-engine-output-equivalence-r35.md` | Round-35 note: the keyed-engine class (fixture-shape, location and label keys); why no output counter can kill a correct alternative engine; fixture unpredictability + trace witness + the stated limit; the three measured survivors and the r36 canary family | `.ufo/waves/round-34/w2a2/MutC2Keyed.md`; `evidence/round35/claims.md` §C2 + erratum; `.ufo/waves/round-35/final/c2-s*.json`; `.ufo/waves/round-35/w2/` (survivor seats) |
 | `knowledge/bash-local-expansion-r35.md` | Round-35 note: `local` evaluates every RHS before assigning, so a derived value in the same statement reads the caller's dynamic scope; the shipped `slen` case, the probe, the sweep rule | `tools/research-gate.sh`; `.ufo/waves/round-35/repairs/slen-probe.sh`; `evidence/round35/claims.md` §R1 |
+| `knowledge/engine-swap-canary-r36.md` | Round-36 note: fourteen swap/contract scenarios, four new separations (manifest hash shim, C-locale decode, pin echo isolation, drift token); the narrowed S7-S9 reading and the per-record attribution that keeps a no-call gate from scoring | `S070`; `evidence/round36/claims.md`; `.ufo/waves/round-36/measure/` |
+| `knowledge/per-record-argv-attribution-r36.md` | Round-36 note: the NUL-delimited argv witness separates the five output-equivalent engines per record, writes the channel outside the gate environment, and does not false-kill a renamed matcher; the recorded limits (global threshold, prefix-64 bypass) | `S069`; `evidence/round36/claims.md`; `.ufo/waves/round-36/measure/c2-*.json` |
+| `knowledge/claim-pin-provenance-r37.md` | Round-37 note: the claim `sha256` pin is hashed through one pinned absolute `sha256sum`, never the caller's PATH; the seven scenarios; PATH-independence is not tamper-proof hashing | `S070`; `evidence/round37/claims.md`; `evidence/round37/receipts/c1-*.json` |
+| `knowledge/pin-capture-env-r37.md` | Round-37 note: the `--pin` capture child runs `env -u BASH_ENV` (S071), so a startup file cannot move a baseline; the seven scenarios; gate-process `BASH_ENV` and `--posix`/`ENV`/`SHELLOPTS`/`TMPDIR` stay named debt | `S071`, `S068`; `evidence/round37/claims.md`; `evidence/round37/receipts/c2-*.json` |

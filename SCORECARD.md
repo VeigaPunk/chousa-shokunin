@@ -2073,16 +2073,64 @@ retried). Sources 68 → 70 rows (S069 grep(1) `-o`+`-b`, S070 sha256sum(1); tie
 | engine-swap canary (`corpus/evidence/round36/c1-count.py`) | scores a candidate gate on fourteen swap/contract scenarios with per-scenario fixtures and receipts, separating the round-35 gate's four open holes (manifest hash shim, C-locale decode, pin echo isolation, drift token) | `python3 corpus/evidence/round36/c1-count.py` → 14/14 (`measure/c1-*.json`, `measure-l1/c1-s36361.json`); `corpus/knowledge/engine-swap-canary-r36.md` | 36 (scope: fourteen asserted behaviours, four newly discriminated) |
 | per-record argv attribution (`tools/argv-witness.py`) | separates output-equivalent engines per record through the pinned engine's NUL-delimited argv log, writes the channel outside the gate's environment, and does not false-kill a renamed matcher | `python3 corpus/evidence/round36/c2-count.py` → 5/5 + renamed pass (`measure/c2-*.json`, `measure-l1/c2-s36371.json`); `corpus/knowledge/per-record-argv-attribution-r36.md` | 36 (scope: query, not use) |
 
-## Planned — round 37 (not started)
+## Round 37 — claim-pin provenance and pin-capture environment (two claims)
 
-Candidates, not commitments: the claim-body `sha256` pin at `research-gate.sh:2002` still resolves
-`sha256sum | cut` through `PATH` (a 64-hex lie passes) — the obvious next arm, with the drift-id
-header comment at 264-265; the `BASH_ENV` re-export hole in the `--pin` capture (R1 incomplete,
-`-u BASH_ENV` at 3921; claims §Erratum 7); the prefix-64 attribution bypass (a stricter span rule
-plus a V7 prefix-query variant; §Erratum 8); per-scenario counter assertions tightened to their
-names (S7-S9, QUALITY 52); three dead fields in `tools/argv-witness.py` (`_stderr.log` write,
-`fixture_root_prefix`, `channel` — SimpDiff D1-D3); the verdict-flipping locale seam in the
-metadata screener (`research-gate.sh:1015`, 1019, 762/1083 — `[[:space:]]`/`-i` under the caller's
-locale; claims §Erratum 13); `counter_sha256` bound into every receipt
-(carried debt); a call-for-show engine measurement (the stated C2 limit, §Erratum 9); the carried
-C1 debt (spans ≥ 32768) stays open.
+Freeze commit `b905217a7dfdcf58be1f0a4c0bf5f2d2d32a2d65` (inherited attempt-4 freeze: counters,
+gate fixes, selftest 262-267, frozen `corpus/evidence/round37/claims.md`, base control
+`.ufo/waves/round-37/controls/base-gate-r37.sh` = `a7d3922c…f54e8`); landed gate
+`9fcac047ddadd616fcf171534f6e6557f3e68271e353a79d81b218832321cf39`. Before-state controls committed at the freeze. Round shape: v1,
+wave 1 (39 seats, inherited dispatch, 8 returned, 31 dead by orchestrator death — never
+replaced) + one residual reviewer/critic call. Attempt 5 of the round (5 watchdog
+`lane-dead-no-report` lines).
+
+| claim / axis | before → after | counting command (lane root) | verdict |
+|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10): a claim's `sha256` revision pin is hashed through one pinned absolute `sha256sum` and never through the caller's PATH (`sha256sum`/`cut`), so no PATH shim can move a pin verdict in either direction | `CLAIM_PIN_PROVENANCE_MATCH=2/7` (base gate, `receipts/c1-base-s37001.json`; wave re-derivation seeds 37101/37123 under `w1/ExecC1BaseRederive/`) → `7/7` `predicate_holds=true` on seeds 37001/37111/37133 (construction + wave) and 37701 (L1, `receipts/c1-after-s37701.json`), 37901/37921 (wave, `receipts/c1-after-s379{01,21}.json`), 41377/52819 (residual, `residual/RevC1FreshSeed.md`), every after-receipt `gate_sha256=9fcac047…` | `python3 corpus/evidence/round37/c1-count.py --gate tools/research-gate.sh --seed N --receipt F` | predicate **verified**; claim text **falsified** beyond PATH-independence — unprivileged `LD_PRELOAD` interposition into the pin child (inherits the caller's loader env at `research-gate.sh:442`; host coreutils 9.12 `sha256sum` imports OpenSSL `SHA256_Update`) moved verdicts 4/7 and 3/7 on the landed gate (`residual/CritC1Kill.md` C27/C18); narrowed + fix direction in claims §Erratum 6; the defect pre-exists the round (base gate equally vulnerable), so no axis is harmed by the round's changes |
+| C2 freshness: a `--pin` baseline is independent of the caller's `BASH_ENV` — the capture child runs `env -u BASH_ENV` (S071), so a startup file re-exporting a scrubbed variable or moving `CHOUSA_ROOT` cannot change the pinned capture, embed a receipt line, or make a later plain `--drift` report phantom drift | `PIN_CAPTURE_ENV_MATCH=3/7` (base gate, `receipts/c2-base-s37021.json`; wave re-derivation seeds 37201/37223) → `7/7` `predicate_holds=true` on seeds 37021/37211/37311 (construction + wave) and 37721 (L1, `receipts/c2-after-s37721.json`), 37941/37961 (wave, `receipts/c2-after-s379{41,61}.json`), 38101 (residual, `residual/RevC2FreshSeed.md`), every after-receipt `gate_sha256=9fcac047…` | `python3 corpus/evidence/round37/c2-count.py --gate tools/research-gate.sh --seed N --receipt F` | predicate **verified**; claim text **narrowed** — function exports defeat the variable-only reading: a startup file's `export -f date` reaches the capture child through `BASH_FUNC_date%%` (not scrubbed) and embeds a receipt line with phantom drift, demonstrated on the landed gate (`residual/RevC2FreshSeed.md`; independently reproduced `residual/CritC2Kill.md` finding 1); narrowed + fix direction in claims §Erratum 5; 28 adjacent vectors otherwise held or confirmed named limits (`residual/CritC2Kill.md`) |
+
+Separability: each counter reads the other's surface not at all; the wave's single-hunk gate
+mutants isolate each fix (`w1/ExecMutGateC1.md` C1 2/7 while C2 7/7; `w1/ExecMutGateC2.md` C2
+3/7 while C1 7/7); the counter-expectation mutants both score 6/7 exit 1
+(`w1/ExecMutC1Counter.md`). No-harm on the landed gate: selftest PASS 267 cases 0 skipped
+(L1, default env); claims 17/17 CLEAN, chain 17/22 CLEAN, broken control 1/2 DRIFT, archives
+3/3 (L1 re-run with the recorded commands; the wave seat's `--root .` mis-invocation that read
+refusals as harm is a lesson mistake, not gate harm).
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| operability | **improved** | C1: the pin digest channel is PATH-independent by measurement (2/7 → 7/7 across six seeds, three independent runners); selftest 261 → 267 cases held. |
+| freshness | **improved** | C2: pin/drift re-derivation is independent of the caller's `BASH_ENV` (3/7 → 7/7 across six seeds); the mechanism source is pinned (S071). |
+| depth | **improved** | `corpus/knowledge/claim-pin-provenance-r37.md` and `pin-capture-env-r37.md`: the fix, the scenario tables, the frozen limits (PATH-independence not tamper-proof hashing; gate-process `BASH_ENV` still sourced; `--posix`/`ENV`/`SHELLOPTS`/`TMPDIR` named debt). |
+| coverage | **unchanged** | no new measured surface; both r36 observables held on the new bytes. |
+| calibration | **unchanged** | the no-harm mis-invocation was caught by re-running the pinned commands, and is recorded as a lesson mistake with QUALITY 53. |
+| adjacency | **unchanged** | zero network (all sources opened from installed man pages); corpus read-only; wave seats wrote only in-lane. |
+
+Admission: **ADMIT-with-errata, operator rules** — both frozen predicates verify on every
+committed receipt and no axis is harmed (the two falsified claim-text clauses describe
+defects that pre-exist the round's changes), but the residual wave falsified both claims'
+general wordings beyond their counters' cells, so the claims as first written do not stand;
+the narrowings and fix directions are frozen as claims §Errata 5-6 and carried to round 38.
+No scalar score. Learning trends: expansion/quality **improved**, discernment **improved**
+(the residual wave's two claim-text kills are the lane's first in-round falsifications of
+its own frozen claims). Round 38 candidates below.
+
+## Planned — round 38 (not started)
+
+Candidates, not commitments: the prefix-64 attribution bypass (a stricter span rule plus a V7
+prefix-query variant; r36 claims §Erratum 8); per-scenario counter assertions tightened to
+their names (S7-S9, QUALITY 52); three dead fields in `tools/argv-witness.py` (`_stderr.log`
+write, `fixture_root_prefix`, `channel` — SimpDiff D1-D3); the verdict-flipping locale seam in
+the metadata screener (`research-gate.sh:1015`, 1019, 762/1083 — `[[:space:]]`/`-i` under the
+caller's locale; r36 claims §Erratum 13); `counter_sha256` bound into every receipt (carried
+debt); a call-for-show engine measurement (the stated C2 limit, r36 §Erratum 9); the S068
+anchor-label supersede row (r36 spot-check defect 8, carried by the round-37 lesson); the
+witnessed `SHELLOPTS=noexec` false pin success (pin exits 0 with no baseline; operability
+defect inside the named shell-option limit — `residual/CritC2Kill.md`) and the exported-`env`
+function witness (pinning one absolute `env` closes that one witness, not the parent-function
+class); the r37 claim-text kills — pin-child loader-environment scrub (`env -u LD_PRELOAD
+-u LD_LIBRARY_PATH …`, `residual/CritC1Kill.md`) plus an LD_PRELOAD counter cell, and the
+capture-side `BASH_FUNC_*` scrub (or minimal `env -i` channel) plus a genuinely-exported
+counter scenario (`residual/RevC2FreshSeed.md`, claims §Errata 5-6); counter-strength debt
+(receipts bind `gate_sha256` post-run and score gate self-report — `residual/RevC1FreshSeed.md`
+F1/F2, `residual/RevC2FreshSeed.md` trust analysis; `counter_sha256` still carried); the
+carried C1 debt (spans ≥ 32768) stays open.

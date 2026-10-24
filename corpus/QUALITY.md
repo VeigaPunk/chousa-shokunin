@@ -422,7 +422,33 @@ the admitted entry that motivates it. Tier definitions live in
     reference output passes without the mechanism, and its PASS inflates the count. Each scenario
     quotes the assertion that would fail if the named behaviour were absent, and a scenario whose
     assertion is a weaker proxy is renamed or re-asserted. Check: read each scenario's assertion
-    next to its name; a mismatch is a survivor. Shown able to fail: round-36 C1 S9 truncates the
+    assertion next to its name; a mismatch is a survivor. Shown able to fail: round-36 C1 S9 truncates the
     recorder log and never reads it again, S8 reads no matcher argv, and S7 accepts one argv
     (`.ufo/waves/round-36/w1/ScoutC1Counter.md` §Vacuity candidates); the 14/14 still holds
     because S10 requires every record attributed. — `lessons/round-36.md`.
+
+53. **A no-harm battery's commands are re-used verbatim from their pinned record.** A battery
+    re-run with a different corpus root, fixture path or flag set than the recorded pin measures
+    a different invocation: refusal-class output under a drifted invocation is a signal to check
+    the invocation, never itself harm. The harm verdict belongs to the recorded commands' result.
+    Check: before running a pinned battery, copy the command text from its pinned record (not
+    from memory or a re-derived brief) and diff the invocation. Shown able to fail: the round-37
+    wave seat ran the r36 battery with `--root .` instead of `--root ..` and read the resulting
+    `*_SOURCE_OUT_OF_CORPUS` refusals as harm on all six rows
+    (`.ufo/waves/round-37/w1/ExecNoHarmPin.md`); the L1's verbatim re-run showed every
+    observable at its pinned value (claims 17/17, chain 17/22, broken 1/2, archives 3/3). —
+    `lessons/round-37.md`.
+
+54. **A claim text's general clause must not outrun its counter's cells, and a named limit
+    must enumerate every demonstrated vector class.** If the counter measures named vectors
+    only, the claim text may promise no more than those vectors; if a falsifier demonstrates a
+    new class (unprivileged `LD_PRELOAD` interposition into a child that inherits the caller's
+    loader environment; exported functions reaching a scrubbed child through `BASH_FUNC_*`),
+    a limit naming root-only mechanisms does not cover it. Check: read the claim's general
+    sentence against each counter cell, and read each limit against every child process the
+    gate spawns. Shown able to fail: round-37 C1's "no PATH shim" wording survived while
+    `LD_PRELOAD` moved pin verdicts 4/7 and 3/7 on the landed gate
+    (`.ufo/waves/round-37/residual/CritC1Kill.md`), and C2's "independent of the caller's
+    `BASH_ENV`" survived while a startup-exported `date` function reached the capture child
+    through `BASH_FUNC_date%%` (`.ufo/waves/round-37/residual/RevC2FreshSeed.md`). —
+    `lessons/round-37.md`.

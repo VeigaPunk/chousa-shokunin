@@ -1364,3 +1364,36 @@ token (S14), selftest cases 257-261 (256 → 261). Before-state control committe
   `.ufo/waves/round-36/w1/`.
 - Motivating evidence: r35 spot-check routed defects 1-9; `corpus/evidence/round35/claims.md`
   §Erratum; SCORECARD planned-r36 candidates; watchdog `lane-dead-no-report chousa round=36`.
+
+## Round 37 — claim-pin provenance and pin-capture environment (2026-10-23)
+
+Attempt 5 of the round (watchdog `lane-dead-no-report chousa round=37` ×5, orchestrator
+deaths). Inherited from attempt 4: the freeze commit `b905217a7dfdcf58be1f0a4c0bf5f2d2d32a2d65`
+(counters `corpus/evidence/round37/c1-count.py` / `c2-count.py`, gate fixes, selftest 262-267,
+frozen `corpus/evidence/round37/claims.md`, base control `.ufo/waves/round-37/controls/base-gate-r37.sh`),
+the wave-1 spec/dispatch (39 seats) and 8 returned seat reports under `.ufo/waves/round-37/w1/`.
+Attempt 5 re-verified the inherited receipts, ran its own fresh-seed re-derivation, landed the
+frontier and the report.
+
+- C1 (operability, lowest axis): claim `sha256` pin hashed through one pinned absolute
+  `sha256sum`; `CLAIM_PIN_PROVENANCE_MATCH` 2/7 → 7/7 on seeds 37001/37111/37133/37701/37901/37921
+  (wave + L1), every receipt `gate_sha256=9fcac047…321cf39`; receipts
+  `corpus/evidence/round37/receipts/c1-*.json`; knowledge `corpus/knowledge/claim-pin-provenance-r37.md`.
+- C2 (freshness): `--pin` capture child scrubs `BASH_ENV` (`env -u`, S071);
+  `PIN_CAPTURE_ENV_MATCH` 3/7 → 7/7 on seeds 37021/37211/37311/37721/37941/37961, every after-receipt
+  `gate_sha256=9fcac047…`; receipts
+  `corpus/evidence/round37/receipts/c2-*.json`; knowledge `corpus/knowledge/pin-capture-env-r37.md`.
+- Separability by single-hunk gate mutants (`w1/ExecMutGateC1.md`, `w1/ExecMutGateC2.md`);
+  counter-expectation mutants 6/7 exit 1 (`w1/ExecMutC1Counter.md`).
+- No-harm (L1, recorded commands verbatim): selftest PASS 267 cases 0 skipped; claims 17/17,
+  chain 17/22, broken control 1/2, archives `VERDICT_BEARING_EXPORTS=3/3`. The wave seat's
+  `--root .` mis-invocation (`w1/ExecNoHarmPin.md`) is a lesson mistake (QUALITY 53), not harm.
+- Frontier: S071 opened (coreutils `env(1)` `-u` semantics, local man page, no network);
+  census 70 → 71 rows (A 64→65, mined 47→48), validate exit 0 both ends; lesson
+  `corpus/lessons/round-37.md` (2 mistakes: no-harm mis-invocation scope, dispatched-vs-returned
+  count drift); QUALITY 53; README index rows for r36+r37.
+- Wave: v1 shape, wave 1 (39 seats, 8 returned, 31 dead — orchestrator deaths, never replaced)
+  + one residual reviewer/critic call (residuals: <32 attack items from returned output).
+  Spec/dispatch `.ufo/waves/round-37/{w1-spec.json,w1-dispatch.json}`, seat reports `w1/`.
+- Motivating evidence: r36 claims §Erratum 7 (BASH_ENV hole) and routed defect 4 (claim-body
+  pin through PATH); SCORECARD planned-r37 candidates; watchdog `lane-dead-no-report chousa round=37`.

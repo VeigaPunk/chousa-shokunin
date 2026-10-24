@@ -1,0 +1,187 @@
+{
+  "counter": "corpus/evidence/round37/c2-count.py",
+  "gate": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-37/controls/base-gate-r37.sh",
+  "gate_sha256": "a7d3922c768a217a2dcedf347b4de438b8dda4108e1335f5a39af6117e1f54e8",
+  "matched": 3,
+  "predicate": "PIN_CAPTURE_ENV_MATCH=7/7",
+  "predicate_holds": false,
+  "scenarios": [
+    {
+      "drift_out_tail": [
+        "GATE_DRIFT: none"
+      ],
+      "env": "none",
+      "expected": {
+        "baseline_echo_lines": 0,
+        "drift_line": "GATE_DRIFT: none",
+        "drift_rc": 0,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "id": "hold-plain",
+      "observed": {
+        "baseline_echo_lines": 0,
+        "drift_line": "GATE_DRIFT: none",
+        "drift_rc": 0,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "ok": true,
+      "pin_out_tail": [
+        "GATE_PIN: ok path=baseline.txt gate_sha256=a7d3922c768a217a2dcedf347b4de438b8dda4108e1335f5a39af6117e1f54e8"
+      ]
+    },
+    {
+      "drift_out_tail": [
+        "GATE_DRIFT: none"
+      ],
+      "env": "benign",
+      "expected": {
+        "baseline_echo_lines": 0,
+        "drift_line": "GATE_DRIFT: none",
+        "drift_rc": 0,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "id": "hold-benign",
+      "observed": {
+        "baseline_echo_lines": 0,
+        "drift_line": "GATE_DRIFT: none",
+        "drift_rc": 0,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "ok": true,
+      "pin_out_tail": [
+        "GATE_PIN: ok path=baseline.txt gate_sha256=a7d3922c768a217a2dcedf347b4de438b8dda4108e1335f5a39af6117e1f54e8"
+      ]
+    },
+    {
+      "drift_out_tail": [
+        "GATE_DRIFT: -GATE_GREP"
+      ],
+      "env": "echo",
+      "expected": {
+        "baseline_echo_lines": 0,
+        "drift_line": "GATE_DRIFT: none",
+        "drift_rc": 0,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "id": "env-echo-pin",
+      "observed": {
+        "baseline_echo_lines": 1,
+        "drift_line": "GATE_DRIFT: -GATE_GREP",
+        "drift_rc": 1,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "ok": false,
+      "pin_out_tail": [
+        "GATE_GREP: path=/usr/bin/grep source=default version=\"grep (GNU grep) 3.12-modified\""
+      ]
+    },
+    {
+      "drift_out_tail": [
+        "GATE_GREP: path=/usr/bin/grep source=default version=\"grep (GNU grep) 3.12-modified\""
+      ],
+      "env": "echo-on-drift",
+      "expected": {
+        "baseline_echo_lines": 0,
+        "drift_line": "GATE_DRIFT: none",
+        "drift_rc": 0,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "id": "env-echo-drift",
+      "observed": {
+        "baseline_echo_lines": 0,
+        "drift_line": "GATE_DRIFT: +GATE_GREP",
+        "drift_rc": 1,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "ok": false,
+      "pin_out_tail": [
+        "GATE_PIN: ok path=baseline.txt gate_sha256=a7d3922c768a217a2dcedf347b4de438b8dda4108e1335f5a39af6117e1f54e8"
+      ]
+    },
+    {
+      "drift_out_tail": [
+        "GATE_DRIFT: -GATE_GREP"
+      ],
+      "env": "fn",
+      "expected": {
+        "baseline_echo_lines": 0,
+        "drift_line": "GATE_DRIFT: none",
+        "drift_rc": 0,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "id": "env-fn-echo-pin",
+      "observed": {
+        "baseline_echo_lines": 1,
+        "drift_line": "GATE_DRIFT: -GATE_GREP",
+        "drift_rc": 1,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "ok": false,
+      "pin_out_tail": [
+        "GATE_GREP: path=/usr/bin/grep source=default version=\"grep (GNU grep) 3.12-modified\""
+      ]
+    },
+    {
+      "drift_out_tail": [
+        "GATE_DRIFT: -FINDING:CHAIN_SOURCE_MISSING -FINDING:CLAIM_SOURCE_MISSING -FINDING:POINTER_UNRESOLVED drift drift-sections drift_sections findings native refused root supported tallies tally verdict verified"
+      ],
+      "env": "root",
+      "expected": {
+        "baseline_echo_lines": 0,
+        "drift_line": "GATE_DRIFT: none",
+        "drift_rc": 0,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "id": "env-root-pin",
+      "observed": {
+        "baseline_echo_lines": 0,
+        "drift_line": "GATE_DRIFT: -FINDING:CHAIN_SOURCE_MISSING -FINDING:CLAIM_SOURCE_MISSING -FINDING:POINTER_UNRESOLVED drift drift-sections drift_sections findings native refused root supported tallies tally verdict verified",
+        "drift_rc": 1,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "ok": false,
+      "pin_out_tail": [
+        "GATE_PIN: ok path=baseline.txt gate_sha256=a7d3922c768a217a2dcedf347b4de438b8dda4108e1335f5a39af6117e1f54e8"
+      ]
+    },
+    {
+      "drift_out_tail": [
+        "GATE_DRIFT: none"
+      ],
+      "env": "strict",
+      "expected": {
+        "baseline_echo_lines": 0,
+        "drift_line": "GATE_DRIFT: none",
+        "drift_rc": 0,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "id": "env-strict-pin",
+      "observed": {
+        "baseline_echo_lines": 0,
+        "drift_line": "GATE_DRIFT: none",
+        "drift_rc": 0,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "ok": true,
+      "pin_out_tail": [
+        "GATE_PIN: ok path=baseline.txt gate_sha256=a7d3922c768a217a2dcedf347b4de438b8dda4108e1335f5a39af6117e1f54e8"
+      ]
+    }
+  ],
+  "seed": 37201,
+  "total": 7
+}

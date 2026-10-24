@@ -1,0 +1,138 @@
+{
+  "counter": "corpus/evidence/round37/c1-count.py",
+  "gate": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-37/controls/base-gate-r37.sh",
+  "gate_sha256": "a7d3922c768a217a2dcedf347b4de438b8dda4108e1335f5a39af6117e1f54e8",
+  "matched": 2,
+  "predicate": "CLAIM_PIN_PROVENANCE_MATCH=7/7",
+  "predicate_holds": false,
+  "scenarios": [
+    {
+      "expected": {
+        "finding": true,
+        "marker": "DRIFT",
+        "observed": "stale",
+        "rc": 1
+      },
+      "id": "hold-stale",
+      "observed": {
+        "finding": true,
+        "marker": "DRIFT",
+        "observed": "stale",
+        "rc": 1
+      },
+      "ok": true,
+      "shim": "none",
+      "tamper": true
+    },
+    {
+      "expected": {
+        "finding": false,
+        "marker": "CLEAN",
+        "observed": "supported",
+        "rc": 0
+      },
+      "id": "hold-match",
+      "observed": {
+        "finding": false,
+        "marker": "CLEAN",
+        "observed": "supported",
+        "rc": 0
+      },
+      "ok": true,
+      "shim": "none",
+      "tamper": false
+    },
+    {
+      "expected": {
+        "finding": true,
+        "marker": "DRIFT",
+        "observed": "stale",
+        "rc": 1
+      },
+      "id": "sha-shim-forge",
+      "observed": {
+        "finding": false,
+        "marker": "CLEAN",
+        "observed": "supported",
+        "rc": 0
+      },
+      "ok": false,
+      "shim": "sha256sum:pin",
+      "tamper": true
+    },
+    {
+      "expected": {
+        "finding": true,
+        "marker": "DRIFT",
+        "observed": "stale",
+        "rc": 1
+      },
+      "id": "cut-shim-forge",
+      "observed": {
+        "finding": false,
+        "marker": "CLEAN",
+        "observed": "supported",
+        "rc": 0
+      },
+      "ok": false,
+      "shim": "cut:pin",
+      "tamper": true
+    },
+    {
+      "expected": {
+        "finding": false,
+        "marker": "CLEAN",
+        "observed": "supported",
+        "rc": 0
+      },
+      "id": "sha-shim-other",
+      "observed": {
+        "finding": true,
+        "marker": "DRIFT",
+        "observed": "stale",
+        "rc": 1
+      },
+      "ok": false,
+      "shim": "sha256sum:other",
+      "tamper": false
+    },
+    {
+      "expected": {
+        "finding": false,
+        "marker": "CLEAN",
+        "observed": "supported",
+        "rc": 0
+      },
+      "id": "sha-shim-broken",
+      "observed": {
+        "finding": true,
+        "marker": "DRIFT",
+        "observed": "stale",
+        "rc": 1
+      },
+      "ok": false,
+      "shim": "sha256sum:broken",
+      "tamper": false
+    },
+    {
+      "expected": {
+        "finding": false,
+        "marker": "CLEAN",
+        "observed": "supported",
+        "rc": 0
+      },
+      "id": "cut-shim-broken",
+      "observed": {
+        "finding": true,
+        "marker": "DRIFT",
+        "observed": "stale",
+        "rc": 1
+      },
+      "ok": false,
+      "shim": "cut:broken",
+      "tamper": false
+    }
+  ],
+  "seed": 37101,
+  "total": 7
+}
