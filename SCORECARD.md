@@ -2259,3 +2259,20 @@ spans-≥32768 debt.
 - R4: not reproduced from the committed r39 spec, plan, and report: each reports reviewer 6 / revenger 2. The contrary 8/0 statement remains attributed to the spot-check; no source artifact is rewritten.
 - R5: the r39 phrase “two independent runners” is superseded. The frozen claim design records two seeds as L1 construction runs; the prepared wave was not dispatched by this seat. Correct wording: **two seeds, both L1 construction runs**.
 
+## Round 40 — measured claims (work commit `d164f88eb71a6c48a66ae1e7abfcb5fef82219d9`)
+
+Freeze: `corpus/evidence/round40/claims.md` (commit `6c01a4144b3637cc57a989ab464f71b8ae69595a`). Both predicates were measured on the committed work tree below.
+
+| Claim / axis | Axis score delta | Before → after | Counting command | Measured commit | Verdict |
+|---|---|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10; receipt evidence integrity) | 3/10 → 3/10; the legacy score counts only the three archive exports and was not redefined | active receipts 3/6 → 6/6 verify | `python3 corpus/evidence/round40/c1-count.py` | `d164f88eb71a6c48a66ae1e7abfcb5fef82219d9` | improved |
+| C2 calibration (R2–R5 disposition alignment) | unscored → unscored; no numeric baseline is invented | evidence-backed dispositions 0/4 → 4/4; R4 is explicitly not reproduced | `python3 corpus/evidence/round40/c2-count.py` | `d164f88eb71a6c48a66ae1e7abfcb5fef82219d9` | improved |
+
+No axis was harmed. Depth and coverage improved narrowly through the sourced receipt-digest note; freshness improved narrowly by re-opening S059 and updating its used-by path; adjacency is unchanged. No capability claim or scalar score is added.
+
+Learning trends: **expansion improved** — one new knowledge entry records the previously unheld receipt-expectation-digest subground and cites reopened S059; **quality improved** — the active receipt set verifies against the committed expectations bytes and the source census exits 0; **discernment unchanged** — the round's admit/reject sample has no non-author spot-check yet.
+
+## Planned — round 41 (not started)
+
+Candidates carried from round 39: the capture path's bare `mktemp`/`sed` names, loader-environment scrubbing, refusal-label re-derivation, and the spans-≥32768 boundary. No round-41 work is started here; freeze only 1–3 separately falsifiable claims after scoring their do-nothing controls.
+
