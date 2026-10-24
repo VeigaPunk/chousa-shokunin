@@ -82,11 +82,24 @@ def load_expectations():
     return rows
 
 
+def base_env():
+    """Scrub the startup/option channels a child would itself consume (the
+    gate sources BASH_ENV before its body runs) plus the families scenarios
+    add; PATH stays live (committed runs are made under a clean caller env)."""
+    env = dict(os.environ)
+    for key in list(env):
+        if (key.startswith("BASH_FUNC_") or key.startswith("CHOUSA_")
+                or key.startswith("RESEARCH_GATE_")
+                or key in ("BASH_ENV", "ENV", "SHELLOPTS", "BASHOPTS")):
+            del env[key]
+    return env
+
+
 def run_counter(counter, gate, seed, receipt, work):
     proc = subprocess.run(
         [sys.executable, counter, "--gate", gate, "--seed", str(seed),
          "--receipt", receipt, "--tmp", work],
-        capture_output=True, text=True)
+        capture_output=True, text=True, timeout=900, env=base_env())
     return proc
 
 
@@ -94,7 +107,7 @@ def run_verify(receipt, gate, counter):
     proc = subprocess.run(
         [sys.executable, VERIFY, "--receipt", receipt, "--gate", gate,
          "--counter", counter, "--expectations", EXPECTATIONS],
-        capture_output=True, text=True)
+        capture_output=True, text=True, timeout=120, env=base_env())
     return proc.returncode, proc.stdout.strip()
 
 
@@ -113,11 +126,15 @@ def write_self_rewrite_shim(shim, target, marker):
     os.chmod(shim, 0o755)
 
 
-def doctor(receipt_path, mutate):
-    """Apply mutate to the receipt; a field the legacy shape lacks stays absent.
+def doctor(receipt_path, mutate, re_digest=False):
+    """Apply mutate to the receipt and optionally re-seal its self-digest.
 
-    verify-receipts fails either way (a doctored binding mismatches, an absent
-    binding is a missing-field refusal), so the honest expectation holds.
+    re_digest=True rebuilds receipt_sha256 so the doctoring reaches the NAMED
+    binding check (counter/expect) instead of stopping at the self-digest;
+    re_digest=False leaves the digest stale so the self-digest check fires.
+    A field the legacy shape lacks stays absent — verify-receipts fails either
+    way (a doctored binding mismatches, an absent binding is a missing-field
+    refusal).
     """
     with open(receipt_path, "r", encoding="utf-8") as fh:
         receipt = json.load(fh)
@@ -125,6 +142,8 @@ def doctor(receipt_path, mutate):
         mutate(receipt)
     except (KeyError, TypeError):
         pass
+    if re_digest and "receipt_sha256" in receipt:
+        receipt["receipt_sha256"] = receipt_digest(receipt)
     with open(receipt_path, "w", encoding="utf-8") as fh:
         json.dump(receipt, fh, indent=2, sort_keys=True)
         fh.write("\n")
@@ -174,11 +193,16 @@ def run_scenario(counter, gate, seed, work, sid, expect):
                  "body-tamper-detected"):
         # The honest receipt must verify first: otherwise the tampered copy's
         # refusal only restates that the pipeline is unverifiable (the
-        # before-state), not that the doctoring was detected.
+        # before-state), not that the doctoring was detected. The counter and
+        # expectation doctors RE-SEAL the self-digest so the refusal must come
+        # from the NAMED binding check; the body doctor stays unsealed so the
+        # self-digest check fires. The exact verifier line is recorded so the
+        # named check is the asserted observable, not any refusal.
         clean = os.path.join(work, "%s-clean.json" % sid)
         run_counter(counter, gate, seed, clean, work)
-        crc, _ = run_verify(clean, gate, counter)
+        crc, cout = run_verify(clean, gate, counter)
         observed["clean_verify_rc"] = crc
+        observed["clean_verify_out"] = cout
         if crc != 0:
             observed["verify_rc"] = "not-measured"
             return {"id": sid, "expect": expect, "observed": observed,
@@ -189,19 +213,20 @@ def run_scenario(counter, gate, seed, work, sid, expect):
             def flip_counter(r):
                 r["counter_sha256"] = ("0" if r["counter_sha256"][0] != "0"
                                        else "1") + r["counter_sha256"][1:]
-            doctor(tampered, flip_counter)
+            doctor(tampered, flip_counter, re_digest=True)
         elif sid == "expect-tamper-detected":
             def flip_expect(r):
                 r["expect_sha256"] = ("0" if r["expect_sha256"][0] != "0"
                                       else "1") + r["expect_sha256"][1:]
-            doctor(tampered, flip_expect)
+            doctor(tampered, flip_expect, re_digest=True)
         else:
             def flip_body(r):
                 r["matched"] = r["matched"] - 1 if r["matched"] > 0 else 1
                 r["predicate_holds"] = not r["predicate_holds"]
             doctor(tampered, flip_body)
-        vrc, _ = run_verify(tampered, gate, counter)
+        vrc, vout = run_verify(tampered, gate, counter)
         observed["verify_rc"] = vrc
+        observed["verify_fail"] = vout
 
     elif sid == "legacy-receipt-refused":
         # A legacy (round-37 shape) receipt must fail closed — and the subject
@@ -224,7 +249,13 @@ def run_scenario(counter, gate, seed, work, sid, expect):
     else:
         raise ValueError("unknown scenario: %s" % sid)
 
-    ok = all(observed.get(k) == v for k, v in expect.items())
+    ok = True
+    for k, v in expect.items():
+        if k.endswith("_contains"):
+            if v not in str(observed.get(k[:-len("_contains")], "")):
+                ok = False
+        elif observed.get(k) != v:
+            ok = False
     return {"id": sid, "expect": expect, "observed": observed, "ok": ok}
 
 
@@ -267,6 +298,10 @@ def main():
 
     work = tempfile.mkdtemp(prefix="chousa-r38-c2-", dir=base_tmp)
     try:
+        if args.receipt and os.path.exists(args.receipt):
+            # A run that refuses must not leave a valid-looking stale receipt
+            # at the requested path (the refusal publishes nothing).
+            os.unlink(args.receipt)
         gate_sha_pre = sha256_file(gate)
         rows = []
         for sid in SCENARIO_ORDER:
@@ -288,7 +323,9 @@ def main():
               % ("PASS" if r["ok"] else "FAIL", r["id"], r["expect"],
                  r["observed"]))
     print("RECEIPT_BINDING_MATCH=%d/%d" % (matched, total))
-    holds = matched == total
+    # The frozen predicate labels 7/7; the count is the claim, not whatever
+    # the table happens to hold.
+    holds = matched == 7 and total == 7
     if args.receipt:
         receipt = {
             "counter": os.path.relpath(__file__),

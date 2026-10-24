@@ -1,7 +1,7 @@
 {
   "counter": "corpus/evidence/round38/c2-count.py",
-  "counter_sha256": "bc325cf4785f62ef3eeca3ea2d8a61094822a0c4345f07ae314c408cf6507818",
-  "expect_sha256": "7cd5d824b4f927329927679f53c747edff0b6c405ff98d1701619519b2eaebc9",
+  "counter_sha256": "6aa8009892fe92ba5ba1e43c14755ff20f2ce4f62c34f7eec1ac1428719a00bf",
+  "expect_sha256": "d34f17353fec83ed2e7b78b41cebcd2a6d309a85d724dbf1097cf6a17afaf8aa",
   "expectations": "corpus/evidence/round38/expectations.jsonl",
   "gate": "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh",
   "gate_sha256": "37e2b9968706adabd095c6ed93d5e3035a014e1961dfe85d44dc80d28ab6d27d",
@@ -10,11 +10,10 @@
   "matched": 0,
   "predicate": "RECEIPT_BINDING_MATCH=7/7",
   "predicate_holds": false,
-  "receipt_sha256": "1879a1a21a81ad3f1de4473f143b6d02d7a335fb82dadf31891cc0c434dc5d5d",
+  "receipt_sha256": "c037a571e67ca959e3e9354676c4c833620319c8f1a47ac2bd67192dfd385324",
   "scenarios": [
     {
       "expect": {
-        "counter_rc": 0,
         "receipt": true,
         "verify_rc": 0
       },
@@ -40,7 +39,6 @@
     },
     {
       "expect": {
-        "counter_rc": 0,
         "receipt": true,
         "verify_foreign_rc": 0,
         "verify_landed_rc": 1
@@ -57,10 +55,12 @@
     {
       "expect": {
         "clean_verify_rc": 0,
+        "verify_fail_contains": "counter-sha256-mismatch",
         "verify_rc": 1
       },
       "id": "counter-tamper-detected",
       "observed": {
+        "clean_verify_out": "VERIFY-FAIL: missing-field counter_sha256",
         "clean_verify_rc": 1,
         "verify_rc": "not-measured"
       },
@@ -69,10 +69,12 @@
     {
       "expect": {
         "clean_verify_rc": 0,
+        "verify_fail_contains": "expect-sha256-mismatch",
         "verify_rc": 1
       },
       "id": "expect-tamper-detected",
       "observed": {
+        "clean_verify_out": "VERIFY-FAIL: missing-field counter_sha256",
         "clean_verify_rc": 1,
         "verify_rc": "not-measured"
       },
@@ -81,10 +83,12 @@
     {
       "expect": {
         "clean_verify_rc": 0,
+        "verify_fail_contains": "receipt-self-digest",
         "verify_rc": 1
       },
       "id": "body-tamper-detected",
       "observed": {
+        "clean_verify_out": "VERIFY-FAIL: missing-field counter_sha256",
         "clean_verify_rc": 1,
         "verify_rc": "not-measured"
       },
@@ -92,7 +96,6 @@
     },
     {
       "expect": {
-        "counter_rc": 0,
         "hold_verify_rc": 0,
         "receipt": true,
         "verify_rc": 1

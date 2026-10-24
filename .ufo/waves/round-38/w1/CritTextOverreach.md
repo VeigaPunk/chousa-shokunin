@@ -1,0 +1,78 @@
+# CritTextOverreach
+## Verdict
+Both frozen seven-cell predicates reproduce; their universal prose overstates coverage, and receipt-only doctoring can verify without changing committed bytes. This is a textual/coverage review, not an admission judgment.
+Axes: **operability**, **calibration**.
+## Evidence
+All lane paths below are rooted at `/home/vgpnk/Projects/shokunin/chousa-shokunin`; `R` denotes that absolute root, `E=R/corpus/evidence/round38`, and `T=/tmp/chousa-r38-CritTextOverreach.XEjVaT` (created with `mktemp -d /tmp/chousa-r38-CritTextOverreach.XXXXXX`). Commands used the expanded absolute paths.
+- E1: `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin rev-parse master` → `504c1d2a1257a9ac6e5d752dcaf3f0bb0a35d05f`.
+- E2: `env C1_TMP=T python3 E/c1-count.py --gate R/tools/research-gate.sh --seed 38881 --receipt T/c1-s38881.json` → seven PASS rows, `ENV_PIN_CAPTURE_MATCH=7/7`, exit 0; receipt `predicate_holds=true`.
+- E3: `env C1_TMP=T C2_TMP=T python3 E/c2-count.py --gate R/tools/research-gate.sh --seed 38882 --receipt T/c2-s38882.json` → seven PASS rows, `RECEIPT_BINDING_MATCH=7/7`, exit 0; receipt `predicate_holds=true`.
+- E4: `sha256sum R/tools/research-gate.sh E/c1-count.py E/c2-count.py E/expectations.jsonl R/.ufo/waves/round-37/controls/base-gate-r37.sh` → respectively `37e2b9968706adabd095c6ed93d5e3035a014e1961dfe85d44dc80d28ab6d27d`, `da1d915b51801fd6d25ebf857318afc87c08c4876dd25fe4055fdede1ede3f74`, `bc325cf4785f62ef3eeca3ea2d8a61094822a0c4345f07ae314c408cf6507818`, `7cd5d824b4f927329927679f53c747edff0b6c405ff98d1701619519b2eaebc9`, `a7d3922c768a217a2dcedf347b4de438b8dda4108e1335f5a39af6117e1f54e8`.
+- E5: `git -C R show 95e33de8250ad9da8657d5af03958f4df53165f0:tools/research-gate.sh | sha256sum` → `9fcac047ddadd616fcf171534f6e6557f3e68271e353a79d81b218832321cf39  -`. Thus the cited a7 control is NOT the gate in the stated pre-round tree.
+- E6: `python3 T/audit_receipts.py` cloned E2's receipt and invoked `python3 E/verify-receipts.py --receipt T/<name>.json --gate R/tools/research-gate.sh --counter E/c1-count.py --expectations E/expectations.jsonl`:
+  - `seed-unrehashed: rc=1 VERIFY-FAIL: receipt-self-digest`
+  - `seed-rehashed: rc=0 VERIFY: ok receipt=seed-rehashed.json gate=research-gate.sh counter=c1-count.py`
+  - `false-observation-rehashed: rc=0 VERIFY: ok receipt=false-observation-rehashed.json gate=research-gate.sh counter=c1-count.py`
+  - `empty-proof-rehashed: rc=0 VERIFY: ok receipt=empty-proof-rehashed.json gate=research-gate.sh counter=c1-count.py`
+  The false observation sets the first row's `observed.pin_rc=99`, retaining its successful `ok`. The empty proof sets `scenarios=[]`, `matched=total=0`, `predicate_holds=true`. Each accepted variant recomputes the public canonical-body SHA256; gate/counter/expectation files remain untouched. Full reproducer and outputs' receipt inputs are in T.
+- E7: `python3 T/probe_debt.py` → `exported-bash-function: pin_rc=0 baseline=True function_marker=True`; construction seed pairs `c1 38001/38011` and `c2 38101/38111` both report `changed_keys=receipt_sha256,seed`.
+- E8: Python `subprocess.run(['/usr/bin/bash', R+'/tools/research-gate.sh', '--help'], env={...,'RESEARCH_GATE_ENV':T+'/missing-env'}, capture_output=True,text=True)` → `rc=0`, no `ENV_PROVENANCE`, first stdout `usage: research-gate.sh [--selftest] [--help]`.
+- E9: A second Python subprocess exported `BASH_FUNC_bash%%=() { printf "%s\\n" "$*" >> "T/bash-invocations.txt"; return 77; }` and launched `/usr/bin/bash R/tools/research-gate.sh --pin T/bash-args-baseline.txt` → pin exit 0. Reading the marker shows five calls: `R/tools/research-gate.sh verify record.md --root .`, then `verify-claims claims.jsonl`, `verify-chain record.md`, `verify-sweeps record.md`, `verify-integrity record.md` (each `--root .`); NOT the `verify-all` capture launch.
+- R1: committed `E/receipts/c1-base-s38001.json` has 2/7; `c1-after-s38001.json` and `c1-after-s38011.json` each have 7/7. R2: committed `c2-base-s38101.json` has 0/7; `c2-after-s38101.json` and `c2-after-s38111.json` each have 7/7. These are construction evidence, not independent post-freeze seed diversity.
+Expectation cross-check keys X1–X14 are literal line numbers in `E/expectations.jsonl`:
+- X1–X5 (`hold-plain`, `hold-fn-benign`, `env-fn-echo-scrub`, `env-fn-root-move`, `env-fn-suppress`): pin exit 0, file true, echo count 0, drift exit 0, exact `GATE_DRIFT: none`.
+- X6–X7 (`env-override-missing`, `env-override-fake`): pin exit 2, file false, refusal `ENV_PROVENANCE`. No successful override, relative override, PATH mutation, other mode, GNU identity attestation, or invocation trace is asserted.
+- X8: counter 0 / receipt true / verify 0; X9: rewrite counter 2 / receipt false; X10: foreign counter 0 / receipt true / foreign verify 0 / landed verify 1.
+- X11–X13: clean verify 0 / doctored verify 1; X14: hold verify 0 / legacy counter 0 / receipt true / legacy verify 1. None asserts a diagnostic name, row-content re-derivation, committed-tree membership, rehashed forgery rejection, or gate immutability between samples.
+## Findings
+1. **Full marking.** Every sentence/propositional fragment in `E/claims.md` is covered below; headings and command blocks inherit their enclosing row. MEASURED means the stated observation has a counter cell or committed receipt; LIMIT is a named scope/acceptance rule, not proof; INFERENCE is unmeasured narrative/mechanism; OVERREACH exceeds what the cells establish. Compound sentences receive the strongest applicable mark, with measured subclauses identified.
+| Claims lines / sentence | Mark | Grounding / exact boundary |
+|---|---|---|
+| 1–3: round/lane/attempt metadata | INFERENCE | Identity labels, not scored observations. |
+| 5–7: freeze chronology and construction runs | INFERENCE | R1/R2 establish seed labels, not temporal ordering or independence. |
+| 7–9: immutable body, append-only errata | LIMIT | Named freeze policy; not a counter measurement. |
+| 11–13: base tip at freeze and r37 gate identity | INFERENCE | E5 confirms that tree's gate hash; freeze timing remains narrative. |
+| 14–15: candidate gate SHA256 | MEASURED | R1/R2 and E2/E3 gate bindings equal E4. |
+| 17–20: routed queue and S070 work | INFERENCE | Routing narrative; no X cell measures queue fulfillment. |
+| 20–23: Errata context, closes same channel, never re-litigated | INFERENCE | X3–X5 cover only named env-function witnesses; routing/exhaustion is not measured. |
+| 27–35: ONE absolute GNU env, refusal before any mode, cannot interpose/re-add/suppress | OVERREACH | X3–X7 measure these three functions and two invalid overrides only. E8 disproves an unrestricted “before any mode” reading. Absolute invocation is visible at gate:4001; GNU identity remains self-reported. No PATH cell or arbitrary-function quantification exists. |
+| 37–39: surface and counter/expectation attribution | MEASURED | E2 exercised X1–X7 through `gate_canonical_capture`; R1 records all rows. |
+| 41–49: P1, two fresh seeds, no lower committed count | LIMIT | Frozen acceptance/saturation condition, not evidence that it has been met by the independent wave. |
+| 49–50: code condition and receipt labels | MEASURED | R1/E2 contain matched 7 and predicate true; c1:233–256 computes from seven rows. |
+| 52–53: any below-7 run kills C1 | LIMIT | Named kill rule. |
+| 53–54: different gate hash is not this measurement | LIMIT | Named gate-identity restriction. |
+| 54–56: weakened fixture not a measurement | LIMIT | Named fixture-validity restriction. |
+| 58–60: before gate 2/7 and receipt pointer | MEASURED | R1 base has precisely 2/7 under X1–X7. |
+| 60–65: two holds, five failures, echo/root/suppress/ignored overrides | MEASURED | R1 base: X1/X2 pass; X3 echo=1/drift=1/`-GATE_GREP`; X4 drift=1 with root-related changes; X5 pin=2/file=false; X6/X7 pin=0/file=true/refusal empty. Root mechanism is supplied by c1:67–69,143–147, not a directly recorded cwd. |
+| 67–69: cheapest control, exact pre-round bytes, same seven, 2/7 | OVERREACH | Seven/2 are measured by R1; “exact pre-round gate” is contradicted by E4/E5, and cheapest is not measured. |
+| 69: do-nothing lane commit cannot reach 7/7 | OVERREACH | R1's older a7 gate is not the stated pre-round 9fc gate; it cannot establish this universal/control identity by itself. |
+| 70: receipt pointer | MEASURED | R1 base exists and contains the stated observations. |
+| 74–82: counter itself/never gate measures all bindings; any changed gate refuses/no receipt | OVERREACH | Honest receipt fields are measured in R1/R2/E2/E3; X9 measures persistent F1 rewrite only. c1:220–229 and c2:270–280 sample digests, not continuous execution identity. “Never by the gate” describes hash-call placement, not an isolated trusted writer boundary; counter/expectation hashes are taken after scenarios (c1:244–246, c2:295–297). |
+| 82–84: re-derives every binding from committed bytes, fails closed/named on any doctoring/legacy | OVERREACH | X8–X14 assert selected exit codes only; E6 accepts altered observations and an empty proof. Verifier:89–107 hashes supplied filesystem paths, not committed-tree membership; :112–118 counts asserted `ok` values, without loading expectations or checking the scenario set. |
+| 86–89: surface/c2 counter/expectation attribution | MEASURED | E3 and R2 cover X8–X14 on the named pipeline. |
+| 91–99: P2 fresh seeds/no lower committed count | LIMIT | Frozen acceptance/saturation condition, not independent proof. |
+| 99: code condition `matched == 7` | MEASURED | R2/E3 have seven matched rows; c2:284–308 implements the fixed seven-row predicate. |
+| 101–104: four C2 kill conditions | LIMIT | Named acceptance rules; E6 is a doctor-undetected counterexample to the prose, not an exercised lower frozen counter count. |
+| 106–109: r37-counter before score 0/7 | MEASURED | R2 base records all seven mismatches under X8–X14. |
+| 109–112: rewrite accepted, receipts verify nowhere, no honest clean receipt | OVERREACH | R2 measures X9 counter=0/receipt=true and X11–X13 clean verify=1; “nowhere” must mean this particular verifier, not every verifier. Clean receipt files were constructed; they are unverifiable under this new shape contract. |
+| 114–116: r37 counter is exact pre-round pipeline/control, seven cells score 0 | INFERENCE | Seven/0 are measured by R2; exact historical pipeline identity is not bound by those cells. |
+| 116: receipt pointer | MEASURED | R2 base contains the stated observations. |
+| 120–122: C1 gate changes versus C2 counter/verifier changes | INFERENCE | Implementation-surface description, not a counter observation. |
+| 122–125: either lands alone, any-counter pipeline, gate-agnostic | OVERREACH | X8/X10 explicitly require subject-counter exit 0; default subject is the C1 counter (c2:240). Its success depends on the C1 gate behavior. Separate edit surfaces do not establish independent frozen predicates. |
+| 125–126: scheduling only/not dependency; wave mutants demonstrate both directions | OVERREACH | Dependency conclusion is stronger than X8/X10 allow; no single-hunk mutant receipt is among the six frozen construction receipts. Later wave evidence cannot be presumed here. |
+| 130: C1 pins capture env invocation only | LIMIT | Explicit named boundary; no loader/hermeticity guarantee follows. |
+| 130–133: exported bash shadows capture bare bash; grandchild debt | OVERREACH | Real function-export debt, misidentified callsite: gate:4001–4004 passes `bash` as an env argument, while E9 identifies interposition at downstream section execution, gate:3642. Correct the mechanism, do not erase the debt. |
+| 134–136: loader env not scrubbed; preload could remove flags | LIMIT | Named loader exclusion; gate:4001–4004 has no loader scrub. This particular env-binary preload witness is hypothetical here, not X-cell coverage. |
+| 136–139: only function-export/PATH independence, loader scrub carried | LIMIT | Scope/debt declaration; X3–X5 support listed functions, not a separately tested PATH matrix or loader repair. |
+| 140–144: noexec exclusion, false success, no in-body fix, separate boundary carried | LIMIT | Named startup exclusion, grounded by r37 claims Erratum context/residual CritC2Kill:14,375–405; no X cell tests it. No claim of new measurement here. |
+| 145–146: dishonest version reporting excluded | LIMIT | Named self-report limit; gate:491–492 accepts the `GNU coreutils` substring, not binary identity. |
+| 147–149: hostile counter/expected-string gate not trusted | LIMIT | Named black-box honesty exclusion (r37 F2), not a new r38 counter cell. |
+| 149–151: binds WHICH judged bytes/re-derives arithmetic; forger must attack committed bytes | OVERREACH | E6 changes receipt data alone and verifies; current file hashes do not prove historical executing/loaded bytes, and the arithmetic recount trusts `ok`. |
+| 152–153: seed namespaces fixture dirs; content seed-invariant, carried | OVERREACH | E7: both receipt pairs differ in seed AND body digest. c1:218/c2:268 use random mkdtemp prefixes, not seed namespacing; c1:247/c2:298 record the seed as metadata. Only scenario content/coverage is seed-invariant. |
+| 154–155: legacy fails closed and never re-stamped | LIMIT | Legacy refusal is MEASURED by X14/R2; never re-stamping is a policy, not a measured global historical property. |
+2. **Calibration counterexample / smallest safe correction:** E6 contradicts “any doctored field” and “must attack committed bytes,” even with the named counter-honesty limit: the counter itself is unchanged. Append an erratum narrowing this to un-rehashed mutation detection and filesystem hash consistency. If semantic verification is retained as a goal, require the exact scenario IDs/cardinality, load frozen expectations, recompute each `ok`, and enforce the seven-row predicate; that still does not authenticate execution. A trusted external attestation boundary would be a new design, not an implied property of this checksum.
+3. **False control provenance / smallest safe correction:** claims:68 must distinguish the older a7 control from the actual pre-round 9fc bytes (E4/E5). Independent execution against the actual pre-round tree is needed for the do-nothing statement; no result for that unexecuted counter/gate combination is asserted here. This affects calibration and the operability comparison's attribution, not the observed E2 score.
+4. **Premature independence/generalization / smallest safe correction:** claims:27–35 and :122–126 should name the tested witnesses and describe separate implementation surfaces without claiming independent frozen-predicate success. Preserve all named exclusions; do not silently reinterpret seven passing cells as arbitrary-environment or immutable-execution proof.
+5. **Carried-debt accuracy / smallest safe correction:** identify the real exported-bash interposition at section calls (E9/gate:3642), retain loader/noexec/self-report exclusions as limits rather than measured fixes, and describe seed diversity as label-only with seed/digest-changing receipts (E7), not temp-dir namespacing or byte-invariant receipt content.
+## Limits
+No lane source, frozen claim, expectation, receipt, git/jj state, fleet file, or sibling report was edited. Only this report and isolated T fixtures were written; no tools were installed or upgraded, no other runtime/judge was invoked, and no agents/jobs were spawned. One fresh seed per frozen counter was run, not the two-seed closure; no PATH, LD_PRELOAD, transient-rewrite, or actual-pre-round counter experiment is claimed. Findings distinguish reproduced cells, explicit limits, source-derived inference, and local falsifying receipt fixtures; disposition remains with the canonical judge.

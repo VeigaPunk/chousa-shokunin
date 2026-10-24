@@ -35,7 +35,9 @@ the tampered source); `sha-shim-other` / `sha-shim-broken` / `cut-shim-broken`
 place wrong-digest or broken shims (an intact source must still read
 CLEAN/supported — the gate may honour PATH for other tools, it must not need
 it for the pin). Base gate `a7d3922c…` scores 2/7; landed gate `9fcac047…`
-scores 7/7 on every committed receipt.
+scores 7/7 on every committed after-receipt (the committed base receipt
+`c1-base-s37001.json` scores 2/7 against the base gate by design; corrected
+round 38 after the round-37 receipt audit finding L1).
 
 ## Named limits (from claims.md §Limits, frozen)
 

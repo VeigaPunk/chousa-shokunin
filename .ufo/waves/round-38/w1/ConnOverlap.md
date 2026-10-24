@@ -1,0 +1,29 @@
+# ConnOverlap
+
+## Verdict
+Chousa r38 stays in-province: no sibling round-37/38 claim owns the research-gate capture or round-38 receipt fields; keep Erratum-6's LD_PRELOAD scrub out of C1's 7/7.
+
+## Evidence
+Axes named: operability (C1, lowest 3/10), calibration (C2). No counter re-run, so no seed. No tool installed.
+
+Re-executed (python3, 2026-10-24): token counts of BASH_FUNC, research-gate, ENV_PROVENANCE, CHOUSA_GREP_PIN, gate_sha256_pre over sibling SCORECARD.md files (kake, kumitate, kaidoku, kotodama, mori, tsukuroi, kotoba) and fleet reports .ufo/reports/round-37/{kake,kumitate,mori,kotodama}.md plus .ufo/reports/round-38/{kake,kumitate,mori,kotodama}.md. Observed: ABSENCE / none of the listed sibling files contain those tokens. Fleet dirs: round-37 also has chousa.md (own prior round); round-38 has no chousa.md, no kaidoku.md, no tsukuroi.md.
+
+Frozen claim text: chousa-shokunin/corpus/evidence/round38/claims.md:25-36 (one absolute GNU env, BASH_FUNC_env%%) and :72-84 (bindings measured by the counter: gate_sha256_pre==gate_sha256_post, counter_sha256, expect_sha256, receipt_sha256). Verifier usage is explicit paths only (corpus/evidence/round38/verify-receipts.py:24-26), not a fleet walk.
+
+## Findings
+1. In-province (no adjacency violation). C1's surface is gate_canonical_capture in this lane's tools/research-gate.sh; C2's surface is this lane's round-38 counters and verify-receipts.py (claims.md:37-39,86-89). PROVINCE.md:5-8,17 owns the lane's own gates and says report, never absorb. The claims file names no sibling tool.
+
+2. Homonym, not shared ground — kumitate r37/r38. Contested word: pin. Round 37 pre-registration (kumitate-shokunin/SCORECARD.md:1921-1923) says PIN v1 asserts the commit, not the bytes. Round 38 correction (:1948-1956) replaces the checklist anchor with scripts/anchor-truth.mjs (per-anchor pin, frozen --base). kumitate-gate-pins-v1 (:312-322) hashes lane scripts (pin.bind-oracle, pin.receipt-attest). Fleet .ufo/reports/round-38/kumitate.md:22-26 is the anchor-truth floor. Chousa does not absorb that ground.
+
+3. Homonym — kake r37/r38. Contested scope: sealed-case counters and receipt identity for scripts/robots_audit.py, not capture env. Fleet .ufo/reports/round-38/kake.md:9-17,33-38: C2 predicate passed >= 20 of 20; harm receipts carry toolSha256; pinned_selftest.py pins the r37 postfix selftest. Scorecard :2141 requires post-measurement receipts to name the tool sha256; :2331-2333 records that pinned_selftest.py's runner field can be forged by a summary. Same class as chousa's end-to-end liar limit (claims.md:147-151), different artifact. Not absorbed.
+
+4. Homonym, and one contradiction — mori. Round 38 C1 (mori-shokunin/SCORECARD.md:2153) binds drift-corpus content (count-c4.py), not a gate file across a run. Round 6 (:304-306) drops env pins before any census (seed stripped from environ). That is the opposite of chousa pinning one absolute env. Synthesizing "adopt mori's env-pin drop" would remove the capture binary and harm operability. Not absorbed.
+
+5. Homonym — kotodama r37, kaidoku planned, kotoba planned. Kotodama r37 records O10: the r36 receipt's runner_sha256 null (kotodama-shokunin/SCORECARD.md:682-690; fleet .ufo/reports/round-37/kotodama.md:21-28). Kotodama r38 is argot counters and a manifest roster (fleet round-38/kotodama.md:13-32), not shell env. Kaidoku planned (kaidoku-shokunin/SCORECARD.md:152-154) reconciles version-pinned REA inventory. Kotoba planned round 37 (kotoba-shokunin/SCORECARD.md:70) is source-blind instruments and substrate pins (PROVINCE.md:14). None is BASH_FUNC_env%%.
+
+6. Nearest real channel, still not absorbed — tsukuroi. No fleet r37/r38 report. Planned header is historical (tsukuroi-shokunin/SCORECARD.md:54-56, superseded later). Round 31 C2 (:1203-1207,1213) measures loader-env: a traced execve after the tool's first exec still carrying LD_PRELOAD / LD_LIBRARY_PATH / PYTHONPATH is leaking; a hollow control that exits 0 with no output whenever LD_PRELOAD is set must still read leaking. Province owns host-tool child environments (PROVINCE.md:8-14), not research-method gates. Chousa's limit (claims.md:134-139) already refuses loader hermeticity and names env -u LD_PRELOAD as carried debt, not as C1.
+
+7. Proposed move (calibration up, operability unharmed). In frontier material only — do not edit frozen claims.md — state four non-claims: (a) C1's 7/7 stays function-export/PATH independence of the one capture env; an env -u LD_PRELOAD unset is a separable later surface and must not become an eighth cell or a relabel of the seven. Tsukuroi's hollow control shows an exit-0 unset is not a loader trace; folding it into 7/7 would make the operability count mean two mechanisms. (b) verify-receipts.py stays on explicit --receipt/--gate/--counter for round-38 chousa bytes; a missing gate_sha256_pre on a kake, kotodama, or kumitate receipt is not a C2 kill. (c) Do not add a self-reported runner string to the binding set (kake :2331-2332). (d) Do not import mori's environ-drop or tsukuroi's eleven-tool probe.
+
+## Limits
+Contradiction, not a scalar: shared words (pin, receipt, binding, env) and disjoint objects. Absence scan did not open every seat file under sibling .ufo/waves/round-37|38 (fleet reports and SCORECARD planned/round sections were the assigned surface). Kaidoku and tsukuroi have no fleet round-37/38 report; their planned/later scorecard sections were read instead. This seat did not re-derive ENV_PIN_CAPTURE_MATCH or RECEIPT_BINDING_MATCH. Risks if the move is ignored: a later frontier that finishes Erratum 6 inside c1-count launders calibration, and a verifier pointed at sibling receipts false-fails them. Verification for the parent: frontier draft contains no new c1 scenario whose id is LD_PRELOAD; verify-receipts.py usage remains the three explicit paths at :24-26.

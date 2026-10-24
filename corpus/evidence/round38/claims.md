@@ -131,6 +131,12 @@ not a dependency; the wave's single-hunk mutants demonstrate each direction.
   `bash` can still shadow the capture's bare `bash` call (the planned-list
   parent-function class); the grandchild `bash` lookup is the next witness,
   carried debt.
+- C1's env pin does not scrub the loader environment of the `env` child — the
+  Erratum-6 class on a second binary: an unprivileged `LD_PRELOAD` active for
+  `/usr/bin/env` could strip the `-u` flags before they apply. The claim is
+  function-export/PATH independence of the capture's env invocation, not
+  loader hermeticity; the `env -u LD_PRELOAD …` scrub is carried debt with
+  Erratum 6's fix direction.
 - C1 does not cover `SHELLOPTS=noexec` (demonstrated again on the landed gate:
   `SHELLOPTS=noexec bash tools/research-gate.sh --pin P` exits 0 with no
   baseline): bash applies `-n` before the gate body executes, so no in-body
@@ -147,3 +153,91 @@ not a dependency; the wave's single-hunk mutants demonstrate each direction.
   seed-invariant (the r37 Erratum-4 class, carried).
 - The r37 counters' receipts (e.g. round-37's own) are legacy shape: they fail
   closed under verify-receipts and are never re-stamped.
+
+## Errata (appended; the body above is frozen)
+
+**Erratum 1 (pre-dispatch, disclosed).** The C1 loader-env limit bullet was
+inserted into §Limits after the freeze commit but before any wave ran (the
+orchestrator's wave-1 dispatch followed it). It is integrated here as part of
+the wave-1 landing; the body text is otherwise untouched.
+
+**Erratum 2 (wave-1, C2 verifier kills — critical, closed pre-wave-2).**
+CritC2Kill, CritTextOverreach, RevClaimsC2 and RevCounterC2 demonstrated that
+the frozen verifier certified self-consistency only: re-sealed doctors keeping
+`ok=true`, a re-bound legacy r37 receipt (public hashes + recomputed digest), a
+c1 receipt rerouted under `--counter c2-count.py` (counter hash swapped to
+c2's public hash + re-seal), doctored observations, and a vacuous empty
+receipt all verified `ok` — contradicting the frozen sentence "fails closed on
+any doctored field and on legacy round-37 receipts". Closed pre-wave-2:
+`verify-receipts.py` now (i) binds the counter family and the frozen predicate
+string, (ii) parses the expectation table it hashes and requires the exact
+frozen scenario census, each row's `expect` tied to the frozen `expect`,
+(iii) re-derives every `ok` from frozen expectations and the receipt's own
+observations, and (iv) keeps the file bindings and arithmetic. All committed
+receipts were regenerated under the strengthened pipeline. Narrowed reading:
+verification certifies integrity and self-consistency against committed bytes,
+NOT authorship — a fabricator holding the public hashes who reproduces honest
+observations can write an indistinguishable receipt (the round-37 F2 residual,
+verify side). Carried debt (r39): bind `verifier_sha256` into c2's receipts (a
+replaced verifier currently re-adjudicates old receipts silently —
+RevSeparability).
+
+**Erratum 3 (wave-1, C2 tamper cells, closed pre-wave-2).** MutVerify,
+RevCounterC2 and ScribeKnowledgeC2 found `doctor()` never re-sealed, so all
+three tamper cells were caught at the receipt-self-digest check and the named
+binding checks were unexercised; a verifier mutated to drop those checks still
+scored 7/7. Closed: the counter/expect doctors re-seal and the exact verifier
+refusal line is the asserted observable (`counter-sha256-mismatch` /
+`expect-sha256-mismatch` / `receipt-self-digest`).
+
+**Erratum 4 (wave-1, C2 cell coupling, closed pre-wave-2).** ExecDoNothingCtl,
+RevSeparability and RevClaimsC2 found three c2 cells asserted the SUBJECT
+counter's exit code, coupling C2's predicate to C1's gate fix (base gate:
+4/7) and falsifying the §Separability sentence "c2 is gate-agnostic" ON THE
+FROZEN BYTES. Closed: the three cells assert receipt existence and
+verification only. Reading: C2's do-nothing control is the pre-round PIPELINE
+(the r37 counter, 0/7); a tree landing only C2 (r38 counters, unfixed gate)
+also scores 7/7 — that is separability, not a do-nothing path, because the
+r38 counters ARE the claimed work.
+
+**Erratum 5 (wave-1, harness hardening, closed).** RevCounterC1 found
+`base_env()` left `BASH_ENV` live: a caller startup file is sourced by the
+gate process itself (the gate's named r37 limit), and an ambient `BASH_ENV`
+(unsetting the attack function, forging refusal tokens) moved even the r37
+gate to 7/7 (seed 38219, report-only evidence). Closed: the scenario
+environment scrubs `BASH_ENV`/`ENV`/`SHELLOPTS`/`BASHOPTS`, the gate
+invocation pins `/usr/bin/bash` with timeouts, and the refusal observable is
+the anchored `research-gate: ENV_PROVENANCE refused:` stderr line. Named: an
+ambient PATH shim (the `bash` name) moves verdicts with gate bytes unchanged
+(RevClaimsC1) — committed runs are made under a clean caller environment;
+PATH coverage is a pre-registered r39 cell.
+
+**Erratum 6 (wave-1, C1 narrowing).** RevErrataCtx, CritTextOverreach and
+RevClaimsC1 found: (a) "closes the same export channel" overstates — only the
+NAME `env` at the capture's one absolute-path call site is bypassed; the
+`BASH_FUNC_*` channel itself is untouched (demonstrated: a parent-exported
+`date` function still embeds a `GATE_GREP:` line and a phantom `-GATE_GREP`
+drift on the landed gate — Erratum 5's symptom on a sibling name); (b) P1 does
+not measure the absolute/PATH half — a mutant capture using PATH-resolved
+`command env` scores 7/7 while being PATH-poisonable (demonstrated, seed
+38207); (c) the `bash`-named limit misidentified the vector — the demonstrated
+live witness is PATH resolution inside `env` (a PATH `bash` shim poisons the
+landed gate's baseline; a suppressing `bash` function pins a crit-severity
+`VERIFY_ALL_SECTION_UNAVAILABLE` baseline while `--pin` exits 0); (d) "two
+fresh seeds" is label-level, not replication (C1's receipts are byte-identical
+modulo seed/digest — the r37 Erratum-4 class; C2 disclosed it, C1 now does
+too); (e) the r37-base control `a7d3922c…` is the pre-round-37 base — the
+actual pre-round-38 gate `9fcac047…` scores 2/7 identically and is committed
+as a second control (`.ufo/waves/round-38/controls/base-gate-r38.sh`,
+receipt `c1-base2-s38003.json`). Narrowed reading: C1 asserts function-export
+interposition on the capture's `env` invocation plus the override refusal
+shape; the env pin's PATH-independence and hostile-drift coverage are
+pre-registered r39 cells (an eighth scenario). P1 is unchanged: 7/7 on the
+landed gate under a clean measurement environment.
+
+**Erratum 7 (wave-1, minor, closed).** The counters refuse with exit 2 without
+leaving a stale pre-existing `--receipt` (RevCounterC2 finding 7); both
+counters hard-check the frozen 7 total so an edited-to-6 table cannot print a
+passing 6/6 (RevClaimsC1 finding 1). The frozen P1/P2 sentences and counting
+commands are unchanged; every erratum above names the wave-1 finding that
+motivated it.

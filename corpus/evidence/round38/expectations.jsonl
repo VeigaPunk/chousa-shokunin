@@ -5,10 +5,10 @@
 {"counter": "c1", "id": "env-fn-suppress", "expect": {"pin_rc": 0, "pin_file": true, "echo_lines": 0, "drift_rc": 0, "drift_line": "GATE_DRIFT: none"}}
 {"counter": "c1", "id": "env-override-missing", "expect": {"pin_rc": 2, "pin_file": false, "refusal": "ENV_PROVENANCE"}}
 {"counter": "c1", "id": "env-override-fake", "expect": {"pin_rc": 2, "pin_file": false, "refusal": "ENV_PROVENANCE"}}
-{"counter": "c2", "id": "hold-receipt-verifies", "expect": {"counter_rc": 0, "receipt": true, "verify_rc": 0}}
+{"counter": "c2", "id": "hold-receipt-verifies", "expect": {"receipt": true, "verify_rc": 0}}
 {"counter": "c2", "id": "self-rewrite-refused", "expect": {"counter_rc": 2, "receipt": false}}
-{"counter": "c2", "id": "foreign-gate-distinguished", "expect": {"counter_rc": 0, "receipt": true, "verify_foreign_rc": 0, "verify_landed_rc": 1}}
-{"counter": "c2", "id": "counter-tamper-detected", "expect": {"clean_verify_rc": 0, "verify_rc": 1}}
-{"counter": "c2", "id": "expect-tamper-detected", "expect": {"clean_verify_rc": 0, "verify_rc": 1}}
-{"counter": "c2", "id": "body-tamper-detected", "expect": {"clean_verify_rc": 0, "verify_rc": 1}}
-{"counter": "c2", "id": "legacy-receipt-refused", "expect": {"hold_verify_rc": 0, "counter_rc": 0, "receipt": true, "verify_rc": 1}}
+{"counter": "c2", "id": "foreign-gate-distinguished", "expect": {"receipt": true, "verify_foreign_rc": 0, "verify_landed_rc": 1}}
+{"counter": "c2", "id": "counter-tamper-detected", "expect": {"clean_verify_rc": 0, "verify_rc": 1, "verify_fail_contains": "counter-sha256-mismatch"}}
+{"counter": "c2", "id": "expect-tamper-detected", "expect": {"clean_verify_rc": 0, "verify_rc": 1, "verify_fail_contains": "expect-sha256-mismatch"}}
+{"counter": "c2", "id": "body-tamper-detected", "expect": {"clean_verify_rc": 0, "verify_rc": 1, "verify_fail_contains": "receipt-self-digest"}}
+{"counter": "c2", "id": "legacy-receipt-refused", "expect": {"hold_verify_rc": 0, "receipt": true, "verify_rc": 1}}

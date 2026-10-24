@@ -92,24 +92,36 @@ def load_expectations():
 
 
 def base_env():
-    """The counter's own environment scrubbed of the families scenarios add."""
+    """The counter's own environment scrubbed of the families scenarios add
+    and of the startup/option channels the GATE ITSELF consumes before its
+    body runs (the gate sources BASH_ENV at startup — the round-37 Erratum-5
+    channel — so an ambient startup file would install attack functions or
+    forge refusal tokens inside the gate process and pass weakened fixtures
+    that are not measurements). PATH stays live: bare-name resolution inside
+    the capture is the claim's named r39 witness, and committed runs are
+    made under a clean caller environment.
+    """
     env = dict(os.environ)
     for key in list(env):
         if (key.startswith("BASH_FUNC_") or key.startswith("CHOUSA_")
-                or key.startswith("RESEARCH_GATE_")):
+                or key.startswith("RESEARCH_GATE_")
+                or key in ("BASH_ENV", "ENV", "SHELLOPTS", "BASHOPTS")):
             del env[key]
     return env
 
 
+BASH = "/usr/bin/bash" if os.path.isfile("/usr/bin/bash") else "bash"
+
+
 def run_pin(gate, baseline, env):
-    proc = subprocess.run(["bash", gate, "--pin", baseline], env=env,
-                          capture_output=True, text=True)
+    proc = subprocess.run([BASH, gate, "--pin", baseline], env=env,
+                          capture_output=True, text=True, timeout=180)
     return proc
 
 
 def run_drift(gate, baseline, env):
-    proc = subprocess.run(["bash", gate, "--drift", baseline], env=env,
-                          capture_output=True, text=True)
+    proc = subprocess.run([BASH, gate, "--drift", baseline], env=env,
+                          capture_output=True, text=True, timeout=180)
     line = ""
     for l in proc.stdout.splitlines():
         if l.startswith("GATE_DRIFT:"):
@@ -176,8 +188,11 @@ def run_scenario(gate, work, sid, expect):
         observed["drift_rc"] = drc
         observed["drift_line"] = dline
     if "refusal" in expect:
-        observed["refusal"] = "ENV_PROVENANCE" if "ENV_PROVENANCE" in (
-            proc.stderr + proc.stdout) else ""
+        # Anchored, gate-emitted line — a bare token-anywhere test could be
+        # satisfied by any output mentioning the word.
+        observed["refusal"] = "ENV_PROVENANCE" if any(
+            l.startswith("research-gate: ENV_PROVENANCE refused:")
+            for l in proc.stderr.splitlines()) else ""
     ok = all(observed.get(k) == v for k, v in expect.items())
     return {"id": sid, "expect": expect, "observed": observed, "ok": ok}
 
@@ -217,6 +232,10 @@ def main():
 
     work = tempfile.mkdtemp(prefix="chousa-r38-c1-", dir=base_tmp)
     try:
+        if args.receipt and os.path.exists(args.receipt):
+            # A run that refuses must not leave a valid-looking stale receipt
+            # at the requested path (the refusal publishes nothing).
+            os.unlink(args.receipt)
         gate_sha_pre = sha256_file(gate)
         rows = []
         for sid in SCENARIO_ORDER:
@@ -237,7 +256,10 @@ def main():
               % ("PASS" if r["ok"] else "FAIL", r["id"], r["expect"],
                  r["observed"]))
     print("ENV_PIN_CAPTURE_MATCH=%d/%d" % (matched, total))
-    holds = matched == total
+    # The frozen predicate labels 7/7; the count is the claim, not whatever
+    # the table happens to hold (a counter edited to six scenarios must not
+    # be able to print a passing 6/6 under this predicate's name).
+    holds = matched == 7 and total == 7
     if args.receipt:
         receipt = {
             "counter": os.path.relpath(__file__),

@@ -1,0 +1,54 @@
+# SentScope
+
+## Verdict
+C1/C2 scored 7/7 in fresh runs, but the current evidence has trust-boundary defects and one measured receipt/expectation race; conditional, not an unqualified pass.
+
+## Evidence
+- Axes: operability; calibration.
+- `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin rev-parse master` → `504c1d2a1257a9ac6e5d752dcaf3f0bb0a35d05f`.
+- Initial `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin status --porcelain` (before peers completed): ` M corpus/evidence/round38/claims.md`; `?? .ufo/waves/round-38/`.
+- `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round38/c1-count.py --gate /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh --seed 38205 --receipt /tmp/sentscope-c1-38205.6GbcCT/c1-38205.json` (`C1_TMP=/tmp/sentscope-c1-38205.6GbcCT`) → `ENV_PIN_CAPTURE_MATCH=7/7`.
+- Same command, seed `38206`, receipt `/tmp/sentscope-c1-38206.QxhPH5/c1-38206.json` (`C1_TMP=/tmp/sentscope-c1-38206.QxhPH5`) → `ENV_PIN_CAPTURE_MATCH=7/7`.
+- C2 commands used existing `C2_TMP` directories `/tmp/sentscope-c2-38207.ZmBSQD` and `/tmp/sentscope-c2-38208.JxciMg`, seeds `38207` and `38208`, and the same absolute gate. Both printed `RECEIPT_BINDING_MATCH=7/7`; their receipts bind expectation SHA `d34f17353fec83ed2e7b78b41cebcd2a6d309a85d724dbf1097cf6a17afaf8aa`.
+- Re-running `verify-receipts.py --receipt /tmp/sentscope-c2-38207.ZmBSQD/c2-38207.json --gate /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh --counter /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round38/c2-count.py` → `VERIFY-FAIL: expect-tie-mismatch counter-tamper-detected`.
+- Seed 38207 receipt row `counter-tamper-detected` expected only `clean_verify_rc` and `verify_rc`; seed 38208 used an extra `verify_fail_contains`. Current `expectations.jsonl:11` contains that extra field. Counter code loads expectations at `c2-count.py:292` but hashes the file when writing at `:334`; no expectation pre/post snapshot refusal.
+- Exported-function probe: `bash(){ printf 'called\n' >> "$TRACE"; return 0; }; export -f bash; /usr/bin/bash /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh --pin /tmp/sentscope-c1-38202.KpINq7/exported-bash-suppress.txt; unset -f bash; /usr/bin/bash ... --drift <baseline>` → `GATE_PIN: ok`, `PIN_RC=0`, `FUNCTION_CALLS=5`; clean drift returned `GATE_DRIFT: +FINDING:REF_UNRESOLVED ... -FINDING:VERIFY_ALL_SECTION_UNAVAILABLE ...`, `DRIFT_RC=1`.
+- Self-reporting env probe used `/tmp/sentscope-c1-38202.KpINq7/fake-gnu-env.sh` (non-GNU shell proxy returning `env (GNU coreutils) 99.0` for `--version`, delegating otherwise) via `RESEARCH_GATE_ENV=<path> /usr/bin/bash .../research-gate.sh --pin <temp-baseline>` → `GATE_PIN: ok`, `PIN_RC=0 BASELINE_EXISTS=yes`.
+- C2 shim-path probe imported current `c2-count.py` and called `write_self_rewrite_shim` with target `/tmp/sentscope-c2-38203.wY9kC5/gate; printf SENT_SCOPE_C2_CURRENT_INJECTION >&2; #.sh`; `bash -n <shim>` → `GENERATED_SHIM_SYNTAX=valid`; `bash <shim>` printed `SENT_SCOPE_C2_CURRENT_INJECTION` (exit 127 after expected missing truncated path).
+- Synthetic C2 receipt command built seven `scenarios` from current frozen rows with `observed=expect`, `ok=true`, actual current gate/counter/expectation hashes, recomputed `receipt_sha256`, and ran no counter. Output: `SYNTHETIC_RECEIPT_CREATED scenario_count=7 counter_executions=0 digest_recomputed=yes`; verifier returned `VERIFY: ok receipt=c2-forged-synthetic.json ... counter=c2-count.py`.
+- Active-source search `grep resume_continuity_v1` over `/home/vgpnk/Projects/shokunin/chousa-shokunin/tools` and `/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus` → `No matches found`.
+- Pre-report status showed outside-scope changes: `M` c1-count.py, c2-count.py, expectations.jsonl, verify-receipts.py, six existing round38 receipt JSONs; untracked `receipts/c1-after-s38351.json`, `c1-base2-s38003.json`, and `c2-after-s38371.json`. `claims.md` was already modified at initial status. These are not this seat's writes.
+- Final files under `.../.ufo/waves/round-38/w1/`: `SentScope.md`, `RevF1Disposition.md`, `SimpCounters.md`, `MutCounterC2.md`, `RevCounterC2.md`, `MutGateC1.md`, `RevSeparability.md`, `ExecC2Rederive.md`, `CritC2Kill.md`, `RevCounterC1.md`, `ScribeKnowledgeC2.md`, `RevClaimsC2.md`, `RevRoutedQueue.md`, `RevClaimsC1.md`, `CritTextOverreach.md`, `RevErrataCtx.md`, `MutVerify.md`, `ScribeSources.md`, `ConnOverlap.md`, `ExecEnvFnHarness.md`, `ScribeKnowledgeC1.md`, `ExecDoNothingCtl.md`, `ScoutGatePins.md`, `ExecNoHarm.md`, `SentNoNet.md`, `CritNoexec.md`, `ExecF1Replay.md`, `ScoutFrontier.md`, `ExecC1Rederive.md`, `swarm-registry.json`.
+- Round-38 root outside `w1/` contained `w1-taskcall.txt`, `w1-dispatch.json`, `w1-run.err`, `w1-spec.json`, `gen-w1-spec.py`, and `controls/base-gate-r38.sh`; no seat report outside `w1/` was observed.
+- Final `git status --porcelain` and diff against the initial two-line status:
+  ```
+ M corpus/evidence/round38/c1-count.py
+ M corpus/evidence/round38/c2-count.py
+ M corpus/evidence/round38/claims.md
+ M corpus/evidence/round38/expectations.jsonl
+ M corpus/evidence/round38/receipts/c1-after-s38001.json
+ M corpus/evidence/round38/receipts/c1-after-s38011.json
+ M corpus/evidence/round38/receipts/c1-base-s38001.json
+ M corpus/evidence/round38/receipts/c2-after-s38101.json
+ M corpus/evidence/round38/receipts/c2-after-s38111.json
+ M corpus/evidence/round38/receipts/c2-base-s38101.json
+ M corpus/evidence/round38/verify-receipts.py
+?? .ufo/waves/round-38/
+?? corpus/evidence/round38/receipts/c1-after-s38351.json
+?? corpus/evidence/round38/receipts/c1-base2-s38003.json
+?? corpus/evidence/round38/receipts/c2-after-s38371.json
+  ```
+- Diff: `claims.md` and `.ufo/waves/round-38/` were present initially; every other status entry above is new relative to the initial snapshot and outside this seat's write surface. No seat report outside `w1/` was observed.
+
+## Findings
+1. **High — C2 self-rewrite fixture permits shell injection through `--gate`.** `c2-count.py:101-113` interpolates `target` and `marker` unquoted into shell source; `run_scenario` passes the caller's gate at `:153`. The harmless probe above executed a `printf` embedded in the target filename. An untrusted gate path can execute arbitrary commands as the counter user during scoring and taint the result. Quote every path with `shlex.quote` or stop generating shell source from paths.
+2. **Medium — measured expectations can diverge from the receipt binding.** The 38207 counter scored the old two-key expectation, then emitted a receipt hashed to the table containing `verify_fail_contains`; the current verifier rejects it. C1 receipts also later returned `VERIFY-FAIL: expect-sha256-mismatch` after the table changed. Both counters load parsed expectations before scenarios and hash current file bytes only at receipt creation. Snapshot hash before parsing, verify unchanged after scoring, and refuse without a receipt on mismatch.
+3. **Medium — exported `bash` function can poison a pin baseline outside frozen C1 cells.** A caller-exported `BASH_FUNC_bash%%` returning success suppresses nested `verify-all` mode dispatches (`research-gate.sh:3642`); `--pin` still exits 0, while clean `--drift` detects `VERIFY_ALL_SECTION_UNAVAILABLE`. The frozen claim names this carried limitation (`claims.md:130-133`); C1's 7/7 does not cover it. Use pinned absolute Bash on nested dispatches and add the function fixture.
+4. **Low — `RESEARCH_GATE_ENV` provenance is self-attested.** `research-gate.sh:480-508` trusts `--version`; the fake proxy above passes and pins. This is not a kill of the frozen “GNU-reporting” predicate and is named at `claims.md:145-146`, but an untrusted override can fabricate identity. Restrict overrides to trusted binary identity (or treat the setting as trusted operator configuration).
+5. **Medium / explicit limit — receipts are not execution-authenticated.** The zero-counter synthetic 7/7 receipt verified because all hashes are public and `receipt_sha256` is an unkeyed digest. Current verifier docs (`verify-receipts.py:43-48`) disclaim authorship authentication. Do not present verification as proof of execution; if that guarantee is required, sign receipts with a key outside the counter or anchor them in trusted append-only storage.
+6. **Scope violation observed, not made by this seat:** initial status differed from the pre-report status by the tracked round38 source/receipt paths and two untracked receipts listed above. All are outside the authorized report path; preserve and investigate, do not attribute to this seat.
+
+## Limits
+- No live `resume_continuity_v1` implementation or canonical run logic was found in assigned `tools/` or `corpus/`, so failed-preflight zero-mutation behavior could not be tested or asserted.
+- Two initial C2 calls (seeds 38203/38204) were auto-backgrounded by the shell tool and completed; later runs completed synchronously. No tool was installed; no lane code or git/jj state was changed by this seat. All fixtures/receipts from this seat were under `/tmp` except this report.
+- The two fresh C2 receipt files were verified against changing working-tree expectation bytes; seed 38207 is specifically rejected by the current verifier. Treat the 7/7 counter outputs as measurements of their captured snapshots, not as a currently accepted joint measurement.

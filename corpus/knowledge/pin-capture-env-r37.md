@@ -42,7 +42,9 @@ re-exports `CHOUSA_STRICT`. Every scenario asserts pin_rc=0, exactly zero
 `GATE_GREP:` lines in the pinned file, and a later plain drift reporting
 `GATE_DRIFT: none`. Base gate `a7d3922c…` scores 3/7 (the four separation
 cells fail exactly as the vulnerability predicts); landed gate `9fcac047…`
-scores 7/7 on every committed receipt.
+scores 7/7 on every committed after-receipt (the committed base receipt
+`c2-base-s37021.json` scores 3/7 against the base gate by design; corrected
+round 38 after the round-37 receipt audit finding L1).
 
 ## Named limits (from claims.md §Limits, frozen)
 
