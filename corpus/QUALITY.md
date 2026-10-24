@@ -452,3 +452,17 @@ the admitted entry that motivates it. Tier definitions live in
     `BASH_ENV`" survived while a startup-exported `date` function reached the capture child
     through `BASH_FUNC_date%%` (`.ufo/waves/round-37/residual/RevC2FreshSeed.md`). —
     `lessons/round-37.md`.
+55. **A verifier's pass is a claim about provenance and truth, not about an artifact's
+    agreement with itself.** A verifier that re-hashes the receipt's own fields certifies only
+    self-consistency: re-sealing restores every digest, a counter hash can be swapped for a
+    public digest, and an unparsed expectation table lets a doctored observation keep `ok=true`.
+    A receipt-verifying gate binds (a) the counter family and the frozen predicate it claims,
+    (b) the frozen expectation bytes — parsed, not only hashed — (c) the exact scenario census
+    with each row's `expect` tied to the frozen table, and (d) re-derives every `ok` from (b)
+    and (c). Check: mutate each of the four independently, re-seal each mutant, and require a
+    named refusal. Shown able to fail: round-38's frozen `verify-receipts.py` accepted a
+    re-bound legacy r37 receipt, a c1 receipt rerouted as c2 (counter hash swapped to the
+    public digest), a `pin_rc` 0→99 doctoring and a zero-scenario receipt
+    (`.ufo/waves/round-38/w1/CritC2Kill.md` findings 1–3); after Erratum 2 all four refuse
+    by their named checks while `c2-count` stays 7/7 (`.ufo/waves/round-38/w2/W2CritLaundering.md`). —
+    `lessons/round-38.md`.

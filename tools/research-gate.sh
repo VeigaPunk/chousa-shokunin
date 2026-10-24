@@ -8532,6 +8532,12 @@ fi
 # pin exits 2 here, before the mode can produce a verdict with an unverified
 # matcher. usage/--help paths return earlier, so argument errors stay usage.
 grep_pin_init
+# Round-38 wave-2 (W2RevC1Final): an ambient POSIXLY_CORRECT makes GNU grep
+# stop treating `--` as end-of-options, so the capture's own `grep -c PAT -- f`
+# probes return `path:N` and --pin refuses on an UNCHANGED gate (false kill,
+# measured 7/7 -> 2/7 with gate bytes untouched). The gate normalizes the
+# option channel it depends on; per-child overrides stay the caller's job.
+unset POSIXLY_CORRECT
 # Resolve the env pin beside it (round-38 C1): the canonical capture child runs
 # through this absolute env, and a refused pin exits 2 before any mode runs.
 env_pin_init

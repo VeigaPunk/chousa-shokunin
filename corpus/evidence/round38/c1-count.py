@@ -104,8 +104,9 @@ def base_env():
     env = dict(os.environ)
     for key in list(env):
         if (key.startswith("BASH_FUNC_") or key.startswith("CHOUSA_")
-                or key.startswith("RESEARCH_GATE_")
-                or key in ("BASH_ENV", "ENV", "SHELLOPTS", "BASHOPTS")):
+                or key.startswith("RESEARCH_GATE_") or key.startswith("PYTHON")
+                or key in ("BASH_ENV", "ENV", "SHELLOPTS", "BASHOPTS",
+                           "POSIXLY_CORRECT")):
             del env[key]
     return env
 
@@ -212,6 +213,11 @@ def main():
     args = ap.parse_args()
 
     gate = os.path.abspath(args.gate)
+    if args.receipt and os.path.lexists(args.receipt):
+        # A run that refuses must not leave a valid-looking stale receipt at
+        # the requested path — unlinked BEFORE any refusal path (W2RevErrata
+        # finding 1: missing-gate refusals used to preserve it).
+        os.unlink(args.receipt)
     if not os.path.isfile(gate):
         print("c1-count: gate not found: %s" % gate, file=sys.stderr)
         return 2
@@ -236,10 +242,6 @@ def main():
 
     work = tempfile.mkdtemp(prefix="chousa-r38-c1-", dir=base_tmp)
     try:
-        if args.receipt and os.path.exists(args.receipt):
-            # A run that refuses must not leave a valid-looking stale receipt
-            # at the requested path (the refusal publishes nothing).
-            os.unlink(args.receipt)
         gate_sha_pre = sha256_file(gate)
         rows = []
         for sid in SCENARIO_ORDER:

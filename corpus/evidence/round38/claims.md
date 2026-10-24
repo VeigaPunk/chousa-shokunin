@@ -254,3 +254,72 @@ certifies integrity and self-consistency against committed bytes, NOT
 execution authorship (Erratum 2's narrowed reading); the r37 knowledge docs'
 stale "7/7 on every committed receipt" wording (receipt-audit finding L1) was
 corrected in both files.
+
+**Erratum 9 (wave-2, W2CritLaundering, closed).** Seven of the eight wave-1
+doctoring fixtures refused under the strengthened verifier; the eighth — a
+re-sealed receipt carrying an EXTRA unknown field — still verified, contradicting
+the frozen "fails closed on any doctored field". Closed: verify-receipts now
+enforces a strict schema (a receipt is exactly the known field set; an added
+field refuses as `unknown-field` whether re-sealed or not). Receipts bind the
+counters' bytes, not the verifier's, so the committed receipt set is unaffected;
+the L1 notified the in-flight wave-2 verifier-testing seats of the mid-wave
+edit, same disclosure pattern as the wave-1 integration.
+
+**Erratum 10 (wave-2, W2RevVerifyFinal, closed/named).** Closed: malformed
+scenario rows now refuse `scenario-row-malformed` (a traceback was reachable);
+Python type-laundering now refuses (`ok-type-mismatch` / `count-type-mismatch` /
+`predicate-holds-type-mismatch` — 1 == True and 7.0 == 7 no longer pass).
+Named, not closed (the narrowed reading already bounds them): the strict schema
+is top-level only (extra fields inside scenario rows are producer-controlled and
+the load-bearing keys are re-derived); the receipt's provenance path strings are
+not bound (path identity is not among the frozen bindings); pinning is to the
+CLI-supplied bytes (a /tmp counter copy or a doctored table verifies against
+itself — committed-tree membership is the caller's discipline, as with any
+hash-checking tool). The `_contains` expectation annotations are producer-side
+assertions; verify re-derives only the equality keys by design.
+
+**Erratum 11 (wave-2, W2MutVerifyFinal/W2CritTextFinal, named).** The
+strengthened verifier's census, ok-re-derivation, type and strict-schema checks
+were verified by DIRECT wave-2 probes (W2RevVerifyFinal, W2CritVacuous: every
+attack refuses with a named label), but the c2 COUNTER scenarios do not
+discriminate a verifier weakened in exactly those checks: five of six verifier
+mutants (accept missing gate_sha256_pre, drop pre!=post, case-insensitive
+hashes, skip census, skip ok re-derivation) still score RECEIPT_BINDING_MATCH
+7/7 (only the self-digest-skip mutant is caught, by the arithmetic recount).
+Named, not closed: the seven cells bind the pre/post gate binding, the
+counter/expect/receipt digests, legacy fail-closed and foreign-gate
+discrimination; the remaining verifier checks are bound only through the
+landed verifier's committed bytes — the carried verifier_sha256 debt
+(Errata 2/8) is now demonstrated twice as the closing fix. Related named
+items: the producer-side `_contains` refusal-label assertions are not
+re-derived by verify (a doctored asserted label verifies; the equality keys
+are re-derived); early counter refusals (before the stale-unlink runs) leave a
+prior --receipt untouched (W2RevC1Final finding 6).
+
+**Erratum 12 (wave-2, W2RevErrata/W2RevC2Final, closed).** Erratum 7's "refuse
+without leaving a stale --receipt" sentence was falsified for the PRE-RUN refusal
+paths (a missing gate exited 2 with a prior receipt intact — W2RevErrata finding 1):
+the stale-receipt unlink now runs before every refusal path in both counters
+(os.path.lexists, so dangling symlinks cannot redirect output either —
+W2SentScopeFinal). Closed. Companion named items from the same audit, all already
+bounded by the narrowed readings: the `_contains` refusal-label annotations are
+producer-side (a re-sealed forged label verifies; the equality keys re-derive —
+Errata 10/11); receipt provenance path strings (`seed`/`gate`/`subject_counter`)
+are not bound (r39: bind `subject_counter_sha256`); the literal kill rule still
+reads on the measurement environment (committed runs are clean-env — Erratum 5);
+an embedded `date` witness needs `CHOUSA_GREP_PIN_ECHO=1` live to embed a line
+(Erratum 6(a) demonstrated the embed; the echo-var condition is recorded in the
+knowledge entry); and a `VERIFY: ok` certifies bindings, never the predicate
+outcome — the 0/7 base receipt verifies with `predicate_holds=false` by design.
+
+**Erratum 13 (wave-2, W2MutGateFinal, precision).** Erratum 6's narrowed reading says
+C1 asserts "function-export interposition on the capture's `env` invocation plus the
+override refusal shape" — the second half overclaims: the two override cells measure
+ONLY the missing-override and non-GNU-override refusals. The relative-override refusal
+(override not an absolute path) is part of the unmeasured half — the M3 mutant deleting
+exactly that refusal scores 7/7 on every byte-set (seeds 38403/38423/38453). The
+pre-registered r39 cell family (Erratum 6) already carries it: the relative-override
+refusal scenario and the positive override-honoured witness land together as the new
+frozen table's env-override cells. The gate's landed bytes do refuse relative overrides
+(the refusal exists and the selftest exercises it at gate level); what the COUNTER
+predicate does not measure is exactly the M3 class.

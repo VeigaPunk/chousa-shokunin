@@ -66,6 +66,13 @@ REQUIRED = ("counter_sha256", "expect_sha256", "gate_sha256_pre",
             "gate_sha256_post", "receipt_sha256", "scenarios", "matched",
             "total", "predicate_holds", "predicate")
 
+# Strict schema: a receipt is exactly this field set. An added field is a
+# doctoring of the body — re-sealed or not, it must refuse (W2CritLaundering:
+# a re-sealed extra unknown field otherwise verified, contradicting the frozen
+# "fails closed on any doctored field").
+KNOWN = set(REQUIRED) | {"counter", "expectations", "seed", "gate",
+                         "gate_sha256", "subject_counter"}
+
 
 def sha256_file(path):
     h = hashlib.sha256()
@@ -118,6 +125,9 @@ def main():
     for key in REQUIRED:
         if key not in receipt:
             return fail("missing-field %s" % key)
+    unknown = sorted(set(receipt) - KNOWN)
+    if unknown:
+        return fail("unknown-field %s" % ",".join(unknown))
 
     if receipt["receipt_sha256"] != receipt_digest(receipt):
         return fail("receipt-self-digest")
@@ -143,6 +153,17 @@ def main():
     scenarios = receipt["scenarios"]
     if not isinstance(scenarios, list):
         return fail("scenarios-not-a-list")
+    if any(not isinstance(s, dict) or not isinstance(s.get("id"), str)
+           for s in scenarios):
+        return fail("scenario-row-malformed")
+    # Strict types: Python equality launders 1 == True and 7.0 == 7, which a
+    # strict JSON consumer would not accept (W2RevVerifyFinal finding 6).
+    if any(not isinstance(s.get("ok"), bool) for s in scenarios):
+        return fail("ok-type-mismatch")
+    if type(receipt["matched"]) is not int or type(receipt["total"]) is not int:
+        return fail("count-type-mismatch")
+    if not isinstance(receipt["predicate_holds"], bool):
+        return fail("predicate-holds-type-mismatch")
     ids = sorted(s.get("id") for s in scenarios
                  if isinstance(s, dict)) if scenarios else []
     if len(scenarios) != len(frozen) or ids != sorted(frozen):

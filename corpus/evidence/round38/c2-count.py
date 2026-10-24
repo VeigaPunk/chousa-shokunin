@@ -85,29 +85,35 @@ def load_expectations():
 def base_env():
     """Scrub the startup/option channels a child would itself consume (the
     gate sources BASH_ENV before its body runs) plus the families scenarios
-    add; PATH stays live (committed runs are made under a clean caller env)."""
+    add and the Python startup channel (W2RevC2Final: a hostile PYTHONPATH
+    reaches the sys.executable children through sitecustomize); PATH stays
+    live: committed runs are made under a clean caller environment."""
     env = dict(os.environ)
     for key in list(env):
         if (key.startswith("BASH_FUNC_") or key.startswith("CHOUSA_")
                 or key.startswith("RESEARCH_GATE_")
-                or key in ("BASH_ENV", "ENV", "SHELLOPTS", "BASHOPTS")):
+                or key.startswith("PYTHON")
+                or key in ("BASH_ENV", "ENV", "SHELLOPTS", "BASHOPTS",
+                           "POSIXLY_CORRECT")):
             del env[key]
     return env
 
 
 def run_counter(counter, gate, seed, receipt, work):
+    # -E ignores PYTHONPATH/PYTHONHOME/PYTHONSTARTUP in the child: the child
+    # must hash with the interpreter's own stdlib, not the caller's site.
     proc = subprocess.run(
-        [sys.executable, counter, "--gate", gate, "--seed", str(seed),
+        [sys.executable, "-E", counter, "--gate", gate, "--seed", str(seed),
          "--receipt", receipt, "--tmp", work],
-        capture_output=True, text=True, timeout=900, env=base_env())
+        capture_output=True, text=True, timeout=3000, env=base_env())
     return proc
 
 
 def run_verify(receipt, gate, counter):
     proc = subprocess.run(
-        [sys.executable, VERIFY, "--receipt", receipt, "--gate", gate,
+        [sys.executable, "-E", VERIFY, "--receipt", receipt, "--gate", gate,
          "--counter", counter, "--expectations", EXPECTATIONS],
-        capture_output=True, text=True, timeout=120, env=base_env())
+        capture_output=True, text=True, timeout=300, env=base_env())
     return proc.returncode, proc.stdout.strip()
 
 
@@ -282,6 +288,11 @@ def main():
 
     gate = os.path.abspath(args.gate)
     counter = os.path.abspath(args.counter)
+    if args.receipt and os.path.lexists(args.receipt):
+        # A run that refuses must not leave a valid-looking stale receipt at
+        # the requested path — unlinked BEFORE any refusal path (W2RevErrata
+        # finding 1: missing-gate refusals used to preserve it).
+        os.unlink(args.receipt)
     for path, name in ((gate, "gate"), (counter, "counter"),
                        (VERIFY, "verify-receipts.py")):
         if not os.path.isfile(path):
@@ -308,10 +319,6 @@ def main():
 
     work = tempfile.mkdtemp(prefix="chousa-r38-c2-", dir=base_tmp)
     try:
-        if args.receipt and os.path.exists(args.receipt):
-            # A run that refuses must not leave a valid-looking stale receipt
-            # at the requested path (the refusal publishes nothing).
-            os.unlink(args.receipt)
         gate_sha_pre = sha256_file(gate)
         rows = []
         for sid in SCENARIO_ORDER:

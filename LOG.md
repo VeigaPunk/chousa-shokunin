@@ -1397,3 +1397,41 @@ frontier and the report.
   Spec/dispatch `.ufo/waves/round-37/{w1-spec.json,w1-dispatch.json}`, seat reports `w1/`.
 - Motivating evidence: r36 claims §Erratum 7 (BASH_ENV hole) and routed defect 4 (claim-body
   pin through PATH); SCORECARD planned-r37 candidates; watchdog `lane-dead-no-report chousa round=37`.
+
+## Round 38 (attempt 1, 2026-10-24)
+
+- Declared claims (frozen `corpus/evidence/round38/claims.md` at freeze `504c1d2a…`):
+  C1 operability (lowest axis 3/10) — the capture's child runs through ONE pinned absolute
+  `env`; C2 calibration — receipts bind pre==post gate hashes + counter/expect/receipt
+  digests, verified by a census-tied verifier. Routed inputs: the r37 counter-strength debt
+  (F1/F4), the exported-env witness + SHELLOPTS=noexec candidates, the S070 supersede row;
+  Errata 5/6 built on, never re-litigated.
+- Measured: C1 2/7 → 7/7 (both base gates: `.ufo/waves/round-37/controls/base-gate-r37.sh`
+  `a7d3922c…` and the new `.ufo/waves/round-38/controls/base-gate-r38.sh` `9fcac047…`);
+  C2 0/7 → 7/7 (r37-counter control). Nine committed receipts, all `VERIFY: ok`; the two c1
+  base receipts bind their control gates and refuse the landed gate. Selftest 267 → 272.
+- Waves falsified the first freezing of BOTH surfaces (w1: CritC2Kill's four verifier kills,
+  the counter_rc coupling at 4/7 on the base gate, the live BASH_ENV forge moving the r37
+  control to 7/7, unsealed doctors, the shim shell injection, the table-binding race); the
+  L1 closed each pre-wave-2 with the disclosed integration commits
+  (`1f0add70…`, `8e93bc91…`); wave 2 confirmed every closure and found the next class
+  (verifier-mutant pass-through → §Erratum 11; POSIXLY_CORRECT false-kill; the PYTHONPATH
+  child channel; pre-run stale receipts) — closed/named in the final bytes with §Errata 9–12.
+- Landed: gate env pin + selftest cases 268–272 + `unset POSIXLY_CORRECT`; counters
+  `corpus/evidence/round38/{c1-count.py,c2-count.py,verify-receipts.py,expectations.jsonl}`;
+  frozen claims + 12 errata; receipts `corpus/evidence/round38/receipts/` (9); controls
+  `base-gate-r38.sh`; knowledge `env-pin-capture-r38.md` (S072) + `receipt-binding-r38.md`
+  (S073 supersedes S070); lesson `round-38.md` (7 mistakes, QUALITY 55); QUALITY 55; README
+  rows + frontier paragraph; SCORECARD r38 verdicts + planned-39; SKILL.md Gates table
+  (selftest 272, r38 counter row); r37 knowledge docs' L1 repair.
+- Waves: v1 shape, two waves of 32 (both validated under policy v1, dispatched as one task
+  call each): w1 roles executor 6 / scout 3 / scribe 3 / reviewer 6 / critic 5 /
+  mutation-tester 3 / sentinel 2 / revenger 2 / connector 1 / simplifier 1 (30 returned,
+  2 dead — CritDoNothing, ScoutCounters, provider `cyber_policy`); w2 roles executor 4 /
+  reviewer 7 / critic 6 / mutation-tester 3 / scribe 3 / scout 4 / sentinel 2 / revenger 1 /
+  simplifier 1 / connector 1 (30 returned, 2 dead — W2CritEnvFinal, W2LabEnvScrub, provider
+  `cyber_policy`). Round total 64 seats. Specs/dispatches
+  `.ufo/waves/round-38/{w1,w2}-{spec.json,dispatch.json}`, seat reports `w1/`, `w2/`.
+- Frontier: census 71 → 73 rows (S072 bash.info, S073 supersedes S070), validate exit 0 at
+  both ends (standing W04 ×2 + the expected S070/S073 shared-URL warning). Sourced claim: C1
+  rests on S072. Mistakes mined: 7 (lesson ## Mistakes). No tool installs by the lane.

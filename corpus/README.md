@@ -1023,6 +1023,19 @@ beside the round-1 scale (operability 3/10, delta 0). Still open: the prefix-64 
 bypass, the `argv-witness` dead fields, the metadata-screener locale seam, `counter_sha256`
 in receipts, and the carried spans-≥-32768 debt.
 
+Round 38 (the routed-debt round): the `--pin` capture's child runs through one pinned absolute
+`env` (`knowledge/env-pin-capture-r38.md`, S072 opened this round; `ENV_PIN_CAPTURE_MATCH`
+2/7 → 7/7 — 2/7 on BOTH base gates, `a7d3922c…` and the pre-round-38 `9fcac047…`), and
+receipts become receipt-bound (`knowledge/receipt-binding-r38.md`, S073 `supersedes S070 —`;
+`RECEIPT_BINDING_MATCH` 0/7 → 7/7 with a census-tied verifier; the waves falsified the first
+freezing of both surfaces and the errata chain 1–12 records every narrowing). Both observables
+sit beside the round-1 scale (operability 3/10, delta 0). Still open, pre-registered for
+round 39: the PATH cells (env shim, bash shim), hostile-drift coverage, the positive
+override-honoured and relative-refusal witnesses, the loader scrub (`LD_PRELOAD` on env and
+on sha256sum), `verifier_sha256`/`subject_counter_sha256` receipt binding (demonstrated live
+twice), the refusal-label re-derivation, the SimpCounters dead-field deletions, the
+spans-≥-32768 debt, and the metadata-screener locale seam.
+
 | Entry | What it holds | Evidence |
 |---|---|---|
 | `knowledge/manifest-append-lock-r32.md` | Round-32 note: the round-24 probe/append race closed by one flock-held critical section on the manifest; why the manifest and not a sibling lock file; why the counter delays writes; limits | `S060`; `evidence/round32/claims.md` (design v2); `.ufo/waves/round-32/measure/after-c1-*.json` |
@@ -1037,3 +1050,5 @@ in receipts, and the carried spans-≥-32768 debt.
 | `knowledge/per-record-argv-attribution-r36.md` | Round-36 note: the NUL-delimited argv witness separates the five output-equivalent engines per record, writes the channel outside the gate environment, and does not false-kill a renamed matcher; the recorded limits (global threshold, prefix-64 bypass) | `S069`; `evidence/round36/claims.md`; `.ufo/waves/round-36/measure/c2-*.json` |
 | `knowledge/claim-pin-provenance-r37.md` | Round-37 note: the claim `sha256` pin is hashed through one pinned absolute `sha256sum`, never the caller's PATH; the seven scenarios; PATH-independence is not tamper-proof hashing | `S070`; `evidence/round37/claims.md`; `evidence/round37/receipts/c1-*.json` |
 | `knowledge/pin-capture-env-r37.md` | Round-37 note: the `--pin` capture child runs `env -u BASH_ENV` (S071), so a startup file cannot move a baseline; the seven scenarios; gate-process `BASH_ENV` and `--posix`/`ENV`/`SHELLOPTS`/`TMPDIR` stay named debt | `S071`, `S068`; `evidence/round37/claims.md`; `evidence/round37/receipts/c2-*.json` |
+| `knowledge/env-pin-capture-r38.md` | Round-38 note: the capture's child runs through one pinned absolute `env` (S072), so a caller-exported `env` function cannot interpose; both delivery mechanisms; the narrowed reading (PATH half, sibling names, bash vectors unmeasured but named) and the harness scrub that carries the measurement | `S072`; `evidence/round38/claims.md` (12 errata); `evidence/round38/receipts/c1-*.json` |
+| `knowledge/receipt-binding-r38.md` | Round-38 note: receipts bind pre==post gate hashes, counter/expect/receipt digests, verified by a census-tied verifier; the wave-1 kills it closed; integrity-and-self-consistency, NOT authorship (the F2 residual, verify side) | `S073` (supersedes S070); `evidence/round38/claims.md`; `evidence/round38/receipts/c2-*.json` |

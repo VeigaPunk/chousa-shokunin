@@ -2134,3 +2134,59 @@ counter scenario (`residual/RevC2FreshSeed.md`, claims §Errata 5-6); counter-st
 (receipts bind `gate_sha256` post-run and score gate self-report — `residual/RevC1FreshSeed.md`
 F1/F2, `residual/RevC2FreshSeed.md` trust analysis; `counter_sha256` still carried); the
 carried C1 debt (spans ≥ 32768) stays open.
+
+## Round 38 — env-pin capture and receipt binding (two claims)
+
+Freeze commit `504c1d2a1257a9ac6e5d752dcaf3f0bb0a35d05f` (counters, gate fix, frozen
+`corpus/evidence/round38/claims.md`, base controls, construction receipts); wave-1
+integration `1f0add702232903f959c8bc9a15acabd8439a033`; SentScope integration
+`8e93bc916527b3c21f0f702967fa65c3b4c31699`; final bytes land with this entry (gate
+`0447ad14b613…`, counters `6a9600ea6b1f…`/`93bf06daac30…`, verifier `33c7c87e7a5f…`).
+Round shape: v1 two waves (32+32 seats, 2 dead per wave by provider `cyber_policy`;
+§3 floor inside wave 1; planner seat held by the L1 with the data-walk on the
+ScoutCounters/RevClaims seats). Landed gate selftest: PASS (272 cases, 0 skipped).
+
+| claim / axis | before → after | counting command (lane root) | verdict |
+|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10): the canonical pin capture's child runs through ONE pinned absolute `env` (RESEARCH_GATE_ENV override, GNU-reporting, refused exit 2 `ENV_PROVENANCE`), so a caller-exported function `env` (BASH_FUNC_env%%) cannot interpose on the capture — narrowed by §Erratum 6 to function-export interposition + override shape | `ENV_PIN_CAPTURE_MATCH=2/7` on BOTH base gates (`a7d3922c…` pre-round-37, `9fcac047…` pre-round-38) → `7/7` `predicate_holds=true` on the landed gate: construction seeds 38001/38011 (receipts `c1-after-s38001/s38011.json`), wave-1 seeds 38211/38231/38251 (`w1/ExecC1Rederive.md`, `w1/ScribeKnowledgeC1.md`), wave-2 seeds 38411/38431 (`w2/W2ExecC1Final.md`); every committed receipt `VERIFY: ok` | `python3 corpus/evidence/round38/c1-count.py --gate tools/research-gate.sh --seed N --receipt F` | **met under the narrowed reading; narrowing frozen as §Erratum 6** (PATH half, sibling-name witnesses, bash vectors: named and demonstrated, not measured by the seven cells) |
+| C2 calibration: every round-38 counter receipt binds gate_sha256_pre==post (changed gate refuses exit 2, NO receipt), counter_sha256, expect_sha256, receipt_sha256; verify-receipts re-derives from committed bytes and fails closed — narrowed by §Errata 2/10/11 to integrity + self-consistency, NOT authorship | `RECEIPT_BINDING_MATCH=0/7` (the r37-counter pipeline, `receipts/c2-base-s38101.json`) → `7/7` on the landed gate: construction 38101/38111, wave-1 38221/38241, wave-2 38421/38441/38461 (base gate 7/7 — separability, `w2/W2ExecC2Final.md`); the four wave-1 verifier kills refuse by name in wave 2 (`w2/W2CritLaundering.md`, `w2/W2ScribeKnowledgeC2.md`) | `python3 corpus/evidence/round38/c2-count.py --gate tools/research-gate.sh --seed N --receipt F` | **met under the narrowed reading; kill-class fixtures closed by Errata 2/3/4/9, the verifier-binding gap named as §Erratum 11 with verifier_sha256 carried** |
+
+The round-1 operability scale is unchanged: score 3 → 3 (delta 0); the C1/C2
+observables sit beside it, as in rounds 25, 29, 31–37.
+
+Separability (measured, `w1/RevSeparability.md`, `w2/W2RevSeparabilityFinal.md`): gate-side
+single hunk (capture `"$ENV_BIN"` → bare `env`) drops c1 to 4/7 while its receipt still binds;
+counter-side hunk (the subject counter's pre!=post refusal disabled) drops c2 to 6/7 while c1
+stays 7/7; c2 on the unfixed base gate is 7/7 post-Erratum-4 (its control is the r37 counter,
+not the gate). No-harm on the final bytes: selftest PASS 272; claims 17/17 CLEAN; chain 17/22
+CLEAN; broken control DRIFT drift-sections=2; archives 3/3 (`w2/W2ExecNoHarmFinal.md`).
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| operability | **improved** | C1: the capture's env invocation is pinned, verified GNU-reporting, refused before any mode; 2/7 → 7/7 across both base gates and five+ independent seed runners; selftest 267 → 272 |
+| calibration | **improved** | C2: receipts now bind counter/expect/receipt digests and pre==post gate hashes with a census-tied verifier; the lane's first in-round kills of its own frozen claims are frozen as errata, not absorbed; 0/7 → 7/7 |
+| depth | **improved** | `knowledge/env-pin-capture-r38.md` and `knowledge/receipt-binding-r38.md`: the mechanism, BOTH delivery mechanisms, the wave-kill record, the narrowed readings, the r39 cell list |
+| coverage | **unchanged** | no new measured verification surface; the seven modes and fixtures held byte-stable |
+| freshness | **improved narrowly** | the r37 knowledge docs' stale "7/7 on every committed receipt" corrected (receipt-audit L1); S070's anchor-label defect dispositioned via the S073 supersede row |
+| adjacency | **unchanged** | zero network (strace, both waves); sibling-overlap scans (w1/w2) confirm in-province; the loader-env channel stays tsukuroi's, named as debt |
+
+Admission: **ADMIT-with-errata, operator rules** — both frozen predicates verify on every
+committed receipt and no axis is harmed (the falsified general clauses name pre-existing or
+out-of-surface defects, each demonstrated and dispositioned); the claims as first written do
+not stand un-narrowed; §Errata 1–12 freeze the narrowings and the r39 fix directions.
+No scalar score. Learning trends: expansion/quality **improved**, discernment **improved**
+(the lane's first self-kills of its own frozen claims, honestly frozen).
+
+## Planned — round 39 (not started)
+
+Candidates, not commitments: the pre-registered measurement cells from Errata 5/6/11 —
+an eighth c1 scenario family covering the PATH `env` shim, the PATH `bash` shim, hostile
+drift, the positive override-honoured witness and the relative-override refusal (a new
+frozen 8-scenario table for both counters); the loader scrub (`env -u LD_PRELOAD -u
+LD_LIBRARY_PATH …` on the capture child and the claim-pin child, with an LD_PRELOAD counter
+cell); `verifier_sha256` + `subject_counter_sha256` bound into c2 receipts (the debt
+demonstrated live twice this round); refusal-label re-derivation in verify; the SimpCounters
+dead-field deletions (subject_counter reader, --tmp plumbing, path strings, BASH fallback
+arm); the SHELLOPTS=noexec pre-startup boundary only if separately specified; the carried
+spans-≥32768 debt; the metadata-screener locale seam; the argv-witness D1-D3 dead fields;
+the S068-scope second-row question remains settled (S072 uses the info file).
