@@ -2298,3 +2298,53 @@ Learning trends: **expansion improved** — one new admitted knowledge entry on 
 ## Planned — round 42 (not started)
 
 Candidates carried: exported-function (`BASH_FUNC_*`) interposition into the captured child (named limit, needs a measured delivery cell); the `spans-≥32768` boundary debt; metadata-screener locale seam; argv-witness dead fields; REFUSAL-label re-derivation in verify; the legacy operability observable's retirement/split decision (r40 routed item). No round-42 work is started here; freeze only 1–3 separately falsifiable claims after scoring their do-nothing controls.
+
+## Round 42 verdict — 2026-10-24 (wave-4 quarantine-first; work commit below)
+
+Selected claims (frozen in `corpus/evidence/round42/claims.md` at
+`dd63b6cfec5e1eafddb6662fc343e2ff6ab6aedc`): C1 = the lane's quarantine scope becomes a
+runnable, re-derived surface (operability — the lowest scored non-retired axis, 3/10);
+C2 = every row of the slice carries one rule-consistent verdict with a reason and a flip
+condition (calibration). This round adopts NOTHING from the shokuknow package (fleet
+lane-addendum item 10) and made no external fetch (fetch-scope L0 `8d77e6c1` open).
+
+| claim / axis | before → after | counting command | verdict |
+|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10) | the lane had no command that yields its quarantine scope: the slice (24 rows) was a line of a prompt, the examination did not exist. After: `SLICE_REDERIVE_MATCH=24/24`, `QUOTES_EXAMINED=43/43`, `REPRODUCIBLE=1/1`, `POSITIVE_CONTROL=1/1`, `NEGATIVE_CONTROL=1/1`, `MUTANT_DETECTED=1/1`, exit 0; the do-nothing control (tree without the tool) exits 1 | `python3 corpus/evidence/round42/c1-count.py` (control: `corpus/evidence/round42/controls/c1-control-before.txt`) | **improved** |
+| C2 calibration | no adjudication existed for the slice. After: `VERDICTED=24/24`, `CLASS_CONSISTENT=24/24`, `REASON_NONEMPTY=24/24`, `FLIP_NONEMPTY=24/24`, `VOCAB_OK=24/24`, `DUPLICATE_ROWS=0`, `ROWS_OUTSIDE_SLICE=0`, exit 0; the do-nothing control (one row's verdict flipped away from the evidence) → `CLASS_CONSISTENT=23/24`, exit 1 | `python3 corpus/evidence/round42/c2-count.py` (control: `corpus/evidence/round42/controls/c2-control-before.txt`) | **improved** |
+
+The round-1 operability scale is unchanged: score 3 → 3 (delta 0). Its counting command
+still prints `VERDICT_BEARING_EXPORTS=3/3`, and `tools/research-gate.sh` is not touched
+by this round. The C1/C2 observables sit beside that score, as in rounds 25, 29 and 31–41.
+
+Adjudication: 24 rows — 15 `absent` (the quoted span is not in the capture that was
+actually read), 9 `unverifiable` (1 bot-wall capture, 4 binary office documents never
+rendered to text, 4 register rows naming no locator), 0 `present`, 0 `mixed`. No row is
+called a fabrication on absent evidence; nothing is adopted.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| operability | **improved** (C1) | the slice and the examination are one committed command; three controls (positive, negative, mutant) hold; the do-nothing control fails |
+| calibration | **improved** (C2) | 24/24 verdicts, each with a reason and a flip condition, graded by an independent re-examination; the flipped-row control fails at 23/24 |
+| depth | **improved narrowly** | `corpus/lessons/round-42.md`: the frozen decision rule, the capture-form ground (S077), the two failure modes the `absent` class spans, four mined mistakes |
+| coverage | **improved narrowly** | a new measured surface: the lane's quarantine scope (24 rows, 43 quotes) now has a command, a receipt and a per-row verdict — a surface the lane did not hold at all |
+| freshness | **improved narrowly** | S077 opened this round from an installed copy (sha256 recorded); the register and every consulted capture are digested by `tools/quarantine-check.py digests` |
+| adjacency | **unchanged** | nothing absorbed from a sibling lane; the campaign tree and every sibling repo stayed read-only; zero egress |
+
+Learning trends, lane view (the outside closure is separate): **expansion improved**
+(one opened source, one lesson, one runnable surface on ground the lane did not hold);
+**quality improved** (both counters verified against do-nothing controls, and the
+register's own class column was shown to be unreliable — the lane's rule now checks the
+capture's FORM); **discernment unchanged** — the round's admit/reject sample still has
+no non-author spot-check, so it is not claimed as externally verified.
+
+## Planned — round 43 (not started)
+
+Candidates, not commitments: split the `absent` class into "the source carries the text
+and the row quotes it wrongly" and "the source does not carry the text" (the round-42
+lesson names the split as a debt, and the measured longest-common-run evidence supports
+it); the round-40 counter lineage's successor design (routed from r41's D1); a
+per-capture provenance receipt (which capture, which form, which digest) so a later
+round can re-check a row without re-deriving the cache; the `spans ≥ 32768` boundary
+debt; the metadata-screener locale seam. No round-43 work is started here; freeze only
+1–3 separately falsifiable claims after scoring their do-nothing controls.

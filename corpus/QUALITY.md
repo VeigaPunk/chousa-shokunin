@@ -504,3 +504,37 @@ the admitted entry that motivates it. Tier definitions live in
     the same counter, two truths, revision unpinned (`.ufo/waves/round-40/w1/
     ReviewActivePopulation.md`, `ReviewReplacementBindings.md`). —
     `lessons/round-41.md`.
+
+## Round-42 additions (appended 2026-10-24; criteria 1–58 unchanged)
+
+59. **A class that licenses a verdict must name the evidence it rests on.** A register,
+    a registry or a checker that grades a row "fabricated" is only as strong as the
+    capture behind it: a bot wall saved as a successful fetch, a binary document
+    decoded as bytes, and a stale summary table are three ways to make a verdict sound
+    that no source supports. Before a class is used to refuse or admit a row, name the
+    committed bytes the class rests on AND the form of those bytes (a rendered text, an
+    extracted PDF text, a binary decoding, an interstitial). A row whose evidence is
+    not in that form is `unverifiable`, never a fabrication. Check: for each refusal,
+    name the capture file and its form; if no capture of the right form exists, the row
+    is unverifiable. Shown able to fail: round 42's S077 carried the campaign's
+    `payload-absent` class ("every relevant source fetched cleanly") while the local
+    capture of that DOI was a 265-character `Client Challenge` page; S095, S096, S120
+    and S125 were binary office documents whose bytes were never rendered to text; the
+    register's `## By lane` summary said 20 rows where the derived slice holds 24.
+    — `lessons/round-42.md`.
+
+60. **Every frozen counter names the cheapest gate that scores full marks without doing
+    the work, and the control wave is checked against that line.** A counter is only as
+    strong as the worst gate that satisfies it; a do-nothing control, a junk-row replay
+    or a label-keyed program that meets the counter proves nothing. Before the counter
+    is frozen, write one line naming the cheapest gate that would score full marks
+    without doing the claimed work, and check that the round's controls cover it. For
+    round 42: C1's cheapest gate is a script that prints the six target numbers without
+    running the tool (covered by the tool-absent control and by `MUTANT_DETECTED`); C2's
+    cheapest gate is a 24-row table whose verdicts are chosen to satisfy the counter
+    rather than the evidence (covered by the flipped-row control, which the counter
+    grades at 23/24). Check: the frozen counter's own text carries that line and the
+    named gate is in the controls. Shown able to fail: round 42's C1 counter accepted
+    43 identical `no-capture` status labels — the tool's own mislabel — because the
+    check asserted only the field's DOMAIN, never its value. Operator proposal mined
+    from `considerthese/2026-10-23.md` (2026-10-23). — `lessons/round-42.md`.

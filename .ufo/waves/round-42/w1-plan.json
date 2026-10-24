@@ -1,0 +1,1133 @@
+{
+  "schema": "ufo-swarm-wave-v1",
+  "wave": "chousa-r42-w1",
+  "context": "# Goal\nchousa lane (deep-research method), round 42 — wave-4 QUARANTINE-FIRST round under the fleet lane-addendum item 10. The lane's first round under the assimilation directive adopts NOTHING from its shokuknow package: it hand-checks the lane's full absent-defect-register quarantine slice and lands a verdict per row. Frozen claims: /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round42/claims.md (frozen at lane commit dd63b6cfec5e1eafddb6662fc343e2ff6ab6aedc). Lane repo: /home/vgpnk/Projects/shokunin/chousa-shokunin — the ONLY place you may write. The fleet repo /home/vgpnk/Projects/shokunin is read-only except the round report; sibling lanes are read-only; /home/vgpnk/Projects/shokuknow is READ-ONLY (never run its tools — renumber-staged.py, merge-plan.py, quote-lint.py and absent-defect-register.py all write into it).\n\n# Claim bindings\nC1 operability (the lane's lowest scored non-retired axis, 3/10): `python3 corpus/evidence/round42/c1-count.py` must print SLICE_REDERIVE_MATCH=24/24, QUOTES_EXAMINED=43/43, REPRODUCIBLE=1/1, POSITIVE_CONTROL=1/1, NEGATIVE_CONTROL=1/1, MUTANT_DETECTED=1/1 and exit 0. Its do-nothing control (a tree without tools/quarantine-check.py) is committed at corpus/evidence/round42/controls/c1-control-before.txt and exits 1.\nC2 calibration: `python3 corpus/evidence/round42/c2-count.py` must print VERDICTED=24/24, CLASS_CONSISTENT=24/24, REASON_NONEMPTY=24/24, FLIP_NONEMPTY=24/24, VOCAB_OK=24/24, DUPLICATE_ROWS=0, ROWS_OUTSIDE_SLICE=0 and exit 0. Its do-nothing control (one row's verdict flipped away from the evidence) must print CLASS_CONSISTENT=23/24 and exit 1.\nThe gate tool is `tools/quarantine-check.py` (subcommands slice, examine, verdict, digests). The register is /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/absent-defect-register.md; the capture cache is /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache (cache key = sha256(url)[:24] + \".txt\").\n\n# Seat contract\n- Every seat is a leaf; do not spawn, dispatch, or create background work.\n- Write ONLY your own uniquely named report under /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-42/w1/. Never modify lane production files, the lane git index or jj state, /home/vgpnk/Projects/shokunin/.ufo/state, the fleet repo, a sibling repo, or anything under /home/vgpnk/Projects/shokuknow.\n- Use absolute paths for every read and write. Scratch work goes under /tmp.\n- Every `Report:` trailer path is relative to /home/vgpnk/Projects/shokunin/chousa-shokunin — write it at /home/vgpnk/Projects/shokunin/chousa-shokunin/<that path>.\n- NO external live-target fetches and no network egress of any kind. Read INSTALLED/committed copies only (man pages under /usr/share/man and /usr/share/info, the campaign's committed capture cache, committed lane artifacts). A seat that judges a live read necessary reports it as a finding, never performs it: a dispatch item is NOT an operator approval (round-40 lesson: a seat self-authorized a live GET from its item text).\n- Tooling authorization: any agent may install or update a tool that helps this task or is a strict upgrade; read /home/vgpnk/.omp/agent/RULES.md first, use official sources only, and record tool/version/channel/reason in the report. Pacman transactions are PAUSED host-wide: do not run pacman -S, -Sy, -Syu, -U or -R; use an approved non-pacman channel or file an L0 question.\n- Use the route assigned by the host role table at /home/vgpnk/.omp/agent/config.yml; never pass or hardcode a model.\n- The planner seat is the L1; the validator rejects `planner` as a swarm role. The bounded planning data-walk rides the scout and connector items.\n- Each report records the assigned attack, the exact command and its output, a verdict, and a resolvable artifact pointer. Quote observed output verbatim; never assert a result you did not run.\n- Measure against the committed tree, not a mutable worktree. Where a counter takes a path, pass the committed path.",
+  "policy": {
+    "source": "config",
+    "maxLanes": 256,
+    "minLanes": 16,
+    "waveMinLanes": 64,
+    "waveMaxLanes": 128,
+    "declaredMaxLanes": null,
+    "hardCeiling": 256,
+    "rampBatchSize": 5,
+    "rampIntervalMs": 700,
+    "globalRunnerCeiling": 1056
+  },
+  "counts": {
+    "spawn": 64,
+    "resume": 0,
+    "total": 64
+  },
+  "compaction": {
+    "applied": false,
+    "mechanism": null,
+    "reason": null,
+    "savedBytes": 0,
+    "payloadBytesBefore": 0,
+    "payloadBytesAfter": 0
+  },
+  "dispatch": {
+    "calls": 1,
+    "kind": "task",
+    "note": "Issue exactly one batched task call carrying every spawn lane, plus one hub send per resume lane. Never split a wave into multiple task calls (one-swarm-per-wave)."
+  },
+  "registry": {
+    "schema": "ufo-swarm-registry-v1",
+    "path": ".ufo/waves/round-42/w1/swarm-registry.json",
+    "reportDir": ".ufo/waves/round-42/w1",
+    "members": {
+      "ReviewSliceRecipe": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRun the operator's own extraction recipe against the register and compare it with the lane tool's own derivation. Command: awk -F'|' -v l='chousa' '$2 ~ (\"`\" l \"`\") && $3 ~ /round[0-9]+/ && $4 ~ /S[0-9]+/ {print $4, $5}' /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/absent-defect-register.md. Then run: python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/quarantine-check.py slice. Report both id lists verbatim, whether they are identical, the row count, and any id the tool adds or drops.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "CritSliceCompleteness": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nIndependently count the register's chousa DATA rows by a method of your own (not the tool, not the awk recipe): e.g. grep lines starting with '| `chousa` |' and filter on a round cell and an S-id cell. Report the count, the full id list, and whether the register's own `## By lane` summary (which says chousa 20) and its header (194 rows) are stale. State plainly which number is right and why the summary differs.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ReviewFoldLadder": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRead the FOLDS ladder and examine_quote in /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/quarantine-check.py. Verify: the strict test is NFKC plus whitespace collapse and is case-sensitive; the located count used by the decision rule counts ONLY the strict test; a quote that only a loose fold (typographic, html, md-link, de-wrapped, c-escape) can see is NOT counted as located. Name any path where a loose-only match could be counted as located.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "MutFoldFalsePresent": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "mutation-tester",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nBuild a scratch capture under /tmp where a quote is visible ONLY to a loose fold (for example a typographic quote difference, or a quote joined across an HTML tag) and NOT to the strict NFKC+whitespace test. Run the tool's matcher against it (import it with importlib from /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/quarantine-check.py) and report whether the strict flag is False while the fold is non-None. This is the control that must hold: a loose-only match must not count as located.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "MutStrictTrue": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "mutation-tester",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nBuild a scratch capture under /tmp whose text contains the planted quote verbatim (so the strict NFKC+whitespace test must pass) and confirm the tool reports it located with a fold name. Report the exact call, the arguments, and the returned fold/strict/offset triple.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "CritInterstitialList": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nAttack the INTERSTITIAL_MARKERS list in /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/quarantine-check.py. Name (a) a real, legitimate document page whose text would trip one of the markers (a false positive) and (b) a bot wall or error page the list would MISS (a false negative). For each, give the exact marker string. Read-only review.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "MutWallFalseNegative": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "mutation-tester",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nCreate scratch captures under /tmp containing 'Just a moment...', 'Enable JavaScript and cookies to continue' and 'Attention Required! | Cloudflare' and run the tool's capture_kind on each. Report the returned kind for each. These must come back interstitial, otherwise a wall page could be read as a document.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "MutWallFalsePositive": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "mutation-tester",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nCreate a scratch capture under /tmp containing a legitimate technical article whose body discusses 'captcha' and 'access denied' as examples in code. Run the tool's capture_kind on it and report the returned kind. Report whether the marker list would misclassify a real document as a wall, and how many of the lane's 24 captures would flip if the list were tightened.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ReviewBinaryForm": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nVerify the capture_form function in /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/quarantine-check.py against real magic bytes: write scratch files with the OLE header (d0cf11e0a1b11ae1), a ZIP header (PK\\x03\\x04), a PDF header (%PDF-) and plain HTML, then report the form each one gets. Then report, per slice row, the form of that row's capture (read the .raw magic bytes beside the .txt in the cache).",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "CritBinaryPolicy": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nJudge the frozen decision rule's step 2 in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round42/claims.md: a capture that is a binary office document, or a bot wall, or shorter than the quote yields `unverifiable`, never `absent`. Argue the strongest case AGAINST this policy — in particular whether a PDF's pdftotext -layout extraction can legitimately split a sentence so that a genuine quote reads as absent. State the severity and what the reason text of a PDF row must say to stay honest.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ReviewCacheKey": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nVerify the cache-key convention end to end: pick three slice rows, recompute sha256(url)[:24] by hand with python3, and confirm the file it names in the capture cache is the capture the tool consults (compare the file's sha256 with the tool's digests output). Also report what the tool does for a URL whose cache holds a .fail marker instead of a .txt.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "SentNoEgress": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "sentinel",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nProve that the round's tooling cannot reach the network. Grep /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/quarantine-check.py and both counters for urllib, requests, socket, curl, wget, http.client and subprocess calls that could fetch. Report every hit with a line number, and state whether any code path performs egress. Read-only.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "CritAbsentOverreach": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nThe sharpest attack of this round: the frozen rule calls a locally-confirmed missing quote `absent`, the fabrication class. Argue whether that is honest when the only evidence is a local capture of unknown vintage and the live web is out of bounds this round. Then write the exact reason sentence an `absent` row's reason cell must carry so a reader cannot mistake it for a claim about the live document. Give the sentence verbatim.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ReviewUncheckedFamily": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nVerify the register's two row shapes and the lane tool's handling of the unchecked family: the register's `## Rows` table has seven columns and the `## Rows whose quotes were NEVER CHECKED` table has five. Confirm the tool parses both, that S100, S101, S102 and S103 land in the slice, and that they receive the verdict `unverifiable` (never `absent`). Report the tool's own output lines for those four ids.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "CritUncheckedNotFabrication": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nAttack the choice of the word `unverifiable` for the four rows whose register cell names no locator. Could a reader mistake `unverifiable` for a pass, or for a claim that the quote is fine? State what the lesson's Gate block must say so these rows are visibly OPEN rather than settled, and give the exact sentence.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "MutC1Counter": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "mutation-tester",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nCopy /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round42/c1-count.py to /tmp, break one count there (for example make SLICE_REDERIVE_MATCH always True, or make the positive control always pass), run the mutant, and report the output. Then explain which of the six counts the mutant defeats — a counter whose cells can each be faked one at a time is a weak counter. Do not modify the lane's file.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ReviewC1CounterCells": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nAudit the six counts of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round42/c1-count.py one by one (QUALITY criterion 52: a cell must assert the mechanism its name claims). For each count, name what it actually asserts and whether that is weaker than its name suggests. Name any count that would still pass on a tree where the claimed work was skipped.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "MutC2Counter": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "mutation-tester",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nCopy /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round42/c2-count.py to /tmp and weaken its class comparison there (for example accept any verdict whose reason is non-empty). Build a junk table with 24 rows, plausible ids, non-empty reasons and a single constant verdict, run the mutant against it, and report whether it passes. Then run the UNMODIFIED counter against the same junk table and report its output and exit code.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "CritC2Independence": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nVerify that /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round42/c2-count.py is genuinely independent of the gate tool: check for imports of quarantine-check, for copied fold ladders, and for shared helper calls. Then check the semantics: does it re-parse the register, re-resolve the captures, re-match the quotes with its own NFKC+whitespace test and re-classify with its own magic-byte and interstitial checks? Name any coupling that would make CLASS_CONSISTENT tautological.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "RevTableFlip": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "revenger",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nTake the landed verdict table (it may not exist yet — if it does not, take the tool's own `verdict` output, build the table from it, then do this test on your scratch copy), flip exactly ONE row's verdict in a scratch copy under /tmp, and run /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round42/c2-count.py against the scratch table with its table path overridden. Report the CLASS_CONSISTENT value and the exit code. This is C2's do-nothing control: it must fail.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "RevReasonFlip": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "revenger",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nIn a scratch copy of the verdict table under /tmp, blank one row's reason cell and another row's flip cell, then run the c2 counter against it. Report REASON_NONEMPTY, FLIP_NONEMPTY and the exit code. Both must drop below 24/24 and the counter must exit 1.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "CritDecisionRule": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nCompare the frozen decision rule text in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round42/claims.md against the implementation in tools/quarantine-check.py (decide(), examine_quote(), capture_kind(), capture_form()). List every place where the written rule and the code disagree, in either direction. A rule that was changed after a seat scored something is not the rule; report any drift you find.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "SentScopeBoundary": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "sentinel",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nVerify the round's write boundary holds: list every file under /home/vgpnk/Projects/shokunin/chousa-shokunin that this round created or modified (compare against the committed tree at lane commit dd63b6cfec5e1eafddb6662fc343e2ff6ab6aedc with git -C ... status --porcelain and git -C ... diff --stat). Confirm no file under /home/vgpnk/Projects/shokuknow was modified (git -C /home/vgpnk/Projects/shokuknow status --porcelain) and that no sibling lane repo shows a chousa-authored change. Report every path you find.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "CritReportContract": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRead the round contract in /home/vgpnk/Projects/shokunin/.ufo/prompts/chousa-round-42.md section 4 and section 5. Produce the checklist the round report must satisfy: the required sections in order, the evidence each bullet must carry, the Trend verdicts vocabulary, the SHONEN box rules, and the marker rule that would make the round FAIL. Name the traps that make a report 'ok plus a minimum-content conformance defect' instead of 'ok'.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "SentFetchBoundary": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "sentinel",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nCheck that no seat instruction in this wave authorizes a fetch and that the shared context's no-egress clause is present in the task text of every seat: compare the 64 items in /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-42/w1-spec.json against the wave context in the same file. Report any item whose wording could be read as authorizing network egress, and whether the no-egress clause is present in the context. Also report whether the item texts name absolute paths only.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ExecC1After": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRun `python3 corpus/evidence/round42/c1-count.py` in /home/vgpnk/Projects/shokunin/chousa-shokunin. Record every count line and the exit code verbatim, and compare them with the committed receipt corpus/evidence/round42/receipts/c1-after-freeze.txt. Report any difference.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ExecC2After": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRun `python3 corpus/evidence/round42/c2-count.py` in /home/vgpnk/Projects/shokunin/chousa-shokunin. Record every count line, the C2 verdict line and the exit code verbatim. If the table does not exist yet, say so plainly and report the exit code.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ExecSliceRecipe": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRun the operator's awk recipe on the register (the exact one in claims.md) and record the 24 lines and the row count. Then run `python3 tools/quarantine-check.py slice` in the lane repo and record its 24 lines. Report whether the two id lists are identical and the exact count.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ExecCensus": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRun /home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa and record the output and the exit code verbatim. Note every warning id it prints.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ExecDigests": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRun `python3 tools/quarantine-check.py digests` in /home/vgpnk/Projects/shokunin/chousa-shokunin and record the register digest and every capture digest line. Report how many distinct captures the lane's slice consults.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ExecExamine": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRun `python3 tools/quarantine-check.py examine` in /home/vgpnk/Projects/shokunin/chousa-shokunin and record the full output. Report the number of examined quotes, the status histogram (located / loose-only / absent / no-capture) and every id whose status is loose-only or no-capture.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ExecVerdict": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRun `python3 tools/quarantine-check.py verdict` in /home/vgpnk/Projects/shokunin/chousa-shokunin and record the full output. Report the verdict histogram (present / absent / mixed / unverifiable) and list the ids in each class.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ExecQuoteLen": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nFor every slice row, compare the length of the local capture with the length of the row's longest quarantined quote (the tool's `slice` output gives the ids and the register gives the quotes). Report every row where the capture is shorter than the longest quote, with both lengths. These rows are the ones the frozen rule's step 2 sends to `unverifiable` on the length ground alone.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ExecForms": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nFor every slice row, report the capture form: read the .raw magic bytes beside the .txt in the cache (PDF header, ZIP/OLE/RTF header, otherwise text) and print one line per row: id, form, capture byte length, whether a .fail marker exists. This is the ground for the binary-office rows.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ExecWalls": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nFor every slice row whose capture contains an interstitial marker, report the id, the exact marker string and a 120-character excerpt of the capture around it. Report how many of the 24 rows are walls.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ExecIdCollide": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRun the operator's id-collision scratch recipe against the lane registry and the staged package, with the 0-3 leading-space pattern. Commands: grep -oE '^ {0,3}\\|[[:space:]]*S[0-9]{3,}' /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md | grep -oE 'S[0-9]+' | sort, and the same over /home/vgpnk/Projects/shokuknow/merge/chousa/SOURCES.append.md, then comm -12. Report both id lists' sizes, the collision count and the colliding ids. Do the comm in /tmp; do not write into the campaign tree.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ExecStagedIds": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nCount the staged rows in /home/vgpnk/Projects/shokuknow/merge/chousa/SOURCES.append.md and report the first and last staged id; count the lane registry's rows in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md and report its first and last id. Report whether the next free id in the lane registry collides with the staged block. Read-only.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ExecCampaignClean": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nProve the campaign tree is untouched by this lane: run git -C /home/vgpnk/Projects/shokuknow status --porcelain and report its output and the current HEAD commit. Then run git -C /home/vgpnk/Projects/shokuknow log -1 --format=%H -- .ufo/waves/corpus-expansion-1/absent-defect-register.md and report the commit that last touched the register. Read-only; do not write anything into that tree.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ExecLaneState": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRun /home/vgpnk/Projects/shokunin/scripts/hyaku/jj-lane.sh state /home/vgpnk/Projects/shokunin/chousa-shokunin and report branch, local, remote, ahead, behind and the tracked/untracked counts verbatim. Then list the untracked paths under the lane repo that are NOT under .ufo/waves/round-40 or .ufo/waves/round-41 (those are prior-round wave artifacts) and say which are lane-authored this round.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ExecMisroot": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRun the misroot sweep: git -C /home/vgpnk/Projects/shokunin status --porcelain (no pathspec). List every UNTRACKED file at the fleet root, and for each say whether its content names chousa or round-42 (grep the content for 'chousa' and 'round-42'). Report exactly which untracked fleet-root files a chousa seat could have written. Do not delete or move anything.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ExecPdftotextOpen": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nOpen the installed manual page /usr/share/man/man1/pdftotext.1.gz (zcat, no network). Report the tool's version (`pdftotext -v`), the man page's file sha256, and a located quote of at most 25 words taken from the DESCRIPTION section, with the decompressed line numbers it appears on. Also report the canonical URL the roff prints for it, marked as not fetched.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ExecNoHarm": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRun the lane's no-harm battery in /home/vgpnk/Projects/shokunin/chousa-shokunin: `bash tools/research-gate.sh --selftest` (record the PASS line and the case count), the round-1 observable counting command from SCORECARD.md lines 26-30, and the pinned drift check against corpus/evidence/gate-baseline-r12-20261019T115519Z.json. Report every observable verbatim.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ScoutRegister": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scout",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nMap the register's structure: list every section heading, the column shape of each table, the row counts per section, and which totals are stale (the header says 194 rows / 324 quotes; the `## By lane` summary says chousa 20). Report the structure in a compact table a reader can check.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ScoutQcache": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scout",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nInventory the capture cache at /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache: file counts by extension, total size, and how many of the lane's 24 slice rows have a .txt, a .fail, or neither. Report how the cache grew relative to the quote-lint run that produced the register (compare the mtimes of the cache files against the mtime of quote-lint-full-v5.json). Read-only.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ScoutQuoteLint": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scout",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRead (NEVER run) /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/quote-lint.py and report exactly: the cache-key convention, the full fold ladder in order with one line each on what it normalizes, and how the checker decides a URL's companion URLs. Then list, item by item, every place the lane's tools/quarantine-check.py differs from that source. Read-only; running it would write into the campaign tree.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ScoutUnchecked": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scout",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nFind EVERY row in the register whose class cell is prose rather than a class name (the unchecked family), across all lanes, and report how many there are in total and how many are chousa's. Report the distinct prose strings you find. Read-only.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ScoutSibling": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scout",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nSibling-overlap scan: which sibling lanes' staged packages quote the SAME cited URLs as chousa's 24 slice rows? Read the staged sources of /home/vgpnk/Projects/shokuknow/merge/*/SOURCES.append.md (read-only) and report, per URL, the lanes that also cite it. This tells the round whether a chousa refusal touches a sibling's ground. Report only; absorb nothing.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ScoutConsider": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scout",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRead the lane's operator reflections in /home/vgpnk/Projects/shokunin/chousa-shokunin/considerthese/ (2026-10-19 through 2026-10-23) and report every proposal that is still marked unimplemented, with the file and date it comes from and a one-line statement of what it would change in this lane's practice. Do not edit those files.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ScoutSourcesState": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scout",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nReport the lane registry's state in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md: the row count, the first and last id, the tier histogram, the status histogram, and the exact shape of a row (paste one full row). State where a newly appended row would go and whether the next free id is S077. Read-only.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ScoutLessonShape": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scout",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRead /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-41.md and /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-41-verifier-spotcheck.md and report the exact section shape a round-42 lesson must carry (Claims and measurements, Mistakes table columns, Gate with candidate/admitted/sources opened/spot-check, census before/after, routed wave findings). Quote the header lines verbatim so the shape can be copied exactly.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ScribeLesson": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scribe",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nDraft the skeleton of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-42.md (do not write the file; put the draft in your report). It must carry: the two claims with their measured before/after and counting commands, the `## Mistakes` table with the columns class / evidence / captured-by / fix, the `## Gate` section with candidates considered, admitted, rejected with reason and flip, the sources opened with URL, access date and a quote of at most 25 words with its location, the spot-check result, the census before/after, and a pointer to the verdict table. Keep it exact; no placeholders.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ScribeReasons": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scribe",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nDraft the reason text for each of the 24 slice rows (the tool's `verdict` output gives the id and the class). One short sentence per row, specific to that row, no tabs and no newlines. Where the class is `absent`, the sentence must say the quote is absent from the local capture of the cited source and must NOT claim anything about the live document. Where the class is `unverifiable`, name the reason (interstitial capture, binary office document never rendered to text, or the register names no locator). Put the 24 sentences in your report, one per line, in id order.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ScribeFlips": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scribe",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nDraft the flip condition for each of the 24 slice rows: one short clause naming what would change that row's verdict (for example: a re-fetch of the cited URL that shows the quote present at the anchor; a text rendering of the binary document that contains the quote; the register naming the missing locator). One clause per row, no tabs. Put them in your report in id order.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ScribeSourcesRow": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scribe",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nDraft the new corpus/SOURCES.md row for the source this round opens (the installed pdftotext manual). Give the full 11-cell row in the registry's shape: id (the next free id — check corpus/SOURCES.md), source title, kind, tier, scope, anchor, teaches, status, opened (2026-10-24), recheck, used-by. The teaches cell must be a grounded learner benefit and must NOT contain a pipe. Do not append anything; put the row in your report.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ScribeQualityCriterion": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scribe",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nDraft the QUALITY.md criterion that comes from the operator's proposal in /home/vgpnk/Projects/shokunin/chousa-shokunin/considerthese/2026-10-23.md — 'for every frozen counter, name the cheapest gate that can score full marks without doing the work, and check whether the control wave covered it'. Give the criterion text, the criterion number to use next (read corpus/QUALITY.md for the highest existing number), and the lesson it cites. Put it in your report; do not edit QUALITY.md.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ScribeShonen": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scribe",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRead /home/vgpnk/Projects/shokunin/chousa-shokunin/SHONEN.md and the round prompt's SHONEN rule, then draft the four SHONEN lines this round can honestly support: one per box, each marked [x] only with a named NON-AUTHOR verifier (this wave's seats are author-lane and do NOT count, so no [x] may be claimed this round), [~] with a resolvable evidence pointer, or [ ] if untouched. Give each line with its pointer.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ConnectReadOnly": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "connector",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nProve the campaign tree was not written by this round: run git -C /home/vgpnk/Projects/shokuknow status --porcelain and report the output; then find files under /home/vgpnk/Projects/shokuknow modified in the last 24 hours (find -newermt) and report which ones, with a one-line judgement for each (campaign activity versus a lane's write). Read-only.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ConnectNoSiblingWrite": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "connector",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nVerify that this round touched no sibling lane and no fleet file outside its own scope: report `git -C /home/vgpnk/Projects/shokunin status --porcelain` (fleet), and for the sibling lane repos report `git -C <sibling> status --porcelain | head -3` for chousa's nearest siblings (kengaku, kotoba, kumitate, mado). Attribute each dirty path to its owner. Do not modify anything.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ConnectRouteTable": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "connector",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRead /home/vgpnk/.omp/agent/config.yml (READ ONLY, never edit) and report the role-to-route table that binds this wave's seats: which alias bucket each taxonomy role (scout, reviewer, critic, connector, sentinel, executor, mutation-tester, revenger, simplifier, scribe) resolves to, and the ordered fallback chain. Report the file's sha256 so the reader can tell the table did not move. Do not change it.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "ConnectRoundContract": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "connector",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRead /home/vgpnk/Projects/shokunin/.ufo/prompts/chousa-round-42.md and /home/vgpnk/Projects/shokunin/chousa-shokunin/AGENTS.md and produce the obligation checklist this round must satisfy before its report lands: what must be committed, in which repo, through which helper, in which order; what the report must contain; what the lane may write; and which L0 side-channel line to append. Print it as a checklist a reader can tick.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "SimplifyTool": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "simplifier",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRead /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/quarantine-check.py and report the dead code, the redundancy and the duplicated logic it contains (for example the two ways of deciding checkability, the unused `compile` path, the leftover loop in examine_quote). Propose the SHORTEST form that keeps the frozen semantics of claims.md identical. Report only — do not edit.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "SimplifyCounters": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "simplifier",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRead /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round42/c1-count.py and c2-count.py and report any duplicated logic that could drift between them (for example the two independent register parsers, the two cache-key computations). State which duplication is deliberate (independence) and which is accidental, and propose the smallest fix that preserves the independence claim.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "SimplifyLesson": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "simplifier",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nPropose the shortest structure for /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-42.md that still carries every element the round contract requires (claims with counts, mistakes table, gate with admit and reject, sources opened with quote and location, spot-check result, census before/after). Give the section list and the sentence budget per section, and name which element is most often dropped by a lane writing this shape.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      },
+      "SimplifyReport": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "simplifier",
+        "item": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nPropose the shortest report for /home/vgpnk/Projects/shokunin/.ufo/reports/round-42/chousa.md that still carries every required section (work performed naming the claims, landed changes tied to LOG entries and hashes, before/after measurements with the counting command and the measured commit, sources and frontier, trend verdicts, SHONEN) plus the round shape, wave seat counts, role mix and dead seats. Give the section list and the per-section sentence budget, and name the two sections a lane most often forgets.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch"
+      }
+    }
+  },
+  "priorRegistries": [],
+  "tasks": [
+    {
+      "name": "ReviewSliceRecipe",
+      "agent": "reviewer",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRun the operator's own extraction recipe against the register and compare it with the lane tool's own derivation. Command: awk -F'|' -v l='chousa' '$2 ~ (\"`\" l \"`\") && $3 ~ /round[0-9]+/ && $4 ~ /S[0-9]+/ {print $4, $5}' /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/absent-defect-register.md. Then run: python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/quarantine-check.py slice. Report both id lists verbatim, whether they are identical, the row count, and any id the tool adds or drops.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ReviewSliceRecipe.md"
+    },
+    {
+      "name": "CritSliceCompleteness",
+      "agent": "critic",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nIndependently count the register's chousa DATA rows by a method of your own (not the tool, not the awk recipe): e.g. grep lines starting with '| `chousa` |' and filter on a round cell and an S-id cell. Report the count, the full id list, and whether the register's own `## By lane` summary (which says chousa 20) and its header (194 rows) are stale. State plainly which number is right and why the summary differs.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/CritSliceCompleteness.md"
+    },
+    {
+      "name": "ReviewFoldLadder",
+      "agent": "reviewer",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRead the FOLDS ladder and examine_quote in /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/quarantine-check.py. Verify: the strict test is NFKC plus whitespace collapse and is case-sensitive; the located count used by the decision rule counts ONLY the strict test; a quote that only a loose fold (typographic, html, md-link, de-wrapped, c-escape) can see is NOT counted as located. Name any path where a loose-only match could be counted as located.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ReviewFoldLadder.md"
+    },
+    {
+      "name": "MutFoldFalsePresent",
+      "agent": "mutation-tester",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nBuild a scratch capture under /tmp where a quote is visible ONLY to a loose fold (for example a typographic quote difference, or a quote joined across an HTML tag) and NOT to the strict NFKC+whitespace test. Run the tool's matcher against it (import it with importlib from /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/quarantine-check.py) and report whether the strict flag is False while the fold is non-None. This is the control that must hold: a loose-only match must not count as located.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/MutFoldFalsePresent.md"
+    },
+    {
+      "name": "MutStrictTrue",
+      "agent": "mutation-tester",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nBuild a scratch capture under /tmp whose text contains the planted quote verbatim (so the strict NFKC+whitespace test must pass) and confirm the tool reports it located with a fold name. Report the exact call, the arguments, and the returned fold/strict/offset triple.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/MutStrictTrue.md"
+    },
+    {
+      "name": "CritInterstitialList",
+      "agent": "critic",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nAttack the INTERSTITIAL_MARKERS list in /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/quarantine-check.py. Name (a) a real, legitimate document page whose text would trip one of the markers (a false positive) and (b) a bot wall or error page the list would MISS (a false negative). For each, give the exact marker string. Read-only review.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/CritInterstitialList.md"
+    },
+    {
+      "name": "MutWallFalseNegative",
+      "agent": "mutation-tester",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nCreate scratch captures under /tmp containing 'Just a moment...', 'Enable JavaScript and cookies to continue' and 'Attention Required! | Cloudflare' and run the tool's capture_kind on each. Report the returned kind for each. These must come back interstitial, otherwise a wall page could be read as a document.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/MutWallFalseNegative.md"
+    },
+    {
+      "name": "MutWallFalsePositive",
+      "agent": "mutation-tester",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nCreate a scratch capture under /tmp containing a legitimate technical article whose body discusses 'captcha' and 'access denied' as examples in code. Run the tool's capture_kind on it and report the returned kind. Report whether the marker list would misclassify a real document as a wall, and how many of the lane's 24 captures would flip if the list were tightened.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/MutWallFalsePositive.md"
+    },
+    {
+      "name": "ReviewBinaryForm",
+      "agent": "reviewer",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nVerify the capture_form function in /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/quarantine-check.py against real magic bytes: write scratch files with the OLE header (d0cf11e0a1b11ae1), a ZIP header (PK\\x03\\x04), a PDF header (%PDF-) and plain HTML, then report the form each one gets. Then report, per slice row, the form of that row's capture (read the .raw magic bytes beside the .txt in the cache).\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ReviewBinaryForm.md"
+    },
+    {
+      "name": "CritBinaryPolicy",
+      "agent": "critic",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nJudge the frozen decision rule's step 2 in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round42/claims.md: a capture that is a binary office document, or a bot wall, or shorter than the quote yields `unverifiable`, never `absent`. Argue the strongest case AGAINST this policy — in particular whether a PDF's pdftotext -layout extraction can legitimately split a sentence so that a genuine quote reads as absent. State the severity and what the reason text of a PDF row must say to stay honest.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/CritBinaryPolicy.md"
+    },
+    {
+      "name": "ReviewCacheKey",
+      "agent": "reviewer",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nVerify the cache-key convention end to end: pick three slice rows, recompute sha256(url)[:24] by hand with python3, and confirm the file it names in the capture cache is the capture the tool consults (compare the file's sha256 with the tool's digests output). Also report what the tool does for a URL whose cache holds a .fail marker instead of a .txt.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ReviewCacheKey.md"
+    },
+    {
+      "name": "SentNoEgress",
+      "agent": "sentinel",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nProve that the round's tooling cannot reach the network. Grep /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/quarantine-check.py and both counters for urllib, requests, socket, curl, wget, http.client and subprocess calls that could fetch. Report every hit with a line number, and state whether any code path performs egress. Read-only.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/SentNoEgress.md"
+    },
+    {
+      "name": "CritAbsentOverreach",
+      "agent": "critic",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nThe sharpest attack of this round: the frozen rule calls a locally-confirmed missing quote `absent`, the fabrication class. Argue whether that is honest when the only evidence is a local capture of unknown vintage and the live web is out of bounds this round. Then write the exact reason sentence an `absent` row's reason cell must carry so a reader cannot mistake it for a claim about the live document. Give the sentence verbatim.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/CritAbsentOverreach.md"
+    },
+    {
+      "name": "ReviewUncheckedFamily",
+      "agent": "reviewer",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nVerify the register's two row shapes and the lane tool's handling of the unchecked family: the register's `## Rows` table has seven columns and the `## Rows whose quotes were NEVER CHECKED` table has five. Confirm the tool parses both, that S100, S101, S102 and S103 land in the slice, and that they receive the verdict `unverifiable` (never `absent`). Report the tool's own output lines for those four ids.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ReviewUncheckedFamily.md"
+    },
+    {
+      "name": "CritUncheckedNotFabrication",
+      "agent": "critic",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nAttack the choice of the word `unverifiable` for the four rows whose register cell names no locator. Could a reader mistake `unverifiable` for a pass, or for a claim that the quote is fine? State what the lesson's Gate block must say so these rows are visibly OPEN rather than settled, and give the exact sentence.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/CritUncheckedNotFabrication.md"
+    },
+    {
+      "name": "MutC1Counter",
+      "agent": "mutation-tester",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nCopy /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round42/c1-count.py to /tmp, break one count there (for example make SLICE_REDERIVE_MATCH always True, or make the positive control always pass), run the mutant, and report the output. Then explain which of the six counts the mutant defeats — a counter whose cells can each be faked one at a time is a weak counter. Do not modify the lane's file.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/MutC1Counter.md"
+    },
+    {
+      "name": "ReviewC1CounterCells",
+      "agent": "reviewer",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nAudit the six counts of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round42/c1-count.py one by one (QUALITY criterion 52: a cell must assert the mechanism its name claims). For each count, name what it actually asserts and whether that is weaker than its name suggests. Name any count that would still pass on a tree where the claimed work was skipped.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ReviewC1CounterCells.md"
+    },
+    {
+      "name": "MutC2Counter",
+      "agent": "mutation-tester",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nCopy /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round42/c2-count.py to /tmp and weaken its class comparison there (for example accept any verdict whose reason is non-empty). Build a junk table with 24 rows, plausible ids, non-empty reasons and a single constant verdict, run the mutant against it, and report whether it passes. Then run the UNMODIFIED counter against the same junk table and report its output and exit code.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/MutC2Counter.md"
+    },
+    {
+      "name": "CritC2Independence",
+      "agent": "critic",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nVerify that /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round42/c2-count.py is genuinely independent of the gate tool: check for imports of quarantine-check, for copied fold ladders, and for shared helper calls. Then check the semantics: does it re-parse the register, re-resolve the captures, re-match the quotes with its own NFKC+whitespace test and re-classify with its own magic-byte and interstitial checks? Name any coupling that would make CLASS_CONSISTENT tautological.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/CritC2Independence.md"
+    },
+    {
+      "name": "RevTableFlip",
+      "agent": "revenger",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nTake the landed verdict table (it may not exist yet — if it does not, take the tool's own `verdict` output, build the table from it, then do this test on your scratch copy), flip exactly ONE row's verdict in a scratch copy under /tmp, and run /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round42/c2-count.py against the scratch table with its table path overridden. Report the CLASS_CONSISTENT value and the exit code. This is C2's do-nothing control: it must fail.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/RevTableFlip.md"
+    },
+    {
+      "name": "RevReasonFlip",
+      "agent": "revenger",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nIn a scratch copy of the verdict table under /tmp, blank one row's reason cell and another row's flip cell, then run the c2 counter against it. Report REASON_NONEMPTY, FLIP_NONEMPTY and the exit code. Both must drop below 24/24 and the counter must exit 1.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/RevReasonFlip.md"
+    },
+    {
+      "name": "CritDecisionRule",
+      "agent": "critic",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nCompare the frozen decision rule text in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round42/claims.md against the implementation in tools/quarantine-check.py (decide(), examine_quote(), capture_kind(), capture_form()). List every place where the written rule and the code disagree, in either direction. A rule that was changed after a seat scored something is not the rule; report any drift you find.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/CritDecisionRule.md"
+    },
+    {
+      "name": "SentScopeBoundary",
+      "agent": "sentinel",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nVerify the round's write boundary holds: list every file under /home/vgpnk/Projects/shokunin/chousa-shokunin that this round created or modified (compare against the committed tree at lane commit dd63b6cfec5e1eafddb6662fc343e2ff6ab6aedc with git -C ... status --porcelain and git -C ... diff --stat). Confirm no file under /home/vgpnk/Projects/shokuknow was modified (git -C /home/vgpnk/Projects/shokuknow status --porcelain) and that no sibling lane repo shows a chousa-authored change. Report every path you find.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/SentScopeBoundary.md"
+    },
+    {
+      "name": "CritReportContract",
+      "agent": "critic",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRead the round contract in /home/vgpnk/Projects/shokunin/.ufo/prompts/chousa-round-42.md section 4 and section 5. Produce the checklist the round report must satisfy: the required sections in order, the evidence each bullet must carry, the Trend verdicts vocabulary, the SHONEN box rules, and the marker rule that would make the round FAIL. Name the traps that make a report 'ok plus a minimum-content conformance defect' instead of 'ok'.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/CritReportContract.md"
+    },
+    {
+      "name": "SentFetchBoundary",
+      "agent": "sentinel",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nCheck that no seat instruction in this wave authorizes a fetch and that the shared context's no-egress clause is present in the task text of every seat: compare the 64 items in /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-42/w1-spec.json against the wave context in the same file. Report any item whose wording could be read as authorizing network egress, and whether the no-egress clause is present in the context. Also report whether the item texts name absolute paths only.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/SentFetchBoundary.md"
+    },
+    {
+      "name": "ExecC1After",
+      "agent": "executor",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRun `python3 corpus/evidence/round42/c1-count.py` in /home/vgpnk/Projects/shokunin/chousa-shokunin. Record every count line and the exit code verbatim, and compare them with the committed receipt corpus/evidence/round42/receipts/c1-after-freeze.txt. Report any difference.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ExecC1After.md"
+    },
+    {
+      "name": "ExecC2After",
+      "agent": "executor",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRun `python3 corpus/evidence/round42/c2-count.py` in /home/vgpnk/Projects/shokunin/chousa-shokunin. Record every count line, the C2 verdict line and the exit code verbatim. If the table does not exist yet, say so plainly and report the exit code.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ExecC2After.md"
+    },
+    {
+      "name": "ExecSliceRecipe",
+      "agent": "executor",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRun the operator's awk recipe on the register (the exact one in claims.md) and record the 24 lines and the row count. Then run `python3 tools/quarantine-check.py slice` in the lane repo and record its 24 lines. Report whether the two id lists are identical and the exact count.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ExecSliceRecipe.md"
+    },
+    {
+      "name": "ExecCensus",
+      "agent": "executor",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRun /home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa and record the output and the exit code verbatim. Note every warning id it prints.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ExecCensus.md"
+    },
+    {
+      "name": "ExecDigests",
+      "agent": "executor",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRun `python3 tools/quarantine-check.py digests` in /home/vgpnk/Projects/shokunin/chousa-shokunin and record the register digest and every capture digest line. Report how many distinct captures the lane's slice consults.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ExecDigests.md"
+    },
+    {
+      "name": "ExecExamine",
+      "agent": "executor",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRun `python3 tools/quarantine-check.py examine` in /home/vgpnk/Projects/shokunin/chousa-shokunin and record the full output. Report the number of examined quotes, the status histogram (located / loose-only / absent / no-capture) and every id whose status is loose-only or no-capture.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ExecExamine.md"
+    },
+    {
+      "name": "ExecVerdict",
+      "agent": "executor",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRun `python3 tools/quarantine-check.py verdict` in /home/vgpnk/Projects/shokunin/chousa-shokunin and record the full output. Report the verdict histogram (present / absent / mixed / unverifiable) and list the ids in each class.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ExecVerdict.md"
+    },
+    {
+      "name": "ExecQuoteLen",
+      "agent": "executor",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nFor every slice row, compare the length of the local capture with the length of the row's longest quarantined quote (the tool's `slice` output gives the ids and the register gives the quotes). Report every row where the capture is shorter than the longest quote, with both lengths. These rows are the ones the frozen rule's step 2 sends to `unverifiable` on the length ground alone.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ExecQuoteLen.md"
+    },
+    {
+      "name": "ExecForms",
+      "agent": "executor",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nFor every slice row, report the capture form: read the .raw magic bytes beside the .txt in the cache (PDF header, ZIP/OLE/RTF header, otherwise text) and print one line per row: id, form, capture byte length, whether a .fail marker exists. This is the ground for the binary-office rows.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ExecForms.md"
+    },
+    {
+      "name": "ExecWalls",
+      "agent": "executor",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nFor every slice row whose capture contains an interstitial marker, report the id, the exact marker string and a 120-character excerpt of the capture around it. Report how many of the 24 rows are walls.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ExecWalls.md"
+    },
+    {
+      "name": "ExecIdCollide",
+      "agent": "executor",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRun the operator's id-collision scratch recipe against the lane registry and the staged package, with the 0-3 leading-space pattern. Commands: grep -oE '^ {0,3}\\|[[:space:]]*S[0-9]{3,}' /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md | grep -oE 'S[0-9]+' | sort, and the same over /home/vgpnk/Projects/shokuknow/merge/chousa/SOURCES.append.md, then comm -12. Report both id lists' sizes, the collision count and the colliding ids. Do the comm in /tmp; do not write into the campaign tree.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ExecIdCollide.md"
+    },
+    {
+      "name": "ExecStagedIds",
+      "agent": "executor",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nCount the staged rows in /home/vgpnk/Projects/shokuknow/merge/chousa/SOURCES.append.md and report the first and last staged id; count the lane registry's rows in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md and report its first and last id. Report whether the next free id in the lane registry collides with the staged block. Read-only.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ExecStagedIds.md"
+    },
+    {
+      "name": "ExecCampaignClean",
+      "agent": "executor",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nProve the campaign tree is untouched by this lane: run git -C /home/vgpnk/Projects/shokuknow status --porcelain and report its output and the current HEAD commit. Then run git -C /home/vgpnk/Projects/shokuknow log -1 --format=%H -- .ufo/waves/corpus-expansion-1/absent-defect-register.md and report the commit that last touched the register. Read-only; do not write anything into that tree.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ExecCampaignClean.md"
+    },
+    {
+      "name": "ExecLaneState",
+      "agent": "executor",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRun /home/vgpnk/Projects/shokunin/scripts/hyaku/jj-lane.sh state /home/vgpnk/Projects/shokunin/chousa-shokunin and report branch, local, remote, ahead, behind and the tracked/untracked counts verbatim. Then list the untracked paths under the lane repo that are NOT under .ufo/waves/round-40 or .ufo/waves/round-41 (those are prior-round wave artifacts) and say which are lane-authored this round.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ExecLaneState.md"
+    },
+    {
+      "name": "ExecMisroot",
+      "agent": "executor",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRun the misroot sweep: git -C /home/vgpnk/Projects/shokunin status --porcelain (no pathspec). List every UNTRACKED file at the fleet root, and for each say whether its content names chousa or round-42 (grep the content for 'chousa' and 'round-42'). Report exactly which untracked fleet-root files a chousa seat could have written. Do not delete or move anything.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ExecMisroot.md"
+    },
+    {
+      "name": "ExecPdftotextOpen",
+      "agent": "executor",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nOpen the installed manual page /usr/share/man/man1/pdftotext.1.gz (zcat, no network). Report the tool's version (`pdftotext -v`), the man page's file sha256, and a located quote of at most 25 words taken from the DESCRIPTION section, with the decompressed line numbers it appears on. Also report the canonical URL the roff prints for it, marked as not fetched.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ExecPdftotextOpen.md"
+    },
+    {
+      "name": "ExecNoHarm",
+      "agent": "executor",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRun the lane's no-harm battery in /home/vgpnk/Projects/shokunin/chousa-shokunin: `bash tools/research-gate.sh --selftest` (record the PASS line and the case count), the round-1 observable counting command from SCORECARD.md lines 26-30, and the pinned drift check against corpus/evidence/gate-baseline-r12-20261019T115519Z.json. Report every observable verbatim.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ExecNoHarm.md"
+    },
+    {
+      "name": "ScoutRegister",
+      "agent": "scout",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nMap the register's structure: list every section heading, the column shape of each table, the row counts per section, and which totals are stale (the header says 194 rows / 324 quotes; the `## By lane` summary says chousa 20). Report the structure in a compact table a reader can check.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ScoutRegister.md"
+    },
+    {
+      "name": "ScoutQcache",
+      "agent": "scout",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nInventory the capture cache at /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache: file counts by extension, total size, and how many of the lane's 24 slice rows have a .txt, a .fail, or neither. Report how the cache grew relative to the quote-lint run that produced the register (compare the mtimes of the cache files against the mtime of quote-lint-full-v5.json). Read-only.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ScoutQcache.md"
+    },
+    {
+      "name": "ScoutQuoteLint",
+      "agent": "scout",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRead (NEVER run) /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/quote-lint.py and report exactly: the cache-key convention, the full fold ladder in order with one line each on what it normalizes, and how the checker decides a URL's companion URLs. Then list, item by item, every place the lane's tools/quarantine-check.py differs from that source. Read-only; running it would write into the campaign tree.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ScoutQuoteLint.md"
+    },
+    {
+      "name": "ScoutUnchecked",
+      "agent": "scout",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nFind EVERY row in the register whose class cell is prose rather than a class name (the unchecked family), across all lanes, and report how many there are in total and how many are chousa's. Report the distinct prose strings you find. Read-only.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ScoutUnchecked.md"
+    },
+    {
+      "name": "ScoutSibling",
+      "agent": "scout",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nSibling-overlap scan: which sibling lanes' staged packages quote the SAME cited URLs as chousa's 24 slice rows? Read the staged sources of /home/vgpnk/Projects/shokuknow/merge/*/SOURCES.append.md (read-only) and report, per URL, the lanes that also cite it. This tells the round whether a chousa refusal touches a sibling's ground. Report only; absorb nothing.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ScoutSibling.md"
+    },
+    {
+      "name": "ScoutConsider",
+      "agent": "scout",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRead the lane's operator reflections in /home/vgpnk/Projects/shokunin/chousa-shokunin/considerthese/ (2026-10-19 through 2026-10-23) and report every proposal that is still marked unimplemented, with the file and date it comes from and a one-line statement of what it would change in this lane's practice. Do not edit those files.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ScoutConsider.md"
+    },
+    {
+      "name": "ScoutSourcesState",
+      "agent": "scout",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nReport the lane registry's state in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md: the row count, the first and last id, the tier histogram, the status histogram, and the exact shape of a row (paste one full row). State where a newly appended row would go and whether the next free id is S077. Read-only.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ScoutSourcesState.md"
+    },
+    {
+      "name": "ScoutLessonShape",
+      "agent": "scout",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRead /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-41.md and /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-41-verifier-spotcheck.md and report the exact section shape a round-42 lesson must carry (Claims and measurements, Mistakes table columns, Gate with candidate/admitted/sources opened/spot-check, census before/after, routed wave findings). Quote the header lines verbatim so the shape can be copied exactly.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ScoutLessonShape.md"
+    },
+    {
+      "name": "ScribeLesson",
+      "agent": "scribe",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nDraft the skeleton of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-42.md (do not write the file; put the draft in your report). It must carry: the two claims with their measured before/after and counting commands, the `## Mistakes` table with the columns class / evidence / captured-by / fix, the `## Gate` section with candidates considered, admitted, rejected with reason and flip, the sources opened with URL, access date and a quote of at most 25 words with its location, the spot-check result, the census before/after, and a pointer to the verdict table. Keep it exact; no placeholders.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ScribeLesson.md"
+    },
+    {
+      "name": "ScribeReasons",
+      "agent": "scribe",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nDraft the reason text for each of the 24 slice rows (the tool's `verdict` output gives the id and the class). One short sentence per row, specific to that row, no tabs and no newlines. Where the class is `absent`, the sentence must say the quote is absent from the local capture of the cited source and must NOT claim anything about the live document. Where the class is `unverifiable`, name the reason (interstitial capture, binary office document never rendered to text, or the register names no locator). Put the 24 sentences in your report, one per line, in id order.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ScribeReasons.md"
+    },
+    {
+      "name": "ScribeFlips",
+      "agent": "scribe",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nDraft the flip condition for each of the 24 slice rows: one short clause naming what would change that row's verdict (for example: a re-fetch of the cited URL that shows the quote present at the anchor; a text rendering of the binary document that contains the quote; the register naming the missing locator). One clause per row, no tabs. Put them in your report in id order.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ScribeFlips.md"
+    },
+    {
+      "name": "ScribeSourcesRow",
+      "agent": "scribe",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nDraft the new corpus/SOURCES.md row for the source this round opens (the installed pdftotext manual). Give the full 11-cell row in the registry's shape: id (the next free id — check corpus/SOURCES.md), source title, kind, tier, scope, anchor, teaches, status, opened (2026-10-24), recheck, used-by. The teaches cell must be a grounded learner benefit and must NOT contain a pipe. Do not append anything; put the row in your report.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ScribeSourcesRow.md"
+    },
+    {
+      "name": "ScribeQualityCriterion",
+      "agent": "scribe",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nDraft the QUALITY.md criterion that comes from the operator's proposal in /home/vgpnk/Projects/shokunin/chousa-shokunin/considerthese/2026-10-23.md — 'for every frozen counter, name the cheapest gate that can score full marks without doing the work, and check whether the control wave covered it'. Give the criterion text, the criterion number to use next (read corpus/QUALITY.md for the highest existing number), and the lesson it cites. Put it in your report; do not edit QUALITY.md.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ScribeQualityCriterion.md"
+    },
+    {
+      "name": "ScribeShonen",
+      "agent": "scribe",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRead /home/vgpnk/Projects/shokunin/chousa-shokunin/SHONEN.md and the round prompt's SHONEN rule, then draft the four SHONEN lines this round can honestly support: one per box, each marked [x] only with a named NON-AUTHOR verifier (this wave's seats are author-lane and do NOT count, so no [x] may be claimed this round), [~] with a resolvable evidence pointer, or [ ] if untouched. Give each line with its pointer.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ScribeShonen.md"
+    },
+    {
+      "name": "ConnectReadOnly",
+      "agent": "connector",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nProve the campaign tree was not written by this round: run git -C /home/vgpnk/Projects/shokuknow status --porcelain and report the output; then find files under /home/vgpnk/Projects/shokuknow modified in the last 24 hours (find -newermt) and report which ones, with a one-line judgement for each (campaign activity versus a lane's write). Read-only.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ConnectReadOnly.md"
+    },
+    {
+      "name": "ConnectNoSiblingWrite",
+      "agent": "connector",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nVerify that this round touched no sibling lane and no fleet file outside its own scope: report `git -C /home/vgpnk/Projects/shokunin status --porcelain` (fleet), and for the sibling lane repos report `git -C <sibling> status --porcelain | head -3` for chousa's nearest siblings (kengaku, kotoba, kumitate, mado). Attribute each dirty path to its owner. Do not modify anything.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ConnectNoSiblingWrite.md"
+    },
+    {
+      "name": "ConnectRouteTable",
+      "agent": "connector",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRead /home/vgpnk/.omp/agent/config.yml (READ ONLY, never edit) and report the role-to-route table that binds this wave's seats: which alias bucket each taxonomy role (scout, reviewer, critic, connector, sentinel, executor, mutation-tester, revenger, simplifier, scribe) resolves to, and the ordered fallback chain. Report the file's sha256 so the reader can tell the table did not move. Do not change it.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ConnectRouteTable.md"
+    },
+    {
+      "name": "ConnectRoundContract",
+      "agent": "connector",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRead /home/vgpnk/Projects/shokunin/.ufo/prompts/chousa-round-42.md and /home/vgpnk/Projects/shokunin/chousa-shokunin/AGENTS.md and produce the obligation checklist this round must satisfy before its report lands: what must be committed, in which repo, through which helper, in which order; what the report must contain; what the lane may write; and which L0 side-channel line to append. Print it as a checklist a reader can tick.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/ConnectRoundContract.md"
+    },
+    {
+      "name": "SimplifyTool",
+      "agent": "simplifier",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRead /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/quarantine-check.py and report the dead code, the redundancy and the duplicated logic it contains (for example the two ways of deciding checkability, the unused `compile` path, the leftover loop in examine_quote). Propose the SHORTEST form that keeps the frozen semantics of claims.md identical. Report only — do not edit.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/SimplifyTool.md"
+    },
+    {
+      "name": "SimplifyCounters",
+      "agent": "simplifier",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nRead /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round42/c1-count.py and c2-count.py and report any duplicated logic that could drift between them (for example the two independent register parsers, the two cache-key computations). State which duplication is deliberate (independence) and which is accidental, and propose the smallest fix that preserves the independence claim.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/SimplifyCounters.md"
+    },
+    {
+      "name": "SimplifyLesson",
+      "agent": "simplifier",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nPropose the shortest structure for /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-42.md that still carries every element the round contract requires (claims with counts, mistakes table, gate with admit and reject, sources opened with quote and location, spot-check result, census before/after). Give the section list and the sentence budget per section, and name which element is most often dropped by a lane writing this shape.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/SimplifyLesson.md"
+    },
+    {
+      "name": "SimplifyReport",
+      "agent": "simplifier",
+      "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nPropose the shortest report for /home/vgpnk/Projects/shokunin/.ufo/reports/round-42/chousa.md that still carries every required section (work performed naming the claims, landed changes tied to LOG entries and hashes, before/after measurements with the counting command and the measured commit, sources and frontier, trend verdicts, SHONEN) plus the round shape, wave seat counts, role mix and dead seats. Give the section list and the per-section sentence budget, and name the two sections a lane most often forgets.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 42 wave-4 quarantine-first: re-derive and hand-check the lane's 24-row absent-defect-register quarantine slice, attack the two frozen counters, adjudicate every row; no adoption, no external fetch\n\nReport: write your scoped findings to .ufo/waves/round-42/w1/SimplifyReport.md"
+    }
+  ]
+}

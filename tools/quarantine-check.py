@@ -351,7 +351,8 @@ def cmd_examine(args, rows):
             if body is not None and kind.startswith("page") and not kind.startswith("page+binary-office"):
                 fold, strict, offset = examine_quote(body, q)
             status = ("located" if strict else "loose-only") if fold else (
-                "absent" if body is not None and kind == "page" else "no-capture")
+                "absent" if body is not None and kind.startswith("page")
+                and not kind.startswith("page+binary-office") else "no-capture")
             print("\t".join([r["id"], str(i), status, fold or "-",
                              path.name if path else "-",
                              str(offset) if offset is not None and offset >= 0 else "-",
@@ -377,7 +378,7 @@ def cmd_verdict(args, rows):
 
 
 def cmd_digests(args, rows):
-    print("register\t%s\t%s" % (args.register, sha256_file(args.register)))
+    print("register\t%s\t%s" % (args.register, sha256_file(pathlib.Path(args.register))))
     seen = {}
     for r in rows:
         path, _b, _k = cache_doc(args.cache, r["url"])

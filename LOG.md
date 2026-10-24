@@ -1490,3 +1490,50 @@ Two claims, both measured, both verified. Freeze: `corpus/evidence/round41/claim
 - Frontier step: S075 (mktemp man) + S076 (sed man/info) opened from installed copies only — no egress; knowledge `capture-path-pin-r41.md`; QUALITY criteria 57 (access receipts) + 58 (counter revision pins) mined from r40-wave findings; four mistakes rows.
 - Round-40 wave dispositions: F1 fetch fixed in this round's seat contract (installed-file sources only); F2/F3 append-only corrections recorded in `corpus/lessons/round-41.md` (fleet side integrator-owned); worktree-vs-commit counter mismatch routed as measurement-target defect — not r40 falsification.
 - L2: 35-seat v1 wave prepared+validated (plan/run exit 0); orchestrator dispatches (host surface). 0 dispatched by this seat.
+
+## Round 42 — wave-4 quarantine-first: the 24-row register slice, adjudicated (2026-10-24)
+
+Two claims, both measured, both verified. Freeze: `corpus/evidence/round42/claims.md` at
+`dd63b6cfec5e1eafddb6662fc343e2ff6ab6aedc` (base `872bf3a3507875b382313f955d15960f9638256f`).
+This round adopts NOTHING from the shokuknow package (fleet lane-addendum item 10,
+wave-4 quarantine-first) and made NO external fetch (fetch-scope L0 `8d77e6c1` open).
+
+- **C1 operability** (lowest scored axis, 3/10): the lane's quarantine scope became a
+  runnable, re-derived surface — `tools/quarantine-check.py` re-derives the slice from
+  the read-only register and examines every quarantined quote against the local capture
+  material. `python3 corpus/evidence/round42/c1-count.py` → `SLICE_REDERIVE_MATCH=24/24`,
+  `QUOTES_EXAMINED=43/43`, `REPRODUCIBLE=1/1`, `POSITIVE_CONTROL=1/1`,
+  `NEGATIVE_CONTROL=1/1`, `MUTANT_DETECTED=1/1`, exit 0 (`receipts/c1-after-freeze.txt`);
+  the do-nothing control (tree without the tool) exits 1 (`controls/c1-control-before.txt`).
+- **C2 calibration**: every slice row carries exactly one verdict from the frozen
+  vocabulary, agreeing with an INDEPENDENT re-examination, with a non-empty reason and
+  flip condition. `python3 corpus/evidence/round42/c2-count.py` → `VERDICTED=24/24`,
+  `CLASS_CONSISTENT=24/24`, `REASON_NONEMPTY=24/24`, `FLIP_NONEMPTY=24/24`,
+  `VOCAB_OK=24/24`, `DUPLICATE_ROWS=0`, `ROWS_OUTSIDE_SLICE=0`, exit 0; the do-nothing
+  control (one row's verdict flipped) → `CLASS_CONSISTENT=23/24`, exit 1
+  (`controls/c2-control-before.txt`).
+- Slice re-derived with the operator's own recipe: **24 data rows** (20 `payload-absent`
+  + 4 unchecked-family). The register's `## By lane` summary (chousa 20) and its header
+  (194) are stale; the M12 census's 25 is not reproduced. Adjudication: **15 `absent`**,
+  **9 `unverifiable`** (1 bot-wall capture, 4 binary office documents never rendered to
+  text, 4 register rows naming no locator), 0 `present`, 0 `mixed`. No row is called a
+  fabrication on absent evidence; nothing is adopted.
+- Frontier step: S077 (Poppler `pdftotext(1)` manual) opened from the installed copy —
+  no egress; `corpus/lessons/round-42.md` (claims, 4 mined mistakes, Gate with admit and
+  reject, sources opened, spot-check pending); QUALITY criteria 59 (a class that
+  licenses a verdict names the evidence and its FORM) + 60 (every frozen counter names
+  the cheapest gate that scores full marks without doing the work — operator proposal
+  mined from `considerthese/2026-10-23.md`); census 76 → 77 rows, exit 0 at both ends (five advisory W04 warnings, S051/S053/S073/S074/S075, unchanged by this round).
+- Id drift noted (scratch, no append): the lane's next free id S077 is also the staged
+  package's first id; at adoption time the package's ids shift by one and every adopted
+  citation is re-pointed BY DOCUMENT. L0 note filed.
+- Wave: one v2 wave spec, 64 seats (24 build / 40 attack roles per the spec: reviewer 6,
+  critic 8, mutation-tester 6, sentinel 3, revenger 2 = 25 attack of 64 = 39%),
+  validator `plan` and `run` exit 0, wave-slot granted 64 seats; the dispatch was issued
+  and the AgentSwarm call was still being composed when the round's time budget closed
+  — 0 seat reports landed, so no seat outcome is claimed here.
+- Learning: expansion improved narrowly (one opened source, one lesson, one runnable
+  surface); quality improved (both counters verified against do-nothing controls; the
+  register's own class column was shown to be unreliable and the lane's rule now checks
+  the capture's FORM); discernment unchanged — the admit/reject sample still has no
+  non-author spot-check. No tool installs, no pacman transactions, no egress.
