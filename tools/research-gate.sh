@@ -520,6 +520,68 @@ env_pin_init() {
     env_pin_refuse "the pin variable cannot be assigned (a caller marked it readonly)" "$cand"
   fi
 }
+
+# ---- bash pin (round-39) ---------------------------------------------------
+# The capture's grandchild was a BARE `bash`: the round-38 claims Erratum 6(c)
+# measured that PATH resolution inside the pinned env still consulted the
+# caller — a PATH `bash` shim re-added CHOUSA_GREP_PIN_ECHO (baseline embeds a
+# GATE_GREP line; a plain --drift reports a phantom -GATE_GREP) and a
+# suppressing shim killed the capture while --pin refused honestly. The
+# capture grandchild therefore runs through ONE pinned absolute bash, resolved
+# and verified like the env and grep pins: an override (RESEARCH_GATE_BASH)
+# must be an absolute path and must report GNU bash; a pin that cannot be
+# verified is refused (exit 2, BASH_PROVENANCE) before any record is read.
+# Named limit: SHELLOPTS=noexec still disables the whole gate body before any
+# of this runs (round-37 residual, carried), and the loader environment of the
+# env/bash children is the caller's (the round-38 claims Erratum-1/6 class).
+BASH_BIN=''
+BASH_PIN_SOURCE=''
+BASH_PIN_VERSION=''
+bash_pin_refuse() { # REASON [CANDIDATE]
+  printf 'research-gate: BASH_PROVENANCE refused: %s (candidate=%s)\n' "$1" "${2:-<none>}" >&2
+  exit 2
+}
+bash_pin_verify() { # PATH -> rc0 when the binary reports GNU bash
+  local cand=$1 v to=''
+  [[ -f $cand && -x $cand ]] || return 1
+  if [[ -x /usr/bin/timeout ]]; then to=/usr/bin/timeout
+  elif [[ -x /bin/timeout ]]; then to=/bin/timeout; fi
+  if [[ -n $to ]]; then v=$("$to" 10 "$cand" --version 2>/dev/null || true)
+  else v=$("$cand" --version 2>/dev/null || true); fi
+  v=${v%%$'\n'*}
+  BASH_PIN_VERSION=$v
+  case "$v" in
+    "GNU bash"*) return 0 ;;
+  esac
+  return 1
+}
+bash_pin_init() {
+  local cand='' c=''
+  if [[ -n ${RESEARCH_GATE_BASH:-} ]]; then
+    cand=${RESEARCH_GATE_BASH}
+    BASH_PIN_SOURCE=override
+    case "$cand" in
+      /*) ;;
+      *) bash_pin_refuse "override is not an absolute path" "$cand" ;;
+    esac
+    [[ -f $cand ]] || bash_pin_refuse "override is not a regular file" "$cand"
+    [[ -x $cand ]] || bash_pin_refuse "override is not executable" "$cand"
+    bash_pin_verify "$cand" \
+      || bash_pin_refuse "override does not report GNU bash: ${BASH_PIN_VERSION:-<no version>}" "$cand"
+  else
+    BASH_PIN_SOURCE=default
+    # No PATH consultation: the round-39 counter measures a caller PATH `bash`
+    # shim interposing on this exact call site. A host whose bash lives
+    # elsewhere sets the override.
+    for c in /usr/bin/bash /bin/bash; do
+      if bash_pin_verify "$c"; then cand=$c; break; fi
+    done
+    [[ -n $cand ]] || bash_pin_refuse "no GNU bash at /usr/bin/bash or /bin/bash (set RESEARCH_GATE_BASH to an absolute path)" ''
+  fi
+  if ! BASH_BIN=$cand 2>/dev/null; then
+    bash_pin_refuse "the pin variable cannot be assigned (a caller marked it readonly)" "$cand"
+  fi
+}
 declare -a FINDING_LINES=()
 
 N_Q=0 N_SRC=0 N_CH=0 N_CL=0 N_NEG=0 N_REJ=0 N_APPR=0
@@ -3639,7 +3701,12 @@ verify_all_section() { # NAME MODE ARG [ARG…] -> VAS_*; unavailable on rc∉{0
   local name=$1 mode=$2
   shift 2
   local rc=0 line nverdict
-  VAS_OUT=$(bash "$SELF" "$mode" "$@" --root "$ROOT" 2>&1) || rc=$?
+  # Round-39: the section child runs through the pinned bash, not a bare
+  # name — this call is reachable from the canonical pin capture (verify-all
+  # on the fixture), and a caller PATH `bash` shim here produced
+  # VERIFY_ALL_SECTION_UNAVAILABLE baselines on an unchanged gate (the
+  # round-39 C1 suppress cell).
+  VAS_OUT=$("$BASH_BIN" "$SELF" "$mode" "$@" --root "$ROOT" 2>&1) || rc=$?
   VAS_RC=$rc
   VAS_VERDICT='' VAS_FIND=0 VAS_DRIFT=0 VAS_COUNTS='' VAS_NATIVE='' VAS_FINDINGS=''
   nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$VAS_OUT" || true)
@@ -4000,7 +4067,7 @@ gate_canonical_capture() { # -> GATE_CAP | GATE_CAP_RC + GATE_CAP_NOTE
   ( cd "$fx" || exit 2
     "$ENV_BIN" -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_ROOT \
       -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_GREP_PIN_ECHO -u BASH_ENV \
-      bash "$SELF" verify-all record.md --claims claims.jsonl \
+      "$BASH_BIN" "$SELF" verify-all record.md --claims claims.jsonl \
       --json manifest.jsonl --root . >capture.txt 2>&1 ) || rc=$?
   nv=$(grep -c '^RESEARCH_GATE: ' -- "$fx/capture.txt" 2>/dev/null || true)
   nml=$(grep -c '' -- "$fx/manifest.jsonl" 2>/dev/null || true)
@@ -8375,9 +8442,8 @@ EOF
   # --pin still refused honestly. The capture now runs through ONE pinned
   # absolute env, so the caller's function cannot interpose; an unverifiable
   # pin (override missing or not GNU coreutils env) refuses exit 2 before any
-  # mode runs. Named limit: an exported function named `bash` could still
-  # shadow the capture's bare `bash` call, and SHELLOPTS=noexec disables the
-  # whole gate body before any of this runs (round-37 residual, carried).
+  # mode runs. The bare-`bash` half of the old named limit is closed by the
+  # round-39 bash pin below; SHELLOPTS=noexec stays carried (round-37 residual).
   rm -f "$WORK/r38-pin-echo.txt" "$WORK/r38-pin-sup.txt" "$WORK/r38-pin-rootmv.txt"
   v38_ok=1 v38_rc=0 v38_drc=0 v38_out='' v38_dout=''
   v38_out=$(bash -c '
@@ -8466,6 +8532,65 @@ EOF
     failures=$((failures + 1))
   fi
 
+  # ---- round-39 bash pin (cases 273-275) ----
+  # The capture's grandchild was a BARE `bash`: PATH resolution inside the
+  # pinned env consulted the caller — a PATH `bash` shim re-added
+  # CHOUSA_GREP_PIN_ECHO (the baseline embeds a GATE_GREP line and a plain
+  # --drift reports a phantom -GATE_GREP) or suppressed the capture while
+  # --pin refused honestly (claims Erratum 6(c), measured on the round-38
+  # landed gate). The capture now runs the grandchild through ONE pinned
+  # absolute bash; an unverifiable pin (override missing or not GNU bash)
+  # refuses exit 2 before any mode runs. Named limit: SHELLOPTS=noexec and
+  # the children's loader environment stay the caller's (carried).
+  mkdir -p "$WORK/r39-shimdir"
+  printf '#!/bin/sh\nCHOUSA_GREP_PIN_ECHO=1 exec /usr/bin/bash "$@"\n' >"$WORK/r39-shimdir/bash"
+  chmod +x "$WORK/r39-shimdir/bash"
+  rm -f "$WORK/r39-pin-pathshim.txt"
+  v39_ok=1 v39_rc=0 v39_drc=0 v39_out='' v39_dout=''
+  v39_out=$(PATH="$WORK/r39-shimdir:$PATH" bash "$SELF" --pin "$WORK/r39-pin-pathshim.txt" 2>&1) || v39_rc=$?
+  v39_dout=$(env -u CHOUSA_GREP_PIN_ECHO bash "$SELF" --drift "$WORK/r39-pin-pathshim.txt" 2>&1) || v39_drc=$?
+  cases=$((cases + 1))
+  [[ $v39_rc -eq 0 ]] || v39_ok=0
+  [[ -f "$WORK/r39-pin-pathshim.txt" ]] || v39_ok=0
+  [[ $v39_drc -eq 0 ]] || v39_ok=0
+  [[ $v39_dout == 'GATE_DRIFT: none' ]] || v39_ok=0
+  grep -q '^GATE_GREP: ' -- "$WORK/r39-pin-pathshim.txt" && v39_ok=0
+  if [[ $v39_ok -eq 1 ]]; then
+    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" pin-bash-path-shim "$v39_drc"
+  else
+    printf 'FAIL-case %-28s pin_rc=%d drift_rc=%d\n' pin-bash-path-shim "$v39_rc" "$v39_drc"
+    printf '%s\n' "$v39_out" "$v39_dout" | sed 's/^/    | /'
+    failures=$((failures + 1))
+  fi
+  v39_ok=1 v39_rc=0 v39_out=''
+  v39_out=$(RESEARCH_GATE_BASH="$WORK/r39-no-such-dir/bash" bash "$SELF" --pin "$WORK/r39-pin-ovm.txt" 2>&1) || v39_rc=$?
+  cases=$((cases + 1))
+  [[ $v39_rc -eq 2 ]] || v39_ok=0
+  [[ $v39_out == *'BASH_PROVENANCE refused'* ]] || v39_ok=0
+  [[ ! -f "$WORK/r39-pin-ovm.txt" ]] || v39_ok=0
+  if [[ $v39_ok -eq 1 ]]; then
+    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" bash-pin-override-missing "$v39_rc"
+  else
+    printf 'FAIL-case %-28s pin_rc=%d\n' bash-pin-override-missing "$v39_rc"
+    printf '%s\n' "$v39_out" | sed 's/^/    | /'
+    failures=$((failures + 1))
+  fi
+  printf '#!/bin/sh\nexit 0\n' >"$WORK/r39-fake-bash"
+  chmod +x "$WORK/r39-fake-bash"
+  v39_ok=1 v39_rc=0 v39_out=''
+  v39_out=$(RESEARCH_GATE_BASH="$WORK/r39-fake-bash" bash "$SELF" --pin "$WORK/r39-pin-ovf.txt" 2>&1) || v39_rc=$?
+  cases=$((cases + 1))
+  [[ $v39_rc -eq 2 ]] || v39_ok=0
+  [[ $v39_out == *'BASH_PROVENANCE refused'* ]] || v39_ok=0
+  [[ ! -f "$WORK/r39-pin-ovf.txt" ]] || v39_ok=0
+  if [[ $v39_ok -eq 1 ]]; then
+    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" bash-pin-override-fake "$v39_rc"
+  else
+    printf 'FAIL-case %-28s pin_rc=%d\n' bash-pin-override-fake "$v39_rc"
+    printf '%s\n' "$v39_out" | sed 's/^/    | /'
+    failures=$((failures + 1))
+  fi
+
   if [[ $failures -eq 0 ]]; then
     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"
     exit 0
@@ -8541,6 +8666,10 @@ unset POSIXLY_CORRECT
 # Resolve the env pin beside it (round-38 C1): the canonical capture child runs
 # through this absolute env, and a refused pin exits 2 before any mode runs.
 env_pin_init
+# Resolve the bash pin beside it (round-39 C1): the canonical capture's
+# grandchild runs through this absolute bash, and a refused pin exits 2 before
+# any mode runs.
+bash_pin_init
 
 # pin/drift take exactly one baseline path: a record, claims surface, manifest
 # or root would be silently ignored by the canonical invocation, so refusing
