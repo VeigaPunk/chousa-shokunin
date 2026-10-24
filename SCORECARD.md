@@ -2276,3 +2276,25 @@ Learning trends: **expansion improved** — one new knowledge entry records the 
 
 Candidates carried from round 39: the capture path's bare `mktemp`/`sed` names, loader-environment scrubbing, refusal-label re-derivation, and the spans-≥32768 boundary. No round-41 work is started here; freeze only 1–3 separately falsifiable claims after scoring their do-nothing controls.
 
+
+## Round 41 — measured claims (work commit `1bd9001330f19d89ec36592010d4218881ea5941`)
+
+Freeze: `corpus/evidence/round41/claims.md` (freeze commit `b173b0943e647f7e3a365689df19debe40fd9dd2`). Both predicates measured on the committed work tree; L1 construction ran before the freeze commit (disclosed, same pattern as round 39).
+
+| Claim / axis | Axis score delta | Before → after | Counting command | Measured commit | Verdict |
+|---|---|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10; canonical-capture invocation surface) | 3/10 → 3/10; the legacy score counts only the three archive exports and was not redefined | `CAPTURE_PIN_MATCH=1/12` → `12/12` (12-cell frozen scenario table: trap inventory, sed/mktemp/cat/rm/sort/mkdir shim cells, override refusals, child-tr, loader-env) | `python3 corpus/evidence/round41/c1-count.py --gate tools/research-gate.sh` (control: `--gate .ufo/waves/round-41/controls/base-gate-r41.sh`) | `1bd9001330f19d89ec36592010d4218881ea5941` | improved |
+| C2 calibration (W04 duplicate-URL disposition alignment) | unscored → unscored; no numeric baseline invented | `W04_DISPOSITIONED=0/5` → `5/5` (S051/S053 same-page distinct-section, S073 required supersede, S074 retained rejected duplicate, S075 added this round on the coreutils page) | `python3 corpus/evidence/round41/c2-count.py` | `1bd9001330f19d89ec36592010d4218881ea5941` | improved |
+
+No axis was harmed. Depth and coverage improved narrowly (sourced `capture-path-pin-r41.md`, the invocation-pinning subground); freshness improved narrowly (S075/S076 opened from installed copies; S067/S071/S072 re-cited); adjacency unchanged. No capability claim; the pinned-tool-table mechanism is gate infrastructure, not a repertoire-table entry. Selftest PASS 275/275 on the landed gate.
+
+Learning trends: **expansion improved** — one new admitted knowledge entry on unheld subground citing mined S075/S076; **quality improved** — the capture's invocation surface now fails closed on caller-PATH and loader-env interposition with a do-nothing control at 1/12, and the selftest's only regression was repaired through the documented override; **discernment unchanged** — the admit/reject sample has no non-author spot-check yet (pending, as in round 40).
+
+## Round 40 — routed wave findings (dispositions, append-only)
+
+- R40-W1 (SentinelFetchScope F1/F2/F3): an egress-ordering seat item ran unapproved; the 2026-10-24 access claim had no committed receipt; the report's no-external-research line contradicted the gate record. Dispositioned in `corpus/lessons/round-41.md` (r41 spec hardened; QUALITY 57; fleet side integrator-owned).
+- R40-W2 (ReviewActivePopulation/ReviewReplacementBindings/ReviewC2Bindings): r40 counter returns 6/6 on committed HEAD but 2/6 on a worktree carrying r41's in-flight gate edits — measurement-target defect in the counter lineage (QUALITY 58), routed to the counter's next owner; not a falsification of round 40.
+
+## Planned — round 42 (not started)
+
+Candidates carried: exported-function (`BASH_FUNC_*`) interposition into the captured child (named limit, needs a measured delivery cell); the `spans-≥32768` boundary debt; metadata-screener locale seam; argv-witness dead fields; REFUSAL-label re-derivation in verify; the legacy operability observable's retirement/split decision (r40 routed item). No round-42 work is started here; freeze only 1–3 separately falsifiable claims after scoring their do-nothing controls.
