@@ -50,3 +50,22 @@ Pending an outside non-author review of at least one admit and one reject. No la
 Round-start command: `/home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa`; exit 0. Output: four W04 warnings (S051, S053, S073, S074) + `ok`.
 Round-end command: same; exit 0; five W04 warnings (S051, S053, S073, S074, S075 — the new row legitimately re-cites the coreutils page at a different anchor; advisory, dispositioned — see C2) + `ok`.
 Manual census (from lane root, frozen commands): rows 74 → 76; tier A 68 → 70, B 1 → 1, C 5 → 5; status mined 50 → 52, queued 19 → 19, rejected 5 → 5; duplicate ids none; enum violations none; mined used-by paths resolve. Knowledge files 53 → 54.
+
+## Post-landing addendum — revision scope of the r40 counter (2026-10-24)
+
+Observed at tip `a3aac044…`: `python3 corpus/evidence/round40/c1-count.py` prints
+`R39_ACTIVE_RECEIPTS=2/6` exit 1 — four rows fail `gate-sha256-mismatch` because
+the r41 gate edit (`1bd9001…`) changed `tools/research-gate.sh` from sha
+`4253c187…` to `2cb04bdd…`. This is **correct receipt semantics, not a
+regression**: the r40 frozen predicate is scoped to revision `6bc90e0` + gate
+`4253c187…`, where it replays 6/6 (receipt pointers in
+`corpus/evidence/round40/`). A later gate commit is *expected* to fail old
+`gate_sha256` bindings — that refusal is the binding working.
+
+Routed to round 42 (pre-registered): next-owner design — a successor counter
+should (a) name the measured revision explicitly (QUALITY 58 already covers the
+worktree side), and (b) where the claim is about receipt binding rather than a
+specific gate byte-set, verify receipts against their recorded measurement
+revision instead of the live `tools/research-gate.sh` digest, or reissue under
+the new gate sha with the prior revision's predicate re-derived. No r40 or
+gate bytes were rewritten.
