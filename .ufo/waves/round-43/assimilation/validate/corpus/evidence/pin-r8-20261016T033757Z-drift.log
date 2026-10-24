@@ -1,0 +1,69 @@
+# chousa-shokunin round-8 receipt — drift — none in peer, named fields in drift, exit 2 on missing/malformed
+# utc: 2026-10-16T03:37:57Z
+# seat: receipts-writer | lane: chousa-shokunin | round: 8 (the gate's own behavioral baseline: --pin/--drift)
+# lane head: 848738c56b183455b4efd05b6323b5a028599732 | gate: tools/research-gate.sh sha256=46f5ddb39d5fafa220fb584121dba2f4a15e071a91fa42728849f3c7567c6ccd
+# before-state gate: git show 848738c:tools/research-gate.sh sha256=3ba718bf9207eed70c66b8c849ac43b44c76890785e1576eeb5e795a604166b2 (round-7 revision; no --pin/--drift)
+# lane baseline (committed): corpus/evidence/gate-baseline-r8-20261016T033757Z.json sha256=1c81a6cb34543bb99c8797a7a0dd8dfbd1f13e3d86ec5b81aa0c7249381a8426
+# canonical invocation (internal to --pin/--drift): verify-all record.md --claims claims.jsonl --json manifest.jsonl --root . run with cwd = a fresh temp fixture the gate writes; volatile_fields: ts gate_sha256 (masked <V>)
+# method: machine-cut by /tmp/chousa-r8-evidence/cut-receipts.sh; stdout verbatim; TMPDIR=/tmp/chousa-r8-evidence/tmp; local files only; no network
+# scope: drift on the committed baseline, churn absorption, six baseline controls, one mutant-gate arm
+
+## drift against the committed baseline
+## command: TMPDIR=/tmp/chousa-r8-evidence/tmp bash tools/research-gate.sh --drift corpus/evidence/gate-baseline-r8-20261016T033757Z.json
+exit: 0
+GATE_DRIFT: none
+
+## after live churn (75 s)
+## command: sleep 75; TMPDIR=/tmp/chousa-r8-evidence/tmp bash tools/research-gate.sh --drift corpus/evidence/gate-baseline-r8-20261016T033757Z.json
+exit: 0
+GATE_DRIFT: none
+
+## baseline controls (scratch copies of the committed baseline)
+
+## control: one non-volatile field changed (severity=warn → info on the FINDING line)
+## command: bash tools/research-gate.sh --drift ctl/base-mutant.json
+exit: 1
+GATE_DRIFT: severity
+
+## control: missing baseline
+## command: bash tools/research-gate.sh --drift ctl/no-such.json
+exit: 2
+research-gate: --drift baseline missing: /tmp/chousa-r8-evidence/ctl/no-such.json
+
+## control: empty file
+## command: bash tools/research-gate.sh --drift ctl/base-empty.json
+exit: 2
+research-gate: --drift baseline malformed (magic line absent): /tmp/chousa-r8-evidence/ctl/base-empty.json
+
+## control: junk bytes
+## command: bash tools/research-gate.sh --drift ctl/base-junk.json
+exit: 2
+research-gate: --drift baseline malformed (magic line absent): /tmp/chousa-r8-evidence/ctl/base-junk.json
+
+## control: canonical marker deleted
+## command: bash tools/research-gate.sh --drift ctl/base-nomarker.json
+exit: 2
+research-gate: --drift baseline malformed (canonical marker absent): /tmp/chousa-r8-evidence/ctl/base-nomarker.json
+
+## control: declared volatile list rewritten (body untouched)
+## command: bash tools/research-gate.sh --drift ctl/base-volrewrite.json
+exit: 1
+GATE_DRIFT: volatile_fields
+
+## mutant gate: a mode silently skipped (the round's named regression class)
+delta in /tmp/chousa-r8-evidence/gate-skip-sweeps.sh: 1 changed line(s)
+2104c2104
+<         sweeps) verify_all_section sweeps verify-sweeps "$record" ;;
+---
+>         sweeps) : ;;
+
+## command: MUTATOR --drift corpus/evidence/gate-baseline-r8-20261016T033757Z.json
+exit: 1
+GATE_DRIFT: -REJECTIONS_OK -hit -rejections-ok anchor-missing native rejections tallies tally
+
+## the mutant gate's own capture of the canonical run (SECTION sweeps line shows the silent skip)
+## command: MUTATOR --pin /tmp/chousa-r8-evidence/mutgate.json
+exit: 0
+SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=RESOLVED_HOPS=1/1
+VERIFY_ALL sections=5 run=5 absent=0 drift-sections=1 findings=1 drift=1
+RESEARCH_GATE: DRIFT (sections=5 run=5 absent=0 drift-sections=1 findings=1 drift=1)

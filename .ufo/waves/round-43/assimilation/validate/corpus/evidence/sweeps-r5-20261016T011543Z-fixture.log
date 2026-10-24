@@ -1,0 +1,81 @@
+# chousa-shokunin round-5 receipt — fixture
+# utc: 2026-10-16T01:15:43Z
+# seat: receipts-writer | lane: chousa-shokunin | round: 5 (coverage move: kept rejections and negative sweeps become verdict-bearing)
+# lane head: 45f8f65 | gate: tools/research-gate.sh sha256=55adb92d0ba5ac958907fac6c4d5d6b0b50129703e866a5befbd9a32789f2ff2
+# before-state gate: git show 45f8f65:tools/research-gate.sh sha256=6b83705b02fe11e98b8b4aeb43fe718ff9910d21cee16d87366cef648a3960b2 (round-4 revision), run from a lane shadow (/tmp/chousa-r5-evidence/lane-shadow: symlinks corpus/ -> lane corpus, research/ -> fleet research) so the record's lane- and fleet-root-relative pointers resolve as they do in place
+# fixtures: corpus/fixtures/sweeps-r5.md sha256=025352b75b7b109147fee8b8eb13b4f74eaa1550489e83166ce1dd59cfb14907 | corpus/fixtures/sweeps-r5-hit.md sha256=89650988074e4c371aada8e1fe77cd02d4fa85bc0c3d0a40dc21e12e1a0f78cd | corpus/fixtures/sweeps-r5-broken.md sha256=f74ea3247e069e711278bb81addda468045053cfe556d8f5a204f3b9ff7abc0c
+# fixture contract: corpus/fixtures/sweeps-r5.README.md sha256=e9178651254841b86e46e98ba4566b568df662ed8c541197ae150f5aba1ebbca
+# control copies: /tmp/chousa-r5-evidence/ctl/ (single-delta copies of sweeps-r5.md; sha256 in the live receipt)
+# method: machine-cut by /tmp/chousa-r5-evidence/cut-receipts.sh; stdout verbatim; local files only; no network
+# scope: fixture inventory + the fixture README's gate-free byte-checks + an independent gate-free re-derivation of both records' expected classifications
+
+## pinned revision
+55adb92d0ba5ac958907fac6c4d5d6b0b50129703e866a5befbd9a32789f2ff2  tools/research-gate.sh (round-5 revision)
+45f8f65  lane HEAD
+025352b75b7b109147fee8b8eb13b4f74eaa1550489e83166ce1dd59cfb14907  corpus/fixtures/sweeps-r5.md
+89650988074e4c371aada8e1fe77cd02d4fa85bc0c3d0a40dc21e12e1a0f78cd  corpus/fixtures/sweeps-r5-hit.md
+f74ea3247e069e711278bb81addda468045053cfe556d8f5a204f3b9ff7abc0c  corpus/fixtures/sweeps-r5-broken.md
+e9178651254841b86e46e98ba4566b568df662ed8c541197ae150f5aba1ebbca  corpus/fixtures/sweeps-r5.README.md
+
+## fixture row counts
+
+sweeps-r5.md: rejections=3 sweeps=2
+sweeps-r5-broken.md: rejections=1 sweeps=1
+
+## README byte-check: the archive set empty of URLs (expect zero matches, exit 1)
+
+## command: grep -nE 'https?://' -- ../research/deep-research-2026-09-28/A-shokunin-tradition.md ../research/deep-research-2026-09-28/B-multiagent-knowledge.md ../research/deep-research-2026-09-28/C-rank-taxonomy.md ../research/README.md
+exit: 1  (gate sha stable before/after)
+
+## record W1 re-run (gate-free: glob expansion of the record's own W1 tokens from the fleet root; expect zero hits)
+
+## command: cd .. && shopt -s nullglob && for p in research/deep-research-2026-09-28/kotobank-* research/deep-research-2026-09-28/saved-*; do for m in $p; do printf 'HIT %s\n' "$m"; done; done; printf 'glob re-run done (no HIT lines above = zero hits)\n'
+exit: 0  (gate sha stable before/after)
+glob re-run done (no HIT lines above = zero hits)
+
+## broken W1 target existence (gate-free; expect the planted hit file)
+
+## command: ls -l corpus/fixtures/sweeps-r5-hit.md && grep -c 'ghost-sweep-token' corpus/fixtures/sweeps-r5-hit.md
+exit: 0  (gate sha stable before/after)
+-rw-r--r-- 1 vgpnk vgpnk 422 Oct 15 22:13 corpus/fixtures/sweeps-r5-hit.md
+1
+
+## README vs record (the record bytes are the input under test)
+
+README line describing W1: (none)
+record ## Sweeps rows:
+## Sweeps
+
+| id | claim_id | where | observed |
+|---|---|---|---|
+| W1 | N1 | research/deep-research-2026-09-28/kotobank-*,research/deep-research-2026-09-28/saved-* | zero matches, no saved copy of a cited external page exists under the archive set |
+| W2 | N2 | https://kotobank.jp/ | non-local target would need an external fetch; recorded, never walked |
+
+## Approval
+
+## pinned export sha256 (must match the fixture README pins)
+
+## command: sha256sum ../research/deep-research-2026-09-28/A-shokunin-tradition.md ../research/deep-research-2026-09-28/B-multiagent-knowledge.md ../research/deep-research-2026-09-28/C-rank-taxonomy.md
+exit: 0  (gate sha stable before/after)
+9033857d4625555c7b778dfad6df80e3e1b24ed8bffa3fee2fd445b9c5540b85  ../research/deep-research-2026-09-28/A-shokunin-tradition.md
+6d8dbddd3e2d2f47dcb153c5a3347cc6321db4afc72cf07da40f0f7fe5022006  ../research/deep-research-2026-09-28/B-multiagent-knowledge.md
+e48fe70ff92055c217ac6ca6ce68e403aa5689fee8717f3bd0ccf5badc92321b  ../research/deep-research-2026-09-28/C-rank-taxonomy.md
+
+## independent gate-free re-derivation (this seat's checker, separate from the fixture README)
+
+## command: python3 /tmp/chousa-r5-evidence/sweepcheck.py
+exit: 0  (gate sha stable before/after)
+== /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/fixtures/sweeps-r5.md
+   REJECTION id=R1 reason=present flip=present observed=complete verdict=match
+   REJECTION id=R2 reason=present flip=present observed=complete verdict=match
+   REJECTION id=R3 reason=present flip=present observed=complete verdict=match
+   SWEEP id=W1 looked=local hits=0 observed=verified verdict=match
+   SWEEP id=W2 looked=non-local observed=exempt verdict=exempt
+   rejections-ok=3/3 verified_sweeps=1/2
+   independent verdict: CLEAN
+== /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/fixtures/sweeps-r5-broken.md
+   SWEEP_REJECTION_INCOMPLETE id=R1 missing=flip
+   SWEEP_CLAIM_FALSE id=W1 hits=1 first=chousa-shokunin/corpus/fixtures/sweeps-r5-hit.md
+   rejections-ok=0/1 verified_sweeps=0/1
+   independent verdict: DRIFT
+Sweepcheck: canonical=CLEAN broken=DRIFT; read-only, no network, no gate

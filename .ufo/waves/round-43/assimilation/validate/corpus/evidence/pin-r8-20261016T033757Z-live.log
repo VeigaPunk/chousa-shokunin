@@ -1,0 +1,46 @@
+# chousa-shokunin round-8 receipt — live — cross-round no-harm, r1 observable, zero network, sha stability
+# utc: 2026-10-16T03:37:57Z
+# seat: receipts-writer | lane: chousa-shokunin | round: 8 (the gate's own behavioral baseline: --pin/--drift)
+# lane head: 848738c56b183455b4efd05b6323b5a028599732 | gate: tools/research-gate.sh sha256=46f5ddb39d5fafa220fb584121dba2f4a15e071a91fa42728849f3c7567c6ccd
+# before-state gate: git show 848738c:tools/research-gate.sh sha256=3ba718bf9207eed70c66b8c849ac43b44c76890785e1576eeb5e795a604166b2 (round-7 revision; no --pin/--drift)
+# lane baseline (committed): corpus/evidence/gate-baseline-r8-20261016T033757Z.json sha256=1c81a6cb34543bb99c8797a7a0dd8dfbd1f13e3d86ec5b81aa0c7249381a8426
+# canonical invocation (internal to --pin/--drift): verify-all record.md --claims claims.jsonl --json manifest.jsonl --root . run with cwd = a fresh temp fixture the gate writes; volatile_fields: ts gate_sha256 (masked <V>)
+# method: machine-cut by /tmp/chousa-r8-evidence/cut-receipts.sh; stdout verbatim; TMPDIR=/tmp/chousa-r8-evidence/tmp; local files only; no network
+# scope: every mode byte-stable vs the round-7 gate, archives 3/3, strace network syscalls 0, manifest untouched
+
+## cross-round no-harm: r8 gate vs r7 gate (stdout ts-normalized, rc compared)
+claims    verify-claims   corpus/fixtures/claims-r2.jsonl                         IDENTICAL (rc=0)
+chain     verify-chain    corpus/fixtures/chain-r3.md                             IDENTICAL (rc=0)
+chainb    verify-chain    corpus/fixtures/chain-r3-broken.md                      IDENTICAL (rc=1)
+sweeps    verify-sweeps   corpus/fixtures/sweeps-r5.md                            IDENTICAL (rc=0)
+sweepsb   verify-sweeps   corpus/fixtures/sweeps-r5-broken.md                     IDENTICAL (rc=1)
+struct    verify          corpus/fixtures/full-r6.md                              IDENTICAL (rc=0)
+full      verify-all      corpus/fixtures/full-r6.md                              IDENTICAL (rc=0)
+fullb     verify-all      corpus/fixtures/full-r6-broken.md                       IDENTICAL (rc=1)
+integ     verify-integrity corpus/fixtures/integrity-r7.md                         IDENTICAL (rc=0)
+integb    verify-integrity corpus/fixtures/integrity-r7-broken.md                  IDENTICAL (rc=1)
+integ-all verify-all      corpus/fixtures/integrity-r7.md                         IDENTICAL (rc=0)
+archA     verify          ../research/deep-research-2026-09-28/A-shokunin-tradition.md IDENTICAL (rc=1)
+archB     verify          ../research/deep-research-2026-09-28/B-multiagent-knowledge.md IDENTICAL (rc=1)
+archC     verify          ../research/deep-research-2026-09-28/C-rank-taxonomy.md IDENTICAL (rc=1)
+
+## the r1 archive observable
+VERDICT_BEARING_EXPORTS=3/3
+
+## zero-network strace (one pin leg)
+command: strace -f -e trace=network -o strace-pin.txt bash tools/research-gate.sh --pin <scratch>
+trace lines: 3759; network syscall lines: 0 (want 0)
+pin exit under strace: 0
+GATE_PIN: ok path=/tmp/chousa-r8-evidence/pin-strace.json gate_sha256=46f5ddb39d5fafa220fb584121dba2f4a15e071a91fa42728849f3c7567c6ccd
+
+## the lane manifest is untouched by pin/drift
+verify-all-manifest.jsonl sha256 before=9620946f8c2740d28cc908215d4ffd63cd3caabcef7e565cf7189cd799ba54f0 after=9620946f8c2740d28cc908215d4ffd63cd3caabcef7e565cf7189cd799ba54f0 untouched=YES
+
+## sha stability across the battery
+gate 46f5ddb39d5fafa220fb584121dba2f4a15e071a91fa42728849f3c7567c6ccd → 46f5ddb39d5fafa220fb584121dba2f4a15e071a91fa42728849f3c7567c6ccd
+baseline sha256 1c81a6cb34543bb99c8797a7a0dd8dfbd1f13e3d86ec5b81aa0c7249381a8426
+
+## what this receipt does not claim
+- the pin baseline covers the canonical invocation only (verify-all over the gate-written fixture); other modes are covered by the r8 selftest and the cross-round pairs above.
+- masked fields (ts, gate_sha256) are blind spots by contract: a regression that only moves a clock or a revision stamp reads none.
+- receipt identity remains lane-local (operator-side); no task_ identifier is invented.

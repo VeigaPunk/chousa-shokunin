@@ -538,3 +538,15 @@ the admitted entry that motivates it. Tier definitions live in
     43 identical `no-capture` status labels — the tool's own mislabel — because the
     check asserted only the field's DOMAIN, never its value. Operator proposal mined
     from `considerthese/2026-10-23.md` (2026-10-23). — `lessons/round-42.md`.
+
+61. **A validated wave spec is not a completed dispatch.** A spec, a plan, and a
+    registry whose agent ids are null are preparation. A dispatch is complete only
+    when the dispatcher stayed alive until each seat settled, and the record names
+    the seats that returned a report and the seats that died. Counting a prepared
+    spec as a dispatched wave hides the shortfall. Check: the round report's wave
+    section cites seat reports or names the dead seats with their last error; a
+    registry of null ids with zero reports is a shortfall, not a completed wave.
+    Shown able to fail: round 42's `w1/swarm-registry.json` has 64 members and null
+    agent ids, and zero seat reports landed. Operator proposal mined from
+    `considerthese/2026-10-24.md` (2026-10-24), "Track prepared-but-undispatched
+    waves". — `lessons/round-43.md`.

@@ -1,0 +1,197 @@
+# chousa-shokunin round-8 receipt — pin — the committed lane baseline + hermetic reproducibility
+# utc: 2026-10-16T03:37:57Z
+# seat: receipts-writer | lane: chousa-shokunin | round: 8 (the gate's own behavioral baseline: --pin/--drift)
+# lane head: 848738c56b183455b4efd05b6323b5a028599732 | gate: tools/research-gate.sh sha256=46f5ddb39d5fafa220fb584121dba2f4a15e071a91fa42728849f3c7567c6ccd
+# before-state gate: git show 848738c:tools/research-gate.sh sha256=3ba718bf9207eed70c66b8c849ac43b44c76890785e1576eeb5e795a604166b2 (round-7 revision; no --pin/--drift)
+# lane baseline (committed): corpus/evidence/gate-baseline-r8-20261016T033757Z.json sha256=1c81a6cb34543bb99c8797a7a0dd8dfbd1f13e3d86ec5b81aa0c7249381a8426
+# canonical invocation (internal to --pin/--drift): verify-all record.md --claims claims.jsonl --json manifest.jsonl --root . run with cwd = a fresh temp fixture the gate writes; volatile_fields: ts gate_sha256 (masked <V>)
+# method: machine-cut by /tmp/chousa-r8-evidence/cut-receipts.sh; stdout verbatim; TMPDIR=/tmp/chousa-r8-evidence/tmp; local files only; no network
+# scope: before-state (no baseline exists), pin legs, header contract, re-pin stability, CLI refusals
+
+## before-state at the round-7 revision
+baseline files in corpus/evidence/ before this cut: 0 (none committed)
+
+## command: bash gate-r7.sh --pin /tmp/chousa-r8-evidence/nope.json
+exit: 2
+research-gate: unknown flag: --pin
+usage: research-gate.sh [--selftest] [--help]
+       research-gate.sh verify [--record PATH] [--root PATH]
+       research-gate.sh verify-claims [CLAIMS] [--root PATH]
+       research-gate.sh verify-chain [RECORD] [--root PATH]
+       research-gate.sh verify-sweeps [RECORD] [--root PATH]
+       research-gate.sh verify-integrity [RECORD] [--root PATH]
+       research-gate.sh verify-all [RECORD] [--claims PATH] [--json PATH]
+                      [--root PATH]
+       research-gate.sh [--record PATH] [--root PATH]
+
+  RECORD via --record, positional, or CHOUSA_RECORD.
+  CLAIMS via positional or CHOUSA_CLAIMS.
+  Claims file: one JSON object per claim line:
+    {"id":…,"source":…,"span":…,"expect":supported|contradicted|unsupported
+     [,"marker":…]}
+  Spans must appear verbatim in sources at token boundaries; sources are
+  local files only.
+  Chain mode: each hop with status=resolved must cite a source (a source id
+  from ## Sources, or a local path) plus an anchor — an anchor_kind column
+  (heading|quote|line) with an anchor column, or a to fragment
+  path#kind:text (bare #text = heading). The anchor must appear in the cited
+  source: headings by text, quotes verbatim at token boundaries, lines as
+  whole lines.
+  Unresolved/marked hops stay exempt but counted. Sources obey the same
+  boundary as verify-claims (local, canonicalized, never fetched).
+  A token boundary is a file/line edge, ASCII whitespace or ASCII
+  punctuation at the match's outer edges; a word-internal hyphen or
+  apostrophe is not a boundary, so a truncated quote (mid-word), a padded
+  extra word running into a longer token, or a possessive join is a miss.
+  Multi-line spans are delimited by their first and last character only.
+  Sweeps mode: every ## Rejections row needs a non-empty reason and a
+  non-empty flip-condition (flip/flip_condition column, or any column whose
+  name contains flip/falsif/reversal). Negative sweeps must name where they
+  looked (a where/looked_at column, or a clean sweep cell): local path sets
+  (comma-separated paths/globs) are re-run — any hit is SWEEP_CLAIM_FALSE
+  naming the hit, zero hits verify; URLs, external:/web:/session: names and
+  declared source ids count as exempt; a sweep naming nowhere drifts.
+  Summary: VERIFIED_SWEEPS=N/M REJECTIONS_OK=K/L.
+  Integrity mode: every cross-section reference token must resolve to a row
+  that declares it — source ids from ## Sources, claim ids from ## Claims and
+  ## Negatives, sweep ids from ## Sweeps — read from chain from/to/claim,
+  claims sweep/source/src/ref/cite/pointer, negatives sweep/where, sweeps
+  claim_id/where and rejections ref/reference cells. An undeclared id in the
+  S<digit>… / C|N<digit>… / SW<digit>… shapes is REF_UNRESOLVED (drift);
+  declared ids resolve; non-local namings and rows marked
+  unresolved/blocked-no-fetch/labelled-dead/not-applicable/rejected stay
+  exempt but counted; local paths/globs and prose are not integrity tokens.
+  Summary: INTEGRITY refs=N resolved=M unresolved=K (exempt = N−M−K).
+  verify-all composes structure + claims + chain + sweeps + integrity over ONE
+  input: absent sections are reported absent (never drift by themselves); the
+  composed verdict is DRIFT iff any run section drifts, exit 1. --claims
+  binds a claims file to a record; a record may also name one in a ## Meta
+  row (claims/claims_file/claims-file/claimset); a claims JSONL passed as
+  the input is its own claims surface. --json PATH appends (never rewrites)
+  one JSON line recording UTC, record + gate SHA-256, per-section tallies
+  and the composed verdict.
+Verdict: RESEARCH_GATE: CLEAN|DRIFT
+Exit:    0 CLEAN | 1 DRIFT | 2 setup/usage
+
+## command: bash gate-r7.sh --drift /tmp/chousa-r8-evidence/nope.json
+exit: 2
+research-gate: unknown flag: --drift
+usage: research-gate.sh [--selftest] [--help]
+       research-gate.sh verify [--record PATH] [--root PATH]
+       research-gate.sh verify-claims [CLAIMS] [--root PATH]
+       research-gate.sh verify-chain [RECORD] [--root PATH]
+       research-gate.sh verify-sweeps [RECORD] [--root PATH]
+       research-gate.sh verify-integrity [RECORD] [--root PATH]
+       research-gate.sh verify-all [RECORD] [--claims PATH] [--json PATH]
+                      [--root PATH]
+       research-gate.sh [--record PATH] [--root PATH]
+
+  RECORD via --record, positional, or CHOUSA_RECORD.
+  CLAIMS via positional or CHOUSA_CLAIMS.
+  Claims file: one JSON object per claim line:
+    {"id":…,"source":…,"span":…,"expect":supported|contradicted|unsupported
+     [,"marker":…]}
+  Spans must appear verbatim in sources at token boundaries; sources are
+  local files only.
+  Chain mode: each hop with status=resolved must cite a source (a source id
+  from ## Sources, or a local path) plus an anchor — an anchor_kind column
+  (heading|quote|line) with an anchor column, or a to fragment
+  path#kind:text (bare #text = heading). The anchor must appear in the cited
+  source: headings by text, quotes verbatim at token boundaries, lines as
+  whole lines.
+  Unresolved/marked hops stay exempt but counted. Sources obey the same
+  boundary as verify-claims (local, canonicalized, never fetched).
+  A token boundary is a file/line edge, ASCII whitespace or ASCII
+  punctuation at the match's outer edges; a word-internal hyphen or
+  apostrophe is not a boundary, so a truncated quote (mid-word), a padded
+  extra word running into a longer token, or a possessive join is a miss.
+  Multi-line spans are delimited by their first and last character only.
+  Sweeps mode: every ## Rejections row needs a non-empty reason and a
+  non-empty flip-condition (flip/flip_condition column, or any column whose
+  name contains flip/falsif/reversal). Negative sweeps must name where they
+  looked (a where/looked_at column, or a clean sweep cell): local path sets
+  (comma-separated paths/globs) are re-run — any hit is SWEEP_CLAIM_FALSE
+  naming the hit, zero hits verify; URLs, external:/web:/session: names and
+  declared source ids count as exempt; a sweep naming nowhere drifts.
+  Summary: VERIFIED_SWEEPS=N/M REJECTIONS_OK=K/L.
+  Integrity mode: every cross-section reference token must resolve to a row
+  that declares it — source ids from ## Sources, claim ids from ## Claims and
+  ## Negatives, sweep ids from ## Sweeps — read from chain from/to/claim,
+  claims sweep/source/src/ref/cite/pointer, negatives sweep/where, sweeps
+  claim_id/where and rejections ref/reference cells. An undeclared id in the
+  S<digit>… / C|N<digit>… / SW<digit>… shapes is REF_UNRESOLVED (drift);
+  declared ids resolve; non-local namings and rows marked
+  unresolved/blocked-no-fetch/labelled-dead/not-applicable/rejected stay
+  exempt but counted; local paths/globs and prose are not integrity tokens.
+  Summary: INTEGRITY refs=N resolved=M unresolved=K (exempt = N−M−K).
+  verify-all composes structure + claims + chain + sweeps + integrity over ONE
+  input: absent sections are reported absent (never drift by themselves); the
+  composed verdict is DRIFT iff any run section drifts, exit 1. --claims
+  binds a claims file to a record; a record may also name one in a ## Meta
+  row (claims/claims_file/claims-file/claimset); a claims JSONL passed as
+  the input is its own claims surface. --json PATH appends (never rewrites)
+  one JSON line recording UTC, record + gate SHA-256, per-section tallies
+  and the composed verdict.
+Verdict: RESEARCH_GATE: CLEAN|DRIFT
+Exit:    0 CLEAN | 1 DRIFT | 2 setup/usage
+
+## pin the committed lane baseline
+## command: TMPDIR=/tmp/chousa-r8-evidence/tmp bash tools/research-gate.sh --pin corpus/evidence/gate-baseline-r8-20261016T033757Z.json
+exit: 0
+GATE_PIN: ok path=corpus/evidence/gate-baseline-r8-20261016T033757Z.json gate_sha256=46f5ddb39d5fafa220fb584121dba2f4a15e071a91fa42728849f3c7567c6ccd
+
+baseline: 2988 bytes, sha256 1c81a6cb34543bb99c8797a7a0dd8dfbd1f13e3d86ec5b81aa0c7249381a8426
+
+## baseline header (verbatim)
+# chousa-gate drift baseline v1 — written by research-gate.sh --pin
+# lineage: mori-shokunin r10 pin/drift (tools/mori-census.sh); volatile contract per the gate header
+# gate_sha256=46f5ddb39d5fafa220fb584121dba2f4a15e071a91fa42728849f3c7567c6ccd
+# pinned_ts=2026-10-16T03:38:57Z
+# canonical: verify-all record.md --claims claims.jsonl --json manifest.jsonl --root . (cwd = a fresh temp fixture written by the gate)
+# volatile_fields=ts gate_sha256
+# volatile_note=values of these fields are masked to <V>; --drift re-normalizes with the CURRENT list and reports every changed field. Changing the list is itself drift; gate_sha256 is informational (behavior, not revision, is compared).
+# --- canonical output follows ---
+
+## baseline body (the normalized canonical capture, verbatim)
+research-gate research-gate-r1 — ts=<V> — mode=verify-all — record=record.md — claims=claims.jsonl — root=.
+SECTION structure state=run verdict=CLEAN findings=0 drift=0
+SECTION claims state=run verdict=CLEAN findings=0 drift=0 tally=VERDICT_BEARING_CLAIMS=1/1
+SECTION chain state=run verdict=CLEAN findings=0 drift=0 tally=RESOLVED_HOPS=1/1
+SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+SECTION integrity state=run verdict=DRIFT findings=1 drift=1 tally=INTEGRITY refs=4 resolved=3 unresolved=1
+FINDING REF_UNRESOLVED severity=warn surface=integrity obs=kind=claim id=C9 section=sweeps row=SW1 cell=claim_id
+VERIFY_ALL sections=5 run=5 absent=0 drift-sections=1 findings=1 drift=1
+RESEARCH_GATE: DRIFT (sections=5 run=5 absent=0 drift-sections=1 findings=1 drift=1)
+# --- json manifest line follows ---
+{"schema":"chousa-verify-all/v1","ts":"<V>","record":"record.md","record_sha256":"038a13aa2b509298eb8afbe8d8272ea5c452ab29e3be91795293a5bbddab71e9","gate_sha256":"<V>","sections":[{"name":"structure","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"findings":0,"drift":0,"questions":1,"sources":1,"chains":1,"claims":1,"negatives":1,"rejections":1,"approvals":1}},{"name":"claims","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"claims":1,"supported":1,"contradicted":0,"unsupported":0,"mismatched":0,"unproven":0,"refused":0,"invalid":0,"findings":0,"drift":0},"native":"VERDICT_BEARING_CLAIMS=1/1"},{"name":"chain","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"hops":1,"verified":1,"exempt":0,"anchor-missing":0,"refused":0,"invalid":0,"findings":0,"drift":0},"native":"RESOLVED_HOPS=1/1"},{"name":"sweeps","state":"run","verdict":"CLEAN","findings":0,"drift":0,"tallies":{"sweeps":1,"verified":1,"exempt":0,"hit":0,"refused":0,"invalid":0,"rejections":1,"rejections-ok":1,"findings":0,"drift":0},"native":"VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1"},{"name":"integrity","state":"run","verdict":"DRIFT","findings":1,"drift":1,"tallies":{"refs":4,"resolved":3,"unresolved":1,"exempt":0,"findings":1,"drift":1},"native":"INTEGRITY refs=4 resolved=3 unresolved=1"}],"verdict":"DRIFT","sections_run":5,"sections_absent":0,"drift_sections":1}
+
+## hermetic reproducibility
+## command: TMPDIR=/tmp/chousa-r8-evidence/tmp bash tools/research-gate.sh --pin /tmp/chousa-r8-evidence/pin2.json
+exit: 0
+GATE_PIN: ok path=/tmp/chousa-r8-evidence/pin2.json gate_sha256=46f5ddb39d5fafa220fb584121dba2f4a15e071a91fa42728849f3c7567c6ccd
+body cmp (pin1 vs pin2, bytes after the canonical marker): IDENTICAL
+## command: sleep 75; TMPDIR=/tmp/chousa-r8-evidence/tmp bash tools/research-gate.sh --pin /tmp/chousa-r8-evidence/pin3.json
+exit: 0
+body cmp (pin1 vs pin3, pin cut after 75 s of live churn): IDENTICAL
+
+## CLI refusals (setup exit contract)
+
+## command: bash tools/research-gate.sh --pin (no PATH)
+exit: 2
+Verdict: RESEARCH_GATE: CLEAN|DRIFT
+Exit:    0 CLEAN | 1 DRIFT | 2 setup/usage
+
+## command: bash tools/research-gate.sh --drift (no PATH)
+exit: 2
+Verdict: RESEARCH_GATE: CLEAN|DRIFT
+Exit:    0 CLEAN | 1 DRIFT | 2 setup/usage
+
+## command: bash tools/research-gate.sh --pin a.json --drift b.json
+exit: 2
+Verdict: RESEARCH_GATE: CLEAN|DRIFT
+Exit:    0 CLEAN | 1 DRIFT | 2 setup/usage
+
+## command: bash tools/research-gate.sh --pin /tmp/chousa-r8-evidence/no-such-dir/x.json
+exit: 2
+tools/research-gate.sh: line 2438: /tmp/chousa-r8-evidence/no-such-dir/x.json: No such file or directory
+research-gate: --pin could not write baseline: /tmp/chousa-r8-evidence/no-such-dir/x.json

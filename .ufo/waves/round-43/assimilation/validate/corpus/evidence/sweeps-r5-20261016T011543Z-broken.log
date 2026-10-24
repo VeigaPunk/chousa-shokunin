@@ -1,0 +1,44 @@
+# chousa-shokunin round-5 receipt — broken
+# utc: 2026-10-16T01:15:43Z
+# seat: receipts-writer | lane: chousa-shokunin | round: 5 (coverage move: kept rejections and negative sweeps become verdict-bearing)
+# lane head: 45f8f65 | gate: tools/research-gate.sh sha256=55adb92d0ba5ac958907fac6c4d5d6b0b50129703e866a5befbd9a32789f2ff2
+# before-state gate: git show 45f8f65:tools/research-gate.sh sha256=6b83705b02fe11e98b8b4aeb43fe718ff9910d21cee16d87366cef648a3960b2 (round-4 revision), run from a lane shadow (/tmp/chousa-r5-evidence/lane-shadow: symlinks corpus/ -> lane corpus, research/ -> fleet research) so the record's lane- and fleet-root-relative pointers resolve as they do in place
+# fixtures: corpus/fixtures/sweeps-r5.md sha256=025352b75b7b109147fee8b8eb13b4f74eaa1550489e83166ce1dd59cfb14907 | corpus/fixtures/sweeps-r5-hit.md sha256=89650988074e4c371aada8e1fe77cd02d4fa85bc0c3d0a40dc21e12e1a0f78cd | corpus/fixtures/sweeps-r5-broken.md sha256=f74ea3247e069e711278bb81addda468045053cfe556d8f5a204f3b9ff7abc0c
+# fixture contract: corpus/fixtures/sweeps-r5.README.md sha256=e9178651254841b86e46e98ba4566b568df662ed8c541197ae150f5aba1ebbca
+# control copies: /tmp/chousa-r5-evidence/ctl/ (single-delta copies of sweeps-r5.md; sha256 in the live receipt)
+# method: machine-cut by /tmp/chousa-r5-evidence/cut-receipts.sh; stdout verbatim; local files only; no network
+# scope: the tampered control: r1 verify cannot see the two broken cells; verify-sweeps must drift naming both findings
+
+## pinned revision
+55adb92d0ba5ac958907fac6c4d5d6b0b50129703e866a5befbd9a32789f2ff2  tools/research-gate.sh (round-5 revision)
+45f8f65  lane HEAD
+025352b75b7b109147fee8b8eb13b4f74eaa1550489e83166ce1dd59cfb14907  corpus/fixtures/sweeps-r5.md
+89650988074e4c371aada8e1fe77cd02d4fa85bc0c3d0a40dc21e12e1a0f78cd  corpus/fixtures/sweeps-r5-hit.md
+f74ea3247e069e711278bb81addda468045053cfe556d8f5a204f3b9ff7abc0c  corpus/fixtures/sweeps-r5-broken.md
+e9178651254841b86e46e98ba4566b568df662ed8c541197ae150f5aba1ebbca  corpus/fixtures/sweeps-r5.README.md
+
+## the control the fixture README pre-registers
+
+README sha256=e9178651254841b86e46e98ba4566b568df662ed8c541197ae150f5aba1ebbca (as cut). Its words: SWEEP_REJECTION_INCOMPLETE on R1 (reason present,
+flip_condition empty) and SWEEP_CLAIM_FALSE on W1 naming the hit (its text says
+corpus/fixtures/sweeps-r5-hit.md:4; the record bytes and the landed gate name the hit by
+path — line-level naming is not part of the landed glob re-run).
+
+## before-state: r4 gate verify (structural only) on the broken control
+
+## command: bash tools/research-gate-r4.sh verify corpus/fixtures/sweeps-r5-broken.md --root .
+exit: 0  (gate sha stable before/after)
+research-gate research-gate-r1 — ts=2026-10-16T01:15:57Z — mode=verify — record=corpus/fixtures/sweeps-r5-broken.md
+RESEARCH_GATE: CLEAN (findings=0 drift=0 questions=1 sources=1 chains=1 claims=1 negatives=1 rejections=1 approvals=1)
+
+## landed gate: verify-sweeps on the broken control
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH bash tools/research-gate.sh verify-sweeps corpus/fixtures/sweeps-r5-broken.md --root ..
+exit: 1  (gate sha stable before/after)
+research-gate research-gate-r1 — ts=2026-10-16T01:15:58Z — mode=sweeps — record=corpus/fixtures/sweeps-r5-broken.md
+SWEEP id=W1 where=chousa-shokunin/corpus/fixtures/sweeps-r5-hit.md looked=local hits=1 at=chousa-shokunin/corpus/fixtures/sweeps-r5-hit.md observed=hit verdict=mismatch
+REJECTION id=R1 ref=research/README.md:12 reason=present flip=absent observed=incomplete verdict=mismatch
+FINDING SWEEP_REJECTION_INCOMPLETE severity=warn surface=sweeps obs=id=R1 missing=flip
+FINDING SWEEP_CLAIM_FALSE severity=warn surface=sweeps obs=id=W1 where=chousa-shokunin/corpus/fixtures/sweeps-r5-hit.md hits=1 first=chousa-shokunin/corpus/fixtures/sweeps-r5-hit.md listed=chousa-shokunin/corpus/fixtures/sweeps-r5-hit.md
+VERIFIED_SWEEPS=0/1 REJECTIONS_OK=0/1
+RESEARCH_GATE: DRIFT (sweeps=1 verified=0 exempt=0 hit=1 refused=0 invalid=0 rejections=1 rejections-ok=0 findings=2 drift=2)

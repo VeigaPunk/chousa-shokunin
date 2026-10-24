@@ -2348,3 +2348,29 @@ per-capture provenance receipt (which capture, which form, which digest) so a la
 round can re-check a row without re-deriving the cache; the `spans ≥ 32768` boundary
 debt; the metadata-screener locale seam. No round-43 work is started here; freeze only
 1–3 separately falsifiable claims after scoring their do-nothing controls.
+
+## Round 43 verdict — 2026-10-24 (absent-class split; one local adoption)
+
+Selected claims, frozen in `corpus/evidence/round43/claims.md` before any seat
+scored: C1 operability (lowest scored non-retired axis, 3/10); C2 calibration;
+C3 depth, sourced on S078. No external fetch. The planned block above is the
+candidate list and is not rewritten.
+
+| claim / axis | before → after | counting command | verdict |
+|---|---|---|---|
+| C1 operability | no command split the 15 `absent` rows. After: `ABSENT_ENUMERATED=15/15`, `CLASSED=15/15`, `BOTH_NONEMPTY=1/1` (9 misquote, 6 not-carried), `REPRODUCIBLE=1/1`, `MUTANT_DETECTED=1/1`, exit 0. Missing-tool control exits 1 | `python3 corpus/evidence/round43/c1-count.py` | **improved** |
+| C2 calibration | the single `absent` label did not agree with a two-mode rule. After: `SPLIT_AGREES=15/15`. Flipping S086 scores 14/15 and exits 1 | `python3 corpus/evidence/round43/c2-count.py` | **improved** |
+| C3 depth | the lane held no opened source for how a search log is kept. After: the entry cites S078, the quote is in the committed capture, the row URL matches | `python3 corpus/evidence/round43/c3-count.py` | **improved** |
+
+The round-1 operability scale is unchanged: 3 → 3. These observables sit beside it.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** | C1: the split is one command; the missing-tool control fails |
+| calibration | **improved** | C2: 15/15 labels match an independent recompute; the flipped row fails |
+| depth | **improved** | C3 and `corpus/lessons/round-43.md`: the two failure modes, four mined mistakes, one re-grounded entry |
+| coverage | **improved narrowly** | one new measured operation (the split) and one search-log fact the lane did not hold; the three-literatures entry was refused |
+| freshness | **improved narrowly** | S078 opened from a committed capture, sha256 recorded; no fetch |
+| adjacency | **unchanged** | nothing absorbed from a sibling; campaign tree read-only |
+
+Learning trends, lane view: expansion improved (one opened row, one lesson, one new operation); quality improved (counters against do-nothing controls; QUALITY 61); discernment unchanged until a non-author spot-check.

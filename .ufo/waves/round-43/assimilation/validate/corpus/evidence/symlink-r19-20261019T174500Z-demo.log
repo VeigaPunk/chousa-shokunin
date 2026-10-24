@@ -1,0 +1,13 @@
+=== BEFORE: pre-round gate (5499cef) verify-sweeps record.md --root /tmp/r19demo ===
+research-gate v2 — ts=2026-10-19T17:42:06Z — mode=sweeps — record=/tmp/r19demo/record.md
+SWEEP id=W1 where=sweepdir/*.md looked=local hits=1 at=sweepdir/escape.md observed=hit verdict=mismatch
+FINDING SWEEP_CLAIM_FALSE severity=warn surface=sweeps obs=id=W1 where=sweepdir/*.md hits=1 first=sweepdir/escape.md listed=sweepdir/escape.md
+VERIFIED_SWEEPS=0/1 REJECTIONS_OK=0/0
+RESEARCH_GATE: DRIFT (sweeps=1 verified=0 exempt=0 hit=1 refused=0 invalid=0 rejections=0 rejections-ok=0 findings=1 drift=1)
+
+=== AFTER: landed gate verify-sweeps record.md --root /tmp/r19demo ===
+research-gate v2 — ts=2026-10-19T17:42:06Z — mode=sweeps — record=/tmp/r19demo/record.md
+SWEEP id=W1 where=sweepdir/*.md looked=local hits=- at=- observed=refused verdict=refused
+FINDING SWEEP_LOCATION_OUT_OF_CORPUS severity=crit surface=sweeps obs=id=W1 where=sweepdir/*.md match=/tmp/r19outside/escape.md refused (symlink escape; not opened)
+VERIFIED_SWEEPS=0/1 REJECTIONS_OK=0/0
+RESEARCH_GATE: DRIFT (sweeps=1 verified=0 exempt=0 hit=0 refused=1 invalid=0 rejections=0 rejections-ok=0 findings=1 drift=1)

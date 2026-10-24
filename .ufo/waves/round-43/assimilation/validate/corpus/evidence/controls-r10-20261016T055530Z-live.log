@@ -1,0 +1,154 @@
+# chousa-shokunin round-10 receipt — live battery — no-gate-change, before/after, prior fixtures, manifest untouched, zero network, stability
+# cut stamp: 20261016T055530Z | utc: 2026-10-16T05:55:30Z
+# seat: receipts-writer | lane: chousa-shokunin | round: 10 (residual hardening: archive-scale negative controls + final limit-disposition ledger)
+# lane head: d5c99c2084dd972fa33c4e2d35b6b7c281382163 | gate: tools/research-gate.sh sha256=46f5ddb39d5fafa220fb584121dba2f4a15e071a91fa42728849f3c7567c6ccd
+# gate unchanged vs HEAD blob: 46f5ddb39d5fafa220fb584121dba2f4a15e071a91fa42728849f3c7567c6ccd (git show HEAD:tools/research-gate.sh) | git diff --numstat tools/research-gate.sh: 0 line(s)
+# method: machine-cut by /home/vgpnk/.cache/chousa-r10/cut-receipts.sh; stdout verbatim (the gate prints its own ts=); local files only; no network
+# scope: gate/HEAD byte identity, the controls' before-state, selftest case-line stability, the committed drift baseline, the r1 observable, prior-fixture no-harm, the untouched manifest, zero-network strace, pin stability
+
+## fixture pins (measured at cut time)
+338918fcb8ed5d6c5f15dc64e5eb8a3ae7a005d51b5c03e7e377c1dab9173c78  corpus/fixtures/archives-r9/A-r9.md
+abfa5290deda4d1708ba97028853b8a770f16ecda6f377dddda53d49cb2e3e86  corpus/fixtures/archives-r9/B-r9.md
+97be0e69ccfb8a701bc5556f738553be8e7179c9b41110fe61c4a3cab4f2d1da  corpus/fixtures/archives-r9/C-r9.md
+f6f0d1ab6b6cbd045035951c7eb4653406dc0853234a8077a8685509bfc94ff5  corpus/fixtures/claims-r9.jsonl
+ec312657c3872de77b45d44d135dd350e6b6cb378db621b4f2cbc61b5798a166  corpus/fixtures/archives-r9/README.md
+
+## control pins (round-10 archive-scale controls)
+e3490cf4bc9dd778311c19949287be93dd2b17690e1bb7f2d1cf77c38d7e82a0  corpus/fixtures/archives-r9/controls/A-r9-anchor-missing.md
+0edb78ee0040bd77af6b1618ca9888f6676eb8082e9aabb9b4c498016664b126  corpus/fixtures/archives-r9/controls/A-r9-span-not-found.claims.jsonl
+5dedb73b4828f8120b1d7538aea49711dc56b2776bc9490e29727979ff4d7671  corpus/fixtures/archives-r9/controls/A-r9-span-not-found.md
+69b7b08f8b1d3362b7848fe6776fd237226a645589c767c9d5cfe11abad85a47  corpus/fixtures/archives-r9/controls/B-r9-false-sweep.md
+b0d488aae5fbfe5aef6b9eaa5f5cf45ba7381abebf1fc51f77af92509b5a0206  corpus/fixtures/archives-r9/controls/B-r9-rejection-missing-flip.md
+b24be0f0768d6b6848b9fa13fe6f862464007322ae52653b42ef0fac09f986f7  corpus/fixtures/archives-r9/controls/C-r9-dangling-ref.md
+21d77e6c4de99719c557d14b105d2b795147f40bc724f4105d041587107c290c  corpus/fixtures/archives-r9/controls/C-r9-structure-break.md
+23f477225aa290c0c3fdf97887b9d954d9b81ab1bb4364815fcd01b07380a688  corpus/fixtures/archives-r9/controls/README.md
+
+## archive pins (read-only, fleet root)
+9033857d4625555c7b778dfad6df80e3e1b24ed8bffa3fee2fd445b9c5540b85  ../research/deep-research-2026-09-28/A-shokunin-tradition.md
+6d8dbddd3e2d2f47dcb153c5a3347cc6321db4afc72cf07da40f0f7fe5022006  ../research/deep-research-2026-09-28/B-multiagent-knowledge.md
+e48fe70ff92055c217ac6ca6ce68e403aa5689fee8717f3bd0ccf5badc92321b  ../research/deep-research-2026-09-28/C-rank-taxonomy.md
+
+## ledger note pin
+3845709bae62603aa67b8fc56e15c55b20dd0673b0c9f83d160806196a5018d5  corpus/knowledge/hardening-r10.md
+
+## r9 README-declared vs measured
+record A MATCH
+record B MATCH
+record C MATCH
+claims-r9.jsonl MATCH
+
+## no gate change (measured, not assumed)
+working tree: 46f5ddb39d5fafa220fb584121dba2f4a15e071a91fa42728849f3c7567c6ccd  tools/research-gate.sh
+HEAD blob   : 46f5ddb39d5fafa220fb584121dba2f4a15e071a91fa42728849f3c7567c6ccd  git show HEAD:tools/research-gate.sh
+git diff --numstat tools/research-gate.sh → 0 line(s); lane HEAD d5c99c2084dd972fa33c4e2d35b6b7c281382163
+match: MATCH
+flag rule: a gate change without a reported defect would itself be a finding; none exists (gate matches HEAD blob; diff empty)
+
+## selftest (case-line stability vs the r8 selftest receipt — the comparator r9 also used)
+## command: TMPDIR=/home/vgpnk/.cache/chousa-r10/tmp env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH bash tools/research-gate.sh --selftest
+exit: 0
+RESEARCH_GATE_SELFTEST: PASS (85 cases)
+case lines r10=85 (r8 selftest receipt first 85 used for cmp; the r8 receipt embeds a second short run after them, head -n 85 selects the full case list)
+cmp: first 85 case lines byte-identical to the r8 selftest receipt: YES
+FAIL-case lines in this run: 0 (want 0)
+
+## gate behavioral baseline (r8 committed)
+## command: bash tools/research-gate.sh --drift corpus/evidence/gate-baseline-r8-20261016T033757Z.json
+exit: 0
+GATE_DRIFT: none
+
+## the r1 observable over the raw archives
+VERDICT_BEARING_EXPORTS=3/3
+
+## prior fixtures held (solo/composed modes; summaries + exits)
+
+## p-claims2 exit=0
+VERDICT_BEARING_CLAIMS=17/17
+RESEARCH_GATE: CLEAN (claims=17 supported=13 contradicted=2 unsupported=2 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)
+
+## p-claims9 exit=0
+VERDICT_BEARING_CLAIMS=10/10
+RESEARCH_GATE: CLEAN (claims=10 supported=7 contradicted=2 unsupported=1 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)
+
+## p-chain3 exit=0
+RESOLVED_HOPS=17/22
+RESEARCH_GATE: CLEAN (hops=22 verified=17 exempt=5 anchor-missing=0 refused=0 invalid=0 findings=0 drift=0)
+
+## p-chain3b exit=1
+RESOLVED_HOPS=1/2
+RESEARCH_GATE: DRIFT (hops=2 verified=1 exempt=0 anchor-missing=1 refused=0 invalid=0 findings=1 drift=1)
+
+## p-sweeps5 exit=0
+VERIFIED_SWEEPS=1/2 REJECTIONS_OK=3/3
+RESEARCH_GATE: CLEAN (sweeps=2 verified=1 exempt=1 hit=0 refused=0 invalid=0 rejections=3 rejections-ok=3 findings=0 drift=0)
+
+## p-sweeps5b exit=1
+VERIFIED_SWEEPS=0/1 REJECTIONS_OK=0/1
+RESEARCH_GATE: DRIFT (sweeps=1 verified=0 exempt=0 hit=1 refused=0 invalid=0 rejections=1 rejections-ok=0 findings=2 drift=2)
+
+## p-full6 exit=0
+VERIFY_ALL sections=5 run=5 absent=0 drift-sections=0 findings=0 drift=0
+RESEARCH_GATE: CLEAN (sections=5 run=5 absent=0 drift-sections=0 findings=0 drift=0)
+
+## p-full6b exit=1
+VERIFY_ALL sections=5 run=5 absent=0 drift-sections=2 findings=2 drift=2
+RESEARCH_GATE: DRIFT (sections=5 run=5 absent=0 drift-sections=2 findings=2 drift=2)
+
+## p-integrity7 exit=0
+INTEGRITY refs=16 resolved=15 unresolved=0
+RESEARCH_GATE: CLEAN (refs=16 resolved=15 unresolved=0 exempt=1 findings=0 drift=0)
+
+## p-integrity7b exit=1
+INTEGRITY refs=16 resolved=13 unresolved=2
+RESEARCH_GATE: DRIFT (refs=16 resolved=13 unresolved=2 exempt=1 findings=2 drift=2)
+
+## round-10 controls battery summary (full runs in the controls receipt)
+span-not-found           exit=1 finding=CLAIM_SPAN_NOT_FOUND
+anchor-missing           exit=1 finding=CHAIN_ANCHOR_NOT_FOUND
+false-sweep              exit=1 finding=SWEEP_CLAIM_FALSE
+rejection-missing-flip   exit=1 finding=SWEEP_REJECTION_INCOMPLETE
+dangling-ref             exit=1 finding=REF_UNRESOLVED
+
+## exempt-item audit summary (full runs in the exempt receipt)
+EXEMPT-AUDIT record=A-r9.md items=2 justified=2 findings=0
+EXEMPT-AUDIT record=B-r9.md items=2 justified=2 findings=0
+EXEMPT-AUDIT record=C-r9.md items=2 justified=2 findings=0
+
+## the lane manifest (untouched this round — no appends; sha preserved)
+before: 8 lines, sha256 78627e6da14c4bcf1b49c8725a763b9c6ed998b56f03460c1c7d843c15d0814d
+after : 8 lines, sha256 78627e6da14c4bcf1b49c8725a763b9c6ed998b56f03460c1c7d843c15d0814d
+unchanged: YES (no verify-all --json ran in this battery)
+
+## zero-network strace (full battery: 6 controls + 3 records + claims)
+command: strace -f -e trace=network -o strace-live.txt bash strace-cmd.sh (contents:)
+  cd /home/vgpnk/Projects/shokunin/chousa-shokunin && bash tools/research-gate.sh verify-all corpus/fixtures/archives-r9/controls/A-r9-span-not-found.md --root .. >/dev/null 2>&1
+  cd /home/vgpnk/Projects/shokunin/chousa-shokunin && bash tools/research-gate.sh verify-all corpus/fixtures/archives-r9/controls/A-r9-anchor-missing.md --root .. >/dev/null 2>&1
+  cd /home/vgpnk/Projects/shokunin/chousa-shokunin && bash tools/research-gate.sh verify-all corpus/fixtures/archives-r9/controls/B-r9-false-sweep.md --root .. >/dev/null 2>&1
+  cd /home/vgpnk/Projects/shokunin/chousa-shokunin && bash tools/research-gate.sh verify-all corpus/fixtures/archives-r9/controls/B-r9-rejection-missing-flip.md --root .. >/dev/null 2>&1
+  cd /home/vgpnk/Projects/shokunin/chousa-shokunin && bash tools/research-gate.sh verify-all corpus/fixtures/archives-r9/controls/C-r9-dangling-ref.md --root .. >/dev/null 2>&1
+  cd /home/vgpnk/Projects/shokunin/chousa-shokunin && bash tools/research-gate.sh verify-all corpus/fixtures/archives-r9/A-r9.md --claims corpus/fixtures/claims-r9.jsonl --root .. >/dev/null 2>&1
+  cd /home/vgpnk/Projects/shokunin/chousa-shokunin && bash tools/research-gate.sh verify-all corpus/fixtures/archives-r9/B-r9.md --claims corpus/fixtures/claims-r9.jsonl --root .. >/dev/null 2>&1
+  cd /home/vgpnk/Projects/shokunin/chousa-shokunin && bash tools/research-gate.sh verify-all corpus/fixtures/archives-r9/C-r9.md --claims corpus/fixtures/claims-r9.jsonl --root .. >/dev/null 2>&1
+  cd /home/vgpnk/Projects/shokunin/chousa-shokunin && bash tools/research-gate.sh verify-claims corpus/fixtures/claims-r9.jsonl --root .. >/dev/null 2>&1
+trace lines: 108440; network syscall lines: 0 (want 0); battery exit: 0
+
+## working tree at cut time (fixture/evidence/knowledge paths)
+ M SKILL.md
+?? corpus/evidence/controls-r10-20261016T054941Z-controls.log
+?? corpus/evidence/controls-r10-20261016T054941Z-exempt.log
+?? corpus/evidence/controls-r10-20261016T054941Z-ledger.log
+?? corpus/evidence/controls-r10-20261016T054941Z-live.log
+?? corpus/fixtures/archives-r9/controls/
+?? corpus/knowledge/hardening-r10.md
+
+## pin stability across the battery
+gate 46f5ddb39d5fafa220fb584121dba2f4a15e071a91fa42728849f3c7567c6ccd → 46f5ddb39d5fafa220fb584121dba2f4a15e071a91fa42728849f3c7567c6ccd
+records 338918fcb8ed5d6c5f15dc64e5eb8a3ae7a005d51b5c03e7e377c1dab9173c78/abfa5290deda4d1708ba97028853b8a770f16ecda6f377dddda53d49cb2e3e86/97be0e69ccfb8a701bc5556f738553be8e7179c9b41110fe61c4a3cab4f2d1da → 338918fcb8ed5d6c5f15dc64e5eb8a3ae7a005d51b5c03e7e377c1dab9173c78/abfa5290deda4d1708ba97028853b8a770f16ecda6f377dddda53d49cb2e3e86/97be0e69ccfb8a701bc5556f738553be8e7179c9b41110fe61c4a3cab4f2d1da
+claims f6f0d1ab6b6cbd045035951c7eb4653406dc0853234a8077a8685509bfc94ff5 → f6f0d1ab6b6cbd045035951c7eb4653406dc0853234a8077a8685509bfc94ff5
+archives 9033857d4625555c7b778dfad6df80e3e1b24ed8bffa3fee2fd445b9c5540b85/6d8dbddd3e2d2f47dcb153c5a3347cc6321db4afc72cf07da40f0f7fe5022006/e48fe70ff92055c217ac6ca6ce68e403aa5689fee8717f3bd0ccf5badc92321b → 9033857d4625555c7b778dfad6df80e3e1b24ed8bffa3fee2fd445b9c5540b85/6d8dbddd3e2d2f47dcb153c5a3347cc6321db4afc72cf07da40f0f7fe5022006/e48fe70ff92055c217ac6ca6ce68e403aa5689fee8717f3bd0ccf5badc92321b
+manifest 78627e6da14c4bcf1b49c8725a763b9c6ed998b56f03460c1c7d843c15d0814d → 78627e6da14c4bcf1b49c8725a763b9c6ed998b56f03460c1c7d843c15d0814d
+STABLE: YES
+
+## identity
+These receipts are lane-local evidence; no task_… value was invented; the round-1
+receipt-identity debt (operator side) remains open and is untouched by this round.

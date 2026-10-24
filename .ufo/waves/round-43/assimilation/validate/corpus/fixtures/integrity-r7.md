@@ -1,0 +1,67 @@
+# research-record v1
+<!-- chousa-record: v1 -->
+## Meta
+| key | value |
+|---|---|
+| window | loopback |
+| fetch | none |
+| claims_file | chousa-shokunin/corpus/fixtures/integrity-r7.claims.jsonl |
+| note | round-7 integrity fixture: full-r6 record bytes plus a reference-integrity mix (a sweep cell bound to declared claim C2, a resolved hop citing declared source S4); structural twin of integrity-r7-broken.md |
+
+## Question
+
+Does one record that carries every section at once — ranked sources, a resolved four-hop citation chain, three pointed claims, two kept rejections with flip-conditions, three named sweeps, plus one sweep cell bound to a declared claim id and one hop citing a declared source id — compose to a single CLEAN verdict whose per-section tallies equal the tallies the four solo modes report for the same bytes?
+
+## Sources
+
+| id | tier | pointer | notes |
+|---|---|---|---|
+| S1 | export | research/deep-research-2026-09-28/A-shokunin-tradition.md | archived export A, pin 9033857d |
+| S2 | export | research/deep-research-2026-09-28/B-multiagent-knowledge.md | archived export B, pin 6d8dbddd |
+| S3 | export | research/deep-research-2026-09-28/C-rank-taxonomy.md | archived export C, pin e48fe70f |
+| S4 | fleet-gate | chousa-shokunin/corpus/knowledge/archived-export-intake.md | round-1 intake, source of the kept rejections and of the sweeps below |
+
+## Chain
+
+| hop | from | to | anchor_kind | anchor | status | notes |
+|---|---|---|---|---|---|---|
+| 1 | C1 | S1 | quote | I could not substantiate this spelling as an established artisan rank in the Japanese or English sources searched. | resolved | the A:64 row the rejected README gloss overreads |
+| 2 | C2 | S2 | quote | Track five axes separately: task competence, retention, evidence fidelity, cross-domain transfer, and operating cost. | resolved | the B:57 separate-the-axes line |
+| 3 | C3 | S3 | line | “Jin’i-ryū” does not support the proposed literal translation | resolved | the C:107 section line, whole line |
+| 4 | C3 | S4 | line | this record is declaration-and-pointer-level acceptance only. | resolved | r7 mix: resolved hop citing declared source S4; the anchor is the intake's acceptance-only line 11 |
+
+## Claims
+
+| id | kind | text | pointer | status | sweep |
+|---|---|---|---|---|---|
+| C1 | observation | export A records only failed substantiation for the coined rank's spelling | research/deep-research-2026-09-28/A-shokunin-tradition.md:64 | verified | |
+| C2 | observation | export B keeps five evaluation axes separate instead of collapsing them to one | research/deep-research-2026-09-28/B-multiagent-knowledge.md:57 | verified | |
+| C3 | observation | export C negates the proposed literal translation of the coined rank | research/deep-research-2026-09-28/C-rank-taxonomy.md:107 | verified | |
+
+## Negatives
+
+| id | text | sweep | status |
+|---|---|---|---|
+| N1 | nothing external was cached locally: no saved copy of a cited external page exists under the archive directory | SW1 | observed-in-dump |
+| N2 | no attestation outside the archive establishes jin'i-ryū as a traditional artisan rank | SW2 | unresolved |
+
+## Sweeps
+
+| id | claim_id | where | observed |
+|---|---|---|---|
+| SW1 | N1 | research/deep-research-2026-09-28/saved-*,research/deep-research-2026-09-28/*-snapshot-* | zero matches, no saved copy of a cited external page exists under the archive directory |
+| SW2 | N2 | S1,S2,S3 | content sweep inside the declared exports; exempt and counted, the gate re-runs path sets only |
+| SW3 | C2 | research/deep-research-2026-09-28/saved-*,research/deep-research-2026-09-28/*-snapshot-* | r7 mix: sweep cell references the declared claim id C2; the same empty archive naming as SW1, re-run zero |
+
+## Rejections
+
+| id | ref | reason | flip_condition |
+|---|---|---|---|
+| R1 | research/README.md:12 | the README gloss asserts jin'i-ryu is not an attested artisan rank and offers four axes, while its cited spans (A:47, A:64) record only failed substantiation — intake RJ-02 | an attested Japanese spelling for jin'i-ryū carried by a local source would flip this rejection |
+| R2 | research/deep-research-2026-09-28/B-multiagent-knowledge.md:79 | the ACE numerals are model-quality claims belonging to kengaku province, carried here only as a hedge form — intake RJ-03 | a kengaku-lane adjudication of those numerals would flip this rejection |
+
+## Approval
+
+| target | state |
+|---|---|
+| (none) | not-required |

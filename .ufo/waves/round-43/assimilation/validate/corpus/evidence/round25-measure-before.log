@@ -1,0 +1,21 @@
+== tree <base d730ae4 archive> gate 752e4e38
+== claim 1 (operability): metadata screen over the frozen 28-entry population
+verify-metadata rc=2
+META_NAMED_DRIFT_ENTRIES=[]
+== claim 2 (freshness): stale index items (base population: files present at d730ae4)
+2a UNINDEXED=2 ['knowledge/audit-r11.md', 'lessons/2026-10-19-hardlink-alias-boundary.md']
+2b FRONTIER_MISSING=13 rounds=[11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+2c EVIDENCE_MISFILED_ROWS=43
+2d CAP_ROWS_MISSING=8 rounds=[15, 17, 18, 19, 20, 21, 22, 23] (LOG Capabilities +1 rounds=[13, 14, 15, 17, 18, 19, 20, 21, 22, 23])
+STALE_INDEX_ITEMS=66
+== claim 3 (calibration): stale restatements
+3a SKILL_OPEN_CLOSED_FINDING=1
+3b SKILL_LEDGER_TUPLES_STALE=3 of 3 (latest ledger 38·21·10·0·3) QUEUE_STALE=2 of 2 (latest queue 24)
+3c PLACEHOLDER_GSHA=1
+3d LEDGER_ADDENDA_MISSING=8 rounds=[16, 17, 18, 19, 20, 21, 22, 23]
+STALE_RESTATEMENTS=15
+== holds: selftest, drift vs r12 baseline, r1 archive observable
+RESEARCH_GATE_SELFTEST: PASS (136 cases, 0 skipped)
+GATE_DRIFT: none
+drift rc=0
+VERDICT_BEARING_EXPORTS=3/3

@@ -1,0 +1,44 @@
+{
+  "schema": "chousa-round26-inherited-measurement-v1",
+  "revision": "0e9784bd52eca456b24d0bc40921480a47f91a2b",
+  "gate_sha256": "c2c813f1b425bc4e74625a2607eaca1b97addf9898f834e88af8f1fe2143abc6",
+  "claim_base": "ba3333254dd337658a4f25e7a9471f9cf4e4567e",
+  "seat": "ChousaR26R.FNoTrade",
+  "receipt": "corpus/evidence/round26-inherited-after.log",
+  "receipt_sha256": "1a5febda2d8327b29bdf4845aceb3269bbc601e5b6cbe11aac93ac5733642a6b",
+  "result_record": "bfe44158",
+  "result_timestamp": "2026-10-21T13:12:40.112Z",
+  "read_command": {
+    "command": "S=/tmp/chousa-r26-falsify-FNoTrade; cat $S/probe-tree-all.log; tail -3 $S/selftest-tree-iso.log",
+    "timeout": 86400
+  },
+  "measurement_command": "bash tree/corpus/evidence/round26-measure.sh /tmp/chousa-r26-falsify-FNoTrade/tree all",
+  "probe_exit": 0,
+  "selftest_exit": 1,
+  "selftest": "FAIL (3/187 cases)",
+  "recovery_rerun": false,
+  "limitation": "The author-lane critic ran the full selftest/probe and background shell jobs despite its bounded-seat contract forbidding them. Preserve observed evidence and record the scope violation; do not relabel it as authorized L1 verification or an outside judgment. All failures are accepted as reported, not rerun to confirm.",
+  "coordinator_errors": [
+    {
+      "coordinator": "ChousaR26",
+      "timestamp": "2026-10-21T11:56:45.735Z",
+      "provider": "devin",
+      "model": "gpt-6-1-sol",
+      "last_error": "Devin stream error failed_precondition: Your weekly usage quota has been exhausted. Visit https://app.devin.ai/settings/usage to purchase on-demand usage or turn on auto-reload. (trace ID: d31e8f90c6526b15d4bd0a95258d4b23)"
+    },
+    {
+      "coordinator": "ChousaR26R",
+      "timestamp": "2026-10-21T13:07:50.025Z",
+      "provider": "openai-codex",
+      "model": "gpt-6.1-sol",
+      "last_error": "Codex error event: This content was flagged for possible cybersecurity risk. If this seems wrong, try rephrasing your request. Otherwise, confirm that the access_programs.cyber parameter is set to the appropriate tier, and note that some cybersecurity requests are still limited, even when Daybreak is on. (code=cyber_policy)"
+    },
+    {
+      "coordinator": "ChousaR26R2",
+      "timestamp": "2026-10-21T13:02:37.909Z",
+      "provider": "anthropic",
+      "model": "claude-opus-5-5",
+      "last_error": "429 {\"type\":\"error\",\"error\":{\"type\":\"rate_limit_error\",\"message\":\"This request would exceed your account's rate limit. Please try again later.\"},\"request_id\":\"req_011CgFRjrJ1yiwmmEXaBt3aA\"} retry-after-ms=6442000"
+    }
+  ]
+}

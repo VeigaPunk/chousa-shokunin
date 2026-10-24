@@ -1,0 +1,40 @@
+# r24 --json delimiter demo — run from the lane root; landed gate 752e4e38…, pre-round gate b5d0f93d… (run as tools/.gate-pre-r24.sh, removed after)
+## counting command
+# r24 counting command: append to a manifest whose last byte is not '\n'
+T=$(mktemp -d); printf '{"prior":true}' >"$T/m.jsonl"
+bash tools/research-gate.sh verify-all corpus/fixtures/full-r6.md --json "$T/m.jsonl" --root . >/dev/null 2>&1
+python3 -c 'import json,sys
+L=[l for l in open(sys.argv[1]).read().splitlines() if l.strip()]
+bad=0
+for l in L:
+    try: json.loads(l)
+    except Exception: bad+=1
+print("MANIFEST_LINES=%d INVALID_JSON_LINES=%d" % (len(L), bad))' "$T/m.jsonl"; rm -rf "$T"
+## before (pre-round gate b5d0f93d…)
+MANIFEST_LINES=1 INVALID_JSON_LINES=1
+## after (landed gate 752e4e38…)
+MANIFEST_LINES=2 INVALID_JSON_LINES=0
+## controls (landed gate): last byte → result
+none: lines=2 blank_lines=0 stderr_bytes=0 first_24_bytes= { " p r i o r " : t r u e } \n { " s c h e m a " 
+cr: lines=2 blank_lines=0 stderr_bytes=0 first_24_bytes= { " p r i o r " : t r u e } \r \n { " s c h e m a 
+nul: lines=2 blank_lines=0 stderr_bytes=0 first_24_bytes= { " p r i o r " : t r u e } \0 \n { " s c h e m a 
+empty: lines=1 blank_lines=0 stderr_bytes=0 first_24_bytes= { " s c h e m a " : " c h o u s a - v e r i f y 
+nl: lines=2 blank_lines=0 stderr_bytes=0 first_24_bytes= { " p r i o r " : t r u e } \n { " s c h e m a " 
+## controls (landed gate): non-empty write-only manifest (mode 0200)
+exit=2 stderr1=research-gate: manifest unreadable: /tmp/tmp.9qY7yQlM7E/m.jsonl (--json; its last byte decides the delimiter)
+manifest bytes after:  { " p r i o r " : t r u e } 
+## concurrency (named debt, not fixed): 16 parallel appenders x 3 runs onto an unterminated manifest
+run=1 appenders=16 objects=16 blank_lines=0 glued_lines=0
+run=2 appenders=16 objects=16 blank_lines=0 glued_lines=0
+run=3 appenders=16 objects=16 blank_lines=1 glued_lines=0
+## mutants (m1=edited m2=edited m3=edited) — selftest on each full lane copy
+### m1
+FAIL-case json-unterminated-manifest   manifest-lines=1/2 schema-not-own-line prior-line-altered json-invalid 
+FAIL-case json-nul-terminated-manifest manifest-lines=1/2 schema-not-own-line 
+RESEARCH_GATE_SELFTEST: FAIL (2/136 cases)
+### m2
+FAIL-case json-nul-terminated-manifest manifest-lines=1/2 schema-not-own-line 
+RESEARCH_GATE_SELFTEST: FAIL (1/136 cases)
+### m3
+FAIL-case json-unreadable-manifest     rc=0/2 manifest-lines=1/0 prior-line-altered json-invalid missing:'manifest unreadable' 
+RESEARCH_GATE_SELFTEST: FAIL (1/136 cases)

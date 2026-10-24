@@ -1537,3 +1537,18 @@ wave-4 quarantine-first) and made NO external fetch (fetch-scope L0 `8d77e6c1` o
   register's own class column was shown to be unreliable and the lane's rule now checks
   the capture's FORM); discernment unchanged — the admit/reject sample still has no
   non-author spot-check. No tool installs, no pacman transactions, no egress.
+
+## Round 43 — absent-class split and one local search-log adoption (2026-10-24)
+
+Three claims, frozen in `corpus/evidence/round43/claims.md` before any seat scored.
+No external fetch (L0 `8d77e6c1` open). The round-42 spot-check's routed repairs are
+the motive: the absent-class split, the wave-completion rule, the inherited
+working-tree disposition, the register-staleness L0, the 265/267 erratum, and the
+S077 collision handled by document.
+
+- **C1 operability** (lowest scored axis, 3/10): `tools/absent-split.py` splits the 15 round-42 `absent` rows into `misquote` (ratio ≥ 1/2) and `not-carried`. `c1-count.py` → 15/15, both classes nonempty (9 and 6), reproducible, exit 0. Missing-tool control exits 1.
+- **C2 calibration**: an independent recompute agrees 15/15. Flipping S086 scores 14/15 and exits 1.
+- **C3 depth**, sourced on S078: `corpus/knowledge/search-log-method-r39.md` cites the Europe PMC capture opened this round. The quote is in the capture. Staged S118 was re-pointed to S078 by URL, not by arithmetic. `c3-count.py` exit 0; missing-entry control exits 1.
+- Rejected, with flip: `search-log-fields-r36.md` (staged S077 capture is a 267-byte / 265-character bot wall) and `search-tracking-record-r40.md` (column sentence not contiguous). Scratch census on the mirrored registry plus the S078 row exited 0 before the append. Collision guard: indented `  | S118 |` is caught; column-zero pattern misses it. Real collision is S077 only.
+- QUALITY 61 mined from `considerthese/2026-10-24.md`: a validated spec is not a completed dispatch. Append-only erratum on the 265/267 nit in `corpus/lessons/round-42.md`; the r42 sentences are not rewritten.
+- Inherited debt, deliberate: `PROVINCE.md` mode restored to 644 (content unchanged). Prior-wave registries, r41 `cells.json`, and untracked r40/r41 seat reports left untouched and named; they are not this round's work. Register staleness routed by L0; the register was not edited.

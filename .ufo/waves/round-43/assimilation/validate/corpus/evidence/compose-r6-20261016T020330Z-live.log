@@ -1,0 +1,168 @@
+# chousa-shokunin round-6 receipt — live composed runs on all three fixtures + absent-section rule + cross-round stability + zero network
+# utc: 2026-10-16T02:05:29Z
+# seat: receipts-writer | lane: chousa-shokunin | round: 6 (operability/composition move: verify-all composes one verdict + --json manifest)
+# lane head: 1d1f56c | gate: tools/research-gate.sh sha256=0c3d51ed1a131146ac33eebf24eefe5830ecaaf3e59a1b03e6c91cd8debfd5f8
+# before-state gate: tools/research-gate.sh sha256=55adb92d0ba5ac958907fac6c4d5d6b0b50129703e866a5befbd9a32789f2ff2 (round-5 revision, lane HEAD; verify-all absent)
+# fixtures:
+#   878c2c50ec9efba5a103644bbc002a7029c9cbead9b95ec369913760d158212a  corpus/fixtures/full-r6.md
+#   0f7e498cf1f6f6192a2660b14e41a025dbf47972d3c37ffd414df008bb6b320f  corpus/fixtures/full-r6-broken.md
+#   39cdb2d727c5f2e26093c7099f501ab21a8fae6ac9d2fa458161614ad4953d6c  corpus/fixtures/full-r6-absent.md
+#   45eb6ac2cde9e3c33dd4d753e4da2cb660308dad8f00475a382a2881b89ddc40  corpus/fixtures/full-r6.claims.jsonl
+#   45eb6ac2cde9e3c33dd4d753e4da2cb660308dad8f00475a382a2881b89ddc40  corpus/fixtures/full-r6-broken.claims.jsonl
+#   f56ef337aa41137af6db3624066947d29bcf4364a228dfdcdc8cc0e701646216  corpus/fixtures/full-r6.README.md
+# manifest: corpus/evidence/verify-all-manifest.jsonl
+# method: machine-cut by /home/vgpnk/.cache/chousa-r6-evidence/cut-receipts.sh + assemble-receipts.sh; stdout verbatim (the gate prints its own ts=); local files only; no network
+# scope: verify-all full/broken/absent, the omission probe, the --claims binding, cross-round byte-stability, the r1 archive observable, and strace
+
+## composed verify-all — canonical
+
+## command: bash tools/research-gate.sh verify-all corpus/fixtures/full-r6.md --root ..
+exit: 0
+
+research-gate research-gate-r1 — ts=2026-10-16T02:04:00Z — mode=verify-all — record=corpus/fixtures/full-r6.md — claims=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/fixtures/full-r6.claims.jsonl — root=..
+SECTION structure state=run verdict=CLEAN findings=0 drift=0
+SECTION claims state=run verdict=CLEAN findings=0 drift=0 tally=VERDICT_BEARING_CLAIMS=3/3
+SECTION chain state=run verdict=CLEAN findings=0 drift=0 tally=RESOLVED_HOPS=3/3
+SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/2 REJECTIONS_OK=2/2
+VERIFY_ALL sections=4 run=4 absent=0 drift-sections=0 findings=0 drift=0
+RESEARCH_GATE: CLEAN (sections=4 run=4 absent=0 drift-sections=0 findings=0 drift=0)
+
+## composed verify-all — broken twin
+
+## command: bash tools/research-gate.sh verify-all corpus/fixtures/full-r6-broken.md --root ..
+exit: 1
+
+research-gate research-gate-r1 — ts=2026-10-16T02:04:02Z — mode=verify-all — record=corpus/fixtures/full-r6-broken.md — claims=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/fixtures/full-r6-broken.claims.jsonl — root=..
+SECTION structure state=run verdict=CLEAN findings=0 drift=0
+SECTION claims state=run verdict=CLEAN findings=0 drift=0 tally=VERDICT_BEARING_CLAIMS=3/3
+SECTION chain state=run verdict=DRIFT findings=1 drift=1 tally=RESOLVED_HOPS=2/3
+FINDING CHAIN_ANCHOR_NOT_FOUND severity=warn surface=chain obs=hop=2 source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"Track five axes separately: task competence, retention, evid" nearest_line=57 context=The strongest design implication is to make knowledge changes—not agent self-a
+SECTION sweeps state=run verdict=DRIFT findings=1 drift=1 tally=VERIFIED_SWEEPS=1/2 REJECTIONS_OK=1/2
+FINDING SWEEP_REJECTION_INCOMPLETE severity=warn surface=sweeps obs=id=R2 missing=flip
+VERIFY_ALL sections=4 run=4 absent=0 drift-sections=2 findings=2 drift=2
+RESEARCH_GATE: DRIFT (sections=4 run=4 absent=0 drift-sections=2 findings=2 drift=2)
+
+## composed verify-all — omission probe
+
+## command: bash tools/research-gate.sh verify-all corpus/fixtures/full-r6-absent.md --root ..
+exit: 0
+
+research-gate research-gate-r1 — ts=2026-10-16T02:04:05Z — mode=verify-all — record=corpus/fixtures/full-r6-absent.md — claims=- — root=..
+SECTION structure state=run verdict=CLEAN findings=0 drift=0
+SECTION claims state=absent
+SECTION chain state=run verdict=CLEAN findings=0 drift=0 tally=RESOLVED_HOPS=1/1
+SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=0/0 REJECTIONS_OK=1/1
+VERIFY_ALL sections=4 run=3 absent=1 drift-sections=0 findings=0 drift=0
+RESEARCH_GATE: CLEAN (sections=4 run=3 absent=1 drift-sections=0 findings=0 drift=0)
+
+## solo structure mode on the omission probe
+
+## command: bash tools/research-gate.sh verify corpus/fixtures/full-r6-absent.md --root ..
+exit: 0
+
+research-gate research-gate-r1 — ts=2026-10-16T02:03:55Z — mode=verify — record=corpus/fixtures/full-r6-absent.md
+RESEARCH_GATE: CLEAN (findings=0 drift=0 questions=1 sources=1 chains=1 claims=1 negatives=0 rejections=1 approvals=1)
+
+## solo chain mode on the omission probe
+
+## command: bash tools/research-gate.sh verify-chain corpus/fixtures/full-r6-absent.md --root ..
+exit: 0
+
+research-gate research-gate-r1 — ts=2026-10-16T02:03:58Z — mode=chain — record=corpus/fixtures/full-r6-absent.md
+CHAIN hop=1 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"I could not substantiate this spelling as an established art" at=line:64 verdict=match
+RESOLVED_HOPS=1/1
+RESEARCH_GATE: CLEAN (hops=1 verified=1 exempt=0 anchor-missing=0 refused=0 invalid=0 findings=0 drift=0)
+
+## solo sweeps mode on the omission probe
+
+## command: bash tools/research-gate.sh verify-sweeps corpus/fixtures/full-r6-absent.md --root ..
+exit: 0
+
+research-gate research-gate-r1 — ts=2026-10-16T02:03:59Z — mode=sweeps — record=corpus/fixtures/full-r6-absent.md
+REJECTION id=R1 ref=research/README.md:12 reason=present flip=present observed=complete verdict=match
+VERIFIED_SWEEPS=0/0 REJECTIONS_OK=1/1
+RESEARCH_GATE: CLEAN (sweeps=0 verified=0 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=1 findings=0 drift=0)
+
+## omission rule as composed
+
+== absent: composed SECTION lines ==
+SECTION structure state=run verdict=CLEAN findings=0 drift=0
+SECTION claims state=absent
+SECTION chain state=run verdict=CLEAN findings=0 drift=0 tally=RESOLVED_HOPS=1/1
+SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=0/0 REJECTIONS_OK=1/1
+== absent: composed summary ==
+VERIFY_ALL sections=4 run=3 absent=1 drift-sections=0 findings=0 drift=0
+RESEARCH_GATE: CLEAN (sections=4 run=3 absent=1 drift-sections=0 findings=0 drift=0)
+== absent: solo summaries to compare ==
+RESEARCH_GATE: CLEAN (findings=0 drift=0 questions=1 sources=1 chains=1 claims=1 negatives=0 rejections=1 approvals=1)
+RESOLVED_HOPS=1/1
+RESEARCH_GATE: CLEAN (hops=1 verified=1 exempt=0 anchor-missing=0 refused=0 invalid=0 findings=0 drift=0)
+VERIFIED_SWEEPS=0/0 REJECTIONS_OK=1/1
+RESEARCH_GATE: CLEAN (sweeps=0 verified=0 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=1 findings=0 drift=0)
+
+## the --claims binding (all four sections run CLEAN)
+
+## command: bash tools/research-gate.sh verify-all corpus/fixtures/full-r6.md --claims corpus/fixtures/full-r6.claims.jsonl --root ..
+exit: 0
+
+research-gate research-gate-r1 — ts=2026-10-16T02:04:06Z — mode=verify-all — record=corpus/fixtures/full-r6.md — claims=corpus/fixtures/full-r6.claims.jsonl — root=..
+SECTION structure state=run verdict=CLEAN findings=0 drift=0
+SECTION claims state=run verdict=CLEAN findings=0 drift=0 tally=VERDICT_BEARING_CLAIMS=3/3
+SECTION chain state=run verdict=CLEAN findings=0 drift=0 tally=RESOLVED_HOPS=3/3
+SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/2 REJECTIONS_OK=2/2
+VERIFY_ALL sections=4 run=4 absent=0 drift-sections=0 findings=0 drift=0
+RESEARCH_GATE: CLEAN (sections=4 run=4 absent=0 drift-sections=0 findings=0 drift=0)
+
+## before-state (round-5 gate snapshot, sha256 55adb92d0ba5ac958907fac6c4d5d6b0b50129703e866a5befbd9a32789f2ff2)
+
+## command: bash gate-r5-55adb92d.sh verify corpus/fixtures/full-r6-broken.md --root ..   (round-5 gate)
+exit: 0
+
+research-gate research-gate-r1 — ts=2026-10-16T02:04:38Z — mode=verify — record=corpus/fixtures/full-r6-broken.md
+RESEARCH_GATE: CLEAN (findings=0 drift=0 questions=1 sources=4 chains=3 claims=3 negatives=2 rejections=2 approvals=1)
+
+## command: bash gate-r5-55adb92d.sh verify-all corpus/fixtures/full-r6.md --root ..   (round-5 gate)
+exit: 2  stdout_bytes=0
+stderr_first: research-gate: multiple record paths
+
+## cross-round no-harm (prior fixtures through the r5 gate vs the r6 gate, same bytes, frozen clock)
+
+== prior modes through the round-5 gate vs the round-6 gate, same fixture bytes, frozen clock (CHOUSA_NOW_EPOCH=1760000000), stdout raw ==
+claims17   r5 exit=0 r6 exit=0 stdout byte-identical: YES
+chain      r5 exit=0 r6 exit=0 stdout byte-identical: YES
+chainbrk   r5 exit=1 r6 exit=1 stdout byte-identical: YES
+sweeps     r5 exit=0 r6 exit=0 stdout byte-identical: YES
+sweepsbrk  r5 exit=1 r6 exit=1 stdout byte-identical: YES
+archiveA   r5 exit=1 r6 exit=1 stdout byte-identical: YES
+
+== the round-5 receipt's own cross-round lines for the digest-ref modes (its compare; raw r4 stdout lived in seat scratch) ==
+byte-stable after ts normalization: YES
+byte-stable after ts normalization: YES
+byte-stable after ts normalization: YES
+byte-stable after ts normalization: YES
+byte-stable after ts normalization: YES
+byte-stable after ts normalization: YES
+
+## round-1 archive observable through the r6 gate
+
+VERDICT_BEARING_EXPORTS=3/3
+
+## setup/usage controls
+
+ctl-json-missing-dir exit=2 stdout_bytes=0 stderr_first=research-gate: manifest directory not found: /nonexistent-dir (--json)
+ctl-json-dir-as-file exit=2 stdout_bytes=0 stderr_first=research-gate: manifest path is not a regular file: /home/vgpnk/.cache/chousa-r6-evidence/out (--json)
+ctl-missing-record exit=2 stdout_bytes=0 stderr_first=research-gate: record not found: corpus/fixtures/no-such-r6.md
+ctl-no-record exit=2 stdout_bytes=0 stderr_first=research-gate: record path required (verify-all RECORD, --record, or CHOUSA_RECORD)
+ctl-missing-claimsfile exit=2 stdout_bytes=0 stderr_first=research-gate: claims file not found: /home/vgpnk/.cache/chousa-r6-evidence/out/nope.jsonl (--claims)
+
+## zero-network check: strace -f -e trace=network around the composed positive run
+
+trace lines: 4237
+network syscall lines: 0
+
+## honest boundary notes
+
+- the composed run shells out to the same CLI paths (bash "$SELF" <mode>), so a section tally IS that solo mode tally by construction; the receipts also measure each solo mode separately for the reader to compare.
+- an absent section is reported state=absent and never drifts by itself; the omission rule is the round-6 claim and its limit (a Chain-less record cannot compose CLEAN) is the named r7 candidate.
+- a section that cannot be run inside verify-all (rc outside 0/1 or a summary the parser cannot read) is FINDING VERIFY_ALL_SECTION_UNAVAILABLE severity=crit and drifts the composition; not exercised by these fixtures.
+- manifest lines append with >> (no rewrite path); a replayed line is information, not deduplicated — replay handling is not part of this round.

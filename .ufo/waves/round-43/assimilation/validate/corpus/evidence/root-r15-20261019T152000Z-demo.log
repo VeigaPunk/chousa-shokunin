@@ -1,0 +1,12 @@
+=== BEFORE: pre-round gate (aabf7f4) CHOUSA_ROOT=/ verify-claims /etc/hostname ===
+research-gate v2 — ts=1970-01-01T00:00:00Z — mode=claims — claims=/tmp/r15-demo-claims.jsonl
+CLAIM id=R2 expected=supported observed=refused source=/etc/hostname at=- verdict=refused
+FINDING CLAIM_SOURCE_OUT_OF_CORPUS severity=crit surface=claims obs=id=R2 source=/etc/hostname obs=resolved=/etc/hostname outside allowed roots
+VERDICT_BEARING_CLAIMS=0/1
+RESEARCH_GATE: DRIFT (claims=1 supported=0 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=1 invalid=0 findings=1 drift=1)
+
+=== AFTER: landed gate CHOUSA_ROOT=/ verify-claims /etc/hostname ===
+research-gate v2 — ts=1970-01-01T00:00:00Z — mode=claims — claims=/tmp/r15-demo-claims.jsonl
+CLAIM id=R2 expected=supported observed=supported source=/etc/hostname at=line:1 verdict=match
+VERDICT_BEARING_CLAIMS=1/1
+RESEARCH_GATE: CLEAN (claims=1 supported=1 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)

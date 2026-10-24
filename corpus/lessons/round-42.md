@@ -147,3 +147,7 @@ parser accepts; the collision is recorded in the round report and in the L0 note
 round appends no staged row, so the collision is a future adoption-time renumbering
 matter (the package's ids shift by one and every adopted citation is re-pointed BY
 DOCUMENT, never by arithmetic).
+
+## Erratum — 2026-10-24, round 43 (append-only; the sentences above are not rewritten)
+
+The S077 capture `.qcache/01f657b3d0ab045c494b3f92.txt` is 267 bytes and 265 Unicode characters. The "265-char" wording above matches the decoded length. The spot-check's "267 bytes" matches `wc -c`. Neither number corrects the other. A later reader should cite both.
