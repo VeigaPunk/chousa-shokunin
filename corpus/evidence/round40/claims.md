@@ -39,3 +39,8 @@ C1 changes only the receipt evidence set and its active-manifest verification; i
 ## Sourced-claim binding
 
 C1's supporting knowledge entry will cite a source row opened this round (planned row `S074`, official Python `hashlib` documentation) and the committed r39 verifier behavior. The source row and its located quote are recorded in `corpus/lessons/round-40.md` `## Gate`.
+
+## Errata (append-only; frozen predicates unchanged)
+
+- The sourced-claim paragraph above initially named planned row S074. `corpus/SOURCES.md` already carries S059 for the same Python `hashlib` page and digest-input scope; this round re-opened S059 and uses it for the knowledge entry. S074 is retained as a rejected duplicate-row proposal with an explicit flip condition. The C1 predicate and both frozen counters are unchanged.
+

@@ -1035,6 +1035,8 @@ override-honoured and relative-refusal witnesses, the loader scrub (`LD_PRELOAD`
 on sha256sum), `verifier_sha256`/`subject_counter_sha256` receipt binding (demonstrated live
 twice), the refusal-label re-derivation, the SimpCounters dead-field deletions, the
 spans-≥-32768 debt, and the metadata-screener locale seam.
+Round 40 advanced one narrow frontier subground: expectation-file digest identity. The r39 verifier rejected receipts whose expectation rows still tied but whose `expect_sha256` named older bytes; three active c1 measurements were reissued against the committed table, and the superseded draft stayed excluded. `knowledge/receipt-expectation-digests-r40.md` records the distinction and limits, citing the re-opened S059. This is evidence-provenance method, not a new gate mode or claim-truth proof.
+
 
 | Entry | What it holds | Evidence |
 |---|---|---|
@@ -1054,3 +1056,4 @@ spans-≥-32768 debt, and the metadata-screener locale seam.
 | `knowledge/receipt-binding-r38.md` | Round-38 note: receipts bind pre==post gate hashes, counter/expect/receipt digests, verified by a census-tied verifier; the wave-1 kills it closed; integrity-and-self-consistency, NOT authorship (the F2 residual, verify side) | `S073` (supersedes S070); `evidence/round38/claims.md`; `evidence/round38/receipts/c2-*.json` |
 | `knowledge/capture-bash-pin-r39.md` | Round-39 note: the capture grandchild and the verify-all section children run through ONE pinned absolute `bash` (override + `BASH_PROVENANCE` refusal); the three pinned call sites; 7/8 → 8/8 with the base and PATH-`env`-mutant discrimination controls; limits (sibling bare names, loader env, noexec) | `S071` (re-opened 2026-10-24), `S072`; `evidence/round39/claims.md`; `evidence/round39/receipts/c1-*.json` |
 | `knowledge/receipt-verifier-subject-r39.md` | Round-39 note: receipts bind `verifier_sha256` + `subject_counter_sha256`, re-derived by the verifier with named refusals; the r38 pipeline as before-state control; the three vacuous-fixture self-catches and their fixes (QUALITY 56) | `evidence/round39/claims.md`; `evidence/round39/receipts/c2-*.json`; `lessons/round-39.md` |
+| `knowledge/receipt-expectation-digests-r40.md` | Round-40 note: a receipt's `expect_sha256` binds exact expectations-file bytes, not only scenario rows; the three regenerated c1 receipts and superseded draft disposition; hash identity does not establish authorship or semantic truth | `S059` (re-opened 2026-10-24); `evidence/round40/claims.md`; `.ufo/waves/round-40/controls/r1-stale-before.txt`; `evidence/round40/c1-count.py` |

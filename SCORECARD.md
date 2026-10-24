@@ -2251,3 +2251,11 @@ C2. Round 40 candidates: the `mktemp`/`sed` bare names in the capture path;
 the loader scrub (`env -u LD_PRELOAD …`); the refusal-label re-derivation in
 verify; the argv-witness dead fields; the metadata-screener locale seam; the
 spans-≥32768 debt.
+
+## Round 40 — closure corrections to r39 (R2–R5)
+
+- R2: the committed `c1-mutenv-s39003.json` is a superseded draft, not an uncommitted file; r39's “six receipts” count omits it. See `corpus/evidence/round40/routed-defect-dispositions.json`.
+- R3: the r39 report's knowledge count `29 → 31` is superseded by the historical `50 → 52` count re-derived in `corpus/evidence/round39/claims.md`.
+- R4: not reproduced from the committed r39 spec, plan, and report: each reports reviewer 6 / revenger 2. The contrary 8/0 statement remains attributed to the spot-check; no source artifact is rewritten.
+- R5: the r39 phrase “two independent runners” is superseded. The frozen claim design records two seeds as L1 construction runs; the prepared wave was not dispatched by this seat. Correct wording: **two seeds, both L1 construction runs**.
+

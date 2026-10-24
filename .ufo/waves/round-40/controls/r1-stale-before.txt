@@ -1,0 +1,16 @@
+# R1 red-before receipt verification — round 40
+
+The lane's committed round-39 expectations file hashes to `01cbdc3a8208a257e2b0ea4304c87a6d74be313a722cf667c5d126a4c29c583a`. The four committed c1 receipts below bind `3abd2dcb1766c404228cf3929024856240a93ea374760ab77a390b92c3fb6480`.
+
+Command (lane root; exact gate/counter per receipt):
+```
+for b in c1-base-s39001.json c1-after-s39011.json c1-mutenv-s39003.json c1-mutenv-s39013.json; do case "$b" in c1-base-s39001.json) g=.ufo/waves/round-39/controls/base-gate-r39.sh;; c1-mutenv-s39003.json) g=tools/research-gate.sh;; c1-mutenv-s39013.json) g=.ufo/waves/round-39/controls/mut-gate-path-env.sh;; *) g=tools/research-gate.sh;; esac; r=corpus/evidence/round39/receipts/$b; out=$(python3 corpus/evidence/round39/verify-receipts.py --receipt "$r" --gate "$g" --counter corpus/evidence/round39/c1-count.py --expectations corpus/evidence/round39/expectations.jsonl 2>&1); rc=$?; printf '%s rc=%s %s\n' "$b" "$rc" "$out"; done
+```
+Observed output:
+```
+c1-base-s39001.json rc=1 VERIFY-FAIL: expect-sha256-mismatch
+c1-after-s39011.json rc=1 VERIFY-FAIL: expect-sha256-mismatch
+c1-mutenv-s39003.json rc=1 VERIFY-FAIL: counter-sha256-mismatch
+c1-mutenv-s39013.json rc=1 VERIFY-FAIL: expect-sha256-mismatch
+```
+The fourth file also carries the stale expectation digest, but the verifier refuses first on its uncommitted counter binding. It is preserved as a superseded drafting receipt (R2), not regenerated. The other three stale active measurements were regenerated at round-40 paths against the committed expectation file; the original r39 receipts remain unchanged.
