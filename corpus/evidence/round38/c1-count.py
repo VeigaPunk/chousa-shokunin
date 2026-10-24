@@ -229,6 +229,10 @@ def main():
         print("c1-count: expectations missing for: %s" % ", ".join(missing),
               file=sys.stderr)
         return 2
+    # Hash the frozen table BEFORE the scenarios run and require it unchanged
+    # afterwards: the receipt must bind the bytes the scenarios actually
+    # scored, not a table edited mid-run (SentScope finding 2).
+    expect_sha = sha256_file(EXPECTATIONS)
 
     work = tempfile.mkdtemp(prefix="chousa-r38-c1-", dir=base_tmp)
     try:
@@ -246,6 +250,11 @@ def main():
                       % gate_sha_pre[:16], file=sys.stderr)
                 return 2
         gate_sha_post = sha256_file(gate)
+        if sha256_file(EXPECTATIONS) != expect_sha:
+            print("c1-count: expectations changed across the run "
+                  "(pre %s != current) — no receipt published"
+                  % expect_sha[:16], file=sys.stderr)
+            return 2
     finally:
         shutil.rmtree(work, ignore_errors=True)
 
@@ -265,7 +274,7 @@ def main():
             "counter": os.path.relpath(__file__),
             "counter_sha256": sha256_file(os.path.abspath(__file__)),
             "expectations": os.path.relpath(EXPECTATIONS),
-            "expect_sha256": sha256_file(EXPECTATIONS),
+            "expect_sha256": expect_sha,
             "seed": args.seed,
             "gate": gate,
             "gate_sha256": gate_sha_pre,

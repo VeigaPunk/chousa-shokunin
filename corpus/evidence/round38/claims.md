@@ -241,3 +241,16 @@ counters hard-check the frozen 7 total so an edited-to-6 table cannot print a
 passing 6/6 (RevClaimsC1 finding 1). The frozen P1/P2 sentences and counting
 commands are unchanged; every erratum above names the wave-1 finding that
 motivated it.
+
+**Erratum 8 (wave-1, SentScope, closed).** (a) The c2 self-rewrite fixture
+interpolated the caller's gate path into shell source unquoted — a gate
+filename containing shell syntax executed as the counter user during scoring;
+every interpolated path is now shlex-quoted. (b) Both counters now hash the
+frozen expectation table BEFORE the scenarios and refuse with no receipt if it
+changes across the run — the receipt binds the bytes the scenarios actually
+scored, closing the measured-expectation/receipt-binding race. (c) The
+sentinel's synthetic zero-execution receipt verified by design: verification
+certifies integrity and self-consistency against committed bytes, NOT
+execution authorship (Erratum 2's narrowed reading); the r37 knowledge docs'
+stale "7/7 on every committed receipt" wording (receipt-audit finding L1) was
+corrected in both files.
