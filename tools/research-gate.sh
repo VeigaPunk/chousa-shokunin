@@ -306,6 +306,81 @@ VERSION=v2
 # variable nor partially searched. 8 MiB = 8388608; the boundary is
 # inclusive (size == cap reads; size == cap+1 refuses).
 SOURCE_READ_MAX_BYTES=$((8 * 1024 * 1024))
+
+# ---- capture-tool pins (round-41 C1) ---------------------------------------
+# The canonical pin/drift capture (gate_canonical_capture, gate_pin_fixture,
+# gate_drift_normalize, gate_drift_scan, gate_drift_report) and the gate's own
+# startup (SELF readlink/dirname, TS_UTC date) resolved core names through
+# PATH: the round-41 instrumentation run counted 20 PATH-resolved calls across
+# one --pin + one --drift (parent: cat/date/dirname/mktemp/mkdir/readlink/rm/
+# sed/sort; child: cat/date/dirname/head/od/readlink/sed/stat/tr/wc). A PATH
+# shim could suppress normalization sed (unmasked volatile fields drifting),
+# return a pre-seeded mktemp dir, poison the fixture via cat, skip rm cleanup,
+# or reorder the drift report's sort. Every name below resolves to ONE pinned
+# absolute binary verified GNU-reporting at startup — before SELF resolves —
+# and every call site keeps its spelling through a bash function wrapper
+# (the grep-pin pattern): an override RESEARCH_GATE_<NAME> must be absolute
+# and pass the same version check; an unverifiable pin is refused (exit 2,
+# <NAME>_PROVENANCE) before any record is read. stat is coreutil-keyed but
+# probe-optional: absent from GNU coreutils --version it still verifies by its
+# own --version string. Named limit: a caller-exported BASH_FUNC_<name> could
+# still interpose inside shells; the captured child's PATH and loader scrub
+# are handled in gate_canonical_capture.
+CAPTOOL_BIN_=''
+declare -A CAPTOOL_BIN=()
+declare -A CAPTOOL_SRC=()
+CAPTOOL_NAMES=(mktemp sed mkdir cat rm sort readlink dirname date tr wc od head stat)
+captool_probe_key() { # NAME -> version-regex a real GNU build self-reports
+  case "$1" in sed) printf 'GNU sed' ;; *) printf 'GNU coreutils' ;; esac
+}
+captool_refuse() { # NAME REASON [CANDIDATE]
+  printf 'research-gate: %s_PROVENANCE refused: %s (candidate=%s)\n' \
+    "${1^^*}" "$2" "${3:-<none>}" >&2
+  exit 2
+}
+captool_verify() { # NAME PATH -> rc0 when the binary reports its GNU lineage
+  local name=$1 cand=$2 v to=''
+  [[ -f $cand && -x $cand ]] || return 1
+  if [[ -x /usr/bin/timeout ]]; then to=/usr/bin/timeout
+  elif [[ -x /bin/timeout ]]; then to=/bin/timeout; fi
+  if [[ -n $to ]]; then v=$("$to" 10 "$cand" --version 2>/dev/null || true)
+  else v=$("$cand" --version 2>/dev/null || true); fi
+  v=${v%%$'\n'*}
+  case "$v" in *"$(captool_probe_key "$name")"*) return 0 ;; esac
+  return 1
+}
+captool_define() { # NAME BIN — wrapper through the pinned absolute path
+  eval "$1() { \"$2\" \"\$@\"; }" 2>/dev/null
+}
+captool_pin_init() {
+  local name up ovn cand c ok
+  for name in "${CAPTOOL_NAMES[@]}"; do
+    up=${name^^*}; ovn=RESEARCH_GATE_$up
+    cand=''
+    if [[ -n ${!ovn:-} ]]; then
+      cand=${!ovn}
+      CAPTOOL_SRC[$name]=override
+      case "$cand" in /*) ;; *) captool_refuse "$name" "override is not an absolute path" "$cand" ;; esac
+      [[ -f $cand ]] || captool_refuse "$name" "override is not a regular file" "$cand"
+      [[ -x $cand ]] || captool_refuse "$name" "override is not executable" "$cand"
+      captool_verify "$name" "$cand" \
+        || captool_refuse "$name" "override does not report $(captool_probe_key "$name")" "$cand"
+    else
+      CAPTOOL_SRC[$name]=default
+      for c in /usr/bin/$name /bin/$name; do
+        if captool_verify "$name" "$c"; then cand=$c; break; fi
+      done
+      [[ -n $cand ]] || captool_refuse "$name" \
+        "no $(captool_probe_key "$name") at /usr/bin/$name or /bin/$name (set $ovn to an absolute path)" ''
+    fi
+    if ! CAPTOOL_BIN[$name]=$cand 2>/dev/null; then
+      captool_refuse "$name" "the pin variable cannot be assigned (a caller marked it readonly)" "$cand"
+    fi
+    captool_define "$name" "$cand" \
+      || captool_refuse "$name" "the pin wrapper cannot be defined" "$cand"
+  done
+}
+captool_pin_init
 SELF=$(readlink -f -- "${BASH_SOURCE[0]}" 2>/dev/null || {
   p=$0; case "$p" in /*) printf '%s' "$p" ;; *) printf '%s' "$PWD/$p" ;; esac
 })
@@ -3986,6 +4061,14 @@ GATE_BASELINE_MARKER='# --- canonical output follows ---'
 GATE_MANIFEST_MARKER='# --- json manifest line follows ---'
 
 GATE_CAP='' GATE_CAP_RC=0 GATE_CAP_NOTE='' GATE_CAP_DIR=''
+# The captured verify-all child resolves its own externals by name. Giving it
+# the caller's PATH would re-open the round-41 measured surface inside the
+# capture: the child gets ONE fixed path of standard binary dirs (override
+# RESEARCH_GATE_CAPTURE_PATH, caller's choice, not provenance-checked) and the
+# loader vars are unset so a caller LD_PRELOAD/LD_LIBRARY_PATH never reaches a
+# captured process (round-38 Erratum-1 class). BASH_FUNC_* exported functions
+# remain a named limit of the claim, not handled here.
+CAP_CHILD_PATH=${RESEARCH_GATE_CAPTURE_PATH:-/usr/bin:/bin}
 GATE_REPORT=''
 GDRIFT_KEYS=()
 declare -A GDRIFT_KEYVAL=()
@@ -4067,6 +4150,8 @@ gate_canonical_capture() { # -> GATE_CAP | GATE_CAP_RC + GATE_CAP_NOTE
   ( cd "$fx" || exit 2
     "$ENV_BIN" -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_ROOT \
       -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_GREP_PIN_ECHO -u BASH_ENV \
+      -u LD_PRELOAD -u LD_LIBRARY_PATH \
+      PATH="$CAP_CHILD_PATH" \
       "$BASH_BIN" "$SELF" verify-all record.md --claims claims.jsonl \
       --json manifest.jsonl --root . >capture.txt 2>&1 ) || rc=$?
   nv=$(grep -c '^RESEARCH_GATE: ' -- "$fx/capture.txt" 2>/dev/null || true)
@@ -6824,11 +6909,16 @@ EOF
     'reason=multilink unparsed' 'METADATA_COMPLETE=0/1'
 
   mkdir -p "$WORK/meta-stat-fail"
-  printf '#!/usr/bin/env bash\nexit 1\n' >"$WORK/meta-stat-fail/stat"
+  # Round-41: `stat` is pinned, so a PATH shim no longer reaches the call.
+  # The stat-unavailable path is simulated through the pin override: the stub
+  # reports GNU coreutils for --version (the pin accepts it) then exits 1 on
+  # every real call, which is the observable the case asserts.
+  printf '#!/usr/bin/env bash\ncase "$1" in --version) echo "stat (GNU coreutils) 9.12"; exit 0;; esac\nexit 1\n' \
+    >"$WORK/meta-stat-fail/stat"
   chmod +x "$WORK/meta-stat-fail/stat"
   metadata_case metadata-stat-unavailable "$WORK/meta-clean.md" 1 \
     'reason=stat unparsed' 'METADATA_COMPLETE=0/1' \
-    "PATH=$WORK/meta-stat-fail:$PATH"
+    "RESEARCH_GATE_STAT=$WORK/meta-stat-fail/stat"
 
   printf 'source: S001\nverified-at: 2026-10-20 checked\nrecheck: 2026-02-30\n' \
     >"$WORK/meta-invalid-date.md"

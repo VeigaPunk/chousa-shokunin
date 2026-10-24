@@ -1480,3 +1480,13 @@ frontier and the report.
 - Wave: one v1 build-and-first-falsify spec, 33 seats, validated under policy v1 (band 32–64), role mix executor 6 / reviewer 6 / critic 6 / scout 3 / scribe 3 / mutation-tester 3 / sentinel 2 / revenger 2 / connector 1 / simplifier 1. Planner seat held by the L1; bounded planning rides scout/connector items. Prepared but not dispatched by this seat; 0 returned, 0 dead. No wave 2 was prepared because wave 1 has not returned attack items. Round total: 33 prepared L2 seats + 1 L1 = 34 accounted. Evidence: `.ufo/waves/round-40/`.
 - Learning: expansion and quality improved narrowly; discernment unchanged pending a non-author admit/reject spot-check. No tool installs or pacman transactions.
 
+
+## Round 41 — capture-invocation pinning + W04 dispositions (2026-10-24)
+
+Two claims, both measured, both verified. Freeze: `corpus/evidence/round41/claims.md`.
+
+- **C1 operability** (lowest scored axis): the canonical pin/drift capture's invocation surface — parent capture functions, startup (SELF/TS_UTC), and the captured verify-all child — resolved 20 PATH-dependent calls per pin+drift (728 in pin alone; instrumentation run recorded in claims.md). All 14 observed names now pin to GNU-verified absolute binaries via the r35 wrapper pattern; the child runs under fixed `CAP_CHILD_PATH` with `LD_PRELOAD`/`LD_LIBRARY_PATH` scrubbed. Counter `corpus/evidence/round41/c1-count.py`: control `1/12` → landed `12/12` (`controls/control-before.txt`, `measure-after-c1.txt`). Selftest 275/275 after repairing `metadata-stat-unavailable` to simulate through `RESEARCH_GATE_STAT`.
+- **C2 calibration**: all five advisory W04 duplicate-URL warnings carry committed evidence-resolving dispositions (`w04-dispositions.tsv`): `0/5` → `5/5` (`controls/c2-control-before.txt`, `measure-after-c2.txt`). Advisory warnings are semantically correct (same-page distinct-section pairs including S075 on the coreutils page, required supersede row, retained rejected duplicate); contract-immutable cells mean dispositions record reason, not edits.
+- Frontier step: S075 (mktemp man) + S076 (sed man/info) opened from installed copies only — no egress; knowledge `capture-path-pin-r41.md`; QUALITY criteria 57 (access receipts) + 58 (counter revision pins) mined from r40-wave findings; four mistakes rows.
+- Round-40 wave dispositions: F1 fetch fixed in this round's seat contract (installed-file sources only); F2/F3 append-only corrections recorded in `corpus/lessons/round-41.md` (fleet side integrator-owned); worktree-vs-commit counter mismatch routed as measurement-target defect — not r40 falsification.
+- L2: 35-seat v1 wave prepared+validated (plan/run exit 0); orchestrator dispatches (host surface). 0 dispatched by this seat.

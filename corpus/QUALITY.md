@@ -479,3 +479,28 @@ the admitted entry that motivates it. Tier definitions live in
     — and each rebuilt fixture fires on its control (`4/8` mutant, `7/8` base,
     `verifier-sha256-mismatch` / `subject-counter-sha256-mismatch` refusals). —
     `lessons/round-39.md`.
+
+57. **A live-access claim carries byte evidence of the access.** "Opened", "accessed",
+    "verified-at" or a re-open cited in a Gate row is attestation unless a receipt exists:
+    committed response body/headers/status/digest, or a named committed capture re-read with
+    its sha256. A prose access date without either is unverifiable provenance — and a seat's
+    dispatch item is not operator approval for egress (the approval table is the only
+    authority). Check: for each `opened`-dated claim, name the committed bytes or committed
+    capture the read came from; a source check may re-read a committed capture and cite its
+    hash instead of fetching. Shown able to fail: round-40's "accessed 2026-10-24" for S059
+    and S074 left zero fetch receipts while the pinned body stayed dated 2026-10-23
+    (`.ufo/waves/round-40/w1/SentinelFetchScope.md` F1/F2; `ScoutHashSource.md:7,32`) —
+    a live GET executed under item-text "authorization" while L0 `8d77e6c1` stayed open. —
+    `lessons/round-41.md`.
+
+58. **A counter's measured revision is pinned inside its receipt.** A counter that grades
+    whatever tree happens to be checked out scores worktree state, not the cited commit: a
+    sibling round's in-flight edit moves the measurement without touching history. Each
+    counter accepts the measured surface explicitly (`--gate PATH`, a detached tree, or a
+    revision-pinned copy) and the receipt records which bytes were measured. Check: run the
+    counter on the cited commit's tree and on the mutable worktree; identical results are
+    required only when the worktree is clean. Shown able to fail: round-40's receipt verifier
+    scored 6/6 on committed HEAD but 2/6 on a worktree carrying round-41's in-flight edits —
+    the same counter, two truths, revision unpinned (`.ufo/waves/round-40/w1/
+    ReviewActivePopulation.md`, `ReviewReplacementBindings.md`). —
+    `lessons/round-41.md`.

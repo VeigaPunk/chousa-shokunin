@@ -1,0 +1,638 @@
+{
+  "schema": "ufo-swarm-wave-dispatch-v1",
+  "wave": "chousa-r41-w1",
+  "policy": {
+    "source": "config",
+    "maxLanes": 256,
+    "minLanes": 16,
+    "waveMinLanes": 32,
+    "waveMaxLanes": 64,
+    "declaredMaxLanes": null,
+    "hardCeiling": 256,
+    "rampBatchSize": 5,
+    "rampIntervalMs": 700,
+    "globalRunnerCeiling": 1056
+  },
+  "counts": {
+    "spawn": 35,
+    "resume": 0,
+    "total": 35
+  },
+  "registry": {
+    "schema": "ufo-swarm-registry-v1",
+    "path": ".ufo/waves/round-41/w1/swarm-registry.json",
+    "reportDir": ".ufo/waves/round-41/w1",
+    "members": {
+      "ExecC1BaseReceipt": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Run `python3 corpus/evidence/round41/c1-count.py --gate .ufo/waves/round-41/controls/base-gate-r41.sh` in /home/vgpnk/Projects/shokunin/chousa-shokunin (detached copy allowed); record CAPTURE_PIN_MATCH and confirm it differs from the committed controls/control-before.txt.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "ExecC1LandedReceipt": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Run `python3 corpus/evidence/round41/c1-count.py --gate tools/research-gate.sh` in /home/vgpnk/Projects/shokunin/chousa-shokunin; record CAPTURE_PIN_MATCH and each cell verdict; confirm receipts/cells/cells.json matches.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "ExecC2Count": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Run `python3 corpus/evidence/round41/c2-count.py` in /home/vgpnk/Projects/shokunin/chousa-shokunin; record W04_DISPOSITIONED and exit code; confirm 4/4 joins against the live census.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "ExecC2Before": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "In a copy of /home/vgpnk/Projects/shokunin/chousa-shokunin with corpus/evidence/round41/w04-dispositions.tsv removed, re-run c2-count.py; confirm W04_DISPOSITIONED=0/4 and exit 1 — the committed controls/c2-control-before.txt must match.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "ExecNoHarm": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Run in /home/vgpnk/Projects/shokunin/chousa-shokunin: `bash tools/research-gate.sh --selftest` (record PASS/case count); then the pinned no-harm battery from corpus/evidence/round39/claims.md: verify-all claims 17/17, verify-chain, broken control drift, and the three archive exports on ../research/deep-research-2026-09-28/. Report every observable verbatim.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "ExecPinDrift": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Run `bash tools/research-gate.sh --pin /tmp/r41-pin-check.txt` and `--drift /tmp/r41-pin-check.txt` in /home/vgpnk/Projects/shokunin/chousa-shokunin under a clean env; confirm GATE_PIN ok and GATE_DRIFT none, exit codes 0.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "ReviewPinTable": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Read tools/research-gate.sh captool_pin_init in /home/vgpnk/Projects/shokunin/chousa-shokunin; verify every name in CAPTOOL_NAMES gets a GNU-version probe, absolute-path override check, and <NAME>_PROVENANCE refusal before records are read. Name any name that escapes the table.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "ReviewChildPath": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Read gate_canonical_capture in /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh; verify the child env unsets LD_PRELOAD and LD_LIBRARY_PATH and sets PATH=$CAP_CHILD_PATH; check the override RESEARCH_GATE_CAPTURE_PATH is the only escape and that verify_all's own section children stay pinned.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "ReviewC1Counter": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Audit corpus/evidence/round41/c1-count.py in /home/vgpnk/Projects/shokunin/chousa-shokunin: does each of the 12 cells assert the mechanism its name claims (QUALITY criterion 52)? Name any cell whose assertion is a weaker proxy or cannot fire on the base gate.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "ReviewC2Counter": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Audit corpus/evidence/round41/c2-count.py + w04-dispositions.tsv in /home/vgpnk/Projects/shokunin/chousa-shokunin: can a TSV row pass with empty or unresolvable evidence? Does the join cover exactly the census's W04 ids? Verify the before/after receipt pair.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "ReviewFreeze": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Diff corpus/evidence/round41/claims.md against the landed tools/research-gate.sh and counters in /home/vgpnk/Projects/shokunin/chousa-shokunin: is the frozen predicate the same sentence the counters implement (kumitate r42 rule)? Flag any post-data claim-text change or any landed behavior the freeze does not name.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "ReviewSourcesRows": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Verify S075 and S076 rows in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md: 11 columns, tier/kind/status enums valid, anchor locates a ≤25-word quote in the named installed file (zcat + line numbers), sha256 cells match `sha256sum` of the files. Read the installed copies only — no network.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "CriticC1Kill": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Falsify C1 in /home/vgpnk/Projects/shokunin/chousa-shokunin: find a PATH-resolved or function-delivered external invocation reachable by the canonical capture that the pin table + fixed child PATH do not cover (BASH_FUNC_*, command -v, eval'd names, aliases). Demonstrate on the landed gate or name it a covered named limit.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "CriticC1Scope": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Attack C1's scope in /home/vgpnk/Projects/shokunin/chousa-shokunin: does the claim's 'measured surface' wording let an unmeasured tool slip in? Check the gate for external calls NOT in the r41 instrumentation trap set (cp/mv/ln/stat/find/xargs/jq/perl/awk). Each finding names call site and reachability from --pin/--drift.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "CriticC2Kill": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Falsify C2 in /home/vgpnk/Projects/shokunin/chousa-shokunin: does w04-dispositions.tsv disposition anything real, or does it only narrate? Try: rename a disposition id, empty an evidence cell, add a TSV row for a non-warned id — does c2-count.py catch each? Report which mutations pass the counter (counter-blind cells).",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "CriticSeparability": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Verify causal separability in /home/vgpnk/Projects/shokunin/chousa-shokunin: revert tools/research-gate.sh alone (use controls/base-gate-r41.sh) and confirm c2 still scores 4/4; keep gate and remove w04-dispositions.tsv and confirm c1 still scores 12/12. Any cross-dependency falsifies the claim pair.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "CriticSourcedClaim": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Attack the sourced-claim binding in /home/vgpnk/Projects/shokunin/chousa-shokunin: does corpus/knowledge/capture-path-pin-r41.md actually need S075/S076, or is it grounded only in lane-own measurement? Check each S### citation resolves to a row opened this round and teaches what the note claims.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "CriticMistakeRows": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Attack corpus/lessons/round-41.md ## Mistakes in /home/vgpnk/Projects/shokunin/chousa-shokunin: is each fix shown able to fail (CORPUS rule)? Is the W04/measurement-target entry a real mistake with evidence and captured-by, or padding?",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "ScoutTrapInventory": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scout",
+        "item": "Re-run the r41 instrumentation sweep in /home/vgpnk/Projects/shokunin/chousa-shokunin with a WIDER trap set than the committed list (add cp, mv, ln, install, awk, perl, file, join, fmt, pr, xargs, sed2, xxd): log every PATH-resolved call of one --pin and one --drift on the LANDED gate. Confirm zero marks or name new unmeasured surfaces. Local only.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "ScoutFrontierOverlap": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scout",
+        "item": "Scan sibling lane reports/SCORECARDs under /home/vgpnk/Projects/shokunin (read-only) for overlapping pin/PATH-independence work (mori pin/drift lineage, tsukuroi loader-env). Report overlaps chousa must attribute vs absorb. Local only.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "ScoutProvinceBoundary": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scout",
+        "item": "Check /home/vgpnk/Projects/shokunin/chousa-shokunin/PROVINCE.md + SKILL.md against the r41 change: does capture-invocation pinning stay inside 'claim-vs-source verification'/'this lane's own gates'? Flag any bleed into kumitate orchestration or tsukuroi loader territory.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "ScribeKnowledgeCheck": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scribe",
+        "item": "Review corpus/knowledge/capture-path-pin-r41.md in /home/vgpnk/Projects/shokunin/chousa-shokunin: provenance trio first, falsifiable limits, S075/S076/S067 citations correct, counts carry commands. List every claim in the note that lacks a resolvable pointer.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "ScribeLessonGate": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scribe",
+        "item": "Review corpus/lessons/round-41.md in /home/vgpnk/Projects/shokunin/chousa-shokunin: ## Gate records every new S-row with URL/path, access date, ≤25-word located quote; Mistakes rows have class/evidence/captured-by/fix; census before→after pasted with exit codes.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "ScribeSearchLog": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scribe",
+        "item": "Check the round-41 Search log entry in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md against CORPUS.md rule 5: question/query, where searched, date, identified/screened/included/excluded counts, exclusion reasons, stop rationale — and the 'registered hosts / open L0 fetch-scope' clause restored.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "MutatePinTable": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "mutation-tester",
+        "item": "Mutation-test the pin in /home/vgpnk/Projects/shokunin/chousa-shokunin: on a sandbox copy, delete one CAPTOOL_NAMES entry and re-run c1-count.py — the corresponding cell must FAIL. Do the same by neutering one wrapper's absolute path (point at /bin/false). Report which mutations the counter misses.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "MutateChildEnv": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "mutation-tester",
+        "item": "Mutation-test the child env in /home/vgpnk/Projects/shokunin/chousa-shokunin: remove `-u LD_PRELOAD` or revert PATH to the caller's in a sandbox copy of the gate; c1 S11/S12 must fail. If they still pass, the cells are vacuous.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "MutateC2Join": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "mutation-tester",
+        "item": "Mutation-test c2-count.py in /home/vgpnk/Projects/shokunin/chousa-shokunin: feed a census stub emitting a W04 for S999 not in the TSV; the counter must print W04_DISPOSITIONED<4 and exit 1. Feed a TSV whose evidence names a missing path; it must also fail.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "SentinelWriteScope": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "sentinel",
+        "item": "Audit the r41 diff in /home/vgpnk/Projects/shokunin/chousa-shokunin: confirm only tools/research-gate.sh, corpus/**, .ufo/waves/round-41/** changed; no fleet paths, no sibling paths, no .ufo/state or watchdog; no aggregator-owned files committed.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "SentinelFetchScope": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "sentinel",
+        "item": "Audit r41 for external egress in /home/vgpnk/Projects/shokunin/chousa-shokunin: grep the round's wave spec, counters, lesson, SOURCES rows for https?:// references and verify every source open used installed files only; flag any item whose semantics require network (the r40 ScoutHashSource class).",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "SentinelCounterPin": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "sentinel",
+        "item": "Audit commit-pinning of r41 evidence in /home/vgpnk/Projects/shokunin/chousa-shokunin: do c1-count.py/c2-count.py and the receipts name the gate path + revision they measured? Flag any receipt that can silently re-measure a different tree than the cited commit (the r40 ReviewActivePopulation class).",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "RevengerPinHistory": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "revenger",
+        "item": "Reverse-engineer the r35-r40 pin lineage in /home/vgpnk/Projects/shokunin/chousa-shokunin (grep→env→bash→sha256 pins + lessons): does the r41 table miss a previously-named sibling bare name or duplicate a mechanism the earlier pins already cover? Cite the r37/r38/r39 named-limit lists.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "RevengerW04History": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "revenger",
+        "item": "Trace the W04 warnings S051/S053/S073/S074 to their origin rounds in /home/vgpnk/Projects/shokunin/chousa-shokunin corpus/lessons and search log: is each disposition in w04-dispositions.tsv faithful to the recorded origin, or does any row rewrite history?",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "ConnectorSiblingScan": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "connector",
+        "item": "Connector scan in /home/vgpnk/Projects/shokunin (read-only): which sibling lanes pin tool invocations or run capture/drift gates (mori census lineage)? Where could chousa's CAPTOOL table be reused, and does any sibling artifact contradict the r41 mechanism? Report cross-lane evidence only.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "SimplifierAudit": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "simplifier",
+        "item": "Simplification audit of the r41 diff in /home/vgpnk/Projects/shokunin/chousa-shokunin: is the 14-name pin table minimal — any pinned name never invoked by the measured surface (pure padding)? Is the per-name override boilerplate reducible without losing a check? Report only; no edits.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      },
+      "CriticDoNothing": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Attack the do-nothing control in /home/vgpnk/Projects/shokunin/chousa-shokunin: controls/base-gate-r41.sh must be byte-identical to the pre-round gate (diff against git show). Confirm control-before.txt was produced by that control and not by an intermediate edit; any substitution falsifies the before measurement.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches"
+      }
+    }
+  },
+  "compaction": {
+    "applied": false,
+    "mechanism": null,
+    "reason": null,
+    "savedBytes": 0,
+    "payloadBytesBefore": 0,
+    "payloadBytesAfter": 0
+  },
+  "taskCall": {
+    "context": "# Goal\nchousa lane (deep-research method), round 41, one v1 build-and-first-falsify wave. Frozen claims: /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round41/claims.md. Lane repo: /home/vgpnk/Projects/shokunin/chousa-shokunin. Fleet repo /home/vgpnk/Projects/shokunin is read-only; sibling lanes and domain source trees are read-only.\n\n# Claim bindings\nC1 operability (lowest scored axis, 3/10): `python3 corpus/evidence/round41/c1-count.py --gate tools/research-gate.sh` must print `CAPTURE_PIN_MATCH=12/12`; control `.ufo/waves/round-41/controls/base-gate-r41.sh` must score `1/12`. C2 calibration: `python3 corpus/evidence/round41/c2-count.py` must print `W04_DISPOSITIONED=4/4`; the TSV is corpus/evidence/round41/w04-dispositions.tsv.\n\n# Seat contract\n- Every seat is a leaf; do not spawn, dispatch, or create background work.\n- Work read-only against committed lane artifacts; write only your own uniquely named report under /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-41/w1/. Never modify lane production files, the lane git index or jj state, /home/vgpnk/Projects/shokunin/.ufo/state, the fleet repo, or sibling repos.\n- Every `Report:` trailer path is relative to /home/vgpnk/Projects/shokunin/chousa-shokunin — write it at /home/vgpnk/Projects/shokunin/chousa-shokunin/<that path>. Use absolute paths for every other read/write.\n- Use the route assigned by the host role table at /home/vgpnk/.omp/agent/config.yml; never pass or hardcode a model.\n- NO external live-target fetches or network egress of any kind. Source re-opens read INSTALLED/committed copies only (man pages under /usr/share/man, /usr/share/info, committed capture bodies under .ufo/waves/round-31/). A seat that judges a live read necessary reports it as a finding, never performs it (round-40 ScoutHashSource lesson: a dispatch item is not an operator approval).\n- Tooling authorization: any agent may install or update a tool that helps this task or is a strict upgrade; read /home/vgpnk/.omp/agent/RULES.md first, use official sources only, and record tool/version/channel/reason in the report. Pacman transactions are PAUSED host-wide: do not run pacman -S, -Sy, -Syu, -U, or -R; use an approved non-pacman channel or file an L0 question.\n- The planner seat is the L1; the validator rejects `planner` as a swarm role. The bounded planning data-walk rides the scout and connector items.\n- Each report records the assigned attack, exact command and output, verdict, and a resolvable artifact pointer.\n- Measure against the pinned committed tree, not a mutable worktree (round-40 lesson: reviewers observed worktree-only mismatches when a sibling round's in-flight edits changed tools/research-gate.sh). Where a counter takes --gate, pass the committed path.",
+    "tasks": [
+      {
+        "name": "ExecC1BaseReceipt",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nRun `python3 corpus/evidence/round41/c1-count.py --gate .ufo/waves/round-41/controls/base-gate-r41.sh` in /home/vgpnk/Projects/shokunin/chousa-shokunin (detached copy allowed); record CAPTURE_PIN_MATCH and confirm it differs from the committed controls/control-before.txt.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/ExecC1BaseReceipt.md"
+      },
+      {
+        "name": "ExecC1LandedReceipt",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nRun `python3 corpus/evidence/round41/c1-count.py --gate tools/research-gate.sh` in /home/vgpnk/Projects/shokunin/chousa-shokunin; record CAPTURE_PIN_MATCH and each cell verdict; confirm receipts/cells/cells.json matches.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/ExecC1LandedReceipt.md"
+      },
+      {
+        "name": "ExecC2Count",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nRun `python3 corpus/evidence/round41/c2-count.py` in /home/vgpnk/Projects/shokunin/chousa-shokunin; record W04_DISPOSITIONED and exit code; confirm 4/4 joins against the live census.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/ExecC2Count.md"
+      },
+      {
+        "name": "ExecC2Before",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nIn a copy of /home/vgpnk/Projects/shokunin/chousa-shokunin with corpus/evidence/round41/w04-dispositions.tsv removed, re-run c2-count.py; confirm W04_DISPOSITIONED=0/4 and exit 1 — the committed controls/c2-control-before.txt must match.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/ExecC2Before.md"
+      },
+      {
+        "name": "ExecNoHarm",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nRun in /home/vgpnk/Projects/shokunin/chousa-shokunin: `bash tools/research-gate.sh --selftest` (record PASS/case count); then the pinned no-harm battery from corpus/evidence/round39/claims.md: verify-all claims 17/17, verify-chain, broken control drift, and the three archive exports on ../research/deep-research-2026-09-28/. Report every observable verbatim.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/ExecNoHarm.md"
+      },
+      {
+        "name": "ExecPinDrift",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nRun `bash tools/research-gate.sh --pin /tmp/r41-pin-check.txt` and `--drift /tmp/r41-pin-check.txt` in /home/vgpnk/Projects/shokunin/chousa-shokunin under a clean env; confirm GATE_PIN ok and GATE_DRIFT none, exit codes 0.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/ExecPinDrift.md"
+      },
+      {
+        "name": "ReviewPinTable",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nRead tools/research-gate.sh captool_pin_init in /home/vgpnk/Projects/shokunin/chousa-shokunin; verify every name in CAPTOOL_NAMES gets a GNU-version probe, absolute-path override check, and <NAME>_PROVENANCE refusal before records are read. Name any name that escapes the table.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/ReviewPinTable.md"
+      },
+      {
+        "name": "ReviewChildPath",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nRead gate_canonical_capture in /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh; verify the child env unsets LD_PRELOAD and LD_LIBRARY_PATH and sets PATH=$CAP_CHILD_PATH; check the override RESEARCH_GATE_CAPTURE_PATH is the only escape and that verify_all's own section children stay pinned.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/ReviewChildPath.md"
+      },
+      {
+        "name": "ReviewC1Counter",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nAudit corpus/evidence/round41/c1-count.py in /home/vgpnk/Projects/shokunin/chousa-shokunin: does each of the 12 cells assert the mechanism its name claims (QUALITY criterion 52)? Name any cell whose assertion is a weaker proxy or cannot fire on the base gate.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/ReviewC1Counter.md"
+      },
+      {
+        "name": "ReviewC2Counter",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nAudit corpus/evidence/round41/c2-count.py + w04-dispositions.tsv in /home/vgpnk/Projects/shokunin/chousa-shokunin: can a TSV row pass with empty or unresolvable evidence? Does the join cover exactly the census's W04 ids? Verify the before/after receipt pair.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/ReviewC2Counter.md"
+      },
+      {
+        "name": "ReviewFreeze",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nDiff corpus/evidence/round41/claims.md against the landed tools/research-gate.sh and counters in /home/vgpnk/Projects/shokunin/chousa-shokunin: is the frozen predicate the same sentence the counters implement (kumitate r42 rule)? Flag any post-data claim-text change or any landed behavior the freeze does not name.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/ReviewFreeze.md"
+      },
+      {
+        "name": "ReviewSourcesRows",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nVerify S075 and S076 rows in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md: 11 columns, tier/kind/status enums valid, anchor locates a ≤25-word quote in the named installed file (zcat + line numbers), sha256 cells match `sha256sum` of the files. Read the installed copies only — no network.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/ReviewSourcesRows.md"
+      },
+      {
+        "name": "CriticC1Kill",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nFalsify C1 in /home/vgpnk/Projects/shokunin/chousa-shokunin: find a PATH-resolved or function-delivered external invocation reachable by the canonical capture that the pin table + fixed child PATH do not cover (BASH_FUNC_*, command -v, eval'd names, aliases). Demonstrate on the landed gate or name it a covered named limit.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/CriticC1Kill.md"
+      },
+      {
+        "name": "CriticC1Scope",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nAttack C1's scope in /home/vgpnk/Projects/shokunin/chousa-shokunin: does the claim's 'measured surface' wording let an unmeasured tool slip in? Check the gate for external calls NOT in the r41 instrumentation trap set (cp/mv/ln/stat/find/xargs/jq/perl/awk). Each finding names call site and reachability from --pin/--drift.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/CriticC1Scope.md"
+      },
+      {
+        "name": "CriticC2Kill",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nFalsify C2 in /home/vgpnk/Projects/shokunin/chousa-shokunin: does w04-dispositions.tsv disposition anything real, or does it only narrate? Try: rename a disposition id, empty an evidence cell, add a TSV row for a non-warned id — does c2-count.py catch each? Report which mutations pass the counter (counter-blind cells).\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/CriticC2Kill.md"
+      },
+      {
+        "name": "CriticSeparability",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nVerify causal separability in /home/vgpnk/Projects/shokunin/chousa-shokunin: revert tools/research-gate.sh alone (use controls/base-gate-r41.sh) and confirm c2 still scores 4/4; keep gate and remove w04-dispositions.tsv and confirm c1 still scores 12/12. Any cross-dependency falsifies the claim pair.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/CriticSeparability.md"
+      },
+      {
+        "name": "CriticSourcedClaim",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nAttack the sourced-claim binding in /home/vgpnk/Projects/shokunin/chousa-shokunin: does corpus/knowledge/capture-path-pin-r41.md actually need S075/S076, or is it grounded only in lane-own measurement? Check each S### citation resolves to a row opened this round and teaches what the note claims.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/CriticSourcedClaim.md"
+      },
+      {
+        "name": "CriticMistakeRows",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nAttack corpus/lessons/round-41.md ## Mistakes in /home/vgpnk/Projects/shokunin/chousa-shokunin: is each fix shown able to fail (CORPUS rule)? Is the W04/measurement-target entry a real mistake with evidence and captured-by, or padding?\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/CriticMistakeRows.md"
+      },
+      {
+        "name": "ScoutTrapInventory",
+        "agent": "scout",
+        "task": "/skill:godspeed\n\nRe-run the r41 instrumentation sweep in /home/vgpnk/Projects/shokunin/chousa-shokunin with a WIDER trap set than the committed list (add cp, mv, ln, install, awk, perl, file, join, fmt, pr, xargs, sed2, xxd): log every PATH-resolved call of one --pin and one --drift on the LANDED gate. Confirm zero marks or name new unmeasured surfaces. Local only.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/ScoutTrapInventory.md"
+      },
+      {
+        "name": "ScoutFrontierOverlap",
+        "agent": "scout",
+        "task": "/skill:godspeed\n\nScan sibling lane reports/SCORECARDs under /home/vgpnk/Projects/shokunin (read-only) for overlapping pin/PATH-independence work (mori pin/drift lineage, tsukuroi loader-env). Report overlaps chousa must attribute vs absorb. Local only.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/ScoutFrontierOverlap.md"
+      },
+      {
+        "name": "ScoutProvinceBoundary",
+        "agent": "scout",
+        "task": "/skill:godspeed\n\nCheck /home/vgpnk/Projects/shokunin/chousa-shokunin/PROVINCE.md + SKILL.md against the r41 change: does capture-invocation pinning stay inside 'claim-vs-source verification'/'this lane's own gates'? Flag any bleed into kumitate orchestration or tsukuroi loader territory.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/ScoutProvinceBoundary.md"
+      },
+      {
+        "name": "ScribeKnowledgeCheck",
+        "agent": "scribe",
+        "task": "/skill:godspeed\n\nReview corpus/knowledge/capture-path-pin-r41.md in /home/vgpnk/Projects/shokunin/chousa-shokunin: provenance trio first, falsifiable limits, S075/S076/S067 citations correct, counts carry commands. List every claim in the note that lacks a resolvable pointer.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/ScribeKnowledgeCheck.md"
+      },
+      {
+        "name": "ScribeLessonGate",
+        "agent": "scribe",
+        "task": "/skill:godspeed\n\nReview corpus/lessons/round-41.md in /home/vgpnk/Projects/shokunin/chousa-shokunin: ## Gate records every new S-row with URL/path, access date, ≤25-word located quote; Mistakes rows have class/evidence/captured-by/fix; census before→after pasted with exit codes.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/ScribeLessonGate.md"
+      },
+      {
+        "name": "ScribeSearchLog",
+        "agent": "scribe",
+        "task": "/skill:godspeed\n\nCheck the round-41 Search log entry in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md against CORPUS.md rule 5: question/query, where searched, date, identified/screened/included/excluded counts, exclusion reasons, stop rationale — and the 'registered hosts / open L0 fetch-scope' clause restored.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/ScribeSearchLog.md"
+      },
+      {
+        "name": "MutatePinTable",
+        "agent": "mutation-tester",
+        "task": "/skill:godspeed\n\nMutation-test the pin in /home/vgpnk/Projects/shokunin/chousa-shokunin: on a sandbox copy, delete one CAPTOOL_NAMES entry and re-run c1-count.py — the corresponding cell must FAIL. Do the same by neutering one wrapper's absolute path (point at /bin/false). Report which mutations the counter misses.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/MutatePinTable.md"
+      },
+      {
+        "name": "MutateChildEnv",
+        "agent": "mutation-tester",
+        "task": "/skill:godspeed\n\nMutation-test the child env in /home/vgpnk/Projects/shokunin/chousa-shokunin: remove `-u LD_PRELOAD` or revert PATH to the caller's in a sandbox copy of the gate; c1 S11/S12 must fail. If they still pass, the cells are vacuous.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/MutateChildEnv.md"
+      },
+      {
+        "name": "MutateC2Join",
+        "agent": "mutation-tester",
+        "task": "/skill:godspeed\n\nMutation-test c2-count.py in /home/vgpnk/Projects/shokunin/chousa-shokunin: feed a census stub emitting a W04 for S999 not in the TSV; the counter must print W04_DISPOSITIONED<4 and exit 1. Feed a TSV whose evidence names a missing path; it must also fail.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/MutateC2Join.md"
+      },
+      {
+        "name": "SentinelWriteScope",
+        "agent": "sentinel",
+        "task": "/skill:godspeed\n\nAudit the r41 diff in /home/vgpnk/Projects/shokunin/chousa-shokunin: confirm only tools/research-gate.sh, corpus/**, .ufo/waves/round-41/** changed; no fleet paths, no sibling paths, no .ufo/state or watchdog; no aggregator-owned files committed.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/SentinelWriteScope.md"
+      },
+      {
+        "name": "SentinelFetchScope",
+        "agent": "sentinel",
+        "task": "/skill:godspeed\n\nAudit r41 for external egress in /home/vgpnk/Projects/shokunin/chousa-shokunin: grep the round's wave spec, counters, lesson, SOURCES rows for https?:// references and verify every source open used installed files only; flag any item whose semantics require network (the r40 ScoutHashSource class).\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/SentinelFetchScope.md"
+      },
+      {
+        "name": "SentinelCounterPin",
+        "agent": "sentinel",
+        "task": "/skill:godspeed\n\nAudit commit-pinning of r41 evidence in /home/vgpnk/Projects/shokunin/chousa-shokunin: do c1-count.py/c2-count.py and the receipts name the gate path + revision they measured? Flag any receipt that can silently re-measure a different tree than the cited commit (the r40 ReviewActivePopulation class).\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/SentinelCounterPin.md"
+      },
+      {
+        "name": "RevengerPinHistory",
+        "agent": "revenger",
+        "task": "/skill:godspeed\n\nReverse-engineer the r35-r40 pin lineage in /home/vgpnk/Projects/shokunin/chousa-shokunin (grep→env→bash→sha256 pins + lessons): does the r41 table miss a previously-named sibling bare name or duplicate a mechanism the earlier pins already cover? Cite the r37/r38/r39 named-limit lists.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/RevengerPinHistory.md"
+      },
+      {
+        "name": "RevengerW04History",
+        "agent": "revenger",
+        "task": "/skill:godspeed\n\nTrace the W04 warnings S051/S053/S073/S074 to their origin rounds in /home/vgpnk/Projects/shokunin/chousa-shokunin corpus/lessons and search log: is each disposition in w04-dispositions.tsv faithful to the recorded origin, or does any row rewrite history?\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/RevengerW04History.md"
+      },
+      {
+        "name": "ConnectorSiblingScan",
+        "agent": "connector",
+        "task": "/skill:godspeed\n\nConnector scan in /home/vgpnk/Projects/shokunin (read-only): which sibling lanes pin tool invocations or run capture/drift gates (mori census lineage)? Where could chousa's CAPTOOL table be reused, and does any sibling artifact contradict the r41 mechanism? Report cross-lane evidence only.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/ConnectorSiblingScan.md"
+      },
+      {
+        "name": "SimplifierAudit",
+        "agent": "simplifier",
+        "task": "/skill:godspeed\n\nSimplification audit of the r41 diff in /home/vgpnk/Projects/shokunin/chousa-shokunin: is the 14-name pin table minimal — any pinned name never invoked by the measured surface (pure padding)? Is the per-name override boilerplate reducible without losing a check? Report only; no edits.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/SimplifierAudit.md"
+      },
+      {
+        "name": "CriticDoNothing",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nAttack the do-nothing control in /home/vgpnk/Projects/shokunin/chousa-shokunin: controls/base-gate-r41.sh must be byte-identical to the pre-round gate (diff against git show). Confirm control-before.txt was produced by that control and not by an intermediate edit; any substitution falsifies the before measurement.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 41: independently audit the frozen capture-invocation-pin claim (C1) and W04-disposition claim (C2); no production edits, no external fetches\n\nReport: write your scoped findings to .ufo/waves/round-41/w1/CriticDoNothing.md"
+      }
+    ]
+  },
+  "resumeSends": [],
+  "note": "Issue exactly one batched task call with taskCall ({context, tasks}); never split a wave into multiple task calls (one-swarm-per-wave). Then one hub send per resumeSends entry: hub send --to <entry.resume> --message <entry.message> (entry.name is bookkeeping, not a hub field)."
+}
