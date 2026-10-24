@@ -466,3 +466,16 @@ the admitted entry that motivates it. Tier definitions live in
     (`.ufo/waves/round-38/w1/CritC2Kill.md` findings 1–3); after Erratum 2 all four refuse
     by their named checks while `c2-count` stays 7/7 (`.ufo/waves/round-38/w2/W2CritLaundering.md`). —
     `lessons/round-38.md`.
+56. **An attack or discrimination fixture must be shown able to fire before its cell counts.**
+    A fixture that cannot fire scores its cell vacuously and the cell is not a measurement:
+    identical bytes (a "doctored" copy replaced with its implicit-concatenation twin), a
+    re-add the scrub un-sets again (a prefix assignment in front of a forwarded `-u` list),
+    or a syntax crash where a named refusal was expected (a deleted `return` leaving an
+    empty if-body). Check: run the fixture against the control bytes and require the named
+    observable to move (red-before); if the control cannot be made to fail, the fixture is
+    inert. Shown able to fail: all three shapes fired in round-39 drafting — the swap cell
+    verified `ok` on identical bytes, the weakening cell produced empty stdout from a
+    stderr-only crash, and the PATH-`env` shim was measured benign (`GATE_GREP` count 0)
+    — and each rebuilt fixture fires on its control (`4/8` mutant, `7/8` base,
+    `verifier-sha256-mismatch` / `subject-counter-sha256-mismatch` refusals). —
+    `lessons/round-39.md`.

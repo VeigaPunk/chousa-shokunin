@@ -1416,10 +1416,10 @@ frontier and the report.
   L1 closed each pre-wave-2 with the disclosed integration commits
   (`1f0add70…`, `8e93bc91…`); wave 2 confirmed every closure and found the next class
   (verifier-mutant pass-through → §Erratum 11; POSIXLY_CORRECT false-kill; the PYTHONPATH
-  child channel; pre-run stale receipts) — closed/named in the final bytes with §Errata 9–12.
+  child channel; pre-run stale receipts) — closed/named in the final bytes with §Errata 9–13.
 - Landed: gate env pin + selftest cases 268–272 + `unset POSIXLY_CORRECT`; counters
   `corpus/evidence/round38/{c1-count.py,c2-count.py,verify-receipts.py,expectations.jsonl}`;
-  frozen claims + 12 errata; receipts `corpus/evidence/round38/receipts/` (9); controls
+  frozen claims + 13 errata; receipts `corpus/evidence/round38/receipts/` (9); controls
   `base-gate-r38.sh`; knowledge `env-pin-capture-r38.md` (S072) + `receipt-binding-r38.md`
   (S073 supersedes S070); lesson `round-38.md` (7 mistakes, QUALITY 55); QUALITY 55; README
   rows + frontier paragraph; SCORECARD r38 verdicts + planned-39; SKILL.md Gates table
@@ -1435,3 +1435,36 @@ frontier and the report.
 - Frontier: census 71 → 73 rows (S072 bash.info, S073 supersedes S070), validate exit 0 at
   both ends (standing W04 ×2 + the expected S070/S073 shared-URL warning). Sourced claim: C1
   rests on S072. Mistakes mined: 7 (lesson ## Mistakes). No tool installs by the lane.
+
+## Round 39 — 2026-10-24 (L1 construction + prepared wave; host-mapped dispatch)
+
+- Claims: C1 operability — the canonical capture's grandchild AND the
+  verify-all section children run through ONE pinned absolute `bash`
+  (`RESEARCH_GATE_BASH` override, `BASH_PROVENANCE` refusal before any mode
+  runs); measured `ENV_PIN_CAPTURE_MATCH` 7/8 (base gate `0447ad14…`) → 8/8
+  (seeds 39011/39111). C2 calibration — receipts bind `verifier_sha256` +
+  `subject_counter_sha256`, re-derived with named refusals; measured
+  `RECEIPT_BINDING_MATCH` 8/8 (seeds 39101/39121); the r38 pipeline is the
+  before-state control (its receipts refuse: `predicate-mismatch` /
+  `missing-field verifier_sha256`).
+- Landed: gate bash pin + selftest cases 273–275 (`PASS (275 cases,
+  0 skipped)`); counters `corpus/evidence/round39/{c1-count.py,
+  c2-count.py,verify-receipts.py,expectations.jsonl}`; frozen claims;
+  receipts (6) under `corpus/evidence/round39/receipts/`; controls
+  `base-gate-r39.sh` + `mut-gate-path-env.sh`; knowledge
+  `capture-bash-pin-r39.md` (S071 re-opened) + `receipt-verifier-subject-r39.md`;
+  lesson `round-39.md` (4 mistakes, QUALITY 56); QUALITY 56; SKILL.md Gates
+  table r39 row + r37 row repair (D5) + 275-case bumps; r38 claims Errata
+  14–15 (D1/D2); r38 lesson correction block (D3/D6); SCORECARD r38
+  attribution note (D4) + r39 verdicts.
+- Host mapping: this seat holds no live L2 dispatch tool (accepted mapping,
+  verified across seats 2026-10-24). The §3 floor is met by PREPARING the
+  validated v1 wave spec under `.ufo/waves/round-39/` (32 seats, policy v1)
+  for the orchestrator to dispatch between rounds; the L1's own construction
+  runs supply the committed measurement evidence. Wave: 0 dispatched /
+  0 dead this seat (prepared-but-undispatched itemized in the report).
+- Discernment: three vacuous-fixture self-catches (identical-bytes doctored
+  subject; stderr-only syntax crash as "weakening"; benign PATH-`env` shim)
+  — fixes shown able to fail on the controls (mutant 4/8, base 7/8); the
+  first c2 construction run (6/8) and the broken-shim mutant run were the
+  red-before states, discarded uncommitted.

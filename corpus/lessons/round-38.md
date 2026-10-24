@@ -11,7 +11,7 @@ interpose (frozen `corpus/evidence/round38/claims.md`; measured
 `ENV_PIN_CAPTURE_MATCH` 2/7 → 7/7). C2 (calibration) — round-38 receipts bind
 pre==post gate hashes, counter/expect/receipt digests, verified by a census-tied
 verifier (measured `RECEIPT_BINDING_MATCH` 0/7 → 7/7). Both landed with narrowings
-frozen as claims.md §Errata 1–12; the waves falsified the first freezing of both
+frozen as claims.md §Errata 1–13; the waves falsified the first freezing of both
 surfaces and the integration closed what they found.
 
 ## Mistakes
@@ -26,7 +26,7 @@ surfaces and the integration closed what they found.
 | scope — both counters hashed the expectation table only at receipt time; a mid-run edit let a receipt bind bytes the scenarios did not score | w1/SentScope.md finding 2 | none | claims.md §Erratum 8b: pre-run hash, refuse with no receipt on mid-run change; w2 verified |
 | process — the frozen claims file was edited in place after the freeze commit (the pre-dispatch LD_PRELOAD limit) instead of landing as an appended erratum | w1/ScribeSources.md finding 7 | QUALITY 4 (errata append-only) — disclosed | kept as claims.md §Erratum 1 with its disclosure sentence; the body is otherwise untouched |
 
-Related wave-2 process notes, recorded not mined: Errata 9–12 continued the same
+Related wave-2 process notes, recorded not mined: Errata 9–13 continued the same
 pattern (a wave finding closed pre-commit, disclosed to in-flight seats); the
 seat-reported freeze-drift alerts (w1/ScribeKnowledgeC2, w1/SimpCounters F9,
 w1/MutCounterC2, w2/W2SentScopeFinal) were the same integration observed from
@@ -80,3 +80,22 @@ contract v1 rule 1.
   S072) and `corpus/knowledge/receipt-binding-r38.md` (C2, cites S073);
   sourced-claim requirement: C1 rests on S072 opened this round. Non-author
   spot-check: pending the hyaku closure's (as every round).
+
+## Correction (2026-10-24, round 39 — routed defects D3/D6)
+
+- (D6a) Gate records, URLs per contract v1 rule 1: S072's canonical URL is
+  `http://www.gnu.org/software/bash/` (printed at decompressed line 30 of
+  `bash.info`); S073's is
+  `https://www.gnu.org/software/coreutils/manual/coreutils.html#cksum-c`
+  (printed as the roff tty-link at the anchored line). Both rows in
+  `corpus/SOURCES.md` already carry them; they are copied here so the lesson
+  record is complete.
+- (D6b) Rejected-candidate wording: the rejected second `bash(1)` row was
+  recorded as "for the SHELLOPTS paragraph"; the wave evidence
+  (`w1/ScribeSources.md`) rejected `bash.1.gz` for the same sentence S068
+  already holds (the BASH_ENV material). The rejection stands; the candidate
+  description is corrected: it was a same-file same-sentence duplicate, not a
+  distinct-scope row.
+- (D3) Erratum count: this lesson's header and process notes above say
+  "§Errata 1–12"/"Errata 9–12"; the frozen claims file carries 13 errata. The
+  count is corrected here and in LOG.md/SCORECARD.md (round-39 landing).

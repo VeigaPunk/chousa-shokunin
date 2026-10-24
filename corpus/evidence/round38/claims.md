@@ -323,3 +323,25 @@ refusal scenario and the positive override-honoured witness land together as the
 frozen table's env-override cells. The gate's landed bytes do refuse relative overrides
 (the refusal exists and the selftest exercises it at gate level); what the COUNTER
 predicate does not measure is exactly the M3 class.
+
+**Erratum 14 (routed defect D1, appended by round 39 — candidate-gate hash
+supersession).** The body above names candidate gate sha256
+`37e2b996…` (the pre-integration bytes at the freeze). The landed round-38
+gate is `0447ad14b6135441f39f9220d02ae2967b810f791a2f1058654ee0c800c3b85a`
+(the `870074e8…` tree: the +6-line `unset POSIXLY_CORRECT` hunk plus comment,
+between `grep_pin_init` and `env_pin_init`; committed byte-exact at
+`.ufo/waves/round-39/controls/base-gate-r39.sh` as the round-39 base
+control). Per this file's own Erratum 6(e) precedent, hash supersessions are
+named by erratum; the frozen P1/P2 blocks, counting commands and receipts are
+untouched, and the nine receipts bind `0447ad14…` (re-derived by the r38
+closure, 9/9).
+
+**Erratum 15 (routed defect D2, appended by round 39 — harness-change
+disclosure).** Between the freeze and the final bytes the counter harness
+tightened without an erratum naming it: `base_env()` in both counters gained
+the `PYTHON*` and `POSIXLY_CORRECT` scrubs (the W2RevC1Final/W2RevC2Final
+child-environment findings), the c2 counter's subject children run under
+`-E`, and per-call timeouts were raised. Tightening-only: every committed
+receipt was regenerated under the tightened harness and re-verified; no
+frozen expectation, predicate or counting command changed. Named here so the
+harness history is complete.

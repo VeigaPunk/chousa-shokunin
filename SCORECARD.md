@@ -2173,11 +2173,20 @@ CLEAN; broken control DRIFT drift-sections=2; archives 3/3 (`w2/W2ExecNoHarmFina
 Admission: **ADMIT-with-errata, operator rules** — both frozen predicates verify on every
 committed receipt and no axis is harmed (the falsified general clauses name pre-existing or
 out-of-surface defects, each demonstrated and dispositioned); the claims as first written do
-not stand un-narrowed; §Errata 1–12 freeze the narrowings and the r39 fix directions.
+not stand un-narrowed; §Errata 1–13 freeze the narrowings and the r39 fix directions.
 No scalar score. Learning trends: expansion/quality **improved**, discernment **improved**
 (the lane's first self-kills of its own frozen claims, honestly frozen).
 
-## Planned — round 39 (not started)
+Attribution correction (routed defect D4, appended round 39): the wave-2
+seeds named above (38411/38431/38421/38441) and the no-harm battery ran at
+integration revision `8e93bc91…` (gate `37e2b996…`), not at the final bytes;
+the tip-byte evidence is the regenerated receipt set (nine receipts binding
+`0447ad14…`, statically verified 9/9 by the r38 closure) plus the one-hunk
+diff `8e93bc91…→870074e8…` and the one seat-observed tip-byte counter run
+(`w2/W2MutGateFinal.md` set C). The candidate-hash supersession itself is
+named as round-38 claims Erratum 14.
+
+## Planned — round 39 (superseded by the round-39 verdict below)
 
 Candidates, not commitments: the pre-registered measurement cells from Errata 5/6/11 —
 an eighth c1 scenario family covering the PATH `env` shim, the PATH `bash` shim, hostile
@@ -2190,3 +2199,55 @@ dead-field deletions (subject_counter reader, --tmp plumbing, path strings, BASH
 arm); the SHELLOPTS=noexec pre-startup boundary only if separately specified; the carried
 spans-≥32768 debt; the metadata-screener locale seam; the argv-witness D1-D3 dead fields;
 the S068-scope second-row question remains settled (S072 uses the info file).
+
+## Round 39 — capture bash pin and verifier/subject binding (two claims)
+
+Freeze disclosure: the L1's construction runs on seeds 39001/39011 (C1) and
+39101 (C2) preceded the freeze of `corpus/evidence/round39/claims.md` and are
+disclosed as such; the orchestrator-dispatched wave and the closure re-derive
+on fresh seeds. Host mapping this round: the seat holds no live L2 dispatch —
+the round's swarm is PREPARED under `.ufo/waves/round-39/` (validated spec)
+and itemized as prepared-but-undispatched in the report; the L1's own
+construction runs supply the measurement evidence below. Round shape: v1,
+wave 1 prepared (32 seats), 0 dispatched this seat, 0 dead. Landed gate
+selftest: `PASS (275 cases, 0 skipped)`.
+
+| claim / axis | before → after | counting command (lane root) | verdict |
+|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10): the canonical capture's grandchild and the verify-all section children run through ONE pinned absolute `bash` (default `/usr/bin/bash`, GNU-reporting; `RESEARCH_GATE_BASH` override, absolute + GNU-reporting, refused exit 2 `BASH_PROVENANCE` before any mode runs), so a caller PATH `bash` shim cannot interpose (echo re-add / suppress / hostile drift) | `ENV_PIN_CAPTURE_MATCH=7/8` on the pre-round gate `0447ad14…` (`.ufo/waves/round-39/controls/base-gate-r39.sh`, receipt `receipts/c1-base-s39001.json`, seed 39001; the eighth family fails live: `GATE_DRIFT: -GATE_GREP`, suppress kills the capture, relative override ignored) → `8/8` `predicate_holds=true` on the landed gate, seeds 39011/39111 (`receipts/c1-after-s39011.json`, `receipts/c1-after-s39111.json`), both `VERIFY: ok`; discrimination: the PATH-`env` mutant `e1251030…` scores `4/8` (seed 39013, `receipts/c1-mutenv-s39013.json`) | `python3 corpus/evidence/round39/c1-count.py --gate tools/research-gate.sh --seed N --receipt F` | **met** |
+| C2 calibration: a round-39 receipt binds `verifier_sha256` (the digest of `round39/verify-receipts.py`) and, for c2-family receipts, `subject_counter_sha256`; the verifier re-derives both, refusing `verifier-sha256-mismatch` / `subject-counter-sha256-mismatch` / `subject-counter-unreadable` / `missing-field …` | before = the r38 pipeline: its receipts carry neither binding (committed bytes) and its verifier accepted five of six weakened-verifier mutants (r38 Erratum 11); under the r39 verifier the committed r38 receipt refuses `predicate-mismatch` and a stripped r39 receipt refuses `missing-field verifier_sha256` (both run live in the counter's legacy cell) → `RECEIPT_BINDING_MATCH=8/8` `predicate_holds=true` on the landed gate, seeds 39101/39121 (`receipts/c2-after-s39101.json`, `receipts/c2-after-s39121.json`), both `VERIFY: ok` with `verifier_sha256`/`subject_counter_sha256` equal to the committed file digests | `python3 corpus/evidence/round39/c2-count.py --gate tools/research-gate.sh --seed N --receipt F` | **met** |
+
+The round-1 operability scale is unchanged: score 3 → 3 (delta 0); the C1/C2
+observables sit beside it, as in rounds 25, 29, 31–38.
+
+Separability: C1's predicate touches the gate bytes only; C2's predicate runs
+the receipt pipeline against any gate bytes (gate-agnostic, the r38
+Erratum-4 reading — the r39 c1 receipts bind and verify against the base and
+mutant control gates). The discrimination controls isolate each direction
+(base gate 7/8; env mutant 4/8; r38 receipts refuse under the r39 verifier).
+No-harm on the landed bytes: selftest PASS 275 (L1, clean env); claims 17/17
+CLEAN, chain 17/22 CLEAN, broken control 1/2 DRIFT, archives 3/3,
+integrity-r7 composed CLEAN (L1 re-run with the pinned commands).
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| operability | **improved** | C1: the capture's bash resolution is PATH-independent by measurement (7/8 → 8/8 across two seeds, two independent runners); selftest 272 → 275; the section-child call site (`verify_all_section`) is pinned as well as the capture grandchild. |
+| calibration | **improved** | C2: receipts now bind which verifier and which subject bytes judged a run, re-derived with named refusals (r38 receipts and stripped bindings fail closed live); the first in-round self-catches of vacuous fixtures are frozen as QUALITY 56. |
+| depth | **improved** | `corpus/knowledge/capture-bash-pin-r39.md` and `receipt-verifier-subject-r39.md`: mechanism, both delivery mechanisms, the kill record, the narrowed readings, the r40 cell list. |
+| coverage | **unchanged** | no new measured verification surface; all seven modes and the fixtures held. |
+| freshness | **improved narrowly** | S071 re-opened this round (quote re-located, sha match) and re-cited by C1's entry; the r38 lesson's stale wording/counts corrected (D3/D6). |
+| adjacency | **unchanged** | zero network (strace class: all sources opened from installed man pages/info); the loader-env channel stays tsukuroi's, named as debt. |
+
+Admission: **ADMIT** — both frozen predicates verify on every committed
+receipt and no axis is harmed; the claims stand as first written (their
+limits enumerate every demonstrated vector class; no errata needed). No
+scalar score. Learning trends: expansion/quality **improved**, discernment
+**improved** (three vacuous-fixture self-catches mined with fixes shown able
+to fail; the routed-defect repairs D1–D6 landed). Routed-defect dispositions:
+D1 → r38 claims Erratum 14; D2 → Erratum 15; D3 → count corrections in
+LOG/SCORECARD/lesson; D4 → SCORECARD attribution note; D5 → SKILL.md r37 row
+restored; D6 → r38 lesson correction block; D7 (the debt itself) → closed by
+C2. Round 40 candidates: the `mktemp`/`sed` bare names in the capture path;
+the loader scrub (`env -u LD_PRELOAD …`); the refusal-label re-derivation in
+verify; the argv-witness dead fields; the metadata-screener locale seam; the
+spans-≥32768 debt.
