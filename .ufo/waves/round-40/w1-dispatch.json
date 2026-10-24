@@ -1,0 +1,604 @@
+{
+  "schema": "ufo-swarm-wave-dispatch-v1",
+  "wave": "chousa-r40-w1",
+  "policy": {
+    "source": "config",
+    "maxLanes": 256,
+    "minLanes": 16,
+    "waveMinLanes": 32,
+    "waveMaxLanes": 64,
+    "declaredMaxLanes": null,
+    "hardCeiling": 256,
+    "rampBatchSize": 5,
+    "rampIntervalMs": 700,
+    "globalRunnerCeiling": 1056
+  },
+  "counts": {
+    "spawn": 33,
+    "resume": 0,
+    "total": 33
+  },
+  "registry": {
+    "schema": "ufo-swarm-registry-v1",
+    "path": ".ufo/waves/round-40/w1/swarm-registry.json",
+    "reportDir": ".ufo/waves/round-40/w1",
+    "members": {
+      "ExecC1BaseReceipt": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Run the committed verifier for the regenerated c1-base-s39001 receipt against the base-gate-r39 control, c1-count.py, current expectations.jsonl, and verifier; confirm the expected 7/8 negative-control result is a valid receipt.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "ExecC1LandedReceipt": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Run the committed verifier for the regenerated c1-after-s39011 receipt against tools/research-gate.sh and current expectation bytes; independently verify its receipt status and the counter's 8/8 result.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "ExecC1MutantReceipt": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Run the committed verifier for the regenerated c1-mutenv-s39013 receipt against the committed mutant control and confirm the 4/8 mutant receipt is valid evidence, not a failed verifier.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "ExecC1Count": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Run the frozen round-40 c1-count.py command on the committed tree and confirm its six-row manifest, exact output, and exit code.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "ExecC2Count": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Run the frozen round-40 c2-count.py command on the committed tree and confirm its four source-derived R2-R5 dispositions and exit code.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "ExecNoHarm": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Run the committed research-gate selftest and the named r1 archive, claims, chain, and integrity regression commands; report exact output and whether any existing mode is harmed.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "ReviewActivePopulation": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Audit active-r39-receipts.tsv against every committed r39 receipt and the three round-40 replacement receipts; identify any omission, duplicate, or stale receipt mislabeled active.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "ReviewReplacementBindings": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Independently verify all three round-40 c1 replacement receipts bind the committed expectations, counter, verifier, and intended base/landed/mutant gate bytes.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "ReviewC2Bindings": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Independently verify both active c2 receipts with c2-count.py, including verifier_sha256 and subject_counter_sha256, and compare the disposition counter's command output.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "ReviewR2CommitTruth": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Check R2 from committed bytes: determine whether c1-mutenv-s39003.json is tracked, compare that with the r39 lesson's not-committed wording, and inspect the appended erratum naming its supersession.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "ReviewR3Counts": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Re-derive the r39 report's knowledge-file count at the two cited commits using only corpus/knowledge/*.md; compare the observed 50-to-52 with the report's 29-to-31 and the appended correction.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "ReviewR4RoleMix": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Count r39 roles independently from w1-spec.json and w1-plan.json, compare with the r39 report and verifier spot-check, and decide whether the routed R4 mismatch reproduces from committed bytes.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "CriticC1Predicate": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Attack the C1 predicate: test whether the six-row active receipt manifest or success condition can be satisfied by a missing, invalid, or superseded receipt; report a concrete counterexample or why none follows.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "CriticC1Control": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Try the cheapest do-nothing replay against the frozen C1 counter and assess whether any already committed receipt set can reach 6/6 without the three required replacement runs.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "CriticC1Scope": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Compare the C1 frozen claim text against the verifier and counter: find any overstatement about what a valid receipt proves beyond byte binding and scenario re-derivation.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "CriticC2Calibration": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Attack the C2 disposition claim by checking whether its four statuses measure source-to-self-assessment mismatches or merely count prose labels; supply a falsifying case if possible.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "CriticR4Disposition": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Adversarially test the R4 not-reproduced disposition: seek an alternate committed validated spec or plan with reviewer 8/revenger 0, and state whether the current evidence supports that closure note.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "ScoutHashSource": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scout",
+        "item": "Re-open the official Python hashlib documentation at S074's anchor, confirm the quoted digest semantics and access date, and assess whether the note avoids claiming truth or authorship from a hash.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "ScoutFrontierOverlap": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scout",
+        "item": "Read the README coverage map and Frontier plus the two r39 receipt knowledge entries; determine whether the r40 expectation-digest note names genuinely distinct ground or duplicates an existing note.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "ScoutProvinceBoundary": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scout",
+        "item": "Read chousa PROVINCE.md and relevant sibling province boundaries; determine whether the receipt-reconciliation work remains within deep-research method and identify any cross-domain evidence to route.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "ScribeKnowledgeEntry": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scribe",
+        "item": "Review the r40 knowledge entry for provenance trio ordering, S074 citation scope, exact anchor, fact-versus-inference separation, and runnable recheck; return precise corrections only.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "ScribeLessonGate": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scribe",
+        "item": "Review round-40.md Gate for every new SOURCES row's URL or own-work locator, access date, located quote under 25 words, and complete old-to-new registry changes.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "ScribeClaimSurfaces": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scribe",
+        "item": "Cross-read LOG.md, SCORECARD.md, and the round-40 report for consistent claim wording, exact counts, measured lane revision, source pointer, and correction/disposition statements.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "MutateExpectDigest": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "mutation-tester",
+        "item": "On a temporary copy only, alter one active receipt expect_sha256 and re-run the committed verifier; record exact refusal and ensure no repository artifact changes.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "MutateGateDigest": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "mutation-tester",
+        "item": "On a temporary copy only, alter an active receipt gate digest while keeping the gate unchanged; re-run the verifier and require the named mismatch refusal.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "MutateVerifierSubject": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "mutation-tester",
+        "item": "On temporary copies only, alter a c2 receipt verifier_sha256 and subject_counter_sha256 independently; require the verifier's named refusals for each mutation.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "SentinelWriteScope": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "sentinel",
+        "item": "Audit the round-40 spec and committed file paths for any seat instruction that could write outside its unique lane report or mutate fleet, sibling, git-index, jj, or state files.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "SentinelFetchScope": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "sentinel",
+        "item": "Audit S074 source use and seat prompts for external live-target fetches or claims that require operator approval; report any out-of-scope fetch or secret exposure.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "RevengerR1History": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "revenger",
+        "item": "Reconstruct the r39 R1 chain from receipt hashes, committed expectations, counter, and verifier; distinguish stale expectation digest from row-tie mismatch and verify the chosen replacement/supersession path.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "RevengerR2R5History": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "revenger",
+        "item": "Reconstruct R2-R5 from the spot-check, r39 lesson, r39 report, SCORECARD, spec, and plan; classify which findings are true, fixed, or contradicted using resolvable pointers.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "ConnectorSiblingScan": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "connector",
+        "item": "Perform a read-only sibling-overlap scan for receipt provenance, corpus-source curation, and calibration work; report the owning lane for any adjacent surface rather than absorbing it.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "SimplifierAudit": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "simplifier",
+        "item": "Review the two round-40 counting scripts and active manifest for unnecessary abstraction, dead branches, unchecked assumptions, or a simpler implementation preserving the frozen predicates.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      },
+      "CriticSourceClaim": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Try to falsify the sourced-claim binding: verify that the R1 evidence or knowledge entry actually uses S074's opened claim rather than merely carrying an unrelated source citation.",
+        "axes": [
+          "operability",
+          "calibration",
+          "depth"
+        ],
+        "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+      }
+    }
+  },
+  "compaction": {
+    "applied": false,
+    "mechanism": null,
+    "reason": "template_invocation",
+    "savedBytes": 0,
+    "payloadBytesBefore": 0,
+    "payloadBytesAfter": 0
+  },
+  "taskCall": {
+    "context": "# Goal\nchousa lane (deep-research method), round 40, one v1 build-and-first-falsify wave. Frozen claims: /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round40/claims.md. Lane repo: /home/vgpnk/Projects/shokunin/chousa-shokunin. Fleet repo /home/vgpnk/Projects/shokunin is read-only; sibling lanes and domain source trees are read-only.\n\n# Claim bindings\nC1 operability (lowest scored axis, 3/10): `python3 corpus/evidence/round40/c1-count.py` must print `R39_ACTIVE_RECEIPTS=6/6`; the six-row manifest is /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round40/active-r39-receipts.tsv. C2 calibration: the four routed r39 findings R2-R5 each need a source-checked disposition; R4 is `not-reproduced` only if the committed spec, validator plan, and report agree against the spot-check. The counter is /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round40/c2-count.py.\n\n# Seat contract\n- Every seat is a leaf; do not spawn, dispatch, or create background work.\n- Work read-only against committed lane artifacts and reports; write only your own uniquely named report under /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-40/w1/. Never modify lane production files, the lane git index or jj state, /home/vgpnk/Projects/shokunin/.ufo/state, the fleet repo, or sibling repos.\n- Every `Report:` trailer path is relative to /home/vgpnk/Projects/shokunin/chousa-shokunin — write it at /home/vgpnk/Projects/shokunin/chousa-shokunin/<that path>. Use absolute paths for every other read/write.\n- Use the route assigned by the host role table at /home/vgpnk/.omp/agent/config.yml; never pass or hardcode a model.\n- No external live-target fetches without operator approval.\n- Tooling authorization: any agent may install or update a tool that helps this task or is a strict upgrade; read /home/vgpnk/.omp/agent/RULES.md first, use official sources only, and record tool/version/channel/reason in the report. Pacman transactions are PAUSED host-wide: do not run pacman -S, -Sy, -Syu, -U, or -R; use an approved non-pacman channel or file an L0 question.\n- The planner seat is the L1; the validator rejects `planner` as a swarm role. The bounded planning data-walk rides the scout and connector items.\n- Each report records the assigned attack, exact command and output, verdict, and a resolvable artifact pointer.\n",
+    "tasks": [
+      {
+        "name": "ExecC1BaseReceipt",
+        "agent": "executor",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: Run the committed verifier for the regenerated c1-base-s39001 receipt against the base-gate-r39 control, c1-count.py, current expectations.jsonl, and verifier; confirm the expected 7/8 negative-control result is a valid receipt.\n\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/ExecC1BaseReceipt.md"
+      },
+      {
+        "name": "ExecC1LandedReceipt",
+        "agent": "executor",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: Run the committed verifier for the regenerated c1-after-s39011 receipt against tools/research-gate.sh and current expectation bytes; independently verify its receipt status and the counter's 8/8 result.\n\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/ExecC1LandedReceipt.md"
+      },
+      {
+        "name": "ExecC1MutantReceipt",
+        "agent": "executor",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: Run the committed verifier for the regenerated c1-mutenv-s39013 receipt against the committed mutant control and confirm the 4/8 mutant receipt is valid evidence, not a failed verifier.\n\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/ExecC1MutantReceipt.md"
+      },
+      {
+        "name": "ExecC1Count",
+        "agent": "executor",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: Run the frozen round-40 c1-count.py command on the committed tree and confirm its six-row manifest, exact output, and exit code.\n\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/ExecC1Count.md"
+      },
+      {
+        "name": "ExecC2Count",
+        "agent": "executor",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: Run the frozen round-40 c2-count.py command on the committed tree and confirm its four source-derived R2-R5 dispositions and exit code.\n\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/ExecC2Count.md"
+      },
+      {
+        "name": "ExecNoHarm",
+        "agent": "executor",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: Run the committed research-gate selftest and the named r1 archive, claims, chain, and integrity regression commands; report exact output and whether any existing mode is harmed.\n\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/ExecNoHarm.md"
+      },
+      {
+        "name": "ReviewActivePopulation",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: Audit active-r39-receipts.tsv against every committed r39 receipt and the three round-40 replacement receipts; identify any omission, duplicate, or stale receipt mislabeled active.\n\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/ReviewActivePopulation.md"
+      },
+      {
+        "name": "ReviewReplacementBindings",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: Independently verify all three round-40 c1 replacement receipts bind the committed expectations, counter, verifier, and intended base/landed/mutant gate bytes.\n\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/ReviewReplacementBindings.md"
+      },
+      {
+        "name": "ReviewC2Bindings",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: Independently verify both active c2 receipts with c2-count.py, including verifier_sha256 and subject_counter_sha256, and compare the disposition counter's command output.\n\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/ReviewC2Bindings.md"
+      },
+      {
+        "name": "ReviewR2CommitTruth",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: Check R2 from committed bytes: determine whether c1-mutenv-s39003.json is tracked, compare that with the r39 lesson's not-committed wording, and inspect the appended erratum naming its supersession.\n\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/ReviewR2CommitTruth.md"
+      },
+      {
+        "name": "ReviewR3Counts",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: Re-derive the r39 report's knowledge-file count at the two cited commits using only corpus/knowledge/*.md; compare the observed 50-to-52 with the report's 29-to-31 and the appended correction.\n\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/ReviewR3Counts.md"
+      },
+      {
+        "name": "ReviewR4RoleMix",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: Count r39 roles independently from w1-spec.json and w1-plan.json, compare with the r39 report and verifier spot-check, and decide whether the routed R4 mismatch reproduces from committed bytes.\n\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/ReviewR4RoleMix.md"
+      },
+      {
+        "name": "CriticC1Predicate",
+        "agent": "critic",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: Attack the C1 predicate: test whether the six-row active receipt manifest or success condition can be satisfied by a missing, invalid, or superseded receipt; report a concrete counterexample or why none follows.\n\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/CriticC1Predicate.md"
+      },
+      {
+        "name": "CriticC1Control",
+        "agent": "critic",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: Try the cheapest do-nothing replay against the frozen C1 counter and assess whether any already committed receipt set can reach 6/6 without the three required replacement runs.\n\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/CriticC1Control.md"
+      },
+      {
+        "name": "CriticC1Scope",
+        "agent": "critic",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: Compare the C1 frozen claim text against the verifier and counter: find any overstatement about what a valid receipt proves beyond byte binding and scenario re-derivation.\n\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/CriticC1Scope.md"
+      },
+      {
+        "name": "CriticC2Calibration",
+        "agent": "critic",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: Attack the C2 disposition claim by checking whether its four statuses measure source-to-self-assessment mismatches or merely count prose labels; supply a falsifying case if possible.\n\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/CriticC2Calibration.md"
+      },
+      {
+        "name": "CriticR4Disposition",
+        "agent": "critic",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: Adversarially test the R4 not-reproduced disposition: seek an alternate committed validated spec or plan with reviewer 8/revenger 0, and state whether the current evidence supports that closure note.\n\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/CriticR4Disposition.md"
+      },
+      {
+        "name": "ScoutHashSource",
+        "agent": "scout",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: Re-open the official Python hashlib documentation at S074's anchor, confirm the quoted digest semantics and access date, and assess whether the note avoids claiming truth or authorship from a hash.\n\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/ScoutHashSource.md"
+      },
+      {
+        "name": "ScoutFrontierOverlap",
+        "agent": "scout",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: Read the README coverage map and Frontier plus the two r39 receipt knowledge entries; determine whether the r40 expectation-digest note names genuinely distinct ground or duplicates an existing note.\n\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/ScoutFrontierOverlap.md"
+      },
+      {
+        "name": "ScoutProvinceBoundary",
+        "agent": "scout",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: Read chousa PROVINCE.md and relevant sibling province boundaries; determine whether the receipt-reconciliation work remains within deep-research method and identify any cross-domain evidence to route.\n\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/ScoutProvinceBoundary.md"
+      },
+      {
+        "name": "ScribeKnowledgeEntry",
+        "agent": "scribe",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: Review the r40 knowledge entry for provenance trio ordering, S074 citation scope, exact anchor, fact-versus-inference separation, and runnable recheck; return precise corrections only.\n\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/ScribeKnowledgeEntry.md"
+      },
+      {
+        "name": "ScribeLessonGate",
+        "agent": "scribe",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: Review round-40.md Gate for every new SOURCES row's URL or own-work locator, access date, located quote under 25 words, and complete old-to-new registry changes.\n\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/ScribeLessonGate.md"
+      },
+      {
+        "name": "ScribeClaimSurfaces",
+        "agent": "scribe",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: Cross-read LOG.md, SCORECARD.md, and the round-40 report for consistent claim wording, exact counts, measured lane revision, source pointer, and correction/disposition statements.\n\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/ScribeClaimSurfaces.md"
+      },
+      {
+        "name": "MutateExpectDigest",
+        "agent": "mutation-tester",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: On a temporary copy only, alter one active receipt expect_sha256 and re-run the committed verifier; record exact refusal and ensure no repository artifact changes.\n\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/MutateExpectDigest.md"
+      },
+      {
+        "name": "MutateGateDigest",
+        "agent": "mutation-tester",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: On a temporary copy only, alter an active receipt gate digest while keeping the gate unchanged; re-run the verifier and require the named mismatch refusal.\n\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/MutateGateDigest.md"
+      },
+      {
+        "name": "MutateVerifierSubject",
+        "agent": "mutation-tester",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: On temporary copies only, alter a c2 receipt verifier_sha256 and subject_counter_sha256 independently; require the verifier's named refusals for each mutation.\n\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/MutateVerifierSubject.md"
+      },
+      {
+        "name": "SentinelWriteScope",
+        "agent": "sentinel",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: Audit the round-40 spec and committed file paths for any seat instruction that could write outside its unique lane report or mutate fleet, sibling, git-index, jj, or state files.\n\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/SentinelWriteScope.md"
+      },
+      {
+        "name": "SentinelFetchScope",
+        "agent": "sentinel",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: Audit S074 source use and seat prompts for external live-target fetches or claims that require operator approval; report any out-of-scope fetch or secret exposure.\n\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/SentinelFetchScope.md"
+      },
+      {
+        "name": "RevengerR1History",
+        "agent": "revenger",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: Reconstruct the r39 R1 chain from receipt hashes, committed expectations, counter, and verifier; distinguish stale expectation digest from row-tie mismatch and verify the chosen replacement/supersession path.\n\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/RevengerR1History.md"
+      },
+      {
+        "name": "RevengerR2R5History",
+        "agent": "revenger",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: Reconstruct R2-R5 from the spot-check, r39 lesson, r39 report, SCORECARD, spec, and plan; classify which findings are true, fixed, or contradicted using resolvable pointers.\n\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/RevengerR2R5History.md"
+      },
+      {
+        "name": "ConnectorSiblingScan",
+        "agent": "connector",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: Perform a read-only sibling-overlap scan for receipt provenance, corpus-source curation, and calibration work; report the owning lane for any adjacent surface rather than absorbing it.\n\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/ConnectorSiblingScan.md"
+      },
+      {
+        "name": "SimplifierAudit",
+        "agent": "simplifier",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: Review the two round-40 counting scripts and active manifest for unnecessary abstraction, dead branches, unchecked assumptions, or a simpler implementation preserving the frozen predicates.\n\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/SimplifierAudit.md"
+      },
+      {
+        "name": "CriticSourceClaim",
+        "agent": "critic",
+        "task": "/skill:godspeed\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\n\nYou are a leaf L2 seat for chousa round 40. All lane files are under /home/vgpnk/Projects/shokunin/chousa-shokunin; resolve every lane path to that absolute root, and use absolute paths for all reads and writes. Follow the shared seat contract. Do not edit production files; write only your assigned report. Attack this exact item: Try to falsify the sourced-claim binding: verify that the R1 evidence or knowledge entry actually uses S074's opened claim rather than merely carrying an unrelated source citation.\n\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, calibration, depth\nMilestone: Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits\n\nReport: write your scoped findings to .ufo/waves/round-40/w1/CriticSourceClaim.md"
+      }
+    ]
+  },
+  "resumeSends": [],
+  "note": "Issue exactly one batched task call with taskCall ({context, tasks}); never split a wave into multiple task calls (one-swarm-per-wave). Then one hub send per resumeSends entry: hub send --to <entry.resume> --message <entry.message> (entry.name is bookkeeping, not a hub field)."
+}

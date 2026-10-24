@@ -1,0 +1,403 @@
+{
+  "schema": "ufo-swarm-registry-v1",
+  "path": ".ufo/waves/round-40/w1/swarm-registry.json",
+  "reportDir": ".ufo/waves/round-40/w1",
+  "members": {
+    "ExecC1BaseReceipt": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "executor",
+      "item": "Run the committed verifier for the regenerated c1-base-s39001 receipt against the base-gate-r39 control, c1-count.py, current expectations.jsonl, and verifier; confirm the expected 7/8 negative-control result is a valid receipt.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "ExecC1LandedReceipt": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "executor",
+      "item": "Run the committed verifier for the regenerated c1-after-s39011 receipt against tools/research-gate.sh and current expectation bytes; independently verify its receipt status and the counter's 8/8 result.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "ExecC1MutantReceipt": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "executor",
+      "item": "Run the committed verifier for the regenerated c1-mutenv-s39013 receipt against the committed mutant control and confirm the 4/8 mutant receipt is valid evidence, not a failed verifier.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "ExecC1Count": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "executor",
+      "item": "Run the frozen round-40 c1-count.py command on the committed tree and confirm its six-row manifest, exact output, and exit code.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "ExecC2Count": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "executor",
+      "item": "Run the frozen round-40 c2-count.py command on the committed tree and confirm its four source-derived R2-R5 dispositions and exit code.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "ExecNoHarm": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "executor",
+      "item": "Run the committed research-gate selftest and the named r1 archive, claims, chain, and integrity regression commands; report exact output and whether any existing mode is harmed.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "ReviewActivePopulation": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "reviewer",
+      "item": "Audit active-r39-receipts.tsv against every committed r39 receipt and the three round-40 replacement receipts; identify any omission, duplicate, or stale receipt mislabeled active.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "ReviewReplacementBindings": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "reviewer",
+      "item": "Independently verify all three round-40 c1 replacement receipts bind the committed expectations, counter, verifier, and intended base/landed/mutant gate bytes.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "ReviewC2Bindings": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "reviewer",
+      "item": "Independently verify both active c2 receipts with c2-count.py, including verifier_sha256 and subject_counter_sha256, and compare the disposition counter's command output.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "ReviewR2CommitTruth": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "reviewer",
+      "item": "Check R2 from committed bytes: determine whether c1-mutenv-s39003.json is tracked, compare that with the r39 lesson's not-committed wording, and inspect the appended erratum naming its supersession.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "ReviewR3Counts": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "reviewer",
+      "item": "Re-derive the r39 report's knowledge-file count at the two cited commits using only corpus/knowledge/*.md; compare the observed 50-to-52 with the report's 29-to-31 and the appended correction.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "ReviewR4RoleMix": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "reviewer",
+      "item": "Count r39 roles independently from w1-spec.json and w1-plan.json, compare with the r39 report and verifier spot-check, and decide whether the routed R4 mismatch reproduces from committed bytes.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "CriticC1Predicate": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "critic",
+      "item": "Attack the C1 predicate: test whether the six-row active receipt manifest or success condition can be satisfied by a missing, invalid, or superseded receipt; report a concrete counterexample or why none follows.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "CriticC1Control": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "critic",
+      "item": "Try the cheapest do-nothing replay against the frozen C1 counter and assess whether any already committed receipt set can reach 6/6 without the three required replacement runs.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "CriticC1Scope": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "critic",
+      "item": "Compare the C1 frozen claim text against the verifier and counter: find any overstatement about what a valid receipt proves beyond byte binding and scenario re-derivation.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "CriticC2Calibration": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "critic",
+      "item": "Attack the C2 disposition claim by checking whether its four statuses measure source-to-self-assessment mismatches or merely count prose labels; supply a falsifying case if possible.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "CriticR4Disposition": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "critic",
+      "item": "Adversarially test the R4 not-reproduced disposition: seek an alternate committed validated spec or plan with reviewer 8/revenger 0, and state whether the current evidence supports that closure note.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "ScoutHashSource": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "scout",
+      "item": "Re-open the official Python hashlib documentation at S074's anchor, confirm the quoted digest semantics and access date, and assess whether the note avoids claiming truth or authorship from a hash.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "ScoutFrontierOverlap": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "scout",
+      "item": "Read the README coverage map and Frontier plus the two r39 receipt knowledge entries; determine whether the r40 expectation-digest note names genuinely distinct ground or duplicates an existing note.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "ScoutProvinceBoundary": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "scout",
+      "item": "Read chousa PROVINCE.md and relevant sibling province boundaries; determine whether the receipt-reconciliation work remains within deep-research method and identify any cross-domain evidence to route.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "ScribeKnowledgeEntry": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "scribe",
+      "item": "Review the r40 knowledge entry for provenance trio ordering, S074 citation scope, exact anchor, fact-versus-inference separation, and runnable recheck; return precise corrections only.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "ScribeLessonGate": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "scribe",
+      "item": "Review round-40.md Gate for every new SOURCES row's URL or own-work locator, access date, located quote under 25 words, and complete old-to-new registry changes.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "ScribeClaimSurfaces": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "scribe",
+      "item": "Cross-read LOG.md, SCORECARD.md, and the round-40 report for consistent claim wording, exact counts, measured lane revision, source pointer, and correction/disposition statements.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "MutateExpectDigest": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "mutation-tester",
+      "item": "On a temporary copy only, alter one active receipt expect_sha256 and re-run the committed verifier; record exact refusal and ensure no repository artifact changes.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "MutateGateDigest": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "mutation-tester",
+      "item": "On a temporary copy only, alter an active receipt gate digest while keeping the gate unchanged; re-run the verifier and require the named mismatch refusal.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "MutateVerifierSubject": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "mutation-tester",
+      "item": "On temporary copies only, alter a c2 receipt verifier_sha256 and subject_counter_sha256 independently; require the verifier's named refusals for each mutation.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "SentinelWriteScope": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "sentinel",
+      "item": "Audit the round-40 spec and committed file paths for any seat instruction that could write outside its unique lane report or mutate fleet, sibling, git-index, jj, or state files.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "SentinelFetchScope": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "sentinel",
+      "item": "Audit S074 source use and seat prompts for external live-target fetches or claims that require operator approval; report any out-of-scope fetch or secret exposure.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "RevengerR1History": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "revenger",
+      "item": "Reconstruct the r39 R1 chain from receipt hashes, committed expectations, counter, and verifier; distinguish stale expectation digest from row-tie mismatch and verify the chosen replacement/supersession path.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "RevengerR2R5History": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "revenger",
+      "item": "Reconstruct R2-R5 from the spot-check, r39 lesson, r39 report, SCORECARD, spec, and plan; classify which findings are true, fixed, or contradicted using resolvable pointers.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "ConnectorSiblingScan": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "connector",
+      "item": "Perform a read-only sibling-overlap scan for receipt provenance, corpus-source curation, and calibration work; report the owning lane for any adjacent surface rather than absorbing it.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "SimplifierAudit": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "simplifier",
+      "item": "Review the two round-40 counting scripts and active manifest for unnecessary abstraction, dead branches, unchecked assumptions, or a simpler implementation preserving the frozen predicates.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    },
+    "CriticSourceClaim": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "critic",
+      "item": "Try to falsify the sourced-claim binding: verify that the R1 evidence or knowledge entry actually uses S074's opened claim rather than merely carrying an unrelated source citation.",
+      "axes": [
+        "operability",
+        "calibration",
+        "depth"
+      ],
+      "milestone": "Round 40: independently audit the frozen R1 receipt-integrity predicate and R2-R5 calibration dispositions; no production edits"
+    }
+  }
+}
