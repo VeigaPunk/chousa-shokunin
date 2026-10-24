@@ -1,0 +1,136 @@
+{
+  "counter": "corpus/evidence/round38/c1-count.py",
+  "counter_sha256": "da1d915b51801fd6d25ebf857318afc87c08c4876dd25fe4055fdede1ede3f74",
+  "expect_sha256": "7cd5d824b4f927329927679f53c747edff0b6c405ff98d1701619519b2eaebc9",
+  "expectations": "corpus/evidence/round38/expectations.jsonl",
+  "gate": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-37/controls/base-gate-r37.sh",
+  "gate_sha256": "a7d3922c768a217a2dcedf347b4de438b8dda4108e1335f5a39af6117e1f54e8",
+  "gate_sha256_post": "a7d3922c768a217a2dcedf347b4de438b8dda4108e1335f5a39af6117e1f54e8",
+  "gate_sha256_pre": "a7d3922c768a217a2dcedf347b4de438b8dda4108e1335f5a39af6117e1f54e8",
+  "matched": 2,
+  "predicate": "ENV_PIN_CAPTURE_MATCH=7/7",
+  "predicate_holds": false,
+  "receipt_sha256": "6f6446e48ab024a95b11be2dd24b2960455aefa8488af88b3e091e17c352dc0a",
+  "scenarios": [
+    {
+      "expect": {
+        "drift_line": "GATE_DRIFT: none",
+        "drift_rc": 0,
+        "echo_lines": 0,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "id": "hold-plain",
+      "observed": {
+        "drift_line": "GATE_DRIFT: none",
+        "drift_rc": 0,
+        "echo_lines": 0,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "ok": true
+    },
+    {
+      "expect": {
+        "drift_line": "GATE_DRIFT: none",
+        "drift_rc": 0,
+        "echo_lines": 0,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "id": "hold-fn-benign",
+      "observed": {
+        "drift_line": "GATE_DRIFT: none",
+        "drift_rc": 0,
+        "echo_lines": 0,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "ok": true
+    },
+    {
+      "expect": {
+        "drift_line": "GATE_DRIFT: none",
+        "drift_rc": 0,
+        "echo_lines": 0,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "id": "env-fn-echo-scrub",
+      "observed": {
+        "drift_line": "GATE_DRIFT: -GATE_GREP",
+        "drift_rc": 1,
+        "echo_lines": 1,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "ok": false
+    },
+    {
+      "expect": {
+        "drift_line": "GATE_DRIFT: none",
+        "drift_rc": 0,
+        "echo_lines": 0,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "id": "env-fn-root-move",
+      "observed": {
+        "drift_line": "GATE_DRIFT: -FINDING:CHAIN_SOURCE_MISSING -FINDING:CLAIM_SOURCE_MISSING -FINDING:POINTER_UNRESOLVED drift drift-sections drift_sections findings native refused root supported tallies tally verdict verified",
+        "drift_rc": 1,
+        "echo_lines": 0,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "ok": false
+    },
+    {
+      "expect": {
+        "drift_line": "GATE_DRIFT: none",
+        "drift_rc": 0,
+        "echo_lines": 0,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "id": "env-fn-suppress",
+      "observed": {
+        "drift_line": "",
+        "drift_rc": 2,
+        "echo_lines": -1,
+        "pin_file": false,
+        "pin_rc": 2
+      },
+      "ok": false
+    },
+    {
+      "expect": {
+        "pin_file": false,
+        "pin_rc": 2,
+        "refusal": "ENV_PROVENANCE"
+      },
+      "id": "env-override-missing",
+      "observed": {
+        "pin_file": true,
+        "pin_rc": 0,
+        "refusal": ""
+      },
+      "ok": false
+    },
+    {
+      "expect": {
+        "pin_file": false,
+        "pin_rc": 2,
+        "refusal": "ENV_PROVENANCE"
+      },
+      "id": "env-override-fake",
+      "observed": {
+        "pin_file": true,
+        "pin_rc": 0,
+        "refusal": ""
+      },
+      "ok": false
+    }
+  ],
+  "seed": 38001,
+  "total": 7
+}

@@ -1,0 +1,113 @@
+{
+  "counter": "corpus/evidence/round38/c2-count.py",
+  "counter_sha256": "bc325cf4785f62ef3eeca3ea2d8a61094822a0c4345f07ae314c408cf6507818",
+  "expect_sha256": "7cd5d824b4f927329927679f53c747edff0b6c405ff98d1701619519b2eaebc9",
+  "expectations": "corpus/evidence/round38/expectations.jsonl",
+  "gate": "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh",
+  "gate_sha256": "37e2b9968706adabd095c6ed93d5e3035a014e1961dfe85d44dc80d28ab6d27d",
+  "gate_sha256_post": "37e2b9968706adabd095c6ed93d5e3035a014e1961dfe85d44dc80d28ab6d27d",
+  "gate_sha256_pre": "37e2b9968706adabd095c6ed93d5e3035a014e1961dfe85d44dc80d28ab6d27d",
+  "matched": 0,
+  "predicate": "RECEIPT_BINDING_MATCH=7/7",
+  "predicate_holds": false,
+  "receipt_sha256": "1879a1a21a81ad3f1de4473f143b6d02d7a335fb82dadf31891cc0c434dc5d5d",
+  "scenarios": [
+    {
+      "expect": {
+        "counter_rc": 0,
+        "receipt": true,
+        "verify_rc": 0
+      },
+      "id": "hold-receipt-verifies",
+      "observed": {
+        "counter_rc": 0,
+        "receipt": true,
+        "verify_rc": 1
+      },
+      "ok": false
+    },
+    {
+      "expect": {
+        "counter_rc": 2,
+        "receipt": false
+      },
+      "id": "self-rewrite-refused",
+      "observed": {
+        "counter_rc": 0,
+        "receipt": true
+      },
+      "ok": false
+    },
+    {
+      "expect": {
+        "counter_rc": 0,
+        "receipt": true,
+        "verify_foreign_rc": 0,
+        "verify_landed_rc": 1
+      },
+      "id": "foreign-gate-distinguished",
+      "observed": {
+        "counter_rc": 0,
+        "receipt": true,
+        "verify_foreign_rc": 1,
+        "verify_landed_rc": 1
+      },
+      "ok": false
+    },
+    {
+      "expect": {
+        "clean_verify_rc": 0,
+        "verify_rc": 1
+      },
+      "id": "counter-tamper-detected",
+      "observed": {
+        "clean_verify_rc": 1,
+        "verify_rc": "not-measured"
+      },
+      "ok": false
+    },
+    {
+      "expect": {
+        "clean_verify_rc": 0,
+        "verify_rc": 1
+      },
+      "id": "expect-tamper-detected",
+      "observed": {
+        "clean_verify_rc": 1,
+        "verify_rc": "not-measured"
+      },
+      "ok": false
+    },
+    {
+      "expect": {
+        "clean_verify_rc": 0,
+        "verify_rc": 1
+      },
+      "id": "body-tamper-detected",
+      "observed": {
+        "clean_verify_rc": 1,
+        "verify_rc": "not-measured"
+      },
+      "ok": false
+    },
+    {
+      "expect": {
+        "counter_rc": 0,
+        "hold_verify_rc": 0,
+        "receipt": true,
+        "verify_rc": 1
+      },
+      "id": "legacy-receipt-refused",
+      "observed": {
+        "counter_rc": 0,
+        "hold_verify_rc": 1,
+        "receipt": true,
+        "verify_rc": 1
+      },
+      "ok": false
+    }
+  ],
+  "seed": 38101,
+  "subject_counter": "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round37/c1-count.py",
+  "total": 7
+}

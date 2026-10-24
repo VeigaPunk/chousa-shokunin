@@ -1,0 +1,318 @@
+#!/usr/bin/env python3
+"""Round-38 C2 counter — receipt binding strength (the round-37 F1/F4 debt).
+
+Predicate (frozen in corpus/evidence/round38/claims.md before any candidate run):
+
+    RECEIPT_BINDING_MATCH=7/7
+
+The round-37 residual wave demonstrated two receipt forgery paths
+(.ufo/waves/round-37/residual/RevC1FreshSeed.md):
+
+  F1 a gate that rewrites itself after the first scenario got a receipt stamped
+     with the landed gate's sha256, because the counter hashed the gate file
+     AFTER the run — the receipt could not establish which bytes answered each
+     scenario;
+  F4 the receipt carried no counter identity at all: an edited counter that kept
+     seven scenarios and seven passes would silently redefine the predicate it
+     claimed to measure.
+
+The round-38 counters bind, measured by the counter itself before/after the
+run: gate_sha256_pre == gate_sha256_post (a changed gate refuses exit 2 with no
+receipt), counter_sha256, expect_sha256 (the frozen expectation table), and
+receipt_sha256 (the receipt body's own digest). verify-receipts.py re-derives
+every binding from committed bytes.
+
+Seven scenarios; the frozen expectations live in expectations.jsonl next to
+this file. A scenario passes only when every listed observation matches: the
+counter's exit code, the receipt file's existence, and the verify command's
+exit code for the honest, foreign, doctored and legacy receipts. The
+before-state control is this same counter pointed at the round-37 c1 counter
+(--counter corpus/evidence/round37/c1-count.py): no binding fields exist, so
+every scenario fails.
+
+Scoring: matched / 7, printed as RECEIPT_BINDING_MATCH=<k>/7.
+Exit 0 iff k == 7; 1 otherwise; 2 on a harness error.
+
+Temp dirs: $C2_TMP (must exist) or the system temp; a fresh mkdtemp inside it.
+No network. Writes only under the temp dir and the optional --receipt path.
+"""
+import argparse
+import hashlib
+import json
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+EXPECTATIONS = os.path.join(HERE, "expectations.jsonl")
+VERIFY = os.path.join(HERE, "verify-receipts.py")
+R37_C1 = os.path.join(HERE, "..", "round37", "c1-count.py")
+
+SCENARIO_ORDER = [
+    "hold-receipt-verifies",
+    "self-rewrite-refused",
+    "foreign-gate-distinguished",
+    "counter-tamper-detected",
+    "expect-tamper-detected",
+    "body-tamper-detected",
+    "legacy-receipt-refused",
+]
+
+
+def sha256_file(path):
+    h = hashlib.sha256()
+    with open(path, "rb") as fh:
+        for chunk in iter(lambda: fh.read(65536), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def load_expectations():
+    rows = {}
+    with open(EXPECTATIONS, "r", encoding="utf-8") as fh:
+        for line in fh:
+            line = line.strip()
+            if not line:
+                continue
+            row = json.loads(line)
+            if row.get("counter") == "c2":
+                rows[row["id"]] = row["expect"]
+    return rows
+
+
+def run_counter(counter, gate, seed, receipt, work):
+    proc = subprocess.run(
+        [sys.executable, counter, "--gate", gate, "--seed", str(seed),
+         "--receipt", receipt, "--tmp", work],
+        capture_output=True, text=True)
+    return proc
+
+
+def run_verify(receipt, gate, counter):
+    proc = subprocess.run(
+        [sys.executable, VERIFY, "--receipt", receipt, "--gate", gate,
+         "--counter", counter, "--expectations", EXPECTATIONS],
+        capture_output=True, text=True)
+    return proc.returncode, proc.stdout.strip()
+
+
+def write_self_rewrite_shim(shim, target, marker):
+    body = ("#!/bin/bash\n"
+            "# round-37 residual F1 replay: the first invocation restores the\n"
+            "# target gate over this shim's own path, so the post-run bytes are\n"
+            "# the target's while the shim bytes answered the first invocation.\n"
+            "if [[ ! -e %s ]]; then\n"
+            "  touch %s\n"
+            "  cat %s > \"$0.tmp\" && mv \"$0.tmp\" \"$0\"\n"
+            "fi\n"
+            "exec bash %s \"$@\"\n" % (marker, marker, target, target))
+    with open(shim, "w", encoding="utf-8") as fh:
+        fh.write(body)
+    os.chmod(shim, 0o755)
+
+
+def doctor(receipt_path, mutate):
+    """Apply mutate to the receipt; a field the legacy shape lacks stays absent.
+
+    verify-receipts fails either way (a doctored binding mismatches, an absent
+    binding is a missing-field refusal), so the honest expectation holds.
+    """
+    with open(receipt_path, "r", encoding="utf-8") as fh:
+        receipt = json.load(fh)
+    try:
+        mutate(receipt)
+    except (KeyError, TypeError):
+        pass
+    with open(receipt_path, "w", encoding="utf-8") as fh:
+        json.dump(receipt, fh, indent=2, sort_keys=True)
+        fh.write("\n")
+
+
+def run_scenario(counter, gate, seed, work, sid, expect):
+    observed = {}
+    if sid == "hold-receipt-verifies":
+        rcpt = os.path.join(work, "hold-receipt.json")
+        proc = run_counter(counter, gate, seed, rcpt, work)
+        observed["counter_rc"] = proc.returncode
+        observed["receipt"] = os.path.isfile(rcpt)
+        if "verify_rc" in expect:
+            vrc, _ = run_verify(rcpt, gate, counter)
+            observed["verify_rc"] = vrc
+
+    elif sid == "self-rewrite-refused":
+        shim = os.path.join(work, "f1-shim-gate.sh")
+        marker = os.path.join(work, "f1-marker")
+        write_self_rewrite_shim(shim, gate, marker)
+        rcpt = os.path.join(work, "f1-receipt.json")
+        proc = run_counter(counter, shim, seed, rcpt, work)
+        observed["counter_rc"] = proc.returncode
+        observed["receipt"] = os.path.isfile(rcpt)
+
+    elif sid == "foreign-gate-distinguished":
+        foreign = os.path.join(work, "foreign-gate.sh")
+        shutil.copyfile(gate, foreign)
+        # The foreign gate must differ in bytes from the landed one, or its
+        # receipt's binding equals the landed hash and the landed verification
+        # cannot be expected to fail.
+        with open(foreign, "a", encoding="utf-8") as fh:
+            fh.write("\n# round-38 c2 foreign-gate-distinguished fixture\n")
+        os.chmod(foreign, 0o755)
+        rcpt = os.path.join(work, "foreign-receipt.json")
+        proc = run_counter(counter, foreign, seed, rcpt, work)
+        observed["counter_rc"] = proc.returncode
+        observed["receipt"] = os.path.isfile(rcpt)
+        if "verify_foreign_rc" in expect and os.path.isfile(rcpt):
+            vrc, _ = run_verify(rcpt, foreign, counter)
+            observed["verify_foreign_rc"] = vrc
+        if "verify_landed_rc" in expect and os.path.isfile(rcpt):
+            vrc, _ = run_verify(rcpt, gate, counter)
+            observed["verify_landed_rc"] = vrc
+
+    elif sid in ("counter-tamper-detected", "expect-tamper-detected",
+                 "body-tamper-detected"):
+        # The honest receipt must verify first: otherwise the tampered copy's
+        # refusal only restates that the pipeline is unverifiable (the
+        # before-state), not that the doctoring was detected.
+        clean = os.path.join(work, "%s-clean.json" % sid)
+        run_counter(counter, gate, seed, clean, work)
+        crc, _ = run_verify(clean, gate, counter)
+        observed["clean_verify_rc"] = crc
+        if crc != 0:
+            observed["verify_rc"] = "not-measured"
+            return {"id": sid, "expect": expect, "observed": observed,
+                    "ok": False}
+        tampered = os.path.join(work, "%s-tampered.json" % sid)
+        shutil.copyfile(clean, tampered)
+        if sid == "counter-tamper-detected":
+            def flip_counter(r):
+                r["counter_sha256"] = ("0" if r["counter_sha256"][0] != "0"
+                                       else "1") + r["counter_sha256"][1:]
+            doctor(tampered, flip_counter)
+        elif sid == "expect-tamper-detected":
+            def flip_expect(r):
+                r["expect_sha256"] = ("0" if r["expect_sha256"][0] != "0"
+                                      else "1") + r["expect_sha256"][1:]
+            doctor(tampered, flip_expect)
+        else:
+            def flip_body(r):
+                r["matched"] = r["matched"] - 1 if r["matched"] > 0 else 1
+                r["predicate_holds"] = not r["predicate_holds"]
+            doctor(tampered, flip_body)
+        vrc, _ = run_verify(tampered, gate, counter)
+        observed["verify_rc"] = vrc
+
+    elif sid == "legacy-receipt-refused":
+        # A legacy (round-37 shape) receipt must fail closed — and the subject
+        # counter's own honest receipt must verify, so the refusal is
+        # discrimination against the legacy shape, not the absence of any
+        # verifiable pipeline (which is the before-state).
+        hold = os.path.join(work, "legacy-hold.json")
+        run_counter(counter, gate, seed, hold, work)
+        hrc, _ = run_verify(hold, gate, counter)
+        observed["hold_verify_rc"] = hrc
+        r37 = os.path.abspath(R37_C1)
+        rcpt = os.path.join(work, "legacy-receipt.json")
+        proc = run_counter(r37, gate, seed, rcpt, work)
+        observed["counter_rc"] = proc.returncode
+        observed["receipt"] = os.path.isfile(rcpt)
+        if "verify_rc" in expect and os.path.isfile(rcpt):
+            vrc, _ = run_verify(rcpt, gate, r37)
+            observed["verify_rc"] = vrc
+
+    else:
+        raise ValueError("unknown scenario: %s" % sid)
+
+    ok = all(observed.get(k) == v for k, v in expect.items())
+    return {"id": sid, "expect": expect, "observed": observed, "ok": ok}
+
+
+def receipt_digest(receipt):
+    body = {k: v for k, v in receipt.items() if k != "receipt_sha256"}
+    text = json.dumps(body, indent=2, sort_keys=True) + "\n"
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--gate", required=True)
+    ap.add_argument("--counter", default=os.path.join(HERE, "c1-count.py"))
+    ap.add_argument("--seed", type=int, default=38101)
+    ap.add_argument("--receipt")
+    ap.add_argument("--tmp")
+    args = ap.parse_args()
+
+    gate = os.path.abspath(args.gate)
+    counter = os.path.abspath(args.counter)
+    for path, name in ((gate, "gate"), (counter, "counter"),
+                       (VERIFY, "verify-receipts.py")):
+        if not os.path.isfile(path):
+            print("c2-count: %s not found: %s" % (name, path), file=sys.stderr)
+            return 2
+    if not os.path.isfile(EXPECTATIONS):
+        print("c2-count: expectations file missing: %s" % EXPECTATIONS,
+              file=sys.stderr)
+        return 2
+    base_tmp = args.tmp or os.environ.get("C2_TMP") or tempfile.gettempdir()
+    if not os.path.isdir(base_tmp):
+        print("c2-count: temp dir does not exist: %s" % base_tmp, file=sys.stderr)
+        return 2
+    expects = load_expectations()
+    missing = [s for s in SCENARIO_ORDER if s not in expects]
+    if missing:
+        print("c2-count: expectations missing for: %s" % ", ".join(missing),
+              file=sys.stderr)
+        return 2
+
+    work = tempfile.mkdtemp(prefix="chousa-r38-c2-", dir=base_tmp)
+    try:
+        gate_sha_pre = sha256_file(gate)
+        rows = []
+        for sid in SCENARIO_ORDER:
+            rows.append(run_scenario(counter, gate, args.seed, work, sid,
+                                     expects[sid]))
+            if sha256_file(gate) != gate_sha_pre:
+                print("c2-count: gate bytes changed across the run "
+                      "(pre %s != current) — no receipt published"
+                      % gate_sha_pre[:16], file=sys.stderr)
+                return 2
+        gate_sha_post = sha256_file(gate)
+    finally:
+        shutil.rmtree(work, ignore_errors=True)
+
+    matched = sum(1 for r in rows if r["ok"])
+    total = len(rows)
+    for r in rows:
+        print("%s %-26s expect=%s observed=%s"
+              % ("PASS" if r["ok"] else "FAIL", r["id"], r["expect"],
+                 r["observed"]))
+    print("RECEIPT_BINDING_MATCH=%d/%d" % (matched, total))
+    holds = matched == total
+    if args.receipt:
+        receipt = {
+            "counter": os.path.relpath(__file__),
+            "counter_sha256": sha256_file(os.path.abspath(__file__)),
+            "expectations": os.path.relpath(EXPECTATIONS),
+            "expect_sha256": sha256_file(EXPECTATIONS),
+            "seed": args.seed,
+            "gate": gate,
+            "gate_sha256": gate_sha_pre,
+            "gate_sha256_pre": gate_sha_pre,
+            "gate_sha256_post": gate_sha_post,
+            "subject_counter": counter,
+            "scenarios": rows,
+            "matched": matched,
+            "total": total,
+            "predicate": "RECEIPT_BINDING_MATCH=7/7",
+            "predicate_holds": holds,
+        }
+        receipt["receipt_sha256"] = receipt_digest(receipt)
+        with open(args.receipt, "w", encoding="utf-8") as fh:
+            json.dump(receipt, fh, indent=2, sort_keys=True)
+            fh.write("\n")
+    return 0 if holds else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

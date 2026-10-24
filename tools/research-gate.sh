@@ -454,6 +454,72 @@ sha256_hex_file() { # FILE -> 64 lowercase hex on stdout; rc 1 otherwise
 }
 
 N_FINDINGS=0 N_DRIFT=0 ROLL=CLEAN
+
+# ---- env pin (round-38) ----------------------------------------------------
+# The canonical pin capture spawned its child through a BARE `env` invocation:
+# an exported shell function named `env` (delivered to every child bash through
+# BASH_FUNC_env%%, the round-37 claims Erratum-5 channel) then received the
+# capture call itself, could drop the -u scrubs, and moved the pinned baseline
+# (echo re-add: baseline embeds a GATE_GREP line and a plain --drift reports a
+# phantom -GATE_GREP; CHOUSA_ROOT re-add: the capture runs against a foreign
+# root; suppress: the capture runs nothing and --pin refuses). The capture
+# child therefore runs through ONE pinned absolute env, resolved and verified
+# like the grep pin: an override (RESEARCH_GATE_ENV) must be an absolute path
+# and must report GNU coreutils env; a pin that cannot be verified is refused
+# (exit 2, ENV_PROVENANCE) before any record is read. Named limit: this pins
+# the `env` invocation only — a caller-exported function named `bash` could
+# still shadow the capture's bare `bash` call, and SHELLOPTS=noexec disables
+# the whole gate body before any of this runs (round-37 residual, carried).
+ENV_BIN=''
+ENV_PIN_SOURCE=''
+ENV_PIN_VERSION=''
+env_pin_refuse() { # REASON [CANDIDATE]
+  printf 'research-gate: ENV_PROVENANCE refused: %s (candidate=%s)\n' "$1" "${2:-<none>}" >&2
+  exit 2
+}
+env_pin_verify() { # PATH -> rc0 when the binary reports GNU coreutils env
+  local cand=$1 v to=''
+  [[ -f $cand && -x $cand ]] || return 1
+  # Same probe shape as the grep pin: the candidate's own --version, bounded by
+  # an absolute timeout(1) when one exists; head/command stay shell builtins.
+  if [[ -x /usr/bin/timeout ]]; then to=/usr/bin/timeout
+  elif [[ -x /bin/timeout ]]; then to=/bin/timeout; fi
+  if [[ -n $to ]]; then v=$("$to" 10 "$cand" --version 2>/dev/null || true)
+  else v=$("$cand" --version 2>/dev/null || true); fi
+  v=${v%%$'\n'*}
+  ENV_PIN_VERSION=$v
+  case "$v" in
+    *"GNU coreutils"*) return 0 ;;
+  esac
+  return 1
+}
+env_pin_init() {
+  local cand='' c=''
+  if [[ -n ${RESEARCH_GATE_ENV:-} ]]; then
+    cand=${RESEARCH_GATE_ENV}
+    ENV_PIN_SOURCE=override
+    case "$cand" in
+      /*) ;;
+      *) env_pin_refuse "override is not an absolute path" "$cand" ;;
+    esac
+    [[ -f $cand ]] || env_pin_refuse "override is not a regular file" "$cand"
+    [[ -x $cand ]] || env_pin_refuse "override is not executable" "$cand"
+    env_pin_verify "$cand" \
+      || env_pin_refuse "override does not report GNU coreutils env: ${ENV_PIN_VERSION:-<no version>}" "$cand"
+  else
+    ENV_PIN_SOURCE=default
+    # No PATH consultation: the round-38 counter measured a caller-exported env
+    # function interposing on this exact call; PATH resolution would consult
+    # the same interposer. A host whose env lives elsewhere sets the override.
+    for c in /usr/bin/env /bin/env; do
+      if env_pin_verify "$c"; then cand=$c; break; fi
+    done
+    [[ -n $cand ]] || env_pin_refuse "no GNU coreutils env at /usr/bin/env or /bin/env (set RESEARCH_GATE_ENV to an absolute path)" ''
+  fi
+  if ! ENV_BIN=$cand 2>/dev/null; then
+    env_pin_refuse "the pin variable cannot be assigned (a caller marked it readonly)" "$cand"
+  fi
+}
 declare -a FINDING_LINES=()
 
 N_Q=0 N_SRC=0 N_CH=0 N_CL=0 N_NEG=0 N_REJ=0 N_APPR=0
@@ -3932,7 +3998,7 @@ gate_canonical_capture() { # -> GATE_CAP | GATE_CAP_RC + GATE_CAP_NOTE
     return 0
   fi
   ( cd "$fx" || exit 2
-    env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_ROOT \
+    "$ENV_BIN" -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_ROOT \
       -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_GREP_PIN_ECHO -u BASH_ENV \
       bash "$SELF" verify-all record.md --claims claims.jsonl \
       --json manifest.jsonl --root . >capture.txt 2>&1 ) || rc=$?
@@ -8300,6 +8366,106 @@ EOF
     failures=$((failures + 1))
   fi
 
+  # ---- round-38 env pin (cases 268-272) ----
+  # The canonical capture spawned its child through a BARE `env`: a caller's
+  # exported function `env` (BASH_FUNC_env%%, the claims Erratum-5 channel)
+  # received the capture call itself — re-adding CHOUSA_GREP_PIN_ECHO moved the
+  # baseline (phantom -GATE_GREP drift), re-adding CHOUSA_ROOT ran the capture
+  # against a foreign root, and a suppressing function killed the capture while
+  # --pin still refused honestly. The capture now runs through ONE pinned
+  # absolute env, so the caller's function cannot interpose; an unverifiable
+  # pin (override missing or not GNU coreutils env) refuses exit 2 before any
+  # mode runs. Named limit: an exported function named `bash` could still
+  # shadow the capture's bare `bash` call, and SHELLOPTS=noexec disables the
+  # whole gate body before any of this runs (round-37 residual, carried).
+  rm -f "$WORK/r38-pin-echo.txt" "$WORK/r38-pin-sup.txt" "$WORK/r38-pin-rootmv.txt"
+  v38_ok=1 v38_rc=0 v38_drc=0 v38_out='' v38_dout=''
+  v38_out=$(bash -c '
+    env() { local o=(); while (($#)); do case "$1" in -u) o+=("$1" "$2"); shift 2;; *) break;; esac; done
+            /usr/bin/env "${o[@]}" CHOUSA_GREP_PIN_ECHO=1 "$@"; }
+    export -f env
+    exec bash "$1" --pin "$2"' _ "$SELF" "$WORK/r38-pin-echo.txt" 2>&1) || v38_rc=$?
+  v38_dout=$(env -u CHOUSA_GREP_PIN_ECHO bash "$SELF" --drift "$WORK/r38-pin-echo.txt" 2>&1) || v38_drc=$?
+  cases=$((cases + 1))
+  [[ $v38_rc -eq 0 ]] || v38_ok=0
+  [[ -f $WORK/r38-pin-echo.txt ]] || v38_ok=0
+  [[ $v38_drc -eq 0 ]] || v38_ok=0
+  [[ $v38_dout == 'GATE_DRIFT: none' ]] || v38_ok=0
+  grep -q '^GATE_GREP: ' -- "$WORK/r38-pin-echo.txt" && v38_ok=0
+  if [[ $v38_ok -eq 1 ]]; then
+    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" pin-env-fn-echo-scrub "$v38_drc"
+  else
+    printf 'FAIL-case %-28s pin_rc=%d drift_rc=%d\n' pin-env-fn-echo-scrub "$v38_rc" "$v38_drc"
+    printf '%s\n' "$v38_out" "$v38_dout" | sed 's/^/    | /'
+    failures=$((failures + 1))
+  fi
+  v38_ok=1 v38_rc=0 v38_drc=0 v38_out='' v38_dout=''
+  v38_out=$(bash -c '
+    env() { :; }
+    export -f env
+    exec bash "$1" --pin "$2"' _ "$SELF" "$WORK/r38-pin-sup.txt" 2>&1) || v38_rc=$?
+  v38_dout=$(env -u CHOUSA_GREP_PIN_ECHO bash "$SELF" --drift "$WORK/r38-pin-sup.txt" 2>&1) || v38_drc=$?
+  cases=$((cases + 1))
+  [[ $v38_rc -eq 0 ]] || v38_ok=0
+  [[ -f $WORK/r38-pin-sup.txt ]] || v38_ok=0
+  [[ $v38_drc -eq 0 ]] || v38_ok=0
+  [[ $v38_dout == 'GATE_DRIFT: none' ]] || v38_ok=0
+  if [[ $v38_ok -eq 1 ]]; then
+    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" pin-env-fn-suppress "$v38_drc"
+  else
+    printf 'FAIL-case %-28s pin_rc=%d drift_rc=%d\n' pin-env-fn-suppress "$v38_rc" "$v38_drc"
+    printf '%s\n' "$v38_out" "$v38_dout" | sed 's/^/    | /'
+    failures=$((failures + 1))
+  fi
+  mkdir -p "$WORK/r38-foreign-root"
+  v38_ok=1 v38_rc=0 v38_drc=0 v38_out='' v38_dout=''
+  v38_out=$(bash -c '
+    env() { local o=(); while (($#)); do case "$1" in -u) o+=("$1" "$2"); shift 2;; *) break;; esac; done
+            /usr/bin/env "${o[@]}" CHOUSA_ROOT="$3" "$@"; }
+    export -f env
+    exec bash "$1" --pin "$2"' _ "$SELF" "$WORK/r38-pin-rootmv.txt" "$WORK/r38-foreign-root" 2>&1) || v38_rc=$?
+  v38_dout=$(env -u CHOUSA_ROOT bash "$SELF" --drift "$WORK/r38-pin-rootmv.txt" 2>&1) || v38_drc=$?
+  cases=$((cases + 1))
+  [[ $v38_rc -eq 0 ]] || v38_ok=0
+  [[ -f $WORK/r38-pin-rootmv.txt ]] || v38_ok=0
+  [[ $v38_drc -eq 0 ]] || v38_ok=0
+  [[ $v38_dout == 'GATE_DRIFT: none' ]] || v38_ok=0
+  if [[ $v38_ok -eq 1 ]]; then
+    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" pin-env-fn-root "$v38_drc"
+  else
+    printf 'FAIL-case %-28s pin_rc=%d drift_rc=%d\n' pin-env-fn-root "$v38_rc" "$v38_drc"
+    printf '%s\n' "$v38_out" "$v38_dout" | sed 's/^/    | /'
+    failures=$((failures + 1))
+  fi
+  v38_ok=1 v38_rc=0 v38_out=''
+  v38_out=$(RESEARCH_GATE_ENV="$WORK/r38-no-such-dir/env" bash "$SELF" --pin "$WORK/r38-pin-ovm.txt" 2>&1) || v38_rc=$?
+  cases=$((cases + 1))
+  [[ $v38_rc -eq 2 ]] || v38_ok=0
+  [[ $v38_out == *'ENV_PROVENANCE refused'* ]] || v38_ok=0
+  [[ ! -f $WORK/r38-pin-ovm.txt ]] || v38_ok=0
+  if [[ $v38_ok -eq 1 ]]; then
+    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" env-pin-override-missing "$v38_rc"
+  else
+    printf 'FAIL-case %-28s pin_rc=%d\n' env-pin-override-missing "$v38_rc"
+    printf '%s\n' "$v38_out" | sed 's/^/    | /'
+    failures=$((failures + 1))
+  fi
+  printf '#!/bin/sh\nexit 0\n' >"$WORK/r38-fake-env"
+  chmod +x "$WORK/r38-fake-env"
+  v38_ok=1 v38_rc=0 v38_out=''
+  v38_out=$(RESEARCH_GATE_ENV="$WORK/r38-fake-env" bash "$SELF" --pin "$WORK/r38-pin-ovf.txt" 2>&1) || v38_rc=$?
+  cases=$((cases + 1))
+  [[ $v38_rc -eq 2 ]] || v38_ok=0
+  [[ $v38_out == *'ENV_PROVENANCE refused'* ]] || v38_ok=0
+  [[ ! -f $WORK/r38-pin-ovf.txt ]] || v38_ok=0
+  if [[ $v38_ok -eq 1 ]]; then
+    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" env-pin-override-fake "$v38_rc"
+  else
+    printf 'FAIL-case %-28s pin_rc=%d\n' env-pin-override-fake "$v38_rc"
+    printf '%s\n' "$v38_out" | sed 's/^/    | /'
+    failures=$((failures + 1))
+  fi
+
   if [[ $failures -eq 0 ]]; then
     printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"
     exit 0
@@ -8366,6 +8532,9 @@ fi
 # pin exits 2 here, before the mode can produce a verdict with an unverified
 # matcher. usage/--help paths return earlier, so argument errors stay usage.
 grep_pin_init
+# Resolve the env pin beside it (round-38 C1): the canonical capture child runs
+# through this absolute env, and a refused pin exits 2 before any mode runs.
+env_pin_init
 
 # pin/drift take exactly one baseline path: a record, claims surface, manifest
 # or root would be silently ignored by the canonical invocation, so refusing
