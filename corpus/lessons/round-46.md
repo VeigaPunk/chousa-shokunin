@@ -210,7 +210,18 @@ None changes a frozen predicate, target or kill rule.
   still passes (mistake 2).
 - **C2, mention not dependence.** `corpus/evidence/round45/tag-count.py` is a
   documented gate with a Gates row and a pinned control, yet it is not an entry
-  point; deleting its row leaves `UNREGISTERED=0` (`RevC2TagCount`). `round25-meta-oracle.py` is likewise outside the set; `build-spans.py` enters it once `SCORECARD.md` names it, which is why the after-state reads 73 rather than 72, and  is likewise outside the set. (`build-spans.py` DOES enter the set once `SCORECARD.md` names it, which is why the after-state reads 73 rather than 72.) C2's predicate
+  point; deleting its row leaves `UNREGISTERED=0` (`RevC2TagCount`). Independent
+  of the counter, the registry is not a complete gate inventory.
+- **C2, literal-name completion (wave-2 `CritC2Scope`).** The frozen sentence says
+  "every existing repo-relative `*.py`/`*.sh` path named in SCORECARD.md or a
+  claims file", and the first implementation's `NAMED` regex only caught
+  `tools/`- and `corpus/`-prefixed names. The regex now reads any repo-relative
+  path token from the frozen set, which adds the eight `.ufo/waves/round-{35..41}/controls/*`
+  names; five of them had no Gates row and are now registered by the
+  `round35–41 gate controls` row. Before-state re-measured on the literal set
+  (tree D: `76`, `UNREGISTERED=18`; trees A–C: `79`, `21`), after-state on the
+  literal set is `81/81`, `UNREGISTERED=0`, and `round25-meta-oracle.py` is
+  likewise outside the set. C2's predicate
   quantifies over its declared union and is met; the calibration READING must say
   membership of a mention-derived set, not gate-registry coverage.
 - **C2, row format only.** A junk eight-cell row naming an unregistered path

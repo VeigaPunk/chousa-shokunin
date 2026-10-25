@@ -37,7 +37,10 @@ import sys
 
 LANE = pathlib.Path(__file__).resolve().parents[3]
 COUNTER = re.compile(r"^(c\d+-count[\w.-]*\.py|verify-receipts\.py|errata-count\.py)$")
-NAMED = re.compile(r"(?:tools|corpus)/[A-Za-z0-9_./-]+\.(?:py|sh)")
+# Any repo-relative *.py/*.sh path token named in a frozen verdict source —
+# including .ufo/waves/ control artifacts (the frozen sentence says
+# "repo-relative" with no prefix restriction; round-46 `CritC2Scope`).
+NAMED = re.compile(r"(?<![\w./-])\.?[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)+\.(?:py|sh)\b")
 
 
 def entry_points(root: pathlib.Path) -> tuple[list[str], int, int, int]:
