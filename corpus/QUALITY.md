@@ -621,3 +621,19 @@ the admitted entry that motivates it. Tier definitions live in
     scoring `TAGGED=21/21`, exit 0). It now takes 0–3 leading spaces, the
     census row rule; `controls/tag-control-indented-forge.txt` scores
     `TAGGED=1/2`, exit 1, and the r35–r44 control is unchanged.
+
+## Round-46 addition (appended 2026-10-25; criteria 1–65 unchanged)
+
+66. **An entry's inference must be cited and grounded, not merely plausible.**
+    Every bullet under `#### Inference` names at least one `S###` source, and
+    every backticked or quoted phrase and every figure in it appears verbatim in
+    a span of a source that bullet cites (or is the designator of a cited
+    document, `RFC 7089`). Check: `python3 tools/inference-ground.py --entry
+    <entry> --spans corpus/evidence/round46/spans.tsv --counts /dev/null
+    --registry corpus/SOURCES.md --root .` — exit 0 `GROUND: PASS`, exit 1 one or
+    more `FINDING` lines. Shown able to fail: the three `junk-*.md` fixtures of
+    `corpus/fixtures/inference-ground-r46/` each exit 1, and a "tool" that exits
+    0 for names starting `positive-` fails the counter's `CANARY` leg
+    (`corpus/evidence/round46/controls/c1-controls.txt`). Named limit: the check
+    is lexical — correct tokens strung into an assertion of the opposite still
+    pass, and 1–2 digit figures are never tokens. — `lessons/round-46.md`.

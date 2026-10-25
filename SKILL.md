@@ -66,7 +66,8 @@ Where the lane learns: `corpus/SOURCES.md` (opened rows, scoped A/B/C tiers, stu
 - [ ] Every claim carries a resolvable pointer to the artifact and revision read.
   - Run: `bash tools/research-gate.sh verify-claims <claims.jsonl> --root ..` with a `"sha256"` pin (the SHA-256 of the exact source bytes read) on each claim; a changed source reads `stale` (`CLAIM_SOURCE_REVISION_MISMATCH`). A claim without a pin is not checked for revision.
 - [ ] A negative claim carries its search sweep, naming where it looked.
-- [ ] Observation, inference and unknown stay separate.
+- [ ] Observation, inference and unknown stay separate — and every `#### Inference` bullet is CITED and GROUNDED, not merely plausible.
+  - Run: `python3 tools/inference-ground.py --entry corpus/knowledge/<entry>.md --spans corpus/evidence/round46/spans.tsv --counts /dev/null --registry corpus/SOURCES.md --root .` → exit 0 `GROUND: PASS`, exit 1 one or more `FINDING`s. It enforces citation presence and token presence in the cited spans; it does NOT enforce that the inference follows (round 46, QUALITY 66), so a passing entry still needs a reader.
 - [ ] A rejected source is kept with its rejection reason and flip-condition.
 - [ ] Every web quote a round cites was re-opened with `python3 tools/quote-reopen.py verify` and every non-`VERBATIM` verdict is recorded with its quote (an `ABSENT` on a page whose text the tool cannot extract, such as one without `</head>`, is a tool limit).
 - [ ] The gate ran against a named, absolute grep binary, not the caller's `PATH` (round 35).
