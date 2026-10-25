@@ -1,9 +1,9 @@
 # ScoutCoverage — coverage-map ground check for expansion credit
 
 Seat: scout. Lane: chousa. Read-only on every file except this report. As-of 2026-10-25.
-Lane HEAD at check `1254ab2` (adoption), freeze `fe740e7`, BASE_REV `414a2ec`.
-No tool installed (per `/home/vgpnk/.omp/agent/RULES.md`: pacman transactions paused host-wide;
-nothing needed). No network, no campaign tool run, no git fixture created.
+Lane HEAD at check `1254ab2` (adoption), freeze `fe740e7`, BASE_REV `414a2ec`. No tool installed
+(per `/home/vgpnk/.omp/agent/RULES.md`: pacman transactions paused host-wide; nothing needed).
+No network, no campaign tool run, no git fixture created.
 
 ## 0. What was adopted
 
@@ -83,8 +83,7 @@ exactly this (`corpus/lessons/round-48.md:50`: "This is the campaign register id
 own-work S095"); round 49's lesson carries no such disambiguation (`grep -c "distinct"
 corpus/lessons/round-49.md` → 0). The frozen counter is immune (`corpus/evidence/round49/c2-count.py:
 202-213` matches on URL and its `VERDICT_RE` requires the literal "register" prefix), so C2 is
-unaffected — but a human reader can misread five verdicts. One-line labelling repair; not a change
-to any predicate.
+unaffected — but a human reader can misread five verdicts. One-line labelling repair.
 
 ## 6. Independent checks I ran (read-only)
 

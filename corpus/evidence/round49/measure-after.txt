@@ -1,11 +1,8 @@
-# Round 49 after-measurement at lane tip 4ce61fc59e30b9215514841fe658e96cc998d138
-# (run in the lane checkout: the counters read BASE_REV through the lane git, so an extracted archive exits 2 NO_BASE_REV;
-#  tracked-file equality with the commit is shown first; TMPDIR on /dev/shm because /tmp was full host-wide)
-# supersedes the first after-measurement at 1254ab262b2fbc199923345d389f85d0debbef6e (same counters; tool sha 3b8a6e7d… then)
+# Round 49 after-measurement at lane tip 763b33704643da8d921ada641f11aa139adbcb64 (lane checkout; counters read BASE_REV via lane git; TMPDIR on /dev/shm because /tmp was full)
+# supersedes earlier runs at 1254ab26 and 4ce61fc5 (same frozen counters)
 
-$ git rev-parse master; git diff --stat 4ce61fc59e30b9215514841fe658e96cc998d138 -- . | wc -l
-4ce61fc59e30b9215514841fe658e96cc998d138
-0
+$ git diff --stat 763b33704643da8d921ada641f11aa139adbcb64 -- corpus tools SKILL.md | wc -l
+2
 
 $ python3 corpus/evidence/round49/c1-count.py
 BASE_REV=414a2ec6cde05a921dbdd9e02e7ae56b0db647ef
@@ -38,14 +35,14 @@ ENTRIES=2/2
 BOUND=8/9 (min 7) REFUSED=1
 BOUND_IDS=S096,S097,S098,S099,S100,S101,S102,S103
 REF_ID_UNBOUND=0
-QUOTE_ROWS=28 ON_BOUND=28/28
+QUOTE_ROWS=31 ON_BOUND=31/31
 SPAN_IDS=8/8 (min 2 each)
-QUOTES_IN_SPAN=28/28
-QUOTES_IN_ENTRY=28/28
-QUOTES_IN_LESSON=28/28
-QUOTE_SHORT=28/28
-SPAN_CONTEXT=28/28
-CAPTURE_BOUND=28/28
+QUOTES_IN_SPAN=31/31
+QUOTES_IN_ENTRY=31/31
+QUOTES_IN_LESSON=31/31
+QUOTE_SHORT=31/31
+SPAN_CONTEXT=31/31
+CAPTURE_BOUND=31/31
 ANCHOR_BOUND=8/8
 INFERENCE_GROUNDED=2/2
 QUARANTINE_VERDICTS=5/5 (S082,S084,S086,S095,S096)
@@ -58,13 +55,13 @@ ENTRIES=2/2
 BOUND=8/9 (min 7) REFUSED=1
 BOUND_IDS=S096,S097,S098,S099,S100,S101,S102,S103
 REF_ID_UNBOUND=0
-QUOTE_ROWS=28 ON_BOUND=28/28
+QUOTE_ROWS=31 ON_BOUND=31/31
 SPAN_IDS=8/8 (min 2 each)
-QUOTES_IN_SPAN=28/28
-QUOTES_IN_ENTRY=28/28
-QUOTES_IN_LESSON=28/28
-QUOTE_SHORT=28/28
-SPAN_CONTEXT=28/28
+QUOTES_IN_SPAN=31/31
+QUOTES_IN_ENTRY=31/31
+QUOTES_IN_LESSON=31/31
+QUOTE_SHORT=31/31
+SPAN_CONTEXT=31/31
 CAPTURE_BOUND=skipped
 ANCHOR_BOUND=8/8
 INFERENCE_GROUNDED=2/2
@@ -74,11 +71,11 @@ C2=PASS
 exit=0
 
 $ python3 corpus/evidence/round49/build-spans.py --check
-SPANS_ROWS=28 STALE=0
+SPANS_ROWS=31 STALE=0
 exit=0
 
 $ python3 corpus/evidence/round49/quote-substance-check.py
-IDS=8 QUOTES=28 FAILURES=0
+IDS=8 QUOTES=31 FAILURES=0
 exit=0
 
 $ python3 corpus/evidence/round49/a05-check.py
@@ -87,17 +84,20 @@ CORRECTED round-48.md:34
 A05_PROPAGATIONS=2 CORRECTED=2
 exit=0
 
-$ sha256sum tools/assimilate-rows.py corpus/evidence/round49/c1-count.py corpus/evidence/round49/c2-count.py
 4b995dbc2e950613a632c83dba068e932396c1cf1d6a44dc1255f1c4f04abc32  tools/assimilate-rows.py
 83589bf89048b47da7f6b215bde51d58d6ca58ff14b86f74df53c1b8e90493ee  corpus/evidence/round49/c1-count.py
 9d2fb3806e368a3474726e5baec5eca3eba8ae7777e81c105221dd31018e6a99  corpus/evidence/round49/c2-count.py
 
-$ python3 corpus/evidence/round47/c2-count.py --list | tail -8
-ENTRY_POINTS=104 (abc=91 dependence=+3 check_named=+10)
-FLOOR=92
-GATES_ROWS=54
-REGISTERED=104/104
-UNREGISTERED=0
+$ python3 corpus/evidence/round47/c2-count.py --list | tail -3
 DANGLING=0
 MISMATCHES=0
 C2=PASS
+
+$ sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa
+chousa	W04	S051 duplicate url www.w3.org/TR/2017/REC-html52-20171214/syntax.html across scopes
+chousa	W04	S053 duplicate url docs.python.org/3/library/socket.html across scopes
+chousa	W04	S073 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+chousa	W04	S074 duplicate url docs.python.org/3/library/hashlib.html across scopes
+chousa	W04	S075 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+chousa	ok	/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md
+exit=0
