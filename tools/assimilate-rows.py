@@ -15,18 +15,23 @@ With one or more --entry (a path relative to --knowledge, e.g.
 `corpus/knowledge/x.md`) it also writes:
 
 - `renumber.tsv` (`staged_id lane_id action url`): every staged id the entries
-  cite, in ascending staged-id order. An entry CITES the ids on its `source:`
-  lines (a line that starts with `source:`) — round 51 (QUALITY 77); `--cites all`
+  cite, in ascending staged-id order. An entry CITES the id right after `source:`
+  on each header line (a line that starts with `source:`, above the first `####`
+  heading; other ids on the line, and `source:` lines in the body, are not
+  citations) — round 51 (QUALITY 77); a `source:` id that is neither a staged row nor
+  a Registry row, or is a lane row of another document that this run also mints, is
+  refused; `--cites all`
   restores the round-49/50 reading (every staged id token an entry mentions). BY DOCUMENT: a staged row whose URL (the
   census's normalised first http(s) URL of the `source` cell) a Registry row
   already carries maps to that row's id (`held`, nothing appended); any other
   maps to the next free lane id, contiguous from the registry maximum
   (`append`). Ids are never shifted by arithmetic.
-- DIR/<entry>: each entry with ONE simultaneous substitution of every cited
-  staged id (so S100->S101 and S101->S102 never chain). Tokens that are not
+- DIR/<entry>: each entry with ONE simultaneous substitution of that entry's OWN
+  cited staged ids (in `--cites all` mode: of every cited staged id) (so S100->S101 and S101->S102 never chain). Tokens that are not
   cited pass through unchanged — checking that they name the right lane
   document is the reader's job. In the default `--cites source` mode a staged id
-  an entry mentions but no entry cites on a `source:` line is listed in
+  an entry mentions but does not itself cite on a header `source:` line (also when
+  another entry cites it) is left unchanged and listed in
   `bodyonly.tsv` (`entry<TAB>staged_id`, header line first) and counted as
   `BODYONLY=<n>` on stdout; when such an id is also a lane id (a registry row
   or a minted one) it is also listed in `bodyclash.tsv` and warned on stderr
@@ -64,8 +69,11 @@ lane status`, `ROWUSEDBY lane list`, `ROWRECHECK lane value`, `ENTRYCITES
 entry ids`, `BODYONLY entry id`, `BODYCLASH entry id` (source mode only),
 `STRIPPED lane column`. `--selftest` also takes `--cites source|all` (default
 `source`; the round-50 pinned package needs `all`). The environment variable
-`ASSIMILATE_CITES=source|all` sets the default of both modes (the frozen round-49 and
-round-50 counters call the tool with no flag and need `all`; an explicit `--cites` wins). It prints each as `FINDING <line>`, every
+`ASSIMILATE_CITES=source|all` sets the default of both modes; it restores the round-49 counter
+(`ASSIMILATE_CITES=all python3 corpus/evidence/round49/c1-count.py` passes) but not the round-50
+one, whose default leg reads the lane default fixtures that are now the source-mode package; an
+explicit `--cites` wins. An ambient value changes the verdict of any caller that passes no flag,
+so the round-51 counters run the tool with the variable removed from its environment). It prints each as `FINDING <line>`, every
 difference as `DIFF missing <line>` / `DIFF unexpected <line>`, then
 `FIXTURES_SHA256=<hex>` (sha256 over the sorted relative paths and bytes of
 every fixture file) and `SELFTEST=PASS|FAIL`. Exit 0 PASS · 1 FAIL · 2 fixtures
@@ -156,12 +164,20 @@ def pipe_free(cell: str) -> str:
     return re.sub(r"\s*\\?\|\s*", " / ", cell)
 
 
+SOURCE_RE = re.compile(r"^source:[ \t]*(S\d{3,})\b")
+
+
 def source_ids(text: str) -> list[str]:
-    """Ids on the entry's `source:` lines (a line that starts with `source:`), in order of first mention."""
+    """The id each header `source:` line cites: the id right after `source:` on a line that starts with
+    `source:`, read only above the first `####` heading (the provenance header), in order of first mention.
+    Other ids on the line (an anchor or note) and `source:` lines in the body are not citations."""
     out: list[str] = []
     for line in text.splitlines():
-        if line.startswith("source:"):
-            out += [i for i in TOKEN_RE.findall(line) if i not in out]
+        if line.startswith("####"):
+            break
+        m = SOURCE_RE.match(line)
+        if m and m.group(1) not in out:
+            out.append(m.group(1))
     return out
 
 
@@ -364,6 +380,10 @@ def main() -> int:
                 refused.append(f"entry not UTF-8: {e}")
     refused += [f"{p}" for p in registry_problems(reg_text)]
     if cites == "source":
+        for e, tx in texts.items():
+            for i in source_ids(tx):
+                if i not in staged and i not in base:
+                    refused.append(f"{e}: source id {i} is neither a staged row nor a lane Registry row")
         cited = sorted({t for tx in texts.values() for t in source_ids(tx) if t in staged}, key=num)
     else:
         cited = sorted({t for tx in texts.values() for t in TOKEN_RE.findall(tx) if t in staged}, key=num)
@@ -398,8 +418,17 @@ def main() -> int:
             by_url[u] = lid
     sub = {sid: v[0] for sid, v in mapping.items()}
 
-    def subst(s: str) -> str:
-        return TOKEN_RE.sub(lambda m: sub.get(m.group(0), m.group(0)), s)
+    def subst(s: str, only: set[str] | None = None) -> str:
+        return TOKEN_RE.sub(lambda m: sub[m.group(0)] if m.group(0) in sub and (only is None or m.group(0) in only)
+                            else m.group(0), s)
+
+    minted = {v[0] for v in mapping.values() if v[1] == "append"}
+    if cites == "source":
+        for e, tx in texts.items():
+            for i in source_ids(tx):
+                if i not in staged and i in minted:
+                    print(f"REFUSED {e}: source id {i} is a lane row of another document and also a minted id", file=sys.stderr)
+                    return 1
 
     rows: list[str] = []
     stripped: list[tuple[str, str, str]] = []
@@ -433,11 +462,11 @@ def main() -> int:
     for e, tx in texts.items():
         dst = out / e
         dst.parent.mkdir(parents=True, exist_ok=True)
-        dst.write_text(subst(tx), encoding="utf-8")
+        dst.write_text(subst(tx, set(source_ids(tx)) if cites == "source" else None), encoding="utf-8")
     if cites == "source":
         lane_ids = {s for s in base} | {v[0] for v in mapping.values()}
         body = [(e, i) for e, tx in texts.items()
-                for i in sorted(set(TOKEN_RE.findall(tx)) - set(cited), key=num) if i in staged]
+                for i in sorted(set(TOKEN_RE.findall(tx)) - set(source_ids(tx)), key=num) if i in staged]
         (out / "bodyonly.tsv").write_text("entry\tstaged_id\n" + "".join(f"{e}\t{i}\n" for e, i in body), encoding="utf-8")
         clash = [(e, i) for e, i in body if i in lane_ids]
         if clash:

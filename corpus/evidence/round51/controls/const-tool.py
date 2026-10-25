@@ -6,7 +6,7 @@ import os
 import pathlib
 import sys
 
-REAL = pathlib.Path(__file__).resolve().parents[4] / "tools" / "assimilate-rows.py"
+REAL = pathlib.Path(__file__).resolve().parent / "tool-before.py"  # round 51: the BASE tool (E4)
 if "--selftest" not in sys.argv:
     os.execv(sys.executable, [sys.executable, str(REAL), *sys.argv[1:]])
 print("SELFTEST=PASS findings=26 expected=26")

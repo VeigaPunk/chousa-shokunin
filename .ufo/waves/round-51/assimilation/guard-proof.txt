@@ -1,0 +1,19 @@
+GUARD PROOF — pattern tolerance (0-3 leading spaces) vs column-zero-only
+fixture: reg-fixture.md (S002 indented two spaces), staged-fixture.md (S002 at column zero)
+
+=== A) pattern: ^ {0,3}\|[[:space:]]*S[0-9]{3,} ===
+-- cmd: grep -oE '^ {0,3}\|[[:space:]]*S[0-9]{3,}' reg-fixture.md | grep -oE 'S[0-9]+' | sort > gA-reg
+-- reg: S001 S002 
+-- staged: S002 S900 
+-- collisions: [S002 ] count=1
+
+=== B) pattern: ^\|[[:space:]]*S[0-9]{3,} ===
+-- reg: S001 
+-- staged: S002 S900 
+-- collisions: [] count=0
+
+=== C) same fixture through the candidate tool (tools/assimilate-rows.py) ===
+-- cmd: python3 tools/assimilate-rows.py --staged staged-fixture.md --knowledge fk-knowledge --registry reg-fixture.md --opened 2026-10-25 --out fk-out
+-- stdout: COLLISIONS=1
+-- fk-out/collisions: [S002 ]
+=> the tool's splitter tolerates a 0-3 space indent, i.e. it agrees with pattern A and not pattern B

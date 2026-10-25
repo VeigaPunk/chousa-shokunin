@@ -2618,3 +2618,12 @@ The numeric operability scale stays 3/10; no other score is invented.
 ## Planned — round 51 (not started)
 
 Candidates: make the adopter cite only `source:` ids (QUALITY 77) and fix its three latent input defects (identity before pipe rewrite, plain-split registry pipe, next id without a `## Registry` heading — W2 `R50ExecPerturbAdopter`); fold `c1-supplement.py`'s nonce leg into a successor counter; give `inference-ground` a CJK polarity check; adopt `cnki-public-surface-r43.md` with a re-grounded S160 and a capture of the sibling portal; read the two screenshots' text by a located-quote method instead of a rendered-page note.
+
+## Round 51 pointer corrections (append-only; no row above is edited)
+
+Each line names the row's line number, the bare pointer it prints and the committed non-empty file it meant (W1 `R51ExecC3Pointers`: receipt labels and add-commits). `python3 corpus/evidence/round51/c3-count.py` reads them.
+
+correction: SCORECARD.md:1843 measure/final/ -> .ufo/waves/round-32/measure/final/
+correction: SCORECARD.md:2073 measure-l1/c1-s36361.json -> .ufo/waves/round-36/measure-l1/c1-s36361.json
+correction: SCORECARD.md:2074 measure-l1/c2-s36371.json -> .ufo/waves/round-36/measure-l1/c2-s36371.json
+correction: SCORECARD.md:2616 c1-supplement.py -> corpus/evidence/round50/c1-supplement.py

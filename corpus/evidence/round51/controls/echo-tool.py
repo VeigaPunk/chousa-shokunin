@@ -9,7 +9,7 @@ import os
 import pathlib
 import sys
 
-REAL = pathlib.Path(__file__).resolve().parents[4] / "tools" / "assimilate-rows.py"
+REAL = pathlib.Path(__file__).resolve().parent / "tool-before.py"  # round 51: delegate to the BASE tool, never the lane tool (E4)
 if "--selftest" not in sys.argv:
     os.execv(sys.executable, [sys.executable, str(REAL), *sys.argv[1:]])
 import hashlib
