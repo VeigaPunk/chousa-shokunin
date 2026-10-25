@@ -33,6 +33,16 @@ Rule (the same sentence as `corpus/evidence/round46/claims.md`, claim C1):
      content words; a figure grounded by a counts key whose name carries
      `no`/`not`/`none`/`without` must be followed by a negator in the
      bullet's next four words, and one whose key does not must not be.
+     Refinements after the round-47 wave-1 attacks (no rule widened toward
+     acceptance of a flip): every occurrence of a phrase in the cited spans is
+     read, and occurrences of mixed polarity decide nothing (row order no
+     longer decides); a span negator counts only within the phrase's own line
+     and clause; negators include implicit ones (`lacks`, `absent`,
+     `missing`, `un…able`/`un…ed` forms); an `un`-prefixed form of an affirmed
+     phrase's word (`unfrozen`) is a flip; every occurrence of a figure is
+     checked at digit boundaries; a key path's parts (any ancestor key, `_`,
+     `-` or camelCase separated) carry its negation; mixed-polarity keys
+     decide nothing.
 
 Usage:
   python3 tools/inference-ground.py --entry PATH --spans TSV --counts JSON
@@ -235,8 +245,18 @@ def words(s: str) -> list[str]:
     return WORDS_RE.findall(s.lower())
 
 
+# Implicit negators (round-47 `LabC1FalsePos`: 9 of 10 correctly-reasoned
+# bullets were refused because `lacks`, `absent` or `untraceable` read as
+# affirmative). A lexical list, not a parser.
+IMPLICIT_NEG = {"lack", "lacks", "lacked", "lacking", "absent", "absence",
+                "missing", "fail", "fails", "failed", "unable", "nothing",
+                "free", "omits", "omitted", "devoid"}
+UN_NEG_RE = re.compile(r"^un(?!der|til|ion|ique|it|iver|iform|less)[a-z]{3,}(?:able|ible|ed|known|clear|sure)$")
+
+
 def is_neg(w: str) -> bool:
-    return w in NEG_WORDS or w.endswith("n't") or w.endswith("n\u2019t")
+    return (w in NEG_WORDS or w in IMPLICIT_NEG or bool(UN_NEG_RE.match(w))
+            or w.endswith("n't") or w.endswith("n\u2019t"))
 
 
 def stem(w: str) -> str:
@@ -251,25 +271,38 @@ def unquoted(bullet: str) -> str:
     return ID_RE.sub(" ", BACKTICK_RE.sub(" ", QUOTE_RE.sub(" ", bullet)))
 
 
-def phrase_polarity(tok: str, spans: list[str]) -> tuple[bool, list[str]] | None:
-    """(negated, scope words) for a phrase as its first carrying span reads it.
+def occurrence_polarity(tok: str, s: str, idx: int) -> tuple[bool, list[str]]:
+    """(negated, scope words) for one occurrence of a phrase in a span.
 
-    The phrase is negated when a negator sits inside it (scope = the content
-    words after that negator) or among the three span words just before it
-    (scope = all of its content words).
+    Negated when a negator sits inside the phrase (scope = the content words
+    after it) or among the three span words just before it, inside the
+    phrase's own line and clause (a negator on a previous list line, such as
+    `(Unlabelled)` above `Pre-processed Wikipedia Pages`, does not negate it).
     """
+    inner = words(tok)
+    negs = [k for k, w in enumerate(inner) if is_neg(w)]
+    if negs:
+        return True, content(inner[negs[0] + 1:])
+    before = re.split(r"[\n.;:()]", s[:idx])[-1]
+    return any(is_neg(w) for w in words(before)[-3:]), content(inner)
+
+
+def phrase_polarity(tok: str, spans: list[str]) -> tuple[bool, list[str]] | None:
+    """(negated, scope words) over EVERY occurrence of a phrase in the cited
+    spans; None when no span carries it or the occurrences disagree (round-47
+    `ReviewerC1Polarity` M4: reading the first carrying span made the verdict
+    depend on manifest row order)."""
+    seen: list[tuple[bool, list[str]]] = []
     for s in spans:
-        idx = s.find(tok)
-        if idx < 0:
-            continue
-        inner = words(tok)
-        negs = [k for k, w in enumerate(inner) if is_neg(w)]
-        if negs:
-            return True, content(inner[negs[0] + 1:])
-        if any(is_neg(w) for w in words(s[:idx])[-3:]):
-            return True, content(inner)
-        return False, content(inner)
-    return None
+        start = s.find(tok)
+        while start >= 0:
+            seen.append(occurrence_polarity(tok, s, start))
+            start = s.find(tok, start + 1)
+    if not seen or len({neg for neg, _ in seen}) != 1:
+        return None
+    negated = seen[0][0]
+    scope = sorted({w for _, sc in seen for w in sc})
+    return negated, scope
 
 
 def polarity_flips(bullet: str, tok: str, spans: list[str]) -> list[str]:
@@ -278,7 +311,8 @@ def polarity_flips(bullet: str, tok: str, spans: list[str]) -> list[str]:
     P1: the span negates the phrase, and the bullet's own (unquoted) text uses a
     scope word (same 5-letter stem) with no negator in the 3 words before or 2
     after it. P2: the span does not negate the phrase, and the bullet's own
-    text puts a negator in the 3 words before one of the phrase's content words.
+    text puts a negator in the 3 words before one of the phrase's content words,
+    or uses an `un`-prefixed form of one (`frozen` -> `unfrozen`).
     """
     pol = phrase_polarity(tok, spans)
     if pol is None:
@@ -290,6 +324,10 @@ def polarity_flips(bullet: str, tok: str, spans: list[str]) -> list[str]:
     uw = words(unquoted(bullet))
     out = []
     for j, w in enumerate(uw):
+        if (not negated and w.startswith("un") and len(w) >= 6
+                and stem(w[2:]) in stems):
+            out.append(w)
+            continue
         if is_neg(w) or len(w) < 4 or w in STOP or stem(w) not in stems:
             continue
         before, after = uw[max(0, j - 3):j], uw[j + 1:j + 3]
@@ -300,8 +338,12 @@ def polarity_flips(bullet: str, tok: str, spans: list[str]) -> list[str]:
     return out
 
 
+KEY_PART_RE = re.compile(r"[A-Z]?[a-z]+|[A-Z]+(?![a-z])|\d+")
+
+
 def count_keys(counts: pathlib.Path) -> dict[str, set[str]]:
-    """numeral string -> the leaf key names that carry it."""
+    """numeral string -> the key PATHS that carry it (every ancestor key, so a
+    nested `{"without_archive": {"count": 1582}}` keeps its negation)."""
     out: dict[str, set[str]] = {}
     if not counts.is_file():
         return out
@@ -310,37 +352,47 @@ def count_keys(counts: pathlib.Path) -> dict[str, set[str]]:
     except json.JSONDecodeError:
         return out
 
-    def walk(node, key: str) -> None:
+    def walk(node, path: str) -> None:
         if isinstance(node, dict):
             for k, v in node.items():
-                walk(v, str(k))
+                walk(v, f"{path}/{k}" if path else str(k))
         elif isinstance(node, list):
             for v in node:
-                walk(v, key)
+                walk(v, path)
         elif isinstance(node, bool):
             return
         elif isinstance(node, (int, float)):
             for s in (str(node), f"{node:,}"):
-                out.setdefault(s, set()).add(key)
+                out.setdefault(s, set()).add(path)
+        elif isinstance(node, str) and re.fullmatch(r"\d[\d,]*", node.strip()):
+            bare = node.strip().replace(",", "")
+            for s in (bare, f"{int(bare):,}"):
+                out.setdefault(s, set()).add(path)
 
     walk(data, "")
     return out
 
 
+def key_negated(path: str) -> bool:
+    return any(p.lower() in NEG_KEY_PARTS for p in KEY_PART_RE.findall(path))
+
+
 def figure_flip(bullet: str, tok: str, keys: set[str]) -> bool:
-    """P3: a counts figure whose key names a negation (`answers_without_key`)
+    """P3: a counts figure whose key path names a negation (`answers_without_key`)
     must be followed by a negator in the bullet's next 4 words, and one whose
-    key does not must not be; keys of mixed polarity decide nothing."""
-    pols = {any(p in NEG_KEY_PARTS for p in k.lower().split("_")) for k in keys}
+    key does not must not be — at EVERY occurrence of the figure, located at
+    digit boundaries; keys of mixed polarity decide nothing."""
+    pols = {key_negated(k) for k in keys}
     if len(pols) != 1:
         return False
     key_neg = pols.pop()
     text = unquoted(bullet)
-    idx = text.find(tok)
-    if idx < 0:
-        return False
-    nxt = words(text[idx + len(tok):])[:4]
-    return key_neg != any(is_neg(w) for w in nxt)
+    bare = tok.rstrip("%")
+    for m in re.finditer(r"(?<![\d,.])" + re.escape(bare) + r"(?![\d,])", text):
+        nxt = words(text[m.end():])[:4]
+        if key_neg != any(is_neg(w) for w in nxt):
+            return True
+    return False
 
 
 def count_values(counts: pathlib.Path) -> set[str]:
