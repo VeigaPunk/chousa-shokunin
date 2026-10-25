@@ -28,8 +28,7 @@ exit=0
 Same output with no `--root` (LANE default), trailing slash, relative root, and through a symlink
 (six invocations, one sha256 `a5e35b53af18…`); empty root → `C2=FAIL no-entry-points` exit 2.
 Counter sha256 `60ad448e99b15cb6…` (blob `4b30bbe3773954a6…`), `SKILL.md` `2ff29159fa61…`,
-`claims.md` `60098dfffe…`, `controls/c2-controls.txt` `a44c50c3e6ee…`; matches
-`measure-after.txt:12-18` and the claims target line-for-line.
+`claims.md` `60098dfffe…`, `controls/c2-controls.txt` `a44c50c3e6ee…` — matches `measure-after.txt:12-18` and the claims target line-for-line.
 
 ## 2. Independent enumeration, set-for-set
 
@@ -117,15 +116,14 @@ refuses the substring credit the frozen blob allowed.
 
 ## Residual risk and gaps
 
-- Control fixtures `SKILL-*.md` are uncommitted (lane convention; round 45 ships `*.txt` only), so
-  the seven controls reproduce in *shape* (my replays match `SKILL-7pipe` and `SKILL-after`) but
-  not byte-for-byte — and finding 1 cannot be reconstructed from the repo.
-- I did not re-run tools' exit codes or verdict maps; row truth is the named limit and belongs to
-  `RevGatesRows` / `RevC2Rows`. No LSP server covers this tree, so cross-file claims here are
-  text-grep matched, each paired with a measured run.
+- Control fixtures `SKILL-*.md` are uncommitted (lane convention; round 45 ships `*.txt` only), so the
+  seven controls reproduce in *shape* (my replays match `SKILL-7pipe` and `SKILL-after`), not
+  byte-for-byte — and finding 1 cannot be reconstructed from the repo.
+- I did not re-run tools' exit codes or verdict maps (row truth is the named limit; `RevGatesRows` /
+  `RevC2Rows` own it). No LSP server covers this tree, so cross-file claims here are text-grep
+  matched, each paired with a measured run.
 - The lane moved during this seat; all numbers above are `git archive d09fc8e`. At `HEAD`
-  (`e50b388`, same counter sha256): `ENTRY_POINTS=73 … REGISTERED=73/73 UNREGISTERED=0 C2=PASS`
-  exit 0, so the wave-2 fixes preserve the claim. Other seats later left an uncommitted counter at
-  `c2729d7f…` (8+/4−) adding `(?:\./)?` and a raw-line row test; the `./` result above does not
-  hold there, and it prints 73/73 PASS.
-- No installs, no network, no writes outside this report; scratch `/tmp/chousa-r46w2-RevRerunC2/` deleted.
+  (`e50b388`, same counter sha256) → `ENTRY_POINTS=73 … 73/73 UNREGISTERED=0 C2=PASS` exit 0, so
+  the wave-2 fixes preserve the claim. Other seats then left an uncommitted counter at `c2729d7f…`
+  adding `(?:\./)?` and a raw-line row test (73/73 PASS); the `./` result above does not hold there.
+  No installs, no network, no writes outside this report; scratch deleted.

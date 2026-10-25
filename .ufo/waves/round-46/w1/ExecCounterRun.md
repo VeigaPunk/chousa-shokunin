@@ -40,6 +40,7 @@ says "6e2630a + this round's counters and fixtures": bare `6e2630a` measures `RE
 07:31:11  C1 PASS exit 0 · C2 REGISTERED=72/72 UNREGISTERED=0 GATES_ROWS=35 PASS exit 0 · C3 PASS exit 0
 07:32:37  c1 819287e2 c2 60ad448e c3 234e2272 · all three PASS exit 0 (shas of the c1 edit in F2)
 07:43:44  c1 8fa8e5cc c2 c2729d7f c3 e069b685 · C1 PASS CANARY=pass · C2 73/73 PASS · C3 PASS (new SPAN_CONTEXT=11/11)
+07:47:03  c1 524b9eef c2 a6ec86a3 c3 e069b685 tool c3ea067e · all three PASS exit 0 (c2 then moved again: `61b9c21c` 07:48:11 → `f2fcb654` 07:48:38, still PASS)
 ```
 C3 flipped 0/5→5/5 between 07:29 and 07:30 (ScribeRows' SOURCES rows); C2 flipped 55/72→72/72 between the first two snapshots, then grew to 73/73 when `named` rose to 71. Safe defaults: a root without the fixtures dir → `C1=FAIL no-fixtures` exit 2; a missing `--skill` → `REGISTERED=0/72` exit 1.
 
@@ -69,13 +70,13 @@ survive). At pin `8473abf6` the counter grew a `CANARY` leg (same bytes under ne
 exit 1 with `INF_UNCITED`/`INF_TOKEN_NOT_IN_SPAN`; rewriting a positive's token to `the pool is reissued nightly` →
 exit 1; grounding the junk-ungrounded token in a real span → exit 0 (correct: it is no longer junk). Named limit
 (`RevC1Pin`): a 9-line stub hardcoding two junk sentences plus a citation-id test scores `3/3 3/3 CANARY=pass` — any
-exit-code counter over a fixed fixture set admits content fingerprinting; named, not chased — and no post-leg re-digest can close it, since the forge never mutates a fixture. Only pinning the tool's own sha256, or stating the limit in the Gates row, closes it.
+exit-code counter over a fixed fixture set admits content fingerprinting; named, not chased — and no post-leg re-digest can close it, since the forge never mutates a fixture. Only pinning the tool's own sha256 (the counter names it only by path, `:5`, `:81`), or stating the limit in the Gates row, closes it.
 
-**F2 — the freeze did not hold: ten edits after `c2f0e9d1` (c1 ×4, c2 ×2, c3 ×2, tool ×2).**
+**F2 — the freeze did not hold: sixteen edits after `c2f0e9d1` (c1 ×5, c2 ×5, c3 ×2, tool ×4).**
 ```
 file      frozen sha256[:16]  settled sha256[:16]  edit history (worktree)
-c1-count   e7686236c811df49   8fa8e5cc9b12b39f    07:27:37 96833e22 → 07:31:17 819287e2 → 07:38:16 8473abf6 → 07:42:52 8fa8e5cc
-c2-count   06c9e9bc3865b60e   c2729d7f77d8cffd    07:28:28 60ad448e → 07:42:26 c2729d7f
+c1-count   e7686236c811df49   524b9eef830d1dbe    07:27:37 96833e22 → 07:31:17 819287e2 → 07:38:16 8473abf6 → 07:42:52 8fa8e5cc → 524b9eef
+c2-count   06c9e9bc3865b60e   f2fcb654fb20ad    07:28:28 60ad448e → 07:42:26 c2729d7f → a6ec86a3 → 61b9c21c → 07:48:38 f2fcb654
 c3-count   5018d7b04eba6bdf   e069b68539949f0d    07:29:33 234e2272 → 07:43:32 e069b685
 ```
 `git diff c2f0e9d1 -- …/cN-count.py`: c1 junk `!= 0` → `== 1` **plus** a `PINNED` table (eight fixtures + two span files)
@@ -90,15 +91,14 @@ Deterministic repro on unmodified `8473abf6` (fake root, no timers): a forge rew
 The pin is also structurally blind to the canary: both `shutil.copyfile` calls run before any `run()`, and `canary-b.md` copies `junk-uncited.md`, whose inference bullet lacks an `S` id, so an uncited rewrite satisfies it by construction (`RevC1Pin`).
 **Mid-write hazard, observed:** at 07:42:26 c1 was four concatenated copies (21 792 B, `SyntaxError`) and settled 07:42:52 at `8fa8e5cc` (13 951 B, still four copies — dead code ×3; verified that copy 1 runs, because editing `spans/S901-1.txt` trips its `FIXTURES_CHANGED`); c3 raised `NameError: integral_offset` until 07:43:32 (`e069b685`). A verdict read inside such a window is invalid.
 
-**F3 — C2's row test is format-only, and two comment/fence routes remain.** One junk row under `## Gates` registers
-an unregistered path: `| x | x | x | x | x | x | x | x | corpus/evidence/round34/self-audit.py exit |` →
-`GATES_ROWS=31 REGISTERED=56/72` (baseline 55/72). Hardening holds elsewhere: fenced copy not registered (30 rows);
-`…/self-audit.py.bak` not registered; no `exit` not registered. Live hazards in `60ad448e` (also measured by
-`MutC2Forge`): a row inside a **multi-line** `<!-- … -->` is still a row (`GATES_ROWS` 35→36, `C2=PASS`); one
-**unterminated** ` ``` ` inside `## Gates` → `GATES_ROWS=0 REGISTERED=0/72` exit 1 (fail-closed, but a
-whole-registry false negative). New: the ≥8-pipe threshold counts **escaped** pipes —
-`| a | b | c | x\|y\|z\|w\|q | corpus/evidence/round34/self-audit.py exit 0 |` (10 pipes, 5 real cells) counts as a
-Gates row; the docstring's named limit therefore understates. Remedy is unescaped-cell counting, not `str.count("|")` (`MutC2Forge` reproduced it on a one-entry fake root: `GATES_ROWS=1 REGISTERED=1/1 C2=PASS`; same row unescaped → 0).
+**F3 — C2's row test is format-only; one of the three routes is now closed.** A junk 8-cell row under `## Gates` still
+registers a path (`| x | … | corpus/evidence/round34/self-audit.py exit |` → `GATES_ROWS` +1), which is the declared
+limit: the row test checks shape and an `exit` substring, not truth. Status at `f2fcb654`: a row inside a **multi-line**
+`<!-- … -->` is **closed** (my retest: `GATES_ROWS` stays 35), while an **unterminated** ` ``` ` still zeroes the whole
+registry (`GATES_ROWS=0`, `C2=FAIL` exit 1 — fail-closed false negative). Still open: the ≥9-separator threshold counts
+**escaped** pipes, so `| a | b | c | x\|y\|z\|w\|q | corpus/evidence/round34/self-audit.py exit 0 |` (10 pipes, 5 real
+cells) counts as a Gates row — remedy remains unescaped-cell counting. All three were open at `60ad448e`; the comment
+fix landed by `f2fcb654`.
 
 **F4 — C2 blind spot: 10 executable scripts are invisible to A∪B∪C.** 82 `.py`/`.sh` files exist in the lane; the
 union is 72: `round25-holds/battery.sh`, `round25-meta-oracle.py`, `round25-sources-census.sh`,
@@ -129,7 +129,7 @@ WARP note is lane `S081`"). Polarity positive, documents right; S085–S089 rows
 verdict maps (`inference-ground (r46)` → exit 0 grounded / 1 findings / 2 usage; `chousa round-46 counters` names
 c1/c2/c3 plus build-spans). One row shows F3's escaped-pipe looseness (14 naive fields, 8 real cells; renders fine); C2=PASS was not obtained with junk rows. The `inference-ground (r46)` row's exit contract omits `FIXTURES_CHANGED=` (`SKILL.md:117`) — a registry-row truth item for `ReviewGatesSection`.
 
-## 5. Verdict at close (07:43:44, settled: c1 `8fa8e5cc`, c2 `c2729d7f`, c3 `e069b685`, tool `99028afe`; all PASS, C1 with `CANARY=pass`; tool since `c3ea067e`, C1 still PASS at 07:45:40)
+## 5. Verdict at close (07:48:38: c1 `524b9eef`, c2 `f2fcb654`, c3 `e069b685`, tool `c3ea067e`; all PASS, C1 with `CANARY=pass`)
 
 - **C1 PASS** (exit 0, `TOOL=present 3/3 3/3 CANARY=pass`). Real tool does lexical grounding — at every tool sha
   tested (`397d9878`, `3018b1d2`, `99028afe`, `c3ea067e`) the renamed-fixture run gives 3 positives exit 0 / 3 junk exit 1, and
@@ -140,9 +140,9 @@ c1/c2/c3 plus build-spans). One row shows F3's escaped-pipe looseness (14 naive 
 - **C3 PASS** (exit 0, both modes; the settled `e069b685` adds a `SPAN_CONTEXT=11/11` leg). Binding verified (F7), polarity read (F6). Semantic support of
   each quote remains the reviewers' judgement — the counter binds bytes, not meaning.
 - **Freeze integrity (F2)** is the one open decision and it binds all three claims: each predicate names its counter
-  by path, so the ten edits after `c2f0e9d1` (c1 ×4, c2 ×2, c3 ×2, tool ×2) are the same class for C1, C2 and C3.
-  Every version agrees on today's tree; the c1 canary closes only the name oracle (F1) and the pin is pre-flight only (F2), so the Admission rule must still answer — errata or re-freeze.
+  by path, so the sixteen edits after `c2f0e9d1` (c1 ×5, c2 ×5, c3 ×2, tool ×4) are the same class for C1, C2 and C3.
+  Every version agrees on today's tree, and the whole round has since **landed**: HEAD `158ab27`, eight commits past the freeze, with `claims.md` and `corpus/fixtures/inference-ground-r46/` unchanged across `c2f0e9d1..HEAD` — so the frozen predicates and fixture bytes are intact. The c1 canary closes only the name oracle (F1), the pin is pre-flight only (F2); the Admission rule must still answer for the frozen-counter edits — errata or re-freeze.
 
 ## 6. Bounds
 
-No fetch, no network, no installs. No writes to lane production files, the lane git index/jj, the fleet repo or shokuknow; the only file I wrote is this report. `git status` at close carries only siblings' work (`M SKILL.md`, `M corpus/SOURCES.md`, `M round46/{c1,c2,c3}-count.py`, `M tools/inference-ground.py`, `?? knowledge/evidence-pool-versioning-r39*.md`, `?? round46/{build-spans.py,spans.tsv,spans/}`, plus the pre-existing wave-registry/cells edits).
+No fetch, no network, no installs. No writes to lane production files, the lane git index/jj, the fleet repo or shokuknow; the only file I wrote is this report. By the last check the round had been committed by its owner (HEAD `72a0f2b`), and the four artifacts my snapshot pins are git blobs — c1 `524b9eef`, c2 `f2fcb654`, c3 `e069b685`, tool `c3ea067e` — with `claims.md` and the fixture set byte-identical to the freeze. `git status` shows nine entries, all siblings' reports plus this one; nothing of mine outside it.
