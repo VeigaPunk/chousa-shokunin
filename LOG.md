@@ -1638,3 +1638,58 @@ opened from a committed capture. The round-43 closure's routed defects are the m
   ceiling, so no further wave was dispatched.
 - **Inherited debt still open.** The three modified JSON paths stay named and uncommitted; the
   round-43 L0 that asks the operator to rule on them is not duplicated here.
+
+## Round 45 — freeze, before any seat scored (2026-10-25)
+
+Three claims frozen in `corpus/evidence/round45/claims.md` at
+`d82cec904bf0fb8736886b9f17be913c7807427a`. No external fetch (L0 `8d77e6c1` still open).
+Motive: the round-44 closure's routed defects D5 (launcher exit contract), D2 (Gates rows)
+and D1 (a counter that could not run from the lane tree alone), plus the next shokuknow
+theme. Round 42 already hand-checked the quarantine slice, so this round assimilates.
+
+- **C1 operability**: control — the round-44 launcher scores `CASES_MATCH=1/5`, exit 1
+  (`controls/c1-control-r44-tool.txt`).
+- **C2 calibration**: control — the base tree scores `UNREGISTERED=26` of 51, exit 1
+  (`controls/c2-control-base.txt`).
+- **C3 depth**: controls — no entries, `ENTRIES=0/2`, exit 1; a forged span manifest passes
+  `--lane-only` (the named blind spot) and fails the default mode
+  (`controls/c3-control-do-nothing.txt`, `controls/c3-control-forged-span.txt`).
+- Census start: `sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa`
+  exit 0, five W04, 81 rows. Collision check: `assimilation/collisions` empty; the indented
+  guard row is caught (`assimilation/guard/`).
+
+## Round 45 — landing (2026-10-25)
+
+Work landed at `5e8c7ad2f7b8254d83358820286e3d12ca4672d1`; post-wave-2 corrections in the
+round-45 closing commit. Two v1 waves: wave 1 (build, 46 seats, 45 reports, 1 dead) and
+wave 2 (falsify, 38 seats, 38 reports). Round total 84 seats.
+
+- **C1 operability**: `tools/parent-lifetime.sh` exits 3 when the end line records zero
+  spawned tasks or a seat timed out, requires `--timeout` in dispatch mode and records
+  `timeout_s=` in the start line. `c1-count.py` → `CASES_MATCH=5/5`, exit 0. Wave 2 killed all
+  four mutants of the landed tool and found an errexit regression (a bare `wait` under an
+  inherited errexit truncates the receipt); the guard is restored
+  (`controls/c1-errexit-probe.txt`).
+- **C2 calibration**: twelve Gates rows added to SKILL.md (rounds 31–34 v1/v2/v3, 40, 41,
+  `tools/quarantine-check.py` with round 42, `tools/absent-split.py` with round 43, 44, 45,
+  `tools/parent-lifetime.sh`, the QUALITY 64 check). `c2-count.py --list` → `REGISTERED=54/54`,
+  `UNREGISTERED=0`, exit 0. Wave-2 row reviews corrected the round-40 row (a nonexistent
+  note; its C2 reads a fleet report) and the round-31 row (two wrong paths).
+- **C3 depth / assimilation** (item 10, one theme: what an AVeriTeC archive field documents,
+  and how many stored values are archive links): `evidence-archive-field-policy-r41.md` (S082
+  README, S083 v3 paper) and `evidence-snapshot-coverage-r40.md` (S084 train.json), staged ids
+  S139/S140/S132 re-bound by document. Re-grounded from on-disk captures: the staged
+  inference narrowed; the staged "6,510 hold a non-empty archive.org URL" replaced by the
+  recount (5,959 web.archive.org values; 1,582 sourced answers with no archive key); the
+  paper's double-archived 404 warning added. Spans, offsets and capture digests committed
+  (`corpus/evidence/round45/spans/`, `spans.tsv`, `counts.json`, `build-spans.py`).
+  `c3-count.py` default and `--lane-only` both pass. Scratch mirror validated before the
+  append, exit 0, no E03/E04. Rejected with flip: the staged pool-versioning amendment.
+- **QUALITY 64** (round tag, from `considerthese/2026-10-24.md`, 2026-10-24) with check
+  `corpus/evidence/round45/tag-count.py`: r35–r44 → `TAGGED=0/22`, exit 1; round 45 →
+  `TAGGED=3/3`, exit 0; a wave-2 indented-row forge fixed and kept as a control.
+  **QUALITY 65**: archive coverage counted by value, not by field.
+- **Misroot sweep**: four wave-1 reports written under the fleet root were copied
+  byte-exact into the lane, `cmp`-verified and removed from the fleet root.
+- **Inherited debt still open**: the three modified r40/r41 JSON paths stay left-named and
+  uncommitted; L0 `chousa | round-43` is unanswered.

@@ -1,0 +1,39 @@
+$ python3 corpus/evidence/round45/c1-count.py   # in git archive of 5e8c7ad2
+CASE a_empty_exits_3=ok
+CASE b_ok_exits_0=ok
+CASE c_timeout_exits_3=ok
+CASE d_no_timeout_exits_2=ok
+CASE e_start_timeout_s=ok
+CASES_MATCH=5/5
+C1=PASS
+exit=0
+$ python3 corpus/evidence/round45/c2-count.py --list   # in git archive of 5e8c7ad2
+ENTRY_POINTS=54
+GATES_ROWS=30
+REGISTERED=54/54
+UNREGISTERED=0
+C2=PASS
+exit=0
+$ python3 corpus/evidence/round45/c3-count.py   # in git archive of 5e8c7ad2
+ENTRIES=2/2
+CITES_BOUND=3/3
+QUOTES_IN_SPAN=4/4
+QUOTES_IN_ENTRY=4/4
+COUNTS_IN_ENTRY=7/7
+CAPTURE_BOUND=4/4
+COUNTS_REDERIVED=7/7
+C3=PASS
+exit=0
+$ python3 corpus/evidence/round45/c3-count.py --lane-only --cache /nonexistent   # in git archive of 5e8c7ad2
+ENTRIES=2/2
+CITES_BOUND=3/3
+QUOTES_IN_SPAN=4/4
+QUOTES_IN_ENTRY=4/4
+COUNTS_IN_ENTRY=7/7
+CAPTURE_BOUND=skipped
+COUNTS_REDERIVED=skipped
+C3=PASS
+exit=0
+$ python3 corpus/evidence/round45/tag-count.py --from 35 --to 44 | tail -2
+TAGGED=0/22
+TAG=FAIL

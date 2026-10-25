@@ -2404,3 +2404,44 @@ entries, one lesson, one new gate); quality improved (three counters against do-
 controls, QUALITY 62 mined from `considerthese/2026-10-24.md`, QUALITY 63 from the wave-3
 launcher probe, and the wave-3 mutation probes); discernment unchanged until a non-author
 spot-check — a seat this lane dispatched is still the lane.
+
+## Round 45 verdict — 2026-10-25 (launcher exit contract, Gates registry, AVeriTeC archive-field adoption)
+
+Selected claims, frozen in `corpus/evidence/round45/claims.md` at
+`d82cec904bf0fb8736886b9f17be913c7807427a` before any seat scored: C1 operability (lowest
+scored non-retired axis, 3/10); C2 calibration; C3 depth, sourced on S082–S084 opened this
+round. Work landed at `5e8c7ad2f7b8254d83358820286e3d12ca4672d1`; measured over a
+`git archive` of that commit (`corpus/evidence/round45/measure-after-5e8c7ad2.txt`). No
+external fetch: L0 `8d77e6c1` is still open. Tag column per QUALITY 64.
+
+| claim / axis | before → after | counting command | verdict | tag |
+|---|---|---|---|---|
+| C1 operability | the round-44 launcher scores `CASES_MATCH=1/5`, exit 1 (exits 0 on zero tasks and on timed-out seats, silent 420 s default, no `timeout_s`). After: `CASES_MATCH=5/5`, exit 0; four mutants of the landed tool each score 4/5 (wave-2 `MutLauncherPatched`) | `python3 corpus/evidence/round45/c1-count.py` | **improved** | plumbing |
+| C2 calibration | the Gates table named 25 of 51 committed entry points at the base tree (`UNREGISTERED=26`; 29 at the freeze tree). After: `REGISTERED=54/54`, `UNREGISTERED=0`, exit 0; eleven of the twelve new rows are load-bearing under single-row removal; the twelfth (`tag-count`) names a check outside the frozen entry-point pattern (wave-2 `MutC2RowRemoval`) | `python3 corpus/evidence/round45/c2-count.py --list` | **improved** | plumbing |
+| C3 depth | the lane held no opened source on what a verification corpus's archive fields record (AVeriTeC was an unopened lead). After: `ENTRIES=2/2 CITES_BOUND=3/3 QUOTES_IN_SPAN=4/4 QUOTES_IN_ENTRY=4/4 COUNTS_IN_ENTRY=7/7 CAPTURE_BOUND=4/4 COUNTS_REDERIVED=7/7`, exit 0; `--lane-only` passes with no campaign cache | `python3 corpus/evidence/round45/c3-count.py` (and `--lane-only`) | **improved** | ground |
+
+The round-1 operability scale is unchanged: 3 → 3. These observables sit beside it.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** | C1; the post-wave errexit guard (`controls/c1-errexit-probe.txt`: first landing exit 124 with a truncated receipt, fix exit 3 complete) |
+| calibration | **improved** | C2: the lane's own gate registry now agrees with the committed tree; wave-2 row reviews corrected the round-40 and round-31 rows. Limit: path membership, not row truth |
+| depth | **improved** | C3 and `corpus/lessons/round-45.md`: two re-grounded entries whose substance moved beyond the staged text (claim archive "no link stored, not why"; 5,959 of 7,572 real-source answers archived; 1,582 sourced answers with no archive key) |
+| coverage | **improved narrowly** | one theme on ground the coverage map did not hold (wave-2 `CritCoverageGround`); coverage map +2 rows |
+| freshness | **unchanged** | every capture opened predates the launch (2026-10-25T06:19:59−03:00); not counted as an improvement |
+| adjacency | **unchanged** | no sibling holds AVeriTeC ground (wave-1 `ConnectSiblings`); campaign tree read only |
+
+Learning trends, lane view: expansion improved (three mined rows, two entries, QUALITY 64–65,
+one QUALITY check); quality improved (three counters against do-nothing controls; two
+post-landing fixes each shown able to fail; nine mined mistakes); discernment unchanged until a
+non-author spot-check — wave-2 seats are still the lane.
+
+## Planned — round 46 (not started)
+
+Candidates, not commitments: the staged AVeriTeC dataset-page amendment as a fresh
+document-bound entry (wave-2 `CritRejectDecision` located its quotes; flip in
+`lessons/round-45.md` `## Gate`); a C3-style counter that checks an entry's inference
+sentences, not only quote and count presence (wave-2 `CritC3Axis`); a gate-registry check
+that also covers executable verifiers outside the frozen name pattern (wave-2
+`CritC2Framing`). Freeze only 1–3 separately falsifiable claims after scoring their do-nothing
+controls.

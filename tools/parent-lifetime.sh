@@ -99,8 +99,8 @@ n_timeout=0
 for i in "${!PIDS[@]}"; do
   child=${PIDS[$i]}
   name=${NAMES[$i]}
-  wait "$child"
-  ec=$?
+  # A bare wait would abort under an inherited errexit and truncate the receipt.
+  if wait "$child"; then ec=0; else ec=$?; fi
   n_reaped=$((n_reaped + 1))
   if [[ "$ec" -eq 124 || "$ec" -eq 137 ]]; then
     n_timeout=$((n_timeout + 1))

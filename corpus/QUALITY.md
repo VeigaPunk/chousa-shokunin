@@ -604,8 +604,9 @@ the admitted entry that motivates it. Tier definitions live in
     another archiver or a link the corpus itself says fails; a missing key is
     not an empty field. Check: the entry's figure is re-derived by a committed
     recount over the capture (`corpus/evidence/round45/counts.json`,
-    `extra_not_frozen`). Shown able to fail: the staged sentence "6,510 hold a
-    non-empty archive.org URL" fails that recount — 5,959 of the 6,510 filled
+    `extra_not_frozen`). Shown able to fail: the staged entry's statement that
+    6,510 evidence entries "hold a non-empty archive.org URL" (one bold
+    sentence, wrapped across two lines in the staged file) fails that recount — 5,959 of the 6,510 filled
     values are web.archive.org links, 429 are the literal `Metadata` — and the
     count over fields missed the 1,582 sourced answers that carry no archive
     key. — `lessons/round-45.md`.
@@ -614,3 +615,9 @@ the admitted entry that motivates it. Tier definitions live in
     line records `n_spawned=0` or a seat timed out, and requires `--timeout`
     in dispatch mode (`corpus/evidence/round45/c1-count.py`, 5/5). Criterion
     63's demonstration is the round-44 tool's behaviour and stays as history.
+
+    Note on 64 (round 45, wave 2): the check first matched claim rows at
+    column 0 only, so an indented untagged row passed (`RevQuality64`, a forge
+    scoring `TAGGED=21/21`, exit 0). It now takes 0–3 leading spaces, the
+    census row rule; `controls/tag-control-indented-forge.txt` scores
+    `TAGGED=1/2`, exit 1, and the r35–r44 control is unchanged.

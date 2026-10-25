@@ -1,0 +1,10 @@
+## current — env SHELLOPTS=errexit bash <tool> --dispatch (1 seat outliving --timeout 1)
+exit=3
+start parent_pid=N epoch=N timeout_s=1
+spawn name=A child_pid=N epoch=N
+reap name=A child_pid=N exit_code=124 epoch=N
+end parent_pid=N epoch=N n_spawned=1 n_reaped=1
+## first-landing-5e8c7ad2 — env SHELLOPTS=errexit bash <tool> --dispatch (1 seat outliving --timeout 1)
+exit=124
+start parent_pid=N epoch=N timeout_s=1
+spawn name=A child_pid=N epoch=N

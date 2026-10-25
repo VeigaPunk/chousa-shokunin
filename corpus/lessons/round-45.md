@@ -41,8 +41,8 @@ Frozen in `corpus/evidence/round45/claims.md` before any seat scored.
    answers with no archive key), every extra figure is in `counts.json` from a
    committed builder (`corpus/evidence/round45/build-spans.py`), and QUALITY 65
    asks for a recount behind every coverage figure. Shown able to fail: the
-   builder prints `answers_without_key_unanswerable: 386` against
-   `answers_without_key: 1968`.
+   builder writes `answers_without_key_unanswerable: 386` against
+   `answers_without_key: 1968` into `counts.json`.
 2. Class: field-count-for-value-count (staged package). Evidence: the staged
    entry says "6,510 hold a non-empty archive.org URL"; 5,959 of those 6,510
    values are web.archive.org links and 429 are the literal `Metadata`
@@ -81,6 +81,35 @@ Frozen in `corpus/evidence/round45/claims.md` before any seat scored.
    `2026-10-24T21:36:37-03:00 launch chousa round=44`; no 21:47:59 line exists
    (`.ufo/waves/round-45/w1/ScribeMistakes.md`). The freshness grade is
    unchanged either way.
+7. Class: seat-contract misread (dead seat). Evidence: wave-1 seat
+   `ScoutCoverageGround` finished its research and wrote no report: "I can't
+   produce the requested scoped report file yet: the seat contract requires
+   reading /home/vgpnk/.omp/agent/RULES.md before any writes"
+   (`history://L1Chousa45.ScoutCoverageGround`). The wave context put the
+   RULES.md read under the tooling-install sentence; the seat read it as a
+   precondition for every write. Captured-by: wave-2 `ScoutWave1Ledger`
+   (45 reports for 46 members) — the L1 had counted completions, not report
+   files. Fix: the dead seat stays dead and is not replaced; the next wave
+   context scopes the RULES.md read to installs explicitly, and the L1 counts
+   report files against the registry before integrating. Shown able to fail:
+   the ledger's set difference names exactly this seat.
+8. Class: guard-removal. Evidence: the first C1 landing (`5e8c7ad2`) dropped
+   the `set +e`/`set -e` toggles around `wait`; under an inherited errexit a
+   timed-out seat then aborts the launcher with exit 124 and a receipt with no
+   reap or end line (wave-2 `CritC1Admission`). Captured-by: none — the frozen
+   C1 cases run without errexit. Fix: `if wait "$child"; then ec=0; else
+   ec=$?; fi`. Shown able to fail:
+   `corpus/evidence/round45/controls/c1-errexit-probe.txt` — the first landing
+   exits 124 with a two-line receipt, the fix exits 3 with a complete one. The
+   L1's first probe was itself invalid (the shell refused `export SHELLOPTS`,
+   so neither run had errexit) and was redone with `env SHELLOPTS=errexit`.
+9. Class: row-rule drift. Evidence: `tag-count.py` matched claim rows at
+   column 0 only, so a forge with one indented untagged row scored
+   `TAGGED=21/21`, exit 0 (wave-2 `RevQuality64`) — the same class as the
+   census's indented-row guard. Captured-by: the wave-2 forge. Fix: 0–3
+   leading spaces. Shown able to fail:
+   `corpus/evidence/round45/controls/tag-control-indented-forge.txt`
+   (`TAGGED=1/2`, exit 1).
 
 ## Round-44 closure defects — disposition
 
@@ -190,5 +219,50 @@ frozen claims:
   (their rows say `superseded`, with the successor path), and some executable
   verifiers under `corpus/evidence/` (for example `round34/self-audit.py`)
   fall outside the frozen set. Named as a limit of C2, not fixed.
+
+Wave 2 (38 seats, all reported) attacked what landed at `5e8c7ad2`:
+
+- Held as landed: all three claim counters re-run over a `git archive` of the
+  tip (`ExecRerunC1`, `ExecRerunC2`, `ExecRerunC3`; C2's entry set
+  re-enumerated independently, 54, set-equal); all four launcher mutants of
+  the landed tool killed (`MutLauncherPatched`); every launcher edge case
+  matches the header (`MutLauncherEdges`); the four entry mutations killed
+  (`MutC3Entries`); the four spans align with their captures
+  (`RevSpans`); every `counts.json` value recounted and the builder
+  reproduces its outputs byte-for-byte (`ExecExtraCounts`); S082, S083 rows
+  (`RevSourceS082`, `RevSourceS083`); the by-document map (`ScoutRenumberMap`);
+  mirror and live census, 84 rows (`RevCensusMirror`); scope, no deletion, no
+  fleet write (`SentScopeAudit`); coverage ground new, rows not overstated
+  (`CritCoverageGround`); ten of the twelve new Gates rows held as landed
+  (round-34's took a 9-minute re-run); the round-40 row failed and the
+  round-31 row held with two wrong paths — both fixed below.
+- Fixed after wave 2 (none changes a frozen predicate, counter or control):
+  the launcher's errexit guard (mistake 8); `tag-count.py`'s row rule
+  (mistake 9); the round-40 row named a nonexistent `R40-W2` note and omitted
+  that its C2 reads a fleet report (exit 2 outside the fleet checkout); the
+  round-31 row cited `after-c2-run{3,4}-tip.json`, which do not exist, and a
+  wrong control directory; the field-policy entry's "contradicts the
+  documented practice" and its 404 inference were narrowed
+  (`CritEntryFieldPolicy`); the snapshot entry now states its web.archive.org
+  rule (one malformed value counts 5,960 by substring, 5,959 by prefix —
+  `CritEntrySnapshot`, `RevSourceS084`); QUALITY 65's quotation of the staged
+  sentence no longer claims byte-verbatim (`RevQuality65`).
+- Disagreements kept open: `CritEntryFieldPolicy` placed guideline 8 under
+  J.4, not J.4.1 — the capture puts it at char 120884, between the J.4.1
+  heading (char 118646) and J.4.2 (char 123298), so the entry keeps J.4.1.
+  `CritRejectDecision` judged the reject over-cautious: the staged amendment's
+  AVeriTeC dataset-page quotes are located in their capture
+  (`b73f7e8dd5b0ace740e48046.txt`). The lane keeps the reject — the entry as
+  staged amends a base the lane does not hold and carries wrong prose ids —
+  and takes the critic's narrower flip as the next round's candidate.
+- Limits named, not fixed: C3's counter checks that quotes and counts are
+  present, not that inferences follow — two junk entry bodies reusing the
+  committed spans and counts pass both modes (`CritC3Axis`); the entries'
+  substance rests on the critics above and the closure. C2 counts path
+  membership, not row truth: the `tag-count` row is outside the frozen
+  entry-point set and the round-44/45 `c1-count.py` paths are also named in
+  the launcher row's self-test cell (`MutC2RowRemoval`, `CritC2Admission`).
+  The committed control files end with a harness `exit=N` line the counters
+  do not print (`ExecRerunC1`).
 
 Pending: the non-author spot-check.

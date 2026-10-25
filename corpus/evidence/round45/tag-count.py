@@ -3,7 +3,8 @@
 `ground` or `plumbing` cell.
 
 A round section is a `## Round N …` heading (a space after `Round`, so
-`## Round-1 …` is not one) up to the next `## ` heading. A claim row is a table line in it that starts with `| C<digit>`.
+`## Round-1 …` is not one) up to the next `## ` heading. A claim row is a table line in it that starts with `| C<digit>` after
+0-3 leading spaces (the census row rule: an indented row is still a row).
 A row is tagged when one of its cells, stripped of `*`, is exactly `ground`
 or `plumbing`. Proposal mined from considerthese/2026-10-24.md (2026-10-24).
 
@@ -28,7 +29,7 @@ def rows(scorecard: pathlib.Path, lo: int, hi: int) -> list[tuple[int, str]]:
             m = HEAD.match(line)
             rnd = int(m.group(1)) if m else None
             continue
-        if rnd is not None and lo <= rnd <= hi and re.match(r"^\| C\d", line):
+        if rnd is not None and lo <= rnd <= hi and re.match(r"^ {0,3}\| C\d", line):
             out.append((rnd, line))
     return out
 
