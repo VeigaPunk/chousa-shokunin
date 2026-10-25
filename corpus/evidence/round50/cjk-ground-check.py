@@ -7,6 +7,9 @@ Before the change a bullet whose only grounding quote is a pure-Chinese phrase r
   B  bullet quoting a phrase NOT in the span    -> must exit 1 INF_TOKEN_NOT_IN_SPAN (a blind tool exits 1 for the
      wrong reason, INF_UNGROUNDED, so the reason is checked)
   C  bullet citing no id                        -> must exit 1 INF_UNCITED
+  D  a 3-character CJK phrase                   -> rc 1 INF_UNGROUNDED (the floor is 4: kills floor 4->1)
+  E  a 4-character-plus CJK phrase in the span  -> rc 0 (kills floor 4->10)
+  F  a kana phrase in the span                  -> rc 0 (kills a CJK_RE that drops kana)
 Usage: python3 cjk-ground-check.py [--old TOOL]   (--old: the pre-change tool, to print the A-case blind spot)
 Exit 0 all three cases behave; 1 a case misbehaves; 2 usage."""
 import argparse
@@ -21,7 +24,7 @@ ap.add_argument("--old")
 ap.add_argument("--tool", default=str(LANE / "tools" / "inference-ground.py"))
 a = ap.parse_args()
 d = pathlib.Path(tempfile.mkdtemp(prefix="chousa-r50-cjk-"))
-span = "该列表的第一列显示的是是否查找到该引用文献，及引文内容的正确性。"
+span = "该列表的第一列显示的是是否查找到该引用文献，及引文内容的正确性。ではありませんでした。"
 (d / "s.txt").write_text("前文。" + span + "后文。", encoding="utf-8")
 (d / "spans.tsv").write_text("id\turl\tcapture_sha256\toffset\tspan_file\tquote\tentry\n"
                              f"S900\thttps://example.test/x\t{'0' * 64}\t0\ts.txt\t{span}\te.md\n", encoding="utf-8")
@@ -31,6 +34,9 @@ cases = {
     "A": (head + f"- The list's first column reports found-ness and correctness: `{span}` (S900).\n", 0, None),
     "B": (head + "- The list reports a verdict: `该列表显示最终的判定结论并给出评分` (S900).\n", 1, "INF_TOKEN_NOT_IN_SPAN"),
     "C": (head + f"- The list's first column reports found-ness: `{span}`.\n", 1, "INF_UNCITED"),
+    "D": (head + "- The list has a first column: `该列表` (S900).\n", 1, "INF_UNGROUNDED"),
+    "E": (head + "- The list has a first column: `该列表的第一列` (S900).\n", 0, None),
+    "F": (head + "- The text is Japanese: `ではありません` (S900).\n", 0, None),
 }
 
 

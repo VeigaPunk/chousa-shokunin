@@ -29,8 +29,11 @@ def names_of(spec, path):
         n = it if isinstance(it, str) else (it.get("name") if isinstance(it, dict) else None)
         if not isinstance(n, str) or not n.strip():
             die("%s: item %d has no 'name'" % (path, i))
-        if n not in out:
-            out.append(n)
+        if "/" in n or "\\" in n or n in (".", "..") or n.startswith("."):
+            die("%s: item %d name %r is not a bare file stem" % (path, i, n))
+        if n in out:
+            die("%s: duplicate item name %r" % (path, n))
+        out.append(n)
     if not out:
         die(path + ": empty 'items' (an empty wave cannot be complete)")
     return out

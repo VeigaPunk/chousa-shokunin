@@ -31,7 +31,7 @@ def scratch(tag: str) -> pathlib.Path:
     (r / "corpus/knowledge").mkdir(parents=True)
     (r / "corpus/evidence").mkdir(parents=True)
     (r / "corpus/lessons").mkdir(parents=True)
-    shutil.copytree(LANE / "corpus/evidence/round50", r / "corpus/evidence/round50", ignore=shutil.ignore_patterns("controls", "c1-fixtures"))
+    shutil.copytree(LANE / "corpus/evidence/round50", r / "corpus/evidence/round50", ignore=shutil.ignore_patterns("controls", "c1-fixtures", "spans", "spans.tsv", "quotes.tsv", "measure-after*.txt", "*-before.txt", "*-after.txt", "*-receipt.txt"))
     shutil.copytree(LANE / "tools", r / "tools", ignore=shutil.ignore_patterns("__pycache__"))
     base = subprocess.run(["git", "-C", str(LANE), "show", f"{BASE}:corpus/SOURCES.md"], capture_output=True, text=True).stdout
     (r / "corpus/SOURCES.md").write_text(base, encoding="utf-8")

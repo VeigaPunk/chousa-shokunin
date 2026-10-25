@@ -2588,3 +2588,33 @@ The numeric operability scale remains 3/10; no other score is invented.
 ## Planned — round 50 (not started)
 
 Candidates: add a perturbed-input leg to the adopter counter (QUALITY 72); adopt the next same-theme package entry (`cnki-citation-check-r40.md`) with an NCPSSD help-page row; fold `quote-substance-check.py` into the next span counter before freezing.
+
+## Round 50 verdict — 2026-10-25 (adopter self-test; Chinese citation-checking theme adopted by document)
+
+Claims frozen in `corpus/evidence/round50/claims.md` at `6a068f2ae4847a1e4aa959f088a39ddc1b167bc0` after scoring their do-nothing controls. After-measurement: `corpus/evidence/round50/measure-after.txt`. Disclosures: `corpus/evidence/round50/claims-erratum.md`. No fetch; L0 `8d77e6c1` open.
+
+| claim / axis | before → after | counting command | verdict | tag |
+|---|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10; capability extension) | base tool `BASELINE=FAIL rc=2`, `LEGS=2/5`, `C1=FAIL`; echo control `LEGS=4/5`, `PERTURB_PASS=0/6`; constant control `LEGS=2/5` → `LEGS=5/5`, `PERTURB_PASS=6/6`, `C1=PASS` | `python3 corpus/evidence/round50/c1-count.py` | **improved narrowly**: the frozen counter is replayable (W2 `R50CritForgeC1`: a forge prints the six literal DIFF lines and passes `LEGS=5/5`); the supplementary `c1-supplement.py` (nonce leg, exclusive DIFF set, hardening probes) passes the real tool 5/5 and fails the forge 1/5 | plumbing |
+| C2 depth (sourced) | `ENTRIES=0/3 BOUND=0/4 NEW_GROUND=0/3 C2=FAIL`; staged copy `REF_ID_UNBOUND=15` → `BOUND=3/4 REFUSED=1 NEW_GROUND=3/3 QUOTE_ROWS=67 CAPTURE_BOUND=67/67 SUBSTANCE=PASS ANCHOR_BOUND=3/3 INFERENCE_GROUNDED=3/3 C2=PASS` | `python3 corpus/evidence/round50/c2-count.py` | **improved**, as a presence-and-binding result: the counter cannot see entailment (W2 `R50CritForgeC2`), the CJK polarity rule is unreachable (named limit), and expansion credit is per document (three documents), not per entry | ground |
+
+The numeric operability scale stays 3/10; no other score is invented.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved narrowly** | C1; `tools/assimilate-rows.py --selftest`; the replay weakness is named |
+| depth | **improved** | C2; three entries narrowed by 30+ W2 corrections, a rendered-page observation the text form drops |
+| calibration | **improved narrowly** | stale counts corrected and checked (`stale-count-check.py` exit 1 → 0); the lesson's mistakes are mined with checks shown able to fail; the report-before-WAVE-DONE defect is not repeated |
+| coverage | **improved narrowly** | the 引文核对 feature, its manuals' scope and a Chinese institute's citation service were not held at base (`git grep` at `3c51da77` finds none in `corpus/knowledge`) |
+| freshness | **unchanged** | newest readable capture 2026-10-24 23:26 -03; this round's captures 2026-10-23 |
+| adjacency | **unchanged** | W2 `R50ConnSiblings`: no sibling overlap |
+
+## Capabilities (round-50 addition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| adopter self-test | runs the section-10 adopter on an isolated hand-expected fixture package, compares findings as a multiset, prints the fixtures digest and exits 0/1/2; scored on perturbed copies against echo and constant controls | `python3 tools/assimilate-rows.py --selftest`; `corpus/evidence/round50/c1-count.py`; `c1-supplement.py` | 50 |
+
+## Planned — round 51 (not started)
+
+Candidates: make the adopter cite only `source:` ids (QUALITY 77) and fix its three latent input defects (identity before pipe rewrite, plain-split registry pipe, next id without a `## Registry` heading — W2 `R50ExecPerturbAdopter`); fold `c1-supplement.py`'s nonce leg into a successor counter; give `inference-ground` a CJK polarity check; adopt `cnki-public-surface-r43.md` with a re-grounded S160 and a capture of the sibling portal; read the two screenshots' text by a located-quote method instead of a rendered-page note.

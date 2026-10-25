@@ -1,0 +1,54 @@
+$ python3 corpus/evidence/round50/c1-supplement.py 
+P7_NONCE_EXCLUSIVE=PASS
+H1_DUPLICATE_EXPECTED=PASS
+H2_NO_ENTRY=PASS
+H3_OPTION_CLASH=PASS
+H4_ENTRYCITES_DASH=PASS
+SUPPLEMENT_LEGS=5/5
+C1_SUPPLEMENT=PASS
+exit=0
+
+$ python3 corpus/evidence/round50/c1-supplement.py --tool corpus/evidence/round50/controls/forge-tool.py
+P7_NONCE_EXCLUSIVE=FAIL
+H1_DUPLICATE_EXPECTED=FAIL
+H2_NO_ENTRY=FAIL
+H3_OPTION_CLASH=PASS
+H4_ENTRYCITES_DASH=FAIL
+SUPPLEMENT_LEGS=1/5
+C1_SUPPLEMENT=FAIL
+exit=1
+
+$ python3 corpus/evidence/round50/c1-supplement.py --tool corpus/evidence/round50/controls/echo-tool.py
+P7_NONCE_EXCLUSIVE=FAIL
+H1_DUPLICATE_EXPECTED=FAIL
+H2_NO_ENTRY=FAIL
+H3_OPTION_CLASH=PASS
+H4_ENTRYCITES_DASH=PASS
+SUPPLEMENT_LEGS=2/5
+C1_SUPPLEMENT=FAIL
+exit=1
+
+$ python3 corpus/evidence/round50/c1-supplement.py --tool corpus/evidence/round50/controls/const-tool.py
+P7_NONCE_EXCLUSIVE=FAIL
+H1_DUPLICATE_EXPECTED=FAIL
+H2_NO_ENTRY=FAIL
+H3_OPTION_CLASH=FAIL
+H4_ENTRYCITES_DASH=FAIL
+SUPPLEMENT_LEGS=0/5
+C1_SUPPLEMENT=FAIL
+exit=1
+
+$ python3 corpus/evidence/round50/c1-supplement.py --tool corpus/evidence/round50/controls/tool-before.py
+P7_NONCE_EXCLUSIVE=FAIL
+H1_DUPLICATE_EXPECTED=FAIL
+H2_NO_ENTRY=FAIL
+H3_OPTION_CLASH=PASS
+H4_ENTRYCITES_DASH=FAIL
+SUPPLEMENT_LEGS=1/5
+C1_SUPPLEMENT=FAIL
+exit=1
+
+$ frozen counter against the forge (the W2 finding)
+R49_REGRESSION=PASS rc=0
+LEGS=5/5
+C1=PASS
