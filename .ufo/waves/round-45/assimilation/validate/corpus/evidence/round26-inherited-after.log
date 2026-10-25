@@ -1,0 +1,53 @@
+tree=/tmp/chousa-r26-falsify-FNoTrade/tree gate_sha256=c2c813f1b425bc4e74625a2607eaca1b97addf9898f834e88af8f1fe2143abc6 base=ba3333254dd337658a4f25e7a9471f9cf4e4567e as_of=2026-10-21
+== C1 operability: metadata reader allocation (8,388,000-byte shapes; cap 8 MiB)
+ctl rc=0 maxrss_kb=11880 elapsed_s=0.0
+s1-newlines bytes=8388000 rc=1 maxrss_kb=54536 extra_kb=42656 elapsed_s=86.4 bounded
+s2-header-body bytes=8388000 rc=0 maxrss_kb=54980 extra_kb=43100 elapsed_s=0.1 bounded
+s3-crlf bytes=8388000 rc=1 maxrss_kb=54876 extra_kb=42996 elapsed_s=44.2 bounded
+s4-header-noheading bytes=8388000 rc=0 maxrss_kb=54864 extra_kb=42984 elapsed_s=62.6 bounded
+C1_AMPLIFIED=0/4
+== C1 hold: plain verify-metadata output over frozen 29 (ts line dropped)
+C1_FROZEN_RC=1 C1_FROZEN_SHA=3f83ba4844cac8d2057b47661be225f84a5945fc7c1db739ec2070b6aa2a4a37
+METADATA_COMPLETE=26/29
+RESEARCH_GATE: DRIFT (entries=29 complete=26 findings=33 drift=3)
+== C2 freshness: due dates with --as-of 2026-10-21
+c2 frozen rc=1
+FRESHNESS_CLASSIFIED=29/29
+C2_ORACLE_AGREE=29/29
+C2_ORACLE_DIST {'unknown': 24, 'current': 4, 'event': 1}
+control c2-overdue ok rc=1
+control c2-current ok rc=0
+control c2-date-past ok rc=1
+control c2-event ok rc=0
+control c2-unknown ok rc=0
+control c2-boundary ok rc=0
+C2_CONTROLS_CAUGHT=6/6
+== C3 calibration: criterion-6 registry link (--registry)
+control c3-good ok rc=0
+control c3-missing ok rc=1
+control c3-queued ok rc=1
+control c3-usedby ok rc=1
+control c3-bare ok rc=1
+control c3-noid ok rc=0
+C3_CONTROLS_CAUGHT=5/5
+C3_POSITIVE_CLEAN=1/1
+c3 pop24 rc=0
+META entry=citation-chain-fidelity-r24.md source=present verified_at=dated recheck=scheduled verdict=clean
+META entry=claim-support-states-r24.md source=present verified_at=dated recheck=scheduled verdict=clean
+META entry=contextual-source-admission-r24.md source=present verified_at=dated recheck=scheduled verdict=clean
+META entry=json-delimiter-r24.md source=present verified_at=dated recheck=scheduled verdict=clean
+META entry=metadata-screen-r25.md source=present verified_at=dated recheck=scheduled verdict=clean
+C3_POP_R24PLUS_CLEAN=5/5
+== holds: selftest, drift vs r12 baseline, r1 archive observable
+RESEARCH_GATE_SELFTEST: FAIL (3/187 cases)
+LEGACY_CASES_SHA=5eac4a7e2af964f6e81631f66990426e5c8ef58fb41ba6ec6d0054ef819e01cb (first 161 ok-case lines)
+GATE_DRIFT: none
+drift rc=0
+VERDICT_BEARING_EXPORTS=3/3
+probe_exit=0
+ok-case  187 metadata-registry-refused-nul exit=2
+RESEARCH_GATE_SELFTEST: FAIL (3/187 cases)
+exit=1
+
+
+Timeout clamped to 3600s (requested 86400s; allowed range 1-3600s).

@@ -1,0 +1,8 @@
+# Round-41 W04 duplicate-URL dispositions (advisory-warning semantics)
+# Columns: warn-id \t url \t disposition \t evidence pointer
+# Disposition vocab: same-page-distinct-section | supersede-row-required | retained-rejected-duplicate
+S051	www.w3.org/TR/2017/REC-html52-20171214/syntax.html	same-page-distinct-section	S050+S051 share one dated W3C snapshot page and cite different insertion-mode sections; the r30 search-log row (corpus/SOURCES.md:138-140) records the pairing as intentional; contract v1 makes source/scope immutable so both rows stay
+S053	docs.python.org/3/library/socket.html	same-page-distinct-section	S052 (socket timeouts) + S053 (create_connection) share one docs.python.org page at different sections; the r30 search-log row (corpus/SOURCES.md:138-140) records the pairing as intentional
+S073	www.gnu.org/software/coreutils/manual/coreutils.html	supersede-row-required	S073 is the contract-required correction row for S070's anchor label (rule 2: corrections are new rows whose teaches opens "supersedes S0NN"); sharing S070's page URL is the mechanism, not an accident
+S074	docs.python.org/3/library/hashlib.html	retained-rejected-duplicate	S074 is an intentionally retained rejected duplicate-row proposal (contract: rejections stay as rows with reason and flip); rejected rows are exempt from E04 within-scope duplication but still surface W04 across scopes — expected and recorded
+S075	www.gnu.org/software/coreutils/manual/coreutils.html	same-page-distinct-section	S075 (mktemp, opened this round) shares the coreutils manual page already cited by S070/S073 at the #cksum-c anchor; S075 anchors #mktemp-d — one page, three section-scoped rows; intentionally retained

@@ -1,0 +1,188 @@
+# chousa-shokunin round-10 receipt — exempt-item audit — every observed=exempt item in the archive records, justified by source bytes
+# cut stamp: 20261016T055530Z | utc: 2026-10-16T05:55:30Z
+# seat: receipts-writer | lane: chousa-shokunin | round: 10 (residual hardening: archive-scale negative controls + final limit-disposition ledger)
+# lane head: d5c99c2084dd972fa33c4e2d35b6b7c281382163 | gate: tools/research-gate.sh sha256=46f5ddb39d5fafa220fb584121dba2f4a15e071a91fa42728849f3c7567c6ccd
+# gate unchanged vs HEAD blob: 46f5ddb39d5fafa220fb584121dba2f4a15e071a91fa42728849f3c7567c6ccd (git show HEAD:tools/research-gate.sh) | git diff --numstat tools/research-gate.sh: 0 line(s)
+# method: machine-cut by /home/vgpnk/.cache/chousa-r10/cut-receipts.sh; stdout verbatim (the gate prints its own ts=); local files only; no network
+# scope: solo verify-chain/verify-integrity outputs for A/B/C, the gate-free byte justification of each exempt item, raw archive greps, and the counted-not-hidden invariants
+
+## fixture pins (measured at cut time)
+338918fcb8ed5d6c5f15dc64e5eb8a3ae7a005d51b5c03e7e377c1dab9173c78  corpus/fixtures/archives-r9/A-r9.md
+abfa5290deda4d1708ba97028853b8a770f16ecda6f377dddda53d49cb2e3e86  corpus/fixtures/archives-r9/B-r9.md
+97be0e69ccfb8a701bc5556f738553be8e7179c9b41110fe61c4a3cab4f2d1da  corpus/fixtures/archives-r9/C-r9.md
+f6f0d1ab6b6cbd045035951c7eb4653406dc0853234a8077a8685509bfc94ff5  corpus/fixtures/claims-r9.jsonl
+ec312657c3872de77b45d44d135dd350e6b6cb378db621b4f2cbc61b5798a166  corpus/fixtures/archives-r9/README.md
+
+## control pins (round-10 archive-scale controls)
+e3490cf4bc9dd778311c19949287be93dd2b17690e1bb7f2d1cf77c38d7e82a0  corpus/fixtures/archives-r9/controls/A-r9-anchor-missing.md
+0edb78ee0040bd77af6b1618ca9888f6676eb8082e9aabb9b4c498016664b126  corpus/fixtures/archives-r9/controls/A-r9-span-not-found.claims.jsonl
+5dedb73b4828f8120b1d7538aea49711dc56b2776bc9490e29727979ff4d7671  corpus/fixtures/archives-r9/controls/A-r9-span-not-found.md
+69b7b08f8b1d3362b7848fe6776fd237226a645589c767c9d5cfe11abad85a47  corpus/fixtures/archives-r9/controls/B-r9-false-sweep.md
+b0d488aae5fbfe5aef6b9eaa5f5cf45ba7381abebf1fc51f77af92509b5a0206  corpus/fixtures/archives-r9/controls/B-r9-rejection-missing-flip.md
+b24be0f0768d6b6848b9fa13fe6f862464007322ae52653b42ef0fac09f986f7  corpus/fixtures/archives-r9/controls/C-r9-dangling-ref.md
+21d77e6c4de99719c557d14b105d2b795147f40bc724f4105d041587107c290c  corpus/fixtures/archives-r9/controls/C-r9-structure-break.md
+23f477225aa290c0c3fdf97887b9d954d9b81ab1bb4364815fcd01b07380a688  corpus/fixtures/archives-r9/controls/README.md
+
+## archive pins (read-only, fleet root)
+9033857d4625555c7b778dfad6df80e3e1b24ed8bffa3fee2fd445b9c5540b85  ../research/deep-research-2026-09-28/A-shokunin-tradition.md
+6d8dbddd3e2d2f47dcb153c5a3347cc6321db4afc72cf07da40f0f7fe5022006  ../research/deep-research-2026-09-28/B-multiagent-knowledge.md
+e48fe70ff92055c217ac6ca6ce68e403aa5689fee8717f3bd0ccf5badc92321b  ../research/deep-research-2026-09-28/C-rank-taxonomy.md
+
+## ledger note pin
+3845709bae62603aa67b8fc56e15c55b20dd0673b0c9f83d160806196a5018d5  corpus/knowledge/hardening-r10.md
+
+## r9 README-declared vs measured
+record A MATCH
+record B MATCH
+record C MATCH
+claims-r9.jsonl MATCH
+
+## method
+Every observed=exempt item in the three records is enumerated from the gate solo outputs
+(the composed verify-all prints no per-item lines; the solo modes are the same code paths).
+Each item is then re-derived gate-free by /home/vgpnk/.cache/chousa-r10/r10check.py on the record bytes and the
+read-only archive: the exempt row is the blocked-no-fetch chip row; its chip token must appear
+byte-verbatim in the archive, and any archive line the row notes cite must be among the found
+lines. JUSTIFIED = both checks hold. The immutable footer: exempt is counted, never hidden.
+
+## record A — solo verify-chain (verbatim)
+## command: bash tools/research-gate.sh verify-chain corpus/fixtures/archives-r9/A-r9.md --root ..
+exit: 0
+research-gate research-gate-r1 — ts=2026-10-16T05:56:40Z — mode=chain — record=corpus/fixtures/archives-r9/A-r9.md
+CHAIN hop=1 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"I could not substantiate this spelling as an established art" at=line:64 verdict=match
+CHAIN hop=2 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"The sources point to craft-specific apprenticeship systems, " at=line:47 verdict=match
+CHAIN hop=3 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"There is no universal sacred number of years or common final" at=line:86 verdict=match
+CHAIN hop=4 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"This documents graduated responsibility through actual work," at=line:88 verdict=match
+CHAIN hop=5 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"Track five axes separately: task competence, retention, evid" at=line:57 verdict=match
+CHAIN hop=6 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"is not a standard rank sequence" at=line:53 verdict=match
+CHAIN hop=7 status=blocked-no-fetch observed=exempt source=コトバンク anchor=- at=- verdict=exempt
+RESOLVED_HOPS=6/7
+RESEARCH_GATE: CLEAN (hops=7 verified=6 exempt=1 anchor-missing=0 refused=0 invalid=0 findings=0 drift=0)
+
+## record A — solo verify-integrity (verbatim)
+## command: bash tools/research-gate.sh verify-integrity corpus/fixtures/archives-r9/A-r9.md --root ..
+exit: 0
+research-gate research-gate-r1 — ts=2026-10-16T05:56:42Z — mode=integrity — record=corpus/fixtures/archives-r9/A-r9.md
+REF kind=claim id=C1 section=chain row=1 cell=from observed=resolved verdict=match
+REF kind=source id=S1 section=chain row=1 cell=to observed=resolved verdict=match
+REF kind=claim id=C2 section=chain row=2 cell=from observed=resolved verdict=match
+REF kind=source id=S1 section=chain row=2 cell=to observed=resolved verdict=match
+REF kind=claim id=C3 section=chain row=3 cell=from observed=resolved verdict=match
+REF kind=source id=S1 section=chain row=3 cell=to observed=resolved verdict=match
+REF kind=claim id=C4 section=chain row=4 cell=from observed=resolved verdict=match
+REF kind=source id=S1 section=chain row=4 cell=to observed=resolved verdict=match
+REF kind=claim id=C5 section=chain row=5 cell=from observed=resolved verdict=match
+REF kind=claim id=C2 section=chain row=6 cell=from observed=resolved verdict=match
+REF kind=claim id=C1 section=chain row=7 cell=from observed=exempt verdict=exempt status=blocked-no-fetch
+REF kind=sweep id=SW1 section=negatives row=N1 cell=sweep observed=resolved verdict=match
+REF kind=claim id=N1 section=sweeps row=SW1 cell=claim_id observed=resolved verdict=match
+INTEGRITY refs=13 resolved=12 unresolved=0
+RESEARCH_GATE: CLEAN (refs=13 resolved=12 unresolved=0 exempt=1 findings=0 drift=0)
+
+## record A — byte justification (gate-free)
+## command: python3 /home/vgpnk/.cache/chousa-r10/r10check.py exempt corpus/fixtures/archives-r9/A-r9.md ../research/deep-research-2026-09-28/<archive-A> /home/vgpnk/.cache/chousa-r10/raw-chain-A.out /home/vgpnk/.cache/chousa-r10/raw-int-A.out
+EXEMPT-CHAIN record=A-r9.md hop=7 status=blocked-no-fetch chip=コトバンク archive-lines=68,72 cited=68 JUSTIFIED
+EXEMPT-REF   record=A-r9.md kind=claim id=C1 chain-row=7 cell=from status=blocked-no-fetch underlying-chip=コトバンク archive-lines=68,72 JUSTIFIED
+EXEMPT-AUDIT record=A-r9.md items=2 justified=2 findings=0
+
+## record B — solo verify-chain (verbatim)
+## command: bash tools/research-gate.sh verify-chain corpus/fixtures/archives-r9/B-r9.md --root ..
+exit: 0
+research-gate research-gate-r1 — ts=2026-10-16T05:56:45Z — mode=chain — record=corpus/fixtures/archives-r9/B-r9.md
+CHAIN hop=1 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"(1) Self-rewriting knowledge bases: the most important failu" at=line:77 verdict=match
+CHAIN hop=2 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"ACE identifies “brevity bias” and “context collapse”" at=line:79 verdict=match
+CHAIN hop=3 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"The strongest design implication is to make knowledge change" at=line:57 verdict=match
+CHAIN hop=4 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"Below, I distinguish published findings from my proposed eng" at=line:59 verdict=match
+CHAIN hop=5 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"team success does not establish which specialist actually im" at=line:47 verdict=match
+CHAIN hop=6 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"keep four axes separate: competence, independence, improveme" at=line:54 verdict=match
+CHAIN hop=7 status=blocked-no-fetch observed=exempt source=arxiv.org anchor=- at=- verdict=exempt
+RESOLVED_HOPS=6/7
+RESEARCH_GATE: CLEAN (hops=7 verified=6 exempt=1 anchor-missing=0 refused=0 invalid=0 findings=0 drift=0)
+
+## record B — solo verify-integrity (verbatim)
+## command: bash tools/research-gate.sh verify-integrity corpus/fixtures/archives-r9/B-r9.md --root ..
+exit: 0
+research-gate research-gate-r1 — ts=2026-10-16T05:56:47Z — mode=integrity — record=corpus/fixtures/archives-r9/B-r9.md
+REF kind=claim id=C1 section=chain row=1 cell=from observed=resolved verdict=match
+REF kind=source id=S1 section=chain row=1 cell=to observed=resolved verdict=match
+REF kind=claim id=C2 section=chain row=2 cell=from observed=resolved verdict=match
+REF kind=source id=S1 section=chain row=2 cell=to observed=resolved verdict=match
+REF kind=claim id=C3 section=chain row=3 cell=from observed=resolved verdict=match
+REF kind=source id=S1 section=chain row=3 cell=to observed=resolved verdict=match
+REF kind=claim id=C4 section=chain row=4 cell=from observed=resolved verdict=match
+REF kind=source id=S1 section=chain row=4 cell=to observed=resolved verdict=match
+REF kind=claim id=C5 section=chain row=5 cell=from observed=resolved verdict=match
+REF kind=source id=S1 section=chain row=5 cell=to observed=resolved verdict=match
+REF kind=claim id=C6 section=chain row=6 cell=from observed=resolved verdict=match
+REF kind=claim id=C3 section=chain row=7 cell=from observed=exempt verdict=exempt status=blocked-no-fetch
+REF kind=sweep id=SW1 section=negatives row=N1 cell=sweep observed=resolved verdict=match
+REF kind=claim id=N1 section=sweeps row=SW1 cell=claim_id observed=resolved verdict=match
+INTEGRITY refs=14 resolved=13 unresolved=0
+RESEARCH_GATE: CLEAN (refs=14 resolved=13 unresolved=0 exempt=1 findings=0 drift=0)
+
+## record B — byte justification (gate-free)
+## command: python3 /home/vgpnk/.cache/chousa-r10/r10check.py exempt corpus/fixtures/archives-r9/B-r9.md ../research/deep-research-2026-09-28/<archive-B> /home/vgpnk/.cache/chousa-r10/raw-chain-B.out /home/vgpnk/.cache/chousa-r10/raw-int-B.out
+EXEMPT-CHAIN record=B-r9.md hop=7 status=blocked-no-fetch chip=arxiv.org archive-lines=51,72 cited=51,72 JUSTIFIED
+EXEMPT-REF   record=B-r9.md kind=claim id=C3 chain-row=7 cell=from status=blocked-no-fetch underlying-chip=arxiv.org archive-lines=51,72 JUSTIFIED
+EXEMPT-AUDIT record=B-r9.md items=2 justified=2 findings=0
+
+## record C — solo verify-chain (verbatim)
+## command: bash tools/research-gate.sh verify-chain corpus/fixtures/archives-r9/C-r9.md --root ..
+exit: 0
+research-gate research-gate-r1 — ts=2026-10-16T05:56:50Z — mode=chain — record=corpus/fixtures/archives-r9/C-r9.md
+CHAIN hop=1 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"Japanese traditions don’t collapse these into one ladder." at=line:53 verdict=match
+CHAIN hop=2 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"There is no traditional Japanese four-rank ladder that preci" at=line:65 verdict=match
+CHAIN hop=3 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=line:"Kyū/dan is a grading structure, not an autonomy ladder" at=line:87 verdict=match
+CHAIN hop=4 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"Rank is conferred through a procedure, not established by a " at=line:92 verdict=match
+CHAIN hop=5 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"The cultural mistake to avoid is presenting your product’s" at=line:85 verdict=match
+CHAIN hop=6 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"I could not substantiate this spelling as an established art" at=line:64 verdict=match
+CHAIN hop=7 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"Track five axes separately: task competence, retention, evid" at=line:57 verdict=match
+CHAIN hop=8 status=blocked-no-fetch observed=exempt source=jstage.jst.go.jp anchor=- at=- verdict=exempt
+RESOLVED_HOPS=7/8
+RESEARCH_GATE: CLEAN (hops=8 verified=7 exempt=1 anchor-missing=0 refused=0 invalid=0 findings=0 drift=0)
+
+## record C — solo verify-integrity (verbatim)
+## command: bash tools/research-gate.sh verify-integrity corpus/fixtures/archives-r9/C-r9.md --root ..
+exit: 0
+research-gate research-gate-r1 — ts=2026-10-16T05:56:51Z — mode=integrity — record=corpus/fixtures/archives-r9/C-r9.md
+REF kind=claim id=C1 section=chain row=1 cell=from observed=resolved verdict=match
+REF kind=source id=S1 section=chain row=1 cell=to observed=resolved verdict=match
+REF kind=claim id=C2 section=chain row=2 cell=from observed=resolved verdict=match
+REF kind=source id=S1 section=chain row=2 cell=to observed=resolved verdict=match
+REF kind=claim id=C3 section=chain row=3 cell=from observed=resolved verdict=match
+REF kind=source id=S1 section=chain row=3 cell=to observed=resolved verdict=match
+REF kind=claim id=C4 section=chain row=4 cell=from observed=resolved verdict=match
+REF kind=source id=S1 section=chain row=4 cell=to observed=resolved verdict=match
+REF kind=claim id=C5 section=chain row=5 cell=from observed=resolved verdict=match
+REF kind=source id=S1 section=chain row=5 cell=to observed=resolved verdict=match
+REF kind=claim id=C6 section=chain row=6 cell=from observed=resolved verdict=match
+REF kind=claim id=C7 section=chain row=7 cell=from observed=resolved verdict=match
+REF kind=claim id=C8 section=chain row=8 cell=from observed=exempt verdict=exempt status=blocked-no-fetch
+REF kind=sweep id=SW1 section=negatives row=N1 cell=sweep observed=resolved verdict=match
+REF kind=claim id=N1 section=sweeps row=SW1 cell=claim_id observed=resolved verdict=match
+INTEGRITY refs=15 resolved=14 unresolved=0
+RESEARCH_GATE: CLEAN (refs=15 resolved=14 unresolved=0 exempt=1 findings=0 drift=0)
+
+## record C — byte justification (gate-free)
+## command: python3 /home/vgpnk/.cache/chousa-r10/r10check.py exempt corpus/fixtures/archives-r9/C-r9.md ../research/deep-research-2026-09-28/<archive-C> /home/vgpnk/.cache/chousa-r10/raw-chain-C.out /home/vgpnk/.cache/chousa-r10/raw-int-C.out
+EXEMPT-CHAIN record=C-r9.md hop=8 status=blocked-no-fetch chip=jstage.jst.go.jp archive-lines=103 cited=103 JUSTIFIED
+EXEMPT-REF   record=C-r9.md kind=claim id=C8 chain-row=8 cell=from status=blocked-no-fetch underlying-chip=jstage.jst.go.jp archive-lines=103 JUSTIFIED
+EXEMPT-AUDIT record=C-r9.md items=2 justified=2 findings=0
+
+## raw byte witnesses (verbatim greps into the read-only archives)
+## command: grep -n 'コトバンク' ../research/deep-research-2026-09-28/A-shokunin-tradition.md; grep -n 'arxiv\.org' ../research/deep-research-2026-09-28/B-multiagent-knowledge.md; grep -n 'jstage' ../research/deep-research-2026-09-28/C-rank-taxonomy.md
+A 68:コトバンク
+A 72:コトバンク
+B 51:arxiv.org
+B 72:arxiv.org
+C 103:jstage.jst.go.jp
+
+## totals
+chain exempt lines: A=1 B=1 C=1 (want 1 each)
+integrity exempt lines: A=1 B=1 C=1 (want 1 each)
+justification audit lines (want findings=0 each):
+EXEMPT-AUDIT record=A-r9.md items=2 justified=2 findings=0
+EXEMPT-AUDIT record=B-r9.md items=2 justified=2 findings=0
+EXEMPT-AUDIT record=C-r9.md items=2 justified=2 findings=0
+each record CLEAN with the exempt item counted: chain 6/7, 6/7, 7/8; integrity refs=13/14/15 resolved=12/13/14 unresolved=0
+the records own local-emptiness sweeps (SW1) run CLEAN: VERIFIED_SWEEPS=1/1, REJECTIONS_OK=4/4, 3/3, 4/4

@@ -1,0 +1,190 @@
+{
+  "counter": "corpus/evidence/round39/c1-count.py",
+  "counter_sha256": "91618e91640f748df76282244186088218d5f2b7a65364137fa6add29fea05d5",
+  "expect_sha256": "3abd2dcb1766c404228cf3929024856240a93ea374760ab77a390b92c3fb6480",
+  "expectations": "corpus/evidence/round39/expectations.jsonl",
+  "gate": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-39/controls/mut-gate-path-env.sh",
+  "gate_sha256": "e1251030ef61722cbba94b4645bd3dced2c8460b2fef89458f488f01c2bd231a",
+  "gate_sha256_post": "e1251030ef61722cbba94b4645bd3dced2c8460b2fef89458f488f01c2bd231a",
+  "gate_sha256_pre": "e1251030ef61722cbba94b4645bd3dced2c8460b2fef89458f488f01c2bd231a",
+  "matched": 4,
+  "predicate": "ENV_PIN_CAPTURE_MATCH=8/8",
+  "predicate_holds": false,
+  "receipt_sha256": "0fb3acebe49f46441425fd4f633dcfbfa3ee4b4fe1a831b93bee1c153ada48b8",
+  "scenarios": [
+    {
+      "expect": {
+        "drift_line": "GATE_DRIFT: none",
+        "drift_rc": 0,
+        "echo_lines": 0,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "id": "hold-plain",
+      "observed": {
+        "drift_line": "GATE_DRIFT: none",
+        "drift_rc": 0,
+        "echo_lines": 0,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "ok": true
+    },
+    {
+      "expect": {
+        "drift_line": "GATE_DRIFT: none",
+        "drift_rc": 0,
+        "echo_lines": 0,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "id": "hold-fn-benign",
+      "observed": {
+        "drift_line": "GATE_DRIFT: none",
+        "drift_rc": 0,
+        "echo_lines": 0,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "ok": true
+    },
+    {
+      "expect": {
+        "drift_line": "GATE_DRIFT: none",
+        "drift_rc": 0,
+        "echo_lines": 0,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "id": "env-fn-echo-scrub",
+      "observed": {
+        "drift_line": "GATE_DRIFT: -GATE_GREP",
+        "drift_rc": 1,
+        "echo_lines": 1,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "ok": false
+    },
+    {
+      "expect": {
+        "drift_line": "GATE_DRIFT: none",
+        "drift_rc": 0,
+        "echo_lines": 0,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "id": "env-fn-root-move",
+      "observed": {
+        "drift_line": "GATE_DRIFT: -FINDING:CHAIN_SOURCE_MISSING -FINDING:CLAIM_SOURCE_MISSING -FINDING:POINTER_UNRESOLVED drift drift-sections drift_sections findings native refused root supported tallies tally verdict verified",
+        "drift_rc": 1,
+        "echo_lines": 0,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "ok": false
+    },
+    {
+      "expect": {
+        "drift_line": "GATE_DRIFT: none",
+        "drift_rc": 0,
+        "echo_lines": 0,
+        "pin_file": true,
+        "pin_rc": 0
+      },
+      "id": "env-fn-suppress",
+      "observed": {
+        "drift_line": "",
+        "drift_rc": 2,
+        "echo_lines": -1,
+        "pin_file": false,
+        "pin_rc": 2
+      },
+      "ok": false
+    },
+    {
+      "expect": {
+        "pin_file": false,
+        "pin_rc": 2,
+        "refusal": "ENV_PROVENANCE"
+      },
+      "id": "env-override-missing",
+      "observed": {
+        "pin_file": false,
+        "pin_rc": 2,
+        "refusal": "ENV_PROVENANCE"
+      },
+      "ok": true
+    },
+    {
+      "expect": {
+        "pin_file": false,
+        "pin_rc": 2,
+        "refusal": "ENV_PROVENANCE"
+      },
+      "id": "env-override-fake",
+      "observed": {
+        "pin_file": false,
+        "pin_rc": 2,
+        "refusal": "ENV_PROVENANCE"
+      },
+      "ok": true
+    },
+    {
+      "expect": {
+        "override_honoured.drift_line": "GATE_DRIFT: none",
+        "override_honoured.drift_rc": 0,
+        "override_honoured.echo_lines": 0,
+        "override_honoured.pin_file": true,
+        "override_honoured.pin_rc": 0,
+        "override_relative_refused.pin_file": false,
+        "override_relative_refused.pin_rc": 2,
+        "override_relative_refused.refusal": "BASH_PROVENANCE",
+        "path_bash_shim_echo.drift_line": "GATE_DRIFT: none",
+        "path_bash_shim_echo.drift_rc": 0,
+        "path_bash_shim_echo.echo_lines": 0,
+        "path_bash_shim_echo.pin_file": true,
+        "path_bash_shim_echo.pin_rc": 0,
+        "path_bash_shim_suppress.drift_line": "GATE_DRIFT: none",
+        "path_bash_shim_suppress.drift_rc": 0,
+        "path_bash_shim_suppress.pin_file": true,
+        "path_bash_shim_suppress.pin_rc": 0,
+        "path_env_shim_echo.drift_line": "GATE_DRIFT: none",
+        "path_env_shim_echo.drift_rc": 0,
+        "path_env_shim_echo.echo_lines": 0,
+        "path_env_shim_echo.pin_file": true,
+        "path_env_shim_echo.pin_rc": 0
+      },
+      "id": "capture-bash-path-pin",
+      "observed": {
+        "override_honoured.drift_line": "GATE_DRIFT: none",
+        "override_honoured.drift_rc": 0,
+        "override_honoured.echo_lines": 0,
+        "override_honoured.pin_file": true,
+        "override_honoured.pin_rc": 0,
+        "override_relative_refused.pin_file": false,
+        "override_relative_refused.pin_rc": 2,
+        "override_relative_refused.refusal": "BASH_PROVENANCE",
+        "path_bash_shim_echo.drift_line": "GATE_DRIFT: none",
+        "path_bash_shim_echo.drift_rc": 0,
+        "path_bash_shim_echo.echo_lines": 0,
+        "path_bash_shim_echo.pin_file": true,
+        "path_bash_shim_echo.pin_rc": 0,
+        "path_bash_shim_suppress.drift_line": "GATE_DRIFT: none",
+        "path_bash_shim_suppress.drift_rc": 0,
+        "path_bash_shim_suppress.pin_file": true,
+        "path_bash_shim_suppress.pin_rc": 0,
+        "path_env_shim_echo.drift_line": "GATE_DRIFT: -GATE_GREP",
+        "path_env_shim_echo.drift_rc": 1,
+        "path_env_shim_echo.echo_lines": 1,
+        "path_env_shim_echo.pin_file": true,
+        "path_env_shim_echo.pin_rc": 0
+      },
+      "ok": false
+    }
+  ],
+  "seed": 39013,
+  "total": 8,
+  "verifier": "corpus/evidence/round39/verify-receipts.py",
+  "verifier_sha256": "1b6e0de688deda7493db3af5397d1e5bbf1fcdf556d8e254acae3ac6a8496267"
+}

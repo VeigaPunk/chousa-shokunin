@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
-# parent-lifetime.sh — chousa round-44 launcher receipt.
+# parent-lifetime.sh — chousa launcher receipt (round 44; exit contract round 45).
 # Contract: this process stays alive until every child it spawned has been
 # reaped by this same pid. It appends the receipt itself. A pipeline must
-# not own the wait. Exit 0 when the end line is written. Exit 1 if a child
-# pid was not captured. Exit 2 on usage.
-# The receipt is not proof against a later hand-edit. It is the log the
-# round-43 closure could not resolve.
+# not own the wait. The per-wave seat timeout is required in dispatch mode
+# and recorded as timeout_s= in the start line (QUALITY 63).
+# Exit 0: end line written, n_spawned > 0, every child reaped, no seat
+# timed out. Exit 3: end line written, but zero tasks were spawned or a
+# seat exited 124/137 (timeout) — the receipt is complete, the wave is not.
+# Exit 1: a child pid was not captured or the parent pid changed. Exit 2:
+# usage, including a dispatch run without --timeout.
+# The receipt is not proof against a later hand-edit.
 set -u
 
 usage() {
-  echo "usage: parent-lifetime.sh --dispatch JSON --receipt PATH --agent FILE [--timeout SECS]" >&2
+  echo "usage: parent-lifetime.sh --dispatch JSON --receipt PATH --agent FILE --timeout SECS" >&2
   echo "       parent-lifetime.sh --selftest --receipt PATH" >&2
   exit 2
 }
@@ -17,7 +21,7 @@ usage() {
 DISPATCH=""
 RECEIPT=""
 AGENT=""
-TIMEOUT=420
+TIMEOUT=""
 SELFTEST=0
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -30,12 +34,17 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 [[ -n "$RECEIPT" ]] || usage
+if [[ "$SELFTEST" -eq 1 ]]; then
+  TIMEOUT=${TIMEOUT:-0}
+else
+  [[ "$TIMEOUT" =~ ^[1-9][0-9]*$ ]] || usage
+fi
 
 parent_pid=$$
 start_epoch=$(date +%s)
 mkdir -p -- "$(dirname -- "$RECEIPT")"
 : > "$RECEIPT"
-printf 'start parent_pid=%s epoch=%s\n' "$parent_pid" "$start_epoch" >> "$RECEIPT"
+printf 'start parent_pid=%s epoch=%s timeout_s=%s\n' "$parent_pid" "$start_epoch" "$TIMEOUT" >> "$RECEIPT"
 
 declare -a NAMES=()
 declare -a PIDS=()
@@ -86,14 +95,16 @@ fi
 
 n_spawned=${#PIDS[@]}
 n_reaped=0
+n_timeout=0
 for i in "${!PIDS[@]}"; do
   child=${PIDS[$i]}
   name=${NAMES[$i]}
-  set +e
   wait "$child"
   ec=$?
-  set -e
   n_reaped=$((n_reaped + 1))
+  if [[ "$ec" -eq 124 || "$ec" -eq 137 ]]; then
+    n_timeout=$((n_timeout + 1))
+  fi
   printf 'reap name=%s child_pid=%s exit_code=%s epoch=%s\n' \
     "$name" "$child" "$ec" "$(date +%s)" >> "$RECEIPT"
 done
@@ -105,4 +116,8 @@ if [[ "$$" -ne "$parent_pid" ]]; then
 fi
 printf 'end parent_pid=%s epoch=%s n_spawned=%s n_reaped=%s\n' \
   "$$" "$end_epoch" "$n_spawned" "$n_reaped" >> "$RECEIPT"
+if [[ "$n_spawned" -eq 0 || "$n_timeout" -gt 0 ]]; then
+  echo "parent-lifetime: incomplete wave n_spawned=$n_spawned n_timeout=$n_timeout" >&2
+  exit 3
+fi
 exit 0

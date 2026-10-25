@@ -1,0 +1,109 @@
+# chousa-shokunin round-6 receipt — broken twin: composed DRIFT naming every dirty section
+# utc: 2026-10-16T02:05:29Z
+# seat: receipts-writer | lane: chousa-shokunin | round: 6 (operability/composition move: verify-all composes one verdict + --json manifest)
+# lane head: 1d1f56c | gate: tools/research-gate.sh sha256=0c3d51ed1a131146ac33eebf24eefe5830ecaaf3e59a1b03e6c91cd8debfd5f8
+# before-state gate: tools/research-gate.sh sha256=55adb92d0ba5ac958907fac6c4d5d6b0b50129703e866a5befbd9a32789f2ff2 (round-5 revision, lane HEAD; verify-all absent)
+# fixtures:
+#   878c2c50ec9efba5a103644bbc002a7029c9cbead9b95ec369913760d158212a  corpus/fixtures/full-r6.md
+#   0f7e498cf1f6f6192a2660b14e41a025dbf47972d3c37ffd414df008bb6b320f  corpus/fixtures/full-r6-broken.md
+#   39cdb2d727c5f2e26093c7099f501ab21a8fae6ac9d2fa458161614ad4953d6c  corpus/fixtures/full-r6-absent.md
+#   45eb6ac2cde9e3c33dd4d753e4da2cb660308dad8f00475a382a2881b89ddc40  corpus/fixtures/full-r6.claims.jsonl
+#   45eb6ac2cde9e3c33dd4d753e4da2cb660308dad8f00475a382a2881b89ddc40  corpus/fixtures/full-r6-broken.claims.jsonl
+#   f56ef337aa41137af6db3624066947d29bcf4364a228dfdcdc8cc0e701646216  corpus/fixtures/full-r6.README.md
+# manifest: corpus/evidence/verify-all-manifest.jsonl
+# method: machine-cut by /home/vgpnk/.cache/chousa-r6-evidence/cut-receipts.sh + assemble-receipts.sh; stdout verbatim (the gate prints its own ts=); local files only; no network
+# scope: verify-all on full-r6-broken.md, the pre-move structural hole, and the solo modes that localize the two defects
+
+## the twin, measured
+
+8c8
+< | claims_file | chousa-shokunin/corpus/fixtures/full-r6.claims.jsonl |
+---
+> | claims_file | chousa-shokunin/corpus/fixtures/full-r6-broken.claims.jsonl |
+29c29
+< | 2 | C2 | S2 | quote | Track five axes separately: task competence, retention, evidence fidelity, cross-domain transfer, and operating cost. | resolved | the B:57 separate-the-axes line |
+---
+> | 2 | C2 | S2 | quote | Track five axes separately: task competence, retention, evidence fidelity, cross-domain transfer, and operating costs. | resolved | the B:57 separate-the-axes line |
+59c59
+< | R2 | research/deep-research-2026-09-28/B-multiagent-knowledge.md:79 | the ACE numerals are model-quality claims belonging to kengaku province, carried here only as a hedge form — intake RJ-03 | a kengaku-lane adjudication of those numerals would flip this rejection |
+---
+> | R2 | research/deep-research-2026-09-28/B-multiagent-knowledge.md:79 | the ACE numerals are model-quality claims belonging to kengaku province, carried here only as a hedge form — intake RJ-03 | |
+
+## composed verify-all on the twin
+
+## command: bash tools/research-gate.sh verify-all corpus/fixtures/full-r6-broken.md --root ..
+exit: 1
+
+research-gate research-gate-r1 — ts=2026-10-16T02:04:02Z — mode=verify-all — record=corpus/fixtures/full-r6-broken.md — claims=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/fixtures/full-r6-broken.claims.jsonl — root=..
+SECTION structure state=run verdict=CLEAN findings=0 drift=0
+SECTION claims state=run verdict=CLEAN findings=0 drift=0 tally=VERDICT_BEARING_CLAIMS=3/3
+SECTION chain state=run verdict=DRIFT findings=1 drift=1 tally=RESOLVED_HOPS=2/3
+FINDING CHAIN_ANCHOR_NOT_FOUND severity=warn surface=chain obs=hop=2 source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"Track five axes separately: task competence, retention, evid" nearest_line=57 context=The strongest design implication is to make knowledge changes—not agent self-a
+SECTION sweeps state=run verdict=DRIFT findings=1 drift=1 tally=VERIFIED_SWEEPS=1/2 REJECTIONS_OK=1/2
+FINDING SWEEP_REJECTION_INCOMPLETE severity=warn surface=sweeps obs=id=R2 missing=flip
+VERIFY_ALL sections=4 run=4 absent=0 drift-sections=2 findings=2 drift=2
+RESEARCH_GATE: DRIFT (sections=4 run=4 absent=0 drift-sections=2 findings=2 drift=2)
+
+## solo structure mode (the hole: CLEAN)
+
+## command: bash tools/research-gate.sh verify corpus/fixtures/full-r6-broken.md --root ..
+exit: 0
+
+research-gate research-gate-r1 — ts=2026-10-16T02:03:54Z — mode=verify — record=corpus/fixtures/full-r6-broken.md
+RESEARCH_GATE: CLEAN (findings=0 drift=0 questions=1 sources=4 chains=3 claims=3 negatives=2 rejections=2 approvals=1)
+
+## solo chain mode
+
+## command: bash tools/research-gate.sh verify-chain corpus/fixtures/full-r6-broken.md --root ..
+exit: 1
+
+research-gate research-gate-r1 — ts=2026-10-16T02:03:58Z — mode=chain — record=corpus/fixtures/full-r6-broken.md
+CHAIN hop=1 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"I could not substantiate this spelling as an established art" at=line:64 verdict=match
+CHAIN hop=2 status=resolved observed=anchor-missing source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"Track five axes separately: task competence, retention, evid" at=- verdict=mismatch
+CHAIN hop=3 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=line:"“Jin’i-ryū” does not support the proposed literal tra" at=line:107 verdict=match
+FINDING CHAIN_ANCHOR_NOT_FOUND severity=warn surface=chain obs=hop=2 source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"Track five axes separately: task competence, retention, evid" nearest_line=57 context=The strongest design implication is to make knowledge changes—not agent self-a
+RESOLVED_HOPS=2/3
+RESEARCH_GATE: DRIFT (hops=3 verified=2 exempt=0 anchor-missing=1 refused=0 invalid=0 findings=1 drift=1)
+
+## solo sweeps mode
+
+## command: bash tools/research-gate.sh verify-sweeps corpus/fixtures/full-r6-broken.md --root ..
+exit: 1
+
+research-gate research-gate-r1 — ts=2026-10-16T02:03:59Z — mode=sweeps — record=corpus/fixtures/full-r6-broken.md
+SWEEP id=SW1 where=research/deep-research-2026-09-28/saved-*,research/deep-research-2026-09-28/*-sn looked=local hits=0 at=- observed=verified verdict=match
+SWEEP id=SW2 where=S1,S2,S3 looked=source-ids hits=- at=- observed=exempt verdict=exempt
+REJECTION id=R1 ref=research/README.md:12 reason=present flip=present observed=complete verdict=match
+REJECTION id=R2 ref=research/deep-research-2026-09-28/B-multiagent-knowledge.md:79 reason=present flip=absent observed=incomplete verdict=mismatch
+FINDING SWEEP_REJECTION_INCOMPLETE severity=warn surface=sweeps obs=id=R2 missing=flip
+VERIFIED_SWEEPS=1/2 REJECTIONS_OK=1/2
+RESEARCH_GATE: DRIFT (sweeps=2 verified=1 exempt=1 hit=0 refused=0 invalid=0 rejections=2 rejections-ok=1 findings=1 drift=1)
+
+## per-section composed vs solo
+
+== broken: composed SECTION lines ==
+SECTION structure state=run verdict=CLEAN findings=0 drift=0
+SECTION claims state=run verdict=CLEAN findings=0 drift=0 tally=VERDICT_BEARING_CLAIMS=3/3
+SECTION chain state=run verdict=DRIFT findings=1 drift=1 tally=RESOLVED_HOPS=2/3
+SECTION sweeps state=run verdict=DRIFT findings=1 drift=1 tally=VERIFIED_SWEEPS=1/2 REJECTIONS_OK=1/2
+== broken: composed summary ==
+VERIFY_ALL sections=4 run=4 absent=0 drift-sections=2 findings=2 drift=2
+RESEARCH_GATE: DRIFT (sections=4 run=4 absent=0 drift-sections=2 findings=2 drift=2)
+== broken: solo summaries to compare ==
+RESEARCH_GATE: CLEAN (findings=0 drift=0 questions=1 sources=4 chains=3 claims=3 negatives=2 rejections=2 approvals=1)
+VERDICT_BEARING_CLAIMS=3/3
+RESEARCH_GATE: CLEAN (claims=3 supported=3 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)
+RESOLVED_HOPS=2/3
+RESEARCH_GATE: DRIFT (hops=3 verified=2 exempt=0 anchor-missing=1 refused=0 invalid=0 findings=1 drift=1)
+VERIFIED_SWEEPS=1/2 REJECTIONS_OK=1/2
+RESEARCH_GATE: DRIFT (sweeps=2 verified=1 exempt=1 hit=0 refused=0 invalid=0 rejections=2 rejections-ok=1 findings=1 drift=1)
+
+## before-state (the mode itself, absent at the round-5 revision)
+
+## command: bash tools/research-gate.sh verify-all corpus/fixtures/full-r6.md --root ..   (round-5 revision)
+captured while the working gate still lacked verify_all (intermediate wave state): exit=2, stdout_bytes=0
+stderr_first=research-gate: multiple record paths
+
+## the fixture README records the same before-state at the round-5 revision, plus the structure hole:
+##   r5 verify on the twin: CLEAN exit 0 (both defects invisible to the structure path)
+##   r5 CLI on verify-all: exit 2 (no such mode)

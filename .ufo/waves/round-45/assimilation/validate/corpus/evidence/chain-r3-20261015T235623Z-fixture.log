@@ -1,0 +1,35 @@
+# chousa-shokunin round-3 receipt — fixture
+# utc: 2026-10-15T23:56:23Z
+# seat: receipts-writer | lane: chousa-shokunin | round: 3 (coverage move: chain-hop resolution)
+# lane head: 0aa794d | gate: tools/research-gate.sh sha256=67daf85ecc49c4c7accbee9534c31b0734061b7f329e8de7a98254a57f9d6084
+# fixtures: corpus/fixtures/chain-r3.md sha256=06115f2f8e6db3c60034411dc6be42c4e0887352b09ab9cbd7f760801237ba07 | corpus/fixtures/chain-r3-broken.md sha256=b66222a16d4c5323ee6932839ff5746af5f716f36372af506755aed18e0f5c6a
+# fixture contract: corpus/fixtures/chain-r3.README.md sha256=72dbee4e1d8c22df898842f2edf406769c8aa7894fcaecdfe5922137f867292a
+# method: machine-cut by /home/vgpnk/.cache/chousa-r3/cut-receipts.sh; stdout verbatim; local files only; no network
+# scope: independent cross-check of the pre-registered chain fixtures against the pinned archived inputs
+
+## pinned inputs (sha256)
+06115f2f8e6db3c60034411dc6be42c4e0887352b09ab9cbd7f760801237ba07  corpus/fixtures/chain-r3.md
+b66222a16d4c5323ee6932839ff5746af5f716f36372af506755aed18e0f5c6a  corpus/fixtures/chain-r3-broken.md
+72dbee4e1d8c22df898842f2edf406769c8aa7894fcaecdfe5922137f867292a  corpus/fixtures/chain-r3.README.md
+67daf85ecc49c4c7accbee9534c31b0734061b7f329e8de7a98254a57f9d6084  tools/research-gate.sh (round-3 revision)
+03a3324455852ea0025115cb0e3ba9c8cdea10da5edc051c4738854a27c14be0  /home/vgpnk/.cache/chousa-r2/gate-snap-03a332445585.sh (r2 gate snapshot)
+9033857d4625555c7b778dfad6df80e3e1b24ed8bffa3fee2fd445b9c5540b85  research/deep-research-2026-09-28/A-shokunin-tradition.md
+6d8dbddd3e2d2f47dcb153c5a3347cc6321db4afc72cf07da40f0f7fe5022006  research/deep-research-2026-09-28/B-multiagent-knowledge.md
+e48fe70ff92055c217ac6ca6ce68e403aa5689fee8717f3bd0ccf5badc92321b  research/deep-research-2026-09-28/C-rank-taxonomy.md
+0aa794db58c2aafae0a50b25b8ae9822f4007900  lane HEAD
+
+## record inventory
+corpus/fixtures/chain-r3.md: lines=65 hops=22 (expected 17 resolved / 5 exempt; RESOLVED_HOPS=17/22 CLEAN exit 0)
+corpus/fixtures/chain-r3-broken.md: lines=43 hops=2 (expected 1 resolved / 0 exempt; RESOLVED_HOPS=1/2 DRIFT exit 1)
+
+## command: python3 (fixture README §Re-run documented byte-check, extracted verbatim)
+exit: 0
+corpus/fixtures/chain-r3.md: RESOLVED_HOPS=17/22 bad_hops=[]
+corpus/fixtures/chain-r3-broken.md: RESOLVED_HOPS=1/2 bad_hops=['2']
+
+## command: python3 /home/vgpnk/.cache/chousa-r3/adapter-chaincheck.py /home/vgpnk/Projects/shokunin corpus/fixtures/chain-r3.md corpus/fixtures/chain-r3-broken.md
+# receipts-writer independent checker: re-derives resolved-hop anchors and the broken control's near-miss
+exit: 0
+CHAINCHECK corpus/fixtures/chain-r3.md: hops=22 resolved=17 exempt=5 bad_hops=[] from_loc_bad=[] (expected: bad_hops=[])
+CHAINCHECK corpus/fixtures/chain-r3-broken.md: hops=2 resolved=1 exempt=0 bad_hops=['2'] from_loc_bad=[] (expected: bad_hops=['2']; near-miss absent; jin'i form present)
+CHAINCHECK_SUMMARY: 2 fixtures re-derived; chain-r3.md all 17 resolved anchors present; chain-r3-broken.md hop 2 absent as expected; near-miss bytes absent from C; jin'i form present at C:118

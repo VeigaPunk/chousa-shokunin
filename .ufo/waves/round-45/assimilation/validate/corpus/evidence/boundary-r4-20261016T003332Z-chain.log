@@ -1,0 +1,227 @@
+# chousa-shokunin round-4 receipt — chain
+# utc: 2026-10-16T00:33:32Z
+# seat: receipts-writer | lane: chousa-shokunin | round: 4 (calibration move: token-boundary matching semantics)
+# lane head: 09153d1 | gate: tools/research-gate.sh sha256=6b83705b02fe11e98b8b4aeb43fe718ff9910d21cee16d87366cef648a3960b2
+# before-state gate snapshot: /tmp/chousa-r4/research-gate-r3-67daf85e.sh sha256=67daf85ecc49c4c7accbee9534c31b0734061b7f329e8de7a98254a57f9d6084 (round-3 revision, run for the before/after pairs)
+# fixtures: corpus/fixtures/claims-r2.jsonl sha256=23d078cbfd032ec5ee7de5c21de65eba3a3cd2989a78281ff61bc6db62188802 | corpus/fixtures/chain-r3.md sha256=06115f2f8e6db3c60034411dc6be42c4e0887352b09ab9cbd7f760801237ba07 | corpus/fixtures/chain-r3-broken.md sha256=b66222a16d4c5323ee6932839ff5746af5f716f36372af506755aed18e0f5c6a
+# fixture contract: corpus/fixtures/chain-r3.README.md sha256=72dbee4e1d8c22df898842f2edf406769c8aa7894fcaecdfe5922137f867292a
+# attack/legit copies: /tmp/chousa-r4/att/ (single-delta copies of the two fixtures; sha256 listed below)
+# method: machine-cut by /tmp/chousa-r4/cut-receipts.sh; stdout verbatim; local files only; no network
+# scope: chain-mode regression + boundary battery: canonical fixture, broken control, attack controls, legit control
+
+## attack deltas (generator output; the copies are single-delta rewrites of the pinned fixture)
+## base pins
+## claims attacks (one delta per copy)
+   delta: A03 span tail '…for nine years before establishing himself independently.' -> '…for nine yea'
+   delta: A03 span -> 'r carver’s career: I…himself independentl' (starts mid 'particular', ends mid 'independently')
+   delta: C06 span -> 'n’t found support for translating “jin’i' (ends at 'jin’i', next byte '-' in source)
+   delta: + L1 (span followed by ',' in B:79) and L2 (span bounded by '(' ')' in A:35; slashes/apostrophe/hyphen inside)
+## chain attacks (one delta per copy)
+   delta: hop 3 anchor -> '…kiwami semantic' (one byte dropped mid-token)
+   delta: hop 14 anchor -> '| 14 | C:65 | S1 | q…' ends at 'jin’i' (next byte '-' in A:52)
+   delta: hop 14 anchor ends at 'jin' (next byte ’ in A:52)
+   delta: hop 6 anchor -> 'n. Track … operating cost.' (start glued into 'evaluation')
+   delta: + hop 23 (quote followed by ',' in B:79) -> expect RESOLVED_HOPS=18/23 CLEAN
+
+## attack/legit copies (sha256, pinned)
+0a23d5d1fb43e09f16875dd34ce3e0ed4d0b86aefcfce556845f97168eee5e07  bound-chain-glue-start.md
+bc043c0de96b82f0a01c818bcc5dda2ea9716aa9be88e8c8b7bb69a4768cae20  bound-chain-legit.md
+197abe31668d17316f164d77d66f25ee13f6c6d35ff2d685d41960b4dedc978b  bound-chain-trunc-apostrophe.md
+18f8554e8d185c8a5c4d5cf0c054eb6eeff3df1c86d6ae42de7205e35c422e12  bound-chain-trunc-hyphen.md
+5b37c1e0f32e76f066e94c53511830a1ba11df455ab22e9f7a233c19297d4492  bound-chain-trunc-midtoken.md
+
+## canonical regression: pre-registered fixture (must stay 17/22 CLEAN, exit 0)
+
+## command: bash tools/research-gate.sh verify-chain corpus/fixtures/chain-r3.md --root ..
+exit: 0
+research-gate research-gate-r1 — ts=2026-10-16T00:34:02Z — mode=chain — record=corpus/fixtures/chain-r3.md
+CHAIN hop=1 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=line:"1. When does an apprentice earn domain independence?" at=line:74 verdict=match
+CHAIN hop=2 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"I could not substantiate this spelling as an established art" at=line:64 verdict=match
+CHAIN hop=3 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"minarai/deshi/shokunin/jin'i-ryu/kiwami semantics" at=line:35 verdict=match
+CHAIN hop=4 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=line:"“Jin’i-ryū” does not support the proposed literal tra" at=line:107 verdict=match
+CHAIN hop=5 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"I found no authoritative attestation establishing jin’i-ry" at=line:109 verdict=match
+CHAIN hop=6 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"Track five axes separately: task competence, retention, evid" at=line:57 verdict=match
+CHAIN hop=7 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"Sources: Voyager and Generative Agents; Reflexion; Dynamic C" at=line:71 verdict=match
+CHAIN hop=8 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"Evolving strategies and domain playbooks" at=line:67 verdict=match
+CHAIN hop=9 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"In one AppWorld case, a rewrite reduced accumulated context " at=line:79 verdict=match
+CHAIN hop=10 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"graduated responsibility through actual work, rather than in" at=line:88 verdict=match
+CHAIN hop=11 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"The axes your system needs are knowledge provenance, demonst" at=line:67 verdict=match
+CHAIN hop=12 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=line:"Kyū/dan is a grading structure, not an autonomy ladder" at=line:87 verdict=match
+CHAIN hop=13 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"In Go, kyū 級 counts downward toward 1-kyū; dan 段 count" at=line:89 verdict=match
+CHAIN hop=14 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"They do not establish a universal ladder of minarai → desh" at=line:52 verdict=match
+CHAIN hop=15 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"A skilled craft worker/artisan. The word itself does not cer" at=line:63 verdict=match
+CHAIN hop=16 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"It offers much weaker support for unrestricted whole-corpus " at=line:55 verdict=match
+CHAIN hop=17 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=line:"“Jin’i-ryū” does not support the proposed literal tra" at=line:107 verdict=match
+CHAIN hop=18 status=blocked-no-fetch observed=exempt source=https://kotobank.jp/ anchor=- at=- verdict=exempt
+CHAIN hop=19 status=blocked-no-fetch observed=exempt source=https://arxiv.org/ anchor=- at=- verdict=exempt
+CHAIN hop=20 status=unresolved observed=exempt source=S3 anchor=- at=- verdict=exempt
+CHAIN hop=21 status=unresolved observed=exempt source=S2 anchor=- at=- verdict=exempt
+CHAIN hop=22 status=unresolved observed=exempt source=S1 anchor=- at=- verdict=exempt
+RESOLVED_HOPS=17/22
+RESEARCH_GATE: CLEAN (hops=22 verified=17 exempt=5 anchor-missing=0 refused=0 invalid=0 findings=0 drift=0)
+
+## broken control (anchor bytes absent; must stay DRIFT 1/2, exit 1)
+
+## command: bash tools/research-gate.sh verify-chain corpus/fixtures/chain-r3-broken.md --root ..
+exit: 1
+research-gate research-gate-r1 — ts=2026-10-16T00:34:06Z — mode=chain — record=corpus/fixtures/chain-r3-broken.md
+CHAIN hop=1 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"I could not substantiate this spelling as an established art" at=line:64 verdict=match
+CHAIN hop=2 status=resolved observed=anchor-missing source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"人為 — jin’i-ryū" at=- verdict=mismatch
+FINDING CHAIN_ANCHOR_NOT_FOUND severity=warn surface=chain obs=hop=2 source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"人為 — jin’i-ryū" nearest_line=53 context=The key distinction is between skill, teaching authority, and permission to act.
+RESOLVED_HOPS=1/2
+RESEARCH_GATE: DRIFT (hops=2 verified=1 exempt=0 anchor-missing=1 refused=0 invalid=0 findings=1 drift=1)
+
+## attack control: chain/trunc-midtoken (must DRIFT at the new revision, exit 1)
+
+## command: bash tools/research-gate.sh verify-chain /tmp/chousa-r4/att/bound-chain-trunc-midtoken.md --root ..
+exit: 1
+research-gate research-gate-r1 — ts=2026-10-16T00:34:06Z — mode=chain — record=/tmp/chousa-r4/att/bound-chain-trunc-midtoken.md
+CHAIN hop=1 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=line:"1. When does an apprentice earn domain independence?" at=line:74 verdict=match
+CHAIN hop=2 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"I could not substantiate this spelling as an established art" at=line:64 verdict=match
+CHAIN hop=3 status=resolved observed=anchor-missing source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"minarai/deshi/shokunin/jin'i-ryu/kiwami semantic" at=- verdict=mismatch
+CHAIN hop=4 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=line:"“Jin’i-ryū” does not support the proposed literal tra" at=line:107 verdict=match
+CHAIN hop=5 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"I found no authoritative attestation establishing jin’i-ry" at=line:109 verdict=match
+CHAIN hop=6 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"Track five axes separately: task competence, retention, evid" at=line:57 verdict=match
+CHAIN hop=7 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"Sources: Voyager and Generative Agents; Reflexion; Dynamic C" at=line:71 verdict=match
+CHAIN hop=8 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"Evolving strategies and domain playbooks" at=line:67 verdict=match
+CHAIN hop=9 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"In one AppWorld case, a rewrite reduced accumulated context " at=line:79 verdict=match
+CHAIN hop=10 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"graduated responsibility through actual work, rather than in" at=line:88 verdict=match
+CHAIN hop=11 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"The axes your system needs are knowledge provenance, demonst" at=line:67 verdict=match
+CHAIN hop=12 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=line:"Kyū/dan is a grading structure, not an autonomy ladder" at=line:87 verdict=match
+CHAIN hop=13 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"In Go, kyū 級 counts downward toward 1-kyū; dan 段 count" at=line:89 verdict=match
+CHAIN hop=14 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"They do not establish a universal ladder of minarai → desh" at=line:52 verdict=match
+CHAIN hop=15 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"A skilled craft worker/artisan. The word itself does not cer" at=line:63 verdict=match
+CHAIN hop=16 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"It offers much weaker support for unrestricted whole-corpus " at=line:55 verdict=match
+CHAIN hop=17 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=line:"“Jin’i-ryū” does not support the proposed literal tra" at=line:107 verdict=match
+CHAIN hop=18 status=blocked-no-fetch observed=exempt source=https://kotobank.jp/ anchor=- at=- verdict=exempt
+CHAIN hop=19 status=blocked-no-fetch observed=exempt source=https://arxiv.org/ anchor=- at=- verdict=exempt
+CHAIN hop=20 status=unresolved observed=exempt source=S3 anchor=- at=- verdict=exempt
+CHAIN hop=21 status=unresolved observed=exempt source=S2 anchor=- at=- verdict=exempt
+CHAIN hop=22 status=unresolved observed=exempt source=S1 anchor=- at=- verdict=exempt
+FINDING CHAIN_ANCHOR_NOT_FOUND severity=warn surface=chain obs=hop=3 source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"minarai/deshi/shokunin/jin'i-ryu/kiwami semantic" nearest_line=35 context=Deep research: The shokunin (職人) concept in Japanese artisan tradition — a
+RESOLVED_HOPS=16/22
+RESEARCH_GATE: DRIFT (hops=22 verified=16 exempt=5 anchor-missing=1 refused=0 invalid=0 findings=1 drift=1)
+
+## attack control: chain/trunc-hyphen (must DRIFT at the new revision, exit 1)
+
+## command: bash tools/research-gate.sh verify-chain /tmp/chousa-r4/att/bound-chain-trunc-hyphen.md --root ..
+exit: 1
+research-gate research-gate-r1 — ts=2026-10-16T00:34:11Z — mode=chain — record=/tmp/chousa-r4/att/bound-chain-trunc-hyphen.md
+CHAIN hop=1 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=line:"1. When does an apprentice earn domain independence?" at=line:74 verdict=match
+CHAIN hop=2 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"I could not substantiate this spelling as an established art" at=line:64 verdict=match
+CHAIN hop=3 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"minarai/deshi/shokunin/jin'i-ryu/kiwami semantics" at=line:35 verdict=match
+CHAIN hop=4 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=line:"“Jin’i-ryū” does not support the proposed literal tra" at=line:107 verdict=match
+CHAIN hop=5 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"I found no authoritative attestation establishing jin’i-ry" at=line:109 verdict=match
+CHAIN hop=6 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"Track five axes separately: task competence, retention, evid" at=line:57 verdict=match
+CHAIN hop=7 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"Sources: Voyager and Generative Agents; Reflexion; Dynamic C" at=line:71 verdict=match
+CHAIN hop=8 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"Evolving strategies and domain playbooks" at=line:67 verdict=match
+CHAIN hop=9 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"In one AppWorld case, a rewrite reduced accumulated context " at=line:79 verdict=match
+CHAIN hop=10 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"graduated responsibility through actual work, rather than in" at=line:88 verdict=match
+CHAIN hop=11 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"The axes your system needs are knowledge provenance, demonst" at=line:67 verdict=match
+CHAIN hop=12 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=line:"Kyū/dan is a grading structure, not an autonomy ladder" at=line:87 verdict=match
+CHAIN hop=13 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"In Go, kyū 級 counts downward toward 1-kyū; dan 段 count" at=line:89 verdict=match
+CHAIN hop=14 status=resolved observed=anchor-missing source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"They do not establish a universal ladder of minarai → desh" at=- verdict=mismatch
+CHAIN hop=15 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"A skilled craft worker/artisan. The word itself does not cer" at=line:63 verdict=match
+CHAIN hop=16 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"It offers much weaker support for unrestricted whole-corpus " at=line:55 verdict=match
+CHAIN hop=17 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=line:"“Jin’i-ryū” does not support the proposed literal tra" at=line:107 verdict=match
+CHAIN hop=18 status=blocked-no-fetch observed=exempt source=https://kotobank.jp/ anchor=- at=- verdict=exempt
+CHAIN hop=19 status=blocked-no-fetch observed=exempt source=https://arxiv.org/ anchor=- at=- verdict=exempt
+CHAIN hop=20 status=unresolved observed=exempt source=S3 anchor=- at=- verdict=exempt
+CHAIN hop=21 status=unresolved observed=exempt source=S2 anchor=- at=- verdict=exempt
+CHAIN hop=22 status=unresolved observed=exempt source=S1 anchor=- at=- verdict=exempt
+FINDING CHAIN_ANCHOR_NOT_FOUND severity=warn surface=chain obs=hop=14 source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"They do not establish a universal ladder of minarai → desh" nearest_line=52 context=The strongest historical model for your roster is “earned responsibility withi
+RESOLVED_HOPS=16/22
+RESEARCH_GATE: DRIFT (hops=22 verified=16 exempt=5 anchor-missing=1 refused=0 invalid=0 findings=1 drift=1)
+
+## attack control: chain/trunc-apostrophe (must DRIFT at the new revision, exit 1)
+
+## command: bash tools/research-gate.sh verify-chain /tmp/chousa-r4/att/bound-chain-trunc-apostrophe.md --root ..
+exit: 1
+research-gate research-gate-r1 — ts=2026-10-16T00:34:15Z — mode=chain — record=/tmp/chousa-r4/att/bound-chain-trunc-apostrophe.md
+CHAIN hop=1 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=line:"1. When does an apprentice earn domain independence?" at=line:74 verdict=match
+CHAIN hop=2 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"I could not substantiate this spelling as an established art" at=line:64 verdict=match
+CHAIN hop=3 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"minarai/deshi/shokunin/jin'i-ryu/kiwami semantics" at=line:35 verdict=match
+CHAIN hop=4 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=line:"“Jin’i-ryū” does not support the proposed literal tra" at=line:107 verdict=match
+CHAIN hop=5 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"I found no authoritative attestation establishing jin’i-ry" at=line:109 verdict=match
+CHAIN hop=6 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"Track five axes separately: task competence, retention, evid" at=line:57 verdict=match
+CHAIN hop=7 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"Sources: Voyager and Generative Agents; Reflexion; Dynamic C" at=line:71 verdict=match
+CHAIN hop=8 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"Evolving strategies and domain playbooks" at=line:67 verdict=match
+CHAIN hop=9 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"In one AppWorld case, a rewrite reduced accumulated context " at=line:79 verdict=match
+CHAIN hop=10 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"graduated responsibility through actual work, rather than in" at=line:88 verdict=match
+CHAIN hop=11 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"The axes your system needs are knowledge provenance, demonst" at=line:67 verdict=match
+CHAIN hop=12 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=line:"Kyū/dan is a grading structure, not an autonomy ladder" at=line:87 verdict=match
+CHAIN hop=13 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"In Go, kyū 級 counts downward toward 1-kyū; dan 段 count" at=line:89 verdict=match
+CHAIN hop=14 status=resolved observed=anchor-missing source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"They do not establish a universal ladder of minarai → desh" at=- verdict=mismatch
+CHAIN hop=15 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"A skilled craft worker/artisan. The word itself does not cer" at=line:63 verdict=match
+CHAIN hop=16 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"It offers much weaker support for unrestricted whole-corpus " at=line:55 verdict=match
+CHAIN hop=17 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=line:"“Jin’i-ryū” does not support the proposed literal tra" at=line:107 verdict=match
+CHAIN hop=18 status=blocked-no-fetch observed=exempt source=https://kotobank.jp/ anchor=- at=- verdict=exempt
+CHAIN hop=19 status=blocked-no-fetch observed=exempt source=https://arxiv.org/ anchor=- at=- verdict=exempt
+CHAIN hop=20 status=unresolved observed=exempt source=S3 anchor=- at=- verdict=exempt
+CHAIN hop=21 status=unresolved observed=exempt source=S2 anchor=- at=- verdict=exempt
+CHAIN hop=22 status=unresolved observed=exempt source=S1 anchor=- at=- verdict=exempt
+FINDING CHAIN_ANCHOR_NOT_FOUND severity=warn surface=chain obs=hop=14 source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"They do not establish a universal ladder of minarai → desh" nearest_line=52 context=The strongest historical model for your roster is “earned responsibility withi
+RESOLVED_HOPS=16/22
+RESEARCH_GATE: DRIFT (hops=22 verified=16 exempt=5 anchor-missing=1 refused=0 invalid=0 findings=1 drift=1)
+
+## attack control: chain/glue-start (must DRIFT at the new revision, exit 1)
+
+## command: bash tools/research-gate.sh verify-chain /tmp/chousa-r4/att/bound-chain-glue-start.md --root ..
+exit: 1
+research-gate research-gate-r1 — ts=2026-10-16T00:34:19Z — mode=chain — record=/tmp/chousa-r4/att/bound-chain-glue-start.md
+CHAIN hop=1 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=line:"1. When does an apprentice earn domain independence?" at=line:74 verdict=match
+CHAIN hop=2 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"I could not substantiate this spelling as an established art" at=line:64 verdict=match
+CHAIN hop=3 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"minarai/deshi/shokunin/jin'i-ryu/kiwami semantics" at=line:35 verdict=match
+CHAIN hop=4 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=line:"“Jin’i-ryū” does not support the proposed literal tra" at=line:107 verdict=match
+CHAIN hop=5 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"I found no authoritative attestation establishing jin’i-ry" at=line:109 verdict=match
+CHAIN hop=6 status=resolved observed=anchor-missing source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"n. Track five axes separately: task competence, retention, e" at=- verdict=mismatch
+CHAIN hop=7 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"Sources: Voyager and Generative Agents; Reflexion; Dynamic C" at=line:71 verdict=match
+CHAIN hop=8 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"Evolving strategies and domain playbooks" at=line:67 verdict=match
+CHAIN hop=9 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"In one AppWorld case, a rewrite reduced accumulated context " at=line:79 verdict=match
+CHAIN hop=10 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"graduated responsibility through actual work, rather than in" at=line:88 verdict=match
+CHAIN hop=11 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"The axes your system needs are knowledge provenance, demonst" at=line:67 verdict=match
+CHAIN hop=12 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=line:"Kyū/dan is a grading structure, not an autonomy ladder" at=line:87 verdict=match
+CHAIN hop=13 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"In Go, kyū 級 counts downward toward 1-kyū; dan 段 count" at=line:89 verdict=match
+CHAIN hop=14 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"They do not establish a universal ladder of minarai → desh" at=line:52 verdict=match
+CHAIN hop=15 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"A skilled craft worker/artisan. The word itself does not cer" at=line:63 verdict=match
+CHAIN hop=16 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"It offers much weaker support for unrestricted whole-corpus " at=line:55 verdict=match
+CHAIN hop=17 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=line:"“Jin’i-ryū” does not support the proposed literal tra" at=line:107 verdict=match
+CHAIN hop=18 status=blocked-no-fetch observed=exempt source=https://kotobank.jp/ anchor=- at=- verdict=exempt
+CHAIN hop=19 status=blocked-no-fetch observed=exempt source=https://arxiv.org/ anchor=- at=- verdict=exempt
+CHAIN hop=20 status=unresolved observed=exempt source=S3 anchor=- at=- verdict=exempt
+CHAIN hop=21 status=unresolved observed=exempt source=S2 anchor=- at=- verdict=exempt
+CHAIN hop=22 status=unresolved observed=exempt source=S1 anchor=- at=- verdict=exempt
+FINDING CHAIN_ANCHOR_NOT_FOUND severity=warn surface=chain obs=hop=6 source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"n. Track five axes separately: task competence, retention, e" nearest_line=57 context=The strongest design implication is to make knowledge changes—not agent self-a
+RESOLVED_HOPS=16/22
+RESEARCH_GATE: DRIFT (hops=22 verified=16 exempt=5 anchor-missing=1 refused=0 invalid=0 findings=1 drift=1)
+
+## legit boundary control (punctuation-followed anchor hop 23; must stay CLEAN, 18/23, exit 0)
+
+## command: bash tools/research-gate.sh verify-chain /tmp/chousa-r4/att/bound-chain-legit.md --root ..
+exit: 0
+research-gate research-gate-r1 — ts=2026-10-16T00:34:24Z — mode=chain — record=/tmp/chousa-r4/att/bound-chain-legit.md
+CHAIN hop=1 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=line:"1. When does an apprentice earn domain independence?" at=line:74 verdict=match
+CHAIN hop=2 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"I could not substantiate this spelling as an established art" at=line:64 verdict=match
+CHAIN hop=3 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"minarai/deshi/shokunin/jin'i-ryu/kiwami semantics" at=line:35 verdict=match
+CHAIN hop=4 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=line:"“Jin’i-ryū” does not support the proposed literal tra" at=line:107 verdict=match
+CHAIN hop=5 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"I found no authoritative attestation establishing jin’i-ry" at=line:109 verdict=match
+CHAIN hop=6 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"Track five axes separately: task competence, retention, evid" at=line:57 verdict=match
+CHAIN hop=7 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"Sources: Voyager and Generative Agents; Reflexion; Dynamic C" at=line:71 verdict=match
+CHAIN hop=8 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"Evolving strategies and domain playbooks" at=line:67 verdict=match
+CHAIN hop=9 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"In one AppWorld case, a rewrite reduced accumulated context " at=line:79 verdict=match
+CHAIN hop=10 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"graduated responsibility through actual work, rather than in" at=line:88 verdict=match
+CHAIN hop=11 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"The axes your system needs are knowledge provenance, demonst" at=line:67 verdict=match
+CHAIN hop=12 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=line:"Kyū/dan is a grading structure, not an autonomy ladder" at=line:87 verdict=match
+CHAIN hop=13 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"In Go, kyū 級 counts downward toward 1-kyū; dan 段 count" at=line:89 verdict=match
+CHAIN hop=14 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"They do not establish a universal ladder of minarai → desh" at=line:52 verdict=match
+CHAIN hop=15 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"A skilled craft worker/artisan. The word itself does not cer" at=line:63 verdict=match
+CHAIN hop=16 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"It offers much weaker support for unrestricted whole-corpus " at=line:55 verdict=match
+CHAIN hop=17 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=line:"“Jin’i-ryū” does not support the proposed literal tra" at=line:107 verdict=match
+CHAIN hop=18 status=blocked-no-fetch observed=exempt source=https://kotobank.jp/ anchor=- at=- verdict=exempt
+CHAIN hop=19 status=blocked-no-fetch observed=exempt source=https://arxiv.org/ anchor=- at=- verdict=exempt
+CHAIN hop=20 status=unresolved observed=exempt source=S3 anchor=- at=- verdict=exempt
+CHAIN hop=21 status=unresolved observed=exempt source=S2 anchor=- at=- verdict=exempt
+CHAIN hop=22 status=unresolved observed=exempt source=S1 anchor=- at=- verdict=exempt
+CHAIN hop=23 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"accuracy fell from 66.7 to 57.1" at=line:79 verdict=match
+RESOLVED_HOPS=18/23
+RESEARCH_GATE: CLEAN (hops=23 verified=18 exempt=5 anchor-missing=0 refused=0 invalid=0 findings=0 drift=0)

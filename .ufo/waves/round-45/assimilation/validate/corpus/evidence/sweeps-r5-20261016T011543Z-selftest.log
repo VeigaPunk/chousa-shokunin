@@ -1,0 +1,111 @@
+# chousa-shokunin round-5 receipt — selftest
+# utc: 2026-10-16T01:15:43Z
+# seat: receipts-writer | lane: chousa-shokunin | round: 5 (coverage move: kept rejections and negative sweeps become verdict-bearing)
+# lane head: 45f8f65 | gate: tools/research-gate.sh sha256=55adb92d0ba5ac958907fac6c4d5d6b0b50129703e866a5befbd9a32789f2ff2
+# before-state gate: git show 45f8f65:tools/research-gate.sh sha256=6b83705b02fe11e98b8b4aeb43fe718ff9910d21cee16d87366cef648a3960b2 (round-4 revision), run from a lane shadow (/tmp/chousa-r5-evidence/lane-shadow: symlinks corpus/ -> lane corpus, research/ -> fleet research) so the record's lane- and fleet-root-relative pointers resolve as they do in place
+# fixtures: corpus/fixtures/sweeps-r5.md sha256=025352b75b7b109147fee8b8eb13b4f74eaa1550489e83166ce1dd59cfb14907 | corpus/fixtures/sweeps-r5-hit.md sha256=89650988074e4c371aada8e1fe77cd02d4fa85bc0c3d0a40dc21e12e1a0f78cd | corpus/fixtures/sweeps-r5-broken.md sha256=f74ea3247e069e711278bb81addda468045053cfe556d8f5a204f3b9ff7abc0c
+# fixture contract: corpus/fixtures/sweeps-r5.README.md sha256=e9178651254841b86e46e98ba4566b568df662ed8c541197ae150f5aba1ebbca
+# control copies: /tmp/chousa-r5-evidence/ctl/ (single-delta copies of sweeps-r5.md; sha256 in the live receipt)
+# method: machine-cut by /tmp/chousa-r5-evidence/cut-receipts.sh; stdout verbatim; local files only; no network
+# scope: full selftest at the pinned revision + case-line stability vs the round-4 selftest stdout
+
+## pinned revision
+55adb92d0ba5ac958907fac6c4d5d6b0b50129703e866a5befbd9a32789f2ff2  tools/research-gate.sh (round-5 revision)
+45f8f65  lane HEAD
+025352b75b7b109147fee8b8eb13b4f74eaa1550489e83166ce1dd59cfb14907  corpus/fixtures/sweeps-r5.md
+89650988074e4c371aada8e1fe77cd02d4fa85bc0c3d0a40dc21e12e1a0f78cd  corpus/fixtures/sweeps-r5-hit.md
+f74ea3247e069e711278bb81addda468045053cfe556d8f5a204f3b9ff7abc0c  corpus/fixtures/sweeps-r5-broken.md
+e9178651254841b86e46e98ba4566b568df662ed8c541197ae150f5aba1ebbca  corpus/fixtures/sweeps-r5.README.md
+
+## full selftest
+
+## command: TMPDIR=/tmp/chousa-r5-evidence/tmp env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH bash tools/research-gate.sh --selftest
+exit: 0  (gate sha stable before/after)
+ok-case  1  pass-control                 exit=0
+ok-case  2  pass-hop-marked-unresolved   exit=0
+ok-case  3  pass-export-chrome           exit=0
+ok-case  4  fail-export-chrome-strict    exit=1
+ok-case  5  fail-chrome-malformed-export exit=1
+ok-case  6  fail-no-question             exit=1
+ok-case  7  fail-unranked-source         exit=1
+ok-case  8  fail-chain-hop-unresolved    exit=1
+ok-case  9  fail-claim-unpointed         exit=1
+ok-case  10 fail-rejection-dropped       exit=1
+ok-case  11 fail-negative-without-sweep  exit=1
+ok-case  12 fail-obs-inference-collapse  exit=1
+ok-case  13 fail-hierarchy-primary-lie   exit=1
+ok-case  14 fail-pointer-ephemeral       exit=1
+ok-case  15 fail-external-without-approval exit=1
+ok-case  16 fail-secret-shaped           exit=1
+ok-case  17 fail-session-read            exit=1
+ok-case  18 fail-schema                  exit=1
+ok-case  19 setup-no-record              exit=2
+ok-case  20 setup-missing-file           exit=2
+ok-case  21 claims-pass                  exit=0
+ok-case  22 claims-fail-tampered         exit=1
+ok-case  23 claims-fail-out-of-corpus    exit=1
+ok-case  24 claims-fail-external         exit=1
+ok-case  25 claims-fail-session          exit=1
+ok-case  26 claims-fail-contradicted-unmarked exit=1
+ok-case  27 claims-fail-stray-marker     exit=1
+ok-case  28 claims-fail-counting         exit=1
+ok-case  29 setup-claims-no-path         exit=2
+ok-case  30 setup-claims-missing-file    exit=2
+ok-case  31 chain-pass                   exit=0
+ok-case  32 chain-fail-tampered          exit=1
+ok-case  33 chain-fail-anchor-kinds      exit=1
+ok-case  34 chain-fail-out-of-corpus     exit=1
+ok-case  35 chain-fail-external          exit=1
+ok-case  36 chain-fail-invalid           exit=1
+ok-case  37 chain-fail-counting          exit=1
+ok-case  38 chain-fail-no-chain          exit=1
+ok-case  39 setup-chain-no-path          exit=2
+ok-case  40 setup-chain-missing-file     exit=2
+ok-case  41 claims-boundary-pass         exit=0
+ok-case  42 claims-boundary-fail         exit=1
+ok-case  43 chain-pass-boundary          exit=0
+ok-case  44 chain-fail-boundary          exit=1
+ok-case  45 sweeps-pass                  exit=0
+ok-case  46 sweeps-fail-planted-hit      exit=1
+ok-case  47 sweeps-fail-rejection-incomplete exit=1
+ok-case  48 sweeps-fail-unnamed          exit=1
+ok-case  49 sweeps-fail-out-of-corpus    exit=1
+ok-case  50 sweeps-fail-unresolved-id    exit=1
+ok-case  51 sweeps-fail-counting         exit=1
+ok-case  52 sweeps-pass-cell-command     exit=0
+ok-case  53 setup-sweeps-no-path         exit=2
+ok-case  54 setup-sweeps-missing-file    exit=2
+RESEARCH_GATE_SELFTEST: PASS (54 cases)
+
+## case-line stability vs the round-4 selftest stdout
+## command: grep -E "^ok-case" corpus/evidence/boundary-r4-20261016T003332Z-selftest.log  vs  the run above
+
+round-4 ok-case lines (first 44; the r4 receipt repeats cases 41-44 in its own trailing "new cases" block): 44   round-5 ok-case lines: 54
+
+# diff of the ok-case lines (round-4 -> round-5; "<" = only in round 4, ">" = only in round 5):
+44a45,54
+> ok-case  45 sweeps-pass                  exit=0
+> ok-case  46 sweeps-fail-planted-hit      exit=1
+> ok-case  47 sweeps-fail-rejection-incomplete exit=1
+> ok-case  48 sweeps-fail-unnamed          exit=1
+> ok-case  49 sweeps-fail-out-of-corpus    exit=1
+> ok-case  50 sweeps-fail-unresolved-id    exit=1
+> ok-case  51 sweeps-fail-counting         exit=1
+> ok-case  52 sweeps-pass-cell-command     exit=0
+> ok-case  53 setup-sweeps-no-path         exit=2
+> ok-case  54 setup-sweeps-missing-file    exit=2
+
+# strict prefix check: first 44 ok-case lines must be byte-identical
+cmp: first 44 ok-case lines byte-identical to the round-4 receipt: YES
+
+## new cases (after line 44)
+ok-case  45 sweeps-pass                  exit=0
+ok-case  46 sweeps-fail-planted-hit      exit=1
+ok-case  47 sweeps-fail-rejection-incomplete exit=1
+ok-case  48 sweeps-fail-unnamed          exit=1
+ok-case  49 sweeps-fail-out-of-corpus    exit=1
+ok-case  50 sweeps-fail-unresolved-id    exit=1
+ok-case  51 sweeps-fail-counting         exit=1
+ok-case  52 sweeps-pass-cell-command     exit=0
+ok-case  53 setup-sweeps-no-path         exit=2
+ok-case  54 setup-sweeps-missing-file    exit=2

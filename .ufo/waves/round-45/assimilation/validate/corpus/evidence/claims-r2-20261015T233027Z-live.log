@@ -1,0 +1,159 @@
+# chousa-shokunin round-2 receipt — live
+# utc: 2026-10-15T23:30:27Z
+# seat: receipts-writer | lane: chousa-shokunin | round: 2 (coverage move: claim-vs-source)
+# lane head: 6344569 | gate: tools/research-gate.sh sha256=03a3324455852ea0025115cb0e3ba9c8cdea10da5edc051c4738854a27c14be0
+# fixture: corpus/fixtures/claims-r2.jsonl sha256=23d078cbfd032ec5ee7de5c21de65eba3a3cd2989a78281ff61bc6db62188802
+# method: machine-cut by /home/vgpnk/.cache/chousa-r2/cut-receipts.sh; stdout verbatim; local files only; no network
+# scope: live verify-claims on the pre-registered fixture, plus before-state and four negative controls
+
+## before-state — the shipped r1 gate (git 6344569:tools/research-gate.sh) on the same claims file
+## command: git show 6344569:tools/research-gate.sh > /home/vgpnk/.cache/chousa-r2/r1-gate.sh && CHOUSA_NOW_EPOCH=1760000000 bash /home/vgpnk/.cache/chousa-r2/r1-gate.sh verify corpus/fixtures/claims-r2.jsonl --root ..
+exit: 1
+research-gate research-gate-r1 — ts=2025-10-09T08:53:20Z — mode=verify — record=corpus/fixtures/claims-r2.jsonl
+FINDING RECORD_SCHEMA_INVALID severity=warn surface=meta obs=no research-record sections/banner detected
+FINDING NO_QUESTION severity=crit surface=question obs=missing ## Question section
+FINDING SOURCE_TABLE_ABSENT severity=warn surface=sources obs=missing ## Sources / ## Source table
+FINDING CLAIM_TABLE_ABSENT severity=warn surface=claims obs=missing ## Claims
+FINDING REJECTION_DROPPED severity=warn surface=rejections obs=missing ## Rejections section
+RESEARCH_GATE: DRIFT (findings=5 drift=5 questions=0 sources=0 chains=0 claims=0 negatives=0 rejections=0 approvals=0)
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH bash tools/research-gate.sh verify-claims corpus/fixtures/claims-r2.jsonl --root ..
+exit: 0
+research-gate research-gate-r1 — ts=2026-10-15T23:30:37Z — mode=claims — claims=corpus/fixtures/claims-r2.jsonl
+CLAIM id=A01 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:52 verdict=match
+CLAIM id=A02 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:80 verdict=match
+CLAIM id=A03 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:81 verdict=match
+CLAIM id=A04 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:88 verdict=match
+CLAIM id=A05 expected=contradicted observed=contradicted source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:64 verdict=match
+CLAIM id=A06 expected=unsupported observed=unsupported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=- verdict=match
+CLAIM id=B01 expected=supported observed=supported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:47 verdict=match
+CLAIM id=B02 expected=supported observed=supported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:64 verdict=match
+CLAIM id=B03 expected=supported observed=supported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:79 verdict=match
+CLAIM id=B04 expected=supported observed=supported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:69 verdict=match
+CLAIM id=B05 expected=unsupported observed=unsupported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=- verdict=match
+CLAIM id=C01 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:89 verdict=match
+CLAIM id=C02 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:92 verdict=match
+CLAIM id=C03 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:97 verdict=match
+CLAIM id=C04 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:102 verdict=match
+CLAIM id=C05 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:130 verdict=match
+CLAIM id=C06 expected=contradicted observed=contradicted source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:53 verdict=match
+VERDICT_BEARING_CLAIMS=17/17
+RESEARCH_GATE: CLEAN (claims=17 supported=13 contradicted=2 unsupported=2 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)
+
+## negative control 1 — tampered span (A03 'nine years' -> 'ten years'), copy at /home/vgpnk/.cache/chousa-r2/neg/claims-tampered.jsonl
+## fixture delta:
+3c3
+< {"id": "A03", "claim": "Export A records Ishii Torao reporting nine years as a disciple before establishing himself independently.", "source": "research/deep-research-2026-09-28/A-shokunin-tradition.md", "span": "In a Taitō City interview, Ishii Torao reports working as a disciple for nine years before establishing himself independently.", "expect": "supported"}
+---
+> {"id": "A03", "claim": "Export A records Ishii Torao reporting nine years as a disciple before establishing himself independently.", "source": "research/deep-research-2026-09-28/A-shokunin-tradition.md", "span": "In a Taitō City interview, Ishii Torao reports working as a disciple for ten years before establishing himself independently.", "expect": "supported"}
+## command: bash tools/research-gate.sh verify-claims /home/vgpnk/.cache/chousa-r2/neg/claims-tampered.jsonl --root ..
+exit: 1
+research-gate research-gate-r1 — ts=2026-10-15T23:30:41Z — mode=claims — claims=/home/vgpnk/.cache/chousa-r2/neg/claims-tampered.jsonl
+CLAIM id=A01 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:52 verdict=match
+CLAIM id=A02 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:80 verdict=match
+CLAIM id=A03 expected=supported observed=unsupported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=- verdict=mismatch
+CLAIM id=A04 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:88 verdict=match
+CLAIM id=A05 expected=contradicted observed=contradicted source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:64 verdict=match
+CLAIM id=A06 expected=unsupported observed=unsupported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=- verdict=match
+CLAIM id=B01 expected=supported observed=supported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:47 verdict=match
+CLAIM id=B02 expected=supported observed=supported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:64 verdict=match
+CLAIM id=B03 expected=supported observed=supported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:79 verdict=match
+CLAIM id=B04 expected=supported observed=supported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:69 verdict=match
+CLAIM id=B05 expected=unsupported observed=unsupported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=- verdict=match
+CLAIM id=C01 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:89 verdict=match
+CLAIM id=C02 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:92 verdict=match
+CLAIM id=C03 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:97 verdict=match
+CLAIM id=C04 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:102 verdict=match
+CLAIM id=C05 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:130 verdict=match
+CLAIM id=C06 expected=contradicted observed=contradicted source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:53 verdict=match
+FINDING CLAIM_SPAN_NOT_FOUND severity=warn surface=claims obs=id=A03 nearest_line=81 context=A particular carver’s career: In a Taitō City interview, Ishii Torao reports 
+VERDICT_BEARING_CLAIMS=16/17
+RESEARCH_GATE: DRIFT (claims=17 supported=12 contradicted=2 unsupported=3 mismatched=1 unproven=0 refused=0 invalid=0 findings=1 drift=1)
+
+## negative control 2 — external URL source (X01 appended), copy at /home/vgpnk/.cache/chousa-r2/neg/claims-external.jsonl
+## fixture delta:
+17a18
+> {"id": "X01", "claim": "external probe", "source": "https://example.invalid/x.md", "span": "nothing from the internet", "expect": "supported"}
+## command: bash tools/research-gate.sh verify-claims /home/vgpnk/.cache/chousa-r2/neg/claims-external.jsonl --root ..
+exit: 1
+research-gate research-gate-r1 — ts=2026-10-15T23:30:45Z — mode=claims — claims=/home/vgpnk/.cache/chousa-r2/neg/claims-external.jsonl
+CLAIM id=A01 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:52 verdict=match
+CLAIM id=A02 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:80 verdict=match
+CLAIM id=A03 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:81 verdict=match
+CLAIM id=A04 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:88 verdict=match
+CLAIM id=A05 expected=contradicted observed=contradicted source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:64 verdict=match
+CLAIM id=A06 expected=unsupported observed=unsupported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=- verdict=match
+CLAIM id=B01 expected=supported observed=supported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:47 verdict=match
+CLAIM id=B02 expected=supported observed=supported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:64 verdict=match
+CLAIM id=B03 expected=supported observed=supported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:79 verdict=match
+CLAIM id=B04 expected=supported observed=supported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:69 verdict=match
+CLAIM id=B05 expected=unsupported observed=unsupported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=- verdict=match
+CLAIM id=C01 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:89 verdict=match
+CLAIM id=C02 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:92 verdict=match
+CLAIM id=C03 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:97 verdict=match
+CLAIM id=C04 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:102 verdict=match
+CLAIM id=C05 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:130 verdict=match
+CLAIM id=C06 expected=contradicted observed=contradicted source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:53 verdict=match
+CLAIM id=X01 expected=supported observed=refused source=https://example.invalid/x.md at=- verdict=refused
+FINDING CLAIM_SOURCE_EXTERNAL severity=crit surface=claims obs=id=X01 source=https://example.invalid/x.md obs=url source refused (no external fetch)
+VERDICT_BEARING_CLAIMS=17/18
+RESEARCH_GATE: DRIFT (claims=18 supported=13 contradicted=2 unsupported=2 mismatched=0 unproven=0 refused=1 invalid=0 findings=1 drift=1)
+
+## negative control 3 — out-of-corpus absolute source (X02 /etc/hostname appended), copy at /home/vgpnk/.cache/chousa-r2/neg/claims-out-of-corpus.jsonl
+## fixture delta:
+17a18
+> {"id": "X02", "claim": "out-of-corpus probe", "source": "/etc/hostname", "span": "hostname", "expect": "supported"}
+## command: bash tools/research-gate.sh verify-claims /home/vgpnk/.cache/chousa-r2/neg/claims-out-of-corpus.jsonl --root ..
+exit: 1
+research-gate research-gate-r1 — ts=2026-10-15T23:30:49Z — mode=claims — claims=/home/vgpnk/.cache/chousa-r2/neg/claims-out-of-corpus.jsonl
+CLAIM id=A01 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:52 verdict=match
+CLAIM id=A02 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:80 verdict=match
+CLAIM id=A03 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:81 verdict=match
+CLAIM id=A04 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:88 verdict=match
+CLAIM id=A05 expected=contradicted observed=contradicted source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:64 verdict=match
+CLAIM id=A06 expected=unsupported observed=unsupported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=- verdict=match
+CLAIM id=B01 expected=supported observed=supported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:47 verdict=match
+CLAIM id=B02 expected=supported observed=supported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:64 verdict=match
+CLAIM id=B03 expected=supported observed=supported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:79 verdict=match
+CLAIM id=B04 expected=supported observed=supported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:69 verdict=match
+CLAIM id=B05 expected=unsupported observed=unsupported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=- verdict=match
+CLAIM id=C01 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:89 verdict=match
+CLAIM id=C02 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:92 verdict=match
+CLAIM id=C03 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:97 verdict=match
+CLAIM id=C04 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:102 verdict=match
+CLAIM id=C05 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:130 verdict=match
+CLAIM id=C06 expected=contradicted observed=contradicted source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:53 verdict=match
+CLAIM id=X02 expected=supported observed=refused source=/etc/hostname at=- verdict=refused
+FINDING CLAIM_SOURCE_OUT_OF_CORPUS severity=crit surface=claims obs=id=X02 source=/etc/hostname obs=resolved=/etc/hostname outside allowed roots
+VERDICT_BEARING_CLAIMS=17/18
+RESEARCH_GATE: DRIFT (claims=18 supported=13 contradicted=2 unsupported=2 mismatched=0 unproven=0 refused=1 invalid=0 findings=1 drift=1)
+
+## negative control 4 — contradicted without marker (A05 'marker' removed), copy at /home/vgpnk/.cache/chousa-r2/neg/claims-contradicted-unmarked.jsonl
+## fixture delta:
+5c5
+< {"id": "A05", "claim": "jin’i-ryū is an established artisan rank attested in the searched Japanese and English sources.", "source": "research/deep-research-2026-09-28/A-shokunin-tradition.md", "span": "I could not substantiate this spelling as an established artisan rank in the Japanese or English sources searched.", "expect": "contradicted", "marker": "could not substantiate"}
+---
+> {"id": "A05", "claim": "jin’i-ryū is an established artisan rank attested in the searched Japanese and English sources.", "source": "research/deep-research-2026-09-28/A-shokunin-tradition.md", "span": "I could not substantiate this spelling as an established artisan rank in the Japanese or English sources searched.", "expect": "contradicted"}
+## command: bash tools/research-gate.sh verify-claims /home/vgpnk/.cache/chousa-r2/neg/claims-contradicted-unmarked.jsonl --root ..
+exit: 1
+research-gate research-gate-r1 — ts=2026-10-15T23:30:53Z — mode=claims — claims=/home/vgpnk/.cache/chousa-r2/neg/claims-contradicted-unmarked.jsonl
+CLAIM id=A01 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:52 verdict=match
+CLAIM id=A02 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:80 verdict=match
+CLAIM id=A03 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:81 verdict=match
+CLAIM id=A04 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:88 verdict=match
+CLAIM id=A05 expected=contradicted observed=unproven source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:64 verdict=mismatch
+CLAIM id=A06 expected=unsupported observed=unsupported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=- verdict=match
+CLAIM id=B01 expected=supported observed=supported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:47 verdict=match
+CLAIM id=B02 expected=supported observed=supported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:64 verdict=match
+CLAIM id=B03 expected=supported observed=supported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:79 verdict=match
+CLAIM id=B04 expected=supported observed=supported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:69 verdict=match
+CLAIM id=B05 expected=unsupported observed=unsupported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=- verdict=match
+CLAIM id=C01 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:89 verdict=match
+CLAIM id=C02 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:92 verdict=match
+CLAIM id=C03 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:97 verdict=match
+CLAIM id=C04 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:102 verdict=match
+CLAIM id=C05 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:130 verdict=match
+CLAIM id=C06 expected=contradicted observed=contradicted source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:53 verdict=match
+FINDING CONTRADICTION_MARKER_ABSENT severity=warn surface=claims obs=id=A05 at=line:64 no marker defined (per-claim or marker_default)
+VERDICT_BEARING_CLAIMS=16/17
+RESEARCH_GATE: DRIFT (claims=17 supported=13 contradicted=1 unsupported=2 mismatched=1 unproven=1 refused=0 invalid=0 findings=1 drift=1)

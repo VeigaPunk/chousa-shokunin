@@ -1,0 +1,75 @@
+# chousa-shokunin round-4 receipt — live
+# utc: 2026-10-16T00:33:32Z
+# seat: receipts-writer | lane: chousa-shokunin | round: 4 (calibration move: token-boundary matching semantics)
+# lane head: 09153d1 | gate: tools/research-gate.sh sha256=6b83705b02fe11e98b8b4aeb43fe718ff9910d21cee16d87366cef648a3960b2
+# before-state gate snapshot: /tmp/chousa-r4/research-gate-r3-67daf85e.sh sha256=67daf85ecc49c4c7accbee9534c31b0734061b7f329e8de7a98254a57f9d6084 (round-3 revision, run for the before/after pairs)
+# fixtures: corpus/fixtures/claims-r2.jsonl sha256=23d078cbfd032ec5ee7de5c21de65eba3a3cd2989a78281ff61bc6db62188802 | corpus/fixtures/chain-r3.md sha256=06115f2f8e6db3c60034411dc6be42c4e0887352b09ab9cbd7f760801237ba07 | corpus/fixtures/chain-r3-broken.md sha256=b66222a16d4c5323ee6932839ff5746af5f716f36372af506755aed18e0f5c6a
+# fixture contract: corpus/fixtures/chain-r3.README.md sha256=72dbee4e1d8c22df898842f2edf406769c8aa7894fcaecdfe5922137f867292a
+# attack/legit copies: /tmp/chousa-r4/att/ (single-delta copies of the two fixtures; sha256 listed below)
+# method: machine-cut by /tmp/chousa-r4/cut-receipts.sh; stdout verbatim; local files only; no network
+# scope: live end-to-end: pre-move structural hole, r1 archive observable, intake, cross-round byte-stability, zero-network strace
+
+## before-state: the structural hole (r3 gate, verify mode) on the broken chain record
+
+## command: bash /tmp/chousa-r4/research-gate-r3-67daf85e.sh verify corpus/fixtures/chain-r3-broken.md --root ..
+exit: 0
+RESEARCH_GATE: CLEAN (findings=0 drift=0 questions=1 sources=2 chains=2 claims=1 negatives=0 rejections=1 approvals=1)
+
+## round-1 archive observable (frozen clock; each must exit 1 with one DRIFT summary)
+
+## command: bash tools/research-gate.sh verify ../research/deep-research-2026-09-28/A-shokunin-tradition.md --root ..
+exit: 1
+RESEARCH_GATE: DRIFT (findings=6 drift=5 questions=0 sources=0 chains=0 claims=0 negatives=0 rejections=0 approvals=0)
+
+## command: bash tools/research-gate.sh verify ../research/deep-research-2026-09-28/B-multiagent-knowledge.md --root ..
+exit: 1
+RESEARCH_GATE: DRIFT (findings=6 drift=5 questions=0 sources=0 chains=0 claims=0 negatives=0 rejections=0 approvals=0)
+
+## command: bash tools/research-gate.sh verify ../research/deep-research-2026-09-28/C-rank-taxonomy.md --root ..
+exit: 1
+RESEARCH_GATE: DRIFT (findings=6 drift=5 questions=0 sources=0 chains=0 claims=0 negatives=0 rejections=0 approvals=0)
+
+## round-1 archives: stdout byte-stability vs the r3 gate receipt (ts-normalized)
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH CHOUSA_NOW_EPOCH=1760000000 bash tools/research-gate.sh verify ../research/deep-research-2026-09-28/A-shokunin-tradition.md --root .. > /tmp/chousa-r4/out/arch-r4-A-shokunin-tradition.raw 2>&1
+exit: 1
+A-shokunin-tradition: byte-identical to the r3 gate receipt (ts-normalized)
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH CHOUSA_NOW_EPOCH=1760000000 bash tools/research-gate.sh verify ../research/deep-research-2026-09-28/B-multiagent-knowledge.md --root .. > /tmp/chousa-r4/out/arch-r4-B-multiagent-knowledge.raw 2>&1
+exit: 1
+B-multiagent-knowledge: byte-identical to the r3 gate receipt (ts-normalized)
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH CHOUSA_NOW_EPOCH=1760000000 bash tools/research-gate.sh verify ../research/deep-research-2026-09-28/C-rank-taxonomy.md --root .. > /tmp/chousa-r4/out/arch-r4-C-rank-taxonomy.raw 2>&1
+exit: 1
+C-rank-taxonomy: byte-identical to the r3 gate receipt (ts-normalized)
+
+## counting command (the scorecard observable)
+
+## command: VERDICT_BEARING_EXPORTS counting command
+exit: 0
+VERDICT_BEARING_EXPORTS=3/3
+
+## intake record (must stay CLEAN, exit 0)
+
+## command: bash tools/research-gate.sh verify corpus/knowledge/archived-export-intake.md --root ..
+exit: 0
+RESEARCH_GATE: CLEAN (findings=0 drift=0 questions=1 sources=8 chains=8 claims=9 negatives=2 rejections=10 approvals=3)
+
+## cross-round stability: claims stdout vs the r2 live receipt (claim/summary lines; those lines carry no ts)
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH bash tools/research-gate.sh verify-claims corpus/fixtures/claims-r2.jsonl --root .. > /tmp/chousa-r4/out/live-claims-r4.raw 2>&1
+exit: 0
+claims stdout byte-identical to the r2 live receipt (claim/summary lines): yes
+
+## cross-round stability: chain stdout vs the r3 live receipt (chain/summary lines; those lines carry no ts)
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH bash tools/research-gate.sh verify-chain corpus/fixtures/chain-r3.md --root .. > /tmp/chousa-r4/out/live-chain-r4.raw 2>&1
+exit: 0
+chain stdout byte-identical to the r3 live receipt (chain/summary lines): yes
+
+## zero-network check (strace, if present)
+
+## command: strace -f -e trace=network -o /tmp/chousa-r4/out/strace-r4.txt bash tools/research-gate.sh verify-chain corpus/fixtures/chain-r3.md --root ..
+exit: 0
+network syscalls: 0
+trace lines: 5300

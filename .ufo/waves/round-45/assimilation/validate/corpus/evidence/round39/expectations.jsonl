@@ -1,0 +1,16 @@
+{"counter": "c1", "id": "hold-plain", "expect": {"pin_rc": 0, "pin_file": true, "echo_lines": 0, "drift_rc": 0, "drift_line": "GATE_DRIFT: none"}}
+{"counter": "c1", "id": "hold-fn-benign", "expect": {"pin_rc": 0, "pin_file": true, "echo_lines": 0, "drift_rc": 0, "drift_line": "GATE_DRIFT: none"}}
+{"counter": "c1", "id": "env-fn-echo-scrub", "expect": {"pin_rc": 0, "pin_file": true, "echo_lines": 0, "drift_rc": 0, "drift_line": "GATE_DRIFT: none"}}
+{"counter": "c1", "id": "env-fn-root-move", "expect": {"pin_rc": 0, "pin_file": true, "echo_lines": 0, "drift_rc": 0, "drift_line": "GATE_DRIFT: none"}}
+{"counter": "c1", "id": "env-fn-suppress", "expect": {"pin_rc": 0, "pin_file": true, "echo_lines": 0, "drift_rc": 0, "drift_line": "GATE_DRIFT: none"}}
+{"counter": "c1", "id": "env-override-missing", "expect": {"pin_rc": 2, "pin_file": false, "refusal": "ENV_PROVENANCE"}}
+{"counter": "c1", "id": "env-override-fake", "expect": {"pin_rc": 2, "pin_file": false, "refusal": "ENV_PROVENANCE"}}
+{"counter": "c1", "id": "capture-bash-path-pin", "expect": {"path_bash_shim_echo.pin_rc": 0, "path_bash_shim_echo.pin_file": true, "path_bash_shim_echo.echo_lines": 0, "path_bash_shim_echo.drift_rc": 0, "path_bash_shim_echo.drift_line": "GATE_DRIFT: none", "path_bash_shim_suppress.pin_rc": 0, "path_bash_shim_suppress.pin_file": true, "path_bash_shim_suppress.drift_rc": 0, "path_bash_shim_suppress.drift_line": "GATE_DRIFT: none", "path_env_shim_echo.pin_rc": 0, "path_env_shim_echo.pin_file": true, "path_env_shim_echo.echo_lines": 0, "path_env_shim_echo.drift_rc": 0, "path_env_shim_echo.drift_line": "GATE_DRIFT: none", "override_honoured.pin_rc": 0, "override_honoured.pin_file": true, "override_honoured.echo_lines": 0, "override_honoured.drift_rc": 0, "override_honoured.drift_line": "GATE_DRIFT: none", "override_relative_refused.pin_rc": 2, "override_relative_refused.pin_file": false, "override_relative_refused.refusal": "BASH_PROVENANCE"}}
+{"counter": "c2", "id": "hold-receipt-verifies", "expect": {"receipt": true, "verify_rc": 0}}
+{"counter": "c2", "id": "self-rewrite-refused", "expect": {"counter_rc": 2, "receipt": false}}
+{"counter": "c2", "id": "foreign-gate-distinguished", "expect": {"receipt": true, "verify_foreign_rc": 0, "verify_landed_rc": 1}}
+{"counter": "c2", "id": "counter-tamper-detected", "expect": {"clean_verify_rc": 0, "verify_rc": 1, "verify_fail_contains": "counter-sha256-mismatch"}}
+{"counter": "c2", "id": "expect-tamper-detected", "expect": {"clean_verify_rc": 0, "verify_rc": 1, "verify_fail_contains": "expect-sha256-mismatch"}}
+{"counter": "c2", "id": "body-tamper-detected", "expect": {"clean_verify_rc": 0, "verify_rc": 1, "verify_fail_contains": "receipt-self-digest"}}
+{"counter": "c2", "id": "legacy-receipt-refused", "expect": {"hold_verify_rc": 0, "receipt": true, "r38_receipt_verify_rc": 1, "unbound_verifier_verify_rc": 1, "unbound_verifier_verify_fail_contains": "missing-field verifier_sha256"}}
+{"counter": "c2", "id": "verifier-subject-rebind", "expect": {"honest_verify_rc": 0, "replaced_verifier_verify_rc": 1, "replaced_verifier_verify_fail_contains": "verifier-sha256-mismatch", "subject_swap_verify_rc": 1, "subject_swap_verify_fail_contains": "subject-counter-sha256-mismatch"}}

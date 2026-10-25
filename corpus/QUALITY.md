@@ -577,3 +577,40 @@ the admitted entry that motivates it. Tier definitions live in
     receipt of this round carries no `end` line at all
     (`.ufo/waves/round-44/w2-parent-lifetime.receipt`). Round-44 defect,
     named and not fixed in the round that found it. — `lessons/round-44.md`.
+
+## Round-45 additions (appended 2026-10-25; criteria 1–63 unchanged)
+
+64. **Every round verdict tags each claim as research ground or plumbing.** A
+    claim is `ground` when it admits a source opened that round on a subject
+    outside the lane's own tooling, or a knowledge entry on such a subject; it
+    is `plumbing` when it changes a gate, counter, receipt pipeline or registry
+    mechanism, even when sources were opened to support that work. Each claim
+    row of a round's `SCORECARD.md` verdict table carries a `ground` or
+    `plumbing` cell. Check: `python3 corpus/evidence/round45/tag-count.py`
+    (default: rounds ≥ 45) prints `TAGGED=k/n` and exits 0 only when every
+    claim row is tagged. Shown able to fail: rounds 35–44 carry no tag —
+    `--from 35 --to 44` prints `TAGGED=0/22`, exit 1
+    (`corpus/evidence/round45/controls/tag-control-r35-r44.txt`); history stays
+    untagged and the rule binds forward. A tag's truth is a reader's check.
+    Operator proposal mined from `considerthese/2026-10-24.md` (2026-10-24),
+    "Tag each round as research ground or plumbing"; the file was not edited.
+    The round-45 scribe's classification of rounds 35–44 found 2 of 22 claims
+    `ground` (`.ufo/waves/round-45/w1/ScribeQuality64.md`). — `lessons/round-45.md`.
+
+65. **A corpus's archive coverage is counted by value, not by field.** An entry
+    that reports how much of a corpus is bound to an archived snapshot counts
+    the values that are archive links, over the citations that name a source —
+    not the fields that are filled. A filled field can hold a placeholder,
+    another archiver or a link the corpus itself says fails; a missing key is
+    not an empty field. Check: the entry's figure is re-derived by a committed
+    recount over the capture (`corpus/evidence/round45/counts.json`,
+    `extra_not_frozen`). Shown able to fail: the staged sentence "6,510 hold a
+    non-empty archive.org URL" fails that recount — 5,959 of the 6,510 filled
+    values are web.archive.org links, 429 are the literal `Metadata` — and the
+    count over fields missed the 1,582 sourced answers that carry no archive
+    key. — `lessons/round-45.md`.
+
+    Note on 63 (round 45): `tools/parent-lifetime.sh` now exits 3 when its end
+    line records `n_spawned=0` or a seat timed out, and requires `--timeout`
+    in dispatch mode (`corpus/evidence/round45/c1-count.py`, 5/5). Criterion
+    63's demonstration is the round-44 tool's behaviour and stays as history.

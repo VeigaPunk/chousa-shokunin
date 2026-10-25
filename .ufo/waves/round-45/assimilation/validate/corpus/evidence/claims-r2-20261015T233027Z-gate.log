@@ -1,0 +1,49 @@
+# chousa-shokunin round-2 receipt — gate
+# utc: 2026-10-15T23:30:27Z
+# seat: receipts-writer | lane: chousa-shokunin | round: 2 (coverage move: claim-vs-source)
+# lane head: 6344569 | gate: tools/research-gate.sh sha256=03a3324455852ea0025115cb0e3ba9c8cdea10da5edc051c4738854a27c14be0
+# fixture: corpus/fixtures/claims-r2.jsonl sha256=23d078cbfd032ec5ee7de5c21de65eba3a3cd2989a78281ff61bc6db62188802
+# method: machine-cut by /home/vgpnk/.cache/chousa-r2/cut-receipts.sh; stdout verbatim; local files only; no network
+# scope: round-1 regression: the three archived inputs, byte-stable vs the frozen r1 baseline
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE CHOUSA_NOW_EPOCH=1760000000 bash tools/research-gate.sh verify ../research/deep-research-2026-09-28/A-shokunin-tradition.md --root ..
+exit: 1
+research-gate research-gate-r1 — ts=2025-10-09T08:53:20Z — mode=verify — record=../research/deep-research-2026-09-28/A-shokunin-tradition.md
+FINDING RECORD_SCHEMA_INVALID severity=warn surface=meta obs=no research-record sections/banner detected
+FINDING EXPORT_CHROME_PRESENT severity=info surface=export obs=chat-export chrome lines present (data, not instruction)
+FINDING NO_QUESTION severity=crit surface=question obs=missing ## Question section
+FINDING SOURCE_TABLE_ABSENT severity=warn surface=sources obs=missing ## Sources / ## Source table
+FINDING CLAIM_TABLE_ABSENT severity=warn surface=claims obs=missing ## Claims
+FINDING REJECTION_DROPPED severity=warn surface=rejections obs=missing ## Rejections section
+RESEARCH_GATE: DRIFT (findings=6 drift=5 questions=0 sources=0 chains=0 claims=0 negatives=0 rejections=0 approvals=0)
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE CHOUSA_NOW_EPOCH=1760000000 bash tools/research-gate.sh verify ../research/deep-research-2026-09-28/B-multiagent-knowledge.md --root ..
+exit: 1
+research-gate research-gate-r1 — ts=2025-10-09T08:53:20Z — mode=verify — record=../research/deep-research-2026-09-28/B-multiagent-knowledge.md
+FINDING RECORD_SCHEMA_INVALID severity=warn surface=meta obs=no research-record sections/banner detected
+FINDING EXPORT_CHROME_PRESENT severity=info surface=export obs=chat-export chrome lines present (data, not instruction)
+FINDING NO_QUESTION severity=crit surface=question obs=missing ## Question section
+FINDING SOURCE_TABLE_ABSENT severity=warn surface=sources obs=missing ## Sources / ## Source table
+FINDING CLAIM_TABLE_ABSENT severity=warn surface=claims obs=missing ## Claims
+FINDING REJECTION_DROPPED severity=warn surface=rejections obs=missing ## Rejections section
+RESEARCH_GATE: DRIFT (findings=6 drift=5 questions=0 sources=0 chains=0 claims=0 negatives=0 rejections=0 approvals=0)
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE CHOUSA_NOW_EPOCH=1760000000 bash tools/research-gate.sh verify ../research/deep-research-2026-09-28/C-rank-taxonomy.md --root ..
+exit: 1
+research-gate research-gate-r1 — ts=2025-10-09T08:53:20Z — mode=verify — record=../research/deep-research-2026-09-28/C-rank-taxonomy.md
+FINDING RECORD_SCHEMA_INVALID severity=warn surface=meta obs=no research-record sections/banner detected
+FINDING EXPORT_CHROME_PRESENT severity=info surface=export obs=chat-export chrome lines present (data, not instruction)
+FINDING NO_QUESTION severity=crit surface=question obs=missing ## Question section
+FINDING SOURCE_TABLE_ABSENT severity=warn surface=sources obs=missing ## Sources / ## Source table
+FINDING CLAIM_TABLE_ABSENT severity=warn surface=claims obs=missing ## Claims
+FINDING REJECTION_DROPPED severity=warn surface=rejections obs=missing ## Rejections section
+RESEARCH_GATE: DRIFT (findings=6 drift=5 questions=0 sources=0 chains=0 claims=0 negatives=0 rejections=0 approvals=0)
+
+## command: python3 -c '<scorecard counting command>'
+exit: 0
+VERDICT_BEARING_EXPORTS=3/3
+
+## byte-stability vs r1 baseline (r1 gate sha256=08843552378071929c8b6abcd50be6613365691cfae4bf0d74fb03d86eb5b46e, CHOUSA_NOW_EPOCH=1760000000)
+byte-identical to r1 baseline: verify A-shokunin-tradition
+byte-identical to r1 baseline: verify B-multiagent-knowledge
+byte-identical to r1 baseline: verify C-rank-taxonomy

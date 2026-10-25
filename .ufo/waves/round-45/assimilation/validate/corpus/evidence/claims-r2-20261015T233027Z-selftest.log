@@ -1,0 +1,45 @@
+# chousa-shokunin round-2 receipt — selftest
+# utc: 2026-10-15T23:30:27Z
+# seat: receipts-writer | lane: chousa-shokunin | round: 2 (coverage move: claim-vs-source)
+# lane head: 6344569 | gate: tools/research-gate.sh sha256=03a3324455852ea0025115cb0e3ba9c8cdea10da5edc051c4738854a27c14be0
+# fixture: corpus/fixtures/claims-r2.jsonl sha256=23d078cbfd032ec5ee7de5c21de65eba3a3cd2989a78281ff61bc6db62188802
+# method: machine-cut by /home/vgpnk/.cache/chousa-r2/cut-receipts.sh; stdout verbatim; local files only; no network
+# scope: full selftest at the pinned gate revision
+
+## command: TMPDIR=/home/vgpnk/.cache/chousa-r2/tmp env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH bash tools/research-gate.sh --selftest
+# (the gate's selftest honours ${TMPDIR:-/tmp}; TMPDIR points at the scratch dir because the host /tmp intermittently hit its quota)
+exit: 0
+ok-case  1  pass-control                 exit=0
+ok-case  2  pass-hop-marked-unresolved   exit=0
+ok-case  3  pass-export-chrome           exit=0
+ok-case  4  fail-export-chrome-strict    exit=1
+ok-case  5  fail-chrome-malformed-export exit=1
+ok-case  6  fail-no-question             exit=1
+ok-case  7  fail-unranked-source         exit=1
+ok-case  8  fail-chain-hop-unresolved    exit=1
+ok-case  9  fail-claim-unpointed         exit=1
+ok-case  10 fail-rejection-dropped       exit=1
+ok-case  11 fail-negative-without-sweep  exit=1
+ok-case  12 fail-obs-inference-collapse  exit=1
+ok-case  13 fail-hierarchy-primary-lie   exit=1
+ok-case  14 fail-pointer-ephemeral       exit=1
+ok-case  15 fail-external-without-approval exit=1
+ok-case  16 fail-secret-shaped           exit=1
+ok-case  17 fail-session-read            exit=1
+ok-case  18 fail-schema                  exit=1
+ok-case  19 setup-no-record              exit=2
+ok-case  20 setup-missing-file           exit=2
+ok-case  21 claims-pass                  exit=0
+ok-case  22 claims-fail-tampered         exit=1
+ok-case  23 claims-fail-out-of-corpus    exit=1
+ok-case  24 claims-fail-external         exit=1
+ok-case  25 claims-fail-session          exit=1
+ok-case  26 claims-fail-contradicted-unmarked exit=1
+ok-case  27 claims-fail-stray-marker     exit=1
+ok-case  28 claims-fail-counting         exit=1
+ok-case  29 setup-claims-no-path         exit=2
+ok-case  30 setup-claims-missing-file    exit=2
+RESEARCH_GATE_SELFTEST: PASS (30 cases)
+
+## round-1 case-line stability (first 20 case lines vs r1 baseline)
+byte-identical to r1 baseline: selftest case lines 1-20 (the r1 twenty)

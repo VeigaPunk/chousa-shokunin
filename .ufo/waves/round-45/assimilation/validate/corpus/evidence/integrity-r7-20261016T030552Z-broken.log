@@ -1,0 +1,156 @@
+# chousa-shokunin round-7 receipt — broken twin — the two dangling references drift only the integrity section
+# utc: 2026-10-16T03:05:52Z
+# seat: receipts-writer | lane: chousa-shokunin | round: 7 (reference integrity inside verify-all)
+# lane head: 4835426432f9a2f8cf9516400fec8340ec0bf772 | gate: tools/research-gate.sh sha256=3ba718bf9207eed70c66b8c849ac43b44c76890785e1576eeb5e795a604166b2
+# before-state gate: git show 4835426:tools/research-gate.sh sha256=0c3d51ed1a131146ac33eebf24eefe5830ecaaf3e59a1b03e6c91cd8debfd5f8 (round-6 revision)
+# fixtures:
+#   4310ce86aa45f3d7d4b7d04c4ebf480a7b59748510ab0f132c5411dd8acd1b1b  corpus/fixtures/integrity-r7.md
+#   fd4e213f03faf9a76bbca3896b11fe6530878e727fefb974043ffb4a9f9a05b8  corpus/fixtures/integrity-r7-broken.md
+#   8e83b23d04e92961f7781e556d600b94a313e083c79d32a517fcb16ec17dabb3  corpus/fixtures/integrity-r7.claims.jsonl
+#   8e83b23d04e92961f7781e556d600b94a313e083c79d32a517fcb16ec17dabb3  corpus/fixtures/integrity-r7-broken.claims.jsonl
+#   2ef59df319d78072a8fa15d2cca052ca0520c22f4083dcaa3f2343d3bdfc93a2  corpus/fixtures/integrity-r7.README.md
+# method: machine-cut by /home/vgpnk/.cache/chousa-r7-evidence/cut-receipts.sh; stdout verbatim (the gate prints its own ts=); local files only; no network
+# scope: twin defects, integrity/composed runs, the r1-r6 hole, single-delta controls
+
+## twin defect rows (verbatim from corpus/fixtures/integrity-r7-broken.md)
+| 4 | S9 | S4 | line | this record is declaration-and-pointer-level acceptance only. | resolved | r7 mix defect: the hop's from cell cites the UNDECLARED source id S9 (non-exempt row; expected REF_UNRESOLVED) |
+| SW3 | C9 | research/deep-research-2026-09-28/saved-*,research/deep-research-2026-09-28/*-snapshot-* | r7 mix defect: sweep cell names the UNDECLARED claim id C9; the where naming still re-runs zero |
+
+## live run: verify-integrity (broken)
+## command: bash tools/research-gate.sh verify-integrity corpus/fixtures/integrity-r7-broken.md --root ..
+exit: 1
+research-gate research-gate-r1 — ts=2026-10-16T03:06:34Z — mode=integrity — record=corpus/fixtures/integrity-r7-broken.md
+REF kind=claim id=C1 section=chain row=1 cell=from observed=resolved verdict=match
+REF kind=source id=S1 section=chain row=1 cell=to observed=resolved verdict=match
+REF kind=claim id=C2 section=chain row=2 cell=from observed=resolved verdict=match
+REF kind=source id=S2 section=chain row=2 cell=to observed=resolved verdict=match
+REF kind=claim id=C3 section=chain row=3 cell=from observed=resolved verdict=match
+REF kind=source id=S3 section=chain row=3 cell=to observed=resolved verdict=match
+REF kind=source id=S9 section=chain row=4 cell=from observed=unresolved verdict=mismatch
+REF kind=source id=S4 section=chain row=4 cell=to observed=resolved verdict=match
+REF kind=sweep id=SW1 section=negatives row=N1 cell=sweep observed=resolved verdict=match
+REF kind=sweep id=SW2 section=negatives row=N2 cell=sweep observed=exempt verdict=exempt status=unresolved
+REF kind=claim id=N1 section=sweeps row=SW1 cell=claim_id observed=resolved verdict=match
+REF kind=claim id=N2 section=sweeps row=SW2 cell=claim_id observed=resolved verdict=match
+REF kind=source id=S1 section=sweeps row=SW2 cell=where observed=resolved verdict=match
+REF kind=source id=S2 section=sweeps row=SW2 cell=where observed=resolved verdict=match
+REF kind=source id=S3 section=sweeps row=SW2 cell=where observed=resolved verdict=match
+REF kind=claim id=C9 section=sweeps row=SW3 cell=claim_id observed=unresolved verdict=mismatch
+FINDING REF_UNRESOLVED severity=warn surface=integrity obs=kind=source id=S9 section=chain row=4 cell=from
+FINDING REF_UNRESOLVED severity=warn surface=integrity obs=kind=claim id=C9 section=sweeps row=SW3 cell=claim_id
+INTEGRITY refs=16 resolved=13 unresolved=2
+RESEARCH_GATE: DRIFT (refs=16 resolved=13 unresolved=2 exempt=1 findings=2 drift=2)
+
+## live run: verify-all (broken)
+## command: bash tools/research-gate.sh verify-all corpus/fixtures/integrity-r7-broken.md --root ..
+exit: 1
+research-gate research-gate-r1 — ts=2026-10-16T03:06:36Z — mode=verify-all — record=corpus/fixtures/integrity-r7-broken.md — claims=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/fixtures/integrity-r7-broken.claims.jsonl — root=..
+SECTION structure state=run verdict=CLEAN findings=0 drift=0
+SECTION claims state=run verdict=CLEAN findings=0 drift=0 tally=VERDICT_BEARING_CLAIMS=3/3
+SECTION chain state=run verdict=CLEAN findings=0 drift=0 tally=RESOLVED_HOPS=4/4
+SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=2/3 REJECTIONS_OK=2/2
+SECTION integrity state=run verdict=DRIFT findings=2 drift=2 tally=INTEGRITY refs=16 resolved=13 unresolved=2
+FINDING REF_UNRESOLVED severity=warn surface=integrity obs=kind=source id=S9 section=chain row=4 cell=from
+FINDING REF_UNRESOLVED severity=warn surface=integrity obs=kind=claim id=C9 section=sweeps row=SW3 cell=claim_id
+VERIFY_ALL sections=5 run=5 absent=0 drift-sections=1 findings=2 drift=2
+RESEARCH_GATE: DRIFT (sections=5 run=5 absent=0 drift-sections=1 findings=2 drift=2)
+
+## contract assertions (vs corpus/fixtures/integrity-r7.README.md)
+REF_UNRESOLVED findings: 2 (want 2); S9 chain/from: 1; C9 sweeps/claim_id: 1
+composed: drift-sections=1 findings=2 drift=2 — PASS
+unharmed section: structure state=run verdict=CLEAN — PASS
+unharmed section: claims state=run verdict=CLEAN findings=0 drift=0 tally=VERDICT_BEARING_CLAIMS=3/3 — PASS
+unharmed section: chain state=run verdict=CLEAN findings=0 drift=0 tally=RESOLVED_HOPS=4/4 — PASS
+unharmed section: sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=2/3 REJECTIONS_OK=2/2 — PASS
+reconciliation gate vs checker (broken): EMPTY
+
+## the hole: prior modes pass the broken twin (frozen at the landed revision)
+
+## command: bash tools/research-gate.sh verify ... (broken)
+exit: 0
+research-gate research-gate-r1 — ts=2026-10-16T03:06:40Z — mode=verify — record=corpus/fixtures/integrity-r7-broken.md
+RESEARCH_GATE: CLEAN (findings=0 drift=0 questions=1 sources=4 chains=4 claims=3 negatives=2 rejections=2 approvals=1)
+
+## command: bash tools/research-gate.sh chain ... (broken)
+exit: 0
+research-gate research-gate-r1 — ts=2026-10-16T03:06:41Z — mode=chain — record=corpus/fixtures/integrity-r7-broken.md
+CHAIN hop=1 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"I could not substantiate this spelling as an established art" at=line:64 verdict=match
+CHAIN hop=2 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"Track five axes separately: task competence, retention, evid" at=line:57 verdict=match
+CHAIN hop=3 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=line:"“Jin’i-ryū” does not support the proposed literal tra" at=line:107 verdict=match
+CHAIN hop=4 status=resolved observed=verified source=chousa-shokunin/corpus/knowledge/archived-export-intake.md anchor=line:"this record is declaration-and-pointer-level acceptance only" at=line:11 verdict=match
+RESOLVED_HOPS=4/4
+RESEARCH_GATE: CLEAN (hops=4 verified=4 exempt=0 anchor-missing=0 refused=0 invalid=0 findings=0 drift=0)
+
+## command: bash tools/research-gate.sh sweeps ... (broken)
+exit: 0
+research-gate research-gate-r1 — ts=2026-10-16T03:06:42Z — mode=sweeps — record=corpus/fixtures/integrity-r7-broken.md
+SWEEP id=SW1 where=research/deep-research-2026-09-28/saved-*,research/deep-research-2026-09-28/*-sn looked=local hits=0 at=- observed=verified verdict=match
+SWEEP id=SW2 where=S1,S2,S3 looked=source-ids hits=- at=- observed=exempt verdict=exempt
+SWEEP id=SW3 where=research/deep-research-2026-09-28/saved-*,research/deep-research-2026-09-28/*-sn looked=local hits=0 at=- observed=verified verdict=match
+REJECTION id=R1 ref=research/README.md:12 reason=present flip=present observed=complete verdict=match
+REJECTION id=R2 ref=research/deep-research-2026-09-28/B-multiagent-knowledge.md:79 reason=present flip=present observed=complete verdict=match
+VERIFIED_SWEEPS=2/3 REJECTIONS_OK=2/2
+RESEARCH_GATE: CLEAN (sweeps=3 verified=2 exempt=1 hit=0 refused=0 invalid=0 rejections=2 rejections-ok=2 findings=0 drift=0)
+
+## command: bash tools/research-gate.sh claims ... (broken)
+exit: 0
+research-gate research-gate-r1 — ts=2026-10-16T03:06:43Z — mode=claims — claims=corpus/fixtures/integrity-r7-broken.claims.jsonl
+CLAIM id=FC1 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:64 verdict=match
+CLAIM id=FC2 expected=supported observed=supported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:57 verdict=match
+CLAIM id=FC3 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:107 verdict=match
+VERDICT_BEARING_CLAIMS=3/3
+RESEARCH_GATE: CLEAN (claims=3 supported=3 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)
+
+## single-delta controls (scratch copies of the positive fixture; declared ephemeral)
+
+## ctl-01 delta:
+< | C1 | observation | export A records only failed substantiation for the coined rank's spelling | research/deep-research-2026-09-28/A-shokunin-tradition.md:64 | verified | |
+> | C1 | observation | export A records only failed substantiation for the coined rank's spelling | research/deep-research-2026-09-28/A-shokunin-tradition.md:64 | verified | SW9 |
+## command: bash tools/research-gate.sh verify-integrity ctl-01-claims-sweep.md --root ..
+exit: 1
+REF kind=source id=S1 section=sweeps row=SW2 cell=where observed=resolved verdict=match
+REF kind=source id=S2 section=sweeps row=SW2 cell=where observed=resolved verdict=match
+REF kind=source id=S3 section=sweeps row=SW2 cell=where observed=resolved verdict=match
+REF kind=claim id=C2 section=sweeps row=SW3 cell=claim_id observed=resolved verdict=match
+FINDING REF_UNRESOLVED severity=warn surface=integrity obs=kind=sweep id=SW9 section=claims row=C1 cell=sweep
+INTEGRITY refs=17 resolved=15 unresolved=1
+assertion: PASS (FINDING REF_UNRESOLVED severity=warn surface=integrity obs=kind=sweep id=SW9 section=claims row=C1 cell=sweep)
+
+## ctl-02 delta:
+< | R1 | research/README.md:12 | the README gloss asserts jin'i-ryu is not an attested artisan rank and offers four axes, while its cited spans (A:47, A:64) record only failed substantiation — intake RJ-02 | an attested Japanese spelling for jin'i-ryū carried by a local source would flip this rejection |
+> | R1 | S9 | the README gloss asserts jin'i-ryu is not an attested artisan rank and offers four axes, while its cited spans (A:47, A:64) record only failed substantiation — intake RJ-02 | an attested Japanese spelling for jin'i-ryū carried by a local source would flip this rejection |
+## command: bash tools/research-gate.sh verify-integrity ctl-02-rejection-ref.md --root ..
+exit: 1
+REF kind=source id=S2 section=sweeps row=SW2 cell=where observed=resolved verdict=match
+REF kind=source id=S3 section=sweeps row=SW2 cell=where observed=resolved verdict=match
+REF kind=claim id=C2 section=sweeps row=SW3 cell=claim_id observed=resolved verdict=match
+REF kind=source id=S9 section=rejections row=R1 cell=ref observed=unresolved verdict=mismatch
+FINDING REF_UNRESOLVED severity=warn surface=integrity obs=kind=source id=S9 section=rejections row=R1 cell=ref
+INTEGRITY refs=17 resolved=15 unresolved=1
+assertion: PASS (FINDING REF_UNRESOLVED severity=warn surface=integrity obs=kind=source id=S9 section=rejections row=R1 cell=ref)
+
+## ctl-03 delta:
+< | N2 | no attestation outside the archive establishes jin'i-ryū as a traditional artisan rank | SW2 | unresolved |
+> | N2 | no attestation outside the archive establishes jin'i-ryū as a traditional artisan rank | SW9 | unresolved |
+## command: bash tools/research-gate.sh verify-integrity ctl-03-exempt-dangling.md --root ..
+exit: 0
+REF kind=claim id=N2 section=sweeps row=SW2 cell=claim_id observed=resolved verdict=match
+REF kind=source id=S1 section=sweeps row=SW2 cell=where observed=resolved verdict=match
+REF kind=source id=S2 section=sweeps row=SW2 cell=where observed=resolved verdict=match
+REF kind=source id=S3 section=sweeps row=SW2 cell=where observed=resolved verdict=match
+REF kind=claim id=C2 section=sweeps row=SW3 cell=claim_id observed=resolved verdict=match
+INTEGRITY refs=16 resolved=15 unresolved=0
+assertion: PASS (REF kind=sweep id=SW9 section=negatives row=N2 cell=sweep observed=exempt verdict=exempt status=unresolved)
+
+## ctl-04 delta:
+< | N1 | nothing external was cached locally: no saved copy of a cited external page exists under the archive directory | SW1 | observed-in-dump |
+> | N1 | nothing external was cached locally: no saved copy of a cited external page exists under the archive directory | https://example.invalid/x.md | observed-in-dump |
+## command: bash tools/research-gate.sh verify-integrity ctl-04-nonlocal.md --root ..
+exit: 0
+REF kind=claim id=N2 section=sweeps row=SW2 cell=claim_id observed=resolved verdict=match
+REF kind=source id=S1 section=sweeps row=SW2 cell=where observed=resolved verdict=match
+REF kind=source id=S2 section=sweeps row=SW2 cell=where observed=resolved verdict=match
+REF kind=source id=S3 section=sweeps row=SW2 cell=where observed=resolved verdict=match
+REF kind=claim id=C2 section=sweeps row=SW3 cell=claim_id observed=resolved verdict=match
+INTEGRITY refs=16 resolved=14 unresolved=0
+assertion: PASS (REF kind=location id=https://example.invalid/x.md section=negatives row=N1 cell=sweep observed=exempt verdict=exempt reason=non-local)

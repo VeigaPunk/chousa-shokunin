@@ -1,0 +1,346 @@
+# chousa-shokunin round-5 receipt — live
+# utc: 2026-10-16T01:15:43Z
+# seat: receipts-writer | lane: chousa-shokunin | round: 5 (coverage move: kept rejections and negative sweeps become verdict-bearing)
+# lane head: 45f8f65 | gate: tools/research-gate.sh sha256=55adb92d0ba5ac958907fac6c4d5d6b0b50129703e866a5befbd9a32789f2ff2
+# before-state gate: git show 45f8f65:tools/research-gate.sh sha256=6b83705b02fe11e98b8b4aeb43fe718ff9910d21cee16d87366cef648a3960b2 (round-4 revision), run from a lane shadow (/tmp/chousa-r5-evidence/lane-shadow: symlinks corpus/ -> lane corpus, research/ -> fleet research) so the record's lane- and fleet-root-relative pointers resolve as they do in place
+# fixtures: corpus/fixtures/sweeps-r5.md sha256=025352b75b7b109147fee8b8eb13b4f74eaa1550489e83166ce1dd59cfb14907 | corpus/fixtures/sweeps-r5-hit.md sha256=89650988074e4c371aada8e1fe77cd02d4fa85bc0c3d0a40dc21e12e1a0f78cd | corpus/fixtures/sweeps-r5-broken.md sha256=f74ea3247e069e711278bb81addda468045053cfe556d8f5a204f3b9ff7abc0c
+# fixture contract: corpus/fixtures/sweeps-r5.README.md sha256=e9178651254841b86e46e98ba4566b568df662ed8c541197ae150f5aba1ebbca
+# control copies: /tmp/chousa-r5-evidence/ctl/ (single-delta copies of sweeps-r5.md; sha256 in the live receipt)
+# method: machine-cut by /tmp/chousa-r5-evidence/cut-receipts.sh; stdout verbatim; local files only; no network
+# scope: live end-to-end: pre-move structural hole, live verify-sweeps, seven negative controls, cross-round byte-stability, zero-network strace
+
+## pinned revision
+55adb92d0ba5ac958907fac6c4d5d6b0b50129703e866a5befbd9a32789f2ff2  tools/research-gate.sh (round-5 revision)
+45f8f65  lane HEAD
+025352b75b7b109147fee8b8eb13b4f74eaa1550489e83166ce1dd59cfb14907  corpus/fixtures/sweeps-r5.md
+89650988074e4c371aada8e1fe77cd02d4fa85bc0c3d0a40dc21e12e1a0f78cd  corpus/fixtures/sweeps-r5-hit.md
+f74ea3247e069e711278bb81addda468045053cfe556d8f5a204f3b9ff7abc0c  corpus/fixtures/sweeps-r5-broken.md
+e9178651254841b86e46e98ba4566b568df662ed8c541197ae150f5aba1ebbca  corpus/fixtures/sweeps-r5.README.md
+
+## before-state note
+
+The r4 snapshot is run by absolute path (/tmp/chousa-r5-evidence/research-gate-r4-6b83705b.sh, sha256 pinned in the header); a relative path would exit 127 without invoking the gate.
+
+## before-state: the r4 CLI has no verify-sweeps mode (usage, exit 2 expected)
+
+## command: bash /tmp/chousa-r5-evidence/research-gate-r4-6b83705b.sh verify-sweeps corpus/fixtures/sweeps-r5.md --root ..
+exit: 2  (gate sha stable before/after)
+research-gate: multiple record paths
+usage: research-gate.sh [--selftest] [--help]
+       research-gate.sh verify [--record PATH] [--root PATH]
+       research-gate.sh verify-claims [CLAIMS] [--root PATH]
+       research-gate.sh verify-chain [RECORD] [--root PATH]
+       research-gate.sh [--record PATH] [--root PATH]
+
+  RECORD via --record, positional, or CHOUSA_RECORD.
+  CLAIMS via positional or CHOUSA_CLAIMS.
+  Claims file: one JSON object per claim line:
+    {"id":…,"source":…,"span":…,"expect":supported|contradicted|unsupported
+     [,"marker":…]}
+  Spans must appear verbatim in sources at token boundaries; sources are
+  local files only.
+  Chain mode: each hop with status=resolved must cite a source (a source id
+  from ## Sources, or a local path) plus an anchor — an anchor_kind column
+  (heading|quote|line) with an anchor column, or a to fragment
+  path#kind:text (bare #text = heading). The anchor must appear in the cited
+  source: headings by text, quotes verbatim at token boundaries, lines as
+  whole lines.
+  Unresolved/marked hops stay exempt but counted. Sources obey the same
+  boundary as verify-claims (local, canonicalized, never fetched).
+  A token boundary is a file/line edge, ASCII whitespace or ASCII
+  punctuation at the match's outer edges; a word-internal hyphen or
+  apostrophe is not a boundary, so a truncated quote (mid-word), a padded
+  extra word running into a longer token, or a possessive join is a miss.
+  Multi-line spans are delimited by their first and last character only.
+Verdict: RESEARCH_GATE: CLEAN|DRIFT
+Exit:    0 CLEAN | 1 DRIFT | 2 setup/usage
+
+## before-state: r4 gate verify on the canonical record (structural pass = the hole)
+
+## command: bash tools/research-gate-r4.sh verify corpus/fixtures/sweeps-r5.md --root .
+exit: 0  (gate sha stable before/after)
+research-gate research-gate-r1 — ts=2026-10-16T01:15:58Z — mode=verify — record=corpus/fixtures/sweeps-r5.md
+RESEARCH_GATE: CLEAN (findings=0 drift=0 questions=1 sources=4 chains=3 claims=3 negatives=2 rejections=3 approvals=1)
+
+## landed gate: verify-sweeps on the canonical record (expected CLEAN, exit 0)
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH bash tools/research-gate.sh verify-sweeps corpus/fixtures/sweeps-r5.md --root ..
+exit: 0  (gate sha stable before/after)
+research-gate research-gate-r1 — ts=2026-10-16T01:15:59Z — mode=sweeps — record=corpus/fixtures/sweeps-r5.md
+SWEEP id=W1 where=research/deep-research-2026-09-28/kotobank-*,research/deep-research-2026-09-28/s looked=local hits=0 at=- observed=verified verdict=match
+SWEEP id=W2 where=https://kotobank.jp/ looked=non-local hits=- at=- observed=exempt verdict=exempt
+REJECTION id=R1 ref=research/README.md:12 reason=present flip=present observed=complete verdict=match
+REJECTION id=R2 ref=research/deep-research-2026-09-28/B-multiagent-knowledge.md:79 reason=present flip=present observed=complete verdict=match
+REJECTION id=R3 ref=research/deep-research-2026-09-28/B-multiagent-knowledge.md:63 reason=present flip=present observed=complete verdict=match
+VERIFIED_SWEEPS=1/2 REJECTIONS_OK=3/3
+RESEARCH_GATE: CLEAN (sweeps=2 verified=1 exempt=1 hit=0 refused=0 invalid=0 rejections=3 rejections-ok=3 findings=0 drift=0)
+
+## negative control ctl-01-rej-flip-empty (sha256=de954f62506c42564bdd0a8b3e97af4eadaed0183fb63dbb0354a9bea9d00be5)
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH bash tools/research-gate.sh verify-sweeps /tmp/chousa-r5-evidence/ctl/ctl-01-rej-flip-empty.md --root ..
+exit: 1  (gate sha stable before/after)
+research-gate research-gate-r1 — ts=2026-10-16T01:15:59Z — mode=sweeps — record=/tmp/chousa-r5-evidence/ctl/ctl-01-rej-flip-empty.md
+SWEEP id=W1 where=research/deep-research-2026-09-28/kotobank-*,research/deep-research-2026-09-28/s looked=local hits=0 at=- observed=verified verdict=match
+SWEEP id=W2 where=https://kotobank.jp/ looked=non-local hits=- at=- observed=exempt verdict=exempt
+REJECTION id=R1 ref=research/README.md:12 reason=present flip=absent observed=incomplete verdict=mismatch
+REJECTION id=R2 ref=research/deep-research-2026-09-28/B-multiagent-knowledge.md:79 reason=present flip=present observed=complete verdict=match
+REJECTION id=R3 ref=research/deep-research-2026-09-28/B-multiagent-knowledge.md:63 reason=present flip=present observed=complete verdict=match
+FINDING SWEEP_REJECTION_INCOMPLETE severity=warn surface=sweeps obs=id=R1 missing=flip
+VERIFIED_SWEEPS=1/2 REJECTIONS_OK=2/3
+RESEARCH_GATE: DRIFT (sweeps=2 verified=1 exempt=1 hit=0 refused=0 invalid=0 rejections=3 rejections-ok=2 findings=1 drift=1)
+
+## negative control ctl-02-rej-reason-empty (sha256=146975db468da963cb3ce351646fbf6e3808d381862db70787a37e5a37d1c7a6)
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH bash tools/research-gate.sh verify-sweeps /tmp/chousa-r5-evidence/ctl/ctl-02-rej-reason-empty.md --root ..
+exit: 1  (gate sha stable before/after)
+research-gate research-gate-r1 — ts=2026-10-16T01:16:00Z — mode=sweeps — record=/tmp/chousa-r5-evidence/ctl/ctl-02-rej-reason-empty.md
+SWEEP id=W1 where=research/deep-research-2026-09-28/kotobank-*,research/deep-research-2026-09-28/s looked=local hits=0 at=- observed=verified verdict=match
+SWEEP id=W2 where=https://kotobank.jp/ looked=non-local hits=- at=- observed=exempt verdict=exempt
+REJECTION id=R1 ref=research/README.md:12 reason=present flip=present observed=complete verdict=match
+REJECTION id=R2 ref=research/deep-research-2026-09-28/B-multiagent-knowledge.md:79 reason=absent flip=present observed=incomplete verdict=mismatch
+REJECTION id=R3 ref=research/deep-research-2026-09-28/B-multiagent-knowledge.md:63 reason=present flip=present observed=complete verdict=match
+FINDING SWEEP_REJECTION_INCOMPLETE severity=warn surface=sweeps obs=id=R2 missing=reason
+VERIFIED_SWEEPS=1/2 REJECTIONS_OK=2/3
+RESEARCH_GATE: DRIFT (sweeps=2 verified=1 exempt=1 hit=0 refused=0 invalid=0 rejections=3 rejections-ok=2 findings=1 drift=1)
+
+## negative control ctl-03-sweep-false-hit (sha256=55c92d63c24a211e57eb317dee9843597149fb396a23dcdd389d044065011263)
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH bash tools/research-gate.sh verify-sweeps /tmp/chousa-r5-evidence/ctl/ctl-03-sweep-false-hit.md --root ..
+exit: 1  (gate sha stable before/after)
+research-gate research-gate-r1 — ts=2026-10-16T01:16:01Z — mode=sweeps — record=/tmp/chousa-r5-evidence/ctl/ctl-03-sweep-false-hit.md
+SWEEP id=W1 where=chousa-shokunin/corpus/fixtures/sweeps-r5-hit.md looked=local hits=1 at=chousa-shokunin/corpus/fixtures/sweeps-r5-hit.md observed=hit verdict=mismatch
+SWEEP id=W2 where=https://kotobank.jp/ looked=non-local hits=- at=- observed=exempt verdict=exempt
+REJECTION id=R1 ref=research/README.md:12 reason=present flip=present observed=complete verdict=match
+REJECTION id=R2 ref=research/deep-research-2026-09-28/B-multiagent-knowledge.md:79 reason=present flip=present observed=complete verdict=match
+REJECTION id=R3 ref=research/deep-research-2026-09-28/B-multiagent-knowledge.md:63 reason=present flip=present observed=complete verdict=match
+FINDING SWEEP_CLAIM_FALSE severity=warn surface=sweeps obs=id=W1 where=chousa-shokunin/corpus/fixtures/sweeps-r5-hit.md hits=1 first=chousa-shokunin/corpus/fixtures/sweeps-r5-hit.md listed=chousa-shokunin/corpus/fixtures/sweeps-r5-hit.md
+VERIFIED_SWEEPS=0/2 REJECTIONS_OK=3/3
+RESEARCH_GATE: DRIFT (sweeps=2 verified=0 exempt=1 hit=1 refused=0 invalid=0 rejections=3 rejections-ok=3 findings=1 drift=1)
+
+## negative control ctl-04-sweep-nonlocal (sha256=e76344d3e329da6355e3a62e2c4ae6570f06bf5bd7c43b62bbe4ccf113c2b53c)
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH bash tools/research-gate.sh verify-sweeps /tmp/chousa-r5-evidence/ctl/ctl-04-sweep-nonlocal.md --root ..
+exit: 0  (gate sha stable before/after)
+research-gate research-gate-r1 — ts=2026-10-16T01:16:01Z — mode=sweeps — record=/tmp/chousa-r5-evidence/ctl/ctl-04-sweep-nonlocal.md
+SWEEP id=W1 where=https://kotobank.jp/ looked=non-local hits=- at=- observed=exempt verdict=exempt
+SWEEP id=W2 where=https://kotobank.jp/ looked=non-local hits=- at=- observed=exempt verdict=exempt
+REJECTION id=R1 ref=research/README.md:12 reason=present flip=present observed=complete verdict=match
+REJECTION id=R2 ref=research/deep-research-2026-09-28/B-multiagent-knowledge.md:79 reason=present flip=present observed=complete verdict=match
+REJECTION id=R3 ref=research/deep-research-2026-09-28/B-multiagent-knowledge.md:63 reason=present flip=present observed=complete verdict=match
+VERIFIED_SWEEPS=0/2 REJECTIONS_OK=3/3
+RESEARCH_GATE: CLEAN (sweeps=2 verified=0 exempt=2 hit=0 refused=0 invalid=0 rejections=3 rejections-ok=3 findings=0 drift=0)
+
+## negative control ctl-05-sweep-nowhere (sha256=77b5ef63603f2b4bbcf0156218a156202a14d42d3b3a83dc4c8dc5a6a5a01296)
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH bash tools/research-gate.sh verify-sweeps /tmp/chousa-r5-evidence/ctl/ctl-05-sweep-nowhere.md --root ..
+exit: 1  (gate sha stable before/after)
+research-gate research-gate-r1 — ts=2026-10-16T01:16:02Z — mode=sweeps — record=/tmp/chousa-r5-evidence/ctl/ctl-05-sweep-nowhere.md
+SWEEP id=W1 where=- looked=unnamed hits=- at=- observed=invalid verdict=invalid
+SWEEP id=W2 where=https://kotobank.jp/ looked=non-local hits=- at=- observed=exempt verdict=exempt
+REJECTION id=R1 ref=research/README.md:12 reason=present flip=present observed=complete verdict=match
+REJECTION id=R2 ref=research/deep-research-2026-09-28/B-multiagent-knowledge.md:79 reason=present flip=present observed=complete verdict=match
+REJECTION id=R3 ref=research/deep-research-2026-09-28/B-multiagent-knowledge.md:63 reason=present flip=present observed=complete verdict=match
+FINDING SWEEP_LOCATION_ABSENT severity=warn surface=sweeps obs=id=W1 no location named
+VERIFIED_SWEEPS=0/2 REJECTIONS_OK=3/3
+RESEARCH_GATE: DRIFT (sweeps=2 verified=0 exempt=1 hit=0 refused=0 invalid=1 rejections=3 rejections-ok=3 findings=1 drift=1)
+
+## negative control ctl-06-sweep-out-of-corpus (sha256=9815ff567ffa3e04a5823ca9226649c793bb04861a67b9a53d035122a13a5869)
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH bash tools/research-gate.sh verify-sweeps /tmp/chousa-r5-evidence/ctl/ctl-06-sweep-out-of-corpus.md --root ..
+exit: 1  (gate sha stable before/after)
+research-gate research-gate-r1 — ts=2026-10-16T01:16:02Z — mode=sweeps — record=/tmp/chousa-r5-evidence/ctl/ctl-06-sweep-out-of-corpus.md
+SWEEP id=W1 where=../research/README.md looked=local hits=- at=- observed=refused verdict=refused
+SWEEP id=W2 where=https://kotobank.jp/ looked=non-local hits=- at=- observed=exempt verdict=exempt
+REJECTION id=R1 ref=research/README.md:12 reason=present flip=present observed=complete verdict=match
+REJECTION id=R2 ref=research/deep-research-2026-09-28/B-multiagent-knowledge.md:79 reason=present flip=present observed=complete verdict=match
+REJECTION id=R3 ref=research/deep-research-2026-09-28/B-multiagent-knowledge.md:63 reason=present flip=present observed=complete verdict=match
+FINDING SWEEP_LOCATION_OUT_OF_CORPUS severity=crit surface=sweeps obs=id=W1 path=../research/README.md refused unopened
+VERIFIED_SWEEPS=0/2 REJECTIONS_OK=3/3
+RESEARCH_GATE: DRIFT (sweeps=2 verified=0 exempt=1 hit=0 refused=1 invalid=0 rejections=3 rejections-ok=3 findings=1 drift=1)
+
+## negative control ctl-07-sweep-unresolved-id (sha256=c1e37316c151f3dabb26c80775ac07e220cc4a26df0860db95496065ebb4403f)
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH bash tools/research-gate.sh verify-sweeps /tmp/chousa-r5-evidence/ctl/ctl-07-sweep-unresolved-id.md --root ..
+exit: 1  (gate sha stable before/after)
+research-gate research-gate-r1 — ts=2026-10-16T01:16:03Z — mode=sweeps — record=/tmp/chousa-r5-evidence/ctl/ctl-07-sweep-unresolved-id.md
+SWEEP id=W1 where=S9 looked=source-ids hits=- at=- observed=refused verdict=refused
+SWEEP id=W2 where=https://kotobank.jp/ looked=non-local hits=- at=- observed=exempt verdict=exempt
+REJECTION id=R1 ref=research/README.md:12 reason=present flip=present observed=complete verdict=match
+REJECTION id=R2 ref=research/deep-research-2026-09-28/B-multiagent-knowledge.md:79 reason=present flip=present observed=complete verdict=match
+REJECTION id=R3 ref=research/deep-research-2026-09-28/B-multiagent-knowledge.md:63 reason=present flip=present observed=complete verdict=match
+FINDING SWEEP_LOCATION_UNRESOLVED severity=warn surface=sweeps obs=id=W1 source_id=S9 not in ## Sources
+VERIFIED_SWEEPS=0/2 REJECTIONS_OK=3/3
+RESEARCH_GATE: DRIFT (sweeps=2 verified=0 exempt=1 hit=0 refused=1 invalid=0 rejections=3 rejections-ok=3 findings=1 drift=1)
+
+## cross-round: verify-claims fixture (expect 17/17 CLEAN)
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH bash tools/research-gate.sh verify-claims corpus/fixtures/claims-r2.jsonl --root ..
+exit: 0  (gate sha stable before/after)
+research-gate research-gate-r1 — ts=2026-10-16T01:16:03Z — mode=claims — claims=corpus/fixtures/claims-r2.jsonl
+CLAIM id=A01 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:52 verdict=match
+CLAIM id=A02 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:80 verdict=match
+CLAIM id=A03 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:81 verdict=match
+CLAIM id=A04 expected=supported observed=supported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:88 verdict=match
+CLAIM id=A05 expected=contradicted observed=contradicted source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=line:64 verdict=match
+CLAIM id=A06 expected=unsupported observed=unsupported source=research/deep-research-2026-09-28/A-shokunin-tradition.md at=- verdict=match
+CLAIM id=B01 expected=supported observed=supported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:47 verdict=match
+CLAIM id=B02 expected=supported observed=supported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:64 verdict=match
+CLAIM id=B03 expected=supported observed=supported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:79 verdict=match
+CLAIM id=B04 expected=supported observed=supported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=line:69 verdict=match
+CLAIM id=B05 expected=unsupported observed=unsupported source=research/deep-research-2026-09-28/B-multiagent-knowledge.md at=- verdict=match
+CLAIM id=C01 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:89 verdict=match
+CLAIM id=C02 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:92 verdict=match
+CLAIM id=C03 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:97 verdict=match
+CLAIM id=C04 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:102 verdict=match
+CLAIM id=C05 expected=supported observed=supported source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:130 verdict=match
+CLAIM id=C06 expected=contradicted observed=contradicted source=research/deep-research-2026-09-28/C-rank-taxonomy.md at=line:53 verdict=match
+VERDICT_BEARING_CLAIMS=17/17
+RESEARCH_GATE: CLEAN (claims=17 supported=13 contradicted=2 unsupported=2 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)
+
+## cross-round: verify-chain fixture (expect 17/22 CLEAN)
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH bash tools/research-gate.sh verify-chain corpus/fixtures/chain-r3.md --root ..
+exit: 0  (gate sha stable before/after)
+research-gate research-gate-r1 — ts=2026-10-16T01:16:07Z — mode=chain — record=corpus/fixtures/chain-r3.md
+CHAIN hop=1 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=line:"1. When does an apprentice earn domain independence?" at=line:74 verdict=match
+CHAIN hop=2 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"I could not substantiate this spelling as an established art" at=line:64 verdict=match
+CHAIN hop=3 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"minarai/deshi/shokunin/jin'i-ryu/kiwami semantics" at=line:35 verdict=match
+CHAIN hop=4 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=line:"“Jin’i-ryū” does not support the proposed literal tra" at=line:107 verdict=match
+CHAIN hop=5 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"I found no authoritative attestation establishing jin’i-ry" at=line:109 verdict=match
+CHAIN hop=6 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"Track five axes separately: task competence, retention, evid" at=line:57 verdict=match
+CHAIN hop=7 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"Sources: Voyager and Generative Agents; Reflexion; Dynamic C" at=line:71 verdict=match
+CHAIN hop=8 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"Evolving strategies and domain playbooks" at=line:67 verdict=match
+CHAIN hop=9 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"In one AppWorld case, a rewrite reduced accumulated context " at=line:79 verdict=match
+CHAIN hop=10 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"graduated responsibility through actual work, rather than in" at=line:88 verdict=match
+CHAIN hop=11 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"The axes your system needs are knowledge provenance, demonst" at=line:67 verdict=match
+CHAIN hop=12 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=line:"Kyū/dan is a grading structure, not an autonomy ladder" at=line:87 verdict=match
+CHAIN hop=13 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"In Go, kyū 級 counts downward toward 1-kyū; dan 段 count" at=line:89 verdict=match
+CHAIN hop=14 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"They do not establish a universal ladder of minarai → desh" at=line:52 verdict=match
+CHAIN hop=15 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"A skilled craft worker/artisan. The word itself does not cer" at=line:63 verdict=match
+CHAIN hop=16 status=resolved observed=verified source=research/deep-research-2026-09-28/B-multiagent-knowledge.md anchor=quote:"It offers much weaker support for unrestricted whole-corpus " at=line:55 verdict=match
+CHAIN hop=17 status=resolved observed=verified source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=line:"“Jin’i-ryū” does not support the proposed literal tra" at=line:107 verdict=match
+CHAIN hop=18 status=blocked-no-fetch observed=exempt source=https://kotobank.jp/ anchor=- at=- verdict=exempt
+CHAIN hop=19 status=blocked-no-fetch observed=exempt source=https://arxiv.org/ anchor=- at=- verdict=exempt
+CHAIN hop=20 status=unresolved observed=exempt source=S3 anchor=- at=- verdict=exempt
+CHAIN hop=21 status=unresolved observed=exempt source=S2 anchor=- at=- verdict=exempt
+CHAIN hop=22 status=unresolved observed=exempt source=S1 anchor=- at=- verdict=exempt
+RESOLVED_HOPS=17/22
+RESEARCH_GATE: CLEAN (hops=22 verified=17 exempt=5 anchor-missing=0 refused=0 invalid=0 findings=0 drift=0)
+
+## cross-round: verify-chain broken control (expect 1/2 DRIFT exit 1)
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH bash tools/research-gate.sh verify-chain corpus/fixtures/chain-r3-broken.md --root ..
+exit: 1  (gate sha stable before/after)
+research-gate research-gate-r1 — ts=2026-10-16T01:16:11Z — mode=chain — record=corpus/fixtures/chain-r3-broken.md
+CHAIN hop=1 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"I could not substantiate this spelling as an established art" at=line:64 verdict=match
+CHAIN hop=2 status=resolved observed=anchor-missing source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"人為 — jin’i-ryū" at=- verdict=mismatch
+FINDING CHAIN_ANCHOR_NOT_FOUND severity=warn surface=chain obs=hop=2 source=research/deep-research-2026-09-28/C-rank-taxonomy.md anchor=quote:"人為 — jin’i-ryū" nearest_line=53 context=The key distinction is between skill, teaching authority, and permission to act.
+RESOLVED_HOPS=1/2
+RESEARCH_GATE: DRIFT (hops=2 verified=1 exempt=0 anchor-missing=1 refused=0 invalid=0 findings=1 drift=1)
+
+## bonus: verify-chain on the new sweep record (fixture README expects 2/3 CLEAN)
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH bash tools/research-gate.sh verify-chain corpus/fixtures/sweeps-r5.md --root ..
+exit: 0  (gate sha stable before/after)
+research-gate research-gate-r1 — ts=2026-10-16T01:16:12Z — mode=chain — record=corpus/fixtures/sweeps-r5.md
+CHAIN hop=1 status=resolved observed=verified source=research/deep-research-2026-09-28/A-shokunin-tradition.md anchor=quote:"I could not substantiate this spelling as an established art" at=line:64 verdict=match
+CHAIN hop=2 status=resolved observed=verified source=corpus/knowledge/archived-export-intake.md anchor=quote:"zero matches, no URL locator exists in the archive set" at=line:151 verdict=match
+CHAIN hop=3 status=blocked-no-fetch observed=exempt source=https://kotobank.jp/ anchor=- at=- verdict=exempt
+RESOLVED_HOPS=2/3
+RESEARCH_GATE: CLEAN (hops=3 verified=2 exempt=1 anchor-missing=0 refused=0 invalid=0 findings=0 drift=0)
+
+## r1 archive observable A-shokunin-tradition (frozen clock, expect exit 1, one DRIFT summary)
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH CHOUSA_NOW_EPOCH=1760000000 bash tools/research-gate.sh verify ../research/deep-research-2026-09-28/A-shokunin-tradition.md --root ..
+exit: 1  (gate sha stable before/after)
+research-gate research-gate-r1 — ts=2025-10-09T08:53:20Z — mode=verify — record=../research/deep-research-2026-09-28/A-shokunin-tradition.md
+FINDING RECORD_SCHEMA_INVALID severity=warn surface=meta obs=no research-record sections/banner detected
+FINDING EXPORT_CHROME_PRESENT severity=info surface=export obs=chat-export chrome lines present (data, not instruction)
+FINDING NO_QUESTION severity=crit surface=question obs=missing ## Question section
+FINDING SOURCE_TABLE_ABSENT severity=warn surface=sources obs=missing ## Sources / ## Source table
+FINDING CLAIM_TABLE_ABSENT severity=warn surface=claims obs=missing ## Claims
+FINDING REJECTION_DROPPED severity=warn surface=rejections obs=missing ## Rejections section
+RESEARCH_GATE: DRIFT (findings=6 drift=5 questions=0 sources=0 chains=0 claims=0 negatives=0 rejections=0 approvals=0)
+
+## r1 archive observable B-multiagent-knowledge (frozen clock, expect exit 1, one DRIFT summary)
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH CHOUSA_NOW_EPOCH=1760000000 bash tools/research-gate.sh verify ../research/deep-research-2026-09-28/B-multiagent-knowledge.md --root ..
+exit: 1  (gate sha stable before/after)
+research-gate research-gate-r1 — ts=2025-10-09T08:53:20Z — mode=verify — record=../research/deep-research-2026-09-28/B-multiagent-knowledge.md
+FINDING RECORD_SCHEMA_INVALID severity=warn surface=meta obs=no research-record sections/banner detected
+FINDING EXPORT_CHROME_PRESENT severity=info surface=export obs=chat-export chrome lines present (data, not instruction)
+FINDING NO_QUESTION severity=crit surface=question obs=missing ## Question section
+FINDING SOURCE_TABLE_ABSENT severity=warn surface=sources obs=missing ## Sources / ## Source table
+FINDING CLAIM_TABLE_ABSENT severity=warn surface=claims obs=missing ## Claims
+FINDING REJECTION_DROPPED severity=warn surface=rejections obs=missing ## Rejections section
+RESEARCH_GATE: DRIFT (findings=6 drift=5 questions=0 sources=0 chains=0 claims=0 negatives=0 rejections=0 approvals=0)
+
+## r1 archive observable C-rank-taxonomy (frozen clock, expect exit 1, one DRIFT summary)
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH CHOUSA_NOW_EPOCH=1760000000 bash tools/research-gate.sh verify ../research/deep-research-2026-09-28/C-rank-taxonomy.md --root ..
+exit: 1  (gate sha stable before/after)
+research-gate research-gate-r1 — ts=2025-10-09T08:53:20Z — mode=verify — record=../research/deep-research-2026-09-28/C-rank-taxonomy.md
+FINDING RECORD_SCHEMA_INVALID severity=warn surface=meta obs=no research-record sections/banner detected
+FINDING EXPORT_CHROME_PRESENT severity=info surface=export obs=chat-export chrome lines present (data, not instruction)
+FINDING NO_QUESTION severity=crit surface=question obs=missing ## Question section
+FINDING SOURCE_TABLE_ABSENT severity=warn surface=sources obs=missing ## Sources / ## Source table
+FINDING CLAIM_TABLE_ABSENT severity=warn surface=claims obs=missing ## Claims
+FINDING REJECTION_DROPPED severity=warn surface=rejections obs=missing ## Rejections section
+RESEARCH_GATE: DRIFT (findings=6 drift=5 questions=0 sources=0 chains=0 claims=0 negatives=0 rejections=0 approvals=0)
+
+## cross-round byte-stability vs the round-4 gate stdout (frozen clock, ts-normalized)
+
+## claims fixture stdout vs round 4
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH bash tools/research-gate.sh verify-claims corpus/fixtures/claims-r2.jsonl --root ..   vs   ref-r4/claims.log (round-4 stdout, this seat, at gate 6b83705b), both ts-normalized
+round-4 ref sha256=5c81e49eea57f8bc63dcb7a84d225a6b52bd44fba4e476402a96a12cadd00c04
+r5 exit=0
+byte-stable after ts normalization: YES
+
+## chain fixture stdout vs round 4
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH bash tools/research-gate.sh verify-chain corpus/fixtures/chain-r3.md --root ..   vs   ref-r4/chain.log (round-4 stdout, this seat, at gate 6b83705b), both ts-normalized
+round-4 ref sha256=8c32db0fdbd00716fd8e41384a960451aea531c020288041ab89aad43e5ad04c
+r5 exit=0
+byte-stable after ts normalization: YES
+
+## chain broken-control stdout vs round 4
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH bash tools/research-gate.sh verify-chain corpus/fixtures/chain-r3-broken.md --root ..   vs   ref-r4/chain-broken.log (round-4 stdout, this seat, at gate 6b83705b), both ts-normalized
+round-4 ref sha256=0956ed511f0bb65ad29df477cf03a3fa0e49afd63b8df78d0f1707ebb838b8da
+r5 exit=1
+byte-stable after ts normalization: YES
+
+## archive A-shokunin-tradition stdout vs round 4 (frozen clock)
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH CHOUSA_NOW_EPOCH=1760000000 bash tools/research-gate.sh verify ../research/deep-research-2026-09-28/A-shokunin-tradition.md --root ..   vs   ref-r4/arch-A-shokunin-tradition.log (round-4 stdout, this seat, at gate 6b83705b), both ts-normalized
+round-4 ref sha256=0634bbc249c5b0e4719a87ed442e7139e95bb17450dba99df3336699109bff3c
+r5 exit=1
+byte-stable after ts normalization: YES
+
+## archive B-multiagent-knowledge stdout vs round 4 (frozen clock)
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH CHOUSA_NOW_EPOCH=1760000000 bash tools/research-gate.sh verify ../research/deep-research-2026-09-28/B-multiagent-knowledge.md --root ..   vs   ref-r4/arch-B-multiagent-knowledge.log (round-4 stdout, this seat, at gate 6b83705b), both ts-normalized
+round-4 ref sha256=15fa76321c06dac23fd8d4198708bd3c1771cd8d8be6525345d584ab8d17588d
+r5 exit=1
+byte-stable after ts normalization: YES
+
+## archive C-rank-taxonomy stdout vs round 4 (frozen clock)
+
+## command: env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH CHOUSA_NOW_EPOCH=1760000000 bash tools/research-gate.sh verify ../research/deep-research-2026-09-28/C-rank-taxonomy.md --root ..   vs   ref-r4/arch-C-rank-taxonomy.log (round-4 stdout, this seat, at gate 6b83705b), both ts-normalized
+round-4 ref sha256=81101d16029decd68a898dcdc66a99460ff732ca4b3920eaad30cc1e9b1de630
+r5 exit=1
+byte-stable after ts normalization: YES
+
+## zero-network check: strace -f -e trace=network around the positive verify-sweeps run
+
+## command: strace -f -e trace=network -o /tmp/chousa-r5-evidence/out/strace.raw env -u CHOUSA_ROOT -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_STRICT -u CHOUSA_AGGREGATOR_ERE -u CHOUSA_NOW_EPOCH bash tools/research-gate.sh verify-sweeps corpus/fixtures/sweeps-r5.md --root .. > /tmp/chousa-r5-evidence/out/strace.gate.out 2>&1; printf 'gate exit: %d\n' $?; tail -2 /tmp/chousa-r5-evidence/out/strace.gate.out; printf 'trace lines: %s\n' $(wc -l </tmp/chousa-r5-evidence/out/strace.raw); printf 'network syscall lines: %s\n' $(grep -cE 'socket\(|connect\(|sendto\(|recvfrom\(|sendmsg\(|recvmsg\(' /tmp/chousa-r5-evidence/out/strace.raw) ; true
+exit: 0  (gate sha stable before/after)
+gate exit: 0
+VERIFIED_SWEEPS=1/2 REJECTIONS_OK=3/3
+RESEARCH_GATE: CLEAN (sweeps=2 verified=1 exempt=1 hit=0 refused=0 invalid=0 rejections=3 rejections-ok=3 findings=0 drift=0)
+trace lines: 992
+network syscall lines: 0
+
+## final gate sha
+55adb92d0ba5ac958907fac6c4d5d6b0b50129703e866a5befbd9a32789f2ff2  tools/research-gate.sh (at the end of the cut)
