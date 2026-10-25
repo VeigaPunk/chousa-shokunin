@@ -24,8 +24,13 @@ shipped in the freeze commit changed after wave-1 seats had scored:
   (`对于合作发文的参考文献中，如果引文出现了任一合作者，那么这条引文将被认定为自引`),
   which keeps context inside the paragraph; the anchor `char` moved 1423 → 1431.
 - What did not change: the counter's CAPTURE_BOUND rule, its other legs, the
-  target and the kill rule. No quote, document or verdict was added or dropped
-  to pass the leg.
+  target and the kill rule. No document or verdict was added or dropped.
+- Correction (W2 `CritErratum`): an earlier draft of this note said no quote was
+  added or dropped. That was false: the S100 paragraph quote was replaced by its
+  body, and the replacement was needed for that row's span to keep context
+  inside the paragraph under the CR clip. CritErratum reproduced 21/28 on the
+  pre-change spans as a text-mode read artefact on spans that were already exact
+  byte slices, and ruled that C2 stands.
 - Why this is disclosed rather than silent: the closure judges the claim on the
   counter and predicate declared before data; a derivation tool changed after
   seats scored is reported so the closure can rule whether the C2 after-state
@@ -43,3 +48,13 @@ shipped in the freeze commit changed after wave-1 seats had scored:
   (`FAILURES=0`); that floor is not part of the frozen C2 rule.
 - C1 (`MutTool` m8): a mutant that does not force `status` to `mined` survives,
   because every cited staged row in the frozen sets is already `mined`.
+
+## Wave-2 narrowing (after the first after-measurement)
+
+W2 critics and row re-openers (`.ufo/waves/round-49/w2/CritEntryAgg.md`,
+`CritEntryCCS.md`, `ReopenS096`–`ReopenS103`) found glosses that outran their
+captures. Both entries and six Registry cells were narrowed; three quotes were
+added (S096 chars 3577 and 3801; S101 char 13247) and two S100/S102 quotes were
+lengthened to carry their own scope; the S102 gloss line is now quoted with its
+line break marked. The counters, predicate, target and kill rule are unchanged;
+the after-measurement was re-run on the narrowed commit.

@@ -77,6 +77,8 @@ two OLE `.doc` captures are read as the UTF-16LE text of the `.raw` file (their
 | S096 | `09fc63de41f293d43d631c46.txt` (.txt; sha256 `374d7dacf95c…`) | char 3599 | CiNii Researchの「参考文献」は、実際の論文の参考文献と必ずしも一致していません |
 | S096 | `09fc63de41f293d43d631c46.txt` (.txt; sha256 `374d7dacf95c…`) | char 3707 | 参考文献数も、論文での掲載数ではなく同定・統合された分をカウントしています。 |
 | S096 | `09fc63de41f293d43d631c46.txt` (.txt; sha256 `374d7dacf95c…`) | char 3752 | CiNii Researchでは、CiNii Articlesとは 文献の収録範囲が異なっており |
+| S096 | `09fc63de41f293d43d631c46.txt` (.txt; sha256 `374d7dacf95c…`) | char 3801 | （それに伴って）別の手法で同定・統合処理を行っているため |
+| S096 | `09fc63de41f293d43d631c46.txt` (.txt; sha256 `374d7dacf95c…`) | char 3577 | 随時増加していきます。 |
 | S097 | `167e9db7dde3c998838e3469.txt` (.txt; sha256 `ba7b2aa64899…`) | char 2760 | J-STAGEが連携している外部サービス に登録されている引用文献および被引用文献には、J-STAGEでの記事公開から数日～2週間後にDOIによるリンクが作成されます |
 | S097 | `167e9db7dde3c998838e3469.txt` (.txt; sha256 `ba7b2aa64899…`) | char 2607 | DOIがURLとして使用できるようになるには、J-STAGEでの公開から1日～数日程度かかります。 |
 | S098 | `fea98dc5a5a486c988dd415c.txt` (.txt; sha256 `ead3a7dd4ba9…`) | char 29482 | システムが引用元の所在を特定できた文献にリンクを付与しています |
@@ -89,13 +91,14 @@ two OLE `.doc` captures are read as the UTF-16LE text of the `.raw` file (their
 | S099 | `32d1d24b24fce96d2a078ec0.txt` (.txt; sha256 `0288da6eab57…`) | char 1694 | grew significantly in their ability to judge the credibility of digital content |
 | S100 | `b539a80218080da56a75b624.raw` (.raw UTF-16LE; sha256 `46d1866ce9af…`) | char 1296 | 中国知网他引频次的查询需要使用《中国引文数据库》。 |
 | S100 | `b539a80218080da56a75b624.raw` (.raw UTF-16LE; sha256 `46d1866ce9af…`) | char 1431 | 对于合作发文的参考文献中，如果引文出现了任一合作者，那么这条引文将被认定为自引 |
-| S100 | `b539a80218080da56a75b624.raw` (.raw UTF-16LE; sha256 `46d1866ce9af…`) | char 2861 | 被引频次为0的文献将不会显示 |
+| S100 | `b539a80218080da56a75b624.raw` (.raw UTF-16LE; sha256 `46d1866ce9af…`) | char 2843 | “文献来源”等方式进行组合查询，注：被引频次为0的文献将不会显示 |
 | S101 | `6dc68fd6b32ce9c8dfcebce8.raw` (.raw UTF-16LE; sha256 `6063a3aff7a4…`) | char 11205 | 每一篇文章或资料应根据其内容性质标识一个文献标志码 |
 | S101 | `6dc68fd6b32ce9c8dfcebce8.raw` (.raw UTF-16LE; sha256 `6063a3aff7a4…`) | char 11170 | 为便于文献的统计和期刊评价 |
 | S101 | `6dc68fd6b32ce9c8dfcebce8.raw` (.raw UTF-16LE; sha256 `6063a3aff7a4…`) | char 12161 | 文献类型及载体类型标志 |
 | S101 | `6dc68fd6b32ce9c8dfcebce8.raw` (.raw UTF-16LE; sha256 `6063a3aff7a4…`) | char 11993 | 本规范推荐采用GB/T 7714中规定的顺序编码制格式著录,也可采用GB/T 7714中规定的作者-出版年制。 |
 | S101 | `6dc68fd6b32ce9c8dfcebce8.raw` (.raw UTF-16LE; sha256 `6063a3aff7a4…`) | char 34374 | 参考文献格式，参照ISO 690 |
-| S102 | `7809d5114330a60527436b07.txt` (.txt; sha256 `e9f66647ee5f…`) | char 13260 | 「发表时间」「被引」「下载」 |
+| S101 | `6dc68fd6b32ce9c8dfcebce8.raw` (.raw UTF-16LE; sha256 `6063a3aff7a4…`) | char 13247 | 参照ISO 690及ISO 690-2，每一参考文献条目的末尾均以“.”结束。 |
+| S102 | `7809d5114330a60527436b07.txt` (.txt; sha256 `e9f66647ee5f…`) | char 13241 | 検索結果には、「篇名」「作者」「刊名」「发表时间」「被引」「下载」の他 |
 | S102 | `7809d5114330a60527436b07.txt` (.txt; sha256 `e9f66647ee5f…`) | char 13514 | 「下载」はそれぞれ文献の公開時期、被引用回数、ダウンロード回数を示します。 |
 | S102 | `7809d5114330a60527436b07.txt` (.txt; sha256 `e9f66647ee5f…`) | char 16123 | 当該文献を中心に年毎の参考、被引用の関係をビジュアルに提示 |
 | S103 | `02aefcf570a7108e699d0990.txt` (.txt; sha256 `32a5907e701f…`) | char 892 | CNKI AI 根据相关文献，生成可信增强回答。 |
@@ -163,6 +166,10 @@ section-14/parameter-table split. Normalisation stripped (lesson record, per sec
 Pre-append validation: the C1 counter's set-A mirror and W1 `ExecMirrorCensus.md`
 validated the nine-row scratch block (census exit 0); the eight-row block validated in
 `.ufo/waves/round-49/assimilation/validate/` (see `## Census`).
+
+### Wave-2 narrowing
+
+W2 `CritEntryAgg`, `CritEntryCCS` and `ReopenS096`–`ReopenS103` found glosses beyond the captures (an aggregator "never the source" rule the lane does not hold; rung 3 mis-described; "only because" exclusivity; an outbound count called inbound; the zero-row rule generalised beyond 高级检索; S103 attributed to the wrong university; scope/teaches cells outrunning captures). Both entries and six Registry cells were narrowed; quotes added at S096 chars 3577/3801 and S101 char 13247. See `corpus/evidence/round49/claims-erratum.md`.
 
 ### Outside spot-check
 

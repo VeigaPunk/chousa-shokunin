@@ -2558,3 +2558,33 @@ The carried R39/R40 receipt mismatch is expected historical revision drift, not 
 | adjacency | **unchanged** | `PROVINCE.md` remains scoped to chousa method; `.ufo/waves/round-48/w2/SiblingFit.md` found no sibling ownership overlap |
 
 Trends: expansion **unchanged** (no new knowledge entry on uncovered ground); quality **unchanged** (no corpus knowledge entry was re-admitted or failed a re-check; the measured tool work is C1 operability); discernment **unchanged** pending the required independent closure spot-check of `corpus/lessons/round-48.md` Gate decisions. Seats dispatched by this lane are not counted as non-authors.
+
+## Round 49 verdict — 2026-10-25 (section-10 adopter; derived-index theme adopted by document)
+
+Claims frozen in `corpus/evidence/round49/claims.md` at `fe740e7838b338d17fec9338c909557e6e7fed7d` after scoring do-nothing controls. Tool `65940928`→fixes `4ce61fc5`; adoption `1254ab26` and W2 narrowing (this round's final commit). After-measurement: `corpus/evidence/round49/measure-after.txt`. Post-freeze span-builder change and W2 narrowing disclosed in `corpus/evidence/round49/claims-erratum.md`. No fetch; L0 `8d77e6c1` open.
+
+| claim / axis | before → after | counting command | verdict | tag |
+|---|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10; capability) | `TOOL=absent C1=FAIL` exit 1; copy control `SETS_PASS=0/3`, GUARD/PIPE FAIL → `SETS_PASS=3/3`, GUARD PASS, PIPE PASS, `C1=PASS` exit 0 | `python3 corpus/evidence/round49/c1-count.py` | **improved narrowly**: conformance on fixed inputs; a replay of the tool's outputs also passes (W1 `CritForgeC1`); W2 perturbed-package and held-row probes passed (supplementary) | plumbing |
+| C2 depth (sourced) | `ENTRIES=0/2 BOUND=0/9 C2=FAIL` exit 1; staged-copy control `REF_ID_UNBOUND=11 C2=FAIL` → `BOUND=8/9 REFUSED=1 QUOTE_ROWS=31 CAPTURE_BOUND=31/31 ANCHOR_BOUND=8/8 INFERENCE_GROUNDED=2/2 QUARANTINE_VERDICTS=5/5 C2=PASS` exit 0 | `python3 corpus/evidence/round49/c2-count.py` | **improved**, subject to the closure's ruling on the disclosed post-freeze `build-spans.py` change (W2 `CritErratum`: C2 stands) | ground |
+
+The numeric operability scale remains 3/10; no other score is invented.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved narrowly** | C1; `tools/assimilate-rows.py` |
+| depth | **improved** | C2; two entries on eight re-opened captures, 31 located quotes, narrowed after W2 |
+| calibration | **improved narrowly** | a05 propagations corrected (`a05-check.py` 1→0); QUALITY 69 note, 72; registry `REGISTERED=104/104` |
+| coverage | **improved narrowly** | index derivation, link lag, resolution ladder and CNKI counter rules were not held (W1 `CritTheme`); the aggregator-is-not-the-source conclusion was held and earns nothing |
+| freshness | **unchanged** | newest readable capture 2026-10-24 23:26 -03; this round's captures 2026-10-23 (QUALITY 71) |
+| adjacency | **unchanged** | W1 `ConnSiblings`: no sibling overlap |
+
+## Capabilities (round-49 addition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| section-10 package adopter | turns staged campaign entries into census-valid lane rows and rewritten entries: by-document renumbering with one simultaneous substitution, held-row detection by census URL normalisation, normalised status/opened/recheck/used-by with the stripped text logged, 0–3-space collision lists | `tools/assimilate-rows.py`; `corpus/evidence/round49/c1-count.py` | 49 |
+
+## Planned — round 50 (not started)
+
+Candidates: add a perturbed-input leg to the adopter counter (QUALITY 72); adopt the next same-theme package entry (`cnki-citation-check-r40.md`) with an NCPSSD help-page row; fold `quote-substance-check.py` into the next span counter before freezing.
