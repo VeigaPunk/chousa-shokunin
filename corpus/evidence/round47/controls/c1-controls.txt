@@ -1,0 +1,31 @@
+# R47-C1 controls — each scored by the frozen counter on the freeze tree
+
+$ python3 corpus/evidence/round47/c1-count.py --tool corpus/evidence/round47/controls/base-tool-r46.py
+TOOL=present
+POSITIVE_PASS=3/3
+JUNK_KILLED=0/3
+CANARY=fail
+R46_COUNTER=pass
+R46_ENTRIES=2/2
+C1=FAIL
+exit=1
+
+$ python3 corpus/evidence/round47/c1-count.py --tool corpus/evidence/round47/controls/always-exit-1.py
+TOOL=present
+POSITIVE_PASS=0/3
+JUNK_KILLED=3/3
+CANARY=fail
+R46_COUNTER=fail
+R46_ENTRIES=0/2
+C1=FAIL
+exit=1
+
+$ python3 corpus/evidence/round47/c1-count.py --tool corpus/evidence/round47/controls/neg-word-refuser.py
+TOOL=present
+POSITIVE_PASS=1/3
+JUNK_KILLED=3/3
+CANARY=fail
+R46_COUNTER=fail
+R46_ENTRIES=0/2
+C1=FAIL
+exit=1

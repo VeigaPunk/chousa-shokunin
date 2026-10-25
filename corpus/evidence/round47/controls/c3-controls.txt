@@ -1,0 +1,53 @@
+# R47-C3 controls
+
+## 1. the two staged entries copied unchanged into a freeze-tree copy
+$ python3 corpus/evidence/round47/c3-count.py --root <copy>
+ENTRIES=2/2
+CITES_BOUND=0/6
+QUOTE_ROWS=0 (min 12)
+SPAN_IDS=0/6
+QUOTES_IN_SPAN=0/0
+QUOTES_IN_ENTRY=0/0
+SPAN_CONTEXT=0/0
+CAPTURE_BOUND=0/0
+REF_ID_UNBOUND=17
+ANCHOR_BOUND=0/6
+INFERENCE_GROUNDED=0/2
+QUARANTINE_VERDICTS=0/4
+QUARANTINE_ABSENT_ADOPTED=0
+C3=FAIL
+exit=1
+
+## 2. copy 1 plus a self-consistent 12-row manifest with invented zero digests and a shared invented quote
+$ python3 corpus/evidence/round47/c3-count.py --root <copy> --lane-only
+ENTRIES=2/2
+CITES_BOUND=0/6
+QUOTE_ROWS=12 (min 12)
+SPAN_IDS=6/6
+QUOTES_IN_SPAN=12/12
+QUOTES_IN_ENTRY=6/12
+SPAN_CONTEXT=12/12
+CAPTURE_BOUND=skipped
+REF_ID_UNBOUND=17
+ANCHOR_BOUND=0/6
+INFERENCE_GROUNDED=0/2
+QUARANTINE_VERDICTS=0/4
+QUARANTINE_ABSENT_ADOPTED=0
+C3=FAIL
+exit=1
+$ python3 corpus/evidence/round47/c3-count.py --root <copy>
+ENTRIES=2/2
+CITES_BOUND=0/6
+QUOTE_ROWS=12 (min 12)
+SPAN_IDS=6/6
+QUOTES_IN_SPAN=12/12
+QUOTES_IN_ENTRY=6/12
+SPAN_CONTEXT=12/12
+CAPTURE_BOUND=0/12
+REF_ID_UNBOUND=17
+ANCHOR_BOUND=0/6
+INFERENCE_GROUNDED=0/2
+QUARANTINE_VERDICTS=0/4
+QUARANTINE_ABSENT_ADOPTED=0
+C3=FAIL
+exit=1
