@@ -1,0 +1,79 @@
+kimi version 2.3.1
+• The task: show from the lane's own files that lane id S079 is bound to the RFC 7089 URL by document, not by arithmetic. I need to:
+
+  1. Quote the URL cell of lane row S079 in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md
+  2. Quote the staged row id and URL cell for the same URL in /home/vgpnk/Projects/shokuknow/merge/chousa/SOURCES.append.md
+  3. State what the arithmetic alternative would have produced and why it's wrong.
+
+  Wait — but the leaf seat instructions say "Never modify ... the fleet repo, a sibling repo, or /home/vgpnk/Projects/shokuknow." Reading is fine, though. Writing is only to the report path.
+
+  Let me read both files. RFC 7089 is the "Linkset" RFC? Actually RFC 7089 doesn't exist... RFC 7089 — let me not speculate; the URL will tell. Actually RFC 7089 is not a real RFC number I know (RFC 7089 doesn't exist as far as I recall; the last RFCs in the 70xx range... RFC 7089 might be fictional in this corpus). I'll just find it.
+
+  Let me search both files in parallel.I have both quotes.
+
+  Lane file (corpus/SOURCES.md, line 89):
+  `| S079 | RFC 7089, HTTP Extension for Time-Based Access to Resource States — Memento — https://www.rfc-editor.org/rfc/rfc7089.txt | spec | A | ...`
+
+  Staged file (SOURCES.append.md, line 9):
+  `| S081 | RFC 7089, HTTP Extension for Time-Based Access to Resource States - Memento — https://www.rfc-editor.org/rfc/rfc7089.txt | spec | A | ...`
+
+  So the staged row id is S081, the lane row id is S079, and both carry the identical URL cell `https://www.rfc-editor.org/rfc/rfc7089.txt`.
+
+  The arithmetic alternative: S079 + the number of rows between staged and lane? Let me think. What would "arithmetic" mean? Presumably: since the staged row for this URL is S081, arithmetic mapping (staged id minus offset, or staged id maps to lane id by position/count of prior staged rows included) would have produced a different lane id. From the round-44 log line: "included 2 (S079 RFC 7089, staged URL S081; S080 WARP FAQ staged S091; S081 E2867 staged S092)". So the arithmetic alternative: taking the staged row id S081 as-is, or mapping staged S081 → lane S081 — but lane S081 is already occupied by the NDL E2867 entry. Let me check what S081 is in the lane file: line 91 shows `| S081 | NDL current-awareness E2867...`. So arithmetic (carrying the staged id forward unchanged) would collide with the existing lane row S081 (E2867), i.e., it would overwrite/mis-bind the RFC 7089 URL onto a lane row that documents a different URL.
+
+  Also the round-44 log explicitly says "Ids assigned by URL to the next free lane ids, not by arithmetic."
+
+  Let me verify the lane S081 row and count lane rows to confirm "next free lane id" = S079. Let me also check the header of SOURCES.md to quote the URL column, and check whether there are rows after S081 in the lane file (are S079-S081 the last rows?). Also check the append file structure — what's the offset between staged and lane numbering? Let me look at the beginning of both files.
+
+  Let me do a quick verification pass: list lane row ids around there and confirm S079's URL cell exactly, check the lane file header row, and check whether any earlier staged row with the same URL exists (id assignment "by URL" — i.e., match on URL, not id). Also confirm the append file only has these rows (staged ids S079...S093?) to describe the arithmetic alternative precisely.
+
+  The arithmetic alternative: if ids were assigned arithmetically — staged id minus a fixed offset computed from the first mapped pair, or simply carrying the staged id over — you'd get a collision. Concretely: staged S081 carried over → lane S081, which already holds the NDL E2867 row (different URL). The observed mapping staged S081 → lane S079 is not a constant offset either (S079→? for other rows: staged S091 → lane S080, staged S092 → lane S081 — offsets of -2, -11, -11... wait: staged S081→lane S079 (offset -2), staged S091→lane S080 (offset -11), staged S092→lane S081 (offset -11). So the offsets differ between rows — meaning no single arithmetic offset reproduces the binding; it's per-URL: the RFC 7089 URL's staged row S081 was matched to lane row S079 because that lane row already documents the same URL (from an earlier round, dated 2026-10-24 in lane file vs staged 2026-10-23 — hmm, actually the lane row says mined 2026-10-24, staged says 2026-10-23).
+
+  Wait — actually the binding direction: the round-44 log says "included 2 (S079 RFC 7089, staged URL S081; ...)". So lane S079 existed? Or was created? Lane row S079 has "mined 2026-10-24" and 365d refresh, referencing citation-version-binding-r36.md. Staged S081 has mined 2026-10-23. Hmm — the lane round-44 entry says ids assigned by URL to the next free lane ids. Two readings:
+
+  (a) Lane S079 pre-existed (from an earlier round) and round 44 matched staged S081 to it by URL, i.e., the same URL is already documented at lane id S079 — so the lane cites it as S079, not S081.
+
+  (b) Round 44 assigned the next free lane id S079 to the RFC 7089 URL regardless of its staged id S081.
+
+  Either way, the key claim: the binding of URL ↔ lane id S079 is documented in the lane row itself (URL cell), and the staged row for the same URL carries id S081. An arithmetic rule (carry staged id, or fixed offset) would produce S081 in the lane — which already names the NDL E2867 URL (https://current.ndl.go.jp/e2867) — a collision with a different document.
+
+  Let me check the lane file header and the exact URL column position, plus whether S079 is the last row before the round log. Also confirm no other lane row has the rfc7089 URL. And check the append file's first rows (staged S079 = PRISMA-S) to characterize the offset difference. Let me also count lane rows to see the "next free" logic. Quick greps.amendments
+knowledge
+MERGE-REPORT.json
+MERGE-REPORT.md
+SOURCES.append.md
+   117 /home/vgpnk/Projects/shokuknow/merge/chousa/SOURCES.append.md
+   282 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md
+   399 total
+Now let me confirm the "next free lane id" claim: the lane table rows end at S081 (line 91), then line 92 is blank/`--`. So lane rows run S001..S081, and round 44 assigned S079 (RFC 7089), S080 (WARP FAQ), S081 (E2867). Wait, but if S079–S081 were assigned this round as "next free", then before round 44 the table ended at S078. The log line: "included 2 (S079 RFC 7089, staged URL S081; S080 WARP FAQ staged S091; S081 E2867 staged S092)". So all three lane ids S079/S080/S081 were assigned in round 44, mapping staged ids S081→S079, S091→S080, S092→S081.
+
+  Check offsets: S081→S079 = −2; S091→S080 = −11; S092→S081 = −11. No constant offset. So a single arithmetic rule (e.g., "lane id = staged id − k") cannot reproduce the binding; and the naive alternative "carry the staged id across unchanged" (offset 0) would put RFC 7089 at lane S081 — which in the landed table is the NDL E2867 row (https://current.ndl.go.jp/e2867), a different document. That's the collision.
+
+  Let me verify the header/col structure of the append file (line 1–6) to quote the staged row properly, and check that lane S080 is indeed WARP FAQ (line 90, yes) and lane S081 E2867 (line 91, yes). Also confirm the last lane row before the log is S081 and what's at line 92.
+
+  Also worth grabbing: the exact URL cell text in both — lane uses "—" em-dash separators, staged uses " - " hyphen, but the URL cell itself is identical: https://www.rfc-editor.org/rfc/rfc7089.txt.
+
+  Let me read the append file header lines 1–10 partially — I already have lines 7–12 from grep with context. Get lines 1–6 of append file for column header names, to name the "URL cell" column precisely. Also check the MERGE-REPORT.md for how ids were mapped — that would strengthen the document-based binding. Quick reads.The MERGE-REPORT says: "lane registry currently holds **78** rows; first staged id is **S079**". So the arithmetic alternative: appending staged rows continuing from... wait, actually the arithmetic is subtle. The staged file's first id is S079 and lane holds 78 rows (S001–S078). So naive arithmetic "next free lane id = last lane id + 1 = S079, assign in staged order" would map staged S079 (PRISMA-S) → lane S079. But the landed lane S079 is RFC 7089, whose staged row is S081. So the arithmetic alternative would have produced lane S079 = PRISMA-S (doi.org/10.1186/s13643-020-01542-z), not RFC 7089.
+
+  And more specifically for S079/URL binding: the arithmetic alternative — "lane id = staged id − 2" (offset from staged-file position: staged row 3 = S081 → ...)? Let me compute what arithmetic would give S079 for staged S081: staged S081 is the 3rd data row of the append file (rows: S079 line 7, S080 line 8, S081 line 9). Lane has 78 rows, so arithmetic "position + 78": 3rd staged row → lane 81 → S081. Or "staged id carried over" → S081. Either arithmetic route → S081, which lands on the row that in the landed table is NDL E2867 — or would collide.
+
+  Hmm wait, actually let me reconsider. The lane table's row ids: before round 44 merge, lane held S001–S078 (78 rows). Round 44 included 2 of these staged entries into the lane, assigning the next free lane ids S079 and S080... but the landed table has S079 (RFC 7089), S080 (WARP FAQ), S081 (E2867) — three new rows dated 2026-10-24, mined. The round-44 log says "included 2 (S079 RFC 7089, staged URL S081; S080 WARP FAQ staged S091; S081 E2867 staged S092)". Confusing — "included 2" then lists three pairs; probably 2 new sources (RFC 7089, WARP FAQ) plus S081 E2867 re-pointed (E2867 was... lane S081 mined 2026-10-24; log says "S081 E2867 staged S092"). Fine — the exact round mechanics aren't my scope. My scope: show the binding is by document (URL cell match) not arithmetic.
+
+  Key evidence:
+  1. Lane row S079's URL cell = `https://www.rfc-editor.org/rfc/rfc7089.txt` (corpus/SOURCES.md:89). Only one row in the lane file contains "rfc7089" — S079.
+  2. Staged row for the same URL: SOURCES.append.md:9, id **S081**, same URL cell.
+  3. Arithmetic alternatives:
+     a. Carry the staged id (offset 0): RFC 7089 would sit at lane S081 — but landed lane S081 is the NDL E2867 row (https://current.ndl.go.jp/e2867), a different document. Collision with a different URL.
+     b. Positional arithmetic: staged row is 3rd data row; lane holds 78 rows pre-merge → 78+3 = row 81 → S081. Same wrong answer.
+     c. First-staged arithmetic: MERGE-REPORT.md:9 says "lane registry currently holds 78 rows; first staged id is S079" — naive continuation "staged order + offset" would make lane S079 = staged S079 = PRISMA-S (https://doi.org/10.1186/s13643-020-01542-z), not RFC 7089. I.e., the landed S079's source cell differs from what the arithmetic continuation predicts.
+  4. The round-44 log line itself (SOURCES.md:255) ends: "Ids assigned by URL to the next free lane ids, not by arithmetic."
+  5. Offsets differ per row (S081→S079 = −2; S091→S080 = −11; S092→S081 = −11), so no constant offset reproduces the landed binding — only the URL match does.
+
+  One more check to nail (c): confirm the append file's first staged row is S079/PRISMA-S — yes, line 7 of SOURCES.append.md: `| S079 | PRISMA-S ... https://doi.org/10.1186/s13643-020-01542-z | paper | ...`. So the staged file itself uses id S079 for a *different* source than the lane's S079. That's the crispest demonstration: the same id string "S079" names different documents in the two files, and the binding is carried by the URL cell, not the id.
+
+  Also verify the em-dash vs hyphen in the source cells: lane "RFC 7089, HTTP Extension for Time-Based Access to Resource States — Memento" vs staged "RFC 7089, HTTP Extension for Time-Based Access to Resource States - Memento" — the title differs by separator, URL identical. Good detail for "bound by document (URL), not by id or arithmetic".
+
+  I have everything. Write the report. Keep it tight, quotable, with file:line cites. Path: /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w3/W3SimpIds.md.
+
+• Both quotes are in hand. Writing the report.
+

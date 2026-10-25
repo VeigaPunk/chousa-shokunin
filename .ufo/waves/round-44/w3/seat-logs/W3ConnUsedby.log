@@ -1,0 +1,157 @@
+kimi version 2.3.1
+• Let me start by reading the SOURCES.md file to check the used-by cells for S079, S080, S081, and grep the lane tree for citations of these ids.
+
+  I should do this in parallel batches. Let me first read the SOURCES.md file and grep for the three ids simultaneously.The task: check the used-by cell of rows S079, S080, S081 in corpus/SOURCES.md. Then grep the lane tree for which files cite each of the three ids. Then say whether the used-by cell names exactly those files and no others.
+
+  From the Read of SOURCES.md:
+
+  - S079 (line 89): used-by = `corpus/knowledge/citation-version-binding-r36.md`
+  - S080 (line 90): used-by = `corpus/knowledge/citation-version-binding-r37.md`
+  - S081 (line 91): used-by = `corpus/knowledge/citation-version-binding-r37.md`
+
+  Now I need to determine "which files cite each of the three ids (grep the lane tree)". The lane tree — the repo /home/vgpnk/Projects/shokunin/chousa-shokunin. But the grep results include a lot of noise: seat-logs, wave reports, .prompt files, etc. The meaningful "files that cite" — production files vs wave/report files. The used-by cell presumably should name the knowledge entries that cite the source. The question asks: "List exactly which files cite each of the three ids (grep the lane tree), and say whether the used-by cell names exactly those files and no others."
+
+  So I should grep the lane tree and list files that contain the id as a citation. Need to be careful about false positives:
+  - "S079" could appear in seat-logs and wave reports (those are process artifacts, not production citations).
+  - Also SOURCES.md itself contains the row (self-reference, not a citation).
+  - There may be files like corpus/lessons/round-44.md mentioning S079.
+  - The .ufo/waves/round-44/assimilation/validate/... copies are mirrors of production files.
+
+  Let me get actual content matches to distinguish citations in production files (corpus/knowledge/*.md) vs mentions elsewhere. Let me grep with content mode for each id, excluding .ufo maybe. But the task says "grep the lane tree" — list exactly which files cite each. I'll gather both: production-tree matches (corpus/, tools/, etc.) and note .ufo/ wave artifacts separately.
+
+  Also important: substring collisions — S079 might match "S079" inside longer tokens? There are no ids beyond S081 currently. But "S080" could be a substring of... no. Also note S0079? No. But careful: ids like S008 contain "S00"... "S079" is distinct. However "S080" might appear as part of "S0801"? Unlikely.
+
+  Also the staged-ids file `.ufo/waves/round-44/assimilation/staged-ids` contains S079/S080/S081 mentions (staged mapping). And guard files.
+
+  Let me now grep with content mode in production areas:
+  - corpus/knowledge/*.md for each id
+  - corpus/lessons/round-44.md
+  - Also check tools/ for any references.
+
+  Let me run content greps to see the exact lines. Also check the knowledge entries citation-version-binding-r36.md and r37.md content to see which ids they cite.
+
+  Also need to check whether the used-by cell names exactly those files: used-by cells only cover corpus/knowledge files. If, say, corpus/lessons/round-44.md also cites S079, does the contract require lessons in used-by? The question just asks me to compare and report. I should report the facts.
+
+  Note: the greps above show W2ScribeRow.log and W2ScribeRow.md mention S079 etc. — those are wave artifacts (process), not production citations. The "lane tree" grep includes them, but I should distinguish "files that cite" (i.e., production records that use the id as a source citation) vs incidental mentions in seat logs/reports. I'll present both categories with precision.
+
+  Also the validate copies under .ufo/waves/round-44/assimilation/validate/corpus/... mirror production files — they are byte copies presumably.
+
+  Let me do content greps now. Also read the two knowledge files.
+
+• Read and greps done. Now pulling the actual match lines to separate production citations from wave-artifact mentions:
+
+• Now let me analyze what I have.
+
+  **Used-by cells (from SOURCES.md lines 89-91):**
+  - S079: `corpus/knowledge/citation-version-binding-r36.md`
+  - S080: `corpus/knowledge/citation-version-binding-r37.md`
+  - S081: `corpus/knowledge/citation-version-binding-r37.md`
+
+  **Files in the lane tree that contain each id (from the greps):**
+
+  Files matching S079:
+  - corpus/SOURCES.md (rows + search log)
+  - corpus/knowledge/citation-version-binding-r36.md (cites S079 — `source: S079` line 3, observations)
+  - corpus/knowledge/citation-version-binding-r37.md (mentions S079 in ground and inference — references RFC 7089 as protocol, "That limit is S079's")
+  - corpus/lessons/round-44.md (mentions)
+  - corpus/evidence/round44/claims.md, c3-count.py, seat-logs/*.prompt (mentions)
+  - .ufo/waves/... (wave artifacts: W2/W3 reports, seat logs, dispatch/plan/spec JSON, assimilation mirrors)
+
+  Files matching S080:
+  - corpus/SOURCES.md
+  - corpus/knowledge/citation-version-binding-r37.md (cites S080 — `source: S080` line 3)
+  - corpus/lessons/round-44.md
+  - corpus/evidence/round44/seat-logs/ScribeRows.prompt (mentions)
+  - Round-43/42 files: corpus/lessons/round-43-verifier-spotcheck.md, corpus/evidence/round43/absent-split.tsv, corpus/evidence/round42/quarantine-verdicts.tsv, corpus/evidence/round42/receipts/verdict.txt, examine.txt — these reference "S080" but as a STAGED campaign id (the campaign tree staged ids, not lane ids!). Important: in the round-42/43 campaign context, S080 is a staged id of the campaign (different document — GB detail page, classed not-carried/absent). That's a different id-space collision. These are corpus/evidence files though — in the lane tree. Hmm, are those "citations" of lane S080? No — they refer to the campaign's staged id S080, a different document. But the grep-level fact is they contain the token "S080".
+  - .ufo/waves/... artifacts
+
+  Files matching S081:
+  - corpus/SOURCES.md
+  - corpus/knowledge/citation-version-binding-r36.md (mentions staged S081 — "The staged citation id was S081", "The entry does not cite source: S081")
+  - corpus/knowledge/citation-version-binding-r37.md (cites S081 — `source: S081` line 4)
+  - corpus/lessons/round-44.md
+  - corpus/evidence/round44/claims.md, c3-count.py, seat-logs prompts
+  - corpus/evidence/round43/absent-split.tsv? Let me check: the round-43 spotcheck line listed "not-carried S080 S082 S086 S088 S104 S114" — that's in corpus/lessons/round-43-verifier-spotcheck.md. absent-split.tsv line 1 shows S080. For S081, the third grep listed `.ufo/waves/round-43/assimilation/staged-ids` and `corpus/evidence/round33/w1/ExecD1CounterV3/receipts/r31-raw.stdout`. Hmm, r31-raw.stdout containing S081? Probably a staged id in round 33 context. Let me check those files to characterize.
+
+  Also `.ufo/waves/round-44/assimilation/staged-ids` and guard files contain these tokens.
+
+  The question: "List exactly which files cite each of the three ids (grep the lane tree), and say whether the used-by cell names exactly those files and no others."
+
+  The used-by cell is meant to name the files (knowledge entries) that use/cite the source. So the comparison should be: which files *cite* each id (i.e., use it as a source citation — `source: S0xx` or explicit citation) vs what the used-by cell names.
+
+  Key findings:
+  1. **S079**: cited by corpus/knowledge/citation-version-binding-r36.md (source: S079). Also corpus/knowledge/citation-version-binding-r37.md references S079 in its ground ("RFC 7089 (S079) is the protocol") and inference ("That limit is S079's") — it names S079 but does not have `source: S079` line. Is that a "citation"? It's a cross-reference to another entry's source. The used-by cell for S079 names only r36. If we count r37's explicit naming of S079 as a use, then used-by is incomplete. This is exactly the kind of falsification finding the wave wants. The gate's own convention (c3-count.py): `cites = "source: S079 —" in text and "source: S081 —" not in text` — so the lane's operational definition of "cites" is the `source: Sxxx —` line. Under that definition, r37 mentions S079 but doesn't "cite" it.
+
+  Hmm. I should report both readings: strict (`source:`-line citations) and token-level mentions in corpus/ production files. And be careful to flag the id-space collision: token "S080" in round-42/43 campaign files refers to a different document (campaign staged id S080, GB detail page), not lane source S080 (WARP FAQ). Similarly "S081" tokens in round-33 receipts and r36/r37 files refer to staged ids.
+
+  2. **S080**: cited by corpus/knowledge/citation-version-binding-r37.md (source: S080). No other corpus file has a `source: S080` line. Used-by names exactly r37. ✓ (modulo the collision files that mention "S080" as a different, campaign-staged id: round-43-verifier-spotcheck.md, round-43/absent-split.tsv, round-42/quarantine-verdicts.tsv, round-42/receipts/verdict.txt, round-42/receipts/examine.txt.)
+
+  Wait — round-43/absent-split.tsv and round-42 files: are they in the lane tree? Yes: corpus/evidence/round43/absent-split.tsv etc. These are committed lane evidence files that contain the token S080 but as campaign staged ids. Note SOURCES.md search log round-42/43 says the campaign's staged ids. So they're different id-space — not citations of the lane S080 row.
+
+  3. **S081**: cited by corpus/knowledge/citation-version-binding-r37.md (source: S081). Used-by names exactly r37. ✓. But r36 mentions staged S081 ("does not cite source: S081") — a negation, not a citation. c3-count.py encodes that check.
+
+  Also SOURCES.md itself contains the ids (registry rows and search log) — self-references, not "used-by" candidates.
+
+  Now, what about the strict question "whether the used-by cell names exactly those files and no others":
+  - For S079: strict citation reading — used-by = r36 only; the only `source: S079` is in r36. Match. Loose reading — r37 also names S079 (twice: ground + inference). If "names the id as supporting a claim" counts, used-by misses r37. I should flag this as a boundary finding: S079's used-by cell does not list r37 even though r37's ground and inference sections lean on S079 by name ("RFC 7089 (S079) is the protocol", "That limit is S079's, and it still applies"). Whether that's a defect depends on the lane's used-by convention. The convention appears to be: used-by lists entries whose `source:` line names the id (per c3-count.py's definition and per ScribeRows.prompt: "S079 recheck 365d used-by the r36 entry; S080 and S081 used-by the r37 entry"). Under that convention the cells are exact.
+
+  Let me verify there are no other `source: S079|S080|S081` occurrences anywhere in the tree. Let me grep for `source: S079|source: S080|source: S081` across the whole repo. Also check tools/ (e.g., tools/quarantine-check.py cites S077 — not relevant). Also check whether any other knowledge entry mentions S079 etc. The corpus grep covered corpus/ fully. Let me also grep outside corpus (tools/, docs/, root) — the earlier repo-wide greps listed all matches; outside corpus and .ufo, I saw only corpus files. Let me double check the repo-wide lists:
+
+  S079 files (repo-wide): .ufo/... stuff, corpus/SOURCES.md, corpus/knowledge/citation-version-binding-r36.md, r37.md, corpus/lessons/round-44.md, corpus/evidence/round44/seat-logs/*.prompt, corpus/evidence/round44/claims.md, c3-count.py. That's all non-.ufo.
+
+  S080: same plus corpus/lessons/round-43-verifier-spotcheck.md, corpus/evidence/round43/absent-split.tsv, corpus/evidence/round42/quarantine-verdicts.tsv, corpus/evidence/round42/receipts/verdict.txt, corpus/evidence/round42/receipts/examine.txt.
+
+  S081: plus corpus/evidence/round44/seat-logs (ScribeRows, ScribeEntryR36, MutArithmeticId), .ufo/waves/round-43/assimilation/staged-ids, corpus/evidence/round33/w1/ExecD1CounterV3/receipts/r31-raw.stdout.
+
+  Let me check r31-raw.stdout to see the S081 context (round-33 — surely a different id-space, e.g. a count or hash). And check the round-43 staged-ids file. Quick greps with content for those two files. Also confirm `source: S079`-style grep repo-wide.
+
+  Then write the report. The report path: /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w3/W3ConnUsedby.md.
+
+  Also I should paste the three used-by cells verbatim.
+
+  Axes (godspeed): operability (did the check run, reproducible commands), calibration (exact match claims, distinguish citation vs mention vs id-space collision), depth (the r37-references-S079 boundary finding and the campaign staged-id collision S080).
+
+  Let me run the confirmation greps now:
+  1. Grep repo-wide for `source: S07[89]|source: S08[01]` content mode.
+  2. Grep r31-raw.stdout for S081 content.
+  3. Read .ufo/waves/round-43/assimilation/staged-ids (small file probably).
+  4. Also grep tools/ for the ids to be thorough (repo-wide greps already covered; tools/quarantine-check.py didn't appear, fine).
+
+  Also maybe check `.ufo/waves/round-44/assimilation/validate/` mirrors contain the same — they're copies; they appeared in results (validate/corpus/SOURCES.md etc.). Good to note as mirrors, not independent citations.
+
+  One more check: the `.prompt` and `.log` files under corpus/evidence/round44/seat-logs are committed in corpus/evidence — they're lane evidence of seat prompts. They mention ids. Not citations.
+
+  Let me run the three quick checks in parallel.
+
+• Registry rows and both knowledge entries are in hand. Two boundary questions remain: does any file anywhere hold a `source: S0xx` line other than the two entries, and what are the `S080`/`S081` tokens doing in the round-42/43 and round-33 files (id-space collision check):
+
+• Interesting. A few things:
+
+  1. The `source: S079|S080|S081` grep repo-wide (excluding .ufo matches which are process artifacts, plus mirrors/drafts):
+     - `corpus/knowledge/citation-version-binding-r36.md:3` — `source: S079` (production)
+     - `corpus/knowledge/citation-version-binding-r37.md:3` — `source: S080` (production)
+     - `corpus/knowledge/citation-version-binding-r37.md:4` — `source: S081` (production)
+     - `corpus/evidence/round44/seat-logs/ScribeEntryR36.prompt` — "citing source: S079 ... Do not cite source: S081" (evidence of seat prompt)
+     - `corpus/evidence/round44/c3-count.py` — check strings (evidence tool)
+     - `corpus/evidence/round44/claims.md` — "The entry does not cite `source: S081`" (claim spec)
+     - `.ufo/waves/round-44/assimilation/draft/...` and `.ufo/waves/round-44/assimilation/validate/corpus/...` — drafts/mirrors of the production files (same content, non-production locations)
+     - round-43 w1 reports mention `source: S079 — https://doi.org/10.1186/...` (ScribeRejects.md) — that's round-43 wave artifact referring to the CAMPAIGN staged id space (S079 = PRISMA-S DOI there, S080 = Cochrane chapter-04). Confirms staged-id-space collision.
+
+  2. The r31-raw.stdout file no longer exists — the earlier repo-wide grep for S081 listed `.ufo/waves/round-33/w1/ExecD1CounterV3/receipts/r31-raw.stdout` (note: under `.ufo/waves/round-33`, not corpus/evidence). My path guess was wrong (I dropped the `.ufo/waves` prefix). It's a round-33 wave artifact anyway — non-production. I don't need to chase it deeply, but the round-43 staged-ids list (S077–S185) shows that in the campaign's staged id space S079/S080/S081 are arbitrary staging ids — so any token match in round-33/42/43 campaign files is a different id-space, not a citation of the lane rows.
+
+  Wait — one nuance about corpus/evidence files mentioning S080: corpus/evidence/round43/absent-split.tsv, corpus/evidence/round42/quarantine-verdicts.tsv, round-42 receipts, corpus/lessons/round-43-verifier-spotcheck.md. These are committed in the lane's corpus/evidence tree. They use campaign staged ids (the round-42/43 quarantine campaign over the shokuknow campaign register). E.g., round-43-verifier-spotcheck.md line 60: "not-carried S080 S082 S086 S088 S104 S114" — campaign staged S080 is the GB detail page (absent/not-carried), definitely not lane S080 (WARP FAQ). And corpus/evidence/round44/claims.md line 78-96 uses lane S079/S081. So the token "S080" appears in the lane tree in two id-spaces. This is a real calibration finding: a naive used-by backlink checker that greps for the token would over-report.
+
+  Note S036's scope mentions META_SOURCE_USEDBY_MISSING branches — the gate checks used-by backlinks. How does the gate check? That's tools/research-gate.sh verify_metadata. The contract per S036: "local ID, mined-status, exact-rooted backlink and descriptive verified-at screening". "Exact-rooted backlink" — the gate checks that the used-by path exists (backlink). Whether it greps content for the id, I don't know. I shouldn't overclaim. I could check tools/research-gate.sh for the used-by check quickly to calibrate the claim about which direction is verified. Let me grep for USEDBY in tools/research-gate.sh.
+
+  Actually, scope: my seat is to compare used-by cells vs files that cite the ids. Checking the gate's used-by mechanics is a bonus depth item, cheap. Let me do it.
+
+  3. Also confirm there are no production files outside corpus/ that cite these ids (tools/, README, etc.). The repo-wide greps at the start covered the whole repo; matches outside corpus/ and .ufo/ — none listed. Good. But wait: the initial greps may have been limited to 100 results? The S079 grep returned ~45 lines, S080 ~60, S081 ~60 — under 100, so complete. Good.
+
+  Also note: the log file `.ufo/waves/round-44/w3/seat-logs/W3ConnUsedby.log` contains my own session's echoed reasoning (the log captures my turns). Funny but fine — it's a seat-log artifact, I'll list it as an artifact mention without quoting its content as evidence.
+
+  Let me now check the gate's used-by mechanics in tools/research-gate.sh to calibrate "what used-by is checked against".
+
+• The round-43 `staged-ids` list (S077–S185) confirms the campaign staged id-space is disjoint from lane registry ids — token matches in round-42/43 campaign files are a different id-space. The `r31-raw.stdout` path I guessed doesn't exist; the real match was under `.ufo/waves/round-33/` (a wave artifact, not production). One calibration check left — how the gate itself treats `used-by` (S036 says "exact-rooted backlink"):
+
+• Let me see the rest of `metadata_registry_check_source` to understand the used-by backlink check mechanics — does it grep the used-by file(s) for the id token?
+

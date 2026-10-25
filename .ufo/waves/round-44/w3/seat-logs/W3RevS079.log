@@ -1,0 +1,211 @@
+kimi version 2.3.1
+• Let me execute the task. I need to:
+
+  1. Read the S079 row of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md
+  2. Count the number of columns it splits into on '|' and say whether any cell contains a literal or escaped pipe
+  3. Confirm that citation-version-binding-r36.md cites 'source: S079' and does not cite 'source: S081'. Quote the citation line.
+  4. Write report at /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w3/W3RevS079.md
+
+  Let me start by reading the SOURCES.md file and the citation file in parallel.Now I need to:
+
+  1. Read the S079 row of SOURCES.md — line 89.
+  2. Count the number of columns it splits into on '|'.
+  3. Say whether any cell contains a literal or escaped pipe.
+  4. Confirm citation-version-binding-r36.md cites 'source: S079' and does not cite 'source: S081'. Quote the citation line.
+
+  Line 89 is:
+  `| S079 | RFC 7089, HTTP Extension for Time-Based Access to Resource States — Memento — https://www.rfc-editor.org/rfc/rfc7089.txt | spec | A | binding a citation to a timestamped prior state; the document puts archive veracity out of scope | section 2.1.1 of the committed capture, no fetch | a Memento-Datetime header is a promise that the reflected resource state will no longer change; an archived body may not be byte-to-byte the same as what the origin served | mined | 2026-10-24 | 365d | corpus/knowledge/citation-version-binding-r36.md |`
+
+  Let me count pipes precisely with a shell command. The header has: id | source | kind | tier | scope | anchor | teaches | status | opened | recheck | used-by = 11 columns. A well-formed row should have 12 pipes (leading + trailing + 9 separators = 12 pipes → 11 cells).
+
+  Let me verify with a command. I need to be careful about escaping backslash-pipe (escaped pipe `\|`). Let me run:
+
+  - Count of '|' occurrences in the S079 line.
+  - Count of '\|' occurrences.
+  - Split on unescaped '|' and count cells.
+
+  Also check the citation file for 'source: S079' and absence of 'source: S081'. From the Read: line 3 is:
+
+  `source: S079 — https://www.rfc-editor.org/rfc/rfc7089.txt — section 2.1.1, byte offset 14896 of the committed capture — RFC 7089, February 2013, Informational`
+
+  But note line 27 mentions "The staged citation id was S081." — that's a mention of S081, but not in the form 'source: S081'. So I should check for the exact string 'source: S081' and also 'source: S081' as grep. Let me grep precisely.
+
+  Let me run precise commands:
+
+  1. Extract line 89, count pipes: `awk 'NR==89' SOURCES.md | tr -cd '|' | wc -c`
+  2. Count escaped pipes: `awk 'NR==89' | grep -o '\\\\|' | wc -l` — need care with escaping. Better: use grep -o on the raw line for the literal backslash-pipe sequence. In shell, `grep -o '\\|'` means pattern `\\|` which matches literal `\|`? In basic grep regex, `\\` matches literal backslash, then `|` matches literal pipe. Actually in BRE, `|` is a literal character unless escaped... no wait, in BRE `|` is literal. So `grep -o '\\|'` pattern is backslash-backslash-pipe = escaped backslash then literal pipe → matches `\|`. Hmm, `\\` in a grep BRE matches a single literal backslash, then `|` matches literal `|`. So the pattern matches the two-character sequence `\|`. Good.
+
+  Better to use python for precision. But python3 should be available. Let me use python to do it robustly:
+
+  ```python
+  import re
+  line = open('corpus/SOURCES.md').readlines()[88]
+  cells = line.strip().split('|')
+  ```
+
+  Note: task says "Count the number of columns it splits into on '|'". So a plain split on '|'. If any cell contains a literal or escaped pipe (`\|`), that matters for row normalization (C3 = maybe a checker that validates column count). An escaped pipe `\|` inside a GFM table cell should NOT split — the lane has history: S043 mentions "escaped-pipe width over-rejection" and "Measure table width in GFM cells". So the check: does the S079 row contain `\|`?
+
+  Let me also check whether S079's row, when split naively on '|', gives the same count as the header. The naive split: leading pipe gives an empty first element. Let me compute: cells = split('|'), count.
+
+  Also compare with header row (line 9) and separator row (line 10).
+
+  Also check every other row? The task is scoped to the S079 row. But for depth, I could note the header count as the reference.
+
+  Also verify the citation file: grep -c 'source: S079' and 'source: S081' in the file.
+
+  Let me run these commands in parallel batches.
+
+  Also, I should double check there's no trailing-space / other subtlety. Let me do it with python3 for exactness.
+
+  Commands:
+
+  1. `python3 - <<'EOF' ... EOF` reading SOURCES.md, find the row starting with '| S079 |', count split('|') length, count '|' chars, detect '\\|' occurrences, print cells with index.
+
+  Wait — careful: is the row on exactly one line? Yes, line 89. Also check S079 doesn't appear elsewhere as a row start (e.g., line 255 mentions S079 in search log text, not a table row). The table rows are lines 11-91. Let me extract all lines that start with '| S0' and find the S079 one.
+
+  2. grep for 'source: S079' and 'source: S081' in citation-version-binding-r36.md.
+
+  Let me also verify the header row column count for reference: split('|') on header → ['', ' id ', ' source ', ..., ' used-by ', ''] → 13 elements for 11 columns.
+
+  Let me write the python:
+
+  ```python
+  import pathlib
+  p = pathlib.Path('corpus/SOURCES.md')
+  lines = p.read_text().splitlines()
+  rows = [(i+1, l) for i, l in enumerate(lines) if l.startswith('| S079 |')]
+  for ln, l in rows:
+      print('line', ln)
+      print('pipe_count', l.count('|'))
+      print('escaped_pipes', l.count('\\|'))
+      cells = l.split('|')
+      print('naive_split_len', len(cells))
+      for i, c in enumerate(cells):
+          print(i, repr(c))
+  header = lines[8]
+  print('header_split_len', header.split('|').__len__())
+  ```
+
+  Then also quote the citation line. The citation line is line 3 of the knowledge file:
+
+  `source: S079 — https://www.rfc-editor.org/rfc/rfc7089.txt — section 2.1.1, byte offset 14896 of the committed capture — RFC 7089, February 2013, Informational`
+
+  Let me also grep for 'S081' anywhere in the knowledge file — it appears at line 27 ("The staged citation id was S081.") and line 21 mentions "Staged S082". Wait, line 21 mentions S082 (GB/T record), line 27 mentions S081. So "does not cite 'source: S081'" — the exact string 'source: S081' does not appear, but 'S081' does appear in prose. I should report that nuance for calibration: the file does not cite source: S081, though S081 is mentioned in prose explaining the staged id mapping.
+
+  Let me run the commands now. Also verify the SOURCES S079 row's used-by cell matches corpus/knowledge/citation-version-binding-r36.md (it does, from the Read).
+
+  Additionally, for C3 row normalization attack context: the check is whether the row's naive '|' split count is consistent (12 pipes → 13 naive cells → 11 real columns) and no escaped/literal pipes inside cells. Also compare to header.
+
+  Let me also check the separator row and all rows' pipe counts quickly, to note whether S079 is the odd one out (depth for the falsify milestone). Actually the milestone is "falsify the landed round-44 state" — the attack is C3's row normalization. So giving the exact pipe counts for S079 and noting the header reference is the core. I can add a quick per-row pipe count scan as cheap depth (read-only, fast).
+
+  Let me batch:
+
+  Command 1 (python analysis of S079 row + header + all-row scan):
+
+  ```bash
+  python3 - <<'EOF'
+  import pathlib
+  lines = pathlib.Path('corpus/SOURCES.md').read_text().splitlines()
+  hdr = lines[8]
+  sep = lines[9]
+  print('header  line 9  pipes=%d splitlen=%d escaped=%d' % (hdr.count('|'), len(hdr.split('|')), hdr.count('\\|')))
+  print('sep     line10  pipes=%d splitlen=%d escaped=%d' % (sep.count('|'), len(sep.split('|')), sep.count('\\|')))
+  rows = [(i+1, l) for i, l in enumerate(lines) if l.startswith('| S') and i < 95]
+  from collections import Counter
+  c = Counter()
+  for ln, l in rows:
+      c[(l.count('|'), len(l.split('|')))] += 1
+  print('row pipe-count histogram:', dict(c))
+  for ln, l in rows:
+      if l.count('|') != hdr.count('|'):
+          print('ODD line', ln, 'id', l.split('|')[1].strip(), 'pipes', l.count('|'))
+  s079 = [l for l in lines if l.startswith('| S079 |')]
+  print('S079 rows found:', len(s079))
+  for l in s079:
+      print('S079 pipes=%d splitlen=%d escapedpipes=%d' % (l.count('|'), len(l.split('|')), l.count('\\|')))
+      cells = l.split('|')
+      for i, c2 in enumerate(cells):
+          print('  cell[%d]=%r' % (i, c2))
+  EOF
+  ```
+
+  cwd: /home/vgpnk/Projects/shokunin/chousa-shokunin
+
+  Command 2 (grep citation file):
+
+  ```bash
+  grep -n 'source: S0' corpus/knowledge/citation-version-binding-r36.md; echo '---'; grep -n 'S081' corpus/knowledge/citation-version-binding-r36.md
+  ```
+
+  Wait, I should use the Grep tool instead of shell grep per instructions. "ALWAYS use Grep tool instead of running `grep` or `rg` from a shell". OK, use Grep tool calls in parallel:
+
+  - Grep pattern 'source: S0' path=corpus/knowledge/citation-version-binding-r36.md output_mode=content -n
+  - Grep pattern 'S081' same file output_mode=content -n
+
+  And Bash python for the column analysis (that's not grep, fine).
+
+  Also the exact citation line — I already have it from the Read (line 3). I can quote it.
+
+  Let me also double-check "does not cite 'source: S081'" — grep for 'source: S081' returns nothing presumably. And 'S081' appears at line 27. Good nuance.
+
+  Also check 'source: S079' appears exactly once (one citation line). Grep will show.
+
+  Also, for depth on the C3 attack: the knowledge entry name is citation-version-binding-r36.md while S079 is the cited source — used-by in the SOURCES row says `corpus/knowledge/citation-version-binding-r36.md`. Matches. Also the r36 in the filename is a lane round label, and the entry itself says "The filename is the package's label, not a lane round number." Interesting context but not required.
+
+  Let me also verify the naive split: header has 12 pipes → split gives 13 items (first and last empty) → 11 non-empty columns. If S079 row also has 12 pipes, it's consistent.
+
+  Potential gotcha: S065's row (line 75) ends with `...r34.md, corpus/knowledge/dead-zone-pcre-r34.md|` — I noticed in the Read output line 75 ends with `|` without space before it: `...dead-zone-pcre-r34.md|`. That's fine, still 12 pipes? Let me let the histogram tell. Not needed for S079 but good falsify-depth: if some row has a different count, C3's normalization might be the point. Actually the milestone is to falsify the landed round-44 state; my scoped check is S079. But a quick histogram adds calibration about whether S079 is consistent with the table.
+
+  Also need to check for literal pipes inside cells: a literal pipe would increase the naive split count beyond 13. An escaped pipe `\|` would appear as `\\|` in the raw text (2 chars: backslash + pipe). Count both.
+
+  Now run.header line  9: pipes=12 naivesplit=13 escapedpipes=0
+sep    line 10: pipes=12 naivesplit=13 escapedpipes=0
+table rows found: 81
+histogram (pipes, naivesplit) -> count: {(12, 13): 81}
+S079 row lines: [89]
+S079 line 89: pipes=12 naivesplit=13 escapedpipes=0
+  cell[0]=''
+  cell[1]=' S079 '
+  cell[2]=' RFC 7089, HTTP Extension for Time-Based Access to Resource States — Memento — https://www.rfc-editor.org/rfc/rfc7089.txt '
+  cell[3]=' spec '
+  cell[4]=' A '
+  cell[5]=' binding a citation to a timestamped prior state; the document puts archive veracity out of scope '
+  cell[6]=' section 2.1.1 of the committed capture, no fetch '
+  cell[7]=' a Memento-Datetime header is a promise that the reflected resource state will no longer change; an archived body may not be byte-to-byte the same as what the origin served '
+  cell[8]=' mined '
+  cell[9]=' 2026-10-24 '
+  cell[10]=' 365d '
+  cell[11]=' corpus/knowledge/citation-version-binding-r36.md '
+  cell[12]=''
+nonempty cells: 11
+All checks complete:
+
+  1. S079 row (line 89 of SOURCES.md):
+     - 12 '|' characters → naive split on '|' yields 13 elements (first and last empty), i.e. 11 non-empty cells, matching the header (id, source, kind, tier, scope, anchor, teaches, status, opened, recheck, used-by).
+     - Zero escaped pipes (`\|`) and zero literal pipes inside cells — no cell content contains a pipe.
+     - All 81 data rows have the same (12, 13) shape; S079 is not an outlier.
+
+  2. citation-version-binding-r36.md:
+     - Line 3 cites `source: S079 — https://www.rfc-editor.org/rfc/rfc7089.txt — section 2.1.1, byte offset 14896 of the committed capture — RFC 7089, February 2013, Informational`. Exactly one `source: S0xx` line, and it's S079.
+     - No `source: S081` anywhere. The only S081 occurrence is line 28, prose explaining the staged→lane id mapping ("The staged citation id was S081."), not a citation.
+     - Cross-check: SOURCES S079 used-by cell = corpus/knowledge/citation-version-binding-r36.md — consistent both directions.
+
+  Also worth noting for the C3 normalization angle: the r36 filename vs S079 id — the entry itself says the filename is the package label, not a lane round number; the staged-id mapping (S081→S079) is what a row-normalization/consumer check could trip on if it matched ids arithmetically. The row's used-by backlink and the entry's source line agree.
+
+  Verdict: C3's row normalization does NOT falsify on the S079 row — no defect found in the scoped check. Calibration: this is a clean pass, with the S081 prose mention noted as the only near-miss.
+
+  Now write the report to /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w3/W3RevS079.md and nowhere else.
+
+• All checks complete. Writing the report.
+
+• Done. Report written to the one allowed path. Summarize concisely.
+
+• Report written to `.ufo/waves/round-44/w3/W3RevS079.md`. Findings:
+
+  **S079 row (SOURCES.md line 89):** 12 pipes → naive `split('|')` gives 13 elements = **11 columns**, matching the header/separator exactly. **Zero escaped pipes (`\|`) and zero literal pipes** inside cells, so naive and GFM-aware splits agree. All 81 data rows share the same (12, 13) shape — S079 is not an outlier.
+
+  **Citation check:** `citation-version-binding-r36.md` has exactly one `source:` line — line 3, `source: S079 — https://www.rfc-editor.org/rfc/rfc7089.txt — section 2.1.1, byte offset 14896 of the committed capture — RFC 7089, February 2013, Informational`. **No `source: S081` exists.** The only `S081` occurrence is prose at line 28 ("The staged citation id was S081…") explaining the staged→lane id mapping — a near-miss for bare-id greps, not a citation. Row → entry (`used-by`) and entry → row agree.
+
+  **Verdict:** C3's row normalization does not falsify on this row — the attack is clean here.
+
+To resume this session: kimi -r session_a4687d67-939a-465e-970a-0038478a04e2

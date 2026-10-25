@@ -1,0 +1,434 @@
+kimi version 2.3.1
+• Let me parse the task. I'm a leaf subagent ("chousa round-44 leaf seat"). I must:
+
+  1. Run `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin status --porcelain` and list every path, stating for each whether it's inside the lane tree or outside it.
+  2. Confirm nothing under /home/vgpnk/Projects/shokuknow was modified by this round: list mtime of /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache and of the merge/chousa package files I read (I need to find which files I read — merge/chousa package files, presumably in the shokuknow repo).
+  3. Write report at /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w3/W3CritScope.md and nowhere else.
+
+  Constraints: no subagent dispatch, no fetch, no editing production files, no jj or git commit.
+
+  Let me start with parallel tool calls: git status porcelain, and stat of .qcache, and explore the shokuknow merge/chousa directory.
+
+  First batch (parallel):
+  - git -C /home/vgpnk/Projects/shokunin/chousa-shokunin status --porcelain
+  - stat /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache
+  - ls /home/vgpnk/Projects/shokuknow (to find merge/chousa)
+
+  Let me do that. M .ufo/waves/round-40/w1/swarm-registry.json
+ M .ufo/waves/round-41/w1/swarm-registry.json
+ M corpus/QUALITY.md
+ M corpus/SOURCES.md
+ M corpus/evidence/round41/receipts/cells/cells.json
+ M tools/parent-lifetime.sh
+?? .ufo/waves/round-40/w1/ConnectorSiblingScan.md
+?? .ufo/waves/round-40/w1/CriticC1Control.md
+?? .ufo/waves/round-40/w1/CriticC1Predicate.md
+?? .ufo/waves/round-40/w1/CriticC1Scope.md
+?? .ufo/waves/round-40/w1/CriticC2Calibration.md
+?? .ufo/waves/round-40/w1/CriticR4Disposition.md
+?? .ufo/waves/round-40/w1/CriticSourceClaim.md
+?? .ufo/waves/round-40/w1/ExecC1BaseReceipt.md
+?? .ufo/waves/round-40/w1/ExecC1Count.md
+?? .ufo/waves/round-40/w1/ExecC1LandedReceipt.md
+?? .ufo/waves/round-40/w1/ExecC1MutantReceipt.md
+?? .ufo/waves/round-40/w1/ExecC2Count.md
+?? .ufo/waves/round-40/w1/ExecNoHarm.md
+?? .ufo/waves/round-40/w1/MutateExpectDigest.md
+?? .ufo/waves/round-40/w1/MutateGateDigest.md
+?? .ufo/waves/round-40/w1/MutateVerifierSubject.md
+?? .ufo/waves/round-40/w1/RevengerR1History.md
+?? .ufo/waves/round-40/w1/RevengerR2R5History.md
+?? .ufo/waves/round-40/w1/ReviewActivePopulation.md
+?? .ufo/waves/round-40/w1/ReviewC2Bindings.md
+?? .ufo/waves/round-40/w1/ReviewR2CommitTruth.md
+?? .ufo/waves/round-40/w1/ReviewR3Counts.md
+?? .ufo/waves/round-40/w1/ReviewR4RoleMix.md
+?? .ufo/waves/round-40/w1/ReviewReplacementBindings.md
+?? .ufo/waves/round-40/w1/ScoutFrontierOverlap.md
+?? .ufo/waves/round-40/w1/ScoutHashSource.md
+?? .ufo/waves/round-40/w1/ScoutProvinceBoundary.md
+?? .ufo/waves/round-40/w1/ScribeClaimSurfaces.md
+?? .ufo/waves/round-40/w1/ScribeKnowledgeEntry.md
+?? .ufo/waves/round-40/w1/ScribeLessonGate.md
+?? .ufo/waves/round-40/w1/SentinelFetchScope.md
+?? .ufo/waves/round-40/w1/SentinelWriteScope.md
+?? .ufo/waves/round-40/w1/SimplifierAudit.md
+?? .ufo/waves/round-41/w1/ConnectorSiblingScan.md
+?? .ufo/waves/round-41/w1/ExecC2Before.md
+?? .ufo/waves/round-41/w1/MutateC2Join.md
+?? .ufo/waves/round-44/assimilation/
+?? .ufo/waves/round-44/launcher-outer.log
+?? .ufo/waves/round-44/make-w3-spec.py
+?? .ufo/waves/round-44/seat-logs/
+?? .ufo/waves/round-44/slot-grant.txt
+?? .ufo/waves/round-44/w2-dispatch.json
+?? .ufo/waves/round-44/w2-launcher-outer.log
+?? .ufo/waves/round-44/w2-parent-lifetime.receipt
+?? .ufo/waves/round-44/w2-plan.json
+?? .ufo/waves/round-44/w2-slot-grant.txt
+?? .ufo/waves/round-44/w2-spec.json
+?? .ufo/waves/round-44/w2/
+?? .ufo/waves/round-44/w3-dispatch.json
+?? .ufo/waves/round-44/w3-launcher-outer.log
+?? .ufo/waves/round-44/w3-launcher.log
+?? .ufo/waves/round-44/w3-plan.json
+?? .ufo/waves/round-44/w3-spec.json
+?? .ufo/waves/round-44/w3/
+?? corpus/evidence/round44/controls/errata-two.txt
+?? corpus/evidence/round44/controls/errata-zero.txt
+?? corpus/evidence/round44/disposition.tsv
+?? corpus/evidence/round44/errata-count.py
+?? corpus/evidence/round44/parent-lifetime.receipt
+?? corpus/evidence/round44/receipts/census-end.txt
+?? corpus/evidence/round44/seat-logs/
+?? corpus/knowledge/citation-version-binding-r36.md
+?? corpus/knowledge/citation-version-binding-r37.md
+?? corpus/lessons/round-44.md
+/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache | mtime=2026-10-24 22:24:19.009414133 -0300 | ctime=2026-10-24 22:24:19.009414133 -0300
+ci_ui.html
+ctx.py
+doctrine
+lanes
+MANIFEST.json
+merge
+mikeseven_pkg.json
+probe.html
+README.md
+RUNBOOK.md
+---
+audio
+chousa
+game-dev-2d
+game-dev-3d
+kagi
+kaidoku
+kake
+kama
+kasegi
+kengaku
+kotoba
+kotodama
+kumitate
+lore
+mado
+mori
+revenger
+souji
+tabi
+tameshi
+tsukuroi
+amendments
+knowledge
+MERGE-REPORT.json
+MERGE-REPORT.md
+SOURCES.append.md
+Now I have the porcelain output. Next I need:
+
+  1. The merge/chousa package files — the "merge/chousa" directory exists at /home/vgpnk/Projects/shokuknow/merge/chousa. I need to stat the package files I read. As a round-44 w3 critic ("W3CritScope"), the milestone is "falsify the landed round-44 state". The merge/chousa package likely contains files like MERGE-REPORT, SOURCES.append.md, knowledge, amendments — actually those are in merge/. Let me list merge/chousa contents and stat them.
+
+  Note the ls output: `/home/vgpnk/Projects/shokuknow/merge` contains the lane dirs (audio, chousa, ...) plus amendments, knowledge, MERGE-REPORT.json, MERGE-REPORT.md, SOURCES.append.md. And merge/chousa was listed too (the second ls output concatenated: after `---` we got the merge listing, then merge/chousa listing). Actually wait — the output shows "audio ... tsukuroi" then "amendments knowledge MERGE-REPORT.json MERGE-REPORT.md SOURCES.append.md". Hmm, the merge listing is `audio chousa game-dev-2d ... tsukuroi` and then merge/chousa listing would be... Actually `ls merge` gave: audio chousa game-dev-2d game-dev-3d kagi kaidoku kake kama kasegi kengaku kotoba kotodama kumitate lore mado mori revenger souji tabi tameshi tsukuroi — that's 22 entries. Then merge/chousa gave: amendments knowledge MERGE-REPORT.json MERGE-REPORT.md SOURCES.append.md? That seems odd for a single-lane dir but plausible (chousa package: amendments, knowledge, merge report, sources append).
+
+  Hmm, actually wait — it could be the other way: merge listing = the lane dirs + amendments + knowledge + MERGE-REPORT.json + MERGE-REPORT.md + SOURCES.append.md, and merge/chousa = nothing? No — `ls` of an empty dir prints nothing. The order of output: `ls shokuknow` gave ci_ui.html ctx.py doctrine lanes MANIFEST.json merge mikeseven_pkg.json probe.html README.md RUNBOOK.md, then `---`, then `ls merge` then `ls merge/chousa` concatenated (no separator). The lane names audio..tsukuroi = 22 names. Then amendments, knowledge, MERGE-REPORT.json, MERGE-REPORT.md, SOURCES.append.md — that's 5 more. If merge/ contains lane dirs AND those 5, then merge/chousa would print nothing. Ambiguous. Let me just stat the files directly.
+
+  The task says "list the mtime ... of the merge/chousa package files you read". So I should stat the merge/chousa files. As the w3 critic, I haven't actually read any merge/chousa files yet in this session — but the report asks to confirm mtimes show they weren't modified this round. I'll stat all files in merge/chousa recursively with mtimes, and also the ones most relevant to round-44 (chousa lane, round 44). Let me get a full listing with mtimes.
+
+  Also check lane tree definition: lane tree = /home/vgpnk/Projects/shokunin/chousa-shokunin (the chousa lane repo). All git-status paths listed are relative to that repo, so all are inside the lane tree. "Outside it" would be none. But wait — some paths might be symlinks or worktrees pointing outside? Let me check for that quickly: verify .ufo/waves and corpus are within the repo. Also check git rev-parse --show-toplevel to confirm repo root.
+
+  Also I should verify that round-44 files' mtimes predate... no wait — the point of the check: "confirm that nothing under /home/vgpnk/Projects/shokuknow was modified by this round". The .qcache mtime is 2026-10-24 22:24:19 -0300. Today is 2026-10-24. So .qcache WAS modified today. Hmm — the check is whether *this round* (round-44 w3 critic, me) modified it. I have not touched shokuknow at all this session (only stat/ls). The mtime being today at 22:24:19 might be from a prior wave/process, not by this round. I need to compare with current time and with mtimes of files I created... Actually I haven't created anything yet. Let me check current time to calibrate: `date`.
+
+  Also stat merge/chousa files. Let me do a full recursive stat of /home/vgpnk/Projects/shokuknow/merge/chousa with mtimes, sorted. And `date` for now.
+
+  Additionally, for "adjacency" attack (Godspeed: attack write scope and adjacency), I should verify: does my write target exist/what's in .ufo/waves/round-44/w3/ already? And confirm no writes outside W3CritScope.md. I can also check that the lane tree git status shows only expected paths — all within repo. Check whether any git status path resolves outside repo root via symlink: `git -C ... rev-parse --show-toplevel` and maybe `ls -la` on .ufo and corpus to see if symlinks. Quick check: `find . -maxdepth 2 -type l` in the repo. That's cheap.
+
+  Also to state per-path inside/outside: all porcelain paths are relative to the repo root, so inside the lane tree. But I can additionally verify the repo root. Also note the parent-lifetime.sh modification — tools/parent-lifetime.sh is inside the lane tree (lane production file — I must not modify; I haven't).
+
+  Let me also grab mtimes for the round-44 w3 dir contents (to show only my report lands there later). Actually my report doesn't exist yet; I'll write it at the end.
+
+  Batch 2 (parallel):
+  1. date + git rev-parse --show-toplevel + symlink check in repo
+  2. find /home/vgpnk/Projects/shokuknow/merge/chousa -type f with stat mtimes
+  3. ls of .ufo/waves/round-44/w3 (existing contents)
+  4. newest mtimes across shokuknow to detect anything modified this round: `find /home/vgpnk/Projects/shokuknow -newermt '2026-10-24 22:24:19' `? Careful — the .qcache mtime is 22:24:19 today. Current time? Let me get date first. Actually I can combine: `date; find /home/vgpnk/Projects/shokuknow -mmin -N -print` — find with -mmin relative to now. Round start unknown; w3 launcher log exists. Check mtime of /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w3-launcher.log to infer round start time, then find files in shokuknow newer than that. That's a solid falsification probe: any file in shokuknow modified after round-44 w3 start.
+
+  Let me run:
+  - A: `date; stat -c '%y %n' /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w3-launcher.log /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w3-spec.json`
+  - B: `find /home/vgpnk/Projects/shokuknow/merge/chousa -type f -printf '%T+ %p\n' | sort`
+  - C: `ls -la /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w3/ 2>/dev/null`
+  - D: symlink check: `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin rev-parse --show-toplevel; find /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus /home/vgpnk/Projects/shokunin/chousa-shokunin/tools -type l -ls | head -50`
+
+  Then a follow-up: `find /home/vgpnk/Projects/shokuknow -type f -newer <w3-launcher.log>` (need launcher mtime first — dependency). So run that after. Actually I can do `find /home/vgpnk/Projects/shokuknow -type f -newermt '2026-10-24 00:00'` vs round start. Since round start unknown yet, make it dependent — but I can approximate: today is 2026-10-24; list all shokuknow files modified today: `find /home/vgpnk/Projects/shokuknow -type f -newermt '2026-10-24 00:00:00' -printf '%T+ %p\n' | sort | tail -40`. That shows everything touched today, including .qcache at 22:24:19. Then compare against round-44 w3 start (launcher mtime). Good — independent enough, run in same batch.
+
+  That find over whole shokuknow might be slow if huge, but likely fine. Add `-not -path '*/.git/*'`.
+
+  Let me fire batch 2 with A–E.
+
+• Status captured. Now probing repo root, symlinks, merge/chousa mtimes, w3 dir state, and everything in shokuknow touched today — in parallel:now: 2026-10-24 22:29:28 -0300
+toplevel: /home/vgpnk/Projects/shokunin/chousa-shokunin
+2026-10-24 22:28:21.116421161 -0300 | /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w3-launcher.log
+2026-10-24 22:28:08.769558107 -0300 | /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w3-spec.json
+2026-10-24+21:17:10.4062839810 | 144266 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/SOURCES.append.md
+2026-10-24+21:17:10.4064838910 | 3856 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/search-log-fields-r36.md
+2026-10-24+21:17:10.4065085310 | 3761 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/citation-version-binding-r36.md
+2026-10-24+21:17:10.4065278510 | 6250 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/aggregator-vs-source-r36.md
+2026-10-24+21:17:10.4065461010 | 4201 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/source-type-taxonomy-r36.md
+2026-10-24+21:17:10.4065648010 | 5425 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/source-type-taxonomy-r37.md
+2026-10-24+21:17:10.4065830310 | 6094 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/citation-version-binding-r37.md
+2026-10-24+21:17:10.4066001210 | 5286 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/claim-support-test-r37.md
+2026-10-24+21:17:10.4066183410 | 6224 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/citation-count-semantics-r37.md
+2026-10-24+21:17:10.4066358210 | 4807 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/chinese-search-log-r37.md
+2026-10-24+21:17:10.4066547510 | 7374 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/chain-resolution-r3-amendment-2026-10-23.md
+2026-10-24+21:17:10.4066727810 | 4914 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/japanese-search-record-r38.md
+2026-10-24+21:17:10.4066898710 | 5128 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/chinese-search-log-r37-amendment-2026-10-23.md
+2026-10-24+21:17:10.4067069110 | 6175 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/claim-support-test-r37-amendment-2026-10-23.md
+2026-10-24+21:17:10.4067253210 | 6008 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/chinese-search-record-r39.md
+2026-10-24+21:17:10.4067451110 | 6154 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/evidence-pool-versioning-r39.md
+2026-10-24+21:17:10.4067619110 | 4669 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/istic-citation-verification-r39.md
+2026-10-24+21:17:10.4067996210 | 4504 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/amendments/corpus/knowledge/search-log-method-r39.md
+2026-10-24+21:17:10.4068259510 | 4248 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/cnki-citation-check-r40.md
+2026-10-24+21:17:10.4068444810 | 5231 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/japanese-search-record-r38-amendment-2026-10-23.md
+2026-10-24+21:17:10.4068636810 | 5424 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/evidence-pool-versioning-r39-amendment-2026-10-23.md
+2026-10-24+21:17:10.4068803610 | 4007 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/japanese-prisma-item-wording-r40.md
+2026-10-24+21:17:10.4068967010 | 5728 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/grey-literature-and-chinese-search-record-r40.md
+2026-10-24+21:17:10.4069124510 | 3037 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/evidence-snapshot-coverage-r40.md
+2026-10-24+21:17:10.4069271710 | 3432 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/search-tracking-record-r40.md
+2026-10-24+21:17:10.4069427410 | 3527 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/citation-matching-semantics-r41.md
+2026-10-24+21:17:10.4069572010 | 2903 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/archived-translation-currency-r41.md
+2026-10-24+21:17:10.4069714710 | 2263 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/evidence-archive-field-policy-r41.md
+2026-10-24+21:17:10.4069857410 | 2031 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/chinese-prisma-s-access-r41.md
+2026-10-24+21:17:10.4070006910 | 2525 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/grey-literature-and-chinese-search-record-r41.md
+2026-10-24+21:17:10.4070153510 | 3585 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/chinese-regulator-guideline-currency-r41.md
+2026-10-24+21:17:10.4070299110 | 2896 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/chinese-document-status-fields-r42.md
+2026-10-24+21:17:10.4070463710 | 3271 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/abolition-instrument-form-r42.md
+2026-10-24+21:17:10.4070677110 | 2387 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/cnki-matching-modes-r42.md
+2026-10-24+21:17:10.4070861710 | 3512 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/grey-literature-field-china-r42.md
+2026-10-24+21:17:10.4071012110 | 3210 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/reachability-route-map-r42.md
+2026-10-24+21:17:10.4071159210 | 2459 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/chinese-journal-open-delivery-r43.md
+2026-10-24+21:17:10.4071308910 | 1995 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/repeal-instrument-class-r43.md
+2026-10-24+21:17:10.4071453810 | 2268 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/cnki-public-surface-r43.md
+2026-10-24+21:17:10.4071594810 | 2349 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/grey-literature-field-boundary-r43.md
+2026-10-24+21:17:10.4071740410 | 2656 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/chinese-journal-issue-toc-r44.md
+2026-10-24+21:17:10.4071885410 | 3145 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/repeal-decision-series-r44.md
+2026-10-24+21:17:10.4072046310 | 3459 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/grey-literature-national-route-r44.md
+2026-10-24+21:17:10.4072191810 | 2546 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/chinese-journal-issue-placement-r45.md
+2026-10-24+21:17:10.4072330310 | 2186 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/nmpa-document-classes-r45.md
+2026-10-24+21:17:10.4072478910 | 3068 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/national-centre-publication-record-r46.md
+2026-10-24+21:17:10.4072622010 | 2580 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/cnki-comparison-basis-r46.md
+2026-10-24+21:17:10.4072783610 | 4711 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/regulator-mandate-vs-centre-silence-r47.md
+2026-10-24+21:17:10.4072975510 | 5407 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/dated-compilation-as-currency-r47.md
+2026-10-24+21:17:10.4073140410 | 3446 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/cnki-citation-check-query-r47.md
+2026-10-24+21:17:10.4073295910 | 4131 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/chinese-journal-doi-and-printed-contents-r47.md
+2026-10-24+21:17:10.4073477310 | 5354 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/quality-control-guideline-issued-text-r48.md
+2026-10-24+21:17:10.4073636910 | 3760 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/citation-check-status-vocabulary-r48.md
+2026-10-24+21:17:10.4073791110 | 3878 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/regulator-register-scopes-r48.md
+2026-10-24+21:17:10.4073940610 | 3524 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/prisma-s-route-without-doi-r48.md
+2026-10-24+21:17:10.4074103210 | 5072 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/grey-literature-mandate-scope-r48.md
+2026-10-24+21:17:10.4074270310 | 5325 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/prisma-s-identifier-routes-r49.md
+2026-10-24+21:17:10.4075093410 | 14222 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/MERGE-REPORT.md
+2026-10-24+21:17:10.4076176710 | 25726 bytes | /home/vgpnk/Projects/shokuknow/merge/chousa/MERGE-REPORT.json
+total 56
+drwxr-xr-x 1 vgpnk vgpnk   132 Oct 24 22:29 .
+drwxr-xr-x 1 vgpnk vgpnk   614 Oct 24 22:28 ..
+-rw-r--r-- 1 vgpnk vgpnk  1908 Oct 24 22:28 parent-lifetime.receipt
+drwxr-xr-x 1 vgpnk vgpnk  2152 Oct 24 22:28 seat-logs
+-rw------- 1 vgpnk vgpnk 45663 Oct 24 22:28 swarm-registry.json
+-rw-r--r-- 1 vgpnk vgpnk  2407 Oct 24 22:29 W3ExecShaRfc.md
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/build/MutateCounter/report.md -> ../MutateCounter.md
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-35/w2/MutGrepShimPath/shims/b/grep -> /bin/false
+symlink-scan-done
+2026-10-24+22:24:11.9211197990 | /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/1863d06824a2b31e70c27289.fail
+2026-10-24+22:24:11.9254244590 | /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/ef6234c19ebe08d812ac3f3a.fail
+2026-10-24+22:24:11.9480440910 | /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/d06568670cd6e029ec96df88.fail
+2026-10-24+22:24:16.8313864910 | /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/4297507a99208e3d44c5b035.fail
+2026-10-24+22:24:16.9899686300 | /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/358666f371a808575f5c6f02.fail
+2026-10-24+22:24:17.4183164950 | /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/c2dca3068df48b9ab2aa1965.fail
+2026-10-24+22:24:17.6042602860 | /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/b8024348a35104eca8d1d76f.raw
+2026-10-24+22:24:17.6056747660 | /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/b8024348a35104eca8d1d76f.txt
+2026-10-24+22:24:19.0074141250 | /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/9b85983279c78f6d9c9907cb.raw
+2026-10-24+22:24:19.0099909480 | /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/9b85983279c78f6d9c9907cb.txt
+2026-10-24+22:24:39.9585028590 | /home/vgpnk/Projects/shokuknow/lanes/kotodama/round16/.deepresearch/20261024_221313_kotodama-r16/final_turn_001.md
+2026-10-24+22:24:52.1875544940 | /home/vgpnk/Projects/shokuknow/.ufo/scopes/corpus-expansion-16/ScoutKotodama.md
+2026-10-24+22:25:04.7846075640 | /home/vgpnk/Projects/shokuknow/lanes/kotodama/round16/KNOWLEDGE-PROPOSED.md
+2026-10-24+22:25:06.5284332400 | /home/vgpnk/Projects/shokuknow/lanes/kotoba/round16/KNOWLEDGE-PROPOSED.md
+2026-10-24+22:25:06.5286205800 | /home/vgpnk/Projects/shokuknow/lanes/kotoba/round16/SOURCES-PROPOSED.md
+2026-10-24+22:25:06.5287580200 | /home/vgpnk/Projects/shokuknow/lanes/kotoba/round16/.deepresearch/20261024_221051_kotoba_r16/final_turn_001.md
+2026-10-24+22:25:15.9794297050 | /home/vgpnk/Projects/shokuknow/lanes/kotoba/round16/.deepresearch/notes/client-provenance-round16.txt
+2026-10-24+22:26:37.7059955840 | /home/vgpnk/Projects/shokuknow/.ufo/scopes/corpus-expansion-16/ScoutKotoba.md
+2026-10-24+22:27:18.1721628360 | /home/vgpnk/Projects/shokuknow/lanes/game-dev-3d/round16/KNOWLEDGE-PROPOSED.md
+2026-10-24+22:27:28.4652052260 | /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/round13-tool-findings.md
+2026-10-24+22:27:29.2604847370 | /home/vgpnk/Projects/shokuknow/lanes/tameshi/round16/DOMAIN.md
+2026-10-24+22:27:29.2605153070 | /home/vgpnk/Projects/shokuknow/lanes/tameshi/round16/CHANNELS.md
+2026-10-24+22:27:29.2605325270 | /home/vgpnk/Projects/shokuknow/lanes/tameshi/round16/SOURCES-PROPOSED.md
+2026-10-24+22:27:29.2605450870 | /home/vgpnk/Projects/shokuknow/lanes/tameshi/round16/KNOWLEDGE-PROPOSED.md
+2026-10-24+22:27:29.2605563070 | /home/vgpnk/Projects/shokuknow/lanes/tameshi/round16/SEARCH-LOG.md
+2026-10-24+22:27:29.2605675270 | /home/vgpnk/Projects/shokuknow/lanes/tameshi/round16/REJECTIONS.md
+2026-10-24+22:27:29.2605840570 | /home/vgpnk/Projects/shokuknow/lanes/tameshi/round16/CANNOT-ANSWER.md
+2026-10-24+22:27:35.1672327960 | /home/vgpnk/Projects/shokuknow/lanes/revenger/round16/measurements/cgo2025-student.html
+2026-10-24+22:27:35.9632360690 | /home/vgpnk/Projects/shokuknow/lanes/revenger/round16/measurements/cgo2025-accepted.html
+2026-10-24+22:27:40.5802550440 | /home/vgpnk/Projects/shokuknow/lanes/revenger/round16/measurements/jssm-vol40-1.html
+2026-10-24+22:27:45.1542738320 | /home/vgpnk/Projects/shokuknow/lanes/tameshi/round16/evidence/hyoka-en.html
+2026-10-24+22:28:07.6513660770 | /home/vgpnk/Projects/shokuknow/lanes/mado/round16/SOURCES-PROPOSED.md
+2026-10-24+22:28:47.9235305570 | /home/vgpnk/Projects/shokuknow/lanes/tabi/round8/.work/ratelimit-series.tsv
+2026-10-24+22:28:53.6925540530 | /home/vgpnk/Projects/shokuknow/lanes/mado/round16/KNOWLEDGE-PROPOSED.md
+2026-10-24+22:29:03.3725934440 | /home/vgpnk/Projects/shokuknow/lanes/tameshi/round16/evidence/agent-harness-cn.html
+2026-10-24+22:29:05.5176021670 | /home/vgpnk/Projects/shokuknow/lanes/tameshi/round16/evidence/baai-survey.html
+2026-10-24+22:29:05.5382007670 | /home/vgpnk/Projects/shokuknow/lanes/tameshi/round16/evidence/agent-harness-cn.txt
+2026-10-24+22:29:08.8556157370 | /home/vgpnk/Projects/shokuknow/lanes/kumitate/round16/SOURCES-PROPOSED.md
+2026-10-24+22:29:16.4451126010 | /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/round13-handles.json
+2026-10-24+22:29:24.5996796720 | /home/vgpnk/Projects/shokuknow/lanes/tameshi/round16/evidence/agentprocessbench-ja.html
+today-scan-done
+
+
+• Important findings:
+
+  1. `git status --porcelain` shows 6 modified tracked files and ~60 untracked paths — all relative to the repo toplevel `/home/vgpnk/Projects/shokunin/chousa-shokunin`, so ALL are inside the lane tree. None outside.
+
+  2. `.qcache` mtime: 2026-10-24 22:24:19 -0300. Note: `.qcache` is a directory — stat showed it as a path; it's actually a directory (contains .fail/.raw/.txt files). Its mtime 22:24:19 matches the newest file inside it (9b85983279c78f6d9c9907cb.txt at 22:24:19.009990).
+
+  3. Round-44 w3 start: w3-launcher.log mtime 22:28:21; w3-spec 22:28:08; now 22:29:28. So this round started ~22:28.
+
+  4. shokuknow files modified today — the tail shows many files modified between 22:24 and 22:29:24 — i.e., DURING/AFTER round-44 w3 start (22:28:08). E.g., `/home/vgpnk/Projects/shokuknow/lanes/tameshi/round16/evidence/agentprocessbench-ja.html` at 22:29:24, and `round13-handles.json` at 22:29:16.
+
+  Wait — careful interpretation. The task: "confirm that nothing under /home/vgpnk/Projects/shokuknow was modified by this round". "This round" = round-44 wave 3 = MY session (started ~22:28). The key question is whether *I* (this leaf seat) modified anything in shokuknow. The answer: I ran only read-only commands (git status, stat, ls, find). I have not written anything to shokuknow. Nothing under shokuknow was modified by this round's w3 critic seat — by me.
+
+  The other files changing in shokuknow (tameshi round16, corpus-expansion-16 scopes etc.) are concurrent activity from OTHER work (corpus-expansion waves running in parallel — different scope/worktree). Those are not "by this round" (round-44 chousa wave). They belong to corpus-expansion-16 scope, a different fleet workflow. My evidence: mtimes of shokuknow files changed AFTER my session start cannot be attributed to me since I executed only read-only commands; and my session's command history shows no writes. Also git/jj status of shokuknow? I shouldn't run jj. I can run `git -C /home/vgpnk/Projects/shokuknow status --porcelain`? That's read-only, and adjacency-relevant. It might show what's dirty there. That could help distinguish. But careful: my mandate says don't modify. Read-only git status is fine.
+
+  Actually — is shokuknow a git repo? It has lanes/ etc. Let me check quickly. It could be a jj-managed repo (the seat prompt says don't run jj — implying shokuknow uses jj). Running `git -C /home/vgpnk/Projects/shokuknow status` on a jj repo is read-only-ish and safe. Hmm, but git status on a jj collocated repo is harmless. I'll do `git -C /home/vgpnk/Projects/shokuknow rev-parse --is-inside-work-tree` and status --porcelain | head. Actually to be safe and minimal, `ls -d /home/vgpnk/Projects/shokuknow/.git /home/vgpnk/Projects/shokuknow/.jj` to note VCS presence without invoking jj.
+
+  Also the milestone: "Round 44 wave 3: falsify the landed round-44 state." My scoped report is W3CritScope.md — write scope and adjacency. So the report should cover:
+  - Porcelain listing with inside/outside classification per path.
+  - mtimes of .qcache and merge/chousa package files (paste both).
+  - Adjacency findings: symlink scan (found two symlinks in lane tree — both point within/neutral: round-29 build symlink → ../MutateCounter.md (relative, inside lane tree), round-35 w2 shim grep → /bin/false (test shim, harmless, outside repo but it's a fixture pointing to a system binary — flag as known fixture).
+  - The falsification angle: are any of the modified tracked files (M) suspicious? `tools/parent-lifetime.sh` modified — that's a production tool inside lane tree; modified by earlier wave presumably. corpus/QUALITY.md, corpus/SOURCES.md, corpus/evidence/round41/receipts/cells/cells.json modified. swarm-registry for r40/r41 modified. These predate round 44? I could check mtimes of those tracked-modified files to date them — useful for the falsification: did round-44 modify tracked production files, or are those from earlier rounds still uncommitted? Let me stat those 6 M files.
+
+  Also check mtimes of round-44 corpus evidence files to show round-44 activity is confined to lane tree. And whether anything in shokuknow/merge/chousa was touched after round-44 w3 start: merge/chousa mtimes all 21:17:10 — well before w3 start (22:28:08). Good: merge/chousa package untouched by this round.
+
+  .qcache mtime 22:24:19 — before w3 start (22:28:08), so not modified by this round either. But it IS from today 22:24 — that's ~4 minutes before round-44 w3 started, likely by the corpus-expansion-1 cache process (another concurrent workflow), not by me. My seat started 22:28.
+
+  Can I establish "not by this round" more strongly? The launcher log start time: w3-launcher.log at 22:28:21; w3-spec at 22:28:08. Also there may be a w3 dispatch json with timestamps. Good enough: all shokuknow mtimes of interest (21:17:10 merge/chousa, 22:24:19 .qcache) predate the w3 round start (22:28:08). And during my seat (22:28:08–now), I only ran read-only commands; the files changing in shokuknow during that window (tameshi, mado, kumitate round16, etc.) are under lanes/ and .ufo/scopes/corpus-expansion-16 — owned by the concurrent corpus-expansion workflow, not by the chousa round-44 lane seat. To be careful: I cannot prove other processes didn't do it, but I can prove THIS seat did not — which is what "modified by this round" means for my scope.
+
+  Let me also stat the 6 modified tracked files to date them, and get the round-44 w2 dir mtimes maybe. And confirm W3CritScope.md doesn't exist yet (w3 listing shows only parent-lifetime.receipt, seat-logs, swarm-registry.json, W3ExecShaRfc.md — a sibling's report; mine is new).
+
+  Also for calibration: read w3-spec.json quickly to align report with expected scope? The prompt already defines it. Reading the spec is cheap and improves calibration. Let me read w3-spec.json and the dispatch. Actually — keep it tight: read w3-spec.json (2.4KB-ish?) — it's w3-spec.json; fine.
+
+  Batch 3 (parallel):
+  - stat -c the 6 modified tracked files
+  - git -C shokuknow: `ls -d .git .jj 2>/dev/null` plus rev-parse --show-toplevel (read-only)
+  - Read w3-spec.json
+  - stat .ufo/waves/round-44/w2/W2CritScope.md (or list w2 dir) to see sibling scope reports? Not needed. Skip.
+
+  Also confirm `.qcache` is a dir: stat output gave mtime; add `-c '%F %n'` for .qcache. Combine into the stat call.
+
+  Then write the report.
+
+  For the porcelain listing classification: every path is relative to the lane repo toplevel → all inside lane tree. None outside. I'll present compactly with a classification table grouped by area, noting per path inside. That satisfies "list every path, stating for each whether it is inside the lane tree or outside it."
+
+  Path count: M files 6; untracked: let me count. The list: 32 files under round-40/w1 (let me count: ConnectorSiblingScan, CriticC1Control, CriticC1Predicate, CriticC1Scope, CriticC2Calibration, CriticR4Disposition, CriticSourceClaim, ExecC1BaseReceipt, ExecC1Count, ExecC1LandedReceipt, ExecC1MutantReceipt, ExecC2Count, ExecNoHarm, MutateExpectDigest, MutateGateDigest, MutateVerifierSubject, RevengerR1History, RevengerR2R5History, ReviewActivePopulation, ReviewC2Bindings, ReviewR2CommitTruth, ReviewR3Counts, ReviewR4RoleMix, ReviewReplacementBindings, ScoutFrontierOverlap, ScoutHashSource, ScoutProvinceBoundary, ScribeClaimSurfaces, ScribeKnowledgeEntry, ScribeLessonGate, SentinelFetchScope, SentinelWriteScope, SimplifierAudit = 33). round-41/w1: 3. round-44 entries: assimilation/, launcher-outer.log, make-w3-spec.py, seat-logs/, slot-grant.txt, w2-dispatch.json, w2-launcher-outer.log, w2-parent-lifetime.receipt, w2-plan.json, w2-slot-grant.txt, w2-spec.json, w2/, w3-dispatch.json, w3-launcher-outer.log, w3-launcher.log, w3-plan.json, w3-spec.json, w3/ = 18. corpus/evidence/round44: 7. corpus/knowledge: 2. corpus/lessons: 1.
+
+  I'll list them exactly as git gave, grouped, each marked "inside".
+
+  Now the report content — scoped: git status classification, shokuknow non-modification evidence with pasted mtimes, adjacency (symlinks, no writes outside W3CritScope.md), falsification notes (mtimes vs round start timeline; concurrency in shokuknow owned by other scopes). Keep it factual, calibrated: state what is proven (this seat ran only read-only commands; all relevant mtimes predate seat start) vs what is unproven (whether concurrent corpus-expansion traffic in shokuknow is authorized — out of my scope, flag only).
+
+  Run batch 3 now.
+
+• Key timeline: w3 seat started ~22:28:08; merge/chousa files are 21:17:10 and `.qcache` is 22:24:19 — both predate the seat. Now dating the 6 tracked-modified files, checking shokuknow VCS type, and reading the w3 spec for calibration:2026-10-24 04:18:06.847655142 -0300 | /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-40/w1/swarm-registry.json
+2026-10-24 04:42:46.930808667 -0300 | /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-41/w1/swarm-registry.json
+2026-10-24 21:54:49.477737224 -0300 | /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md
+2026-10-24 21:58:34.770832888 -0300 | /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md
+2026-10-24 04:46:02.530856414 -0300 | /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round41/receipts/cells/cells.json
+2026-10-24 21:49:24.365738999 -0300 | /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/parent-lifetime.sh
+/home/vgpnk/Projects/shokuknow/.git
+---
+directory | 2026-10-24 22:24:19.009414133 -0300 | /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache
+
+
+• I now have everything I need for the scoped report. Let me also verify the mtimes of the merge/chousa files I actually read: I did NOT read file contents of merge/chousa — I listed/stat'ed them. The prompt says "the merge/chousa package files you read" — as the scope critic I stat'ed them all. The key ones referenced by sibling seats: SOURCES.append.md, MERGE-REPORT.md, MERGE-REPORT.json, and the two round-44 knowledge entries (chinese-journal-issue-toc-r44.md, repeal-decision-series-r44.md, grey-literature-national-route-r44.md). All at 21:17:10 — before this round's w3 start (22:28:08).
+
+  One more adjacency check worth doing cheaply: confirm my own writes this session = only W3CritScope.md (will be true at the end). Also confirm .qcache is a directory whose mtime comes from the last entry created inside it (9b85...txt at 22:24:19.009990948 — directory mtime 22:24:19.009414133, consistent).
+
+  Also worth noting in the report for calibration: the tracked-modified files' mtimes — three from early today (04:18–04:46, rounds 40/41 leftovers) and three from 21:49–21:58 (round-44 wave activity: parent-lifetime.sh 21:49:24, QUALITY.md 21:54:49, SOURCES.md 21:58:34). All predate w3 start; all inside lane tree.
+
+  shokuknow today-modified files during my seat window (22:28:08+): lanes/tameshi/round16/*, lanes/mado, lanes/kumitate, lanes/tabi, .ufo/scopes/corpus-expansion-16/ScoutKotoba.md, .ufo/waves/corpus-expansion-1/round13-handles.json — these are concurrent corpus-expansion workflow writes by other processes/scopes, not by this seat. My evidence of non-attribution: (1) every command I executed this session is listed in the transcript and all are read-only (git status --porcelain, rev-parse, stat, ls, find, read-only file read); (2) I made zero writes outside the lane's w3 report path; (3) .qcache mtime 22:24:19 and merge/chousa mtimes 21:17:10 both predate the w3 launcher start (22:28:08 spec, 22:28:21 log).
+
+  Caveat calibration: I can prove THIS seat did not modify shokuknow; I cannot attribute the 22:24–22:29 shokuknow traffic to any specific other seat (out of my scope), but its paths (corpus-expansion-16 scopes, lanes/*/round16) belong to a different wave/scope (corpus-expansion), not chousa round-44.
+
+  Porcelain paths: 6 M + untracked. Let me carefully classify each as inside lane tree (all are, relative to toplevel /home/vgpnk/Projects/shokunin/chousa-shokunin). Also verify none of the porcelain paths is a symlink to outside — symlink scan found only two symlinks in .ufo/corpus/tools, neither among the porcelain paths (round-29/build symlink and round-35 w2 shim — neither appears in status because... wait, round-35 shim is tracked? It didn't appear in status, meaning it's either tracked unchanged or ignored. Not relevant: not in the porcelain list).
+
+  Also check: no porcelain path resolves outside via `..` — none contain `..`. And .gitignore could hide paths — the porcelain list shows untracked non-ignored; for scope purposes that's what was asked (run status --porcelain and list every path it printed).
+
+  Count: modified = 6. Untracked = let me count from output:
+  round-40/w1: ConnectorSiblingScan, CriticC1Control, CriticC1Predicate, CriticC1Scope, CriticC2Calibration, CriticR4Disposition, CriticSourceClaim, ExecC1BaseReceipt, ExecC1Count, ExecC1LandedReceipt, ExecC1MutantReceipt, ExecC2Count, ExecNoHarm, MutateExpectDigest, MutateGateDigest, MutateVerifierSubject, RevengerR1History, RevengerR2R5History, ReviewActivePopulation, ReviewC2Bindings, ReviewR2CommitTruth, ReviewR3Counts, ReviewR4RoleMix, ReviewReplacementBindings, ScoutFrontierOverlap, ScoutHashSource, ScoutProvinceBoundary, ScribeClaimSurfaces, ScribeKnowledgeEntry, ScribeLessonGate, SentinelFetchScope, SentinelWriteScope, SimplifierAudit → 33 files.
+  round-41/w1: ConnectorSiblingScan, ExecC2Before, MutateC2Join → 3.
+  round-44: assimilation/ , launcher-outer.log, make-w3-spec.py, seat-logs/, slot-grant.txt, w2-dispatch.json, w2-launcher-outer.log, w2-parent-lifetime.receipt, w2-plan.json, w2-slot-grant.txt, w2-spec.json, w2/, w3-dispatch.json, w3-launcher-outer.log, w3-launcher.log, w3-plan.json, w3-spec.json, w3/ → 18 entries (16 files + 2... actually 3 dirs: assimilation/, seat-logs/, w2/, w3/ — wait seat-logs/ is under round-44 too. Count from output order: `?? .ufo/waves/round-44/assimilation/`, launcher-outer.log, make-w3-spec.py, seat-logs/, slot-grant.txt, w2-dispatch.json, w2-launcher-outer.log, w2-parent-lifetime.receipt, w2-plan.json, w2-slot-grant.txt, w2-spec.json, w2/, w3-dispatch.json, w3-launcher-outer.log, w3-launcher.log, w3-plan.json, w3-spec.json, w3/ → 18 entries.
+  corpus/evidence/round44: controls/errata-two.txt, controls/errata-zero.txt, disposition.tsv, errata-count.py, parent-lifetime.receipt, receipts/census-end.txt, seat-logs/ → 7.
+  corpus/knowledge: citation-version-binding-r36.md, citation-version-binding-r37.md → 2.
+  corpus/lessons/round-44.md → 1.
+  Untracked total = 33+3+18+7+2+1 = 64. Total porcelain lines = 70.
+
+  Interesting coincidence: 64 untracked = the 64 dead wave-1 seats? No — different thing; don't overreach. Just report.
+
+  Note: my own W3CritScope.md is not in that list because it doesn't exist yet; after writing, w3/ will gain it. The porcelain snapshot was taken at 22:29:28, before my write. I'll note that.
+
+  Wait — but sibling W3ExecShaRfc.md existed at 22:29 already and did NOT appear in the porcelain list... because git status ran at 22:29:2x — W3ExecShaRfc.md mtime 22:29. Hmm, git status ran at 22:29:28-ish (first call). W3ExecShaRfc.md mtime 22:29:?? — ls showed 22:29 for the file (only minute precision). It should appear as untracked `?? .ufo/waves/round-44/w3/` — and indeed `?? .ufo/waves/round-44/w3/` IS in the list (collapsed to the directory since the whole dir is untracked). Right: git collapses fully-untracked directories to `dir/`. So `w3/` covers it. Good — that also means `assimilation/`, `seat-logs/`, `w2/` are collapsed dirs.
+
+  So in the classification table, note that git collapses untracked directories; their expansion contains sibling reports including mine once written.
+
+  Now write the report. Structure:
+
+  # W3CritScope — write scope and adjacency audit
+  - axes named
+  - command + snapshot time
+  - porcelain listing (verbatim, grouped), classification per path: inside/outside
+  - root-cause notes: why each group is dirty (rounds 40/41 leftovers, round-44 wave artifacts, round-44 corpus evidence)
+  - symlink adjacency scan
+  - shokuknow non-modification: pasted mtimes (.qcache, merge/chousa files), timeline table, verdict + calibration caveat
+  - what this does NOT prove
+
+  Keep quoting command output. Include the exact porcelain output? It's 70 lines — paste it verbatim in a code block to satisfy "list every path". Yes, paste full output, then the classification statement (all 70 inside lane tree; zero outside). Then the per-path classification is stated as a rule plus explicit note for any path that could be ambiguous (none). To satisfy "stating for each", the grouped verbatim list + blanket classification with explicit per-group rationale is reasonable, but the instruction says list every path stating for each. The verbatim list IS every path; I'll add per-group annotations inline via a table mapping each group → inside/outside, and explicitly state the checker: every listed path is relative to toplevel /home/vgpnk/Projects/shokunin/chousa-shokunin (git -C ... rev-parse --show-toplevel output quoted), no `..` components, no symlinked parents among status paths.
+
+  Hmm, to be maximally compliant I could annotate each path. That's verbose but the task is judged on depth/operability/calibration. A middle ground: verbatim block with `# INSIDE` annotations per group header is not per-path. I'll do a table of groups (each path listed within its group row). Every path appears once, grouped, with classification column. That states for each (group-wise but exhaustive). I think that satisfies: every path listed, classification given. I'll add: "All 70/70 paths: INSIDE the lane tree. Paths outside the lane tree: none."
+
+  Also include verification that no status path is a symlink escape.
+
+  Write the file now with Write tool. Then optionally a final quick `git status --porcelain | grep w3` to show my write landed inside scope? That's a nice closure check but "stop after the report" — a read-only verification before stopping is fine and improves calibration. Actually after writing, one quick check: stat the written file. Cheap. I'll do it after the write in a follow-up turn. Then stop.
+
+  Timeline facts to include:
+  - now at audit: 2026-10-24 22:29:28 -0300
+  - w3-spec.json mtime 22:28:08.769558107 -0300 (wave manifest written → wave start marker)
+  - w3-launcher.log mtime 22:28:21.116421161 -0300
+  - This seat's first command ran at ~22:29:28 (the `date` output).
+  - .qcache mtime: 22:24:19.009414133 -0300 → 3m49s before w3 spec existed; 4m02s before launcher log. Predates the round → not modified by this round.
+  - merge/chousa files: all 21:17:10.40xxxx (63 files, SOURCES.append.md 144266 B, MERGE-REPORT.md 14222 B, MERGE-REPORT.json 25726 B, 60 knowledge/amendments entries) → 71 minutes before w3 start. Not modified by this round.
+  - Tracked-modified lane files mtimes: r40 registry 04:18:06, r41 registry 04:42:46, cells.json 04:46:02 (early today, prior rounds); tools/parent-lifetime.sh 21:49:24, QUALITY.md 21:54:49, SOURCES.md 21:58:34 (round-44 wave-1/2 window, before w3).
+
+  The merge/chousa package files "I read": strictly, I stat'ed/listed all 63; the three package-level files (SOURCES.append.md, MERGE-REPORT.md, MERGE-REPORT.json) are the natural "package files" plus the r44 knowledge entries cited by the round. I'll paste the stat lines for those five explicitly and give the range for the rest.
+
+  shokuknow files modified DURING my seat window: list them and attribute: paths under .ufo/scopes/corpus-expansion-16/, .ufo/waves/corpus-expansion-1/, lanes/*/round16|round8 — all corpus-expansion scope artifacts, no chousa round-44 path, and this seat executed only read-only commands (transcript-listed). Verdict: nothing under shokuknow was modified by this round (this seat). Caveat: cannot attribute other processes' writes; that traffic belongs to a different wave and is out of my scope to adjudicate.
+
+  Also note the two symlinks found in lane tree (adjacency):
+  - .ufo/waves/round-29/build/MutateCounter/report.md -> ../MutateCounter.md (relative, stays inside lane tree)
+  - .ufo/waves/round-35/w2/MutGrepShimPath/shims/b/grep -> /bin/false (points outside the tree, but it's a test fixture inside .ufo; not in the porcelain status list; flagged as known benign, worth noting that symlink escapes exist only under wave scratch dirs)
+  Neither is in the porcelain list.
+
+  Count check: "70 porcelain entries (6 ' M' tracked-modified + 64 '??' untracked, of which 4 are git-collapsed untracked directories)".
+
+  Let me recount untracked dirs collapsed: assimilation/, seat-logs/ (round-44), w2/, w3/, plus corpus/evidence/round44/seat-logs/ → 5 collapsed dirs. Entries: round-44: assimilation/, seat-logs/, w2/, w3/ = 4 collapsed; round44 evidence: seat-logs/ = 1 collapsed. Total 5 collapsed dirs; 59 untracked files. 6 M + 59 files + 5 dirs = 70 lines.
+
+  Now compose the markdown report. Keep it tight but complete. Include quoted command outputs verbatim in code fences.
+
+  One more compliance point: "Quote command output." — I'm quoting git status, stat outputs, find outputs. Good.
+
+  Write the file.
+
+• All evidence is in hand. Assembling the audit: 70 porcelain entries (6 ` M` + 64 `??`, five of them git-collapsed untracked dirs), toplevel `/home/vgpnk/Projects/shokunin/chousa-shokunin` so every path is lane-internal; shokuknow mtimes all predate the w3 seat start (22:28:08). Writing the scoped report:
+
+• Report written. One closure check: confirm the write is the only new thing and it's inside the lane tree — a quick git status grep for w3 and stat of the file. Read-only, then stop.
+
+• Closure check — the report is the seat's sole write and landed inside scope:?? .ufo/waves/round-44/w3-dispatch.json
+?? .ufo/waves/round-44/w3-launcher-outer.log
+?? .ufo/waves/round-44/w3-launcher.log
+?? .ufo/waves/round-44/w3-plan.json
+?? .ufo/waves/round-44/w3-spec.json
+?? .ufo/waves/round-44/w3/
+2026-10-24 22:32:22.619395657 -0300 | 11725 bytes | /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w3/W3CritScope.md
+
+

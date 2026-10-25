@@ -1,0 +1,166 @@
+kimi version 2.3.1
+• Let me understand the task:
+
+  1. Attack C2's kill rule. On copies under /tmp only, run two mutations of `/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/disposition.tsv`:
+     - (a) delete the reason text of one reverified-commit row and keep the rest
+     - (b) mark one of the three modified-path rows as reverified-commit
+  2. Run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/c2-count.py --table` against each copy, paste both stdouts and both exit codes.
+  3. Say whether the counter catches each mutation.
+  4. Write report at `/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w3/W3CritBlind.md`.
+
+  Let me start by reading the disposition.tsv and c2-count.py files to understand the structure.Now I understand the structure:
+
+  - disposition.tsv: 39 rows. 36 reverified-commit rows (reports) + 3 left-named rows (modified paths).
+  - c2-count.py: frozen counter. Takes `--table` (default lane table) and `--root` (default lane root).
+
+  Kill rule analysis:
+  - For reverified-commit rows: requires `cls == 'reverified-commit'` AND `reason.strip()` non-empty AND file exists, stem present in text, round token present, len > 80, sha256 matches digest.
+  - For left-named rows: requires `cls == 'left-named'` AND `'not hunk-verified' in reason` AND reason non-empty.
+
+  Mutations to run on copies under /tmp:
+  (a) Delete the reason text of one reverified-commit row and keep the rest. E.g., line 1: remove the reason "re-read; stem ConnectorSiblingScan present; ..." so the line becomes `.ufo/waves/round-40/w1/ConnectorSiblingScan.md\treverified-commit\t<fsha>\t` (empty 4th field). Wait — the line split('\t') gives 4 parts: parts[0]=path, parts[1]=cls, parts[2]=digest, parts[3]=reason. If I delete the reason text, the 4th field is empty. `reason.strip()` will be '' → ok=False → rev=35, consistent=38 → C2=FAIL. So the counter should catch this.
+
+  Actually wait — careful: if I delete the trailing tab too, the line has only 3 parts → `len(parts) < 4` → skipped entirely → row missing → same result (rev=35). Either way it's caught. Let me do: replace the reason with empty string, keeping 4 fields (trailing tab). Actually the task says "delete the reason text" — I'll strip the reason text, keeping the trailing tab so there are still 4 fields. Let me do that with sed or awk.
+
+  (b) Mark one of the three modified-path rows as reverified-commit. E.g., line 37: change `left-named` → `reverified-commit` for `.ufo/waves/round-40/w1/swarm-registry.json`. Then:
+  - In UNTRACKED loop: that rel is not in UNTRACKED, so no effect there. Actually wait — the UNTRACKED loop iterates over UNTRACKED and looks up rows. swarm-registry.json is not in UNTRACKED, so its class change doesn't affect rev count.
+  - In MODIFIED loop: cls == 'reverified-commit' ≠ 'left-named' → ok=False → left=2, consistent=38 → C2=FAIL. So caught.
+
+  Both mutations should be caught. The counter is robust to these two. But note the deeper blind spots to discuss in the report:
+
+  1. The `--table` flag makes the counter run against any table, but UNTRACKED/MODIFIED path lists are frozen in the script. The mutation test with `--table` copy tests the kill rule.
+
+  2. Blind spots worth noting (calibration/depth):
+     - Mutation (b) but with the digest left as `-` and reason kept: cls='left-named' required for left count; marking as reverified-commit drops left to 2 → FAIL. Good.
+     - However: what if you mark a modified path as reverified-commit AND the counter counts it in UNTRACKED loop? No — rows are keyed by path; UNTRACKED loop only looks up UNTRACKED paths. So a modified path reclassified to reverified-commit is never sha-verified (it's not in UNTRACKED list) — but it does reduce left count → FAIL. Good.
+     - Mutation: swap digests between two reverified rows — both would fail sha256 → caught (both drop). Actually each digest mismatch fails that row. Caught.
+     - Blind spot: `rows` dict keyed by parts[0] — duplicate paths: last wins. Not relevant.
+     - Blind spot: if a reverified-commit row's reason contains only whitespace → caught by reason.strip().
+     - Potential blind spot: the counter does NOT verify that extra rows exist or that table has exactly 39 rows. E.g., adding a 40th row claiming something else — CONSISTENT is computed from expected populations only, so extra rows are ignored. Also, if a row for an UNTRACKED path is missing entirely, counts drop → FAIL.
+     - Blind spot: `--root` default is the lane; the counter verifies file content against the digest in the table. If table says digest X but the file has digest X (as landed), pass. If someone edits the table's digest to match a tampered file, the counter passes — but that's a coordinated tamper, out of scope for single mutation.
+     - Blind spot: the stem check `stem in text` — a report that merely mentions its own stem anywhere passes. That's a naming-only-ish check, but the sha256 pins exact content, so content edits break the hash. The combination is what makes it kill-capable: any content edit breaks digest; digest edit alone breaks hash-vs-file. To pass both, you must edit both file and table digest — a two-file coordinated change the single-table mutation doesn't cover. This is the real residual risk for the calibration claim: the counter verifies table↔filesystem consistency, not table↔ground-truth. If disposition.tsv itself was written wrong from the start (wrong digests recorded), the counter would still PASS as long as files match the (possibly wrong) recorded digests. That's a known structural limit — worth stating.
+
+  Now, let me run the mutations. Plan:
+
+  1. Copy disposition.tsv to /tmp/w3-mutA/disposition.tsv with mutation (a): line 1 — delete reason text, keep rest.
+  2. Copy to /tmp/w3-mutB/disposition.tsv with mutation (b): line 37 — left-named → reverified-commit.
+  3. Run the counter with `--table /tmp/...` for each, capture stdout and exit code.
+
+  For mutation (a): use awk to blank the 4th field of line 1, keeping the tab:
+  `awk 'BEGIN{FS=OFS="\t"} NR==1{$4=""} {print}'` — that keeps 4 fields with empty 4th.
+
+  For mutation (b): line 37 field 2: `awk 'BEGIN{FS=OFS="\t"} NR==37{$2="reverified-commit"} {print}'`.
+
+  Let me also verify the copies with diff to prove only the intended line changed, and run a baseline (unmutated copy) for calibration? The task doesn't ask for baseline but it's cheap and improves calibration: run the counter against an unmutated copy under /tmp to show it still PASSes with --table pointing elsewhere (proves the --table flag works and baseline passes). That's a good third data point. Baseline should PASS exit 0.
+
+  Let me do all this in one batch: create both mutations + baseline, diff them, then run the counter three times.
+
+  Commands:
+
+  ```bash
+  mkdir -p /tmp/w3-c2-mut && cd /tmp/w3-c2-mut && cp /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/disposition.tsv baseline.tsv && awk 'BEGIN{FS=OFS="\t"} NR==1{$4=""} {print}' baseline.tsv > mutA.tsv && awk 'BEGIN{FS=OFS="\t"} NR==37{$2="reverified-commit"} {print}' baseline.tsv > mutB.tsv && diff baseline.tsv mutA.tsv; diff baseline.tsv mutB.tsv
+  ```
+
+  diff returns exit 1 when files differ — that would make the chained `&&` fine since diffs are at the end, but diff exit 1 → the command exits 1 → "Command failed with exit code: 1". Use `;` between diffs or `diff ... || true`. Better: run diffs with `;`.
+
+  Then run:
+  ```bash
+  python3 .../c2-count.py --table /tmp/w3-c2-mut/mutA.tsv; echo "EXIT=$?"
+  ```
+  Each in separate call. Exit code capture: the tool reports exit code itself, but the task says paste both stdouts and both exit codes — I'll echo "EXIT=$?" to have it in stdout explicitly.
+
+  Note: the counter resolves LANE from __file__ and uses --root default LANE for reading the report files (sha256 verification reads actual files under the lane). The task says run with `--table` against each copy — exactly as instructed. The file reads still hit the lane root, which is fine (read-only).
+
+  Batch 1 (independent): mkdir+mutations+diffs in one call; three counter runs each as separate calls? The counter runs depend on the mutation files existing, so first create, then run the three counters in parallel.
+
+  Let me also verify tabs are preserved: the tsv uses tabs; awk FS=OFS="\t" preserves.
+
+  Also check: does line 37 end with the reason containing "not hunk-verified"? Yes. For mutB, field2 becomes reverified-commit; reason unchanged.
+
+  Expected results:
+  - mutA: rev 35/36, left 3/3, consistent 38/39, C2=FAIL, exit 1. Caught.
+  - mutB: rev 36/36, left 2/3, consistent 38/39, C2=FAIL, exit 1. Caught.
+  - baseline: 39/39, 36/36, 3/3, PASS, exit 0.
+
+  Also a bonus mutation worth one extra probe for depth (cheap): (c) swap two digests among reverified rows → both fail → 34/36 → caught. This tests the sha256 arm. And (d) tamper a report file itself? That mutates a production file — NOT allowed (lane production). Instead, use --root to point at a /tmp copy of a report? That requires copying the whole lane tree — too heavy. Skip; but I can simulate content tamper purely via the table by changing a digest to all-zeros: file digest won't match → caught. That's equivalent to the digest-swap test. I'll run mutation (c) as a bonus: change line 1 digest to zeros. Expected: rev 35/36, FAIL.
+
+  Actually, let me keep it tight: the two required mutations + baseline + one bonus digest-tamper (tests the sha256 arm which neither (a) nor (b) exercises). Cheap, parallel, adds depth.
+
+  Then write the report to /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w3/W3CritBlind.md.
+
+  Wait — write scope: the report path is under the lane `.ufo/waves/round-44/w3/` — that's the mandated report location ("Write only the one report named in your prompt"). Round-44 wave-3 reports are the current wave, so writing there is the assignment. Fine.
+
+  Let me run batch 1 now.
+
+• Reading done — table is 39 rows (36 reverified-commit + 3 left-named), counter counts against frozen UNTRACKED/MODIFIED lists with per-row predicate: class + non-empty reason (+ stem/round-token/len/hash for reverified; 'not hunk-verified' for left-named). Building the mutation copies now.1c1
+< .ufo/waves/round-40/w1/ConnectorSiblingScan.md	reverified-commit	f0e58b2b84a60cf614b52a7e84ee7c7adaf094fb601c7d68ed759c8d5158811b	re-read; stem ConnectorSiblingScan present; round token 40 present; not a blind add
+---
+> .ufo/waves/round-40/w1/ConnectorSiblingScan.md	reverified-commit	f0e58b2b84a60cf614b52a7e84ee7c7adaf094fb601c7d68ed759c8d5158811b	
+---
+37c37
+< .ufo/waves/round-40/w1/swarm-registry.json	left-named	-	left-named; not hunk-verified; numstat 36 insertions, 34 deletions; committing the diff would be a sweep
+---
+> .ufo/waves/round-40/w1/swarm-registry.json	reverified-commit	-	left-named; not hunk-verified; numstat 36 insertions, 34 deletions; committing the diff would be a sweep
+---
+1c1
+< .ufo/waves/round-40/w1/ConnectorSiblingScan.md	reverified-commit	f0e58b2b84a60cf614b52a7e84ee7c7adaf094fb601c7d68ed759c8d5158811b	re-read; stem ConnectorSiblingScan present; round token 40 present; not a blind add
+---
+> .ufo/waves/round-40/w1/ConnectorSiblingScan.md	reverified-commit	0000000000000000000000000000000000000000000000000000000000000000	re-read; stem ConnectorSiblingScan present; round token 40 present; not a blind add
+---
+.ufo/waves/round-40/w1/ConnectorSiblingScan.md^Ireverified-commit^If0e58b2b84a60cf614b52a7e84ee7c7adaf094fb601c7d68ed759
+   39 /tmp/w3-c2-mut/baseline.tsv
+   39 /tmp/w3-c2-mut/mutA-reason-blanked.tsv
+   39 /tmp/w3-c2-mut/mutB-modified-marked-reverified.tsv
+   39 /tmp/w3-c2-mut/mutC-digest-zeroed.tsv
+  156 total
+
+
+• All three copies built, each a single-line diff from baseline, tabs preserved (^I), 39 lines each. MutA: line 1 field 4 empty (trailing tab kept). MutB: line 37 field 2 left-named → reverified-commit. MutC: line 1 digest zeroed (bonus).
+
+  Now run the counter against each copy plus baseline, in parallel (4 independent calls).
+
+• All three copies built — each is a single-line diff from baseline, tabs preserved (`^I`), 39 lines each. Now running the frozen counter against each copy plus the unmutated baseline in parallel.CONSISTENT=38/39
+REVERIFIED=35/36
+LEFT_NAMED=3/3
+C2=FAIL
+EXIT=1
+CONSISTENT=38/39
+REVERIFIED=36/36
+LEFT_NAMED=2/3
+C2=FAIL
+EXIT=1
+CONSISTENT=38/39
+REVERIFIED=35/36
+LEFT_NAMED=3/3
+C2=FAIL
+EXIT=1
+CONSISTENT=39/39
+REVERIFIED=36/36
+LEFT_NAMED=3/3
+C2=PASS
+EXIT=0
+
+
+• All results in:
+
+  - Baseline (unmutated copy): CONSISTENT=39/39, REVERIFIED=36/36, LEFT_NAMED=3/3, C2=PASS, EXIT=0. — proves --table flag works and baseline passes.
+  - MutA (reason blanked on reverified row): 38/39, 35/36, 3/3, FAIL, EXIT=1 → CAUGHT.
+  - MutB (modified path marked reverified-commit): 38/39, 36/36, 2/3, FAIL, EXIT=1 → CAUGHT.
+  - MutC (digest zeroed, bonus): 38/39, 35/36, 3/3, FAIL, EXIT=1 → CAUGHT (sha256 arm exercised, which (a)/(b) don't touch).
+
+  Now write the report. Include:
+  - The exact pasted stdouts + exit codes for both required mutations (and baseline + bonus).
+  - Verdict: counter catches both.
+  - Mechanism: which predicate clause trips in each case (reason.strip() for mutA — line 101; cls != 'left-named' for mutB — line 110).
+  - Calibration/depth: residual blind spots of the kill rule:
+    1. Table↔filesystem consistency only: counter verifies the table matches the files, not that the table matches ground truth. A table written with wrong digests from the start still PASSes (files match recorded digests). The sha256 arm makes single-side tamper fail but a coordinated two-file edit (file + table digest) passes.
+    2. Counts are computed only over the frozen UNTRACKED/MODIFIED lists: extra rows in the table are ignored (a 40th row, or a table with an extra claim, doesn't move any counter); rows keyed by path so duplicate rows silently last-wins.
+    3. Missing rows behave like failed rows (both drop counts) — same signature, so FAIL doesn't distinguish "row deleted" from "content drifted". Diagnostic only, kill rule unaffected.
+    4. MutB leaves reason 'left-named; not hunk-verified...' under a reverified-commit class — class/reason mismatch is caught only because the MODIFIED loop requires class left-named; symmetrically, a reverified-commit row whose reason lacks meaning is caught by reason.strip() but a reason of e.g. "x" passes the counter — reason text is not semantically validated beyond non-emptiness for reverified rows (only 'not hunk-verified' substring is enforced for left-named).
+    5. stem-in-text and round-token checks are weak (mention anywhere), but the digest pins exact bytes, so content drift can't hide behind them unless the table digest is also edited.
+  - No production files touched; all mutations under /tmp.
+
+  Keep the report tight. Path: /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w3/W3CritBlind.md.
+
+• All four runs returned. Baseline control passes; both required mutations are caught; the bonus digest tamper is caught too. Writing the report.
+

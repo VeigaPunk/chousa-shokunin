@@ -1,0 +1,94 @@
+kimi version 2.3.1
+• Let me start by reading the disposition TSV file to see what's in it.total 52
+drwxr-xr-x 1 vgpnk vgpnk  290 Oct 24 21:58 .
+drwxr-xr-x 1 vgpnk vgpnk 9908 Oct 24 21:44 ..
+-rwxr-xr-x 1 vgpnk vgpnk 3806 Oct 24 21:44 c1-count.py
+-rwxr-xr-x 1 vgpnk vgpnk 4803 Oct 24 21:45 c2-count.py
+-rwxr-xr-x 1 vgpnk vgpnk 2621 Oct 24 21:44 c3-count.py
+-rw-r--r-- 1 vgpnk vgpnk 4795 Oct 24 21:44 claims.md
+drwxr-xr-x 1 vgpnk vgpnk  166 Oct 24 21:54 controls
+-rw-r--r-- 1 vgpnk vgpnk 7987 Oct 24 21:58 disposition.tsv
+-rw-r--r-- 1 vgpnk vgpnk  956 Oct 24 21:54 errata-count.py
+-rw-r--r-- 1 vgpnk vgpnk 8637 Oct 24 21:48 parent-lifetime.receipt
+drwxr-xr-x 1 vgpnk vgpnk   96 Oct 24 21:51 __pycache__
+drwxr-xr-x 1 vgpnk vgpnk  216 Oct 24 21:58 receipts
+drwxr-xr-x 1 vgpnk vgpnk 5028 Oct 24 21:47 seat-logs
+-rw-r--r-- 1 vgpnk vgpnk  969 Oct 24 21:46 seat-names.txt
+Now I need to re-verify the first 10 rows. For each:
+  1. Recompute sha256 of the file at the recorded path (relative to /home/vgpnk/Projects/shokunin/chousa-shokunin)
+  2. Check basename stem appears inside that file
+  3. Check a round token (40 or 41) appears in it
+
+  The first 10 rows are:
+  1. .ufo/waves/round-40/w1/ConnectorSiblingScan.md — f0e58b2b84a60cf614b52a7e84ee7c7adaf094fb601c7d68ed759c8d5158811b
+  2. .ufo/waves/round-40/w1/CriticC1Control.md — 771e948765baf3cd2864c1192a7ddf54c526cbfe00c0cbeb474af68a4ceaede3
+  3. .ufo/waves/round-40/w1/CriticC1Predicate.md — 0c09076104a3b75755519d2ea259fcd3716246d5e89f616bfae42a36d7b1472e
+  4. .ufo/waves/round-40/w1/CriticC1Scope.md — 01b1d19685698be3d0004eda87ac9426dc4c74c38a11af77db94bd319ab2bec9
+  5. .ufo/waves/round-40/w1/CriticC2Calibration.md — fa893fa02ae1c520d6667fcf8afe2a334e833063e659f2524b2bc25ac8cbe2de
+  6. .ufo/waves/round-40/w1/CriticR4Disposition.md — 5dbd6f73bfc0ac81995f2142ca37fe1e708a2bfd2bab52a8b959e31be29ab689
+  7. .ufo/waves/round-40/w1/CriticSourceClaim.md — a38cf8f711f30e9752e096797cb75c38577a57ef54381fce57da0d18c7494f3b
+  8. .ufo/waves/round-40/w1/ExecC1BaseReceipt.md — 3e5fa6ce60b56e87e68b3568ec7477d183bd60bd5f8e1e5447e9d592ebb827cc
+  9. .ufo/waves/round-40/w1/ExecC1Count.md — 9b1bc4ff3f5cfc25f55c8e4ee0962cbd499f3e5c8f77917400cd036188ab5642
+  10. .ufo/waves/round-40/w1/ExecC1LandedReceipt.md — 83849ae15cb52ddf011d1cde15ec16d9f510d929f6d952b57c5b3ee17099d44e
+
+  Let me run sha256sum on all 10 paths in parallel, and grep for stem + round token.
+
+  I'll do this with a script that computes everything, but per godspeed let me batch. Actually a single bash script can do it all. Let me write one command that iterates the first 10 rows of the TSV, computes sha256, checks stem presence and round token, and outputs a table. But the instructions say to paste a table of 10 rows: path, computed sha256, recorded sha256, stem present, round token present. Name every mismatch.
+
+  Let me be careful: computing sha256 with sha256sum — output should be quoted. Let me run it.
+
+  I'll run one bash command that parses the first 10 lines of the TSV and does the verification, printing everything. That's a multi-step logic in a single call — fine.
+
+  Also independently: I should do it myself rather than trusting the TSV. The script is my own independent re-verification since I parse the TSV fields and recompute with sha256sum directly.
+
+  Let me write the script carefully:
+
+  ```bash
+  cd /home/vgpnk/Projects/shokunin/chousa-shokunin
+  head -n 10 corpus/evidence/round44/disposition.tsv | while IFS=$'\t' read -r path verdict sha note; do
+    stem=$(basename "$path"); stem="${stem%.*}"
+    if [ -f "$path" ]; then
+      comp=$(sha256sum "$path" | cut -d' ' -f1)
+      if grep -qF "$stem" "$path"; then stemres=yes; else stemres=NO; fi
+      if grep -qE 'round-(40|41)|\b(40|41)\b' "$path"; then tok=yes; else tok=NO; fi
+      if [ "$comp" = "$sha" ]; then match=match; else match=MISMATCH; fi
+    else
+      comp=MISSING; stemres=NO; tok=NO; match=MISMATCH
+    fi
+    printf '%s | %s | %s | %s | %s | %s | %s\n' "$path" "$comp" "$sha" "$stemres" "$tok" "$match" "$verdict"
+  done
+  ```
+
+  Wait — the round token check: "check a round token (40 or 41) appears in it". The simplest is to check for "40" or "41" appearing in the file content. But "round token" — probably means the string "40" or "41" appears, e.g. "round-40". Let me check both: presence of "40" or "41" as a token, and more strictly "round-40"/"round-41". I'll report both to be thorough.
+
+  Note the TSV may have tabs. Let me use awk for robustness. Actually let me do both a scripted run and a few direct spot checks to be independent.
+
+  Let me run:
+
+  1. The full verification script for rows 1-10.
+  2. Direct sha256sum on the 10 paths.
+
+  Actually, I can do direct sha256sum on all 10 paths in one command — that's the primary evidence, quoted. Then the stem/token greps in another command. Let me issue them as parallel calls.
+
+• Reading done. Now re-verifying rows 1–10 independently: direct `sha256sum` on each recorded path, plus stem and round-token greps.f0e58b2b84a60cf614b52a7e84ee7c7adaf094fb601c7d68ed759c8d5158811b  .ufo/waves/round-40/w1/ConnectorSiblingScan.md
+771e948765baf3cd2864c1192a7ddf54c526cbfe00c0cbeb474af68a4ceaede3  .ufo/waves/round-40/w1/CriticC1Control.md
+0c09076104a3b75755519d2ea259fcd3716246d5e89f616bfae42a36d7b1472e  .ufo/waves/round-40/w1/CriticC1Predicate.md
+01b1d19685698be3d0004eda87ac9426dc4c74c38a11af77db94bd319ab2bec9  .ufo/waves/round-40/w1/CriticC1Scope.md
+fa893fa02ae1c520d6667fcf8afe2a334e833063e659f2524b2bc25ac8cbe2de  .ufo/waves/round-40/w1/CriticC2Calibration.md
+5dbd6f73bfc0ac81995f2142ca37fe1e708a2bfd2bab52a8b959e31be29ab689  .ufo/waves/round-40/w1/CriticR4Disposition.md
+a38cf8f711f30e9752e096797cb75c38577a57ef54381fce57da0d18c7494f3b  .ufo/waves/round-40/w1/CriticSourceClaim.md
+3e5fa6ce60b56e87e68b3568ec7477d183bd60bd5f8e1e5447e9d592ebb827cc  .ufo/waves/round-40/w1/ExecC1BaseReceipt.md
+9b1bc4ff3f5cfc25f55c8e4ee0962cbd499f3e5c8f77917400cd036188ab5642  .ufo/waves/round-40/w1/ExecC1Count.md
+83849ae15cb52ddf011d1cde15ec16d9f510d929f6d952b57c5b3ee17099d44e  .ufo/waves/round-40/w1/ExecC1LandedReceipt.md
+.ufo/waves/round-40/w1/ConnectorSiblingScan.md || f0e58b2b84a60cf614b52a7e84ee7c7adaf094fb601c7d68ed759c8d5158811b || f0e58b2b84a60cf614b52a7e84ee7c7adaf094fb601c7d68ed759c8d5158811b || stem=yes || round-40=yes round-41=no bare40/41=yes || match || reverified-commit
+.ufo/waves/round-40/w1/CriticC1Control.md || 771e948765baf3cd2864c1192a7ddf54c526cbfe00c0cbeb474af68a4ceaede3 || 771e948765baf3cd2864c1192a7ddf54c526cbfe00c0cbeb474af68a4ceaede3 || stem=yes || round-40=yes round-41=yes bare40/41=yes || match || reverified-commit
+.ufo/waves/round-40/w1/CriticC1Predicate.md || 0c09076104a3b75755519d2ea259fcd3716246d5e89f616bfae42a36d7b1472e || 0c09076104a3b75755519d2ea259fcd3716246d5e89f616bfae42a36d7b1472e || stem=yes || round-40=yes round-41=yes bare40/41=yes || match || reverified-commit
+.ufo/waves/round-40/w1/CriticC1Scope.md || 01b1d19685698be3d0004eda87ac9426dc4c74c38a11af77db94bd319ab2bec9 || 01b1d19685698be3d0004eda87ac9426dc4c74c38a11af77db94bd319ab2bec9 || stem=yes || round-40=yes round-41=no bare40/41=yes || match || reverified-commit
+.ufo/waves/round-40/w1/CriticC2Calibration.md || fa893fa02ae1c520d6667fcf8afe2a334e833063e659f2524b2bc25ac8cbe2de || fa893fa02ae1c520d6667fcf8afe2a334e833063e659f2524b2bc25ac8cbe2de || stem=yes || round-40=yes round-41=no bare40/41=yes || match || reverified-commit
+.ufo/waves/round-40/w1/CriticR4Disposition.md || 5dbd6f73bfc0ac81995f2142ca37fe1e708a2bfd2bab52a8b959e31be29ab689 || 5dbd6f73bfc0ac81995f2142ca37fe1e708a2bfd2bab52a8b959e31be29ab689 || stem=yes || round-40=no round-41=no bare40/41=yes || match || reverified-commit
+.ufo/waves/round-40/w1/CriticSourceClaim.md || a38cf8f711f30e9752e096797cb75c38577a57ef54381fce57da0d18c7494f3b || a38cf8f711f30e9752e096797cb75c38577a57ef54381fce57da0d18c7494f3b || stem=yes || round-40=yes round-41=no bare40/41=yes || match || reverified-commit
+.ufo/waves/round-40/w1/ExecC1BaseReceipt.md || 3e5fa6ce60b56e87e68b3568ec7477d183bd60bd5f8e1e5447e9d592ebb827cc || 3e5fa6ce60b56e87e68b3568ec7477d183bd60bd5f8e1e5447e9d592ebb827cc || stem=yes || round-40=yes round-41=no bare40/41=yes || match || reverified-commit
+.ufo/waves/round-40/w1/ExecC1Count.md || 9b1bc4ff3f5cfc25f55c8e4ee0962cbd499f3e5c8f77917400cd036188ab5642 || 9b1bc4ff3f5cfc25f55c8e4ee0962cbd499f3e5c8f77917400cd036188ab5642 || stem=yes || round-40=yes round-41=yes bare40/41=yes || match || reverified-commit
+.ufo/waves/round-40/w1/ExecC1LandedReceipt.md || 83849ae15cb52ddf011d1cde15ec16d9f510d929f6d952b57c5b3ee17099d44e || 83849ae15cb52ddf011d1cde15ec16d9f510d929f6d952b57c5b3ee17099d44e || stem=yes || round-40=yes round-41=yes bare40/41=yes || match || reverified-commit
+
+

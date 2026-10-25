@@ -1,0 +1,76 @@
+kimi version 2.3.1
+• Let me start by reading the required files in parallel.I have the counter, the claims, and the seat names. Now I need to look at the real receipt to copy its schema, so my forgery matches the expected format. Let me read the actual receipt.
+
+• I have the counter, claims, and names. Let me look at the real receipt's schema to copy it faithfully in the forgery.
+
+• I understand the schema. Now I build a forgery in /tmp:
+  - `start parent_pid=NNN ...` and `end parent_pid=NNN ...` with the same number
+  - child pids all invented but positive (I'll pick a different base than the real one to emphasize invention — but importantly, invented means NOT the real pids; I'll use a clearly fabricated sequence like 900000001+ or 42424242+i)
+  - 64 names copied from seat-names.txt
+
+  The counter must be run with `--receipt /tmp/...`. The names default to the frozen seat-names.txt (good — the instruction says the 64 names are copied from seat-names.txt, and I can either pass --names explicitly or rely on default; passing explicitly to the real seat-names.txt file path is fine and equivalent, but the default already points there. I'll pass --names explicitly to make the run self-documenting? Actually the instruction: "Run the counter against that forgery with --receipt". So just --receipt. The names default points to the lane's frozen list, which is what we copied from. Good.
+
+  Wait — one subtlety: c1-count.py computes LANE from `pathlib.Path(__file__).resolve().parents[3]`. The file is at corpus/evidence/round44/c1-count.py. parents[0] = round44, parents[1] = evidence, parents[2] = corpus, parents[3] = lane root. Fine, that works when running from anywhere since it's absolute from __file__.
+
+  I'll build the forgery with a shell script in /tmp. I need to:
+  1. Read seat-names.txt, generate spawn + reap lines with invented positive pids.
+  2. start/end lines with same parent_pid.
+
+  Let me write it in /tmp using a bash heredoc/python. Actually the instruction says "Write only the one report named in your prompt... If the Write tool is unavailable, write that file with a shell redirection and no other path." So the report must use Write tool. The forgery in /tmp can be created via shell. I'll generate the forgery with a small python one-liner in /tmp.
+
+  Plan:
+  - python3 script in /tmp generates /tmp/round44-forgery.receipt
+  - run: python3 corpus/evidence/round44/c1-count.py --receipt /tmp/round44-forgery.receipt ; echo exit=$?
+
+  Note the counter does NOT check reap-before-end ordering (claims.md predicate says "every reap line was written before the end line" but the counter doesn't check epochs ordering!). Let me verify: the counter parses start/end/seats but never compares epochs. Right — line ordering doesn't even matter since parse() collects reap lines anywhere. Also exit codes are not checked (claims say dead seats are not a miss). Also the counter doesn't check that spawn and reap pids correspond — only reap lines are counted for seats. Interesting: a receipt with ONLY reap lines (no spawns at all) would still pass? parse() collects reap lines into seats; count_ok needs len(seats)==64. The "reap " substring check: text needs "parent_pid=" and ("reap " or "n_spawned="). So yes, spawn lines aren't even needed. That's another gap worth noting in the report.
+
+  Also epoch ordering not checked, parent_pid positivity is checked (pid_s > 0). Duplicate names? names_ok = got == expected and len(expected) == 64, so exact ordered list match — names are checked strictly as an ordered sequence. Child pids needn't be unique — counter doesn't check uniqueness. exit_code not checked.
+
+  Now build the forgery. Invented pids: I'll use 700000001 + i for spawn child_pid and same for reap (or different — doesn't matter). Use parent_pid=987654321 (invented, not the real 3226659). Include fake epochs too, with reap epochs before... actually to demonstrate the counter ignores ordering, I could make the "end" line's epoch EARLIER than reap epochs — proving it doesn't check the "reap before end" clause. That's a nice extra: forge with end epoch < reap epoch, counter still passes. But careful: keep it simple and honest. I'll do the base forgery exactly as specified (same parent pid, invented positive pids, 64 names), and additionally set end epoch lower than reap epochs as a second demonstrated gap — but that might conflate. Better: do the specified forgery, then run two extra probes cheaply (they're nearly free): (a) reordering variant where end line appears first? No — parse takes the LAST start and end? Actually it overwrites: `start = fields` each time, so the last start/end win. Hmm.
+
+  Let me keep the main forgery faithful to the prompt, and note additional gaps from code reading, optionally verified with one cheap variant run. The prompt asks specifically: run counter against the forgery with --receipt, paste stdout and exit code, state what's proven/not proven. I'll do one extra probe run to demonstrate "reap-only" file also passes (no spawn lines at all) — cheap and strengthens the report. Also maybe an epoch-inversion probe. Two extra runs, cheap. Keep moves that improve depth and harm none.
+
+  Let me generate everything in one bash call:
+
+  ```bash
+  python3 - <<'EOF'
+  import pathlib
+  names = [l.strip() for l in pathlib.Path('/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/seat-names.txt').read_text().splitlines() if l.strip()]
+  assert len(names) == 64, len(names)
+  ppid = 987654321  # invented
+  lines = [f"start parent_pid={ppid} epoch=1900000000"]
+  # spawn lines (invented positive pids, disjoint from real receipt pids)
+  for i, n in enumerate(names):
+      lines.append(f"spawn name={n} child_pid={700000001+i} epoch=1900000001")
+  for i, n in enumerate(names):
+      lines.append(f"reap name={n} child_pid={700000001+i} exit_code=0 epoch=1900000002")
+  lines.append(f"end parent_pid={ppid} epoch=1900000003 n_spawned=64 n_reaped=64")
+  pathlib.Path('/tmp/round44-forgery.receipt').write_text("\n".join(lines) + "\n")
+  print("wrote /tmp/round44-forgery.receipt", len(lines), "lines")
+  EOF
+  ```
+
+  Then run the counter:
+  ```
+  python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/c1-count.py --receipt /tmp/round44-forgery.receipt; echo "exit=$?"
+  ```
+
+  Then probes:
+  - /tmp/round44-reap-only.receipt: no spawn lines, only reaps + start/end.
+  - /tmp/round44-epoch-inverted.receipt: end epoch before reap epochs (checks "reap before end" clause not enforced).
+
+  Also verify the real receipt passes (baseline) — that's useful for calibration: counter passes the real one too. The counter default run would do that: `python3 c1-count.py` with defaults. That reads production files but doesn't modify. Fine. Actually claims.md says the counting command; running it read-only is allowed and useful for the report to show forgery output matches real output byte-for-byte. Good for calibration: identical stdout proves indistinguishability under this counter.
+
+  Let me run all in parallel batches. First generate forgery (single call), then run the 4 counter invocations — those are independent once forgery exists, so generate first, then parallel calls. Actually I can chain generation into one call and then run counters in separate parallel calls. But counters depend on forgery existing; generation is one call. Let me do: call 1 = generate all three /tmp files (forgery, reap-only, epoch-inverted). Then batch of 4 parallel Bash calls for counter runs.
+
+  For the epoch-inverted probe: end epoch earlier than reap epochs, e.g. end epoch=1900000001 while reaps at 1900000002. Also start must have parent_pid positive and end same.
+
+  Also note ZERO_PIDS probe: claims already have controls/pids0. No need.
+
+  Writing report to /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w3/W3CritForge.md using Write tool.
+
+  Let me now do generation + runs. I'll combine generation into a single Bash call.
+
+• Schema understood. Now I'll build the forgery plus two cheap probe variants in /tmp in one shot.generated: forgery, reap-only, epoch-inverted; names = 64
+
+

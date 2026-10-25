@@ -2374,3 +2374,33 @@ The round-1 operability scale is unchanged: 3 → 3. These observables sit besid
 | adjacency | **unchanged** | nothing absorbed from a sibling; campaign tree read-only |
 
 Learning trends, lane view: expansion improved (one opened row, one lesson, one new operation); quality improved (counters against do-nothing controls; QUALITY 61); discernment unchanged until a non-author spot-check.
+
+## Round 44 verdict — 2026-10-24 (launcher receipt, inherited-tree disposition, one version-binding adoption)
+
+Selected claims, frozen in `corpus/evidence/round44/claims.md` before any seat scored:
+C1 operability (lowest scored non-retired axis, 3/10); C2 calibration; C3 depth, sourced on
+S079. No external fetch: L0 `8d77e6c1` is still open, so every source opened this round was
+opened from a committed capture and no URL was fetched.
+
+| claim / axis | before → after | counting command | verdict |
+|---|---|---|---|
+| C1 operability | no committed launcher log existed, so the round-43 closure could not resolve the parent-lifetime claim. After: `N_SPAWNED=64/64`, `N_REAPED=64/64`, `PARENT_PID_MATCH=1/1`, `ZERO_PIDS=0`, `NAMES_MATCH=64/64`, exit 0. The missing-receipt, `controls/pids0.receipt` and `controls/prose.receipt` do-nothing controls each exit 1 | `python3 corpus/evidence/round44/c1-count.py` | **improved** |
+| C2 calibration | the 39 inherited r40/r41 paths were unswept and unnamed. After: `CONSISTENT=39/39`, `REVERIFIED=36/36`, `LEFT_NAMED=3/3`, exit 0. The all-left table scores `REVERIFIED=0/36` and exits 1 | `python3 corpus/evidence/round44/c2-count.py` | **improved** |
+| C3 depth | the lane held no opened source binding a citation to a prior state. After: the entry cites S079, the S079 row's URL is the RFC 7089 URL and the located quote is in that URL's committed capture | `python3 corpus/evidence/round44/c3-count.py` | **improved** |
+
+The round-1 operability scale is unchanged: 3 → 3. These observables sit beside it.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** | C1: `tools/parent-lifetime.sh` writes the wait log from the same pid that spawned the children; `corpus/evidence/round44/parent-lifetime.receipt` (`start parent_pid=3226659` … `end parent_pid=3226659 n_spawned=64 n_reaped=64`); the three do-nothing controls fail. The wave-3 receipt `.ufo/waves/round-44/w3/parent-lifetime.receipt` carries the same end line for a wave whose seats ran: `n_spawned=32 n_reaped=32` |
+| calibration | **improved** | C2: 36 inherited seat reports re-verified one by one (basename stem, round token, length > 80, sha256) and committed as historical wave evidence; the 3 modified JSON paths stay left-named, uncommitted, reason `not hunk-verified`. Wave-3 mutation seats killed both counters with single-field corruptions (`ZERO_PIDS=1`, `PARENT_PID_MATCH=0/1`, `REVERIFIED=35/36`, `LEFT_NAMED=2/3`) |
+| depth | **improved** | C3 and `corpus/lessons/round-44.md`: two entries and three mined rows on one theme, the version binding of a citation to a prior state |
+| coverage | **improved narrowly** | one theme the lane did not hold: RFC 7089's Memento promise, the NDL WARP capture cadence and the NDL timestamped-URL anchor |
+| freshness | **unchanged** | every capture opened this round was written before this round's launch (`2026-10-24T21:36:37-03:00`): RFC capture mtime 2026-10-23 20:33, WARP 20:36, E2867 20:37 -0300. The round-43 closure routed exactly this inflation; it is not counted as an improvement here and the axis is not harmed |
+| adjacency | **unchanged** | the campaign tree was read only and never written; no sibling lane was absorbed; the two new entries are the lane's own re-grounding of staged package material |
+
+Learning trends, lane view: expansion improved (three new mined rows, two new knowledge
+entries, one lesson, one new gate); quality improved (three counters against do-nothing
+controls, QUALITY 62 mined from `considerthese/2026-10-24.md`, QUALITY 63 from the wave-3
+launcher probe, and the wave-3 mutation probes); discernment unchanged until a non-author
+spot-check — a seat this lane dispatched is still the lane.

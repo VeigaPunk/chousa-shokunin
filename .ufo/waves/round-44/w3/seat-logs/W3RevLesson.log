@@ -1,0 +1,588 @@
+kimi version 2.3.1
+• Let me start by reading the round-44 lesson file to find the Gate block.I have the Gate block. Now I need to quote the four lines: admit entries and reject entries. The Gate block has:
+
+  Admit entries (2):
+  1. `corpus/knowledge/citation-version-binding-r36.md` cites lane S079...
+  2. `corpus/knowledge/citation-version-binding-r37.md` cites lane S080... and lane S081...
+
+  Reject entries (2):
+  1. Staged S082, the SAMR record... Reason: round 43 classed that row not-carried... Flip: a text capture of that record contains the issued and effective dates as a contiguous span.
+  2. Staged S093, the Portico page... Reason: round 43 classed that row misquote... Flip: a capture where the four-factor authenticity sentence is one contiguous span matching the staged teaches cell.
+
+  The task: "quote its '## Gate' block's admit entries and reject entries. State whether the block records at least one admit and at least one reject, and whether each reject carries a reason and a flip condition. Paste the four lines you quote."
+
+  "Four lines" — the four bullet entries (2 admit + 2 reject). These are multi-line bullets in the file, but I'll quote the entries.
+
+  Let me verify falsification too — my milestone is "falsify the landed round-44 state". I should do some checks: verify the named files exist (W2ReviewRfc.md, W2CritForge.md, validate-census.txt, W2ScoutS077.md), check captures exist with the stated sha256? That might be deep. Let me do a few cheap parallel checks to calibrate: do the referenced files exist, does the mirror registry contain the rows, does the guard collision file contain S079.
+
+  Let me run some checks in parallel. Also check claims.md for round44 exists.
+
+  Checks:
+  - ls .ufo/waves/round-44/w2/ files named
+  - sha256sum of the two captures d0c4a09a9de32cb91d5e3797.txt and the WARP/E2867 captures (paths unknown — glob corpus/evidence or captures). Let me find them.
+  - grep for "S079" in the registry mirror
+  - check assimilation/guard/collisions contains S079
+  - check assimilation/collisions empty
+
+  Keep it scoped but falsify. Then write the report.
+
+  Let me batch these.
+
+• Gate block located (lines 48–98). Running falsification checks in parallel before writing the report./home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/assimilation/:
+total 20
+drwxr-xr-x 1 vgpnk vgpnk  158 Oct 24 21:52 .
+drwxr-xr-x 1 vgpnk vgpnk  614 Oct 24 22:28 ..
+-rw-r--r-- 1 vgpnk vgpnk    0 Oct 24 21:48 collisions
+-rw-r--r-- 1 vgpnk vgpnk 7987 Oct 24 21:52 disposition.tsv
+drwxr-xr-x 1 vgpnk vgpnk  124 Oct 24 21:51 draft
+drwxr-xr-x 1 vgpnk vgpnk  120 Oct 24 21:50 guard
+-rw-r--r-- 1 vgpnk vgpnk  390 Oct 24 21:48 reg-ids
+-rw-r--r-- 1 vgpnk vgpnk  555 Oct 24 21:48 staged-ids
+drwxr-xr-x 1 vgpnk vgpnk   22 Oct 24 21:52 validate
+-rw-r--r-- 1 vgpnk vgpnk  574 Oct 24 21:52 validate-census.txt
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w2/:
+total 324
+drwxr-xr-x 1 vgpnk vgpnk   938 Oct 24 21:56 .
+drwxr-xr-x 1 vgpnk vgpnk   614 Oct 24 22:28 ..
+-rw------- 1 vgpnk vgpnk 38389 Oct 24 21:49 swarm-registry.json
+-rw-r--r-- 1 vgpnk vgpnk  4903 Oct 24 21:51 W2ConnOverlap.md
+-rw-r--r-- 1 vgpnk vgpnk  6825 Oct 24 21:56 W2ConnSibling.md
+-rw-r--r-- 1 vgpnk vgpnk  4884 Oct 24 21:52 W2CritForge.md
+-rw-r--r-- 1 vgpnk vgpnk  8255 Oct 24 21:54 W2CritFresh.md
+-rw-r--r-- 1 vgpnk vgpnk  8930 Oct 24 21:55 W2CritS082.md
+-rw-r--r-- 1 vgpnk vgpnk  8345 Oct 24 21:52 W2CritSweep.md
+-rw-r--r-- 1 vgpnk vgpnk  9874 Oct 24 21:54 W2ExecCensus.md
+-rw-r--r-- 1 vgpnk vgpnk  5425 Oct 24 21:52 W2ExecCollision.md
+-rw-r--r-- 1 vgpnk vgpnk 10382 Oct 24 21:53 W2ExecHead.md
+-rw-r--r-- 1 vgpnk vgpnk  7362 Oct 24 21:52 W2ExecNoNet.md
+-rw-r--r-- 1 vgpnk vgpnk  2472 Oct 24 21:51 W2ExecNumstat.md
+-rw-r--r-- 1 vgpnk vgpnk  4248 Oct 24 21:51 W2ExecSha.md
+-rw-r--r-- 1 vgpnk vgpnk  5507 Oct 24 21:51 W2ExecShonen.md
+-rw-r--r-- 1 vgpnk vgpnk  5548 Oct 24 21:52 W2ExecWords.md
+-rw-r--r-- 1 vgpnk vgpnk  9014 Oct 24 21:54 W2MutId.md
+-rw-r--r-- 1 vgpnk vgpnk  7416 Oct 24 21:55 W2MutPipe.md
+-rw-r--r-- 1 vgpnk vgpnk  4202 Oct 24 21:51 W2ReviewC1Log.md
+-rw-r--r-- 1 vgpnk vgpnk  6773 Oct 24 21:52 W2ReviewC2Ctrl.md
+-rw-r--r-- 1 vgpnk vgpnk  8736 Oct 24 21:53 W2ReviewRfc.md
+-rw-r--r-- 1 vgpnk vgpnk  5383 Oct 24 21:53 W2ReviewWarp.md
+-rw-r--r-- 1 vgpnk vgpnk 10218 Oct 24 21:52 W2ScoutConsider.md
+-rw-r--r-- 1 vgpnk vgpnk  5436 Oct 24 21:52 W2ScoutE2867.md
+-rw-r--r-- 1 vgpnk vgpnk  4214 Oct 24 21:53 W2ScoutProvince.md
+-rw-r--r-- 1 vgpnk vgpnk  3450 Oct 24 21:51 W2ScoutRfc.md
+-rw-r--r-- 1 vgpnk vgpnk  5234 Oct 24 21:53 W2ScoutS077.md
+-rw-r--r-- 1 vgpnk vgpnk  3550 Oct 24 21:52 W2ScoutWarp.md
+-rw-r--r-- 1 vgpnk vgpnk  9218 Oct 24 21:54 W2ScribeFresh.md
+-rw-r--r-- 1 vgpnk vgpnk  8739 Oct 24 21:56 W2ScribeGate.md
+-rw-r--r-- 1 vgpnk vgpnk  7958 Oct 24 21:54 W2ScribeRow.md
+-rw-r--r-- 1 vgpnk vgpnk  9782 Oct 24 21:53 W2SimpName.md
+-rw-r--r-- 1 vgpnk vgpnk  8553 Oct 24 21:54 W2SimpSep.md
+8a879d0ad24e51a7f2671ace2228d2ae9eedc4496a97677d622f390da6033f46  corpus/knowledge/citation-version-binding-r36.md
+af8d980675b55fa6e4eb55bdc74e452d5e7ecc4f378952be31656893d84b0b89  corpus/knowledge/citation-version-binding-r37.md
+total 540
+drwxr-xr-x 1 vgpnk vgpnk  2648 Oct 24 21:58 .
+drwxr-xr-x 1 vgpnk vgpnk   122 Oct 19 19:17 ..
+-rw-r--r-- 1 vgpnk vgpnk 20189 Oct 19 17:05 anchor-boundaries-r4.md
+-rw-r--r-- 1 vgpnk vgpnk 19720 Oct 15 02:13 archived-export-intake.md
+-rw-r--r-- 1 vgpnk vgpnk 17799 Oct 19 17:05 archives-verified-r9.md
+-rw-r--r-- 1 vgpnk vgpnk 26926 Oct 19 17:05 audit-r11.md
+-rw-r--r-- 1 vgpnk vgpnk  3588 Oct 23 17:09 bash-local-expansion-r35.md
+-rw-r--r-- 1 vgpnk vgpnk  3926 Oct 24 03:07 capture-bash-pin-r39.md
+-rw-r--r-- 1 vgpnk vgpnk  5014 Oct 24 04:27 capture-path-pin-r41.md
+-rw-r--r-- 1 vgpnk vgpnk 15772 Oct 19 17:05 chain-resolution-r3.md
+-rw-r--r-- 1 vgpnk vgpnk  8931 Oct 21 04:31 citation-chain-fidelity-r24.md
+-rw-r--r-- 1 vgpnk vgpnk  2402 Oct 24 21:58 citation-version-binding-r36.md
+-rw-r--r-- 1 vgpnk vgpnk  2550 Oct 24 21:58 citation-version-binding-r37.md
+-rw-r--r-- 1 vgpnk vgpnk  3373 Oct 24 01:01 claim-pin-provenance-r37.md
+-rw-r--r-- 1 vgpnk vgpnk  7496 Oct 23 09:26 claim-record-fields-r33.md
+-rw-r--r-- 1 vgpnk vgpnk  5972 Oct 19 19:17 claim-support-states-r24.md
+-rw-r--r-- 1 vgpnk vgpnk 11220 Oct 15 20:28 claim-verification-r2.md
+-rw-r--r-- 1 vgpnk vgpnk  5382 Oct 19 19:17 contextual-source-admission-r24.md
+-rw-r--r-- 1 vgpnk vgpnk  2883 Oct 23 16:14 dead-zone-pcre-r34.md
+
+
+• The Glob for `**/d0c4a09a9de32cb91d5e3797.txt` found no matches. The Gate block claims "Capture `d0c4a09a9de32cb91d5e3797.txt`". Let me search more broadly for that capture name and the WARP capture sha256. Also check where captures live. The claims said captures' mtimes 2026-10-23 20:33 and 20:36 -0300 — those are round43 captures maybe. Let me look for capture directories.
+
+  Also the capture file might be under .ufo or corpus/evidence with a different name. Let me glob for captures and grep for the sha256 prefix c3c7b7f2 in wave-2 W2ReviewRfc.md.
+
+• Capture `d0c4a09a9de32cb91d5e3797.txt` not found by glob — probing where captures live and cross-checking the wave-2 reviewer's claims../.ufo/waves/round-33/w1/ExecParserCost33/offsets_captured.txt
+---
+---
+alias-r13-20261019T123621Z-battery.log
+alias-r13-20261019T123621Z-bypass-after.log
+alias-r13-20261019T123621Z-bypass-before.log
+alias-r13-20261019T123621Z-selftest.log
+archives-r9-20261016T045404Z-A.log
+archives-r9-20261016T045404Z-B.log
+archives-r9-20261016T045404Z-claims.log
+archives-r9-20261016T045404Z-C.log
+archives-r9-20261016T045404Z-live.log
+boundary-r4-20261016T003332Z-attacks.log
+boundary-r4-20261016T003332Z-chain.log
+boundary-r4-20261016T003332Z-claims.log
+boundary-r4-20261016T003332Z-live.log
+boundary-r4-20261016T003332Z-selftest.log
+chain-r3-20261015T235623Z-fixture.log
+chain-r3-20261015T235623Z-gate.log
+chain-r3-20261015T235623Z-live.log
+chain-r3-20261015T235623Z-selftest.log
+claims-r2-20261015T233027Z-fixture.log
+claims-r2-20261015T233027Z-gate.log
+claims-r2-20261015T233027Z-live.log
+claims-r2-20261015T233027Z-selftest.log
+compose-r6-20261016T020330Z-broken.log
+compose-r6-20261016T020330Z-full.log
+compose-r6-20261016T020330Z-json.log
+compose-r6-20261016T020330Z-live.log
+compose-r6-20261016T020330Z-selftest.log
+controls-r10-20261016T055530Z-controls.log
+controls-r10-20261016T055530Z-exempt.log
+controls-r10-20261016T055530Z-ledger.log
+controls-r10-20261016T055530Z-live.log
+deny-r22-20261019T190000Z-battery.log
+deny-r22-20261019T190000Z-demo.log
+deny-r22-20261019T190000Z-drift.log
+deny-r22-20261019T190000Z-selftest.log
+fanchor-r23-20261019T192000Z-battery.log
+fanchor-r23-20261019T192000Z-demo.log
+fanchor-r23-20261019T192000Z-drift.log
+fanchor-r23-20261019T192000Z-selftest.log
+fence-r17-20261019T171200Z-battery.log
+fence-r17-20261019T171200Z-demo.log
+fence-r17-20261019T171200Z-drift.log
+fence-r17-20261019T171200Z-selftest.log
+gate-baseline-r12-20261019T115519Z.json
+gate-baseline-r8-20261016T033757Z.json
+integrity-r7-20261016T030552Z-broken.log
+integrity-r7-20261016T030552Z-fixture.log
+integrity-r7-20261016T030552Z-live.log
+integrity-r7-20261016T030552Z-selftest.log
+json-r24-20261019T213117Z-battery.log
+json-r24-20261019T213117Z-demo.log
+json-r24-20261019T213117Z-drift.log
+json-r24-20261019T213117Z-selftest.log
+mount-r14-20261019T132025Z-battery.log
+mount-r14-20261019T132025Z-bypass-after.log
+mount-r14-20261019T132025Z-bypass-before.log
+mount-r14-20261019T132025Z-selftest.log
+pin-r8-20261016T033757Z-drift.log
+pin-r8-20261016T033757Z-live.log
+pin-r8-20261016T033757Z-pin.log
+pin-r8-20261016T033757Z-selftest.log
+ptr-r21-20261019T184000Z-battery.log
+ptr-r21-20261019T184000Z-demo.log
+ptr-r21-20261019T184000Z-drift.log
+ptr-r21-20261019T184000Z-selftest.log
+README.md
+root-r15-20261019T152000Z-battery.log
+root-r15-20261019T152000Z-demo.log
+root-r15-20261019T152000Z-drift.log
+root-r15-20261019T152000Z-selftest.log
+round-1
+round24-measure-after.log
+round24-measure-before.log
+round24-measure.sh
+round25-census-after.log
+round25-census-before.log
+round25-claims.md
+round25-driver-census-end.log
+round25-driver-census-start.json
+round25-final-before.log
+round25-final-census.log
+round25-final-counter-controls.json
+round25-final-differential.log
+round25-final-holds.log
+round25-final-ledger.log
+round25-final-measure.log
+round25-final-pin.json
+round25-holds
+round25-landed-differential.log
+round25-landed-measure.log
+round25-ledger-recount.log
+round25-ledger-recount.py
+round25-measure-after.log
+round25-measure-before.log
+round25-measured-revision.json
+round25-measure.sh
+round25-meta-differential.log
+round25-meta-differential.sh
+round25-meta-oracle.py
+round25-retained-final-selftest.log
+round25-selftest.log
+round25-sources-census.sh
+round26-census-before.json
+round26-census-end.json
+round26-claims.md
+round26-date-differential.sh
+round26-inherited-after.log
+round26-inherited-measurement.json
+round26-measure-before.log
+round26-measured-revision.json
+round26-measure.sh
+round26-recovery-identity.json
+round26-registry-differential.sh
+round26-registry-oracle.py
+round27-census-after.json
+round27-census-before.json
+round27-claims.md
+round27-date-differential-after.log
+round27-drift-after.log
+round27-falsify-controls.py
+round27-mechanisms-after.json
+round27-mechanisms-before.json
+round27-mechanisms.py
+round27-registry-differential-after.log
+round27-regressions-after.json
+round27-regressions.py
+round27-selftest-after.log
+round28-safe
+round29
+round30
+round31
+round32
+round33
+round34
+round35
+round36
+round37
+round38
+round39
+round40
+round41
+round42
+round43
+round44
+scope-r12-20261019T115519Z-A-fix.log
+scope-r12-20261019T115519Z-battery.log
+scope-r12-20261019T115519Z-drift-r8.log
+scope-r12-20261019T115519Z-selftest.log
+scope-r18-20261019T173000Z-battery.log
+scope-r18-20261019T173000Z-demo.log
+scope-r18-20261019T173000Z-drift.log
+scope-r18-20261019T173000Z-selftest.log
+sweeps-r5-20261016T011543Z-broken.log
+sweeps-r5-20261016T011543Z-fixture.log
+sweeps-r5-20261016T011543Z-live.log
+sweeps-r5-20261016T011543Z-selftest.log
+symlink-r19-20261019T174500Z-battery.log
+symlink-r19-20261019T174500Z-demo.log
+symlink-r19-20261019T174500Z-drift.log
+symlink-r19-20261019T174500Z-selftest.log
+verify-all-manifest.jsonl
+verify-r20-20261019T180000Z-battery.log
+verify-r20-20261019T180000Z-demo.log
+verify-r20-20261019T180000Z-drift.log
+verify-r20-20261019T180000Z-selftest.log
+file	W04	S051 duplicate url www.w3.org/TR/2017/REC-html52-20171214/syntax.html across scopes
+file	W04	S053 duplicate url docs.python.org/3/library/socket.html across scopes
+file	W04	S073 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+file	W04	S074 duplicate url docs.python.org/3/library/hashlib.html across scopes
+file	W04	S075 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+file	ok	/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/assimilation/validate/corpus/SOURCES.md
+validate_exit=0
+---GUARD---
+col0
+collisions
+indented-registry.md
+reg-ids
+staged-ids
+staged.md
+S079
+---COLL---
+0 .ufo/waves/round-44/assimilation/collisions
+
+
+• Key finding so far: the capture `d0c4a09a9de32cb91d5e3797.txt` lives in `/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache` — outside this repo (and my prompt says don't touch /home/vgpnk/Projects/shokuknow; I did not modify it — only read references via W2ReviewRfc.md quotes; I shouldn't read that repo per bounds "Never modify ... /home/vgpnk/Projects/shokuknow" — modify is forbidden; read is probably fine but let me be careful. Reading is not modifying. The prompt says "Never modify lane production files, the lane git index, jj state, the fleet repo, a sibling repo, or /home/vgpnk/Projects/shokuknow." So modifying is forbidden; reading should be acceptable. The wave-2 reviewer already read it. I can independently verify the sha256 and offset by reading that file. That's a legitimate falsification check — reading is fine.
+
+  Let me verify:
+  1. sha256 of the qcache file matches c3c7b7f2...
+  2. dd skip=14896 count=45 yields the quote.
+  3. Check knowledge files r36/r37 contents: cite S079/S080/S081, quote text, recheck prose `365d`/`90d`/`180d`, used-by, status mined, no pipe in cells.
+  4. Check the mirror registry staged.md for S079 row-start and guard col0 vs indented.
+  5. Check claims.md round44 for the frozen C3 quote.
+
+  Also check the WARP and E2867 captures (sha256 a7e46e27..., d2a58e70...) in qcache.
+
+  Also verify "S077 not a row-start id in staged append" and "collisions empty" (confirmed: 0 bytes).
+
+  And check the "not staged-id minus 2" claim: staged S081 vs lane S079 — that's staged-id minus 2 actually! Wait: staged S081, lane S079. 81-2=79. The Gate says "Not staged-id minus 2." Hmm — the Gate asserts the lane id is S079 because the URL is the evidence and S079 is the next free lane id, "Not staged-id minus 2." But S081 − 2 = S079, which coincidentally equals staged-id minus 2. Interesting falsification angle: the coincidence makes the reasoning unfalsifiable-by-outcome? Actually the claim "next free lane id" can be checked against the registry: is S079 the next free lane id at append time? Check SOURCES.md registry — does it end at S078? Let me check corpus/SOURCES.md for the max lane id. W2ReviewRfc.md line 124 said: "No `S079` row-start is in `corpus/SOURCES.md` (corpus grep for `S079` hits `claims.md` only)." So at wave-2 time, SOURCES.md had no S079 — next free would indeed be S079 if registry ended at S078. Let me check max id in SOURCES.md.
+
+  Also verify the Gate's "Three rows" claim: S079, S080, S081 rows appended? Check staged.md in guard/ or the draft.
+
+  Also check validate --file census: exit 0, five W04, no E03/E04 — census shows 5 W04 lines, validate_exit=0, no E03/E04. ✓ Confirmed.
+
+  Guard collisions = S079 ✓ confirmed.
+
+  Now the four lines to paste: the Gate block's admit entries and reject entries. The user asks: "quote its '## Gate' block's admit entries and reject entries... Paste the four lines you quote." So four bullets: 2 admit + 2 reject. I'll paste them (multi-line bullets; I'll quote the essential lines — maybe each bullet in full).
+
+  Let me run the deeper verification batch now.
+
+• Census (exit 0, five W04, no E03/E04), empty `collisions`, and guard `collisions=S079` all confirmed. Now verifying the capture hashes/offset, the three appended rows, and the r36/r37 knowledge files.== /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/d0c4a09a9de32cb91d5e3797.raw
+c3c7b7f2c495dce0fad758dac34dcc1eef3623d13c9ef346e19b30dbbbe801dc  /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/d0c4a09a9de32cb91d5e3797.raw
+== MISS for a7e46e274b0784f81426bdc602785b03db1fa87f8f34916097d42ff36cac8dc8
+== MISS for d2a58e70eb8a2b4e42836c0b3df5035c67a45bbce71c412cbcd2bfb155d4848f
+---OFFSET---
+constitutes a promise that the resource state
+
+---WARPQ---
+87:| S077 | Poppler `pdftotext(1)` manual — `/usr/share/man/man1/pdftotext.1.gz` (canonical project URL `http://poppler.freedesktop.org/` printed by the installed `pdftotext -v`; not fetched) | docs | A | the documented text-extraction contract of the exact tool whose `pdftotext -layout` output the campaign's cached PDF captures are; not a rendering-quality standard | DESCRIPTION, lines 12–13 of the decompressed roff source (`/usr/share/man/man1/pdftotext.1.gz`, sha256 `50dd56df…`); the installed binary reports `pdftotext version 26.08.0` | a PDF capture in the campaign's cache IS a text rendering, so a quote's absence in it is a statement about that rendering, while a non-PDF binary document that was never rendered cannot refute a quote at all | mined | 2026-10-24 | 180d | tools/quarantine-check.py, corpus/lessons/round-42.md |
+88:| S078 | Bramer, de Jonge, Rethlefsen, Mast, Kleijnen, A systematic approach to searching — Europe PMC full-text XML https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6148622/fullTextXML (capture sha256 833b13e3e80212522d016a8db9c6edeacb8965148d2334722a7a73c415d7136d; not fetched this round) | paper | A | how a search log is kept as a working document, distinct from a checklist of fields a log must carry | section 6 of the Europe PMC full-text XML, byte offset 17383 of the committed capture | Design and keep the complete search strategies in a log document rather than in the database, so the steps taken stay accountable and reproducible | mined | 2026-10-24 | 365d | corpus/knowledge/search-log-method-r39.md |
+89:| S079 | RFC 7089, HTTP Extension for Time-Based Access to Resource States — Memento — https://www.rfc-editor.org/rfc/rfc7089.txt | spec | A | binding a citation to a timestamped prior state; the document puts archive veracity out of scope | section 2.1.1 of the committed capture, no fetch | a Memento-Datetime header is a promise that the reflected resource state will no longer change; an archived body may not be byte-to-byte the same as what the origin served | mined | 2026-10-24 | 365d | corpus/knowledge/citation-version-binding-r36.md |
+90:| S080 | NDL Web Archiving Project (WARP) FAQ — https://warp.ndl.go.jp/en/info/qanda | docs | A | the collection cadence of Japan's national web archive, as the FAQ states it | the FAQ answer beginning National institution websites are archived once per month; committed capture, no fetch | national institution websites are archived once per month, other public institutions four times per year, and private institutions generally once a year | mined | 2026-10-24 | 90d | corpus/knowledge/citation-version-binding-r37.md |
+91:| S081 | NDL current-awareness E2867, WARP URL renewal — https://current.ndl.go.jp/e2867 | paper | A | how Japan's national web archive binds a capture to a point in time in the URL | the section on a URL that embeds the capture timestamp; committed capture, no fetch | WARP moved to a URL that embeds the capture timestamp, for example warp.ndl.go.jp/web/20250102112233, so a reader can tell the point in time from the URL | mined | 2026-10-24 | 180d | corpus/knowledge/citation-version-binding-r37.md |
+---MAXLANE---
+| S079 
+| S080 
+| S081 
+---GUARDSTAGED---
+1:| S079 | staged |
+---S077CELL---
+
+
+• Findings so far:
+
+  CONFIRMED:
+  - Gate block has exactly 2 admit entries and 2 reject entries. Each reject carries a "Reason:" and a "Flip:". ✓
+  - RFC capture `.raw` sha256 matches `c3c7b7f2...` and dd skip=14896 count=45 yields exactly `constitutes a promise that the resource state` (45 bytes). ✓
+  - SOURCES.md: S079/S080/S081 rows exist, max lane id = S081, S077 stays pdftotext manual, used-by columns cite only the two knowledge files, status mined, recheck 365d/90d/180d matching the Gate. ✓
+  - validate-census: exit 0, five W04, no E03/E04. ✓
+  - assimilation/collisions empty (0 bytes). ✓
+  - guard/collisions contains S079. ✓
+  - r36/r37 knowledge files exist with the quoted content, not-cited rejects recorded, flips recorded. ✓
+
+  ISSUES FOUND (falsification candidates):
+  1. The WARP capture (sha256 a7e46e27...) and E2867 capture (sha256 d2a58e70...) are NOT in the qcache — find returned MISS for both. Need to double check: maybe the file name is the full sha or named differently, or under a different dir. My find used `-name "${f}*"`, where f for those two is the full 64-hex digest. Maybe files are named by URL-hash prefix (like the RFC one: first 24 hex of sha256 of URL). The WARP capture sha256 given is the *file* sha256, not the filename. So search differently: compute sha256 of all files in qcache and grep for the digest. Also possible the capture lives elsewhere. The command failed with exit code 2 on the grep -c part because no file matched the glob. Let me redo: find files in qcache, sha256sum them, grep for the two digests.
+
+  2. The `.txt` variant wasn't printed because find picked `.raw` first (head -1). Fine — .raw matches; W2ReviewRfc said .txt and .raw identical. But I only hashed .raw. Let me hash .txt too.
+
+  3. Gate says "Not staged-id minus 2" for r36: staged S081 → lane S079 = staged minus 2. The Gate denies the *rule* but the arithmetic coincidence holds for this one row. For r37: staged S091→S080 (minus 11), staged S092→S081 (minus 11) — consistent shift of 11, not minus 2, so "not an arithmetic shift of the staged numbers" is false in the weak sense (it IS an arithmetic shift, just not a constant shared with r36's). Actually r37's file says "Not an arithmetic shift of the staged numbers" but S091−S080 = 11 and S092−S081 = 11 — it IS a constant arithmetic shift of −11. That's a genuine calibration finding: the denial is wrong as stated; the correct statement is "not a shared rule across entries / the ids are next-free-lane-ids, which happens to coincide with shifts." Both shifts are constant per-entry but differ across entries (−2 vs −11), so the defensible claim is "no single arithmetic rule," not "not an arithmetic shift."
+
+  4. Verify WARP quote "National institution websites are archived once per month" is in the WARP capture once found.
+
+  5. Check claims.md round44 lines 99-101 for frozen span (per W2ReviewRfc reference). Quick check.
+
+  6. Also verify r36 line 10 quote is contiguous in the capture beyond 45 bytes: the full sentence wraps ("...resource state\n   reflected..."), knowledge r36 quotes the full sentence with "reflected" — fine since the located 7-word span is contiguous; the full sentence quote in Observation includes the wrap but that's an Observation, not a located span. W2ReviewRfc flagged exactly this: a row pasting the whole sentence would miss the substring check. r36's Gate section pastes the 7-word version. OK.
+
+  7. Verify no pipe in cells of the three rows: quick check `grep '|' | awk` — the rows contain pipes as delimiters only. Could count fields: each row should have same number of `|` as S078. Quick check with awk -F'|' NF.
+
+  8. Gate says "used-by on the adopted rows lists only the entries that cite them" — S079 used-by = corpus/knowledge/citation-version-binding-r36.md only ✓; S080/S081 = r37 ✓.
+
+  9. Also the claim "Three rows" ✓ (S079, S080, S081).
+
+  10. Verify the E2867 token in its capture.
+
+  Let me run the batch: qcache inventory + sha grep, field-count parity of registry rows, claims.md lines ~90-110.
+
+• RFC capture verified (sha256 + dd offset exact). But the WARP/E2867 captures were not found by filename — their names may not be the file digest. Digging further.000f224439dccc949aafb53f.raw
+000f224439dccc949aafb53f.txt
+001287c436f0e6b1d166ae8d.raw
+001287c436f0e6b1d166ae8d.txt
+002f2eceb4b6b8f841d89b00.raw
+002f2eceb4b6b8f841d89b00.txt
+0034b800811072de3980e85b.raw
+0034b800811072de3980e85b.txt
+004699acd653cf6dade990fb.raw
+004699acd653cf6dade990fb.txt
+006dea8f19ea2df721870f1a.fail
+0099ca656c75cc14aa71b6ba.raw
+0099ca656c75cc14aa71b6ba.txt
+009a7ebf2056da5cf4003e4b.raw
+009a7ebf2056da5cf4003e4b.txt
+00ae5c2bd51b32fb0a616273.raw
+00ae5c2bd51b32fb0a616273.txt
+00d3f2704147580f72baf764.raw
+00d3f2704147580f72baf764.txt
+010d69dcfaa8bc91681095c0.fail
+0116a4b46c5e94d56a492a24.fail
+011eae980dac27056ced1043.fail
+012a018a181585d3e317e68f.raw
+012a018a181585d3e317e68f.txt
+014fff91988924ad64c58ca4.fail
+015352e29c644496d018ca20.raw
+015352e29c644496d018ca20.txt
+0165eb243333398781ff3981.fail
+016cfd85c3e4fae3597919bb.fail
+0170bc6642212393dfb40e8a.raw
+---COUNT---
+6705
+---SHA-MATCH---
+d2a58e70eb8a2b4e42836c0b3df5035c67a45bbce71c412cbcd2bfb155d4848f  /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/0034b800811072de3980e85b.txt
+a7e46e274b0784f81426bdc602785b03db1fa87f8f34916097d42ff36cac8dc8  /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/5f54e82c87a76eefdc9a0d35.txt
+---TXT---
+c3c7b7f2c495dce0fad758dac34dcc1eef3623d13c9ef346e19b30dbbbe801dc  /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/d0c4a09a9de32cb91d5e3797.txt
+86: NF=13
+87: NF=13
+88: NF=13
+89: NF=13
+90: NF=13
+91: NF=13
+---CLAIMS99---
+Cheapest full-marks gate without the work: an entry that repeats the quote
+and names S079 while the quote is not in the capture. The counter reads
+the capture by the row URL.
+
+Construction, not a seat score (2026-10-24, before this file was the
+scoring rule): the quote is a contiguous substring of capture
+`d0c4a09a9de32cb91d5e3797.txt` (sha256 of the URL, first 24 hex digits).
+The 36 report headings were checked against the stem-and-round-token rule;
+0 of 36 failed that looser rule. Fourteen fail a first-line-only rule, so
+the first-line rule was not frozen.
+
+
+• All three captures now verified by content sha256:
+  - RFC: d0c4a09a...txt → c3c7b7f2... ✓
+  - WARP: 5f54e82c87a76eefdc9a0d35.txt → a7e46e27... ✓
+  - E2867: 0034b800811072de3980e85b.txt → d2a58e70... ✓
+
+  Registry rows S079/S080/S081 have NF=13, same as S076–S078 — field parity holds, so no stray pipe inside a cell (a pipe in a cell would raise NF).
+
+  Remaining checks:
+  1. WARP quote contiguous in 5f54e82c....txt.
+  2. E2867 token in 0034b800....txt.
+  3. mtimes of the two captures (claims say 20:33 and 20:36 -0300; r37 says WARP mtime 20:36).
+  4. The "not staged-id minus 2" / "not an arithmetic shift" wording issue.
+  5. Verify quote uniqueness maybe (grep -c).
+  6. Also verify the rejects: staged S082 and S093 exist in the staged append but were not adopted — check guard/staged.md or staged-ids for S082/S093, and confirm they're absent from SOURCES.md (they are — max lane id is S081).
+
+  One more falsification angle: "next free lane id" — before this round, registry ended at S078 (rows 86–88 are S076/S077/S078; S079 is line 89 and is the append). W2ReviewRfc confirmed no S079 in SOURCES.md at wave-2. So S079 = next free ✓. The "staged-id minus 2" coincidence: staged S081, lane S079 — the Gate's phrasing "Not staged-id minus 2" asserts the derivation is not the arithmetic rule, though the numbers coincide. As calibration, worth noting the coincidence is real (81−2=79) and the denial is only true of the derivation, not the arithmetic. For r37 the file says "Not an arithmetic shift of the staged numbers" — but S091→S080 and S092→S081 is exactly a constant shift of −11. That denial is false as arithmetic; it's only true that it's not a shared rule with r36. That's a genuine wording/calibration finding.
+
+  Let me check what the staged ids actually were — verify S081/S091/S092/S082/S093 in the staged append (guard/staged.md is the mirror; staged-ids file). Check .ufo/waves/round-44/assimilation/staged-ids and guard/staged.md.
+
+• All three captures verified by content digest. Final batch: WARP/E2867 quote containment, mtimes, and the staged-id mapping behind the "not staged-id minus 2" wording.1
+1
+2026-10-23 20:36:10.486713407 -0300 /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/5f54e82c87a76eefdc9a0d35.txt
+2026-10-23 20:36:20.291295276 -0300 /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/0034b800811072de3980e85b.txt
+2026-10-23 20:33:05.526350588 -0300 /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/d0c4a09a9de32cb91d5e3797.txt
+S079
+S080
+S081
+S082
+S083
+S084
+S085
+S086
+S087
+S088
+S089
+S090
+S091
+S092
+S093
+S094
+S095
+S096
+S097
+S098
+S099
+S100
+S101
+S102
+S103
+S104
+S105
+S106
+S107
+S108
+S109
+S110
+S111
+S112
+S113
+S114
+S115
+S116
+S117
+S118
+S119
+S120
+S121
+S122
+S123
+S124
+S125
+S126
+S127
+S128
+S129
+S130
+S131
+S132
+S133
+S134
+S135
+S136
+S137
+S138
+S139
+S140
+S141
+S142
+S143
+S144
+S145
+S146
+S147
+S148
+S149
+S150
+S151
+S152
+S153
+S154
+S155
+S156
+S157
+S158
+S159
+S160
+S161
+S162
+S163
+S164
+S165
+S166
+S167
+S168
+S169
+S170
+S171
+S172
+S173
+S174
+S175
+S176
+S177
+S178
+S179
+S180
+S181
+S182
+S183
+S184
+S185
+S186
+S187
+S188
+S189
+---GUARD-STAGED-IDS---
+S079
+---S082-S093-ROWS---
+
+
+• Interesting: staged-ids lists S079…S189 (staged package ids), and guard/staged.md apparently doesn't contain S082/S091/S092/S093 rows? The grep returned nothing. Let me check what guard/staged.md actually is — earlier grep showed line 1: `| S079 | staged |`. So guard/staged.md is a small fixture (one sentinel row `| S079 | staged |` for the guard test), not the full staged package. The staged package lives where? Maybe .ufo/waves/round-44/assimilation/draft/ or the staged append file itself. Let me look at draft/ and find the staged file with S082/S091/S092/S093 to confirm the staged mapping claims (S081 staged for the RFC URL, S091/S092 for WARP/E2867, S082 SAMR, S093 Portico).
+
+  Also note: staged ids S079–S189 — so staged S079 is the first staged id, and the Gate/knowledge says "Staged S079 is the PRISMA-S DOI and is not this row." And staged S081 = RFC 7089 URL per claims C3. Let me verify quickly in the draft.
+
+• `guard/staged.md` is only the one-row guard fixture. The staged package must be elsewhere — checking `draft/` and the real staged append for the S081/S091/S092/S082/S093 mapping.draft/:
+citation-version-binding-r36.md
+citation-version-binding-r37.md
+
+validate/:
+corpus
+tools
+---
+draft/citation-version-binding-r36.md
+draft/citation-version-binding-r37.md
+---STAGEDROWS---
+
+

@@ -1,0 +1,331 @@
+kimi version 2.3.1
+• I will write a report at the specified path.
+
+• I'll read the round-43 spot-check and the round-44 wave context in parallel, then write only `W2CritFresh.md`.
+
+• I need to understand my specific task as W2CritFresh.
+
+• The spot-check route is in hand. Next I’ll read the seat prompt, scorecard, and freshness claims so the report grades only what this round actually re-checked.
+
+• Determining the expected scope for the W2CritFresh seat.The grep results are missing the actual matching lines and surrounding context.I need to understand the freshness criterion more carefully before writing a calibrated critic report.
+
+  The round-43 spot-check route 2 states that a pre-round cache capture cannot be a freshness improvement. The freshness section shows the lane's scorecard claims an improved narrow result.
+
+  The capture was written the day before launch. No live surface was re-checked. The report must cite round-43 scorecard claims, round-44 launch time, and the round-44 capture to be evidence-based rather than restating the prompt.
+
+• Route 2 is the freshness self-grade. I’ll measure launch time against capture mtimes so the report does not treat a pre-round cache open as an improvement.
+
+• I need to read the Round 43 verdict in SCORECARD.md around line 2352. I also need to check round 44's claims about freshness.I need to find the round 44 launch time and the capture mtime for the RFC capture used by C3.
+
+  Freshness definitions from recent rounds must be checked to write a precise critic report. The prompt requires stating why a pre-launch capture is not a freshness improvement and quoting the exact route 2 sentence from round-43-verifier-spotcheck.md. Actual timestamps will be measured rather than asserted.I need the round 44 launch time.I need to compare actual capture mtimes against the round 44 launch.
+
+  I'll check c3-count.py to resolve capture paths. I'll also look at round 44 wave 1 critic freshness reports and the knowledge entry.
+
+  I'll review prior critic report formats for style reference. The analysis must stay evidence-based and scoped.
+
+  I need to clarify the scorecard pattern for "freshness improvement." Opening a pre-existing capture is not a freshness gain. Re-checking a live surface after launch is. Re-pinning a baseline at round's final bytes is historical freshness.
+
+  I will measure capture mtimes directly rather than relying on spot-checks. Round 44 has not yet produced a scorecard, so the critic must establish the freshness rule to prevent future inflation. I will review the w1 seat prompts for freshness and routed freshness, but I must not present their findings as my own.
+
+  I will check the w2 launcher log to confirm the exact wave launch time. The prompt refers to "this round's launch," which is round 44 at 21:36:37, not wave 2. I am converting epoch 1792889397 to verify.
+
+  The manual epoch calculation for 1792889397 is off by roughly 25 hours, so I will run date commands directly to verify the timestamp. I am also preparing to stat the capture files.
+
+  I will stat the round 43 inflation capture, the RFC capture d0c4a09a9de32cb91d5e3797.txt, and any other round 44 captures. I will read c3-count.py to resolve the path logic. I will check w1 critic freshness reports for consistency but keep my own measurement. The argument must be general: a capture written before this round's launch is not a freshness improvement. It should still be grounded in the measured case.
+
+  I must calibrate the critic's language carefully. The claim should not overstate that no freshness improvement is possible this round; it should only rule out a pre-launch capture as one. The capture remains useful for depth and coverage claims, since the spot-check showed C3 improved while freshness stayed flat. A pre-launch mtime does not mean the content is stale or wrong; it simply means the round did not re-check that surface live. I will also keep the scorecard distinction clear between opening a committed capture and performing a live re-check.
+
+  A pre-launch capture can still support a quote-location predicate, but that is depth, not freshness. Freshness improvement requires a live re-check of the surface or a re-measured baseline shift. Reading yesterday's cache and recording its SHA256 shows continuity, not current upstream status. The critic will run local stat commands against the launch line and quote the output directly.
+
+  A cache open records that a file existed and hashed to a specific value. It does not observe whether the URL still serves that exact text. The round's launch is the earliest moment a live re-check can be claimed. A capture whose mtime predates that moment was written by an earlier process. It can still support a depth or provenance claim, but it cannot itself constitute a freshness improvement.
+
+  The closure already judged round 43 freshness unchanged on this exact ground and routed the scorecard to avoid repeating the inflation. I also need to verify whether the qcache path is actually a shokuknow git blob, since ReviewS086Ratio says it is not. Calling it a "committed capture" would be inflated if that path is not a git blob.
+
+  ScribeGateBlock confirmed the lane-relative qcache does not exist. The scorecard's "committed capture" label is therefore false if those bytes live only in an untracked sibling cache. I will verify with git ls-files and stat rather than citing prior seats. I also need to check whether the capture exists in the chousa repo. Finally, I will compare round 44's intended S079 capture mtime against this round's launch, so the critic applies the rule to this round rather than restating the round 43 closure.
+
+  The round-44 directory only contained seat-logs, receipts, JSON, and w2 swarm-registry data. W1 critic reports appear to be missing from the w1/ subdirectory. I will examine the prompts in corpus/evidence/round44/seat-logs/ to understand the expected critic format.
+
+  I will read the round-43 freshness self-grade lesson and the S078 row in SOURCES. The round 44 launch at 21:36:37 may not yet be complete. I will convert the wave 2 launch epoch. I will review CritNoFetch.md from round 43 to match the lane's report contract. The critic will use quoted command output.
+
+• Round 44 launched at `2026-10-24T21:36:37-03:00`. I’ll stat the cited captures against that line and the route-2 rule, without fetching.
+
+• I need to compare capture mtimes with launch times.
+
+  I will check w1 critic freshness reports and the S079 row in SOURCES. S079 may not be committed yet. I will run stat commands on captures and read the w1 critic log to avoid copying existing measurements. The user wants me to explain why a pre-round capture is not a freshness improvement and quote route 2.
+
+  The round 43 scorecard shows freshness improved narrowly because S078 opened from a committed capture with no fetch. The closure notes this was unchanged since it was a pre-round cache open with no live surface re-checked. Route 2 explicitly prohibits calling a pre-round cache open a freshness improvement.
+
+  The critic argument is that a pre-round capture is merely re-use of an already-stored object. Opening it does not constitute a live surface re-check after launch. Recording its sha256 proves provenance of a stored object, not that the upstream resource was observed during the round.
+
+  This round's RFC capture must be checked against the 44 launch time. If it predates launch, opening it cannot count as a freshness improvement. The plan is to measure the 44 launch, capture mtimes for S078 and the RFC file, and verify git tracking.I need to measure capture mtimes against launch times.
+
+  Capture S078 was written before both round 43 and round 44 launches. I will run stat commands to calibrate the freshness report.
+
+  I also need to stat the round 44 C3 capture. The freshness rule applies to this round's launch, not just the S078 case. I will check the lane's scorecards for the exact definition of freshness.
+
+  The round 43 scorecard records S078 as a narrow freshness improvement. The closure notes no live surface was re-checked. Route 2 explicitly bars calling a pre-round cache open a freshness improvement. The argument is now clear.
+
+  Freshness requires a live surface re-check during or after the round. Opening an older capture merely proves provenance continuity. It does not verify that the URL still serves those bytes. Recording a pre-existing file's digest is not a fresh observation.
+
+  I need to verify whether the committed capture is actually a git blob. I will also check if round 44's RFC capture predates launch, since that would let the critic claim the same inflation would recur. Finally, I should look at the S079 row absence; claims say C3 requires an S079 row that may not exist yet.
+
+  I will check git tracking on the qcache files. I need to convert the parent-lifetime receipt epoch to confirm the wave launch time. I will also review a prior critic report for format guidance.
+
+  I will check the round 42 S077 capture mtime against its launch to verify the lane's prior closure distinction. I must not over-generalize that a pre-round cache open is never a freshness improvement, since the lane may have accepted similar moves in earlier rounds.
+
+  The seat must not recommend fetching. This round's claims explicitly forbid it and do not include freshness.
+
+  The report should name the missing observation without prescribing a fetch procedure. The L0 fetch-scope remains open, so the grade must be unchanged rather than "go fetch to earn improved." Exact quotes from route 2, the stat output, and the launch line will let a later reader re-run the comparison. Depth requires explaining that opening a cache file is a read of a stored artifact, not a live surface re-check.
+
+  Hashing a pre-round capture proves only that the stored bytes are unchanged. It does not prove the upstream resource is unchanged or create a fresh observation dated to this round. The scorecard sentence describes provenance for a depth admit already scored as improved. Counting the same open as freshness would double-count one read across two axes.
+
+  The critic must verify the RFC capture mtime against the round 44 launch time rather than copying claims.md. The freshness rule is independent of whether C3 passes or the S079 row exists. I will run the stat and git checks and read the watchdog log around the launch to quote the exact timestamp.
+
+  I will also verify whether qcache files are tracked by git and check citation-version-binding file existence. I will quote the exact round-43 lesson sentence to anchor the route-2 freshness rule to measured mtimes. The user requires live command output, so I must run stat, sha256, and git ls-files rather than relying on cached claims.
+
+  I will read the watchdog log directly to quote launch lines, not rely on memory. I will also run wc and sha256sum on the S078 capture to confirm it matches the spot-check. Reading shokuknow qcache and running git ls-files are read-only operations, so they do not violate the no-modify rule.
+
+  I will also check birth time versus mtime via `stat` to see if the capture file was touched after creation. I confirmed that `git ls-files` and `git log` are read-only operations that do not modify the lane index or jj state, so they are permitted.
+
+• The route-2 sentence is fixed. Next I’ll stat the cache files against the round-44 launch so the grade is measured, not inferred.CACHE_DIR /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache is_dir True
+--- S078_europepmc
+URL https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6148622/fullTextXML
+KEY 2cef078d8f9f87802e19e770
+PATH /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/2cef078d8f9f87802e19e770.txt
+EXISTS True
+SIZE 80107
+MTIME_EPOCH 1792798806.022035
+MTIME 2026-10-23T20:40:06-0300
+CTIME 2026-10-23T20:40:06-0300
+BIRTH None
+--- S079_rfc7089
+URL https://www.rfc-editor.org/rfc/rfc7089.txt
+KEY d0c4a09a9de32cb91d5e3797
+PATH /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/d0c4a09a9de32cb91d5e3797.txt
+EXISTS True
+SIZE 107130
+MTIME_EPOCH 1792798385.5263505
+MTIME 2026-10-23T20:33:05-0300
+CTIME 2026-10-23T20:33:05-0300
+BIRTH None
+stat /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/2cef078d8f9f87802e19e770.txt size=80107 mtime=2026-10-23 20:40:06.022034917 -0300 ctime=2026-10-23 20:40:06.022034917 -0300
+stat /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/d0c4a09a9de32cb91d5e3797.txt size=107130 mtime=2026-10-23 20:33:05.526350588 -0300 ctime=2026-10-23 20:33:05.526350588 -0300
+--- sha256 prefixes ---
+833b13e3e80212522d016a8db9c6edeacb8965148d2334722a7a73c415d7136d  /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/2cef078d8f9f87802e19e770.txt
+c3c7b7f2c495dce0fad758dac34dcc1eef3623d13c9ef346e19b30dbbbe801dc  /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/d0c4a09a9de32cb91d5e3797.txt
+--- git tracking ---
+error: pathspec '.ufo/waves/corpus-expansion-1/.qcache/2cef078d8f9f87802e19e770.txt' did not match any file(s) known to git
+error: pathspec '.ufo/waves/corpus-expansion-1/.qcache/d0c4a09a9de32cb91d5e3797.txt' did not match any file(s) known to git
+Did you forget to 'git add'?
+shokuknow_ls_files_exit=1
+lane_sources_tracked=0
+--- launch lines ---
+wave2_receipt_epoch=2026-10-24T21:49:57-0300
+w1_receipt_epoch=2026-10-24T21:47:59-0300
+--- quote present? local read only ---
+S078_NEEDLE_OFFSET 17329 SIZE 80107
+RFC_NEEDLE_OFFSET 14896 SIZE 107130
+--- S079 row in SOURCES ---
+S079_ROWS 0
+ENTRY_EXISTS False
+--- scorecard freshness line ---
+265:| freshness | **improved narrowly** | the manifest is the lane's first durable, append-only verification-state ledger. |
+573:| freshness | **improved narrowly** | the lane's behavioral baseline is re-pinned at the round's final bytes with the reason recorded; the stale A-r9 pin cascade (2 READMEs, 2 notes, index) is corrected same-commit |
+657:| freshness | **improved narrowly** | the r12-baseline drift check stays green at the r13 gate (behavior-pinned); the r2-residual documentation chain (ledger row 8, corpus README, 5 note dispositions) is corrected same-landing |
+1966:(`corpus/knowledge/dead-zone-pcre-r34.md`); freshness improved narrowly (S065 re-opened, pins
+2170:| freshness | **improved narrowly** | the r37 knowledge docs' stale "7/7 on every committed receipt" corrected (receipt-audit L1); S070's anchor-label defect dispositioned via the S073 supersede row |
+2238:| freshness | **improved narrowly** | S071 re-opened this round (quote re-located, sha match) and re-cited by C1's entry; the r38 lesson's stale wording/counts corrected (D3/D6). |
+2271:No axis was harmed. Depth and coverage improved narrowly through the sourced receipt-digest note; freshness improved narrowly by re-opening S059 and updating its used-by path; adjacency is unchanged. No capability claim or scalar score is added.
+2289:No axis was harmed. Depth and coverage improved narrowly (sourced `capture-path-pin-r41.md`, the invocation-pinning subground); freshness improved narrowly (S075/S076 opened from installed copies; S067/S071/S072 re-cited); adjacency unchanged. No capability claim; the pinned-tool-table mechanism is gate infrastructure, not a repertoire-table entry. Selftest PASS 275/275 on the landed gate.
+2331:| freshness | **improved narrowly** | S077 opened this round from an installed copy (sha256 recorded); the register and every consulted capture are digested by `tools/quarantine-check.py digests` |
+2373:| freshness | **improved narrowly** | S078 opened from a committed capture, sha256 recorded; no fetch |
+2352:## Round 43 verdict — 2026-10-24 (absent-class split; one local adoption)
+2373:| freshness | **improved narrowly** | S078 opened from a committed capture, sha256 recorded; no fetch |
+
+
+• Strong evidence has been found. A few calibration points will be checked next.
+
+  The 12-word quote offset must be verified against the knowledge entry to avoid contradicting the closure. The scorecard incorrectly claims "committed capture" for git tracking in shokuknow.
+
+  "Committed capture" likely refers to the campaign's committed capture cache, not a git blob. Git ls-files confirmed it is not tracked in shokuknow. The freshness defect is the mtime, not the git status.
+
+  I should verify whether a digest file records the sha256 as committed in the lane repository. The closure accepted Round 42 freshness because it re-read a live installed copy of pdftotext.1.gz.
+
+  Round 43's cache file was written the day before launch with no live surface re-check. Comparing the installed man page mtime against round 42 will help calibrate why a pre-launch capture is not a freshness improvement. The rejected S077 capture from round 42 should also be checked for pre-launch timing.
+
+  Round 41's S075 and S076 were also accepted as freshness. The lane accepts three freshness moves: re-opening an installed local copy, re-pinning a behavioral baseline at the round's final bytes, and correcting stale pins or documentation in the same landing. Opening a cache file written before launch without live re-check is rejected.
+
+  The pre-launch capture fails three criteria. Its mtime and ctime are before the round launch, so it cannot be claimed as a round refresh. Reading a stored cache does not observe whether the live surface still serves those bytes. Opening the same file also already supports depth and coverage, making a freshness claim a double count on a different axis.
+
+  Hashing a stored file proves the object is unchanged, but it does not move the observation's date forward to the round. Git identity is provenance, not a live re-check. The closure grade remains unchanged because the file still supports depth. Round 44 launched at 21:36:37 and Wave 2 at 21:49:57.
+
+  The RFC capture mtime is 2026-10-23T20:33:05-0300 and the S078 capture mtime is 2026-10-23T20:40:06-0300. Both precede the round launch.
+
+  claims.md already states that a pre-round capture open is not a freshness improvement.
+
+  S079 does not yet exist. C3 would read the pre-launch RFC capture, but any future pass would be quote-location depth rather than freshness.
+
+  SCORECARD round 43 line still records an improved narrow result. That historical entry must remain append-only.
+
+  Route 2 explicitly prohibits the next scorecard from repeating this pattern. The round launch is the correct temporal bound for freshness, not wave 2, because freshness is measured against the full round.
+
+  The exact time delta between the S078 capture and Round 44 launch is about 25 hours. The RFC capture predates the launch by roughly 26 hours. These precise intervals will be quoted in the report.
+
+  The spot-check indicates the 12-word quote is at byte offset 17383. The lane file will be read to verify that exact text. A digest receipt in the lane may record the sha256 as committed. The round-43 lesson will also be checked for the lane's own freshness sentence.
+
+  The report will be scoped and operable for the integrator. It will quote route 2 exactly and include raw command output for stat, launch, and git ls-files. The analysis must separate what the open supports (depth) from what it cannot (freshness). The grade is unchanged, not harmed, and not improved. This applies to the RFC capture as well, so the scribe does not inflate C3's cache open. No fetch instructions will be included.
+
+  The seat will not edit SCORECARD. Claims.md lines 13-14 already state the rule, so this seat re-measures rather than treating that sentence as evidence. Two calibration risks are avoided: the capture is not false, and round 42's installed-copy open is not the same defect.
+
+  The man page should be measured to earn the contrast with the rejected cache open. "Committed capture" is not a fabrication; SOURCES.md tracks the sha256 for S078, but the bytes themselves are not a git blob.
+
+  The lane uses "committed capture" to describe the cache object whose hash is recorded in a committed row. The defect is the pre-launch date, not the word itself.
+
+  No numeric freshness score exists for this axis in recent rounds. The closure grade is unchanged, not harmed. The correct fix is to grade unchanged rather than recommending a fetch.I need to verify the 12-word quote offset locally. The quote is in the pre-launch file. Depth can hold it. This should not be treated as freshness.
+
+  I should stat the man page for calibration contrast. Round 42 accepted freshness improvements for re-read installed copies. I must avoid overclaiming that installed-copy opens improve freshness without live re-check measurement. The defect is the observation date relative to launch, not merely reading a local file.
+
+  The RFC quote offset is 14896. I will compute the time delta in the same command to quote it directly.
+
+  Round 44 claims already correctly refuse the inflation.
+
+  The critic should state why, quote route 2, and apply the constraint so the next scorecard does not repeat it. The scribe seat drafts the sentence. The report should be the critic finding that constrains that sentence.
+
+  I will model the report on a prior short critic format. It will name axes, quote route 2, include measured times, explain the mechanism, and state what it is not. The grade stays unchanged. I also need to verify the exact 12-word offset to avoid misquoting the spot-check value.
+
+  I will measure the man page mtime to distinguish a re-read installed copy from a cache file. The round 42 boundary should only be invoked as a calibration point, not to re-litigate that closure.
+
+  The capture bytes are not git objects. The lane recorded the hash in a tracked SOURCES.md row. That is a registry act, not a freshness re-check. I must state this precisely so the scorecard does not falsely claim it invented a file.
+
+  I will run one final measurement batch before writing the report. I am checking whether the lane stores a digest file that commits the hash. The exact route 2 sentence to quote is: "2. Freshness self-grade. Next scorecard must not call a pre-round cache open a freshness improvement. Closure grade is unchanged, not harmed." The prompt asks to quote the round-43 spot-check route 2 sentence, but item 2 contains three sentences, so I need to clarify which one to use.
+
+  I will quote the full numbered item as the route 2 text. The middle sentence is the operative rule.QUOTE12_OFFSET 17410
+QUOTE12_WORDS 12
+SPOTCHECK_OFFSET_MATCH False
+RFC_QUOTE_OFFSET 14896
+RFC_QUOTE_WORDS 7
+--- man page vs round-42 launch (contrast only) ---
+pdftotext_man size=1890 mtime=2026-08-21 04:51:48.000000000 -0300
+round42_launch 2026-10-24T19:58:10-03:00
+round43_launch 2026-10-24T20:59:39-03:00
+round44_launch 2026-10-24T21:36:37-03:00
+wave2_launch 2026-10-24T21:49:57-03:00
+S078_before_round43_launch True delta_seconds 87573
+S078_before_round44_launch True delta_seconds 89791
+S078_before_wave2_launch True delta_seconds 90591
+RFC7089_before_round43_launch True delta_seconds 87994
+RFC7089_before_round44_launch True delta_seconds 90212
+RFC7089_before_wave2_launch True delta_seconds 91012
+--- lane row records hash; capture is not a lane blob ---
+corpus/SOURCES.md:88:| S078 | Bramer, de Jonge, Rethlefsen, Mast, Kleijnen, A systematic approach to searching — Europe PMC full-text XML https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6148622/fullTextXML (capture sha256 833b13e3e80212522d016a8db9c6edeacb8965148d2334722a7a73c415d7136d; not fetched this round) | paper | A | how a search log is kept as a working document, distinct from a checklist of fields a log must carry | section 6 of the Europe PMC full-text XML, byte offset 17383 of the committed capture | Design and keep the complete search strategies in a log document rather than in the database, so the steps taken stay accountable and reproducible | mined | 2026-10-24 | 365d | corpus/knowledge/search-log-method-r39.md |
+corpus/knowledge/search-log-method-r39.md:26:Capture `/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/2cef078d8f9f87802e19e770.txt` is sha256 of the URL, first 24 hex digits; the file sha256 is `833b13e3e80212522d016a8db9c6edeacb8965148d2334722a7a73c415d7136d`.
+--- claims freshness lines ---
+Lowest scored non-retired axis: operability, 3/10. C1 works that axis.
+Freshness is not a claim. A pre-round capture open is not a freshness
+improvement (round-43 closure route 2).
+--- route 2 exact ---
+- **freshness: unchanged.** The lane's scorecard says improved narrowly. The only open is a capture written the day before launch. No live surface was re-checked. Not harmed. Routed below so the next scorecard does not repeat the inflation.
+2. Freshness self-grade. Next scorecard must not call a pre-round cache open a freshness improvement. Closure grade is unchanged, not harmed.
+The 12-word quote offset is 17410, not 17383.
+
+  Offset 17383 marks the start of a longer span containing the 12-word quote, not the quote itself.
+
+  The spot-check offset mismatch is a calibration issue, not the main freshness claim. I will verify bytes near 17383 without reproducing the full passage.
+
+  The 12-word quote begins 27 bytes after offset 17383. I will print only the first 40 bytes around that offset to verify the span without reproducing the full passage.
+
+  The 12-word quote is inside the span starting at offset 17383. The spot-check offset is therefore slightly loose if read as the quote start itself. This is a side finding and does not affect the freshness argument.
+
+  I will cite the file's mtime, size, and SHA256. I will note the 12-word quote at offset 17410. I will not repeat the spot-check's 17383 as my own measurement.
+
+  I am weighing whether to include the offset calibration as a scoped finding or as scope creep. The judge axes are operability, calibration, and depth.
+
+  A one-line parenthetical note about the offset mismatch is sufficient. I will not open a new routed defect for the 27-byte gap. The closure's imprecise offset will not affect the freshness grade.BYTES_17383_17410 b'ly in the database itself, '
+QUOTE_START 17410
+SPAN_CONTAINS_QUOTE True
+RFC_BEFORE_ROUND44 True
+1223:2026-10-24T21:36:37-03:00 launch chousa round=44 pgid=3105723 driver=hyaku-inline attempt=1
+1223:2026-10-24T21:36:37-03:00 launch chousa round=44 pgid=3105723 driver=hyaku-inline attempt=1
+Offset 17383 falls inside a sentence rather than at the start of the 12-word quote.
+
+  The 12-word quote actually starts at byte offset 17410, not 17383. The spot-check was slightly imprecise.
+
+  The 27-byte offset discrepancy is irrelevant to the freshness argument. The quote remains in the pre-launch file regardless. I will use the correct offset of 17410.
+
+  I will include the 27-byte offset calibration as a brief limit note. It prevents a later reader from assuming 17383 is correct, without adding a defect that harms depth.
+
+  The seat is freshness. I am now drafting the report.
+
+  It will list the seat, axes, and grade. It will quote route 2 and explain why the pre-launch capture does not improve freshness. It will separate remaining depth and provenance issues from the freshness defect. It will note that this round's RFC capture has the same shape. It will warn against future scorecards making the same mistake. It will include quoted commands and limits.
+
+  Operability is an axis. A later reader can re-stat both files and compare them to the watchdog launch line without a fetch.
+
+  Calibration is unchanged. I will not double-count the depth open, treat a committed hash as a re-check, or invent a numeric freshness score.
+
+  Depth is temporal: the file predates launch, so this round did not observe the live surface.
+
+  The freshness axis grade stays unchanged. This round does not claim otherwise; claims.md already records that position.
+
+  I will not dictate the exact sentence to paste. The sibling seat drafts it.
+
+  The critic will state the required grade and forbidden wording without editing SCORECARD. Recording a pre-existing file's hash is a registry act, not a fresh observation dated to this round.
+
+  "No fetch" in the scorecard cell is closure evidence that no live surface was re-checked, not proof of freshness.
+
+  Round 42 contrast shows the lane has used a narrower rule than a simple pre-launch file mtime. S077 was an installed manual re-read during that round, and the r42 closure agreed freshness improved narrowly. The man page mtime is also before its round's launch.
+
+  The route 2 rule is therefore narrower: a pre-round cache open is not a freshness improvement.
+
+  I will not over-generalize to all pre-launch local files. The defect is specifically this round's capture written the day before launch, with no live surface re-checked. I will not re-litigate r42, where an installed-copy re-read was accepted as a different move.
+
+  Freshness is a re-observation of a live surface after the round starts. A cache file is a stored rendering from an earlier process. Its mtime and ctime mark the write time of that stored object. If both precede launch, this round did not write the observation or compare it to the URL. Hashing it shows only continuity of a cache object. It can locate a quote for depth and be recorded for provenance.
+
+  The scorecard cell conflates the cache open with a freshness improvement. The "no fetch" clause is the missing re-check, not proof of freshness. Route 2 forbids repeating that call. The grade is unchanged.
+
+  Round 44 launch was 2026-10-24T21:36:37-03:00, the same clock used for round 43.
+
+  Wave 2 launch is later, so it does not loosen the bound.
+
+  The capture C3 has mtime 2026-10-23T20:33:05-0300. That is 90212 seconds before round launch.
+
+  claims.md already records freshness as a non-claim. This seat concurs.
+
+  S079 and its knowledge entry are absent from the lane tree. That is not a freshness defect. There is no new row open to mis-score yet.
+
+  The r43 S078 capture is still valid. Its mtime predates both rounds and its hash and size match the closure.
+
+  Depth evidence remains sound. The pre-launch date does not invalidate the quote or the hash.
+
+  SCORECARD line 2373 must not be rewritten. That line inflates the freshness claim. Route 2 forbids repeating it.
+
+  The offset slip is a one-line limit, not a new defect. The report will be substantial but scoped. Axes will be named as godspeed requested. The write path is confirmed.
+
+  The report will avoid policy dumps and system instructions. It will quote actual command outputs to prevent unrun checks from being claimed. The route 2 text is a numbered item containing three sentences.
+
+  I will quote the full numbered item and isolate its rule sentence. The argument will be general: any capture written before round 44 launch cannot improve freshness. I will instantiate it with the measured files. The chain is tight: launch is the earliest valid instant for a re-check claim, and the closure used that same clock for round 43.
+
+  The capture paths are not shokuknow git blobs. The recorded hash is a registry fact, not a fresh observation at launch.
+
+  The measured mtimes are the operable guardrail against a later scorecard tempting to treat a C3 cache open as a freshness improvement.
+
+  S079 is absent from the lane tree, so C3 cannot pass yet. The quote in the pre-launch RFC capture at offset 14896 is present but not a freshness improvement.
+
+  I will include the round 42 man page contrast. It calibrates the rule to exclude mtime alone and clarifies that a cache open without a live re-check is the defect. The user’s wording targets captures written before launch, not installed manuals.
+
+  I will include a short boundary paragraph quoting the stat output to prevent a false general rule. Fetching is not recommended; the fix is simply an unchanged grade. Wave 2 receipt epoch matches the launcher log, and the parent lifetime receipt for w2 starts at the wave launch time.
+
+  The report itself must state why a pre-launch capture is not a freshness improvement. I will match the tone of prior lane reports, which are evidence-dense and quote commands directly. The draft should be 80 to 120 lines, complete but not padded.
+
+  The knowledge entry claims byte offset 17383 for the 12-word quote, but spot-checking the capture shows that offset contains unrelated text. The true start of the cited span is at 17410. This suggests a real discrepancy in the recorded offset.
+
+  The 27-byte gap between the claimed offset and the true quote start is just the intervening phrase "ly in the database itself, ". The closure likely pointed at a nearby spot inside the same sentence rather than the exact quote beginning. This is a minor slip, not a missing quote. I will note the measured start as 17410 if offsets are mentioned at all.
+
+• The cache files predate round 44’s launch. I’ll write the critic report with that measurement and the route-2 sentence, and I won’t treat the open as a freshness improvement.
+
+• The report is at `.ufo/waves/round-44/w2/W2CritFresh.md`.
+
+  A capture written before launch is not a freshness improvement. Round 44 launched at `2026-10-24T21:36:37-03:00`. The RFC cache file was written at `2026-10-23T20:33:05-0300`, and the Europe PMC file at `2026-10-23T20:40:06-0300`. Opening either file hashes stored bytes. It does not re-check a live surface. The grade is unchanged, not improved, and not harmed.
+
+  Route 2, quoted: "2. Freshness self-grade. Next scorecard must not call a pre-round cache open a freshness improvement. Closure grade is unchanged, not harmed."
+
+To resume this session: kimi -r session_d25f6634-f472-4856-89ec-dbdba6021319

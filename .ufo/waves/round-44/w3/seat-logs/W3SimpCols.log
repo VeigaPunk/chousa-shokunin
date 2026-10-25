@@ -1,0 +1,302 @@
+kimi version 2.3.1
+• Let me start by reading the two files mentioned: the lane SOURCES.md rows S079, S080, S081, and the staged SOURCES.append.md file. These are independent reads, so I'll do them in parallel.
+
+  Note: I was told "Never modify ... /home/vgpnk/Projects/shokuknow" but also asked to read /home/vgpnk/Projects/shokuknow/merge/chousa/SOURCES.append.md. Read-only access is fine.
+
+  Let me read both files.Now let me analyze. The task:
+
+  "Count the columns of each registry row this round added to /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md (S079, S080, S081) and of the three staged rows in /home/vgpnk/Projects/shokuknow/merge/chousa/SOURCES.append.md they came from. Name which staged cells had to be rewritten for the lane schema, and quote the before and after of one such cell."
+
+  Wait — interesting. The lane SOURCES.md rows S079, S080, S081 added in round 44 (line 255 search log says: "Round 44 (2026-10-24): question — what binds a citation to a prior state... included 2 (S079 RFC 7089, staged URL S081; S080 WARP FAQ staged S091; S081 E2867 staged S092)").
+
+  So in the lane SOURCES.md:
+  - S079 = RFC 7089 Memento (staged S081 in append file)
+  - S080 = NDL WARP FAQ (staged S091)
+  - S081 = NDL current-awareness E2867 (staged S092)
+
+  Interesting: the task prompt says "the three staged rows in SOURCES.append.md they came from" — the round-44 search log says ids were assigned by URL, and staged ids were S081 (RFC 7089), S091 (WARP FAQ), S092 (E2867). So the three staged rows are S081, S091, S092 in SOURCES.append.md.
+
+  Note the search log line 255 says "included 2" but then lists three rows S079/S080/S081 — "included 2 (S079 RFC 7089, staged URL S081; S080 WARP FAQ staged S091; S081 E2867 staged S092)". Hmm, that says "Identified 2 candidate entries ... screened 2, included 2 (S079..., S080..., S081...)" — three rows but "included 2"? Actually the wording: "Identified 2 candidate entries on the version-binding theme, screened 2, included 2 (S079 RFC 7089, staged URL S081; S080 WARP FAQ staged S091; S081 E2867 staged S092), excluded the GB/T half and the Portico half."
+
+  That's a discrepancy worth noting: "included 2" but three rows listed. Two candidate entries presumably = two themes/knowledge entries (citation-version-binding-r36 and r37), and three rows included. Actually the "Identified 2 candidate entries" vs "included 2" with three row ids — the counts don't align with three registry rows. That's a calibration finding! The milestone is "falsify the landed round-44 state". Let me count carefully.
+
+  Now the column count:
+
+  Lane schema (SOURCES.md registry header, line 9):
+  | id | source | kind | tier | scope | anchor | teaches | status | opened | recheck | used-by | = 11 columns.
+
+  Lane rows S079 (line 89), S080 (line 90), S081 (line 91): count the pipe-separated cells. Let me count cells in S079:
+
+  `| S079 | RFC 7089, HTTP Extension for Time-Based Access to Resource States — Memento — https://www.rfc-editor.org/rfc/rfc7089.txt | spec | A | binding a citation to a timestamped prior state; the document puts archive veracity out of scope | section 2.1.1 of the committed capture, no fetch | a Memento-Datetime header is a promise that the reflected resource state will no longer change; an archived body may not be byte-to-byte the same as what the origin served | mined | 2026-10-24 | 365d | corpus/knowledge/citation-version-binding-r36.md |`
+
+  Cells: 1) S079, 2) source, 3) spec, 4) A, 5) scope, 6) anchor, 7) teaches, 8) mined, 9) 2026-10-24, 10) 365d, 11) used-by. That's 11 cells. Good.
+
+  S080: `| S080 | NDL Web Archiving Project (WARP) FAQ — https://warp.ndl.go.jp/en/info/qanda | docs | A | ... | ... | ... | mined | 2026-10-24 | 90d | corpus/knowledge/citation-version-binding-r37.md |` = 11 cells.
+
+  S081: 11 cells too.
+
+  But I should verify mechanically, not just by eye. Let me use awk to count pipes per row. Note the lane schema cells must not contain unescaped pipes... Let me check with a shell command.
+
+  Now the staged rows: S081, S091, S092 in SOURCES.append.md.
+
+  Staged S081 (line 9 of append):
+  `| S081 | RFC 7089, HTTP Extension for Time-Based Access to Resource States - Memento — https://www.rfc-editor.org/rfc/rfc7089.txt | spec | A | the protocol for binding a citation to a timestamped prior state of an HTTP resource; the archive's own veracity is explicitly out of scope | section 2.1.1 (Memento-Datetime header), section 3.1 (sparseness and entity-body identity), section 7 (Security Considerations); RFC 7089, February 2013, Informational | a Memento-Datetime header is a promise that the archived state will not change; because Mementos are sparse the archive's datetime may differ significantly from the requested one, and the archived entity-body may not be byte-to-byte what the origin served; the veracity of archives is beyond the document's scope | mined | 2026-10-23 | 365d — `curl -fsSL 'https://www.rfc-editor.org/rfc/rfc7089.txt'` then confirm section 3.1 still carries the "not be byte-to-byte" sentence (ran 2026-10-23) | corpus/knowledge/citation-version-binding-r36.md |`
+
+  Count: 11 cells.
+
+  Key differences staged → lane:
+  - id: S081 → S079 (re-assigned "by URL to the next free lane ids, not by arithmetic")
+  - source: "RFC 7089, HTTP Extension for Time-Based Access to Resource States - Memento" → "RFC 7089, HTTP Extension for Time-Based Access to Resource States — Memento" (hyphen → em dash). Hmm, minor.
+  - scope: rewritten. Staged: "the protocol for binding a citation to a timestamped prior state of an HTTP resource; the archive's own veracity is explicitly out of scope" → lane: "binding a citation to a timestamped prior state; the document puts archive veracity out of scope"
+  - anchor: staged "section 2.1.1 (Memento-Datetime header), section 3.1 (sparseness and entity-body identity), section 7 (Security Considerations); RFC 7089, February 2013, Informational" → lane "section 2.1.1 of the committed capture, no fetch"
+  - teaches: staged much longer with three clauses → lane shortened to two clauses.
+  - opened: 2026-10-23 → 2026-10-24
+  - recheck: staged "365d — `curl -fsSL ...` then confirm ... (ran 2026-10-23)" → lane "365d" (the fetch-command appendix removed — big one: the staged recheck cell embeds a curl command, which the lane cannot use because L0 fetch-scope question 8d77e6c1 is open / no fetch).
+  - used-by: same.
+
+  Staged S091 (WARP FAQ, line 19) → lane S080:
+  - id S091 → S080
+  - source: "NDL Web Archiving Project (WARP) — Frequently Asked Questions — 国立国会図書館 — https://warp.ndl.go.jp/en/info/qanda" → lane "NDL Web Archiving Project (WARP) FAQ — https://warp.ndl.go.jp/en/info/qanda"
+  - scope: staged "the collection cadence, retention goal, storage stack and archived-URL form of Japan's national web archive" → lane "the collection cadence of Japan's national web archive, as the FAQ states it"
+  - anchor: staged four FAQ entries + "page served in English, read 2026-10-23" → lane "the FAQ answer beginning National institution websites are archived once per month; committed capture, no fetch"
+  - teaches: staged long (cadence + retention + Heritrix/pywb/Elasticsearch/WARC + URL form + copyright) → lane "national institution websites are archived once per month, other public institutions four times per year, and private institutions generally once a year"
+  - opened: 2026-10-23 → 2026-10-24
+  - recheck: staged "90d — re-open the FAQ and confirm ... (ran 2026-10-23)" → lane "90d"
+  - used-by: same (corpus/knowledge/citation-version-binding-r37.md)
+
+  Staged S092 (E2867, line 20) → lane S081:
+  - id S092 → S081
+  - kind: staged "paper" → lane "paper"? Lane S081 kind: let me check line 91: `| S081 | NDL current-awareness E2867, WARP URL renewal — https://current.ndl.go.jp/e2867 | paper | A | ...` — yes, kind paper, same.
+  - scope: staged "how Japan's national web archive binds a capture to a point in time, and how it keeps legacy links alive" → lane "how Japan's national web archive binds a capture to a point in time in the URL"
+  - anchor: staged "the 保存日時を含むURLへの変更 section, read 2026-10-23; カレントアウェアネス-ENo.519, 2026.02.26" → lane "the section on a URL that embeds the capture timestamp; committed capture, no fetch"
+  - teaches: staged includes Japanese quotes and "permanent redirects" clause → lane "WARP moved to a URL that embeds the capture timestamp, for example warp.ndl.go.jp/web/20250102112233, so a reader can tell the point in time from the URL" (Japanese dropped, redirects clause dropped)
+  - opened: 2026-10-23 → 2026-10-24
+  - recheck: staged "180d — re-open the article and confirm the 保存日時を含むURLへの変更 section still names warp.ndl.go.jp/web/20250102112233 (ran 2026-10-23)" → lane "180d"
+  - used-by: same.
+
+  So the "cells rewritten for the lane schema":
+  1. id — re-pointed by URL (staged ids S081/S091/S092 collide with or don't match lane's next-free ids; lane had no free ids at those numbers... wait, lane went to S078 before round 44; next free lane ids are S079, S080, S081. Staged ids S081, S091, S092 don't match the lane's next-free sequence, so ids had to be reassigned by URL.)
+  2. opened — staged 2026-10-23 → lane 2026-10-24 (the lane requires opened = the date the lane actually opened the capture; the staged rows were opened in the campaign tree on 2026-10-23, the lane opened the committed captures on 2026-10-24).
+  3. recheck — staged cells embed a re-open command plus "(ran <date>)"; the lane schema keeps recheck as a bare interval token (e.g. "365d", "90d", "180d"). The staged curl/re-open instructions had to be dropped — particularly because they instruct a fetch (curl), and the lane's L0 fetch-scope question 8d77e6c1 is unanswered. Also the anchor cell's "committed capture, no fetch" notation.
+  4. scope/anchor/teaches — narrowed from the staged multi-fact versions to the located-quote scope; anchor restated to name the committed capture rather than page sections with dates.
+
+  Which one to quote before/after: the recheck cell of staged S081 → lane S079 is the most schema-relevant (it embeds a curl command, i.e., a fetch instruction, which cannot live in the lane's recheck cell). Let me quote:
+
+  Before (staged S081, recheck cell):
+  "365d — `curl -fsSL 'https://www.rfc-editor.org/rfc/rfc7089.txt'` then confirm section 3.1 still carries the "not be byte-to-byte" sentence (ran 2026-10-23)"
+
+  After (lane S079, recheck cell):
+  "365d"
+
+  Note the staged cell contains a literal double-quote inside ("not be byte-to-byte") — in the file it's `carries the "not be byte-to-byte" sentence`. And backticks around curl. In the lane registry, recheck cells are bare interval tokens — looking at the lane: "365d", "90d", "on-release", "180d" etc. Yes, all bare. So the staged recheck cells had to be rewritten to bare intervals.
+
+  Also note: does the lane's recheck column in earlier rows ever carry more than a bare token? Scanning: "on-release", "365d", "90d", "180d" — all bare. Good.
+
+  Now the column counts. Let me verify with awk for exactness. Both files' rows: count fields separated by "|". For a well-formed 11-column row with leading and trailing pipes, splitting on "|" gives 13 fields (empty first and last). I'll compute cells = fields - 2.
+
+  One risk: staged rows contain inline pipes? E.g., S094 staged recheck contains "SUPPORTS\|REFUTES\|NOT ENOUGH INFO" — escaped pipes! Line 22: `confirm the label list still reads "SUPPORTS\|REFUTES\|NOT ENOUGH INFO"`. That's in S094, not our three rows. Our three staged rows (S081, S091, S092): any pipes? I don't see any. Lane rows S079-S081: no pipes either. But let me verify mechanically with awk counting.
+
+  Also I should double check: are there really only 3 new rows added this round (S079, S080, S081)? Lane had S078 previously (line 88, opened 2026-10-24 but that was round 43). Round 44 log says opened S079, S080, S081. Yes.
+
+  Also the search-log round-44 entry says "included 2" but lists three ids, and "Identified 2 candidate entries ... screened 2" — while the round-43 entry says "Identified 3 candidate entries..., screened 3, included 1". So the round-44 counts are internally inconsistent: 3 rows landed (S079, S080, S081) against "included 2", and "Identified 2 ... screened 2 ... included 2" leaves no excluded count for the two rejected halves mentioned ("excluded the GB/T half and the Portico half") — plus "Rejected staged S082" and "Rejected staged S093" (two explicit rejections). So the arithmetic: identified 2, screened 2, included 2, yet three rows included and at least four candidates rejected (staged S082, staged S093, GB/T half, Portico half). That's a calibration finding for the falsification milestone. Wait, let me re-read: "Identified 2 candidate entries on the version-binding theme, screened 2, included 2 (S079 RFC 7089, staged URL S081; S080 WARP FAQ staged S091; S081 E2867 staged S092), excluded the GB/T half and the Portico half."
+
+  Hmm — "excluded the GB/T half and the Portico half" — so excluded 2 halves. But identified 2 / screened 2 / included 2 / excluded 2 doesn't add up either (would be 4). And the parenthetical lists three included rows. Possibly "2 candidate entries" = 2 knowledge entries (citation-version-binding-r36 and -r37), each entry including some rows: r36 gets S079, r37 gets S080+S081. The counts in the log are "entries" not "rows" — but the round-43 log used row counts. Either way, the inconsistency (included 2 vs three ids; excluded halves not counted in identified/screened) is worth reporting as a calibration finding, since I'm judging on calibration and the milestone is falsifying the landed round-44 state. I should be careful to state it as an observation, not overclaim: the log's own numbers don't reconcile with the three landed rows under a row-count reading.
+
+  Another falsification angle: the lane rows S079–S081 all say "committed capture, no fetch" in the anchor and dropped the staged recheck fetch commands. But the staged recheck cells instructed curl/re-open — meaning if the lane had appended staged rows verbatim, the registry would carry fetch instructions contradicting the open L0 question 8d77e6c1. The landed rows avoid that. Good.
+
+  Also check: staged S081 anchor says "section 2.1.1 (Memento-Datetime header), section 3.1 (sparseness and entity-body identity), section 7 (Security Considerations)" but lane S079 anchor narrows to "section 2.1.1 of the committed capture, no fetch" — while the lane teaches cell retains the 3.1 substance ("may not be byte-to-byte the same"). So the lane's anchor only pins 2.1.1 while teaches asserts a 3.1 fact — the staged anchor named 3.1. Hmm — is that a scope loss? The lane's teach "an archived body may not be byte-to-byte the same as what the origin served" comes from section 3.1 per the staged row, but the lane anchor only cites section 2.1.1. That's a real finding: the landed anchor under-covers the teaching (anchor names only section 2.1.1, while one of its two teachings is a section-3.1 statement per the staged row it came from). I can verify the capture? The capture is in the campaign cache /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache presumably. Reading the qcache is read-only and allowed? The lane rules say don't modify shokuknow; reading is fine (round 42/43 did exactly that). But my task is scoped: count columns, name rewritten cells, quote one. Depth: I could check whether the RFC 7089 capture is committed in the lane or campaign. Round 44 log says "the campaign capture cache only; no URL was fetched". Let me check if there's a capture file for rfc7089 in the qcache. That would strengthen the report but isn't strictly required. Let me do a quick ls/glob — read-only.
+
+  Actually, let me be careful about scope creep, but the milestone says "falsify the landed round-44 state" and judged on depth. A quick check of the committed capture location is cheap and relevant (anchor verifiability). Also verify the "byte-to-byte" sentence location claim? The staged row says section 3.1; the lane row's anchor only names 2.1.1. If I can find the capture and grep it, I can quote. But I must not fetch network. Local grep of the cache is fine.
+
+  Let me run the mechanical column count first, plus look for the capture.
+
+  Plan of commands (parallel batch 1):
+  1. awk column count for lane rows S079, S080, S081 in corpus/SOURCES.md (and header).
+  2. awk column count for staged rows S081, S091, S092 in SOURCES.append.md (and header).
+  3. Glob/ls the qcache for rfc7089 / warp / e2867 captures.
+
+  Then maybe grep the RFC 7089 capture for "byte-to-byte" and "Memento-Datetime" to check the anchor/teach coverage — read-only.
+
+  Let me write the awk:
+
+  awk -F'|' '/^\| S079 \|/ {print "S079", NF-2}' /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md
+
+  Similarly for header: /^\\| id \\|/ {print "header", NF-2}.
+
+  For staged: file /home/vgpnk/Projects/shokuknow/merge/chousa/SOURCES.append.md, patterns /^\| S081 \|/, /^\| S091 \|/, /^\| S092 \|/.
+
+  Also count all rows in lane registry for a sanity check? Could do: awk -F'|' 'NR>=11 && NR<=91 && /^\|/ {print $2, NF-2}' — but long output; restrict to the three rows.
+
+  Also check whether any of the three rows' cells contain a literal pipe (would break NF-2 arithmetic): if NF-2 == 11 and no escaped pipes, fine. The staged S094 row has "\|" — awk -F'|' would split on those too; NF-2 would exceed 11, which itself flags the cell. Not our rows though.
+
+  For the qcache: the round-42 log gives path /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache. Let me ls it. But wait — my bounds say "Never modify ... /home/vgpnk/Projects/shokuknow" and "Do not modify ... a sibling repo". Reading is allowed (task told me to read SOURCES.append.md there). ls is read-only, fine.
+
+  Let me also confirm the three staged rows are the actual source rows: lane S079 source URL = rfc7089 = staged S081 URL; lane S080 URL warp.ndl.go.jp/en/info/qanda = staged S091 URL; lane S081 URL current.ndl.go.jp/e2867 = staged S092 URL. Confirmed by eye; the round-44 log confirms mapping.
+
+  Now, "Name which staged cells had to be rewritten for the lane schema" — enumerate per row:
+
+  Common to all three (schema-forced rewrites):
+  - id: re-pointed to the lane's next free id by URL (staged S081→lane S079, S091→S080, S092→S081). Staged ids would have collided with the lane's id sequence — actually S081 staged id happens to be a valid next-free lane id but for a different row (RFC 7089 landed as S079, and lane S081 is E2867). So id assignment is not positional.
+  - opened: staged 2026-10-23 → lane 2026-10-24 (lane opened the committed captures itself this round).
+  - recheck: staged "interval — command (ran date)" → lane bare interval token (365d/90d/180d). The staged cells embed fetch/re-open commands (curl, re-open/download) that (a) don't fit the lane's bare-interval recheck column and (b) instruct fetching the original URL, which the lane cannot do while L0 8d77e6c1 is open.
+  - anchor: staged named page sections with read-date ("read 2026-10-23", "page served in English") → lane restated as "committed capture, no fetch" with the located span.
+  - scope/teaches: narrowed to the located quote (schema-consistent scoping; the staged multi-clause teaches were rewritten down).
+
+  Quote before/after for one cell: the recheck cell of staged S081 → lane S079. Include exact text.
+
+  Before (staged S081 recheck):
+  `365d — `curl -fsSL 'https://www.rfc-editor.org/rfc/rfc7089.txt'` then confirm section 3.1 still carries the "not be byte-to-byte" sentence (ran 2026-10-23)`
+
+  After (lane S079 recheck):
+  `365d`
+
+  Good, that's the sharpest: a fetch command removed from a lane whose L0 fetch-scope question is unanswered.
+
+  Now depth: the anchor-undercoverage finding (lane S079 anchor names only §2.1.1 while its teaches carries the §3.1 byte-to-byte fact per the staged row). I can verify the §3.1 location from the committed capture if present. Let me look for it.
+
+  Also verify column counts mechanically. And also verify that lane header is 11 columns and staged header is 11 columns (they look the same).
+
+  Additional falsification angle: lane S079 kind "spec", tier A — staged S081 kind "spec" tier A. Same. Lane S080 "docs" A; staged S091 "docs" A. Lane S081 "paper" A; staged S092 "paper" A. Kinds preserved. used-by preserved (r36 for S079; r37 for S080, S081). Note lane S079 used-by corpus/knowledge/citation-version-binding-r36.md — does that file exist in the lane? Round 36? Let me check quickly with Glob corpus/knowledge/citation-version-binding-*.md. If the used-by target doesn't exist, that's a registry-link finding (the gate checks META_SOURCE_USEDBY_MISSING per S036). Worth checking — cheap.
+
+  Also "mined" status requires a knowledge entry backlink — per lane's own S036 description, mined-status screening with exact-rooted backlink. If citation-version-binding-r36.md exists and cites S079, fine.
+
+  Let me run the checks in one parallel batch:
+
+  Batch 1 (parallel Bash + Glob):
+  1. Bash awk lane counts.
+  2. Bash awk staged counts.
+  3. Bash ls qcache (find rfc7089/warp/e2867 captures).
+  4. Glob corpus/knowledge/citation-version-binding-*.
+
+  Then batch 2 based on results: grep capture for byte-to-byte / Memento-Datetime / warp URL; grep knowledge file for S079/S080/S081 backlinks.
+
+  Let me do it. For awk, one call can do both files:
+
+  awk -F'|' '
+  /^| id |/ { print FILENAME " header cells=" NF-2 }
+  ...' — pattern with pipes needs escaping: /^\\| id \\|/. In awk regex, | is special; escape it.
+
+  Simpler: two separate awk commands chained with ; in one Bash call? The guidance says independent read-only commands should be separate parallel calls. I'll do separate calls.
+
+  Lane call:
+  awk -F'|' '/^\| id \|/ {print "header cells=" NF-2} /^\| S079 \|/ {print "S079 cells=" NF-2} /^\| S080 \|/ {print "S080 cells=" NF-2} /^\| S081 \|/ {print "S081 cells=" NF-2} /^\| S078 \|/ {print "S078 cells=" NF-2}' /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md
+
+  Staged call:
+  awk -F'|' '/^\| id \|/ {print "header cells=" NF-2} /^\| S081 \|/ {print "S081 cells=" NF-2} /^\| S091 \|/ {print "S091 cells=" NF-2} /^\| S092 \|/ {print "S092 cells=" NF-2}' /home/vgpnk/Projects/shokuknow/merge/chousa/SOURCES.append.md
+
+  ls call:
+  ls /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache | head -50 — better: ls and grep -i for rfc7089/warp/e2867/current.ndl. But I shouldn't use grep directly per instructions ("ALWAYS use Grep tool instead of running grep"). For filenames, ls | ... hmm. Use Bash ls piped to shell grep? The instruction says use Grep tool for file contents. For listing, I can use Glob with path. Glob pattern "**/*rfc7089*" under qcache path. Let me use Glob three times (rfc7089, warp/e2867). Glob patterns are case-sensitive probably. Try "**/*7089*", "**/*warp*", "**/*e2867*". Actually one Glob per pattern — three parallel Glob calls. Or just ls the directory via Bash and eyeball. `ls -1` of the qcache could be long. Round 42 mentioned 24 register rows and captures. I'll do ls and pipe through head -100; that's fine.
+
+  Actually simpler: Bash: ls /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/ and I'll read output. If too long, it truncates. Fine.
+
+  Glob for knowledge backlinks: Glob pattern "corpus/knowledge/citation-version-binding-*.md" in lane repo. Then Read/Grep them for S079/S080/S081.
+
+  Batch 1: 2 Bash awk calls, 1 Bash ls call, 1 Glob call. All independent → one block.
+
+  Then batch 2: Grep the knowledge files for S079 etc., Grep the capture for "byte-to-byte".
+
+  For the report: write to /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w3/W3SimpCols.md.
+
+  The report should include:
+  - Column counts: lane schema header = 11 columns; lane rows S079, S080, S081 = 11 cells each (machine-counted, quote output); staged header = 11; staged rows S081, S091, S092 = 11 cells each.
+  - Mapping: staged S081→lane S079 (RFC 7089), S091→lane S080 (WARP FAQ), S092→lane S081 (E2867); ids re-pointed by URL per round-44 log.
+  - Cells rewritten for the lane schema:
+    - id (all three) — re-pointed to lane's next free ids by URL; staged numbering would have landed RFC 7089 as lane S081, which instead holds E2867.
+    - opened (all three) — 2026-10-23 → 2026-10-24 (lane's own opening of committed captures).
+    - recheck (all three) — staged "interval — command (ran date)" → bare interval token; the staged cells carry fetch instructions (curl / re-open / re-download) that can't live in the lane's recheck column and contradict the open L0 fetch-scope question 8d77e6c1.
+    - anchor (all three) — staged section lists with "read 2026-10-23" provenance → "committed capture, no fetch" + located span.
+    - scope and teaches (all three) — narrowed from the staged multi-fact cells to the located quote's scope (schema-consistent scoping; e.g. staged S091 teaches carried retention/Heritrix/pywb/WARC/copyright facts that lane S080 drops).
+  - Quoted before/after: recheck cell staged S081 → lane S079.
+  - Falsification findings on the landed state:
+    - (a) round-44 search-log counts don't reconcile: "Identified 2 ... screened 2, included 2" against three landed ids and at least two explicit rejections (staged S082, staged S093) plus "the GB/T half and the Portico half" excluded — under a row-count reading the arithmetic fails; under an "entries" reading the word "included 2" still lists three ids. Calibration defect.
+    - (b) lane S079's anchor names only §2.1.1, while its teaches asserts the "may not be byte-to-byte" fact that the staged row located in §3.1 — the landed anchor under-pins one of its two teachings (verify in capture if available).
+    - (c) used-by targets exist / backlink state (report what I find).
+  - Keep it scoped: this is a columns + cell-rewrite audit with falsification notes.
+
+  Also note: lane rows retain "no fetch" in anchor — consistent with L0 8d77e6c1 open. The staged recheck commands were the fetch instructions; dropping them is exactly the schema rewrite.
+
+  Also worth checking: does lane recheck column elsewhere ever carry commands? All bare in the registry. And opened dates: all lane rows are 2026-10-19/21/23/24 — the 2026-10-24 for S079-S081 matches the round.
+
+  One more check: staged rows S081/S091/S092 columns = 11 each? The staged S081 row has backticks and quotes but I think no pipes. Mechanical count will tell.
+
+  Also the em-dash/hyphen difference in source cell staged S081 ("Resource States - Memento" vs lane "Resource States — Memento") — a cosmetic rewrite, mention in passing.
+
+  Let me also double-check the round-44 log sentence: "included 2 (S079 RFC 7089, staged URL S081; S080 WARP FAQ staged S091; S081 E2867 staged S092)". So the log itself names staged ids S081, S091, S092 — matching the append file. Good, mapping confirmed by the log, not just by URL matching.
+
+  Now, qcache ls: path /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache. It might contain hashed filenames. Let me see. Also possibly a manifest mapping URLs. Round 42/43 reports referenced captures. I'll ls.
+
+  Also — should I check the lane's gate registry-link rules? Not needed to run the gate (running could write). Read-only grep of knowledge files is fine.
+
+  Let me execute batch 1 now.
+
+• Axes: (1) operability — mechanical column counts, machine-verified; (2) calibration — staged→lane cell rewrite inventory with exact quotes; (3) depth — falsify the landed round-44 state (count arithmetic, anchor coverage, backlink targets). Read-only.lane header cells=11
+S078 cells=11
+S079 cells=11
+S080 cells=11
+S081 cells=11
+staged header cells=11
+staged S081 cells=11
+staged S091 cells=11
+staged S092 cells=11
+000f224439dccc949aafb53f.raw
+000f224439dccc949aafb53f.txt
+001287c436f0e6b1d166ae8d.raw
+001287c436f0e6b1d166ae8d.txt
+002f2eceb4b6b8f841d89b00.raw
+002f2eceb4b6b8f841d89b00.txt
+0034b800811072de3980e85b.raw
+0034b800811072de3980e85b.txt
+004699acd653cf6dade990fb.raw
+004699acd653cf6dade990fb.txt
+006dea8f19ea2df721870f1a.fail
+0099ca656c75cc14aa71b6ba.raw
+0099ca656c75cc14aa71b6ba.txt
+009a7ebf2056da5cf4003e4b.raw
+009a7ebf2056da5cf4003e4b.txt
+00ae5c2bd51b32fb0a616273.raw
+00ae5c2bd51b32fb0a616273.txt
+00d3f2704147580f72baf764.raw
+00d3f2704147580f72baf764.txt
+010d69dcfaa8bc91681095c0.fail
+0116a4b46c5e94d56a492a24.fail
+011eae980dac27056ced1043.fail
+012a018a181585d3e317e68f.raw
+012a018a181585d3e317e68f.txt
+014fff91988924ad64c58ca4.fail
+015352e29c644496d018ca20.raw
+015352e29c644496d018ca20.txt
+0165eb243333398781ff3981.fail
+016cfd85c3e4fae3597919bb.fail
+0170bc6642212393dfb40e8a.raw
+0170bc6642212393dfb40e8a.txt
+018cf9c49e95b3855d8f2ed4.raw
+018cf9c49e95b3855d8f2ed4.txt
+01b62c6a5a10a958be379abd.fail
+01bcfc2b29589b275d172f65.raw
+01bcfc2b29589b275d172f65.txt
+01c894318ca6838f1e463894.fail
+01d1e208cbee035e879cb0fd.raw
+01d1e208cbee035e879cb0fd.txt
+01e29a742b02862deb399eff.raw
+01e29a742b02862deb399eff.txt
+01ed2167cee72a027e04a716.raw
+01ed2167cee72a027e04a716.txt
+01ee77abc8e41530f9bf5010.raw
+01ee77abc8e41530f9bf5010.txt
+01f657b3d0ab045c494b3f92.raw
+01f657b3d0ab045c494b3f92.txt
+0204472dc60d0bfc88480296.fail
+02093d300a0c64077ebe5abc.fail
+02147eaec7d37092877bd808.fail
+021c80adff2c4bf63d875d59.fail
+0227e4b62570c779cbad0e77.raw
+0227e4b62570c779cbad0e77.txt
+0277f815965e16a3cb10be60.raw
+0277f815965e16a3cb10be60.txt
+029aa75dbba452fe0b2e5225.raw
+029aa75dbba452fe0b2e5225.txt
+02a7c334cda236dc49c495e9.raw
+02a7c334cda236dc49c495e9.txt
+02aefcf570a7108e699d0990.pdf
+
+

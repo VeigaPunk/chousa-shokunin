@@ -1,0 +1,951 @@
+kimi version 2.3.1
+• Let me understand the task. I'm a leaf subagent in a "chousa" (調査, investigation) system. My milestone: "Round 44 wave 3: falsify the landed round-44 state". I need to:
+
+  1. Draft the LOG.md entry for round 44 in the lane's existing style: one line per landed change, each with the evidence pointer that motivated it (a file path and the counter that measured it). Output the entry text only. Do not edit LOG.md.
+  2. Write the report at /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w3/W3ScribeLog.md and nowhere else.
+
+  First, I need to explore the lane repo to find:
+  - The existing LOG.md and its style
+  - The landed round-44 state (changes landed in round 44)
+  - Evidence pointers (file paths and counters)
+
+  Let me start by exploring the directory structure.AGENTS.md
+considerthese
+corpus
+LOG.md
+MINT.md
+PROVINCE.md
+README.md
+SCORECARD.md
+scratch
+SHONEN.md
+SKILL.md
+tools
+continuations
+evidence
+interactive-sessions
+plans
+reports
+round-10
+round-11
+round-2
+round-3
+round-4
+round-5
+round-6
+round-7
+round-8
+round-9
+waves
+Let me read LOG.md and look at the waves directory for round-44./home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves:
+round-25
+round-26
+round-27
+round-29
+round-30
+round-31
+round-32
+round-33
+round-34
+round-35
+round-36
+round-37
+round-38
+round-39
+round-40
+round-41
+round-42
+round-43
+round-44
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-25:
+build
+build-assignments.json
+build-dispatch-attempts.json
+build-dispatch.json
+build-spec.json
+falsify
+falsify-assignments.json
+falsify-checkpoint-correction.json
+falsify-dead-seats.json
+falsify-full-checkpoint-correction.json
+falsify-plan.json
+falsify-run.json
+falsify-spec.json
+residual-final-measures.md
+residual-final-meta.md
+residual-final-sources.md
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-25/build:
+CapRowR15.md
+CapRowR17.md
+CapRowR18.md
+CapRowR19.md
+CapRowR20.md
+CapRowR21.md
+CapRowR22.md
+CapRowR23.md
+ConnectorAxisPlan.md
+ConnectorMetaSiblings.md
+ConnectorSeparability.md
+ConnectorSpotcheckMap.md
+CriticAxisHarm.md
+CriticClaim1.md
+CriticClaim2.md
+CriticClaim3.md
+EvidenceIdxR12R15.md
+EvidenceIdxR17R20.md
+EvidenceIdxR21R23.md
+ExecAppendRace.md
+ExecHoldsBaseline.md
+ExecMetaMode.md
+ExecMetaMutants.md
+ExecMetaOracle.md
+FrontierR11.md
+FrontierR12R13.md
+FrontierR14R15.md
+FrontierR16R17.md
+FrontierR18R19.md
+FrontierR20R21.md
+FrontierR22R23.md
+LedgerAddR16.md
+LedgerAddR17.md
+LedgerAddR18.md
+LedgerAddR19.md
+LedgerAddR20.md
+LedgerAddR21.md
+LedgerAddR22.md
+LedgerAddR23.md
+RevengerCriterion6.md
+RevengerGSHA.md
+ReviewC3Closure.md
+ReviewLedgerTotals.md
+ReviewRecheckRoot.md
+ReviewSourcesRecheck.md
+ScoutGateHarness.md
+ScoutHeaderShapes.md
+ScoutPlaceholderSweep.md
+ScoutReadmeCount.md
+ScoutRestatementSweep.md
+ScribeIndexRows.md
+ScribeLessonMistakes.md
+ScribeMetaEntry.md
+ScribePlanned26.md
+ScribeQualityCriteria.md
+SentinelMetaPaths.md
+SimplifierSkillMd.md
+SrcCochraneUpdate.md
+SrcCrossmark.md
+SrcDcmiTerms.md
+Now I understand the lane's LOG.md style. The round 44 freeze entry exists at the end (line 1556-1566). I'm the W3 scribe for round-44 wave 3, and my milestone is "Round 44 wave 3: falsify the landed round-44 state". I need to:
+
+  1. Draft the LOG.md entry for round 44 in the lane's existing style: one line per landed change, each with the evidence pointer that motivated it (a file path and the counter that measured it). Output the entry text only. Do not edit LOG.md.
+  2. Write the report at `.ufo/waves/round-44/w3/W3ScribeLog.md`.
+
+  So I need to look at the round-44 state: the frozen claims in `corpus/evidence/round44/claims.md`, the wave directories under `.ufo/waves/round-44/`, and the landed state. My job is wave 3 — falsification — and I need to draft a LOG entry for round 44 based on what's actually landed, with evidence pointers (file path + counter).
+
+  Let me explore:
+  - `corpus/evidence/round44/` — claims.md, counters, receipts
+  - `.ufo/waves/round-44/` — wave directories (w1, w2, w3?)
+  - Any tools landed: `tools/parent-lifetime.sh`, `tools/absent-split.py` etc.
+
+  Let me look at these in parallel./home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44:
+assimilation
+launcher-outer.log
+make-w3-spec.py
+seat-agent.md
+seat-logs
+slot-grant.txt
+w1
+w1-dispatch.json
+w1-plan.json
+w1-spec.json
+w2
+w2-dispatch.json
+w2-launcher-outer.log
+w2-parent-lifetime.receipt
+w2-plan.json
+w2-slot-grant.txt
+w2-spec.json
+w3
+w3-dispatch.json
+w3-launcher.log
+w3-launcher-outer.log
+w3-plan.json
+w3-spec.json
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/assimilation:
+collisions
+disposition.tsv
+draft
+guard
+reg-ids
+staged-ids
+validate
+validate-census.txt
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/assimilation/draft:
+citation-version-binding-r36.md
+citation-version-binding-r37.md
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/assimilation/guard:
+col0
+collisions
+indented-registry.md
+reg-ids
+staged-ids
+staged.md
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/assimilation/validate:
+corpus
+tools
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/assimilation/validate/corpus:
+knowledge
+lessons
+SOURCES.md
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/assimilation/validate/corpus/knowledge:
+anchor-boundaries-r4.md
+archived-export-intake.md
+archives-verified-r9.md
+audit-r11.md
+bash-local-expansion-r35.md
+capture-bash-pin-r39.md
+capture-path-pin-r41.md
+chain-resolution-r3.md
+citation-chain-fidelity-r24.md
+citation-version-binding-r36.md
+citation-version-binding-r37.md
+claim-pin-provenance-r37.md
+claim-record-fields-r33.md
+claim-support-states-r24.md
+claim-verification-r2.md
+contextual-source-admission-r24.md
+dead-zone-pcre-r34.md
+denylist-r22.md
+engine-swap-canary-r36.md
+env-pin-capture-r38.md
+exempt-hop-audit-r32.md
+fenced-anchor-r23.md
+fenced-heading-r17.md
+gate-baseline-r12.md
+gate-baseline-r8.md
+grep-pin-r35.md
+hardening-r10.md
+hardlink-alias-r13.md
+html-comment-r20.md
+json-delimiter-r24.md
+keyed-engine-output-equivalence-r35.md
+line-binding-r31.md
+long-span-argv-r34.md
+manifest-append-lock-r32.md
+metadata-screen-r25.md
+mount-alias-r14.md
+per-record-argv-attribution-r36.md
+pin-capture-env-r37.md
+pointer-boundary-r21.md
+quote-reopen-r29.md
+quote-reopen-r30.md
+reader-allocation-r26.md
+receipt-binding-r38.md
+receipt-expectation-digests-r40.md
+receipt-verifier-subject-r39.md
+recheck-due-r26.md
+reference-integrity-r7.md
+registry-link-r26.md
+revision-binding-r31.md
+root-slash-boundary-r15.md
+scope-phrase-gap-r18.md
+scope-refusal-r12.md
+search-log-method-r39.md
+sweeps-rejections-r5.md
+sweep-symlink-r19.md
+verification-r16.md
+verify-all-r6.md
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/assimilation/validate/corpus/lessons:
+2026-10-15-anchor-token-boundaries.md
+2026-10-15-chain-hop-resolution.md
+2026-10-15-claims-span-fidelity.md
+2026-10-16-archive-scale-controls-and-ledger.md
+2026-10-16-gate-behavioral-baseline.md
+2026-10-16-reference-integrity.md
+2026-10-16-sweeps-rejections-verdict-bearing.md
+2026-10-16-verify-all-composition.md
+2026-10-16-verifying-conversion-not-original.md
+2026-10-19-hardlink-alias-boundary.md
+round-1.md
+round-24.md
+round-24-verifier-spotcheck.md
+round-25.md
+round-26.md
+round-27.md
+round-27-verifier-spotcheck.md
+round-28.md
+round-28-verifier-spotcheck.md
+round-29.md
+round-29-verifier-spotcheck.md
+round-30.md
+round-30-verifier-spotcheck.md
+round-31.md
+round-31-verifier-spotcheck.md
+round-32.md
+round-32-verifier-spotcheck.md
+round-33.md
+round-33-verifier-spotcheck.md
+round-34.md
+round-34-verifier-spotcheck.md
+round-35.md
+round-35-verifier-spotcheck.md
+round-36.md
+round-36-verifier-spotcheck.md
+round-37.md
+round-37-verifier-spotcheck.md
+round-38.md
+round-38-verifier-spotcheck.md
+round-39.md
+round-39-verifier-spotcheck.md
+round-40.md
+round-40-verifier-spotcheck.md
+round-41.md
+round-41-verifier-spotcheck.md
+round-42.md
+round-42-verifier-spotcheck.md
+round-43.md
+round-43-verifier-spotcheck.md
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/assimilation/validate/tools:
+quarantine-check.py
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/seat-logs:
+W2ConnOver
+lap.log
+W2ConnOverlap.prompt
+W2ConnSibling.log
+W2ConnSibling.prompt
+W2CritForge.log
+W2CritForge.prompt
+W2CritFresh.log
+W2CritFresh.prompt
+W2CritS082.log
+W2CritS082.prompt
+W2CritSweep.log
+W2CritSweep.prompt
+W2ExecCensus.log
+W2ExecCensus.prompt
+W2ExecCollision.log
+W2ExecCollision.prompt
+W2ExecHead.log
+W2ExecHead.prompt
+W2ExecNoNet.log
+W2ExecNoNet.prompt
+W2ExecNumstat.log
+W2ExecNumstat.prompt
+W2ExecSha.log
+W2ExecSha.prompt
+W2ExecShonen.log
+W2ExecShonen.prompt
+W2ExecWords.log
+W2ExecWords.prompt
+W2MutId.log
+W2MutId.prompt
+W2MutPipe.log
+W2MutPipe.prompt
+W2ReviewC1Log.log
+W2ReviewC1Log.prompt
+W2ReviewC2Ctrl.log
+W2ReviewC2Ctrl.prompt
+W2ReviewRfc.log
+W2ReviewRfc.prompt
+W2ReviewWarp.log
+W2ReviewWarp.prompt
+W2ScoutConsider.log
+W2ScoutConsider.prompt
+W2ScoutE2867.log
+W2ScoutE2867.prompt
+W2ScoutProvince.log
+W2ScoutProvince.prompt
+W2ScoutRfc.log
+W2ScoutRfc.prompt
+W2ScoutS077.log
+W2ScoutS077.prompt
+W2ScoutWarp.log
+W2ScoutWarp.prompt
+W2ScribeFresh.log
+W2ScribeFresh.prompt
+W2ScribeGate.log
+W2ScribeGate.prompt
+W2ScribeQ62.log
+W2ScribeQ62.prompt
+W2ScribeRow.log
+W2ScribeRow.prompt
+W2SimpName.log
+W2SimpName.prompt
+W2SimpSep.log
+W2SimpSep.prompt
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w1:
+swarm-registry.json
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w2:
+swarm-registry.json
+W2ConnOverlap.md
+W2ConnSibling.md
+W2CritForge.md
+W2CritFresh.md
+W2CritS082.md
+W2CritSweep.md
+W2ExecCensus.md
+W2ExecCollision.md
+W2ExecHead.md
+W2ExecNoNet.md
+W2ExecNumstat.md
+W2ExecSha.md
+W2ExecShonen.md
+W2ExecWords.md
+W2MutId.md
+W2MutPipe.md
+W2ReviewC1Log.md
+W2ReviewC2Ctrl.md
+W2ReviewRfc.md
+W2ReviewWarp.md
+W2ScoutConsider.md
+W2ScoutE2867.md
+W2ScoutProvince.md
+W2ScoutRfc.md
+W2ScoutS077.md
+W2ScoutWarp.md
+W2ScribeFresh.md
+W2ScribeGate.md
+W2ScribeRow.md
+W2SimpName.md
+W2SimpSep.md
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w3:
+parent-lifetime.receipt
+seat-logs
+swarm-registry.json
+W3ExecShaRfc.md
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w3/seat-logs:
+W3ConnIds.log
+W3ConnIds.prompt
+W3ConnUsedby.log
+W3ConnUsedby.prompt
+W3CritBlind.log
+W3CritBlind.prompt
+W3CritForge.log
+W3CritForge.prompt
+W3CritFresh.log
+W3CritFresh.prompt
+W3CritScope.log
+W3CritScope.prompt
+W3ExecCensus.log
+W3ExecCensus.prompt
+W3ExecE2867.log
+W3ExecE2867.prompt
+W3ExecErrata.log
+W3ExecErrata.prompt
+W3ExecFileCensus.log
+W3ExecFileCensus.prompt
+W3ExecNumstat.log
+W3ExecNumstat.prompt
+W3ExecSelftest.log
+W3ExecSelftest.prompt
+W3ExecShaRfc.log
+W3ExecShaRfc.prompt
+W3ExecWarp.log
+W3ExecWarp.prompt
+W3MutC1.log
+W3MutC1.prompt
+W3MutC2.log
+W3MutC2.prompt
+W3RevDisp.log
+W3RevDisp.prompt
+W3RevLesson.log
+W3RevLesson.prompt
+W3RevReceipt.log
+W3RevReceipt.prompt
+W3RevRouted.log
+W3RevRouted.prompt
+W3RevS079.log
+W3RevS079.prompt
+W3ScoutAdj.log
+W3ScoutAdj.prompt
+W3ScoutConsider.log
+W3ScoutConsider.prompt
+W3ScoutFrontier.log
+W3ScoutFrontier.prompt
+W3ScoutQuar.log
+W3ScoutQuar.prompt
+W3ScribeLesson.log
+W3ScribeLesson.prompt
+W3ScribeLog.log
+W3ScribeLog.prompt
+W3ScribeScore.log
+W3ScribeScore.prompt
+W3ScribeShonen.log
+W3ScribeShonen.prompt
+W3SentNet.log
+W3SentNet.prompt
+W3SimpCols.log
+W3SimpCols.prompt
+W3SimpIds.log
+W3SimpIds.prompt
+/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44:
+c1-count.py
+c2-count.py
+c3-count.py
+claims.md
+controls
+disposition.tsv
+errata-count.py
+parent-lifetime.receipt
+__pycache__
+receipts
+seat-logs
+seat-names.txt
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/controls:
+all-left.tsv
+errata-two.txt
+errata-zero.txt
+pids0.receipt
+prose.receipt
+selftest.receipt
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/__pycache__:
+c1-count.cpython-314.pyc
+c2-count.cpython-314.pyc
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/receipts:
+c1-before.txt
+c1-pids0.txt
+c1-prose.txt
+c2-all-left.txt
+c2-before.txt
+c3-before.txt
+census-end.txt
+census-start.txt
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/seat-logs:
+ConnCampaignRo.log
+ConnCampaignRo.prompt
+ConnNoSecrets.log
+ConnNoSecrets.prompt
+ConnQuoteOverlap.log
+ConnQuoteOverlap.prompt
+ConnSiblingScan.log
+ConnSiblingScan.prompt
+CritBlindSweep.log
+CritBlindSweep.prompt
+CritCheapestGate.log
+CritCheapestGate.prompt
+CritFreshnessInflation.log
+CritFreshnessInflation.prompt
+CritPidMismatch.log
+CritPidMismatch.prompt
+CritPidsZero.log
+CritPidsZero.prompt
+CritPorticoRefuse.log
+CritPorticoRefuse.prompt
+CritProseReceipt.log
+CritProseReceipt.prompt
+CritS082Refuse.log
+CritS082Refuse.prompt
+ExecCensus.log
+ExecCensus.prompt
+ExecCollision.log
+ExecCollision.prompt
+ExecDiffStat.log
+ExecDiffStat.prompt
+ExecE2867Sha.log
+ExecE2867Sha.prompt
+ExecErrataCount.log
+ExecErrataCount.prompt
+ExecHeading36.log
+ExecHeading36.prompt
+ExecLauncherSelftest.log
+ExecLauncherSelftest.prompt
+ExecNoX.log
+ExecNoX.prompt
+ExecQuoteWords.log
+ExecQuoteWords.prompt
+ExecRfcSha.log
+ExecRfcSha.prompt
+ExecSchemaDraft.log
+ExecSchemaDraft.prompt
+ExecWarpSha.log
+ExecWarpSha.prompt
+MutArithmeticId.log
+MutArithmeticId.prompt
+MutDropSeat.log
+MutDropSeat.prompt
+MutEmptyReason.log
+MutEmptyReason.prompt
+MutParentPid.log
+MutParentPid.prompt
+MutPipeCell.log
+MutPipeCell.prompt
+MutZeroPid.log
+MutZeroPid.prompt
+ReviewC1Shape.log
+ReviewC1Shape.prompt
+ReviewC2Shape.log
+ReviewC2Shape.prompt
+ReviewC3Missing.log
+ReviewC3Missing.prompt
+ReviewCollisionDoc.log
+ReviewCollisionDoc.prompt
+ReviewE2867Quote.log
+ReviewE2867Quote.prompt
+ReviewHeadingRule.log
+ReviewHeadingRule.prompt
+ReviewRfcOffset.log
+ReviewRfcOffset.prompt
+ReviewWarpQuote.log
+ReviewWarpQuote.prompt
+RevRoutedFreshness.log
+RevRoutedFreshness.prompt
+RevRoutedParent.log
+RevRoutedParent.prompt
+ScoutConsiderthese.log
+ScoutConsiderthese.prompt
+ScoutE2867Head.log
+ScoutE2867Head.prompt
+ScoutFrontier.log
+ScoutFrontier.prompt
+ScoutProvince.log
+ScoutProvince.prompt
+ScoutQuarantine.log
+ScoutQuarantine.prompt
+ScoutRfcHead.log
+ScoutRfcHead.prompt
+ScoutS077Cell.log
+ScoutS077Cell.prompt
+ScoutSiblingKasegi.log
+ScoutSiblingKasegi.prompt
+ScoutSiblingKengaku.log
+ScoutSiblingKengaku.prompt
+ScoutWarpHead.log
+ScoutWarpHead.prompt
+ScribeDisposition.log
+ScribeDisposition.prompt
+ScribeEntryR36.log
+ScribeEntryR36.prompt
+ScribeEntryR37.log
+ScribeEntryR37.prompt
+ScribeFreshnessLine.log
+ScribeFreshnessLine.prompt
+ScribeLesson.log
+ScribeLesson.prompt
+ScribeQuality62.log
+ScribeQuality62.prompt
+ScribeRows.log
+ScribeRows.prompt
+ScribeShonen.log
+ScribeShonen.prompt
+SentNoFetch.log
+SentNoFetch.prompt
+SentWriteScope.log
+SentWriteScope.prompt
+SimpDeadFields.log
+SimpDeadFields.prompt
+SimpFilename.log
+SimpFilename.prompt
+SimpSeparability.log
+SimpSeparability.prompt
+SimpUniversal.log
+SimpUniversal.prompt
+My own seat is W3ScribeLog — I see `W3ScribeLog.log` and `W3ScribeLog.prompt` in `.ufo/waves/round-44/w3/seat-logs/`. Let me read my own prompt to understand my exact role, plus the claims.md for round 44, and the w3 spec/dispatch.
+
+  Also let me check what landed changes exist in the working tree for round 44 — since the LOG entry needs "one line per landed change, each with the evidence pointer that motivated it (a file path and the counter that measured it)".
+
+  Key question: what has landed in round 44 so far? The LOG has the freeze entry only. The after-measurements entry would be written later. My job as W3 falsification scribe: draft the LOG entry for round 44 from the falsification wave's perspective.
+
+  Let me read:
+  1. My own prompt: `.ufo/waves/round-44/w3/seat-logs/W3ScribeLog.prompt`
+  2. `corpus/evidence/round44/claims.md`
+  3. `corpus/evidence/round44/disposition.tsv`
+  4. `.ufo/waves/round-44/w3-spec.json` and `w3-plan.json`Now I understand the round-44 claims. Let me check:
+  1. The counters (c1-count.py, c2-count.py, c3-count.py, errata-count.py) — what they measure.
+  2. The receipts — what the after-measurements were.
+  3. The landed changes in the working tree: `tools/parent-lifetime.sh`, `corpus/evidence/round44/*`, `corpus/knowledge/citation-version-binding-r36.md`, `corpus/evidence/round44/disposition.tsv`, errata, S079 row in SOURCES.md.
+  4. The w3 spec — my wave's purpose.
+
+  The LOG entry style: looking at recent rounds (43, 42, 41), each entry has:
+  - `## Round NN — title (date)`
+  - Claim-by-claim bullets with counters and before→after values, evidence pointers with file paths.
+  - Frontier/census notes, lesson notes.
+  - Boundaries held.
+
+  My job: "Draft the LOG.md entry for round 44 in the lane's existing style: one line per landed change, each with the evidence pointer that motivated it (a file path and the counter that measured it). Output the entry text only."
+
+  So the deliverable (the W3ScribeLog.md report) should contain the drafted entry text. Also I'm wave 3 — falsify the landed round-44 state — so I should verify each claimed measurement before drafting: actually RUN the counters (they're local, read-only — c1-count.py reads the receipt; c2-count.py reads disposition.tsv and the files; c3-count.py reads knowledge + capture). Running these is a falsification check: does the landed state actually reproduce the claimed numbers?
+
+  I'm allowed to run read-only commands. The counters are python scripts; running them doesn't modify anything (need to check they don't write — they're named count.py, should be safe; but let me check them first quickly to be careful about the __pycache__ writes — running python can write __pycache__... actually for a script run as `python3 script.py`, the script itself isn't cached (only imported modules are). The __pycache__ dir already exists there, hmm, from imports. Running the script may import modules but pycache writes for the main script don't happen. It's fine.)
+
+  Let me first read the w3 spec to understand my seat's scope, then look at counters and receipts in parallel.Now I understand the round-44 shape. I'm the W3 scribe drafting the LOG entry. To make it accurate I need to verify what landed and what the measured after-state is. The key landed artifacts:
+
+  1. `tools/parent-lifetime.sh` (C1's tool) — with the launcher log `corpus/evidence/round44/parent-lifetime.receipt`.
+  2. `corpus/evidence/round44/disposition.tsv` (C2's table) — 39 rows (36 reverified-commit, 3 left-named).
+  3. `corpus/knowledge/citation-version-binding-r36.md` and `-r37.md` (C3, knowledge entries) + S079/S080/S081 rows in `corpus/SOURCES.md`.
+  4. `corpus/lessons/round-44.md`.
+  5. Errata counter: `corpus/evidence/round44/errata-count.py`.
+
+  Let me now:
+  - Run the three counters myself (they're read-only; they're the falsification step for my milestone). This is the evidence I cite in the LOG entry.
+  - Read the receipts (c1-before, c2-before, c3-before, census-start/end, parent-lifetime.receipt summary).
+  - Check git status to see what's landed/modified/untracked.
+  - Read `corpus/lessons/round-44.md`, the disposition.tsv, SOURCES S079-S081 rows, knowledge entries (the two citation-version-binding files are drafts in .ufo assimilation/draft, but claims says `corpus/knowledge/citation-version-binding-r36.md` should exist — check).
+  - Check `tools/parent-lifetime.sh` exists.
+  - Check `corpus/README.md` Frontier / knowledge index rows for round 44.
+  - Check QUALITY.md criterion 62 (round-44 mined).
+  - Check SCORECARD.md round-44 state.
+
+  Also the w2 receipt truncation story: wave 2's parent receipt was truncated (5 reap lines, no end line) when the orchestrator died; wave 3 re-ran the launcher and produced a full receipt. The `w2-parent-lifetime.receipt` at `.ufo/waves/round-44/` and `corpus/evidence/round44/parent-lifetime.receipt` are the two receipts. My LOG entry should reflect the wave-3 re-run.
+
+  Wait — I need to be careful about what "landed" means here: the freeze entry says "This entry is the freeze only. After-measurements are a later entry." So the LOG entry I draft is the after-measurement entry for round 44, written in the lane's style: one line per landed change, each with the evidence pointer that motivated it (file path + counter).
+
+  Let me gather all the facts in parallel. First run the counters and read key files.=== C1 ===
+N_SPAWNED=64/64
+N_REAPED=64/64
+PARENT_PID_MATCH=1/1
+ZERO_PIDS=0
+NAMES_MATCH=64/64
+C1=PASS
+exit=0
+=== C2 ===
+CONSISTENT=39/39
+REVERIFIED=36/36
+LEFT_NAMED=3/3
+C2=PASS
+exit=0
+=== C3 ===
+ENTRY_CITES=1/1
+QUOTE_LOCATED=1/1
+URL_MATCH=1/1
+C3=PASS
+exit=0
+=== ERRATA (claims.md) ===
+ERRATA=0
+ERRATA_COUNT=FAIL
+exit=1
+=== controls C1 ===
+N_SPAWNED=0/64
+N_REAPED=0/64
+PARENT_PID_MATCH=0/1
+ZERO_PIDS=0
+NAMES_MATCH=0/64
+C1=FAIL
+exit=1
+N_SPAWNED=0/64
+N_REAPED=0/64
+PARENT_PID_MATCH=0/1
+ZERO_PIDS=1
+NAMES_MATCH=0/64
+C1=FAIL prose
+exit=1
+=== control C2 all-left ===
+CONSISTENT=3/39
+REVERIFIED=0/36
+LEFT_NAMED=3/3
+C2=FAIL
+exit=1
+=== control C3 missing ===
+ENTRY_CITES=0/1
+QUOTE_LOCATED=0/1
+URL_MATCH=0/1
+C3=FAIL entry-missing
+exit=1
+=== errata controls ===
+ERRATA=0
+ERRATA_COUNT=FAIL
+exit=1
+ERRATA=2
+ERRATA_COUNT=PASS
+exit=0
+Interesting: `errata-count.py --file corpus/evidence/round44/claims.md` returns ERRATA=0 and exit 1 (FAIL). Hmm — is that expected? Let me look at errata-count.py to understand what it counts. Maybe the claims.md is supposed to have zero errata... but then why exit 1? Maybe the predicate is "claims.md must have at least one errata"? Or maybe FAIL is correct when ERRATA=0 because... let me read the counter.
+
+  Also errata-zero.txt control gives FAIL too — so maybe the control contract is inverted: errata-zero.txt must FAIL (exit 1) and errata-two.txt must PASS (exit 0). And claims.md scoring 0 = FAIL would mean claims.md must contain ≥1 errata... but it has 0. Hmm, wait — maybe the errata counter counts "§Errata" markers in a claims file, and the predicate for round 44 is that the claims file has 0 errata → exit 1 means "FAIL" is unexpected → this would be a defect! Or maybe the target is that claims.md eventually grows errata during the round and right now it has 0 which fails.
+
+  Let me read errata-count.py and the receipts to understand. Also read the round-44 lesson and check git status to see what's actually landed.=== receipts dir ===
+--- corpus/evidence/round44/receipts/c1-before.txt
+N_SPAWNED=0/64
+N_REAPED=0/64
+PARENT_PID_MATCH=0/1
+ZERO_PIDS=1
+NAMES_MATCH=0/64
+C1=FAIL receipt-missing
+c1_before=1
+--- corpus/evidence/round44/receipts/c1-pids0.txt
+N_SPAWNED=0/64
+N_REAPED=0/64
+PARENT_PID_MATCH=0/1
+ZERO_PIDS=0
+NAMES_MATCH=0/64
+C1=FAIL
+exit=1
+--- corpus/evidence/round44/receipts/c1-prose.txt
+N_SPAWNED=0/64
+N_REAPED=0/64
+PARENT_PID_MATCH=0/1
+ZERO_PIDS=1
+NAMES_MATCH=0/64
+C1=FAIL prose
+exit=1
+--- corpus/evidence/round44/receipts/c2-all-left.txt
+CONSISTENT=3/39
+REVERIFIED=0/36
+LEFT_NAMED=3/3
+C2=FAIL
+exit=1
+--- corpus/evidence/round44/receipts/c2-before.txt
+CONSISTENT=0/39
+REVERIFIED=0/36
+LEFT_NAMED=0/3
+C2=FAIL table-missing
+exit=1
+--- corpus/evidence/round44/receipts/c3-before.txt
+ENTRY_CITES=0/1
+QUOTE_LOCATED=0/1
+URL_MATCH=0/1
+C3=FAIL entry-missing
+exit=1
+--- corpus/evidence/round44/receipts/census-end.txt
+chousa	W04	S051 duplicate url www.w3.org/TR/2017/REC-html52-20171214/syntax.html across scopes
+chousa	W04	S053 duplicate url docs.python.org/3/library/socket.html across scopes
+chousa	W04	S073 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+chousa	W04	S074 duplicate url docs.python.org/3/library/hashlib.html across scopes
+chousa	W04	S075 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+chousa	ok	/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md
+census_exit=0
+--- corpus/evidence/round44/receipts/census-start.txt
+chousa	W04	S051 duplicate url www.w3.org/TR/2017/REC-html52-20171214/syntax.html across scopes
+chousa	W04	S053 duplicate url docs.python.org/3/library/socket.html across scopes
+chousa	W04	S073 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+chousa	W04	S074 duplicate url docs.python.org/3/library/hashlib.html across scopes
+chousa	W04	S075 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+chousa	ok	/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md
+exit=0
+Interesting: census-start.txt and census-end.txt both show only 5 W04 warnings. But the r43 LOG entry said "five advisory W04 warnings, S051/S053/S073/S074/S075". And round 44 added S079/S080/S081. census-end.txt still shows 5 W04s — meaning the S079 URL (rfc7089) is not duplicated across scopes (or the census-end was taken... hmm). Actually wait — the census-end receipt shows same 5 warnings as census-start; if S079-S081 were appended before census-end, no new W04 appeared, so the appended rows didn't create duplicates.
+
+  Hmm, but wait — is census-end.txt taken AFTER the append? Both look identical except one says `census_exit=0` and the other `exit=0`. Need to check whether the append already happened (S079 in SOURCES.md now). Let me check.
+
+  Also the errata-count: it's a "QUALITY 62 demonstration, not a round-44 claim counter". QUALITY 60 = cheapest gate; QUALITY 62 was mined from considerthese 2026-10-24.md. Wait, in r43, QUALITY 61 was mined. So round 44 mines QUALITY 62. The W3ScoutConsider seat checks that. The errata-count.py demonstrates QUALITY 62 (errata count as... something).
+
+  Hmm wait — but errata-count on claims.md returns 0 → FAIL exit 1. Is that expected or a defect? The docstring says it's a demonstration of QUALITY 62, not a claim counter. Let me read QUALITY.md criterion 62 to see what it requires. And considerthese/2026-10-24.md.
+
+  Now for the LOG entry, I need to establish the full landed-changes list. Let me check git status (the W3CritScope seat does `git status --porcelain`; I can run the same read-only command) and numstat vs base `e6983f6e` (the claims base) or `043f19a1` (mentioned in W3ExecNumstat as the range start).
+
+  Also need:
+  - `corpus/lessons/round-44.md` (Gate section, mistakes).
+  - `corpus/SOURCES.md` S079/S080/S081 rows.
+  - `corpus/knowledge/citation-version-binding-r36.md` and `-r37.md`.
+  - `corpus/README.md` Frontier/index rows for round 44.
+  - `corpus/evidence/README.md` round-44 section.
+  - `tools/parent-lifetime.sh` existence + maybe --selftest.
+  - `.ufo/waves/round-44/w2-parent-lifetime.receipt` (the truncated wave-2 receipt) vs `corpus/evidence/round44/parent-lifetime.receipt` (the wave-3 full receipt).
+  - `parent-lifetime.receipt` in corpus/evidence/round44 (full, 64/64).
+  - SHONEN.md current state.
+  - SCORECARD.md — is there a round-44 verdict section yet?
+  - QUALITY.md — criterion 62 present?
+  - corpus/evidence/round44/disposition.tsv.
+  - corpus/evidence/README.md round-44 rows.
+
+  Let me batch these. M .ufo/waves/round-40/w1/swarm-registry.json
+ M .ufo/waves/round-41/w1/swarm-registry.json
+ M corpus/QUALITY.md
+ M corpus/SOURCES.md
+ M corpus/evidence/round41/receipts/cells/cells.json
+ M tools/parent-lifetime.sh
+?? .ufo/waves/round-40/w1/ConnectorSiblingScan.md
+?? .ufo/waves/round-40/w1/CriticC1Control.md
+?? .ufo/waves/round-40/w1/CriticC1Predicate.md
+?? .ufo/waves/round-40/w1/CriticC1Scope.md
+?? .ufo/waves/round-40/w1/CriticC2Calibration.md
+?? .ufo/waves/round-40/w1/CriticR4Disposition.md
+?? .ufo/waves/round-40/w1/CriticSourceClaim.md
+?? .ufo/waves/round-40/w1/ExecC1BaseReceipt.md
+?? .ufo/waves/round-40/w1/ExecC1Count.md
+?? .ufo/waves/round-40/w1/ExecC1LandedReceipt.md
+?? .ufo/waves/round-40/w1/ExecC1MutantReceipt.md
+?? .ufo/waves/round-40/w1/ExecC2Count.md
+?? .ufo/waves/round-40/w1/ExecNoHarm.md
+?? .ufo/waves/round-40/w1/MutateExpectDigest.md
+?? .ufo/waves/round-40/w1/MutateGateDigest.md
+?? .ufo/waves/round-40/w1/MutateVerifierSubject.md
+?? .ufo/waves/round-40/w1/RevengerR1History.md
+?? .ufo/waves/round-40/w1/RevengerR2R5History.md
+?? .ufo/waves/round-40/w1/ReviewActivePopulation.md
+?? .ufo/waves/round-40/w1/ReviewC2Bindings.md
+?? .ufo/waves/round-40/w1/ReviewR2CommitTruth.md
+?? .ufo/waves/round-40/w1/ReviewR3Counts.md
+?? .ufo/waves/round-40/w1/ReviewR4RoleMix.md
+?? .ufo/waves/round-40/w1/ReviewReplacementBindings.md
+?? .ufo/waves/round-40/w1/ScoutFrontierOverlap.md
+?? .ufo/waves/round-40/w1/ScoutHashSource.md
+?? .ufo/waves/round-40/w1/ScoutProvinceBoundary.md
+?? .ufo/waves/round-40/w1/ScribeClaimSurfaces.md
+?? .ufo/waves/round-40/w1/ScribeKnowledgeEntry.md
+?? .ufo/waves/round-40/w1/ScribeLessonGate.md
+?? .ufo/waves/round-40/w1/SentinelFetchScope.md
+?? .ufo/waves/round-40/w1/SentinelWriteScope.md
+?? .ufo/waves/round-40/w1/SimplifierAudit.md
+?? .ufo/waves/round-41/w1/ConnectorSiblingScan.md
+?? .ufo/waves/round-41/w1/ExecC2Before.md
+?? .ufo/waves/round-41/w1/MutateC2Join.md
+?? .ufo/waves/round-44/assimilation/
+?? .ufo/waves/round-44/launcher-outer.log
+?? .ufo/waves/round-44/make-w3-spec.py
+?? .ufo/waves/round-44/seat-logs/
+?? .ufo/waves/round-44/slot-grant.txt
+?? .ufo/waves/round-44/w2-dispatch.json
+?? .ufo/waves/round-44/w2-launcher-outer.log
+?? .ufo/waves/round-44/w2-parent-lifetime.receipt
+?? .ufo/waves/round-44/w2-plan.json
+?? .ufo/waves/round-44/w2-slot-grant.txt
+?? .ufo/waves/round-44/w2-spec.json
+?? .ufo/waves/round-44/w2/
+?? .ufo/waves/round-44/w3-dispatch.json
+?? .ufo/waves/round-44/w3-launcher-outer.log
+?? .ufo/waves/round-44/w3-launcher.log
+?? .ufo/waves/round-44/w3-plan.json
+?? .ufo/waves/round-44/w3-spec.json
+?? .ufo/waves/round-44/w3/
+?? corpus/evidence/round44/controls/errata-two.txt
+?? corpus/evidence/round44/controls/errata-zero.txt
+?? corpus/evidence/round44/disposition.tsv
+?? corpus/evidence/round44/errata-count.py
+?? corpus/evidence/round44/parent-lifetime.receipt
+?? corpus/evidence/round44/receipts/census-end.txt
+?? corpus/evidence/round44/seat-logs/
+?? corpus/knowledge/citation-version-binding-r36.md
+?? corpus/knowledge/citation-version-binding-r37.md
+?? corpus/lessons/round-44.md
+=== HEAD ===
+043f19a round-44: freeze parent-lifetime, disposition, and RFC quote claims before scoring
+e6983f6 round-43 verifier spot-check (integrator, hyaku): non-author admit/reject
+a0ecc58 round-43: wave evidence, 48 seat reports, 16 dead
+=== branch ===
+=== parent-lifetime.receipt (head/tail) ===
+start parent_pid=3226659 epoch=1792889279
+spawn name=ReviewC1Shape child_pid=3226666 epoch=1792889279
+spawn name=ReviewC2Shape child_pid=3226669 epoch=1792889279
+spawn name=ReviewC3Missing child_pid=3226673 epoch=1792889279
+...
+reap name=SimpUniversal child_pid=3227231 exit_code=1 epoch=1792889282
+reap name=SimpFilename child_pid=3227243 exit_code=1 epoch=1792889282
+reap name=SimpSeparability child_pid=3227254 exit_code=1 epoch=1792889282
+end parent_pid=3226659 epoch=1792889282 n_spawned=64 n_reaped=64
+lines: 130
+=== w2 truncated receipt ===
+38 .ufo/waves/round-44/w2-parent-lifetime.receipt
+start parent_pid=3259975 epoch=1792889397
+spawn name=W2ReviewRfc child_pid=3259982 epoch=1792889397
+spawn name=W2ReviewWarp child_pid=3259985 epoch=1792889397
+reap name=W2ReviewC2Ctrl child_pid=3259993 exit_code=0 epoch=1792889624
+reap name=W2CritFresh child_pid=3259997 exit_code=0 epoch=1792889653
+
+

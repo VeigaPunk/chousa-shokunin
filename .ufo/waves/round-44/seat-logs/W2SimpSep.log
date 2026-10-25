@@ -1,0 +1,660 @@
+kimi version 2.3.1
+• I will write a report at the specified path.
+
+• I'll look through the counter sources for C1 and C2 path constants, then write only `W2SimpSep.md`.
+
+• The counter scripts and claims are the sources. I'll read those next, plus the seat prompt so the report stays on scope.
+
+• I need to thoroughly verify the counter sources.
+
+  C1 does not read disposition.tsv. C2 does not read parent-lifetime.receipt. I will quote the path constants for both.
+
+  I will grep the counter sources and quote the command output. I also need to check for indirect reads via open or Path. I should review prior reports and w2-spec.json for the expected format.
+
+  I will also check tools/parent-lifetime.sh and any other counter sources. I need to confirm that c1-count.py contains no "disposition" string at all.
+
+• Path constants are in the two counters. I'll grep them and check the wave spec so the separability claim is sourced, not assumed.
+
+• I need to run actual checks and quote command output.
+
+  I will analyze c1-count.py and c2-count.py to verify they do not read disposition.tsv or parent-lifetime.receipt. I will quote the relevant path constants.
+
+  I will grep for disposition and parent-lifetime references, then inspect AST file reads and open calls. I also need to check if the counters import each other. The path constants to quote are LANE, RECEIPT, NAMES, and TABLE.
+
+  Static analysis confirms c1-count.py contains no "disposition" string or "disposition.tsv" path component. It only reads receipt and names files. C2 defaults to TABLE for the disposition table.
+
+  c2-count.py contains no "parent-lifetime" or "receipt" string. It only reads the disposition table, markdown reports from the UNTRACKED tuple, and calculates SHA256 hashes. The CLI can override --receipt to point at disposition.tsv or --table to point at parent-lifetime.receipt, but the source itself does not reference those paths.Reviewing the wave-1 SimpSeparability log and a previous report format to understand the expected report style.
+
+  Running rg for forbidden strings, Python AST extraction for constants and read calls, and a runtime open-audit of default invocation. Also checking the wave-1 seat log for failed attempts to learn from.
+
+  The report will be evidence-dense with quoted command output and path constants. A Python script will AST-walk both files to extract module-level path constants, forbidden string literals, read calls, and imports. Production files must remain untouched.
+
+  A runtime `strace -e openat` check on the counter scripts will confirm whether the default invocation opens the other file. This operational verification strengthens the static analysis findings.
+
+  The counter scripts read production files only for reporting. The claim that they do not read disposition.tsv means no hardcoded path or CLI override points to it.The wave 1 prompt referenced three counters' imports and path constants.
+
+  Wave 2 asks for counter sources and path constants, not three counters. I will check c3 imports as a completeness check, though the task is specifically C1 versus disposition.tsv and C2 versus parent-lifetime.receipt. I will review a round 43 simplifier report and seat-agent.md before running line searches.
+
+  I will extract constants, imports, and read calls from the AST. I will also run a runtime file-open audit via Python's audit hook to trace actual file access.
+
+  I am refining the runtime file-open audit. A subprocess wrapper with an audit hook could trace actual file access, but I worry that audit hooks may not catch pathlib reads.Running the actual checks and quoting the command output.
+
+  Designing a static analysis to grep counter sources for disposition.tsv and parent-lifetime.receipt. It will extract path constants via AST, list file-read call sites, imports, and default execution opens. Wave 2 narrows the scope from all three counters' imports to specific files.
+
+  C3 will be included as a negative control. Its resolved absolute paths will be verified by importing the modules.
+
+  A Python snippet using importlib.util will verify the resolved constants without file modification. An AST walk will extract string constants and file-read calls. Grep will catch forbidden names. Runtime open traces are stronger evidence than static analysis.
+
+  Static source evidence is the primary requirement. Runtime traces will be included as supplementary proof. The analysis will also check subprocess calls, imports of the other counter, eval or exec usage, __import__, and any pathlib reads constructed from fragments that could spell disposition.tsv.
+
+  c1's docstring contains no mention of disposition. c2's UNTRACKED and MODIFIED constants are report paths, not the receipt. CLI overrides such as --receipt and --table allow callers to force a cross-read, so the claim is limited to the frozen counter's own path constants and read sites.
+
+  Missing-file early returns only verify the receipt and names paths for C1, and the table path for C2. They never stat the other file.
+
+  The launcher script will be excluded from the scope unless a counter imports it. C1's docstring names the launcher as the writer, but the counter does not execute it.
+
+  The counter files will be sha256 hashed to pin the quoted output.
+
+  The report will follow the SimpDeadFields style: verdict, axes, quoted command output, and path constants. Line numbers will be extracted precisely via commands to avoid memory errors. A final grep will check for the forbidden substrings in comments and docstrings.
+
+• Wave 1 never scored this. I'll extract the path constants and every read site from the counter sources, then trace a default run.===== c1-count.py bytes=3806 lines=109 =====
+-- imports --
+  L16: from __future__ import annotations
+  L18: import argparse
+  L19: import pathlib
+  L20: import sys
+-- module assigns --
+  L22: LANE = pathlib.Path(__file__).resolve().parents[3]
+  L23: RECEIPT = LANE / "corpus" / "evidence" / "round44" / "parent-lifetime.receipt"
+  L24: NAMES = LANE / "corpus" / "evidence" / "round44" / "seat-names.txt"
+-- string literals matching needles or path-like --
+  L23: NEEDLE 'parent-lifetime.receipt'
+  L24: 'seat-names.txt'
+  L57: 'N_SPAWNED=0/64'
+  L58: 'N_REAPED=0/64'
+  L59: 'PARENT_PID_MATCH=0/1'
+  L61: 'NAMES_MATCH=0/64'
+  L66: 'N_SPAWNED=0/64'
+  L67: 'N_REAPED=0/64'
+  L68: 'PARENT_PID_MATCH=0/1'
+  L70: 'NAMES_MATCH=0/64'
+  L98: 'N_SPAWNED=%d/64'
+  L99: 'N_REAPED=%d/64'
+  L100: 'PARENT_PID_MATCH=%d/1'
+  L102: 'NAMES_MATCH=%d/64'
+-- calls that can read or spawn --
+  L54: Path :: pathlib.Path(args.receipt)
+  L55: Path :: pathlib.Path(args.names)
+  L64: read_text :: receipt.read_text(encoding="utf-8", errors="replace")
+  L22: Path :: pathlib.Path(__file__)
+  L74: read_text :: names_path.read_text(encoding="utf-8")
+-- needle line scan (comments included) --
+  L23: RECEIPT = LANE / "corpus" / "evidence" / "round44" / "parent-lifetime.receipt"
+  L54:     receipt = pathlib.Path(args.receipt)
+
+===== c2-count.py bytes=4803 lines=122 =====
+-- imports --
+  L11: from __future__ import annotations
+  L13: import argparse
+  L14: import hashlib
+  L15: import pathlib
+  L16: import sys
+-- module assigns --
+  L18: LANE = pathlib.Path(__file__).resolve().parents[3]
+  L19: TABLE = LANE / "corpus" / "evidence" / "round44" / "disposition.tsv"
+  L21: UNTRACKED = (     '.ufo/waves/round-40/w1/ConnectorSiblingScan.md',     '.ufo/waves/round-40/w1/CriticC1Control.md',     '.ufo/waves/round-40/w1/CriticC1Predicate.md',     '.ufo/waves/round-40/w1/CriticC1Scope.md',     '.ufo/waves/round-40/w1/CriticC2Calibration.md',     '.ufo/waves/round-40/w1/CriticR4Disposition.md',     '.ufo/waves/round-40/w1/CriticSourceClaim.md',     '.ufo/waves/round-40/w1/
+  L59: MODIFIED = (     '.ufo/waves/round-40/w1/swarm-registry.json',     '.ufo/waves/round-41/w1/swarm-registry.json',     'corpus/evidence/round41/receipts/cells/cells.json', )
+-- string literals matching needles or path-like --
+  L19: NEEDLE 'disposition.tsv'
+  L22: '.ufo/waves/round-40/w1/ConnectorSiblingScan.md'
+  L23: '.ufo/waves/round-40/w1/CriticC1Control.md'
+  L24: '.ufo/waves/round-40/w1/CriticC1Predicate.md'
+  L25: '.ufo/waves/round-40/w1/CriticC1Scope.md'
+  L26: '.ufo/waves/round-40/w1/CriticC2Calibration.md'
+  L27: '.ufo/waves/round-40/w1/CriticR4Disposition.md'
+  L28: '.ufo/waves/round-40/w1/CriticSourceClaim.md'
+  L29: '.ufo/waves/round-40/w1/ExecC1BaseReceipt.md'
+  L30: '.ufo/waves/round-40/w1/ExecC1Count.md'
+  L31: '.ufo/waves/round-40/w1/ExecC1LandedReceipt.md'
+  L32: '.ufo/waves/round-40/w1/ExecC1MutantReceipt.md'
+  L33: '.ufo/waves/round-40/w1/ExecC2Count.md'
+  L34: '.ufo/waves/round-40/w1/ExecNoHarm.md'
+  L35: '.ufo/waves/round-40/w1/MutateExpectDigest.md'
+  L36: '.ufo/waves/round-40/w1/MutateGateDigest.md'
+  L37: '.ufo/waves/round-40/w1/MutateVerifierSubject.md'
+  L38: '.ufo/waves/round-40/w1/RevengerR1History.md'
+  L39: '.ufo/waves/round-40/w1/RevengerR2R5History.md'
+  L40: '.ufo/waves/round-40/w1/ReviewActivePopulation.md'
+  L41: '.ufo/waves/round-40/w1/ReviewC2Bindings.md'
+  L42: '.ufo/waves/round-40/w1/ReviewR2CommitTruth.md'
+  L43: '.ufo/waves/round-40/w1/ReviewR3Counts.md'
+  L44: '.ufo/waves/round-40/w1/ReviewR4RoleMix.md'
+  L45: '.ufo/waves/round-40/w1/ReviewReplacementBindings.md'
+  L46: '.ufo/waves/round-40/w1/ScoutFrontierOverlap.md'
+  L47: '.ufo/waves/round-40/w1/ScoutHashSource.md'
+  L48: '.ufo/waves/round-40/w1/ScoutProvinceBoundary.md'
+  L49: '.ufo/waves/round-40/w1/ScribeClaimSurfaces.md'
+  L50: '.ufo/waves/round-40/w1/ScribeKnowledgeEntry.md'
+  L51: '.ufo/waves/round-40/w1/ScribeLessonGate.md'
+  L52: '.ufo/waves/round-40/w1/SentinelFetchScope.md'
+  L53: '.ufo/waves/round-40/w1/SentinelWriteScope.md'
+  L54: '.ufo/waves/round-40/w1/SimplifierAudit.md'
+  L55: '.ufo/waves/round-41/w1/ConnectorSiblingScan.md'
+  L56: '.ufo/waves/round-41/w1/ExecC2Before.md'
+  L57: '.ufo/waves/round-41/w1/MutateC2Join.md'
+  L60: '.ufo/waves/round-40/w1/swarm-registry.json'
+  L61: '.ufo/waves/round-41/w1/swarm-registry.json'
+  L62: 'corpus/evidence/round41/receipts/cells/cells.json'
+  L71: '/round-40/'
+  L83: 'CONSISTENT=0/39'
+  L84: 'REVERIFIED=0/36'
+  L85: 'LEFT_NAMED=0/3'
+  L114: 'CONSISTENT=%d/39'
+  L115: 'REVERIFIED=%d/36'
+  L116: 'LEFT_NAMED=%d/3'
+-- calls that can read or spawn --
+  L80: Path :: pathlib.Path(args.table)
+  L81: Path :: pathlib.Path(args.root)
+  L67: read_bytes :: path.read_bytes()
+  L89: read_text :: table.read_text(encoding='utf-8')
+  L102: read_text :: path.read_text(encoding='utf-8', errors='replace')
+  L18: Path :: pathlib.Path(__file__)
+-- needle line scan (comments included) --
+  L19: TABLE = LANE / "corpus" / "evidence" / "round44" / "disposition.tsv"
+
+===== c3-count.py bytes=2621 lines=73 =====
+-- imports --
+  L15: from __future__ import annotations
+  L17: import argparse
+  L18: import hashlib
+  L19: import pathlib
+  L20: import re
+  L21: import sys
+-- module assigns --
+  L23: LANE = pathlib.Path(__file__).resolve().parents[3]
+  L24: ENTRY = LANE / "corpus" / "knowledge" / "citation-version-binding-r36.md"
+  L25: SOURCES = LANE / "corpus" / "SOURCES.md"
+  L26: CACHE = pathlib.Path(     "/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache" )
+  L29: URL = "https://www.rfc-editor.org/rfc/rfc7089.txt"
+  L30: QUOTE = "constitutes a promise that the resource state"
+-- string literals matching needles or path-like --
+  L29: 'https://www.rfc-editor.org/rfc/rfc7089.txt'
+  L24: 'citation-version-binding-r36.md'
+  L25: 'SOURCES.md'
+  L27: '/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache'
+  L50: 'ENTRY_CITES=0/1'
+  L51: 'QUOTE_LOCATED=0/1'
+  L52: 'URL_MATCH=0/1'
+  L58: 'citation-version-binding-r36.md'
+  L60: '.txt'
+  L64: 'ENTRY_CITES=%d/1'
+  L65: 'QUOTE_LOCATED=%d/1'
+  L66: 'URL_MATCH=%d/1'
+-- calls that can read or spawn --
+  L26: Path :: pathlib.Path(     "/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache" )
+  L47: Path :: pathlib.Path(args.entry)
+  L48: Path :: pathlib.Path(args.sources)
+  L55: read_text :: entry.read_text(encoding="utf-8")
+  L36: read_text :: sources.read_text(encoding="utf-8")
+  L63: read_text :: capture.read_text(encoding="utf-8", errors="replace")
+  L23: Path :: pathlib.Path(__file__)
+-- needle line scan (comments included) --
+
+corpus/evidence/round44/c3-count.py
+36:    for line in sources.read_text(encoding="utf-8").splitlines():
+55:    text = entry.read_text(encoding="utf-8")
+63:        located = QUOTE in capture.read_text(encoding="utf-8", errors="replace")
+
+corpus/evidence/round44/c2-count.py
+19:TABLE = LANE / "corpus" / "evidence" / "round44" / "disposition.tsv"
+67:    h.update(path.read_bytes())
+77:    ap.add_argument("--table", default=str(TABLE))
+89:    for line in table.read_text(encoding='utf-8').splitlines():
+102:            text = path.read_text(encoding='utf-8', errors='replace')
+
+corpus/evidence/round44/c1-count.py
+23:RECEIPT = LANE / "corpus" / "evidence" / "round44" / "parent-lifetime.receipt"
+24:NAMES = LANE / "corpus" / "evidence" / "round44" / "seat-names.txt"
+51:    ap.add_argument("--receipt", default=str(RECEIPT))
+52:    ap.add_argument("--names", default=str(NAMES))
+61:        print("NAMES_MATCH=0/64")
+64:    text = receipt.read_text(encoding="utf-8", errors="replace")
+70:        print("NAMES_MATCH=0/64")
+74:    expected = [ln.strip() for ln in names_path.read_text(encoding="utf-8").splitlines() if ln.strip()]
+102:    print("NAMES_MATCH=%d/64" % (64 if names_ok else 0))
+---RG_EXIT:0---
+=== C1 disposition count ===
+C1_DISPOSITION_MATCHES:0 exit:1
+=== C2 parent-lifetime count ===
+C2_PARENT_LIFETIME_MATCHES:0 exit:1
+=== C2 receipt count ===
+1
+=== C1 tsv count ===
+C1_TSV_MATCHES:0 exit:1
+=== sha256 ===
+9883df289447fbf52005f1fa6e1ca0ced44d1aba3b122b72345a6f0bf4043a6a  corpus/evidence/round44/c1-count.py
+343ba2366e8b448062dfd262d23d8f3d4801bbea5936dbc7f4d8d7e19b8b26ad  corpus/evidence/round44/c2-count.py
+93eb075239ce0d215eacea56c93cb4eedf7075177b3b9ef776b5a7090de6a9e3  corpus/evidence/round44/c3-count.py
+
+
+• C2 contains one match for "receipt".
+
+  The "receipt" match in C2 is in the filename "receipts", not "parent-lifetime.receipt". The AST scan only found ".receipt".
+
+  I will verify the exact line containing "receipt" in c2-count.py. I also need to check c1 for "tsv" and confirm the receipt match with rg -n. Finally, I will resolve path constants at runtime to audit the default invocation.
+
+  The default counters do not read the disposition table or launcher log. The source evidence is primary, so I will not overclaim by citing an open-audit trace. Callers can override paths with --receipt and --table, but the default invocation does not.
+
+  The "does not read" claim is calibrated against source constraints: no path constant names the other file, no string literal contains its name, and read sites are bound to the counter's own arguments. The AST dump confirms c2's untracked and modified paths exclude parent-lifetime.receipt.
+
+  C1 does not construct the disposition table dynamically. It contains no subprocess calls, and neither counter imports the other. The MODIFIED loop in c2 only classifies files from the table; it never reads them directly. Only the UNTRACKED paths are read.
+
+  The "receipt" match in c2-count.py is the frozen path component "receipts" inside a MODIFIED row, not a read of the launcher log. I will import the modules to resolve constants and use sys.addaudithook with runpy for a non-destructive open audit.
+
+  The audit output will go to stdout. The AST scan confirms c1 contains no string constant that dynamically builds disposition.tsv. C2's line scan for parent-lifetime also found only the TABLE line referencing disposition.tsv.
+
+  I will quote claims.md lines 72-73 as the predicate being checked, not as proof. I am considering whether to include c3 in the report; the wave-2 prompt focuses on C1 and C2, so adding c3 risks scope creep.
+
+  I will include a brief note about c3. It is the third counter and its own constants will be listed to show I did not ignore it. The wave-1 prompt asked for three counters but this wave narrowed to C1 and C2.
+
+  The open trace will filter to show whether c1 opens disposition.tsv or c2 opens parent-lifetime.receipt. The 36 report files read during the default run are read-only and allowed. I will also check for side effects when importing the counter modules.
+
+  Importing the counter modules is safe because they only define constants. I will quote the exact constant lines with line numbers from a command. The scored commands in claims.md use no CLI overrides.
+
+  The "does not read" claim applies to the frozen counter source, not to arbitrary command-line arguments. The c1 early-exit path calls receipt.is_file(), which is a stat check rather than a read of disposition.tsv.
+
+  I will use sed -n to extract exact constant lines for quoting. I also want to verify that neither counter uses exec, eval, or importlib. To confirm c2's UNTRACKED paths do not include the receipt path, I will load both modules with importlib.util and print their resolved constants.
+
+  I will run a targeted open audit that captures only the two target paths. The full counters read 36 files each, but the audit will filter to just disposition.tsv and parent-lifetime.receipt.
+
+  The audit hook will catch pathlib read_text calls because they use the underlying open() system call. I am running the targeted checks now and will capture clean command outputs for the report. The AST dump is lengthy because it lists every UNTRACKED path.=== rg -n -F needles ===
+corpus/evidence/round44/c2-count.py:19:TABLE = LANE / "corpus" / "evidence" / "round44" / "disposition.tsv"
+---
+corpus/evidence/round44/c1-count.py:23:RECEIPT = LANE / "corpus" / "evidence" / "round44" / "parent-lifetime.receipt"
+=== c1 disposition / tsv / table (expect none) ===
+C1_CROSS_NAME_MATCHES:0 exit:1
+=== c2 parent-lifetime / parent_pid / RECEIPT (expect none) ===
+C2_CROSS_NAME_MATCHES:0 exit:1
+=== c2 substring receipt (not the launcher log) ===
+62:    'corpus/evidence/round41/receipts/cells/cells.json',
+=== constant lines ===
+    16	from __future__ import annotations
+    17	
+    18	import argparse
+    19	import pathlib
+    20	import sys
+    21	
+    22	LANE = pathlib.Path(__file__).resolve().parents[3]
+    23	RECEIPT = LANE / "corpus" / "evidence" / "round44" / "parent-lifetime.receipt"
+    24	NAMES = LANE / "corpus" / "evidence" / "round44" / "seat-names.txt"
+    49	def main(argv=None) -> int:
+    50	    ap = argparse.ArgumentParser(description=__doc__)
+    51	    ap.add_argument("--receipt", default=str(RECEIPT))
+    52	    ap.add_argument("--names", default=str(NAMES))
+    53	    args = ap.parse_args(argv)
+    54	    receipt = pathlib.Path(args.receipt)
+    55	    names_path = pathlib.Path(args.names)
+    56	    if not receipt.is_file() or not names_path.is_file():
+    64	    text = receipt.read_text(encoding="utf-8", errors="replace")
+    65	    if "parent_pid=" not in text or "reap " not in text and "n_spawned=" not in text:
+    66	        print("N_SPAWNED=0/64")
+    67	        print("N_REAPED=0/64")
+    68	        print("PARENT_PID_MATCH=0/1")
+    69	        print("ZERO_PIDS=1")
+    70	        print("NAMES_MATCH=0/64")
+    71	        print("C1=FAIL prose")
+    72	        return 1
+    73	    parsed = parse(text)
+    74	    expected = [ln.strip() for ln in names_path.read_text(encoding="utf-8").splitlines() if ln.strip()]
+--- c2 constants and reads ---
+    11	from __future__ import annotations
+    12	
+    13	import argparse
+    14	import hashlib
+    15	import pathlib
+    16	import sys
+    17	
+    18	LANE = pathlib.Path(__file__).resolve().parents[3]
+    19	TABLE = LANE / "corpus" / "evidence" / "round44" / "disposition.tsv"
+    59	MODIFIED = (
+    60	    '.ufo/waves/round-40/w1/swarm-registry.json',
+    61	    '.ufo/waves/round-41/w1/swarm-registry.json',
+    62	    'corpus/evidence/round41/receipts/cells/cells.json',
+    63	)
+    75	def main(argv=None) -> int:
+    76	    ap = argparse.ArgumentParser(description=__doc__)
+    77	    ap.add_argument("--table", default=str(TABLE))
+    78	    ap.add_argument("--root", default=str(LANE))
+    79	    args = ap.parse_args(argv)
+    80	    table = pathlib.Path(args.table)
+    81	    root = pathlib.Path(args.root)
+    82	    if not table.is_file():
+    88	    rows = {}
+    89	    for line in table.read_text(encoding='utf-8').splitlines():
+    90	        if not line.strip() or line.startswith('#'):
+    91	            continue
+    92	        parts = line.split('\t')
+    93	        if len(parts) < 4:
+    94	            continue
+    95	        rows[parts[0]] = (parts[1], parts[2], parts[3])
+    96	    rev = left = consistent = 0
+    97	    for rel in UNTRACKED:
+    98	        cls, digest, reason = rows.get(rel, ('', '', ''))
+    99	        path = root / rel
+   100	        ok = False
+   101	        if cls == 'reverified-commit' and reason.strip() and path.is_file():
+   102	            text = path.read_text(encoding='utf-8', errors='replace')
+   103	            stem = path.stem
+   104	            ok = stem in text and round_ok(rel, text) and len(text) > 80 and sha256(path) == digest
+   105	        if ok:
+   106	            rev += 1
+   107	            consistent += 1
+   108	    for rel in MODIFIED:
+   109	        cls, digest, reason = rows.get(rel, ('', '', ''))
+   110	        ok = cls == 'left-named' and 'not hunk-verified' in reason and reason.strip()
+C1_LANE /home/vgpnk/Projects/shokunin/chousa-shokunin
+C1_RECEIPT /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/parent-lifetime.receipt
+C1_NAMES /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/seat-names.txt
+C1_RECEIPT_NAME parent-lifetime.receipt
+C1_NAMES_NAME seat-names.txt
+C1_CONST_NAMES ['LANE', 'NAMES', 'RECEIPT']
+C1_HAS_TABLE False
+C1_DISPOSITION_IN_RECEIPT False
+C1_DISPOSITION_IN_NAMES False
+C2_LANE /home/vgpnk/Projects/shokunin/chousa-shokunin
+C2_TABLE /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/disposition.tsv
+C2_TABLE_NAME disposition.tsv
+C2_CONST_NAMES ['LANE', 'MODIFIED', 'TABLE', 'UNTRACKED']
+C2_HAS_RECEIPT False
+C2_PARENT_IN_TABLE False
+C2_TUPLE_CROSS_HITS []
+C2_TUPLE_RECEIPT_SUBSTR ['corpus/evidence/round41/receipts/cells/cells.json']
+C2_UNTRACKED_LEN 36
+C2_MODIFIED_LEN 3
+C1_DEFAULT_EXIT 2
+C1_DEFAULT_STDOUT
+C1_DEFAULT_STDERR usage: c1-count.py [-h] [--receipt RECEIPT] [--names NAMES]
+c1-count.py: error: unrecognized arguments: /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/c1-count.py
+C1_DEFAULT_OPEN_COUNT 0
+C1_DEFAULT_INTERESTING
+C1_DEFAULT_OPENED_DISPOSITION_TSV 0
+C1_DEFAULT_OPENED_PARENT_LIFETIME_RECEIPT 0
+C2_DEFAULT_EXIT 2
+C2_DEFAULT_STDOUT
+C2_DEFAULT_STDERR usage: c2-count.py [-h] [--table TABLE] [--root ROOT]
+c2-count.py: error: unrecognized arguments: /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/c2-count.py
+C2_DEFAULT_OPEN_COUNT 0
+C2_DEFAULT_INTERESTING
+C2_DEFAULT_OPENED_DISPOSITION_TSV 0
+C2_DEFAULT_OPENED_PARENT_LIFETIME_RECEIPT 0
+The open audit failed because the script path was passed as an extra argv to the -c script, and runpy.run_path also saw sys.
+
+  Exit code 2 is usage, not a valid trace. I will re-run the audit with sys.argv set to just the script name.
+
+  The script path will be read from an environment variable so it does not appear in argv. sys.argv will be set to just the script name before runpy.run_path.
+
+  The failed trace will not be quoted as evidence of non-reading. Only a successful trace will be included in the report. The default receipt path is the RECEIPT constant, and callers can override it with --receipt.
+
+  The source only reads disposition.tsv when the operator overrides --receipt. This override is a calibration caveat, not a default read of that path. C2 --table can also be pointed at the receipt, but the source does not name parent-lifetime.receipt. The default TABLE is disposition.tsv.
+
+  The only "receipt" substring in c2 is a path inside MODIFIED tuples. Those paths are never opened or read. This confirms the substring does not indicate a read of the launcher log.
+
+  c1 and c2 do not import each other. Both only use argparse, pathlib, sys, and hashlib.
+
+  The sources contain no subprocess, open(), or importlib calls. c3 is out of scope for this claim. It will be briefly noted as a third counter that also does not read either file. This prevents a false implication that only two counters exist.
+
+  A negative probe will verify that passing --receipt to a missing path fails without reading disposition.tsv. The audit script will also check that both target files exist, ensuring the default run actually opens them. Claims.md lines 72-73 will be cited as the predicate, not as proof; the source code is the proof. I will also check whether c1's docstring mentions disposition.
+
+  c1's docstring does not mention disposition. The report will follow SimpDeadFields style: title, seat, axes, verdict, quoted path constants, quoted command output, read sites, and the boundary notes. The lane root is confirmed as the project directory.
+
+  The report will list exactly which files each counter opens, not just the two target paths. C2 opens 36 markdown reports plus disposition.tsv. I will summarize the counts and suffixes for non-report opens. I also need to confirm the exit codes and stdout of real default runs.
+
+  A failed default run still reveals which files were opened, so a failure does not count as a separability miss. No shared helper is imported by either counter. c1 constructs no dynamic path containing "disposition"; its Path objects are built from literal constants or CLI arguments. c2 also builds no dynamic path referencing the receipt or table.
+
+  The Python open audit hook should catch all pathlib opens, but strace -e openat will be used as a secondary check to confirm nothing is missed.
+
+• The first open trace died on a usage error before either counter ran. I'll rerun the default invocation with a clean argv.===== C1 wrapper_exit=0 =====
+C1_STDERR <empty>
+N_SPAWNED=64/64
+N_REAPED=64/64
+PARENT_PID_MATCH=1/1
+ZERO_PIDS=0
+NAMES_MATCH=64/64
+C1=PASS
+COUNTER_EXIT 0
+C1_OPEN_COUNT 97
+C1_INTERESTING
+  /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/c1-count.py
+  /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/c1-count.py
+  /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/c1-count.py
+  /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/parent-lifetime.receipt
+  /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/seat-names.txt
+C1_OPENED_DISPOSITION_TSV 0
+C1_OPENED_PARENT_LIFETIME_RECEIPT 1
+C1_LANE_OPENS 5
+  corpus/evidence/round44/c1-count.py
+  corpus/evidence/round44/c1-count.py
+  corpus/evidence/round44/c1-count.py
+  corpus/evidence/round44/parent-lifetime.receipt
+  corpus/evidence/round44/seat-names.txt
+===== C2 wrapper_exit=0 =====
+C2_STDERR <empty>
+CONSISTENT=0/39
+REVERIFIED=0/36
+LEFT_NAMED=0/3
+C2=FAIL table-missing
+COUNTER_EXIT 1
+C2_OPEN_COUNT 97
+C2_INTERESTING
+  /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/c2-count.py
+  /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/c2-count.py
+  /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/c2-count.py
+C2_OPENED_DISPOSITION_TSV 0
+C2_OPENED_PARENT_LIFETIME_RECEIPT 0
+C2_LANE_OPENS 3
+  corpus/evidence/round44/c2-count.py
+  corpus/evidence/round44/c2-count.py
+  corpus/evidence/round44/c2-count.py
+STRACE_PRESENT
+EXISTS True 8637 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/parent-lifetime.receipt
+EXISTS False - /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/disposition.tsv
+EXISTS True 969 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/seat-names.txt
+EXISTS True 3806 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/c1-count.py
+EXISTS True 4803 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/c2-count.py
+
+
+• An interesting finding regarding disposition was noted.
+
+  C2 failed because disposition.tsv was missing. It opened only c2-count.py and never read parent-lifetime.receipt. C1 opened parent-lifetime.receipt and seat-names.txt instead.
+
+  The source code provides stronger evidence than the open audit. C1 contains no reference to disposition.tsv anywhere. C2 exited early at the missing-table check, so its audit cannot prove it skipped reading parent-lifetime.receipt.
+
+  The source code contains no string or constant for parent-lifetime.receipt. Read sites are limited to table.read_text and path.read_text for untracked files only. Disposition.tsv was found in round 41 and round 34, but not in round 44.
+
+  The missing disposition.tsv might be gitignored or untracked. The counter source is the focus, not the table's existence. I will search for it under other names to avoid misreporting.
+
+  The 97 open calls include mostly Python stdlib startup noise. None reference parent-lifetime.receipt. The missing table caused the counter to exit before reaching the UNTRACKED read loop.
+
+  The runtime trace cannot prove the loop skips parent-lifetime.receipt. The source code does.
+
+  A static proof of the loop's path set confirms this. UNTRACKED and MODIFIED membership checks already exclude that file. If the table existed, reads would only cover disposition.tsv and untracked relative paths. None would be parent-lifetime.receipt.
+
+  The substring "receipt" in the cells.json path is not a read. MODIFIED paths are only classified, never opened.
+
+  A CLI caveat remains: `--receipt` and `--table` can be overridden to any path, so a caller could force a cross-read. The frozen defaults and scored commands do not exercise this boundary.
+
+  claims.md explicitly states that C1 and C2 are separable.
+
+  The scored commands for C1 and C2 use no `--receipt` or `--table` overrides. C1 does not import C2, so there is no shared module. A third counter, c3, exists but is outside the scope of this prompt.
+
+  A quick glob of the round44 evidence directory will confirm whether disposition.tsv exists elsewhere. The counter would still not read parent-lifetime.receipt even if the table were created later.
+
+  A precise quote of the claims separability sentence will be retrieved. Strace on C1 is under consideration to corroborate the audit hook, though it would be redundant since the Python audit already passed for the default invocation.
+
+  `is_file()` uses `stat`, not `open`, so C2's missing-table check leaves no open trace. I will run filtered strace on both counters to show C2 only statting the absent disposition table and never touching parent-lifetime.receipt, while C1 opens receipt and seat-names.txt.
+
+  The missing-table path is strictly the default TABLE constant, so it cannot reach parent-lifetime.receipt. Claims.md will be quoted as the predicate being checked rather than as proof. No wrapper or launcher was found that invokes both counters.
+
+  C1's prose gate searches receipt text for "parent_pid=" and "reap " / "n_spawned=", while C2 parses tab-separated class, digest, and reason columns. These differing schemas further support the claim that the counters do not read each other's files.
+
+  SHA256 hashes for both counters are verified. C1's parse() only splits receipt text and performs no further IO. C2's sha256() is restricted to the UNTRACKED loop and never touches the receipt. The report will be written after a final quick strace run.
+
+  The report will follow a SimpDeadFields-style evidence-first structure. It will present the verdict, path constants, imports, read sites, and negative search results.
+
+  The report will list resolved constants and default open audit results. It will note that CLI overrides could theoretically point to any path, but the scored commands do not exercise this boundary. The cells.json "receipt" substring is not a read. Claims.md should not be retuned or edited. The first failed audit was a usage error, so it will be omitted from the evidence. C2's table-missing failure is a real default observation, and it will be included because separability does not require C2 to pass.=== C1 strace names ===
+C1_STDOUT_EXIT:0
+520:newfstatat(AT_FDCWD, "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/parent-lifetime.receipt", {st_mode=S_IFREG|0644, st_size=8637, ...}, 0) = 0
+521:newfstatat(AT_FDCWD, "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/seat-names.txt", {st_mode=S_IFREG|0644, st_size=969, ...}, 0) = 0
+522:openat(AT_FDCWD, "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/parent-lifetime.receipt", O_RDONLY|O_CLOEXEC) = 3
+523:openat(AT_FDCWD, "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/seat-names.txt", O_RDONLY|O_CLOEXEC) = 3
+=== C2 strace names ===
+C2_STDOUT_EXIT:1
+545:newfstatat(AT_FDCWD, "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/disposition.tsv", 0x7ffe73cbd810, 0) = -1 ENOENT (No such file or directory)
+=== stdout ===
+-- c1 --
+N_SPAWNED=64/64
+N_REAPED=64/64
+PARENT_PID_MATCH=1/1
+ZERO_PIDS=0
+NAMES_MATCH=64/64
+C1=PASS
+-- c2 --
+CONSISTENT=0/39
+REVERIFIED=0/36
+LEFT_NAMED=0/3
+C2=FAIL table-missing
+=== claims separability lines ===
+    16	## C1 — operability (lowest scored non-retired axis, 3/10)
+    17	
+    18	Predicate R44-C1: `python3 corpus/evidence/round44/c1-count.py` reads the
+    19	launcher log `corpus/evidence/round44/parent-lifetime.receipt`, written by
+    20	`tools/parent-lifetime.sh` while that process waited. The log's start and
+    21	end `parent_pid` are the same positive integer, `n_spawned` equals
+    22	`n_reaped` equals 64, every seat name is the frozen name in
+    23	`corpus/evidence/round44/seat-names.txt`, every `child_pid` is a positive
+    24	integer, and every reap line was written before the end line.
+    25	
+    26	Counting command: `python3 corpus/evidence/round44/c1-count.py`
+    27	
+    28	Target, one value: `C1=PASS` with `N_SPAWNED=64/64`, `N_REAPED=64/64`,
+    29	`PARENT_PID_MATCH=1/1`, `ZERO_PIDS=0`, `NAMES_MATCH=64/64`, exit 0.
+    30	
+    47	## C2 — calibration
+    48	
+    49	Predicate R44-C2: `corpus/evidence/round44/disposition.tsv` has one row for
+    50	each of the 39 paths frozen in `c2-count.py`. Each of the 36 untracked
+    51	round-40/round-41 seat reports is `reverified-commit`: the committed file
+    52	contains its basename stem, contains a round token matching its directory
+    53	(`40` or `41`), is longer than 80 bytes, and its sha256 equals the row.
+    54	Each of the three modified paths is `left-named` and its reason contains
+    55	`not hunk-verified`. No other class is allowed.
+    56	
+    57	Counting command: `python3 corpus/evidence/round44/c2-count.py`
+    58	
+    59	Target: `C2=PASS` with `CONSISTENT=39/39`, `REVERIFIED=36/36`,
+    60	`LEFT_NAMED=3/3`, exit 0.
+    61	
+    62	Do-nothing control: `controls/all-left.tsv` marks all 39 `left-named`. It
+    63	must print `REVERIFIED=0/36` and exit 1. A missing table exits 1.
+    64	
+    65	Kill rule: a missing path, a reverified row whose stem, round token, or
+    66	sha256 does not match, or a modified path marked `reverified-commit`, is a
+    67	miss. Committing a path without that match is a blind sweep and fails.
+    68	
+    69	Cheapest full-marks gate without the work: copy the spot-check's 39 names
+    70	into 39 `left-named` rows. The all-left control is that gate.
+    71	
+    72	C1 and C2 are separable. C1 does not read the disposition table. C2 does
+    73	not read the launcher log.
+    74	
+The grep search for both patterns in round44 Python files matched both files, since each contained one of the patterns.
+
+  The strace output confirms the files are isolated. C1 contains only parent-lifetime.receipt and seat-names.txt. C2 contains only disposition.tsv. No cross-matches appear.
+
+  The "does not read" claim applies only to the default path constants and their read sites. It does not prevent a caller from overriding the CLI with `--receipt` or `--table` to point at an arbitrary file. The scored commands in claims.md are bare invocations without such overrides.
+
+  The scored commands are `python3 corpus/evidence/round44/c1-count.py` and `python3 corpus/evidence/round44/c2-count.py`.
+
+  The receipt substring in c2 points to a modified file that is never read. C2 exits table-missing before reaching any UNTRACKED files because disposition.tsv is absent.
+
+  The runtime trace for C2 does not exercise the UNTRACKED read loop because the table is missing. The source still shows those reads are `root / rel` for rel in UNTRACKED, and UNTRACKED does not contain parent-lifetime.receipt. The runtime trace alone cannot prove the loop never reads the receipt when the table exists; the source membership check does. A static proof is stronger: even if the table existed, the only extra reads would be UNTRACKED paths.
+
+  A forced `--table` override would read the receipt, but that is a caller-side action rather than a source behavior. I will not run it to avoid confusing the calibration.
+
+  The source lines show `--receipt` and `--table` both default to their respective constants. No other default or cross-import exists.
+
+  C3 is out of scope. The wave-2 prompt limits the claim to C1 and C2.
+
+  C1's open audit reveals three script opens via runpy plus the receipt and names files. C2's strace shows only a disposition.tsv ENOENT stat and no parent-lifetime.receipt open.
+
+  C2's `is_file()` check stats the table and returns before `read_text`, so it never opens the missing table or the receipt. The exact path constants in `c1-count.py` resolve to `C1_LANE / home/vgpnk/Projects/shokunin/chousa-shokunin`.
+
+  C1's resolved paths are `parent-lifetime.receipt` and `seat-names.txt`. C2's resolved path is `disposition.tsv`. C1 has no TABLE constant. C2 has no RECEIPT constant.
+
+  C2 contains no parent-lifetime.receipt in its table. C2_TUPLE_CROSS_HITS is empty. A negative search for disposition, tsv, or table in C1 returned zero matches.
+
+  A negative search for parent-lifetime or RECEIPT in C2 also returned zero matches. The source files will be pinned with SHA256 hashes. C3 constants will be quoted briefly to confirm it is not a bridge between the two counters.
+
+  I will explicitly count strace hits to quote exact numbers. C1's filtered output contains four lines for the receipt and names files, with none for disposition.tsv. C2's filtered output contains one line for the ENOENT stat of disposition.tsv, with none for the receipt.
+
+  The first failed audit will be omitted; it was a harness bug, not a counter result. The report targets only W2SimpSep.md and leaves temp files in /tmp. It will follow the SimpDeadFields axes structure for operability, calibration, and depth, quoting the tuple check and the receipt-substring hit without listing all 36 paths.=== strace hit counts ===
+C1_disposition.tsv 
+0
+C1_parent-lifetime.receipt 
+2
+C2_disposition.tsv 
+1
+C2_parent-lifetime.receipt 
+0
+=== cross import ===
+corpus/evidence/round44/c2-count.py:2:"""c2-count — frozen counter for round 44 claim C2 (calibration).
+corpus/evidence/round44/c1-count.py:2:"""c1-count — frozen counter for round 44 claim C1 (operability).
+=== c3 needles ===
+C3_NEEDLES:0
+The cross-import search matched docstrings because the pattern `c1-count` matches the docstring "c1-count — frozen counter".
+
+  The rg hits are just module docstrings naming the files. Neither file imports the other. AST import analysis confirms c1 uses argparse, pathlib, sys, and __future__.annotations. c2 uses argparse, hashlib, pathlib, sys, and __future__.annotations.
+
+  c1-count.py defines three path constants. LANE resolves to the project root. RECEIPT points to corpus/evidence/round44/parent-lifetime.receipt. NAMES points to corpus/evidence/round44/seat-names.txt.
+
+  c2-count.py defines LANE and TABLE. TABLE points to corpus/evidence/round44/disposition.tsv. It also defines MODIFIED, UNTRACKED, and a tuple constant with no cross-hits. c2 has no receipt constant. A receipt substring appears in corpus/evidence/round41/receipts/cells/cells.json.
+
+  Negative searches confirm no cross-file matches. C1 finds nothing for disposition, .tsv, or TABLE. C2 finds nothing for parent-lifetime, parent_lifetime, parent_pid, or RECEIPT.
+
+  The only receipt substring in c2 is the MODIFIED path, which the script never reads.
+
+  C1 reads the receipt and names files via read_text. It checks both paths with is_file.
+
+  C2 reads the table file via read_text. It also reads paths and computes SHA-256 hashes for the 36 UNTRACKED reports. The MODIFIED loop does not read files.
+
+  Runtime traces confirm C1 opens the receipt and names files. It never touches disposition.tsv. C2 stats the missing table and exits before any read_text call. It never opens the launcher log. Because the table is absent, the UNTRACKED loop did not run.
+
+  The UNTRACKED loop is separable because the source tuples do not reference the other file. The default path constants still name the correct files, and the process never opened the wrong receipt.
+
+  CLI overrides exist for both counters, but the frozen counting commands in claims.md lack them. The claim should be limited to the source: the counter scripts do not read the other file, and their defaults do not name it.
+
+  c3 is a third counter that also does not name either file, so it is not a hidden bridge. The report will briefly note this calibration.
+
+  claims.md already states the separability claim; this report verifies it from the source files without retuning the wording.
+
+  The missing disposition.tsv is a runtime failure, not a source-level coupling issue.
+
+  The first failed audit was a harness bug, not a counter result. The successful rerun is the real evidence.
+
+  C1 passes without the table.
+
+  Hashes:
+  - c1 9883df289447fbf52005f1fa6e1ca0ced44d1aba3b122b72345a6f0bf4043a6a
+  - c2 343ba2366e8b448062dfd262d23d8f3d4801bbea5936dbc7f4d8d7e19b8b26ad
+
+  parents[3] resolves to the lane root because the file sits at corpus/evidence/round44/c1-count.py.
+
+• The sources name different files, and the default runs do not cross-open them. I’ll write that, with the missing-table limit stated.
+
+• The report is complete. The user asked me to stop after finishing it.
+
+• C1 does not read `disposition.tsv`. C2 does not read `parent-lifetime.receipt`. The report is at `.ufo/waves/round-44/w2/W2SimpSep.md`.
+
+  C1's constants are `RECEIPT` (`parent-lifetime.receipt`) and `NAMES` (`seat-names.txt`). C2's constant is `TABLE` (`disposition.tsv`). A default C1 run opened only the receipt and the name list. A default C2 run stat'd the missing table and did not open the launcher log.
+
+To resume this session: kimi -r session_0dc1c97c-2b83-4591-9677-3efac9f9d599

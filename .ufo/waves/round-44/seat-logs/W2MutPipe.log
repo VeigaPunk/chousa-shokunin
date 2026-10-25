@@ -1,0 +1,398 @@
+kimi version 2.3.1
+• I will write a report to the specified path.
+
+• I'll find the census SOURCES pipe rule and a one-cell reject/rewrite pair, then write only `W2MutPipe.md`.
+
+• I need to understand the census pipe rejection rule.Grep on w2-spec.json matched the file but did not display its content.I need to find the census script that rejects SOURCES rows containing a pipe.The census script is located at `/home/vgpnk/Projects/shokunin/scripts/sources-census.sh`.The grep on sources-census.sh returned only the filename, not its contents.The census rejection mechanism is now clear.
+
+  Census splits on pipe delimiters and expects 13 fields per row. A cell containing a literal pipe breaks this count and triggers an E01 error. The task is to build a one-cell SOURCES example with a pipe, demonstrate the rejection, and show the corrected version.
+
+  I will create a temporary file to run census against, since I cannot modify production files. The output must be quoted.
+
+  I will create a temporary test fixture in /tmp using mktemp. Census can validate that file directly with --file. This avoids modifying production files while still providing operational evidence.
+
+• Census splits rows on `|` and wants `NF==13`. I'll find the staged cell that breaks that, then rewrite only that cell.
+
+• The w1 directory appears to contain only swarm-registry.json.A MutPipeCell.log file from wave 1 was found. That wave died due to a usage error.I need to find the staged SOURCES.append.md file.The staged SOURCES.append.md might be in a campaign tree.I will read the chousa-round-44 prompt and examine the campaign tree.The staged file is located at `/home/vgpnk/Projects/shokuknow/merge/chousa/SOURCES.append.md`.The grep search on SOURCES.append.md returned only the filename.The key contract forbids literal or escaped pipe characters in any cell. The anchor must be rewritten within a located quote so the row parses as 11 columns.
+
+  A real kengaku package fails its census gate due to two malformed rows with escaped pipes. Line 22 of the staged file contains an escaped pipe in S094's recheck cell. I am checking for additional pipes.
+
+  The census script uses `-F'|'`, so awk treats `|` as the field separator regardless of backslash escaping. A cell containing `\|` still splits into extra fields and fails the 13-field check. I will locate every such cell in the staged file, select one for the example, rewrite it, and run census to confirm the rejection.
+
+• The staged append uses `\|` inside cells. I'll locate those cells and run census on a scratch copy, not the registry.
+
+• The grep for `\|` found only one line in the append file.
+
+  The `\\\|` pattern may have been misinterpreted. A Python one-liner could count fields to find literal pipes outside table delimiters. S094's recheck cell contains escaped pipes, which is the rejected example. The round-44 prompt requires rewriting the anchor in the located quote so the row parses as 11 columns.
+
+  The w2 task requires a concrete example: a rejected SOURCES row and its rewritten cell. The pipe is in the recheck cell of S094, not the anchor. The contract forbids literal or escaped pipes in any cell.
+
+  The parenthetical likely suggests rewriting the anchor when the pipe sits there. S094’s pipe is in the recheck cell. I will run a field-count script and awk to verify whether other packages contain malformed rows and to confirm if escaped pipes still split under census’s `-F'|'` delimiter. The first step is extracting the S094 row.
+
+  I will build a minimal SOURCES.md with the S094 row and a clean control row, run census validation, rewrite only the recheck cell to remove pipes, and re-run census. The used-by path may be missing in a temp directory, which would trigger E11 instead of E01; I should mirror that file or use status queued with an empty used-by. The task targets pipe rejection specifically.
+
+  I will create an empty used-by file in the temporary tree so census reports only E01 and not E11. I cannot append the bad row to the existing registry.
+
+  A temporary copy is sufficient. The staged S094 row risks triggering additional schema errors beyond the pipe, so a minimal valid row with a single mutated cell is preferable for a clean demonstration.
+
+  The recheck cell `180d — re-open...` is invalid because it contains prose after the date. Even after removing the pipe, census would still reject it for E09. A rewritten cell that passes must satisfy both the pipe rule and the column-specific validation rules.
+
+  The rejected cell is the S094 recheck containing the escaped pipe. Removing that pipe alone should make the row parse as 11 columns and pass census, provided the rest of the row is otherwise valid.
+
+  The recheck cell must become a valid ISO date, NNd, or symbolic cadence. The em dash and quotes must move to the round lesson’s Gate block.
+
+  The census script uses `next` after reporting E01, so a row with an incorrect field count is never checked for E09. This means the recheck cell must be rewritten to a valid cadence such as `180d` and its confirmation prose moved out of the cell.
+
+  The phrase "one-cell example" might refer to a single cell within a row rather than a complete row. I am weighing whether to isolate the pipe in its own valid row or keep it inside the existing S094 entry.The chousa staged file contains one escaped-pipe cell on line 22, in S094's recheck cell.
+
+  The w2 task is a mutation test for census. It will show a rejected pipe cell and its corrected form. I will run sources-census.sh against a temp file without appending the registry. The census script does not treat escaped pipes as literal characters. E01 triggers when NF is not 13 and skips remaining checks. The error message reports fields as NF-2.
+
+  The recheck cell contains two escaped pipes, so NF becomes 15 and fields equals 13. The ID field remains S094 because the extra separators sit after the recheck split. I am now drafting the rewritten cell that passes census.
+
+  Replacing escaped pipes with ` or ` would still fail E09 because the recheck cell must be ISO, NNd, or symbolic. The rewrite must therefore satisfy both the pipe count and the recheck format. The phrase "census would reject" points to E01 as the specific failure reason.
+
+  The cell that passes census is `180d`. It contains no pipe and satisfies the recheck format, so both E01 and E09 pass. A rewrite that only removes the escaped pipes would still fail E09.
+
+  I will lead with the passing cell and note that a partial rewrite would still fail. I must verify whether the referenced used-by file exists to avoid an E11 error. A minimal temp tree with a stub file and queued status will keep the demonstration clean.
+
+  I will use the real S094 row rather than a minimal stub. The used-by path must resolve from the lane directory when census runs with --file, so I need to confirm claim-support-test-r37.md exists there.
+
+  The used-by path resolves from the lane directory, so I can create a stub file in the temp tree. Only E11 causes a non-zero exit; warnings like W02 do not. A standalone temp file avoids registry collisions.
+
+  I will run the frozen manual census awk as a second witness and add a control row with no interior pipe to confirm escaped pipes are not honored. I will count pipes precisely with Python in the shell. I will keep temp files under /tmp and avoid writing anything else in the lane except the report. I am also weighing whether to test an anchor-rewrite interpretation, since w1 asked to rewrite an anchor while w2 asks for a one-cell example.
+
+  The actual pipe is in the recheck cell, not the anchor. I checked S081 for pipes and found none.
+
+  The kengaku note is a general rule about two malformed rows carrying escaped pipes. The chousa mutation test will use its own staged S094 specimen as the concrete example. I will scan chousa's append for all interior pipes with a Python one-liner and confirm field counts. I also verified that gawk splits on `\|` as two separate characters.
+
+  I will build three test fixtures: the bad S094 row, a pipe-stripped prose recheck, and the passing `180d` recheck. The file needs a Registry header so census counts the row correctly; rows outside that section trigger E12 if they look like S-ids.
+
+  The date gap between opened and today is one day, so E08 will not fire. I will run three census validations and the manual awk malformed counter to confirm field counts. The bad and passing cells will be quoted verbatim. A rewrite that preserves the confirmation text while removing the pipe would only work if recheck accepts a symbolic value.
+
+  The confirmation text contains digits, quotes, and an em dash, so it cannot be a symbolic recheck token. The prose must move to the lesson Gate block instead of staying in the cell. Rewriting the anchor would not remove the pipe from recheck, because the pipe is in the recheck column.
+
+  I will run a negative control: rewrite the anchor while leaving the recheck cell unchanged. This proves that an anchor rewrite alone still triggers E01, because the pipe remains in the recheck column.
+
+  The test will be judged on three axes:
+  - operability: the check runs and the rewrite is executable
+  - calibration: it does not claim that an anchor rewrite fixes a recheck-cell pipe, that census honors escaped pipes, or that stripping prose passes E09
+  - depth: it explains actual field counts, which cell contains the pipe, why NF shifts, and why E01 short-circuits E09
+
+  The raw file contains a literal backslash-pipe, not just a grep display artifact. I will verify that gawk still splits on `\|` inside markdown tables. I have started drafting the shell script implementation.
+
+  The shell script will use a temporary directory to extract line 22 from the chousa append, build three registry fixtures, and run census. The existing empty stub file at `corpus/knowledge/claim-support-test-r37.md` satisfies the used-by requirement without extra writes.
+
+  The `--file` path resolves the used-by stub correctly from the temporary directory. Header separators are skipped and rows must be at column zero. A synthetic anchor-pipe row would demonstrate the general mechanism, but the real S094 cell is the better example because the rejection applies to a genuine staged SOURCES row.
+
+  I will scan the source and teaches cells for interior pipes before writing the report. The recheck cell's backticks and em dash do not affect the pass rewrite; only `180d` needs to be clean.
+
+  The source and teaches cells contain no interior pipes, confirming the recheck cell is the sole culprit. I will not validate the live registry because W2ExecCensus already handles that.
+
+  I will pass `--today 2026-10-24` explicitly to the census script so the date check is reproducible regardless of host clock drift. I will also print the exact byte representation of the pipe with Python to confirm it is a literal backslash-pipe.
+
+  The report will be tight and scoped. It will lead with the bad and passing cells, then census output, then explanations for why escaped pipes are not honored, why an anchor rewrite fails, and why stripping prose still fails E09. The SOURCES.md file will remain untouched.
+
+  I will quote the exact census script lines that enforce the 11-column rule and trigger E01. I also need to verify the cell content with Python before running the experiment.
+
+  I will extract the staged row with Python to avoid transcription errors from backticks in a shell heredoc. Writing temporary fixtures to /tmp conflicts with the instruction to write only the report at its absolute path, yet the task requires running the check.
+
+  I will create a temporary directory under /tmp with mktemp and remove it after the check. The census script must run on real fixture files because an unrun check has not passed.
+
+• S094’s recheck cell is the staged pipe. I’ll run census on scratch copies only, then keep the cell that actually passes.2026-10-25
+append_lines=117
+pipe_or_nf_rows:
+  line=22 id=S094 py_split_len=15 escaped_pipe_seqs=2 offsets=[794, 803]
+--- S094 line prefix ---
+| S094 | FEVER: Fact Extraction and VERification (Thorne, Vlachos, Christodoulop
+--- census cells (split on every |) ---
+py_len=15 census_NF_equivalent=15 fields_NF_minus_2=13
+  $0=''
+  $1=' S094 '
+  $2=' FEVER: Fact Extraction and VERification (Thorne, Vlachos, Christodoulopoulos, Mittal) — dataset page — https://fever.ai'
+  $3=' dataset '
+  $4=' A '
+  $5=' the support-test label set and the evidence requirement attached to each label, as the dataset defines them '
+  $6=' the FEVER Dataset header paragraph and the Data Format section; build refs/heads/live build 385, last updated 2026-04-0'
+  $7=' claims are labelled SUPPORTS, REFUTES or NOT ENOUGH INFO; for the first two the annotators also recorded the sentence(s'
+  $8=' mined '
+  $9=' 2026-10-23 '
+  $10=' 180d — re-open the dataset page and confirm the label list still reads "SUPPORTS\\'
+  $11='REFUTES\\'
+  $12='NOT ENOUGH INFO" (ran 2026-10-23) '
+  $13=' corpus/knowledge/claim-support-test-r37.md '
+  $14=''
+
+
+• The system date is 2026-10-25, not 2026-10-24 as the reminder indicated.
+
+  The census default TODAY will be 2026-10-25. The bad row is still in the past, so E08 won't fire. Pipe offsets are py_split_len=15 and fields=13. I'll run the census on three fixtures with --today explicitly and without it to show the default behavior. Both runs should E01 the bad row regardless of date.
+
+  I'll build the fixtures with Python and run the census. The pipe-stripped variant replaces `\|` with `, ` in the recheck cell only. The pass variant replaces the entire recheck cell with `180d`. I need to handle the pipe delimiters that break cell boundaries.
+
+  I'll extract cells with a regex that treats escaped pipes as literal, yielding 11 cells. The recheck cell is index 9. I'll reconstruct the three fixture rows from these cells.
+
+  I'll add two more fixtures. One rewrites the anchor cell but leaves the pipe in recheck, proving that anchor fixes alone won't clear E01. The other uses a valid row with a pipe only in the anchor, then rewrites that anchor.
+
+  The staged row is the real-world case. The pipe-stripped variant will E09, not pass. The recheck-cell replacement should exit 0. The anchor-only rewrite must still E01. The used-by file must exist for the pass run.
+
+  A minimal one-cell mutation on an otherwise valid row may isolate the rejection mechanism more cleanly than the staged S094. The staged row is still the operational specimen for this round. I am re-reading the task to confirm the exact requirement.
+
+  The task is a mutation-tester seat. The headline example must be the staged S094 cell because inventing a pipe is weaker than showing the real row is rejected. I will also include a synthetic isolated-cell proof.
+
+  I will verify that claim-support-test-r37.md needs no real content. I will run the frozen manual census awk on the fixture to check the malformed count. I will not touch SOURCES.md. I will compare gawk and Python field counts for accurate quoting. The pass row will keep every other cell identical so it is a true one-cell rewrite.
+
+  W04 will not fire because the row contains only one URL. E05 is ruled out since kind=dataset is valid. The source cell was confirmed to contain no pipe. I will extract the exact bad cell text with an escape-aware split and print its repr. The report must include verbatim census stdout and exit codes.
+
+  The census output line for the bad row will read `file	E01	S094 fields=13` and exit 1. The pass case will print `file	ok` with the temp path and exit 0. I will use a stable temporary directory so the report can quote the exact path, then delete it afterward. I will also pass `--today 2026-10-25` to match the actual system clock.
+
+  The default census run without `--today` will serve as the canonical "census would" check. I will print the host UTC date so the reader knows the TODAY value. The pipe-stripped variant will trigger E09, and its exact output line will read `file	E09	S094 recheck=<value>`.
+
+  Replacing the escaped pipe with `or` or stripping it entirely still leaves prose inside the cell, so those variants would fail E09. The faithful one-cell rewrite is exactly `180d`, which preserves the cadence token and moves the prose out of the cell. I am also weighing whether to call this a rewrite or a truncation.
+
+  The `180d` rewrite is the prescribed census-legal residue, not an invention. I will also verify that replacing `\|` with `/` inside a cell that otherwise reads `180d` still passes. The census script is local and requires no network access. I will run gawk as a separate witness to confirm the raw line splits into 13 fields.
+
+  I will build a minimal valid row with only the anchor cell containing a pipe, leaving every other cell census-clean. This isolates the pipe rejection from the staged row's prose-recheck confound.ESCAPE_AWARE_CELLS=11
+CELL1 len=6 repr='S094'
+CELL2 len=140 repr='FEVER: Fact Extraction and VERification (Thorne, Vlachos, Christodoulopoulos, Mittal) — dataset page — https://fever.ai/dataset/fever.html'
+CELL3 len=9 repr='dataset'
+CELL4 len=3 repr='A'
+CELL5 len=109 repr='the support-test label set and the evidence requirement attached to each label, as the dataset defines them'
+CELL6 len=139 repr='the FEVER Dataset header paragraph and the Data Format section; build refs/heads/live build 385, last updated 2026-04-02, read 2026-10-23'
+CELL7 len=278 repr='claims are labelled SUPPORTS, REFUTES or NOT ENOUGH INFO; for the first two the annotators also recorded the sentence(s) forming the necessary evidence, while a NOT ENOUGH INFO cla'
+CELL8 len=7 repr='mined'
+CELL9 len=12 repr='2026-10-23'
+CELL10 PIPE len=126 repr='180d — re-open the dataset page and confirm the label list still reads "SUPPORTS\\|REFUTES\\|NOT ENOUGH INFO" (ran 2026-10-23)'
+CELL11 len=44 repr='corpus/knowledge/claim-support-test-r37.md'
+RECON_MATCH=True
+===== rawline exit=1 =====
+CMD: /home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --file /tmp/w2mutpipe-census/rawline/corpus/SOURCES.md
+STDOUT:
+file	E01	S094 fields=13
+file	E11	S094 missing used-by REFUTES\
+STDERR:
+===== strip-pipes-keep-prose exit=1 =====
+CMD: /home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --file /tmp/w2mutpipe-census/strip-pipes-keep-prose/corpus/SOURCES.md
+STDOUT:
+file	E09	S094 recheck=180d — re-open the dataset page and confirm the label list still reads "SUPPORTS, REFUTES, NOT ENOUGH INFO" (ran 2026-10-23)
+STDERR:
+===== recheck-180d exit=0 =====
+CMD: /home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --file /tmp/w2mutpipe-census/recheck-180d/corpus/SOURCES.md
+STDOUT:
+file	ok	/tmp/w2mutpipe-census/recheck-180d/corpus/SOURCES.md
+STDERR:
+===== anchor-rewritten-pipe-kept exit=1 =====
+CMD: /home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --file /tmp/w2mutpipe-census/anchor-rewritten-pipe-kept/corpus/SOURCES.md
+STDOUT:
+file	E01	S094 fields=13
+file	E11	S094 missing used-by REFUTES\
+STDERR:
+===== iso-bad exit=1 =====
+CMD: /home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --file /tmp/w2mutpipe-census/iso-bad/corpus/SOURCES.md
+STDOUT:
+file	E01	S900 fields=12
+STDERR:
+===== iso-pass exit=0 =====
+CMD: /home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --file /tmp/w2mutpipe-census/iso-pass/corpus/SOURCES.md
+STDOUT:
+file	ok	/tmp/w2mutpipe-census/iso-pass/corpus/SOURCES.md
+STDERR:
+===== gawk -F'|' NF =====
+15 13
+13 11
+gawk_exit 0
+1d4c5004beb48a4e3ba67715cd342d406f159f238de91407fe412a9d09209a7c  /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md
+SOURCES_bytes=64314 SOURCES_mtime=1792887246.7315009
+Results were excellent. An important calibration finding was noted.
+
+  The raw S094 row fails E01 and also emits E11. The gawk script skips malformed rows after E01, but the bash parser usedby_findings does not. It checks used-by on all rows regardless of field count.
+
+  Extra pipes shift the bash parser's field indices. The status column moves from cells[8] to cells[7], and used-by shifts from cells[11] to cells[10]. This causes the bash script to read the wrong values.
+
+  The extra pipes sit inside the recheck cell. Status remains at cells[8]. The used-by value REFUTES\ lands at cells[11], which the bash parser reads as the used-by field.
+
+  The E11 error is an artifact of the same pipe corruption, not a missing file. The bash parser only checks for at least twelve cells and a mined status, so it does not reject malformed rows like the gawk script does.
+
+  The real used-by stub was created. E11 still fired on the shifted fragment, confirming the error is pipe shift rather than a missing file. Rewriting recheck to `180d` exited cleanly with no E11. The strip-pipes-keep-prose case exited 1 with only E09, isolating the prose recheck as a separate failure. Anchor rewrite kept both E01 and the spurious E11. A one-cell example with an extra pipe in the anchor cell produced E01 S900 fields=12.
+
+  Rewriting the isolated anchor cell to `section 1; the pipe is the defect` produced a clean exit. The staged S094 rewrite passes E01 but still fails E09 on the recheck prose. The isolated example is the purest one-cell demonstration of the task.
+
+  The staged S094 row should not be appended to this round. A mutation-tester needs a controlled one-cell mutant bound to the real staged cell so the rewrite is operational. The report should lead with the isolated one-cell pair because it exactly matches the request. The staged case can follow as the lane specimen. Deleting the pipe alone is not sufficient.
+
+  The staged confound is worth including for depth, but the answer must remain unmistakable. The registry was not appended; the sha256 below is evidence that SOURCES.md was left unchanged.
+
+  I will check git status to confirm SOURCES.md is unmodified. The isolated example uses a placeholder domain, so no external fetch is needed. I will leave the temporary census directory in place so quoted paths remain inspectable.
+
+  The report will embed the exact cells and command output directly, making the evidence self-contained. The temporary files are only supporting material. A date discrepancy was noted: the system clock showed 2026-10-25, while census used the default today.
+
+  The Python repr output escaped backslashes, so the file actually stores `SUPPORTS\|REFUTES\|`. The bash parser reads cells 555–560, and the E01 pass logic is at lines 635–638.
+
+  The isolated bad row carries status queued, so usedby_findings skips it entirely. Only E01 fires there, confirming the pipe is the sole defect. The staged row instead has status mined, which triggers usedby_findings and produces the spurious E11.
+
+  S094 contains two escaped pipes, yielding thirteen fields. Census treats backslash-escaped pipes as literal characters, so the split still occurs. The anchor rewrite applies only when the pipe sits inside the anchor cell.
+
+  The staged recheck cell is `180d — re-open ... "SUPPORTS\|REFUTES\|NOT ENOUGH INFO" ...`. Rewriting it to `180d` produces a clean exit. The isolated example is the cleaner mechanism demonstration. Including both improves depth without hiding the answer. The user asked for a singular one-cell example.
+
+  The staged S094 pair will anchor the report. The isolated synthetic example will serve as a control to prove that a single pipe is enough to trigger E01 and that a semicolon rewrite of that one cell passes. Leading with the synthetic row risks looking like it was invented rather than found in the staged file. Leading with the staged row risks suggesting the passing rewrite also fixes E09, so the rejection might not be purely about the pipe. The calibration sentence will state that census rejects the staged row with E01 because the cell contains an unescaped pipe; the backslash escape is not honored.
+
+  The isolated one-cell pair will anchor the report as the direct answer. The staged S094 pair will follow as the adoption specimen, showing the same pipe mechanism plus the E09 and shifted-E11 traps.
+
+  The isolated row is registry-shaped but not in the live registry. A stronger approach would copy a valid live row into a scratch registry, inject one pipe into a cell, and rewrite it. This would produce a true SOURCES row that census rejects.
+
+  The headline example will be a real registry row from corpus/SOURCES.md. S016 or S024 are candidates because they are short and already pass census in isolation. A copy will be mutated in /tmp to inject one pipe, then rewritten to show a clean exit.
+
+  A queued row with used-by — is a real SOURCES row. S008 and S016 are candidates. Injecting one pipe into a cell would make census reject it. Rewriting that cell back would make census pass.
+
+  S013 is a valid registry row. It will be copied into a scratch file, one pipe injected, and then rewritten to show census rejects the mutated cell but passes the clean version.
+
+  S008 is the chosen real row because its `used-by` field is `—`, avoiding any E11 risk. A scratch copy will have one pipe injected into the anchor cell to trigger E01, then the pipe removed to show a clean pass. This adds one quick calibration command before writing the report.
+
+  I will scan the live registry for interior pipes and rows with the wrong field count to confirm it is clean. This strengthens the argument that the staged cell is a mutant, not a current defect. I can run this scan together with the real-row mutation test in one command.<stdin>:95: FutureWarning: Possible nested set at position 4
+<stdin>:95: FutureWarning: Possible nested set at position 26
+LIVE_DATA_ROWS=78
+LIVE_NF_OR_ESCAPE=0
+S008_NF 13 S008_esc 0
+S008_CELLS 11
+ANCHOR ' sections 2.1 rationale and 2.3 three PICO levels; last updated August 2023, Handbook v6.5 '
+BAD_ANCHOR ' sections 2.1 rationale and 2.3 three PICO levels; last updated August 2023, Handbook v6.5 | section 2.1 '
+===== s008-pipe-in-anchor exit=1 =====
+STDOUT:
+file	E01	S008 fields=12
+STDERR:
+===== s008-anchor-restored exit=0 =====
+STDOUT:
+file	ok	/tmp/w2mutpipe-census/s008/pass/corpus/SOURCES.md
+STDERR:
+--- manual via python reimplementation of round25 malformed awk ---
+manual-bad malformed=0
+manual-pass malformed=0
+manual-s094-raw malformed=0
+manual-s094-180d malformed=0
+s008-bad-malformed=1
+s008-pass-malformed=0
+BAD_ROW
+| S008 | Cochrane Handbook ch.2, Determining the scope of the review and the questions it will address — https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-02 | docs | A | the Handbook's own guidance on framing review scope and questions | sections 2.1 rationale and 2.3 three PICO levels; last updated August 2023, Handbook v6.5 | section 2.1 | Frame an answerable question first and keep review PICO, synthesis PICO, and included-study PICO distinct | queued | 2026-10-19 | on-release | — |
+PASS_ROW
+| S008 | Cochrane Handbook ch.2, Determining the scope of the review and the questions it will address — https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-02 | docs | A | the Handbook's own guidance on framing review scope and questions | sections 2.1 rationale and 2.3 three PICO levels; last updated August 2023, Handbook v6.5 | Frame an answerable question first and keep review PICO, synthesis PICO, and included-study PICO distinct | queued | 2026-10-19 | on-release | — |
+A bug in the Python malformed counter produces a regex warning and sets malformed to zero.
+
+  The awk output is correct. The Python regex was broken by double-escaping in a raw string. I will re-run awk on the S094 fixtures and quote the real output.
+
+  The raw line contains an interior pipe. The rejected cell is the anchor with that pipe. The passing rewrite removes it.
+
+  The S008 example is a one-cell mutation of a real SOURCES row. The staged S094 case is the operational "do not append" specimen.
+
+  The staged S094 recheck cell will be the primary example. It is rejected for a pipe and shifted E11, with the rewrite also fixing E09. The S008 one-cell control will be shown as well. It is rejected solely for the pipe and passes after its removal.
+
+  S008 will be the primary one-cell example. The staged S094 will bind to the same rule to operationalize the "do not append" instruction. A mutated copy of a real row satisfies the conditional rejection requirement.
+
+  The staged row already contains a literal pipe. Wave 2 requires the concrete cell pair, not a procedure essay. "One-cell" means showing the cell itself, not the full row.
+
+  The literal pipe in the staged S094 row actually sits in the recheck cell, not the anchor. The passing rewrite of that recheck cell is `180d`, which exits zero. The S008 one-cell control will be included briefly as a pure pipe-stripping reference.
+
+  The live registry scan found 78 data rows with no NF mismatches or escaped pipes. The exact E01 lines and the bad and pass cell strings are already extracted and ready to quote.
+
+  I will not claim the live registry passes census unless I run it. The field-count scan is not a census validate, and running validate read-only would produce lengthy W04 warnings. I will either run it or omit that claim.
+
+  I will run census validate on the live registry to confirm it is not the reject case. The staged fixtures will be processed with awk. Exact cell strings will be extracted from the append file via a command to avoid repr backslash doubling.
+
+  I will cite exact line numbers from sources-census.sh for the contract header, E01 comment, and campaign addendum. I will not quote large prompt chunks; I will cite the script path and the rule directly. The census default date is 2026-10-25, so I will mention that clock to avoid confusion for readers on 2026-10-24.
+
+  The reminder date conflicts with the actual system clock, so I will quote the command output and accept the 2026-10-25 result. The live registry SHA256 is 1d4c5004beb48a4e3ba67715cd342d406f159f238de91407fe412a9d09209a7c; I will re-hash after all commands to confirm it stayed unchanged during this seat. I will leave the /tmp fixtures in place so quoted paths remain verifiable. The report will be written to /home/vgpnk/Projects/shokunin/chousa-shokunin/.
+
+  The report will be written to `ufo/waves/round-44/w2/W2MutPipe.md`. I will follow the ExecNoPipe format: verdict first, then the cell pair, then quoted commands, calibration, and what was not done. Axes will be named at the top as requested. I will explicitly state that the registry must not be appended. I will also avoid showing the full S008 row in a way that could be copy-pasted into the registry.
+
+  A compact diff of the two fixture rows will show exactly which cell changed. The S094 cell bytes will be printed with `cat -A` or Python encoding to keep the backslash-pipe unambiguous. I will also verify that gawk reports the S008 bad row as NF=14.
+
+  The staged S094 rejected cell is the 180d label list with a literal pipe. Its rewrite is `180d`. The S008 rejected cell is the 2.3 rationale and PICO levels text ending in `Handbook v6.5 | section 2.1`. Its rewrite drops that trailing pipe.
+
+  The S008 pair will open the report as the pure pipe-rejection example. The staged S094 pair follows because it is the concrete rewrite target for this wave.
+
+  The staged row's anchor is clean; the pipe sits in the recheck cell, so rewriting the anchor alone leaves E01. The passing rewrite is the recheck cell reduced to `180d`. The S008 one-cell example proves the general mechanism on a real row copy. Census treats literal and escaped pipes identically.=== date ===
+2026-10-25
+=== awk malformed ===
+s094-raw-malformed=1
+s094-strip-malformed=0
+s094-180d-malformed=0
+s094-anchor-malformed=1
+=== gawk NF on S008 bad/pass and S094 raw ===
+s008-bad 14 12
+s008-pass 13 11
+s094-raw 15 13
+s094-180d 13 11
+=== pipe bytes in staged S094 ===
+escaped_pipe_count 2
+offset 794 context ds "SUPPORTS\|REFUTES\|NOT
+ords ['0x5c', '0x7c']
+offset 803 context RTS\|REFUTES\|NOT ENOUGH I
+ords ['0x5c', '0x7c']
+RECHECK_CELL_BEGIN
+180d — re-open the dataset page and confirm the label list still reads "SUPPORTS\|REFUTES\|NOT ENOUGH INFO" (ran 2026-10-23)
+RECHECK_CELL_END
+ANCHOR_HAS_PIPE False
+=== live census validate ===
+chousa	W04	S051 duplicate url www.w3.org/TR/2017/REC-html52-20171214/syntax.html across scopes
+chousa	W04	S053 duplicate url docs.python.org/3/library/socket.html across scopes
+chousa	W04	S073 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+chousa	W04	S074 duplicate url docs.python.org/3/library/hashlib.html across scopes
+chousa	W04	S075 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+chousa	ok	/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md
+live_census_exit=0
+=== registry hash after checks ===
+1d4c5004beb48a4e3ba67715cd342d406f159f238de91407fe412a9d09209a7c  /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md
+registry_rowstart_S094 False
+registry_S094_mentions 0
+Solid evidence has been gathered. The exact S008 cells will be pulled from the fixture files to ensure accurate quoting in the report.
+
+  The em dash in the recheck cell is U+2014, not a pipe. The strip-pipes census and recheck-180d row changes are verified. The report will lead with seat, axes, and verdict, then present the one-cell pipe defect example using a copy of registry row S008.
+
+  The rejected cell ends with a pipe followed by "section 2.1". The corrected cell drops that pipe. The census shows twelve fields in E01/S008 and fourteen tokens in the pass corpus versus thirteen in the reject. This round's staged specimen must not be appended as-is.
+
+  The recheck-180d specimen contains two pipe sequences in its recheck cell. The anchor cell has no pipe, so rewriting it does not clear E01. The rejected cell includes a label list that must stay out of the cell. The corrected cell simply keeps the `180d` cadence already present there. Census rechecks must be ISO, NNd, or symbolic. The next section will explain why `|` remains a pipe.
+
+  gawk -F'|' splits on pipes, which is why the pipe shift triggers E11. That E11 is a pipe-shift artifact, not a missing file; the stub existed and the 180d rewrite exited zero with it. Replacing pipes with commas while keeping prose still fails because E09 exits non-zero. Rewriting the anchor while leaving recheck pipes in place still leaves E01 and the shifted E11. The registry was never appended: its sha256 is unchanged, there is no S094 row-start, and the live census exits zero with five standing W04s; scratch files remain only under /tmp.
+
+  The validation ran on scratch registries only. No corpus/SOURCES.md, shokuknow, or git commits were written. The date was 2026-10-25, so E08 did not fire; pipe checks are independent of today.
+
+  The staged row is the primary example because it actually contains a pipe in the adoption package. The S008 pair serves as the controlled proof that a single interior pipe is sufficient to trigger rejection. Leading with an invented mutant would invite a critic to claim the row census was fabricated; the staged row satisfies the task requirement directly.
+
+  The passing recheck cell contains only the `180d` cadence token. The S008 control isolates a single pipe character with no other schema change. The census commands will be included in full for direct re-execution.
+
+  The report will be self-contained and reproducible without /tmp. It will quote the fixture construction and already-run census output, but will not instruct the parent to append anything. The S094 row is long, so only its id, file, line 22, and the fact that every other cell was held fixed in the pass fixture will be noted.
+
+  The report will be tight and complete, citing files directly without policy quotes. The three axes are operability, calibration, and depth. Operability is confirmed because both the reject and pass ran. Calibration is verified: a pipe is not honored, rewriting the anchor is the wrong cell, stripping pipes while keeping prose fails, and the shifted E11 is an artifact, not a missing file. Depth covers field index, NF-2, usedby_findings cells[11], and byte offsets. The census trims whitespace, so the pass fixture recheck cell is exactly `180d`.
+
+  The S008 rewritten cell is the original anchor text trimmed to `sections 2.1 rationale and 2.3 three PICO levels; last updated August 2023, Handbook v6.5`. The rejected cell appends ` | section 2.1`. The report will omit line number prefixes and note that scratch files remain under /tmp.
+
+  The campaign text tells the user to rewrite the anchor when the pipe sits in the quote, but this row’s pipe is in the recheck cell, so that general method fails here. I should verify whether S081 or S079 has no pipe before claiming it as an example.
+
+  S081 contains no pipe. The rejected row is S094 at line 22. Rewriting the anchor in S079 would not fix a defect that does not exist.
+
+  S081's recheck prose would fail E09 even without a pipe, but that is a separate ScribeRow issue. I will not run an unrun census on it; the report will note only that S081 has no pipe and leave the E09 boundary unstated.
+
+  A quick S081 census will be run to confirm the boundary claim. This keeps the report honest without expanding the scope to a full append audit.
+
+  The report will follow the ExecNoPipe style. Line numbers in sources-census.sh are being double-checked for citations.
+
+  The report will cite `sources-census.sh` lines 3-4, 24, and 555-560 for NF-13, E01, and the usedby_findings field index. The contract prompt at `.ufo/prompts/chousa-round-44.md` line 435 will be referenced without quoting its full text.
+
+  The frozen manual awk from round25-sources-census.sh line 8 is the same NF!=13 test, and I ran it. I will quote those four malformed lines.
+
+  I will not instruct the parent to append `180d` into the registry; the rewrite belongs in scratch until an admit, and this seat did not append.
+
+  S094’s used-by file is claim-support-test-r37.md, which may not be the round’s admit. That is not my job to adopt.
+
+  The pass fixture created a stub so E11 would not confound the cell rewrite. I will state that the stub is not an admission.
+
+  The rejected and rewritten cells will be quoted in fenced code blocks rather than markdown tables. This prevents a reader scanning the report as a registry from miscounting fields. The em dash will be copied exactly from the Python output.
+
+  The scratch files will remain under /tmp for re-verification. The Write tool is available, so I will use it directly rather than shell redirection. I am checking whether W2MutPipe.md already exists from a partial write.
+
+• The pipe is in S094’s recheck cell, not the anchor. Census rejects that cell; `180d` is the rewrite that passes. The registry was not appended.
+
+• The report is written. I will verify the file exists and contains the required pair. I will also check that nothing else was written.
+
+• The report is at `.ufo/waves/round-44/w2/W2MutPipe.md`. The registry was not appended.
+
+  The staged pipe is S094's recheck cell, not the anchor. Census rejects it (`E01`, `fields=13`). The cell that passes is `180d`. Replacing `\|` and keeping the prose still fails (`E09`). Rewriting the anchor leaves the `E01`.
+
+To resume this session: kimi -r session_9467d410-c20b-41bc-94e7-78d2b1fd510d

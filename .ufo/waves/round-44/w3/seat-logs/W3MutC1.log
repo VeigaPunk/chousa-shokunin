@@ -1,0 +1,96 @@
+kimi version 2.3.1
+• Let me parse the task:
+
+  1. Read `/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/parent-lifetime.receipt`
+  2. Make two copies under /tmp:
+     - Copy A: set one `child_pid=` to 0
+     - Copy B: change the `end parent_pid=` value to a different number than the `start parent_pid=` value
+  3. Run `python3 .../c1-count.py --receipt` against each copy, paste both stdouts and both exit codes.
+  4. Write report at `/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w3/W3MutC1.md`
+
+  Let me start by reading the receipt and the c1-count.py script in parallel.Now I understand the setup. Let me:
+
+  1. Copy the receipt to /tmp twice.
+  2. Mutation A: set one `child_pid=` to 0. Note the script only parses `reap` lines for seats (child_pid), so I should set a child_pid in a `reap` line to 0 — e.g. line 66's `reap name=ReviewC1Shape child_pid=3226666` → `child_pid=0`. Actually the spawn lines also have child_pid but the parse only looks at `reap` lines. Setting a spawn child_pid to 0 would have no effect on the counter. The task says "set one 'child_pid=' to 0" — I'll set the reap line's child_pid to 0 since that's what the counter checks (MutZeroPid seat analog). Actually to be faithful, I could set the first `reap` line's child_pid to 0. That's the meaningful mutation. I'll note the distinction in the report.
+
+  3. Mutation B: change the `end parent_pid=` value (line 130, parent_pid=3226659) to a different number, e.g. 3229999.
+
+  Then run c1-count.py --receipt against each copy and paste stdout + exit codes.
+
+  Predictions:
+  - Mutation A: ZERO_PIDS=1, count_ok false → C1=FAIL, exit 1.
+  - Mutation B: PARENT_PID_MATCH=0/1 → C1=FAIL, exit 1.
+
+  Let me do it with sed on the /tmp copies. Commands:
+
+  ```bash
+  cp .../parent-lifetime.receipt /tmp/w3-mutA.receipt && sed -i '0,/reap name=ReviewC1Shape child_pid=3226666/s/child_pid=3226666/child_pid=0/' /tmp/w3-mutA.receipt
+  ```
+
+  Simpler: sed -i '66s/child_pid=3226666/child_pid=0/' — but line numbers could be brittle; the file is read and known. Use pattern-based to be safe.
+
+  For B: sed -i 's/^end parent_pid=3226659 /end parent_pid=3229999 /' — picks the end line since start has "start parent_pid=". Also pick a different number, e.g. 4242424.
+
+  Then run both. Also run the baseline (unmutated original path) as a control? The task says run against each copy. Baseline control is a cheap extra that improves calibration — the counter script is frozen but I can run it against the production receipt read-only via --receipt (doesn't modify). That's safe and adds a control. Yes, do that.
+
+  Let me run in one batch: copies + mutations, then runs. The runs depend on copies, so two batches, or one chained command. I can do it in one Bash call chained, but the guidance says independent read-only calls should be parallel; these are dependent so chain. Actually I'll do two calls: one for setup (both copies, both mutations, show diffs), then parallel runs. Or just chain everything in one command and capture exit codes. Let me do:
+
+  Call 1: setup both copies and show diffs to verify.
+  Call 2 & 3 (parallel): run counter on each copy, echo exit codes. Also run baseline control in a third parallel call.
+
+  Note the script defaults --names to production seat-names.txt, which is fine (read-only).
+
+  Let me execute.--- mutA diff ---
+66c66
+< reap name=ReviewC1Shape child_pid=3226666 exit_code=1 epoch=1792889281
+---
+> reap name=ReviewC1Shape child_pid=0 exit_code=1 epoch=1792889281
+--- mutB diff ---
+130c130
+< end parent_pid=3226659 epoch=1792889282 n_spawned=64 n_reaped=64
+---
+> end parent_pid=4242424 epoch=1792889282 n_spawned=64 n_reaped=64
+The exit code 1 is just from the final `diff` returning 1 (differences found) — the setup itself worked. Both copies are mutated correctly as shown by the diffs. The "Tool execution failed" wrapper is because diff exits 1.
+
+  Now run the counter against each copy in parallel, plus a baseline control against the original (read-only).
+
+• Both mutations landed (the exit code 1 was `diff` reporting differences, not a failure). Now run the frozen counter against each copy in parallel, plus an unmutated baseline control:N_SPAWNED=64/64
+N_REAPED=64/64
+PARENT_PID_MATCH=1/1
+ZERO_PIDS=1
+NAMES_MATCH=64/64
+C1=FAIL
+EXIT_CODE=1
+N_SPAWNED=64/64
+N_REAPED=64/64
+PARENT_PID_MATCH=0/1
+ZERO_PIDS=0
+NAMES_MATCH=64/64
+C1=FAIL
+EXIT_CODE=1
+N_SPAWNED=64/64
+N_REAPED=64/64
+PARENT_PID_MATCH=1/1
+ZERO_PIDS=0
+NAMES_MATCH=64/64
+C1=PASS
+EXIT_CODE=0
+
+
+• All three runs complete. Both mutations flip C1 from PASS to FAIL with exit code 1, exactly as the counter docstring claims ("It stops a prose assertion, a pids-0 waiter, and a pid mismatch"). The baseline control confirms the unmutated receipt passes.
+
+  Now write the report. Keep it scoped, quote the outputs verbatim, note what the mutation does NOT cover (the docstring itself admits a hand-written forge with 64 names and invented positive pids passes — this experiment confirms the boundary).
+
+• All three runs done. Writing the scoped report:
+
+• Report written. Done. Stop after the report per instructions.
+
+• Report written to `.ufo/waves/round-44/w3/W3MutC1.md`. Summary:
+
+  - **MutA** (`reap name=ReviewC1Shape child_pid=0`): `ZERO_PIDS=1`, `C1=FAIL`, exit **1**
+  - **MutB** (`end parent_pid=4242424` vs start `3226659`): `PARENT_PID_MATCH=0/1`, `C1=FAIL`, exit **1**
+  - **Control** (unmutated): `C1=PASS`, exit **0**
+
+  Both mutations are caught independently with no collateral field movement. Calibration note: the gate's own docstring admits a self-consistent hand-written receipt (invented positive pids, matching names/counts) still passes — the experiment confirmed rather than refuted that boundary. One latent gap surfaced: `parse()` only reads child pids from `reap` lines, so zeroing a `spawn` line's `child_pid=` would not trip the counter.
+
+To resume this session: kimi -r session_97749772-384f-4afa-a527-584625f0ddaf

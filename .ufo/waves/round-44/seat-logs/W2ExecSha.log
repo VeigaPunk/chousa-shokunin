@@ -1,0 +1,86 @@
+kimi version 2.3.1
+• I need to write a report at the specified path.
+
+  I must confirm the RFC capture filename is the first 24 hex digits of the SHA256 hash of the RFC text. I will write the report to the exact path /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w2/W2ExecSha.md. I will not fetch files, edit production code, or run git or jj. I am a leaf agent and may only dispatch a single labrat.
+
+• I'll confirm the RFC capture hash locally and inspect the wave-2 seat scope before writing the report.d0c4a09a9de32cb91d5e37971b546f2c380d0a60581c6bb80fb9ef72d97743d0
+d0c4a09a9de32cb91d5e3797
+
+
+• I need to confirm the RFC capture filename is the first 24 hex digits of the URL's SHA256 hash.
+
+  The hash is d0c4a09a9de32cb91d5e3797. The expected filename is d0c4a09a9de32cb91d5e3797.txt under .qcache. I will verify the hash with multiple tools and confirm the file exists. I also need to check claims.md and review qcache filename conventions.
+
+  I should verify whether hashing the URL string differs from hashing the file content. The instructions require pasting both the full hash and the first 24 hex digits. I can read shokuknow files without modifying them.
+
+  I will calibrate the hash by comparing sha256sum, openssl, and python. A newline appended by echo would change the hash, so I must verify whether the URL bytes include one or not. I will also check claims.md for the frozen claim.
+
+  Python hashlib confirmed the hash matches the filename exactly. I will now verify with sha256sum and check claims.md and qcache conventions.
+
+• The URL hash matches the cited prefix. I'll verify it with a second tool and check the capture file and the frozen claim.d0c4a09a9de32cb91d5e37971b546f2c380d0a60581c6bb80fb9ef72d97743d0  -
+cdab110644b2203ea5e8946611cecdf44bbf1dca5be305cb180c9127cc22ca1e  -
+bytes 42
+sha256 d0c4a09a9de32cb91d5e37971b546f2c380d0a60581c6bb80fb9ef72d97743d0
+prefix24 d0c4a09a9de32cb91d5e3797
+filename d0c4a09a9de32cb91d5e3797.txt
+-rw-r--r-- 1 vgpnk vgpnk 107130 Oct 23 20:33 /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/d0c4a09a9de32cb91d5e3797.txt
+size=107130 mtime=2026-10-23 20:33:05.526350588 -0300
+c3c7b7f2c495dce0fad758dac34dcc1eef3623d13c9ef346e19b30dbbbe801dc  /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/d0c4a09a9de32cb91d5e3797.txt
+107130 /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/d0c4a09a9de32cb91d5e3797.txt
+
+
+• I will read the claims.md section on RFC capture to calibrate the report against frozen claims.The search for commit d0c4a09a9de32cb91d5e3797 in the shokunin directory returned no matches.I will read the claims around lines 70-110 and quote-lint.py to understand the naming convention.I will examine c3-count.py to understand how it derives capture filenames from URLs.I need the cache key function in quote-lint.py.Grep isn't showing line content for those files.I will read quote-lint.py around lines 420-450 and c3-count.py to accurately quote the key derivation logic.
+
+  I will verify the OpenSSL SHA256 hash matches and check for URL variants. The RFC filename is confirmed as d0c4a09a9de32cb91d5e3797.txt.
+
+  The hash of the newline-appended URL differs from the content hash. I will quote the exact code lines and command output. I will also verify the cache_path function, confirm the URL string is 42 bytes, and check for collisions among the qcache filenames.
+
+  Python and sha256sum agree exactly. OpenSSL will provide a third verification. The report must paste both the full hash and the 24-digit prefix. This confirms URL-key naming rather than file content identity.
+
+  The frozen claim at claims.md:101 matches this construction. The seat recomputed it rather than trusting the claim text alone. Both quote-lint.py line 438 and c3-count.py line 59 use the same derivation. The file is 107130 bytes and dated 2026-10-23, so it is not a fresh download.SHA2-256(stdin)= d0c4a09a9de32cb91d5e37971b546f2c380d0a60581c6bb80fb9ef72d97743d0
+prefix_matches ['d0c4a09a9de32cb91d5e3797.raw', 'd0c4a09a9de32cb91d5e3797.txt']
+exact_txt True
+exact_fail False
+variant_prefix 'https://www.rfc-editor.org/rfc/rfc7089.txt\n' cdab110644b2203ea5e89466 match_file False
+variant_prefix 'https://www.rfc-editor.org/rfc/rfc7089.txt/' 468c44e2a94ceb3c2b4bc6f8 match_file False
+variant_prefix 'http://www.rfc-editor.org/rfc/rfc7089.txt' 89df0605f81b2cc896ee7dd6 match_file False
+variant_prefix 'https://www.rfc-editor.org/rfc/rfc7089' 5c0da30bdd73c5c270ed9b38 match_file False
+variant_prefix 'https://www.rfc-editor.org/rfc/rfc7089.txt ' fa6ce000c5a3c6e50486fa75 match_file False
+variant_prefix 'HTTPS://WWW.RFC-EDITOR.ORG/RFC/RFC7089.TXT' 673c8a0737171780d7d93cdb match_file False
+A .raw file with the same stem was also found.
+
+  The capture filename is the .txt file, not the .raw sibling. I will check sizes and identity to confirm.
+
+  The .raw file is the unprocessed fetch. The .txt file contains the extracted text. Both files will be checked briefly. The 42-byte hash is ASCII, so UTF-8 encoding is irrelevant.
+
+  I will quote the sha256sum and openssl outputs exactly as they appear. I am also checking whether existing wave reports provide a useful format reference./home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/d0c4a09a9de32cb91d5e3797.txt size=107130 mtime=2026-10-23 20:33:05.526350588 -0300
+/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/d0c4a09a9de32cb91d5e3797.raw size=107130 mtime=2026-10-23 20:33:05.524186651 -0300
+b'https://www.rfc-editor.org/rfc/rfc7089.txt'
+42
+.txt and .raw files are identical in size at 107130.cmp_exit=0
+The files are identical. The capture filename the claim names is noted.
+
+  The `.raw` file is identical. The report confirms the capture filename matches the first 24 hex digits of the SHA-256 hash of the RFC URL.
+
+  The full SHA-256 hash is `d0c4a09a9de32cb91d5e37971b546f2c380d0a60581c6bb80fb9ef72d97743d0`. This confirms the URL-key naming pattern used by quote-lint.py and c3-count.py. It does not confirm that the content hash equals the filename. Newline, scheme, or trailing-slash variants do not match. The file exists. The frozen claim is consistent with this recomputed result.
+
+  The file modification time is 2026-10-23, prior to this round's date. This confirms the capture existed before the current wave began and does not establish freshness.
+
+  No network was used.
+
+  Python encode() defaults to UTF-8. The URL is ASCII, so the raw byte string matches.
+
+  All three implementations agree: Python hashlib, sha256sum, and openssl dgst -sha256.
+
+• The three local hashes agree, and the capture file is the 24-hex prefix. Writing that confirmation into the seat report.
+
+• The report is complete. I will stop.
+
+• Confirmed. The RFC capture filename is the first 24 hex digits of the SHA-256 of that URL, with no trailing newline.
+
+  - SHA-256: `d0c4a09a9de32cb91d5e37971b546f2c380d0a60581c6bb80fb9ef72d97743d0`
+  - first 24: `d0c4a09a9de32cb91d5e3797`
+
+  The report is at `.ufo/waves/round-44/w2/W2ExecSha.md`.
+
+To resume this session: kimi -r session_89100b8c-6936-4d88-8d9a-371fcf4783ed

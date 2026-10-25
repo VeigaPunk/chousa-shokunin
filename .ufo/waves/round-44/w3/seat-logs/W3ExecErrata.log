@@ -1,0 +1,43 @@
+kimi version 2.3.1
+• Let me parse the task. I'm a leaf subagent. I need to:
+
+  1. Run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/errata-count.py --file /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/claims.md` and paste stdout + exit code.
+  2. Run same against controls/errata-two.txt and controls/errata-zero.txt, paste outputs + exit codes.
+  3. Say what the round's own errata count is.
+  4. Write report at /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w3/W3ExecErrata.md and nowhere else.
+
+  Axes: operability, calibration, depth. Let me act directly. Run the three commands — they're independent, so run them in parallel in one block. Capture stdout and exit codes.
+
+  Let me use bash with `; echo "EXIT:$?"` to capture exit codes. Since I need stdout and exit code, I can do:
+
+  `python3 ... ; echo "EXIT_CODE=$?"`
+
+  Actually to keep stdout and exit code clearly, run: `python3 script --file X; echo "exit=$?"`.
+
+  Let me fire all three in parallel. Also maybe read the script to verify what it does (depth). And read claims.md maybe briefly to calibrate. Let me do that too, in parallel.
+
+  Then write the report.
+
+  Let me start.ERRATA=0
+ERRATA_COUNT=FAIL
+EXIT_CODE=1
+ERRATA=2
+ERRATA_COUNT=PASS
+EXIT_CODE=0
+ERRATA=0
+ERRATA_COUNT=FAIL
+EXIT_CODE=1
+Interesting. The results:
+
+  - claims.md: ERRATA=0, ERRATA_COUNT=FAIL, exit 1
+  - controls/errata-two.txt: ERRATA=2, ERRATA_COUNT=PASS, exit 0
+  - controls/errata-zero.txt: ERRATA=0, ERRATA_COUNT=FAIL, exit 1
+
+  Wait — the controls are named "errata-two" (expect PASS with 2) and "errata-zero" (expect 0... but the script exits 1 with FAIL on zero). Hmm. The controls directory naming suggests: errata-two.txt should produce ERRATA=2/PASS (it does), and errata-zero.txt should produce ERRATA=0. It does produce ERRATA=0. The exit code 1/FAIL is the script's documented behavior for zero count ("Exit 1 when the count is 0"). So the zero control passing as a control depends on what the control asserts — the ERRATA=0 value matches, but ERRATA_COUNT=FAIL.
+
+  But the key finding: claims.md yields ERRATA=0. Let me look at claims.md to see whether it actually contains errata lines in a different format that the script's regex `^Erratum [0-9]+` misses. The script's docstring says "QUALITY 62 demonstration, not a round-44 claim counter." That's a big hint: the script may be misapplied to claims.md, or claims.md genuinely has zero errata.
+
+  Let me read claims.md and the controls to calibrate. Also check whether claims.md has erratum lines with different formatting (e.g., "Erratum 1:" with leading spaces, or "Errata:" bullets) that a naive regex misses — that would be the falsification target: "the landed round-44 state" may claim errata were counted, but the counter returns 0.
+
+  Let me read claims.md and both control files in parallel.
+

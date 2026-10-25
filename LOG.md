@@ -1564,3 +1564,77 @@ After-measurements are a later entry.
 - **C3 depth**, sourced on the RFC 7089 URL, not yet appended: missing entry exits 1 (`receipts/c3-before.txt`). The located quote was confirmed in the committed capture before this freeze. That confirmation is construction, not a seat score.
 - Freshness will not be scored improved from a pre-round capture. The round-43 closure routed that inflation.
 - Census start: `sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa` exit 0, five W04 (`receipts/census-start.txt`).
+
+## Round 44 — landing (2026-10-24)
+
+Claims frozen in `corpus/evidence/round44/claims.md` at `043f19a1db91288947493d9f879e61e7a9f07241`
+before any seat scored. No external fetch: L0 `8d77e6c1` is still open, so every source was
+opened from a committed capture. The round-43 closure's routed defects are the motive.
+
+- **C1 operability** (lowest scored axis, 3/10): `tools/parent-lifetime.sh` writes a wait log
+  from the same pid that spawned the children. `corpus/evidence/round44/parent-lifetime.receipt`
+  carries `start parent_pid=3226659`, 64 `spawn` lines, 64 `reap` lines and
+  `end parent_pid=3226659 … n_spawned=64 n_reaped=64`. `c1-count.py` → `N_SPAWNED=64/64`,
+  `N_REAPED=64/64`, `PARENT_PID_MATCH=1/1`, `ZERO_PIDS=0`, `NAMES_MATCH=64/64`, exit 0.
+  The missing-receipt, `controls/pids0.receipt` and `controls/prose.receipt` controls each
+  exit 1. The receipt replaces the prose assertion the round-43 closure could not resolve.
+  A wave-3 mutation seat showed that zeroing one `reap` child's pid scores `ZERO_PIDS=1`
+  and that a changed `end parent_pid` scores `PARENT_PID_MATCH=0/1`, both exit 1.
+- **C2 calibration**: the 39 inherited r40/r41 paths are dispositioned one by one in
+  `corpus/evidence/round44/disposition.tsv`. The 36 untracked seat reports are
+  `reverified-commit` — each file was re-read, its basename stem and its round token checked,
+  its length checked, and its sha256 recomputed and compared with the table row before the
+  path was committed as historical wave evidence. The 3 modified JSON paths stay `left-named`
+  with reason `not hunk-verified` and are NOT committed. `c2-count.py` → `CONSISTENT=39/39`,
+  `REVERIFIED=36/36`, `LEFT_NAMED=3/3`, exit 0; `controls/all-left.tsv` scores
+  `REVERIFIED=0/36` and exits 1. Wave-3 mutation seats killed the gate with a blank reason
+  (`REVERIFIED=35/36`), a corrupted digest (`REVERIFIED=35/36`), a deleted row
+  (`LEFT_NAMED=2/3`) and a modified path reclassified as `reverified-commit`
+  (`LEFT_NAMED=2/3`), all exit 1.
+- **C3 depth**, sourced on S079: `corpus/knowledge/citation-version-binding-r36.md` cites lane
+  S079 (RFC 7089), whose row URL is `https://www.rfc-editor.org/rfc/rfc7089.txt`; the located
+  7-word quote `constitutes a promise that the resource state` is a substring of that URL's
+  committed capture at byte offset 14896. `c3-count.py` → `ENTRY_CITES=1/1`,
+  `QUOTE_LOCATED=1/1`, `URL_MATCH=1/1`, exit 0; the missing-entry control exits 1. A wave-3
+  reviewer measured the S079 row at 11 columns with no pipe in any cell, and confirmed the
+  entry cites `source: S079` and not `source: S081`.
+- **Assimilation** (item 10, one theme: the version binding of a citation to a prior state):
+  two entries adopted — `citation-version-binding-r36.md` (lane S079) and
+  `citation-version-binding-r37.md` (lane S080 WARP FAQ, lane S081 NDL E2867) — and three rows
+  appended to `corpus/SOURCES.md`, all `status mined` with the recheck prose stripped to
+  `365d`/`90d`/`180d` and `used-by` naming exactly the adopted entries that cite each row.
+  Collision check in scratch: `assimilation/collisions` is empty because S077 is not a
+  row-start id in the staged append; it occurs once inside a cell of staged S093. The
+  indented-guard fixture still catches `  | S079 |`. Ids were bound by document — the URL is
+  the evidence and the id follows it — never by arithmetic: the staged file itself calls
+  PRISMA-S "S079", and the landed offsets are −2, −11 and −11, so no constant shift works.
+  Validate-before-append: `sources-census.sh validate --file` on the mirrored registry
+  exited 0 with no E03/E04 before the first append.
+- **Rejected, with reason and flip** (in the lesson's Gate block): staged S082, the SAMR record
+  for GB/T 7714-2025, and the GB/T half of `citation-version-binding-r36.md` — round 43
+  classed that row not-carried and this round did not fetch; flip: a text capture of that
+  record contains the issued and effective dates as one contiguous span. Staged S093, the
+  Portico page, and the Portico half of `citation-version-binding-r37.md` — round 43 classed
+  that row misquote and a partial overlap is not the register's sentence; flip: a capture where
+  the four-factor authenticity sentence is one contiguous span.
+- **Freshness is unchanged, not improved.** Every capture opened this round was written
+  before this round's launch. The round-43 closure routed that inflation and the next
+  scorecard does not repeat it.
+- **QUALITY 62** mined from `considerthese/2026-10-24.md` (2026-10-24), "Count claim errata
+  per round": the count is the number of lines matching `^Erratum [0-9]+` in the round's
+  claims file. Shown able to fail: `controls/errata-two.txt` counts 2 and exits 0,
+  `controls/errata-zero.txt` counts 0 and exits 1. This round's own claims file counts 0.
+  The considerthese file was not edited.
+- **QUALITY 63** from a wave-3 probe: a launcher's exit status is not evidence that its seats
+  ran. `tools/parent-lifetime.sh` exits 0 on a malformed dispatch JSON with `n_spawned=0`;
+  the receipt's `n_spawned`/`n_reaped` is the tell.
+- **Wave evidence.** Wave 1's 64 seats all died at spawn on `Cannot combine --prompt with
+  --auto`; those names stay dead and are not replaced. Wave 2 ran 32 seats and produced 31
+  reports, but its parent receipt was truncated at 5 reap lines because the orchestrator
+  process died mid-wait, so it carries no `end parent_pid=` line and proves nothing about
+  parent lifetime. Wave 3 ran 32 seats with the corrected launcher; its receipt carries
+  `end parent_pid=3635446 … n_spawned=32 n_reaped=32`, but 27 of its seats were killed by
+  the 420 s timeout and 23 produced no report. The three waves total 128 seats, the round
+  ceiling, so no further wave was dispatched.
+- **Inherited debt still open.** The three modified JSON paths stay named and uncommitted; the
+  round-43 L0 that asks the operator to rule on them is not duplicated here.

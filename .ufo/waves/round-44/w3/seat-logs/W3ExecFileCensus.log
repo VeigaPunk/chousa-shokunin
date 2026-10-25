@@ -1,0 +1,265 @@
+kimi version 2.3.1
+• Let me parse the task:
+
+  1. Run `/home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --file /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/assimilation/validate/corpus/SOURCES.md` and paste output + exit code.
+  2. State whether any E03 or E04 finding appears.
+  3. Write report at `/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w3/W3ExecFileCensus.md` and nowhere else.
+
+  Constraints: leaf, no background, no network, no editing production files, no jj/git commit, no pacman, no installs.
+
+  Let me run the validate command. I should capture exit code. I'll run it in a way that captures both output and exit code.
+
+  Let me do it. First, maybe check the script exists and run it. I can do parallel calls: one to run the validator, maybe another to look at the SOURCES.md file being validated? Reading files is fine.
+
+  Actually per instructions: "Run ... and paste the output and the exit code." So run:
+
+  `/home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --file ...; echo "EXIT:$?"`
+
+  Let me also read the SOURCES.md file to understand what's in the corpus, and maybe glance at the script to understand E03/E04 codes. Parallel calls:
+
+  1. Bash: run validator with exit code capture.
+  2. Read: SOURCES.md corpus file.
+  3. Read: the script itself (maybe grep for E03/E04).
+
+  Let me do that.file	W04	S051 duplicate url www.w3.org/TR/2017/REC-html52-20171214/syntax.html across scopes
+file	W04	S053 duplicate url docs.python.org/3/library/socket.html across scopes
+file	W04	S073 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+file	W04	S074 duplicate url docs.python.org/3/library/hashlib.html across scopes
+file	W04	S075 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+file	ok	/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/assimilation/validate/corpus/SOURCES.md
+EXIT_CODE:0
+Let me read the AGENTS.md file first, and also verify my findings.
+
+  The validate run output:
+  ```
+  file	W04	S051 duplicate url www.w3.org/TR/2017/REC-html52-20171214/syntax.html across scopes
+  file	W04	S053 duplicate url docs.python.org/3/library/socket.html across scopes
+  file	W04	S073 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+  file	W04	S074 duplicate url docs.python.org/3/library/hashlib.html across scopes
+  file	W04	S075 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+  file	ok	/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/assimilation/validate/corpus/SOURCES.md
+  EXIT_CODE:0
+  ```
+
+  So: exit code 0 (clean — W04 warnings don't fail validation). No E03 or E04 findings. Five W04 warnings.
+
+  Let me check W04 semantics: W04 = "same URL across scopes" — warning, does not affect clean lanes. E03 = duplicate id; E04 = duplicate URL+scope without supersedes — these are errors that would set exit 1.
+
+  The validator found 5 W04s. Interesting observations for the falsification lens:
+
+  1. S051 vs S050: same page URL, different fragments/anchors, different scopes — documented in search log as "census warning W04" intentionally.
+  2. S053 vs S052: same socket.html URL, different anchors/scopes — same intent.
+  3. S073 vs S070: canonical URL printed as roff tty-link; S073 supersedes S070. Note: S073's teaches says "supersedes S070 —", but the E04 check exempts rows whose teaches contains "supersedes S[0-9]{3}" only for same-scope duplicates (E04), not W04. W04 is cross-scope anyway. S070's scope is sha256sum digest/check semantics; S073 says "the same scope as S070" — hmm, wait. S073's scope says "the same scope as S070; this row corrects S070's anchor label only". If they're the same scope, wouldn't that be E04? But the URL differs: S070's source is `/usr/share/man/man1/sha256sum.1.gz` with no URL? Actually S070's source cell is "GNU coreutils `sha256sum(1)` manual — `/usr/share/man/man1/sha256sum.1.gz`" — no http(s) URL, so url_of returns "" and it's not tracked in url_seen. Only S073 carries the canonical coreutils.html URL. But W04 flagged S073 and S075 both for coreutils.html — S071 (env) also has coreutils.html#env-u. Hmm, S075 has coreutils.html#mktemp-d, S071 has #env-u, S073 has #cksum-c. Fragments are stripped (sub(/#[^ ]*$/,"",u)), so all three normalize to the same URL → the 2nd, 3rd occurrences across scopes give W04 warnings for S073 and S075 (S071 is first). That's why S071 isn't flagged but S073 and S075 are. Wait — but S073's row appears... order matters. First occurrence of coreutils.html is S071 (url_seen set, url_scopes[key] set). S073: different scope → W04. S075: different scope → W04. Correct.
+
+  4. S074 vs S059: same hashlib URL. S059's source has URL docs.python.org/3/library/hashlib.html. S074 is a rejected duplicate row. W04 flagged for cross-scope; E04 not triggered because S074's status is "rejected" — wait, actually same scope? S074's scope says "duplicate row proposal ... already held by S059" — scopes differ textually, so scope_key differs → E04 wouldn't fire anyway even if not rejected... Actually E04 requires scope_key already in url_scopes AND not rejected AND nonrejected flag AND no supersedes. Since S074's scope text differs from S059's, E04 doesn't fire; only W04. And the rejection makes it fine regardless.
+
+  Wait, actually let me double check the E04 condition:
+  ```
+  if (u!="" && (scope_key in url_scopes) && status!="rejected" && url_scope_nonrejected[scope_key] && teaches !~ /supersedes S[0-9]{3}/)
+  ```
+  scope_key = u SUBSEP scope. So E04 fires when the same normalized URL appears again within the same scope text, non-rejected, without "supersedes SNNN" in teaches. So S029/S030/S031/S032/S033 (supersede rows) reuse the same URLs. E.g., S019 and S029 both Cochrane chapter-iv with... different scope text? S019 scope: "the Handbook's own guidance on periodically deciding whether and how to update a Cochrane review". S029 scope: same text! Let me compare:
+
+  S019: `the Handbook's own guidance on periodically deciding whether and how to update a Cochrane review`
+  S029: `the Handbook's own guidance on periodically deciding whether and how to update a Cochrane review`
+
+  Same URL (https://www.cochrane.org/.../chapter-iv) and same scope → E04 would fire for S029, but teaches starts "supersedes S019 —" → exempt. Good.
+
+  S021 vs S032: same pubmed URL 17638714. S021 scope: "the study's measured update-signal timing in its sample of 100 quantitative systematic reviews; not a rule for all records". S032 scope: same text! S032 teaches "supersedes S021 —" → exempt.
+
+  S022 vs S030: same 28912002 URL, same scope text; S030 supersedes → exempt.
+
+  S024 vs S031: schema.org/lastReviewed; S024 scope "Schema.org's own definition and declared use of lastReviewed"; S031 scope "Schema.org's own definition and declared use of lastReviewed" — same; supersedes → exempt.
+
+  S020 vs S033: same PROV-O URL, same scope; supersedes → exempt.
+
+  So zero E03 (no duplicate ids — ids are unique S001..S081) and zero E04 (all same-scope duplicates carry supersedes or rejected status). Five W04s: S051, S053, S073, S074, S075.
+
+  Wait — one more check on W04 for S073/S075 coreutils and the within-scope question. Also note S075's used-by cell ends with `r41.md|` — "corpus/knowledge/capture-path-pin-r41.md|" with a trailing pipe? Line 75: `corpus/knowledge/long-span-argv-r34.md, corpus/knowledge/dead-zone-pcre-r34.md|` — the trailing `|` closes the row, fine.
+
+  Also S065 has a missing space: `dead-zone-pcre-r34.md|` right after comma+space... fine.
+
+  Now — potential validator blind spots worth noting in the falsification report (the milestone is "falsify the landed round-44 state"):
+
+  1. S079 appears OUTSIDE the registry table? No — lines 89-92: there's a blank line at line 89 (after S078 line 88), then line 90 S079, line 91 S080, line 92 S081, then blank 93, then "## Paths" at 94. Blank lines don't reset in_registry in the gawk parser (only headings do). So S079-S081 are still counted as registry rows. But note: in strict Markdown, a blank line ends a table; the lane's parser tolerates it. Also earlier, lines 39-43 etc. are contiguous. Actually wait, are S079–S081 inside the Registry section? The Registry section started at line 9-10 and there's no intervening heading until "## Paths" line 94. Blank lines at 89 and 93 are just gaps. The parser counts them. Good.
+
+  2. Interesting: the file has S081 rows but census wasn't run on the file — only validate. The task only asked for validate.
+
+  3. Potential E03/E04 findings: none in output. State that explicitly.
+
+  4. Mirror check: does the validator's W04 exemption for "supersedes" apply? W04 has no supersedes exemption — it's cross-scope. Fine.
+
+  5. One calibration note: exit code 0 despite 5 warnings — by contract "0 clean or warnings". So "validate-before-append mirror" passed: appending writers may proceed; E03/E04 absent.
+
+  Let me also double-check the W04 lines against the file to confirm normalization: 
+  - S050/S051: REC-html52-20171214/syntax.html with different fragments → stripped → same. S051 second occurrence, different scope → W04. ✓ (S050 not flagged as first occurrence.)
+  - S052/S053: socket.html, S053 flagged. ✓
+  - S059/S074: hashlib.html, S074 flagged. ✓
+  - S070 has no URL (path only) → not part of url tracking. S071 first coreutils URL; S073, S075 flagged. ✓
+
+  Also verify there is no S070 row flagged — correct, output lists S051, S053, S073, S074, S075 only.
+
+  Hmm — one subtle thing: S067's source cell contains `https://man7.org/linux/man-pages/man3/execvp.3.html` with backticks around it: "`https://man7.org/...`". url_of matches `https?:\/\/[^[:space:]|]+` — backtick before https... match starts at https, and the URL is followed by a backtick — `[^[:space:]|]+` would include the trailing backtick in the URL! Let me check: `https://man7.org/linux/man-pages/man3/execvp.3.html` — the cell is "`https://man7.org/linux/man-pages/man3/execvp.3.html` (read from the installed copy...)". After the URL comes a backtick, which is not a space or pipe, so it's captured: url = "man7.org/linux/man-pages/man3/execvp.3.html`". That's a distinct key from a clean URL. Any other man7.org URL? No other man7.org rows. So no cross-effects. But this is a latent normalizer quirk: backtick-adjacent URLs capture trailing punctuation. Worth noting as a falsification-adjacent observation (W04/E04 could be evaded or spuriously triggered by markdown punctuation adjacency). Similarly S064's URL... S064 source: "https://man7.org/linux/man-pages/man2/execve.2.html (read from the installed copy; the URL was not fetched)" — space after .html, clean.
+
+  Also lowercase: sub(/^[A-Za-z]+:\/\//,"") then lowercase host part only for the host: `u=tolower(substr(u,1,n-1)) substr(u,n)` — lowercases host, keeps path case. W3C URL: www.w3.org/TR/2017/... case kept. Fine.
+
+  Also fragment stripping `sub(/#[^ ]*$/,"",u)` — strips from first # to end. Note for S058: "https://www.w3.org/TR/2016/REC-SRI-20160623/ (Recommendation, 2016-06-23)" — space-delimited, clean.
+
+  Also S078: URL inside parentheses, capture sha256 — the cell has "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6148622/fullTextXML (capture sha256 ...)" — space-delimited, clean.
+
+  One more check: E11 (used-by paths exist on disk) — validate mode also runs usedby_findings relative to `dir`. dir = realpath of file's dirname/.. = .../assimilation/validate. So used-by paths like `corpus/knowledge/...` are checked relative to `.../round-44/assimilation/validate/corpus/knowledge/...`. The output shows no E11, so those paths exist under the validate corpus copy. Good — that means the corpus snapshot has knowledge files present.
+
+  Hmm wait, actually — is that plausible? The corpus dir under assimilation/validate — used-by references like corpus/knowledge/json-delimiter-r24.md must exist there for no E11. Exit 0 confirms. Let me verify quickly with an ls to be safe (operability: confirm rather than infer). Also confirm no E03/E04 by grep on the output — already in output.
+
+  I could also run a negative control to demonstrate the mirror would catch E03/E04 (falsification discipline): run validate on a temp copy with a duplicated id and duplicated URL+scope to show E03/E04 fire — but "Do not edit production files" — temp files in /tmp are fine (selftest itself does that). That's a cheap falsification probe: proves the validator isn't vacuously passing. Let me do that with a copy of the corpus file in /tmp, injecting: (a) duplicate id row, (b) duplicate URL within same scope without supersedes. But careful: --file mode derives dir from file location for E11 checks; temp copy would produce E11 findings for used-by (since corpus/knowledge missing in tmp dir) — that's fine, we only look for E03/E04 lines. Also gawk with NF check: injected row must have NF=13.
+
+  Actually simpler: craft a minimal 3-row temp SOURCES.md (not a copy) with S901/S902 same id? Let me just make a tiny file:
+
+  ```
+  ## Registry
+  | id | source | kind | tier | scope | anchor | teaches | status | opened | recheck | used-by |
+  |---|---|---|---|---|---|---|---|---|---|---|
+  | S901 | A — https://x.example/a | docs | B | s1 | §1 | evidence one | queued | 2026-10-01 | 90d | — |
+  | S901 | B — https://x.example/b | docs | B | s2 | §2 | evidence two | queued | 2026-10-01 | 90d | — |
+  | S902 | C — https://x.example/c | docs | B | s3 | §3 | evidence three | queued | 2026-10-01 | 90d | — |
+  | S903 | D — https://x.example/c | docs | B | s3 | §4 | evidence four | queued | 2026-10-01 | 90d | — |
+  ```
+
+  Expect E03 for second S901 and E04 for S903 (same url, same scope s3, non-rejected, no supersedes). Run validate --file /tmp/....md. This is a live-fire control proving E03/E04 detection works on this build. 
+
+  Also run selftest? The script has a selftest mode; running it validates the validator broadly. It writes only temp files. That's read-only-ish (mktemp in /tmp). Cheap and increases confidence. But time... selftest is fast. Let me run both in parallel:
+
+  1. Bash: negative-control injection in /tmp → expect E03 + E04 lines, exit 1.
+  2. Bash: sources-census.sh selftest (exit 0 expected, "selftest ok").
+  3. Bash: ls the validate corpus dir to confirm knowledge files exist (supporting no-E11).
+
+  Also read AGENTS.md per the reminder — required before making changes in those directories. I'm writing the report under chousa-shokunin/.ufo — read /home/vgpnk/Projects/shokunin/AGENTS.md. There might also be a chousa-shokunin/AGENTS.md. Let me check both via Read (the shokunin one) and Glob for nested AGENTS.md.
+
+  Then write the report.
+
+  Report path: /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w3/W3ExecFileCensus.md
+
+  The report should contain: command run, full output pasted, exit code, statement about E03/E04 absence, the mirror interpretation, the negative control, warnings enumerated with root causes, any falsification observations (e.g., backtick-URL capture quirk in url_of, W04 has no supersedes exemption, blank-line table gaps tolerated by parser but a Markdown renderer would break the table — S079-S081 sit after a blank line, which GitHub rendering would drop from the table; the lane parser still counts them → a divergence between human-rendered view and census count).
+
+  Wait, actually let me double-check the blank lines: line 89 blank, line 90 S079. And line 93 blank, line 94 "## Paths". So S079, S080, S081 are in a separate visual table block. A strict Markdown renderer shows two tables. The census parser counts all. Also check line 88-92 ordering: S078 line 88, blank 89, S079 line 90... but wait, the search log at line 240+ references rounds in non-chronological order — irrelevant.
+
+  Also: ids go up to S081 but the "## Leads" and correction notes follow. Also note round-43 log says "staged id S118 re-pointed by document" — S118 not in registry (staging id, fine).
+
+  Another falsification angle: E04's supersedes exemption is regex `supersedes S[0-9]{3}` anywhere in teaches — a row could dodge E04 by merely writing "supersedes S999" without a real supersede relation. Cheap to note; not triggered here.
+
+  Also W04 dedupe: url_seen tracks any URL even rejected rows; W04 fires for cross-scope regardless of rejection status (S074 rejected still got W04). Matches contract ("same URL across scopes").
+
+  Now check: does E03 fire for duplicate id across... there are no duplicate ids in this file (S001–S081 unique? Let me verify quickly with a shell check: extract ids and count dupes). The validator already says ok, but a direct independent recount is a good calibration probe: `grep -o 'S[0-9]\{3\}' ... | sort | uniq -d`? Careful: S-numbers appear in scope/teaches text too (supersedes S019 etc.). Better: awk on table rows' second cell within Registry. Cheap: use the same -F'|' parse. I'll do a quick independent recount in the same bash call as the negative control. Actually keep it simple: `awk -F'|' '/^\| *S[0-9]{3} *\|/ {gsub(/ /,"",$2); print $2}' SOURCES.md | sort | uniq -d` → expect empty. But rows with leading spaces (indented code)? None here. Fine.
+
+  Let me also verify the number of data rows = 81 (S001..S081) — quick count.
+
+  Plan of parallel calls now:
+
+  Call A (Bash): negative control — create /tmp file, run validate --file, print output+exit.
+  Call B (Bash): independent id-dup recount + row count on the corpus file.
+  Call C (Read): /home/vgpnk/Projects/shokunin/AGENTS.md.
+  Call D (Bash): selftest run.
+  Call E (Bash): ls the validate corpus + corpus/knowledge to confirm used-by targets exist.
+
+  B and E can merge; keep them separate for parallel speed? They're both trivial; merge into one to reduce noise. Actually parallel calls are cheap; do:
+
+  - Bash: negative control (self-contained)
+  - Bash: selftest
+  - Bash: recount + ls
+  - Read: AGENTS.md
+
+  Then write the report, then done. Note the reminder: "If the Write tool is unavailable, write with shell redirection" — Write tool is available.
+
+  One more thing: the prompt says "Run /home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --file ... and paste the output and the exit code." Done in first call — output captured, EXIT_CODE:0. I already ran it exactly as specified. Good.
+
+  Note about W04 count: five lines. Confirm each is W04 not E04: yes, all W04. And E03: none. So the statement: no E03 or E04 finding appears; exit 0 (clean-with-warnings).
+
+  Let me also record lane label: "file" — in --file mode lane name is literally "file". Worth stating in report.
+
+  Now AGENTS.md read + the probes.
+
+• Running the validator succeeded on the first call. Now let me read the applicable AGENTS.md, then run falsification probes (negative control + selftest + independent recount) in parallel before writing the report.file	E03	S901 duplicate id
+file	E04	S903 duplicate url x.example/c within scope s3
+NEGCTRL_EXIT:1
+killed	E04-rejected-pair-exemption-exit-0
+killed	out-not-truncated-before-target-resolution
+killed	H1-no-table-cell-execution
+killed	gawk-failure-is-error-not-ok
+selftest ok
+SELFTEST_EXIT:0
+--- registry data rows (excl header/separator):
+81
+--- duplicate ids (expect none):
+--- used-by targets missing on disk (expect none):
+check done
+
+
+• All probes confirm:
+
+  1. Primary run: validate on the round-44 assimilation validate corpus SOURCES.md → 5 × W04 warnings, final line `file ok <path>`, exit code 0.
+  2. No E03 (duplicate id) and no E04 (duplicate URL+scope without supersedes) findings appear.
+  3. Negative control: the same build trips E03 + E04 on an injected fixture (exit 1) — the clean pass is not vacuous.
+  4. Selftest: `selftest ok`, exit 0.
+  5. Independent recount: 81 registry data rows (S001–S081), zero duplicate ids, zero missing used-by targets under the validate corpus root.
+
+  W04 root causes (from the file + script normalization logic):
+  - url_of strips fragments (`sub(/#[^ ]*$/,"",u)`) and trailing slash, lowercases host → S050/S051 share the HTML 5.2 syntax.html page across different anchor scopes; S052/S053 share socket.html; S059/S074 share hashlib.html; S071 (first coreutils.html occurrence, env-u), S073 (cksum-c), S075 (mktemp-d) share the canonical coreutils manual URL after fragment stripping. First occurrence per URL isn't flagged (S050, S052, S059, S071 silent); each later cross-scope occurrence emits W04.
+  - W04 is warning-only by contract ("warnings do not affect clean lanes") → exit 0.
+  - E04 would only fire for same-scope repeats; all same-scope repeats in this file (S029, S030, S031, S032, S033 supersede rows) carry "supersedes SNNN" in teaches → exempt. S074 (hashlib duplicate) is additionally status=rejected.
+
+  Falsification observations worth recording (scoped, precise):
+
+  a) `url_of` captures trailing punctuation: match regex `https?:\/\/[^[:space:]|]+` includes a trailing backtick (S067's URL is backtick-wrapped in its source cell: `` `https://man7.org/.../execvp.3.html` `` → normalized key `man7.org/linux/man-pages/man3/execvp.3.html\``). Any future row citing the same page without backticks would silently evade both E04 and W04 (different key). Latent dedupe-evasion vector, not triggered today (only one man7.org row).
+
+  b) The E04 supersedes exemption is a regex on the teaches text (`supersedes S[0-9]{3}`) — any row containing that substring dodges E04 regardless of whether a real supersede relation exists. Not exploited here; the five supersedes rows (S029–S033) all name their real predecessor.
+
+  c) Table continuity: blank lines at lines 89 and 93 split S079–S081 into a visually separate table for a strict Markdown renderer, but the census parser only resets `in_registry` on headings, so all 81 rows count. Rendered view and census agree on membership; a renderer would show two tables though. Minor presentational divergence.
+
+  d) `--file` mode labels the lane `file`, and E11 used-by existence checks resolve relative to the file's parent-parent dir — here `.../round-44/assimilation/validate/`, which contains the corpus snapshot incl. knowledge files (verified: none missing). So E11 was actually exercised, not skipped.
+
+  e) W04 has no supersedes exemption (unlike E04) — S073, which explicitly says "supersedes S070", still gets W04 because S070's source cell holds only the local man-page path (no URL) and S071 already claimed coreutils.html. Hmm wait, S073 flagged because cross-scope vs S071 (env-u) — different scopes. Fine.
+
+  Also note: validate found 0 errors → exit 0 → mirror passes: append-before-validate is clean. The purpose "validate-before-append mirror" — the state is clean for appending.
+
+  Now write the report at /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w3/W3ExecFileCensus.md and nowhere else.
+
+  Report contents:
+  - Command run verbatim + output verbatim + exit code
+  - Statement: no E03, no E04
+  - W04 enumeration with causes
+  - Probe evidence: negative control, selftest, independent recount
+  - Calibration notes / latent quirks
+  - Scope statement: leaf, read-only, no production edits
+
+  Keep it tight. Per AGENTS.md evidence rules: quote actual output, exit codes. Also note: writing report file in .ufo/waves/round-44/w3/ is allowed lane-scope per AGENTS.md (`.ufo/waves/round-N/` is lane-writable).
+
+  mkdir the w3 dir if needed — Write tool creates parents automatically.
+
+  One check: report path is under chousa-shokunin/.ufo/waves/round-44/w3/ — my prompt says write exactly there. Do it.
+
+• All probes landed. Writing the single scoped report now.
+
+• Report written. Summarize concisely for the user: command output, exit code, E03/E04 statement, probes. Stop after — the prompt says "Stop after the report."
+
+• Done. Summary:
+
+  **Command + result (verbatim):**
+  ```
+  $ sources-census.sh validate --file …/round-44/assimilation/validate/corpus/SOURCES.md
+  file	W04	S051 duplicate url www.w3.org/TR/2017/REC-html52-20171214/syntax.html across scopes
+  file	W04	S053 duplicate url docs.python.org/3/library/socket.html across scopes
+  file	W04	S073 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+  file	W04	S074 duplicate url docs.python.org/3/library/hashlib.html across scopes
+  file	W04	S075 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+  file	ok	…/round-44/assimilation/validate/corpus/SOURCES.md
+  EXIT_CODE:0
+  ```
+
+  **E03/E04 verdict: none appear.** Only five W04 warnings (same URL across scopes — fragment-stripped duplicates with different scope cells: S050/S051, S052/S053, S059/S074, S071→S073, S071→S075). Warnings don't affect clean lanes, hence exit 0. All same-scope repeats (S029–S033) legitimately carry the `supersedes S0NN` E04 exemption.
+
+  **Not vacuous:** negative control with injected duplicate id + same-scope URL tripped `E03 S901` + `E04 S903` at exit 1; `selftest` → `selftest ok` exit 0; independent recount confirms 81 unique ids and zero missing used-by targets (E11 actually exercised).
+
+  **Latent quirks noted (untriggered):** `url_of` captures trailing backticks (S067's URL key carries a trailing `` ` `` — future dedupe-evasion vector); the E04 supersedes exemption is a spoofable substring match; blank lines before S079–S081 would split the rendered table while the parser still counts all 81 rows.
+
+  Report written to `.ufo/waves/round-44/w3/W3ExecFileCensus.md` and nowhere else.
+
+To resume this session: kimi -r session_b42f32ad-7f32-4c69-8520-14aeb8f3ef0e

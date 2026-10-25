@@ -1,0 +1,525 @@
+kimi version 2.3.1
+• Let me start by reading the required files: the Frontier section of the corpus README and the Gate block of round-44 lessons.Now I need to understand the round-44 knowledge entries. The Gate block mentions two admitted entries:
+  - `corpus/knowledge/citation-version-binding-r36.md` citing lane S079 (RFC 7089)
+  - `corpus/knowledge/citation-version-binding-r37.md` citing lane S080 (WARP FAQ) and lane S081 (E2867)
+
+  The task: Read the Frontier section of corpus/README.md and the Gate block of corpus/lessons/round-44.md. State which coverage-map ground the two new knowledge entries add that the lane did not hold before this round, quoting the README lines relied on. Say whether the round-44 entries are on ground the lane already held.
+
+  Note: interesting — the README coverage map I read doesn't include round-44 entries yet (the coverage map's last table entries go up to round-41). Let me check whether there are round-42/43/44 knowledge notes and whether the README has a Round42/43/44 frontier disposition section. The README I read ends at line 1060 with the round-41 table row. Let me check the file for round-42/43/44 mentions, and check whether the knowledge entries exist on disk.
+
+  Let me:
+  1. Grep README for round-42, round-43, round-44, citation-version-binding.
+  2. Check corpus/knowledge/ for the two files.
+  3. Read the two knowledge entries.
+  4. Check corpus/evidence/round44/ for captures.
+  5. Check the registry SOURCES.md for S079, S080, S081 rows.
+
+  Also the prompt says the report goes to `.ufo/waves/round-44/w3/W3ScoutFrontier.md`.
+
+  The "Frontier" section of README I read: lines 348-1060. It ends with the round-41 table row. There's no round-44 paragraph in the README yet. So the two new knowledge entries are the round-44 additions: `citation-version-binding-r36.md` and `citation-version-binding-r37.md`. Their theme: "version binding of a citation to a prior state" — Gate line 50: "Theme: version binding of a citation to a prior state. One theme. Two entries. Three rows."
+
+  Now, what ground does the lane already hold? The coverage map / Frontier shows:
+  - Round 30: quote-reopen — first lane command reading a source outside the lane corpus, scoped to SOURCES.md URLs. Pages without `</head>` closed (C1). C2 fetch bounds NOT held ground (failed kill rule).
+  - Round 31: line binding and sha256 revision binding in verify-claims — `LINE_BINDING_MATCH` 50/120→120/120 and `REVISION_BINDING_MATCH` 50/120→120/120. "a claim pinned to the SHA-256 of the exact source bytes it was made against".
+  - Round 36: engine-swap canary (S070).
+  - Round 40: receipt-expectation-digests (`expect_sha256` binds exact expectations-file bytes; cites re-opened S059).
+  - Round 38: receipt-binding (pre==post gate hashes, counter/expect/receipt digests).
+
+  So "version binding" of citations to a prior state: what's new vs held?
+
+  Held ground relevant:
+  - Round 31 C2: claims can be pinned to the sha256 of the exact source bytes (revision binding) — that's binding a claim to a version of a source, at the gate level (verify-claims).
+  - Round 30: quote re-open reads live registered source (SOURCES.md URLs), headless match; C2 fetch bounds not held.
+  - Round 40: receipt expectation digests.
+
+  New ground in round-44 entries (per Gate):
+  1. Citation-version binding as a *method/knowledge* concept: a citation (to a source) can be bound to a specific version/archived state of that resource — RFC 7089 (Memento) "constitutes a promise that the resource state" — i.e., the concept that web archives (WARP, Memento `warp.ndl.go.jp/web/20250102112233` datetime token) give version-specific capture identity with sha256-pinned captures. This is knowledge from opened sources S079 (RFC 7089 Memento), S080 (WARP FAQ — "National institution websites are archived once per month"), S081 (E2867).
+  2. The lane id assignment discipline: "Lane id is S079 because the URL is the evidence and S079 is the next free lane id. Not staged-id minus 2." — that's registry identity ground (but round 26/27 had registry identity rows; S036/S039 registry-link checks; round 27 S042 "registry state/occurrence identity").
+  3. The capture-with-sha256 + byte-offset + located-quote discipline for sources opened without fetch ("from the committed capture, no fetch") — access dated, no network.
+
+  Also rejected: S082 (SAMR GB/T 7714-2025) — "not-carried" per round 43; flip = contiguous span with issued and effective dates. S093 Portico — misquote per round 43; flip = four-factor authenticity sentence as one contiguous span.
+
+  And S077 collision analysis: "S077 is not a row-start id in the staged append. It occurs once, inside a cell of staged S093." Guard analysis: indented guard catches scratch `  | S079 |` row; column-zero pattern misses it.
+
+  Now, are these on ground the lane already held?
+
+  Let me carefully identify what "coverage-map ground" means: the README's Coverage map table (## Coverage map) rows — each row "Holds" a ground. The Frontier section paragraphs also describe held ground ("Moved from frontier to held ground, measured on...").
+
+  Which README lines do I rely on?
+
+  Key prior-ground lines:
+  - Round 31 paragraph (README lines ~960-970): "a claim pinned to the SHA-256 of the exact source bytes it was made against (`"sha256"`; C2, `REVISION_BINDING_MATCH` 50/120 to 120/120)" — gate-level revision binding already held. Also round 30 line ~947: "the quote re-open fetch bounds under slow senders and DNS rebinding (C2, `QUOTE_REOPEN_FETCH_BOUND_MATCH` 12/27 to 27/27)" — but then corrected 2026-10-23: "C2 fetch bounds did not meet their frozen kill rule and are not held ground". So fetch-bounds ground was retracted — the round-44 "no fetch" captures sidestep that.
+  - Round 30 line ~936-939: "re-opening located quotes against their live registered source (`knowledge/quote-reopen-r29.md`, `tools/quote-reopen.py`). This is the first lane command that reads a source outside the lane corpus. Its scope is fixed to `SOURCES.md` URLs".
+  - Round 40 line 1038: "expectation-file digest identity... `expect_sha256` binds exact expectations-file bytes".
+  - Round 38 line 1056: receipt-binding.
+  - Round 26 registry-link note line 65: "Local registry identity/status/exact-rooted backlink checks and descriptive verified-at text; a declaration relation is not semantic citation support".
+
+  So what's genuinely new in the two round-44 entries?
+
+  The two entries are knowledge notes `citation-version-binding-r36.md` and `citation-version-binding-r37.md`. I should read them to characterize precisely. Let me check they exist on disk.
+
+  The theme: "version binding of a citation to a prior state". The new ground is likely: the method of citing a source's archived/prior state (Memento datetime, WARP capture) as the citation target — i.e., a citation can pin the resource *state* (version) rather than the live resource; archives capture; sha256 of capture; byte offset of located quote; recheck prose schedules per source (365d/90d/180d).
+
+  What the lane already held: sha256 revision binding of claims to source bytes (r31 C2), receipt digests (r38/r40), quote re-open of live URLs (r29/30). The round-44 notes are method notes ("current art" style like the r24 method notes? Actually they're from opened sources S079–S081) that add: the *citation-side* counterpart — binding the citation to a prior state via web-archive captures (WARP/Memento), with the access-no-fetch capture discipline and per-source recheck intervals.
+
+  Also the S077 guard/id-collision analysis is registry-mechanics ground, but the Gate reports it; the entries' ground is the two notes.
+
+  I need to verify on disk. Let me look at:
+  - corpus/knowledge/citation-version-binding-r36.md and r37.md
+  - corpus/evidence/round44/ (claims.md, captures, seat-logs)
+  - corpus/SOURCES.md rows S079, S080, S081
+  - .ufo/waves/round-44/w2/ files mentioned (W2ReviewRfc.md, W2CritForge.md, W2ScoutS077.md)
+  - Check README for any round-42/43/44 paragraphs (grep).
+  - corpus/lessons/round-43.md maybe for the "not-carried"/"misquote" classifications.
+
+  Then write the report at /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w3/W3ScoutFrontier.md.
+
+  Let me batch these reads/greps.The two entries exist on disk. The README has no round-42/43/44 paragraphs — the last Frontier table row is round-41. Let me check what rounds 42 and 43 landed, to say whether the round-44 ground was already held by 42/43 (whose disposition may live in SCORECARD/lessons rather than README). Let me check:
+
+  - corpus/lessons/round-43.md (round 43 classed rows not-carried/misquote — the reject flip conditions)
+  - corpus/evidence/round44/claims.md (this round's predicates)
+  - corpus/SOURCES.md rows S077-S081 (to verify the lane ids)
+  - Check .ufo/waves/round-44/ contents to see what landed.
+
+  Also grep README for round-41/42 to see where the Frontier ends: the last table row was round-41 (line 1059-1060). Actually the table ends at line 1060 with `knowledge/capture-path-pin-r41.md`. Grep for "Round42" or "round-42" found nothing, so rounds 42–44 paragraphs are not in the README Frontier yet.
+
+  Let me quickly look at round-42/43 lessons to determine the prior state of the registry and any version-binding ground already held. And check SCORECARD for round 43 verdict maybe. Keep it bounded — the report needs:
+
+  1. Which coverage-map ground the two new entries add that the lane did not hold before this round, quoting README lines relied on.
+  2. Whether the round-44 entries are on ground the lane already held.
+
+  Key held-ground README lines to quote:
+
+  - Line 314 (Known gaps, round-4 boundary class): "the round-4 boundary class is syntactic and ASCII-anchored" — no. Better:
+  - Line 186-194: "None of the five proves semantic support, location binding, uniqueness or the source's own truth... No original external source was fetched and none may be." — that's the r1-era statement; superseded by r29 quote-reopen which does read outside sources. 
+  - Line 944-948 (Round30 disposition): "Moved from frontier to held ground, measured on loopback only: pages that omit `</head>` (C1... 78/106 to 106/106) and the quote re-open fetch bounds under slow senders and DNS rebinding (C2...)" — then line 956-958 correction: "C2 fetch bounds did not meet their frozen kill rule and are not held ground".
+  - Line 936-938 (Round29): "re-opening located quotes against their live registered source... This is the first lane command that reads a source outside the lane corpus. Its scope is fixed to `SOURCES.md` URLs".
+  - Line 962-964 (Round31): "a claim pinned to the SHA-256 of the exact source bytes it was made against (`"sha256"`; C2, `REVISION_BINDING_MATCH` 50/120 to 120/120)".
+  - Line 967-969: "Still open: line binding for records' `## Claims` table pointers (`path:N`) in `verify` mode, chain hops, uniqueness, and whether the named line is the right one for the claim's meaning; a claim without a pin is not checked for revision."
+  - Line 1039 (Round 40): "a receipt's `expect_sha256` binds exact expectations-file bytes, not only scenario rows... hash identity does not establish authorship or semantic truth".
+  - Line 1056 (r38): receipts bind pre==post gate hashes.
+  - Line 65 (r26 registry-link): "Local registry identity/status/exact-rooted backlink checks... a declaration relation is not semantic citation support".
+  - Line 964-966: r31 sources S057–S059.
+  - Line 950-954 (Round30 still open): "pages without a `<head>` start tag, 2xx challenge pages, PDF sources, prefix and suffix disambiguation, resolver time inside the deadline, IPv6, and the L0 fetch-scope question." — Note "PDF sources" is still open, relevant since S077 is the pdftotext manual? Actually S077 is the lane's id for the pdftotext manual already held.
+  - Line 958: correction pins.
+
+  So the new ground added by the two round-44 entries:
+
+  1. **An archived/prior-state citation target with the capture-in-URL version anchor**: before this round the lane held no opened source for (a) a protocol that promises an archived resource state no longer changes (RFC 7089 Memento-Datetime, S079), nor (b) a national web archive that embeds the capture timestamp in the URL with an operator-stated cadence (S080/S081). The r29/r30 quote-reopen ground is *live* registered-source reads; the r31 ground is byte-hash pins on claims. Neither held the *date-of-prior-state* concept: "A Memento-Datetime is a date of a prior state, not a byte hash" (r36 note). The lane's own sha256 pins (r31 C2, r40 expect_sha256) bind bytes; the new entries hold the complementary statement that version identity can be carried by the resource state promise + URL-embedded timestamp, and that this is *not* byte identity nor authenticity ("The promise is about stability, not authenticity"; "It is not evidence that the archived body matches the origin byte for byte").
+
+  2. **Cadence knowledge**: WARP archives national institution websites once per month (S080) — an operator-stated recheck-cadence fact feeding the recheck schedule (365d/90d/180d recheck prose), which pairs with the r26 deadline semantics (`knowledge/recheck-due-r26.md` line 64: "Schedule-derived deadline semantics, explicit as-of date").
+
+  3. **The lane-side discipline proven on this ground**: opened-from-committed-capture (no fetch) source admission — access date + file sha256 + byte offset + located quote from a capture whose mtime precedes round launch. Prior held ground (r30 C1) measured loopback fetches of live URLs; the no-fetch capture-opened admission is a new admission route in the coverage map. Also the lane-id assignment rule (URL-is-evidence, next free lane id, not staged-id shift) and the S077 collision disposition — registry identity mechanics, extending r26/r27 registry ground but at the staged-vs-lane id collision level.
+
+  Is any of it on ground the lane already held? Partially:
+
+  - The *form* of the gate blocks (located quote, access date, sha256 capture, recheck duration) reuses held mechanics: sha256 byte pins (r31 C2; r40 expect_sha256), recheck schedules (r26 C2), located quotes vs live source (r29/30). The ground *claimed* is new (archived-state citation binding, URL-embedded capture time, monthly cadence), but the verification machinery is held ground — and notably the entries are knowledge notes, not gate modes; no gate check binds a citation to a prior state. The r31 still-open line "a claim without a pin is not checked for revision" still stands; nothing in round 44 moves gate enforcement.
+
+  - Byte-hash identity: the capture sha256s are the same class of evidence the lane already holds (r31 C2 revision binding binds claim to exact source bytes; r40 binds receipt to expectation bytes). The entries themselves concede: "The lane's span check against an archived capture checks the capture" — that half is held ground.
+
+  So the answer: the round-44 entries add genuinely new coverage-map ground — version binding of a *citation* to a prior state via archived captures (Memento promise + URL-embedded timestamp + cadence), plus the no-fetch committed-capture admission route — but they sit beside, not on, the held sha256/quote-reopen ground, and they explicitly do not move gate enforcement; where they overlap the held ground (byte pins, recheck schedules) they reuse it rather than extend it.
+
+  Also I should verify the claims file and evidence receipts exist, to be calibrated: quote what I verified vs what I trust. Let me check:
+  - corpus/evidence/round44/claims.md
+  - the capture file sha256 — can I verify? The capture is at /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/d0c4a09a9de32cb91d5e3797.txt — that's outside the lane (shokuknow). My bounds say do not modify /home/vgpnk/Projects/shokuknow — but reading? "Never modify ... /home/vgpnk/Projects/shokuknow". Reading is not modifying. I could sha256sum it to check the pinned hash. That's a read-only check. Also byte offset 14896 check — could extract the quote "constitutes a promise that the resource state" at that offset. That's a strong verification for the report. Also the WARP/E2867 captures — where are they? The r37 note gives sha256s but not paths. Maybe in the same .qcache. Let me look.
+
+  - corpus/SOURCES.md rows S079/S080/S081.
+  - .ufo/waves/round-44/ directory listing.
+
+  Let me batch:
+  1. ls .ufo/waves/round-44 and corpus/evidence/round44
+  2. Read corpus/evidence/round44/claims.md
+  3. Grep SOURCES.md for S077-S081 rows
+  4. sha256sum + offset check on the RFC capture (read-only, outside-write-prohibited dir but reading allowed)
+  5. Read .ufo/waves/round-44/w2/W2ReviewRfc.md, W2ScoutS077.md, W2CritForge.md maybe.
+
+  Batch these.
+
+• The two entries are on disk. Now verifying the evidence chain and prior rounds 42–43 state in parallel:/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/:
+assimilation
+launcher-outer.log
+make-w3-spec.py
+seat-agent.md
+seat-logs
+slot-grant.txt
+w1
+w1-dispatch.json
+w1-plan.json
+w1-spec.json
+w2
+w2-dispatch.json
+w2-launcher-outer.log
+w2-parent-lifetime.receipt
+w2-plan.json
+w2-slot-grant.txt
+w2-spec.json
+w3
+w3-dispatch.json
+w3-launcher.log
+w3-launcher-outer.log
+w3-plan.json
+w3-spec.json
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/assimilation:
+collisions
+disposition.tsv
+draft
+guard
+reg-ids
+staged-ids
+validate
+validate-census.txt
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/assimilation/draft:
+citation-version-binding-r36.md
+citation-version-binding-r37.md
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/assimilation/guard:
+col0
+collisions
+indented-registry.md
+reg-ids
+staged-ids
+staged.md
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/assimilation/validate:
+corpus
+tools
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/assimilation/validate/corpus:
+knowledge
+lessons
+SOURCES.md
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/assimilation/validate/corpus/knowledge:
+anchor-boundaries-r4.md
+archived-export-intake.md
+archives-verified-r9.md
+audit-r11.md
+bash-local-expansion-r35.md
+capture-bash-pin-r39.md
+capture-path-pin-r41.md
+chain-resolution-r3.md
+citation-chain-fidelity-r24.md
+citation-version-binding-r36.md
+citation-version-binding-r37.md
+claim-pin-provenance-r37.md
+claim-record-fields-r33.md
+claim-support-states-r24.md
+claim-verification-r2.md
+contextual-source-admission-r24.md
+dead-zone-pcre-r34.md
+denylist-r22.md
+engine-swap-canary-r36.md
+env-pin-capture-r38.md
+exempt-hop-audit-r32.md
+fenced-anchor-r23.md
+fenced-heading-r17.md
+gate-baseline-r12.md
+gate-baseline-r8.md
+grep-pin-r35.md
+hardening-r10.md
+hardlink-alias-r13.md
+html-comment-r20.md
+json-delimiter-r24.md
+keyed-engine-output-equivalence-r35.md
+line-binding-r31.md
+long-span-argv-r34.md
+manifest-append-lock-r32.md
+metadata-screen-r25.md
+mount-alias-r14.md
+per-record-argv-attribution-r36.md
+pin-capture-env-r37.md
+pointer-boundary-r21.md
+quote-reopen-r29.md
+quote-reopen-r30.md
+reader-allocation-r26.md
+receipt-binding-r38.md
+receipt-expectation-digests-r40.md
+receipt-verifier-subject-r39.md
+recheck-due-r26.md
+reference-integrity-r7.md
+registry-link-r26.md
+revision-binding-r31.md
+root-slash-boundary-r15.md
+scope-phrase-gap-r18.md
+scope-refusal-r12.md
+search-log-method-r39.md
+sweeps-rejections-r5.md
+sweep-symlink-r19.md
+verification-r16.md
+verify-all-r6.md
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/assimilation/validate/corpus/lessons:
+2026-10-15-anchor-token-boundaries.md
+2026-10-15-chain-hop-resolution.md
+2026-10-15-claims-span-fidelity.md
+2026-10-16-archive-scale-controls-and-ledger.md
+2026-10-16-gate-behavioral-baseline.md
+2026-10-16-reference-integrity.md
+2026-10-16-sweeps-rejections-verdict-bearing.md
+2026-10-16-verify-all-composition.md
+2026-10-16-verifying-conversion-not-original.md
+2026-10-19-hardlink-alias-boundary.md
+round-1.md
+round-24.md
+round-24-verifier-spotcheck.md
+round-25.md
+round-26.md
+round-27.md
+round-27-verifier-spotcheck.md
+round-28.md
+round-28-verifier-spotcheck.md
+round-29.md
+round-29-verifier-spotcheck.md
+round-30.md
+round-30-verifier-spotcheck.md
+round-31.md
+round-31-verifier-spotcheck.md
+round-32.md
+round-32-verifier-spotcheck.md
+round-33.md
+round-33-verifier-spotcheck.md
+round-34.md
+round-34-verifier-spotcheck.md
+round-35.md
+round-35-verifier-spotcheck.md
+round-36.md
+round-36-verifier-spotcheck.md
+round-37.md
+round-37-verifier-spotcheck.md
+round-38.md
+round-38-verifier-spotcheck.md
+round-39.md
+round-39-verifier-spotcheck.md
+round-40.md
+round-40-verifier-spotcheck.md
+round-41.md
+round-41-verifier-spotcheck.md
+round-42.md
+round-42-verifier-spotcheck.md
+round-43.md
+round-43-verifier-spotcheck.md
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/assimilation/validate/tools:
+quarantine-check.py
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/seat-logs:
+W2ConnOverlap.log
+W2ConnOverlap.prompt
+W2ConnSibling.log
+W2ConnSibling.prompt
+W2CritForge.log
+W2CritForge.prompt
+W2CritFresh.log
+W2CritFresh.prompt
+W2CritS082.log
+W2CritS082.prompt
+W2CritSweep.log
+W2CritSweep.prompt
+W2ExecCensus.log
+W2ExecCensus.prompt
+W2ExecCollision.log
+W2ExecCollision.prompt
+W2ExecHead.log
+W2ExecHead.prompt
+W2ExecNoNet.log
+W2ExecNoNet.prompt
+W2ExecNumstat.log
+W2ExecNumstat.prompt
+W2ExecSha.log
+W2ExecSha.prompt
+W2ExecShonen.log
+W2ExecShonen.prompt
+W2ExecWords.log
+W2ExecWords.prompt
+W2MutId.log
+W2MutId.prompt
+W2MutPipe.log
+W2MutPipe.prompt
+W2ReviewC1Log.log
+W2ReviewC1Log.prompt
+W2ReviewC2Ctrl.log
+W2ReviewC2Ctrl.prompt
+W2ReviewRfc.log
+W2ReviewRfc.prompt
+W2ReviewWarp.log
+W2ReviewWarp.prompt
+W2ScoutConsider.log
+W2ScoutConsider.prompt
+W2ScoutE2867.log
+W2ScoutE2867.prompt
+W2ScoutProvince.log
+W2ScoutProvince.prompt
+W2ScoutRfc.log
+W2ScoutRfc.prompt
+W2ScoutS077.log
+W2ScoutS077.prompt
+W2ScoutWarp.log
+W2ScoutWarp.prompt
+W2ScribeFresh.log
+W2ScribeFresh.prompt
+W2ScribeGate.log
+W2ScribeGate.prompt
+W2ScribeQ62.log
+W2ScribeQ62.prompt
+W2ScribeRow.log
+W2ScribeRow.prompt
+W2SimpName.log
+W2SimpName.prompt
+W2SimpSep.log
+W2SimpSep.prompt
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w1:
+swarm-registry.json
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w2:
+swarm-registry.json
+W2ConnOverlap.md
+W2ConnSibling.md
+W2CritForge.md
+W2CritFresh.md
+W2CritS082.md
+W2CritSweep.md
+W2ExecCensus.md
+W2ExecCollision.md
+W2ExecHead.md
+W2ExecNoNet.md
+W2ExecNumstat.md
+W2ExecSha.md
+W2ExecShonen.md
+W2ExecWords.md
+W2MutId.md
+W2MutPipe.md
+W2ReviewC1Log.md
+W2ReviewC2Ctrl.md
+W2ReviewRfc.md
+W2ReviewWarp.md
+W2ScoutConsider.md
+W2ScoutE2867.md
+W2ScoutProvince.md
+W2ScoutRfc.md
+W2ScoutS077.md
+W2ScoutWarp.md
+W2ScribeFresh.md
+W2ScribeGate.md
+W2ScribeRow.md
+W2SimpName.md
+W2SimpSep.md
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w3:
+parent-lifetime.receipt
+seat-logs
+swarm-registry.json
+W3CritBlind.md
+W3CritScope.md
+W3ExecFileCensus.md
+W3ExecShaRfc.md
+W3MutC1.md
+W3MutC2.md
+W3RevS079.md
+W3SimpIds.md
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w3/seat-logs:
+W3ConnIds.log
+W3ConnIds.prompt
+W3ConnUsedby.log
+W3ConnUsedby.prompt
+W3CritBlind.log
+W3CritBlind.prompt
+W3CritForge.log
+W3CritForge.prompt
+W3CritFresh.log
+W3CritFresh.prompt
+W3CritScope.log
+W3CritScope.prompt
+W3ExecCensus.log
+W3ExecCensus.prompt
+W3ExecE2867.log
+W3ExecE2867.prompt
+W3ExecErrata.log
+W3ExecErrata.prompt
+W3ExecFileCensus.log
+W3ExecFileCensus.prompt
+W3ExecNumstat.log
+W3ExecNumstat.prompt
+W3ExecSelftest.log
+W3ExecSelftest.prompt
+W3ExecShaRfc.log
+W3ExecShaRfc.prompt
+W3ExecWarp.log
+W3ExecWarp.prompt
+W3MutC1.log
+W3MutC1.prompt
+W3MutC2.log
+W3MutC2.prompt
+W3RevDisp.log
+W3RevDisp.prompt
+W3RevLesson.log
+W3RevLesson.prompt
+W3RevReceipt.log
+W3RevReceipt.prompt
+W3RevRouted.log
+W3RevRouted.prompt
+W3RevS079.log
+W3RevS079.prompt
+W3ScoutAdj.log
+W3ScoutAdj.prompt
+W3ScoutConsider.log
+W3ScoutConsider.prompt
+W3ScoutFrontier.log
+W3ScoutFrontier.prompt
+W3ScoutQuar.log
+W3ScoutQuar.prompt
+W3ScribeLesson.log
+W3ScribeLesson.prompt
+W3ScribeLog.log
+W3ScribeLog.prompt
+W3ScribeScore.log
+W3ScribeScore.prompt
+W3ScribeShonen.log
+W3ScribeShonen.prompt
+W3SentNet.log
+W3SentNet.prompt
+W3SimpCols.log
+W3SimpCols.prompt
+W3SimpIds.log
+W3SimpIds.prompt
+---
+c1-count.py
+c2-count.py
+c3-count.py
+claims.md
+controls
+disposition.tsv
+errata-count.py
+parent-lifetime.receipt
+__pycache__
+receipts
+seat-logs
+seat-names.txt
+---
+round-40-verifier-spotcheck.md
+round-41.md
+round-41-verifier-spotcheck.md
+round-42.md
+round-42-verifier-spotcheck.md
+round-43.md
+round-43-verifier-spotcheck.md
+round-44.md
+---
+root-slash-boundary-r15.md
+scope-phrase-gap-r18.md
+scope-refusal-r12.md
+search-log-method-r39.md
+sweeps-rejections-r5.md
+sweep-symlink-r19.md
+verification-r16.md
+verify-all-r6.md
+87:| S077 | Poppler `pdftotext(1)` manual — `/usr/share/man/man1/pdftotext.1.gz` (canonical project URL `http://poppler.freedesktop.org/` printed by the installed `pdftotext -v`; not fetched) | docs | A | the documented text-extraction contract of the exact tool whose `pdftotext -layout` output the campaign's cached PDF captures are; not a rendering-quality standard | DESCRIPTION, lines 12–13 of the decompressed roff source (`/usr/share/man/man1/pdftotext.1.gz`, sha256 `50dd56df…`); the installed binary reports `pdftotext version 26.08.0` | a PDF capture in the campaign's cache IS a text rendering, so a quote's absence in it is a statement about that rendering, while a non-PDF binary document that was never rendered cannot refute a quote at all | mined | 2026-10-24 | 180d | tools/quarantine-check.py, corpus/lessons/round-42.md |
+88:| S078 | Bramer, de Jonge, Rethlefsen, Mast, Kleijnen, A systematic approach to searching — Europe PMC full-text XML https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6148622/fullTextXML (capture sha256 833b13e3e80212522d016a8db9c6edeacb8965148d2334722a7a73c415d7136d; not fetched this round) | paper | A | how a search log is kept as a working document, distinct from a checklist of fields a log must carry | section 6 of the Europe PMC full-text XML, byte offset 17383 of the committed capture | Design and keep the complete search strategies in a log document rather than in the database, so the steps taken stay accountable and reproducible | mined | 2026-10-24 | 365d | corpus/knowledge/search-log-method-r39.md |
+89:| S079 | RFC 7089, HTTP Extension for Time-Based Access to Resource States — Memento — https://www.rfc-editor.org/rfc/rfc7089.txt | spec | A | binding a citation to a timestamped prior state; the document puts archive veracity out of scope | section 2.1.1 of the committed capture, no fetch | a Memento-Datetime header is a promise that the reflected resource state will no longer change; an archived body may not be byte-to-byte the same as what the origin served | mined | 2026-10-24 | 365d | corpus/knowledge/citation-version-binding-r36.md |
+90:| S080 | NDL Web Archiving Project (WARP) FAQ — https://warp.ndl.go.jp/en/info/qanda | docs | A | the collection cadence of Japan's national web archive, as the FAQ states it | the FAQ answer beginning National institution websites are archived once per month; committed capture, no fetch | national institution websites are archived once per month, other public institutions four times per year, and private institutions generally once a year | mined | 2026-10-24 | 90d | corpus/knowledge/citation-version-binding-r37.md |
+91:| S081 | NDL current-awareness E2867, WARP URL renewal — https://current.ndl.go.jp/e2867 | paper | A | how Japan's national web archive binds a capture to a point in time in the URL | the section on a URL that embeds the capture timestamp; committed capture, no fetch | WARP moved to a URL that embeds the capture timestamp, for example warp.ndl.go.jp/web/20250102112233, so a reader can tell the point in time from the URL | mined | 2026-10-24 | 180d | corpus/knowledge/citation-version-binding-r37.md |
+
+

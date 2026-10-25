@@ -550,3 +550,30 @@ the admitted entry that motivates it. Tier definitions live in
     agent ids, and zero seat reports landed. Operator proposal mined from
     `considerthese/2026-10-24.md` (2026-10-24), "Track prepared-but-undispatched
     waves". — `lessons/round-43.md`.
+
+## Round-44 additions (appended 2026-10-24; criteria 1–61 unchanged)
+
+62. **Count claim errata in the round that froze them.** A round whose claims
+    need many narrowings after freezing was frozen too broad. The count is the
+    number of lines matching `^Erratum [0-9]+` in that round's claims file, not
+    a prose impression. Check: `python3 corpus/evidence/round44/errata-count.py
+    --file <claims>` prints the count. Shown able to fail: the two-line fixture
+    `corpus/evidence/round44/controls/errata-two.txt` counts 2 and exits 0; the
+    empty fixture `controls/errata-zero.txt` counts 0 and exits 1. Operator
+    proposal mined from `considerthese/2026-10-24.md` (2026-10-24), "Count claim
+    errata per round". The file was not edited. The operator's "round 35 needed
+    nine" is that file's sentence, not a count this round re-derived. —
+    `lessons/round-44.md`.
+
+63. **A launcher's exit status is not evidence that its seats ran.** A
+    dispatcher that writes its receipt and then exits 0 has certified that the
+    receipt was written, not that anything was spawned. The tell is the
+    receipt's own `n_spawned`/`n_reaped`, and a receipt with no
+    `end parent_pid=` line is truncated, not clean. Check: read the
+    launcher receipt and require `n_spawned >= 1` and an `end` line before
+    counting a wave as dispatched. Shown able to fail: `tools/parent-lifetime.sh`
+    given a malformed dispatch JSON writes `end … n_spawned=0 n_reaped=0` and
+    exits 0 (`.ufo/waves/round-44/w3/W3ExecSelftest.md`), and the wave-2
+    receipt of this round carries no `end` line at all
+    (`.ufo/waves/round-44/w2-parent-lifetime.receipt`). Round-44 defect,
+    named and not fixed in the round that found it. — `lessons/round-44.md`.

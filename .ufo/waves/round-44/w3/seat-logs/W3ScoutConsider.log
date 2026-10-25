@@ -1,0 +1,181 @@
+kimi version 2.3.1
+• Let me start by reading the considerthese file and the QUALITY.md file in parallel.QUALITY.md doesn't exist at the root. Let me find it.Now I have both files. Let me analyze.
+
+  The considerthese/2026-10-24.md file contains four self-improvement proposals (lines 56-66):
+
+  1. **Tag each round as research ground or plumbing.** (line 58-60) — One column in the ledger saying whether a round's claims add new research coverage or harden the gate's own tools would make the trend in the note above visible at a glance.
+
+  2. **Track prepared-but-undispatched waves.** (line 60-61) — A fixed line listing waves that were validated but never ran, and seat reports left uncommitted, would surface the L2 gap from rounds 39-41 the day it happens.
+
+  3. **Count claim errata per round.** (line 62-64) — Round 35 needed nine. Erratum density is a calibration signal: a round whose claims need many narrowings after freezing was frozen too broad, and I could report that number daily.
+
+  4. **Spot re-verify one receipt a week.** (line 64-66) — Round 39 showed committed receipts can drift from their expectations. A read-only cloud-agent run of the latest `verify-receipts.py` over a sample of receipts would catch that without waiting for the next verifier. That would need your approval, since it goes beyond my current read-only remit.
+
+  Now, which proposal did this round (round 44) mine? Criterion 62 in QUALITY.md (lines 556-566) is "Count claim errata in the round that froze them" — mined from "Count claim errata per round" (proposal 3). The criterion says: "Operator proposal mined from `considerthese/2026-10-24.md` (2026-10-24), 'Count claim errata per round'."
+
+  So the QUALITY.md criterion that carries the one proposal this round mined is criterion 62, at lines 556-566 of corpus/QUALITY.md. Let me quote it with line numbers.
+
+  Wait — I should double check. Round 43 mined criterion 61 from "Track prepared-but-undispatched waves" (see lines 543-552: "Operator proposal mined from `considerthese/2026-10-24.md` (2026-10-24), 'Track prepared-but-undispatched waves'."). And criterion 60 says "Operator proposal mined from `considerthese/2026-10-23.md` (2026-10-23)." So the round-44 additions section (lines 554-566) contains only criterion 62, mined from "Count claim errata per round".
+
+  So:
+  - The one proposal round 44 mined: "Count claim errata per round" → QUALITY.md criterion 62, lines 556-566.
+
+  Remaining unimplemented proposals in that file:
+  1. "Tag each round as research ground or plumbing" — not implemented (no criterion references it; check: grep for "research ground" or "plumbing" in QUALITY.md... I read the whole file; criteria 60's mention is "Operator proposal mined from considerthese/2026-10-23.md" — different. Nothing about research ground vs plumbing tagging. Unimplemented.
+  2. "Track prepared-but-undispatched waves" — implemented as criterion 61 (round 43 additions). So it IS implemented.
+  4. "Spot re-verify one receipt a week" — unimplemented; no criterion references receipt spot re-verification weekly. Criteria 42, 55 relate to receipt verification but not a weekly re-verify proposal. Let me check: criterion 55 is about verifier pass being a claim about provenance; 42 about measurements bound to committed bytes; 56 about fixtures firing. Nothing about a weekly read-only re-verify of a sampled receipt. Unimplemented. Also the proposal itself notes it needs operator approval beyond read-only remit.
+
+  Let me also verify errata-count.py exists to calibrate my statement about criterion 62's implementation — the milestone is "falsify the landed round-44 state", so I should verify the committed artifacts. Let me check:
+  - corpus/evidence/round44/errata-count.py exists
+  - corpus/evidence/round44/controls/errata-two.txt and errata-zero.txt exist
+  - lessons/round-44.md exists
+
+  That would strengthen the report. Also verify that the considerthese file was not edited (the criterion claims "The file was not edited").
+
+  Also, I should verify no other criterion covers "Tag each round as research ground or plumbing" or "Spot re-verify one receipt a week" — grep QUALITY.md and lessons for these phrases.
+
+  Let me run these checks in parallel:
+  1. Glob/ls corpus/evidence/round44/
+  2. Grep for "research ground" across the repo (corpus, lessons)
+  3. Grep for "re-verify" / "verify-receipts" weekly across corpus
+  4. Check lessons/round-44.md exists
+
+  Also possibly run the errata-count.py on the fixtures to verify criterion 62's check claim (falsify the landed state). The milestone says "falsify the landed round-44 state". Running the check script on the fixture is read-only and safe. Let me do:
+
+  python3 corpus/evidence/round44/errata-count.py --file corpus/evidence/round44/controls/errata-two.txt → expect count 2, exit 0
+  python3 corpus/evidence/round44/errata-count.py --file corpus/evidence/round44/controls/errata-zero.txt → expect 0, exit 1
+
+  That's within my remit as a scout (read-only runs). The instructions say "No network, no fetch... Do not install packages. Do not run pacman." Running python scripts in the repo is fine as long as it's read-only. The script presumably only reads the file and prints. Let me check the script first quickly, then run.
+
+  Also verify the count of errata in round-44's claims file? Criterion says count lines matching `^Erratum [0-9]+` in the round's claims file. Not required for my report.
+
+  Let me batch:
+  - Read corpus/evidence/round44/errata-count.py
+  - Bash: ls corpus/evidence/round44 and controls
+  - Grep "research ground|plumbing" in corpus/
+  - Grep "re-verify|reverify" in corpus/ and lessons
+  - Check round-44.md exists
+
+  Then run the two fixture checks.
+
+  Then write the report.
+
+  Axes (godspeed): operability (report is a small, precise file that downstream agents can act on), calibration (distinguish "implemented" vs "claimed implemented", verify by running the check), depth (verify the landed round-44 state against committed bytes rather than taking the criterion's word).
+
+  Let me proceed.
+
+• Read both files. Now verifying the landed round-44 state in parallel — the criterion's check artifacts, whether other proposals appear anywhere in corpus, and the script itself before running it./home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/:
+total 52
+drwxr-xr-x 1 vgpnk vgpnk  290 Oct 24 21:58 .
+drwxr-xr-x 1 vgpnk vgpnk 9908 Oct 24 21:44 ..
+-rwxr-xr-x 1 vgpnk vgpnk 3806 Oct 24 21:44 c1-count.py
+-rwxr-xr-x 1 vgpnk vgpnk 4803 Oct 24 21:45 c2-count.py
+-rwxr-xr-x 1 vgpnk vgpnk 2621 Oct 24 21:44 c3-count.py
+-rw-r--r-- 1 vgpnk vgpnk 4795 Oct 24 21:44 claims.md
+drwxr-xr-x 1 vgpnk vgpnk  166 Oct 24 21:54 controls
+-rw-r--r-- 1 vgpnk vgpnk 7987 Oct 24 21:58 disposition.tsv
+-rw-r--r-- 1 vgpnk vgpnk  956 Oct 24 21:54 errata-count.py
+-rw-r--r-- 1 vgpnk vgpnk 8637 Oct 24 21:48 parent-lifetime.receipt
+drwxr-xr-x 1 vgpnk vgpnk   96 Oct 24 21:51 __pycache__
+drwxr-xr-x 1 vgpnk vgpnk  216 Oct 24 21:58 receipts
+drwxr-xr-x 1 vgpnk vgpnk 5028 Oct 24 21:47 seat-logs
+-rw-r--r-- 1 vgpnk vgpnk  969 Oct 24 21:46 seat-names.txt
+
+/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/controls/:
+total 28
+drwxr-xr-x 1 vgpnk vgpnk  166 Oct 24 21:54 .
+drwxr-xr-x 1 vgpnk vgpnk  290 Oct 24 21:58 ..
+-rw-r--r-- 1 vgpnk vgpnk 4492 Oct 24 21:45 all-left.tsv
+-rw-r--r-- 1 vgpnk vgpnk  118 Oct 24 21:54 errata-two.txt
+-rw-r--r-- 1 vgpnk vgpnk   24 Oct 24 21:54 errata-zero.txt
+-rw-r--r-- 1 vgpnk vgpnk   75 Oct 24 21:45 pids0.receipt
+-rw-r--r-- 1 vgpnk vgpnk   54 Oct 24 21:45 prose.receipt
+-rw-r--r-- 1 vgpnk vgpnk  335 Oct 24 21:46 selftest.receipt
+
+
+• Confirmed:
+  - errata-count.py exists and matches criterion 62's described contract (count `^Erratum [0-9]+`, exit 0 when positive, exit 1 when 0, exit 2 usage/missing).
+  - Fixtures errata-two.txt and errata-zero.txt exist.
+  - No "research ground"/"plumbing" tagging proposal implemented anywhere in corpus (only one incidental hit in an unrelated knowledge file about tally plumbing).
+  - No weekly receipt re-verify proposal implemented (grep shows verify-receipts.py references but nothing about a weekly sampled read-only re-verify).
+  - lessons/round-44.md exists.
+
+  Now let me falsify the landed round-44 state by actually running the criterion's check on both fixtures (read-only), and also verify the errata count on round-44's claims.md. Also verify the considerthese file wasn't edited by the criterion's claim ("The file was not edited") — I can't diff without git, but I read the file and its proposals remain listed as "not acted on", consistent. Also check errata-two.txt content.
+
+  Also, should I check the round-44 claims.md for the errata count? The criterion says the count is of lines matching `^Erratum [0-9]+` in the round's claims file. Let me run the counter on corpus/evidence/round44/claims.md too — that's a genuine falsification probe: if the counter prints 0 on the round's own claims, that would mean criterion 62's subject round has zero errata (a plausible honest result, since it's a demonstration).
+
+  Run all three in one batch (independent).
+
+• Artifacts confirmed present. Now falsifying the landed state: run criterion 62's own check on both named fixtures, and on the round's own claims file, plus read the two fixtures.ERRATA=2
+ERRATA_COUNT=PASS
+rc=0
+ERRATA=0
+ERRATA_COUNT=FAIL
+rc=1
+ERRATA=0
+ERRATA_COUNT=FAIL
+rc=1
+
+
+• All checks behave exactly as criterion 62 states:
+  - two-erratum fixture: ERRATA=2, exit 0 ✓
+  - zero-erratum fixture: ERRATA=0, exit 1 ✓
+  - The two-line fixture is genuinely 2 erratum lines plus a non-matching control line ("not an erratum line") ✓
+  - Round-44's own claims.md: ERRATA=0 (no `^Erratum N` lines) — the criterion's "shown able to fail" was demonstrated on fixtures, not on the round's claims; the round's claims file currently has zero errata. Worth noting in the report as calibration detail.
+
+  Now the mapping:
+  - considerthese/2026-10-24.md proposals (§ "Self-improvement proposals (not acted on)", lines 56-66):
+    1. "Tag each round as research ground or plumbing" (lines 58-60)
+    2. "Track prepared-but-undispatched waves" (lines 60-61)
+    3. "Count claim errata per round" (lines 62-64)
+    4. "Spot re-verify one receipt a week" (lines 64-66)
+
+  - Round 44 mined proposal 3 → QUALITY.md criterion 62 (corpus/QUALITY.md lines 554-566; criterion text starts at line 556 under "## Round-44 additions" heading at 554-555).
+
+  - Implemented already (earlier round): proposal 2 → criterion 61 (round-43 additions, lines 543-552), which explicitly cites the proposal by name.
+
+  - Unimplemented: proposals 1 and 4.
+    - Proposal 1 ("Tag each round as research ground or plumbing"): no criterion in QUALITY.md covers it; grep across corpus for "research ground|plumbing" finds only an unrelated knowledge file line about "native tally plumbing". Unimplemented.
+    - Proposal 4 ("Spot re-verify one receipt a week"): no criterion; verify-receipts.py hits are all about rounds 38-40 verifier work, none about a weekly sampled read-only re-verify. The proposal itself says it needs operator approval beyond read-only remit. Unimplemented.
+
+  Also, criterion 61 (round 43) mined proposal 2 — worth stating so the report doesn't imply proposal 2 is unimplemented.
+
+  One more calibration note: criterion 62's text says "Shown able to fail: the two-line fixture ... counts 2 and exits 0; the empty fixture controls/errata-zero.txt counts 0 and exits 1." I verified: errata-two.txt is actually 3 lines (two matching + one negative control line), not two lines — a trivial wording imprecision in the criterion ("two-line fixture" describes the count, arguably; the file has 3 lines with 2 erratum lines). Actually re-reading: "the two-line fixture `corpus/evidence/round44/controls/errata-two.txt`" — the file has three lines. Minor discrepancy worth noting in the report as a falsification finding (calibration axis). The check itself behaves as specified though.
+
+  Also errata-zero.txt is 1 line ("no erratum heading here"), while the criterion calls it "the empty fixture" — it is not empty (empty would be 0 bytes / 0 lines). Another minor wording imprecision. Both are cosmetic; the executable contract holds. This is exactly the kind of "falsify the landed round-44 state" detail the milestone wants.
+
+  Also note: criterion 62 says "The operator's 'round 35 needed nine' is that file's sentence, not a count this round re-derived." I can verify quickly: count `^Erratum` lines in round-35 claims? The considerthese file says round 35 logged errata 7-15 (nine errata). Where is the round-35 claims file? Probably corpus/evidence/round35/claims.md. Quick grep for `^Erratum` there would calibrate whether "nine" is re-derivable. That's a nice depth move — cheap, in parallel. Let me grep `^Erratum` across corpus/evidence/round35/.
+
+  Then write the report.
+
+  Let me also double-check that criterion 62's "The file was not edited" claim about considerthese/2026-10-24.md — I can check git status/log for that file? The bounds say: do not run `jj` or `git commit`. `git log`/`git status` read-only is fine. Let me check `git status --porcelain considerthese/2026-10-24.md` and `git log --oneline -1 -- considerthese/2026-10-24.md`. Actually the file may be untracked/new. This verifies "The file was not edited" (i.e., the lane didn't modify it to mark proposals acted-on). Cheap and safe (read-only git). Let me do it.
+
+  Batch:
+  1. Grep `^Erratum` in corpus/evidence/round35/ (count per file)
+  2. git status --porcelain on considerthese + git log -1 for the file
+
+  Then write report.
+
+• The criterion's executable contract holds exactly as specified. Two cheap depth probes remain: re-derive the "round 35 needed nine" figure the criterion declines to adopt, and confirm the considerthese file's un-edited state.ab9d3fd considerthese: 2026-10-24 daily review (rounds 34a2-41)
+---
+043f19a round-44: freeze parent-lifetime, disposition, and RFC quote claims before scoring
+
+
+• Interesting findings:
+
+  1. `^Erratum [0-9]+` in corpus/evidence/round35/ — no matches. So the "nine errata" from round 35 (errata 7-15) are not lines starting with `Erratum N` in the round-35 claims file? Let me check where round-35 errata live. The considerthese says "round 35 logged errata 7-15, including that the witness channel is forgeable... (`8a96711`)". Maybe they're in lessons/round-35.md or in a claims file with different heading format like "## Erratum 7" (the `^Erratum` pattern requires start-of-line "Erratum N" — a "## Erratum 7" heading would NOT match the criterion's pattern!).
+
+  This is a significant falsification finding for criterion 62's operationalization: if round-35's errata are recorded as `## Erratum 7` markdown headings, then `^Erratum [0-9]+` matches zero of them, and the counter undercounts real errata in the very round the proposal cites. Let me check how errata are actually formatted in round 35.
+
+  2. git log: considerthese/2026-10-24.md was committed as ab9d3fd ("considerthese: 2026-10-24 daily review") and git status shows no modifications (porcelain output was empty — the first command printed nothing before the log lines). So the file is committed and unmodified — consistent with criterion 62's "The file was not edited."
+
+  3. HEAD is 043f19a "round-44: freeze parent-lifetime, disposition, and RFC quote claims before scoring". Note: the considerthese file mentions window to HEAD 872bf3a — that was yesterday's cursor. Today's HEAD is 043f19a.
+
+  Let me check round-35 errata formatting.
+
+• The "nine errata" figure did not re-derive under the criterion's own pattern in `corpus/evidence/round35/` — a lead worth chasing before I report. Checking how round-35 errata are actually formatted:
+
+• Confirmed: round-35's claims file has a single `## Erratum (round 35, append-only, after the data)` section — not per-erratum `^Erratum N` lines. The nine errata (7-15) are presumably listed inside that section in some other format. Let me look at that section briefly to characterize it. Actually, this is enough for the finding: the criterion 62 counting pattern `^Erratum [0-9]+` would count 0 on round-35's claims file even though round 35 logged errata 7-15. The counter is demonstrated on fixtures but has not been shown to re-derive any real round's erratum count — the round whose number motivated the proposal scores 0 under the counter.
+
+  Let me peek at the erratum section in round35/claims.md to see how the nine are encoded (lines ~141-263). A quick read of a portion.
+

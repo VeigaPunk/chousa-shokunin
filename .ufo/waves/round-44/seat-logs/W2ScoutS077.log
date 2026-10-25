@@ -1,0 +1,183 @@
+kimi version 2.3.1
+• I'll check whether S077 is a row-start id in the staged SOURCES.append.md and write only the scoped report.
+
+• The glob search did not locate SOURCES.append.md.The grep for S077 was scoped to the chousa-shokunin directory.I need to find the staged SOURCES.append.md file.
+
+• The staged append path is not in the lane tree I searched. I'll locate `SOURCES.append.md` and the S077 mentions next.
+
+• The staged SOURCES.append.md is likely located at `/home/vgpnk/Projects/shokuknow/merge/chousa/SOURCES.append.md`.Grep located the file path but did not display the matching line content.
+
+  I need to switch grep to content mode. I will verify the SOURCES table format by reading the file directly, since the prior scout report may not exist.The key evidence is located in `/home/vgpnk/Projects/shokuknow/merge/chousa/SOURCES.append.md`.
+
+  S077 appears only once in the scope cell of row S093, not as a row-start ID. I will run shell commands to count all occurrences, check for row-start patterns, and extract the cell. I will also search for case variants and split-line mentions.
+
+  The file has 117 lines. I am verifying the column structure to quote the exact S093 cell.
+
+  The S093 scope cell contains the exact phrase "wave 1's S077 found J-STAGE contracted". I will run a precise awk or python check to confirm this.
+
+  I will also check for other staged copies of the append file. The wave 1 prompt explicitly names the path, while the current prompt omits it. I am verifying whether S077 refers to a document rather than an arithmetic count.
+
+• S077 shows up inside an S093 cell, not as a row id. I'll confirm occurrence count, row-start pattern, and the exact cell with a local parse.
+
+• The wave-1 prompt defines the row-start pattern for S-ids.The grep on claims.md matched S0, but the output lacked content because files_with_matches was used implicitly.I need the exact 0-3 space pattern.Working out regex patterns to match lines starting with a pipe and followed by up to three spaces and an S-number.Reviewing c3-count.py and the w1-spec item for the collision extract pattern.I need to run the verification commands and quote their output.
+
+  I will grep for S077 in the staged SOURCES.append.md to check if it is a row-start ID. I will also extract any cell that documents a column split for S077 and verify against the 0-3 space pattern from w1-spec.
+
+  S077 appears exactly once on line 21. I will run the grep commands to quote their output.
+
+  S077 is absent from the staged-ids file, which begins at S079. This supports the append file's row-start structure. I will also extract the exact 0-3 space pattern from w1-spec to verify row-start definitions.
+
+  S077 is not a row-start ID. It appears only inside the scope cell of the S093 row. The exact cell text is:
+
+  what a dark preservation archive guarantees, as the service itself states it; this is the Portico that wave 1's S077 found J-STAGE contracted
+
+  S077 sits in the scope column (field 5). The row-start ID is S093. No other occurrence of S077 exists in the file.The staged file for this lane is `/home/vgpnk/Projects/shokuknow/merge/chousa/SOURCES.append.md`.Grep located reports in the shokunin project directory.c3-count.py contains a regex pattern matching up to three leading spaces before a pipe and a session ID.I have a clear definition of row-start from c3-count.py.Checking round-42 claims or lessons for the collision extract pattern.The "0-3 space" might be defined in a campaign instruction outside the lane.
+
+  The 0-3 space pattern is the lane's own frozen regex for row-start IDs. It is more inclusive than the round-43 variant. Both patterns and a Python cell extractor will be run.
+
+  S077 is unlikely to be a false prefix match since IDs use three digits. I will verify word boundaries and run a Python count to catch any encoding-related misses. The exact byte offset will be noted for precise quoting.Only one file is staged for chousa.
+
+  Running verification checks. Reviewing existing report formats and round-43 lessons for S077 cell mentions to ensure findings are accurate and scoped.
+
+  Lane S077 is Poppler pdftotext. The staged file's wave 1 S077 refers to a J-STAGE Portico contract. These are different documents. The key question is whether S077 is a row-start identifier in the staged append.The round-43 lesson contains an interesting point.
+
+  Lane S077 is the pdftotext manual. Staged S077 was historically the PRISMA-S DOI row. The indented-fixture guard catches this collision, so staged S077 was never adopted.
+
+  The current staged file starts at S079. The PRISMA-S DOI is now staged S079. This contradicts the round-43 lesson, which says staged S077 was that row. The file may have been renumbered since then.
+
+  I will verify the current file's actual contents. I need to check for an indented S077 row that a column-zero pattern might miss. The lesson requires allowing 0-3 leading spaces in collision patterns because an indented fixture was used as a guard.
+
+  I will check both column-zero and 0-3 space collision patterns, plus any indented `| S077 |` cells. The round-44 assimilation/collisions file was empty, which aligns with no row-start collision including S077.
+
+  I will inspect the staged append file directly rather than relying on the empty collisions report. I may check git history for read-only evidence, but I must avoid modifying the lane or shokuknow state.
+
+• The lesson still calls staged S077 a row. I'll check the live append with the 0–3-space row-start pattern and extract the cell.<stdin>:10: FutureWarning: Possible nested set at position 4
+<stdin>:10: FutureWarning: Possible nested set at position 20
+path /home/vgpnk/Projects/shokuknow/merge/chousa/SOURCES.append.md
+exists True
+bytes 144266
+lines 117
+sha256 55505c7c5336372e6494a9d5778bc8d72c4bd55e49741d9aebd9ac483a7bb979
+--- row-start checks ---
+col0_count 0
+space0to3_count 0
+any_indent_idcell_count 0
+raw_S077_count 1
+line_hits:
+LINE 21 col0=False s0to3=False anyindent=False
+n_fields 13
+  field[1] id:
+  CELL_BEGIN
+S093
+  CELL_END
+  field[5] scope: <<<
+  CELL_BEGIN
+what a dark preservation archive guarantees, as the service itself states it; this is the Portico that wave 1's S077 found J-STAGE contracted
+  CELL_END
+--- first/last row-start ids (0-3 space, Sddd) ---
+row_start_n 111
+first (7, 'S079')
+last (117, 'S189')
+S077_in_row_ids False
+row_ids_containing_S077 []
+
+--- grep quotes ---
+CMD: grep -n S077
+21:| S093 | Preservation approach — Portico, a service of ITHAKA — https://www.portico.org/our-work/preservation-approach/ | docs | A | what a dark preservation archive guarantees, as the service itself states it; this is the Portico that wave 1's S077 found J-STAGE contracted | the four-factor list and the closing paragraph on the dark archive and audit privileges; page modified 2023-05-12, read 2026-10-23 | true preservation rests on four factors, of which authenticity means the content needs to be an authentic replica of the original and its provenance must be verifiable, backed by a maintained audit trail; the archive is dark, with audit privileges for participants rather than open access | mined | 2026-10-23 | 365d — re-open the page and confirm the four factors and the dark-archive sentence are unchanged (ran 2026-10-23) | corpus/knowledge/citation-version-binding-r37.md |
+grep_S077_exit:0
+CMD: grep -c S077
+1
+grep_c_exit:0
+CMD: grep -nE '^\|[[:space:]]*S077[[:space:]]*\|'
+grep_rowstart_exit:1
+CMD: grep -nE '^ {0,3}\|[[:space:]]*S077[[:space:]]*\|'
+grep_03_exit:1
+CMD: wc -l
+117 /home/vgpnk/Projects/shokuknow/merge/chousa/SOURCES.append.md
+CMD: head -n 6
+
+<!-- corpus-expansion-1 :: staged rows for lane chousa -->
+<!-- Review before appending. Each row was opened in the round that wrote it. -->
+
+| id | source | kind | tier | scope | anchor | teaches | status | opened | recheck | used-by |
+|---|---|---|---|---|---|---|---|---|---|---|
+
+
+• The grep exit code 1 for no matches should be quoted.
+
+  S077 is not a row-start ID. The round-43 lesson incorrectly claims staged S077 is the PRISMA-S DOI; that entry is actually S079. No unicode lookalikes of S077 were found.
+
+  The 0-3 space pattern matches zero lines for S077. The only mention is in field 5 of the S093 row, which is a row-start ID. I will verify the PRISMA-S row ID to evidence the calibration note.
+
+  Only one SOURCES.append.md exists in the staged tree. S077 does not appear in wrapped continuations. The lane corpus's SOURCES.md line 87 is a row-start S077, but that is outside the staged append scope.
+
+  I will run a shell grep on the lane file to back up the S077 row-start claim with fresh command output.
+
+  The wave context flags S077 as a document-level ID rather than an arithmetic one. The PRISMA-S row ID is S079, not S077. Comments and the derived assimilation/staged-ids list both confirm no S077 row exists.
+
+  The collisions file is empty. I will print the header cell indexes and confirm the S079 row begins with PRISMA. The scope cell contains no pipe, so column alignment is intact.
+
+  The S094 row contains an escaped pipe, but the S093 row has none. I will quote the header line from the prior command output and have enough evidence to write the report.
+
+  I will verify the exact ` S093 ` cell match and capture the byte offset for depth calibration. I am also checking round-43 scout reports to match house style.HEADER_LINE | id | source | kind | tier | scope | anchor | teaches | status | opened | recheck | used-by |
+HEADER_CELLS ['id', 'source', 'kind', 'tier', 'scope', 'anchor', 'teaches', 'status', 'opened', 'recheck', 'used-by']
+ROW21_N_CELLS 11
+ROW21_ID S093
+ROW21_SCOPE_INDEX 4
+S077_ONLY_IN ['scope']
+PIPE_IN_SCOPE False
+BACKSLASH_PIPE_IN_ROW False
+ROW21_IS_S093_START True
+PRISMA_ROW line=7 id=S079 start='| S079 | PRISMA-S: an extension to the PRISMA Statement for Reporting Literature'
+PRISMA_ROW line=59 id=S131 start='| S131 | PRISMA 2020 and PRISMA-S: common questions on tracking records and the '
+CMD: grep -nE '^\|[[:space:]]*S077[[:space:]]*\|' corpus/SOURCES.md
+87:| S077 | Poppler `pdftotext(1)` manual — `/usr/share/man/man1/pdftotext.1.gz` (canonical project URL `http://poppler.freedesktop.org/` printed by the installed `pdftotext -v`; not fetched) | docs | A | the documented text-extraction contract of the exact tool whose `pdftotext -layout` output the campaign's cached PDF captures are; not a rendering-quality standard | DESCRIPTION, lines 12–13 of the decompressed roff source (`/usr/share/man/man1/pdftotext.1.gz`, sha256 `50dd56df…`); the installed binary reports `pdftotext version 26.08.0` | a PDF capture in the campaign's cache IS a text rendering, so a quote's absence in it is a statement about that rendering, while a non-PDF binary document that was never rendered cannot refute a quote at all | mined | 2026-10-24 | 180d | tools/quarantine-check.py, corpus/lessons/round-42.md |
+lane_rowstart_exit:0
+CMD: wc -l assimilation/collisions assimilation/staged-ids
+  0 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/assimilation/collisions
+111 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/assimilation/staged-ids
+111 total
+CMD: grep -c '^S077$' staged-ids
+0
+staged_ids_S077_exit:1
+mtime=2026-10-24 21:17:10.406283981 -0300 size=144266
+Solid evidence exists. The round-43 lesson discrepancy will be noted carefully to avoid overclaiming.
+
+  The lesson cites S077 as the PRISMA-S DOI, but the current staged file lists PRISMA-S at row-start S079. This confirms the lesson reflects an earlier round-43 snapshot. I will quote that line to calibrate the reader and avoid treating it as the current row-start fact.
+
+  Lane S077 is the pdftotext manual. Staged S077 is the PRISMA-S DOI. The lane addendum item 10 and the `assimilation/collisions` file confirm this collision was a prior staged document. The current file has no row-start S077.
+
+  The lesson will be presented as a stale description relative to this file. The current first row is S079 PRISMA-S. I will not claim the lesson was wrong when written, since the round-43 snapshot was not inspected.
+
+  Other lanes' staged files do contain row-start S077. I checked only the chousa file named in the wave-1 seat. This calibration prevents overgeneralization.
+
+  The report structure is now set. It will be titled W2ScoutS077 and include verdict, file path, and axes.
+
+  The S093 row contains the cell quote. Two grep commands using c3-count.py patterns found zero matches for row-start S077. The file holds 111 rows from S079 to S189. I will not claim there are no gaps unless I verify them.
+
+  A quick uniqueness check will be run before finalizing the report to avoid misleading claims about gaps or duplicates.
+
+  The phrase "wave 1's S077" in the cell is a prose reference to a campaign finding, not an identifier. The cell itself only states that this Portico was found J-STAGE contracted.
+
+  The cell's "wave 1's S077" is a scope cross-reference inside S093, not an identifier. It should not be conflated with the lesson's "staged S077 is the PRISMA-S DOI," since the lesson describes a different document. The round-43 lesson file still contains that line.
+
+  Lane SOURCES.md line 87 is row-start S077 (Poppler pdftotext). Subtracting or equating ids across files would be the arithmetic error. Different documents. I did not fetch or edit the append file.n 111
+unique 111
+dups []
+min 79 max 189
+missing []
+monotonic True
+nonrow_done
+Row-start IDs are contiguous, unique, and monotonic.
+
+• S077 is not a row-start in the chousa staged append. It appears once, in the S093 scope cell. I'll write that finding to the report.
+
+• The report is complete. The user asked me to stop after finishing it.
+
+• S077 is not a row-start id in the staged chousa `SOURCES.append.md`. It appears once, only in the scope cell of the S093 row:
+
+  `what a dark preservation archive guarantees, as the service itself states it; this is the Portico that wave 1's S077 found J-STAGE contracted`
+
+  The report is at `.ufo/waves/round-44/w2/W2ScoutS077.md`.
+
+To resume this session: kimi -r session_b6fb4314-c436-488a-8f6c-d4490a3e8178

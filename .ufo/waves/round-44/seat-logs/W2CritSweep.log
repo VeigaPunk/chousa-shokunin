@@ -1,0 +1,491 @@
+kimi version 2.3.1
+• I will write a report at the specified path.
+
+• I'll locate `c2-count.py` and the C2 rule so the report can name the three JSON paths and explain the hunk-review failure.
+
+• I need to understand the seat's task more carefully.I need to understand the C2 predicate and why committing three modified JSON files without a hunk review fails it.
+
+• The counter names three modified paths. I'll check the predicate, the working-tree diffs, and the spot-check rule that treats an unreviewed commit as a miss.
+
+• A CritBlindSweep.log from wave 1 died.I need to understand the C2 predicate deeply.
+
+  The three modified JSON paths are:
+
+  - `.ufo/waves/round-40/w1/swarm-registry.json`
+  - `.ufo/waves/round-41/w1/swarm-registry.json`
+  - `corpus/evidence/round41/receipts/cells/cells.json`
+
+  Committing them without a hunk review fails C2.
+
+  The C2 predicate requires each modified path to be classed as `left-named` with a reason containing `not hunk-verified`. Marking them `reverified-commit` without a hunk review is a kill rule miss.
+
+  The counter's check for modified paths does not use sha256 equality. It only accepts `left-named` with a reason containing `not hunk-verified`. A matching sha256 alone is insufficient.
+
+  The kill rule defines "that match" as a reverified row whose stem, round token, or sha256 does not match. Committing a modified path without such a match is a blind sweep and fails.
+
+  The counter does not apply the full reverified-commit verification to modified paths. That check requires stem, round token, length, and sha256 equality. Modified files are already tracked, so they must remain `left-named` until hunk-verified.
+
+  I will inspect the git diffs to explain why a hunk review is required. A whole-file sha256 would miss subtle changes inside JSON files, and the stem and round-token checks are insufficient for them.I need to examine the git diffs of three JSON files. I also need to understand why committing them without hunk review fails C2.The grep results only show filenames, not matching lines.I will read the spotcheck files and LOG.md around the C2 claim. I will also check git diffs.
+
+  I will run git diff --numstat on the three modified paths. I also need to examine the counter code to understand why unreviewed hunks fail C2.
+
+  The counter only accepts modified paths when their class is `left-named` and the reason contains `not hunk-verified`. Committing them as `reverified-commit` fails this check. The left count stays below 3 and consistent stays below 39, so C2 fails.
+
+  The claims kill rule treats a modified path marked `reverified-commit` as a miss. That class is reserved for the 36 untracked seat reports, and its checks rely on stem, round token, length, and sha256 rather than a reviewed diff hunk.
+
+  The counter might not check git status. If the three modified files are committed while their disposition still reads `left-named` / `not hunk-verified`, the table would be lying.
+
+  The counter does not check git status for modified paths. It only validates the table row class and reason string. Committing the files alone will not fail the counter unless the disposition row changes to `reverified-commit` or the reason loses `not hunk-verified`.
+
+  The 36 markdown report checks do not apply to JSON files. Their stems may not appear inside the file contents, so whole-file verification cannot confirm the hunks were reviewed.I need to run commands to demonstrate why committing three JSON files without hunk review fails C2.
+
+  I will run git status and diff --numstat on the three JSON files to show they are modified. The counter's MODIFIED loop requires left-named plus "not hunk-verified" and rejects reverified-commit even if sha256 matches. The stem/round-token check that works for markdown does not count as hunk review.
+
+  I will prove the counter behavior by running c2-count.py against a temporary table with the three JSON files marked as reverified-commit. This will show C2=FAIL without touching production files. I also need to inspect the actual diff contents to confirm they contain unreviewed registry and receipt mutations.
+
+  I will check for an existing disposition.tsv and review the round-43 report on inherited working-tree disposition. I also need to examine QUALITY 60 about the cheapest gate.
+
+  The mechanical failure is in c2-count.py lines 108-117. The MODIFIED loop only counts a file as left-named when the reason string contains "not hunk-verified". It does not accept "reverified-commit" even if the sha256 matches.
+
+  The claims kill rule explicitly classifies a modified path marked `reverified-commit` as a miss. The counter never inspects git hunks, so a manual commit is not evidence of review. A matching sha256 also cannot rescue a file if its class is not `left-named`.
+
+  The JSON files are tracked, not untracked. The counter never computes the stem, round-token, and sha256 match required for `reverified-commit` on tracked paths. Marking them `reverified-commit` is therefore an invalid claim. A commit of a tracked file would simply include whatever dirty diff exists.
+
+  The reverified-commit checks do not inspect the diff. A whole-file sha256 of the dirty working tree would incorrectly validate an unreviewed delta. The predicate therefore requires a literal `not hunk-verified` reason and rejects `reverified-commit` until a hunk review exists.
+
+  If the table were left as `left-named` with `not hunk-verified`, the counter would pass because it never checks git status. This is a key calibration point.
+
+  The failure is not that git commit itself causes the counter to exit 1. It is the C2 predicate rejecting a commit that treats the commit as verification. The seat prompt expects the kill-rule explanation plus the three paths, grounded in the counter source and ideally a demonstrated counter run.
+
+  I will create two temporary tables to demonstrate the failure. One copies all-left.tsv and leaves the three JSON files as left-named; this shows C2=FAIL because they are already receipted. The other marks those same three paths as reverified-commit with their working-tree sha256 and a reason that omits "not hunk-verified"; this also shows C2=FAIL because the counter rejects reverified-commit for modified paths.
+
+  I will also verify that the counter never opens git diff for modified paths. I plan to read the actual diffs to show what a blind commit would land. I will check whether disposition.tsv exists and review a prior well-scored critic report for format guidance.
+
+  I am checking round-43 critic reports and the wave contract to confirm the exact report format. I need to verify whether a "Report:" trailer is required, since the wave contract specifies that every Report: trailer path is relative to the repository root. I will also review seat-logs for the expected report shape.
+
+• The counter only accepts those three paths as `left-named`. I'll measure the dirty diffs and show a `reverified-commit` row fails the gate.MODIFIED = (
+    '.ufo/waves/round-40/w1/swarm-registry.json',
+    '.ufo/waves/round-41/w1/swarm-registry.json',
+    'corpus/evidence/round41/receipts/cells/cells.json',
+)
+---
+sha256 343ba2366e8b448062dfd262d23d8f3d4801bbea5936dbc7f4d8d7e19b8b26ad
+ M .ufo/waves/round-40/w1/swarm-registry.json
+ M .ufo/waves/round-41/w1/swarm-registry.json
+ M corpus/evidence/round41/receipts/cells/cells.json
+---NUMSTAT---
+36	34	.ufo/waves/round-40/w1/swarm-registry.json
+427	214	.ufo/waves/round-41/w1/swarm-registry.json
+149	36	corpus/evidence/round41/receipts/cells/cells.json
+---HEAD---
+043f19a1db91288947493d9f879e61e7a9f07241
+---DISPOSITION---
+ls: cannot access '/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/disposition.tsv'
+: No such file or directory
+---C2-DEFAULT---
+CONSISTENT=0/39
+REVERIFIED=0/36
+LEFT_NAMED=0/3
+C2=FAIL table-missing
+EXIT:1
+---C2-ALL-LEFT---
+CONSISTENT=3/39
+REVERIFIED=0/36
+LEFT_NAMED=3/3
+C2=FAIL
+EXIT:1
+
+
+• Marking the three JSON files as reverified-commit fails C2 even when their SHA256 hashes match the working tree.
+
+  Concrete hunks will show why whole-file SHA256 checks are insufficient. A blind sweep commits unreviewed diffs. The kill rule explicitly bans committing a path without matching its stem, round token, and SHA256.
+
+  The counter's MODIFIED loop only accepts 'left-named' dispositions containing 'not hunk-verified'. Marking a modified path as reverified-commit therefore fails C2, because the counter never applies stem, round token, or SHA256 checks to modified paths.
+
+  A temporary TSV in /tmp will demonstrate the failure without touching production files. It will mark both the 36 untracked paths and the three modified paths as reverified-commit, using real SHA256 hashes for all entries.
+
+  A simpler test flips only the three modified rows to reverified-commit while leaving all-left for the rest. This drops LEFT_NAMED from three out of three to zero.
+
+  The counter never compares SHA256 digests for modified paths, so a matching working-tree hash cannot rescue them.
+
+  Two additional failure modes will be shown: a left-named row missing "not hunk-verified" in its reason, and a reverified-commit row still containing that phrase.
+
+  I will inspect the actual diffs to show what a blind commit would land. I will summarize changed keys without dumping full diffs. I will also check whether the JSON files contain their stems and round tokens.Traceback (most recent call last):
+  File "<stdin>", line 6, in <module>
+  File "<string>", line 18, in <module>
+NameError: name '__file__' is not defined. Did you mean: '__name__'?
+ .ufo/waves/round-40/w1/swarm-registry.json        |  70 +--
+ .ufo/waves/round-41/w1/swarm-registry.json        | 641 ++++++++++++++--------
+ corpus/evidence/round41/receipts/cells/cells.json | 185 +++++--
+ 3 files changed, 612 insertions(+), 284 deletions(-)
+===== HUNK HEADERS r40 registry =====
+diff --git i/.ufo/waves/round-40/w1/swarm-registry.json w/.ufo/waves/round-40/w1/swarm-registry.json
+@@ -3 +3,3 @@
+-  "path": ".ufo/waves/round-40/w1/swarm-registry.json",
++  "wave": "chousa-r40-w1",
++  "createdAt": "2026-10-24T07:16:35.766Z",
++  "updatedAt": "2026-10-24T07:18:06.849Z",
+@@ -8 +10 @@
+@@ -20 +22 @@
+@@ -32 +34 @@
+@@ -44 +46 @@
+@@ -56 +58 @@
+@@ -68 +70 @@
+@@ -80 +82 @@
+@@ -92 +94 @@
+@@ -104 +106 @@
+@@ -116 +118 @@
+@@ -128 +130 @@
+@@ -140 +142 @@
+@@ -152 +154 @@
+@@ -164 +166 @@
+@@ -176 +178 @@
+@@ -188 +190 @@
+@@ -200 +202 @@
+@@ -212 +214 @@
+@@ -224 +226 @@
+@@ -236 +238 @@
+@@ -248 +250 @@
+@@ -260 +262 @@
+@@ -272 +274 @@
+@@ -284 +286 @@
+@@ -296 +298 @@
+@@ -308 +310 @@
+@@ -320 +322 @@
+@@ -332 +334 @@
+@@ -344 +346 @@
+@@ -356 +358 @@
+@@ -368 +370 @@
+@@ -380 +382 @@
+@@ -392 +394 @@
+===== HUNK HEADERS r41 registry (first 40) =====
+@@ -2,212 +2,426 @@
+@@ -215,2 +429 @@
+===== cells.json changed keys sample =====
+@@ -2,2 +2,2 @@
+@@ -17 +17 @@
+@@ -19,2 +19,43 @@
+@@ -26 +67 @@
+@@ -28,3 +69,5 @@
+@@ -35 +78 @@
+@@ -37,3 +80,3 @@
+@@ -44 +87 @@
+@@ -49 +92,12 @@
+@@ -54 +108 @@
+@@ -56 +110,4 @@
+@@ -58 +115,4 @@
+@@ -63 +123 @@
+@@ -66 +126,3 @@
+@@ -71 +133 @@
+@@ -73,3 +135,5 @@
+@@ -80 +144 @@
+@@ -82,2 +146,2 @@
+@@ -89 +153 @@
+@@ -91,2 +155,2 @@
+@@ -98 +162 @@
+@@ -101,2 +165,24 @@
+@@ -107 +193 @@
+@@ -109,2 +195,29 @@
+The execution failed because c2-count.py uses __file__.
+
+  I will rerun the probe and inspect the actual registry and cells.json changes. The C2 failure is a predicate issue: the modified paths must be class `left-named` with reason `not hunk-verified`, but marking them `reverified-commit` violates that rule.
+
+  The reverified-commit checks do not apply to modified paths. Only the class and reason predicates are enforced. Committing working-tree bytes with a matching sha256 therefore does not satisfy C2. A whole-file sha256 would bypass hunk review entirely. I will demonstrate this with a temporary table and sample diff content.UNTRACKED 36
+MODIFIED 3
+--- .ufo/waves/round-40/w1/swarm-registry.json
+bytes 18572
+sha256 c4e00d1141a0faaf0dfd655b9173ef974b702d668efd9751caab78658e3fb0d0
+stem swarm-registry stem_in_text True
+round_token 40 hit True len_gt_80 True
+--- .ufo/waves/round-41/w1/swarm-registry.json
+bytes 23757
+sha256 49b059533008951e54dc2e4c03ecf0b5352e1ec30eaf7af512e516be07bc4b59
+stem swarm-registry stem_in_text True
+round_token 41 hit True len_gt_80 True
+--- corpus/evidence/round41/receipts/cells/cells.json
+bytes 8122
+sha256 1f5c0afae8024c50013e9a9060988c14506115125e3823042e4512833f293b80
+stem cells stem_in_text True
+round_token 41 hit True len_gt_80 True
+=== blind-commit reverified-commit + working-tree sha256 exit=1
+CONSISTENT=36/39
+REVERIFIED=36/36
+LEFT_NAMED=0/3
+C2=FAIL
+=== class reverified-commit, phrase kept, real sha256 exit=1
+CONSISTENT=36/39
+REVERIFIED=36/36
+LEFT_NAMED=0/3
+C2=FAIL
+=== left-named, phrase omitted exit=1
+CONSISTENT=36/39
+REVERIFIED=36/36
+LEFT_NAMED=0/3
+C2=FAIL
+=== 36 reverified + 3 left-named not hunk-verified exit=0
+CONSISTENT=39/39
+REVERIFIED=36/36
+LEFT_NAMED=3/3
+C2=PASS
+=== index vs worktree sha256 ===
+.ufo/waves/round-40/w1/swarm-registry.json
+  HEAD c799d343c7b61bc7eef83ef26ac589a6066a11c538361a9997908001026c0cdd bytes 18010 git_exit 0
+  WORK c4e00d1141a0faaf0dfd655b9173ef974b702d668efd9751caab78658e3fb0d0 bytes 18572
+  equal False
+.ufo/waves/round-41/w1/swarm-registry.json
+  HEAD 9e0e9d171b3207e550a01d4ac9760f67aa3aa40bd990557ebb8735f55dba3680 bytes 7745 git_exit 0
+  WORK 49b059533008951e54dc2e4c03ecf0b5352e1ec30eaf7af512e516be07bc4b59 bytes 23757
+  equal False
+corpus/evidence/round41/receipts/cells/cells.json
+  HEAD 226b8907a3db0722c1f8a2283f41d4783ff0a8a31fe2c86bece80d35aec27b3e bytes 2291 git_exit 0
+  WORK 1f5c0afae8024c50013e9a9060988c14506115125e3823042e4512833f293b80 bytes 8122
+  equal False
+===== r40 registry first hunk =====
+diff --git i/.ufo/waves/round-40/w1/swarm-registry.json w/.ufo/waves/round-40/w1/swarm-registry.json
+index 207ed99..4567c25 100644
+--- i/.ufo/waves/round-40/w1/swarm-registry.json
++++ w/.ufo/waves/round-40/w1/swarm-registry.json
+@@ -1,11 +1,13 @@
+ {
+   "schema": "ufo-swarm-registry-v1",
+-  "path": ".ufo/waves/round-40/w1/swarm-registry.json",
++  "wave": "chousa-r40-w1",
++  "createdAt": "2026-10-24T07:16:35.766Z",
++  "updatedAt": "2026-10-24T07:18:06.849Z",
+   "reportDir": ".ufo/waves/round-40/w1",
+   "members": {
+     "ExecC1BaseReceipt": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "ExecC1BaseReceipt",
+       "role": "executor",
+       "item": "Run the committed verifier for the regenerated c1-base-s39001 receipt against the base-gate-r39 control, c1-count.py, current expectations.jsonl, and verifier; confirm the expected 7/8 negative-control result is a valid receipt.",
+       "axes": [
+@@ -17,7 +19,7 @@
+     },
+     "ExecC1LandedReceipt": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "ExecC1LandedReceipt",
+       "role": "executor",
+       "item": "Run the committed verifier for the regenerated c1-after-s39011 receipt against tools/research-gate.sh and current expectation bytes; independently verify its receipt status and the counter's 8/8 result.",
+       "axes": [
+@@ -29,7 +31,7 @@
+     },
+     "ExecC1MutantReceipt": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "ExecC1MutantReceipt",
+       "role": "executor",
+       "item": "Run the committed verifier for the regenerated c1-mutenv-s39013 receipt against the committed mutant control and confirm the 4/8 mutant receipt is valid evidence, not a failed verifier.",
+       "axes": [
+@@ -41,7 +43,7 @@
+     },
+     "ExecC1Count": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "ExecC1Count",
+       "role": "executor",
+       "item": "Run the frozen round-40 c1-count.py command on the committed tree and confirm its six-row manifest, exact output, and exit code.",
+       "axes": [
+@@ -53,7 +55,7 @@
+     },
+     "ExecC2Count": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "ExecC2Count",
+       "role": "executor",
+       "item": "Run the frozen round-40 c2-count.py command on the committed tree and confirm its four source-derived R2-R5 dispositions and exit code.",
+       "axes": [
+@@ -65,7 +67,7 @@
+     },
+     "ExecNoHarm": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "ExecNoHarm",
+       "role": "executor",
+       "item": "Run the committed research-gate selftest and the named r1 archive, claims, chain, and integrity regression commands; report exact output and whether any existing mode is harmed.",
+       "axes": [
+@@ -77,7 +79,7 @@
+     },
+     "ReviewActivePopulation": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "ReviewActivePopulation",
+       "role": "reviewer",
+       "item": "Audit active-r39-receipts.tsv against every committed r39 receipt and the three round-40 replacement receipts; identify any omission, duplicate, or stale receipt mislabeled active.",
+       "axes": [
+@@ -89,7 +91,7 @@
+     },
+     "ReviewReplacementBindings": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "ReviewReplacementBindings",
+===== r40 agentId / outcome line counts =====
+66
+===== r41 changed field names (added/removed keys, first 40 unique) =====
+      1 "wave": "chousa-r41-w1",
+      1 "updatedAt": "2026-10-24T07:42:46.931Z",
+      1 "schema": "ufo-swarm-registry-v1",
+      1 "reportDir": ".ufo/waves/round-41/w1",
+      1 "members": {
+      1 "createdAt": "2026-10-24T07:41:44.810Z",
+===== cells.json added/removed keys =====
+The cells.json key extraction failed because the JSON structure uses inconsistent indentation.
+
+  I will quote a representative cells.json hunk to make the report concrete. I also need to confirm that c2-count.py does not invoke git diff and verify the counter source lines. The three modified paths are exactly the three JSON files. Committing them without hunk review fails C2 because predicate R44-C2 splits the 39 paths into two classes with different checks.
+
+  The 36 untracked reports only qualify for `reverified-commit` if the stem appears in the text, the round token matches, the reason exceeds 80 characters, and the sha256 equals the row. The three modified paths must be `left-named` and contain the substring `not hunk-verified`; no other class is permitted. A kill rule states that committing a modified path without this match is a blind sweep and fails.
+
+  The counter never applies `reverified-commit` checks to MODIFIED paths. The three JSON files were marked `reverified-commit` with their working-tree sha256 and the reason "committed without hunk review". This produced LEFT_NAMED=0/3 and a C2 failure. Even a matching sha256 cannot save a modified path. A `left-named` class without the exact phrase "not hunk-verified" also fails.
+
+  The phrase "without a hunk review" is specific because the files were already tracked and dirty. A commit of the worktree would land diffs that the counter does not inspect. The r40 registry shows 36 insertions and 34 deletions, with agentId null replaced by seat names and wave/createdAt/updatedAt fields replacing the path. Its HEAD sha256 differs from the worktree sha256. The r41 registry shows 427 insertions and 214 deletions in one giant hunk that rewrites the entire registry.
+
+  The cells.json diff shows 149 insertions and 36 deletions, with HEAD sha256 2291 and worktree sha256 8122. This is the r41 receipt artifact rewritten on counter runs.
+
+  If these three modified files were untracked, they would falsely pass `reverified-commit` checks: each contains its stem, a round token, and exceeds 80 bytes. A whole-file sha256 of the dirty worktree would match a row written from that same dirty file. That is not a hunk review. The predicate therefore rejects `reverified-commit` for these paths. The only consistent class is `left-named` with reason containing `not hunk-verified`.
+
+  The default counter currently fails table-missing because disposition.tsv does not exist. This is a separate issue from the C2 failure. The seat asked why committing the three files without hunk review fails C2, not whether the table exists. I should mention the missing table as an observed fact so I do not imply C2 currently passes.
+
+  I must not claim that `git commit` itself is what the counter detects. The counter does not run git; it fails the disposition class. If the rows were left as `left-named` with the required reason, C2 would pass. I should state this clearly to avoid overclaiming. The kill rule's phrase "without the stem/round/sha256 match" is ambiguous.
+
+  The kill rule defines two distinct misses: a modified path marked `reverified-commit` is always a miss, and committing a path without the stem/round/sha256 match is a blind sweep. The seat's question specifically concerns committing the three modified JSON files without a hunk review.
+
+  The demonstration used temporary /tmp tables and left production files untouched. I will quote the counter loop, the claims kill rule, and the measured stdout. I will name the three paths and describe their hunks to show why a whole-file sha256 is not a hunk review.===== cells.json diff head =====
+diff --git i/corpus/evidence/round41/receipts/cells/cells.json w/corpus/evidence/round41/receipts/cells/cells.json
+index 3a846cd..95478bf 100644
+--- i/corpus/evidence/round41/receipts/cells/cells.json
++++ w/corpus/evidence/round41/receipts/cells/cells.json
+@@ -1,5 +1,5 @@
+ {
+- "gate": "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh",
+- "k": 12,
++ "gate": "/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-41/controls/base-gate-r41.sh",
++ "k": 1,
+  "n": 12,
+  "cells": [
+@@ -15,8 +15,49 @@
+   {
+    "cell": "S2-trap-inventory",
+-   "predicate_holds": true,
++   "predicate_holds": false,
+    "evidence": {
+-    "trap_marks": [],
+-    "count": 0,
++    "trap_marks": [
++     "OUTER:readlink:argv:-f -- /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-41/controls/base-gate-r41.sh",
++     "OUTER:dirname:argv:-- /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-41/controls/base-gate-r41.sh",
++     "OUTER:date:argv:+%s",
++     "OUTER:date:argv:-u -d @1792827947 +%Y-%m-%dT%H:%M:%SZ",
++     "OUTER:mktemp:argv:-d /tmp/ExecC1LandedReceipt-ctl/chousa-gate-pin.XXXXXX",
++     "OUTER:mkdir:argv:-p /tmp/ExecC1LandedReceipt-ctl/chousa-gate-pin.o7z18n/lib /tmp/ExecC1LandedReceipt-ctl/chousa-gate-pin.o7z18n/noise",
++     "OUTER:cat:argv:",
++     "OUTER:cat:argv:",
++     "CHILD:readlink:argv:-f -- /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-41/controls/base-gate-r41.sh",
++     "CHILD:dirname:argv:-- /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-41/controls/base-gate-r41.sh",
++     "CHILD:date:argv:+%s",
++     "CHILD:date:argv:-u -d @1792827947 +%Y-%m-%dT%H:%M:%SZ",
++     "CHILD:dirname:argv:-- manifest.jsonl",
++     "CHILD:sed:argv:s/[[:space:]]*$//",
++     "CHILD:sed:argv:s/[[:space:]]*$//",
++     "CHILD:sed:argv:s/[[:space:]]*$//",
++     "CHILD:sed:argv:s/[[:space:]]*$//",
++     "CHILD:sed:argv:s/[[:space:]]*$//",
++     "CHILD:sed:argv:s/[[:space:]]*$//",
++     "CHILD:sed:argv:s/[[:space:]]*$//",
++     "CHILD:sed:argv:s/[[:space:]]*$//",
++     "CHILD:sed:argv:s/[[:space:]]*$//",
++     "CHILD:sed:argv:s/^[[:space:]]*//;s/[[:space:]]*$//",
++     "CHILD:sed:argv:s/^[[:space:]]*//;s/[[:space:]]*$//",
++     "CHILD:sed:argv:s/^[[:space:]]*//;s/[[:space:]]*$//",
++     "CHILD:sed:argv:s/^[[:space:]]*//;s/[[:space:]]*$//",
++     "CHILD:sed:argv:s/^[[:space:]]*//;s/[[:space:]]*$//",
++     "CHILD:readlink:argv:-f -- /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-41/controls/base-gate-r41.sh",
++     "CHILD:dirname:argv:-- /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-41/controls/base-gate-r41.sh",
++     "CHILD:date:argv:+%s",
++     "CHILD:date:argv:-u -d @1792827947 +%Y-%m-%dT%H:%M:%SZ",
++     "CHILD:head:argv:-n 5 -- record.md",
++     "CHILD:sed:argv:s/[[:space:]]*$//",
++     "CHILD:sed:argv:s/[[:space:]]*$//",
++     "CHILD:sed:argv:s/[[:space:]]*$//",
++     "CHILD:sed:argv:s/[[:space:]]*$//",
++     "CHILD:sed:argv:s/[[:space:]]*$//",
++     "CHILD:sed:argv:s/[[:space:]]*$//",
++     "CHILD:sed:argv:s/[[:space:]]*$//",
++     "CHILD:sed:argv:s/[[:space:]]*$//"
++    ],
++    "count": 1454,
+     "drift": "GATE_DRIFT: none"
+    }
+@@ -24,62 +65,85 @@
+   {
+    "cell": "S3-sed-suppress",
+-   "predicate_holds": true,
++   "predicate_holds": false,
+===== agentId null to name counts =====
+-- .ufo/waves/round-40/w1/swarm-registry.json
+33
+33
+-- .ufo/waves/round-41/w1/swarm-registry.json
+35
+===== counter mentions of git/diff/hunk =====
+5:36 untracked reports are reverified-commit (stem, round token, sha256,
+6:length > 80) and 3 modified paths are left-named with not hunk-verified.
+65:def sha256(path: pathlib.Path) -> str:
+66:    h = hashlib.sha256()
+101:        if cls == 'reverified-commit' and reason.strip() and path.is_file():
+104:            ok = stem in text and round_ok(rel, text) and len(text) > 80 and sha256(path) == digest
+110:        ok = cls == 'left-named' and 'not hunk-verified' in reason and reason.strip()
+===== porcelain of three only, plus whether staged =====
+(empty cached numstat means unstaged)
+===== counter file unchanged vs what we hashed =====
+343ba2366e8b448062dfd262d23d8f3d4801bbea5936dbc7f4d8d7e19b8b26ad  /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/c2-count.py
+The evidence base is solid. The r41 agentId count from the second rg -c command appears to be missing for plus lines.
+
+  The r41 agentId addition count likely failed and was swallowed by `|| true`. I will report only the confirmed null removal counts: 33 for r40 and 35 for r41.
+
+  The r41 plus pattern failed to match, likely due to different indentation. I will not claim agentId was rewritten there without evidence. The numstat already shows 427 insertions and 214 deletions. I have enough data.
+
+  Wrong counts would hurt calibration. I will quote only what I actually saw.
+
+  The whole-file checks would pass these three JSON files. That is the critical calibration point. Applying those checks to untracked reverified-commit files would be a false pass. The counter deliberately skips modified files. A commit recording a working-tree SHA256 as reverified-commit still fails LEFT_NAMED. The counter does not run git.
+
+  Committing fails C2 only when the disposition records a reverified-commit or drops the required reason. A commit that preserves the bytes but leaves rows as left-named or not hunk-verified still passes C2. The claims kill rule marks a modified path marked reverified-commit as a miss, and committing a path without stem, round, or SHA256 match as a blind sweep. These three files do contain stem, round token, and SHA256.
+
+  The SHA256 can match and still fail. The class rule is the actual trigger: modified paths marked reverified-commit are a miss even when stem, round token, length, and digest all align. The required reason substring is `not hunk-verified`.
+
+  The counter never opens a diff, so it cannot distinguish hunk-reviewed commits from unreviewed ones. The predicate therefore refuses to treat commits of these paths as reverified-commit at all. The blind commit would land real, unreviewed diffs: 33 agentId null-to-name replacements on the r40 registry, a full rewrite of the r41 registry, and predicate flips in cells.json. None of these are identity-preserving, yet a whole-file SHA256 of the dirty tree would still bless them.
+
+  The current live counter also fails table-missing because disposition.tsv is absent. That is a separate issue from the C2 failure under discussion.
+
+  The all-left control passes LEFT_NAMED=3/3 yet still fails C2 because REVERIFIED=0/36. I will mention this adjacent control briefly so readers do not conflate the two failure modes.
+
+  No commit was made. The temporary tables are in /tmp/w2critsweep, not the repository.
+
+  The report will follow the prior critic format: title, seat, axes, measured commit, named axes, assigned answer, quoted command output, calibration limits, and trailer.
+
+  The measured HEAD is 043f19a1db91288947493d9f879e61e7a9f07241. Claims.md lists base e6983f6e. These are distinct sources.
+
+  The claim that committing fails C2 is based on the disposition class the predicate requires, not on a live commit. The r40 first hunk quote and the cells.json gate/k/predicate change are ready for inclusion.
+
+  The round-41 spot-check confirms the file rewrites on every counter run and restores to pre-closure bytes. The current dirty file is a later seat-run artifact, not the committed receipt. Committing it without hunk review would replace the committed receipt with this artifact.
+
+  The report will be thorough but concise. The three paths must be listed exactly as they appear in c2-count.py. The file will be written to .ufo/waves/round-44/w2/W2CritSweep.md.
+
+• The class split is measured: a matching sha256 still fails those three paths. I'll write that into the seat report.
+
+• The report has been written. The user asked me to stop.
+
+• Committing those three JSON files without a hunk review fails C2 because the predicate will not class them as `reverified-commit`.
+
+  The three paths in `MODIFIED` in `c2-count.py` are:
+
+  - `.ufo/waves/round-40/w1/swarm-registry.json`
+  - `.ufo/waves/round-41/w1/swarm-registry.json`
+  - `corpus/evidence/round41/receipts/cells/cells.json`
+
+  A table that records them as `reverified-commit` with their working-tree sha256 still scores `LEFT_NAMED=0/3` and `C2=FAIL`. The same 36 reports plus `left-named` / `not hunk-verified` scores `C2=PASS`. The dirty diffs are content changes, including the `cells.json` gate swap and predicate flip, so a whole-file digest is not a hunk review.
+
+  Report: `.ufo/waves/round-44/w2/W2CritSweep.md`
+
+To resume this session: kimi -r session_ae12bb89-eb2d-4387-aaed-dac8a56bf147

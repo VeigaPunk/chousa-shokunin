@@ -1,0 +1,114 @@
+kimi version 2.3.1
+• Let me start by looking at the files involved: the disposition.tsv, the c2-count.py script, and then mutate copies under /tmp.
+
+  Let me read the script and the tsv first.Now I understand the setup. The script counts:
+  - 36 reverified-commit rows (checked against sha256 of files on disk relative to --root)
+  - 3 left-named rows
+  - consistent = 39 if all hold
+
+  Mutations on copies under /tmp:
+  (a) Change one reverified-commit row's sha256 to a wrong value → REVERIFIED=35/36, CONSISTENT=38/39, C2=FAIL, exit 1.
+  (b) Delete one row entirely → depends on which row. If a reverified-commit row is deleted: REVERIFIED=35/36, CONSISTENT=38/39, FAIL, exit 1. If a left-named row deleted: LEFT_NAMED=2/3, CONSISTENT=38/39, FAIL, exit 1.
+
+  Note: `--table` flag only changes the table path; the root defaults to the lane (parents[3] of script — script is at corpus/evidence/round44/c2-count.py, so parents: [round44, evidence, corpus, chousa-shokunin]. parents[3] = chousa-shokunin lane root. Good, so files are checked against the production lane files (read-only checks, fine).
+
+  Wait — the script path is /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round44/c2-count.py. parents[0]=round44, parents[1]=evidence, parents[2]=corpus, parents[3]=chousa-shokunin. Yes.
+
+  First, let me run the script on the pristine table to establish baseline (cheap, gives calibration). Then make two copies, mutate, run each.
+
+  Plan:
+  1. Baseline run (no mutation): `python3 .../c2-count.py` (default table) — capture stdout+exit code.
+  2. Copy A: cp disposition.tsv /tmp/w3-mut-a.tsv; change line 2's sha256 (CriticC1Control.md) to e.g. all zeros or a wrong-but-valid-looking hex. Use awk/sed via a small python or sed. Row 2's digest: 771e9487... Replace with 0000... or something wrong like "deadbeef..." — a wrong value. Keep same length to isolate the digest failure.
+  3. Copy B: cp disposition.tsv /tmp/w3-mut-b.tsv; delete one row entirely. I'll delete a left-named row (line 39, cells.json) — actually the instruction just says "delete one row entirely". Either works. Deleting a left-named row shows LEFT_NAMED=2/3 which is a distinct failure signature from the digest mutation. That's better for depth: two distinct failure modes. Alternatively delete a reverified row to show REVERIFIED=35. Hmm, (a) already shows REVERIFIED dropping. So (b) deleting a left-named row gives new info. I'll delete the last row (cells.json left-named).
+
+  Wait — note that deleting the row makes rows.get(rel) return ('','','') for cells.json, so left stays at 2, consistent 38. C2=FAIL, exit 1.
+
+  Run both with --table /tmp/... exit codes captured.
+
+  Important: the script also checks files on disk against root (production lane). That's read-only — fine.
+
+  Let me do it in parallel-ish: baseline run first (or together). Actually all can be one batch: run baseline, create both copies + mutations, run both. The mutations depend on copies existing; I can chain within each Bash call.
+
+  Let me structure:
+
+  Call 1: baseline: python3 script; echo exit code.
+  Call 2: copy A + mutate + run + echo exit.
+  Call 3: copy B + delete row + run + echo exit.
+
+  These are independent (different files), so I can issue all three in one block. Use `;` and `$?` capture. Careful: piping python stdout to tee would change $?; better: `python3 script > /tmp/out 2>&1; echo "exit=$?"; cat /tmp/out`? But I want to quote stdout. Simpler: run and print exit code after.
+
+  For mutation A with sed: `sed '2s/771e948765baf3cd2864c1192a7ddf54c526cbfe00c0cbeb474af68a4ceaede3/771e948765baf3cd2864c1192a7ddf54c526cbfe00c0cbeb474af68a4ceaedea0/'` — change last chars. Or simpler: use awk on NR==2 field 3. Let me do:
+
+  ```
+  cp .../disposition.tsv /tmp/w3-mut-sha.tsv
+  awk -F'\t' 'BEGIN{OFS="\t"} NR==2{$3="0000000000000000000000000000000000000000000000000000000000000000"} {print}' ... > /tmp/w3-mut-sha.tsv
+  ```
+  Actually cp then in-place via awk to temp then mv, or just awk directly from source to dest without cp. awk directly is fine.
+
+  For mutation B: delete line 39: `awk 'NR!=39' source > /tmp/w3-mut-delrow.tsv` or `sed '39d'`.
+
+  Also verify diff to prove the mutation landed: `diff source /tmp/...` — good calibration. Let me include `diff` output briefly. diff of full lines is long; use `diff <(...) | head -4` maybe. Or just wc -l on the copy (38 vs 39). For A, diff shows one line changed — that's two long lines. I can show `diff ... | cut -c1-80`. Keep it modest.
+
+  Let me run all three calls in one block.CONSISTENT=39/39
+REVERIFIED=36/36
+LEFT_NAMED=3/3
+C2=PASS
+EXIT=0
+2c2
+< .ufo/waves/round-40/w1/CriticC1Control.md	reverified-commit	771e948765baf3cd2864c1192a7ddf54c526cb
+---
+> .ufo/waves/round-40/w1/CriticC1Control.md	reverified-commit	00000000000000000000000000000000000000
+CONSISTENT=38/39
+REVERIFIED=35/36
+LEFT_NAMED=3/3
+C2=FAIL
+EXIT=1
+38 /tmp/w3-mut-delrow.tsv
+39d38
+< corpus/evidence/round41/receipts/cells/cells.json	left-named	-	left-named; not hunk-verified; nums
+CONSISTENT=38/39
+REVERIFIED=36/36
+LEFT_NAMED=2/3
+C2=FAIL
+EXIT=1
+All three runs done. Note in call 3 I accidentally left a stray `--help` invocation — harmless (checks argparse on the real table? No, `--table /tmp/w3-mut-sha.tsv --help` just prints help and exits 0; it doesn't run the counter). It doesn't affect results; I'll note it or just omit — better to be honest and note it was a no-op (argparse exits before reading). Actually it printed help and exited 0, output discarded. Not part of the reported results. I'll mention it as a stray no-op for calibration honesty.
+
+  Both mutants fail with exit 1 as designed: the counter is falsification-sensitive in the right direction (no false PASS under mutation, and baseline is a true PASS). Also note the two distinct failure signatures: digest corruption drops REVERIFIED to 35/36; row deletion of a left-named row drops LEFT_NAMED to 2/3 — consistent counts 38/39 in both.
+
+  Also worth noting for depth: the deletion case for a reverified-commit row would also yield REVERIFIED=35/36 (row missing → rows.get default → cls mismatch → not counted). And a missing table gives CONSISTENT=0/39 FAIL exit 1 (table-missing branch). I didn't run those; I can state only what I ran, and mark the rest as unverified predictions. Per "An unrun check has not passed" — I should distinguish observed vs predicted.
+
+  Cleanup: /tmp copies can remain (they're under /tmp, allowed). Maybe leave them for reproducibility; report their paths.
+
+  Now write the report at /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-44/w3/W3MutC2.md. The .ufo directory is a report lane — my prompt says write the report there and nowhere else. That's the assigned path, allowed.
+
+  Report contents: axes, baseline, mutant A, mutant B, pasted stdouts and exit codes, interpretation (C2 gate is mutation-sensitive; kill? No — mutant killed means the gate detects it, so gate is sound; calibration: baseline PASS exit 0, mutants FAIL exit 1, correct verdicts both directions), scope notes (single-point mutations, one row each; file contents on disk unchanged — mutations were table-side only; the --root checks still ran against the production lane read-only).
+
+• Both mutants land. Writing the report.
+
+• Done. Report written at the assigned path and nowhere else. Stop after the report — give a brief summary.
+
+• Mutation test complete. Summary:
+
+  **Baseline** (pristine table): `C2=PASS`, `EXIT=0` — true PASS established first.
+
+  **Mutant A** (`/tmp/w3-mut-sha.tsv`, row 2 digest → 64 zeros, same length):
+  ```
+  CONSISTENT=38/39
+  REVERIFIED=35/36
+  LEFT_NAMED=3/3
+  C2=FAIL
+  EXIT=1
+  ```
+
+  **Mutant B** (`/tmp/w3-mut-delrow.tsv`, row 39 cells.json left-named row deleted):
+  ```
+  CONSISTENT=38/39
+  REVERIFIED=36/36
+  LEFT_NAMED=2/3
+  C2=FAIL
+  EXIT=1
+  ```
+
+  Both mutants killed with distinct signatures (A breaks the digest count, B breaks the left-named count), both exiting 1 per the documented contract. Gate localizes damage (each counter moves by exactly 1) rather than blanket-failing. Production files untouched; all mutation on `/tmp` copies. Report at `.ufo/waves/round-44/w3/W3MutC2.md`.
+
+To resume this session: kimi -r session_e3a08ad8-36fb-40e8-9b4c-a82f0caec09d

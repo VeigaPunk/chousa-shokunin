@@ -68,8 +68,10 @@ PY
     prompt_file="$logdir/$name.prompt"
     printf '%s\n' "$body" > "$prompt_file"
     # Same shell owns the background pid. Not a pipeline.
+    # --auto and --yolo cannot combine with --prompt (kimi 2.3.1). The host
+    # default permission mode is already auto, so the flag is omitted.
     timeout --signal=TERM --kill-after=20 "$TIMEOUT" \
-      kimi --agent-file "$AGENT" --auto --prompt "$(cat "$prompt_file")" \
+      kimi --agent-file "$AGENT" --prompt "$(cat "$prompt_file")" \
       --output-format text > "$logdir/$name.log" 2>&1 &
     child=$!
     if [[ -z "$child" || "$child" -le 0 ]]; then
