@@ -7,7 +7,8 @@ self-assessment is (a) the evidence-pointer cell (third cell) of every data row
 of every table under a `## Capabilities` heading of `SCORECARD.md` and (b) every
 indented evidence line of `SHONEN.md`; a pointer is every whitespace- or
 `;`-separated token of a backtick span in those places that, after stripping a
-leading or trailing `,;.:()` and a trailing `:N` or `:N-M` line suffix, contains
+leading or trailing `,;:()`, a trailing `.` (never a leading one: `.ufo/...` is a
+path) and a trailing `:N` or `:N-M` line suffix, contains
 a `/` or ends in `.py .sh .md .json .jsonl .txt .tsv .log`, does not start with
 `-` or `http`, and holds none of `<>*=$|{}[]` or `...`. A pointer RESOLVES when
 `<lane>/<pointer>` exists and is a non-empty file or a directory holding a file, or when a later line of `SCORECARD.md` reads
@@ -51,7 +52,7 @@ def pointers(cell: str) -> list[str]:
     out = []
     for span in re.findall(r"`([^`]+)`", cell):
         for tok in re.split(r"[\s;]+", span):
-            tok = SUFFIX.sub("", tok.strip(",;.:()"))
+            tok = SUFFIX.sub("", tok.strip(",;:()").rstrip("."))
             if (not tok or tok.startswith(("-", "http")) or "..." in tok or any(c in BAD for c in tok)
                     or not ("/" in tok or tok.endswith(EXT))):
                 continue
