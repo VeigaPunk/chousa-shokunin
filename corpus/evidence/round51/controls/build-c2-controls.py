@@ -1,0 +1,70 @@
+#!/usr/bin/env python3
+"""build-c2-controls — score the round-51 C2 counter against two do-nothing
+controls in scratch roots (never the lane):
+  STAGED  the three staged entries copied unchanged beside the lane registry;
+  TOOLED  the entries rewritten by tools/assimilate-rows.py plus its append
+          block inserted into the registry (mechanical renumbering, no quote,
+          no span, no lesson, no re-grounding).
+Both must print C2=FAIL. Usage: python3 corpus/evidence/round51/controls/build-c2-controls.py"""
+import pathlib
+import re
+import shutil
+import subprocess
+import sys
+import tempfile
+
+LANE = pathlib.Path(__file__).resolve().parents[4]
+PKG = pathlib.Path("/home/vgpnk/Projects/shokuknow/merge/chousa")
+ENTRIES = ["corpus/knowledge/japanese-search-record-r38.md", "corpus/knowledge/chinese-search-record-r39.md",
+           "corpus/knowledge/japanese-search-record-r38-amendment-2026-10-23.md"]
+BASE = "9ec1751a24231e899ceea4688e21c8edf6046d35"
+
+
+def counter(root: pathlib.Path) -> str:
+    p = subprocess.run([sys.executable, str(LANE / "corpus/evidence/round51/c2-count.py"), "--root", str(root)],
+                       capture_output=True, text=True)
+    return p.stdout + f"exit={p.returncode}\n"
+
+
+def scratch(tag: str) -> pathlib.Path:
+    r = pathlib.Path(tempfile.mkdtemp(prefix=f"chousa-r51-{tag}-"))
+    (r / "corpus/knowledge").mkdir(parents=True)
+    (r / "corpus/evidence").mkdir(parents=True)
+    (r / "corpus/lessons").mkdir(parents=True)
+    shutil.copytree(LANE / "corpus/evidence/round51", r / "corpus/evidence/round51", ignore=shutil.ignore_patterns("controls", "c1-fixtures", "spans", "spans.tsv", "quotes.tsv", "measure-after*.txt", "*-before.txt", "*-after.txt", "*-receipt.txt"))
+    shutil.copytree(LANE / "tools", r / "tools", ignore=shutil.ignore_patterns("__pycache__"))
+    base = subprocess.run(["git", "-C", str(LANE), "show", f"{BASE}:corpus/SOURCES.md"], capture_output=True, text=True).stdout
+    (r / "corpus/SOURCES.md").write_text(base, encoding="utf-8")
+    return r
+
+
+out = []
+r = scratch("staged")
+for e in ENTRIES:
+    shutil.copy(PKG / "knowledge" / e, r / e)
+out.append("# control STAGED: the three staged entries copied unchanged beside the base registry\n" + counter(r))
+shutil.rmtree(r)
+
+r = scratch("tooled")
+o = r / "adopt"
+# the staged entries cite body-only ids (S097 S105 S106: lane own-work rows) the adopter refuses; the
+# mechanical control strips every id that is not on a `source:` line, then lets the adopter rewrite
+kn = r / "stripped-knowledge"
+for e in ENTRIES:
+    txt = (PKG / "knowledge" / e).read_text(encoding="utf-8")
+    src = {i for l in txt.splitlines() if l.startswith("source:") for i in re.findall(r"\bS\d{3,}\b", l)}
+    txt = re.sub(r"\bS\d{3,}\b", lambda m: m.group(0) if m.group(0) in src else "", txt)
+    (kn / e).parent.mkdir(parents=True, exist_ok=True)
+    (kn / e).write_text(txt, encoding="utf-8")
+subprocess.run([sys.executable, str(LANE / "tools/assimilate-rows.py"), "--staged", str(PKG / "SOURCES.append.md"),
+                "--knowledge", str(kn), "--registry", str(r / "corpus/SOURCES.md"), "--opened", "2026-10-25",
+                "--out", str(o)] + sum([["--entry", e] for e in ENTRIES], []), capture_output=True, text=True, check=True)
+for e in ENTRIES:
+    shutil.copy(o / e, r / e)
+reg = (r / "corpus/SOURCES.md").read_text(encoding="utf-8").splitlines(keepends=True)
+last = max(i for i, l in enumerate(reg) if re.match(r"^ {0,3}\|[ \t]*S\d{3,}[ \t]*\|", l))
+reg[last + 1:last + 1] = (o / "append.md").read_text(encoding="utf-8").splitlines(keepends=True)
+(r / "corpus/SOURCES.md").write_text("".join(reg), encoding="utf-8")
+out.append("# control TOOLED: tool-rewritten entries + its append block, no quotes, spans or lesson\n" + counter(r))
+shutil.rmtree(r)
+print("\n".join(out))
