@@ -745,3 +745,99 @@ the admitted entry that motivates it. Tier definitions live in
     `HOLLOW_QUOTE`/`OVERWIDE_SPAN`/`NO_SUBSTANTIVE_QUOTE`, exit 1; the round-49 manifest
     prints `IDS=8 QUOTES=28 FAILURES=0`, exit 0. — `corpus/lessons/round-49.md`
     Mistakes rows 2–3.
+
+## Round-50 additions (appended 2026-10-25; criteria 1–72 unchanged)
+
+73. **A capability's self-test compares against an expected file written from the rule,
+    never one the tool emits, and is scored on perturbed copies against an echo control
+    and a constant control.** A comparison with the tool's own earlier output, or with a
+    file a flag regenerates, proves replay, not the rule. Check (C1):
+    `python3 corpus/evidence/round50/c1-count.py` — five legs on the digest-pinned
+    package `corpus/evidence/round50/c1-fixtures/` (`FIXTURES_SHA256=c5c56480…`): the
+    lane default, the baseline (`SELFTEST=PASS findings=26 expected=26` and that digest),
+    six perturbed copies P1–P6 (each exit 1 with its named `DIFF` line), an unparseable
+    expected file (exit 2 `SELFTEST=ERROR`), and `corpus/evidence/round49/c1-count.py
+    --tool <tool>` still `C1=PASS`; target `LEGS=5/5`, exit 0. The expected file is
+    hand-written (`tools/assimilate-rows.py` docstring) and `selftest()` only reads it.
+    Shown able to fail (`corpus/evidence/round50/controls/c1-before.txt`): the base tool
+    → `BASELINE=FAIL rc=2`, `LEGS=2/5`; the echo control → `BASELINE=PASS`,
+    `PERTURB_PASS=0/6`, `LEGS=4/5`, `C1=FAIL`; the constant control → `PERTURB_PASS=0/6`,
+    `LEGS=2/5`, `C1=FAIL`. Named limits: the echo control passes the baseline, so only
+    P1–P6 separate a real self-test from an echo; a duplicated expected line is not one of
+    the six (W1 `ReviewSelftestCode` F1 found it after the freeze — the tool now compares
+    multisets, `corpus/evidence/round50/selftest-duplicates-after.txt`); a pass is
+    conformance on fixed fixtures, not a rate. — `corpus/lessons/round-50.md`
+    `## Mistakes` row 6; round-49 spot-check defect 3.
+
+74. **A count written in lane prose is derived from a receipt by a check, not carried
+    over from an earlier report.** A manifest grows and every sentence that quoted its
+    size keeps the old figure. Check:
+    `python3 corpus/evidence/round50/stale-count-check.py` — the patterns `QUOTES=<n>`,
+    `<n>-row manifest`, `<n> located quotes`, `CAPTURE_BOUND=<n>/<n>` in
+    `corpus/QUALITY.md`, `corpus/README.md`, `LOG.md` and `corpus/lessons/round-49.md`
+    against the 31 data rows of `corpus/evidence/round49/spans.tsv`; each stale hit prints
+    `STALE path:line says N, receipt M`, exit 1; exit 0 when every hit agrees or a later
+    line of the same file reads `correction: … superseded by …` and names the stale
+    line. Shown able to fail: before the correction lines it prints four `STALE … says 28,
+    receipt 31` (`corpus/evidence/round50/stale-count-before.txt`, exit 1); after them
+    `STALE_COUNT=PASS`, exit 0 (`stale-count-after.txt`). Named limits: digit forms only,
+    one receipt per scan. — `corpus/lessons/round-50.md` `## Mistakes` row 1; round-49
+    spot-check defect 2.
+    correction: corpus/QUALITY.md:746 (criterion 72, `QUOTES=28`) superseded by the receipt's 31 (`IDS=8 QUOTES=31 FAILURES=0`, `corpus/evidence/round49/measure-after.txt`).
+
+75. **A round report is filed only after every wave seat report exists on disk.** A report
+    filed mid-wave hides which seats never returned; the gate reads the wave spec, not the
+    roster. Check: `python3 corpus/evidence/round50/wave-complete-check.py <wave-spec.json>
+    <report-dir> [--rev REV --lane DIR]` — prints `MISSING <name>` per spec item with no
+    `<name>.md` in the report dir (on disk, or in the lane tree at `--rev`), exit 1; exit 0
+    when every item has a report; exit 2 on an unusable spec. Shown able to fail
+    (`corpus/evidence/round50/wave-complete-before.txt`): the round-49 w2 spec at
+    `5275c892` (the revision the round-49 report cited) prints eight `MISSING` names,
+    `OK 27/35`, exit 1. Named limit: presence only — a stub report passes; and a report
+    that exists but belongs to another round is not detected here (QUALITY 78). —
+    `corpus/lessons/round-50.md` `## Mistakes` row 2; round-49 spot-check defects 1 and 4.
+
+76. **Every `char N` offset in a lesson names the capture form it indexes.** An offset is
+    meaningless without its text form: the round-49 NCPSSD help-page offsets differed by a
+    constant 316 characters between two decodes of one capture (spot-check defect 5).
+    Check: `python3 corpus/evidence/round50/decode-form-check.py corpus/lessons/round-<N>.md`
+    — `FORM_NAMED` when the file names `.txt` read as UTF-8, `utf-8-sig`, or `.raw` decoded
+    as UTF-16LE, `FORM_MISSING` (exit 1) when it has offsets and no form. Shown able to
+    fail: `corpus/lessons/round-47.md` prints `FORM_MISSING`, exit 1; `round-50.md` prints
+    `FORM_NAMED`. Named limit: one naming per file, not per offset; historical lessons
+    stay as filed (append-only). — round-49 spot-check defect 5.
+
+77. **An adoption run's renumbered ids are all `source:` ids of the entries, never body
+    cross-references.** The adopter renumbers every staged id token an entry mentions, so a
+    prose reference to another document becomes a row for that document and shifts the real
+    ones. Check: `python3 corpus/evidence/round50/cited-id-check.py <renumber.tsv>
+    <entry.md> [...]` — `BODY_CROSSREF staged->lane` per renumbered id no entry names at
+    the start of a `source:` line, exit 1; `CITED_IDS=PASS` exit 0. Shown able to fail
+    (`corpus/evidence/round50/cited-id-before.txt`): the as-staged run prints
+    `BODY_CROSSREF S109->S104` and `S111->S105`, exit 1; the run on entries with body-only
+    ids removed prints `CITED_IDS=PASS rows=5`. Named limit: an id the adopter does not
+    renumber (a lane-registry id) passes through unseen. — `corpus/lessons/round-50.md`
+    `## Mistakes` row 3.
+
+78. **Seat names in a wave spec are unique across rounds.** The validator checks names
+    inside one wave; the dispatcher resumes a parked agent that already carries the name,
+    and that agent answers with its old report. Check: `python3
+    corpus/evidence/round50/name-collision-check.py <wave-spec.json>` — `NAME_COLLISION name
+    path` per item whose name is the basename of a report file of another round's wave
+    directory, exit 1; exit 0 when none. Shown able to fail
+    (`corpus/evidence/round50/name-collision-before.txt`): the round-50 wave-1 spec prints
+    13 `NAME_COLLISION` lines, exit 1; those 13 seats returned round-49 reports. Run it on a
+    spec before writing the `.ready` file. — `corpus/lessons/round-50.md` `## Mistakes` row 4.
+
+79. **A grounding gate handles the script of its inputs, and says so.** `inference-ground`
+    counted words by ASCII letters, so a pure-Chinese phrase was never a grounding token
+    and a grounded Chinese bullet failed `INF_UNGROUNDED` (round 49 passed only on Latin
+    runs). The tool now counts four CJK characters as two words; a CJK token must occur in
+    a cited span, and no polarity check is made on it (`words()` stays Latin-only — a named
+    limit: a CJK denial of a quoted phrase is not caught). Check: `python3
+    corpus/evidence/round50/cjk-ground-check.py --old <pre-change tool>` — case A (correct
+    bullet) rc 0, B (phrase absent from the span) rc 1 `INF_TOKEN_NOT_IN_SPAN`, C (no id)
+    rc 1 `INF_UNCITED`, `CJK_GROUND=PASS`; the old tool prints rc 1 `INF_UNGROUNDED` on A.
+    The round-46/47/48 counters give identical output before and after
+    (`corpus/evidence/round50/inference-regression-before.txt`, `-after.txt`). —
+    `corpus/lessons/round-50.md` `## Mistakes` row 5.

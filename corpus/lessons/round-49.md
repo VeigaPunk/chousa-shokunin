@@ -216,3 +216,5 @@ exit=0
 ```
 
 Rows 95 → 103 (`grep -cE '^\|[[:space:]]*S[0-9]{3,}[[:space:]]*\|' corpus/SOURCES.md`); tiers {'A': 89, 'B': 1, 'C': 5} → {'A': 92, 'B': 6, 'C': 5}; statuses {'mined': 71, 'queued': 19, 'rejected': 5} → {'mined': 79, 'queued': 19, 'rejected': 5}. Added by tier: A 3 (S096–S098), B 5 (S099–S103). Existing rows touched: none (no `status`/`recheck`/`used-by` change).
+
+correction: corpus/lessons/round-49.md:20 (`IDS=8 QUOTES=28 FAILURES=0`) superseded by 31 — the same command prints `IDS=8 QUOTES=31 FAILURES=0` on the round-49 manifest (`corpus/evidence/round49/measure-after.txt`; round-50 `stale-count-check.py`).

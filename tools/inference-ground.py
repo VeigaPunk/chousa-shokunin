@@ -75,6 +75,7 @@ QUOTE_RE = re.compile(r'"([^"\n]{4,})"')
 NUM_RE = re.compile(r"(?<![\w.])(\d[\d,]{2,}(?:\.\d+)?%?|\d+(?:\.\d+)?%)")
 HEAD_RE = re.compile(r"^(#{1,4})\s+(.*)$")
 WORD_RE = re.compile(r"[A-Za-z]")
+CJK_RE = re.compile(r"[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]")
 
 
 def read(p: pathlib.Path) -> str:
@@ -86,7 +87,14 @@ def read(p: pathlib.Path) -> str:
 
 def has_two_words(s: str) -> bool:
     words = [w for w in re.split(r"\s+", s.strip()) if WORD_RE.search(w)]
-    return len(words) >= 2
+    if len(words) >= 2:
+        return True
+    # Round 50: a Chinese or Japanese phrase carries no spaces, so a token count read every
+    # grounded CJK quote as zero words (tokens=0, INF_UNGROUNDED on a correctly grounded bullet;
+    # round 49 passed only because its quotes held Latin runs). Four CJK characters is the floor
+    # for "two words". Named limit unchanged: words() is Latin-only, so a CJK phrase never trips
+    # the polarity check, and a CJK token is checked for presence in a cited span, not entailment.
+    return len(CJK_RE.findall(s)) >= 4
 
 
 def inference_bullets(text: str) -> tuple[bool, list[str]]:
