@@ -36,13 +36,17 @@ Rule (the same sentence as `corpus/evidence/round46/claims.md`, claim C1):
      Refinements after the round-47 wave-1 attacks (no rule widened toward
      acceptance of a flip): every occurrence of a phrase in the cited spans is
      read, and occurrences of mixed polarity decide nothing (row order no
-     longer decides); a span negator counts only within the phrase's own line
-     and clause; negators include implicit ones (`lacks`, `absent`,
-     `missing`, `un…able`/`un…ed` forms); an `un`-prefixed form of an affirmed
-     phrase's word (`unfrozen`) is a flip; every occurrence of a figure is
-     checked at digit boundaries; a key path's parts (any ancestor key, `_`,
-     `-` or camelCase separated) carry its negation; mixed-polarity keys
-     decide nothing.
+     longer decides); on the SPAN side only explicit negators (`no`, `not`,
+     `never`, … and `n't`) negate a phrase, and only within its own line and
+     clause; in the BULLET's windows negators also include implicit ones
+     (`lacks`, `absent`, `missing`, `un…able`/`un…ed` forms); an `un`-prefixed
+     form of an affirmed phrase's word (`unfrozen`) is a flip unless a negator
+     precedes it; every occurrence of a figure is checked at digit boundaries;
+     the leaf key (`_`, `-` or camelCase separated; a generic leaf such as
+     `count` defers to its parent) carries a figure's negation; mixed-polarity
+     keys decide nothing. The clause bound also ACCEPTS a bullet that a
+     negator on a previous span line would have refused (wave-2
+     `CritC1Claim` §2): a deliberate trade toward reading the span as written.
 
 Usage:
   python3 tools/inference-ground.py --entry PATH --spans TSV --counts JSON
@@ -250,13 +254,18 @@ def words(s: str) -> list[str]:
 # affirmative). A lexical list, not a parser.
 IMPLICIT_NEG = {"lack", "lacks", "lacked", "lacking", "absent", "absence",
                 "missing", "fail", "fails", "failed", "unable", "nothing",
-                "free", "omits", "omitted", "devoid"}
-UN_NEG_RE = re.compile(r"^un(?!der|til|ion|ique|it|iver|iform|less)[a-z]{3,}(?:able|ible|ed|known|clear|sure)$")
+                "omits", "omitted", "devoid"}
+UN_NEG_RE = re.compile(r"^un(?!der|til|ion|ique|it|iver|iform|less|ifi|pack|veil|fold|wrap)"
+                       r"[a-z]{3,}(?:able|ible|ed|known|clear|sure)$")
+
+
+def is_explicit_neg(w: str) -> bool:
+    return w in NEG_WORDS or w.endswith("n't") or w.endswith("n\u2019t")
 
 
 def is_neg(w: str) -> bool:
-    return (w in NEG_WORDS or w in IMPLICIT_NEG or bool(UN_NEG_RE.match(w))
-            or w.endswith("n't") or w.endswith("n\u2019t"))
+    """A negator in the BULLET's own words: explicit, implicit or an un- form."""
+    return is_explicit_neg(w) or w in IMPLICIT_NEG or bool(UN_NEG_RE.match(w))
 
 
 def stem(w: str) -> str:
@@ -280,11 +289,11 @@ def occurrence_polarity(tok: str, s: str, idx: int) -> tuple[bool, list[str]]:
     `(Unlabelled)` above `Pre-processed Wikipedia Pages`, does not negate it).
     """
     inner = words(tok)
-    negs = [k for k, w in enumerate(inner) if is_neg(w)]
+    negs = [k for k, w in enumerate(inner) if is_explicit_neg(w)]
     if negs:
         return True, content(inner[negs[0] + 1:])
     before = re.split(r"[\n.;:()]", s[:idx])[-1]
-    return any(is_neg(w) for w in words(before)[-3:]), content(inner)
+    return any(is_explicit_neg(w) for w in words(before)[-3:]), content(inner)
 
 
 def phrase_polarity(tok: str, spans: list[str]) -> tuple[bool, list[str]] | None:
@@ -326,7 +335,8 @@ def polarity_flips(bullet: str, tok: str, spans: list[str]) -> list[str]:
     for j, w in enumerate(uw):
         if (not negated and w.startswith("un") and len(w) >= 6
                 and stem(w[2:]) in stems):
-            out.append(w)
+            if not any(is_neg(x) for x in uw[max(0, j - 3):j]):
+                out.append(w)
             continue
         if is_neg(w) or len(w) < 4 or w in STOP or stem(w) not in stems:
             continue
@@ -373,8 +383,18 @@ def count_keys(counts: pathlib.Path) -> dict[str, set[str]]:
     return out
 
 
+GENERIC_KEYS = {"count", "counts", "value", "values", "n", "total", "number"}
+
+
 def key_negated(path: str) -> bool:
-    return any(p.lower() in NEG_KEY_PARTS for p in KEY_PART_RE.findall(path))
+    """The leaf key names the quantity; a generic leaf (`count`) defers to its
+    parent. Ancestor grouping labels (`extra_not_frozen/real_source_answers`)
+    do not negate the figure (round-47 wave-2 `SweepC1Corpus`)."""
+    parts = path.split("/")
+    leaf = parts[-1]
+    if leaf.lower() in GENERIC_KEYS and len(parts) > 1:
+        leaf = parts[-2]
+    return any(p.lower() in NEG_KEY_PARTS for p in KEY_PART_RE.findall(leaf))
 
 
 def figure_flip(bullet: str, tok: str, keys: set[str]) -> bool:
