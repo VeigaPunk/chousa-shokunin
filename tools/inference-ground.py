@@ -22,7 +22,17 @@ Rule (the same sentence as `corpus/evidence/round46/claims.md`, claim C1):
      columns), or — for a numeral — equals a value in the counts manifest or
      appears in the title of a Registry row the bullet cites (a document
      number such as `RFC 7089` is grounded by the document it names, not by a
-     data span).
+     data span);
+  5. no grounding token flips POLARITY (round 47, `INF_POLARITY_FLIP`, the
+     same sentence as `corpus/evidence/round47/claims.md`, claim C1): a phrase
+     its span NEGATES (a negator inside it, or among the three span words
+     before it) is refused when the bullet's own unquoted words use one of its
+     scope words (same five-letter stem) with no negator in the three words
+     before or two after; a phrase its span does not negate is refused when
+     the bullet's own words put a negator in the three words before one of its
+     content words; a figure grounded by a counts key whose name carries
+     `no`/`not`/`none`/`without` must be followed by a negator in the
+     bullet's next four words, and one whose key does not must not be.
 
 Usage:
   python3 tools/inference-ground.py --entry PATH --spans TSV --counts JSON
@@ -32,9 +42,9 @@ Usage:
 Exit codes: 0 grounded (no findings) · 1 findings · 2 usage or a missing/unreadable
 entry (an unreadable --spans/--counts/--registry reads as empty, fail-closed).
 
-Named limit: this is lexical. A bullet that strings correct quotes and correct
-figures into a wrong inference still passes; only a sentence whose quotes or
-figures are not in the cited spans is refused. Semantics stay the critic's and
+Named limit: this is lexical. Rule 5 catches a flip that reuses the span's own
+stem; a wrong inference through a synonym, an antonym of a different stem, or
+scope beyond the word windows still passes. Semantics stay the critic's and
 the closure's to judge.
 """
 from __future__ import annotations
@@ -209,6 +219,130 @@ def designators(title: str) -> list[str]:
     return DESIGNATOR_RE.findall(title)
 
 
+NEG_WORDS = {"no", "not", "never", "none", "nothing", "nobody", "nowhere",
+             "without", "cannot", "nor", "neither"}
+NEG_KEY_PARTS = {"no", "not", "none", "without"}
+STOP = {"this", "that", "with", "from", "have", "been", "were", "which", "their",
+        "there", "into", "only", "each", "every", "than", "then", "they", "them",
+        "these", "those", "such", "also", "more", "most", "some", "what", "when",
+        "where", "will", "would", "could", "should", "does", "done", "being",
+        "about", "after", "before", "over", "under", "upon", "both", "other",
+        "same", "here", "very", "just", "your", "ours", "itself"}
+WORDS_RE = re.compile(r"[a-z][a-z'\u2019]*")
+
+
+def words(s: str) -> list[str]:
+    return WORDS_RE.findall(s.lower())
+
+
+def is_neg(w: str) -> bool:
+    return w in NEG_WORDS or w.endswith("n't") or w.endswith("n\u2019t")
+
+
+def stem(w: str) -> str:
+    return w[:5]
+
+
+def content(ws: list[str]) -> list[str]:
+    return [w for w in ws if len(w) >= 4 and not is_neg(w) and w not in STOP]
+
+
+def unquoted(bullet: str) -> str:
+    return ID_RE.sub(" ", BACKTICK_RE.sub(" ", QUOTE_RE.sub(" ", bullet)))
+
+
+def phrase_polarity(tok: str, spans: list[str]) -> tuple[bool, list[str]] | None:
+    """(negated, scope words) for a phrase as its first carrying span reads it.
+
+    The phrase is negated when a negator sits inside it (scope = the content
+    words after that negator) or among the three span words just before it
+    (scope = all of its content words).
+    """
+    for s in spans:
+        idx = s.find(tok)
+        if idx < 0:
+            continue
+        inner = words(tok)
+        negs = [k for k, w in enumerate(inner) if is_neg(w)]
+        if negs:
+            return True, content(inner[negs[0] + 1:])
+        if any(is_neg(w) for w in words(s[:idx])[-3:]):
+            return True, content(inner)
+        return False, content(inner)
+    return None
+
+
+def polarity_flips(bullet: str, tok: str, spans: list[str]) -> list[str]:
+    """Bullet words that assert the opposite polarity of a span-carried phrase.
+
+    P1: the span negates the phrase, and the bullet's own (unquoted) text uses a
+    scope word (same 5-letter stem) with no negator in the 3 words before or 2
+    after it. P2: the span does not negate the phrase, and the bullet's own
+    text puts a negator in the 3 words before one of the phrase's content words.
+    """
+    pol = phrase_polarity(tok, spans)
+    if pol is None:
+        return []
+    negated, scope = pol
+    stems = {stem(w) for w in scope}
+    if not stems:
+        return []
+    uw = words(unquoted(bullet))
+    out = []
+    for j, w in enumerate(uw):
+        if is_neg(w) or len(w) < 4 or w in STOP or stem(w) not in stems:
+            continue
+        before, after = uw[max(0, j - 3):j], uw[j + 1:j + 3]
+        if negated and not any(is_neg(x) for x in before + after):
+            out.append(w)
+        elif not negated and any(is_neg(x) for x in before):
+            out.append(w)
+    return out
+
+
+def count_keys(counts: pathlib.Path) -> dict[str, set[str]]:
+    """numeral string -> the leaf key names that carry it."""
+    out: dict[str, set[str]] = {}
+    if not counts.is_file():
+        return out
+    try:
+        data = json.loads(read(counts))
+    except json.JSONDecodeError:
+        return out
+
+    def walk(node, key: str) -> None:
+        if isinstance(node, dict):
+            for k, v in node.items():
+                walk(v, str(k))
+        elif isinstance(node, list):
+            for v in node:
+                walk(v, key)
+        elif isinstance(node, bool):
+            return
+        elif isinstance(node, (int, float)):
+            for s in (str(node), f"{node:,}"):
+                out.setdefault(s, set()).add(key)
+
+    walk(data, "")
+    return out
+
+
+def figure_flip(bullet: str, tok: str, keys: set[str]) -> bool:
+    """P3: a counts figure whose key names a negation (`answers_without_key`)
+    must be followed by a negator in the bullet's next 4 words, and one whose
+    key does not must not be; keys of mixed polarity decide nothing."""
+    pols = {any(p in NEG_KEY_PARTS for p in k.lower().split("_")) for k in keys}
+    if len(pols) != 1:
+        return False
+    key_neg = pols.pop()
+    text = unquoted(bullet)
+    idx = text.find(tok)
+    if idx < 0:
+        return False
+    nxt = words(text[idx + len(tok):])[:4]
+    return key_neg != any(is_neg(w) for w in nxt)
+
+
 def count_values(counts: pathlib.Path) -> set[str]:
     if not counts.is_file():
         return set()
@@ -264,6 +398,7 @@ def main() -> int:
     if not present:
         findings.append({"code": "INF_SECTION_ABSENT", "bullet": 0, "token": ""})
     values = count_values(counts)
+    keymap = count_keys(counts)
     titles = registry_source(pathlib.Path(a.registry)) if a.registry else {}
     ntok = ngood = 0
     for i, bullet in enumerate(bullets, 1):
@@ -278,8 +413,17 @@ def main() -> int:
             ntok += 1
             is_num = bool(re.fullmatch(r"\d[\d,]*(?:\.\d+)?%?", tok))
             ok = any(numeral_in(tok, s) if is_num else tok in s for s in grounded)
+            if ok and not is_num:
+                for w in polarity_flips(bullet, tok, grounded):
+                    findings.append({"code": "INF_POLARITY_FLIP", "bullet": i,
+                                     "token": f"{tok[:60]} / {w}"})
             if not ok and re.search(r"\d", tok):
                 ok = any(v in values for v in numeral_variants(tok))
+                if ok and is_num:
+                    keys = set().union(*(keymap.get(v, set()) for v in numeral_variants(tok)))
+                    if figure_flip(bullet, tok, keys):
+                        findings.append({"code": "INF_POLARITY_FLIP", "bullet": i,
+                                         "token": f"{tok} / counts key {','.join(sorted(keys))}"})
             if not ok and re.search(r"\d", tok):
                 # A cited DOCUMENT may ground its own designator (RFC 7089 in
                 # S079's title), and nothing else: a bare year or a URL run in
