@@ -210,8 +210,7 @@ None changes a frozen predicate, target or kill rule.
   still passes (mistake 2).
 - **C2, mention not dependence.** `corpus/evidence/round45/tag-count.py` is a
   documented gate with a Gates row and a pinned control, yet it is not an entry
-  point; deleting its row leaves `UNREGISTERED=0` (`RevC2TagCount`). The same
-  holds for `build-spans.py` and `round25-meta-oracle.py`. C2's predicate
+  point; deleting its row leaves `UNREGISTERED=0` (`RevC2TagCount`). `round25-meta-oracle.py` is likewise outside the set. (`build-spans.py` DOES enter the set once `SCORECARD.md` names it, which is why the after-state reads 73 rather than 72.) C2's predicate
   quantifies over its declared union and is met; the calibration READING must say
   membership of a mention-derived set, not gate-registry coverage.
 - **C2, row format only.** A junk eight-cell row naming an unregistered path

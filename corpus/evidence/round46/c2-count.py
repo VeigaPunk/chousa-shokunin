@@ -79,7 +79,8 @@ def gates_rows(skill: pathlib.Path) -> list[str]:
     if not skill.is_file():
         return []
     rows, inside, fence = [], False, False
-    for line in skill.read_text(encoding="utf-8").splitlines():
+    text = re.sub(r"<!--.*?-->", "", skill.read_text(encoding="utf-8"), flags=re.S)
+    for line in text.splitlines():
         if line.lstrip().startswith("```"):
             fence = not fence
             continue
