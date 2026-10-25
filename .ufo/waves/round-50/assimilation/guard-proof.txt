@@ -1,0 +1,53 @@
+# Section-10 id-collision guard proof — seat ExecCollision, round 50
+# Question: does the lane's row-id extractor see a markdown table row that is
+# indented by up to three spaces? A row is still a row when indented; a
+# column-zero-only pattern would silently under-count and under-report collisions.
+# Scratch: /dev/shm/chousa-r50-ExecCollision/ (deleted after this run).
+
+## Fixtures
+$ D=/dev/shm/chousa-r50-ExecCollision; mkdir -p "$D"
+$ printf '| S001 | z |\n  | S002 | y |\n' > "$D/reg-copy.md"
+$ printf '| S002 | x |\n' > "$D/staged-copy.md"
+$ cat -A "$D/reg-copy.md"
+| S001 | z |$
+  | S002 | y |$
+
+## Guarded pipeline (the pipeline this seat ran on the real files)
+$ grep -oE '^ {0,3}\|[[:space:]]*S[0-9]{3,}' "$D/reg-copy.md" | grep -oE 'S[0-9]+' | sort > "$D/reg-ids-copy"
+$ grep -oE '^ {0,3}\|[[:space:]]*S[0-9]{3,}' "$D/staged-copy.md" | grep -oE 'S[0-9]+' | sort > "$D/staged-ids-copy"
+$ comm -12 "$D/reg-ids-copy" "$D/staged-ids-copy" > "$D/collisions-copy"
+reg-ids-copy:
+S001
+S002
+staged-ids-copy:
+S002
+collisions-copy (1 lines):
+S002
+
+## Column-zero-only pattern (the pattern the guard exists to beat)
+$ grep -oE '^\|[[:space:]]*S[0-9]{3,}' "$D/reg-copy.md" | grep -oE 'S[0-9]+' | sort > "$D/reg-ids-col0"
+reg-ids-col0 (1 lines):
+S001
+$ comm -12 "$D/reg-ids-col0" "$D/staged-ids-copy" > "$D/collisions-col0"
+collisions-col0 (0 lines):
+(empty)
+
+## Verdict of the proof
+GUARD: PASS — the `^ {0,3}\|` pattern catches the two-space-indented `  | S002 | y |`
+row and yields COLLISIONS=1 (S002); the column-zero-only `^\|` pattern misses that
+row (reg-ids-col0 = S001 only) and yields COLLISIONS=0. The guard is load-bearing.
+
+## Real-file run (same guarded pipeline, no indented rows present today)
+$ grep -oE '^ {0,3}\|[[:space:]]*S[0-9]{3,}' /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md | grep -oE 'S[0-9]+' | sort > .../reg-ids
+$ grep -oE '^ {0,3}\|[[:space:]]*S[0-9]{3,}' /home/vgpnk/Projects/shokuknow/merge/chousa/SOURCES.append.md | grep -oE 'S[0-9]+' | sort > .../staged-ids
+$ comm -12 .../reg-ids .../staged-ids > .../collisions
+reg-ids:    103 lines, first S001, last S103
+staged-ids: 114 lines, first S082, last S195
+collisions:  22 lines (S082..S103)
+
+## Why the guard is not academic today
+$ grep -cE '^ {1,3}\|' corpus/SOURCES.md          -> 0
+$ grep -cE '^ {1,3}\|' $S/SOURCES.append.md       -> 0
+Both files are column-zero today, so the guarded and unguarded patterns agree on
+the current bytes (103/114/22 either way). The guard is a property of the check,
+not of today's input; the next indented row would otherwise vanish from the count.
