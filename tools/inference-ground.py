@@ -29,7 +29,8 @@ Usage:
                                     [--registry corpus/SOURCES.md]
                                     [--root DIR] [--json OUT] [--quiet]
 
-Exit codes: 0 grounded (no findings) · 1 findings · 2 usage or unreadable input.
+Exit codes: 0 grounded (no findings) · 1 findings · 2 usage or a missing/unreadable
+entry (an unreadable --spans/--counts/--registry reads as empty, fail-closed).
 
 Named limit: this is lexical. A bullet that strings correct quotes and correct
 figures into a wrong inference still passes; only a sentence whose quotes or
@@ -67,6 +68,9 @@ def inference_bullets(text: str) -> tuple[bool, list[str]]:
     for i, line in enumerate(lines):
         if line.lstrip().startswith("```"):
             fence = not fence
+            if cur is not None:
+                bullets.append(cur)
+                cur = None
             continue
         if fence:
             continue
@@ -84,6 +88,9 @@ def inference_bullets(text: str) -> tuple[bool, list[str]]:
             # parked inside a fence still renders to a reader, so it is counted
             # (round-46 mutation survivor `MutC1Junk`).
             fence = not fence
+            if cur is not None:
+                bullets.append(cur)
+                cur = None
             continue
         if not fence:
             m = HEAD_RE.match(line)
@@ -177,8 +184,18 @@ def registry_source(registry: pathlib.Path) -> dict[str, str]:
             continue
         cells = [c.strip() for c in line.strip().strip("|").split("|")]
         if len(cells) == 11 and re.fullmatch(r"S\d{3,}", cells[0]):
-            out[cells[0]] = cells[1]
+            # Title only: the URL runs do not ground a figure (round-46
+            # `ReviewerC1Tool`: `…acl-long.1534` grounded an invented 1,534).
+            out[cells[0]] = cells[1].split(" — http")[0]
     return out
+
+
+DESIGNATOR_RE = re.compile(r"\b[A-Z]{2,7}\s?\d[\d,]{2,}[A-Za-z0-9-]*\b|\b[A-Za-z]{1,3}\d{3,}\b")
+
+
+def designators(title: str) -> list[str]:
+    """Document designators a title can ground: `RFC 7089`, `E2867`, `N18-1074`."""
+    return DESIGNATOR_RE.findall(title)
 
 
 def count_values(counts: pathlib.Path) -> set[str]:
@@ -252,12 +269,17 @@ def main() -> int:
             if not ok and re.search(r"\d", tok):
                 ok = any(v in values for v in numeral_variants(tok))
             if not ok and re.search(r"\d", tok):
-                ok = any(tok.rstrip("%").replace(",", "") in titles.get(sid, "")
-                         for sid in cited)
+                # A cited DOCUMENT may ground its own designator (RFC 7089 in
+                # S079's title), and nothing else: a bare year or a URL run in
+                # the same cell must not ground a figure (round-46
+                # `ReviewerC1Tool`).
+                ok = any(d in bullet for sid in cited for d in designators(titles.get(sid, "")))
             if ok:
                 ngood += 1
             else:
                 findings.append({"code": "INF_TOKEN_NOT_IN_SPAN", "bullet": i, "token": tok[:80]})
+    if present and not bullets:
+        findings.append({"code": "INF_NO_BULLETS", "bullet": 0, "token": ""})
     if not a.quiet:
         print(f"GROUND entry={entry_rel or entry.name} section={int(present)} "
               f"bullets={len(bullets)} tokens={ntok} grounded={ngood}")

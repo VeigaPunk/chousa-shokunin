@@ -18,12 +18,12 @@ OK S085 2360 | OK S085 1271 | OK S086 15269 | OK S086 42011 | OK S086 20847 | OK
 OK S087 4929 | OK S088 3929 | OK S088 2904 | OK S089 3022 | OK S089 7137   SPAN_ROWS_OK=11/11
 ```
 
-First run used default CSV quoting and mis-killed the two S087 rows (my reader artifact, retracted).
-**No span-leg defect.**
+First run used default CSV quoting and mis-killed the two S087 rows (my reader artifact, retracted);
+**no span-leg defect.**
 
-2. `revision` in the two captures frozen question (1) names: `5a631adb…txt` (S085 FEVER page) **0**;
-   `7800e2e1…txt` (S087 Zenodo) **1** → `'"recid": "4925954", "revision": 2, "files": ['` @3667.
-   `metadata` has no `version` key; `swh` is `{}`; `conceptdoi` @171.
+2. `revision` in frozen question (1)'s two captures: S085 ("5a631adb…") **0**; S087 ("7800e2e1…") **1**
+   → `'"recid": "4925954", "revision": 2, "files": ['` @3667. `metadata` has no `version` key;
+   `swh` is `{}`; `conceptdoi` @171.
 
 3. Every quoted fragment tested as a substring; all 11 span fragments hit at their offset. **ABSENT
    from S086** (two-column PDF interleaves lines): `We used the June 2017 Wikipedia dump`, `91.2% of
@@ -36,11 +36,9 @@ First run used default CSV quoting and mis-killed the two S087 rows (my reader a
 4. Cross-corpus probe: `S088 (AVeriTeC page): 'temporal' 0, 'before the claim' 0, 'archive' 16`;
    `S089 (AVerImaTeC paper): 'web.archive' 0, 'cached' 0, 'cached_source_url' 0, 'temporal' 12`;
    `S089:14603` "To ensure long-term accessibility, all source pages are archived on the internet archive."
-
 5. AVeriTeC examples (S088): `claim_date 25-8-2020` @4369 with capture `web/20230323135844/…Hunter_Biden`
    @5264; a `source_url` of `treasury.gov/…/WP81-Table2013.pdf` @7611 whose cached link is
-   `https://home.treasury.gov/` @7760; `"Unanswerable"` + `"source_url": ""` with **no**
-   `cached_source_url` key @9390.
+   `https://home.treasury.gov/` @7760; `"Unanswerable"` + `"source_url": ""`, **no** `cached_source_url` @9390.
 
 ## `corpus/knowledge/evidence-pool-versioning-r39.md`
 
@@ -128,7 +126,7 @@ First run used default CSV quoting and mis-killed the two S087 rows (my reader a
 
 - **depth (C3)** — entry content only; the four FAILS are the class the frozen kill rule already
   covers ("A staged sentence that the captures contradict is corrected in the entry and recorded as a
-  mistake"), so no predicate, counter, fixture or target change is proposed.
+  mistake"), so no predicate, counter, fixture or target is proposed for change.
 - **operability (C1)** / **calibration (C2)** — untouched, no harm.
 - **C3 counter sufficiency** — all 11 span legs pass while three bullets overstate, because the counter
   measures presence, not entailment: the D7 blind spot reproduced one level up, at entry level.
@@ -137,8 +135,7 @@ First run used default CSV quoting and mis-killed the two S087 rows (my reader a
 
 Apply the four replacements as text. **Do not touch the 11 quote strings** — that invalidates a
 `spans.tsv` row. All four narrowings sit outside the quotes, so `SPAN_ROWS_OK` stays 11/11 and
-`--lane-only` is unaffected. Zero-risk additions: `"revision": 2` @3667 into main O2/O3, char 14603
-into the S089 anchors.
+`--lane-only` is unaffected. Zero-risk: `"revision": 2` @3667 into main O2/O3, char 14603 into S089 anchors.
 
 ## Pointers
 
@@ -150,5 +147,4 @@ into the S089 anchors.
   `corpus/knowledge/evidence-pool-versioning-r39.md:24` U1; `…-amendment-2026-10-23.md:11,20,26` O1, I2, U1
 
 Verdict: **no counter or claim falsified; four entry sentences must be narrowed before adoption.**
-The current text carries a universal ("Every") the lane's own S084 row refutes, and a self-
-contradiction between main I1 and U1.
+The current text carries a universal ("Every") S084 refutes, and main I1 contradicts main U1.

@@ -48,7 +48,7 @@ GATES_ROWS=30 / REGISTERED=55/72 / UNREGISTERED=17 / C2=FAIL` exit 1. Forge inje
 |---|---|---|---|---|---|---|
 | a | real 8-col row, all 17 paths, **dead** command, wrong verdict map | 31 | 72/72 | 0 | 0 | matches; claim's named limit ("row truth is not measured") covers it, though a dead command is beyond "verdict map is wrong" |
 | b | one 8-pipe line **inside a ``` fence** in Gates | 31 | 72/72 | 0 | 0 | matches the **line** test literally; contradicts "inside a `## Gates` **row**" and the docstring's own anti-cheat → latent cheap gate |
-| c | all 17 in an own-line `<!-- … -->` comment | 30 | 55/72 | 17 | 1 | matches (refused) |
+| c | all 17 in an own-line `<!-- … -->` comment | 30 | 55/72 | 17 | 1 | matches (refused) — but only because that comment line starts with `<!--`, not `|`; the multi-line shape credits on this blob too (m-c3 below, and ReviewGatesSection's one-entry root) |
 | c2 | same comment **appended to a live row** | 30 | 72/72 | 0 | 0 | literal match, zero visible rows → latent cheap gate |
 | d | row under a `### ` subsection inside Gates | 31 | 72/72 | 0 | 0 | matches **by design** (section runs to next `## `) |
 | e | row names `…/self-audit.pyc` (no such file); EP is `…/self-audit.py` | 31 | 56/72 | 16 | 1 | **DEVIATION — kill** (55→56: prefix credited) |
@@ -124,9 +124,9 @@ Fence state is global and toggled by any lstrip'ed ``` line, so one stray fence 
 
 | mutant | output | read |
 |---|---|---|
-| ``` inserted right after `## Gates`, never closed | `GATES_ROWS=0 REGISTERED=0/72 UNREGISTERED=72` exit 1 | every section line counted as fenced |
-| ``` inserted ~3 lines **before** `## Gates`, never closed | `GATES_ROWS=0 REGISTERED=0/72 UNREGISTERED=72` exit 1 | same, from outside the section |
-| ``` … illustration … ``` balanced inside Gates | `GATES_ROWS=35 REGISTERED=72/72 UNREGISTERED=0 C2=PASS` exit 0 | harmless when closed |
+| ``` inserted right after `## Gates`, never closed | `GATES_ROWS=0 REGISTERED=0/72 UNREGISTERED=72` exit 1 | every row **after** the opener is dropped; here the opener precedes all of them |
+| ``` inserted ~3 lines **before** `## Gates`, never closed | `GATES_ROWS=0 REGISTERED=0/72 UNREGISTERED=72` exit 1 | same, from outside the section — rows already collected before the opener still count |
+| ``` … illustration … ``` balanced inside Gates | `GATES_ROWS=35 REGISTERED=72/72 UNREGISTERED=0 C2=PASS` exit 0 | harmless **only because it wraps no needed row**; wrapping one drops it (`REGISTERED=0/1` on a one-entry root) |
 
 Not a cheap gate (it never yields a false PASS), but a scribe's illustration block inside Gates makes
 the counter report `0/72` — a whole-registry false negative that reads like "no rows". Prefer exit 2
@@ -140,8 +140,8 @@ measurement-time state of `SKILL.md 7b49e2ae…`, not the current tree.
 
 ## Restoration / side effects
 
-- No writes to the lane: HEAD `c2f0e9d100c0d46633a6277b2fd51d2ac99678eb`; `SKILL.md`
-  `7b49e2ae…d05433` unchanged; the counter's live `60ad448e…` is a sibling's edit, not mine (the
+- No writes to the lane: HEAD was `c2f0e9d100c0d46633a6277b2fd51d2ac99678eb` at measurement and
+  `d09fc8e` at finish (siblings' landings); `SKILL.md` `7b49e2ae…d05433` → live `efc99c13…`; the counter's live `60ad448e…` is a sibling's edit, not mine (the
   frozen `06c9e9bc…` is what my forges were scored against). No mutating git/jj, no fetch, no installs.
 - All forged variants lived under `/tmp/chousa-r46-MutC2Forge{,2,3}/` and are deleted; hashes as run:
   a2 `1108e586…990c`, b `8d000736…0802`, c `330cb5a6…9cc3`, c2 `438749dd…1da2`, d `ba03c865…f4ce`,

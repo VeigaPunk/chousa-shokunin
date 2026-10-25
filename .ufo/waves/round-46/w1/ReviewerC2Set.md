@@ -28,28 +28,27 @@ only initial diff artefact (`sort` dictionary order vs Python codepoint order).
 Matching `ENTRY_POINTS=72 (tools=8 counters=50 named=70)`: `A ⊂ C`, `C∩B=48`,
 `B\C = {round31/c2-count-v3.py, round44/errata-count.py}`; no registered path owes credit to a longer token.
 
-## Falsifier 1 — the before-line's numbers come from two different trees
+## Falsifier 1 — the before-line reproduces, but only with a claims.md that skips its own counters
 
-The receipts are honest about their tree: `controls/c1-before.txt:2` reads "`git archive 6e2630a6`
-(round-45 landing) + this round's counters and fixtures", `c2-before.txt:2` "as above". The
-mislabels are in `claims.md` — `:40` says "base tree", and `:66` quotes
-`ENTRY_POINTS=71 (tools=7 counters=50 named=66)` naming no tree at all. Measured read-only:
+The receipts name their tree (`controls/c1-before.txt:2`: "`git archive 6e2630a6` … + this round's
+counters and fixtures"; `controls/c2-before.txt:2`: "as above"). Measured read-only:
 
 ```
-bare 6e2630a6                     : ENTRY_POINTS=68 (tools=7 counters=47 named=66) 55/68 UNREGISTERED=13
-6e2630a6 + this round's counters  : ENTRY_POINTS=71 (tools=7 counters=50 named=69) 55/71 UNREGISTERED=16
-   (= c2f0e9d tree; identical under the frozen instrument 06c9e9bc and the current one)
+bare 6e2630a6                                    → 68 (tools=7 counters=47 named=66) 55/68 UNREGISTERED=13
+c2f0e9d as committed                             → 71 (tools=7 counters=50 named=69) 55/71 UNREGISTERED=16
+c2f0e9d, three round46 counter names stripped     → 71 (tools=7 counters=50 named=66) 55/71 UNREGISTERED=16
+   from claims.md   (same instrument 06c9e9bc)
 ```
-
-71/16 reproduces on the **augmented** tree, but the quoted `named=66` reproduces only at the bare
-commit, where the union is 68 — so the frozen parenthetical belongs to no single tree, and the kill
-rule "`ENTRY_POINTS` below 71" would fire on a bare-commit run. Real pre-existing debt: 13, stable
-across both trees (55 registered throughout).
+So the quoted 4-tuple is reproducible: at the freeze archive the three counter files exist, so
+stripping their *names* from claims.md removes them from leg (C) (`named` 69→66) while leg (B)
+still carries the same three files into the union — the union, registered and unregistered legs do
+not move. The defect is therefore a **label**, not a baseline: `claims.md:66` should print `named=69`,
+and `:40` should not say "base tree" (the bare commit gives 68/13). Real pre-existing debt is 13.
 
 Registration landed while this review ran; the live tree now reads
 `ENTRY_POINTS=72 (tools=8 counters=50 named=70) GATES_ROWS=35 REGISTERED=72/72 UNREGISTERED=0 C2=PASS`
 (`SKILL.md` modified in the worktree). Every other number here is pinned to `HEAD:SKILL.md`
-(30 rows, 17 unregistered) plus the instrument blob named in the section below.
+(30 rows, 17 unregistered) plus the instrument blob named below.
 
 ## Falsifier 2 — leg (C) is narrower than its frozen sentence
 
@@ -126,11 +125,11 @@ declared limit ("row truth is not measured") leaves the pollution unnamed today.
 
 C2's enumeration is faithfully implemented (my independent set is identical, 72/72; the mid-wave
 fix touched only row parsing, so the counts stand). Not sound as declared on four counts: the
-before-line's parenthetical mixes two trees (`named=66` is the bare commit, `tools=7 counters=50`
-the augmented one; 71/16 reproduces only on the latter, where 3 of the 16 rows are this round's
-own counters); leg (C) drops 10 named paths (8 repo-relative controls, 2 absolute); the union omits
-≥3 gate-shaped committed verifiers plus one already-registered check; and the frozen instrument
-admits two forgeries while the current one still admits a multi-line-comment bypass, with
+before-line's `named=66` is not what the committed freeze blob yields (`named=69`), and `:40` calls
+the augmented tree the base commit (bare commit: 68 / 13, and 3 of the 16 receipt rows are this
+round's own counters); leg (C) drops 10 named paths (8 repo-relative controls, 2 absolute); the
+union omits ≥3 gate-shaped committed verifiers plus one already-registered check; and the frozen
+instrument admits two forgeries while the current one still admits a multi-line-comment bypass, with
 `controls/c2-controls.txt` unchanged. Live target is met: 72/72, `GATES_ROWS=35`, exit 0.
 
 ## Residual risk / verification gaps

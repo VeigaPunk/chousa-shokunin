@@ -95,23 +95,47 @@ freeze.
    (argparse only). The row says "usage only"; no behaviour change requested.
 3. **F3** Committed c1/c2/c3 control receipts are `/tmp`-based and no longer on disk: c1 controls
    re-derived (`0/3`, `1/3` reproduced); c2/c3 controls quoted from their files, not re-run.
-4. **F4 (from `L1Chousa46.MutC2Forge`)** `c2-count.py` credits a path by raw substring — a row of
-   nonexistent `X.pyc`/`X.py.disabled`/`X.shc` names, or a fenced/`<!-- -->` row, reaches
-   `UNREGISTERED=0 C2=PASS` registering nothing. Both rows are unaffected (visible 8-column rows, each
-   real path its own backticked token; regex check: no `.pyc`/`.shc`, all four paths exist).
-5. **F5 (same peer, and a conflict to report verbatim)** three trees for the same frozen counter:
-   bare `6e2630a6` + this round's counters/fixtures, tool absent → `ENTRY_POINTS=68 (tools=7
-   counters=47 named=66) REGISTERED=55/68 UNREGISTERED=13` exit 1; the receipt's own declared tree →
-   `71 (7/50/69) 55/71 UNREGISTERED=16` exit 1 per that peer, while the committed
-   `controls/c2-before.txt` line and my own freeze run both print `71 (7/50/66)` / `72 (8/50/70)` —
-   the `named` leg differs (66 vs 69) and this seat cannot reproduce 69 from any tree it opened; live
-   with the untracked tool → `72 (8/50/70) 55/72 UNREGISTERED=17` (matches my run). The "base tree"
-   parenthetical at `claims.md:40` is the mislabel (it describes c1's before line and does not hold for
-   `controls/c2-before.txt`); the receipts themselves declare their tree correctly.
+4. **F4 (from `L1Chousa46.MutC2Forge`)** Cheap gates in `c2-count.py`, split by what blob `60ad448e…`
+   actually closes. **Closed:** a fenced line (b), an appended single-line `<!-- … -->` (c2), and the
+   `X.pyc`/`X.py.disabled`/`X.shc` credit (e/e2 — `names()` now needs a delimiter boundary,
+   `c2-count.py:99-102`). **Residual:** the multi-line comment shape — `gates_rows()` strips per line
+   (`re.sub(r"<!--.*?-->", "", line)`, `:85-96`), so `<!--` on its own line, an 8-pipe row with `exit`,
+   then `-->` still registers; observed here on a one-entry fake root: `GATES_ROWS=1 REGISTERED=1/1
+   C2=PASS` exit 0, identical to the visible row, and by the peer on the live tree while 17 paths were
+   unregistered (`GATES_ROWS=31 REGISTERED=72/72 UNREGISTERED=0`). **Fence-state zeroing:** a balanced
+   fence wrapping a needed row and an unterminated fence opened before it both give `GATES_ROWS=0
+   REGISTERED=0/1 C2=FAIL` exit 1 (observed here; fail-closed, not a pass). An unterminated fence
+   zeroes only the rows after it: a row seen before the opener still counts (`GATES_ROWS=1
+   REGISTERED=1/1`, observed). Fix is stateful: toggle `in_comment` across the section, symmetric with
+   the fence toggle. Both drafted rows are unaffected
+   (visible 8-column rows, each real path its own backticked token) and pass the stricter `names()` test.
+5. **F5 (resolved, same peer)** Three readings of one frozen counter, no contradiction: bare
+   `6e2630a6` + r46 counters/fixtures, tool absent → `68 (tools=7 counters=47 named=66) 55/68
+   UNREGISTERED=13` exit 1; frozen archive `c2f0e9d` → `71 (7/50/69) 55/71 UNREGISTERED=16` exit 1
+   (use this for the frozen blob); the receipt → `71 (7/50/66) 55/71 UNREGISTERED=16` exit 1 (its
+   claims.md did not yet name its own counters); live with the untracked tool → `72 (8/50/70) 55/72
+   UNREGISTERED=17` (my run). Mechanism read in `entry_points()`: leg C admits a named path only
+   `if (root / p).is_file()` and the union is a set, so naming the three r46 counters adds 3 to `named`
+   and 0 to the union. The "base tree" parenthetical at `claims.md:40` remains the only mislabel.
 6. Nothing superseded among counters; round-45 counters keep their own rows.
    `corpus/evidence/round46/build-spans.py` is now named in the landed counters row (it was not an
    R46-C2 entry point at freeze, and is untracked).
 7. No install or upgrade; no lane file modified by this seat (only this report).
+
+## Errata handed to L1 (claims.md is frozen; not edited by this seat)
+
+E1 `corpus/evidence/round46/claims.md:66-67` prints `named=66`; the same frozen counter on the frozen
+archive prints `named=69` (its claims.md names its own three counters). Union/registered/unregistered
+(`71 / 55/71 / 16`) are invariant either way — leg C drops the three, leg B already carries them (F5).
+E2 `claims.md:40` says "base tree" for the c1 before line; the receipt's tree is `6e2630a6` plus this
+round's counters and fixtures (bare commit = `68 (7/47/66) … 13`), so that parenthetical is a mislabel.
+E3 Leg C's path regex (`(?:tools|corpus)/…\.(?:py|sh)`, `c2-count.py:39`) cannot see 10 existing named
+paths, verified by listing what the pattern misses: 8 repo-relative `.ufo/waves/round-*/controls/*`
+(r35 `ctl-c1-hardcoded-grep.sh`, r36 `base-gate-r36.sh` + `ctl-c2-stub-pass.py`, r37/r38/r39
+`base-gate-r*.sh`, r39 `mut-gate-path-env.sh`, r41 `base-gate-r41.sh`) plus
+`/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/falsify/DiffToolB/guarded-run.py`
+and `/home/vgpnk/Projects/shokunin/scripts/sources-census.sh`. Scope note, not a counter defect for C2
+as frozen: the predicate says "repo-relative path".
 
 Pointers: `corpus/evidence/round46/claims.md`; `corpus/evidence/round46/{c1,c2,c3}-count.py`;
 `corpus/evidence/round46/controls/`; `tools/inference-ground.py:1-232`;

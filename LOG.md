@@ -1693,3 +1693,56 @@ wave 2 (falsify, 38 seats, 38 reports). Round total 84 seats.
   byte-exact into the lane, `cmp`-verified and removed from the fleet root.
 - **Inherited debt still open**: the three modified r40/r41 JSON paths stay left-named and
   uncommitted; L0 `chousa | round-43` is unanswered.
+
+## Round 46 — 2026-10-25 (hyaku run 6; claims frozen `c2f0e9d1`, landed `d09fc8e7`)
+
+Three claims, three axes, each verified without the others. No external fetch
+(L0 `8d77e6c1` still open); every source read from the on-disk campaign cache.
+
+- **C1 operability** (lowest scored axis, 3/10; round-45 closure D7):
+  `tools/inference-ground.py` makes an entry's `#### Inference` section checkable
+  — every bullet must cite a source, and every backticked/quoted phrase or figure
+  in it must appear in the spans of the sources it cites (or be the designator of
+  a cited document). Six declared fixtures, `c1-count.py` before `TOOL=absent
+  0/3 0/3` → after `POSITIVE_PASS=3/3 JUNK_KILLED=3/3 C1=PASS`. Controls: an
+  always-exit-0 tool scores `0/3`, a citation-presence-only tool `1/3`. Honest
+  residual: the check proves presence, not entailment — the round-45 D7 body
+  still passes (`CritC1Attack`), routed to round 47.
+- **C2 calibration** (round-45 closure D8): `c2-count.py` enumerates the lane's
+  executables from three legs (tools/, the round-45 counter pattern, and every
+  `*.py`/`*.sh` a SCORECARD or claims cell names) and requires each inside a
+  `## Gates` row. Before `REGISTERED=55/71 UNREGISTERED=16` (freeze tree; bare
+  base `55/68`, 13) → after `REGISTERED=72/72 UNREGISTERED=0`, exit 0. Five rows
+  added covering thirteen historical instruments (registered as `instrument`,
+  two of which state in their own headers that they count and do not gate) plus
+  the round-46 tool, counters and span builder. Forges refused after the waves:
+  fenced row, HTML-comment row, `.pyc`-suffix row, prose paste, six-cell and
+  no-`exit` rows, row after the next `## `.
+- **C3 depth / assimilation** (item 10, one theme: what makes a support verdict
+  durable, and how a later corpus binds each citation to an archived state):
+  `evidence-pool-versioning-r39.md` (S085 FEVER page, S086 FEVER paper, S087
+  Zenodo record) and `…-r39-amendment-2026-10-23.md` (S088 AVeriTeC page, S089
+  AVerImaTeC HTML), staged ids re-bound by document (−35/−35/−35/−39/−39), the
+  round-45 reject's flip met in full. Eleven quotes located with context in
+  `corpus/evidence/round46/spans/`; `build-spans.py --check` re-derives 11/11;
+  `c3-count.py` default and `--lane-only` both pass. Staged misreadings corrected
+  in the entries (field pairing is practice not invariant; the hedge tracks a
+  missing original URL; the temporal rule is the successor corpus's; "limited …
+  to those published before" is not verbatim).
+- **Frontier / SOURCES**: 84 → 89 rows, five added (S085–S089), census exit 0
+  before and after, the same five W04. Quarantine: S086's URL is in the 24-row
+  slice (register line 54, `payload-absent`); hand-checked, all three register
+  quotes present in the capture after removing the PDF column interleave —
+  verdict present, row adoptable.
+- **Wave**: v1, two waves, 64 seats total — wave 1 build+falsify 32 (reviewer 9,
+  scribe 7, scout 5, executor 4, critic 3, mutation-tester 2, connector 1,
+  sentinel 1), wave 2 falsify 32 (reviewer 20, critic 4, mutation-tester 3,
+  scout 3, sentinel 2). Two wave-2 seats and their findings are recorded in the
+  round report.
+- **Instrument revisions after the freeze, disclosed**: `c1-count.py`,
+  `c2-count.py`, `c3-count.py` and `tools/inference-ground.py` were each
+  tightened toward the frozen sentence after wave-1 mutation and sentinel
+  findings; before receipts were re-measured with the final revisions and
+  value-neutrality is measured (`corpus/lessons/round-46.md` mistake 12).
+- **Inherited debt still open**: the three modified r40/r41 JSON paths stay
+  left-named and uncommitted; L0 `chousa | round-43` and `round-44` unanswered.

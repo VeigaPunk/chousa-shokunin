@@ -2445,3 +2445,49 @@ sentences, not only quote and count presence (wave-2 `CritC3Axis`); a gate-regis
 that also covers executable verifiers outside the frozen name pattern (wave-2
 `CritC2Framing`). Freeze only 1–3 separately falsifiable claims after scoring their do-nothing
 controls.
+
+## Round 46 verdict — 2026-10-25 (inference grounding, verifier registry, evidence-pool adoption)
+
+Claims frozen in `corpus/evidence/round46/claims.md` at
+`c2f0e9d100c0d46633a6277b2fd51d2ac99678eb` before any seat scored; work landed at
+`d09fc8e7e2972e30e5e0aaa6e404c97aa0b9f95a`. After-measurement:
+`corpus/evidence/round46/measure-after.txt`. No external fetch: L0 `8d77e6c1`
+is still open and every capture read is on disk. Tag column per QUALITY 64.
+
+| claim / axis | before → after | counting command | verdict | tag |
+|---|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10): inference grounding becomes an executable check — `tools/inference-ground.py` refuses an Inference bullet that cites no source and every quoted phrase or figure in one that its cited spans do not carry | `TOOL=absent POSITIVE_PASS=0/3 JUNK_KILLED=0/3` exit 1 (`controls/c1-before.txt`, base tree `6e2630a6`) → `TOOL=present POSITIVE_PASS=3/3 JUNK_KILLED=3/3 C1=PASS` exit 0; controls: always-exit-0 tool `JUNK_KILLED=0/3`, citation-presence-only `1/3`; fixtures byte-pinned in the counter, so a changed fixture reads `FIXTURES_CHANGED=` and fails | `python3 corpus/evidence/round46/c1-count.py` | **improved** (frozen predicate met). Framing narrowed: the check proves citation and token PRESENCE, not that the inference follows — the round-45 D7 class still passes (`CritC1Attack`, `CritC1D7`); reported, not hidden | plumbing |
+| C2 calibration: the gate registry covers the executable verifiers the lane's verdicts name outside the frozen name pattern | freeze tree `ENTRY_POINTS=71 (tools=7 counters=50 named=66) GATES_ROWS=30 REGISTERED=55/71 UNREGISTERED=16` exit 1; bare base tree `6e2630a6` `ENTRY_POINTS=68 REGISTERED=55/68 UNREGISTERED=13` (`ReviewerC2Set`, and `controls/c2-before.txt` tree C) → `ENTRY_POINTS=72 (tools=8 counters=50 named=70) GATES_ROWS=35 REGISTERED=72/72 UNREGISTERED=0 C2=PASS` exit 0; forges refused: prose paste, six-cell row, eight-pipe row without `exit`, row after the next `## `, fenced row, `.pyc`-suffix row | `python3 corpus/evidence/round46/c2-count.py --list` | **improved**; limit named: the set samples on MENTION (a path named in a verdict), not on DEPENDENCE, so a gate named only in QUALITY/SKILL (`round45/tag-count.py`) stays outside while two historical probes that disclaim gating come in (`CritC2Framing`, `RevC2TagCount`) | plumbing |
+| C3 depth: the evidence-pool theme adopted as two lane entries, five rows S085–S089, eleven capture-bound spans | `ENTRIES=0/2 CITES_BOUND=0/5 QUOTE_ROWS=0/11` exit 1 (`controls/c3-before.txt`) → both modes `ENTRIES=2/2 CITES_BOUND=5/5 QUOTE_ROWS=11/11 QUOTES_IN_SPAN=11/11 QUOTES_IN_ENTRY=11/11 CAPTURE_BOUND=11/11 REF_ID_UNBOUND=0 REF_BOUND=2/2 C3=PASS` exit 0 (`--lane-only`: `CAPTURE_BOUND=skipped`); control: a forged manifest with invented capture digests passes `--lane-only` and is refused by the default mode at `CAPTURE_BOUND=0/11` | `python3 corpus/evidence/round46/c3-count.py` (and `--lane-only`) | **improved**; the counter measures presence and provenance, not entailment (three inferences were narrowed this round by `CritC3Inference`; anchors are not counter-checked — `ReviewerC3Spans` caught a 13-char anchor slip, fixed) | ground |
+
+The round-1 operability scale is unchanged: 3 → 3. These observables sit beside it.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** | C1: a new runnable check plus its counter and six declared fixtures; the wave-1 survivor (a junk bullet parked in a fence) was fixed and the fixture set is now byte-pinned |
+| calibration | **improved** | C2: `UNREGISTERED=0` over a set that grew from 68 to 72 entry points; the counter's own cheap gates (fence, comment, suffix) closed after `MutC2Forge`; the registry now names 13 historical instruments with their real verdict maps, including two that say they do not gate |
+| depth | **improved** | C3 and `corpus/lessons/round-46.md`: two entries re-grounded on five newly opened sources, eleven located quotes with context, staged misreadings corrected (field-pairing is practice not invariant; the hedge tracks a missing original URL; the temporal rule belongs to the successor corpus; the staged "limited …" and "We used …" are not verbatim) |
+| coverage | **improved narrowly** | two entries on ground the map did not hold (`ScoutCoverageGround`); coverage map +2 rows; no sibling holds this ground (`ConnectSiblings`) |
+| freshness | **unchanged** | every capture opened predates the launch (2026-10-25T07:10:05−03:00: captures written 2026-10-23/24); S085's recheck cadence is set `365d` where the staged row said `180d` — a curation choice logged to the lesson, not an improvement |
+| adjacency | **unchanged** | no sibling lane holds FEVER/AVeriTeC ground; six lanes already practise capture-digest binding row-by-row, so the entries state a fleet habit rather than discover one (`ConnectSiblings`) |
+
+## Capabilities (round-46 addition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| inference-grounding check | refuses an `#### Inference` bullet that cites no source, and every quoted phrase or figure in one that its cited spans (or its cited document's designator) do not carry — presence, not entailment | `tools/inference-ground.py`; `corpus/evidence/round46/c1-count.py`; `corpus/fixtures/inference-ground-r46/` | 46 |
+| verifier registry alongside the name pattern | enumerates the lane's executables from three legs (tools/, the round-45 counter pattern, and every `*.py`/`*.sh` its verdicts name) and requires each inside a `## Gates` row, refusing fence, comment and suffix forges | `corpus/evidence/round46/c2-count.py` | 46 |
+| capture-bound span builder with context | rebuilds `spans.tsv` and the span files as exact capture slices carrying ±80 chars of context, and re-derives them with `--check` | `corpus/evidence/round46/build-spans.py` | 46 |
+
+## Planned — round 47 (not started)
+
+Candidates, not commitments: an ENTAILMENT leg for the inference check — the D7
+class still passes (`CritC1Attack`, `CritC1D7`), and the cheapest next move is a
+controlled-vocabulary relation per bullet (supports/narrows/contradicts) checked
+against the cited span's own polarity words, with the critic's six survivors as
+the before-controls; a DEPENDENCE-based C2 set (`RevC2TagCount`: a gate named
+only in QUALITY/SKILL is invisible) that adds `round45/tag-count.py`,
+`round32/q33-check.py`, `round30/rerun-check.py` and `round29/prose-check.py`
+with an `entry paths ⊆ ENTRY_POINTS` assertion; and the amendment's own warrant
+for the archiving practice (`S089` char 14603) as a committed span. Freeze 1–3
+claims after scoring their do-nothing controls.

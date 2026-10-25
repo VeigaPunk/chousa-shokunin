@@ -79,6 +79,11 @@ Binding is by URL + page body, not by S-number. Staged S127/S128 map to lane S08
   own offset (6784) instead of being silently completed.
 - S089's capture uses a typographic apostrophe in `claim’s`; the anchor reproduces it byte-exactly
   (char 7084) rather than normalizing it.
+- S087 identifier distinction: the anchored slice is the record's `conceptdoi` (`10.5281/zenodo.4925953`);
+  the record's own `doi` is `10.5281/zenodo.4925954`. The row keeps them in separate places and no
+  cell in this report treats them as one value. ExecSpanBuilder's standing note that the counter
+  cannot distinguish `+1` from `len(quote)` spans, nor bare-string from JSON-fragment S087 quotes,
+  is recorded as their measurement, not re-run here.
 - No conflict with any capture found in the staged prose I restate (Zenodo publication_date
   2018-04-03 at 362, seven files at 2415+, 4568 claims / 50 organizations at 851, kappa 0.742 /
   74.7 % at 3204, four labels at 1142).
@@ -99,7 +104,10 @@ Counter, run read-only by me at lane root (I did not write SOURCES.md):
   is no VCS byte history to diff, and its mtime is `2026-10-25 07:31:33` — i.e. it was written
   after both measurements. `S095` has no lane Registry row (`grep -n '^| S095 '` empty) and
   `S071` is a row at `corpus/SOURCES.md:81`; the entry's "Staged material corrected on adoption"
-  paragraph records the re-binding to `S079`/`S081`.
+  paragraph records the re-binding to `S079`/`S081`. My own `stat` run orders the writes:
+  `SOURCES.md` 07:29:47, base entry 07:31:17, amendment 07:31:33, `spans.tsv` 07:25:22 — all
+  after the peer's 07:2x run, so both leg flips are rewrites of untracked files, not stale reads
+  by either seat (peer's conclusion, matching my timestamps; neither of us adjudicates).
 - After rows S085–S089 landed at `corpus/SOURCES.md:96-100`, both modes:
   `CITES_BOUND=5/5 QUOTE_ROWS=11/11 QUOTES_IN_SPAN=11/11 QUOTES_IN_ENTRY=11/11
   CAPTURE_BOUND=11/11 REF_ID_UNBOUND=0 REF_BOUND=2/2 C3=PASS`, exit 0.
@@ -109,29 +117,31 @@ Counter, run read-only by me at lane root (I did not write SOURCES.md):
 | id | changed cell | draft | landed |
 |---|---|---|---|
 | S085 | source | names Thorne, Vlachos, Christodoulopoulos, Mittal | "FEVER (2018) dataset release page" (authors dropped) |
-| S085 | scope | adds "distinct in scope from lane row S097 …" | clause dropped |
+| S085 | scope | added "distinct in scope from lane row S097 …" — **draft defect: S097 is a staged id, not a lane row** | clause dropped (correct) |
 | S085 | anchor | char 2349 slice only | adds the "Pre-processed Wikipedia Pages (June 2017 dump)" slice |
 | S085 | teaches | quotes the June 2017 dump and "same tuple" | "one dated pre-processed dump … fixed pool" |
-| S085 | recheck | 180d (as staged S120; lane S097 for the same page also 180d) | 365d |
-| S086 | scope | adds "distinct in scope from lane row S113 …" | clause dropped |
+| S085 | recheck | 180d (as staged S120 and staged S097) | 365d |
+| S086 | scope | added "… lane row S113 …" — **same draft defect (S113 is staged)** | clause dropped (correct) |
 | S086 | anchor | retrieval slice + continuation only | adds a char-42011 label-validation slice |
 | S086 | teaches | 0.6841 Fleiss kappa (char 6418) | 91.2% of sampled examples correctly annotated |
 | S087 | scope / teaches | "the seven files", "labelled jsonl splits" | "among its files", "labelled splits" |
-| S088 | anchor | char 3909 slice only | adds the char-2891 claim_date slice |
+| S088 | anchor | char 3909 slice only | adds a claim_date slice with a **wrong offset**: at char 2891 the capture reads `claim_date : Our best estimate…`; the quoted 56-char fragment starts at 2904. Fix: 2891 → 2904, or quote the 69-char field slice `claim_date : Our best estimate for the date the claim first appeared.` |
 | S088 | teaches | cites "(char 2891)" | char reference dropped |
 | S089 | scope | "…, over 1,297 real-world image-text claims" | claim count dropped; anchor and teaches identical |
 
 Only S085's recheck interval is a substantive divergence from the staged provenance (staged
-S120 and lane S097 both say 180d). The dropped distinct-scope clauses leave two rows for the
-FEVER page (S085 with S097) and two for the FEVER paper (S086 with S113) with no stated
-difference between them — reported, not edited, since SOURCES.md is not mine to write.
+S120 and staged S097 both say 180d; the landed row says 365d). The S088 anchor offset mismatch is
+a real defect but does not affect `c3-count`, which reads Registry cells 1, 7 and 10 only
+(`c3-count.py:100-102`) and never a Registry anchor offset. ReviewerC3Spans reached the same two
+conclusions independently and named the same 2904 fix; ExecSpanBuilder reports its alternate
+manifest still composes with the edited entries (`MISSING=0/11`, their measurement, not mine).
+Neither the recheck interval nor the offset is mine to edit — SOURCES.md is the registry seat's.
 
 ## Out of scope / not done
 
 Entries, spans.tsv and production edits belong to sibling seats. I ran `c3-count.py` read-only
 (name of the shipped counter, not a score I own) at a peer's request — results above — and wrote
-nothing outside this file. No fetch, no network, no tool installs (nothing was needed). Scratch dir
-`/tmp/chousa-r46-ScribeRows` removed.
+nothing outside this file. No fetch, no network, no tool installs (nothing was needed); scratch removed.
 
 Pointers: rows above; captures under
 `/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/`; staged provenance
