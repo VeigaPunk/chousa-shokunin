@@ -1,0 +1,125 @@
+#!/usr/bin/env python3
+"""gen-w2-spec.py — build the round-47 chousa wave-2 spec (v1 band 32-64).
+
+Wave 2 = falsify what wave 1 and the L1 landed. Fresh seats, read-only toward
+production files; every item names what it attacks.
+"""
+import hashlib
+import json
+import pathlib
+
+LANE = "/home/vgpnk/Projects/shokunin/chousa-shokunin"
+OUT = pathlib.Path(LANE) / ".ufo/waves/round-47/w2-spec.json"
+EV = f"{LANE}/corpus/evidence/round47"
+FIX = f"{LANE}/corpus/fixtures/inference-ground-r47"
+QC = "/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache"
+REG = "/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/absent-defect-register.md"
+TIP = "1fc5ed193ad48a482402c862f4e4cc47e46d5b2d"
+URLS = {
+    "S085": "https://fever.ai/dataset/fever.html",
+    "S090": "https://aclanthology.org/2026.findings-acl.19.pdf",
+    "S091": "https://ojs.aaai.org/index.php/AAAI/article/download/29825/31432",
+    "S092": "https://arxiv.org/html/1803.05355",
+    "S093": "https://arxiv.org/html/2012.00614v2",
+    "S094": "https://aclanthology.org/2025.coling-main.108.pdf",
+}
+C = {k: f"{QC}/{hashlib.sha256(u.encode()).hexdigest()[:24]}.txt" for k, u in URLS.items()}
+BASE = f"{LANE}/corpus/knowledge/claim-support-test-r37.md"
+AMEND = f"{LANE}/corpus/knowledge/claim-support-test-r37-amendment-2026-10-23.md"
+LESSON = f"{LANE}/corpus/lessons/round-47.md"
+
+DIRECTIVE = """You are a Godspeed-enabled subagent.
+
+1. **Name the axes.**
+2. **Iterate cheap, in parallel.**
+3. **Keep moves that improve any axis and harm none.**
+4. **Don't aim — let the frontier walk itself.**
+
+## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls."""
+
+CONTEXT = f"""# Goal
+chousa lane (deep-research method: claim-vs-source verification), round 47, wave 2 (FALSIFY). Three claims are FROZEN in {EV}/claims.md (freeze commit `22a44b8b`); the work landed and the lane tip is `{TIP}`. Your job is to attack ONE item each and report whether it holds. Never propose changing a frozen predicate, fixture set, floor or target; report defects, do not fix production files.
+- C1 operability: `{LANE}/tools/inference-ground.py` polarity probe (`INF_POLARITY_FLIP`, docstring rule 5 plus its round-47 refinements paragraph). Counter `python3 {EV}/c1-count.py` (fixtures {FIX}/). Claimed after: `POSITIVE_PASS=3/3 JUNK_KILLED=3/3 CANARY=pass R46_COUNTER=pass R46_ENTRIES=2/2 C1=PASS`.
+- C2 calibration: `python3 {EV}/c2-count.py --list` over {LANE}/SKILL.md `## Gates`. Claimed after: `ENTRY_POINTS=93 REGISTERED=93/93 UNREGISTERED=0 DANGLING=0 MISMATCHES=0 C2=PASS`; the freeze-time counter (`git -C {LANE} show 22a44b8b:corpus/evidence/round47/c2-count.py`) also prints MISMATCHES=0. Post-freeze counter repairs are disclosed in {LESSON} mistake 3.
+- C3 depth: entries {BASE} (S085, S090, S091) and {AMEND} (S092, S093, S094); Registry rows in {LANE}/corpus/SOURCES.md; spans {EV}/spans.tsv + {EV}/spans/ built by {EV}/build-spans.py from {EV}/quotes.tsv. Counter `python3 {EV}/c3-count.py` (and `--lane-only`). Claimed after: every leg full, C3=PASS.
+- Round record: {LESSON} (Mistakes, Named limits, Gate with quarantine verdicts, admit/reject), {LANE}/SCORECARD.md section `## Round 47 verdict`, {LANE}/LOG.md `## Round 47`, {LANE}/corpus/QUALITY.md criteria 67–68, {EV}/measure-after.txt. Wave-1 reports: {LANE}/.ufo/waves/round-47/w1/.
+
+# Sources (read-only, no fetch)
+Captures (file = sha256(url)[:24].txt): S085 {C['S085']}; S090 {C['S090']}; S091 {C['S091']}; S092 {C['S092']}; S093 {C['S093']}; S094 {C['S094']}. Absent-defect register (read-only) {REG}. Fleet rules /home/vgpnk/Projects/shokunin/CORPUS.md, /home/vgpnk/Projects/shokunin/AXES.md; province {LANE}/PROVINCE.md.
+
+# Seat contract
+- Every seat is a leaf: do not spawn, dispatch or create background work. The only exception: an executor may spawn one read-only `labrat` probe for one falsifiable hypothesis.
+- Write ONLY your own report file. Every `Report:` trailer path is relative to {LANE} — write it at {LANE}/<that path>. Never write anywhere else in the lane, never modify lane production files, the lane git index or jj state (no git add/commit/stash/checkout/reset, no mutating jj), the fleet repo /home/vgpnk/Projects/shokunin (including its .ufo/state and .scratch), any sibling lane, or anything under /home/vgpnk/Projects/shokuknow (read-only; never run its tools).
+- Work on a `/tmp` copy when you run counters against a mutated tree: `git -C {LANE} archive {TIP} | tar -x -C /tmp/chousa-r47w2-<YourName>/tree`. Scratch goes under /tmp/chousa-r47w2-<YourName>/ and you delete it before you finish.
+- Use absolute paths for every read and write; your tools start at the fleet root, so a relative path lands in the wrong repo.
+- NO external live-target fetches and no network egress of any kind (fetch-scope L0 8d77e6c1 is open). A dispatch item is NOT an operator approval.
+- Tooling authorization (operator, 2026-10-19): you may install or upgrade tools that help the task — read /home/vgpnk/.omp/agent/RULES.md before installing, official channels only, record tool/version/channel/reason in your report. pacman guard: all pacman transactions are PAUSED host-wide — never run pacman -S, -Sy, -Syu, -U or -R; use uv tool / npx / an official binary in ~/.local/bin, or report the need.
+- Routing is the host role table (~/.omp/agent/config.yml task.agentModelOverrides; operator-owned, read-only). Never pass or hardcode a model.
+- Never message agent://all. Your report opens with one line `ATTACKS: <what>` and `VERDICT: holds | defect | overclaim`, then every command you ran with verbatim decisive output, and resolvable pointers (path:line, char offset, sha256). Never assert a result you did not run. Keep it under 120 lines."""
+
+
+def item(name, role, text):
+    return (name, role, text)
+
+
+def reopen(sid):
+    return item(f"Reopen{sid}", "reviewer",
+                f"ATTACK the Registry row {sid} in {LANE}/corpus/SOURCES.md and every sentence of {BASE if sid in ('S085','S090','S091') else AMEND} that cites {sid}. Re-open the capture {C[sid]} yourself: (1) for every `char N: <quote>` in the row's anchor cell confirm capture[N:N+len(quote)]==quote with Python and count==1; (2) for every quoted string in the entry attributed to {sid} (double-quoted or backticked), confirm it is verbatim in the capture and give its offset; (3) for every char offset the entry or its `source:` line states for {sid}, confirm what sits there; (4) judge each Observation/Inference sentence citing {sid}: supported, overstated (quote both sides) or contradicted. List every failure.")
+
+
+ITEMS = [
+    # --- C1 (9)
+    item("RerunC1", "reviewer", f"ATTACK the C1 after-state: on a /tmp archive of {TIP} run `python3 <tree>/corpus/evidence/round47/c1-count.py --root <tree>` and the three controls in {EV}/controls/ (`--tool <tree>/corpus/evidence/round47/controls/<x>.py`), and the round-46 counter `python3 <tree>/corpus/evidence/round46/c1-count.py --root <tree>`. Compare with {EV}/controls/c1-before.txt, c1-controls.txt and {EV}/measure-after.txt line by line; report every disagreement. Confirm the fixture pins in c1-count.py equal the sha256 of every file in {FIX}/."),
+    item("HeldOutA", "critic", f"Measure the probe's FALSE-REFUSAL rate on a fresh held-out set (the wave-1 set of `{LANE}/.ufo/waves/round-47/w1/LabC1FalsePos.md` was used for tuning — do not reuse its sentences). In /tmp write 12 one-bullet entries in the shape of {FIX}/positive-negation-kept.md, each quoting a phrase from {FIX}/spans/S901-1.txt or S902-1.txt (spans manifest {FIX}/spans.tsv, counts {FIX}/counts.json) and reasoning CORRECTLY in varied academic English, half about the negated phrase `no revision is recorded`, half about affirmed phrases (`the release ships a frozen pool`, `the archived copy is dated at build`). Run the landed tool on each; report the refusal count k/12, every refused bullet with its finding, and why it was refused (window? stem? implicit negator?)."),
+    item("HeldOutB", "critic", f"Measure the probe's MISS rate on a fresh held-out set of polarity flips: in /tmp write 12 one-bullet JUNK entries, each quoting a phrase from {FIX}/spans/S901-1.txt or S902-1.txt and then asserting its OPPOSITE in natural academic English (vary distance, wording, implicit negators such as `lacks`/`absent`, and `un-` forms), using {FIX}/spans.tsv and counts.json. Run the landed tool; report kills k/12 with codes and every survivor, classified by the reason it passed. Do not reuse the bodies in {LANE}/.ufo/waves/round-47/w1/CritC1Survivors.md."),
+    item("MutC1Refined", "mutation-tester", f"Mutation-test the round-47 REFINEMENTS of {LANE}/tools/inference-ground.py (commit 980fe43f): make one /tmp mutant each — (a) IMPLICIT_NEG emptied, (b) UN_NEG_RE never matches, (c) clause-bounded look-back replaced by the plain last-3-words, (d) phrase_polarity back to first-span-only, (e) figure_flip checks only the first occurrence, (f) key_negated reads only the leaf key, (g) the `un`-prefix flip removed. Score each with `python3 {EV}/c1-count.py --root {LANE} --tool <mutant>` and paste. For every survivor, build the smallest /tmp fixture that kills it (run pristine vs mutant) and say whether the frozen counter SHOULD have killed it."),
+    item("RevC1Regex", "reviewer", f"Code-review the implicit negators in {LANE}/tools/inference-ground.py: IMPLICIT_NEG and UN_NEG_RE. Enumerate false negators: run UN_NEG_RE over every distinct lowercase word of all {LANE}/corpus/knowledge/*.md files and list every match that is NOT a negation (e.g. `unified`, `united`, `unpacked`?), and every IMPLICIT_NEG word used non-negatively in those files (`free` as in `fee-free`? `fail` as a noun?). Then show, with a /tmp entry, whether one such false negator can make the probe ACCEPT a real flip (a negator-count masking) or REFUSE a correct bullet. Paste commands and counts."),
+    item("SweepC1Corpus", "executor", f"Regression sweep at {TIP}: for every {LANE}/corpus/knowledge/*.md run the round-47 tool and the round-46 tool ({EV}/controls/base-tool-r46.py) with (a) `--spans {LANE}/corpus/evidence/round46/spans.tsv --counts /dev/null`, (b) round45 spans+counts, (c) `--spans {EV}/spans.tsv --counts /dev/null`, all with `--registry {LANE}/corpus/SOURCES.md --root {LANE}`. Tabulate every entry whose exit differs between tools and every INF_POLARITY_FLIP finding; judge each as true flip or false positive from the entry text."),
+    item("CritC1Claim", "critic", f"ATTACK C1's verdict wording: read the C1 rows in {LANE}/SCORECARD.md `## Round 47 verdict` and `## Capabilities (round-47 addition)`, the `inference-ground` row of {LANE}/SKILL.md `## Gates`, QUALITY 67 in {LANE}/corpus/QUALITY.md, the tool docstring, and {LESSON} mistakes 4–5 and named limits. Does any of them overclaim (entailment, D7 closed, 'refuses every flip'), understate the false-refusal cost, or misstate the windows? Was any change to the tool after wave 1 a change of the FROZEN rule sentence in {EV}/claims.md (quote it) rather than of the work? Rule on whether C1 'improved' or is a trade (axis harm) and why."),
+    item("RevC1Fixtures", "reviewer", f"ATTACK the C1 fixtures as an oracle: are the three junk fixtures of {FIX}/ strawmen that a cheaper rule also kills (e.g. 'refuse any bullet whose unquoted text contains a negator and a word sharing a stem with the quote')? Write that cheaper rule as a /tmp tool wrapping {EV}/controls/base-tool-r46.py and score it with `python3 {EV}/c1-count.py --root {LANE} --tool <it>`. Also score a tool that refuses every bullet whose quoted phrase contains a negator. Report which cheap tools reach C1=PASS, if any."),
+    item("RevQ67", "reviewer", f"ATTACK QUALITY 67 in {LANE}/corpus/QUALITY.md: run its Check line on the three junk and three positive fixtures of {FIX}/ and on both round-47 entries ({BASE}, {AMEND} with `--spans {EV}/spans.tsv --counts /dev/null`), and its 'Shown able to fail' against {EV}/controls/c1-controls.txt. Does every sentence of the criterion match observed behaviour? Report mismatches with line numbers."),
+    # --- C2 (8)
+    item("RerunC2", "reviewer", f"ATTACK the C2 after-state: on a /tmp archive of {TIP} run the final counter `python3 <tree>/corpus/evidence/round47/c2-count.py --root <tree> --list`, the freeze-time counter (`git -C {LANE} show 22a44b8b:corpus/evidence/round47/c2-count.py > /tmp/.../c2-freeze.py`, run with `--root <tree>`), and the round-46 counter. Then on archives of 22a44b8b (freeze) and 9a9f94db (base) reproduce every number in {EV}/controls/c2-before.txt and c2-controls.txt. Report every disagreement."),
+    item("MutC2Final", "mutation-tester", f"Re-run a forge battery against the FINAL {EV}/c2-count.py on /tmp copies: (a) one junk row registering every path with `exit 0`; (b) escaped `\\|` shifting cells; (c) `~~~` fenced row; (d) two inline HTML comments on one row; (e) a row with `` `0` ok `` and no word exit naming a missing path (DANGLING?); (f) a verdict cell `no exit code documented`; (g) floor substitution (drop a check-named gate, add an empty tools/noop.py); (h) a forged `corpus/evidence/round46/__pycache__/c2-count.cpython-*.pyc`; (i) a Gates row inside a `### ` subsection. Paste each output/exit; name every forge that still scores C2=PASS and whether {LESSON} 'Named limits' covers it."),
+    item("RevRowsChecks", "reviewer", f"ATTACK row truth for the QUALITY-check rows added this round in {LANE}/SKILL.md `## Gates` (`prose-check`, `rerun-check`, `q33-check`, `round25-meta-oracle`): for each, run the entry command read-only on a /tmp archive of {TIP} exactly as the entry cell states and compare the output and exit with the verdict-map cell. Report every row whose verdict map is false, whose entry command does not run as written, or whose self-test cell names a control that does not fail."),
+    item("RevRowsWaves", "reviewer", f"ATTACK row truth for the rows added or repaired this round in {LANE}/SKILL.md `## Gates` for `.ufo/waves/round-33/w2/L1ShortcutMask/mask-gate.sh`, `.ufo/waves/round-34/w1/ExecE4Census/receipt-binding.py`, `.ufo/waves/round-35/repairs/slen-probe.sh`, `tools/mechanism-witness.py` (row repaired): run each entry read-only on a /tmp archive of {TIP} and compare with its verdict map and self-test cells. Report every false cell."),
+    item("RevRowsControls", "reviewer", f"ATTACK row truth for the `round35–41 gate controls` row (repaired: exit codes named, r38/r39/r41 base gates added), the `round-29 quote-reopen counter` row and the `round-26 registry oracle` row of {LANE}/SKILL.md `## Gates`. For each control script run it once on a trivial input on a /tmp archive and check the stated exit contract; for the round-29 counter and round-26 oracle read the code paths for each stated exit. Report every false statement (e.g. an exit code the script never returns)."),
+    item("RevC2Dependence", "reviewer", f"ATTACK C2's dependence leg in the final {EV}/c2-count.py: is the BARE-name resolution (a bare `x.py` in an entry point's source resolved against that file's directory) sound — does it pull in paths only named in comments/docstrings, test fixtures, or `.pyc`? Enumerate every path the dependence leg adds (diff the set with and without the BARE rule on a /tmp copy) and classify each as a real call, a read, or a mere mention. Is any real `$VAR/`-composed or `os.path.join` call still missed? grep {LANE}/corpus/evidence {LANE}/tools for subprocess/`bash `/`python3 ` invocations to check."),
+    item("CritC2Claim", "critic", f"ATTACK C2's verdict as calibration: read the C2 rows of {LANE}/SCORECARD.md `## Round 47 verdict`, {LESSON} mistake 3 and named limits, and {LANE}/.ufo/waves/round-47/w1/CritC2Framing.md. Rule: is 'improved narrowly' honest? Did any post-freeze counter change LOOSEN the instrument (make a pass easier) rather than bring it to the frozen sentence? Measure: run the freeze counter and the final counter on the freeze tree, base tree and tip tree (archives) and tabulate. Was rewriting `\\|` as `/` in the round-24–27 row a parser accommodation that changes meaning? Report verdict with evidence."),
+    item("RevR46Refresh", "reviewer", f"ATTACK {EV}/r46-c2-controls-refresh.txt (round-46 closure routed defect 3): re-run the forges it describes against the committed {LANE}/corpus/evidence/round46/c2-count.py on /tmp trees as the header states, and confirm every printed line and the header's counts ('ten forges: eight refusals and two passing blocks') and digest. Report every mismatch."),
+    # --- C3 (12)
+    item("RerunC3", "reviewer", f"ATTACK the C3 after-state: on a /tmp archive of {TIP} run `python3 <tree>/corpus/evidence/round47/c3-count.py --root <tree>` and `--lane-only`, and `python3 <tree>/corpus/evidence/round47/build-spans.py --root <tree> --check`. Independently (your own Python, not the counter) verify for all 35 rows of {EV}/spans.tsv: capture sha256, capture[offset:offset+len(span)]==span, quote in span, quote in the citing entry. Report every disagreement with measure-after.txt."),
+    reopen("S085"), reopen("S090"), reopen("S091"), reopen("S092"), reopen("S093"), reopen("S094"),
+    item("CritBaseEntry", "critic", f"ATTACK the inferences of {BASE}: for each `#### Inference` bullet state whether it follows from the cited spans (quote the spans from {EV}/spans/ or the captures), overstates them, or imports a model-quality claim (kengaku's province per {LANE}/PROVINCE.md). In particular test the '∼22% … no citation hop' / '∼30% … the citation hop itself' reading against {C['S090']} (what are the denominators, who labelled them?), and the 'three-way label is one shape across English and Chinese' claim against {C['S091']}. Give the narrowest true sentence for every overstated bullet."),
+    item("CritAmendEntry", "critic", f"ATTACK the inferences of {AMEND}: for each `#### Inference` bullet state whether it follows from the cited spans, overstates or contradicts them. Test especially: 'NOT ENOUGH INFO is a verdict about an evidence pool' and 'the relabelling measures pool-dependence' against {C['S094']} §3.3 (does CorFEVER say why it relabelled?), the Table 2 arithmetic claims (333/131/426/443, 'off by one claim') against the capture, and climate-fever's 0.334 against {C['S093']}. Give the narrowest true sentence for every overstated bullet."),
+    item("RevQuarantine", "reviewer", f"ATTACK the four quarantine verdicts in {LESSON} `## Gate` (register S093, S094, S108, S110, all `present`): re-derive the lane's slice from {REG} with the awk recipe in the round prompt (data rows: lane cell `chousa`, a round cell, an id cell) and confirm 24 rows; then for each of the four rows re-check every register quote word-by-word in its capture (S093→{C['S090']}, S094→{C['S091']}, S108→{C['S092']}, S110→{C['S094']}) with your own normaliser. Report any quote with a missing or changed word (that would be `absent`, a fabrication)."),
+    item("RevIdBinding", "reviewer", f"ATTACK the id binding by document: for each staged id in /home/vgpnk/Projects/shokuknow/merge/chousa/SOURCES.append.md (S097, S098, S099, S113, S114, S115) confirm its URL equals the URL of lane row S085, S090, S091, S092, S093, S094 in {LANE}/corpus/SOURCES.md; confirm no staged id string (S097–S115) survives in either entry; re-run the collision check (0–3-space pattern) and confirm {LANE}/.ufo/waves/round-47/assimilation/collisions; run `/home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa` and report exit and findings."),
+    item("RevRows", "reviewer", f"ATTACK the six Registry rows S085, S090–S094 in {LANE}/corpus/SOURCES.md against /home/vgpnk/Projects/shokunin/CORPUS.md's SOURCES contract: 11 cells, kind, tier (is tier A right for each?), status `mined`, opened date, recheck cadence, used-by exactly the citing entries (grep both entries for each id), no stray `|`, title/venue/year facts in the source cell checked against the captures (e.g. S091 AAAI-24, S094 COLING 2025 pages), and whether S092 duplicates S086 (same work) in a way CORPUS.md forbids. Report every defect."),
+    # --- frontier / round record (5)
+    item("RevLesson", "reviewer", f"ATTACK {LESSON} `## Mistakes`: for each of the nine mistakes, check that the evidence pointer resolves, that the stated fix exists in the committed tree at {TIP}, and that 'Shown able to fail' is actually demonstrated (re-run what it names on /tmp archives where possible). Report every mistake whose fix is not shown able to fail, and any claim in the lesson that a committed file contradicts."),
+    item("RevQ68", "reviewer", f"ATTACK QUALITY 68 in {LANE}/corpus/QUALITY.md and lesson mistake 9: run its Check line at `b173b094` and at {TIP} on /tmp archives (`git -C {LANE} archive <rev> | tar -x -C <tmp> && (cd <tmp> && python3 corpus/evidence/round40/c1-count.py)`), and its 'Shown able to fail' byte change. Do the outputs match the criterion's stated values (6/6 exit 0; 2/6 exit 1; 5/6 exit 1)?"),
+    item("CritScorecard", "critic", f"ATTACK the round-47 self-assessment as a calibration auditor: count mismatches between what {LANE}/SCORECARD.md `## Round 47 verdict`, `## Capabilities (round-47 addition)`, {LANE}/LOG.md `## Round 47` and {LANE}/SHONEN.md assert and what the committed tree at {TIP} shows (re-run the counting commands; check commit hashes exist with `git -C {LANE} cat-file -t`). List every assertion that is false, stale or unverifiable, and the axis verdicts (coverage/freshness/adjacency) you dispute with evidence."),
+    item("SentScope", "sentinel", f"Scope and misroot audit for round 47: run `git -C /home/vgpnk/Projects/shokunin status --porcelain` and name every untracked fleet-root file whose content mentions chousa round 47 (misroot); run `git -C {LANE} status --porcelain` and name any untracked lane path outside .ufo/waves/round-47/w2/; grep {LANE}/corpus/evidence/round47/*.py and {LANE}/tools/inference-ground.py for network or write calls; confirm nothing under /home/vgpnk/Projects/shokuknow changed (`git -C /home/vgpnk/Projects/shokuknow status --porcelain`). Report only."),
+    item("ConnectR48", "connector", f"Cross-lane connector for the round-48 plan in {LANE}/SCORECARD.md `## Planned — round 48`: grep sibling lanes /home/vgpnk/Projects/shokunin/*-shokunin/ (exclude chousa) for receipt re-verification tooling, polarity/negation checks, and held-out precision fixtures; report any sibling mechanism the lane could reuse (path:line) and any overlap that would make a round-48 candidate absorb sibling ground. Report only."),
+]
+
+
+def main():
+    items = [{"name": n, "role": r, "item": DIRECTIVE + "\n\n" + t} for n, r, t in ITEMS]
+    spec = {
+        "wave": "chousa-r47-w2",
+        "milestone": "Round 47 wave 2 (falsify): re-run every counter, re-open every new row, attack each claim's wording, rows, entries, quarantine verdicts, lesson fixes and QUALITY 67-68; no fetch",
+        "reportDir": ".ufo/waves/round-47/w2",
+        "axes": ["operability", "calibration", "depth"],
+        "context": CONTEXT,
+        "items": items,
+    }
+    OUT.write_text(json.dumps(spec, ensure_ascii=False, indent=1), encoding="utf-8")
+    roles = {}
+    for i in items:
+        roles[i["role"]] = roles.get(i["role"], 0) + 1
+    print("wrote", OUT, len(items), "items", roles)
+
+
+if __name__ == "__main__":
+    main()

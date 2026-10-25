@@ -4,7 +4,7 @@ author: chousa L1 (in-session L1, hyaku run 6)
 date: 2026-10-25
 base: `9a9f94dbcb010eca6636886e53950f38ca806329`
 freeze: `22a44b8b5c923d25123a96a852c11938559bb9b2`
-landings: C1 `a15610a5` then `980fe43f` (wave-1 refinements); C2 `7fb9a232`; C3 the round's
+landings: C1 `a15610a5`, `980fe43f` (wave-1 refinements), `02d95d32` (wave-2 fixes); C2 `7fb9a232`; C3 `3d2a0637`; record `1fc5ed19`
 C3 commit (named in `SCORECARD.md` and the report)
 
 No external fetch: the fetch-scope L0 `8d77e6c1` is still open. Every capture read this
@@ -38,8 +38,11 @@ Frozen in `corpus/evidence/round47/claims.md` before any seat scored.
    round-46 name pattern counted it and the "bare base" read `ENTRY_POINTS=82
    (counters=51)` where the clean base reads `81 (counters=50)`. Captured-by: none — the
    L1 saw the number disagree with the round-46 closure's `81/81`. Fix: the counter runs
-   from the freeze tree with `--root <archive>`; the archive is never written. Shown able to
-   fail: the contaminated and clean runs print different denominators on the same base.
+   from the freeze tree with `--root <archive>`; the archive is never written. The
+   contaminated receipt was overwritten before the freeze and is in no commit (wave-2
+   `RevLesson`); the committed `controls/c2-before.txt` holds only clean runs, and the
+   round-46 counter on the clean base reads `ENTRY_POINTS=81 (counters=50)`
+   (`controls/c2-controls.txt` §1).
 2. Class: masked exit code (L1, before the freeze). Evidence: piping a counter through
    `rg` recorded `exit=0` for a counter that printed `C2=FAIL`. Captured-by: none. Fix:
    every receipt is written by a `run` helper that saves the counter's own `$?` before any
@@ -104,6 +107,58 @@ Frozen in `corpus/evidence/round47/claims.md` before any seat scored.
    receipts. Fix: QUALITY 68 (one re-verify per round, pinned and tip legs). Shown able to
    fail: at `b173b094` the counter reads `6/6`, exit 0; one changed receipt byte reads `5/6`,
    exit 1. The receipts themselves are not repaired this round (named, routed to round 48).
+
+## Wave-2 findings, corrections and adjudicated disagreements
+
+Wave 2 (34 fresh seats) re-ran every counter over a `git archive` of `1fc5ed19` (`RerunC1`,
+`RerunC2`, `RerunC3`, `CritScorecard`: all reproduce), re-opened all six rows (`Reopen*`:
+hold), re-checked the four quarantine rows word by word (`RevQuarantine`: hold) and the
+id binding (`RevIdBinding`: hold). Applied after the wave (no frozen predicate, counter,
+fixture or target changed):
+
+10. Class: refinement false positive (C1). Evidence: the wave-1 key-path refinement read an
+    ancestor grouping label (`extra_not_frozen/real_source_answers`) as negating, so
+    `evidence-snapshot-coverage-r40.md` drew two false `INF_POLARITY_FLIP` lines under the
+    round-45 counts (`SweepC1Corpus`); `free` ("the next free lane id") read as a negator
+    and masked a real flip (`RevC1Regex` demo A); `un`-prefix flips ignored a preceding
+    `not` (`CritC1Claim` §1). Captured-by: the wave-2 sweep, regex review and claim critic;
+    the frozen counter kills only 2 of 7 refinement mutants (`MutC1Refined`), so the
+    fixtures do not exercise most refinements. Fix (`02d95d32`): the leaf key decides (a
+    generic leaf defers to its parent); span-side negation uses explicit negators only;
+    `free` dropped and latent `unified`/`unpacked`/`unveiled`/`unfolded`/`unwrapped`
+    excluded; the `un` flip respects a preceding negator. Shown able to fail: the 63-entry,
+    three-manifest sweep now prints zero polarity findings and zero exit changes, where
+    the `1fc5ed19` tool printed two.
+11. Class: entry overclaim (C3). The amendment's "the relabelling measures
+    pool-dependence" and "durable for the pool" overstated S094 (`CritAmendEntry`); the
+    base entry's "an error rate of this order" did not follow from CFEVER's agreement and
+    audit figures (`CritBaseEntry`); "one word different" was two (`ReopenS092`). All four
+    sentences now state the narrow reading.
+12. Class: recordkeeping (SCORECARD). The C2 after cell said `93/93` and "the freeze
+    counter `92/92`"; the final counter prints `94/94` once `build-spans.py` entered the set,
+    and the freeze counter `93/93` (`CritScorecard`, `CritC2Claim`); `measure-after.txt` was
+    cited before it was committed. Both fixed in the final commit.
+13. Class: false self-test (C2 row). The `q33-check` row said "run from outside the lane
+    root → exit 2"; it depends on the cwd's receipts and lesson (`RevRowsChecks`). The cell
+    now states the observed conditions.
+
+Held-out measurements of C1, written by seats that did not see the tuning set, at
+`1fc5ed19`: false refusals **2/12** correctly-reasoned bullets (`HeldOutA`); kills **4/12**
+natural flips, misses 8/12 (`HeldOutB`). The round-46 tool scores 0/12 on both. They were
+not re-run after `02d95d32` (the bodies were deleted with the seats' scratch), so the
+post-fix rates are not measured.
+
+Disagreements kept open for the operator:
+
+- `CritC1Claim` and `CritScorecard` rule C1's operability axis a TRADE: the probe kills
+  4/12 flips nothing killed before, at the cost of refusing 2/12 correct synthetic bullets.
+  The L1 reads it as improved with a strictness cost, because no real entry's verdict
+  changed. Both readings are in `SCORECARD.md`; this lane does not resolve its own trade.
+- `RevLesson` reported QUALITY 68's tip leg false ("6/6 at `a15610a5`"); the L1 re-ran it
+  over archives of `a15610a5`, `02d95d32` and `b173b094`: `2/6`, `2/6`, `6/6` — the
+  criterion stands. It also called mistake 3's "no exit code documented" example
+  fabricated; the phrase contains the substring `exit`, which is the defect
+  (`ReviewerC2Set` probe P7 registered a path with it), so the example stands.
 
 ## Named limits after the wave-1 fixes
 

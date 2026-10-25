@@ -653,8 +653,10 @@ the admitted entry that motivates it. Tier definitions live in
     (`corpus/evidence/round47/controls/c1-controls.txt`). Named limit: the check counts
     negators in fixed windows (three words before, two after; four after a figure) over
     words sharing a five-letter stem — it is not entailment: a flip through a different
-    stem, a distant negator, double negation, or a second bullet still passes, and a
-    correct bullet whose negator sits outside the window is refused. — `lessons/round-47.md`.
+    stem, a distant negator, or a second bullet still passes, and a correct bullet whose
+    only negator sits outside the window, or whose negator binds a neighbouring word, is
+    refused (wave-2 held-out sets: 4 of 12 flips killed, 2 of 12 correct bullets refused).
+    — `lessons/round-47.md`.
 
     Note on 66 (round 47): its limit "correct tokens strung into an assertion of the
     opposite still pass" now holds only outside criterion 67's windows.

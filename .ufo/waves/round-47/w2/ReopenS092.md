@@ -1,0 +1,23 @@
+ATTACKS: S092 registry row (SOURCES.md:102), claim-support-test-r37-amendment-2026-10-23.md S092-citing sentences, capture b502d4c6a6ee023bee6f8531.txt (69681 chars)
+VERDICT: holds (one minor wording defect in an Observation bullet)
+
+I. Conditional (1)
+- row 102 anchor cell, 3 slices, all chrom: char 2821 '0.6841 in Fleiss' match=True count=1 first=2821; char 2849 'For the first two classes, the annotators also recorded the sentence(s)' match=True count=1 first=2849; char 6601 '95.42% precision and 72.36% recall in evidence retrieval' match=True count=1 first=6601.
+
+II. Every quoted string in the entry attributed to S092 — verbatim, count, first offset (capture)
+- "If I was given only the selected sentences, do I have stronger reason to believe claim is true (supported) or stronger reason to believe the claim is false (refuted).": 1, 60107 (A.6). "If I’m not certain, what additional information (dictionary) do I have to add to reach this conclusion.": 2, 15336 (3.2) & 60274 (A.6). "do I have strong reason to believe the claim is true (supported)": 1, 15211 (3.2).
+- "You must apply common-sense reasoning to the evidence you read but avoid applying your own world-knowledge by basing your decisions on the information presented in the Wikipedia page and dictionary.": 1, 59858 (A.6). "If you could not find any supporting evidence, press Skip then select Not enough information": 1, 59679 (A.6). "For the first two classes, the annotators also recorded the sentence(s) forming the necessary evidence for their judgment.": 1, 2849 (abstract).
+- "Supported , Refuted or NotEnoughInfo by annotators achieving 0.6841 in Fleiss": 1, 2760 (abstract). "κ \kappa": 4, 2838/6533/18025/18177; the bullet's rendering claim is satisfied (capture literal is "κ \kappa"). "We randomly selected 4% ( n = 7506 n=7506 ) of claims which were not skipped to be annotated by 5 annotators.": 1, 17890 (3.4.1). "We calculated the Fleiss κ \kappa score Fleiss (1971) to be 0.6841 which we consider encouraging given the complexity of the task.": 1, 18000 (3.4.1). "5-way Agreement": 2, 667 (TOC) & 17869 (3.4.1 heading).
+- "95.42% precision and 72.36% recall in evidence retrieval": 1, 6601 (intro). "the precision/recall was 95.42% and 72.36% respectively": 1, 18813 (3.4.2, section spans 18352–18878).
+- Inference backticks: "do I have stronger reason to believe claim is true" 1@60151; "basing your decisions on the information presented in the Wikipedia page and dictionary" 1@59968; "You must apply common-sense reasoning to the evidence you read" 1@59858; "0.6841 in Fleiss" 1@2821; "For the first two classes" 2@2849/5605 (entry cites the abstract instance); "If I was given only the selected sentences" 2@15167/60107; "If I’m not certain" 2@15336/60274; "Supported , Refuted" 5 (entry cites the abstract instance @2760).
+- No quoted string attributed to S092 fails verbatim; all offsets in the S092 `source:` line (2760, 2849, 6601, 15211, 15336, 17869, 17890, 18000, 18813, 59679, 59858, 60107, 60274) hold exactly what the line names. Capture metadata matches the row's citation: "arXiv:1803.05355v3 [cs.CL] 18 Dec 2018" @1860; title @1900; DOI 10.18653/v1/N18-1074 @40893; NAACL-HLT 2018 @40893.
+
+III. Sentence judgments (S092-citing)
+- Obs 1 "test is written as a decision rule": supported. Both quotes verbatim; "not byte-identical" true (two renders exist; e.g. "If I was given only the selected sentences" @15167 and @60107).
+- Obs 2 "bounds evidence, names third outcome": supported. Verbatim quotes; §3.4.2's super-annotator setting at 18352 explains "searched the whole of Wikipedia".
+- Obs 3 "three-class label scored by five annotators on a sample": supported. §3.4.1 heading @17863, sample @17890, figure @18000; label set three (Supported/Refuted/NotEnoughInfo @14744).
+- Obs 4 "reliability of the evidence step": supported. Intro quote @6601 (1 Introduction @3403), §3.4.2 quote @18813; precise §1.2 quote @6438 confirms attribution to intro.
+- Inf 1/2/3/4/5 and Unknown 1 S092 references: all supported verbatim; only two-render claims use phrases that occur twice (both forms verified).
+- DEFECT (minor): Obs 1 says the two renders differ in "one word"; the diff shows two word differences: "strong" vs "stronger" and "the claim" vs "claim" (§3.2 @15211: "do I have strong reason to believe the claim is true"; A.6 @60107: "do I have stronger reason to believe claim is true"). The sentence's semantics (decision rule, "stronger reason") are accurate — this is only a miscounted calibration detail; recommend "two words differ".
+
+Verification: python3 captures checks, `awk 'NR==102'`, `cat -A`, row parse (13 cols) run; no installs; no fetches; no lane/fleet mutations. Scratch /tmp/chousa-r47w2-ReopenS092 deleted.
