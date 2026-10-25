@@ -1552,3 +1552,15 @@ S077 collision handled by document.
 - Rejected, with flip: `search-log-fields-r36.md` (staged S077 capture is a 267-byte / 265-character bot wall) and `search-tracking-record-r40.md` (column sentence not contiguous). Scratch census on the mirrored registry plus the S078 row exited 0 before the append. Collision guard: indented `  | S118 |` is caught; column-zero pattern misses it. Real collision is S077 only.
 - QUALITY 61 mined from `considerthese/2026-10-24.md`: a validated spec is not a completed dispatch. Append-only erratum on the 265/267 nit in `corpus/lessons/round-42.md`; the r42 sentences are not rewritten.
 - Inherited debt, deliberate: `PROVINCE.md` mode restored to 644 (content unchanged). Prior-wave registries, r41 `cells.json`, and untracked r40/r41 seat reports left untouched and named; they are not this round's work. Register staleness routed by L0; the register was not edited.
+
+## Round 44 — freeze, before any seat scored (2026-10-24)
+
+Three claims frozen in `corpus/evidence/round44/claims.md` before any seat scored.
+No external fetch (L0 `8d77e6c1` still open). This entry is the freeze only.
+After-measurements are a later entry.
+
+- **C1 operability** (lowest scored axis, 3/10): `tools/parent-lifetime.sh` writes a wait log in the same process that spawned the children. Before: missing log exits 1 (`receipts/c1-before.txt`). `controls/pids0.receipt` and `controls/prose.receipt` exit 1. A two-child selftest log shows matching parent_pid and is not the claim measurement (`controls/selftest.receipt`).
+- **C2 calibration**: the 39 inherited paths are frozen in `c2-count.py`. Missing table exits 1. `controls/all-left.tsv` scores `REVERIFIED=0/36` and exits 1. The three modified JSON files are required `left-named` with `not hunk-verified`.
+- **C3 depth**, sourced on the RFC 7089 URL, not yet appended: missing entry exits 1 (`receipts/c3-before.txt`). The located quote was confirmed in the committed capture before this freeze. That confirmation is construction, not a seat score.
+- Freshness will not be scored improved from a pre-round capture. The round-43 closure routed that inflation.
+- Census start: `sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa` exit 0, five W04 (`receipts/census-start.txt`).
