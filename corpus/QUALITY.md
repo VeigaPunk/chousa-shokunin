@@ -699,6 +699,16 @@ the admitted entry that motivates it. Tier definitions live in
     the frozen composite rejects it when installed at the default tool path
     (`controls/name-key-control.txt`, `MUTATION_NOT_APPLIED`). The 12 texts are
     recycled R47 held-out regression cases, not a fresh estimate.
+    The R48 Named limit records the current bullet-side windows (P1: 7-before/3-after; P2: 2-before); the span-side window remains 3-before. Criterion 67's 3/2 values describe the R47 behavior.
+    Round-49 additions: (a) the two-word P2 look-back has an unmeasured false-negative
+    class — a plain denial of an affirmed phrase passes when its negator sits three words
+    before the phrase stem (a05, `that date is not the copy's build date`, and the W1
+    `DraftP2Limit.md` denial both exit 0; a two-before control exits 1), while
+    `python3 corpus/evidence/round48/precision-count.py` still prints
+    `CORRECT_BULLETS_PASS=12/12` because no frozen case tests it; (b) the round-48
+    closure ruled a05's correct label false, so the R47 tool's false refusals on this set
+    are 2/12 (p03, p04); (c) pointer correction: the round-48 lesson has no Mistake 4 —
+    this criterion rests on its `## Spot-check intake` rows 1–3.
     — `corpus/lessons/round-48.md` Mistake 4; S095.
 
 70. **A control receipt preserves the observed exit/result pair.** A control is
@@ -711,3 +721,27 @@ the admitted entry that motivates it. Tier definitions live in
     `python3 corpus/evidence/round48/c1-count.py --tool /usr/bin/true --cases-only`
     shows `observed_rc=1` (the Python interpreter rejects the ELF binary), documented
     in `controls/before-erratum.txt`. — `corpus/lessons/round-48.md` Mistake 5.
+
+71. **A round report's freshness line states the age of the newest capture the lane
+    may read.** While L0 `8d77e6c1` (fetch scope) is open freshness cannot move; the
+    report makes that cost visible instead of repeating "unchanged". Check:
+    `python3 corpus/evidence/round49/capture-age-check.py <report>` — exit 0
+    `FRESHNESS_CAPTURE_AGE=PASS` when one line names freshness, a capture and an ISO
+    date; exit 1 `FAIL`. Shown able to fail: the round-48 report
+    (`/home/vgpnk/Projects/shokunin/.ufo/reports/round-48/chousa.md`) prints `FAIL`,
+    exit 1. — `considerthese/2026-10-25.md:55-56` (mined 2026-10-25);
+    `corpus/lessons/round-49.md` `## considerthese`.
+
+72. **A span-quote counter has a substance floor, and a capability counter has a
+    perturbed-input leg.** Structural legs (quote in span, in entry, in lesson; exact
+    capture slice; anchor at the quote offset) all pass a single-space quote over a
+    whole-capture span; fixed-input legs all pass a replay of the real tool's outputs.
+    Before freezing such a counter, score a hollow-quote control and a replay control
+    with it (QUALITY 60). Check for span manifests:
+    `python3 corpus/evidence/round49/quote-substance-check.py [MANIFEST]` — exit 1 on a
+    quote under 3 non-space characters, an id with no quote of 12 or more, or a span
+    wider than its quote plus context; exit 0 otherwise. Shown able to fail: the W1
+    `CritForgeC2` shape (single-space quote, 5000-character span) prints
+    `HOLLOW_QUOTE`/`OVERWIDE_SPAN`/`NO_SUBSTANTIVE_QUOTE`, exit 1; the round-49 manifest
+    prints `IDS=8 QUOTES=28 FAILURES=0`, exit 0. — `corpus/lessons/round-49.md`
+    Mistakes rows 2–3.

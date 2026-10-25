@@ -117,7 +117,20 @@ def build(rows, cache: pathlib.Path) -> tuple[list[str], dict[str, str], list[in
         seen[sid] = seen.get(sid, 0) + 1
         name = f"spans/{sid}-{seen[sid]}.txt"
         start = max(0, off - CONTEXT)
-        span = text[start:off + len(quote) + CONTEXT]
+        end = off + len(quote) + CONTEXT
+        if fname.endswith(".raw"):
+            # Round-49 post-freeze repair (disclosed in claims-erratum.md): the
+            # frozen counter reads span FILES with universal newlines, so a bare
+            # CR (Word's paragraph mark in the UTF-16LE text) reads back as LF
+            # and the exact-slice check fails on true bytes. Raw-form context is
+            # clipped at the nearest CR on each side; the span stays an exact
+            # slice of the form. `.txt` forms are read with universal newlines
+            # on both sides already.
+            cr = text.rfind("\r", start, off)
+            start = cr + 1 if cr >= 0 else start
+            cr = text.find("\r", off + len(quote), end)
+            end = cr if cr >= 0 else end
+        span = text[start:end]
         if span == quote:
             refused.append(f"{sid}: capture {cap.name} holds no context around {quote!r}")
             continue
