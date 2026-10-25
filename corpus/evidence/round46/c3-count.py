@@ -74,6 +74,14 @@ def sha(path: pathlib.Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def integral_offset(v: str) -> bool:
+    """A recorded offset is a non-negative integer index into the capture."""
+    try:
+        return int(v) >= 0
+    except ValueError:
+        return False
+
+
 def sentences(text: str) -> list[str]:
     return re.split(r"(?<=[.!?])\s+", text)
 
@@ -104,7 +112,8 @@ def main() -> int:
     manifest = ev / "spans.tsv"
     if manifest.is_file():
         rows = [l.split("\t") for l in manifest.read_text(encoding="utf-8").splitlines()[1:] if l.strip()]
-    in_span = in_entry = cap_bound = 0
+    in_span = in_entry = cap_bound = span_ctx = 0
+    row_ids: set[str] = set()
     for r in rows:
         if len(r) != 7:
             continue
@@ -114,16 +123,17 @@ def main() -> int:
             continue
         span_path = ev / raw
         span = span_path.read_text(encoding="utf-8") if span_path.is_file() else ""
+        row_ids.add(sid.strip())
         in_span += bool(quote and quote in span)
+        span_ctx += bool(integral_offset(offset) and len(span) > len(quote))
         in_entry += bool(quote and quote in texts.get(entry, ""))
         if not a.lane_only:
             cap = cache / f"{key(url)}.txt"
             if cap.is_file() and sha(cap) == cap_sha and span:
                 ct = cap.read_text(encoding="utf-8", errors="replace")
-                try:
-                    o = int(offset)
-                except ValueError:
+                if not integral_offset(offset):
                     continue
+                o = int(offset)
                 cap_bound += ct[o:o + len(span)] == span
 
     unb = 0
@@ -153,7 +163,11 @@ def main() -> int:
         ok = (entries == 2 and bound == len(BINDINGS) and len(rows) == N_QUOTES
               and in_span == N_QUOTES and in_entry == N_QUOTES and cap_bound == N_QUOTES
               and unb == 0 and ref_ok == len(CROSS_REFS))
+    span_ids = len(row_ids & {sid for _e, sid, _u in BINDINGS})
+    print(f"SPAN_IDS={span_ids}/{len(BINDINGS)}")
+    print(f"SPAN_CONTEXT={span_ctx}/{N_QUOTES}")
     print(f"REF_ID_UNBOUND={unb}")
+    ok = ok and span_ids == len(BINDINGS) and span_ctx == N_QUOTES
     print(f"REF_BOUND={ref_ok}/{len(CROSS_REFS)}")
     print("C3=PASS" if ok else "C3=FAIL")
     return 0 if ok else 1

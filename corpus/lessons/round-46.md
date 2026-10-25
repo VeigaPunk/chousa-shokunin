@@ -138,6 +138,61 @@ Frozen in `corpus/evidence/round46/claims.md` before any seat scored.
     frozen sentences (they say "named" and "the sentence names"), not defects to
     repair inside the claim; recorded here so round 47 inherits them.
 
+## Wave-2 corrections and record errata
+
+Every item below was found by a wave-2 seat, applied in the lane, and re-measured.
+None changes a frozen predicate, target or kill rule.
+
+- **Zenodo identifier roles were inverted** (`CritC3Inference` F1). The record's
+  own doi is 10.5281/zenodo.4925954; `conceptdoi` 10.5281/zenodo.4925953 names the
+  version SERIES. The adopted entries said the reverse (and `corpus/README.md`
+  repeated it); all three now state the roles correctly, with `relations.version`
+  (`parent.pid_value` 4925953, char 1439) as the evidence. Recorded here because
+  the C3 kill rule requires a corrected staged sentence to be logged.
+- **72.36% reattributed** to the annotators' agreement against the
+  super-annotators, not to a system (`CritC3Inference`, `RevC3Entries`); the
+  word "exhaustive" is now anchored to the paper's "every possible sentence"
+  (char 20059) in both the entry and the S086 row instead of standing unquoted.
+- **Entry char pointers corrected**: the S089 archiving sentence is at 14582 (not
+  14603), the null-pair pointer at 9949 (not 9920), `"revision": 2` at 3666.
+- **The amendment's 1,582/7,572 pairing** (which does not partition the
+  set: 5,959 + 1,582 = 7,541) was replaced by the remainder phrasing, and the
+  staged "operational in the pipeline" is corrected to the annotators.
+- **SKILL Gates rows moved inside the table** (`RevGatesRows` F1): the first
+  insertion sat after the blank line that closes the header table, so the rows
+  did not render as rows even though the counter counted them. They now sit
+  directly under `tag-count`. Stale digests were replaced by a pointer to
+  `measure-after.txt`, and the round24–27 verdict map no longer claims an exit-2
+  path for scripts that have none.
+- **SOURCES table blank line removed** (`RevC3Rows` F7): the same defect in the
+  registry — a blank line ended the table before S085–S089.
+- **C2 row rule raised to nine separators** (eight cells), because a single
+  seven-cell row holding every path scored `UNREGISTERED=0` (`RevInherited`);
+  eight-cell rows still register.
+- **C1 counter deduplicated** (`RevC1Controls` D4): a bad patch left three dead
+  copies of `main()` after `sys.exit(main())`; the file is one copy again. The
+  three forge scripts are now committed under `controls/` so every control
+  receipt is re-executable (D5).
+- **C3 gains three legs** (`RevC3Spans` F2/F3/F4): `SPAN_IDS=5/5` (every bound
+  source has at least one span), `SPAN_CONTEXT=11/11` (a span is longer than its
+  quote), and a non-negative-integer offset guard.
+- **C1's canary and fixture pins are ADDED discrimination legs, not the frozen
+  predicate** (`RevC1Controls` D2). The frozen sentence quantifies over the six
+  named fixtures' exit codes; that sentence is met at every revision. The CANARY
+  leg (renamed copies) and the byte pins are post-freeze hardening: they also
+  pass, and they refuse forges the frozen legs cannot see. Any closure reading
+  the counter should score the frozen legs first and report the added ones
+  separately.
+- **`measure-after.txt` is regenerated over a `git archive` of the landing
+  commit** (`RevC3Census` F1, `RevC1Controls` D1): the earlier copy mixed a
+  committed counter with an uncommitted tool.
+- **Before-state now records four trees** (`RevC2Before` H1): A = base + the
+  three counters + fixtures (`71`, `UNREGISTERED=16`), B = base + the whole
+  round-46 dir (`71`, `16`), C = base + the counters only (`71`, `16`), D = the
+  pristine base archive (`68`, `13`, the true pre-existing debt). The after-state
+  is `73/73` at HEAD (`72/72` at the landing commit; the +1 is `build-spans.py`,
+  which enters the set once SCORECARD names it).
+
 ### Named limits of the round-46 instruments (not repaired inside the claims)
 
 - **C1, designator leg untested.** The counter invokes the tool without

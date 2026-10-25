@@ -54,7 +54,10 @@ WORD_RE = re.compile(r"[A-Za-z]")
 
 
 def read(p: pathlib.Path) -> str:
-    return p.read_text(encoding="utf-8", errors="replace")
+    try:
+        return p.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return ""
 
 
 def has_two_words(s: str) -> bool:
@@ -63,8 +66,13 @@ def has_two_words(s: str) -> bool:
 
 
 def inference_bullets(text: str) -> tuple[bool, list[str]]:
+    """Every bullet of every `#### Inference` section (all of them, not the first).
+
+    A second Inference section is prose a reader sees, so its bullets are
+    checked too (round-46 `MutC1More` M4: a junk second section was never read).
+    """
     lines = text.splitlines()
-    start, fence = None, False
+    heads, fence = [], False
     for i, line in enumerate(lines):
         if line.lstrip().startswith("```"):
             fence = not fence
@@ -73,40 +81,46 @@ def inference_bullets(text: str) -> tuple[bool, list[str]]:
             continue
         m = HEAD_RE.match(line)
         if m and m.group(1) == "####" and m.group(2).strip().lower().startswith("inference"):
-            start = i + 1
-            break
-    if start is None:
+            heads.append(i)
+    if not heads:
         return False, []
-    bullets, cur, fence = [], None, False
-    for line in lines[start:]:
-        if line.lstrip().startswith("```"):
-            # A fence is literal for HEADINGS (a fenced `## Unknown` does not
-            # end the section) but never hides a bullet: a junk inference line
-            # parked inside a fence still renders to a reader, so it is counted
-            # (round-46 mutation survivor `MutC1Junk`).
-            fence = not fence
+    bullets: list[str] = []
+    for h in heads:
+        cur: str | None = None
+        fence = False
+        for line in lines[h + 1:]:
+            if line.lstrip().startswith("```"):
+                # A fence is literal for HEADINGS but never hides a bullet: a
+                # junk inference parked inside a fence still renders to a reader.
+                fence = not fence
+                if cur is not None:
+                    bullets.append(cur)
+                    cur = None
+                continue
+            if not fence:
+                m = HEAD_RE.match(line)
+                if m and len(m.group(1)) <= 4:
+                    break
+            if line.startswith("- ") or line.startswith("* "):
+                if cur is not None:
+                    bullets.append(cur)
+                cur = line[2:].strip()
+                continue
             if cur is not None:
-                bullets.append(cur)
-                cur = None
-            continue
-        if not fence:
-            m = HEAD_RE.match(line)
-            if m and len(m.group(1)) <= 4:
-                break
-        if line.startswith("- "):
-            if cur is not None:
-                bullets.append(cur)
-            cur = line[2:].strip()
-            continue
+                if line.strip() == "":
+                    bullets.append(cur)
+                    cur = None
+                else:
+                    cur += " " + line.strip()
         if cur is not None:
-            if line.strip() == "":
-                bullets.append(cur)
-                cur = None
-            else:
-                cur += " " + line.strip()
-    if cur is not None:
-        bullets.append(cur)
+            bullets.append(cur)
     return True, [b for b in bullets if b.strip()]
+
+
+def numeral_in(tok: str, text: str) -> bool:
+    """A figure matches at digit boundaries only: `959` is not `5,959`."""
+    bare = tok.rstrip("%")
+    return re.search(r"(?<![\d,])" + re.escape(bare) + r"(?![\d,])", text) is not None
 
 
 def grounding_tokens(bullet: str) -> list[str]:
@@ -262,7 +276,8 @@ def main() -> int:
         grounded = span_texts(spans, cited)
         for tok in toks:
             ntok += 1
-            ok = any(tok in s for s in grounded)
+            is_num = bool(re.fullmatch(r"\d[\d,]*(?:\.\d+)?%?", tok))
+            ok = any(numeral_in(tok, s) if is_num else tok in s for s in grounded)
             if not ok and re.search(r"\d", tok):
                 ok = any(v in values for v in numeral_variants(tok))
             if not ok and re.search(r"\d", tok):
@@ -270,7 +285,9 @@ def main() -> int:
                 # S079's title), and nothing else: a bare year or a URL run in
                 # the same cell must not ground a figure (round-46
                 # `ReviewerC1Tool`).
-                ok = any(d in bullet for sid in cited for d in designators(titles.get(sid, "")))
+                bare = tok.rstrip("%").replace(",", "")
+                ok = any(d in bullet and bare in d.replace(",", "")
+                         for sid in cited for d in designators(titles.get(sid, "")))
             if ok:
                 ngood += 1
             else:
@@ -284,10 +301,14 @@ def main() -> int:
             print(f"FINDING {f['code']} bullet={f['bullet']} token={f['token']!r}")
         print("GROUND: PASS" if not findings else "GROUND: FAIL")
     if a.json:
-        pathlib.Path(a.json).write_text(
-            json.dumps({"entry": entry_rel, "section": present, "bullets": len(bullets),
-                        "tokens": ntok, "grounded": ngood, "findings": findings}, indent=1),
-            encoding="utf-8")
+        try:
+            pathlib.Path(a.json).write_text(
+                json.dumps({"entry": entry_rel, "section": present, "bullets": len(bullets),
+                            "tokens": ntok, "grounded": ngood, "findings": findings}, indent=1),
+                encoding="utf-8")
+        except OSError as exc:
+            print(f"inference-ground: cannot write --json: {exc}", file=sys.stderr)
+            return 2
     return 0 if not findings else 1
 
 

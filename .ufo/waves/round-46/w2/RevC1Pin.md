@@ -2,7 +2,16 @@
 
 seat `L1Chousa46.RevC1Pin` · judged bytes `d09fc8e7e2972e30e5e0aaa6e404c97aa0b9f95a` · claims frozen at `c2f0e9d1`.
 Every mutation ran on a `git archive` copy under `/tmp` (deleted); lane bytes untouched.
-Tree note: HEAD moved `d09fc8e` → `3807537` mid-run; `git diff --stat d09fc8e 3807537 -- corpus/fixtures/inference-ground-r46/ corpus/evidence/round46/c1-count.py` is empty, so all numbers hold at both. The worktree counter has changed again since (`M c1-count.py`, a name-keying canary, §P3) — uncommitted, not what is judged.
+Tree note: HEAD moved `d09fc8e` → `3807537` mid-run; `git diff --stat d09fc8e 3807537 -- corpus/fixtures/inference-ground-r46/ corpus/evidence/round46/c1-count.py` is empty, so all numbers hold at both. The worktree counter has since changed again (`M c1-count.py`, a name-keying canary, §P3) — uncommitted, not what is judged. Settled worktree at my last measurement: c1 `8fa8e5cc`, tool `c3ea067e` (§Closing status).
+
+## Closing status on the settled worktree (`c1-count.py` = `8fa8e5cc`, 13951 B)
+
+Re-run against the same fake roots, after the owner's span pins landed:
+
+- lane run (read-only): `TOOL=present POSITIVE_PASS=3/3 JUNK_KILLED=3/3 CANARY=pass C1=PASS` exit 0.
+- **P1 closed**: append one byte to `spans/S901-1.txt` → `FIXTURES_CHANGED=spans/S901-1.txt` / `C1=FAIL` exit 1. The pin now names the payload path; `PINNED` carries `spans/S901-1.txt` / `spans/S902-1.txt` (`:51-52`).
+- **P2 open**: self-mutating forge, no timer → `… CANARY=pass C1=PASS` exit 0; re-run → `FIXTURES_CHANGED=junk-uncited.md,junk-ungrounded.md,junk-borrowed.md` / `C1=FAIL` exit 1. `grep -n "after the legs\|re-digest\|changed_after"` → none: the post-leg re-digest has not landed.
+- File shape at that revision: one `PINNED` dict, four `def main` / four `if __name__` guards. The **first** copy executes — its `sys.exit(main())` terminates the process, so later copies never run — and it is the one carrying the span pins. (An earlier note of mine said the second copy runs; that was wrong.)
 
 ## Commands (verbatim decisive output)
 
@@ -36,8 +45,9 @@ Restores used `git show d09fc8e:<path>`; N/G2 confirm the copy was faithful agai
 ### Pin is a pre-flight read, not an invariant of the measured bytes
 `c1-count.py:84-90` digests, `:105-106` re-reads the same paths in six subprocesses. In a /tmp copy with a 2 s gap inserted only to make the window deterministic:
 - R0 citation-id-only forge, no swap → `POSITIVE_PASS=3/3 JUNK_KILLED=0/3 C1=FAIL` exit 1.
-- R1 same forge + the three junk bodies rewritten inside the window (`28dbe59108daf9…`, a body citing nothing) → `POSITIVE_PASS=3/3 JUNK_KILLED=3/3 C1=PASS` **exit 0**: a tool the claim says must score 1/3 reaches full marks, pin already satisfied.
-- Natural window, timers only (no sleep): `PIN_TO_LAST_RUN_SEC=0.170`.
+- R1 same forge + the three junk bodies rewritten inside a staged 2 s window → `POSITIVE_PASS=3/3 JUNK_KILLED=3/3 C1=PASS` **exit 0**: a tool the claim says must score 1/3 reaches full marks, pin already satisfied.
+- R2 **no timer, no counter copy** (self-mutating forge: rewrites the three junk bodies on its first invocation), on the committed counter `819287e2` = `d09fc8e` and `3807537` → run 1 `TOOL=present POSITIVE_PASS=3/3 JUNK_KILLED=3/3 C1=PASS` **exit 0**; run 2 `FIXTURES_CHANGED=junk-uncited.md,junk-ungrounded.md,junk-borrowed.md` / `C1=FAIL` exit 1. The same forge on the canary revision `8fa8e5cc` → `… CANARY=pass C1=PASS` exit 0: both `copyfile` calls are taken **before** the first `run()` and `canary-b.md` is a copy of `junk-uncited.md`, whose inference bullet already lacks an `S` id, so an uncited rewrite satisfies the canary's junk leg by construction.
+- Natural window, timers only: `PIN_TO_LAST_RUN_SEC=0.170`.
 
 ### Residual cheapest gate against the in-flight canary
 A 9-line stub reading **no** span file — inference bullet carries an `S` id, two sentences hardcoded as fingerprints (`reverse index of every citation`, `independently re-verified against a live source`; sha256 `9d4995847bb9…`) → `TOOL=present POSITIVE_PASS=3/3 JUNK_KILLED=3/3 CANARY=pass C1=PASS` **exit 0** on the canary-bearing worktree counter. Exact name keying is caught (`CANARY=fail`, exit 1, for both H and a `junk`-substring stub); content fingerprinting is not — the canary copies carry the same sentences.
@@ -47,9 +57,9 @@ All eight `PINNED` values equal the `c2f0e9d1` blobs (`13782968… 1d09c94b… 4
 
 ## Findings
 
-**P1 — high, operability. The kill-rule clause covers 8 of the 10 files the freeze shipped, and the two it skips supply the grounding text.** `claims.md` R46-C1: "a fixture set changed after this freeze, fails the claim as declared." One byte, a rename, or a delete under `spans/` changes the verdict (E1/I/J) yet prints the ordinary `C1=FAIL`, byte-identical to a tool defect — the counter cannot distinguish a post-freeze fixture edit from a regression. `corpus/lessons/round-46.md` mistake 1 states the fix as "a `PINNED` dict of sha256 per fixture", which reads as full coverage; it is per *top-level* file. Close: two entries — `spans/S901-1.txt: 7c2aa321…`, `spans/S902-1.txt: c2184ca7…` — or walk the directory. Additions stay unenforced (F; wave-1 `MutC1Junk` row D — reported here only as its closing status, not as new).
+**P1 — high, operability. The kill-rule clause covers 8 of the 10 files the freeze shipped, and the two it skips supply the grounding text.** `claims.md` R46-C1: "a fixture set changed after this freeze, fails the claim as declared." One byte, a rename, or a delete under `spans/` changes the verdict (E1/I/J) yet prints the ordinary `C1=FAIL`, byte-identical to a tool defect — the counter cannot distinguish a post-freeze fixture edit from a regression. `corpus/lessons/round-46.md` mistake 1 states the fix as "a `PINNED` dict of sha256 per fixture", which reads as full coverage; it is per *top-level* file. Close: two entries — `spans/S901-1.txt: 7c2aa321…`, `spans/S902-1.txt: c2184ca7…` — or walk the directory. **Closed at `8fa8e5cc`** (§Closing status). Additions stay unenforced (F; wave-1 `MutC1Junk` row D — reported here only as its closing status, not as new).
 
-**P2 — high, operability. The pin and the measurement are two independent reads.** A concurrent writer between `:84-90` and `:105-106` turns the declared 1/3 control into `C1=PASS` (R1) with no `FIXTURES_CHANGED`; natural window ≈0.17 s, with 32+ seats in this lane. Content-addressing is therefore not an invariant of the scored bytes. Close: re-digest after the legs and require equality, or pin once and score a private copy.
+**P2 — high, operability. The pin and the measurement are two independent reads.** The scored bytes are not the pinned bytes: a tool that rewrites the fixture directory before the legs are read turns the declared 1/3 control into `C1=PASS` with no `FIXTURES_CHANGED` (R1, R2). R2 needs no timer and no counter copy — a self-mutating forge passes on the unmodified committed counter — and it defeats the worktree canary by construction (both `copyfile` calls precede the first `run()`). Natural window ≈0.17 s with 32+ seats in this lane, so a benign race is plausible too. Close: re-digest after the legs and require equality, or pin once and score a private copy. **Still open at `8fa8e5cc`** — no post-leg re-digest is in the file.
 
 **P3 — high, calibration. `PINNED` protects the fixtures; nothing protects the tool.** The 3-line name-keyed stub (H) scores full marks at the judged commit, falsifying `c1-count.py:19` ("Cheapest gates that would score full marks without the work") as written, and it outlives the `!= 0`→`== 1` hardening (`MutC1Junk` row F's exit-2 stub is refused now; exit-1 name keying was not). The worktree canary closes name keying only (fingerprint stub, above). No tool sha256 is in the counter, and `SKILL.md:117` records none; `measure-after.txt` names `tool 3018b1d25d762054` (= `3807537`'s revision, not `d09fc8e`'s `819f83ebdc6c…`). Both revisions score PASS, so the number is revision-robust while the attestation is not. Close: pin the tool's sha256, or name the limit.
 

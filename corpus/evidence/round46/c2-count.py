@@ -88,15 +88,22 @@ def gates_rows(skill: pathlib.Path) -> list[str]:
         if line.startswith("## "):
             inside = line.strip() == "## Gates"
             continue
-        bare = re.sub(r"<!--.*?-->", "", line)
-        if inside and bare.startswith("|") and bare.count("|") >= 8 and "exit" in bare:
-            rows.append(bare)
+        # The row test runs on the RAW line first: a comment prefix can never
+        # manufacture a row (`MutC2More` N1), while an inline comment inside a
+        # real row is stripped before the cell test.
+        if inside and line.startswith("|"):
+            bare = re.sub(r"<!--.*?-->", "", line)
+            # Nine separators = the table's eight cells. Eight separators (a
+            # seven-cell line) let a single row hold every path in one cell and
+            # score UNREGISTERED=0 (`RevInherited`).
+            if bare.count("|") >= 9 and "exit" in bare:
+                rows.append(bare)
     return rows
 
 
 def names(row: str, path: str) -> bool:
     """Path membership at a delimiter boundary, never as a suffix of another name."""
-    return re.search(r"(?<![A-Za-z0-9_./-])" + re.escape(path) + r"(?![A-Za-z0-9_./-])",
+    return re.search(r"(?<![A-Za-z0-9_./-])(?:\./)?" + re.escape(path) + r"(?![A-Za-z0-9_./-])",
                      row) is not None
 
 

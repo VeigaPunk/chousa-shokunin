@@ -48,6 +48,8 @@ PINNED = {
     "junk-borrowed.md": "cba03251466e44773ef0ed9e080388b284f30f1ada0034e6b3c824d364ceb778",
     "spans.tsv": "38a536bd9d33d0dc45d441cce6ce1882a1f4e60ee8ecdaebfd9f85a229d2aff4",
     "counts.json": "fd414d0a24883711dab8e27bd36e0aad00e6e09192d51b7bf75228e3f76fbb5c",
+    "spans/S901-1.txt": "7c2aa3214d9409886ca91fefa1ed69599c29ec521cd745affae86f93b762b1ef",
+    "spans/S902-1.txt": "c2184ca73ce45977b629591c786525bf8bf7899bc436f443af91feab396f20e4",
 }
 
 
@@ -115,3 +117,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
+
