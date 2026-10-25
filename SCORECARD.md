@@ -2527,9 +2527,34 @@ The round-1 operability scale is unchanged: 3 → 3. These observables sit besid
 
 ## Planned — round 48 (not started)
 
+The following candidates were the pre-freeze plan snapshot; superseded by the measured Round-48 disposition below.
+
 Candidates, not commitments: repair or supersede the four round-39/40 receipts that fail
 `gate-sha256-mismatch` since round 41 (QUALITY 68's first run; routed in round 41, never
 closed); a held-out precision fixture set for the polarity probe (correct bullets with the
 negator outside the window, conflicting-polarity spans) so its false-refusal rate is a
 counted leg; a second assimilation theme from `merge/chousa/` whose captures are byte-faithful.
 Freeze 1–3 claims after scoring their do-nothing controls.
+
+## Round 48 verdict — 2026-10-25 (held-out polarity precision and refinement coverage)
+
+R48-C1 was frozen at lane commit `4bbd2348578bb6288c0700dabf37cea04225bfb6` before wave-2 scoring. The tool/counter change landed at `671b096e2bd5d5b0994bcd7ab8c17abaf16c62c7`; final measurements over its archive are in `corpus/evidence/round48/measure-after.txt`. No external fetch; L0 `8d77e6c1` remains open.
+
+| claim / axis | before → after | counting command | verdict | tag |
+|---|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10): the tool and composite counter reduce false refusals on the fixed R47 regression set and cover the five R47 surviving refinements | current R47 tool control `CORRECT_BULLETS_PASS=9/12`, `PRECISION_GATE=FAIL`, C1 exit 1 → candidate `12/12` (minimum 11), `REFINEMENT_CASES=5/5`, `LEGACY_R47=PASS`, `C1=PASS`; separate mutation probe `MUTANTS_KILLED=5/5`; name-keyed no-read control passes c1-count alone but fails the composite mutation-check leg when installed at the default tool path | `python3 corpus/evidence/round48/c1-count.py`; `python3 corpus/evidence/round48/mutation-check.py`; `python3 corpus/evidence/round48/controls/name-key-control.py` | **improved narrowly** on the recycled R47 regression; W2 `AttackPrecision.md` disputes the a05 label (the prior R47 non-author verdict called it a false refusal); re-open a05 in closure before generalizing the result | plumbing |
+
+The numeric operability scale remains 3/10 (its round-1 observable counts three archived inputs, not these new tests). No other expertise score is invented. The round-47 C2 row `SCORECARD.md:2506` was already corrected: `94/94` final, freeze-time counter `93/93`; `92` is the frozen floor, not an after-state ratio. Re-running `python3 corpus/evidence/round47/c2-count.py --list` after the R48 Gate entries yields `REGISTERED=97/97`, `MISMATCHES=0`, C2=PASS.
+
+The carried R39/R40 receipt mismatch is expected historical revision drift, not corrupted receipts: the round-40 counter at the R48 tool commit reports 2/6 at the current gate (four `gate-sha256-mismatch` refusals after round-41 `1bd9001`), while all six verify at their own adding commits (three at `d164f88`, three at `6d914e9`). Receipt bytes remain untouched; reissuing them would rewrite historical measurement bindings. The phrase “QUALITY 68's first run” in the planned-R48 note refers to an R47 criterion, not a round-41 event; round 41 is the cause of the later gate drift.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved narrowly** | R48-C1 after-state and its no-read composite control; see limitations above |
+| calibration | **unchanged** | the R47 SCORECARD correction reproduces, and the current C2 registry is 97/97; no new numeric self-assessment claim is made |
+| depth | **unchanged** | no new domain knowledge entry was admitted; docstring changes document this lexical tool's limits |
+| coverage | **unchanged** | no province frontier moved into core |
+| freshness | **unchanged** | no live or changing external source was opened |
+| adjacency | **unchanged** | `PROVINCE.md` remains scoped to chousa method; `.ufo/waves/round-48/w2/SiblingFit.md` found no sibling ownership overlap |
+
+Trends: expansion **unchanged** (no new knowledge entry on uncovered ground); quality **unchanged** (no corpus knowledge entry was re-admitted or failed a re-check; the measured tool work is C1 operability); discernment **unchanged** pending the required independent closure spot-check of `corpus/lessons/round-48.md` Gate decisions. Seats dispatched by this lane are not counted as non-authors.

@@ -1,0 +1,74 @@
+# Round-48 after-measurement — exact lane code commit
+
+Measured against lane commit `671b096e2bd5d5b0994bcd7ab8c17abaf16c62c7` via a read-only `git archive` copy (temporary extraction). `tools/inference-ground.py` digest is `fa2b4eb5fc29b4dd30f468d9409790ba55fa4b012851e5c9f3efce0074658b6e` in both the commit blob and the worktree at measurement; `TOOL_BYTES_MATCH=true`.
+
+Command: `python3 corpus/evidence/round48/c1-count.py`
+
+```
+implicit-neg=PASS wanted_rc=0 observed_rc=0 GROUND: PASS
+un-neg=PASS wanted_rc=0 observed_rc=0 GROUND: PASS
+un-prefix-flip=PASS wanted_rc=1 observed_rc=1 FINDING INF_POLARITY_FLIP bullet=1 token='the release ships a frozen pool / unfrozen'
+repeated-figure=PASS wanted_rc=1 observed_rc=1 FINDING INF_POLARITY_FLIP bullet=1 token='1,582 / counts key figures/answers_without_archive_key'
+nested-count-key=PASS wanted_rc=0 observed_rc=0 GROUND: PASS
+REFINEMENT_CASES=5/5
+p01=PASS rc=0
+p02=PASS rc=0
+p03=PASS rc=0
+p04=PASS rc=0
+p05=PASS rc=0
+p06=PASS rc=0
+a01=PASS rc=0
+a02=PASS rc=0
+a03=PASS rc=0
+a04=PASS rc=0
+a05=PASS rc=0
+a06=PASS rc=0
+CORRECT_BULLETS_PASS=12/12
+MIN_CORRECT_PASS=11/12
+PRECISION_GATE=PASS
+LEGACY_R47=PASS
+C1=PASS
+exit=0
+```
+
+Command: `python3 corpus/evidence/round48/mutation-check.py`
+
+```
+PRISTINE_CASES=PASS
+implicit-neg=KILLED expected-cell=implicit-neg rc=1
+un-neg=KILLED expected-cell=un-neg rc=1
+un-prefix-flip=KILLED expected-cell=un-prefix-flip rc=1
+repeated-figure=KILLED expected-cell=repeated-figure rc=1
+nested-count-key=KILLED expected-cell=nested-count-key rc=1
+MUTANTS_KILLED=5/5
+exit=0
+```
+
+Command: `python3 corpus/evidence/round47/c1-count.py`
+
+```
+TOOL=present
+POSITIVE_PASS=3/3
+JUNK_KILLED=3/3
+CANARY=pass
+R46_COUNTER=pass
+R46_ENTRIES=2/2
+C1=PASS
+exit=0
+```
+
+Command: `python3 corpus/evidence/round47/c2-count.py --list`
+
+```
+ENTRY_POINTS=97 (abc=87 dependence=+3 check_named=+7)
+FLOOR=92
+GATES_ROWS=52
+REGISTERED=97/97
+UNREGISTERED=0
+DANGLING=0
+MISMATCHES=0
+C2=PASS
+exit=0
+```
+
+C1 shortcut falsification (the control tool itself runs from the live lane, but its target candidate is installed in a temporary archive of the frozen `4bbd234` bytes): `python3 corpus/evidence/round48/controls/name-key-control.py` → `NAME_KEYED_C1_COMPONENT=PASS`, `C1=PASS`, then `NAME_KEYED_MUTATION_CHECK=REJECTED` (`implicit-neg=MUTATION_NOT_APPLIED`), `COMPOSITE_CONTROL=REJECTED`, script exit 0. A 25-line name-only lookup passes the C1 counter component but does not pass the frozen claim's required mutation-check leg. This control is a bounded test; it does not prove resistance to every possible purpose-built substitute.

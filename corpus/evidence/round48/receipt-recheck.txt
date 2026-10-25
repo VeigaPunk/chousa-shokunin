@@ -1,0 +1,32 @@
+# R39/R40 active receipt recheck — round 48
+
+Read-only; lane tip at start of recheck was `d4e6ef09b755a961bdae56566a7dcf0c9db0cfd7`. Active set: `corpus/evidence/round40/active-r39-receipts.tsv` (6 records). The round-39 verifier is `corpus/evidence/round39/verify-receipts.py`.
+
+For each receipt, `git log -1 --diff-filter=A --format=%H -- <receipt>` found its adding commit; `git archive` copies were extracted under a temporary directory. The invocation for each row used the archived verifier, receipt, gate, counter and expectations paths, and printed:
+
+```
+corpus/evidence/round40/receipts/c1-base-s39001-regenerated.json adding=d164f88e rc=0 VERIFY: ok receipt=c1-base-s39001-regenerated.json gate=base-gate-r39.sh counter=c1-count.py
+corpus/evidence/round40/receipts/c1-after-s39011-regenerated.json adding=d164f88e rc=0 VERIFY: ok receipt=c1-after-s39011-regenerated.json gate=research-gate.sh counter=c1-count.py
+corpus/evidence/round40/receipts/c1-mutenv-s39013-regenerated.json adding=d164f88e rc=0 VERIFY: ok receipt=c1-mutenv-s39013-regenerated.json gate=mut-gate-path-env.sh counter=c1-count.py
+corpus/evidence/round39/receipts/c1-after-s39111.json adding=6d914e95 rc=0 VERIFY: ok receipt=c1-after-s39111.json gate=research-gate.sh counter=c1-count.py
+corpus/evidence/round39/receipts/c2-after-s39101.json adding=6d914e95 rc=0 VERIFY: ok receipt=c2-after-s39101.json gate=research-gate.sh counter=c2-count.py
+corpus/evidence/round39/receipts/c2-after-s39121.json adding=6d914e95 rc=0 VERIFY: ok receipt=c2-after-s39121.json gate=research-gate.sh counter=c2-count.py
+PINNED_ADDING_COMMITS=6/6
+```
+
+Tip command `python3 corpus/evidence/round40/c1-count.py` at that same lane tip:
+
+```
+corpus/evidence/round40/receipts/c1-base-s39001-regenerated.json: ok VERIFY: ok receipt=c1-base-s39001-regenerated.json gate=base-gate-r39.sh counter=c1-count.py
+corpus/evidence/round40/receipts/c1-after-s39011-regenerated.json: fail VERIFY-FAIL: gate-sha256-mismatch
+corpus/evidence/round40/receipts/c1-mutenv-s39013-regenerated.json: ok VERIFY: ok receipt=c1-mutenv-s39013-regenerated.json gate=mut-gate-path-env.sh counter=c1-count.py
+corpus/evidence/round39/receipts/c1-after-s39111.json: fail VERIFY-FAIL: gate-sha256-mismatch
+corpus/evidence/round39/receipts/c2-after-s39101.json: fail VERIFY-FAIL: gate-sha256-mismatch
+corpus/evidence/round39/receipts/c2-after-s39121.json: fail VERIFY-FAIL: gate-sha256-mismatch
+R39_ACTIVE_RECEIPTS=2/6
+exit=1
+```
+
+All four refusals bind `tools/research-gate.sh` at sha `4253c187…`; the file changed at round-41 commit `1bd9001` to sha `2cb04bdd…`. The receipts, their self-digests, counters and expectations remain byte-bound to their adding commits; the gate mismatch is expected historical revision drift, not a corrupted receipt. Rewriting/resealing would erase that measurement identity, so no bytes or active-manifest bindings were changed.
+
+The tip leg was repeated on the measured R48 code commit `671b096e2bd5d5b0994bcd7ab8c17abaf16c62c7` (read-only archive); the exact same four `gate-sha256-mismatch` refusals recur, `R39_ACTIVE_RECEIPTS=2/6`, exit 1. R48 changed only the inference-grounder/docs, not any bound gate, receipt or R39/R40 verifier input.

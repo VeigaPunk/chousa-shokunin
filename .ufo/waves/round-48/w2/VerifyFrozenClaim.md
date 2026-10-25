@@ -1,0 +1,38 @@
+# VerifyFrozenClaim — falsification of frozen R48-C1 (claims.md @ 4bbd234)
+
+ATTACKS: R48-C1 predicate (claims.md:10-23) vs `corpus/evidence/round48/c1-count.py`, `precision-count.py`, `mutation-check.py`, `controls/before.txt`; wave-4 quarantine slice mechanics.
+VERDICT: **predicate holds as implemented** — every leg reproduces live; but the frozen control file has stale cells (M1/M2), the refinement acceptance is exit-code-blind (M3), the kill rule's fixture-integrity clause is unenforced (L1), and the freeze commit itself trips the lane's C2 gate (M1). Findings below; no files changed.
+
+## Verified legs (all live-run, cwd = lane root, today)
+
+- Freeze integrity: `git rev-parse HEAD` = `4bbd234…`; `git show 4bbd234:corpus/evidence/round48/claims.md | sha256sum` == on-disk `3bc5bcdb2e14…`; `git diff d4e6ef0..HEAD -- tools/inference-ground.py` empty (tool last touched `02d95d3`, round 47). Base pin honest.
+- Do-nothing score: `python3 corpus/evidence/round48/c1-count.py` → output byte-identical to before.txt:8-31: `REFINEMENT_CASES=5/5`, p03/p04/a05 `REFUSED`, `CORRECT_BULLETS_PASS=9/12`, `PRECISION_GATE=FAIL`, `LEGACY_R47=PASS`, `C1=FAIL`, `exit=1`. Claim's do-nothing baseline TRUE.
+- Rejecting control: `--tool /usr/bin/true --cases-only` → `REFINEMENT_CASES=0/5`, `C1_CASES=FAIL`, `exit=1` (aggregate reproduces).
+- `python3 corpus/evidence/round47/c1-count.py` → `POSITIVE_PASS=3/3 JUNK_KILLED=3/3 CANARY=pass R46_COUNTER=pass R46_ENTRIES=2/2 C1=PASS exit=0`; `corpus/evidence/round40/c1-count.py` → `R39_ACTIVE_RECEIPTS=2/6 exit=1`. Both match before.txt.
+- `python3 corpus/evidence/round48/mutation-check.py` → `PRISTINE_CASES=PASS`, five `KILLED` at `expected-cell`, `MUTANTS_KILLED=5/5 exit=0`. Mutation anchors verified literal-present (count=1 each) in the landed tool; mutants a/b/e/f/g of `.ufo/waves/round-47/w2/MutC1Refined.md` map 1:1 onto the five R48 mutants, and the R48 cases are that report's killer fixtures generalized — "five R47 surviving mutants" descriptor verified.
+- Target/label fidelity: `case_pass = case_ok == len(CASES)` (5), `prec_ok` requires `PRECISION_GATE=PASS` AND rc 0 (`passed >= 11`), `LEGACY_R47` = round-47 counter rc, `C1=PASS` iff all three; mutation kill = rc 1 AND the NAMED case line `=FAIL`. Predicate's "exits 0 only when" holds leg-for-leg.
+
+## Findings (severity order)
+
+**M1 — freeze commit trips the lane's own C2 gate; before.txt's C2 block is stale.** `python3 corpus/evidence/round47/c2-count.py --list` NOW prints `UNREGISTERED_PATH corpus/evidence/round48/c1-count.py`, `…/mutation-check.py`, `…/precision-count.py`; `ENTRY_POINTS=97 … REGISTERED=94/97 UNREGISTERED=3 MISMATCHES=3 C2=FAIL exit=1`. before.txt:62-73 recorded `ENTRY_POINTS=94 … REGISTERED=94/94 C2=PASS exit=0` — i.e. captured BEFORE the three scripts it documents existed, and the frozen claims commit never registers them in a SKILL.md `## Gates` row. Consequence: (a) the claim's admission rule "no owned axis is harmed" is already violated at the freeze commit; (b) any R48 candidate must also add three Gates rows (a repair the predicate never names) or C2 stays FAIL.
+
+**M2 — `/usr/bin/true` per-row `observed_rc=0` cells in before.txt:39-43 are wrong.** Committed counter wraps the tool as `[sys.executable, str(tool), …]` (c1-count.py:35); `python3 /usr/bin/true` on this host → `SyntaxError: source code cannot contain null bytes`, rc=1. Live run prints `observed_rc=1` on all five rows. The committed transcript cannot be produced by the committed counter — capture predates the final script or was edited. Aggregate (`0/5`, `exit=1`) is honest; per-cell bytes are not.
+
+**M3 — refinement acceptance is exit-code/label blind, weaker than "passes all five fixtures" reads.** Proven with two stubs (scratch): (a) tool printing `FINDING INF_POLARITY_FLIP bullet=1 token='bogus/stub'` + `GROUND: FAIL` and exiting **0** → `implicit-neg=PASS`, `un-neg=PASS`, `nested-count-key=PASS` (any rc==0 accepted; findings printed are irrelevant); (b) tool exiting 1 with a flip on nonexistent `bullet=9` → `un-prefix-flip=PASS`, `repeated-figure=PASS` (`'FINDING INF_POLARITY_FLIP' in out` is a substring test, c1-count.py:42 — wrong token, wrong bullet, wrong mechanism all count). A sloppy/over-flagging candidate gets refinement credit for the wrong reason; the plumbing tag disclaims semantics but not the planted token itself.
+
+**L1 — kill rule's "any missing/changed fixture, fewer than five refinement cases, nonzero harness error" is socially, not mechanically, enforced.** `CASES`/`MUTATIONS` are inline so fixtures can't be "missing", but `REFINEMENT_CASES=n/len(CASES)` and `MUTANTS_KILLED=k/len(MUTATIONS)` count whatever the file contains; nothing pins the three counter scripts' bytes. Compare round47/c1-count.py:45-56 `PINNED` (six fixtures + spans sha256'd). Editing `precision-count.py` to print `PRECISION_GATE=PASS` exits C1 clean. Freeze-by-commit protects only via review, not via the counter.
+
+**L2 — the 11/12 floor names no allowed refusal.** `{p03,p04,a05}` are all genuine over-refusals of correct bullets (HeldOutA.md:24,34 confirms a05's negator scopes a *second* date — the strongest correct-but-refused class; note HeldOutA's own header says "2/12" while printing three exit=1 lines — provenance arithmetic slip, corrected by the 9/12 capture). `passed >= 11` passes ANY 11: a candidate fixing p04+a05 while still refusing p03 scores identically to the intended p03+p04 fix. Calibrated but unkeyed.
+
+## Quarantine-slice mechanics (milestone leg; read-only)
+
+- Recipe reproduces the stored slice exactly: `awk -F'|' -v l='chousa' '$2 ~ ("`" l "`") && $3 ~ /round[0-9]+/ && $4 ~ /S[0-9]+/ {print $4, $5}' $R | diff - assimilation/quarantine-slice` → 24 rows, identical: 20 `payload-absent` + S100–S103 whose class cell is prose ("gate block named no locator").
+- Coverage: w2-spec.json assigns a `QuarantineSxxx` seat to every one of the 24 ids — none orphaned; non-quarantine seats = VerifyFrozenClaim, Mutate{Implicit,Figure,Nested}, Attack{Precision,DoNothing}, SiblingFit, GateQuoteReview.
+- Register row truth spot-check: S100–S103 cited-source cells are literally `#### Gate — Sxxx` (register:269-272) → `unverifiable` corroborated (round-42 spotcheck agrees). Staged S105/S108 lane-local artifacts verified byte-present: `chain-resolution-r3.md` sha256 `d794343f8528…`/15,772 B and `revision-binding-r31.md` `845ea270d8e5…`/4,259 B — both match staged cells.
+- **Trap for sibling seats:** the register's S-ids are PACKAGE ids (`shokuknow/merge/chousa/SOURCES.append.md`), not lane registry ids — lane `corpus/SOURCES.md` already uses S077/S080/S082/S084/S086/S088/S093/S094/S095 for DIFFERENT documents (e.g. lane S082 = AVeriTeC README, staged S082 = the PRISMA-S paper the register quotes). A seat keyed on "lane SOURCES row" by id checks the wrong document for ~9 of 24 rows; a false "absent" verdict could coincide with the register class for the wrong reason. Row ids must resolve through the staged append file + register quote, then the on-disk capture.
+
+## Residual risk / gaps
+
+- `run_case` `detail` tuple has a duplicated `'FINDING'` and `if name in (…)` branches are identical (c1-count.py:30-33,43) — cosmetic dead code.
+- `--quiet` asymmetry (precision cases pass it, refinement cases don't) is benign — only print suppression.
+- Did NOT re-run the 24 per-row hand-checks (owned by QuarantineSxxx seats); slice derivation, no-locator family, and two artifact digests verified. `lsp` device not applicable (ad-hoc scripts; text/execute evidence shown). No installs; scratch `/tmp/chousa-r48-VerifyFrozenClaim` deleted at close.

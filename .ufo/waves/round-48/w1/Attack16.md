@@ -1,0 +1,20 @@
+# Attack16 — R47 C1 nested-count-key coverage probe
+
+## Finding
+
+**Confirmed coverage defect, mutant class (f) `key_negated` leaf-only.** The frozen counter does not execute any nested-count-key fixture, so the original C1 predicate passes with this mutant. A minimal positive fixture plus a nested-key counts manifest exercises the defect: pristine returns `GROUND: PASS`/0, while the mutant reports `INF_POLARITY_FLIP`/1. In a scratch counter updated to pin/count that fixture and nested counts shape, pristine passes and mutant fails. This establishes both the blind spot and that the proposed fixture can kill the mutant; the scratch counter is not the frozen counter and is not a proposed post-score predicate change.
+
+## Setup and evidence
+
+- Read `.ufo/waves/round-47/w2/MutC1Refined.md` (lines 28, 62–66): mutant f changes `key_negated` to inspect only `path.rsplit("/", 1)[-1]`; its survivor fixture uses `{"without_archive":{"count":1582}}`.
+- Extracted pristine tool with `git show 980fe43:tools/inference-ground.py` to `/tmp/chousa-r48-Attack16/pristine.py`; observed SHA-256 `244a1897feec49a5a08625a0ca8d0cb3c490675678badeb3ee23d97a4329667e`. Made `mutf.py` by replacing `tools/inference-ground.py:377` with the documented leaf-only implementation. No lane files were used as mutation targets.
+- Fixture: one Inference bullet, `1,582 records carry no archive bucket`, citing S902; counts are `{"without_archive":{"count":1582}}`; cited span says “The manifest lists archive buckets by record”. The bullet's negator makes it a positive for the correctly negated count. Isolated run from `/tmp/chousa-r48-Attack16/killer-f`:
+  - `python3 ../pristine.py --entry entry.md --spans spans.tsv --counts counts.json --root .` → `GROUND: PASS`, exit 0.
+  - Same command with `../mutf.py` → `FINDING INF_POLARITY_FLIP ... counts key without_archive/count`, `GROUND: FAIL`, exit 1.
+- Frozen counter baseline, run against lane fixtures via `python3 corpus/evidence/round47/c1-count.py --tool <tool>`: pristine and `mutf.py` each produced `POSITIVE_PASS=3/3 JUNK_KILLED=3/3 CANARY=pass R46_COUNTER=pass R46_ENTRIES=2/2 C1=PASS`, exit 0. Evidence matches counter source: `corpus/evidence/round47/c1-count.py:39-40` enumerates fixed three-entry positive/junk tuples; `:45-56` pins only current fixture files; `:103-104` runs only those tuples. Thus adding an unlisted entry alone cannot make it score the mutant.
+- Additional scratch falsifier: copied the counter, changed its scratch-only positive tuple to include `positive-nested-key.md`, pinned its hash, changed scratch-only `counts.json` to include the nested 1582 key while retaining existing values, and used a complete scratch root (including R46 fixtures/entries/spans). With this explicitly modified harness: pristine → `POSITIVE_PASS=4/4 JUNK_KILLED=3/3 ... R46_ENTRIES=2/2 C1=PASS`, exit 0; `mutf.py` → `POSITIVE_PASS=2/4 JUNK_KILLED=3/3 ... R46_ENTRIES=2/2 C1=FAIL`, exit 1. The frozen counter itself cannot accept this fixture unchanged: its exact-byte pin reports `FIXTURES_CHANGED=counts.json` (and fails) when counts are perturbed.
+- Relevant implementation: pristine `tools/inference-ground.py` source at 980fe43, `count_keys` preserves full path (`:344-373`), `key_negated` checks path components (`:376-377`), `figure_flip` consults those keys (`:380-395`). Claim text states key-path ancestor parts carry negation (`corpus/evidence/round47/claims.md:39-41`); lesson routes nested-key coverage as part of frozen-counter coverage (`corpus/lessons/round-47-verifier-spotcheck.md:62-64`).
+
+## Verdict and limits
+
+The counter's present C1 PASS does **not** establish nested count-key coverage; it does not include this class in its scored fixtures. The fixture is operable as a minimal positive killer once wired into a test set and the expected counts shape is pinned. No recommendation to alter a frozen predicate: this is a measured falsifier for round-48 consideration. Scratch `/tmp/chousa-r48-Attack16` was removed. No tools installed.
