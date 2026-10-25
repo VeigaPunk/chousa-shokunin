@@ -683,3 +683,31 @@ the admitted entry that motivates it. Tier definitions live in
     that file from the live tree; a pass proves integrity against committed bytes, not authorship.
     Operator proposal mined from `considerthese/2026-10-24.md` (2026-10-24), "Spot re-verify one
     receipt a week"; the file was not edited. — `lessons/round-47.md`.
+
+## Round-48 additions (criteria 1–68 unchanged)
+
+69. **A polarity precision result is a bounded regression set, not a general rate.**
+    A polarity counter names its correct-bullet regression population and threshold,
+    keeps flip-positive and legacy no-regression controls in the composite claim, and
+    records the false refusals and their cue/window classes. Do not describe a fixed
+    12-case regression set as general-language precision. Check:
+    `python3 corpus/evidence/round48/c1-count.py` plus
+    `python3 corpus/evidence/round48/mutation-check.py`; the R47 tool control prints
+    `CORRECT_BULLETS_PASS=9/12` against a frozen minimum of 11/12 and C1 fails, while
+    R48 after-measurement records every leg. `precision-count.py` alone accepts an
+    accept-all program; the no-read name-key lookup also passes `c1-count` alone, but
+    the frozen composite rejects it when installed at the default tool path
+    (`controls/name-key-control.txt`, `MUTATION_NOT_APPLIED`). The 12 texts are
+    recycled R47 held-out regression cases, not a fresh estimate.
+    — `corpus/lessons/round-48.md` Mistake 4; S095.
+
+70. **A control receipt preserves the observed exit/result pair.** A control is
+    measured only when its stored case labels, stdout and subprocess exit agree with
+    a replay of the same command on the same committed bytes; never transcribe an
+    output line independently of its process status. Check: re-run the exact command
+    and diff its stdout and exit against the receipt. Shown able to fail:
+    `corpus/evidence/round48/controls/before.txt` recorded `FAIL wanted_rc=0
+    observed_rc=0` for `/usr/bin/true`; rerunning
+    `python3 corpus/evidence/round48/c1-count.py --tool /usr/bin/true --cases-only`
+    shows `observed_rc=1` (the Python interpreter rejects the ELF binary), documented
+    in `controls/before-erratum.txt`. — `corpus/lessons/round-48.md` Mistake 5.

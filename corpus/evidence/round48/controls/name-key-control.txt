@@ -1,0 +1,22 @@
+# Name-keyed no-read control for the R48 composite C1 gate
+
+Command: `python3 corpus/evidence/round48/controls/name-key-control.py` (control source in the test is installed as `tools/inference-ground.py` in a temporary, pathspec-limited `git archive` of freeze `4bbd2348578bb6288c0700dabf37cea04225bfb6`).
+
+Observed:
+
+```
+NAME_KEYED_C1_COMPONENT=PASS
+REFINEMENT_CASES=5/5
+CORRECT_BULLETS_PASS=12/12
+MIN_CORRECT_PASS=11/12
+PRECISION_GATE=PASS
+LEGACY_R47=PASS
+C1=PASS
+NAME_KEYED_MUTATION_CHECK=REJECTED
+PRISTINE_CASES=PASS
+implicit-neg=MUTATION_NOT_APPLIED
+COMPOSITE_CONTROL=REJECTED
+exit=0
+```
+
+This 25-line entry-basename lookup reads no input/span/count bytes. It can pass `c1-count.py` alone. The frozen claim also requires `mutation-check.py`; when the same candidate is installed at the default tool path in the scratch archive, that command refuses before any mutant scores because its transformations do not apply (`MUTATION_NOT_APPLIED`). Thus the composite claim rejects this control. This is not a claim that every possible lookup or byte-keyed substitute is impossible; the control tests the cheapest name-keyed form found in wave 2.

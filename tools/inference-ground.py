@@ -23,30 +23,27 @@ Rule (the same sentence as `corpus/evidence/round46/claims.md`, claim C1):
      appears in the title of a Registry row the bullet cites (a document
      number such as `RFC 7089` is grounded by the document it names, not by a
      data span);
-  5. no grounding token flips POLARITY (round 47, `INF_POLARITY_FLIP`, the
-     same sentence as `corpus/evidence/round47/claims.md`, claim C1): a phrase
-     its span NEGATES (a negator inside it, or among the three span words
-     before it) is refused when the bullet's own unquoted words use one of its
-     scope words (same five-letter stem) with no negator in the three words
-     before or two after; a phrase its span does not negate is refused when
-     the bullet's own words put a negator in the three words before one of its
-     content words; a figure grounded by a counts key whose name carries
-     `no`/`not`/`none`/`without` must be followed by a negator in the
-     bullet's next four words, and one whose key does not must not be.
-     Refinements after the round-47 wave-1 attacks (no rule widened toward
-     acceptance of a flip): every occurrence of a phrase in the cited spans is
-     read, and occurrences of mixed polarity decide nothing (row order no
-     longer decides); on the SPAN side only explicit negators (`no`, `not`,
-     `never`, … and `n't`) negate a phrase, and only within its own line and
-     clause; in the BULLET's windows negators also include implicit ones
-     (`lacks`, `absent`, `missing`, `un…able`/`un…ed` forms); an `un`-prefixed
-     form of an affirmed phrase's word (`unfrozen`) is a flip unless a negator
-     precedes it; every occurrence of a figure is checked at digit boundaries;
-     the leaf key (`_`, `-` or camelCase separated; a generic leaf such as
-     `count` defers to its parent) carries a figure's negation; mixed-polarity
-     keys decide nothing. The clause bound also ACCEPTS a bullet that a
-     negator on a previous span line would have refused (wave-2
-     `CritC1Claim` §2): a deliberate trade toward reading the span as written.
+  5. no grounding token flips POLARITY (round 47, `INF_POLARITY_FLIP`): a
+     phrase its span NEGATES (a negator inside it, or among the three span
+     words before it) is refused when the bullet's own unquoted words use one
+     of its scope words (same five-letter stem) with no negator in the seven
+     preceding words or two following words; an AFFIRMED phrase is refused
+     when a bullet negator occurs in the two words before one of its content
+     words; a figure grounded by a counts key whose name carries
+     `no`/`not`/`none`/`without` must be followed by a negator in the bullet's
+     next four words, and one whose key does not must not be.
+     Refinements from round 47: every phrase occurrence in cited spans is
+     read; mixed-polarity occurrences decide nothing; span-side negation uses
+     explicit negators only and is clause/line bound; bullet-side negators
+     also include implicit forms (`lacks`, `absent`, `missing`, `un…able`,
+     `un…ed`, `nonexistent`) and an `un`-prefixed form of an affirmed phrase
+     word (`frozen` → `unfrozen`) is a flip unless a negator precedes it
+     within three words. Every figure occurrence is checked at digit
+     boundaries; the leaf key (`_`, `-` or camelCase separated; a generic
+     leaf such as `count` defers to its parent) carries a figure's negation;
+     mixed-polarity keys decide nothing. The R48 windows deliberately broaden
+     the P1 look-back from three to seven words and narrow the P2 look-back
+     from three to two, measured on `corpus/evidence/round48/precision-count.py`.
 
 Usage:
   python3 tools/inference-ground.py --entry PATH --spans TSV --counts JSON
@@ -56,10 +53,13 @@ Usage:
 Exit codes: 0 grounded (no findings) · 1 findings · 2 usage or a missing/unreadable
 entry (an unreadable --spans/--counts/--registry reads as empty, fail-closed).
 
-Named limit: this is lexical. Rule 5 catches a flip that reuses the span's own
-stem; a wrong inference through a synonym, an antonym of a different stem, or
-scope beyond the word windows still passes. Semantics stay the critic's and
-the closure's to judge.
+Named limit: this is lexical and the R48 12-case set is a regression fixture,
+not a general precision estimate. A correct bullet can still be refused when
+it uses an unlisted absence form, a listed cue outside the P1/P2/figure window,
+or an in-window P2 negator that semantically scopes to a neighbouring word.
+Figures still require a listed negator in the next four words. A different-stem
+flip, a distant negator, or a second bullet can pass; semantics remain for a
+reader to judge.
 """
 from __future__ import annotations
 
@@ -254,7 +254,7 @@ def words(s: str) -> list[str]:
 # affirmative). A lexical list, not a parser.
 IMPLICIT_NEG = {"lack", "lacks", "lacked", "lacking", "absent", "absence",
                 "missing", "fail", "fails", "failed", "unable", "nothing",
-                "omits", "omitted", "devoid"}
+                "omits", "omitted", "devoid", "nonexistent", "nil", "keyless", "unbound"}
 UN_NEG_RE = re.compile(r"^un(?!der|til|ion|ique|it|iver|iform|less|ifi|pack|veil|fold|wrap)"
                        r"[a-z]{3,}(?:able|ible|ed|known|clear|sure)$")
 
@@ -318,10 +318,11 @@ def polarity_flips(bullet: str, tok: str, spans: list[str]) -> list[str]:
     """Bullet words that assert the opposite polarity of a span-carried phrase.
 
     P1: the span negates the phrase, and the bullet's own (unquoted) text uses a
-    scope word (same 5-letter stem) with no negator in the 3 words before or 2
-    after it. P2: the span does not negate the phrase, and the bullet's own
-    text puts a negator in the 3 words before one of the phrase's content words,
-    or uses an `un`-prefixed form of one (`frozen` -> `unfrozen`).
+    scope word (same 5-letter stem) with no negator in the 7 words before or 3
+    after it. P2: the span affirms the phrase, and the bullet's own text puts a
+    negator in the 2 words before one of the phrase's content words. An
+    `un`-prefixed form of an affirmed phrase word (`frozen` -> `unfrozen`) is
+    a flip unless an `is_neg` word occurs in the preceding three words.
     """
     pol = phrase_polarity(tok, spans)
     if pol is None:
@@ -340,10 +341,10 @@ def polarity_flips(bullet: str, tok: str, spans: list[str]) -> list[str]:
             continue
         if is_neg(w) or len(w) < 4 or w in STOP or stem(w) not in stems:
             continue
-        before, after = uw[max(0, j - 3):j], uw[j + 1:j + 3]
-        if negated and not any(is_neg(x) for x in before + after):
+        before, after = uw[max(0, j - 3):j], uw[j + 1:j + 4]
+        if negated and not any(is_neg(x) for x in uw[max(0, j - 7):j] + after):
             out.append(w)
-        elif not negated and any(is_neg(x) for x in before):
+        elif not negated and any(is_neg(x) for x in before[-2:]):
             out.append(w)
     return out
 

@@ -1,0 +1,21 @@
+# Erratum to frozen `controls/before.txt` /usr/bin/true rows
+
+author: chousa L1 (round 48)
+date: 2026-10-25
+
+`controls/before.txt` was frozen at `4bbd2348578bb6288c0700dabf37cea04225bfb6`, but its `/usr/bin/true` `--cases-only` block transcribed `observed_rc=0` beside `FAIL` for expected-rc-0 cells. The committed counter marks those cells PASS when rc is 0, so that pair is impossible. I re-ran the exact command against current committed code:
+
+`python3 corpus/evidence/round48/c1-count.py --tool /usr/bin/true --cases-only`
+
+```
+implicit-neg=FAIL wanted_rc=0 observed_rc=1
+un-neg=FAIL wanted_rc=0 observed_rc=1
+un-prefix-flip=FAIL wanted_rc=1 observed_rc=1
+repeated-figure=FAIL wanted_rc=1 observed_rc=1
+nested-count-key=FAIL wanted_rc=0 observed_rc=1
+REFINEMENT_CASES=0/5
+C1_CASES=FAIL
+exit=1
+```
+
+The binary is invoked through `sys.executable`; it exits 1 with `SyntaxError: source code cannot contain null bytes` on this host. The aggregate “accept-all” failure remains true, but the earlier per-cell receipt is not reproducible and is preserved unchanged as freeze evidence.
