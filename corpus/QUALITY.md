@@ -637,3 +637,47 @@ the admitted entry that motivates it. Tier definitions live in
     (`corpus/evidence/round46/controls/c1-controls.txt`). Named limit: the check
     is lexical — correct tokens strung into an assertion of the opposite still
     pass, and 1–2 digit figures are never tokens. — `lessons/round-46.md`.
+
+## Round-47 additions (appended 2026-10-25; criteria 1–66 unchanged)
+
+67. **An Inference bullet must not reverse the polarity of a phrase it quotes.** A
+    bullet that quotes a phrase its span negates must keep a negator next to that
+    phrase's words when it reuses them, and a bullet quoting an affirmed phrase must
+    not put a negator before one of its words; a counts figure whose key names a
+    negation (`answers_without_key`) must be followed by one, and one whose key does
+    not must not be. Check: `python3 tools/inference-ground.py --entry <entry> --spans
+    <spans.tsv> --counts <counts.json|/dev/null> --registry corpus/SOURCES.md --root .`
+    — a reversal prints `FINDING INF_POLARITY_FLIP`, exit 1. Shown able to fail: the
+    three `junk-flip-*.md` fixtures of `corpus/fixtures/inference-ground-r47/` each exit
+    1 on that code, and the round-46 tool scores them `JUNK_KILLED=0/3`
+    (`corpus/evidence/round47/controls/c1-controls.txt`). Named limit: the check counts
+    negators in fixed windows (three words before, two after; four after a figure) over
+    words sharing a five-letter stem — it is not entailment: a flip through a different
+    stem, a distant negator, double negation, or a second bullet still passes, and a
+    correct bullet whose negator sits outside the window is refused. — `lessons/round-47.md`.
+
+    Note on 66 (round 47): its limit "correct tokens strung into an assertion of the
+    opposite still pass" now holds only outside criterion 67's windows.
+
+68. **A committed receipt is re-verified every round, at its measured revision and at the tip.**
+    Each round, the newest committed `verify-receipts.py` is run read-only, in a `git archive`
+    copy, over every receipt its active manifest names (today
+    `corpus/evidence/round40/active-r39-receipts.tsv`: 6 receipts, rounds 39 and 40). Pinned leg:
+    in an archive of the commit that added each receipt (`git log -1 --diff-filter=A -- <receipt>`),
+    every active receipt prints `VERIFY: ok`; a refusal there means the receipt never verified as
+    committed (the round-39 R1 class) and no claim may cite it. Tip leg: in an archive of `master`,
+    every refusal is listed in the round lesson with its refusal name and the commit that last
+    changed the bytes it binds (`git log -1 -- <path>`); a refusal with no such commit after the
+    receipt's adding commit is a defect, not drift. Check: `git archive <rev> | tar -x -C <tmp> &&
+    (cd <tmp> && python3 corpus/evidence/round40/c1-count.py)` — at `b173b094` (last tree before
+    the round-41 gate edit) `R39_ACTIVE_RECEIPTS=6/6`, exit 0; at `a15610a5` `R39_ACTIVE_RECEIPTS=2/6`,
+    exit 1, all four refusals `gate-sha256-mismatch` after `1bd9001` moved `tools/research-gate.sh`
+    from `4253c187…` to `2cb04bdd…` (`lessons/round-41.md`, post-landing addendum). Shown able to
+    fail: in the `b173b094` copy, change byte 676 of `c1-base-s39001-regenerated.json`
+    (`"matched": 7` to `6`); the verifier refuses `receipt-self-digest` and the counter prints
+    `R39_ACTIVE_RECEIPTS=5/6`, exit 1; restoring the byte returns 6/6, exit 0. Named limits: the
+    pinned leg anchors on the adding commit because receipts carry no revision field; the c2
+    receipts bind `subject_counter` as an absolute live-lane path, so an archive copy still reads
+    that file from the live tree; a pass proves integrity against committed bytes, not authorship.
+    Operator proposal mined from `considerthese/2026-10-24.md` (2026-10-24), "Spot re-verify one
+    receipt a week"; the file was not edited. — `lessons/round-47.md`.
