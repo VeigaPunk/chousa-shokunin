@@ -2491,3 +2491,45 @@ only in QUALITY/SKILL is invisible) that adds `round45/tag-count.py`,
 with an `entry paths ⊆ ENTRY_POINTS` assertion; and the amendment's own warrant
 for the archiving practice (`S089` char 14603) as a committed span. Freeze 1–3
 claims after scoring their do-nothing controls.
+
+## Round 47 verdict — 2026-10-25 (polarity probe, dependence registry, claim-support adoption)
+
+Claims frozen in `corpus/evidence/round47/claims.md` at
+`22a44b8b5c923d25123a96a852c11938559bb9b2` before any seat scored. Landed: C1
+`a15610a5` + `980fe43f`, C2 `7fb9a232`, C3 `3d2a0637`; the after-measurement is
+`corpus/evidence/round47/measure-after.txt`. No external fetch: L0 `8d77e6c1` is still
+open. Tag column per QUALITY 64.
+
+| claim / axis | before → after | counting command | verdict | tag |
+|---|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10): the inference check refuses a windowed stem-sharing polarity flip (`INF_POLARITY_FLIP`) | `POSITIVE_PASS=3/3 JUNK_KILLED=0/3 CANARY=fail R46_COUNTER=pass R46_ENTRIES=2/2 C1=FAIL` exit 1 (`controls/c1-before.txt`) → `3/3 3/3 CANARY=pass R46_COUNTER=pass R46_ENTRIES=2/2 C1=PASS` exit 0; controls: round-46 tool `JUNK_KILLED=0/3`, always-exit-1 `POSITIVE_PASS=0/3`, negator-word refuser `POSITIVE_PASS=1/3` | `python3 corpus/evidence/round47/c1-count.py` | **improved** (frozen predicate met); NOT entailment — a different-stem flip, a distant negator, double negation or a second bullet still passes (`CritC1Survivors`), and correct bullets with a negator outside the window are refused (tuning set 5/10 after the wave-1 fix; held-out rate in the round report) | plumbing |
+| C2 calibration: the gate registry agrees with the tree its checks depend on | freeze tree `MISMATCHES=25` (freeze counter) / `21` (final counter), bare base `22` / `18` (`controls/c2-before.txt`) → `ENTRY_POINTS=93 REGISTERED=93/93 UNREGISTERED=0 DANGLING=0 MISMATCHES=0 C2=PASS` exit 0, and the freeze counter `92/92 MISMATCHES=0` too; control: the round-46 counter prints `C2=PASS` on the base tree while this counter fails it | `python3 corpus/evidence/round47/c2-count.py --list` | **improved narrowly**: of the 25, 8 were real self-assessment mismatches (7 executables named by QUALITY/SKILL or run by an entry point in no row, 1 row whose unescaped pipes lost its exit map), plus 3 control rows naming no exit code; 10 were the freeze counter's own escaped-pipe split (`CritC2Framing`). Row truth stays a reader's check | plumbing |
+| C3 depth: the claim-support test adopted by document — two entries, S090–S094, S085 re-bound, 35 capture-bound spans | `ENTRIES=0/2 CITES_BOUND=0/6 ANCHOR_BOUND=0/6 QUARANTINE_VERDICTS=0/4 C3=FAIL` exit 1 (`controls/c3-before.txt`) → both modes `ENTRIES=2/2 CITES_BOUND=6/6 QUOTE_ROWS=35 SPAN_IDS=6/6 QUOTES_IN_SPAN=35/35 QUOTES_IN_ENTRY=35/35 SPAN_CONTEXT=35/35 CAPTURE_BOUND=35/35 REF_ID_UNBOUND=0 ANCHOR_BOUND=6/6 INFERENCE_GROUNDED=2/2 QUARANTINE_VERDICTS=4/4 QUARANTINE_ABSENT_ADOPTED=0 C3=PASS` exit 0 (`--lane-only`: `CAPTURE_BOUND=skipped`); controls: the staged entries copied unchanged fail `REF_ID_UNBOUND=17 CITES_BOUND=0/6`, invented digests fail `CAPTURE_BOUND=0/12` | `python3 corpus/evidence/round47/c3-count.py` (and `--lane-only`) | **improved** | ground |
+
+The round-1 operability scale is unchanged: 3 → 3. These observables sit beside it.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** | C1: the D7 body of round 46 (`CritC1D7` v7) now exits 1; the probe's precision cost is measured and named, and a regression leg caught the first fix's false flip |
+| calibration | **improved narrowly** | C2: 8 real registry mismatches closed against an enforced floor; the counter's own parser defects were found by the wave and repaired toward the literal sentence |
+| depth | **improved** | C3 and `corpus/lessons/round-47.md`: two entries re-grounded on six captures, nine mined mistakes, eight staged misreadings corrected |
+| coverage | **improved narrowly** | the support DEFINITION, the annotator decision rule and per-step reliability figures were ground the coverage map did not hold (`ScoutCoverageGround`); the four-state frame and FEVER's 0.6841 were already held and earn nothing |
+| freshness | **unchanged** | every capture opened predates the launch (2026-10-25T08:25:52−03:00; captures written 2026-10-23) |
+| adjacency | **unchanged** | no sibling holds this ground (`ConnectSiblings`); PEOPLEPROFILES' model-agreement figure is left to kengaku |
+
+## Capabilities (round-47 addition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| polarity probe in the inference check | refuses an Inference bullet whose own words reverse a quoted phrase's negation within fixed windows, or re-denominate a counts figure against its key — a windowed stem-sharing negator mismatch, not entailment | `tools/inference-ground.py` (`INF_POLARITY_FLIP`); `corpus/evidence/round47/c1-count.py`; `corpus/fixtures/inference-ground-r47/` | 47 |
+| dependence-and-check registry count | counts gate-registry mismatches over the round-46 set plus paths gates run and paths QUALITY/SKILL name as checks, by entry cell and exit-code verdict map, with dangling rows and an enforced floor | `corpus/evidence/round47/c2-count.py` | 47 |
+| anchor-bound span manifest | builds capture-bound spans from a quote list and generates Registry anchor cells whose every `char N` is a located quote offset | `corpus/evidence/round47/build-spans.py`; `corpus/evidence/round47/c3-count.py` `ANCHOR_BOUND` | 47 |
+
+## Planned — round 48 (not started)
+
+Candidates, not commitments: repair or supersede the four round-39/40 receipts that fail
+`gate-sha256-mismatch` since round 41 (QUALITY 68's first run; routed in round 41, never
+closed); a held-out precision fixture set for the polarity probe (correct bullets with the
+negator outside the window, conflicting-polarity spans) so its false-refusal rate is a
+counted leg; a second assimilation theme from `merge/chousa/` whose captures are byte-faithful.
+Freeze 1–3 claims after scoring their do-nothing controls.

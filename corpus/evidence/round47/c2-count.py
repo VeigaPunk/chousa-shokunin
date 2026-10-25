@@ -42,7 +42,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
-import importlib.util
+import types
 import pathlib
 import re
 import sys
@@ -57,12 +57,16 @@ def load_r46(root: pathlib.Path):
     p = root / R46
     if not p.is_file():
         return None, "absent"
-    sha = hashlib.sha256(p.read_bytes()).hexdigest()
+    src = p.read_bytes()
+    sha = hashlib.sha256(src).hexdigest()
     if sha != R46_SHA:
         return None, f"changed {sha[:12]}"
-    spec = importlib.util.spec_from_file_location("c2_r46", p)
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
+    # Execute exactly the hashed bytes: a module loader may prefer a cached
+    # `__pycache__/*.pyc`, which a tree can forge past the pin (round-47
+    # `SentScopeAudit`).
+    mod = types.ModuleType("c2_r46")
+    mod.__file__ = str(p)
+    exec(compile(src, str(p), "exec"), mod.__dict__)
     return mod, "ok"
 
 

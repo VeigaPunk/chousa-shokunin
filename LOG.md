@@ -1746,3 +1746,39 @@ Three claims, three axes, each verified without the others. No external fetch
   value-neutrality is measured (`corpus/lessons/round-46.md` mistake 12).
 - **Inherited debt still open**: the three modified r40/r41 JSON paths stay
   left-named and uncommitted; L0 `chousa | round-43` and `round-44` unanswered.
+
+## Round 47 — 2026-10-25 (polarity probe, dependence registry, claim-support adoption)
+
+Claims frozen in `corpus/evidence/round47/claims.md` at `22a44b8b` before any seat
+scored; base `9a9f94db`. No external fetch (L0 `8d77e6c1` open).
+
+- **C1 operability** (round-46 named limit "entailment", the D7 class):
+  `tools/inference-ground.py` gains `INF_POLARITY_FLIP`, a windowed stem-sharing negator
+  mismatch. `c1-count.py` before `JUNK_KILLED=0/3 CANARY=fail C1=FAIL` → after `3/3 3/3
+  CANARY=pass R46_COUNTER=pass R46_ENTRIES=2/2 C1=PASS`. Motivating evidence: the
+  round-46 `CritC1D7` body that strings real tokens into three inversions passed; it now
+  exits 1. Wave 1 measured 9/10 false refusals on correctly-reasoned bullets
+  (`LabC1FalsePos`); implicit negators and a clause-bounded span look-back cut the tuning
+  set to 5/10; the counter's `R46_ENTRIES` leg caught the first widening's regression.
+  Not entailment (`CritC1Survivors`: twelve survivors outside the windows).
+- **C2 calibration** (round-46 named limit "mention, not dependence"; closure routed
+  defects 2 and 4): `c2-count.py` adds a dependence closure and the QUALITY/SKILL
+  check-named leg, requires the path in a row's `entry` cell with an exit code in its
+  verdict map, counts dangling rows, and enforces FLOOR=92 in code. Before (freeze tree)
+  `MISMATCHES=25` freeze counter / `21` final counter → after `MISMATCHES=0` on both.
+  Motivating evidence: `corpus/evidence/round45/tag-count.py` and three other QUALITY
+  `Check:` scripts were invisible to the round-46 set (`RevC2TagCount`). Thirteen rows
+  added or repaired; post-freeze counter repairs disclosed (lesson mistake 3).
+- **C3 depth / assimilation** (round-46 named limit "anchor cells"; theme: what a support
+  test is, how it is applied, how reliable it is): `claim-support-test-r37.md` (S085,
+  S090, S091) and its amendment (S092–S094), staged ids re-bound by document
+  (−12/−8/−8/−21/−21/−21); 35 capture-bound spans; every anchor cell's `char N` is a
+  located quote offset; four quarantine register rows hand-checked `present`. Staged
+  corrections: CFEVER is AAAI-24 not 2021; four "not read" unknowns were in the captures;
+  0.6841 and 0.792 measure different things; the 202 relabels are pool-dependence.
+- **Frontier / SOURCES**: 89 → 94 rows (S090–S094), S085 re-bound; census exit 0 before
+  and after, the same five W04. QUALITY 67 (polarity) and 68 (per-round receipt
+  re-verify, from `considerthese/2026-10-24.md`). The QUALITY 68 run found four round-39/40
+  receipts failing since round 41's gate edit — routed to round 48.
+- **Inherited debt still open**: the three modified r40/r41 JSON paths stay left-named
+  and uncommitted; L0 `chousa | round-43` and `round-44` unanswered.

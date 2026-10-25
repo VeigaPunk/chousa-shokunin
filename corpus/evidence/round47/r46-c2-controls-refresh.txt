@@ -1,0 +1,30 @@
+### R46-C2 controls (final counter f93cb10795ef7402848ea355680a6b0bd25ad68c8913c24944ef92029c81046f —
+### ten forges: eight refusals and two passing blocks; regenerated round 47 over the final counter)
+### tree /tmp/c46A = git archive 6e2630a6 + corpus/evidence/round46/{c1,c2,c3}-count.py at 5c6e2ca (no claims.md)
+### base SKILL.md 7b49e2ae…d05433; one forged block after Gates table line 111 (`after`: after line 503);
+### forged paths = the 21 UNREGISTERED_PATH lines of the baseline run below
+$ python3 corpus/evidence/round46/c2-count.py --root /tmp/c46A          # baseline, no forge
+ENTRY_POINTS=79 (tools=7 counters=50 named=74) GATES_ROWS=30 REGISTERED=58/79 UNREGISTERED=21 C2=FAIL exit=1
+$ ... --root /tmp/c46A --skill <SKILL-prose.md>          # paths as prose in ## Gates
+ENTRY_POINTS=79 (tools=7 counters=50 named=74) GATES_ROWS=30 REGISTERED=58/79 UNREGISTERED=21 C2=FAIL exit=1
+$ ... --skill <SKILL-6cell.md>                           # six-cell row (7 pipes)
+ENTRY_POINTS=79 (tools=7 counters=50 named=74) GATES_ROWS=30 REGISTERED=58/79 UNREGISTERED=21 C2=FAIL exit=1
+$ ... --skill <SKILL-noexit.md>                          # eight-cell row, no `exit`
+ENTRY_POINTS=79 (tools=7 counters=50 named=74) GATES_ROWS=30 REGISTERED=58/79 UNREGISTERED=21 C2=FAIL exit=1
+$ ... --skill <SKILL-after.md>                           # valid row after the next `## `
+ENTRY_POINTS=79 (tools=7 counters=50 named=74) GATES_ROWS=30 REGISTERED=58/79 UNREGISTERED=21 C2=FAIL exit=1
+$ ... --skill <SKILL-fenced.md>                          # valid row inside a fence
+ENTRY_POINTS=79 (tools=7 counters=50 named=74) GATES_ROWS=30 REGISTERED=58/79 UNREGISTERED=21 C2=FAIL exit=1
+$ ... --skill <SKILL-suffix.md>                          # row names …pyc/…shc
+ENTRY_POINTS=79 (tools=7 counters=50 named=74) GATES_ROWS=31 REGISTERED=58/79 UNREGISTERED=21 C2=FAIL exit=1
+$ ... --skill <SKILL-abut.md>                            # <!--x--> abutting the row
+ENTRY_POINTS=79 (tools=7 counters=50 named=74) GATES_ROWS=30 REGISTERED=58/79 UNREGISTERED=21 C2=FAIL exit=1
+$ ... --skill <SKILL-multicomment.md>                    # <!-- / row / -->
+ENTRY_POINTS=79 (tools=7 counters=50 named=74) GATES_ROWS=30 REGISTERED=58/79 UNREGISTERED=21 C2=FAIL exit=1
+$ ... --skill <SKILL-dotslash.md>   # PASSES: `./`-prefixed repo-relative paths register (predicate-faithful, MutC2More N2)
+ENTRY_POINTS=79 (tools=7 counters=50 named=74) GATES_ROWS=31 REGISTERED=79/79 UNREGISTERED=0 C2=PASS exit=0
+$ ... --skill <SKILL-7pipe.md>      # PASSES — SURVIVOR: one 8-cell row, every path in a non-entry cell; cell roles unread
+ENTRY_POINTS=79 (tools=7 counters=50 named=74) GATES_ROWS=31 REGISTERED=79/79 UNREGISTERED=0 C2=PASS exit=0
+### the previous file's numbers (71/55/16, header f2fcb654) were the pre-widening counter at c294484; re-run
+### here, that counter reproduces them exactly on this tree. Forge inputs are not committed: commit
+### the generator beside this receipt, or state that the forges are reproducible in shape only.
