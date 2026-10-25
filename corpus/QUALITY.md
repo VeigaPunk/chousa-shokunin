@@ -845,3 +845,74 @@ the admitted entry that motivates it. Tier definitions live in
 80. **A capability counter that recognises its own perturbations is paired with a nonce leg and an exclusive output set.** The frozen round-50 C1 counter searches for one `DIFF` line per fixed perturbation, so a 42-line tool that prints all six literal lines for any non-pinned digest passes it (`LEGS=5/5`, W2 `R50CritForgeC1`). Check: `python3 corpus/evidence/round50/c1-supplement.py [--tool PATH]` — P7 (a random recheck token the tool author cannot know; the DIFF set must equal exactly three lines) and four hardening probes (duplicate expected line, no entry, option clash, id-less entry); exit 0 `C1_SUPPLEMENT=PASS` for the real tool. Shown able to fail (`corpus/evidence/round50/c1-supplement-receipt.txt`): forge 1/5, echo 2/5, constant 0/5, base tool 1/5, each `C1_SUPPLEMENT=FAIL`. Named limits: a tool that reimplements the adopter passes by definition; the supplement is post-freeze and supplements, never replaces, the frozen counter. — `corpus/lessons/round-50.md` `## Wave-2 narrowing`.
 
 74 (round-50 named limits, appended): the scan set is pinned to four files and the patterns are not vintage-aware, so a round-50 count phrased `<n>-row manifest` would be judged against the round-49 receipt; the round-50 manifest is therefore written as `67-quote manifest`, and a successor check needs a receipt per vintage (W2 `R50ReviewQuality`). 77 and 78 each have branches the round's own tables never exercise (prefix ids, case-only and non-w1 collisions; W2 `R50MutCitedId`). 76 now requires a naming line that also says `char`, offset or decode form and is not negated; a wrong form named passes.
+
+## Round-51 additions (appended 2026-10-25; criteria 1–80 unchanged)
+
+81. **A capability counter generates its own inputs at counting time from a nonce, and keeps its expected values in itself.** A
+    counter that reads a package its tool's author can open is satisfiable without the behaviour: the frozen round-50 C1 counter
+    searched for one literal `DIFF` line per fixed perturbation, so a tool printing all six lines for any input passed
+    (`LEGS=5/5`, W2 `R50CritForgeC1`). The round-51 counter seeds from `os.urandom(8)` unless `--seed`, draws host and ids per run
+    (`corpus/evidence/round51/c1-count.py:101,121-127`), hands the tool only
+    `--staged/--knowledge/--registry/--opened/--out/--entry` and no expected file (`:77-83`), and keeps the expected relations as
+    literals (`:155-157`) beside the fixtures pin (`:47`). Check: `python3 corpus/evidence/round51/c1-count.py [--seed N] [--tool
+    PATH]` — five legs, exit 0 `LEGS=5/5` `C1=PASS`; exit 1 on any leg failing; exit 2 `PIN_CHANGED` when the round-50 fixture
+    package no longer hashes to the pin. Shown able to fail (ran at the tip, `--tool`): `tool-before.py` `LEGS=1/5`,
+    `flag-noop-tool.py` `LEGS=2/5`, each `C1=FAIL` rc 1; `corpus/evidence/round51/controls/c1-before.txt` records the same for
+    `tool-before`/`echo`/`const`/`flag-noop`. Named limits: with `--tool` the SELFTEST_DEFAULT leg is skipped and counted as
+    passing, so a control starts at 1/5; a tool that reimplements the adopter passes by definition; the nonce legs test the
+    adopter's interface on generated packages, never the lane entries. — `corpus/lessons/round-51.md` `## Mistakes` row 2;
+    `corpus/evidence/round51/claims.md` R51-C1; round-50 spot-check routed defect 2.
+
+82. **An adopter cites only `source:` ids and lists the ids it leaves in the body.** A default that renumbers every id token turns
+    a prose mention into a row for an unrelated document; round 50 answered with a check, round 51 makes the reading the default,
+    so the earlier one-shot counters needed the old mode by name. The default cites the id right after `source:` on each header line above the first `####` heading (W1 `R51ReviewAdopterCode` F1/F3: ids in a line's tail, `source:` lines in the body and another entry's citations are not citations; an entry's own ids only are substituted in it), leaves a body-only
+    id unchanged in the entry text and lists it in `bodyonly.tsv` with `BODYONLY=<n>`; `--cites all` (env `ASSIMILATE_CITES=all`)
+    keeps the round-49/50 reading. Check: `python3 corpus/evidence/round51/c1-count.py` — the SOURCE_ONLY leg requires
+    `renumber.tsv` to hold exactly the two `source:` ids (`append` to the registry maximum + 1, `held` to the row carrying the
+    URL), `append.md` one row, the body-only id present in the rewritten entry, both cited ids absent from it, `bodyonly.tsv`
+    equal to `[["corpus/knowledge/e.md", <body id>]]`, `BODYONLY=1`, and the `--cites all` run to renumber all three and append
+    two; `LEGS=5/5` exit 0. Shown able to fail (ran at the tip): `flag-noop-tool.py` (accepts `--cites`, ignores it)
+    `SOURCE_ONLY=FAIL default_rc=0 map=['S528','S784','S878'] appended=2 bodyonly=[]`, `LEGS=2/5`; `tool-before.py` `LEGS=1/5`.
+    Named limits: `bodyclash.tsv` (a body-only staged id that is also a lane id, `tools/assimilate-rows.py:441-447`) is reached by
+    no leg — the counter's staged ids are S500–S900 and its lane ids ≤ S040 (`c1-count.py:121-127`), disjoint by construction, and
+    I reached the branch only by hand (`WARN` + `bodyclash.tsv` on staged S002 against registry S002); an id the adopter does not
+    renumber still passes unseen (QUALITY 77's limit). — `corpus/lessons/round-51.md` `## Mistakes` row 3;
+    `corpus/evidence/round51/claims.md` R51-C1; QUALITY 77.
+
+83. **A self-assessment pointer resolves, or carries a `correction:` line naming a non-empty target.** Five pointers in
+    `SCORECARD.md` capability rows and `SHONEN.md` evidence lines name paths the tree does not hold, and no criterion read them.
+    Check: `python3 corpus/evidence/round51/c3-count.py [--root LANE]` — `CAP_ROWS=n (base 36)`, `POINTERS=n (base 74)`,
+    `RESOLVED_BY_CORRECTION=n`, one `DANGLING <file>:<line> <pointer>` per unresolved pointer, `DANGLING=n`, `C3=PASS` exit 0 only
+    when `DANGLING=0` and neither count fell below base. A pointer resolves when `<lane>/<pointer>` is a non-empty file or a
+    directory holding a file, or a later `correction: SCORECARD.md:<row line> <pointer> -> <path>` line names that row and an
+    existing non-empty `<path>`. Shown able to fail (ran at the tip): `DANGLING SCORECARD.md:1843 measure/final/`, `:2073
+    measure-l1/c1-s36361.json`, `:2074 measure-l1/c2-s36371.json`, `:2616 c1-supplement.py`, `DANGLING SHONEN.md:10
+    round25-meta-differential.log`, `DANGLING=5 C3=FAIL` rc 1; `controls/build-c3-controls.py` (ran) prints BLANKET `DANGLING=5`,
+    DELETED `CAP_ROWS=32 POINTERS=59`, EMPTY `DANGLING=5`, all `C3=FAIL`. Correction branch (ran, scratch roots): non-empty target
+    `RESOLVED_BY_CORRECTION=1 DANGLING=4`; zero-byte and missing targets `=0`. Named limits: existence, not truth; the three
+    controls prove failure modes only and never a valid correction (my probe is not a round artefact); a `correction:` line names
+    a line number, so an edit that shifts the row invalidates it; the counter's own tokenizer produced three of the first eight
+    `DANGLING` lines (row 5) — extraction is part of the predicate. — `corpus/lessons/round-51.md` `## Mistakes` rows 4 and 5;
+    `corpus/evidence/round51/claims.md` R51-C3; `corpus/evidence/round51/claims-erratum.md` E1.
+
+84. **A receipt names the tool revision it was measured against, and the tip still carries that tool.** The round-50
+    after-measurement opened "at the working tree before the final commit" and named no hash, and the `SKILL.md` Gates row named
+    candidate `ec52e632`, not the landed tip, so neither could be tied to code. Check: `python3
+    corpus/evidence/round51/receipt-check.py <receipt> [...] [--root LANE] [--tip REV] [--skill SKILL.md]` — a receipt's first
+    five lines must carry `tool-rev: <40-hex> tool: <lane-relative path> [digest: sha256:<64-hex>]`; `RECEIPT_NO_REV`,
+    `RECEIPT_REV_UNKNOWN`, `RECEIPT_REV_UNLANDED` (not an ancestor of the tip), `RECEIPT_TOOL_ABSENT`, `RECEIPT_TOOL_MOVED` (the
+    tool's blob at the tip differs from its blob at that revision), `RECEIPT_DIGEST_MISMATCH`, else `RECEIPT_OK`; `CHECKS=n OK=n
+    FAILS=n` (the skill line is a check), `RECEIPT_CHECK=PASS` exit 0, exit 1 on any failure, exit 2 when the root is not a git work tree. Shown able to fail
+    (ran): the filed round-50 receipt and the current Gates row print `RECEIPT_NO_REV corpus/evidence/round50/measure-after.txt`
+    and `SKILL_NO_PIN SKILL.md`, `FAILS=2` rc 1; scratch receipts print `RECEIPT_REV_UNKNOWN … rev=000…0`, `RECEIPT_REV_UNLANDED …
+    rev=1fce006153ab`, `RECEIPT_TOOL_MOVED … rev=d603f6f00f78 tool=corpus/evidence/round51/c3-count.py` (the erratum changed that
+    blob), `RECEIPT_DIGEST_MISMATCH recorded=000000000000 actual=94ddc7dc273c`, `RECEIPT_TOOL_ABSENT`; a header naming the tip and
+    that blob's digest prints `RECEIPT_OK … rev=cfe6c9fb9b56`, `RECEIPT_CHECK=PASS` rc 0. Named limits: the header is a
+    convention, not a signature — a receipt can name a revision it did not run at; only the first five lines are read; a receipt
+    measuring a tree count has no header form here; the digest leg hashes the blob, not the tool's behaviour; receipts filed
+    before round 51 stay as filed (append-only) and fail this check by construction. — `corpus/lessons/round-51.md` `## Mistakes`
+    row 1; `corpus/evidence/round51/claims.md` freeze section; round-50 spot-check routed defect 1.
+
+85. **A counter's work directories carry random names, its do-nothing controls delegate to a pinned base, and a post-freeze supplement states what the frozen counter cannot see.** The frozen round-51 C1 counter names its subtests `s`, `d1`, `d2`, `renamed-heading`, so a 94-line tool that reads the name out of `--out` and prints canned shapes passes it `LEGS=5/5` (`corpus/evidence/round51/controls/forge-dirname.py`, W1 `R51CritForgeC1`); its id draws can collide and hang it (1/401 per run, `R51ExecSeedRuns`); an ambient `ASSIMILATE_CITES` flips its verdict (`R51SentScope` H5); and the shipped echo control delegated to the lane tool, so at the tip it scored `LEGS=5/5` and had stopped being a control. Check: `python3 corpus/evidence/round51/c1-supplement.py [--tool PATH]` — six legs (`SHAPE`, `MUTATION`, `CROSS_ENTRY`, `SOURCE_LINE`, `UNKNOWN_SRC`, `CLASH`) on packages in random-named directories with the variable removed from the tool's environment; exit 0 `SUPPLEMENT_LEGS=6/6` for the lane tool. Shown able to fail (`corpus/evidence/round51/controls/c1-supplement-controls.txt`): the frozen counter prints `LEGS=5/5 C1=PASS` for `forge-dirname.py` and for `tool-candidate1.py` (the first candidate, before the W1 review fixes) while the supplement prints `SUPPLEMENT_LEGS=1/6` and `3/6`; `tool-before.py`, `echo-tool.py`, `const-tool.py` 0/6, `flag-noop-tool.py` 1/6. The echo and const controls now `os.execv` to `controls/tool-before.py`, never to `tools/assimilate-rows.py`. Named limits: the supplement is post-freeze (the frozen counter, predicate and target are unchanged — `claims-erratum.md` E2-E4) and a tool that reimplements the adopter passes both by definition. — `corpus/lessons/round-51.md` `## Mistakes` rows 2 and 8.
+
+86. **A counter's tokenizer is run on a positive control seeded with the class it can mangle.** The round-51 C3 extractor stripped a leading dot, so three existing `.ufo/...` paths read as `DANGLING`; its three controls were all derived from its own `DANGLING` list and could not show that (`corpus/evidence/round51/claims-erratum.md` E1). Check: `python3 corpus/evidence/round51/controls/build-c3-controls.py` — the BLANKET, DELETED and EMPTY controls start from the BASE `SCORECARD.md`/`SHONEN.md` and print `C3=FAIL`; the DOTPATH positive control appends a capability row whose pointer is the real dot-leading path `.ufo/waves/round-51/gen-w1-spec.py` and prints `DANGLING=0 C3=PASS`, and the same row under the pre-erratum counter (`git show d603f6f0:corpus/evidence/round51/c3-count.py`) prints `DANGLING SCORECARD.md:<line> ufo/waves/round-51/gen-w1-spec.py` — red before, green after (`corpus/evidence/round51/controls/c3-controls-final.txt`). Named limit: one class (leading dot); other token shapes (a `~` or an absolute path) are not seeded. — `corpus/lessons/round-51.md` `## Mistakes` row 5.

@@ -10,14 +10,13 @@ import re
 
 L = pathlib.Path("/home/vgpnk/Projects/shokunin/chousa-shokunin")
 Q = pathlib.Path("/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache")
-DOC = {  # url -> lane id (by document; planned map S109->S107 ... S126->S113)
+DOC = {  # url -> lane id (by document: S109->S107 S110->S108 S116->S109 S117->S110 S119->S111 S126->S112; S125 refused)
     "https://www.jstage.jst.go.jp/article/kenkokyoiku/32/2/32_320208/_pdf/-char/ja": "S107",
     "https://jaohfa.com/pdf/systematic_review.pdf": "S108",
     "https://www.slarc.org.cn/dwyx/EN/article/downloadArticleFile.do?attachType=PDF&id=5290": "S109",
     "https://www.slarc.org.cn/dwyx/CN/article/downloadArticleFile.do?attachType=PDF&id=5237": "S110",
     "https://www.sinomed.ac.cn/article.do?ui=2026335073": "S111",
-    "https://c2h.niph.go.jp/tools/system/Reporting_Format_Jap_202404.docx": "S112",
-    "https://www.jahbs.info/journal/pdf/vol38_1/vol38_1_5.pdf": "S113",
+    "https://www.jahbs.info/journal/pdf/vol38_1/vol38_1_5.pdf": "S112",
 }
 ENTRIES = ["corpus/knowledge/japanese-search-record-r38.md", "corpus/knowledge/chinese-search-record-r39.md",
            "corpus/knowledge/japanese-search-record-r38-amendment-2026-10-23.md"]

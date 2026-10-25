@@ -1,0 +1,65 @@
+measured-at: 1d7aba0948cf62f6158f77e220f64320a5b6c6cc
+tree: clone of the lane at that revision, clean (`git status --porcelain` empty), byte-identical to `git archive 1d7aba0948cf62f6158f77e220f64320a5b6c6cc | tar -x` (`diff -r --brief` silent; 14678 files each)
+tool: tools/assimilate-rows.py sha256=382aca9b7e314180ece70a9e1b34fc8622dbfaedf29f9d3efd51df1a94778cb5 (the round-50 tool; HEAD's is bdaf80f4… after 2a3389d)
+limit: an export alone is not measurable — round50/c2-count.py:51,139 and round49/c1-count.py:46,366 run `git -C <parents[3]>`, so in a bare export c2 prints NO_BASE_OR_REGISTER exit 2 and c1's R49_REGRESSION exits 2
+
+$ python3 corpus/evidence/round50/c1-count.py
+SELFTEST_DEFAULT=PASS
+BASELINE=PASS rc=0 findings=26
+PERTURB P1 applied=1 rc=1 -> PASS
+PERTURB P2 applied=1 rc=1 -> PASS
+PERTURB P3 applied=1 rc=1 -> PASS
+PERTURB P4 applied=1 rc=1 -> PASS
+PERTURB P5 applied=1 rc=1 -> PASS
+PERTURB P6 applied=1 rc=1 -> PASS
+PERTURB_PASS=6/6
+EXPECTED_BAD=PASS rc=2
+R49_REGRESSION=PASS rc=0
+LEGS=5/5
+C1=PASS
+exit=0
+
+$ python3 corpus/evidence/round50/c1-supplement.py
+P7_NONCE_EXCLUSIVE=PASS
+H1_DUPLICATE_EXPECTED=PASS
+H2_NO_ENTRY=PASS
+H3_OPTION_CLASH=PASS
+H4_ENTRYCITES_DASH=PASS
+SUPPLEMENT_LEGS=5/5
+C1_SUPPLEMENT=PASS
+exit=0
+
+$ python3 corpus/evidence/round50/c2-count.py
+ENTRIES=3/3
+BOUND=3/4 (min 3) REFUSED=1
+BOUND_IDS=S104,S105,S106
+REF_ID_UNBOUND=0
+NEW_GROUND=3/3
+QUOTE_ROWS=67 ON_BOUND=67/67
+SPAN_IDS=3/3 (min 3 each)
+QUOTES_IN_SPAN=67/67
+QUOTES_IN_ENTRY=67/67
+QUOTES_IN_LESSON=67/67
+QUOTE_SHORT=67/67
+SPAN_CONTEXT=67/67
+CAPTURE_BOUND=67/67
+SUBSTANCE=PASS
+ANCHOR_BOUND=3/3
+INFERENCE_GROUNDED=3/3
+QUARANTINE_VERDICTS=0/0 ()
+QUARANTINE_BLOCKED_ADOPTED=0
+C2=PASS
+exit=0
+
+$ python3 corpus/evidence/round50/stale-count-check.py
+RESOLVED corpus/QUALITY.md:746 says 28, receipt 31
+RESOLVED corpus/QUALITY.md:786 says 28, receipt 31
+RESOLVED corpus/README.md:1074 says 28, receipt 31
+RESOLVED corpus/README.md:1083 says 28, receipt 31
+RESOLVED LOG.md:1803 says 28, receipt 31
+RESOLVED LOG.md:1821 says 28, receipt 31
+RESOLVED corpus/lessons/round-49.md:20 says 28, receipt 31
+RESOLVED corpus/lessons/round-49.md:220 says 28, receipt 31
+STALE_HITS=8 UNRESOLVED=0 RECEIPT_ROWS=31
+STALE_COUNT=PASS
+exit=0
