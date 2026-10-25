@@ -34,9 +34,12 @@ With one or more --entry (a path relative to --knowledge, e.g.
   normalisation removed (recheck prose, the replaced status/opened/used-by
   values, pipe rewrites), for the round lesson's Gate block.
 
-Refusals (exit 1, nothing claimed): an entry missing; a cited staged row with
-no URL; a staged row whose recheck has no leading date/`NNd`/cadence.
-Read-only on its inputs; writes only under --out. Exit 0 done · 1 refused · 2 usage.
+Refusals (exit 1, nothing claimed): an entry missing or not UTF-8; a cited
+staged row with no URL; a staged row whose recheck has no leading
+calendar-valid date, `NNd` or cadence. Headings accept a space or a tab after
+the hashes, as the census does. Read-only on its inputs; writes only under
+--out. Exit 0 done · 1 refused · 2 usage (missing file, non-UTF-8 registry or
+staged file, calendar-invalid --opened, absolute or `..` entry).
 
 Named limit: the URL is the document identity, so two staged rows for one URL
 map to one lane id, and a held row's `used-by` is not widened (report it).
@@ -45,6 +48,7 @@ It does not open sources, check quotes, judge province or decide admission.
 from __future__ import annotations
 
 import argparse
+import datetime
 import pathlib
 import re
 import sys
@@ -92,16 +96,27 @@ def registry_rows(text: str) -> dict[str, list[str]]:
     for line in text.splitlines():
         s = line.lstrip(" ")
         lead = len(line) - len(s)
-        if lead <= 3 and s.startswith("## "):
+        if lead <= 3 and re.match(r"##[ \t]", s):
             inside = s[3:].strip() == "Registry"
             continue
-        if lead <= 3 and s.startswith("# "):
+        if lead <= 3 and re.match(r"#[ \t]", s):
             inside = False
             continue
         m = ROW_RE.match(line)
         if inside and m and m.group(1) not in out:
             out[m.group(1)] = [c.strip() for c in s.strip().split("|")[1:-1]]
     return out
+
+
+def valid_date(s: str) -> bool:
+    """A calendar-valid ISO date with a nonzero year (the census epoch() test)."""
+    if not DATE_RE.match(s) or s.startswith("0000"):
+        return False
+    try:
+        datetime.date.fromisoformat(s)
+    except ValueError:
+        return False
+    return True
 
 
 def write_ids(p: pathlib.Path, ids: list[str]) -> None:
@@ -118,8 +133,8 @@ def main() -> int:
     ap.add_argument("--entry", action="append", default=[])
     a = ap.parse_args()
     staged_p, reg_p, know = pathlib.Path(a.staged), pathlib.Path(a.registry), pathlib.Path(a.knowledge)
-    if not staged_p.is_file() or not reg_p.is_file() or not DATE_RE.match(a.opened):
-        print("assimilate-rows: need --staged FILE, --registry FILE and --opened YYYY-MM-DD", file=sys.stderr)
+    if not staged_p.is_file() or not reg_p.is_file() or not valid_date(a.opened):
+        print("assimilate-rows: need --staged FILE, --registry FILE and a calendar-valid --opened YYYY-MM-DD", file=sys.stderr)
         return 2
     for e in a.entry:
         if e.startswith("/") or ".." in pathlib.PurePath(e).parts:
@@ -127,8 +142,12 @@ def main() -> int:
             return 2
     out = pathlib.Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
-    st_text = staged_p.read_text(encoding="utf-8")
-    reg_text = reg_p.read_text(encoding="utf-8")
+    try:
+        st_text = staged_p.read_text(encoding="utf-8")
+        reg_text = reg_p.read_text(encoding="utf-8")
+    except UnicodeDecodeError as exc:
+        print(f"assimilate-rows: input is not UTF-8: {exc}", file=sys.stderr)
+        return 2
     reg_ids, st_ids = grep_ids(reg_text), grep_ids(st_text)
     write_ids(out / "reg-ids", reg_ids)
     write_ids(out / "staged-ids", st_ids)
@@ -146,7 +165,10 @@ def main() -> int:
         if not p.is_file():
             refused.append(f"entry missing: {e}")
         else:
-            texts[e] = p.read_text(encoding="utf-8")
+            try:
+                texts[e] = p.read_text(encoding="utf-8")
+            except UnicodeDecodeError:
+                refused.append(f"entry not UTF-8: {e}")
     cited = sorted({t for tx in texts.values() for t in TOKEN_RE.findall(tx) if t in staged}, key=num)
     for sid in cited:
         if len(staged[sid]) != 11:
@@ -196,10 +218,10 @@ def main() -> int:
         cells[0] = lid
         users = sorted(e for e, tx in texts.items() if sid in TOKEN_RE.findall(tx))
         recheck = cells[9]
-        if not RECHECK_RE.match(recheck):
+        if not (RECHECK_RE.match(recheck) and (not DATE_RE.match(recheck) or valid_date(recheck))):
             m = LEAD_RE.match(recheck)
-            if not m:
-                print(f"REFUSED {sid}: recheck {recheck[:60]!r} has no leading date or NNd", file=sys.stderr)
+            if not m or (DATE_RE.match(m.group(1)) and not valid_date(m.group(1))):
+                print(f"REFUSED {sid}: recheck {recheck[:60]!r} has no leading valid date or NNd", file=sys.stderr)
                 return 1
             stripped.append((lid, "recheck", recheck))
             cells[9] = m.group(1)
