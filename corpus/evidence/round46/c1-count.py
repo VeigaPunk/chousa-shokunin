@@ -22,6 +22,7 @@ counter checks exit codes only; what a finding NAMES is a reader's check.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import pathlib
 import subprocess
 import sys
@@ -30,6 +31,23 @@ LANE = pathlib.Path(__file__).resolve().parents[3]
 FIXTURES = pathlib.Path("corpus/fixtures/inference-ground-r46")
 POSITIVES = ("positive-a.md", "positive-b.md", "positive-c.md")
 JUNKS = ("junk-uncited.md", "junk-ungrounded.md", "junk-borrowed.md")
+# The kill rule says a fixture set changed after the freeze fails the claim, so
+# every fixture name is bound to the bytes frozen at `c2f0e9d1` (round-46
+# `CritC1Attack` found this clause had no enforcement).
+PINNED = {
+    "positive-a.md": "1378296857c6193d80ce9649f5778216003f10ffdd645c0461fa43c2c46b8a21",
+    "positive-b.md": "1d09c94bd4668fc31389a07354c312ca86b5e8dd0e644b84e3fe69e25a46ced4",
+    "positive-c.md": "4e61f56c8af38418754561096e7e22b8aa54e042bf0b86c4ad36542c7c6f417a",
+    "junk-uncited.md": "7b3e6b6e36c771a336d7da17291d94861226af289b2a2c7d4a6ef7d68016e598",
+    "junk-ungrounded.md": "ab32577d5266fbb07a04a63735e1f4f7432b06841a64fa3ff840b42c2f457fe4",
+    "junk-borrowed.md": "cba03251466e44773ef0ed9e080388b284f30f1ada0034e6b3c824d364ceb778",
+    "spans.tsv": "38a536bd9d33d0dc45d441cce6ce1882a1f4e60ee8ecdaebfd9f85a229d2aff4",
+    "counts.json": "fd414d0a24883711dab8e27bd36e0aad00e6e09192d51b7bf75228e3f76fbb5c",
+}
+
+
+def digest(path: pathlib.Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def run(tool: pathlib.Path, fixture_dir: pathlib.Path, name: str) -> int:
@@ -56,9 +74,18 @@ def main() -> int:
     if not fixture_dir.is_dir():
         print("C1=FAIL no-fixtures")
         return 2
+    changed = [n for n, want in PINNED.items()
+               if not (fixture_dir / n).is_file() or digest(fixture_dir / n) != want]
+    if changed:
+        print("FIXTURES_CHANGED=" + ",".join(changed))
+        print("C1=FAIL")
+        return 1
     present = tool.is_file()
+    # A junk fixture must be refused with EXIT 1 — the frozen sentence says
+    # "exits 1", so a crash (2) or a missing file (127) is not a kill
+    # (round-46 `MutC1Junk` finding).
     pos = sum(run(tool, fixture_dir, n) == 0 for n in POSITIVES) if present else 0
-    junk = sum(run(tool, fixture_dir, n) != 0 for n in JUNKS) if present else 0
+    junk = sum(run(tool, fixture_dir, n) == 1 for n in JUNKS) if present else 0
     print(f"TOOL={'present' if present else 'absent'}")
     print(f"POSITIVE_PASS={pos}/{len(POSITIVES)}")
     print(f"JUNK_KILLED={junk}/{len(JUNKS)}")

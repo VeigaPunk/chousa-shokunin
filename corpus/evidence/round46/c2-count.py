@@ -69,16 +69,35 @@ def entry_points(root: pathlib.Path) -> tuple[list[str], int, int, int]:
 
 
 def gates_rows(skill: pathlib.Path) -> list[str]:
+    """Rows of the `## Gates` section, fence-aware (round-46 `MutC2Forge`).
+
+    A fenced line is literal Markdown source, not a rendered row, so it never
+    registers a path; an HTML comment is stripped before the row test. Both
+    were latent cheap gates under the first implementation, which read the
+    frozen sentence's "a line that starts with |" literally.
+    """
     if not skill.is_file():
         return []
-    rows, inside = [], False
+    rows, inside, fence = [], False, False
     for line in skill.read_text(encoding="utf-8").splitlines():
+        if line.lstrip().startswith("```"):
+            fence = not fence
+            continue
+        if fence:
+            continue
         if line.startswith("## "):
             inside = line.strip() == "## Gates"
             continue
-        if inside and line.startswith("|") and line.count("|") >= 8 and "exit" in line:
-            rows.append(line)
+        bare = re.sub(r"<!--.*?-->", "", line)
+        if inside and bare.startswith("|") and bare.count("|") >= 8 and "exit" in bare:
+            rows.append(bare)
     return rows
+
+
+def names(row: str, path: str) -> bool:
+    """Path membership at a delimiter boundary, never as a suffix of another name."""
+    return re.search(r"(?<![A-Za-z0-9_./-])" + re.escape(path) + r"(?![A-Za-z0-9_./-])",
+                     row) is not None
 
 
 def main() -> int:
@@ -94,7 +113,7 @@ def main() -> int:
         print("C2=FAIL no-entry-points")
         return 2
     rows = gates_rows(skill)
-    unreg = [p for p in eps if not any(p in r for r in rows)]
+    unreg = [p for p in eps if not any(names(r, p) for r in rows)]
     if a.list:
         for p in unreg:
             print("UNREGISTERED_PATH", p)

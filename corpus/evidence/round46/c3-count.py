@@ -109,7 +109,10 @@ def main() -> int:
         if len(r) != 7:
             continue
         sid, url, cap_sha, offset, span_file, quote, entry = r
-        span_path = ev / span_file
+        raw = span_file.strip()
+        if not raw or raw.startswith("/") or ".." in pathlib.PurePath(raw).parts:
+            continue
+        span_path = ev / raw
         span = span_path.read_text(encoding="utf-8") if span_path.is_file() else ""
         in_span += bool(quote and quote in span)
         in_entry += bool(quote and quote in texts.get(entry, ""))
@@ -117,7 +120,10 @@ def main() -> int:
             cap = cache / f"{key(url)}.txt"
             if cap.is_file() and sha(cap) == cap_sha and span:
                 ct = cap.read_text(encoding="utf-8", errors="replace")
-                o = int(offset)
+                try:
+                    o = int(offset)
+                except ValueError:
+                    continue
                 cap_bound += ct[o:o + len(span)] == span
 
     unb = 0

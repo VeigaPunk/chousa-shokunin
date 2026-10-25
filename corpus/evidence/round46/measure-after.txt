@@ -1,0 +1,59 @@
+### round-46 after-state
+### tree: the round-46 landing tree on lane branch master; measured 2026-10-25T07:32:33-03:00
+### counter revisions: c1 819287e2075c3f5b  c2 60ad448e99b15cb6  c3 234e2272e8e21e82  tool 819f83ebdc6c6b47  build-spans b5c4d83bc9a32639
+
+$ python3 corpus/evidence/round46/c1-count.py
+TOOL=present
+POSITIVE_PASS=3/3
+JUNK_KILLED=3/3
+C1=PASS
+exit=0
+
+$ python3 corpus/evidence/round46/c2-count.py --list
+ENTRY_POINTS=72 (tools=8 counters=50 named=70)
+GATES_ROWS=35
+REGISTERED=72/72
+UNREGISTERED=0
+C2=PASS
+exit=0
+
+$ python3 corpus/evidence/round46/c3-count.py
+ENTRIES=2/2
+CITES_BOUND=5/5
+QUOTE_ROWS=11/11
+QUOTES_IN_SPAN=11/11
+QUOTES_IN_ENTRY=11/11
+CAPTURE_BOUND=11/11
+REF_ID_UNBOUND=0
+REF_BOUND=2/2
+C3=PASS
+exit=0
+
+$ python3 corpus/evidence/round46/c3-count.py --lane-only
+ENTRIES=2/2
+CITES_BOUND=5/5
+QUOTE_ROWS=11/11
+QUOTES_IN_SPAN=11/11
+QUOTES_IN_ENTRY=11/11
+CAPTURE_BOUND=skipped
+REF_ID_UNBOUND=0
+REF_BOUND=2/2
+C3=PASS
+exit=0
+
+$ python3 corpus/evidence/round46/build-spans.py --check
+SPANS_ROWS=11 STALE=0
+exit=0
+
+$ python3 tools/inference-ground.py --entry <each admitted round-46 entry> --spans corpus/evidence/round46/spans.tsv --counts /dev/null --registry corpus/SOURCES.md --root .
+GROUND entry=corpus/knowledge/evidence-pool-versioning-r39.md section=1 bullets=4 tokens=7 grounded=7
+GROUND: PASS
+exit=0
+GROUND entry=corpus/knowledge/evidence-pool-versioning-r39-amendment-2026-10-23.md section=1 bullets=4 tokens=5 grounded=5
+GROUND: PASS
+exit=0
+
+$ /home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa
+chousa	W04	S075 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+chousa	ok	/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md
+exit=0
