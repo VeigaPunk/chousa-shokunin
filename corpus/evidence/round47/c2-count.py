@@ -44,6 +44,7 @@ import argparse
 import hashlib
 import importlib.util
 import pathlib
+import re
 import sys
 
 LANE = pathlib.Path(__file__).resolve().parents[3]
@@ -76,6 +77,57 @@ def existing_named(root: pathlib.Path, text: str, rx) -> set[str]:
     return out
 
 
+# A cell boundary is an UNESCAPED pipe: `\|` renders as a literal pipe inside
+# a cell, so splitting on it misplaces cells (round-47 `MutC2Forge` b2).
+CELL_SPLIT = re.compile(r"(?<!\\)\|")
+COMMENT = re.compile(r"<!--.*?-->")
+# "names an exit code": `exit 0`, `exit` `1`, or a backticked code `0`/`1`/`2`
+# (round-47 `ReviewerC2Set` F2: the substring `exit` let "no exit code
+# documented" register a path and dropped `` `0` clean · `1` failed ``).
+EXIT_CODE = re.compile(r"\bexit\b\W{0,4}`?\d|`[0-9]{1,3}`")
+# A bare script name inside an entry point's source resolves against that
+# file's own directory (`ORACLE=$SCRIPT_DIR/round26-registry-oracle.py`).
+BARE = re.compile(r"(?<![\w.-])[A-Za-z0-9_][A-Za-z0-9_.-]*\.(?:py|sh)\b")
+
+
+def gates_table_rows(skill: pathlib.Path) -> list[str]:
+    """Every table row of the `## Gates` section, as a reader sees it.
+
+    Stricter than the round-46 reader it replaces here (round-47 `MutC2Forge`):
+    both ``` and ~~~ fences are literal, every inline HTML comment on a line is
+    stripped (not only the first), and a row needs no `exit` word to be read —
+    the `exit` requirement applies to the verdict-map cell when registering,
+    while DANGLING reads every row.
+    """
+    if not skill.is_file():
+        return []
+    rows, inside, fence, in_comment = [], False, None, False
+    for raw in skill.read_text(encoding="utf-8").splitlines():
+        s = raw.lstrip()
+        if fence is None and (s.startswith("```") or s.startswith("~~~")):
+            fence = s[:3]
+            continue
+        if fence is not None:
+            if s.startswith(fence):
+                fence = None
+            continue
+        line = raw
+        if in_comment:
+            if "-->" not in line:
+                continue
+            line = line.split("-->", 1)[1]
+            in_comment = False
+        line = COMMENT.sub("", line)
+        if "<!--" in line:
+            line, in_comment = line.split("<!--", 1)[0], True
+        if line.startswith("## "):
+            inside = line.strip() == "## Gates"
+            continue
+        if inside and raw.startswith("|") and len(CELL_SPLIT.findall(line)) >= 9:
+            rows.append(line)
+    return rows
+
+
 def outside_gates(text: str) -> str:
     keep, inside = [], False
     for line in text.splitlines():
@@ -98,7 +150,8 @@ def main() -> int:
         print("C2=FAIL")
         return 2
     abc, _na, _nb, _nc = r46.entry_points(root)
-    abc_set = set(abc)
+    # `./tools/x.py` and `tools/x.py` are one path (round-47 `ReviewerC2Set` F3).
+    abc_set = {p[2:] if p.startswith("./") else p for p in abc}
     rx = r46.NAMED
 
     check_named: set[str] = set()
@@ -119,7 +172,16 @@ def main() -> int:
                 src = f.read_text(encoding="utf-8", errors="replace")
             except OSError:
                 continue
-            for d in existing_named(root, src, rx):
+            deps = existing_named(root, src, rx)
+            for m in BARE.finditer(src):
+                q = (f.parent / m.group(0)).resolve()
+                try:
+                    rel = str(q.relative_to(root.resolve()))
+                except ValueError:
+                    continue
+                if q.is_file() and rel != p:
+                    deps.add(rel)
+            for d in deps:
                 if d not in eps:
                     eps.add(d)
                     nxt.append(d)
@@ -127,11 +189,11 @@ def main() -> int:
     dep = eps - abc_set - check_named
     chk = check_named - abc_set
 
-    rows = r46.gates_rows(sk)
+    rows = gates_table_rows(sk)
     entry_cells = []
     for r in rows:
-        cells = r.strip().strip("|").split("|")
-        if len(cells) >= 8 and "exit" in cells[3]:
+        cells = CELL_SPLIT.split(r.strip().strip("|"))
+        if len(cells) >= 8 and EXIT_CODE.search(cells[3]):
             entry_cells.append(cells[2])
     unreg = sorted(p for p in eps if not any(r46.names(c, p) for c in entry_cells))
     dangling = set()
