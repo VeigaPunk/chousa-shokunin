@@ -1,0 +1,103 @@
+# Round 49 after-measurement at lane tip 4ce61fc59e30b9215514841fe658e96cc998d138
+# (run in the lane checkout: the counters read BASE_REV through the lane git, so an extracted archive exits 2 NO_BASE_REV;
+#  tracked-file equality with the commit is shown first; TMPDIR on /dev/shm because /tmp was full host-wide)
+# supersedes the first after-measurement at 1254ab262b2fbc199923345d389f85d0debbef6e (same counters; tool sha 3b8a6e7d… then)
+
+$ git rev-parse master; git diff --stat 4ce61fc59e30b9215514841fe658e96cc998d138 -- . | wc -l
+4ce61fc59e30b9215514841fe658e96cc998d138
+0
+
+$ python3 corpus/evidence/round49/c1-count.py
+BASE_REV=414a2ec6cde05a921dbdd9e02e7ae56b0db647ef
+TOOL=present sha256=4b995dbc2e950613a632c83dba068e932396c1cf1d6a44dc1255f1c4f04abc32
+BASE_CENSUS=ok
+SET_A TOOL_EXIT=0 CITED=9 APPEND=9/9 HELD=0/0 BY_DOC=9/9 EXTRA=0 REWRITE=2/2 SHAPE=9/9 CONTIGUOUS=yes URL=9/9 USED_BY=9/9 NORMALIZED=9/9 COLLISIONS=match CENSUS=ok -> PASS
+SET_B TOOL_EXIT=0 CITED=3 APPEND=3/3 HELD=0/0 BY_DOC=3/3 EXTRA=0 REWRITE=1/1 SHAPE=3/3 CONTIGUOUS=yes URL=3/3 USED_BY=3/3 NORMALIZED=3/3 COLLISIONS=match CENSUS=ok -> PASS
+SET_C TOOL_EXIT=0 CITED=5 APPEND=3/3 HELD=2/2 BY_DOC=5/5 EXTRA=0 REWRITE=1/1 SHAPE=3/3 CONTIGUOUS=yes URL=3/3 USED_BY=3/3 NORMALIZED=3/3 COLLISIONS=match CENSUS=ok -> PASS
+GUARD TOOL_EXIT=0 COLLISIONS=['S002'] -> PASS
+PIPE TOOL_EXIT=0 ROWS=1 CELLS=11 RECHECK=90d STRIPPED_LOGGED=yes CENSUS=ok -> PASS
+SETS_PASS=3/3
+C1=PASS
+exit=0
+
+$ python3 corpus/evidence/round49/c1-count.py --tool corpus/evidence/round49/controls/copy-tool.py
+BASE_REV=414a2ec6cde05a921dbdd9e02e7ae56b0db647ef
+TOOL=present sha256=55d440df112412f1dad5fd5b384caad8d92bf7939fd6fd60c054c9642d0bc638
+BASE_CENSUS=ok
+SET_A TOOL_EXIT=0 CITED=9 APPEND=9/9 HELD=0/0 BY_DOC=0/9 EXTRA=0 REWRITE=0/2 SHAPE=9/9 CONTIGUOUS=no URL=0/9 USED_BY=0/9 NORMALIZED=0/9 COLLISIONS=match CENSUS=exit1 E03	S087 duplicate id;E09	S087 recheck=180d — re-open the NII manual and confirm both 注意書き notes under section G are still present (ran 2026-10-23);E03	S088 duplicate id;E09	S088 recheck=90d — re-open the TAB2 publisher page and confirm section 2 still reads "数日～2週間後にDOIによるリンクが作成されます" (ran 2026-10-2 -> FAIL
+SET_B TOOL_EXIT=0 CITED=3 APPEND=3/3 HELD=0/0 BY_DOC=0/3 EXTRA=0 REWRITE=0/1 SHAPE=3/3 CONTIGUOUS=no URL=0/3 USED_BY=0/3 NORMALIZED=0/3 COLLISIONS=match CENSUS=exit1 E03	S082 duplicate id;E09	S082 recheck=180d — `aaron papers fetch 10.1186/s13643-020-01542-z` then confirm Table 1 item 8 still reads "copied and pasted exactly as run" (ran 2026-10-23);E03	S083 duplicate id;E09	S083 recheck=90d — re-open the chapter-04 URL and confirm section 4.5 still reads "Docum -> FAIL
+SET_C TOOL_EXIT=0 CITED=5 APPEND=5/3 HELD=2/2 BY_DOC=0/5 EXTRA=0 REWRITE=0/1 SHAPE=4/3 CONTIGUOUS=no URL=0/3 USED_BY=0/3 NORMALIZED=0/3 COLLISIONS=match CENSUS=exit1 E01	S097 fields=13;E04	S114 duplicate url arxiv.org/html/2012.00614v2 within scope the per-evidence versus per-claim structure of a support judgement, on real-world claims;E09	S114 recheck=365d — re-open the arXiv HTML and confirm section 1 still reads "7,675 annotated claim-evidence pairs" (ran 202 -> FAIL
+GUARD TOOL_EXIT=0 COLLISIONS=[] -> FAIL
+PIPE TOOL_EXIT=0 ROWS=1 CELLS=13 RECHECK=- STRIPPED_LOGGED=no CENSUS=exit1 E01	S990 fields=13 -> FAIL
+SETS_PASS=0/3
+C1=FAIL
+exit=1
+
+$ python3 corpus/evidence/round49/c2-count.py
+ENTRIES=2/2
+BOUND=8/9 (min 7) REFUSED=1
+BOUND_IDS=S096,S097,S098,S099,S100,S101,S102,S103
+REF_ID_UNBOUND=0
+QUOTE_ROWS=28 ON_BOUND=28/28
+SPAN_IDS=8/8 (min 2 each)
+QUOTES_IN_SPAN=28/28
+QUOTES_IN_ENTRY=28/28
+QUOTES_IN_LESSON=28/28
+QUOTE_SHORT=28/28
+SPAN_CONTEXT=28/28
+CAPTURE_BOUND=28/28
+ANCHOR_BOUND=8/8
+INFERENCE_GROUNDED=2/2
+QUARANTINE_VERDICTS=5/5 (S082,S084,S086,S095,S096)
+QUARANTINE_BLOCKED_ADOPTED=0
+C2=PASS
+exit=0
+
+$ python3 corpus/evidence/round49/c2-count.py --lane-only
+ENTRIES=2/2
+BOUND=8/9 (min 7) REFUSED=1
+BOUND_IDS=S096,S097,S098,S099,S100,S101,S102,S103
+REF_ID_UNBOUND=0
+QUOTE_ROWS=28 ON_BOUND=28/28
+SPAN_IDS=8/8 (min 2 each)
+QUOTES_IN_SPAN=28/28
+QUOTES_IN_ENTRY=28/28
+QUOTES_IN_LESSON=28/28
+QUOTE_SHORT=28/28
+SPAN_CONTEXT=28/28
+CAPTURE_BOUND=skipped
+ANCHOR_BOUND=8/8
+INFERENCE_GROUNDED=2/2
+QUARANTINE_VERDICTS=5/5 (S082,S084,S086,S095,S096)
+QUARANTINE_BLOCKED_ADOPTED=0
+C2=PASS
+exit=0
+
+$ python3 corpus/evidence/round49/build-spans.py --check
+SPANS_ROWS=28 STALE=0
+exit=0
+
+$ python3 corpus/evidence/round49/quote-substance-check.py
+IDS=8 QUOTES=28 FAILURES=0
+exit=0
+
+$ python3 corpus/evidence/round49/a05-check.py
+CORRECTED round-47-verifier-spotcheck.md:29
+CORRECTED round-48.md:34
+A05_PROPAGATIONS=2 CORRECTED=2
+exit=0
+
+$ sha256sum tools/assimilate-rows.py corpus/evidence/round49/c1-count.py corpus/evidence/round49/c2-count.py
+4b995dbc2e950613a632c83dba068e932396c1cf1d6a44dc1255f1c4f04abc32  tools/assimilate-rows.py
+83589bf89048b47da7f6b215bde51d58d6ca58ff14b86f74df53c1b8e90493ee  corpus/evidence/round49/c1-count.py
+9d2fb3806e368a3474726e5baec5eca3eba8ae7777e81c105221dd31018e6a99  corpus/evidence/round49/c2-count.py
+
+$ python3 corpus/evidence/round47/c2-count.py --list | tail -8
+ENTRY_POINTS=104 (abc=91 dependence=+3 check_named=+10)
+FLOOR=92
+GATES_ROWS=54
+REGISTERED=104/104
+UNREGISTERED=0
+DANGLING=0
+MISMATCHES=0
+C2=PASS
