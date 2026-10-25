@@ -9,8 +9,8 @@ capture file named `sha256(url)[:24].txt`. Run from anywhere:
     python3 corpus/evidence/round46/build-spans.py [--cache DIR] [--check]
 
 `--check` re-derives the manifest from the captures and exits 1 if the
-committed bytes differ (nothing is written). Exit 2 on a missing capture or a
-quote that is absent from its capture.
+committed bytes differ (nothing is written). A missing capture or a quote
+absent from its capture also exits 1, with the reason on stderr.
 """
 from __future__ import annotations
 
