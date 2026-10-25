@@ -1,0 +1,308 @@
+diff --git i/.ufo/waves/round-40/w1/swarm-registry.json w/.ufo/waves/round-40/w1/swarm-registry.json
+index 207ed99..4567c25 100644
+--- i/.ufo/waves/round-40/w1/swarm-registry.json
++++ w/.ufo/waves/round-40/w1/swarm-registry.json
+@@ -1,11 +1,13 @@
+ {
+   "schema": "ufo-swarm-registry-v1",
+-  "path": ".ufo/waves/round-40/w1/swarm-registry.json",
++  "wave": "chousa-r40-w1",
++  "createdAt": "2026-10-24T07:16:35.766Z",
++  "updatedAt": "2026-10-24T07:18:06.849Z",
+   "reportDir": ".ufo/waves/round-40/w1",
+   "members": {
+     "ExecC1BaseReceipt": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "ExecC1BaseReceipt",
+       "role": "executor",
+       "item": "Run the committed verifier for the regenerated c1-base-s39001 receipt against the base-gate-r39 control, c1-count.py, current expectations.jsonl, and verifier; confirm the expected 7/8 negative-control result is a valid receipt.",
+       "axes": [
+@@ -17,7 +19,7 @@
+     },
+     "ExecC1LandedReceipt": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "ExecC1LandedReceipt",
+       "role": "executor",
+       "item": "Run the committed verifier for the regenerated c1-after-s39011 receipt against tools/research-gate.sh and current expectation bytes; independently verify its receipt status and the counter's 8/8 result.",
+       "axes": [
+@@ -29,7 +31,7 @@
+     },
+     "ExecC1MutantReceipt": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "ExecC1MutantReceipt",
+       "role": "executor",
+       "item": "Run the committed verifier for the regenerated c1-mutenv-s39013 receipt against the committed mutant control and confirm the 4/8 mutant receipt is valid evidence, not a failed verifier.",
+       "axes": [
+@@ -41,7 +43,7 @@
+     },
+     "ExecC1Count": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "ExecC1Count",
+       "role": "executor",
+       "item": "Run the frozen round-40 c1-count.py command on the committed tree and confirm its six-row manifest, exact output, and exit code.",
+       "axes": [
+@@ -53,7 +55,7 @@
+     },
+     "ExecC2Count": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "ExecC2Count",
+       "role": "executor",
+       "item": "Run the frozen round-40 c2-count.py command on the committed tree and confirm its four source-derived R2-R5 dispositions and exit code.",
+       "axes": [
+@@ -65,7 +67,7 @@
+     },
+     "ExecNoHarm": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "ExecNoHarm",
+       "role": "executor",
+       "item": "Run the committed research-gate selftest and the named r1 archive, claims, chain, and integrity regression commands; report exact output and whether any existing mode is harmed.",
+       "axes": [
+@@ -77,7 +79,7 @@
+     },
+     "ReviewActivePopulation": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "ReviewActivePopulation",
+       "role": "reviewer",
+       "item": "Audit active-r39-receipts.tsv against every committed r39 receipt and the three round-40 replacement receipts; identify any omission, duplicate, or stale receipt mislabeled active.",
+       "axes": [
+@@ -89,7 +91,7 @@
+     },
+     "ReviewReplacementBindings": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "ReviewReplacementBindings",
+       "role": "reviewer",
+       "item": "Independently verify all three round-40 c1 replacement receipts bind the committed expectations, counter, verifier, and intended base/landed/mutant gate bytes.",
+       "axes": [
+@@ -101,7 +103,7 @@
+     },
+     "ReviewC2Bindings": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "ReviewC2Bindings",
+       "role": "reviewer",
+       "item": "Independently verify both active c2 receipts with c2-count.py, including verifier_sha256 and subject_counter_sha256, and compare the disposition counter's command output.",
+       "axes": [
+@@ -113,7 +115,7 @@
+     },
+     "ReviewR2CommitTruth": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "ReviewR2CommitTruth",
+       "role": "reviewer",
+       "item": "Check R2 from committed bytes: determine whether c1-mutenv-s39003.json is tracked, compare that with the r39 lesson's not-committed wording, and inspect the appended erratum naming its supersession.",
+       "axes": [
+@@ -125,7 +127,7 @@
+     },
+     "ReviewR3Counts": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "ReviewR3Counts",
+       "role": "reviewer",
+       "item": "Re-derive the r39 report's knowledge-file count at the two cited commits using only corpus/knowledge/*.md; compare the observed 50-to-52 with the report's 29-to-31 and the appended correction.",
+       "axes": [
+@@ -137,7 +139,7 @@
+     },
+     "ReviewR4RoleMix": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "ReviewR4RoleMix",
+       "role": "reviewer",
+       "item": "Count r39 roles independently from w1-spec.json and w1-plan.json, compare with the r39 report and verifier spot-check, and decide whether the routed R4 mismatch reproduces from committed bytes.",
+       "axes": [
+@@ -149,7 +151,7 @@
+     },
+     "CriticC1Predicate": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "CriticC1Predicate",
+       "role": "critic",
+       "item": "Attack the C1 predicate: test whether the six-row active receipt manifest or success condition can be satisfied by a missing, invalid, or superseded receipt; report a concrete counterexample or why none follows.",
+       "axes": [
+@@ -161,7 +163,7 @@
+     },
+     "CriticC1Control": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "CriticC1Control",
+       "role": "critic",
+       "item": "Try the cheapest do-nothing replay against the frozen C1 counter and assess whether any already committed receipt set can reach 6/6 without the three required replacement runs.",
+       "axes": [
+@@ -173,7 +175,7 @@
+     },
+     "CriticC1Scope": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "CriticC1Scope",
+       "role": "critic",
+       "item": "Compare the C1 frozen claim text against the verifier and counter: find any overstatement about what a valid receipt proves beyond byte binding and scenario re-derivation.",
+       "axes": [
+@@ -185,7 +187,7 @@
+     },
+     "CriticC2Calibration": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "CriticC2Calibration",
+       "role": "critic",
+       "item": "Attack the C2 disposition claim by checking whether its four statuses measure source-to-self-assessment mismatches or merely count prose labels; supply a falsifying case if possible.",
+       "axes": [
+@@ -197,7 +199,7 @@
+     },
+     "CriticR4Disposition": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "CriticR4Disposition",
+       "role": "critic",
+       "item": "Adversarially test the R4 not-reproduced disposition: seek an alternate committed validated spec or plan with reviewer 8/revenger 0, and state whether the current evidence supports that closure note.",
+       "axes": [
+@@ -209,7 +211,7 @@
+     },
+     "ScoutHashSource": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "ScoutHashSource",
+       "role": "scout",
+       "item": "Re-open S059's official Python hashlib documentation at the recorded anchor, confirm the quoted digest semantics and 2026-10-24 access, and assess whether the note avoids claiming truth or authorship from a hash.",
+       "axes": [
+@@ -221,7 +223,7 @@
+     },
+     "ScoutFrontierOverlap": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "ScoutFrontierOverlap",
+       "role": "scout",
+       "item": "Read the README coverage map and Frontier plus the two r39 receipt knowledge entries; determine whether the r40 expectation-digest note names genuinely distinct ground or duplicates an existing note.",
+       "axes": [
+@@ -233,7 +235,7 @@
+     },
+     "ScoutProvinceBoundary": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "ScoutProvinceBoundary",
+       "role": "scout",
+       "item": "Read chousa PROVINCE.md and relevant sibling province boundaries; determine whether the receipt-reconciliation work remains within deep-research method and identify any cross-domain evidence to route.",
+       "axes": [
+@@ -245,7 +247,7 @@
+     },
+     "ScribeKnowledgeEntry": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "ScribeKnowledgeEntry",
+       "role": "scribe",
+       "item": "Review the r40 knowledge entry for provenance trio ordering, S059 citation scope, exact anchor, fact-versus-inference separation, and runnable recheck; return precise corrections only.",
+       "axes": [
+@@ -257,7 +259,7 @@
+     },
+     "ScribeLessonGate": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "ScribeLessonGate",
+       "role": "scribe",
+       "item": "Review round-40.md Gate for every new SOURCES row's URL or own-work locator, access date, located quote under 25 words, and complete old-to-new registry changes.",
+       "axes": [
+@@ -269,7 +271,7 @@
+     },
+     "ScribeClaimSurfaces": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "ScribeClaimSurfaces",
+       "role": "scribe",
+       "item": "Cross-read LOG.md, SCORECARD.md, and the round-40 report for consistent claim wording, exact counts, measured lane revision, source pointer, and correction/disposition statements.",
+       "axes": [
+@@ -281,7 +283,7 @@
+     },
+     "MutateExpectDigest": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "MutateExpectDigest",
+       "role": "mutation-tester",
+       "item": "On a temporary copy only, alter one active receipt expect_sha256 and re-run the committed verifier; record exact refusal and ensure no repository artifact changes.",
+       "axes": [
+@@ -293,7 +295,7 @@
+     },
+     "MutateGateDigest": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "MutateGateDigest",
+       "role": "mutation-tester",
+       "item": "On a temporary copy only, alter an active receipt gate digest while keeping the gate unchanged; re-run the verifier and require the named mismatch refusal.",
+       "axes": [
+@@ -305,7 +307,7 @@
+     },
+     "MutateVerifierSubject": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "MutateVerifierSubject",
+       "role": "mutation-tester",
+       "item": "On temporary copies only, alter a c2 receipt verifier_sha256 and subject_counter_sha256 independently; require the verifier's named refusals for each mutation.",
+       "axes": [
+@@ -317,7 +319,7 @@
+     },
+     "SentinelWriteScope": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "SentinelWriteScope",
+       "role": "sentinel",
+       "item": "Audit the round-40 spec and committed file paths for any seat instruction that could write outside its unique lane report or mutate fleet, sibling, git-index, jj, or state files.",
+       "axes": [
+@@ -329,7 +331,7 @@
+     },
+     "SentinelFetchScope": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "SentinelFetchScope",
+       "role": "sentinel",
+       "item": "Audit S059 source use and seat prompts for external live-target fetches or claims that require operator approval; report any out-of-scope fetch or secret exposure.",
+       "axes": [
+@@ -341,7 +343,7 @@
+     },
+     "RevengerR1History": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "RevengerR1History",
+       "role": "revenger",
+       "item": "Reconstruct the r39 R1 chain from receipt hashes, committed expectations, counter, and verifier; distinguish stale expectation digest from row-tie mismatch and verify the chosen replacement/supersession path.",
+       "axes": [
+@@ -353,7 +355,7 @@
+     },
+     "RevengerR2R5History": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "RevengerR2R5History",
+       "role": "revenger",
+       "item": "Reconstruct R2-R5 from the spot-check, r39 lesson, r39 report, SCORECARD, spec, and plan; classify which findings are true, fixed, or contradicted using resolvable pointers.",
+       "axes": [
+@@ -365,7 +367,7 @@
+     },
+     "ConnectorSiblingScan": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "ConnectorSiblingScan",
+       "role": "connector",
+       "item": "Perform a read-only sibling-overlap scan for receipt provenance, corpus-source curation, and calibration work; report the owning lane for any adjacent surface rather than absorbing it.",
+       "axes": [
+@@ -377,7 +379,7 @@
+     },
+     "SimplifierAudit": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "SimplifierAudit",
+       "role": "simplifier",
+       "item": "Review the two round-40 counting scripts and active manifest for unnecessary abstraction, dead branches, unchecked assumptions, or a simpler implementation preserving the frozen predicates.",
+       "axes": [
+@@ -389,7 +391,7 @@
+     },
+     "CriticSourceClaim": {
+       "kind": "spawn",
+-      "agentId": null,
++      "agentId": "CriticSourceClaim",
+       "role": "critic",
+       "item": "Try to falsify the sourced-claim binding: verify that the R1 evidence or knowledge entry actually uses reopened S059 rather than merely carrying an unrelated source citation.",
+       "axes": [
