@@ -8,12 +8,13 @@ item: attack `corpus/evidence/round46/c2-count.py` with the five assigned forges
   c2f0e9d:…/c2-count.py` — the bytes the claim is frozen against, and the bytes my five forges hit;
 - live revision `60ad448e99b15cb6691e48ce4e01c86ba8f027618f3e2fbb3649485ea39ca7ff`, landed mid-wave by
   a sibling (docstring now credits this seat; adds fence-skip, per-line `<!--…-->` strip and
-  `names()` delimiter-bounded credit). Not written or approved by me; re-measured below.
+  `names()` delimiter-bounded credit). Not written or approved by me; ExecCounterRun's ledger counts
+  six post-freeze edits across the round's instruments (c1 ×3, c2, c3, tool) — an L1 re-freeze/erratum
+  item, since the Admission rule says a rule changed after a seat scored is not this claim's rule.
 
-**Tree caveat:** HEAD == `c2f0e9d`; every count below is against `SKILL.md` `7b49e2ae…d05433` (the
-file at measurement time; siblings landed Gates rows afterwards, live at finish `2ff29159…5da4`).
-Working tree = freeze **plus untracked wave-1 artifacts** (`tools/inference-ground.py` absent in
-`c2f0e9d`), so my baseline is `72/55/17`.
+**Tree caveat:** HEAD == `c2f0e9d`; counts are against `SKILL.md` `7b49e2ae…d05433` (measurement time;
+siblings landed rows after, live `2ff29159…5da4`). Tree = freeze **plus untracked wave-1 artifacts**
+(`tools/inference-ground.py` absent in `c2f0e9d`), so my baseline is `72/55/17`.
 
 ## Provenance of the committed before-line (verified, not inferred)
 
@@ -106,11 +107,10 @@ revision's own control set: `m-c3` above.
 
 ## Leg (C) exclusion (raised by ReviewerC2Set, verified)
 
-`NAMED` hard-requires a `tools/` or `corpus/` prefix. Ten existing paths that `SCORECARD.md` /
-`claims*.md` name are therefore dropped from the literal predicate: 8 relative
-`.ufo/waves/round-{35,36,37,38,39,41}/controls/*.sh|py` (named in round35/36/38/39/41 claims) plus 2
-absolute mentions in `SCORECARD.md` (`.ufo/waves/round-29/falsify/DiffToolB/guarded-run.py`,
-`scripts/sources-census.sh`). Not gates — control artifacts — but the exclusion is undeclared.
+`NAMED` hard-requires a `tools/` or `corpus/` prefix, so ten existing named paths are dropped: 8 relative
+`.ufo/waves/round-{35,36,37,38,39,41}/controls/*.sh|py` plus 2 absolute `SCORECARD.md` mentions
+(`.ufo/waves/round-29/falsify/DiffToolB/guarded-run.py`, `scripts/sources-census.sh`). Not gates — control
+artifacts — but the exclusion is undeclared.
 
 ## Frozen controls, re-run on the live tree (all four hold)
 
@@ -131,12 +131,14 @@ Fence state is global and toggled by any lstrip'ed ``` line, so one stray fence 
 Not a cheap gate (it never yields a false PASS), but a scribe's illustration block inside Gates makes
 the counter report `0/72` — a whole-registry false negative that reads like "no rows". Prefer exit 2
 when entry points exist and `GATES_ROWS==0`.
+Third row-shape route (ExecCounterRun, verified on `60ad448e` with a one-entry root): the ≥8 test counts
+**raw** pipes, so `| a | b | c | x\|y\|z\|w\|q | \`tools/foo.py\` exit 0 |` (10 pipes, 5 cells) registers
+while the same row unescaped (5 pipes) is refused — count cells, not `|` characters.
 
 ## Live drift at finish (recorded, not scored by me)
 
-While the above ran, the siblings' rows + the revision landed: the live tree now prints
-`GATES_ROWS=35 REGISTERED=72/72 UNREGISTERED=0 C2=PASS` exit 0. My `55/72/17` baseline is the
-measurement-time state of `SKILL.md 7b49e2ae…`, not the current tree.
+While the above ran, siblings' rows + the revision landed: live tree `GATES_ROWS=35 REGISTERED=72/72
+UNREGISTERED=0 C2=PASS` exit 0. My `55/72/17` baseline is the measurement-time state, not this tree.
 
 ## Restoration / side effects
 

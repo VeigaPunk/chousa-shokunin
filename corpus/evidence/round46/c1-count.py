@@ -9,7 +9,10 @@ uncited bullet, cited-but-ungrounded token, and a body that reuses the correct
 spans and figures while its inference asserts something else — the round-45 D7
 class, `CritC3Axis`).
 
-Prints `POSITIVE_PASS=n/n JUNK_KILLED=n/n TOOL=present|absent C1=PASS|FAIL`.
+Prints `TOOL=present|absent`, `POSITIVE_PASS=n/n`, `JUNK_KILLED=n/n`,
+`CANARY=pass|fail` (the first positive and first junk fixture copied under
+neutral names — a tool that keys on the fixture NAME fails this leg), then
+`C1=PASS|FAIL`.
 Exit 0 iff the tool is present and every fixture scores its declared verdict;
 1 otherwise; 2 usage/env (no fixtures).
 
@@ -24,6 +27,8 @@ from __future__ import annotations
 import argparse
 import hashlib
 import pathlib
+import shutil
+import tempfile
 import subprocess
 import sys
 
@@ -50,14 +55,16 @@ def digest(path: pathlib.Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def run(tool: pathlib.Path, fixture_dir: pathlib.Path, name: str) -> int:
+def run(tool: pathlib.Path, fixture_dir: pathlib.Path, name: str,
+        spans_dir: pathlib.Path | None = None) -> int:
     entry = fixture_dir / name
     if not entry.is_file():
         return 127
+    src = spans_dir or fixture_dir
     proc = subprocess.run(
         [sys.executable, str(tool), "--entry", str(entry),
-         "--spans", str(fixture_dir / "spans.tsv"),
-         "--counts", str(fixture_dir / "counts.json"),
+         "--spans", str(src / "spans.tsv"),
+         "--counts", str(src / "counts.json"),
          "--root", str(fixture_dir)],
         capture_output=True, text=True)
     return proc.returncode
@@ -81,6 +88,17 @@ def main() -> int:
         print("C1=FAIL")
         return 1
     present = tool.is_file()
+    # Canary (round-46 `ExecCounterRun`): a tool that keys on the FIXTURE NAME
+    # (`basename startswith positive-`) scores 3/3+3/3 without reading a byte.
+    # The same bytes under neutral names must land the same verdicts.
+    canary_ok = 1
+    if present:
+        with tempfile.TemporaryDirectory() as td:
+            tmp = pathlib.Path(td)
+            shutil.copyfile(fixture_dir / POSITIVES[0], tmp / "canary-a.md")
+            shutil.copyfile(fixture_dir / JUNKS[0], tmp / "canary-b.md")
+            canary_ok = int(run(tool, tmp, "canary-a.md", fixture_dir) == 0
+                            and run(tool, tmp, "canary-b.md", fixture_dir) == 1)
     # A junk fixture must be refused with EXIT 1 — the frozen sentence says
     # "exits 1", so a crash (2) or a missing file (127) is not a kill
     # (round-46 `MutC1Junk` finding).
@@ -89,7 +107,8 @@ def main() -> int:
     print(f"TOOL={'present' if present else 'absent'}")
     print(f"POSITIVE_PASS={pos}/{len(POSITIVES)}")
     print(f"JUNK_KILLED={junk}/{len(JUNKS)}")
-    ok = present and pos == len(POSITIVES) and junk == len(JUNKS)
+    print(f"CANARY={'pass' if canary_ok else 'fail'}")
+    ok = present and pos == len(POSITIVES) and junk == len(JUNKS) and canary_ok == 1
     print("C1=PASS" if ok else "C1=FAIL")
     return 0 if ok else 1
 

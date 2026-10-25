@@ -68,9 +68,6 @@ def inference_bullets(text: str) -> tuple[bool, list[str]]:
     for i, line in enumerate(lines):
         if line.lstrip().startswith("```"):
             fence = not fence
-            if cur is not None:
-                bullets.append(cur)
-                cur = None
             continue
         if fence:
             continue

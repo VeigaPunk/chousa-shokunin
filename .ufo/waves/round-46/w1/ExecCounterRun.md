@@ -27,7 +27,7 @@ those three enter via leg B. (E2) `claims.md:40` labels `controls/c1-before.txt`
 says "6e2630a + this round's counters and fixtures": bare `6e2630a` measures `REGISTERED=55/68 UNREGISTERED=13`
 (debt 13), the augmented tree 16. `ENTRY_POINTS ≥ 71` holds in every reading.
 
-## 2. CURRENT tree, three snapshots
+## 2. CURRENT tree, three counter snapshots (07:34:18 tool re-pin in §5)
 
 ```
 07:30:26  c1 96833e22 c2 60ad448e c3 234e2272
@@ -61,19 +61,19 @@ On the command as assigned, `| tail -2` makes `GATE_EXIT` tail's status; the gat
 
 ## 4. Falsifiers
 
-**F1 — C1's cheapest gate is undefeated: a filename oracle scores full marks.** Re-measured on pinned counter
-`819287e2`: `--tool <exit 0 iff basename startswith "positive-">` → `POSITIVE_PASS=3/3 JUNK_KILLED=3/3 C1=PASS
-exit 0`. Declared controls reproduce exactly: always-0 → 3/3,0/3 FAIL; cite-presence-only (every `#### Inference`
-bullet carries a `(\`S###\`)` token) → 3/3,1/3 FAIL (junk-ungrounded, junk-borrowed survive). Exit-codes-only
-predicate, so this is a **control-set gap, not a predicate violation**: C1=PASS alone does not show grounding work.
-Mitigation at both tool shas: renamed fixtures (zeta/alpha/kappa, omega/beta/yotta) → 3 positives exit 0, 3 junk
+**F1 — C1's cheapest gate: a filename oracle scored full marks, now killed by the canary.** At pin `819287e2`,
+`--tool <exit 0 iff basename startswith "positive-">` → `POSITIVE_PASS=3/3 JUNK_KILLED=3/3 C1=PASS exit 0`; the
+declared controls reproduce exactly (always-0 → 3/3,0/3; cite-only → 3/3,1/3, junk-ungrounded and junk-borrowed
+survive). At pin `8473abf6` the counter grew a `CANARY` leg (same bytes under neutral names) and the oracle now gives
+`CANARY=fail C1=FAIL exit 1`; always-0 and crash-on-junk also fail the canary, cite-only passes it and still fails at
+1/3, real tool `CANARY=pass C1=PASS`. Mitigation at both tool shas: renamed fixtures → 3 positives exit 0 / 3 junk
 exit 1 with `INF_UNCITED`/`INF_TOKEN_NOT_IN_SPAN`; rewriting a positive's token to `the pool is reissued nightly` →
 exit 1; grounding the junk-ungrounded token in a real span → exit 0 (correct: it is no longer junk).
 
-**F2 — the freeze did not hold: all three counters were edited after `c2f0e9d1` (c1 twice).**
+**F2 — the freeze did not hold: all three counters were edited after `c2f0e9d1`, c1 three times.**
 ```
 file      frozen sha256[:16]  worktree sha256[:16]  mtime (worktree)
-c1-count   e7686236c811df49   96833e22b0eb3617    2026-10-25 07:27:37.272   → second edit 07:31:17.028 = 819287e2075c3f5b
+c1-count   e7686236c811df49   96833e22b0eb3617    07:27:37.272 → 819287e2075c3f5b 07:31:17.028 → 8473abf6c4437bed 07:38:16.237
 c2-count   06c9e9bc3865b60e   60ad448e99b15cb6    2026-10-25 07:28:28.152
 c3-count   5018d7b04eba6bdf   234e2272e8e21e82    2026-10-25 07:29:33.421
 ```
@@ -93,7 +93,7 @@ an unregistered path: `| x | x | x | x | x | x | x | x | corpus/evidence/round34
 **unterminated** ` ``` ` inside `## Gates` → `GATES_ROWS=0 REGISTERED=0/72` exit 1 (fail-closed, but a
 whole-registry false negative). New: the ≥8-pipe threshold counts **escaped** pipes —
 `| a | b | c | x\|y\|z\|w\|q | corpus/evidence/round34/self-audit.py exit 0 |` (10 pipes, 5 real cells) counts as a
-Gates row; the docstring's named limit therefore understates.
+Gates row; the docstring's named limit therefore understates. Remedy is unescaped-cell counting, not `str.count("|")` (`MutC2Forge` reproduced it on a one-entry fake root: `GATES_ROWS=1 REGISTERED=1/1 C2=PASS`; same row unescaped → 0).
 
 **F4 — C2 blind spot: 10 executable scripts are invisible to A∪B∪C.** 82 `.py`/`.sh` files exist in the lane; the
 union is 72: `round25-holds/battery.sh`, `round25-meta-oracle.py`, `round25-sources-census.sh`,
@@ -127,18 +127,18 @@ WARP note is lane `S081`"). Polarity positive, documents right; S085–S089 rows
 verdict maps (`inference-ground (r46)` → exit 0 grounded / 1 findings / 2 usage; `chousa round-46 counters` names
 c1/c2/c3 plus build-spans). One row shows F3's escaped-pipe looseness (14 naive fields, 8 real cells; renders fine); C2=PASS was not obtained with junk rows.
 
-## 5. Verdict at close (07:34:18: c1 `819287e2`, c2 `60ad448e`, c3 `234e2272`, tool `3018b1d2`, all PASS exit 0)
+## 5. Verdict at close (07:38:28: c1 `8473abf6`, c2 `60ad448e`, c3 `234e2272`, tool `3018b1d2`; all PASS, C1 with `CANARY=pass`)
 
-- **C1 PASS** (exit 0). Real tool does lexical grounding — at sha `397d9878` and again at the current `3018b1d2`
-  the renamed-fixture run gives 3 positives exit 0 / 3 junk exit 1, and the mutation checks behave (F1). Residual:
-  the counter cannot tell it from a filename oracle; the tool review is a seated read.
+- **C1 PASS** (exit 0, `TOOL=present 3/3 3/3 CANARY=pass`). Real tool does lexical grounding — at sha `397d9878` and
+  again at the current `3018b1d2` the renamed-fixture run gives 3 positives exit 0 / 3 junk exit 1, and the mutation
+  checks behave (F1). Residual: the tool's review stays a seated read; the canary only closes the name oracle.
 - **C2 PASS** (exit 0, 72/72, GATES_ROWS=35). Was FAIL(17) five minutes earlier; target ≥71 holds. Residual:
   format-only row test with the two live hazards (F3), invisible set (F4).
 - **C3 PASS** (exit 0, both modes). Binding independently verified (F7), polarity read (F6). Semantic support of
   each quote remains the reviewers' judgement — the counter binds bytes, not meaning.
-- **Freeze integrity (F2)** is the one open decision: three counters changed after `c2f0e9d1` (c1 twice) and the tool
-  itself changed at 07:33:33; every version agrees on today's tree, but the admission rule now has five edits to
-  answer for.
+- **Freeze integrity (F2)** is the one open decision and it binds all three claims: each predicate names its counter
+  by path, so the six edits after `c2f0e9d1` (c1 ×3, c2, c3, tool 07:33:33) are the same class for C1, C2 and C3.
+  Every version agrees on today's tree and the c1 canary closes F1; the Admission rule must still answer — errata or re-freeze.
 
 ## 6. Bounds
 

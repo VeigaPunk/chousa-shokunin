@@ -122,6 +122,49 @@ Frozen in `corpus/evidence/round46/claims.md` before any seat scored.
     on the same tree, C1's fixture exits unchanged, C3's guards cannot fire on
     the committed manifest. No frozen target, predicate or control was changed.
 
+13. Class: filename-oracle. Evidence: C1's counter compares exit codes only,
+    so a "tool" that exits 0 for names starting `positive-` and 1 otherwise
+    scored `3/3 3/3 C1=PASS` without reading a byte (`ExecCounterRun`). Fix: a
+    CANARY leg copies the first positive and the first junk fixture under neutral
+    names (`canary-a.md`, `canary-b.md`) and requires 0 and 1. Shown able to
+    fail: `controls/c1-controls.txt` records the name oracle at `CANARY=fail
+    C1=FAIL`, the citation-presence-only forge at `CANARY=pass JUNK_KILLED=1/3`,
+    the always-exit-0 forge at `CANARY=fail JUNK_KILLED=0/3`, and the real tool at
+    `CANARY=pass`.
+14. Class: co-occurrence-leg. Evidence: C3's `REF_BOUND` requires the S079
+    sentence to contain `RFC 7089`; a forged sentence `S079 is not RFC 7089`
+    passes it (`ExecCounterRun`), and C2's row test is format-only — a junk
+    8-cell row registers an unregistered path. Both are named limits of the
+    frozen sentences (they say "named" and "the sentence names"), not defects to
+    repair inside the claim; recorded here so round 47 inherits them.
+
+### Named limits of the round-46 instruments (not repaired inside the claims)
+
+- **C1, designator leg untested.** The counter invokes the tool without
+  `--registry`, so the document-designator credential (which lets `RFC 7089`
+  ground its own numeral) is dead on every scored run and a mutant that drops it
+  still scores `3/3 3/3 CANARY=pass` (`MutC1Tool` A). The leg is exercised only
+  by the admitted entries (`measure-after.txt`), not by a fixture.
+- **C1, section-end untested.** No frozen fixture has content after its
+  `#### Inference` section, so a mutant that never ends the section survives; the
+  direction is strictness — it would wrongly REFUSE a positive entry, never admit
+  junk (`MutC1Tool` B). `####` headings whose text merely starts with
+  "inference" (`#### Inference Notes`) are treated as the section.
+- **C1, fixture-name oracle.** Closed this round by the CANARY leg (mistake 13).
+- **C1, entailment.** Unclosed: a body of correct tokens asserting the opposite
+  still passes (mistake 2).
+- **C2, mention not dependence.** `corpus/evidence/round45/tag-count.py` is a
+  documented gate with a Gates row and a pinned control, yet it is not an entry
+  point; deleting its row leaves `UNREGISTERED=0` (`RevC2TagCount`). The same
+  holds for `build-spans.py` and `round25-meta-oracle.py`. C2's predicate
+  quantifies over its declared union and is met; the calibration READING must say
+  membership of a mention-derived set, not gate-registry coverage.
+- **C2, row format only.** A junk eight-cell row naming an unregistered path
+  registers it; row truth is a reader's check (`ExecCounterRun`).
+- **C3, anchors and co-occurrence.** The counter never checks a Registry row's
+  `anchor` cell (mistake 7) and `REF_BOUND` is co-occurrence: `S079 is not RFC
+  7089` passes it (`ExecCounterRun`).
+
 ## Round-45 closure defects — disposition
 
 | defect | disposition this round |
