@@ -1,0 +1,53 @@
+# measured over git archive of 2738202b37f05808bce82caba32c03dafaec8a13
+$ python3 corpus/evidence/round45/c1-count.py
+CASE a_empty_exits_3=ok
+CASE b_ok_exits_0=ok
+CASE c_timeout_exits_3=ok
+CASE d_no_timeout_exits_2=ok
+CASE e_start_timeout_s=ok
+CASES_MATCH=5/5
+C1=PASS
+exit=0
+$ python3 corpus/evidence/round45/c2-count.py --list
+ENTRY_POINTS=54
+GATES_ROWS=30
+REGISTERED=54/54
+UNREGISTERED=0
+C2=PASS
+exit=0
+$ python3 corpus/evidence/round45/c3-count.py
+ENTRIES=2/2
+CITES_BOUND=3/3
+QUOTES_IN_SPAN=4/4
+QUOTES_IN_ENTRY=4/4
+COUNTS_IN_ENTRY=7/7
+CAPTURE_BOUND=4/4
+COUNTS_REDERIVED=7/7
+C3=PASS
+exit=0
+$ python3 corpus/evidence/round45/c3-count.py --lane-only --cache /nonexistent
+ENTRIES=2/2
+CITES_BOUND=3/3
+QUOTES_IN_SPAN=4/4
+QUOTES_IN_ENTRY=4/4
+COUNTS_IN_ENTRY=7/7
+CAPTURE_BOUND=skipped
+COUNTS_REDERIVED=skipped
+C3=PASS
+exit=0
+$ python3 corpus/evidence/round45/tag-count.py
+TAGGED=3/3
+TAG=PASS
+exit=0
+$ python3 corpus/evidence/round44/c1-count.py
+C1=PASS
+$ sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa
+chousa	W04	S051 duplicate url www.w3.org/TR/2017/REC-html52-20171214/syntax.html across scopes
+chousa	W04	S053 duplicate url docs.python.org/3/library/socket.html across scopes
+chousa	W04	S073 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+chousa	W04	S074 duplicate url docs.python.org/3/library/hashlib.html across scopes
+chousa	W04	S075 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+chousa	ok	/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md
+exit=0
+$ registry rows (0-3-space pattern)
+84
