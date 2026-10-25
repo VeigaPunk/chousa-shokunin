@@ -1,0 +1,105 @@
+# Round 47 after-measurement — over a git archive of lane commit b8bc06c68a4deaeeed69ae0b90eb38aba256eac9
+# counters run from the archive with --root <archive>; the freeze-time C2 counter is `git show 22a44b8b:corpus/evidence/round47/c2-count.py`
+### sha256 tools/inference-ground.py 9d789b34562cc0ce35be7e4d7ea67a9fa57eabf8794bbf096c8a8d190925149b
+### sha256 corpus/evidence/round47/c2-count.py 60134f25a5069eef2e59309ed41511f13ce4557abc1390cc8ffb68f2cfcce4d4
+
+$ <archive>/corpus/evidence/round47/c1-count.py --root <archive>
+TOOL=present
+POSITIVE_PASS=3/3
+JUNK_KILLED=3/3
+CANARY=pass
+R46_COUNTER=pass
+R46_ENTRIES=2/2
+C1=PASS
+exit=0
+
+$ <archive>/corpus/evidence/round47/c2-count.py --root <archive> --list
+ENTRY_POINTS=94 (abc=85 dependence=+2 check_named=+7)
+FLOOR=92
+GATES_ROWS=51
+REGISTERED=94/94
+UNREGISTERED=0
+DANGLING=0
+MISMATCHES=0
+C2=PASS
+exit=0
+
+## freeze-time C2 counter
+$ /tmp/chousa-r47/c2-freeze.py --root <archive>
+Traceback (most recent call last):
+  File "/tmp/chousa-r47/c2-freeze.py", line 49, in <module>
+    LANE = pathlib.Path(__file__).resolve().parents[3]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 68, in __getitem__
+    raise IndexError(idx)
+IndexError: 3
+exit=1
+
+$ <archive>/corpus/evidence/round47/c3-count.py --root <archive>
+ENTRIES=2/2
+CITES_BOUND=6/6
+QUOTE_ROWS=35 (min 12)
+SPAN_IDS=6/6
+QUOTES_IN_SPAN=35/35
+QUOTES_IN_ENTRY=35/35
+SPAN_CONTEXT=35/35
+CAPTURE_BOUND=35/35
+REF_ID_UNBOUND=0
+ANCHOR_BOUND=6/6
+INFERENCE_GROUNDED=2/2
+QUARANTINE_VERDICTS=4/4
+QUARANTINE_ABSENT_ADOPTED=0
+C3=PASS
+exit=0
+
+$ <archive>/corpus/evidence/round47/c3-count.py --root <archive> --lane-only
+ENTRIES=2/2
+CITES_BOUND=6/6
+QUOTE_ROWS=35 (min 12)
+SPAN_IDS=6/6
+QUOTES_IN_SPAN=35/35
+QUOTES_IN_ENTRY=35/35
+SPAN_CONTEXT=35/35
+CAPTURE_BOUND=skipped
+REF_ID_UNBOUND=0
+ANCHOR_BOUND=6/6
+INFERENCE_GROUNDED=2/2
+QUARANTINE_VERDICTS=4/4
+QUARANTINE_ABSENT_ADOPTED=0
+C3=PASS
+exit=0
+
+$ <archive>/corpus/evidence/round47/build-spans.py --root <archive> --check
+SPANS_ROWS=35 STALE=0
+exit=0
+
+$ <archive>/corpus/evidence/round46/c1-count.py --root <archive>
+TOOL=present
+POSITIVE_PASS=3/3
+JUNK_KILLED=3/3
+CANARY=pass
+C1=PASS
+exit=0
+
+$ <archive>/corpus/evidence/round46/c2-count.py --root <archive>
+ENTRY_POINTS=85 (tools=8 counters=53 named=83)
+GATES_ROWS=46
+REGISTERED=85/85
+UNREGISTERED=0
+C2=PASS
+exit=0
+
+$ <archive>/tools/inference-ground.py --entry <archive>/corpus/knowledge/claim-support-test-r37.md --spans <archive>/corpus/evidence/round47/spans.tsv --counts /dev/null --registry <archive>/corpus/SOURCES.md --root <archive>
+GROUND entry=corpus/knowledge/claim-support-test-r37.md section=1 bullets=7 tokens=16 grounded=16
+GROUND: PASS
+exit=0
+
+$ <archive>/tools/inference-ground.py --entry <archive>/corpus/knowledge/claim-support-test-r37-amendment-2026-10-23.md --spans <archive>/corpus/evidence/round47/spans.tsv --counts /dev/null --registry <archive>/corpus/SOURCES.md --root <archive>
+GROUND entry=corpus/knowledge/claim-support-test-r37-amendment-2026-10-23.md section=1 bullets=6 tokens=21 grounded=21
+GROUND: PASS
+exit=0
+
+$ scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa
+chousa	W04	S075 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+chousa	ok	/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md
+exit=0
