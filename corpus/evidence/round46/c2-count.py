@@ -78,27 +78,33 @@ def gates_rows(skill: pathlib.Path) -> list[str]:
     """
     if not skill.is_file():
         return []
-    rows, inside, fence = [], False, False
-    text = re.sub(r"<!--.*?-->", "", skill.read_text(encoding="utf-8"), flags=re.S)
-    for line in text.splitlines():
-        if line.lstrip().startswith("```"):
+    rows, inside, fence, in_comment = [], False, False, False
+    for raw in skill.read_text(encoding="utf-8").splitlines():
+        if raw.lstrip().startswith("```"):
             fence = not fence
             continue
         if fence:
             continue
-        if line.startswith("## "):
-            inside = line.strip() == "## Gates"
+        if in_comment:
+            if "-->" in raw:
+                in_comment = False
             continue
-        # The row test runs on the RAW line first: a comment prefix can never
-        # manufacture a row (`MutC2More` N1), while an inline comment inside a
-        # real row is stripped before the cell test.
-        if inside and line.startswith("|"):
-            bare = re.sub(r"<!--.*?-->", "", line)
-            # Nine separators = the table's eight cells. Eight separators (a
-            # seven-cell line) let a single row hold every path in one cell and
-            # score UNREGISTERED=0 (`RevInherited`).
-            if bare.count("|") >= 9 and "exit" in bare:
-                rows.append(bare)
+        bare = raw
+        if "<!--" in raw:
+            before, _, after = raw.partition("<!--")
+            if "-->" in after:
+                bare = before + after.split("-->", 1)[1]
+            else:
+                in_comment = True
+                bare = before
+        if bare.startswith("## "):
+            inside = bare.strip() == "## Gates"
+            continue
+        # The RAW line must start with `|` (a comment prefix cannot manufacture
+        # a row — `MutC2More` N1) and the table's eight cells need nine
+        # separators (`RevInherited`).
+        if inside and raw.startswith("|") and bare.count("|") >= 9 and "exit" in bare:
+            rows.append(bare)
     return rows
 
 
