@@ -1,0 +1,49 @@
+# C1 before-state and do-nothing controls (scored pre-freeze, lane base 3c51da77)
+
+$ python3 corpus/evidence/round50/c1-count.py --tool corpus/evidence/round50/controls/tool-before.py
+SELFTEST_DEFAULT=PASS (skipped: --tool)
+BASELINE=FAIL rc=2 findings=?
+PERTURB P1 applied=1 rc=2 -> FAIL
+PERTURB P2 applied=1 rc=2 -> FAIL
+PERTURB P3 applied=1 rc=2 -> FAIL
+PERTURB P4 applied=1 rc=2 -> FAIL
+PERTURB P5 applied=1 rc=2 -> FAIL
+PERTURB P6 applied=1 rc=2 -> FAIL
+PERTURB_PASS=0/6
+EXPECTED_BAD=FAIL rc=2
+R49_REGRESSION=PASS rc=0
+LEGS=2/5
+C1=FAIL
+exit=1
+
+$ python3 corpus/evidence/round50/c1-count.py --tool corpus/evidence/round50/controls/echo-tool.py
+SELFTEST_DEFAULT=PASS (skipped: --tool)
+BASELINE=PASS rc=0 findings=26
+PERTURB P1 applied=1 rc=0 -> FAIL
+PERTURB P2 applied=1 rc=0 -> FAIL
+PERTURB P3 applied=1 rc=0 -> FAIL
+PERTURB P4 applied=1 rc=0 -> FAIL
+PERTURB P5 applied=1 rc=0 -> FAIL
+PERTURB P6 applied=1 rc=0 -> FAIL
+PERTURB_PASS=0/6
+EXPECTED_BAD=PASS rc=2
+R49_REGRESSION=PASS rc=0
+LEGS=4/5
+C1=FAIL
+exit=1
+
+$ python3 corpus/evidence/round50/c1-count.py --tool corpus/evidence/round50/controls/const-tool.py
+SELFTEST_DEFAULT=PASS (skipped: --tool)
+BASELINE=FAIL rc=0 findings=26
+PERTURB P1 applied=1 rc=0 -> FAIL
+PERTURB P2 applied=1 rc=0 -> FAIL
+PERTURB P3 applied=1 rc=0 -> FAIL
+PERTURB P4 applied=1 rc=0 -> FAIL
+PERTURB P5 applied=1 rc=0 -> FAIL
+PERTURB P6 applied=1 rc=0 -> FAIL
+PERTURB_PASS=0/6
+EXPECTED_BAD=FAIL rc=0
+R49_REGRESSION=PASS rc=0
+LEGS=2/5
+C1=FAIL
+exit=1
