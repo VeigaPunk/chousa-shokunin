@@ -1,5 +1,5 @@
 source: S010 — https://example.test/new-a — section a
-source: S011 — https://example.test/new-b — section b
+source: S013 — https://example.test/new-c — section a
 verified-at: 2026-10-25
 recheck: 90d
 
@@ -7,5 +7,5 @@ recheck: 90d
 
 #### Observation
 
-- The first document states a thing (S010) and the second another (S011).
-- A third document (S013) and the held lane row S003 are also cited.
+- The first document states a thing (S010) and the third another (S013).
+- A fourth document (S016) is only mentioned here, and the lane row S003 is also cited.

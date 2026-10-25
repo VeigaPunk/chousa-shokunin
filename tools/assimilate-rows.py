@@ -4,7 +4,7 @@
 Addendum section 10 (assimilation contract) as one runnable step, in scratch:
 
     python3 tools/assimilate-rows.py --staged FILE --knowledge DIR \
-        --registry FILE --opened YYYY-MM-DD --out DIR [--entry REL ...]
+        --registry FILE --opened YYYY-MM-DD --out DIR [--entry REL ...] [--cites source|all]
 
 Always writes DIR/reg-ids, DIR/staged-ids and DIR/collisions: sorted ids from
 the section-10 pattern `^ {0,3}|[[:space:]]*S[0-9]{3,}` over the WHOLE
@@ -15,18 +15,28 @@ With one or more --entry (a path relative to --knowledge, e.g.
 `corpus/knowledge/x.md`) it also writes:
 
 - `renumber.tsv` (`staged_id lane_id action url`): every staged id the entries
-  cite, in ascending staged-id order. BY DOCUMENT: a staged row whose URL (the
+  cite, in ascending staged-id order. An entry CITES the ids on its `source:`
+  lines (a line that starts with `source:`) — round 51 (QUALITY 77); `--cites all`
+  restores the round-49/50 reading (every staged id token an entry mentions). BY DOCUMENT: a staged row whose URL (the
   census's normalised first http(s) URL of the `source` cell) a Registry row
   already carries maps to that row's id (`held`, nothing appended); any other
   maps to the next free lane id, contiguous from the registry maximum
   (`append`). Ids are never shifted by arithmetic.
 - DIR/<entry>: each entry with ONE simultaneous substitution of every cited
   staged id (so S100->S101 and S101->S102 never chain). Tokens that are not
-  staged ids pass through unchanged — checking that they name the right lane
-  document is the reader's job.
+  cited pass through unchanged — checking that they name the right lane
+  document is the reader's job. In the default `--cites source` mode a staged id
+  an entry mentions but no entry cites on a `source:` line is listed in
+  `bodyonly.tsv` (`entry<TAB>staged_id`, header line first) and counted as
+  `BODYONLY=<n>` on stdout; when such an id is also a lane id (a registry row
+  or a minted one) it is also listed in `bodyclash.tsv` and warned on stderr
+  (`WARN`), because the unchanged token then reads as that lane row.
 - `append.md`: one fleet-schema row per `append` id, in lane-id order: 11
   cells; the same substitution applied inside every cell; an escaped `\\|` and
-  any other pipe inside a cell rewritten to ` / `; status `mined`; opened =
+  any other pipe inside a cell rewritten to ` / ` (a staged row's document
+  identity is read from the source cell AFTER that rewrite, and a registry row's
+  cells are split with the same escaped-pipe splitter, so an escaped pipe in either
+  source cell never loses the URL); status `mined`; opened =
   --opened; recheck reduced to a census-valid value (an ISO date, `NNd`, or a
   symbolic cadence) with the stripped prose kept; `used-by` = exactly the
   given entries that cite the staged id, sorted, comma-separated.
@@ -34,7 +44,9 @@ With one or more --entry (a path relative to --knowledge, e.g.
   normalisation removed (recheck prose, the replaced status/opened/used-by
   values, pipe rewrites), for the round lesson's Gate block.
 
-Refusals (exit 1, nothing claimed): an entry missing or not UTF-8; a cited
+Refusals (exit 1, nothing claimed): a registry with no `## Registry` heading or
+with an `S###` row (0-3 leading spaces) outside the Registry section (the ids it
+would continue from are not the registry's); an entry missing or not UTF-8; a cited
 staged row with no URL; a staged row whose recheck has no leading
 calendar-valid date, `NNd` or cadence. Headings accept a space or a tab after
 the hashes, as the census does. Read-only on its inputs; writes only under
@@ -49,7 +61,11 @@ Self-test (round 50): `python3 tools/assimilate-rows.py --selftest [--fixtures D
 the expected file. A finding line is one of: `TOOLEXIT n`, `REFUSED text`,
 `COLLISIONS ids|-`, `MAP staged->lane action`, `ROWCELLS lane n`, `ROWSTATUS
 lane status`, `ROWUSEDBY lane list`, `ROWRECHECK lane value`, `ENTRYCITES
-entry ids`, `STRIPPED lane column`. It prints each as `FINDING <line>`, every
+entry ids`, `BODYONLY entry id`, `BODYCLASH entry id` (source mode only),
+`STRIPPED lane column`. `--selftest` also takes `--cites source|all` (default
+`source`; the round-50 pinned package needs `all`). The environment variable
+`ASSIMILATE_CITES=source|all` sets the default of both modes (the frozen round-49 and
+round-50 counters call the tool with no flag and need `all`; an explicit `--cites` wins). It prints each as `FINDING <line>`, every
 difference as `DIFF missing <line>` / `DIFF unexpected <line>`, then
 `FIXTURES_SHA256=<hex>` (sha256 over the sorted relative paths and bytes of
 every fixture file) and `SELFTEST=PASS|FAIL`. Exit 0 PASS · 1 FAIL · 2 fixtures
@@ -72,6 +88,7 @@ import collections
 import datetime
 import hashlib
 import json
+import os
 import pathlib
 import re
 import shutil
@@ -130,7 +147,42 @@ def registry_rows(text: str) -> dict[str, list[str]]:
             continue
         m = ROW_RE.match(line)
         if inside and m and m.group(1) not in out:
-            out[m.group(1)] = [c.strip() for c in s.strip().split("|")[1:-1]]
+            out[m.group(1)] = [c.strip() for c in ESC_SPLIT.split(s.strip())[1:-1]]
+    return out
+
+
+def pipe_free(cell: str) -> str:
+    """The cell as it lands in the append block: any pipe (escaped or not) becomes ` / `."""
+    return re.sub(r"\s*\\?\|\s*", " / ", cell)
+
+
+def source_ids(text: str) -> list[str]:
+    """Ids on the entry's `source:` lines (a line that starts with `source:`), in order of first mention."""
+    out: list[str] = []
+    for line in text.splitlines():
+        if line.startswith("source:"):
+            out += [i for i in TOKEN_RE.findall(line) if i not in out]
+    return out
+
+
+def registry_problems(text: str) -> list[str]:
+    """Why this registry cannot be renumbered against: no `## Registry` heading, or an S### row outside it."""
+    inside, seen, outside = False, False, []
+    for line in text.splitlines():
+        s = line.lstrip(" ")
+        if len(line) - len(s) <= 3 and re.match(r"##[ \t]", s):
+            inside = s[3:].strip() == "Registry"
+            seen = seen or inside
+            continue
+        if len(line) - len(s) <= 3 and re.match(r"#[ \t]", s):
+            inside = False
+            continue
+        m = ROW_RE.match(line)
+        if m and not inside:
+            outside.append(m.group(1))
+    out = [] if seen else ["registry has no `## Registry` heading"]
+    if outside:
+        out.append("registry rows outside the Registry section: " + ", ".join(sorted(set(outside), key=num)))
     return out
 
 
@@ -153,7 +205,7 @@ def split_cells(line: str) -> list[str]:
     return [c.strip() for c in ESC_SPLIT.split(line.strip())[1:-1]]
 
 
-def observe(fix: pathlib.Path) -> list[str]:
+def observe(fix: pathlib.Path, cites: str = "source") -> list[str]:
     """Run this tool on fixture package `fix`; return its finding lines."""
     know = fix / "knowledge"
     entries = sorted(p.relative_to(know).as_posix() for p in know.rglob("*.md")) if know.is_dir() else []
@@ -161,7 +213,7 @@ def observe(fix: pathlib.Path) -> list[str]:
     try:
         cmd = [sys.executable, str(pathlib.Path(__file__).resolve()), "--staged", str(fix / "staged.md"),
                "--knowledge", str(know), "--registry", str(fix / "registry.md"), "--opened", "2026-10-25",
-               "--out", str(out)]
+               "--out", str(out), "--cites", cites]
         for e in entries:
             cmd += ["--entry", e]
         try:
@@ -193,6 +245,11 @@ def observe(fix: pathlib.Path) -> list[str]:
             if q.is_file():
                 ids = sorted(set(TOKEN_RE.findall(q.read_text(encoding="utf-8"))), key=num)
                 found.append(f"ENTRYCITES {e} {','.join(ids) if ids else '-'}")
+        for fname, tag in (("bodyonly.tsv", "BODYONLY"), ("bodyclash.tsv", "BODYCLASH")):
+            bf = out / fname
+            if bf.is_file():
+                for l in bf.read_text(encoding="utf-8").splitlines()[1:]:
+                    found.append(f"{tag} {l.split(chr(9))[0]} {l.split(chr(9))[1]}")
         sp = out / "stripped.tsv"
         if sp.is_file():
             for l in sp.read_text(encoding="utf-8").splitlines()[1:]:
@@ -210,7 +267,7 @@ def fixtures_digest(fix: pathlib.Path) -> str:
     return h.hexdigest()
 
 
-def selftest(fixtures: str | None, expected: str | None) -> int:
+def selftest(fixtures: str | None, expected: str | None, cites: str = "source") -> int:
     fix = pathlib.Path(fixtures) if fixtures is not None else pathlib.Path(__file__).resolve().parents[1] / "corpus" / "fixtures" / "assimilate-selftest"
     exp = pathlib.Path(expected) if expected is not None else fix / "expected.json"
     if not (fix / "staged.md").is_file() or not (fix / "registry.md").is_file():
@@ -226,7 +283,7 @@ def selftest(fixtures: str | None, expected: str | None) -> int:
     except (OSError, ValueError, KeyError, TypeError) as exc:
         print(f"SELFTEST=ERROR expected file {exp}: {exc}")
         return 2
-    got = observe(fix)
+    got = observe(fix, cites)
     for g in got:
         print(f"FINDING {g}")
     cw, cg = collections.Counter(want), collections.Counter(got)
@@ -246,6 +303,7 @@ def main() -> int:
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--fixtures")
     ap.add_argument("--expected")
+    ap.add_argument("--cites", choices=("source", "all"), default=None)
     for opt in ("staged", "knowledge", "registry", "opened", "out"):
         ap.add_argument("--" + opt)
     ap.add_argument("--entry", action="append", default=[])
@@ -254,7 +312,15 @@ def main() -> int:
         if any((a.staged, a.knowledge, a.registry, a.opened, a.out, a.entry)):
             print("assimilate-rows: --selftest takes only --fixtures and --expected", file=sys.stderr)
             return 2
-        return selftest(a.fixtures, a.expected)
+        sc = a.cites or os.environ.get("ASSIMILATE_CITES") or "source"
+        if sc not in ("source", "all"):
+            print(f"assimilate-rows: ASSIMILATE_CITES={sc!r} must be source or all", file=sys.stderr)
+            return 2
+        return selftest(a.fixtures, a.expected, sc)
+    cites = a.cites or os.environ.get("ASSIMILATE_CITES") or "source"
+    if cites not in ("source", "all"):
+        print(f"assimilate-rows: ASSIMILATE_CITES={cites!r} must be source or all", file=sys.stderr)
+        return 2
     if not all((a.staged, a.knowledge, a.registry, a.opened, a.out)):
         ap.print_usage(sys.stderr)
         print("assimilate-rows: --staged --knowledge --registry --opened --out are required (or --selftest)", file=sys.stderr)
@@ -296,11 +362,15 @@ def main() -> int:
                 texts[e] = p.read_text(encoding="utf-8")
             except UnicodeDecodeError:
                 refused.append(f"entry not UTF-8: {e}")
-    cited = sorted({t for tx in texts.values() for t in TOKEN_RE.findall(tx) if t in staged}, key=num)
+    refused += [f"{p}" for p in registry_problems(reg_text)]
+    if cites == "source":
+        cited = sorted({t for tx in texts.values() for t in source_ids(tx) if t in staged}, key=num)
+    else:
+        cited = sorted({t for tx in texts.values() for t in TOKEN_RE.findall(tx) if t in staged}, key=num)
     for sid in cited:
         if len(staged[sid]) != 11:
             refused.append(f"{sid}: staged row has {len(staged[sid])} cells, not 11")
-        elif not url_of(staged[sid][1]):
+        elif not url_of(pipe_free(staged[sid][1])):
             refused.append(f"{sid}: staged row names no http(s) URL")
     if refused:
         for r in refused:
@@ -309,14 +379,14 @@ def main() -> int:
 
     held: dict[str, str] = {}
     for sid in sorted(base, key=num):
-        u = url_of(base[sid][1]) if len(base[sid]) > 1 else ""
+        u = url_of(pipe_free(base[sid][1])) if len(base[sid]) > 1 else ""
         if u:
             held.setdefault(u, sid)
     nxt = max((num(s) for s in base), default=0) + 1
     mapping: dict[str, tuple[str, str]] = {}
     by_url: dict[str, str] = {}
     for sid in cited:
-        u = url_of(staged[sid][1])
+        u = url_of(pipe_free(staged[sid][1]))
         if u in held:
             mapping[sid] = (held[u], "held")
         elif u in by_url:
@@ -344,7 +414,8 @@ def main() -> int:
                 cells[i] = re.sub(r"\s*\\?\|\s*", " / ", c)
         cells[0] = lid
         twins = {t for t in cited if mapping[t][0] == lid}
-        users = sorted(e for e, tx in texts.items() if twins & set(TOKEN_RE.findall(tx)))
+        users = sorted(e for e, tx in texts.items()
+                       if twins & set(source_ids(tx) if cites == "source" else TOKEN_RE.findall(tx)))
         recheck = cells[9]
         if not (RECHECK_RE.match(recheck) and (not DATE_RE.match(recheck) or valid_date(recheck))):
             m = LEAD_RE.match(recheck)
@@ -363,16 +434,28 @@ def main() -> int:
         dst = out / e
         dst.parent.mkdir(parents=True, exist_ok=True)
         dst.write_text(subst(tx), encoding="utf-8")
+    if cites == "source":
+        lane_ids = {s for s in base} | {v[0] for v in mapping.values()}
+        body = [(e, i) for e, tx in texts.items()
+                for i in sorted(set(TOKEN_RE.findall(tx)) - set(cited), key=num) if i in staged]
+        (out / "bodyonly.tsv").write_text("entry\tstaged_id\n" + "".join(f"{e}\t{i}\n" for e, i in body), encoding="utf-8")
+        clash = [(e, i) for e, i in body if i in lane_ids]
+        if clash:
+            (out / "bodyclash.tsv").write_text("entry\tstaged_id\n" + "".join(f"{e}\t{i}\n" for e, i in clash), encoding="utf-8")
+            for e, i in clash:
+                print(f"WARN {e}: body-only staged id {i} is also a lane id and reads as that row", file=sys.stderr)
     (out / "append.md").write_text("".join(r + "\n" for r in rows), encoding="utf-8")
     (out / "renumber.tsv").write_text(
         "staged_id\tlane_id\taction\turl\n"
-        + "".join(f"{sid}\t{mapping[sid][0]}\t{mapping[sid][1]}\t{url_of(staged[sid][1])}\n" for sid in cited),
+        + "".join(f"{sid}\t{mapping[sid][0]}\t{mapping[sid][1]}\t{url_of(pipe_free(staged[sid][1]))}\n" for sid in cited),
         encoding="utf-8")
     (out / "stripped.tsv").write_text(
         "lane_id\tcolumn\tstripped\n"
         + "".join(f"{l}\t{c}\t{s.replace(chr(9), ' ')}\n" for l, c, s in stripped),
         encoding="utf-8")
     print(f"CITED={len(cited)} APPEND={len(rows)} HELD={len(cited) - len(rows)}")
+    if cites == "source":
+        print(f"BODYONLY={len(body)}")
     return 0
 
 
