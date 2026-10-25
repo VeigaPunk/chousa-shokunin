@@ -13,8 +13,8 @@ table = ["| lane id | form | char offset | located quote (≤25 words, exactly o
 for sid, url, q, e in rows:
     table.append(f"| {sid} | `.txt` UTF-8 | {caps[url].find(q)} | {q} | `{e}` |")
 head = (W / "lesson-head.md").read_text(encoding="utf-8")
-mist = (pathlib.Path("/dev/shm/mistakes-rows.md")).read_text(encoding="utf-8").rstrip("\n")
-gate = pathlib.Path("/dev/shm/gate-table.md").read_text(encoding="utf-8").split("\n")
+mist = (W / "mistakes-rows.md").read_text(encoding="utf-8").rstrip("\n")
+gate = (W / "gate-table.md").read_text(encoding="utf-8").split("\n")
 dec = gate[:2] + [r for r in gate[2:] if r.startswith("|") and not any(k in r.split("|")[1] for k in ("japanese-search-record-r38", "chinese-search-record-r39"))]
 qm = (W / "w1/R51ExecQuarantine.md").read_text(encoding="utf-8")
 verd = re.search(r"## 4\. Machine lines.*?```\n(.*?)\n```", qm, re.S).group(1)

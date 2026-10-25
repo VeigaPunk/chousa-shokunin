@@ -19,8 +19,10 @@ With one or more --entry (a path relative to --knowledge, e.g.
   on each header line (a line that starts with `source:`, above the first `####`
   heading; other ids on the line, and `source:` lines in the body, are not
   citations) — round 51 (QUALITY 77); a `source:` id that is neither a staged row nor
-  a Registry row, or is a lane row of another document that this run also mints, is
-  refused; `--cites all`
+  a Registry row is refused, and an id that is both (a lane id the package also uses) is the staged row
+  only when the line's URL is the staged row's URL, else it is the lane's own row and passes through;
+  a fenced example header and a header below a `#### Provenance`-style heading are read as written
+  (the header ends at the first `#### Observation|Inference|Unknown` heading); `--cites all`
   restores the round-49/50 reading (every staged id token an entry mentions). BY DOCUMENT: a staged row whose URL (the
   census's normalised first http(s) URL of the `source` cell) a Registry row
   already carries maps to that row's id (`held`, nothing appended); any other
@@ -31,7 +33,7 @@ With one or more --entry (a path relative to --knowledge, e.g.
   cited pass through unchanged — checking that they name the right lane
   document is the reader's job. In the default `--cites source` mode a staged id
   an entry mentions but does not itself cite on a header `source:` line (also when
-  another entry cites it) is left unchanged and listed in
+  another entry cites it, and a tail id of a header line) is left unchanged and listed in
   `bodyonly.tsv` (`entry<TAB>staged_id`, header line first) and counted as
   `BODYONLY=<n>` on stdout; when such an id is also a lane id (a registry row
   or a minted one) it is also listed in `bodyclash.tsv` and warned on stderr
@@ -165,20 +167,32 @@ def pipe_free(cell: str) -> str:
 
 
 SOURCE_RE = re.compile(r"^source:[ \t]*(S\d{3,})\b")
+HEADER_END = re.compile(r"^####[ \t]+(Observation|Inference|Unknown)\b")
+
+
+def source_cites(text: str) -> list[tuple[str, str]]:
+    """(id, line) for each header `source:` line: the id right after `source:` on a line that starts with
+    `source:`, read above the first `#### Observation|Inference|Unknown` heading and outside fenced code
+    blocks, one entry per id (first mention). Other ids on the line (an anchor or note) and `source:` lines
+    in the body or in a fenced example are not citations."""
+    out: list[tuple[str, str]] = []
+    fenced = False
+    for line in text.splitlines():
+        if line.startswith("```"):
+            fenced = not fenced
+            continue
+        if fenced:
+            continue
+        if HEADER_END.match(line):
+            break
+        m = SOURCE_RE.match(line)
+        if m and all(m.group(1) != i for i, _l in out):
+            out.append((m.group(1), line))
+    return out
 
 
 def source_ids(text: str) -> list[str]:
-    """The id each header `source:` line cites: the id right after `source:` on a line that starts with
-    `source:`, read only above the first `####` heading (the provenance header), in order of first mention.
-    Other ids on the line (an anchor or note) and `source:` lines in the body are not citations."""
-    out: list[str] = []
-    for line in text.splitlines():
-        if line.startswith("####"):
-            break
-        m = SOURCE_RE.match(line)
-        if m and m.group(1) not in out:
-            out.append(m.group(1))
-    return out
+    return [i for i, _l in source_cites(text)]
 
 
 def registry_problems(text: str) -> list[str]:
@@ -364,6 +378,10 @@ def main() -> int:
     print(f"COLLISIONS={len(set(reg_ids) & set(st_ids))}")
     if not a.entry:
         return 0
+    for name in ("renumber.tsv", "append.md", "stripped.tsv", "bodyonly.tsv", "bodyclash.tsv"):
+        (out / name).unlink(missing_ok=True)      # a refusal never leaves a previous run's claim behind
+    for e in a.entry:
+        (out / e).unlink(missing_ok=True)
 
     staged = staged_rows(st_text)
     base = registry_rows(reg_text)
@@ -379,12 +397,19 @@ def main() -> int:
             except UnicodeDecodeError:
                 refused.append(f"entry not UTF-8: {e}")
     refused += [f"{p}" for p in registry_problems(reg_text)]
+    own: dict[str, set[str]] = {}
     if cites == "source":
+        # a `source:` id is a STAGED row when the staged row exists and either no Registry row carries the id or
+        # the line's URL is the staged row's URL; otherwise a Registry row of the lane (own-work, passes through)
         for e, tx in texts.items():
-            for i in source_ids(tx):
-                if i not in staged and i not in base:
+            own[e] = set()
+            for i, line in source_cites(tx):
+                st_url = url_of(pipe_free(staged[i][1])) if i in staged and len(staged[i]) > 1 else ""
+                if i in staged and (i not in base or url_of(line) == st_url):
+                    own[e].add(i)
+                elif i not in base:
                     refused.append(f"{e}: source id {i} is neither a staged row nor a lane Registry row")
-        cited = sorted({t for tx in texts.values() for t in source_ids(tx) if t in staged}, key=num)
+        cited = sorted({i for s in own.values() for i in s}, key=num)
     else:
         cited = sorted({t for tx in texts.values() for t in TOKEN_RE.findall(tx) if t in staged}, key=num)
     for sid in cited:
@@ -423,12 +448,6 @@ def main() -> int:
                             else m.group(0), s)
 
     minted = {v[0] for v in mapping.values() if v[1] == "append"}
-    if cites == "source":
-        for e, tx in texts.items():
-            for i in source_ids(tx):
-                if i not in staged and i in minted:
-                    print(f"REFUSED {e}: source id {i} is a lane row of another document and also a minted id", file=sys.stderr)
-                    return 1
 
     rows: list[str] = []
     stripped: list[tuple[str, str, str]] = []
@@ -444,7 +463,7 @@ def main() -> int:
         cells[0] = lid
         twins = {t for t in cited if mapping[t][0] == lid}
         users = sorted(e for e, tx in texts.items()
-                       if twins & set(source_ids(tx) if cites == "source" else TOKEN_RE.findall(tx)))
+                       if twins & (own[e] if cites == "source" else set(TOKEN_RE.findall(tx))))
         recheck = cells[9]
         if not (RECHECK_RE.match(recheck) and (not DATE_RE.match(recheck) or valid_date(recheck))):
             m = LEAD_RE.match(recheck)
@@ -462,17 +481,20 @@ def main() -> int:
     for e, tx in texts.items():
         dst = out / e
         dst.parent.mkdir(parents=True, exist_ok=True)
-        dst.write_text(subst(tx, set(source_ids(tx)) if cites == "source" else None), encoding="utf-8")
+        dst.write_text(subst(tx, own[e] if cites == "source" else None), encoding="utf-8")
     if cites == "source":
-        lane_ids = {s for s in base} | {v[0] for v in mapping.values()}
+        lane_ids = {s for s in base} | minted
         body = [(e, i) for e, tx in texts.items()
-                for i in sorted(set(TOKEN_RE.findall(tx)) - set(source_ids(tx)), key=num) if i in staged]
+                for i in sorted(set(TOKEN_RE.findall(tx)) - own[e], key=num) if i in staged]
         (out / "bodyonly.tsv").write_text("entry\tstaged_id\n" + "".join(f"{e}\t{i}\n" for e, i in body), encoding="utf-8")
         clash = [(e, i) for e, i in body if i in lane_ids]
+        # a body token that is no staged row but equals an id this run mints reads as the new row as well
+        clash += [(e, i) for e, tx in texts.items() for i in sorted(set(TOKEN_RE.findall(tx)) - own[e], key=num)
+                  if i in minted and i not in staged]
         if clash:
             (out / "bodyclash.tsv").write_text("entry\tstaged_id\n" + "".join(f"{e}\t{i}\n" for e, i in clash), encoding="utf-8")
             for e, i in clash:
-                print(f"WARN {e}: body-only staged id {i} is also a lane id and reads as that row", file=sys.stderr)
+                print(f"WARN {e}: body-only id {i} is also a lane id and reads as that row", file=sys.stderr)
     (out / "append.md").write_text("".join(r + "\n" for r in rows), encoding="utf-8")
     (out / "renumber.tsv").write_text(
         "staged_id\tlane_id\taction\turl\n"

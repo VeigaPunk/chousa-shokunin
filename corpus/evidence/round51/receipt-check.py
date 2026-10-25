@@ -16,7 +16,8 @@ not a git work tree. Usage: python3 corpus/evidence/round51/receipt-check.py <re
 [--root LANE] [--tip REV] [--skill SKILL.md]. Named limits: the header is a convention, not a
 signature — a receipt can name a revision it did not run at and this check cannot tell; only
 the first five lines are read; a receipt measuring a tree count has no header form here; the
-digest leg hashes the blob, not behaviour.
+digest leg hashes the blob, not behaviour; at least one receipt is required (zero receipts exit 2: a green on nothing
+is not a pass); the `--skill` leg reads the first Markdown table row of the file that carries the header.
 """
 
 from __future__ import annotations
@@ -53,8 +54,13 @@ def pin(root: pathlib.Path, tip: str, label: str, rev: str, tool: str, want: str
     return True, f"RECEIPT_OK {label} rev={rev[:12]} tool={tool}"
 
 
-def header(path: pathlib.Path) -> re.Match | None:
-    for line in path.read_text(encoding="utf-8", errors="replace").splitlines()[:5]:
+def header(path: pathlib.Path, table: bool = False) -> re.Match | None:
+    """The header in a receipt's first five lines; with `table` (the SKILL.md Gates registry) in the first
+    Markdown table row, anywhere in the file, that carries it."""
+    lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
+    for line in (lines if table else lines[:5]):
+        if table and not line.startswith("|"):
+            continue
         m = HEAD_RE.search(line)
         if m:
             return m
@@ -62,7 +68,7 @@ def header(path: pathlib.Path) -> re.Match | None:
 
 
 def one(root: pathlib.Path, tip: str, path: pathlib.Path, nopin: str, ok_label: str) -> bool:
-    m = header(path)
+    m = header(path, table=ok_label == "SKILL_PIN_OK")
     if m is None:
         print(f"{nopin} {path}")
         return False
@@ -73,7 +79,7 @@ def one(root: pathlib.Path, tip: str, path: pathlib.Path, nopin: str, ok_label: 
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("receipts", nargs="*")
+    ap.add_argument("receipts", nargs="+")
     ap.add_argument("--root", default=str(LANE))
     ap.add_argument("--tip", default="HEAD")
     ap.add_argument("--skill", help="also require the Gates registry row to carry the header form")
