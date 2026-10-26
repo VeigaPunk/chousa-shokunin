@@ -2627,3 +2627,34 @@ correction: SCORECARD.md:1843 measure/final/ -> .ufo/waves/round-32/measure/fina
 correction: SCORECARD.md:2073 measure-l1/c1-s36361.json -> .ufo/waves/round-36/measure-l1/c1-s36361.json
 correction: SCORECARD.md:2074 measure-l1/c2-s36371.json -> .ufo/waves/round-36/measure-l1/c2-s36371.json
 correction: SCORECARD.md:2616 c1-supplement.py -> corpus/evidence/round50/c1-supplement.py
+
+## Round 51 verdict — 2026-10-25 (adopter v3 and nonce counter; Japanese/Chinese search-record theme; pointer calibration)
+
+Claims frozen in `corpus/evidence/round51/claims.md` at `d603f6f00f78d64f123d3aed2dd9f8701547a4ba` after scoring their controls; errata `claims-erratum.md` E1–E5. After-measurement: `corpus/evidence/round51/measure-after.txt`. No fetch; L0 `8d77e6c1` open.
+
+| claim / axis | before → after | counting command | verdict | tag |
+|---|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10; capability extension) | lane tool at base `LEGS=1/5 C1=FAIL`; controls base 1/5, echo 2/5, const 1/5, flag-noop 2/5 → `LEGS=5/5 C1=PASS`; supplement `SUPPLEMENT_LEGS=10/10` | `python3 corpus/evidence/round51/c1-count.py`; `python3 corpus/evidence/round51/c1-supplement.py` | **improved narrowly**: the frozen counter is forgeable (a 94-line tool keyed on its directory names passes 5/5; the supplement fails it 1/10), the supplement is post-freeze and forgeable by a tool that reimplements the adopter, and the round-49/50 one-shot counters fail at the new default | plumbing |
+| C2 depth (sourced) | `ENTRIES=0/3 BOUND=0/7 C2=FAIL` → `BOUND=6/7 REFUSED=1 QUOTE_ROWS=70 CAPTURE_BOUND=70/70 ANCHOR_BOUND=6/6 INFERENCE_GROUNDED=3/3 QUARANTINE_VERDICTS=6/6 C2=PASS` | `python3 corpus/evidence/round51/c2-count.py` | **improved** as presence and binding; entailment is uncounted (W2 found 30+ prose overstatements, narrowed); one document refused for capture form | ground |
+| C3 calibration | `CAP_ROWS=36 POINTERS=74 DANGLING=5 C3=FAIL` (first run 8, erratum E1) → `DANGLING=0 C3=PASS` | `python3 corpus/evidence/round51/c3-count.py` | **improved narrowly**: pointer existence, not truth (a correction to any non-empty file passes); the before-count changed once after the freeze | plumbing |
+
+The numeric operability scale stays 3/10; no other score is invented.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved narrowly** | C1; `tools/assimilate-rows.py` v3; the supplement |
+| depth | **improved** | C2; three entries on six documents |
+| calibration | **improved narrowly** | C3; mistakes row 9 (W2 corrections to the round's own prose) |
+| coverage | **improved narrowly** | `git grep -l -e 検索式 -e 検索期間 -e 检索策略` at `9ec1751a` finds nothing in `corpus/knowledge`; six documents now |
+| freshness | **unchanged** | newest readable capture 2026-10-24; no fetch |
+| adjacency | **unchanged** | W1 `R51ConnSiblings` and W2 `R51W2ConnSiblingsFinal`: no sibling overlap |
+
+## Capabilities (round-51 addition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| source-only adoption and receipt check | adopts staged entries citing only header `source:` ids, per entry, with refusals for malformed registries and unknown source ids, and checks that a receipt names the tool revision it measured | `python3 tools/assimilate-rows.py --selftest`; `corpus/evidence/round51/c1-supplement.py`; `corpus/evidence/round51/receipt-check.py` | 51 |
+
+## Planned — round 52 (not started)
+
+Candidates: a zip-member form for the refused `.docx` (a counter and span builder that read `word/document.xml`), then bind it; the other search-record entries decided in the round-51 Gate (`search-tracking-record-r40`, `japanese-prisma-item-wording-r40`, `chinese-search-log-r37-amendment`); close the adopter's named limits (twin-id `held` label, refusal ordering); an enforcing form of the supplement that a reimplementing tool cannot pass.

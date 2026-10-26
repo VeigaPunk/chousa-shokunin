@@ -1,0 +1,148 @@
+tool-rev: 41b4dca86fc86dd2f50df17dd779acb3379e8275 tool: tools/assimilate-rows.py digest: sha256:10af959b2b87dad565717b84e68733caab6cb7a940d68fb1c52fca793d4c86f4
+# round-51 after-measurement; lane files other than this receipt, the report and the W2 reports are those of the commit that precedes it (base of this measurement: the lane tip when this file was written, `git -C lane rev-parse` = 41b4dca86fc8+working tree)
+# every command run with ASSIMILATE_CITES removed from the environment
+
+$ python3 corpus/evidence/round51/c1-count.py
+SELFTEST_DEFAULT=PASS
+LEGACY_ALL=PASS rc=0
+SOURCE_ONLY=PASS default_rc=0 map=['S629', 'S715'] appended=1 bodyonly=[['corpus/knowledge/e.md', 'S593']] all_rc=0 all_map=['S593', 'S629', 'S715']
+PIPE_IDENTITY=PASS d1=ok d2=ok
+REGISTRY renamed-heading rc=1 -> PASS
+REGISTRY no-heading rc=1 -> PASS
+REGISTRY row-outside rc=1 -> PASS
+REGISTRY well-formed rc=0 -> PASS
+REGISTRY_STRUCTURE=PASS 4/4
+LEGS=5/5
+C1=PASS
+exit=0
+
+$ python3 corpus/evidence/round51/c1-count.py --seed 7
+SELFTEST_DEFAULT=PASS
+LEGACY_ALL=PASS rc=0
+SOURCE_ONLY=PASS default_rc=0 map=['S702', 'S833'] appended=1 bodyonly=[['corpus/knowledge/e.md', 'S524']] all_rc=0 all_map=['S524', 'S702', 'S833']
+PIPE_IDENTITY=PASS d1=ok d2=ok
+REGISTRY renamed-heading rc=1 -> PASS
+REGISTRY no-heading rc=1 -> PASS
+REGISTRY row-outside rc=1 -> PASS
+REGISTRY well-formed rc=0 -> PASS
+REGISTRY_STRUCTURE=PASS 4/4
+LEGS=5/5
+C1=PASS
+exit=0
+
+$ python3 corpus/evidence/round51/c1-supplement.py
+SHAPE=PASS 3/3
+MUTATION=PASS 3/3
+CROSS_ENTRY=PASS 3/3
+SOURCE_LINE=PASS 3/3
+UNKNOWN_SRC=PASS 3/3
+CLASH=PASS 3/3
+OWN_WORK=PASS 3/3
+STALE_OUT=PASS 3/3
+HEADER=PASS 3/3
+ENV_DEFAULT=PASS 3/3
+SUPPLEMENT_LEGS=10/10
+C1_SUPPLEMENT=PASS
+exit=0
+
+$ python3 corpus/evidence/round51/c2-count.py
+ENTRIES=3/3
+BOUND=6/7 (min 5) REFUSED=1
+BOUND_IDS=S107,S108,S109,S110,S111,S112
+REF_ID_UNBOUND=0
+NEW_GROUND=3/3
+QUOTE_ROWS=70 ON_BOUND=70/70
+SPAN_IDS=6/6 (min 3 each)
+QUOTES_IN_SPAN=70/70
+QUOTES_IN_ENTRY=70/70
+QUOTES_IN_LESSON=70/70
+QUOTE_SHORT=70/70
+SPAN_CONTEXT=70/70
+CAPTURE_BOUND=70/70
+SUBSTANCE=PASS
+ANCHOR_BOUND=6/6
+INFERENCE_GROUNDED=3/3
+QUARANTINE_VERDICTS=6/6 (S104,S105,S111,S112,S114,S120)
+QUARANTINE_BLOCKED_ADOPTED=0
+C2=PASS
+exit=0
+
+$ python3 corpus/evidence/round51/c2-count.py --lane-only
+ENTRIES=3/3
+BOUND=6/7 (min 5) REFUSED=1
+BOUND_IDS=S107,S108,S109,S110,S111,S112
+REF_ID_UNBOUND=0
+NEW_GROUND=3/3
+QUOTE_ROWS=70 ON_BOUND=70/70
+SPAN_IDS=6/6 (min 3 each)
+QUOTES_IN_SPAN=70/70
+QUOTES_IN_ENTRY=70/70
+QUOTES_IN_LESSON=70/70
+QUOTE_SHORT=70/70
+SPAN_CONTEXT=70/70
+CAPTURE_BOUND=skipped
+SUBSTANCE=PASS
+ANCHOR_BOUND=6/6
+INFERENCE_GROUNDED=3/3
+QUARANTINE_VERDICTS=6/6 (S104,S105,S111,S112,S114,S120)
+QUARANTINE_BLOCKED_ADOPTED=0
+C2=PASS
+exit=0
+
+$ python3 corpus/evidence/round51/c3-count.py
+CAP_ROWS=37 (base 36)
+POINTERS=77 (base 74)
+RESOLVED_BY_CORRECTION=4
+DANGLING=0
+C3=PASS
+exit=0
+
+$ python3 corpus/evidence/round51/build-spans.py --check
+SPANS_ROWS=70 STALE=0
+exit=0
+
+$ python3 corpus/evidence/round51/quote-substance-check.py
+IDS=6 QUOTES=70 FAILURES=0
+exit=0
+
+$ python3 tools/assimilate-rows.py --selftest | tail -2
+FIXTURES_SHA256=3b7ad25837a954be5623d27a7b1a231ddf661e67e5a961f0800a112b2260bd00
+SELFTEST=PASS findings=27 expected=27
+exit=0
+
+$ python3 corpus/evidence/round47/c2-count.py | tail -9
+ENTRY_POINTS=125 (abc=100 dependence=+7 check_named=+18)
+FLOOR=92
+GATES_ROWS=56
+REGISTERED=125/125
+UNREGISTERED=0
+DANGLING=0
+MISMATCHES=0
+C2=PASS
+exit=0
+
+$ python3 corpus/evidence/round50/stale-count-check.py
+RESOLVED corpus/QUALITY.md:746 says 28, receipt 31
+RESOLVED corpus/QUALITY.md:786 says 28, receipt 31
+RESOLVED corpus/README.md:1074 says 28, receipt 31
+RESOLVED corpus/README.md:1083 says 28, receipt 31
+RESOLVED LOG.md:1803 says 28, receipt 31
+RESOLVED LOG.md:1821 says 28, receipt 31
+RESOLVED corpus/lessons/round-49.md:20 says 28, receipt 31
+RESOLVED corpus/lessons/round-49.md:220 says 28, receipt 31
+STALE_HITS=8 UNRESOLVED=0 RECEIPT_ROWS=31
+STALE_COUNT=PASS
+exit=0
+
+$ /home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa
+chousa	W04	S051 duplicate url www.w3.org/TR/2017/REC-html52-20171214/syntax.html across scopes
+chousa	W04	S053 duplicate url docs.python.org/3/library/socket.html across scopes
+chousa	W04	S073 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+chousa	W04	S074 duplicate url docs.python.org/3/library/hashlib.html across scopes
+chousa	W04	S075 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+chousa	ok	/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md
+exit=0
+
+$ grep -cE '^\|[[:space:]]*S[0-9]{3,}[[:space:]]*\|' corpus/SOURCES.md
+112
+exit=0
