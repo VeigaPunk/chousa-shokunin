@@ -1,0 +1,55 @@
+# round-52 C1 before + do-nothing controls; base = lane tip 00f8c7f5272a1d98b6d34913985fa4537e00aaf9 exported by git archive to $TMPDIR/base; 2026-10-26T20:00:02-03:00
+$ git -C <lane> archive 00f8c7f5272a1d98b6d34913985fa4537e00aaf9 | tar -x -C $TMPDIR/base; ls $TMPDIR/base/tools/capture-text.py
+ls: cannot access '/fast/scratch/hyaku/chousa-r52/L1/base/tools/capture-text.py': No such file or directory
+$ python3 corpus/evidence/round52/c1-count.py --tool $TMPDIR/base/tools/capture-text.py   # the lane tool at the base
+PARAS=FAIL tool absent
+RUNS_ENTITIES=FAIL tool absent
+REVISIONS=FAIL tool absent
+LAYOUT=FAIL tool absent
+ALTCONTENT=FAIL tool absent
+MAIN_PART=FAIL tool absent
+LOCATE=FAIL tool absent
+REFUSE=FAIL tool absent
+REAL=FAIL tool absent
+LEGS=0/9
+C1=FAIL
+exit=1
+$ python3 corpus/evidence/round52/c1-count.py --tool corpus/evidence/round52/controls/naive-tool.py
+PARAS=PASS ok
+RUNS_ENTITIES=PASS ok
+REVISIONS=FAIL text differs at 7 (got 90 chars, want 40)
+LAYOUT=FAIL text differs at 0 (got 110 chars, want 90)
+ALTCONTENT=FAIL text differs at 37 (got 76 chars, want 66)
+MAIN_PART=FAIL text differs at 0 (got 22 chars, want 27)
+LOCATE=PASS ok
+REFUSE=FAIL norel not refused
+REAL=PASS rc=0 count=1 locate=(0, 1, 10319) chars=21910
+LEGS=4/9
+C1=FAIL
+exit=1
+$ python3 corpus/evidence/round52/c1-count.py --tool corpus/evidence/round52/controls/cache-txt-tool.py
+PARAS=FAIL text differs at 0 (got 1576 chars, want 146)
+RUNS_ENTITIES=FAIL text differs at 0 (got 1559 chars, want 109)
+REVISIONS=FAIL text differs at 0 (got 1628 chars, want 49)
+LAYOUT=FAIL text differs at 0 (got 1574 chars, want 93)
+ALTCONTENT=FAIL text differs at 0 (got 1610 chars, want 95)
+MAIN_PART=FAIL text differs at 0 (got 1780 chars, want 15)
+LOCATE=FAIL once=(1, 0, -1) want (0,1,69) absent=(1, 0, -1) twice=(1, 0, -1)
+REFUSE=FAIL bytes not refused
+REAL=FAIL rc=0 count=0 locate=(1, 0, -1) chars=168953
+LEGS=0/9
+C1=FAIL
+exit=1
+$ python3 corpus/evidence/round52/c1-count.py --tool corpus/evidence/round52/controls/const-tool.py
+PARAS=FAIL text differs at 0 (got 0 chars, want 93)
+RUNS_ENTITIES=FAIL text differs at 0 (got 0 chars, want 130)
+REVISIONS=FAIL text differs at 0 (got 0 chars, want 65)
+LAYOUT=FAIL text differs at 0 (got 0 chars, want 90)
+ALTCONTENT=FAIL text differs at 0 (got 0 chars, want 53)
+MAIN_PART=FAIL text differs at 0 (got 0 chars, want 29)
+LOCATE=FAIL once=None want (0,1,27) absent=None twice=None
+REFUSE=FAIL bytes not refused
+REAL=FAIL rc=0 count=0 locate=None chars=0
+LEGS=0/9
+C1=FAIL
+exit=1
