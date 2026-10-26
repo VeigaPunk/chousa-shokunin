@@ -9,3 +9,4 @@
 | S014 | Piped held doc — https://example.test/piped | docs | B | piped scope | section 5 | what the piped held row teaches | mined | 2026-10-25 | 90d | corpus/knowledge/b.md |
 | S015 | Other doc — https://example.test/other\| alt | docs | A | other scope | section 2 | what the other row teaches | mined | 2026-10-25 | 90d | corpus/knowledge/b.md |
 | S016 | Body-only doc D — https://example.test/new-d | docs | B | scope d | section d | what row d teaches | mined | 2026-10-25 | 90d | — |
+| S017 | New doc A, staged twice — https://example.test/new-a | docs | A | scope a | section a | the same document as S010, a second staged row for one URL | mined | 2026-10-25 | 90d | corpus/knowledge/a.md |

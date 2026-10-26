@@ -6,6 +6,7 @@
  "MAP S013->S022 append",
  "MAP S014->S020 held",
  "MAP S015->S002 held",
+ "MAP S017->S021 twin",
  "ROWCELLS S021 11",
  "ROWCELLS S022 11",
  "ROWSTATUS S021 mined",
@@ -26,4 +27,29 @@
  "STRIPPED S022 status",
  "STRIPPED S022 cell6-pipe",
  "STRIPPED S022 used-by"
+],
+"cases": [
+ {"fixtures": "cases/twin-recheck",
+  "findings": [
+   "TOOLEXIT 1",
+   "COLLISIONS -",
+   "REFUSED S102: recheck '2026-02-30 — re-verify after release' has no leading valid date or NNd"
+  ]},
+ {"fixtures": "cases/refusal-order",
+  "entry": ["corpus/knowledge/absent.md", "corpus/knowledge/a.md"],
+  "findings": [
+   "TOOLEXIT 1",
+   "COLLISIONS -",
+   "REFUSED registry has no `## Registry` heading",
+   "REFUSED registry rows outside the Registry section: S001",
+   "REFUSED entry missing: corpus/knowledge/absent.md"
+  ]},
+ {"fixtures": "cases/refusal-order",
+  "entry": [],
+  "findings": [
+   "TOOLEXIT 1",
+   "COLLISIONS -",
+   "REFUSED registry has no `## Registry` heading",
+   "REFUSED registry rows outside the Registry section: S001"
+  ]}
 ]}
