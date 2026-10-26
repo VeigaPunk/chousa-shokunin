@@ -1109,3 +1109,30 @@ Left open — named, not closed:
 - **The Chinese PRISMA-S interpretation's item-by-item text** remains order-only from SinoMed and the portal, so the Chinese reception's own reading of the sixteen items is still unread.
 
 correction: corpus/README.md:1078 (`knowledge/istic-citation-verification-r39.md`) — the filename's `istic` names no document in that row. The row's source is the 中国科学院文献情报中心 引证检索 page: its capture names 文献情报中心 three times and `ISTIC` and 中国科学技术信息研究所 zero times (`grep -o` over `.qcache/001287c436f0e6b1d166ae8d.txt` → 3, 0, 0). The name is inherited from the staged entry `istic-citation-verification-r39.md`, and renaming was blocked by the round-50 freeze; the entry records the same fact in its `ground:` line (`corpus/knowledge/istic-citation-verification-r39.md:6`). The file keeps its name — this line records the drift in the coverage map, which is what the round-50 spot-check routed (`corpus/lessons/round-50-verifier-spotcheck.md:93`, routed defect 4).
+
+## Round52 coverage and frontier (2026-10-26)
+
+| Note | Holds | Sources |
+|---|---|---|
+| `knowledge/japanese-search-record-niph-form-r52.md` | Round-52 note (adopted by document from `merge/chousa/`, the NIPH half of the staged amendment refused in round 51 for its capture form): what a Japanese national institute's cost-effectiveness reporting template requires a submitted systematic review to state about its search — the search period (`文献検索期間`), an end point between the analysis-framework decision and the submission, the databases and search expressions used under a PRISMA lead, hand-searched unpublished data in the flow chart — and that it names no searcher and no date of search | `S115`; text form through `tools/capture-text.py` |
+| `knowledge/japanese-prisma-item-wording-r40.md` | Round-52 note (adopted by document): the Japanese wording of PRISMA 2020 items 6 and 7 in an archived one-page table — five source classes with the date each was last searched, the complete strategy with filters and limits for three of them — and no searcher item | `S116` |
+| `knowledge/chinese-prisma-s-reception-r52.md` | Round-52 note (adopted by document, renamed from the staged `chinese-search-log-r37-amendment-2026-10-23.md`): a Chinese journal page hosting PRISMA 2020's items in Chinese with the per-source `检索或查询日期`, credited to Page et al. with no translator named; and a commercial portal record of the Chinese PRISMA-S reading that carries the abstract to its last clause and names the article only as an attachment | `S113`, `S114` |
+| `../tools/capture-text.py` | Round-52 capability: the text form of an OOXML `.docx` capture (main part from `_rels/.rels`; no `mc:Fallback`, `w:delText`, `w:instrText` or tab stops), `--locate` for a quote's offset, refusals for non-zip, relationship-less, non-Word and inflated packages | `corpus/evidence/round52/c1-count.py`, `c1-supplement.py`; `QUALITY.md` 87–90 |
+| `lessons/round-52.md` | Round-52 lesson: fourth package adoption under section 10 (31 collisions, renumber by document, three documents credited and one second carrier), six mined mistakes, round-51 spot-check intake, the S120 verdict re-located | `corpus/evidence/round52/` |
+| `evidence/round52/` | Frozen C1/C2 claims and counters, controls and the shape forge, the post-freeze C1 supplement, the docx-aware span builder and its 38-quote manifest, the verdict-gap check, post-freeze disclosure | `corpus/evidence/round52/claims.md`; `claims-erratum.md`; `controls/` |
+
+Coverage credit for round 52 is per document and is three: the NIPH template (`S115`), the archived Japanese PRISMA 2020 table (`S116`) and the 中国全科医学 checklist page (`S114`). The 梅斯医学 record (`S113`) is a second carrier of the PRISMA-S reading the lane holds through `knowledge/chinese-search-record-r39.md`; it earns no expansion credit. Base sweep: `git grep -l -e 文献検索期間 -e 完全な検索戦略 -e 检索报告清单 00f8c7f5272a1d98b6d34913985fa4537e00aaf9 -- corpus/knowledge` → no output, exit 1.
+
+### Frontier
+
+Advanced:
+
+- **The search-record field set, across a public form and the checklist's own wording.** The lane held society-journal articles and one industry form (round 51); it now holds a public body's template that bounds the search's end date by procedure, and PRISMA 2020's items 6 and 7 in Japanese and in Chinese, both asking a date per source rather than per search.
+- **Capture forms.** The lane can now read an OOXML capture's text and locate a quote's offset in it; round 51's "refused for capture form" class has a lane reader.
+
+Left open:
+
+- **Searcher identity.** None of the four documents makes the searcher a field; the NIPH template names outside experts privately (section 7), the two checklists count reviewers for screening and data collection only.
+- **The Chinese PRISMA-S reading's item text.** Still unread: the portal names the attachment, the SinoMed record cuts the abstract off.
+- **The publisher's current Japanese translation.** The original URL holds only a failed-fetch marker; the archive saw no change up to its 2026-04-18 memento.
+- **Other capture forms.** An OLE `.doc` keeps the UTF-16LE form (round 48); `.xlsx` and `.pptx` captures are refused, not read.

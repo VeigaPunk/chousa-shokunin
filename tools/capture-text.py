@@ -25,8 +25,12 @@ Usage:
 Offsets are Python string indices (code points) into the text form.
 Exit codes: 0 text printed / quote located exactly once · 1 `--locate` found
 the quote 0 or 2+ times · 2 refused (not a zip, no officeDocument
-relationship, missing or unparsable main part; a `REFUSED <reason>` line on
-stderr and nothing on stdout) or usage.
+relationship, missing or unparsable main part, or a main part whose root is
+not `w:document` — a `.xlsx` workbook, a `.pptx` presentation, or the theme
+part an OLE `.doc` with an embedded OPC zip points at; a target outside the
+package root; `_rels/.rels` or a main part that inflates past MAX_PART bytes,
+or a render that runs out of memory; a `REFUSED <reason>`
+line on stderr and nothing on stdout) or usage.
 """
 from __future__ import annotations
 
@@ -40,14 +44,22 @@ W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 MC_FALLBACK = "{http://schemas.openxmlformats.org/markup-compatibility/2006}Fallback"
 RELS_NS = "{http://schemas.openxmlformats.org/package/2006/relationships}"
 RUN_BREAKS = {W + "tab": "\t", W + "br": "\n", W + "cr": "\n"}
+MAX_PART = 256 * 1024 * 1024  # uncompressed bytes of `_rels/.rels` or the main part
 
 
 class Refused(Exception):
     pass
 
 
+def bounded(z: zipfile.ZipFile, name: str) -> None:
+    size = z.getinfo(name).file_size
+    if size > MAX_PART:
+        raise Refused(f"{name!r} inflates to {size} bytes (limit {MAX_PART})")
+
+
 def main_part(z: zipfile.ZipFile) -> str:
     try:
+        bounded(z, "_rels/.rels")
         rels = ET.fromstring(z.read("_rels/.rels"))
     except KeyError:
         raise Refused("no _rels/.rels in the package")
@@ -56,7 +68,10 @@ def main_part(z: zipfile.ZipFile) -> str:
     for rel in rels.iter(RELS_NS + "Relationship"):
         if rel.get("Type", "").endswith("/officeDocument") and rel.get("TargetMode") != "External":
             target = posixpath.normpath(rel.get("Target", "").lstrip("/"))
+            if target.startswith("..") or target.startswith("/"):
+                raise Refused(f"officeDocument target {target!r} leaves the package root")
             if target in z.namelist():
+                bounded(z, target)
                 return target
             raise Refused(f"officeDocument target {target!r} is not in the package")
     raise Refused("no officeDocument relationship in _rels/.rels")
@@ -74,6 +89,8 @@ def text_form(path: str) -> str:
             fallback = 0
             for event, el in ET.iterparse(data, events=("start", "end")):
                 if event == "start":
+                    if not stack and el.tag != W + "document":
+                        raise Refused(f"main part {part!r} is not WordprocessingML (root {el.tag})")
                     if el.tag == MC_FALLBACK:
                         fallback += 1
                     elif not fallback and el.tag in RUN_BREAKS and stack and stack[-1] == W + "r":
@@ -88,9 +105,12 @@ def text_form(path: str) -> str:
                         out.append(el.text or "")
                     elif el.tag == W + "p":
                         out.append("\n")
+                el.clear()
             return "".join(out)
     except (zipfile.BadZipFile, ET.ParseError, OSError) as e:
         raise Refused(f"unreadable package: {e}")
+    except MemoryError:
+        raise Refused("package too large to render in memory")
 
 
 def main() -> int:

@@ -1,0 +1,12 @@
+# guard proof — R52ExecCollision — 2026-10-26T20:06:07-03:00
+pattern bytes: ^ {0,3}\|[[:space:]]*S[0-9]{3,}
+## indent-tolerant (the mandated pattern)
+reg ids:    S001 S002 
+staged ids: S002 
+collisions: S002 
+exit: NONEMPTY  (expect NONEMPTY -> S002 caught despite the 2-space indent)
+## column-zero pattern ^\|
+reg ids:    S001   <- indented S002 row is MISSED
+staged ids: S002 
+collisions: ''
+exit: EMPTY  (expect EMPTY: a naively column-anchored grep under-reports)
