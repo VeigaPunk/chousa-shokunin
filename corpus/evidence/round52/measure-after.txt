@@ -1,0 +1,177 @@
+tool-rev: 643ac77b1097b8650fa20100543b3a9730f393ce tool: tools/capture-text.py digest: sha256:6902db6acf3ae5a0ac579ff88ae4fe4a36877b7b960c438bf36a67007b26be17
+# round-52 after-measurement; lane working tree = 643ac77b1097b8650fa20100543b3a9730f393ce plus the files this receipt's commit adds (no tool or counter change); 2026-10-26T20:36:09-03:00
+
+$ python3 corpus/evidence/round52/c1-count.py
+PARAS=PASS ok
+RUNS_ENTITIES=PASS ok
+REVISIONS=PASS ok
+LAYOUT=PASS ok
+ALTCONTENT=PASS ok
+MAIN_PART=PASS ok
+LOCATE=PASS ok
+REFUSE=PASS ok
+REAL=PASS rc=0 count=1 locate=(0, 1, 8996) chars=19682
+LEGS=9/9
+C1=PASS
+exit=0
+
+$ python3 corpus/evidence/round52/c1-count.py
+PARAS=PASS ok
+RUNS_ENTITIES=PASS ok
+REVISIONS=PASS ok
+LAYOUT=PASS ok
+ALTCONTENT=PASS ok
+MAIN_PART=PASS ok
+LOCATE=PASS ok
+REFUSE=PASS ok
+REAL=PASS rc=0 count=1 locate=(0, 1, 8996) chars=19682
+LEGS=9/9
+C1=PASS
+exit=0
+
+$ python3 corpus/evidence/round52/c1-count.py
+PARAS=PASS ok
+RUNS_ENTITIES=PASS ok
+REVISIONS=PASS ok
+LAYOUT=PASS ok
+ALTCONTENT=PASS ok
+MAIN_PART=PASS ok
+LOCATE=PASS ok
+REFUSE=PASS ok
+REAL=PASS rc=0 count=1 locate=(0, 1, 8996) chars=19682
+LEGS=9/9
+C1=PASS
+exit=0
+
+$ python3 corpus/evidence/round52/c1-count.py --seed 7
+PARAS=PASS ok
+RUNS_ENTITIES=PASS ok
+REVISIONS=PASS ok
+LAYOUT=PASS ok
+ALTCONTENT=PASS ok
+MAIN_PART=PASS ok
+LOCATE=PASS ok
+REFUSE=PASS ok
+REAL=PASS rc=0 count=1 locate=(0, 1, 8996) chars=19682
+LEGS=9/9
+C1=PASS
+exit=0
+
+$ python3 corpus/evidence/round52/c1-supplement.py
+PREFIX=PASS ok
+RELS_FORM=PASS ok
+SYNTAX=PASS ok
+REAL_TEXT=PASS rc=0 chars=19682
+SUPPLEMENT_LEGS=4/4
+C1_SUPPLEMENT=PASS
+exit=0
+
+$ python3 corpus/evidence/round52/c1-supplement.py --tool corpus/evidence/round52/controls/forge-shape.py
+PREFIX=FAIL g_paras: text differs at 32 (got 132 chars, want 137)
+RELS_FORM=FAIL g_paras: rc=2
+SYNTAX=FAIL g_paras: rc=2
+REAL_TEXT=FAIL rc=0 chars=21
+SUPPLEMENT_LEGS=0/4
+C1_SUPPLEMENT=FAIL
+exit=1
+
+$ python3 corpus/evidence/round52/c1-count.py --tool corpus/evidence/round52/controls/forge-shape.py
+PARAS=PASS ok
+RUNS_ENTITIES=PASS ok
+REVISIONS=PASS ok
+LAYOUT=PASS ok
+ALTCONTENT=PASS ok
+MAIN_PART=PASS ok
+LOCATE=PASS ok
+REFUSE=PASS ok
+REAL=PASS rc=0 count=1 locate=(0, 1, 0) chars=21
+LEGS=9/9
+C1=PASS
+exit=0
+
+$ python3 corpus/evidence/round52/c2-count.py
+ENTRIES=3/3
+BOUND=4/4 (min 3) REFUSED=0
+BOUND_IDS=S113,S114,S115,S116
+REF_ID_UNBOUND=0
+NEW_GROUND=3/3
+QUOTE_ROWS=39 ON_BOUND=39/39
+SPAN_IDS=4/4 (min 3 each)
+QUOTES_IN_SPAN=39/39
+QUOTES_IN_ENTRY=39/39
+QUOTES_IN_LESSON=39/39
+QUOTE_SHORT=39/39
+SPAN_CONTEXT=39/39
+CAPTURE_BOUND=39/39
+SUBSTANCE=PASS
+ANCHOR_BOUND=4/4
+INFERENCE_GROUNDED=3/3
+QUARANTINE_VERDICTS=1/1 (S120)
+QUARANTINE_BLOCKED_ADOPTED=0
+C2=PASS
+exit=0
+
+$ python3 corpus/evidence/round52/c2-count.py --lane-only
+ENTRIES=3/3
+BOUND=4/4 (min 3) REFUSED=0
+BOUND_IDS=S113,S114,S115,S116
+REF_ID_UNBOUND=0
+NEW_GROUND=3/3
+QUOTE_ROWS=39 ON_BOUND=39/39
+SPAN_IDS=4/4 (min 3 each)
+QUOTES_IN_SPAN=39/39
+QUOTES_IN_ENTRY=39/39
+QUOTES_IN_LESSON=39/39
+QUOTE_SHORT=39/39
+SPAN_CONTEXT=39/39
+CAPTURE_BOUND=skipped
+SUBSTANCE=PASS
+ANCHOR_BOUND=4/4
+INFERENCE_GROUNDED=3/3
+QUARANTINE_VERDICTS=1/1 (S120)
+QUARANTINE_BLOCKED_ADOPTED=0
+C2=PASS
+exit=0
+
+$ python3 corpus/evidence/round52/build-spans.py --check
+SPANS_ROWS=39 STALE=0
+exit=0
+
+$ python3 corpus/evidence/round51/quote-substance-check.py corpus/evidence/round52/spans.tsv
+IDS=4 QUOTES=39 FAILURES=0
+exit=0
+
+$ python3 corpus/evidence/round47/c2-count.py
+ENTRY_POINTS=132 (abc=104 dependence=+8 check_named=+20)
+FLOOR=92
+GATES_ROWS=58
+REGISTERED=132/132
+UNREGISTERED=0
+DANGLING=0
+MISMATCHES=0
+C2=PASS
+exit=0
+
+$ python3 corpus/evidence/round52/verdict-gap.py --from 46 --to 51
+R46 axes lane=6 verifier=6
+R47 operability: lane=improved verifier=harmed
+R47 axes lane=6 verifier=6
+R48 UNPARSED lane_axes=6 verifier_axes=0
+R49 axes lane=6 verifier=6
+R50 calibration: lane=improved verifier=unchanged
+R50 axes lane=6 verifier=6
+R51 axes lane=6 verifier=6
+VERDICT_GAPS=2 UNPARSED=1
+exit=1
+
+$ /home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa
+chousa	W04	S051 duplicate url www.w3.org/TR/2017/REC-html52-20171214/syntax.html across scopes
+chousa	W04	S053 duplicate url docs.python.org/3/library/socket.html across scopes
+chousa	W04	S073 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+chousa	W04	S074 duplicate url docs.python.org/3/library/hashlib.html across scopes
+chousa	W04	S075 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+chousa	ok	/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md
+exit=0
+
+$ grep -cE '^\|[[:space:]]*S[0-9]{3,}[[:space:]]*\|' corpus/SOURCES.md
+116
