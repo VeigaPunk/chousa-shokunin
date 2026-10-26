@@ -2658,3 +2658,33 @@ The numeric operability scale stays 3/10; no other score is invented.
 ## Planned — round 52 (not started)
 
 Candidates: a zip-member form for the refused `.docx` (a counter and span builder that read `word/document.xml`), then bind it; the other search-record entries decided in the round-51 Gate (`search-tracking-record-r40`, `japanese-prisma-item-wording-r40`, `chinese-search-log-r37-amendment`); close the adopter's named limits (twin-id `held` label, refusal ordering); an enforcing form of the supplement that a reimplementing tool cannot pass.
+
+## Round 52 verdict — 2026-10-26 (OOXML capture text form; search-record theme continued by document)
+
+Claims frozen in `corpus/evidence/round52/claims.md` at `37468eadd8d098e80289b2f31a22de3872d4a1f6` after scoring their do-nothing controls; post-freeze disclosures `corpus/evidence/round52/claims-erratum.md` E1–E4. After-measurement: `corpus/evidence/round52/measure-after.txt` (header `tool-rev:`). No fetch; L0 `8d77e6c1` open.
+
+| claim / axis | before → after | counting command | verdict | tag |
+|---|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10; capability acquisition) | `tools/capture-text.py` absent at base: `LEGS=0/9 C1=FAIL`; controls naive 4/9, cache-txt 0/9, const 0/9 → `LEGS=9/9 C1=PASS` (three unseeded runs and `--seed 7`); supplement `SUPPLEMENT_LEGS=4/4` | `python3 corpus/evidence/round52/c1-count.py`; `python3 corpus/evidence/round52/c1-supplement.py` | **improved narrowly**: the frozen counter is forgeable by XML spelling (`controls/forge-shape.py` 9/9, W1 `R52CritForgeC1`); the post-freeze supplement refuses that forge (0/4) but W2 `R52W2CritForgeSupplement` passed both with a 54-line regex tool and a memoised NIPH text; the tool gained refusal classes after the candidate that no frozen leg measures (erratum E2) | plumbing |
+| C2 depth (sourced) | `ENTRIES=0/3 BOUND=0/4 C2=FAIL`; staged-copy control `REF_ID_UNBOUND=31` → `BOUND=4/4 REFUSED=0 QUOTE_ROWS=39 CAPTURE_BOUND=39/39 ANCHOR_BOUND=4/4 INFERENCE_GROUNDED=3/3 QUARANTINE_VERDICTS=1/1 C2=PASS` | `python3 corpus/evidence/round52/c2-count.py` | **improved**, as presence and binding: entailment is uncounted (W2 narrowed bullets in all three entries, erratum E5), the CJK polarity check is inert on these entries (W2 `R52W2ExecInfRegression`), and expansion credit is three documents, not four (S113 a second carrier) | ground |
+
+The numeric operability scale stays 3/10; no other score is invented.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved narrowly** | C1; `tools/capture-text.py` on the cache's eight zip captures (two `.docx` rendered, six refused) |
+| depth | **improved** | C2; three entries on four documents, 39 located quotes |
+| coverage | improved narrowly | three documents on ground the base did not hold (`git grep -l -e 文献検索期間 -e 完全な検索戦略 -e 检索报告清单 00f8c7f5 -- corpus/knowledge` → exit 1); the 梅斯医学 record (S113) is a second carrier, no credit |
+| calibration | improved narrowly | the round-51 S120 offset re-located (`char 39411` → 8996 in a named form); QUALITY 87–90; `verdict-gap.py` makes two lane-vs-verifier gaps visible (`VERDICT_GAPS=2 UNPARSED=1`) |
+| freshness | unchanged | newest readable capture 2026-10-24; no fetch |
+| adjacency | unchanged | W1 `R52ConnSiblings`, W2 `R52W2ConnSiblingsFinal`: no sibling overlap |
+
+## Capabilities (round-52 addition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| OOXML capture text form | prints the text form of a `.docx` capture (main part from `_rels/.rels`; no Fallback, deleted text, field codes or tab stops), locates a quote's offset in it, and refuses non-zip, relationship-less, non-Word, encrypted and inflated packages | `python3 tools/capture-text.py <raw> --locate '<quote>'`; `corpus/evidence/round52/c1-count.py`; `corpus/evidence/round52/c1-supplement.py` | 52 |
+
+## Planned — round 53 (not started)
+
+Candidates: the adopter twin-id `held` label and refusal-order patch (W1 `R52ExecAdopterTwin`, routed defect 2) with its self-test rows; the anchored `correction:` check (W1 `R52ExecPointerAnchor`, routed defect 4) as a calibration claim; `search-tracking-record-r40.md` with its quote re-cut at char 935; the two verdict gaps `verdict-gap.py` prints (round 47 operability, round 50 calibration) and round 48's unparsed verifier form.

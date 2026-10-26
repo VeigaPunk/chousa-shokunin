@@ -42,6 +42,7 @@ import posixpath
 import urllib.parse
 import sys
 import zipfile
+import zlib
 import xml.etree.ElementTree as ET
 
 W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
@@ -55,6 +56,21 @@ class Refused(Exception):
     pass
 
 
+class Limited:
+    """A read-only stream that refuses once more than MAX_PART bytes were inflated,
+    whatever the zip directory declares."""
+
+    def __init__(self, f):
+        self.f, self.n = f, 0
+
+    def read(self, size: int = -1) -> bytes:
+        b = self.f.read(size)
+        self.n += len(b)
+        if self.n > MAX_PART:
+            raise Refused(f"main part inflates past {MAX_PART} bytes")
+        return b
+
+
 def bounded(z: zipfile.ZipFile, name: str) -> None:
     size = z.getinfo(name).file_size
     if size > MAX_PART:
@@ -64,7 +80,11 @@ def bounded(z: zipfile.ZipFile, name: str) -> None:
 def main_part(z: zipfile.ZipFile) -> str:
     try:
         bounded(z, "_rels/.rels")
-        rels = ET.fromstring(z.read("_rels/.rels"))
+        with z.open("_rels/.rels") as f:
+            raw = f.read(MAX_PART + 1)
+        if len(raw) > MAX_PART:
+            raise Refused(f"'_rels/.rels' inflates past {MAX_PART} bytes")
+        rels = ET.fromstring(raw)
     except KeyError:
         raise Refused("no _rels/.rels in the package")
     except ET.ParseError as e:
@@ -87,7 +107,7 @@ def text_form(path: str) -> str:
     try:
         with zipfile.ZipFile(path) as z:
             part = main_part(z)
-            data = z.open(part)
+            data = Limited(z.open(part))
             out: list[str] = []
             stack: list[str] = []
             fallback = 0
@@ -111,7 +131,7 @@ def text_form(path: str) -> str:
                         out.append("\n")
                 el.clear()
             return "".join(out)
-    except (zipfile.BadZipFile, ET.ParseError, OSError, RuntimeError, NotImplementedError) as e:
+    except (zipfile.BadZipFile, ET.ParseError, OSError, RuntimeError, NotImplementedError, zlib.error, EOFError) as e:
         raise Refused(f"unreadable package: {e}")
     except MemoryError:
         raise Refused("package too large to render in memory")

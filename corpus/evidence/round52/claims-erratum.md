@@ -18,7 +18,10 @@ freeze. What changed or was found after seats scored:
   normalises outside the package root is refused (H3, cosmetic: the candidate read only zip members);
   (d) `el.clear()` after each end event; (e) after W1 `R52ReviewCapture` D1/D4/D6: an encrypted or
   unsupported-compression member is refused (was an uncaught `RuntimeError`, exit 1), a relationship Target is
-  percent-decoded before matching, and `--locate ''` is a usage error (exit 2). These add refusal classes the frozen sentence does not list; the
+  percent-decoded before matching, and `--locate ''` is a usage error (exit 2).
+  (f) after W2 `R52W2SentToolFinal`: a corrupt deflate stream (`zlib.error`, `EOFError`) is refused instead of
+  exiting 1 with a traceback, and both `_rels/.rels` and the main part are read through a byte limit that counts
+  inflated bytes, so a directory entry that understates `file_size` no longer bypasses the 256 MiB bound. These add refusal classes the frozen sentence does not list; the
   sentence's own refusal classes and every other behaviour are unchanged, and no frozen leg exercises the
   new ones (the counter generates only `w:document` parts under 1 MiB).
 - **E3 — named, not changed: the two readers diverge on an External officeDocument relationship listed
@@ -30,3 +33,12 @@ freeze. What changed or was found after seats scored:
   one quote reused per id, one anchor offset and a refused NIPH passes `C2=PASS`; so does a NIPH span cut from
   the `.txt` sidecar's zip bytes (`[Content_Types].xml`), because a span's digest may name the sidecar. The
   counter measures binding and presence; substance and entailment are the closure's, as the claim says.
+- **E5 — in-round narrowing after W2 (outside the frozen counters).** The three entries, row S113's `teaches` cell
+  and the README block were narrowed after the wave-2 entailment attacks (`R52W2CritEntryNiph`, `R52W2CritEntryZhr`,
+  `R52W2CritEntryJpw`, `R52W2ScoutQuoteSample`, `R52W2ReviewReadme`); one quote (`【提出者名】`, S115 char 125) was added
+  to `quotes.tsv` for a narrowed bullet, so the manifest has 39 rows. Rows written this round only; no earlier row changed.
+- **E6 — named, not changed: the frozen span builder's reader is unbounded.** `build-spans.py` `docx_text` reads
+  a whole part into memory and walks it recursively, so a hostile package can exhaust memory or recursion there,
+  and `build-spans.py` without `--check` writes under the lane root by default (W1 `R52SentCapture` H4, W2
+  `R52W2SentToolFinal`). It reads only the four pinned captures in this round.
+
