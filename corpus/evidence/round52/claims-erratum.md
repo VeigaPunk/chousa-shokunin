@@ -16,7 +16,9 @@ freeze. What changed or was found after seats scored:
   OPC zip printed an empty text form at exit 0); (b) `_rels/.rels` or a main part inflating past 256 MiB is
   refused and `MemoryError` maps to a refusal (W1 `R52SentCapture` H1); (c) an officeDocument target that
   normalises outside the package root is refused (H3, cosmetic: the candidate read only zip members);
-  (d) `el.clear()` after each end event. These add refusal classes the frozen sentence does not list; the
+  (d) `el.clear()` after each end event; (e) after W1 `R52ReviewCapture` D1/D4/D6: an encrypted or
+  unsupported-compression member is refused (was an uncaught `RuntimeError`, exit 1), a relationship Target is
+  percent-decoded before matching, and `--locate ''` is a usage error (exit 2). These add refusal classes the frozen sentence does not list; the
   sentence's own refusal classes and every other behaviour are unchanged, and no frozen leg exercises the
   new ones (the counter generates only `w:document` parts under 1 MiB).
 - **E3 — named, not changed: the two readers diverge on an External officeDocument relationship listed

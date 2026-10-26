@@ -22,7 +22,10 @@ Usage:
   python3 tools/capture-text.py RAW                  # text form on stdout (UTF-8)
   python3 tools/capture-text.py RAW --locate QUOTE   # LOCATED count=<n> offset=<o|-1>
 
-Offsets are Python string indices (code points) into the text form.
+Offsets are Python string indices (code points) into the text form. A relationship
+Target is percent-decoded before it is matched to a member name. Strict OOXML
+(`http://purl.oclc.org/ooxml/wordprocessingml/main`) is refused by the root check.
+An encrypted or unsupported-compression member is refused as unreadable.
 Exit codes: 0 text printed / quote located exactly once · 1 `--locate` found
 the quote 0 or 2+ times · 2 refused (not a zip, no officeDocument
 relationship, missing or unparsable main part, or a main part whose root is
@@ -36,6 +39,7 @@ from __future__ import annotations
 
 import argparse
 import posixpath
+import urllib.parse
 import sys
 import zipfile
 import xml.etree.ElementTree as ET
@@ -67,7 +71,7 @@ def main_part(z: zipfile.ZipFile) -> str:
         raise Refused(f"_rels/.rels does not parse: {e}")
     for rel in rels.iter(RELS_NS + "Relationship"):
         if rel.get("Type", "").endswith("/officeDocument") and rel.get("TargetMode") != "External":
-            target = posixpath.normpath(rel.get("Target", "").lstrip("/"))
+            target = posixpath.normpath(urllib.parse.unquote(rel.get("Target", "")).lstrip("/"))
             if target.startswith("..") or target.startswith("/"):
                 raise Refused(f"officeDocument target {target!r} leaves the package root")
             if target in z.namelist():
@@ -107,7 +111,7 @@ def text_form(path: str) -> str:
                         out.append("\n")
                 el.clear()
             return "".join(out)
-    except (zipfile.BadZipFile, ET.ParseError, OSError) as e:
+    except (zipfile.BadZipFile, ET.ParseError, OSError, RuntimeError, NotImplementedError) as e:
         raise Refused(f"unreadable package: {e}")
     except MemoryError:
         raise Refused("package too large to render in memory")
@@ -122,6 +126,9 @@ def main() -> int:
         text = text_form(a.raw)
     except Refused as e:
         print(f"REFUSED {e}", file=sys.stderr)
+        return 2
+    if a.locate == "":
+        print("usage: --locate needs a non-empty quote", file=sys.stderr)
         return 2
     if a.locate is None:
         sys.stdout.buffer.write(text.encode("utf-8"))
