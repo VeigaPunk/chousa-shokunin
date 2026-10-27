@@ -29,14 +29,12 @@ not luck: `git diff --stat 6656f077… HEAD -- tools/inference-ground.py` → em
 Over every entry↔spans pair the manifests name (23 entries, 23 pairs), 22 exit 0; one exits 1:
 `corpus/knowledge/evidence-archive-field-policy-r41.md` × `corpus/evidence/round45/spans.tsv` —
 `INF_UNCITED`/`INF_UNGROUNDED` ×4 bullets and `INF_TOKEN_NOT_IN_SPAN bullet=4 token='404'`, `GROUND: FAIL`
-(those bullets carry no `S###` citation).
-
-**Pre-existing.** Re-running the *base* tool against the *base* entry and spans, extracted with
-`git show 6656f077…` into scratch, gives the identical result (`GROUND: FAIL`, exit 1, same four findings);
-`git diff 6656f077… HEAD` on both files is empty. The round-45 gate never ran this tool on it —
-`grep -n "inference\|ground" corpus/evidence/round45/c*-count.py` → nothing. **Reported, not patched**: it is
-outside both frozen claims (C2's set is the 47 pinned triples; C3's entry does not exist yet). Coverage gap
-for the L1: 27 entries carry a `#### Inference` section, only 23 are named by any
+(those bullets carry no `S###` citation). **Pre-existing:** re-running the *base* tool against the *base*
+entry and spans, extracted with `git show 6656f077…` into scratch, gives the identical result (`GROUND: FAIL`,
+exit 1, same four findings), and `git diff 6656f077… HEAD` on both files is empty. The round-45 gate never ran
+this tool on it (`grep -n "inference\|ground" corpus/evidence/round45/c*-count.py` → nothing). **Reported, not
+patched**: it is outside both frozen claims (C2's set is the 47 pinned triples; C3's entry does not exist yet).
+Coverage gap for the L1: 27 entries carry a `#### Inference` section, only 23 are named by any
 `corpus/evidence/*/spans.tsv`; never grounded: `citation-version-binding-r36.md`,
 `citation-version-binding-r37.md`, `evidence-snapshot-coverage-r40.md`, `search-log-method-r39.md`.
 
@@ -134,10 +132,10 @@ the title but not the year. Rewording to "- The notice is bound (S131): `国家�
 anywhere (`swept=3/3` either way), but `inference-ground.py` reads *every* bullet of an Inference section, so a
 sweep line there is uncited and ungrounded: `FINDING INF_UNCITED bullet=1 … INF_UNGROUNDED bullet=1 …` (one
 pair per sweep line) → `GROUND: FAIL` → `INFERENCE_GROUNDED=no` → `C3=FAIL`. Keep them under
-`#### Observation`. The `C3=PASS` fixture keeps all three sweep lines above the Inference heading.
-Same cause, third constraint: every Inference bullet must cite an `S###` the manifest covers, and the
-counter's `STRAY_IDS` leg rejects any `S###` token in the entry that is neither S127 nor a bound row — so
-citing an unbound-but-held row (e.g. S130) fails the counter.
+`#### Observation`. The `C3=PASS` fixture keeps all three sweep lines above the Inference heading. Same
+cause, third constraint: every Inference bullet must cite an `S###` the manifest covers, and the counter's
+`STRAY_IDS` leg rejects any `S###` token in the entry that is neither S127 nor a bound row — so citing an
+unbound-but-held row (e.g. S130) fails the counter.
 
 ## 6. Scope and scratch hygiene
 

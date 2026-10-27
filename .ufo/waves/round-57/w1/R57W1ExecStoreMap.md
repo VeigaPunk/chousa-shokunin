@@ -1,24 +1,10 @@
 # R57W1ExecStoreMap — lane capture store inventory (chousa r57 w1)
 
-Seat `R57W1ExecStoreMap` (executor, leaf). Item: map `corpus/captures` — sorted listing with per-file sha256+size;
-which of the 47 pinned keys have `.raw`/`.txt`; which keys are NOT pinned (identify each document from its bytes);
-which files lack a raw/txt sibling; total bytes. Frozen claims read-only — no predicate/target/counter/control/recipe
-touched. Lane write: this file only; no fleet-root or sibling-lane write; no network fetch; no git/jj mutation; no
-tool installed (none needed). Snapshot `date -u` = **2026-10-27T08:53:36Z**, lane HEAD `e0e73e0` (the C2
-after-receipt commit, landed after the dispatch tip `f9736a3`); the store is live (L1 fetch continues), so totals are
-a timestamped snapshot — every size+sha was read twice 1.2 s apart with zero unstable files (`unstable: []`); by
-08:58:30Z two more keys had landed (121 files / 62 keys).
+Seat `R57W1ExecStoreMap` (executor, leaf). Item: map `corpus/captures` — sorted listing with per-file sha256+size; which of the 47 pinned keys have `.raw`/`.txt`; which keys are NOT pinned (identify each document from its bytes); which files lack a raw/txt sibling; total bytes. Frozen claims read-only — no predicate/target/counter/control/recipe touched. Lane write: this file only; no fleet-root or sibling-lane write; no network fetch; no git/jj mutation; no tool installed. Snapshot `date -u` = **2026-10-27T08:53:36Z**, lane HEAD `e0e73e0` (the C2 after-receipt commit, landed after dispatch tip `f9736a3`); the store is live (the L1 fetch continues), so totals are a timestamped snapshot — every size+sha read twice 1.2 s apart, zero unstable files (`unstable: []`); by 08:58:30Z two more keys had landed (121 files / 62 keys).
 
-## 1. Pinned set recomputed independently of the counter
+**§1 Pinned set recomputed independently of the counter.** `git ls-tree -r --name-only 6656f0770a1460d6ba73d9d2976f698a35311921 corpus/evidence` → every `*spans.tsv` with a `capture_sha256` column → distinct `(id,url,capture_sha256)` triples = **47** (= frozen `SET_N`); key = `sha256(url)[:24]`. Frozen counter re-run read-only at HEAD: `SET=47 VERDICTS=47/47 REPRODUCED=41 DRIFTED=5 UNREACHABLE=1 BYTE_BACKED=46 CONSISTENT=46/46 FLAGGED=0/0 C2=PASS`, exit 0.
 
-`git ls-tree -r --name-only 6656f0770a1460d6ba73d9d2976f698a35311921 corpus/evidence` → every `*spans.tsv` with a
-`capture_sha256` column → distinct `(id,url,capture_sha256)` triples = **47** (= frozen `SET_N`); key =
-`sha256(url)[:24]`. Frozen counter re-run read-only at HEAD: `SET=47 VERDICTS=47/47 REPRODUCED=41 DRIFTED=5
-UNREACHABLE=1 BYTE_BACKED=46 CONSISTENT=46/46 FLAGGED=0/0 C2=PASS`, exit 0.
-
-## 2. Inventory — 117 files, 60 keys, 58,051,237 bytes (08:53:36Z)
-
-`PIN` = one of the 47 pinned triples; `EXT` = not pinned; `ABSENT` = no such file; `raw=<bytes>:<sha256>`.
+**§2 Inventory — 117 files, 60 keys, 58,051,237 bytes (08:53:36Z).** `PIN` = one of the 47 pinned triples; `EXT` = not pinned; `ABSENT` = no such file; `raw=<bytes>:<sha256>`.
 ```
 001287c436f0e6b1d166ae8d PIN raw=352066:203b16907c2c953e49bb71310df2a5fd761d3f1798115ceb2ad6881cd01c17c5 txt=5599:67f6f2df8ce96d01673d8f2f740e663f55ed8324bbf804834562bf746740a1db
 02aefcf570a7108e699d0990 PIN raw=6550066:efc216d4b2df006674aaeef579167aa6841ed27daf0ba78db2da8a30b66b00a7 txt=22631:32a5907e701fadee0138ba71899090c5b68848075ad34c9564d893c99c6dd616
@@ -82,89 +68,18 @@ fd468a36d78ff156b6200946 PIN raw=1156890:72763389bbe95ab312de097125baa447370a244
 fea98dc5a5a486c988dd415c PIN raw=178654:daa2c5d940fc20d0fab683e5e25b1f31a802d681d71319002449edf334029454 txt=95733:ead3a7dd4ba97ae0ef05620f314844badf6c3fef5428988e61e4e2a146772f60
 TOTAL files=117 keys=60 bytes=58051237
 ```
-`git ls-tree -rl HEAD corpus/captures/` → **97 files / 56,061,395 bytes** committed at `e0e73e0`; 20 files uncommitted
-(`git status --porcelain corpus/captures` → 20 `??`), all EXT keys from this wave's C3 candidate fetches.
-`du -sb corpus/captures` = 58,051,237 (file sum; dir inode adds 4096).
+`git ls-tree -rl HEAD corpus/captures/` → **97 files / 56,061,395 bytes** committed at `e0e73e0`; 20 files uncommitted (`git status --porcelain corpus/captures` → 20 `??`), all EXT keys from this wave's C3 candidate fetches; `du -sb corpus/captures` = 58,051,237 (file sum; dir inode adds 4096).
 
-## 3. Pinned coverage (of the 47 recomputed triples)
+**§3 Pinned coverage.** 46 of 47 pinned keys have both a `.raw` and a `.txt`, and each `.txt` is byte-identical to the campaign recipe on its `.raw` (re-verified here for all EXT captures too: `%PDF-` → `pdftotext -layout`; else UTF-8 decode; else `html_to_text` ⇒ identical sha256). The one pinned key with **neither** sibling is `e3ca8f4fdd15420b80096a75` = S105 (`gs.sxu.edu.cn/docs/2025-03/9e5cdd215a414bf6b5694912018de4c8.pdf`): 3 refetch attempts, all `curl_rc=28` (timeout), no bytes — the wrap-up `.raw` was deliberately removed in `e0e73e0` ("record-less wrap-up S105 bytes removed") ⇒ C2's `UNREACHABLE=1` / `BYTE_BACKED=46`. Whole-store sibling audit: **3 files lack a sibling** (the three orphan `.raw`, §4 — no `.txt`); **0 `.txt` lack a `.raw`**. Item fragment "001287c436f0e6b1d166ae8d.txt exists without …" — verified: that key has **both** siblings (`.raw` 352,066 B = the 科技查新检索服务平台 HTML page; `.txt` 5,599 B = its `html_to_text` recipe form, sha `67f6f2df8ce9…`), and the `.txt` sha **equals S104's pinned `capture_sha256`** while the `.raw` (`203b1690…`) does not — the pin rides the text form.
 
-- **46 of 47** pinned keys have a `.raw` **and** a `.txt`; for each the `.txt` is byte-identical to the campaign
-  recipe on its `.raw` (re-verified here for all EXT captures too: `%PDF-` → `pdftotext -layout`; else UTF-8 decode;
-  else `html_to_text` ⇒ identical sha256).
-- The one pinned key with **neither** sibling: `e3ca8f4fdd15420b80096a75` = S105
-  (`gs.sxu.edu.cn/docs/2025-03/9e5cdd215a414bf6b5694912018de4c8.pdf`) — 3 `refetch.tsv` attempts, all `curl_rc=28`
-  (timeout), no bytes; the wrap-up `.raw` was deliberately removed in `e0e73e0` ("record-less wrap-up S105 bytes
-  removed") ⇒ C2's `UNREACHABLE=1` / `BYTE_BACKED=46`.
-- Sibling audit over the whole store: **3 files lack a sibling** (the three orphan `.raw`, §4 — no `.txt`);
-  **0 `.txt` files lack a `.raw`**.
-- Item fragment "001287c436f0e6b1d166ae8d.txt exists without …" — verified: that key has **both** siblings (`.raw`
-  352,066 B = the 科技查新检索服务平台 HTML page; `.txt` 5,599 B = its `html_to_text` recipe form, sha
-  `67f6f2df8ce9…`), and the `.txt` sha **equals S104's pinned `capture_sha256`** while the `.raw` (`203b1690…`) does
-  not — the pin is carried by the text form; `.txt == recipe(.raw)` holds.
+**§4 The three orphans — identified from their own bytes** (`pdftotext -layout <raw> -`; PDF 1.4 / 1.5 / 1.7). Source URLs recovered by matching `sha256(url)[:24]` against candidate URLs in the lane's own citation text (`corpus/captures/b27ffd2f0161104c6a28c9f5.txt:1360-1377`) plus the wave's scout reports; each match is exact. `53a92273a452a58f28368691` = **国家卫生健康委员会公报 2021·07** (31 pp), the gazette reprinting *国家卫生健康委办公厅关于规范开展药品临床综合评价工作的通知 国卫办药政发〔2021〕16号* and inside it 《药品临床综合评价管理指南（2021 年版 试行）》 — `https://www.nhc.gov.cn/bgt/201807sgf/202109/5e18d6d8d86e405bad64dd4a8b666310/files/1733795726978_35780.pdf`. `d473754a0cbf8d3095255d5a` = **抗肿瘤药品临床综合评价技术指南（2022 年版 试行）** (66 pp) — `https://www.hnysfww.com/data/article/1656481023744041713.pdf`. `d8b4f8f8829b813f16227893` = **儿童药品临床综合评价技术指南（2022 年版 试行）** (68 pp) — `https://www.hnysfww.com/data/article/1656481067585283603.pdf`. None is in the C2 pinned set (correctly no C2 verdict); at HEAD their only `refetch.tsv` rows are failures (`curl_rc=28` timeouts).
 
-## 4. The three orphans — identified from their own bytes
+**§5 Other EXT keys** (this wave's C3 candidate fetches, each attested by a successful `refetch.tsv` row): `6f545e6c16b6b568ea3f591b` (S133, tcmevidence.net PDF) = 《药品临床综合评价管理指南（2021 年版试行）》; `6fe041acddaa1f4e6f6e9775` (S133, `nhc.gov.cn/cms-search/downFiles/863665c…pdf`) = the 2020 cover 《药品临床综合评价管理指南（试行）》, byte-identical to S130's `a42feae4448612f949cc715f` (same raw sha `d01795dd…`) under a second URL key — the "2021年版" trap the R3 scout documented; `a476f4128186c7976671ab54` (S132, catcm.org.cn notice page); `de34c41f76e5a5c0e1f4d1a2` (S131, gcpunion.org 〔2019〕80号 page); `4d89520fce540f1cf7cf9ef8` (S131, qilu-pharma repost); `9695437cac165bb4b6145deb` (S134, 湖南药事服务网 page); `d2a1cf3d2c385daee67c4afd` (S137, phirda repost); `712ec7bb981a9669a6921db7` (S131, mp.weixin.qq.com — 311-byte text, bot wall); `c71776bc3084de059b84569d` (S133, forten-sp.aliyuncs PDF); `0cebd3c84524295839ceaadd` / `ad3010d2aee49a95e0c7cb0b` (takarabiomed PDFs, 1-byte text — image-only).
 
-`pdftotext -layout <raw> -` on each (PDF 1.4 / 1.5 / 1.7). Source URLs recovered by matching `sha256(url)[:24]`
-against candidate URLs from the lane's own citation text (`corpus/captures/b27ffd2f0161104c6a28c9f5.txt:1360-1377`
-reference list) and the wave's scout reports; each match is exact (recomputed key == filename).
+**§6 Findings for the L1's C3 build (reported, not patched).** (1) **The three orphan `.txt` siblings exist in the git object store but not in the lane tree**: `git show 6f3276b:corpus/captures/<key>.txt` (commit `6f3276b` = jj keep-ref side commit `refs/jj/keep/6f3276bc9ea52dfa711c6687efb0cfc3a25de34a`, **not** an ancestor of HEAD) yields blobs whose sha256 equals my recomputed recipe of the committed `.raw` (`c040bc85…`, `7ea529e5…`, `520f663e…`); C3's `form_of()` reads `corpus/captures/<key>.txt` for a non-OLE/zip raw, so **a raw-only PDF yields no defined form and cannot bind**. (2) **Heading rule on those blobs** (frozen rule, read-only): gazette ✔ (`药品临床综合评价管理指南` as a line, empty prefix, `2021年版` present) ⇒ R3-bindable material; the 抗肿瘤 and 儿童 titles are line-split (`…临床综合评价` / `技术指南`) ⇒ **R4/R6 titles are not a heading** in their `pdftotext -layout` forms (token `2022年版` present in both). (3) **In-store material already passing heading+token** (counter's `heading_title` semantics): `6f545e6c16b6b568ea3f591b` R3 ✔; `a476f4128186c7976671ab54` R3 (`附件：药品临床综合评价管理指南（ 2021 年版 试行）`) ✔ and R2 (`国家卫生健康委办公厅关于…通知`, prefix 10) ✔; `de34c41f76e5a5c0e1f4d1a2` R1 (`国家卫生健康委关于开展药品使用监测和临床综合评价工作的通知`, prefix 7) ✔; no R4/R5/R6 heading exists in any store capture. (4) `6fe041acddaa1f4e6f6e9775` and S130's `a42feae4448612f949cc715f` are **one document under two URL keys** (identical raw sha and `.txt`) — key count over-counts distinct documents by one.
 
-| key | what the bytes are | source URL (recomputed key == filename) | pinned? |
-|---|---|---|---|
-| `53a92273a452a58f28368691` | **国家卫生健康委员会公报 2021·07** (31 pp) — gazette reprinting *国家卫生健康委办公厅关于规范开展药品临床综合评价工作的通知 国卫办药政发〔2021〕16号*, and inside it 《药品临床综合评价管理指南（2021 年版 试行）》 | `https://www.nhc.gov.cn/bgt/201807sgf/202109/5e18d6d8d86e405bad64dd4a8b666310/files/1733795726978_35780.pdf` | no |
-| `d473754a0cbf8d3095255d5a` | **抗肿瘤药品临床综合评价技术指南（2022 年版 试行）** (66 pp) — 国家药物和卫生技术综合评估中心 / 国家癌症中心 / 药具管理中心 | `https://www.hnysfww.com/data/article/1656481023744041713.pdf` | no |
-| `d8b4f8f8829b813f16227893` | **儿童药品临床综合评价技术指南（2022 年版 试行）** (68 pp) — 国家儿童医学中心 | `https://www.hnysfww.com/data/article/1656481067585283603.pdf` | no |
+**§7 C2 state observed** (frozen counter, read-only, HEAD `e0e73e0`): `python3 corpus/evidence/round57/c2-count.py` → `SET=47 VERDICTS=47/47 REPRODUCED=41 DRIFTED=5 UNREACHABLE=1 BYTE_BACKED=46 CONSISTENT=46/46 FLAGGED=0/0 C2=PASS`, exit 0; DRIFTED = S083 S087 S113 S114 S121, all `absent=0` ⇒ no FRESHNESS-FLAG due. At dispatch it was 43/47 (S100 S103 S105 S106 pending); attempt-2/3 rows have since landed S100 S103 S106 and S105 is UNREACHABLE (3 timed-out attempts ≥600 s apart). Nothing in the frozen claim was modified.
 
-These are the R2/R3 and R4/R6 documents the frozen C3 REFS table names, held as bytes but outside the C2 pinned set
-(so correctly carrying no C2 verdict); at HEAD their only `refetch.tsv` rows are failures (`curl_rc=28` timeouts).
+**§8 Housekeeping.** Scratch `/fast/scratch/hyaku/chousa-r57/R57W1ExecStoreMap/` (TMPDIR + PYTHONDONTWRITEBYTECODE=1 set there; <50 MB, nothing in /tmp) — **deleted before this report was filed**; only this report survives. Lane writes: this file only. No git/jj mutation; frozen counters run read-only, never edited; no capture re-fetched (no network access).
 
-## 5. The other EXT keys (this wave's C3 candidate fetches; each attested by a successful `refetch.tsv` row)
-
-`6f545e6c16b6b568ea3f591b` (S133, `tcmevidence.net/…6381676262587201848492833.pdf`) = 《药品临床综合评价管理指南
-（2021 年版试行）》; `6fe041acddaa1f4e6f6e9775` (S133, `nhc.gov.cn/cms-search/downFiles/863665c…pdf`) = the 2020 cover
-《药品临床综合评价管理指南（试行）》, byte-identical to S130's `a42feae4448612f949cc715f` (same raw sha `d01795dd…`)
-under a second URL key — the "2021年版" trap the R3 scout documented; `a476f4128186c7976671ab54` (S132, catcm.org.cn
-2021 notice page); `de34c41f76e5a5c0e1f4d1a2` (S131, gcpunion.org 〔2019〕80号 notice page); `4d89520fce540f1cf7cf9ef8`
-(S131, qilu-pharma repost); `9695437cac165bb4b6145deb` (S134, 湖南药事服务网 release page); `d2a1cf3d2c385daee67c4afd`
-(S137, phirda repost); `712ec7bb981a9669a6921db7` (S131, mp.weixin.qq.com — 311-byte text, bot wall);
-`c71776bc3084de059b84569d` (S133, forten-sp.aliyuncs PDF); `0cebd3c84524295839ceaadd` / `ad3010d2aee49a95e0c7cb0b`
-(takarabiomed PDFs, 1-byte text — image-only).
-
-## 6. Findings for the L1's C3 build (reported, not patched)
-
-1. **The three orphan `.txt` siblings exist in the git object store but not in the lane tree.** `git show
-   6f3276b:corpus/captures/<key>.txt` (commit `6f3276b` = jj keep-ref side commit
-   `refs/jj/keep/6f3276bc9ea52dfa711c6687efb0cfc3a25de34a`, **not** an ancestor of HEAD) yields blobs whose sha256
-   equals my recomputed recipe of the committed `.raw` (`c040bc85…`, `7ea529e5…`, `520f663e…` — MATCH for all three).
-   C3's `form_of()` reads `corpus/captures/<key>.txt` for a non-OLE/zip raw, so **a raw-only PDF yields no defined
-   form and cannot bind** as the lane stands.
-2. **Heading-rule check on those three blobs** (frozen rule, applied read-only): the gazette blob satisfies
-   `药品临床综合评价管理指南` as a heading (line `药品临床综合评价管理指南`, empty prefix) with `2021年版` present ⇒
-   R3-bindable material; the 抗肿瘤 blob's title is line-split (`抗肿瘤药品临床综合评价` / `技术指南`) and the 儿童 blob
-   likewise ⇒ **the R4/R6 titles are not a heading** in their `pdftotext -layout` forms (token `2022年版` is present
-   in both). Reported; no patch proposed.
-3. **In-store material that already passes the frozen heading+token rule** (counter's `heading_title` semantics):
-   `6f545e6c16b6b568ea3f591b` → R3 heading (line 3, empty prefix) + `2021年版` ✔; `a476f4128186c7976671ab54` →
-   `附件：药品临床综合评价管理指南（ 2021 年版 试行）` (R3 heading + token) ✔ and `国家卫生健康委办公厅关于规范开展药品
-   临床综合评价工作的通知` (R2 heading, prefix 10 chars) ✔; `de34c41f76e5a5c0e1f4d1a2` → `国家卫生健康委关于开展药品使用
-   监测和临床综合评价工作的通知` (R1 heading, prefix 7) ✔. No R4/R5/R6 heading exists in any store capture.
-4. `6fe041acddaa1f4e6f6e9775` and S130's `a42feae4448612f949cc715f` are **one document under two URL keys**
-   (identical raw sha `d01795dd…` and identical `.txt`) — the key count over-counts distinct documents by one.
-
-## 7. C2 state observed (frozen counter, read-only, at HEAD `e0e73e0`)
-
-`python3 corpus/evidence/round57/c2-count.py` → `SET=47 VERDICTS=47/47 REPRODUCED=41 DRIFTED=5 UNREACHABLE=1
-BYTE_BACKED=46 CONSISTENT=46/46 FLAGGED=0/0 C2=PASS`, exit 0; DRIFTED = S083 S087 S113 S114 S121, all `absent=0`
-(quotes still present) ⇒ no FRESHNESS-FLAG due. At dispatch the state was 43/47 with S100 S103 S105 S106 pending;
-attempt-2/3 rows have since landed S100 S103 S106, and S105 is now UNREACHABLE (3 timed-out attempts ≥600 s apart).
-Nothing in the frozen claim was modified.
-
-## 8. Housekeeping
-
-Scratch `/fast/scratch/hyaku/chousa-r57/R57W1ExecStoreMap/` (TMPDIR + PYTHONDONTWRITEBYTECODE=1 set there; <50 MB,
-nothing in /tmp) — **deleted before this report was filed**; only this report survives. Lane writes: this file only.
-No git/jj mutation anywhere; frozen counters run read-only, never edited; no capture re-fetched (no network access).
-
-VERDICT: the lane capture store was mapped (117 files / 60 keys / 58,051,237 B at 2026-10-27T08:53:36Z; 46 of 47
-pinned keys carry both siblings, 3 files lack a sibling, and the three orphans are the 2021 gazette / 抗肿瘤 2022 /
-儿童 2022 documents whose `.txt` forms live only in a non-ancestor side commit) — the map survived, and the
-orphan-`.txt` / R4-R6-heading gaps that block C3 binding are reported, not patched.
+VERDICT: the lane capture store was mapped (117 files / 60 keys / 58,051,237 B at 2026-10-27T08:53:36Z; 46 of 47 pinned keys carry both siblings, 3 files lack a sibling, and the three orphans are the 2021 gazette / 抗肿瘤 2022 / 儿童 2022 documents whose `.txt` forms live only in a non-ancestor side commit) — the map survived; the orphan-`.txt` and R4-R6-heading gaps that block C3 binding are reported, not patched.

@@ -1,0 +1,52 @@
+# Round 57 — chousa
+
+date: 2026-10-27
+claims: R57-C2 freshness (frozen `c2f914c`), R57-C3 depth sourced (frozen `fd95724`); claim base `6656f07`, lane master at close `f31a91b` (+ this lesson's commit)
+receipts: C2 after `corpus/evidence/round57/` (counter `c2-count.py`, record `refetch.tsv`); C3 after `corpus/evidence/round57/c3/` (counter `c3-count.py`, manifest `c3/spans.tsv`)
+
+## Gate
+
+### New SOURCES rows (each opened this round by the L1 under `corpus/evidence/round57/egress-approval.md`)
+
+- S131 — https://www.nmgyyxh.org.cn/nmgyyxh/zcfg/686cdcc3f266ba2c90c83be7.shtml — opened 2026-10-27. Located quote: `国家卫生健康委关于开展药品使用监测和临床综合评价工作的通知` (title line, char 271 of the defined form, capture `788d2e2f0191d7326b6ca03b.txt`) and `国卫药政函〔2019〕80号` (char 352). Admit: the 2019 notice R1, reposted by 内蒙古自治区药学会; tier B for the repost carrier.
+- S132 — https://www.catcm.org.cn/129/202107/1348.html — opened 2026-10-27. Located quote: `国家卫生健康委办公厅关于规范开展药品临床综合评价工作的通知` (document title, char 68; the manifest quote carries the page-title suffix `_中国中药协会` exactly as served). Admit: the 2021 notice R2, reposted by 中国中药协会; tier B for the carrier.
+- S133 — http://www.tcmevidence.net/UserFiles/upload/file/20230410/6381676262587201848492833.pdf — opened 2026-10-27. Located quote: `药品临床综合评价管理指南` (title, char 19) and `2021 年版试行` (char 54). Admit: the 2021 管理指南 as the 16号 notice attachment; tier B for the mirror.
+- Refused this round (no row): every located copy of the three 2022 technical guidelines — split-cover typesetting means the frozen heading rule fails; the entry's UNBOUND lines carry the per-reference sweep. The gcpunion R1 repost (`de34c41f…`) was fetched and refused: the title prints three times, so no unique-occurrence manifest quote exists; the nmgyyxh repost binds instead.
+
+### used-by changes (old → new, in place)
+
+- S118: `…, corpus/knowledge/grey-literature-field-china-r42.md` → `…, corpus/knowledge/grey-literature-field-china-r42.md, corpus/knowledge/normative-reference-chain-china-r57.md`
+- S127: `corpus/knowledge/grey-literature-field-china-r42.md` → `corpus/knowledge/grey-literature-field-china-r42.md, corpus/knowledge/normative-reference-chain-china-r57.md`
+
+### Quarantine verdicts (register slice, 24 rows; full evidence in the wave reports)
+
+The chousa slice of the campaign absent-defect register was hand-checked against the fresh lane-owned forms by four wave seats (batches A-D, `.ufo/waves/round-57/w1/R57W1Quar{A,B,C,D}.md`). Verdicts: S077 PRESENT (substance, in a committed artifact of the cited article), S080 PRESENT (substance), S082 ABSENT-as-written (defective transcription; the page prints `引用されている`, the quote has `引用している`), S084 PRESENT, S086 UNVERIFIABLE (no committed form since the cache deletion), S088 PRESENT, S093/S094/S104/S105/S108 ABSENT (each a misquote re-confirmed byte-stable against the round-43 absent-split on the fresh forms), S095 ABSENT (one of two quotes located), S110/S111/S114 ABSENT-as-written (substance present in the same capture), S112 ABSENT-as-written (third quote spliced across a column), S116 ABSENT by the strict rule (the -layout rendering is the artifact, not the document), S120 PRESENT (3/3 exact), S125 PRESENT (3/3, offsets reproduced), four prose-class rows UNVERIFIABLE-as-classified (`the gate block named no locator`). Zero rows support a fabrication verdict; the register's `payload-absent` class is falsified on every capturable row — a finding against the register's checker (its fold set drops bulleted/table joins), not against any lane row. Adoption stays closed; no registry row was edited.
+
+### Frontier
+
+- Census at round start (attempt 1, committed `corpus/evidence/round57/census-start.txt`): exit 0, five pre-existing W04; rows 130. Re-run this attempt before the after-measurement: identical output, exit 0. At round end: rows 133 (+S131, S132, S133), exit 0 (receipt in the report).
+- Sourced claim: R57-C3 rests on rows S131-S133 opened this round (Gate above); R57-C2's record is lane-internal (no SOURCES row needed).
+
+## Mistakes
+
+1. **landing (tool misroot)** — `tools/capture-fetch.py` first run wrote 86 capture files + `refetch.tsv` into the FLEET repo (`LANE = HERE.parents[1]` reached `/home/vgpnk/Projects/shokunin`); the C2 counter then printed every triple MISSING with no note. Captured-by: none — no lane criterion checks a tool's own root resolution; the counter's honest MISSING output caught it. Fix: `LANE = HERE.parent`; the misroot sweep (§3) copied the bytes back byte-exact (`cmp` clean), deleted the fleet copy, and `git -C` fleet status is clean; the sweep receipt is this row. Shown able to fail: the incident itself is the red receipt.
+2. **landing (record-less bytes)** — the wrap-up commit `b022b13` landed 14 captures with no fetch record; three (the hnysfww keys `d473754a…`, `d8b4f8f8…`) could not be bound because a registry URL was unrecoverable until this round's search re-derived two of them (same sha256 keys), and the fourth pinned key (`e3ca8f4f…`, S105) had to be deleted to let the frozen counter attest UNREACHABLE. Captured-by: none — the freeze's own predicate (a successful attempt row is mandatory) is the criterion. Fix: a capture and its fetch-record rows are one evidence unit; QUALITY candidate Q112 (scribe seat draft) states the criterion.
+3. **scope (seat write)** — a wave seat rewrote `corpus/evidence/round45/spans.tsv` in the lane working tree (S083's frozen pin replaced with this round's drift digest) before the sentinel seat (`R57W1SimpRound`) reported it; the L1 restored the file from the branch byte-exact (`git show master:…`). Captured-by: none in-wave (the write-scope bound is in every context; detection was the sentinel's hazard review). Fix: restored; the incident is reported and the wave-settled review names the authoring seat if its report admits the edit.
+4. **vacuous (grounding token)** — the C3 entry's first draft Inference bullet carried the numeral `2022`, which no cited span holds, and `tools/inference-ground.py` refused it (`INF_TOKEN_NOT_IN_SPAN`); a second draft bullet then carried no grounding token at all. Captured-by: `tools/inference-ground.py` itself (round-46 gate, QUALITY 66). Fix: bullets cite spans they quote; the counter receipt is the report's C3 block.
+
+## Corrections
+
+- Round-56 routed defect D1 (`corpus/lessons/round-56-verifier-spotcheck.md` §6 item 1): pending — the appended `#### Corrections (round 57)` block and the 表 10 mention sweep land with the integration commit; the scribe seat `R57W1ScribeD1` drafted the block and classified every `表 10` hit (report in the wave dir).
+
+## Manifest quotes (the c3 manifest rows, verbatim, for the IN_LESSON leg)
+
+- S127: `规范性引用而构成本文件必不可少的条款`
+- S127: `国家卫生健康委《关于开展药品使用监测和临床综合评价工作的通知》`
+- S118: `内容，形成《药品临床综合评价质量控制指南（2024 年版 讨论`
+- S118: `二〇二四年十二月`
+- S131: `国家卫生健康委关于开展药品使用监测和临床综合评价工作的通知`
+- S131: `国卫药政函〔2019〕80号`
+- S132: `国家卫生健康委办公厅关于规范开展药品临床综合评价工作的通知_中国中药协会`
+- S132: `为进一步贯彻落实党中央、国务院关于健全药品供应保障制度的决策部署`
+- S133: `药品临床综合评价管理指南`
+- S133: `2021 年版试行`

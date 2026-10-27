@@ -56,6 +56,40 @@ Both register rows carry the *fabrication class*. Neither quote is fabricated.
 
 So the register's `payload-absent` on both rows is an artifact of the checker's *form choice* (OLE never rendered; two-column PDF rendered with `-layout`), not evidence of a fabricated quote. Nothing here touches a frozen claim: under C2's numbering these captures are lane **S124** and **S086**, both **REPRODUCED**, and the DRIFTED set (S083 S087 S113 S114 S121) has `absent=0/m` on every row, so `FLAGGED=0/0` and `C2=PASS` stands unchanged (`SET=47 VERDICTS=47/47 REPRODUCED=41 DRIFTED=5 UNREACHABLE=1 BYTE_BACKED=46 CONSISTENT=46/46 FLAGGED=0/0 C2=PASS`, exit 0). Reported, not patched.
 
+## 5b. Wave-level convergence — the same artifact, measured independently by three seats
+
+Three seats now measure the same defect from disjoint rows — the strongest evidence this round produces that the register's `payload-absent` note ("cited source, companion URLs and local artifacts were all checked; the quote is in none of them") is unreliable as written.
+
+| seat | rows | form that hid the quote | measured result |
+|---|---|---|---|
+| R57W1QuarD (this seat) | register S125 (`.doc`), S116 (two-column PDF) | OLE never rendered; PDF rendered with `-layout` | q0/q1 exact @4625/@761; all 3 locate in reading order @4119/@4457/@11760 |
+| R57W1ReviewQuarMethod | register S120 (`.docx`) | `.txt` sidecar is zip bytes (`PK\x03\x04`) | 3/3 exact @8996/9020/9428 — **PRESENT**, re-verified by me |
+| R57W1QuarA | register S080, S082, S084, S088 | register checker re-joined the page's own list/table rendering | S080/S084/S088 **PRESENT**; S080's quoted string occurs **0** times in the cited `std.samr` capture but **exactly once** in sibling `b9ca2a4f…` @13300 (lane S122, the `openstd.samr.gov.cn` page) — the register row cut one page's rendering and cited another page's URL |
+
+I re-verified batch A's S080 cross-capture claim (`标准号：GB/T 7714-2025` → 0 hits in `adf6ba934e813b2c326fa150.txt`, 1 hit in `b9ca2a4fdf9455867534f144.txt` @13300 = lane **S122** = `http://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=…`), its anchor convention against `corpus/evidence/round54/build-spans.py:28-29` (span = quote + 80 chars context either side, so the quote begins at `offset+80`), and its landing claims (lane S098 @29482, S096 @3577, S123 @59201, S121 @477/537/1029/1048/1162/1797 — all land).
+
+**C2 calibration datum on lane S121** (batch A's finding; batch A corrected it and I re-verified every
+clause; reported, not patched). S121 is counted DRIFTED. What that does and does not mean:
+
+* The pin `4e46154f…` was the deleted `.qcache` blob — not a git object, no file here hashes to it
+  (`git cat-file -p 4e46154f4a84` → "fatal: Not a valid object name"). And there is **no pre-round-57
+  lane capture blob** to compare against: `git ls-tree --name-only 6656f077 corpus/captures/ | wc -l` →
+  **0** (the base tree's `corpus/` holds QUALITY/README/SOURCES/evidence/fixtures/knowledge/lessons
+  only), so "the re-fetch matches the lane's committed blob" compares two round-57 fetches and proves
+  nothing about page stability. (Batch A caught this in its own first draft; I had repeated it.)
+* The live rendering **did** change slightly: `.raw` 76252 → **76273** B (+21); `.txt` on disk 6626 →
+  **6650** B (+24); LF-normalised 3591 → **3599** chars (+8). (My earlier "5773 bytes" was the fresh
+  LF-normalised byte count — a base mismatch; like-for-like the fresh file is **larger**.)
+* The delta lies entirely **after** the last pinned quote: all six round-54 span slices are
+  **byte-identical in place** at their recorded offsets (S121-1 @397, -2 @457, -3 @949, -4 @968,
+  -5 @1082, -6 @1717 — each `fresh[off:off+len(span)] == span`, verified directly), and the last quoted
+  character ends at char **1826** of 3599.
+
+So DRIFTED here records that the whole-file digest differs from a pin whose bytes no longer exist on this
+host **and** that the live rendering differs slightly in its tail — it does **not** mean any pinned quote
+changed or is absent (`absent=0/6`, hence `FLAGGED=0/0`), the same distinction C2's own `absent=0/m`
+flagging logic makes. `C2=PASS` unchanged.
+
 ## 6. Prose-class rows S100`-S103` — UNVERIFIABLE as classified (never fabrication)
 
 | reg id | register class cell (the reason the register itself names) | cited-source cell | verdict |
@@ -66,17 +100,17 @@ Corroboration: register lines 269–272; the campaign's lint JSON (`quote-lint-f
 
 ## 7. Cross-check against batch C
 
-Batch C's item assigns S116 to itself with "the committed form is what matters; record whether the archive snapshot content itself contains the quote" — that is the **lane**-namespace S116 (web.archive PRISMA), answered in §4: **PRESENT**, all four lane anchors land in the committed `.txt` (5328 chars, `93558b6d4b0e`, REPRODUCED). The **register**-namespace S116 (aclanthology) is answered in §3/§5. Batch C must not read §5's "quotes are in the document" as a licence to skip the `-layout` check: the committed defined form does not contain them.
+Batch C's item assigns S116 with "the committed form is what matters; record whether the archive snapshot content itself contains the quote" — that is the **lane**-namespace S116 (web.archive PRISMA), answered in §4: **PRESENT**, all four lane anchors land (5328 chars, `93558b6d4b0e`, REPRODUCED). The **register**-namespace S116 (aclanthology) is answered in §3/§5; batch C must not read §5's "quotes are in the document" as a licence to skip the `-layout` check, since the committed defined form does not contain them.
 
 ## 8. Risks / blockers
 
-* **Namespace ambiguity is a wave-wide hazard**, not local to batch D: a seat that resolves "S125" in `corpus/SOURCES.md` (as the item texts do) audits a different document from the register row it must adjudicate. Batches A–D all carry this. The L1 should state one registry per row id.
-* The lane's gate tool still refuses to render OLE (`quarantine-check.py` verdict: "binary office document decoded as bytes, never rendered to text" for S095/S096/S120/S125), so its table cannot see the S125 quotes even though `tools/capture-text.py` can. A tool-coverage gap, reported not patched.
-* 18/20 register payload-absent URLs have a committed capture in the new store; register **S077** and **S086** have none (their URLs are absent from the lane registry) → `unverifiable`, no capture, batch A's rows. Flagged for the L1, not adjudicated here.
+* **Namespace ambiguity is a wave-wide hazard**, not local to batch D: a seat that resolves "S125" in `corpus/SOURCES.md` (as the item texts do) audits a different document from the register row it must adjudicate. Batches A–D all carry this; the L1 should state one registry per row id.
+* The lane's gate tool still refuses to render OLE/zip (`quarantine-check.py` verdict: "binary office document decoded as bytes, never rendered to text" for S095/S096/S120/S125), so its table cannot see the quotes `tools/capture-text.py` renders. Tool-coverage gap, reported not patched.
+* 18/20 register payload-absent URLs have a committed capture in the new store; register **S077** and **S086** have none (URLs absent from the lane registry) → `unverifiable`, no capture, batch A's rows. Flagged, not adjudicated here.
 * No egress: only committed bytes under `corpus/captures/` were read; `pdftotext` ran on a **committed `.raw`** copied into scratch. No tool was installed or upgraded (none needed).
 
 ## 9. Boundary
 
-Only file written: this report. Lane `git status --porcelain` shows no modification by this seat (only the L1's `refetch.tsv` and other seats' wave reports); fleet root and `shokuknow` show no modification by this seat. Scratch `/fast/scratch/hyaku/chousa-r57/R57W1QuarD/` (608 KB) was deleted before yield, per the round's scratch directive (`trap 'rm -rf -- "$S"' EXIT`).
+Only file written: this report. Lane `git status --porcelain` shows no modification by this seat (only the L1's `refetch.tsv` and other seats' wave reports); fleet root unmodified (0 lines); `shokuknow` unmodified by this seat. Scratch `/fast/scratch/hyaku/chousa-r57/R57W1QuarD/` (608 KB) deleted before yield per the round's scratch directive (`trap 'rm -rf -- "$S"' EXIT`); a second short-lived `R57W1QuarD2/` for the S120 re-verification also removed.
 
 **VERDICT: the quarantine hand-check (batch D) — the slice re-derives to 24 rows (20 payload-absent + 4 prose) as claimed; the four prose rows survive as UNVERIFIABLE-as-classified with the register's own reason; register rows S125 and S116 do NOT survive as fabrications (their quotes are present in the committed source bytes once the OLE `.doc` is rendered and the two-column PDF is read in reading order), while the lane-namespace S125/S116 survive as PRESENT with every recorded anchor reproduced; no edits.**
