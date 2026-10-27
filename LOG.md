@@ -1898,3 +1898,11 @@ on genuine committed data; provenance leg falsified by W2 replay”. The attempt
 `attempt3-sidecar-audits.md` was deleted and replaced by L1-rerun `sidecar-audits.md`; W2 results
 remain committed. The frozen claims also fail the lowest-scored-axis/plan obligation (operability
 3/10; C2/C3 target freshness/depth); L0 question `2c6edbab` asks the operator to rule admission.
+
+## Round 58 — span-builder hazards and the carrier alphabet by document (2026-10-27)
+
+Intake: the round-57 planned row names the build-spans hardening set (`R55W2SentBuilder`) and the S101 carrier-alphabet leg. Round-57 non-author spot-check commit `b13ca7b5c8bbb40d2d29a37fb443c64ca043f791` is the claim base. Claims frozen in `corpus/evidence/round58/claims.md` before any wave data; pre-data receipts `corpus/evidence/round58/controls/c1-before.txt` and `c2-before.txt`.
+
+- **C1 operability (lowest scored non-retired axis, 3/10).** Frozen counter `corpus/evidence/round58/c1-count.py`; base receipt records `EMPTY_OK=pass`, `HELDOUT_OK=pass`, `FOREIGN=fail` (base removes the unrelated span file), and the other hazard refusals fail their frozen reason checks. The target is exactly the safe/refusal battery in the frozen claim, not general security.
+- **C2 depth (sourced).** S101's committed HIT `.doc` capture (key `6dc68fd6b32ce9c8dfcebce8`, raw sha256 `6063a3aff7a4081e93a685f2721e2cd6b477ba84a841211e298bcddd6d9fddf3`) was opened this round through the pinned `tools/capture-text.py`; frozen quote set is `corpus/evidence/round58/c2/quotes.tsv`. The target is one entry binding the carrier-type alphabet and composite notation to those 12 located quotes.
+- **Freeze and controls.** C1's pinned r55 builder removes the foreign-file control; REFUSEALL also fails its target. C2's before receipt is missing-entry/manifest/used-by and `C2=FAIL`. Scratch for counters is under `/fast/scratch/hyaku/chousa-r58/`; no tool installed.
