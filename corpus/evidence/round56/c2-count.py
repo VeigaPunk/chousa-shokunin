@@ -1,0 +1,335 @@
+#!/usr/bin/env python3
+"""c2-count — frozen counter for round 56 claim C2 (depth, sourced).
+
+Predicate R56-C2, the same sentence as corpus/evidence/round56/claims.md:
+the grey-literature evidence-source row of the Chinese drug clinical
+comprehensive evaluation workflow standard enters the lane BY DOCUMENT as the
+lane entry `corpus/knowledge/grey-literature-field-china-r42.md`, which
+exists; of the four new documents it may rest on (the standard's text served
+by ttbz.org.cn, the standard's explanatory note served by ttbz.org.cn, the
+journal-hosted copy of the workflow guideline on journal.china-pharmacy.com,
+the national health commission's 2020 management guideline on nhc.gov.cn) at
+least three are BOUND — exactly one lane Registry row whose FIRST source-cell
+URL is the document's URL, that row new since BASE_REV, `mined`, opened
+2026-10-27, its `used-by` naming exactly the existing entries citing it (at
+least one), and every citing entry carrying a `source: <that id> — <url>`
+line — the standard's ttbz text among them, and every other one is REFUSED
+(no lane row, no `source:` line naming its URL in the entry, and a
+`refused-doc` line naming its URL in the round-56 lesson); the lane's issued
+quality-control guideline capture is cited, if at all, only as
+`source: S118 — <its url>` with S118's `used-by` naming the entry; no `S###`
+token appears in the entry except a bound id or S118 so cited; at BASE_REV no
+`corpus/knowledge` file held `中国循证医学中心`, and the entry holds it;
+`corpus/evidence/round56/spans.tsv` carries at least three quote rows per
+bound id, each quote at most 25 whitespace words and 160 characters, inside
+its span file, inside the entry and inside the round-56 lesson, each span
+file the exact slice, at the recorded offset, of the document's DEFINED text
+form whose file digest is the recorded one — for a capture whose `.raw` is an
+OLE compound file or a zip, the stdout of `tools/capture-text.py` as committed
+at BASE_REV run on the `.raw`, otherwise the `.txt` capture read with
+universal newlines — and longer than its quote; the round-51
+`quote-substance-check.py` exits 0 on the manifest; every `char N` in a bound
+row's `anchor` cell (at least one) is the offset of a quote of that id in that
+form; the entry exits 0 under `tools/inference-ground.py` with this manifest;
+and the lesson carries a re-check verdict line for each absent-defect-register
+row on a theme URL (the sweep prints how many: 0 at the freeze), with no bound
+document whose verdict is `fabricated` or `unverifiable`.
+
+C2 never runs a C1 artefact: the manifest may be built by any means and is
+judged against forms this counter derives itself (separability).
+`--lane-only` reads lane bytes only: `CAPTURE_BOUND` prints `skipped` and C2
+cannot pass.
+Cheapest shortcuts and what refuses them: the staged entry copied unchanged
+carries staged ids (S155 S156 S157, which name no lane row) and no new lane
+row (REF_ID_UNBOUND, BOUND); the adopter's mechanical rewrite binds ids but
+carries no quote, span or lesson (QUOTE legs); a hollow quote fails
+SUBSTANCE. Verdict-line truth and entailment are the closure's.
+
+Exit codes: 0 all counts hold · 1 a count failed · 2 usage/env.
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import importlib.util
+import pathlib
+import re
+import shutil
+import subprocess
+import sys
+import tempfile
+
+LANE = pathlib.Path(__file__).resolve().parents[3]
+CACHE = pathlib.Path("/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache")
+REGISTER = pathlib.Path("/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/absent-defect-register.md")
+BASE_REV = "e5a3795191601797613eb986b36fa0b1a73fe6a1"
+OPENED = "2026-10-27"
+E_GL = "corpus/knowledge/grey-literature-field-china-r42.md"
+ENTRIES = (E_GL,)
+MIN_ENTRIES = 1
+STD = "https://www.ttbz.org.cn/upload/file/20250407/6387963976070960491020144.pdf"
+NOTE = "https://www.ttbz.org.cn/upload/file/20250407/6387963977456239722441041.pdf"
+JRN = "https://journal.china-pharmacy.com/rc-pub/front/front-article/download/129333664/lowqualitypdf/%E8%8D%AF%E5%93%81%E4%B8%B4%E5%BA%8A%E7%BB%BC%E5%90%88%E8%AF%84%E4%BB%B7%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E6%8C%87%E5%8D%97.pdf"
+NHC = "https://www.nhc.gov.cn/yaozs/c100098/202011/6fe336283f69438e9b46f090bc2ec6d1/files/1732786237821_21413.pdf"
+QCG = "https://www.bjhea.org.cn/ueditor/php/upload/file/20250115/1736907153935975.pdf"
+HELD = {QCG: "S118"}
+# (citing entry, staged id in the package, document URL) — four new documents
+DOCS = [
+    (E_GL, "S168", STD),
+    (E_GL, "S156", NOTE),
+    (E_GL, "S155", JRN),
+    (E_GL, "S157", NHC),
+]
+MUST_BIND = STD
+ALIASES: dict[str, str] = {}
+TERMS = {E_GL: "中国循证医学中心"}
+MIN_BOUND = 3
+MIN_PER_ID = 3
+ID_RE = re.compile(r"\bS\d{3,}\b")
+ROW_RE = re.compile(r"^ {0,3}\|[ \t]*(S\d{3,})[ \t]*\|")
+CHAR_RE = re.compile(r"\bchar\s+(\d+)")
+VERDICT_RE = re.compile(r"register\s+`?(S\d{3,})`?.*?verdict[:=]?\s*\**`?(present|absent-as-written|unverifiable|fabricated)`?")
+
+
+def _base_tool():
+    """`tools/capture-text.py` as committed at BASE_REV, imported from a scratch copy."""
+    r = subprocess.run(["git", "-C", str(LANE), "show", f"{BASE_REV}:tools/capture-text.py"], capture_output=True)
+    if r.returncode != 0:
+        print("NO_BASE_TOOL")
+        sys.exit(2)
+    d = pathlib.Path(tempfile.mkdtemp(prefix="r56c2-"))
+    try:
+        t = d / "capture_text_base.py"
+        t.write_bytes(r.stdout)
+        spec = importlib.util.spec_from_file_location("capture_text_base", t)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+    finally:
+        shutil.rmtree(d, ignore_errors=True)
+    return mod
+
+
+def url_of(source: str) -> str:
+    m = re.search(r"https?://[^\s|]+", source)
+    if not m:
+        return ""
+    u = re.sub(r"/$", "", re.sub(r"#[^ ]*$", "", m.group(0)))
+    u = re.sub(r"^[A-Za-z]+://", "", u)
+    n = u.find("/")
+    return (u[:n].lower() + u[n:]) if n >= 0 else u.lower()
+
+
+def registry(text: str) -> list[list[str]]:
+    rows, inside = [], False
+    for line in text.splitlines():
+        s = line.lstrip(" ")
+        if len(line) - len(s) <= 3 and s.startswith("## "):
+            inside = s[3:].strip() == "Registry"
+            continue
+        if len(line) - len(s) <= 3 and s.startswith("# "):
+            inside = False
+            continue
+        if inside and ROW_RE.match(line):
+            rows.append([c.strip() for c in s.strip().split("|")[1:-1]])
+    return rows
+
+
+def key(url: str) -> str:
+    return hashlib.sha256(url.encode()).hexdigest()[:24]
+
+
+def defined_raw(b: bytes) -> bool:
+    return b[:8] == b"\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" or b[:4] == b"PK\x03\x04"
+
+
+_FORMS: dict[str, str | None] = {}
+
+
+def form_text(ct, url: str, digest: str) -> str | None:
+    """The DEFINED text form whose FILE digest is `digest`: an OLE/zip `.raw`
+    through the BASE capture-text (its `.txt` sidecar is never a form), else the
+    `.txt` capture with universal newlines."""
+    if (url, digest) in _FORMS:
+        return _FORMS[(url, digest)]
+    txt, raw = CACHE / f"{key(url)}.txt", CACHE / f"{key(url)}.raw"
+    rb = raw.read_bytes() if raw.is_file() else b""
+    out = None
+    if rb and defined_raw(rb):
+        if hashlib.sha256(rb).hexdigest() == digest:
+            try:
+                out = ct.text_form(str(raw))
+            except Exception:
+                out = None
+    elif txt.is_file() and hashlib.sha256(txt.read_bytes()).hexdigest() == digest:
+        out = txt.read_text(encoding="utf-8", errors="replace")
+    _FORMS[(url, digest)] = out
+    return out
+
+
+def safe_span(ev: pathlib.Path, raw: str) -> pathlib.Path | None:
+    raw = raw.strip()
+    if not raw or raw.startswith("/") or ".." in pathlib.PurePath(raw).parts:
+        return None
+    return ev / raw
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--root", default=str(LANE))
+    ap.add_argument("--lane-only", action="store_true")
+    a = ap.parse_args()
+    root = pathlib.Path(a.root)
+    ev = root / "corpus" / "evidence" / "round56"
+    sources = root / "corpus" / "SOURCES.md"
+    lesson_p = root / "corpus" / "lessons" / "round-56.md"
+    base = subprocess.run(["git", "-C", str(LANE), "show", f"{BASE_REV}:corpus/SOURCES.md"],
+                          capture_output=True, text=True)
+    if base.returncode != 0 or not REGISTER.is_file():
+        print("NO_BASE_OR_REGISTER")
+        return 2
+    bs = _base_tool()
+    base_ids = {r[0] for r in registry(base.stdout)}
+    rows = registry(sources.read_text(encoding="utf-8")) if sources.is_file() else []
+    texts = {p: (root / p).read_text(encoding="utf-8") for p in ENTRIES if (root / p).is_file()}
+    lesson = lesson_p.read_text(encoding="utf-8") if lesson_p.is_file() else ""
+
+    by_doc: dict[str, list[tuple[str, str]]] = {}
+    for entry, _sid, url in DOCS:
+        by_doc.setdefault(url_of(url), []).append((entry, url))
+    bound: dict[str, str] = {}      # lane id -> URL
+    nbound = refused = 0
+    for _u, pairs in by_doc.items():
+        url = pairs[0][1]
+        citing = sorted({e for e, _ in pairs if e in texts})
+        hits = [r for r in rows if len(r) == 11 and url_of(r[1]) == url_of(url)]
+        if len(hits) == 1 and citing:
+            r = hits[0]
+            used = sorted(c.strip() for c in r[10].split(","))
+            cites = all(re.search(r"^source:\s*" + r[0] + r"\s+—\s+" + re.escape(url) + r"(\s|$)",
+                                  texts.get(e, ""), re.M) for e in citing)
+            if r[0] not in base_ids and r[7] == "mined" and r[8] == OPENED and used == citing and cites:
+                bound[r[0]] = url
+                nbound += 1
+        elif not hits:
+            no_src = all(not re.search(r"^source:.*" + re.escape(url), t, re.M) for t in texts.values())
+            named = any("refused-doc" in l and url in l for l in lesson.splitlines())
+            refused += bool(no_src and named)
+
+    held_ok: set[str] = set()
+    held_bad = 0
+    for url, hid in HELD.items():
+        citing = sorted(e for e, t in texts.items() if re.search(r"^source:.*" + re.escape(url), t, re.M))
+        if not citing:
+            continue
+        hrow = [r for r in rows if len(r) == 11 and r[0] == hid and r[0] in base_ids and url_of(r[1]) == url_of(url)]
+        used = {c.strip() for c in hrow[0][10].split(",")} if len(hrow) == 1 else set()
+        good = all(re.search(r"^source:\s*" + hid + r"\s+—\s+" + re.escape(url) + r"(\s|$)", texts[e], re.M) and e in used
+                   for e in citing)
+        if good:
+            held_ok.add(hid)
+        else:
+            held_bad += 1
+    unb = sum(1 for t in texts.values() for i in ID_RE.findall(t) if i not in bound and i not in held_ok) + held_bad
+
+    new_ground = 0
+    held_terms = subprocess.run(["git", "-C", str(LANE), "grep", "-l"] + [x for tm in TERMS.values() for x in ("-e", tm)] + [BASE_REV, "--", "corpus/knowledge"],
+                                capture_output=True, text=True)
+    for entry, term in TERMS.items():
+        new_ground += held_terms.returncode == 1 and entry in texts and term in texts[entry]
+    refused_entries = [p for p in ENTRIES if p not in texts
+                       and any("refused-entry" in l and p in l for l in lesson.splitlines())]
+
+    man = ev / "spans.tsv"
+    mrows = [l.split("\t") for l in man.read_text(encoding="utf-8").splitlines()[1:] if l.strip()] if man.is_file() else []
+    n = len(mrows)
+    in_span = in_entry = in_lesson = short = ctx = cap_bound = on_bound = 0
+    per_id: dict[str, int] = {}
+    offsets: dict[str, set[int]] = {}
+    for r in mrows:
+        if len(r) != 7:
+            continue
+        sid, url, digest, offset, span_file, quote, entry = (c.strip() if i != 5 else c for i, c in enumerate(r))
+        p = safe_span(ev, span_file)
+        span = p.read_text(encoding="utf-8") if p and p.is_file() else ""
+        per_id[sid] = per_id.get(sid, 0) + 1
+        on_bound += bound.get(sid) == url
+        in_span += bool(quote and quote in span)
+        in_entry += bool(quote and quote in texts.get(entry, ""))
+        in_lesson += bool(quote and quote in lesson)
+        short += len(quote.split()) <= 25 and len(quote) <= 160
+        ctx += offset.isdigit() and len(span) > len(quote)
+        if offset.isdigit() and quote and quote in span:
+            offsets.setdefault(sid, set()).add(int(offset) + span.find(quote))
+        if not a.lane_only and offset.isdigit() and span:
+            ft = form_text(bs, url, digest)
+            o = int(offset)
+            cap_bound += ft is not None and ft[o:o + len(span)] == span
+    ids_ok = sum(per_id.get(sid, 0) >= MIN_PER_ID for sid in bound)
+
+    subst = LANE / "corpus" / "evidence" / "round51" / "quote-substance-check.py"
+    substance = (subst.is_file() and man.is_file() and
+                 subprocess.run([sys.executable, str(subst), str(man)], capture_output=True, text=True).returncode == 0)
+
+    anchors = 0
+    for r in rows:
+        if len(r) == 11 and r[0] in bound:
+            chars = [int(c) for c in CHAR_RE.findall(r[5])]
+            anchors += bool(chars) and all(c in offsets.get(r[0], set()) for c in chars)
+
+    grounded = 0
+    tool = root / "tools" / "inference-ground.py"
+    for path in ENTRIES:
+        if path not in texts or not tool.is_file():
+            continue
+        p = subprocess.run([sys.executable, str(tool), "--entry", str(root / path), "--spans", str(man),
+                            "--counts", "/dev/null", "--registry", str(sources), "--root", str(root), "--quiet"],
+                           capture_output=True, text=True)
+        grounded += p.returncode == 0
+
+    theme = {url_of(u): u for _e, _s, u in DOCS}
+    theme.update({url_of(k): v for k, v in ALIASES.items()})
+    reg_ids: dict[str, str] = {}
+    for line in REGISTER.read_text(encoding="utf-8").splitlines():
+        f = line.split("|")
+        if len(f) > 6 and "`chousa`" in f[1] and re.search(r"round[0-9]+", f[2]) and re.search(r"S[0-9]+", f[3]):
+            u = url_of(f[5])
+            if u in theme:
+                reg_ids[re.search(r"S[0-9]+", f[3]).group(0)] = theme[u]
+    verdicts: dict[str, str] = {}
+    for line in lesson.splitlines():
+        m = VERDICT_RE.search(line)
+        if m and m.group(1) in reg_ids:
+            verdicts[m.group(1)] = m.group(2)
+    blocked = sum(1 for rid, v in verdicts.items()
+                  if v in ("fabricated", "unverifiable") and reg_ids[rid] in bound.values())
+
+    print(f"ENTRIES={len(texts)}/{len(ENTRIES)} (min {MIN_ENTRIES}) REFUSED_ENTRIES={len(refused_entries)}")
+    print(f"HELD_CITED={','.join(sorted(held_ok)) or '-'} HELD_BAD={held_bad}")
+    print(f"BOUND={nbound}/{len(by_doc)} (min {MIN_BOUND}) REFUSED={refused}")
+    print(f"BOUND_IDS={','.join(sorted(bound))} GUIDELINE_BOUND={'yes' if MUST_BIND in bound.values() else 'no'}")
+    print(f"REF_ID_UNBOUND={unb}")
+    print(f"NEW_GROUND={new_ground}/{len(texts)}")
+    print(f"QUOTE_ROWS={n} ON_BOUND={on_bound}/{n}")
+    print(f"SPAN_IDS={ids_ok}/{nbound} (min {MIN_PER_ID} each)")
+    print(f"QUOTES_IN_SPAN={in_span}/{n}")
+    print(f"QUOTES_IN_ENTRY={in_entry}/{n}")
+    print(f"QUOTES_IN_LESSON={in_lesson}/{n}")
+    print(f"QUOTE_SHORT={short}/{n}")
+    print(f"SPAN_CONTEXT={ctx}/{n}")
+    print("CAPTURE_BOUND=skipped" if a.lane_only else f"CAPTURE_BOUND={cap_bound}/{n}")
+    print(f"SUBSTANCE={'PASS' if substance else 'FAIL'}")
+    print(f"ANCHOR_BOUND={anchors}/{nbound}")
+    print(f"INFERENCE_GROUNDED={grounded}/{len(texts)}")
+    print(f"QUARANTINE_VERDICTS={len(verdicts)}/{len(reg_ids)} ({','.join(sorted(reg_ids))})")
+    print(f"QUARANTINE_BLOCKED_ADOPTED={blocked}")
+    ok = (len(texts) >= MIN_ENTRIES and len(texts) + len(refused_entries) == len(ENTRIES)
+          and nbound >= MIN_BOUND and nbound + refused == len(by_doc) and MUST_BIND in bound.values() and unb == 0
+          and new_ground == len(texts) and n > 0 and on_bound == n and ids_ok == nbound and in_span == n
+          and in_entry == n and in_lesson == n and short == n and ctx == n and not a.lane_only and cap_bound == n
+          and substance and anchors == nbound and grounded == len(texts) and len(verdicts) == len(reg_ids) and not blocked)
+    print("C2=PASS" if ok else "C2=FAIL")
+    return 0 if ok else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -1,0 +1,74 @@
+# R56-C1 control HOOKONLY — gate = round-56 c1-gate.py (hook closed), battery = round-55 controls
+$ python3 corpus/evidence/round56/c1-count.py --gate corpus/evidence/round56/c1-gate.py --battery $S/r55ctl
+gate=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-gate.py sha256=e3cb3ec5764592553b8601a1718bb5d07fd8c9991de9f4128482d41ffd4e4971
+builder=/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/build-spans.py sha256=1ed2650af28ea8e392bc34f7259cfb58f93b05c7453aca60e86b170c59c80bf6
+battery delegate.py sha256=e2aaca670f1be0986297ed47fadc16d85e680221a92c341f5457c727f49352c4
+battery r54shim.py sha256=0d924c488ddfdb2007dcaf80a206a78285de4ffca16ef9e1abd2877d95e6965c
+battery txtonly.py sha256=e23efd14562645147e3d65d8986314cb074069b5c55c13a090d8fef60959065b
+CANDIDATE=2/2 seed7=(0, 'PASS', 'PASS', 'PASS', 'PASS') seed56=(0, 'PASS', 'PASS', 'PASS', 'PASS')
+MUTANT M1 NO_SLICE SURVIVED
+MUTANT M2 NO_CHAR SURVIVED
+MUTANT M3 NO_SHA SURVIVED
+MUTANT M4 NO_QUOTE SURVIVED
+MUTANT M5 NO_EXTRA SURVIVED
+MUTANT M6 REF_TSV SURVIVED
+MUTANT M7 ALLOW_ROOT SURVIVED
+MUTANT M8 NO_ORACLE_SHA SURVIVED
+MUTANT M9 WIN_NL KILLED by CANDIDATE: seed 7 order mGmGGm: G=(0, 'PASS', 'PASS', 'PASS', 'PASS') mutant=(1, 'FAIL', 'FAIL', 'PASS', 'PASS')
+PROBE P1 FORKEXEC DENIED seed7=(1, 'FAIL', 'FAIL', 'FAIL', 'FAIL') seed56=(1, 'FAIL', 'FAIL', 'FAIL', 'FAIL')
+PROBE P2 DIRFD DENIED seed7=(1, 'FAIL', 'FAIL', 'FAIL', 'FAIL') seed56=(1, 'FAIL', 'FAIL', 'FAIL', 'FAIL')
+RUNS=24
+CANDIDATE=2/2 KILLED=1/9 DENIED=2/2
+C1=FAIL
+exit=1
+
+# R56-C1 control JUNK — gate = c1-gate.py, battery = build-c1-junk.py output (incl. the alternating FLIP forge)
+$ python3 corpus/evidence/round56/controls/build-c1-junk.py $S/junk && python3 corpus/evidence/round56/c1-count.py --battery $S/junk
+gate=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-gate.py sha256=e3cb3ec5764592553b8601a1718bb5d07fd8c9991de9f4128482d41ffd4e4971
+builder=/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/build-spans.py sha256=1ed2650af28ea8e392bc34f7259cfb58f93b05c7453aca60e86b170c59c80bf6
+battery junk-copy0.py sha256=db3570497ad75b1f0168b9a9e2eca7689b70e97035c34d1e7873b96e305b9ecc
+battery junk-copy1.py sha256=d2a8b328c540c3cbf688adf4e06d986a6722e13ad0b8fd19a6714712621960c5
+battery junk-flip0.py sha256=052e82f21b1621f6a423e68e274d876f968614210d8ee6de4eec2ee279820439
+battery junk-refuse0.py sha256=da37f76da2bac682dbaf38b259ee0496dffc4b893e3c564e9956b423c2071515
+battery junk-refuse1.py sha256=52be25d3c6d273dfe87709bee4e870c93e755c68349b56caaf2cc444fd2c574f
+battery junk-refuse2.py sha256=b280d15a079d1574d0090db5be47df73e5418c24578d6a888dcbfc607307213b
+battery junk-refuse3.py sha256=05926a8396ebde024b9a5e620a983f5a4109c9e3657cf670eac8a3fa95078ce2
+battery junk-zero0.py sha256=243821d85c874f0d280a9c63fab08c77ad16408339dc01f4dd4ab09daac14f18
+battery junk-zero1.py sha256=e5d2d149a5bdd4bb5cbd27be506c32edff17bbde43043fcb3a169bb9d23a2e4a
+CANDIDATE=2/2 seed7=(0, 'PASS', 'PASS', 'PASS', 'PASS') seed56=(0, 'PASS', 'PASS', 'PASS', 'PASS')
+MUTANT M1 NO_SLICE SURVIVED
+MUTANT M2 NO_CHAR SURVIVED
+MUTANT M3 NO_SHA SURVIVED
+MUTANT M4 NO_QUOTE SURVIVED
+MUTANT M5 NO_EXTRA SURVIVED
+MUTANT M6 REF_TSV SURVIVED
+MUTANT M7 ALLOW_ROOT SURVIVED
+MUTANT M8 NO_ORACLE_SHA SURVIVED
+MUTANT M9 WIN_NL KILLED by CANDIDATE: seed 7 order GmGmmG: G=(0, 'PASS', 'PASS', 'PASS', 'PASS') mutant=(1, 'FAIL', 'FAIL', 'PASS', 'PASS')
+PROBE P1 FORKEXEC DENIED seed7=(1, 'FAIL', 'FAIL', 'FAIL', 'FAIL') seed56=(1, 'FAIL', 'FAIL', 'FAIL', 'FAIL')
+PROBE P2 DIRFD DENIED seed7=(1, 'FAIL', 'FAIL', 'FAIL', 'FAIL') seed56=(1, 'FAIL', 'FAIL', 'FAIL', 'FAIL')
+RUNS=36
+CANDIDATE=2/2 KILLED=1/9 DENIED=2/2
+C1=FAIL
+exit=1
+
+# R56-C1 control EMPTY — default invocation at the freeze (battery dir absent)
+$ python3 corpus/evidence/round56/c1-count.py
+gate=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-gate.py sha256=e3cb3ec5764592553b8601a1718bb5d07fd8c9991de9f4128482d41ffd4e4971
+builder=/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/build-spans.py sha256=1ed2650af28ea8e392bc34f7259cfb58f93b05c7453aca60e86b170c59c80bf6
+CANDIDATE=2/2 seed7=(0, 'PASS', 'PASS', 'PASS', 'PASS') seed56=(0, 'PASS', 'PASS', 'PASS', 'PASS')
+MUTANT M1 NO_SLICE SURVIVED
+MUTANT M2 NO_CHAR SURVIVED
+MUTANT M3 NO_SHA SURVIVED
+MUTANT M4 NO_QUOTE SURVIVED
+MUTANT M5 NO_EXTRA SURVIVED
+MUTANT M6 REF_TSV SURVIVED
+MUTANT M7 ALLOW_ROOT SURVIVED
+MUTANT M8 NO_ORACLE_SHA SURVIVED
+MUTANT M9 WIN_NL KILLED by CANDIDATE: seed 7 order GmGmGm: G=(0, 'PASS', 'PASS', 'PASS', 'PASS') mutant=(1, 'FAIL', 'FAIL', 'PASS', 'PASS')
+PROBE P1 FORKEXEC DENIED seed7=(1, 'FAIL', 'FAIL', 'FAIL', 'FAIL') seed56=(1, 'FAIL', 'FAIL', 'FAIL', 'FAIL')
+PROBE P2 DIRFD DENIED seed7=(1, 'FAIL', 'FAIL', 'FAIL', 'FAIL') seed56=(1, 'FAIL', 'FAIL', 'FAIL', 'FAIL')
+RUNS=12
+CANDIDATE=2/2 KILLED=1/9 DENIED=2/2
+C1=FAIL
+exit=1
