@@ -4,7 +4,13 @@ author: chousa L1 (hyaku run 9, `ChousaR56`) · date: 2026-10-27 · base `e5a379
 
 ## Mistakes
 
-(filled after the wave settles; see below)
+| class | evidence pointer | captured-by | fix |
+|---|---|---|---|
+| 1. a gate counter's first draft scored an equivalent mutant and a kill rule an alternating tool forges (M9 dropped one of two newline guards; any verdict-vector difference counted as a kill) — found by the L1's own control runs before the freeze | `corpus/evidence/round56/claims.md` "Pre-freeze counter fixes"; wave `R56DraftMistakes` §1 (`EXTRA={}` run → `MUTANT M9 WIN_NL SURVIVED … KILLED=8/9`; parity-aligned FLIP run produces M3's marker without the violation); the `mGmG` FLIP kill is in no committed receipt — the committed JUNK receipt prints `KILLED=1/9` | none — QUALITY 28 binds a landed tool's mutants, QUALITY 33 binds lesson sentences | QUALITY 106 and 107; the frozen rule (clause reason, triplicate random order, both seeds); shown able to fail by the two scratch runs |
+| 2. a report cited measurement revisions its receipts do not name (round-55 D3) | `.ufo/reports/round-55/chousa.md` C2/C3 lines; `corpus/evidence/round55/c2-measure-after.txt:1`, `c3-measure-after.txt:1` (`5a35ebd6`) | QUALITY 9 in letter; no check read a report's citations | QUALITY 108; correction in `corpus/lessons/round-55.md` `## Corrections`; this round's report cites receipt-header revisions only; check shown able to fail (wave `R56DraftMistakes` §2: `UNNAMED=3`, exit 1) |
+| 3. this round's entry (first commit `99eff0ec`) placed the journal's 灰色文献 row in 表 10 — the two-column page's text form prints 表 10's title on the line above the row; the row is 表7's | waves `R56GroundJournal` F1, `R56DraftGate` F1, `R56CritCurrency`; pdftotext order `表7 13013 < 灰色文献 13591 < 表8 13653 < 表 10 14566` | none — QUALITY had no layout criterion for table attribution | QUALITY 109; entry, S129 row and quote table corrected (the `表7` title quote at char 20520 replaces the 表 10 title quote); C2 re-measured after the fix |
+
+Round 55's D1 class (filed before the waves settled) is homed in `corpus/lessons/round-55.md` row 4 and is not re-entered: this round waited for `WAVE-DONE w1` before filing.
 
 ## Spot-check intake
 
@@ -66,7 +72,7 @@ S127 [1, 1, 1], S128 [0, 0, 2], S129 [1, 1, 2], S130 [0, 0, 0], S118 [0, 0, 0].
 | S128 | 4792 | （下简称为“管理指南”）。2022 年，国家药物和卫生技术综合评估中心（“国 |
 | S129 | 10 | 药品临床综合评价工作流程指南Δ |
 | S129 | 3590 | China Pharmacy 2025 Vol. 36 No. 19   ·2353· |
-| S129 | 22539 | 表 10   其他研究的研究类型、研究方法及内容 |
+| S129 | 20520 | 表7    药品临床综合评价的信息来源情况 |
 | S129 | 22564 | 灰色文献 未公开发表的研究信息，可能包含了最新的研究成果和观点           Ⅰ级    A |
 | S129 | 8950 | A        推荐，证据极有效（证据等级为Ⅰ级） |
 | S129 | 748 | 研究方法建立研究证据，采用中国循证医学中心的证据分级体系进行证据分级评价，采用牛津大学循证医学中心制定的推荐强度 |
