@@ -22,8 +22,12 @@ judged on it and capped accordingly.
 
 W1 `R54ReviewOleTool` F1: the Clx walk trusted a signed `cbGrpprl`, so a malformed `.doc` hung the
 tool or exited 1 with a Traceback instead of `REFUSED ole-malformed`. The landed tool bounds it
-(`Prc GrpPrl outside the Clx`). Further tool changes from W1 seats, if any, are listed in
-`measure-after.txt` with the tool sha256 the after-measurement ran on. No frozen leg reaches the Clx
+(`Prc GrpPrl outside the Clx`). W1 `R54ReviewOleSpec` found the OLE form emitted tracked-deleted text as
+live text (its OOXML form drops `w:delText`); the landed tool reads the CHPX FKP pages of the PlcBteChpx and
+drops runs carrying sprmCFRMarkDel (fixture `corpus/fixtures/capture-text-ole/tracked.doc`, check
+`tracked-deletion-check.py`: candidate FAIL, landed PASS). Hidden text stays emitted in both forms (named in
+the docstring). The five pinned captures' text forms are byte-identical before and after both changes
+(sha256 of each, L1 run), and the after-measurement in `measure-after.txt` names the tool sha256 it ran on. No frozen leg reaches the Clx
 walk (W1 `R54ReviewOleTool` F2), so the frozen counter cannot see this fix either way.
 
 ## E3 — the r37 entry's S101 leg cut in round

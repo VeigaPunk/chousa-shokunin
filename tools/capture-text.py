@@ -31,7 +31,11 @@ boxes are not in it), with: 0x0D paragraph end, 0x0B line break, 0x0C page or
 section break and 0x07 cell or row end each a newline; 0x09 a tab; 0x1E a `-`;
 a field emits only its result (from 0x13 to 0x14 the field code is dropped,
 the 0x13/0x14/0x15 marks emit nothing; a field with no separator emits
-nothing); every other code point below 0x20 emits nothing. OLE refusals name
+nothing); a run whose character properties (the CHPX FKP pages of the
+PlcBteChpx) carry sprmCFRMarkDel — a tracked deletion — emits nothing, while
+tracked insertions and hidden (vanish) text are emitted, as in the OOXML form
+(round 54, W1 `R54ReviewOleSpec`); every other code point below 0x20 emits
+nothing. OLE refusals name
 their class first: `ole-not-word` (no `WordDocument` stream, or a stream that
 is not a Word 97+ FIB), `ole-encrypted` (fEncrypted or fObfuscated set),
 `ole-malformed` (a sector, chain, directory entry, Clx or piece outside its
@@ -58,6 +62,7 @@ stdout) or usage.
 from __future__ import annotations
 
 import argparse
+import bisect
 import posixpath
 import urllib.parse
 import sys
@@ -236,6 +241,46 @@ def cp1252(b: bytes) -> str:
     return "".join(bytes([c]).decode("cp1252", errors="ignore") or chr(c) for c in b)
 
 
+def deleted_runs(wd: bytes, table: bytes, fc: int, lcb: int) -> list[tuple[int, int]]:
+    """WordDocument byte ranges whose character properties carry sprmCFRMarkDel (a tracked
+    deletion), read from the PlcBteChpx and its 512-byte CHPX FKP pages."""
+    if lcb == 0:
+        return []
+    if lcb < 12 or (lcb - 4) % 8 or fc + lcb > len(table):
+        raise Refused("ole-malformed: PlcBteChpx outside the table stream")
+    n = (lcb - 4) // 8
+    runs = []
+    for pn in struct.unpack_from(f"<{n}I", table, fc + 4 * (n + 1)):
+        page = wd[(pn & 0x3FFFFF) * 512:(pn & 0x3FFFFF) * 512 + 512]
+        crun = page[511] if len(page) == 512 else 0
+        if len(page) != 512 or 5 * crun + 4 > 511:
+            raise Refused("ole-malformed: CHPX FKP page outside WordDocument")
+        fcs = struct.unpack_from(f"<{crun + 1}I", page, 0)
+        for r in range(crun):
+            b = page[4 * (crun + 1) + r] * 2
+            if b and b < 511 and fcs[r] < fcs[r + 1] and marks_deleted(page[b + 1:b + 1 + page[b]]):
+                runs.append((fcs[r], fcs[r + 1]))
+    return sorted(runs)
+
+
+def marks_deleted(grpprl: bytes) -> bool:
+    i = 0
+    while i + 2 <= len(grpprl):
+        sprm = grpprl[i] | grpprl[i + 1] << 8
+        i += 2
+        spra = sprm >> 13
+        if spra == 6:
+            if i >= len(grpprl):
+                return False
+            size = grpprl[i] + 1
+        else:
+            size = (1, 1, 2, 4, 2, 2, 0, 3)[spra]
+        if sprm == 0x0800 and i < len(grpprl) and grpprl[i] in (1, 0x81):
+            return True
+        i += size
+    return False
+
+
 def doc_text_form(data: bytes) -> str:
     cfb = Cfb(data)
     wd = cfb.stream("WordDocument")
@@ -260,6 +305,7 @@ def doc_text_form(data: bytes) -> str:
         if cb < 34:
             raise Refused("ole-malformed: FibRgFcLcb too short for fcClx")
         fc_clx, lcb_clx = struct.unpack_from("<II", wd, pos + 33 * 8)
+        fc_bte, lcb_bte = struct.unpack_from("<II", wd, pos + 12 * 8)
     except struct.error:
         raise Refused("ole-malformed: FIB shorter than its declared counts")
     table = cfb.stream("1Table" if flags & 0x0200 else "0Table")
@@ -283,6 +329,13 @@ def doc_text_form(data: bytes) -> str:
         raise Refused("ole-malformed: PlcPcd size")
     n = (lcb - 4) // 12
     cps = struct.unpack_from(f"<{n + 1}I", plc, 0)
+    deleted = deleted_runs(wd, table, fc_bte, lcb_bte)
+    starts = [a for a, _ in deleted]
+
+    def live(fc: int) -> bool:
+        j = bisect.bisect_right(starts, fc) - 1
+        return j < 0 or fc >= deleted[j][1]
+
     parts: list[str] = []
     for k in range(n):
         cp0, cp1 = cps[k], cps[k + 1]
@@ -297,11 +350,13 @@ def doc_text_form(data: bytes) -> str:
             raw = wd[off:off + cnt]
             if len(raw) != cnt:
                 raise Refused("ole-malformed: compressed piece outside WordDocument")
-            parts.append(cp1252(raw))
+            parts.append(cp1252(bytes(c for x, c in enumerate(raw) if live(off + x)) if deleted else raw))
         else:
             raw = wd[fcv:fcv + 2 * cnt]
             if len(raw) != 2 * cnt:
                 raise Refused("ole-malformed: piece outside WordDocument")
+            if deleted:
+                raw = b"".join(raw[2 * x:2 * x + 2] for x in range(cnt) if live(fcv + 2 * x))
             parts.append(raw.decode("utf-16-le", errors="replace"))
     out, stack = [], []  # stack: per open field, True while inside its code
     for ch in "".join(parts):
