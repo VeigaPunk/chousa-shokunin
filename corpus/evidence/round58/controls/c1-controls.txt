@@ -1,0 +1,21 @@
+Command: `python3 corpus/evidence/round58/c1-count.py --builder tools/build-spans.py --work /fast/scratch/hyaku/chousa-r58/c1-controls-final --controls corpus/evidence/round58/controls` (exit 1 expected: base candidate fails)
+
+EMPTY_OK=pass
+REBUILD_OK=pass
+FOREIGN=fail(rc=0, orphans deleted: foreign gone=True)
+SYMLINK_OUT=fail(rc=0, expected refusal)(target-dir-written!)
+SYMLINK_CACHE=fail(rc=0, expected refusal)
+FIFO_TXT=fail(rc=1, reason ['NOT_REGULAR', 'FIFO', 'REGTYPE', 'SYMLINK'] absent in 'build-spans: refused S571: no defined text form for f4088c6d6da1f4763182a51d (raw neither OLE nor zip, no .txt)')
+DEVZERO_TXT=fail(rc=1, reason ['NOT_REGULAR', 'SIZE', 'SYMLINK', 'REGTYPE'] absent in 'build-spans: refused S581: no defined text form for a172f04219497476db868414 (raw neither OLE nor zip, no .txt)')
+FAT_RAW=fail(rc=1, reason ['SIZE'] absent in 'build-spans: refused S551: capture-text refused f96cbd6d82dbae8a8e2c6223.raw: ole-malformed: sector shift 0, mini shift 0')
+MANY_QUOTES=fail(rc=0, expected refusal)
+ESCAPE_ENTRY=pass(refused)
+HELDOUT_OK=pass
+BEFORE_FOREIGN=deleted
+CONTROL_REFUSEALL=denied
+CONTROL_build-spans-r55=denied
+DENIED=2/2
+SUMMARY OK=4/4 REFUSE=0/7 BEFORE_FOREIGN=deleted DENIED=2/2
+C1=FAIL
+
+Interpretation: controls do not reach C1=PASS; frozen base currently fails its hazard predicate. `BEFORE_FOREIGN=deleted` independently demonstrates that the target's destructive leg can fail on the pinned r55 builder. No claim of C1 improvement is made by this receipt.

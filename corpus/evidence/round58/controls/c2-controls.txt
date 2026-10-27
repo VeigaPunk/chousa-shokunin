@@ -1,0 +1,37 @@
+Builder: `python3 corpus/evidence/round58/controls/build-c2-controls.py --work /fast/scratch/hyaku/chousa-r58/c2-controls` → `CONTROLS=STAGED,REWRITE`.
+
+Control command: `python3 corpus/evidence/round58/c2-count.py --root /fast/scratch/hyaku/chousa-r58/c2-controls/STAGED --work /fast/scratch/hyaku/chousa-r58/c2-count-STAGED` (exit 1 expected):
+
+ENTRIES=1/1 BOUND=0/1 REF_ID_UNBOUND=1
+QUOTE_ROWS=0/12 CAPTURE_BOUND=0/12 ENTRY_QUOTES=0/12
+SUBSTANCE=FAIL ANCHOR_BOUND=0/3 INFERENCE_GROUNDED=no STRAY_IDS=- NEW_GROUND=no REBUILD=FAIL
+ERROR REF_ID_UNBOUND
+ERROR BUILDER_PIN
+ERROR CAPTURE_TEXT_PIN
+ERROR RAW_PIN
+ERROR QUOTES_MISSING
+ERROR MANIFEST_MISSING
+ERROR CAPTURE_BOUND=0/12
+ERROR ANCHOR_BOUND=0/3
+ERROR ENTRY_QUOTES=0/12
+ERROR NEW_GROUND_FAIL
+C2=FAIL
+
+Control command: `python3 corpus/evidence/round58/c2-count.py --root /fast/scratch/hyaku/chousa-r58/c2-controls/REWRITE --work /fast/scratch/hyaku/chousa-r58/c2-count-REWRITE` (exit 1 expected):
+
+ENTRIES=1/1 BOUND=0/1 REF_ID_UNBOUND=1
+QUOTE_ROWS=0/12 CAPTURE_BOUND=0/12 ENTRY_QUOTES=0/12
+SUBSTANCE=FAIL ANCHOR_BOUND=0/3 INFERENCE_GROUNDED=no STRAY_IDS=- NEW_GROUND=no REBUILD=FAIL
+ERROR REF_ID_UNBOUND
+ERROR BUILDER_PIN
+ERROR CAPTURE_TEXT_PIN
+ERROR RAW_PIN
+ERROR QUOTES_MISSING
+ERROR MANIFEST_MISSING
+ERROR CAPTURE_BOUND=0/12
+ERROR ANCHOR_BOUND=0/3
+ERROR ENTRY_QUOTES=0/12
+ERROR NEW_GROUND_FAIL
+C2=FAIL
+
+Both controls are intentionally minimal unbound/paraphrased roots and cannot reach C2=PASS; their rejection is conservative because they also omit the frozen manifest/capture.
