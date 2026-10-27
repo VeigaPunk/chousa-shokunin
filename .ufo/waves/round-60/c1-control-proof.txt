@@ -1,0 +1,5 @@
+The frozen claim's do-nothing predicate was scored before dispatch at claim-base b379919a873e7080a31ef92c7002f55f5374e2c6 using the original round-58 counter and its lane-pinned controls:
+
+1. `python3 -B corpus/evidence/round58/c1-count.py --builder tools/research-gate.sh --work /fast/scratch/hyaku/chousa-r60/L1/control-original` is NOT the selected C1 counter target: expected builder CLI interface mismatch, excluded.
+2. The claim target is not met by not changing the C1 counter: positive C1 counter forgery shown in prior settled evidence W1 R59Executor09.md, with base counter all seven hazards failing yet `C1=PASS`.
+3. This round's counter implementation proof is `c1-before.txt`: its target probe returns `C1=FAIL` on base builder because candidate and r55 both delete foreign file; output injection is also rejected. This proves C1's exact post-change target is not already present at base.

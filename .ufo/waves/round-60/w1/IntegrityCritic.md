@@ -1,0 +1,29 @@
+# IntegrityCritic — round-60 frozen-claim counter-review
+
+Scope: frozen claims SHA-256 `09d8053f5f09a26c07f41286a7a885a2c21bff31b30f71963cceaa35d971a440`; prior committed R59 evidence and the current round-60 counter/source artifacts only. No live fetch or edits to claims/counters.
+
+## Counterexample: C1's new candidate “safe” state does not establish a working safe path
+
+**Evidence.** Frozen C1 predicate requires an independently observed safe path and preserving the foreign file (claims, `corpus/evidence/round60-claims.md:7,9`). But `corpus/evidence/round60/c1-count.py:37-44` defines `candidate_safe` solely as subprocess return code 0 plus byte-for-byte presence of that pre-seeded foreign file. It never checks that the candidate produced expected output, processed the quote, or changed/created any expected artifact. A builder that exits 0 without doing the requested build and leaves the foreign sentinel untouched satisfies `candidate_safe`; thus it can satisfy the candidate leg without reaching the claimed safe path. This is not hypothetical reliance on output tokens: the state is derived from return code and filesystem state, but those observations are insufficient for the named behavior.
+
+A separate edge in the same state function: `baseline_bad` and `forged_safe` are identical predicates (`rc == 0 and not intact`, lines 41-44). Consequently the baseline-control state and the forged-safe state are not distinct observations; `forge_blocked` is only guaranteed because the supplied forged Python fixture returns 0 without deleting the sentinel and therefore falls into `candidate_safe`. It does not test a candidate whose emitted `=PASS` accompanies a failed/unsafe operation. The frozen claim specifically requires output injection to be rejected, so the distinction must be validated against the relevant adversarial behavior, not inferred from a fixture that cannot cause the unsafe state.
+
+Prior committed R59 evidence gives the strongest demonstrated source of this risk: `R59Executor09.md:215-260` records a builder that injects `=PASS` through candidate-controlled stderr while failing refusal legs, and `:262-290` records a wrong-reason refusal passing the symlink leg. The new counter avoids parsing stdout/stderr (good) but its one foreign-file probe does not cover those semantics. Round-60 pre-work evidence `c1-before.txt:3-8` reports injection rejected and the pinned baseline discriminates, but the candidate refusal is 0/1 and C1 fails; it does not establish the post-change candidate behavior.
+
+**Impacted axis:** C1 operability / measurement integrity. A false positive would admit a candidate not demonstrated safe, despite the explicit claim boundary that the builder itself is not claimed fixed.
+
+**Smallest safe correction:** Give the candidate leg a positive, independent observable of the intended safe build (e.g. validate the expected generated artifact/content from the seeded quote) as well as foreign-file preservation; keep child text diagnostic-only. Make the adversarial injection control exercise a failure/unsafe path that emits the exact token and assert that path fails. Ensure the baseline and adversarial control states have distinct, explicitly checked observations. Do not infer C1 PASS from a no-op success.
+
+## Counterexample: C2's counter does not enforce its frozen observation/admission predicate
+
+**Evidence.** Frozen C2 requires the counter to verify the new entry's *exact observation and no overreach against source bytes*, its citation/metadata, and the scorecard disposition (`round60-claims.md:15-17`). In `corpus/evidence/round60/c2-count.py:12-21`, `--work` is parsed but unused; the `ENTRY` is checked only for `body.startswith('\n# ')`, three metadata substrings, and two broad scope substrings. The source test checks pinned hashes and that one line contains `EXPECTED='c. 文献类型及载体类型标志；'`; it does not relate the entry's factual observation to the captured bytes, check a located quote/citation contents beyond the `source:` URL substring, or inspect any scorecard/disposition. Thus a body with those required snippets plus an unsupported or contradictory assertion still passes. The counter's docstring/printed PASS therefore overstates the predicate it enforces.
+
+**Source boundary/evidence.** The opened offline source form `s101-open.txt:70-78` states the carrier-notation recommendation and examples, including `[J/OL]`, `[DB/OL]`, `[EB/OL]`, and that traditional paper sources need not state carrier type. Lines 260-268 repeat these points in a second portion. These support only the captured specification text; they establish no present-day validity or CNKI implementation behavior. The frozen claim correctly requires those external assertions to remain unknown.
+
+**Impacted axis:** C2 depth and calibration of its sourced claim; also integrity of the counter's measurement/admission signal. A passing result cannot currently certify the scoped note or admission conditions the claim declares.
+
+**Smallest safe correction:** Make the counter check exact expected entry content/located quote against the pinned captured source (with the permitted scope boundary), validate the relevant citation/Gate fields and declared scorecard disposition, and either use `--work` for isolated run artifacts or remove the misleading unused option. If the source/QUALITY gate is unavailable, honor the frozen unprovable path rather than claiming counter PASS.
+
+## Review conclusion
+
+These are fixable counter-predicate defects, not evidence that the underlying builder or current-day source claims are safe/true. The frozen claim boundary is appropriately narrow; the current counters, as read, do not establish all of their own stated predicates. No after-work run or landed candidate behavior is asserted here.

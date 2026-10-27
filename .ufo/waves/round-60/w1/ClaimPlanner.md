@@ -1,0 +1,25 @@
+# ClaimPlanner — frozen-claim source analysis
+
+**Scope:** frozen claim semantics and source grounding only; no execution of counters or external fetches. Frozen claims file identified by assigned SHA `09d8053f5f09a26c07f41286a7a885a2c21bff31b30f71963cceaa35d971a440` (the live sha256 observed in this checkout differed; see unresolved note). Paths below are lane-root relative.
+
+## C1 — operability: scope and measurement caveat
+
+- The claim is deliberately narrower than builder safety overall: it is about round-58 counter measurement integrity, expressly not the full seven-hazard span-builder guarantee (`corpus/evidence/round60-claims.md:5-11`). This distinction is important: a passing corrected counter validates only the declared safe-path, pinned destructive control, and output-injection discriminator, not all hazards.
+- The frozen counter's branch semantics are partly observable directly (`corpus/evidence/round60/c1-count.py:22-44,58-75`): `candidate_safe` is return code 0 plus intact foreign file; the baseline negative is return code 0 plus deletion; the injection test's synthetic builder prints `=PASS` and exits 0. Child stdout/stderr is captured but excluded from state derivation. Thus the stated output-injection rejection is structurally plausible; it is not proved by this source inspection alone.
+- Prior frozen before-receipt says `INJECTION_REJECTED=1/1`, `BASELINE_DISCRIMINATES=1/1`, `CANDIDATE_REFUSAL=0/1`, `C1=FAIL`, rc 1 (`.ufo/waves/round-60/c1-before.txt:2-8`). This is consistent with the selected candidate builder deleting the seeded foreign file; it is not evidence the post-change claim passes.
+- Key inference: these result labels are derived from the same filesystem scenario and return status, and the synthetic forgery is a single controlled stdout payload; additional behavior could still satisfy return-code/file predicates without implementing every frozen broader hazard. Do not promote C1 outcome to whole-builder security.
+
+## C2 — depth: source-supported wording and source limit
+
+- Reopened source was the lane's committed capture, not live web. Receipt identifies URL, access date 2026-10-27, raw digest, derived capture-text digest, and exact located quote `c. 文献类型及载体类型标志；` at capture line 245 (`.ufo/waves/round-60/s101-receipt.txt:1-6`; `corpus/evidence/round59/s101-open.txt:242-246`).
+- The captured specification at lines 260-268 separately says that for non-paper electronic material, carrier type is to be indicated alongside the bibliographic type and gives carrier codes/examples; that observation supports a narrow statement about what this captured text prescribes. It does not establish that the copy is current, authoritative today, implemented by CNKI, or that any counted record applies the notation. The source receipt also locates section 14.1's GB/T 7714 recommendation and expressly disclaims present validity/implementation (`s101-receipt.txt:5-6`).
+- Existing knowledge entry already cites S101 and makes broad claims about its own format recommendation and ISO layout; its explicit unknowns include version-in-force and whether products apply the codes (`corpus/knowledge/citation-count-semantics-r37.md:4-10,23-31,67-86`). The frozen C2 addresses source-quote precision/limit and is separable from C1 counter edits.
+- Counter-source inspection exposes a possible contract mismatch: frozen claim says counter verifies exact observation, no overreach, citation/metadata, and declared scorecard disposition (`round60-claims.md:17`), while visible `c2-count.py:8-21` checks only digest/quote occurrence, broad S101 URL + metadata tokens, and one unknown sentence; it does not inspect scorecard disposition or verify exact observation/no-overreach text beyond that one substring. Therefore its implementation cannot, by itself, establish every frozen predicate element. This is a source-level finding, not a run verdict.
+
+## Evidence provenance / limits
+
+Observed sources: frozen claim file, `c1-count.py`, `c2-count.py`, the pre-work receipt, S101 offline receipt and capture, existing S101 knowledge entry, and fleet CORPUS source rules. No external fetch, counter execution, or file mutation was performed. The frozen claim SHA supplied by the task is inconsistent with sha256 of the current path observed in this checkout (`65721569fc1336b159c7637acf476cda6f583bbd4b3a84aaadd239f7d02018d1`); content is therefore not certified as the assigned immutable snapshot. No LSP device was available in this session; findings are textual source inspection, not semantic LSP proof.
+
+## Confidence / unresolved
+
+High confidence in quoted local evidence and visible counter code; medium confidence in implications about adequacy because no counter was run and no LSP server surfaced. Unresolved: which exact bytes correspond to the assigned frozen SHA; whether later wave/landed changes repair the C2 counter mismatch; final C1/C2 verdicts and scorecard disposition.

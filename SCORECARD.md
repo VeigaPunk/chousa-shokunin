@@ -2920,3 +2920,18 @@ No score was changed or invented. Capability table unchanged; no production buil
 | adjacency | **unchanged** | W1 sibling-province scan found no competing owner for the S101 bibliographic slice; no scope was absorbed. |
 
 Learning trends: expansion **unchanged** (no entry admitted); quality **unchanged** (no admitted entry re-verified, deepened or superseded); discernment **unchanged** (no outside non-author sample was available before filing).
+
+## Round 60 verdict — 2026-10-27 (two frozen targets falsified; no admission)
+
+Claims froze in `corpus/evidence/round60-claims.md` before W1. The exact file digest is `65721569fc1336b159c7637acf476cda6f583bbd4b3a84aaadd239f7d02018d1`; the dispatch prompt carried a different digest (`09d8053f…`), found after dispatch. That binding defect makes both claims unprovable regardless of later code.
+
+| Claim / axis | Before → after | command / evidence | verdict |
+|---|---|---|---|
+| C1 operability (lowest scored axis; historical 3/10) | before counter candidate: `C1=FAIL` exit 1; final narrowed probe: still `C1=FAIL` exit 1. W1 found no-op builder `C1=PASS` exit 0 and forge stub also passes; counter is not discriminating. | `python3 -B corpus/evidence/round60/c1-count.py --builder tools/build-spans.py --work <fresh-dir>`; `.ufo/waves/round-60/c1-before.txt`, `c1-after.txt`, W1 `BuildCounter.md` §§2–3 | **unprovable** — frozen target is do-nothing reachable and its forge branch is tautological; no score change. |
+| C2 depth (S101) | base: counter `C2=PASS` exit 0 with no round-60 entry; after: same base predicate passes, no entry admitted. | `python3 -B corpus/evidence/round60/c2-count.py --root <lane> --work <fresh-dir>`; `c2-before.txt`; W1 `C2CounterAudit.md` §3 | **unprovable** — base already passes; no depth move. |
+
+No numeric axis score or capability row changed. Other axes unchanged; no harm claimed. Learning trends: expansion unchanged (133 rows; no knowledge), quality unchanged (no entry reverified/deepened), discernment unchanged (no fresh outside admit+reject spot-check).
+
+## Planned — round 61 (not started)
+
+Candidates: repair claim-freeze digest binding and require positive/no-op controls to prove exact reachability before dispatch; re-register C1 only with discriminating safe/refusal fixture evidence. C2 requires a new entry and a measured no-overreach predicate or should be dropped. Continue the quarantine-first register adjudication only within authorized source scope.

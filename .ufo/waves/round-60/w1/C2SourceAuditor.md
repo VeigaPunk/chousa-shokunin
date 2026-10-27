@@ -1,0 +1,19 @@
+# C2SourceAuditor — bounded source audit
+
+Scope: frozen C2 claim and its S101 source/counter evidence only; offline lane-owned bytes, no live fetch. The assigned immutable claim SHA does **not** match the bytes present: `sha256sum corpus/evidence/round60-claims.md` returned `65721569fc1336b159c7637acf476cda6f583bbd4b3a84aaadd239f7d02018d1`, not the assigned `09d8053f5f09a26c07f41286a7a885a2c21bff31b30f71963cceaa35d971a440`. Treat this as a freeze-integrity discrepancy; I did not alter claims.
+
+## Source evidence
+
+- `corpus/SOURCES.md:111` identifies S101 as a copy of the Chinese academic-journal data specification hosted by HIT, with relevant sections 11, 14.1, 14.4 and 15.7. `corpus/knowledge/citation-count-semantics-r37.md:5,30-31,67-72,79-80` cites that row and limits the interpretation: it reports recommendations/format and explicitly leaves whether this copy is the in-force version and whether CNKI applies the codes unknown.
+- Offline reopening receipt `.ufo/waves/round-60/s101-receipt.txt:1-6` records the URL, access date 2026-10-27, no external fetch, raw SHA `6063a3aff7a4081e93a685f2721e2cd6b477ba84a841211e298bcddd6d9fddf3`, text-form SHA `a8e3e7ad213b6ec50479542cda23612e7ae7ae5fd4506fba53a91f2f7e79f867`, and located quote at text-form line 245: `c. 文献类型及载体类型标志；`. The captured text shown in `.ufo/waves/round-60/s101-open.txt:240-251` supports that quote in subsection 14.2(c). The receipt's separate statement about section 14.1 is located in `s101-open.txt:240-245`; neither is evidence of current validity or CNKI implementation.
+- The frozen C2 claim (`corpus/evidence/round60-claims.md:13-15`, actual-file digest above) narrowly requires a correction note recording that boundary and the existing entry's quote limit; it explicitly conditions admission on the QUALITY gate and does not claim present-day validity.
+
+## Counter/source consistency finding
+
+`corpus/evidence/round60/c2-count.py:13-16` accepts `--root` for raw capture and entry but resolves `s101-open.txt` from the script's fixed `ROOT`, not from the supplied root (`FORM=ROOT/'.ufo/waves/round-60/s101-open.txt'`). Thus running the frozen command against a lane-copy root does not establish the form/quote evidence from that copy; it reads the original checkout's text form. The counter does pin both expected hashes and requires exactly one occurrence of `EXPECTED` (lines 9-16), but only tests byte equality against the pinned form and quote substring presence—not that the form was freshly derived from the raw capture in that run. The receipt supplies a derivation command, but the counter does not execute or independently validate it. This is a reproducibility/provenance limitation, not evidence that the located quote is absent from the recorded text form.
+
+The counter's expected quote is specifically `...标志；` (line 9); the text-form line 7 uses `...标识；`, while line 245 has the expected `...标志；`. Exact-once matching therefore binds the cited subsection-14.2 occurrence, as the receipt says, rather than the earlier 1.1 list. This is internally consistent with receipt line 5, not a contradiction.
+
+## Verdict
+
+S101's cited text supports the limited bibliographic-format observation and the stated epistemic boundary. It does not substantiate current validity or CNKI behavior. The receipt grounds the specific quote; the counter's copy-root mismatch and lack of raw-to-text derivation check weaken its claimed reproducibility. Separately, the assignment's pinned claim SHA is unmet by the observed claim file. I did not run or modify the counter, change frozen material, or perform external retrieval. Scratch was created at `/fast/scratch/hyaku/chousa-r60/C2SourceAuditor` and removed before handoff; no tools were installed.

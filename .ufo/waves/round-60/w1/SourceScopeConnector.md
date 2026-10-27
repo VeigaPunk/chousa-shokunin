@@ -1,0 +1,29 @@
+# SourceScopeConnector — bounded source/counter connection (round 60)
+
+## Evidence and scope
+
+The frozen claim bytes are SHA-256 `09d8053f5f09a26c07f41286a7a885a2c21bff31b30f71963cceaa35d971a440` (per assignment; not modified). C1 is explicitly a narrow **operability** claim about the round-58 counter's false-positive measurement path, not a claim that the lane builder is secure or that all seven hazards are fixed (`corpus/evidence/round60-claims.md:3-11`). C2 independently targets **depth**, and requires an offline source quote, metadata and QUALITY disposition; its result cannot be supplied by C1 (`round60-claims.md:13-17`).
+
+Prior committed evidence establishes the defect class: R59Executor09's task/result record and the round-59 lesson preserve the counterexample of all seven failing hazards yielding `C1=PASS` through builder-controlled output (`.ufo/waves/round-59/w1-results.json` record for R59Executor09; `corpus/lessons/round-59.md:28-33`). Round-59 claims absence and its honest-stop status are documented at `corpus/lessons/round-59.md:4,27-33`; thus those old seat observations motivate, but cannot themselves verify, the new frozen round-60 predicates.
+
+Current `corpus/evidence/round60/c1-count.py` derives statuses from return code and an independently sampled foreign-file state, not stdout/stderr (`:22-44`); then its top-level predicate requires three separate booleans (`:57-75`). This is a direct measurement-integrity improvement relative to the known output-injection mechanism, but the probe covers only one foreign-file scenario and does not run or certify the prior seven hazard legs. Critically, `baseline_bad` and `forged_safe` share the same condition (`p.returncode == 0 and not intact`, `:41-44`): the latter is therefore not a distinct state, and the later forge rejection is achieved because a forged child does not damage this fixture, not because a separately typed output-injection status is observed. The actual frozen forge test runs a Python child that prints `=PASS` and exits 0 (`:57-64`). The independent control proves only that this pinned R55 builder deletes the seeded foreign file (`:64-68`).
+
+The round-60 before receipt `corpus/evidence/round60/c1-before.txt:1-8` reports injection rejected and pinned control discriminating but candidate refusal failed: both candidate and baseline removed the foreign file. Thus the claim's conjunctive predicate cannot pass on those recorded results, regardless of the two positive subresults. Keep this as an honest failure against the frozen acceptance condition, rather than treating partial diagnostics as a C1 pass.
+
+## One bounded move: make the source-to-verdict boundary explicit
+
+Use a **three-leg evidence table** in the round's claim disposition, populated from the frozen counter's actual structured observations: (1) candidate safe-path return code + foreign-file byte preservation, (2) pinned R55 destructive-control return code + observed deletion, and (3) forge child return code/output shown as diagnostic while the independent filesystem state determines its outcome. Preserve each raw receipt path and state separately; only the conjunction specified in the frozen claim can yield its verdict. In parallel, label C1 evidence as fixture-local and do not map it to seven-hazard builder assurance. This is a small reporting/verification move: it connects source/predicate scope to runtime outcomes without changing the freeze, counter, or source tree.
+
+For C2, maintain a disjoint evidence row: the committed S101 raw capture digest and capture-text quote/location, Gate URL/access date, exact scoped statement and citation/metadata checks, plus QUALITY disposition. The round-59 lesson records a prior offline opening and located quote, but it is historical evidence, not the required round-60 reopening (`corpus/lessons/round-59.md:8-12`). Unless this round's own capture opening and non-author QUALITY judgment are evidenced, C2 remains unproven; neither C1's measurement status nor the old lesson fills that gap.
+
+## Affected axes and contradiction
+
+- **Operability:** supports auditability of C1's narrow measurement predicate by keeping its conjuncts independent and evidence-linked. It is not a measured score delta and does not overcome the before receipt's failed candidate leg.
+- **Depth:** no change proposed; C2's historical source quote is not a current-round verification.
+- Explicit scope contradiction to avoid: the frozen claim discusses a "safe path" while prior R59 evidence discusses seven refusal hazards. The current counter's observable safe path is the foreign-file fixture only; these are different acceptance surfaces. Claiming the former repairs or demonstrates the latter would overstate evidence.
+
+## Risks and verification
+
+Risk: an aggregated `C1=PASS`/round-level status can hide the distinction between the candidate failing its safe leg and the forge/control subtests succeeding; retain per-leg booleans and receipt references. Risk: an output transcript alone is not authority for a leg; bind to return code and independently inspected filesystem state as the implementation does. Residual: the `forged_safe` classification aliases `baseline_bad`, and the R55 test demonstrates this fixture's discriminating power only, not provenance beyond the pinned file location.
+
+Verification for the L1: verify the frozen digest against the supplied immutable SHA; run the exact frozen C1 command in fresh absolute scratch, preserve stdout/exit and inspect the fixture filesystem before assigning each leg; require all frozen conjuncts for C1 admission. For C2, reopen the committed offline capture, independently check digest and quote location against the entry and Gate, and verify the named QUALITY disposition. Do not infer either claim from the other's receipts. No checks or writes beyond this connector report were performed by this seat.
