@@ -1,0 +1,731 @@
+{
+  "schema": "ufo-swarm-wave-dispatch-v1",
+  "wave": "chousa-r53-w2",
+  "policy": {
+    "source": "config",
+    "maxLanes": 256,
+    "minLanes": 16,
+    "waveMinLanes": 32,
+    "waveMaxLanes": 64,
+    "declaredMaxLanes": null,
+    "hardCeiling": 256,
+    "rampBatchSize": 5,
+    "rampIntervalMs": 700,
+    "globalRunnerCeiling": 1056
+  },
+  "counts": {
+    "spawn": 43,
+    "resume": 0,
+    "total": 43
+  },
+  "registry": {
+    "schema": "ufo-swarm-registry-v1",
+    "path": ".ufo/waves/round-53/w2/swarm-registry.json",
+    "reportDir": ".ufo/waves/round-53/w2",
+    "members": {
+      "R53W2ExecC1Target": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Attack the C1 after-state: with TMPDIR=/fast/scratch/hyaku/chousa-r53/R53W2ExecC1Target run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/c1-count.py` three times unseeded, once `--seed 7`, once `--per-leg 10`, and once `--tool <BASE tool from git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 5b550133d79bc09c82d8965cce2e48c2598b8c3e:tools/assimilate-rows.py>`; paste the leg lines. Confirm the tool at the tip equals the candidate (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin diff 32aab5edd70e43145cae72ec872278f3bc6efba7 f4343163b70ce20e6b6d4f52b39935156e8afb26 -- tools/assimilate-rows.py` empty; sha256). Does any run miss 8/8? Is the base still 1/8?",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2ExecSupplement": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Attack the post-freeze C1 supplement as evidence: run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/c1-supplement.py` five times unseeded and with --seed 1..5 on the landed tool, and on `/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/controls/forge-c1.py` and the BASE tool (git show 5b550133d79bc09c82d8965cce2e48c2598b8c3e:tools/assimilate-rows.py). Tabulate SUPPLEMENT_LEGS per run. Any flake? Does CALENDAR ever draw a date the tool's `valid_date` considers valid (print each drawn date and `datetime.date.fromisoformat` result)? Does REAL_PERTURBED depend on the campaign package bytes (what if SOURCES.append.md were edited — it is read-only, so reason from code)?",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2ExecQuotesS117": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Re-open S117 (JMLA PRISMA 2020/PRISMA-S common-questions commentary (PDF; .txt = pdftotext -layout, two-column)), capture /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/0ae65ac01b93119d3c2f3fed.txt (raw 0ae65ac01b93119d3c2f3fed.raw), cited by corpus/knowledge/search-tracking-record-r40.md. For EVERY row of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/quotes.tsv with id S117: count it in the .txt (must be 1), confirm it lies on one line, ≤25 words, ≤160 chars, that its offset equals the `char N` the entry/row/lesson state for it (grep the entry's source line and the S-row anchor cell in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md and the lesson table in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-53.md), and that the span file under /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/spans/ is the exact slice of the .txt at the manifest offset. For PDFs also check each quote (whitespace removed) occurs in an independent pypdf extraction. Then read each sentence of the entry that cites S117 and mark: supported / narrower-than-text / overstated / unsupported, quoting the capture. Table + defects.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2ExecQuotesS118": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Re-open S118 (the issued 药品临床综合评价质量控制指南（2024 年版 试行） (PDF)), capture /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/16fe8487aa97b98576a0dbac.txt (raw 16fe8487aa97b98576a0dbac.raw), cited by corpus/knowledge/western-instrument-alignment-r50.md and corpus/knowledge/quality-control-guideline-issued-text-r48.md. For EVERY row of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/quotes.tsv with id S118: count it in the .txt (must be 1), confirm it lies on one line, ≤25 words, ≤160 chars, that its offset equals the `char N` the entry/row/lesson state for it (grep the entry's source line and the S-row anchor cell in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md and the lesson table in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-53.md), and that the span file under /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/spans/ is the exact slice of the .txt at the manifest offset. For PDFs also check each quote (whitespace removed) occurs in an independent pypdf extraction. Then read each sentence of the entry that cites S118 and mark: supported / narrower-than-text / overstated / unsupported, quoting the capture. Table + defects.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2ExecQuotesS119": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Re-open S119 (the society's posting of the release notice (HTML .txt)), capture /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/cfa080b4046592eb9490a82c.txt (raw cfa080b4046592eb9490a82c.raw), cited by corpus/knowledge/quality-control-guideline-issued-text-r48.md. For EVERY row of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/quotes.tsv with id S119: count it in the .txt (must be 1), confirm it lies on one line, ≤25 words, ≤160 chars, that its offset equals the `char N` the entry/row/lesson state for it (grep the entry's source line and the S-row anchor cell in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md and the lesson table in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-53.md), and that the span file under /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/spans/ is the exact slice of the .txt at the manifest offset. For PDFs also check each quote (whitespace removed) occurs in an independent pypdf extraction. Then read each sentence of the entry that cites S119 and mark: supported / narrower-than-text / overstated / unsupported, quoting the capture. Table + defects.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2ExecQuotesS120": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Re-open S120 (Cochrane Handbook chapter 4 (HTML .txt)), capture /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/c9d1e74c3ac8d9eb332c9770.txt (raw c9d1e74c3ac8d9eb332c9770.raw), cited by corpus/knowledge/western-instrument-alignment-r50.md. For EVERY row of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/quotes.tsv with id S120: count it in the .txt (must be 1), confirm it lies on one line, ≤25 words, ≤160 chars, that its offset equals the `char N` the entry/row/lesson state for it (grep the entry's source line and the S-row anchor cell in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md and the lesson table in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-53.md), and that the span file under /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/spans/ is the exact slice of the .txt at the manifest offset. For PDFs also check each quote (whitespace removed) occurs in an independent pypdf extraction. Then read each sentence of the entry that cites S120 and mark: supported / narrower-than-text / overstated / unsupported, quoting the capture. Table + defects.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2ExecC2Rerun": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Attack the C2 after-state: with TMPDIR=/fast/scratch/hyaku/chousa-r53/R53W2ExecC2Rerun run at the tip `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/c2-count.py`, `--lane-only`, `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/build-spans.py --check`, `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round51/quote-substance-check.py /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/spans.tsv`, and `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/controls/build-c2-controls.py` (both controls must still FAIL). Then export the tip to scratch and run c2-count with --root on it after replacing tools/inference-ground.py by the base version (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 5b550133d79bc09c82d8965cce2e48c2598b8c3e:tools/inference-ground.py`) — erratum E4 says 3/3 either way. Paste every line.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2ExecPdfGlue": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Attack the claim that no PDF quote is a two-column glue: run `uv run --quiet --with pypdf python /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/pdf-crosscheck.py` from /home/vgpnk/Projects/shokunin/chousa-shokunin. Then build the strongest counter-test: for S117 (/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/0ae65ac01b93119d3c2f3fed.txt) list every quote of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/quotes.tsv whose line in the .txt also carries a second column block (split at ≥5 spaces) and check whether the quote crosses blocks; also check reading order — a quote can be in pypdf text yet be two half-sentences from different columns that happen to be adjacent in pypdf too (compare with `pdftotext` without -layout, `/usr/bin/pdftotext -raw`). Report any quote whose meaning depends on an interleave.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2ExecQualityChecks": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Attack QUALITY 91–96 at the end of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md: for each criterion run its stated check command and its stated 'shown able to fail' command exactly as written (TMPDIR=/fast/scratch/hyaku/chousa-r53/R53W2ExecQualityChecks; use an exported tip copy for any mutation). Table: criterion · check output · red-before output · matches the criterion's text? Flag any claim in a criterion that you could not reproduce, any check that cannot fail, and any pointer that does not resolve.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2ExecCensusMisroot": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Round-end conformance probes: `/home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa` (exit, every line); the CORPUS.md awk NF check on S117–S120 (`awk -F'|' '/^\\| S11[7-9] |^\\| S120 /{print NF}' /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md`); `git -C /home/vgpnk/Projects/shokunin status --porcelain` and `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin status --porcelain` — list every untracked file and say which (if any) a round-53 seat wrote (grep its content for 'R53' / 'round 53'); never move or delete anything. Also: any file under /fast/scratch/hyaku/chousa-r53/ older than 45 minutes left by a W1 seat (`find /fast/scratch/hyaku/chousa-r53 -maxdepth 1 -mmin +45`)?",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2ExecCjkSweep": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "False-refusal sweep of the landed CJK polarity window: for EVERY corpus/knowledge entry in /home/vgpnk/Projects/shokunin/chousa-shokunin that has a round spans manifest (`grep -l` the entry path in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round*/spans.tsv), run the tip `tools/inference-ground.py --entry <e> --spans <that manifest> --counts /dev/null --registry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md --root /home/vgpnk/Projects/shokunin/chousa-shokunin --quiet` and the base tool (git show 5b550133d79bc09c82d8965cce2e48c2598b8c3e:tools/inference-ground.py) the same way; tabulate exit codes and findings; any entry the tip flags that the base passed is a regression — print the finding and judge it (true reversal or false refusal). Also run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/cjk-polarity-check.py` and the round-46/47/48 inference-ground counters (`python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round46/c1-count.py`, round47/c1-count.py, round48/precision-count.py).",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2ExecAnchorForge": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Attack `/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/pointer-anchor-check.py` (round-52 closure routed 4): on an exported tip copy, write correction lines that PASS it while pointing at the wrong place (an anchor that occurs exactly once in the target but belongs to unrelated content; an anchor in a directory pool; a later line superseding a good one with a bad one) and lines that should pass but FAIL (an anchor containing `\"`; Unicode dashes). Report each with output, and whether the seven anchored lines at the end of /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md are content-true (open each target at the anchor and say whether it shows what the corrected pointer meant).",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2ExecStreak": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Attack `/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/weakness-streak.py` and `/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/recurring.tsv` (considerthese 2026-10-26 proposal 2): run it; then mutants on an exported tip copy — claimed 5→4, routed path removed, a round-54 lesson stub naming nothing, a lesson that mentions 'forge' only in praise. Does the tool fail when it should and pass when it should? Is RW-1's regex too loose (count matches per round in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-4[5-9]*.md and round-5*.md)? Report the matrix and one concrete improvement.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2ExecHistCounters": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Regression sweep at the tip f4343163b70ce20e6b6d4f52b39935156e8afb26: with TMPDIR=/fast/scratch/hyaku/chousa-r53/R53W2ExecHistCounters run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round47/c2-count.py --list` (SKILL registry), `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round51/c3-count.py`, `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round52/verdict-gap.py --from 40 --to 52`, `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round52/c2-count.py`, `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round51/c2-count.py`, `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round51/c1-count.py`, `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/assimilate-rows.py --selftest`, and `bash /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh selftest` if it has one (read its usage). Compare with the base 5b550133d79bc09c82d8965cce2e48c2598b8c3e (export it). Any count that changed: intended (new rows/tool) or regression?",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2DraftScorecard": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scribe",
+        "item": "Draft the append-only SCORECARD.md section `## Round 53 verdict — 2026-10-26 (adopter v4; search-record instruments by document)` in the exact shape of the `## Round 52 verdict` section of /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md (read it: intro paragraph, claim table with before→after/command/verdict/tag, axis table, capabilities table, `## Planned — round 54 (not started)`). Use only measured values from /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/controls/c1-before.txt, c2-before.txt, c2-controls.txt, the counters run by you at the tip (TMPDIR=/fast/scratch/hyaku/chousa-r53/R53W2DraftScorecard), and claims-erratum E1–E6. State honestly that the frozen C1 counter is forgeable (W1 R53CritForgeC1, supplement 3/3 vs forge 1/3). Planned round 54: theme C (GB/T 7714 source-type, W1 R53ScoutNextThemes) or B; the counter refusing per-leg<1; OLE .doc text form. Output one fenced block labelled SCORECARD.md.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2DraftLog": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scribe",
+        "item": "Draft the append-only LOG.md entry `## Round 53 — …` in the shape of the Round 52 entry at the end of /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md (read it): evidence that motivated the round (round-52 closure routed items, SCORECARD planned row), C1, C2, frontier step (rows 116→120, census, mistakes, considerthese pick weakness-streak), routed fixes landed (CJK polarity, anchored corrections, erratum ranges), not landed/named, waves (W1 49 seats; W2 count from the spec). Use lane commit hashes from `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin log --oneline 5b550133d79bc09c82d8965cce2e48c2598b8c3e..f4343163b70ce20e6b6d4f52b39935156e8afb26`. Output one fenced block labelled LOG.md.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2DraftReportSections": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scribe",
+        "item": "Draft the fleet report sections `## Sources & frontier` and `## Trend verdicts` for round 53 in the shape of /home/vgpnk/Projects/shokunin/.ufo/reports/round-52/chousa.md (read it). Sources: census start /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/census-start.txt and end (run it), rows before→after with the grep count command at base and tip (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 5b550133d79bc09c82d8965cce2e48c2598b8c3e:corpus/SOURCES.md | grep -cE …`), added by tier, rows touched old→new (none expected — verify with `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin diff 5b550133d79bc09c82d8965cce2e48c2598b8c3e f4343163b70ce20e6b6d4f52b39935156e8afb26 -- corpus/SOURCES.md | grep '^-|'`), assimilation line (theme, collision count, renumber map, admits/refuses, quarantine), considerthese line, open L0. Trend verdicts expansion/quality/discernment with evidence; discernment stays 'unchanged pending closure'. Output fenced blocks.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2DraftWaveLimits": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scribe",
+        "item": "Draft the round-53 lesson section `## Wave-2 limits recorded (not fixed this round)` in the shape of the same section in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-52.md. Read every finished wave-1 report in /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-53/w1/ for findings the L1 did NOT fix (named limits: adopter symlink write escape and --out==--knowledge input loss from R53SentCounters; c2-count F2/F3 from R53ReviewC2Counter; quarantine verdict contradictions S104/S114/S077 from R53ExecQuarantine; CJK window limits; the forge's surviving routes) and list each with pointer and flip. Verify each pointer exists (grep). Output one fenced block labelled corpus/lessons/round-53.md.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2SentNewScripts": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "sentinel",
+        "item": "Hazard review of the round's NEW post-freeze scripts and the patched tool: /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/c1-supplement.py, pdf-crosscheck.py, cjk-polarity-check.py, pointer-anchor-check.py, weakness-streak.py, and the CJK window in /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/inference-ground.py (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin diff 5b550133d79bc09c82d8965cce2e48c2598b8c3e f4343163b70ce20e6b6d4f52b39935156e8afb26 -- tools/inference-ground.py`). Every write path (hardcoded /tmp? lane writes? rmtree scope), TMPDIR honoured, cleanup on SIGINT, regex catastrophic backtracking on a 1 MB entry line for the CJK window (time it), path traversal in pointer-anchor-check targets (`correction: x:1 p -> ../../etc/passwd anchor: …` — does it read outside the lane?). Severity and fix per hazard.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2SimplifyRound": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "simplifier",
+        "item": "YAGNI review of what round 53 landed after the freeze: /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/c1-supplement.py (three legs), /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/cjk-polarity-check.py, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/weakness-streak.py, the CJK diff in tools/inference-ground.py. Name any branch, flag or leg no fixture or receipt exercises and that could be deleted without changing any printed result — prove by deleting in a scratch copy and re-running. Do not edit the lane.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2CritForgeSupplement": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Attack the post-freeze C1 supplement /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/c1-supplement.py: write the cheapest tool (in /fast/scratch/hyaku/chousa-r53/R53W2CritForgeSupplement) that passes BOTH `c1-count.py` 8/8 and `c1-supplement.py` 3/3 without implementing the adopter's full contract (e.g. extend /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/controls/forge-c1.py with a real calendar check and a real self-test runner, or key on the supplement's `example.org`/`example.net`/`example.com` hosts or its `n<hex>.md` names). Paste the forge and outputs, or list each shortcut and the leg that refused it.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2CritC1Verdict": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Attack the C1 verdict the lane will claim ('improved narrowly', operability, capability extension): is v4 a behaviour change any lane workflow uses (does the round's own C2 adoption depend on the twin label — read the lesson Gate's collision paragraph), or a relabel? Is the frozen predicate met on the landed tool for inputs the counter never generates (cadence rechecks, erratum E3; a staged row cited by an entry that is refused)? Would a do-nothing control meet the target (controls in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/controls/c1-before.txt)? Verdict with evidence: improved / improved narrowly / unchanged / harmed.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2CritForgeC2": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Attack C2 at the tip: on an exported tip copy, find the cheapest lane edits that keep `c2-count.py --root <copy>` at C2=PASS while making an entry false (swap two quotes' bullets; negate an English bullet that quotes a phrase; replace a CJK bullet's claim while keeping its quote; drop an entry's Unknown sweep). Which edits pass? This measures what C2 does NOT certify; list what the closure must read by hand.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2CritEntailStr": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Entailment attack on /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/search-tracking-record-r40.md against S117 (/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/0ae65ac01b93119d3c2f3fed.txt; read the surrounding paragraphs, not just the quotes; the .txt is two-column, so read the PDF text via `uv run --quiet --with pypdf python` if the order is unclear). For every Observation and Inference sentence: supported / narrower / overstated / unsupported, with the capture text that decides it. Especially: 'a tracking record is routed', 'makes a sweep re-runnable', 'per-source rows are the record', and the Column 2 / Column 1 allocation. Give the narrowed sentence for each defect.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2CritEntailWia": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Entailment attack on /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/western-instrument-alignment-r50.md against S120 (/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/c9d1e74c3ac8d9eb332c9770.txt) and S118 (/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/16fe8487aa97b98576a0dbac.txt). For every sentence: supported / narrower / overstated / unsupported. Especially: is 'the reporting aligns with … PRISMA' one item of a list of librarian services (read §4.2.1's list) — does the entry say whose obligation it is? Is 指标 4 at char 18046 in the 文献研究 indicator row (check the table structure around it; the guideline has several 指标 4)? 'nothing in the guideline asserts an alignment of its own' — sweep. Give narrowed sentences.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2CritEntailQcg": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Entailment attack on /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/quality-control-guideline-issued-text-r48.md against S118 (/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/16fe8487aa97b98576a0dbac.txt) and S119 (/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/cfa080b4046592eb9490a82c.txt and its .raw HTML). For every sentence: supported / narrower / overstated / unsupported. Especially: 'posted day and signed day differ and the page does not reconcile them'; 'the text cannot date itself'; 'the two carriers spell the title differently'; 'the instrument … lists the strategy as a required annex'; '检索日期 0 times'. Give narrowed sentences.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2CritRefuseS190": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Attack the refusal of staged S190 (the pharmwyp print of the 2019 NMPA notice, /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/0435b64f65c3ea7ddc6bb92e.txt) in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-53.md (Gate decisions and the refused-doc line). W1 `R53ReviewProvince` said register it tier C; W1 `R53CritNegatives` found it names PRISMA (char ~7797) which contradicts the staged Wia title. Is the refusal the decisive reason (QUALITY 93)? Does the admitted Wia entry now say anything the NMPA print contradicts? Was a document refused to make C2 easier (it does not need S190: BOUND 4/5 ≥3)? Verdict: refusal right / wrong / right-for-wrong-reason.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2CritCredit": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Attack the expansion credit: the README `Round53 coverage and frontier` section in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/README.md claims four documents of credit (S117–S120). Is S119 (a release-notice posting) a document with its own ground or a carrier stamp of S118? Is S120 (Cochrane ch.4) new when the lane already cites other Cochrane Handbook chapters (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin grep -n 'Cochrane Handbook' 5b550133d79bc09c82d8965cce2e48c2598b8c3e -- corpus/knowledge corpus/SOURCES.md`) and staged S083 is the same chapter at another host? Verdict per document: credit / no credit, with pointers.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2CritMistakes": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Attack `## Mistakes` in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-53.md (six rows): for each row, is the class right, does the evidence pointer resolve (open it), is 'captured-by' honest, and is the fix shown able to fail by a command you can run (run it)? A fix that cannot fail does not count. Also: is any round-53 mistake missing (e.g. the wave context named planned ids S117–S121 that changed to S117–S120; a seat-drafted README assumed S120=NMPA)?",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2CritTrends": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Attack the round's trend verdicts before they are filed: expansion (four documents, a capability), quality (narrowing on adoption, routed fixes landed), discernment (unchanged pending closure). Read the lesson, README section, SCORECARD tail and the W1 reports of R53CritTheme, R53CritNegatives, R53ReviewProvince. For each trend: the strongest argument it is overstated, and the verdict you would give with evidence.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2ReviewSupplement": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Review /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/c1-supplement.py line by line against its docstring and claims-erratum E1: CALENDAR's date draws (are all of them calendar-invalid? any day-32 month a tool might accept by lexical check?), the leap-year control, REAL_PERTURBED's expected map (staged order preserved? twin last?), SELFTEST_RAN's dropped-finding logic when the dropped finding occurs twice. Defects with reproducing commands (scratch /fast/scratch/hyaku/chousa-r53/R53W2ReviewSupplement).",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2ReviewRows": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Review Registry rows S117–S120 in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md against CORPUS.md's SOURCES.md contract (/home/vgpnk/Projects/shokunin/CORPUS.md): 11 cells, kind/tier enums, tier justification (S118/S119 tier B society carriers; S117 tier A publisher PDF; S120 tier A), anchor cells (every `char N` is a quote offset in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/spans.tsv — compute offset+span.find(quote)), teaches cells entailed by the captures, used-by exact, recheck valid. Also the lesson's re-opened-sources table (≤25-word located quote per new row, access date). Defects per cell.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2ReviewCjkPatch": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Review the CJK polarity diff `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin diff 5b550133d79bc09c82d8965cce2e48c2598b8c3e f4343163b70ce20e6b6d4f52b39935156e8afb26 -- tools/inference-ground.py` line by line: negator lists, the six-character clause-bounded window, interaction with the Latin path, the docstring's named limits, and the fixtures /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/fixtures/inference-ground-cjk/ (do the positives really exercise a near-miss; is S901 reused across three fixtures a problem for the spans manifest's entry column?). Defects with reproducing commands; name one false-refusal shape you can build and run it.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2ReviewCorrections": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Review the seven anchored `correction:` lines at the end of /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md and the erratum-range corrections: does each correct what the round-52 closure section 6 item 1 and the round-51 closure item 4 asked (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-52-verifier-spotcheck.md, round-51-verifier-spotcheck.md)? Is SKILL.md:133 really the round-51 erratum range site (open it)? Is any other stale erratum range left in the lane (`grep -rn 'E1–E[0-9]\\|E1-E[0-9]' /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md /home/vgpnk/Projects/shokunin/chousa-shokunin/SKILL.md /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons` and compare with each erratum's real range)? Defects.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2ReviewSkillReadme": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Review the three new SKILL.md Gates rows (grep -n 'round 53\\|round-53' /home/vgpnk/Projects/shokunin/chousa-shokunin/SKILL.md) and the README section `Round53 coverage and frontier`: every command runs as written from /home/vgpnk/Projects/shokunin/chousa-shokunin (run each with TMPDIR=/fast/scratch/hyaku/chousa-r53/R53W2ReviewSkillReadme), every pinned value matches the file (REAL_PIN, R50_PIN, FIXTURES_SHA256 9822ad59…), every claim in the README rows matches the entries (open them). Defects with output.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2MutSupplement": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "mutation-tester",
+        "item": "Mutation-test the adopter through /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/c1-supplement.py: copy /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/assimilate-rows.py to /fast/scratch/hyaku/chousa-r53/R53W2MutSupplement/ and mutate (1) valid_date → lexical regex only; (2) leap-year handling broken (Feb 29 always invalid); (3) selftest prints PASS without comparing; (4) selftest ignores missing findings; (5) twin label on the perturbed package only when ids < 200; (6) registry max read from the first row not the max. Run the supplement (and the frozen counter) per mutant; kill matrix; survivors with the leg that would kill them.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2MutCjkCheck": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "mutation-tester",
+        "item": "Mutation-test the CJK window through /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/cjk-polarity-check.py: copy /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/inference-ground.py to scratch /fast/scratch/hyaku/chousa-r53/R53W2MutCjkCheck and mutate (1) window 6→1; (2) drop 未 from the negators; (3) drop the span-negated direction; (4) ignore clause boundaries; (5) post-negators removed; (6) flip only when the negator is adjacent. Run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/cjk-polarity-check.py --tool <mutant>` per mutant; kill matrix; survivors with the fixture that would kill them.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2MutPdfCrosscheck": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "mutation-tester",
+        "item": "Mutation-test /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/pdf-crosscheck.py: on a scratch copy of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53 (quotes.tsv), plant (1) a quote glued across the two JMLA columns from one .txt line; (2) a quote with one changed character; (3) a quote that exists only in the .txt header/footer; (4) a quote from S118 with a CJK wrap joined. Does the check fail each? It reads quotes.tsv beside itself — run the copy from its own directory. Kill matrix and survivors.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2ConnSiblingsFinal": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "connector",
+        "item": "Final sibling-overlap scan for what round 53 LANDED: grep the sibling lanes under /home/vgpnk/Projects/shokunin/*-shokunin/ (corpus/, tools/, SKILL.md, PROVINCE.md; read-only; skip chousa-shokunin) for tracking record, PRISMA-S, information specialist, 质量控制指南, 药品临床综合评价, bjhea, inference-ground, polarity, CJK negat, pointer anchor, correction:. Verdict: overlap / no overlap for each landed surface, closest sibling file named.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2ConnPattern": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "connector",
+        "item": "Cross-claim pattern after integration: the round's C1 (twin label: two staged ids, one document) and C2 (S118 cited by two entries through those twins) meet in one registry row. (1) Does any OTHER lane row carry two staged ids of one document without a twin record (`grep -rn 'twin' /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-4*.md /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-5*.md`; the round-52 S113/S133 case)? (2) Is the 'forgeable frozen counter' streak (RW-1, 5 rounds) a pattern the lane should answer structurally (e.g. counters that call the tool on held-out real packages) — propose one concrete design with a pointer to where it would live. (3) One recommendation for round 54.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2ScoutFrontier": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scout",
+        "item": "Coverage and frontier check after integration: read /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/README.md `## Frontier` items and the new `Round53 coverage and frontier` section; for each 'Advanced' and 'Left open' bullet, say whether the landed entries support it (path:line) and whether the base already held it (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin grep -n … 5b550133d79bc09c82d8965cce2e48c2598b8c3e -- corpus/knowledge`). Also list which frontier items from round 52's README section this round moved or did not move.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2ExecZeroCases": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Red-team the frozen C1 `--per-leg K` interface in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/c1-count.py (W1 `R53SentCounters` H1): reproduce `--per-leg 0` and `--per-leg -3`, count generated case lines, then probe values `1`, `-1`, `2`, and an invalid non-integer; run with `--seed 53` and TMPDIR=/fast/scratch/hyaku/chousa-r53/R53W2ExecZeroCases. Against the landed tool, tabulate exit, LEGS, case lines, and whether each generated leg actually ran. Read claims.md: does the frozen kill rule explicitly exclude a vacuous sample size? Do not edit the counter.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      },
+      "R53W2ExecAdopterBoundary": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Reproduce the new C1 named limits from W1 `R53SentCounters` H3–H5 against the landed adopter, without writing to the lane: in scratch /fast/scratch/hyaku/chousa-r53/R53W2ExecAdopterBoundary create (1) a safe package whose `--out` is the same directory as `--knowledge`, and record whether it destroys the entry; (2) a package whose `--out` contains a symlink named as a valid `--entry` pointing outside the scratch root, and record the target's before/after digest; (3) a cited row with a 200,000-character symbolic recheck and measure time/RSS; (4) a cadence-only `quarterly` recheck. Use `timeout`, `ulimit` if appropriate; never point a fixture at a real file. Table command, rc, writes and consequence against the frozen predicate.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections"
+      }
+    }
+  },
+  "compaction": {
+    "applied": false,
+    "mechanism": null,
+    "reason": null,
+    "savedBytes": 0,
+    "payloadBytesBefore": 0,
+    "payloadBytesAfter": 0
+  },
+  "taskCall": {
+    "context": "# Goal\nchousa lane (deep-research method), round 53, wave 2 (FALSIFY). Wave 1 built and the L1 integrated at lane tip f4343163b70ce20e6b6d4f52b39935156e8afb26. Two claims are FROZEN at a6ff732c70011f11c9beb681d832cedc6e75f566 in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/claims.md (read it and /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/claims-erratum.md E1–E6 first); never propose changing a predicate, target, counter or control. C1 (operability): adopter v4 `/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/assimilate-rows.py` (candidate 32aab5edd70e43145cae72ec872278f3bc6efba7, unchanged since) — `twin` label, `HELD=`/`TWIN=` counts, recheck pre-pass, registry-first refusal also without --entry; frozen counter `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/c1-count.py` (target LEGS=8/8 on three unseeded runs and --seed 7) and the post-freeze `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/c1-supplement.py` (not the claim's rule). C2 (depth, sourced): three lane entries corpus/knowledge/search-tracking-record-r40.md, corpus/knowledge/western-instrument-alignment-r50.md, corpus/knowledge/quality-control-guideline-issued-text-r48.md on four bound Registry rows S117–S120 of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md (S118 is cited by two entries; staged S190, the NMPA 2019 notice print, is refused as a document — `refused-doc` line in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-53.md); 63 located quotes in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/quotes.tsv → spans.tsv; frozen counter `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/c2-count.py` (now prints C2=PASS). Also landed: the CJK polarity window in /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/inference-ground.py with fixtures /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/fixtures/inference-ground-cjk/ and `/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/cjk-polarity-check.py`; `/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/pointer-anchor-check.py` with anchored `correction:` lines at the end of /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md; `/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/pdf-crosscheck.py`; `/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/weakness-streak.py` + recurring.tsv; QUALITY 91–96 at the end of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md; SKILL.md Gates rows `assimilate-rows (v4, round 53)`, `chousa round-53 counters and checks`, `chousa round-53 post-freeze checks`; README section `Round53 coverage and frontier`. Your job: ATTACK one named item and report what survives. Every item names what it attacks.\n\n# Boundaries (binding)\nLane repo: /home/vgpnk/Projects/shokunin/chousa-shokunin. Your ONLY write is your own report file: every `Report:` trailer path is relative to /home/vgpnk/Projects/shokunin/chousa-shokunin — write it at /home/vgpnk/Projects/shokunin/chousa-shokunin/<that path>. Never write a production file, another seat's report, the git index, jj state, the fleet repo /home/vgpnk/Projects/shokunin (read only), any sibling lane, or /home/vgpnk/Projects/shokuknow (read-only; never run its campaign tools renumber-staged.py, merge-plan.py, quote-lint.py, absent-defect-register.py). Never run git commit/add/stash/checkout/reset/push or any mutating jj command anywhere except inside your own fixture repo. Scratch ONLY under /fast/scratch/hyaku/chousa-r53/<YourSeatName>/ (mkdir -p; export TMPDIR there; never /tmp; never a relative redirect such as `> out.txt` — every output path absolute under your scratch) and remove it before you finish (trap 'rm -rf -- \"$S\"' EXIT); copy any receipt you cite into your report first. Any git fixture repo: D=$(mktemp -d -p /fast/scratch/hyaku/chousa-r53/<YourSeatName>) && git -C \"$D\" init -q, every later git call names -C \"$D\", verify `git -C \"$D\" rev-parse --show-toplevel` equals $D before any commit. To test a changed lane copy, use `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin archive f4343163b70ce20e6b6d4f52b39935156e8afb26 | tar -x -C <scratch dir>` and run with --root / --tool there. No network and no live fetch (L0 `8d77e6c1` open): every source is an on-disk capture under /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache (key = first 24 hex of sha256 of the URL). Code or text a seat drafts goes INSIDE its report (fenced blocks labelled with the intended lane path). Never message the orchestrator or other lanes' seats.\n\n# Evidence\nGround every statement in a command you ran or a file:line/char offset you opened; paste commands with observed output. A check you did not run has not passed. ≤120 lines (≤220 when the item asks for a script or a draft). End with a one-line VERDICT naming what you attacked and whether it survived.\n\n# Tooling\nTooling authorization (operator, 2026-10-19): you may install or upgrade tools that help the task — read /home/vgpnk/.omp/agent/RULES.md first (official channels, update-safety gate; record tool/version/channel/reason in your report). pacman guard: ALL pacman transactions are PAUSED host-wide (never -S/-Sy/-Syu/-U/-R, no downgrade, no service restart); use uv tool / npx / an official binary in ~/.local/bin instead (pypdf: `uv run --quiet --with pypdf python …`). Routing is host-owned; never pass a model.",
+    "tasks": [
+      {
+        "name": "R53W2ExecC1Target",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nAttack the C1 after-state: with TMPDIR=/fast/scratch/hyaku/chousa-r53/R53W2ExecC1Target run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/c1-count.py` three times unseeded, once `--seed 7`, once `--per-leg 10`, and once `--tool <BASE tool from git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 5b550133d79bc09c82d8965cce2e48c2598b8c3e:tools/assimilate-rows.py>`; paste the leg lines. Confirm the tool at the tip equals the candidate (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin diff 32aab5edd70e43145cae72ec872278f3bc6efba7 f4343163b70ce20e6b6d4f52b39935156e8afb26 -- tools/assimilate-rows.py` empty; sha256). Does any run miss 8/8? Is the base still 1/8?\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2ExecC1Target.md"
+      },
+      {
+        "name": "R53W2ExecSupplement",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nAttack the post-freeze C1 supplement as evidence: run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/c1-supplement.py` five times unseeded and with --seed 1..5 on the landed tool, and on `/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/controls/forge-c1.py` and the BASE tool (git show 5b550133d79bc09c82d8965cce2e48c2598b8c3e:tools/assimilate-rows.py). Tabulate SUPPLEMENT_LEGS per run. Any flake? Does CALENDAR ever draw a date the tool's `valid_date` considers valid (print each drawn date and `datetime.date.fromisoformat` result)? Does REAL_PERTURBED depend on the campaign package bytes (what if SOURCES.append.md were edited — it is read-only, so reason from code)?\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2ExecSupplement.md"
+      },
+      {
+        "name": "R53W2ExecQuotesS117",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nRe-open S117 (JMLA PRISMA 2020/PRISMA-S common-questions commentary (PDF; .txt = pdftotext -layout, two-column)), capture /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/0ae65ac01b93119d3c2f3fed.txt (raw 0ae65ac01b93119d3c2f3fed.raw), cited by corpus/knowledge/search-tracking-record-r40.md. For EVERY row of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/quotes.tsv with id S117: count it in the .txt (must be 1), confirm it lies on one line, ≤25 words, ≤160 chars, that its offset equals the `char N` the entry/row/lesson state for it (grep the entry's source line and the S-row anchor cell in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md and the lesson table in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-53.md), and that the span file under /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/spans/ is the exact slice of the .txt at the manifest offset. For PDFs also check each quote (whitespace removed) occurs in an independent pypdf extraction. Then read each sentence of the entry that cites S117 and mark: supported / narrower-than-text / overstated / unsupported, quoting the capture. Table + defects.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2ExecQuotesS117.md"
+      },
+      {
+        "name": "R53W2ExecQuotesS118",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nRe-open S118 (the issued 药品临床综合评价质量控制指南（2024 年版 试行） (PDF)), capture /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/16fe8487aa97b98576a0dbac.txt (raw 16fe8487aa97b98576a0dbac.raw), cited by corpus/knowledge/western-instrument-alignment-r50.md and corpus/knowledge/quality-control-guideline-issued-text-r48.md. For EVERY row of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/quotes.tsv with id S118: count it in the .txt (must be 1), confirm it lies on one line, ≤25 words, ≤160 chars, that its offset equals the `char N` the entry/row/lesson state for it (grep the entry's source line and the S-row anchor cell in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md and the lesson table in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-53.md), and that the span file under /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/spans/ is the exact slice of the .txt at the manifest offset. For PDFs also check each quote (whitespace removed) occurs in an independent pypdf extraction. Then read each sentence of the entry that cites S118 and mark: supported / narrower-than-text / overstated / unsupported, quoting the capture. Table + defects.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2ExecQuotesS118.md"
+      },
+      {
+        "name": "R53W2ExecQuotesS119",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nRe-open S119 (the society's posting of the release notice (HTML .txt)), capture /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/cfa080b4046592eb9490a82c.txt (raw cfa080b4046592eb9490a82c.raw), cited by corpus/knowledge/quality-control-guideline-issued-text-r48.md. For EVERY row of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/quotes.tsv with id S119: count it in the .txt (must be 1), confirm it lies on one line, ≤25 words, ≤160 chars, that its offset equals the `char N` the entry/row/lesson state for it (grep the entry's source line and the S-row anchor cell in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md and the lesson table in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-53.md), and that the span file under /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/spans/ is the exact slice of the .txt at the manifest offset. For PDFs also check each quote (whitespace removed) occurs in an independent pypdf extraction. Then read each sentence of the entry that cites S119 and mark: supported / narrower-than-text / overstated / unsupported, quoting the capture. Table + defects.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2ExecQuotesS119.md"
+      },
+      {
+        "name": "R53W2ExecQuotesS120",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nRe-open S120 (Cochrane Handbook chapter 4 (HTML .txt)), capture /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/c9d1e74c3ac8d9eb332c9770.txt (raw c9d1e74c3ac8d9eb332c9770.raw), cited by corpus/knowledge/western-instrument-alignment-r50.md. For EVERY row of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/quotes.tsv with id S120: count it in the .txt (must be 1), confirm it lies on one line, ≤25 words, ≤160 chars, that its offset equals the `char N` the entry/row/lesson state for it (grep the entry's source line and the S-row anchor cell in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md and the lesson table in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-53.md), and that the span file under /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/spans/ is the exact slice of the .txt at the manifest offset. For PDFs also check each quote (whitespace removed) occurs in an independent pypdf extraction. Then read each sentence of the entry that cites S120 and mark: supported / narrower-than-text / overstated / unsupported, quoting the capture. Table + defects.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2ExecQuotesS120.md"
+      },
+      {
+        "name": "R53W2ExecC2Rerun",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nAttack the C2 after-state: with TMPDIR=/fast/scratch/hyaku/chousa-r53/R53W2ExecC2Rerun run at the tip `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/c2-count.py`, `--lane-only`, `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/build-spans.py --check`, `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round51/quote-substance-check.py /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/spans.tsv`, and `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/controls/build-c2-controls.py` (both controls must still FAIL). Then export the tip to scratch and run c2-count with --root on it after replacing tools/inference-ground.py by the base version (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 5b550133d79bc09c82d8965cce2e48c2598b8c3e:tools/inference-ground.py`) — erratum E4 says 3/3 either way. Paste every line.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2ExecC2Rerun.md"
+      },
+      {
+        "name": "R53W2ExecPdfGlue",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nAttack the claim that no PDF quote is a two-column glue: run `uv run --quiet --with pypdf python /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/pdf-crosscheck.py` from /home/vgpnk/Projects/shokunin/chousa-shokunin. Then build the strongest counter-test: for S117 (/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/0ae65ac01b93119d3c2f3fed.txt) list every quote of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/quotes.tsv whose line in the .txt also carries a second column block (split at ≥5 spaces) and check whether the quote crosses blocks; also check reading order — a quote can be in pypdf text yet be two half-sentences from different columns that happen to be adjacent in pypdf too (compare with `pdftotext` without -layout, `/usr/bin/pdftotext -raw`). Report any quote whose meaning depends on an interleave.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2ExecPdfGlue.md"
+      },
+      {
+        "name": "R53W2ExecQualityChecks",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nAttack QUALITY 91–96 at the end of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md: for each criterion run its stated check command and its stated 'shown able to fail' command exactly as written (TMPDIR=/fast/scratch/hyaku/chousa-r53/R53W2ExecQualityChecks; use an exported tip copy for any mutation). Table: criterion · check output · red-before output · matches the criterion's text? Flag any claim in a criterion that you could not reproduce, any check that cannot fail, and any pointer that does not resolve.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2ExecQualityChecks.md"
+      },
+      {
+        "name": "R53W2ExecCensusMisroot",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nRound-end conformance probes: `/home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa` (exit, every line); the CORPUS.md awk NF check on S117–S120 (`awk -F'|' '/^\\| S11[7-9] |^\\| S120 /{print NF}' /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md`); `git -C /home/vgpnk/Projects/shokunin status --porcelain` and `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin status --porcelain` — list every untracked file and say which (if any) a round-53 seat wrote (grep its content for 'R53' / 'round 53'); never move or delete anything. Also: any file under /fast/scratch/hyaku/chousa-r53/ older than 45 minutes left by a W1 seat (`find /fast/scratch/hyaku/chousa-r53 -maxdepth 1 -mmin +45`)?\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2ExecCensusMisroot.md"
+      },
+      {
+        "name": "R53W2ExecCjkSweep",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nFalse-refusal sweep of the landed CJK polarity window: for EVERY corpus/knowledge entry in /home/vgpnk/Projects/shokunin/chousa-shokunin that has a round spans manifest (`grep -l` the entry path in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round*/spans.tsv), run the tip `tools/inference-ground.py --entry <e> --spans <that manifest> --counts /dev/null --registry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md --root /home/vgpnk/Projects/shokunin/chousa-shokunin --quiet` and the base tool (git show 5b550133d79bc09c82d8965cce2e48c2598b8c3e:tools/inference-ground.py) the same way; tabulate exit codes and findings; any entry the tip flags that the base passed is a regression — print the finding and judge it (true reversal or false refusal). Also run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/cjk-polarity-check.py` and the round-46/47/48 inference-ground counters (`python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round46/c1-count.py`, round47/c1-count.py, round48/precision-count.py).\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2ExecCjkSweep.md"
+      },
+      {
+        "name": "R53W2ExecAnchorForge",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nAttack `/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/pointer-anchor-check.py` (round-52 closure routed 4): on an exported tip copy, write correction lines that PASS it while pointing at the wrong place (an anchor that occurs exactly once in the target but belongs to unrelated content; an anchor in a directory pool; a later line superseding a good one with a bad one) and lines that should pass but FAIL (an anchor containing `\"`; Unicode dashes). Report each with output, and whether the seven anchored lines at the end of /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md are content-true (open each target at the anchor and say whether it shows what the corrected pointer meant).\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2ExecAnchorForge.md"
+      },
+      {
+        "name": "R53W2ExecStreak",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nAttack `/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/weakness-streak.py` and `/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/recurring.tsv` (considerthese 2026-10-26 proposal 2): run it; then mutants on an exported tip copy — claimed 5→4, routed path removed, a round-54 lesson stub naming nothing, a lesson that mentions 'forge' only in praise. Does the tool fail when it should and pass when it should? Is RW-1's regex too loose (count matches per round in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-4[5-9]*.md and round-5*.md)? Report the matrix and one concrete improvement.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2ExecStreak.md"
+      },
+      {
+        "name": "R53W2ExecHistCounters",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nRegression sweep at the tip f4343163b70ce20e6b6d4f52b39935156e8afb26: with TMPDIR=/fast/scratch/hyaku/chousa-r53/R53W2ExecHistCounters run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round47/c2-count.py --list` (SKILL registry), `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round51/c3-count.py`, `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round52/verdict-gap.py --from 40 --to 52`, `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round52/c2-count.py`, `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round51/c2-count.py`, `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round51/c1-count.py`, `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/assimilate-rows.py --selftest`, and `bash /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh selftest` if it has one (read its usage). Compare with the base 5b550133d79bc09c82d8965cce2e48c2598b8c3e (export it). Any count that changed: intended (new rows/tool) or regression?\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2ExecHistCounters.md"
+      },
+      {
+        "name": "R53W2DraftScorecard",
+        "agent": "scribe",
+        "task": "/skill:godspeed\n\nDraft the append-only SCORECARD.md section `## Round 53 verdict — 2026-10-26 (adopter v4; search-record instruments by document)` in the exact shape of the `## Round 52 verdict` section of /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md (read it: intro paragraph, claim table with before→after/command/verdict/tag, axis table, capabilities table, `## Planned — round 54 (not started)`). Use only measured values from /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/controls/c1-before.txt, c2-before.txt, c2-controls.txt, the counters run by you at the tip (TMPDIR=/fast/scratch/hyaku/chousa-r53/R53W2DraftScorecard), and claims-erratum E1–E6. State honestly that the frozen C1 counter is forgeable (W1 R53CritForgeC1, supplement 3/3 vs forge 1/3). Planned round 54: theme C (GB/T 7714 source-type, W1 R53ScoutNextThemes) or B; the counter refusing per-leg<1; OLE .doc text form. Output one fenced block labelled SCORECARD.md.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2DraftScorecard.md"
+      },
+      {
+        "name": "R53W2DraftLog",
+        "agent": "scribe",
+        "task": "/skill:godspeed\n\nDraft the append-only LOG.md entry `## Round 53 — …` in the shape of the Round 52 entry at the end of /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md (read it): evidence that motivated the round (round-52 closure routed items, SCORECARD planned row), C1, C2, frontier step (rows 116→120, census, mistakes, considerthese pick weakness-streak), routed fixes landed (CJK polarity, anchored corrections, erratum ranges), not landed/named, waves (W1 49 seats; W2 count from the spec). Use lane commit hashes from `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin log --oneline 5b550133d79bc09c82d8965cce2e48c2598b8c3e..f4343163b70ce20e6b6d4f52b39935156e8afb26`. Output one fenced block labelled LOG.md.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2DraftLog.md"
+      },
+      {
+        "name": "R53W2DraftReportSections",
+        "agent": "scribe",
+        "task": "/skill:godspeed\n\nDraft the fleet report sections `## Sources & frontier` and `## Trend verdicts` for round 53 in the shape of /home/vgpnk/Projects/shokunin/.ufo/reports/round-52/chousa.md (read it). Sources: census start /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/census-start.txt and end (run it), rows before→after with the grep count command at base and tip (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 5b550133d79bc09c82d8965cce2e48c2598b8c3e:corpus/SOURCES.md | grep -cE …`), added by tier, rows touched old→new (none expected — verify with `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin diff 5b550133d79bc09c82d8965cce2e48c2598b8c3e f4343163b70ce20e6b6d4f52b39935156e8afb26 -- corpus/SOURCES.md | grep '^-|'`), assimilation line (theme, collision count, renumber map, admits/refuses, quarantine), considerthese line, open L0. Trend verdicts expansion/quality/discernment with evidence; discernment stays 'unchanged pending closure'. Output fenced blocks.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2DraftReportSections.md"
+      },
+      {
+        "name": "R53W2DraftWaveLimits",
+        "agent": "scribe",
+        "task": "/skill:godspeed\n\nDraft the round-53 lesson section `## Wave-2 limits recorded (not fixed this round)` in the shape of the same section in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-52.md. Read every finished wave-1 report in /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-53/w1/ for findings the L1 did NOT fix (named limits: adopter symlink write escape and --out==--knowledge input loss from R53SentCounters; c2-count F2/F3 from R53ReviewC2Counter; quarantine verdict contradictions S104/S114/S077 from R53ExecQuarantine; CJK window limits; the forge's surviving routes) and list each with pointer and flip. Verify each pointer exists (grep). Output one fenced block labelled corpus/lessons/round-53.md.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2DraftWaveLimits.md"
+      },
+      {
+        "name": "R53W2SentNewScripts",
+        "agent": "sentinel",
+        "task": "/skill:godspeed\n\nHazard review of the round's NEW post-freeze scripts and the patched tool: /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/c1-supplement.py, pdf-crosscheck.py, cjk-polarity-check.py, pointer-anchor-check.py, weakness-streak.py, and the CJK window in /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/inference-ground.py (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin diff 5b550133d79bc09c82d8965cce2e48c2598b8c3e f4343163b70ce20e6b6d4f52b39935156e8afb26 -- tools/inference-ground.py`). Every write path (hardcoded /tmp? lane writes? rmtree scope), TMPDIR honoured, cleanup on SIGINT, regex catastrophic backtracking on a 1 MB entry line for the CJK window (time it), path traversal in pointer-anchor-check targets (`correction: x:1 p -> ../../etc/passwd anchor: …` — does it read outside the lane?). Severity and fix per hazard.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2SentNewScripts.md"
+      },
+      {
+        "name": "R53W2SimplifyRound",
+        "agent": "simplifier",
+        "task": "/skill:godspeed\n\nYAGNI review of what round 53 landed after the freeze: /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/c1-supplement.py (three legs), /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/cjk-polarity-check.py, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/weakness-streak.py, the CJK diff in tools/inference-ground.py. Name any branch, flag or leg no fixture or receipt exercises and that could be deleted without changing any printed result — prove by deleting in a scratch copy and re-running. Do not edit the lane.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2SimplifyRound.md"
+      },
+      {
+        "name": "R53W2CritForgeSupplement",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nAttack the post-freeze C1 supplement /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/c1-supplement.py: write the cheapest tool (in /fast/scratch/hyaku/chousa-r53/R53W2CritForgeSupplement) that passes BOTH `c1-count.py` 8/8 and `c1-supplement.py` 3/3 without implementing the adopter's full contract (e.g. extend /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/controls/forge-c1.py with a real calendar check and a real self-test runner, or key on the supplement's `example.org`/`example.net`/`example.com` hosts or its `n<hex>.md` names). Paste the forge and outputs, or list each shortcut and the leg that refused it.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2CritForgeSupplement.md"
+      },
+      {
+        "name": "R53W2CritC1Verdict",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nAttack the C1 verdict the lane will claim ('improved narrowly', operability, capability extension): is v4 a behaviour change any lane workflow uses (does the round's own C2 adoption depend on the twin label — read the lesson Gate's collision paragraph), or a relabel? Is the frozen predicate met on the landed tool for inputs the counter never generates (cadence rechecks, erratum E3; a staged row cited by an entry that is refused)? Would a do-nothing control meet the target (controls in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/controls/c1-before.txt)? Verdict with evidence: improved / improved narrowly / unchanged / harmed.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2CritC1Verdict.md"
+      },
+      {
+        "name": "R53W2CritForgeC2",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nAttack C2 at the tip: on an exported tip copy, find the cheapest lane edits that keep `c2-count.py --root <copy>` at C2=PASS while making an entry false (swap two quotes' bullets; negate an English bullet that quotes a phrase; replace a CJK bullet's claim while keeping its quote; drop an entry's Unknown sweep). Which edits pass? This measures what C2 does NOT certify; list what the closure must read by hand.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2CritForgeC2.md"
+      },
+      {
+        "name": "R53W2CritEntailStr",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nEntailment attack on /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/search-tracking-record-r40.md against S117 (/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/0ae65ac01b93119d3c2f3fed.txt; read the surrounding paragraphs, not just the quotes; the .txt is two-column, so read the PDF text via `uv run --quiet --with pypdf python` if the order is unclear). For every Observation and Inference sentence: supported / narrower / overstated / unsupported, with the capture text that decides it. Especially: 'a tracking record is routed', 'makes a sweep re-runnable', 'per-source rows are the record', and the Column 2 / Column 1 allocation. Give the narrowed sentence for each defect.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2CritEntailStr.md"
+      },
+      {
+        "name": "R53W2CritEntailWia",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nEntailment attack on /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/western-instrument-alignment-r50.md against S120 (/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/c9d1e74c3ac8d9eb332c9770.txt) and S118 (/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/16fe8487aa97b98576a0dbac.txt). For every sentence: supported / narrower / overstated / unsupported. Especially: is 'the reporting aligns with … PRISMA' one item of a list of librarian services (read §4.2.1's list) — does the entry say whose obligation it is? Is 指标 4 at char 18046 in the 文献研究 indicator row (check the table structure around it; the guideline has several 指标 4)? 'nothing in the guideline asserts an alignment of its own' — sweep. Give narrowed sentences.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2CritEntailWia.md"
+      },
+      {
+        "name": "R53W2CritEntailQcg",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nEntailment attack on /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/quality-control-guideline-issued-text-r48.md against S118 (/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/16fe8487aa97b98576a0dbac.txt) and S119 (/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/cfa080b4046592eb9490a82c.txt and its .raw HTML). For every sentence: supported / narrower / overstated / unsupported. Especially: 'posted day and signed day differ and the page does not reconcile them'; 'the text cannot date itself'; 'the two carriers spell the title differently'; 'the instrument … lists the strategy as a required annex'; '检索日期 0 times'. Give narrowed sentences.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2CritEntailQcg.md"
+      },
+      {
+        "name": "R53W2CritRefuseS190",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nAttack the refusal of staged S190 (the pharmwyp print of the 2019 NMPA notice, /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/0435b64f65c3ea7ddc6bb92e.txt) in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-53.md (Gate decisions and the refused-doc line). W1 `R53ReviewProvince` said register it tier C; W1 `R53CritNegatives` found it names PRISMA (char ~7797) which contradicts the staged Wia title. Is the refusal the decisive reason (QUALITY 93)? Does the admitted Wia entry now say anything the NMPA print contradicts? Was a document refused to make C2 easier (it does not need S190: BOUND 4/5 ≥3)? Verdict: refusal right / wrong / right-for-wrong-reason.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2CritRefuseS190.md"
+      },
+      {
+        "name": "R53W2CritCredit",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nAttack the expansion credit: the README `Round53 coverage and frontier` section in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/README.md claims four documents of credit (S117–S120). Is S119 (a release-notice posting) a document with its own ground or a carrier stamp of S118? Is S120 (Cochrane ch.4) new when the lane already cites other Cochrane Handbook chapters (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin grep -n 'Cochrane Handbook' 5b550133d79bc09c82d8965cce2e48c2598b8c3e -- corpus/knowledge corpus/SOURCES.md`) and staged S083 is the same chapter at another host? Verdict per document: credit / no credit, with pointers.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2CritCredit.md"
+      },
+      {
+        "name": "R53W2CritMistakes",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nAttack `## Mistakes` in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-53.md (six rows): for each row, is the class right, does the evidence pointer resolve (open it), is 'captured-by' honest, and is the fix shown able to fail by a command you can run (run it)? A fix that cannot fail does not count. Also: is any round-53 mistake missing (e.g. the wave context named planned ids S117–S121 that changed to S117–S120; a seat-drafted README assumed S120=NMPA)?\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2CritMistakes.md"
+      },
+      {
+        "name": "R53W2CritTrends",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nAttack the round's trend verdicts before they are filed: expansion (four documents, a capability), quality (narrowing on adoption, routed fixes landed), discernment (unchanged pending closure). Read the lesson, README section, SCORECARD tail and the W1 reports of R53CritTheme, R53CritNegatives, R53ReviewProvince. For each trend: the strongest argument it is overstated, and the verdict you would give with evidence.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2CritTrends.md"
+      },
+      {
+        "name": "R53W2ReviewSupplement",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nReview /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/c1-supplement.py line by line against its docstring and claims-erratum E1: CALENDAR's date draws (are all of them calendar-invalid? any day-32 month a tool might accept by lexical check?), the leap-year control, REAL_PERTURBED's expected map (staged order preserved? twin last?), SELFTEST_RAN's dropped-finding logic when the dropped finding occurs twice. Defects with reproducing commands (scratch /fast/scratch/hyaku/chousa-r53/R53W2ReviewSupplement).\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2ReviewSupplement.md"
+      },
+      {
+        "name": "R53W2ReviewRows",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nReview Registry rows S117–S120 in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md against CORPUS.md's SOURCES.md contract (/home/vgpnk/Projects/shokunin/CORPUS.md): 11 cells, kind/tier enums, tier justification (S118/S119 tier B society carriers; S117 tier A publisher PDF; S120 tier A), anchor cells (every `char N` is a quote offset in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/spans.tsv — compute offset+span.find(quote)), teaches cells entailed by the captures, used-by exact, recheck valid. Also the lesson's re-opened-sources table (≤25-word located quote per new row, access date). Defects per cell.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2ReviewRows.md"
+      },
+      {
+        "name": "R53W2ReviewCjkPatch",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nReview the CJK polarity diff `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin diff 5b550133d79bc09c82d8965cce2e48c2598b8c3e f4343163b70ce20e6b6d4f52b39935156e8afb26 -- tools/inference-ground.py` line by line: negator lists, the six-character clause-bounded window, interaction with the Latin path, the docstring's named limits, and the fixtures /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/fixtures/inference-ground-cjk/ (do the positives really exercise a near-miss; is S901 reused across three fixtures a problem for the spans manifest's entry column?). Defects with reproducing commands; name one false-refusal shape you can build and run it.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2ReviewCjkPatch.md"
+      },
+      {
+        "name": "R53W2ReviewCorrections",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nReview the seven anchored `correction:` lines at the end of /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md and the erratum-range corrections: does each correct what the round-52 closure section 6 item 1 and the round-51 closure item 4 asked (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-52-verifier-spotcheck.md, round-51-verifier-spotcheck.md)? Is SKILL.md:133 really the round-51 erratum range site (open it)? Is any other stale erratum range left in the lane (`grep -rn 'E1–E[0-9]\\|E1-E[0-9]' /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md /home/vgpnk/Projects/shokunin/chousa-shokunin/SKILL.md /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons` and compare with each erratum's real range)? Defects.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2ReviewCorrections.md"
+      },
+      {
+        "name": "R53W2ReviewSkillReadme",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nReview the three new SKILL.md Gates rows (grep -n 'round 53\\|round-53' /home/vgpnk/Projects/shokunin/chousa-shokunin/SKILL.md) and the README section `Round53 coverage and frontier`: every command runs as written from /home/vgpnk/Projects/shokunin/chousa-shokunin (run each with TMPDIR=/fast/scratch/hyaku/chousa-r53/R53W2ReviewSkillReadme), every pinned value matches the file (REAL_PIN, R50_PIN, FIXTURES_SHA256 9822ad59…), every claim in the README rows matches the entries (open them). Defects with output.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2ReviewSkillReadme.md"
+      },
+      {
+        "name": "R53W2MutSupplement",
+        "agent": "mutation-tester",
+        "task": "/skill:godspeed\n\nMutation-test the adopter through /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/c1-supplement.py: copy /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/assimilate-rows.py to /fast/scratch/hyaku/chousa-r53/R53W2MutSupplement/ and mutate (1) valid_date → lexical regex only; (2) leap-year handling broken (Feb 29 always invalid); (3) selftest prints PASS without comparing; (4) selftest ignores missing findings; (5) twin label on the perturbed package only when ids < 200; (6) registry max read from the first row not the max. Run the supplement (and the frozen counter) per mutant; kill matrix; survivors with the leg that would kill them.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2MutSupplement.md"
+      },
+      {
+        "name": "R53W2MutCjkCheck",
+        "agent": "mutation-tester",
+        "task": "/skill:godspeed\n\nMutation-test the CJK window through /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/cjk-polarity-check.py: copy /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/inference-ground.py to scratch /fast/scratch/hyaku/chousa-r53/R53W2MutCjkCheck and mutate (1) window 6→1; (2) drop 未 from the negators; (3) drop the span-negated direction; (4) ignore clause boundaries; (5) post-negators removed; (6) flip only when the negator is adjacent. Run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/cjk-polarity-check.py --tool <mutant>` per mutant; kill matrix; survivors with the fixture that would kill them.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2MutCjkCheck.md"
+      },
+      {
+        "name": "R53W2MutPdfCrosscheck",
+        "agent": "mutation-tester",
+        "task": "/skill:godspeed\n\nMutation-test /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/pdf-crosscheck.py: on a scratch copy of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53 (quotes.tsv), plant (1) a quote glued across the two JMLA columns from one .txt line; (2) a quote with one changed character; (3) a quote that exists only in the .txt header/footer; (4) a quote from S118 with a CJK wrap joined. Does the check fail each? It reads quotes.tsv beside itself — run the copy from its own directory. Kill matrix and survivors.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2MutPdfCrosscheck.md"
+      },
+      {
+        "name": "R53W2ConnSiblingsFinal",
+        "agent": "connector",
+        "task": "/skill:godspeed\n\nFinal sibling-overlap scan for what round 53 LANDED: grep the sibling lanes under /home/vgpnk/Projects/shokunin/*-shokunin/ (corpus/, tools/, SKILL.md, PROVINCE.md; read-only; skip chousa-shokunin) for tracking record, PRISMA-S, information specialist, 质量控制指南, 药品临床综合评价, bjhea, inference-ground, polarity, CJK negat, pointer anchor, correction:. Verdict: overlap / no overlap for each landed surface, closest sibling file named.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2ConnSiblingsFinal.md"
+      },
+      {
+        "name": "R53W2ConnPattern",
+        "agent": "connector",
+        "task": "/skill:godspeed\n\nCross-claim pattern after integration: the round's C1 (twin label: two staged ids, one document) and C2 (S118 cited by two entries through those twins) meet in one registry row. (1) Does any OTHER lane row carry two staged ids of one document without a twin record (`grep -rn 'twin' /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-4*.md /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-5*.md`; the round-52 S113/S133 case)? (2) Is the 'forgeable frozen counter' streak (RW-1, 5 rounds) a pattern the lane should answer structurally (e.g. counters that call the tool on held-out real packages) — propose one concrete design with a pointer to where it would live. (3) One recommendation for round 54.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2ConnPattern.md"
+      },
+      {
+        "name": "R53W2ScoutFrontier",
+        "agent": "scout",
+        "task": "/skill:godspeed\n\nCoverage and frontier check after integration: read /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/README.md `## Frontier` items and the new `Round53 coverage and frontier` section; for each 'Advanced' and 'Left open' bullet, say whether the landed entries support it (path:line) and whether the base already held it (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin grep -n … 5b550133d79bc09c82d8965cce2e48c2598b8c3e -- corpus/knowledge`). Also list which frontier items from round 52's README section this round moved or did not move.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2ScoutFrontier.md"
+      },
+      {
+        "name": "R53W2ExecZeroCases",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nRed-team the frozen C1 `--per-leg K` interface in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/c1-count.py (W1 `R53SentCounters` H1): reproduce `--per-leg 0` and `--per-leg -3`, count generated case lines, then probe values `1`, `-1`, `2`, and an invalid non-integer; run with `--seed 53` and TMPDIR=/fast/scratch/hyaku/chousa-r53/R53W2ExecZeroCases. Against the landed tool, tabulate exit, LEGS, case lines, and whether each generated leg actually ran. Read claims.md: does the frozen kill rule explicitly exclude a vacuous sample size? Do not edit the counter.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2ExecZeroCases.md"
+      },
+      {
+        "name": "R53W2ExecAdopterBoundary",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nReproduce the new C1 named limits from W1 `R53SentCounters` H3–H5 against the landed adopter, without writing to the lane: in scratch /fast/scratch/hyaku/chousa-r53/R53W2ExecAdopterBoundary create (1) a safe package whose `--out` is the same directory as `--knowledge`, and record whether it destroys the entry; (2) a package whose `--out` contains a symlink named as a valid `--entry` pointing outside the scratch root, and record the target's before/after digest; (3) a cited row with a 200,000-character symbolic recheck and measure time/RSS; (4) a cadence-only `quarterly` recheck. Use `timeout`, `ulimit` if appropriate; never point a fixture at a real file. Table command, rc, writes and consequence against the frozen predicate.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth\nMilestone: Round 53 falsify: re-run every counter and check, re-open every quote, attack entailment, forge the counters and the supplement, review rows, patches and corrections, and draft the verdict sections\n\nReport: write your scoped findings to .ufo/waves/round-53/w2/R53W2ExecAdopterBoundary.md"
+      }
+    ]
+  },
+  "resumeSends": [],
+  "note": "Issue exactly one batched task call with taskCall ({context, tasks}); never split a wave into multiple task calls (one-swarm-per-wave). Then one hub send per resumeSends entry: hub send --to <entry.resume> --message <entry.message> (entry.name is bookkeeping, not a hub field)."
+}
