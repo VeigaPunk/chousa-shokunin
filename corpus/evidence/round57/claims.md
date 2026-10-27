@@ -66,3 +66,62 @@ recipe-consistent `.txt`, successful records) `VERDICTS=47/47 REPRODUCED=0 DRIFT
 
 Separability: C2's counter reads only `refetch.tsv`, `corpus/captures/`, the round-57 lesson's FRESHNESS-FLAG lines,
 the committed manifests at SET_REV and `tools/capture-text.py`; it never runs a gate, a probe or the span builder.
+
+## R57-C3 — depth (sourced): the workflow standard's normative references chained to their own documents
+
+Axis: depth (verifiable detail; citation chaining, the lane's own method). Lead: the round-56 closure's routed item 4
+(`corpus/lessons/round-56-verifier-spotcheck.md` §6.4: S127 `2 规范性引用文件` names the national centre's instruments).
+The surface it moves: the lane holds the standard (S127) and one of the seven documents its normative-reference
+clause lists (S118); none of the others is held, and no entry says what the clause binds a user of the standard to.
+
+**Frozen predicate (one sentence, = the `c3-count.py` docstring):**
+
+the lane entry `corpus/knowledge/normative-reference-chain-china-r57.md`
+exists, cites S127 as `source: S127 — <S127's first URL>` with S127's
+`used-by` naming it, and holds `规范性引用文件` (absent from `corpus/knowledge`
+at BASE_REV); `corpus/evidence/round57/c3/spans.tsv` carries an S127 row
+whose quote contains `规范性引用而构成本文件必不可少的条款` (CLAUSE); of the
+seven references S127's `2 规范性引用文件` lists (R1 the 2019 notice
+〔2019〕80号, R2 the 2021 notice 〔2021〕16号, R3 the 管理指南 2021年版, R4-R6
+the 抗肿瘤 / 心血管病 / 儿童 技术指南 2022年版, R7 the 质量控制指南 2024年版)
+at least four are BOUND — some lane Registry row X other than S127, S128 and
+S129 and whose first source-cell URL U is none of theirs, either new since
+BASE_REV (`mined`, opened 2026-10-27) or held, whose `used-by` names the
+entry and which the entry cites as `source: X — U`, whose lane-owned capture
+`corpus/captures/<key(U)>` is the bytes of a successful attempt for (X, U) in
+`corpus/evidence/round57/refetch.tsv`, whose DEFINED text form (an OLE or zip
+`.raw` through `tools/capture-text.py` as at BASE_REV, else the `.txt`) holds
+the reference's edition token (whitespace removed) and its title as a
+HEADING (a line that, whitespace removed and one trailing `（…）`/`(…)`
+dropped, ends with the title after a prefix of at most 16 characters holding
+none of `《》.[]［］`), and for which the manifest carries at least two rows
+of id X and URL U with the form file's digest, one of whose quotes holds that
+title — and every reference not bound carries a line
+`- UNBOUND R<k> sweep: <queries and hosts>` in the entry; every manifest row
+is a quote of at most 25 whitespace words and 160 characters inside its span
+file, the entry and the round-57 lesson, its span file the exact slice at the
+recorded offset of the form whose digest is recorded and longer than the
+quote; the round-51 `quote-substance-check.py` exits 0 on the manifest; every
+`char N` of a new bound row's `anchor` cell (at least one) is a quote offset
+of that id; the entry exits 0 under `tools/inference-ground.py` with this
+manifest; and no `S###` token in the entry names a row other than S127 or a
+bound row — counted `C3=PASS`.
+
+Counter: `python3 corpus/evidence/round57/c3-count.py` (BASE_REV = round base). Kill rule: any `C3=FAIL` or exit != 0 at
+the after-measurement = C3 not verified; no title, token, threshold or exclusion changes after this commit.
+
+Target (before data): BOUND >= 4 of 7, chosen before any search for the six unheld documents; the held S118 alone
+binds R7 (control HELD), so a do-nothing chain reaches 1. The heading rule was written after reading how S127, S128
+and S129 print the titles (citations in 《》 or GB/T 7714 reference-list lines `….标题（…）[EB/OL]`); on the held
+captures it finds a heading only in S118 (R7) and S130 (R3's title, without the `2021年版` token, so S130 cannot bind
+R3) — pre-freeze checks of the rule, not measurements.
+
+Before (`controls/c3-before.txt`): `ENTRY=no … BOUND=0/7 … C3=FAIL`, exit 1. Controls (`controls/c3-controls.txt`, by
+`controls/build-c3-controls.py`): HELD (entry chained through S127's clause, S118 and S130 only, every quote real)
+`BOUND=1/7 (R7:S118) … C3=FAIL`; CITER (HELD plus a new row on the explanatory note, which cites every title)
+`BOUND=1/7 … C3=FAIL`.
+
+Separability: C3 reads the registry, the entry, the lesson, its own manifest `corpus/evidence/round57/c3/spans.tsv`,
+`refetch.tsv` and `corpus/captures/`; it never runs a gate, probe or builder. It shares the capture store with C2
+(content-addressed by URL key): C3's documents are not in C2's frozen set of 47 except S127 and S118, whose C2 verdicts
+do not depend on C3.
