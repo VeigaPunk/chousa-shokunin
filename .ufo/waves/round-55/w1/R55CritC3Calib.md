@@ -1,0 +1,41 @@
+# R55CritC3Calib — C3 calibration attack
+
+Scope: C3 claim frozen in `corpus/evidence/round55/claims.md:145-191`; baseline statements in files at `dba605deb5cd5ed4874e0e3c39ba24737409cd80`. I did not run the counter or alter lane files. Evidence below is from opened baseline files and W2 reports/closure.
+
+Calibration rule under test: AXES calibration is self-assessment vs observed repo state; prompt §9 requires counting mismatches. A committed statement contradicted by an independently derived observation is eligible; matching/re-stating a W2 conclusion without observing the bytes/probe is not itself calibration.
+
+## Item-by-item classification
+
+All quoted claims below are baseline text in `corpus/knowledge/source-type-taxonomy-r36.md` (R36), `corpus/QUALITY.md` (QUALITY), `corpus/lessons/round-54.md` (lesson), or `corpus/evidence/round54/c1-supplement.py` (supplement). Exact distinguishing anchors and independently recomputed observation recipe/result are frozen in `claims.md:161-180` and implemented at `c3-count.py:142-202`.
+
+| Item | Baseline statement (short quote) | Observation / mismatch determination |
+|---|---|---|
+| E01 | R36 I3: “the stronger claim that the text is unavailable belongs to no line here” (`source-type-taxonomy-r36.md:24`) | `c3-count.py:145-146` counts the latent string in cached S122. W2 `R54W2CritEntailSta.md:63-70` reports `該标准暂无全文，请等待更新`? Exact string is `该标准暂无全文，请等待更新`, once at 1712 in embedded i18n. Genuine mismatch, although statement is about “line” and should be scoped to displayed/rendered lines. |
+| E02 | R36 observation: “主管部门为 国家标准委 (char 575)” (`source-type-taxonomy-r36.md:15`) | `c3-count.py:147-148` finds phrase at S121 char 569, not 575. Genuine offset mismatch (6 chars); W2 `R54W2CritEntailSta.md:27-31`. |
+| E03 | R36 inference: “document-type taxonomy the standard prescribes” (`source-type-taxonomy-r36.md:26`) | Counter counts 附录 / 文献类型 in S121/S122 (`c3-count.py:149`). Both zero, so captures do not substantiate the indicative “prescribes”; W2 `R54W2CritEntailSta.md:73-79` says this is overstated-in-mode, recommends “said to prescribe.” Genuine calibration mismatch, nuanced because absence from captures is not proof the standard lacks the taxonomy. |
+| E04 | R36 observation: “count 1 each, on one line” (`source-type-taxonomy-r36.md:18`) | Counter counts 国家标准委 in both forms (`c3-count.py:150`); W2 `R54W2CritEntailSta.md:42-45` reports count 2 in S122, not 1. Genuine mismatch in stated count; caveat: likely the two occurrences are different fields. |
+| E05 | QUALITY statement keyed by “12,963 / 12,795” | Counter reopens defined S101 OLE form and checks six unique phrases / drift from cited anchors (`c3-count.py:151-156`). This is a direct recomputation of a numerical self-statement; genuine mismatch if the observed vector differs, not merely because W2 says so. The counter's exact result is its own observation. |
+| E06 | QUALITY: “18,242 control characters” | Counter decodes pinned raw as UTF-16LE and counts C0 under three exclusion sets (`c3-count.py:157-160`). Directly measurable numeric assertion; genuine mismatch only to the extent computed counts disagree with 18,242. |
+| E07 | QUALITY: “0 U+FFFD, 0 control characters” | Counter computes C0 and LF counts on defined OLE text form (`c3-count.py:161`). Directly measurable statement; genuine mismatch if computed values differ. |
+| E08 | Lesson: “prints `BAD=6`” | Counter archives BASE, removes two dumps, runs pointer-anchor-check and records its ANCHORED line (`c3-count.py:162-174`). Closure §6 item 6 gives observed `ANCHORED=7/16 UNANCHORED=9 BAD=9` (`round-54-verifier-spotcheck.md:133`), a real numeric mismatch. |
+| E09 | QUALITY: “and refuses a tool that delegates to that reader” | Counter runs ctypes libc `system()` under hook and reads marker (`c3-count.py:175-185`). Closure §6 item 2 and `R54W2CritC1Verdict` report ctypes delegate bypasses audit hook (`round-54-verifier-spotcheck.md:128-129`). Genuine, probe-backed mismatch. |
+| E10 | QUALITY: “the SHELL control's receipt says the same” | Counter extracts SHELL LEGS from baseline controls (`c3-count.py:186-188`); the recorded control receipt is observable committed state, not an independent experiment. Genuine mismatch iff its SHELL LEGS contradict the linked QUALITY assertion; it still qualifies as checking committed self-assessment against committed receipt, not as a new runtime observation. |
+| E11 | Supplement claim keyed by “outside the generation tree (no HTML, no” | Counter runs oracle-echo tool on BASE supplement and reads SUPPLEMENT_LEGS (`c3-count.py:189-202`). Closure §6 item 2 summarizes forgery; `R54W2SentFinal.md:15-49` gives attack and 3/3 pass for tool not opening `.doc`. Genuine mismatch, independently reproducible only if probe is actually run (the C3 counter does run it). |
+
+Important distinction: the prompt's calibration axis is not “did a W2 report already identify this?” It is whether each baseline self-statement differs from observed state. E01–E04 and E08–E09/E11 are clear counterexamples; E05–E07/E10 are also eligible only according to the counter's derived values versus each exact claim. The frozen C3 predicate demanding 11 mismatches is not justified merely by listing 11 observations; before the actual derived values are compared, I cannot affirm all 11 are mismatches. E10 is particularly weak as *independent* observation, though it is a valid repository-state comparison.
+
+## Copying reports / independence attack
+
+Could a seat pass by copying W2 numbers? At the errata-text level, yes: a seat can write the exact expected `observed:` strings and correct anchors by transcribing W2 reports, without opening any source. The counter's design is the relevant defense: `c3-count.py:142-203` recomputes observations itself and `:206-218` parses errata; an exact copied line passes only where the copied bytes happen to equal the counter's current outputs. This checks correction fidelity, not the seat's epistemic process. It matters to the calibration claim: C3 can measure that committed errata match counter-derived observations, but cannot establish that the author independently observed them. Thus “independent observation” is not an acceptance property of the frozen C3 mechanism; do not claim it as such. This is a limitation/tradeoff, not grounds to mutate the frozen predicate.
+
+## Missing W2 findings
+
+Closure `corpus/lessons/round-54-verifier-spotcheck.md:126-134` is the compact routed-defect census. C3 covers its r36 wording (item 4), QUALITY 97 F1 (item 5), lesson Mistakes row 2 (item 6), and the ctypes / forge findings (item 2). Missing from E01–E11 and requiring integration/register disposition: (a) uncommitted W2 outputs (closure line 126); (b) REAL leg echo through inherited TMPDIR, forge builder residue on SIGKILL, ledger checker root escape, PDF cross-check vacuity (closure lines 128-129); (c) RW-1 general finding that frozen C1 counter and supplement are forgeable (line 130); (d) five W04 duplicate-URL warnings (line 134). These are not necessarily “calibration errata”: they include integration, operability, and census issues, and the frozen C3 predicate must not be expanded. The lesson itself also calls out hedging I5 “prescribes” in its routed item 4 (line 131); E03 captures this textual issue.
+
+## Axis impact and smallest safe correction
+
+- Calibration: C3's count of 11 is potentially inflated if any E05–E10's actual counter value agrees with the baseline assertion. The counter's output, not the W2 report's wording, decides that. E10 is a repository-receipt mismatch rather than independent runtime evidence.
+- Operability/depth: report-copying does not bypass the counter, but C3 does not prove authorship or independent reasoning; avoid describing it as doing so.
+- Smallest safe correction: do not alter frozen targets/predicate/counter. Record this qualification and compare all 11 actual `c3-count.py` observations to baseline statements before calling C3 honest. Route the closure's omitted defects through the wave-1 integration register, not by adding C3 items.
+
+VERDICT: C3 is a genuine calibration *form* but its required 11/11 count is unproven here and susceptible to inflation; clear mismatch candidates E01–E04, E08–E09, E11, with E05–E07/E10 contingent on the counter's actual observations.

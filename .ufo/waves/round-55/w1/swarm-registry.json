@@ -1,0 +1,585 @@
+{
+  "schema": "ufo-swarm-registry-v1",
+  "wave": "chousa-r55-w1",
+  "createdAt": "2026-10-27T03:48:17.538Z",
+  "updatedAt": "2026-10-27T03:48:17.538Z",
+  "reportDir": ".ufo/waves/round-55/w1",
+  "members": {
+    "R55ExecC1Runs": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "executor",
+      "item": "Re-measure C1 independently on the candidate /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/build-spans.py (sha256 it first; it must equal the 6ca924995d48facbf704d2aa22ddaec236059039 blob: `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 6ca924995d48facbf704d2aa22ddaec236059039:tools/build-spans.py | sha256sum`): run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c1-count.py --seed 7 --work <empty>` and three unseeded runs (fresh empty --work each), then `--per-leg 5 --seed 55`. Paste every output line (tool sha, seed, legs, LEGS, C1). Verify after each run that no `soffice.bin` of yours survives and that the lane's `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin status --porcelain` is unchanged by your runs. Report the frozen target verdict (LEGS=4/4 on 3 unseeded + seed 7).",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55ExecC1Seeds": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "executor",
+      "item": "Seed sweep of the frozen C1 counter on the candidate /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/build-spans.py: run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c1-count.py --seed N --per-leg 2 --work <fresh empty>` for N = 1..25; tabulate per-leg PASS/FAIL and wall time. Any FAIL: reproduce it, give the failing quote/doc, and say whether the counter (quote picker, oracle, generation) or the builder is at fault, with the exact line. Also run the C1 controls receipt commands from /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/controls/c1-controls.txt header (`python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/controls/build-c1-controls.py $S/ctl` then each control with `--seed 55`) and confirm the receipt numbers reproduce (R54SHIM 1/4, TXTONLY 1/4, DELEGATE 0/4).",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55CritForgeEcho": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "critic",
+      "item": "Forge the frozen C1 counter /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c1-count.py WITHOUT computing the defined text form: write a tool (in your scratch) that never imports or reimplements `tools/capture-text.py` and still scores legs. Ideas to try and report each: read anything the counter leaves on disk during the run (the run dir, `quotes.tsv`, cache files, the hook file, sibling run dirs, /proc/<ppid>/*, environment, argv), recover the seed or the expected offsets, exploit the window picker (windows are 10-24 chars, >=4 letters, unique — can a tool locate a quote in some other form and still produce a slice equal to the defined form?), exploit REGRESS (round-54 bytes), exploit refusal legs (refuse everything vs pass the good row). Paste the forge code and the counter's output for each attempt (LEGS=…). VERDICT: forgeable or not, with the best LEGS any non-reading forge reached.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55CritForgeHook": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "critic",
+      "item": "Attack the audit hook of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c1-count.py (the HOOK constant): find a Python-level way for the tool under test to spawn a process, load native code, or read a path outside the allowlist WITHOUT triggering a denied event — e.g. `_posixsubprocess.fork_exec`, `os.posix_spawn`/`os.posix_spawnp`, `os.openpty`, `os.open` with `dir_fd`, `io.FileIO`, `mmap`, `os.fdopen` of an inherited fd, `importlib` of an extension module under the Python prefix, `signal`, `os.kill`, `sys.remote_exec` (3.14), `os.symlink` inside the run dir then open, `os.chdir` + relative open, `zipimport`. For each: the event it raises (python -X dev, `sys.addaudithook` print probe in your scratch), and whether the hook stops it. Then: does any bypass let a tool PASS a leg (e.g. delegate to LibreOffice — note the span must equal the defined form exactly)? Paste probes and outputs.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55CritForgeReader": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "critic",
+      "item": "Can a cheaper, not-defined reader pass C1? Write (in scratch) a builder that reads OLE `.doc` captures by a heuristic — e.g. olefile (`uv run --with olefile`) + taking the WordDocument stream text as UTF-16LE from fcMin, or a regex over UTF-16LE runs, or antiword/catdoc output if present (they would be spawned: note the hook) — and score it with `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c1-count.py --seed 7 --work <empty>` and two unseeded runs. Report per-leg results and where its text first diverges from `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/capture-text.py <raw>` on each of the four pinned captures (`/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/54fe0734c01f699e735b4b0a.raw`, `6dc68fd6b32ce9c8dfcebce8.raw`, `b539a80218080da56a75b624.raw`, `bdff491a75c6abeda1d9c01d.raw`). VERDICT: does the exact-slice rule separate an approximate reader from the defined one?",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55MutC1Counter": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "mutation-tester",
+      "item": "Mutation-test the frozen counter /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c1-count.py on a scratch copy of the lane (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin archive 6ca924995d48facbf704d2aa22ddaec236059039 | tar -x -C $S/lane`): one mutant at a time — drop the slice-equality check, drop the char check, drop the capture_sha256 check, drop the QUOTE-line check, drop the extra-file check, let refusals pass when spans.tsv is written, widen the hook allowlist to `/`, skip the pinned-digest check, make windows allow newlines. For each mutant run the candidate AND the three controls (`python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/controls/build-c1-controls.py $S/ctl`) with `--seed 55`; a check is load-bearing when its removal lets a control gain a leg. Table: mutant → candidate LEGS, R54SHIM, TXTONLY, DELEGATE. Name every check no control exercises (an untested clause).",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55MutC1Builder": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "mutation-tester",
+      "item": "Mutation-test the candidate /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/build-spans.py against the frozen counter: in a scratch lane copy (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin archive 6ca924995d48facbf704d2aa22ddaec236059039 | tar -x -C $S/lane`; run the copy's counter so the tool sits in the copy's tools/), apply one mutant at a time — `.txt` first for OLE captures, a UTF-16LE fallback for unknown raws, CONTEXT 79, accept a quote occurring twice, write files before checking refusals, skip universal newlines, strip a trailing newline from the form, swap offset for char in the manifest, refuse zip raws. Run `python3 $S/lane/corpus/evidence/round55/c1-count.py --seed 7 --work <empty>` per mutant. Table mutant → LEGS and which leg killed it; list SURVIVING mutants and what leg would catch them.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55ReviewC1Counter": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "reviewer",
+      "item": "Same-sentence audit of R55-C1: compare, clause by clause, the predicate in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/claims.md, the docstring of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c1-count.py and the code that enforces each clause (cite line numbers). For each clause: enforced / partially / not enforced, with the line. Check: the hook's allowlist matches the sentence (run dir, hook file, tool dir, lane tools/, Python installation); 'no expected value is written to disk while the builder runs' (grep every write in the counter); REFUSE's four cases are the ones the sentence names; REGRESS really compares round 54's committed bytes at BASE; `--per-leg` guard; ENV_CHANGED paths. Also verify the before/control receipts in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/controls/ were produced by the frozen bytes (the freeze commit 1fc5d92b5a7866ec16f1cac2de749fccfa6b49cb contains them).",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55ReviewC1Builder": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "reviewer",
+      "item": "Code review of the C1 candidate /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/build-spans.py against its own docstring and against the round-54 builder /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/build-spans.py (`diff` them). Probe edge cases in scratch (copy the tool next to a copy of `tools/capture-text.py`): an empty `.txt`, a `.txt` with a BOM, CRLF and lone CR line ends, a quote containing a tab, a zip `.raw` that capture-text refuses (an `.xlsx`), an OLE `.doc` with a `.txt` sidecar holding the quote once, `--check` against a stale manifest, two rows of one id with different URLs, an entry path with `..`. Report each probe's exit code and output, and every docstring sentence the code contradicts.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55SentC1": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "sentinel",
+      "item": "Hazard review of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c1-count.py, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c2-count.py, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c3-count.py, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/controls/*.py and /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/build-spans.py: every write path (grep write/mkdtemp/rmtree/open), TMPDIR honoured, any hardcoded /tmp, any write into the lane (run each with TMPDIR=$S and compare `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin status --porcelain` before/after), SIGINT mid-run of c1-count (does `soffice.bin` survive? does the profile dir survive? — the round-54 W2 F4 class), rmtree only on the counter's own mkdtemp, `--work` refusing a non-empty dir, the controls builders refusing an OUTDIR inside the lane. c3-count makes a full `git archive` mirror (~250 MB): confirm it lands under --work and is removed. Paste receipts.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55ExecBuilderOld": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "executor",
+      "item": "Coverage evidence for C1: run the candidate builder on the earlier rounds' committed quote tables — `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show dba605deb5cd5ed4874e0e3c39ba24737409cd80:corpus/evidence/round5N/quotes.tsv` for N in 1,2,3,4 where they exist (list them with `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin ls-tree -r --name-only dba605deb5cd5ed4874e0e3c39ba24737409cd80 corpus/evidence | grep quotes.tsv`) — with `--cache /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache --out $S/outN`, and diff each result against that round's committed spans.tsv/spans/. For every row that changes or is now refused, say why (e.g. a `.docx` row read from the `.txt` sidecar in that round, now from the raw through capture-text; a `.doc` row read from the UTF-16LE decode). This is the measured list of earlier spans the defined-form rule would re-derive differently.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55ExecS101Leg": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "executor",
+      "item": "Frontier evidence (not a claim this round): the round-54 cut S101 leg. Read the four S101 QUOTE lines in /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-54/w1/R54DraftEntryStb.md (and any S101 quotes in R54DraftS101Reanchor.md); build them with the candidate builder (`--cache /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache`, url https://jc.hit.edu.cn/_upload/article/files/f7/54/711916924125a0682e3bc3ebb6ed/1f6f2731-8c87-4812-b7e2-9fad0069d508.doc, entry corpus/knowledge/source-type-taxonomy-r37.md) and report each QUOTE line, offsets, refusals; for any refusal give the defined-form wording that does occur once (`python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/capture-text.py /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/6dc68fd6b32ce9c8dfcebce8.raw --locate '<q>'`). Output a ready quotes.tsv block for a later round.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55SimplifyBuilder": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "simplifier",
+      "item": "YAGNI review of /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/build-spans.py: name any branch, option or check no counter leg and no real use exercises and that could be deleted without changing any C1 leg result or round 54's re-derived manifest — prove by deleting in a scratch lane copy and rerunning `python3 $S/lane/corpus/evidence/round55/c1-count.py --seed 7 --work <empty>`. Conversely, is anything its docstring promises not implemented? Do not edit the lane.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55DraftC1Rows": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "scribe",
+      "item": "Draft the C1 registry and coverage text for integration: (1) a `/home/vgpnk/Projects/shokunin/chousa-shokunin/SKILL.md` gate/probe registry row for `tools/build-spans.py` in the shape of the existing rows (read `grep -n 'capture-text\\|gate\\|probe' /home/vgpnk/Projects/shokunin/chousa-shokunin/SKILL.md | head -40` and the registry table it sits in; fields: name, gate|probe, entry command, verdict map, self-test command or 'none', pinned-value path, write scope, owner) — decide gate vs probe honestly (does it have a self-test? does it compare to persisted expected values?); (2) a SCORECARD capabilities row (name → what it can now do → evidence pointer → first-working round 55) worded behaviourally; (3) a /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/README.md coverage-map line for the new tool and the retired per-round builders. Quote the neighbouring rows you matched.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55GroundGcpA": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "scribe",
+      "item": "Grounding pass A on staged S130 -> lane S124 (the NMPA guideline 《上市药品临床安全性文献评价指导原则（试行）》, copy hosted by gcpunion.org, http://www.gcpunion.org/upload/cmsfile/1703404975484107.doc); its form: `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/capture-text.py /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/bdff491a75c6abeda1d9c01d.raw` (the defined OLE text form; NEVER the `.txt` sidecar bdff491a75c6abeda1d9c01d.txt, which is a UTF-8 decode of the binary, nor a UTF-16LE decode of the raw). Read the staged entry /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/grey-literature-and-chinese-search-record-r40.md and staged row S130 in /home/vgpnk/Projects/shokuknow/merge/chousa/SOURCES.append.md. For every factual sentence the staged entry rests on S130 for (the 文献检索策略 field list; 是否检索灰色文献; the 检索策略 contents of the protocol; collecting unpublished material incl. 会议论文/学位论文/产业报告/咨询报告; publication bias): located quote(s) with offsets in the defined form, or `absent` with the `form.count` sweep. Give at least SIX located quotes (one line each, exactly once), emitted as QUOTE machine lines with lane id S124 and entry corpus/knowledge/grey-literature-and-chinese-search-record-r40.md. Name every staged sentence that does not reproduce and its narrower honest wording.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55GroundGcpB": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "scribe",
+      "item": "Independent second pass on lane S124 (the gcpunion `.doc`, http://www.gcpunion.org/upload/cmsfile/1703404975484107.doc); form: `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/capture-text.py /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/bdff491a75c6abeda1d9c01d.raw` (the defined OLE text form; NEVER the `.txt` sidecar bdff491a75c6abeda1d9c01d.txt, which is a UTF-8 decode of the binary, nor a UTF-16LE decode of the raw); do NOT read other seats' reports (pass A is R55GroundGcpA). Find the document's own identity stamp (title line, issuer, any date, 试行 status, section headings 一/二/三…), at least FOUR located quotes other than the 文献检索策略 sentence, and run negative sweeps with exact `form.count` values for: 2019, 二〇一九, 国家药品监督管理局, 药监局, NMPA, 灰色文献, 即“灰色文献”, 即灰色文献, 手工检索, 语言限制, 发表偏倚, 发表偏倚, Cochrane, 系统评价, PRISMA, 附录, 参考文献. Say which are absent so every negative claim carries its sweep. Report the form's length, U+FFFD count and whether the .doc names its own issuer anywhere. Emit QUOTE lines (lane id S124).",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55GroundCnpharm": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "scribe",
+      "item": "Grounding of staged S131 -> lane S125 (the 中国食品药品网 report on the guideline's issuance, http://m.cnpharm.com/201906/18/c280684.html); form /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/27d4865f201e99c1fed9f79b.txt (raw 27d4865f201e99c1fed9f79b.raw is HTML). Locate (exactly once, one line) the issuance statement, the issuer, the date (2019-06-18 or as printed), the five-part structure (概述, 方法学要点, 报告撰写规范, 参考依据/参考文献, 附录 — as printed), and the Cochrane/quality-control sentence the staged entry uses; at least FOUR QUOTE lines (lane id S125, entry corpus/knowledge/grey-literature-and-chinese-search-record-r40.md). Sweep counts for 灰色文献, 检索, 试行, 国家药品监督管理局. Say what the page proves (a newspaper report of the issuance) and what it does not (the guideline's text).",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55GroundNmpaEn": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "scribe",
+      "item": "Grounding of staged S143 -> lane S126 (the NMPA English notice, https://english.nmpa.gov.cn/2019-07/18/c_388252.htm); form /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/d663d66e2d39f868d84b1781.txt (raw d663d66e2d39f868d84b1781.raw is HTML). Read staged row S143 in /home/vgpnk/Projects/shokuknow/merge/chousa/SOURCES.append.md (its used-by names another staged entry — note it). Locate the headline, the issue date (June 18, 2019 or as printed), the issuer, the legal hook (which regulation/plan it implements), and any sentence about the guideline's scope or structure; at least THREE QUOTE lines (lane id S126, entry corpus/knowledge/grey-literature-and-chinese-search-record-r40.md). Decide whether S126 adds anything to the entry beyond S125 (identity on the regulator's own domain → tier A for identity only?) and say bind or refuse with reason.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55GroundMedsci": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "scribe",
+      "item": "The staged S133 is the lane's HELD row S113 (https://www.medsci.cn/guideline/show_article.do?id=23e481c0052069d3; `grep -n '^| S113' /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md`; capture /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/453d492becd9a2f4632cb8dd.txt). The staged entry's third Observation ('sold, not blocked': `haveAttachments=1`, `paymentAmount=10`) and its 'price, not a login wall' Inference rest on it. Check in the capture: do `paymentAmount=10` / `haveAttachments=1` occur (counts, offsets, context — a JS object? a displayed price?), does the page DISPLAY any price (元, 购买, 付费, 价格 counts), and does S113's lane row/its citing entry already hold this (`grep -rn 23e481c0052069d3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge`). Verdict: cite S113 (then S113's used-by gains corpus/knowledge/grey-literature-and-chinese-search-record-r40.md; give old→new) or cut the bullet; draft the narrowed wording either way.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55DraftEntry": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "scribe",
+      "item": "Draft the complete lane entry `corpus/knowledge/grey-literature-and-chinese-search-record-r40.md` from the staged /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/grey-literature-and-chinese-search-record-r40.md, re-grounded BY DOCUMENT on lane S124 (gcpunion `.doc`; form `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/capture-text.py /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/bdff491a75c6abeda1d9c01d.raw` (the defined OLE text form; NEVER the `.txt` sidecar bdff491a75c6abeda1d9c01d.txt, which is a UTF-8 decode of the binary, nor a UTF-16LE decode of the raw)), S125 (/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/27d4865f201e99c1fed9f79b.txt (raw 27d4865f201e99c1fed9f79b.raw is HTML)) and S126 (/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/d663d66e2d39f868d84b1781.txt (raw d663d66e2d39f868d84b1781.raw is HTML)); S113 only if you keep the medsci bullet (capture /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/453d492becd9a2f4632cb8dd.txt). Carry rules: the guideline's currency stays Unknown (the `.doc` prints no date — sweep it); the 'sold for 10 yuan' and 'price, not a login wall' claims are cut unless the medsci capture DISPLAYS a price; 'three literatures require the same disclosure' cites only lane ids that exist (`grep -n '^| S097\\|^| S114' /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md` — S097/S114 in the staged text are staged ids: re-point by document or cut); 'regulator, not a journal' must quote the issuer from S125/S126 since the `.doc` may not name it.  Lane bar: every bullet under `#### Inference` must cite at least one S-id AND quote (backticks or double quotes, two or more words; four CJK characters count as two words) a phrase that occurs verbatim in the cited id's DEFINED text form, with no negation flip (`tools/inference-ground.py` rules); open with the provenance trio — one `source: S12x — <url> — <anchor>` line per document (the LANE id; the URL immediately after the em dash, exactly the document URL), `verified-at: 2026-10-27`, `recheck:` (a date or `NNd` plus the re-verification command) — then a `ground:` line and an `adopted: round 55 from the campaign package merge/chousa/ (staged grey-literature-and-chinese-search-record-r40.md)` line, then `#### Observation`, `#### Inference`, `#### Unknown`. State each negative claim with its sweep command and count. The entry must hold the term `是否检索灰色文献` inside a located quote (C2 NEW_GROUND). No S### token may remain except S124/S125/S126 (and S113 only via `source: S113 — <medsci url> — …`). Read the lane's {L}/corpus/knowledge/chinese-search-record-r39.md, quality-control-guideline-issued-text-r48.md and western-instrument-alignment-r50.md first (they already mention 灰色文献): say what this entry adds that they do not hold. Output the complete entry in one fenced block labelled with its lane path, then QUOTE machine lines for every quote it uses; ≤220 lines.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55DraftRows": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "scribe",
+      "item": "Draft the lane Registry rows for /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md for S124 (gcpunion `.doc`), S125 (cnpharm report), S126 (NMPA English notice) from staged rows S130 S131 S143 in /home/vgpnk/Projects/shokuknow/merge/chousa/SOURCES.append.md (read them in full; read the lane registry header and rows S121-S123 for shape; check the URLs are not already lane rows: `grep -n 'gcpunion\\|cnpharm\\|english.nmpa' /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md`), and S113's `used-by` old→new if the entry cites it. Contract: /home/vgpnk/Projects/shokunin/CORPUS.md section SOURCES.md — 11 cells, no literal or escaped `|`, kind/tier enums, `anchor` = exact section + at least one `char N` = the offset of a located quote in the DEFINED form (for S124: `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/capture-text.py /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/bdff491a75c6abeda1d9c01d.raw` (the defined OLE text form; NEVER the `.txt` sidecar bdff491a75c6abeda1d9c01d.txt, which is a UTF-8 decode of the binary, nor a UTF-16LE decode of the raw)), `status` mined, `opened` 2026-10-27, `recheck` ISO date / NNd / symbolic (strip prose; list it separately for the Gate), `used-by` exactly `corpus/knowledge/grey-literature-and-chinese-search-record-r40.md`. Tier each in one line (a third-party copy of a regulator's guideline; a regulator-affiliated newspaper's report; the regulator's own English notice). One fenced block labelled corpus/SOURCES.md plus the stripped-prose table.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55DraftGate": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "scribe",
+      "item": "Draft the lesson `## Gate` for /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-55.md (shape: /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-54.md `## Gate`): (1) the collision check — files in /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-55/assimilation/ (reg-ids 123, staged-ids 114, collisions 42, quarantine-slice 24, guard-proof.txt) and the renumber map BY DOCUMENT (S130→S124, S131→S125, S143→S126, S133→held S113) with the URL each follows; (2) re-opened sources table (lane id, document, URL, text form, headline quote with char — take quotes only after re-locating them yourself in the defined forms); (3) the decisions table for the assimilation set: this round's theme is the NMPA grey-literature field; decide the staged r40 entry (admit narrowed) and at least ONE refusal from the same theme family (/home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/grey-literature-and-chinese-search-record-r41.md, grey-literature-field-china-r42.md, -boundary-r43.md, -national-route-r44.md, -mandate-scope-r48.md — read them; refuse with reason and a checkable flip), plus `refused-doc <url>` lines for any document not bound; (4) one admit and one reject for the non-author spot-check with exact re-open instructions.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55ExecQuarantine": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "executor",
+      "item": "Hand-check the absent-defect register row for the gcpunion `.doc`: `grep -n 'round6 | S125' /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/absent-defect-register.md` (register id S125, round6; NOT the lane's S125). For each of its three quoted strings: count in the defined form (`python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/capture-text.py /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/bdff491a75c6abeda1d9c01d.raw` (the defined OLE text form; NEVER the `.txt` sidecar bdff491a75c6abeda1d9c01d.txt, which is a UTF-8 decode of the binary, nor a UTF-16LE decode of the raw)), and if 0, the nearest wording that does occur (difflib or substring search; e.g. straight vs curly quotes around 灰色文献, punctuation) with its offset. Verdict per the lane's classes (present / absent-as-written / fabricated / unverifiable) and the exact lesson line in the counter's format: `- register \\`S125\\` (round6) — http://www.gcpunion.org/upload/cmsfile/1703404975484107.doc — verdict: <class> — <reason with counts and offsets>`. Also list any other register row (whole register, lane `chousa`) on the four theme URLs (gcpunion, cnpharm, english.nmpa, medsci) — the C2 counter found 1.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55ExecCollision": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "executor",
+      "item": "Re-derive the section-10 assimilation scratch independently: run the prompt's collision commands into $S (0–3-space pattern on /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md and /home/vgpnk/Projects/shokuknow/merge/chousa/SOURCES.append.md; comm -12; the awk quarantine slice over /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/absent-defect-register.md) and `cmp` each file with /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-55/assimilation/reg-ids, staged-ids, collisions, quarantine-slice. Then verify the renumber map by document: for each staged id S130 S131 S133 S143, its URL (from SOURCES.append.md), whether that URL (census normalisation: scheme dropped, host lower-cased, trailing slash/fragment dropped) is already a lane row (which id), and the next free lane ids (`grep -oE '^\\| S[0-9]+' /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md | sort | tail -3`). Prove the guard once more on your own scratch fixture (indented `  | S002 |`).",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55CritEntailObs": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "critic",
+      "item": "Entailment attack on the staged entry's `#### Observation` bullets (/home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/grey-literature-and-chinese-search-record-r40.md) against the defined forms: S130→lane S124 (`python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/capture-text.py /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/bdff491a75c6abeda1d9c01d.raw` (the defined OLE text form; NEVER the `.txt` sidecar bdff491a75c6abeda1d9c01d.txt, which is a UTF-8 decode of the binary, nor a UTF-16LE decode of the raw)), S131→S125 (/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/27d4865f201e99c1fed9f79b.txt (raw 27d4865f201e99c1fed9f79b.raw is HTML)), S133→S113 (/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/453d492becd9a2f4632cb8dd.txt). For each bullet sentence: ENTAILED / OVERSTATED / ABSENT, with the located span (offset) or sweep count. Pay attention to: 'A Chinese regulator names…' (does the `.doc` name its issuer?), 'requires' vs 'should' (应当), the list of unpublished material, 'issued … on 18 June 2019', 'consists of five parts', 'Cochrane', 'paymentAmount=10'. Output the narrowings the lane entry must carry.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55CritEntailInf": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "critic",
+      "item": "Entailment attack on the staged entry's `#### Inference` and `#### Unknown` (/home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/grey-literature-and-chinese-search-record-r40.md): 'Q15 is answered, the answer is a regulator, not a journal'; 'three literatures now require the same non-database disclosure, none of them PRISMA's' (which lane rows back the Japanese/NIPH legs — `grep -rn 'S097\\|S114' /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge | head` — are those staged ids the same documents?); 'PRISMA 2020's items do not carry' it; 'the blocker is a price'. For each: survives / narrow to <wording> / cut, with evidence (located spans in the defined forms, lane rows). Also: does the lane already hold a regulator-required grey-literature field anywhere (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin grep -n '灰色文献' -- corpus/knowledge`)?",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55CritCurrency": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "critic",
+      "item": "Currency and status attack for C2: the guideline is 《…（试行）》 issued 2019. What can the lane honestly say about whether it is current? Read the staged entries that discuss currency (/home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/ — `grep -ln 'chinese-regulator-guideline-curre\\|试行' /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/*.md`) and staged row S143's used-by; check the captures S125/S126 for status words (试行, interim, effective, 施行, 自…起施行) with counts. Is S126 (NMPA English) evidence of currency or only of issuance? Draft the entry's `#### Unknown` currency bullet and the `recheck:` command that would detect a status change, without fetching.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55ReviewProvinceC2": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "reviewer",
+      "item": "Province and adjacency review for C2: read /home/vgpnk/Projects/shokunin/chousa-shokunin/PROVINCE.md and decide whether 'a drug regulator's guideline requires the search record to state whether grey literature was searched' is in province (search-record method) and which parts are a sibling's (drug-safety evaluation practice, pharmacovigilance). Scan sibling PROVINCE.md files (`grep -ln 'pharmacovigilance\\|drug\\|NMPA\\|regulator\\|systematic review\\|grey literature' /home/vgpnk/Projects/shokunin/*-shokunin/PROVINCE.md`) and report contested scope to be NAMED in the report, not absorbed. Verdict per bullet of the staged entry: in / adjacent-report-only / out.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55ConnSiblings": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "connector",
+      "item": "Sibling-overlap scan for the round's two surfaces: grep the sibling lanes under /home/vgpnk/Projects/shokunin/*-shokunin/ (corpus/, tools/, SKILL.md, PROVINCE.md; read-only; skip chousa-shokunin) for 灰色文献, grey literature, NMPA, 上市药品, PRISMA-S, 检索策略, span builder, build-spans, capture-text, quote offset, text form. Report each hit with lane and path:line, and whether a sibling owns (a) search-record reporting standards or (b) a span/quote locator tool. Verdict: overlap / no overlap, closest sibling file named.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55MutC2Counter": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "mutation-tester",
+      "item": "Mutation-test the frozen counter /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c2-count.py against its controls: build them (`python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/controls/build-c2-controls.py $S/c2c`) and confirm `/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/controls/c2-controls.txt` reproduces. Then, on a scratch copy of the counter, remove one check at a time (MUST_BIND, the defined-form rule that refuses a `.txt` sidecar digest for an OLE/zip raw, OPENED, used-by==citing, REF_ID_UNBOUND, SUBSTANCE, ANCHOR_BOUND, QUOTES_IN_LESSON, QUARANTINE) and craft the cheapest scratch root that passes the mutant but not the frozen counter (e.g. a quote from the `.doc`'s garbage `.txt` sidecar, a row opened 2026-10-26). Table: check → shortcut root → frozen verdict / mutant verdict. Name any check no shortcut exercises.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55ReviewC2Counter": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "reviewer",
+      "item": "Same-sentence audit of R55-C2: the predicate in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/claims.md vs the docstring of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c2-count.py vs the enforcing code (line numbers), clause by clause. Verify separability: the counter never runs or imports `tools/build-spans.py` (grep), and imports `tools/capture-text.py` only from BASE dba605deb5cd5ed4874e0e3c39ba24737409cd80 bytes. Check the defined-form function on all four theme captures (which form it returns for each key; a `.txt` digest for the gcpunion row must return None). Check the register sweep (theme URLs, `chousa` rows) prints 1 (S125). Report any clause unenforced or enforced differently.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55ExecC3ObsR36": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "executor",
+      "item": "C3 items E01–E04 (target /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/source-type-taxonomy-r36.md; W2 source /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-54/w2/R54W2CritEntailSta.md): E01 the latent no-full-text string in the S122 capture (/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/b9ca2a4fdf9455867534f144.txt, universal newlines) — count and char of `该标准暂无全文，请等待更新`; E02 the offset of `主管部门为 国家标准委` in S121 (/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/adf6ba934e813b2c326fa150.txt); E03 counts of 附录 and 文献类型 in both captures; E04 count of 国家标准委 in both captures. Derive each observation YOURSELF from bytes (never read /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c3-count.py's code to copy its strings; you may read its docstring for the item list and the exact `observed` format each item expects is NOT given — propose a precise observation string of the form `name=value` that a reader can re-derive with one command, and paste that command). For each item also give an anchor: a substring of the target statement that contains the item's key phrase and occurs EXACTLY ONCE in the target file (python `text.count(anchor)` → 1; paste it). Output draft lines `erratum: <Exx> <target> anchor: \"…\" observed: \"…\"`.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55ExecC3ObsQ97": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "executor",
+      "item": "C3 items E05–E07 (target /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md criterion 97; W2 sources /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-54/w2/R54W2ReviewQuality.md and R54W2CritMistakes.md): E05 the six S101 phrases (Registry anchors 11170/11205/11993/12161/13247/34374 — the quotes are the anchors of the S101 `correction:` lines in `/home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md` 'Round 54 pointer corrections') located in the defined form of /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/6dc68fd6b32ce9c8dfcebce8.raw by the BASE tool (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show dba605deb5cd5ed4874e0e3c39ba24737409cd80:tools/capture-text.py > $S/ct.py`), in anchor order, and each drift new−old; E06 code points below 0x20 in the raw's UTF-16LE decode under three exclusion sets (none; tab+LF; tab+LF+CR); E07 code points below 0x20 and LF count in the defined form. Derive each observation YOURSELF from bytes (never read /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c3-count.py's code to copy its strings; you may read its docstring for the item list and the exact `observed` format each item expects is NOT given — propose a precise observation string of the form `name=value` that a reader can re-derive with one command, and paste that command). For each item also give an anchor: a substring of the target statement that contains the item's key phrase and occurs EXACTLY ONCE in the target file (python `text.count(anchor)` → 1; paste it). Output draft lines `erratum: <Exx> <target> anchor: \"…\" observed: \"…\"`.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55ExecC3ObsProbe": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "executor",
+      "item": "C3 items E08–E11 (W2 sources /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-54/w2/R54W2CritMistakes.md, R54W2CritC1Verdict.md, R54W2ReviewQuality.md, R54W2SentFinal.md): E08 (target corpus/lessons/round-54.md, Mistakes row 2) — `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin archive dba605deb5cd5ed4874e0e3c39ba24737409cd80 | tar -x -C $S/mirror`, delete corpus/evidence/round54/S100-text-form.txt and S101-text-form.txt, run the BASE `corpus/evidence/round53/pointer-anchor-check.py --root $S/mirror`, paste its last line; E09 (target corpus/QUALITY.md 98) — run a script doing `ctypes.CDLL(None).system(b\"printf SPAWNED > <marker>\")` under the round-54 hook (the HOOK constant of `git show dba605deb5cd5ed4874e0e3c39ba24737409cd80:corpus/evidence/round54/c1-count.py`), report rc and marker; E10 (QUALITY 98) — the SHELL block's LEGS line in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/controls/c1-controls.txt; E11 (target corpus/evidence/round54/c1-supplement.py docstring) — an oracle-echo tool that never opens the `.doc` (reads `../oracle-*/<stem>.txt`, else the stripped `../src-iso/*.html`) scored by the BASE c1-supplement run inside the BASE mirror with `--seed 11 --per-leg 2 --work <empty>`: its SUPPLEMENT_LEGS. Derive each observation YOURSELF from bytes (never read /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c3-count.py's code to copy its strings; you may read its docstring for the item list and the exact `observed` format each item expects is NOT given — propose a precise observation string of the form `name=value` that a reader can re-derive with one command, and paste that command). For each item also give an anchor: a substring of the target statement that contains the item's key phrase and occurs EXACTLY ONCE in the target file (python `text.count(anchor)` → 1; paste it). Output draft lines `erratum: <Exx> <target> anchor: \"…\" observed: \"…\"`.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55DraftC3Fixes": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "scribe",
+      "item": "Draft the in-target corrections that accompany C3's eleven errata (read /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/claims.md C3 and the W2 reports /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-54/w2/R54W2CritEntailSta.md, R54W2ReviewQuality.md, R54W2CritMistakes.md, R54W2CritC1Verdict.md, R54W2SentFinal.md): (a) an appended `#### Corrections (round 55)` section for /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/source-type-taxonomy-r36.md narrowing I3 to displayed lines, hedging I5's 'prescribes', fixing the O4 anchor (569 for the phrase) and the verified-at quantifier — WITHOUT repeating any of the four anchored statements verbatim (paraphrase or quote fragments shorter than the anchors; check with python that each key phrase still occurs exactly once in the corrected file); (b) appended QUALITY lines `97a.` / `98a.` style or new numbered criteria correcting 97's offsets/drift/control-char conventions and 98's delegate/SHELL sentences, same rule; (c) a one-paragraph correction for the round-55 lesson about the round-54 Mistakes row 2 number. Output each block fenced and labelled with its lane path, plus the python check output.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55ReviewC3Counter": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "reviewer",
+      "item": "Same-sentence audit of R55-C3: predicate in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/claims.md vs the docstring and code of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c3-count.py (line numbers). For each of E01–E11: does the observation function compute what the item names, from BASE bytes or the pinned capture (digest checked?), deterministically? Run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c3-count.py --work <empty>` and reproduce /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/controls/c3-before.txt and c3-controls.txt (`python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/controls/build-c3-controls.py $S/c3c`). Check the parser: last line per item wins, only inside `## Round 55 statement errata`, anchor must contain the key and occur once in the target at the counted tree. Report any clause unenforced.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55CritC3Calib": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "critic",
+      "item": "Is C3 a genuine calibration claim (AXES.md calibration: self-assessment vs observed repo state; prompt section 9: 'A calibration claim must count mismatches between the lane's self-assessment and observed repo state')? For each of E01–E11 decide: a real mismatch between a committed lane statement and an observation (quote the statement from its file at dba605deb5cd5ed4874e0e3c39ba24737409cd80, give the observation you derive), or not a mismatch (then the item inflates the count). Attack: could a seat pass C3 by copying the W2 reports' numbers without observing anything, and would that matter? Is any W2 finding the lane should correct missing from the eleven (read /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-54/w2/*.md quickly; list candidates with file:line)? VERDICT: honest / inflated, with item ids.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55MutC3Counter": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "mutation-tester",
+      "item": "Mutation-test /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c3-count.py on a scratch copy: remove the key-phrase-in-anchor check, the anchor-exactly-once check, the target-path check, the section scoping (`## Round 55 statement errata`), last-line-wins; for each mutant craft the cheapest scratch root (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin archive dba605deb5cd5ed4874e0e3c39ba24737409cd80 | tar -x -C $S/root` plus an errata block) that passes the mutant but fails the frozen counter (e.g. an anchor that occurs twice, an anchor of the right text in the wrong target, errata lines outside the section). Use `--skip-slow` where E11 is not under test (and say so). Table: check → shortcut → frozen / mutant ERRATA.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55RegisterW2A": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "scribe",
+      "item": "Integration register, part A: read every round-54 wave-2 report whose name starts R54W2Exec in /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-54/w2/ (and the salvage record /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-54/w2-results.json: which seats are null). For each finding (one row each): report file:line, finding in one line, affected lane file, and a proposed disposition — `C3 Exx` (already one of the eleven, claims.md), `erratum-new` (a further false lane statement: quote it), `QUALITY` (a new criterion), `tool-fix` (which file), `routed` (to whom), `rejected` (why, with evidence you ran). Table only, ≤120 lines.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55RegisterW2B": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "scribe",
+      "item": "Integration register, part B: same as part A for every round-54 wave-2 report NOT starting R54W2Exec in /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-54/w2/ (Crit*, Review*, Sent*, Simplify*, Conn*, Scout*, Draft*). One row per finding: file:line, finding, affected lane file, proposed disposition (`C3 Exx` / `erratum-new` / `QUALITY` / `tool-fix` / `routed` / `rejected` with evidence). Flag every finding the round-54 closure section 6 (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-54-verifier-spotcheck.md) routed. Table only, ≤120 lines.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55DraftQuality": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "scribe",
+      "item": "Draft new numbered QUALITY criteria (next free number: `grep -n '^[0-9]*\\.' /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md | tail -3`) from the round-54 W2 findings, each in the lane's shape (bold rule sentence, evidence with path:line, `Check:` command, `Shown able to fail:` with an observed failing input you RAN): (1) an oracle or expected value is never on disk, nor derivable from argv/env, while the judged tool runs, and the hook audits reads as well as spawns (/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-54/w2/R54W2SentFinal.md F1/F2; the round-55 C1 counter is the positive example: /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c1-count.py); (2) a check's denominator is the full expected set — zero rows, an empty quote or a skipped id is a failure, not a pass (F6 pdf-crosscheck, F5 ledger with no considerthese/); (3) a helper that writes temp files takes its temp root from TMPDIR, never from an output argument that may sit in the lane (F3). Output fenced blocks labelled corpus/QUALITY.md.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55ExecLedgerV2": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "executor",
+      "item": "Write a round-55 successor of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/considerthese-ledger-check.py that fixes /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-54/w2/R54W2SentFinal.md F5: reject absolute pointers and any (root/p).resolve() outside root, cap the read at 1 MiB, refuse regex cells longer than 128 characters or with nested quantifiers (or run the search with a time bound), and exit 1 when considerthese/ is absent or PROPOSALS==0. Keep the output line shape. Test in scratch: the lane ledger /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/considerthese-ledger.tsv (expect the round-54 counts), plus fixtures for each F5 attack (absolute path, ReDoS, 512 MB file, missing dir) — each must exit 1, no hang. Output the full script fenced, labelled `corpus/evidence/round55/considerthese-ledger-check.py`, and the receipts.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55ExecPdfCrossV2": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "executor",
+      "item": "Write a round-55 successor of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/pdf-crosscheck.py fixing /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-54/w2/R54W2SentFinal.md F6: the denominator is every S123 row of the manifest (n must equal that count, and ≥1), an empty quote is a failure, the PDF capture's sha256 is pinned (mismatch → `ENV_CHANGED` exit 2), malformed rows (wrong cell count, a tab in a quote) are failures not tracebacks. Run it with `uv run --with pypdf python …` in scratch (record the pypdf version) on /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/quotes.tsv (expect PDF_QUOTES=21 NOT_IN_INDEPENDENT=0) and on the four W2 attack fixtures (renamed id, empty quote, header only, tab in quote) — each must exit non-zero. Output the script fenced, labelled `corpus/evidence/round55/pdf-crosscheck.py`, and receipts.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55DraftMistakes": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "scribe",
+      "item": "Mine mistakes for /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-55.md `## Mistakes` (shape: class · evidence pointer · captured-by · fix; a fix counts only once shown able to fail). Candidates to verify: (1) the round-54 report was filed before W2's WAVE-DONE although the round prompt says 'Do not file the report before WAVE-DONE for every wave you launched' (`/home/vgpnk/Projects/shokunin/.ufo/reports/round-54/chousa.md` — find the line that says so; the W2 salvage record /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-54/w2-results.json `note`; the commit time of the report vs w2.ready.dispatched) — what criterion should have caught it and what check would fail on it; (2) the round-54 lesson's Mistakes row 2 stated an unrun number (`BAD=6`) — captured-by?; (3) any other mistake you find in round 54's committed record (search the W2 reports). For each fix give a command that FAILS on the round-54 state and passes on a corrected one; run it on the round-54 state.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55ScoutW04": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "scout",
+      "item": "Adjudicate the five carried W04 duplicate-url warnings: run `/home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa` (read-only) and read rows S051, S053, S073, S074, S075 in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md plus their twins (the rows sharing each URL), and /home/vgpnk/Projects/shokunin/CORPUS.md rule 2 (append-only; supersede) and the W04 definition. For each pair: same document read for two different scopes (legitimate, document why) or a duplicate that should be superseded (draft the superseding row/flip). Propose the disposition and the lesson text; do not edit.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55ScoutConsiderthese": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "scout",
+      "item": "considerthese duty: list /home/vgpnk/Projects/shokunin/chousa-shokunin/considerthese/ (newest file 2026-10-26.md) and run the round-54 ledger check `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/considerthese-ledger-check.py --root /home/vgpnk/Projects/shokunin/chousa-shokunin` (paste output). Is there any proposal newer than the ledger (a bullet in any considerthese file not in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/considerthese-ledger.tsv)? The two non-implemented rows are CT-20261019-4 (OPEN: SKILL.md size; `wc -l /home/vgpnk/Projects/shokunin/chousa-shokunin/SKILL.md`) and CT-20261022-2 (OPS). Pick at most ONE that fits this round (or none, with the sweep), and say what landing it would require and the command that would show it implemented.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55ConnPattern": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "connector",
+      "item": "Cross-round pattern on RW-1 (the forgeable frozen counter, six rounds): read the C1 counters of rounds 49–55 (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round4*/c1-count.py, round5*/c1-count.py; `ls`) and /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/recurring.tsv. For each: where its oracle/expected values live during the tool run (disk path / memory), whether generated inputs sit beside the tool's input, whether reads are audited, whether REGRESS is hooked, and which forge broke it (lessons/spotchecks). Does the round-55 counter close each mechanism, and which mechanism class remains open (name it concretely)? Draft the recurring.tsv row update for RW-1 (count, status) in the file's existing shape.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    },
+    "R55ScoutFrontier": {
+      "kind": "spawn",
+      "agentId": null,
+      "role": "scout",
+      "item": "Round-56 frontier scout: read /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/README.md `## Frontier` (tail), /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md 'Planned — round 55', /home/vgpnk/Projects/shokuknow/merge/chousa/MERGE-REPORT.md, and the round's claims. Rank three round-56 candidates (axis, counter shape, cheapest do-nothing control): the S101 HIT carrier-alphabet leg (now buildable with tools/build-spans.py), the next grey-literature-family staged entry (r41/r42/r43/r44/r48 — capture state and province), theme B archived translations, or a freshness move (the lane's oldest `recheck` dates: `grep -oE '\\| [0-9]{4}-[0-9]{2}-[0-9]{2} \\|' /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md | sort | uniq -c | head`). No draft, no production write.",
+      "axes": [
+        "operability",
+        "depth",
+        "calibration"
+      ],
+      "milestone": "Round 55 build: NMPA grey-literature field by document (S124-S126), C3 errata from independent observation, round-54 W2 integration, first falsifiers of C1/C2/C3"
+    }
+  }
+}

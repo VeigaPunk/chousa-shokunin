@@ -2794,3 +2794,34 @@ erratum: E10 corpus/QUALITY.md anchor: "and the SHELL control's receipt says the
 erratum: E11 corpus/evidence/round54/c1-supplement.py anchor: "randomly named directory outside the generation tree (no HTML, no" observed: "oracle-echo SUPPLEMENT_LEGS=3/3"
 
 Readings: E01 — the string sits in the page's embedded i18n map (`noFullText`), a latent template string, not a displayed line; I3's sentence holds only for displayed lines. E02 — 575 is the offset of the value 国家标准委, the quoted phrase starts at 569. E03 — neither capture shows a taxonomy, so "prescribes" is the standard's own text as carried by S123, not by these two pages. E04 — the count-1 property holds for the eleven anchor quotes, not for every quoted token. E05 — positions 3 and 4 are swapped; five of six anchors drift by the constant +802, so "no constant repairs an old anchor" is false (no constant repairs all six). E06/E07 — the counts hold only under the exclusion sets named; the defined form's only control character is LF. E08 — `BAD=6` reproduces only with S101's dump alone missing. E09 — a ctypes `system()` spawns under the round-54 hook, so QUALITY 98's "refuses a tool that delegates" holds only for audited spawn events. E10 — the SHELL control scored 1/6 (it keys refusals on bytes), the criterion's forge 0/6. E11 — the supplement's oracle files and the ISOLATED leg's generation HTML sit two directories above the isolated document, so an echo tool that never opens the `.doc` scores 3/3.
+
+## Round 55 verdict — 2026-10-27 (OLE-aware span builder; the NMPA grey-literature field by document; W2-falsified statements corrected)
+
+Claims frozen at `1fc5d92b5a7866ec16f1cac2de749fccfa6b49cb` after do-nothing controls (`corpus/evidence/round55/claims.md`; `controls/c1-before.txt`, `c1-controls.txt`, `c2-before.txt`, `c2-controls.txt`, `c3-before.txt`, `c3-controls.txt`). C1 candidate `6ca924995d48facbf704d2aa22ddaec236059039`, unchanged after the candidate commit (tool sha256 `1ed2650a…` in `c1-measure-after.txt`). No live fetch; L0 `8d77e6c1` open.
+
+| claim / axis | before → after | counting command | verdict | tag |
+|---|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10; capability acquisition) | `tools/build-spans.py` absent at base: `LEGS=0/4 C1=FAIL` (seed 7 and three unseeded); controls R54SHIM (the round-54 builder, UTF-16LE fallback) 1/4, TXTONLY 1/4, DELEGATE 0/4 → `LEGS=4/4 C1=PASS` on `--seed 7` and three unseeded runs (`corpus/evidence/round55/c1-measure-after.txt`); L1 sweep 40/40 seeds at `--per-leg 4` (`c1-seed-sweep-L1.txt`) | `python3 corpus/evidence/round55/c1-count.py` | **improved narrowly** (capability acquisition): target met 4/4 ×4; W1 forges scored 1/4 (refusal-only) and 0/4 (approximate OLE reader); W1 named hook gaps (`dir_fd`/`chdir` relative opens, `_posixsubprocess.fork_exec`, unlisted events) and six counter clauses no control exercises (`R55MutC1Counter`) — no passing forge shown, but the falsify wave did not run (round wrapped on request budget) | plumbing |
+| C2 depth (sourced; the NMPA grey-literature search-record field) | `ENTRIES=0/1 BOUND=0/3 QUOTE_ROWS=0 SUBSTANCE=FAIL QUARANTINE_VERDICTS=0/1 C2=FAIL`; STAGED control `REF_ID_UNBOUND=12 BOUND=0/3`; REWRITE control `BOUND=2/3 REF_ID_UNBOUND=2 QUOTE_ROWS=0 C2=FAIL` → `ENTRIES=1/1 BOUND=3/3 GUIDELINE_BOUND=yes REF_ID_UNBOUND=0 NEW_GROUND=1/1 QUOTE_ROWS=19 CAPTURE_BOUND=19/19 SUBSTANCE=PASS ANCHOR_BOUND=3/3 INFERENCE_GROUNDED=1/1 QUARANTINE_VERDICTS=1/1 C2=PASS` | `python3 corpus/evidence/round55/c2-count.py` | **improved**, as presence, binding and located support in the defined forms; entailment is uncounted (W1 `R55CritEntailObs`/`Inf` narrowings carried); three documents bound, S113 not cited, r43 refused | ground |
+| C3 calibration (W2-falsified lane statements) | `ERRATA=0/11 MISSING=11 C3=FAIL`; RESTATE control `WRONG=11`; PARAPHRASE control `ANCHOR=11` → `ERRATA=11/11 C3=PASS` | `python3 corpus/evidence/round55/c3-count.py` | **improved**: eleven self-statement/observation mismatches resolved by anchored errata whose observations a counter recomputes; W1 seats re-derived E01–E07 independently and matched; RESTATE/PARAPHRASE controls 0/11 | calibration |
+
+The numeric operability scale remains 3/10; the round-1 score is its narrow archived-export observable, not this builder counter. No other numeric score is invented.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved narrowly** | C1 (`tools/build-spans.py`, 4/4 ×4, 40/40 seeds); successors of the round-54 ledger and PDF checks with their W2 attacks as failing fixtures; `wave-settled-check.py` |
+| depth | **improved** | C2; one entry on three documents, 19 located quotes in defined forms, r36 and r37 corrections appended |
+| coverage | **improved narrowly** | three documents absent at base (`git grep -c 是否检索灰色文献 dba605de -- corpus/knowledge` → exit 1); `.doc` captures now reach located spans end to end |
+| calibration | **improved** | C3 `ERRATA=11/11`; QUALITY 101–105; lesson Mistakes rows 1–4 (row 4: this round's own report filed before W1 settled) |
+| freshness | **unchanged** | no fetch; newest capture dates remain 2026-10-24 |
+| adjacency | **unchanged** | drug-safety evaluation practice reported as adjacent, not absorbed (W1 `R55ReviewProvinceC2`, `R55ConnSiblings`: no sibling overlap) |
+
+## Capabilities (round-55 addition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| OLE-aware span builder | builds a quote's span manifest from any capture through its defined text form — an OLE `.doc` or zip `.raw` through `tools/capture-text.py` (its garbage `.txt` sidecar unused), other captures through the `.txt` — and refuses a capture with no defined form, a quote not exactly once, or a raw capture-text refuses, writing nothing on refusal | `python3 tools/build-spans.py --quotes Q --out DIR [--check]`; `corpus/evidence/round55/c1-measure-after.txt` (frozen counter 4/4 ×4, held-out quotes from generated and pinned OLE captures, round 54's manifest re-derived byte for byte) | 55 |
+
+## Planned — round 56 (not started)
+
+Candidates: run the round-55 falsify wave items that never ran (`.ufo/waves/round-55/w2-spec.json`, 36 items, not dispatched) against the landed C1/C2/C3; integrate the 13 W1 seats that had not reported at filing; close the C1 hook gaps W1 named (`_posixsubprocess.fork_exec`, `dir_fd`) in a successor counter; the S101 carrier-alphabet leg (now buildable); the next grey-literature-family entry (r41/r42/r44/r48).
