@@ -1,0 +1,127 @@
+# guard-proof — round 54, chousa lane (Section-10 id-collision guard)
+# seat: R54ExecCollision    date: 2026-10-26
+# scratch: /fast/scratch/hyaku/chousa-r54/R54ExecCollision
+# lane:    /home/vgpnk/Projects/shokunin/chousa-shokunin
+
+## A. Independent re-derivation of the four L1 files
+
+Commands (the prompt's Section-10 commands, run into my own output dir $OUT):
+
+    grep -oE '^ {0,3}\|[[:space:]]*S[0-9]{3,}' /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md \
+      | grep -oE 'S[0-9]+' | sort > "$OUT/reg-ids"
+    grep -oE '^ {0,3}\|[[:space:]]*S[0-9]{3,}' /home/vgpnk/Projects/shokuknow/merge/chousa/SOURCES.append.md \
+      | grep -oE 'S[0-9]+' | sort > "$OUT/staged-ids"
+    comm -12 "$OUT/reg-ids" "$OUT/staged-ids" > "$OUT/collisions"
+    awk -F'|' -v l='chousa' '$2 ~ ("`" l "`") && $3 ~ /round[0-9]+/ && $4 ~ /S[0-9]+/ {print $4, $5}' \
+      "/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/absent-defect-register.md" > "$OUT/quarantine-slice"
+
+Observed:
+
+    reg-ids           120 lines
+    staged-ids        114 lines
+    collisions        39 lines (first S082, last S120)
+    quarantine-slice  24 lines
+
+cmp against the L1's files (/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-54/assimilation/):
+
+    IDENTICAL  reg-ids            sha256 a875bed3894761e4fced68f3acb9aed8b5ca32d3cfebd8138c8b992ac0f08521
+    IDENTICAL  staged-ids         sha256 9ce3b9c30cd1115797315c6aea6f00fa45b4ff141a9aa630059afe3cc6b8e2f9
+    IDENTICAL  collisions         sha256 b605b00c48e5f9a9d89615dee937d4bbdd80612ca61f0e52bb4463bbf60f3eb4
+    IDENTICAL  quarantine-slice   sha256 1ec5a29fb97afc5a334282e48b41bc3dd59312f0c7e85c37b60f77b392a464be
+
+All four re-derive byte-for-byte. A nonempty `collisions` (39) means the staged package MUST
+be renumbered in scratch before any append.
+
+## B. The guard, proved on a scratch fixture
+
+Fixture: a registry copy carrying a two-space-indented row, and a staged copy at column zero.
+
+    printf '  | S002 | y |\n' > "$G/registry-copy.md"    # two-space indented
+    printf '| S002 | x |\n'   > "$G/staged-copy.md"      # column zero
+
+    $ cat -A "$G/registry-copy.md"
+      | S002 | y |$
+    $ cat -A "$G/staged-copy.md"
+    | S002 | x |$
+
+### B1. The prompt's extractor, 0-3 leading spaces:  ^ {0,3}\|[[:space:]]*S[0-9]{3,}
+
+    grep -oE '^ {0,3}\|[[:space:]]*S[0-9]{3,}' "$G/registry-copy.md" | grep -oE 'S[0-9]+' | sort > "$G/reg-ids"
+    grep -oE '^ {0,3}\|[[:space:]]*S[0-9]{3,}' "$G/staged-copy.md"  | grep -oE 'S[0-9]+' | sort > "$G/staged-ids"
+    comm -12 "$G/reg-ids" "$G/staged-ids" > "$G/collisions"
+
+    reg-ids:      S002
+    staged-ids:   S002
+    collisions:   S002
+    nonempty: YES (5 bytes)
+
+### B2. The old column-zero-only extractor:  ^\|
+
+    grep -oE '^\|[[:space:]]*S[0-9]{3,}' "$G/registry-copy.md" | grep -oE 'S[0-9]+' | sort > "$G/reg-ids.zero"
+    grep -oE '^\|[[:space:]]*S[0-9]{3,}' "$G/staged-copy.md"  | grep -oE 'S[0-9]+' | sort > "$G/staged-ids.zero"
+    comm -12 "$G/reg-ids.zero" "$G/staged-ids.zero" > "$G/collisions.zero"
+
+    reg-ids.zero:      (empty)   (empty: YES)
+    staged-ids.zero:   S002
+    collisions.zero:   (empty)   (empty: YES, 0 bytes)
+
+VERDICT: the 0-3-space extractor yields a NONEMPTY collisions (S002); the column-zero-only
+extractor yields an EMPTY one. The guard is live and behaves as the prompt states.
+
+## C. Why the guard is load-bearing: the census accepts the indented row as a registry row
+
+`/home/vgpnk/Projects/shokunin/scripts/sources-census.sh` row_pass() matches rows with 0-3
+leading ASCII spaces (line 615: `if (line !~ /^ {0,3}\|/) next`; line 616: `sub(/^ {0,3}/,"",line)`),
+so a two-space-indented row IS a registry row to the census — the column-zero-only extractor
+would miss a duplicate the census still reports as E03.
+
+Fixture: a two-row registry (S001, S002) with a `corpus/knowledge/x.md` so used-by resolves.
+
+    $ bash /home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --file "$C3/corpus/SOURCES.md"
+    file    ok      .../guard/census3/corpus/SOURCES.md
+    exit=0   (no indented row: census-valid)
+
+    $ bash /home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --file "$C3/corpus/SOURCES-with-indented.md"
+    file    E03     S002 duplicate id
+    exit=1
+
+Indent tolerance boundary (same fixture, one indented duplicate at indent 1..4):
+
+    indent=1 -> 1 E03 duplicate-id finding(s)
+    indent=2 -> 1 E03 duplicate-id finding(s)
+    indent=3 -> 1 E03 duplicate-id finding(s)
+    indent=4 -> 0 E03 duplicate-id finding(s)
+
+The census sees the indented duplicate at 1-3 spaces and not at 4: the 0-3-space extractor
+matches the census's own tolerance exactly.
+
+## D. Renumber map, by document
+
+Registry maximum is S120 (120 rows, S001..S120, no gaps, no duplicates; `grep -oE '^\| S[0-9]{3,}'`
+gives 120 ids, max S120). S121/S122/S123 are free in the lane registry today.
+
+The three new documents take the next three ids, in the order the two entries cite them:
+
+    staged id -> lane id    document                                  first source-cell URL
+    S085      -> S121       GB/T 7714-2025 record, 全国标准信息公共服务平台 (std.samr.gov.cn)
+    S086      -> S122       GB/T 7714-2025 在线预览 notice, openstd (openstd.samr.gov.cn)
+    S093      -> S123       GB/T 7714-2025 full-text copy, 集美大学学报 (xuebaobangong.jmu.edu.cn)
+
+Each staged id is a member of the 39-id collision set, so each MUST be renumbered; the map is
+re-pointed BY DOCUMENT (the URL is the evidence, the id follows it), never by arithmetic.
+
+## E. S101 is HELD, verified by URL byte for byte
+
+    lane   S101 url: https://jc.hit.edu.cn/_upload/article/files/f7/54/711916924125a0682e3bc3ebb6ed/1f6f2731-8c87-4812-b7e2-9fad0069d508.doc
+    staged S101 url: https://jc.hit.edu.cn/_upload/article/files/f7/54/711916924125a0682e3bc3ebb6ed/1f6f2731-8c87-4812-b7e2-9fad0069d508.doc
+    byte-equal: True
+    sha256 lane  : 6dc68fd6b32ce9c8dfcebce84434d86a92e9841caad388b59986dba15eb0cdf4
+    sha256 staged: 6dc68fd6b32ce9c8dfcebce84434d86a92e9841caad388b59986dba15eb0cdf4
+    len lane/staged: 119 119
+
+So staged S101 is not renumbered: the lane already registers this document at S101, and the
+lane id stays S101. The staged S101 row still differs from the lane's in the anchor, teaches,
+opened, recheck and used-by cells (the staged `used-by` already names
+`corpus/knowledge/source-type-taxonomy-r37.md`; the lane's names only
+`corpus/knowledge/citation-count-semantics-r37.md`), so the held row's `used-by` cell needs the
+old->new update in the lesson if the r37 entry cites it.

@@ -1161,3 +1161,29 @@ Left open:
 - **The draft wording** of the guideline: no draft capture exists in the cache.
 - **The 2019 NMPA notice:** only a tier-C third-party print is captured; the original's capture is a `.fail`.
 - **Japanese verb-final negation and Latin-negator-on-CJK-quote** in `tools/inference-ground.py` (named limits of the round-53 CJK window).
+
+## Round54 coverage and frontier (2026-10-26)
+
+| Note | Holds | Sources |
+|---|---|---|
+| `knowledge/source-type-taxonomy-r36.md` | Round-54 note (adopted by document from `merge/chousa/`, narrowed): the PRC citation standard as its own authority's pages state it — the SAMR record's number, 标准状态 dates (`发布 于 2025-12-02`, `实施 于 2026-07-01`), the 代替 block (`（全部代替）`) and the adoption basis `本标准非等效采用ISO国际标准：ISO 690:2021。`; the openstd portal's statement that its own system serves no text reading for this standard, for copyright (`本系统不提供文本阅读服务`) — a statement about the portal's service, not that the text is unreadable; a field is read on the page that prints it (the two pages fill 归口 with different bodies) | `S121`, `S122`; `corpus/evidence/round54/spans.tsv`; `corpus/lessons/round-54.md` |
+| `knowledge/source-type-taxonomy-r37.md` | Round-54 note (adopted by document, narrowed): the standard's clauses as a journal office's reproduction of the print carries them (tier B) — the scope clause and its express exclusion of librarians, catalogue compilers and indexers, 7.3's type-and-carrier rule, the normative 附录Ａ against the informative 附录Ｂ, the five-row carrier table with the microform row added, the change list's type renames, 7.6's date form, and the copy's own dates, colophon and OCR slip (`图书主要贵任者`) | `S123`; `corpus/evidence/round54/spans.tsv`; `corpus/evidence/round54/pdf-crosscheck.py` |
+| `../tools/capture-text.py` | Round-54 capability: a defined text form for an OLE Word 97+ `.doc` — CFB reader, FIB, Clx piece table, cp1252/UTF-16LE pieces, main story CP 0..ccpText, field results only; refuses `ole-not-word` / `ole-encrypted` / `ole-malformed` | `corpus/evidence/round54/claims.md`; `corpus/evidence/round54/c1-count.py`; `corpus/evidence/round54/c1-supplement.py`; `corpus/evidence/round54/measure-after.txt` |
+
+Coverage credit is per document: three documents absent at the base — the SAMR record (S121: identity, status, replacement, adoption basis), the openstd notice (S122: the portal's own no-text statement) and the JMU reproduction (S123: the standard's operative wording, third-party). Base sweep: `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin grep -l -e 'ISO 690:2021' -e 文献载体标识 c49ffc6ce1c3de87c1dfa96856239ed7274bf07b -- corpus/knowledge` → exit 1, no output. The held HIT data specification (S101) is not cited and earns none. The SAMR record is the document the lane refused as staged S082 in rounds 43-44; its capture prints the two dates as adjacent lines of one 标准状态 block, not as one contiguous string, so `citation-version-binding-r36.md`'s flip is met line by line (the r36 entry says so).
+
+**The OLE `.doc` text form.** `tools/capture-text.py` prints a defined text form for OLE Word 97+ `.doc` captures. The S100 and S101 anchors (round 49, offsets in a whole-file UTF-16LE decode) are re-pointed into it by anchored `correction:` lines (`SCORECARD.md` "Round 54 pointer corrections", targets `corpus/evidence/round54/S100-text-form.txt`, `S101-text-form.txt`). The refused S130 (grey-literature entry, round 53) now has a defined form (`是否检索灰色文献` at char 4678, 0 U+FFFD); it enters no entry this round. The span builder still slices a non-zip `.raw` as UTF-16LE (`corpus/evidence/round54/build-spans.py`), so no new `.doc` quote is written until it reads through the tool.
+
+### Frontier
+
+Advanced:
+
+- **Source-tier adjudication.** One real case now separates an authority that serves a document's identity (S121, S122) from a third-party copy that carries its text (S123), and the standard's own scope clause keeps the form axis (type and carrier codes) apart from the tier axis.
+- **Other capture forms.** OLE `.doc` has a defined text form instead of the round-48 UTF-16LE reading.
+
+Left open:
+
+- **The standard's operative text from an entitled copy.** Only the JMU reproduction is captured; whether its 附录Ａ rows match the issued pages is untested.
+- **The HIT data specification's carrier alphabet beside the standard's** (W1 `R54DraftEntryStb`): waits for a span builder that reads an OLE `.doc` through `tools/capture-text.py`.
+- **Applicability of the codes.** Whether any publisher or index applies 表Ａ．２ was not checked.
+- **The refused S130 regulator field.** The form blocker is gone; adoption waits for its own round.

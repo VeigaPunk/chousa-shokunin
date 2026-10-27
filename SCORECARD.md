@@ -2732,3 +2732,17 @@ The numeric operability scale remains 3/10; the round-1 score is its narrow arch
 ## Planned — round 54 (not started)
 
 Candidates: a C1 counter with a non-vacuous sample-size guard, generic calendar-invalid inputs and a non-canned held-out REAL leg; resolve the E3 predicate/tool recheck grammar; a defined OLE `.doc` text form or a narrower refusal; continue theme C (GB/T 7714 source-type) or theme B (archived-translation currency) after re-checking their capture state and province fit. C1's streak count (RW-1) is exposure, not failure; pair it with the next C1 verdict.
+
+## Round 54 pointer corrections (append-only; no row above is edited)
+
+The S100 and S101 Registry anchors (round 49) are offsets in a whole-file UTF-16LE decode of the `.doc` capture, a form no lane command prints (263 U+FFFD, 243 `0x0B`, a binary preamble; `corpus/lessons/round-54.md` `## Mistakes` row 2). Re-pointed into the defined OLE text form, dumped by the round-54 tool to the two targets (`python3 tools/capture-text.py <raw>`; S101 sha256 `a8e3e7ad…`, S100 `70ca0f0d…`); `python3 corpus/evidence/round53/pointer-anchor-check.py` requires each anchor to occur exactly once in its target. The two rows' form label "(UTF-16LE text of the raw .doc capture)" is superseded by these lines: their text form is now `tools/capture-text.py` (round 54). W1 `R54DraftS101Reanchor`, `R54DraftMistakes`.
+
+correction: corpus/SOURCES.md:110 char1296->char16 -> corpus/evidence/round54/S100-text-form.txt anchor: "中国知网他引频次的查询需要使用《中国引文数据库》。"
+correction: corpus/SOURCES.md:110 char1431->char151 -> corpus/evidence/round54/S100-text-form.txt anchor: "对于合作发文的参考文献中，如果引文出现了任一合作者，那么这条引文将被认定为自引"
+correction: corpus/SOURCES.md:110 char2843->char492 -> corpus/evidence/round54/S100-text-form.txt anchor: "“文献来源”等方式进行组合查询，注：被引频次为0的文献将不会显示"
+correction: corpus/SOURCES.md:111 char11170->char11972 -> corpus/evidence/round54/S101-text-form.txt anchor: "为便于文献的统计和期刊评价"
+correction: corpus/SOURCES.md:111 char11205->char12007 -> corpus/evidence/round54/S101-text-form.txt anchor: "每一篇文章或资料应根据其内容性质标识一个文献标志码"
+correction: corpus/SOURCES.md:111 char11993->char12795 -> corpus/evidence/round54/S101-text-form.txt anchor: "本规范推荐采用GB/T 7714中规定的顺序编码制格式著录,也可采用GB/T 7714中规定的作者-出版年制。"
+correction: corpus/SOURCES.md:111 char12161->char12963 -> corpus/evidence/round54/S101-text-form.txt anchor: "文献类型及载体类型标志；"
+correction: corpus/SOURCES.md:111 char13247->char14049 -> corpus/evidence/round54/S101-text-form.txt anchor: "参照ISO 690及ISO 690-2，每一参考文献条目的末尾均以“.”结束。"
+correction: corpus/SOURCES.md:111 char34374->char25123 -> corpus/evidence/round54/S101-text-form.txt anchor: "参考文献格式，参照ISO 690"

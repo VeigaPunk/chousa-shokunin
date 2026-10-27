@@ -271,7 +271,10 @@ def doc_text_form(data: bytes) -> str:
     while i < len(clx) and clx[i] == 0x01:
         if i + 3 > len(clx):
             raise Refused("ole-malformed: truncated Prc in the Clx")
-        i += 3 + struct.unpack_from("<h", clx, i + 1)[0]
+        cb_grpprl = struct.unpack_from("<h", clx, i + 1)[0]
+        if cb_grpprl < 0 or i + 3 + cb_grpprl > len(clx):
+            raise Refused("ole-malformed: Prc GrpPrl outside the Clx")
+        i += 3 + cb_grpprl
     if i + 5 > len(clx) or clx[i] != 0x02:
         raise Refused("ole-malformed: no Pcdt in the Clx")
     lcb, = struct.unpack_from("<I", clx, i + 1)
