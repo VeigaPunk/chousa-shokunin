@@ -1,0 +1,1216 @@
+{
+  "schema": "ufo-swarm-wave-dispatch-v1",
+  "wave": "chousa-r56-w1",
+  "policy": {
+    "source": "config",
+    "maxLanes": 256,
+    "minLanes": 16,
+    "waveMinLanes": 64,
+    "waveMaxLanes": 128,
+    "declaredMaxLanes": null,
+    "hardCeiling": 256,
+    "rampBatchSize": 5,
+    "rampIntervalMs": 700,
+    "globalRunnerCeiling": 1056
+  },
+  "counts": {
+    "spawn": 69,
+    "resume": 0,
+    "total": 69
+  },
+  "registry": {
+    "schema": "ufo-swarm-registry-v1",
+    "path": ".ufo/waves/round-56/w1/swarm-registry.json",
+    "reportDir": ".ufo/waves/round-56/w1",
+    "members": {
+      "R56ExecC1Measure": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Re-measure R56-C1 independently at the candidate 46e1758f3d8a5d1bf30200d2ff7d909b0230feed: sha256 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-gate.py, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-count.py and every file of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/battery/ and /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/probes/ and confirm each equals `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 46e1758f3d8a5d1bf30200d2ff7d909b0230feed:<path> | sha256sum`. Run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-count.py --work <fresh empty>` twice (paste every MUTANT/PROBE/CANDIDATE line and wall time). Then run the driver on the round-55 counter WITH the new battery (`python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-count.py --gate /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c1-count.py --work <empty>`) and report KILLED/DENIED. After each run: no `soffice.bin` of yours survives and `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin status --porcelain` is unchanged.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56CritC1Forge": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Forge KILLED=9/9 on the frozen driver /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-count.py WITHOUT a per-clause violation battery: in a scratch lane copy (archive 46e1758f3d8a5d1bf30200d2ff7d909b0230feed), replace battery/ with tools that do not each break exactly one checked behaviour deterministically — e.g. call-counting/alternating tools (state in their own dir, in the copy's tools/, or via os.mkdir+os.stat anywhere — note os.mkdir and stat raise no hook-checked event), tools keyed on wall time or on their run-directory name, one tool that randomly violates every clause, tools that read the hook file. Score each forge with the copy's driver. The rule needs the clause's own failure reason in 4 G runs and a PASS in 3 mutant runs at BOTH seeds in random order: report the best forge's KILLED count and how many runs it took, and any forge that reaches a kill with probability above 1/400 per mutant.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56CritC1Hook": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Find a third audit-hook bypass of the round-56 gate /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-gate.py (HOOK constant; BAD now also lists `_posixsubprocess.fork_exec` and `os.chdir`): a Python-level way for the tool under test to spawn a process, load native code, or read a path outside the allowlist WITHOUT a denied event, and still pass the gate's legs. Candidates: os.fork via `os.register_at_fork`? `multiprocessing` forkserver/spawn, `pty`, `os.openpty`, `os.symlink` + TOCTOU from a thread, `os.link`, `io.open_code`, `mmap` of an inherited fd, `/proc/self/fd`, `zipimport`, `importlib.machinery.ExtensionFileLoader` on a `.so` under the Python prefix, `sys.remote_exec`, `os.mkfifo`, `signal`/`os.kill` of the gate, `os.rename` of an allowed file to outside. For each: the audit event raised (probe with a printing hook in scratch) and whether the gate denies it; for any bypass, write the probe tool and the gate's output on it (`python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-gate.py --tool <probe> --seed 7 --per-leg 2 --work <empty>`).",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56MutC1Driver": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "mutation-tester",
+        "item": "Mutation-test the frozen driver /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-count.py on a scratch lane copy (archive 46e1758f3d8a5d1bf30200d2ff7d909b0230feed): one mutant at a time — accept any verdict-vector difference instead of the clause marker, require one seed instead of both, one G + one mutant run instead of three each, fixed (not shuffled) order, sequential run-dir names, drop the CANDIDATE=2/2 requirement, accept DENIED on exit 1 without AUDIT_FORBIDDEN/rc=97, drop the anchor-count check in edit(). For each mutant run the copy's driver on (a) the copy's battery, (b) the JUNK control built by `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/controls/build-c1-junk.py $S/junk` (`--battery $S/junk`), (c) the round-55 controls (`python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/controls/build-c1-controls.py $S/r55ctl`). Table mutant → KILLED/DENIED on a/b/c; a driver clause is load-bearing when its removal lets b or c gain. Name every clause no control exercises.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56MutC1GateNew": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "mutation-tester",
+        "item": "Beyond M1-M9: apply NEW single-edit mutants to a scratch copy of the gate /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-gate.py — drop each of the two new BAD events, drop the manifest-shape check (`len(lines) != len(expect) + 1`), drop the row-echo check, drop the span-name/offset check, drop REFUSE's `span file written` check, drop REGRESS's per-file byte compare, drop the pinned-capture digest check — and for each run the landed builder and every entry of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/battery/ and both probes /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/probes/*.py under the mutant and the pristine gate (`--seed 7 --per-leg 2 --work <empty>`). Table mutant → which entry (if any) changes verdict. List the surviving clauses (the next battery entries a successor would need) with the input that would kill each.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56ReviewC1Battery": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Code-review each file of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/battery/ (candidate 46e1758f3d8a5d1bf30200d2ff7d909b0230feed) against its docstring: does it run the landed builder unchanged and break EXACTLY one behaviour the gate checks? Does any violator also trip an earlier clause (so its kill would come from a different reason)? Check: m1 offset arithmetic, m2's fallback when the context beside the quote is short (does it ever exit non-zero?), m4's stdout filtering vs stderr, m5/m6 only on the success/refusal path, m7 reading outside before building, the oracle copy byte-identical plus a comment. Run each violator under the PRISTINE gate (`python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-gate.py --tool <file> --seed 7 --per-leg 2 --work <empty>`; the oracle copy via `R56_ORACLE` is a driver harness feature — read how the driver passes it) and paste the leg lines; confirm each fails exactly on its clause's reason.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56ReviewC1Same": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Same-sentence audit of R56-C1: compare clause by clause the predicate in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/claims.md, the docstring of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-count.py and the code that enforces each clause (cite lines). Check the MARKER regexes against the reason strings the gate's judge()/refused_ok() actually return (lines in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-gate.py), the M1-M9 anchors against /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c1-count.py and /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-gate.py (each exactly once), the harness edits H1/H2, the probes' DENIED rule, the random order and random run-dir names. Verify the receipts /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/controls/c1-before.txt and c1-controls.txt were produced by the frozen bytes (freeze commit 41c58925580af6be22049f13cfde234c5475b858 contains them) and that the three pre-freeze counter fixes claims.md discloses are real (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 41c58925580af6be22049f13cfde234c5475b858:corpus/evidence/round56/c1-count.py`).",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56SentC1": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "sentinel",
+        "item": "Hazard review of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-count.py, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-gate.py, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/battery/*.py, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/probes/*.py, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/controls/*.py: every write path, TMPDIR honoured, any hardcoded /tmp, any write into the lane (run the driver once with TMPDIR=$S and compare `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin status --porcelain` and a `find /home/vgpnk/Projects/shokunin/chousa-shokunin/tools -newer <stamp>` before/after), SIGINT mid-run of the driver (soffice.bin and its profile dir left?), the p2 probe's mkdir inside the run dir, the JUNK FLIP control's state file (where does it land when the junk dir is outside the lane?), rmtree only on the driver's own dirs. Paste receipts.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56ExecDeterminism": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Hypothesis: the gate /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-gate.py is deterministic per seed on the landed builder and on each battery entry. Test: for seeds 7 and 56, run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-gate.py --tool <T> --seed S --per-leg 2 --work <fresh>` five times each for T = /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/build-spans.py and T = /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/battery/m2-span-beside-quote.py and m6-manifest-on-refusal.py; record each leg line. Any variation (soffice output, timing, quote picks) is a falsifier of the driver's triplicate rule — report it with the differing lines.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56ConnPattern": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "connector",
+        "item": "Cross-round pattern: the lane's frozen C1 counters were forged or found weak in rounds 49-55 (RW-1; /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/recurring.tsv, the round-5x spot-checks in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/). Does the round-56 driver's design (clause-reason kills, triplicate random order at two seeds, a frozen mutant set taken from the previous round's mutation report) close the mechanism classes listed there, and which class stays open? Compare with the round-55 W1 seats R55MutC1Counter, R55CritForgeHook, R55CritForgeEcho in /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-55/w1/. Draft the RW-1 row update in recurring.tsv's existing shape.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56GroundStd": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scribe",
+        "item": "Ground the standard's ttbz text (lane S127; https://www.ttbz.org.cn/upload/file/20250407/6387963976070960491020144.pdf; form /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/b27ffd2f0161104c6a28c9f5.txt (UTF-8, universal newlines; the raw b27ffd2f0161104c6a28c9f5.raw is a PDF, the PDF is /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/b27ffd2f0161104c6a28c9f5.pdf)): identity (title, number, proposing/归口 body, dates — only what the form prints), the evidence-source table row for 灰色文献 (its exact text and its 证据等级/推荐 annotation if printed on that row), the sentence adopting 中国循证医学中心 证据(质量)分级体系 and the Oxford 推荐强度 standard, and where 搜索引擎 sits in the same table. Give ≥6 QUOTE machine lines (lane id S127) with char offsets, each quote once in the form, and for each the 160-char context. Report what the form does NOT print (e.g. is Ⅰ级/A on the grey-literature row itself, or in a separate grading table?).",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56GroundNote": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scribe",
+        "item": "Ground the explanatory note 编制说明 (lane S128; https://www.ttbz.org.cn/upload/file/20250407/6387963977456239722441041.pdf; form /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/de9f5afc3809acbf61f4d5bb.txt (UTF-8, universal newlines; the raw de9f5afc3809acbf61f4d5bb.raw is a PDF, the PDF is /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/de9f5afc3809acbf61f4d5bb.pdf), 7,031 chars): identity (title, issuer, date if printed), the working-group adoption of 中国循证医学中心's 证据分级体系 and the Oxford standard (the exact sentence and the months/years it gives), and the reference-list entries naming 国家药物和卫生技术综合评估中心 or the national centre's instruments. ≥4 QUOTE machine lines (lane id S128) with offsets. Say whether the note mentions 灰色文献 at all (count) — an entry must not cite it for that.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56GroundJournal": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scribe",
+        "item": "Ground the journal-hosted copy (lane S129; https://journal.china-pharmacy.com/rc-pub/front/front-article/download/129333664/lowqualitypdf/%E8%8D%AF%E5%93%81%E4%B8%B4%E5%BA%8A%E7%BB%BC%E5%90%88%E8%AF%84%E4%BB%B7%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E6%8C%87%E5%8D%97.pdf; form /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/5233bf47babaa1ca2b49ed15.txt (UTF-8, universal newlines; the raw 5233bf47babaa1ca2b49ed15.raw is a PDF, the PDF is /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/5233bf47babaa1ca2b49ed15.pdf), 80,732 chars): identity (journal 中国药房, year/volume/issue/pages/doi exactly as printed), the 灰色文献 row (exact text, offset), the grading of grey literature (Ⅰ级 / A — where exactly; is 'the highest grade in its table' true? quote the table's grade scale), the 中国循证医学中心 adoption sentence. Then compare with the ttbz standard text /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/b27ffd2f0161104c6a28c9f5.txt (UTF-8, universal newlines; the raw b27ffd2f0161104c6a28c9f5.raw is a PDF, the PDF is /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/b27ffd2f0161104c6a28c9f5.pdf): is the 灰色文献 row worded identically (diff the two lines)? ≥5 QUOTE machine lines (lane id S129).",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56GroundNhc": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scribe",
+        "item": "Ground the NHC 2020 management guideline (lane S130; https://www.nhc.gov.cn/yaozs/c100098/202011/6fe336283f69438e9b46f090bc2ec6d1/files/1732786237821_21413.pdf; form /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/a42feae4448612f949cc715f.txt (UTF-8, universal newlines; the raw a42feae4448612f949cc715f.raw is a PDF, the PDF is /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/a42feae4448612f949cc715f.pdf), 6,930 chars): identity (title, issuer, date as printed); is the `.txt` form the WHOLE document? Compare with the PDF (/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/a42feae4448612f949cc715f.pdf): page count and per-page text via `uv run --with pypdf python` in scratch (record pypdf version), total characters, last page's last line in both. Only if the form is complete may an entry say the guideline carries no 灰色文献 wording: count 灰色文献, 灰色, 未公开发表, 文献检索 in the form and in pypdf's text. ≥3 QUOTE machine lines (lane id S130) usable for identity and for the guideline's own evidence/literature wording.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56GroundQcg": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scribe",
+        "item": "The staged entries' `#### Unknown` asks whether the national centre's 2024 试行 质量控制指南 lists 灰色文献. The lane holds that document as S118 (https://www.bjhea.org.cn/ueditor/php/upload/file/20250115/1736907153935975.pdf; form /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/16fe8487aa97b98576a0dbac.txt (UTF-8, universal newlines; the raw 16fe8487aa97b98576a0dbac.raw is a PDF, the PDF is /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/16fe8487aa97b98576a0dbac.pdf); entry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/quality-control-guideline-issued-text-r48.md). Count 灰色文献, 灰色, 未公开发表, 会议, 检索 in the form and in pypdf's text of /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/16fe8487aa97b98576a0dbac.pdf (completeness check: pages, chars); quote (≥3 QUOTE machine lines, lane id S118) whatever the guideline says about evidence sources or literature retrieval. Verdict: does S118 answer the Unknown, and with what exact wording may the entry state it?",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56DraftEntry": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scribe",
+        "item": "Draft the full lane entry corpus/knowledge/grey-literature-field-china-r42.md (≤220 lines) by document, in the shape of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/grey-literature-and-chinese-search-record-r40.md (header lines: title, `source: S127 — https://www.ttbz.org.cn/upload/file/20250407/6387963976070960491020144.pdf — …`, S128, S129, S130 as bound and `source: S118 — https://www.bjhea.org.cn/ueditor/php/upload/file/20250115/1736907153935975.pdf — …` if used, verified-at 2026-10-27, recheck 180d, ground, adopted: round 56 from merge/chousa/ staged grey-literature-field-china-r42.md and the sibling r44; then #### Observation / #### Inference / #### Unknown / #### Province bullets), every Observation sentence carrying a located quote of the cited id (offset), every Inference bullet resting on quoted Observation. Must contain the string 中国循证医学中心 (quoted from a form). Narrow the staged claims to what the forms print (Ⅰ级/A, 'highest grade', 'no grey-literature wording at all', 'three channels'). Output the entry fenced and its QUOTE machine lines.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56DraftRows": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scribe",
+        "item": "Draft the four new Registry rows S127-S130 for /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md in the lane's 11-column schema (read /home/vgpnk/Projects/shokunin/CORPUS.md section `SOURCES.md — where a shokunin learns` and the rows S124-S126 as the model): source cell (title — issuer — URL as the FIRST URL), tier with reason, scope, the `anchor` cell with `char N` offsets of quotes that occur once in the defined form, status `mined`, opened 2026-10-27, recheck `180d`, used-by `corpus/knowledge/grey-literature-field-china-r42.md`. No cell may contain `|`. Also the old→new line for S118's used-by if the entry cites it. Run `/home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --file <scratch mirror of corpus/SOURCES.md with your rows appended>` and paste the output.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56DraftGate": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scribe",
+        "item": "Draft the round-56 lesson's `## Gate` block for /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-56.md: per new row S127-S130 the URL, access date 2026-10-27 (capture opened from the read-only cache, no fetch), and a ≤25-word located quote with offset; the assimilation set — admit `grey-literature-field-china-r42.md` (narrowed, say how) and refuse `grey-literature-national-route-r44.md` (reason: same theme on an overlapping document set, merged by document; flip condition) — and any refused document as a `refused-doc <url>` line; the collision check from /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-56/assimilation/ (reg-ids, staged-ids, collisions = 45, guard-proof.txt) and the renumber map by document (S168→S127, S156/S169→S128, S155→S129, S157→S130). Use the cache's capture dates (`ls -l --time-style=+%F` on the .txt) for the campaign-side dates.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56CritEntail": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Attack the staged claims of /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/grey-literature-field-china-r42.md and /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/grey-literature-national-route-r44.md against the forms (S127 = the standard's text on ttbz.org.cn, staged S168 (https://www.ttbz.org.cn/upload/file/20250407/6387963976070960491020144.pdf; form /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/b27ffd2f0161104c6a28c9f5.txt (UTF-8, universal newlines; the raw b27ffd2f0161104c6a28c9f5.raw is a PDF, the PDF is /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/b27ffd2f0161104c6a28c9f5.pdf)); S128 = the standard's explanatory note 编制说明 on ttbz.org.cn, staged S156 = S169 (https://www.ttbz.org.cn/upload/file/20250407/6387963977456239722441041.pdf; form /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/de9f5afc3809acbf61f4d5bb.txt (UTF-8, universal newlines; the raw de9f5afc3809acbf61f4d5bb.raw is a PDF, the PDF is /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/de9f5afc3809acbf61f4d5bb.pdf)); S129 = the journal-hosted copy of the workflow guideline, 中国药房 2025, staged S155 (https://journal.china-pharmacy.com/rc-pub/front/front-article/download/129333664/lowqualitypdf/%E8%8D%AF%E5%93%81%E4%B8%B4%E5%BA%8A%E7%BB%BC%E5%90%88%E8%AF%84%E4%BB%B7%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E6%8C%87%E5%8D%97.pdf; form /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/5233bf47babaa1ca2b49ed15.txt (UTF-8, universal newlines; the raw 5233bf47babaa1ca2b49ed15.raw is a PDF, the PDF is /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/5233bf47babaa1ca2b49ed15.pdf)); S130 = 国家卫生健康委 药品临床综合评价管理指南（试行） 2020, staged S157 (https://www.nhc.gov.cn/yaozs/c100098/202011/6fe336283f69438e9b46f090bc2ec6d1/files/1732786237821_21413.pdf; form /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/a42feae4448612f949cc715f.txt (UTF-8, universal newlines; the raw a42feae4448612f949cc715f.raw is a PDF, the PDF is /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/a42feae4448612f949cc715f.pdf)); held S118 = the issued 药品临床综合评价质量控制指南（2024 年版 试行） (https://www.bjhea.org.cn/ueditor/php/upload/file/20250115/1736907153935975.pdf; form /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/16fe8487aa97b98576a0dbac.txt (UTF-8, universal newlines; the raw 16fe8487aa97b98576a0dbac.raw is a PDF, the PDF is /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/16fe8487aa97b98576a0dbac.pdf))). For each Observation and Inference sentence: supported / narrower / unsupported, with the quote and offset that decides it. Specifically: 'grades it Ⅰ级 with recommendation strength A — the highest grade in its table'; 'contains no grey-literature wording at all'; 'provenance the published text asserts but does not evidence'; 'reaches Chinese practice from three channels'; 'the national centre's documents are the inputs'. Return the narrowings an admitted entry must carry.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56CritCurrency": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Currency and authority of the C2 documents: which of S127 (ttbz text) and S129 (journal copy) is the issued standard, and is either a draft? What dates does each print (发布/实施/年份)? Is the T/CLPA number printed or a placeholder (`XXXX`)? Is the 2020 NHC guideline (S130) still the current version — what does any lane-held source say (grep /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus for 药品临床综合评价管理指南)? Give the tier each row may carry and the `#### Unknown` bullets the entry must keep.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56ReviewProvince": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Province check for C2: read /home/vgpnk/Projects/shokunin/chousa-shokunin/PROVINCE.md and the sibling PROVINCE.md files (/home/vgpnk/Projects/shokunin/*-shokunin/PROVINCE.md). Is 'where a grey-literature search requirement lives in a national drug-evaluation standard' chousa's (source hierarchy / search-record method) or a sibling's (pharmacology, regulatory, evidence grading)? Which parts must the entry report as adjacent and not absorb? Cite lines.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56ConnSiblings": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "connector",
+        "item": "Sibling-overlap scan for C2 and C1: grep every sibling lane's corpus and tools (/home/vgpnk/Projects/shokunin/*-shokunin/, excluding chousa) for 药品临床综合评价, 灰色文献, ttbz.org.cn, 中国循证医学中心, 证据分级, build-spans, audit hook / addaudithook, mutation battery. Report counts per lane and whether any sibling already holds these documents or a gate-clause-coverage tool (overlap → report, not absorb).",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56ScoutFrontier": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scout",
+        "item": "Round-57 frontier scout (read-only): /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/README.md `## Frontier`, /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md 'Planned — round 56', /home/vgpnk/Projects/shokuknow/merge/chousa/MERGE-REPORT.md and the staged grey-literature family left after r40/r42/r44 (r41, r43, r48 entries in /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/): rank three round-57 candidates (axis, counter shape, cheapest do-nothing control), including the S101 carrier-alphabet leg and a freshness move on the lane's oldest recheck dates. No draft, no production write.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56MutC2Counter": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "mutation-tester",
+        "item": "Mutation-test the frozen counter /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c2-count.py on a scratch lane copy (archive 46e1758f3d8a5d1bf30200d2ff7d909b0230feed): mutants — drop the `r[8] == OPENED` check, drop `used == citing`, drop MUST_BIND, drop NEW_GROUND's BASE_REV absence, drop CAPTURE_BOUND's digest match, drop `len(span) > len(quote)`, drop the HELD S118 used-by check, drop QUOTES_IN_LESSON. For each, build the cheapest scratch fixture root (start from `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/controls/build-c2-controls.py $S/ctl`, rewrite/) that the mutant passes and the pristine counter fails; table mutant → fixture → pristine/mutant verdict. List any clause no fixture can separate.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56ReviewC2Counter": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Same-sentence audit of R56-C2: predicate in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/claims.md vs the docstring and code of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c2-count.py (cite lines), especially the constants block (BASE_REV, DOCS URLs vs the cache keys, MUST_BIND, HELD S118 URL vs S118's first source-cell URL in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md, TERMS absent at BASE_REV: `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin grep -c 中国循证医学中心 e5a3795191601797613eb986b36fa0b1a73fe6a1 -- corpus/knowledge`). Re-run the controls (`python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/controls/build-c2-controls.py $S/ctl` then `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c2-count.py --root $S/ctl/<name>`) and confirm /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/controls/c2-controls.txt reproduces.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56ExecPdfCross": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "PDF cross-check for C2: for each of the five PDF captures (S127-S130 and S118; .pdf files named in the context), extract text with `uv run --with pypdf python` in scratch (record the pypdf version) and compare with the cache `.txt` form: page count, total chars, whether every line containing 灰色文献 / 中国循证医学中心 / 证据分级 / 未公开发表 in the `.txt` also appears (whitespace-normalised) in pypdf's text, and any `.txt` truncation. Write the comparison as a small script (fenced, ≤80 lines) plus its output; it will be committed as corpus/evidence/round56/pdf-crosscheck.py if sound.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56ExecCollision": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Reproduce the section-10 collision check independently: compute reg-ids from /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md and staged-ids from /home/vgpnk/Projects/shokuknow/merge/chousa/SOURCES.append.md with the 0-3-space pattern, compare byte-for-byte with /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-56/assimilation/reg-ids, staged-ids, collisions (45 lines) and guard-proof.txt; prove the guard on your own indented fixture; and check by URL that none of the four C2 document URLs already has a lane row (`grep -F` each URL in SOURCES.md) and that S127-S130 are unused ids. Also derive the lane's quarantine slice of /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/absent-defect-register.md for the theme URLs (expected 0 rows) with the context's awk filter.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56RegisterR55Late": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scribe",
+        "item": "Round-55 settlement register: /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-55/w1-results.json holds the final output of all 48 round-55 W1 seats; eleven have no report file in /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-55/w1/ (R55ExecC1Seeds, R55MutC1Builder, R55SentC1, R55SimplifyBuilder, R55GroundNmpaEn, R55GroundMedsci, R55DraftEntry, R55DraftRows, R55DraftC3Fixes, R55RegisterW2A, R55ScoutFrontier — verify the list). For each, extract its findings from the `output` field and table: finding · does it falsify or narrow a landed round-55 statement (cite the statement file:line at 53f1ce6b) · proposed disposition (appended correction / none). Also read the salvaged /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-55/w1/R55MutC2Counter.md and R55ExecBuilderOld.md (round-49 OLE rows re-derived differently) for the same question.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56ExecD3D4": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Verify the two round-55 closure citation defects before the L1 appends corrections: D4 — run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/capture-text.py /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/bdff491a75c6abeda1d9c01d.raw` in scratch and report the offsets of `即“灰色文献”`, `即灰色文献`, and the sentence start `查找时应当注意收集` (closure says 1012 and 994); quote the round-55 lesson line that says 994 (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-55.md, grep 994). D3 — for every lane hash the round-55 report /home/vgpnk/Projects/shokunin/.ufo/reports/round-55/chousa.md cites as a measurement revision, compare with the header line of the receipt it names (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c1/c2/c3-measure-after.txt); table report claim → receipt header revision → match/mismatch.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56DraftMistakes": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scribe",
+        "item": "Mine mistakes for /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-56.md `## Mistakes` (class · evidence pointer · captured-by · fix; a fix counts only once shown able to fail). Candidates to verify: (1) round 56's first driver draft scored an equivalent mutant (M9 dropped one of two newline guards) and a kill rule an alternating tool forges — found by the L1's own controls before the freeze (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/claims.md 'Pre-freeze counter fixes'; the FLIP kill line is in no committed receipt — say so); (2) round 55's report cited measurement revisions its receipts do not name (closure D3); (3) round 55 filed before W1 settled and never dispatched W2 (closure D1). For each name the criterion in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md (grep 104, 101) that should have caught it or `none`, and a check that would fail on it. Draft QUALITY criteria 106+ in the file's shape for any uncaptured class.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56ExecWaveSettled": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Run the round-55 wave-settled check `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/wave-settled-check.py` (read its usage) on round 55 now (w1-results.json committed at e5a37951; W2 never dispatched as a round-55 wave — its items ride round 56's wave) and on round 56 (no results yet: must be UNSETTLED). Does the check handle a wave that is retired/carried rather than dispatched? Propose (fenced script ≤60 lines) a round-56 successor that accepts a `carried-to: <round>/<wave>` marker file and fails on a wave with neither results nor a carried marker; test it on scratch fixtures.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56ReviewSkillRow": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Review the build-spans registry change the L1 will make: read /home/vgpnk/Projects/shokunin/chousa-shokunin/SKILL.md lines 130-150 (the `build-spans` row says `probe`) and the closure's routed item 5 in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-55-verifier-spotcheck.md. Does `tools/build-spans.py --check` + gate /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-gate.py meet the lane's definition of a gate (grep SKILL.md and PROTOCOL for gate vs probe; a gate must be shown able to fail)? Propose the exact replacement row text (append-only: a new row superseding the old) naming the gate, its self-test command and its failure evidence.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R56ScoutConsiderthese": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scout",
+        "item": "considerthese duty (read-only): list /home/vgpnk/Projects/shokunin/chousa-shokunin/considerthese/ (newest file) and run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/considerthese-ledger-check.py --root /home/vgpnk/Projects/shokunin/chousa-shokunin` (paste output). Is any proposal newer than the ledger? Pick at most ONE still-unimplemented proposal that fits this round's claims (gate clause coverage or the grey-literature row), or none with the sweep; say what landing it would require.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2ExecC1Rerun": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Attack C1's after-state at 29cfb12abd70f688b48c0d17f31e636f2d81104a: sha256 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/build-spans.py (must equal the 6ca924995d48facbf704d2aa22ddaec236059039 blob) and tools/capture-text.py (must be 2c0140bc…); run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c1-count.py --seed 7 --work <empty>` and three unseeded runs (fresh --work each); paste every line and compare with /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c1-measure-after.txt. Then `--per-leg 6 --seed 555`. Any FAIL: reproduce and name the leg, quote and line.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2CritForgeNonReader": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "W1 `R55CritForgeEcho` (/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-55/w1/R55CritForgeEcho.md) admits its surrogate forge was misconfigured. Build a real non-reading forge for /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c1-count.py: a builder that never imports, copies or reimplements `tools/capture-text.py` (no CFB/FIB/Clx parsing) yet tries to produce exact slices of the defined form — e.g. search the quote in the raw's UTF-16LE decode and in the `.txt` sidecar and emit a slice of that; strip control chars to approximate the form; exploit that a window's 80-char context may be taken from either side. Score with `--seed 7` and two unseeded runs; per leg, the first divergence from the defined form. VERDICT: best LEGS a non-reading forge reaches.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2CritHookEscape": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "W1 `R55CritForgeHook` (/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-55/w1/R55CritForgeHook.md) found the hook in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c1-count.py does not resolve `dir_fd`/relative opens after `os.chdir` and does not list `os.symlink`/`os.kill`. Turn that into an exploit or rule it out: from inside the builder, can you reach anything that reveals an expected offset or the seed (the counter's process memory `/proc/<ppid>/mem` or `/proc/<ppid>/environ`, its argv, a file the counter writes)? Can you read the campaign cache or the lane corpus via `os.open(name, dir_fd=…)`? Paste probes (a scratch builder run under the counter) and the counter output. VERDICT: hole exploitable for a leg pass or only a boundary defect.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2MutC1BuilderKill": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "mutation-tester",
+        "item": "Mutation kill table for the C1 candidate (independent of W1 `R55MutC1Builder`): in a scratch lane copy at 29cfb12abd70f688b48c0d17f31e636f2d81104a, mutate `tools/build-spans.py` one at a time — use the `.txt` sidecar first for OLE, fall back to UTF-16LE for unknown raws, CONTEXT 79/81, accept 2 occurrences, write before refusing, drop universal-newline normalisation, offset=char, skip the zip branch, refuse zip raws — and run the copy's `corpus/evidence/round55/c1-count.py --seed 7 --work <empty>`. Table mutant → LEGS → killing leg; list survivors and say what input would catch each.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2ReviewC1Claims": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Review every landed C1 claim against evidence: the SKILL.md `build-spans` row (registered as `probe`: is that the honest kind under PROTOCOL §Gate standard?), the corpus/README.md Round55 `../tools/build-spans.py` row (\"re-derives rounds 47 and 50–54's committed manifests byte for byte and the nine round-49 OLE rows\" — re-run it: `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show dba605deb5cd5ed4874e0e3c39ba24737409cd80:corpus/evidence/round5N/quotes.tsv` → `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/build-spans.py --quotes … --out $S/oN --cache /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache` then diff against committed spans), and /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c1-seed-sweep-L1.txt. Report each claim survives / overstated with your output.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2SentBuilder": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "sentinel",
+        "item": "Hazard review of /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/build-spans.py at 29cfb12abd70f688b48c0d17f31e636f2d81104a: `--out` pointing at an existing directory with unrelated `S###-N.txt` files (it deletes orphans — demonstrate in scratch), a symlinked `spans/` dir, a cache `.raw` that is a zip bomb or a huge OLE file (memory/time through capture-text), a `.txt` that is a FIFO or /dev/zero symlink, quotes.tsv with 100k rows, an entry path with `..`. Run each in scratch; report exit code, wall time, peak RSS, and any write outside --out. Propose the smallest guard per hazard (do not edit).",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2CritC1Verdict": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Attack the planned C1 verdict 'improved (capability acquisition)': does the counter measure that the builder reads OLE through the defined form, or only that its output equals capture-text's (would a builder that shells to capture-text pass? — note the hook), and is a wrapper around an existing tool a capability worth a SCORECARD row (AXES.md Capabilities)? Is RW-1 (the forgeable-counter streak, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/recurring.tsv) broken this round, still running, or unknowable from W1+W2 evidence? Read /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-55/w1/R55CritForge*.md, R55MutC1*.md, R55ReviewC1*.md. VERDICT with the honest wording.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2ExecBuilderDiff": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Diff the candidate against the round-54 builder: `diff /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/build-spans.py /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/build-spans.py`; for each behavioural difference construct a scratch capture and quote that shows it (OLE raw + garbage `.txt` sidecar; zip raw + `.txt`; HTML raw + `.txt` with the quote twice; unknown raw, no `.txt`); run both builders (round-54 one via a scratch lane copy with its own quotes path) and tabulate outputs/exit codes. Confirm no behavioural change for `.txt`-only captures.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2ExecC2Rerun": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Attack C2's after-state at 29cfb12abd70f688b48c0d17f31e636f2d81104a: run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c2-count.py` and `--lane-only` (paste all lines and exits), `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/build-spans.py --quotes /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/quotes.tsv --out /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55 --check` from a scratch COPY of the lane (the --check writes nothing, but run it on the copy anyway), `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round51/quote-substance-check.py /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/spans.tsv`, `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/inference-ground.py --entry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/grey-literature-and-chinese-search-record-r40.md --spans /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/spans.tsv --counts /dev/null --registry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md --root /home/vgpnk/Projects/shokunin/chousa-shokunin`. Then rebuild the controls (`python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/controls/build-c2-controls.py $S/c2c`) and score them; compare with /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/controls/c2-controls.txt.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2ReopenS124": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scout",
+        "item": "Re-open lane S124 (http://www.gcpunion.org/upload/cmsfile/1703404975484107.doc; form `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/capture-text.py /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/bdff491a75c6abeda1d9c01d.raw` (the defined OLE text form; never the `.txt` sidecar)) and verify, quote by quote, every S124 offset the lane states: the entry's `source:` line chars (761, 994, 4625, 4652), every `char N` in its Observation bullets, the S124 Registry row's anchor cell, the lesson's quote table, and the entry's Unknown sweep command (run it from /home/vgpnk/Projects/shokunin/chousa-shokunin; does it print what the entry says?). Report each mismatch with the true value.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2ReopenS125": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scout",
+        "item": "Re-open lane S125 (http://m.cnpharm.com/201906/18/c280684.html; /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/27d4865f201e99c1fed9f79b.txt read UTF-8 with universal newlines) and verify every S125 quote, offset and fact in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/grey-literature-and-chinese-search-record-r40.md, the S125 Registry row (title cell, scope, anchor chars 242/371/780, teaches: 'issued … by notice on 18 June', five parts, Cochrane) and the lesson. Is '2019-06-18' in the body or only the byline? Is the 'teaches' cell entailed sentence by sentence? Report mismatches.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2ReopenS126": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scout",
+        "item": "Re-open lane S126 (https://english.nmpa.gov.cn/2019-07/18/c_388252.htm; /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/d663d66e2d39f868d84b1781.txt read UTF-8 with universal newlines) and verify every S126 quote and offset (777, 1204, 1324, 2528) and the Registry row's teaches cell (issued June 18 2019; cites Article 4 of the 2018 No. 66 announcement; Cochrane). Is 'tier A for identity and date' defensible (the page is on the regulator's domain, 'Presented by China Daily', 'CCFDIE')? Report mismatches and the honest tier wording.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2CritEntailObs": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Entailment attack on the LANDED entry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/grey-literature-and-chinese-search-record-r40.md `#### Observation` (six bullets) against the defined forms (S124 `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/capture-text.py /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/bdff491a75c6abeda1d9c01d.raw` (the defined OLE text form; never the `.txt` sidecar); S125/S126 `.txt`). For each sentence: ENTAILED / OVERSTATED / ABSENT with offsets or sweep counts. Watch: 'lists, under 2' and 'continues on the same line'; 'the four kinds are examples (`等`)'; 'names 国家药品监督管理局 only as the author of an earlier announcement'; '2019 occurs 0 times and 发布 0 times'; 'matching the `.doc`'s five numbered headings'; 'the English page renders it as'.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2CritEntailInf": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Entailment attack on the LANDED entry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/grey-literature-and-chinese-search-record-r40.md `#### Inference` and `#### Unknown`: 'makes … a field of the evaluation report, not only a step of the search'; 'the issuer is attested by S125 … and S126 …, not by the `.doc`'; 'the field is about completeness of evidence, not about a source list' and 'the method point this entry adds to the lane's grey-literature-as-source-category entries' (check the lane: `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin grep -n 灰色文献 -- corpus/knowledge`); 'identity is fixed by two independent issuance records' — are S125 and S126 independent of each other? Each: survives / narrow to <wording> / cut.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2ReviewRows": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Review Registry rows S124–S126 in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md against /home/vgpnk/Projects/shokunin/CORPUS.md section SOURCES.md (11 cells, enums, no `|` in cells, anchor char N = a located quote's offset in the defined form, `opened` 2026-10-27, `recheck` 180d, used-by), the tier justifications (B third-party copy; B newspaper; A regulator's English site for identity only), and the census: `/home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa` (paste). Any row whose `teaches` exceeds its source?",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2CritQuarantine": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Attack the lesson's verdict for absent-defect register row S125 (round6; `grep -n 'round6 | S125' /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/absent-defect-register.md`): /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-55.md says `absent-as-written` (two of three quoted strings present in the defined form, the third differs only by curly quotes around 灰色文献). Re-derive the three counts in `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/capture-text.py /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/bdff491a75c6abeda1d9c01d.raw` (the defined OLE text form; never the `.txt` sidecar), the `.txt` sidecar and the UTF-16LE decode. Is `absent-as-written` the right class under the lane's classes (round 42–54 lessons: `grep -rn 'absent-as-written' /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons | head`), or should it be `present` with a note? Is the 'register's payload-absent is wrong for two quotes' sentence right?",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2CritGate": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Attack the lesson Gate decisions in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-55.md `## Gate`: the r40 admit-narrowed reasons; the r43 refusal (/home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/grey-literature-field-boundary-r43.md — read it; is the refusal reason true? is the flip checkable?) and its `refused-doc` line for staged S161; the decision not to cite the held S113 (medsci) — read /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-55/w1/R55GroundMedsci.md if present and the capture /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/453d492becd9a2f4632cb8dd.txt; the admit/reject spot-check instructions (run them exactly as written; do they work?).",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2MutC2Landed": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "mutation-tester",
+        "item": "Mutation-test /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c2-count.py against the LANDED state: in a scratch lane copy at 29cfb12abd70f688b48c0d17f31e636f2d81104a, make one perturbation at a time and run `python3 $S/lane/corpus/evidence/round55/c2-count.py --root $S/lane` — drop one lesson quote row, change an S124 anchor `char 4652`→`4653`, add a `source: S113 — …` line without S113's used-by, change S125 `opened` to 2026-10-26, replace one span file with the slice from the `.doc`'s `.txt` sidecar (and fix its digest column to the sidecar's), add a stray `S130` token to the entry, delete the quarantine verdict line. Table: perturbation → C2 line that fails. Name any perturbation the counter misses.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2ConnAdjacency": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "connector",
+        "item": "Adjacency and cross-lane pattern for C2: the entry claims the drug-safety evaluation practice is adjacent ground it reports and does not hold. Scan sibling PROVINCE.md and corpora (/home/vgpnk/Projects/shokunin/*-shokunin/, read-only, skip chousa) for pharmacovigilance, ADR, 药品不良反应, 上市许可持有人, NMPA, systematic review reporting, PRISMA. Who, if anyone, owns it? Also: do the lane's other 灰色文献 entries (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/chinese-search-record-r39.md, quality-control-guideline-issued-text-r48.md, western-instrument-alignment-r50.md) now contradict or need a pointer to the new entry? Report.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2ExecC3Rerun": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Attack C3's after-state at 29cfb12abd70f688b48c0d17f31e636f2d81104a: run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c3-count.py --work <empty>` (full, with E11; paste every line), then `--skip-slow`; rebuild the controls (`python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/controls/build-c3-controls.py $S/c3c`) and score both (`--root $S/c3c/<name>`), compare with /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/controls/c3-controls.txt. Then append one extra stray `erratum: E05 …` line with a wrong observation OUTSIDE the errata section of a scratch copy's SCORECARD.md and confirm it is ignored; and one inside the section after the real E05 line (last-wins) and confirm E05 turns WRONG.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2CritErrataReadings": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Attack the readings paragraph under /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md `## Round 55 statement errata` and the observations: E01 — is `该标准暂无全文，请等待更新` really a latent, undisplayed template string (inspect the context around char 1712 of /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/b9ca2a4fdf9455867534f144.txt — a JS i18n map? any condition that would display it?); E03 — does 'prescribes' really overstate given S123 carries the type table; E05 — 'no constant repairs all six, but one repairs five'; E09 — rc=0 and SPAWNED really mean the hook missed a spawn; E11 — is the echo tool's 3/3 a property of the supplement (re-derive in a BASE mirror). Each: reading survives / wrong, with evidence.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2ReviewR36Corr": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Review the `#### Corrections (round 55)` section appended to /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/source-type-taxonomy-r36.md: is each bullet true against the captures (S121 /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/adf6ba934e813b2c326fa150.txt, S122 /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/b9ca2a4fdf9455867534f144.txt, universal newlines), does it point at the right bullet ('third inference bullet', 'fourth observation', 'last inference bullet', 'verified-at line'), does each of the four C3 anchors still occur exactly once in the file (python count), and does `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/inference-ground.py --entry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/source-type-taxonomy-r36.md --spans /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/spans.tsv --counts /dev/null --registry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md --root /home/vgpnk/Projects/shokunin/chousa-shokunin` still pass?",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2ReviewQ101": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Review QUALITY 101 in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md (round-55 correction of 97/98): every number it states (12795/12963 for which phrase, +802 ×5, −9251, 18,451, 469, rc 0, SHELL 1/6) re-derived by you — `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show dba605deb5cd5ed4874e0e3c39ba24737409cd80:tools/capture-text.py > $S/ct.py`, the six S101 phrases from the S101 `correction:` lines in /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md 'Round 54 pointer corrections', /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/6dc68fd6b32ce9c8dfcebce8.raw. Does 101 itself avoid repeating any C3 anchor? Is its Check runnable as written and its 'Shown able to fail' true (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/controls/c3-controls.txt)?",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2MutC3Errata": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "mutation-tester",
+        "item": "Mutation-test the landed errata against /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c3-count.py: in a scratch lane copy at 29cfb12abd70f688b48c0d17f31e636f2d81104a, perturb one erratum at a time (one character of an observation; an anchor shortened to drop the key phrase; an anchor that now occurs twice because you paste it into the target's correction section; a target path typo; the section heading renamed) and run `--work <empty> --skip-slow` (E11 separately once). Table perturbation → item status. Also: does any later lane edit this round (r36 Corrections, QUALITY 101–105) risk making an anchor occur twice? (python counts at 29cfb12abd70f688b48c0d17f31e636f2d81104a).",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2CritC3Honest": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Is C3 an honest calibration move? Read /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/claims.md C3, /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md errata block, /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-55/w1/R55ExecC3Obs*.md (independent observations), /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-55/w1/R55CritC3Calib.md if present. Attack: (a) are all eleven real mismatches between a lane self-statement and repo state (quote each statement at dba605deb5cd5ed4874e0e3c39ba24737409cd80); (b) could C3 be satisfied by copying W2 numbers without observing (did W1 seats' independent derivations match the counter? compare their observed strings); (c) does any remaining round-54 W2 falsification of a lane statement lack an erratum (scan /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-54/w2/*.md). VERDICT: honest / inflated / incomplete with item ids.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2ReviewQ102to105": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Review QUALITY 102–105 in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md: re-run each Check exactly as written (102: the DELEGATE control via `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/controls/build-c1-controls.py $S/ctl` then `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c1-count.py --tool $S/ctl/delegate.py --seed 55 --work <empty>`; 103: `uv run --with pypdf python /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/pdf-crosscheck.py` and `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/considerthese-ledger-check.py --root /home/vgpnk/Projects/shokunin/chousa-shokunin`; 104: `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/wave-settled-check.py --round 54` and `--round 52`; 105: the three builders with an in-lane OUTDIR — check nothing is created). Does each 'Shown able to fail' reproduce? Any criterion that restates a C3 anchor?",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2MutLedgerV2": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "mutation-tester",
+        "item": "Attack /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/considerthese-ledger-check.py (round-55 successor): in scratch fixtures, try a symlink inside the root pointing outside, a pointer `a/../../etc/hostname`, a regex the nested-quantifier heuristic misses but still backtracks (`(a|a)+$`, `(a|aa)*c`, `(.*a){20}`), a 1 MiB+1 file, a file that grows between stat and read, a ledger row with 5 columns, a considerthese bullet under a different heading. For each: exit code and wall time; which escape works. Receipts /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/considerthese-ledger-check.txt reproduce?",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2MutPdfV2": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "mutation-tester",
+        "item": "Attack /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/pdf-crosscheck.py (round-55 successor; run with `uv run --with pypdf python` from your scratch): fixtures — a duplicated S123 row (22 rows), an S123 row with a whitespace-only quote, a BOM-prefixed header, CRLF line ends, a quote present only after NFKC, a wrong sha256 pin (copy the script and edit the pin in scratch). Exit code per fixture; does the 21-row denominator mean 'exactly the frozen set' or just 'any 21 rows'? Reproduce /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/pdf-crosscheck.txt.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2MutWaveSettled": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "mutation-tester",
+        "item": "Attack /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/wave-settled-check.py: in a scratch git fixture (D=$(mktemp -d -p $S) && git -C \"$D\" init -q) build a lane-shaped and a fleet-shaped repo and test — a results file committed after the report; a results file renamed; an uncommitted results file; a dispatched marker that is uncommitted; an ABANDONED marker whose first line is not the timestamp form; a report added, deleted and re-added (which commit counts?); timezone offsets that differ between repos. Exit code per case; which cases mislead? Reproduce /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/wave-settled-check.txt on the real repos.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2CritMistakes": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Attack /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-55.md `## Mistakes` (three rows): pointers resolve (open each), `captured-by` honest, each fix shown able to fail with a command you run (row 1: `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/wave-settled-check.py --round 54`; row 2: the E08 observation; row 3: the C1 hook and W1 forge reports). Is row 3 a real mistake of the lane or a restatement of a W2 finding? Is any bigger round-54 mistake missing (read /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-54-verifier-spotcheck.md §6 and /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-54/w2/R54W2CritCredit.md, R54W2CritTrends.md)?",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2ReviewGateConformance": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Section-10 conformance of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-55.md `## Gate` against the round prompt (/home/vgpnk/Projects/shokunin/.ufo/prompts/chousa-round-55.md §6 item 10): collision lists and counts pasted? renumber map by document? recheck prose stripped and recorded? ≥1 admit and ≥1 reject from the assimilation set? quarantine slice derived and the theme rows hand-checked? `refused-doc` lines? Also the W04 adjudication paragraph: re-read rows S050–S053, S059, S070–S075 in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md and say whether each pair disposition is right.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2ScoutW2Integration": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scout",
+        "item": "Integration completeness for round-54 W2: read /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-55/w1/R55RegisterW2A.md and R55RegisterW2B.md (the register of every round-54 W2 finding with a proposed disposition) and check what actually landed at 29cfb12abd70f688b48c0d17f31e636f2d81104a (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin diff dba605deb5cd5ed4874e0e3c39ba24737409cd80 29cfb12abd70f688b48c0d17f31e636f2d81104a --stat`; grep the lesson, QUALITY 101–105, SCORECARD errata, the r36 entry). List every finding whose disposition did not land, with file:line, and say whether its absence matters for this round's claims or only for the next round.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2CritTrends": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Attack the round's planned trend verdicts before they are filed: expansion improved (three documents S124–S126 absent at base, one entry; `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin grep -c 是否检索灰色文献 dba605deb5cd5ed4874e0e3c39ba24737409cd80 -- corpus/knowledge`), quality improved (C1 defined-form spans; r36/QUALITY corrections; check successors), discernment improved (C3 errata recomputed by a counter; quarantine verdict; Gate refusal r43). For each: is 'improved' earned by evidence at 29cfb12abd70f688b48c0d17f31e636f2d81104a, or should it be 'unchanged'/'unprovable-but-better'? Is any axis harmed (compare `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin diff --numstat dba605deb5cd5ed4874e0e3c39ba24737409cd80 29cfb12abd70f688b48c0d17f31e636f2d81104a` for removed lines; did any existing row, entry or criterion lose content)?",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2ExecCensusMisroot": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Census and hygiene at 29cfb12abd70f688b48c0d17f31e636f2d81104a: `/home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa` (paste, exit); row count `grep -cE '^\\|[[:space:]]*S[0-9]{3,}[[:space:]]*\\|' /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md` (expect 126); tier/status histograms per CORPUS.md; `git -C /home/vgpnk/Projects/shokunin status --porcelain` — list untracked fleet-root files whose content names chousa round 55 (misroots; do NOT move or delete them, just list path + first line); `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin status --porcelain` (expect only W1/W2 reports and markers); any `__pycache__` the round's counters left in the lane.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2ReviewEntryShape": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Review /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/grey-literature-and-chinese-search-record-r40.md against the lane's entry bar (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md criteria for entries; the provenance-trio shape of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/source-type-taxonomy-r37.md): title claim vs body, `source:` lines (URL immediately after the em dash; anchors), `verified-at` (its `--check` command — run it on a scratch copy), `recheck:` command (run it), `ground:` (its git grep — run it), `adopted:` line; every S-token bound; negative claims carry sweeps. Report every defect with line number.",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      },
+      "R55W2CritS101Next": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Frontier claim check: corpus/README.md Round55 'Left open' says the four round-54 S101 quotes build 4/4 with the new builder (W1 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-55/w1/R55ExecS101Leg.md). Re-run it: build those quotes (url https://jc.hit.edu.cn/_upload/article/files/f7/54/711916924125a0682e3bc3ebb6ed/1f6f2731-8c87-4812-b7e2-9fad0069d508.doc) with `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/build-spans.py --cache /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache`; report offsets and refusals; is the README sentence accurate? Also: S100/S101 Registry anchors were re-pointed in round 54 by `correction:` lines — do the builder's offsets agree with those corrections?",
+        "axes": [
+          "operability",
+          "depth",
+          "calibration"
+        ],
+        "milestone": "Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items"
+      }
+    }
+  },
+  "compaction": {
+    "applied": false,
+    "mechanism": null,
+    "reason": null,
+    "savedBytes": 0,
+    "payloadBytesBefore": 0,
+    "payloadBytesAfter": 0
+  },
+  "taskCall": {
+    "context": "# Goal\nchousa lane (deep-research method), round 56, ONE v2 wave (build + attack). Two claims are FROZEN at lane commit 41c58925580af6be22049f13cfde234c5475b858 in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/claims.md (read it first) — never propose changing a predicate, target, counter or control; findings against them are reported, not patched. Base e5a3795191601797613eb986b36fa0b1a73fe6a1.\nC1 (operability): the build-spans gate /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-gate.py (the round-55 counter /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c1-count.py plus two audit-hook events, `_posixsubprocess.fork_exec` and `os.chdir`) and its battery /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/battery/ (candidate commit 46e1758f3d8a5d1bf30200d2ff7d909b0230feed: seven violator builders, each running the landed /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/build-spans.py and breaking one checked behaviour, plus an unpinned copy of /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/capture-text.py run as the gate's oracle), measured by the frozen driver `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-count.py` (nine frozen mutants M1-M9 of the gate must be KILLED with the mutated clause's own failure reason at both seeds 7 and 56 in random-order triplicate runs; probes /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/probes/p1-forkexec.py and p2-dirfd.py must be DENIED). Receipts: /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/controls/c1-before.txt (KILLED=1/9 DENIED=0/2), c1-controls.txt (HOOKONLY/JUNK/EMPTY all FAIL).\nC2 (depth, sourced): the 灰色文献 evidence-source row of 药品临床综合评价工作流程指南 enters the lane BY DOCUMENT as /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/grey-literature-field-china-r42.md (not yet written; staged source /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/grey-literature-field-china-r42.md, sibling staged /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/grey-literature-national-route-r44.md), on new lane rows S127-S130 (renumbered BY DOCUMENT from the staged ids): S127 = the standard's text on ttbz.org.cn, staged S168 (https://www.ttbz.org.cn/upload/file/20250407/6387963976070960491020144.pdf; form /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/b27ffd2f0161104c6a28c9f5.txt (UTF-8, universal newlines; the raw b27ffd2f0161104c6a28c9f5.raw is a PDF, the PDF is /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/b27ffd2f0161104c6a28c9f5.pdf)); S128 = the standard's explanatory note 编制说明 on ttbz.org.cn, staged S156 = S169 (https://www.ttbz.org.cn/upload/file/20250407/6387963977456239722441041.pdf; form /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/de9f5afc3809acbf61f4d5bb.txt (UTF-8, universal newlines; the raw de9f5afc3809acbf61f4d5bb.raw is a PDF, the PDF is /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/de9f5afc3809acbf61f4d5bb.pdf)); S129 = the journal-hosted copy of the workflow guideline, 中国药房 2025, staged S155 (https://journal.china-pharmacy.com/rc-pub/front/front-article/download/129333664/lowqualitypdf/%E8%8D%AF%E5%93%81%E4%B8%B4%E5%BA%8A%E7%BB%BC%E5%90%88%E8%AF%84%E4%BB%B7%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E6%8C%87%E5%8D%97.pdf; form /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/5233bf47babaa1ca2b49ed15.txt (UTF-8, universal newlines; the raw 5233bf47babaa1ca2b49ed15.raw is a PDF, the PDF is /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/5233bf47babaa1ca2b49ed15.pdf)); S130 = 国家卫生健康委 药品临床综合评价管理指南（试行） 2020, staged S157 (https://www.nhc.gov.cn/yaozs/c100098/202011/6fe336283f69438e9b46f090bc2ec6d1/files/1732786237821_21413.pdf; form /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/a42feae4448612f949cc715f.txt (UTF-8, universal newlines; the raw a42feae4448612f949cc715f.raw is a PDF, the PDF is /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/a42feae4448612f949cc715f.pdf)); held S118 = the issued 药品临床综合评价质量控制指南（2024 年版 试行） (https://www.bjhea.org.cn/ueditor/php/upload/file/20250115/1736907153935975.pdf; form /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/16fe8487aa97b98576a0dbac.txt (UTF-8, universal newlines; the raw 16fe8487aa97b98576a0dbac.raw is a PDF, the PDF is /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/16fe8487aa97b98576a0dbac.pdf)). Counter `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c2-count.py` (before: /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/controls/c2-before.txt; controls c2-controls.txt). A located quote is ≤25 whitespace words and ≤160 characters, lies on ONE line of its document's DEFINED text form, occurs EXACTLY ONCE in that form, copied byte-exact, with its character offset (`form.find(quote)` on the whole form read with python `open(p, encoding='utf-8', errors='replace').read()` — universal newlines). Machine lines, when asked: `QUOTE<TAB>lane-id<TAB>url<TAB>quote<TAB>corpus/knowledge/grey-literature-field-china-r42.md` inside one fenced block.\nItems named R55W2* are the 36 round-55 wave-2 FALSIFY items that were never dispatched, carried unchanged except their scratch root: they attack ROUND 55's landed claims at lane commit 29cfb12abd70f688b48c0d17f31e636f2d81104a (frozen at 1fc5d92b5a7866ec16f1cac2de749fccfa6b49cb in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/claims.md; round-55 C1 = tools/build-spans.py, C2 = the NMPA grey-literature field entry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/grey-literature-and-chinese-search-record-r40.md on rows S124-S126, C3 = the eleven errata E01-E11 in /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md `## Round 55 statement errata`; also QUALITY 101-105 and the round-55 checks in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/). Round-55 wave-1 reports: /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-55/w1/ and the final outputs of all 48 W1 seats in /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-55/w1-results.json. Round-54 W2 reports: /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-54/w2/. The round-55 closure: /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-55-verifier-spotcheck.md.\nAttack items name what they attack and report survives / falsified with evidence. The planner seat is held by the L1.\n\n# Boundaries (binding)\nLane repo: /home/vgpnk/Projects/shokunin/chousa-shokunin. Your ONLY write is your own report file: every `Report:` trailer path is relative to /home/vgpnk/Projects/shokunin/chousa-shokunin — write it at /home/vgpnk/Projects/shokunin/chousa-shokunin/<that path>. Never write a production file, another seat's report, the git index, jj state, the fleet repo /home/vgpnk/Projects/shokunin (read only), any sibling lane, or /home/vgpnk/Projects/shokuknow (read-only; never run its campaign tools renumber-staged.py, merge-plan.py, quote-lint.py, absent-defect-register.py). Never run git commit/add/stash/checkout/reset/push or any mutating jj command anywhere except inside your own fixture repo. Your cwd starts at the fleet root: cd to your scratch first. Scratch ONLY under /fast/scratch/hyaku/chousa-r56/<YourSeatName>/ (create with mkdir -p; export TMPDIR there and PYTHONDONTWRITEBYTECODE=1; never /tmp, never /dev/shm for anything over 50 MB; never a relative redirect — every output path absolute under your scratch) and remove it before you finish (trap 'rm -rf -- \"$S\"' EXIT); copy any receipt you cite into your report first. Every counter run passes `--work <empty dir under your scratch>` where it accepts one. Any LibreOffice run uses a private profile under your scratch and must leave no `soffice.bin` behind. Any git fixture repo: D=$(mktemp -d -p /fast/scratch/hyaku/chousa-r56/<YourSeatName>) && git -C \"$D\" init -q, every later git call names -C \"$D\", verify `git -C \"$D\" rev-parse --show-toplevel` equals $D before any commit. To test a modified copy of a lane file, copy the lane (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin archive <rev> | tar -x -C $S/lane`, rev 46e1758f3d8a5d1bf30200d2ff7d909b0230feed for round-56 items, 29cfb12abd70f688b48c0d17f31e636f2d81104a for R55W2 items) and edit the copy — never the lane. A battery tool or probe that writes state may only do so inside your scratch copy. No network and no live source fetch (L0 `8d77e6c1` is open): every source is an on-disk capture under /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache (key = first 24 hex of sha256 of the URL). No writes to any PATH directory (~/.local/bin included). Never message the orchestrator or other lanes' seats.\n\n# Evidence\nGround every statement in a command you ran or a file:line/char offset you opened; paste commands with observed output. A check you did not run has not passed. ≤120 lines (≤220 when the item asks for a full entry or a script). End with a one-line VERDICT naming what you attacked or built and whether it survived.\n\n# Tooling\nTooling authorization (operator, 2026-10-19): you may install or upgrade tools that help the task — read /home/vgpnk/.omp/agent/RULES.md first (official channels, update-safety gate; record tool/version/channel/reason in your report). pacman guard: ALL pacman transactions are PAUSED host-wide (never -S/-Sy/-Syu/-U/-R, no downgrade, no service restart); use uv tool / npx / an official binary in ~/.local/bin instead (e.g. `uv run --with pypdf python …` in your scratch). Routing is host-owned; never pass a model.",
+    "tasks": [
+      {
+        "name": "R56ExecC1Measure",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nRe-measure R56-C1 independently at the candidate 46e1758f3d8a5d1bf30200d2ff7d909b0230feed: sha256 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-gate.py, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-count.py and every file of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/battery/ and /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/probes/ and confirm each equals `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 46e1758f3d8a5d1bf30200d2ff7d909b0230feed:<path> | sha256sum`. Run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-count.py --work <fresh empty>` twice (paste every MUTANT/PROBE/CANDIDATE line and wall time). Then run the driver on the round-55 counter WITH the new battery (`python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-count.py --gate /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c1-count.py --work <empty>`) and report KILLED/DENIED. After each run: no `soffice.bin` of yours survives and `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin status --porcelain` is unchanged.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56ExecC1Measure.md"
+      },
+      {
+        "name": "R56CritC1Forge",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nForge KILLED=9/9 on the frozen driver /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-count.py WITHOUT a per-clause violation battery: in a scratch lane copy (archive 46e1758f3d8a5d1bf30200d2ff7d909b0230feed), replace battery/ with tools that do not each break exactly one checked behaviour deterministically — e.g. call-counting/alternating tools (state in their own dir, in the copy's tools/, or via os.mkdir+os.stat anywhere — note os.mkdir and stat raise no hook-checked event), tools keyed on wall time or on their run-directory name, one tool that randomly violates every clause, tools that read the hook file. Score each forge with the copy's driver. The rule needs the clause's own failure reason in 4 G runs and a PASS in 3 mutant runs at BOTH seeds in random order: report the best forge's KILLED count and how many runs it took, and any forge that reaches a kill with probability above 1/400 per mutant.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56CritC1Forge.md"
+      },
+      {
+        "name": "R56CritC1Hook",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nFind a third audit-hook bypass of the round-56 gate /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-gate.py (HOOK constant; BAD now also lists `_posixsubprocess.fork_exec` and `os.chdir`): a Python-level way for the tool under test to spawn a process, load native code, or read a path outside the allowlist WITHOUT a denied event, and still pass the gate's legs. Candidates: os.fork via `os.register_at_fork`? `multiprocessing` forkserver/spawn, `pty`, `os.openpty`, `os.symlink` + TOCTOU from a thread, `os.link`, `io.open_code`, `mmap` of an inherited fd, `/proc/self/fd`, `zipimport`, `importlib.machinery.ExtensionFileLoader` on a `.so` under the Python prefix, `sys.remote_exec`, `os.mkfifo`, `signal`/`os.kill` of the gate, `os.rename` of an allowed file to outside. For each: the audit event raised (probe with a printing hook in scratch) and whether the gate denies it; for any bypass, write the probe tool and the gate's output on it (`python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-gate.py --tool <probe> --seed 7 --per-leg 2 --work <empty>`).\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56CritC1Hook.md"
+      },
+      {
+        "name": "R56MutC1Driver",
+        "agent": "mutation-tester",
+        "task": "/skill:godspeed\n\nMutation-test the frozen driver /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-count.py on a scratch lane copy (archive 46e1758f3d8a5d1bf30200d2ff7d909b0230feed): one mutant at a time — accept any verdict-vector difference instead of the clause marker, require one seed instead of both, one G + one mutant run instead of three each, fixed (not shuffled) order, sequential run-dir names, drop the CANDIDATE=2/2 requirement, accept DENIED on exit 1 without AUDIT_FORBIDDEN/rc=97, drop the anchor-count check in edit(). For each mutant run the copy's driver on (a) the copy's battery, (b) the JUNK control built by `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/controls/build-c1-junk.py $S/junk` (`--battery $S/junk`), (c) the round-55 controls (`python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/controls/build-c1-controls.py $S/r55ctl`). Table mutant → KILLED/DENIED on a/b/c; a driver clause is load-bearing when its removal lets b or c gain. Name every clause no control exercises.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56MutC1Driver.md"
+      },
+      {
+        "name": "R56MutC1GateNew",
+        "agent": "mutation-tester",
+        "task": "/skill:godspeed\n\nBeyond M1-M9: apply NEW single-edit mutants to a scratch copy of the gate /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-gate.py — drop each of the two new BAD events, drop the manifest-shape check (`len(lines) != len(expect) + 1`), drop the row-echo check, drop the span-name/offset check, drop REFUSE's `span file written` check, drop REGRESS's per-file byte compare, drop the pinned-capture digest check — and for each run the landed builder and every entry of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/battery/ and both probes /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/probes/*.py under the mutant and the pristine gate (`--seed 7 --per-leg 2 --work <empty>`). Table mutant → which entry (if any) changes verdict. List the surviving clauses (the next battery entries a successor would need) with the input that would kill each.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56MutC1GateNew.md"
+      },
+      {
+        "name": "R56ReviewC1Battery",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nCode-review each file of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/battery/ (candidate 46e1758f3d8a5d1bf30200d2ff7d909b0230feed) against its docstring: does it run the landed builder unchanged and break EXACTLY one behaviour the gate checks? Does any violator also trip an earlier clause (so its kill would come from a different reason)? Check: m1 offset arithmetic, m2's fallback when the context beside the quote is short (does it ever exit non-zero?), m4's stdout filtering vs stderr, m5/m6 only on the success/refusal path, m7 reading outside before building, the oracle copy byte-identical plus a comment. Run each violator under the PRISTINE gate (`python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-gate.py --tool <file> --seed 7 --per-leg 2 --work <empty>`; the oracle copy via `R56_ORACLE` is a driver harness feature — read how the driver passes it) and paste the leg lines; confirm each fails exactly on its clause's reason.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56ReviewC1Battery.md"
+      },
+      {
+        "name": "R56ReviewC1Same",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nSame-sentence audit of R56-C1: compare clause by clause the predicate in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/claims.md, the docstring of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-count.py and the code that enforces each clause (cite lines). Check the MARKER regexes against the reason strings the gate's judge()/refused_ok() actually return (lines in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-gate.py), the M1-M9 anchors against /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c1-count.py and /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-gate.py (each exactly once), the harness edits H1/H2, the probes' DENIED rule, the random order and random run-dir names. Verify the receipts /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/controls/c1-before.txt and c1-controls.txt were produced by the frozen bytes (freeze commit 41c58925580af6be22049f13cfde234c5475b858 contains them) and that the three pre-freeze counter fixes claims.md discloses are real (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 41c58925580af6be22049f13cfde234c5475b858:corpus/evidence/round56/c1-count.py`).\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56ReviewC1Same.md"
+      },
+      {
+        "name": "R56SentC1",
+        "agent": "sentinel",
+        "task": "/skill:godspeed\n\nHazard review of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-count.py, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-gate.py, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/battery/*.py, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/probes/*.py, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/controls/*.py: every write path, TMPDIR honoured, any hardcoded /tmp, any write into the lane (run the driver once with TMPDIR=$S and compare `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin status --porcelain` and a `find /home/vgpnk/Projects/shokunin/chousa-shokunin/tools -newer <stamp>` before/after), SIGINT mid-run of the driver (soffice.bin and its profile dir left?), the p2 probe's mkdir inside the run dir, the JUNK FLIP control's state file (where does it land when the junk dir is outside the lane?), rmtree only on the driver's own dirs. Paste receipts.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56SentC1.md"
+      },
+      {
+        "name": "R56ExecDeterminism",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nHypothesis: the gate /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-gate.py is deterministic per seed on the landed builder and on each battery entry. Test: for seeds 7 and 56, run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-gate.py --tool <T> --seed S --per-leg 2 --work <fresh>` five times each for T = /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/build-spans.py and T = /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/battery/m2-span-beside-quote.py and m6-manifest-on-refusal.py; record each leg line. Any variation (soffice output, timing, quote picks) is a falsifier of the driver's triplicate rule — report it with the differing lines.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56ExecDeterminism.md"
+      },
+      {
+        "name": "R56ConnPattern",
+        "agent": "connector",
+        "task": "/skill:godspeed\n\nCross-round pattern: the lane's frozen C1 counters were forged or found weak in rounds 49-55 (RW-1; /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/recurring.tsv, the round-5x spot-checks in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/). Does the round-56 driver's design (clause-reason kills, triplicate random order at two seeds, a frozen mutant set taken from the previous round's mutation report) close the mechanism classes listed there, and which class stays open? Compare with the round-55 W1 seats R55MutC1Counter, R55CritForgeHook, R55CritForgeEcho in /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-55/w1/. Draft the RW-1 row update in recurring.tsv's existing shape.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56ConnPattern.md"
+      },
+      {
+        "name": "R56GroundStd",
+        "agent": "scribe",
+        "task": "/skill:godspeed\n\nGround the standard's ttbz text (lane S127; https://www.ttbz.org.cn/upload/file/20250407/6387963976070960491020144.pdf; form /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/b27ffd2f0161104c6a28c9f5.txt (UTF-8, universal newlines; the raw b27ffd2f0161104c6a28c9f5.raw is a PDF, the PDF is /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/b27ffd2f0161104c6a28c9f5.pdf)): identity (title, number, proposing/归口 body, dates — only what the form prints), the evidence-source table row for 灰色文献 (its exact text and its 证据等级/推荐 annotation if printed on that row), the sentence adopting 中国循证医学中心 证据(质量)分级体系 and the Oxford 推荐强度 standard, and where 搜索引擎 sits in the same table. Give ≥6 QUOTE machine lines (lane id S127) with char offsets, each quote once in the form, and for each the 160-char context. Report what the form does NOT print (e.g. is Ⅰ级/A on the grey-literature row itself, or in a separate grading table?).\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56GroundStd.md"
+      },
+      {
+        "name": "R56GroundNote",
+        "agent": "scribe",
+        "task": "/skill:godspeed\n\nGround the explanatory note 编制说明 (lane S128; https://www.ttbz.org.cn/upload/file/20250407/6387963977456239722441041.pdf; form /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/de9f5afc3809acbf61f4d5bb.txt (UTF-8, universal newlines; the raw de9f5afc3809acbf61f4d5bb.raw is a PDF, the PDF is /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/de9f5afc3809acbf61f4d5bb.pdf), 7,031 chars): identity (title, issuer, date if printed), the working-group adoption of 中国循证医学中心's 证据分级体系 and the Oxford standard (the exact sentence and the months/years it gives), and the reference-list entries naming 国家药物和卫生技术综合评估中心 or the national centre's instruments. ≥4 QUOTE machine lines (lane id S128) with offsets. Say whether the note mentions 灰色文献 at all (count) — an entry must not cite it for that.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56GroundNote.md"
+      },
+      {
+        "name": "R56GroundJournal",
+        "agent": "scribe",
+        "task": "/skill:godspeed\n\nGround the journal-hosted copy (lane S129; https://journal.china-pharmacy.com/rc-pub/front/front-article/download/129333664/lowqualitypdf/%E8%8D%AF%E5%93%81%E4%B8%B4%E5%BA%8A%E7%BB%BC%E5%90%88%E8%AF%84%E4%BB%B7%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E6%8C%87%E5%8D%97.pdf; form /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/5233bf47babaa1ca2b49ed15.txt (UTF-8, universal newlines; the raw 5233bf47babaa1ca2b49ed15.raw is a PDF, the PDF is /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/5233bf47babaa1ca2b49ed15.pdf), 80,732 chars): identity (journal 中国药房, year/volume/issue/pages/doi exactly as printed), the 灰色文献 row (exact text, offset), the grading of grey literature (Ⅰ级 / A — where exactly; is 'the highest grade in its table' true? quote the table's grade scale), the 中国循证医学中心 adoption sentence. Then compare with the ttbz standard text /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/b27ffd2f0161104c6a28c9f5.txt (UTF-8, universal newlines; the raw b27ffd2f0161104c6a28c9f5.raw is a PDF, the PDF is /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/b27ffd2f0161104c6a28c9f5.pdf): is the 灰色文献 row worded identically (diff the two lines)? ≥5 QUOTE machine lines (lane id S129).\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56GroundJournal.md"
+      },
+      {
+        "name": "R56GroundNhc",
+        "agent": "scribe",
+        "task": "/skill:godspeed\n\nGround the NHC 2020 management guideline (lane S130; https://www.nhc.gov.cn/yaozs/c100098/202011/6fe336283f69438e9b46f090bc2ec6d1/files/1732786237821_21413.pdf; form /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/a42feae4448612f949cc715f.txt (UTF-8, universal newlines; the raw a42feae4448612f949cc715f.raw is a PDF, the PDF is /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/a42feae4448612f949cc715f.pdf), 6,930 chars): identity (title, issuer, date as printed); is the `.txt` form the WHOLE document? Compare with the PDF (/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/a42feae4448612f949cc715f.pdf): page count and per-page text via `uv run --with pypdf python` in scratch (record pypdf version), total characters, last page's last line in both. Only if the form is complete may an entry say the guideline carries no 灰色文献 wording: count 灰色文献, 灰色, 未公开发表, 文献检索 in the form and in pypdf's text. ≥3 QUOTE machine lines (lane id S130) usable for identity and for the guideline's own evidence/literature wording.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56GroundNhc.md"
+      },
+      {
+        "name": "R56GroundQcg",
+        "agent": "scribe",
+        "task": "/skill:godspeed\n\nThe staged entries' `#### Unknown` asks whether the national centre's 2024 试行 质量控制指南 lists 灰色文献. The lane holds that document as S118 (https://www.bjhea.org.cn/ueditor/php/upload/file/20250115/1736907153935975.pdf; form /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/16fe8487aa97b98576a0dbac.txt (UTF-8, universal newlines; the raw 16fe8487aa97b98576a0dbac.raw is a PDF, the PDF is /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/16fe8487aa97b98576a0dbac.pdf); entry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/quality-control-guideline-issued-text-r48.md). Count 灰色文献, 灰色, 未公开发表, 会议, 检索 in the form and in pypdf's text of /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/16fe8487aa97b98576a0dbac.pdf (completeness check: pages, chars); quote (≥3 QUOTE machine lines, lane id S118) whatever the guideline says about evidence sources or literature retrieval. Verdict: does S118 answer the Unknown, and with what exact wording may the entry state it?\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56GroundQcg.md"
+      },
+      {
+        "name": "R56DraftEntry",
+        "agent": "scribe",
+        "task": "/skill:godspeed\n\nDraft the full lane entry corpus/knowledge/grey-literature-field-china-r42.md (≤220 lines) by document, in the shape of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/grey-literature-and-chinese-search-record-r40.md (header lines: title, `source: S127 — https://www.ttbz.org.cn/upload/file/20250407/6387963976070960491020144.pdf — …`, S128, S129, S130 as bound and `source: S118 — https://www.bjhea.org.cn/ueditor/php/upload/file/20250115/1736907153935975.pdf — …` if used, verified-at 2026-10-27, recheck 180d, ground, adopted: round 56 from merge/chousa/ staged grey-literature-field-china-r42.md and the sibling r44; then #### Observation / #### Inference / #### Unknown / #### Province bullets), every Observation sentence carrying a located quote of the cited id (offset), every Inference bullet resting on quoted Observation. Must contain the string 中国循证医学中心 (quoted from a form). Narrow the staged claims to what the forms print (Ⅰ级/A, 'highest grade', 'no grey-literature wording at all', 'three channels'). Output the entry fenced and its QUOTE machine lines.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56DraftEntry.md"
+      },
+      {
+        "name": "R56DraftRows",
+        "agent": "scribe",
+        "task": "/skill:godspeed\n\nDraft the four new Registry rows S127-S130 for /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md in the lane's 11-column schema (read /home/vgpnk/Projects/shokunin/CORPUS.md section `SOURCES.md — where a shokunin learns` and the rows S124-S126 as the model): source cell (title — issuer — URL as the FIRST URL), tier with reason, scope, the `anchor` cell with `char N` offsets of quotes that occur once in the defined form, status `mined`, opened 2026-10-27, recheck `180d`, used-by `corpus/knowledge/grey-literature-field-china-r42.md`. No cell may contain `|`. Also the old→new line for S118's used-by if the entry cites it. Run `/home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --file <scratch mirror of corpus/SOURCES.md with your rows appended>` and paste the output.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56DraftRows.md"
+      },
+      {
+        "name": "R56DraftGate",
+        "agent": "scribe",
+        "task": "/skill:godspeed\n\nDraft the round-56 lesson's `## Gate` block for /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-56.md: per new row S127-S130 the URL, access date 2026-10-27 (capture opened from the read-only cache, no fetch), and a ≤25-word located quote with offset; the assimilation set — admit `grey-literature-field-china-r42.md` (narrowed, say how) and refuse `grey-literature-national-route-r44.md` (reason: same theme on an overlapping document set, merged by document; flip condition) — and any refused document as a `refused-doc <url>` line; the collision check from /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-56/assimilation/ (reg-ids, staged-ids, collisions = 45, guard-proof.txt) and the renumber map by document (S168→S127, S156/S169→S128, S155→S129, S157→S130). Use the cache's capture dates (`ls -l --time-style=+%F` on the .txt) for the campaign-side dates.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56DraftGate.md"
+      },
+      {
+        "name": "R56CritEntail",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nAttack the staged claims of /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/grey-literature-field-china-r42.md and /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/grey-literature-national-route-r44.md against the forms (S127 = the standard's text on ttbz.org.cn, staged S168 (https://www.ttbz.org.cn/upload/file/20250407/6387963976070960491020144.pdf; form /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/b27ffd2f0161104c6a28c9f5.txt (UTF-8, universal newlines; the raw b27ffd2f0161104c6a28c9f5.raw is a PDF, the PDF is /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/b27ffd2f0161104c6a28c9f5.pdf)); S128 = the standard's explanatory note 编制说明 on ttbz.org.cn, staged S156 = S169 (https://www.ttbz.org.cn/upload/file/20250407/6387963977456239722441041.pdf; form /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/de9f5afc3809acbf61f4d5bb.txt (UTF-8, universal newlines; the raw de9f5afc3809acbf61f4d5bb.raw is a PDF, the PDF is /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/de9f5afc3809acbf61f4d5bb.pdf)); S129 = the journal-hosted copy of the workflow guideline, 中国药房 2025, staged S155 (https://journal.china-pharmacy.com/rc-pub/front/front-article/download/129333664/lowqualitypdf/%E8%8D%AF%E5%93%81%E4%B8%B4%E5%BA%8A%E7%BB%BC%E5%90%88%E8%AF%84%E4%BB%B7%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E6%8C%87%E5%8D%97.pdf; form /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/5233bf47babaa1ca2b49ed15.txt (UTF-8, universal newlines; the raw 5233bf47babaa1ca2b49ed15.raw is a PDF, the PDF is /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/5233bf47babaa1ca2b49ed15.pdf)); S130 = 国家卫生健康委 药品临床综合评价管理指南（试行） 2020, staged S157 (https://www.nhc.gov.cn/yaozs/c100098/202011/6fe336283f69438e9b46f090bc2ec6d1/files/1732786237821_21413.pdf; form /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/a42feae4448612f949cc715f.txt (UTF-8, universal newlines; the raw a42feae4448612f949cc715f.raw is a PDF, the PDF is /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/a42feae4448612f949cc715f.pdf)); held S118 = the issued 药品临床综合评价质量控制指南（2024 年版 试行） (https://www.bjhea.org.cn/ueditor/php/upload/file/20250115/1736907153935975.pdf; form /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/16fe8487aa97b98576a0dbac.txt (UTF-8, universal newlines; the raw 16fe8487aa97b98576a0dbac.raw is a PDF, the PDF is /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/16fe8487aa97b98576a0dbac.pdf))). For each Observation and Inference sentence: supported / narrower / unsupported, with the quote and offset that decides it. Specifically: 'grades it Ⅰ级 with recommendation strength A — the highest grade in its table'; 'contains no grey-literature wording at all'; 'provenance the published text asserts but does not evidence'; 'reaches Chinese practice from three channels'; 'the national centre's documents are the inputs'. Return the narrowings an admitted entry must carry.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56CritEntail.md"
+      },
+      {
+        "name": "R56CritCurrency",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nCurrency and authority of the C2 documents: which of S127 (ttbz text) and S129 (journal copy) is the issued standard, and is either a draft? What dates does each print (发布/实施/年份)? Is the T/CLPA number printed or a placeholder (`XXXX`)? Is the 2020 NHC guideline (S130) still the current version — what does any lane-held source say (grep /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus for 药品临床综合评价管理指南)? Give the tier each row may carry and the `#### Unknown` bullets the entry must keep.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56CritCurrency.md"
+      },
+      {
+        "name": "R56ReviewProvince",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nProvince check for C2: read /home/vgpnk/Projects/shokunin/chousa-shokunin/PROVINCE.md and the sibling PROVINCE.md files (/home/vgpnk/Projects/shokunin/*-shokunin/PROVINCE.md). Is 'where a grey-literature search requirement lives in a national drug-evaluation standard' chousa's (source hierarchy / search-record method) or a sibling's (pharmacology, regulatory, evidence grading)? Which parts must the entry report as adjacent and not absorb? Cite lines.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56ReviewProvince.md"
+      },
+      {
+        "name": "R56ConnSiblings",
+        "agent": "connector",
+        "task": "/skill:godspeed\n\nSibling-overlap scan for C2 and C1: grep every sibling lane's corpus and tools (/home/vgpnk/Projects/shokunin/*-shokunin/, excluding chousa) for 药品临床综合评价, 灰色文献, ttbz.org.cn, 中国循证医学中心, 证据分级, build-spans, audit hook / addaudithook, mutation battery. Report counts per lane and whether any sibling already holds these documents or a gate-clause-coverage tool (overlap → report, not absorb).\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56ConnSiblings.md"
+      },
+      {
+        "name": "R56ScoutFrontier",
+        "agent": "scout",
+        "task": "/skill:godspeed\n\nRound-57 frontier scout (read-only): /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/README.md `## Frontier`, /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md 'Planned — round 56', /home/vgpnk/Projects/shokuknow/merge/chousa/MERGE-REPORT.md and the staged grey-literature family left after r40/r42/r44 (r41, r43, r48 entries in /home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/): rank three round-57 candidates (axis, counter shape, cheapest do-nothing control), including the S101 carrier-alphabet leg and a freshness move on the lane's oldest recheck dates. No draft, no production write.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56ScoutFrontier.md"
+      },
+      {
+        "name": "R56MutC2Counter",
+        "agent": "mutation-tester",
+        "task": "/skill:godspeed\n\nMutation-test the frozen counter /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c2-count.py on a scratch lane copy (archive 46e1758f3d8a5d1bf30200d2ff7d909b0230feed): mutants — drop the `r[8] == OPENED` check, drop `used == citing`, drop MUST_BIND, drop NEW_GROUND's BASE_REV absence, drop CAPTURE_BOUND's digest match, drop `len(span) > len(quote)`, drop the HELD S118 used-by check, drop QUOTES_IN_LESSON. For each, build the cheapest scratch fixture root (start from `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/controls/build-c2-controls.py $S/ctl`, rewrite/) that the mutant passes and the pristine counter fails; table mutant → fixture → pristine/mutant verdict. List any clause no fixture can separate.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56MutC2Counter.md"
+      },
+      {
+        "name": "R56ReviewC2Counter",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nSame-sentence audit of R56-C2: predicate in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/claims.md vs the docstring and code of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c2-count.py (cite lines), especially the constants block (BASE_REV, DOCS URLs vs the cache keys, MUST_BIND, HELD S118 URL vs S118's first source-cell URL in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md, TERMS absent at BASE_REV: `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin grep -c 中国循证医学中心 e5a3795191601797613eb986b36fa0b1a73fe6a1 -- corpus/knowledge`). Re-run the controls (`python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/controls/build-c2-controls.py $S/ctl` then `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c2-count.py --root $S/ctl/<name>`) and confirm /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/controls/c2-controls.txt reproduces.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56ReviewC2Counter.md"
+      },
+      {
+        "name": "R56ExecPdfCross",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nPDF cross-check for C2: for each of the five PDF captures (S127-S130 and S118; .pdf files named in the context), extract text with `uv run --with pypdf python` in scratch (record the pypdf version) and compare with the cache `.txt` form: page count, total chars, whether every line containing 灰色文献 / 中国循证医学中心 / 证据分级 / 未公开发表 in the `.txt` also appears (whitespace-normalised) in pypdf's text, and any `.txt` truncation. Write the comparison as a small script (fenced, ≤80 lines) plus its output; it will be committed as corpus/evidence/round56/pdf-crosscheck.py if sound.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56ExecPdfCross.md"
+      },
+      {
+        "name": "R56ExecCollision",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nReproduce the section-10 collision check independently: compute reg-ids from /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md and staged-ids from /home/vgpnk/Projects/shokuknow/merge/chousa/SOURCES.append.md with the 0-3-space pattern, compare byte-for-byte with /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-56/assimilation/reg-ids, staged-ids, collisions (45 lines) and guard-proof.txt; prove the guard on your own indented fixture; and check by URL that none of the four C2 document URLs already has a lane row (`grep -F` each URL in SOURCES.md) and that S127-S130 are unused ids. Also derive the lane's quarantine slice of /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/absent-defect-register.md for the theme URLs (expected 0 rows) with the context's awk filter.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56ExecCollision.md"
+      },
+      {
+        "name": "R56RegisterR55Late",
+        "agent": "scribe",
+        "task": "/skill:godspeed\n\nRound-55 settlement register: /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-55/w1-results.json holds the final output of all 48 round-55 W1 seats; eleven have no report file in /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-55/w1/ (R55ExecC1Seeds, R55MutC1Builder, R55SentC1, R55SimplifyBuilder, R55GroundNmpaEn, R55GroundMedsci, R55DraftEntry, R55DraftRows, R55DraftC3Fixes, R55RegisterW2A, R55ScoutFrontier — verify the list). For each, extract its findings from the `output` field and table: finding · does it falsify or narrow a landed round-55 statement (cite the statement file:line at 53f1ce6b) · proposed disposition (appended correction / none). Also read the salvaged /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-55/w1/R55MutC2Counter.md and R55ExecBuilderOld.md (round-49 OLE rows re-derived differently) for the same question.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56RegisterR55Late.md"
+      },
+      {
+        "name": "R56ExecD3D4",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nVerify the two round-55 closure citation defects before the L1 appends corrections: D4 — run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/capture-text.py /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/bdff491a75c6abeda1d9c01d.raw` in scratch and report the offsets of `即“灰色文献”`, `即灰色文献`, and the sentence start `查找时应当注意收集` (closure says 1012 and 994); quote the round-55 lesson line that says 994 (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-55.md, grep 994). D3 — for every lane hash the round-55 report /home/vgpnk/Projects/shokunin/.ufo/reports/round-55/chousa.md cites as a measurement revision, compare with the header line of the receipt it names (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c1/c2/c3-measure-after.txt); table report claim → receipt header revision → match/mismatch.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56ExecD3D4.md"
+      },
+      {
+        "name": "R56DraftMistakes",
+        "agent": "scribe",
+        "task": "/skill:godspeed\n\nMine mistakes for /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-56.md `## Mistakes` (class · evidence pointer · captured-by · fix; a fix counts only once shown able to fail). Candidates to verify: (1) round 56's first driver draft scored an equivalent mutant (M9 dropped one of two newline guards) and a kill rule an alternating tool forges — found by the L1's own controls before the freeze (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/claims.md 'Pre-freeze counter fixes'; the FLIP kill line is in no committed receipt — say so); (2) round 55's report cited measurement revisions its receipts do not name (closure D3); (3) round 55 filed before W1 settled and never dispatched W2 (closure D1). For each name the criterion in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md (grep 104, 101) that should have caught it or `none`, and a check that would fail on it. Draft QUALITY criteria 106+ in the file's shape for any uncaptured class.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56DraftMistakes.md"
+      },
+      {
+        "name": "R56ExecWaveSettled",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nRun the round-55 wave-settled check `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/wave-settled-check.py` (read its usage) on round 55 now (w1-results.json committed at e5a37951; W2 never dispatched as a round-55 wave — its items ride round 56's wave) and on round 56 (no results yet: must be UNSETTLED). Does the check handle a wave that is retired/carried rather than dispatched? Propose (fenced script ≤60 lines) a round-56 successor that accepts a `carried-to: <round>/<wave>` marker file and fails on a wave with neither results nor a carried marker; test it on scratch fixtures.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56ExecWaveSettled.md"
+      },
+      {
+        "name": "R56ReviewSkillRow",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nReview the build-spans registry change the L1 will make: read /home/vgpnk/Projects/shokunin/chousa-shokunin/SKILL.md lines 130-150 (the `build-spans` row says `probe`) and the closure's routed item 5 in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-55-verifier-spotcheck.md. Does `tools/build-spans.py --check` + gate /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-gate.py meet the lane's definition of a gate (grep SKILL.md and PROTOCOL for gate vs probe; a gate must be shown able to fail)? Propose the exact replacement row text (append-only: a new row superseding the old) naming the gate, its self-test command and its failure evidence.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56ReviewSkillRow.md"
+      },
+      {
+        "name": "R56ScoutConsiderthese",
+        "agent": "scout",
+        "task": "/skill:godspeed\n\nconsiderthese duty (read-only): list /home/vgpnk/Projects/shokunin/chousa-shokunin/considerthese/ (newest file) and run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/considerthese-ledger-check.py --root /home/vgpnk/Projects/shokunin/chousa-shokunin` (paste output). Is any proposal newer than the ledger? Pick at most ONE still-unimplemented proposal that fits this round's claims (gate clause coverage or the grey-literature row), or none with the sweep; say what landing it would require.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R56ScoutConsiderthese.md"
+      },
+      {
+        "name": "R55W2ExecC1Rerun",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nAttack C1's after-state at 29cfb12abd70f688b48c0d17f31e636f2d81104a: sha256 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/build-spans.py (must equal the 6ca924995d48facbf704d2aa22ddaec236059039 blob) and tools/capture-text.py (must be 2c0140bc…); run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c1-count.py --seed 7 --work <empty>` and three unseeded runs (fresh --work each); paste every line and compare with /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c1-measure-after.txt. Then `--per-leg 6 --seed 555`. Any FAIL: reproduce and name the leg, quote and line.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2ExecC1Rerun.md"
+      },
+      {
+        "name": "R55W2CritForgeNonReader",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nW1 `R55CritForgeEcho` (/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-55/w1/R55CritForgeEcho.md) admits its surrogate forge was misconfigured. Build a real non-reading forge for /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c1-count.py: a builder that never imports, copies or reimplements `tools/capture-text.py` (no CFB/FIB/Clx parsing) yet tries to produce exact slices of the defined form — e.g. search the quote in the raw's UTF-16LE decode and in the `.txt` sidecar and emit a slice of that; strip control chars to approximate the form; exploit that a window's 80-char context may be taken from either side. Score with `--seed 7` and two unseeded runs; per leg, the first divergence from the defined form. VERDICT: best LEGS a non-reading forge reaches.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2CritForgeNonReader.md"
+      },
+      {
+        "name": "R55W2CritHookEscape",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nW1 `R55CritForgeHook` (/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-55/w1/R55CritForgeHook.md) found the hook in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c1-count.py does not resolve `dir_fd`/relative opens after `os.chdir` and does not list `os.symlink`/`os.kill`. Turn that into an exploit or rule it out: from inside the builder, can you reach anything that reveals an expected offset or the seed (the counter's process memory `/proc/<ppid>/mem` or `/proc/<ppid>/environ`, its argv, a file the counter writes)? Can you read the campaign cache or the lane corpus via `os.open(name, dir_fd=…)`? Paste probes (a scratch builder run under the counter) and the counter output. VERDICT: hole exploitable for a leg pass or only a boundary defect.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2CritHookEscape.md"
+      },
+      {
+        "name": "R55W2MutC1BuilderKill",
+        "agent": "mutation-tester",
+        "task": "/skill:godspeed\n\nMutation kill table for the C1 candidate (independent of W1 `R55MutC1Builder`): in a scratch lane copy at 29cfb12abd70f688b48c0d17f31e636f2d81104a, mutate `tools/build-spans.py` one at a time — use the `.txt` sidecar first for OLE, fall back to UTF-16LE for unknown raws, CONTEXT 79/81, accept 2 occurrences, write before refusing, drop universal-newline normalisation, offset=char, skip the zip branch, refuse zip raws — and run the copy's `corpus/evidence/round55/c1-count.py --seed 7 --work <empty>`. Table mutant → LEGS → killing leg; list survivors and say what input would catch each.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2MutC1BuilderKill.md"
+      },
+      {
+        "name": "R55W2ReviewC1Claims",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nReview every landed C1 claim against evidence: the SKILL.md `build-spans` row (registered as `probe`: is that the honest kind under PROTOCOL §Gate standard?), the corpus/README.md Round55 `../tools/build-spans.py` row (\"re-derives rounds 47 and 50–54's committed manifests byte for byte and the nine round-49 OLE rows\" — re-run it: `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show dba605deb5cd5ed4874e0e3c39ba24737409cd80:corpus/evidence/round5N/quotes.tsv` → `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/build-spans.py --quotes … --out $S/oN --cache /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache` then diff against committed spans), and /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c1-seed-sweep-L1.txt. Report each claim survives / overstated with your output.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2ReviewC1Claims.md"
+      },
+      {
+        "name": "R55W2SentBuilder",
+        "agent": "sentinel",
+        "task": "/skill:godspeed\n\nHazard review of /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/build-spans.py at 29cfb12abd70f688b48c0d17f31e636f2d81104a: `--out` pointing at an existing directory with unrelated `S###-N.txt` files (it deletes orphans — demonstrate in scratch), a symlinked `spans/` dir, a cache `.raw` that is a zip bomb or a huge OLE file (memory/time through capture-text), a `.txt` that is a FIFO or /dev/zero symlink, quotes.tsv with 100k rows, an entry path with `..`. Run each in scratch; report exit code, wall time, peak RSS, and any write outside --out. Propose the smallest guard per hazard (do not edit).\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2SentBuilder.md"
+      },
+      {
+        "name": "R55W2CritC1Verdict",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nAttack the planned C1 verdict 'improved (capability acquisition)': does the counter measure that the builder reads OLE through the defined form, or only that its output equals capture-text's (would a builder that shells to capture-text pass? — note the hook), and is a wrapper around an existing tool a capability worth a SCORECARD row (AXES.md Capabilities)? Is RW-1 (the forgeable-counter streak, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/recurring.tsv) broken this round, still running, or unknowable from W1+W2 evidence? Read /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-55/w1/R55CritForge*.md, R55MutC1*.md, R55ReviewC1*.md. VERDICT with the honest wording.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2CritC1Verdict.md"
+      },
+      {
+        "name": "R55W2ExecBuilderDiff",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nDiff the candidate against the round-54 builder: `diff /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/build-spans.py /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/build-spans.py`; for each behavioural difference construct a scratch capture and quote that shows it (OLE raw + garbage `.txt` sidecar; zip raw + `.txt`; HTML raw + `.txt` with the quote twice; unknown raw, no `.txt`); run both builders (round-54 one via a scratch lane copy with its own quotes path) and tabulate outputs/exit codes. Confirm no behavioural change for `.txt`-only captures.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2ExecBuilderDiff.md"
+      },
+      {
+        "name": "R55W2ExecC2Rerun",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nAttack C2's after-state at 29cfb12abd70f688b48c0d17f31e636f2d81104a: run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c2-count.py` and `--lane-only` (paste all lines and exits), `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/build-spans.py --quotes /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/quotes.tsv --out /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55 --check` from a scratch COPY of the lane (the --check writes nothing, but run it on the copy anyway), `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round51/quote-substance-check.py /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/spans.tsv`, `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/inference-ground.py --entry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/grey-literature-and-chinese-search-record-r40.md --spans /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/spans.tsv --counts /dev/null --registry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md --root /home/vgpnk/Projects/shokunin/chousa-shokunin`. Then rebuild the controls (`python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/controls/build-c2-controls.py $S/c2c`) and score them; compare with /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/controls/c2-controls.txt.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2ExecC2Rerun.md"
+      },
+      {
+        "name": "R55W2ReopenS124",
+        "agent": "scout",
+        "task": "/skill:godspeed\n\nRe-open lane S124 (http://www.gcpunion.org/upload/cmsfile/1703404975484107.doc; form `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/capture-text.py /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/bdff491a75c6abeda1d9c01d.raw` (the defined OLE text form; never the `.txt` sidecar)) and verify, quote by quote, every S124 offset the lane states: the entry's `source:` line chars (761, 994, 4625, 4652), every `char N` in its Observation bullets, the S124 Registry row's anchor cell, the lesson's quote table, and the entry's Unknown sweep command (run it from /home/vgpnk/Projects/shokunin/chousa-shokunin; does it print what the entry says?). Report each mismatch with the true value.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2ReopenS124.md"
+      },
+      {
+        "name": "R55W2ReopenS125",
+        "agent": "scout",
+        "task": "/skill:godspeed\n\nRe-open lane S125 (http://m.cnpharm.com/201906/18/c280684.html; /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/27d4865f201e99c1fed9f79b.txt read UTF-8 with universal newlines) and verify every S125 quote, offset and fact in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/grey-literature-and-chinese-search-record-r40.md, the S125 Registry row (title cell, scope, anchor chars 242/371/780, teaches: 'issued … by notice on 18 June', five parts, Cochrane) and the lesson. Is '2019-06-18' in the body or only the byline? Is the 'teaches' cell entailed sentence by sentence? Report mismatches.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2ReopenS125.md"
+      },
+      {
+        "name": "R55W2ReopenS126",
+        "agent": "scout",
+        "task": "/skill:godspeed\n\nRe-open lane S126 (https://english.nmpa.gov.cn/2019-07/18/c_388252.htm; /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/d663d66e2d39f868d84b1781.txt read UTF-8 with universal newlines) and verify every S126 quote and offset (777, 1204, 1324, 2528) and the Registry row's teaches cell (issued June 18 2019; cites Article 4 of the 2018 No. 66 announcement; Cochrane). Is 'tier A for identity and date' defensible (the page is on the regulator's domain, 'Presented by China Daily', 'CCFDIE')? Report mismatches and the honest tier wording.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2ReopenS126.md"
+      },
+      {
+        "name": "R55W2CritEntailObs",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nEntailment attack on the LANDED entry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/grey-literature-and-chinese-search-record-r40.md `#### Observation` (six bullets) against the defined forms (S124 `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/capture-text.py /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/bdff491a75c6abeda1d9c01d.raw` (the defined OLE text form; never the `.txt` sidecar); S125/S126 `.txt`). For each sentence: ENTAILED / OVERSTATED / ABSENT with offsets or sweep counts. Watch: 'lists, under 2' and 'continues on the same line'; 'the four kinds are examples (`等`)'; 'names 国家药品监督管理局 only as the author of an earlier announcement'; '2019 occurs 0 times and 发布 0 times'; 'matching the `.doc`'s five numbered headings'; 'the English page renders it as'.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2CritEntailObs.md"
+      },
+      {
+        "name": "R55W2CritEntailInf",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nEntailment attack on the LANDED entry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/grey-literature-and-chinese-search-record-r40.md `#### Inference` and `#### Unknown`: 'makes … a field of the evaluation report, not only a step of the search'; 'the issuer is attested by S125 … and S126 …, not by the `.doc`'; 'the field is about completeness of evidence, not about a source list' and 'the method point this entry adds to the lane's grey-literature-as-source-category entries' (check the lane: `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin grep -n 灰色文献 -- corpus/knowledge`); 'identity is fixed by two independent issuance records' — are S125 and S126 independent of each other? Each: survives / narrow to <wording> / cut.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2CritEntailInf.md"
+      },
+      {
+        "name": "R55W2ReviewRows",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nReview Registry rows S124–S126 in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md against /home/vgpnk/Projects/shokunin/CORPUS.md section SOURCES.md (11 cells, enums, no `|` in cells, anchor char N = a located quote's offset in the defined form, `opened` 2026-10-27, `recheck` 180d, used-by), the tier justifications (B third-party copy; B newspaper; A regulator's English site for identity only), and the census: `/home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa` (paste). Any row whose `teaches` exceeds its source?\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2ReviewRows.md"
+      },
+      {
+        "name": "R55W2CritQuarantine",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nAttack the lesson's verdict for absent-defect register row S125 (round6; `grep -n 'round6 | S125' /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/absent-defect-register.md`): /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-55.md says `absent-as-written` (two of three quoted strings present in the defined form, the third differs only by curly quotes around 灰色文献). Re-derive the three counts in `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/capture-text.py /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/bdff491a75c6abeda1d9c01d.raw` (the defined OLE text form; never the `.txt` sidecar), the `.txt` sidecar and the UTF-16LE decode. Is `absent-as-written` the right class under the lane's classes (round 42–54 lessons: `grep -rn 'absent-as-written' /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons | head`), or should it be `present` with a note? Is the 'register's payload-absent is wrong for two quotes' sentence right?\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2CritQuarantine.md"
+      },
+      {
+        "name": "R55W2CritGate",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nAttack the lesson Gate decisions in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-55.md `## Gate`: the r40 admit-narrowed reasons; the r43 refusal (/home/vgpnk/Projects/shokuknow/merge/chousa/knowledge/corpus/knowledge/grey-literature-field-boundary-r43.md — read it; is the refusal reason true? is the flip checkable?) and its `refused-doc` line for staged S161; the decision not to cite the held S113 (medsci) — read /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-55/w1/R55GroundMedsci.md if present and the capture /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/453d492becd9a2f4632cb8dd.txt; the admit/reject spot-check instructions (run them exactly as written; do they work?).\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2CritGate.md"
+      },
+      {
+        "name": "R55W2MutC2Landed",
+        "agent": "mutation-tester",
+        "task": "/skill:godspeed\n\nMutation-test /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c2-count.py against the LANDED state: in a scratch lane copy at 29cfb12abd70f688b48c0d17f31e636f2d81104a, make one perturbation at a time and run `python3 $S/lane/corpus/evidence/round55/c2-count.py --root $S/lane` — drop one lesson quote row, change an S124 anchor `char 4652`→`4653`, add a `source: S113 — …` line without S113's used-by, change S125 `opened` to 2026-10-26, replace one span file with the slice from the `.doc`'s `.txt` sidecar (and fix its digest column to the sidecar's), add a stray `S130` token to the entry, delete the quarantine verdict line. Table: perturbation → C2 line that fails. Name any perturbation the counter misses.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2MutC2Landed.md"
+      },
+      {
+        "name": "R55W2ConnAdjacency",
+        "agent": "connector",
+        "task": "/skill:godspeed\n\nAdjacency and cross-lane pattern for C2: the entry claims the drug-safety evaluation practice is adjacent ground it reports and does not hold. Scan sibling PROVINCE.md and corpora (/home/vgpnk/Projects/shokunin/*-shokunin/, read-only, skip chousa) for pharmacovigilance, ADR, 药品不良反应, 上市许可持有人, NMPA, systematic review reporting, PRISMA. Who, if anyone, owns it? Also: do the lane's other 灰色文献 entries (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/chinese-search-record-r39.md, quality-control-guideline-issued-text-r48.md, western-instrument-alignment-r50.md) now contradict or need a pointer to the new entry? Report.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2ConnAdjacency.md"
+      },
+      {
+        "name": "R55W2ExecC3Rerun",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nAttack C3's after-state at 29cfb12abd70f688b48c0d17f31e636f2d81104a: run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c3-count.py --work <empty>` (full, with E11; paste every line), then `--skip-slow`; rebuild the controls (`python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/controls/build-c3-controls.py $S/c3c`) and score both (`--root $S/c3c/<name>`), compare with /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/controls/c3-controls.txt. Then append one extra stray `erratum: E05 …` line with a wrong observation OUTSIDE the errata section of a scratch copy's SCORECARD.md and confirm it is ignored; and one inside the section after the real E05 line (last-wins) and confirm E05 turns WRONG.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2ExecC3Rerun.md"
+      },
+      {
+        "name": "R55W2CritErrataReadings",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nAttack the readings paragraph under /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md `## Round 55 statement errata` and the observations: E01 — is `该标准暂无全文，请等待更新` really a latent, undisplayed template string (inspect the context around char 1712 of /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/b9ca2a4fdf9455867534f144.txt — a JS i18n map? any condition that would display it?); E03 — does 'prescribes' really overstate given S123 carries the type table; E05 — 'no constant repairs all six, but one repairs five'; E09 — rc=0 and SPAWNED really mean the hook missed a spawn; E11 — is the echo tool's 3/3 a property of the supplement (re-derive in a BASE mirror). Each: reading survives / wrong, with evidence.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2CritErrataReadings.md"
+      },
+      {
+        "name": "R55W2ReviewR36Corr",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nReview the `#### Corrections (round 55)` section appended to /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/source-type-taxonomy-r36.md: is each bullet true against the captures (S121 /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/adf6ba934e813b2c326fa150.txt, S122 /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/b9ca2a4fdf9455867534f144.txt, universal newlines), does it point at the right bullet ('third inference bullet', 'fourth observation', 'last inference bullet', 'verified-at line'), does each of the four C3 anchors still occur exactly once in the file (python count), and does `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/inference-ground.py --entry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/source-type-taxonomy-r36.md --spans /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/spans.tsv --counts /dev/null --registry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md --root /home/vgpnk/Projects/shokunin/chousa-shokunin` still pass?\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2ReviewR36Corr.md"
+      },
+      {
+        "name": "R55W2ReviewQ101",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nReview QUALITY 101 in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md (round-55 correction of 97/98): every number it states (12795/12963 for which phrase, +802 ×5, −9251, 18,451, 469, rc 0, SHELL 1/6) re-derived by you — `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show dba605deb5cd5ed4874e0e3c39ba24737409cd80:tools/capture-text.py > $S/ct.py`, the six S101 phrases from the S101 `correction:` lines in /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md 'Round 54 pointer corrections', /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/6dc68fd6b32ce9c8dfcebce8.raw. Does 101 itself avoid repeating any C3 anchor? Is its Check runnable as written and its 'Shown able to fail' true (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/controls/c3-controls.txt)?\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2ReviewQ101.md"
+      },
+      {
+        "name": "R55W2MutC3Errata",
+        "agent": "mutation-tester",
+        "task": "/skill:godspeed\n\nMutation-test the landed errata against /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c3-count.py: in a scratch lane copy at 29cfb12abd70f688b48c0d17f31e636f2d81104a, perturb one erratum at a time (one character of an observation; an anchor shortened to drop the key phrase; an anchor that now occurs twice because you paste it into the target's correction section; a target path typo; the section heading renamed) and run `--work <empty> --skip-slow` (E11 separately once). Table perturbation → item status. Also: does any later lane edit this round (r36 Corrections, QUALITY 101–105) risk making an anchor occur twice? (python counts at 29cfb12abd70f688b48c0d17f31e636f2d81104a).\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2MutC3Errata.md"
+      },
+      {
+        "name": "R55W2CritC3Honest",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nIs C3 an honest calibration move? Read /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/claims.md C3, /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md errata block, /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-55/w1/R55ExecC3Obs*.md (independent observations), /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-55/w1/R55CritC3Calib.md if present. Attack: (a) are all eleven real mismatches between a lane self-statement and repo state (quote each statement at dba605deb5cd5ed4874e0e3c39ba24737409cd80); (b) could C3 be satisfied by copying W2 numbers without observing (did W1 seats' independent derivations match the counter? compare their observed strings); (c) does any remaining round-54 W2 falsification of a lane statement lack an erratum (scan /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-54/w2/*.md). VERDICT: honest / inflated / incomplete with item ids.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2CritC3Honest.md"
+      },
+      {
+        "name": "R55W2ReviewQ102to105",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nReview QUALITY 102–105 in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md: re-run each Check exactly as written (102: the DELEGATE control via `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/controls/build-c1-controls.py $S/ctl` then `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/c1-count.py --tool $S/ctl/delegate.py --seed 55 --work <empty>`; 103: `uv run --with pypdf python /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/pdf-crosscheck.py` and `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/considerthese-ledger-check.py --root /home/vgpnk/Projects/shokunin/chousa-shokunin`; 104: `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/wave-settled-check.py --round 54` and `--round 52`; 105: the three builders with an in-lane OUTDIR — check nothing is created). Does each 'Shown able to fail' reproduce? Any criterion that restates a C3 anchor?\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2ReviewQ102to105.md"
+      },
+      {
+        "name": "R55W2MutLedgerV2",
+        "agent": "mutation-tester",
+        "task": "/skill:godspeed\n\nAttack /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/considerthese-ledger-check.py (round-55 successor): in scratch fixtures, try a symlink inside the root pointing outside, a pointer `a/../../etc/hostname`, a regex the nested-quantifier heuristic misses but still backtracks (`(a|a)+$`, `(a|aa)*c`, `(.*a){20}`), a 1 MiB+1 file, a file that grows between stat and read, a ledger row with 5 columns, a considerthese bullet under a different heading. For each: exit code and wall time; which escape works. Receipts /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/considerthese-ledger-check.txt reproduce?\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2MutLedgerV2.md"
+      },
+      {
+        "name": "R55W2MutPdfV2",
+        "agent": "mutation-tester",
+        "task": "/skill:godspeed\n\nAttack /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/pdf-crosscheck.py (round-55 successor; run with `uv run --with pypdf python` from your scratch): fixtures — a duplicated S123 row (22 rows), an S123 row with a whitespace-only quote, a BOM-prefixed header, CRLF line ends, a quote present only after NFKC, a wrong sha256 pin (copy the script and edit the pin in scratch). Exit code per fixture; does the 21-row denominator mean 'exactly the frozen set' or just 'any 21 rows'? Reproduce /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/pdf-crosscheck.txt.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2MutPdfV2.md"
+      },
+      {
+        "name": "R55W2MutWaveSettled",
+        "agent": "mutation-tester",
+        "task": "/skill:godspeed\n\nAttack /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/wave-settled-check.py: in a scratch git fixture (D=$(mktemp -d -p $S) && git -C \"$D\" init -q) build a lane-shaped and a fleet-shaped repo and test — a results file committed after the report; a results file renamed; an uncommitted results file; a dispatched marker that is uncommitted; an ABANDONED marker whose first line is not the timestamp form; a report added, deleted and re-added (which commit counts?); timezone offsets that differ between repos. Exit code per case; which cases mislead? Reproduce /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/wave-settled-check.txt on the real repos.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2MutWaveSettled.md"
+      },
+      {
+        "name": "R55W2CritMistakes",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nAttack /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-55.md `## Mistakes` (three rows): pointers resolve (open each), `captured-by` honest, each fix shown able to fail with a command you run (row 1: `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round55/wave-settled-check.py --round 54`; row 2: the E08 observation; row 3: the C1 hook and W1 forge reports). Is row 3 a real mistake of the lane or a restatement of a W2 finding? Is any bigger round-54 mistake missing (read /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-54-verifier-spotcheck.md §6 and /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-54/w2/R54W2CritCredit.md, R54W2CritTrends.md)?\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2CritMistakes.md"
+      },
+      {
+        "name": "R55W2ReviewGateConformance",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nSection-10 conformance of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-55.md `## Gate` against the round prompt (/home/vgpnk/Projects/shokunin/.ufo/prompts/chousa-round-55.md §6 item 10): collision lists and counts pasted? renumber map by document? recheck prose stripped and recorded? ≥1 admit and ≥1 reject from the assimilation set? quarantine slice derived and the theme rows hand-checked? `refused-doc` lines? Also the W04 adjudication paragraph: re-read rows S050–S053, S059, S070–S075 in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md and say whether each pair disposition is right.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2ReviewGateConformance.md"
+      },
+      {
+        "name": "R55W2ScoutW2Integration",
+        "agent": "scout",
+        "task": "/skill:godspeed\n\nIntegration completeness for round-54 W2: read /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-55/w1/R55RegisterW2A.md and R55RegisterW2B.md (the register of every round-54 W2 finding with a proposed disposition) and check what actually landed at 29cfb12abd70f688b48c0d17f31e636f2d81104a (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin diff dba605deb5cd5ed4874e0e3c39ba24737409cd80 29cfb12abd70f688b48c0d17f31e636f2d81104a --stat`; grep the lesson, QUALITY 101–105, SCORECARD errata, the r36 entry). List every finding whose disposition did not land, with file:line, and say whether its absence matters for this round's claims or only for the next round.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2ScoutW2Integration.md"
+      },
+      {
+        "name": "R55W2CritTrends",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nAttack the round's planned trend verdicts before they are filed: expansion improved (three documents S124–S126 absent at base, one entry; `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin grep -c 是否检索灰色文献 dba605deb5cd5ed4874e0e3c39ba24737409cd80 -- corpus/knowledge`), quality improved (C1 defined-form spans; r36/QUALITY corrections; check successors), discernment improved (C3 errata recomputed by a counter; quarantine verdict; Gate refusal r43). For each: is 'improved' earned by evidence at 29cfb12abd70f688b48c0d17f31e636f2d81104a, or should it be 'unchanged'/'unprovable-but-better'? Is any axis harmed (compare `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin diff --numstat dba605deb5cd5ed4874e0e3c39ba24737409cd80 29cfb12abd70f688b48c0d17f31e636f2d81104a` for removed lines; did any existing row, entry or criterion lose content)?\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2CritTrends.md"
+      },
+      {
+        "name": "R55W2ExecCensusMisroot",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nCensus and hygiene at 29cfb12abd70f688b48c0d17f31e636f2d81104a: `/home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa` (paste, exit); row count `grep -cE '^\\|[[:space:]]*S[0-9]{3,}[[:space:]]*\\|' /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md` (expect 126); tier/status histograms per CORPUS.md; `git -C /home/vgpnk/Projects/shokunin status --porcelain` — list untracked fleet-root files whose content names chousa round 55 (misroots; do NOT move or delete them, just list path + first line); `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin status --porcelain` (expect only W1/W2 reports and markers); any `__pycache__` the round's counters left in the lane.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2ExecCensusMisroot.md"
+      },
+      {
+        "name": "R55W2ReviewEntryShape",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nReview /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/grey-literature-and-chinese-search-record-r40.md against the lane's entry bar (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md criteria for entries; the provenance-trio shape of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/source-type-taxonomy-r37.md): title claim vs body, `source:` lines (URL immediately after the em dash; anchors), `verified-at` (its `--check` command — run it on a scratch copy), `recheck:` command (run it), `ground:` (its git grep — run it), `adopted:` line; every S-token bound; negative claims carry sweeps. Report every defect with line number.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2ReviewEntryShape.md"
+      },
+      {
+        "name": "R55W2CritS101Next",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nFrontier claim check: corpus/README.md Round55 'Left open' says the four round-54 S101 quotes build 4/4 with the new builder (W1 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-55/w1/R55ExecS101Leg.md). Re-run it: build those quotes (url https://jc.hit.edu.cn/_upload/article/files/f7/54/711916924125a0682e3bc3ebb6ed/1f6f2731-8c87-4812-b7e2-9fad0069d508.doc) with `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/build-spans.py --cache /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache`; report offsets and refusals; is the README sentence accurate? Also: S100/S101 Registry anchors were re-pointed in round 54 by `correction:` lines — do the builder's offsets agree with those corrections?\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth, calibration\nMilestone: Round 56: build-spans gate clause coverage + hook closure (C1), the grey-literature row of the drug clinical comprehensive evaluation workflow standard by document (C2), and the 36 never-dispatched round-55 W2 falsify items\n\nReport: write your scoped findings to .ufo/waves/round-56/w1/R55W2CritS101Next.md"
+      }
+    ]
+  },
+  "resumeSends": [],
+  "note": "Issue exactly one batched task call with taskCall ({context, tasks}); never split a wave into multiple task calls (one-swarm-per-wave). Then one hub send per resumeSends entry: hub send --to <entry.resume> --message <entry.message> (entry.name is bookkeeping, not a hub field)."
+}
