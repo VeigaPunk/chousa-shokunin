@@ -4,6 +4,7 @@
 
 | Note | Holds | Sources |
 |---|---|---|
+| `lessons/round-59.md` | Partial, unadjudicated round-59 lesson: missing pre-data claims freeze and 47/66 spawned seat accounting; offline S101 reopen and its no-fetch boundary; frozen round-58 counter defects retained as reconnaissance, not round-59 claims | `corpus/evidence/round59/{s101-open,census-start,census-end}.txt`; `.ufo/waves/round-59/w1/R59Executor09.md`; `LOG.md` Round 59 |
 | `lessons/round-1.md` | Round-1 gate lesson: real-CLI vs function-under-`set +e` entrypoint gap behind `VERDICT_BEARING_EXPORTS=0/3`, with the gate's candidates/admitted/rejected and the spot-check status | baseline commit `34774a1`; `LOG.md:72-83`; `SCORECARD.md:29`; anchors re-derived from `tools/research-gate.sh` sha256 `e8f07a06…` |
 | `knowledge/archived-export-intake.md` | One filled research-record specimen: pinned archive identity, scoped local observations, unresolved external hops, kept rejections, and explicit semantic-verification limits | note opening metadata and integration errata; `.ufo/evidence/round-1/acceptance.json`; `final-intake.json` |
 | `knowledge/claim-verification-r2.md` | Round-2 note: `verify-claims` mode design (CLI + JSONL schema, fail-closed source boundary, verbatim-span check, structural marker convention), honest limits, receipts and open items | note metadata (gate sha `03a3324455…`); `fixtures/claims-r2.README.md`; `evidence/README.md` and `evidence/claims-r2-*.log` |
