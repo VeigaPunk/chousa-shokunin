@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:mml="http://www.w3.org/1998/Math/MathML">
+<head>
+
+
+
+<!-- 2.3.9 -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="description" content="">
+<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+<title>J-STAGE登載誌が利用できる機能</title>
+
+<link rel="stylesheet" href="/web/css/bootstrap.min.css" />
+
+<link rel="stylesheet" href="/web/css/style.css?rn=2.3.9"/>
+<link rel="stylesheet" href="/web/css/common-elements-style.css?rn=2.3.9" />
+<link rel="stylesheet" href="/web/css/jquery.treefilter.css" />
+<link rel="stylesheet" href="/web/css/jplayer.blue.monday.css" />
+<link rel="stylesheet" href="/web/css/main.css?rn=2.3.9" />
+<!--[if lt IE 9]>
+
+<script src="/web/js/html5shiv.min.js"></script>
+<script src="/web/js/respond.min.js"></script>
+<![endif]-->
+<style type="text/css">
+<!--
+
+main .list-layout{
+	/** Basic Box Model **/
+	display: flex!important;
+	/** Flexible Box Layout **/
+	flex-flow: row nowrap;
+	justify-content: flex-start;
+	align-items: stretch;
+}
+main .list-layout>.marker{
+	/** Text **/
+	white-space: nowrap;
+}
+main .list-layout>.text{
+	/** Basic Box Model **/
+	margin: 0 0 0 .5em;
+}
+.row h1,
+.side-nav,
+.side-nav h1,
+.main-cont,
+.main-cont h2,
+.main-cont h3,
+.main-cont h4{
+	/** Fonts **/
+	font-family: Meiryo!important;
+}
+.row h1{
+	/** Basic Box Model **/
+	margin:0 0 0 40px 10px;
+	/** Fonts **/
+	font-size: 20px;
+	font-weight: bold;
+	/** Line **/
+	line-height: 25px;
+}
+.row p{
+	margin:0 0 0 0 10px;
+
+}
+.side-nav{
+	/** Text **/
+	white-space: nowrap;
+}
+.side-nav h1{
+	/** Fonts **/
+	font-size: 14px;
+	font-weight: bold;
+	/** Line **/
+	line-height: 20px;
+}
+.main-cont h2{
+	/** Basic Box Model **/
+	margin: 10px 0 25px;
+	/** Fonts **/
+	font-size: 18px;
+	font-weight: bold;
+	/** Line **/
+	line-height: 25px;
+}
+.main-cont h3{
+	/** Basic Box Model **/
+	margin: 23px 0;
+	/** Fonts **/
+	font-size: 16px;
+	font-weight: bold;
+	/** Line **/
+	line-height: 23px;
+}
+.main-cont h4{
+	/** Basic Box Model **/
+	margin: 20px 0;
+	/** Fonts **/
+	font-size: 14px;
+	font-weight: bold;
+	/** Line **/
+	line-height: 20px;
+}
+.main-cont p,
+.main-cont ul{
+	/** Basic Box Model **/
+	margin: 10px 0;
+	padding: 0 0 0 15px;
+	/** Fonts **/
+	font-size: 14px;
+	/** Line **/
+	line-height: 20px;
+}
+.main-cont small{
+	/** Fonts **/
+	font-size: 12px;
+}
+.main-cont sup{
+	/** Fonts **/
+	font-size: 10px;
+}
+.main-cont table{
+	/** Basic Box Model **/
+	width: 100%;
+	margin: 10px 0;
+	/** Fonts **/
+	font-size: 13px;
+	/** Line **/
+	line-height: 20px;
+}
+.main-cont th,
+.main-cont td{
+	/** Background and Borders **/
+	border: 1px solid #ddd;
+	/** Basic Box Model **/
+	padding: 10px;
+	/** Line **/
+	vertical-align: middle;
+}
+.main-cont th{
+	/** Background and Borders **/
+	background: #edeeef;
+	/** Text **/
+	text-align: center;
+}
+.main-cont td{
+	/** Background and Borders **/
+	background: #ffffff;
+}
+.main-cont .col1,
+.main-cont .col2,
+.main-cont .col4{
+	/** Text **/
+	white-space: nowrap;
+}
+.layout1{
+	/** Basic Box Model **/
+	margin: 0;
+	padding: 0;
+}
+.layout1>li{
+	/** Background and Borders **/
+	border-top: 1px solid #cccccc;
+	/** Basic Box Model **/
+	padding: 12px 0;
+}
+.layout1>li:first-child{
+	/** Background and Borders **/
+	border-top: none;
+	/** Basic Box Model **/
+	padding-top: 2px;
+}
+ul.chuten>li{
+	/** Positioned Layout **/
+	position: relative;
+	/** Basic Box Model **/
+	margin: 0 0 0 18px;
+	/** Positioned Layout **/
+	position: relative;
+	/** Basic Box Model **/
+	margin-left: 18px;
+	/** Fonts **/
+	font-size: 14px;
+}
+ul.chuten>li::before{
+	/** Positioned Layout **/
+	position: absolute;
+	top: 0;
+	left: -16px;
+	/** Basic Box Model **/
+	display: block;
+	/** Generated and Rplaced Content **/
+	content: '・';
+}
+ul.chuten>li>p{
+	/** Basic Box Model **/
+	margin: 0;
+	padding: 0;
+}
+ul.hyphen>li{
+	/** Positioned Layout **/
+	position: relative;
+	/** Basic Box Model **/
+	margin: 0 0 0 13px;
+	/** Positioned Layout **/
+	position: relative;
+	/** Basic Box Model **/
+	margin-left: 18px;
+	/** Fonts **/
+	font-size: 14px;
+}
+ul.hyphen>li::before{
+	/** Positioned Layout **/
+	position: absolute;
+	top: 0;
+	left: -11px;
+	/** Basic Box Model **/
+	display: block;
+	/** Generated and Rplaced Content **/
+	content: '-';
+}
+ul.hyphen>li>p{
+	/** Basic Box Model **/
+	margin: 0;
+	padding: 0;
+}
+img.thumb{
+	/** Background and Borders **/
+	border: 1px solid #DCDCDC;
+	/** Basic Box Model **/
+	margin: 10px;
+}
+@media(min-width: 992px){
+	.side-nav{
+		/** Basic Box Model **/
+		width: 182px;
+	}
+	.main-cont .thumb-layout{
+		/** Basic Box Model **/
+		display: flex;
+		/** Flexible Box Layout **/
+		flex-flow: row nowrap;
+		justify-content: space-between;
+		align-items: stretch;
+	}
+	#section01 .thumb-box,
+	#section02 .thumb-box,
+	#section07 .thumb-box,
+	#section10 .thumb-box,
+	#section11 .thumb-box,
+	#section12 .thumb-box,
+	#section13 .thumb-box,
+	#section14 .thumb-box,
+	#section15 .thumb-box,
+	#section16 .thumb-box,
+	#section17 .thumb-box,
+	#section18 .thumb-box{
+		/** Basic Box Model **/
+		margin: 0 0 0 20px;
+	}
+	#section04 .thumb-box{
+		/** Basic Box Model **/
+		display: flex;
+		/** Flexible Box Layout **/
+		flex-flow: row nowrap;
+		justify-content: center;
+		align-items: center;
+	}
+}
+@media(max-width: 991px){
+	.main-cont .thumb-layout{
+		/** Basic Box Model **/
+		display: flex;
+		/** Flexible Box Layout **/
+		flex-flow: column nowrap;
+		justify-content: flex-start;
+		align-items: stretch;
+	}
+	#section01 .thumb-box,
+	#section02 .thumb-box,
+	#section07 .thumb-box,
+	#section10 .thumb-box,
+	#section11 .thumb-box,
+	#section12 .thumb-box,
+	#section13 .thumb-box,
+	#section14 .thumb-box,
+	#section15 .thumb-box,
+	#section16 .thumb-box,
+	#section17 .thumb-box,
+	#section18 .thumb-box{
+		/** Basic Box Model **/
+		margin: 15px 0 0;
+		/** Text **/
+		text-align: center;
+	}
+	#section04 .thumb-box{
+		/** Basic Box Model **/
+		display: flex;
+		/** Flexible Box Layout **/
+		flex-flow: column nowrap;
+		justify-content: flex-start;
+		align-items: center;
+	}
+}
+
+.navbar-default .navbar-nav>li>a {
+		color: #093963;
+		font-size: 13px!important;
+}
+.navbar-default .navbar-nav>li>a:hover ,
+.navbar-default .navbar-nav>li>a:focus {
+		color: #fff;
+		font-size: 13px!important;
+	background-color: #4679ac !important;
+}
+@media (max-width: 991px) {
+.navbar-default .navbar-nav > li > a {
+		clear: both;
+		color: #fff;
+		outline: 0 none;
+		width: 250px;
+}
+.navbar-default .navbar-nav .dropdown-menu > li > a:hover,
+.navbar-default .navbar-nav .dropdown-menu > li > a:focus {
+		background: #444 none repeat scroll 0 0 !important;
+		color: #fff !important;
+}
+}
+.navbar-default .navbar-nav>li>a.referencemode {
+		color: #888888;
+}
+.navbar-default .navbar-nav>li>a.referencemode:hover ,
+.navbar-default .navbar-nav>li>a.referencemode:focus {
+		color: #888888;
+		background-color: transparent !important;
+}
+b {
+	font-weight: bold;
+}
+i {
+	font-style: italic;
+}
+// -->
+</style>
+</head>
+	<body class="body-offcanvas addition-pages landing-page">
+
+
+
+
+<!-- HEADER :: START -->
+<span class="noprint">
+<header class="clearfix">
+	<!-- NAVIGATION :: START -->
+	<nav class="navbar navbar-default navbar-fixed-top ep-nav-shadow " >
+
+						
+		<div class="container">
+			<button type="button" class="navbar-toggle offcanvas-toggle" data-toggle="offcanvas" data-target="#js-bootstrap-offcanvas" style="float:left;"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar">&nbsp;</span> <span class="icon-bar">&nbsp;</span> <span class="icon-bar">&nbsp;</span> </button>
+			<!-- RIGHT NAV SEARCH :: BEGIN -->
+			<div class="search-nav-block dropdown">
+				<a href="javascript:;" class=""  data-toggle="collapse" data-target="#Search_nav"><i class="search-nav-icon"></i></a>
+			</div>
+			<!-- RIGHT NAV SEARCH :: END -->
+			<!-- LOGO :: START -->
+			<a class="navbar-brand ms-logowrap hm-logo-padding" href="https://www.jstage.jst.go.jp/browse/-char/ja">
+				<img src="/web/images/J-STAGE_logo_A3.png" alt=""  style="margin-top:6px;" />
+			</a>
+			<!-- LOGO :: END -->
+			<!-- HAMBURGER LEFT TO RIGHT SLIDE :: START -->
+			<div class="offcanvas-left-wrap register-offcanvas-left-wrap">
+								<div class="navbar-offcanvas navbar-offcanvas-touch navbar-offcanvas-fade" role="navigation" id="js-bootstrap-offcanvas">
+					<div class="offcanvas-left-wrap">
+						<div class="navbar-header">
+							<a class="navbar-brand jst-homelink" href="https://www.jstage.jst.go.jp/browse/-char/ja">J-STAGE home</a>
+							<button type="button" class="navbar-toggle offcanvas-toggle pull-right" data-toggle="offcanvas" data-target="#js-bootstrap-offcanvas" style="float:left;"> <img src="/web/images/edit-profile/icon-close-menu.png" alt=""></button>
+						</div>
+						<div class="offcanvas-nav-wrap">
+							<ul class="nav navbar-nav">
+																<li class="dropdown reponsive-menu"> <a href="#" class="dropdown-toggle" data-toggle="dropdown">資料・記事を探す<b class="caret"></b></a>
+									<ul class="dropdown-menu ep-dropdown-menu">
+										<li style="background:none !important;"><span class="topnav-dropdown-icon"><img src="/web/images/top-nav-dropdown-arrow.png" width="18" height="10" alt=""/></span></li>
+										<li><a href="/journal/list/-char/ja">資料を探す：資料タイトルから</a></li>
+										<li><a href="/journal/fields/-char/ja">資料を探す：分野から</a></li>
+										<li><a href="/journal/publisher/-char/ja">資料を探す：発行機関から</a></li>
+										<li><a href="/search/global/_search/-char/ja">記事を探す</a></li>
+										<li><a href="https://jstagedata.jst.go.jp/" target="_blank" rel="noopener noreferrer">データを探す(J-STAGE Data) <img src="/web/images/information-tab2/bg-arrow-white.png" width="13" height="10" alt=""></a></li>
+									</ul>
+								</li>
+																<li class="dropdown reponsive-menu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">J-STAGEについて <b class="caret"></b></a>
+									<ul class="dropdown-menu ep-dropdown-menu">
+										<li style="background:none !important;"><span class="topnav-dropdown-icon"><img src="/web/images/top-nav-dropdown-arrow.png" width="18" height="10" alt=""/></span></li>
+										<li><a href="https://www.jstage.jst.go.jp/static/pages/JstageOverview/-char/ja">J-STAGEの概要</a></li>
+										<li><a href="https://www.jstage.jst.go.jp/static/pages/JstageServices/TAB1/-char/ja">各種サービス・機能</a></li>
+										<li><a href="https://www.jstage.jst.go.jp/static/pages/PublicDataAboutJstage/-char/ja">公開データ</a></li>
+										<li><a href="https://www.jstage.jst.go.jp/static/pages/TermsAndPolicies/ForIndividuals/-char/ja">利用規約・ポリシー</a></li>
+ <li><a href="https://www.jstage.jst.go.jp/static/pages/ForPublishers/TAB1/-char/ja">新規登載の申し込み</a></li>									</ul>
+								</li>
+
+																<li class="dropdown reponsive-menu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">ニュース&PR  <b class="caret"></b></a>
+									<ul class="dropdown-menu ep-dropdown-menu">
+										<li style="background:none !important;"><span class="topnav-dropdown-icon"><img src="/web/images/top-nav-dropdown-arrow.png" width="18" height="10" alt=""/></span></li>
+										<li><a href="https://www.jstage.jst.go.jp/static/pages/News/TAB1/Current/Page1/-char/ja">お知らせ一覧</a></li>
+ <li><a href="https://www.jstage.jst.go.jp/static/pages/News/TAB5/Page1/-char/ja">リリースノート</a></li> 										<li><a href="https://www.jstage.jst.go.jp/static/pages/News/TAB2/Page1/-char/ja">メンテナンス情報</a></li>
+ <li><a href="https://www.jstage.jst.go.jp/static/pages/News/TAB4/Page1/-char/ja">イベント情報</a></li>  <li><a href="https://www.jstage.jst.go.jp/static/pages/News/TAB3/Page1/-char/ja">J-STAGEニュース</a></li> 										<li><a href="https://www.jstage.jst.go.jp/static/pages/News/TAB6/Page1/-char/ja">特集コンテンツ </a></li>
+										<li><a href="https://www.jstage.jst.go.jp/static/pages/News/TAB7/Page1/-char/ja">各種広報媒体 </a></li>
+									</ul>
+								</li>
+																<li class="dropdown reponsive-menu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">サポート  <b class="caret"></b></a>
+									<ul class="dropdown-menu ep-dropdown-menu">
+										<li style="background:none !important;"><span class="topnav-dropdown-icon"><img src="/web/images/top-nav-dropdown-arrow.png" width="18" height="10" alt=""/></span></li>
+ <li><a href="https://www.jstage.jst.go.jp/static/pages/InformationForSocieties/TAB1/-char/ja">J-STAGE登載機関用コンテンツ</a></li>  <li><a href="https://www.jstage.jst.go.jp/static/pages/GuidelineAndManuals/TAB1/-char/ja">登載ガイドライン・マニュアル</a></li> 										<li><a href="https://www.jstage.jst.go.jp/static/pages/ForReaders/-char/ja">閲覧者向けヘルプ</a></li>
+										<li><a href="https://www.jstage.jst.go.jp/static/pages/RecommendedEnvironment/-char/ja">動作確認済みブラウザ</a></li>
+ <li><a href="https://www.jstage.jst.go.jp/static/pages/FAQs/TAB2/-char/ja">FAQ</a></li> 										<li><a href="https://www.jstage.jst.go.jp/static/pages/Contact/-char/ja">お問い合わせ </a></li>
+										<li><a href="https://www.jstage.jst.go.jp/static/pages/Sitemap/-char/ja">サイトマップ </a></li>
+									</ul>
+								</li>
+																													<li class="reponsive-menu">
+												<a href="/mylogin/-char/ja?sourceurl=https%3A%2F%2Fwww.jstage.jst.go.jp%2Fbrowse%2F-char%2Fja">サインイン</a>
+										</li>
+																		<li class="reponsive-menu">
+											<li class="reponsive-menu"><a href="/cart/list/-char/ja?backurl=https%3A%2F%2Fwww.jstage.jst.go.jp%2Fbrowse%2F-char%2Fja" class="" >カート <img src="/web/images/edit-profile/icon-cart.png" alt=""></a>
+									</li>
+								<li class="dropdown reponsive-menu">
+																		<a href="#" class="dropdown-toggle" data-toggle="dropdown"> JA  <img src="/web/images/edit-profile/icon-lang.png" alt=""> <b class="caret"></b></a>
+									<ul class="dropdown-menu ep-dropdown-menu">
+									<li style="background:none !important;"><span class="topnav-dropdown-icon"><img src="/web/images/top-nav-dropdown-arrow.png" width="18" height="10" alt=""/></span></li>
+											<li><a href="javascript:;">日本語</a></li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+								<ul class="nav navbar-nav offcanvas-left-display-none">
+										<li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown">資料・記事を探す<b class="caret"></b></a>
+						<ul class="dropdown-menu ep-dropdown-menu">
+							<li style="background:none !important;"><span class="topnav-dropdown-icon"><img src="/web/images/top-nav-dropdown-arrow.png" width="18" height="10" alt=""/></span></li>
+							<li><a href="/journal/list/-char/ja">資料を探す：資料タイトルから</a></li>
+							<li><a href="/journal/fields/-char/ja">資料を探す：分野から</a></li>
+							<li><a href="/journal/publisher/-char/ja">資料を探す：発行機関から</a></li>
+							<li><a href="/search/global/_search/-char/ja">記事を探す</a></li>
+							<li><a href="https://jstagedata.jst.go.jp/" target="_blank" rel="noopener noreferrer">データを探す(J-STAGE Data) <img src="/web/images/information-tab2/bg-arrow.png" width="13" height="10" alt=""></a></li>
+						</ul>
+					</li>
+										<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">J-STAGEについて <b class="caret"></b></a>
+						<ul class="dropdown-menu ep-dropdown-menu">
+							<li style="background:none !important;"><span class="topnav-dropdown-icon"><img src="/web/images/top-nav-dropdown-arrow.png" width="18" height="10" alt=""/></span></li>
+							<li><a href="https://www.jstage.jst.go.jp/static/pages/JstageOverview/-char/ja">J-STAGEの概要</a></li>
+							<li><a href="https://www.jstage.jst.go.jp/static/pages/JstageServices/TAB1/-char/ja">各種サービス・機能</a></li>
+							<li><a href="https://www.jstage.jst.go.jp/static/pages/PublicDataAboutJstage/-char/ja">公開データ</a></li>
+							<li><a href="https://www.jstage.jst.go.jp/static/pages/TermsAndPolicies/ForIndividuals/-char/ja">利用規約・ポリシー</a></li>
+ <li><a href="https://www.jstage.jst.go.jp/static/pages/ForPublishers/TAB1/-char/ja">新規登載の申し込み</a></li>						</ul>
+					</li>
+										<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">ニュース&PR  <b class="caret"></b></a>
+						<ul class="dropdown-menu ep-dropdown-menu">
+							<li style="background:none !important;"><span class="topnav-dropdown-icon"><img src="/web/images/top-nav-dropdown-arrow.png" width="18" height="10" alt=""/></span></li>
+							<li><a href="https://www.jstage.jst.go.jp/static/pages/News/TAB1/Current/Page1/-char/ja">お知らせ一覧</a></li>
+ <li><a href="https://www.jstage.jst.go.jp/static/pages/News/TAB5/Page1/-char/ja">リリースノート</a></li> 							<li><a href="https://www.jstage.jst.go.jp/static/pages/News/TAB2/Page1/-char/ja">メンテナンス情報</a></li>
+ <li><a href="https://www.jstage.jst.go.jp/static/pages/News/TAB4/Page1/-char/ja">イベント情報</a></li>  <li><a href="https://www.jstage.jst.go.jp/static/pages/News/TAB3/Page1/-char/ja">J-STAGEニュース</a></li> 							<li><a href="https://www.jstage.jst.go.jp/static/pages/News/TAB6/Page1/-char/ja">特集コンテンツ </a></li>
+							<li><a href="https://www.jstage.jst.go.jp/static/pages/News/TAB7/Page1/-char/ja">各種広報媒体 </a></li>
+						</ul>
+					</li>
+										<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">サポート  <b class="caret"></b></a>
+						<ul class="dropdown-menu ep-dropdown-menu">
+							<li style="background:none !important;"><span class="topnav-dropdown-icon"><img src="/web/images/top-nav-dropdown-arrow.png" width="18" height="10" alt=""/></span></li>
+ <li><a href="https://www.jstage.jst.go.jp/static/pages/InformationForSocieties/TAB1/-char/ja">J-STAGE登載機関用コンテンツ</a></li>  <li><a href="https://www.jstage.jst.go.jp/static/pages/GuidelineAndManuals/TAB1/-char/ja">登載ガイドライン・マニュアル</a></li> 							<li><a href="https://www.jstage.jst.go.jp/static/pages/ForReaders/-char/ja">閲覧者向けヘルプ</a></li>
+							<li><a href="https://www.jstage.jst.go.jp/static/pages/RecommendedEnvironment/-char/ja">動作確認済みブラウザ</a></li>
+ <li><a href="https://www.jstage.jst.go.jp/static/pages/FAQs/TAB2/-char/ja">FAQ</a></li> 							<li><a href="https://www.jstage.jst.go.jp/static/pages/Contact/-char/ja">お問い合わせ </a></li>
+							<li><a href="https://www.jstage.jst.go.jp/static/pages/Sitemap/-char/ja">サイトマップ </a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			<!-- HAMBURGER LEFT TO RIGHT SLIDE :: END -->
+			<div class="offcanvas-right-wrap register-offcanvas-right-wrap">
+				<ul class="nav navbar-nav">
+												<li class="">
+								<a href="/mylogin/-char/ja?sourceurl=https%3A%2F%2Fwww.jstage.jst.go.jp%2Fbrowse%2F-char%2Fja" class="" >サインイン  </a>
+						</li>
+										<li class="">
+							<li class=""><a href="/cart/list/-char/ja?backurl=https%3A%2F%2Fwww.jstage.jst.go.jp%2Fbrowse%2F-char%2Fja" class="" >カート </a>
+					</li>
+								<li><div class="txt-welcome"> JA </div></li>
+				</ul>
+			</div>
+			<!-- RIGHT NAV SEARCH DROPDOWN :: BEGIN -->
+			<ul class="dropdown-menu collapse ep-dropdown-menu search-dropdown-menu" id="Search_nav" style="max-width: 300px;">
+				<li style="background:none !important;"><span class="topnav-dropdown-icon"></span></li>
+				<li>
+					<div class="col-md-24 edit-profile-form-control">
+						<form action="/result/journal/-char/ja" method="get">
+						<div class="input-group">
+							<input name="globalSearchKey" type="text" class="form-control search-nav-input" placeholder="J-STAGE上のすべてのジャーナルを検索">
+							<span class="input-group-btn search-btn">
+							<button class="btn btn-default" type="submit"><i class="search-nav-icon"></i></button>
+							</span>
+						</div><!-- /input-group -->
+						<a href="https://www.jstage.jst.go.jp/search/global/_search/-char/ja" class="advanced-search-link">詳細検索</a>
+						</form>
+					</div>
+				</li>
+			</ul>
+			<!-- RIGHT NAV SEARCH DROPDOWN :: END -->
+
+			<div class="clearfix"></div>
+		</div>
+	</nav>
+	<!-- NAVIGATION :: END -->
+</header>
+</span>
+<!-- HEADER :: END -->
+
+<!-- MAIN :: START -->
+<main id="page-content">
+
+	<!-- INTRODUCTION :: START -->
+	<div id="journal-header-compact" class="colorscheme01-cyan">
+		<div class="container">
+			<div class="journal-name">新規登載の申し込み</div>
+		</div>
+	</div>
+	<!-- INTRODUCTION :: END -->
+
+	<!-- SECOND LEVEL TAB NAVIGATION :: START -->
+	<div class="colorscheme01-cyan responsive-lb">
+		<div class="container">
+			<nav id="second-level-nav-tabs">
+				<ul class="nav nav-tabs">
+					<li><a href="https://www.jstage.jst.go.jp/static/pages/ForPublishers/TAB1/-char/ja">資料公開作業の流れ</a></li>
+					<li class="active"><a href="https://www.jstage.jst.go.jp/static/pages/ForPublishers/TAB2/-char/ja">J-STAGE登載誌が利用できる機能</a></li>
+					<li><a href="https://www.jstage.jst.go.jp/static/pages/ForPublishers/TAB3/-char/ja">J-STAGEサービス利用申込方法</a></li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+	<!-- SECOND LEVEL TAB NAVIGATION :: END -->
+
+	<!-- SECOND LEVEL TAB NAVIGATION MOBILE :: START -->
+	<div class="has-select-page colorscheme01-cyan sm">
+		<div class="container">
+			<div class="title-page-mobile">
+				J-STAGE登載誌が利用できる機能
+			</div>
+			<a href="#" class="btn-show-page right-arrow">
+				<img src="/html/images/common/arrow-right-title.png" alt="▼">
+			</a>
+			<ul class="list-select-page">
+				<li><a href="https://www.jstage.jst.go.jp/static/pages/ForPublishers/TAB1/-char/ja">資料公開作業の流れ</a></li>
+				<li><a href="https://www.jstage.jst.go.jp/static/pages/ForPublishers/TAB3/-char/ja">J-STAGEサービス利用申込方法</a></li>
+			</ul>
+		</div>
+	</div>
+	<!-- SECOND LEVEL TAB NAVIGATION MOBILE :: END -->
+	
+	<!-- BREDCRUMBS :: START -->
+	<div class="container">
+		<div class="row">
+			<div class="col-md-24">
+				<ul class="global-breadcrumbs clearfix">
+					<li><a href="https://www.jstage.jst.go.jp/browse/-char/ja">J-STAGEトップ </a></li>
+					<li>/</li>
+					<li>J-STAGEについて</li>
+					<li>/</li>
+					<li>新規登載の申し込み</li>
+					<li>/</li>
+					<li>J-STAGE登載誌が利用できる機能</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- BREDCRUMBS :: END -->
+
+	<!-- ABOUNT THE FEATURES :: START -->
+	<div class="container">
+		<div class="row">
+			<br>
+			<h1>J-STAGE登載誌が利用できる機能</h1>
+			<p>
+				J-STAGEで公開する資料に対して、以下の機能をご利用いただけます（一部の機能は有償となります）。
+			</p>
+			<!-- LEFT SECTION :: START -->
+			<div class="col-md-5">
+				<div data-spy="affix" data-offset-top="190" data-offset-bottom="370" class="side-nav">
+					
+					<ul class="list responsive-lb">
+						<li>
+							<a href="#section10" class="list-layout anchor active">
+								<span class="marker">1.</span>
+								<span class="text">DOI登録機能</span>
+							</a>
+						</li>
+						<li>
+							<a href="#section11" class="list-layout anchor">
+								<span class="marker">2.</span>
+								<span class="text">引用・被引用文献<br>リンク機能</span>
+							</a>
+						</li>
+						<li>
+							<a href="#section01" class="list-layout anchor">
+								<span class="marker">3.</span>
+								<span class="text">購読者認証/<br>ペイ・パー・ビュー（PPV）</span>
+							</a>
+						</li>
+						<li>
+							<a href="#section12" class="list-layout anchor">
+								<span class="marker">4.</span>
+								<span class="text">サイト編集機能</span>
+							</a>
+						</li>
+						<li>
+							<a href="#section13" class="list-layout anchor">
+								<span class="marker">5.</span>
+								<span class="text">サイト編集機能：<br>バーチャルイシュー</span>
+							</a>
+						</li>
+						<li>
+							<a href="#section06" class="list-layout anchor">
+								<span class="marker">6.</span>
+								<span class="text">全文HTML</span>
+							</a>
+						</li>
+						<li>
+							<a href="#section02" class="list-layout anchor">
+								<span class="marker">7.</span>
+								<span class="text">電子付録</span>
+							</a>
+						</li>
+						<li>
+							<a href="#section14" class="list-layout anchor">
+								<span class="marker">8.</span>
+								<span class="text">Graphical Abstract</span>
+							</a>
+						</li>
+						<li>
+							<a href="#section07" class="list-layout anchor">
+								<span class="marker">9.</span>
+								<span class="text">アクセス統計・<br>ダッシュボード</span>
+							</a>
+						</li>
+						<li>
+							<a href="#section03" class="list-layout anchor">
+								<span class="marker">10.</span>
+								<span class="text">資料アラート</span>
+							</a>
+						</li>
+						<li>
+							<a href="#section15" class="list-layout anchor">
+								<span class="marker">11.</span>
+								<span class="text">ダークアーカイブ</span>
+							</a>
+						</li>
+						<li>
+							<a href="#section05" class="list-layout anchor">
+								<span class="marker">12.</span>
+								<span class="text">早期公開</span>
+							</a>
+						</li>
+						<li>
+							<a href="#section16" class="list-layout anchor">
+								<span class="marker">13.</span>
+								<span class="text">COUNTERレポート</span>
+							</a>
+						</li>
+						<li>
+							<a href="#section17" class="list-layout anchor">
+								<span class="marker">14.</span>
+								<span class="text">J-STAGE類似性<br>チェックサービス</span>
+							</a>
+						</li>
+						<li>
+							<a href="#section18" class="list-layout anchor">
+								<span class="marker">15.</span>
+								<span class="text">J-STAGE Data</span>
+							</a>
+						</li>
+					</ul>
+					<select class="side-list sm">
+						<option value="#section10">1. DOI登録機能</option>
+						<option value="#section11">2. 引用・被引用文献リンク機能</option>
+						<option value="#section01">3. 購読者認証/ペイ・パー・ビュー（PPV）</option>
+						<option value="#section12">4. サイト編集機能</option>
+						<option value="#section13">5. サイト編集機能：バーチャルイシュー</option>
+						<option value="#section06">6. 全文HTML</option>
+						<option value="#section02">7. 電子付録</option>Graphical Abstract
+						<option value="#section14">8. Graphical Abstract</option>
+						<option value="#section07">9. アクセス統計・ダッシュボード</option>
+						<option value="#section03">10. 資料アラート</option>
+						<option value="#section15">11. ダークアーカイブ</option>
+						<option value="#section05">12. 早期公開</option>
+						<option value="#section16">13. COUNTERレポート</option>
+						<option value="#section17">14. J-STAGE類似性チェックサービス</option>
+						<option value="#section18">15. J-STAGE Data</option>
+					</select>
+				</div>
+			</div>
+			<!-- LEFT SECTION :: END -->
+
+			<!-- RIGHT SECTION :: START -->
+			<div class="col-md-19">
+				<div class="main-cont">
+					<ol class="layout1">
+						<li id="section10">
+							<article>
+								<h2 class="list-layout">
+									<span class="marker">1.</span>
+									<span class="text">DOI登録機能</span>
+								</h2>
+								<div class="thumb-layout">
+									<ul class="chuten">
+										<li>
+											<p>
+												J-STAGEで公開されたすべての記事にはDOIが付与されます。
+											</p>
+										</li>
+										<li>
+											<p>
+												DOIとは：
+											</p>
+											<ul class="hyphen">
+												<li>
+													<p>
+														インターネット上で公開されている資料、記事、研究データ等の各種コンテンツに付与される永続的な識別子で、ISOにより標準化された国際的な規格です。
+													</p>
+												</li>
+												<li>
+													<p>
+													DOIはコンテンツ毎に付与され、"https://doi.org/" もしくは"https://dx.doi.org/" の後にDOIを付けたURLは、そのコンテンツへのリンク切れを起こさない恒久的なアクセスを保障します。
+													</p>
+												</li>
+												<li>
+													<p>
+													J-STAGEでは、書誌画面に"https://doi.org/～"のURLの形式でDOIが表示されます。
+													</p>
+												</li>
+											</ul>
+											<p class="list-layout">
+												<span class="marker">※</span>
+												<span class="text">DOIがURLとして使用できるようになるには、J-STAGEでの公開から1日～数日程度かかります。</span>
+											</p>
+										</li>
+									</ul>
+									<div class="thumb-box">
+										<img class="thumb" src="/html/images/ForPublishers/TAB2/20171125/ja/img06.jpg">
+									</div>
+								</div>
+							</article>
+						</li>
+						<li id="section11">
+							<article>
+								<h2 class="list-layout">
+									<span class="marker">2.</span>
+									<span class="text">引用・被引用文献リンク機能</span>
+								</h2>
+								<div class="thumb-layout">
+									<p>
+									J-STAGEで記事が公開されると、引用文献および被引用文献へのリンクが表示されます。<a href="https://www.jstage.jst.go.jp/static/pages/JstageServices/TAB1/-char/ja" class="bluelink-style readmore" rel="noopener noreferrer">J-STAGEが連携している外部サービス</a>に登録されている引用文献および被引用文献には、J-STAGEでの記事公開から数日～2週間後にDOIによるリンクが作成されます。 このうち、PubMedやCASに収録されているものは、PubMed/CAS上の書誌情報へのリンクが表示されます。
+									</p>
+									<div class="thumb-box">
+										<img class="thumb" src="/html/images/ForPublishers/TAB2/20171125/ja/img07.jpg">
+									</div>
+								</div>
+							</article>
+						</li>
+						<li id="section01">
+							<article>
+								<h2 class="list-layout">
+									<span class="marker">3.</span>
+									<span class="text">購読者認証/ペイ・パー・ビュー（PPV）</span>
+								</h2>
+								<div class="thumb-layout">
+									<p>
+										J-STAGEでは、記事の抄録部分はすべての閲覧者に公開されますが、全文PDF、全文HTML等に対して記事単位で購読者認証（アクセス制限）をかけることが可能です。購読者認証を設定した記事は、IPアドレスまたはパスワードによる認証を行うことで閲覧できるようになります。購読者認証を解除するタイミングの設定も行えます。詳しくは、「<a href="https://www.jstage.jst.go.jp/static/files/ja/UM-01-004_sousa(henshu).pdf#page=76" class="bluelink-style readmore" rel="noopener noreferrer">J-STAGE操作マニュアル 編集登載編 12.10 記事認証</a>」「<a href="https://www.jstage.jst.go.jp/static/files/ja/UM-01-006_sousa(access).pdf" class="bluelink-style readmore" rel="noopener noreferrer">J-STAGE操作マニュアル アクセス管理編</a>」及び、「<a href="https://www.jstage.jst.go.jp/static/files/ja/UM-22-001_purpose01.pdf" class="bluelink-style readmore" rel="noopener noreferrer">J-STAGE操作マニュアル 購読者管理 （記事の ID/PW 認証）方法</a>」をご確認ください。<br>
+										また、購読者認証を設定した記事は、記事を購入することで閲覧できる「ペイ・パー・ビュー（PPV）」形式での公開も行えます（PPVの利用には事前の申込が必要です）。
+									</p>
+									<div class="thumb-box">
+										<img class="thumb" src="/html/images/ForPublishers/TAB2/20170401/ja/img01.jpg">
+									</div>
+								</div>
+							</article>
+						</li>
+						<li id="section12">
+							<article>
+								<h2 class="list-layout">
+									<span class="marker">4.</span>
+									<span class="text">サイト編集機能</span>
+								</h2>
+								<div class="thumb-layout">
+									<p>
+										J-STAGEの公開画面は、「サイト編集ツール」を使用することでおすすめ記事の登録やお知らせの表示、バナー画像やEditorial Boardの設定など、カスタマイズが可能です。様々な関連情報を充実させることで、貴ジャーナルをより魅力的で信頼性の高いものとして閲覧者に印象づけることができます。「サイト編集ツール」使用の詳細は、「J-STAGE操作マニュアル」ページの操作マニュアル（サービス管理、アクセス管理）「<a href="https://www.jstage.jst.go.jp/static/files/ja/jstage_sousa(saitohenshu).pdf" class="bluelink-style readmore" rel="noopener noreferrer">J-STAGE_操作マニュアル サイト編集ツール編</a>」をご確認ください。
+									</p>
+									<div class="thumb-box">
+										<img width=300px class="thumb" src="/html/images/ForPublishers/TAB2/img12.png">
+									</div>
+								</div>
+							</article>
+						</li>
+						<li id="section13">
+							<article>
+								<h2 class="list-layout">
+									<span class="marker">5.</span>
+									<span class="text">サイト編集機能：バーチャルイシュー</span>
+								</h2>
+								<div class="thumb-layout">
+									<p>
+										バーチャルイシューは、公開されているすべての記事を対象に、特定のテーマごとにまとめた記事を公開する機能です。バーチャルイシューのテーマは、記事の内容、学会の授賞論文や連載記事など、自由に設定できます。また、バーチャルイシューでは巻号をまたいだ記事の選定が可能です。バーチャルイシューの詳細は、登載ガイドライン・マニュアル「登載手順ガイド」ページの動画「<a href="https://youtu.be/HHs2Lk_9B5I" class="bluelink-style readmore" rel="noopener noreferrer">バーチャルイシュー機能 概要と設定方法</a>」をご確認ください。
+									</p>
+									<div class="thumb-box">
+										<img width=300px class="thumb" src="/html/images/ForPublishers/TAB2/img13.png">
+									</div>
+								</div>
+							</article>
+						</li>
+						<li id="section06">
+							<article>
+								<h2 class="list-layout">
+									<span class="marker">6.</span>
+									<span class="text">全文HTML</span>
+								</h2>
+								<p>
+									記事本文を含む全文XMLデータを作成してJ-STAGEへ登載すると、PDFに加えてHTMLページでも全文を公開することができます。全文HTML公開された記事は、ブラウザ上で全文を閲覧できるため、タブレット、スマートフォン等での閲覧にも適しています。また、論文中の図や動画のサムネイルをクリックすることで元のサイズの画像や動画を表示できるため、詳しく見たい情報に素早くアクセスすることができます。さらに、全文HTML公開はブラウザの翻訳機能を利用することで、閲覧者が他言語に翻訳することも可能です。海外からの閲覧者にとっても、論文内容の理解を補助する手段として活用が期待できます。<br>
+									なお、全文XMLデータを作成するツールとして「全文XML作成ツール」を提供しています。Word、LaTeX 形式の原稿ファイルを JATS1.1 形式の XML ファイルに変換し、全文XMLデータを作成できます。
+								</p>
+							</article>
+						</li>
+						<li id="section02">
+							<article>
+								<h2 class="list-layout">
+									<span class="marker">7.</span>
+									<span class="text">電子付録</span>
+								</h2>
+								<div class="thumb-layout">
+									<p>
+										J-STAGEでは、冊子体で提供できない動画・音声・高精細写真等のデータを、記事の電子付録としてアップロードし公開することができます。詳しくは、「<a href="https://www.jstage.jst.go.jp/static/files/ja/UM-01-004_sousa(henshu).pdf#page=146" class="bluelink-style readmore" rel="noopener noreferrer">J-STAGE操作マニュアル 編集登載編 12.11.9</a>」をご確認ください。<br><br>
+									<span class="marker">※</span><span class="text">電子付録のファイルを開くアプリケーションは閲覧者が用意する必要があります。</span><br>
+									<span class="marker">※</span><span class="text">大量のデータをアップロードする場合は事前にご相談下さい。</span>
+									</p>
+									<div class="thumb-box">
+										<img class="thumb" src="/html/images/ForPublishers/TAB2/20170401/ja/img02.jpg">
+									</div>
+								</div>
+							</article>
+						</li>
+						<li id="section14">
+							<article>
+								<h2 class="list-layout">
+									<span class="marker">8.</span>
+									<span class="text">Graphical Abstract</span>
+								</h2>
+								<div class="thumb-layout">
+									<p>
+										各記事の抄録/Abstractの下に、画像と説明文(キャプション)をGraphical Abstractとして1つ掲載できます。論文の内容を図やイラストを用いることで、一目で直感的に伝えることができます。Graphical Abstractの詳細は、「<a href="https://www.jstage.jst.go.jp/static/files/ja/UM-01-004_sousa(henshu).pdf#page=146" class="bluelink-style readmore" rel="noopener noreferrer">J-STAGE操作マニュアル 編集登載編 12.11.9</a>」をご確認ください。
+									</p>
+									<div class="thumb-box">
+										<img width=300px class="thumb" src="/html/images/ForPublishers/TAB2/img14.png">
+									</div>
+								</div>
+							</article>
+						</li>
+						<li id="section07">
+							<article>
+								<h2 class="list-layout">
+									<span class="marker">9.</span>
+									<span class="text">アクセス統計・ダッシュボード</span>
+								</h2>
+								<div class="thumb-layout">
+									<p>
+										1ヶ月単位で資料のアクセス統計データをダウンロードすることができます。サマリ(総アクセス数、総登載数等)、記事別/国・地域別/ドメイン別のアクセス数等が集計されています。<br />
+										また、J-STAGE利用機関向けに、資料と記事の利用状況をビジュアル化したダッシュボードを用意しています。資料全体と記事単位の単純アクセス数、国地域別アクセス数、外部サイト経由のアクセス数、ドメイン別アクセス数、全文HTML/本文PDF/書誌画面のアクセス数がグラフや地図で視覚的に表示されます。TSV形式・PDF形式でダウンロードも可能です。ダッシュボードの詳細は、「<a href="https://www.jstage.jst.go.jp/static/files/ja/dashboardManual.pdf" class="bluelink-style readmore" rel="noopener noreferrer">J-STAGE操作マニュアル（ダッシュボード）</a>」をご確認ください。
+									</p>
+									<div class="thumb-box">
+										<img width=300px class="thumb" src="/html/images/ForPublishers/TAB2/img07.png">
+									</div>
+								</div>
+							</article>
+						</li>
+						<li id="section03">
+							<article>
+								<h2 class="list-layout">
+									<span class="marker">10.</span>
+									<span class="text">資料アラート</span>
+								</h2>
+								<p>
+									学協会会員等の閲覧者が「My J-STAGE」に登録し、資料をお気に入り登録することで、資料の更新情報（最新号が公開された時、記事が引用された時等）をメールで通知することができます。<br /><br />
+									<span class="marker">※</span>
+									<span class="text"> 資料アラートの利用には、閲覧者用無料アカウントサービス「My J-STAGE」への登録が必要です。「My J-STAGE」の詳細は、「<a href="https://www.jstage.jst.go.jp/static/pages/MyJstageHelp/-char/ja" class="bluelink-style readmore" rel="noopener noreferrer">My J-STAGEヘルプ</a>」をご確認ください。</span>
+								</p>
+							</article>
+						</li>
+						<li id="section15">
+							<article>
+								<h2 class="list-layout">
+									<span class="marker">11.</span>
+									<span class="text">ダークアーカイブ</span>
+								</h2>
+								<p>
+									J－STAGEでは、登載データの長期的保存と安定的提供を目的とするダークアーカイブサービス「Portico（ポルティコ）」と契約し、J-STAGE登載誌の発行機関にご利用いただいています。J-STAGEで公開している記事データをPorticoに連携するか否かについては、発行機関にてご判断いただき、J-STAGE編集登載システムにて、Portico連携可否を設定いただけます。<br />
+									ダークアーカイブサービス「Portico」の詳細については、「<a href="https://www.jstage.jst.go.jp/static/pages/JstageServices/TAB6/-char/ja" class="bluelink-style readmore" rel="noopener noreferrer">ダークアーカイブサービスPortico</a>」ページをご確認ください。
+								</p>
+							</article>
+						</li>
+						<li id="section05">
+							<article>
+								<h2 class="list-layout">
+									<span class="marker">12.</span>
+									<span class="text">早期公開</span>
+								</h2>
+								<p>
+									早期公開機能は採択された記事を、巻・号や開始ページ等の書誌情報が確定する前に速やかに公開することができる、オンラインジャーナルの特徴を活かした機能です。書誌情報の確定した出版版でなくても、採択直後の原稿をそのままPDF化して公開する等、迅速な研究成果の流通が可能となります。<br />
+									<span class="marker">※</span>
+									<span class="text">早期公開機能は資料種別が「ジャーナル」の刊行物でのみ利用可能です。</span>
+								</p>
+							</article>
+						</li>
+						<li id="section16">
+							<article>
+								<h2 class="list-layout">
+									<span class="marker">13.</span>
+									<span class="text">COUNTERレポート</span>
+								</h2>
+								<div class="thumb-layout">
+									<p>
+									J-STAGEでは、大学図書館等の購読機関向けに「COUNTERレポート」を提供しています。J-STAGE利用機関は、購読機関向けにCOUNTERレポートを提供するかどうか選択可能です。COUNTERレポートサービスに申し込んだ購読機関は、J-STAGE登載誌のうちCOUNTERレポートを提供している資料について、設定した購読機関のIPアドレスからのPDFダウンロード数に関する月次レポートを取得できます。<br />
+									COUNTERレポートについての詳細は、各種サービス・機能の「<a href="https://www.jstage.jst.go.jp/static/pages/JstageServices/TAB2/-char/ja" class="bluelink-style readmore" rel="noopener noreferrer">COUNTERレポート</a>」をご確認ください。
+									</p>
+									<div class="thumb-box">
+										<img width=300px class="thumb" src="/html/images/ForPublishers/TAB2/img16.png">
+									</div>
+								</div>
+							</article>
+						</li>
+						<li id="section17">
+							<article>
+								<h2 class="list-layout">
+									<span class="marker">14.</span>
+									<span class="text">J-STAGE類似性チェックサービス</span>
+								</h2>
+								<p>
+									J-STAGE登載誌の発行機関に向けて論文等の類似性を検知する剽窃チェックのためのウェブサービス「J-STAGE類似性チェックサービス」を、有料サービスとして提供しています。投稿された論文を剽窃チェックツール「iThenticate」に登録されているデータと照合し、類似文書とその類似率を示します。J-STAGE類似性チェックサービスの詳細は、J-STAGE登載機関用コンテンツ「<a href="https://www.jstage.jst.go.jp/static/pages/InformationForSocieties/TAB2/-char/ja" class="bluelink-style readmore" rel="noopener noreferrer">J-STAGE類似性チェックサービス</a>」をご確認ください。
+								</p>
+							</article>
+						</li>
+						<li id="section18">
+							<article>
+								<h2 class="list-layout">
+									<span class="marker">15.</span>
+									<span class="text">J-STAGE Data</span>
+								</h2>
+								<div class="thumb-layout">
+									<p>
+										J-STAGE Dataは、J-STAGEで公開され記事に関連するデータを登載・公開できるデータリポジトリサービスです。J-STAGEの標準機能である電子付録とは異なり、J-STAGE Dataで公開したデータには個別にDOI、メタデータが付与され、データ単独で流通可能です。J-STAGE Dataの利用には別途申し込み・審査が必要となります。<br />
+										J-STAGE Dataの詳細は、各種サービス・機能の「<a href="https://www.jstage.jst.go.jp/static/pages/JstageServices/TAB5/-char/ja" class="bluelink-style readmore" rel="noopener noreferrer">データリポジトリ</a>」をご確認ください。
+									</p>
+									<div class="thumb-box">
+										<img width=300px class="thumb" src="/html/images/ForPublishers/TAB2/img18.png">
+									</div>
+								</div>
+							</article>
+						</li>
+					</ol>
+				</div>
+			</div>
+			<!-- RIGHT SECTION :: END -->
+			
+		</div>
+	</div>
+	<!-- TERMS AND POLICIES :: END -->
+
+	<!-- TAKE ME TO TOP :: START -->
+	<a href="#0" class="take-on-top">Top</a>
+	<!-- TAKE ME TO TOP :: END -->
+
+</main>
+<!-- MAIN :: END -->
+
+<!-- FOOTER :: START -->
+<span class="noprint">
+<footer class="footer-style2">
+<div class="footer-wrap print-non-disp">
+	<a href="#0" class="take-on-top1">Top</a>
+	<div class="container">
+		<div class="footer-link-section">
+						<div class="footer-link-heading">資料・記事を探す</div>
+			<ul class="footer-link-list">
+				<li><a href="/journal/list/-char/ja">資料を探す：資料タイトルから</a></li>
+				<li><a href="/journal/fields/-char/ja">資料を探す：分野から</a></li>
+				<li><a href="/journal/publisher/-char/ja">資料を探す：発行機関から</a></li>
+				<li><a href="/search/global/_search/-char/ja">記事を探す</a></li>
+				<li><a href="https://jstagedata.jst.go.jp/" target="_blank" rel="noopener noreferrer">データを探す(J-STAGE Data) <img src="/web/images/information-tab2/bg-arrow-white.png" width="13" height="10" alt=""></a></li>
+			</ul>
+		</div>
+
+		<div class="footer-link-section">
+						<div class="footer-link-heading">J-STAGEについて</div>
+			<ul class="footer-link-list">
+				<li><a href="https://www.jstage.jst.go.jp/static/pages/JstageOverview/-char/ja">J-STAGEの概要</a></li>
+				<li><a href="https://www.jstage.jst.go.jp/static/pages/JstageServices/TAB1/-char/ja">各種サービス・機能</a></li>
+				<li><a href="https://www.jstage.jst.go.jp/static/pages/PublicDataAboutJstage/-char/ja">公開データ</a></li>
+				<li><a href="https://www.jstage.jst.go.jp/static/pages/TermsAndPolicies/ForIndividuals/-char/ja">利用規約・ポリシー</a></li>
+ <li><a href="https://www.jstage.jst.go.jp/static/pages/ForPublishers/TAB1/-char/ja">新規登載の申し込み</a></li>			</ul>
+		</div>
+		<div class="footer-link-section">
+						<div class="footer-link-heading">ニュース&PR</div>
+			<ul class="footer-link-list">
+				<li><a href="https://www.jstage.jst.go.jp/static/pages/News/TAB1/Current/Page1/-char/ja">お知らせ一覧</a></li>
+ <li><a href="https://www.jstage.jst.go.jp/static/pages/News/TAB5/Page1/-char/ja">リリースノート</a></li> 				<li><a href="https://www.jstage.jst.go.jp/static/pages/News/TAB2/Page1/-char/ja">メンテナンス情報</a></li>
+ <li><a href="https://www.jstage.jst.go.jp/static/pages/News/TAB4/Page1/-char/ja">イベント情報</a></li>  <li><a href="https://www.jstage.jst.go.jp/static/pages/News/TAB3/Page1/-char/ja">J-STAGEニュース</a></li> 				<li><a href="https://www.jstage.jst.go.jp/static/pages/News/TAB6/Page1/-char/ja">特集コンテンツ </a></li>
+				<li><a href="https://www.jstage.jst.go.jp/static/pages/News/TAB7/Page1/-char/ja">各種広報媒体 </a></li>
+			</ul>
+		</div>
+		<div class="footer-link-section">
+						<div class="footer-link-heading">サポート</div>
+			<ul class="footer-link-list">
+ <li><a href="https://www.jstage.jst.go.jp/static/pages/InformationForSocieties/TAB1/-char/ja">J-STAGE登載機関用コンテンツ</a></li>  <li><a href="https://www.jstage.jst.go.jp/static/pages/GuidelineAndManuals/TAB1/-char/ja">登載ガイドライン・マニュアル</a></li> 				<li><a href="https://www.jstage.jst.go.jp/static/pages/ForReaders/-char/ja">閲覧者向けヘルプ</a></li>
+				<li><a href="https://www.jstage.jst.go.jp/static/pages/RecommendedEnvironment/-char/ja">動作確認済みブラウザ</a></li>
+ <li><a href="https://www.jstage.jst.go.jp/static/pages/FAQs/TAB2/-char/ja">FAQ</a></li> 				<li><a href="https://www.jstage.jst.go.jp/static/pages/Contact/-char/ja">お問い合わせ </a></li>
+				<li><a href="https://www.jstage.jst.go.jp/static/pages/Sitemap/-char/ja">サイトマップ </a></li>
+			</ul>
+		</div>
+
+		<div class="clearfix"></div>
+				<div class="clearfix"></div>
+	</div>
+</div>
+</footer>
+</span>
+<!-- FOOTER :: END -->
+<!-- FEEDBACK BUTTON :: START -->
+<span class="noprint print-non-disp">
+<div id="right-feedback-btn"><a href="https://form2.jst.go.jp/s/jstage-feedback-ja" target="_blank" rel="noopener noreferrer">feedback</a></div>
+</span>
+<!-- FEEDBACK BUTTON :: END -->
+<!-- TAKE ME TO TOP :: START -->
+<a href="#0" class="take-on-top" style="z-index:inherit">Top</a>
+<!-- TAKE ME TO TOP :: END -->
+
+<script src="/web/js/jquery.min.js"></script>
+<!-- Include all compiled plugins (below) -->
+<script src="/web/js/bootstrap.js"></script>
+
+<script src="/web/js/bootstrap.offcanvas.min.js"></script>
+
+<script src="/web/js/bootstrap-tabdrop.min.js"></script>
+
+<script src="/web/js/modernizr.js"></script>
+
+	<script src="/web/js/jquery.hc-sticky.min.js"></script>
+
+<script src="/web/js/jquery.touchSwipe.min.js"></script>
+
+<script src="/web/js/jquery.advancedSlider.min.js"></script>
+
+<script src="/web/js/jquery-navtoselect.min.js?rn=2.3.9"></script>
+
+<script src="/web/js/jquery.treefilter.min.js"></script>
+
+<script src="/web/js/jquery.jplayer.min.js"></script>
+
+<script src="/web/js/jquery.coolfieldset.min.js"></script>
+
+<script src="/web/js/select2.full.min.js"></script>
+
+<script src="/web/js/prettify.min.js"></script>
+
+<script src="/web/js/common.js?rn=2.3.9"></script>
+
+<script src="/web/js/tableHeadFixe.min.js"></script>
+
+<script src="/web/js/validation.js?rn=2.3.9"></script>
+
+<script>
+$(document).ready(function () {
+if(('localStorage' in window) && (window.localStorage !== null)) {
+	if(localStorage.getItem('C.regsticky') != 'off'){
+	$('#sticky-register-to-j-stage').show();
+	}
+}
+$('.dropdown-toggle').on('click', function(E) {
+	$(this).find('.glyphicon').toggleClass("glyphicon-chevron-up");
+	$(this).find('.glyphicon').toggleClass("glyphicon-chevron-down");
+});
+$('[data-toggle="tooltip"]').tooltip({});
+$('.warningtooltip').tooltip();
+
+});
+function registerStickyClose(){
+	$("#sticky-register-to-j-stage").hide();
+	if(('localStorage' in window) && (window.localStorage !== null)) {
+		localStorage.setItem('C.regsticky', 'off');
+	}
+}
+function doChangeLang(langKind){
+
+	if (typeof changeLang == "function")  {
+				changeLang(langKind);
+		return;
+
+	} else {
+				var encStr = "";
+		if(langKind == "ja") {
+			encStr = "https%3A%2F%2Fwww.jstage.jst.go.jp%2Fstatic%2Fpages%2FForPublishers%2FTAB2%2F-char%2Fja";
+		} else {
+			encStr = "https%3A%2F%2Fwww.jstage.jst.go.jp%2Fstatic%2Fpages%2FForPublishers%2FTAB2%2F-char%2Fen";
+		}
+		location.href = decodeURIComponent(encStr);
+		return;
+	}
+}
+function hBack(){
+		var ans;
+		var ref = document.referrer;
+		re = new RegExp(location.hostname,"i");
+		if(ref.match(re)){
+				ans = false;
+		}else{
+				ans = true
+		}
+		if(!ans){
+			history.back();
+		} else {
+			location.href = "https://www.jstage.jst.go.jp/browse/-char/ja";
+		}
+}
+</script>
+</body>
+</html>

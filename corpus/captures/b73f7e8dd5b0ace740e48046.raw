@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Fact Extraction and VERification</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/google-fonts.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    
+    <script type="application/ld+json">
+        {
+            "inLanguage": {
+                "alternateName": "eng",
+                "@type": "Language",
+                "name": "English"
+            },
+            "description": "AVeriTeC (Automated Verification of Textual Claims) aims to evaluate the ability of systems to verify real-world claims with evidence from the Web.",
+            "license": "https://creativecommons.org/licenses/by-sa/3.0/legalcode",
+            "creator": [
+                {
+                    "affiliation": "University of Cambridge",
+                    "@type": "Person",
+                    "name": "Schlichtkrull, Michael Sejr"
+                },
+                {
+                    "affiliation": "University of Cambridge",
+                    "@type": "Person",
+                    "name": "Guo, Zhijiang"
+                },
+                {
+                    "affiliation": "University of Cambridge",
+                    "@id": "https://orcid.org/0000-0003-2123-5071",
+                    "@type": "Person",
+                    "name": "Vlachos, Andreas"
+                }
+            ],
+            "url": "https://proceedings.neurips.cc/paper_files/paper/2023/hash/cd86a30526cd1aff61d6f89f107634e4-Abstract-Datasets_and_Benchmarks.html",
+            "datePublished": "2023-12-10",
+            "keywords": [
+                "fact verification",
+                "natural language processing",
+                "machine learning"
+            ],
+            "@context": "https://schema.org/",
+            "distribution": [
+                {
+                    "contentUrl": "https://github.com/MichSchli/AVeriTeC/blob/main/data/train.json",
+                    "encodingFormat": "json",
+                    "@type": "DataDownload"
+                },
+                {
+                    "contentUrl": "https://github.com/MichSchli/AVeriTeC/blob/main/data/dev.json",
+                    "encodingFormat": "json",
+                    "@type": "DataDownload"
+                }
+            ],
+            "identifier": "https://proceedings.neurips.cc/paper_files/paper/2023/hash/cd86a30526cd1aff61d6f89f107634e4-Abstract-Datasets_and_Benchmarks.html",
+            "@id": "https://proceedings.neurips.cc/paper_files/paper/2023/hash/cd86a30526cd1aff61d6f89f107634e4-Abstract-Datasets_and_Benchmarks.html",
+            "@type": "Dataset",
+            "name": "AVeriTeC: Automated Verification of Textual Claims"
+        }
+    </script>
+
+</head>
+<body>
+
+
+<nav class="navbar navbar-dark navbar-expand-lg px-3" style="background-color: #506ea0;">
+    <a class="navbar-brand" href="/">
+        <img src="/static/img/logo_white_sm.png" width="66" height="30" class="d-inline-block align-top" alt="Fact Extraction and VERification logo">
+        <!--Fact Extraction and VERification-->
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ms-auto justify-content-end">
+            <li class="nav-item">
+                <a class="nav-link " href="/index.html">About</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link " href="/workshop.html">Workshop</a>
+            </li>
+
+            
+            <li class="nav-item">
+                <a class="nav-link " href="/task.html">Shared Task</a>
+            </li>
+            
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle  active" href="#" id="navbarDropdownDatasets" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Datasets
+                </a>
+                <div class="dropdown-menu fixed-top" aria-labelledby="navbarDropdownDatasets">
+                    
+                        <a class="dropdown-item" href="/dataset/fever.html">FEVER (2018)</a>
+                    
+                        <a class="dropdown-item" href="/dataset/adversarial.html">FEVER 2.0 (2019)</a>
+                    
+                        <a class="dropdown-item" href="/dataset/feverous.html">FEVEROUS (2021)</a>
+                    
+                        <a class="dropdown-item" href="/dataset/averitec.html">AVERITEC (2024)</a>
+                    
+                        <a class="dropdown-item" href="/dataset/averitec.html">AVERITEC 2.0 (2025)</a>
+                    
+                        <a class="dropdown-item" href="/dataset/averimatec.html">AVERIMATEC (2026)</a>
+                    
+                    <a class="dropdown-item" href="/dataset_viewer/averitec/0.html">Dataset Viewer</a>
+
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle " href="#" id="navbarDropdownWorkshops" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Past Workshops
+                </a>
+                <div class="dropdown-menu fixed-top" aria-labelledby="navbarDropdownWorkshops">
+                    
+                        <a class="dropdown-item" href="/2018/workshop.html">FEVER (2018)</a>
+                    
+                        <a class="dropdown-item" href="/2019/workshop.html">FEVER 2.0 (2019)</a>
+                    
+                        <a class="dropdown-item" href="/2020/workshop.html">FEVER 3 (2020)</a>
+                    
+                        <a class="dropdown-item" href="/2021/workshop.html">FEVER 4 (2021)</a>
+                    
+                        <a class="dropdown-item" href="/2022/workshop.html">FEVER 5 (2022)</a>
+                    
+                        <a class="dropdown-item" href="/2023/workshop.html">FEVER 6 (2023)</a>
+                    
+                        <a class="dropdown-item" href="/2024/workshop.html">FEVER 7 (2024)</a>
+                    
+                        <a class="dropdown-item" href="/2025/workshop.html">FEVER 8 (2025)</a>
+                    
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle " href="#" id="navbarDropdownTasks" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Past Shared Tasks
+                </a>
+                <div class="dropdown-menu fixed-top" aria-labelledby="navbarDropdownTasks">
+                   
+                        <a class="dropdown-item" href="/2018/task.html">FEVER (2018)</a>
+                   
+                        <a class="dropdown-item" href="/2019/task.html">FEVER 2.0 (2019)</a>
+                   
+                        <a class="dropdown-item" href="/2021/task.html">FEVEROUS (2021)</a>
+                   
+                        <a class="dropdown-item" href="/2024/task.html">AVeriTeC (2024)</a>
+                   
+                        <a class="dropdown-item" href="/2025/task.html">AVeriTeC 2.0 (2025)</a>
+                   
+
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+
+    <!-- <div class="pr-3 text-end float-right"> -->
+    <div class="p-3">
+        <a class="btn btn-block btn-outline-secondary" href="../dataset_viewer/averitec/0.html" role="button"><i class="bi bi-search">View the dataset here</i></a>
+    </div>
+    <header class="mt-1" id="header">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-lg-10 col-xl-10 mx-auto">
+                    <h1 class="text-center">AVeriTeC Dataset</h1>
+                </div>
+            </div>
+            <p>
+                AVeriTeC (Automated Verification of Textual Claims) is a dataset of 4568 real-world claims covering
+                fact-checks by 50 different organizations. Each claim is annotated with question-answer pairs supported
+                by evidence available online, as well as textual justifications explaining how the evidence combines to
+                produce a verdict. The Claims in AVeriTeC are classified into four labels: "Supported", "Refuted", "Not
+                Enough Evidence", "Conflicting Evidence/Cherry-picking". The dataset also contains several fields of
+                metadata such as the speaker of the claim, the publisher of the claim, the date the claim was published,
+                and the location most relevant to the claim. These can be used to support questions, answers, and
+                justifications.
+            </p>
+        </div>
+    </header>
+
+    <section>
+        <div class="container">
+            <h2>Download Links</h2>
+            <ul>
+                <li><a href="https://huggingface.co/chenxwh/AVeriTeC/tree/main/data">Training Dataset</a></li>
+                <li><a href="https://huggingface.co/chenxwh/AVeriTeC/tree/main/data">Development Dataset</a> </li>
+                <li><a href="https://huggingface.co/chenxwh/AVeriTeC/tree/main/data_store/knowledge_store">Evidence Collection Provided</a> (Google Search API, Fever 7) </li>
+                <li><a href="https://huggingface.co/chenxwh/AVeriTeC/tree/main/data">Shared Task Blind Test Dataset</a> (Fever 7) </li>
+                <li><a href="https://huggingface.co/chenxwh/AVeriTeC/blob/main/src/prediction/evaluate_veracity.py">Evaluation Script </a> (Fever 7) </li>
+                <li><a href="https://drive.google.com/drive/folders/1DzcJogH3592Ibv19uFWUI84FpbL7NCcC">Evidence Collection Provided</a> (Google Search API, Fever 8) </li>
+                <li><a href="https://drive.google.com/drive/folders/1DzcJogH3592Ibv19uFWUI84FpbL7NCcC">Shared Task Blind Test Dataset</a> (Fever 8) </li>
+                <li><a href="https://github.com/Raldir/FEVER-8-Shared-Task/blob/main/averitec_evaluate.py">Evaluation Script </a> (Fever 8) </li>
+                <li><a href="https://creativecommons.org/licenses/by-nc/4.0/">License</a></li>
+            </ul>
+        </div>
+        <div class="container">
+            <h2>Citations</h2>
+            <p>
+                <a href="https://proceedings.neurips.cc/paper_files/paper/2023/hash/cd86a30526cd1aff61d6f89f107634e4-Abstract-Datasets_and_Benchmarks.html">AVERITEC: A Dataset for Real-world Claim Verification with Evidence from the Web</a>
+                <br>
+                Michael Schlichtkrull, Zhijiang Guo, Andreas Vlachos
+            </p>
+            <pre style="color:brown">@inproceedings{
+  schlichtkrull2023averitec,
+  title={AVeriTeC: A Dataset for Real-world Claim Verification with Evidence from the Web},
+  author={Michael Sejr Schlichtkrull and Zhijiang Guo and Andreas Vlachos},
+  booktitle={Thirty-seventh Conference on Neural Information Processing Systems Datasets and Benchmarks Track},
+  year={2023},
+  url={https://openreview.net/forum?id=fKzSz0oyaI}
+}</pre>
+
+<!--            <p>You can also cite the dataset directly using its DOI: <a href="https://doi.org/10.5281/zenodo.4911507">https://doi.org/10.5281/zenodo.4911508</a> </p>-->
+        </div>
+        <div class="container">
+            <h2>Data Format</h2>
+            <p>The dataset is formatted as JSON, with each split located as a separate file in the data-folder.</p>
+            <h4>Training/Development Data format</h4>
+            <p>Each claim is an object of the following form:</p>
+            <ul>
+                <li><code style="display: inline;">claim</code>: The claim text itself. </li>
+                <li><code style="display: inline;">required_reannotation</code>: True or False. Denotes that the claim received a second round of QG-QA and quality control annotation. </li>
+                <li><code style="display: inline;">label</code>: The annotated verdict for the claim. </li>
+                <li><code style="display: inline;">justification</code>: A textual justification explaining how the verdict was reached from the question-answer pairs. </li>
+                <li><code style="display: inline;">claim_date</code>: Our best estimate for the date the claim first appeared. </li>
+                <li><code style="display: inline;">speaker</code>: The person or organization that made the claim, e.g. Barrack Obama, The Onion. </li>
+                <li><code style="display: inline;">original_claim_url</code>: If the claim first appeared on the internet, a url to the original location. </li>
+                <li><code style="display: inline;">cached_original_claim_url</code>: Where possible, an archive.org link to the original claim url. </li>
+                <li><code style="display: inline;">fact_checking_article</code>: The fact-checking article we extracted the claim from. </li>
+                <li><code style="display: inline;">reporting_source</code>: The website or organization that first published the claim, e.g. Facebook, CNN. </li>
+                <li><code style="display: inline;">location_ISO_code</code>: The location most relevant for the claim. Highly useful for search. </li>
+                <li><code style="display: inline;">claim_types</code>: The types of the claim. </li>
+                <li><code style="display: inline;">fact_checking_strategies</code>: The strategies employed in the fact-checking article". </li>
+                <li><code style="display: inline;">questions</code>:
+                    <ul>
+                        <li><code style="display: inline;">question</code>: A fact-checking question for the claim. </li>
+                        <li><code style="display: inline;">answers</code>:
+                            <ul>
+                                <li><code style="display: inline;">answer</code>: The answer to the question. </li>
+                                <li><code style="display: inline;">answer_type</code>: Whether the answer was abstractive, extractive, boolean, or unanswerable. </li>
+                                <li><code style="display: inline;">source_url</code>: The answer to the question. </li>
+                                <li><code style="display: inline;">cached_source_url</code>: An archive.org link for the source url. </li>
+                                <li><code style="display: inline;">source_medium</code>: The medium the answer appeared in, e.g. web text, a pdf, or an image. </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Below are four examples of the data structure.</p>
+            <h5>Supported Example</h5>
+            <pre><code>
+            {
+                "claim": "Hunter Biden had no experience in Ukraine or in the energy sector when he joined the board of Burisma.",
+                "required_reannotation": false,
+                "label": "Supported",
+                "justification": "No former experience stated.",
+                "claim_date": "25-8-2020",
+                "speaker": "Pam Bondi",
+                "original_claim_url": null,
+                "cached_original_claim_url": null,
+                "fact_checking_article": "https://web.archive.org/web/20210111003633/https://www.politifact.com/article/2020/aug/26/fact-checking-second-night-2020-rnc/",
+                "reporting_source": "Speech at The Republican National Convention",
+                "location_ISO_code": "US",
+                "claim_types": [
+                    "Position Statement"
+                ],
+                "fact_checking_strategies": [
+                    "Written Evidence"
+                ],
+                "questions": [
+                    {
+                        "question": "Did Hunter Biden have any experience in the energy sector at the time he joined the board of the  Burisma energy company in 2014",
+                        "answers": [
+                            {
+                                "answer": "No",
+                                "answer_type": "Boolean",
+                                "source_url": "https://en.wikipedia.org/wiki/Hunter_Biden",
+                                "source_medium": "Web text",
+                                "boolean_explanation": "Hunter bidens previous career history does not include work for energy company's.",
+                                "cached_source_url": "https://web.archive.org/web/20230323135844/https://en.wikipedia.org/wiki/Hunter_Biden"
+                            }
+                        ]
+                    },
+                    {
+                        "question": "Did Hunter Biden have any experience in Ukraine at the time he joined the board of the  Burisma energy company in 2014",
+                        "answers": [
+                            {
+                                "answer": "No",
+                                "answer_type": "Boolean",
+                                "source_url": "https://en.wikipedia.org/wiki/Hunter_Biden",
+                                "source_medium": "Web text",
+                                "boolean_explanation": "Hunter Bidens previous career history does not include working with Ukrainian company's.",
+                                "cached_source_url": "https://web.archive.org/web/20230323135844/https://en.wikipedia.org/wiki/Hunter_Biden"
+                            }
+                        ]
+                    }
+                ],
+            }
+            </code></pre>
+
+            <h5>Refuted Example</h5>
+            <pre><code>
+            {
+                "claim": "Donald Trump delivered the largest tax cuts in American history.",
+                "required_reannotation": false,
+                "label": "Refuted",
+                "justification": "Three tax bills have been larger than that of Donald Trump",
+                "claim_date": "25-8-2020",
+                "speaker": "Eric Trump",
+                "original_claim_url": null,
+                "cached_original_claim_url": null,
+                "fact_checking_article": "https://web.archive.org/web/20210111003633/https://www.politifact.com/article/2020/aug/26/fact-checking-second-night-2020-rnc/",
+                "reporting_source": "Speech at The Republican National Convention",
+                "location_ISO_code": "US",
+                "claim_types": [
+                    "Numerical Claim"
+                ],
+                "fact_checking_strategies": [
+                    "Written Evidence",
+                    "Numerical Comparison"
+                ],
+                "questions": [
+                    {
+                        "question": "Did the 2017 tax bill deliver the largest tax cuts in American history?",
+                        "answers": [
+                            {
+                                "answer": "This tax cut is the 8th largest as a percent of Gross Domestic Product (GDP) since 1918 and the 4th largest in inflation-adjusted dollars.",
+                                "answer_type": "Abstractive",
+                                "source_url": "https://www.crfb.org/blogs/president-trumps-tax-cut-largest-history-yet",
+                                "source_medium": "Web text",
+                                "cached_source_url": "https://web.archive.org/web/20230202181046/https://www.crfb.org/blogs/president-trumps-tax-cut-largest-history-yet"
+                            }
+                        ]
+                    },
+                    {
+                        "question": "Has there been larger tax bills than the 2017 tax bill?",
+                        "answers": [
+                            {
+                                "answer": "Three tax bills have been larger: American Taxpayer Relief Act of 2012 (enacted in 2013); \nTax Relief, Unemployment Insurance Reauthorization, and Job Creation Act of 2010 and\nEconomic Recovery Tax Act of 1981",
+                                "answer_type": "Abstractive",
+                                "source_url": "https://www.treasury.gov/resource-center/tax-policy/tax-analysis/Documents/WP81-Table2013.pdf",
+                                "source_medium": "Web table",
+                                "cached_source_url": "https://web.archive.org/web/20230420092455/https://home.treasury.gov/"
+                            }
+                        ]
+                    }
+                ],
+            }
+            </code></pre>
+
+            <h5>Not Enough Evidence Example</h5>
+            <pre><code>
+            {
+                "claim": "Kenya had a population of about 48 million with one judge serving over 300,000 people in 2019.",
+                "required_reannotation": false,
+                "label": "Not Enough Evidence",
+                "justification": "From the question and answer pairs, there is not enough evidence to label the claim. Therefore, it is not enough evidence.",
+                "claim_date": "23-8-2020",
+                "speaker": "David Maraga ",
+                "original_claim_url": "https://www.youtube.com/watch?v=xb0LoEBc6_o&feature=youtu.be&t=761",
+                "cached_original_claim_url": "https://web.archive.org/web/20230420110107/https://www.youtube.com/watch?v=xb0LoEBc6_o&feature=youtu.be&t=761"
+                "fact_checking_article": "https://web.archive.org/web/20210127231105/https://africacheck.org/fact-checks/reports/factchecking-kenyas-chief-justice-judiciary-funding-and-backlog-cases",
+                "reporting_source": "Youtube: NTV Kenya",
+                "location_ISO_code": "KE",
+                "claim_types": [
+                    "Numerical Claim"
+                ],
+                "fact_checking_strategies": [
+                    "Numerical Comparison"
+                ],
+                "questions": [
+                    {
+                        "question": "According to the 2019 census data what was the population of Kenya?",
+                        "answers": [
+                            {
+                                "answer": "Posted on November 4, 2019\nThe total enumerated population was 47,564,296",
+                                "answer_type": "Extractive",
+                                "source_url": "https://www.knbs.or.ke/?p=5621",
+                                "source_medium": "Web text",
+                                "cached_source_url": "https://web.archive.org/web/20230328172723/https://www.knbs.or.ke/?p=5621"
+                            }
+                        ]
+                    },
+                    {
+                        "question": "How many judges were there as of June 2019?",
+                        "answers": [
+                            {
+                                "answer": "No answer could be found.",
+                                "answer_type": "Unanswerable",
+                                "source_url": "",
+                                "source_medium": ""
+                            }
+                        ]
+                    }
+                ],
+            }
+            </code></pre>
+
+            <h5>Conflicting Evidence/Cherrypicking Example</h5>
+            <pre><code>
+            {
+                "claim": "Anxiety levels among young teenagers dropped during the coronavirus pandemic, a study has suggested",
+                "required_reannotation": false,
+                "label": "Conflicting Evidence/Cherrypicking",
+                "justification": "One study shows anxiety dropping amongst young teenagers, but another study shows it depends on age and whether child will be receiving exam results.",
+                "claim_date": "23-8-2020",
+                "speaker": null,
+                "original_claim_url": null,
+                "cached_original_claim_url": null
+                "fact_checking_article": "https://web.archive.org/web/20201126085147/https://fullfact.org/health/child-anxiety-pandemic/",
+                "reporting_source": "Media Outlets",
+                "location_ISO_code": null,
+                "claim_types": [
+                    "Causal Claim"
+                ],
+                "fact_checking_strategies": [
+                    "Written Evidence",
+                    "Consultation"
+                ],
+                "questions": [
+                    {
+                        "question": "What study is this based on?",
+                        "answers": [
+                            {
+                                "answer": "The study was based on a survey of around 1,000 year 9 students in the south west of England. It found that students reported lower levels of anxiety when surveyed in April and May of this year compared to October 2019. \n\nIt also found an increase in wellbeing but \u201cno large change in risk of depression.\u201d",
+                                "answer_type": "Abstractive",
+                                "source_url": "https://web.archive.org/web/20201126085147/https://sphr.nihr.ac.uk/wp-content/uploads/2020/08/Young-Peoples-Mental-Health-during-the-COVID-19-Pandemic-Report.pdf",
+                                "source_medium": "Web text",
+                                "cached_source_url": "https://web.archive.org/web/20201126085147/https://sphr.nihr.ac.uk/wp-content/uploads/2020/08/Young-Peoples-Mental-Health-during-the-COVID-19-Pandemic-Report.pdf"
+                            }
+                        ]
+                    },
+                    {
+                        "question": "Is this study backed up by further research?",
+                        "answers": [
+                            {
+                                "answer": "There\u2019s nothing wrong with this study in terms of its method or what it claims, but it shouldn\u2019t necessarily be taken to represent the experience of all children across the country. \n\nIt can\u2019t rule out the possibility that the mental toll of the pandemic may have been different across different parts of the country, and for people of different ages. \n\nFor example, a study out of the University of Oxford, asked parents and carers to report any changes in behavior of their children during a one-month period in lockdown. It found that while parents and carers reported that the emotional difficulties of adolescents decreased, the emotional difficulties of children aged four to ten increased. \n\nAlso a potential contributor to feelings of anxiety among students during the pandemic has been the uncertainty over exam results, which would have primarily affected students in years 11 and 13, not year 9 (as the study itself notes).",
+                                "answer_type": "Abstractive",
+                                "source_url": "https://web.archive.org/web/20201126085147/https://www.ox.ac.uk/news/2020-06-16-children-show-increase-mental-health-difficulties-over-covid-19-lockdown",
+                                "source_medium": "Web text",
+                                "cached_source_url": "https://web.archive.org/web/20201126085147/https://www.ox.ac.uk/news/2020-06-16-children-show-increase-mental-health-difficulties-over-covid-19-lockdown"
+                            }
+                        ]
+                    }
+                ],
+            }
+            </code></pre>
+        </div>
+    </section>
+
+
+<footer class="footer bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12 footer_text">
+            <a href="https://join.slack.com/t/feverworkshop/shared_invite/zt-4v1hjl8w-Uf4yg~diftuGvj2fvw7PDA">Contact us on Slack</a><br />
+            </div>
+            <div class="col-xl-12 footer_text build_info">
+                
+                Build info: refs/heads/live build 385<br />Last updated: 2026-04-02T10:58:13.945736
+                
+            </div>
+
+        </div>
+    </div>
+</footer>
+
+<script src="/static/js/jquery-3.6.0.min.js"></script>
+<script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+
+<script>
+    const offsetFromUTC = Math.floor(new Date().getTimezoneOffset() / 60);
+    const offsetFromPuntaCana = offsetFromUTC+1;
+    const originalHours = $('.event-time').map(function() {
+        return [$(this).text().trim().split(/:|-/)];
+    });
+
+    $('input:radio[name=timezone]').on('change', function (){
+        $('.event-time').each(
+            function(index){
+                if ($(this).text().trim() !== '') {
+                    const times = originalHours[index];
+                    let offset;
+                    if ($('#timezone-local').is(":checked"))
+                        offset = offsetFromPuntaCana;
+                    else
+                        offset = 0;
+                    let hour1 = parseInt(times[0]) - offset;
+                    let hour2 = parseInt(times[2]) - offset;
+                    $(this).text(hour1 + ':' + times[1] + '-' + hour2 + ':' + times[3]);
+                }
+            })
+        }
+    );
+</script>
+
+
+
+
+
+</body>
+</html>

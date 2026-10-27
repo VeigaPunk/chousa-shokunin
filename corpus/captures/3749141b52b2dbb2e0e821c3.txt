@@ -1,0 +1,678 @@
+                                     The Thirty-Eighth AAAI Conference on Artificial Intelligence (AAAI-24)
+
+
+
+
+               CFEVER: A Chinese Fact Extraction and VERification Dataset
+                              Ying-Jia Lin, Chun-Yi Lin, Chia-Jen Yeh, Yi-Ting Li,
+                            Yun-Yu Hu, Chih-Hao Hsu, Mei-Feng Lee, Hung-Yu Kao
+      Department of Computer Science and Information Engineering, National Cheng Kung University, Tainan, Taiwan
+                               yingjia.lin.public@gmail.com, hykao@mail.ncku.edu.tw
+
+
+
+                          Abstract                                            Claim: 尼克·貝爾格在 2004 年前往中東尋找生
+  We present CFEVER, a Chinese dataset designed for Fact                      意商機。(Nick Berg traveled to the Middle East in
+  Extraction and VERification. CFEVER comprises 30,012                        2004 looking for business opportunities.)
+  manually created claims based on content in Chinese
+  Wikipedia. Each claim in CFEVER is labeled as “Supports”,                   Evidence:
+  “Refutes”, or “Not Enough Info” to depict its degree of fac-                [wiki/尼克·貝爾格 (Nick Berg)]
+  tualness. Similar to the FEVER dataset, claims in the “Sup-
+  ports” and “Refutes” categories are also annotated with cor-                他在 2004 年 3 月前往伊拉克 尋找通訊生意商機，自
+  responding evidence sentences sourced from single or mul-                   2004 年 4 月 9 日失蹤。(He went to Iraq in March
+  tiple pages in Chinese Wikipedia. Our labeled dataset holds                 2004 to search for communication business opportu-
+  a Fleiss’ kappa value of 0.7934 for five-way inter-annotator                nities and has been missing since April 9, 2004.)
+  agreement. In addition, through the experiments with the
+  state-of-the-art approaches developed on the FEVER dataset                  [wiki/伊拉克 (Iraq)]
+  and a simple baseline for CFEVER, we demonstrate that our                   伊拉克共和國，通稱伊拉克，位於西亞—中東地區
+  dataset is a new rigorous benchmark for factual extraction
+                                                                              的共和國。(The Republic of Iraq, commonly known
+  and verification, which can be further used for developing
+  automated systems to alleviate human fact-checking efforts.                 as Iraq, is a republic located in West Asia -
+  CFEVER is available at https://ikmlab.github.io/CFEVER.                     the Middle East.)
+                                                                              Verdict: Supports
+                       Introduction
+Fact verification involves assessing the truthfulness of                    Table 1: An example from the CFEVER dataset. Underlined
+claims presented in text or speech. In recent years, the pop-               words indicate knowledge that should be verified from other
+ularization of media platforms has accelerated the spread of                pages in Wikipedia.
+misinformation, making fact verification a critical task to
+prevent the public from being exposed to false information.
+However, the process of fact verification typically involves
+                                                                            as a benchmark for fact verification, the dataset and most of
+extensive searches and assessments from many potential
+                                                                            the other fact verification datasets (Wang 2017; Hanselowski
+sources conducted by journalists, which is time-consuming
+                                                                            et al. 2019; Schuster, Fisch, and Barzilay 2021) are created
+and labor-intensive (Guo, Schlichtkrull, and Vlachos 2022).
+                                                                            in English. The dissemination of rumors and fake news is a
+Consequently, it is imperative to develop automated fact ver-
+                                                                            serious problem in East Asia, especially in China. Compared
+ification systems to speed up the verification process.
+                                                                            to English, text written in Chinese tends to be more ambigu-
+   In recent years, researchers have been building fact-
+                                                                            ous and nuanced, making it more difficult for people to iden-
+verification systems with deep neural networks (Ma et al.
+                                                                            tify misinformation. Therefore, it is critical to create a clean
+2016), where the models are provided with a claim and re-
+                                                                            and high-quality dataset as supervised data for Chinese fact
+quired to determine whether the claim is true or false. A
+                                                                            verification. To achieve this goal, Hu et al. (2022) proposed
+well-established dataset for fact verification is FEVER (Fact
+                                                                            the CHEF dataset from the sources of the fact-checking and
+Extraction and VERification) (Thorne et al. 2018a) and its
+                                                                            news websites. However, compared to English fact verifi-
+shared task (Thorne et al. 2018b). FEVER asks models to ex-
+                                                                            cation datasets (Augenstein et al. 2019; Kotonya and Toni
+tract factual sentences as evidence from the fixed Wikipedia
+                                                                            2020), the size of CHEF is relatively small, making training
+database and provide a verdict for a given claim. There-
+                                                                            and evaluating fact verification systems challenging. A po-
+fore, the task serves for both verification and evidence ex-
+                                                                            tential alternative for building Chinese fact verification sys-
+traction for claims. Though FEVER has been widely used
+                                                                            tems is to take advantage of the multilingual fact-checking
+Copyright © 2024, Association for the Advancement of Artificial             dataset (Nielsen and McConville 2022). Nevertheless, the
+Intelligence (www.aaai.org). All rights reserved.                           Chinese claims in the dataset are still limited in size.
+
+
+
+
+                                                                    18626
+                                     The Thirty-Eighth AAAI Conference on Artificial Intelligence (AAAI-24)
+
+
+                                                                                                                   Task
+     Dataset                                       #Claims           Source           Language       Document    Evidence      Claim
+                                                                                                     Retrieval   Retrieval   Verification
+     Weibo-16 (Ma et al. 2016)                      4,664           Weibo              Chinese           No         No          Yes*
+     Weibo-20 (Zhang et al. 2021)                   6,362           Weibo              Chinese           No         No          Yes*
+     MuMiN (Nielsen and McConville 2022)            1,283†         Tweets              Multi‡            No         No          Yes
+                                                                Fact-checking/
+     CHEF (Hu et al. 2022)                          10,000                             Chinese           No        Yes           Yes
+                                                                News websites
+     CFEVER                                         30,012         Wikipedia           Chinese           Yes       Yes           Yes
+                        * Rumor detection task. † Including Chinese and other languages. ‡ Multi-lingual dataset.
+
+                       Table 2: Comparison of CFEVER with other fact verification datasets in Chinese.
+
+
+   In this work, we present CFEVER, a Chinese dataset for                   VERification (FEVER) along with the dataset of the same
+Factual Extraction and VERification. Following FEVER’s                      name (Thorne et al. 2018a). FEVER is the currently largest
+construction process (Thorne et al. 2018a), we first built                  fact verification dataset that contains 185,445 claims. Each
+a fact database with the fixed version of the Chinese                       of the claims was first sampled from the sentences in the in-
+Wikipedia dump. Then, we hired several workers from                         troductory sections of approximately 50,000 popular pages
+our university to alter the extracted sentences from the                    and then revised by human annotators. In another round of
+Wikipedia pages and label each claim with “Supports”, “Re-                  annotation, the annotators label the claims as “Supports”,
+futes”, or “Not Enough Info” based on the Wikipedia pages                   “Refutes”, or “Not Enough Information”, and discover evi-
+in the fact database. The relevant factual sentences from the               dence sentences from Wikipedia pages. The following year,
+fact database were also annotated by our workers as evi-                    Thorne et al. (2019) introduced the FEVER 2.0 task to first
+dence for the claims belonging to the first two categories.                 generate adversarial claims to fool the existing verification
+Our CFEVER dataset includes 30,012 claims in total, which                   systems built with the FEVER dataset (Thorne et al. 2018a).
+are three times the size of CHEF (Hu et al. 2022). To                       Then the task required participants to improve the systems
+evaluate our labeling quality, we report the five-way inter-                to prevent such adversarial attacks. More recently, Aly et al.
+annotator agreement of 0.7934 in Fleiss κ (Fleiss 1971) us-                 (2021) proposed FEVEROUS and extended the fact verifica-
+ing 6.45% claims of our dataset, while the scores in FEVER                  tion task for verifying claims with the information in struc-
+and CHEF are 0.6841 and 0.74, measured from 4% and 3%                       tured data, such as tables in Wikipedia.
+of claims from the datasets, respectively.                                     Nørregaard and Derczynski (2021) follow the annota-
+   To thoroughly assess the challenges of CFEVER, follow-                   tion process of FEVER and propose a new FEVER dataset
+ing the FEVER task (Thorne et al. 2018b), we conduct ex-                    (Thorne et al. 2018a) in Danish. Jiang et al. (2020) report
+periments on the three stages: document retrieval, sentence                 that 87% of the claims in the FEVER dataset (Thorne et al.
+retrieval, and claim verification. We test the performance for              2018a) require only a single Wikipedia page for verification,
+each stage and the full-pipeline setting with the state-of-the-             which does not support real-world situations where mis-
+art approaches (Stammbach 2021; DeHaven and Scott 2023)                     information may come from multiple articles. Thus, Jiang
+developed on FEVER and our simple baseline (Robertson,                      et al. (2020) propose a new dataset containing 26K claims
+Zaragoza et al. 2009; Soleimani, Monz, and Worring 2020)                    for multi-hop reasoning based on the building process of
+along with oracle experiments to dive into the challenges of                FEVER.
+CFEVER. Further extensive analysis even reveals the char-
+acteristics and difficulty of CFEVER. In summary, we list                   Chinese Fact Verification
+our contributions as follows:                                               We compare CFEVER with other Chinese fact verifica-
+ • We present CFEVER, the currently largest Chinese                         tion datasets in Table 2. Existing Chinese fact verifica-
+    dataset for evidence-based fact verification.                           tion datasets mainly focus on rumor detection, such as the
+ • The five-way inter-annotator agreement of CFEVER in                      Weibo-16 (Ma et al. 2016) and Weibo-20 datasets (Zhang
+    Fleiss κ indicates that the dataset was built with high la-             et al. 2021). In this work, we focus on both the fact extraction
+    bel consistency among claims.                                           and verification tasks, which are different from the binary
+ • Extensive experiments on CFEVER show that the pro-                       claim detection in rumor detection (Guo, Schlichtkrull, and
+    posed dataset can serve as a challenging benchmark for                  Vlachos 2022). The dataset closest to our work is CHEF (Hu
+    future research or development on Chinese fact verifica-                et al. 2022), which is a pilot Chinese dataset for evidence-
+    tion.                                                                   based fact-checking. There are two main differences be-
+                                                                            tween CHEF and our dataset. First, CHEF is created from
+                                                                            the sources of fact-checking websites, while our dataset is
+                      Related Work                                          created from Wikipedia. Second, there is no document re-
+FEVER                                                                       trieval process in the task of CHEF, with candidate evidence
+Thorne et al. (2018b) created the task of Fact Extraction and               sentences provided for each claim in the dataset. In contrast,
+
+
+
+
+                                                                    18627
+                                     The Thirty-Eighth AAAI Conference on Artificial Intelligence (AAAI-24)
+
+
+we follow FEVER (Thorne et al. 2018a) to provide a fixed                       Politics
+fact database and ask models to first extract relevant docu-                   2.7%
+                                                                               Technology
+ments from Wikipedia before verifying the claims with the                      2.9%
+                                                                                                                                   People
+                                                                                                                                   24.4%
+evidence sentences. We consider our approach, along with                       Films
+                                                                               3.9%
+FEVER (Thorne et al. 2018a), to be more realistic for real-                    Culture
+world fact verification scenarios.                                             7.0%
+                                                                               Lifestyle
+                                                                               9.0%
+                 Dataset Construction
+We followed the labeling approach of FEVER (Thorne et al.
+2018a) to create the CFEVER dataset and adapted the anno-                      Science                                               H&S
+tation platform1 publicly released by Thorne et al. (2018a)                    10.2%                                                16.0%
+for our construction task. The annotation process consists of
+two stages: claim generation and claim annotation. Both
+                                                                               Geography
+stages are conducted by human workers recruited from our                       10.4%                                                Others
+                                                                                                                                    12.2%
+university. The two stages of annotation are conducted sepa-
+rately. To distinguish the two stages, we refer to the workers
+in the claim generation stage as writers and the ones in the                Figure 1: Domain distribution of the generated claims in our
+claim annotation stage as annotators, based on the charac-                  dataset. H&S refers to the domain of Humanities & Social
+teristics of their tasks. Before the construction process, we               Sciences.
+first describe our method to prepare the Wikipedia data and
+the fact database.
+                                                                            task. After that, the writer was asked to generate six variants
+Preparation for the Wikipedia Data                                          of the TRUE claim:
+We used the December 2022 dump of the Chinese Wikipedia                      • Rephrasing: A TRUE claim should be rephrased to a
+and extracted the text from the introductory section from                       different sentence with the same meaning.
+each page following the pre-processing method of FEVER                       • Negation: A TRUE claim should be negated without
+(Thorne et al. 2018a). The raw Wikipedia comprises arti-                        simple negation words, such as “not”.
+cles in both Traditional and Simplified Chinese. To unify
+the data, we processed the text with the open-source soft-                   • Entity substitution at a similar level: An entity in a
+ware OpenCC2 to convert the text to Traditional Chinese.                        TRUE claim should be substituted with another one sim-
+Then, the processed data containing 1,187,751 pages were                        ilar to the original entity.
+fixed to serve as the fact database for CFEVER. For the                      • Entity substitution at a disjointed level: An entity in a
+next stage of data construction, we created a source page                       TRUE claim should be substituted with another one dis-
+pool based on the processed Wikipedia pages. The source                         jointed to the original entity.
+page pool includes the 500 most visited Chinese Wikipedia                    • Specification: A TRUE claim should be narrowed down
+pages3 worldwide in 2022, 10,000 Taiwanese pages, and                           with more specific concepts.
+3,000 random pages. All the claims in our dataset were cre-                  • Generalization: A TRUE claim should be generalized
+ated based on the pages in the source page pool.                                with more abstract concepts.
+Claim Generation                                                               During claim generation, the writers were asked not to
+                                                                            generate claims with their own learned knowledge. They
+At this stage, writers are responsible for writing claims                   should write claims solely based on the information in the
+based on the Wikipedia pages in the source page pool. At                    given extracted sentence and the relevant pages. The rea-
+each time, each writer was given one extracted sentence ran-                son behind this step is to help generate verifiable claims and
+domly sampled from the introductory section of a page in                    maintain the quality of the generated claims among differ-
+the source page pool. In addition, Wikipedia pages related                  ent writers. We also measured the domains of the claims
+to the given sentence based on the hyperlinks in the raw                    in CFEVER. To prevent misclassification based on the do-
+Wiki data were also provided to the writer. Then, we asked                  mains of source Wiki pages, we asked the writers to select a
+a writer to first generate a TRUE claim based on the given                  category from the pre-defined domains for each claim they
+extracted sentence and the information in the relevant pages                generated. The final domain distribution of the generated
+without any learned human knowledge. The provided rele-                     claims is shown in Figure 1.
+vant pages were used to help writers come up with diverse
+claims, which may also result in complex claims that require                Claim Annotation
+multi-step reasoning from different pages in the verification
+                                                                            Once a claim was generated, an annotator was asked to label
+   1
+     https://github.com/awslabs/fever/tree/master/fever-                    the claim as “Supports”, “Refutes”, or “Not Enough Info”.
+annotations-platform                                                        For the first two categories, the annotator must also find the
+   2                                                                        sentences as evidence from the fact database. To achieve
+     https://github.com/BYVoid/OpenCC
+   3                                                                        such a process, at each time of annotation, four kinds of ma-
+     https://pageviews.wmcloud.org/topviews/?project=zh.
+wikipedia.org                                                               terials are provided to the annotator in default:
+
+
+
+
+                                                                    18628
+                                    The Thirty-Eighth AAAI Conference on Artificial Intelligence (AAAI-24)
+
+
+ • Claim: The claim generated by the writer in the claim                              Split             Training    Development     Test
+   generation stage.
+                                                                                Total Claims             24,012        3,000        3,000
+ • Page name: The title of the original page from which the                     Num of SUP               11,085        1,000        1,000
+   claim was generated.                                                         Num of REF               7,113         1,000        1,000
+ • Original sentences: The sentences in the introductory                        Num of NEI               5,814         1,000        1,000
+                                                                              Avg. Claim Length          33.19         34.04        34.04
+   section of the original page which the claim was gen-
+   erated from.                                                                 Avg. Evidence
+                                                                                                       1.57 sents    1.53 sents   1.55 sents
+                                                                                  per Claim
+ • Relevant pages: The pages related to the original page
+   based on the hyperlinks in the raw Wiki data.                                 Avg. Evidence            1.13         1.14         1.12
+                                                                                Pages per Claim         (88.41%)     (87.35%)     (89.45%)
+If none of the sentences provided in default can be selected
+as evidence for the claim, an annotator can also search the                Table 3: Dataset statistics of CFEVER in different splits.
+fact database with a Wiki page name as a keyword. After                    SUP indicates the “Supports” class, REF stands for “Re-
+passing the keyword to the annotation platform, the sen-                   futes”, and NEI represents “Not Enough Information”. The
+tences in the introductory section of the Wikipedia page will              Avg. Claim Length is the average number of characters in a
+show up at the annotation interface to be selectable as evi-               claim. The Avg. Evidence per Claim is the average number
+dence by an annotator. Note that a claim may become “Sup-                  of evidence sentences for a claim in the “Supports” or “Re-
+ports” or “Refutes” based on multiple sentences. We encour-                futes” class, and the ratio in the parentheses is the proportion
+aged the annotators to find as many sentences as possible to               of claims with evidence from one single page.
+support or refute a claim from the fact database. Once the an-
+notator considered no factual sentences in our fact database
+could support or refute a claim, the claim was labeled as                  by the authors. We discovered that 84.4% of the claims are
+“Not Enough Info.”                                                         annotated correctly with correct evidence sentences.
+   Some claims were generated based on the original ex-
+tracted sentence along with the content from the relevant                  Dataset Statistics
+pages in the claim generation stage. These claims require
+evidence referenced from multiple pages. For the example                   There are 30,012 claims in the CFEVER dataset. We split
+in Table 1, the term “Middle East” in the claim cannot be                  80%, 10%, and 10% of the claims into the training, develop-
+inferred directly from the sentence mentioning “Iraq.” An-                 ment, and test sets, respectively. The statistics of the dataset
+other sentence in the “Iraq” page should be selected as a                  are shown in Table 3. The number of claims in the three cate-
+part of the evidence, even though the relationship between                 gories is balanced in the development and test sets to ensure
+the two terms is common knowledge. Therefore, for these                    that the performance of the models is not biased towards
+claims, we asked annotators to combine two or more sen-                    any category during evaluations. The average claim length
+tences from different pages as complete evidence to support                (character level) and the average number of evidence sen-
+or refute the claim using the annotation platform.                         tences per claim are also similar among the three splits. We
+                                                                           also report the ratio of claims with evidence from a single
+Workers                                                                    page in Table 3, with 88.41%, 87.35%, and 89.45% of the
+                                                                           claims whose evidence can be found in a single page in the
+We recruited nine writers and annotators from our univer-                  three sets. These ratios are close to the statistic of FEVER
+sity in total. All of the workers were native Chinese speak-               (Thorne et al. 2018a) reported by Jiang et al. (2020), where
+ers. Among them, three workers were from the College of                    87% of the claims require one page for verification.
+Liberal Arts, with two of them focused on the claim genera-
+tion task only, and the remaining six were from the College
+of Engineering. The workers were trained by the authors for
+                                                                                                   Baseline Systems
+the annotation tasks and guidelines until they were able to                Following Thorne et al. (2018b), our task requires a model to
+undergo the annotation process correctly and independently.                retrieve evidence from the Wikipedia fact database and per-
+                                                                           form verification for each claim. This section introduces the
+Data Validation                                                            approaches we test for CFEVER in three stages: document
+                                                                           retrieval, sentence retrieval, and recognizing textual entail-
+To evaluate the consistency of the class labels among the                  ment (RTE) for claim verification. The systems we build
+annotators, we randomly sampled 1,936 claims (6.45% of                     involves two full-pipeline methods4 for the three stages:
+our total dataset) and asked five annotators from our work-                one simple baseline proposed by ourselves and the state-
+ers to label them. The five-way inter-annotator agreement                  of-the-art approach (DeHaven and Scott 2023) developed
+over the 1,936 claims shows a score of 0.7934 in Fleiss κ                  for FEVER (Thorne et al. 2018a). We also test CFEVER
+(Fleiss 1971), which is higher than the score of 0.6841 mea-               with the sentence retrieval approach proposed by Stamm-
+sured with 7,506 claims (4% from total) in FEVER (Thorne                   bach (2021). We provide essential details in this section, and
+et al. 2018a) and the one of 0.74 with 310 claims (3% from                 more information is available on the CFEVER website.
+total) in the CHEF dataset (Hu et al. 2022). To evaluate the
+correctness of the evidence sentences, we randomly sampled                    4
+                                                                                BERT (https://huggingface.co/hfl/chinese-bert-wwm-ext) is
+another 700 claims (2.33% of the dataset) for being reviewed               used for BEVERS and our baseline unless otherwise noted.
+
+
+
+
+                                                                   18629
+                                          The Thirty-Eighth AAAI Conference on Artificial Intelligence (AAAI-24)
+
+
+Our Baseline                                                                     Recognizing Textual Entailment In addition to the
+To understand the difficulty and behaviors of CFEVER, we                         concatenation-based approach (Hanselowski et al. 2018;
+first design a baseline with simple components to explore                        Nie, Chen, and Bansal 2019) for performing claim verifi-
+the dataset.                                                                     cation with concatenated evidence, the singleton-based ap-
+                                                                                 proach (Malon 2018; Soleimani, Monz, and Worring 2020)
+Document Retrieval For evidence-based claim verifica-                            was also proposed to classify each claim-evidence pair indi-
+tion, relevant pages should be discovered for each claim to                      vidually. In this setting, each claim will have multiple scores
+extract evidence. Many studies for the FEVER task (Thorne                        for each evidence sentence. Then, the scores are aggregated
+et al. 2018b) adopt TF-IDF (Thorne et al. 2018a) or the                          based on the rules (Malon 2018; Soleimani, Monz, and Wor-
+search with the MediaWiki API (Hanselowski et al. 2018)                          ring 2020) to obtain the final prediction. BEVERS adopts a
+for document retrieval. Following Jiang et al. (2020), we use                    mixture of both approaches (DeHaven and Scott 2023). They
+BM25 (Robertson, Zaragoza et al. 2009) for retrieving rel-                       first fine-tune DeBERTa-V2-XL (He et al. 2021) pre-trained
+evant pages for each claim. Our implementation was based                         on MNLI (Williams, Nangia, and Bowman 2018) for each
+on Elasticsearch5 , and the representations were built with                      of the approaches and train an additional gradient boosting
+the Wikipedia pages from our fact database.                                      classifier (Friedman 2001) for aggregating the final predic-
+                                                                                 tions.
+Sentence Retrieval After retrieving relevant pages for
+each claim, we perform sentence retrieval to select evidence                     Stammbach
+sentences from the pages. Inspired by Hanselowski et al.                         Stammbach (2021) treats sentence retrieval as a token-level
+(2018) and Soleimani, Monz, and Worring (2020), we im-                           classification problem, where a model must predict 1 for
+plement a pointwise approach for sentence retrieval with                         each token within evidence sentences and 0 for the tokens
+BERT (Devlin et al. 2019) to classify each claim-sentence                        belonging to non-evidence sentences. Such an approach re-
+pair in binary. Positive pairs are created using claims and                      quires a model to process long sequences from input claim-
+their corresponding gold evidence sentences. In contrast,                        article pairs. Thus, Stammbach (2021) adopts BigBird (Za-
+negative pairs consist of claims paired with non-evidence                        heer et al. 2020) as the encoder. Since this approach was
+sentences, which are sampled from the predicted pages ac-                        proposed for sentence retrieval, we only test this approach
+quired during the document retrieval phase.                                      for retrieving evidence with the ground-truth documents.
+Recognizing Textual Entailment We verify each claim
+with the evidence sentences by recognizing textual entail-                                             Evaluation Metrics
+ment (RTE). Following Hanselowski et al. (2018); Nie,                            For document retrieval and sentence retrieval, we report the
+Chen, and Bansal (2019), we first concatenate a claim with                       performance in recall (%). Our recall evaluation metric is
+its top five evidence sentences and then fine-tune the BERT                      designed to assess the model’s ability to correctly predict
+model (Devlin et al. 2019) for the three-class RTE task.                         at least one complete set of evidence pages during docu-
+                                                                                 ment retrieval and, similarly, at least one complete set of
+BEVERS                                                                           evidence sentences during sentence retrieval, for each data
+Document Retrieval The second approach is based on the                           instance. For claim verification in RTE, following Thorne
+BEVERS (DeHaven and Scott 2023), which is the state-                             et al. (2018b), we report performance in accuracy (%) and
+of-the-art full-pipeline system for FEVER (Thorne et al.                         FEVER Score (%). The latter is a strict measure of accuracy,
+2018b). BEVERS uses a hybrid approach to include both                            requiring a model to correctly predict at least one complete
+the search results from Wikisearch (Hanselowski et al. 2018)                     evidence set for each claim. For implementing the evaluation
+and the TF-IDF method (Thorne et al. 2018a). Such a hybrid                       metrics, we use the script from DeHaven and Scott (2023)
+approach was also adopted by Stammbach (2021). Note that                         for document retrieval. For sentence retrieval and RTE, we
+BEVERS replaced the MediaWiki API in the approach of                             utilize the official scoring tool from Thorne et al. (2018b).
+Hanselowski et al. (2018) with a fuzzy string search system.
+                                                                                                      Results and Analysis
+Sentence Retrieval Besides the document retrieval ap-                            Results in Different Stages
+proach, DeHaven and Scott (2023) also proposed a compet-
+itive sentence retrieval approach. BEVERS extends the bi-                        To thoroughly analyze CFEVER, we list the results for
+nary pointwise approach (Hanselowski et al. 2018) with an                        the different stages in Table 4. For document retrieval, we
+additional ternary classification task for classifying a claim-                  observe that BEVERS achieves more than 90% of recall,
+sentence pair into “Supports”, “Refutes”, or “Not Enough                         demonstrating that the approach is able to find correct ar-
+Info”, as an initial set of predicted evidence sentences. Then,                  ticles for most of the given claims. The performance dif-
+BEVERS used the results from the initial set to explore more                     ference between our simple baseline (BM25) and BEVERS
+evidence sentences from the hyperlinks in a Wikipedia ar-                        is primarily due to the hybrid approach employed in BEV-
+ticle, which was called “re-retrieval.” Finally, all extracted                   ERS, which combines the search predictions from the TF-
+sentences from these two steps are ranked to yield the final                     IDF method and the fuzzy string search.
+evidence sentences for each claim.                                                  For sentence retrieval, there’s a huge performance gap
+                                                                                 between our simple baseline and BEVERS. This may re-
+   5
+       https://github.com/elastic/elasticsearch                                  sult from the training with an additional ternary classifica-
+
+
+
+
+                                                                         18630
+                                      The Thirty-Eighth AAAI Conference on Artificial Intelligence (AAAI-24)
+
+
+tion task and the employment of the re-retrieval technique in                     Task (metric)            System               Score (%)
+BEVERS, whose score is also far ahead of the other base-
+lines close to our sentence selection method on FEVER.                            Doc retrieval            Our baseline          87.65
+However, BEVERS scored 94.41% in recall reported in their                         (Recall)                 BEVERSa               92.60
+paper (DeHaven and Scott 2023) for FEVER, showing that                            Sent retrieval           Our baseline          76.65
+our dataset remains a challenge for BEVERS.                                       (Recall)                 BEVERSa               86.60
+   For claim verification and the full-pipeline setting, BEV-
+ERS obtains only 69.73% for the label accuracy, which                                                      Our baseline          61.17
+is much lower than their score (80.24%) reported for the                                                   BEVERSa               69.73
+FEVER dataset (DeHaven and Scott 2023). Since the classi-                                                  GPT-3.5 (zeroshot)    43.17
+                                                                                  RTE (Accuracy)
+fication is based on the evidence extracted in the sentence re-                                            GPT-3.5 (3-shot)      44.20
+trieval stage, the scores for claim verification will be affected                                          GPT-4 (zeroshot)      47.23
+if a model cannot identify correct evidence sentences. Still,                                              GPT-4 (3-shot)        48.40
+BEVERS significantly outperforms our simple baseline by                           Full pipeline            Our baseline          52.47
+8.56% in label accuracy and 12.33% in FEVER Score.                                (FEVER Score)            BEVERSa               64.80
+   We also test the performance of GPT-3.5 (Ouyang et al.
+2022) and GPT-4 (OpenAI 2023)6 for claim verification with                   Table 4: Results on the different stages. a: DeHaven and
+the test set using the zero-shot and few-shot settings. For the              Scott (2023).
+few-shot setting, we sample three labeled claims from the
+training set with the same domain as the input claim for each
+class. From Table 4, we find that the claims in CFEVER are                     Task (metric)        System                        Score (%)
+challenging for both models, and the performance can be                                             Our baseline                    95.90
+slightly improved with the few-shot setting.                                   Sent retrieval
+                                                                                                    BEVERSa                         95.20
+                                                                                 (Recall)
+                                                                                                    Stammbachb                      83.55
+Oracle Results
+                                                                                                    Our baseline                    85.10
+To analyze the difficulty of CFEVER further, we also report                       RTE
+                                                                                                    BEVERSa (BERTBase )             88.50
+the oracle results for the last two stages in Table 5. For the                 (Accuracy)
+                                                                                                    BEVERSa (RoBERTaLarge )         90.33
+oracle setting in sentence retrieval, the gold documents of
+each claim are provided for the models. As for the oracle
+                                                                             Table 5: Oracle results on sentence retrieval and the task of
+setting in claim verification, the models take gold evidence
+                                                                             recognizing textual entailment (RTE). a: DeHaven and Scott
+sentences for each claim as inputs. The results show that
+                                                                             (2023). b: Stammbach (2021).
+both methods achieve more than 95% in recall for the ora-
+cle setting in sentence retrieval. However, there are still 15%
+and 10% error rates in claim verification for our baseline
+and BEVERS (RoBERTaLarge 7 ), showing that certain claims                    70% of the FEVER Score for the claims with evidence from
+in our dataset pose verification challenges. We notice that                  single pages.
+Stammbach performs worse than the other two baselines for
+sentence retrieval. The results may be affected by the Chi-                  Analysis for Claims with Different Numbers of
+nese BigBird we used8 , since there is no official Chinese                   Evidence Sentences
+version of BigBird (Zaheer et al. 2020).                                     Since each claim in our dataset can have multiple evidence
+                                                                             sentences, we also analyze the performance on claims with
+Analysis for Claims with Evidence from Multiple                              different numbers of evidence sentences. The results in Ta-
+Pages                                                                        ble 7 show that both methods perform better on the claims
+                                                                             with two and three evidence sentences in the full-pipeline
+After testing the two methods in different stages, we fur-
+                                                                             setting. This may result from the fact that the claims with
+ther analyze the performance on claims with evidence la-
+                                                                             one evidence sentence are usually shorter ones, containing
+beled from different numbers of Wikipedia pages for the
+                                                                             less information to be verified. Additionally, the claims with
+full-pipeline setting in accuracy and FEVER Score. The re-
+                                                                             more than three evidence sentences are usually much longer,
+sults in Table 6 show that the performance of both meth-
+                                                                             requiring more correct evidence sentences to be identified
+ods degrades significantly for the claims with evidence from
+                                                                             and thus more difficult for the models.
+more pages. For the claims with more than three pages of ev-
+idence, the two methods achieve unsatisfactory performance
+in FEVER Score. In summary, we identify that about 10%                       Analysis for Claims from Different Domains
+claims with evidence from multiple pages in our dataset are                  As the chart in Figure 1 shows, the claims in our dataset
+challenging to verify. Even BEVERS can only get about                        were labeled into 11 domains by our writers during the claim
+                                                                             generation process. Figure 2 shows the performance of the
+   6
+     The prompts we used can be found from the CFEVER website.               two methods in FEVER Score on claims from different do-
+   7
+     https://huggingface.co/hfl/chinese-roberta-wwm-ext-large                mains. We discover that both of the methods have lower per-
+   8
+     https://huggingface.co/Lowin/chinese-bigbird-base-4096                  formance for the domains with fewer training claims, such as
+
+
+
+
+                                                                     18631
+                                           The Thirty-Eighth AAAI Conference on Artificial Intelligence (AAAI-24)
+
+
+                                  #Pages (ratio)                                                    Training Ratio                         Test Ratio                   Our baseline                       BEVERS
+  Methods
+                 1 (89.45%)         2 (9.35%)           ≥ 3 (1.20%)
+                                                                                                   0.8
+  Ours          67.75 / 57.97      55.08 / 15.51         50.00 / 0.00                              0.7
+  BEVERSa       73.95 / 70.54      63.10 / 21.93        58.33 / 16.67                              0.6
+
+                                                                                                   0.5
+Table 6: Full-pipeline results in accuracy / FEVER Score
+
+                                                                                     FEVER Score
+                                                                                                   0.4
+(%) for the claims with evidence from different number of                                          0.3
+pages. “Ratio” indicates the proportion of the claims from                                         0.2
+the test set (not counted for the claims of “Not Enough In-                                        0.1
+formation”) in each group. a: DeHaven and Scott (2023).
+                                                                                                   0.0
+                                                                                                              8)        9)        9)            1)        2)        7)            5)         8)           8)         6)        .4 )
+                                                                                                             .0        .0        .0         .1         .2          .0         .1           .1         .0           .1        (1
+                                                                                                         (1        (1        (1            (1        (1        (1            (1         (1           (1         (1        ts
+                                                                                                        le        &S         s         hy                      e         re                      gy
+                            #Evidence sentences (ratio)                                                                     er                    es        yl                         s                   ic  s        or
+                                                                                                    op        H         th            ap        nc        st            tu         lm           lo        lit        Sp
+                                                                                                   Pe                             gr         ie        fe           ul            Fi        no        Po
+                                                                                                                       O
+                                                                ≥4
+                                                                                                                                                                   C
+ Methods           1              2            3                                                                             G
+                                                                                                                                 eo        Sc          Li                               ch
+                                                                                                                                                                                       Te
+               (61.75%)       (26.40%)     (10.15%)           (1.70%)
+ Ours         64.1 / 55.9    72.2 / 56.3     65.5 / 36.9    61.8 / 11.8
+                                                                                  Figure 2: Performance comparisons for the claims of dif-
+ BEVERSa      70.8 / 67.8    75.6 / 65.3     80.3 / 57.1    55.9 / 26.5
+                                                                                  ferent domains in the full-pipeline setting. H&S refers to
+                                                                                  the domain of Humanities & Social Sciences. Values in the
+Table 7: Full-pipeline results in accuracy / FEVER Score
+                                                                                  parentheses are the average number of evidence pages.
+(%) for the claims with different numbers of evidence sen-
+tences. “Ratio” indicates the proportion of the claims from
+the test set (not counted for the claims of “Not Enough In-
+formation”) in each group. a: DeHaven and Scott (2023).                                             Training Ratio                         Test Ratio                   Our baseline                       BEVERS
+                                                                                                   0.8
+
+                                                                                                   0.7
+
+“Sports,” “Technology,” and “Politics.” We also observe that                                       0.6
+
+the number of Wikipedia pages of the evidence for claims
+
+                                                                                     FEVER Score
+                                                                                                   0.5
+
+in the “Sports” domain is higher than the numbers of all the                                       0.4
+other domains, which may result in lower performance and                                           0.3
+match our findings in Table 6.                                                                     0.2
+
+                                                                                                   0.1
+Analysis for Claims in Different Lengths                                                           0.0
+
+In this section, we analyze the performance of the two meth-                                                       <=20                    21-30                 31-40                     41-50                     >51
+ods on claims with different lengths in the full-pipeline set-                                                                              Character Lengths of Claims
+ting. We divide the claims in the test set into five groups ac-
+cording to the number of characters in the claims and show
+the results in Figure 3. We observe that our simple base-                         Figure 3: Performance comparisons with different lengths
+line performs worse on the claims longer than 51 characters,                      of claims in the full-pipeline setting. “Ratio” indicates the
+while BEVERS remains stable. Furthermore, the two meth-                           proportion for each group of the claims from the test set.
+ods perform better on the medium length claims with 31-40
+characters. These results again indicate that the length of the
+claims is an important factor in the claim verification task.
+                                                                                                                                           Conclusion
+                            Discussion                                            This paper introduces CFEVER, a new Chinese dataset for
+We discuss two limitations of our dataset in this section.                        Fact Extraction and VERification. Following the FEVER
+First, although CFEVER is currently the largest Chinese                           task (Thorne et al. 2018b), CFEVER forms a verification
+dataset for fact extraction and verification, it is still much                    task that requires models to verify the claims into “Sup-
+smaller than the English FEVER dataset. Data size is an im-                       ports”, “Refutes”, and “Not Enough Information”. In addi-
+portant factor for model performance and generalization. We                       tion, for the first two categories, models are also required to
+hope to increase the data scale in the future while maintain-                     extract the evidence sentences from our fact database com-
+ing the high quality of annotation. Second, CFEVER may                            posed of Chinese Wikipedia pages. We carefully validate the
+not be a perfect dataset for training models to handle com-                       quality of the dataset and obtain an inter-annotator agree-
+plex reasoning tasks. As we show in Table 2, most of the                          ment of 0.7934 in Fleiss κ for the class label consistency.
+claims in CFEVER require evidence extracted from only                             Though the experiments with the simple baseline designed
+one Wikipedia page. This issue has also been reported for                         by ourselves and the state-of-the-art method (DeHaven and
+FEVER (Jiang et al. 2020). We hope to expand our dataset                          Scott 2023) developed on FEVER (Thorne et al. 2018a), we
+with more complex claims that require evidence from mul-                          believe that CFEVER is a challenging dataset to serve as a
+tiple pages in the future.                                                        benchmark on Chinese claim verification and fact extraction.
+
+
+
+
+                                                                          18632
+                                    The Thirty-Eighth AAAI Conference on Artificial Intelligence (AAAI-24)
+
+
+                 Acknowledgements                                          He, P.; Liu, X.; Gao, J.; and Chen, W. 2021.               DE-
+This work was supported by the National Science and Tech-                  BERTA: DECODING-ENHANCED BERT WITH DISEN-
+nology Council of Taiwan, under Grant NSTC 112-2223-E-                     TANGLED ATTENTION. In International Conference on
+006-009. We thank the anonymous reviewers for their in-                    Learning Representations.
+sightful comments. We also extend our deepest gratitude to                 Hu, X.; Guo, Z.; Wu, G.; Liu, A.; Wen, L.; and Yu, P. 2022.
+all of our data annotators for their hard work and dedication              CHEF: A Pilot Chinese Dataset for Evidence-Based Fact-
+during the data construction process.                                      Checking. In Proceedings of the 2022 Conference of the
+                                                                           North American Chapter of the Association for Computa-
+                       References                                          tional Linguistics: Human Language Technologies, 3362–
+                                                                           3376. Seattle, United States: Association for Computational
+Aly, R.; Guo, Z.; Schlichtkrull, M. S.; Thorne, J.; Vla-                   Linguistics.
+chos, A.; Christodoulopoulos, C.; Cocarascu, O.; and Mittal,
+A. 2021. FEVEROUS: Fact Extraction and VERification                        Jiang, Y.; Bordia, S.; Zhong, Z.; Dognin, C.; Singh, M.; and
+Over Unstructured and Structured information. In Thirty-                   Bansal, M. 2020. HoVer: A Dataset for Many-Hop Fact
+fifth Conference on Neural Information Processing Systems                  Extraction And Claim Verification. In Findings of the Asso-
+Datasets and Benchmarks Track (Round 1).                                   ciation for Computational Linguistics: EMNLP 2020, 3441–
+                                                                           3460. Online: Association for Computational Linguistics.
+Augenstein, I.; Lioma, C.; Wang, D.; Chaves Lima, L.;
+Hansen, C.; Hansen, C.; and Simonsen, J. G. 2019. MultiFC:                 Kotonya, N.; and Toni, F. 2020. Explainable Automated
+A Real-World Multi-Domain Dataset for Evidence-Based                       Fact-Checking for Public Health Claims. In Proceedings
+Fact Checking of Claims. In Proceedings of the 2019 Con-                   of the 2020 Conference on Empirical Methods in Natural
+ference on Empirical Methods in Natural Language Pro-                      Language Processing (EMNLP), 7740–7754. Online: Asso-
+cessing and the 9th International Joint Conference on Nat-                 ciation for Computational Linguistics.
+ural Language Processing (EMNLP-IJCNLP), 4685–4697.                        Ma, J.; Gao, W.; Mitra, P.; Kwon, S.; Jansen, B. J.; Wong,
+Hong Kong, China: Association for Computational Linguis-                   K.-F.; and Cha, M. 2016. Detecting Rumors from Mi-
+tics.                                                                      croblogs with Recurrent Neural Networks. In Proceedings
+DeHaven, M.; and Scott, S. 2023. BEVERS: A General,                        of the Twenty-Fifth International Joint Conference on Artifi-
+Simple, and Performant Framework for Automatic Fact Ver-                   cial Intelligence, IJCAI’16, 3818–3824. AAAI Press. ISBN
+ification. In Proceedings of the Sixth Fact Extraction and                 9781577357704.
+VERification Workshop (FEVER), 58–65. Dubrovnik, Croa-                     Malon, C. 2018. Team Papelo: Transformer Networks at
+tia: Association for Computational Linguistics.                            FEVER. In Proceedings of the First Workshop on Fact
+Devlin, J.; Chang, M.-W.; Lee, K.; and Toutanova, K. 2019.                 Extraction and VERification (FEVER), 109–113. Brussels,
+BERT: Pre-training of Deep Bidirectional Transformers for                  Belgium: Association for Computational Linguistics.
+Language Understanding. In Proceedings of the 2019 Con-                    Nie, Y.; Chen, H.; and Bansal, M. 2019. Combining fact ex-
+ference of the North American Chapter of the Association                   traction and verification with neural semantic matching net-
+for Computational Linguistics: Human Language Technolo-                    works. In Proceedings of the AAAI conference on artificial
+gies, Volume 1 (Long and Short Papers), 4171–4186. Min-                    intelligence, volume 33, 6859–6866.
+neapolis, Minnesota: Association for Computational Lin-
+                                                                           Nielsen, D. S.; and McConville, R. 2022. MuMiN: A Large-
+guistics.
+                                                                           Scale Multilingual Multimodal Fact-Checked Misinforma-
+Fleiss, J. L. 1971. Measuring nominal scale agreement                      tion Social Network Dataset. In Proceedings of the 45th
+among many raters. Psychological bulletin, 76(5): 378.                     International ACM SIGIR Conference on Research and De-
+Friedman, J. H. 2001. Greedy function approximation: a                     velopment in Information Retrieval, SIGIR ’22, 3141–3153.
+gradient boosting machine. Annals of statistics, 1189–1232.                New York, NY, USA: Association for Computing Machin-
+Guo, Z.; Schlichtkrull, M.; and Vlachos, A. 2022. A Survey                 ery. ISBN 9781450387323.
+on Automated Fact-Checking. Transactions of the Associa-                   Nørregaard, J.; and Derczynski, L. 2021. DanFEVER: claim
+tion for Computational Linguistics, 10: 178–206.                           verification dataset for Danish. In Proceedings of the 23rd
+Hanselowski, A.; Stab, C.; Schulz, C.; Li, Z.; and Gurevych,               Nordic Conference on Computational Linguistics (NoDaL-
+I. 2019. A Richly Annotated Corpus for Different Tasks                     iDa), 422–428. Reykjavik, Iceland (Online): Linköping Uni-
+in Automated Fact-Checking. In Proceedings of the 23rd                     versity Electronic Press, Sweden.
+Conference on Computational Natural Language Learn-                        OpenAI, R. 2023. GPT-4 technical report. arXiv, 2303–
+ing (CoNLL), 493–503. Hong Kong, China: Association for                    08774.
+Computational Linguistics.                                                 Ouyang, L.; Wu, J.; Jiang, X.; Almeida, D.; Wainwright,
+Hanselowski, A.; Zhang, H.; Li, Z.; Sorokin, D.; Schiller,                 C.; Mishkin, P.; Zhang, C.; Agarwal, S.; Slama, K.; Ray,
+B.; Schulz, C.; and Gurevych, I. 2018. UKP-Athene: Multi-                  A.; Schulman, J.; Hilton, J.; Kelton, F.; Miller, L.; Simens,
+Sentence Textual Entailment for Claim Verification. In Pro-                M.; Askell, A.; Welinder, P.; Christiano, P. F.; Leike, J.; and
+ceedings of the First Workshop on Fact Extraction and VER-                 Lowe, R. 2022. Training language models to follow in-
+ification (FEVER), 103–108. Brussels, Belgium: Associa-                    structions with human feedback. In Koyejo, S.; Mohamed,
+tion for Computational Linguistics.                                        S.; Agarwal, A.; Belgrave, D.; Cho, K.; and Oh, A., eds.,
+
+
+
+
+                                                                   18633
+                                    The Thirty-Eighth AAAI Conference on Artificial Intelligence (AAAI-24)
+
+
+Advances in Neural Information Processing Systems, vol-                    Processing Systems, volume 33, 17283–17297. Curran As-
+ume 35, 27730–27744. Curran Associates, Inc.                               sociates, Inc.
+Robertson, S.; Zaragoza, H.; et al. 2009. The probabilistic                Zhang, X.; Cao, J.; Li, X.; Sheng, Q.; Zhong, L.; and Shu,
+relevance framework: BM25 and beyond. Foundations and                      K. 2021. Mining Dual Emotion for Fake News Detection.
+Trends® in Information Retrieval, 3(4): 333–389.                           In Proceedings of the Web Conference 2021, WWW ’21,
+Schuster, T.; Fisch, A.; and Barzilay, R. 2021. Get Your Vita-             3465–3476. New York, NY, USA: Association for Comput-
+min C! Robust Fact Verification with Contrastive Evidence.                 ing Machinery. ISBN 9781450383127.
+In Proceedings of the 2021 Conference of the North Ameri-
+can Chapter of the Association for Computational Linguis-
+tics: Human Language Technologies, 624–643. Online: As-
+sociation for Computational Linguistics.
+Soleimani, A.; Monz, C.; and Worring, M. 2020. BERT
+for Evidence Retrieval and Claim Verification. In Advances
+in Information Retrieval: 42nd European Conference on IR
+Research, ECIR 2020, Lisbon, Portugal, April 14–17, 2020,
+Proceedings, Part II, 359–366. Berlin, Heidelberg: Springer-
+Verlag. ISBN 978-3-030-45441-8.
+Stammbach, D. 2021. Evidence Selection as a Token-Level
+Prediction Task. In Proceedings of the Fourth Workshop on
+Fact Extraction and VERification (FEVER), 14–20. Domini-
+can Republic: Association for Computational Linguistics.
+Thorne, J.; Vlachos, A.; Christodoulopoulos, C.; and Mittal,
+A. 2018a. FEVER: a Large-scale Dataset for Fact Extrac-
+tion and VERification. In Proceedings of the 2018 Confer-
+ence of the North American Chapter of the Association for
+Computational Linguistics: Human Language Technologies,
+Volume 1 (Long Papers), 809–819. New Orleans, Louisiana:
+Association for Computational Linguistics.
+Thorne, J.; Vlachos, A.; Cocarascu, O.; Christodoulopoulos,
+C.; and Mittal, A. 2018b. The Fact Extraction and VERifi-
+cation (FEVER) Shared Task. In Proceedings of the First
+Workshop on Fact Extraction and VERification (FEVER),
+1–9. Brussels, Belgium: Association for Computational Lin-
+guistics.
+Thorne, J.; Vlachos, A.; Cocarascu, O.; Christodoulopou-
+los, C.; and Mittal, A. 2019. The FEVER2.0 Shared Task.
+In Proceedings of the Second Workshop on Fact Extraction
+and VERification (FEVER), 1–6. Hong Kong, China: Asso-
+ciation for Computational Linguistics.
+Wang, W. Y. 2017. “Liar, Liar Pants on Fire”: A New Bench-
+mark Dataset for Fake News Detection. In Proceedings of
+the 55th Annual Meeting of the Association for Computa-
+tional Linguistics (Volume 2: Short Papers), 422–426. Van-
+couver, Canada: Association for Computational Linguistics.
+Williams, A.; Nangia, N.; and Bowman, S. 2018. A Broad-
+Coverage Challenge Corpus for Sentence Understanding
+through Inference. In Proceedings of the 2018 Conference
+of the North American Chapter of the Association for Com-
+putational Linguistics: Human Language Technologies, Vol-
+ume 1 (Long Papers), 1112–1122. New Orleans, Louisiana:
+Association for Computational Linguistics.
+Zaheer, M.; Guruganesh, G.; Dubey, K. A.; Ainslie, J.; Al-
+berti, C.; Ontanon, S.; Pham, P.; Ravula, A.; Wang, Q.; Yang,
+L.; and Ahmed, A. 2020. Big Bird: Transformers for Longer
+Sequences. In Larochelle, H.; Ranzato, M.; Hadsell, R.; Bal-
+can, M.; and Lin, H., eds., Advances in Neural Information
+
+
+
+
+                                                                   18634
+

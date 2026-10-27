@@ -1,0 +1,894 @@
+Improving Explainable Fact-Checking with Claim-Evidence Correlations
+
+
+                                    Xin Tan, Bowei Zou, Ai Ti Aw
+                    Institute for Infocomm Research (I2 R), A*STAR, Singapore
+                       {tan_xin,zou_bowei,aaiti}@i2r.a-star.edu.sg
+
+
+
+
+                     Abstract                             predict the veracity label of a claim along with a
+                                                          brief natural language explanation to support its
+    Automatic fact-checking systems that em-
+                                                          adjudication. The aforementioned work has wit-
+    ploy large language models (LLMs) have
+    achieved human-level performance in combat-           nessed the great success of LLMs in fact-checking
+    ing widespread misinformation. However, cur-          and highlighted their capability to combat misin-
+    rent LLM-based fact-checking systems fail to          formation and promote the truth in the digital age.
+    reveal the reasoning principles behind their          Nevertheless, the inherent “black-box” nature of
+    decision-making for the claim verdict. In this        LLMs has failed to guide explanations to reveal the
+    work, we propose Correlation-Enhanced Ex-             reasoning principles behind their claim verification
+    plainable Fact-Checking (CorXFact), an LLM-
+                                                          decisions.
+    based fact-checking system that simulates the
+    reasoning principle of human fact-checkers
+                                                             Research suggests that the strength and relevance
+    for evidence-based claim verification: assess-        of evidence significantly impact the credibility of
+    ing and weighing the correlations between the         claims. Strong relevant evidence enhances claim
+    claim and each piece of evidence. Following           credibility and persuasiveness, while weak or ir-
+    this principle, CorXFact enables efficient claim      relevant evidence diminishes it (Luchok and Mc-
+    verification and transparent explanation gen-         Croskey, 1978; Briggs and Krantz, 1992; Walker
+    eration. Furthermore, we contribute the Cor-          et al., 2018). Based on this principle, human fact-
+    FEVER test set to comprehensively evaluate
+                                                          checkers tend to verify claims by revealing the sup-
+    the CorXFact system in claim-evidence correla-
+    tion identification and claim verification in both    portive relationship between each piece of evidence
+    closed-domain and real-world fact-checking            and the claim, assessing the degree to which the ev-
+    scenarios. Experimental results show that our         idence supports the claim. Inspired by this, we aim
+    proposed CorXFact significantly outperforms           to simulate human decision-making principle to im-
+    four strong fact-checking baselines in claim          prove the reliability of LLMs in delivering verdicts,
+    authenticity prediction and verdict explanation.      while also generating transparent and convincing
+                                                          explanations during the reasoning process.
+1 Introduction
+                                                             This paper focuses on verifying claims through
+In the digital age, widespread online misinforma- claim-evidence correlations. To this end, we come
+tion has increased the urgent need for automatic          up with Correlation-Enhanced Explainable Fact-
+fact-checking systems. Mainstream methods (Nie            Checking (CorXFact), an LLM-based framework
+et al., 2019; Zhong et al., 2020; Soleimani et al., designed for explainable claim verification through
+2020; Jiang et al., 2021; Pradeep et al., 2021a,b; a two-stage process: claim-evidence correlation
+DeHaven and Scott, 2023) that follow the pipeline         reasoning and correlation-based claim verification.
+of document retrieval, evidence selection and claim       In the first stage, CorXFact leverages LLMs to iden-
+verification to predict the veracity of claims, have      tify the claim-evidence correlations from both rele-
+shown promising results. Moreover, the emergence          vance and degree dimensions: i) Does the evidence
+of large language models (LLMs) further advances          support the claim? ii) To what extent does the evi-
+fact-checking to a new level. Recent LLM-based            dence support the claim? In the second stage, these
+fact-checking systems (Pan et al., 2023b,a; Wang          insights are used to predict a veracity label for the
+and Shu, 2023; Tan et al., 2023; Zhang and Gao, claim, along with a concise reasoning explanation
+2023; Zeng and Gao, 2023) leverage the power- that analytically weighs the claim-evidence corre-
+ful understanding and interpretability of LLMs to         lations. To thoroughly evaluate CorXFact in dis-
+                                                       1600
+            Proceedings of the 31st International Conference on Computational Linguistics, pages 1600–1612
+                        January 19–24, 2025. ©2025 Association for Computational Linguistics
+tinguishing claim-evidence correlation and claim        making authenticity judgments of claims based on
+verification, we further contribute a CorFEVER test     selected evidence (Nie et al., 2019; Zhong et al.,
+set consisting of closed-domain and real-world fact-    2020; Soleimani et al., 2020; Jiang et al., 2021;
+checking parts. The closed-domain part features         Pradeep et al., 2021a,b; DeHaven and Scott, 2023).
+manually annotated claim-evidence correlations,            With the success of the above studies and the pur-
+while the real-world part simulates real-world fact-    suit of interpretability (Guidotti et al., 2018; Balkir
+checking scenarios with diverse and informal evi-       et al., 2022), explainable fact-checking (Kotonya
+dence retrieved from open websites.                     and Toni, 2020a,b; Krishna et al., 2022; Fajcik et al.,
+   We conduct experiments on the FEVER (Thorne          2023), which provides a brief explanation of how
+et al., 2018) and CorFEVER datasets, and build          decisions are made to make judgments more reli-
+CorXFact on several LLMs for assessment: Llama-         able and convincing, has drawn increasing atten-
+2 (Touvron et al., 2023), GPT-4 (OpenAI, 2024),         tion. Among them, one line of work (Popat et al.,
+and fine-tuned Llama-2 tailored for claim verifica-     2017; Cui et al., 2019; Yang et al., 2019; Lu and
+tion and claim-evidence correlation identification.     Li, 2020) focuses on providing insights into neural
+The experimental results show CorXFact signifi-         models’ decision process. Another line of work fo-
+cantly outperforms the LLM-based fact-checking          cuses on providing readable post-hoc explanations,
+baselines in both claim authenticity prediction and     e.g., Gad-Elrab et al. (2019); Ahmadi et al. (2019)
+verdict explanation generation.                         generate abstractive justifications based on knowl-
+   In summary, the key contributions of this work       edge graphs; Atanasova et al. (2020); Kotonya and
+are three-fold:                                         Toni (2020c); Jolly et al. (2022) generate natural
+                                                        language summaries of retrieved relevant evidence.
+   • We introduce CorXFact, an LLM-based frame-         Most recently, there has been exploration into lever-
+     work that provides reliable veracity labels and    aging LLMs to generate refined explanations (Tan
+     transparent verdict explanations for evidence-     et al., 2023; Zhang and Gao, 2023; Kim et al.,
+     based fact-checking. Moreover, by instructing      2024), opening up new directions in this field.
+     LLMs to follow specific principles for logi-
+     cal reasoning during claim verification, this      2.2   Evidence-Independent Fact-Checking
+     work provides reference for exploring reason-      With the strong reasoning and vast knowledge of
+     ing principles in other NLP tasks.                 LLMs being witnessed in nature language pro-
+                                                        cessing (NLP) tasks including question answering
+   • We investigate LLMs’ capabilities in real-
+                                                        (QA) (Press et al., 2023), the task of fact-checking
+      world fact-checking scenarios and reveal the
+                                                        is no longer limited to evidence-based solutions.
+      impact of irrelevant evidence in such tasks.
+                                                        More and more work considers fact-checking as a
+   • We contribute CorFEVER, a test set com- QA problem and verifies claims without any evi-
+      prising both closed-domain and real-world         dence. For example, Wang and Shu (2023); Pan
+      parts to assess LLMs’ ability in distinguishing   et al. (2023b) leverage LLMs to translate a claim
+      claim-evidence correlations and performing        into several sub-claims and perform knowledge-
+      evidence-based claim verification. All codes      grounded question-and-answer pairs to make verac-
+      and data will be released to the research com- ity predictions. Pan et al. (2023a) leverage LLMs to
+      munity.1                                          guide the model’s reasoning process by asking a se-
+                                                        ries of questions critical for verifying a claim. Rani
+2 Related Work                                          et al. (2023) propose a 5W framework (who, what,
+                                                        when, where, and why) for question-answer-based
+2.1 Evidence-based Fact-Checking
+                                                        fact explainability. Aly et al. (2023) use question
+The task of evidence-based fact-checking aims to        answering to predict natural logic operators, tak-
+automatically verify the authenticity of a claim        ing advantage of the generalization capabilities of
+based on evidence provided. The mainstream of           instruction-tuned language models.
+this task follows a three-module pipeline frame-           Even though the evidence-independent solution
+work: retrieving documents related to the claim, se- has shown promising results in providing reasoning
+lecting claim-relevant evidence in each document, principles through question answering, it heavily
+   1
+     https://github.com/txAnnie/                        depends on the knowledge base that LLMs has
+Explainable-Fact-checking                               been trained on. Besides, QA-based fact-checking
+                                                     1601
+              Degree                                               E.g., Claim: Macklemore works with Ryan Lewis;
+                       Definitely   Indirectly   Partially
+    Relevance                                                      Evidence: Their second album, This Unruly Mess I’ve
+       SUPPORT                  <—————->                           Made, was released on February 26, 2016. (Lacking
+        REFUTE                  <—————->                           Knowledge: This Unruly Mess I’ve Made is the second
+          NEI                      —-                              studio album by American hip hop duo Macklemore
+                                                                   & Ryan Lewis.)
+Table 1: Claim-evidence correlation degree definition.
+                                                               Label 3: Evidence indirectly contradicts Claim;
+“NEI” denotes to “NOT ENOUGH INFO”.
+                                                                   E.g., Claim: The Cyclades are southeast of mainland
+                                                                   China; Evidence: They are one of the island groups
+                                                                   which constitute the Aegean archipelago. (Lack-
+may encounter issues like LLMs’ hallucination,                     ing Knowledge: The Aegean archipelago belongs to
+where the questions generated are not grounded                     Greece.)
+in reality or are based on incorrect assumptions.              Label 4: Evidence partially supports Claim;
+This work belongs to the evidence-based explain-                   E.g., Claim:Colin Kaepernick was quarterback
+able fact-checking scope and introduces the idea                   backup to Alex Smith; Evidence: Colin Rand Kaeper-
+                                                                   nick (born November 3 , 1987) is an American football
+of verifying claims follow specific reasoning prin-                quarterback who is currently a free agent.
+ciples to avoid the hallucination problem in the
+                                                               Label 5: Evidence partially contradicts Claim;
+evidence-independent solutions.
+                                                                   E.g., Claim: Buffy Summers has been portrayed
+                                                                   by Kristy Swanson; Evidence: Buffy was portrayed
+3     CorFEVER                                                     by Kristy Swanson in the film, and later by Sarah
+                                                                   Michelle Gellar in the television series.
+3.1     Task Definition                                        Label 6: Evidence has no relation with Claim.
+The task of evidence-based explainable fact-                       E.g., Claim: Camp Flog Gnaw is an event; Evidence:
+                                                                   Camp Flog Gnaw has been held every year since 2012.
+checking verifies the validity of a claim
+based on available evidence and generates                      According to the diverse sources of evidence, we
+a brief explanation on decision-making.                      define the following two fact-checking scenarios:
+In this paper, given a claim c and a set
+of evidence E = {e1 , e2 , ..., en }, the fact-              • Closed-domain: Evidence E is obtained from an-
+checking model predicts a veracity label, L ∈                  notated Wikipedia articles (Thorne et al., 2018)
+{SUPPORTS, REFUTES, NOT ENOUGH INFO},                          or dedicated fact-checking websites, such as Poli-
+for the claim and generates a brief explanation J of           tiFact (Wang, 2017), which are well-organized
+the verdict not only based on evidence E but also              and reliable.
+rely on corresponding claim-evidence correlations
+                                                             • Real-world: Evidence E is obtained from open
+R = {r1 , r2 , .., rn }, which indicate the degree to
+                                                               websites like Google2 and Bing3 , which present
+which each piece of evidence supports or refutes
+                                                               a high degree of complexity, vagueness, and di-
+the claim.
+                                                               versity.
+   Considering the correlations between claim and
+each piece of evidence can range from supportive                To identify correlations between each piece of
+to contradictory, with varying levels of relevance in        evidence and the associated claim, and to conduct
+between (Wadden et al., 2022) (Table 1). To cover            evidence-based claim verification, this paper in-
+the relevance and degree between the claim and               troduces the CorFEVER test set consisting of two
+each piece of evidence, we define the following              scenarios: a closed-domain set and a real-world
+claim-evidence correlation labels for correlation-           set.
+enhanced claim verification:
+                                                             3.2     Closed-Domain Set
+    Label 0: Evidence definitely supports Claim;             For the closed-domain set, We extract 1,000 claims
+      E.g., Claim: The Hunger Games is a book; Evidence:     from the FEVER (Thorne et al., 2018) develop-
+      The Hunger Games is a 2008 dystopian novel by the
+      American writer Suzanne Collins.
+                                                             ment set, maintaining a 33% proportion for each
+                                                             verdict label (i.e. SUPPORT, REFUTE, NOT
+    Label 1: Evidence definitely contradicts Claim;          ENOUGH INFO). To ensure the adequacy and re-
+      E.g., Claim: Marvel vs. Capcom: Infinite is only
+      a comic; Evidence: Marvel vs. Capcom: Infinite is
+                                                             liability of evidence, we utilize human-annotated
+      an upcoming fighting video game in development by      ground-truth evidence from the FEVER dataset
+      Capcom.                                                  2
+                                                                   https://www.google.com
+    Label 2: Evidence indirectly supports Claim;               3
+                                                                   https://www.bing.com
+                                               1602
+                   )#*+&                                                             Dataset                    SUP.    REF.     NEI
+          "#)(&                ,#"%&                                                 FEVER dev set              6,666   6,666   6,666
+           )#*+&      !#*"&
+                                                                                     CorFEVER (Closed-domain)    333     333     333
+                                                                                     CorFEVER (Real-world)       426     443     131
+                                                    !"#$%&
+                                                                                 Table 2: Claim statistics on FEVER and CorFEVER.
+                                                                                 “SUP.”, “REF.”, “NEI” denotes “SUPPORT”, “RE-
+                                                                                 FUTE”, and “NOT ENOUGH INFO”, respectively.
+                     !'#(%&
+
+                                                                                 query. To reduce the information overload and
+                                                                                 reduce complexity for the subsequent claim veri-
+                                                                                 fication stage, we select the top-5 results returned
+   !"#$%&'%($%)#&#*%+,(-.//01*-(2+3#4    !"#$%&'%($%)#&#*%+,('0&*13$#'*-(2+3#4   for both the full claim and keyword-based queries.
+   !"#$%&'%(#&$#1%'*+,(-.//01*-(2+3#4    !"#$%&'%(#&$#1%'*+,('0&*13$#'*-(2+3#4
+                                                                                    To avoid claim label reversals due to introduc-
+   !"#$%&'%(/31*#3++,(-.//01*-(2+3#4     !"#$%&'%(/31*#3++,('0&*13$#'*-(2+3#4
+                                                                                 tion of ambiguity or fake evidence on public web-
+   !"#$%&'%(53-(&0(1%+3*#0&(6#*5(2+3#4
+                                                                                 sites, up to 5 pieces of evidence in the closed-
+         Figure 1: Statistics on label distribution.                             domain CorFEVER are transferred to real-world
+                                                                                 one in addition to the evidence from open websites.
+                                                                                 Moreover, for claims with the “NOT ENOUGH
+as claim-relevant evidence. We recruit two NLP
+                                                                                 INFO" label in the original FEVER dataset have
+researchers proficient in English to manually an-
+                                                                                 no evidence provided, we re-assign labels based
+notate claim-evidence correlations based on the
+                                                                                 on the claim-relevant evidence gathered from open
+annotation guideline (See Appendix A.1) to ensure
+                                                                                 websites. This manner results in total 202 “NOT
+high-quality annotation.
+                                                                                 ENOUGH INFO" claims being relabeled.
+   In summary, 1,043 claim-evidence correlations
+                                                                                    As a result, after removing duplicate evidence re-
+are annotated for 1000 claims, the distribution of
+                                                                                 trieved by claim and claim keywords queries, each
+annotated correlation labels is depicted in Figure 1.
+                                                                                 claim contains 10 pieces of evidence on average.
+The Cohen’s Kappa (Cohen, 1960) score for inter-
+                                                                                 The distribution of labels is listed in Table 2.
+annotator agreement is 0.792, indicating substantial
+agreement among the annotators.                                                  4     CorXFact
+3.3    Real-World Set                                                            4.1    Correlation-Enhanced Claim Verification
+For the real-world set, the claims are identical to                              Determining correlations between each piece of
+those in the closed-domain CorFEVER. To sim-                                     evidence and the claim are crucial for human fact-
+ulate a real-world fact-checking scenario with di-                               checkers to verify a claim, particularly facing com-
+verse and informal claim-relevant evidence, we                                   plex and conflicting evidence. Thoroughly assess-
+retrieve evidence from open websites using the                                   ing the claim-evidence correlations ensures a robust
+Google Custom Search Engine API4 . As the                                        and reliable verdict.
+world’s most widely used search engine, Google                                      Building upon this principle, we harness the
+automatically ranks the relevance of websites that                               strong understanding of LLMs to simulate human
+match a search query and returns the most rele-                                  fact-checkers’ reasoning principle for claim ver-
+vant sentence snippets. On this basis, we input the                              ification in a chain-of-thought (Wei et al., 2023)
+whole claim as a search query and directly treat                                 strategy: i) Assessing the correlation between each
+the returned snippets of matching websites as evi-                               piece of evidence and the claim; ii) Making a ver-
+dence. Besides, to avoid insufficient or one-sided                               dict of the claim and providing a concise explana-
+evidence for potential fake claims, we expand the                                tion of the decision-making process by comprehen-
+search scope to keywords of claims. Specifically,                                sively weighing all claim-evidence correlations.
+we extract nouns and noun chunks from the claims
+using SpaCy (Honnibal et al., 2020) and input these        Claim-evidence correlation reasoning. Given
+keywords5 , separated by semicolons as the search          a claim c and the claim-relevant evidence set
+                                                           E = {e1 , e2 , ..., en }, we employ LLMs as a cor-
+   4
+     https://developers.google.com/custom-search/          relation_identifier to reason correlation degree
+v1/overview?hl=zh-cn
+   5
+     We apply the en_core_web_sm model to extract “token”  between each piece of evidence and the claim:
+and “noun_chunks” attributes for nouns and noun chunks.    R = correlation_identif ier(c, E), where R =
+                                                        1603
+{r1 , r2 , ..., rn }. Considering that the evidence is             by highlighting the evidence and corresponding
+claim-relevant, we agree on the rules that correla-                correlations that ultimately lead to the verdict. Be-
+tion_identifier employs the claim as the context of                sides, along with claim-evidence correlations, the
+the evidence during identifying the claim-evidence                 decision explanation further increases the trans-
+correlation, particularly in cases where evidence                  parency and interpretability of the reasoning pro-
+employs abbreviations or pronouns instead of spe-                  cess, enhances user trust in veracity prediction, and
+cific entities6 . To be specific, the few-shot prompt              assists human fact-checkers in error tracking and
+we use for correlation_identifier to reason claim-                 double-checking the claim.
+evidence correlations is:
+                                                                   LLM model tuning. Our proposed framework
+       Judge the Correlation between Claim and Evidence            can be easily adapted to current popular LLMs.
+       from following options: a) Evidence definitely sup-
+       ports Claim; b) Evidence definitely contradicts Claim;
+                                                                   In this work, we apply the method to both large-
+       c) Evidence indirectly supports Claim; d) Evidence in-      scale API-based GPT-4 and moderate-scale Llama-
+       directly contradicts Claim; e) Evidence partially sup-      2 model. To ensure the Llama-2 model gener-
+       ports Claim; f) Evidence partially contradicts Claim;
+       g) Eevidence has no relation with Claim. You can            ates reliable claim-evidence correlations, we ex-
+       treat Claim as the context of Evidence:                     plore fine-tuning the Llama-2 model with samples
+       Claim                                                       from the latest GPT-4. Specifically, we contribute
+       Evidence                                                    12,142 claim verification samples and correspond-
+       »»»                                                         ing 19,998 claim-evidence correlation identifica-
+       Output: Claim-Evidence Correlation.                         tion samples generated by GPT-4. The details of
+                                                                   the our fine-tuning sample construction and abla-
+The claim-evidence correlations obtained in this                   tion study on different tuning strategies are pre-
+stage not only contribute to the claim verification                sented in Appendix A.2.
+process but also serve as part of the verdict ex-
+planation, reflecting LLMs’ ability to identify and                5       Experimentation
+respond to conflicting evidence.
+                                                                   5.1      Experimental Settings
+Correlation-based claim verification. With the                     Datasets. We evaluate the proposed CorXFact on
+claim-evidence correlations, R = {r1 , r2 , ..., rn },             CorFEVER (see Section 3) and FEVER (Thorne
+obtained from the correlation reasoning stage,                     et al., 2018), the largest and most popular dataset
+we employ LLMs as fact_checkers to make                            in automatic fact-checking. For FEVER, we use
+verdict of the claim: Y = f act_checker(c, E, R).                  the development set for claim verification evalua-
+The verdict Y contains a veracity label L ∈                        tion since the test set is a blind set without claim
+{SUPPORTS, REFUTES, NOT ENOUGH INFO}                               labels annotated. Detailed statistics on FEVER and
+for the claim and a brief natural language expla-                  CorFEVER are shown in Table 2.
+nation J on decision-making. Specifically, the
+few-shot prompt we use for fact_checker to verify                  Baselines. We compare the proposed CorXFact
+claims is:                                                         with BEVERS (DeHaven and Scott, 2023): a stan-
+                                                                   dard three-module baseline system that achieves
+       Verify the authenticity label (‘SUPPORT’, ‘REFUTE’,
+       or ‘NOT ENOUGH INFO’) of Claim with a briefly               SoTA performance on the FEVER dataset and three
+       explanation on why you get this conclusion based on         LLM-based fact-checking systems with following
+       Evidence and corresponding Claim-Evidence Corre-            powerful LLMs employed:
+       lations. Try not to predict ‘NOT ENOUGH INFO’ as
+       much as possible:
+                                                                       Llama-2: Large language model Meta AI 2
+       Claim
+                                                                       (Llama-2)7 (Touvron et al., 2023) is entirely
+       Evidence & Claim-Evidence Correlation
+                                                                       open-source, allowing all individuals full access
+       »»»                                                             to the model. We employ the Llama-2-7b-chat
+       Output: Label; Explanation.
+                                                                       model for experiments in this work.
+We expect the explanation generated in this stage re-                  Fine-tuned Llama-2: Fine-tuning the above
+veals the logical reasoning behind decision-making                     Llama-2 model with claim verification and
+   6
+    Claim: Goosebumps (film) was directed by Tim Burton.               claim-evidence correlation identification sam-
+Evidence: It was directed by Rob Letterman, and written by             ples to tailor Llama-2 to this task.
+Darren Lemke, based from a story by Scott Alexander and
+Larry Karaszewski.                                                     7
+                                                                           https://github.com/facebookresearch/llama
+                                                                1604
+          Model         CE Source        CorAcc.     LLM Employed       Acc.     SUPPORT        REFUTE       NEI
+                                                         Llama-2        63.30      42.86         66.33      73.67
+         Baseline           -               -      Fine-tuned Llama-2   93.30      90.27         99.70      89.91
+                                                          GPT-4         92.93      92.06         92.96      93.75
+                                                         Llama-2        72.50      39.14         78.72      84.35
+                         Llama-2          59.16    Fine-tuned Llama-2   93.30      89.56         99.25      90.96
+                                                          GPT-4         94.95      93.75         95.65      95.38
+                                                         Llama-2        83.40      72.15         84.30      91.26
+                    Fine-tuned Llama-2    78.24    Fine-tuned Llama-2   94.80      92.09         99.11      93.12
+                                                          GPT-4         95.90      94.72         96.80      96.11
+        CorXFact
+                                                         Llama-2        90.40      85.76         89.88      95.07
+                          GPT-4           84.76    Fine-tuned Llama-2   96.50      95.25         98.81      95.39
+                                                          GPT-4         95.96      95.38         97.06      95.38
+                                                         Llama-2        96.70      95.81         96.38      97.89
+                         Human              -      Fine-tuned Llama-2   98.50      97.76         99.85      97.89
+                                                          GPT-4         96.80      95.87         97.51      96.99
+
+Table 3: Results on the closed-domain CorFEVER dataset. “CE Source” denotes the source of correlation-evidence.
+“Acc.” and “CorAcc.” represent the accuracy results, while “SUPPORT”, “REFUTE”, and “NEI” denote the F1
+score results.
+
+
+  GPT-4: Generative Pre-trained Transformer 4               four general correlation categories (i.e., “SUP-
+  (GPT-4)8 is a large-scale Transformer-based               PORT”, “REFUTE”, “PARTIAL”, and “No Re-
+  model that exhibits human-level performance on            lationship”)9 . Among the results (column 3 in
+  various professional and academic benchmarks.             Table 3), GPT-4 achieves the best performance
+                                                            (CorAcc.: 84.76) on claim-evidence correlation
+Parameters. For all LLM-based systems, we                   identification. Comparing the fact-checking results
+use a cutoff length of 256, the generation                  across groups, we found that the higher the accu-
+uses temperature=0.2, top_p=0.9, top_k=1, pres-             racy on claim-evidence correlation identification,
+ence_penalty=1.1, frequency_penalty=2.                      the more the improvement in claim verification.
+                                                            Even the claim-evidence correlation obtained from
+Evaluation. We report the Accuracy (Acc.) of
+                                                            Llama-2 (CorAcc.: 59.16) brings certain perfor-
+the claim verdict, as well as Precision (P), Recall
+                                                            mance improvements. These result further verify
+(R), and F1 score for different claim labels to reflect
+                                                            the importance of the claim-evidence correlation
+the proportion of correctly predicted claims.
+                                                            reasoning principle in claim verification.
+5.2     Results on Closed-Domain CorFEVER                      Comparing the fact-checking results within a
+                                                            group, with the CorXFact method employed, the
+We report the claim verification results of LLM-
+                                                            fine-tuned Llama-2 model performs on par with
+based CorXFact and baseline models on the closed-
+                                                            GPT-4 when incorporating claim-evidence corre-
+domain CorFEVER in Table 3. To intuitively com-
+                                                            lations identified by LLMs. When incorporating
+pare with the baseline models, we divide the CorX-
+                                                            manually annotated claim-evidence correlations,
+Fact results into four groups according to the di-
+                                                            the fine-tuned Llama-2 model can even outperform
+verse sources of the claim-evidence correlation:
+                                                            GPT-4 and achieves state-of-the-art results (line
+Llama-2 (lines 4-6), Fine-tuned Llama-2 (lines 7-
+                                                            14), which demonstrates the significance of our
+9), GPT-4 (lines 10-12), and Human (lines 13-15).
+                                                            approach.
+   The overall results show that all the CorXFact
+models incorporating claim-evidence correlations            5.3    Results on Real-World CorFEVER
+outperform the corresponding LLM-based base-
+lines, demonstrating the effectiveness of the rea-          We report the claim verification results of LLM-
+soning principle considering claim-evidence corre-          based CorXFact and baseline models on the real-
+lations in claim verification.                                 9
+                                                                We treat the definitely support and indirectly support la-
+   To further analyse the impact of claim-evidence          bels as “SUPPORT”, definitely refute and indirectly refute
+correlations on claim verification, we evaluate the         labels as “REFUTE”, partially support and partially refute
+                                                            labels as “Partially” (as these labels do not fully support or
+coarse-grained accuracy of claim-evidence corre-            refute the claim) and remains the “No Relation” label for
+lations identification (CorAcc.) by considering             coarse-grained claim-evidence correlation evaluation. Fine-
+                                                            grained claim-evidence correlation evaluation and analysis are
+   8
+       https://openai.com/gpt-4                             in Section 6.
+                                                        1605
+          Model         CE Source         CorAcc.         LLM Employed                  Acc.            SUPPORT          REFUTE            NEI
+                                                              Llama-2                   58.20             57.71           27.64           73.64
+       Baseline              -                  -       Fine-tuned Llama-2              72.60             76.89           11.78           78.29
+                                                               GPT-4                    82.30             83.50           55.38           89.20
+                                                              Llama-2                   44.00             28.46           31.49           70.26
+                         Llama-2           45.95        Fine-tuned Llama-2              71.70             74.27           11.25           79.24
+                                                               GPT-4                    80.60             81.84           55.60           86.67
+                                                              Llama-2                   47.50             29.00           33.24           76.15
+      CorXFact     Fine-tuned Llama-2      68.93        Fine-tuned Llama-2              74.70             77.98            8.55           82.32
+                                                               GPT-4                    81.70             83.06           55.32           89.02
+                                                              Llama-2                   55.20             38.49           36.98           83.33
+                          GPT-4            74.41        Fine-tuned Llama-2              77.80             80.40           11.85           85.99
+                                                               GPT-4                    83.60             84.88           61.87           89.33
+
+Table 4: Results on the real-world CorFEVER dataset. “CE Source” denotes the source of correlation-evidence.
+“Acc.” and “CorAcc.” represent the accuracy results, while “SUPPORT”, “REFUTE”, and “NEI” denote the F1
+score results.
+
+                                                            SUPPORT                             REFUTE                   NOT ENOUGH INFO
+  Model                                 Acc.
+                                                      P         R    F1                 P          R    F1                P     R     F1
+  BEVERS (DeHaven and Scott, 2023)      81.84       97.17     74.72 84.48             97.64      77.69 86.53            69.67 100.00 82.12
+  Fine-tuned Llama-2                    91.94       91.91     83.65 87.58             85.25      92.17 88.57            99.14 100.00 99.57
+  CorXFact (Fine-tuned Llama-2)         93.57       89.15     93.47 91.26             93.73      87.23 90.37            97.96 100.00 98.97
+
+                                        Table 5: Results on the FEVER dataset.
+
+
+world CorFEVER in Table 4. Similar to the experi-
+ments on the closed-domain CorFEVER, we divide                        12345+67   #!               '"'
+
+
+the CorXFact results into three groups according
+to the different sources of the claim-evidence cor-                   *+,-./0-            !""                            $%&%
+relation: Llama-2 (lines 4-6), Fine-tuned Llama-2
+(lines 7-9), GPT-4 (lines 10-12).                                                %      "%%      (%%     #%%   )%%     $%%%     $"%%   $(%%   $#%%   $)%%
+
+   Since the claim-relevant evidence retrieved from                                                        895:;9    <:==>8;
+
+
+public websites is diverse and informal which may                  Figure 2: Statistics on claims that are misjudged by the
+contain semantic ambiguity and conflicts, the over-                LLM-based baseline and corrected by CorXFact.
+all results in the real-world fact-checking scenario
+are far from those in the closed-domain setting.
+Although the coarse-grained claim-evidence corre-                  and exploration.
+lation results (CorAcc.) shown in Table 4 (column
+                                                                   5.4           Results on FEVER
+3) are at an acceptable level10 , the contradictions
+between claim-evidence correlations caused by di-                  We compare our proposed CorXFact (the fine-
+verse evidence interfere with the verdict decisions.               tuned Llama-2 employed) with the traditional BEV-
+Therefore, not all CorXFact models outperform                      ERS (DeHaven and Scott, 2023) system and an
+the baselines. Compared to the results with claim-                 LLM-based (fine-tuned Llama-2) system on the
+evidence correlations identified by Llama-2 and                    FEVER (Thorne et al., 2018) development set11
+Fine-tuned Llama-2 (lines 4-9), GPT-4 is more                      and report the results in Table 5.
+robotic in dealing with such contradictions between                  The results12 show that the LLM-based baseline
+claim-evidence correlations.                                       has an obvious advantage on the FEVER dataset,
+   All in all, the results in Table 4 on the one hand,             the introduction of claim-evidence correlation in
+demonstrate the importance of claim-evidence cor-                  the CorXFact model further widens the gap be-
+relations in claim verification decisions; and on                  tween the traditional BEVERS system and the
+the other hand, these results reveal the impact of                 LLM-based one. Moreover, the statistics in Fig-
+informal and diverse evidence in real-world fact-                  ure 2 show that almost 88% of the “REFUTE” and
+checking scenarios, which requires future attention                   11
+                                                                         Similar to the experiments on closed-domain CorFEVER,
+                                                                   we use human annotated evidence for claim verification.
+   10                                                                 12
+      We manually annotated 383 claim-evidence correlations              No evidence is provided for the claims with the “NOT
+for 36 random claims to evaluate the coarse-grained accuracy       ENOUGH INFO” label in the FEVER dataset, which results
+of claim-evidence correlations identified by LLMs.                 in 100% Recall of the “NOT ENOUGH INFO” label.
+                                                               1606
+           Statistics            Evaluation
+
+                                                                +,-./0#1    +,-./0*1   +,-./0$1  +,-./0)1   +,-./0(1   +,-./0&1   +,-./0'1
+    Lab.                                                                                                                                                                                                  (')
+            Human       GPT-4   FT Llama-2    Llama-2                                                                                                                                                   &"$
+                                                                                                                                                                                      ")
+      0       424       84.93     73.00        53.87                                                                                                                                                      ('$
+      1       448       79.09     65.24        11.91
+      2        49       25.61     16.28        10.90                                                                                              '
+                                                                                                                                                  '
+
+
+                                                              2345.67.0B,; 2345.67. 2345.67. 2345.67. 2345.67. 2345.67. 2345.67.
+                                                                                                                                                  '
+      3        18       12.61      2.61         8.81                                                                                              '
+      4        18        0.00      0.00         0.00
+      5         2        0.00      0.00         0.00                                                                                              '
+                                                                                                                                                  '
+                                                                                                                                                  '
+      6        84       41.41     33.04        12.68                                                                                                  &&
+
+
+
+                                                               6>0?./,94>6 =,?94,//:  =,?94,//: 4654?.79/: 4654?.79/: 5.84649./: 5.84649./:
+        Accuracy        69.22     53.12        24.35
+                                                                                                                                                                ))
+                                                                                                                                                                      *(
+                                                                                                                                                                       *%
+Table 6: Statistics and assessment on claim-evidence                                                                                                  !
+
+correlations in the closed-domain CorFEVER. “FT                                                                                                                       *&
+                                                                                                                                                                                %$
+
+
+                                                               C49B0@/,4A 7>69?,5479; ;<==>?9; 7>69?,5479; ;<==>?9; 7>69?,5479; ;<==>?9;
+Llama-2” denotes to “Fine-tuned Llama-2”. Sign “Lab.”                                                                                                 %
+                                                                                                                                                                                                             ('&
+
+denotes to the label defined in Section 4.1
+                                                                                                                                                                     $$
+                                                                                                                                                            (!
+                                                                                                                                                      "
+                                                                                                                                                                           #$
+
+
+
+                                                                             @/,4A      @/,4A     @/,4A      @/,4A      @/,4A      @/,4A
+33% of the “SUPPORT” claims that are misjudged                                                                                                                        *(
+                                                                                                                                                                )*
+by baseline can be corrected by CorXFact. These                                                                                                            ()
+                                                                                                                                                                                     !"
+
+statistics further clarify the source of the perfor-                                                                                          '                  *'                  &''     &*'       (''         (*'
+mance improvement in this task.
+                                                                                                                                                  DEFG$          H46.G9<6.50+/,A,G(        +/,A,G(   I<A,6
+
+
+6     Analysis                                               Figure 3: Label statistics on claim-evidence correlation
+                                                             identified on the real-world CorFEVER.
+We analyse the claim-evidence correlations in the
+closed-domain and real-world CorFEVER.
+                                                             6.2                                             Analysis on Claim-Evidence Correlation
+6.1    Analysis on Claim-Evidence Correlation                                                                in Real-World CorFEVER
+       in Closed-Domain CorFEVER
+                                                             Statistics on claim-evidence correlations. We
+We count the distribution of manually identified             display the distribution of human annotated claim-
+claim-evidence correlations in Table 6 (column 2).           evidence correlations in Figure 3. Claim-relevant
+The statistics in Table 6 show that almost 80% of            evidence in real-world CorFEVER is extracted
+evidence has “definitely support/refute (labels 0-           from open websites and are diverse and informal
+1)” relation with the claim, 8% (84) evidence “has           compared to closed-domain CorFEVER. Therefore,
+no relation (label 6)” with the claim and a very             over 53% (204) of all claim-evidence correlations
+low proportion of other labels (labels 3-5)13 . This         are labelled as Label 6 (no relation). This observa-
+distribution indicates that the evidence extracted           tion indicates the significant challenges faced by
+from Wikipedia article is consistent and reliable for        real-world fact-checking.
+claim verification.
+   Besides, we further evaluate the accuracy of                    Impact and challenges of open evidence. To
+claim-evidence correlation identified by LLMs. As                  investigate the impact of evidence labelled as La-
+shown in Table 6 (columns 3-5), all the LLMs has                   bel 6 (no relation), we compare the fact-checking
+a relatively accurate understanding on the “defi-                  results with (w/) and without (w/o) such evidence
+nitely support/refute” relation between evidence                   and plot the performance change in Figure 4. As
+and claims (Labels 0 and 1). Among them, GPT-4                     shown in the figure, after removing the evidence
+achieves the best performance in predicting claim-                 of Label 6, the fact-checking results of all Llama-2
+evidence correlations than the fine-tuned Llama-                   models increase apparently. Moreover, with the
+2 and vanilla Llama-2 (Label 6). For the claim-                    CorXFact method applied, both Llama-2 and fine-
+evidence correlations that account for a small pro-                tuned Llama-2 achieve a significant performance
+portion, i.e., Labels 2-6, all the three LLMs are                  improvement, narrowing the gap with GPT-4. This
+poor at identifying them.                                          demonstrates that reducing evidence not related
+                                                                   to the claim can help the smaller Llama-2 models
+   13
+      Few claims are supported by evidence from one single         make better decision-making. Notably, the results
+Wikipedia document and are interdependent in FEVER. In             of GPT-4 show an exception, that is, when em-
+this case, all evidence jointly support or refute a claim; while
+a single piece of evidence may partially support or refute the     ploying such evidence not related to the claim, it
+claim, which results in a low proportion of labels 2-5.            achieves better performance. We conjecture that
+                                                                1607
+                                                                                    '*"(#
+'!
+'&                '#"(#
+                                                    ')"$#                                   ')"##
+                                                                                                          the FEVER dataset is structured and concise com-
+'#
+$'
+                  $+"+#                           '#"+#                             '#"'#                 pared to social media claims. In this situation, the
+$(
+                                                         $$"&#                      $$"'#
+                                                                                                          generalization to other languages and more noisy
+$!                                                  $!"$#
+$&
+                 $)"$#                                                                                    real-world claims requires further study. Thirdly,
+$#                  $)"$#
+('
+                                                                                                          while our CorXFact enables consistent judgment
+((
+(!
+                                                                                                          explanations through claim-evidence correlation
+                                                                                         (*"!#
+(&                                                                                                        analysis, our primary focus remains on enhancing
+(#
+%'
+                                                          %$"%#                                           fact-checking performance, with interpretability as
+%(
+%!
+                                                                                         %%"&#
+                                                                                                          a secondary outcome. From a traditional explana-
+%&
+%#
+                                                                                                          tion perspective (Guidotti et al., 2018; Balkir et al.,
+!'
+!(
+                         !$")#                            !$"%#                                           2022), the explanations generated by the CorXFact
+!!                       !!"##                                                                            still falls into the local, post-hoc explanation cate-
+!&
+!#                                                                                                        gory that provide a specific decision for a specific
+     ,-./0123/456758,9::5-.;/96<8=:90 ,-./0123/456758,9::5-.;/96<8=:90 ,-./0123/456758,9::5-.;/96<8=:90
+                 >-.0.1&                     ?/651;@6548>-.0.1&                     ABC1!                 input.
+           >-.0.1&8DEFG                     ABC1!8DEFG                      ?/651;@6548>-.0.1&8DEFG
+           >-.0.1&8DEF9G                    ABC1!8DEF9G                     ?/651;@6548>-.0.1&8DEF9G
+                                                                                                          Acknowledgments
+Figure 4: Performance comparison with and without
+evidence of Label 6 ("Evidence has no relation with                                                       We would like to thank anonymous reviewers for
+Claim"). The claim-evidence correlations used by each                                                     their insightful comments which helped us to im-
+LLM comes from itself.                                                                                    prove our paper. This research has been supported
+                                                                                                          by the Institute for Infocomm Research of A*STAR
+                                                                                                          (CR-2021-001).
+GPT-4 has a larger parameter volume and richer
+knowledge. Therefore, when it receives such ev-
+idence along with the meta information of “Evi-                                                           References
+dence has no relation to Claim” (Label 6), it can
+well exclude useless knowledge from mind, thus                                                            Naser Ahmadi, Joohyung Lee, Paolo Papotti, and Mo-
+                                                                                                            hammed Saeed. 2019. Explainable fact checking
+reaching a more accurate claim verdict.                                                                     with probabilistic answer set programming. In Con-
+                                                                                                            ference on Truth and Trust Online.
+7      Conclusion
+                                                                                                          Rami Aly, Marek Strong, and Andreas Vlachos. 2023.
+This paper introduces a novel framework namely                                                              QA-NatVer: Question answering for natural logic-
+Correlation-Enhanced Explainable Fact-Checking                                                              based fact verification. In Proceedings of the 2023
+(CorXFact). It simulates the human fact-checkers                                                            Conference on Empirical Methods in Natural Lan-
+to assess and weigh the claim-evidence correlations                                                         guage Processing, pages 8376–8391, Singapore. As-
+                                                                                                            sociation for Computational Linguistics.
+for claim verification. The quantitative experimen-
+tal results and qualitative analysis demonstrate that                                                     Pepa Atanasova, Jakob Grue Simonsen, Christina Li-
+the proposed method enables generating transpar-                                                            oma, and Isabelle Augenstein. 2020. Generating fact
+ent explanation behind decision-making and per-                                                             checking explanations. In Proceedings of the 58th
+                                                                                                            Annual Meeting of the Association for Computational
+forming efficient claim verdict.                                                                            Linguistics, pages 7352–7364.
+
+8      Limitations                                                                                        Esma Balkir, Svetlana Kiritchenko, Isar Nejadgholi,
+                                                                                                            and Kathleen Fraser. 2022. Challenges in apply-
+We identify three main limitations of the proposed                                                          ing explainability methods to improve the fairness
+CorXFact. First, our CorXFact currently employs                                                             of NLP models. In Proceedings of the 2nd Work-
+large language models such as GPT-4 and Llama-                                                              shop on Trustworthy Natural Language Processing
+                                                                                                            (TrustNLP 2022), pages 80–92, Seattle, U.S.A. Asso-
+2. The LLM-based models inevitably suffer from
+                                                                                                            ciation for Computational Linguistics.
+hallucination issues. Even though we have intro-
+duced the idea of verifying claims following spe- Laura K Briggs and David H Krantz. 1992. Judging the
+cific reasoning principles to avoid the hallucina-        strength of designated evidence. Journal of Behav-
+tion problem, the approach is still far from perfect.     ioral Decision Making, 5(2):77–106.
+Secondly, even though we retrieve claim-relevant       Jacob Cohen. 1960. A coefficient of agreement for
+evidence from open websites, we only take En-             nominal scales. Educational and Psychological Mea-
+glish into consideration. Besides, the claim in           surement, 20:37–46.
+                                                    1608
+Limeng Cui, Kai Shu, Suhang Wang, Dongwon Lee,                pages 7740–7754, Online. Association for Computa-
+  and Huan Liu. 2019. defend: A system for explain-           tional Linguistics.
+  able fake news detection. In Proceedings of the 28th
+  ACM international conference on information and          Neema Kotonya and Francesca Toni. 2020c. Explain-
+  knowledge management, pages 2961–2964.                     able automated fact-checking for public health claims.
+                                                             In Proceedings of the 2020 Conference on Empirical
+Mitchell DeHaven and Stephen Scott. 2023. Bevers:            Methods in Natural Language Processing (EMNLP),
+  A general, simple, and performant framework for            pages 7740–7754.
+  automatic fact verification. In Proceedings of the
+  Sixth Fact Extraction and VERification Workshop          Amrith Krishna, Sebastian Riedel, and Andreas Vlachos.
+ (FEVER), pages 58–65.                                       2022. Proofver: Natural logic theorem proving for
+Martin Fajcik, Petr Motlicek, and Pavel Smrz. 2023.          fact verification. Transactions of the Association for
+ Claim-dissector: An interpretable fact-checking sys-       Computational Linguistics, 10:1013–1030.
+ tem with joint re-rankingand veracity prediction. In
+ Findings of the Association for Computational Lin-        Yi-Ju Lu and Cheng-Te Li. 2020. Gcan: Graph-aware
+ guistics: ACL 2023, pages 10184–10205, Toronto,             co-attention networks for explainable fake news de-
+ Canada. Association for Computational Linguistics.          tection on social media. In Proceedings of the 58th
+                                                             Annual Meeting of the Association for Computational
+Mohamed H Gad-Elrab, Daria Stepanova, Jacopo Ur-             Linguistics, pages 505–514.
+ bani, and Gerhard Weikum. 2019. Exfakt: A frame-
+ work for explaining facts over knowledge graphs and       Joseph A Luchok and James C McCroskey. 1978. The
+ text. In Proceedings of the twelfth ACM international        effect of quality of evidence on attitude change and
+ conference on web search and data mining, pages              source credibility. Southern Journal of Communica-
+ 87–95.                                                       tion, 43(4):371–383.
+Riccardo Guidotti, Anna Monreale, Salvatore Ruggieri,      Yixin Nie, Haonan Chen, and Mohit Bansal. 2019.
+  Franco Turini, Fosca Giannotti, and Dino Pedreschi.        Combining fact extraction and verification with neu-
+  2018. A survey of methods for explaining black box         ral semantic matching networks. In Proceedings of
+  models. ACM computing surveys (CSUR), 51(5):1–             the AAAI conference on artificial intelligence, vol-
+  42.                                                        ume 33, pages 6859–6866.
+Matthew Honnibal, Ines Montani, Sofie Van Lan-
+ deghem, Adriane Boyd, et al. 2020. spacy: Industrial-     OpenAI. 2024. Gpt-4 technical report.         Preprint,
+ strength natural language processing in python.             arXiv:2303.08774.
+
+Kelvin Jiang, Ronak Pradeep, and Jimmy Lin. 2021. Ex-      Liangming Pan, Xinyuan Lu, Min-Yen Kan, and Preslav
+  ploring listwise evidence reasoning with t5 for fact        Nakov. 2023a. QACheck: A demonstration system
+  verification. In Proceedings of the 59th Annual Meet-       for question-guided multi-hop fact-checking. In Pro-
+  ing of the Association for Computational Linguistics        ceedings of the 2023 Conference on Empirical Meth-
+  and the 11th International Joint Conference on Natu-        ods in Natural Language Processing: System Demon-
+  ral Language Processing (Volume 2: Short Papers),           strations, pages 264–273, Singapore. Association for
+  pages 402–410.                                              Computational Linguistics.
+
+Shailza Jolly, Pepa Atanasova, and Isabelle Augenstein.    Liangming Pan, Xiaobao Wu, Xinyuan Lu, Anh Tuan
+  2022. Generating fluent fact checking explanations         Luu, William Yang Wang, Min-Yen Kan, and Preslav
+  with unsupervised post-editing. Information (2078-         Nakov. 2023b. Fact-checking complex claims with
+  2489), 13(10).                                             program-guided reasoning. In Proceedings of the
+                                                             61st Annual Meeting of the Association for Compu-
+Kyungha Kim, Sangyun Lee, Kung-Hsiang Huang,                 tational Linguistics (Volume 1: Long Papers), pages
+  Hou Pong Chan, Manling Li, and Heng Ji. 2024. Can          6981–7004, Toronto, Canada. Association for Com-
+  llms produce faithful explanations for fact-checking?      putational Linguistics.
+  towards faithful explainable fact-checking via multi-
+  agent debate. Preprint, arXiv:2402.07401.
+                                                           Kashyap Popat, Subhabrata Mukherjee, Jannik Ströt-
+Neema Kotonya and Francesca Toni. 2020a. Explain-            gen, and Gerhard Weikum. 2017. Where the truth
+  able automated fact-checking: A survey. In Proceed-        lies: Explaining the credibility of emerging claims
+  ings of the 28th International Conference on Com-          on the web and social media. In Proceedings of the
+  putational Linguistics, pages 5430–5443, Barcelona,        26th International Conference on World Wide Web
+  Spain (Online). International Committee on Compu-          Companion, pages 1003–1012.
+  tational Linguistics.
+                                                           Ronak Pradeep, Xueguang Ma, Rodrigo Nogueira, and
+Neema Kotonya and Francesca Toni. 2020b. Explain-            Jimmy Lin. 2021a. Scientific claim verification with
+  able automated fact-checking for public health claims.     vert5erini. In Proceedings of the 12th International
+  In Proceedings of the 2020 Conference on Empirical         Workshop on Health Text Mining and Information
+  Methods in Natural Language Processing (EMNLP),            Analysis, pages 94–103.
+                                                       1609
+Ronak Pradeep, Xueguang Ma, Rodrigo Nogueira, and         Haoran Wang and Kai Shu. 2023. Explainable claim
+  Jimmy Lin. 2021b. Vera: Prediction techniques for         verification via knowledge-grounded reasoning with
+  reducing harmful misinformation in consumer health        large language models. In Findings of the Associa-
+  search. In Proceedings of the 44th International          tion for Computational Linguistics: EMNLP 2023,
+  ACM SIGIR Conference on Research and Develop-             pages 6288–6304, Singapore. Association for Com-
+  ment in Information Retrieval, pages 2066–2070.           putational Linguistics.
+Ofir Press, Muru Zhang, Sewon Min, Ludwig Schmidt,        William Yang Wang. 2017. “liar, liar pants on fire”:
+  Noah Smith, and Mike Lewis. 2023. Measuring and          A new benchmark dataset for fake news detection.
+  narrowing the compositionality gap in language mod-       In Proceedings of the 55th Annual Meeting of the
+  els. In Findings of the Association for Computational    Association for Computational Linguistics (Volume 2:
+  Linguistics: EMNLP 2023, pages 5687–5711, Singa-          Short Papers), pages 422–426, Vancouver, Canada.
+  pore. Association for Computational Linguistics.         Association for Computational Linguistics.
+Anku Rani, S.M Towhidul Islam Tonmoy, Dwip Dalal,         Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten
+  Shreya Gautam, Megha Chakraborty, Aman Chadha,             Bosma, Brian Ichter, Fei Xia, Ed Chi, Quoc Le, and
+  Amit Sheth, and Amitava Das. 2023. FACTIFY-                Denny Zhou. 2023. Chain-of-thought prompting elic-
+  5WQA: 5W aspect-based fact verification through            its reasoning in large language models. Preprint,
+  question answering. In Proceedings of the 61st An-         arXiv:2201.11903.
+  nual Meeting of the Association for Computational
+  Linguistics (Volume 1: Long Papers), pages 10421–       Fan Yang, Shiva K Pentyala, Sina Mohseni, Mengnan
+  10440, Toronto, Canada. Association for Computa-          Du, Hao Yuan, Rhema Linder, Eric D Ragan, Shui-
+  tional Linguistics.                                       wang Ji, and Xia Hu. 2019. Xfake: Explainable fake
+                                                            news detector with visualizations. In The world wide
+Amir Soleimani, Christof Monz, and Marcel Worring.          web conference, pages 3600–3604.
+ 2020. Bert for evidence retrieval and claim verifi-
+ cation. In Advances in Information Retrieval: 42nd       Fengzhu Zeng and Wei Gao. 2023. Prompt to be con-
+ European Conference on IR Research, ECIR 2020,             sistent is better than self-consistent? few-shot and
+ Lisbon, Portugal, April 14–17, 2020, Proceedings,          zero-shot fact verification with pre-trained language
+ Part II 42, pages 359–366. Springer.                       models. In Findings of the Association for Compu-
+                                                            tational Linguistics: ACL 2023, pages 4555–4569,
+Xin Tan, Bowei Zou, and Ai Ti Aw. 2023. Evidence-           Toronto, Canada. Association for Computational Lin-
+  based interpretable open-domain fact-checking with        guistics.
+  large language models. Preprint, arXiv:2312.05834.
+                                                          Xuan Zhang and Wei Gao. 2023. Towards LLM-based
+James Thorne,         Andreas Vlachos,        Christos      fact verification on news claims with a hierarchical
+  Christodoulopoulos, and Arpit Mittal. 2018.               step-by-step prompting method. In Proceedings of
+  Fever: a large-scale dataset for fact extraction and      the 13th International Joint Conference on Natural
+  verification. In Proceedings of the 2018 Conference       Language Processing and the 3rd Conference of the
+  of the North American Chapter of the Association          Asia-Pacific Chapter of the Association for Compu-
+  for Computational Linguistics: Human Language             tational Linguistics (Volume 1: Long Papers), pages
+  Technologies, Volume 1 (Long Papers), pages               996–1011, Nusa Dua, Bali. Association for Compu-
+  809–819.                                                  tational Linguistics.
+Hugo Touvron, Louis Martin, Kevin Stone, Peter Al-        Wanjun Zhong, Jingjing Xu, Duyu Tang, Zenan Xu,
+  bert, Amjad Almahairi, Yasmine Babaei, Nikolay           Nan Duan, Ming Zhou, Jiahai Wang, and Jian Yin.
+  Bashlykov, Soumya Batra, Prajjwal Bhargava, Shruti       2020. Reasoning over semantic-level graph for fact
+  Bhosale, et al. 2023. Llama 2: Open founda-              checking. In Proceedings of the 58th Annual Meet-
+  tion and fine-tuned chat models. arXiv preprint          ing of the Association for Computational Linguistics,
+  arXiv:2307.09288.                                        pages 6170–6180.
+David Wadden, Kyle Lo, Bailey Kuehl, Arman Cohan,
+  Iz Beltagy, Lucy Lu Wang, and Hannaneh Hajishirzi.      A     Appendix
+  2022. SciFact-open: Towards open-domain scientific
+  claim verification. In Findings of the Association      A.1     Annotation Guideline
+  for Computational Linguistics: EMNLP 2022, pages        We systematically and thoroughly train our annota-
+  4719–4734, Abu Dhabi, United Arab Emirates. As-
+  sociation for Computational Linguistics.
+                                                          tors to fully understand the label definitions (Sec-
+                                                          tion 4.1) and obtain high-quality claim-evidence
+Vern Walker, Dina Foerster, Julia Monica Ponce, and       correlation annotation by considering the following
+  Matthew Rosen. 2018. Evidence types, credibility
+                                                          logic one by one:
+  factors, and patterns or soft rules for weighing con-
+  flicting evidence: Argument mining in the context of
+  legal rules governing evidence assessment. In Pro-
+                                                              1. If the evidence fully covers the overall content
+  ceedings of the 5th Workshop on Argument Mining,               of the claim, annotate it as having definite
+  pages 68–78.                                                   claim-evidence correlation, labelled as either
+                                                      1610
+      Label 0 or Label 1 depending on the support          },
+      or contradict case. Otherwise,                       "output": Correlation
+                                                       }
+  2. If the evidence, supplemented with additional
+                                                          Given the above constructed samples, we adopt
+     knowledge, can cover the overall content of
+                                                       following strategies for fine-tuning Llama-2:
+     the claim, we annotate it as having an indirect
+     claim-evidence correlation, labelled as either        Fact-check & Cor: Shuffling and mix the fact-
+     Label 2 or Label 3 depending on the support           checking and claim-evidence correlation identi-
+     or contradict case. Otherwise,                        fication samples to fine-tune one Llama-2 model
+                                                           with the two capabilities.
+  3. If the evidence only partially covers the con-
+     tent of the claim, we annotate it as having a         Fact-check ; Cor: Fine-tuning two Llama-2
+     partial claim-evidence correlation, labelled          models with fact-checking and claim-evidence
+     as either Label 4 or Label 5 depending on the         correlation identification samples separately.
+     support or contradict case.
+                                                           Fact-check -> Cor: Combining the two kinds of
+Notably, for labels falling into the second situa-         samples in to one sample like chain-of-thought
+tion, we require annotators to specify the “lacking        to fine-tune one Llama-2.
+knowledge” that would fully cover the claim along
+                                                           We employ LoRA fine-tuning for 3 epochs to
+with the evidence.
+                                                       adapt Llama-2 for claim-evidence correlation iden-
+A.2    Fine-Tuning Process of Llama-2                  tification and claim verification capabilities, ensur-
+                                                       ing both effectiveness and efficiency. The overall
+We randomly select 12,142 claims and correspond-
+                                                       results on CorFEVER are shown in Table 7.
+ing 19,998 ground evidence from FEVER train-
+ing dataset and instruct GPT-4 with prompts de-            Tuning Strategy     Acc.    SUP.     REF.     NEI
+scribed in Section 4.1 for Llama-2 fine-tuning             Fact-check & Cor    94.80   92.09   99.11    93.12
+                                                           Fact-check ; Cor    94.10   90.68   99.25    92.22
+sample construction. As a result, we construct             Fact-check -> Cor   83.60   67.59   100.00   80.19
+12,142 claim verification samples and correspond-
+ing 19,998 claim-evidence correlation identifica-      Table 7: Fact-checking results of different fine-tuning
+tion samples with following JSON format:               strategies for Llama-2.
+
+# claim verification sample
+{                                                         It shows that fine-tuning one Llama-2 with two
+  "instruction": "Verify the authenticity label        capabilities gains the best results. Therefore, we
+       ('SUPPORT', 'REFUTE', or 'NOT ENOUGH INFO       use the “Fact-check & Cor” fine-tuning strategy for
+       ') of Claim with a brief explanation on
+       why you get this conclusion",                   CorXFact and baseline models. We will release the
+  "input": {                                           fine-tuning data to the research community.
+    "claim": Claim,
+    "evidence": [Evidence 1,Evidence 2,... ]           A.3     Error Correction
+  },
+  "output": {                                          We display an error correction example in Table 8
+    "verdict label": Label,
+    "explanation": Explanation
+                                                       where the fine-tuned Llama-2 baseline misjudges
+  }                                                    the claim where the fine-tuned Llama-2 with CorX-
+}                                                      Fact corrects it. The example shows that by iden-
+                                                       tifying the correlation between the claim and the
+# claim-evidence correlation sample                    evidence, the verdict is corrected, and the gener-
+{
+  "instruction": "Judge the Correlation between        ated explanation with claim-evidence correlations
+       Claim and Evidence from the options: a)         clearly explains the reasoning process behind the
+       Evidence definitely supports Claim; b)          decision-making process, which is more logical
+       Evidence definitely contradicts Claim; c)
+       Evidence indirectly supports Claim; d)          and convincing.
+       Evidence indirectly contradicts Claim; e)
+       Evidence partially supports Claim; f)
+       Evidence partially contradicts Claim; g)
+       Eevidence has no relation with Claim",
+  "input": {
+    "claim": Claim,
+    "evidence": Evidence
+                                                   1611
+Claim             Hot Right Now is mistakenly attributed to DJ Fresh.
+                  “Hot Right Now” is a single by British drum and bass producer DJ Fresh, released as the second single
+Evidence
+                  from his third studio album, Nextlevelism.
+Model             Baseline                                             CorXFact
+Claim-Evidence
+                  -                                                        The evidence definitely contradicts the claim.
+Correlation
+                                                                           Label: False. Explanation: The claim states that
+                                                                           “Hot Right Now” is mistakenly attributed to DJ
+                  Label: True. Explanation: The claim that “Hot
+                                                                           Fresh, implying it was incorrectly credited as his
+                  Right Now” is mistakenly attributed to DJ Fresh is
+                                                                           work rather than belonging to someone else en-
+                  true based on the evidence provided. Evidence 1
+                                                                           tirely or being a misattribution altogether. How-
+                  clearly states that “Hot Right Now” is a single by
+                                                                           ever, the evidence provided clearly identifies “Hot
+                  British drum and bass producer DJ Fresh, released
+Verdict and Ex-                                                            Right Now” as a single by British drum and bass
+                  as part of his third studio album titled Nextlevelism.
+planation                                                                  producer DJ Fresh from his third studio album ti-
+                  There’s no mention in this context about it being
+                                                                           tled Nextlevelism which directly contradicts this
+                  incorrectly attributed; therefore, we can conclude
+                                                                           claim since there’s no mention of any mistake in
+                  from this information alone that there was indeed
+                                                                           attributing him with this track; therefore, we can
+                  an error or misattribution regarding who produced
+                                                                           conclude based on available information that the
+                  “Hot Right Now.”.
+                                                                           original statement about incorrect attribution is
+                                                                           false.
+
+                                         Table 8: Error correction example.
+
+
+
+
+                                                           1612
+

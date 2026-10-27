@@ -1,0 +1,1141 @@
+                                How Grounded is Wikipedia?
+                    A Study on Structured Evidential Support and Retrieval
+
+                 William Walden∗ Kathryn Ricci∗ Miriam Wanner Zhengping Jiang
+                        Chandler May Rongkun Zhou Benjamin Van Durme
+                                     Johns Hopkins University
+                                                   {wwalden1, kricci2}@jh.edu
+
+
+
+
+                             Abstract                                                               Joe Biden
+
+        Wikipedia is a critical resource for modern                              Lead
+        NLP, serving as a rich repository of up-to-date
+        and citation-backed information on a wide vari-
+        ety of subjects. The reliability of Wikipedia—
+                                                                                  Biden moved in 1953 … to Delaware …
+        its groundedness in its cited sources—is vital
+        to this purpose. This work analyzes both how                  support    Early life
+        grounded Wikipedia is in this sense and how
+        effectively fine-grained grounding evidence
+        can be retrieved. To this end, we introduce                               … Biden’s family lived in Delaware beginning in 1953 [12]
+        P EOPLE P ROFILES1 —a large-scale, multi-level                            …
+        dataset of claim support annotations on bio-
+        graphical Wikipedia articles. We show that:                   support
+        (1) ∼22% of claims in Wikipedia lead sections
+        are unsupported by the article body; (2) ∼30%                           Cited source
+        of claims in the article body are unsupported
+        by their (public) sources; and (3) real-world
+                                                                                [12] ... by 1953, Biden’s father decided to move the whole
+        Wikipedia citation practices often differ from                          family across the state lines.
+        documented standards. Finally, we show that
+        complex evidence retrieval remains a challenge,
+        even for recent reasoning rerankers.                        Figure 1: P EOPLE P ROFILES features fine-grained,
+                                                                    multi-level evidential relations and scalar support labels
+1       Introduction                                                (not shown) on Wikipedia articles—from cited sources
+                                                                    to claims in the article body (bottom arrow), and from
+Long an essential ingredient for LLM pretraining,                   the body to claims in the article lead (top arrow).
+Wikipedia is now widely used during inference
+as a repository of high-quality, citation-backed
+information for RAG applications (Lewis et al.,                        First, we ask how grounded claims in Wikipedia
+2020; Chen et al., 2020b; Fan et al., 2024, i.a.).                  are. Adopting Wikipedia’s distinction between an
+In parallel, Wikipedia has played a major role                      article’s lead section and its body, we explore both
+in advancing automated fact or claim verification                   how claims in the lead are grounded in the body
+(Dmonte et al., 2024), enabling the creation of                     (article-internal support; Figure 1, top arrow) and
+many notable benchmarks for these tasks, such as                    how claims in the body are in turn grounded in
+FEVER (Thorne et al., 2018a,b), WikiFactCheck-                      publicly accessible cited sources (article-external
+English (Sathe et al., 2020), VitaminC (Schuster                    support; Figure 1, bottom arrow). Second, we ask
+et al., 2021), and WiCE (Kamoi et al., 2023). But                   how well both standard first-stage retrievers and
+whereas these works treat Wikipedia articles as sets                new reasoning-based reranking models can recover
+of claims or passages to sample from for dataset                    evidence about these claims—either from the body
+curation, this work studies Wikipedia articles as                   (for lead claims) or from cited source documents
+whole, structured documents—relied upon as trust-                   (for body claims). In answering these questions,
+worthy sources for information-seeking tasks.                       we make the following contributions:
+        ∗
+            Equal Contribution.                                         • We release P EOPLE P ROFILES, a new dataset
+    1
+        https://github.com/wgantt/people-profiles                         of structured Wikipedia claim support judg-
+                                                                400
+                         Findings of the Association for Computational Linguistics: ACL 2026, pages 400–420
+                                   July 2-7, 2026 ©2026 Association for Computational Linguistics
+      ments for all lead claims and all body claims                SIDE dataset (Petroni et al., 2023).3 Each subclaim
+      with scrapable citations from 1.5K articles                  is paired with annotated sets of evidence sentences
+      about people, covering nearly 50K lead claims                from associated cited web articles. In total, WiCE
+      and 100K body claims with fine-grained scalar                contains roughly 5.4K subclaim-evidence pairs.
+      support labels and associated evidence.
+                                                                   Claim Decomposition A wealth of recent work
+    • We show that: (1) a surprising proportion of
+                                                                   on claim decomposition has argued that the appro-
+      lead claims (∼22%) are unsupported by the
+                                                                   priate units for assessment of evidential support
+      body of the same article; (2) an even higher
+                                                                   are subclaims, i.e., sub-sentence-level propositions
+      proportion of body claims (∼30%) are unsup-
+                                                                   (Kamoi et al., 2023; Min et al., 2023; Wanner et al.,
+      ported by scrapable sources; and, more gen-
+                                                                   2024a,b; Gunjal and Durrett, 2024, i.a.). Broadly,
+      erally, (3) actual Wikipedia citation practices
+                                                                   this argument contends that because subclaims as-
+      often differ from documented standards.
+                                                                   sert single atomic propositions, they are easier and
+    • We show that evidence for these claims is of-
+                                                                   less ambiguous to evaluate than sentences, which
+      ten complex, involving multiple premises, and
+                                                                   may assert (or presuppose) multiple propositions.
+      that retrieval of such evidence remains chal-
+                                                                   In practice, the optimal conception of atomicity
+      lenging even for new reasoning rerankers.
+                                                                   is contested, and a variety of decomposition tech-
+                                                                   niques have been proposed (Wanner et al., 2024b;
+2    Background                                                    Gunjal and Durrett, 2024). While we do not con-
+Wikipedia-Based Claim Verification Fact or                         tribute to this debate, we accept the consensus that
+claim verification is an active area of research                   undergirds it—that subclaims are to be preferred to
+within NLP with many supporting datasets, includ-                  sentences—leveraging an existing claim decompo-
+ing several that draw heavily on Wikipedia.2 Of                    sition method to construct P EOPLE P ROFILES (§3).
+these, FEVER (F; Thorne et al., 2018a,b) is the
+                                                                   Our Work Our P EOPLE P ROFILES dataset dif-
+most widely studied, featuring 185K claims writ-
+                                                                   fers from the resources discussed above in sev-
+ten by human annotators, given randomly chosen
+                                                                   eral key ways. First, our claims are ecologically
+Wikipedia sentences as prompts. For each claim,
+                                                                   valid, as they are sourced from Wikipedia articles,
+a different set of annotators then curated evidence
+                                                                   and not synthetically constructed or perturbed by
+passages—sets of sentences from one or more
+                                                                   crowdworkers (contra VC, WFC). Second, we an-
+Wikipedia pages—as well as claim support labels
+                                                                   notate support on atomic subclaims, not full sen-
+(S UPPORTED, R EFUTED, N OT E NOUGH I NFO).
+                                                                   tences, making it unambiguous which proposition’s
+   WikiFactCheck-English (WFC; Sathe et al.,
+                                                                   support is being assessed (contra F, VC, WFC).
+2020) consists of 125K claims also derived from
+                                                                   Third, we obtain scalar (not categorical) support
+Wikipedia, but uses binary (S UPPORTED, R E -
+                                                                   judgments to capture variation in the degree of par-
+FUTED ) labels. S UPPORTED claims are Wikipedia
+                                                                   tial support that subclaims may have. Finally, our
+sentences with at least one citation and R EFUTED
+                                                                   annotations capture multiple levels of evidence—
+claims are obtained via manual edits to the original
+                                                                   enabling us to trace support from key claims in
+(true) claims to make them false. Evidence consists
+                                                                   Wikipedia lead sections down into the body, and
+of full documents cited by the claim sentence.
+                                                                   from there into cited sources. These last two fea-
+   VitaminC (VC; Schuster et al., 2021) uses fac-
+                                                                   tures are unique to P EOPLE P ROFILES.
+tual revisions made by Wikipedia editors on a large
+set of articles as well as synthetic revisions to evi-             3     Data Collection
+dence sentences from F to build a set of contrastive
+evidence sentence pairs, based on which annota-                    3.1    Methodology
+tors then write S UPPORTED or R EFUTED claims—                     We obtain evidence for Wikipedia claims and
+yielding 326K claim-evidence pairs.                                scalar [−1.0, 1.0] judgments of the degree of sup-
+   Finally, the work most similar to ours is WiCE                  port/refutation for those claims given that evi-
+(W; Kamoi et al., 2023), which annotates ternary                   dence.4 Our use of scalar labels draws inspiration
+support labels on subclaims automatically decom-
+                                                                       3
+posed from Wikipedia sentences drawn from the                            Table 8 summarizes key differences between our work
+                                                                   and W. Differences with F/WFC/VC are discussed in §2.
+   2                                                                   4
+     We refer the reader to Dmonte et al. (2024) for a general           While refutation is uncommon in Wikipedia, we wanted
+survey of claim verification and focus only on Wikipedia here.     to be able to capture the cases where it occurs.
+
+                                                                 401
+          Biden moved in 1953   ...   Biden moved to Delaware
+
+                                                                         Support: 1.0
+                                                                             Body
+                                      ...                                 sentences
+                                                                            support
+                                      ...                                 lead claim
+                                                                                                       Support: 1.0
+                                                                                                          Source                                 Body
+                                                                                                        sentences                              sentence
+                                                                                                         support                                 cites
+                                ...   Biden’s family lived in Delaware beginning in 1953                body claim                              source
+
+
+Figure 2: A more detailed view of the multi-level structure of P EOPLE P ROFILES annotations. Claims in the lead of a
+Wikipedia article (top left) are supported by sentences in the body (bottom left), whose claims in turn are supported
+by evidence in cited sources (right). Prior work on Wikipedia claim verification has not considered this structure.
+
+
+from prior work validating the utility of such labels                                      proposition (Kamoi et al., 2023; Min et al., 2023;
+for capturing annotator uncertainty and degrees of                                         Wanner et al., 2024a,b; Gunjal and Durrett, 2024,
+partial support in related tasks—notably in natural                                        i.a.).7 We use the “D N D” method of Wanner et al.
+language inference (NLI; Pavlick and Kwiatkowski,                                          (2024b) to jointly decompose each Wikipedia sen-
+2019; Gantt et al., 2020; Chen et al., 2020a). Ev-                                         tence into two sets of subclaims: a contextualized
+idential support similarly comes in degrees and                                            set decomposed from the sentence alone and a de-
+the empirical distribution of support scores that we                                       contextualized set that inserts into each subclaim
+ultimately obtain corroborates this (Figure 3).                                            relevant extra-sentential context that may help re-
+   We divide annotation into two phases—one for                                            solve ambiguities in the contextualized version (e.g.
+claims appearing in the article’s lead and a second                                        unresolved pronouns).8 Annotators annotate all
+for claims appearing in its body. This is motivated                                        subclaims decomposed from a target sentence and
+by the different guidelines Wikipedia establishes                                          can toggle between the contextualized and decon-
+for these two parts of an article: while citations                                         textualized versions of a subclaim when identifying
+are required for contentful claims in the body (e.g.                                       evidence and assessing support. Following Wanner
+quotations, statistics),5 “it is common for citations                                      et al. (2024b), we perform the decomposition using
+to appear in the body and not the lead,” since “sig-                                       GPT-4o-mini (OpenAI, 2024).9
+nificant information should not appear in the lead
+if it is not covered in the remainder of the arti-                                         3.3    Data Source
+cle.”6 Thus, for lead claims, we seek evidence in                                          Much prior work on claim decomposition and ver-
+the body, and for body claims, we seek evidence in                                         ification has focused on biographies of notable
+cited sources. Following prior work (Kamoi et al.,                                         people—entities—as a natural test domain in which
+2023), we define the evidence for a claim as a set                                         the ground truth (e.g. birth and death dates, educa-
+of (possibly non-contiguous) sentences. We anno-                                           tional background) is generally uncontroversial and
+tate up to three sentences that together provide the                                       where evidence sources are numerous (Min et al.,
+strongest evidence for or against each target claim.                                          7
+                                                                                                 When we refer to claims in this work, we mean subclaims
+                                                                                           in this sense. (The claim decomposition literature often uses
+3.2 Claims                                                                                 claim synonymously with sentence.)
+                                                                                               8
+                                                                                                 E.g. for the sentence “He was one of the most influential
+Per §2, we adopt the view advocated in work on                                             directors in 1930s cinema,” a contextualized subclaim might
+claim decomposition that the appropriate units for                                         be “He was a director” and the decontextualized subclaim
+assessment of evidential support are subclaims, i.e.,                                      might be “Quentin Tarantino was an influential director.”
+                                                                                               9
+                                                                                                 See Appendix A for prompts and further details on D N D.
+sub-sentence-level statements expressing an atomic                                         Since Wanner et al. (2024b) provide extensive validation of the
+                                                                                           quality of the decompositions produced by the DnD method
+   5
+       See Wikipedia:When_to_cite                                                          using the same model on many of the same articles, we do not
+   6
+       See Wikipedia:Manual_of_Style/Lead_section                                          independently verify decomposition quality here.
+
+                                                                                  402
+                        Train        Dev         Test             independently annotated two of the three batches,
+                                                                  such that each batch had two sets of annotations.11
+       Articles           965        256         264
+                                                                     We then use these annotations to guide prompt
+       Lead Claims      30,331      9,272       9,351             engineering for the bulk annotation, assessing GPT-
+       Body Claims      60,107     19,712      18,712             4o-mini on the same examples and aiming to opti-
+       Sources          10,539      3,298       3,485             mize agreement with the human annotations along
+                                                                  two dimensions: (1) average pairwise F1 with anno-
+    Table 1: P EOPLE P ROFILES summary statistics.                tated evidence sets (using exact sentence match as
+                                                                  the underlying similarity); and (2) Krippendorff’s
+                                                                  α (with interval difference function; Krippendorff,
+2023; Jiang et al., 2024; Gunjal and Durrett, 2024).              2018) on the scalar support labels. Model anno-
+Given this, biographical Wikipedia pages also con-                tations from our final prompt on the pilot claims
+ceivably provide a rough upper bound on the degree                yield average pairwise α=66.3 and F1 =62.7 with
+of evidential support for claims in Wikipedia arti-               respect to human annotations. This label agreement
+cles from other domains, which may be subject to                  is only slightly below human expert agreement re-
+more debate (e.g. theories, movements, religions).                ported for related works, including F (α=68.4) and
+Thus, to the extent we observe insufficient eviden-               VC (α=70.7). We note that this is necessarily an
+tial support in biographical articles (§4), this likely           indirect comparison and is to be interpreted cau-
+bodes ill for articles in other domains.                          tiously: we use scalar (not categorical) labels and
+    Accordingly, we follow this line of prior work                also allow for deviation in the evidence sets, while
+and annotate the Wikipedia pages for all 1,485 en-                evidence is fixed in these other works.12 Evidence
+tities studied by Min et al. (2023) and Jiang et al.              selection agreement is also on par with human ex-
+(2024), covering a wide range of nationalities and                pert agreement on these same examples (F1 =61.4).
+degrees of fame. We obtain the English articles for
+each entity from the MegaWika 2 dataset (Barham                   3.5       Bulk Annotation
+et al., 2025), which includes section boundaries,                 Using GPT-4o-mini with the best prompt identi-
+in-text citations, and citations’ scraped source texts            fied in the pilot (same for lead and body claims),
+for each article. We annotate sets of evidence sen-               we collect support and evidence annotations on all
+tences and scalar support labels for subclaims de-                1,485 entities. Table 1 shows statistics of the re-
+composed from (1) all sentences in articles’ leads                sulting P EOPLE P ROFILES dataset. Table 8 further
+and (2) all body sentences that bear citations to                 illustrates that our automatic pipeline enables an-
+publicly accessible sources. We focus on public                   notation of roughly 20x more body claims than W
+sources as it is simply infeasible to obtain access               (Kamoi et al., 2023), the most similar prior work.
+to paywalled and print sources for all articles.10
+    Finally, we construct train (965 entities), dev               4        Claim Support
+(256), and test (264) splits via stratified sampling              In this section, we present analysis of Wikipedia
+of entities based on their number of lead subclaims.              claim support on P EOPLE P ROFILES, including the
+                                                                  degree of support for both body and lead claims,
+3.4 Pilot Annotation
+                                                                  the kinds of claims that tend to be unsupported, and
+Given the large scale of our (main) bulk annotation               propagation of support from body to lead.
+(∼150K claims; §3.5), we adopt an automatic anno-
+tation process. To verify the quality of this process,            4.1       Support Score Distributions
+we first conduct a pilot annotation on a collection               We find that significant fractions of lead and body
+of 160 body claims obtained from 10 randomly                      claims are unsupported. Figure 3 plots (kernel
+selected entities, divided into three batches. Three              density estimates of) lead and body claim support
+of the authors annotated evidence sets and scalar                 distributions for the P EOPLE P ROFILES dev split.
+support judgments for these claims; each author                   We observe bimodality in both distributions, with
+  10                                                                  11
+     Barham et al. (2025) acknowledge rare errors in the                See Appendix A for interface details, annotation instruc-
+source scraping process for MegaWika 2, resulting in 404s or      tions, and annotator demographics.
+                                                                     12
+other incomplete rendering of source content. Thus, we filter           These other works report agreement as Fleiss’s κ (Fleiss,
+out such sources using the DeBERTa-based (He et al., 2020)        1971), a special case of α used in scenarios with nominal data
+text quality classifier from NVIDIA’s NeMo Curator.               where all annotators annotate all items.
+
+                                                                403
+    Claim Type          Category                          Example Claim
+                        Birth/death date/location         Josh Mansour was born in 1990.
+    LEAD                Nicknames                         Michael Barakan is known as Shane Fontayne.
+                        Nationality                       David Thomas Broughton is English.
+                        Career Status                     Richie Dorman is retired.
+                        Background/Summary Claims         Yorktown proved to be the last campaign of the Revolutionary War.
+    BODY                Hearsay/Disputed Information      Some accounts report that Washington opposed flogging.
+                        Bleached Claims                   There was a cabinet.
+
+ Table 2: Some common categories of lead and body claims among those with an annotated support score ≤ 0.
+
+
+                                                                    represent a departure from Wikipedia guidelines.13
+            2.5                                                        Categories of unsupported body claims are more
+                  Claim Type                                        varied, as article bodies themselves are more di-
+                        Lead
+            2.0         Body                                        verse. Here, some unsupported claims are ones that
+                                                                    situate other facts that are more central to the arti-
+
+  Density
+            1.5                                                     cle; others summarize (the import of) those facts
+                                                                    (5th row). When the role of such claims is largely
+            1.0                                                     to contextualize or to recap ground that has been
+                                                                    covered, the absence of supporting source material
+            0.5                                                     can perhaps be justified, though not always.
+                                                                       Hearsay or claims implying that some fact is
+            0.0                                                     disputed are another important case (6th row). In
+                  1.0      0.5     0.0      0.5     1.0
+                                 Support                            the example shown, although technically only one
+                                                                    account of Washington’s opposition to flogging is
+Figure 3: Kernel density estimation plots for Wikipedia
+lead/body claim support in the P EOPLE P ROFILES dev                required to establish that some accounts report that
+split. We find that many claims are not fully grounded.             Washington opposed flogging, other accounts in
+                                                                    the source for this claim say the opposite. Cases
+high density on both full support (1.0) and no sup-                 like this—where evidence is conflicting—can thus
+port (0.0). Indeed, 21.7% of lead claims are judged                 result in support labels of 0 or less.
+unsupported (≤ 0) by the body text and 29.5% of                        Finally, claim decomposition (even after decon-
+body claims by their cited source text(s). Despite                  textualization) can occasionally result in what Jiang
+the bimodality, a sizable proportion of claims do re-               et al. (2024) term bleached claims—ones that are
+ceive partial support (i.e. scores in (0,1)), including             highly likely to be true, even independent of any ev-
+32.6% of lead claims and 35.7% of body claims.                      idence (7th row). For this reason, bleached claims
+4.2 Unsupported Claims                                              are generally not ones that require evidence.
+
+It is natural to wonder what sorts of claims tend to                4.3     Claim Support Propagation
+receive support scores ≤ 0. We find that the answer
+differs between lead and body claims. Table 2                       We annotate lead claim support given body evi-
+presents several common categories of unsupported                   dence, but we can also consider how strong the
+claims separately for the lead and body.                            support is for that evidence based on cited sources.
+    For lead claims, we observe that certain key                    We consider two methods of computing a support
+facts—ubiquitous in lead sections—often do not                      score for an evidence sentence in the body. In
+receive any treatment in the body, including birth                  the first, we take the mean of the support scores
+and death date and place (1st row), nicknames (2nd                  across all claims decomposed from that sentence.
+row), nationality (3rd row), and information about                  In the second, we instead take the product of these
+career status (4th row). In some cases (e.g. nick-                  scores.14 We can then compute an overall score
+names, nationality), the evidence itself may be dif-                for the set of evidence sentences for a given lead
+ficult to obtain or arguably may not merit a citation.                 13
+                                                                          E.g. “Birth and death places, if known, should be men-
+But in other cases (birth/death details, career sta-                tioned in the body of the article” (Wikipedia Manual of Style).
+tus), the observed lack of body evidence seems to                      14
+                                                                          For product scores, we clip body claim scores < 0 to 0.
+
+                                                                404
+                 Evidence Aggregation Method             (blue) and product (orange) aggregation strategies.
+                              Mean
+                              Product                    We find very modest overall scores in both cases
+          2.5                                            (an average of 0.41 for mean and 0.35 for product).
+
+          2.0                                            5        Evidence Retrieval
+
+
+Density
+                                                         We now turn our focus from the extent of eviden-
+          1.5
+                                                         tial support for a target claim to retrieval of find-
+                                                         grained evidence for such a claim. We consider
+          1.0                                            two claim-centric evidence retrieval tasks:
+
+          0.5                                                1. LEAD: For an input lead claim, retrieval all
+                                                                evdience sentences from the article body.
+          0.0                                                2. BODY: For an input body claim and a source
+                0.0   0.2   0.4    0.6   0.8   1.0              document it cites, retrieve all evidence sen-
+                Overall Evidence Score                          tences from that source.
+ Figure 4: Distribution of overall evidence scores for   We also consider a third, entity-level retrieval task:
+ P EOPLE P ROFILES dev split body evidence with mean-
+ (blue) and product-based (orange) aggregation of body       3. ENTITY: For an input entity, retrieve all evi-
+ claim support scores for each evidence sentence.               dence sentences across all source documents
+                                                                for that entity’s Wikipedia article.
+ claim by applying the same aggregations (mean or        We treat (1) and (2) as binary relevance tasks, aim-
+ product) across those sentences.                        ing to recover the gold-annotated evidence sen-
+    First, we find that the majority of lead claims      tences using the decontextualized claim as the
+ (82%) cannot be grounded in external source ma-         query. For (3), we adopt fine-grained relevance la-
+ terial via this method—i.e. by attempting to locate     bels, as different source material may be differently
+ that material via its body evidence sentences. Im-      important to an entity’s biography. Source sen-
+ portantly, this does not imply that evidence for all    tences that support more claims and support them
+ these lead claims is missing from those sources.        more strongly are assigned higher relevance.15 For
+ Rather, the principal issue is that, for many lead      this task, we use the same query template for all
+ claims, many of the body sentences in the evidence      entities: Tell me about the life of ⟨entity⟩, including
+ set do not cite a publicly accessible source. Absent    early life, education, career, and death.
+ a citation, we thus could not annotate claims in           We report first-stage retrieval results on the P EO -
+ these body sentences for source support.                PLE P ROFILES test set with several widely used
+    This finding underscores a key challenge for all     models: BM25 (sparse, lexical; Robertson et al.,
+ NLP work focused on evidence attribution: real-         1995), ColBERTv2 (dense, multi-vector; Khattab
+ world citation practices routinely deviate from the     and Zaharia, 2020; Santhanam et al., 2022), and
+ standard assumption in our field that each citation-    Stella-v5-1.5B (dense, single-vector; Zhang et al.,
+ worthy sentence should bear supporting citations.       2024). We additionally report reranking results
+ In practice, a citation may be provided just once       on BM25 outputs with four recent rerankers, dis-
+ at the beginning of a paragraph (if the rest of the     cussed later in this section. For LEAD and BODY,
+ paragraph concerns the same source) or lumped           we report recall@{5,10} and NDCG@5. For
+ together with other citations only at the end of a      ENTITY, we instead report recall@100, as well as
+ paragraph. While such practices can obscure the         NDCG@{5,100}, since there are ≫ 3 evidence
+ mapping between claims and source material, and         sentences per query.
+ while they may diverge from documented attribu-
+                                                         5.1        First Stage Retrieval
+ tion standards, they are nonetheless commonplace
+ and NLP tools must therefore accommodate them.          The first three rows of Table 3 report first stage
+    Restricting ourselves to P EOPLE P ROFILES lead      retrieval results for the LEAD and BODY tasks. On
+ claims that can be grounded in sources, Figure 4        both, we obtain our best results with Stella, which
+ plots the distribution of overall evidence scores for   shows 7+ point gains over BM25 across metrics on
+ lead claims from the dev split under both the mean          15
+                                                                  Relevance label calculation details are in Appendix B.
+
+                                                     405
+  Task    Model              N@5      R@5      R@10                Model             N@5      N@100     R@100
+          ColBERTv2          52.59    57.90    68.18               ColBERTv2         24.53†   39.65     62.52
+  LEAD    Stella-1.5B-v5     59.67†   64.92†   75.12†              Stella-1.5B-v5    23.79    40.60†    64.37†
+          BM25               49.90    55.98    65.89               BM25              14.59    30.08     56.67
+          RankZephyr-7B      62.56    62.67    65.89               RankZephyr-7B     24.91    35.82     56.67
+          Rank1-7B           60.55    63.25    65.89               Rank1-7B          20.54    34.28     56.67
+          Rank-K-7B          63.33    63.84    65.89               Rank-K-32B        26.98    37.97     56.67
+          ReasonRank-7B      64.24    64.49    65.89               ReasonRank-7B     24.55    36.83     56.67
+          ReasonRank-32B     64.24    64.41    65.89               ReasonRank-32B    26.35    37.60     56.67
+          ColBERTv2          70.02    76.37    87.16
+  BODY    Stella-1.5B-v5     74.27†   80.69†   90.41†        Table 4: Evidence retrieval results for the ENTITY task.
+          BM25               61.52    67.87    78.73         Blue rows are reranking results on the top 100 evidence
+                                                             sentences from BM25. See Table 3 for further details.
+          RankZephyr-7B      73.07    74.40    78.73
+          Rank1-7B           73.02    76.18    78.73
+          Rank-K-32B         75.01    76.28    78.73         and BODY)—clearly belong in this category, as evi-
+          ReasonRank-7B      75.92    76.96    78.73         dence may be multi-premise, with premises dis-
+          ReasonRank-32B     76.16    77.04    78.73         persed across the body of the article or source
+                                                             document. Accordingly, we evaluate several such
+Table 3: Evidence retrieval results for the LEAD and
+BODY tasks. White rows are first-stage retrieval results
+                                                             rerankers on all three tasks:
+(“† ” indicates best results). Blue rows are reranking           1. Rank1 (7B; Weller et al., 2025): Pointwise
+results on the top 10 evidence sentences from BM25
+                                                                    reranker based on Qwen 2.5 7B (Qwen et al.,
+(best results are bolded). N=NDCG; R=Recall.
+                                                                    2025) distilled from 635K DeepSeek R1 rea-
+                                                                    soning traces for MS MARCO relevance judg-
+LEAD and 11+ point gains on BODY. ColBERT also                      ments (Nguyen et al., 2016; Guo et al., 2025).
+achieves notable improvements over BM25, albeit                  2. Rank-K (32B; Yang et al., 2025): Listwise
+not quite as large (2+ on LEAD and 8+ on BODY).                     reranker based on QwQ 32B (Team, 2025)
+   The first three rows of Table 4 show results on                  distilled from 50K R1 traces on MS MARCO.
+the ENTITY task, where both Stella and ColBERT
+again show large improvements over BM25 (up to                   3. ReasonRank (7B, 32B; Liu et al., 2025): List-
++10 on NDCG@100; nearly +8 on recall@100),                          wise rerankers based on Qwen 2.5 instruct
+although Stella is no longer the clear winner. Col-                 models (Qwen et al., 2025) distilled from R1
+BERT achieves best results on NDCG@5 (24.53                         traces on relevance judgments across diverse
+vs. 23.79), whereas Stella achieves a slight edge on                domains (web search, coding, math).
+NDCG@100 (40.60 vs. 39.65) and best results on
+                                                             We also evaluate RankZephyr (7B; Pradeep et al.,
+recall@100 (64.37 vs. 62.52).
+                                                             2023) as a non-reasoning, listwise LLM reranker
+   Collectively, these experiments offer some pre-           baseline. RankZephyr is based on Zephyrβ (Tun-
+liminary evidence that effective evidence retrieval          stall et al., 2023) and is distilled from GPT-3.5 rank
+requires more than mere lexical match. While first-          lists on MS MARCO. For all models, we rerank the
+stage NDCG scores with dense methods (ColBERT,               top 10 evidence sentences from BM25 for LEAD and
+Stella) are decent—at least for LEAD and BODY—the            BODY and the top 100 for ENTITY.16 Appendix C has
+next section considers how much these results may            additional reranking results on top of Stella ranked
+be improved by leveraging yet more sophisticated             lists, where our findings are qualitatively similar.
+reasoning methods for reranking.                                Results on LEAD and BODY are shown in the blue
+                                                             rows of Table 3, where we find large gains in
+5.2 Reranking via Reasoning                                  NDCG@5 (10+ points) and recall@5 (6+ points)
+Recent work has shown that reasoning rerankers,              over BM25 on both tasks across all rerankers. No-
+which use reasoning chains to produce relevance              tably, we achieve our highest scores on LEAD and
+judgments, achieve substantial gains on other com-           BODY with the listwise reasoning rerankers—Rank-
+plex retrieval tasks (Weller et al., 2025; Shao              K and ReasonRank—with the latter achieving best
+et al., 2025; Zhuang et al., 2025, i.a.). Our                   16
+                                                                   Thus, R@10 is unchanged between BM25 and reranking
+tasks—particularly the claim-centric ones (LEAD              results for LEAD and BODY, as is R@100 for ENTITY.
+
+                                                           406
+results. Interestingly, however, we do not find sub-          #Sents   Model           N@5      R@5     R@10
+stantial improvements in moving from the 7B Rea-                1      BM25            76.13    86.60   91.78
+sonRank model to the 32B one.                                          RankZephyr-7B   86.53    89.64   91.78
+   Broadly, these results echo previous findings                       Rank1-7B        84.49    90.67   91.78
+that demonstrate superior performance from list-                       ReasonRank-7B   88.68    91.38   91.78
+wise reasoning rerankers relative to pointwise                  2      BM25            47.29    53.18   66.51
+(Rank1) and non-reasoning models (RankZephyr)                          RankZephyr-7B   63.90    63.28   66.51
+on other reasoning-intensive tasks (Yang et al.,                       Rank1-7B        61.32    63.47   66.51
+                                                                       ReasonRank-7B   65.62    65.57   66.51
+2025; Liu et al., 2025). Further, contra Weller et al.
+                                                                3      BM25            25.25    27.26   39.11
+(2025), Rank1 generally does not improve upon
+                                                                       RankZephyr-7B   37.01    34.88   39.11
+RankZephyr for our tasks, suggesting that both us-
+                                                                       Rank1-7B        35.40    35.28   39.11
+ing listwise reranking and leveraging reasoning are
+                                                                       ReasonRank-7B   38.08    36.37   39.11
+key to strong performance.
+                                                          Table 5: Select retrieval and reranking results on LEAD
+5.3 Reasoning Rerankers and Evidence
+                                                          broken down by number of gold evidence sentences.
+    Complexity
+A tempting hypothesis is that the effectiveness
+of listwise reasoning rerankers derives from their        queries, where body claims (BODY) tend to pro-
+comparative advantage in handling more complex            vide the most detailed information, lead claims
+evidence—here, examples with multi-premise ev-            (LEAD) present key high-level facts, and entity-level
+idence sets. We explore this in Table 5, which            queries (ENTITY) are most general, inquiring about
+reports results on LEAD broken down by the size           the life of the target entity in generic terms. Intu-
+of the gold evidence set (# premises), including          itively, the detailed claims appearing in Wikipedia
+first-stage BM25 results and reranking results with       body sections tend to bear greater lexical and se-
+ReasonRank-7B, Rank1 (as a pointwise baseline),           mantic similarity to their supporting source mate-
+and RankZephyr (as a non-reasoning baseline).             rial than the higher-level queries of LEAD or ENTITY
+   The story these results tell is more complicated       do to theirs. At least for BODY and ENTITY, an initial
+than the hypothesis suggests. Although we do find         passage-level retrieval stage could plausibly yield
+that ReasonRank achieves larger gains over BM25           improved recall, but the core challenge of reasoning
+for 2-premise (+18.3 N@5, +12.4 R@5) and 3-               over combinations of fine-grained (sentence-level)
+premise (+12.8 N@5, +9.1 R@5) evidence sets               premises would still remain.
+than for 1-premise sets (+12.6 N@5, +4.8 R@5),            6    Conclusion
+the same is also true of RankZephyr (which does
+not use reasoning) and Rank1 (which is not list-          We have presented a study of evidential support
+wise). Rather, since ReasonRank achieves the best         and retrieval on Wikipedia and have introduced
+results among models over all evidence set sizes, a       P EOPLE P ROFILES, a large dataset of fine-grained,
+better explanation is that this model simply exhibits     multi-level evidential support annotations on nearly
+the strongest ability to reason about evidential sup-     1,500 Wikipedia articles and their cited sources.
+port full stop, irrespective of evidence complexity.      We have shown that: (1) a sizable fraction of
+   Lastly, we note the large drops in performance         Wikipedia lead claims are unsupported by their
+observed across all models as one moves from 1-,          body sections, and Wikipedia body claims by their
+to 2-, to 3-premise evidence sets. This suggests          (publicly accessible) cited sources; (2) evidence
+that there remains substantial room for better cross-     retrieval for these claims grows much more chal-
+premise reasoning, even among the sophisticated           lenging as the generality of the queries (LEAD →
+listwise rerankers studied here.                          BODY → ENTITY) and the evidence complexity (1
+                                                          → 2 → 3 premises) increases; and lastly (3) new
+5.4 Retrieval Difficulty by Task                          reasoning-based rerankers enable much more effec-
+A final notable observation about our retrieval re-       tive retrieval of complex evidence relative to tradi-
+sults is that retrieval difficulty varies widely across   tional (sparse or dense) methods. We release P EO -
+tasks. We obtain highest N@5 scores on BODY,              PLE P ROFILES to aid future work on claim verifica-
+followed by LEAD and then by ENTITY. Intrigu-             tion and on advancing understanding of Wikipedia
+ingly, this ranking tracks the granularity of the         as a knowledge source for modern NLP.
+                                                      407
+Limitations                                             which can occasionally result in (sub)claims that
+                                                        misrepresent the article’s original content and thus
+We acknowledge several limitations of our
+                                                        (potentially) facts about the subject. Although our
+work. First, P EOPLE P ROFILES focuses only on
+                                                        claim decompositions are generally very faithful
+Wikipedia articles about people. We chose this
+                                                        to the original texts, users of P EOPLE P ROFILES
+focus because biographies tend to have a higher
+                                                        should be aware of this possibility.
+proportion of uncontroversial facts relative to other
+domains (e.g. concepts or events) and because mul-      Acknowledgments
+tiple prior works in this area also focus on people
+(Min et al., 2023; Jiang et al., 2024; Gunjal and       The authors would like to thank Alex Martin for
+Durrett, 2024). However, it is possible support         help in testing the annotation interface, as well as
+distributions or evidence retrieval difficulty could    colleagues at the Human Language Technology
+differ in other domains. (Granted, we believe do-       Center of Excellence (HLTCOE) for general com-
+main shift would likely strengthen many of the          ments and feedback on this work.
+claims we make, as discussed in §3.3.)
+   Second, as we emphasize in the main text, our
+                                                        References
+claims about evidential support extend only to pub-
+licly accessible, digital sources. We therefore can-    Samuel Barham, Chandler May, and Benjamin
+                                                          Van Durme. 2025. Megawika 2: A more compre-
+not make conclusions about support across all             hensive multilingual collection of articles and their
+source types in Wikipedia. The number of paid             sources. arXiv preprint arXiv:2508.03828.
+licenses and the level of access to print resources
+                                                        Tongfei Chen, Zhengping Jiang, Adam Poliak, Keisuke
+required for this are simply infeasible to obtain.        Sakaguchi, and Benjamin Van Durme. 2020a. Un-
+   Third, we leverage GPT-4o-mini as an annota-           certain natural language inference. In Proceedings
+tor to facilitate our large-scale bulk data collec-       of the 58th Annual Meeting of the Association for
+tion. While the agreement we observe between              Computational Linguistics, pages 8772–8779, On-
+this model and our human annotations is strong            line. Association for Computational Linguistics.
+(§3), LLMs have their own response biases and           Xiuyi Chen, Fandong Meng, Peng Li, Feilong Chen,
+may not be fully calibrated when providing scalar         Shuang Xu, Bo Xu, and Jie Zhou. 2020b. Bridging
+judgments (Lovering et al., 2024).                        the gap between prior and posterior knowledge se-
+                                                          lection for knowledge-grounded dialogue generation.
+   Finally, as we note in §4.3, real-world citation       In Proceedings of the 2020 Conference on Empirical
+practices can differ from what is espoused in doc-        Methods in Natural Language Processing (EMNLP),
+umented standards—where citations often do not            pages 3426–3437, Online. Association for Computa-
+appear on a sentence that would seem to require           tional Linguistics.
+one, but where they may appear elsewhere in the         Alphaeus Dmonte, Roland Oruche, Marcos Zampieri,
+same paragraph. Since we restrict our annotations         Prasad Calyam, and Isabelle Augenstein. 2024.
+to body sentences that do bear citations, we thus         Claim verification in the age of large language mod-
+                                                          els: A survey. arXiv preprint arXiv:2408.14317.
+cannot draw conclusions about sentences whose
+source may appear as a citation on some other sen-      Wenqi Fan, Yujuan Ding, Liangbo Ning, Shijie Wang,
+tence. However, we suspect that our estimate of          Hengyun Li, Dawei Yin, Tat-Seng Chua, and Qing
+the proportion of supported body claims decom-           Li. 2024. A survey on rag meeting llms: Towards
+                                                         retrieval-augmented large language models. In Pro-
+posed from citation-bearing sentences is an upper        ceedings of the 30th ACM SIGKDD Conference on
+bound on the proportion we would obtain for all          Knowledge Discovery and Data Mining, KDD ’24,
+citation-worthy sentences.                               page 6491–6501, New York, NY, USA. Association
+                                                         for Computing Machinery.
+Ethics                                                  Joseph L Fleiss. 1971. Measuring nominal scale agree-
+P EOPLE P ROFILES’s use of sources from                    ment among many raters. Psychological bulletin,
+                                                          76(5):378.
+MegaWika 2.0 and our release of this data (via
+a CC-BY-4.0-SA license) is consistent with              William Gantt, Benjamin Kane, and Aaron Steven
+MegaWika 2’s own CC-BY-4.0-SA license. Our               White. 2020. Natural language inference with mixed
+                                                          effects. In Proceedings of the Ninth Joint Confer-
+principle transformation of the original Wikipedia        ence on Lexical and Computational Semantics, pages
+articles consists in the claim decomposition, which       81–87, Barcelona, Spain (Online). Association for
+is performed by an LLM (GPT-4o-mini), and                 Computational Linguistics.
+
+                                                      408
+Anisha Gunjal and Greg Durrett. 2024. Molecular facts:      Xing Han Lù. 2024. Bm25s: Orders of magnitude
+  Desiderata for decontextualization in LLM fact veri-        faster lexical search via eager sparse scoring. arXiv
+  fication. In Findings of the Association for Computa-       preprint arXiv:2407.03618.
+  tional Linguistics: EMNLP 2024, pages 3751–3768,
+  Miami, Florida, USA. Association for Computational        Sewon Min, Kalpesh Krishna, Xinxi Lyu, Mike Lewis,
+  Linguistics.                                                Wen-tau Yih, Pang Koh, Mohit Iyyer, Luke Zettle-
+                                                              moyer, and Hannaneh Hajishirzi. 2023. FActScore:
+Daya Guo, Dejian Yang, Haowei Zhang, Junxiao Song,            Fine-grained atomic evaluation of factual precision
+  Ruoyu Zhang, Runxin Xu, Qihao Zhu, Shirong Ma,              in long form text generation. In Proceedings of the
+  Peiyi Wang, Xiao Bi, et al. 2025. Deepseek-r1: In-          2023 Conference on Empirical Methods in Natural
+  centivizing reasoning capability in llms via reinforce-     Language Processing, pages 12076–12100, Singa-
+  ment learning. arXiv preprint arXiv:2501.12948.             pore. Association for Computational Linguistics.
+
+Pengcheng He, Xiaodong Liu, Jianfeng Gao, and               Tri Nguyen, Mir Rosenberg, Xia Song, Jianfeng Gao,
+  Weizhu Chen. 2020.         Deberta: Decoding-                Saurabh Tiwary, Rangan Majumder, and Li Deng.
+  enhanced bert with disentangled attention. ArXiv,            2016. Ms marco: A human-generated machine read-
+  abs/2006.03654.                                              ing comprehension dataset.
+
+Zhengping Jiang, Jingyu Zhang, Nathaniel Weir,              OpenAI. 2024.      Gpt-4o mini: advancing cost-
+  Seth Ebner, Miriam Wanner, Kate Sanders, Daniel             efficient intelligence.       https://openai.
+  Khashabi, Anqi Liu, and Benjamin Van Durme.                 com/index/gpt-4o-mini-advancing-cost-\
+  2024. Core: Robust factual precision with in-               efficient-intelligence/. Accessed: 2025-05-
+  formative sub-claim identification. arXiv preprint          16.
+  arXiv:2407.03572.
+                                                            Ellie Pavlick and Tom Kwiatkowski. 2019. Inherent
+Jeff Johnson, Matthijs Douze, and Hervé Jégou. 2019.           disagreements in human textual inferences. Transac-
+   Billion-scale similarity search with gpus. IEEE             tions of the Association for Computational Linguis-
+   Transactions on Big Data, 7(3):535–547.                     tics, 7:677–694.
+
+                                                            Fabio Petroni, Samuel Broscheit, Aleksandra Piktus,
+Ryo Kamoi, Tanya Goyal, Juan Diego Rodriguez, and             Patrick Lewis, Gautier Izacard, Lucas Hosseini, Jane
+  Greg Durrett. 2023. WiCE: Real-world entailment             Dwivedi-Yu, Maria Lomeli, Timo Schick, Michele
+  for claims in Wikipedia. In Proceedings of the 2023         Bevilacqua, et al. 2023. Improving wikipedia ver-
+  Conference on Empirical Methods in Natural Lan-             ifiability with ai. Nature Machine Intelligence,
+  guage Processing, pages 7561–7583, Singapore. As-           5(10):1142–1148.
+  sociation for Computational Linguistics.
+                                                            Fabio Petroni, Samuel Broscheit, Aleksandra Piktus,
+Omar Khattab and Matei Zaharia. 2020. Colbert: Effi-          Patrick Lewis, Gautier Izacard, Lucas Hosseini, Jane
+ cient and effective passage search via contextualized        Dwivedi-Yu, Maria Lomeli, Timo Schick, Pierre-
+ late interaction over bert. In Proceedings of the 43rd       Emmanuel Mazaré, Armand Joulin, Edouard Grave,
+ International ACM SIGIR conference on research               and Sebastian Riedel. 2022. Improving wikipedia
+ and development in Information Retrieval, pages 39–          verifiability with ai.
+ 48.
+                                                            Ronak Pradeep, Sahel Sharifymoghaddam, and Jimmy
+Klaus Krippendorff. 2018. Content analysis: An intro-         Lin. 2023. Rankzephyr: Effective and robust zero-
+  duction to its methodology. Sage publications.              shot listwise reranking is a breeze! arXiv preprint
+                                                              arXiv:2312.02724.
+Patrick Lewis, Ethan Perez, Aleksandra Piktus, Fabio
+  Petroni, Vladimir Karpukhin, Naman Goyal, Hein-           Qwen, An Yang, Baosong Yang, Beichen Zhang,
+  rich Küttler, Mike Lewis, Wen-tau Yih, Tim Rock-           Binyuan Hui, Bo Zheng, Bowen Yu, Chengyuan Li,
+  täschel, et al. 2020. Retrieval-augmented generation       Dayiheng Liu, Fei Huang, Haoran Wei, Huan Lin,
+  for knowledge-intensive nlp tasks. Advances in neu-        Jian Yang, Jianhong Tu, Jianwei Zhang, Jianxin Yang,
+  ral information processing systems, 33:9459–9474.          Jiaxi Yang, Jingren Zhou, Junyang Lin, Kai Dang,
+                                                             Keming Lu, Keqin Bao, Kexin Yang, Le Yu, Mei Li,
+Wenhan Liu, Xinyu Ma, Weiwei Sun, Yutao Zhu,                 Mingfeng Xue, Pei Zhang, Qin Zhu, Rui Men, Runji
+ Yuchen Li, Dawei Yin, and Zhicheng Dou.                     Lin, Tianhao Li, Tianyi Tang, Tingyu Xia, Xingzhang
+ 2025. Reasonrank: Empowering passage rank-                  Ren, Xuancheng Ren, Yang Fan, Yang Su, Yichang
+ ing with strong reasoning ability. arXiv preprint           Zhang, Yu Wan, Yuqiong Liu, Zeyu Cui, Zhenru
+ arXiv:2508.07050.                                           Zhang, and Zihan Qiu. 2025. Qwen2.5 technical
+                                                             report.
+Charles Lovering, Michael Krumdick, Viet Dac Lai,
+  Seth Ebner, Nilesh Kumar, Varshini Reddy, Rik             Stephen E Robertson, Steve Walker, Susan Jones,
+  Koncel-Kedziorski, and Chris Tanner. 2024. Lan-              Micheline M Hancock-Beaulieu, Mike Gatford, et al.
+  guage model probabilities are not calibrated in nu-         1995. Okapi at trec-3. Nist Special Publication Sp,
+  meric contexts. arXiv preprint arXiv:2410.16007.            109:109.
+
+                                                        409
+Keshav Santhanam, Omar Khattab, Jon Saad-Falcon,             City, Mexico. Association for Computational Lin-
+  Christopher Potts, and Matei Zaharia. 2022. Col-           guistics.
+  BERTv2: Effective and efficient retrieval via
+  lightweight late interaction. In Proceedings of the    Miriam Wanner, Benjamin Van Durme, and Mark
+  2022 Conference of the North American Chapter of         Dredze. 2024b. Dndscore: Decontextualization and
+  the Association for Computational Linguistics: Hu-       decomposition for factuality verification in long-form
+  man Language Technologies, pages 3715–3734, Seat-        text generation. arXiv preprint arXiv:2412.13175.
+  tle, United States. Association for Computational
+  Linguistics.                                           Orion Weller, Kathryn Ricci, Eugene Yang, Andrew
+                                                           Yates, Dawn Lawrie, and Benjamin Van Durme. 2025.
+Aalok Sathe, Salar Ather, Tuan Manh Le, Nathan Perry,      Rank1: Test-time compute for reranking in informa-
+  and Joonsuk Park. 2020. Automated fact-checking          tion retrieval. arXiv preprint arXiv:2502.18418.
+  of claims from Wikipedia. In Proceedings of the
+  Twelfth Language Resources and Evaluation Confer-      Eugene Yang, Andrew Yates, Kathryn Ricci, Orion
+  ence, pages 6874–6882, Marseille, France. European       Weller, Vivek Chari, Benjamin Van Durme, and
+  Language Resources Association.                          Dawn Lawrie. 2025. Rank-k: Test-time reasoning for
+                                                           listwise reranking. arXiv preprint arXiv:2505.14432.
+Tal Schuster, Adam Fisch, and Regina Barzilay. 2021.
+  Get your vitamin C! robust fact verification with      Dun Zhang, Jiacheng Li, Ziyang Zeng, and Fulong
+  contrastive evidence. In Proceedings of the 2021         Wang. 2024. Jasper and stella: distillation of sota em-
+  Conference of the North American Chapter of the          bedding models. arXiv preprint arXiv:2412.19048.
+  Association for Computational Linguistics: Human       Shengyao Zhuang, Xueguang Ma, Bevan Koopman,
+  Language Technologies, pages 624–643, Online. As-        Jimmy Lin, and Guido Zuccon. 2025. Rank-
+  sociation for Computational Linguistics.                 r1: Enhancing reasoning in llm-based document
+                                                           rerankers via reinforcement learning. arXiv preprint
+Rulin Shao, Rui Qiao, Varsha Kishore, Niklas Muen-
+                                                           arXiv:2503.06034.
+  nighoff, Xi Victoria Lin, Daniela Rus, Bryan
+  Kian Hsiang Low, Sewon Min, Wen-tau Yih,
+  Pang Wei Koh, et al. 2025. Reasonir: Train-
+  ing retrievers for reasoning tasks. arXiv preprint
+  arXiv:2504.20595.
+
+Qwen Team. 2025. Qwq-32b: Embracing the power of
+  reinforcement learning.
+
+James Thorne,       Andreas Vlachos,         Christos
+  Christodoulopoulos, and Arpit Mittal. 2018a.
+  FEVER: a large-scale dataset for fact extraction
+  and VERification. In Proceedings of the 2018
+  Conference of the North American Chapter of
+  the Association for Computational Linguistics:
+  Human Language Technologies, Volume 1 (Long
+  Papers), pages 809–819, New Orleans, Louisiana.
+  Association for Computational Linguistics.
+
+James Thorne, Andreas Vlachos, Oana Cocarascu,
+  Christos Christodoulopoulos, and Arpit Mittal.
+  2018b.    The fact extraction and VERification
+  (FEVER) shared task. In Proceedings of the
+  First Workshop on Fact Extraction and VERification
+  (FEVER), pages 1–9, Brussels, Belgium. Association
+  for Computational Linguistics.
+
+Lewis Tunstall, Edward Beeching, Nathan Lambert,
+  Nazneen Rajani, Kashif Rasul, Younes Belkada,
+  Shengyi Huang, Leandro Von Werra, Clémentine
+  Fourrier, Nathan Habib, et al. 2023. Zephyr: Di-
+  rect distillation of lm alignment. arXiv preprint
+  arXiv:2310.16944.
+
+Miriam Wanner, Seth Ebner, Zhengping Jiang, Mark
+  Dredze, and Benjamin Van Durme. 2024a. A closer
+  look at claim decomposition. In Proceedings of the
+ 13th Joint Conference on Lexical and Computational
+  Semantics (*SEM 2024), pages 153–175, Mexico
+
+                                                       410
+A    Data Collection                                      A.3    Annotation Interface
+                                                          The annotation interface used for the human anno-
+A.1 Annotator Demographics                                tation is shown in Figure 5. The full, sentence-split
+The first three authors of this work—all native           text of a cited source article is shown on the far left.
+English-speaking graduate students in NLP or              All of the subclaims decomposed from a single
+professional NLP researchers—conducted the hu-            Wikipedia body sentence citing that source article
+man pilot annotations. These authors also jointly         are shown in a vertical list of tiles on the far right,
+produced the annotation instructions beforehand.          with the currently selected subclaim displayed in
+None was compensated beyond their co-authorship           the top middle part of the screen (to the right of
+on this work.                                             “Claim:”). Here, annotators can toggle between
+                                                          the original and decontextualized versions of the
+                                                          subclaim using the D toggle shown above the sub-
+A.2 Claim Decomposition                                   claim, with differences (additions, deletions) be-
+Decomposition is the process of breaking down sen-        tween the decontextualized and original versions
+tences into simpler, atomic components—aiming             shown in blue and red. Annotators can also display
+to isolate individual, independent claims for down-       the sentence that the current subclaim was decom-
+stream applications. A common approach to claim           posed from, along with its full Wikipedia context,
+decomposition uses LLMs to segment a sentence             by clicking the More Info toggle in the top right.
+into independent facts, each containing one “piece”          Several checkboxes are also shown above the
+of information. However, these subclaims can be           subclaim to enable annotators to indicate that:
+ambiguous, with vague references that are uninter-           • The source text is uninterpretable or otherwise
+pretable without the context of the document. The              low quality (Bad Source)
+process of decontextualization mitigates this issue
+by rephrasing a subclaim such that it is fully intelli-      • The subclaim is unfaithful to the meaning of
+gible as a standalone statement, without the original          the sentence from which it was decomposed
+document as context. These two processes are com-              (Bad Decontextualization)
+plementary: decomposition divides sentences into
+                                                             • It is simply too difficult to determine how
+smaller parts, whereas decontextualization adds
+                                                               the current subclaim relates to the source
+information.
+                                                               material—e.g. because the source document
+   We use the “DnD” decomposition and decon-                   is too technical for the annotator to understand
+textualization method introduced by Wanner et al.              (I’m Uncertain)
+(2024b), which uses an LLM prompt-based method
+for obtaining subclaim decompositions and the cor-           Annotators select up to three sentences from the
+responding decontextualized subclaims. We de-             source text on the left that together provide the
+compose and decontextualize sentences from the            strongest evidence (either supporting or refuting)
+original Wikipedia page, either from the lead (in         for the target subclaim. We chose a maximum of
+the LEAD task) or body (in the BODY task), and pro-       three sentences because this enabled adequate cov-
+vide the lead paragraph (LEAD) or additionally the        erage of the evidence for the vast majority of claims
+body paragraph from which the claim originates            while keeping the task tractable for annotators.
+(BODY) as context for decontextualization. During            Finally, the blue box (bottom middle) is used to
+the pilot annotation, annotators are able to toggle       specify the support score for the currently selected
+between the subclaim and its decontextualized ver-        subclaim, given the identified evidence. After se-
+sion to select up to three sentences that together        lecting evidence and providing a support score for
+provide the strongest evidence (either supporting         all subclaims (toggling between them using the
+or refuting) for the subclaim. Finally, after iden-       NEXT and BACK buttons on bottom), annotators
+tifying evidence, annotators determine a support          submit their work via the SUBMIT button.
+score for the subclaim given that evidence. The
+bulk annotation provides only the decontextualized        A.4    Prompts and Hyperparameters
+subclaim in the prompt. Following Wanner et al.,          The prompt used for bulk annotation with GPT-
+we use GPT-4o-mini (OpenAI, 2024) to perform              4o-mini is shown in Figure 6 through Figure 10
+DnD.                                                      (divided over multiple pages due to the length of
+                                                      411
+Figure 5: Annotation interface for the human pilot annotation. Detailed description can be found in Appendix A.2.
+
+
+the instructions). This prompt was selected based            Letting CB be a body claim and CL be a lead
+on highest agreement with the human pilot anno-           claim, we then define the relevance of a source
+tations after numerous manual iterations on other         sentence SS to a query QE about entity E as the
+prompts. We used gpt-4o-mini-2024-07-18, the              following weighted sum:
+most recent version of the model available at the
+time. Annotations were generated with temperature                                   P
+0, with a limit of 2K output tokens to accommodate          Rel(QE , SS )       =     CB ∈bodyE (SS ) wCB
+source texts of up to 126K tokens. Source texts ex-                              ·abs(support(CB ))
+ceeding this limit were truncated, though this was                                  P
+                                                                     wCB     = 1 + CL ∈leadE (sent(CB ))
+rarely required.
+                                                                                    abs(support(CL ))
+B     Experimental Details
+                                                             Intuitively, Rel(QE , SS ) is a weighted sum of
+B.1    Qrels for ENTITY                                   the absolute values of the support scores of all body
+For the ENTITY task in §5, we assign fine-grained         claims (CB ’s) that S is evidence for (bodyE (SS )).
+relevance labels to sentences in the source docu-         We use the absolute value of the support score be-
+ments for a given entity based on (1) how strongly        cause S is equally important as evidence regardless
+they support a Wikipedia body claim, (2) how many         of whether it is supporting or refuting evidence.
+body claims they support, (3) how strongly they              The weight wCB associated with each body
+support lead claims via body claims, and (4) how          claim CB is 1, plus the sum of (absolute values
+many lead claims they support.                            of) support scores of all lead claims for which
+   Given an article for entity E, a sentence SB           sent(CB )—the sentence CB was decomposed
+in the article’s body, a sentence SS in some cited        from—provides evidence. This rewards S for indi-
+source, and a claim C, we define the following:           rectly supporting a lead claim CL via a body claim
+                                                          (CB ), proportional to the degree of support for CL .
+    • leadE (SB ): the set of lead claims that have
+                                                          The motivation here is simply that (1) lead claims
+      SB in their (body) evidence set
+                                                          typically represent more important facts about an
+    • bodyE (SS ): the set of body claims that have       entity than body claims, and thus sentences that
+      SS in their (source) evidence set                   (indirectly) provide evidence for them should be re-
+                                                          warded, and (2) that reward should be proportional
+    • support(C): the support score for a claim C
+                                                          to the degree of support.
+    • sent(C): the sentence that claim C was de-             We note that this is a somewhat heuristic weight-
+      composed from                                       ing scheme, as CB is given credit merely for being
+                                                      412
+decomposed from a sentence that supports a lead             Task   Model                N@5       R@5     R@10
+claim CL —even if a different claim (CB   ′ ) decom-        LEAD   Stella-1.5B-v5       59.67     64.92   75.12
+posed from the same sentence provides the bulk of                  RankZephyr-7B        68.96     69.92   75.12
+the evidence for CL . Collecting further annotations               Rank-K-32B           70.0      71.44   75.12
+to enable more precise assignment of relevance                     ReasonRank-7B        71.11     72.36   75.12
+scores is a direction we are pursuing for future            BODY   Stella-1.5B-v5       74.27     80.69   90.41
+work.                                                              RankZephyr-7B        81.28     83.88   90.41
+                                                                   Rank-K-32B           83.54     86.40   90.41
+B.2        Retrieval Model Details                                 ReasonRank-7B        84.31     87.22   90.41
+
+For BM25 (no parameters), we use the im-                Table 6: Reranking results for select models on outputs
+plementation provided in the bm25s library              from Stella-1.5B-v5 on the LEAD and BODY tasks (best
+(Lù, 2024) with default settings. We access             results are bolded). N=NDCG; R=Recall.
+Stella-1.5B-v5 (1.5 billion parameters) through
+the sentence-transformers library with de-                    Model             N@5       N@100       R@100
+fault settings (i.e. no hyperparameter search                 Stella-1.5B-v5    23.79     40.60       64.37
+was performed).         Finally we access Col-                RankZephyr-7B     25.28     41.14       64.37
+BERTv2 (jinaai/jina-colbert-v2 on Hugging-                    Rank-K-32B        25.47     42.08       64.37
+Face; 559M parameters) via the ragatouille li-                ReasonRank-7B     25.99     42.54       64.37
+brary17 , leveraging FAISS for indexing (Johnson
+                                                        Table 7: Reranking results for select models on outputs
+et al., 2019), and again using default settings. Nei-   from Stella-1.5B-v5 on the ENTITY task (best results are
+ther Stella-1.5B-v5 nor ColBERTv2 were fine-            bolded). N=NDCG; R=Recall.
+tuned on P EOPLE P ROFILES. All experiments were
+carried out on a single NVIDIA A100 GPU except
+the reranking experiments, for which four A100s         Similar to the results reported in Table 3, we ob-
+were used. All main text results reflect single runs.   tain the highest scores with ReasonRank on both
+   Rank1 outputs were generated with temperature        tasks, with comparably large gains over first-stage
+0 and a maximum of 8,192 output tokens. We              retrieval.
+adopted the generation temperatures for listwise           Table 7 shows the same results for the ENTITY
+rerankers from the defaults listed in their public      task (k = 100). Here again, ReasonRank achieves
+repositories and limited their outputs to 8K tokens.    the best scores, although the gains relative to first-
+For listwise reranking, we used a window size of        stage retrieval are much smaller compared to those
+20 with stride 10.                                      based on BM25 outputs (Table 4).
+
+B.3        Reranking Prompts                            D    WiCE Comparison
+Figure 11, Figure 12, Figure 13, and Figure 14 list     Table 8 summarizes key differences between our
+the task-specific modifications made to the prompts     P EOPLE P ROFILES and the most similar existing
+used in the original reranker implementations.          benchmark, WiCE (Kamoi et al., 2023). See §2 for
+                                                        a detailed comparison between P EOPLE P ROFILES,
+B.4        Use of AI Assistants                         WiCE, and other related works.
+No AI assistance was used in the ideation or in the
+writing of this paper. GitHub Copilot was used to
+assist in writing the code for some of the experi-
+ments and analysis.
+
+C         Additional Results
+C.1 Additional Reranking Results
+Table 6 shows select reranking results (k = 10) on
+top of Stella-1.5B-v5 outputs (rather than BM25,
+as in the main text) for the LEAD and BODY tasks.
+    17
+         https://github.com/AnswerDotAI/RAGatouille
+
+                                                      413
+                                                                                    P EOPLE P ROFILES
+       Dataset Characteristic                           Split        WiCE
+                                                                                         (Ours)
+       Support Scores                                       —     Categorical             Scalar
+       Article-internal grounding annotations               —           ✗                    ✓
+       Article-external grounding annotations               —           ✓                    ✓
+                                                                  SIDE subset
+       Subset of article-external subclaims                 —    (Petroni et al.,      All available
+       annotated                                                     2022)
+                                                        Train       3 human               1 LLM
+       Annotations per subclaim                          Dev        5 human               1 LLM
+                                                         Test       5 human               1 LLM
+                                                        Train        3,470                60,107
+       Number of body subclaims                          Dev           949                19,712
+                                                         Test          958                18,712
+
+Table 8: Comparison of dataset characteristics between P EOPLE P ROFILES and WiCE, the most similar prior work.
+P EOPLE P ROFILES features fine-grained scalar support labels, article-internal support relations, and ∼20x more
+examples than WiCE.
+
+
+
+
+                                                      414
+P EOPLE P ROFILES Annotation Prompt
+
+In this task, you will be shown a claim along with a list of sentences representing a document
+that might provide evidence for the claim. Given this information, you will perform two steps,
+described below.
+
+For both steps, rely on the following two definitions of evidence:
+Definition 1: “Supporting evidence”:
+A set of sentences S provides supporting evidence for a claim c if, supposing the contents of S
+were true, it would give you greater reason to believe that c is true, all else equal.
+Definition 2: “Refuting evidence”:
+A set of sentences S provides refuting evidence for a claim c if, supposing the contents of S were
+true, it would give you greater reason to believe that c is false, all else equal.
+
+Step 1:
+
+Select 0, 1, 2, or *at maximum* 3 sentence(s) from the document that provide the strongest
+supporting evidence or refuting evidence for the claim. If no sentences in the document provide
+evidence, do not select any sentences.
+
+Additional guidelines for Step 1:
+(a) You may need to use logic and common sense to *infer* that a sentence provides evidence
+for the claim. For example, you can use common sense to assume that a person wearing reading
+glasses struggles with their sight.
+(b) Do not assume any parts of the claim are common knowledge. You must find evidence for all
+parts of the claim. For example, if the claim states that Vidya, the English chef, has poor vision,
+you would need to find evidence that Vidya is English and a chef, as well.
+(c) A sentence might provide evidence for the claim only when combined with other sentences.
+For example, if Sentence A states Bob is married to Mary, and Sentence B states that Mary is
+a doctor, Sentences A and B together provide supporting evidence for the claim that Bob has a
+doctor in his family.
+(d) Please make sure the entities and events in your selected sentences match those in the claim.
+For example, dates and names, as determined by the rest of the document, should match the claim;
+else, the sentences do not provide evidence.
+
+
+                                             Figure 6
+
+
+
+
+                                               415
+P EOPLE P ROFILES Annotation Prompt, continued
+
+Step 2:
+
+Given your selected set of sentences from Step 1, score the degree to which these sentences (taken
+together) support or refute the claim. Determine the score according to the following definition of
+a scale from -1 to 1:
+
+-1: The claim is *fully refuted*: The claim would have to be false, supposing the sentences you
+selected were true.
+Scores between -1 and 0 (-0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1): The claim is *partially
+refuted*. The claim would have to be false, but some parts are likely true.
+0: The claim is neither supported nor refuted. It is equally likely to be true or false.
+Scores between 0 and 1 (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9): The claim is *partially supported*.
+The claim is likely partially true, with missing evidence. No parts of the claim are likely to be
+false.
+1: The claim is *fully supported*: The claim would have to be fully true, supposing the sentences
+you selected were true.
+
+Additional guidelines for Step 2:
+(a) Use only the content of your selected sentences to make your judgment. Do not use any
+knowledge you may already have about the claim, nor any context from other sentences in the
+document. For example, even if you know that London is in England, or it is stated elsewhere in
+the document, you cannot judge that detail of the claim as supported unless it is stated in your
+selected sentences.
+(b) As in Part 1, do not assume any parts of the claim are common knowledge. Assign the score
+based on all parts of the claim, even if they seem obviously true or false.
+(c) The document might only contain evidence for a similar but distinct claim. For example, if
+the strongest evidence states that the president ate at a restaurant on a Friday, this is not refuting
+evidence for the claim that the president ate at a restaurant on Tuesday; in fact, there is no evidence
+to support or refute the claim.
+
+
+
+                                                Figure 7
+
+
+
+
+                                                  416
+P EOPLE P ROFILES Annotation Prompt, continued
+
+Below are 10 examples of scoring sentences that have already been selected from a document as
+supporting or refuting evidence for a claim:
+
+###Example 1###
+Claim: "Methane Momma is a short film directed by Alain Rimbert."
+Selected sentences: ["Well, good news 2̆013 last week, in the middle of one of the worst heat
+waves that New York has seen in recent memory, a pajama-clad (and still ripped) Van Peebles
+entered ex-Sun Ra bandmember Spaceman’s Harlem-based studio and recorded his last takes on
+the rambling poem he’s entitled M̈ethane Momma."]¨
+Score: -0.7
+
+###Example 2###
+Claim: "Raj Kapoor was hospitalised for about a month."
+Selected sentences: ["Suddenly, Kapoor collapsed, and was rushed to the All India Institute of
+Medical Sciences for treatment.", "The country’s top cardiologists tried their best, but could not
+save him."]
+Score: -0.1
+
+###Example 3###
+Claim: "Ottawa is a city located in the province of Ontario, Canada, and is where Matthew Perry
+attended school."
+Selected sentences: []
+Score: 0
+
+###Example 4###
+Claim: "Paul Thomas Anderson registered himself with the Writers Guild of America under the
+name ’Paul Anderson.’"
+Selected sentences: []
+Score: 0
+
+###Example 5###
+Claim: "There were exile forces opposing Idi Amin’s regime."
+Selected sentences: ["Since leading his guerrilla forces to Kampala in 1986, his most impressive
+flexibility has been his capacity to present two concurrent faces: one is that of the democratic
+reformer, the other is of the fearsome military ruler.", "The former is the saviour of Uganda’s
+post-colonial collapse under presidents Milton Obote and Idi Amin, patron of democracy, and
+emancipator of woman and ethnic and religious minorities."]
+Score: 0.1
+
+
+                                             Figure 8
+
+
+
+
+                                               417
+P EOPLE P ROFILES Annotation Prompt, continued
+
+###Example 6###
+Claim: "Margaret Rose Vendryes wrote about Richmond Barth0̆0e9’s work further in her 2008
+book."
+Selected sentences: ["By coincidence, Dr. Vendryes was the Schomburg’s scholar-in-residence
+and was researching her Princeton doctorate thesis on Barthe, which evolved into her landmark
+book Casting Feral Benga: A Biography of Richmond Barth0̆0e9’s Signature Work."]
+Score: 0.3
+
+###Example 7###
+Claim: "Margaret Rose Vendryes gave a lecture in 2015."
+Selected sentences: ["This Thursday, February 5 at the Jepson Center, Dr. Vendryes will give the
+opening lecture for the exhibition."]
+Score: 0.5
+
+###Example 8###
+Claim: "The exhibit presented by The New York Public Library for the Performing Arts was
+extensive."
+Selected sentences: ["Curated by Doug Reside, the Lewis B. and Dorothy Cullman curator of
+the library’s Billy Rose Theatre Division, the installation will run through March 31, 2020, and
+feature original costumes, set models, and archival video tied to Prince’s productions, including
+models for several productions.", "The full display will honor the more than six-decade legacy of
+Prince.", "An open cabaret stage will allow viewers to perform songs from his shows or record
+their own stories about their experience with Prince’s theatrical work to add to the live nature of
+the homage."]
+Score: 0.7
+
+###Example 9###
+Claim: "The location of Matthew Perry’s funeral was Forest Lawn Memorial Park (Hollywood
+Hills), a cemetery."
+Selected sentences: ["Photo: David M. Benett/Dave Benett/Getty Matthew Perry’s loved ones
+gathered for the actor’s funeral on Friday.", "The service was held at Forest Lawn Memorial Park
+in Los Angeles near Warner Bros. Studios.,"] Score: 0.9
+
+###Example 10###
+Claim: "The promotional video was 60 minutes long."
+Selected sentences: ["Microsoft made a c̈yber sitcomẗo promote it.", "The final product [debuted
+on VHS on August 1, 1995](https://books.google.com/books?id=0QsEAAAAMBAJ&
+lpg=RA1-PA62&dq=matthew%20perry%20jennifer%20aniston%20windows%2095&pg=RA1-
+PA62#v=onepage&q&f=false), satisfying everybody who wished Friends were an hour long, had
+four fewer friends, and involved a guide to file management."]
+Score: 1
+
+
+                                             Figure 9
+
+
+
+
+                                               418
+    P EOPLE P ROFILES Annotation Prompt, continued
+
+    Finally, here are the claim and list of document sentences for your task:
+
+    Claim: <subclaim>
+
+   Document sentences:
+   <numbered source sentences>
+
+   Write your response in a dictionary in the format shown below. Write the dictionary and nothing
+   else.
+   Dictionary format:
+   "sentences": [
+   "[<sentence number>] <sentence selected from document>",
+   ...,
+   ],
+   "score": <number between -1 and 1>
+
+    ###Your Task###
+    Selected sentences and score in dictionary form:
+
+
+                                                     Figure 10
+
+
+
+   Task prompt for pointwise evidence reranking: BODY and LEAD
+
+   The following is a claim: <claim>
+   A relevant passage provides supporting or refuting evidence for the claim.
+
+
+Figure 11: This task prompt takes the place of the query in the prompt used by the original Rank1 implementation.
+
+
+
+   Task prompt for pointwise evidence reranking: ENTITY
+
+    I am writing an encyclopedia article about the following person: <entity>. A relevant passage
+    contains noteworthy biographical facts about this person. For example, a passage containing facts
+    about this person’s early life, education, career, or death is relevant.
+
+
+Figure 12: Like the task prompt in Figure 11, this task prompt takes the place of the query in the prompt used by the
+original Rank1 implementation.
+
+
+
+   Task prompt for listwise evidence reranking: BODY and LEAD
+
+   The query given below is a claim. A relevant passage provides supporting or refuting evidence for
+   the claim.
+
+
+Figure 13: This task prompt is prepended to the user message in the reranker’s original implementation, which
+passes prompts to the model using the conversational format. The original system message, if it exists, is retained.
+
+
+                                                        419
+   Task prompt for listwise evidence reranking: ENTITY
+
+   I am writing an encyclopedia article about the following person given in the query below. A
+   relevant passage contains noteworthy biographical facts about this person. For example, a passage
+   containing facts about this person’s early life, education, career, or death is relevant.
+
+
+Figure 14: Like the task prompt in Figure 13, this task prompt is prepended to the user message in the reranker’s
+original implementation, which passes prompts to the model using the conversational format. The original system
+message, if it exists, is retained.
+
+
+
+
+                                                      420
+
