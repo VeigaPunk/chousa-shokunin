@@ -1,0 +1,28 @@
+# R55-C1 controls (controls/build-c1-controls.py OUTDIR), --seed 55, frozen counter
+## r54shim sha256=0d924c488ddfdb2007dcaf80a206a78285de4ffca16ef9e1abd2877d95e6965c
+tool=$SCRATCH/ctl/r54shim.py sha256=0d924c488ddfdb2007dcaf80a206a78285de4ffca16ef9e1abd2877d95e6965c seed=55 per-leg=3
+GENOLE=FAIL S901 span is not a slice of the defined form
+OLEPIN=FAIL S921 span is not a slice of the defined form
+REFUSE=FAIL NOFORM: rc=0
+REGRESS=PASS r54 33 rows identical
+LEGS=1/4
+C1=FAIL
+exit=1
+## txtonly sha256=e23efd14562645147e3d65d8986314cb074069b5c55c13a090d8fef60959065b
+tool=$SCRATCH/ctl/txtonly.py sha256=e23efd14562645147e3d65d8986314cb074069b5c55c13a090d8fef60959065b seed=55 per-leg=3
+GENOLE=FAIL rc=1 b'build-spans: refused S901\nbuild-spans: refused S901\nbuild-spans: refused S902\nbuild-spans: refused S902\nbuild-spans: refused S903\nbuild-spans: refused S903\n'
+OLEPIN=FAIL rc=1 b'ans: refused S922\nbuild-spans: refused S922\nbuild-spans: refused S923\nbuild-spans: refused S923\nbuild-spans: refused S923\nbuild-spans: refused S924\nbuild-spans: refused S924\nbuild-spans: refused S924\n'
+REFUSE=FAIL SIDECAR: no refusal line for S942
+REGRESS=PASS r54 33 rows identical
+LEGS=1/4
+C1=FAIL
+exit=1
+## delegate sha256=e2aaca670f1be0986297ed47fadc16d85e680221a92c341f5457c727f49352c4
+tool=$SCRATCH/ctl/delegate.py sha256=e2aaca670f1be0986297ed47fadc16d85e680221a92c341f5457c727f49352c4 seed=55 per-leg=3
+GENOLE=FAIL rc=97 b'AUDIT_FORBIDDEN ctypes.dlopen\n'
+OLEPIN=FAIL rc=97 b'AUDIT_FORBIDDEN ctypes.dlopen\n'
+REFUSE=FAIL NOFORM: rc=97
+REGRESS=FAIL rc=97 b'AUDIT_FORBIDDEN ctypes.dlopen\n'
+LEGS=0/4
+C1=FAIL
+exit=1
