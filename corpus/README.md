@@ -1211,3 +1211,22 @@ Left open:
 - **Currency of the NMPA guideline:** 试行 / Interim, 2019; no capture states whether it is in force, revised or replaced.
 - **A regulator-hosted copy of the guideline's text:** only the gcpunion.org copy is captured.
 - **The rest of the grey-literature family** (`grey-literature-and-chinese-search-record-r41.md`, `-field-china-r42`, `-national-route-r44`, `-mandate-scope-r48`; r43 refused this round): undecided, each its own round.
+
+## Round56 coverage and frontier (2026-10-27)
+
+New ground: where a grey-literature search requirement sits in Chinese drug clinical comprehensive evaluation practice — the society workflow guideline lists 灰色文献 as an information source (`S127` draft, `S129` publication, 表7), its printed grade is the recommendation's, the adoption of the 中国循证医学中心 grading is dated by the drafters' note (`S128`), and the national centres' 2020 management guideline (`S130`) and issued quality-control guideline (`S118`) carry no grey-literature wording in their text forms. Entry: `corpus/knowledge/grey-literature-field-china-r42.md`.
+
+### Frontier
+
+Advanced:
+
+- **A source requirement and the meaning of its grade.** The lane can now say what a Ⅰ级/A beside a source category grades (the recommendation, on the guideline's own scale) and where the row sits when a two-column text form misleads (QUALITY 109).
+- **Gate clause coverage.** The span builder's gate has every round-55 clause shown able to fail (`corpus/evidence/round56/c1-count.py`).
+
+Left open:
+
+- **An issued T/CLPA standard:** the platform text is a 征求意见稿 with placeholder number and dates.
+- **The 2021 管理指南** the explanatory note names: not captured; the 2020 text's silence does not speak for it.
+- **The gate's hook as a boundary:** `dir_fd` without `chdir`, native `import`, `sqlite3.connect`; six gate clauses without a battery entry.
+- **The builder's output safety** (`R55W2SentBuilder`): destructive `--out`, symlinked outputs, unbounded memory.
+- **The rest of the grey-literature family** (r41, r48); r44 refused this round (same theme, overlapping documents).

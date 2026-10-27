@@ -2825,3 +2825,33 @@ The numeric operability scale remains 3/10; the round-1 score is its narrow arch
 ## Planned — round 56 (not started)
 
 Candidates: run the round-55 falsify wave items that never ran (`.ufo/waves/round-55/w2-spec.json`, 36 items, not dispatched) against the landed C1/C2/C3; integrate the 13 W1 seats that had not reported at filing; close the C1 hook gaps W1 named (`_posixsubprocess.fork_exec`, `dir_fd`) in a successor counter; the S101 carrier-alphabet leg (now buildable); the next grey-literature-family entry (r41/r42/r44/r48).
+
+## Round 56 verdict — 2026-10-27 (build-spans gate clause coverage and hook closure; the grey-literature row of the drug clinical comprehensive evaluation workflow guideline by document)
+
+Claims frozen at `41c58925580af6be22049f13cfde234c5475b858` after do-nothing controls (`corpus/evidence/round56/claims.md`; `controls/c1-before.txt`, `c1-controls.txt`, `c2-before.txt`, `c2-controls.txt`). C1 candidate (battery) `46e1758f3d8a5d1bf30200d2ff7d909b0230feed`. After-receipts: C1 at lane master `99eff0eca3d7440aeb96a9afac6a421759b4f704` (`c1-measure-after.txt`, two runs; C1 inputs unchanged since the candidate), C2 at lane master `98977070993e2f39bc09f0379607e290c294d870` (`c2-measure-after.txt`, after the 表7 fix). No live fetch; L0 `8d77e6c1` open.
+
+| claim / axis | before → after | counting command | verdict | tag |
+|---|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10): the build-spans gate's clause coverage and two hook bypasses | gate = round-55 counter, battery = round-55 controls: `CANDIDATE=2/2 KILLED=1/9 DENIED=0/2 C1=FAIL`; controls HOOKONLY `KILLED=1/9 DENIED=2/2`, JUNK (with an alternating FLIP forge) `KILLED=1/9`, EMPTY `KILLED=1/9` → `CANDIDATE=2/2 KILLED=9/9 DENIED=2/2 C1=PASS` ×2 (124 runs each) | `python3 corpus/evidence/round56/c1-count.py` | **improved narrowly**: the eight clauses no control exercised are each shown able to fail with their own reason, and the two named bypasses (`_posixsubprocess.fork_exec`, `chdir`+`dir_fd`) end the run; M9 was already killed by the landed builder. The wave found the hook still not a boundary: a `dir_fd` open needs no `chdir` (`R56SentC1` F1), native `import` and `sqlite3.connect` are unchecked (`R56CritC1Hook`), and six further gate clauses survive the battery (`R56MutC1GateNew`) | operability |
+| C2 depth (sourced): the 灰色文献 source row of 药品临床综合评价工作流程指南 | `ENTRIES=0/1 BOUND=0/4 … C2=FAIL`; STAGED `REF_ID_UNBOUND=3 BOUND=0/4`; REWRITE `BOUND=3/4 QUOTE_ROWS=0 GUIDELINE_BOUND=no` → `ENTRIES=1/1 HELD_CITED=S118 BOUND=4/4 GUIDELINE_BOUND=yes REF_ID_UNBOUND=0 NEW_GROUND=1/1 QUOTE_ROWS=23 CAPTURE_BOUND=23/23 SUBSTANCE=PASS ANCHOR_BOUND=4/4 INFERENCE_GROUNDED=1/1 C2=PASS` | `python3 corpus/evidence/round56/c2-count.py` | **improved**, as presence, binding and located support in the defined forms; entailment uncounted (wave `R56CritEntail`, `R56CritCurrency` narrowings carried: draft not issued standard; the grade is the recommendation's; the 2020 management guideline's silence scoped to its form); quote uniqueness is checked by the builder, not by this counter (`R56ReviewC2Counter`) | ground |
+
+The numeric operability scale remains 3/10; the round-1 score is its narrow archived-export observable, not this gate counter. No other numeric score is invented.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved narrowly** | C1; `build-spans` re-registered as a gate (SKILL.md, appended row) with its gate and clause-coverage self-test; open: in-process hook classes and six uncovered gate clauses (above), the builder's destructive `--out` (`R55W2SentBuilder`) |
+| depth | **improved** | C2; one entry on four documents (S127–S130) and the held S118, 23 located quotes in defined forms, the published row placed in 表7 by layout |
+| coverage | **improved narrowly** | `git grep -c 中国循证医学中心 e5a37951 -- corpus/knowledge` → exit 1 at base, present at tip; a society guideline's information-source list beside the regulator's report field and the centre's quality-control check |
+| calibration | **improved narrowly** | closure D3/D4 corrected by appended lines; QUALITY 106–109; lesson Mistakes rows 1–3 (row 3 this round's own 表 10 misattribution, caught by the wave and fixed before filing); round-55 W2 narrowings appended (r40 `#### Corrections (round 56)`) |
+| freshness | **unchanged** | no fetch; newest capture dates remain 2026-10-24 |
+| adjacency | **unchanged** | `R56ReviewProvince`: evaluation content and grading systems reported as adjacent; `R56ConnSiblings`: 0 overlaps across the sibling lanes |
+
+## Capabilities (round-56 addition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| Gate clause coverage by clause-reason mutation kills | runs a gate and its frozen mutants on a battery and counts a mutant killed only when some battery entry fails the mutated clause with that clause's own reason under the gate and passes it under the mutant, three times each in a random order at two seeds (an alternating or call-counting forge is refused); runs frozen hook probes and requires the hook's exit | `python3 corpus/evidence/round56/c1-count.py [--gate G] [--battery B]`; `corpus/evidence/round56/c1-measure-after.txt` (`KILLED=9/9 DENIED=2/2` ×2); `controls/c1-controls.txt` (JUNK with FLIP `KILLED=1/9`) | 56 |
+
+## Planned — round 57 (not started)
+
+Candidates: harden `tools/build-spans.py` (`R55W2SentBuilder`: refuse a foreign `spans.tsv` in `--out`, refuse symlinked outputs, unlink orphans last, no `.pyc` in `tools/`, bounded reads) with a frozen counter; run the gate's tool in a separate process boundary or extend the probes to `dir_fd` without `chdir`, native `import` and `sqlite3.connect` (`R56SentC1`, `R56CritC1Hook`); battery entries for the six surviving gate clauses (`R56MutC1GateNew`); the S101 carrier-alphabet leg; the remaining grey-literature family (r41, r48; r44 refused this round).
