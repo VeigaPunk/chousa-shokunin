@@ -28,6 +28,8 @@ Appended corrections for statements this lane filed earlier (append-only: the st
 - E05–E07, E09, E10 (`corpus/QUALITY.md` 97 and 98): QUALITY 101.
 - E08 (`corpus/lessons/round-54.md` Mistakes row 2): the mirror without both dumps prints `ANCHORED=7/16 UNANCHORED=9 BAD=9`; `BAD=6` is the case with S101's dump alone missing (S100's alone gives `BAD=3`; W2 `R54W2CritMistakes`).
 - E11 (`corpus/evidence/round54/c1-supplement.py` docstring): left as filed (it is round-54 evidence and its digest is cited); its isolation sentence holds for the document file only — the work tree two levels up holds the oracle exports and the generation HTML (Mistakes row 3).
+- Round 56 (closure D4, `corpus/lessons/round-55-verifier-spotcheck.md` §1): the `## Gate` quarantine line's "the document prints `即“灰色文献”` with curly quotes (char 994)" gives the start of the containing sentence `查找时应当注意收集…`; `即“灰色文献”` itself is at char 1012 of the defined OLE form (`python3 tools/capture-text.py …/bdff491a75c6abeda1d9c01d.raw`: `即“灰色文献”` count 1 at 1012, `即灰色文献` count 0, `查找时应当注意收集` count 1 at 994; re-run by the round-56 L1). The `## All located quotes` row `S124 994` is the sentence quote and stands. The verdict `absent-as-written` stands.
+- Round 56 (closure D3): the round-55 report cites C2 and C3 as "measured at `29cfb12a`" and a C2 re-run "at `53f1ce6b`"; the committed receipts' headers name lane master `5a35ebd6` (`corpus/evidence/round55/c2-measure-after.txt:1`, `c3-measure-after.txt:1`) and no receipt names `53f1ce6b`. The measurement revision of both is `5a35ebd6`; `29cfb12a` touched none of their inputs. From round 56 the report cites only the revision a committed receipt header names.
 
 ## Gate
 
