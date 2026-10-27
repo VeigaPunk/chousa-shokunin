@@ -2898,3 +2898,25 @@ tip; the hash in the header above now resolves. Clause (1) in the preceding note
 history, not a current SCORECARD defect. Axis conformance remains open: the only numeric axis is
 operability 3/10, while frozen C2/C3 target freshness/depth and the round-56 planned row did not
 name these claims; see `R57W1ReviewAxes.md` and the round-57 L0 question.
+
+## Round 58 verdict — 2026-10-27 (frozen counter defects; no claim admitted)
+
+Claims froze at `9e73a031ab1ac3bac343de008850d7d87f9e5634` against base `b13ca7b5c8bbb40d2d29a37fb443c64ca043f791`; do-nothing receipts are under `corpus/evidence/round58/controls/`.
+
+| claim / axis | before → after measurement | counting command / evidence | verdict |
+|---|---|---|---|
+| C1 operability (lowest numeric axis, historical scale 3/10) | base receipt: `C1=FAIL`, `FOREIGN` deletes S777 and refusal legs fail; a scratch positive builder yields 11/11 per-leg `pass` but frozen aggregate still `REFUSE=0/7 C1=FAIL` | `python3 corpus/evidence/round58/c1-count.py --builder <builder> --work <fresh-dir>`; `controls/c1-before.txt`, `controls/c1-controls.txt`, W1 `R58ScribeMistakeMine.md`, `R58ReviewFrozenClaims.md`, `R58ExecC1CounterAudit.md` | **unprovable** — frozen `ref_pass` searches uppercase `=PASS`, while every refusal emitter outputs lowercase `=pass`; no builder can produce the required token. No score delta; historical 3/10 observable is unchanged. |
+| C2 depth (sourced S101) | before: `C2=FAIL` (entry/manifest absent); builder-produced scratch manifest: `CAPTURE_BOUND=0/12 REBUILD=MATCH C2=FAIL`; occurrence-offset rewrite: `CAPTURE_BOUND=12/12 REBUILD=FAIL` | `python3 corpus/evidence/round58/c2-count.py --root <lane-copy> --work <fresh-dir>`; `controls/c2-before-frozen.txt`, W1 `R58ReviewC2Counter.md`, `R58ScribeEntryDraft.md`, `R58ExecC2Anchors.md` | **unprovable** — the pinned builder stores span-start offsets, but the frozen counter requires quote-occurrence offsets, so its bind and rebuild clauses cannot both pass. No depth score is invented. |
+
+No score was changed or invented. Capability table unchanged; no production builder patch or knowledge entry was admitted under these unsatisfiable frozen predicates.
+
+| axis | round-58 verdict | evidence |
+|---|---|---|
+| operability | **unprovable** | C1 counter's `C1=PASS` target is unreachable as frozen; no numeric score delta. |
+| depth | **unprovable** | C2 span-start/occurrence-offset contradiction; no numeric score recorded. |
+| coverage | **unchanged** | no knowledge entry was admitted or moved from frontier to core. |
+| freshness | **unchanged** | no live fetch; capture-age surfaces untouched (fetch-scope L0 remains open). |
+| calibration | **unchanged** | criterion 115 records the missing positive-control duty, but no outside admit/reject sample or self-assessment calibration was verified. |
+| adjacency | **unchanged** | W1 sibling-province scan found no competing owner for the S101 bibliographic slice; no scope was absorbed. |
+
+Learning trends: expansion **unchanged** (no entry admitted); quality **unchanged** (no admitted entry re-verified, deepened or superseded); discernment **unchanged** (no outside non-author sample was available before filing).

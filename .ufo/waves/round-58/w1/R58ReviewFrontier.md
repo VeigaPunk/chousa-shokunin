@@ -1,0 +1,18 @@
+# Round-58 frontier audit
+
+## Findings
+
+- **S101 opened this round — evidenced.** `corpus/evidence/round58/s101-open.txt:1-6` records the 2026-10-27 opening from the lane-owned committed capture, says no live fetch, gives raw SHA-256, pinned `capture-text.py` command, and a located quote/offset. The independent round-57 quarantine check binds S096 by URL to the same S101 capture: `corpus/evidence/round57/sidecar-audits.md:35-45` (PRESENT; 24/24). Round-57 lesson records that verdict at `corpus/lessons/round-57.md:74`.
+- **Census start — receipt present, but it is a narrow receipt.** `corpus/evidence/round58/census-start.txt:1-7` contains the five W04 findings, `chousa ok .../corpus/SOURCES.md`, and `EXIT=0`. It does **not** print an explicit row count or date; avoid claiming either from this receipt. The preceding round's frontier reported its start count explicitly (`corpus/lessons/round-57.md:41`).
+- **No new SOURCES row unless opened — supported; no new row was added at freeze.** The plan tasks state the rule at `.ufo/waves/round-58/w1-spec.json:21` (Gate lesson) and `:24` (S101 source-row review). S101 already exists as a mined registry row at `corpus/SOURCES.md:111`; the read-only diff of `corpus/SOURCES.md` from claim base `b13ca7b5c8bbb40d2d29a37fb443c64ca043f791` to freeze `9e73a031ab1ac3bac343de008850d7d87f9e5634` was empty. LOG records the existing capture opening and frozen quote set at `LOG.md:1907`.
+- **Round-57 quarantine-first status — evidenced for the reused capture.** The quarantine verdict concerns S096, not the S101 registry ID; it is explicitly URL-bound to S101's capture (`sidecar-audits.md:37-45`). The lesson records quarantine completion at `round-57.md:74`. Keep this distinction explicit; the S101 row itself is `mined` (`SOURCES.md:111`).
+- **Assimilation none — no assimilation task is present in the round-58 wave plan/dispatch.** Text search of `.ufo/waves/round-58/w1-spec.json` and `w1-dispatch.json` found no assimilation task. This is a plan-scope observation, not proof about unrelated lane changes.
+- **One considerthese proposal — one seat assigned.** The wave plan/dispatch has one `R58ScribeConsiderThese` item (`w1-spec.json:23`; `w1-dispatch.json:237-244`) asking it to select one still-unimplemented proposal from `considerthese/2026-10-26.md`. That file has four proposals (`:41-44`); the lane must select only one. Round-57's disposition says the stable-ID proposal was already implemented but has a positional-identity weakness (`corpus/lessons/round-57.md:77-86`), so it must not be represented as wholly unimplemented.
+
+## Verification notes / gaps
+
+- Read frozen `claims.md`, `c1-count.py`, and `c2-count.py` before review; the claims freeze is explicit at `corpus/evidence/round58/claims.md:1-4`, and LOG identifies the freeze/base and pre-data receipts at `LOG.md:1904-1906`.
+- Checked the S101 raw bytes against the claimed digest: `sha256sum corpus/captures/6dc68fd6b32ce9c8dfcebce8.raw` returned `6063a3aff7a4081e93a685f2721e2cd6b477ba84a841211e298bcddd6d9fddf3`.
+- No missing evidence found for S101 opening, round-57 quarantine disposition, the existing-row/no-new-row decision, or the single proposal assignment. Census receipt lacks an explicit count/date; no assimilation assignment is observed. LSP device/status was unavailable, so negative plan checks used literal text search and are not semantic absence proof.
+
+VERDICT: Frontier plan evidence survives for S101 opening/quarantine and row/proposal constraints; census receipt is present but count/date are unsubstantiated, assimilation-none is inconclusive beyond the dispatch text scan.

@@ -1,0 +1,28 @@
+# R58ReviewScope — S101 carrier-alphabet scope/adjacency
+
+## Findings
+
+- **P2 — Frozen C2 new-ground check does not test the claimed spelling.** `corpus/evidence/round58/c2-count.py:153-154` searches the base knowledge tree for `載体类型标识` (traditional 載), then checks the new entry for `载体类型标识` (simplified 载). Thus a base containing the claimed simplified token would not be detected by that search. Read-only base checks:
+  - `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin grep -n '载体类型标识' b13ca7b5c8bbb40d2d29a37fb443c64ca043f791 -- corpus/knowledge` → no output; `simplified_rc=1`.
+  - `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin grep -n '載体类型标识' b13ca7b5c8bbb40d2d29a37fb443c64ca043f791 -- corpus/knowledge` → no output; `traditional_rc=1`.
+  Current base therefore has no demonstrated duplicate, but the frozen predicate can false-pass a future/base containing the exact simplified token. This is a counter finding, not a proposed fix.
+
+## Scope and adjacency
+
+- **In chousa province.** `PROVINCE.md:5-8` owns source hierarchy, citation chaining/hop resolution, claim-vs-source verification, and this lane's corpus/gates. The frozen proposal concerns how one held Chinese journal data specification labels reference/document types and carriers; it does not claim standards currency or truth beyond the captured text (`corpus/evidence/round58/claims.md`, C2). It uses a lane-held capture, not live-target research, and does not enter the province's listed refusals.
+- **Strong complementary adjacency, not a new sibling-domain claim.** `corpus/knowledge/source-type-taxonomy-r37.md:62` explicitly deferred the held HIT specification's type/carrier letters because the then-available raw UTF-16LE span form was undefined, and identifies a defined OLE `.doc` text form as the flip. Round 58's frozen proposal is that adjacent source slice. `corpus/knowledge/citation-count-semantics-r37.md:23-31` already uses S101 for the data specification's document-code purpose, reference elements, and format clauses. The distinct GB/T 7714-2025 carrier table is covered in `source-type-taxonomy-r37.md`; the proposed S101 slice should remain source-specific and not imply that the two instruments' carrier alphabets are interchangeable.
+- **No existing knowledge duplicate on the exact claimed token.** `grep` over `chousa-shokunin/corpus/knowledge` for `载体类型标识|載体类型标识` returned “No matches found.” (The broader corpus does contain this wording in captures/evidence, not as an existing knowledge entry.) The proposed entry was not present at the time checked: glob of `corpus/knowledge/carrier-alphabet-china-r58.md` returned “Path not found”; review is therefore of the frozen proposal/quotes, not an unobserved entry body.
+
+## Sibling-domain bleed check
+
+- Read the top-level scope portions of all 20 sibling `PROVINCE.md` files: kumitate, revenger, mado, kasegi, kaidoku, kake, kengaku, mori, tsukuroi, kama, souji, kotoba, tameshi, kagi, audio, game-dev-2d, lore, game-dev-3d, kotodama, and tabi. No sibling province claims Chinese bibliographic/type/carrier notation as an owned domain.
+- Search run across `/home/vgpnk/Projects/shokunin/*/PROVINCE.md` for `citation|参考文献|载体|文献|carrier|bibliograph|notation|alphabet|引文`: matches were chousa's explicit citation-chain ownership; kengaku's explicit routing of research/citation method to chousa; kotoba's scoped-rule-cell citation; lore's in-world citation requirement; and kaidoku's many uses of “carrier” for binary/artifact carriers. These are either chousa ownership or different senses/domains, not an S101 overlap. The follow-up search over the other sibling paths for `citation|参考文献|载体|文献|carrier|bibliograph|notation|引文|deep.research|source hierarchy` returned only souji's line 82: “chousa-shokunin owns the research method and source hierarchy”.
+- Supplementary sibling corpus sweep: `/home/vgpnk/Projects/shokunin/*/corpus/knowledge` for `GB3469|文献标志码|载体类型|参考文献类型标识` returned only chousa's `citation-count-semantics-r37.md` hit. Layout caveat: this sweep covers only sibling `corpus/knowledge` directories, not other corpus layouts; the province-file scan is the assigned primary surface. Terminological “carrier” hits in kaidoku concern binary artifacts, not bibliographic carriers.
+
+## Source-byte check and limits
+
+- Raw capture digest matches frozen claims: `sha256sum /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/captures/6dc68fd6b32ce9c8dfcebce8.raw` → `6063a3aff7a4081e93a685f2721e2cd6b477ba84a841211e298bcddd6d9fddf3`; `file` identifies it as an OLE Word 97–2003 document (code page 936), 129024 bytes.
+- The committed `.txt` sidecar is not the defined form: it begins with replacement characters and is the raw OLE bytes decoded as text. I instead ran the pinned `tools/capture-text.py` (sha256 `2c0140bc04029c8faedc6c89a65bd657430d8b85f433406946567b70303e2573`) on the committed `.raw`, writing output only under my scratch directory. Its defined form was 27012 characters; all 12 frozen `quotes.tsv` strings were unique (`count=1` each), at offsets 315, 330, 590, 683, 734, 781, 797, 838, 965, 993, 1460, and 11723, respectively. This establishes text presence/locations only; it does not establish present-day standards validity or truth beyond the source.
+- No live fetch, C1/C2 counter run, or inspection of an entry body was performed. Scratch was removed. No tools installed.
+
+VERDICT: The S101 carrier-alphabet proposal survives the province-scope and sibling-domain-bleed review; it is complementary to chousa's existing source-specific work. The frozen C2 new-ground spelling check remains a concrete predicate weakness, although the claimed token is absent from the frozen base.

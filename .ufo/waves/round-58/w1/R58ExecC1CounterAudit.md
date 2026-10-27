@@ -1,0 +1,95 @@
+# R58ExecC1CounterAudit — round-58 C1 frozen counter audit
+
+Seat: R58ExecC1CounterAudit (executor, leaf). Lane: `/home/vgpnk/Projects/shokunin/chousa-shokunin`.
+Scope: audit frozen counter `corpus/evidence/round58/c1-count.py` (sha256 `65da18bbcb03581ca98354d90049215ed3cab3bfd3e41d483908dc1e1c703d3f`). The digest is identical at all **three** distinct round-58 commits that carry it — `git show <c>:corpus/evidence/round58/c1-count.py | sha256sum` gives `65da18bb…` at the freeze commit `9e73a031ab1ac3bac343de008850d7d87f9e5634`, at `718e8d2` ("record frozen control results") and at `5da0a6375a554e1229492a8cb0b9695bd8e85456` (which is current HEAD; `5da0a63..HEAD` is empty) — so every line number cited below is frozen by digest, not merely unchanged in the worktree. `tools/build-spans.py` is likewise unchanged at `1ed2650af28ea8e392bc34f7259cfb58f93b05c7453aca60e86b170c59c80bf6` across the same commits. No lane file created/edited/deleted/committed/pushed; all probes ran in scratch, scratch removed at end. Tooling: none installed or updated (RULES.md read at `/home/vgpnk/.omp/agent/RULES.md`; no pacman transaction, no uv/npx/binary fetch).
+
+## Bottom line
+
+The frozen counter is **internally inconsistent and cannot print `C1=PASS` for any builder**. One line (`ref_pass = all(("=PASS" in l) ...)`) compares uppercase `=PASS` against leg strings the same file formats with lowercase `pass`. A builder satisfying all 11 declared legs still gets `C1=FAIL`. Counter bug, not a builder finding: the frozen predicate is unsatisfiable as written.
+
+## R1 (primary) — case-mismatched verdict aggregation
+
+Frozen counter + hardened probe builder satisfying every declared leg:
+```
+EMPTY_OK=pass ... FOREIGN=pass(refused) ... MANY_QUOTES=pass(refused)
+SUMMARY OK=4/4 REFUSE=0/7 BEFORE_FOREIGN=deleted DENIED=0/0
+C1=FAIL          <-- all 11 legs passed; verdict still FAIL
+```
+Same builder, same fixtures, scratch copy of the counter with ONLY the two case comparisons changed (`:391` `ref_pass = all(("=pass" in l) ...)` and `:399` SUMMARY `'=PASS'`->`'=pass'`; lane file untouched):
+```
+SUMMARY OK=4/4 REFUSE=7/7 BEFORE_FOREIGN=deleted DENIED=2/2
+C1=PASS   (exit 0)
+```
+Mechanism (frozen file, lines 51-52, 160, 223, 234, 315, 391, 399): `PASS = "pass"` (lowercase) is interpolated at every refusal-leg append site (`f"{name}={PASS}(refused)"` at 160/223/234; 315 is a literal lowercase `"pass(refused)"` for ESCAPE_ENTRY), but 391 aggregates with `("=PASS" in l)` and 399 counts `'=PASS'`. `ok_pass` (390) uses lowercase `=pass`, so safe legs aggregate correctly — hence `OK=4/4` and `REFUSE=0/7` on one run. Line 389 is a dead first assignment of `ok_pass` (overwritten at 390), consistent with a partially applied edit.
+
+## R2 — base builder battery: every printed line vs fixture bytes
+
+`python3 corpus/evidence/round58/c1-count.py --builder tools/build-spans.py --work <scratch>/run-base/work` — output byte-identical to frozen receipt `controls/c1-before.txt` (13 legs + SUMMARY + `C1=FAIL`, exit 1). Each line verified against fixture bytes:
+
+- `EMPTY_OK=pass` — `out-empty/spans.tsv` present; doc1 digest `6b9ebc8a…` == manifest `capture_sha256`.
+- `REBUILD_OK=pass` — second build byte-identical (counter's own snapshot compare).
+- `FOREIGN=fail(rc=0, orphans deleted: foreign gone=True)` — `spans/S777-1.txt` **gone**; legit orphan `S503-1.txt` **deleted**; `spans.tsv` rewritten to the 2-row "few" manifest.
+- `SYMLINK_OUT=fail(rc=0…)(target-dir-written!)` — symlink target `realdir/` holds `spans`, `spans.tsv`: base followed `out-link` and wrote into the target.
+- `SYMLINK_CACHE=fail(rc=0…)` — `cache2/<key>.txt` is a symlink; `out-9/` written: base read the symlinked cache file.
+- `FIFO_TXT=fail(rc=1, reason absent)` — `cache3/<key>.txt` is a FIFO; base refused `no defined text form` (never opened it): refusal for the wrong reason.
+- `DEVZERO_TXT=fail(rc=1, reason absent)` — `cache4/<key>.txt` -> `/dev/zero`; base refused `no defined text form`: `/dev/zero` never read.
+- `FAT_RAW=fail(rc=1, reason 'SIZE' absent)` — 80 MiB sparse file, head `d0cf11e0a1b11ae1`; base **read it whole** (`raw.read_bytes()`, unbounded) and refused `ole-malformed` from capture-text, not on size.
+- `MANY_QUOTES=fail(rc=0…)` — `quotes-many.tsv` = 100001 rows (cap 100000); base did **not** refuse: it wrote **100001 span files, 413 MB** into `out-many/`.
+- `ESCAPE_ENTRY=pass(refused)` — base refused `../escape.md`; `out-esc/` empty.
+- `HELDOUT_OK=pass` — real S101 capture; offsets 12033/12199/12007; span bytes equal builder's `form[start:off+len+80]`.
+- `BEFORE_FOREIGN=deleted` — pinned r55 builder deleted `out-before/spans/S888-1.txt`.
+
+The base builder genuinely fails the battery: deletes the foreign file, follows the output symlink, reads the symlinked cache, reads an 80 MiB raw unbounded, materialises 100001 spans instead of refusing.
+
+## Counter defects (exact reproductions)
+
+**D1 (fatal, blocks the claim) — verdict aggregation case mismatch.** R1. `C1=PASS` unreachable for any builder.
+
+**D2 — span-offset formula wrong for quotes near the start of a form.** `expect_ok` expects `form[offset : offset+len(quote)+min(CONTEXT,offset)+CONTEXT]`; the builder (and pinned r55 semantics) produce `form[max(0,off-80) : off+len(quote)+80]`. These coincide only when `min(CONTEXT,offset)==CONTEXT`, i.e. `offset>=80`; with `offset<80` the counter expects a shorter span and fails a **correct** builder:
+```
+python3 corpus/evidence/round58/c1-count.py --builder tools/build-spans.py --work <scratch>/run-seed35/work --seed 35
+EMPTY_OK=fail(spans/S502-1.txt span bytes)     # base builder is correct here
+SUMMARY OK=3/4 REFUSE=0/7 ... C1=FAIL
+```
+Seed 35: S502 quote_off=26 -> start=0 -> builder span 122 bytes vs counter-expected 96. At seed 7 both S501/S502 have offset>80, which is why the default seed passes. Seeds 1..299 with a quote at offset<160: 35, 104, 138, 140, 248, 275 — the frozen counter is seed-sensitive on a correct builder.
+
+**D3 — containment check is snapshot-limited; blind to the work tree.** `expect_ok` compares before/after snapshots of `out.parent`, dropping keys under `out.name`. Probe wrote `stray-regular.txt` + `stray-symlink.txt` + `stray-empty-dir/` into the work tree -> `EMPTY_OK=fail(write outside --out)` fired for the regular file; the symlink and directory were invisible (`snapshot()` skips both). `HELDOUT_OK` takes its "before" snapshot **after** the builder ran (`snapshot(work)` evaluated at the call site), so writes outside `--out` during the HELDOUT leg are never seen: probe wrote `stray-during-heldout.txt` during the HELDOUT run -> `HELDOUT_OK=pass`. Writes outside the whole `--work` tree are never checked at all.
+
+**D4 — `expect_refuse`'s `forbidden_touch` check is inverted.** It returns `FAIL("... was touched/removed")` when the listed path **does not exist**: `expect_refuse("SYMLINK_OUT", proc(rc=1, stderr="...refused SYMLINK..."), ["SYMLINK"], [real/"spans.tsv"])` -> `SYMLINK_OUT=fail(realdir/spans.tsv was touched/removed)` — the path is absent, i.e. correctly untouched. A correct refusal fails for not creating the file it was forbidden to create. Only SYMLINK_OUT passes a non-empty `forbidden_touch`, and that leg is separately rescued by D5's overwrite — masked, not fixed.
+
+**D5 — SYMLINK_OUT verdict is overwritten; the leg cannot fail for the right reason.** Lines 232-236 append `expect_refuse(...)`, then `if not any(real.iterdir()): legs[-1] = f"SYMLINK_OUT={PASS}(refused)"` — unconditional. The rc/reason/forbidden-path verdict is discarded whenever the target dir is empty. Probe: a builder that exits 0, prints nothing, writes nothing into the target -> `SYMLINK_OUT=pass(refused)`, i.e. **a builder that never refused is scored as having refused**. With D4, this leg tests "did you write into the target dir", not "did you refuse". Refinement (verified): the "target-dir-written!" suffix is triggered by *any* entry in the symlink target, not by a data write — a builder that only `mkdir`s `out/spans` through the `--out` symlink (no `spans.tsv`) already flips the leg to `fail(rc=0, expected refusal)(target-dir-written!)`. So the refusal must precede even the directory creation, not just the file writes.
+
+**D6 — FOREIGN leg cannot detect the destructive behaviours claims.md names.** It checks only rc!=0, that the foreign file still **exists**, and `"777" in err or "foreign" in err.lower()`. It never compares the foreign file's **bytes** and never checks whether other span files were deleted. Probe: builder deletes legit orphan `S503-1.txt`, **overwrites** `S777-1.txt` with `CORRUPTED foreign evidence bytes`, then refuses naming S777 -> counter prints `FOREIGN=pass(refused)`, corrupted file survives on disk. The kill rule is stated but unenforced. Refinement (verified): the leg also accepts a refusal issued **after** partial writes — a builder that rewrites `spans.tsv` and writes `spans/S501-1.txt` and only then refuses (leaving the foreign file untouched) still scores `FOREIGN=pass(refused)`. The leg verifies existence, not "refusal preceded every write".
+
+**D7 — FOREIGN reason window is the first 200 chars of stderr+stdout.** `err = ((stderr or "")+(stdout or ""))[:200]`. A builder emitting a >200-char preamble before its refusal reason is scored `FAIL(reason-unnamed)` although the reason is present in full output. Verified: stderr = 250 filler chars + `" refused S777: foreign file"` -> present in full stderr, absent from the window.
+
+**D8 — dead `got`/`want` code: unlisted outputs not caught.** In `expect_ok`, `got` (actual files under `out/`) and `want` are computed and never compared; only manifest rows are checked. Probe: correct manifest plus an extra unlisted `spans/S999-1.txt` -> `EMPTY_OK=pass`, `REBUILD_OK=pass`. The counter also never asserts span-file count == manifest-row count.
+
+**D9 — control recursion unsound.** `--controls` re-invokes the counter with `--builder <control>` and no `--controls` (no infinite recursion — good), but: (a) `tail = [l for l in r.stdout.splitlines() if l.startswith("C1=")]` then `tail[0].strip() == "C1=PASS"` takes the first `C1=`-prefixed line, so a control printing such a line before its verdict is misread, and a control that crashes before printing yields no `C1=` line and is scored `denied` — a crash is indistinguishable from a clean refusal (see D10: the REFUSEALL control's "denied" verdict is in fact produced by exactly such a crash). (b) Controls are found by hardcoded name `("REFUSEALL.py","build-spans-r55.py")` under `args.controls`, while `BEFORE_BUILDER = HERE/"controls"/"build-spans-r55.py"` — the integrity witness comes from the counter's own directory, **not** `--controls`. Running from a copy lacking a sibling `controls/` yields `BEFORE_FOREIGN=absent` -> `C1=FAIL` for any builder, incl. a compliant one: case-patched copy without `controls/` printed `BEFORE_FOREIGN=absent ... C1=FAIL`; with `controls/` copied in, the same copy printed `BEFORE_FOREIGN=deleted ... C1=PASS`. (c) Provenance: `controls/build-spans-r55.py` is **absent at the freeze commit `9e73a03`** (added later in `718e8d2`), so at the freeze commit the counter reads `BEFORE_FOREIGN=absent` by construction. (The counter's own bytes are unchanged across the three distinct round-58 commits `9e73a03`/`718e8d2`/`5da0a63` — digest `65da18bb…` at all three — so the cited line numbers are frozen, not worktree-local.)
+
+**D10 — the counter is not crash-safe, and the REFUSEALL control's "denied" verdict comes from a crash, not a verdict.** (This is the same defect the peer scribe recorded as their F2 — one finding, two clauses; it should be counted once, not twice, in the L1's tally. The clause below that is new and mine is the two-mechanism asymmetry in (c).) Line 212 plants the foreign fixture with `foreign = out/"spans"/"S777-1.txt"; foreign.write_bytes(...)` **unconditionally** — it assumes `out-empty/spans/` exists, which only happens if the EMPTY_OK builder created it. A builder that refuses everything never creates that directory, so the counter dies with an uncaught `FileNotFoundError` before printing any leg. Run the REFUSEALL control as the counter's own builder:
+```
+python3 corpus/evidence/round58/c1-count.py --builder corpus/evidence/round58/controls/REFUSEALL.py --work <scratch>/run-refuseall/work
+FileNotFoundError: .../run-refuseall/work/out-empty/spans/S777-1.txt   (line 212)
+EXIT=1, C1= lines printed: 0, Traceback in stderr: 1
+```
+The same child invoked exactly as the control recursion invokes it (`--seed 1007`) also produces `C1=` lines = 0 with a traceback. Consequences: (a) a candidate builder that refuses on the EMPTY_OK leg likewise crashes the counter, so the counter emits **no** `C1=` line and no leg summary at all — the caller sees a traceback, not a scored `C1=FAIL`; (b) the frozen receipt's `CONTROL_REFUSEALL=denied` is produced by this crash, not by a scored refusal — the denial is indistinguishable from a crash because D9(a) only checks for the presence of a `C1=` line; (c) the r55 control child, by contrast, exits 1 with `C1=FAIL` printed and no traceback, so the two controls are scored by different mechanisms while the receipt renders them identically. `CONTROL_build-spans-r55=denied` is a genuine scored denial; `CONTROL_REFUSEALL=denied` is a crash laundered into a denial. Note for the L1's tally: D10 and the peer scribe's F2 are the same defect (one finding, two clauses — early-refusal crash, and the two-mechanism `DENIED`), so it counts once; the asymmetry in (c) is the part of it that is mine.
+
+## Cross-reference to the peer scribe's report (for the L1's reconciliation)
+
+Sibling seat `R58ScribeC1PatchNotes` audited the same frozen counter and wrote
+`.ufo/waves/round-58/w1/R58ScribeC1PatchNotes.md` (140 lines). Its finding labels map onto mine as follows, so the two lists are not double-counted: its **F1 = my D1** (case-mismatched aggregation; independently reproduced on both sides), **F2 = my D10** (early-refusal crash + two-mechanism `DENIED=2/2`; clause (c) — the REFUSEALL-crash vs r55-scored asymmetry — is mine), **F3/F4 = my D5/D4** (SYMLINK_OUT non-discrimination and its inverted `forbidden_touch` root), **F5 = my D9(b,c)** (controls absent at the freeze commit; `BEFORE_BUILDER` read from the counter's own directory), **F6 = my D2** (span-window divergence at quote offsets 1..159). Both sides reach the same conclusion: the gate is falsified as frozen, and C1 stays inconclusive as scored until the counter is repaired and the `REFUSEALL` receipt re-issued. Its PROBE G/H evidence corroborates the mkdir-before-write and gate-before-every-write orderings I verified independently.
+
+## Checked and NOT defects (so L1 need not re-litigate)
+
+Base builder's failure set is real and `BEFORE_FOREIGN=deleted` is genuine (pinned r55 builder really deletes `spans/S888-1.txt`, so the FOREIGN leg discriminates). `expect_ok`'s offset and digest checks are correct and match the builder (`start=max(0,off-80)`, `capture_sha256` = digest of file read) — verified on S501/S502 and the 3 real S101 held-out quotes. `ESCAPE_ENTRY` genuinely refuses `../escape.md`, writing nothing. `ok_pass` (390) is correct for safe legs; the defect is confined to `ref_pass` (391) and SUMMARY (399). `HELDOUT_QUOTES` are genuinely unique in the S101 defined form (3/3 `count==1`), and the counter's span formula coincides with the builder's for all three (all offsets > 160).
+
+## Evidence hygiene
+
+Lane read-only for this seat; `git status --porcelain` shows only `?? .ufo/waves/` (this wave's report dir) — nothing produced here. Scratch: `/fast/scratch/hyaku/chousa-r58/R58ExecC1CounterAudit/` only, passed explicitly as `--work`/`TMPDIR`, removed at end of seat including the 413 MB `out-many/` tree the base builder's MANY_QUOTES leg produced. No `/tmp` evidence. (That 413 MB is the counter's fixture size, not a lane write.)
+
+## Recommendation to L1 (proposed in report only; nothing applied)
+
+C1's frozen predicate cannot be met by any builder because of D1; the target is unreachable and the correct report is a counter finding, not a builder finding. Minimal repair set for L1 to weigh: (1) `:391` and `:399` — `=PASS` -> `=pass` (D1); without this nothing else matters. (2) Span expectation — use the builder's `form[start : off+len(quote)+CONTEXT]` (D2). (3) `expect_refuse` `forbidden_touch` — fail when the path **exists** (D4); drop the unconditional SYMLINK_OUT overwrite (D5). (4) FOREIGN leg — compare foreign bytes against the pre-run snapshot, assert no other span file removed, and require the refusal to precede every write (D6); widen the reason window past 200 chars (D7). (5) `expect_ok` — actually compare `got` vs `want` (D8); make containment cover the whole work tree incl. symlinks/dirs, and take the HELDOUT "before" snapshot before the run (D3). (6) `--controls` — take `BEFORE_BUILDER` from `args.controls` when given; treat a control producing no `C1=` line as an error, not `denied` (D9). (7) Guard line 212 with `mkdir(parents=True, exist_ok=True)` (or skip the FOREIGN leg when `out/spans/` is absent) so a refusing builder yields a scored `C1=FAIL` instead of a traceback (D10); and re-issue the REFUSEALL control receipt, which currently records a crash as a denial.
+
+VERDICT: The concrete work audited — running the frozen `corpus/evidence/round58/c1-count.py` against the committed base builder and verifying every printed line against actual fixture bytes — **survives**: the base run reproduces `controls/c1-before.txt` byte-for-byte and all 12 lines were verified against real fixture bytes, confirming the base builder truly deletes the foreign file, follows the output symlink, reads the symlinked cache, reads an 80 MiB raw unbounded, and writes 100001 spans instead of refusing. But the attack on the counter itself **falsifies the frozen predicate**: D1 (case-mismatched `ref_pass`/`SUMMARY` aggregation) makes `C1=PASS` unreachable for *any* builder — a builder satisfying all 11 legs still scores `C1=FAIL`, while the same builder against a scratch copy with only that comparison case-corrected scores `C1=PASS` (exit 0) — so C1's stated target is unsatisfiable as frozen. Nine further defects (D2-D10) leave the battery blind to seed-sensitive span offsets, to work-tree writes during the HELDOUT leg, to a foreign file corrupted rather than merely preserved, to a refusal issued after partial writes, to unlisted output files, and to a SYMLINK_OUT leg that scores a non-refusing builder as `pass(refused)`; D10 additionally shows the counter is not crash-safe (line 212 plants the foreign fixture into a directory it never creates), so a builder that refuses outright yields a traceback and no `C1=` line at all, and the frozen receipt's `CONTROL_REFUSEALL=denied` is that crash laundered into a denial rather than a scored refusal. C1 is therefore **inconclusive as scored** — the base builder's behaviour is correctly characterized (not falsified), but the counter producing the verdict is defective and must be repaired before any C1 score change can be read.

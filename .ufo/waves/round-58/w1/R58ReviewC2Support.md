@@ -1,0 +1,42 @@
+# R58ReviewC2Support — S101 carrier-alphabet support review
+
+## Evidence re-opened
+
+- Frozen claims at `corpus/evidence/round58/claims.md` (claim base `b13ca7b5…`; freeze `9e73a031…`), exact 12-row set `corpus/evidence/round58/c2/quotes.tsv`, and frozen counter `corpus/evidence/round58/c2-count.py`.
+- Re-opened lane capture `corpus/captures/6dc68fd6b32ce9c8dfcebce8.raw`: SHA-256 `6063a3aff7a4081e93a685f2721e2cd6b477ba84a841211e298bcddd6d9fddf3`. Re-opened `tools/capture-text.py`: SHA-256 `2c0140bc04029c8faedc6c89a65bd657430d8b85f433406946567b70303e2573`.
+- Command: `python3 tools/capture-text.py corpus/captures/6dc68fd6b32ce9c8dfcebce8.raw > /fast/scratch/hyaku/chousa-r58/R58ReviewC2Support/s101.txt`; observed output file `47356` bytes. No live fetch.
+- Compared source sections 1.2 / 1.3 and 11 in that defined form with `R58ScribeEntryDraft.md` and `R58ScribeEntryInference.md` (the proposed content); no lane entry existed at review time.
+
+## Proposed statement classifications
+
+Classification distinguishes **frozen-quote support** from **what the full captured defined form says**. “Direct” means the source text states it; it does not assert external truth.
+
+| Proposed statement | Classification and evidence |
+|---|---|
+| Section 1.2 is “参考文献类型及其标识”; §1.2.1 says the listed reference types are marked with single letters under GB3469. | **Direct** from quotes 1–2. “Document-type” is a reasonable English gloss, not the exact Chinese wording. |
+| The scheme is a “three-layer marking scheme” (draft Observation, lines 25–29). | **Unsupported / imprecise.** Source distinguishes reference-type marks and carrier-type marks; within reference types it gives single-letter and (for specified electronic types) recommended double-letter forms. It does not call these three layers. Prefer describing the two marker components plus the electronic-type code rule separately. |
+| A two-letter “alternative” exists for a described class (draft line 26). | **Mixed: direct rule, inference in “alternative.”** Quote 3 directly says “建议以下列双字母作为标识” (“recommend the following double-letter identifiers”); its frozen fragment does not include the preceding class list. Full form §1.2.3 names databases, computer programs, and electronic bulletin boards, then prints DB/CP/EB. It does not say these replace or are alternatives to the single-letter marks. |
+| Carrier type is marked simultaneously with reference type, using `[文献类型标识/载体类型标识]`. | **Direct, but condition must be retained.** Quotes 4 and 7 support the requirement and notation. In the full form, this applies to *electronic documents with non-paper carriers* when cited; draft line 35 (“Carrier marking is required on citation, not optional”) is **overbroad** without that condition. |
+| The left slot is reference type and right slot carrier type; examples instantiate the slots. | **Inference, strongly supported** by quote 7’s explicit ordered labels and examples `[M/CD]`, `[J/OL]`, `[DB/OL]` (quotes 8–10). “Attribute of the copy” (Inference draft line 30) is **unsupported wording**: source says carrier type of an electronic document, not an attribute of a copy. |
+| “Two carrier pairs are printed” (draft line 36); “three bracketed composites are printed” (line 37). | **False as exhaustive statements about S101; unsupported as phrased.** Frozen quotes include MT and OL and three composites, but full §1.2.4 prints four carrier codes (MT, DK, CD, OL) and six examples (`[M/CD]`, `[DB/MT]`, `[CP/DK]`, `[J/OL]`, `[DB/OL]`, `[EB/OL]`). The Limits section acknowledges omitted codes, but does not cure these conflicting Observation claims. Say “the frozen set includes…” if limiting to quoted examples. |
+| `[M/CD]`, `[J/OL]`, `[DB/OL]` pair type and carrier components. | **Direct examples; component interpretation is inference.** The exact composites are quotes 8–10 and quote 7 supplies the slot labels. Claims that M/J correspond to monograph/journal entries require the §1.2.1 table, which is outside the frozen quotes (though present in the defined form). |
+| The publication-element sequence gives place, publisher, year, pages, with pages omitted for whole-item citation. | **Direct** from quote 11. The assertion that a template puts `[文献类型标识]` after a title (Inference draft line 33) is **direct in the full form but outside the frozen quote set**; the cited quote 11 alone does not establish it. |
+| A separate document-code field exists in §11, not the §1.2 reference-type/carrier notation. | **Direct as a source-structure observation; separation is an inference.** Quote 12 directly gives `与文献标志码(Document code)`. The defined form places it in heading `11中图分类号(CLC number)与文献标志码(Document code)` and §11.6 describes an article/document code based on content, while §1.2 concerns reference marks. This is distinct by section and function; do not equate its A–E values with reference-type letters or carrier codes. The frozen quote alone omits the heading prefix and does not establish the A–E values. The drafts keep the fields separate; no conflation found. |
+| The A–E code meanings, or the claim that they classify article content. | **Direct in full §11.6, outside frozen quote set.** It says each article/material receives one code according to its content nature and lists A–E. Do not present those meanings as grounded by the 12 frozen quotes. |
+| Non-paper electronic-carrier condition and exemption for paper-carried traditional references (Inference draft line 32). | **Direct in the full form; only the clause after the condition is frozen in quote 4.** The condition precedes the quoted fragment; exemption appears at the end of §1.2.4. “A paper-carried book keeps a bare single-letter marker” is an **inference**, not the source’s wording (which says the carrier need not be specified). |
+| Parallel §14.3 clauses / punctuation differences (Unknown draft line 42). | **Direct text comparison in the full form, outside frozen quotes.** The defined form does show both clause sets and typography differences; editorial intent is **unsupported** and appropriately left unknown. |
+
+## Findings
+
+1. **Content overstatement:** the Observation’s unqualified carrier requirement omits §1.2.4’s non-paper electronic-document condition. Its “two carrier pairs” / “three composites are printed” wording undercounts the full source (four codes / six examples). These are narrowable by stating only what the frozen rows include, not what S101 prints in total.
+2. **Terminology:** “three-layer” and “alternative” overstate the source’s own taxonomy. Keep the source’s distinction between reference-type identifiers and carrier-type identifiers; describe single/double-letter forms as stated recommendations, not replacements.
+3. **Document-code separation:** no conflation found in either proposed draft. The full captured heading and §11.6 support treating Document code as a separate article-level field, not another member of the §1.2 type/carrier alphabet. Keep clear that A–E and the heading prefix are outside the frozen quote set.
+4. C2’s frozen quote set is deliberately partial: it grounds the quoted rules and examples, not every table entry, the complete carrier list, or §11.6’s A–E definitions. The full defined form provides text presence for those additional statements, but they are not among the 12 quote anchors.
+
+## Verification boundaries
+
+- No live fetch, no counter execution, no C1 probe, and no lane/source mutation. I did not treat quote presence as proof of semantic entailment or external standard validity.
+- The C2 counter’s full end-to-end satisfiability and manifest behavior were not this review’s tested subject; counter outputs are not claimed here.
+- Scratch defined form removed before yield; no install/update.
+
+VERDICT: The separation of §11 Document code from §1.2 type/carrier markers **survives** in both drafts. The planned carrier-alphabet content is **inconclusive as written** pending narrowing: the unconditional carrier requirement and claims that only two carrier pairs / three composites are printed are contradicted by S101’s own condition and full §1.2.4; “three-layer” and “alternative” should be treated as inference/unsupported terminology, not direct source statements.
