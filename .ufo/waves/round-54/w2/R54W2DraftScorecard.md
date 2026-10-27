@@ -34,7 +34,23 @@ All numbers below were re-run by me at `git rev-parse HEAD` = `178667dc2c9d1656e
 - The C2 counter measures binding, presence and located quotes; it does not judge entailment (my probe set in item 3 is a spot check of every phrase-bearing paragraph group, not the counter).
 - `F` freshness: the theme's captures are 2026-10-23 files; no capture was added this round.
 
-## Draft — `SCORECARD.md` (one fenced block, insert after the round-54 pointer corrections)
+## Deltas against the landed section (commit `25abbe8`, landed while I was measuring)
+
+The L1 landed its own `## Round 54 verdict` / `## Capabilities (round-54 addition)` / `## Planned — round 55` at `25abbe8` (`SCORECARD.md:2750,2770,2776`). My measurements were taken at the parent `178667d`; `git diff --stat 178667d..25abbe8 -- tools/ corpus/knowledge/ corpus/SOURCES.md corpus/evidence/round54/` → only `corpus/evidence/round54/census-end.txt` (10 insertions), and `sha256sum tools/capture-text.py` is still `2c0140bc…`, so every number above holds at the new tip. My draft is therefore a cross-check, not a replacement; it corroborates the landed rows on every figure I re-ran:
+
+| landed figure | my re-run |
+|---|---|
+| C1 `LEGS=6/6 C1=PASS`, three unseeded + `--seed 7` | confirmed, 4/4, seeds 758329252 / 699492594 / 70267947 / 7 |
+| supplement `SUPPLEMENT_LEGS=3/3` (landed says ×4) | confirmed 2/2 (unseeded, seed 7); the other two are the committed `measure-after.txt` runs |
+| controls CONST 0/6, NAIVE 0/6, REFUSEALL 1/6, SHELL 1/6 | read from `controls/c1-controls.txt` (not re-run: needs the control scripts' LibreOffice path; receipt cited) |
+| forge 6/6 frozen, 0/3 supplement | confirmed by rebuild + run, both counters |
+| C2 full line, `CAPTURE_BOUND=33/33`, `QUARANTINE_VERDICTS=3/3` | confirmed, both modes |
+| `ANCHORED=16/16` | confirmed, plus 9/9 new `char N` == anchor offset |
+| `tracked-deletion-check.py` landed PASS | confirmed PASS (both fixtures) |
+
+Not re-run by me, so not corroborated: `R54ExecOleFuzz` ("37/600 Tracebacks at the candidate"), `R54ReviewProvince` / `kengaku-shokunin/PROVINCE.md:137`, `R54CritForgeC2`, and the supplement's ×4 count. Two small additions the landed text does not carry: (a) the span-slice check (33/33 exact slices under the counter's own newline reading) and the nine offset re-derivations are stronger than `ANCHORED=16/16`, which proves occurrence only; (b) QUALITY 96's PDF cross-check is extractor-specific — a ghostscript `txtwrite` extraction of S123 misses 1 of 21 quotes (`图书 … Ｍ`, a table row whose cells that extractor orders apart) where pypdf misses 0, so "an independent extraction" should be read as "the independent extractor the receipt names".
+
+
 
 ```SCORECARD.md
 ## Round 54 verdict — 2026-10-26 (OLE `.doc` text form; PRC citation standard GB/T 7714-2025 adopted by document)
