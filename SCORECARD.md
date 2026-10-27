@@ -2857,3 +2857,35 @@ Post-wave notes (appended after `WAVE-DONE w1`): three attacks on the C1 driver 
 ## Planned — round 57 (not started)
 
 Candidates: harden `tools/build-spans.py` (`R55W2SentBuilder`: refuse a foreign `spans.tsv` in `--out`, refuse symlinked outputs, unlink orphans last, no `.pyc` in `tools/`, bounded reads) with a frozen counter; run the gate's tool in a separate process boundary or extend the probes to `dir_fd` without `chdir`, native `import` and `sqlite3.connect` (`R56SentC1`, `R56CritC1Hook`); battery entries for the six surviving gate clauses (`R56MutC1GateNew`); the S101 carrier-alphabet leg; the remaining grey-literature family (r41, r48; r44 refused this round).
+
+## Round 57 verdict — 2026-10-27 (pinned-capture freshness re-fetch into lane-owned digest-checked bytes; the workflow standard's normative references chained by document)
+
+Claims frozen at `c2f914c53201a8f8ee4fef823b82681051d55592` (C2) and `fd95724d56a33a150cd2638fadd2ce1f3425e6c` (C3) on the round-56 plan, before any round-57 fetch (`corpus/evidence/round57/claims.md`). Attempt 1 was operator-stopped after the freezes; attempt 2 (this) built on them. After-receipts: C2 `SET=47 VERDICTS=47/47 REPRODUCED=41 DRIFTED=5 UNREACHABLE=1 BYTE_BACKED=46 CONSISTENT=46/46 FLAGGED=0/0 C2=PASS` at lane master `e0e73e0f76163b014033e80c6ba53ed92c14113d` (re-run at `a8d4e7da15a70a06d731739cace43cc3287801a1` after landing, identical); C3 `BOUND=4/7 SWEPT=3/3 QUOTE_ROWS=10 (all legs) SUBSTANCE=PASS ANCHOR_BOUND=3/3 INFERENCE_GROUNDED=yes STRAY_IDS=- C3=PASS` at `a8d4e7da`.
+
+| claim / axis | before → after | counting command | verdict | tag |
+|---|---|---|---|---|
+| C2 freshness: the 47 pinned captures re-fetched into lane-owned, digest-checked bytes | `SET=47 VERDICTS=0/47 … C2=FAIL` (`controls/c2-before.txt`, re-derived in a scratch clone by `R57W1ReviewBefore`) → `SET=47 VERDICTS=47/47 REPRODUCED=41 DRIFTED=5 (S083 S087 S113 S114 S121, absent=0) UNREACHABLE=1 (S105, 3 failed attempts ≥600s apart) BYTE_BACKED=46 CONSISTENT=46/46 FLAGGED=0/0 C2=PASS` | `python3 corpus/evidence/round57/c2-count.py` | **improved**: every pinned quote is now re-verifiable from committed lane bytes; 41 triples reproduce the pin by sha256; 5 live surfaces drifted with all pinned quotes still present (0 flags needed); S105 attested UNREACHABLE at the record level while its wrap-up bytes (git `b022b13`) regenerate the pin — disclosed, not hidden | measured |
+| C3 depth (sourced): the standard's normative references chained to their own documents | `ENTRY=no BOUND=0/7 C3=FAIL` (`controls/c3-before.txt`); do-nothing HELD/CITER controls `BOUND=1/7 C3=FAIL` → `BOUND=4/7 (R1:S131, R2:S132, R3:S133, R7:S118) SWEPT=3/3 CLAUSE=yes NEW_GROUND=yes SUBSTANCE=PASS ANCHOR_BOUND=3/3 INFERENCE_GROUNDED=yes STRAY_IDS=- C3=PASS` | `python3 corpus/evidence/round57/c3-count.py` | **improved**: the clause binds users to seven instruments and the lane now holds four of them by document (the 2019 notice, the 2021 notice, the 2021 管理指南 attachment, the 2024 质量控制指南), each with located title/文号 quotes in defined forms; R4-R6 refused with per-reference sweeps (split-cover typesetting defeats the frozen heading rule on every located copy) | measured |
+
+The numeric operability scale remains 3/10 (the round-1 archived-export observable; no other numeric score is invented). Honest residuals, all named in `corpus/lessons/round-57.md`: the C2 REPRODUCED floor (5) is a count, not a set — a 5-genuine quote-splicing forge passes (freeze-disclosed; live margin 41); UNREACHABLE/DRIFTED are record attestations, not byte proofs; the three 2022 technical guidelines stay unbound; the register quarantine slice's payload-absent class falsified on every capturable row (a checker finding, not a lane-row finding).
+
+| axis | verdict | evidence |
+|---|---|---|
+| freshness | **improved** | C2; the lane's first digest-pinned, record-backed capture store; `tools/capture-fetch.py` (recipe-frozen, root-guarded), `tools/store-record-audit.py` (QUALITY 112-113) |
+| depth | **improved** | C3; one entry chaining the clause to four held instruments by document, 10 located quotes, honest UNBOUND sweeps |
+| coverage | **improved narrowly** | the freshness surface (47 pinned captures) is now lane-owned and re-verifiable; census rows 130 → 133 |
+| calibration | **improved** | D1 (round-56 routed) landed; S077 used-by contract fix; QUALITY 111-113 each cite a lesson row; the lesson carries four Mistakes rows with red receipts; the closure's disagreement classes (misquotes vs fabrications) adjudicated per row in the quarantine block |
+| operability | **unchanged** | the gate and its counter are untouched this round; no operability claim |
+| adjacency | **unchanged** | `R57W1ConnSiblings`/`R57W1ConnPattern`: 0 contested overlaps; the evaluation-content ground reported, not absorbed |
+
+Learning trends: expansion **improved** (one admitted entry on ground the coverage map did not hold, citing three new mined rows), quality **improved** (D1 landed, S077 fixed, three criteria with shown-able-to-fail checks, quarantine verdicts replace the register's stale class), discernment **improved** (every admit carries a located quote re-opened this round; three refuses with named flip conditions; zero fabrications where the register alleged a class of them).
+
+## Capabilities (round-57 addition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| Digest-pinned freshness re-fetch | re-fetches every capture a spans manifest pins, content-addressed by URL, recording every attempt (rc/http/sha) and deriving the recipe text form, so a frozen counter can attest REPRODUCED/DRIFTED/UNREACHABLE per triple from committed bytes | `python3 tools/capture-fetch.py --status`; `python3 corpus/evidence/round57/c2-count.py` (`C2=PASS` at `e0e73e0f`); `python3 tools/store-record-audit.py` (FAIL receipt on the open orphan classes) | 57 |
+
+## Planned — round 58 (not started)
+
+Candidates from the routed lists: run the unmeasured round-56 C1 attacks once the capture-cache ruling lands (L0 `a714799f`; `R56CritC1Forge`, `R56MutC1Driver`, `R56MutC2Counter`); hook classes beyond the two frozen probes (`dir_fd`, native `import`, `sqlite3.connect` — round-56 routed item 3); the S101 carrier-alphabet leg; the remaining grey-literature family (r41, r48); resolve the two hnysfww record-denied captures if the host's 15s window ever passes, or rule them unbindable; the build-spans hardening set (`R55W2SentBuilder`).

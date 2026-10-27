@@ -49,6 +49,16 @@ LANE = HERE.parent
 EVID = LANE / "corpus" / "evidence" / "round57"
 REC = EVID / "refetch.tsv"
 STORE = LANE / "corpus" / "captures"
+
+
+def root_guard() -> None:
+    """QUALITY 111: the tool's root is its own file's git toplevel, nothing else (R57-M1)."""
+    r = subprocess.run(["git", "-C", str(LANE), "rev-parse", "--show-toplevel"],
+                       capture_output=True, text=True)
+    top = r.stdout.strip()
+    if r.returncode != 0 or pathlib.Path(top).resolve() != LANE.resolve():
+        print(f"root guard: {LANE} is not a git toplevel (got {top!r}); refusing", file=sys.stderr)
+        sys.exit(2)
 HEADER = ["id", "url", "key", "attempt", "fetched_utc", "curl_rc", "http_code",
           "raw_sha256", "txt_sha256"]
 MAX_ATTEMPTS = 3
@@ -156,6 +166,12 @@ def main() -> int:
     ap.add_argument("--tsv")
     ap.add_argument("--status", action="store_true")
     a = ap.parse_args()
+    root_guard()
+    if a.status:
+        print(f"root={LANE} record={REC} store={STORE}")
+        if not REC.parent.is_dir():
+            print("root guard: record directory does not exist inside the toplevel", file=sys.stderr)
+            return 2
     pairs: list[tuple[str, str]] = []
     if a.tsv:
         for ln in pathlib.Path(a.tsv).read_text(encoding="utf-8").splitlines():
