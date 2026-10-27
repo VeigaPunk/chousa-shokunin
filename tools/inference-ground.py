@@ -44,6 +44,14 @@ Rule (the same sentence as `corpus/evidence/round46/claims.md`, claim C1):
      mixed-polarity keys decide nothing. The R48 windows deliberately broaden
      the P1 look-back from three to seven words and narrow the P2 look-back
      from three to two, measured on `corpus/evidence/round48/precision-count.py`.
+     Round 53 adds the CJK carrier: `words()` is Latin-only, so a Chinese or
+     Japanese phrase had no window and any reversal it carried passed. A
+     phrase of four or more CJK characters is now read in CHARACTERS — a
+     listed negator (`不 未 没 沒 无 無 非 否 勿 别 別 毋` before it, `ない
+     ません なし 無し 無い` after it) within six characters of the occurrence,
+     inside its own clause — and the bullet's unquoted text repeating the
+     phrase in the opposite polarity is a flip, in both directions. Fixtures:
+     `corpus/fixtures/inference-ground-cjk/`.
 
 Usage:
   python3 tools/inference-ground.py --entry PATH --spans TSV --counts JSON
@@ -58,7 +66,9 @@ not a general precision estimate. A correct bullet can still be refused when
 it uses an unlisted absence form, a listed cue outside the P1/P2/figure window,
 or an in-window P2 negator that semantically scopes to a neighbouring word.
 Figures still require a listed negator in the next four words. A different-stem
-flip, a distant negator, or a second bullet can pass; semantics remain for a
+flip, a distant negator, or a second bullet can pass; so can a CJK reversal
+whose bullet never restates the quoted phrase in the prose, or whose negator
+falls outside the six-character window (`并不真正要求…`). Semantics remain for a
 reader to judge.
 """
 from __future__ import annotations
@@ -357,6 +367,70 @@ def polarity_flips(bullet: str, tok: str, spans: list[str]) -> list[str]:
     return out
 
 
+# CJK polarity (round-53 `R53ExecCjkPolarity`): `words()` is Latin-only, so a
+# Chinese or Japanese phrase had no window at all, and a bullet could quote a
+# span's affirmed phrase and assert its negation (`不要求…`, `未要求…`,
+# `没有要求…`) and still print `GROUND: PASS`. The window is measured in
+# CHARACTERS, not words, because the script is unspaced: a listed negator
+# within `CJK_WINDOW` characters of the occurrence, inside the occurrence's
+# own clause and line. Prefix negators cover the pre-verbal negative that
+# Chinese and Japanese share; the postfix ones cover the Japanese predicative
+# negative that follows a noun (`記載なし`). A negator inside the phrase
+# itself is not read: the phrase is the same bytes on both sides, so it cannot
+# mark a difference between them.
+CJK_NEG_PRE = ("不", "未", "没", "沒", "无", "無", "非", "否", "勿", "别", "別", "毋")
+CJK_NEG_POST = ("ない", "ません", "なし", "無し", "無い")
+CJK_WINDOW = 6
+CJK_CLAUSE_RE = re.compile(r"[\n。、，,；;：:！!？?（）()「」『』\[\]]")
+CJK_RUN_RE = re.compile(r"[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]+")
+
+
+def cjk_occurrence_polarity(tok: str, s: str, idx: int) -> tuple[bool, str]:
+    """(negated, cue) for one occurrence of a CJK phrase: the listed negator
+    inside the window, or "" when none is."""
+    before = CJK_CLAUSE_RE.split(s[:idx])[-1]
+    after = CJK_CLAUSE_RE.split(s[idx + len(tok):])[0]
+    tail, head = CJK_RUN_RE.findall(before), CJK_RUN_RE.findall(after)
+    for n in CJK_NEG_PRE:
+        if tail and n in tail[-1][-CJK_WINDOW:]:
+            return True, n
+    for n in CJK_NEG_POST:
+        if head and n in head[0][:CJK_WINDOW]:
+            return True, n
+    return False, ""
+
+
+def cjk_polarity_flips(bullet: str, tok: str, spans: list[str]) -> list[str]:
+    """CJK carriers: the bullet's own prose repeats the phrase in the opposite
+    polarity from the span, read in characters rather than scope-word stems.
+
+    Read only for a phrase of four or more CJK characters (the `has_two_words`
+    token floor), only when every cited span occurrence agrees on the phrase's
+    polarity, and only where the bullet's unquoted text repeats the phrase: a
+    bullet that does not restate the phrase is out of reach, as a Latin bullet
+    that omits the span's scope words is.
+    """
+    if len(CJK_RE.findall(tok)) < 4:
+        return []
+    span_seen = set()
+    for s in spans:
+        start = s.find(tok)
+        while start >= 0:
+            span_seen.add(cjk_occurrence_polarity(tok, s, start)[0])
+            start = s.find(tok, start + 1)
+    if len(span_seen) != 1:
+        return []
+    negated = span_seen.pop()
+    prose, out = unquoted(bullet), []
+    start = prose.find(tok)
+    while start >= 0:
+        hit, cue = cjk_occurrence_polarity(tok, prose, start)
+        if hit != negated:
+            out.append(f"cjk:{cue}" if hit else "cjk:unnegated")
+        start = prose.find(tok, start + 1)
+    return list(dict.fromkeys(out))
+
+
 KEY_PART_RE = re.compile(r"[A-Z]?[a-z]+|[A-Z]+(?![a-z])|\d+")
 
 
@@ -495,7 +569,9 @@ def main() -> int:
             is_num = bool(re.fullmatch(r"\d[\d,]*(?:\.\d+)?%?", tok))
             ok = any(numeral_in(tok, s) if is_num else tok in s for s in grounded)
             if ok and not is_num:
-                for w in polarity_flips(bullet, tok, grounded):
+                hits = polarity_flips(bullet, tok, grounded)
+                hits += cjk_polarity_flips(bullet, tok, grounded)
+                for w in hits:
                     findings.append({"code": "INF_POLARITY_FLIP", "bullet": i,
                                      "token": f"{tok[:60]} / {w}"})
             if not ok and re.search(r"\d", tok):

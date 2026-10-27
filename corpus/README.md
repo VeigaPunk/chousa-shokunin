@@ -1136,3 +1136,28 @@ Left open:
 - **The Chinese PRISMA-S reading's item text.** Still unread: the portal names the attachment, the SinoMed record cuts the abstract off.
 - **The publisher's current Japanese translation.** The original URL holds only a failed-fetch marker; the archive saw no change up to its 2026-04-18 memento.
 - **Other capture forms.** An OLE `.doc` keeps the UTF-16LE form (round 48); `.xlsx` and `.pptx` captures are refused, not read.
+
+## Round53 coverage and frontier (2026-10-26)
+
+| Note | Holds | Sources |
+|---|---|---|
+| `knowledge/search-tracking-record-r40.md` | Round-53 note (adopted by document from `merge/chousa/`; round 52's admit-later, its staged sentence re-cut at a line break): what the PRISMA 2020 / PRISMA-S authors' commentary says a tracking record counts per information source, and which flow-diagram column each identification route goes to — databases and registers in Column 1, citation searching and other methods in Column 2, per-source detail in supplementary materials when the diagram has no room, an update search one data point per database | `S117`; `corpus/evidence/round53/spans.tsv`; `corpus/lessons/round-53.md` |
+| `knowledge/western-instrument-alignment-r50.md` | Round-53 note (adopted by document, narrowed): the Cochrane Handbook's search chapter lists, among the information specialist's services, that the reporting aligns with the current PRISMA and PRISMA-S guidance and treats finding unpublished studies as a bias question; the centre's issued quality-control guideline asks at 指标 4 whether the search followed Cochrane and other organisations' methods and holds PRISMA 0 times in its text form — a statement about these two documents, not a tradition | `S120`, `S118`; same |
+| `knowledge/quality-control-guideline-issued-text-r48.md` | Round-53 note (adopted by document, narrowed): one issued instrument on two carriers — the release notice carries the issuing body, the act and two dates (posted 2025-01-03, signed 2024-12-31), the PDF carries the wording, the search requirements (several Chinese and English databases, two screeners and an arbiter, a flow chart, the strategy as a report annex) and 0 occurrences of 检索日期 and 灰色文献; the staged draft-versus-issued comparison is not carried (no draft capture exists) | `S118`, `S119`; same |
+| `../tools/assimilate-rows.py` | Round-53 capability (adopter v4, `32aab5e`): `held` only for a URL a Registry row carries, `twin` for a URL the same run minted, `HELD=`/`TWIN=` counts, every cited recheck validated first, registry refusals before entry refusals and also without `--entry` | `corpus/evidence/round53/claims.md`; `c1-count.py`; `c1-supplement.py` |
+
+Coverage credit is per document: four bound documents (S117 JMLA commentary, S118 the issued guideline — cited by two entries through the staged twins S185/S195 — S119 its release notice, S120 Cochrane Handbook chapter 4); none was in the lane at the base (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin grep -l -e 'tracking record' -e 'information specialist' -e 质量控制指南 5b550133d79bc09c82d8965cce2e48c2598b8c3e -- corpus/knowledge` → exit 1, no output; no Registry row carried any of the four URLs). The NMPA 2019 notice print (staged S190) is refused as a document and earns nothing. S119 is a carrier stamp of S118's instrument; it is credited as a document because it alone carries the issuance facts.
+
+### Frontier
+
+Advanced:
+
+- **Search-record fields at instrument level.** The per-source count and the route-to-column allocation (`S117`) give the lane's search log two fields it lacked: one row per source, and the route the source belongs to.
+- **Carrier discipline for an issued instrument.** Which carrier proves the date and issuer (the notice) and which proves the wording (the text) is now recorded on a real case (`S118`, `S119`).
+
+Left open:
+
+- **Searcher identity** on the Chinese side: the issued guideline names no searcher (检索者, 检索人员 0 in its text form).
+- **The draft wording** of the guideline: no draft capture exists in the cache.
+- **The 2019 NMPA notice:** only a tier-C third-party print is captured; the original's capture is a `.fail`.
+- **Japanese verb-final negation and Latin-negator-on-CJK-quote** in `tools/inference-ground.py` (named limits of the round-53 CJK window).

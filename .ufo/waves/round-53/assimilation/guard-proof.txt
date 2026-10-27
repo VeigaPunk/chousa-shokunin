@@ -1,0 +1,22 @@
+R53ExecCollision — section-10 id-collision guard proof
+scratch fixtures: /fast/scratch/hyaku/chousa-r53/R53ExecCollision/guard (removed after the seat)
+
+fixtures
+  reg.md    = "# fixture registry\n## Registry\n\n| id | source | kind |\n|---|---|---|\n| S001 | a | docs |\n  | S002 | y | docs |\n   | S003 | z | docs |\n    | S004 | w | docs |"
+  staged.md = "# fixture staged\n\n| S002 | x | docs |"
+
+PAT_A = ^ {0,3}\|[[:space:]]*S[0-9]{3,}   (the section-10 census pattern)
+  reg-ids    = S001 S002 S003 
+  staged-ids = S002 
+  collisions = S002   (n=1)  <- the two-space-indented registry row DOES collide
+  boundary: S004 at four leading spaces is matched by neither pattern
+
+PAT_B = ^\|[[:space:]]*S[0-9]{3,}   (column-zero only)
+  reg-ids    = S001 
+  staged-ids = S002 
+  collisions =   (n=0)  <- the indented row is missed, collision lost
+
+tool on the same pair (no --entry):
+  python3 tools/assimilate-rows.py --staged staged.md --knowledge . --registry reg.md --opened 2026-10-26 --out tool-out
+  stdout: COLLISIONS=1  exit=0
+  tool reg-ids=S001 S002 S003 | staged-ids=S002 | collisions=S002 

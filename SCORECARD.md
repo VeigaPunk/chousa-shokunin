@@ -2688,3 +2688,17 @@ The numeric operability scale stays 3/10; no other score is invented.
 ## Planned — round 53 (not started)
 
 Candidates: the adopter twin-id `held` label and refusal-order patch (W1 `R52ExecAdopterTwin`, routed defect 2) with its self-test rows; the anchored `correction:` check (W1 `R52ExecPointerAnchor`, routed defect 4) as a calibration claim; `search-tracking-record-r40.md` with its quote re-cut at char 935; the two verdict gaps `verdict-gap.py` prints (round 47 operability, round 50 calibration) and round 48's unparsed verifier form.
+
+## Round 53 pointer corrections (append-only; no row above is edited)
+
+Anchored successors of the round-51 corrections (round-52 closure section 6 item 4; `python3 corpus/evidence/round53/pointer-anchor-check.py` requires each anchor, ≥12 characters, to occur exactly once in the target) and the stale erratum ranges (closure section 6 item 1; W1 `R53DraftCorrections`, `R53DraftMistakes`).
+
+correction: SCORECARD.md:1843 measure/final/ -> .ufo/waves/round-32/measure/final/ anchor: "seed": 32101,"
+correction: SCORECARD.md:2073 measure-l1/c1-s36361.json -> .ufo/waves/round-36/measure-l1/c1-s36361.json anchor: "ENGINE_SWAP_CANARY=14/14"
+correction: SCORECARD.md:2074 measure-l1/c2-s36371.json -> .ufo/waves/round-36/measure-l1/c2-s36371.json anchor: "WITNESS_PER_RECORD=5/5"
+correction: SCORECARD.md:2616 c1-supplement.py -> corpus/evidence/round50/c1-supplement.py anchor: "SUPPLEMENT_LEGS={n}/{len(res)}"
+correction: SCORECARD.md:2664 E1–E4 -> corpus/evidence/round52/claims-erratum.md anchor: "E6 — named, not changed: the frozen span builder's reader is unbounded"
+correction: corpus/lessons/round-52.md:153 E1–E4 -> corpus/evidence/round52/claims-erratum.md anchor: "E6 — named, not changed: the frozen span builder's reader is unbounded"
+correction: SKILL.md:133 E1-E4 -> corpus/evidence/round51/claims-erratum.md anchor: "E5 — controls and supplements changed after the freeze"
+
+The round-52 erratum range is E1–E6 (E5 in-round narrowing, E6 the unbounded span-builder reader); the round-51 erratum range is E1–E5.
