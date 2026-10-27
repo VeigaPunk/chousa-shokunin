@@ -1,0 +1,59 @@
+# R56-C1 after-measurement (L1) at lane master 99eff0eca3d7440aeb96a9afac6a421759b4f704 (C1 inputs unchanged since the candidate 46e1758f3d8a5d1bf30200d2ff7d909b0230feed: git diff --stat 46e1758f 99eff0eca3d7440aeb96a9afac6a421759b4f704 -- corpus/evidence/round56/c1-count.py corpus/evidence/round56/c1-gate.py corpus/evidence/round56/battery corpus/evidence/round56/probes tools/build-spans.py tools/capture-text.py -> empty)
+
+## run 1
+$ python3 corpus/evidence/round56/c1-count.py
+gate=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-gate.py sha256=e3cb3ec5764592553b8601a1718bb5d07fd8c9991de9f4128482d41ffd4e4971
+builder=/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/build-spans.py sha256=1ed2650af28ea8e392bc34f7259cfb58f93b05c7453aca60e86b170c59c80bf6
+battery m1-quote-only-span.py sha256=a6ee9dcb86c18748be26128f0e170ee311e683cf3d7b1f183737906faea9ff38
+battery m2-span-beside-quote.py sha256=136adc60868150682646e7d32d3561cd0b8bd53f7bdd71d96219b5e3ab535776
+battery m3-wrong-digest.py sha256=583b66bd5352c6850996c143140bf5d341658cef63ea010876a2eb38ebc4f9bf
+battery m4-no-quote-lines.py sha256=e94e9e37ea2d692d61586253b3ef6cf732b2faa3dc48dedc13030f309bdef3d9
+battery m5-extra-span-file.py sha256=e4f9cb777ee7cd380e8e1fb9cf9d91eafa7777e69f765bcd52055259d4048a5f
+battery m6-manifest-on-refusal.py sha256=255d95fc8c4aac332f284bce610636b05c792cbb956e4a944834b43cfbbeee78
+battery m7-read-outside.py sha256=316955f567d9ff6b7b2aeeec322e8f9ec76ad55b3ea033edb29e7cfd285986c4
+battery oracle-m8-unpinned.py sha256=e86a52a62fffdb5fbc2b451bd31e5535642234f7f0647c5692ce2e0dba6d7e0a
+CANDIDATE=2/2 seed7=(0, 'PASS', 'PASS', 'PASS', 'PASS') seed56=(0, 'PASS', 'PASS', 'PASS', 'PASS')
+MUTANT M1 NO_SLICE KILLED by m1-quote-only-span.py: seed 7 order mGmGmG: leg GENOLE G='S901 span is not a slice of the defined form' mutant=PASS | seed 56 order mmGmGG: leg GENOLE G='S901 span is not a slice of the defined form' mutant=PASS
+MUTANT M2 NO_CHAR KILLED by m2-span-beside-quote.py: seed 7 order GGmmmG: leg GENOLE G='S901 char' mutant=PASS | seed 56 order mGmmGG: leg GENOLE G='S901 char' mutant=PASS
+MUTANT M3 NO_SHA KILLED by m3-wrong-digest.py: seed 7 order GGmmmG: leg GENOLE G='S901 capture_sha256' mutant=PASS | seed 56 order mmGGGm: leg GENOLE G='S901 capture_sha256' mutant=PASS
+MUTANT M4 NO_QUOTE KILLED by m4-no-quote-lines.py: seed 7 order GmmGGm: leg GENOLE G='S901 QUOTE line' mutant=PASS | seed 56 order GmGGmm: leg GENOLE G='S901 QUOTE line' mutant=PASS
+MUTANT M5 NO_EXTRA KILLED by m5-extra-span-file.py: seed 7 order GGmmGm: leg GENOLE G='extra or missing span files' mutant=PASS | seed 56 order GmmmGG: leg GENOLE G='extra or missing span files' mutant=PASS
+MUTANT M6 REF_TSV KILLED by m6-manifest-on-refusal.py: seed 7 order GmmmGG: leg REFUSE G='NOFORM: spans.tsv written' mutant=PASS | seed 56 order mmGmGG: leg REFUSE G='NOFORM: spans.tsv written' mutant=PASS
+MUTANT M7 ALLOW_ROOT KILLED by m7-read-outside.py: seed 7 order mmmGGG: leg GENOLE G='rc=97 b"AUDIT_FORBIDDEN open \'/home/vgpnk/Projects/shokunin/chousa-shokunin/SKIL' mutant=PASS | seed 56 order mmGGmG: leg GENOLE G='rc=97 b"AUDIT_FORBIDDEN open \'/home/vgpnk/Projects/shokunin/chousa-shokunin/SKIL' mutant=PASS
+MUTANT M8 NO_ORACLE_SHA KILLED by oracle-m8-unpinned.py: seed 7 order mmmGGG: G=('ENV', 2) mutant=(0, 'PASS', 'PASS', 'PASS', 'PASS') | seed 56 order GGmmGm: G=('ENV', 2) mutant=(0, 'PASS', 'PASS', 'PASS', 'PASS')
+MUTANT M9 WIN_NL KILLED by CANDIDATE: seed 7 order GmmGGm: G=(0, 'PASS', 'PASS', 'PASS', 'PASS') mutant=(1, 'FAIL', 'FAIL', 'PASS', 'PASS')
+PROBE P1 FORKEXEC DENIED seed7=(1, 'FAIL', 'FAIL', 'FAIL', 'FAIL') seed56=(1, 'FAIL', 'FAIL', 'FAIL', 'FAIL')
+PROBE P2 DIRFD DENIED seed7=(1, 'FAIL', 'FAIL', 'FAIL', 'FAIL') seed56=(1, 'FAIL', 'FAIL', 'FAIL', 'FAIL')
+RUNS=124
+CANDIDATE=2/2 KILLED=9/9 DENIED=2/2
+C1=PASS
+exit=0 wall=270s
+
+## run 2
+$ python3 corpus/evidence/round56/c1-count.py
+gate=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round56/c1-gate.py sha256=e3cb3ec5764592553b8601a1718bb5d07fd8c9991de9f4128482d41ffd4e4971
+builder=/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/build-spans.py sha256=1ed2650af28ea8e392bc34f7259cfb58f93b05c7453aca60e86b170c59c80bf6
+battery m1-quote-only-span.py sha256=a6ee9dcb86c18748be26128f0e170ee311e683cf3d7b1f183737906faea9ff38
+battery m2-span-beside-quote.py sha256=136adc60868150682646e7d32d3561cd0b8bd53f7bdd71d96219b5e3ab535776
+battery m3-wrong-digest.py sha256=583b66bd5352c6850996c143140bf5d341658cef63ea010876a2eb38ebc4f9bf
+battery m4-no-quote-lines.py sha256=e94e9e37ea2d692d61586253b3ef6cf732b2faa3dc48dedc13030f309bdef3d9
+battery m5-extra-span-file.py sha256=e4f9cb777ee7cd380e8e1fb9cf9d91eafa7777e69f765bcd52055259d4048a5f
+battery m6-manifest-on-refusal.py sha256=255d95fc8c4aac332f284bce610636b05c792cbb956e4a944834b43cfbbeee78
+battery m7-read-outside.py sha256=316955f567d9ff6b7b2aeeec322e8f9ec76ad55b3ea033edb29e7cfd285986c4
+battery oracle-m8-unpinned.py sha256=e86a52a62fffdb5fbc2b451bd31e5535642234f7f0647c5692ce2e0dba6d7e0a
+CANDIDATE=2/2 seed7=(0, 'PASS', 'PASS', 'PASS', 'PASS') seed56=(0, 'PASS', 'PASS', 'PASS', 'PASS')
+MUTANT M1 NO_SLICE KILLED by m1-quote-only-span.py: seed 7 order mGmmGG: leg GENOLE G='S901 span is not a slice of the defined form' mutant=PASS | seed 56 order mGGmmG: leg GENOLE G='S901 span is not a slice of the defined form' mutant=PASS
+MUTANT M2 NO_CHAR KILLED by m2-span-beside-quote.py: seed 7 order GGmmmG: leg GENOLE G='S901 char' mutant=PASS | seed 56 order GmGmGm: leg GENOLE G='S901 char' mutant=PASS
+MUTANT M3 NO_SHA KILLED by m3-wrong-digest.py: seed 7 order mGGmmG: leg GENOLE G='S901 capture_sha256' mutant=PASS | seed 56 order mGGmmG: leg GENOLE G='S901 capture_sha256' mutant=PASS
+MUTANT M4 NO_QUOTE KILLED by m4-no-quote-lines.py: seed 7 order GmmGmG: leg GENOLE G='S901 QUOTE line' mutant=PASS | seed 56 order mGGmGm: leg GENOLE G='S901 QUOTE line' mutant=PASS
+MUTANT M5 NO_EXTRA KILLED by m5-extra-span-file.py: seed 7 order mmGGmG: leg GENOLE G='extra or missing span files' mutant=PASS | seed 56 order mGmGmG: leg GENOLE G='extra or missing span files' mutant=PASS
+MUTANT M6 REF_TSV KILLED by m6-manifest-on-refusal.py: seed 7 order GmGmGm: leg REFUSE G='NOFORM: spans.tsv written' mutant=PASS | seed 56 order mGGmGm: leg REFUSE G='NOFORM: spans.tsv written' mutant=PASS
+MUTANT M7 ALLOW_ROOT KILLED by m7-read-outside.py: seed 7 order GGmGmm: leg GENOLE G='rc=97 b"AUDIT_FORBIDDEN open \'/home/vgpnk/Projects/shokunin/chousa-shokunin/SKIL' mutant=PASS | seed 56 order GGmmmG: leg GENOLE G='rc=97 b"AUDIT_FORBIDDEN open \'/home/vgpnk/Projects/shokunin/chousa-shokunin/SKIL' mutant=PASS
+MUTANT M8 NO_ORACLE_SHA KILLED by oracle-m8-unpinned.py: seed 7 order GmGmmG: G=('ENV', 2) mutant=(0, 'PASS', 'PASS', 'PASS', 'PASS') | seed 56 order mGmmGG: G=('ENV', 2) mutant=(0, 'PASS', 'PASS', 'PASS', 'PASS')
+MUTANT M9 WIN_NL KILLED by CANDIDATE: seed 7 order GmmGmG: G=(0, 'PASS', 'PASS', 'PASS', 'PASS') mutant=(1, 'FAIL', 'FAIL', 'PASS', 'PASS')
+PROBE P1 FORKEXEC DENIED seed7=(1, 'FAIL', 'FAIL', 'FAIL', 'FAIL') seed56=(1, 'FAIL', 'FAIL', 'FAIL', 'FAIL')
+PROBE P2 DIRFD DENIED seed7=(1, 'FAIL', 'FAIL', 'FAIL', 'FAIL') seed56=(1, 'FAIL', 'FAIL', 'FAIL', 'FAIL')
+RUNS=124
+CANDIDATE=2/2 KILLED=9/9 DENIED=2/2
+C1=PASS
+exit=0 wall=457s
