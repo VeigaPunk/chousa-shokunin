@@ -73,3 +73,47 @@ The chousa slice of the campaign absent-defect register was hand-checked against
 - **Counter kills.** `R57W2MutC2Counter` M5 (first-vs-last successful attempt) kills the C2 counter — the last-attempt binding is load-bearing. `R57W2MutC3Counter`: all 8 single-edit mutants survive on the passing state (legs individually masked by sibling AND-legs — a coverage finding, not a falsification).
 - **Quarantine completion.** S096 adjudicated PRESENT (two verbatim, one comma-fold substance; the comma-width fold is a new fold class for `tools/quarantine-check.py`'s fold set — routed). Coverage 24/24, zero fabrications.
 - **SCORECARD freeze-id typo.** The round-57 verdict block printed the C3 freeze as `fd95724d56a33a150cd2638fadd2ce1f3425e6c` (one nibble-group transposed); the commit is `fd95724d56a33ad150cd263f8add2ce1f3425e6c` (7-hex `fd95724` resolves). Corrected by this appended note; LOG and this lesson always used the resolving 7-hex form.
+
+## Considerthese — 2026-10-26 proposal mined this round
+
+`considerthese/2026-10-26.md:41` proposes: “Give my proposals stable ids.” It is already
+implemented as `corpus/evidence/round54/considerthese-ledger.tsv` (W1
+`R57W1ExecConsiderthese.md`: `PROPOSALS=35 ROWS=35 BAD=0`), so this round does not re-implement
+the proposal. The wave seat's real test found the ledger ids are positional: reordering a proposal
+bullet silently rebinds an id while the current check exits 0. Disposition: mined as a lesson,
+not a claim or a fourth work item; a successor check needs an anchor column plus the four routed
+escape cases. The proposal is therefore “implemented, with a surviving identity weakness,” not
+an unimplemented feature.
+
+## Mistakes — wave-2 addenda
+
+5. **attribution (unidentified writer)** — an externally authored `attempt3-sidecar-audits.md`
+   carrying the identity string `ChousaR57a3` appeared in this lane during the live attempt-2
+   session. Its five audit topics were re-run by the L1 and retained as
+   `corpus/evidence/round57/sidecar-audits.md`; the stranger-authored file was deleted in commit
+   `f3ecb764`. Captured-by: none — every seat's write contract limits output to its own wave report.
+   Fix: re-derive before adoption; preserve only L1-run receipts; report the concurrent attempt
+   integration and its resolved tree state.
+6. **survivor (counter provenance)** — W2 critic `R57W2CritC3Forge.md` A1a/A1b fabricated a
+   successful `refetch.tsv` row and replayed genuine capture bytes under a new (id,url); the frozen
+   `c3-count.py` returned C3=PASS for both same-id and different-id forgeries. Captured-by: none —
+   the counter checks record-vs-bytes self-consistency but not that a fetch actually occurred.
+   Fix: future claims must treat the record as self-attestation or bind it to an independently
+   authenticated fetch receipt; the frozen predicate cannot be changed this round. Shown able to
+   fail: the W2 forge returns C3=PASS on a never-fetched URL, a false positive.
+
+### Post-wave corrections
+
+- The `Attempt-3 addenda` above were authored by the concurrent attempt-3 integration (`75004f0`).
+  Its cited `corpus/evidence/round57/attempt3-sidecar-audits.md` was deleted by attempt 2 and
+  replaced with L1-rederived `corpus/evidence/round57/sidecar-audits.md`; the five audit results
+  are the same and re-run under attempt-2 authorship.
+- The appended `SCORECARD freeze-id typo` note above is stale: commit `75004f0` corrected the
+  main Round-57 header before `f3ecb764` landed. The current header carries the resolving full
+  hash `fd95724d56a33ad150cd263f8add2ce1f3425e6c`; the note is retained as history, not as the
+  current SCORECARD state.
+- Axis/plan conformance blocker (W1 `R57W1ReviewAxes.md`): the only scored non-retired axis is
+  operability 3/10; the stagnation nudge is dormant. Frozen C2 targets freshness and C3 depth;
+  the committed round-56 planned row named different candidates, and no R57-C1 was frozen before
+  data. The lowest-axis and plan obligations are unmet; adding a claim after either wave scored
+  would violate the frozen-claim rule. Routed to the operator in the round-57 L0 question.

@@ -1230,3 +1230,33 @@ Left open:
 - **The gate's hook as a boundary:** `dir_fd` without `chdir`, native `import`, `sqlite3.connect`; six gate clauses without a battery entry.
 - **The builder's output safety** (`R55W2SentBuilder`): destructive `--out`, symlinked outputs, unbounded memory.
 - **The rest of the grey-literature family** (r41, r48); r44 refused this round (same theme, overlapping documents).
+## Round57 coverage and frontier (2026-10-27)
+
+New ground: the 2025 workflow standard's `2 规范性引用文件` clause says the listed documents'
+content becomes indispensable terms by normative citation. The lane now binds four of seven
+references by document: R1/S131 (2019 notice), R2/S132 (2021 notice), R3/S133 (2021 管理指南),
+and R7/S118 (2024 quality-control guideline). Entry:
+`corpus/knowledge/normative-reference-chain-china-r57.md`; evidence:
+`corpus/evidence/round57/c3/spans.tsv`.
+
+### Frontier
+
+Advanced:
+
+- **Normative-reference chaining for the workflow standard.** Four of seven cited instruments
+  are bound by title, edition token, capture, and located quotes; the standard's clause is
+  grounded to its own form.
+- **Pinned-capture freshness re-fetch.** The 47 spans-manifest pins now have lane-owned,
+  digest-checked verdicts (`python3 corpus/evidence/round57/c2-count.py` → C2=PASS).
+
+Left open:
+
+- **Three 2022 technical guidelines (R4-R6).** Located copies either split the title across
+  lines, failed the lane's frozen heading rule, or were unreachable under the approved fetch
+  recipe; each has an explicit query/host sweep in the round-57 entry.
+- **C3 provenance attestation.** W2 forged a successful `refetch.tsv` row plus replayed capture
+  bytes under a new URL and reached C3=PASS; the committed five bound pairs are genuine
+  (`corpus/evidence/round57/sidecar-audits.md`), but the frozen counter does not prove a fetch
+  occurred from self-authored record bytes.
+- **C2's disclosed forge class.** Five genuine re-fetches plus quote-spliced drift forms can
+  reach the count floor; the C2 freeze disclosed the count-only boundary before data.
