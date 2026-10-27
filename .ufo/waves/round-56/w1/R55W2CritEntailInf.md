@@ -1,0 +1,29 @@
+# R55W2CritEntailInf — entailment attack
+
+Attacked the frozen round-55 C2 entry's `#### Inference` at lane commit `29cfb12abd70f688b48c0d17f31e636f2d81104a` (claims freeze `1fc5d92b5a7866ec16f1cac2de749fccfa6b49cb`). No predicates/targets/counters/controls proposed for change.
+
+## Findings
+
+1. **Report-field distinction — survives, with a wording boundary.** The entry quotes S124's report-writing instruction at chars 4625 and 4652 and its search-stage instruction at char 994 (entry lines 13, 15, 22). The first explicitly places whether grey literature was searched in `文献检索策略` for the report; the latter separately instructs collection of unpublished works. That supports “field of the evaluation report, not only a step of the search.” However, this establishes a requested report disclosure, not a separately named standardized database/search-record schema; preserve the entry's narrower “should state” wording and avoid implying compliance was measured.
+
+2. **Issuer attestation — survives as corroboration; “independent” is not established.** Entry line 17 reports S125's Chinese issuance statement and S126's English statement, while line 18 notes matching structure/method lineage. Locally checked the captures: S125 (`27d4865f201e99c1fed9f79b.txt`, 1,673 chars) contains the Chinese announcement and structure anchors; S126 (`d663d66e2d39f868d84b1781.txt`, 3,774 chars) contains the English issuer/date anchors. The specific quoted sentences are not duplicated across forms. But both are notices about the same issuance, and neither capture establishes separate editorial/source independence or provenance chains. Smallest safe wording: “corroborated by two issuance records,” not “two independent issuance records.” The quoted claim itself says “independent” in its heading; if interpreted as source independence, that superclaims the evidence.
+
+3. **Completeness rather than source list — narrow / partly underived.** S124 ties unpublished negative results and publication bias to grey literature (entry line 15); it also asks reports to disclose whether it was searched (line 13). These establish a bias-relevant disclosure. The further clause “a search record that omits this field leaves a reader unable to judge that bias” is plausible, but not directly demonstrated by a tested record or reader; also the source describes a report's search-strategy item, not specifically an independent search-record schema. Safer wording: “the disclosure lets a report reader assess whether unpublished evidence was sought in view of the stated publication-bias risk.” The method contribution is distinguishable from the lane's source-category entries: the search record R39 calls grey literature a module item in an animal-experiment protocol table (S109, entry lines 14, 24); round-56 workflow entry's distinct contribution is a report disclosure instruction for drug evaluation. The cited R48/R50 entries concern quality-control/source evaluation and do not themselves state this field (the entry's line 8 and grep results).
+
+4. **“Independent issuance records” — narrow.** S125 and S126 are different captures, languages, and hosts: respectively the Chinese Food and Drug News report (entry line 17) and NMPA English-site notice. The non-overlapping announcement wording and agreement on date/title support two-record corroboration. Nothing opened establishes that the records were generated independently rather than sharing an underlying release. Identity is fixed only in the practical sense of cross-record corroboration, not proven independent issuance provenance. The entry itself acknowledges the third-party `.doc` lacks issuer/date and says the text evidence is what that copy carries (lines 16, 24, 30), a useful limitation.
+
+## Evidence commands and outputs
+
+```text
+python3 -c 'from pathlib import Path; import hashlib; d=Path("/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache"); keys=["27d4865f201e99c1fed9f79b","d663d66e2d39f868d84b1781"]; [(lambda p: print(p.name, p.stat().st_size, hashlib.sha256(p.read_bytes()).hexdigest()))(d/(k+".txt")) for k in keys]'
+27d4865f201e99c1fed9f79b.txt 3945 cd65aa9e26b41d8a0f7a260a7dfacf4cbf0b3fc59ab9dbef7bd7ab6ba1a98626
+d663d66e2d39f868d84b1781.txt 3785 a5173d776e9349aa35531b8e2a217a8f1605d1c726e356e839722018b14fe3b2
+
+python3 -c 'from pathlib import Path; a=Path("/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/27d4865f201e99c1fed9f79b.txt").read_text(); b=Path("/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/d663d66e2d39f868d84b1781.txt").read_text(); qs=["6月18日，国家药品监督管理局发布通告", "which was issued on June 18, 2019", "指导原则分为概述、方法学要点", "NMPA organized the formulation"]; print([(q,q in a,q in b) for q in qs]); print("S125 chars",len(a),"S126 chars",len(b)); print("S125 anchors",a.find("国家药品监督管理局发布通告"),a.find("指导原则分为")); print("S126 anchors",b.find("which was issued on June 18, 2019"),b.find("organized the formulation"))'
+[('6月18日，国家药品监督管理局发布通告', True, False), ('which was issued on June 18, 2019', False, True), ('指导原则分为概述、方法学要点', True, False), ('NMPA organized the formulation', False, True)]
+S125 chars 1673 S126 chars 3774
+S125 anchors 377 780
+S126 anchors 1324 1209
+```
+
+Impacted axes: depth (the report-field distinction is real but not a schema claim); calibration (two records corroborate, independence is unproven); operability not implicated. Smallest safe correction is wording-only: qualify source “independence” and avoid treating reader's ability to judge bias as empirically demonstrated. VERDICT: round-55 C2 inference mostly survives, but its independence and reader-effect phrasing should be narrowed as above.
