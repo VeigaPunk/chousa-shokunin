@@ -34,3 +34,12 @@ adopted: round 54 from the campaign package merge/chousa/ (staged `knowledge/cor
 - **The flip in `citation-version-binding-r36.md` is met line by line, not as one span.** That entry's `#### Unknown` asks for the issued and effective dates as a contiguous span; this capture prints them in one 标准状态 block as two adjacent lines (chars 1029 and 1048), so the record now grounds the dates and no single contiguous string holds both.
 - **Whether the standard is applied anywhere.** The record prints 现行 and an 实施日期 of 2026-07-01; whether any publisher, index or journal applies this edition, and which document-type identifiers they use, was not checked.
 - **What the adoption relation means for the text.** 非等效采用 names an adoption relation between the documents; which clauses differ from ISO 690:2021 cannot be read from either page, and this entry cites no copy of the standard's text, since a third-party copy would prove what that copy carries and not what the authority issued.
+
+#### Corrections (round 55)
+
+Appended after round-54 wave 2 re-read both captures (`.ufo/waves/round-54/w2/R54W2CritEntailSta.md`); the bullets above stay as filed, and the anchored errata E01–E04 sit in `SCORECARD.md` under "Round 55 statement errata" (`python3 corpus/evidence/round55/c3-count.py`).
+
+- **The third inference bullet holds for the lines the portal displays, not for every string in its capture.** The portal's page source carries an embedded i18n map whose `noFullText` value is `该标准暂无全文，请等待更新` (`S122`, char 1712, once) — a latent template string the page does not display for this standard. So the portal page displays no line saying the text is unavailable, while its capture does hold such a string (E01).
+- **The byline offset in the fourth observation names the value, not the phrase.** The phrase 主管部门为 国家标准委 starts at char 569 of the record form; 575 is where its value 国家标准委 starts (E02).
+- **"Prescribes" in the last inference bullet is read as "is said to prescribe".** Neither page shows a taxonomy: 附录 and 文献类型 occur 0 times in both forms. The type table is carried by the third-party copy cited in `source-type-taxonomy-r37.md` (S123), not by S121 or S122 (E03).
+- **The verified-at line's "count 1" covers the anchor quotes only.** Each backticked anchor quote occurs once on one line; other tokens repeat — 国家标准委 occurs twice in each of the two forms (E04).

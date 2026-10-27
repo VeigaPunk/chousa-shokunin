@@ -1,0 +1,16 @@
+# round-55 pdf-crosscheck receipts (L1); pypdf 6.21.2 via uv run --with pypdf (uv cache; nothing installed into PATH)
+$ uv run --with pypdf python corpus/evidence/round55/pdf-crosscheck.py quotes.tsv
+PDF_QUOTES=21 NOT_IN_INDEPENDENT=0 RAW_NOT_IN=14
+exit=0
+$ uv run --with pypdf python corpus/evidence/round55/pdf-crosscheck.py renamed.tsv
+row denominator mismatch S123: got 20, expected 21
+exit=1
+$ uv run --with pypdf python corpus/evidence/round55/pdf-crosscheck.py emptyquote.tsv
+empty quote in S123 row 35
+exit=1
+$ uv run --with pypdf python corpus/evidence/round55/pdf-crosscheck.py headeronly.tsv
+row denominator mismatch S123: got 0, expected 21
+exit=1
+$ uv run --with pypdf python corpus/evidence/round55/pdf-crosscheck.py tab.tsv
+malformed quotes.tsv row 15: expected 4 cells, got 5
+exit=1

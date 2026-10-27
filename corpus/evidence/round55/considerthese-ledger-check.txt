@@ -1,0 +1,24 @@
+# round-55 considerthese-ledger-check receipts (L1)
+$ python3 corpus/evidence/round55/considerthese-ledger-check.py --root .
+PROPOSALS=35 ROWS=35 IMPL=24 FMT=9 OPEN=1 OPS=1 BAD=0
+exit=0
+$ [absolute pointer /etc/hostname::^]
+FAIL POINTER CT-20261026-1 /etc/hostname
+PROPOSALS=1 ROWS=1 IMPL=1 FMT=0 OPEN=0 OPS=0 BAD=1
+exit=1
+$ [regex cell (a+)+$ on 40a+b]
+FAIL REGEX CT-20261026-1 payload.txt::(a+)+$
+PROPOSALS=1 ROWS=1 IMPL=1 FMT=0 OPEN=0 OPS=0 BAD=1
+exit=1
+$ [512 MiB pointer target]
+FAIL SIZE CT-20261026-1 payload.bin
+PROPOSALS=1 ROWS=1 IMPL=1 FMT=0 OPEN=0 OPS=0 BAD=1
+exit=1 maxRSS_children=15848kB
+$ [no considerthese/ tree, empty ledger]
+USAGE considerthese/ is absent
+exit=1
+$ [round-54 checker on the absolute-pointer and empty-tree fixtures, for contrast]
+PROPOSALS=1 ROWS=1 IMPL=1 FMT=0 OPEN=0 OPS=0 BAD=0
+exit=0
+PROPOSALS=0 ROWS=0 IMPL=0 FMT=0 OPEN=0 OPS=0 BAD=0
+exit=0

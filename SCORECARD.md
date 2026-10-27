@@ -2776,3 +2776,21 @@ The numeric operability scale remains 3/10; the round-1 score is its narrow arch
 ## Planned — round 55 (not started)
 
 Candidates: a span builder that reads an OLE `.doc` through `tools/capture-text.py`, then the HIT data specification's carrier alphabet beside the standard's (the cut S101 leg, W1 `R54DraftEntryStb`); the refused S130 grey-literature entry, now that its form blocker is gone (W1 `R54ExecS130Probe`); a frozen C1-style counter whose generated inputs never sit beside the tool's input and whose REAL leg cannot be canned by digest (RW-1, sixth round); the counter limits W1 named (REAL ratio and label rule, fObfuscated-only and nFib branches ungenerated).
+
+## Round 55 statement errata
+
+Eleven lane statements committed at `dba605de` that round-54 wave 2 falsified (closure `corpus/lessons/round-54-verifier-spotcheck.md` section 6 items 2, 4, 5, 6; W2 reports under `.ufo/waves/round-54/w2/`). Each line anchors the statement exactly once in its target (the statement stays, append-only) and records the observation as re-derived this round; `python3 corpus/evidence/round55/c3-count.py` recomputes every observation from BASE bytes, the pinned captures and its own probes (claim R55-C3). The in-target corrections are named in `corpus/lessons/round-55.md` `## Corrections`.
+
+erratum: E01 corpus/knowledge/source-type-taxonomy-r36.md anchor: "the stronger claim that the text is unavailable belongs to no line here" observed: "该标准暂无全文，请等待更新 count=1 char=1712"
+erratum: E02 corpus/knowledge/source-type-taxonomy-r36.md anchor: "continues that 主管部门为 国家标准委 (char 575)" observed: "主管部门为 国家标准委 char=569"
+erratum: E03 corpus/knowledge/source-type-taxonomy-r36.md anchor: "a row scoped to the document-type taxonomy the standard prescribes cannot" observed: "附录 S121=0 S122=0; 文献类型 S121=0 S122=0"
+erratum: E04 corpus/knowledge/source-type-taxonomy-r36.md anchor: "count 1 each, on one line" observed: "国家标准委 S121=2 S122=2"
+erratum: E05 corpus/QUALITY.md anchor: "11,972 / 12,007 / 12,963 / 12,795 / 14,049 / 25,123" observed: "located=11972,12007,12795,12963,14049,25123 drift=+802,+802,+802,+802,+802,-9251"
+erratum: E06 corpus/QUALITY.md anchor: "263 U+FFFD and 18,242 control characters" observed: "C0=18451 C0_excl_tab_lf=18431 C0_excl_tab_lf_cr=18242"
+erratum: E07 corpus/QUALITY.md anchor: "gives 27,012 characters, 0 U+FFFD, 0 control characters" observed: "form_C0=469 form_LF=469"
+erratum: E08 corpus/lessons/round-54.md anchor: "on a mirror without the two dumps `pointer-anchor-check.py` prints `BAD=6`" observed: "ANCHORED=7/16 UNANCHORED=9 BAD=9"
+erratum: E09 corpus/QUALITY.md anchor: "and refuses a tool that delegates to that reader" observed: "ctypes_system_under_hook rc=0 marker=SPAWNED"
+erratum: E10 corpus/QUALITY.md anchor: "and the SHELL control's receipt says the same" observed: "SHELL LEGS=1/6"
+erratum: E11 corpus/evidence/round54/c1-supplement.py anchor: "randomly named directory outside the generation tree (no HTML, no" observed: "oracle-echo SUPPLEMENT_LEGS=3/3"
+
+Readings: E01 — the string sits in the page's embedded i18n map (`noFullText`), a latent template string, not a displayed line; I3's sentence holds only for displayed lines. E02 — 575 is the offset of the value 国家标准委, the quoted phrase starts at 569. E03 — neither capture shows a taxonomy, so "prescribes" is the standard's own text as carried by S123, not by these two pages. E04 — the count-1 property holds for the eleven anchor quotes, not for every quoted token. E05 — positions 3 and 4 are swapped; five of six anchors drift by the constant +802, so "no constant repairs an old anchor" is false (no constant repairs all six). E06/E07 — the counts hold only under the exclusion sets named; the defined form's only control character is LF. E08 — `BAD=6` reproduces only with S101's dump alone missing. E09 — a ctypes `system()` spawns under the round-54 hook, so QUALITY 98's "refuses a tool that delegates" holds only for audited spawn events. E10 — the SHELL control scored 1/6 (it keys refusals on bytes), the criterion's forge 0/6. E11 — the supplement's oracle files and the ISOLATED leg's generation HTML sit two directories above the isolated document, so an echo tool that never opens the `.doc` scores 3/3.

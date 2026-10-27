@@ -1187,3 +1187,27 @@ Left open:
 - **The HIT data specification's carrier alphabet beside the standard's** (W1 `R54DraftEntryStb`): waits for a span builder that reads an OLE `.doc` through `tools/capture-text.py`.
 - **Applicability of the codes.** Whether any publisher or index applies 表Ａ．２ was not checked.
 - **The refused S130 regulator field.** The form blocker is gone; adoption waits for its own round.
+
+## Round55 coverage and frontier (2026-10-27)
+
+| Note | Holds | Sources |
+|---|---|---|
+| `knowledge/grey-literature-and-chinese-search-record-r40.md` | Round-55 note (adopted by document from `merge/chousa/`, narrowed): an NMPA guideline's report item says the evaluation report should state whether the search was restricted, whether it was a hand search and whether grey literature was searched (`是否检索灰色文献`), and its search step names the unpublished material it means (conference papers, unpublished theses, industry and consultancy reports) and why (negative results, publication bias); the guideline text is a third-party `.doc` copy with no date or issuer stamp, and its issuer and 2019-06-18 release are bound to the regulator's newspaper and the regulator's English site; currency Unknown | `S124`, `S125`, `S126`; `corpus/evidence/round55/spans.tsv`; `corpus/lessons/round-55.md` |
+| `../tools/build-spans.py` | Round-55 capability: the lane-level span builder reads every capture through its defined text form — an OLE or zip `.raw` through `tools/capture-text.py` (the `.txt` sidecar unused), otherwise the `.txt` — and refuses a capture with no defined form instead of decoding it as UTF-16LE; re-derives rounds 47 and 50–54's committed manifests byte for byte and the nine round-49 OLE rows into the defined form (W1 `R55ExecBuilderOld`) | `corpus/evidence/round55/claims.md` C1; `c1-count.py`; `c1-measure-after.txt` |
+
+Coverage credit is per document: three documents absent at the base — the guideline copy (S124: the report field and the unpublished-material rule), the newspaper report (S125: issuer, date, five-part structure) and the regulator's English notice (S126: identity and issue date on the regulator's own domain). Base sweep: `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin grep -c 是否检索灰色文献 dba605deb5cd5ed4874e0e3c39ba24737409cd80 -- corpus/knowledge` → exit 1, no output; no Registry row carried any of the three URLs. The staged 梅斯医学 PRISMA-S leg is the lane's held S113 and is not cited (its price field establishes nothing about access).
+
+### Frontier
+
+Advanced:
+
+- **Search-record fields from a regulator.** A Chinese regulator's guideline puts the grey-literature question in the report itself, beside language restriction and hand searching (`S124`), with a bias rationale — the lane held 灰色文献 only as a source category before.
+- **Other capture forms, end to end.** A `.doc` capture now goes from bytes to located spans through one defined form (`tools/capture-text.py` → `tools/build-spans.py`), so a quote in an OLE document is located and anchored like one in HTML or PDF.
+- **The 2019 NMPA notice (round-53 left-open).** The regulator's own English notice (S126, tier A for identity and date) is bound; the Chinese original is still a `.fail` in the cache.
+
+Left open:
+
+- **The HIT data specification's carrier alphabet beside the standard's** (round 54): the span builder now reads the OLE `.doc` (W1 `R55ExecS101Leg`: the four round-54 S101 quotes build 4/4); the entry leg waits for a round whose counter covers S101's `used-by`.
+- **Currency of the NMPA guideline:** 试行 / Interim, 2019; no capture states whether it is in force, revised or replaced.
+- **A regulator-hosted copy of the guideline's text:** only the gcpunion.org copy is captured.
+- **The rest of the grey-literature family** (`grey-literature-and-chinese-search-record-r41.md`, `-field-china-r42`, `-national-route-r44`, `-mandate-scope-r48`; r43 refused this round): undecided, each its own round.
