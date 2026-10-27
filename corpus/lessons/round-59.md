@@ -41,3 +41,9 @@ The previous verifier's routed items remain relevant: (1) require positive contr
 - Expansion: **unchanged** — no knowledge entry was admitted and no frontier area moved into core.
 - Quality: **unchanged** — no existing knowledge entry was reverified, deepened or superseded; the offline source opening is a registry/lesson citation only.
 - Discernment: **unchanged** — the round-58 non-author spot-check belongs to the previous gate decisions; no external reviewer sampled round-59 decisions because there were none.
+
+## Post-WAVE-DONE settlement (2026-10-27)
+
+The orchestrator later delivered `WAVE-DONE chousa r59 w1`; settled results are `.ufo/waves/round-59/w1-results.json`. The results contain 66 seat records, and 66 named report files are present. The records omit `status`, `agentId` and per-seat last-error fields; four records have empty `output` and null `note` (R59Scout34/36/38/40), though those named report files exist. Therefore no dead-seat count or last-error list is inferred from this schema. The dispatch identity map assigns suffixed identities to 11 logical seat names; retain the map/report artifacts as the audit trail, without inferring why an identity was suffixed.
+
+Role mix: 16 executors, 12 scribes, 12 scouts, 14 reviewers, 7 critics, 5 mutation-testers; 0 connectors. The L1 held the planner seat; attack roles = 26/66 (39.4%). The minimum connector assignment was missed and is a wave-shape conformance defect. This settlement does not repair the missing claims freeze or authorize a post-data claim; all seat findings remain round-58 counter/source reconnaissance, not round-59 claim verdicts.
