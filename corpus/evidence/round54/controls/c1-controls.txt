@@ -1,0 +1,45 @@
+# R54-C1 controls, --seed 54, frozen counter
+## const
+tool=/fast/scratch/hyaku/chousa-r54/L1/ctl/const.py sha256=f8f00676f6750bd713e64a6935ed1e18b15384639fd10ce3b014ee492a11b196 seed=54 per-leg=3
+GEN=FAIL ggen0.doc item count=0 '49FyoC 兗妔儳以嗮 CMfIvHs IjgPq L5cyRa oöb 吐凢'
+NONWORD=FAIL x0.xls rc=0 err=b''
+ENCRYPTED=FAIL genc0.doc rc=0 err=b''
+MALFORMED=FAIL gmal0.doc rc=0 err=b''
+REAL=FAIL 54fe0734c01f699e735b4b0a oracle line missing '2\u3000规范性引用文件\t1'
+REGRESS=FAIL r52 ['LEGS=0/9'] ['SUPPLEMENT_LEGS=0/4']
+LEGS=0/6
+C1=FAIL
+exit=1
+## naive
+tool=/fast/scratch/hyaku/chousa-r54/L1/ctl/naive.py sha256=854ccaa9b6482c7025e04c71272301cdcc288922e7f986610742f14fbec5ae38 seed=54 per-leg=3
+GEN=FAIL ggen0.doc U+FFFD or control character in the text form
+NONWORD=FAIL x0.xls rc=0 err=b''
+ENCRYPTED=FAIL genc0.doc rc=0 err=b''
+MALFORMED=FAIL gmal0.doc rc=0 err=b''
+REAL=FAIL 54fe0734c01f699e735b4b0a U+FFFD in the text form
+REGRESS=FAIL r52 ['LEGS=0/9'] ['SUPPLEMENT_LEGS=0/4']
+LEGS=0/6
+C1=FAIL
+exit=1
+## refuseall
+tool=/fast/scratch/hyaku/chousa-r54/L1/ctl/refuseall.py sha256=9e2d4b1f218d8a77104b775405ddb265a97bd3627d5ec392a012e8aac652606a seed=54 per-leg=3
+GEN=FAIL ggen0.doc rc=2 b'REFUSED ole-not-word: control\n'
+NONWORD=PASS 3 sheets
+ENCRYPTED=FAIL genc0.doc rc=2 err=b'REFUSED ole-not-word: control\n'
+MALFORMED=FAIL gmal0.doc rc=2 err=b'REFUSED ole-not-word: control\n'
+REAL=FAIL 54fe0734c01f699e735b4b0a rc=2 b'REFUSED ole-not-word: control\n'
+REGRESS=FAIL r52 ['LEGS=1/9'] ['SUPPLEMENT_LEGS=0/4']
+LEGS=1/6
+C1=FAIL
+exit=1
+## shell
+tool=/fast/scratch/hyaku/chousa-r54/L1/ctl/shell.py sha256=e53423bdc9be1d05f0d57c55c20891854b7f319ea491e7a92fc0d0e09ac8640d seed=54 per-leg=3
+GEN=FAIL ggen0.doc rc=97 b'AUDIT_FORBIDDEN subprocess.Popen\n'
+NONWORD=PASS 3 sheets
+ENCRYPTED=FAIL genc0.doc rc=97 err=b'AUDIT_FORBIDDEN subprocess.Popen\n'
+MALFORMED=FAIL gmal0.doc rc=2 err=b'REFUSED ole-not-word: no WordDocument name\n'
+REAL=FAIL 54fe0734c01f699e735b4b0a rc=97 b'AUDIT_FORBIDDEN subprocess.Popen\n'
+REGRESS=FAIL r52 ['LEGS=1/9'] ['SUPPLEMENT_LEGS=0/4']
+LEGS=1/6
+C1=FAIL
+exit=1
