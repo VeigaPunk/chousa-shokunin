@@ -2702,3 +2702,33 @@ correction: corpus/lessons/round-52.md:153 E1–E4 -> corpus/evidence/round52/cl
 correction: SKILL.md:133 E1-E4 -> corpus/evidence/round51/claims-erratum.md anchor: "E5 — controls and supplements changed after the freeze"
 
 The round-52 erratum range is E1–E6 (E5 in-round narrowing, E6 the unbounded span-builder reader); the round-51 erratum range is E1–E5.
+
+## Round 53 verdict — 2026-10-26 (adopter v4; search-record instruments)
+
+Claims frozen at `a6ff732c70011f11c9beb681d832cedc6e75f566` after do-nothing controls (`corpus/evidence/round53/claims.md`; C1 `controls/c1-before.txt`, C2 `controls/c2-before.txt` / `c2-controls.txt`). Candidate C1 `32aab5edd70e43145cae72ec872278f3bc6efba7`; W1 integration `f4343163b70ce20e6b6d4f52b39935156e8afb26`. No live fetch; L0 `8d77e6c1` open.
+
+| claim / axis | before → after | counting command | verdict | tag |
+|---|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10; capability extension) | base adopter `LEGS=1/8 C1=FAIL` (REGRESS only); controls base 1/8, const 0/8, refuse 0/8, relabel-only 5/8, all-twin 2/8 → candidate `LEGS=8/8 C1=PASS` (three unseeded and `--seed 7`; W1 `R53ExecSeedRuns` also 45/45 required runs plus 140 seeds). Post-freeze supplement: candidate 3/3, W1 forge-c1 1/3 | `python3 corpus/evidence/round53/c1-count.py`; post-freeze `python3 corpus/evidence/round53/c1-supplement.py` | **improved narrowly**: W1 `R53CritForgeC1` demonstrated a 189-line forge still passes the frozen counter 8/8 by canning REAL, shape-keying date checks and stubbing the R50 self-test strings; supplement kills two of those three shortcuts, but not the valid-map implementation. E2 `--per-leg 0` and E3 cadence mismatch remain named | plumbing |
+| C2 depth (sourced; search-record instruments) | `ENTRIES=0/3 BOUND=0/5 C2=FAIL`; staged-copy control `REF_ID_UNBOUND=12 BOUND=0/5`; adopter-rewrite control `BOUND=5/5 REF_ID_UNBOUND=4 ANCHOR_BOUND=0/5 C2=FAIL` → `ENTRIES=3/3 BOUND=4/5 REFUSED=1 QUOTE_ROWS=63 CAPTURE_BOUND=63/63 ANCHOR_BOUND=4/4 INFERENCE_GROUNDED=3/3 QUARANTINE_VERDICTS=0/0 C2=PASS` | `python3 corpus/evidence/round53/c2-count.py` | **improved**, as presence, binding and located support; the C2 counter does not judge entailment. The C1 twin was S118 (one row cited by two entries); S190 refused. Expansion credit per document, not entry | ground |
+
+The numeric operability scale remains 3/10; the round-1 score is its narrow archived-export observable, not this adopter counter. No other numeric score is invented.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved narrowly** | C1; candidate v4 fixes the same-run `held` label (S195 is `twin`) and refusal ordering; the frozen counter remains forgeable on REAL, RECHECK edge shapes and R50 self-test attestation |
+| depth | **improved** | C2; three entries, four bound documents, 63 quote spans and four anchors; W1 critics narrowed the JMLA line-break, the cross-tradition title and the issued-guideline wording |
+| coverage | **improved narrowly** | four unique documents absent at base (S117–S120); S118's S185/S195 staged twins count once; S119 is the release notice, S120 the Cochrane chapter |
+| calibration | **improved narrowly** | pointer-anchor check `ANCHORED=7/7`; the round-52 erratum ranges corrected by anchored successors; W1 C1 forge and counter blind spots named rather than hidden; no non-author spot-check yet |
+| freshness | **unchanged** | no fetch; newest capture dates remain 2026-10-24 |
+| adjacency | **unchanged** | W1 `R53ConnSiblings` reports no sibling ownership of the landed search-record method or adopter; drug-regulator mandates remain report-only |
+
+## Capabilities (round-53 addition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| section-10 adopter v4 twin and refusal handling | labels `held` only for a URL already in Registry and `twin` for a same-run duplicate; separate counts; validates cited rechecks before output; refuses broken Registry before entry refusals, including without `--entry` | `python3 tools/assimilate-rows.py --selftest` (`FIXTURES_SHA256=9822ad59544cd42d6c6a8c3d34cb14d4d7c98d21e4f388d604486d70dd5db4a6`, findings 40/40); `corpus/evidence/round53/c1-count.py`; supplement (post-freeze only) | 53 |
+
+## Planned — round 54 (not started)
+
+Candidates: a C1 counter with a non-vacuous sample-size guard, generic calendar-invalid inputs and a non-canned held-out REAL leg; resolve the E3 predicate/tool recheck grammar; a defined OLE `.doc` text form or a narrower refusal; continue theme C (GB/T 7714 source-type) or theme B (archived-translation currency) after re-checking their capture state and province fit. C1's streak count (RW-1) is exposure, not failure; pair it with the next C1 verdict.
