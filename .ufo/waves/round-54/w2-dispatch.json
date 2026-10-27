@@ -1,0 +1,651 @@
+{
+  "schema": "ufo-swarm-wave-dispatch-v1",
+  "wave": "chousa-r54-w2",
+  "policy": {
+    "source": "config",
+    "maxLanes": 256,
+    "minLanes": 16,
+    "waveMinLanes": 32,
+    "waveMaxLanes": 64,
+    "declaredMaxLanes": null,
+    "hardCeiling": 256,
+    "rampBatchSize": 5,
+    "rampIntervalMs": 700,
+    "globalRunnerCeiling": 1056
+  },
+  "counts": {
+    "spawn": 38,
+    "resume": 0,
+    "total": 38
+  },
+  "registry": {
+    "schema": "ufo-swarm-registry-v1",
+    "path": ".ufo/waves/round-54/w2/swarm-registry.json",
+    "reportDir": ".ufo/waves/round-54/w2",
+    "members": {
+      "R54W2ExecC1Target": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Attack C1's after-state: with TMPDIR=/fast/scratch/hyaku/chousa-r54/R54W2ExecC1Target run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/c1-count.py` three times unseeded and once `--seed 7`, then `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/c1-supplement.py` three times unseeded and once `--seed 7`, on the lane tool at 447cf7ed4dc1a3708518b99e9a5e62e177c11ce9. Paste every leg line and the `tool=… sha256=…` header; confirm the sha256 equals `sha256sum /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/capture-text.py` and `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 447cf7ed4dc1a3708518b99e9a5e62e177c11ce9:tools/capture-text.py | sha256sum`. Any non-6/6 or non-3/3 run is a finding: paste its full output and reproduce with its seed. Then diff the tool against the candidate: `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin diff 8a7d0f137a352000d78704ba5695ded8857104fe 447cf7ed4dc1a3708518b99e9a5e62e177c11ce9 -- tools/capture-text.py` — is every change disclosed in claims-erratum E2?",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2ExecC2Rerun": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Attack C2's after-state at 447cf7ed4dc1a3708518b99e9a5e62e177c11ce9: run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/c2-count.py` and `--lane-only`, `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/build-spans.py --check`, `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round51/quote-substance-check.py /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/spans.tsv`, and `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/inference-ground.py --entry <e> --spans /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/spans.tsv --counts /dev/null --registry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md --root /home/vgpnk/Projects/shokunin/chousa-shokunin` for both entries (TMPDIR=/fast/scratch/hyaku/chousa-r54/R54W2ExecC2Rerun). Paste all output. Then rebuild the span manifest from /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/quotes.tsv into a scratch root (`--root <scratch copy>`) and `cmp` it with the committed spans.tsv and spans/. Every mismatch is a finding.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2ExecCensus": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Census and misroot attack at 447cf7ed4dc1a3708518b99e9a5e62e177c11ce9: run `/home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa` (paste output and exit) and the CORPUS.md census awks (/home/vgpnk/Projects/shokunin/CORPUS.md section SOURCES.md) over /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md: row count, NF per row, tier/status counts, duplicate ids, used-by paths that do not exist. Then read-only misroot check: `git -C /home/vgpnk/Projects/shokunin status --porcelain` — list every untracked path and say whether its content names chousa round 54 (grep the file for `chousa`, `round-54`, `R54`); do NOT move or delete anything. Report.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2ExecPointerAnchor": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Attack the nine 'Round 54 pointer corrections' in /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md: run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/pointer-anchor-check.py --root /home/vgpnk/Projects/shokunin/chousa-shokunin` (paste); regenerate both dumps (`python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/capture-text.py /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/6dc68fd6b32ce9c8dfcebce8.raw` and `… /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/b539a80218080da56a75b624.raw`) and `cmp` them with /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/S101-text-form.txt and S100-text-form.txt; for each correction line verify `old` is the phrase's offset in the whole-file UTF-16LE decode and `new` its offset in the defined form (python). Then on a scratch mirror delete one dump and show the check fails; forge one anchor (absent text) and show it fails. Does any other lane file still cite S100/S101 offsets in the old form without a successor (`grep -rn 'char 11170\\|char 1296' /home/vgpnk/Projects/shokunin/chousa-shokunin --include=*.md | grep -v waves`)?",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2ExecQualityChecks": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Run the check command of each new criterion 97–100 in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md (read each criterion; run exactly what it says, TMPDIR=/fast/scratch/hyaku/chousa-r54/R54W2ExecQualityChecks) and reproduce each red-before claim it makes (e.g. 97: the UTF-16LE decode's U+FFFD/control counts; 99: `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round50/wave-complete-check.py /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-53/w2-spec.json /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-53/w2 --rev d21eb285 --lane /home/vgpnk/Projects/shokunin/chousa-shokunin`; 100: the TOOLED control). Table: criterion · check command · ran output · red-before reproduced? · matches the criterion's text? Any number that differs is a finding.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2ExecLedger": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Attack the considerthese ledger: run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/considerthese-ledger-check.py --root /home/vgpnk/Projects/shokunin/chousa-shokunin` (paste), then in a scratch copy of the lane's `considerthese/` + ledger make five mutants (drop a row; duplicate a row; an IMPL row pointing to a missing file; a ledger row with three columns; a new considerthese file 2026-10-27.md with a 'Self-improvement proposals' section and two bullets) and show each exits 1 with its FAIL line. Then audit 8 IMPL rows by hand: does the pointed file actually implement the proposal (open the considerthese bullet and the file)? List rows whose pointer exists but does not implement the proposal.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2ExecPdfCross": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Attack the S123 PDF quote check: run `uv run --quiet --with pypdf python /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/pdf-crosscheck.py` from /fast/scratch/hyaku/chousa-r54/R54W2ExecPdfCross (paste the last line). Then a THIRD extractor (`uv run --with pymupdf python …` or `pdftotext -raw` if present) over /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/0f33243fd7ac2fe88b85c1ba.raw: for each of the 21 S123 quotes in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/quotes.tsv, present raw / present under NFKC+whitespace-removal / absent. Is NFKC folding hiding a real difference (a quote whose CJK characters, not only its width, differ between extractors)? List per quote.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2ExecFuzzFinal": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Robustness of the LANDED tool (/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/capture-text.py at 447cf7ed4dc1a3708518b99e9a5e62e177c11ce9): write a ≤80-line fuzzer in /fast/scratch/hyaku/chousa-r54/R54W2ExecFuzzFinal/ over 4 LibreOffice-generated `.doc` (private profile) and the five pinned captures (/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/54fe0734c01f699e735b4b0a.raw 6dc68fd6b32ce9c8dfcebce8.raw b539a80218080da56a75b624.raw bdff491a75c6abeda1d9c01d.raw 74ced3e9311594a8cc3f1f42.raw) making 800 mutants focused on the FIB walk (csw/cslw/cbRgFcLcb), the Clx (Prc cbGrpprl sign and size, Pcdt lcb), the PlcPcd CPs (decreasing, beyond ccpText) and the mini FAT. Each run with a 10 s timeout: must end exit 0 or exit 2 with one `REFUSED …` stderr line — never a Traceback, a timeout or exit 1. Report counts by outcome and every failing mutant (rebuild recipe + output). W1 `R54ExecOleFuzz` found 37/600 Tracebacks at the candidate; does any survive at 447cf7ed4dc1a3708518b99e9a5e62e177c11ce9?",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2ExecHistCounters": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Regression of the lane's historical gates at 447cf7ed4dc1a3708518b99e9a5e62e177c11ce9 (TMPDIR=/fast/scratch/hyaku/chousa-r54/R54W2ExecHistCounters, PYTHONDONTWRITEBYTECODE=1): `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round52/c1-count.py`, `round52/c1-supplement.py`, `round53/c1-count.py`, `round53/c2-count.py`, `round52/c2-count.py`, `round47/c2-count.py` (the gate registry), `round53/pointer-anchor-check.py --root /home/vgpnk/Projects/shokunin/chousa-shokunin`, `round53/weakness-streak.py --root /home/vgpnk/Projects/shokunin/chousa-shokunin --table /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/recurring.tsv`, `tools/assimilate-rows.py --selftest`, each run from /home/vgpnk/Projects/shokunin/chousa-shokunin. Table: command · exit · key line · same as at c49ffc6ce1c3de87c1dfa96856239ed7274bf07b (run the base too via `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin worktree`-free method: `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin archive c49ffc6ce1c3de87c1dfa96856239ed7274bf07b | tar -x -C <scratch>` and run there)? A round-53 counter that now fails because round-54 bytes changed is a finding only if the round-53 claim's own bytes changed.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2ExecOleHeldout": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Held-out behaviour of the landed OLE text form against its docstring (`sed -n 1,60p /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/capture-text.py`): with LibreOffice (private profile in /fast/scratch/hyaku/chousa-r54/R54W2ExecOleHeldout) make `.doc` files with (a) a footnote, (b) a header and footer, (c) a text box, (d) a comment, (e) a tracked deletion and insertion (author a .fodt with <text:tracked-changes>, convert to .doc), (f) a nested table, (g) a TOC field, (h) hidden text, (i) a soft hyphen and a non-breaking hyphen, (j) 300 pages of text (performance). For each: what the tool emits vs what the docstring says (footnotes/headers/text boxes/comments excluded; field result only). Tracked-deleted text emitted as if live is the most important finding — show it with the piece text and the docstring sentence it contradicts.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2ExecReopenS121": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Re-open S121 independently: /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/adf6ba934e813b2c326fa150.txt (the SAMR standard record of GB/T 7714-2025 (HTML .txt, CRLF on disk; read with universal newlines)). For every S121 quote in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/quotes.tsv and every `char N` in the S121 row anchor (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md) and in the entry's source line (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/source-type-taxonomy-r36.md): count, offset (python, universal newlines AND raw bytes decoded without newline translation — say which the lane uses and whether the two disagree), one-line, matches the entry's stated offset. Then check every factual sentence of the entry's `#### Observation` that cites S121 against the capture (holds / overstates / wrong) with the substring that decides it.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2ExecReopenS122": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Re-open S122 independently: /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/b9ca2a4fdf9455867534f144.txt (the openstd portal page with its no-text notice (the .txt is the served HTML)). For every S122 quote in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/quotes.tsv and every `char N` in the S122 row anchor and the entry's source line (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/source-type-taxonomy-r36.md): count, offset, one-line, matches. The entry says the portal shows no preview/download control and that the record page offers a 查看文本 control: verify both with the HTML (grep for 预览, 下载, 查看文本, onclick, href in /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/b9ca2a4fdf9455867534f144.txt and /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/adf6ba934e813b2c326fa150.raw). Check every S122 sentence of the entry's Observation and Inference (holds / overstates / wrong).",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2ExecReopenS123": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Re-open S123 independently: /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/0f33243fd7ac2fe88b85c1ba.txt (the JMU journal office's PDF reproduction of the standard (pdftotext .txt, fullwidth Latin)). For every S123 quote in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/quotes.tsv and every `char N` in the S123 row anchor and the entry's source line (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/source-type-taxonomy-r37.md): count, offset, one-line, matches. The entry's source line lists anchors (char 2512, 2655, 4736, 4812, 4852, 5576, 5602, 8881, 11542, 14096, 21382, 57965, 58840, 59201, 82465, 82834): what text starts at each, and does it match the section the line names? Check every Observation sentence of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/source-type-taxonomy-r37.md (holds / overstates / wrong), incl. '主要责任者 occurs 31 times' and the five-row carrier table.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2ExecQuarantineVerify": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": "Re-derive the three quarantine verdicts in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-54.md (`grep -n 'register `S0' /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-54.md`): for register S080, S088, S096 (register /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/absent-defect-register.md, read only) locate the register's quote whole and by parts in the stated form (S096: `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/capture-text.py /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/6dc68fd6b32ce9c8dfcebce8.raw`); does each verdict (absent-as-written) and each cited offset reproduce? Is any of the three better called `present` (all parts present in order, only separators differ) or `fabricated` (a part with no source)? Name the part and its count.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2DraftScorecard": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scribe",
+        "item": "Draft the SCORECARD.md `## Round 54 verdict` section for /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md in the shape of 'Round 53 verdict' (read it: `grep -n '^## Round 53 verdict' /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md` and the 30 lines after; also 'Capabilities (round-53 addition)' and 'Planned — round 54'). Use only numbers you re-run or read from committed receipts: /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/controls/*.txt, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/c1-after-candidate.txt, the counters run now (TMPDIR=/fast/scratch/hyaku/chousa-r54/R54W2DraftScorecard). Include the claim table (before → after, counting command, verdict, tag), the six-axis table, a capabilities row for the OLE text form (only if the after-measurement passes), and `## Planned — round 55 (not started)` (S101 carrier alphabet via a builder that reads the OLE form; S130 grey-literature; theme B). Name the frozen-counter forge (E1) in the C1 verdict. Output one fenced block labelled SCORECARD.md.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2DraftLog": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scribe",
+        "item": "Draft the LOG.md `## Round 54 — …` entry for /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md in the shape of the Round 53 entry (`grep -n '^## Round 53' /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md`, read to the end of that entry): motivating evidence (the round-53 closure routed items, SCORECARD plan), the freeze and candidate commits (5a1a20630d8176a816a60bb43b0d0e7ee2db19a0, 8a7d0f137a352000d78704ba5695ded8857104fe), each landed change with its evidence path, the census before/after, the W1 forge and supplement, the S101 cut, and every seat finding the L1 left unfixed (read /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-54/w1/*.md VERDICT lines). Output one fenced block labelled LOG.md.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2DraftReport": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scribe",
+        "item": "Draft the round report's `## Trend verdicts` and `## SHONEN` sections (report contract: /home/vgpnk/Projects/shokunin/.ufo/prompts/chousa-round-54.md section 4; read /home/vgpnk/Projects/shokunin/chousa-shokunin/SHONEN.md for the boxes and /home/vgpnk/Projects/shokunin/.ufo/reports/round-53/chousa.md for shape). expansion / quality / discernment each one of improved / harmed / unchanged / unprovable-but-better with evidence pointers; SHONEN one line per box, `[~]` with a resolvable pointer or `[ ]` (never `[x]` — no non-author verifier yet). Then list every claim the draft makes that a non-author closure could dispute, with the evidence that would decide it. Output fenced blocks.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2DraftStreak": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scribe",
+        "item": "Update the recurring-weakness table for round 54: read /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/recurring.tsv and weakness-streak.py, run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/weakness-streak.py --root /home/vgpnk/Projects/shokunin/chousa-shokunin --table /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/recurring.tsv` (paste). RW-1 (forgeable frozen counter) recurs in round 54 (W1 `R54CritForgeC1`, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/controls/c1-forge.txt). Draft a round-54 table `corpus/evidence/round54/recurring.tsv` (same columns) that extends the streaks with this round's evidence pointers, and run the script on your scratch copy (paste). Does the script need a code change to read a round-54 table? Output fenced blocks.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2SentFinal": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "sentinel",
+        "item": "Hazard review of the round's post-freeze scripts: /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/c1-supplement.py, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/controls/build-c1-forge.py, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/considerthese-ledger-check.py, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/pdf-crosscheck.py. Any hardcoded /tmp, writes into the lane, rmtree outside own mkdtemp, soffice processes surviving SIGINT/timeout (send SIGINT mid-run to c1-supplement and check `pgrep -af soffice` and leftover dirs), `TemporaryDirectory(dir=out)` in the forge builder, `~/.config/libreoffice` writes, unbounded reads. Reproduce each hazard with a command; severity and fix.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2SimplifyRound": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "simplifier",
+        "item": "YAGNI review of the round's landed bytes: `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin diff --stat c49ffc6ce1c3de87c1dfa96856239ed7274bf07b 447cf7ed4dc1a3708518b99e9a5e62e177c11ce9` then read the new files under /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/ and the tool diff. Name what could be deleted without changing any counter, check or claim (duplicate receipts, dead code paths in the supplement, the forge builder's unused imports, the ledger's pass-through columns), prove each by deleting in a scratch copy and rerunning the affected command. Do not edit the lane.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2CritEntailSta": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Entailment attack on /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/source-type-taxonomy-r36.md: for every bullet under `#### Observation` and `#### Inference`, does the quoted capture text (/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/adf6ba934e813b2c326fa150.txt, /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/b9ca2a4fdf9455867534f144.txt) entail the bullet's sentence, or does the bullet say more (scope words: 'the authority', 'serves no text', 'in force', 'recommended', 'wholly replacing')? Per bullet: entailed / overstated (narrowed wording) / unsupported, with the deciding substring and its count. The counter does not judge entailment — you do.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2CritEntailStb": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Entailment attack on /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/source-type-taxonomy-r37.md: for every bullet under `#### Observation` and `#### Inference`, does the quoted text of /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/0f33243fd7ac2fe88b85c1ba.txt entail it? Hot spots: 'the same letter can stand for a differently named type in the replaced and the current table' (does the change list show a letter reassigned, or only a type renamed?), 'A carrier code describes storage, not access', 'the occasional wrong glyph', 'a citation needs its year'. Per bullet: entailed / overstated (narrowed wording) / unsupported, with the deciding substring and count.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2CritForgeSupplement": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Forge the post-freeze supplement /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/c1-supplement.py: write in /fast/scratch/hyaku/chousa-r54/R54W2CritForgeSupplement/ the cheapest tool that passes ISOLATED, RESAVE and HELDOUT (plus the frozen counter) without parsing the CFB/FIB/piece table — e.g. a UTF-16LE scan of the file restricted by heuristics (longest runs, drop control chars, drop runs matching stream names), reading the LibreOffice profile or cache the counter leaves, keying on the resave's metadata, or exploiting the 0.90–1.10 ratio and the ≤12-char label rule. Score it (TMPDIR set). If it passes 3/3 paste it; else list each shortcut and the leg that refused it.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2CritC1Verdict": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Attack C1's verdict and capability row: the frozen counter passes the candidate and a forge alike (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/controls/c1-forge.txt); the supplement separates them. Read /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/claims.md, claims-erratum.md, the W1 reports /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-54/w1/R54CritForgeC1.md, R54CritOracle.md, R54MutOle.md, R54ReviewC1Counter.md (if present), and the SCORECARD round-54 section. Is 'improved narrowly' honest, too generous, or too harsh? Does the capability row's evidence pointer demonstrate the capability running (AXES.md: a capability without a passing demonstration is pre-claiming)? Does the 3/10 operability score move? Verdict with pointers.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2CritCredit": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Attack expansion/coverage credit at 447cf7ed4dc1a3708518b99e9a5e62e177c11ce9: corpus/README.md 'Round54 coverage and frontier', the two entries, rows S121–S123. Per document: new ground (absent at c49ffc6ce1c3de87c1dfa96856239ed7274bf07b — run the sweeps yourself: URLs, distinctive terms) or a second carrier of held ground? Does the README claim more than the entries hold (e.g. 'source-tier adjudication advanced')? Is S122 (one notice sentence) a document worth a row? Verdict per document: expansion credit yes/no with the command.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2CritMistakes": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Attack /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-54.md `## Mistakes`: per row, is the evidence pointer resolvable (open it), is 'captured-by' honest (did an existing criterion/check exist that should have caught it), and is the fix shown able to fail (run the failing command yourself, TMPDIR=/fast/scratch/hyaku/chousa-r54/R54W2CritMistakes)? Row 4 says QUALITY 85 did not cover generator inputs left in the work tree — read QUALITY 85 and decide. Also: is any round-54 mistake missing (e.g. the C1 candidate committed with a Traceback path W1 found, the counter's REGRESS leg outside the audit hook, the REGRESS `.pyc` written in the lane)?",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2CritTrends": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Attack the round's trend verdicts before they are filed: read /home/vgpnk/Projects/shokunin/chousa-shokunin/LEARNING.md-equivalent at /home/vgpnk/Projects/kimi-shokunin/skills/shokunin/protocol/LEARNING.md (trend definitions) and the lane's round-53 report trends. For expansion (three documents), quality (QUALITY 97–100, corrections, entailment narrowing, the OLE form) and discernment (S101 cut, S130 refused, quarantine verdicts — all lane-dispatched), say which verdict the evidence supports and what would flip it. Discernment cannot be 'improved' on lane-dispatched seats alone — check LEARNING.md and say what the lane may claim.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2CritS101Cut": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": "Attack the L1's S101 decision: the W1 draft /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-54/w1/R54DraftEntryStb.md cited S101 for the HIT specification's carrier alphabet (one medium, two codes; M a type code in both and a carrier code in one); the L1 cut it (claims-erratum E3, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-54.md Gate). Was that right? Weigh: the frozen span builder slices a non-zip `.raw` as UTF-16LE (round-48 rule), QUALITY 97 (landed this round), the defined form now exists. Could the four quotes have been located in the defined form and carried with the frozen builder anyway (what would the span files contain)? Verdict: cut right / cut wrong / cut right for the wrong reason, with evidence.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2ReviewRows": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Review rows S121–S123 in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md cell by cell against the captures and CORPUS.md's SOURCES contract (/home/vgpnk/Projects/shokunin/CORPUS.md): title/URL cell, kind, tier and its scope sentence, scope, anchor (every `char N` a quote offset; the stated character counts and sha256 prefixes — recompute), teaches (does it outrun the capture or the entry? e.g. S123 '必备 for electronic resources', S121 '推荐性 现行'), status/opened/recheck/used-by. Defects with the reproducing command.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2ReviewToolFinal": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Review the landed tool diff `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin diff c49ffc6ce1c3de87c1dfa96856239ed7274bf07b 447cf7ed4dc1a3708518b99e9a5e62e177c11ce9 -- tools/capture-text.py` against [MS-CFB]/[MS-DOC] (from memory; no fetch) and its docstring, focusing on what W1 did not cover: the fComplex (fast-saved) path on /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/bdff491a75c6abeda1d9c01d.raw (piece CPs past ccpText: ccpHdd/ccpTxbx stories), the cp1252 fallback for 0x81/0x8D/0x8F/0x90/0x9D, UTF-16 lone surrogates (errors='replace' → U+FFFD: should that refuse?), field nesting with a missing 0x15, and whether the docstring's exclusions (footnotes, headers, comments, text boxes) are exactly what CP 0..ccpText excludes. Defects with reproducing commands (scratch /fast/scratch/hyaku/chousa-r54/R54W2ReviewToolFinal).",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2ReviewSkillReadme": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Review the round-54 SKILL.md gate rows (`grep -n 'round 54\\|round-54' /home/vgpnk/Projects/shokunin/chousa-shokunin/SKILL.md`) and corpus/README.md 'Round54 coverage and frontier' for truth against the files they describe: every usage line runs as written (run each with --help or a dry invocation), exit codes, pins, the statement that build-spans.py keeps the UTF-16LE form, the README's per-document credit and frontier claims. Run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round47/c2-count.py` (gate registry) and paste REGISTERED/UNREGISTERED. Defects with commands.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2ReviewQuality": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Review QUALITY 97–100 in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md for truth and checkability: every number, path:line and command it cites (open/run them), whether each check can fail (show a failing input), and whether 98's named limit and 99's rule match the round's own conduct (this round's report must cite `.ufo/waves/round-54/w1.ready.dispatched` and w1-results.json). Also check criterion numbering continuity (`grep -n '^9[0-9]\\.\\|^100\\.' /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md`). Defects with commands.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2ReviewCorrections": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": "Review the round-54 pointer corrections and their targets as a calibration move: /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md 'Round 54 pointer corrections' (nine lines + prose) and /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/S100-text-form.txt, S101-text-form.txt. Do the lines follow the round-53 anchored form exactly (read /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/pointer-anchor-check.py)? Is the prose relabel of the S100/S101 form honest (rows unchanged, append-only)? Does any other lane artefact (round-49 spans.tsv rows for S100/S101, citation-count-semantics-r37.md's form statement, the lesson-49 table) now contradict the corrected anchors without a successor? Defects with commands.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2MutSupplement": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "mutation-tester",
+        "item": "Mutation-test the post-freeze supplement as a discriminator: take the W1 mutant classes (read /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-54/w1/R54MutOle.md — survivors m05, m06, m07, m09, m12, m13, m14) and rebuild each against the LANDED tool in /fast/scratch/hyaku/chousa-r54/R54W2MutSupplement/; score each with `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/c1-supplement.py --tool <m> --seed 54` and the frozen counter. Kill matrix: mutant · frozen counter · supplement. Which survivors does the supplement kill, which survive both, and the input that would kill each remaining survivor.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2MutPdfCross": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "mutation-tester",
+        "item": "Mutation-test /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/pdf-crosscheck.py: copy it and /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/quotes.tsv to scratch (/fast/scratch/hyaku/chousa-r54/R54W2MutPdfCross; it reads quotes.tsv beside itself) and make mutants of the QUOTES (change one CJK character in a quote; swap two characters; drop a fullwidth letter; replace a fullwidth letter by a different halfwidth letter) and of the CHECKER (NFKC on one side only; no whitespace removal; skip S123). Which mutants does it flag (NOT_IN_INDEPENDENT>0)? Is the NFKC fold hiding any meaningful change? Kill matrix.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2ConnSiblingsFinal": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "connector",
+        "item": "Final sibling-overlap scan at the landed state: grep /home/vgpnk/Projects/shokunin/*-shokunin/ (read only; skip chousa-shokunin) for GB/T 7714, ISO 690, 参考文献著录, 文献载体, OLE, CFB, WordDocument, capture-text, a `.doc` text form, considerthese ledger, CT-2026. Does any sibling hold or claim these, and should chousa's README name a contested scope? Verdict with path:line per hit.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2ConnPattern": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "connector",
+        "item": "Cross-claim pattern at the landed state: (1) the round found that a forged counter read the generator's own inputs left in its work tree — do other chousa counters (round 50–53 `c1-count.py`, `c1-supplement.py`) leave generator inputs beside their test files (grep for `src-`, `write_text` before the tool run, sibling files)? (2) Do other fleet lanes' frozen counters share the shape (grep /home/vgpnk/Projects/shokunin/*-shokunin/corpus/evidence/round*/c1-count.py for generated source files beside inputs; read only)? (3) One recommendation for the lane's next frozen counter, path:line evidence.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      },
+      "R54W2ScoutFrontier": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scout",
+        "item": "Next-round frontier scout at 447cf7ed4dc1a3708518b99e9a5e62e177c11ce9: read /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/README.md 'Round54 coverage and frontier' Left-open list, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-54.md Gate (S101 leg, S130), /home/vgpnk/Projects/shokuknow/merge/chousa/MERGE-REPORT.md, and the W1 reports /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-54/w1/R54ExecS130Probe.md and R54ScoutNextThemes.md (if present). Rank three round-55 claim candidates (axis, the counter that would measure it, the cheapest do-nothing control it must beat) — e.g. a span builder that reads the OLE form + the S101 carrier alphabet; the S130 grey-literature entry; theme B archived translations. Do not draft.",
+        "axes": [
+          "operability",
+          "depth"
+        ],
+        "milestone": "Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections"
+      }
+    }
+  },
+  "compaction": {
+    "applied": false,
+    "mechanism": null,
+    "reason": null,
+    "savedBytes": 0,
+    "payloadBytesBefore": 0,
+    "payloadBytesAfter": 0
+  },
+  "taskCall": {
+    "context": "# Goal\nchousa lane (deep-research method), round 54, wave 2 (FALSIFY). Wave 1 built and the L1 integrated at lane tip 447cf7ed4dc1a3708518b99e9a5e62e177c11ce9. Two claims are FROZEN at 5a1a20630d8176a816a60bb43b0d0e7ee2db19a0 in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/claims.md (read it and /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/claims-erratum.md E1–E4 first); never propose changing a predicate, target, counter or control. C1 (operability, capability acquisition): `/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/capture-text.py` reads OLE Word 97+ `.doc` (candidate 8a7d0f137a352000d78704ba5695ded8857104fe; one post-candidate fix, E2), counted by `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/c1-count.py` (frozen; W1 forged it, E1) and the post-freeze `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/c1-supplement.py` (ISOLATED, RESAVE, HELDOUT; not the claim rule). C2 (depth, sourced): two entries `/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/source-type-taxonomy-r36.md` (S121 SAMR record, S122 openstd notice) and `/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/source-type-taxonomy-r37.md` (S123 JMU reproduction; the W1 S101 leg was cut, E3), rows S121–S123 in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md, spans /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/spans.tsv, lesson /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-54.md; counted by `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/c2-count.py`. Also landed: QUALITY 97–100 (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md), SKILL.md gate rows (round-54), corpus/README.md 'Round54 coverage and frontier', nine anchored S100/S101 `correction:` lines in /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md ('Round 54 pointer corrections') with dumps /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/S100-text-form.txt and S101-text-form.txt, the considerthese ledger /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/considerthese-ledger.tsv + checker, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/pdf-crosscheck.py (NFKC). Every item names what it attacks; the L1 holds the planner seat and integrates.\n\n# Boundaries (binding)\nLane repo: /home/vgpnk/Projects/shokunin/chousa-shokunin. Your ONLY write is your own report file: every `Report:` trailer path is relative to /home/vgpnk/Projects/shokunin/chousa-shokunin — write it at /home/vgpnk/Projects/shokunin/chousa-shokunin/<that path>. Never write a production file, another seat's report, the git index, jj state, the fleet repo /home/vgpnk/Projects/shokunin (read only), any sibling lane, or /home/vgpnk/Projects/shokuknow (read-only; never run its campaign tools renumber-staged.py, merge-plan.py, quote-lint.py, absent-defect-register.py). Never run git commit/add/stash/checkout/reset/push or any mutating jj command anywhere except inside your own fixture repo. Your cwd starts at the fleet root: cd to your scratch first. Scratch ONLY under /fast/scratch/hyaku/chousa-r54/<YourSeatName>/ (create with mkdir -p; export TMPDIR there; never /tmp, never /dev/shm for anything over 50 MB; never a relative redirect — every output path absolute under your scratch) and remove it before you finish (trap 'rm -rf -- \"$S\"' EXIT); copy any receipt you cite into your report first. Any LibreOffice run uses a private profile under your scratch (`soffice -env:UserInstallation=file://$S/prof --headless …`) and leaves no `soffice.bin` behind. Running a lane counter imports sibling modules and may drop a gitignored `__pycache__` in the lane: export PYTHONDONTWRITEBYTECODE=1. Any git fixture repo: D=$(mktemp -d -p /fast/scratch/hyaku/chousa-r54/<YourSeatName>) && git -C \"$D\" init -q, every later git call names -C \"$D\", verify `git -C \"$D\" rev-parse --show-toplevel` equals $D before any commit. No network and no live source fetch (L0 `8d77e6c1` is open): every source is an on-disk capture under /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache (key = first 24 hex of sha256 of the URL). No writes to any PATH directory. Code or text a seat drafts goes INSIDE its report (fenced blocks labelled with the intended lane path). Never message the orchestrator or other lanes' seats.\n\n# Evidence\nGround every statement in a command you ran or a file:line/char offset you opened; paste commands with observed output. A check you did not run has not passed. ≤120 lines (≤220 when the item asks for a script or a draft). End with a one-line VERDICT naming what you attacked and whether it survived.\n\n# Tooling\nTooling authorization (operator, 2026-10-19): you may install or upgrade tools that help the task — read /home/vgpnk/.omp/agent/RULES.md first (official channels, update-safety gate; record tool/version/channel/reason in your report). pacman guard: ALL pacman transactions are PAUSED host-wide (never -S/-Sy/-Syu/-U/-R, no downgrade, no service restart); use uv tool / npx / an official binary in ~/.local/bin instead (e.g. `uv run --with pypdf python …`). Routing is host-owned; never pass a model.",
+    "tasks": [
+      {
+        "name": "R54W2ExecC1Target",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nAttack C1's after-state: with TMPDIR=/fast/scratch/hyaku/chousa-r54/R54W2ExecC1Target run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/c1-count.py` three times unseeded and once `--seed 7`, then `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/c1-supplement.py` three times unseeded and once `--seed 7`, on the lane tool at 447cf7ed4dc1a3708518b99e9a5e62e177c11ce9. Paste every leg line and the `tool=… sha256=…` header; confirm the sha256 equals `sha256sum /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/capture-text.py` and `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 447cf7ed4dc1a3708518b99e9a5e62e177c11ce9:tools/capture-text.py | sha256sum`. Any non-6/6 or non-3/3 run is a finding: paste its full output and reproduce with its seed. Then diff the tool against the candidate: `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin diff 8a7d0f137a352000d78704ba5695ded8857104fe 447cf7ed4dc1a3708518b99e9a5e62e177c11ce9 -- tools/capture-text.py` — is every change disclosed in claims-erratum E2?\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2ExecC1Target.md"
+      },
+      {
+        "name": "R54W2ExecC2Rerun",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nAttack C2's after-state at 447cf7ed4dc1a3708518b99e9a5e62e177c11ce9: run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/c2-count.py` and `--lane-only`, `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/build-spans.py --check`, `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round51/quote-substance-check.py /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/spans.tsv`, and `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/inference-ground.py --entry <e> --spans /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/spans.tsv --counts /dev/null --registry /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md --root /home/vgpnk/Projects/shokunin/chousa-shokunin` for both entries (TMPDIR=/fast/scratch/hyaku/chousa-r54/R54W2ExecC2Rerun). Paste all output. Then rebuild the span manifest from /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/quotes.tsv into a scratch root (`--root <scratch copy>`) and `cmp` it with the committed spans.tsv and spans/. Every mismatch is a finding.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2ExecC2Rerun.md"
+      },
+      {
+        "name": "R54W2ExecCensus",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nCensus and misroot attack at 447cf7ed4dc1a3708518b99e9a5e62e177c11ce9: run `/home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa` (paste output and exit) and the CORPUS.md census awks (/home/vgpnk/Projects/shokunin/CORPUS.md section SOURCES.md) over /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md: row count, NF per row, tier/status counts, duplicate ids, used-by paths that do not exist. Then read-only misroot check: `git -C /home/vgpnk/Projects/shokunin status --porcelain` — list every untracked path and say whether its content names chousa round 54 (grep the file for `chousa`, `round-54`, `R54`); do NOT move or delete anything. Report.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2ExecCensus.md"
+      },
+      {
+        "name": "R54W2ExecPointerAnchor",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nAttack the nine 'Round 54 pointer corrections' in /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md: run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/pointer-anchor-check.py --root /home/vgpnk/Projects/shokunin/chousa-shokunin` (paste); regenerate both dumps (`python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/capture-text.py /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/6dc68fd6b32ce9c8dfcebce8.raw` and `… /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/b539a80218080da56a75b624.raw`) and `cmp` them with /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/S101-text-form.txt and S100-text-form.txt; for each correction line verify `old` is the phrase's offset in the whole-file UTF-16LE decode and `new` its offset in the defined form (python). Then on a scratch mirror delete one dump and show the check fails; forge one anchor (absent text) and show it fails. Does any other lane file still cite S100/S101 offsets in the old form without a successor (`grep -rn 'char 11170\\|char 1296' /home/vgpnk/Projects/shokunin/chousa-shokunin --include=*.md | grep -v waves`)?\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2ExecPointerAnchor.md"
+      },
+      {
+        "name": "R54W2ExecQualityChecks",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nRun the check command of each new criterion 97–100 in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md (read each criterion; run exactly what it says, TMPDIR=/fast/scratch/hyaku/chousa-r54/R54W2ExecQualityChecks) and reproduce each red-before claim it makes (e.g. 97: the UTF-16LE decode's U+FFFD/control counts; 99: `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round50/wave-complete-check.py /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-53/w2-spec.json /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-53/w2 --rev d21eb285 --lane /home/vgpnk/Projects/shokunin/chousa-shokunin`; 100: the TOOLED control). Table: criterion · check command · ran output · red-before reproduced? · matches the criterion's text? Any number that differs is a finding.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2ExecQualityChecks.md"
+      },
+      {
+        "name": "R54W2ExecLedger",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nAttack the considerthese ledger: run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/considerthese-ledger-check.py --root /home/vgpnk/Projects/shokunin/chousa-shokunin` (paste), then in a scratch copy of the lane's `considerthese/` + ledger make five mutants (drop a row; duplicate a row; an IMPL row pointing to a missing file; a ledger row with three columns; a new considerthese file 2026-10-27.md with a 'Self-improvement proposals' section and two bullets) and show each exits 1 with its FAIL line. Then audit 8 IMPL rows by hand: does the pointed file actually implement the proposal (open the considerthese bullet and the file)? List rows whose pointer exists but does not implement the proposal.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2ExecLedger.md"
+      },
+      {
+        "name": "R54W2ExecPdfCross",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nAttack the S123 PDF quote check: run `uv run --quiet --with pypdf python /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/pdf-crosscheck.py` from /fast/scratch/hyaku/chousa-r54/R54W2ExecPdfCross (paste the last line). Then a THIRD extractor (`uv run --with pymupdf python …` or `pdftotext -raw` if present) over /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/0f33243fd7ac2fe88b85c1ba.raw: for each of the 21 S123 quotes in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/quotes.tsv, present raw / present under NFKC+whitespace-removal / absent. Is NFKC folding hiding a real difference (a quote whose CJK characters, not only its width, differ between extractors)? List per quote.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2ExecPdfCross.md"
+      },
+      {
+        "name": "R54W2ExecFuzzFinal",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nRobustness of the LANDED tool (/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/capture-text.py at 447cf7ed4dc1a3708518b99e9a5e62e177c11ce9): write a ≤80-line fuzzer in /fast/scratch/hyaku/chousa-r54/R54W2ExecFuzzFinal/ over 4 LibreOffice-generated `.doc` (private profile) and the five pinned captures (/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/54fe0734c01f699e735b4b0a.raw 6dc68fd6b32ce9c8dfcebce8.raw b539a80218080da56a75b624.raw bdff491a75c6abeda1d9c01d.raw 74ced3e9311594a8cc3f1f42.raw) making 800 mutants focused on the FIB walk (csw/cslw/cbRgFcLcb), the Clx (Prc cbGrpprl sign and size, Pcdt lcb), the PlcPcd CPs (decreasing, beyond ccpText) and the mini FAT. Each run with a 10 s timeout: must end exit 0 or exit 2 with one `REFUSED …` stderr line — never a Traceback, a timeout or exit 1. Report counts by outcome and every failing mutant (rebuild recipe + output). W1 `R54ExecOleFuzz` found 37/600 Tracebacks at the candidate; does any survive at 447cf7ed4dc1a3708518b99e9a5e62e177c11ce9?\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2ExecFuzzFinal.md"
+      },
+      {
+        "name": "R54W2ExecHistCounters",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nRegression of the lane's historical gates at 447cf7ed4dc1a3708518b99e9a5e62e177c11ce9 (TMPDIR=/fast/scratch/hyaku/chousa-r54/R54W2ExecHistCounters, PYTHONDONTWRITEBYTECODE=1): `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round52/c1-count.py`, `round52/c1-supplement.py`, `round53/c1-count.py`, `round53/c2-count.py`, `round52/c2-count.py`, `round47/c2-count.py` (the gate registry), `round53/pointer-anchor-check.py --root /home/vgpnk/Projects/shokunin/chousa-shokunin`, `round53/weakness-streak.py --root /home/vgpnk/Projects/shokunin/chousa-shokunin --table /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/recurring.tsv`, `tools/assimilate-rows.py --selftest`, each run from /home/vgpnk/Projects/shokunin/chousa-shokunin. Table: command · exit · key line · same as at c49ffc6ce1c3de87c1dfa96856239ed7274bf07b (run the base too via `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin worktree`-free method: `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin archive c49ffc6ce1c3de87c1dfa96856239ed7274bf07b | tar -x -C <scratch>` and run there)? A round-53 counter that now fails because round-54 bytes changed is a finding only if the round-53 claim's own bytes changed.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2ExecHistCounters.md"
+      },
+      {
+        "name": "R54W2ExecOleHeldout",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nHeld-out behaviour of the landed OLE text form against its docstring (`sed -n 1,60p /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/capture-text.py`): with LibreOffice (private profile in /fast/scratch/hyaku/chousa-r54/R54W2ExecOleHeldout) make `.doc` files with (a) a footnote, (b) a header and footer, (c) a text box, (d) a comment, (e) a tracked deletion and insertion (author a .fodt with <text:tracked-changes>, convert to .doc), (f) a nested table, (g) a TOC field, (h) hidden text, (i) a soft hyphen and a non-breaking hyphen, (j) 300 pages of text (performance). For each: what the tool emits vs what the docstring says (footnotes/headers/text boxes/comments excluded; field result only). Tracked-deleted text emitted as if live is the most important finding — show it with the piece text and the docstring sentence it contradicts.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2ExecOleHeldout.md"
+      },
+      {
+        "name": "R54W2ExecReopenS121",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nRe-open S121 independently: /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/adf6ba934e813b2c326fa150.txt (the SAMR standard record of GB/T 7714-2025 (HTML .txt, CRLF on disk; read with universal newlines)). For every S121 quote in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/quotes.tsv and every `char N` in the S121 row anchor (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md) and in the entry's source line (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/source-type-taxonomy-r36.md): count, offset (python, universal newlines AND raw bytes decoded without newline translation — say which the lane uses and whether the two disagree), one-line, matches the entry's stated offset. Then check every factual sentence of the entry's `#### Observation` that cites S121 against the capture (holds / overstates / wrong) with the substring that decides it.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2ExecReopenS121.md"
+      },
+      {
+        "name": "R54W2ExecReopenS122",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nRe-open S122 independently: /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/b9ca2a4fdf9455867534f144.txt (the openstd portal page with its no-text notice (the .txt is the served HTML)). For every S122 quote in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/quotes.tsv and every `char N` in the S122 row anchor and the entry's source line (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/source-type-taxonomy-r36.md): count, offset, one-line, matches. The entry says the portal shows no preview/download control and that the record page offers a 查看文本 control: verify both with the HTML (grep for 预览, 下载, 查看文本, onclick, href in /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/b9ca2a4fdf9455867534f144.txt and /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/adf6ba934e813b2c326fa150.raw). Check every S122 sentence of the entry's Observation and Inference (holds / overstates / wrong).\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2ExecReopenS122.md"
+      },
+      {
+        "name": "R54W2ExecReopenS123",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nRe-open S123 independently: /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/0f33243fd7ac2fe88b85c1ba.txt (the JMU journal office's PDF reproduction of the standard (pdftotext .txt, fullwidth Latin)). For every S123 quote in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/quotes.tsv and every `char N` in the S123 row anchor and the entry's source line (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/source-type-taxonomy-r37.md): count, offset, one-line, matches. The entry's source line lists anchors (char 2512, 2655, 4736, 4812, 4852, 5576, 5602, 8881, 11542, 14096, 21382, 57965, 58840, 59201, 82465, 82834): what text starts at each, and does it match the section the line names? Check every Observation sentence of /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/source-type-taxonomy-r37.md (holds / overstates / wrong), incl. '主要责任者 occurs 31 times' and the five-row carrier table.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2ExecReopenS123.md"
+      },
+      {
+        "name": "R54W2ExecQuarantineVerify",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nRe-derive the three quarantine verdicts in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-54.md (`grep -n 'register `S0' /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-54.md`): for register S080, S088, S096 (register /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/absent-defect-register.md, read only) locate the register's quote whole and by parts in the stated form (S096: `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/capture-text.py /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/6dc68fd6b32ce9c8dfcebce8.raw`); does each verdict (absent-as-written) and each cited offset reproduce? Is any of the three better called `present` (all parts present in order, only separators differ) or `fabricated` (a part with no source)? Name the part and its count.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2ExecQuarantineVerify.md"
+      },
+      {
+        "name": "R54W2DraftScorecard",
+        "agent": "scribe",
+        "task": "/skill:godspeed\n\nDraft the SCORECARD.md `## Round 54 verdict` section for /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md in the shape of 'Round 53 verdict' (read it: `grep -n '^## Round 53 verdict' /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md` and the 30 lines after; also 'Capabilities (round-53 addition)' and 'Planned — round 54'). Use only numbers you re-run or read from committed receipts: /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/controls/*.txt, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/c1-after-candidate.txt, the counters run now (TMPDIR=/fast/scratch/hyaku/chousa-r54/R54W2DraftScorecard). Include the claim table (before → after, counting command, verdict, tag), the six-axis table, a capabilities row for the OLE text form (only if the after-measurement passes), and `## Planned — round 55 (not started)` (S101 carrier alphabet via a builder that reads the OLE form; S130 grey-literature; theme B). Name the frozen-counter forge (E1) in the C1 verdict. Output one fenced block labelled SCORECARD.md.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2DraftScorecard.md"
+      },
+      {
+        "name": "R54W2DraftLog",
+        "agent": "scribe",
+        "task": "/skill:godspeed\n\nDraft the LOG.md `## Round 54 — …` entry for /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md in the shape of the Round 53 entry (`grep -n '^## Round 53' /home/vgpnk/Projects/shokunin/chousa-shokunin/LOG.md`, read to the end of that entry): motivating evidence (the round-53 closure routed items, SCORECARD plan), the freeze and candidate commits (5a1a20630d8176a816a60bb43b0d0e7ee2db19a0, 8a7d0f137a352000d78704ba5695ded8857104fe), each landed change with its evidence path, the census before/after, the W1 forge and supplement, the S101 cut, and every seat finding the L1 left unfixed (read /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-54/w1/*.md VERDICT lines). Output one fenced block labelled LOG.md.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2DraftLog.md"
+      },
+      {
+        "name": "R54W2DraftReport",
+        "agent": "scribe",
+        "task": "/skill:godspeed\n\nDraft the round report's `## Trend verdicts` and `## SHONEN` sections (report contract: /home/vgpnk/Projects/shokunin/.ufo/prompts/chousa-round-54.md section 4; read /home/vgpnk/Projects/shokunin/chousa-shokunin/SHONEN.md for the boxes and /home/vgpnk/Projects/shokunin/.ufo/reports/round-53/chousa.md for shape). expansion / quality / discernment each one of improved / harmed / unchanged / unprovable-but-better with evidence pointers; SHONEN one line per box, `[~]` with a resolvable pointer or `[ ]` (never `[x]` — no non-author verifier yet). Then list every claim the draft makes that a non-author closure could dispute, with the evidence that would decide it. Output fenced blocks.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2DraftReport.md"
+      },
+      {
+        "name": "R54W2DraftStreak",
+        "agent": "scribe",
+        "task": "/skill:godspeed\n\nUpdate the recurring-weakness table for round 54: read /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/recurring.tsv and weakness-streak.py, run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/weakness-streak.py --root /home/vgpnk/Projects/shokunin/chousa-shokunin --table /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/recurring.tsv` (paste). RW-1 (forgeable frozen counter) recurs in round 54 (W1 `R54CritForgeC1`, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/controls/c1-forge.txt). Draft a round-54 table `corpus/evidence/round54/recurring.tsv` (same columns) that extends the streaks with this round's evidence pointers, and run the script on your scratch copy (paste). Does the script need a code change to read a round-54 table? Output fenced blocks.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2DraftStreak.md"
+      },
+      {
+        "name": "R54W2SentFinal",
+        "agent": "sentinel",
+        "task": "/skill:godspeed\n\nHazard review of the round's post-freeze scripts: /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/c1-supplement.py, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/controls/build-c1-forge.py, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/considerthese-ledger-check.py, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/pdf-crosscheck.py. Any hardcoded /tmp, writes into the lane, rmtree outside own mkdtemp, soffice processes surviving SIGINT/timeout (send SIGINT mid-run to c1-supplement and check `pgrep -af soffice` and leftover dirs), `TemporaryDirectory(dir=out)` in the forge builder, `~/.config/libreoffice` writes, unbounded reads. Reproduce each hazard with a command; severity and fix.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2SentFinal.md"
+      },
+      {
+        "name": "R54W2SimplifyRound",
+        "agent": "simplifier",
+        "task": "/skill:godspeed\n\nYAGNI review of the round's landed bytes: `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin diff --stat c49ffc6ce1c3de87c1dfa96856239ed7274bf07b 447cf7ed4dc1a3708518b99e9a5e62e177c11ce9` then read the new files under /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/ and the tool diff. Name what could be deleted without changing any counter, check or claim (duplicate receipts, dead code paths in the supplement, the forge builder's unused imports, the ledger's pass-through columns), prove each by deleting in a scratch copy and rerunning the affected command. Do not edit the lane.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2SimplifyRound.md"
+      },
+      {
+        "name": "R54W2CritEntailSta",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nEntailment attack on /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/source-type-taxonomy-r36.md: for every bullet under `#### Observation` and `#### Inference`, does the quoted capture text (/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/adf6ba934e813b2c326fa150.txt, /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/b9ca2a4fdf9455867534f144.txt) entail the bullet's sentence, or does the bullet say more (scope words: 'the authority', 'serves no text', 'in force', 'recommended', 'wholly replacing')? Per bullet: entailed / overstated (narrowed wording) / unsupported, with the deciding substring and its count. The counter does not judge entailment — you do.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2CritEntailSta.md"
+      },
+      {
+        "name": "R54W2CritEntailStb",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nEntailment attack on /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/knowledge/source-type-taxonomy-r37.md: for every bullet under `#### Observation` and `#### Inference`, does the quoted text of /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/0f33243fd7ac2fe88b85c1ba.txt entail it? Hot spots: 'the same letter can stand for a differently named type in the replaced and the current table' (does the change list show a letter reassigned, or only a type renamed?), 'A carrier code describes storage, not access', 'the occasional wrong glyph', 'a citation needs its year'. Per bullet: entailed / overstated (narrowed wording) / unsupported, with the deciding substring and count.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2CritEntailStb.md"
+      },
+      {
+        "name": "R54W2CritForgeSupplement",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nForge the post-freeze supplement /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/c1-supplement.py: write in /fast/scratch/hyaku/chousa-r54/R54W2CritForgeSupplement/ the cheapest tool that passes ISOLATED, RESAVE and HELDOUT (plus the frozen counter) without parsing the CFB/FIB/piece table — e.g. a UTF-16LE scan of the file restricted by heuristics (longest runs, drop control chars, drop runs matching stream names), reading the LibreOffice profile or cache the counter leaves, keying on the resave's metadata, or exploiting the 0.90–1.10 ratio and the ≤12-char label rule. Score it (TMPDIR set). If it passes 3/3 paste it; else list each shortcut and the leg that refused it.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2CritForgeSupplement.md"
+      },
+      {
+        "name": "R54W2CritC1Verdict",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nAttack C1's verdict and capability row: the frozen counter passes the candidate and a forge alike (/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/controls/c1-forge.txt); the supplement separates them. Read /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/claims.md, claims-erratum.md, the W1 reports /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-54/w1/R54CritForgeC1.md, R54CritOracle.md, R54MutOle.md, R54ReviewC1Counter.md (if present), and the SCORECARD round-54 section. Is 'improved narrowly' honest, too generous, or too harsh? Does the capability row's evidence pointer demonstrate the capability running (AXES.md: a capability without a passing demonstration is pre-claiming)? Does the 3/10 operability score move? Verdict with pointers.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2CritC1Verdict.md"
+      },
+      {
+        "name": "R54W2CritCredit",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nAttack expansion/coverage credit at 447cf7ed4dc1a3708518b99e9a5e62e177c11ce9: corpus/README.md 'Round54 coverage and frontier', the two entries, rows S121–S123. Per document: new ground (absent at c49ffc6ce1c3de87c1dfa96856239ed7274bf07b — run the sweeps yourself: URLs, distinctive terms) or a second carrier of held ground? Does the README claim more than the entries hold (e.g. 'source-tier adjudication advanced')? Is S122 (one notice sentence) a document worth a row? Verdict per document: expansion credit yes/no with the command.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2CritCredit.md"
+      },
+      {
+        "name": "R54W2CritMistakes",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nAttack /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-54.md `## Mistakes`: per row, is the evidence pointer resolvable (open it), is 'captured-by' honest (did an existing criterion/check exist that should have caught it), and is the fix shown able to fail (run the failing command yourself, TMPDIR=/fast/scratch/hyaku/chousa-r54/R54W2CritMistakes)? Row 4 says QUALITY 85 did not cover generator inputs left in the work tree — read QUALITY 85 and decide. Also: is any round-54 mistake missing (e.g. the C1 candidate committed with a Traceback path W1 found, the counter's REGRESS leg outside the audit hook, the REGRESS `.pyc` written in the lane)?\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2CritMistakes.md"
+      },
+      {
+        "name": "R54W2CritTrends",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nAttack the round's trend verdicts before they are filed: read /home/vgpnk/Projects/shokunin/chousa-shokunin/LEARNING.md-equivalent at /home/vgpnk/Projects/kimi-shokunin/skills/shokunin/protocol/LEARNING.md (trend definitions) and the lane's round-53 report trends. For expansion (three documents), quality (QUALITY 97–100, corrections, entailment narrowing, the OLE form) and discernment (S101 cut, S130 refused, quarantine verdicts — all lane-dispatched), say which verdict the evidence supports and what would flip it. Discernment cannot be 'improved' on lane-dispatched seats alone — check LEARNING.md and say what the lane may claim.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2CritTrends.md"
+      },
+      {
+        "name": "R54W2CritS101Cut",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nAttack the L1's S101 decision: the W1 draft /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-54/w1/R54DraftEntryStb.md cited S101 for the HIT specification's carrier alphabet (one medium, two codes; M a type code in both and a carrier code in one); the L1 cut it (claims-erratum E3, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-54.md Gate). Was that right? Weigh: the frozen span builder slices a non-zip `.raw` as UTF-16LE (round-48 rule), QUALITY 97 (landed this round), the defined form now exists. Could the four quotes have been located in the defined form and carried with the frozen builder anyway (what would the span files contain)? Verdict: cut right / cut wrong / cut right for the wrong reason, with evidence.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2CritS101Cut.md"
+      },
+      {
+        "name": "R54W2ReviewRows",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nReview rows S121–S123 in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md cell by cell against the captures and CORPUS.md's SOURCES contract (/home/vgpnk/Projects/shokunin/CORPUS.md): title/URL cell, kind, tier and its scope sentence, scope, anchor (every `char N` a quote offset; the stated character counts and sha256 prefixes — recompute), teaches (does it outrun the capture or the entry? e.g. S123 '必备 for electronic resources', S121 '推荐性 现行'), status/opened/recheck/used-by. Defects with the reproducing command.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2ReviewRows.md"
+      },
+      {
+        "name": "R54W2ReviewToolFinal",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nReview the landed tool diff `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin diff c49ffc6ce1c3de87c1dfa96856239ed7274bf07b 447cf7ed4dc1a3708518b99e9a5e62e177c11ce9 -- tools/capture-text.py` against [MS-CFB]/[MS-DOC] (from memory; no fetch) and its docstring, focusing on what W1 did not cover: the fComplex (fast-saved) path on /home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/.qcache/bdff491a75c6abeda1d9c01d.raw (piece CPs past ccpText: ccpHdd/ccpTxbx stories), the cp1252 fallback for 0x81/0x8D/0x8F/0x90/0x9D, UTF-16 lone surrogates (errors='replace' → U+FFFD: should that refuse?), field nesting with a missing 0x15, and whether the docstring's exclusions (footnotes, headers, comments, text boxes) are exactly what CP 0..ccpText excludes. Defects with reproducing commands (scratch /fast/scratch/hyaku/chousa-r54/R54W2ReviewToolFinal).\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2ReviewToolFinal.md"
+      },
+      {
+        "name": "R54W2ReviewSkillReadme",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nReview the round-54 SKILL.md gate rows (`grep -n 'round 54\\|round-54' /home/vgpnk/Projects/shokunin/chousa-shokunin/SKILL.md`) and corpus/README.md 'Round54 coverage and frontier' for truth against the files they describe: every usage line runs as written (run each with --help or a dry invocation), exit codes, pins, the statement that build-spans.py keeps the UTF-16LE form, the README's per-document credit and frontier claims. Run `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round47/c2-count.py` (gate registry) and paste REGISTERED/UNREGISTERED. Defects with commands.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2ReviewSkillReadme.md"
+      },
+      {
+        "name": "R54W2ReviewQuality",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nReview QUALITY 97–100 in /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md for truth and checkability: every number, path:line and command it cites (open/run them), whether each check can fail (show a failing input), and whether 98's named limit and 99's rule match the round's own conduct (this round's report must cite `.ufo/waves/round-54/w1.ready.dispatched` and w1-results.json). Also check criterion numbering continuity (`grep -n '^9[0-9]\\.\\|^100\\.' /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md`). Defects with commands.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2ReviewQuality.md"
+      },
+      {
+        "name": "R54W2ReviewCorrections",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nReview the round-54 pointer corrections and their targets as a calibration move: /home/vgpnk/Projects/shokunin/chousa-shokunin/SCORECARD.md 'Round 54 pointer corrections' (nine lines + prose) and /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/S100-text-form.txt, S101-text-form.txt. Do the lines follow the round-53 anchored form exactly (read /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round53/pointer-anchor-check.py)? Is the prose relabel of the S100/S101 form honest (rows unchanged, append-only)? Does any other lane artefact (round-49 spans.tsv rows for S100/S101, citation-count-semantics-r37.md's form statement, the lesson-49 table) now contradict the corrected anchors without a successor? Defects with commands.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2ReviewCorrections.md"
+      },
+      {
+        "name": "R54W2MutSupplement",
+        "agent": "mutation-tester",
+        "task": "/skill:godspeed\n\nMutation-test the post-freeze supplement as a discriminator: take the W1 mutant classes (read /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-54/w1/R54MutOle.md — survivors m05, m06, m07, m09, m12, m13, m14) and rebuild each against the LANDED tool in /fast/scratch/hyaku/chousa-r54/R54W2MutSupplement/; score each with `python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/c1-supplement.py --tool <m> --seed 54` and the frozen counter. Kill matrix: mutant · frozen counter · supplement. Which survivors does the supplement kill, which survive both, and the input that would kill each remaining survivor.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2MutSupplement.md"
+      },
+      {
+        "name": "R54W2MutPdfCross",
+        "agent": "mutation-tester",
+        "task": "/skill:godspeed\n\nMutation-test /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/pdf-crosscheck.py: copy it and /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round54/quotes.tsv to scratch (/fast/scratch/hyaku/chousa-r54/R54W2MutPdfCross; it reads quotes.tsv beside itself) and make mutants of the QUOTES (change one CJK character in a quote; swap two characters; drop a fullwidth letter; replace a fullwidth letter by a different halfwidth letter) and of the CHECKER (NFKC on one side only; no whitespace removal; skip S123). Which mutants does it flag (NOT_IN_INDEPENDENT>0)? Is the NFKC fold hiding any meaningful change? Kill matrix.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2MutPdfCross.md"
+      },
+      {
+        "name": "R54W2ConnSiblingsFinal",
+        "agent": "connector",
+        "task": "/skill:godspeed\n\nFinal sibling-overlap scan at the landed state: grep /home/vgpnk/Projects/shokunin/*-shokunin/ (read only; skip chousa-shokunin) for GB/T 7714, ISO 690, 参考文献著录, 文献载体, OLE, CFB, WordDocument, capture-text, a `.doc` text form, considerthese ledger, CT-2026. Does any sibling hold or claim these, and should chousa's README name a contested scope? Verdict with path:line per hit.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2ConnSiblingsFinal.md"
+      },
+      {
+        "name": "R54W2ConnPattern",
+        "agent": "connector",
+        "task": "/skill:godspeed\n\nCross-claim pattern at the landed state: (1) the round found that a forged counter read the generator's own inputs left in its work tree — do other chousa counters (round 50–53 `c1-count.py`, `c1-supplement.py`) leave generator inputs beside their test files (grep for `src-`, `write_text` before the tool run, sibling files)? (2) Do other fleet lanes' frozen counters share the shape (grep /home/vgpnk/Projects/shokunin/*-shokunin/corpus/evidence/round*/c1-count.py for generated source files beside inputs; read only)? (3) One recommendation for the lane's next frozen counter, path:line evidence.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2ConnPattern.md"
+      },
+      {
+        "name": "R54W2ScoutFrontier",
+        "agent": "scout",
+        "task": "/skill:godspeed\n\nNext-round frontier scout at 447cf7ed4dc1a3708518b99e9a5e62e177c11ce9: read /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/README.md 'Round54 coverage and frontier' Left-open list, /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-54.md Gate (S101 leg, S130), /home/vgpnk/Projects/shokuknow/merge/chousa/MERGE-REPORT.md, and the W1 reports /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-54/w1/R54ExecS130Probe.md and R54ScoutNextThemes.md (if present). Rank three round-55 claim candidates (axis, the counter that would measure it, the cheapest do-nothing control it must beat) — e.g. a span builder that reads the OLE form + the S101 carrier alphabet; the S130 grey-literature entry; theme B archived translations. Do not draft.\n\nLane bounds: leaf member — no subagent dispatch.\nJudged on: operability, depth\nMilestone: Round 54 falsify: re-run every counter and check on the integrated tip, re-open S121-S123, attack entailment, credit, the supplement, the S101 cut, QUALITY 97-100 and the corrections, and draft the SCORECARD/LOG/report sections\n\nReport: write your scoped findings to .ufo/waves/round-54/w2/R54W2ScoutFrontier.md"
+      }
+    ]
+  },
+  "resumeSends": [],
+  "note": "Issue exactly one batched task call with taskCall ({context, tasks}); never split a wave into multiple task calls (one-swarm-per-wave). Then one hub send per resumeSends entry: hub send --to <entry.resume> --message <entry.message> (entry.name is bookkeeping, not a hub field)."
+}
