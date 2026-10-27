@@ -2746,3 +2746,33 @@ correction: corpus/SOURCES.md:111 char11993->char12795 -> corpus/evidence/round5
 correction: corpus/SOURCES.md:111 char12161->char12963 -> corpus/evidence/round54/S101-text-form.txt anchor: "文献类型及载体类型标志；"
 correction: corpus/SOURCES.md:111 char13247->char14049 -> corpus/evidence/round54/S101-text-form.txt anchor: "参照ISO 690及ISO 690-2，每一参考文献条目的末尾均以“.”结束。"
 correction: corpus/SOURCES.md:111 char34374->char25123 -> corpus/evidence/round54/S101-text-form.txt anchor: "参考文献格式，参照ISO 690"
+
+## Round 54 verdict — 2026-10-26 (OLE `.doc` text form; the PRC citation standard by document)
+
+Claims frozen at `5a1a20630d8176a816a60bb43b0d0e7ee2db19a0` after do-nothing controls (`corpus/evidence/round54/claims.md`; `controls/c1-before.txt`, `c1-controls.txt`, `c2-before.txt`, `c2-controls.txt`). Candidate C1 `8a7d0f137a352000d78704ba5695ded8857104fe`; post-candidate tool changes disclosed in `corpus/evidence/round54/claims-erratum.md` E2. After-measurement: `corpus/evidence/round54/measure-after.txt` (header `tool-rev:` with the tool sha256). No live fetch; L0 `8d77e6c1` open.
+
+| claim / axis | before → after | counting command | verdict | tag |
+|---|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10; capability acquisition) | base tool refuses every OLE file as `not a zip`: `LEGS=1/6 C1=FAIL` (REGRESS only) on three unseeded runs and `--seed 7`; controls CONST 0/6, NAIVE 0/6, REFUSEALL 1/6, SHELL 1/6 → `LEGS=6/6 C1=PASS` on three unseeded runs and `--seed 7`. Post-freeze supplement (E1): landed tool `SUPPLEMENT_LEGS=3/3` ×4; rebuilt forge and all four controls 0/3 | `python3 corpus/evidence/round54/c1-count.py`; post-freeze `python3 corpus/evidence/round54/c1-supplement.py` | **improved narrowly**: W1 `R54CritForgeC1` passed the frozen counter 6/6 with a tool that reads the generated HTML left beside each document and cans REAL by digest (rebuilt: `controls/build-c1-forge.py`, `controls/c1-forge.txt`); W1 `R54CritOracle` and `R54MutOle` showed REAL accepts capped junk and 7 of 16 mutants survive the frozen counter; the supplement closes the three forge shortcuts, but it is not the frozen rule | plumbing |
+| C2 depth (sourced; the PRC citation standard GB/T 7714-2025) | `ENTRIES=0/2 BOUND=0/3 SUBSTANCE=FAIL QUARANTINE_VERDICTS=0/3 C2=FAIL`; staged-copy control `REF_ID_UNBOUND=6 HELD_BAD=1`; adopter-rewrite control `BOUND=3/3 REF_ID_UNBOUND=3 HELD_BAD=1 ANCHOR_BOUND=0/3 C2=FAIL` → `ENTRIES=2/2 BOUND=3/3 REFUSED=0 REF_ID_UNBOUND=0 NEW_GROUND=2/2 QUOTE_ROWS=33 CAPTURE_BOUND=33/33 ANCHOR_BOUND=3/3 INFERENCE_GROUNDED=2/2 QUARANTINE_VERDICTS=3/3 C2=PASS` | `python3 corpus/evidence/round54/c2-count.py` | **improved**, as presence, binding and located support; entailment is uncounted (W1 `R54CritForgeC2`: boilerplate quotes and an opposite inference also pass). The W1 S101 leg was cut (E3); expansion credit is three documents | ground |
+
+The numeric operability scale remains 3/10; the round-1 score is its narrow archived-export observable, not this text-form counter. No other numeric score is invented.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved narrowly** | C1; the OLE text form reads the five pinned captures and LibreOffice-generated documents, refuses non-Word OLE, encrypted and malformed files; post-candidate fixes: the signed Prc bound (W1 `R54ReviewOleTool` F1, `R54ExecOleFuzz` 37/600 Tracebacks at the candidate) and tracked-deletion runs dropped (W1 `R54ReviewOleSpec`; `tracked-deletion-check.py` candidate FAIL, landed PASS) |
+| depth | **improved** | C2; two entries on three documents, 33 located quotes, three anchors; the staged headlines narrowed (the portal notice is about the portal's service; the type enumeration cut; the 7.3 quote re-cut at its line break) |
+| coverage | **improved narrowly** | three documents absent at base (`git grep -l -e 'ISO 690:2021' -e 文献载体标识 c49ffc6c -- corpus/knowledge` → exit 1); a new capture form (OLE `.doc`) read; the HIT data specification's carrier alphabet stays open |
+| calibration | **improved narrowly** | nine anchored `correction:` lines re-point S100/S101 from an undefined UTF-16LE decode into the defined form (`pointer-anchor-check.py` → `ANCHORED=16/16`); QUALITY 97–100; the round-53 W2 handoff recorded as not dispatched; the frozen counter's forgeability named, not hidden |
+| freshness | **unchanged** | no fetch; newest capture dates remain 2026-10-24 |
+| adjacency | **unchanged** | W1 `R54ReviewProvince`: no sibling PROVINCE claims citation standards or document-format parsing; `kengaku-shokunin/PROVINCE.md:137` hands the method here |
+
+## Capabilities (round-54 addition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| OLE Word 97+ `.doc` text form | prints the main-story text form of an OLE `.doc` with no helper program (CFB chains, FIB, Clx piece table, cp1252/UTF-16LE pieces, field results only, tracked deletions dropped) and locates a quote's offset in it; refuses `ole-not-word`, `ole-encrypted`, `ole-malformed` | `python3 tools/capture-text.py <raw> [--locate Q]`; `corpus/evidence/round54/measure-after.txt` (frozen counter 6/6 ×4, supplement 3/3 ×4, tracked-deletion PASS) | 54 |
+
+## Planned — round 55 (not started)
+
+Candidates: a span builder that reads an OLE `.doc` through `tools/capture-text.py`, then the HIT data specification's carrier alphabet beside the standard's (the cut S101 leg, W1 `R54DraftEntryStb`); the refused S130 grey-literature entry, now that its form blocker is gone (W1 `R54ExecS130Probe`); a frozen C1-style counter whose generated inputs never sit beside the tool's input and whose REAL leg cannot be canned by digest (RW-1, sixth round); the counter limits W1 named (REAL ratio and label rule, fObfuscated-only and nFib branches ungenerated).
