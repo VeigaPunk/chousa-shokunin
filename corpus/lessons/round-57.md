@@ -64,3 +64,12 @@ The chousa slice of the campaign absent-defect register was hand-checked against
 - S132: `为进一步贯彻落实党中央、国务院关于健全药品供应保障制度的决策部署`
 - S133: `药品临床综合评价管理指南`
 - S133: `2021 年版试行`
+
+5. **attribution (unidentified writer)** — a file `corpus/evidence/round57/attempt3-sidecar-audits.md` appeared in the lane mid-wave-2 carrying the authorship string `ChousaR57a3`, an identity this lane never dispatched (this attempt is `ChousaR57a2`; attempt 1's seats are all dead); no dispatched seat's item named that path. The file's five audit topics were legitimate, so the L1 re-ran each audit itself (receipts `corpus/evidence/round57/sidecar-audits.md`, L1-authored), and deleted the stray. Captured-by: none — no wave item writes outside the wave dir or a named lane evidence path; `R57W2SentFinal` F2-class hygiene caught the category. Fix: the sidecar receipts stand on L1-run commands; any future stray writer is restored-from-branch, never adopted.
+
+## Wave-2 addenda (after `WAVE-DONE w2`)
+
+- **C3 provenance-leg forge (RW-1 continues).** `R57W2CritC3Forge` A1a/A1b: a fabricated `refetch.tsv` success row plus byte-replayed captures under a new (id,url) reaches `C3=PASS` — the "successful attempt" leg checks the record only for self-consistency, and nothing ties `.txt` to `.raw`. The committed state does not exercise the hole (`sidecar-audits.md` §4: all five bindings genuine, unique ids); the claim verdict stands on real fetches. Reported as the recurring forgeable-counter weakness (RW-1); the smallest safe correction is named for a future re-freeze.
+- **Counter kills.** `R57W2MutC2Counter` M5 (first-vs-last successful attempt) kills the C2 counter — the last-attempt binding is load-bearing. `R57W2MutC3Counter`: all 8 single-edit mutants survive on the passing state (legs individually masked by sibling AND-legs — a coverage finding, not a falsification).
+- **Quarantine completion.** S096 adjudicated PRESENT (two verbatim, one comma-fold substance; the comma-width fold is a new fold class for `tools/quarantine-check.py`'s fold set — routed). Coverage 24/24, zero fabrications.
+- **SCORECARD freeze-id typo.** The round-57 verdict block printed the C3 freeze as `fd95724d56a33a150cd2638fadd2ce1f3425e6c` (one nibble-group transposed); the commit is `fd95724d56a33ad150cd263f8add2ce1f3425e6c` (7-hex `fd95724` resolves). Corrected by this appended note; LOG and this lesson always used the resolving 7-hex form.
