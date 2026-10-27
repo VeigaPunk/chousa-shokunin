@@ -2860,7 +2860,7 @@ Candidates: harden `tools/build-spans.py` (`R55W2SentBuilder`: refuse a foreign 
 
 ## Round 57 verdict — 2026-10-27 (pinned-capture freshness re-fetch into lane-owned digest-checked bytes; the workflow standard's normative references chained by document)
 
-Claims frozen at `c2f914c53201a8f8ee4fef823b82681051d55592` (C2) and `fd95724d56a33a150cd2638fadd2ce1f3425e6c` (C3) on the round-56 plan, before any round-57 fetch (`corpus/evidence/round57/claims.md`). Attempt 1 was operator-stopped after the freezes; attempt 2 (this) built on them. After-receipts: C2 `SET=47 VERDICTS=47/47 REPRODUCED=41 DRIFTED=5 UNREACHABLE=1 BYTE_BACKED=46 CONSISTENT=46/46 FLAGGED=0/0 C2=PASS` at lane master `e0e73e0f76163b014033e80c6ba53ed92c14113d` (re-run at `a8d4e7da15a70a06d731739cace43cc3287801a1` after landing, identical); C3 `BOUND=4/7 SWEPT=3/3 QUOTE_ROWS=10 (all legs) SUBSTANCE=PASS ANCHOR_BOUND=3/3 INFERENCE_GROUNDED=yes STRAY_IDS=- C3=PASS` at `a8d4e7da`.
+Claims frozen at `c2f914c53201a8f8ee4fef823b82681051d55592` (C2) and `fd95724d56a33ad150cd263f8add2ce1f3425e6c` (C3) on the round-56 plan, before any round-57 fetch (`corpus/evidence/round57/claims.md`). Attempt 1 was operator-stopped after the freezes; attempt 2 (this) built on them. After-receipts: C2 `SET=47 VERDICTS=47/47 REPRODUCED=41 DRIFTED=5 UNREACHABLE=1 BYTE_BACKED=46 CONSISTENT=46/46 FLAGGED=0/0 C2=PASS` at lane master `e0e73e0f76163b014033e80c6ba53ed92c14113d` (re-run at `a8d4e7da15a70a06d731739cace43cc3287801a1` after landing, identical); C3 `BOUND=4/7 SWEPT=3/3 QUOTE_ROWS=10 (all legs) SUBSTANCE=PASS ANCHOR_BOUND=3/3 INFERENCE_GROUNDED=yes STRAY_IDS=- C3=PASS` at `a8d4e7da`.
 
 | claim / axis | before → after | counting command | verdict | tag |
 |---|---|---|---|---|
