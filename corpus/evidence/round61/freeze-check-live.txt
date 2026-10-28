@@ -1,0 +1,24 @@
+# round 61 live triple
+CHECK CLAIMS_NONEMPTY PASS 9110 bytes sha256=9afec8d493f0ba511a256f38cd5098ff508f9ed311c6c49ff5383add9ce0acec
+CHECK CONTEXT_DIGEST PASS context carries 9afec8d493f0ba511a256f38cd5098ff508f9ed311c6c49ff5383add9ce0acec
+CHECK CONTEXT_SPEC_EQ PASS identical (3194 chars)
+CHECK DIGEST_STRAY PASS no 64-hex token other than the claims digest
+CHECK NAMES PASS 64 names match in order, roles match agents
+CHECK BODY_RENDER PASS 64/64 dispatch tasks equal the rendered spec items
+CHECK READY_DISPATCH PASS ready -> /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-61/w1-dispatch.json
+CHECK READY_IDENT PASS lane=chousa round=61 wave=w1 agree with dispatch, spec and location
+FAILED_CHECKS=none
+FREEZE_CHECK=PASS
+exit=0
+# round 60 live pair (red-before: the real frozen-digest mismatch)
+CHECK CLAIMS_NONEMPTY PASS 3355 bytes sha256=65721569fc1336b159c7637acf476cda6f583bbd4b3a84aaadd239f7d02018d1
+CHECK CONTEXT_DIGEST FAIL context lacks whole-token 65721569fc1336b159c7637acf476cda6f583bbd4b3a84aaadd239f7d02018d1
+CHECK CONTEXT_SPEC_EQ PASS identical (688 chars)
+CHECK DIGEST_STRAY FAIL 128 foreign 64-hex tokens vs claims 65721569...: spec:BuildCounter:09d8053f..., spec:CounterAudit:09d8053f..., spec:SourceGate:09d8053f..., spec:S101Reopen:09d8053f..., spec:FrontierCurator:09d8053f..., spec:C1CounterCritic:09d8053f... ...
+CHECK NAMES PASS 64 names match in order, roles match agents
+CHECK BODY_RENDER PASS 64/64 dispatch tasks equal the rendered spec items
+CHECK READY_DISPATCH PASS ready -> /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-60/w1-dispatch.json
+CHECK READY_IDENT PASS lane=chousa round=60 wave=w1 agree with dispatch, spec and location
+FAILED_CHECKS=CONTEXT_DIGEST,DIGEST_STRAY
+FREEZE_CHECK=FAIL
+exit=1
