@@ -35,7 +35,10 @@ for a success token (QUALITY 117).
   H20 BIGFORM  a `.docx` of 70 MiB of paragraph text (a few hundred KiB on disk): exit non-zero, nothing
                written, no timeout (the text form is over 64 MiB chars).
 
-Every run has a 60 s timeout (a timeout fails the leg). The `.txt` text form is the UTF-8 decode
+Every run has a 60 s timeout (a timeout fails the leg), a 512 MiB file-size limit on the child, its own
+process group (killed when the run ends, so no detached helper outlives its leg) and a 64 KiB read of its
+stderr. The order of the leg groups is a seeded shuffle, so a builder cannot learn which leg it is
+in from the call sequence (amendment A1). The `.txt` text form is the UTF-8 decode
 with universal newlines; the `.docx` form is each `w:p` paragraph's text plus a newline; the golden
 manifest and span files follow the builder docstring's contract (span = form[max(0,off-80) :
 off+len(quote)+80], offset = its start, file `spans/<id>-<n>.txt`, digest of the file read).
@@ -52,6 +55,8 @@ import json
 import os
 import pathlib
 import random
+import resource
+import signal
 import secrets
 import shutil
 import stat
@@ -244,16 +249,23 @@ def run(fx: Fx, extra: list[str], out: pathlib.Path | None = None, rows_path: pa
            "LC_ALL": "C.UTF-8"}
     so, se = fx.dir / f"so-{secrets.token_hex(3)}", fx.dir / f"se-{secrets.token_hex(3)}"
     with open(so, "wb") as fo, open(se, "wb") as fe:
-        p = subprocess.Popen(argv, cwd=fx.dir, env=env, stdin=subprocess.DEVNULL, stdout=fo, stderr=fe)
-        timer = threading.Timer(TIMEOUT, p.kill)
+        p = subprocess.Popen(argv, cwd=fx.dir, env=env, stdin=subprocess.DEVNULL, stdout=fo, stderr=fe,
+                             start_new_session=True,
+                             preexec_fn=lambda: resource.setrlimit(resource.RLIMIT_FSIZE, (512 << 20, 512 << 20)))
+        timer = threading.Timer(TIMEOUT, lambda: os.killpg(p.pid, signal.SIGKILL))
         timer.start()
         try:
             _, status, ru = os.wait4(p.pid, 0)
         finally:
             timer.cancel()
+            try:
+                os.killpg(p.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
     rc = os.waitstatus_to_exitcode(status)
     p.returncode = rc
-    err = se.read_text(errors="replace")
+    with open(se, "rb") as fh:
+        err = fh.read(65536).decode("utf-8", errors="replace")
     so.unlink()
     se.unlink()
     return {"rc": rc, "stderr": err, "rss_kib": ru.ru_maxrss, "timeout": rc == -9}
@@ -577,7 +589,9 @@ def main() -> int:
             (("H15 BIGRAW",), leg_h15), (("H16 OUTFILE",), leg_h16), (("H17 UNREADABLE",), leg_h17),
             (("H18 FIFO",), leg_h18), (("H19 ENTRYDOT",), leg_h19), (("H20 BIGFORM",), leg_h20)]
     try:
-        for names, fn in plan:
+        order = list(range(len(plan)))
+        random.Random(seed * 7919 + 1).shuffle(order)
+        for names, fn in (plan[i] for i in order):
             try:
                 got = fn(work, rng, builder)
             except (AssertionError, SystemExit):
