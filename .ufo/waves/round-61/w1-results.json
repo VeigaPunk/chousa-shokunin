@@ -1,0 +1,392 @@
+{
+ "lane": "chousa",
+ "round": 61,
+ "wave": "w1",
+ "seats": 64,
+ "results": [
+  {
+   "name": "CritC1Sniff",
+   "agent": "critic",
+   "output": "{\n  \"seat\": \"CritC1Sniff\",\n  \"item\": \"R61-C1 detection attack\",\n  \"report\": \".ufo/waves/round-61/w1/CritC1Sniff.md\",\n  \"verdict\": \"FORGE_BEST=20/20 sniff_caught_by_sweep=partly\",\n  \"findings\": [\n    \"forge-all-clean.py (base plus sniffed branch, unhardened outside the gate) scores LEGS=20/20 C1=PASS at seeds 61001, 61002, 61003 and passes the frozen sweep (exit 1, no match).\",\n    \"The same logic with getppid written literally scores 20/20 \u00d73 but the sweep matches line 44 (exit 0); obfuscating that one call clears the sweep.\",\n    \"Single stateless sniffs proc, cwd, env, layout each reach 20/20 at all three seeds; order-only and no-sniff control reach 9/20 \u00d73 (only the legs that pass without a guard).\",\n    \"Outside the counter the forge follows a symlink (manual H10-style run wrote into the victim), so the sniff is the only gate.\",\n    \"Sweep catches literal tokens only; regex, env, layout, marker and constructed tokens evade it.\",\n    \"Not run: regress.py, C2, landed builder, reference builder. No installs. Scratch deleted.\"\n  ]\n}",
+   "note": null
+  },
+  {
+   "name": "CritC1Seq",
+   "agent": "critic",
+   "output": "{\n  \"item\": \"CritC1Seq\",\n  \"report\": \".ufo/waves/round-61/w1/CritC1Seq.md\",\n  \"verdict\": \"VERDICT: SEQ_FORGE_BEST=15/20 over 5 seeds\",\n  \"findings\": [\n    \"Frozen random-seed command: best call-sequence forge scores 15/20 at all 5 seeds (4281664984, 4051996151, 3000344513, 482477860, 639963194). A do-nothing exit-2 stub scores 14/20 (ablation without the --replace rule: LEGS=14/20). The extra leg is H08.\",\n    \"Channel for the 15: the builder's own invocation log <work>/.seq.jsonl in the parent of its cwd gives the run index within the leg directory, combined with its own argv flags. Shuffled order is not learned; sibling count is logged but unused.\",\n    \"With --seed visible on the counter's argv, the forge reads it via `ps -o args= -p <ppid>`, replays random.Random(N*7919+1).shuffle and maps the k-th leg directory to its group: LEGS=20/20 at 5 of 5 seeds (62101-62105). The frozen command passes no --seed, so the frozen count is not broken this way; seeded reruns are.\",\n    \"The admission sweep (getppid|/proc/|c1-count|round61|leg-|argv[0]) exits 1 on the 20/20 forge because ps replaces /proc; the sweep is a string filter, not a control.\",\n    \"Parent-memory channel closed: a child reading its ancestor's /proc/<pid>/mem gets PermissionError (ptrace_scope=1).\",\n    \"Fingerprints: H07/H08 gives the unique (2,--replace) class; P04 visible but still fails under refusal; P06's second run collides with H07's second run; P02/P03 leaves no sequence fingerprint and P03 passes under refusal.\",\n    \"Calibration: a refusing builder makes P04 fail via the counter's own FileNotFoundError, not the predicate.\"\n  ],\n  \"limits\": [\n    \"Five seeds, one forge, one machine.\",\n    \"Better sequence-only policy using earlier legs' fingerprints could add at most one leg per seed (INFERENCE, not built).\",\n    \"Fixture timestamps and fixture-input channels not used by the forge; full-input identification not built (INFERENCE).\"\n  ],\n  \"installs\": \"none\",\n  \"lane_writes\": \"none; git status on tools and corpus/evidence/round61 empty after runs; scratch /fast/scratch/hyaku/chousa-r61/CritC1Seq deleted\"\n}",
+   "note": null
+  },
+  {
+   "name": "CritC1Heuristic",
+   "agent": "critic",
+   "output": "{\n  \"item\": \"CritC1Heuristic\",\n  \"report\": \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-61/w1/CritC1Heuristic.md\",\n  \"builder\": \"corpus/evidence/round61/controls/ref-build-spans.py sha256 86d64c312e1640d44f1e71bb3e23c8fc6c8b4ef56b627ae5750f761a579eccfd (matches frozen)\",\n  \"hazard_classes\": 16,\n  \"steps_run\": 21,\n  \"damage_classes\": [\n    \"F01b symlinked --out with --replace deletes foreign spans and overwrites manifest in link target\",\n    \"F02 ancestor symlink of --out with --replace, same effect\",\n    \"F06 SIGKILL mid-write leaves one span replaced with manifest old, leftover tmp persists\",\n    \"F09 ENOSPC on real 1MiB tmpfs leaves one span replaced with manifest old, exit 2\",\n    \"F16 cache capture hardlinked to outside file leaks marker into output (read-side)\"\n  ],\n  \"damage_excluding_read_side\": 4,\n  \"measured_not_damage\": [\n    \"F03 hardlinked span/manifest safe\",\n    \"F04 cache-prefix sibling refused\",\n    \"F05 leftover tmp persists, victim intact\",\n    \"F07 CRLF manifest passes --check (false pass)\",\n    \"F08 read-only out exits 2 with no writes\",\n    \"F10 dir named as span: exit 2 after writes\",\n    \"F11/F11b 200/250MiB inflate RSS 608/757MiB, rc 1\",\n    \"F12 entity expansion refused\",\n    \"F13 non-UTF8 quotes exit 1 traceback\",\n    \"F14 out equals cache safe\",\n    \"F15 check follows symlinked spans/ false pass\",\n    \"F01a symlinked out redirect creates files, no damage\"\n  ],\n  \"installs\": \"none; sudo -n mount/umount of 1MiB tmpfs under scratch, unmounted, verified 0\",\n  \"scratch\": \"deleted\",\n  \"lane_writes\": \"none from this seat\",\n  \"verdict\": \"VERDICT: UNCOVERED_HAZARDS_THAT_DAMAGE=5 of 16\"\n}",
+   "note": null
+  },
+  {
+   "name": "CritC1Detached",
+   "agent": "critic",
+   "output": "{\n  \"item\": \"CritC1Detached\",\n  \"report\": \".ufo/waves/round-61/w1/CritC1Detached.md\",\n  \"verdict\": \"DETACHED_FLIP_POSSIBLE=yes legs=P03,H10,H11,H12\",\n  \"a1_2\": \"demonstrated forge, not hardening\",\n  \"flips\": {\n    \"P03\": \"setsid post-exit helper 3/3; setsid poller spawned in an earlier leg 3/3\",\n    \"H10\": \"setsid restore + forced rc2 3/3\",\n    \"H11\": \"setsid restore + forced rc2 3/3\",\n    \"H12\": \"setsid restore + forced rc2 2/3\",\n    \"H14_H15\": \"unwaited in-group child, RSS unmeasured, 3/3 each (not detached; separate hole)\"\n  },\n  \"proposal_not_applied\": \"one-line unshare -Ufp --fork --kill-child prefix (builder as pid-ns init): closes post-exit and survivor routes in tests, reference stays 20/20; RSS hole remains and needs a cgroup memory measure or a claim narrowing\",\n  \"scratch_deleted\": true,\n  \"installs\": \"none\"\n}",
+   "note": null
+  },
+  {
+   "name": "CritC1Rss",
+   "agent": "critic",
+   "output": "{\n  \"report\": \".ufo/waves/round-61/w1/CritC1Rss.md\",\n  \"rss_escapes\": 2,\n  \"legitimate_streaming\": \"yes\",\n  \"escapes\": [\n    {\n      \"id\": \"c5_detached\",\n      \"class\": \"detached setsid helper does the 192 MiB read\",\n      \"counter_rss_kib\": {\n        \"H14\": 18188,\n        \"H15\": 17700\n      },\n      \"true_peak_kib\": {\n        \"H14\": 208968,\n        \"H15\": 208972\n      }\n    },\n    {\n      \"id\": \"c7_memfd\",\n      \"class\": \"whole capture retained in memfd (shmem, outside RSS)\",\n      \"counter_rss_kib\": {\n        \"H14\": 20004,\n        \"H15\": 19860\n      },\n      \"system_shmem_kb_while_retained\": {\n        \"H14\": 272264,\n        \"H15\": 269648\n      }\n    }\n  ],\n  \"adjacent\": \"c8 late setsid writer creates out/ files after the leg returns (tree check, not RSS)\",\n  \"verdict_line\": \"VERDICT: RSS_ESCAPES=2 legitimate_streaming=yes\"\n}",
+   "note": null
+  },
+  {
+   "name": "RevC1LegsP1",
+   "agent": "reviewer",
+   "output": "{\n  \"verdict\": \"VERDICT: LEG_DEFECTS=3 false_negative=0 false_positive=3 legs=P01 TXT, P02 DOCX, P03 NOPYC\",\n  \"report\": \".ufo/waves/round-61/w1/RevC1LegsP1.md\",\n  \"findings\": [\n    {\n      \"leg\": \"P02 DOCX\",\n      \"kind\": \"false_positive\",\n      \"builder\": \"bad5 (first w:t per paragraph)\",\n      \"evidence\": \"c1-count.py:182-194 single run per paragraph; bad5 passes seeds 61001-61003\"\n    },\n    {\n      \"leg\": \"P01 TXT\",\n      \"kind\": \"false_positive\",\n      \"builder\": \"bad4 (no start clamp)\",\n      \"evidence\": \"c1-count.py:224 clamp never reached; fixture quote offset min 115 over 1200 quotes; bad4 passes seeds 61001-61003; demo shows offset -80 vs 0\"\n    },\n    {\n      \"leg\": \"P03 NOPYC\",\n      \"kind\": \"false_positive\",\n      \"builder\": \"bad2 (rewrites tools/capture-text.py bytes)\",\n      \"evidence\": \"c1-count.py:274-275 names-only; bad2 passes seeds 61001-61003\"\n    }\n  ],\n  \"false_negative\": 0,\n  \"correct_builders_20_of_20\": [\n    \"cb1 refuse+exit-code+guard-order\",\n    \"cb2 heal-links\",\n    \"cb3 O_NOFOLLOW+exit3\"\n  ],\n  \"out_of_scope_observed\": [\n    \"bad1 P04 size-only check passes counter (c1-count.py:315 appends b'x')\",\n    \"bad3 H19 startswith('../') passes counter (c1-count.py:537)\"\n  ],\n  \"not_run\": [\n    \"H10-H12 partial-tree acceptance (INFERENCE from c1-count.py:414,431,447)\"\n  ],\n  \"installs\": \"none\",\n  \"scratch\": \"deleted\"\n}",
+   "note": null
+  },
+  {
+   "name": "RevC1LegsP2",
+   "agent": "reviewer",
+   "output": "{\n  \"verdict\": \"VERDICT: LEG_DEFECTS=3 false_negative=0 false_positive=3 legs=P04 CHECK, P05 REFUSEROW, P06 REBUILD\",\n  \"report\": \".ufo/waves/round-61/w1/RevC1LegsP2.md\",\n  \"findings\": [\n    \"F1 P04: check verifying only the first span file passes P04 and the full counter (LEGS=20/20 C1=PASS, seeds 61001/61002). Cause: victim fixed at sorted[0], counter line 314.\",\n    \"F2 P04: size-only span comparison passes P04 (LEGS=20/20). Cause: mutation appends a byte (line 315), not an in-place change the predicate names.\",\n    \"F3 P05: fail-fast writer that writes before refusing passes P05 (LEGS=15/20 full run). Cause: refused row fixed at rows[0] (lines 323-324); probe with rows[1] fails it.\"\n  ],\n  \"false_negatives\": 0,\n  \"false_positives\": 3,\n  \"limits\": [\n    \"L1 P05: empty out/spans created before refusal passes (clean_out lines 278-284); calibration, not counted.\",\n    \"L2 P06: no-op second run passes P06; that hazard belongs to H07; not counted.\",\n    \"L3: victim and refused-row index ignore the seed.\"\n  ],\n  \"installs\": \"none\",\n  \"scratch\": \"removed\"\n}",
+   "note": null
+  },
+  {
+   "name": "RevC1LegsH1",
+   "agent": "reviewer",
+   "output": "{\n  \"item\": \"RevC1LegsH1\",\n  \"report\": \".ufo/waves/round-61/w1/RevC1LegsH1.md\",\n  \"verdict\": \"VERDICT: LEG_DEFECTS=3 false_negative=0 false_positive=3 legs=H07 FOREIGN, H08 REPLACE, H09 ORPHAN\",\n  \"findings\": [\n    \"H07: counter snapshot is mtime-blind (c1-count.py:94,115; calls at 364,366,371,373); transient clobber-then-restore builder passes 20/20 at seeds 61001-61003. Mtime-aware probe copy fails it (19/20) and keeps reference and correct variants at 20/20.\",\n    \"H08: only non-span user file is README.txt (c1-count.py:369-370,376); an extension-selective --replace that deletes notes.md passes 20/20. Probe with notes.md fails it (19/20).\",\n    \"H09: snapshot compares only fx.out (c1-count.py:388,390); a builder writing a sibling staged tree and exiting 2 passes 20/20. Whole-fixture snapshot probe fails it (19/20).\",\n    \"No false negatives: three correct variants (guard order; always-heal links; refuse-links unless --replace) pass H07-H09 and LEGS=20/20 at seeds 61001-61003.\",\n    \"Observation outside my legs: builder docstring refuses links with no exception, while counter H10-H12 accept healing.\"\n  ],\n  \"checks_run\": \"reference 20/20 at 61001; 6 variants x 3 seeds; 4 mtime/whole-dir probe copies in scratch; demo.sh hand checks. Scratch removed. No installs, no lane writes beyond the report.\"\n}",
+   "note": null
+  },
+  {
+   "name": "RevC1LegsH2",
+   "agent": "reviewer",
+   "output": "{\n  \"verdict\": \"VERDICT: LEG_DEFECTS=3 false_negative=0 false_positive=3 legs=H10 SPANSLINK, H11 FILELINK, H12 TSVLINK\",\n  \"report\": \".ufo/waves/round-61/w1/RevC1LegsH2.md\",\n  \"findings\": [\n    \"F1: H10 (c1-count.py:410-414), H11 (429-431), H12 (445-447) are final-state only; three incorrect builders that write through the link and restore the victim pass their leg and the whole counter (20/20, seeds 61001-61003). strace confirms the victim writes.\",\n    \"F2: H10-H12 verdicts (lines 414, 431, 447) do not check the output tree on refusal, unlike H09 (line 390); a refused run can leave out/spans.tsv with no spans and pass.\",\n    \"F3: three correct policy variants (replace-links, exit-1 link refusal with reordered guards, mixed refuse-dir/replace-file) pass all 20 legs at three seeds; no false negative.\",\n    \"Not run: H13 OUTSIDE, which checks only output for the marker (INFERENCE, routed to its owner). Scratch deleted; installs none; no lane writes except the report.\"\n  ]\n}",
+   "note": null
+  },
+  {
+   "name": "RevC1LegsH3",
+   "agent": "reviewer",
+   "output": "{\n  \"seat\": \"RevC1LegsH3\",\n  \"report\": \".ufo/waves/round-61/w1/RevC1LegsH3.md\",\n  \"verdict\": \"LEG_DEFECTS=3 false_negative=0 false_positive=3 legs=H13 OUTSIDE, H14 BIGTXT, H15 BIGRAW\",\n  \"defects\": [\n    \"H13: a builder that writes outside-file spans to output and exits 1 passes (marker at byte 0, outside every 80-char span; c1-count.py:458,463-468)\",\n    \"H14/H15: a builder that buffers 64 MiB+1 before refusing passes at RSS 85-86 MiB under the 96 MiB limit (c1-count.py:76,482)\",\n    \"H15: a builder whose 192 MiB read runs in a start_new_session helper passes; waited helper fails at 205 MiB (c1-count.py:254-271)\"\n  ],\n  \"correct_builders_failed\": 0,\n  \"incorrect_builders_passed\": 3\n}",
+   "note": null
+  },
+  {
+   "name": "RevC1LegsH4",
+   "agent": "reviewer",
+   "output": "{\n  \"report\": \"chousa-shokunin/.ufo/waves/round-61/w1/RevC1LegsH4.md\",\n  \"verdict\": \"VERDICT: LEG_DEFECTS=3 false_negative=1 false_positive=2 legs=H16 OUTFILE, H17 UNREADABLE, H18 FIFO, H19 ENTRYDOT, H20 BIGFORM\",\n  \"defects\": [\n    {\n      \"id\": \"D1\",\n      \"kind\": \"false_positive\",\n      \"leg\": \"H16\",\n      \"cite\": \"c1-count.py:267-268 stderr read capped at 65536 bytes; :501 token test\",\n      \"evidence\": \"builder i1: Traceback at byte 71681 of 71729; LEG H16 pass traceback=False, seeds 61001/61002, LEGS=20/20\"\n    },\n    {\n      \"id\": \"D2\",\n      \"kind\": \"false_positive\",\n      \"leg\": \"H19 (also H17, H18, H20 via clean_out)\",\n      \"cite\": \"c1-count.py:278-284 clean_out snapshots fx.out only; :533-540 leg_h19\",\n      \"evidence\": \"builder i3 rewrites cache/*.txt on refusal; cache_changed True; LEG H19 pass, seeds 61001/61002\"\n    },\n    {\n      \"id\": \"D3\",\n      \"kind\": \"false_negative\",\n      \"leg\": \"H16\",\n      \"cite\": \"c1-count.py:501 substring Traceback search vs predicate lines 7-9\",\n      \"evidence\": \"correct builder c4 with '(Traceback-free refusal)' message: LEG H16 fail traceback=True, LEGS=19/20, seeds 61001/61002\"\n    }\n  ],\n  \"limits_not_counted\": [\n    \"L1 H19 leading-only '../' check passes (i2)\",\n    \"L2 H18 reads FIFO as empty and refuses (i4)\",\n    \"L3 H20 has no RSS bound (i5 764 MB passes)\",\n    \"L4 invalid entry exit code 1 vs 2 ambiguous in builder docstring (c5 fails H19 only)\"\n  ],\n  \"calibration\": \"always-exit-2 stub passes H16-H20 (controls/c1-controls.txt line 3); in-set exit variants c1, c2, c3 pass 20/20 at both seeds\",\n  \"installs\": \"none\",\n  \"scratch\": \"/fast/scratch/hyaku/chousa-r61/RevC1LegsH4 deleted\"\n}",
+   "note": null
+  },
+  {
+   "name": "MutC1ExtraProbe",
+   "agent": "mutation-tester",
+   "output": "{\n  \"item\": \"MutC1ExtraProbe\",\n  \"report\": \".ufo/waves/round-61/w1/MutC1ExtraProbe.md\",\n  \"mutants_run\": 22,\n  \"killed\": 7,\n  \"killed_legs\": {\n    \"D-noS_ISREG\": \"H18\",\n    \"F-no-realpath\": \"H13\",\n    \"I-cap-after-read\": \"H14,H15\",\n    \"J-head-whole\": \"H15\",\n    \"K-no-head\": \"P02\",\n    \"R-no-crlf-fold\": \"P01,P06,H08\",\n    \"T-digest-form\": \"P01,P02,P06,H08\"\n  },\n  \"equivalent\": [\n    \"G-no-memo\",\n    \"P-no-bytecode-restore\",\n    \"Q-no-ct-memo\",\n    \"U-exists\"\n  ],\n  \"survivors_that_are_gaps\": 11,\n  \"gaps\": {\n    \"A-startswith\": \"safety: sibling-prefix symlink reads and writes a file outside the cache (leak shown)\",\n    \"Y-link-size\": \"safety: cap read from link size, 70 MiB target accepted (rc 0 vs reference rc 1)\",\n    \"B-cap-ge\": \"boundary: exact 64 MiB not pinned\",\n    \"C-cap16\": \"calibration: 20 MiB accepted by reference, refused by 16 MiB cap\",\n    \"E-lstat-kind\": \"operability: in-cache symlink refused\",\n    \"H-root-raw\": \"operability: symlinked --cache refused\",\n    \"L-no-ole\": \"operability: real OLE capture refused; no OLE positive leg\",\n    \"M-except-valueerror\": \"hygiene: refusal escapes as Traceback\",\n    \"N-unguarded-stat\": \"hygiene: dangling link escapes as Traceback\",\n    \"O-unguarded-head\": \"hygiene: mode-000 raw escapes as Traceback (non-root only)\",\n    \"S-strict-decode\": \"operability: invalid UTF-8 txt refused despite errors=replace\"\n  },\n  \"observation\": \"reference accepts a row whose .raw is an out-of-cache symlink by falling through to the .txt sidecar (docstring says refused row); no leak, routed to L1\",\n  \"seed\": 61001,\n  \"installs\": \"none\",\n  \"scratch\": \"deleted\",\n  \"lane_writes\": \"report only\"\n}",
+   "note": null
+  },
+  {
+   "name": "MutC1ExtraWrite",
+   "agent": "mutation-tester",
+   "output": "{\n  \"item\": \"MutC1ExtraWrite\",\n  \"report\": \".ufo/waves/round-61/w1/MutC1ExtraWrite.md\",\n  \"mutants\": 15,\n  \"killed\": 3,\n  \"survived\": 12,\n  \"equivalent\": [\n    \"N01-no-nofollow\",\n    \"N02-no-excl\"\n  ],\n  \"gaps\": [\n    \"N03-mode-0666\",\n    \"N04-mode-0600\",\n    \"N05-tmp-fixed-name\",\n    \"N06-no-tmp-cleanup\",\n    \"N07-swallow-tmp-failure\",\n    \"N08-manifest-first\",\n    \"N09-orphans-unlinked-first\",\n    \"N10-orphan-symlink-allowed\",\n    \"N11-write-error-uncaught\",\n    \"N15-manifest-compare-rstrip\"\n  ],\n  \"verdict\": \"KILLED=3/15 survivors_that_are_gaps=10\"\n}",
+   "note": null
+  },
+  {
+   "name": "MutC1ExtraMain",
+   "agent": "mutation-tester",
+   "output": "{\n  \"item\": \"MutC1ExtraMain\",\n  \"report\": \".ufo/waves/round-61/w1/MutC1ExtraMain.md\",\n  \"mutants\": 23,\n  \"killed\": 9,\n  \"survived\": 14,\n  \"survivors_that_are_gaps\": 10,\n  \"equivalent\": 2,\n  \"predicate_accepted\": 1,\n  \"outside_predicate\": 1,\n  \"reference_baseline\": \"LEGS=20/20 C1=PASS seed 61001\",\n  \"safety_gaps\": [\n    \"N02 id path escape\",\n    \"N21 manifest without spans on failed write\"\n  ],\n  \"installs\": \"none\",\n  \"verdict\": \"VERDICT: KILLED=9/23 survivors_that_are_gaps=10\"\n}",
+   "note": null
+  },
+  {
+   "name": "MutC1ExtraDoc",
+   "agent": "mutation-tester",
+   "output": "{\n  \"item\": \"MutC1ExtraDoc\",\n  \"report\": \".ufo/waves/round-61/w1/MutC1ExtraDoc.md\",\n  \"reference\": {\n    \"file\": \"corpus/evidence/round61/controls/ref-build-spans.py\",\n    \"sha256_prefix\": \"86d64c31\",\n    \"counter_seed_61001\": \"LEGS=20/20 C1=PASS\",\n    \"counter_seed_61002\": \"LEGS=20/20 C1=PASS\"\n  },\n  \"mutants\": {\n    \"total\": 24,\n    \"killed\": 8,\n    \"survived\": 16,\n    \"killed_list\": [\n      \"X03\",\n      \"X06\",\n      \"X07\",\n      \"X12\",\n      \"X16\",\n      \"X21\",\n      \"X22\",\n      \"X23\"\n    ],\n    \"survivor_classes\": {\n      \"equivalent\": [\n        \"X17\"\n      ],\n      \"coverage_gap\": [\n        \"X01\",\n        \"X02\",\n        \"X04\",\n        \"X05\",\n        \"X08\",\n        \"X09\",\n        \"X10\",\n        \"X11\",\n        \"X13\",\n        \"X14\",\n        \"X15\",\n        \"X18\",\n        \"X19\",\n        \"X20\"\n      ],\n      \"design_limited\": [\n        \"X24\"\n      ]\n    }\n  },\n  \"smallest_fixtures_verified_by_harness\": {\n    \"X01\": \"64MiB+1 bytes of 3-byte UTF-8 .txt (ASCII 64MiB+1 masked by MAX_FORM); ref rc=1, mut rc=0\",\n    \"X02\": \"exactly 64<<20 byte .txt; ref rc=0, mut rc=1\",\n    \"X04\": \".txt with 0xff outside quote; ref rc=0, mut rc=1\",\n    \"X05\": \".txt with lone \\\\r; tree differs, rc equal\",\n    \"X08\": \"corrupt .raw plus .txt sidecar with quote; ref rc=1, mut rc=0\",\n    \"X09\": \"valid docx .raw plus .txt sidecar; tree differs, rc equal\",\n    \"X10\": \"quote twice in .txt; ref rc=1, mut rc=0\",\n    \"X11\": \"quote at form offset 0; tree differs, rc equal\",\n    \"X13\": \"reference build plus one stale byte then --check; ref tree unchanged, mut tree healed\",\n    \"X14\": \"bad header; ref rc=2, mut rc=1\",\n    \"X15\": \"nonexistent --cache; ref rc=2, mut rc=1\",\n    \"X18\": \"out/spans.tsv as directory; mut writes spans/ before failing\",\n    \"X19\": \"read-only out, orphan, --replace; mut removes orphan before failing (non-root)\",\n    \"X20\": \"read-only spans/; mut leaves spans.tsv behind (non-root)\",\n    \"X24\": \"stdout char 12 vs 13; rc and tree equal\"\n  },\n  \"installs\": \"none\",\n  \"lane_writes\": \"report only; frozen paths clean in git status\",\n  \"verdict\": \"VERDICT: KILLED=8/24 survivors_that_are_gaps=15\"\n}",
+   "note": null
+  },
+  {
+   "name": "MutC1Counter",
+   "agent": "mutation-tester",
+   "output": "{\n  \"item\": \"MutC1Counter\",\n  \"report\": \".ufo/waves/round-61/w1/MutC1Counter.md\",\n  \"mutants\": 23,\n  \"killed_by_frozen\": 10,\n  \"control_gaps\": 13,\n  \"residual_after_scratch_controls\": 0,\n  \"verdict\": \"VERDICT: COUNTER_MUTANTS_KILLED=10/23 control_gaps=13\",\n  \"scratch_removed\": true,\n  \"installs\": \"none\",\n  \"lane_writes\": \"report only\"\n}",
+   "note": null
+  },
+  {
+   "name": "MutC2Counter",
+   "agent": "mutation-tester",
+   "output": "{\n  \"item\": \"MutC2Counter\",\n  \"report\": \".ufo/waves/round-61/w1/MutC2Counter.md\",\n  \"mutants_total\": 31,\n  \"non_equivalent\": 29,\n  \"frozen_legit_kills\": 12,\n  \"artifact_kills\": [\n    \"M11\"\n  ],\n  \"survivors\": [\n    \"M01\",\n    \"M05\",\n    \"M06\",\n    \"M07\",\n    \"M09\",\n    \"M10\",\n    \"M12\",\n    \"M13\",\n    \"M14\",\n    \"M15\",\n    \"M17\",\n    \"M18\",\n    \"M19\",\n    \"M22\",\n    \"M25\",\n    \"M31\"\n  ],\n  \"equivalent\": [\n    \"M21\",\n    \"M23\"\n  ],\n  \"control_gaps\": 17,\n  \"harness_baseline\": \"pinned original reproduces controls/c2-controls.txt line for line (diff only OK suffix and exit=0)\",\n  \"census_leg_never_fails_in_frozen_matrix\": true,\n  \"scratch_deleted\": true,\n  \"installs\": \"none\",\n  \"verdict\": \"VERDICT: COUNTER_MUTANTS_KILLED=12/29 control_gaps=17\"\n}",
+   "note": null
+  },
+  {
+   "name": "SentC1Race",
+   "agent": "sentinel",
+   "output": "{\n  \"report\": \"chousa-shokunin/.ufo/waves/round-61/w1/SentC1Race.md\",\n  \"verdict\": \"VERDICT: TOCTOU_ESCAPES=3 fix=pin out and out/spans as dir fds (O_DIRECTORY|O_NOFOLLOW), do every check, temp create, replace and unlink via dir_fd\",\n  \"escaping_scenarios\": [\n    \"T1 dirlink: writes span files into swapped out/spans target\",\n    \"T2 dirlink+orphan: writes span files and deletes same-named victim file\",\n    \"T6 out swap: writes whole output tree into swapped out target\"\n  ],\n  \"non_escaping\": [\n    \"T3/T4/T5 planted symlink at span, orphan or manifest name: os.replace/unlink replace the link entry, victim unchanged\",\n    \"T7 planted temp name: O_NOFOLLOW|O_EXCL stops it (refnoflag escapes)\"\n  ],\n  \"flags_stop_T1_T2_T6\": false,\n  \"fix_A_dir_fd\": \"stops T1/T2/T6 (fails closed or writes to pinned inode); happy-path output identical; ~117 changed lines; Linux/POSIX only\",\n  \"fix_B_stage_then_path_rename\": \"does not stop T1/T2/T6; 19 lines; whole-dir rename is not viable without fds\",\n  \"installs\": \"none\",\n  \"scratch\": \"removed\"\n}",
+   "note": null
+  },
+  {
+   "name": "SentC1Fs",
+   "agent": "sentinel",
+   "output": "{\n  \"report\": \"chousa-shokunin/.ufo/waves/round-61/w1/SentC1Fs.md\",\n  \"fs_defects\": 4,\n  \"leftovers_unrecoverable\": 0,\n  \"verdict\": \"VERDICT: FS_DEFECTS=4 leftovers_unrecoverable=0\",\n  \"defects\": [\n    \"D1 unreadable spans/ (chmod 300/000) -> uncaught PermissionError traceback, exit 1 not 2\",\n    \"D2 --check on no-search out reports STALE rows, exit 1\",\n    \"D3 identical rebuild refused after SIGKILL at orphan unlink (contradicts 'identical rebuild always allowed'); recoverable with --replace\",\n    \"D4 failed replacing run leaves old manifest over overwritten span files (E7b, E2d); recoverable with --replace\"\n  ],\n  \"minor\": [\n    \"M1 identical rebuild into read-only out exits 2\",\n    \"M2 tmp leftovers never reclaimed\",\n    \"M3 umask 077 yields 0600/0700\",\n    \"M4 controls copy cannot read OLE/zip captures (capture-text beside controls/ absent)\",\n    \"M5 --check follows symlinked spans.tsv\"\n  ],\n  \"installs\": \"none; scratch removed; lane not written\"\n}",
+   "note": null
+  },
+  {
+   "name": "SentC1Input",
+   "agent": "sentinel",
+   "output": "{\n  \"item\": \"SentC1Input\",\n  \"report\": \".ufo/waves/round-61/w1/SentC1Input.md\",\n  \"verdict\": \"VERDICT: INPUT_DEFECTS=12 tracebacks=2 hangs=0\",\n  \"tracebacks\": [\n    \"invalid UTF-8 quotes file (byte 0xff)\",\n    \"encoded surrogate quotes file (\\\\xed\\\\xa0\\\\x80)\"\n  ],\n  \"hangs\": [],\n  \"cost_note\": \"100000 rows vs 4 MB form: rc=0, 165.0 s; 64 MiB form extrapolated ~45 min (INFERENCE, not run)\",\n  \"defect_classes\": [\n    \"D1 invalid UTF-8 traceback\",\n    \"D2 U+2028/U+0085/U+000C split legit quotes (refused)\",\n    \"D3 separators in entry inject a row\",\n    \"D4 non-regular/outside/unreadable/dir raw silently falls back to .txt\",\n    \"D5 overlapping quote accepted ambiguously (str.count non-overlapping)\",\n    \"D6 Unicode digits accepted in ids\",\n    \"D7 --replace deletes file named S###-n.txt\\\\n (reference-only)\",\n    \"D8 partial writes on exit 2 (dir at span name; dir orphan)\",\n    \"D9 BOM header refused with misleading message\",\n    \"D10 NUL accepted into manifest (minor)\",\n    \"D11 Windows-style entries accepted as lane-relative (minor)\",\n    \"D12 --out \\\"\\\" writes into cwd (minor)\"\n  ],\n  \"base_comparison\": \"D2,D3,D4,D5,D6,D9-D12 shared with base; base crashes on raw-unreadable and dir-at-span; D7 and D8b reference-only\",\n  \"installs\": \"none\",\n  \"scratch\": \"deleted\",\n  \"frozen_files_touched\": \"none\"\n}",
+   "note": null
+  },
+  {
+   "name": "RevRefDiffGuards",
+   "agent": "reviewer",
+   "output": "{\n  \"report\": \".ufo/waves/round-61/w1/RevRefDiffGuards.md\",\n  \"verdict\": \"VERDICT: REF_DEFECTS=7 blocking=2\",\n  \"blocking\": [\n    \"D1: ref builds a row from .txt when the .raw is a symlink out of the cache, unreadable, a FIFO or oversize; the docstring says refused (ref lines 115-126; repro S1/S2/S16: rc=0, base rc=1 or 0)\",\n    \"E1: guard_out lines 266 and 273 unguarded; PermissionError exits 1 traceback; S7 regression (base rc=0, ref rc=1 with spans.tsv mode 0200, also with --replace)\"\n  ],\n  \"non_blocking\": [\n    \"E2 preflight gap for directory at span path; mixed state, detectable by --check\",\n    \"E3 leftover .tmp dotfiles invisible to --check and never removed\",\n    \"E4 _probe reason dropped from message\",\n    \"B2 identical rebuild changes spans.tsv inode and mode\",\n    \"B3 read-only span files silently replaced\"\n  ],\n  \"regress\": {\n    \"ref\": \"REAL_REBUILD=3/3 exit 0\",\n    \"base\": \"REAL_REBUILD=3/3 exit 0\"\n  },\n  \"round56_gate\": \"ENV_CHANGED pinned capture digest, exit 2 for base and ref; not exercised\",\n  \"scratch_removed\": true\n}",
+   "note": null
+  },
+  {
+   "name": "RevRefDiffForms",
+   "agent": "reviewer",
+   "output": "{\n  \"seat\": \"RevRefDiffForms\",\n  \"report\": \".ufo/waves/round-61/w1/RevRefDiffForms.md\",\n  \"verdict\": \"VERDICT: REF_DEFECTS=6 blocking=2\",\n  \"findings\": [\n    {\n      \"id\": \"F1\",\n      \"severity\": \"blocking\",\n      \"lines\": \"L115-137 (ref-build-spans.py)\",\n      \"defect\": \"Unreadable, out-of-cache, dangling or FIFO .raw silently falls back to the .txt sidecar; docstring says sidecar is never used and these are refused rows\",\n      \"repro\": \"R1 mode-000 OLE raw + sidecar: ref rc=0 with sidecar text, base PermissionError traceback; R2 raw symlink outside cache to docx: ref span SIDECAR text sha 09886271956c, base DOCX text sha a986f60f3df1; R2f FIFO: both rc=0 with sidecar (docstring contradiction, not regression)\",\n      \"not_caught_by_c1\": true\n    },\n    {\n      \"id\": \"F2\",\n      \"severity\": \"non-blocking\",\n      \"lines\": \"L127-130\",\n      \"defect\": \"Reason for a bad raw dropped when no sidecar exists; message misleading for dangling link\",\n      \"repro\": \"R3 dangling .raw symlink, no .txt: ref and base both print no-defined-text-form message\"\n    },\n    {\n      \"id\": \"F3\",\n      \"severity\": \"blocking\",\n      \"lines\": \"L273, L266, L234\",\n      \"defect\": \"Unguarded OS calls in new guard_out (read_bytes on spans.tsv, iterdir on spans/) and in check (span file read); docstring promises exit 2 for output refusals\",\n      \"repro\": \"R5 spans.tsv mode 000: ref rc=1 traceback; R8 spans/ mode 000: ref rc=1 traceback; R9 --check mode-000 span file: ref rc=1 traceback (base identical)\"\n    },\n    {\n      \"id\": \"F4\",\n      \"severity\": \"non-blocking\",\n      \"lines\": \"L300-309, L305-306\",\n      \"defect\": \"Directory at span-file name not refused; partial writes return exit 2 with state the docstring does not describe\",\n      \"repro\": \"R7 --replace into dir span path: ref rc=2, S001-1.txt rewritten, spans.tsv old, --check STALE rc=1; R6 orphan dir with --replace: rc=2 after spans.tsv replaced, orphan remains\"\n    },\n    {\n      \"id\": \"F5\",\n      \"severity\": \"non-blocking\",\n      \"lines\": \"L147-151\",\n      \"defect\": \"64M-char derived-form cap applied after form is materialised; cap bounds output not memory\",\n      \"repro\": \"R10 200MiB text in 204447-byte docx: ref rc=1 refused at 209715319 chars, child ru_maxrss 633108 KiB; extrapolation to 256MiB part is INFERENCE, not run\"\n    },\n    {\n      \"id\": \"F6\",\n      \"severity\": \"non-blocking\",\n      \"lines\": \"L123, L143\",\n      \"defect\": \"Capture read twice; digest from one read, form from another (lambda ignores bytes); pre-existing in base\",\n      \"repro\": \"not reproduced; INFERENCE on in-place rewrite race\"\n    },\n    {\n      \"id\": \"F7\",\n      \"severity\": \"calibration\",\n      \"lines\": \"L36-38\",\n      \"defect\": \"Identical rebuild overwrites hand-edited same-name span file without --replace; not a docstring violation\",\n      \"repro\": \"R4 rc=0, file restored; base identical\"\n    }\n  ],\n  \"checks\": {\n    \"diff\": \"diff -u base vs ref, 274 lines; sha256 base 1ed2650a, ref 86d64c31 match claims; git HEAD:tools/build-spans.py 072415ad (read-only)\",\n    \"regress\": \"python3 -B regress.py --builder controls/ref-build-spans.py --work <scratch> -> REAL_REBUILD=3/3 exit 0\",\n    \"reproductions\": \"R1-R10 via scratch driver, outputs quoted in report; scratch deleted\",\n    \"semantics_py314\": \"lexists true for dangling; is_file false, is_symlink true; realpath to target; commonpath rejects sibling prefix; os.replace over symlink replaces link, victim intact\",\n    \"not_run\": [\n      \"c1-count.py (not my item)\"\n    ]\n  },\n  \"calibration_notes\": [\n    \"C1 20/20 does not exercise .raw symlinks, unreadable .raw, directories at span names, or mode-000 metadata reads; counter limit, not refutation\",\n    \"O1 caller audit not done; INFERENCE that callers rebuilding over changed input now fail loudly\"\n  ],\n  \"scratch_removed\": true\n}",
+   "note": null
+  },
+  {
+   "name": "RevRefDiffDoc",
+   "agent": "reviewer",
+   "output": "{\n  \"report\": \".ufo/waves/round-61/w1/RevRefDiffDoc.md\",\n  \"verdict\": \"VERDICT: REF_DEFECTS=9 blocking=1\",\n  \"blocking\": [\n    \"RD1: the .raw gate falls through to .txt for an outside-cache link, FIFO, unreadable raw and oversize non-magic raw (ref lines 92-105, 112-128); base refused or crashed on the outside-link and unreadable cases, ref accepts from the .txt; no counter leg covers raw variants, so C1 20/20 is a counter limit, not a refutation\"\n  ],\n  \"non_blocking\": [\n    \"RD2 overlapping quote counted once (line 195, inherited)\",\n    \"RD3 missing capture-text reported as per-row refusal (lines 136, 146-149, introduced)\",\n    \"RD4 dangling/looping/outside .txt refusal message changed (introduced)\",\n    \"RD5 span-named directories not guarded; partial write exit 2, orphan dir exit 2 after manifest (introduced)\",\n    \"RD6 identical manifest silently overwrites a changed span file (lines 273-276, introduced coverage gap)\",\n    \"RD7 non-UTF-8 quotes file traceback, exit 1 not 2 (line 159, inherited)\",\n    \"RD8 quote silently trimmed (line 171, inherited)\",\n    \"RD9 8-byte raw sniff before size gate, code-read only (lines 117-118)\"\n  ],\n  \"checks_run\": [\n    \"diff -u of base vs ref (full)\",\n    \"21 fixture reproductions on Python 3.14.8 (exp.py)\",\n    \"base vs ref on raw-gate cases (base B rc=1 ole-malformed, base C traceback, ref B/C rc=0 from txt)\",\n    \"bytecode guard without -B: ref no __pycache__, base __pycache__\",\n    \"regress.py with ref: REAL_REBUILD=3/3 exit 0\",\n    \"c1-count.py ref seed 61009: LEGS=20/20 C1=PASS exit 0 (extra seed, not a closure seed)\"\n  ],\n  \"installs\": \"none\",\n  \"lane_writes\": \"report only; scratch removed\"\n}",
+   "note": null
+  },
+  {
+   "name": "RevC2Claim1",
+   "agent": "reviewer",
+   "output": "{\n  \"item\": \"RevC2Claim1\",\n  \"claim\": \"CLAIM1\",\n  \"verdict\": \"overreach\",\n  \"rewrite_needed\": true,\n  \"report\": \".ufo/waves/round-61/w1/RevC2Claim1.md\",\n  \"summary\": \"Core clause (O_NOFOLLOW checks only the trailing component; earlier-component symlinks still followed) is supported verbatim by Q1 and Q2 in open(2) rendered line 147. Overreach: 'the writer must test that directory itself' and 'such as a linked output directory' are not in the quotes, and the entry's own Limits say a check before a write is not atomic. Rewrite proposed (quote-bound), plus an optional openat2(2) RESOLVE_NO_SYMLINKS depth note (verbatim line 86, not cited by the entry; L1 would need to add a row after opening it). Scratch removed; no installs; no writes outside the report.\",\n  \"verdict_line\": \"VERDICT: CLAIM1=overreach rewrite_needed=yes\"\n}",
+   "note": null
+  },
+  {
+   "name": "RevC2Claim2",
+   "agent": "reviewer",
+   "output": "{\n  \"verdict\": \"CLAIM2=overreach rewrite_needed=yes\",\n  \"report\": \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-61/w1/RevC2Claim2.md\"\n}",
+   "note": null
+  },
+  {
+   "name": "RevC2Claim3",
+   "agent": "reviewer",
+   "output": "{\n  \"report\": \".ufo/waves/round-61/w1/RevC2Claim3.md\",\n  \"verdict\": \"CLAIM3=supported rewrite_needed=no\",\n  \"summary\": \"Q4 (rename(2) DESCRIPTION, rendered line 46) is byte-identical to the entry's quote and sits in a paragraph with no qualifier that changes it. Claim 3 is supported within its stated scope ('at its final name'). 'Instead of following it' is a reading of 'will be overwritten' (INFERENCE, confirmed by fixture for live and dangling links). Gap, not overreach: rename(2) does not say how earlier path components are treated, and a fixture showed they are followed (linkdir/final3.txt landed in realdir). Claim 3 does not cover that, and the entry quotes no rename(2) text for it. Checks run: man render, exact-match grep, context read, one 3-case Python fixture probe. Scratch removed. No installs.\"\n}",
+   "note": null
+  },
+  {
+   "name": "RevC2Claim4",
+   "agent": "reviewer",
+   "output": "{\n  \"verdict\": \"CLAIM4=overreach rewrite_needed=yes\",\n  \"report\": \".ufo/waves/round-61/w1/RevC2Claim4.md\",\n  \"summary\": \"Claim 4's atomic-replacement clause is supported by Q5, but the atomicity sentence is conditional (\\\"If newpath already exists\\\") and the claim drops that. The window clause misses the hedge: the page says there will probably be a window, and the claim says one exists. The inference that a failed run leaves the temporary name behind, and that cleanup belongs on the error path, is not in Q5, Q6, or any other line of rename(2). Line 42 concerns newpath, not oldpath. The rewrite splits the claim and marks the leftover-name point as INFERENCE.\",\n  \"checks\": \"Rendered rename.2.gz with MANWIDTH=1000 man -l | col -bx; Q5 and Q6 located verbatim in DESCRIPTION line 38 (Python substring test: True, True); grep of the rendered page for temporar/unchanged/remain/left in DESCRIPTION found nothing relevant; BUGS line 205 is NFS-only. Scratch dir /fast/scratch/hyaku/chousa-r61/RevC2Claim4 removed. No installs. No git mutation. No counter or corpus files touched.\"\n}",
+   "note": null
+  },
+  {
+   "name": "RevC2Claim5",
+   "agent": "reviewer",
+   "output": "{\n  \"seat\": \"RevC2Claim5\",\n  \"report\": \".ufo/waves/round-61/w1/RevC2Claim5.md\",\n  \"verdict\": \"CLAIM5=misread rewrite_needed=yes\",\n  \"summary\": \"Claim 5's core facts (removal, creation, writes through links, exit 0) are supported by S136 Q7/Q8 in context. Two misreadings: (1) the claim calls the victim directory 'symlinked', but the symlink is out/spans and the victim directory is its target (table row h2; builder blob 29cfb12 lines 203-208 confirm unlink via iterdir and write_bytes through the link); (2) 'truncated' is used for files whose sizes grew (10\u2192457 B, 74\u2192243 B), i.e. overwrites. Rewrite proposed in the report; it also names the sourcing limit (lane seat transcription, not re-run in round 61). Fixtures not re-run; numbers are as reported by S136 (INFERENCE from code for mechanism only). Out-of-scope notes for L1: Claim 4's failed-run temp-name conclusion and Claim 2's temp-name conclusion are inference, not quote. Installs: none. Scratch removed. Commands: man -l renders of open(2)/rename(2) at MANWIDTH=1000 | col -bx; sed of S136 lines 1-40 and 85-120; git show 29cfb12:tools/build-spans.py (sha 1ed2650a, matches current tools/build-spans.py).\"\n}",
+   "note": null
+  },
+  {
+   "name": "CritC2Forge",
+   "agent": "critic",
+   "output": "{\n  \"item\": \"CritC2Forge\",\n  \"report\": \".ufo/waves/round-61/w1/CritC2Forge.md\",\n  \"forges_reaching_pass\": 13,\n  \"named_in_claims\": 2,\n  \"named_detail\": {\n    \"explicit\": [\n      \"F01 echo claim: claims.md names 'a claim that echoes its quote also PASSES'\"\n    ],\n    \"generic\": [\n      \"F10 inverted claim: claims.md names only 'does not judge that a claim follows from its quotes'\"\n    ]\n  },\n  \"forges\": {\n    \"F02\": \"S136 source = entry itself; PASS 8/8\",\n    \"F03\": \"S136 source = frozen claims.md; PASS 8/8\",\n    \"F04\": \"PATH shim man; PASS 8/8\",\n    \"F05\": \"PATH shim col; PASS 8/8\",\n    \"F06\": \"GROFF_TMAC_PATH injection, no shim; PASS 8/8\",\n    \"F07b\": \"LC_ALL=POSIX caller env, col inherits locale; PASS 8/8 (flips with locale)\",\n    \"F08\": \"substring quote + anchor 'e'; PASS 8/8\",\n    \"F10\": \"inverted claim sharing 2 words; PASS\",\n    \"F11\": \"junk limits; PASS\",\n    \"F12\": \"future opened + --fleet stub; PASS\",\n    \"F13\": \"heading-splicing quote; PASS 9/9\",\n    \"F14\": \"verified-at 'someday'; PASS\"\n  },\n  \"non_forges\": {\n    \"F07a_manwidth\": \"PASS identical to positive; override load-bearing\",\n    \"F09_future_opened\": \"FAIL via census E08\"\n  },\n  \"patches_tested_in_scratch_only\": \"A-J; every forge except F10 caught; positive still PASS; J (env=env on col) closes locale route\",\n  \"installs\": \"none\",\n  \"lane_writes\": \"report only; corpus git status clean; scratch removed\",\n  \"verdict\": \"VERDICT: C2_FORGES_REACHING_PASS=13 named_in_claims=2\"\n}",
+   "note": null
+  },
+  {
+   "name": "CritC2Quotes",
+   "agent": "critic",
+   "output": "{\n  \"verdict\": \"QUOTES_WITH_UNSTATED_LIMIT=6 of 8\",\n  \"report\": \".ufo/waves/round-61/w1/CritC2Quotes.md\",\n  \"unstated\": [\n    \"Q1 (O_PATH: ELOOP only without O_PATH, open.txt:319/189)\",\n    \"Q3 (antecedent 'When these two flags are specified' cut; O_PATH ignores O_CREAT|O_EXCL, open.txt:185; final component only)\",\n    \"Q5 (antecedent 'If newpath already exists,' cut, rename.txt:38)\",\n    \"Q6 (hedge 'probably' dropped in claim 4; failed-run leftover not in any quote)\",\n    \"Q7 (S136 revision 29cfb12 and own fixture not in claim 5 or Limits, r55.md:3/33)\",\n    \"Q8 (same as Q7, r55.md:34)\"\n  ],\n  \"no_unstated_limit\": [\n    \"Q2\",\n    \"Q4\"\n  ],\n  \"checks_run\": \"man -l open.2/rename.2 (MANWIDTH=1000 | col -bx), grep -F per quote, git show 9eef15e R55W2SentBuilder.md (read-only); c2/c1 counters not run\",\n  \"installs\": \"none\",\n  \"scratch\": \"removed\"\n}",
+   "note": null
+  },
+  {
+   "name": "RevProvince",
+   "agent": "reviewer",
+   "output": "{\n  \"seat\": \"RevProvince\",\n  \"report\": \".ufo/waves/round-61/w1/RevProvince.md\",\n  \"verdict\": \"PROVINCE=in contested_with=none\",\n  \"adjacency\": \"Span builder output hardening and derived-output-safety-r61 are chousa's (tools/build-spans.py, its own gates); POSIX open(2)/rename(2) cited for that tool only. Adjacent, not contested: souji (orphan unlink, receipt-gated removal), tsukuroi (host state; btrfs-scrub rename-write Frontier entry is a different writer), kumitate/tameshi (child runner pattern), kaidoku/revenger, kagi.\",\n  \"evidence\": [\n    \"grep -liE 'span manifest|span builder|build-spans|spans\\\\.tsv' */PROVINCE.md | grep -v '^chousa' -> no lines\",\n    \"kumitate PROVINCE harden/symlink/rename terms -> 0\",\n    \"tsukuroi PROVINCE same terms -> 1 hit (line 241, btrfs scrub record, Frontier)\",\n    \"chousa precedent entries: hardening-r10, hardlink-alias-r13, mount-alias-r14, sweep-symlink-r19, pointer-boundary-r21, metadata-screen-r25\",\n    \"grep -c S134 corpus/SOURCES.md -> 0 (rows pending L1 append; pre-landing state)\"\n  ],\n  \"not_run\": \"no counter, control or regress run; sibling PROVINCE files read at working tree, not pinned commits\",\n  \"installs\": \"none\",\n  \"scratch\": \"removed\"\n}",
+   "note": null
+  },
+  {
+   "name": "RevStreak",
+   "agent": "reviewer",
+   "output": "{\n  \"report\": \".ufo/waves/round-61/w1/RevStreak.md\",\n  \"rows_confirmed\": 8,\n  \"rows_total\": 10,\n  \"corrected\": 2,\n  \"confirmed_rows\": [\n    49,\n    50,\n    51,\n    52,\n    57,\n    58,\n    60,\n    61\n  ],\n  \"corrected_rows\": {\n    \"56\": \"class none at freeze; forgeable state was a pre-freeze draft, fixed before freeze; forge attack unrun\",\n    \"59\": \"class (forgeable, token injection) holds but there was no round-59 frozen counter; the round-58 counter was reused\"\n  },\n  \"reproduced_by_me\": [\n    \"r61 C1 base 7/20 C1=FAIL\",\n    \"r61 C1 exit-0 stub 1/20 C1=FAIL\",\n    \"r61 C2 before C2=FAIL\",\n    \"r50 forge with ASSIMILATE_CITES=all LEGS=5/5 C1=PASS (without: 4/5)\",\n    \"r51 forge-dirname LEGS=5/5 C1=PASS; supplement 1/10\",\n    \"r52 forge 8/9 (REAL leg blocked: .qcache empty since 2026-10-27 05:41)\"\n  ],\n  \"cited_not_rerun\": [\n    \"r49\",\n    \"r56\",\n    \"r57\",\n    \"r58 (source read)\",\n    \"r59\",\n    \"r60\"\n  ],\n  \"verdict\": \"VERDICT: STREAK_ROWS_CONFIRMED=8/10 corrected=2\"\n}",
+   "note": null
+  },
+  {
+   "name": "RevQualityA",
+   "agent": "reviewer",
+   "output": "{\n  \"item\": \"RevQualityA\",\n  \"report\": \".ufo/waves/round-61/w1/RevQualityA.md\",\n  \"criterion\": \"119 draft: control matrix committed before a counter binds data, scored on the counter's own verdict\",\n  \"check_results\": {\n    \"round-61 c1-count.py\": \"MATRIX=21/21 POSITIVE=1/1 exit 0\",\n    \"round-60 c1-count.py\": \"MATRIX=18/21 POSITIVE=0/1 exit 1; token-forger got=PASS\",\n    \"round-58 c1-count.py\": \"MATRIX=20/21 POSITIVE=0/1 exit 1; reference got FAIL\"\n  },\n  \"ordering_check_fixture\": \"matrix-before-data exit 0; matrix-after-data exit 1\",\n  \"key_findings\": [\n    \"round-60 injection leg tautological: forged_safe never returned (c1-count.py:62)\",\n    \"round-60 token forger (prints success tokens, writes nothing) scores C1=PASS\",\n    \"round-60 refuses its own positive: reference rc 2 keeps foreign file, counter accepts only candidate_safe\",\n    \"round-58 refusal legs print lowercase pass(refused) while verdict tests =PASS (:160,223,234,391); reference also fails several r58 legs, so red is confounded; named reason rests on cited scribe receipt R58ScribeMistakeMine.md 57-83, not re-run\",\n    \"round-60 M08 PASS is an equivalent mutant under its predicate; mutants need killed-or-equivalent classes\"\n  ],\n  \"caveats\": [\n    \"checker tightened after first run to require the counter's own C1=PASS line; untested against a counter exiting 0 with non-PASS line\",\n    \"token forger narrow; decisive only for round-60\",\n    \"no installs; scratch deleted; lane and QUALITY.md untouched\"\n  ],\n  \"verdict\": \"CRITERION_CHECK_CAN_FAIL=yes text_ready=yes\"\n}",
+   "note": null
+  },
+  {
+   "name": "RevQualityB",
+   "agent": "reviewer",
+   "output": "{\n  \"report\": \".ufo/waves/round-61/w1/RevQualityB.md\",\n  \"criterion\": \"119 (seeded leg order + process-group bound, call-counting forge check)\",\n  \"verdict\": \"CRITERION_CHECK_CAN_FAIL=yes text_ready=yes\",\n  \"red_before\": \"1661b85 counter + call-counting forge: LEGS=20/20 at seeds 61001-61003; Check CHECK=FAIL\",\n  \"real\": \"amended lane counter (f1d8b6fd): forge 17/14/16, CHECK=PASS\",\n  \"limits\": [\n    \"process-group kill does not bind a child that starts its own session (escape run: marker present after exit)\",\n    \"STRUCT is presence-only; forge pinned to round-61 call order\"\n  ],\n  \"installs\": \"none\",\n  \"scratch\": \"removed\"\n}",
+   "note": null
+  },
+  {
+   "name": "ExecIndepBuilder1",
+   "agent": "executor",
+   "output": "{\n  \"files\": [\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-61/w1/ExecIndepBuilder1/build-spans.py\",\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-61/w1/ExecIndepBuilder1.md\"\n  ],\n  \"result\": \"The hardened builder (strict policy) reads LEGS=20/20 C1=PASS at seeds 61101, 61102 and 61103, and REAL_REBUILD=3/3. No leg failed first: I wrote one draft and measured it, so this shows reachability for one implementer and one draft. The sniff-sweep grep on the builder exits 1 (no match). Every command ran under my scratch dir, which is deleted.\",\n  \"ambiguities\": 7,\n  \"verdict\": \"VERDICT: INDEP1_LEGS=20/20 REAL_REBUILD=3/3 ambiguities=7\"\n}",
+   "note": null
+  },
+  {
+   "name": "ExecIndepBuilder2",
+   "agent": "executor",
+   "output": "{\n  \"files_changed\": [\n    \".ufo/waves/round-61/w1/ExecIndepBuilder2/build-spans.py\",\n    \".ufo/waves/round-61/w1/ExecIndepBuilder2.md\"\n  ],\n  \"verdict\": \"VERDICT: INDEP2_LEGS=20/20 REAL_REBUILD=3/3 ambiguities=8\",\n  \"evidence\": \"c1-count at seeds 71001/71002/71003: LEGS=20/20 C1=PASS each; regress REAL_REBUILD=3/3; sniff sweep exit 1. First run was 19/20 (P02 DOCX) and regress 2/3 (round55) from my own bug: the 8-byte magic read advanced the fd before the digest read; fixed with lseek. Builder sha256 f37723f2...b069b24. Scratch deleted. Did not open ref-build-spans.py or other controls files.\"\n}",
+   "note": null
+  },
+  {
+   "name": "ExecIndepBuilder3",
+   "agent": "executor",
+   "output": "{\n  \"files_changed\": [\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-61/w1/ExecIndepBuilder3/build-spans.py\",\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-61/w1/ExecIndepBuilder3.md\"\n  ],\n  \"result\": \"The hardened builder passed the counter at all three seeds (61101, 61102, 61103), LEGS=20/20 C1=PASS, exit 0 each. regress.py gave REAL_REBUILD=3/3. No leg failed on the first run. The base's known failures (P03, H07\u2013H17, H20) were designed against from the docstring and base source, not measured by me. I counted 7 ambiguities in the counter docstring; the report lists them.\",\n  \"verdict\": \"VERDICT: INDEP3_LEGS=20/20 REAL_REBUILD=3/3 ambiguities=7\"\n}",
+   "note": null
+  },
+  {
+   "name": "ExecForgeSeqRed",
+   "agent": "executor",
+   "output": "{\n  \"report\": \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-61/w1/ExecForgeSeqRed.md\",\n  \"first_freeze\": \"20/20 PASS at 5/5 seeds (61001,61002,61003,81001,81002)\",\n  \"amended\": \"9,11,8,10,12 /20 FAIL at seeds 71001-71005\",\n  \"verdict\": \"VERDICT: FIRST_FREEZE_FORGED=20/20 AMENDED=8-12/20 over 5 seeds\"\n}",
+   "note": null
+  },
+  {
+   "name": "ExecForgeProcgroup",
+   "agent": "executor",
+   "output": "{\n  \"report\": \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-61/w1/ExecForgeProcgroup.md\",\n  \"verdict\": \"VERDICT: FIRST_FREEZE_FLIPPED=yes flood_harm=first-freeze counter 4.1 GiB transient RSS for 2 GiB flood and H14/H15 false FAIL for a correct builder; none on amended amended_ok=no\",\n  \"summary\": \"First-freeze counter flipped FAIL to PASS by a daemonising builder (memhog-launder 20/20; base+pycache-repair daemon flips P03). The amended counter is still flipped by setsid daemons and by a parent-SIGSTOP; its process-group kill only catches same-group daemons. Flood: first-freeze reads stderr whole (4.1 GiB RSS for 2 GiB sparse) and then fails H14/H15 for a correct builder; amended 512 MiB RLIMIT_FSIZE plus 64 KiB read held, 20/20. Scratch deleted; no install; no lane files touched.\"\n}",
+   "note": null
+  },
+  {
+   "name": "ExecRegressSets",
+   "agent": "executor",
+   "output": "{\n  \"report\": \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-61/w1/ExecRegressSets.md\",\n  \"verdict\": \"VERDICT: REGRESS_SETS_CHECKED=10 identical=7 skipped=3\"\n}",
+   "note": null
+  },
+  {
+   "name": "ExecRegressRows",
+   "agent": "executor",
+   "output": "{\n  \"report\": \".ufo/waves/round-61/w1/ExecRegressRows.md\",\n  \"verdict\": \"VERDICT: TABLES=66 DIFFERENT=0\",\n  \"notes\": \"6 primary tables (40 distinct rows, seed 61555) + 60 supplementary (50 success, 10 refusal). Exit, stdout, stderr and output tree byte-identical on base and reference in every case. No zip .raw rows exist in the round 55-57 quotes tables, so that branch was not exercised; OLE .raw and .txt were. Scratch deleted.\"\n}",
+   "note": null
+  },
+  {
+   "name": "ExecPerf",
+   "agent": "executor",
+   "output": "{\n  \"report\": \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-61/w1/ExecPerf.md\",\n  \"verdict\": \"VERDICT: WALL_RATIO=1.150 RSS_RATIO=1.096\",\n  \"summary\": \"Five-run median ref/base on r55, r56, r57c3 and a synthetic 5000-row/1 MiB table. No ratio is above 1.25. Reference output is byte-identical to base on every set. A 21-run repeat gave max wall 1.111 and max RSS 1.060. The reported ratios are the max over sets, both on r57c3, whose runs last only 31-36 ms. The reference uses about 1-2 MiB more RSS on every set. On the synthetic table, the only input with real work (~3 s), ref/base wall is 0.96 over five runs and 1.03 over 21. Scratch deleted; nothing installed.\"\n}",
+   "note": null
+  },
+  {
+   "name": "ExecReproC1A",
+   "agent": "executor",
+   "output": "{\n  \"report\": \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-61/w1/ExecReproC1A.md\",\n  \"verdict\": \"BASE=7-7/20 REF=20-20/20 flaky_legs=none\"\n}",
+   "note": null
+  },
+  {
+   "name": "ExecReproC1B",
+   "agent": "executor",
+   "output": "{\n  \"report\": \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-61/w1/ExecReproC1B.md\",\n  \"summary\": \"25 counter runs, seeds 7104/7105/7106, idle and under a two-core busy loop. Base builder read 7/20 C1=FAIL in all 13 runs; the failing legs were P03, H07-H17 and H20 every time. Reference builder read 20/20 C1=PASS in all 12 runs. No leg changed verdict between runs of the same seed, and nothing timed out. Only RSS figures varied, and by well under 1% between runs.\",\n  \"verdict\": \"VERDICT: BASE=7-7/20 REF=20-20/20 flaky_legs=none\"\n}",
+   "note": null
+  },
+  {
+   "name": "ExecReproC1C",
+   "agent": "executor",
+   "output": "{\n  \"report\": \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-61/w1/ExecReproC1C.md\",\n  \"verdict\": \"BASE=7-7/20 REF=20-20/20 flaky_legs=none\",\n  \"summary\": \"24 runs of c1-count.py at seeds 7107\u20137110: the base builder scored 7/20 every time and the reference scored 20/20 every time. The base always failed the same 13 legs: P03, H07\u2013H17, H20. No leg changed verdict between runs of the same seed, including under a 2-core busy loop (seed 7107) and a 32-process load I added (seed 7108). Peak RSS did vary: ref H20 ran 219\u2013294 MB and base H14 ran 412\u2013609 MB. I did not read the counter source, so how H20's verdict is derived is inference. I did not run regress.py or the controls. Scratch is deleted; I installed nothing.\"\n}",
+   "note": null
+  },
+  {
+   "name": "ExecReproC2",
+   "agent": "executor",
+   "output": "{\n  \"report\": \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-61/w1/ExecReproC2.md\",\n  \"verdict\": \"C2_VERDICT_STABLE=yes controls_unexpected=0\",\n  \"notes\": \"12 env variants (MANWIDTH 80/1000, LANG C/C.UTF-8, PATH orders, shim man) all PASS on the mirror. The counter forces MANWIDTH=1000 and LC_ALL=C.UTF-8 for the man child, so caller locale is a no-op. Controls rerun matched c2-controls.txt. Limit found: a hostile PATH `man` that emits the quotes plus anchors forges PASS 8/8. PATH=/nonexistent exits 1, but the docstring says 2. Scratch removed.\"\n}",
+   "note": null
+  },
+  {
+   "name": "ExecFreezeCheck",
+   "agent": "executor",
+   "output": "{\n  \"files_changed\": [\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-61/w1/ExecFreezeCheck/freeze-check.py\",\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-61/w1/ExecFreezeCheck.md\"\n  ],\n  \"behavior\": \"freeze-check.py --claims --dispatch --spec --ready runs 8 checks and exits 0 only when all pass. The checks are claims nonempty, claims digest in the dispatch context as a whole 64-hex token, no other 64-hex token in prompts or contexts, spec context equals dispatch context, names/roles match, every task body equals the rendered spec item, and ready names the checked dispatch with a matching lane/round/wave. --selftest runs 34 fixtures built from the real round-59/60/61 files. Each fixture must give the expected exit code and the exact set of failing checks.\",\n  \"evidence\": \"--selftest gives 34/34 pass, and R1 (the real round-60 pair) exits 1 with CONTEXT_DIGEST,DIGEST_STRAY. The live round-61 triple exits 0. The live round-60 pair exits 1: its context carries no 64-hex digest at all, and 128 spec/dispatch prompt tokens are 09d8053f\u2026 against claims 65721569\u2026. The live round-59 pair exits 1 with BODY_RENDER at 0/66 equal, plus the missing-claims failures. Two scratch copies of the checker with one check forced to PASS took the selftest to 25/34 (BODY_RENDER) and 28/34 (DIGEST_STRAY). The render rule reproduces 42 of 44 historic pairs byte for byte; the two misses are round-59 (0/66) and round-57 w2 (0/8, bare bodies with no wrapper, cause not investigated).\",\n  \"risks\": \"The render rule is fitted to historic pairs, not taken from the validator source. It cannot detect a spec that was rewritten and then re-rendered. The 64-hex stray rule follows the item text literally and also fails deliberate foreign digests; those need --allow-digest (6 historic pairs contain such tokens). Commit ids and 8-hex prefixes in prompts are not compared. The mtime ORDER warning is advisory only. QUALITY 118's spec/dispatch digest recorded at render time still has to come from the L1.\",\n  \"blockers\": \"none\",\n  \"verdict\": \"VERDICT: FREEZE_CHECK=34/34 red_before_exit=1\"\n}",
+   "note": null
+  },
+  {
+   "name": "ScoutC2ManPages",
+   "agent": "scout",
+   "output": "{\n  \"seat\": \"ScoutC2ManPages\",\n  \"report\": \".ufo/waves/round-61/w1/ScoutC2ManPages.md\",\n  \"package\": \"man-pages 6.19-1\",\n  \"pages\": {\n    \"open\": \"/usr/share/man/man2/open.2.gz\",\n    \"rename\": \"/usr/share/man/man2/rename.2.gz\"\n  },\n  \"col_bx\": \"byte-identical to man -l stdout (open 44181, rename 13286); backspace 0, ESC 0, tab 0, no EOL hyphen\",\n  \"quotes\": {\n    \"Q1\": {\n      \"rendered\": \"open:147\",\n      \"roff\": \"open:522-525\",\n      \"heading\": \"DESCRIPTION/O_NOFOLLOW\",\n      \"words\": 20\n    },\n    \"Q2\": {\n      \"rendered\": \"open:147\",\n      \"roff\": \"open:526-527\",\n      \"heading\": \"DESCRIPTION/O_NOFOLLOW\",\n      \"words\": 12\n    },\n    \"Q3\": {\n      \"rendered\": \"open:123\",\n      \"roff\": \"open:418-424\",\n      \"heading\": \"DESCRIPTION/O_EXCL\",\n      \"words\": 21\n    },\n    \"Q4\": {\n      \"rendered\": \"rename:46\",\n      \"roff\": \"rename:92-97\",\n      \"heading\": \"DESCRIPTION\",\n      \"words\": 23\n    },\n    \"Q5\": {\n      \"rendered\": \"rename:38\",\n      \"roff\": \"rename:60-63\",\n      \"heading\": \"DESCRIPTION\",\n      \"words\": 23\n    },\n    \"Q6\": {\n      \"rendered\": \"rename:38\",\n      \"roff\": \"rename:64-68\",\n      \"heading\": \"DESCRIPTION\",\n      \"words\": 19\n    }\n  },\n  \"norm_changes_q1_q6\": false,\n  \"extra_quotes\": 4,\n  \"verdict\": \"VERDICT: Q1_Q6_LOCATED=6/6 extra_quotes=4\"\n}",
+   "note": null
+  },
+  {
+   "name": "ScoutC2Package",
+   "agent": "scout",
+   "output": "{\n  \"report\": \".ufo/waves/round-61/w1/ScoutC2Package.md\",\n  \"pages_are_package_copies\": \"yes\",\n  \"version\": \"6.19-1\",\n  \"rendered_text\": \"package\",\n  \"shadow\": false,\n  \"access_disclosure\": \"Access: S134 and S135 are the installed man-pages 6.19-1 files /usr/share/man/man2/open.2.gz and /usr/share/man/man2/rename.2.gz (alpm mtree sha256 match; Install Date 2026-10-20; .TH 2026-02-08 \\\"Linux man-pages 6.19\\\"), rendered by MANWIDTH=1000 man -l | col -bx; man 2 open and man 2 rename render the same text; no earlier MANPATH entry contains these pages; man7.org HTML was not opened; rows carry no URL.\",\n  \"verdict\": \"VERDICT: PAGES_ARE_PACKAGE_COPIES=yes version=6.19-1\"\n}",
+   "note": null
+  },
+  {
+   "name": "ScoutC2RowsCensus",
+   "agent": "scout",
+   "output": "{\n  \"seat\": \"ScoutC2RowsCensus\",\n  \"report\": \".ufo/waves/round-61/w1/ScoutC2RowsCensus.md\",\n  \"rows_sha256\": \"721a108b8fa058eb3d228cd36620b32743c7071eae6ba9b0553da4e080d701dc\",\n  \"sources_sha256_unchanged\": \"ed8802350271e39f663361e501598f1476b464f599e592a14e76904e44f3a5aa\",\n  \"before\": {\n    \"rows\": 133,\n    \"tier\": {\n      \"A\": 106,\n      \"B\": 22,\n      \"C\": 5\n    },\n    \"status\": {\n      \"mined\": 109,\n      \"queued\": 19,\n      \"rejected\": 5\n    },\n    \"validate_exit\": 0,\n    \"w_codes\": [\n      \"W04:S051\",\n      \"W04:S053\",\n      \"W04:S073\",\n      \"W04:S074\",\n      \"W04:S075\"\n    ]\n  },\n  \"after\": {\n    \"rows\": 137,\n    \"tier\": {\n      \"A\": 108,\n      \"B\": 23,\n      \"C\": 6\n    },\n    \"status\": {\n      \"mined\": 112,\n      \"queued\": 19,\n      \"rejected\": 6\n    },\n    \"validate_exit\": 1,\n    \"census_mode_exit\": 0,\n    \"new_e\": [\n      \"E11:S134\",\n      \"E11:S135\",\n      \"E11:S136\"\n    ],\n    \"new_w\": [],\n    \"manual_malformed\": 0,\n    \"manual_dupes\": [],\n    \"manual_enums\": []\n  },\n  \"probe_entry_path_exists_validate_exit\": 0,\n  \"contract\": {\n    \"nf\": 13,\n    \"ids\": [\n      \"S134\",\n      \"S135\",\n      \"S136\",\n      \"S137\"\n    ],\n    \"id_gaps_before\": [],\n    \"cadence\": {\n      \"S134\": \"on-release\",\n      \"S135\": \"on-release\",\n      \"S136\": \"180d\",\n      \"S137\": \"180d\"\n    },\n    \"rejected_wording_S137\": true,\n    \"docs_rows_without_url\": [\n      \"S134\",\n      \"S135\"\n    ],\n    \"url_absence_is_census_ecode\": false\n  },\n  \"scratch_removed\": true,\n  \"verdict\": \"VERDICT: CENSUS_EXIT=1 rows=133->137 findings=E11:S134,E11:S135,E11:S136\"\n}",
+   "note": null
+  },
+  {
+   "name": "ScoutC2RowsScope",
+   "agent": "scout",
+   "output": "{\n  \"verdict\": \"ROWS_NEEDING_EDIT=2/4\",\n  \"rows_needing_edit\": [\n    \"S134\",\n    \"S137\"\n  ],\n  \"rows_unchanged\": [\n    \"S135\",\n    \"S136\"\n  ],\n  \"s136_tier_B\": true,\n  \"s137_tier_C_rejected\": true,\n  \"near_duplicate\": false,\n  \"e04_url_risk\": false,\n  \"report\": \".ufo/waves/round-61/w1/ScoutC2RowsScope.md\",\n  \"s134_scope\": \"what man-pages 6.19 states a symbolic link does at open on Linux: O_NOFOLLOW (added in Linux 2.1.126) fails with ELOOP when the final component is a symlink and still follows earlier components, except O_PATH|O_NOFOLLOW (since Linux 2.6.39) which returns a descriptor for the link; O_CREAT together with O_EXCL fails if path is a symlink; not O_CREAT alone, not O_EXCL without O_CREAT, not other systems\",\n  \"s137_defect\": \"source cell names tools/build-spans.py Output safety paragraph; absent from base sha 1ed2650a\u2026c80bf6; present in ref-build-spans.py lines 34-40 sha 86d64c31\u2026eccfd\"\n}",
+   "note": null
+  },
+  {
+   "name": "ScoutMistakesPrior",
+   "agent": "scout",
+   "output": "{\n  \"report\": \".ufo/waves/round-61/w1/ScoutMistakesPrior.md\",\n  \"lines\": 67,\n  \"verdict\": \"VERDICT: MISTAKES=20 uncaught=16 fixed_with_red_before=0\",\n  \"uncaught_ids\": [\n    1,\n    2,\n    3,\n    4,\n    5,\n    6,\n    7,\n    8,\n    9,\n    10,\n    15,\n    16,\n    17,\n    18,\n    19,\n    20\n  ],\n  \"caught\": {\n    \"11\": [\n      56,\n      60\n    ],\n    \"12\": [\n      58\n    ],\n    \"13\": [\n      60\n    ],\n    \"14\": [\n      116\n    ]\n  },\n  \"fixed_with_red_before\": 0,\n  \"note\": \"QUALITY 115-118 are sentence additions. No committed command is red on the pre-fix bytes and green after a one-delta fix. Round-61 c1-controls.txt was read, not re-run, and is a new counter.\"\n}",
+   "note": null
+  },
+  {
+   "name": "ScoutMistakesThisRound",
+   "agent": "scout",
+   "output": "{\n  \"report\": \".ufo/waves/round-61/w1/ScoutMistakesThisRound.md\",\n  \"verdict\": \"VERDICT: THIS_ROUND_MISTAKES=6 stale_claim_statements=3 misroot_files=0\",\n  \"THIS_ROUND_MISTAKES\": 6,\n  \"stale_claim_statements\": 3,\n  \"misroot_files\": 0,\n  \"rows\": [\n    \"call order named the leg (fixed for a secret seed)\",\n    \"same-group helper outlived the snapshot (fixed by killpg)\",\n    \"unbounded stdout/stderr (bounded; Traceback check still sees 64 KiB)\",\n    \"setsid helper and --seed-on-argv shuffle (left)\",\n    \"no mutant for the three A1 routes; M08 fail set is not exact (left)\",\n    \"two truncated digests do not match the files (left)\"\n  ],\n  \"stale\": [\n    \"c1-count.py f1d8b6fd\u2026cfff9ef (actual tail dfff9ef / end cdfff9ef)\",\n    \"run-c1-controls.py bcca093e\u2026b5624 (actual 5-char tail 5b624)\",\n    \"claims 'exactly the legs named' vs c1-controls.txt M08 failing=H08,H09 expect=H09\"\n  ],\n  \"leg_count_mismatches\": 0,\n  \"claims_sha256\": \"9afec8d493f0ba511a256f38cd5098ff508f9ed311c6c49ff5383add9ce0acec\"\n}",
+   "note": null
+  },
+  {
+   "name": "ScoutSpotcheckPrior",
+   "agent": "scout",
+   "output": "{\n  \"verdict\": \"ROUTED_DEFECTS_ADDRESSED=1/4 open=gate-admit-reject,sourced-row-grounding,report-headings\",\n  \"addressed\": [\n    \"freeze-digest-and-controls\"\n  ],\n  \"open\": [\n    \"gate-admit-reject\",\n    \"sourced-row-grounding\",\n    \"report-headings\"\n  ],\n  \"report\": \".ufo/waves/round-61/w1/ScoutSpotcheckPrior.md\",\n  \"notes\": {\n    \"freeze\": \"2b0e17b2a3b20a5f350e4dc4ddd5900c4d1f952c parent 1661b85bfa84d3dc75712d64f79034265b8831d3\",\n    \"claims_sha256\": \"9afec8d493f0ba511a256f38cd5098ff508f9ed311c6c49ff5383add9ce0acec\",\n    \"round60_headings\": \"committed report 739025700c already has ## Sources & frontier and ## Trend verdicts in section-4 order; spot-check line 9 does not match that commit\",\n    \"round61_report\": \"absent\"\n  }\n}",
+   "note": null
+  },
+  {
+   "name": "ScoutConsiderthese",
+   "agent": "scout",
+   "output": "{\n  \"implemented_check\": \"grep -nE 'distillation pass|SKILL.md size|prose logs' /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md\",\n  \"implemented_check_result\": \"exit 1, no output\",\n  \"ledger\": \"PROPOSALS=35 ROWS=35 IMPL=24 FMT=9 OPEN=1 OPS=1 BAD=0 exit 0\",\n  \"recommended\": \"Watch SKILL.md size (~420 lines, mostly prose logs); consider a distillation pass back into decision tables\",\n  \"recommended_id\": \"CT-20261019-4\",\n  \"rejected\": [\n    {\n      \"reason\": \"implemented as round54 ledger plus round55 checker (BAD=0); round-57.md:79-86 dispositions the positional rebind as a surviving weakness of an implemented proposal\",\n      \"title\": \"Give my proposals stable ids\"\n    },\n    {\n      \"reason\": \"ledger FMT; round-58.md:39 carries it because it requires a reader this lane did not dispatch\",\n      \"title\": \"Do one independent CJK quote spot-check per review\"\n    }\n  ],\n  \"report\": \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-61/w1/ScoutConsiderthese.md\",\n  \"report_lines\": 60,\n  \"verdict\": \"VERDICT: RECOMMENDED=Watch SKILL.md size (~420 lines, mostly prose logs); consider a distillation pass back into decision tables implemented_check=grep -nE 'distillation pass|SKILL.md size|prose logs' /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/QUALITY.md\"\n}",
+   "note": null
+  },
+  {
+   "name": "ScoutCensusCounts",
+   "agent": "scout",
+   "output": "{\n  \"report\": \".ufo/waves/round-61/w1/ScoutCensusCounts.md\",\n  \"revision\": \"2b0e17b2a3b20a5f350e4dc4ddd5900c4d1f952c\",\n  \"sources_blob\": \"1dce476b312336c5e89b71602d5716f8b4eaa98a\",\n  \"head_note\": \"HEAD 9f32ac055c591b17abf119aac30b202d6cd52a7e; SOURCES.md and corpus/knowledge identical to the named revision\",\n  \"before\": {\n    \"rows\": 133,\n    \"tier_A\": 106,\n    \"tier_B\": 22,\n    \"tier_C\": 5,\n    \"mined\": 109,\n    \"queued\": 19,\n    \"rejected\": 5,\n    \"malformed\": 0,\n    \"duplicate_ids\": 0,\n    \"enum_violations\": 0,\n    \"missing_used_by\": 0,\n    \"knowledge_md\": 82,\n    \"recheck\": 78,\n    \"entry_present\": false,\n    \"validate_exit\": 0,\n    \"w04\": [\n      \"S051\",\n      \"S053\",\n      \"S073\",\n      \"S074\",\n      \"S075\"\n    ]\n  },\n  \"projected_after\": {\n    \"rows\": 137,\n    \"tier_A\": 108,\n    \"tier_B\": 23,\n    \"tier_C\": 6,\n    \"mined\": 112,\n    \"queued\": 19,\n    \"rejected\": 6,\n    \"malformed\": 0,\n    \"knowledge_md\": 83,\n    \"recheck\": 79,\n    \"validate_exit\": 0,\n    \"w04_unchanged\": true,\n    \"condition\": \"joint landing of positive-control rows S134-S137 and corpus/knowledge/derived-output-safety-r61.md; rows alone trip E11\"\n  },\n  \"verdict\": \"VERDICT: BEFORE_ROWS=133 PROJECTED_AFTER=137\"\n}",
+   "note": null
+  },
+  {
+   "name": "ScribeC2Entry1",
+   "agent": "scribe",
+   "output": "{\n  \"verdict\": \"ENTRY1_C2=PASS quotes=11 claims=6\",\n  \"entry\": \".ufo/waves/round-61/w1/ScribeC2Entry1/entry.md\",\n  \"report\": \".ufo/waves/round-61/w1/ScribeC2Entry1.md\",\n  \"counter\": \"ENTRY=1/1 TRIO=1/1 ROWS=3/3 QUOTES=11/11 COVERAGE=1/1 CLAIMS=1/1 LIMITS=1/1 CENSUS=1/1 C2=PASS (rc 0, scratch mirror)\",\n  \"installs\": \"none\"\n}",
+   "note": null
+  },
+  {
+   "name": "ScribeC2Entry2",
+   "agent": "scribe",
+   "output": "{\n  \"verdict\": \"VERDICT: ENTRY2_C2=PASS quotes=10 claims=5\",\n  \"counter_line\": \"ENTRY=1/1 TRIO=1/1 ROWS=3/3 QUOTES=10/10 COVERAGE=1/1 CLAIMS=1/1 LIMITS=1/1 CENSUS=1/1 C2=PASS (exit 0, mirror run, no detail lines)\",\n  \"report\": \".ufo/waves/round-61/w1/ScribeC2Entry2.md\",\n  \"entry\": \".ufo/waves/round-61/w1/ScribeC2Entry2/entry.md\",\n  \"counter_output\": \".ufo/waves/round-61/w1/ScribeC2Entry2/counter-output.txt\",\n  \"not_run\": [\n    \"run-c2-controls.py and its variants (mirror prepared by hand, steps copied from the runner)\",\n    \"counter on the lane tree itself (entry not written to lane corpus)\"\n  ],\n  \"installs\": \"none\",\n  \"scratch\": \"/fast/scratch/hyaku/chousa-r61/ScribeC2Entry2/ removed\"\n}",
+   "note": null
+  },
+  {
+   "name": "ScribeC2Entry3",
+   "agent": "scribe",
+   "output": "{\n  \"seat\": \"ScribeC2Entry3\",\n  \"item\": \"C2 independent entry draft\",\n  \"verdict\": \"ENTRY3_C2=PASS quotes=7 claims=4\",\n  \"counter_line\": \"ENTRY=1/1 TRIO=1/1 ROWS=3/3 QUOTES=7/7 COVERAGE=1/1 CLAIMS=1/1 LIMITS=1/1 CENSUS=1/1 C2=PASS\",\n  \"counter_run\": \"python3 -B corpus/evidence/round61/c2-count.py --root <scratch mirror>, rc 0, no detail lines; mirror = lane corpus copy + S136 file + c2-positive-rows.txt inserted before ## Paths + my draft at corpus/knowledge/derived-output-safety-r61.md\",\n  \"findings\": [\n    \"Draft has 7 quotes (S134 x3, S135 x2, S136 x2) and 4 claims: three principles (Claims 1-3) and one S136 observation (Claim 4), plus 5 Limits bullets.\",\n    \"Quote selection converges with the positive control: 7 of its 8 quote sentences are verbatim the same; the omitted one is the rename(2) window sentence. Claim wording differs. L1 should merge on claim wording and limits.\",\n    \"Calibration: Claim 1 consequence and check-then-write non-atomicity are tagged [INFERENCE]; Claim 2 covers only a link present before create; Claim 4 limited to one seat's fixture runs at revision 29cfb12 (tier B, not re-run).\",\n    \"Counter limit: CLAIMS only requires two shared >=5-letter words with cited quotes; the PASS on claims is structural, reviewers judge whether claims follow.\",\n    \"Operability: grep tool returned 'Path not found' for the /fast scratch file; quotes were read by range instead.\"\n  ],\n  \"quote_locations\": {\n    \"Q1\": \"open2.txt:147 (S134)\",\n    \"Q2\": \"open2.txt:147 (S134)\",\n    \"Q3\": \"open2.txt:123 (S134)\",\n    \"Q4\": \"rename2.txt:46 (S135)\",\n    \"Q5\": \"rename2.txt:38 (S135)\",\n    \"Q6\": \"R55W2SentBuilder.md:33 (S136, h2)\",\n    \"Q7\": \"R55W2SentBuilder.md:34 (S136, h3)\"\n  },\n  \"provenance\": {\n    \"S136_file\": \"git diff --quiet 9eef15e -- .ufo/waves/round-56/w1/R55W2SentBuilder.md rc 0; status clean\",\n    \"man_render\": \"env MANWIDTH=1000 LC_ALL=C.UTF-8 man -l <page> | col -bx; open 516 lines, rename 210 lines\"\n  },\n  \"lane_writes\": [\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-61/w1/ScribeC2Entry3/entry.md\",\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-61/w1/ScribeC2Entry3.md\"\n  ],\n  \"not_done\": [\n    \"Entry not landed; no SOURCES.md append or corpus write in lane\",\n    \"run-c2-controls.py not executed (only its mirror logic copied)\",\n    \"No external fetch\"\n  ],\n  \"installs\": \"none\",\n  \"scratch\": \"/fast/scratch/hyaku/chousa-r61/ScribeC2Entry3/ removed\"\n}",
+   "note": null
+  },
+  {
+   "name": "ScribeGate",
+   "agent": "scribe",
+   "output": "{\n  \"seat\": \"ScribeGate\",\n  \"item\": \"round-61 w1 scribe: Gate draft for S134-S137\",\n  \"deliverables\": [\n    \".ufo/waves/round-61/w1/ScribeGate/gate.md\",\n    \".ufo/waves/round-61/w1/ScribeGate.md\"\n  ],\n  \"decisions\": {\n    \"S134\": \"admit tier A (open(2), /usr/share/man/man2/open.2.gz, rendered lines 147 and 123)\",\n    \"S135\": \"admit tier A (rename(2), /usr/share/man/man2/rename.2.gz, rendered lines 46 and 38)\",\n    \"S136\": \"admit tier B (.ufo/waves/round-56/w1/R55W2SentBuilder.md lines 33-34, identical at 9eef15e; scope rev 29cfb12, not re-run)\",\n    \"S137\": \"reject; 'Output safety (round 61)' absent from tools/build-spans.py at 9f32ac0, 2b0e17b, 9eef15e (grep 0); only copy is controls/ref-build-spans.py:34; flip = c1-count.py exit 0 LEGS=20/20 on shipped bytes\"\n  },\n  \"row_corrections\": [\n    \"S137 teaches says 'caps', but 64 MiB caps are in ref-build-spans.py lines 16-19, not the Output safety paragraph\",\n    \"S137 location names a file that does not yet carry the paragraph\"\n  ],\n  \"quotes_reopened\": 9,\n  \"quote_check\": \"9/9 found in source; 8 entry quotes also found with anchors in row location cells\",\n  \"not_done\": [\n    \"c2-count.py not run (entry absent at HEAD)\",\n    \"one read-only pacman -Qi man-pages query (6.19-1); no installs\"\n  ],\n  \"spot_check\": {\n    \"admit\": \"S136: re-open R55W2SentBuilder.md lines 33-34 at 9eef15e, check Q7/Q8 verbatim\",\n    \"reject\": \"S137: grep 'Output safety' tools/build-spans.py expects no match; controls/ref-build-spans.py expects line 34 only\"\n  },\n  \"verdict_line\": \"VERDICT: GATE_ROWS_WRITTEN=4/4 quotes_reopened=9\"\n}",
+   "note": null
+  },
+  {
+   "name": "ScribeStreak",
+   "agent": "scribe",
+   "output": "{\n  \"item\": \"ScribeStreak\",\n  \"deliverable\": \".ufo/waves/round-61/w1/ScribeStreak/streak.md\",\n  \"report\": \".ufo/waves/round-61/w1/ScribeStreak.md\",\n  \"rows\": 13,\n  \"unopened\": 1,\n  \"verdict\": \"VERDICT: STREAK_ROWS=13 unopened=1\",\n  \"findings\": [\n    \"Proposal 2 (recurring weaknesses as streaks) is already implemented in round 53 as corpus/evidence/round53/weakness-streak.py with recurring.tsv (corpus/lessons/round-53.md:78, LOG.md:1850, SKILL.md:138).\",\n    \"The implemented gate fails on the current tree: python3 -B weakness-streak.py --root <lane> --table recurring.tsv prints RW-1 streak=12 claimed=5, RW-3 streak=0 claimed=2, FAILING=2, exit 1. The regex counts mentions (round-49 hit is seat name CritForgeC1 at round-49 lesson line 45), and the claimed column is hand-typed (5 at r53; LOG.md:1871 says 7 at r55).\",\n    \"Classed frozen-counter forge streak (class F): rounds 49-55 consecutive (7); round 56 unmeasured (cache deleted); round 57 recurs; rounds 58-60 not F; F run ending at 60 is 0.\",\n    \"Red-before fixes landed only for round-55 counter mutants (killed in round 56: KILLED=1/9 to 9/9) and the freeze-before-dispatch rule (QUALITY 116; round 61 followed it). Supplements in rounds 50-54 carry red controls; frozen counters were not changed. Round 61 has red-before controls at freeze; landed builder absent (tools/build-spans.py unchanged since base).\",\n    \"Round-58 C1 unreachability (lowercase PASS constant vs =PASS verdict test) is code-read, not run; the round-58 C2 offset half was not re-derived (the unopened row).\"\n  ],\n  \"commands\": [\n    \"python3 -B corpus/evidence/round53/weakness-streak.py --root <lane> --table corpus/evidence/round53/recurring.tsv (read-only; output in report E1)\",\n    \"grep -n / sed -n reads of all cited lesson, receipt, controls and seat-report paths (opened)\",\n    \"git -C <lane> log / diff --stat / cat-file (read-only)\"\n  ],\n  \"installs\": \"none\",\n  \"writes\": [\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-61/w1/ScribeStreak/streak.md\",\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-61/w1/ScribeStreak.md\"\n  ],\n  \"scratch\": \"/fast/scratch/hyaku/chousa-r61/ScribeStreak created and removed (verified absent)\",\n  \"not_run\": [\n    \"no frozen counter executed (C1, C2, round-58 to 60 counters, round-61 counter)\"\n  ]\n}",
+   "note": null
+  },
+  {
+   "name": "ScribeLogDraft",
+   "agent": "scribe",
+   "output": "{\n  \"report\": \".ufo/waves/round-61/w1/ScribeLogDraft.md\",\n  \"draft\": \".ufo/waves/round-61/w1/ScribeLogDraft/draft.md\",\n  \"draft_sections\": 4,\n  \"after_markers\": 71,\n  \"lane_files_written\": 0,\n  \"verdict\": \"VERDICT: DRAFT_SECTIONS=4 after_markers=71\"\n}",
+   "note": null
+  },
+  {
+   "name": "ConnSiblingOverlap",
+   "agent": "connector",
+   "output": "{\n  \"report\": \".ufo/waves/round-61/w1/ConnSiblingOverlap.md\",\n  \"verdict\": \"VERDICT: SIBLING_OVERLAPS=5 contested=souji-shokunin\",\n  \"overlaps\": [\n    \"souji-shokunin: corpus/knowledge/origin-record-exclusivity-r28.md, origin-record-durability-r28.md, origin-record-writer-r27.md, trash-spec-restorable-quarantine.md, quarantine-same-filesystem-rename.md, quarantine-staging-no-copy-r23.md; SOURCES S110, S212-S214\",\n    \"kumitate-shokunin: corpus/knowledge/local-ship.md, route-probe-cluster.md, native-trial-launch.md (O_NOFOLLOW, O_EXCL, rename, fsync)\",\n    \"kagi-shokunin: corpus/knowledge/tac-evidence-integrity.md (O_EXCL no-overwrite)\",\n    \"audio-shokunin: corpus/knowledge/2026-10-14-sox-transport-axis.md:5 (non-atomic WAV write, os.replace not integrated; verified in corpus/fixtures/build_artifacts.py)\",\n    \"tameshi-shokunin: corpus/knowledge/r40-r42 write-site census (adjacent, no safety judgment)\"\n  ],\n  \"relation\": \"C2 risks duplicating souji S110/S212-S214 if S134/S135 are rename/open pages (topic not named in claims: INFERENCE); derived-output angle (output dir O_NOFOLLOW + fstat + publish-rename + parent fsync) is not covered by any sibling sourced row; no contradictions found; no installs; scratch removed\"\n}",
+   "note": null
+  },
+  {
+   "name": "ConnClaimTrace",
+   "agent": "connector",
+   "output": "{\n  \"report\": \".ufo/waves/round-61/w1/ConnClaimTrace.md\",\n  \"hazards_fully_traced\": 2,\n  \"hazards_total\": 16,\n  \"fully_traced_rows\": [\n    \"h2 spans/ symlink\",\n    \"h3 span/tsv symlinks\"\n  ],\n  \"key_gaps\": [\n    \"H20 predicate ignores RSS: reference refuses a 256 MiB-form docx with exit 1 at 803 MiB peak (probe A)\",\n    \"reference still uses splitlines() at ref-build-spans.py:159: U+2028 quote misreported (probe B)\",\n    \"H18 and H19 pass at base (non-discriminating)\",\n    \"no leg for /dev/zero, spans.tsv-as-directory, 100k rows, aggregate multi-URL memory\",\n    \"entry explains write-side link hazards only; landed entry file absent\"\n  ],\n  \"installs\": \"none\",\n  \"verdict\": \"VERDICT: HAZARDS_FULLY_TRACED=2/16\"\n}",
+   "note": null
+  }
+ ]
+}
