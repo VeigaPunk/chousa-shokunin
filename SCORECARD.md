@@ -2935,3 +2935,29 @@ No numeric axis score or capability row changed. Other axes unchanged; no harm c
 ## Planned — round 61 (not started)
 
 Candidates: repair claim-freeze digest binding and require positive/no-op controls to prove exact reachability before dispatch; re-register C1 only with discriminating safe/refusal fixture evidence. C2 requires a new entry and a measured no-overreach predicate or should be dropped. Continue the quarantine-first register adjudication only within authorized source scope.
+
+## Round 61 verdict — 2026-10-28 (span-builder output safety measured 7/20 → 20/20; a sourced entry on derived-output safety; the frozen C1 counter shown forgeable by detection)
+
+Claims froze at `1661b85bfa84d3dc75712d64f79034265b8831d3` and were amended once, before any seat existed, at `2b0e17b2a3b20a5f350e4dc4ddd5900c4d1f952c` (A1: shuffled legs, process-group bound, output limits); claims sha256 `9afec8d493f0ba511a256f38cd5098ff508f9ed311c6c49ff5383add9ce0acec` (`corpus/evidence/round61/claims.md`; erratum for three stale statements in `claims-erratum.md`). Each counter was exercised before the freeze against the base, do-nothing stubs, a token forger, a naive guard, a positive control and frozen mutants (`controls/`). Wave w1: 64 seats, all settled. Landed: builder `2edacafa0df371866fc578180872e0fcba5eb4b0`; entry and rows `11fa23e417019a9dedd85f3157f2ecc800e60d79`.
+
+| Claim / axis | Before → after | counting command / evidence | tag | verdict |
+|---|---|---|---|---|
+| C1 operability (lowest scored axis; historical 3/10 observable not moved) | base builder `LEGS=7/20 C1=FAIL` exit 1 at seeds 61001 and 61002 → landed `tools/build-spans.py` `LEGS=20/20 C1=PASS` exit 0 at three fresh random seeds; real committed span sets `REAL_REBUILD=3/3` before and after; post-wave supplement `EXTRAS=16/16` (base 5/16, reference candidate 0/16) | `python3 corpus/evidence/round61/c1-count.py --builder tools/build-spans.py --work <dir>`; `regress.py --work <dir>`; `corpus/evidence/round61/controls/c1-before.txt`, `c1-measure-after.txt`, `regress-after.txt`, `extras-after.txt` | plumbing | **improved** on the frozen predicate; the counter itself is forgeable by a builder that detects it (CritC1Sniff 20/20) and the best do-nothing stub reaches 14/20 — admission rests on the landed source, `sniff-sweep.py` exit 0 and the non-author source reviews, not on the count alone |
+| C2 depth, sourced (rows S134–S136 opened this round; S137 rejected) | `ENTRY=0/1 … ROWS=0/3 … C2=FAIL` exit 1 → `ENTRY=1/1 TRIO=1/1 ROWS=3/3 QUOTES=10/10 COVERAGE=1/1 CLAIMS=1/1 LIMITS=1/1 CENSUS=1/1 C2=PASS` exit 0 | `python3 corpus/evidence/round61/c2-count.py`; `controls/c2-before.txt`, `c2-measure-after.txt` | plumbing | **improved**; the counter is structural (an echoing claim passes, recorded); entailment was judged by wave reviewers, four of five first-draft claims were rewritten before landing |
+
+The numeric operability scale remains 3/10 (the round-1 archived-export observable); no new score is invented. No capability row is added: `tools/freeze-check.py` (selftest 34/34; round-60 pair exit 1, round-61 triple exit 0) landed as the fix for round 59/60's freeze-binding mistakes, supporting work without its own claim.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** (C1) | builder legs 7/20 → 20/20; `tools/freeze-check.py`; open: the counter's own forgeability (lesson Mistakes 1–3) |
+| depth | **improved** (C2) | `corpus/knowledge/derived-output-safety-r61.md`, 10 located quotes, marked inferences |
+| coverage | **improved narrowly** | the lane's first entry on the operating-system semantics under its own evidence writers; frontier lead `openat2(2)` |
+| calibration | **improved narrowly** | QUALITY 119–123, each citing a lesson row with a red-before; `claims-erratum.md`; the recurring-weakness table corrected by a non-author seat (rows 56 and 59) |
+| freshness | **unchanged** | no fetch; captures untouched |
+| adjacency | **unchanged** | `RevProvince`: in province; souji's origin-record entries named as contested ground, not absorbed |
+
+Learning trends: expansion **improved** (narrowly), quality **improved**, discernment **unchanged** pending the non-author spot-check named in the lesson (3 admits, 1 reject to sample).
+
+## Planned — round 62 (not started)
+
+Candidates from `corpus/lessons/round-61.md` `## Routed to the next round`: repair the C1 counter's open classes with a new frozen counter and a control matrix that includes the wave's detection and `setsid` forges (seed out of argv, a session reaper, no output-token legs, tree checks on H10–H12, an RSS check on the oversized-form leg, `.raw`-side hazards); `openat2(2)` as a registry row; fix or re-register `corpus/evidence/round53/weakness-streak.py`; the open considerthese size-watch row `CT-20261019-4`.

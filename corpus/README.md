@@ -4,6 +4,8 @@
 
 | Note | Holds | Sources |
 |---|---|---|
+| `knowledge/derived-output-safety-r61.md` | What the Linux manual pages state a symbolic link does at open (O_NOFOLLOW final component only, O_CREAT with O_EXCL refuses a link), at rename (a link at the destination is overwritten; atomic replacement of an existing destination) and in a directory prefix that changes between check and create (open a directory descriptor); the round-55 builder's observed redirected writes; 10 located quotes, 6 claims, marked inferences and limits | S134 (`open(2)`, man-pages 6.19), S135 (`rename(2)`), S136 (`.ufo/waves/round-56/w1/R55W2SentBuilder.md`); counter `corpus/evidence/round61/c2-count.py` (`C2=PASS`); `corpus/evidence/round61/c2-measure-after.txt` |
+| `lessons/round-61.md` | Round-61 lesson: Gate (3 admits, 1 reject S137, the entry-claim rewrites by non-author seats), mistakes (the first-frozen counter named the leg; the amended counter is forgeable by detection; a failure-token leg; abbreviated digests; a positive control with three blocking defects; an attribution slip; a seat with no report file), the corrected recurring-weakness table, trends, wave settlement and routed work | `corpus/evidence/round61/{claims.md,claims-erratum.md,controls/,c1-measure-after.txt,extras-after.txt}`; `.ufo/waves/round-61/w1-results.json`; `LOG.md` Round 61 |
 | `lessons/round-59.md` | Partial, unadjudicated round-59 lesson: missing pre-data claims freeze and 47/66 spawned seat accounting; offline S101 reopen and its no-fetch boundary; frozen round-58 counter defects retained as reconnaissance, not round-59 claims | `corpus/evidence/round59/{s101-open,census-start,census-end}.txt`; `.ufo/waves/round-59/w1/R59Executor09.md`; `LOG.md` Round 59 |
 | `lessons/round-1.md` | Round-1 gate lesson: real-CLI vs function-under-`set +e` entrypoint gap behind `VERDICT_BEARING_EXPORTS=0/3`, with the gate's candidates/admitted/rejected and the spot-check status | baseline commit `34774a1`; `LOG.md:72-83`; `SCORECARD.md:29`; anchors re-derived from `tools/research-gate.sh` sha256 `e8f07a06…` |
 | `knowledge/archived-export-intake.md` | One filled research-record specimen: pinned archive identity, scoped local observations, unresolved external hops, kept rejections, and explicit semantic-verification limits | note opening metadata and integration errata; `.ufo/evidence/round-1/acceptance.json`; `final-intake.json` |
@@ -1261,3 +1263,34 @@ Left open:
   occurred from self-authored record bytes.
 - **C2's disclosed forge class.** Five genuine re-fetches plus quote-spliced drift forms can
   reach the count floor; the C2 freeze disclosed the count-only boundary before data.
+
+## Round61 coverage and frontier (2026-10-28)
+
+New ground: what the Linux manual pages state a symbolic link does when a file is opened or renamed onto,
+and how that bears on a tool that writes derived evidence under a caller-named directory — O_NOFOLLOW checks
+only the trailing path component (`S134`), O_CREAT with O_EXCL refuses a link at the path (`S134`), rename
+overwrites a link at the destination and replaces an existing destination atomically (`S135`), a directory
+prefix can change between a check and a create and a directory descriptor avoids it (`S134`), and what the
+lane's own round-55 builder did through such links (`S136`). Entry:
+`corpus/knowledge/derived-output-safety-r61.md` (10 located quotes, 6 claims, marked inferences). Base sweep:
+`grep -n 'open\.2\|rename\.2' corpus/SOURCES.md` printed nothing before the rows. One rejected row (`S137`, the
+builder's docstring: intent, not evidence).
+
+### Frontier
+
+Advanced:
+
+- **Output safety of the lane's own evidence writers.** `tools/build-spans.py` opens its output directories
+  by descriptor, refuses links and non-regular entries, and is measured by a 20-leg counter, a 16-leg
+  post-wave supplement and the three real committed span sets (`corpus/evidence/round61/`).
+- **A structural check for freeze binding.** `tools/freeze-check.py` (selftest 34/34) fails the round-60
+  pair on the named reason and passes the round-61 triple.
+- **Counters shown forgeable by detection.** The wave's attacks on the C1 counter are on record
+  (`.ufo/waves/round-61/w1/CritC1Sniff.md`, `CritC1Seq.md`, `CritC1Detached.md`, `CritC1Rss.md`); QUALITY 119–123.
+
+Left open:
+
+- **The C1 counter's own gaps** (lesson `corpus/lessons/round-61.md` Mistakes 1–3 and `## Routed to the next round`).
+- **`openat2(2)` `RESOLVE_NO_SYMLINKS`** as a registered row: named, not opened as a row.
+- **Memory bounded before the form is built:** capture-text inflates up to 256 MiB, so the builder's 64 Mi-char form cap does not bound peak memory.
+- **The size-watch half of considerthese `CT-20261019-4`** (no threshold agreed).

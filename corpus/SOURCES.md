@@ -323,6 +323,7 @@ its author opened the source and judged its tier for the stated scope only.
 
 ## Leads (unopened)
 
+- openat2(2) — installed `/usr/share/man/man2/openat2.2.gz` (Linux man-pages 6.19) — `RESOLVE_NO_SYMLINKS` covers every path component, unlike `O_NOFOLLOW`; named by wave seat RevC2Claim1 (round 61) from one rendered line, not opened as a row.
 - TREC RAG track website — https://trec-rag.github.io/ — task data, qrels, and
   run artifacts behind the S011 overview.
 - AVeriTeC original shared-task paper — https://arxiv.org/html/2410.23850v1 —

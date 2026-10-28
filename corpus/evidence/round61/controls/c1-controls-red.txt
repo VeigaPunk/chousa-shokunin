@@ -1,0 +1,23 @@
+# red state: the runner given the reference builder as --base (a base that already reaches the target)
+base                   rc=0 legs=20/20 failing=- UNEXPECTED
+noop0                  rc=1 legs=1/20 failing=P01,P02,P04,P05,P06,H07,H08,H09,H10,H11,H12,H13,H14,H15,H16,H17,H18,H19,H20 OK
+always2                rc=1 legs=14/20 failing=P01,P02,P04,P05,P06,H08 OK
+forge-token            rc=0 legs=20/20 failing=- UNEXPECTED
+naive-guard            rc=1 legs=16/20 failing=P04,P06,H08,H16 OK
+reference              rc=0 legs=20/20 failing=- OK
+M01-pyc                rc=1 legs=19/20 failing=P03 expect=P03 KILLED
+M02-capsize            rc=1 legs=18/20 failing=H14,H15 expect=H14,H15 KILLED
+M03-inside             rc=1 legs=19/20 failing=H13 expect=H13 KILLED
+M04-spanslink          rc=1 legs=19/20 failing=H10 expect=H10 KILLED
+M05-filelink           rc=1 legs=19/20 failing=H11 expect=H11 KILLED
+M06-tsvlink            rc=1 legs=19/20 failing=H12 expect=H12 KILLED
+M07-differs            rc=1 legs=19/20 failing=H07 expect=H07 KILLED
+M08-orphans            rc=1 legs=18/20 failing=H08,H09 expect=H09 KILLED
+M09-noguard            rc=1 legs=18/20 failing=H07,H09 expect=H07,H09 KILLED
+M10-replace-ignored    rc=1 legs=19/20 failing=H08 expect=H08 KILLED
+M11-no-unlink          rc=1 legs=19/20 failing=H08 expect=H08 KILLED
+M12-outfile            rc=1 legs=19/20 failing=H16 expect=H16 KILLED
+M13-unreadable         rc=1 legs=19/20 failing=H17 expect=H17 KILLED
+M14-bigform            rc=1 legs=19/20 failing=H20 expect=H20 KILLED
+CONTROLS_UNEXPECTED=2
+exit=1
