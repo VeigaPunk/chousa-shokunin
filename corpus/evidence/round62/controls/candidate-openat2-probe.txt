@@ -1,0 +1,18 @@
+KERNEL 7.2.11-arch1-1
+PYTHON 3.14.8
+HEADER RESOLVE_NO_XDEV=0x1 RESOLVE_NO_MAGICLINKS=0x2 RESOLVE_NO_SYMLINKS=0x4 RESOLVE_BENEATH=0x8 RESOLVE_IN_ROOT=0x10 RESOLVE_CACHED=0x20 __NR_openat2=437
+PROBE P01 python-os-has-openat2 observed=False expected=False ok
+PROBE P02 os.open-O_NOFOLLOW-symlink-in-earlier-component observed=opened expected=opened ok
+PROBE P03 os.open-O_NOFOLLOW-symlink-final-component observed=ELOOP expected=ELOOP ok
+PROBE P04 openat2-NO_SYMLINKS-symlink-in-earlier-component observed=ELOOP expected=ELOOP ok
+PROBE P05 openat2-NO_SYMLINKS-symlink-final-component observed=ELOOP expected=ELOOP ok
+PROBE P06 openat2-NO_SYMLINKS-plain-path-inside observed=opened expected=opened ok
+PROBE P07 openat2-BENEATH-dotdot-escape observed=EXDEV expected=EXDEV ok
+PROBE P08 openat2-BENEATH-absolute-symlink observed=EXDEV expected=EXDEV ok
+PROBE P09 openat2-BENEATH-relative-symlink-inside observed=opened expected=opened ok
+PROBE P10 openat2-IN_ROOT-absolute-symlink-content observed=rootfile expected=rootfile ok
+PROBE P11 os.open-dir_fd-absolute-symlink-content observed=outside expected=outside ok
+PROBE P12 openat2-unknown-resolve-bit observed=EINVAL expected=EINVAL ok
+PROBE P13 openat2-mode-without-O_CREAT observed=EINVAL expected=EINVAL ok
+PROBE P14 openat2-O_PATH-O_NOFOLLOW-NO_SYMLINKS-final-symlink-fd-is-the-link observed=True expected=True ok
+PROBE_FACTS=14/14

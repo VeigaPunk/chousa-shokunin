@@ -1,0 +1,13 @@
+CONTROL X00-intact battery_exit=0 SURVIVED forgers_accepted=- expected=ok | no change: the battery must pass | LANDED=3/3 POSITIVES=4/4 FORGERS_REJECTED=12/12 STUBS_REJECTED=4/4 BATTERY=PASS
+CONTROL X01-no-neutral battery_exit=1 KILLED forgers_accepted=F01,F02,F03,F04,F05,F07,F08,F09,F11 expected=ok | only the plain profile | LANDED=3/3 POSITIVES=4/4 FORGERS_REJECTED=3/12 STUBS_REJECTED=4/4 BATTERY=FAIL
+CONTROL X02-no-sandbox battery_exit=1 KILLED forgers_accepted=F06,F10,F12 expected=ok | no PID namespace | LANDED=3/3 POSITIVES=4/4 FORGERS_REJECTED=9/12 STUBS_REJECTED=4/4 BATTERY=FAIL
+CONTROL X03-no-pipes battery_exit=1 KILLED forgers_accepted=F11 expected=ok | neutral stdout and stderr stay files | LANDED=3/3 POSITIVES=4/4 FORGERS_REJECTED=11/12 STUBS_REJECTED=4/4 BATTERY=FAIL
+CONTROL X04-no-closed-stdin battery_exit=1 KILLED forgers_accepted=F09 expected=ok | neutral stdin stays /dev/null | LANDED=3/3 POSITIVES=4/4 FORGERS_REJECTED=11/12 STUBS_REJECTED=4/4 BATTERY=FAIL
+CONTROL X05-no-env-vary battery_exit=1 KILLED forgers_accepted=F02,F07,F08 expected=ok | neutral environment, LANG and limits equal the plain ones | LANDED=3/3 POSITIVES=4/4 FORGERS_REJECTED=9/12 STUBS_REJECTED=4/4 BATTERY=FAIL
+CONTROL X06-no-fsize-vary battery_exit=1 KILLED forgers_accepted=F08 expected=ok | neutral RLIMIT_FSIZE equals the plain one | LANDED=3/3 POSITIVES=4/4 FORGERS_REJECTED=11/12 STUBS_REJECTED=4/4 BATTERY=FAIL
+CONTROL X07-no-name-vary battery_exit=1 KILLED forgers_accepted=F01,F03,F04 expected=ok | neutral directory, cwd, builder, quotes, cache and out names equal the plain ones | LANDED=3/3 POSITIVES=4/4 FORGERS_REJECTED=9/12 STUBS_REJECTED=4/4 BATTERY=FAIL
+CONTROL X08-no-url-vary battery_exit=1 KILLED forgers_accepted=F05 expected=ok | neutral URLs keep the example.invalid shape | LANDED=3/3 POSITIVES=4/4 FORGERS_REJECTED=11/12 STUBS_REJECTED=4/4 BATTERY=FAIL
+CONTROL X10-no-as-limit battery_exit=0 SURVIVED forgers_accepted=- expected=ok | address-space limit dropped: expected to SURVIVE (named gap) | LANDED=3/3 POSITIVES=4/4 FORGERS_REJECTED=12/12 STUBS_REJECTED=4/4 BATTERY=PASS
+CONTROL X12-any-profile battery_exit=1 KILLED forgers_accepted=F01,F02,F03,F04,F05,F07,F08,F09,F11 expected=ok | a leg passes when either profile passes | LANDED=3/3 POSITIVES=4/4 FORGERS_REJECTED=3/12 STUBS_REJECTED=4/4 BATTERY=FAIL
+CONTROLS_UNEXPECTED=0
+exit=0
