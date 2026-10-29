@@ -4,6 +4,8 @@
 
 | Note | Holds | Sources |
 |---|---|---|
+| `knowledge/openat2-resolve-r62.md` | What the Linux openat2(2) page and the kernel header state the how.resolve flags do (RESOLVE_NO_SYMLINKS refuses a symbolic link in every path component with ELOOP, with one O_PATH exception; RESOLVE_BENEATH and the EAGAIN dotdot race; the page's note that glibc provides no wrapper) and what this host's kernel and Python did in a 14-case probe (os.open with O_NOFOLLOW followed an earlier-component link, openat2 refused it; the os module had no openat2); 16 located quotes, 6 claims, marked inferences and limits including the host's glibc export | S138 (`openat2(2)`, man-pages 6.19, page date 2026-07-02), S139 (`/usr/include/linux/openat2.h`, linux-api-headers 7.2-1), S140 (own probe), S141 rejected; counter `corpus/evidence/round62/c2v2-count.py` (`C2=PASS`); `corpus/evidence/round62/{openat2-probe.py,openat2-probe.txt}` |
+| `lessons/round-62.md` | Round-62 lesson: Gate (3 admits S138-S140, 1 reject S141, all five original entry claims rewritten after non-author review, the glibc finding that contradicts the page's note), mistakes (counters that cannot tell a hardened builder from a detector; stale statements in a frozen claims file; a battery that hands the counter the subject name; a sandbox that is not a filesystem sandbox), the corrected recurring-weakness table, trends, wave settlement and routed work | `corpus/evidence/round62/{claims.md,claims-erratum.md,controls/,c1v2-measure-after.txt}`; `.ufo/waves/round-62/w1-results.json`; `LOG.md` Round 62 |
 | `knowledge/derived-output-safety-r61.md` | What the Linux manual pages state a symbolic link does at open (O_NOFOLLOW final component only, O_CREAT with O_EXCL refuses a link), at rename (a link at the destination is overwritten; atomic replacement of an existing destination) and in a directory prefix that changes between check and create (open a directory descriptor); the round-55 builder's observed redirected writes; 10 located quotes, 6 claims, marked inferences and limits | S134 (`open(2)`, man-pages 6.19), S135 (`rename(2)`), S136 (`.ufo/waves/round-56/w1/R55W2SentBuilder.md`); counter `corpus/evidence/round61/c2-count.py` (`C2=PASS`); `corpus/evidence/round61/c2-measure-after.txt` |
 | `lessons/round-61.md` | Round-61 lesson: Gate (3 admits, 1 reject S137, the entry-claim rewrites by non-author seats), mistakes (the first-frozen counter named the leg; the amended counter is forgeable by detection; a failure-token leg; abbreviated digests; a positive control with three blocking defects; an attribution slip; a seat with no report file), the corrected recurring-weakness table, trends, wave settlement and routed work | `corpus/evidence/round61/{claims.md,claims-erratum.md,controls/,c1-measure-after.txt,extras-after.txt}`; `.ufo/waves/round-61/w1-results.json`; `LOG.md` Round 61 |
 | `lessons/round-59.md` | Partial, unadjudicated round-59 lesson: missing pre-data claims freeze and 47/66 spawned seat accounting; offline S101 reopen and its no-fetch boundary; frozen round-58 counter defects retained as reconnaissance, not round-59 claims | `corpus/evidence/round59/{s101-open,census-start,census-end}.txt`; `.ufo/waves/round-59/w1/R59Executor09.md`; `LOG.md` Round 59 |
@@ -1294,3 +1296,35 @@ Left open:
 - **`openat2(2)` `RESOLVE_NO_SYMLINKS`** as a registered row: named, not opened as a row.
 - **Memory bounded before the form is built:** capture-text inflates up to 256 MiB, so the builder's 64 Mi-char form cap does not bound peak memory.
 - **The size-watch half of considerthese `CT-20261019-4`** (no threshold agreed).
+
+## Round62 coverage and frontier (2026-10-28)
+
+New ground: the kernel call that makes the operating system enforce what round 61's builder only tested — `openat2`
+with `RESOLVE_NO_SYMLINKS` (every path component, unlike `O_NOFOLLOW`, with one `O_PATH` exception), `RESOLVE_BENEATH`
+and the `EAGAIN` dotdot race (`S138`), the header's flag values and comment (`S139`), and what this host did in a
+14-case probe (`S140`). Entry: `corpus/knowledge/openat2-resolve-r62.md` (16 located quotes, 6 claims). Base sweep:
+`grep -rl openat2 corpus/knowledge` printed nothing before the entry. One rejected row (`S141`, the candidate probe's
+docstring: intent, not evidence). A finding that contradicts a quoted note: the page says glibc provides no wrapper
+while this host's glibc 2.44 exports `openat2@@GLIBC_2.43` (entry Limits).
+
+### Frontier
+
+Advanced:
+
+- **A counter that varies what a forger can detect.** `corpus/evidence/round62/c1v2-count.py` runs each leg in a plain
+  and a neutral profile inside a PID namespace; the 12-forger battery `corpus/evidence/round62/c1v2-battery.py`
+  reads `FORGERS_REJECTED=0/12` on the round-61 counter and `12/12` on the v2 counter
+  (`corpus/evidence/round62/c1v2-measure-after.txt`).
+- **A probe-backed sourced entry.** The entry's counter re-runs `corpus/evidence/round62/openat2-probe.py` and
+  compares its output with the committed `openat2-probe.txt`.
+
+Left open:
+
+- **Forgers the v2 counter accepts** (named limits in `corpus/lessons/round-62.md`): sandbox detection by `getpid() == 1`
+  or `/proc/1/cmdline`, the relation `HOME == cwd`, the argv[0] depth, stdin tty-ness, file-descriptor and thread counts;
+  each is a row for the next battery.
+- **The sandbox is a PID/proc namespace, not a filesystem sandbox** (`CritC1Sandbox`): a builder can write the counter's
+  own files; the counter exits 1 as root (H17); a missing `unshare` is fail-open on a pass-through shim.
+- **The battery hands the counter the subject name** (`RevQualityA` finding 4): a counter that keys on the subject path passes it.
+- **Memory bounded before the form is built** (carried from round 61).
+- **The size-watch half of considerthese `CT-20261019-4`:** a measured series, no threshold (an L0 question).
