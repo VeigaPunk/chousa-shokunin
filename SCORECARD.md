@@ -2961,3 +2961,29 @@ Learning trends: expansion **improved** (narrowly), quality **improved**, discer
 ## Planned — round 62 (not started)
 
 Candidates from `corpus/lessons/round-61.md` `## Routed to the next round`: repair the C1 counter's open classes with a new frozen counter and a control matrix that includes the wave's detection and `setsid` forges (seed out of argv, a session reaper, no output-token legs, tree checks on H10–H12, an RSS check on the oversized-form leg, `.raw`-side hazards); `openat2(2)` as a registry row; fix or re-register `corpus/evidence/round53/weakness-streak.py`; the open considerthese size-watch row `CT-20261019-4`.
+
+## Round 62 verdict — 2026-10-28 (a detection-forger battery moves a counter from 0/12 to 12/12; a sourced entry on openat2; the freeze carried 14 false statements)
+
+Claims froze at `388d153519a36a4c3f34d56d034870f032865a70` against base `8607de84723d5ff9bbcbe71eedebd6a0d30bfd87`; claims sha256 prefix `a3193ebd328919e2` (`corpus/evidence/round62/claims.md`; erratum `claims-erratum.md` for 14 statements the files contradict). Wave `w1`: 66 seats. Landed: entry and rows `c4c11e9da62ce571fd903c5a27b527d06d53a855`; instruments and receipts `85ef0b44eba195848e9028b1cb5633b3583dc185`.
+
+| Claim / axis | Before → after | counting command / evidence | tag | verdict |
+|---|---|---|---|---|
+| C1 operability (lowest scored axis; historical 3/10 observable not moved) | round-61 counter on the battery `FORGERS_REJECTED=0/12 BATTERY=FAIL` exit 1 → v2 counter `LANDED=3/3 POSITIVES=4/4 FORGERS_REJECTED=12/12 STUBS_REJECTED=4/4 BATTERY=PASS` exit 0; `LEGS=20/20 C1V2=PASS` at three unset seeds | `python3 corpus/evidence/round62/c1v2-battery.py --counter <counter> --work <dir>`; `controls/c1v2-before.txt`, `c1v2-measure-after.txt`, `controls/null-counters.txt`, `controls/c1v2-controls.txt` | plumbing | **improved** on the frozen predicate; limits: the v2 counter is still forgeable by detection of its own sandbox and by invariants it does not vary, the battery hands the counter the subject path, the forgers were written by the counter's author |
+| C2 coverage, sourced (rows S138–S140 opened this round; S141 rejected) | `ENTRY=0/1 … PROBE=0/1 MAP=0/1 CENSUS=1/1 C2=FAIL` exit 1 → `ENTRY=1/1 TRIO=1/1 ROWS=3/3 QUOTES=16/16 COVERAGE=1/1 CLAIMS=1/1 ECHO=1/1 LIMITS=1/1 PROBE=1/1 MAP=1/1 CENSUS=1/1 C2=PASS` exit 0 | `python3 corpus/evidence/round62/c2v2-count.py`; `controls/c2v2-before.txt`, `c2v2-measure-after.txt`, `controls/c2v2-controls.txt` | plumbing | **improved**; the counter is structural plus an echo screen (a claim that adds filler words passes); entailment was judged by five non-author reviewers and all five control-entry claims were rewritten |
+
+No numeric axis score and no capability row changed: the numeric operability scale stays 3/10.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** (C1) | battery 0/12 → 12/12; `probe-cite-check.py`, `digest-prefix-check.py`, `skill-size-watch.py`, `research-gate-selftest.txt` (275 cases) |
+| coverage | **improved** (C2) | `corpus/knowledge/openat2-resolve-r62.md`; frontier lead `openat2(2)` closed |
+| depth | **unchanged** | no existing entry deepened beyond the new one's own limits |
+| calibration | **unchanged** | the frozen claims file carried 14 false statements caught by a non-author seat and corrected by erratum; QUALITY 124–127 each cite a lesson row with a red-before; a reader may read the 14 as a harm — the measured verdicts do not rest on them |
+| freshness | **unchanged** | no fetch; captures untouched |
+| adjacency | **unchanged** | `RevProvince.md`: instance in province, generic battery shape contested with tameshi (routed, not absorbed); souji overlap unchanged |
+
+Learning trends: expansion **improved** (narrowly), quality **improved**, discernment **unchanged** pending the non-author spot-check named in the lesson (3 admits, 1 reject to sample).
+
+## Planned — round 63 (not started)
+
+Candidates from `corpus/lessons/round-62.md` `## Routed to the next round`: a v3 counter and battery (fixture-only sandbox, a pid shim or no-namespace neutral profile, a randomised subject path, rows for the accepted forgers); the C2 counter's 27 control gaps and the bound `KERNEL`/`PYTHON` lines; the operator's threshold for the SKILL.md size watch.
