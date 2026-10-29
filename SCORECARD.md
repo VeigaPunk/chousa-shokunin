@@ -2991,3 +2991,33 @@ Candidates from `corpus/lessons/round-62.md` `## Routed to the next round`: a v3
 ## Planned — round 63 (amended before the freeze, 2026-10-28)
 
 Two claims, frozen in `corpus/evidence/round63/claims.md`: C1 operability, a capability acquisition — `tools/lane-preflight.py` (one command that runs the lane's own committed self-checks and names the failing gate), measured by a frozen planted-defect battery (`corpus/evidence/round63/c1-battery.py`: 22 legs, `DEFECTS=15/15 BENIGN=6/6`); C2 coverage, sourced — a knowledge entry on what pins a citation to a git revision, on rows S142–S144 (installed `git-rev-parse(1)` and `gitrevisions(7)` pages and the lane's own probe). Why this differs from the row above: its first candidate (a v3 counter and battery) continues the detection-forger line of rounds 49–62 a further round without moving the lane's repertoire. The closure's routed item 1 (a bare export exits 2 from the C2 counter) is addressed by the new C2 counter's `--fleet` handling; routed item 3 (a claims-versus-files read) is given to wave seats after the freeze, not met before it. The row above keeps the candidates that are not taken (the v3 counter and battery, the C2 counter control gaps of `corpus/evidence/round62/c2v2-count.py`, the size-watch threshold, an open operator question) as the next round's list.
+
+## Round 63 verdict — 2026-10-28 (a lane preflight enters the repertoire, measured by a planted-defect battery; a sourced entry on git revision identity; the wave was stopped by the operator before it settled)
+
+Claims froze at `62876ef90154714bfa806fbbec7890a9ff11b179` against base `a847a37cc263c80417ee1cdf650de33e2f91a839`; claims sha256 prefix `6c46b2cc193e1a44` (`corpus/evidence/round63/claims.md`; erratum `claims-erratum.md`: four statements the files contradict, found by `CritCalibration`). Wave `w1`: 69 seats dispatched, the operator ended run 11 before it settled — 42 reports read, the rest stopped. Landed instruments and controls: `62876ef90154714bfa806fbbec7890a9ff11b179`; wave spec and dispatch: `c8bfcc65cb327b1a7da27fa39ef9a482a5b33cfb`.
+
+| Claim / axis | Before → after | counting command / evidence | tag | verdict |
+|---|---|---|---|---|
+| C1 operability (capability acquisition; historical 3/10 observable not moved) | tool absent: `CLEAN=0/1 DEFECTS=0/15 BENIGN=0/6 BATTERY=FAIL` exit 1 → landed `tools/lane-preflight.py` `CLEAN=1/1 DEFECTS=15/15 BENIGN=6/6 BATTERY=PASS` exit 0 in three runs; the full run prints `PREFLIGHT=8/8 FAILED=none ENV=none SKIPPED=none` exit 0 in 2 minutes on a pre-landing copy of the lane with the same tool bytes | `python3 corpus/evidence/round63/c1-battery.py --tool tools/lane-preflight.py --fleet <fleet> --work <dir>`; `controls/c1-before.txt`, `c1-landed-runs.txt`, `preflight-full-run-prelanding-copy.txt`, `controls/c1-controls.txt` (22 control tools, `C1_CONTROLS_UNEXPECTED=0`) | plumbing | **improved** on the frozen predicate; the landed tool is the frozen reference plus one disclosed change (a run of zero gates exits 2); limits: a 55-line content oracle passes all 22 legs (`CritC1DiffOverfit.md`), six judge holes and one path-keyed forger are accepted (`CritC1JudgeHoles.md`, `CritC1PathKeyed.md`), the gates G04 and G05 false-positive on siblings' files |
+| C2 coverage, sourced (rows S142–S144 opened this round; S145 rejected) | `ENTRY=0/1 … C2=FAIL` exit 1 → `ENTRY=1/1 TRIO=1/1 ROWS=3/3 QUOTES=10/10 COVERAGE=1/1 CLAIMS=1/1 ECHO=1/1 LIMITS=1/1 PROBE=1/1 MAP=1/1 CENSUS=1/1 C2=PASS` exit 0 | `python3 corpus/evidence/round63/c2-count.py --fleet <fleet>`; `controls/c2-before.txt`, `c2-measure-after.txt`, `controls/c2-controls.txt` | plumbing | **improved narrowly**; the counter is structural plus an echo screen (eight forges reach PASS, `CritC2Forge.md`); all five first-draft claims were judged overreaching by non-author reviewers and the landed claims are the L1's narrowing, not yet judged by a non-author |
+
+No numeric axis score changed. One capability row enters (below).
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** (C1) | battery 0/15 defects (tool absent) → 15/15, 6/6 benign; full run 8/8 |
+| coverage | **improved narrowly** (C2) | `corpus/knowledge/git-revision-identity-r63.md`; `grep -rl rev-parse corpus/knowledge` printed nothing at the base |
+| calibration | **unchanged** | four false statements in the frozen claims file, recorded in `claims-erratum.md`; the wave's judge holes and mutation survivors are limits of instruments claimed as passing |
+| depth, freshness, adjacency | **unchanged** | no entry deepened, no fetch, `RevProvince.md` marks the topic contested with kake, kumitate and tameshi (routed, not absorbed) |
+
+Learning trends: expansion **improved** (narrowly), quality **unchanged**, discernment **unchanged** pending the non-author spot-check named in `corpus/lessons/round-63.md` `## Gate` (S143 admit, S145 reject).
+
+## Capabilities (round-63 addition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| Lane preflight | runs the lane's own committed self-checks (census, knowledge index, lesson `## Gate` headings, SHONEN pointers, SCORECARD capability pointers, the freeze-check, assimilate-rows and research-gate selftests) in one command and names the failed gate ids; exits 2 when no gate ran | `python3 corpus/evidence/round63/c1-battery.py --tool tools/lane-preflight.py --fleet <fleet> --work <dir>` (`BATTERY=PASS`); `corpus/evidence/round63/c1-landed-runs.txt`; `corpus/evidence/round63/preflight-full-run-prelanding-copy.txt` | 63 |
+
+## Planned — round 64 (not started)
+
+Candidates from `corpus/lessons/round-63.md` `## Routed to the next round`: a zero-gate battery leg, the six judge holes, the path-keyed forger and an oracle-breaking benign leg for the C1 battery; the G04 and G05 rule false positives on sibling files; the C2 counter's 7 control gaps; plus the round-62 list above (the v3 counter and battery, the size-watch threshold).

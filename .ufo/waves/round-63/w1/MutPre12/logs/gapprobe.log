@@ -1,0 +1,25 @@
+--- G1 remove corpus/SOURCES.md (N01 ENV, N02 check-dropped)
+  ref        rc=1 | GATE G01 census FAIL corpus/SOURCES.md absent | GATE G02 knowledge-index PASS 84 entries indexed | PREFLIGHT=1/2 FAILED=G01 ENV=none SKIPPED=G03,G04,G05,G06,G07,G08
+  N01        rc=2 | GATE G01 census ENV corpus/SOURCES.md absent | GATE G02 knowledge-index PASS 84 entries indexed | PREFLIGHT=1/2 FAILED=none ENV=G01 SKIPPED=G03,G04,G05,G06,G07,G08
+  N02        rc=1 | GATE G01 census FAIL exit=2 ERROR: --file not found: /fast/scratch/hyaku/chousa-r63/MutPre12/probe/N01/lane/ | GATE G02 knowledge-index PASS 84 entries indexed | PREFLIGHT=1/2 FAILED=G01 ENV=none SKIPPED=G03,G04,G05,G06,G07,G08
+--- G2 chmod 000 corpus/SOURCES.md (N05 exit2 treated as pass)
+  ref        rc=1 | GATE G01 census FAIL exit=2 gawk: cmd. line:27: fatal: cannot open file `/fast/scratch/hyaku/chousa-r63/MutP | GATE G02 knowledge-index PASS 84 entries indexed | PREFLIGHT=1/2 FAILED=G01 ENV=none SKIPPED=G03,G04,G05,G06,G07,G08
+  N05        rc=0 | GATE G01 census PASS exit=0 census_findings=0 | GATE G02 knowledge-index PASS 84 entries indexed | PREFLIGHT=2/2 FAILED=none ENV=none SKIPPED=G03,G04,G05,G06,G07,G08
+--- G3 remove corpus/README.md (N11 readme-absent pass)
+  ref        rc=1 | GATE G01 census PASS exit=0 census_findings=0 | GATE G02 knowledge-index FAIL corpus/README.md absent | PREFLIGHT=1/2 FAILED=G02 ENV=none SKIPPED=G03,G04,G05,G06,G07,G08
+  N11        rc=0 | GATE G01 census PASS exit=0 census_findings=0 | GATE G02 knowledge-index PASS corpus/README.md absent | PREFLIGHT=2/2 FAILED=none ENV=none SKIPPED=G03,G04,G05,G06,G07,G08
+--- G4 README names one entry in upper case only (N09 case-insensitive)
+  ref        rc=1 | GATE G01 census PASS exit=0 census_findings=0 | GATE G02 knowledge-index FAIL 1 not named in corpus/README.md: hardening-r10.md | PREFLIGHT=1/2 FAILED=G02 ENV=none SKIPPED=G03,G04,G05,G06,G07,G08
+  N09        rc=0 | GATE G01 census PASS exit=0 census_findings=0 | GATE G02 knowledge-index PASS 84 entries indexed | PREFLIGHT=2/2 FAILED=none ENV=none SKIPPED=G03,G04,G05,G06,G07,G08
+--- G5 README: name -> .gone, stem kept (N10 stem-tolerant)
+  ref        rc=1 | GATE G01 census PASS exit=0 census_findings=0 | GATE G02 knowledge-index FAIL 1 not named in corpus/README.md: hardening-r10.md | PREFLIGHT=1/2 FAILED=G02 ENV=none SKIPPED=G03,G04,G05,G06,G07,G08
+  N10fixed   rc=0 | GATE G01 census PASS exit=0 census_findings=0 | GATE G02 knowledge-index PASS 84 entries indexed | PREFLIGHT=2/2 FAILED=none ENV=none SKIPPED=G03,G04,G05,G06,G07,G08
+--- G6 env SHOKUNIN_ROOT=dir without scripts, --fleet valid (N03 root-beats-fleet)
+  ref        rc=0 | GATE G01 census PASS exit=0 census_findings=0 | GATE G02 knowledge-index PASS 84 entries indexed | PREFLIGHT=2/2 FAILED=none ENV=none SKIPPED=G03,G04,G05,G06,G07,G08
+  N03        rc=2 | GATE G01 census ENV no sources-census.sh (pass --fleet DIR, or set SHOKUNIN_ROOT, or run inside a fleet layout) | GATE G02 knowledge-index PASS 84 entries indexed | PREFLIGHT=1/2 FAILED=none ENV=G01 SKIPPED=G03,G04,G05,G06,G07,G08
+--- G7 broken scripts/ in lane parent, --fleet valid (N18 parent-first)
+  ref        rc=0 | GATE G01 census PASS exit=0 census_findings=0 | GATE G02 knowledge-index PASS 84 entries indexed | PREFLIGHT=2/2 FAILED=none ENV=none SKIPPED=G03,G04,G05,G06,G07,G08
+  N18        rc=1 | GATE G01 census FAIL exit=1  | GATE G02 knowledge-index PASS 84 entries indexed | PREFLIGHT=1/2 FAILED=G01 ENV=none SKIPPED=G03,G04,G05,G06,G07,G08
+--- G8 unchanged lane (N21 census timeout=1)
+  ref        rc=0 | GATE G01 census PASS exit=0 census_findings=0 | GATE G02 knowledge-index PASS 84 entries indexed | PREFLIGHT=2/2 FAILED=none ENV=none SKIPPED=G03,G04,G05,G06,G07,G08
+  N21        rc=1 | GATE G01 census FAIL timeout after 1s | GATE G02 knowledge-index PASS 84 entries indexed | PREFLIGHT=1/2 FAILED=G01 ENV=none SKIPPED=G03,G04,G05,G06,G07,G08

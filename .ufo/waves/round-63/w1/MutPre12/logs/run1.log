@@ -1,0 +1,106 @@
+== BASELINE-reference: rc=0 failing_legs=-
+   LEG CLEAN clean ok ok
+   LEG D01 defect ok ok
+   LEG D02 defect ok ok
+   LEG D03 defect ok ok
+   LEG D04 defect ok ok
+   LEG D05 defect ok ok
+   LEG D11 defect ok ok
+   LEG D12 defect ok ok
+== N01-g01-registry-absent-env: rc=0 failing_legs=-
+   LEG CLEAN clean ok ok
+   LEG D01 defect ok ok
+   LEG D02 defect ok ok
+   LEG D03 defect ok ok
+   LEG D11 defect ok ok
+   LEG D12 defect ok ok
+== N02-g01-registry-absent-check-dropped: rc=0 failing_legs=-
+   LEG CLEAN clean ok ok
+   LEG D01 defect ok ok
+   LEG D02 defect ok ok
+   LEG D03 defect ok ok
+   LEG D11 defect ok ok
+== N03-g01-shokunin-root-beats-fleet: rc=0 failing_legs=-
+   LEG CLEAN clean ok ok
+   LEG D12 defect ok ok
+== N04-g01-script-existence-ignored: rc=0 failing_legs=D12
+   LEG CLEAN clean ok ok
+   LEG D12 defect FAIL rc=1 want 2
+== N05-g01-census-exit-1-treated-pass: rc=0 failing_legs=-
+   LEG CLEAN clean ok ok
+   LEG D01 defect ok ok
+   LEG D02 defect ok ok
+   LEG D03 defect ok ok
+   LEG D11 defect ok ok
+== N06-g01-env-does-not-change-exit-code: rc=0 failing_legs=D12
+   LEG CLEAN clean ok ok
+   LEG D12 defect FAIL rc=0 want 2
+== N13-g01-no-census-script-is-fail-not-env: rc=0 failing_legs=D12
+   LEG CLEAN clean ok ok
+   LEG D12 defect FAIL rc=1 want 2
+== N14-g01-fleet-flag-ignored: rc=0 failing_legs=CLEAN,D01
+   LEG CLEAN clean FAIL rc=2 want 0
+   LEG D01 defect FAIL rc=2 want 1
+== N07-g02-stem-not-file-name: rc=0 failing_legs=CLEAN
+   LEG CLEAN clean FAIL rc=1 want 0
+   LEG D04 defect ok ok
+   LEG D05 defect ok ok
+   LEG D11 defect ok ok
+== N08-g02-first-missing-dropped: rc=0 failing_legs=D04,D05,D11
+   LEG CLEAN clean ok ok
+   LEG D04 defect FAIL rc=0 want 1
+   LEG D05 defect FAIL rc=0 want 1
+   LEG D11 defect FAIL FAIL=['G01'] ENV=[] want FAIL=['G01', 'G02'] ENV=[]
+== N09-g02-case-insensitive-index: rc=0 failing_legs=-
+   LEG CLEAN clean ok ok
+   LEG D04 defect ok ok
+   LEG D05 defect ok ok
+   LEG D11 defect ok ok
+== N10-g02-near-miss-name-accepted: rc=0 failing_legs=-
+   LEG CLEAN clean ok ok
+   LEG D04 defect ok ok
+   LEG D05 defect ok ok
+   LEG D11 defect ok ok
+== N11-g02-readme-absent-is-pass: rc=0 failing_legs=-
+   LEG CLEAN clean ok ok
+   LEG D04 defect ok ok
+   LEG D05 defect ok ok
+   LEG D11 defect ok ok
+== N12-g02-count-check-not-membership: rc=0 failing_legs=-
+   LEG CLEAN clean ok ok
+   LEG D04 defect ok ok
+   LEG D05 defect ok ok
+   LEG D11 defect ok ok
+== N15-g01-census-mode-typo: rc=0 failing_legs=D01,D02,D03,D11
+   LEG CLEAN clean ok ok
+   LEG D01 defect FAIL rc=0 want 1
+   LEG D02 defect FAIL rc=0 want 1
+   LEG D03 defect FAIL rc=0 want 1
+   LEG D11 defect FAIL FAIL=['G02'] ENV=[] want FAIL=['G01', 'G02'] ENV=[]
+== N16-g02-index-searched-in-whole-corpus: rc=0 failing_legs=D05
+   LEG CLEAN clean ok ok
+   LEG D04 defect ok ok
+   LEG D05 defect FAIL rc=0 want 1
+   LEG D11 defect ok ok
+
+SUMMARY name verdict failing_legs
+BASELINE-reference SURVIVED -
+N01-g01-registry-absent-env SURVIVED -
+N02-g01-registry-absent-check-dropped SURVIVED -
+N03-g01-shokunin-root-beats-fleet SURVIVED -
+N04-g01-script-existence-ignored KILLED D12
+N05-g01-census-exit-1-treated-pass SURVIVED -
+N06-g01-env-does-not-change-exit-code KILLED D12
+N13-g01-no-census-script-is-fail-not-env KILLED D12
+N14-g01-fleet-flag-ignored KILLED CLEAN,D01
+N07-g02-stem-not-file-name KILLED CLEAN
+N08-g02-first-missing-dropped KILLED D04,D05,D11
+N09-g02-case-insensitive-index SURVIVED -
+N10-g02-near-miss-name-accepted SURVIVED -
+N11-g02-readme-absent-is-pass SURVIVED -
+N12-g02-count-check-not-membership SURVIVED -
+N15-g01-census-mode-typo KILLED D01,D02,D03,D11
+N16-g02-index-searched-in-whole-corpus KILLED D05
+REF_SHA_BEFORE=07683086fd6c6b413439172f416c1ce91d06a56e634a843b9a5cfe01851903c6
+REF_SHA_AFTER=07683086fd6c6b413439172f416c1ce91d06a56e634a843b9a5cfe01851903c6
+REF_UNCHANGED=True

@@ -1,0 +1,52 @@
+== N05b-g01-census-exit1-is-pass: rc=0 failing_legs=D01,D02,D03,D11
+   LEG CLEAN clean ok ok
+   LEG D01 defect FAIL rc=0 want 1
+   LEG D02 defect FAIL rc=0 want 1
+   LEG D03 defect FAIL rc=0 want 1
+   LEG D11 defect FAIL FAIL=['G02'] ENV=[] want FAIL=['G01', 'G02'] ENV=[]
+== N17-g02-skips-zz-prefixed-entries: rc=0 failing_legs=D04,D11
+   LEG CLEAN clean ok ok
+   LEG D04 defect FAIL rc=0 want 1
+   LEG D05 defect ok ok
+   LEG D11 defect FAIL FAIL=['G01'] ENV=[] want FAIL=['G01', 'G02'] ENV=[]
+== N18-g01-parent-scripts-beat-fleet: rc=0 failing_legs=-
+   LEG CLEAN clean ok ok
+   LEG D12 defect ok ok
+== N19-g02-only-first-entry-checked: rc=0 failing_legs=D04,D05,D11
+   LEG CLEAN clean ok ok
+   LEG D04 defect FAIL rc=0 want 1
+   LEG D05 defect FAIL rc=0 want 1
+   LEG D11 defect FAIL FAIL=['G01'] ENV=[] want FAIL=['G01', 'G02'] ENV=[]
+== N20-g02-tautological-index-check: rc=0 failing_legs=D04,D05,D11
+   LEG CLEAN clean ok ok
+   LEG D04 defect FAIL rc=0 want 1
+   LEG D05 defect FAIL rc=0 want 1
+   LEG D11 defect FAIL FAIL=['G01'] ENV=[] want FAIL=['G01', 'G02'] ENV=[]
+== N21-g01-census-run-from-root: rc=0 failing_legs=CLEAN
+   LEG CLEAN clean FAIL rc=1 want 0
+   LEG D01 defect ok ok
+   LEG D02 defect ok ok
+   LEG D03 defect ok ok
+   LEG D11 defect ok ok
+== N22-g01-census-errors-not-parsed: rc=0 failing_legs=-
+   LEG CLEAN clean ok ok
+   LEG D01 defect ok ok
+   LEG D02 defect ok ok
+   LEG D03 defect ok ok
+   LEG D11 defect ok ok
+== N23-g02-readme-from-fleet-root: rc=0 failing_legs=CLEAN
+   LEG CLEAN clean FAIL rc=1 want 0
+   LEG D04 defect ok ok
+   LEG D05 defect ok ok
+   LEG D11 defect ok ok
+
+SUMMARY name verdict failing_legs
+N05b-g01-census-exit1-is-pass KILLED D01,D02,D03,D11
+N17-g02-skips-zz-prefixed-entries KILLED D04,D11
+N18-g01-parent-scripts-beat-fleet SURVIVED -
+N19-g02-only-first-entry-checked KILLED D04,D05,D11
+N20-g02-tautological-index-check KILLED D04,D05,D11
+N21-g01-census-run-from-root KILLED CLEAN
+N22-g01-census-errors-not-parsed SURVIVED -
+N23-g02-readme-from-fleet-root KILLED CLEAN
+REF_SHA=07683086fd6c6b413439172f416c1ce91d06a56e634a843b9a5cfe01851903c6
