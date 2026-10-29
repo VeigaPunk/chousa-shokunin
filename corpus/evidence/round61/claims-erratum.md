@@ -21,3 +21,11 @@ stderr`, which contradicts the predicate sentence ("never from searching its out
 `RevC1LegsH4` showed a correct refusal whose message contains the word fails H16 (`LEGS=19/20`). The landed
 builder prints no such word; the contradiction stays in the frozen counter and is routed to the next
 counter (QUALITY 121).
+
+## Round-62 addendum (appended 2026-10-28; names the text it supersedes)
+
+`claims.md` line 81 says the C2 target is met "at the landing commit with 8 located quotes (the positive control in
+`controls/c2-positive-entry.md` has 8" — the landed entry carries 10 and the counter's predicate is `QUOTES=k/k`:
+`grep -oE 'QUOTES=[0-9]+/[0-9]+' corpus/evidence/round61/c2-measure-after.txt` prints `QUOTES=10/10`. The frozen "8" is a count of
+the control entry, not a target; the target was `QUOTES=k/k`. The round-61 closure routed this correction
+(`corpus/lessons/round-61-verifier-spotcheck.md` defect (a), routed item 3); QUALITY 125 now checks counts a claims file states.
