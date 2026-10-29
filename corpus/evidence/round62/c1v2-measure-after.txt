@@ -1,0 +1,94 @@
+SUBJECT LANDED landed-1 sha256=4650f075927b12b1 counter_exit=0 want=0 ok | LEGS=20/20 C1V2=PASS
+SUBJECT LANDED landed-2 sha256=834ed9c5b19cb638 counter_exit=0 want=0 ok | LEGS=20/20 C1V2=PASS
+SUBJECT LANDED landed-3 sha256=8a8a14054f55fb59 counter_exit=0 want=0 ok | LEGS=20/20 C1V2=PASS
+SUBJECT POSITIVE pos-indep1 sha256=aad7cfcf0ec4ebd1 counter_exit=0 want=0 ok | LEGS=20/20 C1V2=PASS
+SUBJECT POSITIVE pos-indep2 sha256=e30679e389c9c681 counter_exit=0 want=0 ok | LEGS=20/20 C1V2=PASS
+SUBJECT POSITIVE pos-indep3 sha256=a84a624e60669bf2 counter_exit=0 want=0 ok | LEGS=20/20 C1V2=PASS
+SUBJECT POSITIVE pos-ref sha256=05e03e7bccb1c9cc counter_exit=0 want=0 ok | LEGS=20/20 C1V2=PASS
+SUBJECT FORGER F01 sha256=7a0475ec809f4aef counter_exit=1 want=1 ok | LEGS=11/20 C1V2=FAIL
+SUBJECT FORGER F02 sha256=4d8802fe59bb02ab counter_exit=1 want=1 ok | LEGS=11/20 C1V2=FAIL
+SUBJECT FORGER F03 sha256=596d4a0d6d01b14f counter_exit=1 want=1 ok | LEGS=11/20 C1V2=FAIL
+SUBJECT FORGER F04 sha256=467d4713184d08a4 counter_exit=1 want=1 ok | LEGS=11/20 C1V2=FAIL
+SUBJECT FORGER F05 sha256=fff8f5c5bd378438 counter_exit=1 want=1 ok | LEGS=11/20 C1V2=FAIL
+SUBJECT FORGER F06 sha256=8d43c653f11862be counter_exit=1 want=1 ok | LEGS=11/20 C1V2=FAIL
+SUBJECT FORGER F07 sha256=8cadd653c426b63f counter_exit=1 want=1 ok | LEGS=11/20 C1V2=FAIL
+SUBJECT FORGER F08 sha256=6f986e19ef6d4a9f counter_exit=1 want=1 ok | LEGS=11/20 C1V2=FAIL
+SUBJECT FORGER F09 sha256=c22b872c2f7eccab counter_exit=1 want=1 ok | LEGS=9/20 C1V2=FAIL
+SUBJECT FORGER F10 sha256=8a4c682ec096eba8 counter_exit=1 want=1 ok | LEGS=11/20 C1V2=FAIL
+SUBJECT FORGER F11 sha256=8bce94d0792f766f counter_exit=1 want=1 ok | LEGS=11/20 C1V2=FAIL
+SUBJECT FORGER F12 sha256=3cc44107a34f4220 counter_exit=1 want=1 ok | LEGS=19/20 C1V2=FAIL
+SUBJECT STUB stub-exit0 sha256=fda7f11a2f9b123c counter_exit=1 want=1 ok | LEGS=1/20 C1V2=FAIL
+SUBJECT STUB stub-exit2 sha256=8fb51ec8a7b8aea4 counter_exit=1 want=1 ok | LEGS=14/20 C1V2=FAIL
+SUBJECT STUB stub-base sha256=865c9c2cc57dfb36 counter_exit=1 want=1 ok | LEGS=11/20 C1V2=FAIL
+SUBJECT STUB stub-base-token sha256=8a02360f5df30653 counter_exit=1 want=1 ok | LEGS=11/20 C1V2=FAIL
+LANDED=3/3 POSITIVES=4/4 FORGERS_REJECTED=12/12 STUBS_REJECTED=4/4 BATTERY=PASS
+exit=0
+BUILDER sha256=c366492005ce304a0396401c4eea9d41b8cd2d384f82174b79277678f5474eac path=/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/build-spans.py SEED=1983229874
+LEG P01 TXT pass neutral: ok rc=0 | plain: ok rc=0
+LEG P02 DOCX pass neutral: ok rc=0 | plain: ok rc=0
+LEG P03 NOPYC pass neutral: ok tools=['capture-text.py', 'tjkdn.py'] | plain: ok tools=['build-spans.py', 'capture-text.py']
+LEG P04 CHECK pass neutral: ok rc=0,0,1 | plain: ok rc=0,0,1
+LEG P05 REFUSEROW pass neutral: ok rc=1 | plain: ok rc=1
+LEG P06 REBUILD pass neutral: ok rc=0,0 | plain: ok rc=0,0
+LEG H07 FOREIGN pass neutral: ok rc=2,2 | plain: ok rc=2,2
+LEG H08 REPLACE pass neutral: ok rc=0 | plain: ok rc=0
+LEG H09 ORPHAN pass neutral: ok rc=2 | plain: ok rc=2
+LEG H10 SPANSLINK pass neutral: ok rc=2 victim_unchanged=True | plain: ok rc=2 victim_unchanged=True
+LEG H11 FILELINK pass neutral: ok rc=2 victim_unchanged=True | plain: ok rc=2 victim_unchanged=True
+LEG H12 TSVLINK pass neutral: ok rc=2 victim_unchanged=True | plain: ok rc=2 victim_unchanged=True
+LEG H13 OUTSIDE pass neutral: ok rc=1 leaked=False | plain: ok rc=1 leaked=False
+LEG H14 BIGTXT pass neutral: ok rc=1 rss_kib=20800 limit=98304 | plain: ok rc=1 rss_kib=20880 limit=98304
+LEG H15 BIGRAW pass neutral: ok rc=1 rss_kib=21184 limit=98304 | plain: ok rc=1 rss_kib=21096 limit=98304
+LEG H16 OUTFILE pass neutral: ok rc=2 | plain: ok rc=2
+LEG H17 UNREADABLE pass neutral: ok rc=1 | plain: ok rc=1
+LEG H18 FIFO pass neutral: ok rc=1 | plain: ok rc=1
+LEG H19 ENTRYDOT pass neutral: ok rc=2 | plain: ok rc=2
+LEG H20 BIGFORM pass neutral: ok rc=1 rss_kib=231228 | plain: ok rc=1 rss_kib=231228
+LEGS=20/20 C1V2=PASS
+exit=0 (counter run 1, C1V2_SEED unset)
+BUILDER sha256=c366492005ce304a0396401c4eea9d41b8cd2d384f82174b79277678f5474eac path=/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/build-spans.py SEED=3928594849
+LEG P01 TXT pass neutral: ok rc=0 | plain: ok rc=0
+LEG P02 DOCX pass neutral: ok rc=0 | plain: ok rc=0
+LEG P03 NOPYC pass neutral: ok tools=['capture-text.py', 'hrawqj.py'] | plain: ok tools=['build-spans.py', 'capture-text.py']
+LEG P04 CHECK pass neutral: ok rc=0,0,1 | plain: ok rc=0,0,1
+LEG P05 REFUSEROW pass neutral: ok rc=1 | plain: ok rc=1
+LEG P06 REBUILD pass neutral: ok rc=0,0 | plain: ok rc=0,0
+LEG H07 FOREIGN pass neutral: ok rc=2,2 | plain: ok rc=2,2
+LEG H08 REPLACE pass neutral: ok rc=0 | plain: ok rc=0
+LEG H09 ORPHAN pass neutral: ok rc=2 | plain: ok rc=2
+LEG H10 SPANSLINK pass neutral: ok rc=2 victim_unchanged=True | plain: ok rc=2 victim_unchanged=True
+LEG H11 FILELINK pass neutral: ok rc=2 victim_unchanged=True | plain: ok rc=2 victim_unchanged=True
+LEG H12 TSVLINK pass neutral: ok rc=2 victim_unchanged=True | plain: ok rc=2 victim_unchanged=True
+LEG H13 OUTSIDE pass neutral: ok rc=1 leaked=False | plain: ok rc=1 leaked=False
+LEG H14 BIGTXT pass neutral: ok rc=1 rss_kib=20772 limit=98304 | plain: ok rc=1 rss_kib=21012 limit=98304
+LEG H15 BIGRAW pass neutral: ok rc=1 rss_kib=20036 limit=98304 | plain: ok rc=1 rss_kib=20352 limit=98304
+LEG H16 OUTFILE pass neutral: ok rc=2 | plain: ok rc=2
+LEG H17 UNREADABLE pass neutral: ok rc=1 | plain: ok rc=1
+LEG H18 FIFO pass neutral: ok rc=1 | plain: ok rc=1
+LEG H19 ENTRYDOT pass neutral: ok rc=2 | plain: ok rc=2
+LEG H20 BIGFORM pass neutral: ok rc=1 rss_kib=166576 | plain: ok rc=1 rss_kib=167356
+LEGS=20/20 C1V2=PASS
+exit=0 (counter run 2, C1V2_SEED unset)
+BUILDER sha256=c366492005ce304a0396401c4eea9d41b8cd2d384f82174b79277678f5474eac path=/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/build-spans.py SEED=2039230051
+LEG P01 TXT pass neutral: ok rc=0 | plain: ok rc=0
+LEG P02 DOCX pass neutral: ok rc=0 | plain: ok rc=0
+LEG P03 NOPYC pass neutral: ok tools=['capture-text.py', 'wxlk.py'] | plain: ok tools=['build-spans.py', 'capture-text.py']
+LEG P04 CHECK pass neutral: ok rc=0,0,1 | plain: ok rc=0,0,1
+LEG P05 REFUSEROW pass neutral: ok rc=1 | plain: ok rc=1
+LEG P06 REBUILD pass neutral: ok rc=0,0 | plain: ok rc=0,0
+LEG H07 FOREIGN pass neutral: ok rc=2,2 | plain: ok rc=2,2
+LEG H08 REPLACE pass neutral: ok rc=0 | plain: ok rc=0
+LEG H09 ORPHAN pass neutral: ok rc=2 | plain: ok rc=2
+LEG H10 SPANSLINK pass neutral: ok rc=2 victim_unchanged=True | plain: ok rc=2 victim_unchanged=True
+LEG H11 FILELINK pass neutral: ok rc=2 victim_unchanged=True | plain: ok rc=2 victim_unchanged=True
+LEG H12 TSVLINK pass neutral: ok rc=2 victim_unchanged=True | plain: ok rc=2 victim_unchanged=True
+LEG H13 OUTSIDE pass neutral: ok rc=1 leaked=False | plain: ok rc=1 leaked=False
+LEG H14 BIGTXT pass neutral: ok rc=1 rss_kib=20072 limit=98304 | plain: ok rc=1 rss_kib=20532 limit=98304
+LEG H15 BIGRAW pass neutral: ok rc=1 rss_kib=21080 limit=98304 | plain: ok rc=1 rss_kib=21168 limit=98304
+LEG H16 OUTFILE pass neutral: ok rc=2 | plain: ok rc=2
+LEG H17 UNREADABLE pass neutral: ok rc=1 | plain: ok rc=1
+LEG H18 FIFO pass neutral: ok rc=1 | plain: ok rc=1
+LEG H19 ENTRYDOT pass neutral: ok rc=2 | plain: ok rc=2
+LEG H20 BIGFORM pass neutral: ok rc=1 rss_kib=167060 | plain: ok rc=1 rss_kib=167032
+LEGS=20/20 C1V2=PASS
+exit=0 (counter run 3, C1V2_SEED unset)
