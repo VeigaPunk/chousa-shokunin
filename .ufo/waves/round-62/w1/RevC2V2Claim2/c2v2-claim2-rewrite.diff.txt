@@ -1,0 +1,2 @@
+- Claim 2. On this host the difference is observable: a path through a symlinked directory is opened by os.open with O_NOFOLLOW, and refused with ELOOP by openat2 with RESOLVE_NO_SYMLINKS. [Q7, Q8]
++ Claim 2. On this host the difference is observable in the probe case with a symlink in an earlier component: os.open with O_NOFOLLOW opens the path, while openat2 with RESOLVE_NO_SYMLINKS refuses it with ELOOP. [Q7, Q8]
