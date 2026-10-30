@@ -1,0 +1,34 @@
+Probe02 nonzero-valid receipt fixture run — 2026-10-30T14:43:44Z
+Seat: Probe02 (leaf), lane chousa-shokunin, freeze f99de3bdfaaf9b4c4fa85cc55dd37b9df2ee90fd
+Frozen format source: corpus/evidence/round65/claims.md (C1); oracle: corpus/evidence/round65/controls/ref-receipt-pin.py
+Base master: d6ed8155e9b4735639a2cf0a3e479c62f2056195
+Root: /home/vgpnk/Projects/shokunin/chousa-shokunin (read-only git, explicit -C)
+Python 3.14.8; TMPDIR=/fast/scratch/hyaku/chousa-r65/Probe02/tmp
+
+Independent digest derivation (two channels, neither using counter internals):
+  sha256sum over `git -C <lane> cat-file blob d6ed8155...:SKILL.md`
+    = 4355e16a5d8d16057496f005df7382ca287863712ed2e3abb25f61c60008ce1a
+  hashlib.sha256 (python3) over same blob
+    = 4355e16a5d8d16057496f005df7382ca287863712ed2e3abb25f61c60008ce1a
+  channels agree; object type verified `blob` before hashing.
+
+Derived expectation for nonzero-valid (from claims.md alone): EXIT is recorded
+data bounded 0..255; consistency turns on revision equality + blob digest binding
++ header shape + nonempty body. A receipt reporting EXIT=1 with everything else
+consistent is CONSISTENT -> validator exit 0, token RECEIPT_PIN=PASS. The
+validator's own exit must not propagate the receipt's reported exit.
+
+Argv shape (identical to c1-count.py invocation of a tool):
+  python3 -B <tool> --receipt <fixture> --root <lane> --revision d6ed8155e9b4735639a2cf0a3e479c62f2056195
+
+Results (reference as --tool):
+== nonzero-valid-exit1        rc=0  RECEIPT_PIN=PASS
+== nonzero-valid-exit255      rc=0  RECEIPT_PIN=PASS
+== nonzero-exit-bad-digest    rc=1  RECEIPT_PIN=FAIL blob/digest
+== nonzero-exit-wrong-revision rc=1 RECEIPT_PIN=FAIL header/body
+== nonzero-valid-exit01       rc=1  RECEIPT_PIN=FAIL header/body   (leading-zero EXIT encoding rejected; beyond frozen 20)
+
+Verdict: independent derivation matches oracle on the assigned surface. Nonzero
+reported exit does not weaken the digest/revision binding and does not leak into
+the validator's own exit code. EXIT=01 rejection is an observed reference
+strictness (canonical decimal) outside the frozen 20 cases; noted, not scored.

@@ -1,0 +1,54 @@
+
+=== environment ===
+python 3.14.8
+git version 2.56.0
+
+=== crafted receipts (exact bytes preserved) ===
+lf-valid: b'REVISION=d6ed8155e9b4735639a2cf0a3e479c62f2056195\nEXIT=0\nSHA256=4355e1'
+frozen-negative-exit: b'REVISION=d6ed8155e9b4735639a2cf0a3e479c62f2056195\nEXIT=-1\nSHA256=4355e'
+crlf-every-lf: b'REVISION=d6ed8155e9b4735639a2cf0a3e479c62f2056195\r\nEXIT=0\r\nSHA256=4355'
+cr-only: b'REVISION=d6ed8155e9b4735639a2cf0a3e479c62f2056195\rEXIT=0\rSHA256=4355e1'
+vt-separator: b'REVISION=d6ed8155e9b4735639a2cf0a3e479c62f2056195\nEXIT=0\nSHA256=4355e1'
+ff-separator: b'REVISION=d6ed8155e9b4735639a2cf0a3e479c62f2056195\nEXIT=0\nSHA256=4355e1'
+fs-separator: b'REVISION=d6ed8155e9b4735639a2cf0a3e479c62f2056195\nEXIT=0\nSHA256=4355e1'
+nel-separator: b'REVISION=d6ed8155e9b4735639a2cf0a3e479c62f2056195\nEXIT=0\nSHA256=4355e1'
+u2028-separator: b'REVISION=d6ed8155e9b4735639a2cf0a3e479c62f2056195\nEXIT=0\nSHA256=4355e1'
+body-forged-header-block: b'REVISION=d6ed8155e9b4735639a2cf0a3e479c62f2056195\nEXIT=0\nSHA256=4355e1'
+exit-leading-zero: b'REVISION=d6ed8155e9b4735639a2cf0a3e479c62f2056195\nEXIT=00\nSHA256=4355e'
+exit-tab-trailing: b'REVISION=d6ed8155e9b4735639a2cf0a3e479c62f2056195\nEXIT=0\t\nSHA256=4355e'
+
+=== reference validator (frozen controls copy) on each variant ===
+lf-valid: rc=0 out='RECEIPT_PIN=PASS'
+frozen-negative-exit: rc=1 out='RECEIPT_PIN=FAIL header/body'
+crlf-every-lf: rc=0 out='RECEIPT_PIN=PASS'
+cr-only: rc=0 out='RECEIPT_PIN=PASS'
+vt-separator: rc=0 out='RECEIPT_PIN=PASS'
+ff-separator: rc=0 out='RECEIPT_PIN=PASS'
+fs-separator: rc=0 out='RECEIPT_PIN=PASS'
+nel-separator: rc=0 out='RECEIPT_PIN=PASS'
+u2028-separator: rc=0 out='RECEIPT_PIN=PASS'
+body-forged-header-block: rc=0 out='RECEIPT_PIN=PASS'
+exit-leading-zero: rc=1 out='RECEIPT_PIN=FAIL header/body'
+exit-tab-trailing: rc=1 out='RECEIPT_PIN=FAIL header/body'
+
+=== strict-NL validator (split("\n") only) on each variant ===
+lf-valid: rc=0 out='RECEIPT_PIN=PASS'
+frozen-negative-exit: rc=1 out='RECEIPT_PIN=FAIL header/body'
+crlf-every-lf: rc=0 out='RECEIPT_PIN=PASS'
+cr-only: rc=0 out='RECEIPT_PIN=PASS'
+vt-separator: rc=1 out='RECEIPT_PIN=FAIL header/body'
+ff-separator: rc=1 out='RECEIPT_PIN=FAIL header/body'
+fs-separator: rc=1 out='RECEIPT_PIN=FAIL header/body'
+nel-separator: rc=1 out='RECEIPT_PIN=FAIL header/body'
+u2028-separator: rc=1 out='RECEIPT_PIN=FAIL header/body'
+body-forged-header-block: rc=0 out='RECEIPT_PIN=PASS'
+exit-leading-zero: rc=1 out='RECEIPT_PIN=FAIL header/body'
+exit-tab-trailing: rc=1 out='RECEIPT_PIN=FAIL header/body'
+
+=== frozen counter calibration ===
+tool=ref-copy: counter rc=0 | CASES=20/20 C1=PASS
+tool=strict-nl: counter rc=0 | CASES=20/20 C1=PASS
+tool=missing-target: counter rc=1 | CASES=0/20 C1=FAIL missing-target
+
+=== attack summary (reference validator verdicts) ===
+reference-PASS on malformed variants: ['crlf-every-lf', 'cr-only', 'vt-separator', 'ff-separator', 'fs-separator', 'nel-separator', 'u2028-separator', 'body-forged-header-block']

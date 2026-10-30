@@ -1,0 +1,102 @@
+[
+ {
+  "fixture": "valid-control",
+  "argv": [
+   "/usr/bin/python3",
+   "-B",
+   "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round65/controls/ref-receipt-pin.py",
+   "--receipt",
+   "/fast/scratch/hyaku/chousa-r65/Probe05/fixtures/valid-control.txt",
+   "--root",
+   "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+   "--revision",
+   "d6ed8155e9b4735639a2cf0a3e479c62f2056195"
+  ],
+  "expected_exit": 0,
+  "actual_exit": 0,
+  "stdout": "RECEIPT_PIN=PASS\n",
+  "stderr": "",
+  "exit_match": true,
+  "derivation": "format contract satisfied; revision == --revision; digest binds blob at declared revision => consistent => 0"
+ },
+ {
+  "fixture": "wrong-rev-zeros",
+  "argv": [
+   "/usr/bin/python3",
+   "-B",
+   "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round65/controls/ref-receipt-pin.py",
+   "--receipt",
+   "/fast/scratch/hyaku/chousa-r65/Probe05/fixtures/wrong-rev-zeros.txt",
+   "--root",
+   "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+   "--revision",
+   "d6ed8155e9b4735639a2cf0a3e479c62f2056195"
+  ],
+  "expected_exit": 1,
+  "actual_exit": 1,
+  "stdout": "RECEIPT_PIN=FAIL header/body\n",
+  "stderr": "",
+  "exit_match": true,
+  "derivation": "declared revision (well-formed 40 hex) != caller --revision => invalid => 1"
+ },
+ {
+  "fixture": "wrong-rev-other-commit",
+  "argv": [
+   "/usr/bin/python3",
+   "-B",
+   "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round65/controls/ref-receipt-pin.py",
+   "--receipt",
+   "/fast/scratch/hyaku/chousa-r65/Probe05/fixtures/wrong-rev-other-commit.txt",
+   "--root",
+   "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+   "--revision",
+   "d6ed8155e9b4735639a2cf0a3e479c62f2056195"
+  ],
+  "expected_exit": 1,
+  "actual_exit": 1,
+  "stdout": "RECEIPT_PIN=FAIL header/body\n",
+  "stderr": "",
+  "exit_match": true,
+  "derivation": "receipt internally consistent at FREEZE but header revision != caller --revision => invalid => 1"
+ },
+ {
+  "fixture": "wrong-rev-caller-side",
+  "argv": [
+   "/usr/bin/python3",
+   "-B",
+   "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round65/controls/ref-receipt-pin.py",
+   "--receipt",
+   "/fast/scratch/hyaku/chousa-r65/Probe05/fixtures/wrong-rev-caller-side.txt",
+   "--root",
+   "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+   "--revision",
+   "0000000000000000000000000000000000000000"
+  ],
+  "expected_exit": 1,
+  "actual_exit": 1,
+  "stdout": "RECEIPT_PIN=FAIL header/body\n",
+  "stderr": "",
+  "exit_match": true,
+  "derivation": "valid receipt but caller-supplied --revision disagrees; contract binds revision to caller value => 1"
+ },
+ {
+  "fixture": "wrong-rev-uppercase",
+  "argv": [
+   "/usr/bin/python3",
+   "-B",
+   "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round65/controls/ref-receipt-pin.py",
+   "--receipt",
+   "/fast/scratch/hyaku/chousa-r65/Probe05/fixtures/wrong-rev-uppercase.txt",
+   "--root",
+   "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+   "--revision",
+   "d6ed8155e9b4735639a2cf0a3e479c62f2056195"
+  ],
+  "expected_exit": 1,
+  "actual_exit": 1,
+  "stdout": "RECEIPT_PIN=FAIL header/body\n",
+  "stderr": "",
+  "exit_match": true,
+  "derivation": "format demands lowercase 40 hex; uppercase header != lowercase --revision (and violates format) => 1"
+ }
+]

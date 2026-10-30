@@ -1,0 +1,45 @@
+# C2 structural counter counterexamples (ReviewFreeze, 2026-10-30)
+# Counter: corpus/evidence/round65/c2-count.py (frozen, matches HEAD blob 2d642e72)
+# All mutation confined to a scratch clone; no production writes.
+
+## A. Do-nothing (reproduces frozen before control)
+# Scratch clone of lane at f99de3bdfaaf9b4c4fa85cc55dd37b9df2ee90fd (clone lacks the uncommitted draft entry):
+$ python3 -B corpus/evidence/round65/c2-count.py
+ENTRY_CHECKS=0/10 C2=FAIL
+exit=1
+# Matches frozen controls/c2-before.txt (ENTRY_CHECKS=0/10 C2=FAIL, EXIT=1). VERIFIED.
+
+## B. Boilerplate entry passes the structural counter (claim-admitted boundary, demonstrated)
+# In the scratch clone only:
+#   corpus/knowledge/receipt-identity-r65.md :=
+#     source: S154 S155 S156
+#     verified-at: 2026-10-30
+#     recheck: none
+#
+#     ## Claims
+#     boilerplate authenticity working tree
+#     ## Limits
+#     none
+#   corpus/SOURCES.md appends: | S154 | x | / | S155 | x | / | S156 | x |
+#   corpus/README.md appends: receipt-identity-r65.md
+$ python3 -B corpus/evidence/round65/c2-count.py
+ENTRY_CHECKS=10/10 C2=PASS
+exit=0
+# A semantically empty 9-line entry scores full marks. Second, tighter variant (single-line Claims body,
+# 'recheck: x') also scores ENTRY_CHECKS=10/10 C2=PASS exit 0.
+# CONCLUSION: the structural counter cannot distinguish a sourced lesson from boilerplate; it checks
+# presence/shape of markers only. This is exactly the limitation the frozen claim states
+# ("A boilerplate entry could pass; no semantic-quality claim rests on this counter alone").
+# Not a counter defect; a boundary confirmation.
+
+## C. Production working-tree state (observed, not modified)
+# corpus/knowledge/receipt-identity-r65.md exists as an UNCOMMITTED draft; corpus/SOURCES.md rows S154-S156
+# and corpus/README.md mention are likewise uncommitted modifications. Running the frozen counter read-only
+# in the lane today yields ENTRY_CHECKS=10/10 C2=PASS exit 0.
+# Boundary consequence: c2-count.py reads working-tree bytes only; commitment/provenance is enforced by the
+# lane process (L1 integrates and commits), not by the counter. A working-tree entry passes pre-commit.
+
+## D. Entry quote spot-checks against local sources (read-only)
+# - hashlib /usr/lib/python3.14/hashlib.py: documented window lines 27-34 contains
+#   " - digest():     Return the digest of the bytes passed to the update() method" (file lines 31-32). MATCH.
+# - git-cat-file(1) OUTPUT section: "If <type> is specified, the raw (though uncompressed) contents of the <object>". MATCH.

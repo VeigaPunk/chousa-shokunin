@@ -1,0 +1,32 @@
+{
+  "control-valid": {
+    "exit": 0,
+    "stdout": "RECEIPT_PIN=PASS",
+    "expected": "accept(exit0)"
+  },
+  "dup-revision": {
+    "exit": 1,
+    "stdout": "RECEIPT_PIN=FAIL header/body",
+    "expected": "reject(exit1)"
+  },
+  "dup-exit": {
+    "exit": 1,
+    "stdout": "RECEIPT_PIN=FAIL header/body",
+    "expected": "reject(exit1)"
+  },
+  "dup-sha256": {
+    "exit": 1,
+    "stdout": "RECEIPT_PIN=FAIL header/body",
+    "expected": "reject(exit1)"
+  },
+  "dup-sha256-diffval": {
+    "exit": 1,
+    "stdout": "RECEIPT_PIN=FAIL header/body",
+    "expected": "reject(exit1)"
+  },
+  "dup-in-body": {
+    "exit": 0,
+    "stdout": "RECEIPT_PIN=PASS",
+    "expected": "reject(exit1)"
+  }
+}

@@ -1,0 +1,15 @@
+=== strict2 (bytes-exact read + split("\n")) on variants ===
+body-forged-header-block: rc=0 out='RECEIPT_PIN=PASS'
+cr-only: rc=0 out='RECEIPT_PIN=PASS'
+crlf-every-lf: rc=0 out='RECEIPT_PIN=PASS'
+exit-leading-zero: rc=1 out='RECEIPT_PIN=FAIL header/body'
+exit-tab-trailing: rc=1 out='RECEIPT_PIN=FAIL header/body'
+ff-separator: rc=0 out='RECEIPT_PIN=PASS'
+frozen-negative-exit: rc=1 out='RECEIPT_PIN=FAIL header/body'
+fs-separator: rc=0 out='RECEIPT_PIN=PASS'
+lf-valid: rc=0 out='RECEIPT_PIN=PASS'
+nel-separator: rc=0 out='RECEIPT_PIN=PASS'
+u2028-separator: rc=0 out='RECEIPT_PIN=PASS'
+vt-separator: rc=0 out='RECEIPT_PIN=PASS'
+=== frozen counter vs strict2 ===
+counter rc= 0 | CASES=20/20 C1=PASS

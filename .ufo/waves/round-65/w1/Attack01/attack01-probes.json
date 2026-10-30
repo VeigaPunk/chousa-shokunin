@@ -1,0 +1,86 @@
+[
+ {
+  "case": "z0-frozen-valid",
+  "exit": 0,
+  "stdout": "RECEIPT_PIN=PASS"
+ },
+ {
+  "case": "z1-frozen-duplicate",
+  "exit": 1,
+  "stdout": "RECEIPT_PIN=FAIL header/body"
+ },
+ {
+  "case": "a1-body-header-smuggle",
+  "exit": 0,
+  "stdout": "RECEIPT_PIN=PASS"
+ },
+ {
+  "case": "a2-crlf",
+  "exit": 0,
+  "stdout": "RECEIPT_PIN=PASS"
+ },
+ {
+  "case": "a3-leading-blank-body",
+  "exit": 0,
+  "stdout": "RECEIPT_PIN=PASS"
+ },
+ {
+  "case": "a4-trailing-header-line",
+  "exit": 0,
+  "stdout": "RECEIPT_PIN=PASS"
+ },
+ {
+  "case": "b1-forged-readme",
+  "exit": 0,
+  "stdout": "RECEIPT_PIN=PASS"
+ },
+ {
+  "case": "b2-forged-nonzero",
+  "exit": 0,
+  "stdout": "RECEIPT_PIN=PASS"
+ },
+ {
+  "case": "c1-exit-leading-zero",
+  "exit": 1,
+  "stdout": "RECEIPT_PIN=FAIL header/body"
+ },
+ {
+  "case": "c2-path-dot-segment",
+  "exit": 1,
+  "stdout": "RECEIPT_PIN=FAIL path"
+ },
+ {
+  "case": "c3-path-backslash",
+  "exit": 1,
+  "stdout": "RECEIPT_PIN=FAIL blob/digest"
+ },
+ {
+  "case": "c4-exit-plus",
+  "exit": 1,
+  "stdout": "RECEIPT_PIN=FAIL header/body"
+ },
+ {
+  "case": "d1-cheat-valid",
+  "exit": 0,
+  "stdout": "RECEIPT_PIN=PASS",
+  "counter_would_count_pass": true
+ },
+ {
+  "case": "d1-cheat-wrong-digest",
+  "exit": 1,
+  "stdout": "RECEIPT_PIN=FAIL keyed",
+  "counter_would_count_pass": true
+ },
+ {
+  "case": "d1-cheat-duplicate",
+  "exit": 1,
+  "stdout": "RECEIPT_PIN=FAIL keyed",
+  "counter_would_count_pass": true
+ },
+ {
+  "case": "d1-cheat-no-body",
+  "exit": 1,
+  "stdout": "RECEIPT_PIN=FAIL keyed",
+  "counter_would_count_pass": true
+ }
+]

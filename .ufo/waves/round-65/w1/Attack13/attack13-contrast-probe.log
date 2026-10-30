@@ -1,0 +1,25 @@
+=== frozen counter vs MUTANT B (accepts any 1..64 char digest prefix) ===
+CASE valid PASS rc=0
+CASE nonzero-valid PASS rc=0
+CASE max-exit PASS rc=0
+CASE no-revision PASS rc=1
+CASE wrong-revision PASS rc=1
+CASE short-revision PASS rc=1
+CASE no-exit PASS rc=1
+CASE negative-exit PASS rc=1
+CASE overflow-exit PASS rc=1
+CASE word-exit PASS rc=1
+CASE no-digest PASS rc=1
+CASE wrong-digest PASS rc=1
+CASE short-digest FAIL rc=0
+CASE missing-blob PASS rc=1
+CASE traversal PASS rc=1
+CASE absolute PASS rc=1
+CASE duplicate PASS rc=1
+CASE no-separator PASS rc=1
+CASE no-body PASS rc=1
+CASE upper-digest PASS rc=1
+CASES=19/20 C1=FAIL  [counter rc=1]
+=== mutant B direct acceptance ===
+frozen-short-digest-16     mutantB rc=0  RECEIPT_PIN=PASS
+digest-16-upper            mutantB rc=1  RECEIPT_PIN=FAIL digest header

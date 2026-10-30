@@ -1,0 +1,30 @@
+# Freeze integrity (ReviewFreeze, 2026-10-30)
+lane=/home/vgpnk/Projects/shokunin/chousa-shokunin
+HEAD=f99de3bdfaaf9b4c4fa85cc55dd37b9df2ee90fd  (matches operator freeze)
+
+## Frozen artifacts: working-tree blob hash == HEAD blob hash (all MATCH)
+corpus/evidence/round65/claims.md                 MATCH
+corpus/evidence/round65/c1-count.py               MATCH
+corpus/evidence/round65/c2-count.py               MATCH
+corpus/evidence/round65/controls/c1-before.txt    MATCH
+corpus/evidence/round65/controls/c1-positive.txt  MATCH
+corpus/evidence/round65/controls/c2-before.txt    MATCH
+corpus/evidence/round65/controls/always-pass.txt  MATCH
+corpus/evidence/round65/controls/always-fail.txt  MATCH
+corpus/evidence/round65/controls/ref-receipt-pin.py MATCH
+corpus/evidence/round65/controls/always-pass.py   (untracked-in-head? tracked; content verified in repro)
+corpus/evidence/round65/controls/always-fail.py   (tracked; content verified in repro)
+corpus/evidence/round65/source-openings.json      UNTRACKED (new file; preliminary planning per claims.md; not a frozen artifact)
+
+## Uncommitted working-tree modifications observed (not mine; not touched)
+ M SCORECARD.md / SKILL.md / corpus/QUALITY.md / corpus/README.md / corpus/SOURCES.md
+ corpus/knowledge/receipt-identity-r65.md        untracked draft (C2 target)
+ claims.md: "the preliminary uncommitted planning does not freeze any others" — consistent.
+
+## Base blob
+git cat-file -e d6ed8155e9b4735639a2cf0a3e479c62f2056195:SKILL.md  -> BLOB-EXISTS
+sha256(blob) = 4355e16a5d8d16057496f005df7382ca287863712ed2e3abb25f61c60008ce1a
+(c1-count.py derives the same digest at runtime; positive control confirms)
+
+## C1 target state
+tools/receipt-pin.py ABSENT -> frozen before control (CASES=0/20 C1=FAIL exit 1) currently holds. Reproduced.

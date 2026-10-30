@@ -1,0 +1,114 @@
+[
+ {
+  "name": "crlf",
+  "why": "CRLF line endings (non-canonical POSIX text)",
+  "rc": 0,
+  "out": "RECEIPT_PIN=PASS",
+  "detected": false
+ },
+ {
+  "name": "cr-only",
+  "why": "lone CR line endings",
+  "rc": 0,
+  "out": "RECEIPT_PIN=PASS",
+  "detected": false
+ },
+ {
+  "name": "mixed-sep-crlf",
+  "why": "headers LF, separator CRLF",
+  "rc": 0,
+  "out": "RECEIPT_PIN=PASS",
+  "detected": false
+ },
+ {
+  "name": "no-trailing-nl",
+  "why": "missing final newline",
+  "rc": 0,
+  "out": "RECEIPT_PIN=PASS",
+  "detected": false
+ },
+ {
+  "name": "bom",
+  "why": "UTF-8 BOM before REVISION",
+  "rc": 1,
+  "out": "RECEIPT_PIN=FAIL header/body",
+  "detected": true
+ },
+ {
+  "name": "leading-blank",
+  "why": "leading empty line",
+  "rc": 1,
+  "out": "RECEIPT_PIN=FAIL header/body",
+  "detected": true
+ },
+ {
+  "name": "upper-revision",
+  "why": "uppercase hex revision",
+  "rc": 1,
+  "out": "RECEIPT_PIN=FAIL header/body",
+  "detected": true
+ },
+ {
+  "name": "revision-space",
+  "why": "trailing space on revision",
+  "rc": 1,
+  "out": "RECEIPT_PIN=FAIL header/body",
+  "detected": true
+ },
+ {
+  "name": "exit-padded",
+  "why": "space-padded exit",
+  "rc": 1,
+  "out": "RECEIPT_PIN=FAIL header/body",
+  "detected": true
+ },
+ {
+  "name": "exit-plus",
+  "why": "signed exit",
+  "rc": 1,
+  "out": "RECEIPT_PIN=FAIL header/body",
+  "detected": true
+ },
+ {
+  "name": "sep-space",
+  "why": "whitespace separator line",
+  "rc": 1,
+  "out": "RECEIPT_PIN=FAIL header/body",
+  "detected": true
+ },
+ {
+  "name": "path-trail-space",
+  "why": "trailing space on path",
+  "rc": 1,
+  "out": "RECEIPT_PIN=FAIL blob/digest",
+  "detected": true
+ },
+ {
+  "name": "path-tab",
+  "why": "tab instead of space before path",
+  "rc": 1,
+  "out": "RECEIPT_PIN=FAIL digest header",
+  "detected": true
+ },
+ {
+  "name": "nul-body",
+  "why": "NUL byte in body",
+  "rc": 0,
+  "out": "RECEIPT_PIN=PASS",
+  "detected": false
+ },
+ {
+  "name": "body-fake-header",
+  "why": "forged header lines inside opaque body",
+  "rc": 0,
+  "out": "RECEIPT_PIN=PASS",
+  "detected": false
+ },
+ {
+  "name": "empty-path",
+  "why": "empty digest path",
+  "rc": 1,
+  "out": "RECEIPT_PIN=FAIL digest header",
+  "detected": true
+ }
+]

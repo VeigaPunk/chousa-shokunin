@@ -1,0 +1,14 @@
+FIXTURE rev=0718832ee77a3f09d6d6006c338648bdee9c5fbd digest=3b10336bb758eedd113b0f24174d975fee6b2b0f5c0b822f892d01958ad77752
+CASE valid-relative expect_rc=0 got_rc=0 expect='RECEIPT_PIN=PASS' got='RECEIPT_PIN=PASS' OK
+CASE abs-real-file expect_rc=1 got_rc=1 expect='RECEIPT_PIN=FAIL path' got='RECEIPT_PIN=FAIL path' OK
+CASE abs-root-style expect_rc=1 got_rc=1 expect='RECEIPT_PIN=FAIL path' got='RECEIPT_PIN=FAIL path' OK
+CASE abs-double-slash expect_rc=1 got_rc=1 expect='RECEIPT_PIN=FAIL path' got='RECEIPT_PIN=FAIL path' OK
+CASE dot-prefix expect_rc=1 got_rc=1 expect='RECEIPT_PIN=FAIL path' got='RECEIPT_PIN=FAIL path' OK
+CASE dotdot-mid expect_rc=1 got_rc=1 expect='RECEIPT_PIN=FAIL path' got='RECEIPT_PIN=FAIL path' OK
+CASE trailing-slash expect_rc=1 got_rc=1 expect='RECEIPT_PIN=FAIL path' got='RECEIPT_PIN=FAIL path' OK
+CASE empty-path expect_rc=1 got_rc=1 expect='RECEIPT_PIN=FAIL ' got='RECEIPT_PIN=FAIL digest header' OK
+CASE no-path-field expect_rc=1 got_rc=1 expect='RECEIPT_PIN=FAIL digest header' got='RECEIPT_PIN=FAIL digest header' OK
+CASE windows-abs expect_rc=1 got_rc=1 expect='RECEIPT_PIN=FAIL ' got='RECEIPT_PIN=FAIL blob/digest' OK
+CASE wrong-digest-valid-rel expect_rc=1 got_rc=1 expect='RECEIPT_PIN=FAIL ' got='RECEIPT_PIN=FAIL blob/digest' OK
+ANCHORS [('uppercase-revision', 2, 2, 'ref-receipt-pin.py: error: --revision requires full lowercase object id'), ('unreadable-receipt', 2, 1, "RECEIPT_PIN=FAIL [Errno 2] No such file or directory: '/fast/scratch/hyaku/chousa-r65/Probe16/missing.txt'")]
+PROBE16_ABS=11/11 PASS

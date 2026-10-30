@@ -1,0 +1,41 @@
+{
+ "lane": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+ "base": "d6ed8155e9b4735639a2cf0a3e479c62f2056195",
+ "blob_bytes": 172749,
+ "true_blob_sha256": "4355e16a5d8d16057496f005df7382ca287863712ed2e3abb25f61c60008ce1a",
+ "reference": "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round65/controls/ref-receipt-pin.py",
+ "argv_shape": "--receipt <file> --root <lane> --revision <BASE>",
+ "rows": [
+  {
+   "case": "control-valid",
+   "expect_rc": 0,
+   "expect_stdout_prefix": "RECEIPT_PIN=PASS",
+   "actual_rc": 0,
+   "actual_stdout": "RECEIPT_PIN=PASS\n",
+   "actual_stderr": "",
+   "agree": true,
+   "declared_digest_matches_blob": true
+  },
+  {
+   "case": "wrong-digest-zeros",
+   "expect_rc": 1,
+   "expect_stdout_prefix": "RECEIPT_PIN=FAIL ",
+   "actual_rc": 1,
+   "actual_stdout": "RECEIPT_PIN=FAIL blob/digest\n",
+   "actual_stderr": "",
+   "agree": true,
+   "declared_digest_matches_blob": false
+  },
+  {
+   "case": "wrong-digest-flip",
+   "expect_rc": 1,
+   "expect_stdout_prefix": "RECEIPT_PIN=FAIL ",
+   "actual_rc": 1,
+   "actual_stdout": "RECEIPT_PIN=FAIL blob/digest\n",
+   "actual_stderr": "",
+   "agree": true,
+   "declared_digest_matches_blob": false
+  }
+ ],
+ "ALL_AGREE": true
+}

@@ -1,0 +1,174 @@
+{
+  "freeze": "f99de3bdfaaf9b4c4fa85cc55dd37b9df2ee90fd",
+  "revision": "f99de3bdfaaf9b4c4fa85cc55dd37b9df2ee90fd",
+  "blob": "f99de3bdfaaf9b4c4fa85cc55dd37b9df2ee90fd:SKILL.md",
+  "digest": "4355e16a5d8d16057496f005df7382ca287863712ed2e3abb25f61c60008ce1a",
+  "all_agree": true,
+  "cases": [
+    {
+      "case": "control-valid",
+      "expect": 0,
+      "expect_why": "canonical decimal in 0..255",
+      "actual_rc": 0,
+      "actual_stdout": "RECEIPT_PIN=PASS",
+      "actual_stderr": "",
+      "agree": true,
+      "frozen_fail_token_shape": true,
+      "note": "in-range baseline; also harness sanity control"
+    },
+    {
+      "case": "nonzero-valid",
+      "expect": 0,
+      "expect_why": "canonical decimal in 0..255",
+      "actual_rc": 0,
+      "actual_stdout": "RECEIPT_PIN=PASS",
+      "actual_stderr": "",
+      "agree": true,
+      "frozen_fail_token_shape": true,
+      "note": "in-range nonzero"
+    },
+    {
+      "case": "max-exit",
+      "expect": 0,
+      "expect_why": "canonical decimal in 0..255",
+      "actual_rc": 0,
+      "actual_stdout": "RECEIPT_PIN=PASS",
+      "actual_stderr": "",
+      "agree": true,
+      "frozen_fail_token_shape": true,
+      "note": "range boundary, must stay consistent"
+    },
+    {
+      "case": "overflow-256",
+      "expect": 1,
+      "expect_why": "out of range 0..255",
+      "actual_rc": 1,
+      "actual_stdout": "RECEIPT_PIN=FAIL header/body",
+      "actual_stderr": "",
+      "agree": true,
+      "frozen_fail_token_shape": true,
+      "note": "minimal overflow (frozen counter case name)"
+    },
+    {
+      "case": "overflow-999",
+      "expect": 1,
+      "expect_why": "out of range 0..255",
+      "actual_rc": 1,
+      "actual_stdout": "RECEIPT_PIN=FAIL header/body",
+      "actual_stderr": "",
+      "agree": true,
+      "frozen_fail_token_shape": true,
+      "note": "largest 3-digit"
+    },
+    {
+      "case": "overflow-1000",
+      "expect": 1,
+      "expect_why": "out of range 0..255",
+      "actual_rc": 1,
+      "actual_stdout": "RECEIPT_PIN=FAIL header/body",
+      "actual_stderr": "",
+      "agree": true,
+      "frozen_fail_token_shape": true,
+      "note": "4-digit: range + width overflow"
+    },
+    {
+      "case": "overflow-65535",
+      "expect": 1,
+      "expect_why": "out of range 0..255",
+      "actual_rc": 1,
+      "actual_stdout": "RECEIPT_PIN=FAIL header/body",
+      "actual_stderr": "",
+      "agree": true,
+      "frozen_fail_token_shape": true,
+      "note": "width-5 overflow"
+    },
+    {
+      "case": "leading-zero-0255",
+      "expect": 1,
+      "expect_why": "non-canonical (leading zero)",
+      "actual_rc": 1,
+      "actual_stdout": "RECEIPT_PIN=FAIL header/body",
+      "actual_stderr": "",
+      "agree": true,
+      "frozen_fail_token_shape": true,
+      "note": "numerically in range, non-canonical decimal"
+    },
+    {
+      "case": "leading-zeros-000",
+      "expect": 1,
+      "expect_why": "non-canonical (leading zero)",
+      "actual_rc": 1,
+      "actual_stdout": "RECEIPT_PIN=FAIL header/body",
+      "actual_stderr": "",
+      "agree": true,
+      "frozen_fail_token_shape": true,
+      "note": "zero with leading zeros"
+    },
+    {
+      "case": "negative-exit",
+      "expect": 1,
+      "expect_why": "non-decimal/signed",
+      "actual_rc": 1,
+      "actual_stdout": "RECEIPT_PIN=FAIL header/body",
+      "actual_stderr": "",
+      "agree": true,
+      "frozen_fail_token_shape": true,
+      "note": "signed"
+    },
+    {
+      "case": "plus-exit",
+      "expect": 1,
+      "expect_why": "non-decimal/signed",
+      "actual_rc": 1,
+      "actual_stdout": "RECEIPT_PIN=FAIL header/body",
+      "actual_stderr": "",
+      "agree": true,
+      "frozen_fail_token_shape": true,
+      "note": "explicit sign"
+    },
+    {
+      "case": "empty-value",
+      "expect": 1,
+      "expect_why": "non-decimal/signed",
+      "actual_rc": 1,
+      "actual_stdout": "RECEIPT_PIN=FAIL header/body",
+      "actual_stderr": "",
+      "agree": true,
+      "frozen_fail_token_shape": true,
+      "note": "bare EXIT="
+    },
+    {
+      "case": "hexish-exit",
+      "expect": 1,
+      "expect_why": "non-decimal/signed",
+      "actual_rc": 1,
+      "actual_stdout": "RECEIPT_PIN=FAIL header/body",
+      "actual_stderr": "",
+      "agree": true,
+      "frozen_fail_token_shape": true,
+      "note": "non-decimal alphabet"
+    },
+    {
+      "case": "space-padded-exit",
+      "expect": 1,
+      "expect_why": "non-decimal/signed",
+      "actual_rc": 1,
+      "actual_stdout": "RECEIPT_PIN=FAIL header/body",
+      "actual_stderr": "",
+      "agree": true,
+      "frozen_fail_token_shape": true,
+      "note": "whitespace inside header value"
+    },
+    {
+      "case": "bad-revision-argv",
+      "expect": 2,
+      "expect_why": "usage/environment partition",
+      "actual_rc": 2,
+      "actual_stdout": "",
+      "actual_stderr": "usage: ref-receipt-pin.py [-h] --receipt RECEIPT --root ROOT\n                          --revision REVISION\nref-receipt-pin.py: error: --revision requires full lowercase object id",
+      "agree": true,
+      "frozen_fail_token_shape": false,
+      "note": "argv probe: uppercase --revision -> usage/environment, not exit 1"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+PROBE19 no-body fixture
+ref=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round65/controls/ref-receipt-pin.py
+freeze=f99de3bdfaaf9b4c4fa85cc55dd37b9df2ee90fd
+lane=/home/vgpnk/Projects/shokunin/chousa-shokunin
+clone-toplevel=/fast/scratch/hyaku/chousa-r65/Probe19/clone
+blob=SKILL.md@f99de3bdfaaf9b4c4fa85cc55dd37b9df2ee90fd sha256=4355e16a5d8d16057496f005df7382ca287863712ed2e3abb25f61c60008ce1a
+---
+CASE no-body receipt=/fast/scratch/hyaku/chousa-r65/Probe19/probe19-nobody-receipt.txt
+  receipt-bytes|REVISION=f99de3bdfaaf9b4c4fa85cc55dd37b9df2ee90fd
+  receipt-bytes|EXIT=0
+  receipt-bytes|SHA256=4355e16a5d8d16057496f005df7382ca287863712ed2e3abb25f61c60008ce1a SKILL.md
+  receipt-bytes|
+EXPECT rc=1 stdout=[RECEIPT_PIN=FAIL header/body]
+GOT    rc=1 stdout=[RECEIPT_PIN=FAIL header/body]
+CASE no-body MATCH
+---
+CASE ws-body receipt=/fast/scratch/hyaku/chousa-r65/Probe19/probe19-wsbody-receipt.txt
+  receipt-bytes|REVISION=f99de3bdfaaf9b4c4fa85cc55dd37b9df2ee90fd
+  receipt-bytes|EXIT=0
+  receipt-bytes|SHA256=4355e16a5d8d16057496f005df7382ca287863712ed2e3abb25f61c60008ce1a SKILL.md
+  receipt-bytes|
+  receipt-bytes|   
+EXPECT rc=1 stdout=[RECEIPT_PIN=FAIL header/body]
+GOT    rc=1 stdout=[RECEIPT_PIN=FAIL header/body]
+CASE ws-body MATCH
+---
+CASE positive receipt=/fast/scratch/hyaku/chousa-r65/Probe19/probe19-positive-receipt.txt
+  receipt-bytes|REVISION=f99de3bdfaaf9b4c4fa85cc55dd37b9df2ee90fd
+  receipt-bytes|EXIT=0
+  receipt-bytes|SHA256=4355e16a5d8d16057496f005df7382ca287863712ed2e3abb25f61c60008ce1a SKILL.md
+  receipt-bytes|
+  receipt-bytes|measured output
+EXPECT rc=0 stdout=[RECEIPT_PIN=PASS]
+GOT    rc=0 stdout=[RECEIPT_PIN=PASS]
+CASE positive MATCH
+---
+PROBE19_RESULT=PASS all observed outputs match independent expectations

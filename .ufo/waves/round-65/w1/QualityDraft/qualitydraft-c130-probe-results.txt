@@ -1,0 +1,35 @@
+lane: /home/vgpnk/Projects/shokunin/chousa-shokunin
+freeze revision: f99de3bdfaaf9b4c4fa85cc55dd37b9df2ee90fd
+tmpdir: /fast/scratch/hyaku/chousa-r65/QualityDraft/tmp
+tool: corpus/evidence/round65/controls/ref-receipt-pin.py (prefreeze reference, S157)
+exhibit: corpus/evidence/round64/controls/c1v3-before-full.txt (committed at freeze; unmodified in worktree per git status)
+
+# P1 red-before: round64 before receipt, headers absent
+$ python3 -B corpus/evidence/round65/controls/ref-receipt-pin.py --receipt <scratch>/c1v3-before-full.txt --root /home/vgpnk/Projects/shokunin/chousa-shokunin --revision f99de3bdfaaf9b4c4fa85cc55dd37b9df2ee90fd
+stdout: RECEIPT_PIN=FAIL header/body
+stderr: 
+exit: 1
+
+# P2 positive control: consistent header, EXIT=1, blob digest of exhibit at freeze
+$ python3 -B corpus/evidence/round65/controls/ref-receipt-pin.py --receipt <scratch>/p2-positive.txt --root /home/vgpnk/Projects/shokunin/chousa-shokunin --revision f99de3bdfaaf9b4c4fa85cc55dd37b9df2ee90fd
+stdout: RECEIPT_PIN=PASS
+stderr: 
+exit: 0
+
+# P3 authenticity boundary: identical header, fabricated body
+$ python3 -B corpus/evidence/round65/controls/ref-receipt-pin.py --receipt <scratch>/p3-fabricated.txt --root /home/vgpnk/Projects/shokunin/chousa-shokunin --revision f99de3bdfaaf9b4c4fa85cc55dd37b9df2ee90fd
+stdout: RECEIPT_PIN=PASS
+stderr: 
+exit: 0
+
+# P4 negative: digest tampered by one hex digit
+$ python3 -B corpus/evidence/round65/controls/ref-receipt-pin.py --receipt <scratch>/p4-tamper.txt --root /home/vgpnk/Projects/shokunin/chousa-shokunin --revision f99de3bdfaaf9b4c4fa85cc55dd37b9df2ee90fd
+stdout: RECEIPT_PIN=FAIL blob/digest
+stderr: 
+exit: 1
+
+# P5 negative: REVISION header differs from caller --revision
+$ python3 -B corpus/evidence/round65/controls/ref-receipt-pin.py --receipt <scratch>/p5-wrongrev.txt --root /home/vgpnk/Projects/shokunin/chousa-shokunin --revision f99de3bdfaaf9b4c4fa85cc55dd37b9df2ee90fd
+stdout: RECEIPT_PIN=FAIL header/body
+stderr: 
+exit: 1

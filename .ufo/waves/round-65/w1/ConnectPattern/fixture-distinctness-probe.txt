@@ -1,0 +1,22 @@
+# ConnectPattern evidence — C1 fixture-construction replication (static probe)
+
+Probe: replicated the frozen case-construction expressions from corpus/evidence/round65/c1-count.py
+in scratch (no frozen instrument executed). Inputs: BASE=d6ed8155…, git cat-file blob BASE:SKILL.md,
+sha256 hexdigest h.
+
+Observed output:
+    count 20 pairwise-distinct True
+    all-differ-from-valid True
+    expected-rc-tally {0: 3, 1: 17}
+    rc1-tautology-clause present: q.stdout.strip()==(... if rc==0 else q.stdout.strip())
+    names-unique True
+
+Notes:
+- No phantom/double-identity fixture (contrast r64 E12/E13): each of the 19 mutated texts differs
+  from the valid vector and from each other.
+- Expected tally matches the frozen claims text: 3 rc=0 (valid, nonzero-valid, max-exit),
+  17 rc=1. Matches controls/c1-positive.txt and always-pass.txt / always-fail.txt receipts.
+- Counter scoring line: for rc==1 legs the stdout-equality clause is a tautology; discrimination
+  for negative legs is carried by the third clause (stdout must start with 'RECEIPT_PIN=FAIL ').
+  For rc==0 legs stdout must equal exactly 'RECEIPT_PIN=PASS' after strip. Asymmetric but
+  functional; no aggregate/summary divergence (single variable n feeds both CASES= and C1=).

@@ -1,0 +1,18 @@
+# Attack20 probe transcript — frozen ref-receipt-pin.py (round65 freeze f99de3b)
+# invocation: python3 -B <frozen ref> --receipt <probe> --root <lane> --revision BASE
+# BASE=d6ed8155e9b4735639a2cf0a3e479c62f2056195  blob-sha256(SKILL.md)=4355e16a5d8d16057496f005df7382ca287863712ed2e3abb25f61c60008ce1a
+p0-valid-control rc=0 :: RECEIPT_PIN=PASS
+p1-mixed-digest rc=1 :: RECEIPT_PIN=FAIL digest header
+p2-double-separator rc=0 :: RECEIPT_PIN=PASS
+p3-crlf rc=0 :: RECEIPT_PIN=PASS
+p4-exit-00 rc=1 :: RECEIPT_PIN=FAIL header/body
+p5-dup-sha-line rc=1 :: RECEIPT_PIN=FAIL header/body
+p6-leading-blank rc=1 :: RECEIPT_PIN=FAIL header/body
+p7-tab-after-digest rc=1 :: RECEIPT_PIN=FAIL digest header
+p8-space-only-body rc=1 :: RECEIPT_PIN=FAIL header/body
+p9-ws-separator rc=1 :: RECEIPT_PIN=FAIL header/body
+p10-trailing-ws-path rc=1 :: RECEIPT_PIN=FAIL blob/digest
+p11-no-space-before-path rc=1 :: RECEIPT_PIN=FAIL digest header
+p12-vt-sep rc=0 :: RECEIPT_PIN=PASS
+p13-nel-sep rc=0 :: RECEIPT_PIN=PASS
+p14-u2028-sep rc=0 :: RECEIPT_PIN=PASS

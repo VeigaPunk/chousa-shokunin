@@ -1,0 +1,77 @@
+# C1 control reproductions (ReviewFreeze, 2026-10-30)
+# Production counter run with --work under scratch; case lines diffed against frozen receipts: all IDENTICAL.
+
+=== before ===
+CASES=0/20 C1=FAIL missing-target
+
+=== positive ===
+CASE valid PASS rc=0
+CASE nonzero-valid PASS rc=0
+CASE max-exit PASS rc=0
+CASE no-revision PASS rc=1
+CASE wrong-revision PASS rc=1
+CASE short-revision PASS rc=1
+CASE no-exit PASS rc=1
+CASE negative-exit PASS rc=1
+CASE overflow-exit PASS rc=1
+CASE word-exit PASS rc=1
+CASE no-digest PASS rc=1
+CASE wrong-digest PASS rc=1
+CASE short-digest PASS rc=1
+CASE missing-blob PASS rc=1
+CASE traversal PASS rc=1
+CASE absolute PASS rc=1
+CASE duplicate PASS rc=1
+CASE no-separator PASS rc=1
+CASE no-body PASS rc=1
+CASE upper-digest PASS rc=1
+CASES=20/20 C1=PASS
+
+=== alwayspass ===
+CASE valid PASS rc=0
+CASE nonzero-valid PASS rc=0
+CASE max-exit PASS rc=0
+CASE no-revision FAIL rc=0
+CASE wrong-revision FAIL rc=0
+CASE short-revision FAIL rc=0
+CASE no-exit FAIL rc=0
+CASE negative-exit FAIL rc=0
+CASE overflow-exit FAIL rc=0
+CASE word-exit FAIL rc=0
+CASE no-digest FAIL rc=0
+CASE wrong-digest FAIL rc=0
+CASE short-digest FAIL rc=0
+CASE missing-blob FAIL rc=0
+CASE traversal FAIL rc=0
+CASE absolute FAIL rc=0
+CASE duplicate FAIL rc=0
+CASE no-separator FAIL rc=0
+CASE no-body FAIL rc=0
+CASE upper-digest FAIL rc=0
+CASES=3/20 C1=FAIL
+
+=== alwaysfail ===
+CASE valid FAIL rc=1
+CASE nonzero-valid FAIL rc=1
+CASE max-exit FAIL rc=1
+CASE no-revision PASS rc=1
+CASE wrong-revision PASS rc=1
+CASE short-revision PASS rc=1
+CASE no-exit PASS rc=1
+CASE negative-exit PASS rc=1
+CASE overflow-exit PASS rc=1
+CASE word-exit PASS rc=1
+CASE no-digest PASS rc=1
+CASE wrong-digest PASS rc=1
+CASE short-digest PASS rc=1
+CASE missing-blob PASS rc=1
+CASE traversal PASS rc=1
+CASE absolute PASS rc=1
+CASE duplicate PASS rc=1
+CASE no-separator PASS rc=1
+CASE no-body PASS rc=1
+CASE upper-digest PASS rc=1
+CASES=17/20 C1=FAIL
+
+=== frozen-vs-repro diff verdicts ===
+positive/always-pass/always-fail/before case lines: IDENTICAL-CASE-LINES (see transcript)

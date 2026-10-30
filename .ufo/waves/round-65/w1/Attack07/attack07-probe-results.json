@@ -1,0 +1,202 @@
+[
+ {
+  "name": "vt-separators",
+  "note": "headers joined by VT not LF",
+  "rc": 0,
+  "stdout": "RECEIPT_PIN=PASS",
+  "stderr": "",
+  "in_frozen_battery": false
+ },
+ {
+  "name": "ff-separators",
+  "note": "headers joined by FF",
+  "rc": 0,
+  "stdout": "RECEIPT_PIN=PASS",
+  "stderr": "",
+  "in_frozen_battery": false
+ },
+ {
+  "name": "cr-separators",
+  "note": "headers joined by lone CR",
+  "rc": 0,
+  "stdout": "RECEIPT_PIN=PASS",
+  "stderr": "",
+  "in_frozen_battery": false
+ },
+ {
+  "name": "nel-separators",
+  "note": "NEL U+0085 separator",
+  "rc": 0,
+  "stdout": "RECEIPT_PIN=PASS",
+  "stderr": "",
+  "in_frozen_battery": false
+ },
+ {
+  "name": "exit-empty-value",
+  "note": "EXIT header present, value empty",
+  "rc": 1,
+  "stdout": "RECEIPT_PIN=FAIL header/body",
+  "stderr": "",
+  "in_frozen_battery": false
+ },
+ {
+  "name": "exit-space-pad",
+  "note": "space before value",
+  "rc": 1,
+  "stdout": "RECEIPT_PIN=FAIL header/body",
+  "stderr": "",
+  "in_frozen_battery": false
+ },
+ {
+  "name": "exit-leading-zero",
+  "note": "leading zero",
+  "rc": 1,
+  "stdout": "RECEIPT_PIN=FAIL header/body",
+  "stderr": "",
+  "in_frozen_battery": false
+ },
+ {
+  "name": "exit-hex",
+  "note": "hex-looking value",
+  "rc": 1,
+  "stdout": "RECEIPT_PIN=FAIL header/body",
+  "stderr": "",
+  "in_frozen_battery": false
+ },
+ {
+  "name": "exit-signed",
+  "note": "signed value",
+  "rc": 1,
+  "stdout": "RECEIPT_PIN=FAIL header/body",
+  "stderr": "",
+  "in_frozen_battery": false
+ },
+ {
+  "name": "exit-lower-key",
+  "note": "lowercase key",
+  "rc": 1,
+  "stdout": "RECEIPT_PIN=FAIL header/body",
+  "stderr": "",
+  "in_frozen_battery": false
+ },
+ {
+  "name": "exit-conflict-dup",
+  "note": "conflicting duplicate EXIT (frozen dup is identical value)",
+  "rc": 1,
+  "stdout": "RECEIPT_PIN=FAIL header/body",
+  "stderr": "",
+  "in_frozen_battery": false
+ },
+ {
+  "name": "nul-in-body",
+  "note": "NUL byte inside body",
+  "rc": 0,
+  "stdout": "RECEIPT_PIN=PASS",
+  "stderr": "",
+  "in_frozen_battery": false
+ },
+ {
+  "name": "crlf-receipt",
+  "note": "CRLF everywhere",
+  "rc": 0,
+  "stdout": "RECEIPT_PIN=PASS",
+  "stderr": "",
+  "in_frozen_battery": false
+ },
+ {
+  "name": "separator-space",
+  "note": "separator line is a space",
+  "rc": 1,
+  "stdout": "RECEIPT_PIN=FAIL header/body",
+  "stderr": "",
+  "in_frozen_battery": false
+ },
+ {
+  "name": "body-before-headers",
+  "note": "body text before headers",
+  "rc": 1,
+  "stdout": "RECEIPT_PIN=FAIL header/body",
+  "stderr": "",
+  "in_frozen_battery": false
+ },
+ {
+  "name": "extra-header-unknown",
+  "note": "unknown third header line",
+  "rc": 1,
+  "stdout": "RECEIPT_PIN=FAIL header/body",
+  "stderr": "",
+  "in_frozen_battery": false
+ },
+ {
+  "name": "bom-prefix",
+  "note": "UTF-8 BOM",
+  "rc": 1,
+  "stdout": "RECEIPT_PIN=FAIL header/body",
+  "stderr": "",
+  "in_frozen_battery": false
+ },
+ {
+  "name": "digest-tab-path",
+  "note": "tab instead of space before path",
+  "rc": 1,
+  "stdout": "RECEIPT_PIN=FAIL digest header",
+  "stderr": "",
+  "in_frozen_battery": false
+ },
+ {
+  "name": "exit-trailing-tab",
+  "note": "trailing tab on EXIT line",
+  "rc": 1,
+  "stdout": "RECEIPT_PIN=FAIL header/body",
+  "stderr": "",
+  "in_frozen_battery": false
+ },
+ {
+  "name": "nul-after-exit",
+  "note": "NUL right after exit value",
+  "rc": 1,
+  "stdout": "RECEIPT_PIN=FAIL header/body",
+  "stderr": "",
+  "in_frozen_battery": false
+ },
+ {
+  "name": "utf16-le",
+  "note": "UTF-16LE without BOM",
+  "rc": 1,
+  "stdout": "RECEIPT_PIN=FAIL header/body",
+  "stderr": "",
+  "in_frozen_battery": false
+ },
+ {
+  "name": "env-unreadable-receipt",
+  "note": "chmod 000 receipt",
+  "rc": 1,
+  "stdout": "RECEIPT_PIN=FAIL [Errno 13] Permission denied: '/fast/scratch/hyaku/chousa-r65/Attack07/work/unreadable.txt'",
+  "stderr": "",
+  "in_frozen_battery": false
+ },
+ {
+  "name": "env-missing-receipt",
+  "note": "receipt path absent",
+  "rc": 1,
+  "stdout": "RECEIPT_PIN=FAIL [Errno 2] No such file or directory: '/fast/scratch/hyaku/chousa-r65/Attack07/work/does-not-exist.txt'",
+  "stderr": "",
+  "in_frozen_battery": false
+ },
+ {
+  "name": "env-git-off-PATH",
+  "note": "git binary unavailable",
+  "rc": 1,
+  "stdout": "RECEIPT_PIN=FAIL [Errno 2] No such file or directory: 'git'",
+  "stderr": "",
+  "in_frozen_battery": false
+ },
+ {
+  "name": "control-valid",
+  "note": "canonical valid receipt",
+  "rc": 0,
+  "stdout": "RECEIPT_PIN=PASS",
+  "stderr": "",
+  "in_frozen_battery": true
+ }
+]

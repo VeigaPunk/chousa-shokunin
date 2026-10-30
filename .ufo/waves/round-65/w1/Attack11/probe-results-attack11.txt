@@ -1,0 +1,18 @@
+empty-digest-line	rc=1	RECEIPT_PIN=FAIL digest header	digest header present but empty: strict "no digest in effect" variant
+digest-spaces-only	rc=1	RECEIPT_PIN=FAIL digest header	digest header with only whitespace value
+digest-line-whitespace-value	rc=1	RECEIPT_PIN=FAIL digest header	digest keyword present, value blanked by a space
+digest-colon	rc=1	RECEIPT_PIN=FAIL digest header	digest keyword with colon, not equals
+digest-lowercase-key	rc=1	RECEIPT_PIN=FAIL digest header	digest key lowercased
+digest-tab-sep	rc=1	RECEIPT_PIN=FAIL digest header	tab instead of space before path
+digest-crlf	rc=0	RECEIPT_PIN=PASS	whole receipt CRLF-terminated
+digest-64hex-wrong-path-trailing-dot	rc=1	RECEIPT_PIN=FAIL blob/digest	near-valid path typo
+digest-duplicate-in-body	rc=0	RECEIPT_PIN=PASS	valid header block + forged second receipt appended in body
+digest-receipt-no-trailing-newline	rc=0	RECEIPT_PIN=PASS	valid receipt missing trailing newline
+digest-extra-blank-tail	rc=0	RECEIPT_PIN=PASS	valid receipt with extra blank tail lines
+digest-separator-whitespace	rc=1	RECEIPT_PIN=FAIL header/body	separator line is a single space, not empty
+digest-path-dotdot-enc	rc=1	RECEIPT_PIN=FAIL blob/digest	percent-encoded traversal
+digest-path-double-slash	rc=1	RECEIPT_PIN=FAIL path	double-leading-slash path
+digest-path-dot-prefix	rc=1	RECEIPT_PIN=FAIL path	dot-prefixed relative path
+exit-leading-plus	rc=1	RECEIPT_PIN=FAIL header/body	exit with explicit plus sign
+exit-leading-space	rc=1	RECEIPT_PIN=FAIL header/body	exit value space-padded
+revision-upper	rc=1	RECEIPT_PIN=FAIL header/body	uppercase revision (format says lowercase)

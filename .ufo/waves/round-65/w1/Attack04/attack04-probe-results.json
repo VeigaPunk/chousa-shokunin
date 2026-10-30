@@ -1,0 +1,101 @@
+[
+ {
+  "probe": "p1-doubled-separator",
+  "family": "malformed framing",
+  "malformed_or_forged": true,
+  "ref_rc": 0,
+  "ref_stdout": "RECEIPT_PIN=PASS",
+  "frozen_counter_detects": false,
+  "verdict": "ACCEPTED-BYPASS"
+ },
+ {
+  "probe": "p2-nul-only-body",
+  "family": "malformed body",
+  "malformed_or_forged": true,
+  "ref_rc": 0,
+  "ref_stdout": "RECEIPT_PIN=PASS",
+  "frozen_counter_detects": false,
+  "verdict": "ACCEPTED-BYPASS"
+ },
+ {
+  "probe": "p3-forged-body",
+  "family": "forgery",
+  "malformed_or_forged": true,
+  "ref_rc": 0,
+  "ref_stdout": "RECEIPT_PIN=PASS",
+  "frozen_counter_detects": false,
+  "verdict": "ACCEPTED-BYPASS"
+ },
+ {
+  "probe": "p4-concat-receipt",
+  "family": "framing ambiguity",
+  "malformed_or_forged": true,
+  "ref_rc": 0,
+  "ref_stdout": "RECEIPT_PIN=PASS",
+  "frozen_counter_detects": false,
+  "verdict": "ACCEPTED-BYPASS"
+ },
+ {
+  "probe": "p5-upper-revision",
+  "family": "near no-revision",
+  "malformed_or_forged": true,
+  "ref_rc": 1,
+  "ref_stdout": "RECEIPT_PIN=FAIL header/body",
+  "frozen_counter_detects": true,
+  "verdict": "rejected-ok"
+ },
+ {
+  "probe": "p6-revision-trailing-space",
+  "family": "near no-revision",
+  "malformed_or_forged": true,
+  "ref_rc": 1,
+  "ref_stdout": "RECEIPT_PIN=FAIL header/body",
+  "frozen_counter_detects": true,
+  "verdict": "rejected-ok"
+ },
+ {
+  "probe": "p7-leading-blank",
+  "family": "near no-revision",
+  "malformed_or_forged": true,
+  "ref_rc": 1,
+  "ref_stdout": "RECEIPT_PIN=FAIL header/body",
+  "frozen_counter_detects": true,
+  "verdict": "rejected-ok"
+ },
+ {
+  "probe": "p8-exit-leading-zero",
+  "family": "near overflow",
+  "malformed_or_forged": true,
+  "ref_rc": 1,
+  "ref_stdout": "RECEIPT_PIN=FAIL header/body",
+  "frozen_counter_detects": true,
+  "verdict": "rejected-ok"
+ },
+ {
+  "probe": "p9-separator-tab",
+  "family": "near no-separator",
+  "malformed_or_forged": true,
+  "ref_rc": 1,
+  "ref_stdout": "RECEIPT_PIN=FAIL header/body",
+  "frozen_counter_detects": true,
+  "verdict": "rejected-ok"
+ },
+ {
+  "probe": "p10-body-space-only",
+  "family": "near no-body",
+  "malformed_or_forged": true,
+  "ref_rc": 1,
+  "ref_stdout": "RECEIPT_PIN=FAIL header/body",
+  "frozen_counter_detects": true,
+  "verdict": "rejected-ok"
+ },
+ {
+  "probe": "p11-digest-two-spaces",
+  "family": "near path-canonical",
+  "malformed_or_forged": true,
+  "ref_rc": 1,
+  "ref_stdout": "RECEIPT_PIN=FAIL blob/digest",
+  "frozen_counter_detects": true,
+  "verdict": "rejected-ok"
+ }
+]

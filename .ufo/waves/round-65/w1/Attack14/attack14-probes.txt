@@ -1,0 +1,56 @@
+=== probe.py (path resolution + encoding) ===
+path='SKILL.md'                       git_blob_resolves=True  ref=ACCEPT(PASS) out='RECEIPT_PIN=PASS'
+path='missing-r65.md'                 git_blob_resolves=False ref=reject rc=1  out='RECEIPT_PIN=FAIL blob/digest'
+path=':(top)SKILL.md'                 git_blob_resolves=False ref=reject rc=1  out='RECEIPT_PIN=FAIL blob/digest'
+path=':(icase)skill.md'               git_blob_resolves=False ref=reject rc=1  out='RECEIPT_PIN=FAIL blob/digest'
+path=':(icase)SKILL.MD'               git_blob_resolves=False ref=reject rc=1  out='RECEIPT_PIN=FAIL blob/digest'
+path=':(glob)SKILL.*'                 git_blob_resolves=False ref=reject rc=1  out='RECEIPT_PIN=FAIL blob/digest'
+path=':(literal)SKILL.md'             git_blob_resolves=False ref=reject rc=1  out='RECEIPT_PIN=FAIL blob/digest'
+path='./SKILL.md'                     git_blob_resolves=True  ref=reject rc=1  out='RECEIPT_PIN=FAIL path'
+path='SKILL.md '                      git_blob_resolves=False ref=reject rc=1  out='RECEIPT_PIN=FAIL blob/digest'
+path='SKILL.md/.'                     git_blob_resolves=False ref=reject rc=1  out='RECEIPT_PIN=FAIL path'
+path='sub/../SKILL.md'                git_blob_resolves=False ref=reject rc=1  out='RECEIPT_PIN=FAIL path'
+variant=crlf                   ref_rc=0 out='RECEIPT_PIN=PASS'
+variant=trailing-newline-body  ref_rc=0 out='RECEIPT_PIN=PASS'
+variant=bom                    ref_rc=1 out='RECEIPT_PIN=FAIL header/body'
+variant=extra-body-blank       ref_rc=0 out='RECEIPT_PIN=PASS'
+frozen-case missing-blob rc=1 out='RECEIPT_PIN=FAIL blob/digest'
+
+=== probe2.py (line endings, body leniency, counter determinism) ===
+canon-lf                     rc=0 out='RECEIPT_PIN=PASS'
+crlf                         rc=0 out='RECEIPT_PIN=PASS'
+lone-cr                      rc=0 out='RECEIPT_PIN=PASS'
+mixed-cr-lf                  rc=0 out='RECEIPT_PIN=PASS'
+body-nul                     rc=0 out='RECEIPT_PIN=PASS'
+body-only-blank+text         rc=0 out='RECEIPT_PIN=PASS'
+many-trailing-blanks         rc=0 out='RECEIPT_PIN=PASS'
+leading-blank-before-rev     rc=1 out='RECEIPT_PIN=FAIL header/body'
+no-final-newline             rc=0 out='RECEIPT_PIN=PASS'
+path='/SKILL.md'            git_resolves=False ref_rc=1 out='RECEIPT_PIN=FAIL path'
+path='//SKILL.md'           git_resolves=False ref_rc=1 out='RECEIPT_PIN=FAIL path'
+path='SKILL.md//'           git_resolves=False ref_rc=1 out='RECEIPT_PIN=FAIL path'
+path='./SKILL.md'           git_resolves=True  ref_rc=1 out='RECEIPT_PIN=FAIL path'
+path='x/../../SKILL.md'     git_resolves=False ref_rc=1 out='RECEIPT_PIN=FAIL path'
+--- c1-count vs ref-receipt-pin ---
+CASE valid PASS rc=0
+CASE nonzero-valid PASS rc=0
+CASE max-exit PASS rc=0
+CASE no-revision PASS rc=1
+CASE wrong-revision PASS rc=1
+CASE short-revision PASS rc=1
+CASE no-exit PASS rc=1
+CASE negative-exit PASS rc=1
+CASE overflow-exit PASS rc=1
+CASE word-exit PASS rc=1
+CASE no-digest PASS rc=1
+CASE wrong-digest PASS rc=1
+CASE short-digest PASS rc=1
+CASE missing-blob PASS rc=1
+CASE traversal PASS rc=1
+CASE absolute PASS rc=1
+CASE duplicate PASS rc=1
+CASE no-separator PASS rc=1
+CASE no-body PASS rc=1
+CASE upper-digest PASS rc=1
+CASES=20/20 C1=PASS
+counter_rc= 0 work_exists_after= False

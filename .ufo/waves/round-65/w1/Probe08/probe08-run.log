@@ -1,0 +1,9 @@
+CASE positive-exit0         EXIT=0     want_rc=0 got_rc=0 stdout='RECEIPT_PIN=PASS' OK
+CASE boundary-exit255       EXIT=255   want_rc=0 got_rc=0 stdout='RECEIPT_PIN=PASS' OK
+CASE negative-exit-frozen   EXIT=-1    want_rc=1 got_rc=1 stdout='RECEIPT_PIN=FAIL header/body' OK
+CASE negative-zero          EXIT=-0    want_rc=1 got_rc=1 stdout='RECEIPT_PIN=FAIL header/body' OK
+CASE negative-255           EXIT=-255  want_rc=1 got_rc=1 stdout='RECEIPT_PIN=FAIL header/body' OK
+CASE negative-256           EXIT=-256  want_rc=1 got_rc=1 stdout='RECEIPT_PIN=FAIL header/body' OK
+CASE sign-space             EXIT=- 1   want_rc=1 got_rc=1 stdout='RECEIPT_PIN=FAIL header/body' OK
+CASE minus-minus            EXIT=--1   want_rc=1 got_rc=1 stdout='RECEIPT_PIN=FAIL header/body' OK
+NEGATIVE-EXIT-SURFACE 8/8 CONSISTENT

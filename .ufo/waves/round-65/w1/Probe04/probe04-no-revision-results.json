@@ -1,0 +1,87 @@
+{
+ "base": "d6ed8155e9b4735639a2cf0a3e479c62f2056195",
+ "tool": "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round65/controls/ref-receipt-pin.py",
+ "argv_shape": "--receipt <f> --root <lane> --revision <BASE>",
+ "rows": [
+  {
+   "case": "control-valid",
+   "expected_rc": 0,
+   "actual_rc": 0,
+   "stdout": "RECEIPT_PIN=PASS\n",
+   "stderr": "",
+   "independent_rc": 0,
+   "agree": true
+  },
+  {
+   "case": "absent",
+   "expected_rc": 1,
+   "actual_rc": 1,
+   "stdout": "RECEIPT_PIN=FAIL header/body\n",
+   "stderr": "",
+   "independent_rc": 1,
+   "independent_why": "header-count/separator/body",
+   "agree": true
+  },
+  {
+   "case": "empty-value",
+   "expected_rc": 1,
+   "actual_rc": 1,
+   "stdout": "RECEIPT_PIN=FAIL header/body\n",
+   "stderr": "",
+   "independent_rc": 1,
+   "independent_why": "revision-header-malformed",
+   "agree": true
+  },
+  {
+   "case": "upper-hex",
+   "expected_rc": 1,
+   "actual_rc": 1,
+   "stdout": "RECEIPT_PIN=FAIL header/body\n",
+   "stderr": "",
+   "independent_rc": 1,
+   "independent_why": "revision-header-malformed",
+   "agree": true
+  },
+  {
+   "case": "mixed-hex",
+   "expected_rc": 1,
+   "actual_rc": 1,
+   "stdout": "RECEIPT_PIN=FAIL header/body\n",
+   "stderr": "",
+   "independent_rc": 1,
+   "independent_why": "revision-header-malformed",
+   "agree": true
+  },
+  {
+   "case": "nonhex-40",
+   "expected_rc": 1,
+   "actual_rc": 1,
+   "stdout": "RECEIPT_PIN=FAIL header/body\n",
+   "stderr": "",
+   "independent_rc": 1,
+   "independent_why": "revision-header-malformed",
+   "agree": true
+  },
+  {
+   "case": "trailing-space",
+   "expected_rc": 1,
+   "actual_rc": 1,
+   "stdout": "RECEIPT_PIN=FAIL header/body\n",
+   "stderr": "",
+   "independent_rc": 1,
+   "independent_why": "revision-header-malformed",
+   "agree": true
+  },
+  {
+   "case": "short-8",
+   "expected_rc": 1,
+   "actual_rc": 1,
+   "stdout": "RECEIPT_PIN=FAIL header/body\n",
+   "stderr": "",
+   "independent_rc": 1,
+   "independent_why": "revision-header-malformed",
+   "agree": true
+  }
+ ],
+ "all_agree": true
+}

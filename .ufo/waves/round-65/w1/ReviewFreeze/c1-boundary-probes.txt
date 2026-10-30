@@ -1,0 +1,40 @@
+# C1 reference-validator boundary probes (ReviewFreeze, 2026-10-30)
+# Tool under test: corpus/evidence/round65/controls/ref-receipt-pin.py (frozen, matches HEAD blob 9cf660f0)
+# Invocation: python3 -B ref-receipt-pin.py --receipt <case> --root <lane> --revision d6ed8155...
+# Probes beyond the frozen 20 cases. Expected per header-consistency contract; none are frozen cases.
+
+probe.exit00       rc=1 RECEIPT_PIN=FAIL header/body     # EXIT=00 leading zero rejected (regex EXIT=(?:0|[1-9][0-9]{0,2}))
+probe.exit01       rc=1 RECEIPT_PIN=FAIL header/body     # EXIT=01 leading zero rejected
+probe.exitsp       rc=1 RECEIPT_PIN=FAIL header/body     # EXIT=0 trailing space rejected
+probe.revupper     rc=1 RECEIPT_PIN=FAIL header/body     # uppercase hex revision in receipt rejected
+probe.pathspace    rc=1 RECEIPT_PIN=FAIL blob/digest     # path 'SKILL.md ' trailing space rejected (str(rel)!=field)
+probe.pathdot      rc=1 RECEIPT_PIN=FAIL path            # './SKILL.md' rejected (str(PurePosixPath) normalizes to 'SKILL.md' != field)
+probe.bodyws       rc=1 RECEIPT_PIN=FAIL header/body     # whitespace-only body rejected
+probe.extrahead    rc=1 RECEIPT_PIN=FAIL header/body     # extra EXIT line before separator rejected (lines[3] nonempty)
+probe.missing-file rc=1 RECEIPT_PIN=FAIL [Errno 2] No such file or directory   # OSError path -> exit 1
+probe.receipt-dir  rc=1 RECEIPT_PIN=FAIL [Errno 21] Is a directory            # OSError path -> exit 1
+probe.bad-rev-arg  rc=2 (argparse usage error to stderr)                        # --revision not full lowercase hex -> p.error -> exit 2
+
+# BOUNDARY OBSERVATION (not a defect against the frozen claim):
+probe.crlf         rc=0 RECEIPT_PIN=PASS
+  # A receipt with CRLF (\r\n) line endings PASSES the reference validator.
+  # Cause: str.splitlines() normalizes \r\n, so the header equality and empty-separator
+  # checks never see the \r. The byte-level format stated in the claims ("empty separator",
+  # ordered headers) is therefore line-ending-tolerant in the reference implementation.
+  # None of the 20 frozen cases pins byte-exact line endings; the frozen counter inherits
+  # this tolerance. Receipt bytes are not themselves digest-bound (the digest binds the
+  # named blob), so CRLF does not weaken blob binding; it is an interface-tolerance note.
+
+# COUNTER-ROBUSTNESS PROBES (c1-count.py itself):
+robust.nonempty-work  rc=2  "c1-count.py: error: nonempty work"   # argparse p.error; documented contract, work dir untouched
+robust.hanging-tool   rc=1  subprocess.TimeoutExpired traceback; NO 'CASES=x/20' summary line emitted;
+                      # work dir still removed via finally. A tool that hangs >20s crashes the counter
+                      # instead of scoring a clean FAIL. Frozen-counter limitation, out of claim scope.
+robust.token-check    rc=1 cases require only stdout prefix 'RECEIPT_PIN=FAIL ' (payload unconstrained
+                      # beyond prefix); stderr entirely unconstrained. rc=0 cases require exact
+                      # 'RECEIPT_PIN=PASS' after strip. A tool may emit 'RECEIPT_PIN=FAIL <any garbage>'.
+robust.basename-gamer rc=0  CASES=20/20 C1=PASS with a 6-line tool that inspects --receipt basename
+                      # (valid.txt/nonzero-valid.txt/max-exit.txt -> PASS else FAIL) and never parses content.
+                      # Demonstrates the black-box counter cannot detect argv/path-inspection gaming;
+                      # defense is L1 integration judgment, not the counter. Consistent with the frozen
+                      # claim's stated scope (interface/consistency coverage).

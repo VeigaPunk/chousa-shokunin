@@ -1,0 +1,9 @@
+F1-body-exit-injection: rc=0 RECEIPT_PIN=PASS
+F1b-body-revision-injection: rc=0 RECEIPT_PIN=PASS
+F1c-body-full-second-receipt: rc=0 RECEIPT_PIN=PASS
+F2-crlf: rc=0 RECEIPT_PIN=PASS
+F3-double-blank-separator: rc=0 RECEIPT_PIN=PASS
+G1-presperator-duplicate: rc=1 RECEIPT_PIN=FAIL header/body
+H1-leading-zero-exit(EXIT=00): rc=1 FAIL (over-strict, not a bypass)
+H2-space-exit(EXIT= 1): rc=1 FAIL (over-strict, not a bypass)
+counter sanity: python3 corpus/evidence/round65/c1-count.py --tool <ref> --work <scratch> => CASES=20/20 C1=PASS

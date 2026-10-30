@@ -1,0 +1,80 @@
+#!/usr/bin/env python3
+"""Attack01 bounded isolated probes against frozen R65-C1 reference validator.
+Read-only on frozen bytes. All receipts live in scratch; receipts deleted with scratch.
+"""
+import hashlib, json, pathlib, subprocess, sys
+
+LANE = '/home/vgpnk/Projects/shokunin/chousa-shokunin'
+BASE = 'd6ed8155e9b4735639a2cf0a3e479c62f2056195'
+REF = f'{LANE}/corpus/evidence/round65/controls/ref-receipt-pin.py'
+W = pathlib.Path('/fast/scratch/hyaku/chousa-r65/Attack01/probes')
+W.mkdir(parents=True, exist_ok=True)
+
+def blob(path):
+    q = subprocess.run(['git', '-C', LANE, 'cat-file', 'blob', f'{BASE}:{path}'],
+                       capture_output=True, check=True)
+    return q.stdout
+
+def run_ref(name, text):
+    f = W / (name + '.txt')
+    f.write_bytes(text if isinstance(text, bytes) else text.encode())
+    q = subprocess.run([sys.executable, '-B', REF, '--receipt', str(f),
+                        '--root', LANE, '--revision', BASE],
+                       capture_output=True, text=True, timeout=20)
+    return {'case': name, 'exit': q.returncode, 'stdout': q.stdout.strip()}
+
+h_skill = hashlib.sha256(blob('SKILL.md')).hexdigest()
+v = f'REVISION={BASE}\nEXIT=0\nSHA256={h_skill} SKILL.md\n\nmeasured output\n'
+
+results = []
+# 0. sanity: frozen-valid and frozen-duplicate constructions against reference
+results.append(run_ref('z0-frozen-valid', v))
+dup_frozen = v.replace('\n\n', '\nEXIT=0\n\n')  # exact frozen 'duplicate' case text
+results.append(run_ref('z1-frozen-duplicate', dup_frozen))
+
+# A. nearby MALFORMED bypasses outside the 20 frozen cases
+# A1: header smuggling into body (docstring demands "exactly one of each header")
+results.append(run_ref('a1-body-header-smuggle',
+    v.replace('\n\nmeasured output\n', '\n\nREVISION=' + '0'*40 + '\nEXIT=0\nSHA256=' + '0'*64 + ' EVIL.md\nmeasured output\n')))
+# A2: CRLF canonical-form violation
+results.append(run_ref('a2-crlf', v.replace('\n', '\r\n')))
+# A3: blank first body line
+results.append(run_ref('a3-leading-blank-body', v.replace('\n\nmeasured output\n', '\n\n\nmeasured output\n')))
+# A4: trailing junk header after body
+results.append(run_ref('a4-trailing-header-line', v + 'EXIT=0\n'))
+
+# B. FORGED provenance (consistency-only by claim; expected accept = scope boundary, not defect)
+h_claims = hashlib.sha256(blob('README.md')).hexdigest()
+results.append(run_ref('b1-forged-readme',
+    f'REVISION={BASE}\nEXIT=0\nSHA256={h_claims} README.md\n\nfabricated measurement output\n'))
+# B2: forged nonzero exit over real blob
+results.append(run_ref('b2-forged-nonzero',
+    f'REVISION={BASE}\nEXIT=7\nSHA256={h_skill} SKILL.md\n\nfabricated failure transcript\n'))
+
+# C. strictness spot checks (expected reject; confirm no trivial regex hole)
+results.append(run_ref('c1-exit-leading-zero', v.replace('EXIT=0', 'EXIT=00')))
+results.append(run_ref('c2-path-dot-segment', v.replace('SKILL.md', 'corpus/./evidence/round65/claims.md')))
+results.append(run_ref('c3-path-backslash', v.replace('SKILL.md', 'SKILL.md\\x')))
+results.append(run_ref('c4-exit-plus', v.replace('EXIT=0', 'EXIT=+0')))
+
+# D. harness signal leak demo: filename-keyed cheat tool, invoked exactly as the
+# frozen counter invokes the target (same argv shape), on representative case names.
+cheat = W / 'cheat-filename-keyed.py'
+cheat.write_text(
+    "import pathlib,sys\n"
+    "name=pathlib.Path(sys.argv[sys.argv.index('--receipt')+1]).stem\n"
+    "valid={'valid','nonzero-valid','max-exit'}\n"
+    "print('RECEIPT_PIN=PASS' if name in valid else 'RECEIPT_PIN=FAIL keyed');sys.exit(0 if name in valid else 1)\n")
+for case, expect_rc in [('valid', 0), ('wrong-digest', 1), ('duplicate', 1), ('no-body', 1)]:
+    f = W / (case + '.txt')
+    f.write_text(v)  # content identical; only filename varies
+    q = subprocess.run([sys.executable, '-B', str(cheat), '--receipt', str(f),
+                        '--root', LANE, '--revision', BASE],
+                       capture_output=True, text=True, timeout=20)
+    ok = (q.returncode == expect_rc and
+          (q.stdout.strip() == 'RECEIPT_PIN=PASS' if expect_rc == 0
+           else q.stdout.startswith('RECEIPT_PIN=FAIL ')))
+    results.append({'case': f'd1-cheat-{case}', 'exit': q.returncode,
+                    'stdout': q.stdout.strip(), 'counter_would_count_pass': ok})
+
+print(json.dumps(results, indent=1))

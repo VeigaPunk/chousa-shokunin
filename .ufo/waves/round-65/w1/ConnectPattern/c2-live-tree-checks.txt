@@ -1,0 +1,30 @@
+# ConnectPattern evidence — C2 ten-check replication: live tree vs base vs freeze commit
+
+Probe: static replication of the 10 checks in corpus/evidence/round65/c2-count.py (frozen counter
+not executed). Checks read the LIVE working tree (L = Path(__file__).resolve().parents[3], direct
+read_text of corpus/knowledge/receipt-identity-r65.md, corpus/SOURCES.md, corpus/README.md).
+
+Live working tree (HEAD=f99de3bdf + uncommitted edits), observed:
+    PASS 1 startswith source:
+    PASS 2 verified-at
+    PASS 3 recheck
+    PASS 4 S154-6 in text
+    PASS 5 S154-6 in SOURCES
+    PASS 6 name in README
+    PASS 7 ## Claims
+    PASS 8 ## Limits
+    PASS 9 authenticity
+    PASS 10 working tree
+    ENTRY_CHECKS=10/10
+
+Base d6ed8155 (via git show, per-file), observed: 0/10 — entry absent from commit;
+S154–S156 rows absent (grep -cE '^\|[[:space:]]*S15[456][[:space:]]*\|' on
+git show d6ed8155:corpus/SOURCES.md → 0). Matches committed controls/c2-before.txt.
+
+Freeze commit f99de3bdf, observed: entry path "exists on disk, but not in 'f99de3b'"
+(git show f99de3b:corpus/knowledge/receipt-identity-r65.md); SOURCES.md at the commit has 0
+S154–S156 rows. git status: corpus/knowledge/receipt-identity-r65.md untracked;
+corpus/SOURCES.md and corpus/README.md modified (README line 1342 indexes the entry).
+
+Conclusion: the target state is satisfied only by uncommitted working-tree bytes at freeze time;
+the counter cannot attribute a pass to committed/landing bytes. Before-state at base is honest.

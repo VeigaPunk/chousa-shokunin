@@ -1,0 +1,15 @@
+=== strict3 (open(newline="") + split("\n")) on variants ===
+body-forged-header-block: rc=0 out='RECEIPT_PIN=PASS'
+cr-only: rc=1 out='RECEIPT_PIN=FAIL header/body'
+crlf-every-lf: rc=1 out='RECEIPT_PIN=FAIL header/body'
+exit-leading-zero: rc=1 out='RECEIPT_PIN=FAIL header/body'
+exit-tab-trailing: rc=1 out='RECEIPT_PIN=FAIL header/body'
+ff-separator: rc=1 out='RECEIPT_PIN=FAIL header/body'
+frozen-negative-exit: rc=1 out='RECEIPT_PIN=FAIL header/body'
+fs-separator: rc=1 out='RECEIPT_PIN=FAIL header/body'
+lf-valid: rc=0 out='RECEIPT_PIN=PASS'
+nel-separator: rc=1 out='RECEIPT_PIN=FAIL header/body'
+u2028-separator: rc=1 out='RECEIPT_PIN=FAIL header/body'
+vt-separator: rc=1 out='RECEIPT_PIN=FAIL header/body'
+=== frozen counter vs strict3 ===
+counter rc= 0 | CASES=20/20 C1=PASS

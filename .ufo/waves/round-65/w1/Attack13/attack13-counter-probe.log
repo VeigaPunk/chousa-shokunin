@@ -1,0 +1,50 @@
+=== frozen counter vs REFERENCE (baseline replication) ===
+CASE valid PASS rc=0
+CASE nonzero-valid PASS rc=0
+CASE max-exit PASS rc=0
+CASE no-revision PASS rc=1
+CASE wrong-revision PASS rc=1
+CASE short-revision PASS rc=1
+CASE no-exit PASS rc=1
+CASE negative-exit PASS rc=1
+CASE overflow-exit PASS rc=1
+CASE word-exit PASS rc=1
+CASE no-digest PASS rc=1
+CASE wrong-digest PASS rc=1
+CASE short-digest PASS rc=1
+CASE missing-blob PASS rc=1
+CASE traversal PASS rc=1
+CASE absolute PASS rc=1
+CASE duplicate PASS rc=1
+CASE no-separator PASS rc=1
+CASE no-body PASS rc=1
+CASE upper-digest PASS rc=1
+CASES=20/20 C1=PASS  [counter rc=0]
+=== frozen counter vs MUTANT (accepts 60-64 char digest prefixes) ===
+CASE valid PASS rc=0
+CASE nonzero-valid PASS rc=0
+CASE max-exit PASS rc=0
+CASE no-revision PASS rc=1
+CASE wrong-revision PASS rc=1
+CASE short-revision PASS rc=1
+CASE no-exit PASS rc=1
+CASE negative-exit PASS rc=1
+CASE overflow-exit PASS rc=1
+CASE word-exit PASS rc=1
+CASE no-digest PASS rc=1
+CASE wrong-digest PASS rc=1
+CASE short-digest PASS rc=1
+CASE missing-blob PASS rc=1
+CASE traversal PASS rc=1
+CASE absolute PASS rc=1
+CASE duplicate PASS rc=1
+CASE no-separator PASS rc=1
+CASE no-body PASS rc=1
+CASE upper-digest PASS rc=1
+CASES=20/20 C1=PASS  [counter rc=0]
+=== mutant direct acceptance probes ===
+digest-63                  mutant rc=0  RECEIPT_PIN=PASS
+digest-60                  mutant rc=0  RECEIPT_PIN=PASS
+digest-16-upper            mutant rc=1  RECEIPT_PIN=FAIL digest header
+digest-65                  mutant rc=1  RECEIPT_PIN=FAIL digest header
+frozen-short-digest-16     mutant rc=1  RECEIPT_PIN=FAIL digest header

@@ -1,0 +1,49 @@
+=== battery: duplicate-adjacent receipts vs frozen reference validator ===
+case                                       expect_rc got_rc     result  token
+control-valid                                      0      0         OK  RECEIPT_PIN=PASS
+control-frozen-duplicate-exit-before-sep           1      1         OK  RECEIPT_PIN=FAIL header/body
+dup-revision-before-sep                            1      1         OK  RECEIPT_PIN=FAIL header/body
+dup-sha256-before-sep                              1      1         OK  RECEIPT_PIN=FAIL header/body
+dup-unknown-line-before-sep                        1      1         OK  RECEIPT_PIN=FAIL header/body
+dup-two-exit-before-sep                            1      1         OK  RECEIPT_PIN=FAIL header/body
+sep-is-single-space                                1      1         OK  RECEIPT_PIN=FAIL header/body
+header-order-shuffled                              1      1         OK  RECEIPT_PIN=FAIL header/body
+dup-exit-after-sep                                 0      0         OK  RECEIPT_PIN=PASS
+dup-revision-after-sep                             0      0         OK  RECEIPT_PIN=PASS
+dup-sha256-after-sep                               0      0         OK  RECEIPT_PIN=PASS
+dup-full-second-header-block                       0      0         OK  RECEIPT_PIN=PASS
+exit-leading-zeros                                 1      1         OK  RECEIPT_PIN=FAIL header/body
+receipt-with-utf8-bom                              1      1         OK  RECEIPT_PIN=FAIL header/body
+crlf-line-endings                                  0      0         OK  RECEIPT_PIN=PASS
+
+TOTAL=15 UNEXPECTED=0
+
+=== memorizer vs frozen counter (c1-count.py --tool memorizer) ===
+CASE valid PASS rc=0
+CASE nonzero-valid PASS rc=0
+CASE max-exit PASS rc=0
+CASE no-revision PASS rc=1
+CASE wrong-revision PASS rc=1
+CASE short-revision PASS rc=1
+CASE no-exit PASS rc=1
+CASE negative-exit PASS rc=1
+CASE overflow-exit PASS rc=1
+CASE word-exit PASS rc=1
+CASE no-digest PASS rc=1
+CASE wrong-digest PASS rc=1
+CASE short-digest PASS rc=1
+CASE missing-blob PASS rc=1
+CASE traversal PASS rc=1
+CASE absolute PASS rc=1
+CASE duplicate PASS rc=1
+CASE no-separator PASS rc=1
+CASE no-body PASS rc=1
+CASE upper-digest PASS rc=1
+CASES=20/20 C1=PASS
+counter_exit=0
+
+=== forged receipt (wrong digest, FORGED.md): memorizer vs reference ===
+RECEIPT_PIN=PASS
+memorizer_rc=0
+RECEIPT_PIN=FAIL blob/digest
+reference_rc=1

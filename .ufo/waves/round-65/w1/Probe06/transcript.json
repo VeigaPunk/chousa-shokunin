@@ -1,0 +1,100 @@
+{
+  "meta": {
+    "fixture_rev": "ac3407da7e1006fa29c49d9175d49dc6fc8ebb7c",
+    "fixture_rev_short12": "ac3407da7e10",
+    "blob_sha256": "1691be3eb31918531de22a709b79e10d16527cd2a820223e74dda2940dae30f7",
+    "repo": "/fast/scratch/hyaku/chousa-r65/Probe06/fixture/repo"
+  },
+  "runs": [
+    {
+      "case": "s1-arg-short12",
+      "argv": [
+        "--receipt",
+        "/fast/scratch/hyaku/chousa-r65/Probe06/runs/s1-arg-short12.receipt",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r65/Probe06/fixture/repo",
+        "--revision",
+        "ac3407da7e10"
+      ],
+      "revision_len": 12,
+      "expected_exit": 2,
+      "expected_note": "p.error: usage",
+      "actual_exit": 2,
+      "stdout": "",
+      "stderr": "usage: ref-receipt-pin.py [-h] --receipt RECEIPT --root ROOT\n                          --revision REVISION\nref-receipt-pin.py: error: --revision requires full lowercase object id\n",
+      "match": true
+    },
+    {
+      "case": "s2-receipt-short12",
+      "argv": [
+        "--receipt",
+        "/fast/scratch/hyaku/chousa-r65/Probe06/runs/s2-receipt-short12.receipt",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r65/Probe06/fixture/repo",
+        "--revision",
+        "ac3407da7e1006fa29c49d9175d49dc6fc8ebb7c"
+      ],
+      "revision_len": 40,
+      "expected_exit": 1,
+      "expected_note": "header/body",
+      "actual_exit": 1,
+      "stdout": "RECEIPT_PIN=FAIL header/body\n",
+      "stderr": "",
+      "match": true
+    },
+    {
+      "case": "s3-arg-short39",
+      "argv": [
+        "--receipt",
+        "/fast/scratch/hyaku/chousa-r65/Probe06/runs/s3-arg-short39.receipt",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r65/Probe06/fixture/repo",
+        "--revision",
+        "ac3407da7e1006fa29c49d9175d49dc6fc8ebb7"
+      ],
+      "revision_len": 39,
+      "expected_exit": 2,
+      "expected_note": "p.error: usage",
+      "actual_exit": 2,
+      "stdout": "",
+      "stderr": "usage: ref-receipt-pin.py [-h] --receipt RECEIPT --root ROOT\n                          --revision REVISION\nref-receipt-pin.py: error: --revision requires full lowercase object id\n",
+      "match": true
+    },
+    {
+      "case": "s4-anchor-full",
+      "argv": [
+        "--receipt",
+        "/fast/scratch/hyaku/chousa-r65/Probe06/runs/s4-anchor-full.receipt",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r65/Probe06/fixture/repo",
+        "--revision",
+        "ac3407da7e1006fa29c49d9175d49dc6fc8ebb7c"
+      ],
+      "revision_len": 40,
+      "expected_exit": 0,
+      "expected_note": "PASS",
+      "actual_exit": 0,
+      "stdout": "RECEIPT_PIN=PASS\n",
+      "stderr": "",
+      "match": true
+    },
+    {
+      "case": "s5-arg-short-nonexistent",
+      "argv": [
+        "--receipt",
+        "/fast/scratch/hyaku/chousa-r65/Probe06/runs/s5-arg-short-nonexistent.receipt",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r65/Probe06/fixture/repo",
+        "--revision",
+        "ffffffffffff"
+      ],
+      "revision_len": 12,
+      "expected_exit": 2,
+      "expected_note": "p.error: usage",
+      "actual_exit": 2,
+      "stdout": "",
+      "stderr": "usage: ref-receipt-pin.py [-h] --receipt RECEIPT --root ROOT\n                          --revision REVISION\nref-receipt-pin.py: error: --revision requires full lowercase object id\n",
+      "match": true
+    }
+  ]
+}

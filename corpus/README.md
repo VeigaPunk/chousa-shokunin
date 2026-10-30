@@ -1336,3 +1336,8 @@ Left open:
 
 - `corpus/knowledge/lane-root-derivation-r64.md` — positional pathlib parents, explicit existence modes, and the limits of a missing-file assertion; S150–S152.
 - Frontier: the frozen relocation counter's expected-path arithmetic is not inferred correct from the presence of asserts. Its measured verdict and the C1 fixture mismatch are recorded in `corpus/lessons/round-64.md`, not silently repaired.
+
+## Round65 receipt interpretation (2026-10-30)
+
+- `corpus/knowledge/receipt-identity-r65.md` — S154–S156 distinguish selected object bytes, SHA256 content identity, reported exit and execution authenticity. Held evidence-provenance ground deepened; no new province asserted.
+- Frontier remains: an authenticated command/result binding and outside re-execution are not supplied by a local header-consistency validator.

@@ -1,0 +1,85 @@
+{
+  "fixture_rev": "5ced04cdb686adf249f1c9ae7b877342b27461fa",
+  "fixture_digest_hello": "b95f233da0363838b01d5abb0a5c4fb902caaa488c12617166cf1be277c912aa",
+  "empty_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "freeze": "f99de3bdfaaf9b4c4fa85cc55dd37b9df2ee90fd",
+  "python": "3.14.8",
+  "git": "git version 2.56.0",
+  "ref": "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round65/controls/ref-receipt-pin.py",
+  "results": [
+    {
+      "case": "A-positive-control",
+      "receipt": "/fast/scratch/hyaku/chousa-r65/Probe14/receipts/A-positive.receipt",
+      "root": "/fast/scratch/hyaku/chousa-r65/Probe14/repo",
+      "revision": "5ced04cdb686adf249f1c9ae7b877342b27461fa",
+      "exit": 0,
+      "stdout": "RECEIPT_PIN=PASS",
+      "stderr": "",
+      "cat_file_rc": 0,
+      "cat_file_stderr": ""
+    },
+    {
+      "case": "B-missing-path",
+      "receipt": "/fast/scratch/hyaku/chousa-r65/Probe14/receipts/B-missing-path.receipt",
+      "root": "/fast/scratch/hyaku/chousa-r65/Probe14/repo",
+      "revision": "5ced04cdb686adf249f1c9ae7b877342b27461fa",
+      "exit": 1,
+      "stdout": "RECEIPT_PIN=FAIL blob/digest",
+      "stderr": "",
+      "cat_file_rc": 128,
+      "cat_file_stderr": "fatal: path 'no/such/file.txt' does not exist in '5ced04cdb686adf249f1c9ae7b877342b27461fa'"
+    },
+    {
+      "case": "C-missing-revision",
+      "receipt": "/fast/scratch/hyaku/chousa-r65/Probe14/receipts/C-missing-revision.receipt",
+      "root": "/fast/scratch/hyaku/chousa-r65/Probe14/repo",
+      "revision": "f99de3bdfaaf9b4c4fa85cc55dd37b9df2ee90fd",
+      "exit": 1,
+      "stdout": "RECEIPT_PIN=FAIL blob/digest",
+      "stderr": "",
+      "cat_file_rc": 128,
+      "cat_file_stderr": "fatal: path 'hello.txt' exists on disk, but not in 'f99de3bdfaaf9b4c4fa85cc55dd37b9df2ee90fd'"
+    },
+    {
+      "case": "D-lane-freeze-missing-path",
+      "receipt": "/fast/scratch/hyaku/chousa-r65/Probe14/receipts/D-lane-missing.receipt",
+      "root": "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+      "revision": "f99de3bdfaaf9b4c4fa85cc55dd37b9df2ee90fd",
+      "exit": 1,
+      "stdout": "RECEIPT_PIN=FAIL blob/digest",
+      "stderr": "",
+      "cat_file_rc": 128,
+      "cat_file_stderr": "fatal: path 'corpus/evidence/round65/controls/no-such-blob-probe14.txt' does not exist in 'f99de3bdfaaf9b4c4fa85cc55dd37b9df2ee90fd'"
+    }
+  ],
+  "verdicts": {
+    "A-positive-control": {
+      "expected_exit": 0,
+      "got_exit": 0,
+      "expected_token": "RECEIPT_PIN=PASS",
+      "got_token": "RECEIPT_PIN=PASS",
+      "match": true
+    },
+    "B-missing-path": {
+      "expected_exit": 1,
+      "got_exit": 1,
+      "expected_token": "RECEIPT_PIN=FAIL blob/digest",
+      "got_token": "RECEIPT_PIN=FAIL blob/digest",
+      "match": true
+    },
+    "C-missing-revision": {
+      "expected_exit": 1,
+      "got_exit": 1,
+      "expected_token": "RECEIPT_PIN=FAIL blob/digest",
+      "got_token": "RECEIPT_PIN=FAIL blob/digest",
+      "match": true
+    },
+    "D-lane-freeze-missing-path": {
+      "expected_exit": 1,
+      "got_exit": 1,
+      "expected_token": "RECEIPT_PIN=FAIL blob/digest",
+      "got_token": "RECEIPT_PIN=FAIL blob/digest",
+      "match": true
+    }
+  }
+}

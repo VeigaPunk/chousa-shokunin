@@ -1,0 +1,36 @@
+== leg1-draft-positive
+driver: wrote /fast/scratch/hyaku/chousa-r65/PinFormat/out/pinformat-positive.receipt; reported EXIT=0; driver-invocation-exit will be 0 regardless of reported EXIT
+invocation-rc=0
+== leg2-ref-positive
+RECEIPT_PIN=PASS
+invocation-rc=0
+== leg3-draft-exit7
+driver: wrote /fast/scratch/hyaku/chousa-r65/PinFormat/out/pinformat-exit7.receipt; reported EXIT=7; driver-invocation-exit will be 0 regardless of reported EXIT
+invocation-rc=0
+== leg4-ref-exit7
+RECEIPT_PIN=PASS
+invocation-rc=0
+tamper-rc=0
+== leg5-ref-tampered-digest
+RECEIPT_PIN=FAIL blob/digest
+invocation-rc=1
+== leg6-ref-wrong-caller-revision
+RECEIPT_PIN=FAIL header/body
+invocation-rc=1
+== leg7-ref-uppercase-revision
+usage: ref-receipt-pin.py [-h] --receipt RECEIPT --root ROOT
+                          --revision REVISION
+ref-receipt-pin.py: error: --revision requires full lowercase object id
+invocation-rc=2
+forge-rc=0
+== leg8-ref-forged-body
+RECEIPT_PIN=PASS
+invocation-rc=0
+crlf-rc=0
+== leg9-ref-crlf
+RECEIPT_PIN=PASS
+invocation-rc=0
+== leg10-ref-absent-receipt
+RECEIPT_PIN=FAIL [Errno 2] No such file or directory: '/fast/scratch/hyaku/chousa-r65/PinFormat/out/absent.receipt'
+invocation-rc=1
+== transcript-complete
