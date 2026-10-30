@@ -1,0 +1,7 @@
+# Round-63 attempt-2 audit rules for the attempt-1 frozen claims file (claims sha16 6c46b2cc193e1a44).
+# One row per machine-checkable statement the attempt-1 erratum (CritCalibration) records as false: E1..E4.
+# id	rule	anchor	target	expect	note
+R63-E1	git-first-commit	**Controls (all committed before the freeze	corpus/evidence/round63/controls/c1-controls.txt,corpus/evidence/round63/controls/run-c1-controls.py		erratum E1: added in the freeze commit itself
+R63-E2	file-kind	wrong header file, wrong anchor	corpus/evidence/round63/controls/run-c2-controls.py::s143-wrong-file	header	erratum E2: the variant substitutes a man page (.1.gz)
+R63-E3	verbatim-heading	is amended by `Planned — round 63 (amended before the freeze)`	SCORECARD.md		erratum E3: the heading carries ", 2026-10-28"
+R63-E4	scope-narrower	the lane holds nothing on what a git revision name			erratum E4: the claim's own sweep names corpus/knowledge only

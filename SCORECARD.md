@@ -3021,3 +3021,7 @@ Learning trends: expansion **improved** (narrowly), quality **unchanged**, disce
 ## Planned — round 64 (not started)
 
 Candidates from `corpus/lessons/round-63.md` `## Routed to the next round`: a zero-gate battery leg, the six judge holes, the path-keyed forger and an oracle-breaking benign leg for the C1 battery; the G04 and G05 rule false positives on sibling files; the C2 counter's 7 control gaps; plus the round-62 list above (the v3 counter and battery, the size-watch threshold).
+
+## Planned — round 63 (attempt 2, frozen 2026-10-30)
+
+Attempt 1's routed list, taken as two claims frozen in `corpus/evidence/round63/claims-a2.md`: C1 operability — the wave's falsifier class (zero-gate run, six judge holes, path-keyed forger, 55-line overfit oracle, G04/G05 false positives) closed in `corpus/evidence/round63/c1-battery-v2.py` (29 legs) and in the amended `tools/lane-preflight.py`, measured nine-of-nine exhibits rejected against the frozen battery's nine-of-nine accepted; C2 calibration — `tools/claims-audit.py`, a committed checker that flags the six mechanically-checkable of the eighteen erratum statements (`FLAGGED=2/2` and `4/4`), sourced on rows S146–S148 opened this round (S149 rejected), with the pre-freeze audit of the round's own claims (`FLAGGED=0/4`). No wave: the orchestrator paused new campaign dispatches 2026-10-30 (provider failures); the L2 floor is unmet and the attack items are routed to round 64.

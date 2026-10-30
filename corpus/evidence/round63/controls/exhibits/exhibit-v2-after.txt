@@ -1,0 +1,35 @@
+FULL landed-tool rc=0 CLEAN=1/1 DEFECTS=17/17 BENIGN=8/8 ZERO=3/3 BATTERY=PASS
+FULL E01-pos-ref rc=1 CLEAN=1/1 DEFECTS=17/17 BENIGN=6/8 ZERO=0/3 BATTERY=FAIL
+  LEG B07 benign FAIL rc=1 want 0
+  LEG B08 benign FAIL rc=1 want 0
+  LEG Z01 zero FAIL rc=0 want 2 on a zero-gate run
+  LEG Z02 zero FAIL rc=0 want 2 on a zero-gate run
+  LEG Z03 zero FAIL rc=0 want 2 on a zero-gate run
+FULL E08-forge-token rc=1 CLEAN=1/1 DEFECTS=14/17 BENIGN=6/8 ZERO=0/3 BATTERY=FAIL
+  LEG D13 defect FAIL rc=2 (want 2, no output lines, bad id on stderr)
+  LEG D16 defect FAIL rc=0 want 1
+  LEG D17 defect FAIL rc=0 want 1
+  LEG B07 benign FAIL rc=1 want 0
+  LEG B08 benign FAIL rc=1 want 0
+  LEG Z01 zero FAIL rc=0 want 2 on a zero-gate run
+  LEG Z02 zero FAIL rc=0 want 2 on a zero-gate run
+  LEG Z03 zero FAIL rc=0 want 2 on a zero-gate run
+FULL E09-overfit-oracle rc=1 CLEAN=1/1 DEFECTS=14/17 BENIGN=6/8 ZERO=0/3 BATTERY=FAIL
+  LEG D13 defect FAIL rc=2 (want 2, no output lines, bad id on stderr)
+  LEG D16 defect FAIL rc=0 want 1
+  LEG D17 defect FAIL rc=0 want 1
+  LEG B07 benign FAIL rc=1 want 0
+  LEG B08 benign FAIL rc=1 want 0
+  LEG Z01 zero FAIL rc=0 want 2 on a zero-gate run
+  LEG Z02 zero FAIL rc=0 want 2 on a zero-gate run
+  LEG Z03 zero FAIL rc=0 want 2 on a zero-gate run
+LEG honest-clean [CLEAN] rc=0 LEG CLEAN clean ok ok
+LEG t00-honest-d06 [D06] rc=0 LEG D06 defect ok ok
+LEG t17-honest-d14 [D14] rc=0 LEG D14 defect ok ok
+LEG E02-formfeed [D06] rc=0 LEG D06 defect FAIL control character on stdout
+LEG E03-wrong-name [D06] rc=0 LEG D06 defect FAIL 1 non-contract lines on stdout
+LEG E04-glued-status [D06] rc=0 LEG D06 defect FAIL 7 non-contract lines on stdout
+LEG E05-usage-gates [D13] rc=0 LEG D13 defect FAIL rc=2 (want 2, no output lines, bad id on stderr)
+LEG E06-usage-silent [D13] rc=0 LEG D13 defect FAIL rc=2 (want 2, no output lines, bad id on stderr)
+LEG E07-dup-member [D06] rc=0 LEG D06 defect FAIL summary component 'G03,G03' has duplicate members
+RUNS=13

@@ -1975,3 +1975,47 @@ Base `a847a37cc263c80417ee1cdf650de33e2f91a839`. Claims froze at `62876ef9015471
 - **Mistakes.** `corpus/lessons/round-63.md` `## Mistakes`: five rows (a rule written from the sample at hand, a shell-python edit, control text wrong, four false statements in the claims file, a zero-gate exit).
 - **Wave findings, not landings.** Judge holes, a path-keyed forger, a 55-line oracle passing all legs, mutation gaps in the battery and the reference, G04/G05 false positives on siblings (`corpus/lessons/round-63.md` `## What the wave measured`).
 - **Tools.** `tools/lane-preflight.py`, `corpus/evidence/round63/{c1-battery.py,c2-count.py,git-revision-probe.py}`. No installs.
+
+## Round 63 (attempt 2) — the wave's falsifier class closed in a v2 battery; a claims-audit checker; no wave dispatched (2026-10-30)
+
+Re-dispatch of steered round 63 after the run-11 wrap-up released attempt 1 without a closure. Base
+`4ece131ca826c646bd28a50802d41bc78d8a9717`; claims froze in `corpus/evidence/round63/claims-a2.md`. No wave:
+the orchestrator paused new campaign dispatches on 2026-10-30 (provider failures; two irc directives quoted in
+the claims file and the report), so no `.ready` was written and the round's L2 floor is unmet, reported as
+such. Freeze and landing evidence:
+
+- **Freeze.** `corpus/evidence/round63/claims-a2.md` (C1 operability: the attempt-1 wave's falsifier class
+  closed in `c1-battery-v2.py`; C2 calibration: `tools/claims-audit.py`, seven rule classes, six of eighteen
+  erratum statements machine-checkable); instruments `c1-battery-v2.py` (`0fbfd076e9a6235c`),
+  `claims-audit.py` (`d48247f9c77ac1e7`), the nine exhibit fixtures + three honest controls under
+  `controls/exhibits/` (E09 the wave's oracle byte-exact, sha256 prefix `9ebbe9b8a8d61137`), audit rule files
+  `audit/audit-r62.tsv` + `audit-r63.tsv`, probe `audit-probe.py`; before-receipts
+  `controls/exhibits/exhibit-v1-before.txt` (the frozen battery accepts the falsifier class 9/9) and
+  `controls/audit-before.txt` (tool absent at the base, exit 2).
+- **C1 after.** `controls/exhibits/exhibit-v2-after.txt`: all nine exhibits rejected (E01 via its old rules
+  on B07/B08 and its zero-gate exit 0 on Z01–Z03; E02–E07 rejected per leg by the strict judge; E08, E09 fail
+  in full on D16/D17/B07/B08/Z), honest controls accepted; `controls/c1v2-landed-runs.txt`: the landed
+  `tools/lane-preflight.py` reads `CLEAN=1/1 DEFECTS=17/17 BENIGN=8/8 ZERO=3/3 BATTERY=PASS` exit 0 ×3;
+  `controls/c1v2-nulls-v2.txt`: both committed nulls FAIL exit 1; `controls/c1-on-fixed-tool.txt`: the frozen
+  attempt-1 battery still passes the amended tool ×3; `controls/preflight-full-run-final.txt`:
+  `PREFLIGHT=8/8 FAILED=none ENV=none SKIPPED=none` exit 0 including G08.
+- **C2 after.** `FLAGGED=2/2 AUDIT=FAIL` exit 1 on the round-62 claims (`audit/audit-r62.tsv`),
+  `FLAGGED=4/4 AUDIT=FAIL` exit 1 on attempt 1's claims (`audit/audit-r63.tsv`); selftest
+  `AUDIT_SELFTEST=PASS (3 cases)` exit 0; probe `PROBE_FACTS=11/11` exit 0 (`audit-probe.txt`); pre-freeze
+  read of this round's own claims `audit-a2-result.txt` `FLAGGED=0/4 AUDIT=PASS` exit 0.
+- **Tool amendment (routed defect).** `tools/lane-preflight.py` G04 (first-segment and `=` rules) and G05
+  (`:N`/trailing-dot strip, brace expansion) fixed per the wave's `CritC1GateRules.md`; verified PASS on the
+  lane and on the three sibling roots the finding named (kagi `caught=18/18`, kake brace shorthand); the
+  false-positive shapes are pinned as benign legs B07/B08 of the v2 battery.
+- **Frontier/source.** Rows 145 → 149, tiers A/B/C 113/25/7 → 116/26/7, mined 118 → 121, rejected 8 → 9;
+  census exit 0 at both ends, the same five pre-existing W04 warnings. Sourced claim: C2 (S146 grep(1),
+  S147 git-log(1), S148 own probe; S149 file(1) rejected). Assimilation: none — adoption closed by the
+  round-42 quarantine verdicts plus this round's id-collision check (64 of 114 staged ids already in the
+  registry, `.ufo/waves/round-63/assimilation/`).
+- **Mistakes.** `corpus/lessons/round-63-attempt2.md` `## Mistakes`: four rows (a judge rule written from the
+  sample at hand — the wrong-name exhibit passed the first hardened judge; a standalone-token rule defeated by
+  a digit inside a word; a `__file__` lane-root offset in two new scripts, twice; a receipt quoting the
+  pipe's exit instead of the command's).
+- **Tools.** `tools/claims-audit.py` (new), `corpus/evidence/round63/{c1-battery-v2.py,audit-probe.py}`,
+  exhibits and runners under `corpus/evidence/round63/controls/`. No installs (pacman paused; nothing
+  installed or upgraded).
