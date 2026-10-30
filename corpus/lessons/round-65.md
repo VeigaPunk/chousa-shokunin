@@ -9,8 +9,8 @@ Admit corpus/knowledge/receipt-identity-r65.md narrowly: interpreting lane-owned
 
 | row | URL/path opened 2026-10-30 | location and <=25-word quote | decision |
 |---|---|---|---|
-| S154 | file:///usr/share/man/man1/git-cat-file.1.gz | Git2.56.0 manual dated2026-09-27, OUTPUT: `If <type> is specified, the raw (though uncompressed) contents of the object will be returned.` | A for object-content output only |
-| S155 | file:///usr/lib/python3.14/hashlib.py | Python3.14.8 module documentation31–32: `Return the digest of the bytes passed to the update() method` | A for installed digest semantics |
+| S154 | file:///usr/share/man/man1/git-cat-file.1.gz | Git2.56.0 manual dated2026-09-27, OUTPUT: `If <type> is specified, the raw (though uncompressed) contents of the <object> will be returned.` | A for object-content output only |
+| S155 | file:///usr/lib/python3.14/hashlib.py | Python3.14.8 module documentation line 31 (bullet spans 31–32): `Return the digest of the bytes passed to the update() method` | A for installed digest semantics |
 | S156 | corpus/evidence/round64/controls/c1v3-before-full.txt | line1 `LEG CLEAN clean ok ok`; line44 is the failed aggregate | B for receipt text, not historical execution authenticity |
 | S157 | corpus/evidence/round65/controls/ref-receipt-pin.py | module docstring first sentence: `Validate receipt header consistency, not execution authenticity.` | rejected C as execution proof; flip independent command/bytes/result binding |
 
@@ -23,6 +23,8 @@ Registry:153->157 rows; new A2/B1/C1, mined3/rejected1. No held status/recheck/u
 | Before receipt relies on surrounding provenance instead of self-contained headers | round64 verifier-spotcheck section5 item3; corpus/evidence/round64/controls/c1v3-before-full.txt:1,44 | none requiring this exact format; QUALITY42 supplied a broader binding rule | receipt-pin introduces a narrow in-file revision/exit/blob-digest consistency check. Red-before uses retained r64 receipt; twenty-case controls also fail on missing headers. It does not authenticate output or retrospectively repair the old receipt. |
 | Evidence-only counters lack explicit gate-registry disposition | round64 verifier-spotcheck section5 item2 | gate registry completeness duty | SKILL.md appended evidence-only honest-stop exemption naming r64 c3-count, supplement and runner; old failed predicates unchanged. No new general detector claimed. |
 | A fixed-case black-box counter cannot distinguish a parsing validator from an argv-keyed lookup table (reviewer demo scored 20/20 without parsing receipts) | .ufo/waves/round-65/w1/ReviewFreeze/c1-boundary-probes.txt and findings 1–5; Attack05/13/16 nearby-forgery probes | none frozen — claims.md scopes C1 to interface/consistency coverage, not general parser safety | the landed tools/receipt-pin.py was written from the frozen format contract and read by the L1 before admission (ReviewFreeze's recommendation); wave-2 review seats re-read the landed implementation; a successor freeze could add implementation-independent negative cases |
+| The validator answered every environment fault with a receipt verdict (exit 1) although the frozen contract assigns "2 usage/environment" | wave-2 `R65R01.md` finding F1 and `R65C01.md` finding 1 — missing `git`, a non-repository `--root` and an unreadable receipt all exited 1 | the frozen contract sentence "0 consistent,1 invalid,2 usage/environment" (`corpus/evidence/round65/claims.md` C1) | `tools/receipt-pin.py` now separates the taxonomy: an explicit environment probe (`git -C ROOT rev-parse --git-dir`) and an OSError branch return exit 2 with `RECEIPT_PIN=ERROR` on stderr, while receipt-content defects keep exit 1; re-measured at the new tip, CASES=20/20 C1=PASS exit 0 |
+| A structural sourced-entry counter attests an entry's shape, not its substance: a 9-line boilerplate entry plus three stub registry rows and a README mention also score 10/10 | wave-2 `R65C03.md` (boilerplate control ENTRY_CHECKS=10/10 exit 0) and `R65M02.md` (M5b 116-byte token stub 10/10; M6 cites non-existent ids S1549/S1559/S1569 and still 10/10; M2a–M2c strip a source id from the header and survive) | none frozen — claims.md concedes "a boilerplate entry could pass"; the round-sizing rule (a target must be unreachable by a do-nothing control) does bind | C2 is reported unprovable / not admitted on its counter; the entry stays landed with its three sources re-opened and reviewed; QUALITY criterion 131 records the rule; a successor freeze needs a semantic counter (per-id citation reconciliation against `corpus/SOURCES.md` and non-empty claim bodies) so the after-state is do-nothing-unreachable |
 
 ## Prior closure routed items
 
@@ -58,3 +60,26 @@ above records the sharpest of them.
 C1's frozen counter enumerates twenty cases, not universal input correctness. C2 checks structure and citations, not entailment. Generic testing belongs adjacent to tameshi; dispatch/receipt lifecycle to kumitate. This lane's work is the interpretation and checking of its own research evidence. Open fetch-scope and receipt-identity L0 questions remain unanswered and are routed around with local reads only.
 
 L1 boundary probes on the landed validator (`corpus/evidence/round65/controls/l1-boundary-probes.txt`): a CRLF receipt is accepted (universal-newline read plus `splitlines()`), while `EXIT=00`, a `./`-prefixed path and a whitespace-only body are refused, a bad `--revision` exits 2 and an absent receipt exits 1. The frozen 20 cases pin no byte-exact line endings, so CRLF acceptance is a disclosed behaviour of the landed tool rather than a measured failure — w1 ReviewFreeze finding 1 anticipated it. A successor freeze could pin byte-exactness; this round does not rewrite the frozen counter.
+
+## Wave-2 falsify findings (2026-10-30, 32 seats dispatched, 29 reported, 3 released un-settled)
+
+Wave-2 attacked the landed bytes at 9672a2e: re-runs of both frozen counters (R65E01–R65E08), four reviews
+(R65R01–R65R04), four critics (R65C01–R65C04), two mutation tests (R65M01, R65M02), eight scouts, four
+scribes and two connectors. Findings that changed the round:
+
+1. C1's sizing holds — the always-pass stub reaches only 3/20 and the always-fail stub 17/20 (R65C03), so
+   the 20/20 target is unreachable by a do-nothing control. The frozen counter reproduces byte-for-byte at
+   the tip (R65E01) and the landed validator passes 20/20.
+2. The frozen oracle under-pins the contract: 11 behavioural mutants of the validator, 6 killed and 5
+   survived (R65M01). Every survivor is a coverage gap of the frozen case list, not a defect of the shipped
+   validator — the pristine tool rejects all four live probes. The `..` guard is an equivalent mutant
+   (git refuses every `..` path in `rev:path` syntax).
+3. The exit taxonomy deviated from the frozen contract: environment faults returned 1 instead of 2
+   (R65R01 finding F1, R65C01 finding 1). Fixed this round — see the Mistakes row; re-measured at the tip.
+4. C2's counter attests shape, not substance: a boilerplate entry also scores 10/10 (R65C03, R65M02). C2 is
+   therefore reported unprovable / not admitted on its counter; see the SCORECARD round-65 verdict.
+5. Two cosmetic location imprecisions in the knowledge entry's located quotes were corrected (the
+   git-cat-file quote's `<object>` notation; the hashlib quote's span, line 31 rather than 31–32) after
+   R65R02 re-opened all three sources and found no misquote and no overreach in the four claims.
+6. The registry rows S154–S157 conform to the CORPUS.md contract (R65R03: 11 columns, tier scope, located
+   anchors, reciprocal used-by, the rejected row keeping reason and flip).

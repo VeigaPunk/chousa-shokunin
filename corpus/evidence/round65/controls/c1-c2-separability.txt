@@ -1,0 +1,21 @@
+REVISION=9672a2e998bff2b51d18b0df4d835bd3ae2c453f
+EXIT=0
+PROBE=causal separability of the two frozen round-65 claims, measured in a scratch clone (git clone --shared) at the landed tip; the lane tree was not modified and the scratch clone was deleted after the run
+
+clone baseline (nothing removed)
+  python3 -B corpus/evidence/round65/c1-count.py --work <fresh>  -> CASES=20/20 C1=PASS
+  python3 -B corpus/evidence/round65/c2-count.py                  -> ENTRY_CHECKS=10/10 C2=PASS
+
+with C1's target removed (rm -f tools/receipt-pin.py)
+  python3 -B corpus/evidence/round65/c1-count.py --work <fresh>  -> CASES=0/20 C1=FAIL missing-target
+  python3 -B corpus/evidence/round65/c2-count.py                  -> ENTRY_CHECKS=10/10 C2=PASS
+  => C2 verifies without C1 having landed
+
+with C1's target restored and C2's entry removed (rm -f corpus/knowledge/receipt-identity-r65.md)
+  python3 -B corpus/evidence/round65/c1-count.py --work <fresh>  -> CASES=20/20 C1=PASS
+  python3 -B corpus/evidence/round65/c2-count.py                  -> ENTRY_CHECKS=2/10 C2=FAIL
+  => C1 verifies without C2 having landed
+
+Reading: the two claims are causally separable — each predicate is re-derivable with the other claim's
+artifact absent. The 2/10 residue in the second leg is the two entry-independent checks (the S154-S156
+registry rows and the corpus/README.md index line), both of which survive the entry's removal by design.

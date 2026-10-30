@@ -10,8 +10,10 @@ equal the caller-selected --revision and the digest must match
 working tree. Header consistency is NOT execution authenticity: a PASS proves
 only that the receipt is self-consistent with the selected blob, not that a
 command truly ran or that the body is truthful. Read-only Git; no writes.
-Exits 0 consistent (RECEIPT_PIN=PASS), 1 malformed or inconsistent
-(RECEIPT_PIN=FAIL ...), 2 usage/environment.
+Exits 0 consistent (RECEIPT_PIN=PASS on stdout), 1 malformed or inconsistent
+receipt (RECEIPT_PIN=FAIL ... on stdout), 2 usage or environment fault
+(argparse usage errors; unreadable receipt; git unavailable; --root is not a
+git repository — RECEIPT_PIN=ERROR ... on stderr).
 """
 import argparse
 import hashlib
@@ -25,6 +27,12 @@ EXIT_RE = re.compile(r"EXIT=(?:0|[1-9][0-9]{0,2})")
 DIGEST_RE = re.compile(r"SHA256=([0-9a-f]{64}) (.+)")
 
 
+def environment(message):
+    """Usage or environment fault: exit 2, never a receipt verdict."""
+    print("RECEIPT_PIN=ERROR " + message, file=sys.stderr)
+    return 2
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--receipt", required=True, help="receipt file to validate")
@@ -35,6 +43,12 @@ def main():
         p.error("--revision requires a full lowercase 40-hex object id")
     try:
         lines = pathlib.Path(a.receipt).read_text(encoding="utf-8").splitlines()
+    except UnicodeError as e:
+        print("RECEIPT_PIN=FAIL receipt is not valid UTF-8: " + str(e))
+        return 1
+    except OSError as e:
+        return environment("receipt file unreadable: " + str(e))
+    try:
         if len(lines) < 5:
             raise ValueError("receipt needs four header lines, an empty separator and a body")
         if lines[0] != "REVISION=" + a.revision:
@@ -51,16 +65,29 @@ def main():
             raise ValueError("header block must be followed by one empty separator line")
         if not "\n".join(lines[4:]).strip():
             raise ValueError("receipt body must be nonempty")
+    except ValueError as e:
+        print("RECEIPT_PIN=FAIL " + str(e))
+        return 1
+    try:
+        probe = subprocess.run(
+            ["git", "-C", a.root, "rev-parse", "--git-dir"], capture_output=True
+        )
+    except OSError as e:
+        return environment("git is unavailable: " + str(e))
+    if probe.returncode != 0:
+        return environment("--root is not a git repository: " + a.root)
+    try:
         blob = subprocess.run(
             ["git", "-C", a.root, "cat-file", "blob", a.revision + ":" + m.group(2)],
             capture_output=True,
         )
-        if blob.returncode != 0:
-            raise ValueError("no blob " + a.revision + ":" + m.group(2) + " in --root")
-        if hashlib.sha256(blob.stdout).hexdigest() != m.group(1):
-            raise ValueError("digest does not match the pinned blob bytes")
-    except (OSError, UnicodeError, ValueError) as e:
-        print("RECEIPT_PIN=FAIL " + str(e))
+    except OSError as e:
+        return environment("git is unavailable: " + str(e))
+    if blob.returncode != 0:
+        print("RECEIPT_PIN=FAIL no blob " + a.revision + ":" + m.group(2) + " in --root")
+        return 1
+    if hashlib.sha256(blob.stdout).hexdigest() != m.group(1):
+        print("RECEIPT_PIN=FAIL digest does not match the pinned blob bytes")
         return 1
     print("RECEIPT_PIN=PASS")
     return 0
