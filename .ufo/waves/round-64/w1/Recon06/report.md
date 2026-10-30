@@ -1,0 +1,31 @@
+# Recon06 — newest teaching integration reconnaissance
+
+Lane: /home/vgpnk/Projects/shokunin/chousa-shokunin
+
+Axes: teaching traceability, evidence fidelity, scope safety. Documentary inspection only; advisory findings, not outside non-author closure.
+
+## Observed findings
+
+1. **No canonical operator lesson record was located.** `glob` of `corpus/lessons/operator-*` returned no files; the complete lesson directory listing likewise contains none. Fleet `LEARNING.md:50–53` requires operator teaching to land verbatim in that form and be reflected next round in QUALITY or SKILL with a lesson citation, or an explanation. This establishes an absent record, not proof that an unrecorded operator teaching occurred. Confidence: high for this checkout's file inventory.
+
+2. **Newest available proposal file is 2026-10-26, and its proposals must not be described as universally unimplemented.** `considerthese/2026-10-26.md:39–44` proposes stable ids, recurring-weakness streaks, lane/verifier disagreement reporting, and independent CJK review. `corpus/evidence/round54/considerthese-ledger.tsv:33–36` records the first three as IMPL with concrete tool pointers and the fourth as FMT, explicitly outside the lane. `SKILL.md:141,144` already registers weakness-streak and ledger checking. The newest lesson `corpus/lessons/round-64.md:37` mines the disagreement proposal again, recording round63's unchanged/improved discrepancy with its outside-closure pointer. A fresh missing-implementation claim for these three would be unsupported. Confidence: high for the recorded statuses; no execution of those older tools was assigned.
+
+3. **New mistakes are in the lesson but not yet distilled into current QUALITY/SKILL teaching.** `corpus/lessons/round-64.md:25–27` records (a) positive fixtures drawing identity twice, (b) unverified expected-path arithmetic, and (c) a universal instrument claim exceeding its enumerated set. Its captured-by cell for (b) is explicitly `none`. QUALITY currently ends at criterion 127 (`corpus/QUALITY.md:1004`); targeted searches of QUALITY and SKILL found no round64/round-64 or expected-path/root-derivation teaching. Fleet `LEARNING.md:18–21` requires a mistake caught by no criterion to produce a lesson-citing QUALITY criterion. **Integration gap for L1:** distill expected-root/oracle arithmetic into a grounded criterion or explain non-integration; also connect enumeration coverage and the existing positive-control requirements to these actual failures. This is a current-tree observation, not a finding that the still-running round has already missed its filing deadline. Confidence: high for the documentary gap.
+
+4. **Existing teaching was present but its positive-control prerequisite was not reflected in the inherited freeze.** QUALITY 115 (`:974`) requires a positive builder to attain the exact target before freeze; QUALITY 119 (`:986`) requires the committed control matrix before binding data. The newest lesson explicitly says these should have caught E12/E13 (`round-64.md:25`). Stored before receipt `corpus/evidence/round64/controls/c1v3-before-full.txt:38–44` records E12/E13 rc=1 versus wanted 0 and `CLEAN=1/1 DEFECTS=17/28 BENIGN=8/11 ZERO=3/3 BATTERY=FAIL`. `corpus/evidence/round64/claims-erratum.md:5` explains the independently drawn fixture identities and says a conforming checker should reject the resulting phantom links. This is a failure to apply existing teaching, not evidence that QUALITY lacks a positive-path rule. The supplement is distinct and post-freeze; it cannot replace frozen C1 failure. `controls/ref-preflight-v3.py` remains a candidate, not production. Confidence: high; receipt result is inherited, not freshly executed by this seat.
+
+5. **The outside-reader proposal cannot be closed by this wave.** The ledger's FMT treatment of CT-20261026-4 accords with fleet `LEARNING.md:42–48`: a lane-dispatched subagent remains the lane. `round-64.md:8` correctly leaves outside admit/reject review pending. No CJK-independent-review accomplishment is established by this seat's documentary read. Confidence: high.
+
+## Inference and remaining unknowns
+
+- Inference: a narrow new criterion about checking the counter's expected address independently would close the clearest current teaching gap without adding another generic positive-control rule. Its source would be round64 mistake row 2; any actual criterion and discriminating receipt remain L1's integration responsibility.
+- Unknown: whether an operator teaching exists outside the checked lane records; no canonical operator lesson files were discoverable here. The considerthese files identify their author as Grok Bot, so they are not silently elevated into verbatim operator instructions.
+- Unknown: final round64 integration and outside non-author verdicts; the round is live. No exported code contract was traced or judged.
+
+## Evidence collection and boundaries
+
+Read mandatory `/home/vgpnk/.omp/agent/RULES.md` first, then frozen `corpus/evidence/round64/claims.md`. Used read/glob/grep against the paths cited above. These are literal documentary observations, not semantic reference proof. Attempted `read xd://lsp`; response: `No such tool: xd://lsp`. No semantic server was available through that device; no cold empty LSP result was treated as absence.
+
+No probes were explicitly required for this documentary item, so no shell command, test, counter, or build was run; no new command/output/exit receipt is claimed. Stored receipt lines above are clearly attributed. No network, git/jj mutation, production edit, install/update, or service action occurred. Tool install record: none. No scratch directory or clone was created; nothing remains to remove.
+
+Self-evaluation: accuracy 4 (live-tree rather than pinned-blob inventory); completeness 4 (unrecorded operator teaching cannot be reconstructed); clarity 4 (proposal versus instruction distinction explicit); actionability 4 (L1 criterion target named, not authored); conciseness 4 (evidence repeated only to distinguish inherited failures). Overall 4.0/5. Highest-impact improvement at integration: cite a newly grounded expected-address criterion and preserve frozen failure separately. Would the user agree? Expected, because no closure or execution is overstated.

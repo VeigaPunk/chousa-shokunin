@@ -1,0 +1,168 @@
+{
+  "python": "3.14.8 (main, Oct  2 2026, 10:23:31) [GCC 16.2.1 20260810]",
+  "freeze": "bf40d99bda9eefdad3ed6276da077cfb24ba82f1",
+  "digests": {
+    "tools/claims-audit-v2.py": {
+      "frozen_sha256": "db0e28dd4c0332591b8898feb727f23a0e80b6e2ad29cbf0a6237d35a4d0b88d",
+      "current_sha256": "db0e28dd4c0332591b8898feb727f23a0e80b6e2ad29cbf0a6237d35a4d0b88d",
+      "equal": true
+    },
+    "corpus/evidence/round64/gen-audit-mutants.py": {
+      "frozen_sha256": "6e1055b28d315e32a3d43ee0866f9c32b78470899826f1d29c8c3707610a4191",
+      "current_sha256": "6e1055b28d315e32a3d43ee0866f9c32b78470899826f1d29c8c3707610a4191",
+      "equal": true
+    },
+    "corpus/evidence/round64/c2-mutrun.py": {
+      "frozen_sha256": "0045787ee9de39749e1dd06739259cd5f0a494865c921edbed91cfd86249a8c9",
+      "current_sha256": "0045787ee9de39749e1dd06739259cd5f0a494865c921edbed91cfd86249a8c9",
+      "equal": true
+    }
+  },
+  "cases": [
+    {
+      "variant": "frozen",
+      "fixture": "duplicate",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack15/frozen.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack15/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack15/duplicate.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack15"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "claims-audit-v2: duplicate rule id\n"
+    },
+    {
+      "variant": "frozen",
+      "fixture": "duplicate-stripped",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack15/frozen.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack15/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack15/duplicate-stripped.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack15"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "claims-audit-v2: duplicate rule id\n"
+    },
+    {
+      "variant": "frozen",
+      "fixture": "unknown",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack15/frozen.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack15/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack15/unknown.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack15"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "claims-audit: bad rule row unknown.tsv:1\n"
+    },
+    {
+      "variant": "frozen",
+      "fixture": "valid",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack15/frozen.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack15/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack15/valid.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack15"
+      ],
+      "exit": 0,
+      "stdout": "FLAGGED=0/1 AUDIT=PASS\n",
+      "stderr": ""
+    },
+    {
+      "variant": "A10",
+      "fixture": "duplicate",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack15/A10.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack15/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack15/duplicate.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack15"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "claims-audit-v2: duplicate rule id\n"
+    },
+    {
+      "variant": "A10",
+      "fixture": "duplicate-stripped",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack15/A10.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack15/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack15/duplicate-stripped.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack15"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "claims-audit-v2: duplicate rule id\n"
+    },
+    {
+      "variant": "A10",
+      "fixture": "unknown",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack15/A10.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack15/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack15/unknown.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack15"
+      ],
+      "exit": 0,
+      "stdout": "FLAGGED=0/1 AUDIT=PASS\n",
+      "stderr": ""
+    },
+    {
+      "variant": "A10",
+      "fixture": "valid",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack15/A10.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack15/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack15/valid.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack15"
+      ],
+      "exit": 0,
+      "stdout": "FLAGGED=0/1 AUDIT=PASS\n",
+      "stderr": ""
+    }
+  ],
+  "scratch_removed": true
+}

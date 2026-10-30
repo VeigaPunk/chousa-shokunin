@@ -1,0 +1,32 @@
+COMMAND: python3 -B /fast/scratch/hyaku/chousa-r64/Attack12/probe.py
+CWD: /fast/scratch/hyaku/chousa-r64/Attack12
+EXIT: 0
+PYTHON 3.14.8
+FROZEN_COMPARE tools/claims-audit-v2.py git_exit 0 same True sha256 db0e28dd4c0332591b8898feb727f23a0e80b6e2ad29cbf0a6237d35a4d0b88d
+FROZEN_COMPARE corpus/evidence/round64/gen-audit-mutants.py git_exit 0 same True sha256 6e1055b28d315e32a3d43ee0866f9c32b78470899826f1d29c8c3707610a4191
+FROZEN_COMPARE corpus/evidence/round64/c2-mutrun.py git_exit 0 same True sha256 0045787ee9de39749e1dd06739259cd5f0a494865c921edbed91cfd86249a8c9
+FROZEN_COMPARE corpus/evidence/round64/claims.md git_exit 0 same True sha256 bab186919f4518f3662c31661d1e2060b4f9f3d186b33d184c365a3f82d7cfc0
+{"label": "unknown-rule", "command": ["/usr/bin/python3", "-B", "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/claims-audit-v2.py", "--claims", "/fast/scratch/hyaku/chousa-r64/Attack12/fx/claims.md", "--audit", "/fast/scratch/hyaku/chousa-r64/Attack12/fx/audit.tsv", "--root", "/fast/scratch/hyaku/chousa-r64/Attack12/fx"], "exit": 1, "stdout": "", "stderr": "claims-audit: bad rule row audit.tsv:1\n"}
+{"label": "C7-duplicate", "command": ["/usr/bin/python3", "-B", "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/claims-audit-v2.py", "--claims", "/fast/scratch/hyaku/chousa-r64/Attack12/fx/claims.md", "--audit", "/fast/scratch/hyaku/chousa-r64/Attack12/fx/audit.tsv", "--root", "/fast/scratch/hyaku/chousa-r64/Attack12/fx"], "exit": 1, "stdout": "", "stderr": "claims-audit-v2: duplicate rule id\n"}
+{"label": "unknown-rule", "command": ["/usr/bin/python3", "-B", "/fast/scratch/hyaku/chousa-r64/Attack12/A10.py", "--claims", "/fast/scratch/hyaku/chousa-r64/Attack12/fx/claims.md", "--audit", "/fast/scratch/hyaku/chousa-r64/Attack12/fx/audit.tsv", "--root", "/fast/scratch/hyaku/chousa-r64/Attack12/fx"], "exit": 0, "stdout": "FLAGGED=0/1 AUDIT=PASS\n", "stderr": ""}
+{"label": "C7-duplicate", "command": ["/usr/bin/python3", "-B", "/fast/scratch/hyaku/chousa-r64/Attack12/A10.py", "--claims", "/fast/scratch/hyaku/chousa-r64/Attack12/fx/claims.md", "--audit", "/fast/scratch/hyaku/chousa-r64/Attack12/fx/audit.tsv", "--root", "/fast/scratch/hyaku/chousa-r64/Attack12/fx"], "exit": 1, "stdout": "", "stderr": "claims-audit-v2: duplicate rule id\n"}
+{"label": "R6-fault1", "command": ["/usr/bin/python3", "-B", "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/claims-audit-v2.py", "--selftest", "--selftest-fault", "1"], "exit": 1, "stdout": "AUDIT_SELFTEST: FAULT case 1 forced\n", "stderr": ""}
+CASE 1 bad FAIL
+AUDIT_SELFTEST: FAIL bad rc=0
+FLAGGED=0/6 AUDIT=PASS
+
+INJECT_FIRST_BAD_FIXTURE base return 1
+{"label": "R6-fault1", "command": ["/usr/bin/python3", "-B", "/fast/scratch/hyaku/chousa-r64/Attack12/A11.py", "--selftest", "--selftest-fault", "1"], "exit": 1, "stdout": "AUDIT_SELFTEST: FAULT case 1 forced\n", "stderr": ""}
+CASE 1 bad FAIL
+AUDIT_SELFTEST: FAIL bad rc=0
+FLAGGED=0/6 AUDIT=PASS
+
+INJECT_FIRST_BAD_FIXTURE A11 return 0
+{"label": "quantifier the lane holds nothing on revision names.", "command": ["/usr/bin/python3", "-B", "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/claims-audit-v2.py", "--claims", "/fast/scratch/hyaku/chousa-r64/Attack12/fx/claims.md", "--audit", "/fast/scratch/hyaku/chousa-r64/Attack12/fx/audit.tsv", "--root", "/fast/scratch/hyaku/chousa-r64/Attack12/fx"], "exit": 1, "stdout": "FLAG R scope-narrower lane-wide claim swept only `corpus/knowledge` [quantifier]\nFLAGGED=1/1 AUDIT=FAIL\n", "stderr": ""}
+{"label": "quantifier the lane holds nothing on revision names.", "command": ["/usr/bin/python3", "-B", "/fast/scratch/hyaku/chousa-r64/Attack12/A12.py", "--claims", "/fast/scratch/hyaku/chousa-r64/Attack12/fx/claims.md", "--audit", "/fast/scratch/hyaku/chousa-r64/Attack12/fx/audit.tsv", "--root", "/fast/scratch/hyaku/chousa-r64/Attack12/fx"], "exit": 0, "stdout": "FLAGGED=0/1 AUDIT=PASS\n", "stderr": ""}
+{"label": "quantifier nothing in the lane on revision names.", "command": ["/usr/bin/python3", "-B", "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/claims-audit-v2.py", "--claims", "/fast/scratch/hyaku/chousa-r64/Attack12/fx/claims.md", "--audit", "/fast/scratch/hyaku/chousa-r64/Attack12/fx/audit.tsv", "--root", "/fast/scratch/hyaku/chousa-r64/Attack12/fx"], "exit": 1, "stdout": "FLAG R scope-narrower lane-wide claim swept only `corpus/knowledge` [quantifier]\nFLAGGED=1/1 AUDIT=FAIL\n", "stderr": ""}
+{"label": "quantifier nothing in the lane on revision names.", "command": ["/usr/bin/python3", "-B", "/fast/scratch/hyaku/chousa-r64/Attack12/A12.py", "--claims", "/fast/scratch/hyaku/chousa-r64/Attack12/fx/claims.md", "--audit", "/fast/scratch/hyaku/chousa-r64/Attack12/fx/audit.tsv", "--root", "/fast/scratch/hyaku/chousa-r64/Attack12/fx"], "exit": 0, "stdout": "FLAGGED=0/1 AUDIT=PASS\n", "stderr": ""}
+{"label": "quantifier the lane holds nothing at all on revision names.", "command": ["/usr/bin/python3", "-B", "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/claims-audit-v2.py", "--claims", "/fast/scratch/hyaku/chousa-r64/Attack12/fx/claims.md", "--audit", "/fast/scratch/hyaku/chousa-r64/Attack12/fx/audit.tsv", "--root", "/fast/scratch/hyaku/chousa-r64/Attack12/fx"], "exit": 1, "stdout": "FLAG R scope-narrower lane-wide claim swept only `corpus/knowledge` [quantifier]\nFLAGGED=1/1 AUDIT=FAIL\n", "stderr": ""}
+{"label": "quantifier the lane holds nothing at all on revision names.", "command": ["/usr/bin/python3", "-B", "/fast/scratch/hyaku/chousa-r64/Attack12/A12.py", "--claims", "/fast/scratch/hyaku/chousa-r64/Attack12/fx/claims.md", "--audit", "/fast/scratch/hyaku/chousa-r64/Attack12/fx/audit.tsv", "--root", "/fast/scratch/hyaku/chousa-r64/Attack12/fx"], "exit": 1, "stdout": "FLAG R scope-narrower lane-wide claim swept only `corpus/knowledge` [quantifier]\nFLAGGED=1/1 AUDIT=FAIL\n", "stderr": ""}
+
+STDERR:

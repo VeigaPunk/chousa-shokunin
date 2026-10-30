@@ -1,0 +1,1009 @@
+{
+  "axes": [
+    "frozen-byte fidelity",
+    "mutation discrimination",
+    "zero production mutation"
+  ],
+  "python": "3.14.8 (main, Oct  2 2026, 10:23:31) [GCC 16.2.1 20260810]",
+  "tools_installed": [],
+  "byte_checks": [
+    {
+      "path": "corpus/evidence/round64/claims.md",
+      "git_show_exit": 0,
+      "freeze_sha256": "bab186919f4518f3662c31661d1e2060b4f9f3d186b33d184c365a3f82d7cfc0",
+      "current_sha256": "bab186919f4518f3662c31661d1e2060b4f9f3d186b33d184c365a3f82d7cfc0",
+      "equal": true
+    },
+    {
+      "path": "corpus/evidence/round64/gen-audit-mutants.py",
+      "git_show_exit": 0,
+      "freeze_sha256": "6e1055b28d315e32a3d43ee0866f9c32b78470899826f1d29c8c3707610a4191",
+      "current_sha256": "6e1055b28d315e32a3d43ee0866f9c32b78470899826f1d29c8c3707610a4191",
+      "equal": true
+    },
+    {
+      "path": "corpus/evidence/round64/c2-mutrun.py",
+      "git_show_exit": 0,
+      "freeze_sha256": "0045787ee9de39749e1dd06739259cd5f0a494865c921edbed91cfd86249a8c9",
+      "current_sha256": "0045787ee9de39749e1dd06739259cd5f0a494865c921edbed91cfd86249a8c9",
+      "equal": true
+    },
+    {
+      "path": "tools/claims-audit.py",
+      "git_show_exit": 0,
+      "freeze_sha256": "d48247f9c77ac1e736ae627cd191168b741956982adb948e76c8057df405cb1b",
+      "current_sha256": "d48247f9c77ac1e736ae627cd191168b741956982adb948e76c8057df405cb1b",
+      "equal": true
+    },
+    {
+      "path": "tools/claims-audit-v2.py",
+      "git_show_exit": 0,
+      "freeze_sha256": "db0e28dd4c0332591b8898feb727f23a0e80b6e2ad29cbf0a6237d35a4d0b88d",
+      "current_sha256": "db0e28dd4c0332591b8898feb727f23a0e80b6e2ad29cbf0a6237d35a4d0b88d",
+      "equal": true
+    }
+  ],
+  "runs": [
+    {
+      "target": "claims-audit.py",
+      "variant": "baseline",
+      "leg": "minimal-A04",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/claims-audit.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04/audit.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04",
+      "exit": 1,
+      "stdout": "FLAG R json-count line numbers ['1']; spec.json:items holds 2 [detection counter]\nFLAGGED=1/1 AUDIT=FAIL\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit.py",
+      "variant": "baseline",
+      "leg": "minimal-A05",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/claims-audit.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05/audit.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05",
+      "exit": 1,
+      "stdout": "FLAG R verbatim-heading not found in S.md: 'planned' [case-only]\nFLAGGED=1/1 AUDIT=FAIL\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit.py",
+      "variant": "baseline",
+      "leg": "minimal-A06",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/claims-audit.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06/audit.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06",
+      "exit": 1,
+      "stdout": "FLAG R json-count line numbers ['2']; spec.json:items holds 2 [word digit]\nFLAGGED=1/1 AUDIT=FAIL\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit.py",
+      "variant": "baseline",
+      "leg": "R2",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/claims-audit.py",
+        "--claims",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round62/claims.md",
+        "--audit",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/audit/audit-r62.tsv",
+        "--root",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10",
+      "exit": 1,
+      "stdout": "FLAG R62-01 json-count line numbers ['2', '1', '64', '25']; .ufo/waves/round-62/w1-spec.json:items holds 66 [erratum round-62 #1: spec holds 66 items]\nFLAG R62-13 section-contains-at S138 not under `## Leads` of corpus/SOURCES.md at 8607de8472 [erratum round-62 #13: at the r62 base the ## Leads bullet is unnumbered]\nFLAGGED=2/2 AUDIT=FAIL\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit.py",
+      "variant": "baseline",
+      "leg": "R3",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/claims-audit.py",
+        "--claims",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/claims.md",
+        "--audit",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/audit/audit-r63.tsv",
+        "--root",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10",
+      "exit": 1,
+      "stdout": "FLAG R63-E1 git-first-commit first added with the claims file in 62876ef901: corpus/evidence/round63/controls/c1-controls.txt,corpus/evidence/round63/controls/run-c1-controls.py [erratum E1: added in the freeze commit itself]\nFLAG R63-E2 file-kind `header` claimed; s143-wrong-file substitutes ['git-log.1.gz', 'gitrevisions.7.gz'] (['man']) [erratum E2: the variant substitutes a man page (.1.gz)]\nFLAG R63-E3 verbatim-heading not found in SCORECARD.md: 'Planned \u2014 round 63 (amended before the freeze)' [erratum E3: the heading carries \", 2026-10-28\"]\nFLAG R63-E4 scope-narrower lane-wide claim swept only `corpus/knowledge` [erratum E4: the claim's own sweep names corpus/knowledge only]\nFLAGGED=4/4 AUDIT=FAIL\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit.py",
+      "variant": "baseline",
+      "leg": "R4",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/claims-audit.py",
+        "--claims",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/claims-a2.md",
+        "--audit",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/audit/audit-a2.tsv",
+        "--root",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10",
+      "exit": 0,
+      "stdout": "FLAGGED=0/4 AUDIT=PASS\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit.py",
+      "variant": "A04",
+      "leg": "minimal-A04",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit.py-A04.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04/audit.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04",
+      "exit": 0,
+      "stdout": "FLAG R json-count line numbers ['1']; spec.json:items holds 2 [detection counter]\nFLAGGED=0/1 AUDIT=PASS\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit.py",
+      "variant": "A04",
+      "leg": "minimal-A05",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit.py-A04.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05/audit.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05",
+      "exit": 0,
+      "stdout": "FLAG R verbatim-heading not found in S.md: 'planned' [case-only]\nFLAGGED=0/1 AUDIT=PASS\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit.py",
+      "variant": "A04",
+      "leg": "minimal-A06",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit.py-A04.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06/audit.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06",
+      "exit": 0,
+      "stdout": "FLAG R json-count line numbers ['2']; spec.json:items holds 2 [word digit]\nFLAGGED=0/1 AUDIT=PASS\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit.py",
+      "variant": "A04",
+      "leg": "R2",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit.py-A04.py",
+        "--claims",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round62/claims.md",
+        "--audit",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/audit/audit-r62.tsv",
+        "--root",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10",
+      "exit": 0,
+      "stdout": "FLAG R62-01 json-count line numbers ['2', '1', '64', '25']; .ufo/waves/round-62/w1-spec.json:items holds 66 [erratum round-62 #1: spec holds 66 items]\nFLAG R62-13 section-contains-at S138 not under `## Leads` of corpus/SOURCES.md at 8607de8472 [erratum round-62 #13: at the r62 base the ## Leads bullet is unnumbered]\nFLAGGED=0/2 AUDIT=PASS\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit.py",
+      "variant": "A04",
+      "leg": "R3",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit.py-A04.py",
+        "--claims",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/claims.md",
+        "--audit",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/audit/audit-r63.tsv",
+        "--root",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10",
+      "exit": 0,
+      "stdout": "FLAG R63-E1 git-first-commit first added with the claims file in 62876ef901: corpus/evidence/round63/controls/c1-controls.txt,corpus/evidence/round63/controls/run-c1-controls.py [erratum E1: added in the freeze commit itself]\nFLAG R63-E2 file-kind `header` claimed; s143-wrong-file substitutes ['git-log.1.gz', 'gitrevisions.7.gz'] (['man']) [erratum E2: the variant substitutes a man page (.1.gz)]\nFLAG R63-E3 verbatim-heading not found in SCORECARD.md: 'Planned \u2014 round 63 (amended before the freeze)' [erratum E3: the heading carries \", 2026-10-28\"]\nFLAG R63-E4 scope-narrower lane-wide claim swept only `corpus/knowledge` [erratum E4: the claim's own sweep names corpus/knowledge only]\nFLAGGED=0/4 AUDIT=PASS\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit.py",
+      "variant": "A04",
+      "leg": "R4",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit.py-A04.py",
+        "--claims",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/claims-a2.md",
+        "--audit",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/audit/audit-a2.tsv",
+        "--root",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10",
+      "exit": 0,
+      "stdout": "FLAGGED=0/4 AUDIT=PASS\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit.py",
+      "variant": "A05",
+      "leg": "minimal-A04",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit.py-A05.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04/audit.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04",
+      "exit": 1,
+      "stdout": "FLAG R json-count line numbers ['1']; spec.json:items holds 2 [detection counter]\nFLAGGED=1/1 AUDIT=FAIL\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit.py",
+      "variant": "A05",
+      "leg": "minimal-A05",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit.py-A05.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05/audit.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05",
+      "exit": 0,
+      "stdout": "FLAGGED=0/1 AUDIT=PASS\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit.py",
+      "variant": "A05",
+      "leg": "minimal-A06",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit.py-A05.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06/audit.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06",
+      "exit": 1,
+      "stdout": "FLAG R json-count line numbers ['2']; spec.json:items holds 2 [word digit]\nFLAGGED=1/1 AUDIT=FAIL\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit.py",
+      "variant": "A05",
+      "leg": "R2",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit.py-A05.py",
+        "--claims",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round62/claims.md",
+        "--audit",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/audit/audit-r62.tsv",
+        "--root",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10",
+      "exit": 1,
+      "stdout": "FLAG R62-01 json-count line numbers ['2', '1', '64', '25']; .ufo/waves/round-62/w1-spec.json:items holds 66 [erratum round-62 #1: spec holds 66 items]\nFLAG R62-13 section-contains-at S138 not under `## Leads` of corpus/SOURCES.md at 8607de8472 [erratum round-62 #13: at the r62 base the ## Leads bullet is unnumbered]\nFLAGGED=2/2 AUDIT=FAIL\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit.py",
+      "variant": "A05",
+      "leg": "R3",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit.py-A05.py",
+        "--claims",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/claims.md",
+        "--audit",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/audit/audit-r63.tsv",
+        "--root",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10",
+      "exit": 1,
+      "stdout": "FLAG R63-E1 git-first-commit first added with the claims file in 62876ef901: corpus/evidence/round63/controls/c1-controls.txt,corpus/evidence/round63/controls/run-c1-controls.py [erratum E1: added in the freeze commit itself]\nFLAG R63-E2 file-kind `header` claimed; s143-wrong-file substitutes ['git-log.1.gz', 'gitrevisions.7.gz'] (['man']) [erratum E2: the variant substitutes a man page (.1.gz)]\nFLAG R63-E3 verbatim-heading not found in SCORECARD.md: 'Planned \u2014 round 63 (amended before the freeze)' [erratum E3: the heading carries \", 2026-10-28\"]\nFLAG R63-E4 scope-narrower lane-wide claim swept only `corpus/knowledge` [erratum E4: the claim's own sweep names corpus/knowledge only]\nFLAGGED=4/4 AUDIT=FAIL\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit.py",
+      "variant": "A05",
+      "leg": "R4",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit.py-A05.py",
+        "--claims",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/claims-a2.md",
+        "--audit",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/audit/audit-a2.tsv",
+        "--root",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10",
+      "exit": 0,
+      "stdout": "FLAGGED=0/4 AUDIT=PASS\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit.py",
+      "variant": "A06",
+      "leg": "minimal-A04",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit.py-A06.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04/audit.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04",
+      "exit": 1,
+      "stdout": "FLAG R json-count line numbers ['1']; spec.json:items holds 2 [detection counter]\nFLAGGED=1/1 AUDIT=FAIL\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit.py",
+      "variant": "A06",
+      "leg": "minimal-A05",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit.py-A06.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05/audit.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05",
+      "exit": 1,
+      "stdout": "FLAG R verbatim-heading not found in S.md: 'planned' [case-only]\nFLAGGED=1/1 AUDIT=FAIL\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit.py",
+      "variant": "A06",
+      "leg": "minimal-A06",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit.py-A06.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06/audit.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06",
+      "exit": 0,
+      "stdout": "FLAGGED=0/1 AUDIT=PASS\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit.py",
+      "variant": "A06",
+      "leg": "R2",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit.py-A06.py",
+        "--claims",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round62/claims.md",
+        "--audit",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/audit/audit-r62.tsv",
+        "--root",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10",
+      "exit": 1,
+      "stdout": "FLAG R62-01 json-count line numbers ['2', '1', '64', '25']; .ufo/waves/round-62/w1-spec.json:items holds 66 [erratum round-62 #1: spec holds 66 items]\nFLAG R62-13 section-contains-at S138 not under `## Leads` of corpus/SOURCES.md at 8607de8472 [erratum round-62 #13: at the r62 base the ## Leads bullet is unnumbered]\nFLAGGED=2/2 AUDIT=FAIL\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit.py",
+      "variant": "A06",
+      "leg": "R3",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit.py-A06.py",
+        "--claims",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/claims.md",
+        "--audit",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/audit/audit-r63.tsv",
+        "--root",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10",
+      "exit": 1,
+      "stdout": "FLAG R63-E1 git-first-commit first added with the claims file in 62876ef901: corpus/evidence/round63/controls/c1-controls.txt,corpus/evidence/round63/controls/run-c1-controls.py [erratum E1: added in the freeze commit itself]\nFLAG R63-E2 file-kind `header` claimed; s143-wrong-file substitutes ['git-log.1.gz', 'gitrevisions.7.gz'] (['man']) [erratum E2: the variant substitutes a man page (.1.gz)]\nFLAG R63-E3 verbatim-heading not found in SCORECARD.md: 'Planned \u2014 round 63 (amended before the freeze)' [erratum E3: the heading carries \", 2026-10-28\"]\nFLAG R63-E4 scope-narrower lane-wide claim swept only `corpus/knowledge` [erratum E4: the claim's own sweep names corpus/knowledge only]\nFLAGGED=4/4 AUDIT=FAIL\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit.py",
+      "variant": "A06",
+      "leg": "R4",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit.py-A06.py",
+        "--claims",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/claims-a2.md",
+        "--audit",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/audit/audit-a2.tsv",
+        "--root",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10",
+      "exit": 0,
+      "stdout": "FLAGGED=0/4 AUDIT=PASS\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit-v2.py",
+      "variant": "baseline",
+      "leg": "minimal-A04",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/claims-audit-v2.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04/audit.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04",
+      "exit": 1,
+      "stdout": "FLAG R json-count line numbers ['1']; spec.json:items holds 2 [detection counter]\nFLAGGED=1/1 AUDIT=FAIL\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit-v2.py",
+      "variant": "baseline",
+      "leg": "minimal-A05",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/claims-audit-v2.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05/audit.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05",
+      "exit": 1,
+      "stdout": "FLAG R verbatim-heading not found in S.md: 'planned' [case-only]\nFLAGGED=1/1 AUDIT=FAIL\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit-v2.py",
+      "variant": "baseline",
+      "leg": "minimal-A06",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/claims-audit-v2.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06/audit.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06",
+      "exit": 1,
+      "stdout": "FLAG R json-count line numbers ['2']; spec.json:items holds 2 [word digit]\nFLAGGED=1/1 AUDIT=FAIL\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit-v2.py",
+      "variant": "baseline",
+      "leg": "R2",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/claims-audit-v2.py",
+        "--claims",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round62/claims.md",
+        "--audit",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/audit/audit-r62.tsv",
+        "--root",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10",
+      "exit": 1,
+      "stdout": "FLAG R62-01 json-count line numbers ['2', '1', '64', '25']; .ufo/waves/round-62/w1-spec.json:items holds 66 [erratum round-62 #1: spec holds 66 items]\nFLAG R62-13 section-contains-at S138 not under `## Leads` of corpus/SOURCES.md at 8607de8472 [erratum round-62 #13: at the r62 base the ## Leads bullet is unnumbered]\nFLAGGED=2/2 AUDIT=FAIL\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit-v2.py",
+      "variant": "baseline",
+      "leg": "R3",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/claims-audit-v2.py",
+        "--claims",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/claims.md",
+        "--audit",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/audit/audit-r63.tsv",
+        "--root",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10",
+      "exit": 1,
+      "stdout": "FLAG R63-E1 git-first-commit first added with the claims file in 62876ef901: corpus/evidence/round63/controls/c1-controls.txt,corpus/evidence/round63/controls/run-c1-controls.py [erratum E1: added in the freeze commit itself]\nFLAG R63-E2 file-kind `header` claimed; s143-wrong-file substitutes ['git-log.1.gz', 'gitrevisions.7.gz'] (['man']) [erratum E2: the variant substitutes a man page (.1.gz)]\nFLAG R63-E3 verbatim-heading not found in SCORECARD.md: 'Planned \u2014 round 63 (amended before the freeze)' [erratum E3: the heading carries \", 2026-10-28\"]\nFLAG R63-E4 scope-narrower lane-wide claim swept only `corpus/knowledge` [erratum E4: the claim's own sweep names corpus/knowledge only]\nFLAGGED=4/4 AUDIT=FAIL\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit-v2.py",
+      "variant": "baseline",
+      "leg": "R4",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/claims-audit-v2.py",
+        "--claims",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/claims-a2.md",
+        "--audit",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/audit/audit-a2.tsv",
+        "--root",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10",
+      "exit": 0,
+      "stdout": "FLAGGED=0/4 AUDIT=PASS\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit-v2.py",
+      "variant": "A04",
+      "leg": "minimal-A04",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit-v2.py-A04.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04/audit.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04",
+      "exit": 0,
+      "stdout": "FLAG R json-count line numbers ['1']; spec.json:items holds 2 [detection counter]\nFLAGGED=0/1 AUDIT=PASS\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit-v2.py",
+      "variant": "A04",
+      "leg": "minimal-A05",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit-v2.py-A04.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05/audit.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05",
+      "exit": 0,
+      "stdout": "FLAG R verbatim-heading not found in S.md: 'planned' [case-only]\nFLAGGED=0/1 AUDIT=PASS\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit-v2.py",
+      "variant": "A04",
+      "leg": "minimal-A06",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit-v2.py-A04.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06/audit.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06",
+      "exit": 0,
+      "stdout": "FLAG R json-count line numbers ['2']; spec.json:items holds 2 [word digit]\nFLAGGED=0/1 AUDIT=PASS\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit-v2.py",
+      "variant": "A04",
+      "leg": "R2",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit-v2.py-A04.py",
+        "--claims",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round62/claims.md",
+        "--audit",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/audit/audit-r62.tsv",
+        "--root",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10",
+      "exit": 0,
+      "stdout": "FLAG R62-01 json-count line numbers ['2', '1', '64', '25']; .ufo/waves/round-62/w1-spec.json:items holds 66 [erratum round-62 #1: spec holds 66 items]\nFLAG R62-13 section-contains-at S138 not under `## Leads` of corpus/SOURCES.md at 8607de8472 [erratum round-62 #13: at the r62 base the ## Leads bullet is unnumbered]\nFLAGGED=0/2 AUDIT=PASS\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit-v2.py",
+      "variant": "A04",
+      "leg": "R3",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit-v2.py-A04.py",
+        "--claims",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/claims.md",
+        "--audit",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/audit/audit-r63.tsv",
+        "--root",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10",
+      "exit": 0,
+      "stdout": "FLAG R63-E1 git-first-commit first added with the claims file in 62876ef901: corpus/evidence/round63/controls/c1-controls.txt,corpus/evidence/round63/controls/run-c1-controls.py [erratum E1: added in the freeze commit itself]\nFLAG R63-E2 file-kind `header` claimed; s143-wrong-file substitutes ['git-log.1.gz', 'gitrevisions.7.gz'] (['man']) [erratum E2: the variant substitutes a man page (.1.gz)]\nFLAG R63-E3 verbatim-heading not found in SCORECARD.md: 'Planned \u2014 round 63 (amended before the freeze)' [erratum E3: the heading carries \", 2026-10-28\"]\nFLAG R63-E4 scope-narrower lane-wide claim swept only `corpus/knowledge` [erratum E4: the claim's own sweep names corpus/knowledge only]\nFLAGGED=0/4 AUDIT=PASS\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit-v2.py",
+      "variant": "A04",
+      "leg": "R4",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit-v2.py-A04.py",
+        "--claims",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/claims-a2.md",
+        "--audit",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/audit/audit-a2.tsv",
+        "--root",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10",
+      "exit": 0,
+      "stdout": "FLAGGED=0/4 AUDIT=PASS\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit-v2.py",
+      "variant": "A05",
+      "leg": "minimal-A04",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit-v2.py-A05.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04/audit.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04",
+      "exit": 1,
+      "stdout": "FLAG R json-count line numbers ['1']; spec.json:items holds 2 [detection counter]\nFLAGGED=1/1 AUDIT=FAIL\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit-v2.py",
+      "variant": "A05",
+      "leg": "minimal-A05",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit-v2.py-A05.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05/audit.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05",
+      "exit": 0,
+      "stdout": "FLAGGED=0/1 AUDIT=PASS\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit-v2.py",
+      "variant": "A05",
+      "leg": "minimal-A06",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit-v2.py-A05.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06/audit.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06",
+      "exit": 1,
+      "stdout": "FLAG R json-count line numbers ['2']; spec.json:items holds 2 [word digit]\nFLAGGED=1/1 AUDIT=FAIL\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit-v2.py",
+      "variant": "A05",
+      "leg": "R2",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit-v2.py-A05.py",
+        "--claims",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round62/claims.md",
+        "--audit",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/audit/audit-r62.tsv",
+        "--root",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10",
+      "exit": 1,
+      "stdout": "FLAG R62-01 json-count line numbers ['2', '1', '64', '25']; .ufo/waves/round-62/w1-spec.json:items holds 66 [erratum round-62 #1: spec holds 66 items]\nFLAG R62-13 section-contains-at S138 not under `## Leads` of corpus/SOURCES.md at 8607de8472 [erratum round-62 #13: at the r62 base the ## Leads bullet is unnumbered]\nFLAGGED=2/2 AUDIT=FAIL\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit-v2.py",
+      "variant": "A05",
+      "leg": "R3",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit-v2.py-A05.py",
+        "--claims",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/claims.md",
+        "--audit",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/audit/audit-r63.tsv",
+        "--root",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10",
+      "exit": 1,
+      "stdout": "FLAG R63-E1 git-first-commit first added with the claims file in 62876ef901: corpus/evidence/round63/controls/c1-controls.txt,corpus/evidence/round63/controls/run-c1-controls.py [erratum E1: added in the freeze commit itself]\nFLAG R63-E2 file-kind `header` claimed; s143-wrong-file substitutes ['git-log.1.gz', 'gitrevisions.7.gz'] (['man']) [erratum E2: the variant substitutes a man page (.1.gz)]\nFLAG R63-E3 verbatim-heading not found in SCORECARD.md: 'Planned \u2014 round 63 (amended before the freeze)' [erratum E3: the heading carries \", 2026-10-28\"]\nFLAG R63-E4 scope-narrower lane-wide claim swept only `corpus/knowledge` [erratum E4: the claim's own sweep names corpus/knowledge only]\nFLAGGED=4/4 AUDIT=FAIL\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit-v2.py",
+      "variant": "A05",
+      "leg": "R4",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit-v2.py-A05.py",
+        "--claims",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/claims-a2.md",
+        "--audit",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/audit/audit-a2.tsv",
+        "--root",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10",
+      "exit": 0,
+      "stdout": "FLAGGED=0/4 AUDIT=PASS\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit-v2.py",
+      "variant": "A06",
+      "leg": "minimal-A04",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit-v2.py-A06.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04/audit.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A04",
+      "exit": 1,
+      "stdout": "FLAG R json-count line numbers ['1']; spec.json:items holds 2 [detection counter]\nFLAGGED=1/1 AUDIT=FAIL\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit-v2.py",
+      "variant": "A06",
+      "leg": "minimal-A05",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit-v2.py-A06.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05/audit.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A05",
+      "exit": 1,
+      "stdout": "FLAG R verbatim-heading not found in S.md: 'planned' [case-only]\nFLAGGED=1/1 AUDIT=FAIL\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit-v2.py",
+      "variant": "A06",
+      "leg": "minimal-A06",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit-v2.py-A06.py",
+        "--claims",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06/claims.md",
+        "--audit",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06/audit.tsv",
+        "--root",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10/fixture-A06",
+      "exit": 0,
+      "stdout": "FLAGGED=0/1 AUDIT=PASS\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit-v2.py",
+      "variant": "A06",
+      "leg": "R2",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit-v2.py-A06.py",
+        "--claims",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round62/claims.md",
+        "--audit",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/audit/audit-r62.tsv",
+        "--root",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10",
+      "exit": 1,
+      "stdout": "FLAG R62-01 json-count line numbers ['2', '1', '64', '25']; .ufo/waves/round-62/w1-spec.json:items holds 66 [erratum round-62 #1: spec holds 66 items]\nFLAG R62-13 section-contains-at S138 not under `## Leads` of corpus/SOURCES.md at 8607de8472 [erratum round-62 #13: at the r62 base the ## Leads bullet is unnumbered]\nFLAGGED=2/2 AUDIT=FAIL\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit-v2.py",
+      "variant": "A06",
+      "leg": "R3",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit-v2.py-A06.py",
+        "--claims",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/claims.md",
+        "--audit",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/audit/audit-r63.tsv",
+        "--root",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10",
+      "exit": 1,
+      "stdout": "FLAG R63-E1 git-first-commit first added with the claims file in 62876ef901: corpus/evidence/round63/controls/c1-controls.txt,corpus/evidence/round63/controls/run-c1-controls.py [erratum E1: added in the freeze commit itself]\nFLAG R63-E2 file-kind `header` claimed; s143-wrong-file substitutes ['git-log.1.gz', 'gitrevisions.7.gz'] (['man']) [erratum E2: the variant substitutes a man page (.1.gz)]\nFLAG R63-E3 verbatim-heading not found in SCORECARD.md: 'Planned \u2014 round 63 (amended before the freeze)' [erratum E3: the heading carries \", 2026-10-28\"]\nFLAG R63-E4 scope-narrower lane-wide claim swept only `corpus/knowledge` [erratum E4: the claim's own sweep names corpus/knowledge only]\nFLAGGED=4/4 AUDIT=FAIL\n",
+      "stderr": ""
+    },
+    {
+      "target": "claims-audit-v2.py",
+      "variant": "A06",
+      "leg": "R4",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack10/claims-audit-v2.py-A06.py",
+        "--claims",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/claims-a2.md",
+        "--audit",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round63/audit/audit-a2.tsv",
+        "--root",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin"
+      ],
+      "cwd": "/fast/scratch/hyaku/chousa-r64/Attack10",
+      "exit": 0,
+      "stdout": "FLAGGED=0/4 AUDIT=PASS\n",
+      "stderr": ""
+    }
+  ],
+  "scratch_removed": true
+}

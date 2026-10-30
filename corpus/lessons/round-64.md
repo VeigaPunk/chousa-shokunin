@@ -39,3 +39,39 @@ considerthese/2026-10-26.md proposal “Report where the lane and the verifier d
 ## Honest-stop rule
 
 The frozen targets are neither narrowed nor amended. A supplement pass cannot replace a frozen failure. All three claim verdicts and any additional wave findings are recorded in SCORECARD.md and the report after the wave settles. No capability is preclaimed; no numeric score is invented.
+
+## Wave integration and corrections (attempt2)
+
+WAVE-DONE received from Main with `w1-results.json`: 64/64 seats returned outputs; 20 executor, 12 critic, 12 reviewer, 12 scribe, 6 scout, 2 connector; no result note reports a dead seat. The L1 is the canonical planner. All work rides one v2 wave; attack share 24/64. The results format does not expose per-seat answering model or agent IDs; none is invented.
+
+- G02Probe06 and Attack05/06/08 exposed nested `.gitkeep`, directory-target symlink, complete-filename and non-ASCII/nested phantom-reference gaps in the inherited reference. Production code corrects these while the reference remains an immutable exhibit.
+- C1: Attack01 and Counter06 independently demonstrate the frozen E12/E13 mismatch. Attack03's three-line path recognizer passes the supplement but fails an ordinary-path phantom fixture; Attack02/04 demonstrate malformed ZERO summaries accepted by its judge. These remain limitations, not new frozen legs.
+- C2: Counter01 reproduces 6/12; Counter02 scores v2 9/12 (A07/A10/A11 survive). Attack11 explains why A07's add-plus-modify mutation does not move `c[-1]` away from the first add; Attack12/14/15 explain why the A10 duplicate fixture and A11 fault arm fail to discriminate the actual defects. Attack13 demonstrates timeout-as-kill under injected zero timeout, not under the normal budget. The missing unmutated baseline control and contradictory-summary acceptance remain open. No 12/12 pass is claimed.
+- C3: Counter03 measures SMOKE=3/3 RELOCATION_MATCH=0/3 SHIFT_MUTANT_UNNAMED=1/1 C3=FAIL; Attack17/18/24 independently locate the expected-path error. No frozen repair is made.
+- Outside scope: ConnectScope keeps generic testing in tameshi adjacency, filesystem cleanup authority outside chousa, and dispatch orchestration in kumitate. This round changes only chousa's own research artifacts.
+
+Correction to the considerthese paragraph above: CT-20261026-3 was already implemented (`corpus/evidence/round52/verdict-gap.py`, reopened by Draft08); the paragraph records a historical comparison, not a newly implemented proposal. The sole still-unimplemented proposal selected for a lesson pointer is CT-20261026-4, the independent CJK quote spot-check per daily review. It stays carried: a dispatched seat cannot supply the outside independence or cadence. No claim credit is taken for it.
+
+### Additional mistake discovered by final measurement
+
+| class | evidence pointer | captured-by | fix |
+|---|---|---|---|
+| Concrete-reference lexer consumes documented glob/template text | controls/pre-glob-repair/preflight-full-run-r64.txt: G02 flags `knowledge/*.md` and a semicolon-joined glob as missing files; PREFLIGHT=7/8 exit 1 at 344cb55521581ed10dadbaf4204be562eea99529 | final whole-lane run; wave probes exercised candidate rather than this later production lexer | distinguish concrete reference tokens from wildcard/template punctuation; code landed at 944955cc1aaf94cbfdc0eda68fa9fc995ca3bec8; preserve every red receipt under controls/pre-glob-repair, then measure changed bytes separately. This is a production correction, never a frozen-counter amendment. |
+
+### Remaining provenance limits
+
+S152 records code inspection, not the frozen claim's proposed successful probe output. The sibling receipt is durable but does not record a full argv/digest header (Draft07); it is narrower evidence than the final revision-bound measurements. Root-derivation assertions establish existence, not intent, and the C3 list omits c2-mutrun.py. A07 is ineffective for the claimed history shape; a future target must classify it before freeze instead of chasing a number.
+
+Misroot sweep: `git -C /home/vgpnk/Projects/shokunin status --porcelain` returned only modified `.scratch/goal-20261029-hyaku-run12.md` and `.ufo/l0-questions.md` on this sweep. Neither is a seat misroot; neither was edited, copied or deleted. No misroot migration was necessary.
+
+Tool installs/updates: none reported by L1 or the 64 seats. The disk guard reported /tmp 24%, /var/tmp 41%, /fast/scratch/hyaku 55%, then timed out in its consumer-listing phase; no successful full disk-guard completion is claimed.
+
+## Final measured outcome
+
+At measured revision `944955cc1aaf94cbfdc0eda68fa9fc995ca3bec8`, final frozen C1 reads CLEAN=1/1 DEFECTS=28/28 BENIGN=9/11 ZERO=3/3 BATTERY=FAIL in three runs (exit 1). The separately identified supplement reads 43/43 BATTERY=PASS exit 0; the unchanged round63 v2 battery passes twice; both nulls still FAIL. C2 reads 6/12 on v1 and 9/12 on v2, exit 1; C3 reads SMOKE=3/3 RELOCATION_MATCH=0/3 SHIFT_MUTANT_UNNAMED=1/1 C3=FAIL exit 1. No frozen claim is admitted.
+
+The changed production bytes restore the actual whole-lane `PREFLIGHT=8/8 FAILED=none ENV=none SKIPPED=none` exit 0 (`controls/preflight-full-run-r64.txt`), compared with the preserved pre-glob-repair 7/8 red state. This proves the concrete-reference correction on the actual lane; it does not establish arbitrary Markdown parsing. Final commands, child exit codes and tool digests are in `corpus/evidence/round64/controls/measurement-summary.json`, generated by `measure-after.py`.
+
+Registry counts are reproducible with `python3 corpus/evidence/round64/source-stats.py [--revision 759c6cbef4cf9cdc81b68afc709f3b82ecd1a9d9]`: 149→153 rows, A/B/C 116/26/7→118/27/8, mined/queued/rejected 121/19/9→124/19/10; census start/end exit 0, same five W04 warnings. Source byte pins: `corpus/evidence/round64/source-openings.json`. No held cells changed.
+
+Self-evaluation: accuracy 3/5 (frozen targets fail and the first production lexer regressed the real lane, retained and corrected); completeness 4/5 (all 64 seats settled, fixtures/source work retained, but no claim reaches admission); clarity 4/5 (frozen/supplement/candidate distinctions explicit); actionability 4/5 (commands and failing classes named); conciseness 3/5 (inherited duplicated instruments and evidence remain intentionally historical). These are delivery reflections, not expertise-axis scores or admission. Priority: classify equivalent mutants and validate a positive before the next freeze; never repair the target after scoring. Would the user agree? The failed frozen claims remain openly reported rather than converted into passes.

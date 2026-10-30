@@ -1,0 +1,28 @@
+Candidate: corpus/evidence/round64/controls/ref-preflight-v3.py (unchanged)
+Frozen source: corpus/evidence/round64/claims.md lines 47-52.
+Invocation template per case:
+python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round64/controls/ref-preflight-v3.py --root /fast/scratch/hyaku/chousa-r64/G02Probe06/<case> --only G02 --work /fast/scratch/hyaku/chousa-r64/G02Probe06/work
+
+CASE nested-gitkeep: root corpus/knowledge/sub contains only .gitkeep; good.md is valid and indexed. Exit 1; stdout:
+GATE G01 census SKIP
+GATE G02 knowledge-index FAIL 1 invalid under corpus/knowledge: sub/.gitkeep (not *.md)
+GATE G03 lesson-gate SKIP
+GATE G04 shonen-pointers SKIP
+GATE G05 scorecard-paths SKIP
+GATE G06 freeze-selftest SKIP
+GATE G07 assimilate-selftest SKIP
+GATE G08 gate-selftest SKIP
+PREFLIGHT=0/1 FAILED=G02 ENV=none SKIPPED=G01,G03,G04,G05,G06,G07,G08
+stderr empty.
+
+CASE nested-nonmarkdown: root corpus/knowledge/sub contains notes.txt; good.md is valid and indexed. Exit 1; stdout:
+GATE G01 census SKIP
+GATE G02 knowledge-index FAIL 1 invalid under corpus/knowledge: sub/notes.txt (not *.md)
+GATE G03 lesson-gate SKIP
+GATE G04 shonen-pointers SKIP
+GATE G05 scorecard-paths SKIP
+GATE G06 freeze-selftest SKIP
+GATE G07 assimilate-selftest SKIP
+GATE G08 gate-selftest SKIP
+PREFLIGHT=0/1 FAILED=G02 ENV=none SKIPPED=G01,G03,G04,G05,G06,G07,G08
+stderr empty.

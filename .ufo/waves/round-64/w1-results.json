@@ -1,0 +1,392 @@
+{
+ "lane": "chousa",
+ "round": 64,
+ "wave": "w1",
+ "seats": 64,
+ "results": [
+  {
+   "name": "G02Probe01",
+   "agent": "executor",
+   "output": "{\n  \"files_changed\": [\n    \".ufo/waves/round-64/w1/G02Probe01.md\",\n    \".ufo/waves/round-64/w1/G02Probe01/fixture-recipe.py\"\n  ],\n  \"behavior\": \"Added advisory report of isolated G02 prefix/suffix fixture observations against the frozen R64-C1 whole-token contract; preserved the fixture recipe alongside the report. Candidate untouched.\",\n  \"evidence\": {\n    \"command\": \"python3 /fast/scratch/hyaku/chousa-r64/G02Probe01/probe.py\",\n    \"exit\": 0,\n    \"output\": [\n      \"whole-token bare: PASS | 1 entries indexed\",\n      \"left word boundary rejected: FAIL | 1 not named in corpus/README.md: alpha.md\",\n      \"left dot boundary rejected: FAIL | 1 not named in corpus/README.md: alpha.md\",\n      \"left hyphen boundary allowed: FAIL | 1 not named in corpus/README.md: alpha.md\",\n      \"right word boundary rejected: FAIL | 1 not named in corpus/README.md: alpha.md\",\n      \"right hyphen boundary rejected: FAIL | 1 not named in corpus/README.md: alpha.md\",\n      \"right dot boundary allowed: PASS | 1 entries indexed\",\n      \"prefixed whole token: PASS | 1 entries indexed\"\n    ],\n    \"scratch_removed\": true\n  },\n  \"risks\": [\n    \"Candidate matches file stem rather than full NAME including .md in its index-side regex; this probe does not establish all resulting false-positive/false-negative token shapes.\",\n    \"The first recipe output's left-hyphen case label was inaccurate; frozen contract rejects left hyphen, and report corrects this interpretation.\"\n  ],\n  \"blockers\": [],\n  \"tool_installs\": []\n}",
+   "note": null
+  },
+  {
+   "name": "G02Probe02",
+   "agent": "executor",
+   "output": "{\n  \"files_changed\": [\n    \"chousa-shokunin/.ufo/waves/round-64/w1/G02Probe02.md\",\n    \"chousa-shokunin/.ufo/waves/round-64/w1/G02Probe02/recipe.md\",\n    \"chousa-shokunin/.ufo/waves/round-64/w1/G02Probe02/missing.out\",\n    \"chousa-shokunin/.ufo/waves/round-64/w1/G02Probe02/nondir.out\"\n  ],\n  \"behavior\": \"Read-only candidate fixture probe: missing and regular-file knowledge roots both report G02 FAIL and exit 1, matching frozen C1 requirement.\",\n  \"evidence\": \"Exact command outcomes and stdout/stderr are retained in missing.out and nondir.out; fixture recreation instructions in recipe.md. Python 3.14.8 observed. No installs. Scratch removed.\",\n  \"risks\": [],\n  \"blockers\": []\n}",
+   "note": null
+  },
+  {
+   "name": "G02Probe03",
+   "agent": "executor",
+   "output": "{\n  \"files_changed\": [\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/G02Probe03/fixture-recipe.txt\",\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/G02Probe03/report.md\"\n  ],\n  \"behavior\": \"Ran bounded isolated G02 checks against candidate ref-preflight-v3.py for mode-000 and mode-111 knowledge roots. Mode 000 explicitly failed the accessibility check (rc 1); mode 111 failed as zero indexed entries (rc 1), not an isolated explicit search-only diagnosis. Candidate unchanged.\",\n  \"exact_retained_evidence\": \"Report contains exact successful-run stdout summaries, exit codes, initial fixture setup failure, and scope caveat. Fixture recipe retained under G02Probe03/. Frozen requirement cited from claims.md R64-C1 lines 47\u201352.\",\n  \"risks_and_blockers\": \"The 111-mode result cannot distinguish a search-only access failure from the resulting inability to enumerate entries. Privilege boundary prevented runuser (runuser: may not be used by non-root users), so probes ran as uid 1000. No builds/tests/formatters run; no tools installed. Scratch removed.\"\n}",
+   "note": null
+  },
+  {
+   "name": "G02Probe04",
+   "agent": "executor",
+   "output": "{\n  \"files_changed\": [\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/G02Probe04/report.md\"\n  ],\n  \"behavior\": \"Isolated strike-only index fixture probe against a copy of candidate ref-preflight-v3.py; candidate untouched. Strike-only alpha.md was rejected by G02 while live beta.md mention passed.\",\n  \"exact_retained_evidence\": {\n    \"command\": \"python3 -B ref-preflight-v3.py --root root --only G02 --work work (run from /fast/scratch/hyaku/chousa-r64/G02Probe04)\",\n    \"output\": \"GATE G01 census SKIP\\nGATE G02 knowledge-index FAIL 1 not named in corpus/README.md: alpha.md\\nGATE G03 lesson-gate SKIP\\nGATE G04 shonen-pointers SKIP\\nGATE G05 scorecard-paths SKIP\\nGATE G06 freeze-selftest SKIP\\nGATE G07 assimilate-selftest SKIP\\nGATE G08 gate-selftest SKIP\\nPREFLIGHT=0/1 FAILED=G02 ENV=none SKIPPED=G01,G03,G04,G05,G06,G07,G08\\nEXIT=1\",\n    \"fixture\": \"Recipe retained in report.md: regular alpha.md and beta.md knowledge files; README first line ~~alpha.md~~, second line beta.md.\"\n  },\n  \"risks_or_blockers\": \"Probe covers the strike-only form requested; no broader contract verification performed. Scratch fixture removed. No tools installed or updated.\"\n}",
+   "note": null
+  },
+  {
+   "name": "G02Probe05",
+   "agent": "executor",
+   "output": "{\n  \"files_changed\": [\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/G02Probe05/report.md\",\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/G02Probe05/nested-knowledge-fixture.json\"\n  ],\n  \"behavior\": \"Isolated direct G02 probe confirms recursive nested files can be indexed by basename; removing the nested basename from the README produces the expected failure. Candidate was not modified.\",\n  \"exact_evidence\": {\n    \"command\": \"Inline Python fixture driver imported ref-preflight-v3.py and called g02 directly; PASS case exit 0.\",\n    \"pass_observed\": [\n      \"PASS\",\n      \"2 entries indexed\"\n    ],\n    \"negative_control_observed\": [\n      \"FAIL\",\n      \"1 not named in corpus/README.md: nested.md\"\n    ],\n    \"contract_source\": \"Frozen claims.md R64-C1 lines 47-61: recursive index source set; optional knowledge/ prefix.\"\n  },\n  \"risks_or_blockers\": \"Probe covers nested-path basename indexing only; it does not establish full candidate compliance. Scratch removed; no tools installed.\"\n}",
+   "note": null
+  },
+  {
+   "name": "G02Probe06",
+   "agent": "executor",
+   "output": "{\n  \"files_changed\": [\n    \".ufo/waves/round-64/w1/G02Probe06/probe.py\",\n    \".ufo/waves/round-64/w1/G02Probe06/evidence.txt\",\n    \".ufo/waves/round-64/w1/G02Probe06/report.md\"\n  ],\n  \"behavior\": \"Isolated probe found candidate accepts the ordinary recursive non-markdown rejection but rejects a nested `.gitkeep`, contrary to the frozen rule's basename-based allowance. Candidate unchanged.\",\n  \"evidence\": \"Probe command invocations, exits, exact full stdout and empty stderr retained in evidence.txt; fixture recipe retained in probe.py. Both probe commands exited 1. Scratch removed.\",\n  \"risks\": [\n    \"The frozen contract wording does not explicitly say whether `.gitkeep` allowance applies only at root; interpretation as any entry with that basename is labeled [INFERENCE].\",\n    \"The report notes the already-reported C1 E12/E13 mismatch as context; these probes do not evaluate it.\"\n  ],\n  \"blockers\": []\n}",
+   "note": null
+  },
+  {
+   "name": "G02Probe07",
+   "agent": "executor",
+   "output": "{\n  \"files_changed\": [\n    \".ufo/waves/round-64/w1/G02Probe07/report.md\"\n  ],\n  \"behavior\": \"Ran the candidate against an isolated fixture containing a dangling symlink and a FIFO. The G02 gate rejected both, consistent with the frozen contract.\",\n  \"evidence\": {\n    \"command\": \"python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round64/controls/ref-preflight-v3.py --root /fast/scratch/hyaku/chousa-r64/G02Probe07/fixture --only G02 --work /fast/scratch/hyaku/chousa-r64/G02Probe07/work\",\n    \"exit\": 1,\n    \"stdout\": \"GATE G01 census SKIP\\nGATE G02 knowledge-index FAIL 2 invalid under corpus/knowledge: dangling.md (unresolvable symlink),special.pipe (not a regular file)\\nGATE G03 lesson-gate SKIP\\nGATE G04 shonen-pointers SKIP\\nGATE G05 scorecard-paths SKIP\\nGATE G06 freeze-selftest SKIP\\nGATE G07 assimilate-selftest SKIP\\nGATE G08 gate-selftest SKIP\\nPREFLIGHT=0/1 FAILED=G02 ENV=none SKIPPED=G01,G03,G04,G05,G06,G07,G08\\n\",\n    \"stderr\": \"\",\n    \"preserved_recipe\": \"Recipe and full command/output are in .ufo/waves/round-64/w1/G02Probe07/report.md\"\n  },\n  \"risks_or_blockers\": \"Candidate-only fixture result; does not establish production behavior. No installs or updates. Scratch removed.\"\n}",
+   "note": null
+  },
+  {
+   "name": "G02Probe08",
+   "agent": "executor",
+   "output": "{\n  \"files_changed\": [\n    \".ufo/waves/round-64/w1/G02Probe08.md\",\n    \".ufo/waves/round-64/w1/G02Probe08/probe.py\"\n  ],\n  \"behavior\": \"Ran isolated G02 phantom nested-path fixture against unchanged ref-preflight-v3.py. Candidate falsely passes a README reference to absent knowledge/real/missing.md; frozen R64-C1 contract clause (iii) requires failure. Preserved fixture recipe in seat output; removed scratch tree.\",\n  \"evidence\": {\n    \"command\": \"python3 /fast/scratch/hyaku/chousa-r64/G02Probe08/probe.py\",\n    \"exit\": 0,\n    \"observed\": \"GATE G02 knowledge-index PASS 1 entries indexed; PREFLIGHT=1/1 FAILED=none ENV=none SKIPPED=G01,G03,G04,G05,G06,G07,G08\",\n    \"stderr\": \"empty\"\n  },\n  \"risks\": [\n    \"Probe finds a concrete false pass in the candidate's phantom-row matcher; it does not evaluate the complete R64-C1 battery or claim closure.\"\n  ],\n  \"blockers\": [],\n  \"tools_installed_or_updated\": []\n}",
+   "note": null
+  },
+  {
+   "name": "G02Probe09",
+   "agent": "executor",
+   "output": "{\n  \"files_changed\": [\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/G02Probe09.md\",\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/G02Probe09/fixture_recipe.py\"\n  ],\n  \"behavior\": \"Ran isolated escaped-underscore markdown fixture against the candidate without modifying it. The fixture was accepted: `PASS 1 entries indexed`, exit 0, consistent with the frozen D6 benign target for this shape.\",\n  \"evidence\": {\n    \"command\": \"python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/G02Probe09/fixture_recipe.py\",\n    \"output\": \"fixture: knowledge/foo_bar.md; README token: foo\\\\_bar.md\\nobserved: PASS 1 entries indexed\\nexit: 0\",\n    \"exit\": 0\n  },\n  \"risks_or_blockers\": \"Single fixture shape only; no broader battery or checks were run. No installs/updates.\"\n}",
+   "note": null
+  },
+  {
+   "name": "G02Probe10",
+   "agent": "executor",
+   "output": "{\n  \"files_changed\": [\n    \".ufo/waves/round-64/w1/G02Probe10.md\",\n    \".ufo/waves/round-64/w1/G02Probe10/report.md\",\n    \".ufo/waves/round-64/w1/G02Probe10/fixture-recipe.md\"\n  ],\n  \"behavior\": \"Ran an isolated G02 candidate probe for a filename containing a space referenced by a percent-encoded link target. Candidate returned PASS with exact detail `1 entries indexed`, matching the expected contract tuple; exit 0. Candidate was not modified.\",\n  \"evidence\": {\n    \"command\": \"python3 /fast/scratch/hyaku/chousa-r64/G02Probe10/probe.py\",\n    \"output\": \"FIXTURE=percent-encoded-space-link-target\\nOBSERVED=PASS 1 entries indexed\\nEXPECTED=PASS 1 entries indexed\\nMATCH=1\",\n    \"exit\": 0,\n    \"fixture\": \"knowledge/space name.md; README link target knowledge/space%20name.md\"\n  },\n  \"risks\": [\n    \"This is a single narrow fixture and does not prove the full G02 contract or production readiness.\",\n    \"Frozen claims record E12/E13 as failing against the before-tool (`rc=1 want 0`); this candidate probe does not alter those receipts.\"\n  ],\n  \"blockers\": [],\n  \"tool_installations\": \"None\",\n  \"scratch_cleanup\": \"Removed /fast/scratch/hyaku/chousa-r64/G02Probe10 before yielding.\"\n}",
+   "note": null
+  },
+  {
+   "name": "G02Probe11",
+   "agent": "executor",
+   "output": "{\n  \"files_changed\": [\n    \".ufo/waves/round-64/w1/G02Probe11/report.md\",\n    \".ufo/waves/round-64/w1/G02Probe11/recipe.json\"\n  ],\n  \"behavior\": \"Executed isolated NFC-file/NFD-index probe against the read-only candidate. Candidate passed the G02-only fixture, consistent with frozen claims\u2019 NFC-normalized matching requirement. Scratch tree removed.\",\n  \"evidence\": {\n    \"frozen_contract\": \"claims.md lines 53\u201356 specify NFC normalization on both sides; lines 95\u201399 specify D8's NFC-file/NFD-index direction.\",\n    \"command\": \"python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round64/controls/ref-preflight-v3.py --root /fast/scratch/hyaku/chousa-r64/G02Probe11/fixture --fleet /nonexistent --work /fast/scratch/hyaku/chousa-r64/G02Probe11/work --only G02\",\n    \"exit\": 0,\n    \"stdout\": \"GATE G02 knowledge-index PASS 1 entries indexed; PREFLIGHT=1/1 FAILED=none ENV=none\",\n    \"stderr\": \"empty\"\n  },\n  \"risks\": [\n    \"Single bounded fixture only; no full frozen C1 battery or production verification performed.\"\n  ],\n  \"blockers\": [],\n  \"installations\": []\n}",
+   "note": null
+  },
+  {
+   "name": "G02Probe12",
+   "agent": "executor",
+   "output": "{\n  \"files_changed\": [\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/G02Probe12/fixture-recipe.py\",\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/G02Probe12/report.md\",\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/G02Probe12.md\"\n  ],\n  \"behavior\": \"Isolated fixture with invalid UTF-8 byte 0xff in a knowledge filename; candidate reported it as `bad_\\\\\\\\xff.md`, stdout strictly UTF-8 decodable, G02 failed as expected (exit 1). No candidate edits.\",\n  \"evidence\": \"Frozen claims.md R64-C1 clause (v), lines 60\u201361. Command: `python3 <candidate> --root <fixture> --only G02`. Observed stdout contains `GATE G02 knowledge-index FAIL 1 not named in corpus/README.md: bad_\\\\\\\\xff.md`; stderr empty; exit 1. Fixture creation is reproducible via recorded recipe.\",\n  \"risks\": \"One input covers only invalid-UTF8 reporting, not the complete G02 predicate or production acceptance. C1 frozen failure is not re-evaluated or modified.\",\n  \"blockers\": [],\n  \"tools_installed\": []\n}",
+   "note": null
+  },
+  {
+   "name": "G02Probe13",
+   "agent": "executor",
+   "output": "{\n  \"files_changed\": [\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/G02Probe13.md\",\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/G02Probe13/probe.txt\"\n  ],\n  \"behavior\": \"Probed the candidate's handling of an existing regular-file --work path. It matched frozen R64-C1 \u00a7(iv): exit 2, empty stdout, and usage-form stderr naming the offending path. Candidate unchanged.\",\n  \"evidence\": {\n    \"command\": \"python3 -B /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round64/controls/ref-preflight-v3.py --root /fast/scratch/hyaku/chousa-r64/G02Probe13 --work /fast/scratch/hyaku/chousa-r64/G02Probe13/work-file\",\n    \"exit\": 2,\n    \"stdout\": \"\",\n    \"stderr\": \"lane-preflight: --work /fast/scratch/hyaku/chousa-r64/G02Probe13/work-file is not a directory\"\n  },\n  \"risks_or_blockers\": [],\n  \"scratch\": \"Fixture removed after recording the probe recipe and result.\",\n  \"verification\": \"No build, lint, tests, or formatters run. No tools installed or updated.\"\n}",
+   "note": null
+  },
+  {
+   "name": "G02Probe14",
+   "agent": "executor",
+   "output": "{\n  \"files_changed\": [\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/G02Probe14.md\"\n  ],\n  \"behavior\": \"Ran isolated G02 probe against candidate; valid file symlink passed, directory symlink cycle was omitted and gate passed, conflicting with frozen contract's non-file-symlink failure requirement.\",\n  \"evidence\": \"Report preserves frozen clause, fixture recipe, exact command, stdout, and exit 0. Candidate unchanged. Python 3.14.8; no tools installed. Scratch removed.\",\n  \"risks_or_blockers\": []\n}",
+   "note": null
+  },
+  {
+   "name": "Attack01",
+   "agent": "critic",
+   "output": "{\n  \"counterexample\": \"Frozen E12/E13 independently draw filename and index tags; concrete fixtures correctly fail candidate G02 with exit 1. Identically seeded inherited supplement fixtures pass with exit 0.\",\n  \"evidence\": {\n    \"report\": \".ufo/waves/round-64/w1/Attack01.md\",\n    \"details\": \".ufo/waves/round-64/w1/Attack01/report.md\",\n    \"probe\": \".ufo/waves/round-64/w1/Attack01/probe.py\",\n    \"probe_exit\": 0,\n    \"frozen_bytes_match\": true,\n    \"scratch_removed\": true\n  },\n  \"impacted_axes\": [\n    \"operability\",\n    \"calibration/provenance\"\n  ],\n  \"smallest_safe_correction\": \"Preserve frozen failure; retain single-tag repair under distinct supplement identity. Correct supplement documentation without rewriting frozen claims. Do not treat partial-run exit 0 as BATTERY=PASS.\",\n  \"limits\": \"Minimal G02 probes only, not full battery or landing verification. Tag collisions mean universal seed-impossibility was not established; canonical judgment remains with L1.\"\n}",
+   "note": null
+  },
+  {
+   "name": "Attack02",
+   "agent": "reviewer",
+   "output": "{\n  \"report\": \".ufo/waves/round-64/w1/Attack02.md\",\n  \"detail\": \".ufo/waves/round-64/w1/Attack02/report.md\",\n  \"findings\": [\n    {\n      \"severity\": \"medium\",\n      \"location\": \"corpus/evidence/round64/c1-battery-v3.py:480-487\",\n      \"finding\": \"ZERO early return accepts contradictory summary denominator and invalid/duplicate FAILED/ENV/SKIPPED memberships. Same weakness survives the inherited supplement.\",\n      \"evidence\": \".ufo/waves/round-64/w1/Attack02/probe-output.txt\"\n    }\n  ],\n  \"frozen_failure\": \"E12/E13 independent filename draws remain unchanged; supplemental repair cannot satisfy frozen C1 kill rule.\",\n  \"verification\": \"Seven direct canonical judge probes per instrument; command exit 0, stderr empty. Frozen byte identity confirmed. No full-battery pass claimed.\",\n  \"gaps\": [\n    \"LSP device unavailable; source inspection fallback used.\",\n    \"No end-to-end malicious tool battery run.\"\n  ],\n  \"cleanup\": \"No scratch tree or clone created; no installs or production changes.\"\n}",
+   "note": null
+  },
+  {
+   "name": "Attack03",
+   "agent": "critic",
+   "output": "{\n  \"counterexample\": \"Three-line root-path recognizer passes all 43 supplemental legs but falsely passes an ordinary-path phantom-index fixture rejected by the inherited candidate.\",\n  \"evidence\": {\n    \"supplement\": \"exit 0; CLEAN=1/1 DEFECTS=28/28 BENIGN=11/11 ZERO=3/3 BATTERY=PASS\",\n    \"ordinary_candidate\": \"exit 1; FAILED=G02\",\n    \"ordinary_forgery\": \"exit 0; FAILED=none\",\n    \"frozen_E12_E13\": \"Both FAIL rc=1 want 0; selected run exit 0 means PARTIAL only\",\n    \"provenance\": \"Frozen battery bytes equal bf40d99bda9eefdad3ed6276da077cfb24ba82f1\"\n  },\n  \"impacted_axes\": [\n    \"operability\",\n    \"calibration\",\n    \"provenance\"\n  ],\n  \"smallest_safe_correction\": \"Preserve frozen failure; add an ordinary-root versus fixture-root defective-content metamorphic check to a separately named successor battery. Supplemental PASS cannot discharge frozen closure.\",\n  \"report\": \".ufo/waves/round-64/w1/Attack03.md\",\n  \"detailed_report\": \".ufo/waves/round-64/w1/Attack03/report.md\",\n  \"cleanup\": \"Driver cleanup initially failed on mode-000 residue after writing receipts; explicit permission restoration and scratch removal exited 0. No installs, clones, production edits or git mutations.\"\n}",
+   "note": null
+  },
+  {
+   "name": "Attack04",
+   "agent": "reviewer",
+   "output": "{\n  \"report\": \".ufo/waves/round-64/w1/Attack04.md\",\n  \"detailed_report\": \".ufo/waves/round-64/w1/Attack04/report.md\",\n  \"evidence\": \".ufo/waves/round-64/w1/Attack04/evidence.json\",\n  \"findings\": [\n    {\n      \"severity\": \"high\",\n      \"finding\": \"Confirmed known frozen E12/E13 filename/reference mismatch; supplemental repairs cannot establish frozen C1.\"\n    },\n    {\n      \"severity\": \"medium\",\n      \"finding\": \"Actual frozen ZERO judge accepts PREFLIGHT=0/8 and inconsistent or malformed summary sets; inherited and supplemental judges also accept these counterexamples.\"\n    }\n  ],\n  \"observed\": \"All three zero-gate paths in production and separately in the candidate correctly exited 2 with PREFLIGHT=0/0. No production zero-gate defect observed.\",\n  \"verification\": \"Bounded probe exited 0; exact command/output/exits retained. No full battery performed. LSP unavailable.\",\n  \"scratch_removed\": true,\n  \"tools_installed\": [],\n  \"advisory_only\": true\n}",
+   "note": null
+  },
+  {
+   "name": "Attack05",
+   "agent": "critic",
+   "output": "{\n  \"counterexample\": \"Indexed ok.md plus loop -> . or a directory symlink falsely passes inherited reference candidate; frozen contract requires FAIL. Current working-tree tool rejects both.\",\n  \"evidence\": \"15 bounded G02 subprocess probes completed. Reference directory cases exit 0; current directory cases exit 1; current regular-file symlink exit 0 and dangling symlink exit 1. Snapshot hashes and reproducible driver recorded.\",\n  \"impacted_axes\": [\n    \"operability\",\n    \"calibration\",\n    \"provenance\"\n  ],\n  \"smallest_safe_correction\": \"Reject symlinks in os.walk directory lists without following them; current measured tool already does. Add distinct future symlink/cycle coverage, never rewrite frozen instruments.\",\n  \"frozen_failure\": \"Known E12/E13 mismatched random names preserved and source-confirmed; not rerun or repaired. Supplement is distinct and cannot satisfy frozen closure.\",\n  \"report\": \".ufo/waves/round-64/w1/Attack05.md\",\n  \"detailed_report\": \".ufo/waves/round-64/w1/Attack05/report.md\",\n  \"scratch_removed\": true,\n  \"production_edits\": false\n}",
+   "note": null
+  },
+  {
+   "name": "Attack06",
+   "agent": "reviewer",
+   "output": "{\n  \"seat\": \"Attack06\",\n  \"report\": \".ufo/waves/round-64/w1/Attack06.md\",\n  \"detailed_report\": \".ufo/waves/round-64/w1/Attack06/report.md\",\n  \"findings\": [\n    {\n      \"severity\": \"high\",\n      \"finding\": \"Known frozen E12/E13 name mismatch prevents honest C1 full-pass closure; supplement cannot replace frozen authority.\"\n    },\n    {\n      \"severity\": \"medium\",\n      \"finding\": \"Inherited candidate accepts NFC/NFD Unicode and nested phantom paths because mirror extraction is ASCII-only.\"\n    }\n  ],\n  \"current_behavior\": \"Observed current tools/lane-preflight.py rejects all tested Unicode phantoms and accepts both valid normalization directions; no scoped current defect reproduced.\",\n  \"verification\": \"12 bounded G02 CLI invocations; exact commands/output/exits retained; driver exit 0. Frozen claims and battery bytes match freeze commit. No full closure run.\",\n  \"gaps\": [\n    \"LSP device unavailable\",\n    \"No landing-bound or full-battery verification\"\n  ],\n  \"cleanup\": \"Seat scratch removed; no clone, installs, network, production edits or git mutations.\"\n}",
+   "note": null
+  },
+  {
+   "name": "Attack07",
+   "agent": "critic",
+   "output": "{\n  \"counterexample\": \"README containing only https://example.invalid/alpha.md or `alpha.md` indexes corpus/knowledge/alpha.md in current tool and inherited candidate; both exit 0. Strike-only control exits 1.\",\n  \"evidence\": \".ufo/waves/round-64/w1/Attack07/evidence.json\",\n  \"impacted_axes\": [\n    \"operability\",\n    \"calibration\",\n    \"provenance\"\n  ],\n  \"classification\": \"Disclosed URL/code coverage weakness, not literal frozen-regex violation. Frozen E12/E13 fixture mismatch independently remains a counter failure; supplement cannot substitute for frozen closure.\",\n  \"smallest_safe_correction\": \"Preserve frozen rules; report mismatch honestly and route explicit URL/code variants into a newly named future instrument with an explicitly defined index structure.\",\n  \"report\": \".ufo/waves/round-64/w1/Attack07.md\",\n  \"full_report\": \".ufo/waves/round-64/w1/Attack07/report.md\",\n  \"probe_exit\": 0,\n  \"scratch_removed\": true,\n  \"production_edits\": false\n}",
+   "note": null
+  },
+  {
+   "name": "Attack08",
+   "agent": "reviewer",
+   "output": "{\n  \"report\": \".ufo/waves/round-64/w1/Attack08.md\",\n  \"detailed_report\": \".ufo/waves/round-64/w1/Attack08/report.md\",\n  \"findings\": [\n    {\n      \"severity\": \"high\",\n      \"finding\": \"Candidate matches stem rather than complete .md filename; bare stem, .txt and .mdx mentions incorrectly pass G02.\",\n      \"evidence\": \".ufo/waves/round-64/w1/Attack08/evidence.json\"\n    },\n    {\n      \"severity\": \"high\",\n      \"finding\": \"Frozen E12/E13 generate independently drawn mismatched names; isolated fixtures fail correctly despite expected exit 0. Supplemental fixture repair does not admit frozen C1.\"\n    }\n  ],\n  \"verification\": \"Nine bounded CLI probes captured; driver exit 0. Frozen battery matches freeze-commit SHA256. No full battery result claimed.\",\n  \"limitations\": \"LSP device unavailable; candidate is not production; findings advisory.\",\n  \"scratch_removed\": true,\n  \"installs\": []\n}",
+   "note": null
+  },
+  {
+   "name": "Attack09",
+   "agent": "critic",
+   "output": "{\n  \"counterexample\": \"Minimal missing-anchor and missing-heading fixtures distinguish A01, A02, A03 on both committed v1 and v2 checkers; no scoped C2 falsification found.\",\n  \"evidence\": {\n    \"report\": \".ufo/waves/round-64/w1/Attack09/report.md\",\n    \"trailer\": \".ufo/waves/round-64/w1/Attack09.md\",\n    \"outputs\": \".ufo/waves/round-64/w1/Attack09/evidence.json\",\n    \"driver\": \".ufo/waves/round-64/w1/Attack09/probe.py\",\n    \"driver_exit\": 0,\n    \"bounded_probes\": 10,\n    \"freeze_comparisons\": \"All six compared files identical\",\n    \"scratch_removed\": true\n  },\n  \"impacted_axes\": [\n    \"calibration\",\n    \"instrument provenance\",\n    \"stdout-consumer operability\"\n  ],\n  \"smallest_safe_correction\": \"Externally pin measured committed digests; consumers must inspect stale exit 2 rather than PASS summary alone. Do not modify frozen instruments.\",\n  \"limits\": \"Full matrix not rerun; no canonical closure judgment. Known frozen C1 E12/E13 failure remains distinct from post-freeze supplements.\",\n  \"tools\": \"Existing Python 3.14.8; no installs or updates.\"\n}",
+   "note": null
+  },
+  {
+   "name": "Attack10",
+   "agent": "reviewer",
+   "output": "{\n  \"seat\": \"Attack10\",\n  \"report\": \".ufo/waves/round-64/w1/Attack10.md\",\n  \"detailed_report\": \".ufo/waves/round-64/w1/Attack10/report.md\",\n  \"findings\": [],\n  \"recommendation\": \"No actionable C2 defect found for A04\u2013A06; advisory only.\",\n  \"evidence\": \"48 bounded probes; all three mutant errors independently reproduced on both checker versions. Five scoped inputs exactly matched frozen commit. Driver exit 0.\",\n  \"verification_gaps\": [\n    \"Full mutation matrix and git-writing selftests not executed under seat restrictions.\",\n    \"LSP device unavailable.\"\n  ],\n  \"c1_status\": \"Known frozen E12/E13 failure remains unrepaired; supplement is distinct.\",\n  \"scratch_removed\": true,\n  \"tools_installed\": []\n}",
+   "note": null
+  },
+  {
+   "name": "Attack11",
+   "agent": "critic",
+   "output": "{\n  \"report\": \".ufo/waves/round-64/w1/Attack11.md\",\n  \"evidence\": \".ufo/waves/round-64/w1/Attack11/\",\n  \"counterexample\": \"A07 adds modifications to newest-first git log but retains c[-1], so the exact R7 add-then-modify history still selects the add commit. Synthetic response probe confirms identical firing verdicts; real R2\u2013R4 remain unchanged.\",\n  \"additional_findings\": [\n    \"A08 still fires on unreadable revisions with nonempty needles; C6 distinguishes diagnostic text, not a fail-open verdict.\",\n    \"A09 genuinely breaks summary counts; real R2/R3 and minimal one-row fixture detect it.\"\n  ],\n  \"impacted_axes\": [\n    \"calibration\",\n    \"provenance\",\n    \"operability\"\n  ],\n  \"smallest_safe_correction\": \"Preserve frozen instruments; disclose A07's ineffective defect and A08's diagnostic-only distinction. Any corrected mutant must receive a distinct future or supplemental identity, not frozen C2 credit.\",\n  \"evidence_bounds\": \"Probe exit 0; frozen bytes matched for generator, runner, and both checkers. Full matrix not run because its fixtures perform forbidden git mutations. A07 complete survival remains inference, not measured total. Known C1 E12/E13 frozen failure explicitly preserved.\",\n  \"scratch_removed\": true,\n  \"production_edits\": false,\n  \"tool_installs\": []\n}",
+   "note": null
+  },
+  {
+   "name": "Attack12",
+   "agent": "reviewer",
+   "output": "{\n  \"seat\": \"Attack12\",\n  \"report\": \".ufo/waves/round-64/w1/Attack12.md\",\n  \"detailed_report\": \".ufo/waves/round-64/w1/Attack12/report.md\",\n  \"findings\": [\n    {\n      \"severity\": \"high\",\n      \"mutant\": \"A10\",\n      \"finding\": \"Unknown-rule acceptance demonstrated; added duplicate-id fixture does not distinguish frozen A10.\"\n    },\n    {\n      \"severity\": \"high\",\n      \"mutant\": \"A11\",\n      \"finding\": \"Fault case 1 bypasses mutated bad-case return; injected failing child demonstrates mutant falsely returns 0.\"\n    },\n    {\n      \"severity\": \"low\",\n      \"mutant\": \"A12\",\n      \"finding\": \"Mutation removes both original quantifier arms; kill cannot uniquely establish added second-arm coverage.\"\n    }\n  ],\n  \"verification\": \"Bounded probe exit 0; target, claims, generator and runner match frozen commit bytes. Full-matrix survivor outcomes inferred, not measured: runner performs prohibited git commits.\",\n  \"evidence\": \".ufo/waves/round-64/w1/Attack12/evidence.txt\",\n  \"scratch_removed\": true,\n  \"production_changed\": false,\n  \"tools_installed\": []\n}",
+   "note": null
+  },
+  {
+   "name": "Attack13",
+   "agent": "critic",
+   "output": "{\n  \"counterexample\": \"Frozen C2 runner credits subprocess timeouts as mutant kills. Injecting only a zero-second timeout budget into its unchanged run() path produced 12/12 kills and exit 0 for both v1 and v2, without completed checker verdicts.\",\n  \"evidence\": [\n    \".ufo/waves/round-64/w1/Attack13/timeout-output.txt\",\n    \".ufo/waves/round-64/w1/Attack13/timeout-probe.py\",\n    \"Frozen runner lines 164\u2013174; SHA-256 matches freeze commit.\"\n  ],\n  \"impacted_axes\": [\n    \"calibration\",\n    \"operability\",\n    \"provenance\"\n  ],\n  \"smallest_safe_correction\": \"Preserve frozen instruments. In a distinctly named successor, treat harness timeouts as exit 2 without kill credit and require an unmutated matrix control.\",\n  \"limits\": \"Fault-injection counterexample, not a demonstrated normal-budget C2 closure miss. Frozen C1 E12/E13 mismatch remains unrepaired; supplement is not frozen evidence.\",\n  \"report\": \".ufo/waves/round-64/w1/Attack13.md\",\n  \"full_report\": \".ufo/waves/round-64/w1/Attack13/report.md\",\n  \"cleanup\": \"Own scratch removed; no clones, production edits, git mutations, installations, or network fetches.\"\n}",
+   "note": null
+  },
+  {
+   "name": "Attack14",
+   "agent": "reviewer",
+   "output": "{\n  \"findings\": [\n    {\n      \"severity\": \"high\",\n      \"path\": \"tools/claims-audit-v2.py:282-288\",\n      \"finding\": \"Fault injection bypasses the genuine failure guard modified by frozen A11. Exact A11 incorrectly returns 0 on an unexpected bad-fixture result, yet still satisfies frozen R6 with fault 1.\",\n      \"evidence\": \"Bounded probe driver exited 0; original actual CLI fault leg exited 1. Injected bad-child result: original selftest exited 1, A11 exited 0; fault 1 made both exit 1 with identical FAULT output.\"\n    }\n  ],\n  \"report\": \".ufo/waves/round-64/w1/Attack14.md\",\n  \"detailed_report\": \".ufo/waves/round-64/w1/Attack14/report.md\",\n  \"reproducer\": \".ufo/waves/round-64/w1/Attack14/probe.py\",\n  \"verification_gaps\": [\n    \"Full mutation count not run: fixture git mutations prohibited.\",\n    \"LSP device unavailable; source inspection used.\",\n    \"C1 known frozen E12/E13 failure neither hidden nor repaired.\"\n  ],\n  \"cleanup\": \"Scratch removed; no clone, production edits, network calls, or tool installations.\"\n}",
+   "note": null
+  },
+  {
+   "name": "Attack15",
+   "agent": "critic",
+   "output": "{\n  \"report\": \".ufo/waves/round-64/w1/Attack15.md\",\n  \"counterexample\": \"Frozen A10 accepts a six-column unknown rule as AUDIT=PASS while preserving C7 duplicate rejection unchanged; C7 does not discriminate A10.\",\n  \"evidence\": \".ufo/waves/round-64/w1/Attack15/evidence.json\",\n  \"observed\": \"Eight bounded parsing probes; frozen/current checker, generator and runner hashes match. Original rejects duplicate and unknown rules; A10 still rejects duplicates but accepts unknown rules.\",\n  \"impacted_axes\": [\n    \"calibration\",\n    \"correctness\",\n    \"provenance\"\n  ],\n  \"smallest_safe_correction\": \"Record frozen discriminator defect; add unknown-rule rejection only in a separately named supplement or next-round instrument. Never substitute supplemental success for frozen C2.\",\n  \"limits\": \"Full matrix survival inferred, not executed: its selftest/probe create forbidden git commits. C1 frozen E12/E13 failure preserved honestly.\",\n  \"scratch_removed\": true\n}",
+   "note": null
+  },
+  {
+   "name": "Attack16",
+   "agent": "reviewer",
+   "output": "{\n  \"report\": \".ufo/waves/round-64/w1/Attack16.md\",\n  \"evidence\": \".ufo/waves/round-64/w1/Attack16/probe.py\",\n  \"findings\": [\n    {\n      \"severity\": \"medium\",\n      \"classification\": \"supplemental weakness, not frozen C2 failure\",\n      \"finding\": \"R2 accepts an additional contradictory FLAGGED=999/999 AUDIT=PASS summary because validation uses substring presence; bounded original/A09/fresh-mutant probes demonstrate the gap.\"\n    },\n    {\n      \"severity\": \"informational\",\n      \"finding\": \"Original stale-anchor fixture prints AUDIT=PASS while exiting 2; consistent with zero-fired semantics, unsafe as standalone success signal.\"\n    }\n  ],\n  \"verification\": \"Probe exit 0; child exits original=1, frozen-A09=1, fresh-duplicate=1, stale=2. Frozen A09 rejected by actual R2 predicate; fresh duplicate accepted. Full matrix survival not claimed.\",\n  \"cleanup\": \"Scratch removed; no clone, production edits, installs, network fetches or git mutations.\"\n}",
+   "note": null
+  },
+  {
+   "name": "Attack17",
+   "agent": "critic",
+   "output": "{\n  \"counterexample\": \"Frozen C3 oracle expects mirror.parent/corpus/SOURCES.md, but unchanged instruments correctly name mirror.parents[2]/corpus/SOURCES.md. Its round65 fixture also does not increase directory depth.\",\n  \"evidence\": \"Six bounded relocated executions: all exit 2, exact guard diagnostics correct, frozen oracle comparisons false. All three instrument bytes equal freeze bf40d99bda9eefdad3ed6276da077cfb24ba82f1. Full counter not executed; aggregate failure is identified as inference.\",\n  \"impacted_axes\": [\n    \"depth\",\n    \"calibration\",\n    \"provenance\"\n  ],\n  \"smallest_safe_correction\": \"Preserve frozen counter and disclose unmet target. Use a distinctly named supplement with genuinely deeper relocation and independently specified exact expected paths; supplemental success cannot replace frozen failure.\",\n  \"report\": \".ufo/waves/round-64/w1/Attack17.md\",\n  \"detailed_report\": \".ufo/waves/round-64/w1/Attack17/report.md\",\n  \"probe\": \".ufo/waves/round-64/w1/Attack17/probe.py\",\n  \"cleanup\": \"Scratch removed; no clone, installs, production changes, or git mutations.\"\n}",
+   "note": null
+  },
+  {
+   "name": "Attack18",
+   "agent": "reviewer",
+   "output": "{\n  \"report\": \".ufo/waves/round-64/w1/Attack18.md\",\n  \"details\": \".ufo/waves/round-64/w1/Attack18/report.md\",\n  \"evidence\": \".ufo/waves/round-64/w1/Attack18/probe-receipt.json\",\n  \"findings\": [\n    {\n      \"severity\": \"high\",\n      \"path\": \"corpus/evidence/round64/c3-count.py:91\",\n      \"finding\": \"Frozen relocation oracle expects the wrong missing-file path. All three exact-layout bounded probes correctly exit 2 but fail the frozen match predicate; required 3/3 cannot hold.\"\n    },\n    {\n      \"severity\": \"medium\",\n      \"path\": \"corpus/evidence/round64/c3-count.py:86\",\n      \"finding\": \"Fixture retains the same directory depth, contrary to advertised extra-directory relocation.\"\n    }\n  ],\n  \"controls\": \"Complete relocated committed tree passes all three startup imports. Five asserted-file removal controls and three actual depth-shift controls correctly exit 2 naming exact missing paths.\",\n  \"verification_gaps\": [\n    \"Full canonical counter not executed; no final counter output claimed.\",\n    \"LSP device unavailable.\",\n    \"C1 known frozen E12/E13 mismatch acknowledged, not rerun or repaired.\"\n  ],\n  \"cleanup\": \"Scratch removed; no clones, installs, production edits, or repository mutations.\",\n  \"recommendation\": \"Preserve frozen C3 failure; corrected oracle/depth evidence must be separately named supplemental evidence.\"\n}",
+   "note": null
+  },
+  {
+   "name": "Attack19",
+   "agent": "critic",
+   "output": "{\n  \"report\": \".ufo/waves/round-64/w1/Attack19.md\",\n  \"evidence\": \".ufo/waves/round-64/w1/Attack19/report.md\",\n  \"counterexample\": \"Original R5 instruments and claims first appear together in commit 92a084175f9534296527b77a2b7fe38560b96b18. Subsequent R5 substitution checks older round63 subjects instead; its PASS does not establish round64 instrument precedence.\",\n  \"digest_result\": \"All seven frozen instrument prefixes and v1 checker identity match committed and inherited bytes; frozen claims unchanged.\",\n  \"impacted_axes\": [\n    \"calibration\",\n    \"operability\"\n  ],\n  \"smallest_safe_correction\": \"Preserve original R5 failure and label amended audit scope accurately; retain frozen C1 E12/E13 failure separately from supplemental results.\",\n  \"limits\": \"No runtime chronology inferred, no checker or battery executed, no canonical judgment. No installs or scratch created.\"\n}",
+   "note": null
+  },
+  {
+   "name": "Attack20",
+   "agent": "reviewer",
+   "output": "{\n  \"report\": \".ufo/waves/round-64/w1/Attack20.md\",\n  \"details\": \".ufo/waves/round-64/w1/Attack20/report.md\",\n  \"findings\": [\n    {\n      \"severity\": \"high\",\n      \"finding\": \"Frozen C1 E12/E13 expectations contradict independently drawn fixture names; supplement cannot admit frozen C1.\"\n    },\n    {\n      \"severity\": \"high\",\n      \"finding\": \"Frozen C3 relocation oracle expects the wrong diagnostic path and preserves original lane-relative depth.\"\n    },\n    {\n      \"severity\": \"medium\",\n      \"finding\": \"C2 runner counts harness timeouts as mutant kills.\"\n    },\n    {\n      \"severity\": \"medium\",\n      \"finding\": \"Claimed C2 unmutated baseline control is absent from frozen runner.\"\n    },\n    {\n      \"severity\": \"low\",\n      \"finding\": \"C3 universal instrument wording omits C2's self-derived lane paths.\"\n    }\n  ],\n  \"evidence\": \"Seven frozen instrument digest prefixes match; inherited before counts and C2 survivor list match frozen prose. Commands and exits recorded in report.\",\n  \"verification_gaps\": \"Static counterexamples only; no new battery or alternate-runtime executions. LSP device unavailable.\",\n  \"changes\": \"Only unique seat reports written. No scratch or clone created; no tool installations.\",\n  \"status\": \"Advisory review complete; no admission or integration.\"\n}",
+   "note": null
+  },
+  {
+   "name": "Attack21",
+   "agent": "critic",
+   "output": "{\n  \"report\": \".ufo/waves/round-64/w1/Attack21/report.md\",\n  \"counterexamples\": [\n    \"Frozen C1 E12/E13 generate mismatched file/index tags; supplemental repairs cannot satisfy frozen closure.\",\n    \"C2 lacks an unmutated baseline prerequisite: a target failing before all legs can yield mutation kills without calibration (static counterexample).\",\n    \"C3 accepts failed CLEAN partial runs as successful smoke; inherited receipt demonstrates failed CLEAN with exit 0.\"\n  ],\n  \"evidence\": \"Source-line references, inherited receipts, and seven SHA-256 digests matching frozen declarations recorded in report.\",\n  \"impacted_axes\": [\n    \"operability\",\n    \"calibration\",\n    \"sourced depth\",\n    \"provenance\"\n  ],\n  \"smallest_safe_correction\": \"Keep frozen outcomes unchanged and honestly labeled; use separately named supplements for baseline validation, accurate smoke checks, and per-prerequisite coverage. L1 alone integrates.\",\n  \"constraints\": \"No runtime probes, production edits, installs, clones, scratch trees, network access, or git/jj mutations. Advisory review only.\"\n}",
+   "note": null
+  },
+  {
+   "name": "Attack22",
+   "agent": "reviewer",
+   "output": "{\n  \"report\": \".ufo/waves/round-64/w1/Attack22.md\",\n  \"detailed_report\": \".ufo/waves/round-64/w1/Attack22/report.md\",\n  \"findings\": [\n    {\n      \"severity\": \"medium\",\n      \"classification\": \"inherited limitation, not regression\",\n      \"finding\": \"G04 ignores missing references when their first directory is absent; minimal absent-dir/missing.md passes with zero pointers.\"\n    }\n  ],\n  \"regression_result\": \"No introduced G04/G05 harm found: gate/helper ASTs match frozen bytes and 15 bounded CLI runs match across frozen, candidate and working versions.\",\n  \"frozen_C1\": \"Known E12/E13 fixture mismatch preserved; supplement does not satisfy frozen PASS requirement.\",\n  \"verification\": {\n    \"driver_exit\": 0,\n    \"scratch_removed\": true,\n    \"lsp\": \"Unavailable\",\n    \"full_battery\": \"Not rerun\"\n  },\n  \"advisory_only\": true\n}",
+   "note": null
+  },
+  {
+   "name": "Attack23",
+   "agent": "critic",
+   "output": "{\n  \"report\": \".ufo/waves/round-64/w1/Attack23.md\",\n  \"evidence\": \".ufo/waves/round-64/w1/Attack23/report.md\",\n  \"counterexamples\": [\n    \"Candidate matches bare stem instead of required complete .md filename.\",\n    \"Candidate ignores directory-target symlinks classified in os.walk directory entries.\",\n    \"Unmeasured calibration could be below recorded operability 3; only lowest-scored wording is justified.\"\n  ],\n  \"frozen_failure\": \"Known E12/E13 mismatch preserved; supplemental repairs cannot satisfy frozen C1 authority.\",\n  \"impacted_axes\": [\n    \"operability\",\n    \"calibration\",\n    \"depth\"\n  ],\n  \"smallest_safe_correction\": \"Preserve frozen failures and historical scalar; L1 corrects candidate matching and symlink handling with separately named evidence.\",\n  \"evidence_results\": \"Frozen-file git diff exit 0 empty; sha256sum exit 0; frozen/supplement diff exit 1 showing only E12/E13 repairs. No runtime verdicts inferred as observed.\",\n  \"cleanup\": \"No scratch or clone created; no installations.\"\n}",
+   "note": null
+  },
+  {
+   "name": "Attack24",
+   "agent": "reviewer",
+   "output": "{\n  \"report\": \".ufo/waves/round-64/w1/Attack24.md\",\n  \"findings\": [\n    {\n      \"severity\": \"high\",\n      \"path\": \"corpus/evidence/round64/c3-count.py:85-92\",\n      \"finding\": \"Frozen relocation oracle expects an incorrectly derived path. All three independent bounded startup probes exited 2 naming the correct missing path, but failed the frozen matching expression.\"\n    },\n    {\n      \"severity\": \"medium\",\n      \"path\": \"corpus/evidence/round64/claims.md:219-226\",\n      \"finding\": \"S152's inherited source is counter code rather than the promised successful probe output. Local pathlib/realpath quotations are supported; they do not validate the failing relocation oracle.\"\n    }\n  ],\n  \"evidence\": \".ufo/waves/round-64/w1/Attack24/evidence.json\",\n  \"limits\": \"No full-counter execution claimed. Frozen C1 E12/E13 failure acknowledged; supplemental results cannot admit it. Advisory only, not non-author closure.\",\n  \"cleanup\": \"Scratch removed; no installs, production edits, network or VCS mutations.\"\n}",
+   "note": null
+  },
+  {
+   "name": "Counter01",
+   "agent": "executor",
+   "output": "{\n  \"files_changed\": [\n    \".ufo/waves/round-64/w1/Counter01/report.md\",\n    \".ufo/waves/round-64/w1/Counter01/c2-v1.stdout\",\n    \".ufo/waves/round-64/w1/Counter01/c2-v1.stderr\",\n    \".ufo/waves/round-64/w1/Counter01/c2-v1.exit\"\n  ],\n  \"behavior\": \"Ran the frozen C2 v1 mutant matrix against tools/claims-audit.py; no production or instrument edits.\",\n  \"evidence\": {\n    \"command\": \"python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round64/c2-mutrun.py --target /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/claims-audit.py --matrix v1 --work /fast/scratch/hyaku/chousa-r64/Counter01/work\",\n    \"exit\": 1,\n    \"survivors\": [\n      \"A05\",\n      \"A06\",\n      \"A07\",\n      \"A08\",\n      \"A10\",\n      \"A11\"\n    ],\n    \"stdout\": \"Retained complete at .ufo/waves/round-64/w1/Counter01/c2-v1.stdout\",\n    \"stderr\": \"Retained complete at .ufo/waves/round-64/w1/Counter01/c2-v1.stderr (empty)\",\n    \"exit_file\": \"Retained as .ufo/waves/round-64/w1/Counter01/c2-v1.exit\"\n  },\n  \"risks_or_blockers\": \"None for the assigned frozen v1 matrix run. No tool installs/updates; scratch directory removed.\"\n}",
+   "note": null
+  },
+  {
+   "name": "Counter02",
+   "agent": "executor",
+   "output": "{\n  \"files_changed\": [\n    \"chousa-shokunin/.ufo/waves/round-64/w1/Counter02/report.md\",\n    \"chousa-shokunin/.ufo/waves/round-64/w1/Counter02/evidence/stdout.txt\",\n    \"chousa-shokunin/.ufo/waves/round-64/w1/Counter02/evidence/stderr.txt\",\n    \"chousa-shokunin/.ufo/waves/round-64/w1/Counter02/evidence/exit.txt\"\n  ],\n  \"behavior\": \"Ran frozen C2 v2 mutation matrix against tools/claims-audit-v2.py; observed 9/12 killed, with A07, A10, A11 surviving. Runner exited 1; stderr empty.\",\n  \"retained_evidence\": \"Evidence files retain full captured stdout, stderr, and exit code. Frozen claims read from corpus/evidence/round64/claims.md specify expected 12/12. Scratch directory was removed. No tools installed and no production or frozen instrument files edited.\",\n  \"risks\": [\n    \"Frozen C2 acceptance target is not met.\"\n  ],\n  \"blockers\": []\n}",
+   "note": null
+  },
+  {
+   "name": "Counter03",
+   "agent": "executor",
+   "output": "{\n  \"files_changed\": [\n    \".ufo/waves/round-64/w1/Counter03/report.md\",\n    \".ufo/waves/round-64/w1/Counter03/c3-count.stdout\",\n    \".ufo/waves/round-64/w1/Counter03/c3-count.stderr\"\n  ],\n  \"behavior\": \"Ran the frozen C3 relocation counter. Smoke was 3/3 and the shift mutant was unnamed as expected, but relocation matching was 0/3; overall C3=FAIL, exit 1.\",\n  \"evidence\": \"Report includes the command and available output; scratch was removed. The counter truncated two relocation diagnostics, and did not emit full subprocess stderr.\",\n  \"risks_and_blockers\": [\n    \"C3 relocation result failed the frozen criterion.\"\n  ]\n}",
+   "note": null
+  },
+  {
+   "name": "Counter04",
+   "agent": "executor",
+   "output": "{\n  \"files_changed\": [\n    \"chousa-shokunin/.ufo/waves/round-64/w1/Counter04/report.md\",\n    \"chousa-shokunin/.ufo/waves/round-64/w1/Counter04/evidence.txt\"\n  ],\n  \"behavior\": \"Ran audit v2 selftest (10 cases PASS, exit 0) and fault-1 selftest (fault observed on stderr, exit 1).\",\n  \"evidence\": \"Complete captured stdout/stderr and exit codes are in the seat evidence.txt; the scoped report is report.md.\",\n  \"risks\": [\n    \"This probe did not run the full C2 mutation battery.\"\n  ],\n  \"blockers\": []\n}",
+   "note": null
+  },
+  {
+   "name": "Counter05",
+   "agent": "executor",
+   "output": "{\n  \"files_changed\": [\n    \".ufo/waves/round-64/w1/Counter05.md\"\n  ],\n  \"behavior\": \"Recorded comparison of all seven frozen digest pins to original bytes; all digest prefixes match. No instruments or production files changed.\",\n  \"exact_retained_evidence\": \"sha256sum stdout and EXIT=0 are preserved in the report; stderr empty. Frozen C1 before-receipt evidence retained verbatim in finding: DEFECTS=17/28, BENIGN=8/11, BATTERY=FAIL including E12/E13/E14 benign failures.\",\n  \"risks_or_blockers\": \"Digest comparison does not establish candidate/supplement behavior; no post-freeze battery was run. No tools installed/updated. No scratch tree was created, so nothing required cleanup.\"\n}",
+   "note": null
+  },
+  {
+   "name": "Counter06",
+   "agent": "executor",
+   "output": "{\n  \"files_changed\": [\n    \".ufo/waves/round-64/w1/Counter06.md\",\n    \" .ufo/waves/round-64/w1/Counter06/run.txt\"\n  ],\n  \"behavior\": \"Recorded one frozen C1 battery run against the reference candidate; result was BATTERY=FAIL with E12 and E13 failing, all other legs passing.\",\n  \"evidence\": \"Command and full tool-delivered output are in run.txt; exit 1. Frozen claims were read first. No tool installation. Scratch removed after permission adjustment confined to the seat scratch directory.\",\n  \"risks\": [\n    \"Frozen C1\u2019s E12/E13 fixture mismatch is observed; this run does not validate any production candidate.\"\n  ],\n  \"blockers\": []\n}",
+   "note": null
+  },
+  {
+   "name": "Draft01",
+   "agent": "scribe",
+   "output": "{\n  \"behavior\": \"Located Python 3.14.8 installed pathlib documentation and produced an integration-ready lane-root draft; no production changes.\",\n  \"findings\": [\n    \"parents quote: 7 words, /usr/lib/python3.14/pathlib/__init__.py:393.\",\n    \"resolve quote: 14 words, same source lines 934\u2013935; strict=False at 932, realpath delegation at 938.\",\n    \"Existing S150 already registers this source. Documentation establishes logical parents and normalization, not intended repository identity.\",\n    \"Existing knowledge entry lacks literal ## Gate section; no frozen acceptance or counter PASS asserted.\"\n  ],\n  \"gates\": \"Scoped source admission only; unsupported repository-detection/strict-default interpretations rejected. Frozen C1 fixture mismatch retained honestly; supplement not substituted for frozen success.\",\n  \"touched_surfaces\": [\n    \".ufo/waves/round-64/w1/Draft01.md\",\n    \".ufo/waves/round-64/w1/Draft01/report.md\",\n    \".ufo/waves/round-64/w1/Draft01/evidence.md\"\n  ],\n  \"out_of_scope\": [\n    \"Production integration\",\n    \"Claim counters and behavioral verification\",\n    \"GNU realpath source admission\",\n    \"Canonical judgment\"\n  ],\n  \"artifacts\": [\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/Draft01.md\",\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/Draft01/report.md\",\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/Draft01/evidence.md\"\n  ],\n  \"cleanup\": \"Empty scratch removed successfully; no clone or tool installation.\"\n}",
+   "note": null
+  },
+  {
+   "name": "Draft02",
+   "agent": "scribe",
+   "output": "{\n  \"behavior\": \"Drafted narrow GNU realpath -e source admission and explicit overreach rejection.\",\n  \"gates\": {\n    \"source\": \"Installed /usr/share/man/man1/realpath.1.gz, DESCRIPTION, -e/--canonicalize-existing\",\n    \"quote\": \"all components of the path must exist\",\n    \"quote_words\": 8,\n    \"installed_version\": \"GNU coreutils 9.12; package 9.12-2\",\n    \"version_command\": \"/usr/bin/realpath --version\",\n    \"version_exit\": 0\n  },\n  \"findings\": [\n    \"Unqualified realpath resolves to shell builtin 0.8.0; excluded from GNU provenance.\",\n    \"Installed man source supports all-components existence, not intended lane identity.\",\n    \"Info member rendering unavailable; no info claim made.\",\n    \"Frozen C1 E12/E13 failure remains unclosed; supplement is distinct.\",\n    \"Conflicting report-path instructions preserved verbatim in report.\"\n  ],\n  \"touched_surfaces\": [\n    \".ufo/waves/round-64/w1/Draft02/report.md\",\n    \".ufo/waves/round-64/w1/Draft02.md\"\n  ],\n  \"out_of_scope\": [\n    \"Production integration\",\n    \"Canonical judgment\",\n    \"Python source admission\",\n    \"Battery/counter execution\"\n  ],\n  \"artifacts\": [\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/Draft02/report.md\",\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/Draft02.md\"\n  ],\n  \"cleanup\": \"No scratch tree or clone created. No installs or updates.\"\n}",
+   "note": null
+  },
+  {
+   "name": "Draft03",
+   "agent": "scribe",
+   "output": "{\n  \"behavior\": \"Rejected existence assertions as proof of intended lane-root identity; admitted only source-supported regular-file checks and missing-file fail-fast branch.\",\n  \"gates\": \"Mandatory rules, frozen claims, Godspeed skill, and local pathlib source read. No probes, tests, counters, shell commands, runtime invocations, or installations performed.\",\n  \"touched_surfaces\": [\n    \".ufo/waves/round-64/w1/Draft03/report.md\"\n  ],\n  \"out_of_scope\": [\n    \"Production integration\",\n    \"Frozen claim/counter edits\",\n    \"Execution-success or canonical closure judgments\"\n  ],\n  \"findings\": [\n    \"Installed pathlib parent indexing is positional; resolve normalizes/resolves paths; is_file checks regular-file status, including symlink targets. None binds operator intent.\",\n    \"A wrong populated root satisfies the same checks: source-based inference, not an executed fixture.\",\n    \"Inherited frozen C1 E12/E13 mismatch remains disclosed; a distinct supplement does not establish frozen PASS.\",\n    \"Conflicting report destinations recorded verbatim; honored the explicit only-own-folder boundary.\"\n  ],\n  \"artifact_paths\": [\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/Draft03/report.md\"\n  ],\n  \"scratch\": \"Never created; no clone or cleanup residue.\"\n}",
+   "note": null
+  },
+  {
+   "name": "Draft04",
+   "agent": "scribe",
+   "output": "{\n  \"behavior\": \"Drafted bounded source-admission Gate using directly opened local S150\u2013S152 material; no execution evidence invented.\",\n  \"gates\": \"S150/S151 admitted for bounded source claims. S152 admitted as code inspection, rejected as proof of executed relocation or C3=PASS. Frozen C1 failure disclosed; supplement distinguished.\",\n  \"touched_surfaces\": [\n    \".ufo/waves/round-64/w1/Draft04/report.md\",\n    \".ufo/waves/round-64/w1/Draft04.md\"\n  ],\n  \"findings\": [\n    \"Frozen S152 description says probe output; current source row identifies counter source. These are not interchangeable evidence.\",\n    \"Existing knowledge entry lacks a literal ## Gate section; draft provided for L1 integration only.\",\n    \"Counter expected-path arithmetic discrepancy recorded without claiming an executed verdict.\"\n  ],\n  \"commands\": \"gzip -cd /usr/share/man/man1/realpath.1.gz and pacman -Q python coreutils gzip completed successfully; outputs recorded in report.\",\n  \"out_of_scope\": \"No runtime probes, production edits, frozen-input edits, package transactions, network, Git/JJ mutations, or canonical judgment. No scratch or clone created; no tools installed.\",\n  \"artifact_paths\": [\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/Draft04/report.md\",\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/Draft04.md\"\n  ]\n}",
+   "note": null
+  },
+  {
+   "name": "Draft05",
+   "agent": "scribe",
+   "output": "{\n  \"behavior\": \"Mined inherited E12/E13 double-identity fixture mistake and source-observed shared-tag repair in distinct supplement.\",\n  \"gates\": \"Frozen C1 failure preserved; no supplement pass or production readiness asserted. No runtime probes rerun.\",\n  \"touched_surfaces\": [\n    \".ufo/waves/round-64/w1/Draft05/report.md\",\n    \".ufo/waves/round-64/w1/Draft05.md\"\n  ],\n  \"out_of_scope\": [\n    \"Production integration\",\n    \"Frozen instrument modifications\",\n    \"Canonical closure judgment\"\n  ],\n  \"findings\": [\n    \"Inherited full baseline records E12/E13 failures and BATTERY=FAIL.\",\n    \"Source diff shows supplement changes only E12/E13 to reuse one tag per fixture.\",\n    \"Inspected frozen claims and battery match bf40d99bda9eefdad3ed6276da077cfb24ba82f1.\",\n    \"Conflicting report-path instructions recorded verbatim; required trailer points to folder report.\"\n  ],\n  \"artifact_paths\": [\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/Draft05/report.md\",\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/Draft05.md\"\n  ],\n  \"cleanup\": \"Scratch absent; no clone created; no tool installs or updates.\"\n}",
+   "note": null
+  },
+  {
+   "name": "Draft06",
+   "agent": "scribe",
+   "output": "{\n  \"behavior\": \"Completed static claim erratum; enumerated eight arithmetic/token/provenance findings without repairing frozen inputs.\",\n  \"gates\": \"Existing frozen C1 baseline reports BATTERY=FAIL; no new executions or closure verdicts claimed. Supplement remains distinct from frozen instrument.\",\n  \"touched_surfaces\": [\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/Draft06.md\"\n  ],\n  \"findings\": [\n    \"Instrument prose says 29 defects/44 total versus actual 28 defects/43 total.\",\n    \"E12 and E13 independently generate filename/index suffixes, invalidating benign-fixture attribution.\",\n    \"Literal right-token boundary permits dotted continuations.\",\n    \"Strike-only normalization does not establish URL/code-span rejection.\",\n    \"Named-limit character classes contain corrupted [coeff] tokens.\",\n    \"Seven added C2 selftests are not one-to-one with six survivor classes.\",\n    \"Legs-only and full-before receipts differ in expected gate sets.\"\n  ],\n  \"out_of_scope\": \"No product changes, runtime probes, installs, network, git/jj mutations, canonical judgment, or scratch creation. Frozen commit identity supplied, not independently authenticated.\",\n  \"conflicts\": \"Report-folder restriction conflicts with explicit Report trailer; report records both verbatim and uses the later trailer path.\",\n  \"artifact_paths\": [\n    \".ufo/waves/round-64/w1/Draft06.md\"\n  ]\n}",
+   "note": null
+  },
+  {
+   "name": "Draft07",
+   "agent": "scribe",
+   "output": "{\n  \"behavior\": \"Mapped round63 routed defects 1\u20134 to observed round64 receipts and remaining provenance/execution gaps.\",\n  \"gates\": \"No gates rerun. Frozen C1 fixture failure retained; supplement and candidate not treated as production success. Dispatch contracts not promoted to execution evidence.\",\n  \"findings\": [\n    \"Sibling G04/G05 receipt exists with 2/2 and exit=0 per sibling; command/digest/revision provenance remains incomplete.\",\n    \"Historical 5/5 reconciled to exact round63 final 8/8 receipt; not substituted for round64 execution.\",\n    \"64-seat dispatch and attack routing observed; settled attack receipts remain necessary for closure.\",\n    \"Durable historical compatibility receipt opened; deleted scratch origin is not evidence.\"\n  ],\n  \"touched_surfaces\": [\n    \".ufo/waves/round-64/w1/Draft07.md\",\n    \".ufo/waves/round-64/w1/Draft07/report.md\"\n  ],\n  \"out_of_scope\": [\n    \"Product changes\",\n    \"Counter execution\",\n    \"Independent commit verification\",\n    \"Outside non-author closure\"\n  ],\n  \"artifact_paths\": [\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/Draft07.md\",\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/Draft07/report.md\"\n  ],\n  \"tools_installed\": [],\n  \"scratch\": \"None created; no live clone.\"\n}",
+   "note": null
+  },
+  {
+   "name": "Draft08",
+   "agent": "scribe",
+   "output": "{\n  \"behavior\": \"Assessed all four latest considerthese proposals against implementation source and recorded uptake. Recommend exactly CT-20261026-4: independent CJK quote spot-check per review, advisory carry only.\",\n  \"gates\": \"No independent closure or measured improvement claimed. Frozen C1 failure preserved; post-freeze supplement distinguished. No runtime, probe, test, network, install or git/jj operation executed.\",\n  \"touched_surfaces\": [\n    \".ufo/waves/round-64/w1/Draft08/report.md\",\n    \".ufo/waves/round-64/w1/Draft08.md\"\n  ],\n  \"out_of_scope\": [\n    \"Production changes\",\n    \"Performing outside independent review\",\n    \"Claims/counter modifications\",\n    \"Judging or integration\"\n  ],\n  \"findings\": [\n    \"Stable ids, weakness streaks and verdict gaps have implementation evidence; positional-id weakness does not make proposal 1 unimplemented.\",\n    \"Proposal 4 remains carried, not fulfilled by lane-dispatched checks; no later adoption declaration found in scoped search.\",\n    \"Conflicting report-path instructions recorded verbatim; requested trailer points to substantive exclusive-folder report.\",\n    \"No scratch directory or clone created.\"\n  ],\n  \"artifact_paths\": [\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/Draft08/report.md\",\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/Draft08.md\"\n  ]\n}",
+   "note": null
+  },
+  {
+   "name": "Draft09",
+   "agent": "scribe",
+   "output": "{\n  \"behavior\": \"Drafted an extractable index-rule-v3 knowledge entry covering the exact frozen contract, explicitly separating normative requirements from observed receipt/source evidence.\",\n  \"gates\": \"No execution or closure PASS claimed. Frozen before BATTERY=FAIL preserved; E12/E13 fixture mismatch and post-freeze supplement distinction documented.\",\n  \"touched_surfaces\": [\n    \".ufo/waves/round-64/w1/Draft09/report.md\",\n    \".ufo/waves/round-64/w1/Draft09.md\"\n  ],\n  \"out_of_scope\": [\n    \"Production integration\",\n    \"Frozen instrument edits\",\n    \"Fresh probes or verification\",\n    \"Claim admission\"\n  ],\n  \"findings\": [\n    \"Full .md filename, not stem, is required for forward matching.\",\n    \"Contract does not specify blanket removal of URL/code-span mentions.\",\n    \"Supplemental success cannot satisfy the frozen C1 kill rule.\",\n    \"Conflicting report-path instructions quoted verbatim for canonical judgment.\"\n  ],\n  \"execution\": \"No commands, probes, runtime invocations, installs, clones, or scratch artifacts created.\",\n  \"artifact_paths\": [\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/Draft09/report.md\",\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/Draft09.md\"\n  ]\n}",
+   "note": null
+  },
+  {
+   "name": "Draft10",
+   "agent": "scribe",
+   "output": "{\n  \"behavior\": \"Completed draft-only SOURCES contract/schema review with registry block and conditional Search log note.\",\n  \"gates\": \"No commands, probes, tests, or validators executed; no execution outcomes claimed.\",\n  \"findings\": [\n    \"S150\u2013S153 already exist; appending them again would duplicate IDs.\",\n    \"Local code/docs/own-work kinds and scoped tiers fit the eleven-column contract.\",\n    \"S153 rejection includes reason and flip but needs snapshot revision/digest binding.\",\n    \"S152 counter source is distinct from frozen C3's proposed probe output.\",\n    \"No Round64 Search log entry found in the inspected Search log.\",\n    \"Frozen C1 failure remains distinct from the post-freeze supplement.\"\n  ],\n  \"touched_surfaces\": [\n    \".ufo/waves/round-64/w1/Draft10/report.md\",\n    \".ufo/waves/round-64/w1/Draft10.md\"\n  ],\n  \"out_of_scope\": \"Production integration, frozen edits, runtime execution, non-author closure, commits and pushes.\",\n  \"artifacts\": [\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/Draft10/report.md\",\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/Draft10.md\"\n  ],\n  \"cleanup\": \"No scratch or clone created. No tools installed.\"\n}",
+   "note": null
+  },
+  {
+   "name": "Draft11",
+   "agent": "scribe",
+   "output": "{\n  \"behavior\": \"Inspected all four SHONEN boxes; concrete author-assertion evidence exists, but all remain [~]. No promotion or non-author closure attested.\",\n  \"gates\": \"Read-only evidence inspection; no commands, probes, tests or counters executed. Historical receipt exits explicitly attributed. No installations.\",\n  \"touched_surfaces\": [\n    \".ufo/waves/round-64/w1/Draft11/report.md\",\n    \".ufo/waves/round-64/w1/Draft11.md\"\n  ],\n  \"findings\": [\n    \"Round-25 cited measurement records DRIFT, not universal cleanliness.\",\n    \"Round-9 LOG evidence-commit token remains LOGPEND9, not a resolved hash.\",\n    \"Frozen C1 mismatch remains disclosed frozen failure; post-freeze supplement cannot replace its kill rule.\",\n    \"Conflicting report locations recorded verbatim; detailed report and trailer summary provided.\"\n  ],\n  \"out_of_scope\": [\n    \"Promotion attestation\",\n    \"Canonical judgment and integration\",\n    \"Fresh executable conformance\",\n    \"Product or frozen-input edits\"\n  ],\n  \"scratch\": \"No scratch or clone created; none remains.\",\n  \"artifact_paths\": [\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/Draft11/report.md\",\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/Draft11.md\"\n  ]\n}",
+   "note": null
+  },
+  {
+   "name": "Draft12",
+   "agent": "scribe",
+   "output": "{\n  \"behavior\": \"Reviewed inherited round64 commit lineage and separated frozen defects from unfinished closure; no behavioral reruns.\",\n  \"gates\": {\n    \"frozen_integrity\": \"Seven digest prefixes match; no scoped differences from bf40d99 at inspection.\",\n    \"execution\": \"Static read-only commands only; no tests/counters/checkers invoked.\",\n    \"authorization\": \"No production edits, git mutations, installs, network, dispatch or scratch creation.\"\n  },\n  \"findings\": [\n    \"Frozen C1 E12/E13 mismatch remains; supplement cannot replace frozen failure.\",\n    \"Frozen C3 relocation arithmetic disagrees with expected path and enumeration omits c2-mutrun.py.\",\n    \"bf40d99 audit R5 checks substituted round63 targets, not original round64 instruments.\",\n    \"34cbd84 production G02 changes are distinct from nonproduction ref-preflight candidate.\",\n    \"After-receipts, outside source admission and final closure dispositions are not established by this inherited review.\"\n  ],\n  \"touched_surfaces\": [\n    \".ufo/waves/round-64/w1/Draft12/report.md\",\n    \".ufo/waves/round-64/w1/Draft12.md\"\n  ],\n  \"out_of_scope\": [\n    \"Production integration\",\n    \"Canonical judgment\",\n    \"Behavioral execution\",\n    \"Outside non-author closure\"\n  ],\n  \"artifact_paths\": [\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/Draft12/report.md\",\n    \"/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-64/w1/Draft12.md\"\n  ]\n}",
+   "note": null
+  },
+  {
+   "name": "Recon01",
+   "agent": "scout",
+   "output": "{\n  \"report\": \".ufo/waves/round-64/w1/Recon01.md\",\n  \"findings\": [\n    \"Located and opened Python 3.14.8 installed pathlib docstrings/source at /usr/lib/python3.14/pathlib/__init__.py.\",\n    \"PurePath.parents documents logical parents; indexing removes components positionally (lines 49\u201372, 392\u2013396).\",\n    \"Path.resolve defaults strict=False and delegates to os.path.realpath (lines 932\u2013938).\",\n    \"S150 accurately labels this source code, not a standalone reference manual.\"\n  ],\n  \"confidence\": \"high for opened source semantics\",\n  \"remaining_unknowns\": [\n    \"No standalone pathlib manual located within searched installation locations; absence elsewhere is unproven.\"\n  ],\n  \"constraints\": \"No network, installs, production edits, clones, scratch artifacts, or verification runs. LSP device unavailable; direct source opening used.\"\n}",
+   "note": null
+  },
+  {
+   "name": "Recon02",
+   "agent": "scout",
+   "output": "{\n  \"findings\": \"Installed GNU coreutils 9.12 man page states -e requires all path components to exist. Installed Info paragraph: \u201cFail if the named file does not exist. A trailing slash requires that the name resolve to a directory.\u201d Both documentation commands exited 0.\",\n  \"caveat\": \"Unqualified realpath is a shell builtin reporting 0.8.0; /usr/bin/realpath reports GNU coreutils 9.12. Existence does not establish intended-file identity.\",\n  \"confidence\": \"high\",\n  \"report\": \".ufo/waves/round-64/w1/Recon02.md\",\n  \"evidence\": \".ufo/waves/round-64/w1/Recon02/report.md\",\n  \"remaining_unknowns\": \"Behavior not probed; no claim closure assessed.\",\n  \"cleanup\": \"No scratch or clone created; no installations or production edits.\"\n}",
+   "note": null
+  },
+  {
+   "name": "Recon03",
+   "agent": "scout",
+   "output": "{\n  \"report\": \".ufo/waves/round-64/w1/Recon03.md\",\n  \"evidence_report\": \".ufo/waves/round-64/w1/Recon03/report.md\",\n  \"findings\": [\n    \"Register slice contains 24 rows: 20 payload-absent candidates plus four never-checked rows; summary count 20 is incomplete.\",\n    \"Concrete namespace collision: campaign S077 and staged S082 identify PRISMA-S, while held lane S082 identifies AVeriTeC.\",\n    \"Merge acceptance is staging metadata, not adoption clearance; no adoption performed.\",\n    \"Historical round59 offline split is 14 absent/10 unverifiable; no fresh source adjudication claimed.\"\n  ],\n  \"confidence\": \"High for documentary findings\",\n  \"unknowns\": [\n    \"Current-origin quote truth\",\n    \"Exhaustive namespace collision census\",\n    \"Complete document-bound campaign/package mapping\"\n  ],\n  \"probes\": \"None required or run\",\n  \"tools_installed\": \"None\",\n  \"scratch\": \"No scratch tree or clone created\",\n  \"closure\": \"Advisory only; frozen C1 failure preserved, supplement distinguished, candidate not represented as production.\"\n}",
+   "note": null
+  },
+  {
+   "name": "Recon04",
+   "agent": "scout",
+   "output": "{\n  \"seat\": \"Recon04\",\n  \"findings\": {\n    \"lane_rows\": 153,\n    \"package_rows\": 114,\n    \"id_collisions\": 72,\n    \"exact_id_set\": \"S082\u2013S153 inclusive\",\n    \"unique_source_cell_url_collisions\": 53,\n    \"same_id_shared_url\": [\n      \"S100\",\n      \"S101\",\n      \"S102\",\n      \"S103\"\n    ],\n    \"confidence\": \"High for recorded input bytes; URL equivalence and admission unassessed\"\n  },\n  \"report\": \".ufo/waves/round-64/w1/Recon04.md\",\n  \"detailed_report\": \".ufo/waves/round-64/w1/Recon04/report.md\",\n  \"exact_lists\": \".ufo/waves/round-64/w1/Recon04/evidence.json\",\n  \"execution\": \"Bounded extraction exit 0; stderr empty; Python 3.14.8; no installs or scratch created\",\n  \"limits\": \"Advisory only; historical 64-collision receipt is not current. No frozen C1 PASS claimed; no production edits.\"\n}",
+   "note": null
+  },
+  {
+   "name": "Recon05",
+   "agent": "scout",
+   "output": "{\n  \"report\": \".ufo/waves/round-64/w1/Recon05.md\",\n  \"findings\": \"Prior coverage separates root computation/existence from writer confinement. Direct precursor: round-63-attempt2 Mistakes row 3. Writer safety: derived-output-safety-r61 (S134\u2013S136); all-component resolution: openat2-resolve-r62 (S138\u2013S140); canonicalization/policy distinction: S044\u2013S045. Current root entry S150\u2013S152 does not establish repository identity or prevent TOCTOU.\",\n  \"confidence\": \"High for documentary overlap; no behavioral revalidation.\",\n  \"execution\": \"No probes, installs, network, mutations, clones, or scratch artifacts.\"\n}",
+   "note": null
+  },
+  {
+   "name": "Recon06",
+   "agent": "scout",
+   "output": "{\n  \"report\": \".ufo/waves/round-64/w1/Recon06.md\",\n  \"evidence_report\": \".ufo/waves/round-64/w1/Recon06/report.md\",\n  \"findings\": [\n    \"Round64 expected-path arithmetic mistake is recorded as uncaught but not yet reflected in QUALITY/SKILL.\",\n    \"E12/E13 demonstrate missed application of existing positive-control criteria 115/119; frozen failure cannot be replaced by supplement success.\",\n    \"Newest proposal ledger already marks three proposals implemented; independent CJK review remains outside-lane.\",\n    \"No canonical operator-* lesson files were located; no unrecorded teaching is inferred.\"\n  ],\n  \"confidence\": \"High for documentary observations; final live-round integration remains unknown.\",\n  \"execution\": \"No probes required or run; no installs, mutations, network, scratch, or clones. LSP device unavailable.\",\n  \"closure\": \"Advisory only; not outside non-author closure.\"\n}",
+   "note": null
+  },
+  {
+   "name": "ConnectScope",
+   "agent": "connector",
+   "output": "{\n  \"report\": \".ufo/waves/round-64/w1/ConnectScope.md\",\n  \"evidence\": \".ufo/waves/round-64/w1/ConnectScope/report.md\",\n  \"affected_axes\": [\n    \"operability\",\n    \"calibration\",\n    \"depth\"\n  ],\n  \"proposed_move\": \"One append-only claim-to-evidence crosswalk separating frozen predicates, post-freeze supplements, and candidate observations using existing chousa support-state rules.\",\n  \"risks\": [\n    \"Supplemental or candidate results must never inherit frozen closure status.\",\n    \"Generic testing craft remains contested adjacent scope; orchestration and filesystem cleanup authority remain outside chousa.\",\n    \"Cached Counter04 reports FAULT on stderr, contradicting frozen stdout requirement; requires L1 exact-contract review.\"\n  ],\n  \"verification\": \"Read local contracts, province declarations, fixtures and current-round cached reports; sha256sum of eight artifacts exited 0. No runtime probes, tests or closure judgments performed. Frozen E12/E13 failure retained honestly.\",\n  \"cleanup\": \"No scratch or clone created; no installations, production edits, sibling edits, or git/jj mutations.\"\n}",
+   "note": null
+  },
+  {
+   "name": "ConnectClaims",
+   "agent": "connector",
+   "output": "{\n  \"report\": \".ufo/waves/round-64/w1/ConnectClaims/report.md\",\n  \"trailer\": \".ufo/waves/round-64/w1/ConnectClaims.md\",\n  \"proposed_move\": \"Use a non-transitive closure dependency table separating frozen results, supplemental behavior, source admission, and external closure authority, with actual measured-byte and child-receipt bindings.\",\n  \"affected_axes\": [\n    \"calibration\",\n    \"sourced depth\",\n    \"operability evidence integrity\"\n  ],\n  \"key_risks\": [\n    \"Frozen C1 failure cannot become a supplemental pass.\",\n    \"Source-supported technical content does not validate C3's defective relocation oracle.\",\n    \"Coordinator exit 0 and a pre-run master revision do not prove passing child results or stable measured bytes.\",\n    \"Lane-authored wave evidence cannot replace external non-author closure.\"\n  ],\n  \"verification\": \"Static local evidence walk only; no runtime probes or checks executed.\",\n  \"cleanup\": \"No scratch or clones created; no installations or production edits.\"\n}",
+   "note": null
+  }
+ ]
+}

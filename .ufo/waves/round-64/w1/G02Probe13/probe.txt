@@ -1,0 +1,11 @@
+# G02 --work regular-file refusal fixture
+
+Command:
+```sh
+mkdir -p /fast/scratch/hyaku/chousa-r64/G02Probe13
+cd /fast/scratch/hyaku/chousa-r64/G02Probe13
+printf fixture > work-file
+python3 -B /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round64/controls/ref-preflight-v3.py --root /fast/scratch/hyaku/chousa-r64/G02Probe13 --work /fast/scratch/hyaku/chousa-r64/G02Probe13/work-file
+```
+
+Fixture: `--root` is an existing directory; `--work` is an existing regular file containing `fixture`. Probe ran 2026-10-30. Captured result: exit 2; stdout empty; stderr `lane-preflight: --work /fast/scratch/hyaku/chousa-r64/G02Probe13/work-file is not a directory\n`.

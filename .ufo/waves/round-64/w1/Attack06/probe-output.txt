@@ -1,0 +1,159 @@
+PYTHON 3.14.8 (main, Oct  2 2026, 10:23:31) [GCC 16.2.1 20260810]
+BYTES corpus/evidence/round64/claims.md bab186919f4518f3662c31661d1e2060b4f9f3d186b33d184c365a3f82d7cfc0 freeze_show_exit 0 same_as_freeze True
+BYTES corpus/evidence/round64/c1-battery-v3.py 4b3f0b658bcd3bb640cd2e6e56a28a91a72d5352f2610887db01e636fc039fe2 freeze_show_exit 0 same_as_freeze True
+BYTES corpus/evidence/round64/c1-battery-supplement.py a7057ae33ac958f060a25ea325537bec7bed728e7ea2dad3f3a961e715fc33f1 freeze_show_exit 128 same_as_freeze absent-at-freeze
+BYTES corpus/evidence/round64/controls/ref-preflight-v3.py 0b4da0d2128e23b4feeb82bb179ec6a89277a1f0a0aa1c7115e3ae38966f185e freeze_show_exit 128 same_as_freeze absent-at-freeze
+BYTES tools/lane-preflight.py 3d792f0961434ccd76ef87ccb0b2dcccc022f6f84d958dbc4e35e6f4c260a89d freeze_show_exit 0 same_as_freeze False
+FIXTURE ascii-phantom-control {"filename": "ok.md", "readme": "- `knowledge/ok.md`\n- `knowledge/gone.md`\n"}
+COMMAND ["/usr/bin/python3", "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round64/controls/ref-preflight-v3.py", "--root", "/fast/scratch/hyaku/chousa-r64/Attack06/ascii-phantom-control", "--only", "G02", "--work", "/fast/scratch/hyaku/chousa-r64/Attack06/ascii-phantom-control-work"]
+EXIT 1
+STDOUT GATE G01 census SKIP
+GATE G02 knowledge-index FAIL 1 index rows name no knowledge file: knowledge/gone.md (no such file)
+GATE G03 lesson-gate SKIP
+GATE G04 shonen-pointers SKIP
+GATE G05 scorecard-paths SKIP
+GATE G06 freeze-selftest SKIP
+GATE G07 assimilate-selftest SKIP
+GATE G08 gate-selftest SKIP
+PREFLIGHT=0/1 FAILED=G02 ENV=none SKIPPED=G01,G03,G04,G05,G06,G07,G08
+STDERR 
+COMMAND ["/usr/bin/python3", "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/lane-preflight.py", "--root", "/fast/scratch/hyaku/chousa-r64/Attack06/ascii-phantom-control", "--only", "G02", "--work", "/fast/scratch/hyaku/chousa-r64/Attack06/ascii-phantom-control-work"]
+EXIT 1
+STDOUT GATE G01 census SKIP
+GATE G02 knowledge-index FAIL 1 index rows name no knowledge file: knowledge/gone.md (no regular .md file)
+GATE G03 lesson-gate SKIP
+GATE G04 shonen-pointers SKIP
+GATE G05 scorecard-paths SKIP
+GATE G06 freeze-selftest SKIP
+GATE G07 assimilate-selftest SKIP
+GATE G08 gate-selftest SKIP
+PREFLIGHT=0/1 FAILED=G02 ENV=none SKIPPED=G01,G03,G04,G05,G06,G07,G08
+STDERR 
+FIXTURE unicode-phantom-nfc {"filename": "ok.md", "readme": "- `knowledge/ok.md`\n- `knowledge/caf\u00e9.md`\n"}
+COMMAND ["/usr/bin/python3", "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round64/controls/ref-preflight-v3.py", "--root", "/fast/scratch/hyaku/chousa-r64/Attack06/unicode-phantom-nfc", "--only", "G02", "--work", "/fast/scratch/hyaku/chousa-r64/Attack06/unicode-phantom-nfc-work"]
+EXIT 0
+STDOUT GATE G01 census SKIP
+GATE G02 knowledge-index PASS 1 entries indexed
+GATE G03 lesson-gate SKIP
+GATE G04 shonen-pointers SKIP
+GATE G05 scorecard-paths SKIP
+GATE G06 freeze-selftest SKIP
+GATE G07 assimilate-selftest SKIP
+GATE G08 gate-selftest SKIP
+PREFLIGHT=1/1 FAILED=none ENV=none SKIPPED=G01,G03,G04,G05,G06,G07,G08
+STDERR 
+COMMAND ["/usr/bin/python3", "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/lane-preflight.py", "--root", "/fast/scratch/hyaku/chousa-r64/Attack06/unicode-phantom-nfc", "--only", "G02", "--work", "/fast/scratch/hyaku/chousa-r64/Attack06/unicode-phantom-nfc-work"]
+EXIT 1
+STDOUT GATE G01 census SKIP
+GATE G02 knowledge-index FAIL 1 index rows name no knowledge file: knowledge/café.md (no regular .md file)
+GATE G03 lesson-gate SKIP
+GATE G04 shonen-pointers SKIP
+GATE G05 scorecard-paths SKIP
+GATE G06 freeze-selftest SKIP
+GATE G07 assimilate-selftest SKIP
+GATE G08 gate-selftest SKIP
+PREFLIGHT=0/1 FAILED=G02 ENV=none SKIPPED=G01,G03,G04,G05,G06,G07,G08
+STDERR 
+FIXTURE unicode-phantom-nfd {"filename": "ok.md", "readme": "- `knowledge/ok.md`\n- `knowledge/cafe\u0301.md`\n"}
+COMMAND ["/usr/bin/python3", "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round64/controls/ref-preflight-v3.py", "--root", "/fast/scratch/hyaku/chousa-r64/Attack06/unicode-phantom-nfd", "--only", "G02", "--work", "/fast/scratch/hyaku/chousa-r64/Attack06/unicode-phantom-nfd-work"]
+EXIT 0
+STDOUT GATE G01 census SKIP
+GATE G02 knowledge-index PASS 1 entries indexed
+GATE G03 lesson-gate SKIP
+GATE G04 shonen-pointers SKIP
+GATE G05 scorecard-paths SKIP
+GATE G06 freeze-selftest SKIP
+GATE G07 assimilate-selftest SKIP
+GATE G08 gate-selftest SKIP
+PREFLIGHT=1/1 FAILED=none ENV=none SKIPPED=G01,G03,G04,G05,G06,G07,G08
+STDERR 
+COMMAND ["/usr/bin/python3", "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/lane-preflight.py", "--root", "/fast/scratch/hyaku/chousa-r64/Attack06/unicode-phantom-nfd", "--only", "G02", "--work", "/fast/scratch/hyaku/chousa-r64/Attack06/unicode-phantom-nfd-work"]
+EXIT 1
+STDOUT GATE G01 census SKIP
+GATE G02 knowledge-index FAIL 1 index rows name no knowledge file: knowledge/café.md (no regular .md file)
+GATE G03 lesson-gate SKIP
+GATE G04 shonen-pointers SKIP
+GATE G05 scorecard-paths SKIP
+GATE G06 freeze-selftest SKIP
+GATE G07 assimilate-selftest SKIP
+GATE G08 gate-selftest SKIP
+PREFLIGHT=0/1 FAILED=G02 ENV=none SKIPPED=G01,G03,G04,G05,G06,G07,G08
+STDERR 
+FIXTURE nested-unicode-phantom {"filename": "ok.md", "readme": "- `knowledge/ok.md`\n- `knowledge/sub/caf\u00e9.md`\n"}
+COMMAND ["/usr/bin/python3", "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round64/controls/ref-preflight-v3.py", "--root", "/fast/scratch/hyaku/chousa-r64/Attack06/nested-unicode-phantom", "--only", "G02", "--work", "/fast/scratch/hyaku/chousa-r64/Attack06/nested-unicode-phantom-work"]
+EXIT 0
+STDOUT GATE G01 census SKIP
+GATE G02 knowledge-index PASS 1 entries indexed
+GATE G03 lesson-gate SKIP
+GATE G04 shonen-pointers SKIP
+GATE G05 scorecard-paths SKIP
+GATE G06 freeze-selftest SKIP
+GATE G07 assimilate-selftest SKIP
+GATE G08 gate-selftest SKIP
+PREFLIGHT=1/1 FAILED=none ENV=none SKIPPED=G01,G03,G04,G05,G06,G07,G08
+STDERR 
+COMMAND ["/usr/bin/python3", "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/lane-preflight.py", "--root", "/fast/scratch/hyaku/chousa-r64/Attack06/nested-unicode-phantom", "--only", "G02", "--work", "/fast/scratch/hyaku/chousa-r64/Attack06/nested-unicode-phantom-work"]
+EXIT 1
+STDOUT GATE G01 census SKIP
+GATE G02 knowledge-index FAIL 1 index rows name no knowledge file: knowledge/sub/café.md (no regular .md file)
+GATE G03 lesson-gate SKIP
+GATE G04 shonen-pointers SKIP
+GATE G05 scorecard-paths SKIP
+GATE G06 freeze-selftest SKIP
+GATE G07 assimilate-selftest SKIP
+GATE G08 gate-selftest SKIP
+PREFLIGHT=0/1 FAILED=G02 ENV=none SKIPPED=G01,G03,G04,G05,G06,G07,G08
+STDERR 
+FIXTURE nfc-file-nfd-index {"filename": "caf\u00e9.md", "readme": "- `knowledge/cafe\u0301.md`\n"}
+COMMAND ["/usr/bin/python3", "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round64/controls/ref-preflight-v3.py", "--root", "/fast/scratch/hyaku/chousa-r64/Attack06/nfc-file-nfd-index", "--only", "G02", "--work", "/fast/scratch/hyaku/chousa-r64/Attack06/nfc-file-nfd-index-work"]
+EXIT 0
+STDOUT GATE G01 census SKIP
+GATE G02 knowledge-index PASS 1 entries indexed
+GATE G03 lesson-gate SKIP
+GATE G04 shonen-pointers SKIP
+GATE G05 scorecard-paths SKIP
+GATE G06 freeze-selftest SKIP
+GATE G07 assimilate-selftest SKIP
+GATE G08 gate-selftest SKIP
+PREFLIGHT=1/1 FAILED=none ENV=none SKIPPED=G01,G03,G04,G05,G06,G07,G08
+STDERR 
+COMMAND ["/usr/bin/python3", "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/lane-preflight.py", "--root", "/fast/scratch/hyaku/chousa-r64/Attack06/nfc-file-nfd-index", "--only", "G02", "--work", "/fast/scratch/hyaku/chousa-r64/Attack06/nfc-file-nfd-index-work"]
+EXIT 0
+STDOUT GATE G01 census SKIP
+GATE G02 knowledge-index PASS 1 entries indexed
+GATE G03 lesson-gate SKIP
+GATE G04 shonen-pointers SKIP
+GATE G05 scorecard-paths SKIP
+GATE G06 freeze-selftest SKIP
+GATE G07 assimilate-selftest SKIP
+GATE G08 gate-selftest SKIP
+PREFLIGHT=1/1 FAILED=none ENV=none SKIPPED=G01,G03,G04,G05,G06,G07,G08
+STDERR 
+FIXTURE nfd-file-nfc-index {"filename": "cafe\u0301.md", "readme": "- `knowledge/caf\u00e9.md`\n"}
+COMMAND ["/usr/bin/python3", "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round64/controls/ref-preflight-v3.py", "--root", "/fast/scratch/hyaku/chousa-r64/Attack06/nfd-file-nfc-index", "--only", "G02", "--work", "/fast/scratch/hyaku/chousa-r64/Attack06/nfd-file-nfc-index-work"]
+EXIT 0
+STDOUT GATE G01 census SKIP
+GATE G02 knowledge-index PASS 1 entries indexed
+GATE G03 lesson-gate SKIP
+GATE G04 shonen-pointers SKIP
+GATE G05 scorecard-paths SKIP
+GATE G06 freeze-selftest SKIP
+GATE G07 assimilate-selftest SKIP
+GATE G08 gate-selftest SKIP
+PREFLIGHT=1/1 FAILED=none ENV=none SKIPPED=G01,G03,G04,G05,G06,G07,G08
+STDERR 
+COMMAND ["/usr/bin/python3", "/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/lane-preflight.py", "--root", "/fast/scratch/hyaku/chousa-r64/Attack06/nfd-file-nfc-index", "--only", "G02", "--work", "/fast/scratch/hyaku/chousa-r64/Attack06/nfd-file-nfc-index-work"]
+EXIT 0
+STDOUT GATE G01 census SKIP
+GATE G02 knowledge-index PASS 1 entries indexed
+GATE G03 lesson-gate SKIP
+GATE G04 shonen-pointers SKIP
+GATE G05 scorecard-paths SKIP
+GATE G06 freeze-selftest SKIP
+GATE G07 assimilate-selftest SKIP
+GATE G08 gate-selftest SKIP
+PREFLIGHT=1/1 FAILED=none ENV=none SKIPPED=G01,G03,G04,G05,G06,G07,G08
+STDERR 
+
+DRIVER_EXIT 0
+STDERR 

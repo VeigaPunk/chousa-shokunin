@@ -9,3 +9,12 @@ The frozen claims.md, counters and kill rules remain unchanged. This is not an a
 5. S150 is grounded this attempt in installed Python source (code), not an unlocated documentation package. S152 is the opened frozen counter source, not a successful probe-output row. The entry states these exact limits; neither source substitution proves the frozen C3 target.
 
 No after-verdict, digest, seat observation or claim score is invented by this erratum. Actual run receipts live under controls and the w1 seat folders.
+
+## Wave-confirmed additional discrepancies
+
+6. Counter04's evidence records the forced fault message on stderr. The L1's revision-bound `controls/pre-glob-repair/audit-v2-fault.txt` captures the same command's FAULT on stdout; the installed source prints it without a stderr override. Both receipts are retained as a channel-provenance disagreement, not silently reconciled. No R6 fail-open conclusion rests on the seat's channel label; Counter02's mutation result remains 9/12 independently.
+7. Attack20/21 show the claimed unmutated baseline run is absent from the frozen runner. The runner starts at each patched mutant; prose asserting a baseline control is not that control.
+8. Draft06 records the frozen battery's second summary description as 29 defects and 44 total while its actual table is 28 and 43. The executable summary uses 28/43; the contradictory documentation remains as filed.
+9. The pre-freeze R5 audit's later substitution checks round63 subjects rather than establishing precedence of the round64 instruments (Attack19/Draft12). Its PASS is not evidence that the original round64 precedence statement was true.
+
+These findings are append-only disclosures. No instrument, target or kill rule is changed.

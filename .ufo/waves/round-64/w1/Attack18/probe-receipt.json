@@ -1,0 +1,221 @@
+{
+  "axes": [
+    "startup path accuracy",
+    "complete-tree relocation continuity",
+    "frozen-counter fidelity"
+  ],
+  "python": "3.14.8 (main, Oct  2 2026, 10:23:31) [GCC 16.2.1 20260810]",
+  "byte_checks": [
+    {
+      "file": "corpus/evidence/round64/c1-battery-v3.py",
+      "frozen_sha256": "4b3f0b658bcd3bb640cd2e6e56a28a91a72d5352f2610887db01e636fc039fe2",
+      "working_sha256": "4b3f0b658bcd3bb640cd2e6e56a28a91a72d5352f2610887db01e636fc039fe2",
+      "equal": true
+    },
+    {
+      "file": "corpus/evidence/round64/run-receipts-v3.py",
+      "frozen_sha256": "0f3cfae75f711f17251174a2e123321040c91394497bafe4a64c9148d7c3abd7",
+      "working_sha256": "0f3cfae75f711f17251174a2e123321040c91394497bafe4a64c9148d7c3abd7",
+      "equal": true
+    },
+    {
+      "file": "corpus/evidence/round64/c3-count.py",
+      "frozen_sha256": "465a8c5efbb870f73c7c6306c813c4fe35f4ccaf5a996a56ab71d4da5feec682",
+      "working_sha256": "465a8c5efbb870f73c7c6306c813c4fe35f4ccaf5a996a56ab71d4da5feec682",
+      "equal": true
+    }
+  ],
+  "probes": [
+    {
+      "kind": "frozen-counter-relocation-exact",
+      "command": [
+        "/usr/bin/python",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack18/rel-c1-battery-v3.py/lane-copy/corpus/evidence/round65/c1-battery-v3.py"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "c1-battery-v3: MISSING_LANE_FILE: /fast/scratch/hyaku/chousa-r64/Attack18/rel-c1-battery-v3.py/lane-copy/corpus/SOURCES.md\n",
+      "counter_want": "/fast/scratch/hyaku/chousa-r64/Attack18/rel-c1-battery-v3.py/lane-copy/corpus/evidence/corpus/SOURCES.md",
+      "derived_missing_path": "/fast/scratch/hyaku/chousa-r64/Attack18/rel-c1-battery-v3.py/lane-copy/corpus/SOURCES.md",
+      "frozen_counter_matches": false
+    },
+    {
+      "kind": "frozen-counter-relocation-exact",
+      "command": [
+        "/usr/bin/python",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack18/rel-run-receipts-v3.py/lane-copy/corpus/evidence/round65/run-receipts-v3.py"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "run-receipts-v3: MISSING_LANE_FILE: /fast/scratch/hyaku/chousa-r64/Attack18/rel-run-receipts-v3.py/lane-copy/corpus/SOURCES.md\n",
+      "counter_want": "/fast/scratch/hyaku/chousa-r64/Attack18/rel-run-receipts-v3.py/lane-copy/corpus/evidence/corpus/SOURCES.md",
+      "derived_missing_path": "/fast/scratch/hyaku/chousa-r64/Attack18/rel-run-receipts-v3.py/lane-copy/corpus/SOURCES.md",
+      "frozen_counter_matches": false
+    },
+    {
+      "kind": "frozen-counter-relocation-exact",
+      "command": [
+        "/usr/bin/python",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack18/rel-c3-count.py/lane-copy/corpus/evidence/round65/c3-count.py"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "c3-count: MISSING_LANE_FILE: /fast/scratch/hyaku/chousa-r64/Attack18/rel-c3-count.py/lane-copy/corpus/SOURCES.md\n",
+      "counter_want": "/fast/scratch/hyaku/chousa-r64/Attack18/rel-c3-count.py/lane-copy/corpus/evidence/corpus/SOURCES.md",
+      "derived_missing_path": "/fast/scratch/hyaku/chousa-r64/Attack18/rel-c3-count.py/lane-copy/corpus/SOURCES.md",
+      "frozen_counter_matches": false
+    },
+    {
+      "kind": "complete-relocated-tree-startup",
+      "command": [
+        "/usr/bin/python",
+        "-B",
+        "-c",
+        "import runpy; d=runpy.run_path('/fast/scratch/hyaku/chousa-r64/Attack18/complete/deeper/renamed-lane/corpus/evidence/round64/c1-battery-v3.py',run_name=\"startup_probe\"); print(\"STARTUP_OK LANE=\"+str(d[\"LANE\"]))"
+      ],
+      "exit": 0,
+      "stdout": "STARTUP_OK LANE=/fast/scratch/hyaku/chousa-r64/Attack18/complete/deeper/renamed-lane\n",
+      "stderr": ""
+    },
+    {
+      "kind": "complete-relocated-tree-startup",
+      "command": [
+        "/usr/bin/python",
+        "-B",
+        "-c",
+        "import runpy; d=runpy.run_path('/fast/scratch/hyaku/chousa-r64/Attack18/complete/deeper/renamed-lane/corpus/evidence/round64/run-receipts-v3.py',run_name=\"startup_probe\"); print(\"STARTUP_OK LANE=\"+str(d[\"LANE\"]))"
+      ],
+      "exit": 0,
+      "stdout": "STARTUP_OK LANE=/fast/scratch/hyaku/chousa-r64/Attack18/complete/deeper/renamed-lane\n",
+      "stderr": ""
+    },
+    {
+      "kind": "complete-relocated-tree-startup",
+      "command": [
+        "/usr/bin/python",
+        "-B",
+        "-c",
+        "import runpy; d=runpy.run_path('/fast/scratch/hyaku/chousa-r64/Attack18/complete/deeper/renamed-lane/corpus/evidence/round64/c3-count.py',run_name=\"startup_probe\"); print(\"STARTUP_OK LANE=\"+str(d[\"LANE\"]))"
+      ],
+      "exit": 0,
+      "stdout": "STARTUP_OK LANE=/fast/scratch/hyaku/chousa-r64/Attack18/complete/deeper/renamed-lane\n",
+      "stderr": ""
+    },
+    {
+      "kind": "complete-tree-minus-asserted-file",
+      "missing": "corpus/SOURCES.md",
+      "command": [
+        "/usr/bin/python",
+        "-B",
+        "-c",
+        "import runpy; runpy.run_path('/fast/scratch/hyaku/chousa-r64/Attack18/complete/deeper/renamed-lane/corpus/evidence/round64/c1-battery-v3.py',run_name=\"startup_probe\")"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "c1-battery-v3: MISSING_LANE_FILE: /fast/scratch/hyaku/chousa-r64/Attack18/complete/deeper/renamed-lane/corpus/SOURCES.md\n",
+      "exact_path_named": true
+    },
+    {
+      "kind": "complete-tree-minus-asserted-file",
+      "missing": "corpus/SOURCES.md",
+      "command": [
+        "/usr/bin/python",
+        "-B",
+        "-c",
+        "import runpy; runpy.run_path('/fast/scratch/hyaku/chousa-r64/Attack18/complete/deeper/renamed-lane/corpus/evidence/round64/run-receipts-v3.py',run_name=\"startup_probe\")"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "run-receipts-v3: MISSING_LANE_FILE: /fast/scratch/hyaku/chousa-r64/Attack18/complete/deeper/renamed-lane/corpus/SOURCES.md\n",
+      "exact_path_named": true
+    },
+    {
+      "kind": "complete-tree-minus-asserted-file",
+      "missing": "corpus/SOURCES.md",
+      "command": [
+        "/usr/bin/python",
+        "-B",
+        "-c",
+        "import runpy; runpy.run_path('/fast/scratch/hyaku/chousa-r64/Attack18/complete/deeper/renamed-lane/corpus/evidence/round64/c3-count.py',run_name=\"startup_probe\")"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "c3-count: MISSING_LANE_FILE: /fast/scratch/hyaku/chousa-r64/Attack18/complete/deeper/renamed-lane/corpus/SOURCES.md\n",
+      "exact_path_named": true
+    },
+    {
+      "kind": "complete-tree-minus-asserted-file",
+      "missing": "tools/lane-preflight.py",
+      "command": [
+        "/usr/bin/python",
+        "-B",
+        "-c",
+        "import runpy; runpy.run_path('/fast/scratch/hyaku/chousa-r64/Attack18/complete/deeper/renamed-lane/corpus/evidence/round64/c1-battery-v3.py',run_name=\"startup_probe\")"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "c1-battery-v3: MISSING_LANE_FILE: /fast/scratch/hyaku/chousa-r64/Attack18/complete/deeper/renamed-lane/tools/lane-preflight.py\n",
+      "exact_path_named": true
+    },
+    {
+      "kind": "complete-tree-minus-asserted-file",
+      "missing": "tools/lane-preflight.py",
+      "command": [
+        "/usr/bin/python",
+        "-B",
+        "-c",
+        "import runpy; runpy.run_path('/fast/scratch/hyaku/chousa-r64/Attack18/complete/deeper/renamed-lane/corpus/evidence/round64/run-receipts-v3.py',run_name=\"startup_probe\")"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "run-receipts-v3: MISSING_LANE_FILE: /fast/scratch/hyaku/chousa-r64/Attack18/complete/deeper/renamed-lane/tools/lane-preflight.py\n",
+      "exact_path_named": true
+    },
+    {
+      "kind": "actual-one-directory-deeper-instrument",
+      "command": [
+        "/usr/bin/python",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack18/true-depth-c1-battery-v3.py/lane-copy/corpus/evidence/round64/extra/c1-battery-v3.py"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "c1-battery-v3: MISSING_LANE_FILE: /fast/scratch/hyaku/chousa-r64/Attack18/true-depth-c1-battery-v3.py/lane-copy/corpus/corpus/SOURCES.md\n"
+    },
+    {
+      "kind": "actual-one-directory-deeper-instrument",
+      "command": [
+        "/usr/bin/python",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack18/true-depth-run-receipts-v3.py/lane-copy/corpus/evidence/round64/extra/run-receipts-v3.py"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "run-receipts-v3: MISSING_LANE_FILE: /fast/scratch/hyaku/chousa-r64/Attack18/true-depth-run-receipts-v3.py/lane-copy/corpus/corpus/SOURCES.md\n"
+    },
+    {
+      "kind": "actual-one-directory-deeper-instrument",
+      "command": [
+        "/usr/bin/python",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r64/Attack18/true-depth-c3-count.py/lane-copy/corpus/evidence/round64/extra/c3-count.py"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": "c3-count: MISSING_LANE_FILE: /fast/scratch/hyaku/chousa-r64/Attack18/true-depth-c3-count.py/lane-copy/corpus/corpus/SOURCES.md\n"
+    }
+  ],
+  "archive_extraction_note": "Initial tarfile data-filter extraction rejected an archived absolute symlink; retried with guarded extraction preserving symlinks, refusing writes through external parents.",
+  "archive_command": [
+    "git",
+    "archive",
+    "--format=tar",
+    "bf40d99bda9eefdad3ed6276da077cfb24ba82f1"
+  ],
+  "archive_exit": 0,
+  "archive_bytes": 298045440,
+  "cleanup": "Removed /fast/scratch/hyaku/chousa-r64/Attack18; no live clone created, one git archive export removed."
+}

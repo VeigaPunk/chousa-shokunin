@@ -1,0 +1,11 @@
+{
+  "fixture": "corpus/knowledge/top.md and corpus/knowledge/sub/nested.md; corpus/README.md initially contains top.md nested.md",
+  "invocation": "python3 inline fixture driver importing corpus/evidence/round64/controls/ref-preflight-v3.py and calling g02(root, argparse.Namespace(), os.environ, work)",
+  "observed": ["PASS", "2 entries indexed"],
+  "exit": 0,
+  "control": {
+    "fixture": "same nested files; README indexes only top.md",
+    "observed": ["FAIL", "1 not named in corpus/README.md: nested.md"],
+    "expected": "FAIL because nested.md is absent from the index"
+  }
+}
