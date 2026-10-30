@@ -123,7 +123,7 @@ def g02(root, a, env, work):
                 bad_nodes.append(rel + " (not a regular file)")
                 continue
             if not name.endswith(".md"):
-                if p.relative_to(kd).as_posix() == ".gitkeep":
+                if name == ".gitkeep":
                     continue
                 bad_nodes.append(rel + " (not *.md)")
                 continue
