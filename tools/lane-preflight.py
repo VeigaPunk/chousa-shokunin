@@ -104,7 +104,7 @@ def g03(root, a, env, work):
 def path_words(span: str):
     for w in span.split():
         w = w.lstrip("(").rstrip(";,.)")
-        if not w or w[0] in "<-$" or "*" in w or w.startswith(("http:", "https:")) or "<" in w:
+        if not w or w[0] in "<-$" or "*" in w or "=" in w or w.startswith(("http:", "https:")) or "<" in w:
             continue
         w = re.sub(r":\d+(-\d+)?$", "", w)
         if PATHWORD.search(w):
@@ -115,9 +115,33 @@ def g04(root, a, env, work):
     f = root / "SHONEN.md"
     if not f.is_file():
         return "FAIL", "SHONEN.md absent"
-    words = [w for m in re.finditer(r"`([^`\n]+)`", read(f)) for w in path_words(m.group(1))]
+    words = []
+    for m in re.finditer(r"`([^`\n]+)`", read(f)):
+        for w in path_words(m.group(1)):
+            if "/" in w and not (root / w.split("/", 1)[0]).exists():
+                continue  # first segment names nothing under root: a ratio (caught=18/18), a host (github.com/x), and/or — not a path
+            words.append(w)
     miss = [w for w in words if not (root / w).exists()]
     return ("PASS", f"{len(words)} pointers resolve") if not miss else ("FAIL", f"{len(miss)} unresolved: " + ",".join(miss[:3]))
+
+
+def cap_pointers(cells_text):
+    for m in re.finditer(r"`([^`\n]+)`", cells_text):
+        for tok in m.group(1).split():
+            tok = tok.strip(";,").rstrip(")")
+            if not re.match(r"^(corpus|tools|\.ufo)/[^\s*<>]+$", tok):
+                continue
+            tok = re.sub(r":\d+(-\d+)?$", "", tok).rstrip(".)")
+            for part in brace_expand(tok):
+                yield part
+
+
+def brace_expand(tok):
+    m = re.match(r"^([^{}]*)\{([^{}]*)\}(.*)$", tok)
+    if not m:
+        return [tok]
+    pre, inner, suf = m.groups()
+    return [pre + mem + suf for mem in inner.split(",")]
 
 
 def g05(root, a, env, work):
@@ -132,11 +156,7 @@ def g05(root, a, env, work):
         if on and line.startswith("|"):
             cells = [c.strip() for c in line.strip().strip("|").split("|")]
             if len(cells) >= 4 and cells[0] not in ("Capability", "Name") and not set(cells[0]) <= set("-: "):
-                for m in re.finditer(r"`([^`\n]+)`", cells[2]):
-                    for tok in m.group(1).split():
-                        tok = tok.strip(";,")
-                        if re.match(r"^(corpus|tools|\.ufo)/[^\s*<>]+$", tok):
-                            words.append(tok)
+                words.extend(cap_pointers(cells[2]))
     miss = [w for w in words if not (root / w).exists()]
     return ("PASS", f"{len(words)} capability pointers resolve") if not miss else ("FAIL", f"{len(miss)} unresolved: " + ",".join(miss[:3]))
 

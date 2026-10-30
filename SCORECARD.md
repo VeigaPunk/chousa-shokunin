@@ -3017,6 +3017,7 @@ Learning trends: expansion **improved** (narrowly), quality **unchanged**, disce
 | Capability | What it can now do | Evidence pointer | First-working round |
 |---|---|---|---|
 | Lane preflight | runs the lane's own committed self-checks (census, knowledge index, lesson `## Gate` headings, SHONEN pointers, SCORECARD capability pointers, the freeze-check, assimilate-rows and research-gate selftests) in one command and names the failed gate ids; exits 2 when no gate ran | `python3 corpus/evidence/round63/c1-battery.py --tool tools/lane-preflight.py --fleet <fleet> --work <dir>` (`BATTERY=PASS`); `corpus/evidence/round63/c1-landed-runs.txt`; `corpus/evidence/round63/preflight-full-run-prelanding-copy.txt` | 63 |
+| Claims audit | flags machine-checkable false statements in a frozen claims file from a rule file: seven classes (json-count, section-contains, section-contains-at, git-first-commit, file-kind, verbatim-heading, scope-narrower), `FLAGGED=k/n` exit contract, selftest plus a fixture probe; on the two committed errata'd claims files it flags the six mechanically-checkable erratum statements | `python3 tools/claims-audit.py --claims corpus/evidence/round62/claims.md --audit corpus/evidence/round63/audit/audit-r62.tsv --root .` (`FLAGGED=2/2`); `controls/audit-after.txt`; `corpus/evidence/round63/audit-probe.txt` (`PROBE_FACTS=11/11`) | 63 |
 
 ## Planned — round 64 (not started)
 
@@ -3025,3 +3026,25 @@ Candidates from `corpus/lessons/round-63.md` `## Routed to the next round`: a ze
 ## Planned — round 63 (attempt 2, frozen 2026-10-30)
 
 Attempt 1's routed list, taken as two claims frozen in `corpus/evidence/round63/claims-a2.md`: C1 operability — the wave's falsifier class (zero-gate run, six judge holes, path-keyed forger, 55-line overfit oracle, G04/G05 false positives) closed in `corpus/evidence/round63/c1-battery-v2.py` (29 legs) and in the amended `tools/lane-preflight.py`, measured nine-of-nine exhibits rejected against the frozen battery's nine-of-nine accepted; C2 calibration — `tools/claims-audit.py`, a committed checker that flags the six mechanically-checkable of the eighteen erratum statements (`FLAGGED=2/2` and `4/4`), sourced on rows S146–S148 opened this round (S149 rejected), with the pre-freeze audit of the round's own claims (`FLAGGED=0/4`). No wave: the orchestrator paused new campaign dispatches 2026-10-30 (provider failures); the L2 floor is unmet and the attack items are routed to round 64.
+
+## Round 63 verdict (attempt 2, 2026-10-30) — the wave's falsifier class closed in a v2 battery measured 9 accepted → 9 rejected; a claims-audit checker flags the six machine-checkable erratum statements; no wave dispatched (L2 floor unmet, disclosed)
+
+Claims froze in `corpus/evidence/round63/claims-a2.md` at landing-commit-base `e5166179197b43c77b58d56b89b8e2523aed0dd3` against base `4ece131ca826c646bd28a50802d41bc78d8a9717`. No wave (orchestrator pause, quoted in the claims file); every verdict rests on frozen counters, committed controls and receipts.
+
+| Claim / axis | Before → after | counting command / evidence | tag | verdict |
+|---|---|---|---|---|
+| C1 operability (the attempt-1 wave's routed falsifier class; historical 3/10 observable not moved) | the frozen battery accepts the class 9/9 (`controls/exhibits/exhibit-v1-before.txt`: E01, E08, E09 `BATTERY=PASS` in full; E02–E07 accepted on their legs) → the v2 battery rejects 9/9 (`controls/exhibits/exhibit-v2-after.txt`) while the amended landed tool reads `CLEAN=1/1 DEFECTS=17/17 BENIGN=8/8 ZERO=3/3 BATTERY=PASS` exit 0 in three runs (`controls/c1v2-landed-runs.txt`) and the full preflight prints `PREFLIGHT=8/8` exit 0 (`controls/preflight-full-run-final.txt`); the frozen attempt-1 battery still passes the amended tool ×3 (`controls/c1-on-fixed-tool.txt`); both committed nulls FAIL the v2 battery (`controls/c1v2-nulls-v2.txt`) | `python3 corpus/evidence/round63/c1-battery-v2.py --tool tools/lane-preflight.py --fleet <fleet> --work <dir>`; runner `python3 corpus/evidence/round63/controls/run-exhibit-receipts.py --battery {v1,v2} …` | plumbing | **improved** on the frozen predicate; limits: exhibits are the L1's re-creations of the wave findings (E02–E07 are leg-local probes; E08 falls back to old-rules gates; a forger embedding the amended tool itself stays indistinguishable — the t00 residual) |
+| C2 calibration (no numeric score invented; the move is no-instrument → committed checker) | tool absent at the base (`controls/audit-before.txt`, exit 2) → `FLAGGED=2/2 AUDIT=FAIL` exit 1 on the round-62 claims and `FLAGGED=4/4 AUDIT=FAIL` exit 1 on attempt-1's claims, selftest `AUDIT_SELFTEST=PASS (3 cases)` exit 0, probe `PROBE_FACTS=11/11` exit 0, and the round's own claims pass their pre-freeze audit `FLAGGED=0/4` exit 0 (`controls/audit-after.txt`, `audit-a2-result.txt`) | `python3 tools/claims-audit.py --claims <claims> --audit <rules> --root .`; `python3 tools/claims-audit.py --selftest`; `python3 corpus/evidence/round63/audit-probe.py` | plumbing | **improved** on the frozen predicate; limits: 6 of the 18 erratum statements are machine-checkable, the classes are lexical and line-local, and the rule rows are authored by the same lane that wrote the claims (a reader outranks the checker) |
+
+Sourced claim: C2's entry `corpus/knowledge/self-claim-audit-r63.md` cites S146–S148, opened 2026-10-30 (S149 rejected); the non-author spot-check is asked to re-open admit S147 and reject S149.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** (C1) | 9/9 exhibits rejected, landed tool BATTERY=PASS ×3 + PREFLIGHT=8/8; G04/G05 false positives fixed and pinned as benign legs |
+| calibration | **improved** (C2) | the erratum class has a committed checker with committed detections; the round's own claims were audited pre-freeze |
+| depth | **unchanged** | the new entry states its classes and limits; no existing entry deepened |
+| coverage | **unchanged** | no new province surface; the checker audits the lane's own artifacts |
+| freshness | **unchanged** | no fetch; local pages only |
+| adjacency | **unchanged** | sibling roots were only read (the G04/G05 verification ran the tool read-only on kagi/kake/tameshi); no cross-domain work absorbed |
+
+Learning trends: expansion **improved (narrowly)** (one admitted entry on new ground, three rows opened), quality **improved (narrowly)** (the demonstrated false-positive class fixed and pinned; the falsifier class closed), discernment **unchanged** pending the non-author spot-check named in `corpus/lessons/round-63-attempt2.md` `## Gate`. No numeric axis score changed; one capability row enters (Claims audit).

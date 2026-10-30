@@ -1,0 +1,22 @@
+# C2 after — the four commands of claims-a2.md on the frozen bytes
+$ python3 -B tools/claims-audit.py --claims corpus/evidence/round62/claims.md --audit corpus/evidence/round63/audit/audit-r62.tsv --root .
+FLAG R62-01 json-count line numbers ['2', '1', '64', '25']; .ufo/waves/round-62/w1-spec.json:items holds 66 [erratum round-62 #1: spec holds 66 items]
+FLAG R62-13 section-contains-at S138 not under `## Leads` of corpus/SOURCES.md at 8607de8472 [erratum round-62 #13: at the r62 base the ## Leads bullet is unnumbered]
+FLAGGED=2/2 AUDIT=FAIL
+rc=1
+
+$ python3 -B tools/claims-audit.py --claims corpus/evidence/round63/claims.md --audit corpus/evidence/round63/audit/audit-r63.tsv --root .
+FLAG R63-E1 git-first-commit first added with the claims file in 62876ef901: corpus/evidence/round63/controls/c1-controls.txt,corpus/evidence/round63/controls/run-c1-controls.py [erratum E1: added in the freeze commit itself]
+FLAG R63-E2 file-kind `header` claimed; s143-wrong-file substitutes ['git-log.1.gz', 'gitrevisions.7.gz'] (['man']) [erratum E2: the variant substitutes a man page (.1.gz)]
+FLAG R63-E3 verbatim-heading not found in SCORECARD.md: 'Planned — round 63 (amended before the freeze)' [erratum E3: the heading carries ", 2026-10-28"]
+FLAG R63-E4 scope-narrower lane-wide claim swept only `corpus/knowledge` [erratum E4: the claim's own sweep names corpus/knowledge only]
+FLAGGED=4/4 AUDIT=FAIL
+rc=1
+
+$ python3 -B tools/claims-audit.py --selftest
+AUDIT_SELFTEST=PASS (3 cases)
+rc=0
+
+$ python3 -B corpus/evidence/round63/audit-probe.py (tail)
+PROBE_FACTS=11/11
+rc=0
