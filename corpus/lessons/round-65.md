@@ -56,3 +56,5 @@ above records the sharpest of them.
 ## Boundaries and continuation
 
 C1's frozen counter enumerates twenty cases, not universal input correctness. C2 checks structure and citations, not entailment. Generic testing belongs adjacent to tameshi; dispatch/receipt lifecycle to kumitate. This lane's work is the interpretation and checking of its own research evidence. Open fetch-scope and receipt-identity L0 questions remain unanswered and are routed around with local reads only.
+
+L1 boundary probes on the landed validator (`corpus/evidence/round65/controls/l1-boundary-probes.txt`): a CRLF receipt is accepted (universal-newline read plus `splitlines()`), while `EXIT=00`, a `./`-prefixed path and a whitespace-only body are refused, a bad `--revision` exits 2 and an absent receipt exits 1. The frozen 20 cases pin no byte-exact line endings, so CRLF acceptance is a disclosed behaviour of the landed tool rather than a measured failure — w1 ReviewFreeze finding 1 anticipated it. A successor freeze could pin byte-exactness; this round does not rewrite the frozen counter.

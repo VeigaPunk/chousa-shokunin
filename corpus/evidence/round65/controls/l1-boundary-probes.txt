@@ -1,0 +1,13 @@
+REVISION=9672a2e998bff2b51d18b0df4d835bd3ae2c453f
+EXIT=0
+PROBES=python3 -B tools/receipt-pin.py --receipt FILE --root LANE --revision TIP
+
+ok -> exit=0 out=RECEIPT_PIN=PASS
+crlf -> exit=0 out=RECEIPT_PIN=PASS
+zeropad -> exit=1 out=RECEIPT_PIN=FAIL EXIT header must be the reported child exit, decimal 0..255
+dotpath -> exit=1 out=RECEIPT_PIN=FAIL path must be canonical and repository-relative
+blankbody -> exit=1 out=RECEIPT_PIN=FAIL receipt body must be nonempty
+bad-revision-arg -> exit=2 out=usage: receipt-pin.py [-h] --receipt RECEIPT --root ROOT --revision REVISION
+receipt-pin.py: error: --revision requires a full lowercase 40-hex object id
+absent-receipt -> exit=1 out=RECEIPT_PIN=FAIL [Errno 2] No such file or directory: '/fast/scratch/hyaku/chousa-r65/L1/probe/nonexistent.receipt'
+tmp-hardcode-check: 0 occurrences of /tmp
