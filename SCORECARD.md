@@ -3070,3 +3070,33 @@ Next candidates, not a started round: a pre-freeze positive-control matrix for t
 ## Planned — round65 (frozen before wave)
 
 Exactly two claims frozen at `f99de3bdfaaf9b4c4fa85cc55dd37b9df2ee90fd`: C1 operability (lowest numeric axis, historical3/10), new receipt-header consistency capability; C2 depth, sourced interpretation of object/digest/exit identity versus execution authenticity. Before counters `corpus/evidence/round65/c1-count.py --work DIR` 0/20 exit1 and `c2-count.py` 0/10 exit1; positive reference20/20, always-pass3/20 and always-fail17/20. Round64's positive-matrix/relocation/mutation candidates remain routed, not silently claimed or repaired. This bounded repertoire move avoids another self-oracle continuation while directly fixing closure's receipt self-containment item. No score or capability row is awarded before final measurement.
+
+## Round65 verdict (2026-10-30, attempt 2)
+
+Attempt 1 (ChousaR65) froze both claims at `f99de3bdfaaf9b4c4fa85cc55dd37b9df2ee90fd`, drafted the
+corpus bytes and dispatched wave w1 (64 seats), and died before committing; attempt 2 (ChousaR65a2)
+re-verified the inherited bytes (all four source digests in `source-openings.json` byte-exact),
+implemented `tools/receipt-pin.py`, and landed implementation + corpus at
+`0a85189821322e01db06216b5cb82d2d858c19f0`. Frozen counters/controls byte-unchanged since the freeze
+(`git diff f99de3b 0a851898` over `corpus/evidence/round65` instruments is empty). Final measurement
+at the landed tip: `corpus/evidence/round65/measurement-summary.json`.
+
+| Claim | Before (frozen receipt) | After (measured at `0a851898`) | Counting command | Verdict |
+|---|---|---|---|---|
+| C1 operability — receipt-header consistency capability | `controls/c1-before.txt` CASES=0/20 C1=FAIL missing-target, exit 1 | `controls/c1-after.txt` CASES=20/20 C1=PASS, exit 0; do-nothing stubs `c1-stubs-after.txt` 3/20 and 17/20, both exit 1 | `python3 corpus/evidence/round65/c1-count.py --work <fresh-dir>` | improved (capability acquired); numeric score unchanged at the declared historical 3/10 per the frozen claim |
+| C2 depth — sourced interpretation entry | `controls/c2-before.txt` ENTRY_CHECKS=0/10 C2=FAIL, exit 1 | `controls/c2-after.txt` ENTRY_CHECKS=10/10 C2=PASS, exit 0; sources S154–S156 re-opened and digest-pinned this round | `python3 corpus/evidence/round65/c2-count.py` | improved (structural, sources pinned; entailment excluded by the frozen claim); no numeric depth score invented |
+
+Per-axis: operability improved (capability, evidence above); depth improved (sourced entry
+`corpus/knowledge/receipt-identity-r65.md`, rows S154–S156 admitted, S157 rejected); coverage
+unchanged (held evidence-provenance ground, no province expansion); freshness unchanged (sources
+opened and pinned this round, no drift detector); calibration unchanged (limits named in the entry
+and lesson; no overreach claimed); adjacency unchanged (generic testing stays adjacent to tameshi,
+receipt/dispatch lifecycle to kumitate, no sibling writes). Trends: expansion improved (new
+capability row below); quality improved (sourced entry + registered gate); discernment unchanged
+(outside non-author spot-check still owed; wave seats are lane-authored evidence).
+
+## Capabilities
+
+| Capability | What the lane can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| receipt-header consistency checking | validate a research receipt's REVISION/EXIT/SHA256 headers and body separator against a caller-pinned Git blob over 20 frozen interface cases | `python3 corpus/evidence/round65/c1-count.py --work <fresh-dir>` → `CASES=20/20 C1=PASS`; `controls/c1-after.txt` | 65 |
