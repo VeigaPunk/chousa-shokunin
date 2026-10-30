@@ -3084,16 +3084,19 @@ at the landed tip: `corpus/evidence/round65/measurement-summary.json`.
 | Claim | Before (frozen receipt) | After (measured at `0a851898`) | Counting command | Verdict |
 |---|---|---|---|---|
 | C1 operability — receipt-header consistency capability | `controls/c1-before.txt` CASES=0/20 C1=FAIL missing-target, exit 1 | `controls/c1-after.txt` CASES=20/20 C1=PASS, exit 0; do-nothing stubs `c1-stubs-after.txt` 3/20 and 17/20, both exit 1 | `python3 corpus/evidence/round65/c1-count.py --work <fresh-dir>` | improved (capability acquired); numeric score unchanged at the declared historical 3/10 per the frozen claim |
-| C2 depth — sourced interpretation entry | `controls/c2-before.txt` ENTRY_CHECKS=0/10 C2=FAIL, exit 1 | `controls/c2-after.txt` ENTRY_CHECKS=10/10 C2=PASS, exit 0; sources S154–S156 re-opened and digest-pinned this round | `python3 corpus/evidence/round65/c2-count.py` | improved (structural, sources pinned; entailment excluded by the frozen claim); no numeric depth score invented |
+| C2 depth — sourced interpretation entry | `controls/c2-before.txt` ENTRY_CHECKS=0/10 C2=FAIL, exit 1 | `controls/c2-after.txt` ENTRY_CHECKS=10/10 C2=PASS, exit 0; sources S154–S156 re-opened and digest-pinned this round | `python3 corpus/evidence/round65/c2-count.py` | **unprovable / not admitted on this counter** — wave-2 `R65C03` and `R65M02` built a boilerplate control (9-line entry + three stub registry rows + a README mention; and a 116-byte token stub) that also scores 10/10, so the after-state is reachable by a do-nothing control and the counter attests shape, not substance. The entry itself landed, its three sources were re-opened and reviewed (`R65R02`: no misquote, no overreach; two cosmetic quote locations corrected), and the semantic evidence is cited separately — but the frozen predicate cannot certify the depth move. No numeric depth score invented. |
 
-Per-axis: operability improved (capability, evidence above); depth improved (sourced entry
-`corpus/knowledge/receipt-identity-r65.md`, rows S154–S156 admitted, S157 rejected); coverage
-unchanged (held evidence-provenance ground, no province expansion); freshness unchanged (sources
-opened and pinned this round, no drift detector); calibration unchanged (limits named in the entry
-and lesson; no overreach claimed); adjacency unchanged (generic testing stays adjacent to tameshi,
-receipt/dispatch lifecycle to kumitate, no sibling writes). Trends: expansion improved (new
-capability row below); quality improved (sourced entry + registered gate); discernment unchanged
-(outside non-author spot-check still owed; wave seats are lane-authored evidence).
+Per-axis: operability improved (capability, evidence above); depth improved **narrowly** on the landed
+entry and its re-opened sources, with the claim's own counter reported unprovable (the depth axis move
+rests on the re-opens and the source review, not on `ENTRY_CHECKS`); coverage unchanged (held
+evidence-provenance ground, no province expansion); freshness unchanged (sources opened and pinned this
+round, no drift detector); calibration unchanged (limits named in the entry and lesson; the shape-only
+counter and the forged-body limit are disclosed); adjacency unchanged (generic testing stays adjacent to
+tameshi, receipt/dispatch lifecycle to kumitate, no sibling writes). Trends: expansion improved (new
+capability row below); quality improved narrowly (sourced entry + registered gate, with the counter's
+shape-only limit stated); discernment unchanged (outside non-author spot-check still owed; wave seats are
+lane-authored evidence). Wave-2 falsification landed a contract fix and a disclosed limit: the validator's
+environment taxonomy (exit 2 for usage/environment) and two quote-location corrections at `1df2af73`.
 
 ## Capabilities
 

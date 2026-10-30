@@ -4,10 +4,17 @@
   "measured-at": "2026-10-30",
   "freeze": "f99de3bdfaaf9b4c4fa85cc55dd37b9df2ee90fd",
   "base": "d6ed8155e9b4735639a2cf0a3e479c62f2056195",
-  "measured-revision": "0a85189821322e01db06216b5cb82d2d858c19f0",
-  "counters-vs-freeze": "unchanged (git diff f99de3b..0a851898 over c1-count.py, c2-count.py, claims.md, controls/ is empty except these after-receipts)",
+  "measured-revision": "1df2af73a79d038edf0b62ebc5691cb579ca3445",
+  "landing-commits": [
+    "0a85189821322e01db06216b5cb82d2d858c19f0 (implementation + corpus)",
+    "9672a2e998bff2b51d18b0df4d835bd3ae2c453f (first after-measurement + scorecard verdicts)",
+    "91717322e4dc7f38d4f84010e48b832032808e0c (wave-1 results, wave-2 spec/dispatch/ready)",
+    "a6b6f9396a825558edd1fdddaa2b43cb5f0a6bfe (L1 boundary probes, CRLF disclosure)",
+    "1df2af73a79d038edf0b62ebc5691cb579ca3445 (wave-2 falsify findings: exit-2 environment taxonomy, quote-location corrections, QUALITY 131)"
+  ],
+  "counters-vs-freeze": "unchanged — c1-count.py, c2-count.py and claims.md are byte-identical to the freeze; only the after-receipts and the summary were added",
   "digests": {
-    "tools/receipt-pin.py": "SEE c1-after.txt REVISION pin; blob pinned at the measured revision",
+    "tools/receipt-pin.py": "blob at 1df2af73 (see the commit; sha256 recorded in the wave-2 seat reports)",
     "corpus/evidence/round65/c1-count.py": "unchanged since freeze",
     "corpus/evidence/round65/c2-count.py": "unchanged since freeze"
   },
@@ -15,8 +22,11 @@
     {"receipt": "corpus/evidence/round65/controls/c1-after.txt", "summary": "CASES=20/20 C1=PASS", "exit": 0},
     {"receipt": "corpus/evidence/round65/controls/c2-after.txt", "summary": "ENTRY_CHECKS=10/10 C2=PASS", "exit": 0},
     {"receipt": "corpus/evidence/round65/controls/c1-stubs-after.txt", "summary": "always-pass 3/20 C1=FAIL exit 1; always-fail 17/20 C1=FAIL exit 1"},
+    {"receipt": "corpus/evidence/round65/controls/c1-c2-separability.txt", "summary": "C1 0/20 while C2 10/10; C2 2/10 while C1 20/20 — the claims are causally separable"},
+    {"receipt": "corpus/evidence/round65/controls/l1-boundary-probes.txt", "summary": "ok exit 0; CRLF exit 0 (disclosed); EXIT=00, ./path, blank body exit 1; bad --revision, absent receipt, non-git root, missing git exit 2"},
     {"receipt": "corpus/evidence/round65/controls/c1-before.txt (frozen)", "summary": "CASES=0/20 C1=FAIL missing-target", "exit": 1},
-    {"receipt": "corpus/evidence/round65/controls/c2-before.txt (frozen)", "summary": "ENTRY_CHECKS=0/10 C2=FAIL", "exit": 1}
+    {"receipt": "corpus/evidence/round65/controls/c2-before.txt (frozen)", "summary": "ENTRY_CHECKS=0/10 C2=FAIL", "exit": 1},
+    {"receipt": "wave-2 R65C03/R65M02 boilerplate controls", "summary": "ENTRY_CHECKS=10/10 C2=PASS exit 0 — the C2 after-state is reachable by a do-nothing control, so C2 is not admitted on that counter"}
   ],
   "census": {
     "start": ".ufo/waves/round-65/census-start.txt",

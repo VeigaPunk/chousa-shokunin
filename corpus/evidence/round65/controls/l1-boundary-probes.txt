@@ -1,6 +1,6 @@
-REVISION=9672a2e998bff2b51d18b0df4d835bd3ae2c453f
+REVISION=1df2af73a79d038edf0b62ebc5691cb579ca3445
 EXIT=0
-PROBES=python3 -B tools/receipt-pin.py --receipt FILE --root LANE --revision TIP
+PROBES=python3 -B tools/receipt-pin.py --receipt FILE --root LANE --revision TIP (environment taxonomy after the wave-2 R65R01 F1 fix)
 
 ok -> exit=0 out=RECEIPT_PIN=PASS
 crlf -> exit=0 out=RECEIPT_PIN=PASS
@@ -9,5 +9,7 @@ dotpath -> exit=1 out=RECEIPT_PIN=FAIL path must be canonical and repository-rel
 blankbody -> exit=1 out=RECEIPT_PIN=FAIL receipt body must be nonempty
 bad-revision-arg -> exit=2 out=usage: receipt-pin.py [-h] --receipt RECEIPT --root ROOT --revision REVISION
 receipt-pin.py: error: --revision requires a full lowercase 40-hex object id
-absent-receipt -> exit=1 out=RECEIPT_PIN=FAIL [Errno 2] No such file or directory: '/fast/scratch/hyaku/chousa-r65/L1/probe/nonexistent.receipt'
+absent-receipt -> exit=2 out=RECEIPT_PIN=ERROR receipt file unreadable: [Errno 2] No such file or directory: '/fast/scratch/hyaku/chousa-r65/L1/probe/nonexistent.receipt'
+non-git-root -> exit=2 out=RECEIPT_PIN=ERROR --root is not a git repository: /fast/scratch/hyaku/chousa-r65/L1/emptyroot
+git-missing -> exit=2 out=RECEIPT_PIN=ERROR git is unavailable: [Errno 2] No such file or directory: 'git'
 tmp-hardcode-check: 0 occurrences of /tmp
