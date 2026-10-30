@@ -15,7 +15,7 @@ skipped: nothing was checked) — a gate that could not run is never counted as 
 Gates (the ids are the interface; each reads only files under --root and runs only committed tools):
   G01 census           the fleet's sources-census.sh `validate --file ROOT/corpus/SOURCES.md` exits 0. The script is
                        taken from --fleet DIR/scripts, else $SHOKUNIN_ROOT/scripts, else ROOT/../scripts; none → ENV.
-  G02 knowledge-index  every corpus/knowledge/*.md file name occurs in corpus/README.md (an index row is a claim).
+  G02 knowledge-index  recursive nonempty regular-.md inventory, normalized whole-name README match and phantom-path check.
   G03 lesson-gate      every corpus/lessons/round-<N>.md has a heading line beginning `## Gate`.
   G04 shonen-pointers  every path-shaped word inside a backtick span of SHONEN.md exists under ROOT.
   G05 scorecard-paths  every corpus/ tools/ .ufo/ path in the evidence cell of a SCORECARD.md `## Capabilities`
@@ -33,6 +33,9 @@ import os
 import pathlib
 import re
 import shutil
+import stat as statmod
+import unicodedata
+import urllib.parse
 import subprocess
 import sys
 import tempfile
@@ -85,13 +88,85 @@ def g01(root, a, env, work):
 
 
 def g02(root, a, env, work):
+    """R64-C1 v3 contract (corpus/evidence/round64/claims.md): recursive walk, regular-.md allowlist,
+    symlink judged by target, no vacuous pass on a missing/unreadable/empty index, whole-token
+    two-sided index matching over a normalized README (strikes stripped, escapes unescaped, link
+    targets unquoted, NFC on both sides), a mirror direction for phantom index rows, UTF-8-safe
+    reporting."""
     kd, rd = root / "corpus" / "knowledge", root / "corpus" / "README.md"
     if not rd.is_file():
         return "FAIL", "corpus/README.md absent"
-    readme = read(rd)
-    files = sorted(f.name for f in kd.glob("*.md")) if kd.is_dir() else []
-    miss = [f for f in files if f not in readme]
-    return ("PASS", f"{len(files)} entries indexed") if not miss else ("FAIL", f"{len(miss)} not named in corpus/README.md: " + ",".join(miss[:3]))
+    try:
+        if not kd.is_dir():
+            return "FAIL", "corpus/knowledge is not a directory"
+        if not os.access(kd, os.R_OK | os.X_OK):
+            return "FAIL", "corpus/knowledge is not readable/searchable by this uid"
+    except OSError as e:
+        return "FAIL", f"corpus/knowledge unusable: {type(e).__name__}"
+    bad_nodes, entries = [], []
+    def walk_error(error):
+        raise error
+    for d, ds, fs in os.walk(kd, followlinks=False, onerror=walk_error):
+        for name in ds:
+            p = pathlib.Path(d) / name
+            if p.is_symlink():
+                bad_nodes.append(p.relative_to(kd).as_posix() + " (not a regular file)")
+        for name in fs:
+            p = pathlib.Path(d) / name
+            rel = p.relative_to(kd).as_posix()
+            try:
+                st = p.stat()
+            except OSError:
+                bad_nodes.append(rel + " (unresolvable symlink)")
+                continue
+            if not statmod.S_ISREG(st.st_mode):
+                bad_nodes.append(rel + " (not a regular file)")
+                continue
+            if not name.endswith(".md"):
+                if p.relative_to(kd).as_posix() == ".gitkeep":
+                    continue
+                bad_nodes.append(rel + " (not *.md)")
+                continue
+            entries.append(p)
+    if bad_nodes:
+        return "FAIL", f"{len(bad_nodes)} invalid under corpus/knowledge: " + ",".join(
+            _u8(b) for b in bad_nodes[:3])
+    if not entries:
+        return "FAIL", "0 entries indexed (corpus/knowledge holds no *.md entry)"
+    readme = _index_norm(read(rd))
+    miss, phantom_src = [], []
+    for p in entries:
+        name = unicodedata.normalize("NFC", p.name)
+        if not re.search(r"(?<![\w.-])(?:knowledge/)?" + re.escape(name) + r"(?![\w-])", readme):
+            miss.append(p.name)
+    for pattern in (
+        r"`(knowledge/[^`\n]+\.md)`",
+        r"\((knowledge/[^()\n]+\.md)\)",
+        r"(?<![\w.-])(knowledge/[^\s`|()<>\[\]]+\.md)(?![\w-])",
+    ):
+        phantom_src.extend(m.group(1) for m in re.finditer(pattern, readme))
+    held = {unicodedata.normalize("NFC", p.relative_to(kd).as_posix()) for p in entries}
+    phantom = [
+        tok + " (no regular .md file)"
+        for tok in dict.fromkeys(phantom_src)
+        if tok.split("/", 1)[1] not in held
+    ]
+    if phantom:
+        return "FAIL", f"{len(phantom)} index rows name no knowledge file: " + ",".join(_u8(x) for x in phantom[:3])
+    if miss:
+        return "FAIL", f"{len(miss)} not named in corpus/README.md: " + ",".join(_u8(m) for m in miss[:3])
+    return "PASS", f"{len(entries)} entries indexed"
+
+
+def _index_norm(text: str) -> str:
+    t = re.sub(r"~~(?!~).*?~~", " ", text, flags=re.S)
+    t = re.sub(r"\\([_*`\[\]])", r"\1", t)
+    t = urllib.parse.unquote(t)
+    return unicodedata.normalize("NFC", t)
+
+
+def _u8(s: str) -> str:
+    return s.encode("utf-8", "surrogateescape").decode("utf-8", "backslashreplace")
 
 
 def g03(root, a, env, work):
@@ -217,6 +292,9 @@ def main() -> int:
     base = os.environ.get("HYAKU_SCRATCH") or os.environ.get("TMPDIR") or tempfile.gettempdir()
     own = a.work is None
     work = pathlib.Path(tempfile.mkdtemp(prefix="lane-preflight-", dir=base)) if own else pathlib.Path(a.work)
+    if not own and work.exists() and not work.is_dir():
+        print(f"lane-preflight: --work {a.work} is not a directory", file=sys.stderr)
+        return 2
     work.mkdir(parents=True, exist_ok=True)
     env = dict(os.environ, TMPDIR=str(work), LC_ALL="C.UTF-8", PYTHONDONTWRITEBYTECODE="1")
     res = {}

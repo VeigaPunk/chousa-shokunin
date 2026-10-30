@@ -1331,3 +1331,8 @@ Left open:
 - **The battery hands the counter the subject name** (`RevQualityA` finding 4): a counter that keys on the subject path passes it.
 - **Memory bounded before the form is built** (carried from round 61).
 - **The size-watch half of considerthese `CT-20261019-4`:** a measured series, no threshold (an L0 question).
+
+## Round64 root-derivation detail (2026-10-30)
+
+- `corpus/knowledge/lane-root-derivation-r64.md` — positional pathlib parents, explicit existence modes, and the limits of a missing-file assertion; S150–S152.
+- Frontier: the frozen relocation counter's expected-path arithmetic is not inferred correct from the presence of asserts. Its measured verdict and the C1 fixture mismatch are recorded in `corpus/lessons/round-64.md`, not silently repaired.
