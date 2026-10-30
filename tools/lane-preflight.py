@@ -140,9 +140,9 @@ def g02(root, a, env, work):
         if not re.search(r"(?<![\w.-])(?:knowledge/)?" + re.escape(name) + r"(?![\w-])", readme):
             miss.append(p.name)
     for pattern in (
-        r"`(knowledge/[^`\n]+\.md)`",
-        r"\((knowledge/[^()\n]+\.md)\)",
-        r"(?<![\w.-])(knowledge/[^\s`|()<>\[\]]+\.md)(?![\w-])",
+        r"`(knowledge/[\w ./-]+\.md)`",
+        r"\((knowledge/[\w ./-]+\.md)\)",
+        r"(?<![\w.-])(knowledge/[^\s`|()<>\[\]*?;{}]+\.md)(?![\w-])",
     ):
         phantom_src.extend(m.group(1) for m in re.finditer(pattern, readme))
     held = {unicodedata.normalize("NFC", p.relative_to(kd).as_posix()) for p in entries}
