@@ -1,0 +1,16 @@
+# R65S07 — round-65 final cross-checks
+
+## C2 counter re-run at the landed tip (read-only; c2-count.py only read_text()s)
+ENTRY_CHECKS=10/10 C2=PASS
+  rc=0
+
+## CR-only framing (no LF byte at all) against the landed tool
+  cr_only -> rc=0 out=RECEIPT_PIN=PASS
+
+## no separator at all (header block then body immediately)
+  nosep -> rc=1 out=RECEIPT_PIN=FAIL receipt needs four header lines, an empty separator and a body
+
+## wave-1 settlement: seats with no report artifact
+  empty result output : ['Attack03', 'Attack06', 'Attack19', 'RegistryDraft', 'ScoreDraft', 'ReadmeDraft', 'Considerthese', 'Assimilation', 'SourceGit']
+  no artifact on disk  : ['Attack03', 'Attack06', 'Attack19', 'RegistryDraft', 'ScoreDraft', 'ReadmeDraft', 'Considerthese', 'Assimilation', 'SourceGit', 'PriorClosure', 'SourcesCensus']
+  w1 seats total       : 64

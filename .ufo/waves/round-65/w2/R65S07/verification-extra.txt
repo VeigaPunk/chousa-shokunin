@@ -1,0 +1,48 @@
+# R65S07 extra verification (HEAD 62b0af1538e067f014ed96d6973e9a711b9d2487)
+
+## A. does any landed round-65 control receipt carry a digest anywhere?
+  corpus/evidence/round65/controls/always-fail.txt     sha256_any=0
+  corpus/evidence/round65/controls/always-pass.txt     sha256_any=0
+  corpus/evidence/round65/controls/c1-after.txt        sha256_any=0
+  corpus/evidence/round65/controls/c1-before.txt       sha256_any=0
+  corpus/evidence/round65/controls/c1-c2-separability.txt sha256_any=0
+  corpus/evidence/round65/controls/c1-positive.txt     sha256_any=0
+  corpus/evidence/round65/controls/c1-stubs-after.txt  sha256_any=0
+  corpus/evidence/round65/controls/c2-after.txt        sha256_any=0
+  corpus/evidence/round65/controls/c2-before.txt       sha256_any=0
+  corpus/evidence/round65/controls/l1-boundary-probes.txt sha256_any=0
+
+## B. counter accept-predicate: reason text is unconstrained on the fail branch
+     ok=q.returncode==rc and q.stdout.strip()==('RECEIPT_PIN=PASS' if rc==0 else q.stdout.strip()) and (rc==0 or
+   q.stdout.startswith('RECEIPT_PIN=FAIL '));n+=ok;print(f'CASE {name} {"PASS" if ok else "FAIL"} rc={q.returnco
+  de}')
+
+## C. landed tool reason strings differ from the frozen reference's
+  reference:
+    15:  if len(lines)<5 or lines[0]!='REVISION='+a.revision or not re.fullmatch(r'EXIT=(?:0|[1-9][0-9]{0,2})',lines[1]) or int(lines[1][5:])>255 or lines[3] or not '\n'.join(lines[4:]).strip(): raise ValueError('header/body')
+    17:  if not m: raise ValueError('digest header')
+    19:  if rel.is_absolute() or '..' in rel.parts or str(rel)!=m[2] or not rel.parts: raise ValueError('path')
+    21:  if q.returncode or hashlib.sha256(q.stdout).hexdigest()!=m[1]: raise ValueError('blob/digest')
+  landed:
+    53:            raise ValueError("receipt needs four header lines, an empty separator and a body")
+    55:            raise ValueError("REVISION header missing or not the selected revision")
+    57:            raise ValueError("EXIT header must be the reported child exit, decimal 0..255")
+    60:            raise ValueError("SHA256 header must be 64 lowercase hex plus a relative path")
+    63:            raise ValueError("path must be canonical and repository-relative")
+    65:            raise ValueError("header block must be followed by one empty separator line")
+    67:            raise ValueError("receipt body must be nonempty")
+
+## D. c2-count.py resolves its inputs from the live tree (no revision pin)
+  L=Path(__file__).resolve().parents[3]
+  f=L/'corpus/knowledge/receipt-identity-r65.md'; text=f.read_text() if f.exists() else ''
+  s=(L/'corpus/SOURCES.md').read_text();idx=(L/'corpus/README.md').read_text()
+
+## E. c1-after.txt pins a revision but the counter reads the live tree
+  REVISION=1df2af73a79d038edf0b62ebc5691cb579ca3445
+  EXIT=0
+  ARGV=["python3","-B","corpus/evidence/round65/c2-count.py"]
+  
+
+## F. lesson routed item 3 (final receipts carry blob digest) vs the receipts
+  3. New validator and revision/exit-bearing prefreeze controls; final receipts also carry blob digest. The old 
+  before receipt remains unmodified.

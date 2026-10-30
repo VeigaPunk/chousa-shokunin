@@ -1,0 +1,21 @@
+## F. NUL in the path field against the LANDED tool (ToolDraft reported path hardening)
+   nul-in-path: rc=1 out='' err_tail=ValueError: embedded null byte
+   cr-in-path: rc=0 out='RECEIPT_PIN=PASS' err_tail=
+
+## G. does the landed tool disable git replace objects (ToolDraft recommendation)?
+0
+   (0 = no replace-object guard)
+
+## H. counter judging line (token contract)
+   ok=q.returncode==rc and q.stdout.strip()==('RECEIPT_PIN=PASS' if rc==0 else q.stdout.strip()) and (rc==0 or q.stdout.startswith('RECEIPT_PIN=FAIL '));n+=ok;print(f'CASE {name} {"PASS" if ok else "FAIL"} rc={q.returncode}')
+
+## I. freeze tree of round65 evidence (source-openings.json absent at freeze)
+   corpus/evidence/round65/c1-count.py
+   corpus/evidence/round65/c2-count.py
+   corpus/evidence/round65/claims.md
+   corpus/evidence/round65/controls
+
+## J. QUALITY 75 gate on the w1 wave spec
+   checker rc=1
+   OK 49/64 reports present in .ufo/waves/round-65/w1
+   MISSING count: 15

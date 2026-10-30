@@ -1,0 +1,40 @@
+# R65S07 falsification checks against the landed round-65 corpus (HEAD 62b0af1538e067f014ed96d6973e9a711b9d2487)
+
+## 1. The round's own after/control receipts carry no instrument-blob digest
+  corpus/evidence/round65/controls/always-fail.txt  SHA256_header_lines=0
+  corpus/evidence/round65/controls/always-pass.txt  SHA256_header_lines=0
+  corpus/evidence/round65/controls/c1-after.txt  SHA256_header_lines=0
+  corpus/evidence/round65/controls/c1-before.txt  SHA256_header_lines=0
+  corpus/evidence/round65/controls/c1-c2-separability.txt  SHA256_header_lines=0
+  corpus/evidence/round65/controls/c1-positive.txt  SHA256_header_lines=0
+  corpus/evidence/round65/controls/c1-stubs-after.txt  SHA256_header_lines=0
+  corpus/evidence/round65/controls/c2-after.txt  SHA256_header_lines=0
+  corpus/evidence/round65/controls/c2-before.txt  SHA256_header_lines=0
+  corpus/evidence/round65/controls/l1-boundary-probes.txt  SHA256_header_lines=0
+
+## 2. The round's own reference validator refuses the round's own after-receipt
+RECEIPT_PIN=FAIL digest header
+  rc=1
+
+## 3. Lesson text vs the receipt it cites (both at HEAD)
+  lesson:62 says: an absent receipt exits 1
+  receipt:12 says: absent-receipt -> exit=2 out=RECEIPT_PIN=ERROR receipt file unreadable: [Errno 2
+
+## 4. S156 line-44 tally vs the round-64 final measurement
+  r64 receipt line44: CLEAN=1/1 DEFECTS=17/28 BENIGN=8/11 ZERO=3/3 BATTERY=FAIL
+  r64 lesson final: DEFECTS=28/28 BENIGN=9/11
+
+## 5. QUALITY 75 wave-completeness check on wave 1 and wave 2
+  w1: MISSING PriorClosure
+  w1: MISSING SourcesCensus
+  w1: OK 49/64 reports present in .ufo/waves/round-65/w1
+  w1 exit=1
+  w2: MISSING R65S07
+  w2: OK 31/32 reports present in .ufo/waves/round-65/w2
+
+## 6. replace-object guard in the landed validator (ToolDraft proposed none; w1 asked for one)
+  no replace-object guard present
+
+## 7. git history of the S154 quote cell (w1 SourcesDraft finding 1)
+  0a85189 (attempt-2 landing): contents of the object will be returned.
+  HEAD: contents of the <object> will be returned.

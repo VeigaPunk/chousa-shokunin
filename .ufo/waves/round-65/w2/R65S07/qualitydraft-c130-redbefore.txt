@@ -1,0 +1,17 @@
+# R65S07 — QualityDraft w1 red-before for criterion 130, re-run against the landed corpus
+# (w1 report: .ufo/waves/round-65/w1/QualityDraft/report.md:18-24)
+
+## P1 red-before: the round-64 before receipt is not a valid receipt
+  P1 -> rc=1 out=RECEIPT_PIN=FAIL header/body
+
+## P2 positive: same exhibit's blob digest with EXIT=1
+  P2 -> rc=0 out=RECEIPT_PIN=PASS
+
+## P3 boundary: byte-identical header over a fabricated body
+  P3 -> rc=0 out=RECEIPT_PIN=PASS
+
+## P4 digest tamper
+  P4 -> rc=1 out=RECEIPT_PIN=FAIL blob/digest
+
+## P5 header/caller revision mismatch
+  P5 -> rc=1 out=RECEIPT_PIN=FAIL header/body

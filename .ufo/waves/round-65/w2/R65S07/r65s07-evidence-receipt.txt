@@ -1,0 +1,65 @@
+# R65S07 evidence — malformed-class + self-receipt probes at HEAD 62b0af1
+
+## A. round65 landed receipts vs the format QUALITY:1014 describes
+   (self-contained receipt = REVISION + EXIT + instrument-blob digest)
+   always-fail.txt            L1=REVISION L2=EXIT L3=ARGV=["python3", "-B", "/home/vgpn
+   always-pass.txt            L1=REVISION L2=EXIT L3=ARGV=["python3", "-B", "/home/vgpn
+   c1-after.txt               L1=REVISION L2=EXIT L3=ARGV=["python3","-B","corpus/evide
+   c1-before.txt              L1=REVISION L2=EXIT L3=ARGV=["python3", "-B", "/home/vgpn
+   c1-c2-separability.txt     L1=REVISION L2=EXIT L3=PROBE=causal separability of the t
+   c1-positive.txt            L1=REVISION L2=EXIT L3=ARGV=["python3", "-B", "/home/vgpn
+   c1-stubs-after.txt         L1=REVISION L2=EXIT L3=ARGV=["python3","-B","corpus/evide
+   c2-after.txt               L1=REVISION L2=EXIT L3=ARGV=["python3","-B","corpus/evide
+   c2-before.txt              L1=REVISION L2=EXIT L3=ARGV=["python3", "-B", "/home/vgpn
+   l1-boundary-probes.txt     L1=REVISION L2=EXIT L3=PROBES=python3 -B tools/receipt-pi
+   sha256-header count in the 10 round65 receipt/control files:
+     corpus/evidence/round65/controls/always-fail.txt:0
+     corpus/evidence/round65/controls/always-pass.txt:0
+     corpus/evidence/round65/controls/c1-after.txt:0
+     corpus/evidence/round65/controls/c1-before.txt:0
+     corpus/evidence/round65/controls/c1-c2-separability.txt:0
+     corpus/evidence/round65/controls/c1-positive.txt:0
+     corpus/evidence/round65/controls/c1-stubs-after.txt:0
+     corpus/evidence/round65/controls/c2-after.txt:0
+     corpus/evidence/round65/controls/c2-before.txt:0
+     corpus/evidence/round65/controls/l1-boundary-probes.txt:0
+
+   reference validator on each landed receipt (--revision = its own pinned rev):
+     c1-after.txt rc=1 out=RECEIPT_PIN=FAIL digest header
+     c2-after.txt rc=1 out=RECEIPT_PIN=FAIL digest header
+     c1-before.txt rc=1 out=RECEIPT_PIN=FAIL digest header
+     c2-before.txt rc=1 out=RECEIPT_PIN=FAIL digest header
+     c1-positive.txt rc=1 out=RECEIPT_PIN=FAIL digest header
+
+## B. M1 cross-blob swap against the landed tool (Attack12 class)
+     tools/receipt-pin.py: rc=1 out=RECEIPT_PIN=FAIL digest does not match the pinned blob bytes
+     corpus/evidence/round65/controls/ref-receipt-pin.py: rc=1 out=RECEIPT_PIN=FAIL blob/digest
+     (README digest put on the SKILL.md path = M1 cross-blob swap)
+
+## C. accepted-malformed classes still accepted by the LANDED tool at HEAD
+   === tools/receipt-pin.py ===
+   valid                  rc=0 out=RECEIPT_PIN=PASS
+   crlf                   rc=0 out=RECEIPT_PIN=PASS
+   cr-only                rc=0 out=RECEIPT_PIN=PASS
+   vt-sep                 rc=0 out=RECEIPT_PIN=PASS
+   nel-sep                rc=0 out=RECEIPT_PIN=PASS
+   u2028-sep              rc=0 out=RECEIPT_PIN=PASS
+   body-smuggle           rc=0 out=RECEIPT_PIN=PASS
+   nul-in-body            rc=0 out=RECEIPT_PIN=PASS
+   dup-header-post-sep    rc=1 out=RECEIPT_PIN=FAIL header block must be followed by one empty separator 
+   trailing-header        rc=0 out=RECEIPT_PIN=PASS
+   no-trailing-newline    rc=0 out=RECEIPT_PIN=PASS
+   extra-trailing-blank   rc=0 out=RECEIPT_PIN=PASS
+   === corpus/evidence/round65/controls/ref-receipt-pin.py ===
+
+## D. the frozen counter cannot certify the exit-2 taxonomy fix
+   counter run against the PRE-FIX reference (controls/ref-receipt-pin.py, env faults -> exit 1):
+   CASES=20/20 C1=PASS
+   expected-rc values present in the frozen 20 cases (grep ",2)" count):
+     0
+
+## E. counter crash on a hanging tool (no CASES= summary)
+       ...<2 lines>...
+               stderr=b''.join(stderr_seq) if stderr_seq else None)
+   subprocess.TimeoutExpired: Command '['/usr/bin/python3', '-B', '/fast/scratch/hyaku/chousa-r65/w2/R65S07/hang.py', '--receipt', '/fast/scratch/hyaku/chousa-r65/w2/R65S07/hangwork/valid.txt', '--root', '/home/vgpnk/Projects/shokunin/chousa-shokunin', '--revision', 'd6ed8155e9b4735639a2cf0a3e479c62f2056195']' timed out after 20 seconds
+   counter rc=1 (unhandled TimeoutExpired, no CASES=x/20 line)
