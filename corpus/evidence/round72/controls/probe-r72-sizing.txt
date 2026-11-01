@@ -1,0 +1,22 @@
+# r72 sizing probe receipt (C1 ground): the timeout capability and the locale-boundary case duration in the round-72 window
+# measured 2026-11-01, Windows/11 git bash; fixture built in the round scratch (never the lane repo); the gate run is verify-claims (zero writes) on the scratch fixture, the lane tool invoked by absolute path from the scratch cwd
+# why: the r71 measurement was killed at case 8 under two orphaned sibling-lane lineages (~86-110 s/case, corpus/evidence/round71/controls/battery-partial-r71.txt); this round re-measures the same body BEFORE sizing the budget, and leaves both budget env vars at their defaults if the window is quiet
+
+$ timeout 1 sleep 5 >/dev/null 2>&1; echo tprobe_rc=$?
+tprobe_rc=124
+
+# the case-258 body verbatim (16K-accent multibyte span across the 32764-byte direct/chunk boundary), current window 2026-11-01 ~14:52 local:
+\$ time (env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 CHOUSA_ROOT="$PWD/probe" CHOUSA_NOW_EPOCH="1700000000" LC_ALL=C LANG=C bash C:/Users/jpvei/.zcode/workspace/95b1ba4d-5089-47a4-9fd8-54adebbce2ae/fleet/chousa-shokunin/tools/research-gate.sh verify-claims probe/claims-locale-b.jsonl > probe-out.txt 2>&1); echo case_rc=$?
+
+real	0m18.131s
+user	0m2.127s
+sys	0m4.700s
+case_rc=0
+VERDICT_BEARING_CLAIMS=1/1
+RESEARCH_GATE: CLEAN (claims=1 supported=1 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)
+
+# sizing statement: LC_BOUNDARY_BUDGET_S left UNSET for the r72 runs - the 900 s default in force, ~50x the measured body (18.131 s), ~55x the r71 uncontended 16.333 s (S175). The two orphaned souji-verify.sh lineages (PIDs 25504/29096, started 2026-10-31 21:17/21:37) were still alive at probe time but near-idle by cumulative-CPU sampling (~2000 CPU-s at the r71 census -> ~2225/2075 CPU-s ~2.4 h later) - an observation, not a measurement claim; still not killed from this lane (adjacency), the L0 question stays open. G08_SELFTEST_BUDGET_S left at its 7200 s default.
+# git state at probe time:
+$ git -C C:/Users/jpvei/.zcode/workspace/95b1ba4d-5089-47a4-9fd8-54adebbce2ae/fleet/chousa-shokunin rev-parse HEAD
+7851c4ce29ef4c13d2c6ffd67b2ea1ea2646a536
+pre-freeze base: 7851c4ce29ef4c13d2c6ffd67b2ea1ea2646a536

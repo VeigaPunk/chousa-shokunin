@@ -1,0 +1,58 @@
+# r72 before-receipt (C1 + C2): every count line below re-run fresh at the round base, immediately before the freeze (the r71 unverified-count lesson)
+
+$ git rev-parse HEAD
+7851c4ce29ef4c13d2c6ffd67b2ea1ea2646a536
+
+$ git log --oneline -1
+7851c4ce round-71 verifier spot-check (integrator, hyaku): non-author admit/reject
+
+# C1 do-nothing control: no completing verdict line exists in any committed battery receipt
+$ grep -c "^RESEARCH_GATE_SELFTEST:" corpus/evidence/round71/controls/battery-partial-r71.txt
+0
+
+# C1: the r71 round produced no preflight-final receipt (arm 2 unmeasured in r71)
+$ ls corpus/evidence/round71/controls/ | grep -c preflight
+0
+
+# C1: the in-tree gate bytes equal the r71 landing blob (the timeout-wrap in force, unchanged)
+$ sha256sum tools/research-gate.sh
+d5d48128509f77edf161e4d8b10b833e6e00f822906460fa049f27d1244d41e2 *tools/research-gate.sh
+expected (r71 pinned): d5d48128509f77edf161e4d8b10b833e6e00f822906460fa049f27d1244d41e2
+
+# C1 sizing re-check (frozen probe receipt carries the full output): case-258 body 18.131 s NOW vs 16.333 s at the r71 freeze
+
+# C2 routed defects at the base — (R-72-1) the non-re-derivable 18:
+$ grep -c "18 healthy" SCORECARD.md
+1
+$ grep -c "18 healthy" LOG.md
+1
+$ grep -c "18 healthy" corpus/lessons/round-71.md
+1
+
+# C2 — the true per-receipt ok-case counts the 18 misstates:
+$ grep -c "^ok-case" corpus/evidence/round71/controls/battery-partial-r71.txt
+9
+$ grep -c "^ok-case" corpus/evidence/round71/controls/killtest-partial-scratch-copy.txt
+16
+
+# C2 routed defect (R-72-2) — header says case 8, transcript carries 9 lines:
+$ grep -c "the transcript below ends at case 8" corpus/evidence/round71/controls/battery-partial-r71.txt
+1
+$ grep -c "^ok-case" corpus/evidence/round71/controls/battery-partial-r71.txt
+9
+
+# C2 routed defect (R-72-3) — LOG says three Mistakes rows, the lesson carries four:
+$ grep -c "Mistakes: three rows" LOG.md
+1
+$ awk '/^## Mistakes/,/^## Spot-check intake/' corpus/lessons/round-71.md | grep -c "^| unverified\|^| census\|^| pipe\|^| prose"
+4
+
+# C2 routed defect (R-72-4) — the r71 report's SHONEN assessment sits under an inline line, not the heading:
+$ grep -c "^## SHONEN" C:/Users/jpvei/.zcode/workspace/95b1ba4d-5089-47a4-9fd8-54adebbce2ae/shokunin-clone/shokunin/.ufo/reports/round-71/chousa.md
+0
+$ grep -c "^SHONEN: lane has SHONEN.md" C:/Users/jpvei/.zcode/workspace/95b1ba4d-5089-47a4-9fd8-54adebbce2ae/shokunin-clone/shokunin/.ufo/reports/round-71/chousa.md
+1
+
+# registry state at the base:
+$ grep -c "^| S[0-9]" corpus/SOURCES.md
+177
