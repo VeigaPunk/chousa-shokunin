@@ -1,0 +1,71 @@
+# r72 process-census receipt (the mistake-mining ground): the r71 census-self-match class recurred in this round's own load probe; the bracketed self-excluding pattern fixed it; the pass-2 capture also shows the orphaned lineages RESPAWN new children. Both passes fresh-captured 2026-11-01 ~15:33 local.
+
+# pass 1 - bare matcher 'souji' (ProcessId+CreationDate only, to keep the capture readable). 12 hits = the 4 real orphan-lineage processes (7100/25504 since 10/31 21:17, 17336/29096 since 10/31 21:37) + 3 shells of THIS ROUND'S OWN running battery (22900/25528/29204, 15:15-15:16 - the battery wrapper's receipt-header text names the souji lineages) + 5 shells of the capturing command itself (25184/29468/21700/23168/25332, 15:32-15:33). The census matched everything whose TEXT mentions the subject - including this round's own run and the census itself: the r71 lesson's exact class, recurred.
+
+$ powershell -NoProfile -Command "Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -match 'souji' } | Select-Object ProcessId,CreationDate | Format-Table -AutoSize"
+
+ProcessId CreationDate 
+--------- ------------ 
+ 7100 10/31/2026 9:17:16 PM
+ 25504 10/31/2026 9:17:20 PM
+ 17336 10/31/2026 9:37:17 PM
+ 29096 10/31/2026 9:40:57 PM
+ 22900 11/1/2026 3:15:26 PM 
+ 25528 11/1/2026 3:15:26 PM 
+ 29204 11/1/2026 3:16:16 PM 
+ 25184 11/1/2026 3:32:41 PM 
+ 29468 11/1/2026 3:32:42 PM 
+ 21700 11/1/2026 3:33:38 PM 
+ 23168 11/1/2026 3:33:38 PM 
+ 25332 11/1/2026 3:33:38 PM 
+
+
+
+# pass 2 - self-excluding matcher 'souji[-]verify' seconds later: the prober's own text carries 'souji[-]verify', which the regex does not match, so the census's own shells and the battery wrapper drop out. What remains: the 4 real lineage processes PLUS two FRESH souji-verify.sh children (16528, 31360) created AT 15:33:42 - the orphaned lineages respawn new verification runs with identical command lines; the load is not a static two-process situation.
+
+$ powershell -NoProfile -Command "Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -match 'souji[-]verify' } | Select-Object ProcessId,CreationDate,CommandLine | Format-List"
+
+
+ProcessId : 7100
+CreationDate : 10/31/2026 9:17:16 PM
+CommandLine : "C:\Program Files\Git\usr\bin\bash.exe" tools/souji-verify.sh 
+ C:/Users/jpvei/.zcode/workspace/95b1ba4d-5089-47a4-9fd8-54adebbce2ae/helpers-r74
+
+ProcessId : 25504
+CreationDate : 10/31/2026 9:17:20 PM
+CommandLine : "C:\Program Files\Git\usr\bin\bash.exe" tools/souji-verify.sh 
+ C:/Users/jpvei/.zcode/workspace/95b1ba4d-5089-47a4-9fd8-54adebbce2ae/helpers-r74
+
+ProcessId : 17336
+CreationDate : 10/31/2026 9:37:17 PM
+CommandLine : "C:\Program Files\Git\usr\bin\bash.exe" tools/souji-verify.sh 
+ C:/Users/jpvei/.zcode/workspace/95b1ba4d-5089-47a4-9fd8-54adebbce2ae/fleet/kotodama-shokunin 
+ C:/Users/jpvei/.zcode/workspace/95b1ba4d-5089-47a4-9fd8-54adebbce2ae/fleet/shokunin-binary-forensics 
+ C:/Users/jpvei/.zcode/workspace/95b1ba4d-5089-47a4-9fd8-54adebbce2ae/fleet/shokunin-reverse-engineering 
+ C:/Users/jpvei/.zcode/workspace/95b1ba4d-5089-47a4-9fd8-54adebbce2ae/helpers-r74
+
+ProcessId : 29096
+CreationDate : 10/31/2026 9:40:57 PM
+CommandLine : "C:\Program Files\Git\usr\bin\bash.exe" tools/souji-verify.sh 
+ C:/Users/jpvei/.zcode/workspace/95b1ba4d-5089-47a4-9fd8-54adebbce2ae/fleet/kotodama-shokunin 
+ C:/Users/jpvei/.zcode/workspace/95b1ba4d-5089-47a4-9fd8-54adebbce2ae/fleet/shokunin-binary-forensics 
+ C:/Users/jpvei/.zcode/workspace/95b1ba4d-5089-47a4-9fd8-54adebbce2ae/fleet/shokunin-reverse-engineering 
+ C:/Users/jpvei/.zcode/workspace/95b1ba4d-5089-47a4-9fd8-54adebbce2ae/helpers-r74
+
+ProcessId : 16528
+CreationDate : 11/1/2026 3:33:42 PM
+CommandLine : "C:\Program Files\Git\usr\bin\bash.exe" tools/souji-verify.sh 
+ C:/Users/jpvei/.zcode/workspace/95b1ba4d-5089-47a4-9fd8-54adebbce2ae/fleet/kotodama-shokunin 
+ C:/Users/jpvei/.zcode/workspace/95b1ba4d-5089-47a4-9fd8-54adebbce2ae/fleet/shokunin-binary-forensics 
+ C:/Users/jpvei/.zcode/workspace/95b1ba4d-5089-47a4-9fd8-54adebbce2ae/fleet/shokunin-reverse-engineering 
+ C:/Users/jpvei/.zcode/workspace/95b1ba4d-5089-47a4-9fd8-54adebbce2ae/helpers-r74
+
+ProcessId : 31360
+CreationDate : 11/1/2026 3:33:42 PM
+CommandLine : "C:\Program Files\Git\usr\bin\bash.exe" tools/souji-verify.sh 
+ C:/Users/jpvei/.zcode/workspace/95b1ba4d-5089-47a4-9fd8-54adebbce2ae/helpers-r74
+
+
+
+
+# reading: (a) the census-self-match class is recurring and cheap to repeat - every future census on this host uses a bracketed pattern and counts its own expected self-matches; (b) the two orphaned lineages are ALIVE and RESPAWNING at round open (the r71 L0 question unanswered; this receipt is the r72 observation for that queue); not killed from this lane (adjacency: report, never absorb); (c) the current-window battery rate measured effectively quiet (probe-r72-sizing.txt: the case-258 body 18.131 s vs 16.333 s uncontended at r71), so the respawned children were light or idle at probe time - consistent with their near-zero cumulative CPU at spawn.
