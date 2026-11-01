@@ -1,0 +1,42 @@
+# after-receipt: the sourced entry landed and verifies (measured at landing 58b5ad3b9875e42ddab5f1891c04bae27e3a5628)
+$ ls corpus/knowledge/receipt-digest-provenance-r67.md
+corpus/knowledge/receipt-digest-provenance-r67.md
+$ python -I corpus/evidence/round66/c2-semantic-count.py --entry corpus/knowledge/receipt-digest-provenance-r67.md
+CHECK TRIO ok trio lines=4
+CHECK IDS_DEFINED ok cited=S161,S162
+CHECK MINED ok statuses=mined,mined
+CHECK USED_BY ok entry=corpus/knowledge/receipt-digest-provenance-r67.md
+CHECK TIER ok tiers=A,B
+CHECK ANCHOR ok bad=none
+CHECK BODY_CITES ok absent-from-body=none
+CHECK CLAIMS ok items=3 minlen=497
+CHECK LIMITS ok lines=2 total=1117
+ENTRY_SHA256=6f4089b6e0033dd1232192ea5ff55f28338badc324cadf68270e16fa57ca5122
+REGISTRY_SHA256=859f75dbbbf6ca48ccdb9bd79d679acd78f9d106719f3739808bfbcb9b785b51
+LANE_REVISION=58b5ad3b9875e42ddab5f1891c04bae27e3a5628
+SEMANTIC=9/9 C2SEM=PASS
+EXIT=0
+$ grep -c '^| S161 |' corpus/SOURCES.md
+1
+$ grep -c '^| S162 |' corpus/SOURCES.md
+1
+$ grep -c '^| S163 |' corpus/SOURCES.md
+1
+$ sha256sum corpus/evidence/round67/captures/git-hash-object-50fe5cc6.adoc corpus/evidence/round67/captures/git-scm-hash-object-page-2026-10-31.html
+37d38be417e2b21bee4763503c8f38204db3ba2cd8097f586037cf8c18571094 *corpus/evidence/round67/captures/git-hash-object-50fe5cc6.adoc
+0fad574deee1be56c766ccdf7cdc66594dc1d40be469064520cb901fab91007a *corpus/evidence/round67/captures/git-scm-hash-object-page-2026-10-31.html
+$ python -I tools/quote-reopen.py verify --items corpus/evidence/round67/quote-reopen.tsv
+QUOTE_REOPEN	S161q1	VERBATIM	matched in normalized page text
+QUOTE_REOPEN	S161q2	VERBATIM	matched in normalized page text
+QUOTE_REOPEN	S163q1	NO_SOURCE	registry row S163 has no http(s) URL
+QUOTE_REOPEN_SUMMARY verbatim=2 absent=0 too_long=0 no_source=1 unreachable=0
+EXIT=1
+# frozen literal `verbatim=3` exit 0 is NOT met — disclosed pre-landing in the claims amendment:
+# the third item's NO_SOURCE is the tool's designed refusal of a capture-path row (no http(s) URL),
+# not a quote miss; the S163 quote is verified against the committed capture bytes instead:
+$ tr -s '[:space:]' ' ' < corpus/evidence/round67/captures/git-scm-hash-object-page-2026-10-31.html | grep -c "Computes the object ID value for an object with specified type with the contents of the named file"
+1
+C3_AFTER: entry=9/9 PASS rows=1/1/1 capture-digests=match S161-quotes=VERBATIM/2 S163=capture-re-read-1
+C3AFTER=LANDED-AND-VERIFIED
+LANE_REVISION=58b5ad3b9875e42ddab5f1891c04bae27e3a5628
+EXIT=0

@@ -1,0 +1,19 @@
+# after-receipt: the S159 line-location correction landed and verified (measured at landing 58b5ad3b9875e42ddab5f1891c04bae27e3a5628)
+$ grep -c 'line 9: `GIT_PIN_MATCH=no`' corpus/lessons/round-66.md
+2
+# before was 1; the added hit is the correction note itself quoting the superseded text
+# (same quote-hit pattern the round-66 C1 corrections note disclosed) — no unquoted occurrence remains
+$ grep -c 'line 8: `GIT_PIN_MATCH=no`' corpus/lessons/round-66.md
+1
+$ grep -c '^correction: corpus/lessons/round-66.md' corpus/lessons/round-66.md
+1
+$ git show 8c2a0a2add04d0e74222d58a3f695aab95a13cf9:corpus/evidence/round66/controls/before-host-pins.txt | grep -n 'GIT_PIN_MATCH\|LANE_REVISION'
+8:GIT_PIN_MATCH=no
+9:LANE_REVISION=4f784d9ee29ee7423d6c63bb2ba501d8ecb1ccee
+$ sha256sum corpus/lessons/round-66.md
+69646b3ac5dcd0e4427a44fd6b2bf4f15ec1c629e47a6cdde5d3cd8a4a0efa6a *corpus/lessons/round-66.md
+C1_AFTER: superseded-location=2 (1 gate-table + 1 quote inside the correction note) corrected-location=1 correction-notes=1 C1AFTER=CORRECTED
+# frozen predicate outcome: `line 9` literal 1 → 2 (the second hit is the note's quotation, disclosed);
+# `line 8` literal 0 → 1; correction notes 0 → 1; the gate table row is retained as committed history
+LANE_REVISION=58b5ad3b9875e42ddab5f1891c04bae27e3a5628
+EXIT=0

@@ -1,0 +1,17 @@
+# after-receipt: SOURCES.md registry tallies at the landing tip (measured at 58b5ad3b9875e42ddab5f1891c04bae27e3a5628)
+$ grep -cE '^\|[[:space:]]*S[0-9]{3,}[[:space:]]*\|' corpus/SOURCES.md
+163
+$ awk -F'|' '/^\|[[:space:]]*S[0-9]{3,}[[:space:]]*\|/ {t=$5; gsub(/ /,"",t); print t}' corpus/SOURCES.md | sort | uniq -c
+    122 A
+     30 B
+     11 C
+$ awk -F'|' '/^\|[[:space:]]*S[0-9]{3,}[[:space:]]*\|/ {s=$9; gsub(/ /,"",s); print s}' corpus/SOURCES.md | sort | uniq -c
+    131 mined
+     19 queued
+     13 rejected
+ROWS_AFTER=163 TIERS_AFTER=A122/B30/C11 STATUS_AFTER=mined131/queued19/rejected13
+# before: rows 160, A121/B29/C10, mined129/queued19/rejected12 (controls/before-registry-tallies.txt)
+# delta: +3 rows (S161 A mined, S162 B mined, S163 C rejected); no held status/recheck/used-by cell changed
+SOURCES_SHA256=859f75dbbbf6ca48ccdb9bd79d679acd78f9d106719f3739808bfbcb9b785b51
+LANE_REVISION=58b5ad3b9875e42ddab5f1891c04bae27e3a5628
+EXIT=0

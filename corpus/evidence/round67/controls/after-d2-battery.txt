@@ -1,0 +1,51 @@
+# after-receipt: the digest-in-tree battery at the landing tip (measured at 58b5ad3b9875e42ddab5f1891c04bae27e3a5628)
+$ python -I tools/digest-in-tree.py --receipt corpus/evidence/round66/controls/before-new-counter-boilerplate.txt --all-objects
+LANE_REVISION=58b5ad3b9875e42ddab5f1891c04bae27e3a5628
+MODE=all-objects SCANNED_BLOBS=14888
+DIGEST c0aaa9ed7e42f62b7bc1381ac6474c6bbfd97c399f4adae3b76c1289d8845601 OUT_OF_TREE
+DIGEST b19f9ac6d76caaacd6e5b09b0d6117b34793deb4dbcd2097183cd6fa069d34ec OUT_OF_TREE
+DIGESTS_IN_TREE=0/2 DIGEST_IN_TREE=FAIL
+EXIT=1
+# the routed r66 receipt keeps its historical bytes; the class stays named (0/2 over all objects)
+$ python -I tools/digest-in-tree.py --receipt corpus/evidence/round67/controls/before-r66-counter-committed-fixture.txt --all-objects
+LANE_REVISION=58b5ad3b9875e42ddab5f1891c04bae27e3a5628
+MODE=all-objects SCANNED_BLOBS=14888
+DIGEST bca84fad6ac84284f428afd71afbf2dfcc10cb0b320f20e1c8b61d9eddb51e75 IN_TREE oid=5722292efca8e2b8faa6d31ae3dac614c6967f1f
+DIGEST 113ea18251ff4666054e67485abc9e8c895f81045deb9cd9e3538a7d95f4a27c IN_TREE oid=786200064271a2e36a2dd3a62f251e5557084c11
+DIGESTS_IN_TREE=2/2 DIGEST_IN_TREE=PASS
+EXIT=0
+$ python -I tools/digest-in-tree.py --receipt corpus/evidence/round67/controls/before-c1-lesson.txt --all-objects
+LANE_REVISION=58b5ad3b9875e42ddab5f1891c04bae27e3a5628
+MODE=all-objects SCANNED_BLOBS=14888
+DIGEST 37f8ade6bf32a2c5d438c012bee99dfa3788e20f72122c148ba893779e753980 IN_TREE oid=65a2740b86f418f690f97722a58f0f45c77a3055
+DIGESTS_IN_TREE=1/1 DIGEST_IN_TREE=PASS
+EXIT=0
+# the pre-correction lesson blob is no longer in HEAD's tree but is still a committed object —
+# all-objects is the mode that states what the receipt's pin promises
+$ python -I tools/digest-in-tree.py --receipt corpus/evidence/round67/controls/before-registry-tallies.txt --all-objects
+LANE_REVISION=58b5ad3b9875e42ddab5f1891c04bae27e3a5628
+MODE=all-objects SCANNED_BLOBS=14888
+DIGEST 6ffec801c6c69b73a64b21fe683a5b16d47a8a0a8f82bef02de1ff1cd3594dca IN_TREE oid=d636c1614da64610d8e97d1b55efaccde4eee543
+DIGESTS_IN_TREE=1/1 DIGEST_IN_TREE=PASS
+EXIT=0
+$ python -I tools/digest-in-tree.py --receipt corpus/evidence/round67/controls/ctl-digest-in-tree.txt
+LANE_REVISION=58b5ad3b9875e42ddab5f1891c04bae27e3a5628
+MODE=rev SCANNED_BLOBS=17433
+DIGEST bca84fad6ac84284f428afd71afbf2dfcc10cb0b320f20e1c8b61d9eddb51e75 IN_TREE path=corpus/evidence/round66/controls/boilerplate-entry.md oid=5722292efca8e2b8faa6d31ae3dac614c6967f1f
+DIGESTS_IN_TREE=1/1 DIGEST_IN_TREE=PASS
+EXIT=0
+$ python -I tools/digest-in-tree.py --receipt corpus/evidence/round67/controls/ctl-digest-fake.txt --all-objects
+LANE_REVISION=58b5ad3b9875e42ddab5f1891c04bae27e3a5628
+MODE=all-objects SCANNED_BLOBS=14888
+DIGEST 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef OUT_OF_TREE
+DIGESTS_IN_TREE=0/1 DIGEST_IN_TREE=FAIL
+EXIT=1
+$ python -I tools/digest-in-tree.py --receipt corpus/evidence/round67/controls/ctl-digest-empty.txt
+(stdout empty; stderr: DIGEST_IN_TREE=ERROR NO_DIGESTS: no 64-hex sha256 pin found in corpus/evidence/round67/controls/ctl-digest-empty.txt)
+EXIT=2
+C2_AFTER: defect-class 0/2 FAIL named OUT_OF_TREE (unchanged history); corrected committed-fixture receipt 2/2 PASS;
+every round-67 before-receipt with digest pins verifies (before-c1-lesson 1/1, before-registry-tallies 1/1,
+before-r66-counter-committed-fixture 2/2); controls: positive PASS both modes, fake FAIL, empty ERROR exit 2
+D2AFTER=ENFORCED-AND-REPAIRED-FROM-COMMITTED-BYTES
+LANE_REVISION=58b5ad3b9875e42ddab5f1891c04bae27e3a5628
+EXIT=0
