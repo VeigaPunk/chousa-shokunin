@@ -1,0 +1,22 @@
+# C1 after-greps at tip d3f1b8109b04c0e580dc4242516a7c9ba709c5cf
+$ grep -c 'After (measured at `0a851898`)' SCORECARD.md
+wrong-pin-hits=0
+$ grep -c 'After (measured at `1df2af73`)' SCORECARD.md
+right-pin-hits=1
+$ grep -n '^## Capabilities$' SCORECARD.md | tail -1
+last-bare-capabilities=596:## Capabilities
+bare-capabilities-above-3105=0
+$ grep -c '^## Capabilities (round-65 addition)$' SCORECARD.md
+r65-capabilities-heading-hits=1
+$ grep -c 'depth improved \*\*narrowly\*\* on the landed' SCORECARD.md
+depth-credit-clause-hits=0
+$ grep -c "depth unprovable on the claim's counter" SCORECARD.md
+depth-unprovable-clause-hits=1
+$ grep -c 'deliberately frozen at the historical' SCORECARD.md
+axes-sync-note-hits=1
+$ grep -c '"location": "module documentation31-32"' corpus/evidence/round65/source-openings.json
+s155-location-hits=0
+$ python -c json.load(...)
+json-valid
+$ grep -c '"sha256"' corpus/evidence/round65/source-openings.json
+digest-fields=4
