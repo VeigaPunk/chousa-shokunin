@@ -1,0 +1,105 @@
+# round-70 reconnaissance capture (S171): the gate selftest run in a scratch copy of tools/research-gate.sh at base 1db6babf528692d871a2b97be0b3e519614fa300, modified ONLY by the one-line h1 crash guard (base line 5560: added '2>/dev/null' and '|| true'; diff of that one line is in the round report)
+# started 2026-10-31 23:49 local, completed 2026-11-01 ~02:1x; cwd = the lane repo; stdout+stderr redirected to a scratch file
+# outcome: the battery died a SECOND time after case 80 (drift-malformed) at the bare sed reading the missing pin-clean.baseline (base line 5977), rc=2, still no verdict line;
+# FAIL-case inventory at death: 2x manifest tall cases (rc=2/0, flock refusal) + pin-clean + drift-clean + drift-volatile-churn + drift-one-field-mutant (capture zone); the guard worked as designed at case 60 (FAIL-case printed, battery continued)
+# SELFTEST_RC=2 (read by immediate rc=$? in the launching command); diagnostic only — never a measurement of committed bytes
+
+ok-case  1  pass-control                 exit=0
+ok-case  2  pass-hop-marked-unresolved   exit=0
+ok-case  3  pass-export-chrome           exit=0
+ok-case  4  fail-export-chrome-strict    exit=1
+ok-case  5  fail-chrome-malformed-export exit=1
+ok-case  6  fail-no-question             exit=1
+ok-case  7  fail-unranked-source         exit=1
+ok-case  8  fail-chain-hop-unresolved    exit=1
+ok-case  9  fail-claim-unpointed         exit=1
+ok-case  10 fail-rejection-dropped       exit=1
+ok-case  11 fail-negative-without-sweep  exit=1
+ok-case  12 fail-obs-inference-collapse  exit=1
+ok-case  13 fail-hierarchy-primary-lie   exit=1
+ok-case  14 fail-pointer-ephemeral       exit=1
+ok-case  15 fail-external-without-approval exit=1
+ok-case  16 fail-secret-shaped           exit=1
+ok-case  17 fail-session-read            exit=1
+ok-case  18 fail-schema                  exit=1
+ok-case  19 setup-no-record              exit=2
+ok-case  20 setup-missing-file           exit=2
+ok-case  21 claims-pass                  exit=0
+ok-case  22 claims-fail-tampered         exit=1
+ok-case  23 claims-fail-out-of-corpus    exit=1
+ok-case  24 claims-fail-external         exit=1
+ok-case  25 claims-fail-session          exit=1
+ok-case  26 claims-fail-contradicted-unmarked exit=1
+ok-case  27 claims-fail-stray-marker     exit=1
+ok-case  28 claims-fail-counting         exit=1
+ok-case  29 setup-claims-no-path         exit=2
+ok-case  30 setup-claims-missing-file    exit=2
+ok-case  31 chain-pass                   exit=0
+ok-case  32 chain-fail-tampered          exit=1
+ok-case  33 chain-fail-anchor-kinds      exit=1
+ok-case  34 chain-fail-out-of-corpus     exit=1
+ok-case  35 chain-fail-external          exit=1
+ok-case  36 chain-fail-invalid           exit=1
+ok-case  37 chain-fail-counting          exit=1
+ok-case  38 chain-fail-no-chain          exit=1
+ok-case  39 setup-chain-no-path          exit=2
+ok-case  40 setup-chain-missing-file     exit=2
+ok-case  41 claims-boundary-pass         exit=0
+ok-case  42 claims-boundary-fail         exit=1
+ok-case  43 chain-pass-boundary          exit=0
+ok-case  44 chain-fail-boundary          exit=1
+ok-case  45 sweeps-pass                  exit=0
+ok-case  46 sweeps-fail-planted-hit      exit=1
+ok-case  47 sweeps-fail-rejection-incomplete exit=1
+ok-case  48 sweeps-fail-unnamed          exit=1
+ok-case  49 sweeps-fail-out-of-corpus    exit=1
+ok-case  50 sweeps-fail-unresolved-id    exit=1
+ok-case  51 sweeps-fail-counting         exit=1
+ok-case  52 sweeps-pass-cell-command     exit=0
+ok-case  53 setup-sweeps-no-path         exit=2
+ok-case  54 setup-sweeps-missing-file    exit=2
+ok-case  55 all-pass.md                  exit=0
+ok-case  56 all-pass.md                  exit=1
+ok-case  57 all-structure.md             exit=1
+ok-case  58 all-pass.md                  exit=0
+ok-case  59 claims-pass.jsonl            exit=0
+C:/Users/jpvei/.zcode/workspace/95b1ba4d-5089-47a4-9fd8-54adebbce2ae/scratch/chousa-r70/recon/research-gate.sh: line 5548: /tmp/chousa-research-gate-selftest.K1Yhut/r6-manifest.jsonl: No such file or directory
+C:/Users/jpvei/.zcode/workspace/95b1ba4d-5089-47a4-9fd8-54adebbce2ae/scratch/chousa-r70/recon/research-gate.sh: line 5551: /tmp/chousa-research-gate-selftest.K1Yhut/r6-manifest.jsonl: No such file or directory
+/usr/bin/grep: /tmp/chousa-research-gate-selftest.K1Yhut/r6-manifest.jsonl: No such file or directory
+/usr/bin/grep: /tmp/chousa-research-gate-selftest.K1Yhut/r6-manifest.jsonl: No such file or directory
+/usr/bin/grep: /tmp/chousa-research-gate-selftest.K1Yhut/r6-manifest.jsonl: No such file or directory
+/usr/bin/grep: /tmp/chousa-research-gate-selftest.K1Yhut/r6-manifest.jsonl: No such file or directory
+FAIL-case all-pass.md                  rc=2/0 verdicts=0/1 sums=0/1 missing:'RESEARCH_GATE: CLEAN' manifest-lines=0/1 json-invalid schema-absent record-sha-absent gate-sha-absent verdict-field 
+    | research-gate: flock(1) unavailable; manifest not written: /tmp/chousa-research-gate-selftest.K1Yhut/r6-manifest.jsonl
+C:/Users/jpvei/.zcode/workspace/95b1ba4d-5089-47a4-9fd8-54adebbce2ae/scratch/chousa-r70/recon/research-gate.sh: line 5548: /tmp/chousa-research-gate-selftest.K1Yhut/r6-manifest.jsonl: No such file or directory
+C:/Users/jpvei/.zcode/workspace/95b1ba4d-5089-47a4-9fd8-54adebbce2ae/scratch/chousa-r70/recon/research-gate.sh: line 5551: /tmp/chousa-research-gate-selftest.K1Yhut/r6-manifest.jsonl: No such file or directory
+/usr/bin/grep: /tmp/chousa-research-gate-selftest.K1Yhut/r6-manifest.jsonl: No such file or directory
+/usr/bin/grep: /tmp/chousa-research-gate-selftest.K1Yhut/r6-manifest.jsonl: No such file or directory
+/usr/bin/grep: /tmp/chousa-research-gate-selftest.K1Yhut/r6-manifest.jsonl: No such file or directory
+/usr/bin/grep: /tmp/chousa-research-gate-selftest.K1Yhut/r6-manifest.jsonl: No such file or directory
+FAIL-case all-pass.md                  rc=2/0 verdicts=0/1 sums=0/1 missing:'RESEARCH_GATE: CLEAN' manifest-lines=0/2 json-invalid schema-absent record-sha-absent gate-sha-absent verdict-field 
+    | research-gate: flock(1) unavailable; manifest not written: /tmp/chousa-research-gate-selftest.K1Yhut/r6-manifest.jsonl
+ok-case  62 all-meta.md                  exit=0
+ok-case  63 all-meta-missing.md          exit=1
+ok-case  64 no-such-record.md            exit=2
+ok-case  65 integrity-pass               exit=0
+ok-case  66 integrity-fail-dangling-claim exit=1
+ok-case  67 integrity-fail-dangling-source exit=1
+ok-case  68 integrity-fail-dangling-chain-claim exit=1
+ok-case  69 integrity-fail-dangling-sweep exit=1
+ok-case  70 integrity-exempt-counted     exit=0
+ok-case  71 integrity-fail-counting      exit=1
+ok-case  72 setup-integrity-no-path      exit=2
+ok-case  73 setup-integrity-missing-file exit=2
+ok-case  74 all-dangling.md              exit=1
+FAIL-case pin-clean                    exit=2 want=0 pin-lines=0 token=GATE_PIN: ok
+    | research-gate: --pin canonical capture failed (rc=2 verdict-lines=0 manifest-lines=0 schema-lines=0): /tmp/chousa-research-gate-selftest.K1Yhut/pin-clean.baseline
+FAIL-case drift-clean                  exit=2 want=0 drift-lines=0 token=GATE_DRIFT: none
+    | research-gate: --drift baseline missing: /tmp/chousa-research-gate-selftest.K1Yhut/pin-clean.baseline
+FAIL-case drift-volatile-churn         exit=2 want=0 drift-lines=0 token=GATE_DRIFT: none
+    | research-gate: --drift baseline missing: /tmp/chousa-research-gate-selftest.K1Yhut/pin-clean.baseline
+FAIL-case drift-one-field-mutant       exit=2 want=1 drift-lines=0 token=+finds -findings
+    | research-gate: --drift baseline missing: /tmp/chousa-research-gate-selftest.K1Yhut/pin-clean.baseline
+ok-case  79 drift-missing                exit=2
+ok-case  80 drift-malformed              exit=2
+/usr/bin/sed: can't read /tmp/chousa-research-gate-selftest.K1Yhut/pin-clean.baseline: No such file or directory

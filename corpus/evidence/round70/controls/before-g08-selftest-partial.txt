@@ -1,0 +1,71 @@
+# capture of the reconnaissance run at the freeze: bash tools/research-gate.sh --selftest, stdout redirected to a scratch file
+# started 23:49 local 2026-10-31 (scratch file creation), captured into the freeze at the timestamp in before-g08-budget.txt;
+# PARTIAL by design: the run was still executing when captured (no RESEARCH_GATE_SELFTEST line yet); cases so far: 59, failed: 0
+# the full official run is the round's after-measurement (the preflight G08 gate at the raised budget), not this capture
+
+ok-case  1  pass-control                 exit=0
+ok-case  2  pass-hop-marked-unresolved   exit=0
+ok-case  3  pass-export-chrome           exit=0
+ok-case  4  fail-export-chrome-strict    exit=1
+ok-case  5  fail-chrome-malformed-export exit=1
+ok-case  6  fail-no-question             exit=1
+ok-case  7  fail-unranked-source         exit=1
+ok-case  8  fail-chain-hop-unresolved    exit=1
+ok-case  9  fail-claim-unpointed         exit=1
+ok-case  10 fail-rejection-dropped       exit=1
+ok-case  11 fail-negative-without-sweep  exit=1
+ok-case  12 fail-obs-inference-collapse  exit=1
+ok-case  13 fail-hierarchy-primary-lie   exit=1
+ok-case  14 fail-pointer-ephemeral       exit=1
+ok-case  15 fail-external-without-approval exit=1
+ok-case  16 fail-secret-shaped           exit=1
+ok-case  17 fail-session-read            exit=1
+ok-case  18 fail-schema                  exit=1
+ok-case  19 setup-no-record              exit=2
+ok-case  20 setup-missing-file           exit=2
+ok-case  21 claims-pass                  exit=0
+ok-case  22 claims-fail-tampered         exit=1
+ok-case  23 claims-fail-out-of-corpus    exit=1
+ok-case  24 claims-fail-external         exit=1
+ok-case  25 claims-fail-session          exit=1
+ok-case  26 claims-fail-contradicted-unmarked exit=1
+ok-case  27 claims-fail-stray-marker     exit=1
+ok-case  28 claims-fail-counting         exit=1
+ok-case  29 setup-claims-no-path         exit=2
+ok-case  30 setup-claims-missing-file    exit=2
+ok-case  31 chain-pass                   exit=0
+ok-case  32 chain-fail-tampered          exit=1
+ok-case  33 chain-fail-anchor-kinds      exit=1
+ok-case  34 chain-fail-out-of-corpus     exit=1
+ok-case  35 chain-fail-external          exit=1
+ok-case  36 chain-fail-invalid           exit=1
+ok-case  37 chain-fail-counting          exit=1
+ok-case  38 chain-fail-no-chain          exit=1
+ok-case  39 setup-chain-no-path          exit=2
+ok-case  40 setup-chain-missing-file     exit=2
+ok-case  41 claims-boundary-pass         exit=0
+ok-case  42 claims-boundary-fail         exit=1
+ok-case  43 chain-pass-boundary          exit=0
+ok-case  44 chain-fail-boundary          exit=1
+ok-case  45 sweeps-pass                  exit=0
+ok-case  46 sweeps-fail-planted-hit      exit=1
+ok-case  47 sweeps-fail-rejection-incomplete exit=1
+ok-case  48 sweeps-fail-unnamed          exit=1
+ok-case  49 sweeps-fail-out-of-corpus    exit=1
+ok-case  50 sweeps-fail-unresolved-id    exit=1
+ok-case  51 sweeps-fail-counting         exit=1
+ok-case  52 sweeps-pass-cell-command     exit=0
+ok-case  53 setup-sweeps-no-path         exit=2
+ok-case  54 setup-sweeps-missing-file    exit=2
+ok-case  55 all-pass.md                  exit=0
+ok-case  56 all-pass.md                  exit=1
+ok-case  57 all-structure.md             exit=1
+ok-case  58 all-pass.md                  exit=0
+ok-case  59 claims-pass.jsonl            exit=0
+tools/research-gate.sh: line 5548: /tmp/chousa-research-gate-selftest.dcCFup/r6-manifest.jsonl: No such file or directory
+tools/research-gate.sh: line 5551: /tmp/chousa-research-gate-selftest.dcCFup/r6-manifest.jsonl: No such file or directory
+/usr/bin/grep: /tmp/chousa-research-gate-selftest.dcCFup/r6-manifest.jsonl: No such file or directory
+/usr/bin/grep: /tmp/chousa-research-gate-selftest.dcCFup/r6-manifest.jsonl: No such file or directory
+/usr/bin/grep: /tmp/chousa-research-gate-selftest.dcCFup/r6-manifest.jsonl: No such file or directory
+/usr/bin/grep: /tmp/chousa-research-gate-selftest.dcCFup/r6-manifest.jsonl: No such file or directory
+/usr/bin/sed: can't read /tmp/chousa-research-gate-selftest.dcCFup/r6-manifest.jsonl: No such file or directory

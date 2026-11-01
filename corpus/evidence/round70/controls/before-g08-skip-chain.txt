@@ -1,0 +1,31 @@
+# r70 before-receipt: the G08 skip chain (captured at base 1db6babf528692d871a2b97be0b3e519614fa300, 2026-11-01)
+# every command below ran with cwd = the lane repo; rc read by immediate $?
+
+$ for f in round-67/preflight.txt round-67/preflight-after.txt round-68/preflight-final.txt round-69/preflight-final.txt; do printf "%s " "$f"; grep -c "SKIPPED=G08" ".ufo/waves/$f"; done
+round-67/preflight.txt 1
+round-67/preflight-after.txt 1
+round-68/preflight-final.txt 1
+round-69/preflight-final.txt 1
+rc=0
+
+# r66 ran no preflight at all (disclosed in LOG round-66/67); the wave dir carries no preflight file:
+$ ls .ufo/waves/round-66/
+census-end.txt
+census-start.txt
+registry-census-end.txt
+rc=0
+
+# no committed receipt anywhere in .ufo/waves/ shows a full G08 PASS on this host:
+$ grep -rl "GATE G08 gate-selftest PASS" .ufo/waves/ | wc -l
+0
+rc=0
+
+# the r69 preflight-final summary line (the skip this round closes):
+$ grep "PREFLIGHT=" .ufo/waves/round-69/preflight-final.txt
+PREFLIGHT=7/7 FAILED=none ENV=none SKIPPED=G08
+rc=0
+
+# do-nothing control: the round-70 evidence dir is absent at the base (created by this freeze):
+$ git show 1db6babf:corpus/evidence/round70 2>&1 | head -1
+fatal: path 'corpus/evidence/round70' exists on disk, but not in '1db6babf'
+rc=0

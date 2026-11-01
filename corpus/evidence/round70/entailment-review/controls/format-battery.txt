@@ -1,0 +1,25 @@
+# r70 C2 battery: the record-format checker on the two committed fixtures plus the fail-closed arm
+# captured at the round-70 freeze; Windows/11, python 3.13.15; each EXIT= is the rc read by immediate rc=$? after the redirected command
+
+$ python -I corpus/evidence/round70/entailment-review/record-format-check.py --record corpus/evidence/round70/entailment-review/fixtures/record-valid.md --scope corpus/evidence/round70/entailment-review/claims-scope.tsv --root .
+RECORD_FORMAT=2/2 REVIEW_FORMAT=PASS
+EXIT=0
+
+$ python -I corpus/evidence/round70/entailment-review/record-format-check.py --record corpus/evidence/round70/entailment-review/fixtures/record-broken.md --scope corpus/evidence/round70/entailment-review/claims-scope.tsv --root .
+RECORD_FORMAT=0/3 REVIEW_FORMAT=FAIL
+defect: no `reviewed-at:` line carrying an ISO date
+defect: row 1 (host-source-resolution-r66#1): verdict word `probably-fine` not in supported/contradicted/unsupported
+defect: row 1 (host-source-resolution-r66#1): reason shorter than 8 words
+defect: row 2 (host-source-resolution-r66#2): reason shorter than 8 words
+defect: row 3 (no-such-entry-r70#9): claim id not in scope
+defect: row 3 (no-such-entry-r70#9): S-row id `S999` not in corpus/SOURCES.md
+defect: row 3 (no-such-entry-r70#9): entry path `corpus/knowledge/no-such-entry-r70.md` does not exist under --root
+EXIT=1
+
+$ python -I corpus/evidence/round70/entailment-review/record-format-check.py --record corpus/evidence/round70/entailment-review/fixtures/no-such-record.md --root .
+RECORD_FORMAT=ERROR REVIEW_FORMAT=ERROR record absent (fail-closed)
+EXIT=2
+
+CHECKER_SHA256=7444fa3e29d4167c78e9b8e43e3cd8eefd70df2b6797f3aa8c41724feb09fbed
+# CHECKER_SHA256 is corpus/evidence/round70/entailment-review/record-format-check.py at the freeze;
+# re-derive via: python -I tools/digest-in-tree.py --receipt corpus/evidence/round70/entailment-review/controls/format-battery.txt

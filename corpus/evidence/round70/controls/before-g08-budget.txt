@@ -1,0 +1,18 @@
+# r70 before-receipt: the preflight G08 budget (1500 s) is un-meetable on this host (captured 2026-11-01 at base 1db6babf528692d871a2b97be0b3e519614fa300)
+
+# the frozen g08 budget line at the base (tree-to-tree):
+$ git show 1db6babf:tools/lane-preflight.py | sed -n "262,264p"
+def g08(root, a, env, work):
+    return selftest(["bash", "tools/research-gate.sh", "--selftest"], root, env, "RESEARCH_GATE_SELFTEST: PASS", 1500,
+                    "tools/research-gate.sh")
+
+# the reconnaissance selftest run (bash tools/research-gate.sh --selftest), started
+# scratch file created: 2026-11-01 00:16:42 (no verdict line yet at capture time — still running)
+# captured:                    2026-11-01 00:16:44
+# selftest cases completed at capture: 59 (0 failed so far; the run has not printed RESEARCH_GATE_SELFTEST)
+# elapsed arithmetic: the capture is more than 1500 s after the start (started 23:49:xx local, captured after 00:2x), i.e. the
+# r63-era 1500 s budget would have killed the run (TimeoutExpired -> gate FAIL) before the selftest could finish; the budget, not
+# the gate, is the host drift. Full transcript committed alongside as before-g08-selftest-partial.txt (disclosed: partial, no verdict yet).
+$ date
+Sun Nov  1 00:16:44 PDT 2026
+EXIT=0
