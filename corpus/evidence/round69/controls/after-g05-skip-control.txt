@@ -1,0 +1,31 @@
+# after-receipt (round-69 C2): the G05 parse-boundary control re-run at the round-69 landing
+# working tree about to land as the landing commit (HEAD at capture 6eaa9b4fa3a72de57fa8eea2d0809f41a035a193; the fixtures and the parser
+# are byte-identical to the freeze measurement in controls/before-g05-skip-control.txt)
+# exit codes read by immediate rc=$? after each redirected command; no pipeline
+
+$ python -I tools/lane-preflight.py --only G05 --root corpus/evidence/round69/fixtures/g05-skip3
+GATE G01 census SKIP
+GATE G02 knowledge-index SKIP
+GATE G03 lesson-gate SKIP
+GATE G04 shonen-pointers SKIP
+GATE G05 scorecard-paths PASS 0 capability pointers resolve
+GATE G06 freeze-selftest SKIP
+GATE G07 assimilate-selftest SKIP
+GATE G08 gate-selftest SKIP
+PREFLIGHT=1/1 FAILED=none ENV=none SKIPPED=G01,G02,G03,G04,G06,G07,G08
+EXIT=0
+
+$ python -I tools/lane-preflight.py --only G05 --root corpus/evidence/round69/fixtures/g05-skip4
+GATE G01 census SKIP
+GATE G02 knowledge-index SKIP
+GATE G03 lesson-gate SKIP
+GATE G04 shonen-pointers SKIP
+GATE G05 scorecard-paths FAIL 1 unresolved: corpus/no-such-entry-r69.md
+GATE G06 freeze-selftest SKIP
+GATE G07 assimilate-selftest SKIP
+GATE G08 gate-selftest SKIP
+PREFLIGHT=0/1 FAILED=G05 ENV=none SKIPPED=G01,G02,G03,G04,G06,G07,G08
+EXIT=1
+
+# reading: unchanged from the freeze - the identical pointer is skipped in the 3-cell row and parsed in
+# the 4-cell row; the >=4-cell boundary is the mechanism the round-69 correction note records

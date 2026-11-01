@@ -1,0 +1,28 @@
+# after-receipt (round-69 C1): the freeze-check selftest battery re-issued with explicit rc capture
+# supersedes the bare EXIT= of corpus/evidence/round68/controls/after-freeze-battery.txt line 9 (routed by
+# the round-68 closure spot-check section 8 item 1); the r68 receipt bytes stay as committed history, never rewritten
+# measured at the working tree about to land as the round-69 landing commit (HEAD at capture 6eaa9b4fa3a72de57fa8eea2d0809f41a035a193);
+# Windows/11, python 3.13.15; each EXIT= line is the process rc read by immediate rc=$? after the redirected
+# command - no pipeline (the receipt-exit-transcription class, r63 attempt-2 / r68 lesson Mistakes)
+
+$ python -I tools/freeze-check.py --selftest
+# [tail of captured output]
+PASS  [M26 red: foreign digest in a prompt, wrong --allow-digest] exit=1 want=1 failed=DIGEST_STRAY want=DIGEST_STRAY
+SELFTEST 34/34 pass
+VERDICT: FREEZE_CHECK=34/34 red_before_exit=1
+EXIT=0
+
+$ python -I tools/freeze-check.py --selftest --lane-root .
+# [tail of captured output]
+PASS  [M26 red: foreign digest in a prompt, wrong --allow-digest] exit=1 want=1 failed=DIGEST_STRAY want=DIGEST_STRAY
+SELFTEST 34/34 pass
+VERDICT: FREEZE_CHECK=34/34 red_before_exit=1
+EXIT=0
+
+TOOL_SHA256=da9f6e16b9913a63fc6b16445cbe7b97ac878e6863ab8bb4e92e7922735b55c2
+TOOL_CASE_LITERALS=9 TOOL_MUT_LITERALS=25
+# TOOL_SHA256 is tools/freeze-check.py at the measured revision - byte-unchanged since the r68 landing
+# 948afaa0a2a73c3c3c672aef650a3afe81022a84 (the r68 receipt pinned the same digest as REPAIRED_TOOL_SHA256);
+# after the landing commit it re-derives via: python -I tools/digest-in-tree.py --receipt corpus/evidence/round69/controls/after-freeze-battery-r69.txt
+# the 34 frozen case names, expected exits and expected finding-ids are byte-unchanged from the base
+# (case(' = 9 and mut(' = 25, counted over the committed bytes; the r68 receipt and spot-check carry the same counts)
