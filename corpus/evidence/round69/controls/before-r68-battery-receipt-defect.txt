@@ -1,0 +1,32 @@
+# before-receipt (round-69 C1): the round-68 after-battery receipt's transcription defect
+# measured at the round-69 freeze b51f4d879b95f42147a716eac1d05e7e01c981a0; Windows/11, python 3.13.15
+# routed defect (round-68 closure spot-check section 8 item 1): invocation 1 carries a bare EXIT=
+# each EXIT= line below is the captured process rc (immediate rc=$?, no pipeline); where a tool prints
+# its own in-band EXIT= line (tools/digest-in-tree.py does), both lines appear - tool line first
+
+$ grep -n '^EXIT=' corpus/evidence/round68/controls/after-freeze-battery.txt
+9:EXIT=
+15:EXIT=0
+EXIT=0
+
+$ grep -c '^EXIT=$' corpus/evidence/round68/controls/after-freeze-battery.txt
+1
+EXIT=0
+
+$ grep -c '^EXIT=0$' corpus/evidence/round68/controls/after-freeze-battery.txt
+1
+EXIT=0
+
+# the old receipt's digest pins still re-derive at the base (the defect is transcription-only)
+$ python -I tools/digest-in-tree.py --receipt corpus/evidence/round68/controls/after-freeze-battery.txt
+LANE_REVISION=b51f4d879b95f42147a716eac1d05e7e01c981a0
+MODE=rev SCANNED_BLOBS=17458
+DIGEST da9f6e16b9913a63fc6b16445cbe7b97ac878e6863ab8bb4e92e7922735b55c2 IN_TREE path=tools/freeze-check.py oid=0050f507f81ede5911db78aa7f85e7f4c2332115
+DIGESTS_IN_TREE=1/1 DIGEST_IN_TREE=PASS
+EXIT=0
+EXIT=0   # process rc; the EXIT=0 line above it is the tool's own in-band exit line
+
+# the re-issued receipt does not exist at the freeze (absence is the before state; ls exits 2 by design)
+$ ls corpus/evidence/round69/controls/after-freeze-battery-r69.txt
+ls: cannot access 'corpus/evidence/round69/controls/after-freeze-battery-r69.txt': No such file or directory
+EXIT=2

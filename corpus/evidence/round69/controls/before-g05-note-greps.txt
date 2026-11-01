@@ -1,0 +1,25 @@
+# before-receipt (round-69 C2): the r68 SCORECARD correction note's G05 mechanism wording
+# measured at the round-69 freeze b51f4d879b95f42147a716eac1d05e7e01c981a0
+
+$ grep -n 'names no path' SCORECARD.md
+3192:Correction to the round-67 section above, found and repaired this round: the r67 capability row ("receipt-digest provenance enforcement") was committed truncated mid-cell at the r67 verdicts commit (`75deb9b8`: the evidence cell ends `` `python -I tools/digest-in-tree.py -- `` and the cell and row terminator are missing — G05 still passed because the truncated tail names no path). The row is completed in place this round with the battery's real exit contract and controls receipt; the r67 bytes stay in history and this note is the record. Not a scored claim — protocol/conformance work like r67's G02 wrap-up fix.
+EXIT=0
+
+$ grep -c 'names no path' SCORECARD.md
+1
+EXIT=0
+
+$ grep -c 'len(cells) >= 4' SCORECARD.md
+0
+EXIT=1   # grep exits 1 on zero matches: the precise mechanism is recorded nowhere in SCORECARD.md
+
+$ grep -n 'len(cells) >= 4' tools/lane-preflight.py
+233:            if len(cells) >= 4 and cells[0] not in ("Capability", "Name") and not set(cells[0]) <= set("-: "):
+EXIT=0
+
+# the same imprecise literal also sits in the r68 lesson Mistakes row (left as history):
+$ grep -rn 'names no path' corpus/lessons/ LOG.md
+corpus/lessons/round-68-verifier-spotcheck.md:55:1. **Truncated r67 SCORECARD capability row.** Confirmed at `git show 75deb9b8:SCORECARD.md`: last line ends `` `python -I tools/digest-in-tree.py -- `` — mid-cell, no fourth cell, no row terminator. The r68 diff repairs exactly that line (+30/−1 in SCORECARD.md): the row is completed (real exit contract, controls receipt `corpus/evidence/round67/controls/after-d2-battery.txt`, first-working round 67 retained) and a correction note in the `## Round 68 verdict` section names the superseded text, the commit (`75deb9b8`), and the disposition. **Convention judgment: respected.** SCORECARD.md is a living table file, not an append-only log; the correction landed as a new commit (no amend), the truncated r67 bytes remain in history, the note is discoverable in the same file's verdict section, the report discloses it as self-found and not scored, and the lesson carries a `landing-truncation` `## Mistakes` row. The completed cell adds no new capability claim (the battery receipt it cites is an r67 artifact). One imprecision, routed below: the note's "G05 still passed because the truncated tail names no path" is not the mechanism — the tail does name `tools/digest-in-tree.py` (unterminated backtick); G05 actually skips the row because its parser requires ≥4 cells (`len(cells) >= 4`, verified in `tools/lane-preflight.py` `g05`), and a 3-cell row is never parsed. Operative fact (G05 passed over the truncated row — r67 receipts show `G05 … 90 capability pointers resolve`) is true either way.
+corpus/lessons/round-68-verifier-spotcheck.md:83:2. **Correction-note precision:** the SCORECARD r68 correction note's G05 mechanism ("the truncated tail names no path") should say "the row lacks the fourth cell, so G05's ≥4-cell parser never reads it" — the tail does name `tools/digest-in-tree.py` in an unterminated backtick.
+corpus/lessons/round-68.md:22:| landing-truncation — the r67 verdicts commit left the new SCORECARD capability row mid-cell: the evidence cell ends `` `python -I tools/digest-in-tree.py -- `` with the rest of the cell, the first-working-round cell and the row terminator missing, and G05 (path-existence over evidence cells) could not see it because the truncated tail names no path | `git show 75deb9b8c2ea95b777bda16bbce42966f8fc5535:SCORECARD.md` last line; found when this round's append collided with the truncated line | this round's SCORECARD append (the continuation line landed as a separate broken row before inspection) | the row is completed in place at the landing with the battery's real exit contract and controls receipt; the correction note in the r68 SCORECARD verdict section is the record; r67 bytes stay in history |
+EXIT=0
