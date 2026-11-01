@@ -4404,6 +4404,21 @@ run_selftest() {
   command -v flock >/dev/null 2>&1 || HAVE_FLOCK=0
   PY3=0
   if command -v python3 >/dev/null 2>&1 && python3 -c 'import json' >/dev/null 2>&1; then PY3=1; fi
+  # r71: the locale-boundary case's duration is unbounded on this host (the r70
+  # D5 class: >70 min under contention at case 258, 16.3 s uncontended - measured
+  # at the r71 freeze), so the case runs under a time budget where timeout(1) is
+  # actually capable: the probe requires timeout to KILL (`timeout 1 sleep 5` ->
+  # rc 124), not merely exist (the python3 store-stub lesson). Overrunning the
+  # budget fails the case honestly - a named FAIL-case at rc 124 plus a case-note
+  # (verdict unmeasured within the budget) - never a pass, never a fake. Default
+  # 900 s (~55x the measured uncontended duration); overridable.
+  LC_BOUNDARY_BUDGET_S="${LC_BOUNDARY_BUDGET_S:-900}"
+  HAVE_TIMEOUT=0
+  tprobe_rc=0
+  if command -v timeout >/dev/null 2>&1; then
+    timeout 1 sleep 5 >/dev/null 2>&1 || tprobe_rc=$?
+    if [[ $tprobe_rc -eq 124 ]]; then HAVE_TIMEOUT=1; fi
+  fi
   printf 'outside text\n' >"$OUTSIDE_FILE"
   mkdir -p "$WORK/lib" "$WORK/noise" "$WORK/claimsrc"
   printf 'line1 primary material\nline2\n' >"$WORK/lib/primary.md"
@@ -8341,9 +8356,13 @@ EOF
   printf '{"id":"LC2","source":"lib/locale-b.md","span":"%s","expect":"supported"}\n' \
     "$(printf '\\u00e9%.0s' {1..16383})" >"$WORK/claims-locale-b.jsonl"
   lc_ok=1 lc_rc=0 lc_out=''
+  lc_run=(bash "$SELF" verify-claims "$WORK/claims-locale-b.jsonl")
+  if [[ $HAVE_TIMEOUT -eq 1 ]]; then
+    lc_run=(timeout "$LC_BOUNDARY_BUDGET_S" "${lc_run[@]}")
+  fi
   lc_out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
     CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" LC_ALL=C LANG=C \
-    bash "$SELF" verify-claims "$WORK/claims-locale-b.jsonl" 2>&1) || lc_rc=$?
+    "${lc_run[@]}" 2>&1) || lc_rc=$?
   cases=$((cases + 1))
   [[ $lc_rc -eq 0 ]] || lc_ok=0
   [[ $lc_out == *'CLAIM id=LC2 expected=supported observed=supported source=lib/locale-b.md at=line:1 verdict=match'* ]] || lc_ok=0
@@ -8352,6 +8371,7 @@ EOF
   else
     printf 'FAIL-case %-28s exit=%d\n' claims-locale-boundary "$lc_rc"
     printf '%s\n' "$lc_out" | sed 's/^/    | /'
+    [[ $lc_rc -ne 124 ]] || printf 'case-note %-29s reason=locale-boundary budget %ss exceeded (timeout); verdict unmeasured within budget\n' claims-locale-boundary "$LC_BOUNDARY_BUDGET_S"
     failures=$((failures + 1))
   fi
 
