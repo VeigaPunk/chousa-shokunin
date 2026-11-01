@@ -45,7 +45,11 @@ import sys
 import tempfile
 
 HEX64 = re.compile(r'(?<![0-9A-Fa-f])[0-9A-Fa-f]{64}(?![0-9A-Fa-f])')
-LANE_ROOT_DEFAULT = '/home/vgpnk/Projects/shokunin/chousa-shokunin'
+# The default lane root is the checkout this file itself lives in (the tools/ parent), so the
+# selftest is portable across host checkouts; --lane-root still overrides. (Round 68 repair of
+# the routed r67 G06 drift: the previous hardcoded '/home/vgpnk/...' default named one dead
+# host and broke the bare --selftest everywhere else.)
+LANE_ROOT_DEFAULT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def sha256_file(path):
@@ -294,8 +298,17 @@ def selftest(lane_root, work):
             return (load_json(os.path.join(waves, 'round-%d' % r, 'w1-spec.json')),
                     load_json(os.path.join(waves, 'round-%d' % r, 'w1-dispatch.json')), rdy)
 
+        seen_dirs = set()
+
         def mk(name, rnd, spec, disp, ready, claims_bytes):
-            d = os.path.join(base, name)
+            # Fixture directories must exist on the running host's filesystem: map the case's
+            # display name through the Win32-reserved set (< > : " / \ | ? * — Microsoft's
+            # naming rules, lane row S164) so names like 'M01 red: ...' work on NTFS too.
+            # Display names (check output, expected-finding reporting) stay verbatim.
+            fs_name = re.sub(r'[<>:"/\\|?*]', '_', name)
+            assert fs_name not in seen_dirs, 'fixture dir collision: %r' % name
+            seen_dirs.add(fs_name)
+            d = os.path.join(base, fs_name)
             rd = os.path.join(d, 'round-%d' % rnd)
             os.makedirs(rd)
             sp, dp, rp, cp = (os.path.join(rd, 'w1-spec.json'), os.path.join(rd, 'w1-dispatch.json'),
