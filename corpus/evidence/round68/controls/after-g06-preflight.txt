@@ -1,0 +1,14 @@
+# after-receipt (round-68 C1): lane preflight with the repaired freeze-check — G06 PASS
+# measured at the working tree about to land as the round-68 landing commit (2026-10-31); G08 skipped (disclosed)
+$ python -I tools/lane-preflight.py --root . --fleet <fleet> --skip G08
+GATE G01 census PASS exit=0 census_findings=0
+GATE G02 knowledge-index PASS 90 entries indexed
+GATE G03 lesson-gate PASS 45 lessons carry ## Gate
+GATE G04 shonen-pointers PASS 10 pointers resolve
+GATE G05 scorecard-paths PASS 90 capability pointers resolve
+GATE G06 freeze-selftest PASS exit=0
+GATE G07 assimilate-selftest PASS exit=0
+GATE G08 gate-selftest SKIP
+PREFLIGHT=7/7 FAILED=none ENV=none SKIPPED=G08
+EXIT=0
+# before: PREFLIGHT=6/7 FAILED=G06 exit 1 (controls/before-g06-preflight.txt, same command at the base)

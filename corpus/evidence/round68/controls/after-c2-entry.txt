@@ -1,0 +1,32 @@
+# after-receipt (round-68 C2): the sourced entry lands and verifies on the r66 reconciliation counter
+# measured at the working tree about to land as the round-68 landing commit (2026-10-31); the entry, both
+# registry rows and the capture are absent at the base 27df950df83a2c0aea84cfe8de8ddb7b0ff432d4 (frozen before greps: S164=0 S165=0)
+$ python -I corpus/evidence/round66/c2-semantic-count.py --entry corpus/knowledge/host-portable-gate-selftest-r68.md
+CHECK TRIO ok trio lines=4
+CHECK IDS_DEFINED ok cited=S164,S165
+CHECK MINED ok statuses=mined,mined
+CHECK USED_BY ok entry=corpus/knowledge/host-portable-gate-selftest-r68.md
+CHECK TIER ok tiers=A,B
+CHECK ANCHOR ok bad=none
+CHECK BODY_CITES ok absent-from-body=none
+CHECK CLAIMS ok items=2 minlen=283
+CHECK LIMITS ok lines=2 total=697
+ENTRY_SHA256=6de8c3da03d13a76e0e8faefa4c628f5beb1d718f01ecb1c108aa3acb03ebbee
+REGISTRY_SHA256=ff08b249a085e1ce9b0f001fcf626fadb27b08eca62d3960e9a5ccf1e552e42e
+LANE_REVISION=27df950df83a2c0aea84cfe8de8ddb7b0ff432d4
+SEMANTIC=9/9 C2SEM=PASS
+EXIT=0
+$ python -I tools/quote-reopen.py verify --items corpus/evidence/round68/quote-reopen.tsv
+QUOTE_REOPEN_SUMMARY verbatim=1 absent=0 too_long=0 no_source=0 unreachable=0
+EXIT=0
+$ grep -c "^| S164 |" corpus/SOURCES.md; grep -c "^| S165 |" corpus/SOURCES.md
+S164=1
+S165=1
+$ rows/tiers/status tallies over corpus/SOURCES.md
+rows_total=165
+tiers A=123 B=31 C=11
+mined=133 queued=19 rejected=13 
+$ sha256 of the committed capture (S164 pinned digest)
+bf2485c9f36d278b7d96f947869e36247ff8c56eacda6b65124ad0418d7bdcec *corpus/evidence/round68/captures/microsoft-naming-a-file-63e70903.md
+# ENTRY_SHA256 and REGISTRY_SHA256 above are pinned by this receipt; after the landing commit both
+# re-derive: python -I tools/digest-in-tree.py --receipt corpus/evidence/round68/controls/after-c2-entry.txt (add --all-objects for the registry's prior blob history)

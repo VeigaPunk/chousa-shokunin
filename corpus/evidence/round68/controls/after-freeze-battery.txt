@@ -1,0 +1,22 @@
+# after-receipt (round-68 C1): the repaired freeze-check selftest battery on this host
+# measured at the working tree about to land as the round-68 landing commit; Windows/11, python 3.13.15
+# captured by direct redirection; exit codes read immediately (no pipeline)
+$ python -I tools/freeze-check.py --selftest
+# [tail of captured output]
+PASS  [M26 red: foreign digest in a prompt, wrong --allow-digest] exit=1 want=1 failed=DIGEST_STRAY want=DIGEST_STRAY
+SELFTEST 34/34 pass
+VERDICT: FREEZE_CHECK=34/34 red_before_exit=1
+EXIT=
+$ python -I tools/freeze-check.py --selftest --lane-root .
+# [tail of captured output]
+PASS  [M26 red: foreign digest in a prompt, wrong --allow-digest] exit=1 want=1 failed=DIGEST_STRAY want=DIGEST_STRAY
+SELFTEST 34/34 pass
+VERDICT: FREEZE_CHECK=34/34 red_before_exit=1
+EXIT=0
+REPAIRED_TOOL_SHA256=da9f6e16b9913a63fc6b16445cbe7b97ac878e6863ab8bb4e92e7922735b55c2
+TOOL_CASE_LITERALS=9 TOOL_MUT_LITERALS=25
+# the 34 frozen case names, expected exits and expected finding-ids are byte-unchanged from the base
+# (the repair edits only LANE_ROOT_DEFAULT and the mk() fixture-name sanitizer); case(' = 9 and mut(' = 25
+# match the base counts exactly (claims.md after-predicate 4)
+# REPAIRED_TOOL_SHA256 is the working-tree tool about to be committed at the landing; after the landing
+# commit it re-derives via: python -I tools/digest-in-tree.py --receipt corpus/evidence/round68/controls/after-freeze-battery.txt
