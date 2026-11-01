@@ -1,0 +1,16 @@
+# after-receipt (round-69 C1): the re-issued receipt's digest pin re-derives from committed bytes at HEAD
+# HEAD at capture e8a3e6fef92a659bcc8def278ecb07b2679bf313 (the verdicts tree; the tool bytes are unchanged from the landing)
+
+$ python -I tools/digest-in-tree.py --receipt corpus/evidence/round69/controls/after-freeze-battery-r69.txt
+LANE_REVISION=e8a3e6fef92a659bcc8def278ecb07b2679bf313
+MODE=rev SCANNED_BLOBS=17468
+DIGEST da9f6e16b9913a63fc6b16445cbe7b97ac878e6863ab8bb4e92e7922735b55c2 IN_TREE path=tools/freeze-check.py oid=0050f507f81ede5911db78aa7f85e7f4c2332115
+DIGESTS_IN_TREE=1/1 DIGEST_IN_TREE=PASS
+EXIT=0
+PROCESS_EXIT=0   # the EXIT=0 line above it is the tool's own in-band exit line
+
+# the superseded r68 receipt's pin still re-derives too (both receipts valid over committed bytes):
+$ python -I tools/digest-in-tree.py --receipt corpus/evidence/round68/controls/after-freeze-battery.txt
+DIGESTS_IN_TREE=1/1 DIGEST_IN_TREE=PASS
+EXIT=0
+PROCESS_EXIT=0
