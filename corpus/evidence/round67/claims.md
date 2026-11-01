@@ -99,6 +99,10 @@ root):
 - `sha256sum corpus/evidence/round67/captures/git-hash-object-50fe5cc6.adoc` → `37d38be4…71094`; `python -I tools/quote-reopen.py verify --items corpus/evidence/round67/quote-reopen.tsv` → `verbatim=3` exit 0
 - `bash scripts/sources-census.sh validate --root <fleet> chousa` → exit 0 at round end
 
+## Amendment (pre-landing, disclosed 2026-10-31, before commit B)
+
+The C3 quote-reopen literal above is superseded before it was measured against the landed tree: the frozen expectation `verbatim=3` exit 0 is wrong — the third TSV item (`S163q1`) cites S163, whose registry row names a committed capture path, not an http(s) URL, so `tools/quote-reopen.py` answers `NO_SOURCE` by design (the same designed refusal r66 recorded for path rows) and the run exits 1 with `verbatim=2 absent=0 no_source=1`. The S163 quote is instead verified against the committed capture bytes (normalized-whitespace grep; digest `0fad574d…007a`), the QUALITY-57 capture re-read leg. The two S161 items — the anchor source the claim rests on — are `VERBATIM`. The mistake class (a frozen literal written from anticipation, not from a pre-flight run on the exact TSV) is mined in `corpus/lessons/round-67.md` `## Mistakes`; the verdict cites the measured receipt, and this amendment names the superseded text rather than rewriting the frozen line.
+
 Sizing: a do-nothing control cannot land the entry, the captures, or the
 registry rows — absence stays absence. Axis: depth (verifiable technical detail
 with canonical citations and named limits), a distinct axis from C1/C2.
