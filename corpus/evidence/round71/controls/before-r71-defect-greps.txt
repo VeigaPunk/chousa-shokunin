@@ -1,0 +1,46 @@
+# r71 before-receipt (C2): the five routed defects D-70-1..5 of corpus/lessons/round-70-verifier-spotcheck.md, measured over committed bytes at the base
+# measured at base 11b51988d3878cd33b826295304f6f266718ba86 (= origin/master at round start); Windows/11, git bash
+# every command is paste-able; counts are over committed bytes via the worktree (worktree == HEAD at the base: git diff HEAD is empty over these paths, tree-to-tree commands are the measuring surface on this host)
+
+$ git rev-parse HEAD
+11b51988d3878cd33b826295304f6f266718ba86
+
+# --- D-70-1 (S171 quote attribution): the quoted dcCFup crash line is in the sibling capture, not the pinned recon capture
+$ grep -c "dcCFup" corpus/evidence/round70/controls/recon-run-r70.txt
+0
+$ grep -c "dcCFup" corpus/evidence/round70/controls/before-g08-selftest-partial.txt
+7
+$ grep -c "K1Yhut" corpus/evidence/round70/controls/recon-run-r70.txt
+19
+$ grep -c "dcCFup" corpus/SOURCES.md
+1
+
+# --- D-70-2 (counting-command collision): the r70 report/SCORECARD command greps for the verdict token unanchored and hits the receipt's own header quote of the frozen predicate; the anchored form states the true fact
+$ grep -c "RESEARCH_GATE_SELFTEST:" corpus/evidence/round70/controls/after-battery-completes-r70.txt
+1
+$ grep -c "^RESEARCH_GATE_SELFTEST:" corpus/evidence/round70/controls/after-battery-completes-r70.txt
+0
+$ grep -n "RESEARCH_GATE_SELFTEST:" corpus/evidence/round70/controls/after-battery-completes-r70.txt | head -2
+4:# frozen predicate: the battery COMPLETES and prints its verdict line (RESEARCH_GATE_SELFTEST: FAIL ... skipped), rc=1, every failure a named FAIL-case, the six append-subject cases skipped by name - against the base battery's silent death (rc=2, no verdict, S171)
+
+# --- D-70-3 (five-of-six skips): the committed r70 transcript carries five of the six append-subject skips; the sixth (all-manifest-hash-shim, case 259) sits after the ended-at case 258
+$ grep -c "reason=no flock(1): append fails closed" corpus/evidence/round70/controls/after-battery-completes-r70.txt
+5
+$ grep -c "all-manifest-hash-shim" corpus/evidence/round70/controls/after-battery-completes-r70.txt
+0
+
+# --- D-70-4 (the /269 denominator): the unsupported denominator is carried in three committed r70 places (the canonical committed total is the registry's 275, and the r70 transcript's own numbering reaches 257 with 12 skips among cases 1-257)
+$ grep -c "257/269" corpus/lessons/round-70.md
+2
+$ grep -c "257/269" SCORECARD.md
+1
+$ grep -c "257/269" corpus/evidence/round70/controls/after-battery-completes-r70.txt
+1
+$ grep -c "^skip-case" corpus/evidence/round70/controls/after-battery-completes-r70.txt
+12
+
+# --- D-70-5 (SKILL registry row 83 asserts a completing FAIL verdict its own cited receipt does not show)
+$ grep -c "the battery completes and prints" SKILL.md
+1
+$ grep -c "RESEARCH_GATE_SELFTEST: FAIL (k/N cases, 6 skipped)" SKILL.md
+1

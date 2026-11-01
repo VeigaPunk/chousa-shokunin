@@ -1,0 +1,18 @@
+# r71 probe receipt (C1 ground): timeout(1) capability and the locale-boundary case duration on this host
+# measured 2026-11-01, Windows/11 git bash; fixture built in scratch (never the lane repo); the gate run is verify-claims (zero writes) on the scratch fixture
+
+$ timeout 1 sleep 5 >/dev/null 2>&1; echo tprobe_rc=$?
+tprobe_rc=124
+
+# the case-258 body verbatim (16K-accent multibyte span across the 32764-byte direct/chunk boundary), uncontended window:
+$ time (env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 CHOUSA_ROOT="$PWD/probe" CHOUSA_NOW_EPOCH="1700000000" LC_ALL=C LANG=C bash <lane>/tools/research-gate.sh verify-claims probe/claims-locale-b.jsonl > probe-out.txt 2>&1); echo case_rc=$?
+
+real	0m16.333s
+user	0m2.143s
+sys	0m4.497s
+case_rc=0
+$ tail -2 probe-out.txt
+VERDICT_BEARING_CLAIMS=1/1
+RESEARCH_GATE: CLEAN (claims=1 supported=1 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)
+
+# sizing: default LC_BOUNDARY_BUDGET_S=900 s is ~55x the measured uncontended duration and bounds the contended case that ran >70 min at r70 (the D5 class, RUN-END ADDENDUM of corpus/evidence/round70/controls/after-battery-completes-r70.txt)
