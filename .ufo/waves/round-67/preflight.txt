@@ -1,0 +1,18 @@
+# round-67 preflight, first run (at the verdicts commit 75deb9b8c2ea95b777bda16bbce42966f8fc5535; transcript of the console run)
+$ python -I tools/lane-preflight.py --root . --fleet <fleet> --skip G08
+GATE G01 census PASS exit=0 census_findings=0
+GATE G02 knowledge-index FAIL 2 not named in corpus/README.md: host-source-resolution-r66.md,receipt-digest-provenance-r67.md
+GATE G03 lesson-gate PASS 45 lessons carry ## Gate
+GATE G04 shonen-pointers PASS 10 pointers resolve
+GATE G05 scorecard-paths PASS 90 capability pointers resolve
+GATE G06 freeze-selftest FAIL exit=1
+GATE G07 assimilate-selftest PASS exit=0
+GATE G08 gate-selftest SKIP
+PREFLIGHT=5/7 FAILED=G02,G06 ENV=none SKIPPED=G08
+PREFLIGHT_EXIT=0
+# G06 re-run with the explicit root (console transcript):
+$ python -I tools/freeze-check.py --selftest --lane-root .
+Traceback (most recent call last): ... NotADirectoryError: [WinError 267] The directory name is invalid: 'C:\\Users\\jpvei\\AppData\\Local\\Temp\\freeze-selftest-y3lc75jh\\M01 red: claims file empty'
+# diagnosis: pre-existing host drift, not this round's breakage — LANE_ROOT_DEFAULT '/home/vgpnk/...' (tools/freeze-check.py:48)
+# plus selftest case names containing ':' used as directory names (invalid on NTFS); round-63's PREFLIGHT=8/8 predates the host move
+# disposition: G02 fixed this round (coverage rows, see preflight-after.txt); G06 routed to round 68, disclosed in the report

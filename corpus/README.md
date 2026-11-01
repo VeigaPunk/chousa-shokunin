@@ -1341,3 +1341,9 @@ Left open:
 
 - `corpus/knowledge/receipt-identity-r65.md` — S154–S156 distinguish selected object bytes, SHA256 content identity, reported exit and execution authenticity. Held evidence-provenance ground deepened; no new province asserted.
 - Frontier remains: an authenticated command/result binding and outside re-execution are not supplied by a local header-consistency validator.
+
+## Round66–67 provenance detail (2026-10-31)
+
+- `corpus/knowledge/host-source-resolution-r66.md` — a citation anchored to an installed-local path is host-scoped; the re-anchor hops to a revision-pinned canonical upstream with committed capture bytes (S158–S160; round 67's S163 extends the same flip family).
+- `corpus/knowledge/receipt-digest-provenance-r67.md` — a receipt digest is evidence only when it re-derives from committed bytes; S161–S162, with S163 the rejected versioned-page lead. Enforced by `tools/digest-in-tree.py` (rev/all-objects modes; fail-closed NO_DIGESTS).
+- Preflight drift recorded, not repaired this round: `tools/freeze-check.py --selftest` fails on this host for two pre-existing reasons — the hardcoded `LANE_ROOT_DEFAULT = '/home/vgpnk/Projects/shokunin/chousa-shokunin'` (line 48) and colon-containing selftest case directory names that NTFS refuses (`M01 red: claims file empty`); `--lane-root .` clears the first only. Round-63's `PREFLIGHT=8/8` predates the host move.
