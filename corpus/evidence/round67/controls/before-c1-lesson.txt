@@ -1,0 +1,21 @@
+# before-receipt: the round-66 lesson's S159 quote-location defect, re-derived from committed bytes
+# (routed by the round-66 verifier spot-check item 1; run at the round-67 base)
+$ git show 8c2a0a2add04d0e74222d58a3f695aab95a13cf9:corpus/evidence/round66/controls/before-host-pins.txt | grep -n 'P01\|GIT_PIN_MATCH\|LANE_REVISION'
+4:P01 /usr/share/man/man1/git-cat-file.1.gz absent
+8:GIT_PIN_MATCH=no
+9:LANE_REVISION=4f784d9ee29ee7423d6c63bb2ba501d8ecb1ccee
+$ git show 8c2a0a2add04d0e74222d58a3f695aab95a13cf9:corpus/evidence/round66/controls/before-host-pins.txt | wc -l
+14
+$ grep -c 'line 9: `GIT_PIN_MATCH=no`' corpus/lessons/round-66.md
+1
+$ grep -c 'line 8: `GIT_PIN_MATCH=no`' corpus/lessons/round-66.md
+0
+$ grep -c '^correction: corpus/lessons/round-66.md' corpus/lessons/round-66.md
+0
+C1_BEFORE: superseded-location=1 corrected-location=0 correction-notes=0 C1BEFORE=DEFECT-PRESENT
+# the gate table's row is corpus/lessons/round-66.md line 13; the corrected location is line 8
+# (line 9 carries LANE_REVISION); the row's line-4 P01 cite is correct; the receipt is 14 lines
+LESSON_SHA256=37f8ade6bf32a2c5d438c012bee99dfa3788e20f72122c148ba893779e753980
+RECEIPT_BASIS=corpus/evidence/round66/controls/before-host-pins.txt at 8c2a0a2add04d0e74222d58a3f695aab95a13cf9 (committed bytes)
+LANE_REVISION=cd654578c5e09e1c12e245fd27ad5d609d1694aa
+EXIT=0

@@ -1,0 +1,36 @@
+# before-receipt: the routed r66 scratch-clone defect re-measured by tools/digest-in-tree.py
+# (round-66 verifier spot-check item 2; run at the round-67 base, before the landing)
+$ python -I tools/digest-in-tree.py --receipt corpus/evidence/round66/controls/before-new-counter-boilerplate.txt --all-objects
+LANE_REVISION=cd654578c5e09e1c12e245fd27ad5d609d1694aa
+MODE=all-objects SCANNED_BLOBS=14869
+DIGEST c0aaa9ed7e42f62b7bc1381ac6474c6bbfd97c399f4adae3b76c1289d8845601 OUT_OF_TREE
+DIGEST b19f9ac6d76caaacd6e5b09b0d6117b34793deb4dbcd2097183cd6fa069d34ec OUT_OF_TREE
+DIGESTS_IN_TREE=0/2 DIGEST_IN_TREE=FAIL
+EXIT=1
+# both digest pins re-derive from no blob among all 14,869 objects in the lane
+# repository (history plus unreachable) — the scratch-clone bytes never entered a commit
+$ python -I tools/digest-in-tree.py --receipt corpus/evidence/round67/controls/ctl-digest-in-tree.txt --all-objects
+LANE_REVISION=cd654578c5e09e1c12e245fd27ad5d609d1694aa
+MODE=all-objects SCANNED_BLOBS=14869
+DIGEST bca84fad6ac84284f428afd71afbf2dfcc10cb0b320f20e1c8b61d9eddb51e75 IN_TREE oid=5722292efca8e2b8faa6d31ae3dac614c6967f1f
+DIGESTS_IN_TREE=1/1 DIGEST_IN_TREE=PASS
+EXIT=0
+$ python -I tools/digest-in-tree.py --receipt corpus/evidence/round67/controls/ctl-digest-in-tree.txt --revision cd654578c5e09e1c12e245fd27ad5d609d1694aa
+LANE_REVISION=cd654578c5e09e1c12e245fd27ad5d609d1694aa
+MODE=rev SCANNED_BLOBS=17418
+DIGEST bca84fad6ac84284f428afd71afbf2dfcc10cb0b320f20e1c8b61d9eddb51e75 IN_TREE path=corpus/evidence/round66/controls/boilerplate-entry.md oid=5722292efca8e2b8faa6d31ae3dac614c6967f1f
+DIGESTS_IN_TREE=1/1 DIGEST_IN_TREE=PASS
+EXIT=0
+$ python -I tools/digest-in-tree.py --receipt corpus/evidence/round67/controls/ctl-digest-fake.txt --all-objects
+LANE_REVISION=cd654578c5e09e1c12e245fd27ad5d609d1694aa
+MODE=all-objects SCANNED_BLOBS=14869
+DIGEST 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef OUT_OF_TREE
+DIGESTS_IN_TREE=0/1 DIGEST_IN_TREE=FAIL
+EXIT=1
+$ python -I tools/digest-in-tree.py --receipt corpus/evidence/round67/controls/ctl-digest-empty.txt
+(stdout empty; stderr: DIGEST_IN_TREE=ERROR NO_DIGESTS: no 64-hex sha256 pin found in corpus/evidence/round67/controls/ctl-digest-empty.txt)
+EXIT=2
+C2_BEFORE: checker=absent defect-digests-out-of-tree=2/2 committed-controls-pass=positive-only
+D2BEFORE=NO-ENFORCEMENT-DEFECT-RECORDED
+LANE_REVISION=cd654578c5e09e1c12e245fd27ad5d609d1694aa
+EXIT=0

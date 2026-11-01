@@ -1,0 +1,22 @@
+# before-receipt: SOURCES.md registry tallies and new-row absence at the round-67 base
+$ grep -cE '^\|[[:space:]]*S[0-9]{3,}[[:space:]]*\|' corpus/SOURCES.md
+160
+$ awk -F'|' '/^\|[[:space:]]*S[0-9]{3,}[[:space:]]*\|/ {t=$5; gsub(/ /,"",t); print t}' corpus/SOURCES.md | sort | uniq -c
+    121 A
+     29 B
+     10 C
+$ awk -F'|' '/^\|[[:space:]]*S[0-9]{3,}[[:space:]]*\|/ {s=$9; gsub(/ /,"",s); print s}' corpus/SOURCES.md | sort | uniq -c
+    129 mined
+     19 queued
+     12 rejected
+$ grep -c '^| S161 |' corpus/SOURCES.md
+0
+$ grep -c '^| S162 |' corpus/SOURCES.md
+0
+$ grep -c '^| S163 |' corpus/SOURCES.md
+0
+ROWS_BEFORE=160 TIERS_BEFORE=A121/B29/C10 STATUS_BEFORE=mined129/queued19/rejected12
+S161_S162_S163_BEFORE=0/0/0
+SOURCES_SHA256=6ffec801c6c69b73a64b21fe683a5b16d47a8a0a8f82bef02de1ff1cd3594dca
+LANE_REVISION=cd654578c5e09e1c12e245fd27ad5d609d1694aa
+EXIT=0

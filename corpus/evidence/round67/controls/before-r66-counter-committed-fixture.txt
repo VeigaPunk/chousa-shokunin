@@ -1,0 +1,25 @@
+# before-receipt (the routed item-2 correction): the r66 semantic counter's registered-boilerplate
+# before-state re-derived from committed fixture bytes only — no scratch clone, every digest below
+# is sha256 of a blob committed in this repository
+$ python -I corpus/evidence/round66/c2-semantic-count.py --entry corpus/evidence/round66/controls/boilerplate-entry.md --registry corpus/evidence/round66/controls/boilerplate-registered-registry.md
+CHECK TRIO ok trio lines=4
+CHECK IDS_DEFINED ok cited=S154,S155,S156
+CHECK MINED ok statuses=mined,mined,mined
+CHECK USED_BY ok entry=corpus/evidence/round66/controls/boilerplate-entry.md
+CHECK TIER ok tiers=A,A,B
+CHECK ANCHOR ok bad=none
+CHECK BODY_CITES ok absent-from-body=none
+CHECK CLAIMS fail items=1 minlen=58
+CHECK LIMITS fail lines=2 total=106
+ENTRY_SHA256=bca84fad6ac84284f428afd71afbf2dfcc10cb0b320f20e1c8b61d9eddb51e75
+REGISTRY_SHA256=113ea18251ff4666054e67485abc9e8c895f81045deb9cd9e3538a7d95f4a27c
+LANE_REVISION=cd654578c5e09e1c12e245fd27ad5d609d1694aa
+SEMANTIC=7/9 C2SEM=FAIL
+EXIT=1
+# provenance: the entry is corpus/evidence/round66/controls/boilerplate-entry.md (committed round 66),
+# the registry is corpus/evidence/round66/controls/boilerplate-registered-registry.md (committed round 66);
+# this receipt re-measures the r66 before-state the defective scratch-clone receipt approximated
+# (r66 before-new-counter-boilerplate.txt pinned c0aaa9ed…/b19f9ac6…, re-derived from nothing)
+FIXTURES_COMMITTED_AT=8c2a0a2add04d0e74222d58a3f695aab95a13cf9 (round-66 freeze; both fixture paths verified by git log --follow)
+LANE_REVISION=cd654578c5e09e1c12e245fd27ad5d609d1694aa
+EXIT=0
