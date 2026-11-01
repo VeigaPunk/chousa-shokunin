@@ -1,0 +1,15 @@
+# before-receipt (round-68 C1): lane preflight at the round-68 base — G06 freeze-selftest FAIL
+# run at base 27df950df83a2c0aea84cfe8de8ddb7b0ff432d4 (2026-10-31); G08 skipped (minutes-long; r67 practice, disclosed)
+$ python -I tools/lane-preflight.py --root . --fleet <fleet> --skip G08
+GATE G01 census PASS exit=0 census_findings=0
+GATE G02 knowledge-index PASS 90 entries indexed
+GATE G03 lesson-gate PASS 45 lessons carry ## Gate
+GATE G04 shonen-pointers PASS 10 pointers resolve
+GATE G05 scorecard-paths PASS 90 capability pointers resolve
+GATE G06 freeze-selftest FAIL exit=1
+GATE G07 assimilate-selftest PASS exit=0
+GATE G08 gate-selftest SKIP
+PREFLIGHT=6/7 FAILED=G06 ENV=none SKIPPED=G08
+EXIT=1
+# G06 passes --lane-root explicitly, so this FAIL is the colon-fixture defect alone
+# (see before-freeze-colon-case.txt); the default-root defect shows in the bare --selftest receipt

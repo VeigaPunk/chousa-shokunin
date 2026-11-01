@@ -1,0 +1,18 @@
+# before-receipt (round-68 C1): tools/freeze-check.py --selftest default lane root is a foreign host
+# run at the round-68 base 27df950df83a2c0aea84cfe8de8ddb7b0ff432d4 (2026-10-31, Windows/11, python 3.13.15)
+# captured by direct redirection; the exit code is read immediately (no pipeline)
+$ python -I tools/freeze-check.py --selftest
+# [tail of captured output; the head is interpreter frames]
+    s61, d61, r61 = real(61)
+                    ~~~~^^^^
+  File "C:\Users\jpvei\.zcode\workspace\95b1ba4d-5089-47a4-9fd8-54adebbce2ae\fleet\chousa-shokunin\tools\freeze-check.py", line 292, in real
+    rdy = load_json(os.path.join(waves, 'round-%d' % r, 'w1.ready'))
+  File "C:\Users\jpvei\.zcode\workspace\95b1ba4d-5089-47a4-9fd8-54adebbce2ae\fleet\chousa-shokunin\tools\freeze-check.py", line 78, in load_json
+    with open(path, 'rb') as f:
+         ~~~~^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/vgpnk/Projects/shokunin/chousa-shokunin\\.ufo\\waves\\round-61\\w1.ready'
+EXIT=1
+TOOL_SHA256=d43c6845ebcd2081b15e47bc2f3c46b6964b7bca098639a9cabf79e533e91cfa
+# TOOL_SHA256 = sha256(tools/freeze-check.py) at the base revision, a committed blob:
+# re-derive with git show 27df950df83a2c0aea84cfe8de8ddb7b0ff432d4:tools/freeze-check.py | sha256sum
+# or python -I tools/digest-in-tree.py --receipt corpus/evidence/round68/controls/before-freeze-default-root.txt --revision 27df950df83a2c0aea84cfe8de8ddb7b0ff432d4
