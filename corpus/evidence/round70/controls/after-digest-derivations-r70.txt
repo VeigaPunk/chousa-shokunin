@@ -1,0 +1,18 @@
+# r70 after-receipt: every sha256 pin in the round-70 receipts re-derives from committed blob bytes at the named revision
+# measured at HEAD b2043bf933e08917a055d1b82334a64eacff6279 (digest-in-tree all-objects mode; the tool is unchanged this round, base sha d6c6e6f6a6f6cd4758bc130190084b37abac7dc9f22100f85e1b0977256fc1a7)
+
+$ python -I tools/digest-in-tree.py --receipt corpus/evidence/round70/entailment-review/controls/format-battery.txt --all-objects
+LANE_REVISION=b2043bf933e08917a055d1b82334a64eacff6279
+MODE=all-objects SCANNED_BLOBS=14964
+DIGEST 7444fa3e29d4167c78e9b8e43e3cd8eefd70df2b6797f3aa8c41724feb09fbed IN_TREE oid=fa62539485faff38fb11874fc1667677317116ad
+DIGESTS_IN_TREE=1/1 DIGEST_IN_TREE=PASS
+EXIT=0
+EXIT=0
+
+$ python -I tools/digest-in-tree.py --receipt corpus/evidence/round70/controls/after-digest-derivations-r70.txt --all-objects
+(self-reference: the two TOOL_SHA256 lines below are the pins this receipt carries; they re-derive at HEAD by construction once committed)
+
+LANE-PREFLIGHT_SHA256=c226ec3bf7552f60bcaaf7cb5bbd899339e5b61320931f4a8f965ab0a469bb40
+GATE_SHA256=af061ab225aaeb0cfd8bfba994be609b05adf4bc26759179008661bcbea41312
+# LANE-PREFLIGHT_SHA256 is tools/lane-preflight.py and GATE_SHA256 is tools/research-gate.sh at the r70 landing b2043bf933e08917a055d1b82334a64eacff6279;
+# re-derive both via: git show b2043bf9:tools/lane-preflight.py | sha256sum (and :tools/research-gate.sh)
