@@ -1,0 +1,48 @@
+# r71 after-receipt (C2): the five routed corrections D-70-1..5, measured at the round's verdicts tip
+# before column: controls/before-r71-defect-greps.txt (frozen at commit A 58232b27d1ea542f4189d093c13f5865521c07ca over the base); the r70 bytes themselves are untouched (correction is append-only; the receipts below re-measure the corrected RECORDS, not the history)
+# measured over the verdicts tip's WORKTREE bytes (identical to the verdicts commit for every path counted here; rev-parse at measurement time printed the landing e5458b35 because the verdicts commit did not exist yet); Windows/11 git bash
+
+$ git rev-parse HEAD
+e5458b35c8fb8a153d4c76a42812d75aa4e2940f
+
+--- D-70-1 (S171 re-anchor: correction row S176 + lesson correction block; the ground unchanged)
+$ grep -c "dcCFup" corpus/evidence/round70/controls/recon-run-r70.txt
+0
+$ grep -c "supersedes S171" corpus/SOURCES.md
+1
+$ grep -c "^correction: corpus/lessons/round-70.md D-70" corpus/lessons/round-70.md
+1
+
+--- D-70-2 (the anchored command is the corrected form; both counts stated)
+$ grep -c "^RESEARCH_GATE_SELFTEST:" corpus/evidence/round70/controls/after-battery-completes-r70.txt
+0
+$ grep -c "RESEARCH_GATE_SELFTEST:" corpus/evidence/round70/controls/after-battery-completes-r70.txt
+1
+
+--- D-70-3 (five-of-six stated; the r70 bytes unchanged)
+$ grep -c "reason=no flock(1): append fails closed" corpus/evidence/round70/controls/after-battery-completes-r70.txt
+5
+
+--- D-70-4 (the unsupported denominator superseded by the correction block; carried bytes unchanged, disclosed - the count went 2 to 3 because the correction block's own bullet quotes the superseded literal once, the r66 correction-note precedent)
+$ grep -c "257/269" corpus/lessons/round-70.md
+3
+$ grep -c "275−6 derivation" corpus/lessons/round-70.md
+1
+
+--- D-70-5 (SKILL row 83 corrected to the measured state)
+$ grep -c "the battery completes and prints" SKILL.md
+0
+$ grep -c "the battery does NOT complete into a verdict line" SKILL.md
+1
+
+--- registry (S173-S177 appended; one rejection surfaced)
+$ grep -c "^| S17[3-7] " corpus/SOURCES.md
+5
+$ grep -c '^| S[0-9]' corpus/SOURCES.md
+177
+$ grep '^| S[0-9]' corpus/SOURCES.md | grep -c '| B |'
+42
+$ grep '^| S[0-9]' corpus/SOURCES.md | grep -c '| C |'
+12
+$ grep '^| S[0-9]' corpus/SOURCES.md | grep -c ' rejected |'
+14

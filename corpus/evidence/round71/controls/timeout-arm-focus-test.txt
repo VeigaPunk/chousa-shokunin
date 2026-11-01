@@ -1,0 +1,9 @@
+# r71 focused timeout-arm test (C1): the patched block's own lines, budget forced to 1 s so the bound must fire; fixture = the scratch probe fixture (same bytes the S175 probe measured CLEAN in 16.333 s uncontended)
+# landing under test: e5458b35c8fb8a153d4c76a42812d75aa4e2940f (worktree tool sha d5d48128509f77edf161e4d8b10b833e6e00f822906460fa049f27d1244d41e2)
+
+$ bash focus-test.sh
+PROBE HAVE_TIMEOUT=1 tprobe_rc=124 budget=900
+CASE_RC=124
+CASE_OUT_LINES=1
+case-note claims-locale-boundary        reason=locale-boundary budget 1s exceeded (timeout); verdict unmeasured within budget
+script_rc=0

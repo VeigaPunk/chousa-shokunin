@@ -1,0 +1,24 @@
+# r71 measurement receipt (C1, HONEST PARTIAL): the bounded battery's own run at the landing tip, KILLED BY THE ROUND at case 8
+# measured against the r71 landing e5458b35c8fb8a153d4c76a42812d75aa4e2940f (worktree tools/research-gate.sh sha256 d5d48128509f77edf161e4d8b10b833e6e00f822906460fa049f27d1244d41e2 == HEAD blob, verified at the landing); Windows/11; LC_BOUNDARY_BUDGET_S unset - the 900 s default in force; timeout(1) capable (probe rc 124, HAVE_TIMEOUT=1 - see timeout-arm-focus-test.txt and the frozen probe-timeout-capability-r71.txt)
+# why killed: the host is contended by two orphaned sibling-lane lineages (tools/souji-verify.sh, started 2026-10-31 21:17/21:37, ~2000 CPU-seconds each by census) plus the agent sessions; the battery's measured case rate under this load was ~86-110 s/case (samples below), putting the 275-case battery at ~6.5-8.5 h and the preflight's G08 at a second full battery - the frozen completing predicate (battery verdict line + preflight SKIPPED=none) cannot be measured within this round's execution window; C1 lands honest-stop per the rule frozen in claims.md, and the completing run is routed with this record
+# kill record: the round killed its own lineages by PID (4 + 1 census-self-matches, two passes, final census 0); the wrapper bash died in the same pass, so NO EXIT line exists for this transcript - the absence is the kill's record, not a completed run; the transcript below ends at case 8 (ok-case lines only, every one healthy)
+
+$ git rev-parse HEAD
+e5458b35c8fb8a153d4c76a42812d75aa4e2940f
+
+$ date +%s  (run start)
+1793568687
+
+# rate samples (elapsed_s -> case lines): 331 -> 3 (~110 s/case); 429 -> 5 (~86 s/case); 850 -> 8 (killed)
+
+$ bash tools/research-gate.sh --selftest  (partial transcript, killed by the round)
+ok-case  1  pass-control                 exit=0
+ok-case  2  pass-hop-marked-unresolved   exit=0
+ok-case  3  pass-export-chrome           exit=0
+ok-case  4  fail-export-chrome-strict    exit=1
+ok-case  5  fail-chrome-malformed-export exit=1
+ok-case  6  fail-no-question             exit=1
+ok-case  7  fail-unranked-source         exit=1
+ok-case  8  fail-chain-hop-unresolved    exit=1
+ok-case  9  fail-claim-unpointed         exit=1
+... (transcript ends here - the round killed the run)

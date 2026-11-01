@@ -1,0 +1,18 @@
+# r71 after-receipt: every sha256 pin in the round-71 receipts re-derives from committed blob bytes
+# measured over the verdicts tip's worktree (HEAD at measurement: e5458b35c8fb8a153d4c76a42812d75aa4e2940f; the receipts carrying pins are committed in the verdicts commit and re-checked at the tip)
+
+$ python -I tools/digest-in-tree.py --receipt corpus/evidence/round71/controls/battery-partial-r71.txt --all-objects
+LANE_REVISION=e5458b35c8fb8a153d4c76a42812d75aa4e2940f
+MODE=all-objects SCANNED_BLOBS=14978
+DIGEST d5d48128509f77edf161e4d8b10b833e6e00f822906460fa049f27d1244d41e2 IN_TREE oid=a5780cd699d3184e114aa7f63d03daef6e79d105
+DIGESTS_IN_TREE=1/1 DIGEST_IN_TREE=PASS
+EXIT=0
+EXIT=0
+
+$ python -I tools/digest-in-tree.py --receipt corpus/evidence/round71/controls/timeout-arm-focus-test.txt --all-objects
+LANE_REVISION=e5458b35c8fb8a153d4c76a42812d75aa4e2940f
+MODE=all-objects SCANNED_BLOBS=14978
+DIGEST d5d48128509f77edf161e4d8b10b833e6e00f822906460fa049f27d1244d41e2 IN_TREE oid=a5780cd699d3184e114aa7f63d03daef6e79d105
+DIGESTS_IN_TREE=1/1 DIGEST_IN_TREE=PASS
+EXIT=0
+EXIT=0

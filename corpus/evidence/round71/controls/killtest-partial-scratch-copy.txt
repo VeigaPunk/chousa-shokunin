@@ -1,0 +1,21 @@
+$ bash --version
+GNU bash, version 5.3.15(1)-release (x86_64-pc-cygwin)
+
+$ LC_BOUNDARY_BUDGET_S=1 bash research-gate.sh --selftest  (scratch copy of the patched gate; budget forced to 1 s so the timeout arm must fire at case 258 - a diagnostic kill-test of the bound, never a measurement of committed bytes)
+
+ok-case  1  pass-control                 exit=0
+ok-case  2  pass-hop-marked-unresolved   exit=0
+ok-case  3  pass-export-chrome           exit=0
+ok-case  4  fail-export-chrome-strict    exit=1
+ok-case  5  fail-chrome-malformed-export exit=1
+ok-case  6  fail-no-question             exit=1
+ok-case  7  fail-unranked-source         exit=1
+ok-case  8  fail-chain-hop-unresolved    exit=1
+ok-case  9  fail-claim-unpointed         exit=1
+ok-case  10 fail-rejection-dropped       exit=1
+ok-case  11 fail-negative-without-sweep  exit=1
+ok-case  12 fail-obs-inference-collapse  exit=1
+ok-case  13 fail-hierarchy-primary-lie   exit=1
+ok-case  14 fail-pointer-ephemeral       exit=1
+ok-case  15 fail-external-without-approval exit=1
+ok-case  16 fail-secret-shaped           exit=1
