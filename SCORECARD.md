@@ -4,7 +4,7 @@
 
 | Axis | Score (0–10) | Evidence | Last-change round |
 |---|---:|---|---:|
-| operability | 3 | Gate commit `31b46832e56a7f095092a4a6d62b74bfaf6933e8`: A/B/C each exit 1 with exactly one full DRIFT summary; `.ufo/evidence/round-1/acceptance.json`; baseline `34774a1777d4058ca8c2b4456ce2e6ccee9e24c5` was 0/3 | 1 |
+| operability | 3 | Gate commit `31b46832e56a7f095092a4a6d62b74bfaf6933e8`: A/B/C each exit 1 with exactly one full DRIFT summary; `.ufo/evidence/round-1/acceptance.json`; baseline `34774a1777d4058ca8c2b4456ce2e6ccee9e24c5` was 0/3. Numeric score deliberately frozen at the historical 3/10 — the r63–r65 capability verdicts and their counters were recorded without moving this number (last numeric change round 1; re-measurement owed when the lane revisits the score) | 1 |
 
 This missing-at-baseline scorecard starts with the one measured axis, operability
 (AXES.md's runnable-artifact axis). No expertise scores are invented for the
@@ -3081,14 +3081,14 @@ implemented `tools/receipt-pin.py`, and landed implementation + corpus at
 (`git diff f99de3b 0a851898` over `corpus/evidence/round65` instruments is empty). Final measurement
 at the landed tip: `corpus/evidence/round65/measurement-summary.json`.
 
-| Claim | Before (frozen receipt) | After (measured at `0a851898`) | Counting command | Verdict |
+| Claim | Before (frozen receipt) | After (measured at `1df2af73`) | Counting command | Verdict |
 |---|---|---|---|---|
 | C1 operability — receipt-header consistency capability | `controls/c1-before.txt` CASES=0/20 C1=FAIL missing-target, exit 1 | `controls/c1-after.txt` CASES=20/20 C1=PASS, exit 0; do-nothing stubs `c1-stubs-after.txt` 3/20 and 17/20, both exit 1 | `python3 corpus/evidence/round65/c1-count.py --work <fresh-dir>` | improved (capability acquired); numeric score unchanged at the declared historical 3/10 per the frozen claim |
 | C2 depth — sourced interpretation entry | `controls/c2-before.txt` ENTRY_CHECKS=0/10 C2=FAIL, exit 1 | `controls/c2-after.txt` ENTRY_CHECKS=10/10 C2=PASS, exit 0; sources S154–S156 re-opened and digest-pinned this round | `python3 corpus/evidence/round65/c2-count.py` | **unprovable / not admitted on this counter** — wave-2 `R65C03` and `R65M02` built a boilerplate control (9-line entry + three stub registry rows + a README mention; and a 116-byte token stub) that also scores 10/10, so the after-state is reachable by a do-nothing control and the counter attests shape, not substance. The entry itself landed, its three sources were re-opened and reviewed (`R65R02`: no misquote, no overreach; two cosmetic quote locations corrected), and the semantic evidence is cited separately — but the frozen predicate cannot certify the depth move. No numeric depth score invented. |
 
-Per-axis: operability improved (capability, evidence above); depth improved **narrowly** on the landed
-entry and its re-opened sources, with the claim's own counter reported unprovable (the depth axis move
-rests on the re-opens and the source review, not on `ENTRY_CHECKS`); coverage unchanged (held
+Per-axis: operability improved (capability, evidence above); depth unprovable on the claim's counter
+(closure ruling: the entry landed as an artifact with its sources re-opened and reviewed, but the axis
+move is not admitted — a sourced explanation does not rescue the claim, the round-64 precedent); coverage unchanged (held
 evidence-provenance ground, no province expansion); freshness unchanged (sources opened and pinned this
 round, no drift detector); calibration unchanged (limits named in the entry and lesson; the shape-only
 counter and the forged-body limit are disclosed); adjacency unchanged (generic testing stays adjacent to
@@ -3098,7 +3098,7 @@ shape-only limit stated); discernment unchanged (outside non-author spot-check s
 lane-authored evidence). Wave-2 falsification landed a contract fix and a disclosed limit: the validator's
 environment taxonomy (exit 2 for usage/environment) and two quote-location corrections at `1df2af73`.
 
-## Capabilities
+## Capabilities (round-65 addition)
 
 | Capability | What the lane can now do | Evidence pointer | First-working round |
 |---|---|---|---|
