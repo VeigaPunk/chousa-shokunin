@@ -4389,6 +4389,21 @@ run_selftest() {
   # scratch mount. GATE_CAP_DIR is the pin/drift capture fixture: removed at
   # the end of every capture, and re-swept here if a capture died mid-flight.
   trap 'rm -rf -- "${WORK:-}" "${OUTSIDE_FILE:-}" "${GATE_CAP_DIR:-}"' EXIT
+  # r70: host-capability probes for the environment-conditional cases. A case
+  # whose subject this host cannot run is skipped BY NAME with a reason (the
+  # c1lk precedent below), never counted as a pass and never faked: flock(1)
+  # gates the manifest-append critical section, and the gate is DESIGNED to
+  # fail closed without it (lines 3970-3975), so a flock-less host skips the
+  # manifest-write cases instead of failing them. python3 must actually run:
+  # `command -v python3` alone is satisfied on hosts whose python3 alias is a
+  # non-running store stub (measured on the r70 host), so the probe executes
+  # it once. SKIPPED moves up here from the r14 block (which kept resetting it,
+  # losing any skip counted before cases 103+).
+  SKIPPED=0
+  HAVE_FLOCK=1
+  command -v flock >/dev/null 2>&1 || HAVE_FLOCK=0
+  PY3=0
+  if command -v python3 >/dev/null 2>&1 && python3 -c 'import json' >/dev/null 2>&1; then PY3=1; fi
   printf 'outside text\n' >"$OUTSIDE_FILE"
   mkdir -p "$WORK/lib" "$WORK/noise" "$WORK/claimsrc"
   printf 'line1 primary material\nline2\n' >"$WORK/lib/primary.md"
@@ -5547,7 +5562,7 @@ EOF
     if [[ $json != - ]]; then
       n=$(wc -l <"$WORK/$json" 2>/dev/null | tr -d ' ' || true)
       if [[ ${n:-0} -ne $want_jl ]]; then ok=0; msg+="manifest-lines=${n:-0}/$want_jl "; fi
-      if command -v python3 >/dev/null 2>&1; then
+      if [[ $PY3 -eq 1 ]]; then
         python3 -c 'import json,sys
 for ln in sys.stdin.read().splitlines():
     if ln.strip():
@@ -5557,7 +5572,7 @@ for ln in sys.stdin.read().splitlines():
       grep -qE '"record_sha256":"[0-9a-f]{64}"' -- "$WORK/$json" || { ok=0; msg+="record-sha-absent "; }
       grep -qE '"gate_sha256":"[0-9a-f]{64}"' -- "$WORK/$json" || { ok=0; msg+="gate-sha-absent "; }
       grep -q '"verdict":"CLEAN"' -- "$WORK/$json" || { ok=0; msg+="verdict-field "; }
-      h1=$(sed -n 1p -- "$WORK/$json" | sha256sum | cut -d' ' -f1)
+      h1=$(sed -n 1p -- "$WORK/$json" 2>/dev/null | sha256sum | cut -d' ' -f1 || true)
       if [[ -n $TALL_JSON_H1 ]]; then
         if [[ $h1 != "$TALL_JSON_H1" ]]; then ok=0; msg+="line1-rewritten "; fi
       else
@@ -5614,10 +5629,17 @@ for ln in sys.stdin.read().splitlines():
     'SECTION integrity state=run verdict=CLEAN findings=0 drift=0 tally=INTEGRITY refs=0 resolved=0 unresolved=0' \
     'VERIFY_ALL sections=5 run=2 absent=3 drift-sections=0 findings=0 drift=0'
 
-  tall all-pass.md 0 1 1 claims-pass.jsonl r6-manifest.jsonl 1 \
-    'RESEARCH_GATE: CLEAN'
-  tall all-pass.md 0 1 1 claims-pass.jsonl r6-manifest.jsonl 2 \
-    'RESEARCH_GATE: CLEAN'
+  if [[ $HAVE_FLOCK -eq 1 ]]; then
+    tall all-pass.md 0 1 1 claims-pass.jsonl r6-manifest.jsonl 1 \
+      'RESEARCH_GATE: CLEAN'
+    tall all-pass.md 0 1 1 claims-pass.jsonl r6-manifest.jsonl 2 \
+      'RESEARCH_GATE: CLEAN'
+  else
+    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" verify-all-manifest-append 'no flock(1): append fails closed'
+    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" verify-all-manifest-two-appends 'no flock(1): append fails closed'
+  fi
 
   # Meta-declared claims binding (r6): the record names its claims surface in
   # ## Meta (| claims | PATH |); a declaration that cannot resolve under the
@@ -5975,7 +5997,7 @@ EOF
   # A baseline whose declared volatile list differs from the current one is
   # itself drift: the recorded contract is part of what was pinned.
   sed 's/^# volatile_fields=.*/# volatile_fields=ts/' \
-    "$WORK/pin-clean.baseline" >"$WORK/drift-vol-list.baseline"
+    "$WORK/pin-clean.baseline" >"$WORK/drift-vol-list.baseline" 2>/dev/null || true
   tdrift drift-volatile-list 1 "$WORK/drift-vol-list.baseline" 'volatile_fields'
 
   tsetup pin-no-path 2 --pin
@@ -6150,7 +6172,7 @@ EOF
   # measured rc=2). Mount, fixture write and gate run share that child;
   # nothing reaches the host and cases 1-102 keep their bytes. No userns =>
   # the ns cases are skipped BY NAME and the skip is counted in the summary.
-  NS_STATE='' NS_WHY='' SKIPPED=0
+  NS_STATE='' NS_WHY=''
   ns_probe() { # silent; sets NS_STATE=yes|no once
     [[ -n $NS_STATE ]] && return 0
     command -v unshare >/dev/null 2>&1 || { NS_STATE=no NS_WHY='unshare absent'; return 0; }
@@ -6688,7 +6710,7 @@ EOF
     fi
     if [[ $pj -eq 1 ]]; then
       [[ $(sed -n 1p -- "$f") == '{"prior":true}' ]] || msg+="prior-line-altered "
-      if command -v python3 >/dev/null 2>&1; then
+      if [[ $PY3 -eq 1 ]]; then
         python3 -c 'import json,sys
 for ln in sys.stdin.read().splitlines():
     if ln.strip():
@@ -6704,8 +6726,15 @@ for ln in sys.stdin.read().splitlines():
       failures=$((failures + 1))
     fi
   }
-  r24_case json-unterminated-manifest '{"prior":true}' 0 2 1
-  r24_case json-nul-terminated-manifest '{"prior":true}\0' 0 2 0
+  if [[ $HAVE_FLOCK -eq 1 ]]; then
+    r24_case json-unterminated-manifest '{"prior":true}' 0 2 1
+    r24_case json-nul-terminated-manifest '{"prior":true}\0' 0 2 0
+  else
+    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" json-unterminated-manifest 'no flock(1): append fails closed'
+    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" json-nul-terminated-manifest 'no flock(1): append fails closed'
+  fi
   if [[ $(id -u) -ne 0 ]]; then
     r24_case json-unreadable-manifest '{"prior":true}' 2 0 1 'manifest unreadable'
   else
@@ -7887,7 +7916,7 @@ C1LK_HOLDER
     [[ $(grep -a -c '^$' -- "$c1lk_mf" || true) -eq 0 ]] || c1lk_msg+='blank-line '
     [[ $c1lk_rc -eq 0 ]] || c1lk_msg+="gate-rc=$c1lk_rc/0 "
     [[ $(stat -c %i -- "$c1lk_mf") == "$c1lk_ino" ]] || c1lk_msg+='inode-changed '
-    if command -v python3 >/dev/null 2>&1; then
+    if [[ $PY3 -eq 1 ]]; then
       python3 -c 'import json,sys
 for ln in sys.stdin.read().splitlines():
     if ln.strip():
@@ -7904,6 +7933,11 @@ for ln in sys.stdin.read().splitlines():
     cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
     printf 'skip-case %-2d %-26s reason=%s\n' "$cases" c1lk-holder-blocks-append 'no /proc/locks or no flock(1)'
   fi
+  if [[ $HAVE_FLOCK -ne 1 ]]; then
+    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" c1lk-second-append 'no flock(1): append fails closed'
+  fi
+  if [[ $HAVE_FLOCK -eq 1 ]]; then
   cases=$((cases + 1))
   c1lk_msg=''
   c1lk_mf2="$WORK/c1lk-second.jsonl"; : >"$c1lk_mf2"
@@ -7918,7 +7952,7 @@ for ln in sys.stdin.read().splitlines():
   [[ $c1lk_rca -eq 0 && $c1lk_rcb -eq 0 ]] || c1lk_msg+="gate-rc=$c1lk_rca,$c1lk_rcb/0,0 "
   [[ $(stat -c %i -- "$c1lk_mf2") == "$c1lk_ino2" ]] || c1lk_msg+='inode-changed '
   [[ $(tail -c1 -- "$c1lk_mf2" | od -An -tx1 | tr -d ' \n') == 0a ]] || c1lk_msg+='no-final-newline '
-  if command -v python3 >/dev/null 2>&1; then
+  if [[ $PY3 -eq 1 ]]; then
     python3 -c 'import json,sys
 for ln in sys.stdin.read().splitlines():
     if ln.strip():
@@ -7931,6 +7965,7 @@ for ln in sys.stdin.read().splitlines():
     sed 's/^/    | /' "$WORK/c1lk-gate-second-a.out" 2>/dev/null || true
     sed 's/^/    | /' "$WORK/c1lk-gate-second-b.out" 2>/dev/null || true
     failures=$((failures + 1))
+  fi
   fi
   # ---- round-32 R2: verify-claims grammar/binding detectors ----
   # Routed defect R2, selftest half (corpus/lessons/round-31-verifier-spotcheck.md
@@ -8325,6 +8360,11 @@ EOF
   # PATH `sha256sum` shim wrote HOSTILE-CUT-OUTPUT into both fields and the run
   # stayed exit 0/CLEAN (round-35 erratum 13). The gate now hashes with one
   # absolute binary and refuses a non-hex result; the shim must be ignored.
+  if [[ $HAVE_FLOCK -ne 1 ]]; then
+    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" all-manifest-hash-shim 'no flock(1): append fails closed'
+  fi
+  if [[ $HAVE_FLOCK -eq 1 ]]; then
   mkdir -p "$WORK/r36hashbin"
   printf '#!/bin/sh\nprintf "HOSTILE-CUT-OUTPUT  -\\n"\nexit 0\n' >"$WORK/r36hashbin/sha256sum"
   chmod +x "$WORK/r36hashbin/sha256sum"
@@ -8346,6 +8386,7 @@ EOF
     printf 'FAIL-case %-28s exit=%d\n' all-manifest-hash-shim "$h36_rc"
     printf '%s\n' "$h36_out" "$(cat "$WORK/r36-manifest.jsonl" 2>/dev/null)" | sed 's/^/    | /'
     failures=$((failures + 1))
+  fi
   fi
 
   # ---- round-36 pin echo isolation (cases 260-261) ----
@@ -8372,7 +8413,7 @@ EOF
   fi
   p36_ok=1 p36_out='' p36_dout=''
   p36_out=$(bash "$SELF" --pin "$WORK/r36-pin2.txt" 2>&1)
-  sed -i "/^# --- canonical output follows ---$/a GATE_GREP: path=/usr/bin/grep source=default version=\"x\"" "$WORK/r36-pin2.txt"
+  sed -i "/^# --- canonical output follows ---$/a GATE_GREP: path=/usr/bin/grep source=default version=\"x\"" "$WORK/r36-pin2.txt" 2>/dev/null || true
   p36_drc=0
   p36_dout=$(env -u CHOUSA_GREP_PIN_ECHO bash "$SELF" --drift "$WORK/r36-pin2.txt" 2>&1) || p36_drc=$?
   cases=$((cases + 1))

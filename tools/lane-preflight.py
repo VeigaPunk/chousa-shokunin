@@ -260,7 +260,13 @@ def g07(root, a, env, work):
 
 
 def g08(root, a, env, work):
-    return selftest(["bash", "tools/research-gate.sh", "--selftest"], root, env, "RESEARCH_GATE_SELFTEST: PASS", 1500,
+    # budget: the r63-era 1500 s default is un-meetable on the Windows host
+    # (r70 before-g08-budget.txt: >1650 s elapsed at selftest case 59 without
+    # completion), so the budget is overridable; the default covers the measured
+    # order of magnitude with margin. No other gate or line changes, and every
+    # edit here sits below the G05 parser guard (line 233) the r69 note cites.
+    budget = int(os.environ.get("G08_SELFTEST_BUDGET_S", "7200"))
+    return selftest(["bash", "tools/research-gate.sh", "--selftest"], root, env, "RESEARCH_GATE_SELFTEST: PASS", budget,
                     "tools/research-gate.sh")
 
 
