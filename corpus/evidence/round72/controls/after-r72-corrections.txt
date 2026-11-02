@@ -1,0 +1,62 @@
+# r72 after-receipt (C2): every count line re-run fresh at the verdicts tree, immediately before the verdicts commit (the r71 unverified-count lesson)
+# collisions disclosed per the D-70-2 rule: the correction blocks QUOTE the superseded texts, so each quoted token counts its original hit + its quotation hit; both are marked below
+
+$ git rev-parse HEAD
+7f7ea19a945e0998f009f82b9c651cb08aec1c12
+
+# (R-72-1) the 18 correction landed in three restating files - LOG, lesson, SCORECARD (original restatement hit + correction-quotation hit per file):
+$ grep -c "18 healthy" LOG.md
+2
+# 2 = the round-71 entry's original restatement + the correction entry's quotation
+$ grep -c "18 healthy" corpus/lessons/round-71.md
+2
+# 2 = the Trends line's original restatement + the correction block's quotation
+$ grep -c "18 healthy" SCORECARD.md
+2
+# 2 = the C1 verdict row's original restatement + the correction note's quotation
+
+# the correction records exist:
+$ grep -c "^correction: R-71 counts" corpus/lessons/round-71.md
+1
+$ grep -c "^## Round 71 correction entry" LOG.md
+1
+$ grep -c "^## Round 71 correction note" SCORECARD.md
+1
+
+# the true per-receipt ok-case counts (the correction's content, re-derived):
+$ grep -c "^ok-case" corpus/evidence/round71/controls/battery-partial-r71.txt
+9
+$ grep -c "^ok-case" corpus/evidence/round71/controls/killtest-partial-scratch-copy.txt
+16
+
+# (R-72-2) the ends-at-8 honest statement landed (receipt bytes unchanged - the count below is against the untouched committed receipt; the correcting statement lives in the lesson block):
+$ grep -c "the transcript below ends at case 8" corpus/evidence/round71/controls/battery-partial-r71.txt
+1
+$ grep -c "The honest final count is 9 ok-case lines" corpus/lessons/round-71.md
+1
+$ git diff 7851c4ce29ef4c13d2c6ffd67b2ea1ea2646a536 HEAD --stat -- corpus/evidence/round71/controls/battery-partial-r71.txt | wc -l
+0
+# 0 = the r71 receipt byte-unchanged since the round base (append-only discipline)
+
+# (R-72-3) the three-vs-four correction landed (original text kept, correction names the fourth row):
+$ grep -c "Mistakes: three rows" LOG.md
+2
+# 2 = the round-71 entry's original text + the correction entry's quotation
+$ grep -c "the missing fourth is the prose-in-used-by-cell row" LOG.md
+1
+$ awk '/^## Mistakes/,/^## Spot-check intake/' corpus/lessons/round-71.md | grep -c "^| unverified\|^| census\|^| pipe\|^| prose"
+4
+# 4 = the lesson's Mistakes rows, unchanged (history); the LOG now names all four
+
+# (R-72-4) the SHONEN re-file (the round-72 report carries the four [~] boxes under the heading):
+$ grep -c "^## SHONEN" C:/Users/jpvei/.zcode/workspace/95b1ba4d-5089-47a4-9fd8-54adebbce2ae/shokunin-clone/shokunin/.ufo/reports/round-72/chousa.md
+1
+$ grep -c "^- \[~\]" C:/Users/jpvei/.zcode/workspace/95b1ba4d-5089-47a4-9fd8-54adebbce2ae/shokunin-clone/shokunin/.ufo/reports/round-72/chousa.md
+4
+
+# SOURCES additions-only:
+$ grep -c "^| S[0-9]" corpus/SOURCES.md
+179
+$ git diff 7851c4ce29ef4c13d2c6ffd67b2ea1ea2646a536 HEAD -- corpus/SOURCES.md | grep -c "^-| S"
+0
+# 0 deleted rows = additions-only

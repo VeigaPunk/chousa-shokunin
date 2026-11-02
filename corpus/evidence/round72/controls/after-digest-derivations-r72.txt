@@ -1,0 +1,19 @@
+# r72 digest derivations (C1 receipt identity): the run receipt's pinned tool sha re-derives from the committed tree at the verdicts tip
+
+$ git rev-parse HEAD
+7f7ea19a945e0998f009f82b9c651cb08aec1c12
+
+$ sha256sum tools/research-gate.sh  (in-tree)
+d5d48128509f77edf161e4d8b10b833e6e00f822906460fa049f27d1244d41e2 *tools/research-gate.sh
+
+$ git show 7f7ea19a945e0998f009f82b9c651cb08aec1c12:tools/research-gate.sh | sha256sum  (the landing blob the run executed)
+d5d48128509f77edf161e4d8b10b833e6e00f822906460fa049f27d1244d41e2 *-
+
+$ grep -c "d5d48128509f77edf161e4d8b10b833e6e00f822906460fa049f27d1244d41e2" corpus/evidence/round72/controls/battery-past-locale-dies-pinzone-r72.txt
+1
+# 1 = the receipt carries the pin; in-tree == landing blob == the r71 landing digest d5d48128...41e2
+
+$ python -I tools/digest-in-tree.py --receipt corpus/evidence/round72/controls/battery-past-locale-dies-pinzone-r72.txt --all-objects 2>&1 | tail -3
+DIGEST d5d48128509f77edf161e4d8b10b833e6e00f822906460fa049f27d1244d41e2 IN_TREE oid=a5780cd699d3184e114aa7f63d03daef6e79d105
+DIGESTS_IN_TREE=1/1 DIGEST_IN_TREE=PASS
+EXIT=0
