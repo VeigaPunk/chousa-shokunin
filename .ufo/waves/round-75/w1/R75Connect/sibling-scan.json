@@ -1,0 +1,123 @@
+[
+  {
+    "lane": "tsukuroi",
+    "round": "38",
+    "file_line": "/home/vgpnk/Projects/shokunin/tsukuroi-shokunin/corpus/lessons/round-38-verifier-spotcheck.md:76",
+    "search_term": "order oracle",
+    "quote": "| Kill rule: pacman.log run-order oracle | my own parser over /var/log/pacman.log: per transaction and phase, the running '<hook>' sequence must be increasing in the table's positions | 60 transactions with hooks, 109 phases, 0 violations, 0 names absent from the table.",
+    "same_defect_class": false,
+    "defect_class_analysis": "Related mechanism (order verification), but distinct defect class: tsukuroi's run-order oracle validates that pacman hook transaction logs match alphabetical/phase table ordering, whereas chousa C1 is a test harness defense preventing a candidate tool from guessing test case ordering.",
+    "prior_art_to_cite": "Precedent of enforcing strict execution order verification and shuffling fixture lines (tsukuroi r35 K08FixtureKeyed.md:19) to eliminate chronological/line-order oracles.",
+    "province_boundary_do_not_absorb": "Tsukuroi owns host operability and repair (Pacman, ALPM hooks, pacman.log, btrfs error counters, systemd). Chousa must not absorb pacman hook transaction logs or host storage repair."
+  },
+  {
+    "lane": "kama",
+    "round": "28",
+    "file_line": "/home/vgpnk/Projects/shokunin/kama-shokunin/corpus/lessons/round-28.md:34",
+    "search_term": "source-blind",
+    "quote": "Evidential: do-nothing 0, junk 0/30, label-keyed 12/41, source-blind 14/38, duplicate-field 0/26.",
+    "same_defect_class": true,
+    "defect_class_analysis": "Exact same defect class: kama r28 identified that a candidate-scoring counter could be satisfied by a 'source-blind' generator guessing modal bounds (0..INT32_MAX, hard clamps) without reading server schema semantics, exactly as chousa's r74 matrix was satisfied by a source-blind order oracle scoring 9/9.",
+    "prior_art_to_cite": "Kama r28 pre-registration of explicit pre-freeze source-blind controls (CtlSourceBlind, CtlA1Rescore) measuring the empirical score ceiling of blind guessing policies.",
+    "province_boundary_do_not_absorb": "Kama owns local model serving and endpoint health (llama-server, server-schema.cpp, GBNF grammars). Chousa must not absorb HTTP request field validation or model sampling semantics."
+  },
+  {
+    "lane": "kumitate",
+    "round": "48",
+    "file_line": "/home/vgpnk/Projects/shokunin/kumitate-shokunin/corpus/lessons/round-48.md:9",
+    "search_term": "forger battery / summary forgery",
+    "quote": "kills one case, suppresses the FAIL line, prints 62/62 + VERDICT: PASS exit 0, read ROUTED_HELD 3/3 under F48. captured-by: the pre-data control wave (MutSummaryForge)... fix: A48 — per-case line corroboration...",
+    "same_defect_class": true,
+    "defect_class_analysis": "Same defect class: a test runner/counter accepting summary-level exit codes or reports without corroborating per-case outcomes, permitting a forger that suppresses failures or matches aggregate counts to pass.",
+    "prior_art_to_cite": "Kumitate r48 A48 per-case expected-line corroboration (matching both rc and specific failed check IDs per case, as loader-matrix-v2.py does with expected_rc and expected_failed).",
+    "province_boundary_do_not_absorb": "Kumitate owns orchestration and tooling (OMP harness, Rust runtime, bubblewrap isolation, gate dispatch, attestation ledger). Chousa must not absorb process orchestration or container runtime mechanics."
+  },
+  {
+    "lane": "kumitate",
+    "round": "51",
+    "file_line": "/home/vgpnk/Projects/shokunin/kumitate-shokunin/corpus/lessons/round-51.md:91-92",
+    "search_term": "forger battery / detection-forger",
+    "quote": "seat ExecForgerControl (wave 1, delivered late during wave 2 — 53 min, after two return-now nudges) built a zero-spawn forger with faithful receipt format (canonical digest, GNU sidecar, distinct nonces, ledger semantics) and read ATTEST_HELD held=9/9",
+    "same_defect_class": true,
+    "defect_class_analysis": "Same defect class: a candidate-running probe whose challenge mechanism leaks predictable parameters, enabling a zero-execution forger to achieve full marks.",
+    "prior_art_to_cite": "Kumitate Q43 freeze discipline ('freeze means frozen AND executed; every declared do-nothing control is executed by a seat before data, not asserted').",
+    "province_boundary_do_not_absorb": "Kumitate invocation attestation ledger mechanics and nonce verification protocols."
+  },
+  {
+    "lane": "kumitate",
+    "round": "68",
+    "file_line": "/home/vgpnk/Projects/shokunin/kumitate-shokunin/corpus/lessons/round-68.md:23",
+    "search_term": "forger battery / counter-forgery",
+    "quote": "counter-forgery — C1 L4 reveals mutant names through fixture paths, allowing a pathname-dispatch stub to report HELD without ledger semantics. Captured by K68CriticForgeryC1; next freeze must hide the answer key and score an implementation-level falsifier.",
+    "same_defect_class": true,
+    "defect_class_analysis": "Same defect class: test harness leaking answer keys or case identity via arguments/paths, allowing stubs to return pre-computed answers without inspecting target file content.",
+    "prior_art_to_cite": "Kumitate r68 masking answer keys and isolating fixture names to prevent candidate stubs from dispatching on parameter heuristics.",
+    "province_boundary_do_not_absorb": "Kumitate MCP deprecation registry and routed-ledger format."
+  },
+  {
+    "lane": "souji",
+    "round": "59",
+    "file_line": "/home/vgpnk/Projects/shokunin/souji-shokunin/corpus/QUALITY.md:316",
+    "search_term": "forger battery / prefreeze controls",
+    "quote": "Q120 | Before declaring a successor claim, retain executed no-work and relevant forgery controls with exact input bytes/revisions, commands, instrument digest, independent expected rc/findings and observed outputs in a commit strictly preceding predicate freeze. A later replay never repairs the chronology of the rejected claim.",
+    "same_defect_class": true,
+    "defect_class_analysis": "Exact same procedural defect class: chousa r74 was rejected under QUALITY 126 because prefreeze detection-forger controls were not committed prior to candidate scoring. Souji Q120 codifies the fleet rule that prefreeze controls must precede predicate freeze in commit history.",
+    "prior_art_to_cite": "Souji Q120 prefreeze control commitment rule, requiring exact inputs, commands, instrument digests, and expected vs observed outputs committed prior to freeze.",
+    "province_boundary_do_not_absorb": "Souji owns workspace hygiene (stale artifacts, duplicate files, census quarantine). Chousa must not absorb file cleanup, quarantine, or workspace hygiene policies."
+  },
+  {
+    "lane": "tabi",
+    "round": "33",
+    "file_line": "/home/vgpnk/Projects/shokunin/tabi-shokunin/corpus/QUALITY.md:571",
+    "search_term": "forger battery",
+    "quote": "90. A feasibility sentence — 'not reachable without …', 'the counter cannot judge …', 'the battery cannot catch …' — is written only after the cheapest forgery against that instrument has been run, and it names the attack and cites its control...",
+    "same_defect_class": true,
+    "defect_class_analysis": "Same defect class: prohibiting ungrounded prose claims of unforgeability and requiring empirical execution of cheapest forgeries against candidate-running instruments before declaring them robust.",
+    "prior_art_to_cite": "Tabi Q90 / Q112 requiring empirical cheapest-forgery execution across production call paths.",
+    "province_boundary_do_not_absorb": "Tabi owns browser and web-interaction craft (CDP, Playwright, browser automation). Chousa must not absorb browser protocols."
+  },
+  {
+    "lane": "mado",
+    "round": "46",
+    "file_line": "/home/vgpnk/Projects/shokunin/mado-shokunin/corpus/QUALITY.md:432-434",
+    "search_term": "forger battery",
+    "quote": "88. A counter that reads tree shape carries a committed forgery suite — revisions a reader rejects — and a tightening candidate is admitted only when the positive control passes every candidate and each undeclared admitted forgery fails the intended one...",
+    "same_defect_class": false,
+    "defect_class_analysis": "Related defect class: maintaining committed forgery suites for tree-shape readers, but focused on desktop layout verification rather than loader subprocess execution.",
+    "prior_art_to_cite": "Mado Q88 principle that tightening candidates must be evaluated against a committed forgery suite.",
+    "province_boundary_do_not_absorb": "Mado owns desktop and compositor craft (Hyprland, waybar). Chousa must not absorb desktop compositor states or IPC."
+  },
+  {
+    "lane": "kaidoku",
+    "round": "48",
+    "file_line": "/home/vgpnk/Projects/shokunin/kaidoku-shokunin/corpus/QUALITY.md:147",
+    "search_term": "forger battery",
+    "quote": "Row 78: ...A battery's forgery must differ where it claims to... Before freezing, run the proposed instrument against one complete green candidate and each forgery, and inspect the exact field each clause reads.",
+    "same_defect_class": true,
+    "defect_class_analysis": "Same defect class: ensuring that a forger battery tests the actual discriminating logic of the checker rather than failing for extraneous or incidental reasons (e.g. case count starvation).",
+    "prior_art_to_cite": "Kaidoku Row 78 requiring that each forgery differ specifically where it claims to, and inspecting the exact fields each clause reads.",
+    "province_boundary_do_not_absorb": "Kaidoku owns binary reverse engineering with REA on host (Ghidra, ELF decompilation). Chousa must not absorb binary forensics."
+  },
+  {
+    "lane": "mori",
+    "round": "18",
+    "file_line": "/home/vgpnk/Projects/shokunin/mori-shokunin/.ufo/waves/round-18/falsify/MutDispatchLedger.md:96",
+    "search_term": "order oracle",
+    "quote": "2. Independent recursive key-order oracle — demonstrated survivor M2. The task object has only one key (:447), and fixture files are themselves serialized with sorted keys (:379-385). There is no noncanonical nested insertion-order fixture checked against an independent canonical digest. The current suite does not protect sort_keys=True.",
+    "same_defect_class": false,
+    "defect_class_analysis": "Related mechanism: fixture sorting masking the lack of key-order verification, analogous to fixed test ordering masking invocation-order oracles.",
+    "prior_art_to_cite": "Mori M2 demonstration that deterministic ordering in fixtures masks candidate inability to enforce canonical ordering.",
+    "province_boundary_do_not_absorb": "Mori owns fleet and host observability (森). Chousa must not absorb host telemetry or wave settlement tracking."
+  },
+  {
+    "lane": "kotoba",
+    "round": "37",
+    "file_line": "/home/vgpnk/Projects/shokunin/MANIFEST.json:4527",
+    "search_term": "source-blind",
+    "quote": "kotoba r37... REJECTED on C1 (depth): the source-blind harness re-derivation fails as declared — comparator exit 1, 23/28 headline (strict 17/28), 5 open rows (3 catalogue UNLANDED = a real blindness boundary; 2 disagreements with raw-substrate evidence favoring the harness)...",
+    "same_defect_class": false,
+    "defect_class_analysis": "Distinct defect class: kotoba intentionally constructed a source-blind harness comparator to establish the empirical boundary of what could be inferred without router inspection, whereas chousa C1 addresses a surviving false-green forge.",
+    "prior_art_to_cite": "Kotoba r37/r38 discipline of strict comparators between independent implementations to isolate blindness boundaries.",
+    "province_boundary_do_not_absorb": "Kotoba owns prompt and skill craft. Chousa must not absorb prompt routing or skill catalog schemas."
+  }
+]

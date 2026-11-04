@@ -1,0 +1,24 @@
+COUNTER_SHA256=9334721a5e7a4080255b478771bf5443739738fb1936b40c116da28d7fa8ac41
+SEED=14107982078087736986
+CASE append-1 PASS expected_rc=0 actual_rc=0 failed=none expected_failed=none base=68d68e3df7a700c7f1dce62eaa232803af64300d rev=4f2d536468d992648af839436a20b3b534e0548b
+CASE unchanged PASS expected_rc=0 actual_rc=0 failed=none expected_failed=none base=68d68e3df7a700c7f1dce62eaa232803af64300d rev=fc9d33252bfe89037ffcb73484b0087c8d974be2
+CASE dup-lesson-heading PASS expected_rc=1 actual_rc=1 failed=C2-3,C2-5 expected_failed=C2-3,C2-5 base=68d68e3df7a700c7f1dce62eaa232803af64300d rev=18ec0012890e3a2b6cf1dbb493c818a5431a84b8
+CASE append-2 PASS expected_rc=0 actual_rc=0 failed=none expected_failed=none base=68d68e3df7a700c7f1dce62eaa232803af64300d rev=1e26b397989822b8d399c455f6929d24dc9ef6a0
+CASE dup-log-heading PASS expected_rc=1 actual_rc=1 failed=C2-1,C2-2 expected_failed=C2-1,C2-2 base=68d68e3df7a700c7f1dce62eaa232803af64300d rev=668ad7225f6ecd7c197a5156d1cf7b1077523115
+CASE replace-equal PASS expected_rc=1 actual_rc=1 failed=C2-6 expected_failed=C2-6 base=68d68e3df7a700c7f1dce62eaa232803af64300d rev=2057c0f39ceb70be453a1e16143c1f123c851b16
+CASE dup-card-heading PASS expected_rc=1 actual_rc=1 failed=C2-4 expected_failed=C2-4 base=68d68e3df7a700c7f1dce62eaa232803af64300d rev=4ddec6edaeec4387afac0223c583bd81fa0da3ae
+CASE delete-1 PASS expected_rc=1 actual_rc=1 failed=C2-6 expected_failed=C2-6 base=68d68e3df7a700c7f1dce62eaa232803af64300d rev=4dfa5d08a0fe58e6c5955c2f242ef413e0f17f5d
+CASE append-0 PASS expected_rc=0 actual_rc=0 failed=none expected_failed=none base=68d68e3df7a700c7f1dce62eaa232803af64300d rev=ffbda0d43a9130a36a6bc0a185c9a1051d0f462a
+CASE delete-2 PASS expected_rc=1 actual_rc=1 failed=C2-6 expected_failed=C2-6 base=68d68e3df7a700c7f1dce62eaa232803af64300d rev=c17272e5b49064f746911596c6b982c2eaa8eb5a
+CASE receipt-change FAIL expected_rc=1 actual_rc=0 failed=none expected_failed=C2-7 base=68d68e3df7a700c7f1dce62eaa232803af64300d rev=2375d879c95e2690c4226b011357dd657e45f99c
+CHECK C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+CHECK C2-2 PASS LOG entry missing=none
+CHECK C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+CHECK C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+CHECK C2-5 PASS lesson tree statement missing=none
+CHECK C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+CHECK C2-7 PASS r72 receipts changed=none
+C2=PASS checks=7/7 rev=2375d879c95e base=68d68e3df7a7
+CASE delete-0 PASS expected_rc=1 actual_rc=1 failed=C2-6 expected_failed=C2-6 base=68d68e3df7a700c7f1dce62eaa232803af64300d rev=4723028d1324551667ba68c44b380b2610bdabde
+LOADER_MATRIX=11/12 MATRIX=FAIL
+EXIT=1

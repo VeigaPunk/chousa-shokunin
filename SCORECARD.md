@@ -3363,3 +3363,27 @@ Exactly two claims frozen in `corpus/evidence/round75/claims.md`:
 2. **C2 — calibration** (sourced on S184). The r74 spot-check's routed status-neutral defect corrected append-only: the round-74 lesson's located-quote token counts 18/13 superseded by the derived 16/11 in an appended correction block. Command `python3 -B corpus/evidence/round75/c2-count.py --lane . --rev <landing> --base 8022f72c…` must exit 0 with `C2=PASS checks=4/4`; before it is `C2=FAIL checks=1/4` with `DERIVED=S182:16 S183:11 RECORDED=S182:18 S183:13` (`controls/before-c2.txt`).
 
 Wave: one v1 wave of 10 seats (3 executor, 1 scout, 1 scribe, 1 connector, 2 reviewer, 1 critic, 1 mutation-tester; 4 attack seats, 40%) under `ufo-wave-policy.json` (band 8–16), via the run-15 inline spawn handoff. L1 holds the canonical planner seat; no residual call planned.
+
+## Round 75 verdict — QUALITY-126 battery passes the successor matrix and the source-blind order oracle dies (C1 operability); the r74 quote-count defect corrected append-only (C2 calibration) (2026-11-04)
+
+Freeze `43a7a0db52c8aabdf32735f58e09610e05200e79` (claims, matrix, battery, reference counter, C2 counter, five forgers, control receipts, parser-slip guard, shuffle-necessity and stability receipts, census-start); landing `a` (content) / final tip `b` (receipts and results), both named in the report.
+
+| Claim / axis | Before → after | counting command / evidence | verdict |
+|---|---|---|---|
+| C1 operability (lowest-scored non-retired axis; the historical 3/10 observable deliberately not moved) | the r74 matrix accepts three of five forgers at 9/9 — the source-blind invocation-order oracle, a diff-only oracle and a naive presence-grep sibling (`BATTERY=FAIL forgers_rejected=2/5 positive=2/2`, exit 1) → the successor matrix adds three append-only-but-structurally-wrong content cases and draws case order from `secrets.randbits(64)`, and the same battery reports `BATTERY=PASS forgers_rejected=5/5 positive=2/2`, exit 0, reproduced over further runs (order oracle 2–6/12; diff-only and naive-grep 9/12; positives 12/12 twice each) | `python3 -B corpus/evidence/round75/matrix-battery.py --matrix <matrix> --work <dir> --runs 2`; receipts `corpus/evidence/round75/controls/{before-battery-r74-matrix,after-battery-v2-matrix,battery-stability-r75,order-oracle-through-v2,negative-r73-counter-on-v2,shuffle-necessity-r75}.txt` | **improved** |
+| C2 calibration (sourced on S184) | the round-74 lesson records its two located-quote sizes as 18 words and 13 whitespace tokens while the quoted strings carry 16 and 11 (`DERIVED=S182:16 S183:11 RECORDED=S182:18 S183:13`, `C2=FAIL checks=1/4`, exit 1) → the appended correction block states the derived counts and names the superseded ones, append-only; `C2=PASS checks=4/4`, exit 0 at the landing | `python3 -B corpus/evidence/round75/c2-count.py --lane . --rev <landing> --base 8022f72c889c904b5657d52c7f29e1643392a216`; receipts `controls/before-c2.txt` and `controls/after-c2.txt` | **improved** |
+
+No numeric axis score changed; no capability row (C1 is a discrimination repair on the existing r74 repertoire; C2 is a record correction — both disclosed rather than pre-claimed).
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** (C1) | the candidate-running matrix now has a committed detection-forger battery that passes it before the claim is bound (QUALITY 126), the surviving order oracle is rejected, and real committed appends/deletions run through the public loader path |
+| calibration | **improved** (C2) | a recorded count that contradicted its own quoted bytes is corrected append-only and re-derived by one command; the round's own slips are mined with a committed guard that can fail |
+| depth | **unchanged** | no externally-grounded knowledge entry this round; all three rows are own-work tier B/C records |
+| freshness | **unchanged** | no drift surface measured; S184–S186 are revision-pinned own-work records with `on-release` rechecks |
+| coverage | **unchanged** | PROVINCE.md untouched; the work stays inside the lane's own gate/evidence ground |
+| adjacency | **unchanged** | sibling material read read-only by the connector seat; nothing absorbed |
+
+Learning trends: expansion **unchanged** (curation only, no knowledge entry or capability); quality **improved** (the matrix's 12/12 now means something: five forged subjects rejected and two correct implementations accepted; the shuffle shown load-bearing; and the surviving classes — metadata-reading, patch-text, harness-source, seed-leak, unbounded child — are measured and recorded rather than certified away); discernment **improved** (routed spot-check defect corrected with a re-derivable count; six attack-seat findings integrated as limits and three criteria 135–137; own slips mined with a guard shown able to fail; outside non-author spot-check requested, not self-granted).
+
+The frozen rationale sentences did not survive the wave: "decidable only from protected-file content" is false (metadata-reading counters reach 12/12), the battery does not test the shuffle, and the C2 counter is a presence test. The predicates themselves hold; the corrections are append-only in `corpus/lessons/round-75.md`. Round admission: **both claims verify on their frozen predicates, no axis harmed**; the canonical non-author closure owns the final ruling.

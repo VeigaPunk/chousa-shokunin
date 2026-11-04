@@ -1,0 +1,26 @@
+RUN FORGER constant-pass 0 matrix_exit=1 marks=4/12/FAIL
+RUN FORGER constant-pass 1 matrix_exit=1 marks=4/12/FAIL
+SUBJECT FORGER constant-pass REJECTED
+RUN FORGER constant-fail 0 matrix_exit=1 marks=4/12/FAIL
+RUN FORGER constant-fail 1 matrix_exit=1 marks=4/12/FAIL
+SUBJECT FORGER constant-fail REJECTED
+RUN FORGER order-oracle 0 matrix_exit=1 marks=5/12/FAIL
+RUN FORGER order-oracle 1 matrix_exit=1 marks=0/12/FAIL
+SUBJECT FORGER order-oracle REJECTED
+RUN FORGER diff-only 0 matrix_exit=1 marks=9/12/FAIL
+RUN FORGER diff-only 1 matrix_exit=1 marks=9/12/FAIL
+SUBJECT FORGER diff-only REJECTED
+RUN FORGER naive-grep 0 matrix_exit=1 marks=9/12/FAIL
+RUN FORGER naive-grep 1 matrix_exit=1 marks=9/12/FAIL
+SUBJECT FORGER naive-grep REJECTED
+RUN FORGER NEW-label-oracle 0 matrix_exit=0 marks=12/12/PASS
+RUN FORGER NEW-label-oracle 1 matrix_exit=0 marks=12/12/PASS
+SUBJECT FORGER NEW-label-oracle ACCEPTED
+RUN FORGER NEW-harness-source-oracle 0 matrix_exit=0 marks=12/12/PASS
+RUN FORGER NEW-harness-source-oracle 1 matrix_exit=0 marks=12/12/PASS
+SUBJECT FORGER NEW-harness-source-oracle ACCEPTED
+RUN FORGER NEW-memorized-fixture-oracle 0 matrix_exit=0 marks=12/12/PASS
+RUN FORGER NEW-memorized-fixture-oracle 1 matrix_exit=0 marks=12/12/PASS
+SUBJECT FORGER NEW-memorized-fixture-oracle ACCEPTED
+forgers_rejected=5/8
+BATTERY=FAIL forgers_rejected=5/8 positive=2/2

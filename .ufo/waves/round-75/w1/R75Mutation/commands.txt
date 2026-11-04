@@ -1,0 +1,75 @@
+# R75Mutation — exact commands and observed exits
+
+Root: /home/vgpnk/Projects/shokunin/chousa-shokunin
+Scratch: /fast/scratch/hyaku/chousa-r75/R75Mutation (S)
+Logs: .ufo/waves/round-75/w1/R75Mutation/ (L)
+Python 3.14.8; git 2.x. No tools installed or upgraded.
+
+## Baseline / pristine control
+
+cd /home/vgpnk/Projects/shokunin/chousa-shokunin
+sha256sum corpus/evidence/round75/loader-matrix-v2.py corpus/evidence/round75/matrix-battery.py \
+  corpus/evidence/round75/ref-counter.py corpus/evidence/round74/correction-count.py \
+  corpus/evidence/round75/forgers/*.py                                        # EXIT=0
+git -C . rev-parse HEAD                                                       # 43a7a0db52c8aabdf32735f58e09610e05200e79
+
+python3 -B corpus/evidence/round75/matrix-battery.py \
+  --matrix corpus/evidence/round75/loader-matrix-v2.py \
+  --work "$S/base/work" > "$S/base/battery.txt" 2>&1                           # EXIT=0
+  -> BATTERY=PASS forgers_rejected=5/5 positive=2/2
+cp "$S/base/battery.txt" "$L/battery-baseline.txt"                             # EXIT=0
+
+## Mutant generation (single hunk each, asserted once)
+
+python3 -B "$S/make_mutants.py"                                               # EXIT=0, 7 files
+diff -u corpus/evidence/round75/loader-matrix-v2.py "$S/mut/<m>.py" | grep -c '^@@'   # 1 for M1..M6
+diff -u corpus/evidence/round75/matrix-battery.py   "$S/mut/<m7>.py" | grep -c '^@@'  # 1 for M7
+(diff itself exits 1 for each pair: files differ.)
+
+## Battery over each matrix mutant (frozen battery, two matrix seeds per run)
+
+python3 -B corpus/evidence/round75/matrix-battery.py --matrix "$S/mut/m1-drop-content-cases.py" --work "$S/w-m1"   # EXIT=1
+python3 -B corpus/evidence/round75/matrix-battery.py --matrix "$S/mut/m2-no-shuffle.py"         --work "$S/w-m2"   # EXIT=0
+python3 -B corpus/evidence/round75/matrix-battery.py --matrix "$S/mut/m3-accept-exit2.py"       --work "$S/w-m3"   # EXIT=0
+python3 -B corpus/evidence/round75/matrix-battery.py --matrix "$S/mut/m4-exit-code-only.py"     --work "$S/w-m4"   # EXIT=0
+python3 -B corpus/evidence/round75/matrix-battery.py --matrix "$S/mut/m5-no-fixture-restore.py" --work "$S/w-m5"   # EXIT=1
+python3 -B corpus/evidence/round75/matrix-battery.py --matrix "$S/mut/m6-receipt-wrong-path.py" --work "$S/w-m6"   # EXIT=1
+
+Second independent battery run for the three survivors (new seeds):
+same command, --work "$S/w2-<m>"                                               # EXIT=0, 0, 0
+
+## Battery mutant (M7) over a byte-identical scratch copy of pristine v2
+
+python3 -B "$S/ev/round75/matrix-battery-m7.py" --matrix "$S/ev/round75/loader-matrix-v2.py" \
+  --work "$S/w-m7"                                                             # EXIT=1
+  -> BATTERY=FAIL forgers_rejected=0/5 positive=2/2 (all five forgers labelled ACCEPTED)
+
+Relocation control (pristine battery copy, pristine matrix copy):
+python3 -B "$S/ev/round75/matrix-battery-pristine.py" --matrix "$S/ev/round75/loader-matrix-v2.py" \
+  --work "$S/w-ctl"                                                            # EXIT=0
+  -> BATTERY=PASS forgers_rejected=5/5 positive=2/2
+
+## Direct matrix probes (one fixture repository, 12 real commits per run)
+
+P=corpus/evidence/round75/loader-matrix-v2.py
+python3 -B "$P"                    --counter "$S/probe/probe-exit2-fullpass.py"  --work "$S/pA"  # EXIT=1, 0/12
+python3 -B "$S/mut/m3-accept-exit2.py"   --counter "$S/probe/probe-exit2-fullpass.py"  --work "$S/pB"  # EXIT=1, 4/12
+python3 -B "$P"                    --counter "$S/probe/probe-all-fail-rc1.py"   --work "$S/pC"  # EXIT=1, 0/12
+python3 -B "$S/mut/m4-exit-code-only.py" --counter "$S/probe/probe-all-fail-rc1.py"    --work "$S/pD"  # EXIT=1, 8/12
+python3 -B "$P"                    --counter "$S/probe/probe-order-oracle-v2.py" --work "$S/pE"  # EXIT=1, 3/12
+python3 -B "$S/mut/m2-no-shuffle.py"     --counter "$S/probe/probe-order-oracle-v2.py" --work "$S/pF"  # EXIT=0, 12/12
+python3 -B "$P"                    --counter corpus/evidence/round75/forgers/forge-order-oracle.py --work "$S/pG" # EXIT=1, 3/12
+python3 -B "$S/mut/m2-no-shuffle.py"     --counter corpus/evidence/round75/forgers/forge-order-oracle.py --work "$S/pH" # EXIT=1, 9/12
+python3 -B "$S/mut/m5-no-fixture-restore.py" --counter corpus/evidence/round74/correction-count.py --work "$S/pM5"     # EXIT=1, 2/12
+python3 -B "$S/mut/m6-receipt-wrong-path.py" --counter corpus/evidence/round74/correction-count.py --work "$S/pM6"     # EXIT=1, 11/12
+
+## Restoration / no-write checks
+
+sha256sum <same frozen list> > "$S/frozen-sha256-after.txt"
+diff -u "$S/frozen-sha256-before.txt" "$S/frozen-sha256-after.txt"              # EXIT=0 (empty: UNCHANGED)
+python3 -B corpus/evidence/round75/matrix-battery.py \
+  --matrix corpus/evidence/round75/loader-matrix-v2.py --work "$S/base/work-restored"  # EXIT=0, PASS 5/5 2/2
+git status --porcelain -- corpus/evidence/round75 corpus/evidence/round74       # EXIT=0; only sibling-created
+                                                                                # untracked controls files listed
+git rev-parse HEAD                                                              # 43a7a0db…
+rm -rf -- "$S"                                                                  # scratch removed

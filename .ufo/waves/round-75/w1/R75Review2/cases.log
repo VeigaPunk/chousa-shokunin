@@ -1,0 +1,158 @@
+R75Review2 — verbatim counter output per fixture case
+fixture=/fast/scratch/hyaku/chousa-r75/R75Review2/fix (removed after this log)
+counter=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round75/c2-count.py
+base=e28e2ac3f95a39a50d78b937bdd7bd5b4fc71a3b (fixture "main": corpus/lessons/round-74.md only)
+invocation shape: python3 -B <counter> --lane <fixture> --rev <branch> --base <base>
+
+--- CASE A: appended block stating 17/12, naming superseded 18/13 -------------------------
+COMMIT=2d457cd
+DERIVED=S182:16 S183:11 RECORDED=S182:18 S183:13
+CHECK Q1 PASS correction block count=1
+CHECK Q2 FAIL block states derived counts 16/11: False
+CHECK Q3 PASS block names superseded 18/13: True
+CHECK Q4 PASS removed lines=0
+C2=FAIL checks=3/4 rev=caseA base=e28e2ac3f95a
+EXIT=1
+
+--- CASE B: appended block stating 16/11 but omitting superseded 18/13 ---------------------
+COMMIT=340a8ad
+DERIVED=S182:16 S183:11 RECORDED=S182:18 S183:13
+CHECK Q1 PASS correction block count=1
+CHECK Q2 PASS block states derived counts 16/11: True
+CHECK Q3 FAIL block names superseded 18/13: False
+CHECK Q4 PASS removed lines=0
+C2=FAIL checks=3/4 rev=caseB base=e28e2ac3f95a
+EXIT=1
+DIFF=4	0	corpus/lessons/round-74.md
+
+--- CASE C: correct block appended + one authored line deleted (non-append-only) -----------
+COMMIT=0a564b7
+NUMSTAT=4	1	corpus/lessons/round-74.md
+DERIVED=S182:16 S183:11 RECORDED=S182:18 S183:13
+CHECK Q1 PASS correction block count=1
+CHECK Q2 PASS block states derived counts 16/11: True
+CHECK Q3 PASS block names superseded 18/13: True
+CHECK Q4 FAIL removed lines=1
+C2=FAIL checks=3/4 rev=caseC base=e28e2ac3f95a
+EXIT=1
+
+--- CASE D: appended block that NEGATES the claim -----------------------------------------
+COMMIT=7f479f5
+DERIVED=S182:16 S183:11 RECORDED=S182:18 S183:13
+CHECK Q1 PASS correction block count=1
+CHECK Q2 PASS block states derived counts 16/11: True
+CHECK Q3 PASS block names superseded 18/13: True
+CHECK Q4 PASS removed lines=0
+C2=PASS checks=4/4 rev=caseD base=e28e2ac3f95a
+EXIT=0
+block text: "Correction withdrawn: the authored 18 words and 13 whitespace tokens are correct;
+16 and 11 are miscounts of the same quotes."
+
+--- CASE E: correct block INSERTED MID-FILE (pure insertion) -------------------------------
+COMMIT=570691d
+NUMSTAT=4	0	corpus/lessons/round-74.md
+C2=PASS checks=4/4 rev=caseE base=e28e2ac3f95a
+EXIT=0
+
+--- CASE F: block states WRONG magnitudes 161/117 + superseded 18/13 -----------------------
+DERIVED=S182:16 S183:11 RECORDED=S182:18 S183:13
+CHECK Q1 PASS correction block count=1
+CHECK Q2 PASS block states derived counts 16/11: True
+CHECK Q3 PASS block names superseded 18/13: True
+CHECK Q4 PASS removed lines=0
+C2=PASS checks=4/4 rev=caseF base=e28e2ac3f95a
+EXIT=0
+
+--- CASE G: block body is only <!-- 16 11 18 13 --> ----------------------------------------
+DERIVED=S182:16 S183:11 RECORDED=S182:18 S183:13
+CHECK Q1 PASS correction block count=1
+CHECK Q2 PASS block states derived counts 16/11: True
+CHECK Q3 PASS block names superseded 18/13: True
+CHECK Q4 PASS removed lines=0
+C2=PASS checks=4/4 rev=caseG base=e28e2ac3f95a
+EXIT=0
+
+--- CASE H: delete authored line (commit 1), restore verbatim (commit 2), append block -----
+NUMSTAT_BASE_TO_HEAD=4	0	corpus/lessons/round-74.md
+git log base..caseH: 45374ba caseH restore+block / 8529eed caseH delete
+C2=PASS checks=4/4 rev=caseH base=e28e2ac3f95a
+EXIT=0
+
+--- CASE K: fake 'Located quote:' lines inserted above the authored ones --------------------
+NUMSTAT=6	0	corpus/lessons/round-74.md
+AUTHORED_18_13_STILL_PRESENT=2
+DERIVED=S182:16 S183:11 RECORDED=S182:20 S183:19
+CHECK Q1 PASS correction block count=1
+CHECK Q2 PASS block states derived counts 16/11: True
+CHECK Q3 PASS block names superseded 20/19: True
+CHECK Q4 PASS removed lines=0
+C2=PASS checks=4/4 rev=caseK base=e28e2ac3f95a
+EXIT=0
+inserted lines (fixture head):
+  Located quote: “The quick brown fox jumps over the lazy dog and then some more words here today” (20 words).
+  - Located quote: `alpha beta gamma delta epsilon zeta eta theta iota kappa lambda` (line 1, 19 whitespace tokens).
+appended block: "... carry 16 and 11 whitespace tokens, superseding the recorded 20 words and 19 whitespace tokens."
+authored bullets still readable at lines 10-11 with "(18 words)" and "(line 163, 13 whitespace tokens)".
+
+--- CASE L: every 'Located quote:' line deleted --------------------------------------------
+c2-count: located quotes not found
+(no DERIVED=/CHECK/C2= lines)
+EXIT=1
+
+--- CASE M: spot-check copy committed in fixture with counts rewritten to 99/88 ------------
+SPOTCHECK_COUNTS_IN_REPO=99 whitespace tokens 88 whitespace tokens
+DERIVED=S182:16 S183:11 RECORDED=S182:18 S183:13
+CHECK Q1 FAIL correction block count=0
+C2=FAIL checks=1/4 rev=caseM base=e28e2ac3f95a
+EXIT=1
+
+--- CASE N: only the block heading line inserted -------------------------------------------
+NUMSTAT=2	0	corpus/lessons/round-74.md
+CHECK Q1 PASS; CHECK Q2 FAIL; CHECK Q3 FAIL; CHECK Q4 PASS
+C2=FAIL checks=2/4 rev=caseN base=e28e2ac3f95a
+EXIT=1
+
+--- CASE P: lesson copied aside and parentheticals rewritten in place ----------------------
+NUMSTAT_PATHSCOPED=6	2	corpus/lessons/round-74.md
+DERIVED=S182:16 S183:11 RECORDED=S182:16 S183:11
+CHECK Q1 PASS; CHECK Q2 PASS; CHECK Q3 PASS; CHECK Q4 FAIL removed lines=2
+C2=FAIL checks=3/4 rev=caseP base=e28e2ac3f95a
+EXIT=1
+
+--- CASE Q: authored lesson deleted, a new rewrite written at the same path ----------------
+NUMSTAT_PATHSCOPED=7	35	corpus/lessons/round-74.md
+DERIVED=S182:16 S183:11 RECORDED=S182:16 S183:11
+CHECK Q1 PASS; CHECK Q2 PASS; CHECK Q3 PASS; CHECK Q4 FAIL removed lines=35
+C2=FAIL checks=3/4 rev=caseQ base=e28e2ac3f95a
+EXIT=1
+
+--- CASE R (positive control): proper append -----------------------------------------------
+NUMSTAT=4	0	corpus/lessons/round-74.md
+DERIVED=S182:16 S183:11 RECORDED=S182:18 S183:13
+CHECK Q1 PASS; CHECK Q2 PASS; CHECK Q3 PASS; CHECK Q4 PASS
+C2=PASS checks=4/4 rev=caseR base=e28e2ac3f95a
+EXIT=0
+
+--- CASE S: Case C measured with --base caseC (base == rev) --------------------------------
+CHECK Q1 PASS; CHECK Q2 PASS; CHECK Q3 PASS; CHECK Q4 PASS removed lines=0
+C2=PASS checks=4/4 rev=caseC base=caseC
+EXIT=0
+
+--- independent recount of the two quotes (python, no counter) -----------------------------
+A split_len=16 re_split_len=16 ws_gaps=15 len=110
+B split_len=11 re_split_len=11 ws_gaps=10 len=59
+A_lesson_eq_spotcheck=True ; B_lesson_eq_spotcheck=True
+lesson parentheticals: (18 words) / (line 163, 13 whitespace tokens)
+
+--- real lane runs (read-only) -------------------------------------------------------------
+rev 8022f72c... --base 8022f72c... : C2=FAIL checks=1/4 EXIT=1 (byte-equal to controls/before-c2.txt)
+rev 43a7a0db... --base 8022f72c... : C2=FAIL checks=1/4 EXIT=1 ; lesson numstat over that span is empty
+sha256 c2-count.py = bf0250e7e1c3f3ebf80626d68f743b2b8ac1f3640e5a15a4d4d4048a186e48b8
+(worktree blob == blob at 43a7a0db; git diff HEAD -- c2-count.py empty)
+
+--- fixture hygiene ------------------------------------------------------------------------
+git -C /fast/scratch/hyaku/chousa-r75/R75Review2/fix rev-parse --show-toplevel
+  -> /fast/scratch/hyaku/chousa-r75/R75Review2/fix  (asserted before every commit)
+identity used only inside the fixture: r75review2-fixture <r75review2@fixture.invalid>
+scratch root removed at end of seat; no lane/fleet/production file written.
+tooling: no install or upgrade performed (host python3, git 2.56.0); pacman untouched.

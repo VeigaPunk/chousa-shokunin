@@ -1,0 +1,87 @@
+COUNTER_SHA256=e6e22b1ec8d270171cf015d44cac3d544a61bd23a3fa67d14c91fa26585dc320
+SEED=10444390424406021826
+CASE receipt-change PASS expected_rc=1 actual_rc=1 failed=C2-7 expected_failed=C2-7 base=941c57a2e3c5b10cb1cc2b369bfea716b915fbc0 rev=26288bf28452036b7e5d2bb0985cab38ade2102f
+CASE append-0 FAIL expected_rc=0 actual_rc=1 failed=C2-6 expected_failed=none base=941c57a2e3c5b10cb1cc2b369bfea716b915fbc0 rev=d0a12d32f619854da49619b2c036016f3c2272b8
+CHECK C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+CHECK C2-2 PASS LOG entry missing=none
+CHECK C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+CHECK C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+CHECK C2-5 PASS lesson tree statement missing=none
+CHECK C2-6 FAIL removed lines=LOG.md:2
+CHECK C2-7 PASS r72 receipts changed=none
+C2=FAIL checks=6/7 rev=d0a12d32f619 base=941c57a2e3c5
+CASE dup-log-heading FAIL expected_rc=1 actual_rc=1 failed=C2-1,C2-2,C2-6 expected_failed=C2-1,C2-2 base=941c57a2e3c5b10cb1cc2b369bfea716b915fbc0 rev=75a9e5c9f0867c58647cb4224d4d04839ed9c5e3
+CHECK C2-1 FAIL LOG.md '## Round 72 correction entry' count=2
+CHECK C2-2 FAIL LOG entry missing=8426,8435,exempt
+CHECK C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+CHECK C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+CHECK C2-5 PASS lesson tree statement missing=none
+CHECK C2-6 FAIL removed lines=LOG.md:2
+CHECK C2-7 PASS r72 receipts changed=none
+C2=FAIL checks=4/7 rev=75a9e5c9f086 base=941c57a2e3c5
+CASE append-2 FAIL expected_rc=0 actual_rc=1 failed=C2-6 expected_failed=none base=941c57a2e3c5b10cb1cc2b369bfea716b915fbc0 rev=b75e62f4e3e981108afc479ffc23c0697a1cf1e8
+CHECK C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+CHECK C2-2 PASS LOG entry missing=none
+CHECK C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+CHECK C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+CHECK C2-5 PASS lesson tree statement missing=none
+CHECK C2-6 FAIL removed lines=SCORECARD.md:2
+CHECK C2-7 PASS r72 receipts changed=none
+C2=FAIL checks=6/7 rev=b75e62f4e3e9 base=941c57a2e3c5
+CASE replace-equal PASS expected_rc=1 actual_rc=1 failed=C2-6 expected_failed=C2-6 base=941c57a2e3c5b10cb1cc2b369bfea716b915fbc0 rev=ccf34f53ed8660b53d25ac8e3b2814b184a8e314
+CASE delete-1 FAIL expected_rc=1 actual_rc=0 failed=none expected_failed=C2-6 base=941c57a2e3c5b10cb1cc2b369bfea716b915fbc0 rev=87d40cc23da5e91d8ffbaaaa0f74bab2f3255f16
+CHECK C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+CHECK C2-2 PASS LOG entry missing=none
+CHECK C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+CHECK C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+CHECK C2-5 PASS lesson tree statement missing=none
+CHECK C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+CHECK C2-7 PASS r72 receipts changed=none
+C2=PASS checks=7/7 rev=87d40cc23da5 base=941c57a2e3c5
+CASE dup-lesson-heading FAIL expected_rc=1 actual_rc=1 failed=C2-3,C2-5,C2-6 expected_failed=C2-3,C2-5 base=941c57a2e3c5b10cb1cc2b369bfea716b915fbc0 rev=cb70e9d3163380da73ba76b07da06f0d614ca8ca
+CHECK C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+CHECK C2-2 PASS LOG entry missing=none
+CHECK C2-3 FAIL lesson '## Correction — round-72 spot-check' count=2 missing=V72-1,V72-2,8426,8435,7f7ea19a,6dd6c82
+CHECK C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+CHECK C2-5 FAIL lesson tree statement missing=measured at the landing tip 7f7ea19a,three at the verdicts tree 6dd6c82,two recorded
+CHECK C2-6 FAIL removed lines=corpus/lessons/round-72.md:2
+CHECK C2-7 PASS r72 receipts changed=none
+C2=FAIL checks=4/7 rev=cb70e9d31633 base=941c57a2e3c5
+CASE delete-0 FAIL expected_rc=1 actual_rc=0 failed=none expected_failed=C2-6 base=941c57a2e3c5b10cb1cc2b369bfea716b915fbc0 rev=054f2ca574b36f41f0a49b6306670f8ad0d98b41
+CHECK C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+CHECK C2-2 PASS LOG entry missing=none
+CHECK C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+CHECK C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+CHECK C2-5 PASS lesson tree statement missing=none
+CHECK C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+CHECK C2-7 PASS r72 receipts changed=none
+C2=PASS checks=7/7 rev=054f2ca574b3 base=941c57a2e3c5
+CASE unchanged PASS expected_rc=0 actual_rc=0 failed=none expected_failed=none base=941c57a2e3c5b10cb1cc2b369bfea716b915fbc0 rev=57b26d206b78fe095f47a50a3a49321920c8606e
+CASE dup-card-heading FAIL expected_rc=1 actual_rc=1 failed=C2-4,C2-6 expected_failed=C2-4 base=941c57a2e3c5b10cb1cc2b369bfea716b915fbc0 rev=b0a75a6229646542537817f064e0deec52de4dc1
+CHECK C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+CHECK C2-2 PASS LOG entry missing=none
+CHECK C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+CHECK C2-4 FAIL SCORECARD '## Round 72 correction note' count=2 missing=V72-1,V72-2
+CHECK C2-5 PASS lesson tree statement missing=none
+CHECK C2-6 FAIL removed lines=SCORECARD.md:2
+CHECK C2-7 PASS r72 receipts changed=none
+C2=FAIL checks=5/7 rev=b0a75a622964 base=941c57a2e3c5
+CASE delete-2 FAIL expected_rc=1 actual_rc=0 failed=none expected_failed=C2-6 base=941c57a2e3c5b10cb1cc2b369bfea716b915fbc0 rev=d37e4c08ea5141fd70f9e9eea52cd7a8ea66feb7
+CHECK C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+CHECK C2-2 PASS LOG entry missing=none
+CHECK C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+CHECK C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+CHECK C2-5 PASS lesson tree statement missing=none
+CHECK C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+CHECK C2-7 PASS r72 receipts changed=none
+C2=PASS checks=7/7 rev=d37e4c08ea51 base=941c57a2e3c5
+CASE append-1 FAIL expected_rc=0 actual_rc=1 failed=C2-6 expected_failed=none base=941c57a2e3c5b10cb1cc2b369bfea716b915fbc0 rev=f55bd99b67191dcc3c8ef979d8819527175dbe37
+CHECK C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+CHECK C2-2 PASS LOG entry missing=none
+CHECK C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+CHECK C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+CHECK C2-5 PASS lesson tree statement missing=none
+CHECK C2-6 FAIL removed lines=corpus/lessons/round-72.md:2
+CHECK C2-7 PASS r72 receipts changed=none
+C2=FAIL checks=6/7 rev=f55bd99b6719 base=941c57a2e3c5
+LOADER_MATRIX=3/12 MATRIX=FAIL

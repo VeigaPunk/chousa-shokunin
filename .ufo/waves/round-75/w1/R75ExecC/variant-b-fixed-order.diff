@@ -1,0 +1,10 @@
+--- matrix-orig.py	2026-11-04 16:09:10.584656945 -0300
++++ matrix-b-fixed-order.py	2026-11-04 16:09:29.829007699 -0300
+@@ -99,7 +99,6 @@
+ def run(counter: Path, work: Path) -> int:
+     seed = secrets.randbits(64)
+     order = list(CASES)
+-    random.Random(seed).shuffle(order)
+     passed = 0
+     print("COUNTER_SHA256=" + hashlib.sha256(counter.read_bytes()).hexdigest())
+     print(f"SEED={seed}")

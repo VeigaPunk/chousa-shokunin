@@ -1,0 +1,26 @@
+MATRIX_PATH=/fast/scratch/hyaku/chousa-r75/R75Mutation/mut/m1-drop-content-cases.py
+MATRIX_SHA256=c270c230b84a6a1db4ef75a18d2cad1a94b4f89076f39cab1fa9e803beb805c5
+RUN POSITIVE successor-counter 0 matrix_exit=0 marks=9/9/PASS
+RUN POSITIVE successor-counter 1 matrix_exit=0 marks=9/9/PASS
+SUBJECT POSITIVE successor-counter sha256=9334721a5e7a4080 ACCEPTED
+RUN POSITIVE ref-counter 0 matrix_exit=0 marks=9/9/PASS
+RUN POSITIVE ref-counter 1 matrix_exit=0 marks=9/9/PASS
+SUBJECT POSITIVE ref-counter sha256=909987ce9f762398 ACCEPTED
+RUN FORGER constant-pass 0 matrix_exit=1 marks=4/9/FAIL
+RUN FORGER constant-pass 1 matrix_exit=1 marks=4/9/FAIL
+SUBJECT FORGER constant-pass sha256=0dbd573c87eb6d28 REJECTED
+RUN FORGER constant-fail 0 matrix_exit=1 marks=4/9/FAIL
+RUN FORGER constant-fail 1 matrix_exit=1 marks=4/9/FAIL
+SUBJECT FORGER constant-fail sha256=d515585003abebf0 REJECTED
+RUN FORGER order-oracle 0 matrix_exit=1 marks=4/9/FAIL
+RUN FORGER order-oracle 1 matrix_exit=1 marks=3/9/FAIL
+SUBJECT FORGER order-oracle sha256=180d1a3d92be9e13 REJECTED
+RUN FORGER diff-only 0 matrix_exit=0 marks=9/9/PASS
+RUN FORGER diff-only 1 matrix_exit=0 marks=9/9/PASS
+SUBJECT FORGER diff-only sha256=6691c74c88efdb88 ACCEPTED
+RUN FORGER naive-grep 0 matrix_exit=0 marks=9/9/PASS
+RUN FORGER naive-grep 1 matrix_exit=0 marks=9/9/PASS
+SUBJECT FORGER naive-grep sha256=e5fc4104d56c8162 ACCEPTED
+forgers_rejected=3/5 positive=2/2
+BATTERY=FAIL forgers_rejected=3/5 positive=2/2
+EXIT=1

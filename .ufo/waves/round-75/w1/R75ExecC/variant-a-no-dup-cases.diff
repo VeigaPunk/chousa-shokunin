@@ -1,0 +1,15 @@
+--- matrix-orig.py	2026-11-04 16:09:10.584656945 -0300
++++ matrix-a-no-dup-cases.py	2026-11-04 16:09:29.826007690 -0300
+@@ -66,11 +66,7 @@
+ CASES += [(f"append-{i}", path, "append", 0, frozenset()) for i, path in enumerate(PATHS)]
+ CASES += [(f"delete-{i}", path, "delete", 1, frozenset({"C2-6"})) for i, path in enumerate(PATHS)]
+ CASES += [("replace-equal", PATHS[0], "replace", 1, frozenset({"C2-6"})),
+-          ("receipt-change", RECEIPTS[0], "append", 1, frozenset({"C2-7"})),
+-          # append-only but structurally wrong: decidable from content, never from numstat
+-          ("dup-log-heading", PATHS[0], "dup-log", 1, frozenset({"C2-1", "C2-2"})),
+-          ("dup-lesson-heading", PATHS[1], "dup-lesson", 1, frozenset({"C2-3", "C2-5"})),
+-          ("dup-card-heading", PATHS[2], "dup-card", 1, frozenset({"C2-4"}))]
++          ("receipt-change", RECEIPTS[0], "append", 1, frozenset({"C2-7"}))]
+ 
+ 
+ def git(root, *args):

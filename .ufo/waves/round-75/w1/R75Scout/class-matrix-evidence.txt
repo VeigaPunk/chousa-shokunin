@@ -1,0 +1,18 @@
+=== label-oracle ===
+run1 matrix_exit=0 LOADER_MATRIX=12/12 MATRIX=PASS
+run2 matrix_exit=0 LOADER_MATRIX=12/12 MATRIX=PASS
+=== pure-harness-detection-oracle ===
+run1 matrix_exit=0 LOADER_MATRIX=12/12 MATRIX=PASS
+run2 matrix_exit=0 LOADER_MATRIX=12/12 MATRIX=PASS
+=== memorized-fixture-oracle ===
+run1 matrix_exit=0 LOADER_MATRIX=12/12 MATRIX=PASS
+run2 matrix_exit=0 LOADER_MATRIX=12/12 MATRIX=PASS
+=== seed-leak-order-oracle (matrix stdout = regular file, the receipt-production mode) ===
+run1 matrix_exit=0 LOADER_MATRIX=12/12 MATRIX=PASS
+run2 matrix_exit=0 LOADER_MATRIX=12/12 MATRIX=PASS
+=== frozen forgers for contrast ===
+forge-constant-pass matrix_exit=1 LOADER_MATRIX=4/12 MATRIX=FAIL
+forge-constant-fail matrix_exit=1 LOADER_MATRIX=4/12 MATRIX=FAIL
+forge-order-oracle matrix_exit=1 LOADER_MATRIX=7/12 MATRIX=FAIL
+forge-diff-only matrix_exit=1 LOADER_MATRIX=9/12 MATRIX=FAIL
+forge-naive-grep matrix_exit=1 LOADER_MATRIX=9/12 MATRIX=FAIL

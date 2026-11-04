@@ -1,0 +1,88 @@
+# R75Review — exact commands and exits
+
+Environment: Linux 7.2.11-arch1-1 x86_64; python3 3.14.8; git 2.56.0.
+No tool was installed or upgraded (nothing was needed). No network. No lane or
+fleet git/jj mutation. All writes confined to
+/fast/scratch/hyaku/chousa-r75/R75Review/ (scratch) and this output folder.
+
+Clean shell used for every measurement:
+`env -i HOME=/home/vgpnk PATH=/usr/local/bin:/usr/bin:/bin TMPDIR=$S/tmp LANG=C.UTF-8 LC_ALL=C.UTF-8`
+where S=/fast/scratch/hyaku/chousa-r75/R75Review
+
+## Pin of the frozen bytes (one clone at A, read-only)
+
+    git clone --quiet --no-hardlinks /home/vgpnk/Projects/shokunin/chousa-shokunin $S/lane      # exit 0
+    git -C $S/lane checkout --quiet --detach 43a7a0db52c8aabdf32735f58e09610e05200e79            # exit 0
+    git -C $S/lane rev-parse HEAD                        # 43a7a0db52c8aabdf32735f58e09610e05200e79
+    git -C $S/lane status --porcelain                    # empty
+    for f in <12 frozen instruments>; do git -C $S/lane show 43a7a0d:$f | sha256sum; done         # exit 0
+
+## C1 predicate (claims.md C1)
+
+    cd $S/lane && env -i ... python3 -B corpus/evidence/round75/matrix-battery.py \
+      --matrix corpus/evidence/round75/loader-matrix-v2.py --work $S/out/work-after --runs 2
+    # exit 0; MATRIX_SHA256=95bdd49363e475316c5f5a9e200f039fcc1611f6fbd52848af8e078be0268ee7
+    # BATTERY=PASS forgers_rejected=5/5 positive=2/2
+    # receipt: 03-after-battery-v2-run1.txt  (same command, work-after2 / work-after3)
+    # repeats: exit 0, same digest, same BATTERY line (04, 05)
+
+    # the claims.md command VERBATIM (no --runs; battery default is 2):
+    cd $S/lane && env -i ... python3 -B corpus/evidence/round75/matrix-battery.py \
+      --matrix corpus/evidence/round75/loader-matrix-v2.py --work $S/out/work-exact
+    # exit 0; MATRIX_SHA256=95bdd493...; BATTERY=PASS forgers_rejected=5/5 positive=2/2
+    # receipt: 03b-after-battery-v2-exact-predicate.txt
+
+## C1 before state (do-nothing control)
+
+    cd $S/lane && env -i ... python3 -B corpus/evidence/round75/matrix-battery.py \
+      --matrix corpus/evidence/round74/loader-matrix.py --work $S/out/work-before --runs 2
+    # exit 1; MATRIX_SHA256=979638251845071cfb2c5e130cd81800251c5a6cb041438deb258d8877e2ff8d
+    # BATTERY=FAIL forgers_rejected=2/5 positive=2/2; order-oracle/diff-only/naive-grep 9/9 both runs
+    # receipt: 06-before-battery-r74-matrix.txt
+
+## C2 predicate (claims.md C2)
+
+    cd $S/lane && env -i ... python3 -B corpus/evidence/round75/c2-count.py --lane . \
+      --rev 8022f72c889c904b5657d52c7f29e1643392a216 --base 8022f72c889c904b5657d52c7f29e1643392a216
+    # exit 1; DERIVED=S182:16 S183:11 RECORDED=S182:18 S183:13; C2=FAIL checks=1/4
+    # receipt: 07-c2-base.txt
+
+    cd $S/lane && env -i ... python3 -B corpus/evidence/round75/c2-count.py --lane . \
+      --rev 43a7a0db52c8aabdf32735f58e09610e05200e79 --base 8022f72c889c904b5657d52c7f29e1643392a216
+    # exit 1; identical line; C2=FAIL checks=1/4 rev=43a7a0db52c8 base=8022f72c889c
+    # receipt: 08-c2-freezeA.txt
+
+## Independent derivation of the two counts (no counter code)
+
+    python3 -B - <<'PY'   (re.search on git show A:corpus/lessons/round-74.md)
+    # quoteA 16 tokens, recorded 18; quoteB 11 tokens, recorded 13   exit 0
+
+## Probes (reviewer instruments, not committed to the lane)
+
+    cd $S/lane && env -i ... python3 -B corpus/evidence/round75/loader-matrix-v2.py \
+      --counter $S/patch-counter.py --work $S/out/work-patch
+    # exit 0; LOADER_MATRIX=12/12 MATRIX=PASS  (counter reads `git diff` patch text only)
+    # receipt: 10-patch-only-counter-on-v2.txt
+
+    cd $S/lane && env -i ... python3 -B corpus/evidence/round75/loader-matrix-v2.py \
+      --counter corpus/evidence/round73/c2-count.py --work $S/out/work-r73
+    # exit 1; LOADER_MATRIX=3/12 MATRIX=FAIL  (matches controls/negative-r73-counter-on-v2.txt 3/12)
+    # receipt: 11-r73-counter-on-v2.txt
+
+    env -i ... S=$S/out/fixprobe python3 -B $S/probe_c2_underenforce.py
+    # exit 0 (all four fixtures exit 0 = C2=PASS 4/4)
+    # intended / mid-insert / underenforced / substring blocks
+    # receipt: 09-c2-underenforce-probe.txt
+
+    python3 -B -  (200000 random permutations of the 12 cases scored against
+                  forgers/forge-order-oracle.py's 9-entry SCRIPT)
+    # max = 9/12; P(full 12) = 0.0; exit 0
+    # receipt: 12-oracle-permutation-bound.txt
+
+## Repository facts
+
+    git -C $S/lane log -1 --format='A=%H parent=%P' 43a7a0d   # parent=8022f72c...
+    git -C $S/lane log --oneline 8022f72c..43a7a0d -- corpus/lessons/round-74.md   # empty
+    git -C $S/lane diff --numstat 8022f72c 43a7a0d -- corpus/lessons/round-74.md  # empty
+    git -C $S/lane show 43a7a0d:corpus/SOURCES.md | grep -c S184                   # 0
+    # receipt: 13-claim-facts.txt
