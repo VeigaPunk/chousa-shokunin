@@ -191,6 +191,8 @@ its author opened the source and judged its tier for the stated scope only.
 
 | S180 | chousa round-72 verifier spot-check — corpus/lessons/round-72-verifier-spotcheck.md | own-work | B | two routed r72 record defects and their line-level grounds | a0f094c272dcb09f1bf79e2c9057d7ea20b7ac7b, section 6, V72-1 and V72-2 | Distinguish the symptom grep from the terminating assignment and bind counts to the measured revision | mined | 2026-11-03 | on-release | corpus/lessons/round-73.md |
 | S181 | r72 count receipt — corpus/evidence/round72/controls/after-r72-corrections.txt | own-work | C | the receipt header's attribution of counts to the verdicts tree | a0f094c272dcb09f1bf79e2c9057d7ea20b7ac7b, header line 1 and revision line 5 | REJECTED: prose names the verdicts tree while the recorded revision is the landing tip; flip: correct the attribution and rederive at that revision | rejected | 2026-11-03 | on-release | — |
+| S182 | chousa round-73 verifier spot-check — corpus/lessons/round-73-verifier-spotcheck.md | own-work | B | routed correction-counter loader defect and required public-path controls | 8a28732b3c1591b52449a982849b758cda6f4c45, section 5 item 1 | Validate actual committed appends and deletions through load before successor calibration evidence | mined | 2026-11-04 | on-release | corpus/lessons/round-74.md |
+| S183 | frozen r73 correction counter — corpus/evidence/round73/c2-count.py | own-work | C | helper-only selftest as evidence of Git loader correctness | 8a28732b3c1591b52449a982849b758cda6f4c45, lines 162–179 and 125–134 | REJECTED: synthetic check fixtures bypass the defective loader; flip: public CLI tests using committed append and deletion fixtures | rejected | 2026-11-04 | on-release | — |
 
 ## Paths
 

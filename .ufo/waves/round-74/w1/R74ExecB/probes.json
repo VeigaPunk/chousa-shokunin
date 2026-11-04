@@ -1,0 +1,74 @@
+{
+  "frozen": "1eaa30ad248bbd3bd7469b2c17295fcda5fc02bb",
+  "base": "f748abbb6bf58388e732facd4ecec5612419c457",
+  "rev": "5aec90775fc7cc1fe9ad442e0d5491731323eec1",
+  "axes": [
+    "CLI outcome fidelity",
+    "independent deletion evidence",
+    "historical status neutrality"
+  ],
+  "scripts": {
+    "successor": {
+      "source": "corpus/evidence/round74/correction-count.py",
+      "sha256": "9334721a5e7a4080255b478771bf5443739738fb1936b40c116da28d7fa8ac41",
+      "working_bytes_match_frozen": true
+    },
+    "original": {
+      "source": "corpus/evidence/round73/c2-count.py",
+      "sha256": "e6e22b1ec8d270171cf015d44cac3d544a61bd23a3fa67d14c91fa26585dc320",
+      "working_bytes_match_frozen": true
+    }
+  },
+  "results": {
+    "successor": {
+      "command": [
+        "python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r74/R74ExecB/successor.py",
+        "--lane",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+        "--base",
+        "f748abbb6bf58388e732facd4ecec5612419c457",
+        "--rev",
+        "5aec90775fc7cc1fe9ad442e0d5491731323eec1"
+      ],
+      "exit": 0,
+      "stdout": "CHECK C2-1 PASS LOG.md '## Round 72 correction entry' count=1\nCHECK C2-2 PASS LOG entry missing=none\nCHECK C2-3 PASS lesson '## Correction \u2014 round-72 spot-check' count=1 missing=none\nCHECK C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none\nCHECK C2-5 PASS lesson tree statement missing=none\nCHECK C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD\nCHECK C2-7 PASS r72 receipts changed=none\nC2=PASS checks=7/7 rev=5aec90775fc7 base=f748abbb6bf5\n",
+      "stderr": ""
+    },
+    "original": {
+      "command": [
+        "python3",
+        "-B",
+        "/fast/scratch/hyaku/chousa-r74/R74ExecB/original.py",
+        "--lane",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+        "--base",
+        "f748abbb6bf58388e732facd4ecec5612419c457",
+        "--rev",
+        "5aec90775fc7cc1fe9ad442e0d5491731323eec1"
+      ],
+      "exit": 1,
+      "stdout": "CHECK C2-1 PASS LOG.md '## Round 72 correction entry' count=1\nCHECK C2-2 PASS LOG entry missing=none\nCHECK C2-3 PASS lesson '## Correction \u2014 round-72 spot-check' count=1 missing=none\nCHECK C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none\nCHECK C2-5 PASS lesson tree statement missing=none\nCHECK C2-6 FAIL removed lines=LOG.md:11,corpus/lessons/round-72.md:6,SCORECARD.md:21\nCHECK C2-7 PASS r72 receipts changed=none\nC2=FAIL checks=6/7 rev=5aec90775fc7 base=f748abbb6bf5\n",
+      "stderr": ""
+    },
+    "protected-numstat": {
+      "command": [
+        "git",
+        "-C",
+        "/home/vgpnk/Projects/shokunin/chousa-shokunin",
+        "diff",
+        "--numstat",
+        "f748abbb6bf58388e732facd4ecec5612419c457",
+        "5aec90775fc7cc1fe9ad442e0d5491731323eec1",
+        "--",
+        "LOG.md",
+        "corpus/lessons/round-72.md",
+        "SCORECARD.md"
+      ],
+      "exit": 0,
+      "stdout": "11\t0\tLOG.md\n21\t0\tSCORECARD.md\n6\t0\tcorpus/lessons/round-72.md\n",
+      "stderr": ""
+    }
+  }
+}

@@ -1357,3 +1357,9 @@ Left open:
 - `lessons/round-73.md` — S180 admit, S181 reject, routed V72-1/V72-2 corrections, and the frozen counter's additions/deletions loader defect.
 - `evidence/round73/controls/battery-r73.txt` — fresh Linux-host direct battery PASS (275 cases, 0 skipped), rc 0, 80 s; `preflight-r73.txt` — full preflight 8/8, no skipped gates, rc 0, 92 s. Both bind freeze revision and instrument digests. This supersedes no Windows receipt: host-scoped results coexist.
 - `evidence/round73/c2-count.py` is retained frozen and known invalid: its loader labels additions as removed lines. C2 is not certified; `QUALITY.md` criteria 132–133 record the precision lessons. No frontier coverage-map surface advanced.
+
+## Round74 correction-counter loader
+
+- `lessons/round-74.md` — S182 admit/S183 reject; real committed-input controls prevent the helper-only blind spot routed by the r73 closure.
+- `evidence/round74/correction-count.py` is a distinct successor; `evidence/round73/c2-count.py` remains immutable and known invalid. `evidence/round74/loader-matrix.py --counter COUNTER --work DIR` exercises nine public-CLI Git cases. Historical findings and rejections are not replaced.
+- Existing evidence-verification ground only: no new knowledge entry or frontier coverage-map surface is claimed. Substring semantic checks and fabricated-counter detection remain limitations, not certified capability.

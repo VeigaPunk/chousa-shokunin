@@ -1,0 +1,11 @@
+--- pristine/counter.py
++++ m2/counter.py
+@@ -128,7 +128,7 @@
+     for line in git(lane, "diff", "--numstat", base, rev, "--", *PATHS).splitlines():
+         parts = line.split("\t")
+         if len(parts) >= 3:
+-            deleted[parts[2]] = int(parts[1]) if parts[1].isdigit() else 1
++            deleted[parts[2]] = 0
+     changed = {ln.strip() for ln in git(lane, "diff", "--name-only", base, rev, "--", *RECEIPTS).splitlines()
+                if ln.strip()}
+     return files, {p: deleted.get(p, 0) for p in PATHS}, changed

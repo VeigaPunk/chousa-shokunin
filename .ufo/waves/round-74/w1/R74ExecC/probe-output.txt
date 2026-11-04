@@ -1,0 +1,85 @@
+AXES=CLI fidelity; per-file deletion isolation; equal-line rejection; receipt integrity; scratch containment
+SOURCE_REV=5aec90775fc7cc1fe9ad442e0d5491731323eec1
+ARTIFACT /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round74/correction-count.py SHA256=9334721a5e7a4080255b478771bf5443739738fb1936b40c116da28d7fa8ac41
+ARTIFACT /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round73/c2-count.py SHA256=e6e22b1ec8d270171cf015d44cac3d544a61bd23a3fa67d14c91fa26585dc320
+INPUT LOG.md bytes=271774 SHA256=0fcdb590b37bfddb7b865382471b52a019fd91ef477f1f371e0e8b6b32547a8f
+INPUT corpus/lessons/round-72.md bytes=9911 SHA256=97ebadbfc195cfe7a5924f27aa9c9b6ee65848a1b334173544894dcdc1c588ca
+INPUT SCORECARD.md bytes=375008 SHA256=8132af6894a3408c678a9b002d93cbe297c7a75c3e36859e099806010d3e1c6d
+INPUT corpus/evidence/round72/controls/battery-past-locale-dies-pinzone-r72.txt bytes=23701 SHA256=cae531e43ff4679620bbff0b753a6d36f3412b8b033776f0faea946238729fc1
+INPUT corpus/evidence/round72/controls/after-r72-corrections.txt bytes=3075 SHA256=e8dcf5839a817ffe1808a09fd8715c0237a283c6e2f571eabdc4df097f8c4012
+{"appended_path": null, "base": "ee51b32ce05d1bd6136dfa2dc1883d6365ad675f", "case": "unchanged", "command": ["/usr/bin/python3", "-B", "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round74/correction-count.py", "--lane", "/fast/scratch/hyaku/chousa-r74/R74ExecC", "--base", "ee51b32ce05d1bd6136dfa2dc1883d6365ad675f", "--rev", "a03f64bce1eedde852eb823fa624aa9d047b2bc6"], "deleted_path": null, "expected_failed": [], "failed": [], "matched": true, "rc": 0, "receipts_unchanged": true, "rev": "a03f64bce1eedde852eb823fa624aa9d047b2bc6"}
+CHECK C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+CHECK C2-2 PASS LOG entry missing=none
+CHECK C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+CHECK C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+CHECK C2-5 PASS lesson tree statement missing=none
+CHECK C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+CHECK C2-7 PASS r72 receipts changed=none
+C2=PASS checks=7/7 rev=a03f64bce1ee base=ee51b32ce05d
+{"appended_path": "corpus/lessons/round-72.md", "base": "ee51b32ce05d1bd6136dfa2dc1883d6365ad675f", "case": "mixed-0", "command": ["/usr/bin/python3", "-B", "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round74/correction-count.py", "--lane", "/fast/scratch/hyaku/chousa-r74/R74ExecC", "--base", "ee51b32ce05d1bd6136dfa2dc1883d6365ad675f", "--rev", "0ebed859d814d092d0c0e0370ca7aec7b26138c1"], "deleted_path": "LOG.md", "expected_failed": ["C2-6"], "failed": ["C2-6"], "matched": true, "rc": 1, "receipts_unchanged": true, "rev": "0ebed859d814d092d0c0e0370ca7aec7b26138c1"}
+0	1	LOG.md
+2	0	corpus/lessons/round-72.md
+CHECK C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+CHECK C2-2 PASS LOG entry missing=none
+CHECK C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+CHECK C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+CHECK C2-5 PASS lesson tree statement missing=none
+CHECK C2-6 FAIL removed lines=LOG.md:1
+CHECK C2-7 PASS r72 receipts changed=none
+C2=FAIL checks=6/7 rev=0ebed859d814 base=ee51b32ce05d
+{"appended_path": "SCORECARD.md", "base": "ee51b32ce05d1bd6136dfa2dc1883d6365ad675f", "case": "mixed-1", "command": ["/usr/bin/python3", "-B", "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round74/correction-count.py", "--lane", "/fast/scratch/hyaku/chousa-r74/R74ExecC", "--base", "ee51b32ce05d1bd6136dfa2dc1883d6365ad675f", "--rev", "c9ebcd89ac9d8845b75d6fdb0602cda7b44cf66f"], "deleted_path": "corpus/lessons/round-72.md", "expected_failed": ["C2-6"], "failed": ["C2-6"], "matched": true, "rc": 1, "receipts_unchanged": true, "rev": "c9ebcd89ac9d8845b75d6fdb0602cda7b44cf66f"}
+2	0	SCORECARD.md
+0	1	corpus/lessons/round-72.md
+CHECK C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+CHECK C2-2 PASS LOG entry missing=none
+CHECK C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+CHECK C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+CHECK C2-5 PASS lesson tree statement missing=none
+CHECK C2-6 FAIL removed lines=corpus/lessons/round-72.md:1
+CHECK C2-7 PASS r72 receipts changed=none
+C2=FAIL checks=6/7 rev=c9ebcd89ac9d base=ee51b32ce05d
+{"appended_path": "LOG.md", "base": "ee51b32ce05d1bd6136dfa2dc1883d6365ad675f", "case": "mixed-2", "command": ["/usr/bin/python3", "-B", "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round74/correction-count.py", "--lane", "/fast/scratch/hyaku/chousa-r74/R74ExecC", "--base", "ee51b32ce05d1bd6136dfa2dc1883d6365ad675f", "--rev", "61db77f2a17a3afe2ad2e1c52797471e34934aa3"], "deleted_path": "SCORECARD.md", "expected_failed": ["C2-6"], "failed": ["C2-6"], "matched": true, "rc": 1, "receipts_unchanged": true, "rev": "61db77f2a17a3afe2ad2e1c52797471e34934aa3"}
+2	0	LOG.md
+0	1	SCORECARD.md
+CHECK C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+CHECK C2-2 PASS LOG entry missing=none
+CHECK C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+CHECK C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+CHECK C2-5 PASS lesson tree statement missing=none
+CHECK C2-6 FAIL removed lines=SCORECARD.md:1
+CHECK C2-7 PASS r72 receipts changed=none
+C2=FAIL checks=6/7 rev=61db77f2a17a base=ee51b32ce05d
+{"appended_path": null, "base": "ee51b32ce05d1bd6136dfa2dc1883d6365ad675f", "case": "equal-0", "command": ["/usr/bin/python3", "-B", "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round74/correction-count.py", "--lane", "/fast/scratch/hyaku/chousa-r74/R74ExecC", "--base", "ee51b32ce05d1bd6136dfa2dc1883d6365ad675f", "--rev", "eace9aed2538ff53beccc8dd5b740d43abd64b01"], "deleted_path": "LOG.md", "expected_failed": ["C2-6"], "failed": ["C2-6"], "matched": true, "rc": 1, "receipts_unchanged": true, "rev": "eace9aed2538ff53beccc8dd5b740d43abd64b01"}
+1	1	LOG.md
+CHECK C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+CHECK C2-2 PASS LOG entry missing=none
+CHECK C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+CHECK C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+CHECK C2-5 PASS lesson tree statement missing=none
+CHECK C2-6 FAIL removed lines=LOG.md:1
+CHECK C2-7 PASS r72 receipts changed=none
+C2=FAIL checks=6/7 rev=eace9aed2538 base=ee51b32ce05d
+{"appended_path": null, "base": "ee51b32ce05d1bd6136dfa2dc1883d6365ad675f", "case": "equal-1", "command": ["/usr/bin/python3", "-B", "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round74/correction-count.py", "--lane", "/fast/scratch/hyaku/chousa-r74/R74ExecC", "--base", "ee51b32ce05d1bd6136dfa2dc1883d6365ad675f", "--rev", "a91cda298298d989930f00bfa2f9e6bae7a6615b"], "deleted_path": "corpus/lessons/round-72.md", "expected_failed": ["C2-6"], "failed": ["C2-6"], "matched": true, "rc": 1, "receipts_unchanged": true, "rev": "a91cda298298d989930f00bfa2f9e6bae7a6615b"}
+1	1	corpus/lessons/round-72.md
+CHECK C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+CHECK C2-2 PASS LOG entry missing=none
+CHECK C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+CHECK C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+CHECK C2-5 PASS lesson tree statement missing=none
+CHECK C2-6 FAIL removed lines=corpus/lessons/round-72.md:1
+CHECK C2-7 PASS r72 receipts changed=none
+C2=FAIL checks=6/7 rev=a91cda298298 base=ee51b32ce05d
+{"appended_path": null, "base": "ee51b32ce05d1bd6136dfa2dc1883d6365ad675f", "case": "equal-2", "command": ["/usr/bin/python3", "-B", "/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round74/correction-count.py", "--lane", "/fast/scratch/hyaku/chousa-r74/R74ExecC", "--base", "ee51b32ce05d1bd6136dfa2dc1883d6365ad675f", "--rev", "1b2609c73718a8a1fb36204ca6a592f76d17f945"], "deleted_path": "SCORECARD.md", "expected_failed": ["C2-6"], "failed": ["C2-6"], "matched": true, "rc": 1, "receipts_unchanged": true, "rev": "1b2609c73718a8a1fb36204ca6a592f76d17f945"}
+1	1	SCORECARD.md
+CHECK C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+CHECK C2-2 PASS LOG entry missing=none
+CHECK C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+CHECK C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+CHECK C2-5 PASS lesson tree statement missing=none
+CHECK C2-6 FAIL removed lines=SCORECARD.md:1
+CHECK C2-7 PASS r72 receipts changed=none
+C2=FAIL checks=6/7 rev=1b2609c73718 base=ee51b32ce05d
+BOUNDED_PROBE=7/7
+SCRATCH_REMOVED=True
+
+DRIVER_RC=0
