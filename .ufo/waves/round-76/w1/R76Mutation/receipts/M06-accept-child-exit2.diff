@@ -1,0 +1,11 @@
+--- loader-matrix-v3.py
++++ mut-M06-accept-child-exit2-matrix-v3.py
+@@ -175,7 +175,7 @@
+                     checks[parts[1]] = parts[2]
+             failed = frozenset(key for key, value in checks.items() if value == "FAIL")
+             summary = "PASS" if expected_rc == 0 else "FAIL"
+-            ok = (not timed_out and rc == expected_rc and len(checks) == len(CHECK_IDS)
++            ok = (not timed_out and (rc == expected_rc or rc == 2) and len(checks) == len(CHECK_IDS)
+                   and failed == expected_failed
+                   and any(line.startswith("C2=" + summary + " checks=") for line in out.splitlines()))
+             passed += ok

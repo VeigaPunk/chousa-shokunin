@@ -1,0 +1,14 @@
+--- loader-matrix-v3.py
++++ mut-M13-flaky-order-matrix-v3.py
+@@ -142,7 +142,10 @@
+     print("SEED_SHA256=" + hashlib.sha256(str(seed).encode()).hexdigest())
+     print(f"CHILD_TIMEOUT={child_timeout}")
+     order = list(CASES)
+-    random.Random(seed).shuffle(order)
++    marker = work.parent / "mut-flaky.marker"
++    if not marker.exists():  # MUTANT M13: shuffle the first run only
++        marker.write_text("x")
++        random.Random(seed).shuffle(order)
+     files = salted(secrets.token_hex(8))
+     passed = 0
+     with tempfile.TemporaryDirectory(prefix="loader-matrix-v3-", dir=work) as tmp:

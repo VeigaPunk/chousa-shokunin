@@ -1,0 +1,52 @@
+=== R76Connect Verification Receipt: Two-Tier Battery Entropy & Variable-Length Salt ===
+Date: 2026-11-04
+Lane: chousa-shokunin
+Seat: R76Connect (connector, leaf)
+Base revision: da9ac7ec684fe9fe9ad5554cab6180057255b76b (r76 frozen controls)
+
+1. Size-Beacon Reproduction on loader-matrix-v3.py:
+Frozen loader-matrix-v3.py:
+  secrets.token_hex(8) -> exactly 16 hex chars (24 bytes "# salt <16hex>\n")
+  case-00-unchanged has path=None -> mutate() is never called -> no pad_line()
+Observed file size tuples across 3 runs:
+  Run 1: (107, 101, 43, 44, 202)
+  Run 2: (107, 101, 43, 44, 202)
+  Run 3: (107, 101, 43, 44, 202)
+Distinct size tuples: 1/3 (invariant metadata channel; PROBE=FAIL confirmed by R76Sentinel).
+
+2. Variable-Length Salt Remediation:
+Proposed generator:
+  salt_len = random.randint(8, 32)
+  token = secrets.token_hex(salt_len)
+Observed file size tuples across 3 runs:
+  Run 1: (119, 113, 55, 56, 214)
+  Run 2: (135, 129, 71, 72, 230)
+  Run 3: (123, 117, 59, 60, 218)
+Distinct size tuples: 3/3 (entropy injected into unchanged baseline; size beacon eliminated).
+
+3. Battery Sequential Invocation Oracle Reproduction:
+Static execution order in c2-battery.py:
+  [good-block (accept), decoy-above (reject), negation (reject), magnitude (reject), comment-only (reject), mid-file (reject), deletion-history (reject), lane (accept)]
+Sequential oracle forge-leg-order.py:
+  accept on call 1 and 8; reject on calls 2..7.
+Result under frozen c2-battery.py:
+  FIXTURE good-block expected=accept actual=accept rc=0
+  FIXTURE decoy-above expected=reject actual=reject rc=1
+  FIXTURE negation expected=reject actual=reject rc=1
+  FIXTURE magnitude expected=reject actual=reject rc=1
+  FIXTURE comment-only expected=reject actual=reject rc=1
+  FIXTURE mid-file expected=reject actual=reject rc=1
+  FIXTURE deletion-history expected=reject actual=reject rc=1
+  LANE real expected=accept actual=accept rc=0
+  C2_BATTERY=PASS bogus_rejected=6/6 positive=1/1 lane=PASS (exit 0)
+
+4. Battery Shuffling Remediation:
+When fixture execution sequence is shuffled with CSPRNG seed (unseen by candidate):
+  Trial 1 shuffled order: ['decoy-above', 'lane', 'mid-file', 'good-block', 'comment-only', 'magnitude', 'deletion-history', 'negation']
+  Oracle result:
+    decoy-above: call 1 -> accept (expected reject) -> MISMATCH
+    lane: call 2 -> reject (expected accept) -> MISMATCH
+    good-block: call 4 -> reject (expected accept) -> MISMATCH
+  Summary: bogus_rejected=5/6, positive=0/1, lane=FAIL
+  Battery result: C2_BATTERY=FAIL (exit 1)
+Sequential oracle defeated.

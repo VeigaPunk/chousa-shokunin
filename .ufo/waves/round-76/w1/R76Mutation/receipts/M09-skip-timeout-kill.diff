@@ -1,0 +1,19 @@
+--- loader-matrix-v3.py
++++ mut-M09-skip-timeout-kill-matrix-v3.py
+@@ -124,15 +124,7 @@
+                          stderr=subprocess.PIPE, text=True, start_new_session=True,
+                          close_fds=True)
+     timed_out = False
+-    try:
+-        out, _err = p.communicate(timeout=timeout)
+-    except subprocess.TimeoutExpired:
+-        timed_out = True
+-        try:
+-            os.killpg(p.pid, signal.SIGKILL)
+-        except ProcessLookupError:
+-            pass
+-        out, _err = p.communicate()
++    out, _err = p.communicate()  # MUTANT M09: no bound, no kill
+     return p.returncode, out, timed_out
+ 
+ 

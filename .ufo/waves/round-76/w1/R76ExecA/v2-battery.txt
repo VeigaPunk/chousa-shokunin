@@ -1,0 +1,39 @@
+== seat R76ExecA: BEFORE direction — r76 battery over the r75 matrix (bounded variant: --runs 1 --matrix-timeout 120) ==
+command: python3 -B /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round76/matrix-battery-v3.py --matrix /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round75/loader-matrix-v2.py --work /fast/scratch/hyaku/chousa-r76/R76ExecA/a-v2 --runs 1 --matrix-timeout 120
+sha256 corpus/evidence/round75/loader-matrix-v2.py = 95bdd49363e475316c5f5a9e200f039fcc1611f6fbd52848af8e078be0268ee7  (matches sha256 pinned in corpus/evidence/round76/claims.md)
+sha256 corpus/evidence/round76/matrix-battery-v3.py = 217ae367c7e6e4ed23d1e6c1412de50370f309ba12d4a1703eaff386b7094360  (worktree == git blob at controls commit da9ac7ec684fe9fe9ad5554cab6180057255b76b)
+note: the frozen before receipt corpus/evidence/round76/controls/before-battery-v2-matrix.txt used the battery defaults (RUNS=2 MATRIX_TIMEOUT=300) and its hang forger hit the battery bound; this seat ran the seat-assigned bounded variant, which produces the same tally 9/11 with the hang leg killed at the 120 s matrix bound instead.
+--- stdout (verbatim) ---
+MATRIX_PATH=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round75/loader-matrix-v2.py
+MATRIX_SHA256=95bdd49363e475316c5f5a9e200f039fcc1611f6fbd52848af8e078be0268ee7
+RUNS=1 CHILD_TIMEOUT=3 MATRIX_TIMEOUT=120
+RUN POSITIVE successor-counter 0 matrix_exit=0 marks=12/12/PASS
+SUBJECT POSITIVE successor-counter sha256=9334721a5e7a4080 ACCEPTED
+RUN POSITIVE ref-counter 0 matrix_exit=0 marks=12/12/PASS
+SUBJECT POSITIVE ref-counter sha256=909987ce9f762398 ACCEPTED
+RUN FORGER constant-pass 0 matrix_exit=1 marks=4/12/FAIL
+SUBJECT FORGER constant-pass sha256=50f3b5bd9da5ed29 REJECTED
+RUN FORGER constant-fail 0 matrix_exit=1 marks=4/12/FAIL
+SUBJECT FORGER constant-fail sha256=698733323e24e5a9 REJECTED
+RUN FORGER order-twelve 0 matrix_exit=1 marks=1/12/FAIL
+SUBJECT FORGER order-twelve sha256=b24eb3ca206c2ebd REJECTED
+RUN FORGER diff-only 0 matrix_exit=1 marks=9/12/FAIL
+SUBJECT FORGER diff-only sha256=6b36c1d4b18803dd REJECTED
+RUN FORGER naive-grep 0 matrix_exit=1 marks=4/12/FAIL
+SUBJECT FORGER naive-grep sha256=6f8977be1fe9c265 REJECTED
+RUN FORGER subject-map 0 matrix_exit=0 marks=12/12/PASS
+SUBJECT FORGER subject-map sha256=1f12dd2b3c44a333 MISS
+RUN FORGER tree-identity 0 matrix_exit=1 marks=5/12/FAIL
+SUBJECT FORGER tree-identity sha256=5f265e35951fd12d REJECTED
+RUN FORGER size-map 0 matrix_exit=1 marks=5/12/FAIL
+SUBJECT FORGER size-map sha256=73ab5e9f436b62b4 REJECTED
+RUN FORGER harness-source 0 matrix_exit=1 marks=3/12/FAIL
+SUBJECT FORGER harness-source sha256=8184b9afd0501e10 REJECTED
+RUN FORGER seed-leak 0 matrix_exit=1 marks=4/12/FAIL
+SUBJECT FORGER seed-leak sha256=52b5b51ef81aa8c9 REJECTED
+RUN FORGER hang 0 matrix_exit=timeout marks=none
+SUBJECT FORGER hang sha256=61d9b839524ab6e0 MISS
+forgers_rejected=9/11 positive=2/2
+BATTERY=FAIL forgers_rejected=9/11 positive=2/2
+--- stderr: 0 bytes ---
+EXIT=1

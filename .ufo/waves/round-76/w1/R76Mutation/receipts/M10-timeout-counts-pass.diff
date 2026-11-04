@@ -1,0 +1,11 @@
+--- loader-matrix-v3.py
++++ mut-M10-timeout-counts-pass-matrix-v3.py
+@@ -178,7 +178,7 @@
+             ok = (not timed_out and rc == expected_rc and len(checks) == len(CHECK_IDS)
+                   and failed == expected_failed
+                   and any(line.startswith("C2=" + summary + " checks=") for line in out.splitlines()))
+-            passed += ok
++            passed += (True if timed_out else ok)  # MUTANT M10
+             print(f"CASE {name} {'PASS' if ok else 'FAIL'} expected_rc={expected_rc} "
+                   f"actual_rc={rc} timeout={timed_out} failed={','.join(sorted(failed)) or 'none'} "
+                   f"expected_failed={','.join(sorted(expected_failed)) or 'none'}")

@@ -3387,3 +3387,54 @@ No numeric axis score changed; no capability row (C1 is a discrimination repair 
 Learning trends: expansion **unchanged** (curation only, no knowledge entry or capability); quality **improved** (the matrix's 12/12 now means something: five forged subjects rejected and two correct implementations accepted; the shuffle shown load-bearing; and the surviving classes — metadata-reading, patch-text, harness-source, seed-leak, unbounded child — are measured and recorded rather than certified away); discernment **improved** (routed spot-check defect corrected with a re-derivable count; six attack-seat findings integrated as limits and three criteria 135–137; own slips mined with a guard shown able to fail; outside non-author spot-check requested, not self-granted).
 
 The frozen rationale sentences did not survive the wave: "decidable only from protected-file content" is false (metadata-reading counters reach 12/12), the battery does not test the shuffle, and the C2 counter is a presence test. The predicates themselves hold; the corrections are append-only in `corpus/lessons/round-75.md`. Round admission: **both claims verify on their frozen predicates, no axis harmed**; the canonical non-author closure owns the final ruling.
+
+## Round 75 correction note (append-only; landed with round 76, routed by this round's self-claim audit)
+
+The round-75 verdict row opens "Freeze `43a7a0db…` … landing `a` (content) / final tip `b`
+(receipts and results)". Those two one-letter placeholders name no commit: read them as
+`ad57562215a1a729e6ab8c7e13ef713c4e5843d1` (landing) and
+`e515c9624278cef906671d76188cb44e2a3445fe` (final tip), the hashes the r75 non-author spot-check
+records (`corpus/lessons/round-75-verifier-spotcheck.md`, "Conformance and disposition"). The
+row's claims, predicates, measurements and admission are unchanged; this is a record correction,
+not an axis move. Criterion 10's placeholder list does not catch a bare one-letter hash, which is
+why r75 filed and r76 found it.
+
+## Planned — round 76 (frozen 2026-11-04 at `5daa3628389c164f6ee34027be77d26b175c0de7`; controls commit `da9ac7ec684fe9fe9ad5554cab6180057255b76b` precedes it)
+
+Round 76 closes the two routed instrument defects the r75 non-author spot-check holds open, as
+two claims on distinct axes (predicates, before/after and kill rules frozen in
+`corpus/evidence/round76/claims.md`):
+
+1. **C1 — operability** (lowest scored non-retired axis, 3/10; the historical 3/10 observable
+   deliberately not moved). `python3 -B corpus/evidence/round76/matrix-battery-v3.py --matrix
+   corpus/evidence/round76/loader-matrix-v3.py --work DIR` exits 0 and prints exactly
+   `BATTERY=PASS forgers_rejected=11/11 positive=2/2`. The successor matrix closes the
+   commit-subject, tree-id/size and unbounded-child answer keys, and the battery adds
+   subject-map, tree-identity, size-map, harness-source, seed-leak, order-twelve and hang
+   subjects. Before (same battery over the r75 matrix): `BATTERY=FAIL forgers_rejected=9/11
+   positive=2/2`, exit 1 — the subject-map oracle reaches 12/12 twice. After: 11/11 and 2/2,
+   exit 0.
+2. **C2 — calibration**. `python3 -B corpus/evidence/round76/c2-battery.py --counter
+   corpus/evidence/round76/correction-count-v2.py --work DIR` exits 0 and prints exactly
+   `C2_BATTERY=PASS bogus_rejected=6/6 positive=1/1 lane=PASS`. The successor counter binds the
+   derivation to the authored bullets and tests polarity, magnitude, last-section position,
+   base ancestry, append-only and comment concealment. Before (same battery over the r75
+   counter): `C2_BATTERY=FAIL bogus_rejected=2/6 positive=1/1 lane=PASS`, exit 1.
+
+Wave: one v1 wave of 12 seats (3 executor, 1 scout, 1 scribe, 1 connector, 2 reviewer, 2 critic,
+1 mutation-tester, 1 sentinel = 6 attack seats, 50%) under `ufo-wave-policy.json` (band 8–16),
+via the run-15 inline spawn handoff. L1 holds the canonical planner seat; no residual call
+planned.
+
+## Round 76 verdict — finite predicate gains, broader closure withheld
+
+Measured instrument revision da9ac7ec684fe9fe9ad5554cab6180057255b76b; claims freeze 5daa3628389c164f6ee34027be77d26b175c0de7. Instruments remain byte-identical; `controls/freeze-remeasure-clone.txt` and `R76Review.md` independently reproduce the predicates.
+
+| claim / axis | before → after | counting command / evidence | verdict |
+|---|---|---|---|
+| C1 operability | `BATTERY=FAIL forgers_rejected=9/11 positive=2/2` exit1 on r75 matrix → `BATTERY=PASS forgers_rejected=11/11 positive=2/2` exit0 on v3 | `python3 -B corpus/evidence/round76/matrix-battery-v3.py --matrix MATRIX --work DIR`; `controls/{before-battery-v2-matrix,after-battery-v3-matrix}.txt` | improved narrowly on frozen finite predicate |
+| C2 declared calibration | `C2_BATTERY=FAIL bogus_rejected=2/6 positive=1/1 lane=PASS` exit1 on r75 counter → `C2_BATTERY=PASS bogus_rejected=6/6 positive=1/1 lane=PASS` exit0 on successor | `python3 -B corpus/evidence/round76/c2-battery.py --counter COUNTER --work DIR`; `controls/{before,after}-c2-battery.txt` | finite predicate met; axis-fit caveat: this measures instrument discrimination, not SCORECARD/SHONEN mismatch calibration |
+
+Numeric score delta0: operability remains frozen historical3/10; no capability row. Depth, coverage, freshness and adjacency unchanged. C1 metadata-channel rationale is falsified for unchanged sizes; C2 generic correction-class closure is falsified by nine retained fixtures. Outer invocation-count scripts achieve both exact target lines, so a passing battery is not arbitrary discrimination. Existing QUALITY119/120/126 obligations are not retroactively repaired by these post-freeze findings.
+
+Round admission **withheld for independent closure**, rather than claiming every axis improved: finite predicates hold, but the prefreeze outer-oracle gap and C2 distinct-axis fit are unresolved. No held knowledge entry was altered or superseded; no cross-domain source was absorbed. Trends: expansion unchanged; quality improved narrowly (bounded execution, old subject oracle and four formerly accepted bogus blocks now rejected); discernment improved through grounded QUALITY138–140. Outside admit/reject review remains requested, not self-granted.

@@ -1,0 +1,31 @@
+MATRIX_PATH=/fast/scratch/hyaku/chousa-r76/R76Mutation/mut/mut-M13-flaky-order-matrix-v3.py
+MATRIX_SHA256=b79d6441057a01b27eb465c6b0625cd46502114f8b622b370c2cd2805c81913f
+RUNS=1 CHILD_TIMEOUT=3 MATRIX_TIMEOUT=120
+RUN POSITIVE successor-counter 0 matrix_exit=0 marks=12/12/PASS
+SUBJECT POSITIVE successor-counter sha256=9334721a5e7a4080 ACCEPTED
+RUN POSITIVE ref-counter 0 matrix_exit=0 marks=12/12/PASS
+SUBJECT POSITIVE ref-counter sha256=909987ce9f762398 ACCEPTED
+RUN FORGER constant-pass 0 matrix_exit=1 marks=4/12/FAIL
+SUBJECT FORGER constant-pass sha256=50f3b5bd9da5ed29 REJECTED
+RUN FORGER constant-fail 0 matrix_exit=1 marks=4/12/FAIL
+SUBJECT FORGER constant-fail sha256=698733323e24e5a9 REJECTED
+RUN FORGER order-twelve 0 matrix_exit=1 marks=2/12/FAIL
+SUBJECT FORGER order-twelve sha256=b24eb3ca206c2ebd REJECTED
+RUN FORGER diff-only 0 matrix_exit=1 marks=9/12/FAIL
+SUBJECT FORGER diff-only sha256=6b36c1d4b18803dd REJECTED
+RUN FORGER naive-grep 0 matrix_exit=1 marks=4/12/FAIL
+SUBJECT FORGER naive-grep sha256=6f8977be1fe9c265 REJECTED
+RUN FORGER subject-map 0 matrix_exit=1 marks=4/12/FAIL
+SUBJECT FORGER subject-map sha256=1f12dd2b3c44a333 REJECTED
+RUN FORGER tree-identity 0 matrix_exit=1 marks=5/12/FAIL
+SUBJECT FORGER tree-identity sha256=5f265e35951fd12d REJECTED
+RUN FORGER size-map 0 matrix_exit=1 marks=5/12/FAIL
+SUBJECT FORGER size-map sha256=73ab5e9f436b62b4 REJECTED
+RUN FORGER harness-source 0 matrix_exit=1 marks=4/12/FAIL
+SUBJECT FORGER harness-source sha256=8184b9afd0501e10 REJECTED
+RUN FORGER seed-leak 0 matrix_exit=1 marks=4/12/FAIL
+SUBJECT FORGER seed-leak sha256=52b5b51ef81aa8c9 REJECTED
+RUN FORGER hang 0 matrix_exit=1 marks=0/12/FAIL
+SUBJECT FORGER hang sha256=61d9b839524ab6e0 REJECTED
+forgers_rejected=11/11 positive=2/2
+BATTERY=PASS forgers_rejected=11/11 positive=2/2

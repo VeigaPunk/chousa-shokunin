@@ -1,0 +1,11 @@
+--- loader-matrix-v3.py
++++ mut-M04-drop-salt-matrix-v3.py
+@@ -97,7 +97,7 @@
+ 
+ def salted(salt: str) -> dict[str, str]:
+     """Per-run salt in every file body: no case keeps a stable tree id or blob size."""
+-    return {path: text + f"\nsalt {salt}-{i}\n" for i, (path, text) in enumerate(FILES.items())}
++    return dict(FILES)  # MUTANT M04: no per-run salt
+ 
+ 
+ def mutate(text: str, operation: str) -> str:

@@ -1,0 +1,13 @@
+--- matrix-battery-v3.py
++++ mut-B01-forger-single-run-battery-v3.py
+@@ -142,8 +142,8 @@
+                     ok = all(rc == 0 and marks is not None and marks[0] == marks[1] and marks[2] == "PASS"
+                              for rc, marks in runs)
+                 else:
+-                    ok = all(rc == 1 and marks is not None and marks[0] < marks[1]
+-                             for rc, marks in runs)
++                    ok = (runs[0][0] == 1 and runs[0][1] is not None
++                          and runs[0][1][0] < runs[0][1][1])  # MUTANT B01: first run only
+                 tally[group][0] += ok
+                 tally[group][1] += 1
+                 label = ("ACCEPTED" if ok else "MISS") if group == "POSITIVE" else ("REJECTED" if ok else "MISS")

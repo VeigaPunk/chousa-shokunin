@@ -1,0 +1,11 @@
+--- loader-matrix-v3.py
++++ mut-M05-drop-pad-matrix-v3.py
+@@ -92,7 +92,7 @@
+ 
+ def pad_line() -> str:
+     """Per-case random-length padding: no case keeps a stable size signature."""
+-    return "\n" + "pad " + secrets.token_hex(random.randint(2, 20)) + "\n"
++    return ""  # MUTANT M05: no per-run pad
+ 
+ 
+ def salted(salt: str) -> dict[str, str]:

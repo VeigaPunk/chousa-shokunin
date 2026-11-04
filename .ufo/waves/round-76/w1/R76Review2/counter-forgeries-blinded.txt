@@ -1,0 +1,275 @@
+INSTRUMENT HASH CHECK vs frozen da9ac7ec684fe9fe9ad5554cab6180057255b76b
+  corpus/evidence/round76/correction-count-v2.py live=610e5655af2bd2f5f034edcfc732b012db29d8a9ff7295cae8edce835982ecbb frozen=610e5655af2bd2f5f034edcfc732b012db29d8a9ff7295cae8edce835982ecbb match=True
+  corpus/evidence/round76/c2-battery.py live=7e0d6832b705a81d48a1143d0b039dbaeec0665dc01fc8cbd977f97edc0d8619 frozen=7e0d6832b705a81d48a1143d0b039dbaeec0665dc01fc8cbd977f97edc0d8619 match=True
+
+===== A1 =====
+NOTE: HTML comment opened BELOW the heading: the whole block body is commented out (renders invisible) yet V9 only inspects lines above the heading
+BLOCK:
+# Round 74 — fixture
+
+removable line
+
+## Gate
+
+- Admit S182, own-work B. Opened 2026-11-04. Located quote: “Before any successor calibration freeze, exercise a real committed append and a real deletion through `load()`” (18 words).
+- Reject S183, own-work C. Opened 2026-11-04. Located quote: `base = check({k: v for k, v in FIXTURE.items()}, {}, set())` (line 163, 13 whitespace tokens).
+
+## Boundaries
+
+Fixture boundary text.
+
+## Correction — round-74 quote counts
+
+<!--
+Superseded: 18 words and 13 whitespace tokens. The quoted strings carry 16 and 11 whitespace tokens.
+-->
+CMD: python3 -B /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round76/correction-count-v2.py --lane /fast/scratch/hyaku/chousa-r76/R76Review2/fixtures/0f50051b3e6a86d857bcdb2c97136a85 --base ed06cb0fa837 --rev 73a9c7e3c419
+STDOUT:
+DERIVED=S182:16 S183:11 RECORDED=S182:18 S183:13
+CHECK V1 PASS authored bullets: found
+CHECK V2 PASS block count=1 states derived 16/11
+CHECK V3 PASS names superseded 18/13 with cue: True cue=True
+CHECK V4 PASS corrected lines=1 negating=0
+CHECK V5 PASS magnitudes=18,13,11
+CHECK V6 PASS last section='## Correction — round-74 quote counts'
+CHECK V7 PASS base ancestor of rev=True
+CHECK V8 PASS removed lines=0
+CHECK V9 PASS block inside comment=False
+C2V=PASS checks=9/9 rev=73a9c7e3c419 base=ed06cb0fa837
+RC=0
+RESULT: SURVIVOR(bogus scored PASS 9/9)
+
+===== A7 =====
+NOTE: deletion-history: commit1 deletes 'removable line', commit2 restores it and appends the block; base..rev numstat is a NET diff and shows 0 removals
+BLOCK:
+base=BASE_LESSON; case1=BASE_LESSON minus 'removable line'; case2=BASE_LESSON+GOOD_BLOCK
+CMD: python3 -B /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round76/correction-count-v2.py --lane /fast/scratch/hyaku/chousa-r76/R76Review2/fixtures/7ddb20899fd8a16672bbedff3ae06c4d --base ed06cb0fa837 --rev 2f91e14df520
+STDOUT:
+DERIVED=S182:16 S183:11 RECORDED=S182:18 S183:13
+CHECK V1 PASS authored bullets: found
+CHECK V2 PASS block count=1 states derived 16/11
+CHECK V3 PASS names superseded 18/13 with cue: True cue=True
+CHECK V4 PASS corrected lines=1 negating=0
+CHECK V5 PASS magnitudes=18,13,11
+CHECK V6 PASS last section='## Correction — round-74 quote counts'
+CHECK V7 PASS base ancestor of rev=True
+CHECK V8 PASS removed lines=0
+CHECK V9 PASS block inside comment=False
+C2V=PASS checks=9/9 rev=2f91e14df520 base=ed06cb0fa837
+RC=0
+RESULT: SURVIVOR(bogus scored PASS 9/9)
+
+===== A2 =====
+NOTE: valid block is NOT the last section: an h1 '# Boundaries' section follows it; V6 only compares '## '-prefixed headings
+BLOCK:
+# Round 74 — fixture
+
+removable line
+
+## Gate
+
+- Admit S182, own-work B. Opened 2026-11-04. Located quote: “Before any successor calibration freeze, exercise a real committed append and a real deletion through `load()`” (18 words).
+- Reject S183, own-work C. Opened 2026-11-04. Located quote: `base = check({k: v for k, v in FIXTURE.items()}, {}, set())` (line 163, 13 whitespace tokens).
+
+## Boundaries
+
+Fixture boundary text.
+
+## Correction — round-74 quote counts
+
+Superseded: 18 words and 13 whitespace tokens. The quoted strings carry 16 and 11 whitespace tokens.
+
+# Boundaries
+
+Appended h1 section: the document continues after the block.
+CMD: python3 -B /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round76/correction-count-v2.py --lane /fast/scratch/hyaku/chousa-r76/R76Review2/fixtures/ee24a431ac15aa07f0843e97d922918b --base ed06cb0fa837 --rev d87ad3195698
+STDOUT:
+DERIVED=S182:16 S183:11 RECORDED=S182:18 S183:13
+CHECK V1 PASS authored bullets: found
+CHECK V2 PASS block count=1 states derived 16/11
+CHECK V3 PASS names superseded 18/13 with cue: True cue=True
+CHECK V4 PASS corrected lines=1 negating=0
+CHECK V5 PASS magnitudes=18,13,11
+CHECK V6 PASS last section='## Correction — round-74 quote counts'
+CHECK V7 PASS base ancestor of rev=True
+CHECK V8 PASS removed lines=0
+CHECK V9 PASS block inside comment=False
+C2V=PASS checks=9/9 rev=d87ad3195698 base=ed06cb0fa837
+RC=0
+RESULT: SURVIVOR(bogus scored PASS 9/9)
+
+===== A6 =====
+NOTE: block present already at base; the only change at rev is one blank line, so V7 ancestry + V8 zero-removals hold with no correction append at all
+BLOCK:
+base = BASE_LESSON + GOOD_BLOCK; case = base + one blank line
+CMD: python3 -B /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round76/correction-count-v2.py --lane /fast/scratch/hyaku/chousa-r76/R76Review2/fixtures/ce57073e1e0aad7c6bcb7a5ae39174ea --base f0eff809aa02 --rev 25092402feed
+STDOUT:
+DERIVED=S182:16 S183:11 RECORDED=S182:18 S183:13
+CHECK V1 PASS authored bullets: found
+CHECK V2 PASS block count=1 states derived 16/11
+CHECK V3 PASS names superseded 18/13 with cue: True cue=True
+CHECK V4 PASS corrected lines=1 negating=0
+CHECK V5 PASS magnitudes=18,13,11
+CHECK V6 PASS last section='## Correction — round-74 quote counts'
+CHECK V7 PASS base ancestor of rev=True
+CHECK V8 PASS removed lines=0
+CHECK V9 PASS block inside comment=False
+C2V=PASS checks=9/9 rev=25092402feed base=f0eff809aa02
+RC=0
+RESULT: SURVIVOR(bogus scored PASS 9/9)
+
+===== A3 =====
+NOTE: magnitude 161 stated in the block but written '**161** whitespace tokens': MAGNITUDE needs whitespace immediately after the digits, so 161 is unmeasured
+BLOCK:
+# Round 74 — fixture
+
+removable line
+
+## Gate
+
+- Admit S182, own-work B. Opened 2026-11-04. Located quote: “Before any successor calibration freeze, exercise a real committed append and a real deletion through `load()`” (18 words).
+- Reject S183, own-work C. Opened 2026-11-04. Located quote: `base = check({k: v for k, v in FIXTURE.items()}, {}, set())` (line 163, 13 whitespace tokens).
+
+## Boundaries
+
+Fixture boundary text.
+
+## Correction — round-74 quote counts
+
+Superseded: 18 words and 13 whitespace tokens. Correction: 16 and 11. The quoted strings carry **161** whitespace tokens.
+CMD: python3 -B /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round76/correction-count-v2.py --lane /fast/scratch/hyaku/chousa-r76/R76Review2/fixtures/03caef2cf2938b72c16d355e747af1ef --base ed06cb0fa837 --rev 565a902c0bcf
+STDOUT:
+DERIVED=S182:16 S183:11 RECORDED=S182:18 S183:13
+CHECK V1 PASS authored bullets: found
+CHECK V2 PASS block count=1 states derived 16/11
+CHECK V3 PASS names superseded 18/13 with cue: True cue=True
+CHECK V4 PASS corrected lines=1 negating=0
+CHECK V5 PASS magnitudes=18,13
+CHECK V6 PASS last section='## Correction — round-74 quote counts'
+CHECK V7 PASS base ancestor of rev=True
+CHECK V8 PASS removed lines=0
+CHECK V9 PASS block inside comment=False
+C2V=PASS checks=9/9 rev=565a902c0bcf base=ed06cb0fa837
+RC=0
+RESULT: SURVIVOR(bogus scored PASS 9/9)
+
+===== A8 =====
+NOTE: block placed inside a fenced code sample: the '## ' line is literal text, not a heading, but last_section_heading() matches any line starting '## '
+BLOCK:
+```markdown
+## Correction — round-74 quote counts
+
+Superseded: 18 words and 13 whitespace tokens. The quoted strings carry 16 and 11 whitespace tokens.
+```
+CMD: python3 -B /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round76/correction-count-v2.py --lane /fast/scratch/hyaku/chousa-r76/R76Review2/fixtures/73db1e771e16438bde204f31efcbe7df --base ed06cb0fa837 --rev 32d2d01de4de
+STDOUT:
+DERIVED=S182:16 S183:11 RECORDED=S182:18 S183:13
+CHECK V1 PASS authored bullets: found
+CHECK V2 PASS block count=1 states derived 16/11
+CHECK V3 PASS names superseded 18/13 with cue: True cue=True
+CHECK V4 PASS corrected lines=1 negating=0
+CHECK V5 PASS magnitudes=18,13,11
+CHECK V6 PASS last section='## Correction — round-74 quote counts'
+CHECK V7 PASS base ancestor of rev=True
+CHECK V8 PASS removed lines=0
+CHECK V9 PASS block inside comment=False
+C2V=PASS checks=9/9 rev=32d2d01de4de base=ed06cb0fa837
+RC=0
+RESULT: SURVIVOR(bogus scored PASS 9/9)
+
+===== A3b =====
+NOTE: magnitude 161 stated with a hyphenated unit ('161 whitespace-token units'): MAGNITUDE only matches 'whitespace tokens'/'tokens'/'words'
+BLOCK:
+# Round 74 — fixture
+
+removable line
+
+## Gate
+
+- Admit S182, own-work B. Opened 2026-11-04. Located quote: “Before any successor calibration freeze, exercise a real committed append and a real deletion through `load()`” (18 words).
+- Reject S183, own-work C. Opened 2026-11-04. Located quote: `base = check({k: v for k, v in FIXTURE.items()}, {}, set())` (line 163, 13 whitespace tokens).
+
+## Boundaries
+
+Fixture boundary text.
+
+## Correction — round-74 quote counts
+
+Superseded: 18 words and 13 whitespace tokens. Correction: 16 and 11. The quoted strings carry 161 whitespace-token units.
+CMD: python3 -B /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round76/correction-count-v2.py --lane /fast/scratch/hyaku/chousa-r76/R76Review2/fixtures/e670a1a71fae38f332b78574db093f38 --base ed06cb0fa837 --rev 4c264267264e
+STDOUT:
+DERIVED=S182:16 S183:11 RECORDED=S182:18 S183:13
+CHECK V1 PASS authored bullets: found
+CHECK V2 PASS block count=1 states derived 16/11
+CHECK V3 PASS names superseded 18/13 with cue: True cue=True
+CHECK V4 PASS corrected lines=1 negating=0
+CHECK V5 PASS magnitudes=18,13
+CHECK V6 PASS last section='## Correction — round-74 quote counts'
+CHECK V7 PASS base ancestor of rev=True
+CHECK V8 PASS removed lines=0
+CHECK V9 PASS block inside comment=False
+C2V=PASS checks=9/9 rev=4c264267264e base=ed06cb0fa837
+RC=0
+RESULT: SURVIVOR(bogus scored PASS 9/9)
+
+===== A4 =====
+NOTE: negation stated with cues outside NEGATIONS ('false', 'disregarded'): V4 is a denylist of seven spellings
+BLOCK:
+# Round 74 — fixture
+
+removable line
+
+## Gate
+
+- Admit S182, own-work B. Opened 2026-11-04. Located quote: “Before any successor calibration freeze, exercise a real committed append and a real deletion through `load()`” (18 words).
+- Reject S183, own-work C. Opened 2026-11-04. Located quote: `base = check({k: v for k, v in FIXTURE.items()}, {}, set())` (line 163, 13 whitespace tokens).
+
+## Boundaries
+
+Fixture boundary text.
+
+## Correction — round-74 quote counts
+
+Superseded: 18 words and 13 whitespace tokens. The counts 16 and 11 are false and must be disregarded as corrected values.
+CMD: python3 -B /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round76/correction-count-v2.py --lane /fast/scratch/hyaku/chousa-r76/R76Review2/fixtures/6391709488a00299d3dff875e53d0132 --base 54fa64d219ec --rev 9f2c5bc439c2
+STDOUT:
+DERIVED=S182:16 S183:11 RECORDED=S182:18 S183:13
+CHECK V1 PASS authored bullets: found
+CHECK V2 PASS block count=1 states derived 16/11
+CHECK V3 PASS names superseded 18/13 with cue: True cue=True
+CHECK V4 PASS corrected lines=1 negating=0
+CHECK V5 PASS magnitudes=18,13
+CHECK V6 PASS last section='## Correction — round-74 quote counts'
+CHECK V7 PASS base ancestor of rev=True
+CHECK V8 PASS removed lines=0
+CHECK V9 PASS block inside comment=False
+C2V=PASS checks=9/9 rev=9f2c5bc439c2 base=54fa64d219ec
+RC=0
+RESULT: SURVIVOR(bogus scored PASS 9/9)
+
+===== A5 =====
+NOTE: decoy 'Admit S182' bullet inserted ABOVE the authored one: bullet_line takes the first prefix match, so derive rebinds to the decoy and the block states the decoy's counts
+BLOCK:
+## Correction — round-74 quote counts
+
+Superseded: the authored bullets now record 13 words and 13 whitespace tokens. The quoted strings carry 11 and 11 whitespace tokens.
+CMD: python3 -B /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round76/correction-count-v2.py --lane /fast/scratch/hyaku/chousa-r76/R76Review2/fixtures/e8d703bfe5983d474419a540e3f65374 --base 54fa64d219ec --rev 0fb1c45e6b68
+STDOUT:
+DERIVED=S182:11 S183:11 RECORDED=S182:13 S183:13
+CHECK V1 PASS authored bullets: found
+CHECK V2 PASS block count=1 states derived 11/11
+CHECK V3 PASS names superseded 13/13 with cue: True cue=True
+CHECK V4 PASS corrected lines=1 negating=0
+CHECK V5 PASS magnitudes=13,13,11
+CHECK V6 PASS last section='## Correction — round-74 quote counts'
+CHECK V7 PASS base ancestor of rev=True
+CHECK V8 PASS removed lines=0
+CHECK V9 PASS block inside comment=False
+C2V=PASS checks=9/9 rev=0fb1c45e6b68 base=54fa64d219ec
+RC=0
+RESULT: SURVIVOR(bogus scored PASS 9/9)
+
+SURVIVORS=A1,A7,A2,A6,A3,A8,A3b,A4,A5
+SURVIVOR_COUNT=9/9
+
+DRIVER_RC=0

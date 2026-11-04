@@ -1,0 +1,64 @@
+# sources-census receipts — seat R76Scribe, round 76
+# script: /home/vgpnk/Projects/shokunin/scripts/sources-census.sh
+# mirrors are scratch copies of the lane at 5daa3628 (git archive); the lane was never written.
+
+## baseline: committed 5daa3628 registry, no new rows
+$ sources-census.sh validate --file $S/mirrorA/corpus/SOURCES.md
+file	W04	S051 duplicate url www.w3.org/TR/2017/REC-html52-20171214/syntax.html across scopes
+file	W04	S053 duplicate url docs.python.org/3/library/socket.html across scopes
+file	W04	S073 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+file	W04	S074 duplicate url docs.python.org/3/library/hashlib.html across scopes
+file	W04	S075 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+file	ok	/fast/scratch/hyaku/chousa-r76/R76Scribe/mirrorA/corpus/SOURCES.md
+EXIT=0
+
+## census baseline
+file	rows	186
+file	tier.A	123
+file	tier.B	48
+file	tier.C	15
+file	status.mined	150
+file	status.queued	19
+file	status.rejected	17
+
+## mirrorB: L1's three drafted rows, cited lesson file present
+$ sources-census.sh validate --file $S/mirrorB/corpus/SOURCES.md
+file	W04	S051 duplicate url www.w3.org/TR/2017/REC-html52-20171214/syntax.html across scopes
+file	W04	S053 duplicate url docs.python.org/3/library/socket.html across scopes
+file	W04	S073 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+file	W04	S074 duplicate url docs.python.org/3/library/hashlib.html across scopes
+file	W04	S075 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+file	ok	/fast/scratch/hyaku/chousa-r76/R76Scribe/mirrorB/corpus/SOURCES.md
+EXIT=0
+file	rows	189
+file	tier.A	123
+file	tier.B	50
+file	tier.C	16
+file	status.mined	152
+file	status.queued	19
+file	status.rejected	18
+
+## mirrorC: same rows, cited lesson file absent (fail-closed check of E11)
+file	W04	S051 duplicate url www.w3.org/TR/2017/REC-html52-20171214/syntax.html across scopes
+file	W04	S053 duplicate url docs.python.org/3/library/socket.html across scopes
+file	W04	S073 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+file	W04	S074 duplicate url docs.python.org/3/library/hashlib.html across scopes
+file	W04	S075 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+file	E11	S187 missing used-by corpus/lessons/round-76.md
+file	E11	S188 missing used-by corpus/lessons/round-76.md
+
+## mirrorD: R76Scribe corrected rows (anchor + quote fixes)
+file	W04	S051 duplicate url www.w3.org/TR/2017/REC-html52-20171214/syntax.html across scopes
+file	W04	S053 duplicate url docs.python.org/3/library/socket.html across scopes
+file	W04	S073 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+file	W04	S074 duplicate url docs.python.org/3/library/hashlib.html across scopes
+file	W04	S075 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+file	ok	/fast/scratch/hyaku/chousa-r76/R76Scribe/mirrorD/corpus/SOURCES.md
+EXIT=0
+file	rows	189
+file	tier.A	123
+file	tier.B	50
+file	tier.C	16
+file	status.mined	152
+file	status.queued	19
+file	status.rejected	18

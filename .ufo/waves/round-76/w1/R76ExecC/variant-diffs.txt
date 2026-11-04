@@ -1,0 +1,68 @@
+### variant-a-subject.py vs frozen loader-matrix-v3.py (diff exit=1)
+--- /fast/scratch/hyaku/chousa-r76/R76ExecC/loader-matrix-v3.py	2026-11-04 17:03:50.843261500 -0300
++++ /fast/scratch/hyaku/chousa-r76/R76ExecC/variant-a-subject.py	2026-11-04 17:06:47.005440245 -0300
+@@ -155,7 +155,7 @@
+             target.parent.mkdir(parents=True, exist_ok=True)
+             target.write_text(text)
+         git(root, "add", "--", *files)
+-        git(root, "-c", "user.name=fixture", "-c", "user.email=fixture@invalid", "commit", "-qm", "case")
++        git(root, "-c", "user.name=fixture", "-c", "user.email=fixture@invalid", "commit", "-qm", "base")
+         base = git(root, "rev-parse", "HEAD")
+         for name, path, operation, expected_rc, expected_failed in order:
+             # Restore fixture bytes, never the caller's working tree or index.
+@@ -165,7 +165,7 @@
+                 (root / path).write_text(mutate(files[path], operation))
+             git(root, "add", "--", *files)
+             git(root, "-c", "user.name=fixture", "-c", "user.email=fixture@invalid",
+-                "commit", "--allow-empty", "-qm", "case")
++                "commit", "--allow-empty", "-qm", name)
+             rev = git(root, "rev-parse", "HEAD")
+             rc, out, timed_out = run_child(counter, root, base, rev, child_timeout)
+             checks = {}
+
+### variant-b-nosalt.py vs frozen loader-matrix-v3.py (diff exit=1)
+--- /fast/scratch/hyaku/chousa-r76/R76ExecC/loader-matrix-v3.py	2026-11-04 17:03:50.843261500 -0300
++++ /fast/scratch/hyaku/chousa-r76/R76ExecC/variant-b-nosalt.py	2026-11-04 17:06:53.529457255 -0300
+@@ -91,13 +91,13 @@
+ 
+ 
+ def pad_line() -> str:
+-    """Per-case random-length padding: no case keeps a stable size signature."""
+-    return "\n" + "pad " + secrets.token_hex(random.randint(2, 20)) + "\n"
++    """Byte-stable mutation tail: the random pad line is removed for the neighbor test."""
++    return ""
+ 
+ 
+ def salted(salt: str) -> dict[str, str]:
+-    """Per-run salt in every file body: no case keeps a stable tree id or blob size."""
+-    return {path: text + f"\nsalt {salt}-{i}\n" for i, (path, text) in enumerate(FILES.items())}
++    """Byte-stable body: the per-run salt line is removed for the neighbor test."""
++    return dict(FILES)
+ 
+ 
+ def mutate(text: str, operation: str) -> str:
+
+### variant-c-notimeout.py vs frozen loader-matrix-v3.py (diff exit=1)
+--- /fast/scratch/hyaku/chousa-r76/R76ExecC/loader-matrix-v3.py	2026-11-04 17:03:50.843261500 -0300
++++ /fast/scratch/hyaku/chousa-r76/R76ExecC/variant-c-notimeout.py	2026-11-04 17:06:51.101450917 -0300
+@@ -121,18 +121,9 @@
+     """Return (rc, out, timed_out). Child in its own session, killed on expiry."""
+     cmd = [sys.executable, "-B", str(counter), "--lane", str(root), "--base", base, "--rev", rev]
+     p = subprocess.Popen(cmd, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
+-                         stderr=subprocess.PIPE, text=True, start_new_session=True,
+-                         close_fds=True)
++                         stderr=subprocess.PIPE, text=True, close_fds=True)
+     timed_out = False
+-    try:
+-        out, _err = p.communicate(timeout=timeout)
+-    except subprocess.TimeoutExpired:
+-        timed_out = True
+-        try:
+-            os.killpg(p.pid, signal.SIGKILL)
+-        except ProcessLookupError:
+-            pass
+-        out, _err = p.communicate()
++    out, _err = p.communicate()
+     return p.returncode, out, timed_out
+ 
+ 

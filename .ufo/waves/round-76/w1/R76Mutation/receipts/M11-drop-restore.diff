@@ -1,0 +1,12 @@
+--- loader-matrix-v3.py
++++ mut-M11-drop-restore-matrix-v3.py
+@@ -159,8 +159,7 @@
+         base = git(root, "rev-parse", "HEAD")
+         for name, path, operation, expected_rc, expected_failed in order:
+             # Restore fixture bytes, never the caller's working tree or index.
+-            for key, value in files.items():
+-                (root / key).write_text(value)
++            pass  # MUTANT M11: fixture not restored
+             if path:
+                 (root / path).write_text(mutate(files[path], operation))
+             git(root, "add", "--", *files)

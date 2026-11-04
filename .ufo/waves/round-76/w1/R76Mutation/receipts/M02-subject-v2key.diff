@@ -1,0 +1,24 @@
+--- loader-matrix-v3.py
++++ mut-M02-subject-v2key-matrix-v3.py
+@@ -81,6 +81,12 @@
+           ("case-11-dup-card-heading", PATHS[2], "dup-card", 1, frozenset({"C2-4"}))]
+ 
+ CHECK_IDS = ("C2-1", "C2-2", "C2-3", "C2-4", "C2-5", "C2-6", "C2-7")
++
++# MUTANT: the r75 v2 commit-subject answer key restored.
++V2_KEYS = ("unchanged", "append-0", "append-1", "append-2", "delete-0", "delete-1",
++           "delete-2", "replace-equal", "receipt-change", "dup-log-heading",
++           "dup-lesson-heading", "dup-card-heading")
++SUBJECT = {name: key for (name, *_rest), key in zip(CASES, V2_KEYS)}
+ 
+ 
+ def git(root: Path, *args: str) -> str:
+@@ -165,7 +171,7 @@
+                 (root / path).write_text(mutate(files[path], operation))
+             git(root, "add", "--", *files)
+             git(root, "-c", "user.name=fixture", "-c", "user.email=fixture@invalid",
+-                "commit", "--allow-empty", "-qm", "case")
++                "commit", "--allow-empty", "-qm", SUBJECT[name])
+             rev = git(root, "rev-parse", "HEAD")
+             rc, out, timed_out = run_child(counter, root, base, rev, child_timeout)
+             checks = {}

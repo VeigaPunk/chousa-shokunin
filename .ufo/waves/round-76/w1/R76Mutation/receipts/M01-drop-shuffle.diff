@@ -1,0 +1,12 @@
+--- loader-matrix-v3.py
++++ mut-M01-drop-shuffle-matrix-v3.py
+@@ -141,8 +141,7 @@
+     print("COUNTER_SHA256=" + hashlib.sha256(counter.read_bytes()).hexdigest())
+     print("SEED_SHA256=" + hashlib.sha256(str(seed).encode()).hexdigest())
+     print(f"CHILD_TIMEOUT={child_timeout}")
+-    order = list(CASES)
+-    random.Random(seed).shuffle(order)
++    order = list(CASES)  # MUTANT M01: shuffle dropped
+     files = salted(secrets.token_hex(8))
+     passed = 0
+     with tempfile.TemporaryDirectory(prefix="loader-matrix-v3-", dir=work) as tmp:

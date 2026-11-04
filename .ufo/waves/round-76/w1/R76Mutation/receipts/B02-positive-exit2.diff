@@ -1,0 +1,11 @@
+--- matrix-battery-v3.py
++++ mut-B02-positive-exit2-battery-v3.py
+@@ -139,7 +139,7 @@
+                     print(f"RUN {group} {name} {i} matrix_exit={'timeout' if rc is None else rc} "
+                           f"marks={'/'.join(str(x) for x in marks) if marks else 'none'}")
+                 if group == "POSITIVE":
+-                    ok = all(rc == 0 and marks is not None and marks[0] == marks[1] and marks[2] == "PASS"
++                    ok = all(rc in (0, 2) and marks is not None and marks[0] == marks[1] and marks[2] == "PASS"
+                              for rc, marks in runs)
+                 else:
+                     ok = all(rc == 1 and marks is not None and marks[0] < marks[1]
