@@ -131,3 +131,12 @@ strong, and the round records that rather than narrowing the target after landin
 not do: close the content channels (carried as QUALITY 143), cure the settlement attestation, or add
 case coverage to the matrix.
 
+## Erratum — round 78
+
+erratum: round-77.md:73 — the `## Mistakes` row for the control-receipt digest slip (class
+"a control receipt named a probe digest no committed object carries") is stranded below
+`## Boundaries` instead of inside the `## Mistakes` table at lines 40–43, so it renders as
+literal text and the mined mistake is easy to miss. Routed by
+`corpus/lessons/round-77-verifier-spotcheck.md` routed defect 4. The filed bytes above are not
+rewritten (append-only): this line is the correction entry that names the stranded row, and
+`python3 -B corpus/evidence/round78/selfcheck.py --lane .` check S3 re-derives its position.
