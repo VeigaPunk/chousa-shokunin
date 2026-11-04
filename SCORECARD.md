@@ -3467,3 +3467,50 @@ claims on distinct axes (predicates, before/after and kill rules frozen in
 Wave: one v1 wave of 12 seats (3 executor, 1 scout, 1 scribe, 1 connector, 2 reviewer, 2 critic,
 1 mutation-tester, 1 sentinel = 5 attack seats, 42%) under `ufo-wave-policy.json` (band 8–16), via
 the run-15 inline spawn handoff. L1 holds the canonical planner seat; no residual call planned.
+
+## Round 77 verdict — the call-count matrix dies; the battery's own answer key survives (2026-11-04)
+
+Freeze `a9530782578723de1364e0a3a47effcde8c85c23`; controls `e6fcdc4770c2fa73e5ccda99445c4311128d7e0d`;
+landing `9874f46d21139dcfa9ca496ad831c4b9300c3d8b`; final tip in the round report. Instruments
+unchanged from the controls commit through the landing (`matrix-battery-v4.py` `155fafb1…f106a3d`,
+`c3-count.py` `32b76565…062335d`).
+
+| claim / axis | before → after | counting command / evidence | verdict |
+|---|---|---|---|
+| C1 operability (lowest scored non-retired axis; the historical 3/10 held) | the round-76 battery prints `BATTERY=PASS forgers_rejected=11/11 positive=2/2`, exit 0, for a matrix that reads nothing and scripts its verdict by invocation count → the successor prints `BATTERY=PASS forgers_rejected=11/11 positive=2/2 oracle=REJECTED`, exit 0, and the same first-four oracle as the matrix under test is `BATTERY=FAIL forgers_rejected=0/11 positive=0/2`, exit 1 | `python3 -B corpus/evidence/round77/matrix-battery-v4.py --matrix corpus/evidence/round76/loader-matrix-v3.py --work DIR`; `controls/{before-oracle-v3-committed-bytes,after-battery-v4,forge-as-matrix-summary}.txt` | **improved narrowly on the frozen predicate** |
+| C2 calibration (sourced on S190/S191) | the false receipt-precision clause in the frozen r76 claims file has no supersession (`C3=FAIL checks=1/5`, exit 1) → the same file carries an append-only correction block quoting the clause and stating the corrected fact, and the base→landing diff adds 12 lines and deletes none (`C3=PASS checks=5/5`, exit 0) | `python3 -B corpus/evidence/round77/c3-count.py --lane . --base a519fb0a80cf52c7988713c1f05b3ce8440fedda --rev 9874f46d21139dcfa9ca496ad831c4b9300c3d8b`; `controls/{before,after}-c3.txt` | **improved** |
+
+Closure-removal twins, measured: `--no-permute` → `BATTERY=FAIL … oracle=MISS` (`controls/twin-no-permute.txt`),
+so the order leg is load-bearing; `--no-content` → still `BATTERY=PASS` (`controls/twin-no-content.txt`),
+so the content leg is a shape requirement, not the discriminating closure — the claim states that
+asymmetry instead of claiming symmetry.
+
+Falsification retained, not repaired: `R77CriticA` reaches the predicate line at exit 0 without
+scoring any subject through three channels — the appended salt suffix leaves a content-hash identity
+(`rcpt-a1.txt`), `/proc/<ppid>/cmdline` exposes the battery's `CONTRACT` cells (`rcpt-a2.txt`), and the
+printed `ORDER` digest is a digest of the permutation, recovered by enumerating 13! inside the
+battery's own cap (11.8 s and 59.1 s, `rcpt-a7.txt`). A detached helper also appends 26 copies of the
+predicate line after the battery exits 1 (`rcpt-a5d.txt`). The frozen claims' supporting sentences are
+falsified and recorded as such; QUALITY 143 carries the successor requirements. `R77SentinelA` records
+two `--work` contract defects (a caller's directory is deleted by the battery's `finally`; an
+unwritable `--work` exits 1, not 2) and the absence of a lane-root guard in `c3-count.py`; QUALITY 142
+carries the first. `R77ScoutA` shows the installed `random.py`/`secrets.py` say "cryptographically
+strong" and never "unpredictable", so seed secrecy is an inference, not a quoted property.
+
+Numeric score delta 0 (operability stays the historical 3/10); no capability row (C1 is a
+discrimination repair on the existing repertoire, C2 a record correction — both disclosed rather than
+pre-claimed). Depth, freshness, coverage and adjacency unchanged; no knowledge entry added or changed.
+Trends: expansion unchanged; quality improved narrowly (the call-count channel is closed and shown
+load-bearing, while three content channels are measured and carried); discernment improved (the wave's
+critic and sentinel findings became QUALITY 142–143, and the scribe corrected a quote count and found a
+receipt-identity slip before landing). Round admission is not self-granted: both frozen predicates
+hold, the closure owns the final ruling, and C1 must not be read as "the battery cannot be passed by a
+forgery".
+
+Wave: one v1 wave, 12 seats (3 executor, 1 scout, 1 scribe, 1 connector, 2 reviewer, 2 critic,
+1 mutation-tester, 1 sentinel = 5 attack seats, 42%), L1 holding the planner seat, no residual call,
+no dead seat replaced. Five reports retained (`R77ConnectorA`, `R77CriticA`, `R77ScoutA`, `R77ScribeA`,
+`R77SentinelA`); `w1-results.json` carries 12 entries with empty `output` and a note that the
+orchestrator kernel restarted mid-wave and seat outputs went to the orchestrator session, so seven
+seats settled without a retained report. That is the same settlement-attestation weakness the r76
+spot-check routed as defect 5; committing the results file did not cure it, and the report says so.

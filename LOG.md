@@ -2209,3 +2209,16 @@ such. Freeze and landing evidence:
   registry 189 → 192; census exit 0 at both ends. QUALITY 141 records the outer-battery criterion;
   SKILL registers the battery. No knowledge entry added or changed; no numeric score moved; no
   capability row.
+- Wave: one v1 wave, 12 seats (3 executor, 1 scout, 1 scribe, 1 connector, 2 reviewer, 2 critic,
+  1 mutation-tester, 1 sentinel; 5 attack seats, 42%), L1 planner, no residual. Five reports retained;
+  `w1-results.json` carries 12 entries with empty `output` after an orchestrator kernel restart, so
+  seven seats settled without a retained report (r76 routed defect 5 recurring, recorded not cured).
+- Attack findings retained: `R77CriticA` reaches the predicate line at exit 0 without scoring anything
+  (appended salt suffix → content hash; `/proc/<ppid>/cmdline` → `CONTRACT`; printed `ORDER` digest is
+  the permutation, 13! enumerated in 11.8 s / 59.1 s), and a detached helper appends 26 predicate
+  lines after a failing run. `R77SentinelA` finds the `--work` directory is deleted by the battery's
+  `finally` and an unwritable `--work` exits 1 instead of 2; `R77ScoutA` shows the stdlib text says
+  "cryptographically strong", never "unpredictable".
+- Outcome: both claims verify on their frozen predicates; C1 improved narrowly (the call-count channel
+  is closed and shown load-bearing) and its supporting sentences are falsified and recorded; QUALITY
+  142–143 carry the successor requirements. No axis harmed; no numeric score moved; no capability row.

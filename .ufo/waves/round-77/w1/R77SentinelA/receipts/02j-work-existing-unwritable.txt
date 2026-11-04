@@ -1,0 +1,16 @@
+### --work = an EXISTING unwritable directory (mkdir exist_ok passes, salted_copy fails)
+rc=1
+--- stdout
+MATRIX_PATH=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round76/loader-matrix-v3.py
+MATRIX_SHA256=b79d6441057a01b27eb465c6b0625cd46502114f8b622b370c2cd2805c81913f
+RUNS=2 CHILD_TIMEOUT=3 MATRIX_TIMEOUT=300 PERMUTE=True CONTENT=True
+MATRIX ORDER 0 2fc5c61162295d0fea498a9cf2c60ab203bd8736abc656b372ecd11dd328adeb
+--- stderr tail
+    ~~~~~~~^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 1011, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: '/fast/scratch/hyaku/chousa-r77/R77SentinelA/probe2j/exists-ro/bc939ae1c2887788'
+--- dir left behind?
+ls: cannot access 'exists-ro': No such file or directory
+--- lane fingerprint unchanged? see 02a

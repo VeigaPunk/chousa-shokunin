@@ -90,4 +90,44 @@ predicate.
   battery's memory would be outside these quotes. No `SOURCES.md` row was added for the two stdlib
   files: nothing admitted this round cites them, and a row without a citer is curation debt, not
   knowledge.
+- **Three channels reach the predicate line without scoring anything (`R77CriticA`, exit 0 each).**
+  (A1) `salted_copy()` appends `# salt <hex>` as a suffix, so stripping the trailing line recovers the
+  lane file byte-for-byte and a content hash classifies every subject — 22 forgers at `11/12` and four
+  positives at `12/12`, `rcpt-a1.txt`. (A2) `/proc/<ppid>/cmdline` names the battery, whose `CONTRACT`
+  constant is the twelve expected cells — `rcpt-a2.txt`. (A7) the printed `ORDER` digest is
+  `sha256` of the *permuted names*, not of the seed, so the permutation is recoverable by enumeration
+  of 13! inside the battery's own 300 s cap (11.8 s and 59.1 s measured with an OpenMP SHA-256
+  enumerator) and the matrix then answers by position — `rcpt-a7.txt`, exact predicate line, exit 0.
+  What the battery does close is blind invocation-count scripting: `rcpt-a3.txt` is
+  `BATTERY=FAIL forgers_rejected=7/11 positive=0/2`. The claim's first clause holds; its supporting
+  sentences "the seed digest is printed, the permutation is not" and "a matrix that reads the battery's
+  own source can recover the order" are falsified — the order leaks through the digest, not the source.
+  Frozen bytes are not amended; the corrections are carried to QUALITY 143.
+- **A child can append the predicate line to the judge's receipt after the judge exits 1.** A detached
+  helper that closes the inherited pipes appends 26 copies of the exact predicate line two seconds
+  after the battery's own `BATTERY=FAIL` line (`R77CriticA` A5d, `rcpt-a5d.txt`); a verifier that reads
+  `tail -1` or greps for the predicate is fooled while the exit code is 1. In-band writes are destroyed
+  by the judge's later writes (A5–A5c); `ptrace` is closed (`ptrace_scope=1`, A6).
+## Wave integration
+
+One v1 wave, 12 seats (3 executor, 1 scout, 1 scribe, 1 connector, 2 reviewer, 2 critic, 1
+mutation-tester, 1 sentinel = 5 attack seats, 42%), L1 holding the canonical planner seat; no residual
+call; no dead seat replaced. Five reports are retained: `R77ConnectorA` (sibling-overlap scan: chousa
+QUALITY 139 is the only criterion that names the outer-battery boundary; `kaidoku` rows 71/95 and
+`souji` Q51 are stronger as general anti-vacuity rules, and none is absorbed), `R77CriticA` (the three
+forging channels above), `R77ScoutA` (the stdlib readings), `R77ScribeA` (the Gate/Mistakes drafts, the
+quote-count correction and the receipt-digest slip), `R77SentinelA` (the boundary audit, the `--work`
+defects, the state-file containment). Seven seats settled with no retained report: `w1-results.json`
+records 12 entries with empty `output` and a note that the orchestrator kernel restarted mid-wave and
+seat outputs went to the orchestrator session. That is the r76 routed defect 5 recurring — committing
+the results file did not retain per-seat terminal records — and it is recorded, not glossed.
+
+## Self-evaluation
+
+Both frozen predicates hold on the committed bytes. The round's own slips are mined above (a probe
+writing into the lane; a control receipt naming a digest no committed object carries; a quote count
+off by one). The larger honesty finding is the critic's: the claim's supporting sentences were too
+strong, and the round records that rather than narrowing the target after landing. What the round did
+not do: close the content channels (carried as QUALITY 143), cure the settlement attestation, or add
+case coverage to the matrix.
 

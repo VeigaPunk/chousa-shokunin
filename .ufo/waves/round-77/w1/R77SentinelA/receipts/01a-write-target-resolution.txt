@@ -1,0 +1,14 @@
+# write-target resolution, trace-predicate-y.txt (strace -fy -e trace=network,openat)
+# rule: every openat with O_WRONLY|O_RDWR|O_CREAT, path resolved against AT_FDCWD cwd or the annotated dirfd
+trace_lines=154747
+network_syscall_lines=0            # socket/connect/bind/sendto/recvfrom absent
+write_flag_opens=9313              # excluding /dev/null (2716 DEVNULL stdin opens, subprocess.DEVNULL)
+distinct_write_targets=3734
+targets_outside_work=0
+unresolved_targets=0
+writes_under_work=9313
+# read targets: 137357 opens over 4302 targets; /usr 70822, work 54529, /home 7281, /etc 4259, /proc 465
+# /home reads outside the lane: ~/.local/lib/python3.14/site-packages, ~/.config/git/config, ~/.config/git/attributes
+# credential-name matches (id_rsa|.netrc|.ssh/|.aws|.git-credentials|.password|keyring|shadow): 0
+# /proc targets: 2x /proc/<pid>/cmdline (the seed-leak forger's designed probe), 2x /proc/<pid>/fd/1, /proc/self/maps
+# lane read targets: 21 (237 opens); lane write targets: 0
