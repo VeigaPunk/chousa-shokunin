@@ -1,0 +1,38 @@
+# freeze-check at ready (round-78 pair)
+CHECK CLAIMS_NONEMPTY PASS 6134 bytes sha256=4422ff4a9603043d373c2ac924daaf592fa872ef94559ec587184b2fab71627c
+CHECK CONTEXT_DIGEST FAIL context lacks whole-token 4422ff4a9603043d373c2ac924daaf592fa872ef94559ec587184b2fab71627c
+CHECK CONTEXT_SPEC_EQ PASS identical (2977 chars)
+CHECK DIGEST_STRAY FAIL 4 foreign 64-hex tokens vs claims 4422ff4a...: spec:R78ExecC:9334721a..., spec:R78ExecC:909987ce..., dispatch:R78ExecC:9334721a..., dispatch:R78ExecC:909987ce...
+CHECK NAMES PASS 12 names match in order, roles match agents
+CHECK BODY_RENDER FAIL 0/12 dispatch tasks equal the rendered spec items; first mismatch R78ExecA
+CHECK READY_DISPATCH PASS ready -> /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-78/w1-dispatch.json
+CHECK READY_IDENT PASS lane=chousa round=78 wave=w1 agree with dispatch, spec and location
+FAILED_CHECKS=CONTEXT_DIGEST,DIGEST_STRAY,BODY_RENDER
+FREEZE_CHECK=FAIL
+# exit: 1
+
+# same tool on the round-77 pair (pre-existing drift control)
+CHECK CLAIMS_NONEMPTY PASS 7236 bytes sha256=749718b17068af72c2e65560bd18b3dec6d4525c754bb62aec29fd55e26c6c36
+CHECK CONTEXT_DIGEST FAIL context lacks whole-token 749718b17068af72c2e65560bd18b3dec6d4525c754bb62aec29fd55e26c6c36
+CHECK CONTEXT_SPEC_EQ PASS identical (2904 chars)
+CHECK DIGEST_STRAY PASS no 64-hex token other than the claims digest
+CHECK NAMES PASS 12 names match in order, roles match agents
+CHECK BODY_RENDER FAIL 0/12 dispatch tasks equal the rendered spec items; first mismatch R77ExecA
+CHECK READY_DISPATCH PASS ready -> /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-77/w1-dispatch.json
+CHECK READY_IDENT PASS lane=chousa round=77 wave=w1 agree with dispatch, spec and location
+FAILED_CHECKS=CONTEXT_DIGEST,BODY_RENDER
+FREEZE_CHECK=FAIL
+# exit: 1
+
+# round-78 pair with the two deliberate public digests allowed
+CHECK CLAIMS_NONEMPTY PASS 6134 bytes sha256=4422ff4a9603043d373c2ac924daaf592fa872ef94559ec587184b2fab71627c
+CHECK CONTEXT_DIGEST FAIL context lacks whole-token 4422ff4a9603043d373c2ac924daaf592fa872ef94559ec587184b2fab71627c
+CHECK CONTEXT_SPEC_EQ PASS identical (2977 chars)
+CHECK DIGEST_STRAY PASS no 64-hex token other than the claims digest
+CHECK NAMES PASS 12 names match in order, roles match agents
+CHECK BODY_RENDER FAIL 0/12 dispatch tasks equal the rendered spec items; first mismatch R78ExecA
+CHECK READY_DISPATCH PASS ready -> /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-78/w1-dispatch.json
+CHECK READY_IDENT PASS lane=chousa round=78 wave=w1 agree with dispatch, spec and location
+FAILED_CHECKS=CONTEXT_DIGEST,BODY_RENDER
+FREEZE_CHECK=FAIL
+# exit: 1

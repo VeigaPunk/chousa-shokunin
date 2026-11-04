@@ -1,0 +1,12 @@
+--- pristine/matrix-battery-v5.py
++++ M2-matrix-battery-v5.py
+@@ -187,6 +187,9 @@
+     d = work / secrets.token_hex(8)
+     d.mkdir(parents=True)
+     target = d / "subject.py"
++    target.write_bytes(source.read_bytes()
++                       + f"\n# salt {secrets.token_hex(8)}\n".encode())
++    return target
+     text = source.read_text()
+     lines = text.splitlines(keepends=True)
+     if lines and not lines[-1].endswith("\n"):

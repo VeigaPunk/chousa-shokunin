@@ -1,0 +1,34 @@
+# R78ExecB independent --work probe (outside the control); PROBE=FAIL on one real defect (P5)
+# cmd: python3 -B .ufo/waves/round-78/w1/R78ExecB/probe-work-contract.py --lane /home/vgpnk/Projects/shokunin/chousa-shokunin --scratch /fast/scratch/hyaku/chousa-r78/R78ExecB/probe
+ok   v5.digest: 5545a4718690a80e5d3d6611e43132fdd5cb4dcd67e87be9a27ed44c032b5af0
+ok   P1.exit: rc=1
+ok   P1.sentinel-bytes: sha=0d0780cd07a5e3cbe5370864e2f7e2b4c609fc0613dd87c726dc65226158edcd
+ok   P1.manifest-unchanged: added=[] removed=[]
+ok   P1.no-run-debris: entries=['caller-file.txt', 'keep/', 'keep/deep.txt', 'other.bin']
+ok   P1.no-traceback: stderr_lines=0
+ok   P2.exit: rc=0
+ok   P2.predicate: last=['BATTERY=PASS forgers_rejected=11/11 positive=2/2 oracle=REJECTED']
+ok   P2.sentinel-bytes: sha=0d0780cd07a5e3cbe5370864e2f7e2b4c609fc0613dd87c726dc65226158edcd
+ok   P2.manifest-unchanged: added=[] removed=[]
+ok   P3.exit: rc=2
+ok   P3.one-line: lines=1 first=matrix-battery-v5: cannot create --work /fast/scratch/hyaku/chousa-r78/R78ExecB/probe/p3/regular-file: [Errno 17] File exists: '/fast/scratch/hyaku/chousa-r78/R
+ok   P3.no-traceback: checked
+ok   P3.diagnostic-shape: matrix-battery-v5: cannot create --work /fast/scratch/hyaku/chousa-r78/R78ExecB/probe/p3/regular-file: [Errno 17] File exists: '/fast/scratch/hyaku/chousa-r78/R
+ok   P3.file-bytes-unchanged: sha=46e03d0fbfa9111169c4f0449423b1b5abfd26f050edd4dafc05c7cd96c89b81
+ok   P3.stdout-empty: stdout=''
+ok   P4.exit: rc=2
+ok   P4.no-traceback: matrix-battery-v5: cannot create --work /fast/scratch/hyaku/chousa-r78/R78ExecB/probe/p4/ro/child: [Errno 13] Permission denied: '/fast/scratch/hyaku/chousa-r78
+ok   P5.copy-is-instrument: 5545a4718690a80e5d3d6611e43132fdd5cb4dcd67e87be9a27ed44c032b5af0
+ok   P5.exit: rc=2
+ok   P5.no-traceback: matrix-battery-v5: missing subject /fast/scratch/hyaku/chousa-r78/corpus/evidence/round74/correction-count.py
+FAIL P5.run-dir-cleaned: left=['caller-file.txt', 'r78-5e95d5fe70d063da'] leaked_dir_empty=True inside=[]
+ok   P5.sentinel-bytes: checked
+ok   P6.exit: rc=1
+ok   P6.link-survives: is_symlink=True
+ok   P6.sentinel-bytes: checked
+ok   P6.manifest-unchanged: added=[] removed=[]
+ok   P7.P1.parent-stable: before=['work'] after=['work']
+ok   P7.P2.parent-stable: before=['work'] after=['work']
+ok   P7.P6.parent-stable: before=['link', 'real'] after=['link', 'real']
+PROBE=FAIL checks=30 failed=1 names=P5.run-dir-cleaned
+# exit: 1

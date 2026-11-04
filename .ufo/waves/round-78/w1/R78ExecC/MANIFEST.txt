@@ -1,0 +1,41 @@
+Seat R78ExecC — residual-channel probe receipts (round 78, wave 1)
+==================================================================
+
+Frozen instruments verified byte-identical to corpus/evidence/round78/claims.md:
+  5545a4718690a80e5d3d6611e43132fdd5cb4dcd67e87be9a27ed44c032b5af0  corpus/evidence/round78/matrix-battery-v5.py
+  155fafb16b6931449abefb60575029f273959ba4e94a4db48ac22e525f106a3d  corpus/evidence/round77/matrix-battery-v4.py
+No frozen instrument was edited.
+
+FILES (all paths relative to this folder)
+-----------------------------------------
+residual-matrix.py                  d851b0ffa46a920e0d149705d1a8beb216123b0a6511137223062d84c5154ba9  primary probe MATRIX
+variant-v5shape-only.py             045cb1aaebb2ca5538b90154a734d5e00c4afa98eb954ea1ba567033aadda455  supporting: round-78 salt spelling only, no brute pass
+variant-brute-only.py               cd77b3737578313edcd68076a3d2552e59cf03f5ead26cb7a7492faa298aec17  supporting: no salt-spelling knowledge at all
+recovery-table.py / recovery-table.txt   per-subject salted copy, deleted line, IDENT line, exit
+v5.stdout.txt                       22b1cb2a4bd63f493fad9b77123597a9c2ed107d2e2e63894f9acffc6f4da4e6  v5 battery receipt (113 lines == RECEIPT_LINES=113)
+v4.stdout.txt                       082f435fade883d3957ad78408f00e504da858b2dc9c18b27556268866bc7eb9  v4 battery receipt
+variant-*.stdout.txt                supporting-variant battery receipts
+variant-v5shape-only-v4.stdout.txt  control: v5-only normalizer run through v4 (expected FAIL)
+mutation-control.txt                control: one edited positive classified FORGER
+
+COMMANDS AND EXITS (scratch root /fast/scratch/hyaku/chousa-r78/R78ExecC, since deleted)
+----------------------------------------------------------------------------------------
+$ python3 -B corpus/evidence/round78/matrix-battery-v5.py --matrix residual-matrix.py \
+      --work <scratch>/w5 --runs 1
+  exit 0
+  BATTERY=PASS forgers_rejected=11/11 positive=2/2 oracle=REJECTED
+  RECEIPT_LINES=113   (wc -l v5.stdout.txt == 113)
+
+$ python3 -B corpus/evidence/round77/matrix-battery-v4.py --matrix residual-matrix.py \
+      --work <scratch>/w4 --runs 1
+  exit 0
+  BATTERY=PASS forgers_rejected=11/11 positive=2/2 oracle=REJECTED
+
+$ python3 -B corpus/evidence/round78/matrix-battery-v5.py --matrix variant-v5shape-only.py --work ... --runs 1
+  exit 0   BATTERY=PASS forgers_rejected=11/11 positive=2/2 oracle=REJECTED
+$ python3 -B corpus/evidence/round78/matrix-battery-v5.py --matrix variant-brute-only.py --work ... --runs 1
+  exit 0   BATTERY=PASS forgers_rejected=11/11 positive=2/2 oracle=REJECTED
+$ python3 -B corpus/evidence/round77/matrix-battery-v4.py --matrix variant-v5shape-only.py --work ... --runs 1
+  exit 1   BATTERY=FAIL forgers_rejected=11/11 positive=0/2 oracle=REJECTED
+$ python3 -B residual-matrix.py --counter mutated.py --work w   (positive + "\n# edited\n")
+  exit 1   IDENT recovered=none  LOADER_MATRIX=0/12 MATRIX=FAIL

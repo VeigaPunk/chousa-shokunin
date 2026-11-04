@@ -1,0 +1,20 @@
+--- pristine/matrix-battery-v5.py
++++ M4-matrix-battery-v5.py
+@@ -127,7 +127,7 @@
+ def emit(text: str = "") -> None:
+     """Write one receipt line and count it (the RECEIPT_LINES trailer is bound to this)."""
+     global _LINES
+-    print(text)
++    print(text, flush=True)
+     _LINES += 1
+ 
+ 
+@@ -234,7 +234,7 @@
+             subject = salted_copy(source, work)
+             rc, marks, ok = run_matrix(matrix, subject, subject.parent / "w", matrix_timeout, content)
+             results[name].append((rc, marks, ok))
+-            buffered.append(f"{label} RUN {group} {name} {i} matrix_exit="
++            emit(f"{label} RUN {group} {name} {i} matrix_exit="
+                             f"{'timeout' if rc is None else rc} "
+                             f"marks={'/'.join(str(x) for x in marks) if marks else 'none'} "
+                             f"content={'ok' if ok else 'bad'}")

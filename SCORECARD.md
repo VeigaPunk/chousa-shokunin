@@ -3514,3 +3514,57 @@ no dead seat replaced. Five reports retained (`R77ConnectorA`, `R77CriticA`, `R7
 orchestrator kernel restarted mid-wave and seat outputs went to the orchestrator session, so seven
 seats settled without a retained report. That is the same settlement-attestation weakness the r76
 spot-check routed as defect 5; committing the results file did not cure it, and the report says so.
+
+## Round 78 verdict — the answer key, the subject identity and the verdict receipt (2026-11-04)
+
+Base `53dbd512d0ab70055338cb44898a6db70049537f`; prefreeze instruments and controls
+`93e0432eb5bb9c4492d540bc6a6358ed3f8d4392`; claims freeze
+`01b444b7f8d90785515e77c7ba9db5d63361329b`. Instruments unchanged from the controls commit
+through the landing: `matrix-battery-v5.py` `5545a471…032b5af0`, `forge-battery.py`
+`ba98db41…1f1c5143`, `work-contract.py` `e51d8917…3d87ffa8a0`, `selfcheck.py` `f5acdd82…2837bf9af`.
+
+| claim / axis | before → after | counting command / evidence | verdict |
+|---|---|---|---|
+| C1 operability (lowest scored non-retired axis; the historical 3/10 held) | the round-77 battery is passed by all four round-77 falsification channels — a strippable salt suffix (content-hash identity), the parent cmdline (the contract table), the printed ORDER digest (the permutation) and a detached append after exit 1 → the successor refuses the three identity channels and detects the append, with the legitimate matrix still accepted | `python3 -B corpus/evidence/round78/forge-battery.py --battery <v4\|v5> --work DIR`; `controls/forge-battery-before-v4.txt` `FORGE_BATTERY=FAIL forgers_handled=0/4 positive=1/1` exit 1 → `controls/forge-battery-after-v5.txt` `FORGE_BATTERY=PASS forgers_handled=4/4 positive=1/1` exit 0 | **falsified by its own kill rule** — the predicate holds, but a content normalizer reaches the same line at exit 0 without scoring a subject (`.ufo/waves/round-78/w1/R78L1/a8-normalizer-v5.txt`, `R78ExecC/v5.stdout.txt`, `R78ReviewA/v5-vs-a9-receipt.txt`); numeric delta 0, the 3/10 is deliberately held |
+| C2 calibration (sourced on S193/S194) | three routed self-assessment defects do not resolve (SKILL gate row 168 at 7 cells against an 8-cell header; QUALITY 142's pointer to no committed file; the round-77 `## Mistakes` row stranded at line 73) → all three resolve through append-only corrections and a superseding criterion, and a committed counter re-derives it | `python3 -B corpus/evidence/round78/selfcheck.py --lane .`; `controls/selfcheck-before.txt` `SELFCHECK=FAIL unresolved=3/3` exit 1 at the base → `controls/selfcheck-after.txt` `SELFCHECK=PASS unresolved=0/3` exit 0 at the controls commit | **falsified by its own kill rule** — a clone carrying all three defects and three hollow repair lines prints the same PASS (`.ufo/waves/round-78/w1/R78ReviewB/ALL-three-hollow.txt`); the three repairs are truthful and directly checkable, the counter is not discriminating |
+
+Both claims therefore land as honest misses on the rules declared before data; the round's
+admission is false and the operator rules. Supporting repair carried with C1, not its predicate:
+QUALITY 142 → 144, the `--work` contract (`controls/work-contract-before-v4.txt`
+`WORK_CONTRACT=FAIL survived=no unwritable_exit=1 file_exit=1` exit 1 →
+`controls/work-contract-after-v5.txt` `WORK_CONTRACT=PASS survived=yes unwritable_exit=2
+file_exit=2` exit 0).
+
+Recorded limits, not repaired after scoring: the salt closes the trailing-strip class only (a
+normalizer recovers 13/13 identities); the quiet leg hides the streaming position but not the work
+tree's shape or `/proc/<ppid>/mem`; `RECEIPT_LINES` exposes an append and not a same-count rewrite;
+the forge battery reads each receipt once at a caller-chosen settle time and cannot certify
+honesty against a digest-keyed UUT battery; `work-contract.py` never reads case A's matrix exit.
+QUALITY 146–147 carry the requirements forward.
+
+Depth, freshness, coverage and adjacency unchanged: no knowledge entry, no `corpus/README.md`
+frontier row, no `PROVINCE.md` edit, no sibling absorption (`R78ConnectorA` reports that tsukuroi
+90, kasegi R39, souji Q102, kama KQ112 and mado 132 hold stronger forms of 143/144/145 and absorbs
+none of them). Trends: expansion unchanged; quality improved narrowly in the four named channels
+with the residual channels measured; discernment improved — two attack seats falsified both frozen
+claims inside the round, each with an honest control pair.
+
+## Planned — round 79
+
+The round-1 `## Planned` block above is historical; this is the live planned row. Round 79 intends
+two claims and one carried debt:
+
+1. **operability (lowest scored non-retired axis)** — the successor battery's subject bytes must
+   stop being a textual derivative of a public file (a behaviour-preserving re-emission with a
+   fresh identifier table, or a wrapper that never exposes the original text), and the forge
+   battery carries one normalizer per salt family with the honest control pair; counting command is
+   a forger battery, not a receipt.
+2. **calibration or depth** — a self-assessment counter whose repair lines are validated against
+   the bytes they name and whose pointer audit covers every block (QUALITY 146), sourced on a row
+   opened in that round.
+3. **carried debt** — `c3-count.py`'s tree leg follows the working tree (round-77 routed defect 6),
+   the wave settlement attestation (routed defect 8) and the round-78 forge-battery settle race are
+   still open; none is claimed until a control can fail without the fix.
+
+Assimilation stays closed until the `merge/chousa/` id drift is renumbered in scratch (111 of 114
+staged ids collide with the live registry at round 78).

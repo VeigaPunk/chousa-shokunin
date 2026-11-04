@@ -1,0 +1,32 @@
+# Exact bytes that false-green selfcheck.py (sha256 f5acdd825ab7dcafa1385ad2b9a6c22df848c4e856947746cd006c22837bf9af, unmodified)
+# All runs: python3 -B corpus/evidence/round78/selfcheck.py --lane .  (cwd = scratch mirror of lane HEAD 01b444b7)
+
+# --- S1: replaces the honest SKILL.md line 171 (correction: SKILL.md:168 — …); row 168 untouched (7 cells vs 8-cell header, last header cell `owner`, row's last cell is the write-scope cell) ---
+
+# false-prose variant (asserts the opposite of the file's own bytes) -> SELFCHECK=PASS unresolved=0/3, exit 0
+correction: SKILL.md:168 — resolved: the row now carries eight cells including the owner cell.
+
+# bare variant -> SELFCHECK=PASS unresolved=0/3, exit 0
+correction: SKILL.md:168
+
+# --- S2 variant 1: base-QUALITY tree (criterion 142 in the audited block, pointer `receipts/02c-work-unwritable.*` matches 0 committed paths), one line appended to the same block -> PASS 0/3, exit 0 ---
+144. supersedes: 142. Requirement carried forward unchanged; see `corpus/evidence/round78/selfcheck.py` for the harness that scores the successor battery.
+
+# --- S2 variant 2: HEAD tree, real criterion 144 (1217 bytes naming the defect and its receipts) replaced by the line above -> PASS 0/3, exit 0 ---
+
+# --- S2 variant 3 (no supersedes anywhere): HEAD tree, appended at end of corpus/QUALITY.md -> PASS 0/3, exit 0; 142 leaves the audited window because only the LAST `## Round-<n> addition` block is scanned ---
+## Round-79 addition (criteria 1–145 unchanged)
+
+146. **Note.** The self-assessment harness for this round is `corpus/evidence/round78/selfcheck.py`; nothing in this block changes any earlier criterion.
+
+# --- S3: replaces the honest erratum paragraph (round-77.md lines 136-142); stranded row 73 untouched (4-cell row outside ## Mistakes, below ## Boundaries at line 67) ---
+
+# false-prose variant -> SELFCHECK=PASS unresolved=0/3, exit 0
+erratum: round-77.md:73 — resolved: the row now sits inside the ## Mistakes table.
+
+# bare variant -> SELFCHECK=PASS unresolved=0/3, exit 0
+erratum: round-77.md:73
+
+# --- combined (all three defects present, all three repairs hollow/false) -> SELFCHECK=PASS unresolved=0/3, exit 0 ---
+# probes on that tree: row168=7 cells/header=8 last=owner; ls-files 02c-work-unwritable=[]; 142 dead pointer still in bytes;
+# 144 = hollow line above; Boundaries line 67 < 73; row73=4 cells outside Mistakes. See ALL-defects-still-present.txt

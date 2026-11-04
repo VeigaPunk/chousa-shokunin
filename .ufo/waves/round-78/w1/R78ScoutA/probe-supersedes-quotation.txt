@@ -1,0 +1,6 @@
+# probe: does the frozen SUPERSEDES regex match a QUOTED supersedes line inside prose?
+# instrument line: SUPERSEDES = re.compile(r"supersedes: (\d+)")  + SUPERSEDES.finditer(body)
+# criterion 146 body (worktree, line 1054) contains the attack input as prose:
+  match: supersedes: 142
+# selfcheck verbose reports superseders={142: [144, 146]} -> 146 is registered as a superseder of 142 by quotation.
+# exit: 0

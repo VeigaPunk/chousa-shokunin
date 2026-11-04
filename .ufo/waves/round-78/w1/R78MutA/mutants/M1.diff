@@ -1,0 +1,10 @@
+--- pristine/matrix-battery-v5.py
++++ M1-matrix-battery-v5.py
+@@ -270,6 +270,7 @@
+     ap.add_argument("--print-order", action="store_true",
+                     help="re-enable the round-77 ORDER digest line (comparison only)")
+     a = ap.parse_args()
++    a.print_order = True
+     matrix = pathlib.Path(a.matrix).resolve()
+     work = pathlib.Path(a.work).resolve()
+     if not matrix.is_file():

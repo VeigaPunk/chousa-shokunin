@@ -2222,3 +2222,48 @@ such. Freeze and landing evidence:
 - Outcome: both claims verify on their frozen predicates; C1 improved narrowly (the call-count channel
   is closed and shown load-bearing) and its supporting sentences are falsified and recorded; QUALITY
   142–143 carry the successor requirements. No axis harmed; no numeric score moved; no capability row.
+
+## Round 78 — the outer battery stops printing its answer key, stripping its subject identity and trusting its receipt (2026-11-04)
+
+Base `53dbd512d0ab70055338cb44898a6db70049537f` (round-77 tip); prefreeze instruments and
+controls `93e0432eb5bb9c4492d540bc6a6358ed3f8d4392`; claims freeze
+`01b444b7f8d90785515e77c7ba9db5d63361329b`. Two claims, distinct axes, frozen before any seat
+scored: C1 operability (lowest scored non-retired axis, the historical 3/10 held) and C2
+calibration.
+- C1 operability: the round-77 battery prints `sha256` of the permuted subject names, salts its
+  subjects with a strippable trailing line and lets a child append the predicate line to its
+  receipt — the four round-77 falsification forgeries therefore reach the exact predicate line at
+  exit 0 or are believed (`controls/forge-battery-before-v4.txt`: `FORGE_BATTERY=FAIL
+  forgers_handled=0/4 positive=1/1`, exit 1). The successor `matrix-battery-v5.py` prints no order
+  line at all, buffers every per-subject line until the loop ends, salts each subject with an inert
+  statement above a random top-level statement, and trails `RECEIPT_LINES` before its verdict;
+  `controls/forge-battery-after-v5.txt` is `FORGE_BATTERY=PASS forgers_handled=4/4 positive=1/1`,
+  exit 0, with the legitimate matrix still ACCEPTED.
+- C2 calibration: three self-assessment surfaces the round-77 spot-check routed do not resolve —
+  the `SKILL.md` gate row with 7 cells against an 8-cell header, QUALITY 142's pointer to a file
+  that does not exist, and the `## Mistakes` row stranded below `## Boundaries` in the round-77
+  lesson (`controls/selfcheck-before.txt`: `SELFCHECK=FAIL unresolved=3/3`, exit 1 at the base).
+  After the registry correction line and the complete successor row, the append-only QUALITY 144
+  (supersedes 142) and 145, and the round-77 erratum block: `controls/selfcheck-after.txt` is
+  `SELFCHECK=PASS unresolved=0/3`, exit 0.
+- Supporting repair, not the predicate: QUALITY 142 → 144 — v5 creates and deletes only its own run
+  directory under `--work` and maps an unwritable or file-valued `--work` to exit 2
+  (`controls/work-contract-{before-v4,after-v5}.txt`: `WORK_CONTRACT=FAIL survived=no
+  unwritable_exit=1 file_exit=1` → `WORK_CONTRACT=PASS survived=yes unwritable_exit=2
+  file_exit=2`).
+- Frontier: S193/S194 admitted (mined, own-work B), S195 rejected (this round's own predicate
+  receipt); registry 192 → 195; census exit 0 at both ends. QUALITY 144–145 appended; SKILL
+  registers the v5 battery and carries the row-168 correction. No knowledge entry added or
+  changed; no numeric score moved; no capability row.
+- Outcome: both frozen predicates hold on the committed bytes, and **both frozen kill rules fired**.
+  C1: a content normalizer that deletes the salt family and answers from the two public positive
+  digests reaches the exact predicate line at exit 0 while scoring nothing
+  (`.ufo/waves/round-78/w1/R78L1/a8-normalizer-v5.txt`, `R78ExecC/v5.stdout.txt`,
+  `R78ReviewA/v5-vs-a9-receipt.txt`), which C1's own kill rule names as falsifying the claim. C2:
+  a clone carrying all three routed defects and three hollow repair lines prints
+  `SELFCHECK=PASS unresolved=0/3` at exit 0 (`R78ReviewB/ALL-three-hollow.txt`), with an honest
+  control pair per class. Neither claim is re-declared or narrowed after data; the repairs and
+  instruments are what they are, the kill rules are the rules declared before data, and the
+  round's admission is false on them. QUALITY 146–147 carry the successor requirements; the wave's
+  remaining findings (settle race, same-count rewrite, digest-keyed UUT battery, the weaker
+  sibling comparisons, `work-contract.py` never reading `rc_a`) are recorded as limits.

@@ -1,0 +1,35 @@
+--- pristine/matrix-battery-v5.py
++++ M5-matrix-battery-v5.py
+@@ -127,7 +127,7 @@
+ def emit(text: str = "") -> None:
+     """Write one receipt line and count it (the RECEIPT_LINES trailer is bound to this)."""
+     global _LINES
+-    print(text)
++    print(text, flush=True)
+     _LINES += 1
+ 
+ 
+@@ -228,13 +228,13 @@
+         if permute:
+             random.Random(secrets.randbits(64)).shuffle(order)
+         if print_order:
+-            buffered.append(f"{label} ORDER {i} " + hashlib.sha256(
++            emit(f"{label} ORDER {i} " + hashlib.sha256(
+                 "|".join(name for _g, name, _s in order).encode()).hexdigest())
+         for group, name, source in order:
+             subject = salted_copy(source, work)
+             rc, marks, ok = run_matrix(matrix, subject, subject.parent / "w", matrix_timeout, content)
+             results[name].append((rc, marks, ok))
+-            buffered.append(f"{label} RUN {group} {name} {i} matrix_exit="
++            emit(f"{label} RUN {group} {name} {i} matrix_exit="
+                             f"{'timeout' if rc is None else rc} "
+                             f"marks={'/'.join(str(x) for x in marks) if marks else 'none'} "
+                             f"content={'ok' if ok else 'bad'}")
+@@ -270,6 +270,7 @@
+     ap.add_argument("--print-order", action="store_true",
+                     help="re-enable the round-77 ORDER digest line (comparison only)")
+     a = ap.parse_args()
++    a.print_order = True
+     matrix = pathlib.Path(a.matrix).resolve()
+     work = pathlib.Path(a.work).resolve()
+     if not matrix.is_file():

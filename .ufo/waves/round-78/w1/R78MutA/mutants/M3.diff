@@ -1,0 +1,10 @@
+--- pristine/matrix-battery-v5.py
++++ M3-matrix-battery-v5.py
+@@ -326,7 +326,6 @@
+     verdict = (p_ok == p_all and f_ok == f_all and oracle_ok == len(ORACLES))
+     emit(f"forgers_rejected={f_ok}/{f_all} positive={p_ok}/{p_all} "
+          f"oracle={'REJECTED' if oracle_ok == len(ORACLES) else 'MISS'}")
+-    emit(f"RECEIPT_LINES={_LINES + 2}")
+     emit(f"BATTERY={'PASS' if verdict else 'FAIL'} forgers_rejected={f_ok}/{f_all} "
+          f"positive={p_ok}/{p_all} oracle={'REJECTED' if oracle_ok == len(ORACLES) else 'MISS'}")
+     return 0 if verdict else 1
