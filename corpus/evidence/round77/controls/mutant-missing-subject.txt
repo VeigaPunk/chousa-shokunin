@@ -1,0 +1,10 @@
+# round-77 lesson receipt — the missing-subject guard refuses before any scoring
+# lane rev: 6defa58dbdc40856f4e7dd24df98dc7ebd3459c0
+# command: python3 -B <scratch mutant of corpus/evidence/round77/matrix-battery-v4.py> --matrix corpus/evidence/round76/loader-matrix-v3.py --work <scratch>
+# mutant diff: two tokens — LANE pinned to the lane (a scratch copy cannot derive it) and the first forger path retargeted at a missing file
+# observed cause in the round: the first predicate run named corpus/evidence/round77/forgers/forge-constant-pass.py, which does not exist (the eleven r76 forgers live under corpus/evidence/round76/forgers/)
+MATRIX_PATH=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round76/loader-matrix-v3.py
+MATRIX_SHA256=b79d6441057a01b27eb465c6b0625cd46502114f8b622b370c2cd2805c81913f
+RUNS=2 CHILD_TIMEOUT=3 MATRIX_TIMEOUT=300 PERMUTE=True CONTENT=True
+matrix-battery-v4: missing subject /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round76/forgers/forge-constant-pass-missing.py
+# exit: 2

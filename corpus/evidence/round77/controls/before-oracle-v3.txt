@@ -1,0 +1,24 @@
+# round-77 C1 before receipt — the round-76 battery accepts a call-count matrix oracle
+# lane rev: 6defa58dbdc40856f4e7dd24df98dc7ebd3459c0
+# command: python3 -B corpus/evidence/round76/matrix-battery-v3.py --matrix <scratch copy of corpus/evidence/round77/forgers/forge-order-matrix.py> --work <scratch>
+# oracle sha256: 9bb74e2a88e9bf42a801c7025bb77c8e8b45296550334ecac0e0b5b753c248b1
+# battery sha256: 217ae367c7e6e4ed23d1e6c1412de50370f309ba12d4a1703eaff386b7094360
+# matrix under test: a fake matrix that reads no input and scripts its verdict by invocation count
+MATRIX_SHA256=9bb74e2a88e9bf42a801c7025bb77c8e8b45296550334ecac0e0b5b753c248b1
+RUNS=2 CHILD_TIMEOUT=3 MATRIX_TIMEOUT=300
+SUBJECT POSITIVE successor-counter sha256=9334721a5e7a4080 ACCEPTED
+SUBJECT POSITIVE ref-counter sha256=909987ce9f762398 ACCEPTED
+SUBJECT FORGER constant-pass sha256=50f3b5bd9da5ed29 REJECTED
+SUBJECT FORGER constant-fail sha256=698733323e24e5a9 REJECTED
+SUBJECT FORGER order-twelve sha256=b24eb3ca206c2ebd REJECTED
+SUBJECT FORGER diff-only sha256=6b36c1d4b18803dd REJECTED
+SUBJECT FORGER naive-grep sha256=6f8977be1fe9c265 REJECTED
+SUBJECT FORGER subject-map sha256=1f12dd2b3c44a333 REJECTED
+SUBJECT FORGER tree-identity sha256=5f265e35951fd12d REJECTED
+SUBJECT FORGER size-map sha256=73ab5e9f436b62b4 REJECTED
+SUBJECT FORGER harness-source sha256=8184b9afd0501e10 REJECTED
+SUBJECT FORGER seed-leak sha256=52b5b51ef81aa8c9 REJECTED
+SUBJECT FORGER hang sha256=61d9b839524ab6e0 REJECTED
+forgers_rejected=11/11 positive=2/2
+BATTERY=PASS forgers_rejected=11/11 positive=2/2
+# exit: 0
