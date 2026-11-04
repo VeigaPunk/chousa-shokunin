@@ -1,0 +1,86 @@
+# r73 before-greps (the do-nothing control and the C2 defect standing) — every line re-run fresh at base f748abbb6bf58388e732facd4ecec5612419c457 (the r72 spot-check tip)
+# run from the lane root /home/vgpnk/Projects/shokunin/chousa-shokunin; each "$ cmd" is followed by its output and rc
+
+=== C1 control: the completing predicate is NOT met at the base ===
+$ grep -c "^RESEARCH_GATE_SELFTEST:" corpus/evidence/round72/controls/battery-past-locale-dies-pinzone-r72.txt
+0
+rc=1
+$ ls corpus/evidence/round72/controls/ | grep -c "preflight"
+0
+rc=1
+$ grep -c "^ok-case\|^FAIL-case\|^skip-case" corpus/evidence/round72/controls/battery-past-locale-dies-pinzone-r72.txt
+260
+rc=0
+
+=== V72-1 standing: the kill-narrative text and the absence of the kill line number ===
+$ grep -c "kills the script" LOG.md
+1
+rc=0
+$ grep -c "kills the script" SCORECARD.md
+1
+rc=0
+$ grep -c "kills the script" corpus/lessons/round-72.md
+0
+rc=1
+$ grep -c "kills the script" corpus/evidence/round72/controls/battery-past-locale-dies-pinzone-r72.txt
+1
+rc=0
+$ grep -c "kills the script" /home/vgpnk/Projects/shokunin/.ufo/reports/round-72/chousa.md
+0
+rc=1
+$ grep -rn "8426\|8435" LOG.md SCORECARD.md corpus/lessons/round-72.md corpus/evidence/round72/
+LOG.md:195:`08843552378071929c8b6abcd50be6613365691cfae4bf0d74fb03d86eb5b46e`.
+SCORECARD.md:87:**Before** (gate `0884355…`, selftest 20): the gate validated record
+rc=0 (1 = no match: neither line number is recorded)
+$ grep -n "r36-pin.txt\" && p36_ok=0" tools/research-gate.sh
+8426:  grep -q '^GATE_GREP: ' -- "$WORK/r36-pin.txt" && p36_ok=0
+rc=0
+$ grep -n "p36_out=$(bash \"$SELF\" --pin \"$WORK/r36-pin2.txt\"" tools/research-gate.sh
+8435:  p36_out=$(bash "$SELF" --pin "$WORK/r36-pin2.txt" 2>&1)
+rc=0
+
+=== V72-2 standing: the after-receipt tree statement matches no single tree ===
+$ head -2 corpus/evidence/round72/controls/after-r72-corrections.txt
+# r72 after-receipt (C2): every count line re-run fresh at the verdicts tree, immediately before the verdicts commit (the r71 unverified-count lesson)
+# collisions disclosed per the D-70-2 rule: the correction blocks QUOTE the superseded texts, so each quoted token counts its original hit + its quotation hit; both are marked below
+rc=0
+$ grep -n "rev-parse HEAD" -A1 corpus/evidence/round72/controls/after-r72-corrections.txt
+4:$ git rev-parse HEAD
+5-7f7ea19a945e0998f009f82b9c651cb08aec1c12
+rc=0
+$ git show 6dd6c82405989083f16e101d6573656d39211879:SCORECARD.md | grep -c "18 healthy"   # 6dd6c82=verdicts tree, 7f7ea19=landing tip, f748abb=base tip
+3
+$ git show 7f7ea19a945e0998f009f82b9c651cb08aec1c12:SCORECARD.md | grep -c "18 healthy"   # 6dd6c82=verdicts tree, 7f7ea19=landing tip, f748abb=base tip
+2
+$ git show f748abbb6bf58388e732facd4ecec5612419c457:SCORECARD.md | grep -c "18 healthy"   # 6dd6c82=verdicts tree, 7f7ea19=landing tip, f748abb=base tip
+3
+$ grep -c "18 healthy" LOG.md SCORECARD.md corpus/lessons/round-72.md   # at the base
+LOG.md:2
+SCORECARD.md:3
+corpus/lessons/round-72.md:0
+rc=0 (4 = one non-matching file)
+
+=== byte identity of the instrument and the registry ===
+$ sha256sum tools/research-gate.sh
+d5d48128509f77edf161e4d8b10b833e6e00f822906460fa049f27d1244d41e2  tools/research-gate.sh
+rc=0
+$ grep -cE "^\|[[:space:]]*S[0-9]{3,}[[:space:]]*\|" corpus/SOURCES.md
+179
+rc=0
+
+=== the C2 counter at the base (do-nothing control: the correction records do not exist) ===
+$ python3 -B corpus/evidence/round73/c2-count.py --lane . --rev f748abbb6bf58388e732facd4ecec5612419c457 --base f748abbb6bf58388e732facd4ecec5612419c457
+python3 -B corpus/evidence/round73/c2-count.py --lane . --rev f748abbb6bf58388e732facd4ecec5612419c457 --base f748abbb6bf58388e732facd4ecec5612419c457
+CHECK C2-1 FAIL LOG.md '## Round 72 correction entry' count=0
+CHECK C2-2 FAIL LOG entry missing=8426,8435,exempt
+CHECK C2-3 FAIL lesson '## Correction — round-72 spot-check' count=0 missing=V72-1,V72-2,8426,8435,7f7ea19a,6dd6c82
+CHECK C2-4 FAIL SCORECARD '## Round 72 correction note' count=0 missing=V72-1,V72-2
+CHECK C2-5 FAIL lesson tree statement missing=measured at the landing tip 7f7ea19a,three at the verdicts tree 6dd6c82,two recorded
+CHECK C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+CHECK C2-7 PASS r72 receipts changed=none
+C2=FAIL checks=2/7 rev=f748abbb6bf5 base=f748abbb6bf5
+rc=1
+
+$ python3 -B corpus/evidence/round73/c2-count.py --selftest   # the frozen counter catches its seven mutations
+SELFTEST=PASS mutations=7/7
+rc=0
