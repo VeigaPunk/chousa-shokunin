@@ -111,3 +111,15 @@ admit/reject set; dispatched wave seats are author-lane evidence, not promotion 
 shape: one v1 wave of 12 seats (3 executor, 1 scout, 1 scribe, 1 connector, 2 reviewer, 2 critic,
 1 mutation-tester, 1 sentinel = 6 attack seats, 50%); L1 holds the canonical planner seat; no
 residual call planned; no dead seat replaced.
+
+## Correction — round-76 claims prose
+
+- Appended by round 77, append-only; the frozen bytes above are unchanged.
+- Superseded text: the header clause "4 (receipt precision) is honoured by naming the controls
+  revision in every receipt". It is false as written — the prefreeze receipts name worktree digests,
+  not the controls revision (`corpus/lessons/round-76-verifier-spotcheck.md`, routed defect 3, lines
+  160-164). The frozen bytes above are quoted here, never rewritten.
+- Corrected fact: the prefreeze receipts name worktree digests, not the controls revision; a
+  successor claims file does not repeat the sentence.
+- This block is round 77's C2 landing artifact; the counter is
+  `corpus/evidence/round77/c3-count.py` (`C3=PASS checks=5/5` at the landing revision).

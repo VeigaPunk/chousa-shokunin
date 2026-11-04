@@ -3438,3 +3438,32 @@ Measured instrument revision da9ac7ec684fe9fe9ad5554cab6180057255b76b; claims fr
 Numeric score delta0: operability remains frozen historical3/10; no capability row. Depth, coverage, freshness and adjacency unchanged. C1 metadata-channel rationale is falsified for unchanged sizes; C2 generic correction-class closure is falsified by nine retained fixtures. Outer invocation-count scripts achieve both exact target lines, so a passing battery is not arbitrary discrimination. Existing QUALITY119/120/126 obligations are not retroactively repaired by these post-freeze findings.
 
 Round admission **withheld for independent closure**, rather than claiming every axis improved: finite predicates hold, but the prefreeze outer-oracle gap and C2 distinct-axis fit are unresolved. No held knowledge entry was altered or superseded; no cross-domain source was absorbed. Trends: expansion unchanged; quality improved narrowly (bounded execution, old subject oracle and four formerly accepted bogus blocks now rejected); discernment improved through grounded QUALITY138–140. Outside admit/reject review remains requested, not self-granted.
+
+## Planned — round 77 (frozen 2026-11-04 at `a9530782578723de1364e0a3a47effcde8c85c23`; controls commit `e6fcdc4770c2fa73e5ccda99445c4311128d7e0d` precedes it)
+
+Round 77 closes the two routed instrument defects the r76 non-author spot-check holds open, as two
+claims on distinct axes (predicates, before/after and kill rules frozen in
+`corpus/evidence/round77/claims.md`):
+
+1. **C1 — operability** (lowest scored non-retired axis, 3/10; the historical 3/10 observable
+   deliberately not moved). `python3 -B corpus/evidence/round77/matrix-battery-v4.py --matrix
+   corpus/evidence/round76/loader-matrix-v3.py --work DIR` exits 0 and prints exactly
+   `BATTERY=PASS forgers_rejected=11/11 positive=2/2 oracle=REJECTED`. The successor battery
+   permutes the subject order per run from a fresh 64-bit seed, requires every matrix run to print
+   the twelve-line contract table with the battery's independently stated expected cells, and scores
+   three forged matrices as a control leg. Before (do-nothing state): the round-76 battery accepts a
+   call-count matrix at its exact target lines (`BATTERY=PASS forgers_rejected=11/11 positive=2/2`,
+   exit 0, `corpus/evidence/round77/controls/before-oracle-v3.txt`). After: `BATTERY=PASS … oracle=REJECTED`,
+   exit 0; the `--no-permute` twin is `BATTERY=FAIL` with `oracle=MISS`, so the order leg is
+   load-bearing, and the `--no-content` twin still passes, which the claim states rather than hides.
+2. **C2 — calibration** (sourced on S190/S191, opened this round). `python3 -B
+   corpus/evidence/round77/c3-count.py --lane . --base a519fb0a80cf52c7988713c1f05b3ce8440fedda --rev <landing>`
+   exits 0 and prints exactly `C3=PASS checks=5/5`. The false sentence in
+   `corpus/evidence/round76/claims.md` (routed defect 3) is superseded by an append-only correction
+   block in that same file; the counter re-derives presence, position, the quoted superseded clause,
+   the corrected fact and an append-only numstat. Before: `C3=FAIL checks=1/5`, exit 1
+   (`controls/before-c3.txt`).
+
+Wave: one v1 wave of 12 seats (3 executor, 1 scout, 1 scribe, 1 connector, 2 reviewer, 2 critic,
+1 mutation-tester, 1 sentinel = 5 attack seats, 42%) under `ufo-wave-policy.json` (band 8–16), via
+the run-15 inline spawn handoff. L1 holds the canonical planner seat; no residual call planned.

@@ -2182,3 +2182,30 @@ such. Freeze and landing evidence:
 - Frontier: S187/S188 mined and S189 rejected, 186→189 rows; no held row changed. Gate source anchors/counts corrected before landing after R76Scribe review. QUALITY138–140 learn the metadata, outer-battery and correction-identity failures. SKILL registers the two gate families. SCORECARD's r75 landing/tip placeholders corrected append-only.
 - WAVE-DONE from Main confirms12 settled; 11 reports exist, R76Critic report absent and its wake failed402 insufficient funds. Results file lost per-seat final/status fields after orchestrator restart; no replacement. One v1 wave12, six attack-role seats, L1 planner, no residual. Report retains this accounting defect.
 - Both finite predicates verify; broad channel-closure rationale does not. Admission is not self-granted: missed prefreeze outer-oracle controls and the C2 calibration-axis fit remain for independent closure. Expansion unchanged, quality improved narrowly, discernment improved through lesson-grounded QUALITY criteria. Sources census and final remote proof accompany the report.
+
+## Round 77 — the outer battery stops being passable by an invocation counter (2026-11-04)
+
+- Trigger: the r76 non-author spot-check's routed defects. Defect 1 (outer batteries score exit codes
+  in a fixed subject order, so a call-count matrix reaches both exact target lines) and defect 3 (a
+  false sentence in the frozen r76 claims file) are the two claims; defect 2 (the moving `--lane-rev`)
+  is answered inside C2 by pinning `--base` and `--rev`; defect 4 (the learned-table subject) is
+  carried as a recorded limit; defect 5 (wave settlement records) is answered by committing the wave
+  results file.
+- Controls `e6fcdc4770c2fa73e5ccda99445c4311128d7e0d` precede the claims freeze
+  `a9530782578723de1364e0a3a47effcde8c85c23`.
+- C1 operability (lowest scored non-retired axis; historical 3/10 held): the round-76 battery accepts
+  a matrix that counts its own invocations — `BATTERY=PASS forgers_rejected=11/11 positive=2/2`,
+  exit 0 (`corpus/evidence/round77/controls/before-oracle-v3.txt`). The successor
+  `matrix-battery-v4.py` permutes the subject order per run from `secrets.randbits(64)`, requires the
+  twelve-line contract table with its own independently stated expected cells, and scores three forged
+  matrices: `BATTERY=PASS forgers_rejected=11/11 positive=2/2 oracle=REJECTED`, exit 0
+  (`controls/after-battery-v4.txt`). The `--no-permute` twin is `BATTERY=FAIL … oracle=MISS`
+  (`controls/twin-no-permute.txt`), so the order leg is load-bearing; `--no-content` still passes
+  (`controls/twin-no-content.txt`), and the claim records that asymmetry instead of claiming symmetry.
+- C2 calibration: the false r76 claims sentence is superseded by an append-only block in the same
+  file (frozen bytes quoted, never rewritten); `c3-count.py` moves `C3=FAIL checks=1/5` exit 1
+  (`controls/before-c3.txt`) to `C3=PASS checks=5/5` exit 0 at the landing (`controls/after-c3.txt`).
+- Frontier: S190/S191 admitted (mined, own-work B), S192 rejected (the round's own claims file);
+  registry 189 → 192; census exit 0 at both ends. QUALITY 141 records the outer-battery criterion;
+  SKILL registers the battery. No knowledge entry added or changed; no numeric score moved; no
+  capability row.
