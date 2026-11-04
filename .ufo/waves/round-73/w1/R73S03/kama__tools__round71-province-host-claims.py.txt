@@ -1,0 +1,735 @@
+lane_revision=bc9e30599b6c6133bb094f0e7abd1a9f512778ec
+source=tools/round71-province-host-claims.py
+git_show_rc=0
+1: #!/usr/bin/env python3
+2: """round71-province-host-claims.py - re-derive every PROVINCE.md host-surface claim.
+3: 
+4: Round 65 re-hosted the lane and recorded each former-host artifact as an
+5: ``absent-on-this-host (DATE)`` marker in PROVINCE.md; round 67 added three more.
+6: Markers rot: the lane is back on the original Linux box, so ten of the twelve
+7: marked surfaces and all four prose claims no longer hold. The frozen predicate
+8: (plans/round-71-claims.md, C3): every province host-surface claim is re-derived
+9: on this host and stale ones carry a dated, verdict-checked correction.
+10: 
+11:     PROVINCE_HOST_CLAIMS markers=<m> tags=<t> extra=<e> contradicted=<c> uncovered=<u> exit=<x>
+12: 
+13: Marker grammar. A marker paragraph opens with ``- absent-on-this-host (YYYY-MM-DD)``
+14: and continues over indented wrap lines until a blank line. Every
+15: ``province-host:TAG`` occurrence inside that paragraph declares TAG absent (a
+16: wrap naming two tags declares two claims). One marker line naming two tags is
+17: the round-67 ``llama-b11755-install`` / ``llama-server-link`` wrap.
+18: 
+19: Declared SURFACES (path existence unless the kind says otherwise):
+20:   omp-binary                 ~/.local/bin/omp
+21:   llama-b11755-install       ~/.local/opt/llama-b11755
+22:   llama-server-link          ~/.local/bin/llama-server
+23:   kama-cache-gguf            ~/.cache/kama-shokunin
+24:   llama-b11755-archive       ~/.local/opt/llama-b11755-bin-ubuntu-x64.tar.gz
+25:   qwen-coder-unit            ~/.config/systemd/user/qwen-coder.service
+26:   opencode-json              ~/.config/opencode/opencode.json
+27:   janitor-md                 ~/.config/opencode/agents/janitor.md
+28:   ollama-v04011-install      ~/.local/opt/ollama-v0.40.11
+29:   fixture-gguf-model         ~/.cache/kama-shokunin/models/stories260K.gguf
+30:   ufo-src                    a ufo-fsd checkout resolves, in the declared search
+31:                              order $UFO_SRC then ~/Projects/ufo-fsd-alpha (a
+32:                              checkout = that directory carries .git)
+33:   python3-interpreter        `python3 -c "import sys"` exits 0 (a real run, not a
+34:                              PATH hit; the round-65 Store alias passes `command -v`)
+35: 
+36: Declared EXTRA prose claims (4), each a claim of the surface subject's presence:
+37:   host-identity   the lane host is Windows 10.0.26200    probe: `uname -s`
+38:   python3-alias   python3 is the Microsoft Store alias   probe: a real run
+39:   ntfs-path       a tracked `|` path cannot be checked   probe: a scratch repo
+40:                   out under NTFS                         commit + checkout of
+41:                                                          `pipe|name.txt`
+42:   ss-flock        `ss` and `flock` are absent            probe: `command -v ss flock`
+43: The extra claim date is the round-65 note date, 2026-10-31. A claim is
+44: contradicted when its declared verdict differs from the live probe verdict.
+45: 
+46: Corrections. A line
+47:     - correction-on-host (YYYY-MM-DD) `province-host:TAG` — present|absent: <evidence>
+48: covers TAG only when its date is later than the claim date, TAG is declared,
+49: and its verdict equals the live probe verdict. A wrong tag or a flipped
+50: verdict covers nothing (the do-nothing shortcut this round's control names).
+51: 
+52: --base REV additionally reads PROVINCE.md at REV (git show) and requires every
+53: base marker tag to still occur in a tip marker paragraph; a missing tag prints
+54: ``PROVINCE_HOST_CLAIMS_REWRITTEN <tag>`` and exits 1 (the append-only rule:
+55: marker lines are never deleted or reworded). When --corrections names another
+56: file inside the repo, its repo-relative path is read at REV first and
+57: PROVINCE.md at REV is the fallback (an untracked copy of the province file).
+58: 
+59: --draft PATH writes the generated correction block for every contradicted and
+60: uncovered claim (one line per tag, probe command and live output carried in the
+61: evidence field). The tool never edits PROVINCE.md.
+62: 
+63: Exit: 0 uncovered == 0; 1 uncovered > 0 or a base marker tag rewritten;
+64: 2 could-not-evaluate (unreadable --corrections, --base git failure, a marker
+65: tag with no declared probe, an NTFS probe setup failure). Read-only on the
+66: repository: it stats host paths, spawns the declared probes once, creates its
+67: NTFS probe repo under the scratch root and removes it, and reads PROVINCE.md.
+68: 
+69:     --repo PATH        repository/worktree holding PROVINCE.md (default ".")
+70:     --base REV         rewrite check against PROVINCE.md at REV
+71:     --corrections PATH province file to grade (default <repo>/PROVINCE.md)
+72:     --json             one JSON object instead of per-claim lines
+73:     --draft PATH       write the generated correction block to PATH
+74:     --scratch DIR      scratch root for the NTFS probe and selftest fixtures
+75:     --selftest         fixture arms; prints PROVINCE_HOST_CLAIMS_SELFTEST pass=N fail=M
+76:     --keep             keep the selftest fixture tree
+77: """
+78: from __future__ import annotations
+79: 
+80: import argparse
+81: import datetime as _dt
+82: import json
+83: import os
+84: import platform
+85: import re
+86: import shutil
+87: import subprocess
+88: import sys
+89: import tempfile
+90: from pathlib import Path
+91: 
+92: TOOL = Path(__file__).resolve()
+93: LANE = TOOL.parent.parent
+94: PROVINCE_NAME = "PROVINCE.md"
+95: BASE_REV = "f3ee44f4"
+96: MARKER_DATE = "2026-10-31"
+97: PROBE_TIMEOUT = 30
+98: GIT_TIMEOUT = 60
+99: 
+100: MARKER_OPEN_RE = re.compile(r"^- absent-on-this-host \((\d{4}-\d{2}-\d{2})\)")
+101: TAG_RE = re.compile(r"province-host:([A-Za-z0-9._-]+)")
+102: CORRECTION_RE = re.compile(
+103:     r"^\s*-\s*correction-on-host\s+\((\d{4}-\d{2}-\d{2})\)\s+"
+104:     r"`province-host:([A-Za-z0-9._-]+)`\s*(?:\u2014|--)\s*"
+105:     r"(present|absent)\s*:\s*(\S.*)$"
+106: )
+107: 
+108: # (tag, kind, target) - the round-65/67 host surfaces, one live probe each.
+109: SURFACES = [
+110:     ("omp-binary", "file", "~/.local/bin/omp"),
+111:     ("llama-b11755-install", "dir", "~/.local/opt/llama-b11755"),
+112:     ("llama-server-link", "file", "~/.local/bin/llama-server"),
+113:     ("kama-cache-gguf", "dir", "~/.cache/kama-shokunin"),
+114:     ("llama-b11755-archive", "file", "~/.local/opt/llama-b11755-bin-ubuntu-x64.tar.gz"),
+115:     ("qwen-coder-unit", "file", "~/.config/systemd/user/qwen-coder.service"),
+116:     ("opencode-json", "file", "~/.config/opencode/opencode.json"),
+117:     ("janitor-md", "file", "~/.config/opencode/agents/janitor.md"),
+118:     ("ufo-src", "checkout", "UFO_SRC|~/Projects/ufo-fsd-alpha"),
+119:     ("ollama-v04011-install", "dir", "~/.local/opt/ollama-v0.40.11"),
+120:     ("fixture-gguf-model", "file", "~/.cache/kama-shokunin/models/stories260K.gguf"),
+121:     ("python3-interpreter", "spawn", "python3"),
+122: ]
+123: SURFACE_MAP = {tag: (kind, target) for tag, kind, target in SURFACES}
+124: 
+125: 
+126: class ProbeError(Exception):
+127:     """A live probe could not be evaluated; the tool fails closed (exit 2)."""
+128: 
+129: 
+130: def _run(cmd, timeout, cwd=None):
+131:     try:
+132:         proc = subprocess.run(cmd, capture_output=True, timeout=timeout, cwd=cwd)
+133:     except (OSError, subprocess.TimeoutExpired) as exc:
+134:         return 127, b"", str(exc).encode("utf-8", "replace")
+135:     return proc.returncode, proc.stdout, proc.stderr
+136: 
+137: 
+138: def _text(raw):
+139:     return raw.decode("utf-8", "replace").strip()
+140: 
+141: 
+142: def git(root, *args):
+143:     rc, out, err = _run(["git", "-C", str(root), *args], GIT_TIMEOUT)
+144:     return rc, _text(out), _text(err)
+145: 
+146: 
+147: def read_text(path):
+148:     try:
+149:         return Path(path).read_bytes().decode("utf-8").replace("\r\n", "\n")
+150:     except OSError as exc:
+151:         raise ProbeError(f"cannot read {path}: {exc}") from exc
+152:     except UnicodeDecodeError as exc:
+153:         raise ProbeError(f"{path} is not UTF-8: {exc}") from exc
+154: 
+155: 
+156: def parse_markers(text):
+157:     """Return (marker paragraphs, {tag: first paragraph date})."""
+158:     lines = text.splitlines()
+159:     markers = 0
+160:     tags = {}
+161:     i = 0
+162:     while i < len(lines):
+163:         match = MARKER_OPEN_RE.match(lines[i])
+164:         if not match:
+165:             i += 1
+166:             continue
+167:         markers += 1
+168:         date = match.group(1)
+169:         block = [lines[i]]
+170:         j = i + 1
+171:         while j < len(lines) and lines[j].strip() and lines[j][0] in " \t":
+172:             block.append(lines[j])
+173:             j += 1
+174:         for tag in TAG_RE.findall("\n".join(block)):
+175:             tags.setdefault(tag, date)
+176:         i = j
+177:     return markers, tags
+178: 
+179: 
+180: def marker_paragraphs(text):
+181:     """Map each province-host tag to the normalized text of its marker paragraph."""
+182:     out = {}
+183:     current = None
+184:     buf = []
+185: 
+186:     def flush():
+187:         if current is None:
+188:             return
+189:         joined = " ".join(part.strip() for part in buf if part.strip())
+190:         for tag in re.findall(r"province-host:([A-Za-z0-9._-]+)", joined):
+191:             out.setdefault(tag, joined)
+192: 
+193:     for line in text.splitlines():
+194:         if line.startswith("- absent-on-this-host ("):
+195:             flush()
+196:             current, buf = line, [line]
+197:         elif current is not None and line.strip() and not line.startswith("- "):
+198:             buf.append(line)
+199:         else:
+200:             flush()
+201:             current, buf = None, []
+202:     flush()
+203:     return out
+204: 
+205: 
+206: def parse_corrections(text):
+207:     found = []
+208:     for line in text.splitlines():
+209:         match = CORRECTION_RE.match(line)
+210:         if not match:
+211:             continue
+212:         try:
+213:             _dt.date.fromisoformat(match.group(1))
+214:         except ValueError:
+215:             print(f"warning: correction date {match.group(1)!r} is not a calendar date; "
+216:                   f"the line covers nothing", file=sys.stderr)
+217:             continue
+218:         found.append({"date": match.group(1), "tag": match.group(2),
+219:                       "verdict": match.group(3), "evidence": match.group(4).strip()})
+220:     return found
+221: 
+222: 
+223: def probe_path(kind, target):
+224:     path = Path(os.path.expanduser(target))
+225:     try:
+226:         hit = path.is_dir() if kind == "dir" else path.is_file()
+227:     except OSError:
+228:         hit = False
+229:     command = f"test {'-d' if kind == 'dir' else '-e'} {path}"
+230:     if hit:
+231:         evidence = f"{path} exists ({'directory' if kind == 'dir' else 'file'})"
+232:     else:
+233:         evidence = f"{path} does not exist"
+234:     return ("present" if hit else "absent"), command, evidence
+235: 
+236: 
+237: def probe_checkout(_target):
+238:     order = []
+239:     env = os.environ.get("UFO_SRC", "")
+240:     if env:
+241:         order.append(os.path.expanduser(env))
+242:     order.append(os.path.expanduser("~/Projects/ufo-fsd-alpha"))
+243:     for candidate in order:
+244:         root = Path(candidate)
+245:         try:
+246:             if (root / ".git").exists():
+247:                 command = f"test -e {root}/.git (search order: $UFO_SRC, ~/Projects/ufo-fsd-alpha)"
+248:                 return "present", command, f"ufo-fsd checkout resolves at {root}"
+249:         except OSError:
+250:             continue
+251:     command = "test -e $UFO_SRC/.git || test -e ~/Projects/ufo-fsd-alpha/.git"
+252:     tried = ", ".join(order) if order else "<none>"
+253:     return "absent", command, f"no ufo-fsd checkout (tried {tried})"
+254: 
+255: 
+256: def probe_spawn(target):
+257:     rc, out, err = _run([target, "-c", "import sys; print(sys.version.split()[0])"],
+258:                         PROBE_TIMEOUT)
+259:     command = f'{target} -c "import sys"'
+260:     if rc == 0:
+261:         return "present", command, f"exit=0, Python {_text(out) or 'unknown'}"
+262:     detail = _text(err) or _text(out) or "no output"
+263:     return "absent", command, f"exit={rc}: {detail.splitlines()[0][:200]}"
+264: 
+265: 
+266: def probe_windows():
+267:     rc, out, err = _run(["uname", "-s"], PROBE_TIMEOUT)
+268:     name = _text(out) if rc == 0 and out.strip() else platform.system()
+269:     lowered = name.lower()
+270:     windows = lowered.startswith(("mingw", "msys", "cygwin")) or lowered == "windows"
+271:     return ("present" if windows else "absent"), "uname -s", f"{name or _text(err) or 'unknown'}"
+272: 
+273: 
+274: def probe_python3_alias():
+275:     rc, out, err = _run(["python3", "-c", "import sys; print(sys.version.split()[0])"],
+276:                         PROBE_TIMEOUT)
+277:     command = 'python3 -c "import sys"'
+278:     if rc == 0:
+279:         return "absent", command, f"exit=0, Python {_text(out)}; python3 is a real interpreter, not the Store alias"
+280:     detail = _text(err) or _text(out) or "no output"
+281:     return "present", command, f"exit={rc}: {detail.splitlines()[0][:200]}"
+282: 
+283: 
+284: def probe_ss_flock():
+285:     ss = shutil.which("ss")
+286:     flock = shutil.which("flock")
+287:     both_absent = ss is None and flock is None
+288:     evidence = f"ss={ss or 'not found'}, flock={flock or 'not found'}"
+289:     return ("present" if both_absent else "absent"), "command -v ss flock", evidence
+290: 
+291: 
+292: def _git_fixture(root, *args):
+293:     if not any(arg in ("init", "rev-parse") for arg in args):
+294:         rc, out, err = git(root, "rev-parse", "--show-toplevel")
+295:         if rc != 0 or os.path.realpath(out) != os.path.realpath(str(root)):
+296:             raise ProbeError(f"fixture toplevel assertion failed for {root}: {out or err}")
+297:     return git(root, *args)
+298: 
+299: 
+300: def probe_ntfs_path(scratch_root):
+301:     repo = Path(tempfile.mkdtemp(prefix="ntfs-path-probe-", dir=str(scratch_root)))
+302:     command = "git init; git add 'pipe|name.txt'; git commit; git checkout -- ."
+303:     payload = "probe\n"
+304:     try:
+305:         rc, _out, err = _git_fixture(repo, "init", "-q")
+306:         if rc != 0:
+307:             raise ProbeError(f"ntfs probe: git init failed: {err[:200]}")
+308:         rc, out, err = _git_fixture(repo, "rev-parse", "--show-toplevel")
+309:         if rc != 0 or os.path.realpath(out) != os.path.realpath(str(repo)):
+310:             raise ProbeError(f"ntfs probe: toplevel assertion failed: {out or err}")
+311:         target = repo / "pipe|name.txt"
+312:         try:
+313:             target.write_text(payload, encoding="utf-8")
+314:         except OSError as exc:
+315:             return "present", command, f"cannot create the '|' path under {repo}: {exc}"
+316:         rc, _out, err = _git_fixture(repo, "add", "--", "pipe|name.txt")
+317:         if rc != 0:
+318:             raise ProbeError(f"ntfs probe: git add of the '|' path failed: {err[:200]}")
+319:         rc, _out, err = _git_fixture(
+320:             repo, "-c", "user.name=kama-r71", "-c", "user.email=kama-r71@example.invalid",
+321:             "commit", "-q", "-m", "pipe-path probe")
+322:         if rc != 0:
+323:             raise ProbeError(f"ntfs probe: git commit failed: {err[:200]}")
+324:         target.unlink()
+325:         rc, _out, err = _git_fixture(repo, "checkout", "--", ".")
+326:         if rc != 0:
+327:             return "present", command, f"git checkout exit={rc}: {err[:200]}"
+328:         return "absent", command, f"git checkout exit=0; the '|' path round-tripped under {repo}"
+329:     finally:
+330:         shutil.rmtree(repo, ignore_errors=True)
+331: 
+332: 
+333: # (tag, claim verdict, prose claim, probe) - probe None means probe_ntfs_path.
+334: EXTRAS = [
+335:     ("host-identity", "present", "the lane host is Windows 10.0.26200", probe_windows),
+336:     ("python3-alias", "present", "python3 on PATH is the Microsoft Store alias stub", probe_python3_alias),
+337:     ("ntfs-path", "present", "a tracked '|' path cannot be checked out under NTFS", None),
+338:     ("ss-flock", "present", "ss and flock are absent", probe_ss_flock),
+339: ]
+340: 
+341: 
+342: def probe_surface(tag):
+343:     kind, target = SURFACE_MAP[tag]
+344:     if kind in ("file", "dir"):
+345:         return probe_path(kind, target)
+346:     if kind == "checkout":
+347:         return probe_checkout(target)
+348:     if kind == "spawn":
+349:         return probe_spawn(target)
+350:     raise ProbeError(f"unknown probe kind {kind!r} for {tag}")
+351: 
+352: 
+353: def covering_correction(claim, corrections):
+354:     for correction in corrections:
+355:         if correction["tag"] != claim["tag"]:
+356:             continue
+357:         if correction["date"] <= claim["date"]:
+358:             continue
+359:         if correction["verdict"] != claim["live"]:
+360:             continue
+361:         return correction
+362:     return None
+363: 
+364: 
+365: def evaluate(corrections_path, scratch_root):
+366:     text = read_text(corrections_path)
+367:     markers, marker_tags = parse_markers(text)
+368:     corrections = parse_corrections(text)
+369:     claims = []
+370:     for tag, date in marker_tags.items():
+371:         if tag not in SURFACE_MAP:
+372:             raise ProbeError(
+373:                 f"marker tag province-host:{tag} has no declared probe (add it to SURFACES)")
+374:         verdict, command, evidence = probe_surface(tag)
+375:         claims.append({"tag": tag, "kind": "marker", "date": date, "claim": "absent",
+376:                        "live": verdict, "command": command, "evidence": evidence})
+377:     for tag, verdict, prose, probe in EXTRAS:
+378:         if probe is None:
+379:             live, command, evidence = probe_ntfs_path(scratch_root)
+380:         else:
+381:             live, command, evidence = probe()
+382:         claims.append({"tag": tag, "kind": "extra", "date": MARKER_DATE,
+383:                        "claim": verdict, "prose": prose,
+384:                        "live": live, "command": command, "evidence": evidence})
+385:     for claim in claims:
+386:         claim["contradicted"] = claim["claim"] != claim["live"]
+387:         correction = covering_correction(claim, corrections)
+388:         claim["covered"] = correction is not None
+389:         claim["correction"] = correction
+390:     contradicted = sum(1 for claim in claims if claim["contradicted"])
+391:     uncovered = sum(1 for claim in claims if claim["contradicted"] and not claim["covered"])
+392:     return {"markers": markers, "tags": len(marker_tags), "extra": len(EXTRAS),
+393:             "contradicted": contradicted, "uncovered": uncovered,
+394:             "claims": claims, "corrections": len(corrections)}
+395: 
+396: 
+397: def relative_to_repo(corrections, repo):
+398:     try:
+399:         return Path(os.path.realpath(corrections)).relative_to(
+400:             Path(os.path.realpath(repo))).as_posix()
+401:     except ValueError:
+402:         return PROVINCE_NAME
+403: 
+404: 
+405: def base_province(repo, rev, corrections):
+406:     rel = relative_to_repo(corrections, repo)
+407:     candidates = [rel] if rel == PROVINCE_NAME else [rel, PROVINCE_NAME]
+408:     errors = []
+409:     for candidate in candidates:
+410:         rc, out, err = git(repo, "show", f"{rev}:{candidate}")
+411:         if rc == 0:
+412:             return out
+413:         errors.append(f"{rev}:{candidate}: {err[:120] or 'no such object/path'}")
+414:     raise ProbeError("git show failed for " + "; ".join(errors))
+415: 
+416: 
+417: def draft_date(claims):
+418:     today = _dt.date.today()
+419:     latest = max((_dt.date.fromisoformat(claim["date"]) for claim in claims),
+420:                  default=_dt.date(1970, 1, 1))
+421:     chosen = today if today > latest else latest + _dt.timedelta(days=1)
+422:     return chosen.isoformat()
+423: 
+424: 
+425: def write_draft(path, claims, date):
+426:     target = Path(os.path.expanduser(path))
+427:     target.parent.mkdir(parents=True, exist_ok=True)
+428:     lines = [
+429:         "<!-- generated by tools/round71-province-host-claims.py --draft.",
+430:         "     One correction line per contradicted claim; each carries the live probe command",
+431:         "     and its output in the evidence field. Append verbatim to PROVINCE.md. -->",
+432:         "",
+433:     ]
+434:     written = 0
+435:     for claim in claims:
+436:         if not claim["contradicted"] or claim["covered"]:
+437:             continue
+438:         written += 1
+439:         lines.append(
+440:             f'- correction-on-host ({date}) `province-host:{claim["tag"]}` '
+441:             f'\u2014 {claim["live"]}: {claim["command"]} \u2192 {claim["evidence"]}')
+442:     lines.append("")
+443:     target.write_text("\n".join(lines), encoding="utf-8")
+444:     print(f"PROVINCE_HOST_CLAIMS_DRAFT path={target} lines={written}", file=sys.stderr)
+445:     return written
+446: 
+447: 
+448: def summary_of(stdout):
+449:     match = re.search(
+450:         r"^PROVINCE_HOST_CLAIMS markers=(\d+) tags=(\d+) extra=(\d+) "
+451:         r"contradicted=(\d+) uncovered=(\d+) exit=(\d+)$", stdout, re.M)
+452:     if not match:
+453:         return None
+454:     keys = ("markers", "tags", "extra", "contradicted", "uncovered", "exit")
+455:     return {key: int(value) for key, value in zip(keys, match.groups())}
+456: 
+457: 
+458: def main(argv=None):
+459:     parser = argparse.ArgumentParser(
+460:         description="Re-derive every PROVINCE.md host-surface claim on this host.")
+461:     parser.add_argument("--repo", default=".")
+462:     parser.add_argument("--base")
+463:     parser.add_argument("--corrections")
+464:     parser.add_argument("--json", action="store_true")
+465:     parser.add_argument("--draft")
+466:     parser.add_argument("--scratch")
+467:     parser.add_argument("--selftest", action="store_true")
+468:     parser.add_argument("--keep", action="store_true")
+469:     options = parser.parse_args(argv)
+470: 
+471:     created_scratch = options.scratch is None
+472:     try:
+473:         scratch_root = Path(os.path.expanduser(options.scratch)) if options.scratch \
+474:             else Path(tempfile.mkdtemp(prefix="r71-province-claims-"))
+475:         scratch_root.mkdir(parents=True, exist_ok=True)
+476:     except OSError as exc:
+477:         print(f"PROVINCE_HOST_CLAIMS could-not-evaluate: unusable --scratch root: {exc}",
+478:               file=sys.stderr)
+479:         return 2
+480:     try:
+481:         if options.selftest:
+482:             return selftest(scratch_root, options.keep)
+483:         repo = Path(os.path.expanduser(options.repo)).resolve()
+484:         corrections = Path(os.path.expanduser(options.corrections)).resolve() \
+485:             if options.corrections else repo / PROVINCE_NAME
+486:         if not corrections.is_file():
+487:             print(f"PROVINCE_HOST_CLAIMS could-not-evaluate: cannot read {corrections}",
+488:                   file=sys.stderr)
+489:             return 2
+490:         result = evaluate(str(corrections), str(scratch_root))
+491:         rewritten = []
+492:         if options.base:
+493:             base_text = base_province(str(repo), options.base, str(corrections))
+494:             _base_markers, base_tags = parse_markers(base_text)
+495:             tip_tags = {claim["tag"] for claim in result["claims"]
+496:                         if claim["kind"] == "marker"}
+497:             tip_text = corrections.read_text(encoding="utf-8")
+498:             base_paragraphs = marker_paragraphs(base_text)
+499:             tip_paragraphs = marker_paragraphs(tip_text)
+500:             rewritten = [tag for tag, paragraph in base_paragraphs.items()
+501:                          if tip_paragraphs.get(tag) != paragraph]
+502:             rewritten += [tag for tag in base_tags
+503:                           if tag not in tip_paragraphs and tag not in rewritten]
+504:         exit_code = 0 if result["uncovered"] == 0 and not rewritten else 1
+505:         if options.draft:
+506:             write_draft(options.draft, result["claims"], draft_date(result["claims"]))
+507:         if options.json:
+508:             payload = {
+509:                 "tool": "province-host-claims/v1",
+510:                 "repo": str(repo),
+511:                 "corrections": str(corrections),
+512:                 "base": options.base,
+513:                 "markers": result["markers"],
+514:                 "tags": result["tags"],
+515:                 "extra": result["extra"],
+516:                 "contradicted": result["contradicted"],
+517:                 "uncovered": result["uncovered"],
+518:                 "corrections_parsed": result["corrections"],
+519:                 "rewritten": rewritten,
+520:                 "exit": exit_code,
+521:                 "claims": result["claims"],
+522:             }
+523:             print(json.dumps(payload, ensure_ascii=False))
+524:             return exit_code
+525:         for claim in result["claims"]:
+526:             covered = "yes" if claim["covered"] else (
+527:                 "n/a" if not claim["contradicted"] else "no")
+528:             print(f'claim {claim["tag"]} kind={claim["kind"]} date={claim["date"]} '
+529:                   f'claim={claim["claim"]} live={claim["live"]} '
+530:                   f'contradicted={"yes" if claim["contradicted"] else "no"} '
+531:                   f'covered={covered} evidence="{claim["command"]} -> {claim["evidence"]}"')
+532:         for tag in rewritten:
+533:             print(f"PROVINCE_HOST_CLAIMS_REWRITTEN {tag}")
+534:         print(f'PROVINCE_HOST_CLAIMS markers={result["markers"]} tags={result["tags"]} '
+535:               f'extra={result["extra"]} contradicted={result["contradicted"]} '
+536:               f'uncovered={result["uncovered"]} exit={exit_code}')
+537:         return exit_code
+538:     except ProbeError as exc:
+539:         print(f"PROVINCE_HOST_CLAIMS could-not-evaluate: {exc}", file=sys.stderr)
+540:         return 2
+541:     finally:
+542:         if created_scratch:
+543:             shutil.rmtree(scratch_root, ignore_errors=True)
+544: 
+545: 
+546: def drop_marker_block(text, tag):
+547:     lines = text.splitlines(keepends=True)
+548:     out = []
+549:     i = 0
+550:     removed = False
+551:     while i < len(lines):
+552:         line = lines[i]
+553:         match = MARKER_OPEN_RE.match(line.rstrip("\n"))
+554:         if match and not removed:
+555:             j = i + 1
+556:             while j < len(lines) and lines[j].strip() and lines[j][0] in " \t":
+557:                 j += 1
+558:             block = "".join(lines[i:j])
+559:             if tag in block:
+560:                 i = j
+561:                 removed = True
+562:                 continue
+563:         out.append(line)
+564:         i += 1
+565:     if not removed:
+566:         raise ProbeError(f"fixture: no marker block names {tag}")
+567:     return "".join(out)
+568: 
+569: 
+570: def selftest(scratch_root, keep):
+571:     checks = []
+572: 
+573:     def check(name, ok, note):
+574:         checks.append((name, bool(ok), note))
+575: 
+576:     try:
+577:         base_text = base_province(str(LANE), BASE_REV, str(LANE / PROVINCE_NAME))
+578:     except ProbeError as exc:
+579:         print(f"[FAIL] base-fixture: {exc}")
+580:         print("PROVINCE_HOST_CLAIMS_SELFTEST pass=0 fail=1")
+581:         return 1
+582: 
+583:     root = scratch_root / "selftest"
+584:     shutil.rmtree(root, ignore_errors=True)
+585:     root.mkdir(parents=True, exist_ok=True)
+586: 
+587:     def run_tool(args):
+588:         proc = subprocess.run([sys.executable, str(TOOL), *args],
+589:                               capture_output=True, text=True, timeout=300)
+590:         return proc.returncode, proc.stdout, proc.stderr
+591: 
+592:     def fixture(name, text):
+593:         directory = root / name
+594:         directory.mkdir()
+595:         (directory / PROVINCE_NAME).write_text(text, encoding="utf-8")
+596:         return directory
+597: 
+598:     def correction_lines(claims, date, flip=None, flip_all=False):
+599:         lines = []
+600:         for claim in claims:
+601:             if not claim["contradicted"]:
+602:                 continue
+603:             verdict = claim["live"]
+604:             if flip_all or (flip and claim["tag"] == flip):
+605:                 verdict = "absent" if verdict == "present" else "present"
+606:             lines.append(
+607:                 f'- correction-on-host ({date}) `province-host:{claim["tag"]}` '
+608:                 f'\u2014 {verdict}: {claim["command"]} \u2192 {claim["evidence"]}')
+609:         return "\n".join(lines)
+610: 
+611:     # Arm 1: the frozen base text - contradicted claims exist and none is covered.
+612:     base_dir = fixture("f0-base", base_text)
+613:     rc, out, err = run_tool(["--repo", str(base_dir)])
+614:     parsed = summary_of(out)
+615:     check("base-uncovered",
+616:           rc == 1 and parsed is not None and parsed["markers"] == 11
+617:           and parsed["tags"] == 12 and parsed["extra"] == 4
+618:           and parsed["contradicted"] == parsed["uncovered"] and parsed["uncovered"] > 0,
+619:           f"rc={rc} summary={out.strip().splitlines()[-1] if out.strip() else err[:120]}")
+620: 
+621:     # The live claims (with probe verdicts) drive the generated corrections.
+622:     rc_json, json_out, json_err = run_tool(["--repo", str(base_dir), "--json"])
+623:     data = json.loads(json_out)
+624:     date = draft_date(data["claims"])
+625: 
+626:     # Arm 2: verdict-equal corrections for every contradicted claim -> uncovered 0.
+627:     corrected_dir = fixture("f1-corrected", base_text + "\n\n"
+628:                             + correction_lines(data["claims"], date) + "\n")
+629:     rc, out, _err = run_tool(["--repo", str(corrected_dir)])
+630:     parsed = summary_of(out)
+631:     check("corrected-covers",
+632:           rc == 0 and parsed is not None and parsed["uncovered"] == 0
+633:           and parsed["contradicted"] > 0,
+634:           f"rc={rc} contradicted={parsed and parsed['contradicted']} "
+635:           f"uncovered={parsed and parsed['uncovered']}")
+636: 
+637:     # Arm 3: one flipped verdict leaves exactly that claim uncovered.
+638:     flipped_tag = next((claim["tag"] for claim in data["claims"]
+639:                         if claim["contradicted"] and claim["kind"] == "marker"),
+640:                        next(claim["tag"] for claim in data["claims"] if claim["contradicted"]))
+641:     flipped_dir = fixture("f2-flipped", base_text + "\n\n"
+642:                           + correction_lines(data["claims"], date, flip=flipped_tag) + "\n")
+643:     rc, out, _err = run_tool(["--repo", str(flipped_dir)])
+644:     parsed = summary_of(out)
+645:     check("flipped-verdict",
+646:           rc == 1 and parsed is not None and parsed["uncovered"] == 1,
+647:           f"rc={rc} tag={flipped_tag} uncovered={parsed and parsed['uncovered']}")
+648: 
+649:     # Arm 4: the do-nothing shortcut - every correction tag-correct, every verdict
+650:     # flipped (appended without probing the host) - covers nothing.
+651:     shortcut_dir = fixture("f2b-shortcut", base_text + "\n\n"
+652:                            + correction_lines(data["claims"], date, flip_all=True) + "\n")
+653:     rc, out, _err = run_tool(["--repo", str(shortcut_dir)])
+654:     parsed = summary_of(out)
+655:     check("shortcut-all-flipped",
+656:           rc == 1 and parsed is not None
+657:           and parsed["uncovered"] == parsed["contradicted"] and parsed["uncovered"] > 0,
+658:           f"rc={rc} contradicted={parsed and parsed['contradicted']} "
+659:           f"uncovered={parsed and parsed['uncovered']}")
+660: 
+661:     # Arm 5: a wrong tag covers nothing.
+662:     wrong_dir = fixture("f3-wrongtag", base_text + f"\n\n"
+663:                         f"- correction-on-host ({date}) `province-host:not-a-declared-surface` "
+664:                         f"\u2014 absent: fixture\n")
+665:     rc, out, _err = run_tool(["--repo", str(wrong_dir)])
+666:     parsed = summary_of(out)
+667:     check("wrong-tag",
+668:           rc == 1 and parsed is not None and parsed["uncovered"] == parsed["contradicted"]
+669:           and parsed["uncovered"] > 0,
+670:           f"rc={rc} contradicted={parsed and parsed['contradicted']} "
+671:           f"uncovered={parsed and parsed['uncovered']}")
+672: 
+673:     # Arm 6: deleting a base marker line trips the rewrite check.
+674:     rewrite_repo = root / "f4-rewritten"
+675:     rewrite_repo.mkdir()
+676:     (rewrite_repo / PROVINCE_NAME).write_text(base_text, encoding="utf-8")
+677:     rc, _out, err = git(rewrite_repo, "init", "-q")
+678:     if rc != 0:
+679:         check("rewritten-marker", False, f"git init failed: {err[:120]}")
+680:     else:
+681:         rc, top, err = git(rewrite_repo, "rev-parse", "--show-toplevel")
+682:         if rc != 0 or os.path.realpath(top) != os.path.realpath(str(rewrite_repo)):
+683:             check("rewritten-marker", False, f"toplevel assertion failed: {top or err}")
+684:         else:
+685:             rc, _out, err = git(rewrite_repo, "add", PROVINCE_NAME)
+686:             rc2, _out2, err2 = git(rewrite_repo, "-c", "user.name=kama-r71",
+687:                                    "-c", "user.email=kama-r71@example.invalid",
+688:                                    "commit", "-q", "-m", "fixture base")
+689:             rev = git(rewrite_repo, "rev-parse", "HEAD")[1]
+690:             if rc != 0 or rc2 != 0 or not rev:
+691:                 check("rewritten-marker", False, f"fixture commit failed: {err or err2}")
+692:             else:
+693:                 (rewrite_repo / PROVINCE_NAME).write_text(
+694:                     drop_marker_block(base_text, "qwen-coder-unit"), encoding="utf-8")
+695:                 rc, out, err = run_tool(
+696:                     ["--repo", str(rewrite_repo), "--base", rev])
+697:                 check("rewritten-marker",
+698:                       rc == 1 and "PROVINCE_HOST_CLAIMS_REWRITTEN qwen-coder-unit" in out,
+699:                       f"rc={rc} rewritten_line="
+700:                       f"{'yes' if 'PROVINCE_HOST_CLAIMS_REWRITTEN qwen-coder-unit' in out else 'no'}")
+701: 
+702:     # Arm 7: no contradicted marker and every extra covered -> exit 0.
+703:     clean_dir = fixture("f5-clean",
+704:                         "# province fixture\n\n"
+705:                         "- absent-on-this-host (2026-10-31) "
+706:                         "`province-host:qwen-coder-unit` \u2014 fixture paragraph "
+707:                         "naming no other surface.\n")
+708:     rc, out, err = run_tool(["--repo", str(clean_dir), "--json"])
+709:     clean_data = json.loads(out)
+710:     clean_text = (clean_dir / PROVINCE_NAME).read_text(encoding="utf-8")
+711:     clean_text += "\n" + correction_lines(clean_data["claims"], date) + "\n"
+712:     (clean_dir / PROVINCE_NAME).write_text(clean_text, encoding="utf-8")
+713:     rc, out, _err = run_tool(["--repo", str(clean_dir)])
+714:     parsed = summary_of(out)
+715:     check("no-contradiction",
+716:           rc == 0 and parsed is not None and parsed["uncovered"] == 0
+717:           and parsed["extra"] == 4,
+718:           f"rc={rc} uncovered={parsed and parsed['uncovered']} "
+719:           f"contradicted={parsed and parsed['contradicted']}")
+720: 
+721:     if not keep:
+722:         shutil.rmtree(root, ignore_errors=True)
+723:     failures = [item for item in checks if not item[1]]
+724:     for name, ok, note in checks:
+725:         print(f"[{'PASS' if ok else 'FAIL'}] {name}: {note}")
+726:     print(f"PROVINCE_HOST_CLAIMS_SELFTEST pass={len(checks) - len(failures)} "
+727:           f"fail={len(failures)}")
+728:     return 0 if not failures else 1
+729: 
+730: 
+731: if __name__ == "__main__":
+732:     sys.exit(main())

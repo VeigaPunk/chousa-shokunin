@@ -1,0 +1,157 @@
+# V72-1 isolated harness: two independent runs; gate never executed.
+
+# Run 1/2
+$ TMPDIR=/fast/scratch/hyaku/chousa-r73/w1/R73E01 bash /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-73/w1/R73E01/v72-killline-harness.sh
+# Each bash probe below is invoked directly, not in an if/AND/OR context.
+$ cat grep-and-list.sh
+#!/usr/bin/env bash
+set -euo pipefail
+p36_ok=1
+grep -q '^GATE_GREP: ' -- missing-r36-pin.txt && p36_ok=0
+rc=$?
+printf 'GREP_LIST_RC=%d\n' "$rc"
+printf 'GREP_LIST_SURVIVED\n'
+rc=0
+$ cat child-exit-2.sh
+#!/usr/bin/env bash
+printf 'CHILD_DESIGNED_RC=2\n'
+exit 2
+rc=0
+$ cat unguarded-assignment.sh
+#!/usr/bin/env bash
+set -euo pipefail
+printf 'UNGUARDED_ASSIGNMENT_ENTERED\n'
+p36_out=$(bash child-exit-2.sh 2>&1)
+printf 'UNGUARDED_ASSIGNMENT_AFTER_MARKER\n'
+rc=0
+$ cat guarded-if.sh
+#!/usr/bin/env bash
+set -euo pipefail
+if p36_out=$(bash child-exit-2.sh 2>&1); then
+  printf 'UNEXPECTED_ASSIGNMENT_SUCCESS\n'
+  exit 1
+else
+  rc=$?
+  printf 'IF_ASSIGNMENT_RC=%d captured=%s\n' "$rc" "$p36_out"
+fi
+printf 'IF_ASSIGNMENT_SURVIVED\n'
+# The final pipeline command succeeds; pipefail must propagate the child rc=2.
+if bash child-exit-2.sh | cat; then
+  printf 'UNEXPECTED_PIPELINE_SUCCESS\n'
+  exit 1
+else
+  rc=$?
+  printf 'IF_PIPELINE_RC=%d\n' "$rc"
+fi
+printf 'IF_PIPELINE_SURVIVED\n'
+rc=0
+$ bash grep-and-list.sh
+grep: missing-r36-pin.txt: No such file or directory
+GREP_LIST_RC=2
+GREP_LIST_SURVIVED
+rc=0
+EXPECT grep-list-status: PASS
+EXPECT grep-list-survival: PASS
+$ bash child-exit-2.sh
+CHILD_DESIGNED_RC=2
+rc=2
+EXPECT child-designed-status: PASS
+$ bash unguarded-assignment.sh
+UNGUARDED_ASSIGNMENT_ENTERED
+rc=2
+EXPECT assignment-terminates: PASS
+$ bash guarded-if.sh
+IF_ASSIGNMENT_RC=2 captured=CHILD_DESIGNED_RC=2
+IF_ASSIGNMENT_SURVIVED
+CHILD_DESIGNED_RC=2
+IF_PIPELINE_RC=2
+IF_PIPELINE_SURVIVED
+rc=0
+EXPECT guarded-assignment-status: PASS
+EXPECT guarded-assignment-survival: PASS
+EXPECT guarded-pipeline-status: PASS
+EXPECT guarded-pipeline-survival: PASS
+HARNESS: PASS expectations=8/8
+rc=0
+
+# Run 2/2
+$ TMPDIR=/fast/scratch/hyaku/chousa-r73/w1/R73E01 bash /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-73/w1/R73E01/v72-killline-harness.sh
+# Each bash probe below is invoked directly, not in an if/AND/OR context.
+$ cat grep-and-list.sh
+#!/usr/bin/env bash
+set -euo pipefail
+p36_ok=1
+grep -q '^GATE_GREP: ' -- missing-r36-pin.txt && p36_ok=0
+rc=$?
+printf 'GREP_LIST_RC=%d\n' "$rc"
+printf 'GREP_LIST_SURVIVED\n'
+rc=0
+$ cat child-exit-2.sh
+#!/usr/bin/env bash
+printf 'CHILD_DESIGNED_RC=2\n'
+exit 2
+rc=0
+$ cat unguarded-assignment.sh
+#!/usr/bin/env bash
+set -euo pipefail
+printf 'UNGUARDED_ASSIGNMENT_ENTERED\n'
+p36_out=$(bash child-exit-2.sh 2>&1)
+printf 'UNGUARDED_ASSIGNMENT_AFTER_MARKER\n'
+rc=0
+$ cat guarded-if.sh
+#!/usr/bin/env bash
+set -euo pipefail
+if p36_out=$(bash child-exit-2.sh 2>&1); then
+  printf 'UNEXPECTED_ASSIGNMENT_SUCCESS\n'
+  exit 1
+else
+  rc=$?
+  printf 'IF_ASSIGNMENT_RC=%d captured=%s\n' "$rc" "$p36_out"
+fi
+printf 'IF_ASSIGNMENT_SURVIVED\n'
+# The final pipeline command succeeds; pipefail must propagate the child rc=2.
+if bash child-exit-2.sh | cat; then
+  printf 'UNEXPECTED_PIPELINE_SUCCESS\n'
+  exit 1
+else
+  rc=$?
+  printf 'IF_PIPELINE_RC=%d\n' "$rc"
+fi
+printf 'IF_PIPELINE_SURVIVED\n'
+rc=0
+$ bash grep-and-list.sh
+grep: missing-r36-pin.txt: No such file or directory
+GREP_LIST_RC=2
+GREP_LIST_SURVIVED
+rc=0
+EXPECT grep-list-status: PASS
+EXPECT grep-list-survival: PASS
+$ bash child-exit-2.sh
+CHILD_DESIGNED_RC=2
+rc=2
+EXPECT child-designed-status: PASS
+$ bash unguarded-assignment.sh
+UNGUARDED_ASSIGNMENT_ENTERED
+rc=2
+EXPECT assignment-terminates: PASS
+$ bash guarded-if.sh
+IF_ASSIGNMENT_RC=2 captured=CHILD_DESIGNED_RC=2
+IF_ASSIGNMENT_SURVIVED
+CHILD_DESIGNED_RC=2
+IF_PIPELINE_RC=2
+IF_PIPELINE_SURVIVED
+rc=0
+EXPECT guarded-assignment-status: PASS
+EXPECT guarded-assignment-survival: PASS
+EXPECT guarded-pipeline-status: PASS
+EXPECT guarded-pipeline-survival: PASS
+HARNESS: PASS expectations=8/8
+rc=0
+
+$ cmp run-1.txt run-2.txt
+rc=0
+
+$ sha256sum run-1.txt run-2.txt
+a709b53594e0706447efda25c4c604bef24c17ddb5e9422762e338cce21a8bb8  run-1.txt
+a709b53594e0706447efda25c4c604bef24c17ddb5e9422762e338cce21a8bb8  run-2.txt
+rc=0

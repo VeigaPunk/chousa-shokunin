@@ -1,0 +1,1142 @@
+lane_revision=bc9e30599b6c6133bb094f0e7abd1a9f512778ec
+source=tools/kama-probe.sh
+git_show_rc=0
+1: #!/usr/bin/env bash
+2: # kama-probe.sh — loopback model-endpoint probe + consumer-registry reconciler.
+3: #
+4: # Domain: local model serving & endpoint health (kama-shokunin).
+5: # Answers exactly one question: "is the thing at this baseURL the model this config
+6: # believes it is, right now" — never "is the model good" (kengaku) or "is the request
+7: # safe" (kagi).
+8: #
+9: # Read-only toward live services and consumer configs. listeners/consumers/check
+10: # write only to a removed mktemp dir. snapshot additionally writes inside its
+11: # explicit history dir. Non-snapshot output is byte-stable for identical state;
+12: # snapshot intentionally carries UTC ids/timestamps and a predecessor link.
+13: #
+14: # Subcommands:
+15: #   listeners   enumerate loopback TCP listeners (ss -ltn) and classify each
+16: #   consumers   resolve each registry consumer's declared baseURL FROM ITS OWN FILE
+17: #               (never from the TSV text) and report declared-vs-actual
+18: #   check       reconcile registry entries against live classification (exit gate)
+19: #   snapshot    run the check evaluation AND persist it: dated JSON + a TSV baseline
+20: #               + a transition ledger under a history dir. On every run after the
+21: #               first, each row is diffed against the previous baseline and verdict/
+22: #               served-model/port/file-match transitions are appended to DELTA.md —
+23: #               the bounded drift window a manual `check` cannot give (v4 contract).
+24: #
+25: # Common flags: --json  --registry PATH  --timeout S  --connect-timeout S  --help
+26: # Matrix flags: --port N  --expect ID  --id KEY | snapshot-only: --history DIR
+27: #
+28: # Verdict vocabulary (exact strings):
+29: #   MODEL_OK MODEL_MISMATCH FOREIGN_SERVICE UNAUTHORIZED_SERVICE DEAD NOT_HTTP
+30: #   MODEL_LOADING
+31: #
+32: # MODEL_LOADING: GET /v1/models answered 503 with the exact llama.cpp single-model
+33: # loading envelope {"error":{"message":"Loading model","type":"unavailable_error","code":503}}
+34: # (b11755 tools/server/server-http.cpp:307-328). Not ready; drift, so `check` and
+35: # `snapshot` exit 2 (`listeners` and `consumers` report it without gating). A
+36: # body-shape match only — runtime identity and served model are unverified. The
+37: # router's own /v1/models never answers with it; requires python3 (without it the
+38: # body keeps FOREIGN_SERVICE).
+39: #
+40: # Exit codes: 0 every declared consumer reconciles | 2 at least one drift
+41: #             1 probe error (bad arg, missing dep, unreadable registry) — never a verdict
+42: #
+43: # Served-id rules (contract v2):
+44: #   extraction precedence, first non-empty wins:
+45: #     data[].id -> models[].id -> models[].name -> models[].model -> top-level id
+46: #   both served and expected ids are NORMALISED before comparison: drop the directory
+47: #   (basename) then strip ONE trailing ".gguf"; comparison is case-sensitive.
+48: #   If normalisation leaves either side empty -> MODEL_MISMATCH, reason unresolvable-id.
+49: # History layout (snapshot; DIR default <repo>/registry/history, override --history):
+50: #   <ISO-UTC>.json   dated, persistence-safe row state (schema kama-probe/v2)
+51: #   latest.tsv       baseline, one row per consumer: id,verdict,reason,served,port,fmatch
+52: #   DELTA.md         append-only ledger; one line per transition, "<ts> id field old->new"
+53: # First run writes a "baseline" line and records no transitions. A corrupt or
+54: # unreadable latest.tsv rebaselines (warned + noted) rather than breaking the
+55: # gate. snapshot refuses --port mode: a matrix probe has no registry baseline.
+56: # Persisted rows exclude evidence, notes, resolved URLs and raw model paths;
+57: # served ids use the same basename/.gguf normalization as identity comparison.
+58: #
+59: # Deps: ss, curl, flock, coreutils. python3 optional (exact JSON-pointer/model-id
+60: # parsing and generated-JSON validation; grep fallbacks used when absent).
+61: set -euo pipefail
+62: umask 077
+63: 
+64: VOCAB="MODEL_OK MODEL_MISMATCH FOREIGN_SERVICE UNAUTHORIZED_SERVICE DEAD NOT_HTTP MODEL_LOADING"
+65: 
+66: SELF_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+67: REPO_ROOT=$(cd -- "$SELF_DIR/.." && pwd)
+68: REGISTRY_DEFAULT="$REPO_ROOT/registry/endpoint-consumers.tsv"
+69: 
+70: TIMEOUT=5
+71: CONNECT_TIMEOUT=2
+72: JSON_OUT=0
+73: OPT_PORT=""
+74: OPT_EXPECT=""
+75: OPT_ID=""
+76: OPT_REGISTRY="$REGISTRY_DEFAULT"
+77: OPT_HISTORY="$REPO_ROOT/registry/history"
+78: OPT_UFO_SRC=""
+79: SUBCOMMAND=""
+80: 
+81: HAVE_PY=0
+82: command -v python3 >/dev/null 2>&1 && HAVE_PY=1
+83: 
+84: TMP_ROOT=""
+85: F_RC=0 F_CODE=000 F_CT="" F_SIZE=0 F_SERVER="" F_ERRMSG=""
+86: FBODY="" FHDR="" FERR=""
+87: C_VERDICT='' C_SERVED='-' C_EVIDENCE='' C_REASON=''
+88: 
+89: warn() { printf '[kama-probe] %s\n' "$*" >&2; }
+90: die()  { printf 'kama-probe: %s\n' "$*" >&2; exit 1; }
+91: 
+92: cleanup() { [ -n "$TMP_ROOT" ] && [ -d "$TMP_ROOT" ] && rm -rf -- "$TMP_ROOT"; return 0; }
+93: trap cleanup EXIT INT TERM
+94: 
+95: usage() {
+96:   cat <<'EOF'
+97: usage: kama-probe.sh <listeners|consumers|check|snapshot> [flags]
+98: 
+99:   listeners            enumerate loopback TCP listeners and classify each
+100:   consumers            resolve each registry consumer's baseURL from its own file
+101:   check                reconcile registry entries against live classification
+102:   snapshot             check + persist: dated JSON, TSV baseline, DELTA.md ledger
+103:                        under a history dir (see the header contract)
+104: 
+105: flags:
+106:   --json               emit JSON on stdout (diagnostics stay on stderr)
+107:   --port N             probe only port N (single-port mode; pair with --expect for matrices)
+108:   --expect ID          expected model id for --port mode ("*" or "-" = any)
+109:   --id KEY             row id to label --port mode with (default cli-override)
+110:   --registry PATH      registry TSV to use (default registry/endpoint-consumers.tsv)
+111:   --history DIR        snapshot history dir (default registry/history; snapshot only)
+112:   --ufo-src DIR        ufo-fsd-alpha checkout for '$UFO_SRC/...' registry rows
+113:                        (default: $UFO_SRC env, else first existing of
+114:                        ~/Projects/ufo-fsd-alpha then ~/Projects/origin-work/ufo-fsd-alpha;
+115:                        if none exists, $UFO_SRC rows resolve as file=missing)
+116:   --timeout S          per-request curl --max-time in seconds (default 5)
+117:   --connect-timeout S  per-request curl --connect-timeout in seconds (default 2)
+118: 
+119: verdicts: MODEL_OK MODEL_MISMATCH FOREIGN_SERVICE UNAUTHORIZED_SERVICE DEAD NOT_HTTP MODEL_LOADING
+120: exit: 0 reconciled | 2 drift | 1 probe error
+121: EOF
+122: }
+123: 
+124: parse_args() {
+125:   while [ $# -gt 0 ]; do
+126:     case "$1" in
+127:       listeners|consumers|check|snapshot) [ -z "$SUBCOMMAND" ] && SUBCOMMAND=$1 || die "duplicate subcommand: $1" ;;
+128:       --json) JSON_OUT=1 ;;
+129:       --port) shift; [ $# -gt 0 ] || die "--port needs a value"; OPT_PORT=$1 ;;
+130:       --port=*) OPT_PORT=${1#*=} ;;
+131:       --expect) shift; [ $# -gt 0 ] || die "--expect needs a value"; OPT_EXPECT=$1 ;;
+132:       --expect=*) OPT_EXPECT=${1#*=} ;;
+133:       --id) shift; [ $# -gt 0 ] || die "--id needs a value"; OPT_ID=$1 ;;
+134:       --id=*) OPT_ID=${1#*=} ;;
+135:       --registry) shift; [ $# -gt 0 ] || die "--registry needs a value"; OPT_REGISTRY=$1 ;;
+136:       --registry=*) OPT_REGISTRY=${1#*=} ;;
+137:       --timeout) shift; [ $# -gt 0 ] || die "--timeout needs a value"; TIMEOUT=$1 ;;
+138:       --timeout=*) TIMEOUT=${1#*=} ;;
+139:       --connect-timeout) shift; [ $# -gt 0 ] || die "--connect-timeout needs a value"; CONNECT_TIMEOUT=$1 ;;
+140:       --connect-timeout=*) CONNECT_TIMEOUT=${1#*=} ;;
+141:       --history) shift; [ $# -gt 0 ] || die "--history needs a value"; OPT_HISTORY=$1 ;;
+142:       --ufo-src) shift; [ $# -gt 0 ] || die "--ufo-src needs a value"; OPT_UFO_SRC=$1 ;;
+143:       --ufo-src=*) OPT_UFO_SRC=${1#*=} ;;
+144:       --history=*) OPT_HISTORY=${1#*=} ;;
+145:       --help|-h) usage; exit 0 ;;
+146:       *) die "unknown argument: $1 (see --help)" ;;
+147:     esac
+148:     shift
+149:   done
+150:   if [ -n "$OPT_UFO_SRC" ]; then
+151:     [ -d "$OPT_UFO_SRC" ] || die "--ufo-src is not a directory: $OPT_UFO_SRC"
+152:   fi
+153:   [ -n "$SUBCOMMAND" ] || { usage >&2; exit 1; }
+154:   local v
+155:   for v in "$TIMEOUT" "$CONNECT_TIMEOUT"; do
+156:     case "$v" in ''|*[!0-9]*) die "timeouts must be positive integers" ;; esac
+157:     [ "$v" -ge 1 ] || die "timeouts must be >= 1"
+158:   done
+159:   if [ -n "$OPT_PORT" ]; then
+160:     case "$OPT_PORT" in *[!0-9]*|'') die "--port must be a numeric port" ;; esac
+161:     { [ "$OPT_PORT" -ge 1 ] && [ "$OPT_PORT" -le 65535 ]; } || die "--port out of range: $OPT_PORT"
+162:   fi
+163:   if [ -n "$OPT_EXPECT" ] && [ -z "$OPT_PORT" ]; then
+164:     die "--expect is only meaningful with --port (matrix mode)"
+165:   fi
+166:   if [ "$SUBCOMMAND" = "snapshot" ] && [ -n "$OPT_PORT" ]; then
+167:     die "snapshot refuses --port: a matrix probe has no registry baseline to persist"
+168:   fi
+169: }
+170: 
+171: # ---------------------------------------------------------------- json helpers
+172: jstr() { # $1 -> JSON string literal
+173:   local s=${1-}
+174:   s=${s//\\/\\\\}
+175:   s=${s//\"/\\\"}
+176:   s=${s//$'\t'/\\t}
+177:   s=${s//$'\n'/\\n}
+178:   s=${s//$'\r'/\\r}
+179:   printf '"%s"' "$s"
+180: }
+181: 
+182: emit_json() { # $1 = JSON text; validated/normalised when python3 is present
+183:   if [ "$HAVE_PY" -eq 1 ]; then
+184:     if ! printf '%s\n' "$1" | python3 -c 'import json,sys; print(json.dumps(json.load(sys.stdin), indent=2))'; then
+185:       die "internal error: generated JSON failed to parse (this is a probe bug)"
+186:     fi
+187:   else
+188:     printf '%s\n' "$1"
+189:   fi
+190: }
+191: 
+192: json_array() { # rows on argv, each already a JSON object -> array body (no trailing comma)
+193:   local out='' first=1 r
+194:   for r in "$@"; do
+195:     if [ "$first" -eq 1 ]; then out=$r; first=0; else out="$out,"$'\n'"$r"; fi
+196:   done
+197:   printf '%s' "$out"
+198: }
+199: 
+200: # ---------------------------------------------------------------- table render
+201: print_table() { # rows on stdin, tab-separated; first row is the header
+202:   local -a rows=() widths=()
+203:   local line
+204:   while IFS= read -r line; do
+205:     [ -n "$line" ] && rows+=("$line")
+206:   done
+207:   [ ${#rows[@]} -eq 0 ] && return 0
+208: 
+209:   local row ncol=0 i
+210:   for row in "${rows[@]}"; do
+211:     local -a c=()
+212:     IFS=$'\t' read -r -a c <<< "$row"
+213:     for ((i=0; i<${#c[@]}; i++)); do
+214:       local L=${#c[i]}
+215:       [ "$L" -gt "${widths[i]:-0}" ] && widths[i]=$L
+216:     done
+217:     [ ${#c[@]} -gt "$ncol" ] && ncol=${#c[@]}
+218:   done
+219: 
+220:   local out pad
+221:   for row in "${rows[@]}"; do
+222:     local -a c=()
+223:     IFS=$'\t' read -r -a c <<< "$row"
+224:     out=""
+225:     for ((i=0; i<ncol; i++)); do
+226:       if [ "$i" -eq $((ncol-1)) ]; then
+227:         out+="${c[i]:-}"
+228:       else
+229:         printf -v pad '%-*s' "${widths[i]:-0}" "${c[i]:-}"
+230:         out+="$pad | "
+231:       fi
+232:     done
+233:     printf '%s\n' "$out"
+234:   done
+235: }
+236: 
+237: # ---------------------------------------------------------------- listeners
+238: declare -a SS_LINES=()
+239: declare -A OWNER=()
+240: 
+241: load_listeners() {
+242:   local line
+243:   SS_LINES=()
+244:   while IFS= read -r line; do
+245:     [ -n "$line" ] && SS_LINES+=("$line")
+246:   done < <(ss -ltnpH 2>/dev/null || ss -ltnH 2>/dev/null || true)
+247: 
+248:   local st rq sq localaddr peer rest name pid port
+249:   for line in "${SS_LINES[@]}"; do
+250:     # shellcheck disable=SC2086,SC2034
+251:     read -r st rq sq localaddr peer rest <<< "$line"
+252:     [ -n "${localaddr:-}" ] || continue
+253:     port=${localaddr##*:}
+254:     case "$port" in *[!0-9]*|'') continue ;; esac
+255:     rest=${rest:-}
+256:     if [ -n "$rest" ]; then
+257:       name=$(sed -E 's/.*users:\(\(\"([^\"]+)\".*/\1/' <<< "$rest")
+258:       pid=$(sed -E 's/.*pid=([0-9]+).*/\1/' <<< "$rest")
+259:       if [ "$name" != "$rest" ] && [ "$pid" != "$rest" ] && [ -z "${OWNER[$port]:-}" ]; then
+260:         OWNER[$port]="$name(pid=$pid)"
+261:       fi
+262:     fi
+263:     [ -n "${OWNER[$port]:-}" ] || OWNER[$port]="-"
+264:   done
+265: }
+266: 
+267: # -> sorted unique "port<TAB>scope" lines
+268: loopback_ports() {
+269:   local line st rq sq localaddr peer rest addr port scope
+270:   for line in "${SS_LINES[@]}"; do
+271:     # shellcheck disable=SC2086,SC2034
+272:     read -r st rq sq localaddr peer rest <<< "$line"
+273:     [ -n "${localaddr:-}" ] || continue
+274:     addr=${localaddr%:*}
+275:     port=${localaddr##*:}
+276:     case "$port" in *[!0-9]*|'') continue ;; esac
+277:     scope=""
+278:     case "$addr" in
+279:       127.*|"[::1]"|"::1") scope=loopback ;;
+280:       0.0.0.0|"[::]"|"::"|"*") scope=wildcard ;;
+281:     esac
+282:     [ -n "$scope" ] && printf '%s\t%s\n' "$port" "$scope"
+283:   done | sort -n -u -k1,1
+284: }
+285: 
+286: # ---------------------------------------------------------------- fetch
+287: # shellcheck disable=SC2034
+288: fetch() { # $1 port, $2 path, $3 tag -> sets F_*
+289:   local port=$1 path=$2 tag=$3
+290:   FBODY="$TMP_ROOT/$tag.body"
+291:   FHDR="$TMP_ROOT/$tag.hdr"
+292:   FERR="$TMP_ROOT/$tag.err"
+293:   local w rc=0
+294:   w=$(curl -sS --noproxy '*' --connect-timeout "$CONNECT_TIMEOUT" --max-time "$TIMEOUT" \
+295:         -o "$FBODY" -D "$FHDR" \
+296:         -w '%{http_code}|%{content_type}|%{size_download}' \
+297:         "http://127.0.0.1:$port$path" 2>"$FERR") || rc=$?
+298:   F_RC=$rc
+299:   F_CODE=${w%%|*}
+300:   w=${w#*|}
+301:   F_CT=${w%%|*}
+302:   F_SIZE=${w##*|}
+303:   F_SERVER=""
+304:   if [ -f "$FHDR" ]; then
+305:     F_SERVER=$(grep -i '^server:' "$FHDR" 2>/dev/null | head -n1 | sed -E 's/^[Ss]erver:[[:space:]]*//; s/\r$//' || true)
+306:   fi
+307:   F_ERRMSG=""
+308:   if [ -s "$FERR" ]; then
+309:     F_ERRMSG=$(head -n1 "$FERR" | sed -E 's/^curl: \([0-9]+\) //' || true)
+310:   fi
+311: }
+312: 
+313: # A foreign service can answer 200 on a non-model path (jvb's /metrics on 8080 returns
+314: # openmetrics). Recording it shows why a status-code-only liveness check false-passes.
+315: metrics_trap() { # $1 port -> "" or "; GET /metrics -> ... (status-only liveness would false-pass)"
+316:   local m
+317:   m=$(probe_short "$1" "/metrics")
+318:   case "$m" in
+319:     200\|*) printf '; GET /metrics -> %s (status-only liveness would false-pass)' "$m" ;;
+320:     *) printf '' ;;
+321:   esac
+322: }
+323: 
+324: probe_short() { # $1 port, $2 path -> "code|ct" or "err-<rc>"
+325:   local port=$1 path=$2 rc=0 w
+326:   w=$(curl -sS --noproxy '*' --connect-timeout "$CONNECT_TIMEOUT" --max-time "$TIMEOUT" \
+327:         -o /dev/null -w '%{http_code}|%{content_type}' \
+328:         "http://127.0.0.1:$port$path" 2>/dev/null) || rc=$?
+329:   if [ "$rc" -eq 0 ]; then printf '%s' "$w"; else printf 'err-%s' "$rc"; fi
+330: }
+331: 
+332: # ---------------------------------------------------------------- model ids
+333: # extraction precedence, first non-empty group wins:
+334: #   data[].id -> models[].id -> models[].name -> models[].model -> top-level id
+335: served_ids() { # $1 body -> one id per line
+336:   local body=$1
+337:   if [ "$HAVE_PY" -eq 1 ]; then
+338:     python3 - "$body" <<'PY' 2>/dev/null || true
+339: import json, sys
+340: try:
+341:     doc = json.load(open(sys.argv[1]))
+342: except Exception:
+343:     sys.exit(0)
+344: if not isinstance(doc, dict):
+345:     sys.exit(0)
+346: 
+347: def group(seq, key):
+348:     out = []
+349:     if isinstance(seq, list):
+350:         for item in seq:
+351:             if isinstance(item, dict):
+352:                 v = item.get(key)
+353:                 if isinstance(v, str) and v:
+354:                     out.append(v)
+355:     return out
+356: 
+357: groups = [
+358:     group(doc.get("data"), "id"),
+359:     group(doc.get("models"), "id"),
+360:     group(doc.get("models"), "name"),
+361:     group(doc.get("models"), "model"),
+362:     [doc["id"]] if isinstance(doc.get("id"), str) and doc.get("id") else [],
+363: ]
+364: for g in groups:
+365:     if g:
+366:         print("\n".join(dict.fromkeys(g)))
+367:         break
+368: PY
+369:     return 0
+370:   fi
+371:   # grep fallback: approximate the same precedence ("id" before "model"/"name")
+372:   local out
+373:   out=$({ grep -oE '"id"[[:space:]]*:[[:space:]]*"[^"]*"' "$body" 2>/dev/null || true; } | sed -E 's/.*:[[:space:]]*"//; s/"$//' || true)
+374:   [ -n "$out" ] && { printf '%s\n' "$out"; return 0; }
+375:   { grep -oE '"model"[[:space:]]*:[[:space:]]*"[^"]*"' "$body" 2>/dev/null || true; } |
+376:     sed -E 's/.*:[[:space:]]*"//; s/"$//' || true
+377: }
+378: 
+379: # drop directory, strip ONE trailing .gguf
+380: normalize_id() { local s=${1-}; s=${s##*/}; s=${s%.gguf}; printf '%s' "$s"; }
+381: 
+382: # $1 newline-joined served ids, $2 expected id -> 0 match, 1 mismatch, 2 unresolvable
+383: model_matches() {
+384:   local served=$1 expected=$2
+385:   local exp_n; exp_n=$(normalize_id "$expected")
+386:   [ -n "$exp_n" ] || return 2
+387:   local s sn found=0
+388:   while IFS= read -r s; do
+389:     [ -n "$s" ] || continue
+390:     sn=$(normalize_id "$s")
+391:     [ -n "$sn" ] || continue
+392:     found=1
+393:     [ "$sn" = "$exp_n" ] && return 0
+394:   done <<< "$served"
+395:   [ "$found" -eq 0 ] && return 2
+396:   return 1
+397: }
+398: 
+399: # A model array must be PRESENT for MODEL_OK. v3: a status code or a `Server: llama.cpp`
+400: # header is never proof on its own.
+401: body_has_model_array() { # $1 body -> 0 when data[] or models[] is present
+402:   local body=$1
+403:   if [ "$HAVE_PY" -eq 1 ]; then
+404:     python3 - "$body" <<'PY' 2>/dev/null
+405: import json, sys
+406: try:
+407:     doc = json.load(open(sys.argv[1]))
+408: except Exception:
+409:     sys.exit(1)
+410: if not isinstance(doc, dict):
+411:     sys.exit(1)
+412: for key in ("data", "models"):
+413:     if isinstance(doc.get(key), list):
+414:         sys.exit(0)
+415: sys.exit(1)
+416: PY
+417:     return $?
+418:   fi
+419:   grep -qE '"(data|models)"[[:space:]]*:[[:space:]]*\[' "$body" 2>/dev/null
+420: }
+421: 
+422: # llama.cpp loading gate (b11755 tools/server/server-http.cpp:307-325): while
+423: # is_ready is false every non-frontend path returns 503 with the exact envelope
+424: # {"error":{"message":"Loading model","type":"unavailable_error","code":503}}.
+425: # That is not-ready drift; the body shape does not prove the runtime. Exact match only —
+426: # any deviation (e.g. "no slot available" unavailable_error, code as string or
+427: # float, non-503 status) falls through to the generic path. Requires python3:
+428: # a grep approximation cannot prove the exact envelope, so without python3 the
+429: # body keeps its old FOREIGN_SERVICE verdict (fail closed, never false-pass).
+430: body_is_llamacpp_loading() { # $1 body file -> 0 only on the exact loading envelope
+431:   [ "$HAVE_PY" -eq 1 ] || return 1
+432:   python3 - "$1" <<'PY' 2>/dev/null
+433: import json, sys
+434: try:
+435:     doc = json.load(open(sys.argv[1]))
+436: except Exception:
+437:     sys.exit(1)
+438: if not isinstance(doc, dict):
+439:     sys.exit(1)
+440: err = doc.get("error")
+441: if not isinstance(err, dict):
+442:     sys.exit(1)
+443: code = err.get("code")
+444: if err.get("message") == "Loading model" and err.get("type") == "unavailable_error" \
+445:         and not isinstance(code, bool) and isinstance(code, int) and code == 503:
+446:     sys.exit(0)
+447: sys.exit(1)
+448: PY
+449: }
+450: 
+451: # ---------------------------------------------------------------- classify
+452: # shellcheck disable=SC2034
+453: classify() { # $1 port, $2 expected -> sets C_VERDICT C_SERVED C_EVIDENCE C_REASON
+454:   local port=$1 expected=${2:-}
+455:   C_VERDICT='' C_SERVED='-' C_EVIDENCE='' C_REASON=''
+456:   fetch "$port" "/v1/models" "m$port"
+457: 
+458:   local base="GET /v1/models -> $F_CODE"
+459:   [ -n "$F_CT" ] && base="$base ${F_CT}"
+460:   [ -n "$F_SERVER" ] && base="$base (Server: $F_SERVER)"
+461: 
+462:   case "$F_RC" in
+463:     0) : ;;
+464:     6|7)
+465:       C_VERDICT=DEAD
+466:       C_REASON=$([ "$F_RC" = 7 ] && echo connection-refused || echo dns-failure)
+467:       C_EVIDENCE="rc=$F_RC ${F_ERRMSG:-connect failed}; $base"
+468:       return 0 ;;
+469:     28)
+470:       C_VERDICT=DEAD
+471:       C_REASON=timeout
+472:       C_EVIDENCE="rc=28 timeout (connect=${CONNECT_TIMEOUT}s max=${TIMEOUT}s); $base"
+473:       return 0 ;;
+474:     52)
+475:       C_VERDICT=NOT_HTTP
+476:       C_REASON=empty-reply
+477:       C_EVIDENCE="rc=52 empty reply on a TCP-accepted port; $base"
+478:       return 0 ;;
+479:     56)
+480:       C_VERDICT=NOT_HTTP
+481:       C_REASON=connection-reset
+482:       C_EVIDENCE="rc=56 ${F_ERRMSG:-connection reset}; $base"
+483:       return 0 ;;
+484:     1|2|92)
+485:       C_VERDICT=NOT_HTTP
+486:       C_REASON=no-http-response
+487:       C_EVIDENCE="rc=$F_RC ${F_ERRMSG:-no usable HTTP response}; $base"
+488:       return 0 ;;
+489:     *)
+490:       C_VERDICT=NOT_HTTP
+491:       C_REASON=no-http-response
+492:       C_EVIDENCE="rc=$F_RC ${F_ERRMSG:-no HTTP response}; $base"
+493:       return 0 ;;
+494:   esac
+495: 
+496:   case "$F_CODE" in
+497:     401) C_VERDICT=UNAUTHORIZED_SERVICE; C_REASON=http-401 ;;
+498:     403) C_VERDICT=UNAUTHORIZED_SERVICE; C_REASON=http-403 ;;
+499:   esac
+500:   if [ -n "$C_VERDICT" ]; then
+501:     C_EVIDENCE="$base; $(probe_short "$port" "/") @ /"
+502:     return 0
+503:   fi
+504: 
+505:   if [ "$F_CODE" = "503" ] && [ -s "$FBODY" ] && body_is_llamacpp_loading "$FBODY"; then
+506:     C_VERDICT=MODEL_LOADING
+507:     C_REASON=llamacpp-loading
+508:     C_EVIDENCE="$base (body matches the llama.cpp loading envelope: not ready; runtime identity and served model unverified); GET /health -> $(probe_short "$port" "/health")"
+509:     return 0
+510:   fi
+511: 
+512:   local is2=0 ishtml=0 has_models=0
+513:   case "$F_CODE" in 2*) is2=1 ;; esac
+514:   # HTML at ANY status: header, or a body sniff (v3 rule 4)
+515:   case "$F_CT" in *html*) ishtml=1 ;; esac
+516:   if [ "$ishtml" -eq 0 ] && [ -s "$FBODY" ]; then
+517:     case "$(head -c 64 "$FBODY" | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')" in
+518:       '<html'*|'<!doctype'*'html'*) ishtml=1 ;;
+519:     esac
+520:   fi
+521:   # MODEL_OK requires a model array; status code / Server header alone is not proof (v3)
+522:   if [ -s "$FBODY" ] && body_has_model_array "$FBODY"; then has_models=1; fi
+523: 
+524:   if [ "$is2" -eq 1 ] && [ "$has_models" -eq 1 ]; then
+525:     local ids
+526:     ids=$(served_ids "$FBODY")
+527:     C_SERVED=$(printf '%s' "$ids" | tr '\n' ',')
+528:     C_SERVED=${C_SERVED%,}
+529:     [ -n "$C_SERVED" ] || C_SERVED='-'
+530:     local runtime="other"
+531:     [ "$F_SERVER" = "llama.cpp" ] && runtime="llama.cpp"
+532:     case "$expected" in
+533:       ''|'*'|'-')
+534:         C_VERDICT=MODEL_OK; C_REASON='expected-wildcard' ;;
+535:       *)
+536:         local mrc=0
+537:         model_matches "$ids" "$expected" || mrc=$?
+538:         case "$mrc" in
+539:           0) C_VERDICT=MODEL_OK; C_REASON=matched ;;
+540:           2) C_VERDICT=MODEL_MISMATCH; C_REASON=unresolvable-id ;;
+541:           *) C_VERDICT=MODEL_MISMATCH; C_REASON='served-id-mismatch' ;;
+542:         esac ;;
+543:     esac
+544:     local ev="$base (runtime=$runtime; expected=${expected:--}; reason=$C_REASON)"
+545:     local h; h=$(probe_short "$port" "/health")
+546:     case "$h" in 200\|*json*) ev="$ev; GET /health -> $h" ;; esac
+547:     C_EVIDENCE="$ev"
+548:     return 0
+549:   fi
+550: 
+551:   if [ "$ishtml" -eq 1 ]; then
+552:     C_VERDICT=FOREIGN_SERVICE
+553:     C_REASON=html-non-model
+554:     C_EVIDENCE="$base; $(probe_short "$port" "/") @ /$(metrics_trap "$port")"
+555:     return 0
+556:   fi
+557: 
+558:   C_VERDICT=FOREIGN_SERVICE
+559:   if [ "$is2" -eq 1 ]; then
+560:     case "$F_CT" in
+561:       *json*) C_REASON=schema-unrecognized ;;
+562:       *)      C_REASON=non-model-2xx ;;
+563:     esac
+564:     C_EVIDENCE="$base (2xx service with no recognisable model array); $(probe_short "$port" "/") @ /$(metrics_trap "$port")"
+565:   else
+566:     C_REASON=non-2xx-non-model-http
+567:     C_EVIDENCE="$base (non-2xx HTTP from a non-model service); $(probe_short "$port" "/") @ /$(metrics_trap "$port")"
+568:   fi
+569:   return 0
+570: }
+571: 
+572: # ---------------------------------------------------------------- ufo-fsd source root
+573: # Cross-repo consumer rows cite the ufo-fsd-alpha checkout as '$UFO_SRC/<relpath>'
+574: # so the registry survives a relocation of that tree (2026-10-12: it moved from
+575: # ~/Projects/origin-work/ to ~/Projects/; the old root may exist again or not).
+576: # Resolution order, first match wins: --ufo-src flag > $UFO_SRC env > first
+577: # existing candidate dir. If nothing resolves, the row degrades to file=missing
+578: # (an honest DEAD/absent verdict), never to a silently guessed path.
+579: UFO_SRC_CACHE=""
+580: UFO_SRC_RESOLVED=0
+581: 
+582: ufo_src() { # -> resolved dir on stdout (may be empty)
+583:   if [ "$UFO_SRC_RESOLVED" -eq 0 ]; then
+584:     UFO_SRC_RESOLVED=1
+585:     if [ -n "$OPT_UFO_SRC" ]; then
+586:       UFO_SRC_CACHE=$OPT_UFO_SRC
+587:     elif [ -n "${UFO_SRC:-}" ] && [ -d "${UFO_SRC:-}" ]; then
+588:       UFO_SRC_CACHE=$UFO_SRC
+589:     else
+590:       local cand
+591:       for cand in "$HOME/Projects/ufo-fsd-alpha" "$HOME/Projects/origin-work/ufo-fsd-alpha"; do
+592:         if [ -d "$cand" ]; then UFO_SRC_CACHE=$cand; break; fi
+593:       done
+594:     fi
+595:   fi
+596:   printf '%s' "$UFO_SRC_CACHE"
+597: }
+598: 
+599: # ---------------------------------------------------------------- resolve
+600: expand_path() { # $1 -> ~ expanded, $UFO_SRC/ resolved, relative paths anchored at the repo root
+601:   local p=$1
+602:   case "$p" in
+603:     '$UFO_SRC/'*|'$UFO_SRC')
+604:       local src; src=$(ufo_src)
+605:       if [ -n "$src" ]; then p="$src${p#\$UFO_SRC}"; else printf '%s' ""; return 0; fi ;;
+606:   esac
+607:   # shellcheck disable=SC2088  # the quoted '~' is a literal prefix we substitute ourselves
+608:   case "$p" in
+609:     "~"|"~/"*) p="$HOME${p#\~}" ;;
+610:   esac
+611:   case "$p" in
+612:     /*) printf '%s' "$p" ;;
+613:     *) printf '%s' "$REPO_ROOT/$p" ;;
+614:   esac
+615: }
+616: 
+617: resolve_json_pointer() { # $1 file, $2 pointer -> value on stdout
+618:   local file=$1 ptr=$2
+619:   if [ "$HAVE_PY" -eq 1 ]; then
+620:     python3 - "$file" "$ptr" <<'PY'
+621: import json, sys
+622: doc = json.load(open(sys.argv[1]))
+623: cur = doc
+624: for tok in sys.argv[2].split('/'):
+625:     if tok == '':
+626:         continue
+627:     tok = tok.replace('~1', '/').replace('~0', '~')
+628:     cur = cur[int(tok)] if isinstance(cur, list) else cur[tok]
+629: print(cur if isinstance(cur, str) else json.dumps(cur))
+630: PY
+631:     return 0
+632:   fi
+633:   # leaf-key fallback: first "<leaf>": "<value>" occurrence
+634:   local leaf=${2##*/}
+635:   grep -oE "\"$leaf\"[[:space:]]*:[[:space:]]*\"[^\"]*\"" "$file" 2>/dev/null | head -n1 |
+636:     sed -E 's/.*:[[:space:]]*"//; s/"$//' || true
+637: }
+638: 
+639: # -> "<resolved>|<kind>"; kind = url | port:<n> | raw | empty | error
+640: #    raw = the resolver matched something that is neither a URL nor a port
+641: #    (the baseURL is then inherited from the provider named in the file)
+642: resolve_spec() { # $1 consumer path, $2 resolver spec
+643:   local file=$1 spec=$2 raw rc=0
+644:   case "$spec" in
+645:     json:*) raw=$(resolve_json_pointer "$file" "${spec#json:}") || rc=$? ;;
+646:     grep:*) raw=$(grep -a -oE -m1 -e "${spec#grep:}" "$file" 2>/dev/null) || rc=$? ;;
+647:     *)      raw=$(grep -a -oE -m1 -e "$spec" "$file" 2>/dev/null) || rc=$? ;;
+648:   esac
+649:   [ "$rc" -ne 0 ] && { printf '|error'; return 0; }
+650:   raw=${raw%%$'\n'*}
+651:   if [[ $raw =~ https?://[^\"\ ]+ ]]; then
+652:     local url=${BASH_REMATCH[0]}
+653:     url=${url%%/}
+654:     # never surface credentials: strip userinfo and query/fragment from the
+655:     # resolved endpoint before it reaches output or the ledger (sentinel r2)
+656:     url=${url%%\?*}; url=${url%%\#*}
+657:     if [[ $url =~ ^https?://[^/]*@ ]]; then url="${url%%://*}://${url#*@}"; fi
+658:     printf '%s|url' "$url"
+659:     return 0
+660:   fi
+661:   # Port synthesis only from an EXPLICIT port marker. A bare digit run must never be
+662:   # read as a port: a model id like "Qwen3-Coder-30B-A3B" would otherwise resolve to
+663:   # port 30 and report a false DEAD.
+664:   local pnum=''
+665:   if [[ $raw =~ port[[:space:]]*=[[:space:]]*([0-9]{2,5})([^0-9A-Za-z]|$) ]]; then
+666:     pnum=${BASH_REMATCH[1]}
+667:   elif [[ $raw =~ (--port|-p)[[:space:]]+([0-9]{2,5})([^0-9A-Za-z]|$) ]]; then
+668:     pnum=${BASH_REMATCH[2]}
+669:   elif [[ $raw =~ :([0-9]{2,5})([^0-9A-Za-z]|$) ]]; then
+670:     pnum=${BASH_REMATCH[1]}
+671:   fi
+672:   if [ -n "$pnum" ]; then
+673:     printf 'http://127.0.0.1:%s/v1|port:%s' "$pnum" "$pnum"
+674:     return 0
+675:   fi
+676:   if [ -n "$raw" ]; then printf '%s|raw' "$raw"; else printf '|empty'; fi
+677: }
+678: 
+679: url_port() {
+680:   local u=${1#*://}
+681:   u=${u%%/*}
+682:   case "$u" in *:*) printf '%s' "${u##*:}" ;; *) printf '80' ;; esac
+683: }
+684: 
+685: # ---------------------------------------------------------------- registry read
+686: declare -a REG_IDS=() REG_PATHS=() REG_SPECS=() REG_DECLARED=() REG_EXPECT=() REG_NOTES=()
+687: REG_ROWS=0
+688: 
+689: read_registry() { # $1 path
+690:   local path=$1
+691:   [ -f "$path" ] || die "registry not found: $path"
+692:   [ -r "$path" ] || die "registry not readable: $path"
+693:   local id cpath spec declared expected notes lineno=0
+694:   REG_IDS=() REG_PATHS=() REG_SPECS=() REG_DECLARED=() REG_EXPECT=() REG_NOTES=()
+695:   REG_ROWS=0
+696:   while IFS=$'\t' read -r id cpath spec declared expected notes || [ -n "${id:-}" ]; do
+697:     lineno=$((lineno+1))
+698:     case "${id:-}" in ''|'#'*) continue ;; esac
+699:     [ "$id" = "id" ] && continue   # header row
+700:     if [ -z "${cpath:-}" ] || [ -z "${spec:-}" ] || [ -z "${declared:-}" ]; then
+701:       warn "registry line $lineno: malformed (id, consumer_path, resolver, declared_baseurl required) — skipped"
+702:       continue
+703:     fi
+704:     REG_IDS+=("$id"); REG_PATHS+=("$cpath"); REG_SPECS+=("$spec")
+705:     REG_DECLARED+=("$declared"); REG_EXPECT+=("${expected:--}"); REG_NOTES+=("${notes:-}")
+706:     REG_ROWS=$((REG_ROWS+1))
+707:   done < "$path"
+708:   [ "$REG_ROWS" -gt 0 ] || die "registry has no usable rows: $path"
+709: }
+710: 
+711: # ---------------------------------------------------------------- subcommands
+712: cmd_listeners() {
+713:   local -a ports=() scopes=()
+714:   local port scope
+715:   if [ -n "$OPT_PORT" ]; then
+716:     ports=("$OPT_PORT"); scopes=("override")
+717:   else
+718:     while IFS=$'\t' read -r port scope; do
+719:       [ -n "${port:-}" ] && { ports+=("$port"); scopes+=("$scope"); }
+720:     done < <(loopback_ports)
+721:   fi
+722: 
+723:   local -a json_rows=() table=()
+724:   table+=("$(printf 'port\tbind\towner\tverdict\treason\tserved_model\tevidence')")
+725:   local i n_model=0 n_dead=0 n_foreign=0 n_nothttp=0 n_unauth=0 n_loading=0
+726:   for ((i=0; i<${#ports[@]}; i++)); do
+727:     port=${ports[i]}
+728:     classify "$port" "${OPT_EXPECT:-}"
+729:     case "$C_VERDICT" in
+730:       MODEL_OK|MODEL_MISMATCH) n_model=$((n_model+1)) ;;
+731:       DEAD) n_dead=$((n_dead+1)) ;;
+732:       FOREIGN_SERVICE) n_foreign=$((n_foreign+1)) ;;
+733:       NOT_HTTP) n_nothttp=$((n_nothttp+1)) ;;
+734:       UNAUTHORIZED_SERVICE) n_unauth=$((n_unauth+1)) ;;
+735:       MODEL_LOADING) n_loading=$((n_loading+1)) ;;
+736:     esac
+737:     table+=("$(printf '%s\t%s\t%s\t%s\t%s\t%s\t%s' \
+738:       "$port" "${scopes[i]}" "${OWNER[$port]:--}" "$C_VERDICT" "$C_REASON" "$C_SERVED" "$C_EVIDENCE")")
+739:     json_rows+=("$(printf '    {"port":%s,"bind":%s,"owner":%s,"verdict":%s,"reason":%s,"served_model":%s,"evidence":%s}' \
+740:       "$port" "$(jstr "${scopes[i]}")" "$(jstr "${OWNER[$port]:--}")" \
+741:       "$(jstr "$C_VERDICT")" "$(jstr "$C_REASON")" "$(jstr "$C_SERVED")" "$(jstr "$C_EVIDENCE")")")
+742:   done
+743: 
+744:   if [ "$JSON_OUT" -eq 1 ]; then
+745:     emit_json "$(printf '{\n  "schema": "kama-probe/v1",\n  "subcommand": "listeners",\n  "verdict_vocabulary": "%s",\n  "exit_codes": {"0": "probe completed", "2": "drift (listeners does not gate)", "1": "probe error"},\n  "summary": {"probed": %s, "model_endpoints": %s, "foreign_service": %s, "unauthorized_service": %s, "dead": %s, "not_http": %s, "model_loading": %s},\n  "listeners": [\n%s\n  ]\n}\n' \
+746:       "$VOCAB" "${#ports[@]}" "$n_model" "$n_foreign" "$n_unauth" "$n_dead" "$n_nothttp" "$n_loading" "$(json_array "${json_rows[@]}")")"
+747:     return 0
+748:   fi
+749:   printf '%s\n' "${table[@]}" | print_table
+750:   printf 'probed=%s model_endpoints=%s foreign_service=%s unauthorized_service=%s dead=%s not_http=%s model_loading=%s\n' \
+751:     "${#ports[@]}" "$n_model" "$n_foreign" "$n_unauth" "$n_dead" "$n_nothttp" "$n_loading"
+752: }
+753: 
+754: # shared row builder: resolve a registry row's file value
+755: # sets R_RESOLVED R_KIND R_ENDPOINT R_FMATCH
+756: R_RESOLVED='' R_KIND='' R_ENDPOINT='' R_FMATCH=''
+757: resolve_row() { # $1 consumer path, $2 resolver spec, $3 declared baseurl
+758:   local cpath=$1 spec=$2 declared=$3 file rspec
+759:   R_RESOLVED='' R_KIND='' R_ENDPOINT='' R_FMATCH=''
+760:   file=$(expand_path "$cpath")
+761:   if [ ! -f "$file" ]; then
+762:     R_KIND=error; R_FMATCH=missing; R_ENDPOINT=$declared
+763:     return 0
+764:   fi
+765:   rspec=$(resolve_spec "$file" "$spec")
+766:   R_RESOLVED=${rspec%|*}; R_KIND=${rspec##*|}
+767:   case "$R_KIND" in
+768:     url|port:*)
+769:       R_ENDPOINT=$R_RESOLVED
+770:       if [ "$R_RESOLVED" = "$declared" ]; then R_FMATCH=yes; else R_FMATCH=no; fi ;;
+771:     raw)
+772:       R_ENDPOINT=$declared; R_FMATCH=inherited ;;
+773:     *)
+774:       R_ENDPOINT=$declared; R_FMATCH=unresolved ;;
+775:   esac
+776:   return 0
+777: }
+778: 
+779: cmd_consumers() {
+780:   local -a table=() json_rows=()
+781:   table+=("$(printf 'id\tconsumer\tdeclared\tresolved_from_file\tfile_match\tresolver_kind\tendpoint\tport\tverdict\tserved_model')")
+782:   local exit_code=0
+783: 
+784:   if [ -n "$OPT_PORT" ]; then
+785:     local v_id="${OPT_ID:-cli-override}"
+786:     local declared="http://127.0.0.1:$OPT_PORT/v1"
+787:     classify "$OPT_PORT" "${OPT_EXPECT:-}"
+788:     table+=("$(printf '%s\t--port override\t%s\t%s\tyes\tcli-override\t%s\t%s\t%s\t%s' \
+789:       "$v_id" "$declared" "$declared" "$declared" "$OPT_PORT" "$C_VERDICT" "$C_SERVED")")
+790:     json_rows+=("$(printf '    {"id":%s,"consumer_path":"-","declared":%s,"resolved_from_file":%s,"file_match":"yes","resolve_kind":"cli-override","endpoint":%s,"port":%s,"expected_model_id":%s,"verdict":%s,"reason":%s,"served_model":%s,"evidence":%s,"notes":""}' \
+791:       "$(jstr "$v_id")" "$(jstr "$declared")" "$(jstr "$declared")" "$(jstr "$declared")" \
+792:       "$OPT_PORT" "$(jstr "${OPT_EXPECT:--}")" "$(jstr "$C_VERDICT")" "$(jstr "$C_REASON")" \
+793:       "$(jstr "$C_SERVED")" "$(jstr "$C_EVIDENCE")")")
+794:   else
+795:     read_registry "$OPT_REGISTRY"
+796:     local i id declared expected pnum
+797:     for ((i=0; i<REG_ROWS; i++)); do
+798:       id=${REG_IDS[i]}; declared=${REG_DECLARED[i]}; expected=${REG_EXPECT[i]}
+799:       resolve_row "${REG_PATHS[i]}" "${REG_SPECS[i]}" "$declared"
+800:       [ "$R_FMATCH" = no ] && exit_code=2
+801:       [ "$R_FMATCH" = missing ] && exit_code=2
+802:       pnum=$(url_port "$R_ENDPOINT")
+803:       classify "$pnum" "$expected"
+804:       table+=("$(printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s' \
+805:         "$id" "${REG_PATHS[i]}" "$declared" "${R_RESOLVED:--}" "$R_FMATCH" "$R_KIND" \
+806:         "$R_ENDPOINT" "$pnum" "$C_VERDICT" "$C_SERVED")")
+807:       json_rows+=("$(printf '    {"id":%s,"consumer_path":%s,"resolver":%s,"declared":%s,"resolved_from_file":%s,"file_match":%s,"resolve_kind":%s,"endpoint":%s,"port":%s,"expected_model_id":%s,"verdict":%s,"reason":%s,"served_model":%s,"evidence":%s,"notes":%s}' \
+808:         "$(jstr "$id")" "$(jstr "${REG_PATHS[i]}")" "$(jstr "${REG_SPECS[i]}")" "$(jstr "$declared")" \
+809:         "$(jstr "${R_RESOLVED:--}")" "$(jstr "$R_FMATCH")" "$(jstr "$R_KIND")" "$(jstr "$R_ENDPOINT")" \
+810:         "$pnum" "$(jstr "$expected")" "$(jstr "$C_VERDICT")" "$(jstr "$C_REASON")" \
+811:         "$(jstr "$C_SERVED")" "$(jstr "$C_EVIDENCE")" "$(jstr "${REG_NOTES[i]}")")")
+812:     done
+813:   fi
+814: 
+815:   if [ "$JSON_OUT" -eq 1 ]; then
+816:     emit_json "$(printf '{\n  "schema": "kama-probe/v1",\n  "subcommand": "consumers",\n  "registry": %s,\n  "verdict_vocabulary": "%s",\n  "exit_codes": {"0": "registry text matches every file", "2": "registry text disagrees with a file", "1": "probe error"},\n  "summary": {"consumer_rows_registered": %s, "consumer_rows_evaluated": %s, "exit": %s},\n  "consumers": [\n%s\n  ]\n}\n' \
+817:       "$(jstr "$OPT_REGISTRY")" "$VOCAB" "${REG_ROWS:-${#json_rows[@]}}" "${#json_rows[@]}" "$exit_code" \
+818:       "$(json_array "${json_rows[@]}")")"
+819:     return "$exit_code"
+820:   fi
+821:   printf '%s\n' "${table[@]}" | print_table
+822:   printf 'consumer_rows_evaluated=%s exit=%s\n' "${#json_rows[@]}" "$exit_code"
+823:   return "$exit_code"
+824: }
+825: 
+826: # ---------------------------------------------------------------- row evaluation
+827: # Shared by check and snapshot. Fills EV_* parallel arrays + EV_JSON (pretty-printed
+828: # row objects, 4-space indented). Returns the gate exit code (0 clean / 2 drift).
+829: EV_N=0 EV_OK=0 EV_DRIFT=0 EV_JSON=''
+830: declare -a EV_IDS=() EV_PATHS=() EV_DECLARED=() EV_RESOLVED=() EV_FMATCH=() EV_RKIND=()
+831: declare -a EV_ENDPOINT=() EV_PORT=() EV_EXPECT=() EV_VERDICT=() EV_REASON=()
+832: declare -a EV_SERVED=() EV_DRIFTROW=() EV_EVIDENCE=() EV_NOTES=()
+833: 
+834: eval_rows() {
+835:   local -a json_rows=()
+836:   EV_N=0 EV_OK=0 EV_DRIFT=0 EV_JSON=''
+837:   EV_IDS=() EV_PATHS=() EV_DECLARED=() EV_RESOLVED=() EV_FMATCH=() EV_RKIND=()
+838:   EV_ENDPOINT=() EV_PORT=() EV_EXPECT=() EV_VERDICT=() EV_REASON=()
+839:   EV_SERVED=() EV_DRIFTROW=() EV_EVIDENCE=() EV_NOTES=()
+840: 
+841:   if [ -n "$OPT_PORT" ]; then
+842:     local v_id="${OPT_ID:-cli-override}"
+843:     local declared="http://127.0.0.1:$OPT_PORT/v1"
+844:     classify "$OPT_PORT" "${OPT_EXPECT:-}"
+845:     EV_IDS=("$v_id"); EV_PATHS=("-"); EV_DECLARED=("$declared"); EV_RESOLVED=("-")
+846:     EV_FMATCH=("cli-override"); EV_RKIND=("cli-override"); EV_ENDPOINT=("$declared")
+847:     EV_PORT=("$OPT_PORT"); EV_EXPECT=("${OPT_EXPECT:--}"); EV_VERDICT=("$C_VERDICT")
+848:     EV_REASON=("$C_REASON"); EV_SERVED=("$C_SERVED"); EV_EVIDENCE=("$C_EVIDENCE")
+849:     EV_NOTES=(""); EV_N=1
+850:     if [ "$C_VERDICT" = "MODEL_OK" ]; then EV_OK=1; EV_DRIFTROW=(false)
+851:     else EV_DRIFT=1; EV_DRIFTROW=(true); fi
+852:     json_rows+=("$(printf '    {"id":%s,"consumer_path":"-","declared":%s,"file_match":"cli-override","resolver_kind":"cli-override","expected_model_id":%s,"verdict":%s,"reason":%s,"served_model":%s,"drift":%s,"evidence":%s,"notes":""}' \
+853:       "$(jstr "$v_id")" "$(jstr "$declared")" "$(jstr "${OPT_EXPECT:--}")" "$(jstr "$C_VERDICT")" \
+854:       "$(jstr "$C_REASON")" "$(jstr "$C_SERVED")" \
+855:       "${EV_DRIFTROW[0]}" "$(jstr "$C_EVIDENCE")")")
+856:   else
+857:     read_registry "$OPT_REGISTRY"
+858:     local i id declared expected pnum verdict drift
+859:     for ((i=0; i<REG_ROWS; i++)); do
+860:       id=${REG_IDS[i]}; declared=${REG_DECLARED[i]}; expected=${REG_EXPECT[i]}
+861:       resolve_row "${REG_PATHS[i]}" "${REG_SPECS[i]}" "$declared"
+862:       pnum=$(url_port "$R_ENDPOINT")
+863:       classify "$pnum" "$expected"
+864:       verdict=$C_VERDICT
+865:       drift=false
+866:       if [ "$verdict" != "MODEL_OK" ]; then drift=true; fi
+867:       case "$R_FMATCH" in yes|inherited) : ;; *) drift=true ;; esac
+868:       if [ "$drift" = true ]; then EV_DRIFT=$((EV_DRIFT+1)); else EV_OK=$((EV_OK+1)); fi
+869:       EV_IDS+=("$id"); EV_PATHS+=("${REG_PATHS[i]}"); EV_DECLARED+=("$declared")
+870:       EV_RESOLVED+=("${R_RESOLVED:--}"); EV_FMATCH+=("$R_FMATCH"); EV_RKIND+=("$R_KIND")
+871:       EV_ENDPOINT+=("$R_ENDPOINT"); EV_PORT+=("$pnum"); EV_EXPECT+=("$expected")
+872:       EV_VERDICT+=("$verdict"); EV_REASON+=("$C_REASON"); EV_SERVED+=("$C_SERVED")
+873:       EV_DRIFTROW+=("$drift"); EV_EVIDENCE+=("$C_EVIDENCE"); EV_NOTES+=("${REG_NOTES[i]}")
+874:       EV_N=$((EV_N+1))
+875:       json_rows+=("$(printf '    {"id":%s,"consumer_path":%s,"resolver":%s,"declared":%s,"resolved_from_file":%s,"file_match":%s,"resolve_kind":%s,"endpoint":%s,"port":%s,"expected_model_id":%s,"verdict":%s,"reason":%s,"served_model":%s,"drift":%s,"evidence":%s,"notes":%s}' \
+876:         "$(jstr "$id")" "$(jstr "${REG_PATHS[i]}")" "$(jstr "${REG_SPECS[i]}")" "$(jstr "$declared")" \
+877:         "$(jstr "${R_RESOLVED:--}")" "$(jstr "$R_FMATCH")" "$(jstr "$R_KIND")" "$(jstr "$R_ENDPOINT")" \
+878:         "$pnum" "$(jstr "$expected")" "$(jstr "$verdict")" "$(jstr "$C_REASON")" \
+879:         "$(jstr "$C_SERVED")" "$drift" "$(jstr "$C_EVIDENCE")" "$(jstr "${REG_NOTES[i]}")")")
+880:     done
+881:   fi
+882:   EV_JSON=$(json_array "${json_rows[@]}")
+883:   [ "$EV_DRIFT" -gt 0 ] && return 2 || return 0
+884: }
+885: 
+886: cmd_check() {
+887:   # `eval_rows || exit_code=$?`: a bare call would trip set -e on the drift exit 2
+888:   local exit_code=0
+889:   eval_rows || exit_code=$?
+890:   if [ "$JSON_OUT" -eq 1 ]; then
+891:     emit_json "$(printf '{\n  "schema": "kama-probe/v1",\n  "subcommand": "check",\n  "registry": %s,\n  "verdict_vocabulary": "%s",\n  "exit_codes": {"0": "every declared consumer reconciles", "2": "at least one drift", "1": "probe error"},\n  "summary": {"registry_rows_evaluated": %s, "model_ok": %s, "drift": %s, "exit": %s},\n  "rows": [\n%s\n  ]\n}\n' \
+892:       "$(jstr "$OPT_REGISTRY")" "$VOCAB" "$EV_N" "$EV_OK" "$EV_DRIFT" "$exit_code" \
+893:       "$EV_JSON")"
+894:     return "$exit_code"
+895:   fi
+896: 
+897:   local -a table=()
+898:   table+=("$(printf 'id\tconsumer\tdeclared\tverdict\treason\tserved_model\tevidence')")
+899:   local i
+900:   for ((i=0; i<EV_N; i++)); do
+901:     table+=("$(printf '%s\t%s\t%s\t%s\t%s\t%s\t%s' \
+902:       "${EV_IDS[i]}" "${EV_PATHS[i]}" "${EV_DECLARED[i]}" "${EV_VERDICT[i]}" \
+903:       "${EV_REASON[i]}" "${EV_SERVED[i]}" \
+904:       "file=${EV_FMATCH[i]} via ${EV_RKIND[i]} @${EV_PORT[i]}; ${EV_EVIDENCE[i]}")")
+905:   done
+906:   printf '%s\n' "${table[@]}" | print_table
+907:   printf 'registry_rows_evaluated=%s model_ok=%s drift=%s exit=%s\n' "$EV_N" "$EV_OK" "$EV_DRIFT" "$exit_code"
+908:   return "$exit_code"
+909: }
+910: 
+911: # ---------------------------------------------------------------- snapshot
+912: # Compute row-set transitions against the previous latest.tsv baseline — pure
+913: # comparison, no writes; the caller decides when DELTA.md is appended (after the
+914: # dated JSON validates, so a failed snapshot re-derives transitions next run).
+915: # Baseline row format: id \t verdict \t reason \t served \t port \t fmatch.
+916: # Sets DELTA_LINES[], N_TRANS, PREV_ID. $1 ts, $2 history dir.
+917: declare -a DELTA_LINES=()
+918: N_TRANS=0 PREV_ID='-'
+919: 
+920: diff_baseline() {
+921:   local ts=$1 hist=$2
+922:   local -A PV_V=() PV_R=() PV_S=() PV_P=() PV_F=()
+923:   PREV_ID='-'
+924:   local -a MAL_NOTES=()
+925:   if [ -f "$hist/latest.tsv" ] && [ ! -r "$hist/latest.tsv" ]; then
+926:     # unreadable baseline: rebaseline rather than die with a bare shell redirect
+927:     # error (contract: losing a baseline must never break the gate)
+928:     warn "latest.tsv unreadable — rebaselining"
+929:     MAL_NOTES+=("- $ts baseline-note unreadable-latest.tsv; rebaseline")
+930:   elif [ -f "$hist/latest.tsv" ]; then
+931:     local id v r s p f bad=0
+932:     while IFS=$'\t' read -r id v r s p f; do
+933:       case "${id:-}" in ''|'#'*)
+934:         case "${id:-}" in '#@snapshot_id'*) PREV_ID=${id##* } ;; esac
+935:         continue ;;
+936:       esac
+937:       # a baseline row is only believable if its verdict is in the vocabulary —
+938:       # garbage lines are dropped (warned + noted in DELTA.md), not turned into
+939:       # phantom row-absent transitions and not silently forgiven
+940:       case " ${v:-} " in
+941:         *\ MODEL_OK\ *|*\ MODEL_MISMATCH\ *|*\ FOREIGN_SERVICE\ *|*\ UNAUTHORIZED_SERVICE\ *|*\ DEAD\ *|*\ NOT_HTTP\ *|*\ MODEL_LOADING\ *) : ;;
+942:         *) warn "latest.tsv: dropping malformed baseline row for id='$id'"
+943:            MAL_NOTES+=("- $ts baseline-note malformed-row-dropped id='$(persist_clean "$id")'")
+944:            bad=1; continue ;;
+945:       esac
+946:       PV_V[$id]=${v:-} PV_R[$id]=${r:-} PV_S[$id]=${s:-} PV_P[$id]=${p:-} PV_F[$id]=${f:-}
+947:     done < "$hist/latest.tsv"
+948:     if [ "${#PV_V[@]}" -eq 0 ]; then
+949:       warn "latest.tsv has no usable baseline rows — rebaselining"
+950:     elif [ "$bad" -eq 1 ]; then
+951:       warn "latest.tsv had malformed rows (dropped); this snapshot rebaselines them"
+952:     fi
+953:   fi
+954: 
+955:   DELTA_LINES=() N_TRANS=0
+956:   [ "${#MAL_NOTES[@]}" -gt 0 ] && DELTA_LINES+=("${MAL_NOTES[@]}")
+957:   local i rid
+958:   if [ "${#PV_V[@]}" -eq 0 ]; then
+959:     DELTA_LINES+=("- $ts baseline recorded ($EV_N rows); transitions begin with the next snapshot")
+960:   else
+961:     local -A SEEN=()
+962:     for ((i=0; i<EV_N; i++)); do
+963:       rid=$(persist_clean "${EV_IDS[i]}")
+964:       SEEN[$rid]=1
+965:       if [ -z "${PV_V[$rid]+x}" ]; then
+966:         DELTA_LINES+=("- $ts $rid row-added verdict=${EV_VERDICT[i]} port=${EV_PORT[i]} served=$(served_persist "${EV_SERVED[i]}")")
+967:         N_TRANS=$((N_TRANS+1))
+968:         continue
+969:       fi
+970:       local fields=(verdict reason served_model port file_match)
+971:       # served_model compares PERSISTED form (normalised basename) on both sides —
+972:       # a raw GGUF-path change that keeps the basename is not an identity change.
+973:       local vals_new=("${EV_VERDICT[i]}" "$(persist_clean "${EV_REASON[i]}")" "$(served_persist "${EV_SERVED[i]}")" "$(persist_clean "${EV_PORT[i]}")" "$(persist_clean "${EV_FMATCH[i]}")")
+974:       local vals_old=("$(persist_clean "${PV_V[$rid]}")" "$(persist_clean "${PV_R[$rid]}")" "$(persist_clean "${PV_S[$rid]}")" "$(persist_clean "${PV_P[$rid]}")" "$(persist_clean "${PV_F[$rid]}")")
+975:       local k
+976:       for ((k=0; k<${#fields[@]}; k++)); do
+977:         if [ "${vals_new[k]}" != "${vals_old[k]}" ]; then
+978:           DELTA_LINES+=("- $ts $rid ${fields[k]} ${vals_old[k]:--} -> ${vals_new[k]:--}")
+979:           N_TRANS=$((N_TRANS+1))
+980:         fi
+981:       done
+982:     done
+983:     # sorted for deterministic output (planner r2: assoc-array order is arbitrary)
+984:     while IFS= read -r rid; do
+985:       if [ -z "${SEEN[$rid]+x}" ]; then
+986:         DELTA_LINES+=("- $ts $(persist_clean "$rid") row-absent (was verdict=$(persist_clean "${PV_V[$rid]}") port=$(persist_clean "${PV_P[$rid]}"))")
+987:         N_TRANS=$((N_TRANS+1))
+988:       fi
+989:     done < <(printf '%s\n' "${!PV_V[@]}" | sort)
+990:   fi
+991: }
+992: 
+993: # ------------------------------------------------- persisted-field hygiene
+994: # Fields that land in latest.tsv / DELTA.md must not carry control chars (a
+995: # hostile loopback service can inject TAB/CR via Server/Content-Type headers and
+996: # corrupt the TSV trust anchor — sentinel round-2) or URL userinfo/query (creds
+997: # in a baseURL must never persist to the ledger).
+998: persist_clean() { # $1 -> single-line, tab-free, control-stripped value
+999:   local s=${1-}
+1000:   s=${s//$'\t'/ }; s=${s//$'\n'/ }; s=${s//$'\r'/ }
+1001:   s=$(printf '%s' "$s" | tr -d '[:cntrl:]')
+1002:   printf '%s' "$s"
+1003: }
+1004: 
+1005: # served ids persist as NORMALISED basenames (matches contract v2 semantics):
+1006: # two ids differing only in directory or a trailing .gguf are the same model.
+1007: served_persist() { # $1 comma-joined raw served ids -> comma-joined basenames
+1008:   local s=${1-} out='' parts=() p
+1009:   [ "$s" = "-" ] && { printf '%s' '-'; return 0; }
+1010:   IFS=',' read -r -a parts <<< "$s"
+1011:   for p in "${parts[@]}"; do
+1012:     p=$(normalize_id "$(persist_clean "$p")")
+1013:     [ -n "$p" ] || p='-'
+1014:     out+="${out:+,}$p"
+1015:   done
+1016:   printf '%s' "${out:--}"
+1017: }
+1018: 
+1019: cmd_snapshot() {
+1020:   # `eval_rows || exit_code=$?`: a bare call would trip set -e on the drift exit 2
+1021:   local exit_code=0
+1022:   eval_rows || exit_code=$?
+1023:   local hist=$OPT_HISTORY ts snap_id snap_file
+1024:   ts=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+1025:   snap_id=$(date -u +%Y%m%dT%H%M%SZ)
+1026:   snap_file="$hist/$snap_id.json"
+1027:   if [ -e "$snap_file" ] || [ -L "$snap_file" ]; then
+1028:     snap_file="$hist/$snap_id-p$$.json"
+1029:     { [ ! -e "$snap_file" ] && [ ! -L "$snap_file" ]; } ||
+1030:       die "snapshot filename collision: $snap_file"
+1031:   fi
+1032: 
+1033:   # symlink refusal before mkdir -p: a planted link would aim the writes outside
+1034:   # the lane's repo (sentinel round-2 finding — containment check on history dir)
+1035:   [ -L "$hist" ] && die "history dir is a symlink (refused): $hist"
+1036:   mkdir -p -- "$hist" || die "cannot create history dir: $hist"
+1037:   [ -d "$hist" ] && [ -w "$hist" ] || die "history dir not writable: $hist"
+1038:   local output_path
+1039:   for output_path in "$hist/.lock" "$hist/DELTA.md" "$hist/latest.tsv"; do
+1040:     [ -L "$output_path" ] && die "history output is a symlink (refused): $output_path"
+1041:   done
+1042: 
+1043:   # Serialise snapshots: concurrent runs would interleave DELTA.md and tear the
+1044:   # baseline. Snapshot integrity requires flock; other subcommands do not.
+1045:   command -v flock >/dev/null 2>&1 || die "missing snapshot dependency: flock"
+1046:   exec 9>"$hist/.lock" || die "cannot open snapshot lock: $hist/.lock"
+1047:   flock -w 10 9 || die "snapshot lock busy: $hist/.lock"
+1048: 
+1049:   diff_baseline "$ts" "$hist"
+1050: 
+1051:   # Dated JSON first — if validation/write fails, the baseline is not advanced
+1052:   # and DELTA.md is not appended. Persist only the transition contract fields:
+1053:   # no registry notes, probe evidence, resolved URLs, or raw filesystem paths.
+1054:   local -a snap_rows=()
+1055:   local i
+1056:   for ((i=0; i<EV_N; i++)); do
+1057:     snap_rows+=("$(printf '    {"id":%s,"consumer_path":%s,"port":%s,"expected_model_id":%s,"verdict":%s,"reason":%s,"served_model":%s,"file_match":%s,"drift":%s}' \
+1058:       "$(jstr "$(persist_clean "${EV_IDS[i]}")")" "$(jstr "$(persist_clean "${EV_PATHS[i]}")")" \
+1059:       "${EV_PORT[i]}" "$(jstr "$(persist_clean "${EV_EXPECT[i]}")")" \
+1060:       "$(jstr "${EV_VERDICT[i]}")" "$(jstr "$(persist_clean "${EV_REASON[i]}")")" \
+1061:       "$(jstr "$(served_persist "${EV_SERVED[i]}")")" \
+1062:       "$(jstr "$(persist_clean "${EV_FMATCH[i]}")")" "${EV_DRIFTROW[i]}")")
+1063:   done
+1064:   local snap_json
+1065:   snap_json=$(printf '{\n  "schema": "kama-probe/v2",\n  "subcommand": "snapshot",\n  "snapshot": {"id": %s, "ts": %s, "prev_snapshot": %s, "registry": %s, "history_dir": %s},\n  "verdict_vocabulary": "%s",\n  "exit_codes": {"0": "every declared consumer reconciles", "2": "at least one drift", "1": "probe error"},\n  "summary": {"registry_rows_evaluated": %s, "model_ok": %s, "drift": %s, "transitions": %s, "exit": %s},\n  "rows": [\n%s\n  ]\n}\n' \
+1066:     "$(jstr "$snap_id")" "$(jstr "$ts")" "$(jstr "$PREV_ID")" \
+1067:     "$(jstr "$(persist_clean "$OPT_REGISTRY")")" "$(jstr "$(persist_clean "$hist")")" \
+1068:     "$VOCAB" "$EV_N" "$EV_OK" "$EV_DRIFT" "$N_TRANS" "$exit_code" \
+1069:     "$(json_array "${snap_rows[@]}")")
+1070:   if [ "$HAVE_PY" -eq 1 ]; then
+1071:     printf '%s\n' "$snap_json" | python3 -c 'import json,sys; json.load(sys.stdin)' \
+1072:       || die "internal error: generated snapshot JSON failed to parse (probe bug)"
+1073:   fi
+1074:   printf '%s\n' "$snap_json" > "$snap_file" || die "cannot write snapshot file: $snap_file"
+1075: 
+1076:   if [ ! -f "$hist/DELTA.md" ]; then
+1077:     printf '# kama snapshot DELTA.md — endpoint-verdict transition ledger\n#\n' > "$hist/DELTA.md" \
+1078:       || die "DELTA.md not writable: $hist"
+1079:     printf '# Append-only; one line per row-field change between snapshots, in\n# chronological order. Generated by kama-probe.sh snapshot; never hand-edited.\n\n' \
+1080:       >> "$hist/DELTA.md"
+1081:   fi
+1082:   if [ ${#DELTA_LINES[@]} -gt 0 ]; then
+1083:     printf '%s\n' "${DELTA_LINES[@]}" >> "$hist/DELTA.md" || die "DELTA.md not writable: $hist"
+1084:   fi
+1085: 
+1086:   # Advance tracked state only when the state changed (or recovery rebaselined).
+1087:   # Stable scheduled runs must not dirty the repository merely by changing a
+1088:   # snapshot id. tmp+mv prevents a killed write from tearing latest.tsv.
+1089:   if [ ${#DELTA_LINES[@]} -gt 0 ]; then
+1090:     {
+1091:       printf '#@snapshot_id %s\t# columns: id\tverdict\treason\tserved_model\tport\tfile_match\n' "$snap_id"
+1092:       local i
+1093:       for ((i=0; i<EV_N; i++)); do
+1094:         printf '%s\t%s\t%s\t%s\t%s\t%s\n' \
+1095:           "${EV_IDS[i]}" "${EV_VERDICT[i]}" "$(persist_clean "${EV_REASON[i]:--}")" \
+1096:           "$(served_persist "${EV_SERVED[i]:--}")" "${EV_PORT[i]}" "$(persist_clean "${EV_FMATCH[i]:--}")"
+1097:       done
+1098:     } > "$hist/latest.tsv.new.$$" || die "cannot write baseline: $hist/latest.tsv"
+1099:     mv -- "$hist/latest.tsv.new.$$" "$hist/latest.tsv" || die "cannot replace baseline: $hist/latest.tsv"
+1100:   fi
+1101: 
+1102:   if [ "$JSON_OUT" -eq 1 ]; then
+1103:     emit_json "$snap_json"
+1104:   else
+1105:     local -a table=()
+1106:     table+=("$(printf 'id\tconsumer\tverdict\treason\tserved_model\tport\tfile_match')")
+1107:     for ((i=0; i<EV_N; i++)); do
+1108:       table+=("$(printf '%s\t%s\t%s\t%s\t%s\t%s\t%s' \
+1109:         "${EV_IDS[i]}" "${EV_PATHS[i]}" "${EV_VERDICT[i]}" "${EV_REASON[i]}" \
+1110:         "${EV_SERVED[i]}" "${EV_PORT[i]}" "${EV_FMATCH[i]}")")
+1111:     done
+1112:     printf '%s\n' "${table[@]}" | print_table
+1113:     printf 'snapshot=%s prev=%s rows=%s model_ok=%s drift=%s transitions=%s exit=%s\n' \
+1114:       "$snap_id" "$PREV_ID" "$EV_N" "$EV_OK" "$EV_DRIFT" "$N_TRANS" "$exit_code"
+1115:     printf 'history=%s (dated JSON + latest.tsv baseline + DELTA.md ledger)\n' "$hist"
+1116:   fi
+1117:   return "$exit_code"
+1118: }
+1119: 
+1120: # ---------------------------------------------------------------- main
+1121: main() {
+1122:   parse_args "$@"
+1123:   command -v ss >/dev/null 2>&1 || die "missing dependency: ss"
+1124:   command -v curl >/dev/null 2>&1 || die "missing dependency: curl"
+1125:   if [ "$HAVE_PY" -eq 0 ]; then
+1126:     warn "python3 not found — using grep fallbacks for JSON-pointer and model-id parsing"
+1127:   fi
+1128:   TMP_ROOT=$(mktemp -d "${KAMA_PROBE_TMPDIR:-${TMPDIR:-/tmp}}/kama-probe.XXXXXX")  # round 52 (seat Sen2Scratch): honour TMPDIR
+1129: 
+1130:   case "$SUBCOMMAND" in
+1131:     listeners) load_listeners; cmd_listeners ;;
+1132:     consumers) cmd_consumers ;;
+1133:     check) cmd_check ;;
+1134:     snapshot) cmd_snapshot ;;
+1135:     *) usage >&2; exit 1 ;;
+1136:   esac
+1137: }
+1138: 
+1139: main "$@"

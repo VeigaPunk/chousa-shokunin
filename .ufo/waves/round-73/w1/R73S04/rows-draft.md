@@ -1,0 +1,17 @@
+# R73S04 — registry rows draft (S180 admit, S181 reject)
+
+Contract column order: `| id | source | kind | tier | scope | anchor | teaches | status | opened | recheck | used-by |`.
+Both rows are exact 11-column rows. No literal or escaped `|` appears in any cell; `recheck` carries no prose.
+Opened at freeze commit A `a0f094c272dcb09f1bf79e2c9057d7ea20b7ac7b` (lane HEAD re-derived read-only in `receipts-counts.txt`).
+Draft only — `corpus/SOURCES.md` is not edited by this seat.
+
+| S180 | chousa round-72 verifier spot-check — corpus/lessons/round-72-verifier-spotcheck.md (own-work record: the non-author integrator closure of round 72, committed in this lane; opened 2026-11-03 via read + grep at a0f094c272dcb09f1bf79e2c9057d7ea20b7ac7b) | own-work | B | the two routed r72 record defects (kill-line precision; after-receipt measurement tree) and their line-level grounds | section `## 6. Routed defects for round 73 (all status-neutral; none verdict-bearing)` (line 88), item V72-1 (line 90): `The line that actually exits is the next unguarded sub-run assignment at **`tools/research-gate.sh:8435`**` (13 words); item V72-2 (line 91): `after-r72-corrections.txt records $ git rev-parse HEAD → 7f7ea19a… (the landing tip)` (11 words) | A crash-site claim must name the line that actually exits: the unguarded grep at tools/research-gate.sh:8426 is set -e-exempt inside its `&&` list and supplies only the visible symptom, while the kill is the next unguarded sub-run assignment at tools/research-gate.sh:8435; and a count receipt must state the tree it was measured at, since the landing tip 7f7ea19a gives SCORECARD 18-healthy 2 where the verdicts tree 6dd6c82 gives 3 | mined | 2026-11-03 | on-release | corpus/lessons/round-73.md |
+| S181 | corpus/evidence/round72/controls/after-r72-corrections.txt (own-work r72 after-receipt; opened 2026-11-03 via read + grep at a0f094c272dcb09f1bf79e2c9057d7ea20b7ac7b) | own-work | C | count provenance for the r72 after-receipt's re-run counts, insofar as the receipt names the tree those counts were measured at | header, line 1: `every count line re-run fresh at the verdicts tree, immediately before the verdicts commit` (14 words); the receipt's own `$ git rev-parse HEAD` records `7f7ea19a945e0998f009f82b9c651cb08aec1c12` (line 5) while line 15 records SCORECARD 18-healthy = 2, re-measured 3 at the verdicts tree 6dd6c82405989083f16e101d6573656d39211879 | REJECTED: the header says the counts were re-run at the verdicts tree but the receipt's recorded HEAD is the landing tip 7f7ea19a, where SCORECARD 18-healthy counts 2 against 3 at the verdicts tree 6dd6c82, so no recorded count line can be assigned the tree the header claims; flip: record HEAD beside each count and state the tree per count line, or re-run at the verdicts tree and record 6dd6c82 as HEAD | rejected | 2026-11-03 | on-release | corpus/lessons/round-73.md |
+
+## Grounds cited
+
+- V72-1 quote: `corpus/lessons/round-72-verifier-spotcheck.md:90` (exact-substring verified, `receipts-quotes.txt`).
+- V72-2 quote: `corpus/lessons/round-72-verifier-spotcheck.md:91` (exact-substring verified, `receipts-quotes.txt`).
+- S181 header quote: `corpus/evidence/round72/controls/after-r72-corrections.txt:1` (exact-substring verified, `receipts-quotes.txt`).
+- S181 HEAD mismatch: receipt lines 4-5 (`$ git rev-parse HEAD` → `7f7ea19a…`) vs its own header.
+- S181 count contradiction: receipt line 15 (SCORECARD 18-healthy = 2) vs `git show 6dd6c82…:SCORECARD.md | grep -c "18 healthy"` → 3 (both counts in `receipts-counts.txt`).

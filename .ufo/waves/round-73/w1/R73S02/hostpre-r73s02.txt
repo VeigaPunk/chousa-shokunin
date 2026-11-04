@@ -1,0 +1,26 @@
+=== case-108/110 preconditions: /etc/hostname dev vs / dev, nlink, size ===
+/etc/hostname dev=32 nlink=1 size=9 mode=644
+/ dev=32 nlink=1 size=176 mode=555
+/tmp dev=66305 nlink=846 size=172032 mode=1777
+echo $TMPDIR=<unset>
+
+=== case-233 precondition: a real FLOCK line matching the gate regex ===
+inode=677171638
+5:5: FLOCK  ADVISORY  WRITE 12550 00:1e:250716648 0 EOF
+16:16: FLOCK  ADVISORY  WRITE 13393 00:1e:250717168 0 EOF
+24:24: FLOCK  ADVISORY  WRITE 12550 00:1e:12436911 0 EOF
+27:27: FLOCK  ADVISORY  WRITE 1665 00:4c:131 0 EOF
+33:33: FLOCK  ADVISORY  WRITE 64479 00:1e:251586134 0 EOF
+-- gate regex on this file (bash, same ERE) --
+GATE-REGEX-MATCH=no
+
+=== PY3 probe exactly as the gate runs it ===
+PY3=1
+
+=== HAVE_FLOCK probe exactly as the gate runs it ===
+HAVE_FLOCK=1
+
+=== timeout probe exactly as the gate runs it, in a child bash ===
+HAVE_TIMEOUT=1 tprobe_rc=124
+
+/proc/locks readability (Python open, same uid): read succeeded; first line='1: POSIX  ADVISORY  WRITE 29564 00:1e:250992760 0 0\n'

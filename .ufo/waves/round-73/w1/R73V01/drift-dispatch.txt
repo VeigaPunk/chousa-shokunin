@@ -1,0 +1,18 @@
+== run_drift missing-baseline exit ==
+  4316	
+  4317	run_drift() { # PATH
+  4318	  local path=$1 line first='' in_block=0 have_vol=0 declared='' body='' vol_token=''
+  4319	  [[ -e $path ]] || {
+  4320	    printf 'research-gate: --drift baseline missing: %s\n' "$path" >&2
+  4321	    exit 2
+  4322	  }
+  4323	  [[ -f $path && -r $path ]] || {
+  4324	    printf 'research-gate: --drift baseline unreadable: %s\n' "$path" >&2
+
+== dispatch: run_pin/run_drift/run_selftest ==
+4281:run_pin() { # PATH
+4317:run_drift() { # PATH
+4377:run_selftest() {
+8841:  selftest) run_selftest ;;
+8842:  pin) run_pin "$PIN_ARG" ;;
+8843:  drift) run_drift "$DRIFT_ARG" ;;

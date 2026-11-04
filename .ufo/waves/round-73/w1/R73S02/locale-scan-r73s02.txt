@@ -1,0 +1,17 @@
+=== locale -a (count: 4) ===
+C
+C.utf8
+en_US.utf8
+POSIX
+
+=== gate loop replicated: first locale whose LC_ALL regex admits U+FF12 etc ===
+MATCH locale=en_US.utf8
+
+=== per-locale detail (ASCII-digit sanity + fullwidth) ===
+locale=C                        ascii=yes fullwidth=no
+locale=C.utf8                   ascii=yes fullwidth=no
+locale=en_US.utf8               ascii=yes fullwidth=yes
+locale=POSIX                    ascii=yes fullwidth=no
+
+=== LC_ALL=C reference arm (gate's next case) ===
+C-arm match rc=1

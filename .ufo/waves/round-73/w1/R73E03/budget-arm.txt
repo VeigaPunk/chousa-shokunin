@@ -1,0 +1,131 @@
+R73E03 — C1 timeout-wrap disclosure receipt
+Axes: accurate timeout classification; byte-exact disclosure; bounded execution.
+No full selftest run by this seat. No tool installs. No source changes.
+Recorded UTC fixture creation: 2026-11-04T02:47:10Z
+nproc=32 loadavg=4.25 4.17 4.06
+
+$ git -C /home/vgpnk/Projects/shokunin/chousa-shokunin rev-parse HEAD
+a0f094c272dcb09f1bf79e2c9057d7ea20b7ac7b
+rc=0
+$ sha256sum /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh
+d5d48128509f77edf161e4d8b10b833e6e00f822906460fa049f27d1244d41e2  tools/research-gate.sh
+rc=0
+$ /usr/bin/time --version
+time (GNU Time) 1.10
+$ timeout 1 sleep 5
+rc=124
+
+Fixture commands (verbatim body from gate:8355-8357):
+$ W=/fast/scratch/hyaku/chousa-r73/w1/R73E03/w
+$ mkdir -p "$W/lib"
+$ printf 'lead %s tail\n' "$(printf '\303\251%.0s' {1..16383})" >"$W/lib/locale-b.md"
+rc=0
+$ printf '{"id":"LC2","source":"lib/locale-b.md","span":"%s","expect":"supported"}\n' "$(printf '\\u00e9%.0s' {1..16383})" >"$W/claims-locale-b.jsonl"
+rc=0
+$ wc -c "$W/lib/locale-b.md" "$W/claims-locale-b.jsonl"
+ 32777 /fast/scratch/hyaku/chousa-r73/w1/R73E03/w/lib/locale-b.md
+ 98369 /fast/scratch/hyaku/chousa-r73/w1/R73E03/w/claims-locale-b.jsonl
+131146 total
+rc=0
+$ sha256sum "$W/lib/locale-b.md" "$W/claims-locale-b.jsonl"
+b7722d7572e0368061bf032bd8ebf7fbeb70f390fd7700b3cf96eeffb9359b9e  /fast/scratch/hyaku/chousa-r73/w1/R73E03/w/lib/locale-b.md
+49934b4ee525ab13a451a9c63c637be56185d363194d3d8a89d1a6ae20a26653  /fast/scratch/hyaku/chousa-r73/w1/R73E03/w/claims-locale-b.jsonl
+rc=0
+
+(a) Explicit timeout 900 reproduces the gate's default (LC_BOUNDARY_BUDGET_S left unset; gate:4415 defaults to 900).
+$ NOW=1793760441
+$ /usr/bin/time -f 'wall=%e user=%U sys=%S maxrss_kb=%M' -o "$SC/timing-a.txt" env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 CHOUSA_ROOT="$W" CHOUSA_NOW_EPOCH="$NOW" LC_ALL=C LANG=C timeout 900 bash /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh verify-claims "$W/claims-locale-b.jsonl"
+stdout:
+research-gate v2 — ts=2026-11-04T02:47:21Z — mode=claims — claims=/fast/scratch/hyaku/chousa-r73/w1/R73E03/w/claims-locale-b.jsonl
+CLAIM id=LC2 expected=supported observed=supported source=lib/locale-b.md at=line:1 verdict=match
+VERDICT_BEARING_CLAIMS=1/1
+RESEARCH_GATE: CLEAN (claims=1 supported=1 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)
+stderr: empty
+rc=0
+GNU time: wall=21.97 user=18.42 sys=3.82 maxrss_kb=8464
+Match-line count=1; RESEARCH_GATE: CLEAN count=1.
+$ awk 'BEGIN{printf "margin=%.2fx\n", 900/21.97}'
+margin=40.96x
+rc=0
+Derived slack: 900 - 21.97 = 878.03 seconds. Observed runtime uses 2.44% of default budget.
+
+(b) Same fixture, same scrubbed environment; timeout 1:
+$ /usr/bin/time -f 'wall=%e user=%U sys=%S' -o "$SC/timing-b.txt" env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 CHOUSA_ROOT="$W" CHOUSA_NOW_EPOCH="$NOW" LC_ALL=C LANG=C timeout 1 bash /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh verify-claims "$W/claims-locale-b.jsonl"
+stdout: empty (0 bytes)
+stderr: empty (0 bytes)
+rc=124
+GNU time: Command exited with non-zero status 124
+wall=1.00 user=0.96 sys=0.03
+Repeated once for immediate survivor observation:
+rc=124
+GNU time: Command exited with non-zero status 124
+wall=1.00 user=0.94 sys=0.05
+stdout_bytes=0 stderr_bytes=0
+$ pgrep -af 'hyaku/chousa-r73/w1/R73E03'
+no matches immediately after timeout; no matches after sleep 2
+rc=1 (no matches)
+This is fixture-specific, not a claim about other seats' processes.
+
+Narrow extracted-arm harness, NOT the full battery:
+$ GATE=/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh
+$ { printf '#!/usr/bin/env bash\nset -uo pipefail\n'; printf 'cases=257\nlc_rc=124\nlc_out=%q\nLC_BOUNDARY_BUDGET_S=1\nfailures=0\n' ''; sed -n '8366,8376p' "$GATE"; printf 'printf "ARM_STATE cases=%%s lc_ok=%%s failures=%%s\\n" "$cases" "$lc_ok" "$failures"\n'; } >"$SC/arm2.sh"
+$ bash "$SC/arm2.sh" >arm2-out.txt 2>arm2-err.txt
+rc=0
+$ cat -A arm2-out.txt
+FAIL-case claims-locale-boundary       exit=124$
+    | $
+case-note claims-locale-boundary        reason=locale-boundary budget 1s exceeded (timeout); verdict unmeasured within budget$
+ARM_STATE cases=258 lc_ok=0 failures=1$
+arm2-err.txt: empty
+The observed rc=124/empty output were injected into the extracted predicate and branch; this is NOT an observed full-battery continuation.
+
+Gate code retained for interpretation:
+4415: LC_BOUNDARY_BUDGET_S="${LC_BOUNDARY_BUDGET_S:-900}"
+4419: timeout 1 sleep 5 >/dev/null 2>&1 || tprobe_rc=$?
+4420: if [[ $tprobe_rc -eq 124 ]]; then HAVE_TIMEOUT=1; fi
+8366: cases=$((cases + 1))
+8367: [[ $lc_rc -eq 0 ]] || lc_ok=0
+8368: [[ $lc_out == *'CLAIM id=LC2 expected=supported observed=supported source=lib/locale-b.md at=line:1 verdict=match'* ]] || lc_ok=0
+8369: if [[ $lc_ok -eq 1 ]]; then
+8370:   printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" claims-locale-boundary "$lc_rc"
+8371: else
+8372:   printf 'FAIL-case %-28s exit=%d\n' claims-locale-boundary "$lc_rc"
+8373:   printf '%s\n' "$lc_out" | sed 's/^/    | /'
+8374:   [[ $lc_rc -ne 124 ]] || printf 'case-note %-29s reason=locale-boundary budget %ss exceeded (timeout); verdict unmeasured within budget\n' claims-locale-boundary "$LC_BOUNDARY_BUDGET_S"
+8375:   failures=$((failures + 1))
+8376: fi
+8378: # ---- round-36 hash pin (case 259): a PATH shim cannot poison the manifest ----
+8383: if [[ $HAVE_FLOCK -ne 1 ]]; then
+8384:   cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+8745: if [[ $failures -eq 0 ]]; then
+8746:   printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"
+8747:   exit 0
+8748: fi
+8749: printf 'RESEARCH_GATE_SELFTEST: FAIL (%d/%d cases)\n' "$failures" "$cases"
+8750: exit 1
+Source inference: the case is COUNTED AS A FAILURE, never a pass, and the battery continues into case 259 (no exit/return or skip increment in this FAIL arm). A completing battery with this failure prints FAIL, not PASS. Completion alone is not a passing gate result.
+
+Byte comparison: extracted arm's case-note vs gate:8374 alone with lc_rc=124 and budget=1.
+Initial note-only harness omitted lc_rc under set -u and failed rc=1 (unbound variable); corrected by defining lc_rc=124 before extracting line 8374. Only corrected output is compared below.
+$ { printf '#!/usr/bin/env bash\nset -uo pipefail\nlc_rc=124\nLC_BOUNDARY_BUDGET_S=1\n'; sed -n '8374p' "$GATE"; } >"$SC/note.sh"
+$ bash "$SC/note.sh" >note-gate.txt
+rc=0
+$ grep '^case-note' arm2-out.txt >note-from-arm.txt
+rc=0
+$ diff -u note-from-arm.txt note-gate.txt
+(no output)
+rc=0
+$ cmp note-from-arm.txt note-gate.txt
+(no output)
+rc=0
+$ wc -c note-gate.txt
+126 note-gate.txt
+rc=0
+Byte-identical, including newline. The %-29s field pads the 21-character case name with 8 spaces. An additional naive single-space rendering differs (diff nonempty, rc=1; 119 vs 126 bytes); do not use that rendering as exact text.
+
+Default-budget substitution (not a 900s expiry measurement):
+$ LC_BOUNDARY_BUDGET_S=900; lc_rc=124; [[ $lc_rc -ne 124 ]] || printf 'case-note %-29s reason=locale-boundary budget %ss exceeded (timeout); verdict unmeasured within budget\n' claims-locale-boundary "$LC_BOUNDARY_BUDGET_S"
+case-note claims-locale-boundary        reason=locale-boundary budget 900s exceeded (timeout); verdict unmeasured within budget
+rc=0
+
+Limits: only this case and extracted arm measured; no full battery/preflight conclusion. Other error codes still select FAIL, but the timeout-specific note is guarded specifically on rc=124. HAVE_TIMEOUT=0 hosts do not use this wrap (not the measured host).

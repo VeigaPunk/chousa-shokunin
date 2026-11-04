@@ -1,0 +1,76 @@
+COMMAND: grep -nE 'skip-case' tools/research-gate.sh
+5654:    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" verify-all-manifest-append 'no flock(1): append fails closed'
+5656:    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" verify-all-manifest-two-appends 'no flock(1): append fails closed'
+6225:      printf 'skip-case %-2d %-26s reason=%s\n' "$cases" "$name" "$NS_WHY"
+6306:    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" claims-root-slash-read '/etc/hostname unreadable'
+6326:    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" claims-root-dslash '/etc/hostname unreadable'
+6749:    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" json-unterminated-manifest 'no flock(1): append fails closed'
+6751:    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" json-nul-terminated-manifest 'no flock(1): append fails closed'
+6757:    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" json-unreadable-manifest 'root reads any file'
+7361:    printf 'skip-case %-2d %-28s reason=no available locale admits Unicode digits\n' \
+7949:    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" c1lk-holder-blocks-append 'no /proc/locks or no flock(1)'
+7953:    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" c1lk-second-append 'no flock(1): append fails closed'
+8097:    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" r2-hash-fault-pinned "$NS_WHY"
+8385:    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" all-manifest-hash-shim 'no flock(1): append fails closed'
+COMMAND: grep -nE 'SKIPPED' tools/research-gate.sh
+4400:  # it once. SKIPPED moves up here from the r14 block (which kept resetting it,
+4402:  SKIPPED=0
+5653:    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+5655:    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+6224:      SKIPPED=$((SKIPPED + 1))
+6305:    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+6325:    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+6748:    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+6750:    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+6756:    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+7360:    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+7948:    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+7952:    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+8096:    SKIPPED=$((SKIPPED + 1))
+8384:    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+8746:    printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"
+COMMAND: grep -nE 'command -v|/proc/|id -u|locale -a|HAVE_FLOCK|HAVE_TIMEOUT|PY3|NS_STATE|NS_WHY' tools/research-gate.sh
+480:    # `command -v grep` fallback resolves this script's own grep() function and
+2805:  elif command -v realpath >/dev/null 2>&1; then
+3306:    fdpath="/proc/$$/fd/$registry_fd"
+3539:      fdpath="/proc/$$/fd/$meta_fd"
+3972:    if ! command -v flock >/dev/null 2>&1; then
+3988:    # round 32). /proc/$$/fd/N reopens the fd's own inode; without /proc the
+3991:    if [[ -e /proc/$$/fd/$jfd ]]; then
+3992:      jprobe=/proc/$$/fd/$jfd
+4398:  # `command -v python3` alone is satisfied on hosts whose python3 alias is a
+4403:  HAVE_FLOCK=1
+4404:  command -v flock >/dev/null 2>&1 || HAVE_FLOCK=0
+4405:  PY3=0
+4406:  if command -v python3 >/dev/null 2>&1 && python3 -c 'import json' >/dev/null 2>&1; then PY3=1; fi
+4416:  HAVE_TIMEOUT=0
+4418:  if command -v timeout >/dev/null 2>&1; then
+4420:    if [[ $tprobe_rc -eq 124 ]]; then HAVE_TIMEOUT=1; fi
+5580:      if [[ $PY3 -eq 1 ]]; then
+5647:  if [[ $HAVE_FLOCK -eq 1 ]]; then
+6190:  NS_STATE='' NS_WHY=''
+6191:  ns_probe() { # silent; sets NS_STATE=yes|no once
+6192:    [[ -n $NS_STATE ]] && return 0
+6193:    command -v unshare >/dev/null 2>&1 || { NS_STATE=no NS_WHY='unshare absent'; return 0; }
+6198:    then NS_STATE=yes; else NS_STATE=no NS_WHY='no unprivileged user+mount namespace'; fi
+6223:    if [[ $NS_STATE != yes ]]; then
+6225:      printf 'skip-case %-2d %-26s reason=%s\n' "$cases" "$name" "$NS_WHY"
+6728:      if [[ $PY3 -eq 1 ]]; then
+6744:  if [[ $HAVE_FLOCK -eq 1 ]]; then
+6753:  if [[ $(id -u) -ne 0 ]]; then
+7352:  done < <(locale -a 2>/dev/null)
+7870:  if command -v timeout >/dev/null 2>&1; then c1lk_to=(timeout 120); fi
+7876:  if [[ -r /proc/locks ]] && command -v flock >/dev/null 2>&1; then
+7912:      if grep -Eq "^[0-9]+:[[:space:]]+->[[:space:]]+FLOCK[[:space:]]+ADVISORY[[:space:]]+WRITE[[:space:]]+[0-9]+[[:space:]]+[0-9a-fA-F]+:[0-9a-fA-F]+:$c1lk_ino[[:space:]]" /proc/locks; then
+7934:    if [[ $PY3 -eq 1 ]]; then
+7949:    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" c1lk-holder-blocks-append 'no /proc/locks or no flock(1)'
+7951:  if [[ $HAVE_FLOCK -ne 1 ]]; then
+7955:  if [[ $HAVE_FLOCK -eq 1 ]]; then
+7970:  if [[ $PY3 -eq 1 ]]; then
+8095:  if [[ $NS_STATE != yes ]]; then
+8097:    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" r2-hash-fault-pinned "$NS_WHY"
+8360:  if [[ $HAVE_TIMEOUT -eq 1 ]]; then
+8383:  if [[ $HAVE_FLOCK -ne 1 ]]; then
+8387:  if [[ $HAVE_FLOCK -eq 1 ]]; then
+UNMAPPED_SKIP_EMITTERS=[]
+EMITTER_SITES=13

@@ -1,0 +1,182 @@
+fleet_revision=1a3fbac0fbdc09342ccf86850dfb1227a0792ae6
+source=.ufo/reports/round-74/kake.md
+git_show_rc=0
+1: # kake — round 74
+2: 
+3: ## Work performed
+4: 
+5: The round declared two claims, frozen in `.ufo/waves/round-74/contract.md` at
+6: `b35dd4d7d6a0a633d7c950bf641d3f948e680448` (base controls and retained sources committed before any
+7: seat ran), with Amendment 1 (terms only, after the wave-1 attack seats and before any after-state) at
+8: `312b531a1e319cb0cc14d9d2eac4ff1414d6ca75`:
+9: 
+10: - **C1 calibration** (lowest owned axis, score 2, HOLD) — seven of the eight counters the frozen
+11:   contracts of rounds 69–73 name had no `SKILL.md` gate-registry table row at base (only
+12:   `c73_tmp_v3.py` was registered, and `c72_tmp_v2.py` was an unregistered routed debt). Land the
+13:   seven rows plus the round's own counter row, with a counter that re-derives the gap from committed
+14:   bytes and a selftest that kills the witness-cell, dump-row, prose-only, dead-path, missing-file and
+15:   fenced-row readings.
+16: - **C2 freshness** (score 10, HOLD) — `corpus/knowledge/freshness-sidecar.json` carried 148
+17:   `kind=absent` notes, 144 of whose tokens resolve on this host (they were written on the Windows
+18:   host, dated 2026-10-31). The standing sweep never probes a note's token for the note's own sake, so
+19:   the contradiction was invisible. Land an `os.stat` three-way re-observation (present / absent on
+20:   ENOENT·ENOTDIR / unevaluable on any other `OSError`), flip the 144 contradicted notes to dated
+21:   `restored` observations with the prior note preserved under `history`, keep the 4 genuinely absent
+22:   entries (3 tokens) `absent`, and land the counter and tool as the new capability. Sourced on S441
+23:   and S442 (opened this round).
+24: 
+25: Work items, each with evidence:
+26: 
+27: - Freeze commit `b35dd4d7` (lane, via `jj-lane.sh`): contract, the three claim controls
+28:   (`controls/base-c1-registry.txt`, `base-c2-sidecar.txt`, `base-c2-sweep.txt`) and the retained
+29:   Python-doc sources (`.ufo/waves/round-74/sources/python-os-{path,stat}.{html,txt}`, byte-identical
+30:   to ScoutSources' independent 2026-11-03 fetches).
+31: - Amendment commit `312b531a`: A1–A7 (registration cells, one counter per row with the entry-command
+32:   basename bound, `own_row` section bound, label honesty, append-after-935 placement, reproduction
+33:   fields, unevaluable severity) and B1–B5 (severity, extended restored-note vocabulary, base-byte
+34:   binding, zero-drift pass, field-name mapping), each closing a measured attack finding.
+35: - Wave `w1` (one v1 wave, 14 seats, band 8–16; scout 2, executor 4, scribe 2, reviewer 2, critic 1,
+36:   mutation-tester 1, connector 1, sentinel 1; attack share 4/14 = 28.6 %; the L1 held the planner
+37:   seat): spec `w1-spec.json`, dispatch `w1-dispatch.json`, results `w1-results.json` — 14/14 settled,
+38:   none dead. Dispatched through the inline handoff (`w1.ready` written 20:13, taken by the
+39:   orchestrator; seats filled in tranches).
+40: - Instrument deliverables integrated: `.ufo/waves/round-74/c74_registry_gap.py` (selftest 8/8; the
+41:   delivered 5/5 was extended with f6 fenced-row, f7 witness-cell and f8 dump-row fixtures),
+42:   `.ufo/waves/round-74/c74_sidecar_reobserve.py` (selftest 8/8; the delivered counter's verdict did
+43:   not gate on its annotation findings — fixed and g8 added), `scripts/sidecar_reobserve.py` (selftest
+44:   10/10; extended vocabulary, `ensure_ascii=False`, atomic replace, reader-mirroring validation,
+45:   `--root` required with `--write`).
+46: - Landing evidence: `SKILL.md` `### Round 74 gate registry additions` (32 appended lines, 0
+47:   deletions), `corpus/knowledge/sidecar-reobservation.md`, one `corpus/README.md` coverage row, the
+48:   `corpus/SOURCES.md` S441/S442 rows, the 144-entry sidecar rewrite, `SCORECARD.md` round-74 section
+49:   and capability row, `LOG.md` round-74 entry, `corpus/lessons/round-74.md`.
+50: 
+51: ## Landed changes
+52: 
+53: All tied to the LOG.md round-74 entry. Lane commits (pushed; `git ls-remote origin refs/heads/master`
+54: shows the final hash): freeze `b35dd4d7`, amendment `312b531a`, round work `30c35842`, measured
+55: claims/lesson `a0500653`, receipts `c9fd9643`.
+56: 
+57: - `SKILL.md` — the round-74 gate-registry section: seven population rows plus `c74_registry_gap.py`'s
+58:   own row, with `gate (live …)` only for exit-0 counters and `instrument (historical …)` for the
+59:   measured non-green ones; successor mentions spelled `.ufo/waves/round-73/c73_tmp_v3.py`. C1.
+60: - `corpus/knowledge/freshness-sidecar.json` — 144 `absent` → `restored` flips with the prior
+61:   observation under `history`; `line`/`lineSha256` unchanged (0 position changes); 4 absent entries
+62:   remain. C2.
+63: - `corpus/knowledge/sidecar-reobservation.md` — the new entry (provenance trio, S441/S442, the
+64:   three-way probe, the procedure, the census, the limits). C2.
+65: - `corpus/README.md` — one coverage row; it supersedes the old sidecar row's "30 entries" count.
+66: - `corpus/SOURCES.md` — S441 and S442 appended after S440 (178 → 180 rows).
+67: - `scripts/sidecar_reobserve.py` — the re-observation capability (check/write/selftest).
+68: - `.ufo/waves/round-74/` — contract, amendment, controls (3 claim controls, 4 supplementary base-harm
+69:   receipts with `controls/PROVENANCE.md`, 11 after receipts), sources, spec/dispatch/results, the two
+70:   counters, and all 14 seat reports with their held-out fixtures.
+71: - `SCORECARD.md` — the round-74 measured-claims section, the capability row and the move log; 37
+72:   appended lines, 0 deletions.
+73: - `LOG.md` — the round-74 entry (10 appended lines, 0 deletions).
+74: - `corpus/lessons/round-74.md` — four mined mistakes, the Gate (5 admits / 5 rejects), the sourced
+75:   claim and the routed limits.
+76: 
+77: Inherited state resolved: none — the lane was clean at `ced2878a` (`git status --porcelain` empty at
+78: round open). The four `base-harm-*.txt` receipts are the L1's own post-freeze supplementary readings,
+79: disclosed in `controls/PROVENANCE.md` and lesson M4; the three claim controls remain the frozen set.
+80: 
+81: ## Before → after measurements
+82: 
+83: - **C1 (calibration)** — counting command
+84:   `python3 -B .ufo/waves/round-74/c74_registry_gap.py --root . --revision <rev>`
+85:   (receipts `controls/base-c1-registry.txt`, `controls/after-c1-registry.txt`,
+86:   `controls/after-c1-registry-final.txt`):
+87:   - Before, base `ced2878a`: `unregistered=7 own_row=false met=false`, exit 1.
+88:   - After, landed tip `30c35842`: `unregistered=0 own_row=true met=true`, exit 0; re-measured at `a0500653` and at the
+89:     final tip `c9fd9643`: same line, exit 0. The do-nothing control is the base receipt: no row added
+90:     leaves `unregistered=7`.
+91: - **C2 (freshness)** — counting command
+92:   `python3 -B .ufo/waves/round-74/c74_sidecar_reobserve.py --root . --revision <rev>`
+93:   (receipts `controls/base-c2-sidecar.txt`, `controls/after-c2-sidecar.txt`,
+94:   `controls/after-c2-sidecar-final.txt`):
+95:   - Before, base `ced2878a`: `entries=174 absent=148 restored=26 absent_present=144 contradictions=144
+96:     met=false`, exit 1; the standing sweep at base exits 1 with one unannotated miss and never names
+97:     the 144 contradictions (`controls/base-c2-sweep.txt` — the blindness control).
+98:   - After, landed tip `30c35842`: `absent=4 restored=170 absent_present=0 contradictions=0
+99:     annotation_findings=0 met=true`, exit 0; re-measured at `a0500653` and at the final tip `c9fd9643`: same line, exit 0. The
+100:     sweep's `--selftest` stays `36/36` and `--offline` stays exit 1 with the same single `~/projects`
+101:     drift and no `Error:` line (`controls/after-harm-sweep-selftest.txt`,
+102:     `controls/after-harm-sweep-offline.txt`).
+103: - **Harm at `a0500653`** (claim counters and the sweep re-checked at the final tip `c9fd9643` with the same lines): c66 exit 0 (`members=28 evaluated=28 mismatches=3
+104:   structural=0 agreement=25 scores_held=3/3 met=True`), c70 exit 0 (`pointers=373 dangling=17
+105:   annotated=17 unannotated=0 append_only=true met=true`), c72 exit 0 (`findings=[] met=True`),
+106:   c73_wave_pointers `met=true`, c73_tmp_v3 `selftest=41/41 findings=[] met=True`; the three new
+107:   instrument files carry 0 `/tmp` literals. Receipts `controls/after-harm-*.txt`.
+108: 
+109: ## Sources & frontier
+110: 
+111: - Census: before — `/home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root
+112:   /home/vgpnk/Projects/shokunin kake` exit 0 (`ok`, 178 rows; the 16 W04 duplicate-URL warnings are
+113:   pre-existing and allowed). After — same command, exit 0, `ok`, 180 rows
+114:   (`controls/after-census.txt`).
+115: - Rows before→after: 178 → 180. Rows added by tier: two tier-A `docs` rows — S441
+116:   (`docs.python.org/3/library/os.path.html#os.path.exists`) and S442
+117:   (`docs.python.org/3/library/os.html#os.stat`), both opened 2026-11-03 and retained under
+118:   `.ufo/waves/round-74/sources/`. Rows touched old→new: none (no status, recheck or used-by cell of an
+119:   existing row changed; the diff is 2 additions, 0 deletions). Frontier rows advanced: none (the two
+120:   rows back the round's freshness instrument and its knowledge entry; no new coverage-map ground
+121:   beyond the sidecar ground the lane already held).
+122: - The lesson's `## Gate` records both URLs, the 2026-11-03 access dates, located ≤25-word quotes
+123:   (S441: "may return False if permission is not granted to execute os.stat() on the requested file,
+124:   even if the path physically exists"; S442: "All functions in this module raise OSError (or
+125:   subclasses thereof) in the case of invalid or inaccessible file names and paths"), and 5 admits /
+126:   5 rejects with reasons.
+127: - Assimilation: none. The round's claims are lane-instrument repairs; no `merge/kake/` source was
+128:   opened and no `considerthese/` proposal was implemented (the latest file's open proposals remain
+129:   candidates for a later round).
+130: 
+131: ## Trend verdicts
+132: 
+133: - **expansion: unchanged** — one new knowledge entry (`sidecar-reobservation.md`) on ground the lane
+134:   already holds (the local-path freshness sidecar), two curated rows, no frontier-map move. Evidence:
+135:   the SOURCES diff (2 additions, 0 deletions) and the absence of a new coverage area.
+136: - **quality: improved** — two instruments added or repaired with able-to-fail evidence: C1's counter
+137:   is red at base and green at the tip over the same eight counters (7/8 → 0/8 unregistered), with
+138:   eight selftest fixtures; C2's counter goes 144 → 0 contradictions with history preserved, and the
+139:   standing sweep is unchanged (36/36, exit 1 same drift), so no gate was weakened to go green. The
+140:   attack seats measured the delivered counters' two verdict gaps and both were closed before the
+141:   after-state (A2, M2).
+142: - **discernment: improved locally** — four mistakes mined with evidence, the Gate records 5 admits
+143:   and 5 substantive rejects (including rejecting the "any cell" registration test and the "clean"
+144:   freshness reading), and the contract's amendment was written only after the attack seats' measured
+145:   findings and before any after-state. The independent non-author spot-check is owed to the hyaku
+146:   closure, as recorded in the lesson.
+147: 
+148: ## SHONEN
+149: 
+150: - [~] SKILL.md contains real decision tables, error patterns, checklists, cited sources — the round-74
+151:   gate-registry section (eight rows, honest Kind labels, entry/self-test commands) plus S441/S442;
+152:   `w1/ReviewerC1.md` and `w1/ConnOverlap.md` re-derived the row grammar and the placement.
+153: - [~] At least one end-to-end domain task executed and logged in LOG.md — the round-74 LOG entry with
+154:   the two frozen claims measured end-to-end; receipts under `.ufo/waves/round-74/controls/` measured
+155:   at `30c35842`/`a0500653`.
+156: - [~] Instructions executable by an agent without oral context — the registry rows' command cells,
+157:   `scripts/sidecar_reobserve.py`'s `--check`/`--write` CLI and the contract's amendment re-derive every
+158:   step; the wave's 14 seats ran from committed bytes alone.
+159: - [~] No cross-domain bleed (PROVINCE.md still accurate) — PROVINCE.md untouched; the round's only web
+160:   reads were two public Python-doc GETs; `w1/ConnOverlap.md` found no sibling overlap requiring
+161:   arbitration.
+162: 
+163: ## Stale-lane
+164: 
+165: kake's own mission: this round, landed and reported; no other mission of this lane is open
+166: (respawn-per-round driver). Age under two driver ticks.
+167: 
+168: ## Tooling
+169: 
+170: No tool installed or upgraded by the L1 or any seat this round (pacman untouched, per the host-wide
+171: pause). The wave's seats recorded the host toolchain they used (git, node, Python 3) and no installs.
+172: 
+173: ## Round shape
+174: 
+175: One v1 wave `w1` of 14 seats (band 8–16), no residual call, round total 14. Roles: scout 2, executor
+176: 4, scribe 2, reviewer 2, critic 1, mutation-tester 1, connector 1, sentinel 1; dead seats: none
+177: (14/14 settled in `w1-results.json`). Lane commits: freeze `b35dd4d7`, amendment `312b531a`, round
+178: work `30c35842`, measured claims/lesson `a0500653`, receipts `c9fd9643` (pushed; ls-remote
+179: shows the final hash). Report commit follows via `fleet-commit.sh`.

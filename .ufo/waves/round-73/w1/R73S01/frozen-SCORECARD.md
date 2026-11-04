@@ -1,0 +1,3328 @@
+# chousa — Scorecard
+
+## Axes
+
+| Axis | Score (0–10) | Evidence | Last-change round |
+|---|---:|---|---:|
+| operability | 3 | Gate commit `31b46832e56a7f095092a4a6d62b74bfaf6933e8`: A/B/C each exit 1 with exactly one full DRIFT summary; `.ufo/evidence/round-1/acceptance.json`; baseline `34774a1777d4058ca8c2b4456ce2e6ccee9e24c5` was 0/3. Numeric score deliberately frozen at the historical 3/10 — the r63–r65 capability verdicts and their counters were recorded without moving this number (last numeric change round 1; re-measurement owed when the lane revisits the score) | 1 |
+
+This missing-at-baseline scorecard starts with the one measured axis, operability
+(AXES.md's runnable-artifact axis). No expertise scores are invented for the
+other five axes. Score = the number of the three named archived inputs that
+exit 1 **and** emit exactly one `RESEARCH_GATE: DRIFT` summary, one point each;
+this deliberately narrow observable can award at most 3/10, not field readiness.
+
+## Planned
+
+Round 1's one move is integrated: informational findings no longer abort the
+CLI before its verdict, and fresh-process fixtures exercise the public path.
+No second round runs here. Fresh round 2 must pre-register its local-only
+claim-verification fixture after receipt identity and new-wave routing exist.
+
+Baseline inputs, read-only under the fleet root:
+`research/deep-research-2026-09-28/A-shokunin-tradition.md`,
+`B-multiagent-knowledge.md`, and `C-rank-taxonomy.md`.
+
+Counting command (run from this lane; no fetch):
+
+```bash
+python3 -c 'import subprocess; names=("A-shokunin-tradition.md","B-multiagent-knowledge.md","C-rank-taxonomy.md"); rows=[subprocess.run(["bash","tools/research-gate.sh","verify","../research/deep-research-2026-09-28/"+n,"--root",".."],capture_output=True,text=True) for n in names]; print("VERDICT_BEARING_EXPORTS=%d/3" % sum(r.returncode==1 and sum(s.startswith("RESEARCH_GATE: DRIFT (") for s in r.stdout.splitlines())==1 for r in rows))'
+```
+
+## Retired
+
+None. The unmeasured axes are not retired or asserted saturated.
+
+## Round-1 per-axis verdicts
+
+Measurements: committed gate `31b46832e56a7f095092a4a6d62b74bfaf6933e8`,
+`.ufo/evidence/round-1/acceptance.json` and `final-intake.json`.
+The earlier baseline is the observed failure preserved in LOG.md, not a
+failure rerun in this continuation. The 3/10 score remains the narrow count
+above, never a scalar replacement for these verdicts.
+
+| Axis | Verdict | Evidence boundary |
+|---|---|---|
+| operability | improved | 0/3 → 3/3 verdict-bearing archives; real CLI selftest PASS (20 cases), normal/strict info paths and setup exits checked; intake CLEAN |
+| depth | unchanged | No independently verified domain fact or broader expertise measurement added |
+| coverage | unchanged | One supporting intake specimen, not a measured fraction of the province |
+| freshness | unchanged | Changed surface rechecked; no new drift detector or cross-revision freshness claim |
+| calibration | unchanged | Structural/semantic limits retained; no non-author discernment or promotion claim |
+| adjacency | unchanged | Existing province refusals retained; foreign findings reported, not absorbed |
+
+## Round-1 learning trends
+
+| Trend | Verdict | Evidence |
+|---|---|---|
+| expansion | improved | New held archive-intake specimen, `corpus/README.md` coverage row for `knowledge/archived-export-intake.md`; source pins and structural acceptance attached |
+| quality | unchanged | No older admitted knowledge entry was reverified or superseded; no semantic-quality gain claimed from a structural CLEAN |
+| discernment | unchanged | Non-author admit/reject spot-check unavailable; L2 reviews remain author-lane evidence |
+
+## Admission and continuation
+
+Local axis result: one improved, none harmed. The inherited 32-member
+rendered wave is reconciled; later nine-seat calls are advisory only.
+No second round-1 wave or round-2 work was started.
+
+Mission acceptance is separate: the interactive launch has no authentic
+queue taskKey/expected receipt bag. Do not manufacture `task_...`, count a
+shape-only receipt as applicable, or mark the Sighting complete. Proven
+receipt-backed completed rounds remain 0 pending integrator receipt binding
+and acceptance. The operator's target remains at least 100, not reduced.
+
+Debt and concrete unblocks: the continuation records missing receipt identity,
+current role-to-alias bindings needed before a new wave, outside spot-check,
+and absent scope-refusal gate findings. The narrow archive observable is
+exhausted, not the operability axis or province; no saturation is declared.
+
+## Round 2 verdict — 2026-10-15 (goal wave; evidence commit `c3df458`)
+
+Selected axis: **coverage** — the lane's core method (claim-vs-source
+verification), registered in round 1 as "fresh round 2 must pre-register its
+local-only claim-verification fixture." Routing is satisfied by the
+operator's in-session direct dispatch; **receipt identity remains open** (see
+the report's debt section). Wave: one 32-seat flash call, 24/24 reports.
+Report: `.ufo/round-2/chousa-goalwave.md`.
+
+**Before** (gate `0884355…`, selftest 20): the gate validated record
+STRUCTURE only — no claim was ever checked against its source; the claim
+machinery of the declared method was unmeasured.
+
+**After** (gate `03a33244…`, selftest 30 = +10, first 20 byte-identical;
+fixture `corpus/fixtures/claims-r2.jsonl` with 17 provenance-carrying claims;
+parent acceptance 2026-10-15T23:45Z): `verify-claims <file> --root ..`
+verifies each claim's span appears VERBATIM in its source under the corpus
+boundary (canonicalized; out-of-corpus/URL/session paths refused unopened),
+line-aware miss reports, the contradicted structural marker, per-claim
+verdicts + exact counting + the existing CLEAN|DRIFT/exit contract. Fixture:
+`VERDICT_BEARING_CLAIMS=17/17`, `RESEARCH_GATE: CLEAN (13 supported / 2
+contradicted / 2 unsupported)`. Round-1 observable intact: 3/3
+verdict-bearing exports. Boundary escapes refused (absolute, traversal,
+symlink, named pipe); strace-confirmed zero network; the r1 verify path
+byte-stable.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | claim-vs-source verification lands as a verdict-bearing gate mode with a pre-registered 17-claim fixture (provenance README, span-fidelity independently re-verified); the method's core move is now executable and measured. |
+| depth | **improved** | `corpus/knowledge/claim-verification-r2.md`: verbatim-span semantics + the honest limits (does NOT prove semantics, location binding, source truth, external verification); lesson `2026-10-15-claims-span-fidelity.md`. |
+| operability | **improved** | selftest 20 → 30 (+10: positive/tampered/out-of-corpus/external/session/marker/counting); existing cases byte-identical; exit contract 0/1/2 held. |
+| freshness | **unchanged** | four receipts + fixture log at the new SHA; no drift detector (mori-style pins are a sibling lane's pattern, not adopted here). |
+| calibration | **unchanged** | the contradicted marker is structural by design; the note names what the check does not prove. |
+| adjacency | **unchanged** | zero network (strace); research corpus read-only; seats wrote only in-lane; scope-sentinel clean. |
+
+Honest residuals (named in the note + seat reports): in-root hardlinks bypass
+path canonicalization (critic); no size cap on claim-source reads
+(boundary-tester recommendation); the banner still says `research-gate-r1`
+(cosmetic). Admission: **ADMIT** (coverage/depth/operability improved, none
+harmed). No scalar score. Learning trends: expansion/quality **improved**,
+discernment **unchanged** (no outside spot-check exists). Round 3
+registered: chain-hop resolution — each hop's citation must resolve to a real
+corpus location, making citation chaining verdict-bearing.
+
+## Round 3 verdict — 2026-10-15 (goal wave; evidence commit `cc9fe8f`)
+
+Selected axis: **coverage** — citation chaining becomes verdict-bearing (the
+round-2-named continuation). Wave: one 32-seat flash call, 24/24 reports.
+Report: `.ufo/round-3/chousa-goalwave.md`. Environmental note: the host's
+per-user /tmp quota exhausted mid-acceptance (all prior waves' scratch);
+the parent freed 727 MB of stale declared-ephemeral scratch and re-ran the
+battery clean — no artifact was affected.
+
+**Before** (gate `03a33244…`, selftest 30): chain hops were checked
+STRUCTURALLY only — a hop could cite an anchor that does not exist in the
+target and still pass.
+
+**After** (gate `67daf85e…`, selftest 40 = +10, first 30 byte-identical;
+parent acceptance 2026-10-16T00:15Z): `verify-chain <record> --root ..`
+verifies each resolved hop's citation — source must be a declared Sources id
+or in-corpus path (same canonicalization as verify-claims; unknown ids and
+out-of-corpus/URL/session sources refused unopened), anchor must exist
+(heading trimmed-equality, quote verbatim line-aware, whole-line) with
+`at=line:N` reporting; unresolved/marked hops stay exempt but counted;
+`RESOLVED_HOPS=N/M` + the CLEAN|DRIFT/0-1-2 contract. Fixture:
+`RESOLVED_HOPS=17/22`, `RESEARCH_GATE: CLEAN` (17 verified / 5 exempt);
+the broken control fixture DRIFTs exit 1 naming `anchor-missing`.
+verify-claims held byte-identical (17/17 CLEAN); the r1 archive observable
+intact (3/3).
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | citation chaining is now resolution-verified end to end (source id or path + anchor existence), the third verdict-bearing mode; per-hop line reporting makes misses actionable. |
+| depth | **improved** | `corpus/knowledge/chain-resolution-r3.md` (anchor semantics, exempt classes, the named limit: anchors are SUBSTRING semantics — a truncated quote still resolves; round-4 hardening candidate). |
+| operability | **improved** | selftest 30 → 40 (+10: positive/missing-anchor/out-of-corpus/unresolved-exempt/counting/exits); all r1+r2 cases byte-identical; three modes compose with one boundary policy. |
+| freshness | **unchanged** | r3 receipts at the new SHA. |
+| calibration | **unchanged** | the substring-semantics limit is documented as a named candidate, not hidden. |
+| adjacency | **unchanged** | zero network; corpus read-only; scope-sentinel clean. |
+
+Admission: **ADMIT** (coverage/depth/operability improved, none harmed). No
+scalar score. Learning trends: expansion/quality **improved**, discernment
+**unchanged**. Round 4 registered: anchor hardening — token-boundary
+semantics so truncated-quote games cannot resolve, plus the claim-span
+truncation class from round 2's note.
+
+## Round 4 verdict — 2026-10-16 (goal wave; evidence commit `a6f3118`)
+
+Selected axis: **calibration** of the matching semantics — the round-3-named
+truncation limit. Wave: one 32-seat flash call, 25/25 reports. Report:
+`.ufo/round-4/chousa-goalwave.md`.
+
+**Before** (gate `67daf85e…`): anchors and claim spans matched as raw
+substrings — a citation truncated mid-phrase (or padded with an extra word)
+still resolved.
+
+**After** (gate `6b83705b…`, selftest 44 = +4; parent acceptance
+2026-10-16T00:55Z): ONE shared token-boundary matcher serves both verify-claims
+spans and verify-chain quote anchors (the rule cannot drift between modes;
+verified by the cross-mode seat): an occurrence counts only when both outer
+edges are boundaries — file/line edge, ASCII whitespace, ASCII punctuation —
+with `-`/`'` as boundaries only when not joining two word characters, `_`
+punctuation (Markdown emphasis), non-ASCII bytes NOT boundaries (fail closed),
+byte-exact, case-sensitive; misses keep the line-aware reports. All r1-r3
+cases byte-identical PASS (1-40 cmp-clean against the r3 receipt); claims
+17/17 and chain 17/22 still CLEAN; the broken control still DRIFTs naming
+anchor-missing; the r1 observable intact (3/3); the attack seat's
+truncation/padding/glue games all FAIL, controls PASS.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| calibration | **improved** | the matching semantics went from substring (truncation-vulnerable, demonstrated) to documented token boundaries, with the exact character class in the header and shared logic across modes. |
+| depth | **improved** | `corpus/knowledge/anchor-boundaries-r4.md`: the rule, the catches, and what hardening still cannot do (semantic/context limits — a real quote reused in a wrong context still resolves); lesson `2026-10-15-anchor-token-boundaries.md`. |
+| operability | **improved** | selftest 40 → 44 (+4: boundary pass/fail pairs running the SAME fixture bytes through both modes); zero regression across all modes. |
+| coverage | **unchanged** | no new measured surface; both fixtures held. |
+| freshness | **unchanged** | five receipts at the new SHA. |
+| adjacency | **unchanged** | zero network; quota-sentinel-held /tmp; corpus read-only. |
+
+Admission: **ADMIT** (calibration/depth/operability improved, none harmed). No
+scalar score. Learning trends: expansion/quality **improved**, discernment
+**unchanged**. Round 5 registered: the last unmeasured structural axis —
+kept rejections and negative sweeps become verdict-bearing (`verify-sweeps`:
+each rejection cites reason + flip-condition; each sweep names where it
+looked, with local emptiness checkable).
+
+## Round 5 verdict — 2026-10-16 (goal wave; evidence commit `e7ab39a`)
+
+Selected axis: **coverage** — the last r1 structural axis: kept rejections and
+negative sweeps become verdict-bearing. Wave: one 32-seat flash call, 27/27
+reports. Report: `.ufo/round-5/chousa-goalwave.md`.
+
+**Before** (gate `6b83705b…`): rejections and sweeps existed structurally — a
+rejection with no flip-condition passed; a sweep naming nowhere (or a false
+emptiness) passed.
+
+**After** (gate `55adb92d…`, selftest 54 = +10, cases 1-44 byte-identical;
+parent acceptance 2026-10-16T02:00Z): `verify-sweeps <record> --root ..`
+requires every kept rejection to carry a non-empty reason AND flip-condition
+(`SWEEP_REJECTION_INCOMPLETE` on miss), and every sweep to name where it
+looked: local path sets are re-run for emptiness (any hit =
+`SWEEP_CLAIM_FALSE` naming the hit; zero hits = verified), non-local namings
+exempt-but-counted (the unresolved-hop idiom), unnamed = `SWEEP_LOCATION_ABSENT`,
+boundary escapes refused unopened. Fixture: `VERIFIED_SWEEPS=1/2
+REJECTIONS_OK=3/3` CLEAN; broken control DRIFT naming both classes (incomplete
+rejection + a planted hit listed by path). claims 17/17 and chain 17/22 held
+CLEAN; selftest 54/54 x2.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | all four r1 structural axes are now verdict-bearing (structure, claims, chains, rejections+sweeps); every record element that asserts something now gets checked against something. |
+| depth | **improved** | `corpus/knowledge/sweeps-rejections-r5.md`: flip-condition semantics, the local-emptiness re-check, the exempt class, and the named limits (vacuous flip-conditions, narrow-sweep triviality — as exercised by the adversarial seats). |
+| operability | **improved** | selftest 44 → 54 (+10, 1-44 byte-identical); five modes under one boundary + exit contract. |
+| freshness | **unchanged** | receipts at the new SHA. |
+| calibration | **unchanged** | the critic's vacuous-flip and narrow-sweep classes are documented limits, not silently closed. |
+| adjacency | **unchanged** | zero network; corpus read-only; quota held. |
+
+Admission: **ADMIT** (coverage/depth/operability improved, none harmed). No
+scalar score. Learning trends: expansion/quality **improved**, discernment
+**unchanged**. Round 6 registered: composition — a `verify-all` deep mode
+running all four checks as one verdict, plus the fleet-ledger/manifest step
+that records a record's full verification state.
+
+## Round 6 verdict — 2026-10-16 (goal wave; evidence commit `74c533d`)
+
+Selected axis: **operability/composition** — one record, one deep verdict.
+Wave: one 32-seat flash call, 26/26 reports. Report:
+`.ufo/round-6/chousa-goalwave.md`.
+
+**Before** (gate `55adb92d…`): a record's full verification state required
+running four modes manually and eyeballing; no durable manifest.
+
+**After** (gate `0c3d51ed…`, selftest 64 = +10, cases 1-54 byte-identical;
+parent acceptance 2026-10-16T03:20Z): `verify-all <record> [--claims PATH]
+[--json PATH] --root ..` runs every applicable section as a fresh solo-mode
+invocation (section tallies equal the solo runs BY CONSTRUCTION), composes one
+`RESEARCH_GATE: CLEAN|DRIFT` (DRIFT iff any section drifts), reports absent
+sections (claims/chains/sweeps optional; absent != drift — the omission limit
+is a named r7 candidate), and `--json` APPENDS the verification state
+(record+gate SHAs, UTC, per-section tallies, composed verdict) to
+`corpus/evidence/verify-all-manifest.jsonl` (>> only, no rewrite path). Full
+fixture: CLEAN, sections=4 run=4; broken fixture: DRIFT with drift-sections=2
+naming chain + sweeps; strace-confirmed zero network; all solo modes held.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| operability | **improved** | composed verification with solo-equal tallies, absent-not-drift semantics, and a durable append-only manifest — a record's verification state is now one command + one manifest line. |
+| depth | **improved** | `corpus/knowledge/verify-all-r6.md`: composition semantics, the omission limit, the manifest schema; the omission-hunter demonstrated the named hole (claims-heavy record with no ## Claims verifies CLEAN) and the r7 candidate (cross-section reference integrity / record-type obligations). |
+| coverage | **unchanged** | no new measured surface; all five modes intact. |
+| freshness | **improved narrowly** | the manifest is the lane's first durable, append-only verification-state ledger. |
+| calibration | **unchanged** | absent!=drift is a declared semantic, not a hidden relaxation. |
+| adjacency | **unchanged** | zero network; corpus read-only; quota held. |
+
+Admission: **ADMIT** (operability/depth/freshness improved, none harmed). No
+scalar score. Learning trends: expansion/quality **improved**, discernment
+**unchanged**. Round 7 registered: binding integrity — every cross-section
+reference (sweep/companion bindings) must resolve to a declared row or source,
+fail-closed, closing the dangling-claim/unbound-companion class demonstrated
+this round.
+
+## Round 7 verdict — 2026-10-16 (goal wave; evidence commit `a1948c3`)
+
+Selected axis: **coverage-of-integrity** — the round-6 demonstrated hole:
+dangling cross-section references. Wave: one 32-seat flash call, 24/24
+reports. Report: `.ufo/round-7/chousa-goalwave.md`.
+
+**Before** (gate `0c3d51ed…`): a record's sweep cell could name a claim id no
+`## Claims` row declares, a hop could cite an undeclared source id — and every
+mode passed it (demonstrated: `CLEAN` on a record with 3 dangling refs).
+
+**After** (gate `3ba718bf…`, selftest 74 = +10; parent acceptance
+2026-10-16T04:15Z): seventh mode `verify-integrity`, composed as verify-all's
+fifth section: every reference token (claim/source/sweep ids in chain, claims,
+negatives, sweeps, rejections cells) must resolve to a declared id —
+`REF_UNRESOLVED` (drift) when not, resolved counted, exempt classes
+(non-local namings, blocked-no-fetch) exempt-but-counted. Fixture: 16 refs /
+15 resolved / 0 unresolved CLEAN; broken control DRIFT naming exactly
+`S9` (chain from-cell) and `C9` (sweeps claim_id). Solo holds intact
+(claims 17/17, chain 17/22); quota-sentinel clean 28 samples.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | every cross-section reference is now resolution-checked; the record's internal consistency is as verdict-bearing as its external citations. |
+| depth | **improved** | `corpus/knowledge/reference-integrity-r7.md`: the reference model (declared ids, reference cells, token splitting), fail-closed semantics, exempt classes, the critic's extraction limits (substring-looking ids, quoted-span tokens) dispositioned. |
+| operability | **improved** | selftest 64 → 74 (+10); seven modes; verify-all now runs five sections as fresh solo invocations (tally-equal by construction). |
+| freshness | **unchanged** | receipts + manifest lines at the new SHA. |
+| calibration | **unchanged** | warn-severity REF findings drift the record (visibility) — severity semantics documented. |
+| adjacency | **unchanged** | zero network; corpus read-only; quota held. |
+
+Admission: **ADMIT** (coverage/depth/operability improved, none harmed). No
+scalar score. Learning trends: expansion/quality **improved**, discernment
+**unchanged**. Round 8 registered: the gate's own behavioral baseline
+(`--pin`/`--drift` adapted from the sibling lane's proven pattern) — the
+verification tool's drift becomes detectable.
+
+## Round 8 verdict — 2026-10-16 (goal wave; evidence commit `27b55c3`)
+
+Selected axis: **freshness/operability** — the gate's own drift becomes
+detectable (the mori lane's proven pattern, lineage declared). Wave: one
+32-seat flash call, 23/23 reports. Report: `.ufo/round-8/chousa-goalwave.md`.
+
+**Before** (gate `3ba718bf…`): a gate regression (a mode silently skipped, an
+output field changed) was catchable only by reading receipts after the fact;
+no baseline existed anywhere in the lane.
+
+**After** (gate `46f5ddb3…`, selftest 85 = +11; parent acceptance
+2026-10-16T05:10Z): `--pin` captures a canonical invocation (verify-all on a
+self-built temp fixture, relative paths, byte-stable anywhere) with a declared
+VOLATILE contract (`ts gate_sha256` shape-masked; changing the list is itself
+drift); `--drift` reports `GATE_DRIFT: none` exit 0 / named tokens exit 1 /
+missing-malformed exit 2 — never a false none. Measured catches: a one-field
+mutant names `+finds -findings`; a silently-skipped mode names
+`-REJECTIONS_OK -SECTION:sweeps`; a volatile-list rewrite names
+`volatile_fields`. The lane committed its baseline
+(`corpus/evidence/gate-baseline-r8-20261016T033757Z.json`); the parent's
+drift re-run: `GATE_DRIFT: none` exit 0. All 74 prior cases byte-identical;
+all seven modes byte-stable; hermetic (pin from lane, drift from `/`); zero
+network.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| freshness | **improved** | the verification tool's behavior is now pinned and drift-detecting; the r7 selftest-flake class of surprise has a detector. |
+| operability | **improved** | selftest 74 → 85 (+11); --pin/--drift join the 0/1/2 contract; canonical invocation documented in the header. |
+| depth | **improved** | `corpus/knowledge/gate-baseline-r8.md`: design, the mori lineage, the volatile contract, catches (field/mode/volatile drift) and cannot-catches (semantic drift inside stable fields). |
+| coverage | **unchanged** | no new measured research surface. |
+| calibration | **unchanged** | the volatile list was measured before declared (3-run field diff). |
+| adjacency | **unchanged** | zero network; corpus read-only; sibling-lane files read-only (lineage cited). |
+
+Admission: **ADMIT** (freshness/operability/depth improved, none harmed). No
+scalar score. Learning trends: expansion/quality **improved**, discernment
+**unchanged**. Round 9 registered: fixture-depth coverage — the three archived
+inputs themselves run through verify-all end-to-end as records, with expanded
+claim/hop fixtures where the archives support them.
+
+## Round 9 verdict — 2026-10-16 (goal wave; evidence commit `ebd04d2`)
+
+Selected axis: **coverage** — the archive corpus gets its first full deep
+verification (fixture-led round; the gate correctly stayed unchanged).
+Wave: one 32-seat flash call, 24/24 reports. Report:
+`.ufo/round-9/chousa-goalwave.md`.
+
+**Before** (gate `46f5ddb3…`): the three archived inputs had only the r1
+structural observable (3/3) and ~17 pointwise fixture claims; no archive had
+ever passed through verify-all as a record.
+
+**After** (parent acceptance 2026-10-16T06:20Z): the three archives exist as
+gate-format records under `corpus/fixtures/archives-r9/` (spans machine-
+extracted from archive bytes, never retyped): verify-all CLEAN on each with
+zero findings — A: 6/7 hops resolved, 13 integrity refs / 0 unresolved, 4/4
+rejections, 1/1 sweeps; B: 6/7, 14/0, 3/3, 1/1; C: 7/8, 15/0, 4/4, 1/1.
+`claims-r9.jsonl` adds 10 new verbatim claims (10/10 CLEAN, 7 supported / 2
+contradicted / 1 unsupported). Premise correction recorded honestly: the
+archives do NOT literally cross-cite — the hops are intra-archive/conceptual,
+authored as such. The reframing risk (record-format distortion of what an
+archive claims) is named and mitigated in the record READMEs. All holds:
+selftest 85/85, `GATE_DRIFT: none` vs the r8 baseline, claims-r2 17/17.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | the lane's whole research corpus is now deep-verifiable end to end; claim coverage grew 17 -> 27 with archive-scale records. |
+| depth | **improved** | `corpus/knowledge/archives-verified-r9.md`: coverage stats, the reframing-risk analysis, honest premise correction. |
+| operability | **unchanged** | the gate unchanged (a fixture-led round as designed); every hold green. |
+| freshness | **unchanged** | receipts + three archive manifest lines at the current SHA. |
+| calibration | **improved narrowly** | the no-cross-citation finding is a calibration of the corpus map (prior records implied inter-archive chains that do not exist). |
+| adjacency | **unchanged** | archives quoted read-only; zero network. |
+
+Admission: **ADMIT** (coverage/depth/calibration improved, none harmed). No
+scalar score. Learning trends: expansion/quality **improved**, discernment
+**unchanged**. Round 10 registered: residual hardening — negative controls at
+archive scale (broken archive records per defect class), the exempt-hop audit,
+and disposition of every r2-r9 named limit.
+
+## Round 10 verdict — 2026-10-16 (goal wave; evidence commit `5f99fa3`)
+
+Selected axis: **hardening/calibration** — archive-scale negative controls +
+the final limit-disposition ledger (the round-11 audit's starting map).
+Wave: one 32-seat flash call, 23/23 reports. Report:
+`.ufo/round-10/chousa-goalwave.md`.
+
+**Before**: defect classes were covered only by small fixtures; the archive
+records' exempt items were unaudited; rounds 2-9's named limits had no single
+disposition ledger.
+
+**After** (parent acceptance 2026-10-16T07:20Z): six archive-scale controls —
+one per class (span-not-found, anchor-missing, rejection-missing-flip,
+false-sweep, dangling-ref, structure-break), each a minimal scripted byte-edit
+of its clean record — every one DRIFTs verify-all with exactly ONE finding
+naming its class (parent re-ran all six verbatim); the clean records stay
+CLEAN; the exempt audit justified every exemption against source bytes;
+`corpus/knowledge/hardening-r10.md` carries the complete r2-r9 limit
+disposition ledger. Gate byte-unchanged (the round's standing rule held).
+Named non-coverage: `RECORD_SCHEMA_INVALID` cannot fire alone (it drags
+companion structural findings) — documented in the controls README.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| calibration | **improved** | the tool's trust is now earned at archive scale: six classes, one finding each, parent-reproduced; every r2-r9 limit dispositioned in one ledger. |
+| coverage | **improved** | negative controls at the scale the lane actually verifies. |
+| depth | **improved** | `hardening-r10.md` = the audit map; the schema-invalid non-coverage documented. |
+| operability | **unchanged** | selftest 85/85; gate unchanged; `GATE_DRIFT: none` held. |
+| freshness | **unchanged** | receipts at the current SHA. |
+| adjacency | **unchanged** | zero network; corpus read-only; quota held. |
+
+Admission: **ADMIT** (calibration/coverage/depth improved, none harmed). No
+scalar score. Learning trends: expansion/quality **improved**, discernment
+**unchanged**. Round 11 registered (capstone): the chousa deep audit —
+evidence chains, receipt integrity, verdict consistency, limit-ledger
+reconciliation, SHONEN readiness, and re-execution of the load-bearing claims.
+
+## Round 11 verdict — 2026-10-16 (capstone audit; evidence commit `2e414ec`)
+
+Selected axis: **calibration** — deep discernment: the chousa capstone audit,
+the lane's final goal round. Wave: one 32-seat flash call, 31/31+ reports.
+Report: `.ufo/round-11/chousa-goalwave.md`; consolidated findings:
+`corpus/knowledge/audit-r11.md`.
+
+**What the audit confirmed (measured, re-executed):** round 2's entire
+evidence chain re-runs at the frozen bytes and matches (15/15 claims
+supported: commits resolve, receipt SHAs match, the 17/17 CLEAN, the boundary
+refusals, strace-zero-network); the per-round auditors verified rounds 2-10's
+chains; the battery at today's bytes: selftest 85/85, `GATE_DRIFT: none`,
+all fixtures/records/controls reproducing their verdicts; the gate
+byte-unchanged through the round.
+
+**Corrections folded at admission:** (1) the wave-seat-count claims in earlier
+reports ("24/24", "32/32") are **unverifiable without wave rosters** — my
+in-session swarms leave no fleet `.ufo/waves/` roster; the audit could only
+verify the ARTIFACTS, not the roster claims — recorded, and future rounds
+should log seat rosters; (2) `audit-r11.md` §5/§7 carries the record-text
+defects with `[PARENT]` markers and recommended moves; (3) SHONEN: 0/4, hold
+promotion — readiness assessed without self-attestation (same conclusion as
+the sibling lane).
+
+| axis | verdict | evidence |
+|---|---|---|
+| calibration | **improved** | the lane knows with measured coverage what is verified (chains re-executed at frozen bytes; receipts match; limits reconciled) and what is not (roster claims, operator-side receipt identity). |
+| depth | **improved** | `audit-r11.md`: findings tables, the final debt register, SHONEN readiness, operator recommendations. |
+| coverage / operability / freshness / adjacency | **unchanged** | the audit measured the measuring; battery green; gate untouched. |
+
+Admission: **ADMIT-with-correction** (calibration/depth improved; corrections
+named; none harmed). No scalar score. Learning trends: expansion/quality
+**improved**, discernment **improved** (the audit is the lane's first
+discernment-product round, externally probed). chousa rounds 2-11: ten
+admitted rounds — the goal's second half complete.
+
+## Capabilities
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| — none yet — | | | |
+
+Rows enter only through a round that demonstrates the capability running (`AXES.md` §Capabilities); none enter through this rollout.
+
+## Saturation
+
+Saturation line: **8.0 on this Scorecard's six axes** (0–10 scale; a threshold,
+never a score). Rationale: fleet precedent `../souji-shokunin/SCORECARD.md:44`
+("Saturation line: 8 per axis; stagnation window 3 rounds"); this lane has no
+rubric of its own that derives 8.0, and none is claimed.
+
+Stagnation window: **N = 3 landed lane rounds** — rounds that produced an
+admitted report, never dispatch attempts (the 2026-10-19 key-1/2 interruptions
+and key-3/4/5 402s produced zero reports; LOG.md round-12 opening). Declared
+prospectively at round 12 (kotoba reading, `../SCORECARD.md:172-174`): the
+Capabilities table entered this file at the 2026-10-16 conformance rollout and
+held no row before this round, so the clock starts at this declaration round;
+no retroactive window is claimed.
+
+Computability (fail closed) — the `AXES.md` §The stagnation nudge predicate is
+decidable from this file alone:
+1. "Every axis sits at or above 8.0": operability is the only scored axis — 3
+   (round 1, SCORECARD.md:7); the other five are deliberately unscored
+   (:9-13; rounds 2–11 all refuse a scalar score). An unscored axis is NOT
+   counted as at/above the line, so condition 1 fails.
+2. "No capability entered within N=3": three capability rows entered this
+   round (below), so the window resets at round 12.
+Nudge verdict: **dormant** — the waiver does not apply, the lowest-axis
+obligation stands, and by the only recorded score the lowest non-retired axis
+is operability, which round 12 claim 2 works. This declaration creates or
+changes no axis score and asserts no axis saturated.
+
+## Planned — round 12 (pre-registered 2026-10-19, goal turn 1)
+
+Wave: one 64-seat AgentSwarm call, opencode-go key 1 / deepseek-v4.1-flash (curriculum loop 1, round 1; opencode-go keys rotate between rounds). Seat roster is logged in the round-12 report. Before-receipts (2026-10-19): selftest `PASS (85 cases)` exit 0; `--drift` vs the r8 baseline `GATE_DRIFT: none` exit 0; r1 counting command `VERDICT_BEARING_EXPORTS=3/3`; `grep -c SCOPE_ tools/research-gate.sh` → 0; `VERSION=research-gate-r1` at `tools/research-gate.sh:227`; A-r9.md C3 cites `A-shokunin-tradition.md:76`, span verified at `:86`.
+
+1. **coverage — scope-refusal teeth** (the r1 landing requirement, open since 2026-10-15): the structure check gains a DECLARED-scope screen — only a record's `## Meta` `domain:`/`scope:` row triggers it (prose is never keyword-scanned, so the B archive on multi-agent knowledge cannot trip it); a refused declaration (bounty-program scope → kasegi; model-quality claims → kengaku; orchestration/dispatch → kumitate) emits its named finding — `SCOPE_BOUNTY_ABSORBED` / `SCOPE_MODEL_QUALITY_ABSORBED` / `SCOPE_ORCHESTRATION_ABSORBED` — at warn severity, which drifts (exit 1). One symmetric selftest fixture per province asserting exit 1 + one clean/absent control. Observable: `SCOPE_` emitting sites 0 → 3; selftest 85 → 85+N (N≥4, settled at landing); scope-less records byte-identical (canary: archives-r9 A/B/C + r6/r7 fixtures re-run unchanged).
+2. **operability — r2-carried residuals**: (a) `VERSION=research-gate-r1` corrected to a mode-agnostic version string with a selftest case pinning the banner; (b) claim/chain source reads gain a size cap (8 MiB default; oversized source → named refusal `SOURCE_READ_TOO_LARGE`, refused never partially read) with just-under/over boundary fixtures. Observable: selftest grows by the landed case count; every prior case byte-identical (cmp against `corpus/evidence/pin-r8-20261016T033757Z-selftest.log`); `--drift` vs the r8 baseline stays `none` or a re-pin lands with a recorded reason.
+3. **calibration — close the r11 open finding**: A-r9.md row C3 citation `:76` → `:86` (span re-verified at `:86` 2026-10-19); `hardening-r10.md` ledger row dispositioned closed; append-only errata to `audit-r11.md` and the ledger naming the superseded text. Observable: the ledger's one open finding → 0 open; verify-all on A-r9 CLEAN at the corrected bytes; no other A/B/C-r9 row carries the same cite-vs-span mismatch (mechanically swept).
+
+Conformance (not an axis claim): §Saturation (SCORECARD.md:469) is amended at this landing to declare the line + window the 2026-10-16 rollout deferred to this round; the declaration creates or changes no axis score.
+
+## Round 12 verdict — 2026-10-19 (goal wave; evidence commits this landing)
+
+Selected claims (pre-registered, SCORECARD.md §Planned — round 12): coverage =
+scope-refusal teeth (the r1 landing requirement); operability = the two
+r2-carried residuals (banner + source-read size cap); calibration = close the
+r11 open finding. Wave: one 64-seat AgentSwarm call on **opencode-go-6 /
+deepseek-v4.1-flash** (operator directive: stick with the first working key;
+keys 1–2 interrupted pre-report, keys 3/4/5 dead 402 insufficient funds — all
+recorded in LOG.md), 64/64 seat reports. Reports: the wave output file
+(session tool-results, 64 seats); consolidated verdicts this block. Seat
+roster: the round-12 report (`.ufo/reports/round-12/chousa.md`) — the r11
+correction (seat counts unverifiable without rosters) is satisfied.
+
+**Before** (gate `46f5ddb3…`, re-measured 2026-10-19 after the /tmp quota
+unblock): `grep -c SCOPE_ tools/research-gate.sh` → 0 (no scope machinery);
+`VERSION=research-gate-r1` at `tools/research-gate.sh:227`; no size cap on
+claim/chain source reads; the r11 audit's one open finding live (A-r9.md C3
+cites `A:76`, span verified at `A:86`); selftest `PASS (85 cases)`;
+`GATE_DRIFT: none` vs the r8 baseline; r1 observable `3/3`.
+
+**After** (gate `91a01695…`, selftest `PASS (98 cases)` = 85+13, cases 1–85
+byte-identical per `cmp` against `pin-r8-…-selftest.log`):
+- scope screen: `scope_decl_screen` reads only `## Meta` rows keyed
+  `domain`/`scope` (table + `key: value` forms); refused-province declarations
+  emit `SCOPE_BOUNTY_ABSORBED` / `SCOPE_MODEL_QUALITY_ABSORBED` /
+  `SCOPE_ORCHESTRATION_ABSORBED` at warn (drift, exit 1), one finding per
+  matched province per declaration row; cases 86–92 (3 provinces, both clean
+  grammars, declared near-miss, prose decoy). Observable:
+  `grep -c 'id=SCOPE_' tools/research-gate.sh` → 3 (the three emitting
+  assignments; the pre-registered bare `grep -c SCOPE_` over-counts header/
+  fixture mentions after documentation — amendment recorded, conformance
+  reviewer D3); canary: `verify B-r9 --root ..` → 0 `SCOPE_` findings.
+- banner: `VERSION=v2` (revision token alone; six banner sites), pinned by
+  cases 93–94 (literal + `GATE_DRIFT: GATE` mutant arm). Forced consequence,
+  pre-registered: `--drift` vs the r8 baseline reads `GATE_DRIFT: GATE
+  record_sha256` exit 1 (version token + the pin fixture's new clean domain
+  row, both unmasked by design); ONE recorded re-pin at final bytes:
+  `corpus/evidence/gate-baseline-r12-20261019T115519Z.json`, `GATE_DRIFT:
+  none` at pin time.
+- size cap: `SOURCE_READ_MAX_BYTES` = 8 MiB (inclusive) at the shared
+  `claim_source_path` chokepoint (claims + chain + verify-all claims binding);
+  `CLAIM_SOURCE_READ_TOO_LARGE` / `CHAIN_SOURCE_READ_TOO_LARGE` (warn),
+  refused before any read — the pre-registered bare id `SOURCE_READ_TOO_LARGE`
+  was namespaced to the mode idiom (amendment recorded, seats 18/36); cases
+  95–98 straddle 8388608/8388609 with the over-cap span on line 1 (a partial
+  read would have matched — `observed=refused at=-` proves it was never
+  searched). Companion deviation (recorded): `count_nl` was quadratic
+  (>60 s at 8 MiB — the cap would be operability theatre); now linear via
+  `tr -dc '\n' | wc -c` (~3 ms), behavior-identical.
+- A-r9 C3: pointer `:76` → `:86` (one cell; new sha `dfd2ae1a…` exactly as
+  the wave predicted); post-fix `verify-all` CLEAN (receipt
+  `scope-r12-20261019T115519Z-A-fix.log`); parent re-sweep 19/19; the two
+  A-derived controls stay byte-copies of the pre-fix base (desync note in
+  `controls/README.md`); append-only errata to `audit-r11.md` and
+  `hardening-r10.md` §6 (rows 9/10/56/70 dispositioned; 71 rows now
+  38·23·7·0·3, queue 26); the class (pointer-line vs span-line) stays a named
+  non-coverage.
+- battery: r1 `3/3`; selftest PASS; fixture battery (A/B/C-r9, r6 trio, r7
+  pair, claims-r2, chain-r3, sweeps-r5, six controls) byte-identical vs the
+  pre-round gate modulo the masked banner/ts (receipt
+  `scope-r12-20261019T115519Z-battery.log`); zero network throughout.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | the r1 scope-teeth requirement lands: declared out-of-province scope is verdict-bearing (0 emitting sites → 3; 7 selftest cases; B-archive canary clean); A-r9's corpus is corrected (19/19 cite-vs-span) |
+| operability | **improved** | selftest 85 → 98 with 1–85 byte-identical; the two r2-carried residuals land (banner pinned by a drift arm; 8 MiB cap with boundary + never-partially-read teeth); `count_nl` linear; re-pin battery green at HEAD |
+| freshness | **improved narrowly** | the lane's behavioral baseline is re-pinned at the round's final bytes with the reason recorded; the stale A-r9 pin cascade (2 READMEs, 2 notes, index) is corrected same-commit |
+| depth | **improved** | `corpus/knowledge/scope-refusal-r12.md` (contract, phrase lists, not-triggers, disposition rule, limits) + `gate-baseline-r12.md` (re-pin reason) |
+| calibration | **unchanged (debt closure, per the wave reviewers)** | the finding closed is bookkeeping the r11 audit already surfaced; the gate stays blind to the class (pointer-line vs span-line), now a named non-coverage; claiming "improved" here would double-count the audit's discernment (seats 45/56) |
+| adjacency | **unchanged** | the screen ROUTES to kasegi/kengaku/kumitate rather than absorbing; zero network; fleet research corpus read-only; no sibling files touched (the MANIFEST/L0 appends are integrator-queue rows, recorded below) |
+
+Honest residuals (named by the wave, dispositioned): solo verify-claims/
+chain/sweeps/integrity modes lack scope teeth (enforcement via verify/
+verify-all only); declaration-only detection cannot catch undeclared absorbed
+scope; negations unparsed; record + claims-surface reads uncapped (row 9
+partial); unmeasurable-size stat failure silently bypasses the cap
+(documented); the pin baseline covers only the canonical invocation (a
+pattern-widening regression outside the clean-path fixture stays invisible —
+the r12 pin fixture's domain row closes this for the screen itself).
+Admission: **ADMIT** (coverage/operability/freshness/depth improved;
+calibration unchanged as debt-closure; none harmed). No scalar score.
+Learning trends: expansion **improved** (two knowledge notes, three
+capability rows, seven receipt files), quality **improved** (corrections
+sweep across SKILL/corpus README/notes; errata append-only), discernment
+**unchanged** (L2 reviews remain author-lane evidence; no non-author
+spot-check exists). Round 13 registered: closure of the last r2 residual —
+in-root hardlink canonicalization (ledger row 8) — plus receipt-runbook
+automation if the operator answers the re-filed receipt-identity L0 row.
+
+## Capabilities
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| scope-refusal screening | refuses declared out-of-province scope (`## Meta` domain/scope rows) with three named warn findings, exit 1 | selftest cases 86–92; `corpus/knowledge/scope-refusal-r12.md` | 12 |
+| source-read size cap | refuses claim/chain sources over 8 MiB before any read, never partially searched | selftest cases 95–98 | 12 |
+| banner drift contract | the version token is non-volatile; renaming it drifts the baseline (`GATE_DRIFT: GATE`) | selftest cases 93–94 | 12 |
+
+## Planned — round 13 (pre-registered 2026-10-19)
+
+Wave per the curriculum (loop 1, round 2): one 64-seat AgentSwarm call,
+**opencode-go-6 / deepseek-v4.1-flash** (standing operator directive: stick
+with key 6 until it fails). Registered claim: **operability/coverage — in-root
+hardlink canonicalization** (ledger row 8, the last open r2 residual): a
+claims/chain source reachable in-root via a hardlink alias is canonicalized
+to its inode-true path (or refused), so the r2 critic's bypass class closes;
+before: `grep -c samefile tools/research-gate.sh` → 0 with a demonstrated
+bypass; after: bypass refused/canonicalized + symmetric selftest fixtures +
+hold battery green. Secondary (only if the operator answers the L0 row):
+receipt-runbook automation. Seats: 64, roster logged in the round-13 report.
+
+## Round 13 verdict — 2026-10-19 (goal wave; evidence commit this landing)
+
+Selected claims (SCORECARD.md §Planned — round 13): coverage = close the last
+r2 residual (ledger row 8), the in-root hardlink canonicalization bypass;
+depth = the alias-semantics knowledge note + SKILL sweep. Wave: one 64-seat
+AgentSwarm call on opencode-go-6 / deepseek-v4.1-flash, 64/64 seat reports
+(roster: the round-13 report). The wave BLOCKed partner enumeration as
+unsound (two independent seats) and the reviewers re-scoped the claim: the
+landing is a one-probe `nlink != 1` refusal — the HARDLINK class closes; bind
+mounts, TOCTOU and legit in-root families are named limits, not silently
+closed.
+
+**Before** (gate `91a01695…`, re-measured at opening `0b0a133`): no inode
+logic (`grep -c samefile tools/research-gate.sh` → 0); 0 multi-linked files
+across corpus/tools/research (so no fixture could perturb); the bypass live:
+a claim through an in-root hardlink alias of an out-of-root file read
+`observed=supported` CLEAN (receipt `alias-r13-20261019T123621Z-bypass-before.log`);
+selftest 98; drift none vs the r12 baseline; r1 3/3.
+
+**After** (gate `6b17e50cc9b61dda…`, selftest `PASS (102 cases)` = 98+4,
+cases 1–98 `cmp` byte-identical vs `scope-r12-…-selftest.log`): one
+`stat -c '%s %h'` probe at the shared `claim_source_path` chokepoint (claims,
+chain, verify-all's claims binding alike) refuses `nlink != 1` unread —
+`CLAIM_SOURCE_MULTILINKED` / `CHAIN_SOURCE_MULTILINKED`, crit, per-item
+`observed=refused`; the same probe serves the r12 size cap unchanged. Cases
+99–102: claims-alias refused, chain-alias refused (CHAIN id + crit severity
+arms), in-root two-alias family refused (case 101 pins the named trade),
+single-link control CLEAN. Bypass after: crit refusal (receipt
+`-bypass-after.log`). Battery: r1 3/3; drift `none` vs the r12 baseline (no
+re-pin — the canonical invocation is unchanged); masked battery (banner/ts)
+vs the pre-round gate with LANE_ROOT intact (temp copy inside `tools/` —
+the /tmp-copy form breaks lane-root-relative pointers, a recorded method
+artifact): A/B/C-r9, full-r6, integrity-r7, claims-r2, chain-r3, sweeps-r5,
+six controls ALL IDENTICAL (receipt `alias-r13-20261019T123621Z-battery.log`).
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | the r2 bypass class is closed at the one content-read chokepoint: before CLEAN `1/1` on an out-of-root alias → after crit refusal `0/1` (both live receipts); 4 symmetric cases |
+| operability | **improved** | selftest 98 → 102 with 1–98 byte-identical; one probe serves two checks (no double stat); no re-pin needed; the gate's failure modes refuse rather than read |
+| depth | **improved** | `corpus/knowledge/hardlink-alias-r13.md`: the symlink/hardlink asymmetry, the refusal semantics, why enumeration was rejected, four named limits; lesson `2026-10-19-hardlink-alias-boundary.md` |
+| freshness | **improved narrowly** | the r12-baseline drift check stays green at the r13 gate (behavior-pinned); the r2-residual documentation chain (ledger row 8, corpus README, 5 note dispositions) is corrected same-landing |
+| calibration | **unchanged** | the claim was honestly narrowed by the wave (hardlink class only; bind mounts/TOCTOU/families named); no overclaim made or admitted |
+| adjacency | **unchanged** | zero network; read-only wave; sweeps confirmed content-free (no scope creep into sweeps mode); no sibling/fleet writes beyond the recorded MANIFEST/L0 queue rows |
+
+Admission: **ADMIT** (coverage/operability/depth/freshness improved; none
+harmed; the case-101 family refusal is a pinned, documented trade, not a
+hidden one). No scalar score. Learning trends: expansion improved (note +
+lesson + capability row + 4 receipts), quality improved (battery artifact
+recorded; errata append-only), discernment unchanged. Round 14 registered:
+curriculum round 3 (zai glm-5.3-flash per the curriculum; key 6 fallback if
+zai is out); claim TBD from the named-limit queue (bind-mount boundary or
+receipt-runbook automation), pre-registered at the round-14 opening.
+
+## Capabilities (addition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| hardlink-alias refusal | refuses multi-linked claim/chain sources unread before any read | selftest cases 99–102; `corpus/knowledge/hardlink-alias-r13.md` | 13 |
+
+## Round 14 verdict — 2026-10-19 (goal wave; evidence commit this landing)
+
+Selected claims (LOG.md round-14 opening): coverage/operability = the
+mount-alias (bind) boundary — refuse sources whose st_dev differs from the
+resolving root's device; depth = the mount/alias note + registry sweep.
+Wave: one 64-seat AgentSwarm call on **alibaba-token-plan /
+deepseek-v4.1-flash** (operator directive: token-plan lanes for the
+deepseek-v4.1-flash waves), 63/64 seat reports — seat 54 (OverflowScout)
+failed on a provider content-filter 400; the deficit is recorded here and in
+the report, not backfilled. The wave validated the fixture unprivileged on
+this host (user+mount namespace tmpfs forge; a repo bind inside the ns is
+refused, rc=2, measured) and BLOCKed the mount-free "absolute-path"
+fallback as unsound.
+
+**Before** (gate `6b17e50c…`): `grep -c CROSS_DEVICE tools/research-gate.sh`
+→ 0; device logic absent; the bypass live — a tmpfs mounted over an in-root
+dir read `observed=supported` CLEAN (receipt
+`mount-r14-20261019T132025Z-bypass-before.log`); selftest 102; drift none vs
+the r12 baseline; r1 3/3.
+
+**After** (gate `d8bbd0bf…`, selftest `PASS (106 cases, 0 skipped)`,
+cases 1–102 `cmp` byte-identical): the chokepoint tracks the RESOLVING root
+(longest prefix — a ROOT-only compare would false-refuse the live sweeps-r5
+S4 lane-fallback and the selftest itself, devices 57 vs 30 measured), one
+`stat -c '%s %h %d'` probe serves nlink → size → device (a combined source
+reports the earliest class), refusing `CLAIM_SOURCE_CROSS_DEVICE` /
+`CHAIN_SOURCE_CROSS_DEVICE` (crit) unread. Cases 103–106: ns-mounted
+claims/chain refusal, same-device true-positive control, and the
+lane-fallback control that defeats a naive implementation. Bypass after:
+crit refusal (receipt `-bypass-after.log`). Battery: r1 3/3; drift `none`
+vs the r12 baseline (no re-pin); masked battery vs the pre-round gate
+(LANE_ROOT intact) ALL IDENTICAL (receipt `mount-r14-20261019T132025Z-battery.log`).
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | the bind-alias class is closed at the one content-read chokepoint: before CLEAN `1/1` on a mounted alias → after crit refusal `0/1`, both live; claims + chain + verify-all binding refuse alike |
+| operability | **improved** | selftest 102 → 106 (1–102 byte-identical); one probe serves three checks; namespace fixtures run unprivileged with zero host residue; no re-pin |
+| depth | **improved** | `corpus/knowledge/mount-alias-r14.md`: the bind gap, the resolving-root rule, the probe order, and five measured named limits (same-device binds, overlay roots, TOCTOU, unmeasurable-stat, legit subtree trade) + the discovered `--root /` dead-arm (queued) |
+| freshness | **unchanged** | the r12 baseline holds unchanged (no re-pin needed); no stale pins moved this round |
+| calibration | **improved narrowly** | the claim landed exactly as narrowed (cross-device only) with the same-device-bind limit stated verbatim; the unsound mount-free fixture was BLOCKed, not fudged; the seat-54 deficit is recorded, not backfilled |
+| adjacency | **unchanged** | zero network; sweeps' unclaimed glob surface named as a limit, not absorbed; no sibling/fleet writes beyond the recorded queue rows |
+
+Admission: **ADMIT** (coverage/operability/depth/calibration(narrow)
+improved; none harmed). No scalar score. Learning trends: expansion
+improved, quality improved, discernment unchanged. Round 15 registered:
+curriculum round 4 — **zai glm-5.3-flash**, 32–64 seats (fallback ladder per
+the standing directives: token-plan deepseek → devin deepseek → opencode-go-
+6); claims from the r14 queue (the `--root /` boundary dead-arm fix and/or
+the same-device-bind mountinfo candidate), pre-registered at the round-15
+opening.
+
+## Capabilities (addition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| cross-device refusal | refuses sources whose st_dev differs from the resolving root's device (bind aliases) | selftest cases 103–106; `corpus/knowledge/mount-alias-r14.md` | 14 |
+
+## Round 15 verdict — 2026-10-19 (goal wave; evidence commit this landing)
+
+Selected claims (LOG.md round-15 opening): coverage/operability = the
+`--root /` boundary dead-arm (r14 discovery): `"$root_r"/*` renders `//*`
+when the root resolves to `/`, matching nothing, so every absolute in-`/`
+source refuses `CLAIM_SOURCE_OUT_OF_CORPUS` crit; depth = the
+root-normalization note + registry sweep. Wave: one 48-seat AgentSwarm call
+on **zai glm-5.3-flash** (curriculum loop 1, round 4), 48/48 seat reports.
+Seat roster: the round-15 report.
+
+**Before** (gate `d8bbd0bf…`, selftest 106): the prefix tests at
+`tools/research-gate.sh:1051/:1055` (claims chokepoint), `:548`
+(`ptr_resolves_meta`), and `:1742` (sweeps resolver) all render `//*` under
+`--root /`. A claim citing `/etc/hostname` (dev 31 = `stat -c %d /`, nlink 1,
+9 B — a legitimate read) refuses `OUT_OF_CORPUS` crit (receipt
+`root-r15-20261019T152000Z-demo.log`, before half). Selftest `PASS (106
+cases, 0 skipped)`; drift `none` vs the r12 baseline; r1 `3/3`.
+
+**After** (gate `dd0951d7…`, selftest `PASS (110 cases, 0 skipped)`, cases
+1–106 `cmp` byte-identical vs `mount-r14-20261019T132025Z-selftest.log`): the
+`in_root()` helper (`tools/research-gate.sh` ~:612) strips the trailing slash
+for the prefix test only — `${r%/}` on `/` yields `""`, `""/*` renders `/*`,
+which matches `/` and every descendant. All three same-class sites converted
+(`claim_source_path`, `ptr_resolves_meta`, `sweep_path_guarded`); `src_root`
+keeps the un-normalized root so the r14 device probe still stats the declared
+root. The materialized helper is mandatory — inline
+`case "$canon" in "${root_r%/}"/*)` is itself dead when the expansion strips
+to empty (measured, bash 5.3.15). Cases 107–110 pin the healed arm:
+ghost-missing (`/chousa-r15-absent`), `/etc/hostname` read (span derived
+from the file's first line), tmpfs cross-device (`$WORK` dev 57 ≠ 31),
+sweeps absolute glob (`/chousa-r15-absent/*.md`). The `CHOUSA_ROOT=` override
+rides a new harness channel — six runners gained a `^CHOUSA_[A-Z_]+=`
+env-override classifier; `tcase`'s override placement corrected to last-wins.
+Receipts `root-r15-20261019T152000Z-{demo,selftest,battery,drift}.log`.
+Masked battery vs the pre-round gate: ALL IDENTICAL.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | before `OUT_OF_CORPUS` crit on a legitimate /-root absolute read → after `CLEAN` `1/1` through all three probe arms (receipts live); the `ptr_resolves_meta` and `sweep_path_guarded` same-class sites also healed |
+| operability | **improved** | selftest 106 → 110 (1–106 byte-identical); six runners gained the `CHOUSA_`-prefixed env-override channel; no re-pin needed |
+| depth | **improved** | `corpus/knowledge/root-slash-boundary-r15.md`: the `//*` glob mechanics (measured), the four-outcome pre-fix table, the `in_root` contract, the 3-site registry, the inline-strip quirk |
+| freshness | **unchanged** | the r12 baseline holds unchanged (no re-pin needed — the canonical invocation uses a non-/ temp root where normalization is a no-op); no stale pins moved |
+| calibration | **improved narrowly** | the fix landed exactly at the discovered class; the `ptr_resolves_meta` third site was found by this round's own audit, not the pre-registered claim — dispositioned explicitly; the `17 B`→`9 B` stat erratum corrected in receipts |
+| adjacency | **unchanged** | zero network; corpus read-only; /-root reads confined to the named fixture paths; no sibling/fleet writes beyond the recorded queue rows |
+
+Admission: **ADMIT** (coverage/operability/depth/calibration(narrow)
+improved; none harmed). No scalar score. Learning trends: expansion
+improved, quality improved, discernment unchanged. Round 16 registered:
+curriculum round 5 — §Planned below.
+
+## Planned — round 16 (pre-registered 2026-10-19, at the round-15 landing)
+
+Wave per the curriculum (loop 1, round 5): one 64-seat AgentSwarm call,
+**gpt-6-luna-max** — a verification wave: adversarially re-audit the current
+loop's rounds 1–4 (lane rounds 12–15) for correctness defects and missed
+coverage; every finding lands as a dispositioned item (fix, absorb, or named
+debt). Provider liveness probed before spending the wave; fallback ladder
+per the standing doctrine (devin → token-plan → opencode-go-6), recorded at
+the round-16 opening. Claims pre-registered at the round-16 opening from the
+named-limit queue: candidates — verify-sweeps' mount-alias-blind glob
+surface (r14 note), the same-device-bind mountinfo walk, the overlay-fstype
+guard. Seats: 64; roster logged in the round-16 report.
+
+## Round 16 verdict — 2026-10-19 (goal wave; evidence commit this landing)
+
+Selected claims (LOG.md round-16 opening): coverage/calibration =
+adversarially re-audit loop-1 rounds 1–4 (lane rounds 12–15) for correctness
+defects and missed coverage; every finding lands as a dispositioned item
+(fix, absorb, or named debt). Wave: one 64-seat AgentSwarm call on
+**openai-codex gpt-6-luna-max**, 64/64 seat reports. Seat roster: the
+round-16 report.
+
+**Before** (gate `dd0951d7…`, selftest 110): the boundary stack as landed
+through rounds 12–15, unaudited by an independent model. The r15 battery
+receipt carried wrong fixture paths (A/B/C-r9 under `corpus/fixtures/` not
+`archives-r9/`; `--root .` vs `--root ..`). The `--root //` spelling still
+refused in-corpus absolute paths (`in_root` stripped only one `/`).
+
+**After** (gate `2b64a1c8…`, selftest `PASS (111 cases, 0 skipped)`, cases
+1–110 `cmp` byte-identical): two fixes landed — `in_root` strips all
+trailing slashes (`//` → `/` → `""`, `""/*` renders `/*`); the r15 battery
+receipt re-run with correct fixture paths (`archives-r9/`, `--root ..`) and
+replaced. ~15 findings absorbed as record corrections (the `wc -c` fallback
+pre-read claim, the scope-refusal coverage overstatement, the full-r6
+README sweeps-absent claim, the mount-alias "queued" item now closed, the
+stale hardlink status in older notes, the hardening-r10 count phantom).
+~12 findings named as debt for round 17 (scope-screen fenced-heading
+shadow, `LLM benchmarks` phrase gap, sweeps symlink-escape, `--drift`
+truncated-baseline ambiguity, `--json` delimiter edge, manifest timestamp
+mask breadth, secret-scan source coverage, URI-like citation
+classification, `--` delimiter handling, TOCTOU readability, bash-3
+portability, 8 unasserted finding IDs). The full disposition table is
+`corpus/knowledge/verification-r16.md`.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **unchanged** | the audit found no out-of-corpus read; two fixes landed (`--root //` healed, battery receipt corrected) but the boundary's refusal classes are unchanged — the wave verified coverage, it did not expand it |
+| operability | **improved** | selftest 110 → 111 (1–110 byte-identical); the `//` edge is now pinned; the battery receipt is honest |
+| depth | **improved** | `corpus/knowledge/verification-r16.md`: the full disposition table with seat citations; the `wc -c` pre-read correction; the corrected battery |
+| freshness | **unchanged** | the r12 baseline holds (no re-pin); no stale pins moved |
+| calibration | **improved** | the audit measured every claim against live behavior; the `//` defect was found because the wave tested what the r15 note claimed but didn't verify; every finding has a named disposition |
+| adjacency | **unchanged** | zero network; corpus read-only; no sibling/fleet writes beyond the recorded queue rows |
+
+Admission: **ADMIT** (operability/depth/calibration improved; none harmed).
+No scalar score. Learning trends: expansion improved, quality improved,
+discernment improved. Round 17 registered: curriculum round 6 —
+§Planned below.
+
+## Planned — round 17 (pre-registered 2026-10-19, at the round-16 landing)
+
+Wave per the curriculum (loop 1, round 6): one 32–64-seat AgentSwarm call,
+**xai-oauth grok-4.7-fast**. Claims pre-registered at the round-17 opening
+from the named-debt queue: candidates — the scope-screen fenced-heading
+shadow fix, the `LLM benchmarks` phrase gap, the sweeps symlink-escape
+guard, the `--drift` truncated-baseline detection. Seats: 32–64; roster
+logged in the round-17 report.
+
+## Round 17 verdict — 2026-10-19 (goal wave; evidence commit this landing)
+
+Selected claims (LOG.md round-17 opening): coverage/operability = fix the
+scope-screen fenced-heading shadow (round-16 named debt): `load_sections`
+resets on every `## ` line without recognizing fenced code blocks, so a
+fenced `## Meta` shadows the real declaration — the scope screen checks the
+wrong body. depth = the fenced-heading mechanics note + the `LLM
+benchmarks` phrase-gap disposition. Wave: one 32-seat AgentSwarm call on
+**opencode-go / deepseek-v4.1-flash** (fallback from xai-oauth 403 — all
+48 seats failed on quota; provider deviation recorded in LOG.md), 27/32
+seat reports (5 failed on provider 400 `reasoning_content` errors; deficit
+recorded, not backfilled). Seat roster: the round-17 report.
+
+**Before** (gate `2b64a1c8…`, selftest 111): `load_sections` splits on every
+`## ` line — a fenced `## Meta` inside a code block resets the real Meta
+body. A record whose real Meta declares `domain: bounty program scope` but
+carries a fenced `## Meta` with `domain: deep-research method` passes
+CLEAN (receipt `fence-r17-20261019T171200Z-demo.log`, before half).
+
+**After** (gate `c2915f24…`, selftest `PASS (116 cases, 0 skipped)`, cases
+1–109 `cmp` byte-identical vs the r15 receipt — r16 inserted case 110, so
+the cmp boundary is 109): `load_sections` pairs fences in two passes —
+same char must close, closing length >= opening, 0–3 literal-space indent;
+an unclosed opener IS a fence (fail closed — everything after it is
+literal). Cases 112–116 pin the five shadow variants: simple shadow,
+fenced-only phantom (no real Meta → CLEAN by the declaration-only
+contract), nested 4-backtick, indented closer, unclosed fence. The naive
+`^``` ` toggle fixes only the simple shadow (measured shape matrix in
+`corpus/knowledge/fenced-heading-r17.md`). Masked battery vs the
+pre-round gate: ALL IDENTICAL. Drift `none` vs the r12 baseline (no
+re-pin); r1 `3/3`.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | the fenced-heading shadow class is closed at the parser: before CLEAN on a shadowed refused domain → after `SCOPE_BOUNTY_ABSORBED` warn + DRIFT (receipts live); five variants pinned |
+| operability | **improved** | selftest 111 → 116 (1–109 byte-identical); two-pass fence pairing is deterministic; no re-pin needed |
+| depth | **improved** | `corpus/knowledge/fenced-heading-r17.md`: the shadow mechanics, the naive-vs-two-pass shape matrix, the call-site audit, the named limits |
+| freshness | **unchanged** | the r12 baseline holds (no re-pin); no stale pins moved |
+| calibration | **improved narrowly** | the fix landed at the discovered class only; the `LLM benchmarks` phrase gap stays named debt (not silently absorbed); the provider fallback is recorded, not hidden |
+| adjacency | **unchanged** | zero network; corpus read-only; no sibling/fleet writes beyond the recorded queue rows |
+
+Admission: **ADMIT** (coverage/operability/depth/calibration(narrow)
+improved; none harmed). No scalar score. Learning trends: expansion
+improved, quality improved, discernment improved. Round 18 registered:
+curriculum round 7 — §Planned below.
+
+## Planned — round 18 (pre-registered 2026-10-19, at the round-17 landing)
+
+Wave per the curriculum (loop 1, round 7): one 16–32-seat AgentSwarm call,
+**zai glm-5.3-flash** (fallback ladder per the standing doctrine: devin →
+token-plan → opencode-go-6). Claims pre-registered at the round-18 opening
+from the named-debt queue: candidates — the `LLM benchmarks` phrase gap,
+the sweeps symlink-escape guard, the `--drift` truncated-baseline
+detection, the fenced-data-row `approved` suppression. Seats: 16–32;
+roster logged in the round-18 report.
+
+## Round 18 verdict — 2026-10-19 (goal wave; evidence commit this landing)
+
+Selected claims (LOG.md round-18 opening): coverage = close the `LLM
+benchmarks` phrase gap (round-16 named debt): `SCOPE_KENGAKU` has `model
+benchmark(s)` but not `llm benchmark(s)`/`llm scoring`/`ai benchmark(s)` —
+a record declaring `domain: LLM benchmarks` passes CLEAN despite the
+model-quality boundary. operability = the phrase-gap selftest cases. Wave:
+one 16-seat AgentSwarm call on **openai-codex gpt-6-luna-max** (zai glm-5.3-
+flash quota exhausted; operator directed codex luna max for all zai-assigned
+rounds until tomorrow), 16/16 seat reports. Seat roster: the round-18
+report.
+
+**Before** (gate `c2915f24…`, selftest 116): `SCOPE_KENGAKU` has `model
+benchmark(s)` and `model scoring` but not `llm benchmark(s)`/`llm
+scoring` — a record declaring `domain: LLM benchmarks` passes CLEAN
+(receipt `scope-r18-20261019T173000Z-demo.log`, before half).
+
+**After** (gate `6e694881…`, selftest `PASS (119 cases, 0 skipped)`, cases
+1–116 `cmp` byte-identical vs the r17 receipt): `SCOPE_KENGAKU` gains `llm
+benchmark|llm benchmarks|llm scoring` — the conservative 3-phrase set the
+wave's adversary seats validated. `ai benchmark(s)` stays named debt (too
+broad — "AI benchmark methodology research" is not model-quality scope).
+The plural form needs a separate entry (`scope_hit` matches literal phrases,
+never stems). Cases 117–119 pin the new phrases (llm-benchmarks refusal,
+llm-scoring refusal, prose-only control CLEAN). Masked battery vs the
+pre-round gate: ALL IDENTICAL. Drift `none` vs the r12 baseline; r1 `3/3`.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | the `llm benchmark(s)`/`llm scoring` gap is closed: before CLEAN on `domain: LLM benchmarks` → after `SCOPE_MODEL_QUALITY_ABSORBED` warn + DRIFT (receipts live) |
+| operability | **improved** | selftest 116 → 119 (1–116 byte-identical); the plural-form rule (literal-phrase match, no stemming) is now pinned |
+| depth | **improved** | `corpus/knowledge/scope-phrase-gap-r18.md`: the gap mechanics, the conservative-vs-broad fix boundary, the audit's other inflection findings dispositioned |
+| freshness | **unchanged** | the r12 baseline holds (no re-pin); no stale pins moved |
+| calibration | **improved narrowly** | the fix landed exactly the validated set (3 phrases, not 5 — `ai benchmark(s)` kept as named debt per the wave's adversary measurement); the provider deviation (zai → luna) is recorded |
+| adjacency | **unchanged** | zero network; corpus read-only; no sibling/fleet writes beyond the recorded queue rows |
+
+Admission: **ADMIT** (coverage/operability/depth/calibration(narrow)
+improved; none harmed). No scalar score. Learning trends: expansion
+improved, quality improved, discernment improved. Round 19 registered:
+curriculum round 8 — §Planned below.
+
+## Planned — round 19 (pre-registered 2026-10-19, at the round-18 landing)
+
+Wave per the curriculum (loop 1, round 8): one 16–32-seat AgentSwarm call,
+**openai-codex gpt-6-luna-max** (zai exhaustion directive). Claims
+pre-registered at the round-19 opening from the named-debt queue:
+candidates — the `ai benchmark(s)` boundary decision, `bug bounties`/
+`dispatch mechanisms`/`llm evaluations` inflection gaps, the sweeps
+symlink-escape guard, the `--drift` truncated-baseline detection, the
+fenced-data-row `approved` suppression, the 8 unasserted finding IDs.
+Seats: 16–32; roster logged in the round-19 report.
+
+## Round 19 verdict — 2026-10-19 (goal wave; evidence commit this landing)
+
+Selected claims (LOG.md round-19 opening): coverage/operability = the
+sweeps symlink-escape guard (round-16 named debt): `sweep_path_guarded`
+canonicalizes the glob's BASE but not each match, so a wildcard inside an
+in-root dir can match a symlink whose target is outside the allowed roots.
+depth = the symlink-escape mechanics note + the remaining named-debt
+dispositions. Wave: one 16-seat AgentSwarm call on **openai-codex
+gpt-6-luna-max** (zai exhaustion directive), 16/16 seat reports. Seat
+roster: the round-19 report.
+
+**Before** (gate `6e694881…`, selftest 119): the guard canonicalizes only
+the glob's base — `dir/*.md` matching an outside leaf symlink or
+`dir/*/*.md` traversing an outside dir symlink reports `SWEEP_CLAIM_FALSE`
+hit, not a boundary refusal (receipt `symlink-r19-20261019T174500Z-demo.log`,
+before half).
+
+**After** (gate `9f163807…`, selftest `PASS (122 cases, 0 skipped)`, cases
+1–119 `cmp` byte-identical vs the r18 receipt): `verify_sweeps` now
+canonicalizes every glob match and refuses the whole sweep if any match
+resolves outside both allowed roots — `SWEEP_LOCATION_OUT_OF_CORPUS` crit,
+`observed=refused`, no match paths reported. Cases 120–122 pin the escape
+class (outside leaf symlink, outside dir symlink, in-root symlink control
+unaffected). Masked battery vs the pre-round gate: ALL IDENTICAL. Drift
+`none` vs the r12 baseline; r1 `3/3`.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | the symlink-escape class is closed at the match level: before `SWEEP_CLAIM_FALSE` hit on an outside symlink → after `SWEEP_LOCATION_OUT_OF_CORPUS` crit + refused (receipts live) |
+| operability | **improved** | selftest 119 → 122 (1–119 byte-identical); per-match canonicalization is deterministic; no re-pin needed |
+| depth | **improved** | `corpus/knowledge/sweep-symlink-r19.md`: the escape mechanics (leaf + dir shapes), the fix contract, the named limits (post-expansion check, TOCTOU) |
+| freshness | **unchanged** | the r12 baseline holds (no re-pin); no stale pins moved |
+| calibration | **improved narrowly** | the fix landed at the discovered class only (match-level, not the guard's base contract); the remaining named debts are recorded |
+| adjacency | **unchanged** | zero network; corpus read-only; no sibling/fleet writes beyond the recorded queue rows |
+
+Admission: **ADMIT** (coverage/operability/depth/calibration(narrow)
+improved; none harmed). No scalar score. Learning trends: expansion
+improved, quality improved, discernment improved. Round 20 registered:
+curriculum round 9 — §Planned below.
+
+## Planned — round 20 (pre-registered 2026-10-19, at the round-19 landing)
+
+Wave per the curriculum (loop 1, round 9): one 64–128-seat AgentSwarm call,
+**openai-codex gpt-6-luna-max** (zai exhaustion directive). Claims
+pre-registered at the round-20 opening from the named-debt queue:
+candidates — the `ai benchmark(s)` boundary decision, `bug bounties`/
+`dispatch mechanisms`/`llm evaluations`/`llmbenchmark`/`language model
+benchmark(s)` inflection gaps, the `--drift` truncated-baseline detection,
+the fenced-data-row `approved` suppression, the 8 unasserted finding IDs,
+the secret-scan source coverage gap, the `--json` delimiter edge, the
+manifest timestamp mask breadth, bash-3 portability. Seats: 64–128; roster
+logged in the round-20 report.
+
+## Round 20 verdict — 2026-10-19 (goal wave; evidence commit this landing)
+
+Selected claims (LOG.md round-20 opening): coverage/calibration =
+adversarially re-audit the expanded boundary stack (rounds 15–19's fixes)
+for correctness defects, missed coverage, and interactions. operability =
+the audit's own receipts + any fixes that land. Wave: one 64-seat AgentSwarm
+call on **openai-codex gpt-6-luna-max** (zai exhaustion directive), 64/64
+seat reports. Seat roster: the round-20 report.
+
+**Before** (gate `9f163807…`, selftest 122): the boundary stack as landed
+through rounds 15–19. The wave found a new same-class defect the r17 fix
+missed: `load_sections` has no HTML-comment state — a `## Meta` inside
+`<!-- -->` still shadows the real Meta (live demo: pre-round gate → CLEAN;
+landed → `SCOPE_BOUNTY_ABSORBED` + DRIFT; receipt
+`verify-r20-20261019T180000Z-demo.log`).
+
+**After** (gate `49b36759…`, selftest `PASS (124 cases, 0 skipped)`, cases
+1–119 `cmp` byte-identical vs the r18 receipt): `load_sections` now tracks
+`in_comment` alongside `fence_char` — comment state checked after fence
+state, before heading; a `## ` inside `<!-- -->` is literal. Case 124 pins
+the HTML-comment arm. The wave's other findings dispositioned: the
+`ptr_resolves_meta` boundary gap (relative paths check `-f` without
+canonicalization — `..` traversal and symlinks escape), the denylist
+bypass (`.config/foo` at path start misses `*/.config/*`; benign symlink
+to `.config` target passes), the fenced-heading anchor (chain `heading`
+anchors match headings inside fences), and ~10 more scope/inflection gaps
+(`workflow dispatch`, `security bounty`, `vulnerability disclosure`,
+`responsible disclosure`, `bug bounties`, `llm evaluations`, `dispatch
+mechanisms`, `language model benchmark(s)`, `llmbenchmark`, `ai
+benchmark(s)`) — all named debt for round 21. The uncommitted
+`tok_span_at` performance rewrite (grep PCRE — fixes a 240s stall on
+8MiB sources) and `claims-cap-eof` case 123 from a prior session are
+absorbed and recorded. Masked battery vs the pre-round gate: ALL
+IDENTICAL. Drift `none` vs the r12 baseline; r1 `3/3`.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | the HTML-comment shadow class is closed at the parser: before CLEAN on a shadowed refused domain → after `SCOPE_BOUNTY_ABSORBED` warn + DRIFT (receipts live); the wave confirmed no out-of-corpus read |
+| operability | **improved** | selftest 122 → 124 (1–119 byte-identical); the `tok_span_at` rewrite lands a measured performance fix; case 124 pins the new arm |
+| depth | **improved** | `corpus/knowledge/html-comment-r20.md`: the shadow class generalized (fence → comment), the fix contract, the named limits |
+| freshness | **unchanged** | the r12 baseline holds (no re-pin); no stale pins moved |
+| calibration | **improved narrowly** | the fix landed at the discovered class only; the `ptr_resolves_meta` and denylist findings are named debt, not silently absorbed |
+| adjacency | **unchanged** | zero network; corpus read-only; no sibling/fleet writes beyond the recorded queue rows |
+
+Admission: **ADMIT** (coverage/operability/depth/calibration(narrow)
+improved; none harmed). No scalar score. Learning trends: expansion
+improved, quality improved, discernment improved. Round 21 registered:
+curriculum round 10 — §Planned below.
+
+## Planned — round 21 (pre-registered 2026-10-19, at the round-20 landing)
+
+Wave per the curriculum (loop 1, round 10): one 32–64-seat AgentSwarm call,
+**devin deepseek-v4.1-flash** (fallback ladder per the standing doctrine:
+opencode-go-6 → token-plan → devin). Claims pre-registered at the round-21
+opening from the named-debt queue: candidates — the `ptr_resolves_meta`
+boundary gap, the denylist `.config` bypass, the fenced-heading anchor
+false-positive, the `ai benchmark(s)` boundary decision, the `bug
+bounties`/`dispatch mechanisms`/`llm evaluations`/`workflow dispatch`/
+`security bounty`/`vulnerability disclosure`/`responsible disclosure`/
+`language model benchmark(s)`/`llmbenchmark` inflection gaps, the `--drift`
+truncated-baseline detection, the fenced-data-row `approved` suppression,
+the 8 unasserted finding IDs, the secret-scan source coverage gap, the
+`--json` delimiter edge, the manifest timestamp mask breadth, bash-3
+portability. Seats: 32–64; roster logged in the round-21 report.
+
+## Round 21 verdict — 2026-10-19 (goal wave; evidence commit this landing)
+
+Selected claims (LOG.md round-21 opening): coverage/operability = the
+`ptr_resolves_meta` boundary gap (round-20 named debt): relative pointer
+paths check `-f` without canonicalization — `..` traversal and symlinks
+escape. depth = the pointer-boundary mechanics note + the denylist `.config`
+bypass disposition. Wave: one 32-seat AgentSwarm call on **opencode-go-6 /
+deepseek-v4.1-flash** (devin 502 quota fallback per the standing record),
+32/32 seat reports. Seat roster: the round-21 report.
+
+**Before** (gate `49b36759…`, selftest 124): `ptr_resolves_meta` checks
+`-f "$ROOT/$f"` or `-f "$LANE_ROOT/$f"` without canonicalization — a
+`lib/../../etc/passwd` or a symlink to outside passes if the file exists
+under the raw path (live demo: pre-round gate → CLEAN; landed →
+`POINTER_UNRESOLVED` warn + DRIFT; receipt `ptr-r21-20261019T184000Z-demo.log`).
+
+**After** (gate `bfc291ef…`, selftest `PASS (128 cases, 0 skipped)`, cases
+1–124 `cmp` byte-identical vs the r20 receipt): the candidate is
+canonicalized with `readlink -f` (resolving `..` and symlinks), then checked
+with `in_root` against BOTH roots. The denylist applies to the canonical
+target too — a benign symlink to `.config/passwd` is refused. Cases 125–128
+pin the escape class (traversal, symlink, lane-root absolute pointer,
+`.config` symlink). Masked battery vs the pre-round gate: ALL IDENTICAL.
+Drift `none` vs the r12 baseline; r1 `3/3`.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | the pointer-boundary escape class is closed: before CLEAN on a traversal pointer → after `POINTER_UNRESOLVED` warn + DRIFT (receipts live); the `.config` canonical-target check closes the benign-symlink arm |
+| operability | **improved** | selftest 124 → 128 (1–124 byte-identical); canonicalization is deterministic; no re-pin needed |
+| depth | **improved** | `corpus/knowledge/pointer-boundary-r21.md`: the escape mechanics, the fix contract, the named limits |
+| freshness | **unchanged** | the r12 baseline holds (no re-pin); no stale pins moved |
+| calibration | **improved narrowly** | the fix landed at the discovered class only; the denylist `.config` path-start form and the fenced-heading anchor are named debt, not silently absorbed |
+| adjacency | **unchanged** | zero network; corpus read-only; no sibling/fleet writes beyond the recorded queue rows |
+
+Admission: **ADMIT** (coverage/operability/depth/calibration(narrow)
+improved; none harmed). No scalar score. Learning trends: expansion
+improved, quality improved, discernment improved. Round 22 registered:
+curriculum round 11 — §Planned below.
+
+## Planned — round 22 (pre-registered 2026-10-19, at the round-21 landing)
+
+Wave per the curriculum (loop 1, round 11): one 32–64-seat AgentSwarm call,
+**antigravity gemini-3.8-flash**. Claims pre-registered at the round-22
+opening from the named-debt queue: candidates — the `.config` path-start
+denylist bypass (direct citation, not through a symlink), the fenced-heading
+anchor false-positive, the `ai benchmark(s)` boundary decision, the
+inflection gaps (`bug bounties`, `dispatch mechanisms`, `llm evaluations`,
+`workflow dispatch`, `security bounty`, `vulnerability disclosure`,
+`responsible disclosure`, `language model benchmark(s)`, `llmbenchmark`),
+the `--drift` truncated-baseline detection, the fenced-data-row `approved`
+suppression, the 8 unasserted finding IDs, the secret-scan source coverage
+gap, the `--json` delimiter edge, the manifest timestamp mask breadth,
+bash-3 portability. Seats: 32–64; roster logged in the round-22 report.
+
+## Round 22 verdict — 2026-10-19 (goal wave; evidence commit this landing)
+
+Selected claims (LOG.md round-22 opening): coverage/operability = the
+`.config` path-start denylist bypass (round-20 named debt):
+`is_denylist_path` uses `*/.config/*` which requires a leading component —
+`.config/foo` (no `./` prefix) passes CLEAN while `./.config/foo` is
+refused `CLAIM_SOURCE_SESSION` crit. depth = the denylist-pattern note +
+the fenced-heading anchor disposition. Wave: one 32-seat AgentSwarm call
+on **openai-codex gpt-6-luna-max** (antigravity gemini-3.8-flash failed
+24 seats on provider errors + 8 aborted; luna per the fallback ladder),
+32/32 seat reports. Seat roster: the round-22 report.
+
+**Before** (gate `bfc291ef…`, selftest 128): `is_denylist_path` uses
+`*/.config/*`, `*/.omp/*`, `*/.local/state/*` — the `*/X/*` pattern needs
+a leading path component; bare-start forms (`.config/foo`, `.omp/foo`,
+`.local/state/foo`) pass CLEAN while `./.config/foo` refuses (live demo:
+pre-round gate → CLEAN on `.config/agent-token.txt`; landed →
+`CLAIM_SOURCE_SESSION` crit + refused; receipt
+`deny-r22-20261019T190000Z-demo.log`).
+
+**After** (gate `dfb798b4…`, selftest `PASS (132 cases, 0 skipped)`, cases
+1–128 `cmp` byte-identical vs the r21 receipt): `is_denylist_path` gains
+bare-start alternatives `'.config/'*`, `'.omp/'*`, `'.local/state/'*` —
+checked after the existing `*/X/*` forms. Cases 129–132 pin the
+path-start class (`.config` start, `.omp` start, `.local/state` start,
+`.config-adjacent` over-refusal control). Masked battery vs the pre-round
+gate: ALL IDENTICAL. Drift `none` vs the r12 baseline; r1 `3/3`.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | the denylist path-start class is closed: before CLEAN on `.config/foo` (no `./` prefix) → after `CLAIM_SOURCE_SESSION` crit + refused (receipts live); `.omp/` and `.local/state/` share the fix |
+| operability | **improved** | selftest 128 → 132 (1–128 byte-identical); the `.config-adjacent` over-refusal control proves the fix doesn't over-reach |
+| depth | **improved** | `corpus/knowledge/denylist-r22.md`: the path-start bypass mechanics, the fix contract, the named limits |
+| freshness | **unchanged** | the r12 baseline holds (no re-pin); no stale pins moved |
+| calibration | **improved narrowly** | the fix landed at the discovered class only; the `.config-adjacent` control proves the boundary is precise; the fenced-heading anchor stays named debt |
+| adjacency | **unchanged** | zero network; corpus read-only; no sibling/fleet writes beyond the recorded queue rows |
+
+Admission: **ADMIT** (coverage/operability/depth/calibration(narrow)
+improved; none harmed). No scalar score. Learning trends: expansion
+improved, quality improved, discernment improved. Round 23 registered:
+curriculum round 12 — §Planned below.
+
+## Planned — round 23 (pre-registered 2026-10-19, at the round-22 landing)
+
+Wave per the curriculum (loop 1, round 12): one 16-seat AgentSwarm call,
+**devin swe-2** (fallback ladder per the standing record: devin exhausted
+→ token-plan → opencode-go-6). Claims pre-registered at the round-23
+opening from the named-debt queue: candidates — the fenced-heading anchor
+false-positive, the `ai benchmark(s)` boundary decision, the inflection
+gaps, the `--drift` truncated-baseline detection, the fenced-data-row
+`approved` suppression, the 8 unasserted finding IDs, the secret-scan
+source coverage gap, the `--json` delimiter edge, the manifest timestamp
+mask breadth, bash-3 portability. Seats: 16; roster logged in the
+round-23 report.
+
+## Round 23 verdict — 2026-10-19 (goal wave; evidence commit this landing)
+
+Selected claims (LOG.md round-23 opening — direct integration, no wave:
+the claim was pre-registered and the fix landed before a wave could
+dispatch): coverage/operability = the fenced-heading anchor false-positive
+(round-20 named debt): `chain_anchor_at` scanned raw lines with `^#+` and
+matched headings inside fences — a `## Phantom Heading` inside a code
+block verified as a real anchor. depth = the fenced-anchor mechanics note.
+Wave: none — the fix landed directly (the claim's falsifiable before→after
+was already measured by the round-20 wave's live reproduction).
+
+**Before** (gate `dfb798b4…`, selftest 132): `chain_anchor_at` scanned
+raw lines for `^#+[[:space:]]+` — no fence state; a `## Phantom Heading`
+inside a fence matched as a real heading, making the hop `verified`
+(receipt `fanchor-r23-20261019T192000Z-demo.log`, before half).
+
+**After** (gate `b5d0f93d…`, selftest `PASS (133 cases, 0 skipped)`, cases
+1–128 `cmp` byte-identical vs the r22 receipt): the heading arm tracks
+fence state inline — a `# ` inside a fence is literal, not an anchor
+target. Case 129 pins it. Masked battery vs the pre-round gate: ALL
+IDENTICAL. Drift `none` vs the r12 baseline; r1 `3/3`.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| coverage | **improved** | the fenced-heading anchor class is closed: before `verified` on a fenced heading → after `anchor-missing` + `CHAIN_ANCHOR_NOT_FOUND` warn (receipts live) |
+| operability | **improved** | selftest 132 → 133 (1–128 byte-identical); inline fence tracking is deterministic |
+| depth | **improved** | `corpus/knowledge/fenced-anchor-r23.md`: the false-positive mechanics, the fix contract, the named limits |
+| freshness | **unchanged** | the r12 baseline holds (no re-pin); no stale pins moved |
+| calibration | **improved narrowly** | the fix landed at the discovered class only; the quote/line anchor kinds are unaffected (correct — literal text is literal inside or outside a fence) |
+| adjacency | **unchanged** | zero network; corpus read-only; no sibling/fleet writes beyond the recorded queue rows |
+
+Admission: **ADMIT** (coverage/operability/depth/calibration(narrow)
+improved; none harmed). No scalar score. Learning trends: expansion
+improved, quality improved, discernment improved. Round 24 registered:
+loop 2 begins — §Planned below.
+
+## Planned — round 24 (pre-registered 2026-10-19, at the round-23 landing)
+
+Loop 2 begins (curriculum loop 2, round 1): one 64-seat AgentSwarm call on
+**opencode-go key 7 / deepseek-v4.1-flash** (per the curriculum's
+key-rotation directive — keys rotate BETWEEN rounds; R1 uses the next
+unused key lane). Claims pre-registered at the round-24 opening from the
+named-debt queue: candidates — the `ai benchmark(s)` boundary decision,
+the inflection gaps, the `--drift` truncated-baseline detection, the
+fenced-data-row `approved` suppression, the 8 unasserted finding IDs,
+the secret-scan source coverage gap, the `--json` delimiter edge, the
+manifest timestamp mask breadth, bash-3 portability. Seats: 64; roster
+logged in the round-24 report.
+
+## Round 24 verdict — 2026-10-19 (kaika campaign landing; self-verdicts pending non-author verification)
+
+Disposition of the pre-registration (round-24 criterion 11): planned one
+64-seat AgentSwarm call on opencode-go key 7; the round-24 opening
+(`LOG.md` :816-820) recorded opencode-go-7 interrupted at 17 seats and a
+64-seat luna dispatch. That dispatch produced no seat report in this lane or
+in the fleet `.ufo/reports/round-24/` — nothing from it is used here. This
+landing ran under the orchestrator's kaika binding (tower worktree
+`kaika/round`): one batched 10-member L2 call (planner, connector, scout,
+4 executors, scribe, reviewer, critic; models by the session route table,
+none passed). The first attempt was refused whole by the session's
+100-job cap and retried unchanged as one batch; 10/10 completed.
+
+Selected claims: the pre-registered `--json` delimiter edge (operability)
+first; the pre-registered depth slot (the manifest-format note) lands as
+claim 1's record and is NOT separately claimed — its before→after is claim
+1's, so a separate depth claim would not be causally separable (round
+critic, finding 7). Campaign slots: coverage (source registry + three
+current-art method entries, one claim) and calibration (mistakes → criteria).
+
+| # | axis | claim | counting command | before (ab19cff) | after | verdict |
+|---|---|---|---|---|---|---|
+| 1 | operability (lowest scored) | `--json` append onto a manifest whose last byte is not `\n` glued two objects; the write-only and NUL variants found mid-round | `bash corpus/evidence/round24-measure.sh <tree>` §claim 1 (also verbatim in `json-r24-20261019T213117Z-demo.log`) | `MANIFEST_LINES=1 INVALID_JSON_LINES=1` | `MANIFEST_LINES=2 INVALID_JSON_LINES=0`; selftest 133 → 136 (1–133 byte-identical); mutants m1/m2/m3 killed | **improved** |
+| 2 | coverage + capability `source registry` | `corpus/SOURCES.md` (contract v1) and 3 method entries admitted through it | `bash corpus/evidence/round24-measure.sh <tree>` §claim 2: per-entry header + every cited row `mined` with `used-by` naming the entry + coverage-map row; then the 7 contract census commands | `EXPANSION_ADMITTED=0/3`; registry absent | `EXPANSION_ADMITTED=3/3`; 18 rows, malformed 0, A=14 B=1 C=3, mined=8 queued=7 rejected=3, no dup/enum/missing, 4/4 sections | **improved** |
+| 3 | calibration | the lane's own 14 mistake classes mined; unlearned classes get a criterion citing its lesson | `bash corpus/evidence/round24-measure.sh <tree> [<bar>]` §claim 3 over `corpus/lessons/round-24.md` | 3/14 captured (bar `ab19cff:corpus/QUALITY.md`) | 13/14 (M-8 stays `none`, by reason) | **improved** |
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** (claim 1) | receipts `json-r24-20261019T213117Z-*`; score re-derived per criterion 12: round-1 counting command → `VERDICT_BEARING_EXPORTS=3/3` → **3**, unchanged (the score measures a narrow 3/10 construct, not this round's arm) |
+| coverage | **improved** (claim 2) | first method entries since round 2 off gate-hardening ground; `corpus/README.md` coverage rows + Frontier round-24 paragraph |
+| calibration | **improved** (claim 3) | `corpus/lessons/round-24.md` `## Mistakes`; `corpus/QUALITY.md` criteria 6–12 |
+| depth | **unchanged** (not claimed) | the manifest note and method entries add detail, but no depth before→after was measured |
+| freshness | **unchanged** | drift `none` vs the r12 baseline (no re-pin); README count re-derived as an appended correction |
+| adjacency | **unchanged** | benchmark results in S006/S007 kept out of admitted knowledge (kengaku); routed in the report |
+
+No axis harmed: battery ALL IDENTICAL, drift `none`, r1 `3/3`, cases 1–133
+byte-identical. Admission is the operator's after non-author verification.
+
+## Capabilities (round-24 addition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| source registry | keeps where the lane learns as opened, scope-tiered rows with kept rejections, study paths and a search log; every contract census command runs clean | `corpus/SOURCES.md`; census outputs in the round-24 report | 24 |
+
+Not backfilled here: the 8 capability acquisitions `LOG.md` claims for
+rounds 15 and 17–23 still have no row (`lessons/round-24.md` M-14) —
+queued below.
+
+## Planned — round 25 (pre-registered 2026-10-19, at the round-24 landing)
+
+Claims, 1–3, distinct axes, each falsifiable; wave per the binding in force
+at dispatch:
+
+1. **operability — metadata screen.** A gate check for the `source:` /
+   `verified-at:` / `recheck:` header (`QUALITY.md` 6). Before: the 3 legacy
+   notes lacking `recheck:` (`archives-verified-r9.md`, `audit-r11.md`,
+   `gate-baseline-r8.md`) are invisible to every mode; after: each names
+   its finding, the 28 others stay clean, selftest cases 1–136 byte-identical.
+2. **freshness — re-derive the indexes and ledgers.** Index the 2 unindexed
+   files, add Frontier rows r11–r23 and evidence-index sections r12–r23,
+   backfill the 8 capability rows. Before/after by the commands in
+   `corpus/README.md` (round-24 correction) and `lessons/round-24.md` M-12, M-14.
+3. **calibration — close stale restatements append-only.** `SKILL.md`'s
+   open A-r9 C3 finding, the three divergent ledger totals, the `${GSHA}`
+   placeholder, hardening addenda r16–r23 (M-3, M-4, M-5, M-6).
+
+Remaining round-20 named debt, unclaimed: manifest concurrency (`flock`),
+manifest timestamp mask breadth, `ai benchmark(s)` boundary, inflection
+gaps, fenced-data-row `approved` suppression, 8 unasserted finding IDs,
+secret-scan source coverage, bash-3 portability.
+
+## Capabilities (round-25 reconciliation of earlier LOG claims)
+
+These eight rows reconcile `LOG.md`'s `Capabilities +1` claims for rounds 15
+and 17–23 (round-24 lesson M-14). First-working rounds are the historical
+rounds, not new acquisitions in round 25. Each demonstration was re-run at
+`b820e4e` this round (`--selftest` PASS 136 cases; the case-level outputs and
+row review are `.ufo/waves/round-25/build/CapRowR{15,17..23}.md`); the final
+landing selftest also carries the same cases byte-identically.
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| root-slash source resolution | reads a same-device absolute claim source under `--root /` rather than falsely refusing it as out-of-corpus | round-15 receipt cases 107–110, current cases 107–109 and 111; `corpus/knowledge/root-slash-boundary-r15.md` | 15 |
+| fence-aware scope screening | ignores fenced `## Meta` headings while parsing sections, so a fake in-province declaration cannot shadow the real refused domain | selftest cases 112–116; `corpus/knowledge/fenced-heading-r17.md` | 17 |
+| LLM benchmark-phrase scope screening | flags declared `llm benchmark(s)` / `llm scoring` scope with `SCOPE_MODEL_QUALITY_ABSORBED` warn; prose-only control stays CLEAN | selftest cases 117–119; `corpus/knowledge/scope-phrase-gap-r18.md` | 18 |
+| sweep symlink-escape refusal | refuses the whole sweep when an expanded match canonicalizes outside both allowed roots | selftest cases 120–122; `corpus/knowledge/sweep-symlink-r19.md` | 19 |
+| HTML-comment heading-shadow detection | treats headings inside HTML comments as literal text, so a fake `## Meta` cannot shadow the real scope declaration | selftest case 124 (`scope-comment-shadow`); `corpus/knowledge/html-comment-r20.md` | 20 |
+| canonical pointer-boundary screening | canonicalizes pointer targets and checks both roots, refusing traversal/symlink escapes and denylisted canonical targets | selftest cases 125–128; `corpus/knowledge/pointer-boundary-r21.md` | 21 |
+| denylist path-start refusal | refuses claim sources beginning `.config/`, `.omp/`, or `.local/state/`, while allowing `.config-adjacent/` | selftest cases 130–133 (current; round-22 receipt 129–132); `corpus/knowledge/denylist-r22.md` | 22 |
+| fenced-heading chain anchors | rejects a heading inside a fenced block as a chain `heading` anchor, reporting missing-anchor drift | selftest case 129; `corpus/knowledge/fenced-anchor-r23.md` | 23 |
+
+## Capabilities (round-25 acquisition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| knowledge-entry metadata screen | names absent source/verified-at/recheck keys and undated verification values, reports command-only and parent-root rechecks as info, and refuses denylisted/oversized/NUL-bearing entries | `bash tools/research-gate.sh verify-metadata corpus/knowledge --root .`; selftest cases 137–154; `corpus/knowledge/metadata-screen-r25.md` | 25 |
+
+## Round 25 verdict — 2026-10-21 (recovery attempt 2, pending outside closure)
+
+Claims and frozen populations: `corpus/evidence/round25-claims.md`, registered
+at `b820e4e` against base `d730ae4` before implementation. Counting command:
+`bash corpus/evidence/round25-measure.sh <tree-root>` (from any cwd); receipts
+`corpus/evidence/round25-measure-{before,after}.log`. The measured integration
+revision is the round-25 checkpoint carrying this section (its landed hash is
+recorded in the fleet report); a commit cannot embed its own hash. Attempt 1
+left no output and spawned 0 seats; no dead identity was respawned.
+
+| claim / canonical axis | before → after | verdict / score delta |
+|---|---|---|
+| C1 operability — metadata-screen capability | mode absent, rc 2 and no named legacy-header findings → rc 1, `METADATA_COMPLETE=25/28`, exactly `archives-verified-r9`, `audit-r11`, `gate-baseline-r8` each `META_RECHECK_ABSENT`; 27-fixture differential 54/54; cases 1–136 identical | **improved** (syntactic screen, not full QUALITY 6); operability score **3→3, delta 0** on its original r1 construct, re-derived 3/3 this landing; capability row above |
+| C2 freshness — re-derived indexes | `STALE_INDEX_ITEMS=66` (2 unindexed +13 Frontier gaps +43 misfiled receipt rows +8 missing capability rows) → 0 | **improved** (index freshness, not a coverage score); no numeric freshness score invented |
+| C3 calibration — stale restatements | `STALE_RESTATEMENTS=15` → 0 (one closed finding, three stale tuples, two queue sizes, one template slot, eight missing addenda) | **improved**, qualified: lexical count plus cited replacements, not semantic proof of mistake→criterion mapping; no numeric calibration score invented |
+
+C3 also found the owning ledger's E4 tuple was wrong (sum 72 over 71 rows),
+so `hardening-r10.md` has an append-only erratum and a reproducible recount:
+`python3 corpus/evidence/round25-ledger-recount.py` → rows=71, 38/22/8/0/3,
+queue_committed=24 versus queue_true=25. SKILL now points to that owner and
+command instead of duplicating totals. The r13 template substitution is
+recorded in the same erratum; history is not silently rewritten.
+
+Holds at the integration checkpoint: `PASS (154 cases, 0 skipped)` (136→154),
+`GATE_DRIFT: none` versus the r12 baseline, r1 `VERDICT_BEARING_EXPORTS=3/3`.
+The explicit-root hold battery and final suite are recorded separately at the
+round-25 landing. Depth and adjacency: **unchanged** (no claim). Coverage:
+**unchanged** as a measured axis; a new entry/capability supports the qualified
+expansion trend, not an invented domain-coverage fraction. Freshness and
+calibration remain unscored (only operability has a numeric construct).
+
+Trends (lane assessment, outside closure remains separate): **expansion
+improved** — `metadata-screen-r25.md` is uncovered metadata-screen ground,
+mined S019/S020, indexed; **quality improved** — stale index/ledger claims
+reconciled, relative-root recheck superseded, legacy headers made visible;
+**discernment improved** — prior outside-check debts become shown-to-fail
+criteria 13/14 and the S006 quote error is corrected. Neither source-row growth
+nor `STALE_INDEX_ITEMS=0` by itself is an expansion verdict. SHONEN stays `[~]`
+(no self-attested `[x]`). No historic misrooted-battery hold is relabelled green.
+
+## Planned — round 26 (not started)
+
+1. **operability (lowest measured, 3/10):** serialize cooperating `--json`
+   appenders across the EOF probe plus append (`flock` candidate remains
+   unlanded in r25 wave evidence); reproduce seeded-unterminated race before,
+   then ≥10×16-writer same-precondition runs with no blank/invalid lines.
+2. **freshness:** compute due dates from verified-at + recheck cadence with
+   an explicit as-of date; before no due-date output, after one planted
+   past-due control caught and current entries reported with due/unknown.
+3. **calibration:** a criterion-6 verifier (not the r25 syntax screen) checks
+   each cited S-id exists, is mined and used-by names the entry, plus the
+   what-was-checked text; freeze r24+ population and semantic negative controls
+   before implementation. Legacy entries remain distinct from prospective bar.
+
+### Round-25 measured-revision erratum (2026-10-21)
+
+The initial `0fc037e` checkpoint had prose/fixtures but omitted the gate from
+the helper path list: old gate SHA752e4e38/selftest136. The corrected measured
+checkpoint is `d8c8cff3923f10481ac9ced66d0af7c41d38130c` (gate landed, 154
+cases); original working-tree counts are not proof for `0fc037e`. Fresh
+falsifiers were steered to the corrected commit, same identities. Final
+measurement receipts and the fleet report cite the final helper landing.
+See lesson R25-M13 and QUALITY15; no numeric score changes from this erratum.
+
+### Round-25 final recovery measurements (same attempt, 2026-10-21)
+
+Replacement L1 `ChousaR25` inherited the two validated 68-seat waves, their
+landed checkpoints and uncommitted falsifier-driven corrections. No wave was
+rerun and no dead identity replaced. Final counting command remains
+`bash corpus/evidence/round25-measure.sh <lane-tree>`:
+`round25-final-measure.log` records C1 25/28 with exactly the three legacy
+drifts, C2 0 stale index items and C3 0 unresolved stale restatements.
+The historical `${GSHA}` token is restored (raw count 1); its explicit
+append-only disposition makes unresolved count 0. The original raw-zero
+prediction is withdrawn, not fulfilled by editing history.
+
+Final holds: selftest 161/161, legacy cases 1–136 identical, r12 drift none,
+r1 3/3; differential 54/54. See `round25-final-holds.log`,
+`round25-final-differential.log` and `round25-final-ledger.log`.
+Operability score stays 3→3 (delta 0); C1/C2/C3 retain the qualified improved
+verdicts above. The final pushed lane revision is identified by the report's
+helper `landed` hash; these receipts measure its executable/index bytes.
+S029/S033, not superseded S019/S020, are the mined rows grounding the new
+entry. No outside admission or SHONEN verification is self-awarded.
+
+Counter qualification from residual review: `round25-measure.sh` is a probe,
+so exit0 is not a verdict. The actual printed values plus retained content
+reviews support the claims. C3 now rejects slot/marker/addendum/recount
+deletions; `round25-final-counter-controls.json` preserves failing controls.
+C2 remains a bounded syntax/population count, not a complete semantic index
+validator. README's old handoff tuple is explicitly dated, outside the
+frozen C3 population rather than silently counted as an original claim item.
+
+**Measured commit for all three final claims:**
+`c125d8bc20e5433947df26fe0af3d3b58d0b37d3`.
+`corpus/evidence/round25-measured-revision.json` binds all 11 measured
+executable/counting/index/ledger input blobs to that landed revision.
+Final counting receipt: `round25-landed-measure.log`; final differential:
+`round25-landed-differential.log`. C1 improved, score3→3/delta0; C2 freshness
+improved, 66→0; C3 calibration improved with lexical/content-review limits,
+15→0 unresolved (historical raw slot1 retained). No other numeric score
+is invented. The following bookkeeping landing does not change the gate.
+
+Packaging erratum: explicit helper path selection still omitted the gate
+from `c2a6e338`; this was caught by QUALITY15's actual blob comparison,
+not assumed from the helper's success. A gate-only helper retry landed
+`c125d8bc` with all11 hashes matching. Cause unresolved; no direct VCS
+mutation or blind repeated retry was used (lesson R25-M15).
+
+Baseline comparability recheck: the exact final counting probe, run over
+`git archive d730ae4c33989ad9c8535764d4cae77b4db869f6` in an isolated tree,
+records the same absent-mode rc2, 66 stale index items and 15 unresolved
+restatements (`round25-final-before.log`, probe exit0). Thus the later
+anti-deletion guards do not manufacture the before→after reduction.
+
+## Round26 recovery verdict — 2026-10-21, same attempt1
+
+**NOT ADMITTED.** This closes the author-lane record, not the fleet's outside
+closure. The earlier `Planned — round 26 (not started)` heading is historical:
+the actual preregistration is `f361d12e44687841e30ec35710ddb366c6f795e0`
+against base `ba3333254dd337658a4f25e7a9471f9cf4e4567e`. Its appender-race
+item was carried, not implemented or claimed. C1 instead exercised the
+round25 closure's reader-allocation risk on the lowest measured axis.
+
+Measured production revision: `0e9784bd52eca456b24d0bc40921480a47f91a2b`;
+gate SHA-256 `c2c813f1b425bc4e74625a2607eaca1b97addf9898f834e88af8f1fe2143abc6`.
+Command: `bash corpus/evidence/round26-measure.sh TREE all`, with TREE an
+isolated archive of that revision. The inherited author-lane critic actually
+executed it; its exact output is retained in
+`corpus/evidence/round26-inherited-after.log`, with command/record provenance
+and the seat's verification-scope violation in
+`round26-inherited-measurement.json`. Recovery did not repeat failed checks.
+Before: the identical probe at the base, `round26-measure-before.log`.
+
+| claim / axis | before → after observed | final author-lane verdict |
+|---|---|---|
+| C1 operability — metadata entry-reader allocation | `C1_AMPLIFIED=4/4 → 0/4`; frozen29 SHA `3f83ba4844cac8d2057b47661be225f84a5945fc7c1db739ec2070b6aa2a4a37`, rc1 unchanged | **improved narrowly**, but not verified under the complete claim contract: shared PASS hold fails and 31 falsifier seats returned no report |
+| C2 freshness — computed due dates | classified `0/29 → 29/29`, oracle `0/29 → 29/29`, controls `0/6 → 6/6` | **harmed / falsified** beyond frozen controls: cadence-input termination and locale-dependent usage exit; `FDateHugeCadence.md`, `FDateAsOfUsage.md` |
+| C3 calibration — registry relationships | controls `0/5 → 5/5`, positive `0/1 → 1/1`, frozen r24+ clean `0/5 → 5/5` | **harmed / falsified**: stale table-header state, incorrect source-token rescan and refused-path guarantee failure; `FRegistryHeaderless.md`, `FRegistryIdBoundary.md`, `FRegistryRegistryDeny.md` |
+
+All named falsifier reports are under `.ufo/waves/round-26/falsify/`.
+No frozen threshold or oracle was relaxed to erase those counterexamples.
+The registry comparator's set-of-finding-code comparison misses some
+occurrence/whitespace differences; frozen agreement is not grammar equivalence.
+
+Shared hold: base `PASS (161 cases, 0 skipped)` → target
+`FAIL (3/187 cases)`, exit1. Legacy161 case SHA remains
+`5eac4a7e2af964f6e81631f66990426e5c8ef58fb41ba6ec6d0054ef819e01cb`;
+drift remains none, rc0; archived-input observable remains3/3.
+`FNoTrade.md:115-137` explains the three new unsatisfiable usage assertions.
+Probe exit0 is not a PASS. The operability scalar stays **3→3, delta0**
+on the original narrow r1 construct; the inherited probe used its explicit
+fleet-root equivalent, and FNoTrade also exercised the original sibling-layout
+form. Neither form measures resource safety or general field readiness.
+
+No round26 capability is admitted to the repertoire table. The three new
+knowledge files are retained with explicit candidate/withdrawal qualifications;
+their presence and six mined source rows do not count as admitted expansion.
+Trends: **expansion unchanged; quality harmed; discernment unchanged**.
+The lane recorded and learned from falsification but has no outside round26
+admit/reject judgment. No new numeric freshness/calibration score is invented.
+
+Wave accounting: inherited build64 + falsify68 = **132 distinct seats**.
+Final reconciliation: build39 reports/25 no-report; falsify37 reports/31
+aborted no-report. Every seat transcript is terminal. Earlier death manifests
+describe earlier recovery snapshots; errors and reports can coexist.
+`build-final-reconciliation.json` and `falsify-final-reconciliation.json`
+retain per-seat report hashes, last errors, terminal records and dispositions.
+Recovery spawned/resumed/replaced zero seats. It does not claim full
+falsification, no-harm, promotion, or admission.
+
+## Round27 recovery verdict — 2026-10-21, same attempt1
+
+**NOT ADMITTED: C3 partially falsified; no-harm condition not met.**
+Frozen claims: `corpus/evidence/round27-claims.md`, base
+`64eec5d41c7cf7f17f5ce1e968e28b3769952596`.
+Final measured production revision:
+`4f48419425f5165a8f950e1db4c0a781cf845d40`;
+gate SHA-256 `ac1315ddaa12e79b68069d1a9866b9b1b55e3a43efef3ba0cb5ca5e665835765`.
+The receipt owner is `.ufo/waves/round-27/final/identity.json`, not the
+historical `corpus/evidence/round27-*-after.*` files (dd72641e, PASS210).
+
+| claim / distinct axis | measured before → after | verdict / score delta |
+|---|---|---|
+| C1 operability, lowest measured axis | accepted r26 `FAIL3/187` → `PASS215/215`, no skips; original187 retained and first210 identities unchanged from dd72641e; original161 line SHA unchanged; original C1 controls6/6 plus final added5/5 | **improved bounded repair**; original r1 scalar3→3, delta0, re-derived3/3 (not a general resource/readiness score) |
+| C2 freshness | accepted r26 locale/input-normalization failures → original synthetic21/21 + final added8/8 match; date differential9024/9024; 4 MiB representable cadence completes (timeout-sensitive historical baseline, not a semantic mismatch) | **improved bounded repair**; no invented numerical axis score |
+| C3 calibration | accepted r26 stale-header/rescan/hidden-denylist defects → original31/31 + final added19/19 match, registry differential48/48; complete-path hidden-denylist failure class repaired; frozen negative no-prefix clause still fails | **partially falsified / harmed**: prefix matching retained, including a new claims-canonical over-refusal; no axis score or capability admitted |
+
+Commands (run in an isolated archive of the measured revision; every command
+below exits0):
+
+- `python3 corpus/evidence/round27-regressions.py --gate tools/research-gate.sh`
+  →58 controls,0 mismatches (C1=6,C2=21,C3=31);
+  `final/regressions.json`.
+- `python3 corpus/evidence/round27-falsify-controls.py --gate tools/research-gate.sh`
+  →32 controls,0 mismatches (C1=5,C2=8,C3=19);
+  `final/falsify-controls.json`.
+- `bash tools/research-gate.sh --selftest` →PASS215,0 skipped, host
+  LANG=en_US.UTF-8 and LC_ALL unset; `final/selftest.log`.
+- `python3 corpus/evidence/round27-mechanisms.py tools/research-gate.sh`
+  →C1=0,C2=0,C3=0 versus non-executing base counts1/2/5. This is only a
+  lexical mechanism count, not a behavioral admission gate.
+- `bash corpus/evidence/round26-date-differential.sh TREE/tools/research-gate.sh`
+  →9024/9024;
+  `bash corpus/evidence/round26-registry-differential.sh TREE` →48/48;
+  `bash corpus/evidence/round25-meta-differential.sh` →54/54 (27 fixtures).
+- `bash tools/research-gate.sh --drift corpus/evidence/gate-baseline-r12-20261019T115519Z.json`
+  →`GATE_DRIFT: none`. The r1 explicit-fleet-root A/B/C invocations each
+  exit1 and emit one DRIFT summary →3/3; argv and per-input outcomes in identity.json.
+
+All abbreviated `final/` paths above mean `.ufo/waves/round-27/final/`.
+Legacy161 ok-line SHA remains
+`5eac4a7e2af964f6e81631f66990426e5c8ef58fb41ba6ec6d0054ef819e01cb`.
+Neither suite covers the entire frozen C3 claim: ResC3Clause demonstrates
+that actual filesystem inputs still pass through citation-prefix denial,
+including the new `plain.md -> k.env:1` canonical refusal. The negative
+compatibility expectations were not weakened or deleted to manufacture green.
+
+Post-falsify checkpoints remain distinct: dd72641e PASS210/58 controls;
+cb895a2 PASS215/26 controls but false CLEAN on shifted escaped columns and
+scanner failure; final4f484194 fixes those two counterexamples with shared
+cell splitting and separately checked scanner stages. Source-method
+counts1/2/5→0/0/0 and green frozen suites do not erase that history.
+Residual8 seats independently attacked cb895a2; candidate followups bind
+the exact final gate digest (scanner) and unchanged shared-split form (width).
+
+Sources39→43 (A33→37,B1→1,C5→5; mined16→20,queued19→19,rejected4→4);
+four new own-work rows, no new knowledge/capability admission. Source census
+exit0→0; rows S040–S043, Gate quotes and mistakes are owned by the round27
+lesson. Quality criteria19–22 mine real rejected/falsified behavior.
+Trends: **expansion unchanged; quality harmed; discernment unchanged**
+(no self-awarded outside admit/reject spot-check). No promotion or round28.
+Wave accounting: inherited build64 + falsify64 + new residual8 =136 seats;
+7 inherited no-report dead seats, none replaced.
+
+## Round28 — DERIVED full-claim honest negative
+
+One full proposed C1 targeted operability, the lowest active measured
+axis: canonical claim-source ancestor over-refusal plus actual complete
+denied-path attribution, preserving original consumer/usage/legacy/
+no-harm obligations. It is **not achieved / unprovable**.
+`corpus/evidence/round28-safe/claims.md` retains its full negative scope.
+
+Parent did not approve the proposed default/nested-root relaxation;
+denylist not waived. No implementation or new measurement was authorised.
+There is no after value, new scalar/delta, capability, Core graduation,
+promotion or admission. Prior metric and original187/legacy161 ordinals
+are held, not repinned or remeasured. The original R27 C3 clause, controls
+and rejected-harmed result remain unchanged.
+
+The only before is the old committed grouped receipt; cb→BASE transfer
+is explicitly inferential. Procedural native counts and two VOID
+contributions are qualified in `corpus/evidence/round28-safe/native-seats.json`
+and `corpus/evidence/round28-safe/qualifiers.md`, not behaviour/no-harm proof.
+Full raw/private bodies and the unapproved executable are excluded from
+the safe Git set; custody is in `corpus/evidence/round28-safe/provenance.json`.
+No Root report/end census or continuation is authorised at this stage.
+
+### 2026-10-23 correction to the round-28 section (routed defect D3)
+
+The round-28 section says no end census was run at that stage. The fleet witness `.ufo/waves/hyaku/chousa28-negative-records/parent-census.json` (fleet commit `b4b338e9`) records `bash /home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa`, run at 2026-10-22 02:49:09 UTC against lane commit `7c87b9734eb71985e19767af36d57dff89536521`. It exited 0 and printed `chousa ok` for `chousa-shokunin/corpus/SOURCES.md`. This corrects the run-status record only; the earlier text is kept as written. Routed as defect D3 by `corpus/lessons/round-28-verifier-spotcheck.md:50-54,125-126`; witness re-read in round 29 by seat ScribeRepairD3 (`.ufo/waves/round-29/build/ScribeRepairD3.md`).
+
+## Round 29 — quote re-open capability (one claim, C1 operability)
+
+Base `6c5eb1466f2b8abbd3de576389037f435016d07b`. Frozen claim, counter, fixture
+and design history: `corpus/evidence/round29/claims.md` (design v3,
+`aa5e1a3187955fa923de14e11c150bf1c526efc6`). The tool landed at
+`30c9d24da1815e01e161ed2f52d5f951005cc2b8` (tool SHA-256 `72a3ad47…54fea`,
+counter SHA-256 `cd509650…175d`).
+
+| claim / axis | before → after | counting command (lane root) | verdict |
+|---|---|---|---|
+| C1 operability, lowest scored axis; capability acquisition | `QUOTE_REOPEN_MATCH=0/130` (tool absent, `.ufo/waves/round-29/controls/before-do-nothing-v3.json`) → `130/130` twice on `30c9d24d` (`.ufo/waves/round-29/measure/after-run1.json`, `after-run2.json`) | `python3 corpus/evidence/round29/c1-count.py -- python3 tools/quote-reopen.py verify` | measured: met. Re-derived by wave 2: 130/130 in 6 further runs (RerunCounterA, RerunCounterB x2, ScoutFreshnessH x3) |
+
+The round-1 operability scale is unchanged: score 3 → 3. Its counting
+command (lines 28-30) still prints `VERDICT_BEARING_EXPORTS=3/3`, and
+`tools/research-gate.sh` is byte-identical (SHA-256 `ac1315dd…5835765`). The
+new observable sits beside that score and does not replace it.
+
+Pre-data controls under v3 (28 committed receipts, best 126/130 from
+casefold without a boundary; the best no-fetch label cheat reached 115/130)
+are in `.ufo/waves/round-29/controls/`. Designs v1 (a label replay met 82/82)
+and v2 (a seed replay met 130/130) were voided before data; the lesson records
+both as mistakes.
+
+Falsify-wave limits (reported, not re-scaled):
+- The counter does not prove a live fetch. A cache-only verifier built from
+  page snapshots taken 27 minutes earlier scored 130/130 twice
+  (`.ufo/waves/round-29/falsify/CriticClaimDesign.md`). Liveness rests on the
+  loopback harness, which counts server hits (65/65 with only the address
+  guard disabled, `falsify/OfflineConformance.md`), and on code review.
+- Mutants: boundary removal (126), quote-map removal (126) and inline-as-block
+  (117) are killed. Three mutants survive at 130: verdict order, script and
+  head text, and case-insensitive matching. The fixture lacks those classes.
+- Security review: open findings on DNS rebinding between check and connect
+  (T1) and on a slow-drip read that outlasts the 30 s deadline (T4)
+  (`falsify/SentinelTool.md`). The tool fetches only registry URLs.
+- Pages that omit `</head>` (S047, 1 of 32 HTML registry pages) and 2xx
+  challenge pages (S021, S022) read as `ABSENT`.
+
+## Capabilities (round-29 acquisition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| quote re-open | re-opens each located quote against the live URL of its `corpus/SOURCES.md` row and returns `VERBATIM`, `ABSENT`, `TOO_LONG`, `NO_SOURCE` or `UNREACHABLE` | `python3 tools/quote-reopen.py verify --items <tsv>`; `python3 corpus/evidence/round29/c1-count.py -- python3 tools/quote-reopen.py verify` → `QUOTE_REOPEN_MATCH=130/130`; `corpus/knowledge/quote-reopen-r29.md` | 29 |
+
+Sources 45 → 49 rows (tier A 39 → 43; mined 22 → 26). New rows S046 to S049,
+each mined and used by `corpus/knowledge/quote-reopen-r29.md`. QUALITY criteria
+23 to 25 were added. Trends, author view: expansion improved, quality improved,
+discernment unchanged.
+
+### 2026-10-23 correction — capabilities-row wording (routed defect D1)
+
+The phrase “live URL” in the round 29 capabilities row is not shown by the round 29 counter. The counter can be met without a network fetch: the cache-only verifier described in `.ufo/waves/round-29/falsify/CriticClaimDesign.md` scored 130/130. Separate network evidence is `.ufo/waves/round-29/falsify/DiffToolB/landed-fixture.network.json`, bound by `.ufo/waves/round-29/falsify/DiffToolB/differential-receipt.json`: the `landed-fixture` network record has 8 allowed request events with `"method": "GET"` and 8 response entries with `"status": 200`. The bound run records `"production_bytes_unchanged": true`, 40 expected and 40 observed items, and the command and exit shown below. Its verdict summary is `verbatim=14 absent=20 too_long=3 no_source=3 unreachable=0`. This is evidence for those GETs and HTTP 200 responses in that one fixture run, not evidence that the counter itself fetches or that every registered URL is reachable. [INFERENCE] Keep the row's counter result distinct from this bounded network observation.
+
+Recorded command (from `differential-receipt.json`; not rerun by this seat):
+
+```text
+timeout --kill-after=5s 590s python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/falsify/DiffToolB/guarded-run.py /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/falsify/DiffToolB/landed-fixture.network.json tools/quote-reopen.py verify --items corpus/fixtures/quote-reopen-r29/items.tsv --registry corpus/SOURCES.md
+```
+
+The receipt records `cwd` `/home/vgpnk/Projects/shokunin/chousa-shokunin`, `exit_code` 1, `expected_count` 40, `observed_count` 40, and `production_bytes_unchanged` true. The exit and mixed verdict summary are reported as recorded, not interpreted as a pass.
+
+The word "live" in the round-29 lesson, knowledge entry, this file and `corpus/README.md` (inventory: `.ufo/waves/round-30/build/ScribeD1Liveness/drafts.md` section B) is read the same way: backed for that one DiffToolB run only, never by the counter. QUALITY criterion 26 now requires this. Routed by `corpus/lessons/round-29-verifier-spotcheck.md:143-147`.
+
+### 2026-10-23 correction — second DiffToolB network run (routed D8)
+
+The D1 correction above says the network evidence is “that one DiffToolB run only”; this omits a second recorded run of the landed tool. `corpus/lessons/round-30-verifier-spotcheck.md:197-198` routes this finding. The `landed-heldout` record in `.ufo/waves/round-29/falsify/DiffToolB/differential-receipt.json` binds the command below to `.ufo/waves/round-29/falsify/DiffToolB/landed-heldout.network.json`; the receipt records exit 1, 33 expected and 33 observed items, and `QUOTE_REOPEN_SUMMARY verbatim=26 absent=3 too_long=0 no_source=0 unreachable=4`:
+
+```text
+timeout --kill-after=5s 590s python3 /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/falsify/DiffToolB/guarded-run.py /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-29/falsify/DiffToolB/landed-heldout.network.json tools/quote-reopen.py verify --items .ufo/waves/round-29/falsify/DiffToolB/held-out-3col.tsv --registry corpus/SOURCES.md
+```
+
+The bound network record contains 32 allowed GETs and 2 refused GET requests; its responses are 27 HTTP 200, 2 HTTP 203, 2 HTTP 301 and 1 HTTP 403 (`.ufo/waves/round-30/falsify/ReviewCorrections.md:25`). This is a second bounded network observation, not evidence that the counter itself fetches or that every registered URL is reachable. The recorded exit is not characterized as a pass. The earlier text remains intact.
+
+### 2026-10-23 correction to the Round 29 re-derivation count (routed defect D2)
+
+The Round 29 table says wave 2 re-derived C1 in 6 further runs. The committed outputs support 5 further runs, each scoring 130/130:
+
+- `.ufo/waves/round-29/falsify/RerunCounterA/receipt.json` — seed `16442982337510174646`.
+- `.ufo/waves/round-29/falsify/RerunCounterB/receipt-1.json` — seed `5392061795029416258`.
+- `.ufo/waves/round-29/falsify/RerunCounterB/receipt-2.json` — seed `1932010155184684229`.
+- `.ufo/waves/round-29/falsify/ScoutFreshnessH/rederive-receipt.json` and `rederive.out` — run 1, seed `13173258806708832500`.
+- `.ufo/waves/round-29/falsify/ScoutFreshnessH/rederive3.out` — run 3, seed `3497534629407128034`.
+
+`ScoutFreshnessH.md` labels run 2 with seed `12970099299958901445` but cites `rederive3.out`; that file records seed `3497534629407128034` (run 3). No separate committed output or receipt for the run 2 seed is in the falsify artifacts, so it is not included in the count of 5. This corrects the count and its evidence trail only; the earlier text is retained. Routed by `corpus/lessons/round-29-verifier-spotcheck.md:148-150`.
+
+## Planned — round 30 (not started)
+
+Candidates, not commitments: close the three surviving mutants with fixture
+classes declared before data (an unreachable over-long item, a hidden-text-only
+item, a case-only edit); handle a missing `</head>` and 2xx challenge pages in
+a new contract version; close sentinel T1 and T4; get the L0 ruling on the
+fetch scope. Round-28 C1 (path-denylist surface) stays open and is
+operator-owned.
+
+## Round 30 — quote re-open head boundary and fetch bounds (two claims; D-list only)
+
+Base `a3a3710e3d0adf2f95882292f17b5093e3baf97c`. Frozen design:
+`corpus/evidence/round30/claims.md` (design v4 at `abfdf93274d0c70e02465e22abcf029dea59efb9`;
+earlier designs were changed before data after the control wave found leaks, see the
+lesson). Landed tool `49b2aa3006d3c44a29b171ab30df09776c21405d` (tool SHA-256 `47a657e7…1201`).
+
+| claim / axis | before → after | counting command (lane root) | verdict |
+|---|---|---|---|
+| C1 coverage: edge class of pages that omit `</head>` | `QUOTE_REOPEN_HEADLESS_MATCH=78/106` (round-29 tool, `.ufo/waves/round-30/controls/before-c1-v4-run{1,2}.json`) → `106/106` twice on `49b2aa30` (`.ufo/waves/round-30/measure/after-c1-run{1,2}.json`) | `python3 corpus/evidence/round30/c1-count.py` | measured: met; re-derived 106/106 in every falsify-wave run (RerunC1A/B/C 9 runs, SeparabilityRevs, CriticClaimsAfter) |
+| C2 operability (lowest scored axis): stated fetch bounds hold under slow senders and DNS rebinding | `QUOTE_REOPEN_FETCH_BOUND_MATCH=12/27` (`before-c2-v4-run{1,2}.json`) → `27/27` twice on `49b2aa30` (`measure/after-c2-run{1,2}.json`); revision `33dd643f` scored 24/27 once and was fixed at `bd43bd53` | `python3 corpus/evidence/round30/c2-count.py` | **not met (miss under the kill rule)**: the landed tool printed 26/27 on 3 of 44 fresh-seed runs (`.ufo/waves/round-30/falsify/RerunC2B/run2.json`, `run4.json`, `extra16.json`); each miss is a slow-ok item refused about 0.07 s after its own DEADLINE. The seat's diagnosis points at the frozen harness's listen queue (backlog 5), not the tool; the counter is not re-scaled and the claim is reported as a miss |
+
+The round-1 operability scale is unchanged: score 3 → 3; `tools/research-gate.sh` is not
+touched by this round. The C2 observable sits beside that score.
+
+Controls (all under `.ufo/waves/round-30/controls/`): C2 v2 was met 20/20 by a DNS- and
+header-keyed shortcut and re-designed before data; under v4 no control met either
+counter (best C1 no-reader 84/106, best C2 control 18/27, a fixed 3.8 s cutoff).
+
+Not claimed: liveness, TLS (counters are plain HTTP), per-hop address provenance,
+resolver time, IPv6, pages without a `<head>` start tag, 2xx challenge pages, PDFs.
+
+Sources 49 → 56 rows (S050 to S056, tier A, mined, used by
+`corpus/knowledge/quote-reopen-r30.md`). QUALITY criteria 26 to 29 added. Census at the
+end: `chousa ok`, exit 0, with two W04 warnings (two pairs of rows share a page URL).
+
+### 2026-10-23 correction — routed D4
+
+The Round 30 C1 re-derivation is corrected: 32 of 35 distinct committed after-receipts carrying the landed tool SHA `47a657e7…` and frozen C1 counter SHA `5b312d84…` scored 106/106. The other three (`falsify/ConnectorKagiPin/c1-run2.json`, `falsify/MutR29Order/baseline.json`, and `falsify/MutR29SkipScript/baseline.json`) scored 0/106 under resource caps and are inconclusive, not support for 106/106. `CriticClaimsAfter`'s 14/14 is a combined count of its 3 C1 receipts, the 9 `RerunC1A/B/C` receipts, and the 2 measurement receipts; it is not a separate 14-run bucket. `SeparabilityRevs` contributes 2 distinct C1 receipts. This corrects the duplicate count routed by `corpus/lessons/round-30-verifier-spotcheck.md:178-181`.
+
+Evidence: `.ufo/waves/round-31/build/ExecD4Rerun/enum-output.txt:1-57` and `.ufo/waves/round-31/build/ExecD4Rerun.md:11-18,22-46` (recorded command exit 0).
+
+## Capabilities (round-30 change)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| quote re-open (contract v2, C1 part) | as round 29, and also reads pages that omit `</head>` (C1 measured). The fetch-layer change (one validated address per hop; one `DEADLINE` over header and body reads) landed, but C2 missed its predicate and the deadline does not cover name resolution or dialing (`falsify/SentinelFetchLayer.md`) | `python3 corpus/evidence/round30/c1-count.py` → 106/106; `python3 corpus/evidence/round30/c2-count.py` → 27/27 (loopback harness); `corpus/knowledge/quote-reopen-r30.md` | 29 (contract v2 in 30) |
+
+### 2026-10-23 correction — capabilities evidence pointer (routed defect D1)
+
+The `27/27` C2 pointer above is not the round's frozen-predicate verdict. Although the two measurement runs scored 27/27, C2 missed its kill rule: 3 of 44 fresh-seed runs printed 26/27 (`corpus/lessons/round-30-verifier-spotcheck.md:109`; this correction was routed at `:165-168`). The three miss receipts record `n=26`, `t=27`, and `predicate_holds=false`: `.ufo/waves/round-30/falsify/RerunC2B/run2.json:478-480`, `.ufo/waves/round-30/falsify/RerunC2B/run4.json:478-480`, and `.ufo/waves/round-30/falsify/RerunC2B/extra16.json:478-480`. Keep the earlier row as history; its C2 evidence must be read as a miss, not as held ground.
+
+### 2026-10-23 correction (round 31, D2)
+
+The backlog-5 explanation in the Round 30 C2 row above is **[INFERENCE]**, not an established cause. `RerunC2B.md:45,57` labels it `[INFERENCE]` and states that no per-connection record shows a dropped or delayed SYN. The 18/18 backlog-128 control is consistent with the explanation but not conclusive (`.ufo/waves/round-30/falsify/RerunC2B.md:49-50`). Round-31 copies: `.ufo/waves/round-31/build/ExecD2Backlog/bl/`. The C2 verdict remains “not met (miss under the kill rule)”; the control does not re-scale it or change the frozen v4 bytes. Any future C2 counter version that sets `request_queue_size` must be declared before data as a new version; never edit the frozen v4 bytes. This append-only correction answers D2 in `corpus/lessons/round-30-verifier-spotcheck.md:169-174`.
+
+## Planned — round 31 (not started)
+
+Candidates, not commitments: pages without a `<head>` start tag; 2xx challenge pages;
+resolver time inside `DEADLINE`; a TLS case in the harness; per-hop address provenance;
+IPv6; the L0 fetch-scope answer. Round-28 C1 (path-denylist surface) stays open and
+operator-owned.
+
+## Round 31 — claim location binding and revision pin (two claims)
+
+Base `be7b8d8d54962286417465a305fd9a1a7b3b1525`. Frozen design `corpus/evidence/round31/claims.md`
+(v1 `d78d1889`, v2 `8070f92b`; v2 was frozen after the control wave and before any candidate was
+scored; v2 control re-score committed at `86188116`). Landed: C1 at
+`c17948a776ad0389d47f2f15ec68f204adad5c8d` (gate SHA-256 `3b5279eb…bc3b`), C2 on top at
+`6d0ae19f240c1b5c0e62dffc06e57d28a2af1efd` (gate SHA-256 `c23d7537…823c`). `tools/quote-reopen.py`
+is not touched (anti-loop: rounds 29 and 30 worked it).
+
+| claim / axis | before → after | counting command (lane root) | verdict |
+|---|---|---|---|
+| C1 coverage: edge class "a claim names a line or range" in `verify-claims` (frontier item: pairing a span's occurrence with a named pointer line, README Round26 disposition) | `LINE_BINDING_MATCH=50/120` (base gate, `.ufo/waves/round-31/controls/CtlBaselineJunk/c1_base_seed*.json`) → `120/120` twice on `c17948a7` (`.ufo/waves/round-31/measure/after-c1-run{1,2}.json`) and twice on `6d0ae19f` (`after-c1-run{3,4}-tip.json`) | `python3 corpus/evidence/round31/c1-count.py` | measured: met under P1 |
+| C2 operability (lowest scored axis: the only scored axis, `SCORECARD.md:7`): `SKILL.md` checklist item 1's revision clause made runnable for every claim that carries a `"sha256"` pin | `REVISION_BINDING_MATCH=50/120` (base gate, `controls/CtlBaselineJunk/c2_base_seed*.json`) → `120/120` twice on `6d0ae19f` (`measure/after-c2-run{1,2}.json`) | `python3 corpus/evidence/round31/c2-count.py` | measured: met under P2 |
+
+The round-1 operability scale is unchanged: score 3 → 3 (delta 0); the C2 observable sits beside
+it, as in rounds 25 and 29. Separability: the C2 counter on the C1-only build prints 50/120
+(`measure/sep-c2-on-c1only.json`), the C1 counter on the C2-only build prints 50/120
+(`measure/sep-c1-on-c2only.json`).
+
+Controls (v2, all under `.ufo/waves/round-31/controls/`): no control met either counter. Best C1
+control 116/120 (start-line-only binding), best C2 control 118/120 (whitespace-trimming
+validator); no-reader C1 88/120, C2 86/120; do-nothing 50/120 each; disclosed full-contract
+oracles 120/120 (feasibility only). v1 was broken by three control findings before data
+(`corpus/lessons/round-31.md`, Design history).
+
+Selftest: `RESEARCH_GATE_SELFTEST: PASS (228 cases)` (base 215; C1 cases 216–219, C2 cases
+220–228). Not claimed: semantics or truth of a span; that the named line is the right line for
+the meaning; that every claim carries a pin; git-revision binding; `## Claims` table pointers in
+`verify`; chain hops; races between hashing and reading.
+
+Sources 56 → 59 rows (S057 RFC 5147, S058 W3C SRI, S059 Python hashlib; tier A, mined, used by
+`corpus/knowledge/line-binding-r31.md` and `revision-binding-r31.md`). QUALITY criteria 30 to 32
+added. Routed defects D1 to D8 of the round-30 outside spot-check are repaired append-only (see
+the lesson's intake table).
+
+## Capabilities (round-31 change)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| claim location and revision binding (`verify-claims`) | a claim may name the line or line range its span sits on (`"line"`) and the SHA-256 of the exact source bytes it was made against (`"sha256"`); a span found elsewhere reads `mislocated`, a changed source reads `stale` | `python3 corpus/evidence/round31/c1-count.py` → 120/120; `python3 corpus/evidence/round31/c2-count.py` → 120/120; `corpus/knowledge/line-binding-r31.md`, `corpus/knowledge/revision-binding-r31.md` | 31 |
+
+## Planned — round 32 (not started)
+
+Candidates, not commitments: line binding for records' `## Claims` table pointers (`path:N`) in
+`verify` mode (the C1 residual); a selftest case for end-line-only binding (a mutant the counter
+kills but the selftest does not, `falsify/MutC1Binding.md`); `--json` appender serialization
+(Planned26); the L0 fetch-scope answer. Round-28 C1 (path-denylist surface) stays open and
+operator-owned.
+
+### Round 31 — post-falsify gate revisions (same round)
+
+The falsify wave found C2 contract violations outside the counter's fixture space
+(`.ufo/waves/round-31/falsify/CriticEdgeC2.md`): a pin with an escaped trailing newline or NUL
+decoded into a match, and a source whose file name holds `\` or a newline read `stale` because
+`sha256sum` escapes such names. Fixed at `65d00cfc` (hash via stdin) and in the round's final gate
+commit (exact JSON decoding that keeps trailing newlines; an escaped NUL is malformed), final gate
+SHA-256 `0bc318b3…1258`. On the final gate both counters print 120/120 twice
+(`.ufo/waves/round-31/measure/after-c{1,2}-run{7,8}-final.json`) and the selftest prints
+`PASS (228 cases)`. Open, not fixed: a present non-string `"line"` or `"sha256"` treated as absent
+would still score 120/120 on both counters (no fixture class; `falsify/MutC1Grammar.md`,
+`falsify/MutC2Parse.md`, `falsify/CriticClaimsAfter31.md`); nested `"line"`/`"sha256"` keys are
+read as the record's (flat-key parser, `falsify/ReviewIntegrationDiff31.md`); fail-open hashing
+and span-before-stale are killed by the counter but not the selftest (`falsify/MutC2Hash.md`,
+`falsify/MutSelftestNew31.md`). Planned round 32 adds these as fixture classes before data
+(QUALITY 28).
+
+## Round 32 — serialized manifest appends and the exempt-hop audit (two claims)
+
+Base `7a7259f0ad41a68068131bfa422a829db9fd1b55` (gate SHA-256 `0bc318b3…1258`). Frozen design
+`corpus/evidence/round32/claims.md`: v1 `4111607c` (attempt 1), v2 `3d586d3a` (after the pre-data
+control wave broke both v1 counters; before any candidate receipt). Control evidence committed at
+`f43dd5a3` and `a065845a`; candidate `0f96bc1c` (gate `10f2fe12…`); post-falsify C1 repairs
+`53cf649c` (final gate SHA-256 `f4731885ac0f8307…03f0`). `verify-claims` and
+`tools/quote-reopen.py` are not changed by either claim (anti-loop).
+
+| claim / axis | before → after | counting command (lane root) | verdict |
+|---|---|---|---|
+| C1 operability (lowest scored axis): the `verify-all --json` manifest append is one flock-held critical section on the manifest | `APPEND_SERIALIZED=0/24` (base gate, `.ufo/waves/round-32/controls/L1-design-v2/c1-base-s3201.json`) → `24/24` on the final gate, seeds 32101 and 32102 (`.ufo/waves/round-32/measure/final/c1-s3210{1,2}.json`); committed receipts on landed gates: `10f2fe12` ×18, `f4731885` ×3, all 24/24 (plus ×2 on the uncommitted intermediate `d13a76e3`, also 24/24) | `python3 corpus/evidence/round32/c1-count-v2.py --seed N --receipt F` | P1 v2 met; no run of the counter on a landed gate below 24 |
+| C2 coverage: hops marked `unresolved` / `blocked-no-fetch` / `labelled-dead` are read in `verify-chain` | `EXEMPT_AUDIT_MATCH=0/132` (base, record checks fail; raw hop matches 96/132, R1–R3 0/36) → `132/132` on the final gate, seeds 32111 and 32112 (`measure/final/c2-s3211{1,2}.json`) (committed receipts: `10f2fe12` ×36, `f4731885` ×2, all 132/132; ×2 on the uncommitted intermediate `d13a76e3`, also 132/132) | `python3 corpus/evidence/round32/c2-count-v2.py --seed N --receipt F` | **not verified**: P2 v2 is met numerically, but a control that never opens a cited source (ranks source files by mtime/inode) also scores 132/132 on two seeds (`.ufo/waves/round-32/w2/CriticAxis32/control-metadata-s3232002{1,2}.json`), so the frozen counter does not discriminate (§9); found post-data, counter not amended |
+
+The round-1 operability scale is unchanged: score 3 → 3 (delta 0); the C1 observable sits beside
+it, as in rounds 25, 29 and 31. Separability (v2): C2 counter on the C1-only gate 0/132, C1 counter
+on the C2-only gate 0/24 (`.ufo/waves/round-32/w2/SepAudit32/`).
+
+Controls under v2 (`.ufo/waves/round-32/w1/*/v2/`): best C1 non-oracle 12/24 (sibling-file flock,
+lockf, mkdir lock); best C2 pre-data control 126/132 (boundary skip, case-insensitive, whitespace
+collapse); oracles C1 24/24, C2 132/132. Post-data, the metadata-order control above meets P2.
+
+No-harm on the final gate (`measure/final/battery.out`): selftest `PASS (241 cases, 0 skipped)`,
+first 228 case lines byte-identical to base (sha256 `a8873064…`); claims-r2 17/17 CLEAN; chain-r3
+17/22 CLEAN, chain-r3-broken 1/2 DRIFT (`--root` fleet root; summaries gain `resolvable=0`);
+round-1 observable 3/3; round-31 counters v2 120/120 each, v3 132/132 each. No corpus chain record
+changes verdict (NoHarmCorpus32, 19/19). Declared behaviour changes: a host without flock(1) is
+refused with exit 2 before the report (the gate's existing convention when sha256sum is missing);
+a non-empty manifest unreadable under the lock is refused with exit 2.
+
+Sources 59 → 61 rows (S060 Python fcntl, S061 RFC 9110; tier A, mined). QUALITY 33 to 35 added.
+Round-31 routed defects R1–R6 repaired (`corpus/evidence/round32/r31-repairs.md`).
+
+## Capabilities (round-32 change)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| serialized manifest appends (`verify-all --json`) | concurrent `verify-all` runs and any writer that flocks the manifest append without blank or glued lines; the probe reads the locked file even if the path is retargeted | `python3 corpus/evidence/round32/c1-count-v2.py` → 24/24 (`measure/final/`); `corpus/knowledge/manifest-append-lock-r32.md` | 32 |
+| exempt-hop audit (`verify-chain`) | a hop marked "could not be followed" whose local citation resolves drifts with `CHAIN_EXEMPT_RESOLVABLE` | landed and reviewed (ReviewC2Probe32, MutC2Gate, CriticAxis32 witness), but its frozen counter is met by a no-reader control, so no counter verifies it; `corpus/knowledge/exempt-hop-audit-r32.md` | 32 (unverified measure) |
+
+## Planned — round 33 (not started)
+
+Candidates, not commitments: a C2 measure whose fixture decouples file metadata (creation order,
+mtime, inode) from truth, scored against the metadata-order control before freezing; the nested
+`"line"`/`"sha256"` key defect (unanchored `json_str`/`json_has_key`); a selftest case for a NUL
+last byte through the locked-fd probe; the L0 fetch-scope answer. This supersedes the round-32
+planned list above, whose `--json` serialization item is now landed and whose "end-line-only"
+selftest case landed as case 237.
+
+### 2026-10-23 correction (round 33, routed D2)
+
+The round-32 C1 row above says committed receipts on `10f2fe12` ×18; the outside spot-check said
+20. The count is **21**, all `APPEND_SERIALIZED=24/24`, counter `e6bf9531…`:
+`python3 corpus/evidence/round33/d2-census.py --lane .` prints `C1 receipts on gate 10f2fe12: 21`
+(and 3 on `f4731885`). The receipts that take the count from 18 to 21 are RerunC1b's load runs
+(`w2/RerunC1b/rerunc1b-landed-load{1,2}.json`, 07:51:22Z) and its tmpfs run
+(`rerunc1b-landed-fs.json`, 07:56:21Z), not critic re-scores. The C1 verdict does not change.
+Evidence: `.ufo/waves/round-33/w1/ExecD2Census.md`, re-run by ReviewRepairsD2D3D5 (jq recount
+identical).
+
+## Round 33 — claim fields from the top-level object only (one claim)
+
+Base `2b9cc73aed30c2e2c95699db6617d9531ef49fb2` (gate SHA-256 `f4731885…03f0`). Frozen design
+`corpus/evidence/round33/claims.md`: v1 `3b528b9a`, v2 `e3e24ec8` (after the pre-data critic,
+before any candidate receipt). Controls committed `96be7925`; candidate `eb179ec3` (gate
+`52f07c74…`); integration `0fb300b5` (`94a7be5a…`); post-falsify repairs `0cad05eb` (`165acd5f…`)
+and the final gate `43a1af35ca668fe5…4346`.
+
+| claim / axis | before → after | counting command (lane root) | verdict |
+|---|---|---|---|
+| C1 operability (lowest scored axis): `verify-claims` reads claim fields from the record's top-level JSON object only; nested members ignored; repeated top-level read fields invalid; string content never structure | `TOPLEVEL_FIELD_MATCH=60/156` (base, `.ufo/waves/round-33/controls/L1-design-v2/c1v2-base-s3311.json`) → `156/156` on every committed v2 run on a landed gate (`52f07c74` ×2, `94a7be5a` many, `165acd5f`, `43a1af35` seeds 3701/3702 in `measure/final/`; none below, ReceiptCensus33) | `python3 corpus/evidence/round33/c1-count-v2.py --seed N --receipt F` | **P1 v2 met; not verified by its counter for clause 3**: a gate that masks the counter's six fixed confuser literals, regex-strips nested containers and counts repeats also scores 156/156 (`.ufo/waves/round-33/w2/L1ShortcutMask/mask-s339{1,2}.json`, post-data). Non-counter evidence on the reader: differential fuzz 1950/1950 on the final gate (`measure/final/fz-9021{2,3,4}.json`), base 313/750 |
+
+The round-1 operability scale is unchanged: score 3 → 3 (delta 0); the C1 observable sits beside
+it. Controls under v2 (pre-data): best non-oracle 142/156; do-nothing 60/156; oracles 156/156.
+
+Repairs (not claims): D1 exempt-hop counter v3 (`corpus/evidence/round32/c2-count-v3.py`): the
+round-32 metadata-order control 132/132 under v2 → 87–98/132 under v3; landed audit 132/132 on
+`f4731885`, `94a7be5a`, `165acd5f`, `43a1af35`. D2 above. D3 battery revision header
+(`measure/final/battery.out`). D5 `corpus/evidence/round33/no-name-signals.sh`. QUALITY 36–41.
+
+No-harm on the final gate: selftest `PASS (251 cases, 0 skipped)`, first 241 case lines identical
+to base; claims-r2 17/17 CLEAN; chain-r3 17/22 CLEAN; broken 1/2 DRIFT; round-1 observable 3/3;
+round-31 counters v3 132/132; round-32 C2 v2 132/132 (`measure/final/battery.out`). 35 committed
+claims JSONL files: exit codes identical to base, every changed line a nested or duplicate record
+(NoHarmCorpus33). Declared behaviour changes (fail closed): malformed lines (bare non-JSON tokens,
+FF/VT whitespace, invalid escapes, unbalanced brackets, trailing bytes), an escaped NUL in a read
+string field, and marker_default rows with repeated read fields now read `invalid`.
+
+Sources 61 → 63 rows (S062 RFC 8259, S063 Python `json`; tier A, mined).
+
+## Capabilities (round-33 change)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| top-level claim-field reader (`verify-claims`) | reads claim fields from the record's top-level object only, refuses repeated read fields and malformed lines | `python3 corpus/evidence/round33/c1-count-v2.py` → 156/156 (counter met by a fixture-literal shortcut too, so clause 3 rests on the fuzz evidence); `corpus/knowledge/claim-record-fields-r33.md` | 33 |
+
+## Planned — round 34 (not started)
+
+Candidates, not commitments: a counter whose confuser content is generated per seed (QUALITY 40);
+member grammar inside nested values; raw control bytes in strings; spans of 32 KiB or more
+(`tok_span_at` argv limit); the L0 fetch-scope answer.
+
+### 2026-10-23 correction (round 34, routed E1) — round-33 capabilities row
+
+The round-33 capabilities row says clause 3 "rests on the fuzz evidence"; the three fuzz receipts it
+leaned on (`.ufo/waves/round-33/measure/final/fz-9021{2,3,4}.json`) bind gate `b2c07eda…`, which
+matches no committed blob. Re-run on the committed landed bytes `43a1af35…4346`: 650/650 ×3,
+calibration 60/60 (`.ufo/waves/round-34/w1/ExecE1Fuzz/fz-9021{2,3,4}-landed-43a1af35.json`). The
+per-seed confuser counter (`corpus/evidence/round33/c1-count-v3.py`, E2) does not close clause 3: the
+mask gate misses on seeds 9401/9402 (155/156) but meets 156/156 on seed 61111 (R34ReviewRepairs).
+E3: `SKILL.md` metadata range corrected to cases 137–208 and 210–215.
+
+## Round 34 — long claim spans (one claim)
+
+Base `b80539005176ac6ce39bc1c7afb846cb1f2f7c75` (gate `43a1af35…4346`). Frozen design
+`corpus/evidence/round34/claims.md`: v1 `70feb5ea`, v2 `ef16afb1`, v3 `f20aeaa7` (all before any
+candidate receipt). Pre-data control evidence `a92b9f43`; candidate `3026a4e5` (gate
+`772a1d8e4d94dbf3…3e58`); measurement `934d7cb7`.
+
+| claim / axis | before → after | counting command (lane root) | verdict |
+|---|---|---|---|
+| C1 operability (lowest scored axis): `verify-claims` verifies spans of 32768..65536 bytes (surface: `tok_span_at` / `tok_span_all`, the argv/PCRE-limited span matcher) | `LONGSPAN_MATCH=25/42` (base, `LC_ALL=C`, `.ufo/waves/round-34/controls/L1-base-v3/base-v3-C-s3493.json`; 0/42 ×2 by the 1500 s bound in the UTF-8 locale) → `42/42` on seeds 3601, 3602 (`LC_ALL=C`) and 3603 (UTF-8) (`.ufo/waves/round-34/measure/`); 42/42 on five more fresh seeds by R34RerunC1v3 and R34ReviewPatchC; no committed v3 run on the landed gate below 42 | `LC_ALL=C python3 corpus/evidence/round34/c1-count-v3.py --seed N --receipt F` | **unverified (required controls held)** — numerical P1 v3 met; five wave-1 seats ended on provider holds (CtlC1Shortcut, CtlC1Windows, CtlC1Halves, MutC1Counter, CritC1AxisFit), their controls may not be substituted, and the frozen design declared C1 unverified before data (`claims.md`, "Held controls and exclusions") |
+
+The round-1 operability scale is unchanged: score 3 → 3 (delta 0). Non-held controls under v3
+(pre-data): best seat control 40/42 (partial fixes, boundary left-only; `controls/L1-v3-rescore/`);
+L1 diagnostic shapes 33–38/42; feasibility oracle 42/42. Excluded (held-shape re-authoring):
+`controls/L1-keyed/`, `L1-windows/`, window/fraction/halves/shoulder helpers and their receipts.
+
+No-harm on the landed gate: battery PASS, 11 rows (`measure/battery/battery.out`): selftest
+`PASS (253 cases)`, first 251 case lines identical to base (sha256 `46c9c092…` both); claims-r2 17/17;
+chain-r3 17/22; broken 1/2 DRIFT; round-1 observable 3/3; r31 v3 132/132 ×2; r32 C2 v2 and v3
+132/132; r33 C1 v2 156/156. Disclosed: under `LC_ALL=C` the selftest fails on base (11 cases) and
+landed gate (10 cases) alike (`measure/selftest-env/`); the default-locale selftest passes.
+
+Repairs (not claims): E1 (fuzz re-run on committed bytes; corrections above and in
+`knowledge/claim-record-fields-r33.md`), E2 (per-seed confuser counter; not closed), E3 (SKILL range),
+E4 (`w1/ExecE4Census/receipt-binding.py`; QUALITY 42), E5 (QUALITY 43). QUALITY 42–44.
+
+Sources 63 → 66 rows (S064 execve(2), S065 pcre2limits(3), S066 grep(1); tier A, mined; opened
+from installed man pages).
+
+## Round 34 attempt 2 — dead zone + self-audit (two claims)
+
+Attempt 1 died lane-dead-no-report after its commits landed; attempt 2 inherits C1 unchanged
+(verdict `unverified (required controls held)` stands — the frozen exclusion is not re-opened)
+and declares two new claims on distinct axes. Frozen design v4
+`corpus/evidence/round34/claims-a2.md` (`7c7eb3a6`), before any attempt-2 candidate receipt.
+
+| claim / axis | before → after | counting command (lane root) | verdict |
+|---|---|---|---|
+| C2 operability (lowest scored axis): `verify-claims` verifies spans of 32765..32767 bytes (the PCRE dead zone: the 4N-byte pattern fits argv but PCRE2 refuses it, "regular expression is too large", S065) | `DEADZONE_MATCH=21/37` (unfixed gate `772a1d8e`, seeds 5011/5023, `measure-a2/c2-before-s*.json`) → `37/37` on seeds 5011, 5023, 5033, 5047 on gate `a6307edf…` (`measure-a2/c2-after-s*.json`); no committed run below 37 | `LC_ALL=C python3 corpus/evidence/round34/c2-count.py --seed N --receipt F` | **verified (measured)** — do-nothing 21/37, four 37/37 receipts (seeds 5011/5023/5033/5047), re-derived by wave seats ExecC2Rerun (fresh 7311/7417/7589), RevC2Receipts and MutC2Counter; no-harm battery 11 rows PASS; selftest 256. Disclosures: the frozen design's predicted before-ceiling of 4/37 was wrong (true 21/37 — erratum in `claims-a2.md`); window controls that compare every byte at these lengths (positional 16384-byte edge windows) correctly meet 37/37 as exact-verifier equivalents (MutC2Windows); a fixture-keyed engine that implements the exact semantics is output-equivalent and no output-only counter can exclude it (MutC2Keyed 2/6) — routed as r35 hardening (work-proof battery), not a kill: the landed gate is not keyed and P2 is gate-scoped |
+| C3 calibration: self-assessment text vs observed repo state, counted | no committed count existed (E4/E5 were point repairs); the first counted run printed `SELF_AUDIT_MISMATCHES=0` over 43 checks (`measure-a2/audit-first-run.txt`) → reshaped to a bounded structural-audit acquisition after wave criticism (CritC3Claim's shallow-set do-nothing reproduced identical 0/0 under planted drift): the auditor deepened to 62 checks (content pins of the self-assessment documents, 9/9 measurement-receipt bindings + a receipt_gate_file kind for control receipts, HEAD-byte reads so a dirty worktree cannot move the count, SET_SHA256 per run); identical before/after measurement — 3 counted at the pre-integration tree (2 real: the SKILL.md banner vs the gate's exact output form, found by ScoutSkillTally; 1 superseded-pin artifact) with 1 undispositioned (`measure-a2/audit-v3-prelim.txt`), at the landed tree the count is 1 (the superseded tool pin, dispositioned) over 62 checks with the set digest printed (`measure-a2/audit-v3-final.txt`); the SCORECARD count string the set pins is the first-run `SELF_AUDIT_MISMATCHES=0` literal above; assessment-derived controls: committed negative control 5/5 lies killed exactly (MutC3Inject), junk auditor killed by re-derivation, do-nothing unreachable (MutC3Bypass) | `python3 corpus/evidence/round34/self-audit.py` | **verified (reshaped, bounded acquisition)** — wave verdicts: MutC3Inject/MutC3Bypass/RevC3Set (set valid; shallow-as-written) + CritC3Claim (counterexample stands against the written form; its prescription is the landed reshape); r35 candidates named in the lesson |
+
+Per-axis: operability improved (C2: three span lengths moved from false-unsupported to
+verdict-bearing; C1's capability stands unverified); calibration improved (C3: the lane's
+round-34 self-description is now machine-audited, 43 checks, count-committed). No axis harmed:
+the no-harm battery holds every prior row (selftest 256 with first 253 case lines identical,
+claims 17/17, chain 17/22, broken 1/2, observable 3/3, five counters hold). The disclosed
+behaviour change: 32765..32767-byte quote anchors in `verify-chain` now resolve instead of
+reading `anchor-missing` (same class as C1's false-negative closure). Depth improved
+(`corpus/knowledge/dead-zone-pcre-r34.md`); freshness improved narrowly (S065 re-opened, pins
+unchanged); adjacency unchanged.
+
+## Capabilities (round-34 change)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| long-span verification (`verify-claims`) | locates and binds spans of 32768..65536 bytes by a 4096-byte probe plus whole-span confirmation, instead of failing on the argv/PCRE pattern limit | `LC_ALL=C python3 corpus/evidence/round34/c1-count-v3.py` → 42/42 (`.ufo/waves/round-34/measure/`); `corpus/knowledge/long-span-argv-r34.md` | 34 (unverified measure: required controls held) |
+| dead-zone span verification (`verify-claims`) | locates and binds spans of 32765..32767 bytes — between the PCRE2 compiled-pattern ceiling and the argv per-string limit — via the same probe-and-confirm matcher | `LC_ALL=C python3 corpus/evidence/round34/c2-count.py` → 37/37 ×4 seeds (`.ufo/waves/round-34/measure-a2/`); `corpus/knowledge/dead-zone-pcre-r34.md` | 34 (attempt 2, verified) |
+
+## Planned — round 35 (not started)
+
+Candidates, not commitments: E2 (a clause-3 counter every lexer-less mask fails on every seed);
+the selftest's `LC_ALL=C` dependence; the L0 fetch-scope answer. (Landed by round 34 attempt 2
+and removed from this list: the PCRE dead zone — measured as exactly the 3 lengths 32765–32767,
+not "about 28000–32767", C2; chunk-matcher selftest cases 254–256.)
+
+## Round 35 — the pinned binary and the routing witness (two claims)
+
+Base `08be4c9e3a4ebe55d915ce4761c81854286c23ae` (gate `a6307edf…2995b`). Frozen design
+`corpus/evidence/round35/claims.md` (`0e167649`, P1/P2 + kill rules + pre-data controls;
+post-data §Erratum is append-only). First landing `e87c5d7e` (gate `1f2fb4f5…c617`); the pin was
+then hardened on the three vectors the wave reported (`command`-keyword dispatch, `head` in the
+version probe, the dead `command -v grep` fallback) and the final gate is
+`a47688518e509edbf43b433a5e16e1cf2481233f3acedb5824ba341f7f0c38ad`; both claims re-measured on the
+final bytes (`.ufo/waves/round-35/final/`).
+
+| claim / axis | before → after | counting command (lane root) | verdict |
+|---|---|---|---|
+| C1 operability (lowest scored axis): `research-gate.sh` resolves, verifies and pins ONE absolute grep binary at startup and refuses an unverifiable pin with a named exit-2 refusal, instead of resolving bare `grep` through `PATH` at each matcher call | `GREP_PIN_MATCH=0/9` (base gate `a6307edf`, `controls/c1-base-s3501.json`) → `9/9` on seeds 3529 and 3539 on the final gate (`final/c1-s3529.json`, `final/c1-s3539.json`); cheapest non-oracle control (hardcoded pin, no provenance/override/echo) 3/9 (`controls/c1-hardcoded-s3501.json`) | `python3 corpus/evidence/round35/c1-count.py --gate tools/research-gate.sh --seed N` | **met under P1; reading narrowed** — the counter proves path+version pinning, refusal shape and output equality. It does **not** measure per-call engine identity: a read-before-refusal mutant (`147ded03…`), correct-output engines replacing `tok_span_offsets_direct` (`fd6d5a8e…`, `9040dcba…`) and a `BASH_ENV` `command()` swap all score 9/9 (wave seats MutPinRefusals, MutGrepPinEngines, MutGrepShimEnv; claims.md §Erratum 3). The ordering claim rests on strace (0 opens vs 2). |
+| C2 calibration: the lane's receipts can separate an output-equivalent keyed engine from the landed dead-zone routing (mechanism witness), where output counters cannot | `WITNESS_SEPARATED=0/2 battery=absent` (base tree; `controls/c2-before-s3501.json`) → `WITNESS_SEPARATED=2/2 OUTPUT_EQUIV=2/2 LANDED_WITNESS=pass` on seeds 3529 and 3539 (`final/c2-s3529.json`, `final/c2-s3539.json`); witness stubs fail both ways (`controls/c2-stub-{pass,fail}-s3501.json`) | `python3 corpus/evidence/round35/c2-count.py --seed N` | **met under P2 as a ROUTING witness** — it proves the routed matcher was entered, not that its body ran: a one-record shortcut (8 stamps for 8 records), a length-keyed engine (6/31 seeds), a chunk call with a discarded result and a body-replaced matcher (`3e5648b8…`) all pass (wave seats MutC2KeyedBattery, MutWitnessBypass1/2, MutWitnessThreshold; QUALITY 49 is the r36 requirement). Axis caveat recorded (wave critic CritC2AxisFit): P2 measures receipt strength, not the lane's self-assessment accuracy. |
+
+The round-1 operability scale is unchanged: score 3 → 3 (delta 0); the C1 observable sits beside
+it, as in rounds 25, 29, 31–34.
+
+Repairs (not claims): R1 `slen` reads its own parameter (probe: base `offsets=0` / landed
+`offsets=1 first=5`; `repairs/slen-probe.sh`, wave seats MutSlenScope and RevSlenSweep re-derived);
+R2 case-range comments 252-253 and 254-256 (all 14 gate case-number comments verified by
+RevCaseRanges); R3 round-34 wave-debris count reconciled (26 tracked `w2a2/*.md`; the three
+`ExecC2Oracle` texts tracked since `6a3cc32`); R4 runbook rows in `SKILL.md` + three knowledge
+entries with metadata headers.
+
+No-harm on the final gate: `RESEARCH_GATE_SELFTEST: PASS (256 cases, 0 skipped)`; case ranges
+252-253/254-256 confirmed from the run's own `ok-case` labels; the wave re-derived C1 9/9 on the
+pre-hardening landed gate (ExecC1Fresh1) and the prior counters were exercised in the wave.
+Wave: one v2 wave, 65 seats (attack 27 = 42%), `1f2fb4f5` attacked, final gate re-measured;
+one dead seat (CritWitnessBlind, provider `cyber_policy` refusal, not retried).
+Sources 66 → 68 rows (S067 exec(3), S068 bash(1); tier A, both opened 2026-10-23). QUALITY 45–49
+added.
+
+## Capabilities (round-35 change)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| pinned-binary resolution (`research-gate.sh`) | resolves ONE absolute grep (`/usr/bin/grep` → `/bin/grep`; `RESEARCH_GATE_GREP` override, absolute + GNU-reporting), refuses an unverifiable pin with `GREP_PROVENANCE` and exit 2 before reading a record, runs every grep call through a direct-path wrapper (never `command`, never `head`), and can name the pin for a receipt (`CHOUSA_GREP_PIN_ECHO=1`) | `python3 corpus/evidence/round35/c1-count.py` → 9/9 (`final/c1-s*.json`); `corpus/knowledge/grep-pin-r35.md` | 35 (scope: path + version, not engine identity) |
+| output-vs-routing witness (`tools/mechanism-witness.py`) | scores a candidate gate on output AND on whether the routed matcher function was entered, with a per-seed randomized fixture; separates two output-equivalent keyed engines while the landed gate passes both, and reports the trace-stamp counts | `python3 corpus/evidence/round35/c2-count.py` → 2/2 separated (`final/c2-s*.json`); `corpus/knowledge/keyed-engine-output-equivalence-r35.md` (survivor table) | 35 (scope: routing, not computation) |
+
+## Planned — round 36 (not started)
+
+Candidates, not commitments: a **semantic canary** that belongs to both counters — a pinned needle
+set whose match results differ between a correct matcher and an exact-search substitute (or a
+verified GNU-reporting recorder that must log ≥1 `-z -P` 4N-hex query) — the class three wave seats
+converged on (QUALITY 45, 49); per-record witness attribution + per-record fixture id-shape
+diversity; C1 receipt `counter_sha256` binding; witness tolerance to a matcher rename (currently
+`WITNESS=unparseable` → a spurious C2 kill); the `chousa`-root key class; the L0 fetch-scope answer;
+the carried C1 debt (spans ≥ 32768, `unverified (required controls held)`) stays open.
+
+## Round 36 — the engine-swap canary and per-record attribution (two claims)
+
+Gate bytes landed at `700bd5fcbf9abc118a6a0f078d51a2e7460c2878` (inherited attempt-1 freeze:
+counters, witness, gate edits, controls, receipts), gate
+`a7d3922c768a217a2dcedf347b4de438b8dda4108e1335f5a39af6117e1f54e8`; before-state control
+`.ufo/waves/round-36/controls/base-gate-r36.sh`
+(`a47688518e509edbf43b433a5e16e1cf2481233f3acedb5824ba341f7f0c38ad`). Frozen design
+`corpus/evidence/round36/claims.md` (P1/P2 + kill rules + limits; §Erratum appended after the
+data, 13 entries).
+
+| claim / axis | before → after | counting command (lane root) | verdict |
+|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10): the gate and its counter separate an output-equivalent engine swap in fourteen scenarios — pin resolution and refusals, distinct-path override honoured and observed, live `--version` identity, per-record argv attribution, manifest hash identity under a hostile `sha256sum`, C-locale decode, and the two pin echo/drift cells | `ENGINE_SWAP_CANARY=10/14` (base gate, `measure/c1-before-s36001.json`, re-derived seed 36321 by `w1/ExecC1BaseCtl`) → `14/14` `predicate_holds=true` on seeds 36001/36011 (construction, `measure/c1-after-s36001.json`, `c1-after-s36011.json`) and 36301/36311/36331/36341/36351/36361 on landed-gate receipts (wave + L1: `w1/*/c1-*.json` with `gate_sha256=a7d3922c…`, `measure-l1/c1-s36361.json`; the same seeds also appear in variant/control receipts under `w1/RevCounterHonesty/` whose gates are NOT the landed gate) | `python3 corpus/evidence/round36/c1-count.py --gate tools/research-gate.sh --seed N --receipt F` | **met under P1; reading narrowed** — the four failures (S11-S14) are this round's separations; S1-S10 also pass on the base control, S7-S9 assert the echo/refusal contract rather than per-call engine identity (QUALITY 52), and S10 is what keeps a no-call gate from scoring 14/14 (§Erratum 5) |
+| C2 calibration: the lane's per-record witness separates the five output-equivalent engines the round-35 witness admitted, through the pinned engine's out-of-band argv channel, while a renamed matcher passes | `WITNESS_PER_RECORD=2/5 OUTPUT_EQUIV=5/5 LANDED_ATTRIB=absent RENAMED=fail` (base gate + `tools/mechanism-witness.py`, `measure/c2-before-legacy-s36001.json`, re-derived seed 36321 by `w1/ExecC2LegacyCtl`) → `5/5 OUTPUT_EQUIV=5/5 LANDED_ATTRIB=pass RENAMED=pass` on seeds 36001/36011 (construction) and 36301/36311/36371 (wave + L1: `w1/*/c2-*.json`, `measure-l1/c2-s36371.json`); witness stubs fail 0/5 and landed-fail | `python3 corpus/evidence/round36/c2-count.py --gate tools/research-gate.sh --witness tools/argv-witness.py --seed N --receipt F` | **met under P2 as a query witness** — it proves the pinned matcher was queried per record, not that the answer was used; the call-for-show and read-the-recorder limits are stated (§Limits, §Erratum 2-3) |
+
+The round-1 operability scale is unchanged: score 3 → 3 (delta 0); the C1 observable sits beside
+it, as in rounds 25, 29, 31-35.
+
+Repairs (not claims): R1 `--pin` capture environment scrubs `CHOUSA_GREP_PIN_ECHO`; R2 the drift
+diagnostic names `GATE_GREP`; R3 one absolute `sha256sum` with a 64-lowercase-hex contract for
+`verify-all --json` and `--pin` (S070); R4 `json_unescape` decodes UTF-8 by hand in a `LC_ALL=C`
+scope; R5 selftest cases 257-261 (256 → 261); R6 pin-coverage ledger in `SKILL.md` (verified:
+`verify-integrity`/`verify-sweeps` make 1 recorder call, `--version`, 0 matcher calls —
+`w1/ExecModeCoverage/`); R7 both counters' docstring counts corrected to their receipts.
+
+No-harm on the landed gate: `RESEARCH_GATE_SELFTEST: PASS (261 cases, 0 skipped)` under default,
+`LC_ALL=C` and a scratch `TMPDIR` (`w1/ExecSelftest/`); pinned observables unchanged — claims
+17/17, chain 17/22, broken control 1/2, archives 3/3 (`w1/SentNoHarm.md`); the wave's
+scenario-isolation probe found no falsification (`w1/LabScenarioIsolation.md`, 14/14 twice on
+seed 36351).
+
+Wave: one v1 wave, 36 seats (attack roles 10 = 28%; planner seat held by the L1, its data-walk on
+the LabScenarioIsolation seat), one dead seat (`CritC1Swap`, provider `cyber_policy` refusal, not
+retried). Sources 68 → 70 rows (S069 grep(1) `-o`+`-b`, S070 sha256sum(1); tier A, both opened
+2026-10-23). QUALITY 50-52 added. Lesson `corpus/lessons/round-36.md`.
+
+## Capabilities (round-36 change)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| engine-swap canary (`corpus/evidence/round36/c1-count.py`) | scores a candidate gate on fourteen swap/contract scenarios with per-scenario fixtures and receipts, separating the round-35 gate's four open holes (manifest hash shim, C-locale decode, pin echo isolation, drift token) | `python3 corpus/evidence/round36/c1-count.py` → 14/14 (`measure/c1-*.json`, `measure-l1/c1-s36361.json`); `corpus/knowledge/engine-swap-canary-r36.md` | 36 (scope: fourteen asserted behaviours, four newly discriminated) |
+| per-record argv attribution (`tools/argv-witness.py`) | separates output-equivalent engines per record through the pinned engine's NUL-delimited argv log, writes the channel outside the gate's environment, and does not false-kill a renamed matcher | `python3 corpus/evidence/round36/c2-count.py` → 5/5 + renamed pass (`measure/c2-*.json`, `measure-l1/c2-s36371.json`); `corpus/knowledge/per-record-argv-attribution-r36.md` | 36 (scope: query, not use) |
+
+## Round 37 — claim-pin provenance and pin-capture environment (two claims)
+
+Freeze commit `b905217a7dfdcf58be1f0a4c0bf5f2d2d32a2d65` (inherited attempt-4 freeze: counters,
+gate fixes, selftest 262-267, frozen `corpus/evidence/round37/claims.md`, base control
+`.ufo/waves/round-37/controls/base-gate-r37.sh` = `a7d3922c…f54e8`); landed gate
+`9fcac047ddadd616fcf171534f6e6557f3e68271e353a79d81b218832321cf39`. Before-state controls committed at the freeze. Round shape: v1,
+wave 1 (39 seats, inherited dispatch, 8 returned, 31 dead by orchestrator death — never
+replaced) + one residual reviewer/critic call. Attempt 5 of the round (5 watchdog
+`lane-dead-no-report` lines).
+
+| claim / axis | before → after | counting command (lane root) | verdict |
+|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10): a claim's `sha256` revision pin is hashed through one pinned absolute `sha256sum` and never through the caller's PATH (`sha256sum`/`cut`), so no PATH shim can move a pin verdict in either direction | `CLAIM_PIN_PROVENANCE_MATCH=2/7` (base gate, `receipts/c1-base-s37001.json`; wave re-derivation seeds 37101/37123 under `w1/ExecC1BaseRederive/`) → `7/7` `predicate_holds=true` on seeds 37001/37111/37133 (construction + wave) and 37701 (L1, `receipts/c1-after-s37701.json`), 37901/37921 (wave, `receipts/c1-after-s379{01,21}.json`), 41377/52819 (residual, `residual/RevC1FreshSeed.md`), every after-receipt `gate_sha256=9fcac047…` | `python3 corpus/evidence/round37/c1-count.py --gate tools/research-gate.sh --seed N --receipt F` | predicate **verified**; claim text **falsified** beyond PATH-independence — unprivileged `LD_PRELOAD` interposition into the pin child (inherits the caller's loader env at `research-gate.sh:442`; host coreutils 9.12 `sha256sum` imports OpenSSL `SHA256_Update`) moved verdicts 4/7 and 3/7 on the landed gate (`residual/CritC1Kill.md` C27/C18); narrowed + fix direction in claims §Erratum 6; the defect pre-exists the round (base gate equally vulnerable), so no axis is harmed by the round's changes |
+| C2 freshness: a `--pin` baseline is independent of the caller's `BASH_ENV` — the capture child runs `env -u BASH_ENV` (S071), so a startup file re-exporting a scrubbed variable or moving `CHOUSA_ROOT` cannot change the pinned capture, embed a receipt line, or make a later plain `--drift` report phantom drift | `PIN_CAPTURE_ENV_MATCH=3/7` (base gate, `receipts/c2-base-s37021.json`; wave re-derivation seeds 37201/37223) → `7/7` `predicate_holds=true` on seeds 37021/37211/37311 (construction + wave) and 37721 (L1, `receipts/c2-after-s37721.json`), 37941/37961 (wave, `receipts/c2-after-s379{41,61}.json`), 38101 (residual, `residual/RevC2FreshSeed.md`), every after-receipt `gate_sha256=9fcac047…` | `python3 corpus/evidence/round37/c2-count.py --gate tools/research-gate.sh --seed N --receipt F` | predicate **verified**; claim text **narrowed** — function exports defeat the variable-only reading: a startup file's `export -f date` reaches the capture child through `BASH_FUNC_date%%` (not scrubbed) and embeds a receipt line with phantom drift, demonstrated on the landed gate (`residual/RevC2FreshSeed.md`; independently reproduced `residual/CritC2Kill.md` finding 1); narrowed + fix direction in claims §Erratum 5; 28 adjacent vectors otherwise held or confirmed named limits (`residual/CritC2Kill.md`) |
+
+Separability: each counter reads the other's surface not at all; the wave's single-hunk gate
+mutants isolate each fix (`w1/ExecMutGateC1.md` C1 2/7 while C2 7/7; `w1/ExecMutGateC2.md` C2
+3/7 while C1 7/7); the counter-expectation mutants both score 6/7 exit 1
+(`w1/ExecMutC1Counter.md`). No-harm on the landed gate: selftest PASS 267 cases 0 skipped
+(L1, default env); claims 17/17 CLEAN, chain 17/22 CLEAN, broken control 1/2 DRIFT, archives
+3/3 (L1 re-run with the recorded commands; the wave seat's `--root .` mis-invocation that read
+refusals as harm is a lesson mistake, not gate harm).
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| operability | **improved** | C1: the pin digest channel is PATH-independent by measurement (2/7 → 7/7 across six seeds, three independent runners); selftest 261 → 267 cases held. |
+| freshness | **improved** | C2: pin/drift re-derivation is independent of the caller's `BASH_ENV` (3/7 → 7/7 across six seeds); the mechanism source is pinned (S071). |
+| depth | **improved** | `corpus/knowledge/claim-pin-provenance-r37.md` and `pin-capture-env-r37.md`: the fix, the scenario tables, the frozen limits (PATH-independence not tamper-proof hashing; gate-process `BASH_ENV` still sourced; `--posix`/`ENV`/`SHELLOPTS`/`TMPDIR` named debt). |
+| coverage | **unchanged** | no new measured surface; both r36 observables held on the new bytes. |
+| calibration | **unchanged** | the no-harm mis-invocation was caught by re-running the pinned commands, and is recorded as a lesson mistake with QUALITY 53. |
+| adjacency | **unchanged** | zero network (all sources opened from installed man pages); corpus read-only; wave seats wrote only in-lane. |
+
+Admission: **ADMIT-with-errata, operator rules** — both frozen predicates verify on every
+committed receipt and no axis is harmed (the two falsified claim-text clauses describe
+defects that pre-exist the round's changes), but the residual wave falsified both claims'
+general wordings beyond their counters' cells, so the claims as first written do not stand;
+the narrowings and fix directions are frozen as claims §Errata 5-6 and carried to round 38.
+No scalar score. Learning trends: expansion/quality **improved**, discernment **improved**
+(the residual wave's two claim-text kills are the lane's first in-round falsifications of
+its own frozen claims). Round 38 candidates below.
+
+## Planned — round 38 (not started)
+
+Candidates, not commitments: the prefix-64 attribution bypass (a stricter span rule plus a V7
+prefix-query variant; r36 claims §Erratum 8); per-scenario counter assertions tightened to
+their names (S7-S9, QUALITY 52); three dead fields in `tools/argv-witness.py` (`_stderr.log`
+write, `fixture_root_prefix`, `channel` — SimpDiff D1-D3); the verdict-flipping locale seam in
+the metadata screener (`research-gate.sh:1015`, 1019, 762/1083 — `[[:space:]]`/`-i` under the
+caller's locale; r36 claims §Erratum 13); `counter_sha256` bound into every receipt (carried
+debt); a call-for-show engine measurement (the stated C2 limit, r36 §Erratum 9); the S068
+anchor-label supersede row (r36 spot-check defect 8, carried by the round-37 lesson); the
+witnessed `SHELLOPTS=noexec` false pin success (pin exits 0 with no baseline; operability
+defect inside the named shell-option limit — `residual/CritC2Kill.md`) and the exported-`env`
+function witness (pinning one absolute `env` closes that one witness, not the parent-function
+class); the r37 claim-text kills — pin-child loader-environment scrub (`env -u LD_PRELOAD
+-u LD_LIBRARY_PATH …`, `residual/CritC1Kill.md`) plus an LD_PRELOAD counter cell, and the
+capture-side `BASH_FUNC_*` scrub (or minimal `env -i` channel) plus a genuinely-exported
+counter scenario (`residual/RevC2FreshSeed.md`, claims §Errata 5-6); counter-strength debt
+(receipts bind `gate_sha256` post-run and score gate self-report — `residual/RevC1FreshSeed.md`
+F1/F2, `residual/RevC2FreshSeed.md` trust analysis; `counter_sha256` still carried); the
+carried C1 debt (spans ≥ 32768) stays open.
+
+## Round 38 — env-pin capture and receipt binding (two claims)
+
+Freeze commit `504c1d2a1257a9ac6e5d752dcaf3f0bb0a35d05f` (counters, gate fix, frozen
+`corpus/evidence/round38/claims.md`, base controls, construction receipts); wave-1
+integration `1f0add702232903f959c8bc9a15acabd8439a033`; SentScope integration
+`8e93bc916527b3c21f0f702967fa65c3b4c31699`; final bytes land with this entry (gate
+`0447ad14b613…`, counters `6a9600ea6b1f…`/`93bf06daac30…`, verifier `33c7c87e7a5f…`).
+Round shape: v1 two waves (32+32 seats, 2 dead per wave by provider `cyber_policy`;
+§3 floor inside wave 1; planner seat held by the L1 with the data-walk on the
+ScoutCounters/RevClaims seats). Landed gate selftest: PASS (272 cases, 0 skipped).
+
+| claim / axis | before → after | counting command (lane root) | verdict |
+|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10): the canonical pin capture's child runs through ONE pinned absolute `env` (RESEARCH_GATE_ENV override, GNU-reporting, refused exit 2 `ENV_PROVENANCE`), so a caller-exported function `env` (BASH_FUNC_env%%) cannot interpose on the capture — narrowed by §Erratum 6 to function-export interposition + override shape | `ENV_PIN_CAPTURE_MATCH=2/7` on BOTH base gates (`a7d3922c…` pre-round-37, `9fcac047…` pre-round-38) → `7/7` `predicate_holds=true` on the landed gate: construction seeds 38001/38011 (receipts `c1-after-s38001/s38011.json`), wave-1 seeds 38211/38231/38251 (`w1/ExecC1Rederive.md`, `w1/ScribeKnowledgeC1.md`), wave-2 seeds 38411/38431 (`w2/W2ExecC1Final.md`); every committed receipt `VERIFY: ok` | `python3 corpus/evidence/round38/c1-count.py --gate tools/research-gate.sh --seed N --receipt F` | **met under the narrowed reading; narrowing frozen as §Erratum 6** (PATH half, sibling-name witnesses, bash vectors: named and demonstrated, not measured by the seven cells) |
+| C2 calibration: every round-38 counter receipt binds gate_sha256_pre==post (changed gate refuses exit 2, NO receipt), counter_sha256, expect_sha256, receipt_sha256; verify-receipts re-derives from committed bytes and fails closed — narrowed by §Errata 2/10/11 to integrity + self-consistency, NOT authorship | `RECEIPT_BINDING_MATCH=0/7` (the r37-counter pipeline, `receipts/c2-base-s38101.json`) → `7/7` on the landed gate: construction 38101/38111, wave-1 38221/38241, wave-2 38421/38441/38461 (base gate 7/7 — separability, `w2/W2ExecC2Final.md`); the four wave-1 verifier kills refuse by name in wave 2 (`w2/W2CritLaundering.md`, `w2/W2ScribeKnowledgeC2.md`) | `python3 corpus/evidence/round38/c2-count.py --gate tools/research-gate.sh --seed N --receipt F` | **met under the narrowed reading; kill-class fixtures closed by Errata 2/3/4/9, the verifier-binding gap named as §Erratum 11 with verifier_sha256 carried** |
+
+The round-1 operability scale is unchanged: score 3 → 3 (delta 0); the C1/C2
+observables sit beside it, as in rounds 25, 29, 31–37.
+
+Separability (measured, `w1/RevSeparability.md`, `w2/W2RevSeparabilityFinal.md`): gate-side
+single hunk (capture `"$ENV_BIN"` → bare `env`) drops c1 to 4/7 while its receipt still binds;
+counter-side hunk (the subject counter's pre!=post refusal disabled) drops c2 to 6/7 while c1
+stays 7/7; c2 on the unfixed base gate is 7/7 post-Erratum-4 (its control is the r37 counter,
+not the gate). No-harm on the final bytes: selftest PASS 272; claims 17/17 CLEAN; chain 17/22
+CLEAN; broken control DRIFT drift-sections=2; archives 3/3 (`w2/W2ExecNoHarmFinal.md`).
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| operability | **improved** | C1: the capture's env invocation is pinned, verified GNU-reporting, refused before any mode; 2/7 → 7/7 across both base gates and five+ independent seed runners; selftest 267 → 272 |
+| calibration | **improved** | C2: receipts now bind counter/expect/receipt digests and pre==post gate hashes with a census-tied verifier; the lane's first in-round kills of its own frozen claims are frozen as errata, not absorbed; 0/7 → 7/7 |
+| depth | **improved** | `knowledge/env-pin-capture-r38.md` and `knowledge/receipt-binding-r38.md`: the mechanism, BOTH delivery mechanisms, the wave-kill record, the narrowed readings, the r39 cell list |
+| coverage | **unchanged** | no new measured verification surface; the seven modes and fixtures held byte-stable |
+| freshness | **improved narrowly** | the r37 knowledge docs' stale "7/7 on every committed receipt" corrected (receipt-audit L1); S070's anchor-label defect dispositioned via the S073 supersede row |
+| adjacency | **unchanged** | zero network (strace, both waves); sibling-overlap scans (w1/w2) confirm in-province; the loader-env channel stays tsukuroi's, named as debt |
+
+Admission: **ADMIT-with-errata, operator rules** — both frozen predicates verify on every
+committed receipt and no axis is harmed (the falsified general clauses name pre-existing or
+out-of-surface defects, each demonstrated and dispositioned); the claims as first written do
+not stand un-narrowed; §Errata 1–13 freeze the narrowings and the r39 fix directions.
+No scalar score. Learning trends: expansion/quality **improved**, discernment **improved**
+(the lane's first self-kills of its own frozen claims, honestly frozen).
+
+Attribution correction (routed defect D4, appended round 39): the wave-2
+seeds named above (38411/38431/38421/38441) and the no-harm battery ran at
+integration revision `8e93bc91…` (gate `37e2b996…`), not at the final bytes;
+the tip-byte evidence is the regenerated receipt set (nine receipts binding
+`0447ad14…`, statically verified 9/9 by the r38 closure) plus the one-hunk
+diff `8e93bc91…→870074e8…` and the one seat-observed tip-byte counter run
+(`w2/W2MutGateFinal.md` set C). The candidate-hash supersession itself is
+named as round-38 claims Erratum 14.
+
+## Planned — round 39 (superseded by the round-39 verdict below)
+
+Candidates, not commitments: the pre-registered measurement cells from Errata 5/6/11 —
+an eighth c1 scenario family covering the PATH `env` shim, the PATH `bash` shim, hostile
+drift, the positive override-honoured witness and the relative-override refusal (a new
+frozen 8-scenario table for both counters); the loader scrub (`env -u LD_PRELOAD -u
+LD_LIBRARY_PATH …` on the capture child and the claim-pin child, with an LD_PRELOAD counter
+cell); `verifier_sha256` + `subject_counter_sha256` bound into c2 receipts (the debt
+demonstrated live twice this round); refusal-label re-derivation in verify; the SimpCounters
+dead-field deletions (subject_counter reader, --tmp plumbing, path strings, BASH fallback
+arm); the SHELLOPTS=noexec pre-startup boundary only if separately specified; the carried
+spans-≥32768 debt; the metadata-screener locale seam; the argv-witness D1-D3 dead fields;
+the S068-scope second-row question remains settled (S072 uses the info file).
+
+## Round 39 — capture bash pin and verifier/subject binding (two claims)
+
+Freeze disclosure: the L1's construction runs on seeds 39001/39011 (C1) and
+39101 (C2) preceded the freeze of `corpus/evidence/round39/claims.md` and are
+disclosed as such; the orchestrator-dispatched wave and the closure re-derive
+on fresh seeds. Host mapping this round: the seat holds no live L2 dispatch —
+the round's swarm is PREPARED under `.ufo/waves/round-39/` (validated spec)
+and itemized as prepared-but-undispatched in the report; the L1's own
+construction runs supply the measurement evidence below. Round shape: v1,
+wave 1 prepared (32 seats), 0 dispatched this seat, 0 dead. Landed gate
+selftest: `PASS (275 cases, 0 skipped)`.
+
+| claim / axis | before → after | counting command (lane root) | verdict |
+|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10): the canonical capture's grandchild and the verify-all section children run through ONE pinned absolute `bash` (default `/usr/bin/bash`, GNU-reporting; `RESEARCH_GATE_BASH` override, absolute + GNU-reporting, refused exit 2 `BASH_PROVENANCE` before any mode runs), so a caller PATH `bash` shim cannot interpose (echo re-add / suppress / hostile drift) | `ENV_PIN_CAPTURE_MATCH=7/8` on the pre-round gate `0447ad14…` (`.ufo/waves/round-39/controls/base-gate-r39.sh`, receipt `receipts/c1-base-s39001.json`, seed 39001; the eighth family fails live: `GATE_DRIFT: -GATE_GREP`, suppress kills the capture, relative override ignored) → `8/8` `predicate_holds=true` on the landed gate, seeds 39011/39111 (`receipts/c1-after-s39011.json`, `receipts/c1-after-s39111.json`), both `VERIFY: ok`; discrimination: the PATH-`env` mutant `e1251030…` scores `4/8` (seed 39013, `receipts/c1-mutenv-s39013.json`) | `python3 corpus/evidence/round39/c1-count.py --gate tools/research-gate.sh --seed N --receipt F` | **met** |
+| C2 calibration: a round-39 receipt binds `verifier_sha256` (the digest of `round39/verify-receipts.py`) and, for c2-family receipts, `subject_counter_sha256`; the verifier re-derives both, refusing `verifier-sha256-mismatch` / `subject-counter-sha256-mismatch` / `subject-counter-unreadable` / `missing-field …` | before = the r38 pipeline: its receipts carry neither binding (committed bytes) and its verifier accepted five of six weakened-verifier mutants (r38 Erratum 11); under the r39 verifier the committed r38 receipt refuses `predicate-mismatch` and a stripped r39 receipt refuses `missing-field verifier_sha256` (both run live in the counter's legacy cell) → `RECEIPT_BINDING_MATCH=8/8` `predicate_holds=true` on the landed gate, seeds 39101/39121 (`receipts/c2-after-s39101.json`, `receipts/c2-after-s39121.json`), both `VERIFY: ok` with `verifier_sha256`/`subject_counter_sha256` equal to the committed file digests | `python3 corpus/evidence/round39/c2-count.py --gate tools/research-gate.sh --seed N --receipt F` | **met** |
+
+The round-1 operability scale is unchanged: score 3 → 3 (delta 0); the C1/C2
+observables sit beside it, as in rounds 25, 29, 31–38.
+
+Separability: C1's predicate touches the gate bytes only; C2's predicate runs
+the receipt pipeline against any gate bytes (gate-agnostic, the r38
+Erratum-4 reading — the r39 c1 receipts bind and verify against the base and
+mutant control gates). The discrimination controls isolate each direction
+(base gate 7/8; env mutant 4/8; r38 receipts refuse under the r39 verifier).
+No-harm on the landed bytes: selftest PASS 275 (L1, clean env); claims 17/17
+CLEAN, chain 17/22 CLEAN, broken control 1/2 DRIFT, archives 3/3,
+integrity-r7 composed CLEAN (L1 re-run with the pinned commands).
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| operability | **improved** | C1: the capture's bash resolution is PATH-independent by measurement (7/8 → 8/8 across two seeds, two independent runners); selftest 272 → 275; the section-child call site (`verify_all_section`) is pinned as well as the capture grandchild. |
+| calibration | **improved** | C2: receipts now bind which verifier and which subject bytes judged a run, re-derived with named refusals (r38 receipts and stripped bindings fail closed live); the first in-round self-catches of vacuous fixtures are frozen as QUALITY 56. |
+| depth | **improved** | `corpus/knowledge/capture-bash-pin-r39.md` and `receipt-verifier-subject-r39.md`: mechanism, both delivery mechanisms, the kill record, the narrowed readings, the r40 cell list. |
+| coverage | **unchanged** | no new measured verification surface; all seven modes and the fixtures held. |
+| freshness | **improved narrowly** | S071 re-opened this round (quote re-located, sha match) and re-cited by C1's entry; the r38 lesson's stale wording/counts corrected (D3/D6). |
+| adjacency | **unchanged** | zero network (strace class: all sources opened from installed man pages/info); the loader-env channel stays tsukuroi's, named as debt. |
+
+Admission: **ADMIT** — both frozen predicates verify on every committed
+receipt and no axis is harmed; the claims stand as first written (their
+limits enumerate every demonstrated vector class; no errata needed). No
+scalar score. Learning trends: expansion/quality **improved**, discernment
+**improved** (three vacuous-fixture self-catches mined with fixes shown able
+to fail; the routed-defect repairs D1–D6 landed). Routed-defect dispositions:
+D1 → r38 claims Erratum 14; D2 → Erratum 15; D3 → count corrections in
+LOG/SCORECARD/lesson; D4 → SCORECARD attribution note; D5 → SKILL.md r37 row
+restored; D6 → r38 lesson correction block; D7 (the debt itself) → closed by
+C2. Round 40 candidates: the `mktemp`/`sed` bare names in the capture path;
+the loader scrub (`env -u LD_PRELOAD …`); the refusal-label re-derivation in
+verify; the argv-witness dead fields; the metadata-screener locale seam; the
+spans-≥32768 debt.
+
+## Round 40 — closure corrections to r39 (R2–R5)
+
+- R2: the committed `c1-mutenv-s39003.json` is a superseded draft, not an uncommitted file; r39's “six receipts” count omits it. See `corpus/evidence/round40/routed-defect-dispositions.json`.
+- R3: the r39 report's knowledge count `29 → 31` is superseded by the historical `50 → 52` count re-derived in `corpus/evidence/round39/claims.md`.
+- R4: not reproduced from the committed r39 spec, plan, and report: each reports reviewer 6 / revenger 2. The contrary 8/0 statement remains attributed to the spot-check; no source artifact is rewritten.
+- R5: the r39 phrase “two independent runners” is superseded. The frozen claim design records two seeds as L1 construction runs; the prepared wave was not dispatched by this seat. Correct wording: **two seeds, both L1 construction runs**.
+
+## Round 40 — measured claims (work commit `d164f88eb71a6c48a66ae1e7abfcb5fef82219d9`)
+
+Freeze: `corpus/evidence/round40/claims.md` (commit `6c01a4144b3637cc57a989ab464f71b8ae69595a`). Both predicates were measured on the committed work tree below.
+
+| Claim / axis | Axis score delta | Before → after | Counting command | Measured commit | Verdict |
+|---|---|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10; receipt evidence integrity) | 3/10 → 3/10; the legacy score counts only the three archive exports and was not redefined | active receipts 3/6 → 6/6 verify | `python3 corpus/evidence/round40/c1-count.py` | `d164f88eb71a6c48a66ae1e7abfcb5fef82219d9` | improved |
+| C2 calibration (R2–R5 disposition alignment) | unscored → unscored; no numeric baseline is invented | evidence-backed dispositions 0/4 → 4/4; R4 is explicitly not reproduced | `python3 corpus/evidence/round40/c2-count.py` | `d164f88eb71a6c48a66ae1e7abfcb5fef82219d9` | improved |
+
+No axis was harmed. Depth and coverage improved narrowly through the sourced receipt-digest note; freshness improved narrowly by re-opening S059 and updating its used-by path; adjacency is unchanged. No capability claim or scalar score is added.
+
+Learning trends: **expansion improved** — one new knowledge entry records the previously unheld receipt-expectation-digest subground and cites reopened S059; **quality improved** — the active receipt set verifies against the committed expectations bytes and the source census exits 0; **discernment unchanged** — the round's admit/reject sample has no non-author spot-check yet.
+
+## Planned — round 41 (not started)
+
+Candidates carried from round 39: the capture path's bare `mktemp`/`sed` names, loader-environment scrubbing, refusal-label re-derivation, and the spans-≥32768 boundary. No round-41 work is started here; freeze only 1–3 separately falsifiable claims after scoring their do-nothing controls.
+
+
+## Round 41 — measured claims (work commit `1bd9001330f19d89ec36592010d4218881ea5941`)
+
+Freeze: `corpus/evidence/round41/claims.md` (freeze commit `b173b0943e647f7e3a365689df19debe40fd9dd2`). Both predicates measured on the committed work tree; L1 construction ran before the freeze commit (disclosed, same pattern as round 39).
+
+| Claim / axis | Axis score delta | Before → after | Counting command | Measured commit | Verdict |
+|---|---|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10; canonical-capture invocation surface) | 3/10 → 3/10; the legacy score counts only the three archive exports and was not redefined | `CAPTURE_PIN_MATCH=1/12` → `12/12` (12-cell frozen scenario table: trap inventory, sed/mktemp/cat/rm/sort/mkdir shim cells, override refusals, child-tr, loader-env) | `python3 corpus/evidence/round41/c1-count.py --gate tools/research-gate.sh` (control: `--gate .ufo/waves/round-41/controls/base-gate-r41.sh`) | `1bd9001330f19d89ec36592010d4218881ea5941` | improved |
+| C2 calibration (W04 duplicate-URL disposition alignment) | unscored → unscored; no numeric baseline invented | `W04_DISPOSITIONED=0/5` → `5/5` (S051/S053 same-page distinct-section, S073 required supersede, S074 retained rejected duplicate, S075 added this round on the coreutils page) | `python3 corpus/evidence/round41/c2-count.py` | `1bd9001330f19d89ec36592010d4218881ea5941` | improved |
+
+No axis was harmed. Depth and coverage improved narrowly (sourced `capture-path-pin-r41.md`, the invocation-pinning subground); freshness improved narrowly (S075/S076 opened from installed copies; S067/S071/S072 re-cited); adjacency unchanged. No capability claim; the pinned-tool-table mechanism is gate infrastructure, not a repertoire-table entry. Selftest PASS 275/275 on the landed gate.
+
+Learning trends: **expansion improved** — one new admitted knowledge entry on unheld subground citing mined S075/S076; **quality improved** — the capture's invocation surface now fails closed on caller-PATH and loader-env interposition with a do-nothing control at 1/12, and the selftest's only regression was repaired through the documented override; **discernment unchanged** — the admit/reject sample has no non-author spot-check yet (pending, as in round 40).
+
+## Round 40 — routed wave findings (dispositions, append-only)
+
+- R40-W1 (SentinelFetchScope F1/F2/F3): an egress-ordering seat item ran unapproved; the 2026-10-24 access claim had no committed receipt; the report's no-external-research line contradicted the gate record. Dispositioned in `corpus/lessons/round-41.md` (r41 spec hardened; QUALITY 57; fleet side integrator-owned).
+- R40-W2 (ReviewActivePopulation/ReviewReplacementBindings/ReviewC2Bindings): r40 counter returns 6/6 on committed HEAD but 2/6 on a worktree carrying r41's in-flight gate edits — measurement-target defect in the counter lineage (QUALITY 58), routed to the counter's next owner; not a falsification of round 40.
+
+## Planned — round 42 (not started)
+
+Candidates carried: exported-function (`BASH_FUNC_*`) interposition into the captured child (named limit, needs a measured delivery cell); the `spans-≥32768` boundary debt; metadata-screener locale seam; argv-witness dead fields; REFUSAL-label re-derivation in verify; the legacy operability observable's retirement/split decision (r40 routed item). No round-42 work is started here; freeze only 1–3 separately falsifiable claims after scoring their do-nothing controls.
+
+## Round 42 verdict — 2026-10-24 (wave-4 quarantine-first; work commit below)
+
+Selected claims (frozen in `corpus/evidence/round42/claims.md` at
+`dd63b6cfec5e1eafddb6662fc343e2ff6ab6aedc`): C1 = the lane's quarantine scope becomes a
+runnable, re-derived surface (operability — the lowest scored non-retired axis, 3/10);
+C2 = every row of the slice carries one rule-consistent verdict with a reason and a flip
+condition (calibration). This round adopts NOTHING from the shokuknow package (fleet
+lane-addendum item 10) and made no external fetch (fetch-scope L0 `8d77e6c1` open).
+
+| claim / axis | before → after | counting command | verdict |
+|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10) | the lane had no command that yields its quarantine scope: the slice (24 rows) was a line of a prompt, the examination did not exist. After: `SLICE_REDERIVE_MATCH=24/24`, `QUOTES_EXAMINED=43/43`, `REPRODUCIBLE=1/1`, `POSITIVE_CONTROL=1/1`, `NEGATIVE_CONTROL=1/1`, `MUTANT_DETECTED=1/1`, exit 0; the do-nothing control (tree without the tool) exits 1 | `python3 corpus/evidence/round42/c1-count.py` (control: `corpus/evidence/round42/controls/c1-control-before.txt`) | **improved** |
+| C2 calibration | no adjudication existed for the slice. After: `VERDICTED=24/24`, `CLASS_CONSISTENT=24/24`, `REASON_NONEMPTY=24/24`, `FLIP_NONEMPTY=24/24`, `VOCAB_OK=24/24`, `DUPLICATE_ROWS=0`, `ROWS_OUTSIDE_SLICE=0`, exit 0; the do-nothing control (one row's verdict flipped away from the evidence) → `CLASS_CONSISTENT=23/24`, exit 1 | `python3 corpus/evidence/round42/c2-count.py` (control: `corpus/evidence/round42/controls/c2-control-before.txt`) | **improved** |
+
+The round-1 operability scale is unchanged: score 3 → 3 (delta 0). Its counting command
+still prints `VERDICT_BEARING_EXPORTS=3/3`, and `tools/research-gate.sh` is not touched
+by this round. The C1/C2 observables sit beside that score, as in rounds 25, 29 and 31–41.
+
+Adjudication: 24 rows — 15 `absent` (the quoted span is not in the capture that was
+actually read), 9 `unverifiable` (1 bot-wall capture, 4 binary office documents never
+rendered to text, 4 register rows naming no locator), 0 `present`, 0 `mixed`. No row is
+called a fabrication on absent evidence; nothing is adopted.
+
+| axis | verdict | evidence (before → after) |
+|---|---|---|
+| operability | **improved** (C1) | the slice and the examination are one committed command; three controls (positive, negative, mutant) hold; the do-nothing control fails |
+| calibration | **improved** (C2) | 24/24 verdicts, each with a reason and a flip condition, graded by an independent re-examination; the flipped-row control fails at 23/24 |
+| depth | **improved narrowly** | `corpus/lessons/round-42.md`: the frozen decision rule, the capture-form ground (S077), the two failure modes the `absent` class spans, four mined mistakes |
+| coverage | **improved narrowly** | a new measured surface: the lane's quarantine scope (24 rows, 43 quotes) now has a command, a receipt and a per-row verdict — a surface the lane did not hold at all |
+| freshness | **improved narrowly** | S077 opened this round from an installed copy (sha256 recorded); the register and every consulted capture are digested by `tools/quarantine-check.py digests` |
+| adjacency | **unchanged** | nothing absorbed from a sibling lane; the campaign tree and every sibling repo stayed read-only; zero egress |
+
+Learning trends, lane view (the outside closure is separate): **expansion improved**
+(one opened source, one lesson, one runnable surface on ground the lane did not hold);
+**quality improved** (both counters verified against do-nothing controls, and the
+register's own class column was shown to be unreliable — the lane's rule now checks the
+capture's FORM); **discernment unchanged** — the round's admit/reject sample still has
+no non-author spot-check, so it is not claimed as externally verified.
+
+## Planned — round 43 (not started)
+
+Candidates, not commitments: split the `absent` class into "the source carries the text
+and the row quotes it wrongly" and "the source does not carry the text" (the round-42
+lesson names the split as a debt, and the measured longest-common-run evidence supports
+it); the round-40 counter lineage's successor design (routed from r41's D1); a
+per-capture provenance receipt (which capture, which form, which digest) so a later
+round can re-check a row without re-deriving the cache; the `spans ≥ 32768` boundary
+debt; the metadata-screener locale seam. No round-43 work is started here; freeze only
+1–3 separately falsifiable claims after scoring their do-nothing controls.
+
+## Round 43 verdict — 2026-10-24 (absent-class split; one local adoption)
+
+Selected claims, frozen in `corpus/evidence/round43/claims.md` before any seat
+scored: C1 operability (lowest scored non-retired axis, 3/10); C2 calibration;
+C3 depth, sourced on S078. No external fetch. The planned block above is the
+candidate list and is not rewritten.
+
+| claim / axis | before → after | counting command | verdict |
+|---|---|---|---|
+| C1 operability | no command split the 15 `absent` rows. After: `ABSENT_ENUMERATED=15/15`, `CLASSED=15/15`, `BOTH_NONEMPTY=1/1` (9 misquote, 6 not-carried), `REPRODUCIBLE=1/1`, `MUTANT_DETECTED=1/1`, exit 0. Missing-tool control exits 1 | `python3 corpus/evidence/round43/c1-count.py` | **improved** |
+| C2 calibration | the single `absent` label did not agree with a two-mode rule. After: `SPLIT_AGREES=15/15`. Flipping S086 scores 14/15 and exits 1 | `python3 corpus/evidence/round43/c2-count.py` | **improved** |
+| C3 depth | the lane held no opened source for how a search log is kept. After: the entry cites S078, the quote is in the committed capture, the row URL matches | `python3 corpus/evidence/round43/c3-count.py` | **improved** |
+
+The round-1 operability scale is unchanged: 3 → 3. These observables sit beside it.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** | C1: the split is one command; the missing-tool control fails |
+| calibration | **improved** | C2: 15/15 labels match an independent recompute; the flipped row fails |
+| depth | **improved** | C3 and `corpus/lessons/round-43.md`: the two failure modes, four mined mistakes, one re-grounded entry |
+| coverage | **improved narrowly** | one new measured operation (the split) and one search-log fact the lane did not hold; the three-literatures entry was refused |
+| freshness | **improved narrowly** | S078 opened from a committed capture, sha256 recorded; no fetch |
+| adjacency | **unchanged** | nothing absorbed from a sibling; campaign tree read-only |
+
+Learning trends, lane view: expansion improved (one opened row, one lesson, one new operation); quality improved (counters against do-nothing controls; QUALITY 61); discernment unchanged until a non-author spot-check.
+
+## Round 44 verdict — 2026-10-24 (launcher receipt, inherited-tree disposition, one version-binding adoption)
+
+Selected claims, frozen in `corpus/evidence/round44/claims.md` before any seat scored:
+C1 operability (lowest scored non-retired axis, 3/10); C2 calibration; C3 depth, sourced on
+S079. No external fetch: L0 `8d77e6c1` is still open, so every source opened this round was
+opened from a committed capture and no URL was fetched.
+
+| claim / axis | before → after | counting command | verdict |
+|---|---|---|---|
+| C1 operability | no committed launcher log existed, so the round-43 closure could not resolve the parent-lifetime claim. After: `N_SPAWNED=64/64`, `N_REAPED=64/64`, `PARENT_PID_MATCH=1/1`, `ZERO_PIDS=0`, `NAMES_MATCH=64/64`, exit 0. The missing-receipt, `controls/pids0.receipt` and `controls/prose.receipt` do-nothing controls each exit 1 | `python3 corpus/evidence/round44/c1-count.py` | **improved** |
+| C2 calibration | the 39 inherited r40/r41 paths were unswept and unnamed. After: `CONSISTENT=39/39`, `REVERIFIED=36/36`, `LEFT_NAMED=3/3`, exit 0. The all-left table scores `REVERIFIED=0/36` and exits 1 | `python3 corpus/evidence/round44/c2-count.py` | **improved** |
+| C3 depth | the lane held no opened source binding a citation to a prior state. After: the entry cites S079, the S079 row's URL is the RFC 7089 URL and the located quote is in that URL's committed capture | `python3 corpus/evidence/round44/c3-count.py` | **improved** |
+
+The round-1 operability scale is unchanged: 3 → 3. These observables sit beside it.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** | C1: `tools/parent-lifetime.sh` writes the wait log from the same pid that spawned the children; `corpus/evidence/round44/parent-lifetime.receipt` (`start parent_pid=3226659` … `end parent_pid=3226659 n_spawned=64 n_reaped=64`); the three do-nothing controls fail. The wave-3 receipt `.ufo/waves/round-44/w3/parent-lifetime.receipt` carries the same end line for a wave whose seats ran: `n_spawned=32 n_reaped=32` |
+| calibration | **improved** | C2: 36 inherited seat reports re-verified one by one (basename stem, round token, length > 80, sha256) and committed as historical wave evidence; the 3 modified JSON paths stay left-named, uncommitted, reason `not hunk-verified`. Wave-3 mutation seats killed both counters with single-field corruptions (`ZERO_PIDS=1`, `PARENT_PID_MATCH=0/1`, `REVERIFIED=35/36`, `LEFT_NAMED=2/3`) |
+| depth | **improved** | C3 and `corpus/lessons/round-44.md`: two entries and three mined rows on one theme, the version binding of a citation to a prior state |
+| coverage | **improved narrowly** | one theme the lane did not hold: RFC 7089's Memento promise, the NDL WARP capture cadence and the NDL timestamped-URL anchor |
+| freshness | **unchanged** | every capture opened this round was written before this round's launch (`2026-10-24T21:36:37-03:00`): RFC capture mtime 2026-10-23 20:33, WARP 20:36, E2867 20:37 -0300. The round-43 closure routed exactly this inflation; it is not counted as an improvement here and the axis is not harmed |
+| adjacency | **unchanged** | the campaign tree was read only and never written; no sibling lane was absorbed; the two new entries are the lane's own re-grounding of staged package material |
+
+Learning trends, lane view: expansion improved (three new mined rows, two new knowledge
+entries, one lesson, one new gate); quality improved (three counters against do-nothing
+controls, QUALITY 62 mined from `considerthese/2026-10-24.md`, QUALITY 63 from the wave-3
+launcher probe, and the wave-3 mutation probes); discernment unchanged until a non-author
+spot-check — a seat this lane dispatched is still the lane.
+
+## Round 45 verdict — 2026-10-25 (launcher exit contract, Gates registry, AVeriTeC archive-field adoption)
+
+Selected claims, frozen in `corpus/evidence/round45/claims.md` at
+`d82cec904bf0fb8736886b9f17be913c7807427a` before any seat scored: C1 operability (lowest
+scored non-retired axis, 3/10); C2 calibration; C3 depth, sourced on S082–S084 opened this
+round. Work landed at `5e8c7ad2f7b8254d83358820286e3d12ca4672d1`; measured over a
+`git archive` of that commit (`corpus/evidence/round45/measure-after-5e8c7ad2.txt`). No
+external fetch: L0 `8d77e6c1` is still open. Tag column per QUALITY 64.
+
+| claim / axis | before → after | counting command | verdict | tag |
+|---|---|---|---|---|
+| C1 operability | the round-44 launcher scores `CASES_MATCH=1/5`, exit 1 (exits 0 on zero tasks and on timed-out seats, silent 420 s default, no `timeout_s`). After: `CASES_MATCH=5/5`, exit 0; four mutants of the landed tool each score 4/5 (wave-2 `MutLauncherPatched`) | `python3 corpus/evidence/round45/c1-count.py` | **improved** | plumbing |
+| C2 calibration | the Gates table named 25 of 51 committed entry points at the base tree (`UNREGISTERED=26`; 29 at the freeze tree). After: `REGISTERED=54/54`, `UNREGISTERED=0`, exit 0; eleven of the twelve new rows are load-bearing under single-row removal; the twelfth (`tag-count`) names a check outside the frozen entry-point pattern (wave-2 `MutC2RowRemoval`) | `python3 corpus/evidence/round45/c2-count.py --list` | **improved** | plumbing |
+| C3 depth | the lane held no opened source on what a verification corpus's archive fields record (AVeriTeC was an unopened lead). After: `ENTRIES=2/2 CITES_BOUND=3/3 QUOTES_IN_SPAN=4/4 QUOTES_IN_ENTRY=4/4 COUNTS_IN_ENTRY=7/7 CAPTURE_BOUND=4/4 COUNTS_REDERIVED=7/7`, exit 0; `--lane-only` passes with no campaign cache | `python3 corpus/evidence/round45/c3-count.py` (and `--lane-only`) | **improved** | ground |
+
+The round-1 operability scale is unchanged: 3 → 3. These observables sit beside it.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** | C1; the post-wave errexit guard (`controls/c1-errexit-probe.txt`: first landing exit 124 with a truncated receipt, fix exit 3 complete) |
+| calibration | **improved** | C2: the lane's own gate registry now agrees with the committed tree; wave-2 row reviews corrected the round-40 and round-31 rows. Limit: path membership, not row truth |
+| depth | **improved** | C3 and `corpus/lessons/round-45.md`: two re-grounded entries whose substance moved beyond the staged text (claim archive "no link stored, not why"; 5,959 of 7,572 real-source answers archived; 1,582 sourced answers with no archive key) |
+| coverage | **improved narrowly** | one theme on ground the coverage map did not hold (wave-2 `CritCoverageGround`); coverage map +2 rows |
+| freshness | **unchanged** | every capture opened predates the launch (2026-10-25T06:19:59−03:00); not counted as an improvement |
+| adjacency | **unchanged** | no sibling holds AVeriTeC ground (wave-1 `ConnectSiblings`); campaign tree read only |
+
+Learning trends, lane view: expansion improved (three mined rows, two entries, QUALITY 64–65,
+one QUALITY check); quality improved (three counters against do-nothing controls; two
+post-landing fixes each shown able to fail; nine mined mistakes); discernment unchanged until a
+non-author spot-check — wave-2 seats are still the lane.
+
+## Planned — round 46 (not started)
+
+Candidates, not commitments: the staged AVeriTeC dataset-page amendment as a fresh
+document-bound entry (wave-2 `CritRejectDecision` located its quotes; flip in
+`lessons/round-45.md` `## Gate`); a C3-style counter that checks an entry's inference
+sentences, not only quote and count presence (wave-2 `CritC3Axis`); a gate-registry check
+that also covers executable verifiers outside the frozen name pattern (wave-2
+`CritC2Framing`). Freeze only 1–3 separately falsifiable claims after scoring their do-nothing
+controls.
+
+## Round 46 verdict — 2026-10-25 (inference grounding, verifier registry, evidence-pool adoption)
+
+Claims frozen in `corpus/evidence/round46/claims.md` at
+`c2f0e9d100c0d46633a6277b2fd51d2ac99678eb` before any seat scored; work landed at
+`d09fc8e7e2972e30e5e0aaa6e404c97aa0b9f95a`. After-measurement:
+`corpus/evidence/round46/measure-after.txt`. No external fetch: L0 `8d77e6c1`
+is still open and every capture read is on disk. Tag column per QUALITY 64.
+
+| claim / axis | before → after | counting command | verdict | tag |
+|---|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10): inference grounding becomes an executable check — `tools/inference-ground.py` refuses an Inference bullet that cites no source and every quoted phrase or figure in one that its cited spans do not carry | `TOOL=absent POSITIVE_PASS=0/3 JUNK_KILLED=0/3` exit 1 (`controls/c1-before.txt`, base tree `6e2630a6`) → `TOOL=present POSITIVE_PASS=3/3 JUNK_KILLED=3/3 C1=PASS` exit 0; controls: always-exit-0 tool `JUNK_KILLED=0/3`, citation-presence-only `1/3`; fixtures byte-pinned in the counter, so a changed fixture reads `FIXTURES_CHANGED=` and fails; a CANARY leg copies the first positive and first junk fixture under neutral names, so a tool that keys on the fixture NAME fails (`CANARY=fail`) | `python3 corpus/evidence/round46/c1-count.py` | **improved** (frozen predicate met). Framing narrowed: the check proves citation and token PRESENCE, not that the inference follows — the round-45 D7 class still passes (`CritC1Attack`, `CritC1D7`); reported, not hidden | plumbing |
+| C2 calibration: the gate registry covers the executable verifiers the lane's verdicts name outside the frozen name pattern | under the literal frozen set: freeze-equivalent trees A–C `ENTRY_POINTS=79 (tools=7 counters=50 named=74/77) REGISTERED=58/79 UNREGISTERED=21` exit 1; pristine base tree D `ENTRY_POINTS=76 (7/47/74) REGISTERED=58/76 UNREGISTERED=18` exit 1 (in `controls/c2-before.txt`) → `REGISTERED=81/81 UNREGISTERED=0 C2=PASS` exit 0 at the round close under the literal frozen set (all 79 existing named paths, including the eight `.ufo/waves/` controls — five newly registered by the `round35–41 gate controls` row; the original 72-path enumeration measured `73/73` at the landing, before `CritC2Scope` brought the literal set); forges refused: prose paste, six-cell row, eight-pipe row without `exit`, row after the next `## `, fenced row, `.pyc`-suffix row | `python3 corpus/evidence/round46/c2-count.py --list` | **improved**; limit named: the set samples on MENTION (a path named in a verdict), not on DEPENDENCE, so a gate named only in QUALITY/SKILL (`round45/tag-count.py`) stays outside while two historical probes that disclaim gating come in (`CritC2Framing`, `RevC2TagCount`) | plumbing |
+| C3 depth: the evidence-pool theme adopted as two lane entries, five rows S085–S089, eleven capture-bound spans | `ENTRIES=0/2 CITES_BOUND=0/5 QUOTE_ROWS=0/11` exit 1 (`controls/c3-before.txt`) → both modes `ENTRIES=2/2 CITES_BOUND=5/5 QUOTE_ROWS=11/11 QUOTES_IN_SPAN=11/11 QUOTES_IN_ENTRY=11/11 CAPTURE_BOUND=11/11 REF_ID_UNBOUND=0 REF_BOUND=2/2 C3=PASS` exit 0 (`--lane-only`: `CAPTURE_BOUND=skipped`); control: a forged manifest with invented capture digests passes `--lane-only` and is refused by the default mode at `CAPTURE_BOUND=0/11` | `python3 corpus/evidence/round46/c3-count.py` (and `--lane-only`) | **improved**; the counter measures presence and provenance, not entailment (three inferences were narrowed this round by `CritC3Inference`; anchors are not counter-checked — `ReviewerC3Spans` caught a 13-char anchor slip, fixed) | ground |
+
+The round-1 operability scale is unchanged: 3 → 3. These observables sit beside it.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** | C1: a new runnable check plus its counter and six declared fixtures; the wave-1 survivor (a junk bullet parked in a fence) was fixed and the fixture set is now byte-pinned |
+| calibration | **improved** | C2: `UNREGISTERED=0` over a set that grew from 68 to 72 entry points; the counter's own cheap gates (fence, comment, suffix) closed after `MutC2Forge`; the registry now names 13 historical instruments with their real verdict maps, including two that say they do not gate |
+| depth | **improved** | C3 and `corpus/lessons/round-46.md`: two entries re-grounded on five newly opened sources, eleven located quotes with context, staged misreadings corrected (field-pairing is practice not invariant; the hedge tracks a missing original URL; the temporal rule belongs to the successor corpus; the staged "limited …" and "We used …" are not verbatim) |
+| coverage | **improved narrowly** | two entries on ground the map did not hold (`ScoutCoverageGround`); coverage map +2 rows; no sibling holds this ground (`ConnectSiblings`) |
+| freshness | **unchanged** | every capture opened predates the launch (2026-10-25T07:10:05−03:00: captures written 2026-10-23/24); S085's recheck cadence is set `365d` where the staged row said `180d` — a curation choice logged to the lesson, not an improvement |
+| adjacency | **unchanged** | no sibling lane holds FEVER/AVeriTeC ground; six lanes already practise capture-digest binding row-by-row, so the entries state a fleet habit rather than discover one (`ConnectSiblings`) |
+
+## Capabilities (round-46 addition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| inference-grounding check | refuses an `#### Inference` bullet that cites no source, and every quoted phrase or figure in one that its cited spans (or its cited document's designator) do not carry — presence, not entailment | `tools/inference-ground.py`; `corpus/evidence/round46/c1-count.py`; `corpus/fixtures/inference-ground-r46/` | 46 |
+| verifier registry alongside the name pattern | enumerates the lane's executables from three legs (tools/, the round-45 counter pattern, and every `*.py`/`*.sh` its verdicts name) and requires each inside a `## Gates` row, refusing fence, comment and suffix forges | `corpus/evidence/round46/c2-count.py` | 46 |
+| capture-bound span builder with context | rebuilds `spans.tsv` and the span files as exact capture slices carrying ±80 chars of context, and re-derives them with `--check` | `corpus/evidence/round46/build-spans.py` | 46 |
+
+## Planned — round 47 (not started)
+
+Candidates, not commitments: an ENTAILMENT leg for the inference check — the D7
+class still passes (`CritC1Attack`, `CritC1D7`), and the cheapest next move is a
+controlled-vocabulary relation per bullet (supports/narrows/contradicts) checked
+against the cited span's own polarity words, with the critic's six survivors as
+the before-controls; a DEPENDENCE-based C2 set (`RevC2TagCount`: a gate named
+only in QUALITY/SKILL is invisible) that adds `round45/tag-count.py`,
+`round32/q33-check.py`, `round30/rerun-check.py` and `round29/prose-check.py`
+with an `entry paths ⊆ ENTRY_POINTS` assertion; and the amendment's own warrant
+for the archiving practice (`S089` char 14603) as a committed span. Freeze 1–3
+claims after scoring their do-nothing controls.
+
+## Round 47 verdict — 2026-10-25 (polarity probe, dependence registry, claim-support adoption)
+
+Claims frozen in `corpus/evidence/round47/claims.md` at
+`22a44b8b5c923d25123a96a852c11938559bb9b2` before any seat scored. Landed: C1
+`a15610a5` + `980fe43f`, C2 `7fb9a232`, C3 `3d2a0637`; the after-measurement is
+`corpus/evidence/round47/measure-after.txt`. No external fetch: L0 `8d77e6c1` is still
+open. Tag column per QUALITY 64.
+
+| claim / axis | before → after | counting command | verdict | tag |
+|---|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10): the inference check refuses a windowed stem-sharing polarity flip (`INF_POLARITY_FLIP`) | `POSITIVE_PASS=3/3 JUNK_KILLED=0/3 CANARY=fail R46_COUNTER=pass R46_ENTRIES=2/2 C1=FAIL` exit 1 (`controls/c1-before.txt`) → `3/3 3/3 CANARY=pass R46_COUNTER=pass R46_ENTRIES=2/2 C1=PASS` exit 0; controls: round-46 tool `JUNK_KILLED=0/3`, always-exit-1 `POSITIVE_PASS=0/3`, negator-word refuser `POSITIVE_PASS=1/3` | `python3 corpus/evidence/round47/c1-count.py` | **verifies** (frozen predicate met). NOT entailment: on wave-2 held-out sets written after the wave-1 fix, the probe killed 4 of 12 natural flips (`HeldOutB`; the round-46 tool kills 0) and refused 2 of 12 correctly-reasoned bullets (`HeldOutA`; the round-46 tool refuses 0); on the lane's 63 real entries it changes no exit (`SweepC1Corpus`, 378 runs, after the wave-2 leaf-key fix). Two wave-2 critics rule the axis a trade (`CritC1Claim`, `CritScorecard`); see the axis row | plumbing |
+| C2 calibration: the gate registry agrees with the tree its checks depend on | freeze tree `MISMATCHES=25` (freeze counter) / `21` (final counter), bare base `22` / `18` (`controls/c2-before.txt`) → `ENTRY_POINTS=94 REGISTERED=94/94 UNREGISTERED=0 DANGLING=0 MISMATCHES=0 C2=PASS` exit 0 (FLOOR=92 met), and the freeze-time counter `93/93 MISMATCHES=0` too; control: the round-46 counter prints `C2=PASS` on the base tree while this counter fails it | `python3 corpus/evidence/round47/c2-count.py --list` | **improved narrowly**: of the 25, 8 were real self-assessment mismatches (7 executables named by QUALITY/SKILL or run by an entry point in no row, 1 row whose unescaped pipes lost its exit map), plus 3 control rows naming no exit code; 10 were the freeze counter's own escaped-pipe split (`CritC2Framing`). Row truth stays a reader's check | plumbing |
+| C3 depth: the claim-support test adopted by document — two entries, S090–S094, S085 re-bound, 35 capture-bound spans | `ENTRIES=0/2 CITES_BOUND=0/6 ANCHOR_BOUND=0/6 QUARANTINE_VERDICTS=0/4 C3=FAIL` exit 1 (`controls/c3-before.txt`) → both modes `ENTRIES=2/2 CITES_BOUND=6/6 QUOTE_ROWS=35 SPAN_IDS=6/6 QUOTES_IN_SPAN=35/35 QUOTES_IN_ENTRY=35/35 SPAN_CONTEXT=35/35 CAPTURE_BOUND=35/35 REF_ID_UNBOUND=0 ANCHOR_BOUND=6/6 INFERENCE_GROUNDED=2/2 QUARANTINE_VERDICTS=4/4 QUARANTINE_ABSENT_ADOPTED=0 C3=PASS` exit 0 (`--lane-only`: `CAPTURE_BOUND=skipped`); controls: the staged entries copied unchanged fail `REF_ID_UNBOUND=17 CITES_BOUND=0/6`, invented digests fail `CAPTURE_BOUND=0/12` | `python3 corpus/evidence/round47/c3-count.py` (and `--lane-only`) | **improved** | ground |
+
+The round-1 operability scale is unchanged: 3 → 3. These observables sit beside it.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved, disputed as a trade** | C1: the D7 body of round 46 (`CritC1D7` v7) now exits 1 and 4/12 held-out flips are refused that nothing refused before; the cost is 2/12 held-out correct bullets refused, against zero exit changes on the lane's 63 entries. Wave-2 `CritC1Claim` and `CritScorecard` rule this a trade (axis harm); the L1 reads the synthetic false refusals as a strictness cost with no observed harm to the lane's corpus. Reported for the operator to rule, not resolved here |
+| calibration | **improved narrowly** | C2: 8 real registry mismatches closed against an enforced floor; the counter's own parser defects were found by the wave and repaired toward the literal sentence |
+| depth | **improved** | C3 and `corpus/lessons/round-47.md`: two entries re-grounded on six captures, nine mined mistakes, eight staged misreadings corrected |
+| coverage | **improved narrowly** | the support DEFINITION, the annotator decision rule and per-step reliability figures were ground the coverage map did not hold (`ScoutCoverageGround`); the four-state frame and FEVER's 0.6841 were already held and earn nothing |
+| freshness | **unchanged** | every capture opened predates the launch (2026-10-25T08:25:52−03:00; captures written 2026-10-23) |
+| adjacency | **unchanged** | no sibling holds this ground (`ConnectSiblings`); PEOPLEPROFILES' model-agreement figure is left to kengaku |
+
+## Capabilities (round-47 addition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| polarity probe in the inference check | refuses an Inference bullet whose own words reverse a quoted phrase's negation within fixed windows, or re-denominate a counts figure against its leaf key — a windowed stem-sharing negator mismatch, not entailment; the figure leg fires only where an entry is checked with a counts manifest (the lane's entries are checked with `--counts /dev/null`) | `tools/inference-ground.py` (`INF_POLARITY_FLIP`); `corpus/evidence/round47/c1-count.py`; `corpus/fixtures/inference-ground-r47/` | 47 |
+| dependence-and-check registry count | counts gate-registry mismatches over the round-46 set plus paths gates run and paths QUALITY/SKILL name as checks, by entry cell and exit-code verdict map, with dangling rows and an enforced floor | `corpus/evidence/round47/c2-count.py` | 47 |
+| anchor-bound span manifest | builds capture-bound spans from a quote list and generates Registry anchor cells whose every `char N` is a located quote offset | `corpus/evidence/round47/build-spans.py`; `corpus/evidence/round47/c3-count.py` `ANCHOR_BOUND` | 47 |
+
+## Planned — round 48 (not started)
+
+The following candidates were the pre-freeze plan snapshot; superseded by the measured Round-48 disposition below.
+
+Candidates, not commitments: repair or supersede the four round-39/40 receipts that fail
+`gate-sha256-mismatch` since round 41 (QUALITY 68's first run; routed in round 41, never
+closed); a held-out precision fixture set for the polarity probe (correct bullets with the
+negator outside the window, conflicting-polarity spans) so its false-refusal rate is a
+counted leg; a second assimilation theme from `merge/chousa/` whose captures are byte-faithful.
+Freeze 1–3 claims after scoring their do-nothing controls.
+
+## Round 48 verdict — 2026-10-25 (held-out polarity precision and refinement coverage)
+
+R48-C1 was frozen at lane commit `4bbd2348578bb6288c0700dabf37cea04225bfb6` before wave-2 scoring. The tool/counter change landed at `671b096e2bd5d5b0994bcd7ab8c17abaf16c62c7`; final measurements over its archive are in `corpus/evidence/round48/measure-after.txt`. No external fetch; L0 `8d77e6c1` remains open.
+
+| claim / axis | before → after | counting command | verdict | tag |
+|---|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10): the tool and composite counter reduce false refusals on the fixed R47 regression set and cover the five R47 surviving refinements | current R47 tool control `CORRECT_BULLETS_PASS=9/12`, `PRECISION_GATE=FAIL`, C1 exit 1 → candidate `12/12` (minimum 11), `REFINEMENT_CASES=5/5`, `LEGACY_R47=PASS`, `C1=PASS`; separate mutation probe `MUTANTS_KILLED=5/5`; name-keyed no-read control passes c1-count alone but fails the composite mutation-check leg when installed at the default tool path | `python3 corpus/evidence/round48/c1-count.py`; `python3 corpus/evidence/round48/mutation-check.py`; `python3 corpus/evidence/round48/controls/name-key-control.py` | **improved narrowly** on the recycled R47 regression; W2 `AttackPrecision.md` disputes the a05 label (the prior R47 non-author verdict called it a false refusal); re-open a05 in closure before generalizing the result | plumbing |
+
+The numeric operability scale remains 3/10 (its round-1 observable counts three archived inputs, not these new tests). No other expertise score is invented. The round-47 C2 row `SCORECARD.md:2506` was already corrected: `94/94` final, freeze-time counter `93/93`; `92` is the frozen floor, not an after-state ratio. Re-running `python3 corpus/evidence/round47/c2-count.py --list` after the R48 Gate entries yields `REGISTERED=97/97`, `MISMATCHES=0`, C2=PASS.
+
+The carried R39/R40 receipt mismatch is expected historical revision drift, not corrupted receipts: the round-40 counter at the R48 tool commit reports 2/6 at the current gate (four `gate-sha256-mismatch` refusals after round-41 `1bd9001`), while all six verify at their own adding commits (three at `d164f88`, three at `6d914e9`). Receipt bytes remain untouched; reissuing them would rewrite historical measurement bindings. The phrase “QUALITY 68's first run” in the planned-R48 note refers to an R47 criterion, not a round-41 event; round 41 is the cause of the later gate drift.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved narrowly** | R48-C1 after-state and its no-read composite control; see limitations above |
+| calibration | **unchanged** | the R47 SCORECARD correction reproduces, and the current C2 registry is 97/97; no new numeric self-assessment claim is made |
+| depth | **unchanged** | no new domain knowledge entry was admitted; docstring changes document this lexical tool's limits |
+| coverage | **unchanged** | no province frontier moved into core |
+| freshness | **unchanged** | no live or changing external source was opened |
+| adjacency | **unchanged** | `PROVINCE.md` remains scoped to chousa method; `.ufo/waves/round-48/w2/SiblingFit.md` found no sibling ownership overlap |
+
+Trends: expansion **unchanged** (no new knowledge entry on uncovered ground); quality **unchanged** (no corpus knowledge entry was re-admitted or failed a re-check; the measured tool work is C1 operability); discernment **unchanged** pending the required independent closure spot-check of `corpus/lessons/round-48.md` Gate decisions. Seats dispatched by this lane are not counted as non-authors.
+
+## Round 49 verdict — 2026-10-25 (section-10 adopter; derived-index theme adopted by document)
+
+Claims frozen in `corpus/evidence/round49/claims.md` at `fe740e7838b338d17fec9338c909557e6e7fed7d` after scoring do-nothing controls. Tool `65940928`→fixes `4ce61fc5`; adoption `1254ab26` and W2 narrowing (this round's final commit). After-measurement: `corpus/evidence/round49/measure-after.txt`. Post-freeze span-builder change and W2 narrowing disclosed in `corpus/evidence/round49/claims-erratum.md`. No fetch; L0 `8d77e6c1` open.
+
+| claim / axis | before → after | counting command | verdict | tag |
+|---|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10; capability) | `TOOL=absent C1=FAIL` exit 1; copy control `SETS_PASS=0/3`, GUARD/PIPE FAIL → `SETS_PASS=3/3`, GUARD PASS, PIPE PASS, `C1=PASS` exit 0 | `python3 corpus/evidence/round49/c1-count.py` | **improved narrowly**: conformance on fixed inputs; a replay of the tool's outputs also passes (W1 `CritForgeC1`); W2 perturbed-package and held-row probes passed (supplementary) | plumbing |
+| C2 depth (sourced) | `ENTRIES=0/2 BOUND=0/9 C2=FAIL` exit 1; staged-copy control `REF_ID_UNBOUND=11 C2=FAIL` → `BOUND=8/9 REFUSED=1 QUOTE_ROWS=31 CAPTURE_BOUND=31/31 ANCHOR_BOUND=8/8 INFERENCE_GROUNDED=2/2 QUARANTINE_VERDICTS=5/5 C2=PASS` exit 0 | `python3 corpus/evidence/round49/c2-count.py` | **improved**, subject to the closure's ruling on the disclosed post-freeze `build-spans.py` change (W2 `CritErratum`: C2 stands) | ground |
+
+The numeric operability scale remains 3/10; no other score is invented.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved narrowly** | C1; `tools/assimilate-rows.py` |
+| depth | **improved** | C2; two entries on eight re-opened captures, 31 located quotes, narrowed after W2 |
+| calibration | **improved narrowly** | a05 propagations corrected (`a05-check.py` 1→0); QUALITY 69 note, 72; registry `REGISTERED=104/104` |
+| coverage | **improved narrowly** | index derivation, link lag, resolution ladder and CNKI counter rules were not held (W1 `CritTheme`); the aggregator-is-not-the-source conclusion was held and earns nothing |
+| freshness | **unchanged** | newest readable capture 2026-10-24 23:26 -03; this round's captures 2026-10-23 (QUALITY 71) |
+| adjacency | **unchanged** | W1 `ConnSiblings`: no sibling overlap |
+
+## Capabilities (round-49 addition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| section-10 package adopter | turns staged campaign entries into census-valid lane rows and rewritten entries: by-document renumbering with one simultaneous substitution, held-row detection by census URL normalisation, normalised status/opened/recheck/used-by with the stripped text logged, 0–3-space collision lists | `tools/assimilate-rows.py`; `corpus/evidence/round49/c1-count.py` | 49 |
+
+## Planned — round 50 (not started)
+
+Candidates: add a perturbed-input leg to the adopter counter (QUALITY 72); adopt the next same-theme package entry (`cnki-citation-check-r40.md`) with an NCPSSD help-page row; fold `quote-substance-check.py` into the next span counter before freezing.
+
+## Round 50 verdict — 2026-10-25 (adopter self-test; Chinese citation-checking theme adopted by document)
+
+Claims frozen in `corpus/evidence/round50/claims.md` at `6a068f2ae4847a1e4aa959f088a39ddc1b167bc0` after scoring their do-nothing controls. After-measurement: `corpus/evidence/round50/measure-after.txt`. Disclosures: `corpus/evidence/round50/claims-erratum.md`. No fetch; L0 `8d77e6c1` open.
+
+| claim / axis | before → after | counting command | verdict | tag |
+|---|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10; capability extension) | base tool `BASELINE=FAIL rc=2`, `LEGS=2/5`, `C1=FAIL`; echo control `LEGS=4/5`, `PERTURB_PASS=0/6`; constant control `LEGS=2/5` → `LEGS=5/5`, `PERTURB_PASS=6/6`, `C1=PASS` | `python3 corpus/evidence/round50/c1-count.py` | **improved narrowly**: the frozen counter is replayable (W2 `R50CritForgeC1`: a forge prints the six literal DIFF lines and passes `LEGS=5/5`); the supplementary `c1-supplement.py` (nonce leg, exclusive DIFF set, hardening probes) passes the real tool 5/5 and fails the forge 1/5 | plumbing |
+| C2 depth (sourced) | `ENTRIES=0/3 BOUND=0/4 NEW_GROUND=0/3 C2=FAIL`; staged copy `REF_ID_UNBOUND=15` → `BOUND=3/4 REFUSED=1 NEW_GROUND=3/3 QUOTE_ROWS=67 CAPTURE_BOUND=67/67 SUBSTANCE=PASS ANCHOR_BOUND=3/3 INFERENCE_GROUNDED=3/3 C2=PASS` | `python3 corpus/evidence/round50/c2-count.py` | **improved**, as a presence-and-binding result: the counter cannot see entailment (W2 `R50CritForgeC2`), the CJK polarity rule is unreachable (named limit), and expansion credit is per document (three documents), not per entry | ground |
+
+The numeric operability scale stays 3/10; no other score is invented.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved narrowly** | C1; `tools/assimilate-rows.py --selftest`; the replay weakness is named |
+| depth | **improved** | C2; three entries narrowed by 30+ W2 corrections, a rendered-page observation the text form drops |
+| calibration | **improved narrowly** | stale counts corrected and checked (`stale-count-check.py` exit 1 → 0); the lesson's mistakes are mined with checks shown able to fail; the report-before-WAVE-DONE defect is not repeated |
+| coverage | **improved narrowly** | the 引文核对 feature, its manuals' scope and a Chinese institute's citation service were not held at base (`git grep` at `3c51da77` finds none in `corpus/knowledge`) |
+| freshness | **unchanged** | newest readable capture 2026-10-24 23:26 -03; this round's captures 2026-10-23 |
+| adjacency | **unchanged** | W2 `R50ConnSiblings`: no sibling overlap |
+
+## Capabilities (round-50 addition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| adopter self-test | runs the section-10 adopter on an isolated hand-expected fixture package, compares findings as a multiset, prints the fixtures digest and exits 0/1/2; scored on perturbed copies against echo and constant controls | `python3 tools/assimilate-rows.py --selftest`; `corpus/evidence/round50/c1-count.py`; `c1-supplement.py` | 50 |
+
+## Planned — round 51 (not started)
+
+Candidates: make the adopter cite only `source:` ids (QUALITY 77) and fix its three latent input defects (identity before pipe rewrite, plain-split registry pipe, next id without a `## Registry` heading — W2 `R50ExecPerturbAdopter`); fold `c1-supplement.py`'s nonce leg into a successor counter; give `inference-ground` a CJK polarity check; adopt `cnki-public-surface-r43.md` with a re-grounded S160 and a capture of the sibling portal; read the two screenshots' text by a located-quote method instead of a rendered-page note.
+
+## Round 51 pointer corrections (append-only; no row above is edited)
+
+Each line names the row's line number, the bare pointer it prints and the committed non-empty file it meant (W1 `R51ExecC3Pointers`: receipt labels and add-commits). `python3 corpus/evidence/round51/c3-count.py` reads them.
+
+correction: SCORECARD.md:1843 measure/final/ -> .ufo/waves/round-32/measure/final/
+correction: SCORECARD.md:2073 measure-l1/c1-s36361.json -> .ufo/waves/round-36/measure-l1/c1-s36361.json
+correction: SCORECARD.md:2074 measure-l1/c2-s36371.json -> .ufo/waves/round-36/measure-l1/c2-s36371.json
+correction: SCORECARD.md:2616 c1-supplement.py -> corpus/evidence/round50/c1-supplement.py
+
+## Round 51 verdict — 2026-10-25 (adopter v3 and nonce counter; Japanese/Chinese search-record theme; pointer calibration)
+
+Claims frozen in `corpus/evidence/round51/claims.md` at `d603f6f00f78d64f123d3aed2dd9f8701547a4ba` after scoring their controls; errata `claims-erratum.md` E1–E5. After-measurement: `corpus/evidence/round51/measure-after.txt`. No fetch; L0 `8d77e6c1` open.
+
+| claim / axis | before → after | counting command | verdict | tag |
+|---|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10; capability extension) | lane tool at base `LEGS=1/5 C1=FAIL`; controls base 1/5, echo 2/5, const 1/5, flag-noop 2/5 → `LEGS=5/5 C1=PASS`; supplement `SUPPLEMENT_LEGS=10/10` | `python3 corpus/evidence/round51/c1-count.py`; `python3 corpus/evidence/round51/c1-supplement.py` | **improved narrowly**: the frozen counter is forgeable (a 94-line tool keyed on its directory names passes 5/5; the supplement fails it 1/10), the supplement is post-freeze and forgeable by a tool that reimplements the adopter, and the round-49/50 one-shot counters fail at the new default | plumbing |
+| C2 depth (sourced) | `ENTRIES=0/3 BOUND=0/7 C2=FAIL` → `BOUND=6/7 REFUSED=1 QUOTE_ROWS=70 CAPTURE_BOUND=70/70 ANCHOR_BOUND=6/6 INFERENCE_GROUNDED=3/3 QUARANTINE_VERDICTS=6/6 C2=PASS` | `python3 corpus/evidence/round51/c2-count.py` | **improved** as presence and binding; entailment is uncounted (W2 found 30+ prose overstatements, narrowed); one document refused for capture form | ground |
+| C3 calibration | `CAP_ROWS=36 POINTERS=74 DANGLING=5 C3=FAIL` (first run 8, erratum E1) → `DANGLING=0 C3=PASS` | `python3 corpus/evidence/round51/c3-count.py` | **improved narrowly**: pointer existence, not truth (a correction to any non-empty file passes); the before-count changed once after the freeze | plumbing |
+
+The numeric operability scale stays 3/10; no other score is invented.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved narrowly** | C1; `tools/assimilate-rows.py` v3; the supplement |
+| depth | **improved** | C2; three entries on six documents |
+| calibration | **improved narrowly** | C3; mistakes row 9 (W2 corrections to the round's own prose) |
+| coverage | **improved narrowly** | `git grep -l -e 検索式 -e 検索期間 -e 检索策略` at `9ec1751a` finds nothing in `corpus/knowledge`; six documents now |
+| freshness | **unchanged** | newest readable capture 2026-10-24; no fetch |
+| adjacency | **unchanged** | W1 `R51ConnSiblings` and W2 `R51W2ConnSiblingsFinal`: no sibling overlap |
+
+## Capabilities (round-51 addition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| source-only adoption and receipt check | adopts staged entries citing only header `source:` ids, per entry, with refusals for malformed registries and unknown source ids, and checks that a receipt names the tool revision it measured | `python3 tools/assimilate-rows.py --selftest`; `corpus/evidence/round51/c1-supplement.py`; `corpus/evidence/round51/receipt-check.py` | 51 |
+
+## Planned — round 52 (not started)
+
+Candidates: a zip-member form for the refused `.docx` (a counter and span builder that read `word/document.xml`), then bind it; the other search-record entries decided in the round-51 Gate (`search-tracking-record-r40`, `japanese-prisma-item-wording-r40`, `chinese-search-log-r37-amendment`); close the adopter's named limits (twin-id `held` label, refusal ordering); an enforcing form of the supplement that a reimplementing tool cannot pass.
+
+## Round 52 verdict — 2026-10-26 (OOXML capture text form; search-record theme continued by document)
+
+Claims frozen in `corpus/evidence/round52/claims.md` at `37468eadd8d098e80289b2f31a22de3872d4a1f6` after scoring their do-nothing controls; post-freeze disclosures `corpus/evidence/round52/claims-erratum.md` E1–E4. After-measurement: `corpus/evidence/round52/measure-after.txt` (header `tool-rev:`). No fetch; L0 `8d77e6c1` open.
+
+| claim / axis | before → after | counting command | verdict | tag |
+|---|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10; capability acquisition) | `tools/capture-text.py` absent at base: `LEGS=0/9 C1=FAIL`; controls naive 4/9, cache-txt 0/9, const 0/9 → `LEGS=9/9 C1=PASS` (three unseeded runs and `--seed 7`); supplement `SUPPLEMENT_LEGS=4/4` | `python3 corpus/evidence/round52/c1-count.py`; `python3 corpus/evidence/round52/c1-supplement.py` | **improved narrowly**: the frozen counter is forgeable by XML spelling (`controls/forge-shape.py` 9/9, W1 `R52CritForgeC1`); the post-freeze supplement refuses that forge (0/4) but W2 `R52W2CritForgeSupplement` passed both with a 54-line regex tool and a memoised NIPH text; the tool gained refusal classes after the candidate that no frozen leg measures (erratum E2) | plumbing |
+| C2 depth (sourced) | `ENTRIES=0/3 BOUND=0/4 C2=FAIL`; staged-copy control `REF_ID_UNBOUND=31` → `BOUND=4/4 REFUSED=0 QUOTE_ROWS=39 CAPTURE_BOUND=39/39 ANCHOR_BOUND=4/4 INFERENCE_GROUNDED=3/3 QUARANTINE_VERDICTS=1/1 C2=PASS` | `python3 corpus/evidence/round52/c2-count.py` | **improved**, as presence and binding: entailment is uncounted (W2 narrowed bullets in all three entries, erratum E5), the CJK polarity check is inert on these entries (W2 `R52W2ExecInfRegression`), and expansion credit is three documents, not four (S113 a second carrier) | ground |
+
+The numeric operability scale stays 3/10; no other score is invented.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved narrowly** | C1; `tools/capture-text.py` on the cache's eight zip captures (two `.docx` rendered, six refused) |
+| depth | **improved** | C2; three entries on four documents, 39 located quotes |
+| coverage | improved narrowly | three documents on ground the base did not hold (`git grep -l -e 文献検索期間 -e 完全な検索戦略 -e 检索报告清单 00f8c7f5 -- corpus/knowledge` → exit 1); the 梅斯医学 record (S113) is a second carrier, no credit |
+| calibration | improved narrowly | the round-51 S120 offset re-located (`char 39411` → 8996 in a named form); QUALITY 87–90; `verdict-gap.py` makes two lane-vs-verifier gaps visible (`VERDICT_GAPS=2 UNPARSED=1`) |
+| freshness | unchanged | newest readable capture 2026-10-24; no fetch |
+| adjacency | unchanged | W1 `R52ConnSiblings`, W2 `R52W2ConnSiblingsFinal`: no sibling overlap |
+
+## Capabilities (round-52 addition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| OOXML capture text form | prints the text form of a `.docx` capture (main part from `_rels/.rels`; no Fallback, deleted text, field codes or tab stops), locates a quote's offset in it, and refuses non-zip, relationship-less, non-Word, encrypted and inflated packages | `python3 tools/capture-text.py <raw> --locate '<quote>'`; `corpus/evidence/round52/c1-count.py`; `corpus/evidence/round52/c1-supplement.py` | 52 |
+
+## Planned — round 53 (not started)
+
+Candidates: the adopter twin-id `held` label and refusal-order patch (W1 `R52ExecAdopterTwin`, routed defect 2) with its self-test rows; the anchored `correction:` check (W1 `R52ExecPointerAnchor`, routed defect 4) as a calibration claim; `search-tracking-record-r40.md` with its quote re-cut at char 935; the two verdict gaps `verdict-gap.py` prints (round 47 operability, round 50 calibration) and round 48's unparsed verifier form.
+
+## Round 53 pointer corrections (append-only; no row above is edited)
+
+Anchored successors of the round-51 corrections (round-52 closure section 6 item 4; `python3 corpus/evidence/round53/pointer-anchor-check.py` requires each anchor, ≥12 characters, to occur exactly once in the target) and the stale erratum ranges (closure section 6 item 1; W1 `R53DraftCorrections`, `R53DraftMistakes`).
+
+correction: SCORECARD.md:1843 measure/final/ -> .ufo/waves/round-32/measure/final/ anchor: "seed": 32101,"
+correction: SCORECARD.md:2073 measure-l1/c1-s36361.json -> .ufo/waves/round-36/measure-l1/c1-s36361.json anchor: "ENGINE_SWAP_CANARY=14/14"
+correction: SCORECARD.md:2074 measure-l1/c2-s36371.json -> .ufo/waves/round-36/measure-l1/c2-s36371.json anchor: "WITNESS_PER_RECORD=5/5"
+correction: SCORECARD.md:2616 c1-supplement.py -> corpus/evidence/round50/c1-supplement.py anchor: "SUPPLEMENT_LEGS={n}/{len(res)}"
+correction: SCORECARD.md:2664 E1–E4 -> corpus/evidence/round52/claims-erratum.md anchor: "E6 — named, not changed: the frozen span builder's reader is unbounded"
+correction: corpus/lessons/round-52.md:153 E1–E4 -> corpus/evidence/round52/claims-erratum.md anchor: "E6 — named, not changed: the frozen span builder's reader is unbounded"
+correction: SKILL.md:133 E1-E4 -> corpus/evidence/round51/claims-erratum.md anchor: "E5 — controls and supplements changed after the freeze"
+
+The round-52 erratum range is E1–E6 (E5 in-round narrowing, E6 the unbounded span-builder reader); the round-51 erratum range is E1–E5.
+
+## Round 53 verdict — 2026-10-26 (adopter v4; search-record instruments)
+
+Claims frozen at `a6ff732c70011f11c9beb681d832cedc6e75f566` after do-nothing controls (`corpus/evidence/round53/claims.md`; C1 `controls/c1-before.txt`, C2 `controls/c2-before.txt` / `c2-controls.txt`). Candidate C1 `32aab5edd70e43145cae72ec872278f3bc6efba7`; W1 integration `f4343163b70ce20e6b6d4f52b39935156e8afb26`. No live fetch; L0 `8d77e6c1` open.
+
+| claim / axis | before → after | counting command | verdict | tag |
+|---|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10; capability extension) | base adopter `LEGS=1/8 C1=FAIL` (REGRESS only); controls base 1/8, const 0/8, refuse 0/8, relabel-only 5/8, all-twin 2/8 → candidate `LEGS=8/8 C1=PASS` (three unseeded and `--seed 7`; W1 `R53ExecSeedRuns` also 45/45 required runs plus 140 seeds). Post-freeze supplement: candidate 3/3, W1 forge-c1 1/3 | `python3 corpus/evidence/round53/c1-count.py`; post-freeze `python3 corpus/evidence/round53/c1-supplement.py` | **improved narrowly**: W1 `R53CritForgeC1` demonstrated a 189-line forge still passes the frozen counter 8/8 by canning REAL, shape-keying date checks and stubbing the R50 self-test strings; supplement kills two of those three shortcuts, but not the valid-map implementation. E2 `--per-leg 0` and E3 cadence mismatch remain named | plumbing |
+| C2 depth (sourced; search-record instruments) | `ENTRIES=0/3 BOUND=0/5 C2=FAIL`; staged-copy control `REF_ID_UNBOUND=12 BOUND=0/5`; adopter-rewrite control `BOUND=5/5 REF_ID_UNBOUND=4 ANCHOR_BOUND=0/5 C2=FAIL` → `ENTRIES=3/3 BOUND=4/5 REFUSED=1 QUOTE_ROWS=63 CAPTURE_BOUND=63/63 ANCHOR_BOUND=4/4 INFERENCE_GROUNDED=3/3 QUARANTINE_VERDICTS=0/0 C2=PASS` | `python3 corpus/evidence/round53/c2-count.py` | **improved**, as presence, binding and located support; the C2 counter does not judge entailment. The C1 twin was S118 (one row cited by two entries); S190 refused. Expansion credit per document, not entry | ground |
+
+The numeric operability scale remains 3/10; the round-1 score is its narrow archived-export observable, not this adopter counter. No other numeric score is invented.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved narrowly** | C1; candidate v4 fixes the same-run `held` label (S195 is `twin`) and refusal ordering; the frozen counter remains forgeable on REAL, RECHECK edge shapes and R50 self-test attestation |
+| depth | **improved** | C2; three entries, four bound documents, 63 quote spans and four anchors; W1 critics narrowed the JMLA line-break, the cross-tradition title and the issued-guideline wording |
+| coverage | **improved narrowly** | four unique documents absent at base (S117–S120); S118's S185/S195 staged twins count once; S119 is the release notice, S120 the Cochrane chapter |
+| calibration | **improved narrowly** | pointer-anchor check `ANCHORED=7/7`; the round-52 erratum ranges corrected by anchored successors; W1 C1 forge and counter blind spots named rather than hidden; no non-author spot-check yet |
+| freshness | **unchanged** | no fetch; newest capture dates remain 2026-10-24 |
+| adjacency | **unchanged** | W1 `R53ConnSiblings` reports no sibling ownership of the landed search-record method or adopter; drug-regulator mandates remain report-only |
+
+## Capabilities (round-53 addition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| section-10 adopter v4 twin and refusal handling | labels `held` only for a URL already in Registry and `twin` for a same-run duplicate; separate counts; validates cited rechecks before output; refuses broken Registry before entry refusals, including without `--entry` | `python3 tools/assimilate-rows.py --selftest` (`FIXTURES_SHA256=9822ad59544cd42d6c6a8c3d34cb14d4d7c98d21e4f388d604486d70dd5db4a6`, findings 40/40); `corpus/evidence/round53/c1-count.py`; supplement (post-freeze only) | 53 |
+
+## Planned — round 54 (not started)
+
+Candidates: a C1 counter with a non-vacuous sample-size guard, generic calendar-invalid inputs and a non-canned held-out REAL leg; resolve the E3 predicate/tool recheck grammar; a defined OLE `.doc` text form or a narrower refusal; continue theme C (GB/T 7714 source-type) or theme B (archived-translation currency) after re-checking their capture state and province fit. C1's streak count (RW-1) is exposure, not failure; pair it with the next C1 verdict.
+
+## Round 54 pointer corrections (append-only; no row above is edited)
+
+The S100 and S101 Registry anchors (round 49) are offsets in a whole-file UTF-16LE decode of the `.doc` capture, a form no lane command prints (263 U+FFFD, 243 `0x0B`, a binary preamble; `corpus/lessons/round-54.md` `## Mistakes` row 2). Re-pointed into the defined OLE text form, dumped by the round-54 tool to the two targets (`python3 tools/capture-text.py <raw>`; S101 sha256 `a8e3e7ad…`, S100 `70ca0f0d…`); `python3 corpus/evidence/round53/pointer-anchor-check.py` requires each anchor to occur exactly once in its target. The two rows' form label "(UTF-16LE text of the raw .doc capture)" is superseded by these lines: their text form is now `tools/capture-text.py` (round 54). W1 `R54DraftS101Reanchor`, `R54DraftMistakes`.
+
+correction: corpus/SOURCES.md:110 char1296->char16 -> corpus/evidence/round54/S100-text-form.txt anchor: "中国知网他引频次的查询需要使用《中国引文数据库》。"
+correction: corpus/SOURCES.md:110 char1431->char151 -> corpus/evidence/round54/S100-text-form.txt anchor: "对于合作发文的参考文献中，如果引文出现了任一合作者，那么这条引文将被认定为自引"
+correction: corpus/SOURCES.md:110 char2843->char492 -> corpus/evidence/round54/S100-text-form.txt anchor: "“文献来源”等方式进行组合查询，注：被引频次为0的文献将不会显示"
+correction: corpus/SOURCES.md:111 char11170->char11972 -> corpus/evidence/round54/S101-text-form.txt anchor: "为便于文献的统计和期刊评价"
+correction: corpus/SOURCES.md:111 char11205->char12007 -> corpus/evidence/round54/S101-text-form.txt anchor: "每一篇文章或资料应根据其内容性质标识一个文献标志码"
+correction: corpus/SOURCES.md:111 char11993->char12795 -> corpus/evidence/round54/S101-text-form.txt anchor: "本规范推荐采用GB/T 7714中规定的顺序编码制格式著录,也可采用GB/T 7714中规定的作者-出版年制。"
+correction: corpus/SOURCES.md:111 char12161->char12963 -> corpus/evidence/round54/S101-text-form.txt anchor: "文献类型及载体类型标志；"
+correction: corpus/SOURCES.md:111 char13247->char14049 -> corpus/evidence/round54/S101-text-form.txt anchor: "参照ISO 690及ISO 690-2，每一参考文献条目的末尾均以“.”结束。"
+correction: corpus/SOURCES.md:111 char34374->char25123 -> corpus/evidence/round54/S101-text-form.txt anchor: "参考文献格式，参照ISO 690"
+
+## Round 54 verdict — 2026-10-26 (OLE `.doc` text form; the PRC citation standard by document)
+
+Claims frozen at `5a1a20630d8176a816a60bb43b0d0e7ee2db19a0` after do-nothing controls (`corpus/evidence/round54/claims.md`; `controls/c1-before.txt`, `c1-controls.txt`, `c2-before.txt`, `c2-controls.txt`). Candidate C1 `8a7d0f137a352000d78704ba5695ded8857104fe`; post-candidate tool changes disclosed in `corpus/evidence/round54/claims-erratum.md` E2. After-measurement: `corpus/evidence/round54/measure-after.txt` (header `tool-rev:` with the tool sha256). No live fetch; L0 `8d77e6c1` open.
+
+| claim / axis | before → after | counting command | verdict | tag |
+|---|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10; capability acquisition) | base tool refuses every OLE file as `not a zip`: `LEGS=1/6 C1=FAIL` (REGRESS only) on three unseeded runs and `--seed 7`; controls CONST 0/6, NAIVE 0/6, REFUSEALL 1/6, SHELL 1/6 → `LEGS=6/6 C1=PASS` on three unseeded runs and `--seed 7`. Post-freeze supplement (E1): landed tool `SUPPLEMENT_LEGS=3/3` ×4; rebuilt forge and all four controls 0/3 | `python3 corpus/evidence/round54/c1-count.py`; post-freeze `python3 corpus/evidence/round54/c1-supplement.py` | **improved narrowly**: W1 `R54CritForgeC1` passed the frozen counter 6/6 with a tool that reads the generated HTML left beside each document and cans REAL by digest (rebuilt: `controls/build-c1-forge.py`, `controls/c1-forge.txt`); W1 `R54CritOracle` and `R54MutOle` showed REAL accepts capped junk and 7 of 16 mutants survive the frozen counter; the supplement closes the three forge shortcuts, but it is not the frozen rule | plumbing |
+| C2 depth (sourced; the PRC citation standard GB/T 7714-2025) | `ENTRIES=0/2 BOUND=0/3 SUBSTANCE=FAIL QUARANTINE_VERDICTS=0/3 C2=FAIL`; staged-copy control `REF_ID_UNBOUND=6 HELD_BAD=1`; adopter-rewrite control `BOUND=3/3 REF_ID_UNBOUND=3 HELD_BAD=1 ANCHOR_BOUND=0/3 C2=FAIL` → `ENTRIES=2/2 BOUND=3/3 REFUSED=0 REF_ID_UNBOUND=0 NEW_GROUND=2/2 QUOTE_ROWS=33 CAPTURE_BOUND=33/33 ANCHOR_BOUND=3/3 INFERENCE_GROUNDED=2/2 QUARANTINE_VERDICTS=3/3 C2=PASS` | `python3 corpus/evidence/round54/c2-count.py` | **improved**, as presence, binding and located support; entailment is uncounted (W1 `R54CritForgeC2`: boilerplate quotes and an opposite inference also pass). The W1 S101 leg was cut (E3); expansion credit is three documents | ground |
+
+The numeric operability scale remains 3/10; the round-1 score is its narrow archived-export observable, not this text-form counter. No other numeric score is invented.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved narrowly** | C1; the OLE text form reads the five pinned captures and LibreOffice-generated documents, refuses non-Word OLE, encrypted and malformed files; post-candidate fixes: the signed Prc bound (W1 `R54ReviewOleTool` F1, `R54ExecOleFuzz` 37/600 Tracebacks at the candidate) and tracked-deletion runs dropped (W1 `R54ReviewOleSpec`; `tracked-deletion-check.py` candidate FAIL, landed PASS) |
+| depth | **improved** | C2; two entries on three documents, 33 located quotes, three anchors; the staged headlines narrowed (the portal notice is about the portal's service; the type enumeration cut; the 7.3 quote re-cut at its line break) |
+| coverage | **improved narrowly** | three documents absent at base (`git grep -l -e 'ISO 690:2021' -e 文献载体标识 c49ffc6c -- corpus/knowledge` → exit 1); a new capture form (OLE `.doc`) read; the HIT data specification's carrier alphabet stays open |
+| calibration | **improved narrowly** | nine anchored `correction:` lines re-point S100/S101 from an undefined UTF-16LE decode into the defined form (`pointer-anchor-check.py` → `ANCHORED=16/16`); QUALITY 97–100; the round-53 W2 handoff recorded as not dispatched; the frozen counter's forgeability named, not hidden |
+| freshness | **unchanged** | no fetch; newest capture dates remain 2026-10-24 |
+| adjacency | **unchanged** | W1 `R54ReviewProvince`: no sibling PROVINCE claims citation standards or document-format parsing; `kengaku-shokunin/PROVINCE.md:137` hands the method here |
+
+## Capabilities (round-54 addition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| OLE Word 97+ `.doc` text form | prints the main-story text form of an OLE `.doc` with no helper program (CFB chains, FIB, Clx piece table, cp1252/UTF-16LE pieces, field results only, tracked deletions dropped) and locates a quote's offset in it; refuses `ole-not-word`, `ole-encrypted`, `ole-malformed` | `python3 tools/capture-text.py <raw> [--locate Q]`; `corpus/evidence/round54/measure-after.txt` (frozen counter 6/6 ×4, supplement 3/3 ×4, tracked-deletion PASS) | 54 |
+
+## Planned — round 55 (not started)
+
+Candidates: a span builder that reads an OLE `.doc` through `tools/capture-text.py`, then the HIT data specification's carrier alphabet beside the standard's (the cut S101 leg, W1 `R54DraftEntryStb`); the refused S130 grey-literature entry, now that its form blocker is gone (W1 `R54ExecS130Probe`); a frozen C1-style counter whose generated inputs never sit beside the tool's input and whose REAL leg cannot be canned by digest (RW-1, sixth round); the counter limits W1 named (REAL ratio and label rule, fObfuscated-only and nFib branches ungenerated).
+
+## Round 55 statement errata
+
+Eleven lane statements committed at `dba605de` that round-54 wave 2 falsified (closure `corpus/lessons/round-54-verifier-spotcheck.md` section 6 items 2, 4, 5, 6; W2 reports under `.ufo/waves/round-54/w2/`). Each line anchors the statement exactly once in its target (the statement stays, append-only) and records the observation as re-derived this round; `python3 corpus/evidence/round55/c3-count.py` recomputes every observation from BASE bytes, the pinned captures and its own probes (claim R55-C3). The in-target corrections are named in `corpus/lessons/round-55.md` `## Corrections`.
+
+erratum: E01 corpus/knowledge/source-type-taxonomy-r36.md anchor: "the stronger claim that the text is unavailable belongs to no line here" observed: "该标准暂无全文，请等待更新 count=1 char=1712"
+erratum: E02 corpus/knowledge/source-type-taxonomy-r36.md anchor: "continues that 主管部门为 国家标准委 (char 575)" observed: "主管部门为 国家标准委 char=569"
+erratum: E03 corpus/knowledge/source-type-taxonomy-r36.md anchor: "a row scoped to the document-type taxonomy the standard prescribes cannot" observed: "附录 S121=0 S122=0; 文献类型 S121=0 S122=0"
+erratum: E04 corpus/knowledge/source-type-taxonomy-r36.md anchor: "count 1 each, on one line" observed: "国家标准委 S121=2 S122=2"
+erratum: E05 corpus/QUALITY.md anchor: "11,972 / 12,007 / 12,963 / 12,795 / 14,049 / 25,123" observed: "located=11972,12007,12795,12963,14049,25123 drift=+802,+802,+802,+802,+802,-9251"
+erratum: E06 corpus/QUALITY.md anchor: "263 U+FFFD and 18,242 control characters" observed: "C0=18451 C0_excl_tab_lf=18431 C0_excl_tab_lf_cr=18242"
+erratum: E07 corpus/QUALITY.md anchor: "gives 27,012 characters, 0 U+FFFD, 0 control characters" observed: "form_C0=469 form_LF=469"
+erratum: E08 corpus/lessons/round-54.md anchor: "on a mirror without the two dumps `pointer-anchor-check.py` prints `BAD=6`" observed: "ANCHORED=7/16 UNANCHORED=9 BAD=9"
+erratum: E09 corpus/QUALITY.md anchor: "and refuses a tool that delegates to that reader" observed: "ctypes_system_under_hook rc=0 marker=SPAWNED"
+erratum: E10 corpus/QUALITY.md anchor: "and the SHELL control's receipt says the same" observed: "SHELL LEGS=1/6"
+erratum: E11 corpus/evidence/round54/c1-supplement.py anchor: "randomly named directory outside the generation tree (no HTML, no" observed: "oracle-echo SUPPLEMENT_LEGS=3/3"
+
+Readings: E01 — the string sits in the page's embedded i18n map (`noFullText`), a latent template string, not a displayed line; I3's sentence holds only for displayed lines. E02 — 575 is the offset of the value 国家标准委, the quoted phrase starts at 569. E03 — neither capture shows a taxonomy, so "prescribes" is the standard's own text as carried by S123, not by these two pages. E04 — the count-1 property holds for the eleven anchor quotes, not for every quoted token. E05 — positions 3 and 4 are swapped; five of six anchors drift by the constant +802, so "no constant repairs an old anchor" is false (no constant repairs all six). E06/E07 — the counts hold only under the exclusion sets named; the defined form's only control character is LF. E08 — `BAD=6` reproduces only with S101's dump alone missing. E09 — a ctypes `system()` spawns under the round-54 hook, so QUALITY 98's "refuses a tool that delegates" holds only for audited spawn events. E10 — the SHELL control scored 1/6 (it keys refusals on bytes), the criterion's forge 0/6. E11 — the supplement's oracle files and the ISOLATED leg's generation HTML sit two directories above the isolated document, so an echo tool that never opens the `.doc` scores 3/3.
+
+## Round 55 verdict — 2026-10-27 (OLE-aware span builder; the NMPA grey-literature field by document; W2-falsified statements corrected)
+
+Claims frozen at `1fc5d92b5a7866ec16f1cac2de749fccfa6b49cb` after do-nothing controls (`corpus/evidence/round55/claims.md`; `controls/c1-before.txt`, `c1-controls.txt`, `c2-before.txt`, `c2-controls.txt`, `c3-before.txt`, `c3-controls.txt`). C1 candidate `6ca924995d48facbf704d2aa22ddaec236059039`, unchanged after the candidate commit (tool sha256 `1ed2650a…` in `c1-measure-after.txt`). No live fetch; L0 `8d77e6c1` open.
+
+| claim / axis | before → after | counting command | verdict | tag |
+|---|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10; capability acquisition) | `tools/build-spans.py` absent at base: `LEGS=0/4 C1=FAIL` (seed 7 and three unseeded); controls R54SHIM (the round-54 builder, UTF-16LE fallback) 1/4, TXTONLY 1/4, DELEGATE 0/4 → `LEGS=4/4 C1=PASS` on `--seed 7` and three unseeded runs (`corpus/evidence/round55/c1-measure-after.txt`); L1 sweep 40/40 seeds at `--per-leg 4` (`c1-seed-sweep-L1.txt`) | `python3 corpus/evidence/round55/c1-count.py` | **improved narrowly** (capability acquisition): target met 4/4 ×4; W1 forges scored 1/4 (refusal-only) and 0/4 (approximate OLE reader); W1 named hook gaps (`dir_fd`/`chdir` relative opens, `_posixsubprocess.fork_exec`, unlisted events) and six counter clauses no control exercises (`R55MutC1Counter`) — no passing forge shown, but the falsify wave did not run (round wrapped on request budget) | plumbing |
+| C2 depth (sourced; the NMPA grey-literature search-record field) | `ENTRIES=0/1 BOUND=0/3 QUOTE_ROWS=0 SUBSTANCE=FAIL QUARANTINE_VERDICTS=0/1 C2=FAIL`; STAGED control `REF_ID_UNBOUND=12 BOUND=0/3`; REWRITE control `BOUND=2/3 REF_ID_UNBOUND=2 QUOTE_ROWS=0 C2=FAIL` → `ENTRIES=1/1 BOUND=3/3 GUIDELINE_BOUND=yes REF_ID_UNBOUND=0 NEW_GROUND=1/1 QUOTE_ROWS=19 CAPTURE_BOUND=19/19 SUBSTANCE=PASS ANCHOR_BOUND=3/3 INFERENCE_GROUNDED=1/1 QUARANTINE_VERDICTS=1/1 C2=PASS` | `python3 corpus/evidence/round55/c2-count.py` | **improved**, as presence, binding and located support in the defined forms; entailment is uncounted (W1 `R55CritEntailObs`/`Inf` narrowings carried); three documents bound, S113 not cited, r43 refused | ground |
+| C3 calibration (W2-falsified lane statements) | `ERRATA=0/11 MISSING=11 C3=FAIL`; RESTATE control `WRONG=11`; PARAPHRASE control `ANCHOR=11` → `ERRATA=11/11 C3=PASS` | `python3 corpus/evidence/round55/c3-count.py` | **improved**: eleven self-statement/observation mismatches resolved by anchored errata whose observations a counter recomputes; W1 seats re-derived E01–E07 independently and matched; RESTATE/PARAPHRASE controls 0/11 | calibration |
+
+The numeric operability scale remains 3/10; the round-1 score is its narrow archived-export observable, not this builder counter. No other numeric score is invented.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved narrowly** | C1 (`tools/build-spans.py`, 4/4 ×4, 40/40 seeds); successors of the round-54 ledger and PDF checks with their W2 attacks as failing fixtures; `wave-settled-check.py` |
+| depth | **improved** | C2; one entry on three documents, 19 located quotes in defined forms, r36 and r37 corrections appended |
+| coverage | **improved narrowly** | three documents absent at base (`git grep -c 是否检索灰色文献 dba605de -- corpus/knowledge` → exit 1); `.doc` captures now reach located spans end to end |
+| calibration | **improved** | C3 `ERRATA=11/11`; QUALITY 101–105; lesson Mistakes rows 1–4 (row 4: this round's own report filed before W1 settled) |
+| freshness | **unchanged** | no fetch; newest capture dates remain 2026-10-24 |
+| adjacency | **unchanged** | drug-safety evaluation practice reported as adjacent, not absorbed (W1 `R55ReviewProvinceC2`, `R55ConnSiblings`: no sibling overlap) |
+
+## Capabilities (round-55 addition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| OLE-aware span builder | builds a quote's span manifest from any capture through its defined text form — an OLE `.doc` or zip `.raw` through `tools/capture-text.py` (its garbage `.txt` sidecar unused), other captures through the `.txt` — and refuses a capture with no defined form, a quote not exactly once, or a raw capture-text refuses, writing nothing on refusal | `python3 tools/build-spans.py --quotes Q --out DIR [--check]`; `corpus/evidence/round55/c1-measure-after.txt` (frozen counter 4/4 ×4, held-out quotes from generated and pinned OLE captures, round 54's manifest re-derived byte for byte) | 55 |
+
+## Planned — round 56 (not started)
+
+Candidates: run the round-55 falsify wave items that never ran (`.ufo/waves/round-55/w2-spec.json`, 36 items, not dispatched) against the landed C1/C2/C3; integrate the 13 W1 seats that had not reported at filing; close the C1 hook gaps W1 named (`_posixsubprocess.fork_exec`, `dir_fd`) in a successor counter; the S101 carrier-alphabet leg (now buildable); the next grey-literature-family entry (r41/r42/r44/r48).
+
+## Round 56 verdict — 2026-10-27 (build-spans gate clause coverage and hook closure; the grey-literature row of the drug clinical comprehensive evaluation workflow guideline by document)
+
+Claims frozen at `41c58925580af6be22049f13cfde234c5475b858` after do-nothing controls (`corpus/evidence/round56/claims.md`; `controls/c1-before.txt`, `c1-controls.txt`, `c2-before.txt`, `c2-controls.txt`). C1 candidate (battery) `46e1758f3d8a5d1bf30200d2ff7d909b0230feed`. After-receipts: C1 at lane master `99eff0eca3d7440aeb96a9afac6a421759b4f704` (`c1-measure-after.txt`, two runs; C1 inputs unchanged since the candidate), C2 at lane master `98977070993e2f39bc09f0379607e290c294d870` (`c2-measure-after.txt`, after the 表7 fix). No live fetch; L0 `8d77e6c1` open.
+
+| claim / axis | before → after | counting command | verdict | tag |
+|---|---|---|---|---|
+| C1 operability (lowest scored axis, 3/10): the build-spans gate's clause coverage and two hook bypasses | gate = round-55 counter, battery = round-55 controls: `CANDIDATE=2/2 KILLED=1/9 DENIED=0/2 C1=FAIL`; controls HOOKONLY `KILLED=1/9 DENIED=2/2`, JUNK (with an alternating FLIP forge) `KILLED=1/9`, EMPTY `KILLED=1/9` → `CANDIDATE=2/2 KILLED=9/9 DENIED=2/2 C1=PASS` ×2 (124 runs each) | `python3 corpus/evidence/round56/c1-count.py` | **improved narrowly**: the eight clauses no control exercised are each shown able to fail with their own reason, and the two named bypasses (`_posixsubprocess.fork_exec`, `chdir`+`dir_fd`) end the run; M9 was already killed by the landed builder. The wave found the hook still not a boundary: a `dir_fd` open needs no `chdir` (`R56SentC1` F1), native `import` and `sqlite3.connect` are unchecked (`R56CritC1Hook`), and six further gate clauses survive the battery (`R56MutC1GateNew`) | operability |
+| C2 depth (sourced): the 灰色文献 source row of 药品临床综合评价工作流程指南 | `ENTRIES=0/1 BOUND=0/4 … C2=FAIL`; STAGED `REF_ID_UNBOUND=3 BOUND=0/4`; REWRITE `BOUND=3/4 QUOTE_ROWS=0 GUIDELINE_BOUND=no` → `ENTRIES=1/1 HELD_CITED=S118 BOUND=4/4 GUIDELINE_BOUND=yes REF_ID_UNBOUND=0 NEW_GROUND=1/1 QUOTE_ROWS=23 CAPTURE_BOUND=23/23 SUBSTANCE=PASS ANCHOR_BOUND=4/4 INFERENCE_GROUNDED=1/1 C2=PASS` | `python3 corpus/evidence/round56/c2-count.py` | **improved**, as presence, binding and located support in the defined forms; entailment uncounted (wave `R56CritEntail`, `R56CritCurrency` narrowings carried: draft not issued standard; the grade is the recommendation's; the 2020 management guideline's silence scoped to its form); quote uniqueness is checked by the builder, not by this counter (`R56ReviewC2Counter`) | ground |
+
+The numeric operability scale remains 3/10; the round-1 score is its narrow archived-export observable, not this gate counter. No other numeric score is invented.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved narrowly** | C1; `build-spans` re-registered as a gate (SKILL.md, appended row) with its gate and clause-coverage self-test; open: in-process hook classes and six uncovered gate clauses (above), the builder's destructive `--out` (`R55W2SentBuilder`) |
+| depth | **improved** | C2; one entry on four documents (S127–S130) and the held S118, 23 located quotes in defined forms, the published row placed in 表7 by layout |
+| coverage | **improved narrowly** | `git grep -c 中国循证医学中心 e5a37951 -- corpus/knowledge` → exit 1 at base, present at tip; a society guideline's information-source list beside the regulator's report field and the centre's quality-control check |
+| calibration | **improved narrowly** | closure D3/D4 corrected by appended lines; QUALITY 106–109; lesson Mistakes rows 1–3 (row 3 this round's own 表 10 misattribution, caught by the wave and fixed before filing); round-55 W2 narrowings appended (r40 `#### Corrections (round 56)`) |
+| freshness | **unchanged** | no fetch; newest capture dates remain 2026-10-24 |
+| adjacency | **unchanged** | `R56ReviewProvince`: evaluation content and grading systems reported as adjacent; `R56ConnSiblings`: 0 overlaps across the sibling lanes |
+
+## Capabilities (round-56 addition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| Gate clause coverage by clause-reason mutation kills | runs a gate and its frozen mutants on a battery and counts a mutant killed only when some battery entry fails the mutated clause with that clause's own reason under the gate and passes it under the mutant, three times each in a random order at two seeds (an alternating or call-counting forge is refused); runs frozen hook probes and requires the hook's exit | `python3 corpus/evidence/round56/c1-count.py [--gate G] [--battery B]`; `corpus/evidence/round56/c1-measure-after.txt` (`KILLED=9/9 DENIED=2/2` ×2); `controls/c1-controls.txt` (JUNK with FLIP `KILLED=1/9`) | 56 |
+
+Post-wave notes (appended after `WAVE-DONE w1`): three attacks on the C1 driver did not measure — `R56CritC1Forge` (its copy printed `('ENV', 2)`; "not a valid forge measurement"), `R56MutC1Driver` (INCONCLUSIVE: the campaign capture cache was deleted during its run, see `corpus/lessons/round-56.md`), `R56MutC2Counter` (no report; a reasoning fragment in `w1-results.json`). The frozen rule bounds a forge per entry (one random order in 400 for an entry that counts its calls), not per battery: a battery of N such entries aimed at one clause reaches a kill with probability about N/400. These are open, not survived.
+
+## Planned — round 57 (not started)
+
+Candidates: harden `tools/build-spans.py` (`R55W2SentBuilder`: refuse a foreign `spans.tsv` in `--out`, refuse symlinked outputs, unlink orphans last, no `.pyc` in `tools/`, bounded reads) with a frozen counter; run the gate's tool in a separate process boundary or extend the probes to `dir_fd` without `chdir`, native `import` and `sqlite3.connect` (`R56SentC1`, `R56CritC1Hook`); battery entries for the six surviving gate clauses (`R56MutC1GateNew`); the S101 carrier-alphabet leg; the remaining grey-literature family (r41, r48; r44 refused this round).
+
+## Round 57 verdict — 2026-10-27 (pinned-capture freshness re-fetch into lane-owned digest-checked bytes; the workflow standard's normative references chained by document)
+
+Claims frozen at `c2f914c53201a8f8ee4fef823b82681051d55592` (C2) and `fd95724d56a33ad150cd263f8add2ce1f3425e6c` (C3) on the round-56 plan, before any round-57 fetch (`corpus/evidence/round57/claims.md`). Attempt 1 was operator-stopped after the freezes; attempt 2 (this) built on them. After-receipts: C2 `SET=47 VERDICTS=47/47 REPRODUCED=41 DRIFTED=5 UNREACHABLE=1 BYTE_BACKED=46 CONSISTENT=46/46 FLAGGED=0/0 C2=PASS` at lane master `e0e73e0f76163b014033e80c6ba53ed92c14113d` (re-run at `a8d4e7da15a70a06d731739cace43cc3287801a1` after landing, identical); C3 `BOUND=4/7 SWEPT=3/3 QUOTE_ROWS=10 (all legs) SUBSTANCE=PASS ANCHOR_BOUND=3/3 INFERENCE_GROUNDED=yes STRAY_IDS=- C3=PASS` at `a8d4e7da`.
+
+| claim / axis | before → after | counting command | verdict | tag |
+|---|---|---|---|---|
+| C2 freshness: the 47 pinned captures re-fetched into lane-owned, digest-checked bytes | `SET=47 VERDICTS=0/47 … C2=FAIL` (`controls/c2-before.txt`, re-derived in a scratch clone by `R57W1ReviewBefore`) → `SET=47 VERDICTS=47/47 REPRODUCED=41 DRIFTED=5 (S083 S087 S113 S114 S121, absent=0) UNREACHABLE=1 (S105, 3 failed attempts ≥600s apart) BYTE_BACKED=46 CONSISTENT=46/46 FLAGGED=0/0 C2=PASS` | `python3 corpus/evidence/round57/c2-count.py` | **improved**: every pinned quote is now re-verifiable from committed lane bytes; 41 triples reproduce the pin by sha256; 5 live surfaces drifted with all pinned quotes still present (0 flags needed); S105 attested UNREACHABLE at the record level while its wrap-up bytes (git `b022b13`) regenerate the pin — disclosed, not hidden | measured |
+| C3 depth (sourced): the standard's normative references chained to their own documents | `ENTRY=no BOUND=0/7 C3=FAIL` (`controls/c3-before.txt`); do-nothing HELD/CITER controls `BOUND=1/7 C3=FAIL` → `BOUND=4/7 (R1:S131, R2:S132, R3:S133, R7:S118) SWEPT=3/3 CLAUSE=yes NEW_GROUND=yes SUBSTANCE=PASS ANCHOR_BOUND=3/3 INFERENCE_GROUNDED=yes STRAY_IDS=- C3=PASS` | `python3 corpus/evidence/round57/c3-count.py` | **improved**: the clause binds users to seven instruments and the lane now holds four of them by document (the 2019 notice, the 2021 notice, the 2021 管理指南 attachment, the 2024 质量控制指南), each with located title/文号 quotes in defined forms; R4-R6 refused with per-reference sweeps (split-cover typesetting defeats the frozen heading rule on every located copy) | measured |
+
+The numeric operability scale remains 3/10 (the round-1 archived-export observable; no other numeric score is invented). Honest residuals, all named in `corpus/lessons/round-57.md`: the C2 REPRODUCED floor (5) is a count, not a set — a 5-genuine quote-splicing forge passes (freeze-disclosed; live margin 41); UNREACHABLE/DRIFTED are record attestations, not byte proofs; the three 2022 technical guidelines stay unbound; the register quarantine slice's payload-absent class falsified on every capturable row (a checker finding, not a lane-row finding).
+
+| axis | verdict | evidence |
+|---|---|---|
+| freshness | **improved** | C2; the lane's first digest-pinned, record-backed capture store; `tools/capture-fetch.py` (recipe-frozen, root-guarded), `tools/store-record-audit.py` (QUALITY 112-113) |
+| depth | **improved** | C3; one entry chaining the clause to four held instruments by document, 10 located quotes, honest UNBOUND sweeps |
+| coverage | **improved narrowly** | the freshness surface (47 pinned captures) is now lane-owned and re-verifiable; census rows 130 → 133 |
+| calibration | **improved** | D1 (round-56 routed) landed; S077 used-by contract fix; QUALITY 111-113 each cite a lesson row; the lesson carries four Mistakes rows with red receipts; the closure's disagreement classes (misquotes vs fabrications) adjudicated per row in the quarantine block |
+| operability | **unchanged** | the gate and its counter are untouched this round; no operability claim |
+| adjacency | **unchanged** | `R57W1ConnSiblings`/`R57W1ConnPattern`: 0 contested overlaps; the evaluation-content ground reported, not absorbed |
+
+Learning trends: expansion **improved** (one admitted entry on ground the coverage map did not hold, citing three new mined rows), quality **improved** (D1 landed, S077 fixed, three criteria with shown-able-to-fail checks, quarantine verdicts replace the register's stale class), discernment **improved** (every admit carries a located quote re-opened this round; three refuses with named flip conditions; zero fabrications where the register alleged a class of them).
+
+## Capabilities (round-57 addition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| Digest-pinned freshness re-fetch | re-fetches every capture a spans manifest pins, content-addressed by URL, recording every attempt (rc/http/sha) and deriving the recipe text form, so a frozen counter can attest REPRODUCED/DRIFTED/UNREACHABLE per triple from committed bytes | `python3 tools/capture-fetch.py --status`; `python3 corpus/evidence/round57/c2-count.py` (`C2=PASS` at `e0e73e0f`); `python3 tools/store-record-audit.py` (FAIL receipt on the open orphan classes) | 57 |
+
+## Planned — round 58 (not started)
+
+Candidates from the routed lists: run the unmeasured round-56 C1 attacks once the capture-cache ruling lands (L0 `a714799f`; `R56CritC1Forge`, `R56MutC1Driver`, `R56MutC2Counter`); hook classes beyond the two frozen probes (`dir_fd`, native `import`, `sqlite3.connect` — round-56 routed item 3); the S101 carrier-alphabet leg; the remaining grey-literature family (r41, r48); resolve the two hnysfww record-denied captures if the host's 15s window ever passes, or rule them unbindable; the build-spans hardening set (`R55W2SentBuilder`).
+
+Post-wave notes (appended after `WAVE-DONE w2`): (1) the C3 freeze id printed in the round-57 verdict block above mis-transcribes one nibble-group — the commit is `fd95724d56a33ad150cd263f8add2ce1f3425e6c` (7-hex `fd95724` resolves; `R57W2SentFinal` F1); (2) `R57W2CritC3Forge` A1a/A1b forged `C3=PASS` via a fabricated `refetch.tsv` success row plus byte-replayed captures — the provenance leg checks the record only for self-consistency (RW-1 continues; the committed state is genuine per `corpus/evidence/round57/sidecar-audits.md` §4, and the smallest safe re-freeze correction is named there); (3) `R57W2MutC2Counter` M5 killed the C2 counter (last-attempt binding load-bearing); all eight C3 mutants survive as a coverage finding; (4) the wave-settled review's D1-D3 findings against the report draft were corrected in the filed report (receipts named, census row-count command pasted, w2 results committed before filing); (5) an unidentified writer's sidecar file was re-derived under L1 authorship and the stray deleted (`corpus/lessons/round-57.md` Mistakes row 5).
+
+Post-wave correction: the main Round-57 verdict header's C3 hash was corrected by concurrent
+attempt-3 integration commit `75004f0ab28aa953f80784b7eb7b57496ce055f3` before the `f3ecb764`
+tip; the hash in the header above now resolves. Clause (1) in the preceding note is stale
+history, not a current SCORECARD defect. Axis conformance remains open: the only numeric axis is
+operability 3/10, while frozen C2/C3 target freshness/depth and the round-56 planned row did not
+name these claims; see `R57W1ReviewAxes.md` and the round-57 L0 question.
+
+## Round 58 verdict — 2026-10-27 (frozen counter defects; no claim admitted)
+
+Claims froze at `9e73a031ab1ac3bac343de008850d7d87f9e5634` against base `b13ca7b5c8bbb40d2d29a37fb443c64ca043f791`; do-nothing receipts are under `corpus/evidence/round58/controls/`.
+
+| claim / axis | before → after measurement | counting command / evidence | verdict |
+|---|---|---|---|
+| C1 operability (lowest numeric axis, historical scale 3/10) | base receipt: `C1=FAIL`, `FOREIGN` deletes S777 and refusal legs fail; a scratch positive builder yields 11/11 per-leg `pass` but frozen aggregate still `REFUSE=0/7 C1=FAIL` | `python3 corpus/evidence/round58/c1-count.py --builder <builder> --work <fresh-dir>`; `controls/c1-before.txt`, `controls/c1-controls.txt`, W1 `R58ScribeMistakeMine.md`, `R58ReviewFrozenClaims.md`, `R58ExecC1CounterAudit.md` | **unprovable** — frozen `ref_pass` searches uppercase `=PASS`, while every refusal emitter outputs lowercase `=pass`; no builder can produce the required token. No score delta; historical 3/10 observable is unchanged. |
+| C2 depth (sourced S101) | before: `C2=FAIL` (entry/manifest absent); builder-produced scratch manifest: `CAPTURE_BOUND=0/12 REBUILD=MATCH C2=FAIL`; occurrence-offset rewrite: `CAPTURE_BOUND=12/12 REBUILD=FAIL` | `python3 corpus/evidence/round58/c2-count.py --root <lane-copy> --work <fresh-dir>`; `controls/c2-before-frozen.txt`, W1 `R58ReviewC2Counter.md`, `R58ScribeEntryDraft.md`, `R58ExecC2Anchors.md` | **unprovable** — the pinned builder stores span-start offsets, but the frozen counter requires quote-occurrence offsets, so its bind and rebuild clauses cannot both pass. No depth score is invented. |
+
+No score was changed or invented. Capability table unchanged; no production builder patch or knowledge entry was admitted under these unsatisfiable frozen predicates.
+
+| axis | round-58 verdict | evidence |
+|---|---|---|
+| operability | **unprovable** | C1 counter's `C1=PASS` target is unreachable as frozen; no numeric score delta. |
+| depth | **unprovable** | C2 span-start/occurrence-offset contradiction; no numeric score recorded. |
+| coverage | **unchanged** | no knowledge entry was admitted or moved from frontier to core. |
+| freshness | **unchanged** | no live fetch; capture-age surfaces untouched (fetch-scope L0 remains open). |
+| calibration | **unchanged** | criterion 115 records the missing positive-control duty, but no outside admit/reject sample or self-assessment calibration was verified. |
+| adjacency | **unchanged** | W1 sibling-province scan found no competing owner for the S101 bibliographic slice; no scope was absorbed. |
+
+Learning trends: expansion **unchanged** (no entry admitted); quality **unchanged** (no admitted entry re-verified, deepened or superseded); discernment **unchanged** (no outside non-author sample was available before filing).
+
+## Round 60 verdict — 2026-10-27 (two frozen targets falsified; no admission)
+
+Claims froze in `corpus/evidence/round60-claims.md` before W1. The exact file digest is `65721569fc1336b159c7637acf476cda6f583bbd4b3a84aaadd239f7d02018d1`; the dispatch prompt carried a different digest (`09d8053f…`), found after dispatch. That binding defect makes both claims unprovable regardless of later code.
+
+| Claim / axis | Before → after | command / evidence | verdict |
+|---|---|---|---|
+| C1 operability (lowest scored axis; historical 3/10) | before counter candidate: `C1=FAIL` exit 1; final narrowed probe: still `C1=FAIL` exit 1. W1 found no-op builder `C1=PASS` exit 0 and forge stub also passes; counter is not discriminating. | `python3 -B corpus/evidence/round60/c1-count.py --builder tools/build-spans.py --work <fresh-dir>`; `.ufo/waves/round-60/c1-before.txt`, `c1-after.txt`, W1 `BuildCounter.md` §§2–3 | **unprovable** — frozen target is do-nothing reachable and its forge branch is tautological; no score change. |
+| C2 depth (S101) | base: counter `C2=PASS` exit 0 with no round-60 entry; after: same base predicate passes, no entry admitted. | `python3 -B corpus/evidence/round60/c2-count.py --root <lane> --work <fresh-dir>`; `c2-before.txt`; W1 `C2CounterAudit.md` §3 | **unprovable** — base already passes; no depth move. |
+
+No numeric axis score or capability row changed. Other axes unchanged; no harm claimed. Learning trends: expansion unchanged (133 rows; no knowledge), quality unchanged (no entry reverified/deepened), discernment unchanged (no fresh outside admit+reject spot-check).
+
+## Planned — round 61 (not started)
+
+Candidates: repair claim-freeze digest binding and require positive/no-op controls to prove exact reachability before dispatch; re-register C1 only with discriminating safe/refusal fixture evidence. C2 requires a new entry and a measured no-overreach predicate or should be dropped. Continue the quarantine-first register adjudication only within authorized source scope.
+
+## Round 61 verdict — 2026-10-28 (span-builder output safety measured 7/20 → 20/20; a sourced entry on derived-output safety; the frozen C1 counter shown forgeable by detection)
+
+Claims froze at `1661b85bfa84d3dc75712d64f79034265b8831d3` and were amended once, before any seat existed, at `2b0e17b2a3b20a5f350e4dc4ddd5900c4d1f952c` (A1: shuffled legs, process-group bound, output limits); claims sha256 `9afec8d493f0ba511a256f38cd5098ff508f9ed311c6c49ff5383add9ce0acec` (`corpus/evidence/round61/claims.md`; erratum for three stale statements in `claims-erratum.md`). Each counter was exercised before the freeze against the base, do-nothing stubs, a token forger, a naive guard, a positive control and frozen mutants (`controls/`). Wave w1: 64 seats, all settled. Landed: builder `2edacafa0df371866fc578180872e0fcba5eb4b0`; entry and rows `11fa23e417019a9dedd85f3157f2ecc800e60d79`.
+
+| Claim / axis | Before → after | counting command / evidence | tag | verdict |
+|---|---|---|---|---|
+| C1 operability (lowest scored axis; historical 3/10 observable not moved) | base builder `LEGS=7/20 C1=FAIL` exit 1 at seeds 61001 and 61002 → landed `tools/build-spans.py` `LEGS=20/20 C1=PASS` exit 0 at three fresh random seeds; real committed span sets `REAL_REBUILD=3/3` before and after; post-wave supplement `EXTRAS=16/16` (base 5/16, reference candidate 0/16) | `python3 corpus/evidence/round61/c1-count.py --builder tools/build-spans.py --work <dir>`; `regress.py --work <dir>`; `corpus/evidence/round61/controls/c1-before.txt`, `c1-measure-after.txt`, `regress-after.txt`, `extras-after.txt` | plumbing | **improved** on the frozen predicate; the counter itself is forgeable by a builder that detects it (CritC1Sniff 20/20) and the best do-nothing stub reaches 14/20 — admission rests on the landed source, `sniff-sweep.py` exit 0 and the non-author source reviews, not on the count alone |
+| C2 depth, sourced (rows S134–S136 opened this round; S137 rejected) | `ENTRY=0/1 … ROWS=0/3 … C2=FAIL` exit 1 → `ENTRY=1/1 TRIO=1/1 ROWS=3/3 QUOTES=10/10 COVERAGE=1/1 CLAIMS=1/1 LIMITS=1/1 CENSUS=1/1 C2=PASS` exit 0 | `python3 corpus/evidence/round61/c2-count.py`; `controls/c2-before.txt`, `c2-measure-after.txt` | plumbing | **improved**; the counter is structural (an echoing claim passes, recorded); entailment was judged by wave reviewers, four of five first-draft claims were rewritten before landing |
+
+The numeric operability scale remains 3/10 (the round-1 archived-export observable); no new score is invented. No capability row is added: `tools/freeze-check.py` (selftest 34/34; round-60 pair exit 1, round-61 triple exit 0) landed as the fix for round 59/60's freeze-binding mistakes, supporting work without its own claim.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** (C1) | builder legs 7/20 → 20/20; `tools/freeze-check.py`; open: the counter's own forgeability (lesson Mistakes 1–3) |
+| depth | **improved** (C2) | `corpus/knowledge/derived-output-safety-r61.md`, 10 located quotes, marked inferences |
+| coverage | **improved narrowly** | the lane's first entry on the operating-system semantics under its own evidence writers; frontier lead `openat2(2)` |
+| calibration | **improved narrowly** | QUALITY 119–123, each citing a lesson row with a red-before; `claims-erratum.md`; the recurring-weakness table corrected by a non-author seat (rows 56 and 59) |
+| freshness | **unchanged** | no fetch; captures untouched |
+| adjacency | **unchanged** | `RevProvince`: in province; souji's origin-record entries named as contested ground, not absorbed |
+
+Learning trends: expansion **improved** (narrowly), quality **improved**, discernment **unchanged** pending the non-author spot-check named in the lesson (3 admits, 1 reject to sample).
+
+## Planned — round 62 (not started)
+
+Candidates from `corpus/lessons/round-61.md` `## Routed to the next round`: repair the C1 counter's open classes with a new frozen counter and a control matrix that includes the wave's detection and `setsid` forges (seed out of argv, a session reaper, no output-token legs, tree checks on H10–H12, an RSS check on the oversized-form leg, `.raw`-side hazards); `openat2(2)` as a registry row; fix or re-register `corpus/evidence/round53/weakness-streak.py`; the open considerthese size-watch row `CT-20261019-4`.
+
+## Round 62 verdict — 2026-10-28 (a detection-forger battery moves a counter from 0/12 to 12/12; a sourced entry on openat2; the freeze carried 14 false statements)
+
+Claims froze at `388d153519a36a4c3f34d56d034870f032865a70` against base `8607de84723d5ff9bbcbe71eedebd6a0d30bfd87`; claims sha256 prefix `a3193ebd328919e2` (`corpus/evidence/round62/claims.md`; erratum `claims-erratum.md` for 14 statements the files contradict). Wave `w1`: 66 seats. Landed: entry and rows `c4c11e9da62ce571fd903c5a27b527d06d53a855`; instruments and receipts `85ef0b44eba195848e9028b1cb5633b3583dc185`.
+
+| Claim / axis | Before → after | counting command / evidence | tag | verdict |
+|---|---|---|---|---|
+| C1 operability (lowest scored axis; historical 3/10 observable not moved) | round-61 counter on the battery `FORGERS_REJECTED=0/12 BATTERY=FAIL` exit 1 → v2 counter `LANDED=3/3 POSITIVES=4/4 FORGERS_REJECTED=12/12 STUBS_REJECTED=4/4 BATTERY=PASS` exit 0; `LEGS=20/20 C1V2=PASS` at three unset seeds | `python3 corpus/evidence/round62/c1v2-battery.py --counter <counter> --work <dir>`; `controls/c1v2-before.txt`, `c1v2-measure-after.txt`, `controls/null-counters.txt`, `controls/c1v2-controls.txt` | plumbing | **improved** on the frozen predicate; limits: the v2 counter is still forgeable by detection of its own sandbox and by invariants it does not vary, the battery hands the counter the subject path, the forgers were written by the counter's author |
+| C2 coverage, sourced (rows S138–S140 opened this round; S141 rejected) | `ENTRY=0/1 … PROBE=0/1 MAP=0/1 CENSUS=1/1 C2=FAIL` exit 1 → `ENTRY=1/1 TRIO=1/1 ROWS=3/3 QUOTES=16/16 COVERAGE=1/1 CLAIMS=1/1 ECHO=1/1 LIMITS=1/1 PROBE=1/1 MAP=1/1 CENSUS=1/1 C2=PASS` exit 0 | `python3 corpus/evidence/round62/c2v2-count.py`; `controls/c2v2-before.txt`, `c2v2-measure-after.txt`, `controls/c2v2-controls.txt` | plumbing | **improved**; the counter is structural plus an echo screen (a claim that adds filler words passes); entailment was judged by five non-author reviewers and all five control-entry claims were rewritten |
+
+No numeric axis score and no capability row changed: the numeric operability scale stays 3/10.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** (C1) | battery 0/12 → 12/12; `probe-cite-check.py`, `digest-prefix-check.py`, `skill-size-watch.py`, `research-gate-selftest.txt` (275 cases) |
+| coverage | **improved** (C2) | `corpus/knowledge/openat2-resolve-r62.md`; frontier lead `openat2(2)` closed |
+| depth | **unchanged** | no existing entry deepened beyond the new one's own limits |
+| calibration | **unchanged** | the frozen claims file carried 14 false statements caught by a non-author seat and corrected by erratum; QUALITY 124–127 each cite a lesson row with a red-before; a reader may read the 14 as a harm — the measured verdicts do not rest on them |
+| freshness | **unchanged** | no fetch; captures untouched |
+| adjacency | **unchanged** | `RevProvince.md`: instance in province, generic battery shape contested with tameshi (routed, not absorbed); souji overlap unchanged |
+
+Learning trends: expansion **improved** (narrowly), quality **improved**, discernment **unchanged** pending the non-author spot-check named in the lesson (3 admits, 1 reject to sample).
+
+## Planned — round 63 (not started)
+
+Candidates from `corpus/lessons/round-62.md` `## Routed to the next round`: a v3 counter and battery (fixture-only sandbox, a pid shim or no-namespace neutral profile, a randomised subject path, rows for the accepted forgers); the C2 counter's 27 control gaps and the bound `KERNEL`/`PYTHON` lines; the operator's threshold for the SKILL.md size watch.
+
+## Planned — round 63 (amended before the freeze, 2026-10-28)
+
+Two claims, frozen in `corpus/evidence/round63/claims.md`: C1 operability, a capability acquisition — `tools/lane-preflight.py` (one command that runs the lane's own committed self-checks and names the failing gate), measured by a frozen planted-defect battery (`corpus/evidence/round63/c1-battery.py`: 22 legs, `DEFECTS=15/15 BENIGN=6/6`); C2 coverage, sourced — a knowledge entry on what pins a citation to a git revision, on rows S142–S144 (installed `git-rev-parse(1)` and `gitrevisions(7)` pages and the lane's own probe). Why this differs from the row above: its first candidate (a v3 counter and battery) continues the detection-forger line of rounds 49–62 a further round without moving the lane's repertoire. The closure's routed item 1 (a bare export exits 2 from the C2 counter) is addressed by the new C2 counter's `--fleet` handling; routed item 3 (a claims-versus-files read) is given to wave seats after the freeze, not met before it. The row above keeps the candidates that are not taken (the v3 counter and battery, the C2 counter control gaps of `corpus/evidence/round62/c2v2-count.py`, the size-watch threshold, an open operator question) as the next round's list.
+
+## Round 63 verdict — 2026-10-28 (a lane preflight enters the repertoire, measured by a planted-defect battery; a sourced entry on git revision identity; the wave was stopped by the operator before it settled)
+
+Claims froze at `62876ef90154714bfa806fbbec7890a9ff11b179` against base `a847a37cc263c80417ee1cdf650de33e2f91a839`; claims sha256 prefix `6c46b2cc193e1a44` (`corpus/evidence/round63/claims.md`; erratum `claims-erratum.md`: four statements the files contradict, found by `CritCalibration`). Wave `w1`: 69 seats dispatched, the operator ended run 11 before it settled — 42 reports read, the rest stopped. Landed instruments and controls: `62876ef90154714bfa806fbbec7890a9ff11b179`; wave spec and dispatch: `c8bfcc65cb327b1a7da27fa39ef9a482a5b33cfb`.
+
+| Claim / axis | Before → after | counting command / evidence | tag | verdict |
+|---|---|---|---|---|
+| C1 operability (capability acquisition; historical 3/10 observable not moved) | tool absent: `CLEAN=0/1 DEFECTS=0/15 BENIGN=0/6 BATTERY=FAIL` exit 1 → landed `tools/lane-preflight.py` `CLEAN=1/1 DEFECTS=15/15 BENIGN=6/6 BATTERY=PASS` exit 0 in three runs; the full run prints `PREFLIGHT=8/8 FAILED=none ENV=none SKIPPED=none` exit 0 in 2 minutes on a pre-landing copy of the lane with the same tool bytes | `python3 corpus/evidence/round63/c1-battery.py --tool tools/lane-preflight.py --fleet <fleet> --work <dir>`; `controls/c1-before.txt`, `c1-landed-runs.txt`, `preflight-full-run-prelanding-copy.txt`, `controls/c1-controls.txt` (22 control tools, `C1_CONTROLS_UNEXPECTED=0`) | plumbing | **improved** on the frozen predicate; the landed tool is the frozen reference plus one disclosed change (a run of zero gates exits 2); limits: a 55-line content oracle passes all 22 legs (`CritC1DiffOverfit.md`), six judge holes and one path-keyed forger are accepted (`CritC1JudgeHoles.md`, `CritC1PathKeyed.md`), the gates G04 and G05 false-positive on siblings' files |
+| C2 coverage, sourced (rows S142–S144 opened this round; S145 rejected) | `ENTRY=0/1 … C2=FAIL` exit 1 → `ENTRY=1/1 TRIO=1/1 ROWS=3/3 QUOTES=10/10 COVERAGE=1/1 CLAIMS=1/1 ECHO=1/1 LIMITS=1/1 PROBE=1/1 MAP=1/1 CENSUS=1/1 C2=PASS` exit 0 | `python3 corpus/evidence/round63/c2-count.py --fleet <fleet>`; `controls/c2-before.txt`, `c2-measure-after.txt`, `controls/c2-controls.txt` | plumbing | **improved narrowly**; the counter is structural plus an echo screen (eight forges reach PASS, `CritC2Forge.md`); all five first-draft claims were judged overreaching by non-author reviewers and the landed claims are the L1's narrowing, not yet judged by a non-author |
+
+No numeric axis score changed. One capability row enters (below).
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** (C1) | battery 0/15 defects (tool absent) → 15/15, 6/6 benign; full run 8/8 |
+| coverage | **improved narrowly** (C2) | `corpus/knowledge/git-revision-identity-r63.md`; `grep -rl rev-parse corpus/knowledge` printed nothing at the base |
+| calibration | **unchanged** | four false statements in the frozen claims file, recorded in `claims-erratum.md`; the wave's judge holes and mutation survivors are limits of instruments claimed as passing |
+| depth, freshness, adjacency | **unchanged** | no entry deepened, no fetch, `RevProvince.md` marks the topic contested with kake, kumitate and tameshi (routed, not absorbed) |
+
+Learning trends: expansion **improved** (narrowly), quality **unchanged**, discernment **unchanged** pending the non-author spot-check named in `corpus/lessons/round-63.md` `## Gate` (S143 admit, S145 reject).
+
+## Capabilities (round-63 addition)
+
+| Capability | What it can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| Lane preflight | runs the lane's own committed self-checks (census, knowledge index, lesson `## Gate` headings, SHONEN pointers, SCORECARD capability pointers, the freeze-check, assimilate-rows and research-gate selftests) in one command and names the failed gate ids; exits 2 when no gate ran | `python3 corpus/evidence/round63/c1-battery.py --tool tools/lane-preflight.py --fleet <fleet> --work <dir>` (`BATTERY=PASS`); `corpus/evidence/round63/c1-landed-runs.txt`; `corpus/evidence/round63/preflight-full-run-prelanding-copy.txt` | 63 |
+| Claims audit | flags machine-checkable false statements in a frozen claims file from a rule file: seven classes (json-count, section-contains, section-contains-at, git-first-commit, file-kind, verbatim-heading, scope-narrower), `FLAGGED=k/n` exit contract, selftest plus a fixture probe; on the two committed errata'd claims files it flags the six mechanically-checkable erratum statements | `python3 tools/claims-audit.py --claims corpus/evidence/round62/claims.md --audit corpus/evidence/round63/audit/audit-r62.tsv --root .` (`FLAGGED=2/2`); `controls/audit-after.txt`; `corpus/evidence/round63/audit-probe.txt` (`PROBE_FACTS=11/11`) | 63 |
+
+## Planned — round 64 (not started)
+
+Candidates from `corpus/lessons/round-63.md` `## Routed to the next round`: a zero-gate battery leg, the six judge holes, the path-keyed forger and an oracle-breaking benign leg for the C1 battery; the G04 and G05 rule false positives on sibling files; the C2 counter's 7 control gaps; plus the round-62 list above (the v3 counter and battery, the size-watch threshold).
+
+## Planned — round 63 (attempt 2, frozen 2026-10-30)
+
+Attempt 1's routed list, taken as two claims frozen in `corpus/evidence/round63/claims-a2.md`: C1 operability — the wave's falsifier class (zero-gate run, six judge holes, path-keyed forger, 55-line overfit oracle, G04/G05 false positives) closed in `corpus/evidence/round63/c1-battery-v2.py` (29 legs) and in the amended `tools/lane-preflight.py`, measured nine-of-nine exhibits rejected against the frozen battery's nine-of-nine accepted; C2 calibration — `tools/claims-audit.py`, a committed checker that flags the six mechanically-checkable of the eighteen erratum statements (`FLAGGED=2/2` and `4/4`), sourced on rows S146–S148 opened this round (S149 rejected), with the pre-freeze audit of the round's own claims (`FLAGGED=0/4`). No wave: the orchestrator paused new campaign dispatches 2026-10-30 (provider failures); the L2 floor is unmet and the attack items are routed to round 64.
+
+## Round 63 verdict (attempt 2, 2026-10-30) — the wave's falsifier class closed in a v2 battery measured 9 accepted → 9 rejected; a claims-audit checker flags the six machine-checkable erratum statements; no wave dispatched (L2 floor unmet, disclosed)
+
+Claims froze in `corpus/evidence/round63/claims-a2.md` at landing-commit-base `e5166179197b43c77b58d56b89b8e2523aed0dd3` against base `4ece131ca826c646bd28a50802d41bc78d8a9717`. No wave (orchestrator pause, quoted in the claims file); every verdict rests on frozen counters, committed controls and receipts.
+
+| Claim / axis | Before → after | counting command / evidence | tag | verdict |
+|---|---|---|---|---|
+| C1 operability (the attempt-1 wave's routed falsifier class; historical 3/10 observable not moved) | the frozen battery accepts the class 9/9 (`controls/exhibits/exhibit-v1-before.txt`: E01, E08, E09 `BATTERY=PASS` in full; E02–E07 accepted on their legs) → the v2 battery rejects 9/9 (`controls/exhibits/exhibit-v2-after.txt`) while the amended landed tool reads `CLEAN=1/1 DEFECTS=17/17 BENIGN=8/8 ZERO=3/3 BATTERY=PASS` exit 0 in three runs (`controls/c1v2-landed-runs.txt`) and the full preflight prints `PREFLIGHT=8/8` exit 0 (`controls/preflight-full-run-final.txt`); the frozen attempt-1 battery still passes the amended tool ×3 (`controls/c1-on-fixed-tool.txt`); both committed nulls FAIL the v2 battery (`controls/c1v2-nulls-v2.txt`) | `python3 corpus/evidence/round63/c1-battery-v2.py --tool tools/lane-preflight.py --fleet <fleet> --work <dir>`; runner `python3 corpus/evidence/round63/controls/run-exhibit-receipts.py --battery {v1,v2} …` | plumbing | **improved** on the frozen predicate; limits: exhibits are the L1's re-creations of the wave findings (E02–E07 are leg-local probes; E08 falls back to old-rules gates; a forger embedding the amended tool itself stays indistinguishable — the t00 residual) |
+| C2 calibration (no numeric score invented; the move is no-instrument → committed checker) | tool absent at the base (`controls/audit-before.txt`, exit 2) → `FLAGGED=2/2 AUDIT=FAIL` exit 1 on the round-62 claims and `FLAGGED=4/4 AUDIT=FAIL` exit 1 on attempt-1's claims, selftest `AUDIT_SELFTEST=PASS (3 cases)` exit 0, probe `PROBE_FACTS=11/11` exit 0, and the round's own claims pass their pre-freeze audit `FLAGGED=0/4` exit 0 (`controls/audit-after.txt`, `audit-a2-result.txt`) | `python3 tools/claims-audit.py --claims <claims> --audit <rules> --root .`; `python3 tools/claims-audit.py --selftest`; `python3 corpus/evidence/round63/audit-probe.py` | plumbing | **improved** on the frozen predicate; limits: 6 of the 18 erratum statements are machine-checkable, the classes are lexical and line-local, and the rule rows are authored by the same lane that wrote the claims (a reader outranks the checker) |
+
+Sourced claim: C2's entry `corpus/knowledge/self-claim-audit-r63.md` cites S146–S148, opened 2026-10-30 (S149 rejected); the non-author spot-check is asked to re-open admit S147 and reject S149.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** (C1) | 9/9 exhibits rejected, landed tool BATTERY=PASS ×3 + PREFLIGHT=8/8; G04/G05 false positives fixed and pinned as benign legs |
+| calibration | **improved** (C2) | the erratum class has a committed checker with committed detections; the round's own claims were audited pre-freeze |
+| depth | **unchanged** | the new entry states its classes and limits; no existing entry deepened |
+| coverage | **unchanged** | no new province surface; the checker audits the lane's own artifacts |
+| freshness | **unchanged** | no fetch; local pages only |
+| adjacency | **unchanged** | sibling roots were only read (the G04/G05 verification ran the tool read-only on kagi/kake/tameshi); no cross-domain work absorbed |
+
+Learning trends: expansion **improved (narrowly)** (one admitted entry on new ground, three rows opened), quality **improved (narrowly)** (the demonstrated false-positive class fixed and pinned; the falsifier class closed), discernment **unchanged** pending the non-author spot-check named in `corpus/lessons/round-63-attempt2.md` `## Gate`. No numeric axis score changed; one capability row enters (Claims audit).
+
+## Round64 verdict — attempt2 (2026-10-30): three frozen targets missed; honest stop
+
+Inherited freeze `corpus/evidence/round64/claims.md` is retained unchanged at `bf40d99bda9eefdad3ed6276da077cfb24ba82f1`. Its base is `759c6cbef4cf9cdc81b68afc709f3b82ecd1a9d9`. The incomplete first attempt's counter edit was restored to the committed frozen bytes; its repair survives only as `c1-battery-supplement.py`. Wave w1: 64 seats, all settled before filing; 24 attack seats, no dead seat reported (`.ufo/waves/round-64/w1-results.json`).
+
+All final measurement receipts name `944955cc1aaf94cbfdc0eda68fa9fc995ca3bec8`, with code digests in `corpus/evidence/round64/controls/measurement-summary.json`. No numeric axis score changes and no capability row enters.
+
+| Claim / axis | Before → after | frozen counting command (lane root) | verdict |
+|---|---|---|---|
+| C1 operability; lowest numerically scored non-retired axis remains historical 3/10 | CLEAN=1/1 DEFECTS=17/28 BENIGN=8/11 ZERO=3/3 FAIL → CLEAN=1/1 DEFECTS=28/28 BENIGN=9/11 ZERO=3/3 FAIL ×3, exit 1 | `python3 corpus/evidence/round64/c1-battery-v3.py --tool tools/lane-preflight.py --fleet /home/vgpnk/Projects/shokunin --work <fresh-dir> --jobs 2`; before `controls/c1v3-before-full.txt`, after `controls/c1-frozen-after-{0,1,2}.txt` | **unprovable / not admitted**: the frozen E12/E13 fixtures independently draw filename and link identities. The distinct supplement passes 43/43, the historical v2 battery passes twice, both nulls fail, and full preflight passes 8/8; none substitutes for frozen PASS. |
+| C2 calibration | v1 AUDIT_MUTANTS_KILLED=6/12 exit 1 → v2 9/12 exit 1; A07/A10/A11 survive | `python3 corpus/evidence/round64/c2-mutrun.py --target tools/claims-audit-v2.py --matrix v2 --work <fresh-dir>`; v1 comparison uses `--target tools/claims-audit.py --matrix v1`; final `controls/c2-mutrun-{v1,v2}-final.txt` | **unprovable / not admitted**: frozen target 12/12 missed. Ten-case selftest PASS and forced fault exit 1 do not establish the missing discrimination. |
+| C3 depth, sourced | shifted mutant names no missing file (controls/c3-before.txt) → SMOKE=3/3 RELOCATION_MATCH=0/3 SHIFT_MUTANT_UNNAMED=1/1 C3=FAIL exit 1 | `python3 corpus/evidence/round64/c3-count.py --work <fresh-dir>`; `controls/c3-after.txt` | **unprovable / not admitted**: the expected-path oracle is wrong and the purported deeper copy is same-depth. Source-grounded entry on S150–S152 is admitted narrowly, but S152 is code inspection rather than the promised successful output. |
+
+The first final run exposed a production regression: a reverse-reference lexer interpreted documented globs as literal files, making PREFLIGHT=7/8 and contaminating battery legs. That state at `344cb55521581ed10dadbaf4204be562eea99529` is preserved in `controls/pre-glob-repair/`; the corrected bytes at `944955cc1aaf94cbfdc0eda68fa9fc995ca3bec8` restore the old v2 battery twice and the actual lane's PREFLIGHT=8/8. No lasting old-gate regression was observed in those enumerated checks; no universal no-harm theorem is asserted.
+
+Other axes: coverage unchanged (no province expansion); freshness unchanged (local openings only); adjacency unchanged (generic testing remains contested with tameshi, dispatch with kumitate, no sibling writes). Calibration receives no improvement credit from the failed target. Depth's sourced explanation does not rescue C3. Expansion unchanged; quality improved narrowly on bounded G02 fixes and the restored old battery; discernment unchanged pending the outside admit/reject spot-check. A submitted report is not admission.
+
+Next candidates, not a started round: a pre-freeze positive-control matrix for the fixture identities, independently specified relocation paths, C2 equivalent-mutant classification and unknown-rule/fault-arm discriminators. Freeze new instrument names before any successor data; do not rewrite this round.
+
+## Planned — round65 (frozen before wave)
+
+Exactly two claims frozen at `f99de3bdfaaf9b4c4fa85cc55dd37b9df2ee90fd`: C1 operability (lowest numeric axis, historical3/10), new receipt-header consistency capability; C2 depth, sourced interpretation of object/digest/exit identity versus execution authenticity. Before counters `corpus/evidence/round65/c1-count.py --work DIR` 0/20 exit1 and `c2-count.py` 0/10 exit1; positive reference20/20, always-pass3/20 and always-fail17/20. Round64's positive-matrix/relocation/mutation candidates remain routed, not silently claimed or repaired. This bounded repertoire move avoids another self-oracle continuation while directly fixing closure's receipt self-containment item. No score or capability row is awarded before final measurement.
+
+## Round65 verdict (2026-10-30, attempt 2)
+
+Attempt 1 (ChousaR65) froze both claims at `f99de3bdfaaf9b4c4fa85cc55dd37b9df2ee90fd`, drafted the
+corpus bytes and dispatched wave w1 (64 seats), and died before committing; attempt 2 (ChousaR65a2)
+re-verified the inherited bytes (all four source digests in `source-openings.json` byte-exact),
+implemented `tools/receipt-pin.py`, and landed implementation + corpus at
+`0a85189821322e01db06216b5cb82d2d858c19f0`. Frozen counters/controls byte-unchanged since the freeze
+(`git diff f99de3b 0a851898` over `corpus/evidence/round65` instruments is empty). Final measurement
+at the landed tip: `corpus/evidence/round65/measurement-summary.json`.
+
+| Claim | Before (frozen receipt) | After (measured at `1df2af73`) | Counting command | Verdict |
+|---|---|---|---|---|
+| C1 operability — receipt-header consistency capability | `controls/c1-before.txt` CASES=0/20 C1=FAIL missing-target, exit 1 | `controls/c1-after.txt` CASES=20/20 C1=PASS, exit 0; do-nothing stubs `c1-stubs-after.txt` 3/20 and 17/20, both exit 1 | `python3 corpus/evidence/round65/c1-count.py --work <fresh-dir>` | improved (capability acquired); numeric score unchanged at the declared historical 3/10 per the frozen claim |
+| C2 depth — sourced interpretation entry | `controls/c2-before.txt` ENTRY_CHECKS=0/10 C2=FAIL, exit 1 | `controls/c2-after.txt` ENTRY_CHECKS=10/10 C2=PASS, exit 0; sources S154–S156 re-opened and digest-pinned this round | `python3 corpus/evidence/round65/c2-count.py` | **unprovable / not admitted on this counter** — wave-2 `R65C03` and `R65M02` built a boilerplate control (9-line entry + three stub registry rows + a README mention; and a 116-byte token stub) that also scores 10/10, so the after-state is reachable by a do-nothing control and the counter attests shape, not substance. The entry itself landed, its three sources were re-opened and reviewed (`R65R02`: no misquote, no overreach; two cosmetic quote locations corrected), and the semantic evidence is cited separately — but the frozen predicate cannot certify the depth move. No numeric depth score invented. |
+
+Per-axis: operability improved (capability, evidence above); depth unprovable on the claim's counter
+(closure ruling: the entry landed as an artifact with its sources re-opened and reviewed, but the axis
+move is not admitted — a sourced explanation does not rescue the claim, the round-64 precedent); coverage unchanged (held
+evidence-provenance ground, no province expansion); freshness unchanged (sources opened and pinned this
+round, no drift detector); calibration unchanged (limits named in the entry and lesson; the shape-only
+counter and the forged-body limit are disclosed); adjacency unchanged (generic testing stays adjacent to
+tameshi, receipt/dispatch lifecycle to kumitate, no sibling writes). Trends: expansion improved (new
+capability row below); quality improved narrowly (sourced entry + registered gate, with the counter's
+shape-only limit stated); discernment unchanged (outside non-author spot-check still owed; wave seats are
+lane-authored evidence). Wave-2 falsification landed a contract fix and a disclosed limit: the validator's
+environment taxonomy (exit 2 for usage/environment) and two quote-location corrections at `1df2af73`.
+
+## Capabilities (round-65 addition)
+
+| Capability | What the lane can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| receipt-header consistency checking | validate a research receipt's REVISION/EXIT/SHA256 headers and body separator against a caller-pinned Git blob over 20 frozen interface cases | `python3 corpus/evidence/round65/c1-count.py --work <fresh-dir>` → `CASES=20/20 C1=PASS`; `controls/c1-after.txt` | 65 |
+
+## Planned — round 66 (frozen 2026-10-31 at commit A `8c2a0a2add04d0e74222d58a3f695aab95a13cf9`, against base `4f784d9ee29ee7423d6c63bb2ba501d8ecb1ccee`)
+
+Exactly three claims frozen in `corpus/evidence/round66/claims.md`: C1 calibration — the round-65 verifier spot-check's routed lane-side items (receipt-attribution relabel, depth-credit wording, axes-table freeze note, capabilities heading convention, S155 location string); C2 operability (lowest-scored non-retired axis) — a semantic sourced-entry counter closing the r65 routed successor item ("per-id citation reconciliation against `corpus/SOURCES.md` and non-empty claim bodies"), measured against the recorded R65C03/R65M02 boilerplate class; C3 freshness — the round-65 installed-local citation pins measured on the new Windows host, drift recorded, and the citation re-anchored to a revision-pinned canonical upstream (sourced on S158–S160, opened this round). Host adaptations declared in the claims file: `python` (3.13.15) replaces `python3`; fetches are public read-only per the round dispatch context; no wave is dispatched (no batched dispatch surface on this host) — verdicts rest on committed counters, controls and receipts, the round-63 attempt-2 precedent, disclosed.
+
+## Round 66 verdict — 2026-10-31 (spot-check routed corrections landed; the boilerplate class is now rejected by a committed reconciliation counter; an absent-host citation re-anchored to a pinned upstream)
+
+Freeze `8c2a0a2add04d0e74222d58a3f695aab95a13cf9` (instruments, controls, before-receipts; base `4f784d9ee29ee7423d6c63bb2ba501d8ecb1ccee`); landing `d3f1b8109b04c0e580dc4242516a7c9ba709c5cf` (rows S158–S160, captures, entry, SCORECARD/SKILL corrections); final measurement at the landing tip (receipts `controls/after-c1-greps.txt`, `after-c2-final.txt`, `after-c3-final.txt`, `after-quote-reopen.txt`).
+
+| Claim / axis | Before → after | counting command / evidence | verdict |
+|---|---|---|---|
+| C1 calibration (r65 spot-check routed items 1, 2, 4, 5, 6) | SCORECARD round-65 table cited "measured at `0a851898`" while both after-receipts pin `REVISION=1df2af73…` → relabeled to `1df2af73`; depth-credit clause "depth improved **narrowly** on the landed entry" → "depth unprovable on the claim's counter" (the closure ruling, round-64 precedent); operability axes row now states the numeric score is deliberately frozen at the historical 3/10; bare `## Capabilities` at line 3101 → `## Capabilities (round-65 addition)`; `source-openings.json` S155 location "module documentation31-32" → "module documentation line 31" with all four `sha256` fields untouched (JSON still valid) | `grep -c 'After (measured at 0a851898-with-backticks)' pattern at SCORECARD.md line 3084 → 0 hits and the 1df2af73 twin → 1 hit (backticks omitted in this cell to keep the table parseable; the receipt shows the literal commands); bare-heading count above line 3105 1→0; depth clauses 1→0 and 0→1; axes-note 0→1; S155 location 1→0 (`controls/before-c1-greps.txt` → `after-c1-greps.txt`) | **improved** on the recorded state (every routed lane-side item closed with a flipped grep; the two historical bare `## Capabilities` headings at lines 461/596 predate the convention and are left as historical) |
+| C2 operability (capability acquisition; the r65 routed successor item; historical 3/10 observable not moved) | the frozen r65 counter scores the recorded boilerplate class 10/10 PASS (reproduced on this host in a base-clone: `controls/before-old-counter-boilerplate.txt` `ENTRY_CHECKS=10/10 C2=PASS` exit 0) → the new reconciliation counter rejects the identical bytes (`controls/before-new-counter-boilerplate.txt` `SEMANTIC=4/9 C2SEM=FAIL` exit 1) and every committed control: boilerplate unregistered 6/9, fully registered 7/9 (fails only the CLAIMS/LIMITS floors), token stub 0/9, arm mutants m1–m6 each failing their named arm — while both real sourced entries pass 9/9 at the tip | `python corpus/evidence/round66/c2-semantic-count.py --entry corpus/knowledge/receipt-identity-r65.md` → `SEMANTIC=9/9 C2SEM=PASS` exit 0; same for `host-source-resolution-r66.md`; controls under `corpus/evidence/round66/controls/` (`after-c2-final.txt`, `ctl-*.txt`, `before-*.txt`) | **improved** on the frozen predicate; limits: the floors are minimal — an author who registers real mined rows, re-points used-by and writes long filler still passes (the QUALITY-131 residual, disclosed in the gate row) |
+| C3 freshness (capability acquisition, sourced on S158–S160 opened this round) | r65's installed-local pins unresolvable on this host and unrecorded: `PINS_PRESENT=0/2`, `GIT_PIN_MATCH=no` (git 2.55.0.windows.3 vs the pinned 2.56.0 manual), no drift entry, registry 157 rows → drift recorded in `corpus/knowledge/host-source-resolution-r66.md`; citation re-anchored to S158 (upstream `git-cat-file.adoc` at pinned commit `50fe5cc63f9cd6e89b87a2c9ccf96a444f4cfdb7`, capture committed, sha256 `3a8971e7…cc847`), quote re-opened `VERBATIM`; S160 records the versioned git-scm.com page as an opened-and-rejected lead; registry 157→160 | `python corpus/evidence/round66/host-pins.py`; `grep -c '^| S158 |' corpus/SOURCES.md` → 1 (same S159/S160); `python tools/quote-reopen.py verify --items <tsv>` → `verbatim=1` exit 0 (`controls/after-c3-final.txt`, `after-quote-reopen.txt`); census exit 0 (`.ufo/waves/round-66/census-end.txt`) | **improved** (drift detected and recorded; the hop lands on pinned bytes); limits: one host, one point in time; `VERBATIM` is support state 3, not truth; the upstream pin is a moving tip with `on-release` recheck |
+
+Corrections to the round-65 section above (this round's C1): the "After (measured at `0a851898`)" column header was relabeled to `1df2af73` — no round-65 measurement receipt names `0a851898`; `0a851898` remains correct only as the implementation+corpus landing citation. The depth per-axis line was aligned with the closure ruling (`unprovable`), replacing "depth improved **narrowly** on the landed entry". These are attribution corrections routed by the round-65 verifier spot-check (items 1 and 4), not re-measurements.
+
+No numeric axis score changed; two capability rows enter (below).
+
+| axis | verdict | evidence |
+|---|---|---|
+| calibration | **improved** (C1) | five routed spot-check items closed with flipped greps and a disclosed corrections note |
+| operability | **improved** (C2) | the recorded do-nothing class measured 4/9–7/9 under the new counter; both real entries 9/9 |
+| freshness | **improved** (C3) | drift measured (`PINS_PRESENT=0/2`), recorded, and re-anchored with pinned byte evidence |
+| depth | **unchanged** | the new entry states its claims and limits; no existing entry deepened |
+| coverage | **unchanged** | no new province surface; the re-anchor work is inside the lane's citation-chain province |
+| adjacency | **unchanged** | host/tooling observations belong to this lane's method records; no sibling writes; the generic Windows-host questions stay out of lane scope |
+
+Learning trends: expansion **unchanged** (registry rows opened on already-covered method ground: the re-anchor and reconciliation surfaces extend existing coverage-map rows, no new domain ground); quality **improved** (the boilerplate-reachable counter class closed with a committed reconciliation gate and per-arm controls; an absent-host citation now resolves to pinned bytes); discernment **unchanged** (the outside non-author spot-check is again requested below; the round's verdicts are counter-and-receipt-derived, wave seats absent and disclosed).
+
+## Capabilities (round-66 addition)
+
+| Capability | What the lane can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| semantic sourced-entry reconciliation | reconcile a knowledge entry's cited ids against the registry (defined, mined, used-by, tier A/B, located anchor, body citation) and enforce non-empty claim/limits floors; rejects the recorded r65 boilerplate class (unregistered 6/9, registered 7/9, token stub 0/9) while both real sourced entries pass 9/9 | `python corpus/evidence/round66/c2-semantic-count.py --entry <entry.md>`; `corpus/evidence/round66/controls/` receipts | 66 |
+| host-source drift re-anchoring | measure the r65 installed-local citation pins on the current host, record the drift as an own-work receipt row, and re-anchor the citation to a revision-pinned canonical upstream with committed capture bytes, a matching sha256, and a `VERBATIM` quote re-open | `python corpus/evidence/round66/host-pins.py`; `controls/after-c3-final.txt`; `controls/after-quote-reopen.txt`; `corpus/knowledge/host-source-resolution-r66.md` | 66 |
+
+## Planned — round 67 (frozen 2026-10-31 at commit A `3528f38df3ef990b786555cf9d92d7f4b09001de`, against base `cd654578c5e09e1c12e245fd27ad5d609d1694aa`)
+
+Exactly three claims frozen in `corpus/evidence/round67/claims.md`: C1 calibration — the round-66 verifier spot-check's routed item 1 (the S159 line-location correction, landed as an append-only correction note); C2 operability (lowest-scored non-retired axis) — the routed item-2 class (before-receipts pin committed fixture bytes), enforced by the new `tools/digest-in-tree.py` checker and demonstrated by re-issuing the r66 before-state from committed fixture bytes; C3 depth — a sourced method entry on receipt-digest provenance (S161–S163, opened this round). Host adaptations declared in the claims file: `python -I` (3.13.15) replaces `python3`; fetches are public read-only per the round dispatch context; no wave is dispatched — the L2-floor template question is standing open (L0, routed to the operator/protocol lane) and this round routes around it, never treats it as answered; verdicts rest on committed counters, controls and receipts (round-63 attempt-2 precedent, disclosed).
+
+## Round 67 verdict — 2026-10-31 (the routed S159 location corrected; before-receipt digests now enforceably re-derive from committed bytes; a sourced provenance entry lands)
+
+Freeze `3528f38df3ef990b786555cf9d92d7f4b09001de` (claims, instrument, eight controls, before-receipts; base `cd654578c5e09e1c12e245fd27ad5d609d1694aa`); landing `58b5ad3b9875e42ddab5f1891c04bae27e3a5628` (correction note, rows S161–S163 with committed captures, entry, SKILL registry row, claims amendment); final measurement at the landing tip (receipts `controls/after-c1-correction.txt`, `after-d2-battery.txt`, `after-c3-entry.txt`, `after-registry-tallies.txt`).
+
+| Claim / axis | Before → after | counting command / evidence | verdict |
+|---|---|---|---|
+| C1 calibration (r66 spot-check routed item 1) | the r66 lesson Gate table's S159 row cited "line 9: `GIT_PIN_MATCH=no`" while the committed receipt bytes say line 8 (`grep -n` over the `8c2a0a2` blob; line 9 is `LANE_REVISION`; the receipt is 14 lines) and no correction note existed → an anchored `correction:` line on `corpus/lessons/round-66.md` names the superseded text and the re-derived location, plus the adjacent anchor-range observation ("lines 1 to 13" of a 14-line receipt; the omitted line 14 carries the ls-remote HEAD sha) | `grep -c 'line 8: `GIT_PIN_MATCH=no`' corpus/lessons/round-66.md` 0 → 1; `grep -c '^correction: corpus/lessons/round-66.md'` 0 → 1; the superseded literal 1 → 2 where the added hit is the note's own quotation, disclosed (backticks omitted here to keep the table parseable; `controls/before-c1-lesson.txt` → `after-c1-correction.txt`) | **improved** (the routed defect corrected append-only, discoverable from the lesson itself) |
+| C2 operability (capability acquisition; r66 spot-check routed item 2; historical 3/10 observable not moved) | no provenance checker existed and the routed defect was real: the r66 before-receipt's two digest pins re-derive from no object (`DIGESTS_IN_TREE=0/2` OUT_OF_TREE over 14,869 blobs, all-objects) → `tools/digest-in-tree.py` lands (rev mode at a named revision / all-objects; exit 0/1/2; fail-closed NO_DIGESTS); the r66 before-state re-issued from committed fixture bytes only (`SEMANTIC=7/9` transcript; pins `bca84fad…`/`113ea182…` 2/2 IN_TREE); every round-67 before-receipt with digest pins verifies | `python -I tools/digest-in-tree.py --receipt corpus/evidence/round66/controls/before-new-counter-boilerplate.txt --all-objects` → 0/2 FAIL named OUT_OF_TREE (historical bytes unchanged); `--receipt corpus/evidence/round67/controls/before-r66-counter-committed-fixture.txt --all-objects` → 2/2 PASS; controls: committed-fixture positive PASS in both modes, fake digest 0/1 FAIL, digest-free receipt `DIGEST_IN_TREE=ERROR NO_DIGESTS` exit 2 (`controls/before-d2-defect-receipt.txt` → `after-d2-battery.txt`) | **improved** on the frozen predicate; limits: re-derivability is provenance, not command authenticity (`tools/receipt-pin.py` owns header/revision consistency) or entailment (the QUALITY-131 residual, the non-author reviewer) |
+| C3 depth (sourced on S161–S163, opened this round) | no entry, no rows, no captures → `corpus/knowledge/receipt-digest-provenance-r67.md` lands (identity-follows-content ground, the measured counterexample class, the provenance rule with named limits), citing S161 (upstream `git-hash-object.adoc` at pinned commit `50fe5cc63f9cd6e89b87a2c9ccf96a444f4cfdb7`, capture committed sha256 `37d38be4…71094`, both quotes re-opened `VERBATIM`) and S162 (the measured defect), with S163 recording the opened-and-rejected versioned git-scm.com page (same flip family as S160); registry 160 → 163 (A 121→122, B 29→30, C 10→11; mined 129→131, rejected 12→13) | `python -I corpus/evidence/round66/c2-semantic-count.py --entry corpus/knowledge/receipt-digest-provenance-r67.md` → `SEMANTIC=9/9 C2SEM=PASS` exit 0; `grep -c '^| S161 |' corpus/SOURCES.md` → 1 (same S162/S163); capture sha256s match the committed captures; `controls/after-c3-entry.txt` | **improved, with one disclosed frozen-literal miss** — the frozen `verbatim=3` exit 0 was written from anticipation; actual `verbatim=2 absent=0 no_source=1` exit 1 (the third item's NO_SOURCE is the tool's designed refusal of a capture-path row; the S163 quote verified by capture re-read = 1 hit). The claims amendment names the superseded literal pre-landing; mined in the lesson `## Mistakes` |
+
+Corrections to the round-66 section above (this round's C1): the Gate table's S159 "line 9" cite is superseded by "line 8" per the correction note appended to `corpus/lessons/round-66.md`; the note is the record, the committed table stays as history.
+
+No numeric axis score changed; one capability row enters (below).
+
+| axis | verdict | evidence |
+|---|---|---|
+| calibration | **improved** (C1) | the routed location defect corrected append-only from re-derived bytes; the C3 frozen-literal miss disclosed rather than absorbed |
+| operability | **improved** (C2) | the checker battery: defect class 0/2 named OUT_OF_TREE, committed-fixture receipts 2/2 and 1/1 PASS, fake FAIL, empty fail-closed ERROR exit 2 |
+| freshness | **unchanged** | no drift surface measured this round; S161 is fresh-opened with an `on-release` recheck |
+| depth | **improved** (C3) | the sourced entry adds a decision rule with canonical ground and named limits; 9/9 reconciliation PASS |
+| coverage | **unchanged** | no new province surface; provenance enforcement is inside the lane's citation-chain/verification ground |
+| adjacency | **unchanged** | no sibling writes; git-semantics observations stay in-method (host/tooling specifics recorded as limits) |
+
+Learning trends: expansion **unchanged** (the rows extend already-covered provenance ground); quality **improved** (a receipt class unmeasurable last round is now checker-named with committed controls; before-receipts are enforceably reproducible from the repository alone); discernment **unchanged** (the outside non-author spot-check is requested in the lesson `## Gate`; verdicts are counter-and-receipt-derived, wave seats absent and disclosed).
+
+## Capabilities (round-67 addition)
+
+| Capability | What the lane can now do | Evidence pointer | First-working round |
+|---|---|---|---|
+| receipt-digest provenance enforcement | verify that every sha256 a receipt pins re-derives from committed blob bytes — rev mode at a named revision or all-objects across the repository's object database — with per-digest `OUT_OF_TREE` naming and fail-closed `NO_DIGESTS`; rejects the recorded r66 scratch-clone receipt 0/2 while committed-fixture receipts pass in both modes | `python -I tools/digest-in-tree.py --receipt <receipt.txt> [--all-objects]` → `DIGESTS_IN_TREE=n/n DIGEST_IN_TREE=PASS` exit 0 (defect receipts name each miss `OUT_OF_TREE`, exit 1; a digest-free receipt is `ERROR NO_DIGESTS`, exit 2); battery and controls `corpus/evidence/round67/controls/after-d2-battery.txt` | 67 |
+| host-portable gate selftest execution (round-68 addition) | run the freeze-check selftest battery green on the Windows/NTFS host for the first time — the routed r67 G06 drift (hardcoded `/home/vgpnk` default root; Win32-reserved `:` in fixture directory names) is repaired inside the tool with the 34 frozen cases byte-unchanged; preflight reads `PREFLIGHT=7/7` with G06 PASS | `python -I tools/freeze-check.py --selftest` → `SELFTEST 34/34 pass` exit 0; `python -I tools/lane-preflight.py --root . --fleet <fleet> --skip G08` → `GATE G06 freeze-selftest PASS`; receipts `corpus/evidence/round68/controls/after-freeze-battery.txt`, `after-g06-preflight.txt` (before: `before-freeze-default-root.txt`, `before-freeze-colon-case.txt`, `before-g06-preflight.txt`) | 68 |
+
+## Planned — round 68 (frozen 2026-10-31 at commit A `061880ca7d2d6586d6ba7b9b661eb4ebda047ee1`, against base `27df950df83a2c0aea84cfe8de8ddb7b0ff432d4`)
+
+Exactly two claims frozen in `corpus/evidence/round68/claims.md`: C1 operability (lowest-scored non-retired axis; capability acquisition) — the round-67 closure's routed item, repairing `tools/freeze-check.py --selftest` host assumptions (default lane root derived from `__file__`; fixture directory names sanitized for the Win32-reserved set, display names verbatim, the 34 frozen cases byte-unchanged), with the three red before-receipts and the frozen after-predicates (battery 34/34 exit 0, preflight G06 PASS 7/7); C2 depth (sourced on S164–S165, opened this round) — the entry `corpus/knowledge/host-portable-gate-selftest-r68.md` (derive the root; sanitize fixture names; two named error signatures), verified on the r66 reconciliation counter 9/9 with the S164 capture and quote re-open. Host adaptations declared in the claims file: `python -I` (3.13.15) replaces `python3`; one public read-only fetch (raw.githubusercontent.com pin); no wave is dispatched — the L2-floor template question is standing open (L0, routed to the operator/protocol lane) and this round routes around it, never treats it as answered; verdicts rest on committed counters, controls and receipts (round-63 attempt-2 precedent, disclosed).
+
+## Round 68 verdict — 2026-10-31 (the routed freeze-check host drift repaired with red-before/green-after receipts; a sourced host-portability entry lands)
+
+Freeze `061880ca7d2d6586d6ba7b9b661eb4ebda047ee1` (claims, three before-receipts, census-start; base `27df950df83a2c0aea84cfe8de8ddb7b0ff432d4`); landing `948afaa0a2a73c3c3c672aef650a3afe81022a84` (tool repair, rows S164–S165 with committed capture, entry, coverage row, quote-reopen TSV); final measurement at the landing tip and the verdicts tree (receipts `controls/after-freeze-battery.txt`, `after-g06-preflight.txt`, `after-c2-entry.txt`; `preflight-final.txt`, `census-end.txt`).
+
+| Claim / axis | Before → after | counting command / evidence | verdict |
+|---|---|---|---|
+| C1 operability (capability acquisition; the r67 closure's routed G06 item; historical 3/10 observable not moved) | at the base the routed drift is real and reproduced: bare `--selftest` exit 1 with FileNotFoundError at the foreign `/home/vgpnk` root (`before-freeze-default-root.txt`), `--lane-root .` exit 1 with `NotADirectoryError: [WinError 267]` at the fixture dir `M01 red: claims file empty` (`before-freeze-colon-case.txt`), preflight `PREFLIGHT=6/7 FAILED=G06` exit 1 (`before-g06-preflight.txt`) → the repair lands (`LANE_ROOT_DEFAULT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))`; `mk()` maps case names through the Win32-reserved set with a seen-set collision assertion; the 34 frozen case literals unchanged: `case('`=9, `mut('`=25 at base and landing) and the battery reads `SELFTEST 34/34 pass` / `VERDICT: FREEZE_CHECK=34/34 red_before_exit=1` exit 0 in both invocations, preflight `GATE G06 freeze-selftest PASS`, `PREFLIGHT=7/7 FAILED=none` exit 0 | `python -I tools/freeze-check.py --selftest` → exit 0 (receipt `controls/after-freeze-battery.txt`); `python -I tools/lane-preflight.py --root . --fleet <fleet> --skip G08` → `PREFLIGHT=7/7` exit 0 (`controls/after-g06-preflight.txt`, `preflight-final.txt`); `python -I tools/digest-in-tree.py --receipt corpus/evidence/round68/controls/after-freeze-battery.txt` → 1/1 PASS (the repaired tool sha re-derives at HEAD) | **improved** on the frozen predicate; limits: two repaired defect classes only — reserved device names, trailing dots/spaces, path length and case-folded collisions stay out of scope (entry `## Limits`) |
+| C2 depth (sourced on S164–S165, opened this round) | no entry, no rows, no capture at the base (frozen greps S164=0 S165=0; registry 163 rows, A=122 B=30 C=11, mined=131) → `corpus/knowledge/host-portable-gate-selftest-r68.md` lands (derive the root, sanitize fixture names, two named error signatures, S152 prior art), citing S164 (Microsoft win32 naming rules at pinned commit `63e70903d18b0637e62ffab6656c4a388ef0f2ce`, capture committed sha256 `bf2485c9…d7bdcec`, quote re-opened `VERBATIM` against the pinned live URL) and S165 (the round's own red receipts); registry 163 → 165 (A 122→123, B 30→31, C 11; mined 131→133, queued 19, rejected 13); SOURCES.md diff additions-only, no held status/recheck/used-by cell changed | `python -I corpus/evidence/round66/c2-semantic-count.py --entry corpus/knowledge/host-portable-gate-selftest-r68.md` → `SEMANTIC=9/9 C2SEM=PASS` exit 0; `python -I tools/quote-reopen.py verify --items corpus/evidence/round68/quote-reopen.tsv` → `verbatim=1` exit 0; `grep -c '^| S164 |' corpus/SOURCES.md` → 1 (same S165); capture digest recomputed at HEAD matches the S164 pin; `python -I tools/digest-in-tree.py --receipt corpus/evidence/round68/controls/after-c2-entry.txt` → 3/3 PASS (`controls/after-c2-entry.txt`) | **improved** on the frozen predicate; limits: one host pair measured; the sanitizer is name-level, not a general path-escape; entailment stays with the non-author reviewer (QUALITY-131 residual) |
+
+Correction to the round-67 section above, found and repaired this round: the r67 capability row ("receipt-digest provenance enforcement") was committed truncated mid-cell at the r67 verdicts commit (`75deb9b8`: the evidence cell ends `` `python -I tools/digest-in-tree.py -- `` and the cell and row terminator are missing — G05 still passed because the truncated tail names no path). The row is completed in place this round with the battery's real exit contract and controls receipt; the r67 bytes stay in history and this note is the record. Not a scored claim — protocol/conformance work like r67's G02 wrap-up fix.
+
+No numeric axis score changed; one capability row enters (above).
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** (C1) | the routed red gate is green with committed before/after receipts; lowest non-retired axis obligation met |
+| depth | **improved** (C2) | the sourced entry adds a decision rule with a pinned canonical ground and two named error signatures; 9/9 reconciliation PASS |
+| calibration | **unchanged** | no routed calibration item this round; the round's own capture-practice slip is mined in the lesson `## Mistakes`, not scored |
+| freshness | **unchanged** | no drift surface measured; S164 fresh-opened with an `on-release` recheck |
+| coverage | **unchanged** | PROVINCE.md untouched; gate portability is inside the lane's gates/corpus ground |
+| adjacency | **unchanged** | no sibling writes; the Win32 naming observation is grounded to the lane's own gate behavior, not absorbed as an OS claim |
+
+Learning trends: expansion **unchanged** (the rows extend the lane's own gates/provenance ground; no new province surface); quality **improved** (a gate that could not run its own selftest on this host now runs 34/34 with committed red-before receipts, and the practice behind it is written down with a pinned canonical source); discernment **unchanged** (the outside non-author spot-check is requested in the lesson `## Gate`; verdicts are counter-and-receipt-derived, wave seats absent and disclosed).
+
+## Planned — round 69 (frozen 2026-10-31 at commit A `6eaa9b4fa3a72de57fa8eea2d0809f41a035a193`, against base `b51f4d879b95f42147a716eac1d05e7e01c981a0`)
+
+Exactly two claims frozen in `corpus/evidence/round69/claims.md`: C1 operability (lowest-scored non-retired axis, 3/10) — the round-68 closure's routed item 1, re-issuing the r68 freeze-check battery receipt with explicit rc capture: both invocations re-run at the landing, each exit code read by immediate `rc=$?` after the redirected command (no pipeline — the mined receipt-exit-transcription class), the new receipt naming the superseded bare `EXIT=` line, the r68 bytes and the tool bytes unchanged; C2 calibration (sourced on S166–S167, opened this round) — the round-68 closure's routed item 2, an append-only correction to the r68 note's G05 mechanism wording, demonstrated by a committed two-fixture parse-boundary control (a 3-cell row and a 4-cell row naming the same missing path through `--only G05`). No fetch this round (both grounds are own-work committed bytes); no wave — the L2-floor template question stays standing open (L0, operator/protocol lane) and this round routes around it, never treats it as answered; verdicts rest on committed counters, controls and receipts (round-63 attempt-2 precedent, disclosed).
+
+## Round 69 correction to the round-68 note (append-only; landed with the round-69 landing)
+
+Correction to the round-68 correction paragraph above (routed by the round-68 closure spot-check §4 item 1): its mechanism wording — "G05 still passed because the truncated tail names no path" — is imprecise: the truncated tail does name `tools/digest-in-tree.py`, in an unterminated backtick. G05 passes over the row because its parser extracts pointers only from capability rows with at least four cells (`tools/lane-preflight.py` g05 line 233: `len(cells) >= 4`), and the truncated r67 row ends after three cells, so the pointer it names is never extracted and never checked. The operative fact — G05 passed over the truncated row — is unchanged; the r68 sentence's bytes stay as history and this note is the record. Measured: the committed parse-boundary control runs the identical pointer `corpus/no-such-entry-r69.md` through `--only G05` in a 3-cell row (`GATE G05 scorecard-paths PASS 0 capability pointers resolve`, exit 0) and a 4-cell row (`GATE G05 scorecard-paths FAIL 1 unresolved: corpus/no-such-entry-r69.md`, exit 1) — `corpus/evidence/round69/controls/before-g05-skip-control.txt` at the freeze, re-run at the landing (`after-g05-skip-control.txt`), fixtures committed at `corpus/evidence/round69/fixtures/`.
+
+## Round 69 verdict — 2026-10-31 (the routed r68 closure items closed: an explicit-rc battery receipt; the G05 parse boundary written down with a committed control)
+
+Freeze `6eaa9b4fa3a72de57fa8eea2d0809f41a035a193` (claims, four before-receipts, two g05 fixtures, census-start; base `b51f4d879b95f42147a716eac1d05e7e01c981a0`); landing `e8a3e6fef92a659bcc8def278ecb07b2679bf313` (the re-issued receipt, the control re-run, rows S166–S167, the correction section and the planned section above); final measurement at the landing tip and the verdicts tree (receipts `corpus/evidence/round69/controls/after-g05-note-greps.txt`, `after-r69-receipt-derivation.txt`, `after-g05-skip-control.txt`; `.ufo/waves/round-69/preflight-final.txt`, `census-end.txt`).
+
+| Claim / axis | Before → after | counting command / evidence | verdict |
+|---|---|---|---|
+| C1 operability (the r68 closure's routed item 1; the historical 3/10 observable deliberately not moved) | the only committed battery receipt carried a bare exit marker for invocation 1 (`grep -c '^EXIT=$'` over `after-freeze-battery.txt` = 1; explicit-rc invocation-1 receipts: none — `controls/before-r68-battery-receipt-defect.txt`, which also shows the old receipt's digest pins re-deriving 1/1, i.e. a transcription defect, not pin rot) → `controls/after-freeze-battery-r69.txt` re-issues both invocations at the landing tip: `SELFTEST 34/34 pass` / `VERDICT: FREEZE_CHECK=34/34 red_before_exit=1` twice, `EXIT=0` twice, each rc read by immediate `rc=$?` after the redirected command (no pipeline); the receipt names the superseded r68 line 9; the tool and the r68 bytes are unchanged this round | `grep -c '^EXIT=0$' corpus/evidence/round69/controls/after-freeze-battery-r69.txt` → 2 (bare exit marker in the same file → 0); `python -I tools/digest-in-tree.py --receipt corpus/evidence/round69/controls/after-freeze-battery-r69.txt` → `DIGESTS_IN_TREE=1/1 DIGEST_IN_TREE=PASS` exit 0 at HEAD (`controls/after-r69-receipt-derivation.txt`); `git diff <base>..<landing> -- corpus/evidence/round68/ tools/freeze-check.py` → empty | **improved** on the frozen predicate; limits: an evidence-level repair only — no new capability (the repertoire entered in round 68), the frozen 3/10 observable unmoved, G08 still skipped |
+| C2 calibration (sourced on S166–S167, opened this round) | the r68 note's mechanism wording was imprecise and the precise mechanism was recorded nowhere in this file (`controls/before-g05-note-greps.txt`: the correction-section's parser-guard literal counted 0 over SCORECARD.md at the base; the superseded bare-wording literal counted 1) → the correction section above records the ≥4-cell capability-row parse boundary with the parser line cited and the committed parse-boundary control; the parser-guard literal 0 → 1, the bare-wording literal 1 → 2 (the second hit is the correction's own quotation of the superseded wording, disclosed — the r67 correction-note precedent); registry 165 → 167 (B 31→33, mined 133→135), SOURCES.md additions-only, no held status/recheck/used-by cell changed | the exact commands and counts in `controls/after-g05-note-greps.txt`; the control: `python -I tools/lane-preflight.py --only G05 --root corpus/evidence/round69/fixtures/g05-skip3` → `PASS 0 capability pointers resolve` exit 0 and `…\g05-skip4` → `FAIL 1 unresolved: corpus/no-such-entry-r69.md` exit 1 — the identical pointer skipped in a 3-cell row, parsed in a 4-cell row (`before-g05-skip-control.txt` at the freeze; `after-g05-skip-control.txt` at the landing; the parser line stays at 233) | **improved** on the frozen predicate; limits: the note records one parse boundary, not an audit of every G05 arm (the r63 batteries remain the gate's falsifier coverage); entailment of S166's routing judgments stays with the non-author record itself |
+
+No numeric axis score changed; no capability row (the repertoire already entered in round 68; this round re-issued its evidence to the verifier-complete standard). Both claims are scored claims, frozen and measured above; nothing this round was disclosed as unscored self-found work.
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** (C1) | the routed receipt defect is closed with a re-issued, digest-re-derivable, explicit-rc receipt a verifier can re-run and compare line for line; lowest non-retired axis obligation met |
+| calibration | **improved** (C2) | the recorded mechanism now matches the parser bytes, demonstrated by a measured control; the superseded wording is named, not rewritten |
+| depth | **unchanged** | no externally-grounded entry this round; both rows are own-work tier B records |
+| freshness | **unchanged** | no drift surface measured; both rows are on-release own-work records |
+| coverage | **unchanged** | PROVINCE.md untouched; both fixes live inside the lane's own records |
+| adjacency | **unchanged** | no sibling writes; nothing cross-domain read or absorbed |
+
+Learning trends: expansion **unchanged** (own-work rows inside the lane's existing ground; no new province surface); quality **improved** (the lane's evidence records now meet the explicit-rc discipline the round itself mined, and the recorded gate mechanism matches the parser bytes with a committed demonstration); discernment **unchanged** (verdicts are receipt-and-control-derived; the outside non-author spot-check is requested in the lesson `## Gate`; wave seats absent and disclosed).
+
+## Planned — round 70 (frozen 2026-11-01 at commit A `f05eb5baa5bf936fd0d1626c543ea276daa83989`, against base `1db6babf528692d871a2b97be0b3e519614fa300`)
+
+Exactly two claims frozen in `corpus/evidence/round70/claims.md`: C1 operability (lowest-scored non-retired axis, 3/10) — the round-69 closure's routed item 1 (S172), the G08 full-run receipt owed since r66 (S168), landed honestly red: the reconnaissance (S171) shows the battery cannot even finish on this host (three bare-statement crash sites under `set -euo pipefail`; the manifest-append/pin-capture subsystem fails closed by design without flock(1), S169; the 1500 s preflight budget is un-meetable; the guarded `python3` sites trust a store stub), so the smallest repair that makes the battery COMPLETE and truthful lands (crash guards; the battery's own flock-conditional skip-case pattern, S170, for exactly the six append-subject cases; a capability probe replacing the four `command -v python3` existence guards; an overridable G08 budget, default 7200 s, edits confined below the G05 line-233 guard in lane-preflight.py and inside `run_selftest` in research-gate.sh; the pin/drift capture cases stay un-skipped and name their flock-blocked failure), then the preflight runs full with no `--skip` and the receipt is committed — the frozen verdict rule, verbatim from the claims file: battery completes with verdict line + preflight completes with `SKIPPED=none` → improved on that predicate with the gate's red disclosed everywhere it is cited (the gate itself is NOT claimed improved); if the repaired battery still dies before its verdict line, or the preflight cannot complete, C1 lands honest-stop with the red receipts committed as the defect record and the residual routed; no predicate is edited after measurement — the honest green additionally needs the operator's flock decision, filed to the L0 queue this round; C2 calibration (sourced on S172, opened this round) — the r69 closure's routed item 2, the semantic-counter filler-author residual (QUALITY-131): the author-side half of its closure lands as a committed entailment-review packet (who reviews, the 12-claim scope over the four counter-passed entries, the per-claim procedure bound to QUALITY 8's support states, the closure rule) with a record-format checker shown able to fail (valid 2/2 PASS exit 0, broken 0/3 FAIL exit 1 naming seven defects, absent ERROR exit 2), and the non-author review itself is requested on record, scheduled like the SHONEN promotion review (r69 spot-check item 5 precedent) — the packet does not close the residual; the judgment stays with the scheduled non-author reviewer. Host adaptations declared in the claims file: `python -I` (3.13.15) replaces `python3` (whose WindowsApps alias here is a non-running stub — measured, and probed rather than assumed inside the selftest repair); no fetch — every ground is own-work committed bytes (S168–S172 opened this round); no wave — the L2-floor template question stays standing open (L0, operator/protocol lane) and this round routes around it, never treats it as answered; verdicts rest on committed counters, controls and receipts (round-63 attempt-2 precedent, disclosed). The two historical bare `## Capabilities` headings are filed to the L0 queue this round (operator call) and stay routed around.
+
+## Round 70 verdict — 2026-11-01 (the owed G08 full-run receipt lands honestly RED; the battery is made truthful but does not complete on this host — C1 honest-stop per its frozen rule; the entailment-review packet verifies — C2 improved)
+
+Freeze `098c23dd1011fd5ff3eac502df03fac8bfc0e700` + `f05eb5baa5bf936fd0d1626c543ea276daa83989` (claims, five before-receipts, recon capture, packet instruments + format battery, rows S168–S172, census-start; base `1db6babf528692d871a2b97be0b3e519614fa300`); landing `b2043bf933e08917a055d1b82334a64eacff6279` (both tool repairs, SKILL registry row 83); final measurement at the landing tip (receipts `corpus/evidence/round70/controls/after-battery-completes-r70.txt`, `after-full-preflight-r70.txt` with the wave copy `.ufo/waves/round-70/preflight-final.txt`, `after-digest-derivations-r70.txt`; `.ufo/waves/round-70/census-end.txt`).
+
+| Claim / axis | Before → after | counting command / evidence | verdict |
+|---|---|---|---|
+| C1 operability (the r69 closure's routed item 1; the historical 3/10 observable deliberately not moved) | the G08 check has no full-run receipt anywhere in the lane's committed waves and the four-round skip chain stands (`grep -rl "GATE G08 gate-selftest PASS" .ufo/waves/ \| wc -l` → 0; four receipts carry `SKIPPED=G08`; the r69 summary is 7/7 with SKIPPED=G08 — `controls/before-g08-skip-chain.txt`) and the reconnaissance shows the battery dies silently on this host (rc=2, no verdict line — S171) → the repair lands (crash guards at base lines 5560/5977/8375; `HAVE_FLOCK`/`PY3` capability probes; the six append-subject cases skip by name with reason, the battery's own c1lk pattern (S170); `SKIPPED` init moved above the r14 reset; the g08 budget overridable `G08_SELFTEST_BUDGET_S`; case literals unchanged, 69 diff lines, every research-gate hunk ≥ line 4378, every preflight hunk below the G05 line-233 guard) and the receipts land: the FULL preflight ran with no `--skip` — `GATE G08 gate-selftest FAIL timeout after 180s`, `PREFLIGHT=7/8 FAILED=G08 ENV=none SKIPPED=none`, `EXIT=1` (the receipt exists; the skip chain ends; the 180 s budget is the r70 override, documented in the receipt header, because the battery's locale-boundary case is unbounded) — and the battery transcript reaches case 257/269 complete-and-truthful (both crash sites behind it guarded: the tall manifest cases print their skips at 60–61 instead of dying at the h1 assignment; the pin zone prints named FAIL-cases instead of dying at the line-5977 sed), but the battery did NOT reach its verdict line: the case-258 gate (claims-locale-boundary, the 16K-accent-span case) ran >70 minutes without emitting its line in the final clean single-writer run — the D5 class, unbounded case duration on this host — and the run was ended by the round (the receipt's RUN-END ADDENDUM) | the frozen predicate — "battery completes with verdict line + preflight completes with `SKIPPED=none`" — is NOT met on its first arm: `grep -c "RESEARCH_GATE_SELFTEST:" controls/after-battery-completes-r70.txt` → 0 (no verdict line; the run ended at case 258 with the addendum); the second arm IS met: `grep -c "SKIPPED=none" controls/after-full-preflight-r70.txt` → 1 with `FAILED=G08` and `EXIT=1`; the six append-subject skips each print by name with reason `no flock(1): append fails closed`; `grep -c "GATE G08 gate-selftest FAIL" controls/after-full-preflight-r70.txt` → 1 (before: the gate never ran — 0 receipts with any G08 result, 4 with the skip); both receipts' tool sha256 pins re-derive at HEAD (`controls/after-digest-derivations-r70.txt`: `DIGESTS_IN_TREE=1/1 PASS`; preflight sha `c226ec3b…` and gate sha `af061ab2…` equal the landing blobs) | **honest-stop per the frozen rule** ("if the repaired battery still dies before its verdict line… C1 lands honest-stop with the red receipts committed as the defect record and the residual routed; no predicate is edited after measurement") — the routed RECEIPT debt itself closes (a full-run receipt now exists, red), and the repair is demonstrated (guards, skips, probes all fired in the transcript), but no operability improvement is claimed because the completing verdict line was never reached; routed to round 71: the operator's flock(1) decision (L0, filed this round) and a bound for the unbounded locale-boundary case (timeout-wrap or by-name skip, its coverage cost to be spelled out); limits: one host, one point in time; the D5 class is measured from one run plus one earlier uncontended pass, not a distribution |
+| C2 calibration (sourced on S172, opened this round) | the residual bar existed only as carried prose — at the base `git grep -c "entailment-review"` over the registry and records hits 0 files (`controls/before-entailment-packet-greps.txt`) → `corpus/evidence/round70/entailment-review/` lands: the packet (who reviews: a fresh non-author session not dispatched by the lane author, operator-scheduled; the 12-claim scope over the four counter-passed entries; the per-claim QUALITY-8 procedure; the closure rule), the record template, the scope TSV, and a format-only checker shown able to fail | `ls corpus/evidence/round70/entailment-review \| wc -l` → 6 (before: the path absent at the base, exit 2 in the before-receipt); the committed battery `entailment-review/controls/format-battery.txt`: valid fixture `RECORD_FORMAT=2/2 REVIEW_FORMAT=PASS` EXIT=0, broken fixture `RECORD_FORMAT=0/3 REVIEW_FORMAT=FAIL` EXIT=1 naming seven defects, absent record ERROR EXIT=2; the checker sha pin re-derives at HEAD (`after-digest-derivations-r70.txt`: `DIGEST 7444fa3e… IN_TREE`, `DIGEST_IN_TREE=PASS` exit 0) | **improved** on the frozen predicate; limits, frozen with the claim: the packet does NOT close the residual — a passing format check says nothing about verdict correctness (the checker's docstring says so); the residual stays open until a committed non-author review record exists, and the review is requested on record (report + lesson `## Gate`), operator-scheduled like the SHONEN promotion review |
+
+No numeric axis score changed; no capability row (C1's repairs are host-portability work on the existing r63/r65–r68 repertoire entries; C2 is a protocol packet whose checker battery is committed evidence, not a new lane power — both disclosed here rather than pre-claimed).
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **honest-stop** (C1) | the receipt debt closes (a full-run receipt exists, red, no skips) and the repair demonstrably works in the transcript, but the frozen completing-verdict-line predicate was not met — no improvement is claimed on the axis; the defect record is committed and routed |
+| calibration | **improved** (C2) | the residual's bar is now an executable protocol with a committed, falsifiable checker; the request is on record; the packet's own limits keep the judgment with the non-author |
+| depth | **unchanged** | no externally-grounded entry this round; all five rows are own-work tier B records |
+| freshness | **unchanged** | no drift surface measured; S168/S169/S170 are pinned to the base revision with `on-release` rechecks |
+| coverage | **unchanged** | PROVINCE.md untouched; the repairs live inside the lane's own gate/records ground |
+| adjacency | **unchanged** | no sibling writes; the flock/python3/timeout findings are grounded to the lane's own gate behavior and routed to the operator, not absorbed as OS claims |
+
+Learning trends: expansion **unchanged** (own-work rows inside the lane's existing ground; no new province surface); quality **improved** (a gate battery that died silently twice now runs truthfully to within twelve cases of its verdict line with every failure named and its skips disclosed in-band, and the lane's one-command preflight finally runs its full gate set with no skip — the receipts are red and that is the improvement: the truth is measured and committed where four rounds of bare skips stood); discernment **unchanged** (verdicts are receipt-and-control-derived; the outside non-author spot-check is requested in the lesson `## Gate`; wave seats absent and disclosed). Round admission: **not admitted — C1 honest-stop** (C2 verifies; the honest-stop is the frozen rule's own outcome, not a negotiation).
+
+Corrections to earlier sections (this round, disclosed): the r69 claims file's host line "no `python3` on this host" measured neither existence nor capability reliably — a python3 alias exists at the WindowsApps stub path and `command -v` succeeds against it while execution fails; the r69 bytes stand as committed history and the correction is recorded here, in the claims file, and in the lesson `## Mistakes`.
+
+## Planned — round 71 (frozen 2026-11-01 at commit A `58232b27d1ea542f4189d093c13f5865521c07ca`, against base `11b51988d3878cd33b826295304f6f266718ba86`)
+
+Exactly two claims frozen in `corpus/evidence/round71/claims.md`: C1 operability (lowest-scored non-retired axis, 3/10) — the r70 lesson's routed D5 item and the re-pursuit of the r70 C1 completing predicate: a timeout-wrap for the unbounded locale-boundary case (the coverage-preserving arm the routing named first; a one-time `HAVE_TIMEOUT` capability probe requiring the kill, rc 124, not mere existence; budget `LC_BOUNDARY_BUDGET_S` default 900 s ~55x the measured uncontended 16.333 s; budget expiry prints a named FAIL-case at rc 124 plus a case-note and counts as a failure — never a pass, never a fake; hosts without a capable timeout keep base behavior), with the frozen rule: battery completes with verdict line (anchored `^RESEARCH_GATE_SELFTEST:` count 1 — the D-70-2 form) + preflight completes with `SKIPPED=none` → improved ON THAT PREDICATE with the gate's red disclosed everywhere cited and the operability score unmoved; if the bounded battery still dies before its verdict line → honest-stop again; the do-nothing control is the committed r70 transcript (anchored count 0, ended at case 258); C2 calibration (sourced on S173, opened this round) — the five routed status-neutral defects D-70-1..5 corrected append-only (S171 re-anchor via correction row S176 + a `correction:` block on the r70 lesson; the anchored counting command stated with both counts; five-of-six stated with its count and reason; the /269 denominator replaced by its derivation and the honest "case 257, run ended at case 258"; SKILL row 83 rewritten after measurement to cite only receipts that show what it asserts), D-70-6 answered by surfacing a rejection in the search log (S177). Host: `timeout` measured killing (rc 124) at the freeze; `flock(1)` still absent — the L0 question standing open and routed around, never treated as answered; the capture-zone cases still fail by name and the gate stays red. No fetch (every ground own-work committed bytes, S173–S177); no wave (no batched dispatch surface on this host; round-63 attempt-2 precedent, disclosed).
+
+## Round 71 verdict — 2026-11-01 (the routed D-70 defects corrected append-only — C2 improved; the locale-boundary timeout-wrap lands and is unit-verified, but the completing predicate cannot be measured inside the round on the contended host — C1 honest-stop per its frozen rule)
+
+Freeze `58232b27d1ea542f4189d093c13f5865521c07ca` (commit A: claims, before-receipt, probe receipt, census-start; base `11b51988d3878cd33b826295304f6f266718ba86`); landing `e5458b35c8fb8a153d4c76a42812d75aa4e2940f` (the gate repair, rows S173–S177, the r70 lesson correction block, the planned section above); final measurement at the landing tip and the verdicts tree (receipts `corpus/evidence/round71/controls/battery-partial-r71.txt`, `killtest-partial-scratch-copy.txt`, `timeout-arm-focus-test.txt`, `after-r71-corrections.txt`, `after-digest-derivations-r71.txt`; `.ufo/waves/round-71/census-start.txt`, `census-end.txt` — no preflight-final receipt exists this round; the preflight could not be measured, which is itself C1's honest-stop ground).
+
+| Claim / axis | Before → after | counting command / evidence | verdict |
+|---|---|---|---|
+| C1 operability (the r70 lesson's routed D5 item; the completing predicate re-pursued; the historical 3/10 observable deliberately not moved) | the do-nothing control stands where r70 left it: `grep -c "^RESEARCH_GATE_SELFTEST:" corpus/evidence/round70/controls/after-battery-completes-r70.txt` → 0 (no verdict line; ended at case 258; re-derived by the r70 spot-check) → the routed remedy lands: a `HAVE_TIMEOUT` capability probe requiring the kill (`timeout 1 sleep 5` → rc 124, not mere existence — the r70 python3-stub lesson), budget `LC_BOUNDARY_BUDGET_S` default 900 s (~55x the measured uncontended 16.333 s, S175), the case-258 invocation wrapped when the probe passes, budget expiry = the case's FAIL-case line at rc 124 plus a named case-note (verdict unmeasured within budget), counted a failure — never a pass, never a fake; hosts without a capable timeout keep base behavior; case literals unchanged (3 hunks at lines 4405 and 8342–8372, all inside `run_selftest`; 21 insertions, 1 deletion) — the bound is unit-verified (the focus test runs the patched block's own lines: probe `HAVE_TIMEOUT=1 tprobe_rc=124 budget=900`, forced 1 s budget → `CASE_RC=124` + the case-note bytes, `controls/timeout-arm-focus-test.txt`; and 18 healthy ok-case lines ran through the patched battery across the two runs) — but the completing predicate was NOT met inside the round: the measurement battery at the landing tip measured ~86–110 s/case under the identified load (two orphaned sibling-lane `souji-verify.sh` lineages, ~16 h, 86–93% CPU; L0 filed, not killed from this lane) and was killed by the round at case 8 (`controls/battery-partial-r71.txt`; no EXIT line — the wrapper died in the same kill pass, disclosed), putting the 275-case battery at ~6.5–8.5 h and the preflight's G08 at a second full battery, so no completing verdict line and no `preflight-final` receipt exist | `grep -c "^RESEARCH_GATE_SELFTEST:" corpus/evidence/round71/controls/battery-partial-r71.txt` → 0 (partial; no verdict line); `grep -c "CASE_RC=124" corpus/evidence/round71/controls/timeout-arm-focus-test.txt` → 1; `grep -c "case-note claims-locale-boundary" corpus/evidence/round71/controls/timeout-arm-focus-test.txt` → 1; `python -I tools/digest-in-tree.py --receipt corpus/evidence/round71/controls/battery-partial-r71.txt --all-objects` → 1/1 PASS at HEAD | **honest-stop per the frozen rule** (the rule's own arm: "or the preflight cannot complete within its budget" — neither completing receipt could be produced inside the round; no operability improvement is claimed; the gate stays red without flock and stays disclosed everywhere cited); routed to round 72 with measured numbers: a quiet window or host relief (L0) makes both frozen arms measurable — uncontended, the heaviest case ran 16.333 s (S175); limits: one host, one load regime; the rate is three samples, not a distribution |
+| C2 calibration (sourced on S173, opened this round) | the five routed status-neutral defects stood as committed record defects (`controls/before-r71-defect-greps.txt` at the base: dcCFup 0/7 in the two captures; unanchored verdict-grep 1 vs anchored 0; append-subject skip count 5; "257/269" in three committed places; the asserting literal in SKILL row 83) → corrected append-only: S176 supersedes S171's location attribution + a `correction:` block on the r70 lesson (D-70-1); the anchored command recorded with both counts (D-70-2); five-of-six stated with count and reason (D-70-3); the denominator replaced by its derivation and the honest "case 257, run ended at case 258" (D-70-4); SKILL row 83 rewritten after measurement to cite only receipts that show what it asserts (D-70-5); D-70-6 answered by surfacing S177 (a genuine post-open rejection with a flip) | all commands and counts in `controls/after-r71-corrections.txt` (verdicts tip) against the frozen before-receipt: `supersedes S171` 0 → 1; `^correction: corpus/lessons/round-70.md D-70` 0 → 1; anchored verdict-grep 0 (unchanged, the true fact); "the battery completes and prints" in SKILL.md 1 → 0; `^| S17[3-7] ` → 5; registry 172 → 177 (A 123, B 42, C 12; mined 144, queued 19, rejected 14); SOURCES.md additions-only, no held cell changed; the r70 receipt/lesson bytes unchanged except the appended correction block | **improved** on the frozen predicate; limits, frozen with the claim: status-neutral record work — the r70 closure ruling (honest-stop, not admitted) is undisturbed; the frozen claims files and the r70 receipt bytes are untouched (the ADDENDUM's "257/269" stays as history, corrected by C2's record) |
+
+No numeric axis score changed; no capability row (C1's repair is a bound on an existing battery, honest-stopped on its completing predicate; C2 is record correction — both disclosed here rather than pre-claimed).
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **honest-stop** (C1) | the bound lands and is unit-verified, but the frozen completing predicate (battery verdict line + preflight `SKIPPED=none`) was not met inside the round — no improvement claimed; the defect record and the measured route are committed |
+| calibration | **improved** (C2) | five routed record defects corrected append-only with counted before/after evidence; an over-asserting registry row corrected in place after measurement; a rejection surfaced (S177) where r70 had none |
+| depth | **unchanged** | no externally-grounded entry; all five rows are own-work tier B/C records |
+| freshness | **unchanged** | no drift surface measured; S173–S177 are own-work `on-release` records |
+| coverage | **unchanged** | PROVINCE.md untouched; the repair stays inside the lane's own gate/records ground |
+| adjacency | **unchanged** | the contending orphaned lineages belong to a sibling lane: identified with PIDs/command lines and routed to the L0 queue, never killed from this lane, never absorbed as an OS claim; no sibling writes |
+
+Learning trends: expansion **unchanged** (own-work rows inside existing ground; no new province surface); quality **unchanged** (the repair lands and is unit-verified but its completing verification is routed — no operable-capability improvement recorded this round); discernment **improved** (the record corrections are counted, an over-assertion was caught against its own cited receipt, and a rejection surfaced where the round-70 sample had none). Round admission: **not admitted — C1 honest-stop** (C2 verifies; the honest-stop is the frozen rule's own outcome, not a negotiation).
+
+## Planned — round 72 (frozen 2026-11-01 at commit A `97b6ea754b2341cacdfeb29728de0e81c388ad29`, against base `7851c4ce29ef4c13d2c6ffd67b2ea1ea2646a536`)
+
+Exactly two claims frozen in `corpus/evidence/round72/claims.md`: C1 operability (lowest-scored non-retired axis, 3/10) — the completing run re-pursued with the r71 timeout-wrap in force, the predicate carried unchanged from the r71 claims file (battery completes with verdict line at anchored `^RESEARCH_GATE_SELFTEST:` count 1 + preflight completes with `SKIPPED=none` → improved ON THAT PREDICATE, the gate's red disclosed everywhere cited, score unmoved; the bounded battery still dies before its verdict line, or the preflight cannot complete within its budget → honest-stop again); budgets left at their defaults on the measured quiet window (probe: `tprobe_rc=124`, the case-258 body 18.131 s now vs 16.333 s at the r71 freeze, `controls/probe-r72-sizing.txt`; 900 s ≈ 50x; `G08_SELFTEST_BUDGET_S` 7200 s default), single-writer discipline (the battery completes before the preflight starts), no kill probe aimed at the run; do-nothing control: the r71 partial receipt's verdict-line count 0 and the absent r71 preflight receipt. C2 calibration (sourced on S178, opened this round) — the four routed r71 spot-check defects corrected append-only: the 18→25 ok-case correction across LOG + lesson + SCORECARD with per-receipt counts stated; the ends-at-case-8 vs 9-lines honest statement (receipt bytes stay history); the LOG three-vs-four Mistakes rows named; the SHONEN assessment re-filed under `## SHONEN` in the round-72 report. Host: timeout(1) kills (rc 124 re-measured this round); flock(1) still absent (the L0 question open since r70, routed around); the two orphaned sibling-lane souji lineages still alive, near-idle by cumulative-CPU sampling, still not killed from this lane (L0 open). No fetch (S178–S179 own-work); no wave (the round-63 attempt-2 precedent, disclosed).
+
+## Round 71 correction note (append-only, landed with round 72, 2026-11-01; routed by the round-71 verifier spot-check section 6, S178)
+
+The round-71 C1 verdict row above states "18 healthy ok-case lines ran through the patched battery across the two runs". The committed receipts carry 9 (`corpus/evidence/round71/controls/battery-partial-r71.txt`) + 16 (`corpus/evidence/round71/controls/killtest-partial-scratch-copy.txt`) = 25 ok-case lines (counting command `grep -c "^ok-case" <receipt>`). Read that sentence with 25 and the per-receipt split; the verdicts and the honest-stop ruling are undisturbed. Companion corrections in this landing: `corpus/lessons/round-71.md` correction block (which also states the receipt's ends-at-case-8 header vs the transcript's 9 ok-case lines) and the LOG.md round-71 correction entry (which also names the fourth `## Mistakes` row the entry's "three rows" list omitted).
+
+## Round 72 verdict — 2026-11-01 (the r71 bound PROVEN in production and the r70 stall passed for the first time, but a new never-before-reachable pin-zone crash site killed the run before the verdict line — C1 honest-stop per its frozen rule; the four routed r71 spot-check defects corrected append-only — C2 improved)
+
+Freeze `97b6ea754b2341cacdfeb29728de0e81c388ad29` (commit A: claims, before-receipt, probe receipt, census-start; base `7851c4ce29ef4c13d2c6ffd67b2ea1ea2646a536`); landing `7f7ea19a945e0998f009f82b9c651cb08aec1c12` (SOURCES S178–S179, the round-71 lesson correction block, the LOG round-71 correction entry, the SCORECARD planned section + round-71 correction note, the census-selfmatch receipt); final measurement at the landing tip (receipts `corpus/evidence/round72/controls/battery-past-locale-dies-pinzone-r72.txt`, `after-r72-corrections.txt`, `after-digest-derivations-r72.txt`, `census-selfmatch-r72.txt`; `.ufo/waves/round-72/census-start.txt`, `census-end.txt`). No tool bytes changed all round (in-tree gate sha256 = the r71 landing blob `d5d48128…41e2` at A, B and the verdicts tip; `DIGESTS_IN_TREE=1/1 PASS`).
+
+| Claim / axis | Before → after | counting command / evidence | verdict |
+|---|---|---|---|
+| C1 operability (the completing predicate re-pursued a third time, unchanged; the historical 3/10 observable deliberately not moved) | the do-nothing control re-derived at the base: `grep -c "^RESEARCH_GATE_SELFTEST:" corpus/evidence/round71/controls/battery-partial-r71.txt` → 0 and no r71 preflight receipt exists (`controls/before-r72-greps.txt`) → the run executed at the landing tip under the standing defaults (`LC_BOUNDARY_BUDGET_S` unset — 900 s in force, ~50x the probe-measured 18.131 s body; the probe receipt frozen at A: `tprobe_rc=124`, body 18.131 s CLEAN vs 16.333 s at r71) and produced the round chain's deepest run ever: **the r70 stall point passed** — the r71 timeout-wrap fired in production at case 258 (named FAIL-case at rc 124 + the case-note "verdict unmeasured within budget", counted a failure, never a pass) and the battery CONTINUED (`skip-case 259` printed; 231 ok-case + 16 FAIL-case + 13 skip-case lines) — and then died at a new, never-before-reachable crash site: the flock-less `--pin` capture fails closed by design (rc=2, verdict-lines=0), the `r36-pin.txt` baseline is never written, and the unguarded grep on that missing file kills the script under `set -euo pipefail` — SELFTEST_RC=2, no summary, **no verdict line** (the same bare-statement class r70's claim guarded at three sites BELOW case 258; this site sits above it and was unreachable until the bound worked). The preflight was not run: arm 1's failure already decides C1 under the conjunctive frozen rule (disclosed; ~3–4 h under the measured rates buys no verdict) | `grep -c "^RESEARCH_GATE_SELFTEST:" corpus/evidence/round72/controls/battery-past-locale-dies-pinzone-r72.txt` → **0** (the honest-stop ground); `grep -c "^FAIL-case claims-locale-boundary"` → 1 (rc 124); `grep -c "^case-note claims-locale-boundary"` → 1; `grep -c "^skip-case 259"` → 1; `grep -c "r36-pin.txt: No such file or directory"` → 1; last case line `FAIL-case pin-echo-isolation pin_rc=2 drift_rc=2` (case ~260 of the canonical 275); run window epochs 1793579430 → 1793593780 = 14350 s (~55 s/case average under evening fleet load; the 19:21–20:00 stretch ~14 s/case — the quiet-window number the routed run is sized on: a full 275-case battery ≈ 64–90 min on a quiet host); the receipt's tool pin re-derives at the tip (`after-digest-derivations-r72.txt`) | **honest-stop per the frozen rule** (the rule's own arm: "the bounded battery still dies before its verdict line"); the routed remedy for round 73 is now fully measured and byte-located: guard the pin-zone crash site (the r70 bare-statement guard class, exact bytes in the receipt), then one quiet-window completing run (~64–90 min) + the bounded preflight complete both arms; limits: one host, one load regime, rates from three stretches not a distribution |
+| C2 calibration (sourced on S178, opened this round) | the four routed r71 spot-check defects stood as committed record defects (`controls/before-r72-greps.txt` at the base: "18 healthy" restatements 1+1+1 across LOG/lesson/SCORECARD against true per-receipt ok-case counts 9 and 16; ends-at-8 header = 1 against 9 transcript lines; LOG "Mistakes: three rows" = 1 against 4 lesson rows; fleet-report `^## SHONEN` = 0 against the inline form = 1) → corrected append-only: the LOG round-71 correction entry naming both superseded texts + the fourth Mistakes row; the round-71 lesson correction block (per-receipt counts; the honest final line count); the SCORECARD round-71 correction note; the round-72 report re-files the four `[~]` boxes under `## SHONEN`; the r71 receipt bytes untouched | all commands and counts in `controls/after-r72-corrections.txt` (verdicts tree) against the frozen before-receipt; collisions disclosed per hit (each quoted token = original + quotation: "18 healthy" 2/2/2, "Mistakes: three rows" 2); correction records 1+1+1; per-receipt counts re-derived 9 + 16; `git diff 7851c4ce..HEAD --stat -- corpus/evidence/round71/controls/battery-partial-r71.txt` → empty; registry 179 additions-only (deleted rows 0); report `^## SHONEN` → 1 with 4 `[~]` boxes | **improved** on the frozen predicate; limits, frozen with the claim: status-neutral record work — the r71 honest-stop ruling is undisturbed |
+
+No numeric axis score changed; no capability row (C1 is the measurement of an existing battery's completing predicate, honest-stopped; C2 is record correction — both disclosed here rather than pre-claimed).
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **honest-stop** (C1) | the deepest run ever (the r70 stall passed, the r71 bound production-proven) still ended before the verdict line at a newly-reachable crash site; no improvement claimed on the axis; the defect record is committed with the crash site byte-located and the completing route measured |
+| calibration | **improved** (C2) | four routed defects corrected append-only with counted before/after evidence across every restating file (QUALITY 9); the disqualified SHONEN assessment re-filed under the heading; a non-re-derivable count replaced by per-receipt counts |
+| depth | **unchanged** | no externally-grounded entry; both new rows are own-work tier B records |
+| freshness | **unchanged** | no drift surface measured; S178–S179 are own-work `on-release` records |
+| coverage | **unchanged** | PROVINCE.md untouched; the work stays inside the lane's own gate/records ground |
+| adjacency | **unchanged** | the orphaned souji lineages: identified ALIVE and RESPAWNING (two fresh children at census time), routed to the L0 queue with the respawn observation, never killed from this lane, never absorbed as an OS claim |
+
+Learning trends: expansion **unchanged** (own-work rows inside existing ground; no new province surface); quality **unchanged** (the r71 bound is production-proven and the r70 stall passed for the first time, but no completing receipt exists — no operable-capability improvement recorded; the measured route replaces padding); discernment **improved** (the corrections are counted with collisions disclosed; the round's own slips are mined — four classes, two caught pre-commit; the census gate re-validated the registry additions at both ends). Round admission: **not admitted — C1 honest-stop** (C2 verifies; the honest-stop is the frozen rule's own outcome, not a negotiation).
+
+## Planned — round 73 (frozen 2026-11-03 at commit A — the freeze commit this section lands in — against base `f748abbb6bf58388e732facd4ecec5612419c457`)
+
+Fresh-start round under the run-15 rule: the last three closures (r70, r71, r72, all `rejected-honest-stop` on the same completing predicate) were read before declaring, their host reasons (no `flock(1)`, sibling load) are measured ABSENT on this Linux/omp host (`corpus/evidence/round73/controls/probe-r73-sizing.txt`), and only claims a do-nothing control cannot reach are declared. Exactly two claims frozen in `corpus/evidence/round73/claims.md`:
+
+1. **C1 — operability** (lowest-scored non-retired axis, 3/10; the historical 3/10 observable deliberately not moved). The completing predicate, carried unchanged from the r70/r71/r72 claims files, is re-measured on this host with the r71 timeout-wrap in force and the tool bytes unchanged (`d5d48128…41e2`): battery completes with anchored `^RESEARCH_GATE_SELFTEST:` count 1 **and** preflight completes with `SKIPPED=none` → improved ON THAT PREDICATE; a battery that dies before its verdict line, or a preflight that cannot complete within budget → honest-stop again. Budgets left unset (900 s / 7200 s defaults); the gate's real result disclosed everywhere. Control: r72's receipt carries verdict-line count 0 and no preflight receipt (`controls/before-r73-greps.txt`).
+2. **C2 — calibration** (sourced on S180, opened this round). The two routed round-72 spot-check defects corrected append-only: V72-1 (the kill line is `tools/research-gate.sh:8435`, the unguarded sub-run assignment; the `:8426` grep is `set -e`-exempt) and V72-2 (the after-receipt's counts are measured at the landing tip `7f7ea19a`, and the verdicts-tree `6dd6c82` adds a third `"18 healthy"` hit — three at `6dd6c82` against two recorded). Frozen counter `corpus/evidence/round73/c2-count.py` (seven checks; `--selftest` catches 7/7 mutations); control: `C2=FAIL checks=2/7` at the base.
+
+Wave: one v1 wave of 11 seats (2 scout, 1 connector, 3 executor, 1 scribe, 1 revenger, 1 reviewer, 1 critic, 1 mutation-tester) under `ufo-wave-policy.json` (band 8–16), via the run-15 inline spawn handoff.

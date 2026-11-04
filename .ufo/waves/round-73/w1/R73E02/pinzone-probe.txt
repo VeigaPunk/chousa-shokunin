@@ -1,0 +1,106 @@
+R73E02 pin-zone isolation probe — C1 context only, NOT the battery
+Axes: invocation fidelity; echo isolation; drift-token precision; exit-cause precision.
+No tool installs. No gate/tool/source edits. Full selftest NOT run.
+
+Identity observed:
+git -C /home/vgpnk/Projects/shokunin/chousa-shokunin rev-parse HEAD
+a0f094c272dcb09f1bf79e2c9057d7ea20b7ac7b
+sha256sum /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh
+d5d48128509f77edf161e4d8b10b833e6e00f822906460fa049f27d1244d41e2  /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh
+
+Host prerequisite outputs:
+command -v flock
+/usr/bin/flock
+flock --version
+flock from util-linux 2.42.4
+flock -n /fast/scratch/hyaku/chousa-r73/w1/R73E02/lk -c true
+rc=0
+bash version observed: GNU bash, version 5.3.20(1)-release (x86_64-pc-linux-gnu)
+
+Invocation context:
+WORK=/fast/scratch/hyaku/chousa-r73/w1/R73E02
+GATE=/home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh
+cd "$WORK"
+All gate stdout/stderr captured together (2>&1), as in the gate block.
+Chronological order was a, c, b, sed, d; targets are independent files.
+
+(a) CHOUSA_GREP_PIN_ECHO=1 bash "$GATE" --pin "$WORK/r36-pin.txt"
+GATE_GREP: path=/usr/bin/grep source=default version="grep (GNU grep) 3.12-modified"
+GATE_PIN: ok path=/fast/scratch/hyaku/chousa-r73/w1/R73E02/r36-pin.txt gate_sha256=d5d48128509f77edf161e4d8b10b833e6e00f822906460fa049f27d1244d41e2
+rc=0
+Raw: raw/a-pin.out, raw/a-pin.rc
+
+(b) env -u CHOUSA_GREP_PIN_ECHO bash "$GATE" --drift "$WORK/r36-pin.txt"
+GATE_DRIFT: none
+rc=0
+Raw: raw/b-drift.out, raw/b-drift.rc
+
+(c) bash "$GATE" --pin "$WORK/r36-pin2.txt"
+GATE_PIN: ok path=/fast/scratch/hyaku/chousa-r73/w1/R73E02/r36-pin2.txt gate_sha256=d5d48128509f77edf161e4d8b10b833e6e00f822906460fa049f27d1244d41e2
+rc=0
+Raw: raw/c-pin.out, raw/c-pin.rc
+
+(d) Gate's exact insertion (current file line 8436, not the assignment at 8437):
+sed -i "/^# --- canonical output follows ---$/a GATE_GREP: path=/usr/bin/grep source=default version=\"x\"" "$WORK/r36-pin2.txt" 2>/dev/null || true
+No output; compound-command rc=0. The original sed status is masked by || true,
+so successful insertion is established instead by the observed inserted line:
+9:GATE_GREP: path=/usr/bin/grep source=default version="x"
+
+env -u CHOUSA_GREP_PIN_ECHO bash "$GATE" --drift "$WORK/r36-pin2.txt"
+GATE_DRIFT: -GATE_GREP
+rc=1
+The required token appears exactly.
+Raw: raw/d-drift.out, raw/d-drift.rc; raw/d-sed.rc records the masked status.
+
+Echo-scrub counts:
+grep -c '^GATE_GREP: ' -- "$WORK/r36-pin.txt" || true
+0
+grep -c '^GATE_GREP: ' -- "$WORK/r36-pin2.txt" || true
+1
+First pinned file contains NO GATE_GREP line, although (a)'s receipt does.
+Pinned files retained as raw/r36-pin.txt and raw/r36-pin2.txt.
+
+Exit-cause conclusion (attacks the old attribution to the missing-file grep):
+Within this isolated block, line 8435 WOULD be reached but would NOT kill the
+shell on this host: its exact --pin child (c) returned 0. This is not evidence
+that the entire battery reaches this block; no battery was run by this seat.
+The flock-less child's designed rc=2 is the trigger absent from this host's
+normal runs. tools/research-gate.sh:3972-3975 fails closed if flock is unavailable;
+:4150-4170 propagates failed capture into GATE_CAP_RC=2; :4283-4287 exits --pin 2.
+Under set -euo pipefail (:292), the unguarded assignment at :8435 inherits that
+nonzero status. The first --pin at :8419 and drift at :8420 are ||-guarded.
+The grep at :8426 is the non-final command in an && list, so a miss/error there
+is errexit-exempt. It is a visible symptom on a missing pin file, not the kill.
+
+Supplementary Bash semantics harnesses (not the gate battery):
+bash <scratch>/errexit-harness/h1-exempt-grep-then-unguarded.sh
+[set -euo pipefail; missing-file grep && assignment; marker; unguarded child exit 2]
+grep: /nonexistent/pin-does-not-exist.txt: No such file or directory
+H1-A reached past the exempt grep (p36_ok=1)
+rc=2
+H1-B marker after unguarded assignment did NOT print.
+bash <scratch>/errexit-harness/h2-guarded.sh
+[set -euo pipefail; child exit 2 guarded with || p36_rc=$?; marker]
+H2 survived the GUARDED assignment: rc=2
+rc=0
+Exact harness source retained in raw/h1-exempt-grep-then-unguarded.sh and raw/h2-guarded.sh;
+outputs/status retained in raw/h1.out, raw/h1.rc, raw/h2.out, raw/h2.rc.
+
+Supplementary modeled flock-less capture (NOT a host absence measurement):
+SHIM="$WORK/shim-noflock" was populated with symlinks to /usr/bin and /bin
+entries, then "$SHIM/flock" removed. Parent PATH stayed unchanged.
+env PATH="$SHIM" /usr/bin/bash -c 'command -v flock; echo "cmdv_rc=$?"; type -a flock 2>&1 | head -3'
+cmdv_rc=1
+/usr/bin/bash: line 1: type: flock: not found
+RESEARCH_GATE_CAPTURE_PATH="$SHIM" bash "$GATE" --pin "$WORK/r36-pin-noflock.txt"
+research-gate: --pin canonical capture failed (rc=2 verdict-lines=0 manifest-lines=0 schema-lines=0): /fast/scratch/hyaku/chousa-r73/w1/R73E02/r36-pin-noflock.txt
+rc=2
+No pin file created. Raw output/status: raw/e-noflock-pin.out, raw/e-noflock-pin.rc.
+Do not use the exploratory parent-shell prefix-assignment lookup as proof of
+absence: it resolved /usr/bin/flock despite the shim. The fresh-shell lookup
+above is the valid modeled-absence observation. Capture child's internal output
+was removed by the gate, so the model's precise internal failure site is not
+independently traced; the designed flock exit is established by source citation.
+
+Limits: narrow probe only; no C1 completing predicate adjudication or battery
+verdict. No supported-symbol refactor occurred; no LSP interface was exposed.

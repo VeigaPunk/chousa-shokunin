@@ -1,0 +1,13 @@
+$ cat demoB1-failing-preflight.txt
+# r73 preflight receipt — real-instrument summary-line format for a FAILING run
+PREFLIGHT=1/8 FAILED=G01,G02,G03,G04,G05,G06,G07,G08 ENV=none SKIPPED=none
+$ grep -c "SKIPPED=none" demoB1-failing-preflight.txt  # claims.md:65 expected 1
+1
+$ grep -c "^PREFLIGHT=" demoB1-failing-preflight.txt  # claims.md:66 expected 1
+1
+
+$ cat demoB2-header-only.txt
+# r73 preflight — header narration alone, zero instrument output
+# this round the preflight must land with the SKIPPED=none state
+$ grep -c "SKIPPED=none" demoB2-header-only.txt  # claims.md:65 expected 1 — satisfied with no preflight output at all
+1

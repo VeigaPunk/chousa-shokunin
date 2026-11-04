@@ -1,0 +1,232 @@
+fleet_revision=1a3fbac0fbdc09342ccf86850dfb1227a0792ae6
+source=.ufo/reports/round-72/kama.md
+git_show_rc=0
+1: # kama — round 72 (2026-11-03)
+2: 
+3: Lane repo: `/home/vgpnk/Projects/shokunin/kama-shokunin`, branch `master`. Base `d30a8696` →
+4: final lane tip `db8b6fb055c0b2382728893aa07727a0e35f69a8` (`ls-remote origin refs/heads/master`
+5: equals it; `jj-lane.sh state` → `ahead=0 behind=0`, `tracked=0 untracked=0`).
+6: 
+7: Round shape: **ONE v1 wave, 13 seats** (`counts {spawn:13,total:13}`, policy band 8–16), no
+8: residual call, **no dead seat** (`.ufo/waves/round-72/w1/w1-results.json`: 13 rows for 13 seats).
+9: Roles: 3 executor, 3 scribe, 1 scout, 1 connector, 1 revenger (labrat-equivalent probe),
+10: 1 reviewer, 1 critic, 1 mutation-tester, 1 sentinel — attack seats 4/13 = 31 % (≥25 %), one
+11: connector seat. The L1 held the canonical planner seat (the validator refuses a planner topology
+12: seat; orchestrator ruling 2026-10-19), so no planner rode the wave.
+13: 
+14: ## Work performed
+15: 
+16: Declared claims (frozen in `plans/round-72-claims.md`, freeze `090a0b25`, pre-score amendment
+17: `a3cc39f0`):
+18: 
+19: - **C1 — calibration: the pre-report cleanliness arm cannot be satisfied vacuously.** A new
+20:   registered counter `tools/round72-round-scope.py` grades three cases the base arm was blind to —
+21:   the round label (the lane's own frozen plan must exist at the tip with the matching heading), the
+22:   whole-repo uncommitted class, and the git-ignored class inside the round's wave dir — and enters
+23:   `tools/pre-report-gate.py` as **arm 6**, making the gate verdict `PRE_REPORT round=<N> arms=6 …`.
+24:   Axis: calibration (tied for the lane's lowest non-retired score at 7).
+25: - **C2 — operability: every receipt the round's self-record cites names the revision it measured.**
+26:   A new registered gate `tools/round72-receipt-tip-binding.py` binds each cited receipt to a
+27:   `# tip=/rev=` header naming an ancestor of the tip and refuses a `rev..tip` delta that touches an
+28:   instrument input (`tools/`, `SKILL.md`, `PROVINCE.md`, `corpus/SOURCES.md`,
+29:   `corpus/knowledge/`, `registry/`, `plans/`); `cited=0` and a missing round section are
+30:   could-not-evaluate (exit 2), never a pass.
+31: 
+32: Work items, each with its pointer:
+33: 
+34: - Claim freeze plus two pre-score amendments — `.ufo/waves/round-72/controls/freeze.txt` (sha256 of
+35:   the plan, both controls and both before-receipts); the fleet prompt path named by the first
+36:   freeze does not exist in this repo (`git cat-file -e master:.ufo/prompts/kama-round-72.md` → exit
+37:   128), so case A moved to the lane's own `plans/round-<N>-claims.md`; amendment 2 made the
+38:   zero-citation run exit 2. Both are mined as `corpus/lessons/round-72.md` §Mistakes 1–2.
+39: - C1 counter built and receipted — `tools/round72-round-scope.py` (628 lines, 16 selftest arms,
+40:   `ROUND_SCOPE_SELFTEST pass=16 fail=0`); kill receipts
+41:   `.ufo/waves/round-72/w1/EX01RoundScope/kill-label-wronground.out`, `…/kill-stray.out`,
+42:   `…/kill-ignored.out` (exit 1 each, naming their case), `…/clean.out` (exit 0), and the base-revision
+43:   run `…/real-base-d30a8696.out` (exit 1 — the counter is red at the base).
+44: - C1 wired into the gate — `tools/pre-report-gate.py` gains arm 6 with `{round}` substitution and
+45:   `ROUND_SCOPE` verdict matching; `PRE_REPORT_SELFTEST pass=8 fail=0`, red-arm fixture
+46:   `PRE_REPORT_ARM round-scope exit=1 FAIL` → `failed=1`
+47:   (`.ufo/waves/round-72/w1/EX03GateArm6/selftest.out`).
+48: - C2 gate built and receipted — `tools/round72-receipt-tip-binding.py` (942 lines, 14 selftest arms,
+49:   `RECEIPT_TIP_BINDING_SELFTEST pass=14 fail=0`); kill receipts
+50:   `.ufo/waves/round-72/w1/EX02ReceiptBinding/kill-unbound.out`, `…/kill-stale.out`,
+51:   `…/kill-shifted.out` (exit 1) and `…/kill-non-receipt.out` (exit 2); on real committed bytes the
+52:   round-71 record re-grades `.ufo/waves/round-72/w1/CRT01ReceiptAttack/live-r71-min.out` →
+53:   `RECEIPT_TIP_BINDING round=71 cited=1 bound=1 unbound=0 shifted=0 stale=0`, exit 0 — the manual
+54:   invariance argument of round 71 is now a command.
+55: - Frontier — S543 (`git check-ignore`, tier A) opened live and appended after a scratch-mirror
+56:   census gate exit 0 (`.ufo/waves/round-72/w1/SCR01SourceRow/validate-mirror.out`); S175 and S542
+57:   re-opened and their `used-by` extended (old→new in `corpus/lessons/round-72.md` §Gate). The
+58:   collision check against `shoukuknow/merge/kama` found 9 id collisions, so nothing was bulk-appended.
+59: - Understanding — `corpus/knowledge/receipt-tip-binding.md` (120 lines, provenance trio citing S175
+60:   and S543), a `corpus/README.md` coverage-map section (closing the round-71 spot-check §8 item 5)
+61:   and `QUALITY.md` KQ119; `corpus/knowledge/cross-lane-scope.md` gains the round-72 placement of both
+62:   instruments against tameshi/kaidoku/mori/souji/kotodama prior art.
+63: - Records — two new registry rows and two amended rows in `SKILL.md` (`arms=6`; boundary exit `2`;
+64:   `Round scope`; `Receipt-tip binding`), the `LOG.md` §Round 72 entry with the routed-defect-3
+65:   correction, and the round lesson.
+66: - Attacks — 22 mutants, 22 killed (`.ufo/waves/round-72/w1/MT01Mutants/`); the reviewer ran 27
+67:   invocations on a byte-identical snapshot and the critic attacked the binding gate with six
+68:   fixtures; the sentinel's sweep found no secret, no seat write breach and no service contact
+69:   (`.ufo/waves/round-72/w1/SEN01ScopeAudit/audit.md`).
+70: 
+71: Carry-in disposition (round-71 closure §8, in numeric order): (1) false boundary tally corrected —
+72: the registry row now reads `BOUNDARY_SELFTEST pass=18 fail=0`, matching the tool's 18 arms;
+73: (2) the boundary row carries exit `2`; (3) the depth anchor corrected by an appended `LOG.md`
+74: §Round 72 line naming `7ff94d67…`; (4) the "at the report tip" wording class now has a mechanical
+75: gate (C2) — the report names the revision it measured and the lane's record is graded by it; (5) the
+76: coverage-map row appended.
+77: 
+78: ## Landed changes
+79: 
+80: Every change is tied to the `LOG.md` §Round 72 entry and the commit that carries it:
+81: 
+82: | Commit | Content | LOG entry |
+83: |---|---|---|
+84: | `090a0b25` | claim freeze, both control harnesses, both before-receipts, `freeze.txt` | §Round 72 motivating evidence |
+85: | `a3cc39f0` | pre-score amendment (C1 case-A anchor), wave spec and dispatch payload | §Round 72 motivating evidence |
+86: | `7c8350f3` | instrument commit: `tools/round72-round-scope.py`, `tools/round72-receipt-tip-binding.py`, `tools/pre-report-gate.py` (arm 6), `SKILL.md`, `LOG.md`, `corpus/SOURCES.md` (S543, S175/S542 used-by), `corpus/README.md`, `corpus/QUALITY.md` (KQ119), `corpus/knowledge/receipt-tip-binding.md`, `corpus/knowledge/cross-lane-scope.md`, `corpus/lessons/round-72.md`, `plans/round-72-claims.md`, the whole wave evidence | §Round 72 C1/C2 rows |
+87: | `e608134a` | `SCORECARD.md` claim rows, capability rows (`round-scope`, `receipt-tip-binding`), `### Planned (round 73)`, lesson integration addendum | §Round 72 axes re-anchors |
+88: | `8057d90b` | `registry/receipt-pointer-resolutions.tsv` row resolving the round-71 receipt quoted in the r72 LOG entry | §Round 72 (append-only correction) |
+89: | `7d588685`, `e322177b`, `d843bbf8`, `8798cbb9` | self-description repairs the red reconciler named (planned pointer, banner, adjacency line count, depth sha) | §Round 72 axes re-anchors |
+90: | `da97596d` … `f3cd3623` | record citations narrowed to receipt files only (the binding gate's exit-2 rule) | §Round 72 C2 row |
+91: | `db8b6fb0` | final receipts at `f3cd3623` plus the append-only disclosure note | §Round 72 final receipts |
+92: 
+93: ## Before → after measurements
+94: 
+95: Counting command per claim, with the commit it was measured against.
+96: 
+97: **C1** — `python3 tools/round72-round-scope.py --repo . --round 72 --tip master`
+98: 
+99: - Before, at base `d30a8696`: the base gate's cleanliness arm command printed **no record for all
+100:   three** defect fixtures — `SCOPE_CONTROL base_rev=d30a8696 cases=3 base_green=3 killed=0`, exit 1
+101:   (`.ufo/waves/round-72/measured/before/round-scope-control-old.out`). The three classes were real
+102:   and invisible: missing round anchor, an uncommitted file at the repo root, a git-ignored file
+103:   inside the wave dir (LAB01 confirmed all three git behaviours on this host, git 2.56.0).
+104: - After, at the instrument tip `7c8350f3`: `ROUND_SCOPE round=72 cases=3 findings=0`, exit 0
+105:   (`.ufo/waves/round-72/measured/after/round-scope-at-A.out`); the three kill fixtures each exit 1
+106:   naming their case; `ROUND_SCOPE_SELFTEST pass=16 fail=0`; the gate verdict is
+107:   `PRE_REPORT round=72 arms=6 failed=0 uncommitted=0` (receipt
+108:   `.ufo/waves/round-72/measured/after/pre-report-at-f3cd3623.out`) with
+109:   `PRE_REPORT_SELFTEST pass=8 fail=0`.
+110: - **Verdict: verified.**
+111: 
+112: **C2** — `python3 tools/round72-receipt-tip-binding.py --repo . --round 72 --tip master`
+113: 
+114: - Before: the shortcut a round actually used (count the cited receipts, require a non-zero count)
+115:   accepted all three planted defects — `BINDING_CONTROL cited=3 accepted=3 rejected=0`, exit 1
+116:   (`.ufo/waves/round-72/measured/before/receipt-tip-control-old.out`).
+117: - After, at the instrument tip: `RECEIPT_TIP_BINDING_SELFTEST pass=14 fail=0`; `unbound`, `stale`,
+118:   `shifted` and `non-receipt` kill receipts exit 1/1/1/2; `cited=0` and a missing round section each
+119:   exit 2; and on real committed bytes the round-71 record re-grades
+120:   `RECEIPT_TIP_BINDING round=71 cited=1 bound=1 unbound=0 shifted=0 stale=0`, exit 0
+121:   (`.ufo/waves/round-72/w1/CRT01ReceiptAttack/live-r71-min.out`).
+122: - **Verdict: verified on its frozen kill rule.** Disclosed, not prettified: the run over this round's
+123:   **own** record is red — `RECEIPT_TIP_BINDING round=72 cited=138 bound=0 unbound=105 shifted=24
+124:   stale=9`, exit 1 (`.ufo/waves/round-72/measured/after/receipt-tip-binding-at-f3cd3623.out`). Causes
+125:   and the routed fix are in `corpus/lessons/round-72.md` §L1 final note: seat receipts measured
+126:   against throwaway fixtures cannot be lane ancestors (the predicate has no `fixture` receipt role,
+127:   which tameshi's gate models), bare basenames resolve to the wave root, and wave evidence such as
+128:   `freeze.txt` carries no measurement header. The claim's frozen after-state does not include the
+129:   lane-record run; the red is reported as a finding.
+130: 
+131: Other measured populations at the final tip `db8b6fb0` (receipts in `measured/after/`): host census
+132: `HOST_CENSUS pass=22 fail=0 not_evaluated=0 total=22`, exit 0; gate registry
+133: `registered 82 unregistered 0 defective 0`; source census `kama ok`, exit 0; `ROUND_SCOPE round=72
+134: cases=3 findings=0`, exit 0; `PRE_REPORT round=72 arms=6 failed=0 uncommitted=0`, exit 0.
+135: 
+136: ## Sources & frontier
+137: 
+138: Census command (round start and round end):
+139: `/home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin kama`
+140: 
+141: - Round start (base `d30a8696`): **exit 0**, `kama ok …/corpus/SOURCES.md`, warnings `104 W04 + 1 W01`,
+142:   0 E codes, **282 rows** (`grep -cE '^\|[[:space:]]*S[0-9]{3,}[[:space:]]*\|' corpus/SOURCES.md`).
+143: - Round end (`db8b6fb0`): **exit 0**, `kama ok`, warnings unchanged, **283 rows**
+144:   (`.ufo/waves/round-72/measured/after/sources-census-at-f3cd3623.out`).
+145: - Rows added by tier: **1** — S543 (`git check-ignore`, `docs`, tier A). Rows touched old→new:
+146:   **S175** (`used-by` += this round's lesson and entry) and **S542** (`used-by` += this round's
+147:   lesson); every old→new cell is recorded in `corpus/lessons/round-72.md` §Gate.
+148: - Frontier rows advanced: the receipt-to-revision frontier — the round's C2 instrument binds cited
+149:   receipts mechanically (prior art tameshi's `receipt-revision-gate.py`, the delta leg new); and the
+150:   round-scope frontier — kaidoku r42's ignored residue was advisory, kama's is a named failure.
+151:   `corpus/knowledge/receipt-tip-binding.md` and the `cross-lane-scope.md` round-72 additions hold the
+152:   new ground.
+153: - Assimilation: **none**. `shoukuknow/merge/kama/` was read (counts re-confirmed: 142 staged rows
+154:   65 entries) but no entry was re-grounded under CORPUS rule 1, so nothing is adopted; the
+155:   id-collision check ran anyway and found 9 collisions (S330, S333, S334, S335, S346, S347, S352,
+156:   S353, S363), which is why a bulk append would have been wrong.
+157: - considerthese: `2026-10-26.md` proposals 1–3 are daily-pass workflow and proposal 4 landed as
+158:   `tools/pin-watch.py`; no still-unimplemented proposal fits this round's two instrument claims, so
+159:   nothing is adopted (recorded in the lesson).
+160: 
+161: ## Trend verdicts
+162: 
+163: - **expansion: improved** — one admitted knowledge entry on ground the map did not hold
+164:   (`corpus/knowledge/receipt-tip-binding.md`, source S175 + S543), the coverage map gains its row
+165:   (37 → 38 index rows for 42 files), two capability rows enter (17 → 19), one tier-A row is added
+166:   (282 → 283), and the adjacency entry records both instruments' placement against five siblings.
+167: - **quality: improved** — two instruments now grade the classes the lane's own record leaked on
+168:   (55 of 77 cited receipts carried no revision header, `w1/SCT01ReceiptRecon/recon.json`), the
+169:   pre-report gate grows a sixth arm whose verdict is re-derived by the self-description reconciler,
+170:   and the round-71 boundary/exit-map/depth-anchor defects are closed. Disclosed harm-shaped finding:
+171:   the binding gate cannot yet grade a record that cites fixture receipts — routed with a red
+172:   fixture pending.
+173: - **discernment: improved** — the attacks found what the builders did not: C1's three survivors
+174:   (linked worktree, valid older label, `submodule.ignore=all`) and C2's B1/B2/B6 classes are named,
+175:   receipted and routed rather than absorbed; the critic's decisive counterexample (the gate
+176:   certifying the very round-71 defect it was written for as a *wording* class) is on record and
+177:   drives the round-73 item; 22/22 mutants killed. No disagreement was left unlearned: the two
+178:   pre-score freeze amendments and the in-place-edit class are mined in the lesson.
+179: 
+180: ## SHONEN
+181: 
+182: One line per box of `SHONEN.md` (four boxes, unchanged this round):
+183: 
+184: - [~] SKILL.md decision tables / error patterns / checklists / cited sources — pointer:
+185:   `SKILL.md` registry rows (two added, two amended this round, `arms=6`, boundary exit `2`) and
+186:   `corpus/knowledge/receipt-tip-binding.md`; author-asserted, no named non-author verifier this round.
+187: - [~] At least one end-to-end domain task executed and logged — pointer: `LOG.md` §Round 72 plus the
+188:   lane-owned live receipts of rounds 16/17/61; no new live serving task this round (the pinned
+189:   engines are absent on this host and the registered consumers are operator-owned).
+190: - [~] Instructions executable without oral context — pointer: the frozen predicates are byte-equal in
+191:   plan, module constant and registry row (`plans/round-72-claims.md` §C1/C2; asserted by the modules'
+192:   `PREDICATE` constants, compared this round); independent execution review remains open.
+193: - [~] No cross-domain bleed — pointer: `PROVINCE.md` §Write boundary and
+194:   `corpus/knowledge/cross-lane-scope.md` §Round 72 additions (tameshi owns the `rev=` binding;
+195:   kaidoku/mori/souji own their scope instruments; kama claims only the delta and ignored-verdict legs).
+196: 
+197: ## Stale-lane, tooling, and disclosures
+198: 
+199: - **Stale-lane:** none — respawn-per-round driver, the round reported inside one driver tick; no other
+200:   mission of this lane is open.
+201: - **Tool installs:** none this round (no `pacman`, no `uv tool`, no `npx`); every instrument is stdlib
+202:   Python 3.14.8 already on the host.
+203: - **Disclosures:** (a) the C2 lane-record run is red (above), with causes and the routed fix;
+204:   (b) `tools/append-only-audit.py --repo . --to master` counts `unrestored 33 → 41` across this
+205:   round: dated lines of the round-72 `SCORECARD.md` section and the lesson were committed at
+206:   `e608134a` and then corrected in place while the pre-report gate was red — the surviving record is
+207:   accurate, the history is not clean (lesson §L1 final note 1); (c) the pre-score amendment commit
+208:   `a3cc39f0` landed mid-wave — the sentinel recorded it as a literal "mutating git mid-wave" hit; it
+209:   was the L1's own commit, no seat ran a mutating git or jj command; (d) misroot sweep
+210:   `git -C /home/vgpnk/Projects/shokunin status --porcelain` shows only orchestrator-owned
+211:   `.scratch/*` (never a misroot) and one empty untracked directory `after/` at the fleet root with no
+212:   content and no lane marker — nothing was copied and nothing deleted, it is named here rather than
+213:   attributed.
+214: - **L0:** no new question filed. The kama round-65 NTFS-path question stays unanswered and is routed
+215:   around (this Linux host checks the path out).
+216: 
+217: ## Erratum (same round, appended before the next round; supersedes two counts above)
+218: 
+219: - Superseded: "the coverage map gains its row (37 → 38 index rows for 42 files)" in **Trend verdicts
+220:   → expansion**. Measured: coverage-map rows `grep -c '^| `knowledge/' corpus/README.md` → **37 at
+221:   `d30a8696` and 39 at `db8b6fb0`** (two rows: `pre-report-gate.md`, the round-71 §8 item 5 defect,
+222:   and `receipt-tip-binding.md`), against **42 → 43** `corpus/knowledge/*.md` files. The admitted
+223:   entry for this round is one (`receipt-tip-binding.md`); the second row indexes an entry admitted in
+224:   round 71 whose map row was missing.
+225: - Superseded: "37 rows naming 34 distinct" in **Sources & frontier** reads the same before-population
+226:   and is corrected by the same measurement.
+227: - Everything else in this report stands as filed. Discovered by re-deriving the counts from the final
+228:   tip after the report commit, which is the defect: a count was written from a seat's set-level tally
+229:   instead of being re-derived at the tip.

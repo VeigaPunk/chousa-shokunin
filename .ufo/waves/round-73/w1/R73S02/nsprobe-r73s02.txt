@@ -1,0 +1,29 @@
+=== parent shell view ===
+$ declare -F timeout:
+  (no function)
+$ type -a timeout:
+timeout is a shell builtin
+timeout is /usr/bin/timeout
+$ export -p | grep -c 'BASH_FUNC_timeout':
+0
+
+=== child bash view (what the gate's own bash sees) ===
+command -v timeout -> /usr/bin/timeout
+type -t -> file
+command -v flock -> /usr/bin/flock
+
+=== child bash view with env scrubbed (gate top-level style) ===
+command -v timeout -> /usr/bin/timeout
+type -t -> file
+rc=124
+
+=== uid / hostname / userns sysctls ===
+id -u: 1000
+/etc/hostname: -rw-r--r-- 1 root root 9 Oct  3 17:42 /etc/hostname
+first line: plazir27
+max_user_namespaces: 122865
+unprivileged_userns_clone: 1
+unshare: /usr/bin/unshare ver=unshare from util-linux 2.42.4
+
+=== gate ns_probe replicated verbatim ===
+NS_STATE=yes

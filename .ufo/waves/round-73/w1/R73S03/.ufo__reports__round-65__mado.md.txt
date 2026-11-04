@@ -1,0 +1,190 @@
+fleet_revision=1a3fbac0fbdc09342ccf86850dfb1227a0792ae6
+source=.ufo/reports/round-65/mado.md
+git_show_rc=0
+1: # mado round 65 — returned host, measured landing checks
+2: 
+3: ## Work performed
+4: 
+5: Declared claims: **C1 freshness**, eight-group returned-host register re-derivation;
+6: **C2 operability**, a standing four-leg landing instrument (capability acquisition).
+7: Both frozen counters meet their targets; counter weaknesses remain explicitly disclosed.
+8: This is a lane self-verdict, not independent admission.
+9: 
+10: - Frozen declaration and base controls: `cb63ab13ccaf85191318701d5db5ace050bd5bd4`,
+11:   `.ufo/waves/round-65/claims-declaration-r65.md` and receipts. Base
+12:   `524fa1f90b1f2de44b3019bacf833d54e0af13a0`; no inherited attempt-65 residue.
+13: - C1 appended PROVINCE register, preserved historical Windows rows; live gate
+14:   CLEAN 52 pass; file plane 29 pass; unchanged gate selftest 460/460.
+15:   Evidence: `.ufo/waves/round-65/measurement-final-r65.txt`.
+16: - C2 integrated `quality/landing-counters.sh` and two revision-reading counters;
+17:   ledger 104 → 106. Instrument selftest 19/19; landing GREEN with four rc=0.
+18: - ONE validated v1 wave, w1, 12 seats, all settled before this report (WAVE-DONE).
+19:   Role mix: 4 executor, 2 scout, 2 reviewer, 1 critic, 1 mutation-tester,
+20:   1 scribe, 1 connector. Attack share 4/12; connectors 1; residual calls 0;
+21:   total 12; no dead seats reported. Planner seat: L1. Routing came from host
+22:   overrides, no model parameter. Evidence: `w1-spec.json`, `w1-dispatch.json`,
+23:   `w1.ready.dispatched`, `w1-results.json` under `.ufo/waves/round-65/`.
+24: - Attack findings: C1 accepts forged state cells (reviewer A3); independent
+25:   seat probes reproduced rows, but do not make this a truth-binding counter.
+26:   C2 critic B1/B2/B4 addressed by dirty-receipt refusal, nonempty-citation
+27:   guard, and git-env stripping; B3 by ledger rows. Mutation survivors and
+28:   remaining hermeticity weaknesses are preserved in the lesson and seat reports.
+29:   No universal robustness or independent admission claimed.
+30: - Misroot sweep: `git -C /home/vgpnk/Projects/shokunin status --porcelain`
+31:   showed only orchestrator-owned `.scratch` state; no mado seat misroots found.
+32: 
+33: ## Landed changes
+34: 
+35: - `cb63ab13ccaf85191318701d5db5ace050bd5bd4`: freeze and before receipts.
+36: - `c6b8ec301ac54c2c082ad228cbacabecbd15b48e`: register, instruments, ledger,
+37:   source reopened dates, lesson, wave evidence.
+38: - `23fbc174d02fa44662e9aee735bbf6de5cad3f1d`: measured SCORECARD and LOG,
+39:   measurement outputs and honest limitation addendum. Each change is tied to
+40:   `LOG.md` **Round 65**, beginning line 3148.
+41: - Final lane hash above was verified by `git ls-remote origin refs/heads/master`.
+42: 
+43: ## Before → after measurements
+44: 
+45: Measured content revision: `c6b8ec301ac54c2c082ad228cbacabecbd15b48e`.
+46: Both base controls still MISS at the original base; predicates did not change.
+47: 
+48: | Claim | Counting command (lane cwd; REV selects base or measured content) | Before → after |
+49: |---|---|---|
+50: | C1 freshness | `python3 quality/counters/c1-r65-register.py --repo . --rev REV` | rows=0 groups=0/8 receipts=0 gate=missing TARGET_MISSED rc=1 → rows=8 groups=8/8 receipts=4 resolved=4 gate=ok TARGET_MET rc=0 |
+51: | C2 operability | `python3 quality/counters/c2-r65-landing-instrument.py --repo . --rev REV --scratch-root /fast/scratch/hyaku/mado-r65/c2` | instrument absent TARGET_MISSED rc=1 → selftest=0 landing=0 green=yes TARGET_MET rc=0 |
+52: 
+53: Exact outputs: `.ufo/waves/round-65/measurement-final-r65.txt`.
+54: First measurement red is preserved in `measurement-first-r65.txt`: writing the
+55: output inside the receipts scan dirtied that scope. Moving it outside restored
+56: the landing measurement without code changes. C1's dated Windows rows are
+57: preserved, not erased. Re-derived live health is environmental observation,
+58: not a causal repair by this round.
+59: 
+60: Harm watch: navigation 78/78, used-by missing=0, ledger 106/106,
+61: citations 10/10, fail-closed selftests 54/54 and 62/62, citecheck 12/12,
+62: new instrument 19/19, unchanged gate 460/460. All relevant verdicts green.
+63: Some measurement wrappers for hermetic checker selftests capture tail's rc;
+64: the passing assertion totals are observed, not replaced with fabricated producer rcs.
+65: 
+66: ## Sources & frontier
+67: 
+68: Registry command: `/home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin mado`.
+69: Rows 371 → 371; rows added by tier A/B/C: 0/0/0. Rows touched: S028 opened
+70: 2026-10-19 → 2026-11-03; S097 opened 2026-10-20 → 2026-11-03. Recheck cadence
+71: on-release, status mined and used-by are unchanged. Declaration's wrong-column
+72: wording is corrected in lesson M65-4. Gate quotes and access dates are in
+73: `corpus/lessons/round-65.md` and scout `gate-quotes.md`.
+74: Frontier advanced: returned-host observation currency, not new corpus ground.
+75: 
+76: Assimilation: none — package reachable, no theme fits these frozen claims;
+77: connector screened 69 staged entries / 147 rows, closest surface-state groups
+78: held for re-grounding. No append selection, so no adopted-id collision or renumber map.
+79: Considerthese: nine files unchanged since previous screen; no new adoptable proposal.
+80: Mistakes M65-1–M65-4 and landing-output recursion mined; failure demonstrations
+81: and remaining counter limits recorded in `corpus/lessons/round-65.md`.
+82: 
+83: Start census (exit 0):
+84: ```
+85: mado	W04	S030 duplicate url wiki.hypr.land/Configuring/Basics/Window-Rules across scopes
+86: mado	W04	S042 duplicate url wayland.freedesktop.org/extras.html across scopes
+87: mado	W04	S045 duplicate url wiki.hypr.land/Configuring/Basics/Window-Rules across scopes
+88: mado	W04	S097 duplicate url raw.githubusercontent.com/basecamp/omarchy/v3.8.4/themes/matte-black/colors.toml across scopes
+89: mado	W04	S119 duplicate url raw.githubusercontent.com/python/cpython/v3.14.8/Lib/imaplib.py across scopes
+90: mado	W04	S120 duplicate url raw.githubusercontent.com/python/cpython/v3.14.8/Doc/reference/executionmodel.rst across scopes
+91: mado	W04	S121 duplicate url raw.githubusercontent.com/python/cpython/v3.14.8/Doc/reference/executionmodel.rst across scopes
+92: mado	W01	S277 tierC mined used-by=corpus/knowledge/request-socket-live-bound-r8.md, corpus/knowledge/request-limits-upstream-r31.md
+93: mado	W04	S303 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/config/legacy/ConfigManager.cpp across scopes
+94: mado	W04	S307 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/debug/HyprCtl.cpp across scopes
+95: mado	W04	S317 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/config/legacy/ConfigManager.cpp across scopes
+96: mado	W04	S318 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/config/values/ConfigValues.cpp across scopes
+97: mado	W04	S320 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/debug/HyprCtl.cpp across scopes
+98: mado	W04	S321 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/helpers/MiscFunctions.cpp across scopes
+99: mado	W04	S324 duplicate url raw.githubusercontent.com/hyprwm/hyprlang/v0.6.8/src/config.cpp across scopes
+100: mado	W04	S326 duplicate url raw.githubusercontent.com/Vladimir-csp/xdg-terminal-exec/v0.14.3/xdg-terminal-exec across scopes
+101: mado	W04	S327 duplicate url raw.githubusercontent.com/Vladimir-csp/xdg-terminal-exec/v0.14.3/README.md across scopes
+102: mado	W04	S332 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/desktop/rule/matchEngine/RegexMatchEngine.cpp across scopes
+103: mado	W04	S353 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/config/legacy/ConfigManager.cpp across scopes
+104: mado	W04	S354 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/managers/input/InputManager.cpp across scopes
+105: mado	W04	S364 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/managers/KeybindManager.cpp across scopes
+106: mado	W04	S366 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/debug/HyprCtl.cpp across scopes
+107: mado	W04	S368 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/config/legacy/ConfigManager.cpp across scopes
+108: mado	W04	S370 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/config/legacy/DispatcherTranslator.cpp across scopes
+109: mado	W04	S371 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/config/shared/actions/ConfigActions.cpp across scopes
+110: mado	W04	S373 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/managers/KeybindManager.cpp across scopes
+111: mado	W04	S380 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/devices/IKeyboard.hpp across scopes
+112: mado	W04	S381 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/protocols/core/Seat.cpp across scopes
+113: mado	W04	S382 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/devices/IKeyboard.hpp across scopes
+114: mado	W04	S384 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/config/values/ConfigValues.cpp across scopes
+115: mado	W04	S387 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/config/legacy/ConfigManager.cpp across scopes
+116: mado	W04	S388 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/helpers/MiscFunctions.cpp across scopes
+117: mado	W04	S389 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/debug/HyprCtl.cpp across scopes
+118: mado	W04	S392 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/config/shared/inotify/ConfigWatcher.cpp across scopes
+119: mado	W04	S393 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/helpers/MiscFunctions.cpp across scopes
+120: mado	W04	S394 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/debug/HyprCtl.cpp across scopes
+121: mado	W04	S395 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/config/legacy/ConfigManager.cpp across scopes
+122: mado	ok	/home/vgpnk/Projects/shokunin/mado-shokunin/corpus/SOURCES.md
+123: census-exit=0
+124: ```
+125: End census (exit 0):
+126: ```
+127: mado	W04	S030 duplicate url wiki.hypr.land/Configuring/Basics/Window-Rules across scopes
+128: mado	W04	S042 duplicate url wayland.freedesktop.org/extras.html across scopes
+129: mado	W04	S045 duplicate url wiki.hypr.land/Configuring/Basics/Window-Rules across scopes
+130: mado	W04	S097 duplicate url raw.githubusercontent.com/basecamp/omarchy/v3.8.4/themes/matte-black/colors.toml across scopes
+131: mado	W04	S119 duplicate url raw.githubusercontent.com/python/cpython/v3.14.8/Lib/imaplib.py across scopes
+132: mado	W04	S120 duplicate url raw.githubusercontent.com/python/cpython/v3.14.8/Doc/reference/executionmodel.rst across scopes
+133: mado	W04	S121 duplicate url raw.githubusercontent.com/python/cpython/v3.14.8/Doc/reference/executionmodel.rst across scopes
+134: mado	W01	S277 tierC mined used-by=corpus/knowledge/request-socket-live-bound-r8.md, corpus/knowledge/request-limits-upstream-r31.md
+135: mado	W04	S303 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/config/legacy/ConfigManager.cpp across scopes
+136: mado	W04	S307 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/debug/HyprCtl.cpp across scopes
+137: mado	W04	S317 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/config/legacy/ConfigManager.cpp across scopes
+138: mado	W04	S318 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/config/values/ConfigValues.cpp across scopes
+139: mado	W04	S320 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/debug/HyprCtl.cpp across scopes
+140: mado	W04	S321 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/helpers/MiscFunctions.cpp across scopes
+141: mado	W04	S324 duplicate url raw.githubusercontent.com/hyprwm/hyprlang/v0.6.8/src/config.cpp across scopes
+142: mado	W04	S326 duplicate url raw.githubusercontent.com/Vladimir-csp/xdg-terminal-exec/v0.14.3/xdg-terminal-exec across scopes
+143: mado	W04	S327 duplicate url raw.githubusercontent.com/Vladimir-csp/xdg-terminal-exec/v0.14.3/README.md across scopes
+144: mado	W04	S332 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/desktop/rule/matchEngine/RegexMatchEngine.cpp across scopes
+145: mado	W04	S353 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/config/legacy/ConfigManager.cpp across scopes
+146: mado	W04	S354 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/managers/input/InputManager.cpp across scopes
+147: mado	W04	S364 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/managers/KeybindManager.cpp across scopes
+148: mado	W04	S366 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/debug/HyprCtl.cpp across scopes
+149: mado	W04	S368 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/config/legacy/ConfigManager.cpp across scopes
+150: mado	W04	S370 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/config/legacy/DispatcherTranslator.cpp across scopes
+151: mado	W04	S371 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/config/shared/actions/ConfigActions.cpp across scopes
+152: mado	W04	S373 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/managers/KeybindManager.cpp across scopes
+153: mado	W04	S380 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/devices/IKeyboard.hpp across scopes
+154: mado	W04	S381 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/protocols/core/Seat.cpp across scopes
+155: mado	W04	S382 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/devices/IKeyboard.hpp across scopes
+156: mado	W04	S384 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/config/values/ConfigValues.cpp across scopes
+157: mado	W04	S387 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/config/legacy/ConfigManager.cpp across scopes
+158: mado	W04	S388 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/helpers/MiscFunctions.cpp across scopes
+159: mado	W04	S389 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/debug/HyprCtl.cpp across scopes
+160: mado	W04	S392 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/config/shared/inotify/ConfigWatcher.cpp across scopes
+161: mado	W04	S393 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/helpers/MiscFunctions.cpp across scopes
+162: mado	W04	S394 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/debug/HyprCtl.cpp across scopes
+163: mado	W04	S395 duplicate url raw.githubusercontent.com/hyprwm/Hyprland/efb50993780079460b0cbed1363e2166a2de1d9f/src/config/legacy/ConfigManager.cpp across scopes
+164: mado	ok	/home/vgpnk/Projects/shokunin/mado-shokunin/corpus/SOURCES.md
+165: ```
+166: 
+167: ## Trend verdicts
+168: 
+169: - **expansion: unchanged** — no new knowledge entry or domain ground admitted;
+170:   register refresh and instrument are quality work, not coverage growth.
+171: - **quality: improved** — standing four-leg instrument demonstrated GREEN;
+172:   source re-opens, returned-host probes, and executable register check landed.
+173: - **discernment: unchanged** — adversarial findings are named, but no new
+174:   independent admit/reject agreement sample exists; forged-cell weakness remains.
+175: 
+176: Stale-lane: this assignment owns round 65 only; no other mado mission is open here.
+177: L0: r57 freshness/Windows L2 waiver, r58 gate-selftest disposal, r59 calibration
+178: re-derivability and r60 screenshot-scope questions remain operator-owned and open.
+179: Returned Linux host allows this round's dispatch and omarchy remeasurement; it
+180: is not a retrospective waiver or answer. No tool installs or host service changes.
+181: 
+182: ## SHONEN
+183: 
+184: - [~] Real tables and cited instructions — `SHONEN.md`, `corpus/knowledge/executor-test-sufficiency.md`; no new outside-lane promotion verifier.
+185: - [~] End-to-end domain task — historical `corpus/knowledge/config-health-report-r3.md`; live round-65 gate is not an independent promotion judgment.
+186: - [~] Instructions without oral context — historical executor-test note; dispatched seats are not outside-lane promotion authority.
+187: - [~] No cross-domain bleed — `PROVINCE.md` returned-host register and boundary; no new outside-lane approval.

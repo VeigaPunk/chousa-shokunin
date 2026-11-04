@@ -1,0 +1,58 @@
+R73V01 — committed-byte reconstruction of the round-72 pin-zone crash
+
+Axes: causal precision; independently reproducible evidence; preservation of true historical observations.
+
+Source keys (paths relative to lane root):
+G = tools/research-gate.sh
+R = corpus/evidence/round72/controls/battery-past-locale-dies-pinzone-r72.txt
+Local immutable copies: source-gate.sh, source-r72-receipt.txt, source-r73-claims.md in this output directory.
+Identity receipt: gate-identity.txt. Observed gate SHA-256 d5d48128509f77edf161e4d8b10b833e6e00f822906460fa049f27d1244d41e2; HEAD a0f094c272dcb09f1bf79e2c9057d7ea20b7ac7b; no working-tree changes for G. This matches R:16-17 and the frozen round-73 claims.
+LSP: xd://lsp returned 'No such tool'; semantic-server references/definitions unavailable. Literal lookup plus direct executable-byte inspection used instead; grep locations are not represented as semantic-server proof.
+
+1. Executed sequence after skip-case 259
+
+R:322 records skip-case 259, reason no flock(1). G:8383-8386 increments/skips that case; its flock-present branch at G:8387 does not run.
+G:8417 removes r36-pin.txt and r36-pin2.txt; :8418 initializes state.
+G:8419 invokes CHOUSA_GREP_PIN_ECHO=1 bash "$SELF" --pin r36-pin.txt, captures stdout/stderr, and catches failure using || p36_rc=$?. It returns 2 without writing the baseline.
+G:8420 invokes env -u CHOUSA_GREP_PIN_ECHO bash "$SELF" --drift r36-pin.txt and catches its rc=2 in p36_drc. Missing-baseline handling prints at G:4320 and exits 2 at :4321.
+G:8421 advances the counter to 260. Assertions :8422-8425 set p36_ok=0 because pin/drift did not succeed and their outputs lack the expected success verdicts.
+G:8426 runs grep on the nonexistent r36-pin.txt. Its direct stderr becomes R:323.
+G:8430 prints FAIL-case pin-echo-isolation pin_rc=2 drift_rc=2 (R:324); :8431 prints previously captured child output (R:325-327); :8432 increments failures.
+G:8434 resets state. G:8435 invokes the second --pin child, targeting r36-pin2.txt, in an unguarded command-substitution assignment. This is the terminating statement. No subsequent pin-drift-grep-token line prints (receipt-tail.txt: pin2 mentions=0; receipt-counts.txt: pin-drift-grep-token mentions=0).
+
+2. Child and refusal chain
+
+Both outer --pin children (:8419 and :8435) follow the same implementation. run_pin calls gate_canonical_capture at G:4283. Its nested canonical child runs verify-all record.md --claims claims.jsonl --json manifest.jsonl --root . at G:4150-4156, with capture output redirected to capture.txt.
+The manifest writer tests command -v flock at G:3972. With flock unavailable it prints exactly:
+research-gate: flock(1) unavailable; manifest not written: %s
+at G:3973 and exits 2 at :3974. Here JSON_ARG is manifest.jsonl.
+The capture records failure at G:4169-4170, including rc=2 verdict-lines=0 manifest-lines=0 schema-lines=0. run_pin prints the outer diagnostic at G:4285-4286 and exits 2 at :4287, before its baseline-writing path.
+R:326 exposes that outer diagnostic for the first --pin. The nested flock-refusal text is not directly visible in R: it was redirected into the private capture. The connection to that refusal is reconstructed from the executable path and corroborated by R:322's no-flock observation, not claimed as a directly printed transcript line. The second child's output is captured at :8435 but never subsequently printed.
+
+3. Symptom versus termination
+
+G:292 enables set -euo pipefail. G:8426 is:
+grep -q '^GATE_GREP: ' -- "$WORK/r36-pin.txt" && p36_ok=0
+The failed grep is the non-final member of an && list and is errexit-exempt. Missing-file rc=2 therefore does not terminate the script. Independently, the observed later FAIL-case at R:324 proves execution passed the symptom at R:323.
+G:8435 is an unguarded assignment with command substitution. Its status is the status of its --pin child, 2. Unlike :8419 it has no || handler. Errexit terminates the selftest process there with status 2. R:329 records SELFTEST_RC=2; no anchored RESEARCH_GATE_SELFTEST verdict appears.
+Supplementary shape-only probe: probe-set-e.txt records the &&-list shape surviving, the unguarded assignment exiting 2 without its continuation marker, and the guarded assignment surviving with rc=2. This probe used stub child status, not the gate and not an r72 host replay; causal reconstruction above does not depend on it.
+
+4. Counterfactual guard at :8435
+
+Assuming the assignment were caught in the same way as :8419, execution would pass :8435. The absent baseline makes sed at :8436 fail harmlessly under || true. The guarded drift at :8438 returns 2 (G:4319-4321). Both assertions fail: :8440 requires rc=1, and :8441 requires GATE_DRIFT: -GATE_GREP, not a baseline-missing diagnostic. Consequently G:8445 would print:
+FAIL-case pin-drift-grep-token          drift_rc=2
+followed by captured diagnostics at :8446, increment failures at :8447, and continue beyond this case.
+This is the case's implemented assertion result: a FAIL, not an ok-case or skip-case. It does not establish a token-pairing defect because no baseline existed. Continuing beyond this case is supported; claiming eventual full-battery completion is not. G:8556 contains another unguarded --pin assignment with the same unavailable-flock precondition (source-gate.sh:8538-8567). No whole-battery counterfactual was run.
+
+5. What remains true in the historical header
+
+R:1,5-7 remain supported insofar as they say: case 258 printed timeout FAIL rc=124 and a case-note; execution reached skip-case 259 and the r36 pin zone; flock-less pin capture failed closed, baseline absent; case 260 printed FAIL with pin_rc=2 drift_rc=2; process exit 2, no summary/verdict; C1 honest-stop remains unchanged. R:319-329 supplies the direct evidence. Changing kill-line attribution does not retract those facts.
+R:6's claim that the missing-file grep killed the script is false; the missing-file diagnostic is a symptom at :8426, not the fatal statement. R:7's parenthetical 'the crash site' has the same precision defect.
+Additional literal-count divergence: R:7 says its unanchored grep count over the receipt is 1. Re-running that exact command yields 2: R:7 self-matches and R:323 is the one actual diagnostic. count-context.txt preserves both hits and the transcript-only anchored count of 1. The verdict, timeout, case-note and skip counts remain 0,1,1,1 respectively (receipt-counts.txt).
+R:8's inherited phrase 'run to completion' cannot mean verdict-bearing completion: R:1 explicitly records an honest-stop and the transcript has no verdict. The correction does not newly validate that phrase. Historical detachment, load, external process and budget-environment statements are not independently established by the assigned tail/code surface; they are neither disproved by this correction nor re-proven here.
+
+Minimal corrected narrative (52 words; citations below):
+After skip-case 259, flock-less pin capture failed closed. The missing-file grep at tools/research-gate.sh:8426 only printed a symptom; its && list was errexit-exempt. The unguarded second --pin assignment at :8435 inherited rc=2 and terminated the battery. Exit 2, the absent verdict, and the round-72 honest-stop remain unchanged.
+Citations: G:292,3972-3974,4150-4170,4283-4287,8417-8447; R:319-329.
+
+Confidence: high for local sequence, exempt/fatal distinction, exit status and local guarded-case outcome; reconstructed, not directly observed, for the nested refusal text hidden inside capture.txt. No claim of whole-battery completion after a single guard. No source, frozen evidence, LOG, SCORECARD or corpus changes. No tools installed.

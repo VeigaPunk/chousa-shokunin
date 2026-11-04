@@ -1,0 +1,33 @@
+== exact bytes (nl) 8417-8448 ==
+  8417	  rm -f "$WORK/r36-pin.txt" "$WORK/r36-pin2.txt"
+  8418	  p36_ok=1 p36_rc=0 p36_drc=0 p36_out='' p36_dout=''
+  8419	  p36_out=$(CHOUSA_GREP_PIN_ECHO=1 bash "$SELF" --pin "$WORK/r36-pin.txt" 2>&1) || p36_rc=$?
+  8420	  p36_dout=$(env -u CHOUSA_GREP_PIN_ECHO bash "$SELF" --drift "$WORK/r36-pin.txt" 2>&1) || p36_drc=$?
+  8421	  cases=$((cases + 1))
+  8422	  [[ $p36_rc -eq 0 ]] || p36_ok=0
+  8423	  [[ $p36_drc -eq 0 ]] || p36_ok=0
+  8424	  [[ $p36_dout == 'GATE_DRIFT: none' ]] || p36_ok=0
+  8425	  [[ $p36_out == *'GATE_PIN: ok path='* ]] || p36_ok=0
+  8426	  grep -q '^GATE_GREP: ' -- "$WORK/r36-pin.txt" && p36_ok=0
+  8427	  if [[ $p36_ok -eq 1 ]]; then
+  8428	    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" pin-echo-isolation "$p36_drc"
+  8429	  else
+  8430	    printf 'FAIL-case %-28s pin_rc=%d drift_rc=%d\n' pin-echo-isolation "$p36_rc" "$p36_drc"
+  8431	    printf '%s\n' "$p36_out" "$p36_dout" | sed 's/^/    | /'
+  8432	    failures=$((failures + 1))
+  8433	  fi
+  8434	  p36_ok=1 p36_out='' p36_dout=''
+  8435	  p36_out=$(bash "$SELF" --pin "$WORK/r36-pin2.txt" 2>&1)
+  8436	  sed -i "/^# --- canonical output follows ---$/a GATE_GREP: path=/usr/bin/grep source=default version=\"x\"" "$WORK/r36-pin2.txt" 2>/dev/null || true
+  8437	  p36_drc=0
+  8438	  p36_dout=$(env -u CHOUSA_GREP_PIN_ECHO bash "$SELF" --drift "$WORK/r36-pin2.txt" 2>&1) || p36_drc=$?
+  8439	  cases=$((cases + 1))
+  8440	  [[ $p36_drc -eq 1 ]] || p36_ok=0
+  8441	  [[ $p36_dout == *'GATE_DRIFT: -GATE_GREP'* ]] || p36_ok=0
+  8442	  if [[ $p36_ok -eq 1 ]]; then
+  8443	    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" pin-drift-grep-token "$p36_drc"
+  8444	  else
+  8445	    printf 'FAIL-case %-28s drift_rc=%d\n' pin-drift-grep-token "$p36_drc"
+  8446	    printf '%s\n' "$p36_out" "$p36_dout" | sed 's/^/    | /'
+  8447	    failures=$((failures + 1))
+  8448	  fi

@@ -1,0 +1,125 @@
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73C01/exact-base-fixture init -q
+rc=0
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73C01/exact-base-fixture rev-parse --show-toplevel
+/fast/scratch/hyaku/chousa-r73/w1/R73C01/exact-base-fixture
+rc=0
+$ git -C /home/vgpnk/Projects/shokunin/chousa-shokunin rev-parse --path-format=absolute --git-path objects
+/home/vgpnk/Projects/shokunin/chousa-shokunin/.git/objects
+rc=0
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73C01/exact-base-fixture rev-parse --show-toplevel
+/fast/scratch/hyaku/chousa-r73/w1/R73C01/exact-base-fixture
+rc=0
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73C01/exact-base-fixture add -A
+rc=0
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73C01/exact-base-fixture -c user.name=R73C01 -c user.email=critic@local commit -qm exact three-file and receipt copy at original base
+rc=0
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73C01/exact-base-fixture rev-parse HEAD
+2ff4dae437e503ee9cdedce00a21de106003cb4b
+rc=0
+=== C2 original-base control ===
+$ python3 -B /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round73/c2-count.py --lane /fast/scratch/hyaku/chousa-r73/w1/R73C01/exact-base-fixture --rev 2ff4dae437e503ee9cdedce00a21de106003cb4b --base f748abbb6bf58388e732facd4ecec5612419c457
+CHECK C2-1 FAIL LOG.md '## Round 72 correction entry' count=0
+CHECK C2-2 FAIL LOG entry missing=8426,8435,exempt
+CHECK C2-3 FAIL lesson '## Correction — round-72 spot-check' count=0 missing=V72-1,V72-2,8426,8435,7f7ea19a,6dd6c82
+CHECK C2-4 FAIL SCORECARD '## Round 72 correction note' count=0 missing=V72-1,V72-2
+CHECK C2-5 FAIL lesson tree statement missing=measured at the landing tip 7f7ea19a,three at the verdicts tree 6dd6c82,two recorded
+CHECK C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+CHECK C2-7 PASS r72 receipts changed=none
+C2=FAIL checks=2/7 rev=2ff4dae437e5 base=f748abbb6bf5
+rc=1
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73C01/exact-base-fixture rev-parse --show-toplevel
+/fast/scratch/hyaku/chousa-r73/w1/R73C01/exact-base-fixture
+rc=0
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73C01/exact-base-fixture add -A
+rc=0
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73C01/exact-base-fixture -c user.name=R73C01 -c user.email=critic@local commit -qm self-refuting correction tokens only
+rc=0
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73C01/exact-base-fixture rev-parse HEAD
+336b64612cd98f93508ab623890ad105813f200d
+rc=0
+=== Plain text self-refuting fabrication ===
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73C01/exact-base-fixture diff --numstat f748abbb6bf58388e732facd4ecec5612419c457 336b64612cd98f93508ab623890ad105813f200d -- LOG.md corpus/lessons/round-72.md SCORECARD.md
+4	0	LOG.md
+4	0	SCORECARD.md
+4	0	corpus/lessons/round-72.md
+rc=0
+$ python3 -B /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round73/c2-count.py --lane /fast/scratch/hyaku/chousa-r73/w1/R73C01/exact-base-fixture --rev 336b64612cd98f93508ab623890ad105813f200d --base f748abbb6bf58388e732facd4ecec5612419c457
+CHECK C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+CHECK C2-2 PASS LOG entry missing=none
+CHECK C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+CHECK C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+CHECK C2-5 PASS lesson tree statement missing=none
+CHECK C2-6 FAIL removed lines=LOG.md:4,corpus/lessons/round-72.md:4,SCORECARD.md:4
+CHECK C2-7 PASS r72 receipts changed=none
+C2=FAIL checks=6/7 rev=336b64612cd9 base=f748abbb6bf5
+rc=1
+=== Same revision, local attribute, no C1 receipts: cheapest C2 false green ===
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73C01/exact-base-fixture diff --numstat f748abbb6bf58388e732facd4ecec5612419c457 336b64612cd98f93508ab623890ad105813f200d -- LOG.md corpus/lessons/round-72.md SCORECARD.md
+-	-	LOG.md
+-	-	SCORECARD.md
+-	-	corpus/lessons/round-72.md
+rc=0
+$ python3 -B /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round73/c2-count.py --lane /fast/scratch/hyaku/chousa-r73/w1/R73C01/exact-base-fixture --rev 336b64612cd98f93508ab623890ad105813f200d --base f748abbb6bf58388e732facd4ecec5612419c457
+CHECK C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+CHECK C2-2 PASS LOG entry missing=none
+CHECK C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+CHECK C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+CHECK C2-5 PASS lesson tree statement missing=none
+CHECK C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+CHECK C2-7 PASS r72 receipts changed=none
+C2=PASS checks=7/7 rev=336b64612cd9 base=f748abbb6bf5
+rc=0
+C1 receipt existence: battery=False preflight=False
+=== Same revision after removing local attribute ===
+$ python3 -B /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round73/c2-count.py --lane /fast/scratch/hyaku/chousa-r73/w1/R73C01/exact-base-fixture --rev 336b64612cd98f93508ab623890ad105813f200d --base f748abbb6bf58388e732facd4ecec5612419c457
+CHECK C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+CHECK C2-2 PASS LOG entry missing=none
+CHECK C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+CHECK C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+CHECK C2-5 PASS lesson tree statement missing=none
+CHECK C2-6 FAIL removed lines=LOG.md:4,corpus/lessons/round-72.md:4,SCORECARD.md:4
+CHECK C2-7 PASS r72 receipts changed=none
+C2=FAIL checks=6/7 rev=336b64612cd9 base=f748abbb6bf5
+rc=1
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73C01/exact-base-fixture rev-parse --show-toplevel
+/fast/scratch/hyaku/chousa-r73/w1/R73C01/exact-base-fixture
+rc=0
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73C01/exact-base-fixture add -A
+rc=0
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73C01/exact-base-fixture -c user.name=R73C01 -c user.email=critic@local commit -qm omit the required identity tokens
+rc=0
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73C01/exact-base-fixture rev-parse HEAD
+b25bf31917022bba73d759e4718c38c50b6ab83a
+rc=0
+=== Required identities literally absent ===
+$ python3 -B /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round73/c2-count.py --lane /fast/scratch/hyaku/chousa-r73/w1/R73C01/exact-base-fixture --rev b25bf31917022bba73d759e4718c38c50b6ab83a --base f748abbb6bf58388e732facd4ecec5612419c457
+CHECK C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+CHECK C2-2 FAIL LOG entry missing=8426,8435
+CHECK C2-3 FAIL lesson '## Correction — round-72 spot-check' count=1 missing=8426,8435,7f7ea19a,6dd6c82
+CHECK C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+CHECK C2-5 FAIL lesson tree statement missing=measured at the landing tip 7f7ea19a,three at the verdicts tree 6dd6c82
+CHECK C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+CHECK C2-7 PASS r72 receipts changed=none
+C2=FAIL checks=4/7 rev=b25bf3191702 base=f748abbb6bf5
+rc=1
+=== C1 fabricated two-path control: exact commands ===
+$ grep -c ^RESEARCH_GATE_SELFTEST: corpus/evidence/round73/controls/battery-r73.txt
+1
+rc=0
+$ grep -c SKIPPED=none corpus/evidence/round73/controls/preflight-r73.txt
+1
+rc=0
+$ grep -c ^PREFLIGHT= corpus/evidence/round73/controls/preflight-r73.txt
+1
+rc=0
+=== C1-only fixture: no correction commit required; C2 original base remains red ===
+$ python3 -B /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round73/c2-count.py --lane /fast/scratch/hyaku/chousa-r73/w1/R73C01/exact-base-fixture --rev 2ff4dae437e503ee9cdedce00a21de106003cb4b --base f748abbb6bf58388e732facd4ecec5612419c457
+CHECK C2-1 FAIL LOG.md '## Round 72 correction entry' count=0
+CHECK C2-2 FAIL LOG entry missing=8426,8435,exempt
+CHECK C2-3 FAIL lesson '## Correction — round-72 spot-check' count=0 missing=V72-1,V72-2,8426,8435,7f7ea19a,6dd6c82
+CHECK C2-4 FAIL SCORECARD '## Round 72 correction note' count=0 missing=V72-1,V72-2
+CHECK C2-5 FAIL lesson tree statement missing=measured at the landing tip 7f7ea19a,three at the verdicts tree 6dd6c82,two recorded
+CHECK C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+CHECK C2-7 PASS r72 receipts changed=none
+C2=FAIL checks=2/7 rev=2ff4dae437e5 base=f748abbb6bf5
+rc=1

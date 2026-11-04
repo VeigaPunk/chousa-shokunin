@@ -1,0 +1,907 @@
+tools/research-gate.sh:3217:metadata_iso_date() {
+tools/research-gate.sh:3218:  local LC_ALL=C
+tools/research-gate.sh:3219:  [[ $1 =~ ^([0-9]{4})-([0-9]{2})-([0-9]{2})$ ]] || return 1
+tools/research-gate.sh:3220:  local year=$((10#${BASH_REMATCH[1]})) month=$((10#${BASH_REMATCH[2]}))
+tools/research-gate.sh:3221:  local day=$((10#${BASH_REMATCH[3]})) maxday=31
+tools/research-gate.sh:3222:  ((year >= 1 && month >= 1 && month <= 12 && day >= 1)) || return 1
+tools/research-gate.sh:3223:  case "$month" in
+tools/research-gate.sh:3224:    4|6|9|11) maxday=30 ;;
+tools/research-gate.sh:3225:    2)
+tools/research-gate.sh:3226:      maxday=28
+tools/research-gate.sh:3227:      if ((year % 400 == 0 || (year % 4 == 0 && year % 100 != 0))); then maxday=29; fi
+tools/research-gate.sh:3228:      ;;
+tools/research-gate.sh:3229:  esac
+tools/research-gate.sh:3230:  ((day <= maxday))
+tools/research-gate.sh:3231:}
+tools/research-gate.sh:4380:  WORK=$(mktemp -d "${TMPDIR:-/tmp}/chousa-research-gate-selftest.XXXXXX") \
+tools/research-gate.sh:4381:    || die_usage "mktemp failed"
+tools/research-gate.sh:4382:  trap 'rm -rf -- "${WORK:-}"' EXIT
+tools/research-gate.sh:4383:  OUTSIDE_FILE=$(mktemp "${TMPDIR:-/tmp}/chousa-gate-outside.XXXXXX") \
+tools/research-gate.sh:4384:    || die_usage "mktemp failed"
+tools/research-gate.sh:4385:  # WORK/OUTSIDE_FILE/GATE_CAP_DIR are globals with ${:-} guards: at
+tools/research-gate.sh:4386:  # errexit-exit the EXIT trap sees function locals as unset (measured), which
+tools/research-gate.sh:4387:  # silently skips the cleanup, and a quota-limited tmp dir can fail the first
+tools/research-gate.sh:4388:  # fixture write. Honoring TMPDIR lets a crowded /tmp be swapped for another
+tools/research-gate.sh:4389:  # scratch mount. GATE_CAP_DIR is the pin/drift capture fixture: removed at
+tools/research-gate.sh:4390:  # the end of every capture, and re-swept here if a capture died mid-flight.
+tools/research-gate.sh:4391:  trap 'rm -rf -- "${WORK:-}" "${OUTSIDE_FILE:-}" "${GATE_CAP_DIR:-}"' EXIT
+tools/research-gate.sh:4392:  # r70: host-capability probes for the environment-conditional cases. A case
+tools/research-gate.sh:4393:  # whose subject this host cannot run is skipped BY NAME with a reason (the
+tools/research-gate.sh:4394:  # c1lk precedent below), never counted as a pass and never faked: flock(1)
+tools/research-gate.sh:4395:  # gates the manifest-append critical section, and the gate is DESIGNED to
+tools/research-gate.sh:4396:  # fail closed without it (lines 3970-3975), so a flock-less host skips the
+tools/research-gate.sh:4397:  # manifest-write cases instead of failing them. python3 must actually run:
+tools/research-gate.sh:4398:  # `command -v python3` alone is satisfied on hosts whose python3 alias is a
+tools/research-gate.sh:4399:  # non-running store stub (measured on the r70 host), so the probe executes
+tools/research-gate.sh:4400:  # it once. SKIPPED moves up here from the r14 block (which kept resetting it,
+tools/research-gate.sh:4401:  # losing any skip counted before cases 103+).
+tools/research-gate.sh:4402:  SKIPPED=0
+tools/research-gate.sh:4403:  HAVE_FLOCK=1
+tools/research-gate.sh:4404:  command -v flock >/dev/null 2>&1 || HAVE_FLOCK=0
+tools/research-gate.sh:4405:  PY3=0
+tools/research-gate.sh:4406:  if command -v python3 >/dev/null 2>&1 && python3 -c 'import json' >/dev/null 2>&1; then PY3=1; fi
+tools/research-gate.sh:4407:  # r71: the locale-boundary case's duration is unbounded on this host (the r70
+tools/research-gate.sh:4408:  # D5 class: >70 min under contention at case 258, 16.3 s uncontended - measured
+tools/research-gate.sh:4409:  # at the r71 freeze), so the case runs under a time budget where timeout(1) is
+tools/research-gate.sh:4410:  # actually capable: the probe requires timeout to KILL (`timeout 1 sleep 5` ->
+tools/research-gate.sh:4411:  # rc 124), not merely exist (the python3 store-stub lesson). Overrunning the
+tools/research-gate.sh:4412:  # budget fails the case honestly - a named FAIL-case at rc 124 plus a case-note
+tools/research-gate.sh:4413:  # (verdict unmeasured within the budget) - never a pass, never a fake. Default
+tools/research-gate.sh:4414:  # 900 s (~55x the measured uncontended duration); overridable.
+tools/research-gate.sh:4415:  LC_BOUNDARY_BUDGET_S="${LC_BOUNDARY_BUDGET_S:-900}"
+tools/research-gate.sh:4416:  HAVE_TIMEOUT=0
+tools/research-gate.sh:4417:  tprobe_rc=0
+tools/research-gate.sh:4418:  if command -v timeout >/dev/null 2>&1; then
+tools/research-gate.sh:4419:    timeout 1 sleep 5 >/dev/null 2>&1 || tprobe_rc=$?
+tools/research-gate.sh:4420:    if [[ $tprobe_rc -eq 124 ]]; then HAVE_TIMEOUT=1; fi
+tools/research-gate.sh:4421:  fi
+tools/research-gate.sh:4422:  printf 'outside text\n' >"$OUTSIDE_FILE"
+tools/research-gate.sh:5560:      if [[ $a =~ ^CHOUSA_[A-Z_]+= ]]; then over+=("$a"); else want+=("$a"); fi
+tools/research-gate.sh:5561:    done
+tools/research-gate.sh:5562:    cases=$((cases + 1))
+tools/research-gate.sh:5563:    if [[ $claims != - ]]; then extra+=(--claims "$WORK/$claims"); fi
+tools/research-gate.sh:5564:    if [[ $json != - ]]; then extra+=(--json "$WORK/$json"); fi
+tools/research-gate.sh:5565:    out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+tools/research-gate.sh:5566:      CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+tools/research-gate.sh:5567:      "${over[@]+"${over[@]}"}" \
+tools/research-gate.sh:5568:      bash "$SELF" verify-all "$WORK/$input" "${extra[@]+"${extra[@]}"}" 2>&1) || rc=$?
+tools/research-gate.sh:5569:    nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
+tools/research-gate.sh:5570:    nsum=$(grep -c '^VERIFY_ALL ' <<<"$out" || true)
+tools/research-gate.sh:5571:    if [[ $rc -ne $want_rc ]]; then ok=0; msg+="rc=$rc/$want_rc "; fi
+tools/research-gate.sh:5572:    if [[ ${nverdict:-0} -ne $want_nv ]]; then ok=0; msg+="verdicts=$nverdict/$want_nv "; fi
+tools/research-gate.sh:5573:    if [[ ${nsum:-0} -ne $want_ns ]]; then ok=0; msg+="sums=$nsum/$want_ns "; fi
+tools/research-gate.sh:5574:    for tok in "${want[@]+"${want[@]}"}"; do
+tools/research-gate.sh:5575:      if [[ $out != *"$tok"* ]]; then ok=0; msg+="missing:'$tok' "; fi
+tools/research-gate.sh:5576:    done
+tools/research-gate.sh:5577:    if [[ $json != - ]]; then
+tools/research-gate.sh:5578:      n=$(wc -l <"$WORK/$json" 2>/dev/null | tr -d ' ' || true)
+tools/research-gate.sh:5579:      if [[ ${n:-0} -ne $want_jl ]]; then ok=0; msg+="manifest-lines=${n:-0}/$want_jl "; fi
+tools/research-gate.sh:5580:      if [[ $PY3 -eq 1 ]]; then
+tools/research-gate.sh:5581:        python3 -c 'import json,sys
+tools/research-gate.sh:5582:for ln in sys.stdin.read().splitlines():
+tools/research-gate.sh:5583:    if ln.strip():
+tools/research-gate.sh:5584:        json.loads(ln)' <"$WORK/$json" >/dev/null 2>&1 || { ok=0; msg+="json-invalid "; }
+tools/research-gate.sh:5585:      fi
+tools/research-gate.sh:5586:      grep -q '"schema":"chousa-verify-all/v1"' -- "$WORK/$json" || { ok=0; msg+="schema-absent "; }
+tools/research-gate.sh:5587:      grep -qE '"record_sha256":"[0-9a-f]{64}"' -- "$WORK/$json" || { ok=0; msg+="record-sha-absent "; }
+tools/research-gate.sh:5588:      grep -qE '"gate_sha256":"[0-9a-f]{64}"' -- "$WORK/$json" || { ok=0; msg+="gate-sha-absent "; }
+tools/research-gate.sh:5589:      grep -q '"verdict":"CLEAN"' -- "$WORK/$json" || { ok=0; msg+="verdict-field "; }
+tools/research-gate.sh:5590:      h1=$(sed -n 1p -- "$WORK/$json" 2>/dev/null | sha256sum | cut -d' ' -f1 || true)
+tools/research-gate.sh:5647:  if [[ $HAVE_FLOCK -eq 1 ]]; then
+tools/research-gate.sh:5648:    tall all-pass.md 0 1 1 claims-pass.jsonl r6-manifest.jsonl 1 \
+tools/research-gate.sh:5649:      'RESEARCH_GATE: CLEAN'
+tools/research-gate.sh:5650:    tall all-pass.md 0 1 1 claims-pass.jsonl r6-manifest.jsonl 2 \
+tools/research-gate.sh:5651:      'RESEARCH_GATE: CLEAN'
+tools/research-gate.sh:5652:  else
+tools/research-gate.sh:5653:    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+tools/research-gate.sh:5654:    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" verify-all-manifest-append 'no flock(1): append fails closed'
+tools/research-gate.sh:5655:    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+tools/research-gate.sh:5656:    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" verify-all-manifest-two-appends 'no flock(1): append fails closed'
+tools/research-gate.sh:5657:  fi
+tools/research-gate.sh:6184:  # A cross-device source can exist in-root only through a mount; the only
+tools/research-gate.sh:6185:  # unprivileged forge on this host is a tmpfs mounted inside one ephemeral
+tools/research-gate.sh:6186:  # `unshare --user --mount` child (a bind of the repo is refused there,
+tools/research-gate.sh:6187:  # measured rc=2). Mount, fixture write and gate run share that child;
+tools/research-gate.sh:6188:  # nothing reaches the host and cases 1-102 keep their bytes. No userns =>
+tools/research-gate.sh:6189:  # the ns cases are skipped BY NAME and the skip is counted in the summary.
+tools/research-gate.sh:6190:  NS_STATE='' NS_WHY=''
+tools/research-gate.sh:6191:  ns_probe() { # silent; sets NS_STATE=yes|no once
+tools/research-gate.sh:6192:    [[ -n $NS_STATE ]] && return 0
+tools/research-gate.sh:6193:    command -v unshare >/dev/null 2>&1 || { NS_STATE=no NS_WHY='unshare absent'; return 0; }
+tools/research-gate.sh:6194:    mkdir -p "$WORK/nsprobe"
+tools/research-gate.sh:6195:    if unshare --user --map-root-user --mount --propagation private bash -c '
+tools/research-gate.sh:6196:         mount -t tmpfs none "$1" 2>/dev/null || exit 1
+tools/research-gate.sh:6197:         [[ $(stat -c %d "$1") != $(stat -c %d "$2") ]]' _ "$WORK/nsprobe" "$WORK" 2>/dev/null
+tools/research-gate.sh:6198:    then NS_STATE=yes; else NS_STATE=no NS_WHY='no unprivileged user+mount namespace'; fi
+tools/research-gate.sh:6199:    return 0
+tools/research-gate.sh:6200:  }
+tools/research-gate.sh:6201:  ns_run() { # MODE FILE FIXDIR FIXNAME FIXBODY [ENV=V…] -> gate out; rc = gate rc
+tools/research-gate.sh:6202:    local mode=$1 file=$2 fixdir=$3 fixname=$4 fixbody=$5
+tools/research-gate.sh:6203:    shift 5
+tools/research-gate.sh:6204:    local -a extra=("$@")
+tools/research-gate.sh:6205:    NS_MODE=$mode NS_FILE=$file NS_FIXDIR=$fixdir NS_FIXNAME=$fixname NS_FIXBODY=$fixbody \
+tools/research-gate.sh:6206:      NS_SELF=$SELF NS_ROOT=$WORK NS_NOW=$NOW_EPOCH
+tools/research-gate.sh:6207:    export NS_MODE NS_FILE NS_FIXDIR NS_FIXNAME NS_FIXBODY NS_SELF NS_ROOT NS_NOW
+tools/research-gate.sh:6208:    unshare --user --map-root-user --mount --propagation private bash -c '
+tools/research-gate.sh:6209:      mount -t tmpfs none "$NS_FIXDIR" || exit 97
+tools/research-gate.sh:6210:      printf "%s\n" "$NS_FIXBODY" >"$NS_FIXDIR/$NS_FIXNAME" || exit 98
+tools/research-gate.sh:6211:      exec env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE \
+tools/research-gate.sh:6212:        CHOUSA_STRICT=0 CHOUSA_ROOT="$NS_ROOT" CHOUSA_NOW_EPOCH="$NS_NOW" \
+tools/research-gate.sh:6213:        "$@" bash "$NS_SELF" "$NS_MODE" "$NS_FILE"' _ "${extra[@]+"${extra[@]}"}" 2>&1
+tools/research-gate.sh:6214:  }
+tools/research-gate.sh:6215:  tnscase() { # NAME WANT_RC MODE TARGET SUMPFX FIXDIR FIXNAME FIXBODY [want…|ENV=V…]
+tools/research-gate.sh:6216:    local name=$1 want_rc=$2 mode=$3 target=$4 sum=$5 fixdir=$6 fixname=$7 fixbody=$8
+tools/research-gate.sh:6217:    shift 8
+tools/research-gate.sh:6218:    local -a want=() extra=()
+tools/research-gate.sh:6219:    local a rc=0 out nverdict nsum=0 ok=1 tok
+tools/research-gate.sh:6220:    for a in "$@"; do case "$a" in [A-Z_]*=*) extra+=("$a") ;; *) want+=("$a") ;; esac; done
+tools/research-gate.sh:6221:    ns_probe
+tools/research-gate.sh:6222:    cases=$((cases + 1))
+tools/research-gate.sh:6223:    if [[ $NS_STATE != yes ]]; then
+tools/research-gate.sh:6224:      SKIPPED=$((SKIPPED + 1))
+tools/research-gate.sh:6225:      printf 'skip-case %-2d %-26s reason=%s\n' "$cases" "$name" "$NS_WHY"
+tools/research-gate.sh:6226:      return 0
+tools/research-gate.sh:6227:    fi
+tools/research-gate.sh:6228:    out=$(ns_run "$mode" "$target" "$fixdir" "$fixname" "$fixbody" "${extra[@]+"${extra[@]}"}") || rc=$?
+tools/research-gate.sh:6229:    nverdict=$(grep -c '^RESEARCH_GATE: ' <<<"$out" || true)
+tools/research-gate.sh:6230:    if [[ -n $sum ]]; then nsum=$(grep -c "^$sum" <<<"$out" || true); else nsum=1; fi
+tools/research-gate.sh:6231:    for tok in "${want[@]+"${want[@]}"}"; do [[ $out == *"$tok"* ]] || ok=0; done
+tools/research-gate.sh:6232:    if [[ $rc -eq $want_rc && $nverdict -eq 1 && $nsum -eq 1 && $ok -eq 1 ]]; then
+tools/research-gate.sh:6233:      printf 'ok-case  %-2d %-26s exit=%d\n' "$cases" "$name" "$rc"
+tools/research-gate.sh:6234:    else
+tools/research-gate.sh:6235:      printf 'FAIL-case %-26s exit=%d want=%d verdicts=%d sums=%d token=%s\n' \
+tools/research-gate.sh:6236:        "$name" "$rc" "$want_rc" "$nverdict" "$nsum" "${want[*]-}"
+tools/research-gate.sh:6237:      printf '%s\n' "$out" | sed 's/^/    | /'
+tools/research-gate.sh:6238:      failures=$((failures + 1))
+tools/research-gate.sh:6239:    fi
+tools/research-gate.sh:6240:  }
+tools/research-gate.sh:6241:  # 103/104: the canonical path is in-root but its st_dev differs from the
+tools/research-gate.sh:6242:  # resolving root's device (tmpfs mounted over $WORK/crossdev inside the ns)
+tools/research-gate.sh:6243:  # => mount alias of another filesystem, refused unread. 105: same path and
+tools/research-gate.sh:6244:  # bytes WITHOUT the mount must read (true-positive control). 106: a
+tools/research-gate.sh:6245:  # LANE_ROOT source (repo device) cited with CHOUSA_ROOT=$WORK (tmpfs) must
+tools/research-gate.sh:6246:  # stay CLEAN — the only case that catches a naive compare-to-CHOUSA_ROOT
+tools/research-gate.sh:6247:  # implementation; it pins PROVINCE.md's span `deep-research method`
+tools/research-gate.sh:6248:  # (line 3, nlink=1), so a text change makes it FAIL loudly.
+tools/research-gate.sh:6249:  mkdir -p "$WORK/crossdev"
+tools/research-gate.sh:6250:  printf '{"id":"D1","source":"crossdev/cross.md","span":"cross-device content here","expect":"supported"}\n' >"$WORK/claims-cross-device.jsonl"
+tools/research-gate.sh:6251:  printf '{"id":"D2","source":"crossdev/cross.md","span":"cross-device content here","expect":"supported"}\n' >"$WORK/claims-cross-device-control.jsonl"
+tools/research-gate.sh:6252:  printf '{"id":"L1","source":"PROVINCE.md","span":"deep-research method","expect":"supported"}\n' >"$WORK/claims-lane-fallback.jsonl"
+tools/research-gate.sh:6253:  write_rec chain-cross-device <<'EOF'
+tools/research-gate.sh:6254:# research-record v1
+tools/research-gate.sh:6255:## Sources
+tools/research-gate.sh:6256:| id | tier | pointer |
+tools/research-gate.sh:6257:|---|---|---|
+tools/research-gate.sh:6258:| S1 | primary | crossdev/cross.md |
+tools/research-gate.sh:6259:## Chain
+tools/research-gate.sh:6260:| hop | from | to | status | anchor_kind | anchor |
+tools/research-gate.sh:6270:    "$WORK/crossdev" cross.md 'cross-device content here' \
+tools/research-gate.sh:6271:    'RESEARCH_GATE: DRIFT' 'FINDING CHAIN_SOURCE_CROSS_DEVICE severity=crit surface=chain' \
+tools/research-gate.sh:6272:    'CHAIN hop=1 status=resolved observed=refused source=crossdev/cross.md anchor=- at=- verdict=refused' \
+tools/research-gate.sh:6273:    'RESOLVED_HOPS=0/1'
+tools/research-gate.sh:6274:  printf 'cross-device content here\n' >"$WORK/crossdev/cross.md"
+tools/research-gate.sh:6275:  tclaims claims-cross-device-control 0 'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=1/1' \
+tools/research-gate.sh:6276:    'CLAIM id=D2 expected=supported observed=supported source=crossdev/cross.md at=line:1 verdict=match'
+tools/research-gate.sh:6277:  tclaims claims-lane-fallback 0 'RESEARCH_GATE: CLEAN' 'VERDICT_BEARING_CLAIMS=1/1' \
+tools/research-gate.sh:6278:    'CLAIM id=L1 expected=supported observed=supported source=PROVINCE.md at=line:3 verdict=match'
+tools/research-gate.sh:6279:
+tools/research-gate.sh:6280:  # 107-110 (r15): the --root / dead-arm — raw "$root_r"/* rendered //* and
+tools/research-gate.sh:6281:  # matched nothing, refusing every absolute source OUT_OF_CORPUS. in_root()
+tools/research-gate.sh:6282:  # normalizes the prefix; src_root keeps the declared root for the device
+tools/research-gate.sh:6283:  # probe. The CHOUSA_ROOT=/ override rides the r15 harness channel.
+tools/research-gate.sh:6284:  # 107: deterministic ghost — an absent absolute path passes the healed
+tools/research-gate.sh:6285:  # boundary and fails the -f probe (pre-fix: OUT_OF_CORPUS crit).
+tools/research-gate.sh:6286:  printf '{"id":"R1","source":"/chousa-r15-absent/absent.md","span":"never present","expect":"unsupported"}\n' \
+tools/research-gate.sh:6287:    >"$WORK/claims-root-slash-absent.jsonl"
+tools/research-gate.sh:6288:  tclaims claims-root-slash-absent 1 'RESEARCH_GATE: DRIFT' \
+tools/research-gate.sh:6289:    'FINDING CLAIM_SOURCE_MISSING severity=warn surface=claims' \
+tools/research-gate.sh:6290:    'CLAIM id=R1 expected=unsupported observed=refused source=/chousa-r15-absent/absent.md' \
+tools/research-gate.sh:6291:    'VERDICT_BEARING_CLAIMS=0/1' CHOUSA_ROOT=/
+tools/research-gate.sh:6292:  # 108: read arm — an existing in-/ absolute source reads CLEAN (this host:
+tools/research-gate.sh:6293:  # /etc/hostname dev 31 == / dev 31, nlink 1, 9 B — the span is the file's
+tools/research-gate.sh:6294:  # own first line, measured at case-build). The device probe still stats
+tools/research-gate.sh:6295:  # the declared root (/) — a cross-device in-/ source must still refuse.
+tools/research-gate.sh:6296:  # 109: that refusal — $WORK is tmpfs (dev 57 != 31) so the absolute path
+tools/research-gate.sh:6297:  # passes the prefix test and dies at the device arm (pre-fix: OUT_OF_CORPUS).
+tools/research-gate.sh:6298:  if [[ -r /etc/hostname ]] && read -r _hspan </etc/hostname && [[ -n $_hspan ]]; then
+tools/research-gate.sh:6299:    printf '{"id":"R2","source":"/etc/hostname","span":"%s","expect":"supported"}\n' "$_hspan" \
+tools/research-gate.sh:6300:      >"$WORK/claims-root-slash-read.jsonl"
+tools/research-gate.sh:6301:    tclaims claims-root-slash-read 0 'RESEARCH_GATE: CLEAN' \
+tools/research-gate.sh:6302:      'CLAIM id=R2 expected=supported observed=supported source=/etc/hostname at=line:1 verdict=match' \
+tools/research-gate.sh:6303:      'VERDICT_BEARING_CLAIMS=1/1' CHOUSA_ROOT=/
+tools/research-gate.sh:6304:  else
+tools/research-gate.sh:6305:    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+tools/research-gate.sh:6306:    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" claims-root-slash-read '/etc/hostname unreadable'
+tools/research-gate.sh:6307:  fi
+tools/research-gate.sh:6308:  printf 'cross-device content here\n' >"$WORK/rootdev.md"
+tools/research-gate.sh:6309:  printf '{"id":"R3","source":"%s","span":"cross-device content here","expect":"supported"}\n' "$WORK/rootdev.md" \
+tools/research-gate.sh:6310:    >"$WORK/claims-root-slash-xdev.jsonl"
+tools/research-gate.sh:6311:  tclaims claims-root-slash-xdev 1 'RESEARCH_GATE: DRIFT' \
+tools/research-gate.sh:6312:    'FINDING CLAIM_SOURCE_CROSS_DEVICE severity=crit surface=claims' \
+tools/research-gate.sh:6313:    'CLAIM id=R3 expected=supported observed=refused' \
+tools/research-gate.sh:6314:    'VERDICT_BEARING_CLAIMS=0/1' CHOUSA_ROOT=/
+tools/research-gate.sh:6315:  # 111 (r16): --root // — pwd -P preserves '//' so in_root must strip ALL
+tools/research-gate.sh:6316:  # trailing slashes, not just one (the r15 single-strip left '/' which still
+tools/research-gate.sh:6317:  # rendered '//*'). Same /etc/hostname read, same expected CLEAN.
+tools/research-gate.sh:6318:  if [[ -r /etc/hostname ]] && read -r _hspan </etc/hostname && [[ -n $_hspan ]]; then
+tools/research-gate.sh:6319:    printf '{"id":"R4","source":"/etc/hostname","span":"%s","expect":"supported"}\n' "$_hspan" \
+tools/research-gate.sh:6320:      >"$WORK/claims-root-dslash.jsonl"
+tools/research-gate.sh:6321:    tclaims claims-root-dslash 0 'RESEARCH_GATE: CLEAN' \
+tools/research-gate.sh:6322:      'CLAIM id=R4 expected=supported observed=supported source=/etc/hostname at=line:1 verdict=match' \
+tools/research-gate.sh:6323:      'VERDICT_BEARING_CLAIMS=1/1' CHOUSA_ROOT=//
+tools/research-gate.sh:6324:  else
+tools/research-gate.sh:6325:    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+tools/research-gate.sh:6326:    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" claims-root-dslash '/etc/hostname unreadable'
+tools/research-gate.sh:6327:  fi
+tools/research-gate.sh:6328:  # 110: sweeps symmetric arm — an absolute in-/ location glob resolves
+tools/research-gate.sh:6329:  # through the healed guard (pre-fix: SWEEP_LOCATION_OUT_OF_CORPUS crit).
+tools/research-gate.sh:6330:  # The glob names only; a nonexistent /-rooted dir verifies with zero rows.
+tools/research-gate.sh:6715:      bash "$SELF" verify-all "$WORK/all-pass.md" --claims "$WORK/claims-pass.jsonl" \
+tools/research-gate.sh:6716:      --json "$f" 2>&1) || rc=$?
+tools/research-gate.sh:6717:    chmod 600 "$f"
+tools/research-gate.sh:6718:    [[ $rc -eq $want_rc ]] || msg+="rc=$rc/$want_rc "
+tools/research-gate.sh:6719:    n=$(wc -l <"$f" | tr -d ' ')
+tools/research-gate.sh:6720:    [[ $n -eq $want_lines ]] || msg+="manifest-lines=$n/$want_lines "
+tools/research-gate.sh:6721:    # -a: GNU grep treats a NUL as a line break in a binary file (case 135).
+tools/research-gate.sh:6722:    [[ $(grep -a -c '^$' -- "$f" || true) -eq 0 ]] || msg+="blank-line "
+tools/research-gate.sh:6723:    if [[ $want_lines -eq 2 ]]; then
+tools/research-gate.sh:6724:      sed -n 2p -- "$f" | grep -q '^{"schema":"chousa-verify-all/v1"' || msg+="schema-not-own-line "
+tools/research-gate.sh:6725:    fi
+tools/research-gate.sh:6726:    if [[ $pj -eq 1 ]]; then
+tools/research-gate.sh:6727:      [[ $(sed -n 1p -- "$f") == '{"prior":true}' ]] || msg+="prior-line-altered "
+tools/research-gate.sh:6728:      if [[ $PY3 -eq 1 ]]; then
+tools/research-gate.sh:6729:        python3 -c 'import json,sys
+tools/research-gate.sh:6730:for ln in sys.stdin.read().splitlines():
+tools/research-gate.sh:6731:    if ln.strip():
+tools/research-gate.sh:6732:        json.loads(ln)' <"$f" >/dev/null 2>&1 || msg+="json-invalid "
+tools/research-gate.sh:6733:      fi
+tools/research-gate.sh:6734:    fi
+tools/research-gate.sh:6735:    if [[ -n $tok && $out != *"$tok"* ]]; then msg+="missing:'$tok' "; fi
+tools/research-gate.sh:6736:    if [[ -z $msg ]]; then
+tools/research-gate.sh:6737:      printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" "$name" "$rc"
+tools/research-gate.sh:6738:    else
+tools/research-gate.sh:6739:      printf 'FAIL-case %-28s %s\n' "$name" "$msg"
+tools/research-gate.sh:6740:      printf '%s\n' "$out" | sed 's/^/    | /'
+tools/research-gate.sh:6741:      failures=$((failures + 1))
+tools/research-gate.sh:6742:    fi
+tools/research-gate.sh:6743:  }
+tools/research-gate.sh:6744:  if [[ $HAVE_FLOCK -eq 1 ]]; then
+tools/research-gate.sh:6745:    r24_case json-unterminated-manifest '{"prior":true}' 0 2 1
+tools/research-gate.sh:6746:    r24_case json-nul-terminated-manifest '{"prior":true}\0' 0 2 0
+tools/research-gate.sh:6747:  else
+tools/research-gate.sh:6748:    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+tools/research-gate.sh:6749:    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" json-unterminated-manifest 'no flock(1): append fails closed'
+tools/research-gate.sh:6750:    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+tools/research-gate.sh:6751:    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" json-nul-terminated-manifest 'no flock(1): append fails closed'
+tools/research-gate.sh:6752:  fi
+tools/research-gate.sh:6753:  if [[ $(id -u) -ne 0 ]]; then
+tools/research-gate.sh:6754:    r24_case json-unreadable-manifest '{"prior":true}' 2 0 1 'manifest unreadable'
+tools/research-gate.sh:6755:  else
+tools/research-gate.sh:6756:    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+tools/research-gate.sh:6757:    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" json-unreadable-manifest 'root reads any file'
+tools/research-gate.sh:6758:  fi
+tools/research-gate.sh:7343:  # Find an installed locale whose inherited regex admits these non-ASCII digits.
+tools/research-gate.sh:7344:  unicode_locale=''
+tools/research-gate.sh:7345:  while IFS= read -r candidate_locale; do
+tools/research-gate.sh:7346:    if LC_ALL="$candidate_locale" bash -c \
+tools/research-gate.sh:7347:      '[[ "２０２６-10-21" =~ ^([0-9]{4})-([0-9]{2})-([0-9]{2})$ ]]' \
+tools/research-gate.sh:7348:      >/dev/null 2>&1; then
+tools/research-gate.sh:7349:      unicode_locale=$candidate_locale
+tools/research-gate.sh:7350:      break
+tools/research-gate.sh:7351:    fi
+tools/research-gate.sh:7352:  done < <(locale -a 2>/dev/null)
+tools/research-gate.sh:7353:  if [[ -n $unicode_locale ]]; then
+tools/research-gate.sh:7354:    printf 'metadata-asof-unicode-date-locale=%s\n' "$unicode_locale"
+tools/research-gate.sh:7355:    LC_ALL="$unicode_locale" metadata_asof_usage_case \
+tools/research-gate.sh:7356:      metadata-asof-unicode-date-locale \
+tools/research-gate.sh:7357:      '--as-of must be a valid YYYY-MM-DD date' \
+tools/research-gate.sh:7358:      verify-metadata "$WORK/meta-asof/current.md" --root "$WORK" --as-of '２０２６-10-21'
+tools/research-gate.sh:7359:  else
+tools/research-gate.sh:7360:    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+tools/research-gate.sh:7361:    printf 'skip-case %-2d %-28s reason=no available locale admits Unicode digits\n' \
+tools/research-gate.sh:7362:      "$cases" metadata-asof-unicode-date-locale
+tools/research-gate.sh:7363:  fi
+tools/research-gate.sh:7364:  LC_ALL=C metadata_asof_usage_case metadata-asof-unicode-date-C \
+tools/research-gate.sh:7365:    '--as-of must be a valid YYYY-MM-DD date' \
+tools/research-gate.sh:7366:    verify-metadata "$WORK/meta-asof/current.md" --root "$WORK" --as-of '２０２６-10-21'
+tools/research-gate.sh:7868:    >"$WORK/c1lk-record.md"
+tools/research-gate.sh:7869:  c1lk_to=()
+tools/research-gate.sh:7870:  if command -v timeout >/dev/null 2>&1; then c1lk_to=(timeout 120); fi
+tools/research-gate.sh:7871:  c1lk_verify() { # MANIFEST OUT -> rc
+tools/research-gate.sh:7872:    "${c1lk_to[@]}" env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+tools/research-gate.sh:7873:      CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+tools/research-gate.sh:7874:      bash "$SELF" verify-all "$WORK/c1lk-record.md" --json "$1" >"$2" 2>&1
+tools/research-gate.sh:7875:  }
+tools/research-gate.sh:7876:  if [[ -r /proc/locks ]] && command -v flock >/dev/null 2>&1; then
+tools/research-gate.sh:7877:    cases=$((cases + 1))
+tools/research-gate.sh:7878:    c1lk_msg='' c1lk_rc=0
+tools/research-gate.sh:7879:    c1lk_mf="$WORK/c1lk-hold.jsonl"; : >"$c1lk_mf"
+tools/research-gate.sh:7880:    c1lk_ino=$(stat -c %i -- "$c1lk_mf")
+tools/research-gate.sh:7881:    c1lk_flag="$WORK/c1lk-release.flag"; rm -f "$c1lk_flag"
+tools/research-gate.sh:7882:    cat >"$WORK/c1lk-holder.sh" <<'C1LK_HOLDER'
+tools/research-gate.sh:7883:manifest=$1 flag=$2 frag=$3
+tools/research-gate.sh:7884:exec {fd}>>"$manifest" || exit 3
+tools/research-gate.sh:7885:flock -x "$fd" || exit 4
+tools/research-gate.sh:7886:printf '%s' "$frag" >&"$fd" || exit 5
+tools/research-gate.sh:7887:i=0
+tools/research-gate.sh:7888:while [[ ! -e $flag ]]; do
+tools/research-gate.sh:7889:  i=$((i + 1))
+tools/research-gate.sh:7890:  if [[ $i -ge 600 ]]; then exit 6; fi
+tools/research-gate.sh:7891:  sleep 0.1
+tools/research-gate.sh:7892:done
+tools/research-gate.sh:7893:C1LK_HOLDER
+tools/research-gate.sh:7894:    bash "$WORK/c1lk-holder.sh" "$c1lk_mf" "$c1lk_flag" '{"frag":229}' &
+tools/research-gate.sh:7895:    c1lk_hpid=$!
+tools/research-gate.sh:7896:    c1lk_seen=0
+tools/research-gate.sh:7897:    i=0
+tools/research-gate.sh:7898:    while [[ $i -lt 100 ]]; do
+tools/research-gate.sh:7899:      if [[ $(cat -- "$c1lk_mf" 2>/dev/null || true) == '{"frag":229}' ]]; then c1lk_seen=1; break; fi
+tools/research-gate.sh:7900:      i=$((i + 1)); sleep 0.1
+tools/research-gate.sh:7901:    done
+tools/research-gate.sh:7902:    [[ $c1lk_seen -eq 1 ]] || c1lk_msg+='holder-fragment-absent '
+tools/research-gate.sh:7903:    "${c1lk_to[@]}" env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+tools/research-gate.sh:7904:      CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+tools/research-gate.sh:7905:      bash "$SELF" verify-all "$WORK/c1lk-record.md" --json "$c1lk_mf" \
+tools/research-gate.sh:7906:      >"$WORK/c1lk-gate-hold.out" 2>&1 &
+tools/research-gate.sh:7907:    c1lk_gpid=$!
+tools/research-gate.sh:7908:    c1lk_held=0
+tools/research-gate.sh:7909:    i=0
+tools/research-gate.sh:7910:    while [[ $i -lt 200 ]]; do
+tools/research-gate.sh:7911:      if ! kill -0 "$c1lk_gpid" 2>/dev/null; then break; fi
+tools/research-gate.sh:7912:      if grep -Eq "^[0-9]+:[[:space:]]+->[[:space:]]+FLOCK[[:space:]]+ADVISORY[[:space:]]+WRITE[[:space:]]+[0-9]+[[:space:]]+[0-9a-fA-F]+:[0-9a-fA-F]+:$c1lk_ino[[:space:]]" /proc/locks; then
+tools/research-gate.sh:7913:        c1lk_held=1; break
+tools/research-gate.sh:7914:      fi
+tools/research-gate.sh:7915:      i=$((i + 1)); sleep 0.1
+tools/research-gate.sh:7916:    done
+tools/research-gate.sh:7917:    # The gate must be sitting on the lock (not finished, not past it) and the
+tools/research-gate.sh:7918:    # manifest must still hold exactly the holder's bytes.
+tools/research-gate.sh:7919:    if [[ $c1lk_held -eq 1 ]]; then
+tools/research-gate.sh:7920:      [[ $(cat -- "$c1lk_mf") == '{"frag":229}' ]] || c1lk_msg+='appended-under-holder-lock '
+tools/research-gate.sh:7921:    else
+tools/research-gate.sh:7922:      c1lk_msg+='gate-not-blocked-on-lock '
+tools/research-gate.sh:7923:    fi
+tools/research-gate.sh:7924:    : >"$c1lk_flag"
+tools/research-gate.sh:7925:    wait "$c1lk_gpid" || c1lk_rc=$?
+tools/research-gate.sh:7926:    wait "$c1lk_hpid" || true
+tools/research-gate.sh:7927:    n=$(wc -l <"$c1lk_mf" | tr -d ' ')
+tools/research-gate.sh:7928:    [[ $n -eq 2 ]] || c1lk_msg+="manifest-lines=$n/2 "
+tools/research-gate.sh:7929:    [[ $(sed -n 1p -- "$c1lk_mf") == '{"frag":229}' ]] || c1lk_msg+='fragment-line '
+tools/research-gate.sh:7930:    sed -n 2p -- "$c1lk_mf" | grep -q '^{"schema":"chousa-verify-all/v1"' || c1lk_msg+='schema-not-own-line '
+tools/research-gate.sh:7931:    [[ $(grep -a -c '^$' -- "$c1lk_mf" || true) -eq 0 ]] || c1lk_msg+='blank-line '
+tools/research-gate.sh:7932:    [[ $c1lk_rc -eq 0 ]] || c1lk_msg+="gate-rc=$c1lk_rc/0 "
+tools/research-gate.sh:7933:    [[ $(stat -c %i -- "$c1lk_mf") == "$c1lk_ino" ]] || c1lk_msg+='inode-changed '
+tools/research-gate.sh:7934:    if [[ $PY3 -eq 1 ]]; then
+tools/research-gate.sh:7935:      python3 -c 'import json,sys
+tools/research-gate.sh:7936:for ln in sys.stdin.read().splitlines():
+tools/research-gate.sh:7937:    if ln.strip():
+tools/research-gate.sh:7938:        json.loads(ln)' <"$c1lk_mf" >/dev/null 2>&1 || c1lk_msg+='json-invalid '
+tools/research-gate.sh:7939:    fi
+tools/research-gate.sh:7940:    if [[ -z $c1lk_msg ]]; then
+tools/research-gate.sh:7941:      printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" c1lk-holder-blocks-append "$c1lk_rc"
+tools/research-gate.sh:7942:    else
+tools/research-gate.sh:7943:      printf 'FAIL-case %-28s %s\n' c1lk-holder-blocks-append "$c1lk_msg"
+tools/research-gate.sh:7944:      sed 's/^/    | /' "$WORK/c1lk-gate-hold.out" 2>/dev/null || true
+tools/research-gate.sh:7945:      failures=$((failures + 1))
+tools/research-gate.sh:7946:    fi
+tools/research-gate.sh:7947:  else
+tools/research-gate.sh:7948:    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+tools/research-gate.sh:7949:    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" c1lk-holder-blocks-append 'no /proc/locks or no flock(1)'
+tools/research-gate.sh:7950:  fi
+tools/research-gate.sh:7951:  if [[ $HAVE_FLOCK -ne 1 ]]; then
+tools/research-gate.sh:7952:    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+tools/research-gate.sh:7953:    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" c1lk-second-append 'no flock(1): append fails closed'
+tools/research-gate.sh:7954:  fi
+tools/research-gate.sh:7955:  if [[ $HAVE_FLOCK -eq 1 ]]; then
+tools/research-gate.sh:7956:  cases=$((cases + 1))
+tools/research-gate.sh:7957:  c1lk_msg=''
+tools/research-gate.sh:7958:  c1lk_mf2="$WORK/c1lk-second.jsonl"; : >"$c1lk_mf2"
+tools/research-gate.sh:7959:  c1lk_ino2=$(stat -c %i -- "$c1lk_mf2")
+tools/research-gate.sh:7960:  c1lk_rca=0 c1lk_rcb=0
+tools/research-gate.sh:7961:  c1lk_verify "$c1lk_mf2" "$WORK/c1lk-gate-second-a.out" || c1lk_rca=$?
+tools/research-gate.sh:7962:  c1lk_verify "$c1lk_mf2" "$WORK/c1lk-gate-second-b.out" || c1lk_rcb=$?
+tools/research-gate.sh:7963:  n=$(wc -l <"$c1lk_mf2" | tr -d ' ')
+tools/research-gate.sh:7964:  [[ $n -eq 2 ]] || c1lk_msg+="manifest-lines=$n/2 "
+tools/research-gate.sh:7965:  [[ $(grep -c '^{"schema":"chousa-verify-all/v1"' -- "$c1lk_mf2" || true) -eq 2 ]] || c1lk_msg+='schema-lines '
+tools/research-gate.sh:7966:  [[ $(grep -a -c '^$' -- "$c1lk_mf2" || true) -eq 0 ]] || c1lk_msg+='blank-line '
+tools/research-gate.sh:7967:  [[ $c1lk_rca -eq 0 && $c1lk_rcb -eq 0 ]] || c1lk_msg+="gate-rc=$c1lk_rca,$c1lk_rcb/0,0 "
+tools/research-gate.sh:7968:  [[ $(stat -c %i -- "$c1lk_mf2") == "$c1lk_ino2" ]] || c1lk_msg+='inode-changed '
+tools/research-gate.sh:7969:  [[ $(tail -c1 -- "$c1lk_mf2" | od -An -tx1 | tr -d ' \n') == 0a ]] || c1lk_msg+='no-final-newline '
+tools/research-gate.sh:7970:  if [[ $PY3 -eq 1 ]]; then
+tools/research-gate.sh:7971:    python3 -c 'import json,sys
+tools/research-gate.sh:7972:for ln in sys.stdin.read().splitlines():
+tools/research-gate.sh:7973:    if ln.strip():
+tools/research-gate.sh:7974:        json.loads(ln)' <"$c1lk_mf2" >/dev/null 2>&1 || c1lk_msg+='json-invalid '
+tools/research-gate.sh:7975:  fi
+tools/research-gate.sh:7976:  if [[ -z $c1lk_msg ]]; then
+tools/research-gate.sh:7977:    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" c1lk-second-append "$c1lk_rcb"
+tools/research-gate.sh:7978:  else
+tools/research-gate.sh:7979:    printf 'FAIL-case %-28s %s\n' c1lk-second-append "$c1lk_msg"
+tools/research-gate.sh:7980:    sed 's/^/    | /' "$WORK/c1lk-gate-second-a.out" 2>/dev/null || true
+tools/research-gate.sh:7981:    sed 's/^/    | /' "$WORK/c1lk-gate-second-b.out" 2>/dev/null || true
+tools/research-gate.sh:7982:    failures=$((failures + 1))
+tools/research-gate.sh:7983:  fi
+tools/research-gate.sh:7984:  fi
+tools/research-gate.sh:8074:  # longer make the hash unmeasurable — that arm is covered by case 262/263.
+tools/research-gate.sh:8075:  # The same record reads supported on the normal PATH and must never read
+tools/research-gate.sh:8076:  # supported once the pinned tool is unmeasurable: fail closed to stale with
+tools/research-gate.sh:8077:  # actual=unreadable (research-gate.sh: fail closed: an unmeasurable source is
+tools/research-gate.sh:8078:  # not a match). The injection binds a failing stub over /usr/bin/sha256sum
+tools/research-gate.sh:8079:  # inside an unprivileged user+mount namespace (the r14 ns harness); without a
+tools/research-gate.sh:8080:  # userns the case is skipped BY NAME and the skip is counted, never passed.
+tools/research-gate.sh:8081:  mkdir -p "$WORK/r2faultbin"
+tools/research-gate.sh:8082:  printf '#!/bin/sh\nexit 127\n' >"$WORK/r2faultbin/sha256sum"
+tools/research-gate.sh:8083:  chmod +x "$WORK/r2faultbin/sha256sum"
+tools/research-gate.sh:8084:  printf '{"id":"HF1","source":"claimsrc/sha-src.txt","span":"sha source line one","expect":"supported","sha256":"%s"}\n' "$SHA_GOOD" \
+tools/research-gate.sh:8085:    >"$WORK/claims-r2-hash-fault.jsonl"
+tools/research-gate.sh:8086:  cases=$((cases + 1))
+tools/research-gate.sh:8087:  r2_ok=1 r2_ctl_rc=0 r2_fault_rc=0
+tools/research-gate.sh:8088:  r2_ctl_out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+tools/research-gate.sh:8089:    CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+tools/research-gate.sh:8090:    bash "$SELF" verify-claims "$WORK/claims-r2-hash-fault.jsonl" 2>&1) || r2_ctl_rc=$?
+tools/research-gate.sh:8091:  [[ $r2_ctl_rc -eq 0 ]] || r2_ok=0
+tools/research-gate.sh:8092:  [[ $r2_ctl_out == *'CLAIM id=HF1 expected=supported observed=supported'* ]] || r2_ok=0
+tools/research-gate.sh:8093:  [[ $r2_ctl_out == *'VERDICT_BEARING_CLAIMS=1/1'* ]] || r2_ok=0
+tools/research-gate.sh:8094:  ns_probe
+tools/research-gate.sh:8095:  if [[ $NS_STATE != yes ]]; then
+tools/research-gate.sh:8096:    SKIPPED=$((SKIPPED + 1))
+tools/research-gate.sh:8097:    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" r2-hash-fault-pinned "$NS_WHY"
+tools/research-gate.sh:8098:  else
+tools/research-gate.sh:8099:    r2_fault_out=$(unshare --user --map-root-user --mount --propagation private bash -c '
+tools/research-gate.sh:8100:      mount --bind "$1/r2faultbin/sha256sum" /usr/bin/sha256sum || exit 97
+tools/research-gate.sh:8101:      exec env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE -u BASH_ENV \
+tools/research-gate.sh:8102:        CHOUSA_STRICT=0 CHOUSA_ROOT="$1" CHOUSA_NOW_EPOCH="$2" \
+tools/research-gate.sh:8103:        bash "$3" verify-claims "$1/claims-r2-hash-fault.jsonl"' _ "$WORK" "$NOW_EPOCH" "$SELF" 2>&1) || r2_fault_rc=$?
+tools/research-gate.sh:8104:    [[ $r2_fault_rc -eq 1 ]] || r2_ok=0
+tools/research-gate.sh:8105:    [[ $r2_fault_out == *'FINDING CLAIM_SOURCE_REVISION_MISMATCH severity=warn surface=claims'* ]] || r2_ok=0
+tools/research-gate.sh:8106:    [[ $r2_fault_out == *'actual=unreadable'* ]] || r2_ok=0
+tools/research-gate.sh:8107:    [[ $r2_fault_out == *'VERDICT_BEARING_CLAIMS=0/1'* ]] || r2_ok=0
+tools/research-gate.sh:8108:    [[ $r2_fault_out != *'observed=supported'* ]] || r2_ok=0
+tools/research-gate.sh:8109:    if [[ $r2_ok -eq 1 ]]; then
+tools/research-gate.sh:8110:      printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" r2-hash-fault-pinned "$r2_fault_rc"
+tools/research-gate.sh:8111:    else
+tools/research-gate.sh:8112:      printf 'FAIL-case %-28s control_rc=%d fault_rc=%d\n' \
+tools/research-gate.sh:8113:        r2-hash-fault-pinned "$r2_ctl_rc" "$r2_fault_rc"
+tools/research-gate.sh:8114:      printf '%s\n' "$r2_ctl_out" "$r2_fault_out" | sed 's/^/    | /'
+tools/research-gate.sh:8115:      failures=$((failures + 1))
+tools/research-gate.sh:8350:  else
+tools/research-gate.sh:8351:    printf 'FAIL-case %-28s exit=%d\n' claims-locale-c "$lc_rc"
+tools/research-gate.sh:8352:    printf '%s\n' "$lc_out" | sed 's/^/    | /'
+tools/research-gate.sh:8353:    failures=$((failures + 1))
+tools/research-gate.sh:8354:  fi
+tools/research-gate.sh:8355:  printf 'lead %s tail\n' "$(printf '\303\251%.0s' {1..16383})" >"$WORK/lib/locale-b.md"
+tools/research-gate.sh:8356:  printf '{"id":"LC2","source":"lib/locale-b.md","span":"%s","expect":"supported"}\n' \
+tools/research-gate.sh:8357:    "$(printf '\\u00e9%.0s' {1..16383})" >"$WORK/claims-locale-b.jsonl"
+tools/research-gate.sh:8358:  lc_ok=1 lc_rc=0 lc_out=''
+tools/research-gate.sh:8359:  lc_run=(bash "$SELF" verify-claims "$WORK/claims-locale-b.jsonl")
+tools/research-gate.sh:8360:  if [[ $HAVE_TIMEOUT -eq 1 ]]; then
+tools/research-gate.sh:8361:    lc_run=(timeout "$LC_BOUNDARY_BUDGET_S" "${lc_run[@]}")
+tools/research-gate.sh:8362:  fi
+tools/research-gate.sh:8363:  lc_out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+tools/research-gate.sh:8364:    CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" LC_ALL=C LANG=C \
+tools/research-gate.sh:8365:    "${lc_run[@]}" 2>&1) || lc_rc=$?
+tools/research-gate.sh:8366:  cases=$((cases + 1))
+tools/research-gate.sh:8367:  [[ $lc_rc -eq 0 ]] || lc_ok=0
+tools/research-gate.sh:8368:  [[ $lc_out == *'CLAIM id=LC2 expected=supported observed=supported source=lib/locale-b.md at=line:1 verdict=match'* ]] || lc_ok=0
+tools/research-gate.sh:8369:  if [[ $lc_ok -eq 1 ]]; then
+tools/research-gate.sh:8370:    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" claims-locale-boundary "$lc_rc"
+tools/research-gate.sh:8371:  else
+tools/research-gate.sh:8372:    printf 'FAIL-case %-28s exit=%d\n' claims-locale-boundary "$lc_rc"
+tools/research-gate.sh:8373:    printf '%s\n' "$lc_out" | sed 's/^/    | /'
+tools/research-gate.sh:8374:    [[ $lc_rc -ne 124 ]] || printf 'case-note %-29s reason=locale-boundary budget %ss exceeded (timeout); verdict unmeasured within budget\n' claims-locale-boundary "$LC_BOUNDARY_BUDGET_S"
+tools/research-gate.sh:8375:    failures=$((failures + 1))
+tools/research-gate.sh:8376:  fi
+tools/research-gate.sh:8377:
+tools/research-gate.sh:8380:  # PATH `sha256sum` shim wrote HOSTILE-CUT-OUTPUT into both fields and the run
+tools/research-gate.sh:8381:  # stayed exit 0/CLEAN (round-35 erratum 13). The gate now hashes with one
+tools/research-gate.sh:8382:  # absolute binary and refuses a non-hex result; the shim must be ignored.
+tools/research-gate.sh:8383:  if [[ $HAVE_FLOCK -ne 1 ]]; then
+tools/research-gate.sh:8384:    cases=$((cases + 1)); SKIPPED=$((SKIPPED + 1))
+tools/research-gate.sh:8385:    printf 'skip-case %-2d %-26s reason=%s\n' "$cases" all-manifest-hash-shim 'no flock(1): append fails closed'
+tools/research-gate.sh:8386:  fi
+tools/research-gate.sh:8387:  if [[ $HAVE_FLOCK -eq 1 ]]; then
+tools/research-gate.sh:8388:  mkdir -p "$WORK/r36hashbin"
+tools/research-gate.sh:8389:  printf '#!/bin/sh\nprintf "HOSTILE-CUT-OUTPUT  -\\n"\nexit 0\n' >"$WORK/r36hashbin/sha256sum"
+tools/research-gate.sh:8390:  chmod +x "$WORK/r36hashbin/sha256sum"
+tools/research-gate.sh:8391:  rm -f "$WORK/r36-manifest.jsonl"
+tools/research-gate.sh:8392:  h36_ok=1 h36_rc=0 h36_out=''
+tools/research-gate.sh:8393:  h36_out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+tools/research-gate.sh:8394:    CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+tools/research-gate.sh:8395:    PATH="$WORK/r36hashbin:$PATH" \
+tools/research-gate.sh:8396:    bash "$SELF" verify-all "$WORK/all-pass.md" --json "$WORK/r36-manifest.jsonl" 2>&1) || h36_rc=$?
+tools/research-gate.sh:8397:  cases=$((cases + 1))
+tools/research-gate.sh:8398:  [[ $h36_rc -eq 0 ]] || h36_ok=0
+tools/research-gate.sh:8399:  [[ -s $WORK/r36-manifest.jsonl ]] || h36_ok=0
+tools/research-gate.sh:8400:  grep -qE '"record_sha256":"[0-9a-f]{64}"' -- "$WORK/r36-manifest.jsonl" || h36_ok=0
+tools/research-gate.sh:8401:  grep -qE '"gate_sha256":"[0-9a-f]{64}"' -- "$WORK/r36-manifest.jsonl" || h36_ok=0
+tools/research-gate.sh:8402:  grep -q 'HOSTILE-CUT-OUTPUT' -- "$WORK/r36-manifest.jsonl" && h36_ok=0
+tools/research-gate.sh:8403:  if [[ $h36_ok -eq 1 ]]; then
+tools/research-gate.sh:8404:    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" all-manifest-hash-shim "$h36_rc"
+tools/research-gate.sh:8405:  else
+tools/research-gate.sh:8406:    printf 'FAIL-case %-28s exit=%d\n' all-manifest-hash-shim "$h36_rc"
+tools/research-gate.sh:8407:    printf '%s\n' "$h36_out" "$(cat "$WORK/r36-manifest.jsonl" 2>/dev/null)" | sed 's/^/    | /'
+tools/research-gate.sh:8408:    failures=$((failures + 1))
+tools/research-gate.sh:8409:  fi
+tools/research-gate.sh:8410:  fi
+tools/research-gate.sh:8411:
+tools/research-gate.sh:8412:  # ---- round-36 pin echo isolation (cases 260-261) ----
+tools/research-gate.sh:8413:  # CHOUSA_GREP_PIN_ECHO is receipt-only: a baseline pinned with the echo on
+tools/research-gate.sh:8414:  # embedded a GATE_GREP line and --drift against the unchanged gate reported
+tools/research-gate.sh:8415:  # a false drift (round-35 erratum 8a). The capture environment now scrubs
+tools/research-gate.sh:8416:  # the flag, and a GATE_GREP line pairs under its own token, not LINE.
+tools/research-gate.sh:8417:  rm -f "$WORK/r36-pin.txt" "$WORK/r36-pin2.txt"
+tools/research-gate.sh:8418:  p36_ok=1 p36_rc=0 p36_drc=0 p36_out='' p36_dout=''
+tools/research-gate.sh:8419:  p36_out=$(CHOUSA_GREP_PIN_ECHO=1 bash "$SELF" --pin "$WORK/r36-pin.txt" 2>&1) || p36_rc=$?
+tools/research-gate.sh:8420:  p36_dout=$(env -u CHOUSA_GREP_PIN_ECHO bash "$SELF" --drift "$WORK/r36-pin.txt" 2>&1) || p36_drc=$?
+tools/research-gate.sh:8421:  cases=$((cases + 1))
+tools/research-gate.sh:8422:  [[ $p36_rc -eq 0 ]] || p36_ok=0
+tools/research-gate.sh:8423:  [[ $p36_drc -eq 0 ]] || p36_ok=0
+tools/research-gate.sh:8424:  [[ $p36_dout == 'GATE_DRIFT: none' ]] || p36_ok=0
+tools/research-gate.sh:8425:  [[ $p36_out == *'GATE_PIN: ok path='* ]] || p36_ok=0
+tools/research-gate.sh:8426:  grep -q '^GATE_GREP: ' -- "$WORK/r36-pin.txt" && p36_ok=0
+tools/research-gate.sh:8427:  if [[ $p36_ok -eq 1 ]]; then
+tools/research-gate.sh:8428:    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" pin-echo-isolation "$p36_drc"
+tools/research-gate.sh:8429:  else
+tools/research-gate.sh:8430:    printf 'FAIL-case %-28s pin_rc=%d drift_rc=%d\n' pin-echo-isolation "$p36_rc" "$p36_drc"
+tools/research-gate.sh:8431:    printf '%s\n' "$p36_out" "$p36_dout" | sed 's/^/    | /'
+tools/research-gate.sh:8432:    failures=$((failures + 1))
+tools/research-gate.sh:8433:  fi
+tools/research-gate.sh:8434:  p36_ok=1 p36_out='' p36_dout=''
+tools/research-gate.sh:8435:  p36_out=$(bash "$SELF" --pin "$WORK/r36-pin2.txt" 2>&1)
+tools/research-gate.sh:8436:  sed -i "/^# --- canonical output follows ---$/a GATE_GREP: path=/usr/bin/grep source=default version=\"x\"" "$WORK/r36-pin2.txt" 2>/dev/null || true
+tools/research-gate.sh:8437:  p36_drc=0
+tools/research-gate.sh:8438:  p36_dout=$(env -u CHOUSA_GREP_PIN_ECHO bash "$SELF" --drift "$WORK/r36-pin2.txt" 2>&1) || p36_drc=$?
+tools/research-gate.sh:8439:  cases=$((cases + 1))
+tools/research-gate.sh:8440:  [[ $p36_drc -eq 1 ]] || p36_ok=0
+tools/research-gate.sh:8441:  [[ $p36_dout == *'GATE_DRIFT: -GATE_GREP'* ]] || p36_ok=0
+tools/research-gate.sh:8442:  if [[ $p36_ok -eq 1 ]]; then
+tools/research-gate.sh:8443:    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" pin-drift-grep-token "$p36_drc"
+tools/research-gate.sh:8444:  else
+tools/research-gate.sh:8445:    printf 'FAIL-case %-28s drift_rc=%d\n' pin-drift-grep-token "$p36_drc"
+tools/research-gate.sh:8446:    printf '%s\n' "$p36_out" "$p36_dout" | sed 's/^/    | /'
+tools/research-gate.sh:8447:    failures=$((failures + 1))
+tools/research-gate.sh:8448:  fi
+tools/research-gate.sh:8449:
+tools/research-gate.sh:8450:  # ---- round-37 claim-pin hashing (cases 262-264) ----
+tools/research-gate.sh:8451:  # verify-claims hashed a pinned source through `sha256sum < FILE | cut -d' '
+tools/research-gate.sh:8452:  # -f1`: both names resolved through PATH, so a shim printing the pinned
+tools/research-gate.sh:8453:  # digest made a stale source read current, and `cut` was a second lookup.
+tools/research-gate.sh:8454:  # The gate now hashes through the same pinned absolute binary the manifest
+tools/research-gate.sh:8455:  # uses, with no `cut`. Case 262 is the sha256sum shim, 263 the cut shim, 264
+tools/research-gate.sh:8456:  # the contract hold (a correct pin on the untouched stdin path).
+tools/research-gate.sh:8457:  mkdir -p "$WORK/lib" "$WORK/r37pinbin" "$WORK/r37cutbin"
+tools/research-gate.sh:8458:  printf 'pin r37 content\n' >"$WORK/lib/sha-r37.md"
+tools/research-gate.sh:8459:  r37_pin=$(sha256_hex_file "$WORK/lib/sha-r37.md") || r37_pin=''
+tools/research-gate.sh:8460:  printf 'pin r37 content\nTAMPERED after the pin\n' >>"$WORK/lib/sha-r37.md"
+tools/research-gate.sh:8461:  printf '{"id":"P1","source":"lib/sha-r37.md","span":"pin r37 content","expect":"supported","sha256":"%s"}\n' \
+tools/research-gate.sh:8462:    "$r37_pin" >"$WORK/claims-sha37-path.jsonl"
+tools/research-gate.sh:8463:  cat >"$WORK/r37pinbin/sha256sum" <<EOF
+tools/research-gate.sh:8464:#!/bin/sh
+tools/research-gate.sh:8465:cat >/dev/null 2>/dev/null
+tools/research-gate.sh:8466:printf '%s  -\\n' '$r37_pin'
+tools/research-gate.sh:8467:exit 0
+tools/research-gate.sh:8468:EOF
+tools/research-gate.sh:8469:  chmod +x "$WORK/r37pinbin/sha256sum"
+tools/research-gate.sh:8470:  r37_ok=1 r37_rc=0 r37_out=''
+tools/research-gate.sh:8471:  r37_out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+tools/research-gate.sh:8472:    CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+tools/research-gate.sh:8473:    PATH="$WORK/r37pinbin:$PATH" \
+tools/research-gate.sh:8474:    bash "$SELF" verify-claims "$WORK/claims-sha37-path.jsonl" 2>&1) || r37_rc=$?
+tools/research-gate.sh:8475:  cases=$((cases + 1))
+tools/research-gate.sh:8476:  [[ $r37_rc -eq 1 ]] || r37_ok=0
+tools/research-gate.sh:8477:  [[ $r37_out == *'RESEARCH_GATE: DRIFT'* ]] || r37_ok=0
+tools/research-gate.sh:8478:  [[ $r37_out == *'CLAIM_SOURCE_REVISION_MISMATCH'* ]] || r37_ok=0
+tools/research-gate.sh:8479:  [[ $r37_out == *'CLAIM id=P1 expected=supported observed=stale'* ]] || r37_ok=0
+tools/research-gate.sh:8480:  if [[ $r37_ok -eq 1 ]]; then
+tools/research-gate.sh:8481:    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" claims-sha-path-shim "$r37_rc"
+tools/research-gate.sh:8482:  else
+tools/research-gate.sh:8483:    printf 'FAIL-case %-28s exit=%d\n' claims-sha-path-shim "$r37_rc"
+tools/research-gate.sh:8484:    printf '%s\n' "$r37_out" | sed 's/^/    | /'
+tools/research-gate.sh:8485:    failures=$((failures + 1))
+tools/research-gate.sh:8486:  fi
+tools/research-gate.sh:8487:  cat >"$WORK/r37cutbin/cut" <<EOF
+tools/research-gate.sh:8488:#!/bin/sh
+tools/research-gate.sh:8489:cat >/dev/null 2>/dev/null
+tools/research-gate.sh:8490:printf '%s\\n' '$r37_pin'
+tools/research-gate.sh:8491:exit 0
+tools/research-gate.sh:8492:EOF
+tools/research-gate.sh:8493:  chmod +x "$WORK/r37cutbin/cut"
+tools/research-gate.sh:8494:  r37_ok=1 r37_rc=0 r37_out=''
+tools/research-gate.sh:8495:  r37_out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+tools/research-gate.sh:8496:    CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+tools/research-gate.sh:8497:    PATH="$WORK/r37cutbin:$PATH" \
+tools/research-gate.sh:8498:    bash "$SELF" verify-claims "$WORK/claims-sha37-path.jsonl" 2>&1) || r37_rc=$?
+tools/research-gate.sh:8499:  cases=$((cases + 1))
+tools/research-gate.sh:8500:  [[ $r37_rc -eq 1 ]] || r37_ok=0
+tools/research-gate.sh:8501:  [[ $r37_out == *'RESEARCH_GATE: DRIFT'* ]] || r37_ok=0
+tools/research-gate.sh:8502:  [[ $r37_out == *'CLAIM_SOURCE_REVISION_MISMATCH'* ]] || r37_ok=0
+tools/research-gate.sh:8503:  if [[ $r37_ok -eq 1 ]]; then
+tools/research-gate.sh:8504:    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" claims-sha-cut-shim "$r37_rc"
+tools/research-gate.sh:8505:  else
+tools/research-gate.sh:8506:    printf 'FAIL-case %-28s exit=%d\n' claims-sha-cut-shim "$r37_rc"
+tools/research-gate.sh:8507:    printf '%s\n' "$r37_out" | sed 's/^/    | /'
+tools/research-gate.sh:8508:    failures=$((failures + 1))
+tools/research-gate.sh:8509:  fi
+tools/research-gate.sh:8510:  printf 'pin r37 hold content\n' >"$WORK/lib/sha-r37-hold.md"
+tools/research-gate.sh:8511:  r37_hold=$(sha256_hex_file "$WORK/lib/sha-r37-hold.md") || r37_hold=''
+tools/research-gate.sh:8512:  printf '{"id":"H1","source":"lib/sha-r37-hold.md","span":"pin r37 hold content","expect":"supported","sha256":"%s"}\n' \
+tools/research-gate.sh:8513:    "$r37_hold" >"$WORK/claims-sha37-hold.jsonl"
+tools/research-gate.sh:8514:  r37_ok=1 r37_rc=0 r37_out=''
+tools/research-gate.sh:8515:  r37_out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+tools/research-gate.sh:8516:    CHOUSA_ROOT="$WORK" CHOUSA_NOW_EPOCH="$NOW_EPOCH" \
+tools/research-gate.sh:8517:    bash "$SELF" verify-claims "$WORK/claims-sha37-hold.jsonl" 2>&1) || r37_rc=$?
+tools/research-gate.sh:8518:  cases=$((cases + 1))
+tools/research-gate.sh:8519:  [[ $r37_rc -eq 0 ]] || r37_ok=0
+tools/research-gate.sh:8520:  [[ $r37_out == *'RESEARCH_GATE: CLEAN'* ]] || r37_ok=0
+tools/research-gate.sh:8521:  [[ $r37_out == *'CLAIM id=H1 expected=supported observed=supported'* ]] || r37_ok=0
+tools/research-gate.sh:8522:  [[ $r37_out == *'verdict=match'* ]] || r37_ok=0
+tools/research-gate.sh:8523:  if [[ $r37_ok -eq 1 ]]; then
+tools/research-gate.sh:8524:    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" claims-sha-stdin-hold "$r37_rc"
+tools/research-gate.sh:8525:  else
+tools/research-gate.sh:8526:    printf 'FAIL-case %-28s exit=%d\n' claims-sha-stdin-hold "$r37_rc"
+tools/research-gate.sh:8527:    printf '%s\n' "$r37_out" | sed 's/^/    | /'
+tools/research-gate.sh:8528:    failures=$((failures + 1))
+tools/research-gate.sh:8529:  fi
+tools/research-gate.sh:8530:
+tools/research-gate.sh:8531:  # ---- round-37 pin capture environment (cases 265-267) ----
+tools/research-gate.sh:8532:  # --pin's capture scrubbed the named CHOUSA_* variables but not BASH_ENV: the
+tools/research-gate.sh:8533:  # child bash re-sourced the caller's startup file, which re-exported a scrubbed
+tools/research-gate.sh:8534:  # variable (or moved CHOUSA_ROOT), so the pinned baseline embedded a GATE_GREP
+tools/research-gate.sh:8535:  # line and a plain --drift reported a phantom drift (-GATE_GREP / +GATE_GREP)
+tools/research-gate.sh:8536:  # on an unchanged gate. The capture now scrubs BASH_ENV too. Named limit: the
+tools/research-gate.sh:8537:  # gate process itself already sourced BASH_ENV before its body ran.
+tools/research-gate.sh:8538:  printf 'export CHOUSA_GREP_PIN_ECHO=1\n' >"$WORK/r37-echo.env"
+tools/research-gate.sh:8539:  rm -f "$WORK/r37-pin-env.txt" "$WORK/r37-pin-env2.txt" "$WORK/r37-pin-root.txt"
+tools/research-gate.sh:8540:  e37_ok=1 e37_rc=0 e37_drc=0 e37_out='' e37_dout=''
+tools/research-gate.sh:8541:  e37_out=$(BASH_ENV="$WORK/r37-echo.env" bash "$SELF" --pin "$WORK/r37-pin-env.txt" 2>&1) || e37_rc=$?
+tools/research-gate.sh:8542:  e37_dout=$(env -u BASH_ENV -u CHOUSA_GREP_PIN_ECHO bash "$SELF" --drift "$WORK/r37-pin-env.txt" 2>&1) || e37_drc=$?
+tools/research-gate.sh:8543:  cases=$((cases + 1))
+tools/research-gate.sh:8544:  [[ $e37_rc -eq 0 ]] || e37_ok=0
+tools/research-gate.sh:8545:  [[ $e37_drc -eq 0 ]] || e37_ok=0
+tools/research-gate.sh:8546:  [[ $e37_dout == 'GATE_DRIFT: none' ]] || e37_ok=0
+tools/research-gate.sh:8547:  grep -q '^GATE_GREP: ' -- "$WORK/r37-pin-env.txt" && e37_ok=0
+tools/research-gate.sh:8548:  if [[ $e37_ok -eq 1 ]]; then
+tools/research-gate.sh:8549:    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" pin-bashenv-echo "$e37_drc"
+tools/research-gate.sh:8550:  else
+tools/research-gate.sh:8551:    printf 'FAIL-case %-28s pin_rc=%d drift_rc=%d\n' pin-bashenv-echo "$e37_rc" "$e37_drc"
+tools/research-gate.sh:8552:    printf '%s\n' "$e37_out" "$e37_dout" | sed 's/^/    | /'
+tools/research-gate.sh:8553:    failures=$((failures + 1))
+tools/research-gate.sh:8554:  fi
+tools/research-gate.sh:8555:  e37_ok=1 e37_drc=0 e37_out='' e37_dout=''
+tools/research-gate.sh:8556:  e37_out=$(env -u BASH_ENV bash "$SELF" --pin "$WORK/r37-pin-env2.txt" 2>&1)
+tools/research-gate.sh:8557:  e37_dout=$(BASH_ENV="$WORK/r37-echo.env" bash "$SELF" --drift "$WORK/r37-pin-env2.txt" 2>&1) || e37_drc=$?
+tools/research-gate.sh:8558:  cases=$((cases + 1))
+tools/research-gate.sh:8559:  [[ $e37_drc -eq 0 ]] || e37_ok=0
+tools/research-gate.sh:8560:  # the drift run's own receipt echo is allowed; the verdict is its last line
+tools/research-gate.sh:8561:  [[ $(printf '%s\n' "$e37_dout" | tail -n1) == 'GATE_DRIFT: none' ]] || e37_ok=0
+tools/research-gate.sh:8562:  if [[ $e37_ok -eq 1 ]]; then
+tools/research-gate.sh:8563:    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" drift-bashenv-echo "$e37_drc"
+tools/research-gate.sh:8564:  else
+tools/research-gate.sh:8565:    printf 'FAIL-case %-28s drift_rc=%d\n' drift-bashenv-echo "$e37_drc"
+tools/research-gate.sh:8566:    printf '%s\n' "$e37_out" "$e37_dout" | sed 's/^/    | /'
+tools/research-gate.sh:8567:    failures=$((failures + 1))
+tools/research-gate.sh:8568:  fi
+tools/research-gate.sh:8569:  printf 'export CHOUSA_ROOT=%s\n' "$WORK/r37-foreign-root" >"$WORK/r37-root.env"
+tools/research-gate.sh:8570:  mkdir -p "$WORK/r37-foreign-root"
+tools/research-gate.sh:8571:  e37_ok=1 e37_rc=0 e37_drc=0 e37_out='' e37_dout=''
+tools/research-gate.sh:8572:  e37_out=$(BASH_ENV="$WORK/r37-root.env" bash "$SELF" --pin "$WORK/r37-pin-root.txt" 2>&1) || e37_rc=$?
+tools/research-gate.sh:8573:  e37_dout=$(env -u BASH_ENV bash "$SELF" --drift "$WORK/r37-pin-root.txt" 2>&1) || e37_drc=$?
+tools/research-gate.sh:8574:  cases=$((cases + 1))
+tools/research-gate.sh:8575:  [[ $e37_rc -eq 0 ]] || e37_ok=0
+tools/research-gate.sh:8576:  [[ -f $WORK/r37-pin-root.txt ]] || e37_ok=0
+tools/research-gate.sh:8577:  [[ $e37_drc -eq 0 ]] || e37_ok=0
+tools/research-gate.sh:8578:  [[ $e37_dout == 'GATE_DRIFT: none' ]] || e37_ok=0
+tools/research-gate.sh:8579:  if [[ $e37_ok -eq 1 ]]; then
+tools/research-gate.sh:8580:    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" pin-bashenv-root "$e37_drc"
+tools/research-gate.sh:8581:  else
+tools/research-gate.sh:8582:    printf 'FAIL-case %-28s pin_rc=%d drift_rc=%d\n' pin-bashenv-root "$e37_rc" "$e37_drc"
+tools/research-gate.sh:8583:    printf '%s\n' "$e37_out" "$e37_dout" | sed 's/^/    | /'
+tools/research-gate.sh:8584:    failures=$((failures + 1))
+tools/research-gate.sh:8585:  fi
+tools/research-gate.sh:8586:
+tools/research-gate.sh:8587:  # ---- round-38 env pin (cases 268-272) ----
+tools/research-gate.sh:8588:  # The canonical capture spawned its child through a BARE `env`: a caller's
+tools/research-gate.sh:8589:  # exported function `env` (BASH_FUNC_env%%, the claims Erratum-5 channel)
+tools/research-gate.sh:8590:  # received the capture call itself — re-adding CHOUSA_GREP_PIN_ECHO moved the
+tools/research-gate.sh:8591:  # baseline (phantom -GATE_GREP drift), re-adding CHOUSA_ROOT ran the capture
+tools/research-gate.sh:8592:  # against a foreign root, and a suppressing function killed the capture while
+tools/research-gate.sh:8593:  # --pin still refused honestly. The capture now runs through ONE pinned
+tools/research-gate.sh:8594:  # absolute env, so the caller's function cannot interpose; an unverifiable
+tools/research-gate.sh:8595:  # pin (override missing or not GNU coreutils env) refuses exit 2 before any
+tools/research-gate.sh:8596:  # mode runs. The bare-`bash` half of the old named limit is closed by the
+tools/research-gate.sh:8597:  # round-39 bash pin below; SHELLOPTS=noexec stays carried (round-37 residual).
+tools/research-gate.sh:8598:  rm -f "$WORK/r38-pin-echo.txt" "$WORK/r38-pin-sup.txt" "$WORK/r38-pin-rootmv.txt"
+tools/research-gate.sh:8599:  v38_ok=1 v38_rc=0 v38_drc=0 v38_out='' v38_dout=''
+tools/research-gate.sh:8600:  v38_out=$(bash -c '
+tools/research-gate.sh:8601:    env() { local o=(); while (($#)); do case "$1" in -u) o+=("$1" "$2"); shift 2;; *) break;; esac; done
+tools/research-gate.sh:8602:            /usr/bin/env "${o[@]}" CHOUSA_GREP_PIN_ECHO=1 "$@"; }
+tools/research-gate.sh:8603:    export -f env
+tools/research-gate.sh:8604:    exec bash "$1" --pin "$2"' _ "$SELF" "$WORK/r38-pin-echo.txt" 2>&1) || v38_rc=$?
+tools/research-gate.sh:8605:  v38_dout=$(env -u CHOUSA_GREP_PIN_ECHO bash "$SELF" --drift "$WORK/r38-pin-echo.txt" 2>&1) || v38_drc=$?
+tools/research-gate.sh:8606:  cases=$((cases + 1))
+tools/research-gate.sh:8607:  [[ $v38_rc -eq 0 ]] || v38_ok=0
+tools/research-gate.sh:8608:  [[ -f $WORK/r38-pin-echo.txt ]] || v38_ok=0
+tools/research-gate.sh:8609:  [[ $v38_drc -eq 0 ]] || v38_ok=0
+tools/research-gate.sh:8610:  [[ $v38_dout == 'GATE_DRIFT: none' ]] || v38_ok=0
+tools/research-gate.sh:8611:  grep -q '^GATE_GREP: ' -- "$WORK/r38-pin-echo.txt" && v38_ok=0
+tools/research-gate.sh:8612:  if [[ $v38_ok -eq 1 ]]; then
+tools/research-gate.sh:8613:    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" pin-env-fn-echo-scrub "$v38_drc"
+tools/research-gate.sh:8614:  else
+tools/research-gate.sh:8615:    printf 'FAIL-case %-28s pin_rc=%d drift_rc=%d\n' pin-env-fn-echo-scrub "$v38_rc" "$v38_drc"
+tools/research-gate.sh:8616:    printf '%s\n' "$v38_out" "$v38_dout" | sed 's/^/    | /'
+tools/research-gate.sh:8617:    failures=$((failures + 1))
+tools/research-gate.sh:8618:  fi
+tools/research-gate.sh:8619:  v38_ok=1 v38_rc=0 v38_drc=0 v38_out='' v38_dout=''
+tools/research-gate.sh:8620:  v38_out=$(bash -c '
+tools/research-gate.sh:8621:    env() { :; }
+tools/research-gate.sh:8622:    export -f env
+tools/research-gate.sh:8623:    exec bash "$1" --pin "$2"' _ "$SELF" "$WORK/r38-pin-sup.txt" 2>&1) || v38_rc=$?
+tools/research-gate.sh:8624:  v38_dout=$(env -u CHOUSA_GREP_PIN_ECHO bash "$SELF" --drift "$WORK/r38-pin-sup.txt" 2>&1) || v38_drc=$?
+tools/research-gate.sh:8625:  cases=$((cases + 1))
+tools/research-gate.sh:8626:  [[ $v38_rc -eq 0 ]] || v38_ok=0
+tools/research-gate.sh:8627:  [[ -f $WORK/r38-pin-sup.txt ]] || v38_ok=0
+tools/research-gate.sh:8628:  [[ $v38_drc -eq 0 ]] || v38_ok=0
+tools/research-gate.sh:8629:  [[ $v38_dout == 'GATE_DRIFT: none' ]] || v38_ok=0
+tools/research-gate.sh:8630:  if [[ $v38_ok -eq 1 ]]; then
+tools/research-gate.sh:8631:    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" pin-env-fn-suppress "$v38_drc"
+tools/research-gate.sh:8632:  else
+tools/research-gate.sh:8633:    printf 'FAIL-case %-28s pin_rc=%d drift_rc=%d\n' pin-env-fn-suppress "$v38_rc" "$v38_drc"
+tools/research-gate.sh:8634:    printf '%s\n' "$v38_out" "$v38_dout" | sed 's/^/    | /'
+tools/research-gate.sh:8635:    failures=$((failures + 1))
+tools/research-gate.sh:8636:  fi
+tools/research-gate.sh:8637:  mkdir -p "$WORK/r38-foreign-root"
+tools/research-gate.sh:8638:  v38_ok=1 v38_rc=0 v38_drc=0 v38_out='' v38_dout=''
+tools/research-gate.sh:8639:  v38_out=$(bash -c '
+tools/research-gate.sh:8640:    env() { local o=(); while (($#)); do case "$1" in -u) o+=("$1" "$2"); shift 2;; *) break;; esac; done
+tools/research-gate.sh:8641:            /usr/bin/env "${o[@]}" CHOUSA_ROOT="$3" "$@"; }
+tools/research-gate.sh:8642:    export -f env
+tools/research-gate.sh:8643:    exec bash "$1" --pin "$2"' _ "$SELF" "$WORK/r38-pin-rootmv.txt" "$WORK/r38-foreign-root" 2>&1) || v38_rc=$?
+tools/research-gate.sh:8644:  v38_dout=$(env -u CHOUSA_ROOT bash "$SELF" --drift "$WORK/r38-pin-rootmv.txt" 2>&1) || v38_drc=$?
+tools/research-gate.sh:8645:  cases=$((cases + 1))
+tools/research-gate.sh:8646:  [[ $v38_rc -eq 0 ]] || v38_ok=0
+tools/research-gate.sh:8647:  [[ -f $WORK/r38-pin-rootmv.txt ]] || v38_ok=0
+tools/research-gate.sh:8648:  [[ $v38_drc -eq 0 ]] || v38_ok=0
+tools/research-gate.sh:8649:  [[ $v38_dout == 'GATE_DRIFT: none' ]] || v38_ok=0
+tools/research-gate.sh:8650:  if [[ $v38_ok -eq 1 ]]; then
+tools/research-gate.sh:8651:    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" pin-env-fn-root "$v38_drc"
+tools/research-gate.sh:8652:  else
+tools/research-gate.sh:8653:    printf 'FAIL-case %-28s pin_rc=%d drift_rc=%d\n' pin-env-fn-root "$v38_rc" "$v38_drc"
+tools/research-gate.sh:8654:    printf '%s\n' "$v38_out" "$v38_dout" | sed 's/^/    | /'
+tools/research-gate.sh:8655:    failures=$((failures + 1))
+tools/research-gate.sh:8656:  fi
+tools/research-gate.sh:8657:  v38_ok=1 v38_rc=0 v38_out=''
+tools/research-gate.sh:8658:  v38_out=$(RESEARCH_GATE_ENV="$WORK/r38-no-such-dir/env" bash "$SELF" --pin "$WORK/r38-pin-ovm.txt" 2>&1) || v38_rc=$?
+tools/research-gate.sh:8659:  cases=$((cases + 1))
+tools/research-gate.sh:8660:  [[ $v38_rc -eq 2 ]] || v38_ok=0
+tools/research-gate.sh:8661:  [[ $v38_out == *'ENV_PROVENANCE refused'* ]] || v38_ok=0
+tools/research-gate.sh:8662:  [[ ! -f $WORK/r38-pin-ovm.txt ]] || v38_ok=0
+tools/research-gate.sh:8663:  if [[ $v38_ok -eq 1 ]]; then
+tools/research-gate.sh:8664:    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" env-pin-override-missing "$v38_rc"
+tools/research-gate.sh:8665:  else
+tools/research-gate.sh:8666:    printf 'FAIL-case %-28s pin_rc=%d\n' env-pin-override-missing "$v38_rc"
+tools/research-gate.sh:8667:    printf '%s\n' "$v38_out" | sed 's/^/    | /'
+tools/research-gate.sh:8668:    failures=$((failures + 1))
+tools/research-gate.sh:8669:  fi
+tools/research-gate.sh:8670:  printf '#!/bin/sh\nexit 0\n' >"$WORK/r38-fake-env"
+tools/research-gate.sh:8671:  chmod +x "$WORK/r38-fake-env"
+tools/research-gate.sh:8672:  v38_ok=1 v38_rc=0 v38_out=''
+tools/research-gate.sh:8673:  v38_out=$(RESEARCH_GATE_ENV="$WORK/r38-fake-env" bash "$SELF" --pin "$WORK/r38-pin-ovf.txt" 2>&1) || v38_rc=$?
+tools/research-gate.sh:8674:  cases=$((cases + 1))
+tools/research-gate.sh:8675:  [[ $v38_rc -eq 2 ]] || v38_ok=0
+tools/research-gate.sh:8676:  [[ $v38_out == *'ENV_PROVENANCE refused'* ]] || v38_ok=0
+tools/research-gate.sh:8677:  [[ ! -f $WORK/r38-pin-ovf.txt ]] || v38_ok=0
+tools/research-gate.sh:8678:  if [[ $v38_ok -eq 1 ]]; then
+tools/research-gate.sh:8679:    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" env-pin-override-fake "$v38_rc"
+tools/research-gate.sh:8680:  else
+tools/research-gate.sh:8681:    printf 'FAIL-case %-28s pin_rc=%d\n' env-pin-override-fake "$v38_rc"
+tools/research-gate.sh:8682:    printf '%s\n' "$v38_out" | sed 's/^/    | /'
+tools/research-gate.sh:8683:    failures=$((failures + 1))
+tools/research-gate.sh:8684:  fi
+tools/research-gate.sh:8685:
+tools/research-gate.sh:8686:  # ---- round-39 bash pin (cases 273-275) ----
+tools/research-gate.sh:8687:  # The capture's grandchild was a BARE `bash`: PATH resolution inside the
+tools/research-gate.sh:8688:  # pinned env consulted the caller — a PATH `bash` shim re-added
+tools/research-gate.sh:8689:  # CHOUSA_GREP_PIN_ECHO (the baseline embeds a GATE_GREP line and a plain
+tools/research-gate.sh:8690:  # --drift reports a phantom -GATE_GREP) or suppressed the capture while
+tools/research-gate.sh:8691:  # --pin refused honestly (claims Erratum 6(c), measured on the round-38
+tools/research-gate.sh:8692:  # landed gate). The capture now runs the grandchild through ONE pinned
+tools/research-gate.sh:8693:  # absolute bash; an unverifiable pin (override missing or not GNU bash)
+tools/research-gate.sh:8694:  # refuses exit 2 before any mode runs. Named limit: SHELLOPTS=noexec and
+tools/research-gate.sh:8695:  # the children's loader environment stay the caller's (carried).
+tools/research-gate.sh:8696:  mkdir -p "$WORK/r39-shimdir"
+tools/research-gate.sh:8697:  printf '#!/bin/sh\nCHOUSA_GREP_PIN_ECHO=1 exec /usr/bin/bash "$@"\n' >"$WORK/r39-shimdir/bash"
+tools/research-gate.sh:8698:  chmod +x "$WORK/r39-shimdir/bash"
+tools/research-gate.sh:8699:  rm -f "$WORK/r39-pin-pathshim.txt"
+tools/research-gate.sh:8700:  v39_ok=1 v39_rc=0 v39_drc=0 v39_out='' v39_dout=''
+tools/research-gate.sh:8701:  v39_out=$(PATH="$WORK/r39-shimdir:$PATH" bash "$SELF" --pin "$WORK/r39-pin-pathshim.txt" 2>&1) || v39_rc=$?
+tools/research-gate.sh:8702:  v39_dout=$(env -u CHOUSA_GREP_PIN_ECHO bash "$SELF" --drift "$WORK/r39-pin-pathshim.txt" 2>&1) || v39_drc=$?
+tools/research-gate.sh:8703:  cases=$((cases + 1))
+tools/research-gate.sh:8704:  [[ $v39_rc -eq 0 ]] || v39_ok=0
+tools/research-gate.sh:8705:  [[ -f "$WORK/r39-pin-pathshim.txt" ]] || v39_ok=0
+tools/research-gate.sh:8706:  [[ $v39_drc -eq 0 ]] || v39_ok=0
+tools/research-gate.sh:8707:  [[ $v39_dout == 'GATE_DRIFT: none' ]] || v39_ok=0
+tools/research-gate.sh:8708:  grep -q '^GATE_GREP: ' -- "$WORK/r39-pin-pathshim.txt" && v39_ok=0
+tools/research-gate.sh:8709:  if [[ $v39_ok -eq 1 ]]; then
+tools/research-gate.sh:8710:    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" pin-bash-path-shim "$v39_drc"
+tools/research-gate.sh:8711:  else
+tools/research-gate.sh:8712:    printf 'FAIL-case %-28s pin_rc=%d drift_rc=%d\n' pin-bash-path-shim "$v39_rc" "$v39_drc"
+tools/research-gate.sh:8713:    printf '%s\n' "$v39_out" "$v39_dout" | sed 's/^/    | /'
+tools/research-gate.sh:8714:    failures=$((failures + 1))
+tools/research-gate.sh:8715:  fi
+tools/research-gate.sh:8716:  v39_ok=1 v39_rc=0 v39_out=''
+tools/research-gate.sh:8717:  v39_out=$(RESEARCH_GATE_BASH="$WORK/r39-no-such-dir/bash" bash "$SELF" --pin "$WORK/r39-pin-ovm.txt" 2>&1) || v39_rc=$?
+tools/research-gate.sh:8718:  cases=$((cases + 1))
+tools/research-gate.sh:8719:  [[ $v39_rc -eq 2 ]] || v39_ok=0
+tools/research-gate.sh:8720:  [[ $v39_out == *'BASH_PROVENANCE refused'* ]] || v39_ok=0
+tools/research-gate.sh:8721:  [[ ! -f "$WORK/r39-pin-ovm.txt" ]] || v39_ok=0
+tools/research-gate.sh:8722:  if [[ $v39_ok -eq 1 ]]; then
+tools/research-gate.sh:8723:    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" bash-pin-override-missing "$v39_rc"
+tools/research-gate.sh:8724:  else
+tools/research-gate.sh:8725:    printf 'FAIL-case %-28s pin_rc=%d\n' bash-pin-override-missing "$v39_rc"
+tools/research-gate.sh:8726:    printf '%s\n' "$v39_out" | sed 's/^/    | /'
+tools/research-gate.sh:8727:    failures=$((failures + 1))
+tools/research-gate.sh:8728:  fi
+tools/research-gate.sh:8729:  printf '#!/bin/sh\nexit 0\n' >"$WORK/r39-fake-bash"
+tools/research-gate.sh:8730:  chmod +x "$WORK/r39-fake-bash"
+tools/research-gate.sh:8731:  v39_ok=1 v39_rc=0 v39_out=''
+tools/research-gate.sh:8732:  v39_out=$(RESEARCH_GATE_BASH="$WORK/r39-fake-bash" bash "$SELF" --pin "$WORK/r39-pin-ovf.txt" 2>&1) || v39_rc=$?
+tools/research-gate.sh:8733:  cases=$((cases + 1))
+tools/research-gate.sh:8734:  [[ $v39_rc -eq 2 ]] || v39_ok=0
+tools/research-gate.sh:8735:  [[ $v39_out == *'BASH_PROVENANCE refused'* ]] || v39_ok=0
+tools/research-gate.sh:8736:  [[ ! -f "$WORK/r39-pin-ovf.txt" ]] || v39_ok=0
+tools/research-gate.sh:8737:  if [[ $v39_ok -eq 1 ]]; then
+tools/research-gate.sh:8738:    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" bash-pin-override-fake "$v39_rc"
+tools/research-gate.sh:8739:  else
+tools/research-gate.sh:8740:    printf 'FAIL-case %-28s pin_rc=%d\n' bash-pin-override-fake "$v39_rc"
+tools/research-gate.sh:8741:    printf '%s\n' "$v39_out" | sed 's/^/    | /'
+tools/research-gate.sh:8742:    failures=$((failures + 1))
+tools/research-gate.sh:8743:  fi
+tools/research-gate.sh:8744:
+tools/research-gate.sh:8745:  if [[ $failures -eq 0 ]]; then
+tools/research-gate.sh:8746:    printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"
+tools/research-gate.sh:8747:    exit 0
+tools/research-gate.sh:8748:  fi
+tools/research-gate.sh:8749:  printf 'RESEARCH_GATE_SELFTEST: FAIL (%d/%d cases)\n' "$failures" "$cases"
+tools/research-gate.sh:8750:  exit 1
+tools/research-gate.sh:8751:}
+tools/research-gate.sh:6261:|---|---|---|---|---|---|
+tools/research-gate.sh:6262:| 1 | C1 | S1 | resolved | quote | cross-device content here |
+tools/research-gate.sh:6263:EOF
+tools/research-gate.sh:6264:  tnscase claims-cross-device 1 verify-claims "$WORK/claims-cross-device.jsonl" 'VERDICT_BEARING_CLAIMS=' \
+tools/research-gate.sh:6265:    "$WORK/crossdev" cross.md 'cross-device content here' \
+tools/research-gate.sh:6266:    'RESEARCH_GATE: DRIFT' 'FINDING CLAIM_SOURCE_CROSS_DEVICE severity=crit surface=claims' \
+tools/research-gate.sh:6267:    'CLAIM id=D1 expected=supported observed=refused source=crossdev/cross.md at=- verdict=refused' \
+tools/research-gate.sh:6268:    'VERDICT_BEARING_CLAIMS=0/1'
+tools/research-gate.sh:6269:  tnscase chain-cross-device 1 verify-chain "$WORK/chain-cross-device.md" 'RESOLVED_HOPS=' \
+tools/research-gate.sh:3970:    # states); a host without flock(1) cannot serialize, so it fails closed
+tools/research-gate.sh:3971:    # instead of appending unlocked.
+tools/research-gate.sh:3972:    if ! command -v flock >/dev/null 2>&1; then
+tools/research-gate.sh:3973:      printf 'research-gate: flock(1) unavailable; manifest not written: %s\n' "$JSON_ARG" >&2
+tools/research-gate.sh:3974:      exit 2
+tools/research-gate.sh:3975:    fi
+tools/research-gate.sh:3976:    local jfd='' jlast=''
+tools/research-gate.sh:3977:    if ! exec {jfd}>>"$JSON_ARG"; then
+tools/research-gate.sh:3978:      printf 'research-gate: manifest open failed: %s\n' "$JSON_ARG" >&2
+tools/research-gate.sh:3979:      exit 2
+tools/research-gate.sh:3980:    fi
+tools/research-gate.sh:3981:    if ! flock -x "$jfd"; then
+tools/research-gate.sh:3982:      printf 'research-gate: manifest lock failed: %s\n' "$JSON_ARG" >&2
+tools/research-gate.sh:3983:      exit 2
+tools/research-gate.sh:3984:    fi
+tools/research-gate.sh:3985:    # Probe the file the locked fd refers to, not the path: if PATH is a
+tools/research-gate.sh:3986:    # symlink retargeted after the open, a path probe would read another
+tools/research-gate.sh:3987:    # file's last byte while the append goes to the locked one (SentinelC1After,
+tools/research-gate.sh:3988:    # round 32). /proc/$$/fd/N reopens the fd's own inode; without /proc the
+tools/research-gate.sh:3989:    # path is the only handle.
+tools/research-gate.sh:3990:    local jprobe=$JSON_ARG
+tools/research-gate.sh:3991:    if [[ -e /proc/$$/fd/$jfd ]]; then
+tools/research-gate.sh:3992:      jprobe=/proc/$$/fd/$jfd
+tools/research-gate.sh:3993:    fi
+tools/research-gate.sh:3994:    if [[ -s $jprobe ]]; then
+tools/research-gate.sh:3995:      jlast=$(tail -c1 -- "$jprobe" 2>/dev/null | od -An -tx1 | tr -d ' \n' || true)
+tools/research-gate.sh:8370:    printf 'ok-case  %-2d %-28s exit=%d\n' "$cases" claims-locale-boundary "$lc_rc"
+tools/research-gate.sh:8371:  else
+tools/research-gate.sh:8372:    printf 'FAIL-case %-28s exit=%d\n' claims-locale-boundary "$lc_rc"
+tools/research-gate.sh:8373:    printf '%s\n' "$lc_out" | sed 's/^/    | /'
+tools/research-gate.sh:8374:    [[ $lc_rc -ne 124 ]] || printf 'case-note %-29s reason=locale-boundary budget %ss exceeded (timeout); verdict unmeasured within budget\n' claims-locale-boundary "$LC_BOUNDARY_BUDGET_S"
+tools/research-gate.sh:8375:    failures=$((failures + 1))
+tools/research-gate.sh:8376:  fi

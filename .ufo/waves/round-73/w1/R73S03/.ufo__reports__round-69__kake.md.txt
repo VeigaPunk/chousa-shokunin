@@ -1,0 +1,101 @@
+fleet_revision=1a3fbac0fbdc09342ccf86850dfb1227a0792ae6
+source=.ufo/reports/round-69/kake.md
+git_show_rc=0
+1: # kake — round 69 report (attempt 1)
+2: 
+3: Lane: kake (web properties & publishing). Lane repo `/home/vgpnk/Projects/shokunin/kake-shokunin`, branch `master`. Final lane hash **`a46ca62acfa0b1661d63f3a5e64ef8ab33590204`** (remote `refs/heads/master` verified by `git ls-remote` before filing). Frozen contract commit `dbcfef0b`; measured artifact commit `c182f5790e10f9d15814887ff5cbc9bb6e1a4e35`; SCORECARD/LOG commit `cb08ab092454cef756b08ab2d8bb9c4411930fa8`.
+4: 
+5: ## Work performed
+6: 
+7: Declared claims (2, distinct axes, both causally checked; the lowest owned non-retired axis, calibration 2, is among them):
+8: 
+9: - **C1 — calibration (2 → 2, HOLD).** Every integer count in the frozen 20-pair set re-derives at its named revision, or is cleared by a correction row. Counter `.ufo/waves/round-69/c69_recorded_counts.py`. Base `4d188f94` red; tip green via one correction row (see Before → after).
+10: - **C2 — operability (10 → 10, HOLD).** The lane gate `scripts/freshness-sweep.mjs` holds no `/tmp` code literal and its selftest fixture lands under TMPDIR. Counter `.ufo/waves/round-69/c69_tmp_honour.py`. Base red; tip green.
+11: - Frontier step: SOURCES rows S436 and S437 (opened 2026-11-03), mistakes M1 and M2 mined, QUALITY criteria for both, and one sourced claim (C2 rests on S436).
+12: 
+13: Work items (evidence pointers):
+14: 
+15: - Frozen contract with predicates before data: `.ufo/waves/round-69/contract.md` (commit `dbcfef0b`). Amendment 1 recorded after the W1 attacks and before any after-state: same file, section "Amendment 1" (terms only; base receipts of unamended counters kept as history).
+16: - W1 build and attack wave (12 seats, one v1 wave, `.ufo/waves/round-69/w1-spec.json`, `w1-dispatch.json`, `w1.ready`, `w1-results.json`). Reports in `.ufo/waves/round-69/w1/<seat>.md`, artifacts in `.ufo/waves/round-69/w1/<seat>/`.
+17: - C1 pair set (20 rows, sha256 `4e787bcb…e9be`): `.ufo/waves/round-69/c1/pairs.json`, from ScoutC1Pairs (`w1/ScoutC1Pairs.md`). One mismatch: C1-02 (record says 1 at `4b03efe1`; command gives 2). The round-67 pre-value 5 at `6ff73edd` re-derives (C1-01); the earlier concern about it was a mis-scoping, now corrected in the contract.
+18: - C1 counter: `.ufo/waves/round-69/c69_recorded_counts.py` (ExecC1Counter; `w1/ExecC1Counter/{selftest,base-run,attacks,relabel-demo}.txt`; 29 named attacks in `attacks.txt`). Selftest 6/6 re-run by the L1 at `c182f579`.
+19: - C2 patch: `scripts/freshness-sweep.mjs` (ExecC2Fix; `w1/ExecC2Fix/{patch.diff,measure.txt}`): R15 snapshot default removed (only `KAKE_R15_SNAPSHOT` supplies it), selftest default `path.join(os.tmpdir(),'kake-r16','selftest')`, help and comment text reworded. Selftest 36/36 at base and tip.
+20: - C2 counter: `.ufo/waves/round-69/c69_tmp_honour.py` (ExecC2Fix). Base and tip outputs in `controls/c2-base.txt` and `controls/c2-after-t1.txt`.
+21: - Mistake M2 re-run: `.ufo/waves/round-69/controls/wordcounts-r68-rerun.txt` (ScoutR68Receipt): S133 10 words collapsed-only, S434 full 26 words raw-substring, S434 22-word sub-quote raw-substring; `grep -c '/tmp'` 0 (base receipt `.ufo/waves/round-68/controls/wordcounts-d3-r68.txt`: 1).
+22: - Pre-data design attacks: ReviewerDesign (F1–F7: `tmp_literals` definition, offline predicate unsatisfiable at base, correction-value binding, scope of C1, M2 wording), CriticDesign (HOME≡TMPDIR pass, obfuscated literals, `offline_exit`), MutC2Base (M1–M5; M5 the residual), ConnW1 (correction row must carry the re-derived integer second; SOURCES rows must sit inside `## Registry` with resolvable `used-by`; second-order coupling noted below). Each changed the contract or the artifacts before measurement.
+23: - L1 direct checks at the landed tip: HOME-redirect mutant → `selftest_under_tmpdir=false`, exit 1; `'/tm'+'p'` concat mutant → exit 1; S436 and S437 quotes present in the retained bodies after tag-strip and whitespace collapse (`ScoutSources/sources/`).
+24: - SOURCES: S436 (Node.js `os.tmpdir()`, sha256 `0d31bf3c…b6245b`) and S437 (Python `tempfile`, sha256 `4a9695c5…9beec`) appended inside `## Registry` after the id-collision guard proof (`w1/ExecCensusMirror/measure.txt`: indented-row fixture collisions nonempty; `guard.sh` on the final rows: `collisions=0`). Census exit 0 before and after.
+25: - QUALITY addendum (end of file): three criteria (recorded counts re-derive or are cleared by a correction row; committed receipts name no `/tmp` path; lane gates take their temp root from the environment), each with an able-to-fail command.
+26: - Lesson `corpus/lessons/round-69.md`: Mistakes (M1, M2), the single Corrections row `| C1-02 | 2 |` (the frozen counter reads the re-derived integer in the second cell), Gate, sourced claims, Known residuals.
+27: - L0 question appended: `.ufo/l0-questions.md` line `kake | round-69 | --offline exits 1 on this Linux host …` (host-bound debt; operator ruling wanted).
+28: 
+29: Shape and seats:
+30: 
+31: - W1: one v1 wave, 12 seats, under `scripts/hyaku/ufo-wave-policy.json` (band 8–16). Roles: scout ×3 (ScoutC1Pairs, ScoutSources, ScoutR68Receipt), executor ×3 (ExecC1Counter, ExecC2Fix, ExecCensusMirror), scribe ×1 (ScribeC1Text), reviewer ×1 (ReviewerDesign), critic ×1 (CriticDesign), mutation-tester ×1 (MutC2Base), connector ×1 (ConnW1), revenger ×1 (RevengerC2). Attack seats: reviewer, critic, mutation-tester = 3 of 12 = 25 %. Connector seats: 1 (≤2). Planner: held by the L1 (no planner seat in the spawn set).
+32: - Routing: no `model` passed; route by role per the run-15 map (`task.agentModelOverrides`). The handoff does not record each seat's answering model; none is claimed here.
+33: - Dead seats: none recorded. `w1-results.json` lists 12 seats settled with no error field. Two seats (ExecC2Fix, ConnW1) ended their turn without a yield call; both had written complete reports, and ConnW1's final report landed after a nudge (`w1/ConnW1.md`, landed in `a46ca62a`).
+34: - Residual wave: **not dispatched.** `w1r-spec.json` (3 attack seats) was refused by the validator with `impossible_band` (spawn floor 8; padding to 8 would exceed the 16-seat round cap). Refusal kept as `w1r-dispatch.json`, `w1r-run.stderr`, `w1r-spec.json` (commit `cb08ab09`). Round total: 12 seats. The post-landing attacks are the L1's direct checks above; the mutation probe of the landed counter is the W1 MutC2Base run.
+35: 
+36: Amendment 1 (recorded in the contract before any after-state): the pair set and its exact relabel row; `tmp_literals` counts quote-adjacent path literals (help text and prose are not path literals); `offline_exit=0` replaced by `offline_unchanged` (same exit and VERDICT as base on this host); distinct fresh TMPDIR and HOME, with an lstat symlink check; M2 wording corrected.
+37: 
+38: Misroot sweep: `git -C /home/vgpnk/Projects/shokunin status --porcelain` shows only `.scratch/run15-state.json` (modified) and `.scratch/run13-state.json` (untracked). Both are orchestrator-owned and were left alone. No seat misrooted a file; nothing copied.
+39: 
+40: Peer-message note: two messages from another lane's seat (`SC2Census`, about a tsukuroi round-64 CRLF blocker) reached this L1 session. They do not concern kake: the lane's `corpus/SOURCES.md` has 0 CR bytes and the census is exit 0. No action taken in kake.
+41: 
+42: ## Landed changes
+43: 
+44: | Change | File(s) | Commit | Entry |
+45: |---|---|---|---|
+46: | Frozen contract (predicates before data) | `.ufo/waves/round-69/contract.md` | `dbcfef0b` | LOG `## Round 69` |
+47: | Artifacts: C1 counter, C2 patch and counter, pair set, sources, QUALITY addendum, lesson | `.ufo/waves/round-69/{c69_recorded_counts.py,c69_tmp_honour.py,c1/pairs.json,sources-append/,controls/,w1-spec.json,w1-dispatch.json,w1.ready,w1/,contract.md}`; `scripts/freshness-sweep.mjs`; `corpus/SOURCES.md`; `corpus/QUALITY.md`; `corpus/lessons/round-69.md` | `c182f579` (measured) | LOG `## Round 69` |
+48: | SCORECARD round-69 section, LOG entry, measurement receipts, residual refusal evidence | `SCORECARD.md`; `LOG.md`; `.ufo/waves/round-69/controls/{c1-base,c1-after-t1,c2-base,c2-after-t1}.txt`; `w1r-*` | `cb08ab09` | LOG `## Round 69` |
+49: | Final W1 wave evidence (ConnW1 final report, results handoff, dispatch marker) | `.ufo/waves/round-69/w1/ConnW1.md`, `w1-results.json`, `w1-run.stderr`, `w1.ready.dispatched` | `a46ca62a` | — (wave evidence) |
+50: | This report (fleet repo) | `.ufo/reports/round-69/kake.md` | fleet commit (see below) | — |
+51: 
+52: Commits `cb08ab09` and `a46ca62a` change no counter input (`scripts/`, `corpus/`, `c1/pairs.json` unchanged after `c182f579`), so the measured values stand at the final tip; re-run at `a46ca62a` below.
+53: 
+54: ## Before → after measurements
+55: 
+56: Counting commands are run from the lane root; receipts for the first two rows are in `.ufo/waves/round-69/controls/`.
+57: 
+58: | Claim | Axis | Base `4d188f94` | Measured commit `c182f579` | Re-run at final `a46ca62a` | Command |
+59: |---|---|---|---|---|---|
+60: | C1 | calibration 2→2 HOLD | `pairs=20 mismatches=1 relabelled=0 unrelabelled=1 met=false`, exit 1 | `pairs=20 mismatches=1 relabelled=1 unrelabelled=0 met=true`, exit 0 | `met=true`, exit 0 | `python3 -B .ufo/waves/round-69/c69_recorded_counts.py --root . --revision <rev> --pairs .ufo/waves/round-69/c1/pairs.json` |
+61: | C2 | operability 10→10 HOLD | `tmp_literals=2 selftest_under_tmpdir=false offline_unchanged=true`, exit 1 | `tmp_literals=0 selftest_under_tmpdir=true offline_unchanged=true`, exit 0 | same, exit 0 | `python3 -B .ufo/waves/round-69/c69_tmp_honour.py --root . --revision <rev> --work <dir>` |
+62: 
+63: Supporting counts: registry data rows `grep -cE '^\|[[:space:]]*S[0-9]{3,}[[:space:]]*\|' corpus/SOURCES.md` 173 (base) → 175 (final). `sources-census.sh validate --root /home/vgpnk/Projects/shokunin kake` exit 0 before and after. M2 receipt `grep -c '/tmp'`: base receipt 1 → re-run 0. Selftests: C1 6/6, C2 36/36 (the lane's own selftest) at base and tip.
+64: 
+65: Interpretation, bounded: the C1 tip is green because the record's post-value (C1-02, recorded 1) is cleared by a correction row with the re-derived integer 2. The record itself is not edited (append-only), so it remains wrong as written; the frozen contract makes the correction row the resolution. The calibration score is held at 2 under the HOLD rule.
+66: 
+67: Coupling, stated (ConnW1): C2's `offline_unchanged` runs `--offline`, whose §paths scan reads `corpus/**/*.md`. C1's correction lands in `corpus/lessons/round-69.md`. At the tip the offline VERDICT is identical to base, so no movement was observed; the two claims are independently measured but not fully isolated by the offline gate.
+68: 
+69: ## Sources & frontier
+70: 
+71: - `corpus/SOURCES.md` rows before → after: **173 → 175** registry rows (counting command above). Census exit 0 before and after.
+72: - Rows added by tier: tier A ×2 (S436 Node.js `os.tmpdir()`; S437 Python `tempfile`). Both `mined`, `opened 2026-11-03`, recheck `180d`, used-by `corpus/lessons/round-69.md`.
+73: - Rows touched old→new: none (no existing row changed).
+74: - Quote classes (re-derived, not asserted): S436 collapsed-only, 23 words (raw `grep -cF` 0; collapsed 1). S437 collapsed-only, 19 words, and the row teaches only the environment knob that span states; the precedence claim rests on S436 alone. The spec's named S437 span was absent (three `<li>` items) and is recorded as a disclosed deviation in the lesson.
+75: - Frontier rows advanced: none on PROVINCE frontier ground; the round is operability of the lane's own gate.
+76: - Sourced claim: C2 rests on S436 (cited in the lesson, Sourced claims; and the QUALITY addendum).
+77: - Mistakes mined (`corpus/lessons/round-69.md` `## Mistakes`): M1 record/observed drift (captured-by none at the round-67 landing; fix = C1 counter, base red, selftest 6/6, plus a QUALITY criterion and correction row); M2 `/tmp`-rooted receipt (captured-by none; fix = re-run receipt, `grep -c '/tmp'` 0 vs 1, plus a QUALITY criterion). Both fixes shown able to fail.
+78: - considerthese: `considerthese/2026-10-26.md:32` proposal 4 (Gate-agreement ledger) is the one still-unimplemented proposal. Not taken: the round-67 record states it is verifier-side data, not lane-ownable. Recorded, not adopted.
+79: - Assimilation: **none.** `shokuknow merge/kake/` read only. The staged package fails quarantine (the absent-defect register's kake slice has 9 payload-absent rows, not hand-checked this round), and no staged theme matches a round-69 claim.
+80: 
+81: ## Trend verdicts
+82: 
+83: - **expansion: unchanged.** No admitted knowledge entry on uncovered ground this round; two registry rows added as sources only.
+84: - **quality: improved (bounded).** Two `/tmp` code literals removed with a behavioural check (C2); the round-68 receipt re-derived from committed bytes (M2); the record's post-value cleared by a re-derived correction row, not silently edited (C1). Evidence: measured values above.
+85: - **discernment: unchanged.** Pre-data attacks caught four defects before measurement (ReviewerDesign F1, F2, F4/F5; ConnW1 finding 1: the correction-row shape). No non-author spot-check exists for this round; the lane-side sample is 3 admits and 2 rejects (lesson, Gate). The closure owes the outside check, so no `improved` or `unprovable-but-better` is claimed.
+86: 
+87: ## SHONEN
+88: 
+89: [~] Box 2 (end-to-end domain task executed and logged in LOG.md): LOG `## Round 69` (`LOG.md`, commit `cb08ab09`); measured receipts `.ufo/waves/round-69/controls/`; gate runs at base and tip above. Not verified by a non-author.
+90: [ ] Box 1 (SKILL.md decision tables, error patterns, checklists, cited sources): not touched this round.
+91: [ ] Box 3 (instructions executable without oral context): not assessed this round.
+92: [ ] Box 4 (no cross-domain bleed; PROVINCE.md accurate): not touched this round; PROVINCE.md unchanged.
+93: 
+94: Stale-lane: no (respawn-per-round driver; no other mission of this lane is open).
+95: 
+96: Tool installs: none by the L1. Seat reports state no installs (ConnW1, ExecC1Counter, ExecC2Fix, ReviewerDesign: none). Tools used were already present: node v24.21.0, Python 3.14.8, git 2.56.0. pacman untouched.
+97: 
+98: Open L0 questions: one, appended this round (`kake | round-69 |` `--offline` red on this Linux host, host-bound debt; routed around by the `offline_unchanged` reading). Named limits, not closed: M5 (removing the r15 absent branch is indistinguishable on this host), the TMPDIR-unset `/tmp` fallback documented in S436, SKILL.md `/tmp` procedure paths outside C2.

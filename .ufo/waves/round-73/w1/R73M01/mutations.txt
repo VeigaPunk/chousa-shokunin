@@ -1,0 +1,661 @@
+== R73M01 mutation receipt ==
+$ date -u +%Y-%m-%dT%H:%M:%SZ
+2026-11-04T02:49:57Z
+[rc=0]
+$ python3 --version
+Python 3.14.8
+[rc=0]
+$ git --version
+git version 2.56.0
+[rc=0]
+$ sha256sum /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round73/c2-count.py
+e6e22b1ec8d270171cf015d44cac3d544a61bd23a3fa67d14c91fa26585dc320  /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round73/c2-count.py
+[rc=0]
+$ sha256sum /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh
+d5d48128509f77edf161e4d8b10b833e6e00f822906460fa049f27d1244d41e2  /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/research-gate.sh
+[rc=0]
+lane HEAD: a0f094c272dcb09f1bf79e2c9057d7ea20b7ac7b
+clone toplevel: /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone
+CLONE_TOPLEVEL_ASSERT=ok
+lane tracked state (LOG/SCORECARD/corpus): ' M corpus/QUALITY.md\n?? corpus/evidence/round73/controls/battery-r73.txt\n?? corpus/evidence/round73/controls/preflight-r73.txt\n'
+$ cp /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round73/c2-count.py /fast/scratch/hyaku/chousa-r73/w1/R73M01/c2-count.scratch.py
+[rc=0]
+$ sha256sum /fast/scratch/hyaku/chousa-r73/w1/R73M01/c2-count.scratch.py
+e6e22b1ec8d270171cf015d44cac3d544a61bd23a3fa67d14c91fa26585dc320  /fast/scratch/hyaku/chousa-r73/w1/R73M01/c2-count.scratch.py
+[rc=0]
+$ cd /home/vgpnk/Projects/shokunin/chousa-shokunin && python3 -B corpus/evidence/round73/c2-count.py --selftest; echo EXIT=$?
+SELFTEST=PASS mutations=7/7
+EXIT=0
+[rc=0]
+
+== C1 counting commands (scratch copy of the r72 receipt) ==
+$ cp /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round72/controls/battery-past-locale-dies-pinzone-r72.txt /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/receipt.txt
+[rc=0]
+$ wc -l /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/receipt.txt
+332 /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/receipt.txt
+[rc=0]
+$ grep -c '^ok-case ' /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/receipt.txt
+231
+[rc=0]
+$ grep -c '^FAIL-case ' /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/receipt.txt
+16
+[rc=0]
+$ grep -c '^skip-case ' /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/receipt.txt
+13
+[rc=0]
+$ grep -c '^case-note ' /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/receipt.txt
+1
+[rc=0]
+$ grep -c -E '^(ok-case|FAIL-case|skip-case) ' /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/receipt.txt
+260
+[rc=0]
+$ grep -v -E '^(ok-case|FAIL-case|skip-case|case-note) ' /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/receipt.txt > /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/stripped.txt; wc -l /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/stripped.txt
+71 /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/stripped.txt
+[rc=0]
+$ grep -o -w case /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/receipt.txt | wc -l
+282
+[rc=0]
+$ grep -o -w case /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/stripped.txt | wc -l
+21
+[rc=0]
+$ grep -c -w case /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/stripped.txt
+5
+[rc=0]
+$ grep -n -w case /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/stripped.txt
+1:# r72 battery receipt (C1, HONEST DEFECT RECORD): the bounded battery's full run at the r72 landing tip 7f7ea19a945e0998f009f82b9c651cb08aec1c12 - the r70 STALL POINT PASSED FOR THE FIRST TIME (the r71 bound fired in production at case 258) and the run then died at a NEW, never-before-reachable crash site in the r36 pin zone - SELFTEST_RC=2, NO verdict line; C1 lands honest-stop per its frozen rule (the rule's own arm: the battery died before its verdict line)
+4:# measured rates (from this receipt's own lines): 260 case lines (231 ok-case + 16 FAIL-case + 13 skip-case) over 14350 s ~ 55 s/case average under evening fleet load; the 19:21-20:00 stretch measured ~14 s/case (the quiet-window number r73's route is sized on: the full 275-case battery ~64-90 min on a quiet host, vs the r71 contended ~86-110 s/case)
+5:# what the bound did (the r71 repair PROVEN in production): case 258 claims-locale-boundary exceeded the 900 s budget - the timeout-wrap printed the named FAIL-case at rc 124 plus the case-note (verdict unmeasured within budget), counted one failure, and the battery CONTINUED past case 258 - the exact point where r70 (>70 min unbounded) and every earlier attempt died
+6:# the new defect (routed to round 73): after skip-case 259, the pin-echo-isolation zone crashed the script under set -euo pipefail - the flock-less --pin capture fails closed by design (rc=2, verdict-lines=0), so the r36-pin.txt baseline is never written, and the unguarded grep on that missing file kills the script (the same bare-statement class the r70 claim guarded at three sites BELOW case 258; this site sits ABOVE it and was unreachable until the bound worked); exit 2, no summary, no verdict line
+7:# counting commands (all over this receipt): grep -c "^RESEARCH_GATE_SELFTEST:" -> 0 (the honest-stop ground); grep -c "^FAIL-case claims-locale-boundary" -> 1 (rc 124); grep -c "^case-note claims-locale-boundary" -> 1; grep -c "^skip-case 259" -> 1 (the r70 stall point passed); grep -c "r36-pin.txt: No such file or directory" -> 1 (the crash site); last case line: FAIL-case pin-echo-isolation pin_rc=2 drift_rc=2 (case ~260 of the canonical 275)
+[rc=0]
+$ grep -c '^RESEARCH_GATE_SELFTEST:' /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/receipt.txt
+0
+[rc=1]
+$ grep -c 'RESEARCH_GATE_SELFTEST:' /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/receipt.txt
+1
+[rc=0]
+$ grep -n 'RESEARCH_GATE_SELFTEST:' /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/receipt.txt
+7:# counting commands (all over this receipt): grep -c "^RESEARCH_GATE_SELFTEST:" -> 0 (the honest-stop ground); grep -c "^FAIL-case claims-locale-boundary" -> 1 (rc 124); grep -c "^case-note claims-locale-boundary" -> 1; grep -c "^skip-case 259" -> 1 (the r70 stall point passed); grep -c "r36-pin.txt: No such file or directory" -> 1 (the crash site); last case line: FAIL-case pin-echo-isolation pin_rc=2 drift_rc=2 (case ~260 of the canonical 275)
+[rc=0]
+$ grep -c '^RESEARCH_GATE_SELFTEST:' /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/stripped.txt
+0
+[rc=1]
+$ grep -E '^(ok-case|FAIL-case|skip-case) ' /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/receipt.txt | grep -c 'RESEARCH_GATE_SELFTEST:'
+0
+[rc=1]
+$ cp /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/receipt.txt /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/inj_bare.txt && printf '\nRESEARCH_GATE_SELFTEST: PASS (275 cases, 0 skipped)\n' >> /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/inj_bare.txt
+[rc=0]
+$ grep -c '^RESEARCH_GATE_SELFTEST:' /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/inj_bare.txt
+1
+[rc=0]
+$ grep -c 'RESEARCH_GATE_SELFTEST:' /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/inj_bare.txt
+2
+[rc=0]
+$ cp /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/receipt.txt /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/inj_hash.txt && printf '\n# RESEARCH_GATE_SELFTEST: PASS (275 cases, 0 skipped)\n' >> /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/inj_hash.txt
+[rc=0]
+$ grep -c '^RESEARCH_GATE_SELFTEST:' /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/inj_hash.txt
+0
+[rc=1]
+$ grep -c 'RESEARCH_GATE_SELFTEST:' /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/inj_hash.txt
+2
+[rc=0]
+$ cp /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/receipt.txt /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/inj_midline.txt && printf '\nthe gate would print RESEARCH_GATE_SELFTEST: PASS (275 cases, 0 skipped) here\n' >> /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/inj_midline.txt
+[rc=0]
+$ grep -c '^RESEARCH_GATE_SELFTEST:' /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/inj_midline.txt
+0
+[rc=1]
+$ cp /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/receipt.txt /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/inj_indented.txt && printf '\n  RESEARCH_GATE_SELFTEST: PASS (275 cases, 0 skipped)\n' >> /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/inj_indented.txt
+[rc=0]
+$ grep -c '^RESEARCH_GATE_SELFTEST:' /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/inj_indented.txt
+0
+[rc=1]
+$ cp /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/receipt.txt /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/inj_two_bare.txt && printf '\nRESEARCH_GATE_SELFTEST: PASS (275 cases, 0 skipped)\nRESEARCH_GATE_SELFTEST: PASS (275 cases, 0 skipped)\n' >> /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/inj_two_bare.txt
+[rc=0]
+$ grep -c '^RESEARCH_GATE_SELFTEST:' /fast/scratch/hyaku/chousa-r73/w1/R73M01/c1/inj_two_bare.txt
+2
+[rc=0]
+
+== base control (counter over committed bytes at f748abb) ==
+$ python3 -B /fast/scratch/hyaku/chousa-r73/w1/R73M01/c2-count.scratch.py --lane /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone --rev f748abbb6bf58388e732facd4ecec5612419c457 --base f748abbb6bf58388e732facd4ecec5612419c457; echo EXIT=$?
+CHECK C2-1 FAIL LOG.md '## Round 72 correction entry' count=0
+CHECK C2-2 FAIL LOG entry missing=8426,8435,exempt
+CHECK C2-3 FAIL lesson '## Correction — round-72 spot-check' count=0 missing=V72-1,V72-2,8426,8435,7f7ea19a,6dd6c82
+CHECK C2-4 FAIL SCORECARD '## Round 72 correction note' count=0 missing=V72-1,V72-2
+CHECK C2-5 FAIL lesson tree statement missing=measured at the landing tip 7f7ea19a,three at the verdicts tree 6dd6c82,two recorded
+CHECK C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+CHECK C2-7 PASS r72 receipts changed=none
+C2=FAIL checks=2/7 rev=f748abbb6bf5 base=f748abbb6bf5
+EXIT=1
+[rc=0]
+
+== mut01-fake-heading-no-line: LOG only: a `## Round 72 correction entry` naming no line number ==
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone checkout -f -B mut01-fake-heading-no-line f748abbb6bf58388e732facd4ecec5612419c457
+[stderr] Switched to a new branch 'mut01-fake-heading-no-line'
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone add -A
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone -c user.name=R73M01 -c user.email=r73m01@scratch.invalid -c commit.gpgsign=false commit -q -m mut01-fake-heading-no-line: LOG only: a `## Round 72 correction entry` naming no line number
+mutant tip: 8c4271bade523685fbb4412f3591fdfe499c8782
+$ git diff --numstat f748abbb6bf5 8c4271bade52 -- LOG.md corpus/lessons/round-72.md SCORECARD.md
+4	0	LOG.md
+$ python3 -B /fast/scratch/hyaku/chousa-r73/w1/R73M01/c2-count.scratch.py --lane /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone --rev 8c4271bade523685fbb4412f3591fdfe499c8782 --base f748abbb6bf58388e732facd4ecec5612419c457; echo EXIT=$?
+CHECK C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+CHECK C2-2 FAIL LOG entry missing=8426,8435,exempt
+CHECK C2-3 FAIL lesson '## Correction — round-72 spot-check' count=0 missing=V72-1,V72-2,8426,8435,7f7ea19a,6dd6c82
+CHECK C2-4 FAIL SCORECARD '## Round 72 correction note' count=0 missing=V72-1,V72-2
+CHECK C2-5 FAIL lesson tree statement missing=measured at the landing tip 7f7ea19a,three at the verdicts tree 6dd6c82,two recorded
+CHECK C2-6 FAIL removed lines=LOG.md:4
+CHECK C2-7 PASS r72 receipts changed=none
+C2=FAIL checks=2/7 rev=8c4271bade52 base=f748abbb6bf5
+EXIT=1
+[rc=0]
+
+== mut02-heading-8436: LOG only: compliant shape but the kill line named as :8436 instead of :8435 ==
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone checkout -f -B mut02-heading-8436 f748abbb6bf58388e732facd4ecec5612419c457
+[stderr] Switched to a new branch 'mut02-heading-8436'
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone add -A
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone -c user.name=R73M01 -c user.email=r73m01@scratch.invalid -c commit.gpgsign=false commit -q -m mut02-heading-8436: LOG only: compliant shape but the kill line named as :8436 instead of :8435
+mutant tip: 6be636c3a5abbd0b604c2efbca3716072351fdf1
+$ git diff --numstat f748abbb6bf5 6be636c3a5ab -- LOG.md corpus/lessons/round-72.md SCORECARD.md
+4	0	LOG.md
+$ python3 -B /fast/scratch/hyaku/chousa-r73/w1/R73M01/c2-count.scratch.py --lane /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone --rev 6be636c3a5abbd0b604c2efbca3716072351fdf1 --base f748abbb6bf58388e732facd4ecec5612419c457; echo EXIT=$?
+CHECK C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+CHECK C2-2 FAIL LOG entry missing=8435
+CHECK C2-3 FAIL lesson '## Correction — round-72 spot-check' count=0 missing=V72-1,V72-2,8426,8435,7f7ea19a,6dd6c82
+CHECK C2-4 FAIL SCORECARD '## Round 72 correction note' count=0 missing=V72-1,V72-2
+CHECK C2-5 FAIL lesson tree statement missing=measured at the landing tip 7f7ea19a,three at the verdicts tree 6dd6c82,two recorded
+CHECK C2-6 FAIL removed lines=LOG.md:4
+CHECK C2-7 PASS r72 receipts changed=none
+C2=FAIL checks=2/7 rev=6be636c3a5ab base=f748abbb6bf5
+EXIT=1
+[rc=0]
+
+== mut03-lesson-missing-tree: LOG+lesson+card compliant except the lesson block never names 7f7ea19a ==
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone checkout -f -B mut03-lesson-missing-tree f748abbb6bf58388e732facd4ecec5612419c457
+[stderr] Switched to a new branch 'mut03-lesson-missing-tree'
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone add -A
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone -c user.name=R73M01 -c user.email=r73m01@scratch.invalid -c commit.gpgsign=false commit -q -m mut03-lesson-missing-tree: LOG+lesson+card compliant except the lesson block never names 7f7ea19a
+mutant tip: 6397a1009115927c8e2a5e66a5756307d6f765e8
+$ git diff --numstat f748abbb6bf5 6397a1009115 -- LOG.md corpus/lessons/round-72.md SCORECARD.md
+5	0	LOG.md
+4	0	SCORECARD.md
+6	0	corpus/lessons/round-72.md
+$ python3 -B /fast/scratch/hyaku/chousa-r73/w1/R73M01/c2-count.scratch.py --lane /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone --rev 6397a1009115927c8e2a5e66a5756307d6f765e8 --base f748abbb6bf58388e732facd4ecec5612419c457; echo EXIT=$?
+CHECK C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+CHECK C2-2 PASS LOG entry missing=none
+CHECK C2-3 FAIL lesson '## Correction — round-72 spot-check' count=1 missing=7f7ea19a
+CHECK C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+CHECK C2-5 FAIL lesson tree statement missing=measured at the landing tip 7f7ea19a
+CHECK C2-6 FAIL removed lines=LOG.md:5,corpus/lessons/round-72.md:6,SCORECARD.md:4
+CHECK C2-7 PASS r72 receipts changed=none
+C2=FAIL checks=4/7 rev=6397a1009115 base=f748abbb6bf5
+EXIT=1
+[rc=0]
+
+== mut04-one-phrase-missing: LOG+lesson+card compliant except the lesson omits the phrase `two recorded` ==
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone checkout -f -B mut04-one-phrase-missing f748abbb6bf58388e732facd4ecec5612419c457
+[stderr] Switched to a new branch 'mut04-one-phrase-missing'
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone add -A
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone -c user.name=R73M01 -c user.email=r73m01@scratch.invalid -c commit.gpgsign=false commit -q -m mut04-one-phrase-missing: LOG+lesson+card compliant except the lesson omits the phrase `two recorded`
+mutant tip: c745aeebb02cf5d7ca2d31244c8a0ab6c1fc6a1c
+$ git diff --numstat f748abbb6bf5 c745aeebb02c -- LOG.md corpus/lessons/round-72.md SCORECARD.md
+5	0	LOG.md
+4	0	SCORECARD.md
+6	0	corpus/lessons/round-72.md
+$ python3 -B /fast/scratch/hyaku/chousa-r73/w1/R73M01/c2-count.scratch.py --lane /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone --rev c745aeebb02cf5d7ca2d31244c8a0ab6c1fc6a1c --base f748abbb6bf58388e732facd4ecec5612419c457; echo EXIT=$?
+CHECK C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+CHECK C2-2 PASS LOG entry missing=none
+CHECK C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+CHECK C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+CHECK C2-5 FAIL lesson tree statement missing=two recorded
+CHECK C2-6 FAIL removed lines=LOG.md:5,corpus/lessons/round-72.md:6,SCORECARD.md:4
+CHECK C2-7 PASS r72 receipts changed=none
+C2=FAIL checks=5/7 rev=c745aeebb02c base=f748abbb6bf5
+EXIT=1
+[rc=0]
+
+== mut05-duplicate-heading: LOG carries `## Round 72 correction entry` twice, both sections compliant ==
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone checkout -f -B mut05-duplicate-heading f748abbb6bf58388e732facd4ecec5612419c457
+[stderr] Switched to a new branch 'mut05-duplicate-heading'
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone add -A
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone -c user.name=R73M01 -c user.email=r73m01@scratch.invalid -c commit.gpgsign=false commit -q -m mut05-duplicate-heading: LOG carries `## Round 72 correction entry` twice, both sections compliant
+mutant tip: 2665e734966da08875674c15bbe5f13252574935
+$ git diff --numstat f748abbb6bf5 2665e734966d -- LOG.md corpus/lessons/round-72.md SCORECARD.md
+10	0	LOG.md
+4	0	SCORECARD.md
+6	0	corpus/lessons/round-72.md
+$ python3 -B /fast/scratch/hyaku/chousa-r73/w1/R73M01/c2-count.scratch.py --lane /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone --rev 2665e734966da08875674c15bbe5f13252574935 --base f748abbb6bf58388e732facd4ecec5612419c457; echo EXIT=$?
+CHECK C2-1 FAIL LOG.md '## Round 72 correction entry' count=2
+CHECK C2-2 PASS LOG entry missing=none
+CHECK C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+CHECK C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+CHECK C2-5 PASS lesson tree statement missing=none
+CHECK C2-6 FAIL removed lines=LOG.md:10,corpus/lessons/round-72.md:6,SCORECARD.md:4
+CHECK C2-7 PASS r72 receipts changed=none
+C2=FAIL checks=5/7 rev=2665e734966d base=f748abbb6bf5
+EXIT=1
+[rc=0]
+
+== mut06-pure-deletion: LOG last 6 lines deleted, nothing added (a non-append-only edit) ==
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone checkout -f -B mut06-pure-deletion f748abbb6bf58388e732facd4ecec5612419c457
+[stderr] Switched to a new branch 'mut06-pure-deletion'
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone add -A
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone -c user.name=R73M01 -c user.email=r73m01@scratch.invalid -c commit.gpgsign=false commit -q -m mut06-pure-deletion: LOG last 6 lines deleted, nothing added (a non-append-only edit)
+mutant tip: d2477f5a899d4290b7ea648046db8b26f31ff8ee
+$ git diff --numstat f748abbb6bf5 d2477f5a899d -- LOG.md corpus/lessons/round-72.md SCORECARD.md
+0	6	LOG.md
+$ python3 -B /fast/scratch/hyaku/chousa-r73/w1/R73M01/c2-count.scratch.py --lane /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone --rev d2477f5a899d4290b7ea648046db8b26f31ff8ee --base f748abbb6bf58388e732facd4ecec5612419c457; echo EXIT=$?
+CHECK C2-1 FAIL LOG.md '## Round 72 correction entry' count=0
+CHECK C2-2 FAIL LOG entry missing=8426,8435,exempt
+CHECK C2-3 FAIL lesson '## Correction — round-72 spot-check' count=0 missing=V72-1,V72-2,8426,8435,7f7ea19a,6dd6c82
+CHECK C2-4 FAIL SCORECARD '## Round 72 correction note' count=0 missing=V72-1,V72-2
+CHECK C2-5 FAIL lesson tree statement missing=measured at the landing tip 7f7ea19a,three at the verdicts tree 6dd6c82,two recorded
+CHECK C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+CHECK C2-7 PASS r72 receipts changed=none
+C2=FAIL checks=2/7 rev=d2477f5a899d base=f748abbb6bf5
+EXIT=1
+[rc=0]
+
+== mut07-compliant-append: the full compliant append-only correction: LOG + lesson + card blocks ==
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone checkout -f -B mut07-compliant-append f748abbb6bf58388e732facd4ecec5612419c457
+[stderr] Switched to a new branch 'mut07-compliant-append'
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone add -A
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone -c user.name=R73M01 -c user.email=r73m01@scratch.invalid -c commit.gpgsign=false commit -q -m mut07-compliant-append: the full compliant append-only correction: LOG + lesson + card blocks
+mutant tip: 8adcbe3da914c6544b7c713245e0c3fccefe0ad2
+$ git diff --numstat f748abbb6bf5 8adcbe3da914 -- LOG.md corpus/lessons/round-72.md SCORECARD.md
+5	0	LOG.md
+4	0	SCORECARD.md
+6	0	corpus/lessons/round-72.md
+$ python3 -B /fast/scratch/hyaku/chousa-r73/w1/R73M01/c2-count.scratch.py --lane /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone --rev 8adcbe3da914c6544b7c713245e0c3fccefe0ad2 --base f748abbb6bf58388e732facd4ecec5612419c457; echo EXIT=$?
+CHECK C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+CHECK C2-2 PASS LOG entry missing=none
+CHECK C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+CHECK C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+CHECK C2-5 PASS lesson tree statement missing=none
+CHECK C2-6 FAIL removed lines=LOG.md:5,corpus/lessons/round-72.md:6,SCORECARD.md:4
+CHECK C2-7 PASS r72 receipts changed=none
+C2=FAIL checks=6/7 rev=8adcbe3da914 base=f748abbb6bf5
+EXIT=1
+[rc=0]
+
+== mutation scoreboard ==
+mut01-fake-heading-no-line: tip=8c4271bade52 rc=0 C2_PASS_PRINTED=False failed_checks=5
+    CHECK C2-2 FAIL LOG entry missing=8426,8435,exempt
+    CHECK C2-3 FAIL lesson '## Correction — round-72 spot-check' count=0 missing=V72-1,V72-2,8426,8435,7f7ea19a,6dd6c82
+    CHECK C2-4 FAIL SCORECARD '## Round 72 correction note' count=0 missing=V72-1,V72-2
+    CHECK C2-5 FAIL lesson tree statement missing=measured at the landing tip 7f7ea19a,three at the verdicts tree 6dd6c82,two recorded
+    CHECK C2-6 FAIL removed lines=LOG.md:4
+mut02-heading-8436: tip=6be636c3a5ab rc=0 C2_PASS_PRINTED=False failed_checks=5
+    CHECK C2-2 FAIL LOG entry missing=8435
+    CHECK C2-3 FAIL lesson '## Correction — round-72 spot-check' count=0 missing=V72-1,V72-2,8426,8435,7f7ea19a,6dd6c82
+    CHECK C2-4 FAIL SCORECARD '## Round 72 correction note' count=0 missing=V72-1,V72-2
+    CHECK C2-5 FAIL lesson tree statement missing=measured at the landing tip 7f7ea19a,three at the verdicts tree 6dd6c82,two recorded
+    CHECK C2-6 FAIL removed lines=LOG.md:4
+mut03-lesson-missing-tree: tip=6397a1009115 rc=0 C2_PASS_PRINTED=False failed_checks=3
+    CHECK C2-3 FAIL lesson '## Correction — round-72 spot-check' count=1 missing=7f7ea19a
+    CHECK C2-5 FAIL lesson tree statement missing=measured at the landing tip 7f7ea19a
+    CHECK C2-6 FAIL removed lines=LOG.md:5,corpus/lessons/round-72.md:6,SCORECARD.md:4
+mut04-one-phrase-missing: tip=c745aeebb02c rc=0 C2_PASS_PRINTED=False failed_checks=2
+    CHECK C2-5 FAIL lesson tree statement missing=two recorded
+    CHECK C2-6 FAIL removed lines=LOG.md:5,corpus/lessons/round-72.md:6,SCORECARD.md:4
+mut05-duplicate-heading: tip=2665e734966d rc=0 C2_PASS_PRINTED=False failed_checks=2
+    CHECK C2-1 FAIL LOG.md '## Round 72 correction entry' count=2
+    CHECK C2-6 FAIL removed lines=LOG.md:10,corpus/lessons/round-72.md:6,SCORECARD.md:4
+mut06-pure-deletion: tip=d2477f5a899d rc=0 C2_PASS_PRINTED=False failed_checks=5
+    CHECK C2-1 FAIL LOG.md '## Round 72 correction entry' count=0
+    CHECK C2-2 FAIL LOG entry missing=8426,8435,exempt
+    CHECK C2-3 FAIL lesson '## Correction — round-72 spot-check' count=0 missing=V72-1,V72-2,8426,8435,7f7ea19a,6dd6c82
+    CHECK C2-4 FAIL SCORECARD '## Round 72 correction note' count=0 missing=V72-1,V72-2
+    CHECK C2-5 FAIL lesson tree statement missing=measured at the landing tip 7f7ea19a,three at the verdicts tree 6dd6c82,two recorded
+mut07-compliant-append: tip=8adcbe3da914 rc=0 C2_PASS_PRINTED=False failed_checks=1
+    CHECK C2-6 FAIL removed lines=LOG.md:5,corpus/lessons/round-72.md:6,SCORECARD.md:4
+
+ANY_C2_PASS=False
+
+== eighth mutation: :8435 -> :84350, scored in a scratch counter copy ==
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone checkout -f -B mut08-84350 f748abbb6bf58388e732facd4ecec5612419c457
+[stderr] Switched to a new branch 'mut08-84350'
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone add -A
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone -c user.name=R73M01 -c user.email=r73m01@scratch.invalid -c commit.gpgsign=false commit -q -m mut08-84350: kill line named :84350
+mutant tip: 2c647b0176b67cc774cfdd6ce3188f2cd82bd181
+5	0	LOG.md
+$ git -C /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone show 2c647b0176b67cc774cfdd6ce3188f2cd82bd181:LOG.md | grep -n '8435'
+195:`08843552378071929c8b6abcd50be6613365691cfae4bf0d74fb03d86eb5b46e`.
+2143:- V72-1 (kill-line precision): the process exit is the unguarded sub-run assignment at tools/research-gate.sh:84350, which inherits the flock-less --pin child's designed rc=2; the grep at tools/research-gate.sh:8426 is set-e-exempt inside its `&&` list and supplies the receipt's visible symptom line only.
+[rc=0]
+$ grep -c '8435' <(git -C /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone show 2c647b0176b67cc774cfdd6ce3188f2cd82bd181:LOG.md)  # substring membership
+2
+[rc=0]
+$ python3 -B /fast/scratch/hyaku/chousa-r73/w1/R73M01/c2-count.scratch.py --lane /fast/scratch/hyaku/chousa-r73/w1/R73M01/clone --rev 2c647b0176b67cc774cfdd6ce3188f2cd82bd181 --base f748abbb6bf58388e732facd4ecec5612419c457; echo EXIT=$?
+CHECK C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+CHECK C2-2 PASS LOG entry missing=none
+CHECK C2-3 FAIL lesson '## Correction — round-72 spot-check' count=0 missing=V72-1,V72-2,8426,8435,7f7ea19a,6dd6c82
+CHECK C2-4 FAIL SCORECARD '## Round 72 correction note' count=0 missing=V72-1,V72-2
+CHECK C2-5 FAIL lesson tree statement missing=measured at the landing tip 7f7ea19a,three at the verdicts tree 6dd6c82,two recorded
+CHECK C2-6 FAIL removed lines=LOG.md:5
+CHECK C2-7 PASS r72 receipts changed=none
+C2=FAIL checks=3/7 rev=2c647b0176b6 base=f748abbb6bf5
+EXIT=1
+[rc=0]
+
+== in-memory candidate matrix (fixture, frozen check()) ==
+fixture baseline fails=[]
+RECOVERY: prior driver stopped only at candidate lambda arity; preceding counter EXIT=1 lines are actual detector exit codes. Scoreboard rc=0 is the shell echo wrapper, not detector status.
+Axes: detection precision; loader fidelity; restoration integrity.
+=== seven documented mutations, pristine/mutated/restored ===
+MUTANT C2-1 before_sha256 085218bcb7a277a6f0ee5704f1172cf89a9484ef5bd1e48e6cfbada988093224
+PRISTINE
+checks=7/7
+C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+C2-2 PASS LOG entry missing=none
+C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+C2-5 PASS lesson tree statement missing=none
+C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+C2-7 PASS r72 receipts changed=none
+mutated_sha256 69e9c0e365e5a97a003d2a8812b9547723c98ac3ca29953eeaf59df320c046ef deleted {} changed []
+MUTATED
+checks=5/7
+C2-1 FAIL LOG.md '## Round 72 correction entry' count=0
+C2-2 FAIL LOG entry missing=8426,8435,exempt
+C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+C2-5 PASS lesson tree statement missing=none
+C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+C2-7 PASS r72 receipts changed=none
+RESTORED sha256 085218bcb7a277a6f0ee5704f1172cf89a9484ef5bd1e48e6cfbada988093224 exact True
+checks=7/7
+C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+C2-2 PASS LOG entry missing=none
+C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+C2-5 PASS lesson tree statement missing=none
+C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+C2-7 PASS r72 receipts changed=none
+MUTANT C2-2 before_sha256 085218bcb7a277a6f0ee5704f1172cf89a9484ef5bd1e48e6cfbada988093224
+PRISTINE
+checks=7/7
+C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+C2-2 PASS LOG entry missing=none
+C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+C2-5 PASS lesson tree statement missing=none
+C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+C2-7 PASS r72 receipts changed=none
+mutated_sha256 5a7ab8584e486b897bbd5a8afdecb88a93a72e600eb78e2cebb052b891304938 deleted {} changed []
+MUTATED
+checks=6/7
+C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+C2-2 FAIL LOG entry missing=8435
+C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+C2-5 PASS lesson tree statement missing=none
+C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+C2-7 PASS r72 receipts changed=none
+RESTORED sha256 085218bcb7a277a6f0ee5704f1172cf89a9484ef5bd1e48e6cfbada988093224 exact True
+checks=7/7
+C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+C2-2 PASS LOG entry missing=none
+C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+C2-5 PASS lesson tree statement missing=none
+C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+C2-7 PASS r72 receipts changed=none
+MUTANT C2-3 before_sha256 085218bcb7a277a6f0ee5704f1172cf89a9484ef5bd1e48e6cfbada988093224
+PRISTINE
+checks=7/7
+C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+C2-2 PASS LOG entry missing=none
+C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+C2-5 PASS lesson tree statement missing=none
+C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+C2-7 PASS r72 receipts changed=none
+mutated_sha256 06d77d28842ecf081536360b173d1c53493e6088dbcc23f5aff8db5f282f6f1e deleted {} changed []
+MUTATED
+checks=6/7
+C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+C2-2 PASS LOG entry missing=none
+C2-3 FAIL lesson '## Correction — round-72 spot-check' count=1 missing=V72-2
+C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+C2-5 PASS lesson tree statement missing=none
+C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+C2-7 PASS r72 receipts changed=none
+RESTORED sha256 085218bcb7a277a6f0ee5704f1172cf89a9484ef5bd1e48e6cfbada988093224 exact True
+checks=7/7
+C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+C2-2 PASS LOG entry missing=none
+C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+C2-5 PASS lesson tree statement missing=none
+C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+C2-7 PASS r72 receipts changed=none
+MUTANT C2-4 before_sha256 085218bcb7a277a6f0ee5704f1172cf89a9484ef5bd1e48e6cfbada988093224
+PRISTINE
+checks=7/7
+C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+C2-2 PASS LOG entry missing=none
+C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+C2-5 PASS lesson tree statement missing=none
+C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+C2-7 PASS r72 receipts changed=none
+mutated_sha256 bc14684bbc21e97e1ebbd144825d7759426bf11e01185beceb0cd2f06cbb10c9 deleted {} changed []
+MUTATED
+checks=6/7
+C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+C2-2 PASS LOG entry missing=none
+C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+C2-4 FAIL SCORECARD '## Round 72 correction note' count=0 missing=V72-1,V72-2
+C2-5 PASS lesson tree statement missing=none
+C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+C2-7 PASS r72 receipts changed=none
+RESTORED sha256 085218bcb7a277a6f0ee5704f1172cf89a9484ef5bd1e48e6cfbada988093224 exact True
+checks=7/7
+C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+C2-2 PASS LOG entry missing=none
+C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+C2-5 PASS lesson tree statement missing=none
+C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+C2-7 PASS r72 receipts changed=none
+MUTANT C2-5 before_sha256 085218bcb7a277a6f0ee5704f1172cf89a9484ef5bd1e48e6cfbada988093224
+PRISTINE
+checks=7/7
+C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+C2-2 PASS LOG entry missing=none
+C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+C2-5 PASS lesson tree statement missing=none
+C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+C2-7 PASS r72 receipts changed=none
+mutated_sha256 95e6599e3cb11511dc1492731380086f15f9c19ac975625f6e2e54212af5dc45 deleted {} changed []
+MUTATED
+checks=6/7
+C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+C2-2 PASS LOG entry missing=none
+C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+C2-5 FAIL lesson tree statement missing=three at the verdicts tree 6dd6c82
+C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+C2-7 PASS r72 receipts changed=none
+RESTORED sha256 085218bcb7a277a6f0ee5704f1172cf89a9484ef5bd1e48e6cfbada988093224 exact True
+checks=7/7
+C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+C2-2 PASS LOG entry missing=none
+C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+C2-5 PASS lesson tree statement missing=none
+C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+C2-7 PASS r72 receipts changed=none
+MUTANT C2-6 before_sha256 085218bcb7a277a6f0ee5704f1172cf89a9484ef5bd1e48e6cfbada988093224
+PRISTINE
+checks=7/7
+C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+C2-2 PASS LOG entry missing=none
+C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+C2-5 PASS lesson tree statement missing=none
+C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+C2-7 PASS r72 receipts changed=none
+mutated_sha256 085218bcb7a277a6f0ee5704f1172cf89a9484ef5bd1e48e6cfbada988093224 deleted {'LOG.md': 1} changed []
+MUTATED
+checks=6/7
+C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+C2-2 PASS LOG entry missing=none
+C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+C2-5 PASS lesson tree statement missing=none
+C2-6 FAIL removed lines=LOG.md:1
+C2-7 PASS r72 receipts changed=none
+RESTORED sha256 085218bcb7a277a6f0ee5704f1172cf89a9484ef5bd1e48e6cfbada988093224 exact True
+checks=7/7
+C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+C2-2 PASS LOG entry missing=none
+C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+C2-5 PASS lesson tree statement missing=none
+C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+C2-7 PASS r72 receipts changed=none
+MUTANT C2-7 before_sha256 085218bcb7a277a6f0ee5704f1172cf89a9484ef5bd1e48e6cfbada988093224
+PRISTINE
+checks=7/7
+C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+C2-2 PASS LOG entry missing=none
+C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+C2-5 PASS lesson tree statement missing=none
+C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+C2-7 PASS r72 receipts changed=none
+mutated_sha256 085218bcb7a277a6f0ee5704f1172cf89a9484ef5bd1e48e6cfbada988093224 deleted {} changed ['corpus/evidence/round72/controls/battery-past-locale-dies-pinzone-r72.txt']
+MUTATED
+checks=6/7
+C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+C2-2 PASS LOG entry missing=none
+C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+C2-5 PASS lesson tree statement missing=none
+C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+C2-7 FAIL r72 receipts changed=corpus/evidence/round72/controls/battery-past-locale-dies-pinzone-r72.txt
+RESTORED sha256 085218bcb7a277a6f0ee5704f1172cf89a9484ef5bd1e48e6cfbada988093224 exact True
+checks=7/7
+C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+C2-2 PASS LOG entry missing=none
+C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+C2-5 PASS lesson tree statement missing=none
+C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+C2-7 PASS r72 receipts changed=none
+=== eighth mutation, :8435 -> :84350 ===
+PRISTINE sha256 085218bcb7a277a6f0ee5704f1172cf89a9484ef5bd1e48e6cfbada988093224
+checks=7/7
+C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+C2-2 PASS LOG entry missing=none
+C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+C2-5 PASS lesson tree statement missing=none
+C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+C2-7 PASS r72 receipts changed=none
+MUTATED sha256 321af955efc9a233c42745d98b523c9197d11a2c7d030ed9be250bf7d161ec10
+checks=7/7
+C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+C2-2 PASS LOG entry missing=none
+C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+C2-5 PASS lesson tree statement missing=none
+C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+C2-7 PASS r72 receipts changed=none
+RESTORED sha256 085218bcb7a277a6f0ee5704f1172cf89a9484ef5bd1e48e6cfbada988093224 exact True
+checks=7/7
+C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+C2-2 PASS LOG entry missing=none
+C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+C2-5 PASS lesson tree statement missing=none
+C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+C2-7 PASS r72 receipts changed=none
+VERDICT eighth=SURVIVED (all seven checks pass on otherwise-compliant fixture)
+=== supplement candidate observations ===
+heading trailing space
+checks=7/7
+C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+C2-2 PASS LOG entry missing=none
+C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+C2-5 PASS lesson tree statement missing=none
+C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+C2-7 PASS r72 receipts changed=none
+uppercase EXEMPT
+checks=6/7
+C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+C2-2 FAIL LOG entry missing=exempt
+C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+C2-5 PASS lesson tree statement missing=none
+C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+C2-7 PASS r72 receipts changed=none
+curly apostrophe
+checks=6/7
+C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+C2-2 PASS LOG entry missing=none
+C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+C2-5 FAIL lesson tree statement missing=three at the verdicts tree 6dd6c82
+C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+C2-7 PASS r72 receipts changed=none
+=== compliant append text vs numstat loader ===
+same committed text with true zero deletions
+checks=7/7
+C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+C2-2 PASS LOG entry missing=none
+C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+C2-5 PASS lesson tree statement missing=none
+C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+C2-7 PASS r72 receipts changed=none
+same committed text through frozen loader; loaded deleted= {'LOG.md': 5, 'corpus/lessons/round-72.md': 6, 'SCORECARD.md': 4}
+checks=6/7
+C2-1 PASS LOG.md '## Round 72 correction entry' count=1
+C2-2 PASS LOG entry missing=none
+C2-3 PASS lesson '## Correction — round-72 spot-check' count=1 missing=none
+C2-4 PASS SCORECARD '## Round 72 correction note' count=1 missing=none
+C2-5 PASS lesson tree statement missing=none
+C2-6 FAIL removed lines=LOG.md:5,corpus/lessons/round-72.md:6,SCORECARD.md:4
+C2-7 PASS r72 receipts changed=none
+=== C1 restored counts and hashes ===
+pristine_receipt_sha256 cae531e43ff4679620bbff0b753a6d36f3412b8b033776f0faea946238729fc1
+stripped sha256 5e820bd75c5439550174ad185f7ab78ef7a054a1acb505dc56a7d0be81db9224
+restored stripped sha256 cae531e43ff4679620bbff0b753a6d36f3412b8b033776f0faea946238729fc1 count 0 exit 1 exact True
+inj_bare sha256 244f72f5a53d6b6fea5af6ba049a0c3115ca7267bac5ed5eb7df3a9a8a3027ce
+restored inj_bare sha256 cae531e43ff4679620bbff0b753a6d36f3412b8b033776f0faea946238729fc1 count 0 exit 1 exact True
+inj_hash sha256 c005f1102cbb7314ca75d0630f2f35459ef3f137112d712f4c125a980065b171
+restored inj_hash sha256 cae531e43ff4679620bbff0b753a6d36f3412b8b033776f0faea946238729fc1 count 0 exit 1 exact True
+inj_midline sha256 345bd5a845979016354cc74c4f4f4ea2141871acd40a2bcb73f2678b44bc94a7
+restored inj_midline sha256 cae531e43ff4679620bbff0b753a6d36f3412b8b033776f0faea946238729fc1 count 0 exit 1 exact True
+inj_indented sha256 ec1748aca77eb394dfe69e7b75ec5df4be84945b331682a4857d750556ca1940
+restored inj_indented sha256 cae531e43ff4679620bbff0b753a6d36f3412b8b033776f0faea946238729fc1 count 0 exit 1 exact True
+inj_two_bare sha256 2bb25893507a84cb6d3de5e91fec719b9004aaf61abb4eb070f12b9d7c675d26
+restored inj_two_bare sha256 cae531e43ff4679620bbff0b753a6d36f3412b8b033776f0faea946238729fc1 count 0 exit 1 exact True
+=== lane frozen bytes unchanged ===
+corpus/evidence/round73/c2-count.py e6e22b1ec8d270171cf015d44cac3d544a61bd23a3fa67d14c91fa26585dc320
+tools/research-gate.sh d5d48128509f77edf161e4d8b10b833e6e00f822906460fa049f27d1244d41e2
+=== restore scratch clone to base before disposal ===
+ HEAD is now at f748abbb round-72 verifier spot-check (integrator, hyaku): non-author admit/reject
+ exit 0
+LOG.md base_sha256 1099d7958be3a4d4d2d1639b0b110b0519334a586cf9d5efd72958730d8ee386 restored_sha256 1099d7958be3a4d4d2d1639b0b110b0519334a586cf9d5efd72958730d8ee386 exact True
+corpus/lessons/round-72.md base_sha256 6b0346b769b80e79dd8ecb99a6b6fea46faf9949c853eb8c3d3bb688e3902371 restored_sha256 6b0346b769b80e79dd8ecb99a6b6fea46faf9949c853eb8c3d3bb688e3902371 exact True
+SCORECARD.md base_sha256 a243810cf3dc6349f081c073205bad28a07f7fc5181d5bfea338747208eeedac restored_sha256 a243810cf3dc6349f081c073205bad28a07f7fc5181d5bfea338747208eeedac exact True
+corpus/evidence/round72/controls/battery-past-locale-dies-pinzone-r72.txt base_sha256 cae531e43ff4679620bbff0b753a6d36f3412b8b033776f0faea946238729fc1 restored_sha256 cae531e43ff4679620bbff0b753a6d36f3412b8b033776f0faea946238729fc1 exact True
+corpus/evidence/round72/controls/after-r72-corrections.txt base_sha256 e8dcf5839a817ffe1808a09fd8715c0237a283c6e2f571eabdc4df097f8c4012 restored_sha256 e8dcf5839a817ffe1808a09fd8715c0237a283c6e2f571eabdc4df097f8c4012 exact True
+RESTORED detector:
+CHECK C2-1 FAIL LOG.md '## Round 72 correction entry' count=0
+CHECK C2-2 FAIL LOG entry missing=8426,8435,exempt
+CHECK C2-3 FAIL lesson '## Correction — round-72 spot-check' count=0 missing=V72-1,V72-2,8426,8435,7f7ea19a,6dd6c82
+CHECK C2-4 FAIL SCORECARD '## Round 72 correction note' count=0 missing=V72-1,V72-2
+CHECK C2-5 FAIL lesson tree statement missing=measured at the landing tip 7f7ea19a,three at the verdicts tree 6dd6c82,two recorded
+CHECK C2-6 PASS removed lines=0 across LOG/lesson/SCORECARD
+CHECK C2-7 PASS r72 receipts changed=none
+C2=FAIL checks=2/7 rev=f748abbb6bf5 base=f748abbb6bf5
+ EXIT=1
+No tool installation. Clone/scratch disposable under assignment; deletion performed after this receipt.
+
+CLEANUP command: rm -rf -- /fast/scratch/hyaku/chousa-r73/w1/R73M01
+CLEANUP scratch_exists=no clone_exists=no exit=0

@@ -1,0 +1,12 @@
+=== case-240 arm: bind a failing sha256sum stub over /usr/bin/sha256sum in a userns ===
+bind ok; inside ns:  rc_of_sha256sum=0
+sha256sum-exit=127
+unshare-rc=0
+
+=== control: same bind path outside any ns is NOT performed (read-only check only) ===
+-rwxr-xr-x 1 root root 51512 Sep 17 07:16 /usr/bin/sha256sum
+
+=== case-103/104 arm: tmpfs over a dir + fixture write, in a userns ===
+tmpfs ok dev=72 vs work dev=66306
+content: cross-device content here
+unshare-rc=0

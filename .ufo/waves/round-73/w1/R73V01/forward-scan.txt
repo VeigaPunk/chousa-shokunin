@@ -1,0 +1,104 @@
+== run_pin head, numbered ==
+  4281	run_pin() { # PATH
+  4282	  local path=$1 sha text
+  4283	  gate_canonical_capture
+  4284	  if [[ $GATE_CAP_RC -ne 0 || -z $GATE_CAP ]]; then
+  4285	    printf 'research-gate: --pin canonical capture failed (%s): %s\n' \
+  4286	      "${GATE_CAP_NOTE:-unknown}" "$path" >&2
+  4287	    exit 2
+  4288	  fi
+  4289	  sha=$(sha256_hex_file "$SELF") || sha=''
+  4290	  if [[ -z $sha ]]; then
+  4291	    printf 'research-gate: sha256sum unavailable or returned a non-hex value; baseline not written\n' >&2
+  4292	    exit 2
+
+== selftest-body assignments from command substitution, lines 8449-8800, and whether guarded ==
+8459	GUARDED	  r37_pin=$(sha256_hex_file "$WORK/lib/sha-r37.md") || r37_pin=''
+8471	UNGUARDED	  r37_out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+8475	UNGUARDED	  cases=$((cases + 1))
+8495	UNGUARDED	  r37_out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+8499	UNGUARDED	  cases=$((cases + 1))
+8511	GUARDED	  r37_hold=$(sha256_hex_file "$WORK/lib/sha-r37-hold.md") || r37_hold=''
+8515	UNGUARDED	  r37_out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+8518	UNGUARDED	  cases=$((cases + 1))
+8541	GUARDED	  e37_out=$(BASH_ENV="$WORK/r37-echo.env" bash "$SELF" --pin "$WORK/r37-pin-env.txt" 2>&1) || e37_rc=$?
+8542	GUARDED	  e37_dout=$(env -u BASH_ENV -u CHOUSA_GREP_PIN_ECHO bash "$SELF" --drift "$WORK/r37-pin-env.txt" 2>&1) || e37_drc=$?
+8543	UNGUARDED	  cases=$((cases + 1))
+8556	UNGUARDED	  e37_out=$(env -u BASH_ENV bash "$SELF" --pin "$WORK/r37-pin-env2.txt" 2>&1)
+8557	GUARDED	  e37_dout=$(BASH_ENV="$WORK/r37-echo.env" bash "$SELF" --drift "$WORK/r37-pin-env2.txt" 2>&1) || e37_drc=$?
+8558	UNGUARDED	  cases=$((cases + 1))
+8572	GUARDED	  e37_out=$(BASH_ENV="$WORK/r37-root.env" bash "$SELF" --pin "$WORK/r37-pin-root.txt" 2>&1) || e37_rc=$?
+8573	GUARDED	  e37_dout=$(env -u BASH_ENV bash "$SELF" --drift "$WORK/r37-pin-root.txt" 2>&1) || e37_drc=$?
+8574	UNGUARDED	  cases=$((cases + 1))
+8600	UNGUARDED	  v38_out=$(bash -c '
+8605	GUARDED	  v38_dout=$(env -u CHOUSA_GREP_PIN_ECHO bash "$SELF" --drift "$WORK/r38-pin-echo.txt" 2>&1) || v38_drc=$?
+8606	UNGUARDED	  cases=$((cases + 1))
+8620	UNGUARDED	  v38_out=$(bash -c '
+8624	GUARDED	  v38_dout=$(env -u CHOUSA_GREP_PIN_ECHO bash "$SELF" --drift "$WORK/r38-pin-sup.txt" 2>&1) || v38_drc=$?
+8625	UNGUARDED	  cases=$((cases + 1))
+8639	UNGUARDED	  v38_out=$(bash -c '
+8644	GUARDED	  v38_dout=$(env -u CHOUSA_ROOT bash "$SELF" --drift "$WORK/r38-pin-rootmv.txt" 2>&1) || v38_drc=$?
+8645	UNGUARDED	  cases=$((cases + 1))
+8658	GUARDED	  v38_out=$(RESEARCH_GATE_ENV="$WORK/r38-no-such-dir/env" bash "$SELF" --pin "$WORK/r38-pin-ovm.txt" 2>&1) || v38_rc=$?
+8659	UNGUARDED	  cases=$((cases + 1))
+8673	GUARDED	  v38_out=$(RESEARCH_GATE_ENV="$WORK/r38-fake-env" bash "$SELF" --pin "$WORK/r38-pin-ovf.txt" 2>&1) || v38_rc=$?
+8674	UNGUARDED	  cases=$((cases + 1))
+8701	GUARDED	  v39_out=$(PATH="$WORK/r39-shimdir:$PATH" bash "$SELF" --pin "$WORK/r39-pin-pathshim.txt" 2>&1) || v39_rc=$?
+8702	GUARDED	  v39_dout=$(env -u CHOUSA_GREP_PIN_ECHO bash "$SELF" --drift "$WORK/r39-pin-pathshim.txt" 2>&1) || v39_drc=$?
+8703	UNGUARDED	  cases=$((cases + 1))
+8717	GUARDED	  v39_out=$(RESEARCH_GATE_BASH="$WORK/r39-no-such-dir/bash" bash "$SELF" --pin "$WORK/r39-pin-ovm.txt" 2>&1) || v39_rc=$?
+8718	UNGUARDED	  cases=$((cases + 1))
+8732	GUARDED	  v39_out=$(RESEARCH_GATE_BASH="$WORK/r39-fake-bash" bash "$SELF" --pin "$WORK/r39-pin-ovf.txt" 2>&1) || v39_rc=$?
+8733	UNGUARDED	  cases=$((cases + 1))
+
+== any UNGUARDED $( ) assignment in the WHOLE selftest body 4377-8800 ==
+4380	  WORK=$(mktemp -d "${TMPDIR:-/tmp}/chousa-research-gate-selftest.XXXXXX") \
+4383	  OUTSIDE_FILE=$(mktemp "${TMPDIR:-/tmp}/chousa-gate-outside.XXXXXX") \
+6978	  cases=$((cases + 1)); rc=0
+7006	  cases=$((cases + 1))
+7378	  plain_out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE \
+7384	  cases=$((cases + 1))
+7579	  cases=$((cases + 1))
+7681	  SHA_GOOD=$(sha256sum -- "$WORK/claimsrc/sha-src.txt" | cut -d' ' -f1)
+7684	  SHA_TAMPERED=$(sha256sum -- "$WORK/claimsrc/sha-src-tampered.txt" | cut -d' ' -f1)
+7686	  SHA_CRLF=$(sha256sum -- "$WORK/claimsrc/sha-src-crlf.txt" | cut -d' ' -f1)
+7889	  i=$((i + 1))
+7956	  cases=$((cases + 1))
+7959	  c1lk_ino2=$(stat -c %i -- "$c1lk_mf2")
+7963	  n=$(wc -l <"$c1lk_mf2" | tr -d ' ')
+8086	  cases=$((cases + 1))
+8088	  r2_ctl_out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+8265	  ls_span=$(printf 'w%04d ' {1..4999})
+8297	  dz_span=$(printf 'w%04d ' {1..5461})   # exactly 32766 bytes
+8317	  dz_low=$(printf 'w%04d ' {1..5460})'wwwww'     # exactly 32765 bytes
+8318	  dz_high=$(printf 'w%04d ' {1..5460})'wwwwwww' # exactly 32767 bytes
+8341	  lc_out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+8344	  cases=$((cases + 1))
+8363	  lc_out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+8366	  cases=$((cases + 1))
+8393	  h36_out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+8397	  cases=$((cases + 1))
+8421	  cases=$((cases + 1))
+8435	  p36_out=$(bash "$SELF" --pin "$WORK/r36-pin2.txt" 2>&1)
+8439	  cases=$((cases + 1))
+8471	  r37_out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+8475	  cases=$((cases + 1))
+8495	  r37_out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+8499	  cases=$((cases + 1))
+8515	  r37_out=$(env -u CHOUSA_RECORD -u CHOUSA_CLAIMS -u CHOUSA_AGGREGATOR_ERE CHOUSA_STRICT=0 \
+8518	  cases=$((cases + 1))
+8543	  cases=$((cases + 1))
+8556	  e37_out=$(env -u BASH_ENV bash "$SELF" --pin "$WORK/r37-pin-env2.txt" 2>&1)
+8558	  cases=$((cases + 1))
+8574	  cases=$((cases + 1))
+8600	  v38_out=$(bash -c '
+8606	  cases=$((cases + 1))
+8620	  v38_out=$(bash -c '
+8625	  cases=$((cases + 1))
+8639	  v38_out=$(bash -c '
+8645	  cases=$((cases + 1))
+8659	  cases=$((cases + 1))
+8674	  cases=$((cases + 1))
+8703	  cases=$((cases + 1))
+8718	  cases=$((cases + 1))
+8733	  cases=$((cases + 1))

@@ -1,0 +1,19 @@
+=== case-260 arm: --pin with CHOUSA_GREP_PIN_ECHO=1 (flock present) ===
+GATE_GREP: path=/usr/bin/grep source=default version="grep (GNU grep) 3.12-modified"
+GATE_PIN: ok path=/fast/scratch/hyaku/chousa-r73/w1/R73S02/pinarm/r36-pin.txt gate_sha256=d5d48128509f77edf161e4d8b10b833e6e00f822906460fa049f27d1244d41e2
+pin_rc=0
+--- baseline first 3 lines / GATE_PIN line ---
+# chousa-gate drift baseline v1 — written by research-gate.sh --pin
+# lineage: mori-shokunin r10 pin/drift (tools/mori-census.sh); volatile contract per the gate header
+# gate_sha256=d5d48128509f77edf161e4d8b10b833e6e00f822906460fa049f27d1244d41e2
+0
+
+=== same arm: --drift against the unchanged gate ===
+GATE_DRIFT: none
+drift_rc=0
+
+=== case-261 arm: --pin then inject a GATE_GREP line, --drift must report -GATE_GREP ===
+GATE_PIN: ok path=/fast/scratch/hyaku/chousa-r73/w1/R73S02/pinarm/r36-pin2.txt gate_sha256=d5d48128509f77edf161e4d8b10b833e6e00f822906460fa049f27d1244d41e2
+pin2_rc=0
+GATE_DRIFT: -GATE_GREP
+drift2_rc=1

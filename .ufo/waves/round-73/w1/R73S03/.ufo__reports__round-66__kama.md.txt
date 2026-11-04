@@ -1,0 +1,216 @@
+fleet_revision=1a3fbac0fbdc09342ccf86850dfb1227a0792ae6
+source=.ufo/reports/round-66/kama.md
+git_show_rc=0
+1: # Round 66 — kama (2026-10-31, Windows host)
+2: 
+3: Dispatch digest: launched by the orchestrator for round 66 (fresh-start round, carry-in
+4: debt from the r65 `rejected-honest-stop` closure). Lane head at round start:
+5: `d02416c9862c7ddaa4b714811e526d0d21456bf7` (branch tip, pushed; includes the r65
+6: verifier spot-check commit). Lane head at report time: `c5bdc9fd434eee5bf9e35bb8aff40aa82f620bb7`
+7: (pushed; remote `origin/master` equal). All four round commits carry the lane identity
+8: `kama-shokunin <kama@shokunin.local>` and are ancestors of the pushed tip
+9: (`git merge-base --is-ancestor` → ANCESTOR for each, checked live).
+10: 
+11: ## Work performed
+12: 
+13: Declared claims (2, distinct axes; lowest assigned axis worked):
+14: 
+15: - **C1 — operability** (held 8): the append-only-audit `v6-revert-class` arm — the one
+16:   tier-B FAIL that falsified r65 C1's census predicate — root-caused and repaired with a
+17:   red-before/green-after pair. Root cause: a host-dependent **fixture** defect, not a
+18:   classifier defect. The selftest's `t_v6_revert_class` wrote its fixture LOG.md through a
+19:   text-mode `open(path, "w")`; on this host that translates every written `\n` to `\r\n`
+20:   (S538), so the LF-parent → CRLF-child diff reports five changed lines (`deleted=5`), four
+21:   graded lines stay undisclosed, and the arm exits 1. Evidence: instrumented reproduction
+22:   receipt `.ufo/waves/round-66/measured/aoa-v6-revert-rootcause-repro.out` (committed,
+23:   including the fixture-inherited `core.autocrlf` config: system `true` overridden by
+24:   global `~/.gitconfig` `false`). The r65 plan's hypothesis ("subject-if never fires for
+25:   the graded commit") is **falsified** by the same receipt: the subject call fired and
+26:   returned `Revert "something"` correctly (`['revert']` on every undisclosed line). Fix:
+27:   the fixture writes bytes (`Fixture.commit`'s own idiom), a two-line diff; the classifier
+28:   is untouched; on POSIX the change is byte-identical (text and binary writes agree for
+29:   these strings). This resolves carry-in debt item (2) and makes the r65 census predicate
+30:   actually hold.
+31: - **C2 — calibration** (held 7; the lowest assigned axis): the lane's self-record made to
+32:   match the observed repo state. (a) The §Round 65 SCORECARD record — r65 spotcheck D1 —
+33:   landed byte-clean: the uncommitted worktree copy (3506 CR bytes vs 0 in HEAD) was
+34:   CR-stripped and re-landed as authored, with exactly one disclosed repair (the authored
+35:   census pointer `.ufo/waves/round-65/census/{start,end}.out` names no committed path; it
+36:   was written as `measured/census-start.out` + `census-end.out`). Landed as commit
+37:   `762a5c32dc9e3fca74aabde5111ed2e22de28433` (76 insertions, 3 deletions, 0 CR bytes;
+38:   landing verified by `git show <sha>:SCORECARD.md | sha256sum` equal to the worktree
+39:   bytes). (b) PROVINCE.md receipt pointers (spotcheck D3) repaired to the committed
+40:   `measured/` paths. This resolves carry-in debt item (1) and the D3 half of item (3).
+41: 
+42: Carry-in debt disposition (all four routed spotcheck defects): **D1** resolved (above);
+43: **D2** resolved by discipline — every gate count cited this round carries a committed byte
+44: receipt (`.ufo/waves/round-66/measured/before/gate-registry-check-selftest-before.out`:
+45: `GATE_SELFTEST pass=6 fail=0`, lane-tip arm `registered 76 unregistered 0 defective 0`);
+46: **D3** resolved (above); **D4** resolved — the AOA arm's round-start red receipt is
+47: committed (`.ufo/waves/round-66/measured/before/append-only-audit-selftest-before.out`,
+48: exit 1, `AOA_SELFTEST pass=50 fail=1`, tool bytes unchanged from the r65 tip).
+49: 
+50: Fresh-start (§9) ruling: the three rejected closures were read (r63/r64 digests in the
+51: round prompt; r65 closure + `corpus/lessons/round-65-verifier-spotcheck.md`). Ruled out
+52: and why: (a) live serving-plane / process-binding counters (r63 C1, r64 C1) — falsified by
+53: their own waves, and the pinned engine is absent on this host; (b) claim-registry
+54: re-freezes (r62 C2, r64 C2) — falsified, and a falsification wave has no dispatch surface
+55: here; (c) endpoint restoration / probe-gate repair-to-green — restoring a serving runtime
+56: is operator-owned (`lessons/round-1-safety.md`), and the `ss`/`flock` refusals are
+57: fail-closed correct; (d) re-declaring r65 C1's census predicate in the abstract — declared
+58: once and falsified by its own receipt; the reachable move is the routed repair itself, red
+59: before green after; (e) the round-42 reconciler re-run — blocked on the unanswered NTFS
+60: L0 question (kama round-65). What a do-nothing control cannot reach: the four routed
+61: defects, each of which requires landing bytes.
+62: 
+63: Cross-domain evidence: none encountered — the round's surfaces (a Python stdlib write-mode
+64: semantic and git diff/numstat behavior inside a lane fixture) belong to this lane's
+65: instrument health; no sibling domain's files were touched.
+66: 
+67: Conformance notes: the MISSION.md L2 floor (≥8 L2 subagents, one batched AgentSwarm call)
+68: is unmet on this host — no dispatch surface exists; routed around per the filed
+69: `souji | round-46` L0 line, never treated as answered. The kama round-65 NTFS-path L0
+70: question remains unanswered; nothing was assumed answered. No mission open longer than two
+71: driver ticks observed from this lane's surfaces; this report completes the round's own
+72: mission.
+73: 
+74: ## Landed changes
+75: 
+76: All tied to LOG.md §Round 66 and its commits (helper-printed shas, verified with
+77: `git show <sha> --stat` and `git ls-remote`):
+78: 
+79: - `762a5c32dc9e3fca74aabde5111ed2e22de28433` — SCORECARD §Round 65 byte-clean re-land
+80:   (D1): the authored record (head banner swap to round 65 + demotion of the round-64
+81:   banner, depth/coverage re-anchors, §9 ruled-out record, C1/C2 claim table) with 0 CR
+82:   bytes and one disclosed pointer repair.
+83: - `01bfe8fcd2a8b68eef8bf5ec639e5362df9a40c3` — the AOA fixture repair
+84:   (`tools/append-only-audit.py`, 2 lines: text-mode write → binary write) + PROVINCE.md
+85:   receipt-pointer repair (D3, 3 paths → `measured/`) + round receipts: census-start,
+86:   host-census before/after, AOA selftest before/after, gate-registry-check selftest with
+87:   full registered/unregistered/defective counts (D2), self-record before-state (D1/D3
+88:   evidence), root-cause repro (D4).
+89: - `1b2584a31b1041ade68c7736a554325d31edd765` — SCORECARD round-66 head banner (+ round-65
+90:   banner demoted verbatim into the superseded-banners section), coverage row re-anchor
+91:   (PROVINCE.md sha `203b9283…`, knowledge count 39 — the recorded `38` was stale since the
+92:   round-63 re-anchor, mined as lesson Mistake 3), §Round 66 claims section, LOG.md §Round
+93:   66 entry, `corpus/lessons/round-66.md` (## Gate + ## Mistakes 1-4), SOURCES.md S538 row,
+94:   retained source bytes `.ufo/waves/round-66/source/python-open-newline.html`.
+95: - `c5bdc9fd434eee5bf9e35bb8aff40aa82f620bb7` — census-end receipt (validate exit 0 at the
+96:   final tip, `kama ok`).
+97: 
+98: Worktree end state: for every file the round touched (and spot-checked siblings:
+99: SKILL.md, PROVINCE.md, LOG.md, SCORECARD.md, corpus/SOURCES.md, lessons, tools,
+100: round-66 wave receipts) the worktree bytes equal the HEAD blobs — the worktree ends clean
+101: (index-free hash comparison throughout; `git status` not used, per the host rule).
+102: 
+103: **Erratum (correction of record; supersedes one sentence in the filed round-65 report,
+104: `.ufo/reports/round-65/kama.md`, "Landed changes" bullet for
+105: `9c5a864461fadcb2d720a872ce7f83aac6a2ef85`):** that commit did **not** carry "SCORECARD
+106: §Round 65 + head banner + depth/coverage re-anchors" — `git diff-tree -r 3325e8ed86a5
+107: bd4024687f5e -- SCORECARD.md` is empty (SCORECARD byte-identical r65 base→tip). The record
+108: landed in round 66 as commit `762a5c32dc9e3fca74aabde5111ed2e22de28433`. The superseded
+109: text stays on file; per the corrections rule this erratum, not a rewrite, is the
+110: correction.
+111: 
+112: ## Before → after measurements
+113: 
+114: - **C1 (operability).** Before (round start; tool bytes unchanged from the r65 tip
+115:   `d02416c9`): `python tools/append-only-audit.py --selftest` → exit 1, tail
+116:   `AOA_SELFTEST pass=50 fail=1`, `FAIL v6-revert-class` (receipt
+117:   `.ufo/waves/round-66/measured/before/append-only-audit-selftest-before.out`; the same
+118:   red receipted at the r65 tip in `.ufo/waves/round-65/measured/append-only-selftest.out`).
+119:   After (at `01bfe8fc`): same command → exit 0, `AOA_SELFTEST pass=51 fail=0` (receipt
+120:   `.ufo/waves/round-66/measured/append-only-audit-selftest-after.out`). Census predicate
+121:   (the r65 C1 predicate, now actually holding): `python tools/round65-host-census.py` →
+122:   `HOST_CENSUS pass=16 fail=1 refused=2 total=19 tierA_fail=0 tierB_fail=1`, exit 1
+123:   (`measured/before/host-census-before.out`) → `HOST_CENSUS pass=17 fail=0 refused=2
+124:   total=19 tierA_fail=0 tierB_fail=0`, exit 0 (`measured/host-census-after.out`). Measured
+125:   against `01bfe8fcd2a8b68eef8bf5ec639e5362df9a40c3`.
+126: - **C2 (calibration).** Before (at the round-start head `d02416c9`):
+127:   `git show d02416c9862c7ddaa4b714811e526d0d21456bf7:SCORECARD.md | grep -c "Round 65 —
+128:   fresh-start round on the new Windows host"` → `0`; and
+129:   `ls .ufo/waves/round-65/endpoint-census.out` → exit 2 (PROVINCE.md cited that path).
+130:   After: `git show 762a5c32dc9e3fca74aabde5111ed2e22de28433:SCORECARD.md | grep -c
+131:   "Round 65 — fresh-start round on the new Windows host"` → `1`; and
+132:   `ls .ufo/waves/round-65/measured/endpoint-census.out` (and the consumer-surfaces /
+133:   consumer-shape siblings) → exit 0. Before-state receipt:
+134:   `.ufo/waves/round-66/measured/before/selfrecord-before.out`. Measured against
+135:   `762a5c32dc9e3fca74aabde5111ed2e22de28433` (SCORECARD) and
+136:   `01bfe8fcd2a8b68eef8bf5ec639e5362df9a40c3` (PROVINCE).
+137: - **Census (frontier, before → after).** Round start:
+138:   `bash scripts/sources-census.sh validate --root <fleet> kama` → exit 0, 106 lines, final
+139:   line `kama ok` (receipt `.ufo/waves/round-66/census-start.out`). Round end (final tip
+140:   `c5bdc9fd`): same command → exit 0, 106 lines, `kama ok`, no E-codes (receipt
+141:   `.ufo/waves/round-66/census-end.out`). Registry rows:
+142:   `grep -cE '^\|[[:space:]]*S[0-9]{3,}[[:space:]]*\|' corpus/SOURCES.md` → 277 before,
+143:   278 after.
+144: 
+145: ## Sources & frontier
+146: 
+147: SOURCES.md rows 277 → 278 (`grep -cE '^\|[[:space:]]*S[0-9]{3,}[[:space:]]*\|'
+148: corpus/SOURCES.md`, run at the r65-tip head and at `1b2584a3`):
+149: 
+150: - **S538 added (tier A, docs, mined):** Python built-in `open()` —
+151:   https://docs.python.org/3/library/functions.html#open — the `newline` parameter's write
+152:   side. Opened this round (fetched 2026-10-31; fetched bytes sha256
+153:   `74e94703229483288715c82d467c6ae80ae762ec0bd65a3f9bcc6d7bd04d7fc3` retained at
+154:   `.ufo/waves/round-66/source/python-open-newline.html`). Located quote (≤25 words, body
+155:   text, the `open()` builtin's newline paragraph): "if newline is None, any '\n'
+156:   characters written are translated to the system default line separator, os.linesep" —
+157:   verified verbatim in the retained bytes. Grounds C1's fixture diagnosis and the
+158:   binary-write fix. `used-by`: `corpus/lessons/round-66.md,SCORECARD.md`; recheck
+159:   on-release. Gate record: `corpus/lessons/round-66.md` ## Gate (one admit, one no-row
+160:   decision on the census receipts, none rejected, none flipped). Malformed rows 0,
+161:   duplicate ids none, enum violations none, mined `used-by` paths all resolve (census
+162:   commands run at the tip).
+163: - Sourced claim: C1 rests on S538 (row opened this round).
+164: - Mistake mined: `corpus/lessons/round-66.md` ## Mistakes 1-4 (class · evidence ·
+165:   captured-by · fix): the third newline-translation instance (first in a test fixture),
+166:   the never-committed r65 SCORECARD record (D1), the inherited coverage-row number-drift
+167:   (38 → 39), and the falsified r65 planned root-cause hypothesis (stale-premise).
+168: 
+169: Assimilation: `considerthese/` re-opened (eight files through `2026-10-26.md`): proposals
+170: 1/4 already exist as registered instruments (`tools/append-only-audit.py`,
+171: `tools/pin-watch.py`); proposals 2/3 are daily-reflection workflow, not lane-round work;
+172: nothing new adopted this round. Assimilation: none — shokuknow unreachable.
+173: 
+174: ## Trend verdicts
+175: 
+176: - **expansion — unchanged:** registry rows 277 → 278 (one tier-A row added and mined into
+177:   the round's claim, same shape as r65); no `corpus/knowledge/` addition, no coverage-map
+178:   advance, no capability row (none claimed — instrument repair is not a repertoire
+179:   capability).
+180: - **quality — improved:** the one deterministic red instrument is repaired red→green with
+181:   honest receipts (AOA `pass=50 fail=1` → `pass=51 fail=0`), the declared host census set
+182:   runs fully green-or-refused for the first time on this host (`pass=17 fail=0 refused=2`,
+183:   exit 0), the r65 open defect is closed with a root cause, and every cited count carries
+184:   a committed receipt (D2). Nothing admitted failed re-check; no axis harmed.
+185: - **discernment — improved:** the self-record now matches the observed repo state (C2:
+186:   the uncommitted-record debt landed byte-clean; pointers resolve); an inherited stale
+187:   number (coverage 38) was caught by re-derivation and corrected with its command pasted;
+188:   the r65 planned root-cause hypothesis was falsified by the round's own instrument and
+189:   recorded as such (lesson Mistake 4); the r65 outcome-line overclaim for C1 is corrected
+190:   by erratum in this report. No new overclaim filed: both verdicts are "met on predicate
+191:   (self-assessed; non-author closure pending)" with committed receipts.
+192: 
+193: Scores: operability held 8, calibration held 7 (the moves restore states the scores
+194: already assumed; the axis-gaining calibration ledger work of rounds 44-45 was not
+195: extended). No capability row enters.
+196: 
+197: ## SHONEN
+198: 
+199: - [~] SKILL.md contains real decision tables, error patterns, checklists, cited sources —
+200:   asserted, unchanged this round; re-derivable at the tip: `grep -c '^## ' SKILL.md` → 46,
+201:   sha256 `c588ca9d173abdf6b08f4a6bba9d4a381eefdb874003495256c5758c9c6cdedb` (1691 lines);
+202:   instrument registry `registered 76 unregistered 0 defective 0` receipted at
+203:   `.ufo/waves/round-66/measured/before/gate-registry-check-selftest-before.out`.
+204: - [~] At least one end-to-end domain task executed and logged in LOG.md — asserted: LOG.md
+205:   §Round 66 (the AOA arm trigger → root cause → repair → green census, receipts committed
+206:   under `.ufo/waves/round-66/`).
+207: - [~] Instructions executable by an agent without oral context — asserted: the counting
+208:   commands above run on this host against committed bytes (`python` is the working
+209:   interpreter here; the `python3`-stub adaptation is recorded in the registered census
+210:   runner's docstring).
+211: - [~] No cross-domain bleed (PROVINCE.md still accurate) — asserted: this round's only
+212:   PROVINCE.md change repairs three receipt pointers to their committed `measured/` paths;
+213:   all three resolve; no boundary text changed.

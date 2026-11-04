@@ -1,0 +1,23 @@
+== receipt counts (independent re-derivation) ==
+grep -c "^RESEARCH_GATE_SELFTEST:"             0
+grep -c "^FAIL-case claims-locale-boundary"    1
+grep -c "^case-note claims-locale-boundary"    1
+grep -c "^skip-case 259"                       1
+grep -c "r36-pin.txt: No such file or directory" 2
+grep -c "^FAIL-case pin-echo-isolation"        1
+grep -c "^ok-case.*pin-echo-isolation"         0
+grep -c "pin-drift-grep-token"                 0
+grep -c "^SELFTEST_RC="                        1
+
+== header lines ==
+1:# r72 battery receipt (C1, HONEST DEFECT RECORD): the bounded battery's full run at the r72 landing tip 7f7ea19a945e0998f009f82b9c651cb08aec1c12 - the r70 STALL POINT PASSED FOR THE FIRST TIME (the r71 bound fired in production at case 258) and the run then died at a NEW, never-before-reachable crash site in the r36 pin zone - SELFTEST_RC=2, NO verdict line; C1 lands honest-stop per its frozen rule (the rule's own arm: the battery died before its verdict line)
+2:# budget env: LC_BOUNDARY_BUDGET_S unset - the 900 s default in force (~50x the probe-measured 18.131 s body, corpus/evidence/round72/controls/probe-r72-sizing.txt); G08_SELFTEST_BUDGET_S n/a (the preflight's knob; the preflight was NOT run this round - arm 1's failure already decides C1 under the conjunctive frozen rule, disclosed in the round report)
+3:# detachment note: the FIRST launch (15:15) was orphaned mid-run when the session harness stopped the owning pipeline (transcript pipe reader dead); the surviving lineage was killed BY PID (two passes, recount 0, the r71 discipline) and THIS run relaunched detached writing straight to this file; run start epoch 1793579430 (16:30 local), run end epoch 1793593780 (20:29 local) = 14350 s wall
+4:# measured rates (from this receipt's own lines): 260 case lines (231 ok-case + 16 FAIL-case + 13 skip-case) over 14350 s ~ 55 s/case average under evening fleet load; the 19:21-20:00 stretch measured ~14 s/case (the quiet-window number r73's route is sized on: the full 275-case battery ~64-90 min on a quiet host, vs the r71 contended ~86-110 s/case)
+5:# what the bound did (the r71 repair PROVEN in production): case 258 claims-locale-boundary exceeded the 900 s budget - the timeout-wrap printed the named FAIL-case at rc 124 plus the case-note (verdict unmeasured within budget), counted one failure, and the battery CONTINUED past case 258 - the exact point where r70 (>70 min unbounded) and every earlier attempt died
+6:# the new defect (routed to round 73): after skip-case 259, the pin-echo-isolation zone crashed the script under set -euo pipefail - the flock-less --pin capture fails closed by design (rc=2, verdict-lines=0), so the r36-pin.txt baseline is never written, and the unguarded grep on that missing file kills the script (the same bare-statement class the r70 claim guarded at three sites BELOW case 258; this site sits ABOVE it and was unreachable until the bound worked); exit 2, no summary, no verdict line
+7:# counting commands (all over this receipt): grep -c "^RESEARCH_GATE_SELFTEST:" -> 0 (the honest-stop ground); grep -c "^FAIL-case claims-locale-boundary" -> 1 (rc 124); grep -c "^case-note claims-locale-boundary" -> 1; grep -c "^skip-case 259" -> 1 (the r70 stall point passed); grep -c "r36-pin.txt: No such file or directory" -> 1 (the crash site); last case line: FAIL-case pin-echo-isolation pin_rc=2 drift_rc=2 (case ~260 of the canonical 275)
+8:# r72 completing-run receipt (C1): the bounded battery's own full run at the r72 landing tip, run to completion - NO budget env override: LC_BOUNDARY_BUDGET_S unset (the 900 s default in force, ~50x the probe-measured 18.131 s body, corpus/evidence/round72/controls/probe-r72-sizing.txt); G08_SELFTEST_BUDGET_S n/a here (that is the preflight's knob)
+9:# detachment note: first launch (15:15) was orphaned mid-run when the session harness stopped the owning pipeline - the surviving lineage was killed BY PID (two passes, recount 0, the r71 discipline) and this run relaunched detached writing straight to this file; the run's own bytes below are its record
+10:# single-writer discipline: this run completes before the preflight starts; no kill probe aimed at this run; monitored by scratch-file sampling only
+11:# the two orphaned sibling-lane souji lineages were still alive at launch (not killed from this lane, L0 open; the r72 census receipt records that they RESPAWN children)

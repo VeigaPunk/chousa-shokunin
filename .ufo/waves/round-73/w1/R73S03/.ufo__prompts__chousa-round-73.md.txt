@@ -1,0 +1,707 @@
+fleet_revision=1a3fbac0fbdc09342ccf86850dfb1227a0792ae6
+source=.ufo/prompts/chousa-round-73.md
+git_show_rc=0
+1: You are the chousa L1, round 73. Working dir: /home/vgpnk/Projects/shokunin/chousa-shokunin.
+2: 
+3: ## 1. MISSION / AXES binding (SSOT)
+4: 
+5: Read MISSION.md + AXES.md at /home/vgpnk/Projects/shokunin first — they are the mission single source of
+6: truth. Your lane axes: deep-research method (調査) — question framing, source hierarchy, citation chaining, claim-vs-source verification; no external live-target fetches without operator approval. Where this prompt conflicts with MISSION.md + AXES.md,
+7: the mission files win.
+8: 
+9: ## 2. Claims this round — 1 to 3, each falsifiable
+10: 
+11: This round is **1–3 declared claims**, not a batch of unrelated work:
+12: 
+13: 1. Open your lane repo's SCORECARD.md (create it per AXES.md if missing).
+14: 2. Declare 1–3 claims. Each claim is one axis-move against a distinct axis, with
+15:    its own falsifiable before→after. At least one claim works the **lowest-scoring
+16:    non-retired axis** — unless the stagnation nudge waives it (AXES.md section
+17:    *The stagnation nudge*).
+18: 3. Land every claimed improvement. Claims must be **causally separable**: each
+19:    verifiable without the others having landed. Two claims on one axis = one claim.
+20: 4. Measure each: run a counting command you can paste into the report, before and
+21:    after.
+22: 5. Record per claim in SCORECARD.md: the score delta, evidence pointer, counting
+23:    command, and measured commit; append the motivating evidence to LOG.md.
+24: 6. A claim may be a **capability acquisition** (AXES.md section *Capabilities*): the
+25:    new capability runs, its output verifies, and its row enters the SCORECARD
+26:    capabilities table in the same round.
+27: 7. Saturated or wrong-fit axes may be retired or split — record the reason in
+28:    SCORECARD.md.
+29: 8. At most one claim may be **exploratory** — taste-bound (elegance, technique
+30:    quality, a novel resolution path): name what it improves and why the prior
+31:    state lacked it; no counting command. It verifies only as
+32:    `unprovable-but-better` with a named non-author reviewer on record (reasons
+33:    included); otherwise it lands `unprovable` and the round reports that
+34:    honestly. Its axis score need not change — the SCORECARD row carries the
+35:    verdict and reviewer pointer instead of a number.
+36: 
+37: **Admission:** every claim verifies — measured, or exploratory with a named
+38: non-author `unprovable-but-better` judgment — and **no axis is harmed**; a
+39: trade anywhere is not an improvement. Report all verdicts and let the operator
+40: rule.
+41: 
+42: ## 2b. Frontier step — every child-lane round
+43: 
+44: Every child-lane round curates where the lane learns and learns from its own mistakes. This
+45: step runs inside the 1–3 claim cap; it is not a fourth claim. Its contract is `corpus/SOURCES.md`
+46: contract v1 in `/home/vgpnk/Projects/shokunin/CORPUS.md` section *SOURCES.md — where a shokunin learns* —
+47: follow it, never redefine it.
+48: 
+49: 1. **Curate `corpus/SOURCES.md`** (create it in the contract's shape if missing). A row is
+50:    written only after its source is opened this round; the lesson's `## Gate` records the
+51:    URL, access date, and a ≤25-word located quote for every new row. Rejections stay as
+52:    rows with reason and flip. Every `status` / `recheck` / `used-by` change is logged
+53:    old→new in the lesson.
+54: 2. **Record the census before → after.** Run this command at round start and at round
+55:    end; paste both outputs and their exit codes. Exit 0 is required at round end for
+56:    conformance. Exit 2 is expected at round start only when `corpus/SOURCES.md` does not
+57:    yet exist. If it is still missing at round end, the driver logs a warning and continues;
+58:    that is a conformance defect, not a pass. Record it in the report and create or repair
+59:    the registry. Driver completion is not admission; the independent non-author
+60:    verification duty remains required. The frozen manual census commands remain in
+61:    `/home/vgpnk/Projects/shokunin/CORPUS.md` section *SOURCES.md — where a shokunin learns*; that
+62:    section is the specification.
+63: 
+64:    ```sh
+65:    /home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa
+66:    ```
+67: 
+68: 3. **Mine one mistake** — from this round or an earlier one (rejected, harmed or honest-stop
+69:    rounds, errata, spot-check disagreements) into `corpus/lessons/round-73.md`
+70:    `## Mistakes`: class · evidence pointer · captured-by (the criterion or rule that should
+71:    have caught it, or `none`) · fix. A fix counts only once shown able to fail. Found none?
+72:    Paste the sweep — command and output — that found none.
+73: 4. **At least one sourced claim** — one of the round's claims rests on a `SOURCES.md` row
+74:    opened this round: the knowledge entry or evidence it lands cites that `S###`.
+75: 
+76: Main-repo lanes (`repo = .`) do not run this child-lane frontier step, so they need neither
+77: a mined mistake nor a sourced claim. Their report's Sources & frontier section uses
+78: exactly: `SOURCES: unchanged — main-repo lanes hold no corpus/`.
+79: 
+80: ## 3. L2 floor — one batched swarm
+81: 
+82: Dispatch **at least 8 L2 subagents in ONE batched AgentSwarm call** this round (Kimi
+83: surface: a single batched swarm dispatch, not serial one-at-a-time spawns). Minimum role
+84: split:
+85: 
+86: - 1× planner, 1× connector (sibling-overlap scan)
+87: - 3× executor, 1× scribe, 1× scout (per-surface reconnaissance)
+88: - 1× reviewer, 1× critic (falsifies the claims the others assert)
+89: 
+90: Add sentinel / revenger / labrat / mutation-tester / simplifier / distiller as the axis
+91: demands. Route every role through the **host route table** — the operator's role→model
+92: assignments for this substrate. Never hardcode model aliases in the lane repo; the route
+93: table, not this prompt, decides which model serves which role.
+94: 
+95: **Godspeed lead:** every L2 lane prompt leads with `/skill:godspeed`, followed by the
+96: verbatim directive bytes provided by the host's Godspeed skill binding — do not
+97: paraphrase. Resumes and nudges never re-carry it.
+98: 
+99: ## 4. Report contract
+100: 
+101: Write the round report at `/home/vgpnk/Projects/shokunin/.ufo/reports/round-73/chousa.md` on the
+102: fleet repo. Required sections, in order:
+103: 
+104: - **Work performed** — opens by naming the round's declared claims (1–3) and their
+105:   target axes or capability; then one bullet per work item, each carrying an
+106:   evidence pointer (path:line, command output, or commit hash).
+107: - **Landed changes** — every change tied to a LOG.md entry and to the commit hash that
+108:   carries it.
+109: - **Before → after measurements** — one per claim, each with the counting command and the
+110:   commit it was measured against.
+111: - **Sources & frontier** — `SOURCES.md` rows before→after with the counting command, rows
+112:   added by tier, rows touched old→new, frontier rows advanced; a lane with no `corpus/`
+113:   writes a line beginning `SOURCES: unchanged —` that names why (main-repo lanes:
+114:   `SOURCES: unchanged — main-repo lanes hold no corpus/`). This is a conformance item,
+115:   not a report marker predicate.
+116: - **Trend verdicts** — one verdict each for `expansion`, `quality`, and `discernment`
+117:   (`improved`, `harmed`, `unchanged`, `unprovable-but-better`), with evidence; no scalar.
+118: - **SHONEN** — one line per box of your SHONEN.md checklist: `[x]` only with a named
+119:   non-author verifier, `[~]` with a resolvable evidence pointer, `[ ]` if untouched.
+120: 
+121: **Marker rule:** a contentless report (placeholder text, missing required sections
+122: other than **Sources & frontier** and **Trend verdicts**, or no evidence pointers)
+123: counts as the round **failed** — the driver relaunches the same round. A report that
+124: names real committed work but skips those sections is `ok` plus a minimum-content
+125: conformance defect, logged as one; neither section is a marker predicate.
+126: 
+127: The watchdog logs its Sources & frontier marker and applies its source-census gate; it
+128: does not check trend verdicts or the full claim-admission criteria. Driver completion
+129: is not admission; independent non-author verification remains required.
+130: 
+131: ## 5. Commit, push scope, L0 side channel
+132: 
+133: - Round end: commit (`round-73`) inside your lane repo, then push. Also commit and
+134:   push the report on the fleet repo.
+135: - **Push scope:** only the fleet repo remote and your own chousa lane remote. Domain
+136:   source trees are **read-only** — upstream work is documented in the report, never
+137:   pushed.
+138: - **L0 side channel:** if you need an operator decision, append
+139:   `<lane> | round-<N> | <question>` to `/home/vgpnk/Projects/shokunin/.ufo/l0-questions.md`. Do not block
+140:   the round on an answer; note the open question in the report and route around it.
+141: ## 6. Campaign addendum — hyaku (百) phases 3–7, operator directives of 2026-10-22/23/25 (binding this round; in-session)
+142: 
+143: **Run 15 (2026-11-03, binding; supersedes the run-13 routing, round-size, budget, fresh-start and hold lines below; every other run-13/11/10/9/8/7 rule — the 256 hard ceiling, ≥25 % attack share, few-connector-seats, 10-round blocks, clean commits, WAVE-DONE before report, §9 claim sizing, §10 assimilation, the inline spawn handoff and the fresh-start rule — stays binding).** Operator directive, verbatim: "ok i need you to continue the hyaku run, we will be using 32-40 concurrent workers, you are the orchestrator of each run; i want you to do 10 rounds of training per shokunin, until each reeach 100 completed rounds. our subagents for the swarms rounds (each round, a wave composed of m_flash, m_mim, m_zfl on roles you assign) on the hyaku style but using these models and conc i've assigned; remember, the essence of the shokunin runs is to learn by doing, to activelky get better and more capable, to have curated source of knowledge (corpus and their own trials)" — and: "you will be running until each shokunin reaches round 100".
+144: - **Routing: run-15 map** (never pass `model`): task/main/planner/reviewer/security-reviewer/critic `@m_zfl` (reasoning and judgment); executor/revenger/labrat/mutation-tester/simplifier/connector/sentinel/scribe/sonic/distiller/seance `@m_flash` (code, probes, mutation, cross-linking, drafting; mid-run operator ruling 2026-11-03 "assign all m_mim to m_flash" — m_mim is on no role, backup `config.yml.pre-mim-to-flash-20261103`); scout `@m_antigravity` (google-antigravity/gemini-3.8-flash:high; mid-run operator ruling 2026-11-03). `task.agentModelOverrides` in `~/.omp/agent/config.yml` is the authority (backup `config.yml.pre-run14-20261103`); every other model is off every role. Fallback chains unchanged. Compose each wave from at least two of the three models' roles.
+145: - **Round size: 8–16 seats per round** (fleet-wide concurrency is 32–64 workers shared by ~9 live lanes; mid-run operator ruling 2026-11-03 "increase concurrency to 32-64 instead of 32-40"). Shape: ONE v1 wave of 8–16 seats under `ufo-wave-policy.json` (band 8–16), ≥25 % attack seats (reviewer, critic, mutation-tester, labrat), at most 2 connector seats; residual ≤4 seats in one ordinary task call, counted in the round total. 8 is the protocol L2 floor. Never pad: size to the claims. Seats fill in tranches when the fleet is busy (spawns stop at 60 running jobs) — expected, not a failure.
+146: - **Campaign: every pool lane to round 100**, in 10-round blocks, lowest `next/` first, ~9 lanes live at once. Learning by doing is the point: each round must leave the lane measurably more capable — a trial run end-to-end on real domain work, a curated `corpus/SOURCES.md` delta, and a mistake mined into a lesson. Bookkeeping-only rounds are thin claims.
+147: - **Continuity and holds.** Run 15 continues the zcode run-14 campaign (`.scratch/goal-20261031-hyaku-zcode-run14.md`, Windows host) back on this Linux/omp host: lane state is the MANIFEST closure ledger, every lane repo is fast-forwarded to its remote tip. No holds; kagi's refusal boundary, mado's credential-material rule and mori's settings/session redaction rule stay binding. Host differences matter: this host has flock, jj and omp — a claim that failed on the Windows host for a host reason (e.g. chousa r70–72: no flock, sibling load) is re-measured here, never re-declared from the old receipts. Streak blocks are lifted at run start (chousa: fresh-start rule, §9).
+148: - Run state, lane order, blocks: `.scratch/goal-20261103-hyaku-run15.md` under /home/vgpnk/Projects/shokunin.
+149: - **Latest routing amendment (2026-11-03):** operator: "ok use all roles on m_flash", then "leave only executor and reviewer on m_zfl", then "use m_flash as executor". Net map: ONLY reviewer uses `@m_zfl`; every other role (task/main/planner/executor/scout/critic/security-reviewer/scribe/connector/sentinel/etc.) uses `@m_flash`. Supersedes routing and multi-model composition requirements above. Existing seats retain captured routes. Backups: `config.yml.pre-flash-zfl-executor-reviewer-20261103`, `config.yml.pre-flash-executor-20261103`.
+150: 
+151: **Run 13 (2026-10-30, binding; supersedes the run-11 routing and 64–128 band lines below; every other run-11/10/9/8/7 rule — the 256 hard ceiling, ≥25 % attack share, few-connector-seats, 10-round blocks, clean commits, WAVE-DONE before report, §9 claim sizing, §10 assimilation, the inline spawn handoff and the fresh-start rule — stays binding).** Operator directive, verbatim: "ok i want you to train our shokunins on the hyaku style, but using 16-32 lanes per round; all using m_zfl, m_mim or m_swe for the roles; assign accordingly | | choose the order to train them, do 10 rounds sequentially on each, until we reach 100 rounds trained."
+152: - **Routing: run-13 map** (never pass `model`): task/main/planner/reviewer/security-reviewer/scout `@m_zfl`; connector/critic/mutation-tester/sentinel/labrat/seance/distiller/simplifier/sonic/scribe `@m_mim`; executor/revenger `@m_swe`. `task.agentModelOverrides` in `~/.omp/agent/config.yml` is the authority (backup `config.yml.pre-run13-20261030`); m_kfc, m_flash, m_luna, m_opus, m_sol are off every role. Fallback chains unchanged (ultimate fallback devin/swe-2:max). L1_MODEL/JUDGE_MODEL labels stay `@m_zfl`.
+153: - **Round size: 16–32 seats per round** (directive "16-32 lanes per round"; down from 64–128). Shape: ONE v1 wave of 16–32 seats under `ufo-wave-policy.json` (band now 16–32, restored to the ufo-fsd-alpha default), ≥25 % attack seats, a few connector seats; residual ≤8 seats in one ordinary task call, counted in the round total. 256 stays the hard ceiling. Never pad: fewer than 16 genuine items means the claims are too thin.
+154: - **Campaign budget: 100 lane-rounds trained** (directive "until we reach 100 rounds trained") = 10 lanes × 10-round blocks, lowest `next/` first: tabi r44–r53, souji r46–r55, kasegi r50–r59, kaidoku r53–r62, tsukuroi r53–r62, kengaku r55–r64, tameshi r60–r69, mori r62–r71, chousa r66–r75, kama r65–r74.
+155: - **Fresh-start rule applies at run-13 start to tabi, kaidoku, tsukuroi, tameshi, mori and kama** (each streak-blocked by three rejected closures at run-12 end; run-12 wrap-up lifted none of them). Their first run-13 round reads the last three rejected closures and spot-checks first, and declares only claims a do-nothing control cannot reach (§9). **kagi stays blocked** (operator HOLD 2026-10-21; open L0 `kagi | round-28`). **mado stays on SECURITY HOLD** (r56 live-credential capture in local commits; GH013 push block) — never dispatch, never `inline.sh verify mado` until operator clearance.
+156: - Run state, lane order, blocks and holds: `.scratch/goal-20261030-hyaku-run13.md` under /home/vgpnk/Projects/shokunin.
+157: 
+158: **Run 11 (2026-10-28, binding; supersedes the run-10 routing and goal-file lines below;
+159: every other run-10/9/8/7 rule, including the 64–128 seat band, the 256 hard ceiling, the
+160: ≥25 % attack share, few-connector-seats, 10-round blocks, clean commits, WAVE-DONE before
+161: report, and the inline spawn handoff, stays binding).** Operator directive, verbatim: "ok,
+162: let's continue the training rounds; i want you to do 10 rounds per shokunin, so we can keep
+163: consistency and not get messy with commits and dispatches; the goal is to reach round 100 on
+164: each; choose the order you deem best to do so. | /skill:godspeed | we are on the hyaku mode,
+165: which seems the one that works best; make sure to adapt to the 64-128 per round directive; max
+166: ceiling of 256 | use the same model delegations we were using as before | i want you to use
+167: m_flash for all roles; only use m_grok for the scout role" — later amended: "m_flash on high
+168: effort" (alias already :high, unchanged).
+169: - **Routing: run-11 map** (never pass `model`): every role `@m_flash` except `scout`
+170:   `@m_grok` and `task` `@m_zfl` — L1 lane seats and closure judges ride `task`/`main`.
+171:   That includes planners, executors, scribes, reviewers, critics, connectors, sentinels,
+172:   revengers, labrats, mutation-testers, simplifiers, sonic, distiller and seance —
+173:   `task.agentModelOverrides` in `~/.omp/agent/config.yml` is the authority; this line is
+174:   the label. m_flash is cursor/deepseek-v41-flash-1017:high; m_zfl is zai/glm-5.3-flash:max.
+175:   (Operator mid-startup amendment: "use m_zfl as task".)
+176: - **Routing amendment 2 (same run, operator: "swap some m_flash for m_auto"):** the review
+177:   and coordination seats move to `@m_auto` — reviewer, critic, mutation-tester,
+178:   security-reviewer, connector, distiller, seance. `task` stays `@m_zfl`, `scout` stays
+179:   `@m_grok`, executor/labrat/sentinel/simplifier/revenger/sonic/scribe/planner/main stay
+180:   `@m_flash`. Seats keep the route they captured at spawn.
+181: - **Fresh-start rule applies at run-11 start to mori, souji and tabi** (each blocked at run-10
+182:   end by three rejected closures in a row; the run-start directive lifts streak blocks). Their
+183:   first run-11 round reads the last three rejected closures and spot-checks first and declares
+184:   only claims a do-nothing control cannot reach (§9). **kagi stays blocked**: operator HOLD
+185:   (2026-10-21 content-safety refusal; open L0 kagi|round-28) — never dispatched this run.
+186: - Run state, lane order, blocks and holds: `.scratch/goal-20261028-hyaku-run11.md` under
+187:   /home/vgpnk/Projects/shokunin.
+188: 
+189: **Run 10 (2026-10-27, binding; supersedes the run-9 routing, fresh-start and goal-file lines below;
+190: every other run-9, run-8 and run-7 rule, including the 64–128 band, the 256 ceiling, 10-round blocks,
+191: clean commits and the inline spawn handoff, stays binding).** Operator directive, verbatim (same text
+192: as run 9): "ok, let's continue the training rounds; i want you to do 10 rounds per shokunin, so we can
+193: keep consistency and not get messy with commits and dispatches; the goal is to reach round 100 on each;
+194: choose the order you deem best to do so. | /skill:godspeed | we are on the hyaku mode, which seems the
+195: one that works best; make sure to adapt to the 64-128 per round directive; max ceiling of 256 | use the
+196: same model delegations we were using as before".
+197: - **Routing: the map live at the end of run 9, unchanged** (never pass `model`): task `@m_kfc`;
+198:   main/planner `@m_opus`; executor `@m_mim`; critic/scout/reviewer/mutation-tester `@m_kfc`;
+199:   security-reviewer `@m_zfl`; scribe/sonic/simplifier/revenger/labrat/sentinel `@m_flash`; connector
+200:   `@m_antigravity`; distiller/seance `@m_haiku`. All seven aliases answered on their primary at run
+201:   start. The ≥25 % attack share and the few-connector-seats rule still apply.
+202: - **Fresh-start rule (run 8) applies at run-10 start to souji, tabi, kasegi, kaidoku, tsukuroi and
+203:   kengaku** (each blocked at run-9 end by three rejected closures in a row; the run-start directive
+204:   lifts streak blocks). Their first run-10 round reads the last three rejected closures and
+205:   spot-checks first and declares only claims a do-nothing control cannot reach (§9).
+206: - **File only after WAVE-DONE** (run-9 lesson, 9 incidents): an L1 that files before every launched
+207:   wave settles gets woken by late seat results after its closure. Wait for WAVE-DONE and the
+208:   `<wave>-results.json` handoff; if seats stall, ask the orchestrator to settle the wave.
+209: - **Counters that bind seat votes** parse the seat's final text; seats wrap output unpredictably (run-9
+210:   mori r55: JSON-wrapped vote lines failed a counter that bound plain lines). Freeze a parser that
+211:   accepts both, or bind on files the seat writes.
+212: - Run state, lane order, blocks and holds: `.scratch/goal-20261027-hyaku-run10.md` under /home/vgpnk/Projects/shokunin.
+213: 
+214: **Run 9 (2026-10-26, binding; supersedes the run-8 round-size and goal-file lines below; every other
+215: run-8 and run-7 rule, including the run-8 routing and the inline spawn handoff, stays binding).**
+216: Operator directive, verbatim: "ok, let's continue the training rounds; i want you to do 10 rounds per
+217: shokunin, so we can keep consistency and not get messy with commits and dispatches; the goal is to reach
+218: round 100 on each; choose the order you deem best to do so. | /skill:godspeed | we are on the hyaku mode,
+219: which seems the one that works best; make sure to adapt to the 64-128 per round directive; max ceiling of
+220: 256 | use the same model delegations we were using as before".
+221: - **Routing: the run-8 map at run start** (never pass `model`), amended by the operator during run 9;
+222:   each amendment supersedes the one before: ~17:45 critic `@m_flash` → `@m_glm53` → `@m_kfc`;
+223:   ~22:20 executor/labrat/sentinel `@m_flash` → `@m_mim` and reviewer/mutation-tester/security-reviewer
+224:   `@m_zfl` → `@m_mim`; ~23:00 reviewer/mutation-tester/security-reviewer back to `@m_zfl` and
+225:   labrat/sentinel back to `@m_flash`; ~23:40 connector `@m_kfc` → `@m_antigravity` and scout
+226:   `@m_sonnet` → `@m_kfc`. **Current map:** task/main/planner `@m_opus`; executor `@m_mim`;
+227:   reviewer/mutation-tester/security-reviewer `@m_zfl`; scribe/sonic/simplifier/revenger/labrat/sentinel
+228:   `@m_flash`; critic and scout `@m_kfc`; connector `@m_antigravity`; distiller/seance `@m_haiku`. A seat
+229:   keeps the model it was spawned with. The run-7/8 rule "m_flash roles carry ≥50 % of every wave" no
+230:   longer binds (the operator moved volume off m_flash); the ≥25 % attack share and the
+231:   few-connector-seats rule still apply.
+232: - **Round size: 64–128 seats in total, every round; 256 is the hard ceiling** (the validator's
+233:   `maxLanes`). Shape per §2: one v2 wave of 64–128, or two v1 waves (32–64 each) summing to 64–128,
+234:   residual call included. 64 is the floor; size to the claims inside the band and never pad. At most
+235:   ~88 seats run at once across the fleet (omp caps one session at 100 running agents), so a large
+236:   wave fills in tranches as slots free up: expected, not a failure, and never a reason to resend,
+237:   split or shrink a wave.
+238: - **10-round blocks.** Each lane runs 10 consecutive rounds, one steered round per dispatch, and
+239:   each round is closed by a non-author judge before the next is dispatched. This prompt is ONE
+240:   round of that block: work it only, land it, report it.
+241: - **Clean commits and dispatches** (the directive's reason for blocks): only you commit, only
+242:   through `jj-lane.sh` (lane) and `fleet-commit.sh` (report, L0 lines); seats return findings and
+243:   files and never commit, push or run a mutating git/jj command anywhere; one `.ready` per wave,
+244:   never rewritten once taken; the §3 misroot sweep runs before the report.
+245: - **Fresh-start rule (run 8) applies at run-9 start to souji** (three rejected closures r30–r32).
+246: - Run state, lane order, blocks and holds: `.scratch/goal-20261026-hyaku-run9.md` under /home/vgpnk/Projects/shokunin.
+247: 
+248: **Run 8 (2026-10-26, binding; supersedes the run-7 routing and goal-file lines below; every other
+249: run-7 rule, including the inline spawn handoff, stays binding).** Operator directives, verbatim: "ok we
+250: will be doing the shokunin training, in the hyaku format; I would like us to first estabilish the model
+251: delegations for each role; then, you decide the order onto which shokunins to develop and train upon;"
+252: then "ok so start the training run, the goal is to get every single shokunin to round 100; we will be
+253: doing it for the next 12h".
+254: - **Run-8 routing** (global role map; never pass `model`; the operator chose it): task/main/planner `@m_opus`;
+255:   reviewer/mutation-tester/security-reviewer `@m_zfl`; scout `@m_sonnet`; distiller/seance `@m_haiku`;
+256:   connector `@m_kfc`; executor/labrat/scribe/sonic/simplifier/critic/revenger/sentinel `@m_flash`.
+257:   m_flash roles still carry ≥50 % of every wave; the attack share (≥25 %) still applies; every wave
+258:   still carries a few connector seats.
+259: - **Round size unchanged: 64–100 seats in total.** The live job cap of 100 is shared by up to 6
+260:   concurrent lanes, so waves queue and fill as slots free up. Size near the floor (64) unless the
+261:   claims need more.
+262: - **Assimilation (§10)** carries over as preferred, not required: take a `merge/chousa/` theme or a
+263:   `considerthese/` proposal when it fits the claims, and say which in the report.
+264: - **Fresh-start rounds:** a lane whose previous three closures were rejected (tabi, kaidoku, tsukuroi,
+265:   revenger at run start) begins with a fresh-start round. Read the last three rejected closures and
+266:   spot-checks first, and declare only claims a do-nothing control cannot reach (§9). Route around
+267:   open L0 questions; never treat them as answered.
+268: - Run state, lane order and holds: `.scratch/goal-20261026-hyaku-run8.md` under /home/vgpnk/Projects/shokunin.
+269: 
+270: **Run 7 (2026-10-25, binding; supersedes run-6 band and routing lines below).** Operator directive,
+271: verbatim: "ok let's go back to training the shokunins, following that meethod of doing swarms
+272: inline for each round, and pushing towards round 100 on each shokunin that hasn't gotten to that
+273: threshold; we should assimilate the 'considerthese' in their repos, and also the shokuknow dirs on
+274: their given shokunins that match the contents; do it with high parallelization; this will be hyaku
+275: 7th run; choose the shokunin orders. for delegations, i want a mix of m_zfl, m_flash, m_kcode,
+276: m_mim, m_glm53 | delegate accordingly. | i want the swarm rounds to be of 64-100 subagents per
+277: shokunin;" — then: "use more m_flash"; "oh, its m_kfc; my bad, not m_kcode"; "also, include
+278: m_antigravity as the connector"; "stop with the m_glm53 roles assignment, use m_flash".
+279: - **Round size: 64–100 seats in total, every round** (floor 64 is the directive, ceiling 100). Shape:
+280:   one v2 wave of 64–100, or two v1 waves (32–64 each) summing to 64–100. Residual calls count
+281:   toward the 100. The capacity rule's "size near the band floor" means 64 this run.
+282: - **Run-7 routing** (global role map; never pass `model`): task/main/planner `@m_opus` (operator, later in run: "use m_opus (high) on planner, task, main"; was `@m_kfc`);
+283:   reviewer/mutation-tester/security-reviewer `@m_zfl`; connector `@m_antigravity`;
+284:   scout/distiller/seance `@m_mim`; executor/labrat/scribe/sonic/simplifier/critic/revenger/sentinel
+285:   `@m_flash` (m_glm53 dropped by the operator). Every wave carries a few connector seats
+286:   (cross-claim/cross-source pattern finding). **"use more m_flash":** m_flash roles carry the
+287:   majority of every wave (≥50% of seats as executor/scribe/labrat/sonic/simplifier) — drafting goes
+288:   to scribes, runnable checks to executors/labrats; attack share (≥25%) is met with
+289:   reviewer/critic/mutation-tester/labrat seats.
+290: - **Assimilation is a standing duty this run (§10):** every round either assimilates one theme from
+291:   `merge/chousa/` that matches the lane's PROVINCE, or mines one `considerthese/` proposal — prefer
+292:   both when they fit the claims; say which in the report.
+293: - Run state, lane order, blocks: `.scratch/goal-20261025-hyaku-run7.md` under /home/vgpnk/Projects/shokunin
+294:   (replaces the run-6 goal file named below).
+295: - **Inline spawn handoff (binding; replaces §2's "Dispatch bridge" and the capacity resend rule).**
+296:   Operator, verbatim: "the spawns should spoawn inline, here on this session". NEVER call `task` /
+297:   `tool.task` yourself for a wave or a residual call. Build the spec, validate it, write
+298:   `<wave>-dispatch.json` as before; then write `/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-73/<wave>.ready`
+299:   holding JSON `{"lane":"chousa","round":73,"wave":"<wave>","dispatch":"<abs dispatch json>","l1":"<your agent id>"}`.
+300:   The orchestrator's dispatcher takes it within ~15 s (marker `<wave>.ready.dispatched`), spawns every
+301:   seat of `taskCall` unchanged in the operator session, and when all seats settle writes
+302:   `<wave>-results.json` beside the dispatch file (per seat: name, agent, id, status, final output) and
+303:   messages you `WAVE-DONE <wave> … results=<path>`. After writing the ready file call the `wait`
+304:   tool, and call it again if it returns without that message; never poll files, never sleep-loop,
+305:   never re-write a taken ready file. Seat counts, dead seats and role mix come from results.json.
+306: 
+307: 
+308: Operator directive 3, verbatim (phase 3, 2026-10-22): "each round should be a 32-100 swarm round".
+309: Operator directives of run 6, verbatim (2026-10-25): "we will be doing a 12hour shokunin training,
+310: aiming for developing and expanding capabilities in terms of quality, resourcefulness, depth and
+311: breadth of all the shokunins that havwen't gotten to round 100 yet"; "make all subagents run on
+312: m_flash and swarm with high concurrency every round 32-64 per shokunin round"; "ideally, you do
+313: 3-4 rounds then you train another shokunin; keep doing that until we get them to 100"; "try to
+314: assimilate shokuknow to their corpuses, also, and check them for capabilities enhancing"; "ideally,
+315: you do it inline". Later the same run: "use some m_zfl and m_mim instead of m_flash | also, use
+316: some m_kfc for the more diffficult roles". Run-6 routing (global role map — never pass a model):
+317: task/main/planner/critic/revenger `@m_kfc`; reviewer/connector/sentinel/mutation-tester/
+318: security-reviewer `@m_zfl`; scout/scribe/simplifier/sonic/distiller/seance `@m_mim`;
+319: executor/labrat `@m_flash`. Wave band stays v1 32–64 (directive satisfied, unchanged); lane
+320: order is lowest-round-first per the queue; one shokuknow-assimilation claim per round under §10
+321: below plus capability-deepening claims.
+322: Session scope, lane order and blocks, holds and operator rulings: `.scratch/goal-20261025-hyaku-run7.md`
+323: under /home/vgpnk/Projects/shokunin. Phase-2 directives still bind (2026-10-20): "let's try to also implement using
+324: jj as git manager from now on on shokunin runs"; "make sure we are always swarming heavily though".
+325: Phase-1 directives still bind: "train all shokunins to at least round 100"; "commit and push after
+326: every round done"; "do it inline with multiple swarms of subagents".
+327: 
+328: You are an in-session **L1 lane subagent** dispatched by the hyaku orchestrator (the operator's
+329: parent omp session) for exactly ONE steered round: **chousa round 73** (attempt 1;
+330: campaign target: round 100). Your lane's place in the session follows the goal file (lane
+331: order and blocks: `.scratch/goal-20261025-hyaku-run7.md`); the orchestrator dispatches your lane's
+332: next round only after this one lands and its non-author closure is written. Work this round only
+333: and land it; then return a summary of at most 12 lines: claims with verdicts, lane HEAD, report
+334: commit, round shape, wave sizes and seat-role mix, round total, dead seats, open L0 questions.
+335: Never start round 73+1 and never claim another round number. Sections 1–5 above
+336: are the canonical round contract; this section adds host mechanics and never relaxes them. Repo files
+337: beat this prompt (PROTOCOL.md snapshot clause). Never call the `ask` tool: the round is unattended.
+338: **Working directory:** your tools start at the fleet root, not the lane repo — run lane commands as
+339: `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin …` / `cd /home/vgpnk/Projects/shokunin/chousa-shokunin && …` and use absolute paths for every read/edit/write.
+340: **Earlier attempts:** if `.ufo/watchdog.log` shows a `lane-dead-no-report chousa round=73`
+341: line, an earlier attempt of this same round ended mid-work. Its uncommitted outputs in the lane repo
+342: (e.g. `.ufo/waves/round-73/`) are inherited: reuse what you re-verify, discard what you do
+343: not, and name both in the report.
+344: 
+345: 1. **Load order, every round.** `skill://shokunin`, then /home/vgpnk/Projects/kimi-shokunin/skills/shokunin/SKILL.md and
+346:    `protocol/` PROTOCOL.md, MISSION.md, AXES.md, CORPUS.md, LEARNING.md (PROTOCOL-APPENDIX.md when a
+347:    rule seems not to fit). Read `skill://swarm` before the first wave. Then your lane's SKILL.md,
+348:    PROVINCE.md, SCORECARD.md (its `planned` row is your starting point), corpus/QUALITY.md,
+349:    corpus/README.md (`## Frontier`), and the newest corpus/lessons.
+350: 2. **Swarm: each round is 32–128 seats in total** (operator directive 3, 2026-10-22: "each round
+351:    should be a 32-100 swarm round"; raised by the operator the same day: "increase L1 max to 128
+352:    subagents", "make it 256 max xwarm lanes"). Choose one shape and name it in the report:
+353:    - **Default — two v1 waves.** **Wave 1 — build (32–64):** recon, source opening, entry drafting,
+354:      tooling, plus first falsifiers of the round's declared claims. **Wave 2 — falsify (32–64)**,
+355:      dispatched after wave 1 returns and only when wave 1's output yields ≥32 distinct attack items:
+356:      fresh reviewer/critic/mutation-tester/scout seats attack what wave 1 produced — re-run each
+357:      counting command, re-open each new source row, attack each claim, review each new entry or
+358:      tool, mutation-test each new gate; every item names what it attacks. Both waves validate under
+359:      policy v1 (`/home/vgpnk/Projects/shokunin/scripts/hyaku/ufo-wave-policy.json`, band 32–64); the two waves
+360:      together stay ≤128 seats.
+361:    - **Alternative — one v2 wave (64–128)** under policy v2
+362:      (`/home/vgpnk/Projects/shokunin/scripts/hyaku/ufo-wave-policy-v2.json`, band 64–128) carrying build and
+363:      attack items together, with ≥25% of its seats attack roles (reviewer, critic,
+364:      mutation-tester, labrat).
+365: 
+366:    Residual checks (fewer than 32 attack items for a wave 2, or leftovers after the waves) go into
+367:    one ordinary `task` call of ≤8 reviewer/critic seats, counted in the round total (≤128); say so in the
+368:    report. Never pad: if fewer than 32 genuine items exist, the claims are too thin — choose a
+369:    larger frontier claim instead of adding filler seats. Validate every wave under its policy (both
+370:    policies set `maxLanes` 256, the validator's hard ceiling), then dispatch it as exactly ONE `task` call carrying the
+371:    validator's `taskCall` (`context` + `tasks`) unchanged; a refused wave is fixed, never split.
+372:    **Dispatch bridge (run 6):** tool output truncates long strings, so do not hand-transcribe the
+373:    payload — load it in ONE eval (py) cell and call the session tool directly:
+374:    `p=json.load(open('<abs>/<wave>-dispatch.json')); tc=p['taskCall']; tasks=[{**t,'solutionSpace':'one wave item, spec in task text'} for t in tc['tasks']]; r=await tool.task({'context':tc['context'],'tasks':tasks,'i':'Dispatching wave'})`.
+375:    That is the one batched call, payload unchanged. **A return without a landed report is a failed
+376:    attempt** — finish the round end to end (run 6: two L1s returned mid-round with nothing landed).
+377:    For a v1 wave:
+378: 
+379:        cd /home/vgpnk/Projects/shokunin/chousa-shokunin && UFO_CONFIG_PATH=/home/vgpnk/Projects/shokunin/scripts/hyaku/ufo-wave-policy.json \
+380:          UFO_FLEET_ALLOW_EXTERNAL_TOOLS=1 UFO_PROJECT_ROOT=/home/vgpnk/Projects/shokunin/chousa-shokunin \
+381:          node ~/Projects/ufo-fsd-alpha/scripts/ufo-swarm-wave.mjs run --spec <wave-spec.json>
+382: 
+383:    For a v2 wave, set `UFO_CONFIG_PATH=/home/vgpnk/Projects/shokunin/scripts/hyaku/ufo-wave-policy-v2.json`
+384:    instead; nothing else changes. Never replace a dead seat. Put specs and registries under
+385:    `/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-73/` (spec `reportDir: ".ufo/waves/round-73/<wave>"`,
+386:    lane-relative) and commit them as wave evidence.
+387:    Items are distinct, concrete work items serving the round's 1–3 claims plus the frontier step
+388:    and verification — never padding. Record the round shape, each wave's seat count, role mix and
+389:    dead seats, any residual call, and the round total in the report. The §3 L2 floor is met inside
+390:    wave 1 (or inside the single v2 wave).
+391:    **Planner seat (orchestrator ruling 2026-10-19):** the validator rejects `planner` — a
+392:    frozen-topology seat, never a swarm role. You, the L1, hold the canonical §3 planner seat; a
+393:    bounded planning data-walk may ride a scout, connector or revenger item. Record that mapping in
+394:    the report; never bypass validation to add a planner.
+395:    **Routing:** Routing is `task.agentModelOverrides` in `~/.omp/agent/config.yml`. The role
+396:    decides the route. Never pass `model`. That file, its aliases and fallback chains are
+397:    operator-owned: read them, never change them. Give an item to an executor only when it writes or
+398:    runs code (scripts, gates, selftests, fixtures, parsers, counting commands); prose drafting
+399:    (knowledge entries, SOURCES rows, lessons) goes to scribes; attacks go to reviewers, critics,
+400:    mutation-testers and scouts. A seat keeps the route chain it captured at spawn, also when
+401:    resumed. Record a seat's actual answering model when a claim depends on it. Report every seat
+402:    that dies, with its last error text; a dead seat stays dead in the evidence. When a coordinator
+403:    receives a provider backoff, respect it and resume the same identity; never restart a duplicate
+404:    writer.
+405:    **REA MCP:** the operator authorized disabling the OMP `rea` MCP entry for this phase; the
+406:    orchestrator set `"enabled": false` in `~/.omp/agent/mcp.json` at 10:12 -03 (pre-edit copy
+407:    `~/.omp/agent/mcp.json.pre-disable-20261020T1015`). An unidentified writer rewrote that file at
+408:    13:35:56 -03: the rea pin is now `rea-agents@6.7.0` and `enabled: false` is gone (reported by
+409:    kaidoku r19; left for the operator to decide). The file is operator-owned either way: never edit
+410:    or restore it. Do REA work through the CLI (`npx -y rea-agents@6.5.0 <command>`), never through
+411:    `xd://mcp__rea_*` devices.
+412:    **Capacity:** the session's job and concurrency limits are `async.maxJobs` and
+413:    `task.maxConcurrency` in `~/.omp/agent/config.yml` (operator-owned: read them, never change
+414:    them). Several lanes run at once, so a `task` call can still be refused at the job limit; the
+415:    refusal ("Background job limit reached") spawns nothing. Never split or shrink a wave below its
+416:    band, and never poll or loop on retries: resend the same payload after one of your own running
+417:    jobs settles. **Run-6 amendment (the swarm is the operator's directive, not optional):** if you
+418:    hold no running job of your own, wait with one `sleep 240` per attempt and resend the same
+419:    payload, up to 8 resends (~32 min); size waves near the band floor (32–40) while the cap is
+420:    shared. Only after the 8th refusal land the round with verifiable work, reporting each refusal
+421:    with its error text — a round whose swarm never ran gets no falsification credit. **Resend only
+422:    on an explicit "Background job limit reached" refusal**: before any resend, `read proc://` and
+423:    look for your wave's seat names; if any are listed, the dispatch succeeded — never send it
+424:    again (run 6: kama r38/r39 and souji r25 each dispatched a wave twice). Every concurrent writer needs an actual
+425:    separate worktree, unique branch/path and observed base; bind its absolute paths there and
+426:    keep one integration owner. Read-only seats return findings without production edits. Never
+427:    run concurrent writers on one checkout. Seats never mutate the fleet repo, sibling lanes,
+428:    lane jj state or lane Git index; put those bounds in every wave context. **Git fixtures (run-6
+429:    incident: a seat's fixture commit, author `t <t@t>`, landed on the FLEET repo and deleted 4,606
+430:    paths):** any fixture repo is created as `D=$(mktemp -d) && git -C "$D" init -q` and every later
+431:    git/jj call names `-C "$D"` explicitly; verify `git -C "$D" rev-parse --show-toplevel` equals
+432:    `$D` before the first commit. Never run `git commit`/`jj` with a throwaway identity anywhere else.
+433:    **Depth (`task.maxRecursionDepth` 3):** an executor seat may spawn one read-only `labrat` probe
+434:    for a falsifiable hypothesis — the only card-permitted seat spawn; every other role stays a leaf,
+435:    and no seat runs its own swarm.
+436:    **Seat paths are absolute:** seat tools also start at the fleet root, so a relative path such as
+437:    `.ufo/waves/...` lands in the FLEET repo (observed hyaku phase 1: kama r11, tsukuroi r12, tabi r15,
+438:    mado r16). The wave `context` and every item must name absolute paths under /home/vgpnk/Projects/shokunin/chousa-shokunin; the spec
+439:    `reportDir` alone stays lane-relative (the validator requires a relative path and resolves it
+440:    beneath `UFO_PROJECT_ROOT` = your lane). The validator renders each seat a relative
+441:    `Report: .ufo/waves/...` trailer, which a seat would resolve from the fleet root: every wave
+442:    `context` must say "every `Report:` trailer path is relative to /home/vgpnk/Projects/shokunin/chousa-shokunin — write it at
+443:    /home/vgpnk/Projects/shokunin/chousa-shokunin/<that path>". Never `agent://all` (it reaches every lane's seats) — message your
+444:    seats by id.
+445: 3. **Write scope:** /home/vgpnk/Projects/shokunin/chousa-shokunin (your lane repo — including its own `scripts/`, `tools/`, gates);
+446:    your report `/home/vgpnk/Projects/shokunin/.ufo/reports/round-73/chousa.md`; appended lines in
+447:    `/home/vgpnk/Projects/shokunin/.ufo/l0-questions.md`. Never edit MANIFEST.json (a separate non-author hyaku
+448:    closure session verifies this round and appends its closure entry), the fleet root's
+449:    `/home/vgpnk/Projects/shokunin/templates/` and `/home/vgpnk/Projects/shokunin/scripts/`, `.ufo/state/`, `.ufo/watchdog.log`,
+450:    or any sibling repo.
+451:    **Misroot sweep before the report:** run `git -C /home/vgpnk/Projects/shokunin status --porcelain` (no
+452:    pathspec — seat notes have landed as plain files at the fleet root). For every untracked file one
+453:    of your seats wrote into the fleet root (check its content names your lane/round), copy it
+454:    byte-exact into the same relative path under /home/vgpnk/Projects/shokunin/chousa-shokunin, verify with `cmp`, then delete the
+455:    fleet copy (the one fleet-root deletion you may make) and record the misroot under `## Mistakes`.
+456:    Never touch files another lane's seats wrote, never touch `.ufo/state/*` driver files, and never
+457:    touch `/home/vgpnk/Projects/shokunin/.scratch/` — orchestrator-owned run state that names many lanes and rounds
+458:    by design; it is never a misroot (incident 2026-10-25: the tracked tree was deleted mid-run).
+459: 4. **Commit order (landed = committed and pushed) — jj lane VCS** (operator 2026-10-20: "let's try
+460:    to also implement using jj as git manager from now on on shokunin runs"). Your lane repo is
+461:    jj-colocated (jj 0.45.1; git stays the backend and the GitHub remote). Commit ONLY through the
+462:    lane helper, which tracks exactly the listed paths, commits them under
+463:    `chousa-shokunin <chousa@shokunin.local>`, moves the branch bookmark and pushes (recovering
+464:    from an operator push by fetch + rebase of your unpushed commits only):
+465: 
+466:        /home/vgpnk/Projects/shokunin/scripts/hyaku/jj-lane.sh commit /home/vgpnk/Projects/shokunin/chousa-shokunin --as chousa \
+467:          -m "round-73: <what>" -- <repo-relative path>...
+468: 
+469:    Cite ONLY the helper's final `landed <hash>` line after successful remote verification.
+470:    `rewritten <old> -> <new>` is diagnostic, never a citable landed hash. For an ordinary
+471:    `commit`, exit 3 retains a local commit but proves no push: resolve the cause, then retry
+472:    the helper push; never force.
+473:    The post-commit scope/deletion guard reads NUL-delimited `git diff-tree
+474:    --name-status -z --no-renames` records, not human brace summaries: a rename
+475:    is checked as a deletion plus an addition, and an unchanged copy source is
+476:    not treated as a changed path.
+477:    If a specific helper-stranded candidate must be recovered, supply its
+478:    reviewed full hash and the original requested paths explicitly:
+479: 
+480:        /home/vgpnk/Projects/shokunin/scripts/hyaku/jj-lane.sh recover /home/vgpnk/Projects/shokunin/chousa-shokunin --as chousa \
+481:          --revision <full-commit-hash> -- <original repo-relative path>...
+482: 
+483:    Recovery is never automatic: the candidate must be a single direct child of
+484:    the current lane branch tip, current `@` must be its direct child, both
+485:    author and committer must match the lane/protocol identity, it must be
+486:    conflict-free with a nonempty tree diff, and every changed path must pass
+487:    the same scope, runtime and phantom-deletion guards. Its local mutation
+488:    advances only the named branch bookmark; it does not snapshot or rewrite
+489:    the remainder of `@`, and refuses stale-remote rebasing.
+490:    Exit 3 means no landed-hash proof; never cite a candidate unless the helper
+491:    prints `landed <hash>` after remote verification. Do not retry ordinary `push`
+492:    while unrelated edits remain in `@`.
+493:    `nothing to commit` lands nothing. Explicit files above 10 MiB require `--allow-large`. A named
+494:    directory commits like `git add <dir>` (ignored content stays out; new files over 1 MiB inside it
+495:    are skipped with a warning — name them as files). **Never** `git add`, `git commit`, `git stash`,
+496:    `git checkout`, `git switch`, `git reset`, `git pull` or `git push` in the lane, and never run a
+497:    mutating jj command yourself (`commit`, `new`, `describe`, `squash`, `rebase`, `abandon`,
+498:    `bookmark`, `undo`, `op restore`/`revert`, `git push`/`fetch`): the helper is the only writer, jj
+499:    resets the git index on every mutation, and a stray jj commit would be swept into your next push.
+500:    Read-only git (log, show, diff, status, ls-files, rev-parse, merge-base) stays fine, but git HEAD
+501:    is detached after the first helper commit: read the lane tip with
+502:    `/home/vgpnk/Projects/shokunin/scripts/hyaku/jj-lane.sh state /home/vgpnk/Projects/shokunin/chousa-shokunin` (`local=`, `ahead=`) or
+503:    `git rev-parse <branch>`, never `@{u}`, `--abbrev-ref HEAD` or `branch --show-current`; record
+504:    measured/pinned revisions as the branch tip, never bare `HEAD`. Read-only jj only with
+505:    `--ignore-working-copy`. Revert a tracked file by rewriting it from the branch
+506:    (`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show <branch>:<path> > /home/vgpnk/Projects/shokunin/chousa-shokunin/<path>`). A lane gate or selftest that
+507:    runs git writes must run on a sandbox clone, never in the lane.
+508:    Fleet-repo commits stay on git, only through the serialized helper, which pushes origin:
+509: 
+510:        /home/vgpnk/Projects/shokunin/scripts/hyaku/fleet-commit.sh --as chousa -m "round-73: chousa report" \
+511:          -- .ufo/reports/round-73/chousa.md
+512: 
+513:    (also for an l0-questions append). The report lands last and cites the pushed lane hash.
+514:    **Pre-report gate (run 6: kotoba r69 and kake r52 left every round commit off-branch):** before
+515:    writing the report run `git -C /home/vgpnk/Projects/shokunin/chousa-shokunin ls-remote origin refs/heads/<branch>` — it MUST print
+516:    your final lane hash. If it prints an older hash, your commits are not on the branch: land them
+517:    through `jj-lane.sh` (never plain git) until it does. Commit the report only via `fleet-commit.sh --as chousa`.
+518:    Before committing the report run `grep -c '^## SHONEN' <report>` — it must print 1, followed by
+519:    one `[~]`/`[ ]` line per SHONEN.md box (run 6: kotoba r69 and r71 both filed without it).
+520: 5. **Inherited state.** Uncommitted lane-authored leftovers → resolve per PROTOCOL (commit under
+521:    this round's entry or revert) and name them in the report. Files you did not author (operator
+522:    sweeps, `round-*-aggregator-*`, `round-*-verifier-spotcheck.md`) → never edit; name them.
+523:    Read `corpus/lessons/round-72-verifier-spotcheck.md` if it exists: it is the outside
+524:    discernment check of your previous round — turn every disagreement or routed defect into a
+525:    lesson-backed `QUALITY.md` criterion or fix, or say in the report why not. Also honor any
+526:    `corpus/lessons/operator-*.md` teaching not yet reflected.
+527: 6. **Report extras:** the canonical **Trend verdicts** section; a `Stale-lane` line (respawn-per-
+528:    round driver; no other mission of this lane is open); and any tool installs.
+529: 7. **Tooling authorization (operator, 2026-10-19):** you and every seat may install or upgrade
+530:    tools that help the task — read `/home/vgpnk/.omp/agent/RULES.md` first (official channels,
+531:    update-safety gate, record tool/version/channel/reason in the report). Put that sentence in
+532:    each wave's `context`. **pacman guard (orchestrator ruling 2026-10-20, after the mado r15
+533:    libinput incident):** **all pacman transactions are PAUSED host-wide** until the operator
+534:    resolves the host-recovery L0 question — install via `uv tool`/`npx`/an official binary in
+535:    `~/.local/bin`, or file an L0 question. When the pause lifts, the dry-run rule applies: the
+536:    host's sync DB is ~413 packages ahead of the installed system, so installing or naming an
+537:    already-installed package is a forbidden partial upgrade; before any `pacman -S`, run
+538:    `pacman -Sp --print-format '%n %v' <pkgs>` and proceed only if every listed package is not
+539:    installed yet. Never `-Sy`, `-Syu`, `-U`, `-R`, downgrade, or restart a host service. Put this
+540:    guard in each wave's `context` too.
+541: 8. **Honesty.** An unrun check has not passed; never fabricate evidence or verdicts; harmed or
+542:    unprovable claims are reported, not prettified. Blocked on an operator decision → append an L0
+543:    question, route around it, and still land an honest report.
+544: 9. **Claim sizing** (fleet lesson from the 12 rejections):
+545:    - Declare each after-state as one concrete value that the closure can re-derive with one
+546:      command over committed bytes. Size it to what one round can land and verify.
+547:    - Use no universal clauses ("all", "complete", "every", "no harm anywhere") unless the counting
+548:      command enumerates the full set.
+549:    - A calibration claim must count mismatches between the lane's self-assessment
+550:      (SCORECARD/SHONEN) and observed repo state. It cannot be an assertion.
+551:    - Prefer 2 claims. Add a 3rd only if it is independent and cheap to verify.
+552:    - Never narrow a target after landing: a miss is an honest stop.
+553:    - A target must be one a do-nothing control cannot reach (phase-4 closures: kaidoku r29 C1,
+554:      where a first-answer baseline scored 152/152; kake r34, where a no-parse replay and a junk-row
+555:      commit met both counters). Before freezing, build the cheapest control that skips the claimed
+556:      work, score it with the frozen counter, and commit that receipt: if it meets the target, the
+557:      counter or target is wrong — fix it before data.
+558:    - The claim is judged on the counter, kill rule and predicate declared before data. A rule
+559:      changed after any seat has scored is not the claim's rule, whatever attacks it later passes
+560:      (kumitate r42). Freeze one predicate that is the same sentence in the plan, the same
+561:      condition in the counter's code and the same label in the receipt.
+562:    - Name the axis by the surface the round changes, not by the number it produces (kaidoku r29).
+563:      Re-scoring a rule the lane already holds on new inputs, or counting rows a sourceless
+564:      fixture also counts, is quality work, never coverage or depth. A coverage claim names the
+565:      surface it moves (frontier → core, a new tool, operation or edge class) and the command that
+566:      would show it unmoved.
+567: 10. **Assimilation contract (operator directive of 2026-10-24; binds every round dispatched on or
+568:    after that date).** Directive, verbatim: "it should incorporate shokuknow corpuses, and also the
+569:    'considerthese' subdir on each of the shokunins repos" — "assimilating these other sources (be it
+570:    corpuses or considerations, into each of them, individually)". External root:
+571:    `/home/vgpnk/Projects/shokuknow` — staging campaign `corpus-expansion-1`; its `RUNBOOK.md` §5 and
+572:    your package `merge/chousa/` are the adoption interface (census evidence 2026-10-24:
+573:    `/home/vgpnk/Projects/shokunin/.tower/comms/missions/M12-r100-assimilation-census.md`). This item
+574:    rides inside §2b of sections 1–5 and the 1–3 claim cap; it adds no claim slot and never relaxes
+575:    the canonical contract.
+576:    - **Source repo read-only.** Never write, commit, fetch or push into `/home/vgpnk/Projects/shokuknow`,
+577:      and never run a campaign tool there — `renumber-staged.py`, `merge-plan.py`, `quote-lint.py` and
+578:      `absent-defect-register.py` all write into it. Read their outputs; run nothing. Adoption = read
+579:      package bytes, write only inside /home/vgpnk/Projects/shokunin/chousa-shokunin, with registry and knowledge edits landing solely
+580:      through the §4 helper; pre-adoption checks live in scratch and nothing is committed until then.
+581:    - **Assimilation round shape.** A round either assimilates or says `Assimilation: none` in the
+582:      report's Sources & frontier section (no penalty). An assimilation round takes ONE theme and
+583:      1–3 knowledge entries from `merge/chousa/` — `MERGE-REPORT.md` names what was staged and why,
+584:      entries sit at `knowledge/<target path>`, their rows in `SOURCES.append.md`. Re-ground each
+585:      entry in-round under CORPUS.md rule 1: re-open every cited source yourself; your Gate block
+586:      carries YOUR access date and ≤25-word located quote — the campaign's `opened` date and quote
+587:      prove nothing about this lane. Append only the rows the admitted entries cite; never
+588:      bulk-append a package (CORPUS.md rule 4: expansion is knowledge, not rows — a row no admitted
+589:      entry cites is not appended). Refused entries keep reason + flip condition in the Gate block
+590:      and stay refused until the reason clears. `doctrine/` is curation guidance, not corpus
+591:      material; only chousa may judge it as a source through its own gate.
+592:    - **Per-entry gates.** PROVINCE.md scope check per entry — refuse generic or sibling-domain
+593:      material even though the package was built per-lane. QUALITY.md bar per entry. Expansion credit
+594:      only on coverage-map ground the lane did not hold (corpus/README.md). The lesson's `## Gate`
+595:      records ≥1 admit and ≥1 reject from the assimilation set for the round's non-author closure to
+596:      spot-check (LEARNING.md — a seat this lane dispatched is still the lane).
+597:    - **Id collision check in scratch, before any append.** The lane registry keeps moving after the
+598:      package was built (kumitate and kotodama already collided — census note, risk 2). The census
+599:      parser accepts rows with 0–3 leading spaces (`CORPUS.md` census clause), so the extractor must
+600:      too — a column-zero-only pattern false-greens an indented collision (proven on a scratch
+601:      `  | S002 |` fixture: registry census-valid, old pattern empty `collisions`, 0–3-space pattern
+602:      catches S002). Run the check with scratch committed as wave evidence:
+603: 
+604:          S=/home/vgpnk/Projects/shokuknow
+605:          A=/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-73/assimilation; mkdir -p "$A"
+606:          grep -oE '^ {0,3}\|[[:space:]]*S[0-9]{3,}' /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md \
+607:            | grep -oE 'S[0-9]+' | sort > "$A/reg-ids"
+608:          grep -oE '^ {0,3}\|[[:space:]]*S[0-9]{3,}' "$S/merge/chousa/SOURCES.append.md" \
+609:            | grep -oE 'S[0-9]+' | sort > "$A/staged-ids"
+610:          comm -12 "$A/reg-ids" "$A/staged-ids" > "$A/collisions"   # nonempty -> renumber in scratch
+611: 
+612:      Prove the guard once before this lane's first append under this item: a scratch registry with
+613:      an indented row the staged set collides with must produce a nonempty `collisions` — if it does
+614:      not, the guard is broken and nothing appends. A nonempty `collisions` file is fixed in scratch
+615:      only: adopted ids continue the lane's registry (append-only, CORPUS.md rule 2) and every
+616:      adopted entry's citation is re-pointed **by document** — the URL/anchor is the evidence and the
+617:      id follows it, never arithmetic (fleet lesson: an id shifted by one repairs one citation and
+618:      breaks the next). Paste both id lists, the collision count and the renumber map into the
+619:      report. Drift a read-only check cannot fix (mass id drift, reshuffled register) → append an L0
+620:      question and adopt nothing this round.
+621:    - **Scratch transformation and validation, before any append — no staged row is appended as-is.**
+622:      Staged rows are campaign-schema, not fleet-schema: on the real kengaku package a byte-exact
+623:      append fails its own census gate (2 malformed rows carrying escaped `\|` pipes; 132 prose
+624:      recheck cells such as `2026-10-23 — re-verify …`), and a 1-entry subset copied unchanged dangles
+625:      `used-by` at unadopted entries. Build the append block in scratch from the rows the admitted
+626:      entries cite (`source:` ids in each admitted knowledge file): normalize every row to
+627:      `CORPUS.md`/census schema — recheck becomes a valid ISO date, `NNd`, or symbolic cadence, with
+628:      the stripped prose (re-verify conditions, Gate pointers) recorded in the round lesson's Gate
+629:      block; no cell contains a literal or escaped `|` (rewrite the anchor in your own located quote
+630:      so the row parses as 11 columns); `used-by` lists exactly the admitted entries citing the row;
+631:      status is `mined`. Then mirror the lane in scratch (copy of its `corpus/` + the append block in
+632:      the Registry table + the admitted knowledge files at their repo-relative paths) and gate the
+633:      append on it:
+634: 
+635:          /home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --file "$A/validate/corpus/SOURCES.md"
+636: 
+637:      Exit 0 (warnings allowed) BEFORE the first registry append — E03/E04 findings mean a duplicate
+638:      id or a within-scope duplicate URL: refuse that row or supersede per CORPUS.md rule 2, never
+639:      append past it. Round end still requires
+640:      `/home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa` exit 0.
+641:    - **Quarantine — payload-absent rows.** Register (read-only; its header AND `## By lane` summary
+642:      totals are stale — derive your slice yourself), data rows only — the lane cell, a round cell
+643:      and an id cell (summary rows match a bare lane name and print blanks):
+644: 
+645:          A=/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-73/assimilation; mkdir -p "$A"
+646:          R=/home/vgpnk/Projects/shokuknow/.ufo/waves/corpus-expansion-1/absent-defect-register.md
+647:          awk -F'|' -v l='chousa' '$2 ~ ("`" l "`") && $3 ~ /round[0-9]+/ && $4 ~ /S[0-9]+/ \
+648:            {print $4, $5}' "$R" > "$A/quarantine-slice"    # every line must carry an S-id
+649: 
+650:      Every slice row is quarantined: not appendable until hand-checked this round — fetch the cited
+651:      source and locate the quote; absent → refuse the row (fabrication class, reason in the Gate
+652:      block); present → adopt with the anchor you located. A prose class cell ("could not be
+653:      fetched", "named no locator") is the register's unchecked family: mark the row unverifiable —
+654:      `unreachable` is not fabrication. Never edit the register or any campaign file; verdicts land
+655:      in the lane's lesson and report.
+656:    - **Wave-4 quarantine-first (tabi, revenger, chousa, kotodama).** This lane's first round under
+657:      this item adopts nothing from its package: it hand-checks the lane's full register slice and
+658:      lands a verdict per row (2026-10-24 data-row counts: tabi 38, revenger 26, chousa 24,
+659:      kotodama 21 — re-derive at round time). An honest partial verdict list keeps adoption closed;
+660:      package adoption starts a later round.
+661:    - **considerthese.** `/home/vgpnk/Projects/shokunin/chousa-shokunin/considerthese/` is operator-authored input: mine it, never
+662:      edit it. At most ONE still-unimplemented proposal per round (a "proposals only … not
+663:      implemented" item from the latest file), grounded through the lane's own bar — the reflection
+664:      is a pointer, not evidence; open what it points at. It lands as a lesson, QUALITY.md criterion
+665:      or SOURCES row citing `considerthese/<file>` + date. No such dir (tabi, souji, kaidoku,
+666:      kotodama) → one report line says so.
+667:    - **Frozen and resumed rounds.** This item never rewrites a frozen claim: predicate, counter,
+668:      kill rule and target stay exactly as declared. A resumed attempt of a round whose prompt
+669:      predates 2026-10-24, or whose claims are already frozen, runs those claims unchanged;
+670:      shokuknow/considerthese material may serve an already-frozen claim as ordinary §2b curation
+671:      (a source it cites, opened this round) — never as a new or widened target. Assimilation work
+672:      otherwise waits for the lane's next round.
+673: 
+674: ## 7. Scratch discipline — operator directive of 2026-10-25 (binding every round, every seat)
+675: 
+676: Every long run so far has ended with `/tmp` (a 128 GB partition) at 100 %: seats and lane counters
+677: clone the lane and build multi-GB work trees under `/tmp`, the trees outlive the seat (SIGKILL,
+678: ENOSPC, kernel restart, closed round) and nothing reclaims them, so later seats die of ENOSPC in
+679: cascades and their deaths get scored as red legs. Run 7 lost ~20 seats this way. The driver now
+680: runs `/home/vgpnk/Projects/shokunin/scripts/hyaku/disk-guard.sh` (gate before every spawn, sweep during the run,
+681: `purge-lane` at every `advance`), and the lane side binds as follows:
+682: 
+683: 1. **Scratch root.** Every clone, mirror, work tree, counter `--work` dir and fixture of this round
+684:    lives under `$HYAKU_SCRATCH/chousa-r73/<seat-name>/` with `HYAKU_SCRATCH` defaulting to
+685:    `/fast/scratch/hyaku` (NVMe, ~600 GB free). Create it with `mkdir -p`, pass it explicitly
+686:    (`TMPDIR=… --work … mkdtemp(dir=…)`), never rely on an inherited `TMPDIR`. `/tmp` is for files
+687:    under 50 MB only. The L1 puts the exact path into every seat prompt.
+688: 2. **Delete on exit.** A seat removes its scratch dir before it yields — `trap 'rm -rf -- "$S"' EXIT`
+689:    in shell, `finally: shutil.rmtree` in Python — receipts first copied into the wave dir. The L1
+690:    removes `$HYAKU_SCRATCH/chousa-r73` after landing; `inline.sh advance` purges whatever
+691:    is left. A seat that ends with its tree still on disk reports that as a defect of its own.
+692: 3. **One live clone per seat**, `git clone --shared` / `git worktree add` / `git archive` instead of
+693:    full clones, and no mirror of the whole lane inside a wave `build/` dir (a 600 MB mirror is not
+694:    evidence; cite the revision and the command instead).
+695: 4. **No hardcoded `/tmp` in committed tools.** A counter, probe or gate that writes under `/tmp`
+696:    regardless of `TMPDIR`/`--work` (`mkdtemp(dir="/tmp")`, `/tmp/<name>.XXXX` roots) is a routed
+697:    defect this round and a frozen-counter amendment next round; counters must honour `TMPDIR`
+698:    and accept a scratch argument.
+699: 5. **Reaper notice.** The driver deletes any entry under `/tmp`, `/var/tmp` or `$HYAKU_SCRATCH`
+700:    that has had no live process and no file change for 45 minutes (10 minutes above 90 % usage),
+701:    without asking. A `/tmp` path is therefore never citable evidence (QUALITY-class defect, as
+702:    kotodama Q14 already rules); anything a report must point at lands in the wave dir or the
+703:    lane tree. Check `disk-guard.sh status` before a heavy pass; a seat that gets ENOSPC reports
+704:    the free space it saw and does not re-run until `status` is green.

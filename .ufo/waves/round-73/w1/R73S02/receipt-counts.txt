@@ -1,0 +1,30 @@
+grep -c '^skip-case' corpus/evidence/round72/controls/battery-past-locale-dies-pinzone-r72.txt => 13
+grep -c 'skip-case' corpus/evidence/round72/controls/battery-past-locale-dies-pinzone-r72.txt => 16
+grep -c '^ok-case' corpus/evidence/round72/controls/battery-past-locale-dies-pinzone-r72.txt => 231
+grep -c '^FAIL-case' corpus/evidence/round72/controls/battery-past-locale-dies-pinzone-r72.txt => 16
+grep -c '^RESEARCH_GATE_SELFTEST:' corpus/evidence/round72/controls/battery-past-locale-dies-pinzone-r72.txt => 0
+82:skip-case 60 verify-all-manifest-append reason=no flock(1): append fails closed
+83:skip-case 61 verify-all-manifest-two-appends reason=no flock(1): append fails closed
+131:skip-case 103 claims-cross-device        reason=unshare absent
+132:skip-case 104 chain-cross-device         reason=unshare absent
+136:skip-case 108 claims-root-slash-read     reason=/etc/hostname unreadable
+142:skip-case 110 claims-root-dslash         reason=/etc/hostname unreadable
+186:skip-case 134 json-unterminated-manifest reason=no flock(1): append fails closed
+187:skip-case 135 json-nul-terminated-manifest reason=no flock(1): append fails closed
+250:skip-case 193 metadata-asof-unicode-date-locale reason=no available locale admits Unicode digits
+294:skip-case 233 c1lk-holder-blocks-append  reason=no /proc/locks or no flock(1)
+295:skip-case 234 c1lk-second-append         reason=no flock(1): append fails closed
+301:skip-case 240 r2-hash-fault-pinned       reason=unshare absent
+320:    | 
+321:case-note claims-locale-boundary        reason=locale-boundary budget 900s exceeded (timeout); verdict unmeasured within budget
+322:skip-case 259 all-manifest-hash-shim     reason=no flock(1): append fails closed
+323:/usr/bin/grep: /tmp/chousa-research-gate-selftest.2rSINk/r36-pin.txt: No such file or directory
+324:FAIL-case pin-echo-isolation           pin_rc=2 drift_rc=2
+325:    | GATE_GREP: path=/usr/bin/grep source=default version="grep (GNU grep) 3.0"
+326:    | research-gate: --pin canonical capture failed (rc=2 verdict-lines=0 manifest-lines=0 schema-lines=0): /tmp/chousa-research-gate-selftest.2rSINk/r36-pin.txt
+327:    | research-gate: --drift baseline missing: /tmp/chousa-research-gate-selftest.2rSINk/r36-pin.txt
+328:
+329:SELFTEST_RC=2
+330:$ date +%s  (run end)
+331:1793593780
+332:EXIT_LINE_PRESENT=yes

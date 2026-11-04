@@ -1,0 +1,55 @@
+fleet_revision=1a3fbac0fbdc09342ccf86850dfb1227a0792ae6
+source=.scratch/goal-20261103-hyaku-run15.md
+git_show_rc=0
+1: # hyaku run 15 — 2026-11-03 (Linux/omp host; continues zcode run 14)
+2: 
+3: Operator directive (verbatim): "ok i need you to continue the hyaku run, we will be using 32-40
+4: concurrent workers, you are the orchestrator of each run; i want you to do 10 rounds of training per
+5: shokunin, until each reeach 100 completed rounds. our subagents for the swarms rounds (each round, a
+6: wave composed of m_flash, m_mim, m_zfl on roles you assign) on the hyaku style but using these models
+7: and conc i've assigned; remember, the essence of the shokunin runs is to learn by doing, to activelky
+8: get better and more capable, to have curated source of knowledge (corpus and their own trials)".
+9: Interjection: "you will be running until each shokunin reaches round 100".
+10: 
+11: ## Campaign shape
+12: 
+13: - **Goal: every pool lane reaches round 100** (17 lanes, 706 lane-rounds remaining at start).
+14:   10-round blocks per lane; a lane holds its slot for its whole block, then the slot goes to the
+15:   lowest-`next/` lane (`inline.sh queue` order) — the long-pole lanes (kagi r29, tabi r44, souji r46)
+16:   stay live continuously.
+17: - **Concurrency 32–40 workers total**: ~6 L1 lanes live at once; dispatcher `SEAT_CEILING=36`
+18:   (seat spawns stop at 36 running jobs); L1/closure spawns only while running jobs < 40; closures
+19:   may use ≤3 helper seats.
+20: - **Round size: ONE v1 wave of 8–16 seats** (`ufo-wave-policy.json` band 8–16; residual ≤4;
+21:   ≥25 % attack seats; ≤2 connector seats).
+22: - Hyaku in-session inline mode unchanged (inline.sh + inline-dispatcher.py, jj lanes, fleet-commit.sh,
+23:   fresh non-author closures, append-closure.py the only MANIFEST writer).
+24: 
+25: ## Routing (never pass `model`; backup `~/.omp/agent/config.yml.pre-run14-20261103`)
+26: 
+27: | roles | model |
+28: |---|---|
+29: | task (L1 + closure judges), main, planner, reviewer, security-reviewer, critic | @m_zfl |
+30: | executor, revenger, scout, labrat, mutation-tester, simplifier | @m_flash |
+31: | connector, sentinel, scribe, sonic, distiller, seance | @m_mim |
+32: 
+33: ## Start-state reconciliation
+34: 
+35: The zcode run-14 campaign (`.scratch/goal-20261031-hyaku-zcode-run14.md`, Windows host, 2026-10-31 to
+36: 2026-11-02) advanced every pool lane while this host sat on run-13 state. Reconciled 2026-11-03:
+37: - Fleet repo: local run-15 setup commit rebased onto origin tip b73780ab; stale local commit
+38:   "round-60: hyaku closure dispatch for tameshi" (tameshi r60 was already closed remotely) abandoned.
+39: - Lane repos: all 17 fast-forwarded to their remote tips (all were ahead=0, behind 6-98). Dead run-13
+40:   working-copy residue (tracked diffs + untracked strays) preserved under /tmp/run13-orphans/<lane>/.
+41: - Local hyaku state rebuilt from MANIFEST closure rows: next = closed_max+1, outcome files per closed
+42:   round; run-13 claims moved aside. kake r68 landed unclosed on zcode (report 9d56e80b) → claim
+43:   reconstructed (base = r67 closure lane tip a6cb7efa), closed first.
+44: - chousa r70-72 rejected on the Windows host (no flock, sibling load): streak lifted at run start,
+45:   fresh-start rule applies to chousa r73.
+46: - 574 lane-rounds remain at start: revenger 89, tsukuroi 64, kama 70, tameshi 72, tabi 56, mado 65,
+47:   mori 79, souji 52, kaidoku 64, kake 68, kagi 30, kasegi 57, chousa 73, kengaku 63, kumitate 74,
+48:   kotoba 85, kotodama 82 (next round per lane). Critical path: kagi (71 sequential rounds).
+49: 
+50: ## Progress
+51: 
+52: State file: `.scratch/run15-state.json` (rounds trained this run, per-lane block progress).

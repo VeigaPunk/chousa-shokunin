@@ -1,0 +1,264 @@
+fleet_revision=1a3fbac0fbdc09342ccf86850dfb1227a0792ae6
+source=.ufo/reports/round-79/kotodama.md
+git_show_rc=0
+1: # kotodama — round 79 (attempt 2) — honest stop (operator wrap-up, run 12)
+2: 
+3: Lane: /home/vgpnk/Projects/shokunin/kotodama-shokunin · final lane tip `cb9b1c5c88e5daff346dce74485f1cfd1c7a729b` (verified: `git ls-remote origin refs/heads/main` prints it).
+4: Report committed via `fleet-commit.sh --as kotodama`.
+5: 
+6: ## Verdict
+7: 
+8: Two claims were scoped, frozen, landed and counter-verified **before** the
+9: wrap-up arrived; the wave was still settling and wave 2 was never launched.
+10: This is an honest stop, not a fleet closure: no axis score is asserted, the
+11: in-flight wave is released unsettled, and the next round stays unchanged.
+12: 
+13: | claim | axis | landed | counter | verdict |
+14: |---|---|---|---|---|
+15: | Ca — bind r78 census S884 used-by drift with an append-only correction | calibration (unclaimed record/instrument repair, per the r79 CLAIMS-DRAFT pre-freeze scope disposition) | `reports/round-79/corrections/ca79-r78-s884.md` @ `0439764` (in graded history) | `reports/round-79/accept-ca.py` @ `82b822a` | `ACCEPT-CA-79: PASS legs=7/7` |
+16: | O — acquire `tools/ledger-token-guard.py` | operability | `tools/ledger-token-guard.py` + `corpus/SOURCES.md` (S897) + `SKILL.md` (gate row) @ `80c6352` | `reports/round-79/accept-o.py` @ `7fdf355` | `ACCEPT-O-79: PASS legs=10/10` |
+17: 
+18: Lowest non-retired axis: freshness remains paused by the unresolved round-11
+19: L0 question (same disposition as rounds 77/78), so the round worked
+20: operability + calibration instead.
+21: 
+22: ## What landed (commit chain, all pushed)
+23: 
+24: - `98b0e53` freeze #1: claims.json, both counters, r77 fixture ledgers
+25:   (red/green), 16-file refusal battery, echo-stub control.
+26: - `404b0aa`, `0439764`, `241627d`, `19d6901`, `ad2427c` Ca lands + two
+27:   receipt-path corrections (see process findings).
+28: - `80c6352` O lands: guard tool, S897 own-work row, SKILL.md gate row.
+29: - `82b822a` re-freeze: counter fixes (`-z` diff-tree parsing, guard `--work`
+30:   scratch dirs) + claims `sibling_paths` extension; supersedes `98b0e53` as
+31:   the frozen base for grading.
+32: - `7fdf355` accept-ca fix: corrections derive from `base..lands` adds;
+33:   freeze..lands stays the separable window.
+34: - `cb9b1c5` LOG entry + start-census telemetry.
+35: 
+36: Graded-run receipts live in this fleet dir:
+37: `kotodama-accept-ca-lands.txt` (PASS 7/7), `kotodama-accept-o-lands.txt`
+38: (PASS 10/10), `kotodama-pre-freeze-dry.txt` (both counters refuse at base,
+39: exit 2), `kotodama-pre-dispatch-receipt.txt` (first dry-run receipt,
+40: superseded). Claims/frozen constants: `reports/round-79/claims.json` in the
+41: lane tree.
+42: 
+43: ## The guard (claim O artifact)
+44: 
+45: `tools/ledger-token-guard.py` (sha256 `504c51c6…f040dd7964`, 17822 bytes)
+46: re-runs a claim ledger's recorded observations against immutable committed
+47: bytes: ops `count`/`line` on `cat-file` blobs only, `observe.rev` must be
+48: 40-hex, unsafe paths / command-channel keys / unknown ops / missing blobs /
+49: mutable revs all refuse with the stable `LEDGER-TOKEN-GUARD` label; detects
+50: `MISMATCH` (recorded≠observed, the r77 R78-M1 class) and `VACUOUS`
+51: (stated==observed echo). Red fixture → 11/11 failures (10 mismatch + 1
+52: vacuous); green → PASS 11 pairs; selftest 9/9; 16/16 refusal fixtures;
+53: fresh-nonce oracle: real tool observed `1`, echo stub echoed the stated
+54: nonce and never the observed token.
+55: 
+56: ## Waves and seats
+57: 
+58: - W1: 32 seats dispatched through the inline handoff (`w1.ready` →
+59:   orchestrator spawn, tranches 25→31→32 under the cap). ~27 seats delivered
+60:   stage artifacts and `w1/*.md` reports; 5 seats returned empty stages
+61:   (ScribeClaims, ScoutR77Truth, ConnHistory, RevSeparable, ScribeCorrection).
+62:   WAVE-DONE had not arrived at wrap-up; the wave is released unsettled.
+63: - W2 (falsify wave on the landed tool/counter): not launched.
+64: 
+65: ## Integrated from W1 before the stop
+66: 
+67: - `ExecCaCounter` draft promoted to `reports/round-79/accept-ca.py` and
+68:   adopted wholesale (its cfg/CORR_KEYS contract drove claims.json and the
+69:   correction file).
+70: - `ExecCaCounter` Ca claims fragment values verified and frozen verbatim
+71:   (receipt blob `62eb55b7`, sha256 `05b5011a`, measured `4b255745`, S884
+72:   r13-vs-10-23 used-by tokens — all re-derived by the L1).
+73: - `RevQuality` binding map used to structure declared inputs, dry runs and
+74:   review-only clauses.
+75: - Adopted-but-UNLANDED seat findings (recorded for round 80, worktree edits
+76:   reverted at honest stop to keep the tree identical to the graded lands):
+77:   `MutPath` F5/F6 → `GIT_NO_REPLACE_OBJECTS=1` + `cat-file -t` blob check
+78:   (blob check landed; env var reverted); `SentinelLimits` → 1 MiB ledger
+79:   input cap + expanded `GIT_*` env drop (reverted); `MutRevision` →
+80:   pristine-ledger-as-green is a defect class (red fixture correctly kept
+81:   red).
+82: - Mutation/critic batteries (`MutVacuous`, `MutRevision`, `MutPath`,
+83:   `RevMalformed`, `SentinelLimits`, `CritNoopO/Ca`, `RevOContract`,
+84:   `RevCaContract`) delivered fixture/driver evidence under
+85:   `.ufo/waves/round-79/w1/stage/` — not yet folded into the tool.
+86: 
+87: ## Process findings (for the record)
+88: 
+89: - Freeze/receipt geometry had two collisions: a committed receipt path first
+90:   landed inside the Ca SEPARABLE window (fixed by relocating receipts to
+91:   this fleet dir; lane A+D nets out of the diff), then inside
+92:   `correction_dir` where the correction parser graded it (fixed by the
+93:   base..lands corrections window in accept-ca). Both documented in
+94:   `LOG.md` and the receipts.
+95: - One counter re-freeze (82b822a) was needed after two counter defects
+96:   (`-z` parsing; missing scratch dirs). Frozen claims were re-issued, not
+97:   silently edited in place.
+98: 
+99: ## Remains (explicitly not done)
+100: 
+101: - w1 integration of ~20 delivered stage findings into the tool/counter
+102:   (replace-ref + input-cap hardening, distinct-observation floor).
+103: - W2 falsify wave never launched; no mutation run against the landed tool.
+104: - SHONEN/SCORECARD/PROVINCE updates beyond LOG.md; no corpus lesson
+105:   (ScribeLesson draft exists under `w1/stage/ScribeLesson/`).
+106: - 5 empty seat stages; orchestrator settles the wave record.
+107: 
+108: Tool installs: none. pacman not run (addendum guard respected).
+109: Stale-lane: none at report time (`git status --porcelain` shows only
+110: `.ufo/waves/` artifacts, never committable).
+111: 
+112: ## SHONEN
+113: 
+114: - [~] SKILL.md contains real decision tables, error patterns, checklists, cited sources — `SKILL.md:20`,`:505`,`:564`; registry row added at `:767` this round (ledger-token-guard).
+115: - [~] At least one end-to-end domain task executed and logged in LOG.md — round-79 O lands + `ACCEPT-O-79: PASS legs=10/7fdf355` + `ACCEPT-CA-79: PASS legs=7/7` receipts (fleet `.ufo/reports/round-79/kotodama-accept-*.txt`).
+116: - [~] Instructions executable by an agent without oral context — counters run from committed bytes only (`--root/--lands/--freeze/--work`), receipts reproduce them verbatim.
+117: - [~] No cross-domain bleed — lane paths only (tools/, corpus/SOURCES.md, SKILL.md, reports/round-79/); PROVINCE unchanged.
+118: 
+119: ---
+120: 
+121: # kotodama — round 79 continuation (zcode run 14, 2026-10-31) — completion of the run-12 honest stop
+122: 
+123: Erratum/continuation appended after the filed attempt-2 bytes above, which it does not modify.
+124: It supersedes part of the "Remains (explicitly not done)" list above: its items 2–4 (SHONEN /
+125: SCORECARD / PROVINCE updates, corpus lesson) are now done; item 1 (W1 stage-finding integration)
+126: and item 4 (wave settlement) stand, routed. Dispatch: `.ufo/watchdog.log`
+127: `2026-10-31T18:58:01-07:00 launch kotodama round=79 base=efdc19e52cd9 (zcode run14)`. Host
+128: note: this Windows host has no working `python3` alias (Store stub); every counting command
+129: below uses `python -B` — the same interpreter the landed `python3 -B` docstrings name on the
+130: old POSIX host.
+131: 
+132: ## Work performed
+133: 
+134: - **Declared claim O (operability — capability acquisition): re-derived on this host.**
+135:   `ACCEPT-O-79: PASS legs=10/10`, exit 0, at `--lands 7fdf355aa717edcf9ef5d2a7ff7cbb7c72076209
+136:   --freeze 82b822a7971d236928aac7792be0964cd7ee1059`; counter sha `3ad26c10…` matches the
+137:   run-12 fleet receipt. Evidence: lane `reports/round-79/telemetry/lands-rerun-o-run14.txt`;
+138:   direct guard demonstration `telemetry/guard-direct-red-run14.txt` (`LEDGER-TOKEN-GUARD: FAIL
+139:   pairs=11 failed=11 mismatched=10 vacuous=1`, exit 1) — the capability runs on this host.
+140: - **Candidate repair Ca (calibration — unclaimed record repair, no delta per the pre-freeze
+141:   scope disposition and QUALITY 20): re-derived.** `ACCEPT-CA-79: PASS legs=7/7`, exit 0, same
+142:   lands/freeze; counter sha `63444388…` matches. Evidence:
+143:   `telemetry/lands-rerun-ca-run14.txt`; correction artifact
+144:   `reports/round-79/corrections/ca79-r78-s884.md` (receipt not rewritten).
+145: - **QUALITY 23 counter selftest receipts landed (run-12 residual, lesson R79-M1).** Both
+146:   counters now carry committed verdict-line/exit/sha receipts:
+147:   `selftest-o-run14.txt` (`SELFTEST-O79: PASS`, exit 0); accept-ca red-before
+148:   `selftest-ca-redbefore-run14.txt` (`SELFTEST: 4/12`, exit 1) → fixed
+149:   `selftest-ca-fixed-run14.txt` (`SELFTEST: 12/12`, exit 0).
+150: - **Counter revision 2 (accept-ca host-portability; lesson R79-M2).** Old sha `63444388…` →
+151:   new `94b66ea5…`: fixture writes pin LF, cleanup `ignore_errors=True`; no predicate moved —
+152:   the graded lands verdict is byte-identical pre/post (`telemetry/lands-rerun-ca-run14.txt` vs
+153:   `telemetry/lands-rerun-ca-postfix-run14.txt`, both PASS 7/7). Record:
+154:   `reports/round-79/counter-revisions.md`.
+155: - **Round records landed:** `corpus/lessons/round-79.md` (`## Gate` + `## Mistakes`
+156:   R79-M1/M2/M3 + Sources & frontier), SCORECARD round-79 axes section + capabilities row
+157:   (`ledger-token guard`), LOG.md run-14 entry, census start/end receipts (validate exit 0
+158:   both).
+159: - **Inherited working tree resolved (lesson R79-M3):** the 3 staged deletions are host
+160:   artifacts, not lane-authored work — two committed wave-stage paths carry `>`
+161:   (uncheckoutable on NTFS; blobs intact in HEAD, `git cat-file -e` passes), one round-76 stage
+162:   file absent on disk after the host move; left unstaged/untouched, recorded in the lesson.
+163:   Cross-domain note (fleet-meta / protocol lane): committed-path charset and host-portable
+164:   gate selftests are fleet-level classes — reported, not absorbed.
+165: 
+166: ## Landed changes
+167: 
+168: - Commit `1ac882bfb76cc211040876fa9063f755d4761e68` (pushed to origin main; lane identity
+169:   `kotodama-shokunin <kotodama@shokunin.local>`; 14 files, +821/−2): accept-ca.py revision 2,
+170:   counter-revisions.md, 9 telemetry receipts, corpus/lessons/round-79.md, SCORECARD.md,
+171:   LOG.md — all tied to the LOG.md run-14 entry. Parent `efdc19e5…` (run-12 wrap-up); cited
+172:   graded shas `7fdf355`/`82b822a` verified ancestral to the new HEAD.
+173: - Prior run-12 chain (already on record): `98b0e53` freeze #1 → `404b0aa`/`0439764`/`241627d`/
+174:   `19d6901`/`ad2427c` Ca lands → `80c6352` O lands → `82b822a` re-freeze → `7fdf355`
+175:   accept-ca window fix → `cb9b1c5` LOG/census-start → `efdc19e` wave-evidence wrap-up.
+176: 
+177: ## Before → after measurements
+178: 
+179: - **Claim O (operability):** before — `git ls-tree 44f76d456c1b326a71ffdb381590af825cbf11be
+180:   tools/` contains no `ledger-token-guard.py` (capability absent; recorded-observation drift
+181:   catchable only by hand); after — tool present (sha256 `504c51c6…f040dd7964`, 17822 B), red
+182:   fixture 11/11 pair failures / green 11/11 PASS / selftest 9/9 / 16/16 refusals / fresh-nonce
+183:   oracle. Counting command: `python -B reports/round-79/accept-o.py --root <lane> --lands
+184:   7fdf355aa717edcf9ef5d2a7ff7cbb7c72076209 --freeze 82b822a7971d236928aac7792be0964cd7ee1059
+185:   --work <scratch>` → `ACCEPT-O-79: PASS legs=10/10`, exit 0, measured at commit `1ac882b`
+186:   (verdict grades lands `7fdf355`).
+187: - **Ca repair (calibration, no delta):** before — unresolved receipt/registry mismatches 1
+188:   (S884 `…amend-2026-10-24-r13.md` at `reports/round-78/telemetry/census-end.txt:33` vs
+189:   `…amend-2026-10-23.md` at measured `4b255745`); after — 0 unresolved, bound by an
+190:   append-only correction. Counting command: `python -B reports/round-79/accept-ca.py --root
+191:   <lane> --lands 82b822a7971d236928aac7792be0964cd7ee1059 --freeze
+192:   82b822a7971d236928aac7792be0964cd7ee1059 --work <scratch>` → `ACCEPT-CA-79: PASS legs=7/7`,
+193:   exit 0, measured at commit `1ac882b`.
+194: - **Do-nothing control:** both counters refuse at `--lands` = base with exit 2 (fleet receipt
+195:   `kotodama-pre-freeze-dry.txt`); a control landing nothing cannot acquire the tool, move
+196:   rows, or bind the drift.
+197: - **Counter revision (instrument):** before — `SELFTEST: 4/12`, exit 1 on this host
+198:   (red-before receipt pins counter sha `63444388…`); after — `SELFTEST: 12/12`, exit 0 (sha
+199:   `94b66ea5…`); graded verdict byte-identical across the fix (PASS 7/7 both sides).
+200: 
+201: ## Sources & frontier
+202: 
+203: `corpus/SOURCES.md` rows 820 → 821 (base `44f76d4` → round records commit `1ac882b`), one new
+204: row this round: **S897** (own-work, tier A scoped, `mined`, opened 2026-10-30, used-by
+205: `tools/ledger-token-guard.py`). Counting command: `grep -cE
+206: '^\|[[:space:]]*S[0-9]{3,}[[:space:]]*\|' corpus/SOURCES.md` = 821. Census: start
+207: `reports/round-79/telemetry/census-start-run14.txt` (exit 0), end `census-end-run14.txt`
+208: (exit 0), both via `bash <fleet>/scripts/sources-census.sh validate --root <fleet> kotodama`
+209: (the fleet-root lane path is a junction to this repo — same tree verified by HEAD). No
+210: prior-row status/recheck/used-by cell changed this run. Sourced claim: O rests on S897
+211: (opened this round). Frontier obligations: lesson `## Gate` + `## Mistakes` landed (3 mined
+212: mistakes with evidence, captured-by, fix).
+213: 
+214: ## Trend verdicts
+215: 
+216: - **expansion: improved** — a capability (`ledger-token guard`) was demonstrated running and
+217:   admitted to the SCORECARD capabilities table this round (a listed expansion observable in
+218:   `LEARNING.md`); no admitted entry failed its bar; registry +1 own-work mined row.
+219: - **quality: unchanged** — no knowledge entry was re-verified, deepened or superseded; the
+220:   counter/guard work is instrument repair and registration, which QUALITY 20 excludes from
+221:   quality observables.
+222: - **discernment: unchanged** — repairs only; no QUALITY criterion added this round; no
+223:   non-author spot-check was available inside the single-session run (recorded in the lesson;
+224:   the receipts are committed so the closure judge can sample O's admit and the counter
+225:   revision from committed bytes).
+226: 
+227: Fresh-start §7 dispositions (read + spot-checked before declaring): r76's ROWS/COLLCHECK red
+228: legs verified at `reports/round-76/telemetry/measures-c-final-c28ea.txt` (`ACCEPT-C-76: FAIL
+229: legs=11/13`) — not re-run for a flip; its claims are frozen-honest-failed. r77's missing
+230: `## Gate` section verified (`grep -c '^## Gate' corpus/lessons/round-77.md` = 0). r78's S884
+231: drift verified on both sides — and is exactly what this round's Ca correction binds. Ruled
+232: out before declaring: (a) dining/tableware coverage entry — ground already held
+233: (`cuisine-food-lexicon.md` §6 lines 90–93, `furniture-interior-lexicon.md`); (b) the r77
+234: naming-systems candidate — reviewed and not admitted in r77/r78; (c) re-running r76's frozen
+235: counters for a flip without new landings — a do-nothing artifact (counters refuse
+236: lands==base); (d) a freshness move — paused by the open round-11 L0 question (no
+237: stagnation-nudge evidence); (e) integrating the ~20 W1 hardening findings into the
+238: guard/counter this round — would change frozen tool bytes mid-closure; routed to round 80 as
+239: a QUALITY 23 counter revision with red-befores.
+240: 
+241: ## Swarm floor, stale-lane, assimilation, L0
+242: 
+243: - L2 floor: this continuation run is a single-session lane round with no L2 dispatch surface —
+244:   no wave was dispatched by run 14 (run 12's 32-seat W1 record stands; 5 empty seat stages
+245:   remain the operator's to settle). Named as a conformance defect of this run, not padded.
+246: - Stale-lane actuator: no mission of this lane open longer than two ticks at filing (launch
+247:   18:58:01-07:00, filing same session); no sibling mission state observable from this lane.
+248: - Assimilation: `considerthese/` absent from the lane repo. Assimilation: none — shokuknow
+249:   unreachable.
+250: - L0: no new question appended; the round-11 freshness pause stands as the open operator item.
+251: 
+252: ## SHONEN
+253: 
+254: - [~] SKILL.md contains real decision tables, error patterns, checklists, cited sources — `SKILL.md:20`,`:505`,`:564`; gate registry row added this round at `:767` (ledger-token-guard, cited to S897); no non-author verifier on record.
+255: - [~] At least one end-to-end domain task executed and logged in LOG.md — round-79 claim O executed end-to-end (tool + fixtures + counters + receipts), LOG.md run-12 and run-14 entries; graded receipts fleet `.ufo/reports/round-79/kotodama-accept-{ca,o}-lands.txt` plus this run's re-derivations `reports/round-79/telemetry/lands-rerun-{ca,o}-run14.txt`; no non-author verifier on record.
+256: - [~] Instructions executable by an agent without oral context — both counters and the guard run from committed bytes only (`--root/--lands/--freeze/--work`), selftests build isolated fixtures; this host's re-runs used only landed bytes and a scratch dir; no non-author verifier on record.
+257: - [~] No cross-domain bleed (PROVINCE.md still accurate) — PROVINCE.md byte-identical (host-agnostic, no paths); writes confined to this lane repo + this report; the fleet-meta findings (NTFS paths, host-portable selftests) are reported as routing notes, not absorbed; no non-author verifier on record.
+258: 
+259: Round marker: claims declared 1 (O; Ca executed as unclaimed repair); both verdicts
+260: re-derived green on this host at commit `1ac882bfb76cc211040876fa9063f755d4761e68`;
+261: pushed yes; scratch deleted at close.
