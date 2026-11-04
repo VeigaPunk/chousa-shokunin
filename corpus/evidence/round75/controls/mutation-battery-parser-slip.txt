@@ -1,0 +1,7 @@
+MISTAKE DEMONSTRATION — a summary parser that accepts only the v2 label reports 'no marks' for every r74-matrix run
+measured-at=43a7a0db52c8aabdf32735f58e09610e05200e79
+mutant=the MATRIX_LINE regex narrowed to '(?:MATRIX)=' (v2-only), the first battery draft
+command=inline python, exact bytes:
+LOADER_MATRIX=9/9 C1=PASS | both-labels=True v2-only=False
+LOADER_MATRIX=12/12 MATRIX=PASS | both-labels=True v2-only=True
+consequence: with marks=none the battery's positive check reports 0/2 despite exit 0 and 9/9 (see the corrected receipt controls/before-battery-r74-matrix.txt: positive=2/2)

@@ -1,0 +1,20 @@
+C1 supplementary (post-freeze, not part of the frozen predicate) — the shuffle is load-bearing
+measured-at=43a7a0db52c8aabdf32735f58e09610e05200e79
+probe=/fast/scratch/hyaku/chousa-r75/L1/shuffle/order-oracle-12.py (L1-written, reads no repository bytes; replays the v2 declared order)
+variant=/fast/scratch/hyaku/chousa-r75/L1/shuffle/matrix-fixed-order.py (scratch copy of the v2 matrix with the shuffle line replaced by 'pass')
+
+--- 12-entry oracle against the FROZEN shuffled matrix
+CASE delete-0 FAIL expected_rc=1 actual_rc=0 failed=none expected_failed=C2-6 base=2bbc07ede6f37c2a8be50d25317d1feaf16d88a9 rev=8738e98bf20f45dc862bb24feda9a4525560b4cc
+CASE dup-log-heading FAIL expected_rc=1 actual_rc=0 failed=none expected_failed=C2-1,C2-2 base=2bbc07ede6f37c2a8be50d25317d1feaf16d88a9 rev=c6e3f53bb4f21938e0b83457762eaffb9834d144
+CASE dup-lesson-heading FAIL expected_rc=1 actual_rc=0 failed=none expected_failed=C2-3,C2-5 base=2bbc07ede6f37c2a8be50d25317d1feaf16d88a9 rev=6da9a3ecb026d6ea40cf4c513c4b145a08f3e1a7
+CASE unchanged FAIL expected_rc=0 actual_rc=1 failed=C2-6 expected_failed=none base=2bbc07ede6f37c2a8be50d25317d1feaf16d88a9 rev=64203f7e11cefcf2ef01c2277cf5527a19185956
+CASE append-1 FAIL expected_rc=0 actual_rc=1 failed=C2-7 expected_failed=none base=2bbc07ede6f37c2a8be50d25317d1feaf16d88a9 rev=f44d3029aff89e0e7ceb82a84bf481561ad369e6
+CASE dup-card-heading FAIL expected_rc=1 actual_rc=1 failed=C2-1,C2-2 expected_failed=C2-4 base=2bbc07ede6f37c2a8be50d25317d1feaf16d88a9 rev=9ad81aae4258dbb1b276576a1ed20fc7ddce6242
+CASE append-0 FAIL expected_rc=0 actual_rc=1 failed=C2-3,C2-5 expected_failed=none base=2bbc07ede6f37c2a8be50d25317d1feaf16d88a9 rev=23cccd954b34160e0a879fad04c5737dd2b62624
+CASE receipt-change FAIL expected_rc=1 actual_rc=1 failed=C2-4 expected_failed=C2-7 base=2bbc07ede6f37c2a8be50d25317d1feaf16d88a9 rev=ae5d7f793776568b7e2d8c7019df8308e84b3a25
+LOADER_MATRIX=4/12 MATRIX=FAIL
+
+--- 12-entry oracle against the fixed-order scratch variant
+LOADER_MATRIX=12/12 MATRIX=PASS
+
+reading: a scripted oracle that knows the declared order reaches full marks only when the order is fixed; the frozen matrix's random permutation rejects it. This is why the shuffle exists (QUALITY 120), and it is a limit of the frozen five-forger battery that this oracle is not among its subjects.
