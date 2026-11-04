@@ -3326,3 +3326,15 @@ Fresh-start round under the run-15 rule: the last three closures (r70, r71, r72,
 2. **C2 — calibration** (sourced on S180, opened this round). The two routed round-72 spot-check defects corrected append-only: V72-1 (the kill line is `tools/research-gate.sh:8435`, the unguarded sub-run assignment; the `:8426` grep is `set -e`-exempt) and V72-2 (the after-receipt's counts are measured at the landing tip `7f7ea19a`, and the verdicts-tree `6dd6c82` adds a third `"18 healthy"` hit — three at `6dd6c82` against two recorded). Frozen counter `corpus/evidence/round73/c2-count.py` (seven checks; `--selftest` catches 7/7 mutations); control: `C2=FAIL checks=2/7` at the base.
 
 Wave: one v1 wave of 11 seats (2 scout, 1 connector, 3 executor, 1 scribe, 1 revenger, 1 reviewer, 1 critic, 1 mutation-tester) under `ufo-wave-policy.json` (band 8–16), via the run-15 inline spawn handoff.
+
+## Round 72 correction note
+
+V72-1: supersedes the round-72 C1 row's attribution of termination to the grep. At `tools/research-gate.sh:8426` the missing-file grep is `set -e`-exempt inside `&&`; the unguarded assignment at `:8435` inherits the pin child's rc=2 and terminates. V72-2: supersedes the C2 row's “verdicts tree” measurement attribution: the after-receipt names landing tip `7f7ea19a`, where the SCORECARD count is 2; verdicts tree `6dd6c82` has 3 because the verdict row adds its quotation. Historical receipt bytes and prior verdicts remain unchanged; see S180 and the round-72 lesson correction block.
+
+## Round 73 verdict
+
+C1 operability improved on the frozen completing predicate: direct battery `RESEARCH_GATE_SELFTEST: PASS (275 cases, 0 skipped)`, rc 0, 275 ok / 0 FAIL / 0 skip, 80 s; full preflight `PREFLIGHT=8/8 FAILED=none ENV=none SKIPPED=none`, rc 0, 92 s. Both measured at freeze `a0f094c272dcb09f1bf79e2c9057d7ea20b7ac7b`; receipts under `corpus/evidence/round73/controls/` bind unchanged tool digests. Counting commands are the three frozen greps in `claims.md`: expected outputs 1, 1, 1. This is fresh Linux-host evidence, not reuse of Windows receipts.
+
+C2 calibration does not verify on its frozen counter: the actual corrections land, but `c2-count.py` loads numstat additions as deleted lines. A compliant append is rejected (6/7), while an actual deletion passes C2-6 (R73M01 mutation evidence). Frozen code is not amended after scoring. Report C2 honest-stop / counter-invalid, not PASS. The substring mutation `:8435` to `:84350` also survives the pure checks. Actual append-only status is checked separately with git numstat's deletion column.
+
+Operability remains the historical numeric 3/10; no capability row added. Calibration: unprovable on the frozen counter, factual corrections disclosed. Depth, freshness, coverage and adjacency unchanged; no new province surface. Trends: expansion unchanged; quality improved by the completed battery/full preflight; discernment unchanged pending outside review, with the new counter defect explicitly retained. Round admission: not admitted because C2's frozen target is unmet.

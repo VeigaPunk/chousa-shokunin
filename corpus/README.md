@@ -1351,3 +1351,9 @@ Left open:
 ## Round68 gate portability (2026-10-31)
 
 - `corpus/knowledge/host-portable-gate-selftest-r68.md` — a gate selftest derives its default root from its own committed location and maps fixture display names through a Win32-reserved-character sanitizer before using them as directories; S164 (pinned Microsoft naming rules) and S165 (the round-68 red receipts). Supersedes the drift note above: `tools/freeze-check.py --selftest` is repaired this round — the `LANE_ROOT_DEFAULT` constant now derives from `__file__` and `mk()` sanitizes fixture directory names (display names verbatim; the 34 frozen cases byte-unchanged) — and preflight G06 reads PASS (`corpus/evidence/round68/controls/before-g06-preflight.txt` → `after-g06-preflight.txt`). The r67 note above stays as committed history naming the then-unrepaired state.
+
+## Round73 host remeasurement and record precision
+
+- `lessons/round-73.md` — S180 admit, S181 reject, routed V72-1/V72-2 corrections, and the frozen counter's additions/deletions loader defect.
+- `evidence/round73/controls/battery-r73.txt` — fresh Linux-host direct battery PASS (275 cases, 0 skipped), rc 0, 80 s; `preflight-r73.txt` — full preflight 8/8, no skipped gates, rc 0, 92 s. Both bind freeze revision and instrument digests. This supersedes no Windows receipt: host-scoped results coexist.
+- `evidence/round73/c2-count.py` is retained frozen and known invalid: its loader labels additions as removed lines. C2 is not certified; `QUALITY.md` criteria 132–133 record the precision lessons. No frontier coverage-map surface advanced.

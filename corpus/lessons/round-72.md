@@ -35,3 +35,9 @@ Registry: 177 → 179 rows; new B2; mined 144 → 146, queued 19 unchanged, reje
 ## Trends and continuation
 
 Recorded at verdict time in SCORECARD (round-72 verdict section). Standing after this round: the operator's flock(1) decision (L0 since r70 — on install the capture-zone cases flip to real runs and the gate can go honestly green); the host-load question now carries the respawn observation (L0, this round: the lineages spawn fresh children — killing the two known PIDs is not enough); the L2-floor template question (operator/protocol lane); no SHONEN promotion review and no non-author entailment review were manufactured this round (both remain operator-schedulable; the r69/r70 notes stand).
+
+## Correction — round-72 spot-check
+
+V72-1: the round-72 receipt header, LOG and SCORECARD wrongly attribute the exit to the missing-file grep. `tools/research-gate.sh:8426` is exempt from `set -e` inside its `&&` list: the error is a symptom, not termination. The unguarded child assignment at `tools/research-gate.sh:8435` inherits rc=2 and exits the script. See S180 and the round-73 harness evidence. Receipt bytes and the r72 honest-stop ruling remain unchanged.
+
+V72-2: the after-counts were measured at the landing tip 7f7ea19a (`7f7ea19a945e0998f009f82b9c651cb08aec1c12`), despite the receipt header and later restatements calling it the verdicts tree. SCORECARD's count is three at the verdicts tree 6dd6c82 (`6dd6c82405989083f16e101d6573656d39211879`) against two recorded: its verdict row adds a quotation. LOG and round-71 lesson counts remain two. The receipt's exact revision governs re-derivation; its original bytes stay untouched. Source: S180; rejected contextual interpretation: S181.
