@@ -10,7 +10,7 @@ instrument table matched (`35351b23…` v7, `580233ad…` oracle-check, `bb91406
 
 ## Free space
 - before first run (`df -h /fast`): 397G avail (51% used)
-- after last committed-subject run: 387G avail (52% used)
+- after final mutated run (`df -h /fast`): 387G avail (52% used)
 
 ## (a) BEFORE — do-nothing control, committed oracle-check
 
@@ -39,8 +39,8 @@ structure-identity forger.
 Command:
 `python3 -B /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round80/matrix-battery-v7.py --matrix /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round76/loader-matrix-v3.py --work /fast/scratch/hyaku/chousa-r80/R80ExecA/v7/run1 --runs 1 --fresh 2`
 
-Receipt: `r80a-after-v7-run1.txt` (aae6c755…). Exit **1**, wall clock 1m43.9s real /
-12m48s user / 3m3s sys. It printed:
+Receipt: `r80a-after-v7-run1.txt` (aae6c755…). Exit **1**, wall 1m43.9s real (user ~12.8m,
+sys ~3.1m — multi-core gc). It printed:
 
 ```
 forgers_rejected=11/11 positive=2/2 fresh_positive=1/2 fresh_forgers=1/2 oracles_rejected=5/5
@@ -83,7 +83,7 @@ oracle scored `fresh_forger=0/2` on the same names. Two independent causes:
    gate itself (`rc==0` full-marks for positives, `rc==1` lower-marks for forgers) sees rows of
    both kinds and fails on both. The `ref-counter#1` positive escaped only because its
    forger twin was drawn on base `successor-counter` (different key); `ref-counter#0` had a
-   same-base twin at the same index. Counting师傅's framing: the predicate counts
+   same-base twin at the same index. Summary framing: the predicate counts
    `fresh_positive` and `fresh_forger` per *drawn entry*, but `results` is keyed per *name
    string*, and name strings collide across group and index.
 2. F2 — **the payload-decode oracle's fresh-forger score is confounded by the same fold** (and
@@ -126,10 +126,10 @@ layout channel, an oracle-side per-run flap on committed bytes alone (no fresh r
 
 ## (d) STABILITY of the fresh leg — two re-draws, fresh=2, fresh=3
 
-`--fresh 3` exposes a `--seed` flag: **no such flag exists** (grep: v7's argparse has
---matrix/--work/--runs/--matrix-timeout/--fresh/--no-fresh/--rev/--no-permute/--no-content/
---print-order/--reemit-only; draw order comes from `secrets.randbits(64)` per draw). So the
-draw leg was re-measured by independent runs.
+No `--seed` flag exists (v7's argparse: --matrix/--work/--runs/--matrix-timeout/--fresh/
+--no-fresh/--rev/--no-permute/--no-content/--print-order/--reemit-only; draw bits come from
+`secrets.randbits(64)` per draw, so runs are inherently independent). The draw leg was therefore
+re-measured with independent runs.
 
 Re-draw 2 command: `.../matrix-battery-v7.py --matrix .../loader-matrix-v3.py
 --work /fast/scratch/hyaku/chousa-r80/R80ExecA/v7/run2 --runs 1 --fresh 2`
@@ -162,62 +162,74 @@ Receipt: `r80d-v7-run3-fresh3.txt` (570aeb6f…). Exit **1**, wall 1m54.9s real 
 BATTERY=FAIL forgers_rejected=11/11 positive=2/2 fresh_positive=0/3 fresh_forgers=0/3 oracles_rejected=5/5
 ```
 
-Fresh subjects drawn this run: `ref-counter#0`, `ref-counter#1`, `ref-counter#2` (+ twins).
-Every fresh subject printed `MISS` on BOTH sides, and every `#i` subject had
-`matrix_exit=0 marks=12/12/PASS` (positive side) or `matrix_exit=1` lower-marks (forger side)
-in its run lines — i.e. every micro-behaviour was CORRECT, yet the per-name score marked 0/3.
-This is F1 in full: at fresh=3, three POSITIVE/FORGER pairs all share `ref-counter#N`.
-`results['ref-counter#0']` accordingly holds the txn rows of POSITIVE `ref-counter#0` AND
-FORGER `ref-counter#0` (and the `#N` names that later draws' rows were appended to cannot
-unwind — the `#1` set sees a `#2` FORGER row too). With a mixed observed list the
-`all(...)` gate can never pass for either side, hence 0/3 and 0/3 with every run row
+Fresh subjects drawn this run: POSITIVE `ref-counter#0/#1/#2` AND FORGER
+`ref-counter#0/#1/#2` — all six entries share the `ref-counter#<i>` name space (each pair
+same-base, same-index). Every fresh SUBJECT line prints `MISS` on BOTH sides, while the run
+rows are individually correct: positives all `matrix_exit=0 marks=12/12/PASS`, forgers all
+`matrix_exit=1` lower-marks (`0/12` or `8/12`). This is F1 in full: with all six entries
+sharing three name strings, `results["ref-counter#<i>"]` folds one positive's pass rows with
+one forger's fail rows for each i, so for every name the `all(...)` gate sees rows of BOTH
+kinds and fails for both — hence `fresh_positive=0/3 fresh_forgers=0/3` with every run row
 individually correct. The committed-side counts (11/11, 2/2) were untouched because none of
-those names collide with the fresh names.
+those names collide with a fresh name. Note the payload-decode oracle again printed its
+own clean datapoint inside the folded aggregate:
+`ORACLE:payload-decode RUN FORGER ref-counter#N matrix_exit=0 marks=12/12/PASS content=ok`
+for all three drawn forgers (all ACCEPTED-class under that oracle).
 
 ## (e) Hypothesis isolation — rerun of (d) fresh=3 with only CHILD_TIMEOUT mutated
 
-To rule out "the fresh=3 failure is a load/timeout artifact of the 6-second child timeout",
-I locally (scratch only, `mut/v7-t60-fixed.py`, non-committed copy, all child timeouts 6 s →
-60 s; the only other file difference is point HERE at a fixed absolute path) re-ran fresh=3:
-Receipt: `r80e-v7-t60-fresh3.txt` (285c7f73…). Exit **1**, wall 6m0.685s real (`RECEIPT_LINES=240`) — one committed `hang` forger timed out at the raised timeout (correct class, but also not a clean reject), and every fresh `#0/#1/#2` subject again printed `MISS` per side with all fresh run rows individually correct — i.e. the F1 counter artifact reproduces at child-timeout 60 s.
+To rule out "the fresh=3 0/3 is a load/timeout artifact of the 6-second child timeout", I
+re-ran fresh=3 with a scratch-only mutated copy (`mut/v7-t60-fixed.py`, never committed:
+`CHILD_TIMEOUT` 6 → 60, plus the two mechanical changes the mutation needed — `HERE` pointed
+at an absolute path and `str()` around the env value). Receipt
+`r80e-v7-t60-fresh3.txt` (285c7f73…), exit **1**, wall 6m0.7s real, `RECEIPT_LINES=240`:
 
 ```
 BATTERY=FAIL forgers_rejected=10/11 positive=2/2 fresh_positive=0/3 fresh_forgers=0/3 oracles_rejected=5/5
 ```
 
-The committed `hang` forger timed out (1 `matrix_exit=timeout`, correct — an exit of 2 is
-never scored in the matrix's favour but a timeout is also not a clean reject) and every fresh
-subject was again WRONGLY 0/3 per side with every fresh run row again singularly correct. So
-child-timeout raising does NOT fix it, and the fresh=3 0/3 shape reproduces identically for a
-non-fleet-load reason. This is a v7 defect, not a machine artifact. (The run is scratch-only,
-never committed.)
+Fresh subjects drew POSITIVE `ref-counter#0/#2`, POSITIVE `successor-counter#1` and FORGER
+`ref-counter#0/#2` — two cross-side collisions (`#0`, `#2`) plus one collision-free index
+(`#1` on a different base). All six fresh SUBJECT lines print `MISS` per side with every fresh
+run row individually correct, exactly as in (d); one committed `hang` run printed
+`matrix_exit=timeout` (MISS, hence `forgers_rejected=10/11`). Child-timeout raising does not
+remove the shape: F1 is an instrument defect, not a machine-load artifact.
 
 ## Severities and carry
 
-- **F1 (the draw loop and score() jointly count with collision-folded keys, HIGH for the frozen claim):**
-  The v7 predicate `fresh_positive=2/2 fresh_forgers=2/2` is not a measurement of independent
-  draws; the 2/2 target is a number when the draw happens to avoid same-name twins' collision,
-  a 0/3 or 1/2 when it does not. Two of my three full predicate runs landed on a collision;
-  the run that printed the exact frozen PASS line (run 2) had a no-collision parcial. Fix is
-  not for this seat: the drawn name must be made unique per draw (e.g. append the hex token
-  `#<r>` = `secrets.token_hex(4)` to every entry name instead of the loop index `i`), or the
-  `results` dict keyed on (group, name) tuples in `score()`. The lane SHOULD record this as a
-  lesson/criterion; the frozen C1 predicate line cannot be treated as measured-draw evidence:
-  at fresh=3 the frozen instrument claims the drawn set was 0/3 correct although every single
-  run row was individually correct, which plainly contradicts "the drawn set is scored".
-- **F2 (the fresh-forger side is not independent-of-witness for the payload channel, MEDIUM): the
-  payload-decode forger scored the drawn fresh `ref-counter` forger as a positive in the run that
-  drew it (`ORACLE:payload-decode … fresh_forger=0/2`). The receipts cannot separate "the drawn
-  mutation is genuinely counter-detected" from the F1 count folding without a rerun at unique
-  names, so this is a question for the wave's critic seat, not a certification either way.
-  claims.md's own limits paragraph says exactly this channel is measured by the critic seat and
-  never closed — this seat contributes the datapoint, not the verdict.
-- **F3 (pass shape unstable across draw seeds, LOW, informational): my four full-predicate runs
-  produced three outcomes (FAIL 1/2-1/2, PASS 2/2-2/2, FAIL 0/3-0/3 at fresh=3 twice). The pass state is not
+- **F1 (score() and the draw loop jointly key rows by name string, HIGH for the frozen
+  claim):** the v7 predicate `fresh_positive=2/2 fresh_forgers=2/2` is not a measurement of
+  independent draws; it is 2/2 when the draw happens to avoid same-name cross-side collision
+  and 0/3 / 1/2 when it does not. Two of my three full-predicate runs landed on collisions;
+  the run that printed the exact frozen PASS line (run 2) was the only no-collision draw.
+  Fix is not this seat's to make: make every drawn entry's name unique (e.g. per-draw
+  `secrets.token_hex(4)` suffix instead of the loop index `i`), or key `results` on
+  `(group, name)` tuples in `score()`. Until fixed, the frozen C1 fresh predicate is
+  draw-shaped, not behaviour-measured, and a 0/3 FAIL can occur while every drawn subject
+  behaves exactly as its class requires — plainly contradicting the docstring's "the drawn
+  set is scored".
+- **F2 (the committed payload-decode forger classifies drawn fresh forgers as positives,
+  MEDIUM):** measured clean (no-fold) on run 2: both drawn fresh forgers print
+  `RUN FORGER ref-counter#N matrix_exit=0 marks=12/12/PASS content=ok` under that oracle while
+  the matrix under test REJECTS the same subjects (`marks=0/12`), and again all three drawn
+  forgers on run 3 and the fresh=3 mutated run. Per claims.md's own limits paragraph this is
+  the critic seat's channel (a static classifier keyed on the generator's operators), measured
+  and recorded, never certified closed — this seat contributes the per-run datapoint, not the
+  verdict.
+- **F3 (pass shape is draw-seeded, LOW, informational): my three full-predicate fresh runs
+  produced three outcomes (FAIL 1/2-1/2 at fresh=2, PASS 2/2-2/2 at fresh=2, FAIL 0/3-0/3 at
+  fresh=3). The pass state is not
   draw-invariant, so any score, trend and identity-of-subject wording ("the drawn set is
   scored") in the round report must be worded per-run, with the collision-corrected verdict.
-- **F4 (confirmed the frozen BEFORE is not stale, NO-BREAK): the (a) receipt matched every
-  frozen token; the do-nothing control is valid and reproducible as of this round.
+- **F4 (the frozen BEFORE control is reproducible at this round, NO-BREAK):** the (a) receipt
+  matched every frozen token; the committed do-nothing control is valid as of this seat.
+- **F5 (measurement-time lane drift, informational):** three `LANE_REV`s appear in the
+  receipts as sibling seats landed during the wave — `0d253c95` (claims freeze, run 1),
+  `44d09edf` (S199–S202 registration, `--no-fresh` run), `5ba30d87` (after-receipt land, runs
+  2/3/mutated). `git diff --stat 0d253c95 5ba30d87` over all five instrument paths (v7,
+  oracle-check, v6 battery, loader-matrix-v3, structure-identity) prints **no output** —
+  instruments moved nowhere between the first and last run, so every receipt is
+  revision-bound and instrument-bound; this is the round-79 routed defect 6 handled correctly.
 
 ## What this seat did NOT touch / nuances:
 - No production instrument was edited; all mutations live under `scratch/mut/` and were never

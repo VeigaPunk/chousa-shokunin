@@ -1,0 +1,33 @@
+==============================================================================
+A. The full landing shape the C2 predicate names
+==============================================================================
+    LANE_REV=47e95449755397df73e75325075349d3d5bb13e1 SINCE_ROUND=79 TIPS=192 AUDITED=4
+    ROW S199 record=bad quote_words=15 location=R4 quote is 8 words, record says 15 verdict=UNRESOLVED
+    ROW S200 record=bad quote_words=15 location=R4 quote is 6 words, record says 15 verdict=UNRESOLVED
+    ROW S201 record=bad quote_words=14 location=R4 quote is 8 words, record says 14 verdict=UNRESOLVED
+    ROW S202 record=bad quote_words=3 location=R4 quote is 2 words, record says 3 verdict=UNRESOLVED
+    SUPERSEDED S196 by S199 record=bad verdict=UNRESOLVED
+    SUPERSEDED S197 by S200 record=bad verdict=UNRESOLVED
+    SUPERSEDED S198 by S201 record=bad verdict=UNRESOLVED
+    GATE_GROUNDING=FAIL unresolved=7 superseded_resolved=0 audited=S199,S200,S201,S202
+    exit=1
+    predicate met: False
+
+==============================================================================
+B. The blind spot, sized three ways
+==============================================================================
+  --since-round 79: TIPS=191 AUDITED=3  (3 rows)
+  --since-round 60: TIPS=191 AUDITED=17  (17 rows)
+  --since-round  1: TIPS=191 AUDITED=17  (17 rows)
+
+  -> widening 79 -> 60 adds S182..S195 (14 rows).
+  -> widening 60 ->  1 adds NOTHING: the DECIDED regex
+     '^- (?:Admit|Reject) (S\d{3,})\b' matches only the plain bullet
+     form used from round 74 on. Rounds 26-73 record their decisions
+     as markdown TABLE rows ('| S168 | ...') or bold bullets
+     ('- **Admit S180**'), neither of which the regex matches.
+  -> so the counter's own audit set is capped at 17 rows at ANY window,
+     while 119 registry rows carry a Gate decision in a round-N.md lesson.
+  -> 102 of those 119 are invisible to the counter at every --since-round.
+
+scratch clone reset to BASE: True

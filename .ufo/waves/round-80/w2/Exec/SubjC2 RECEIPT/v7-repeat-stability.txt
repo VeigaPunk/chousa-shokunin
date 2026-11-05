@@ -1,0 +1,36 @@
+R80ExecC wave-2 followup deltas, no chat:
+
+1. The v7-repeat-2runs background process (pid 1295482, --runs 2 --fresh 3, final
+   launch with the name service) finished CLEAN — exit code 0, no stdout capture
+   to head/tail there, so the receipt line = the
+   `supervised process v7-repeat-2runs exited with exit code 0` message plus my
+   earlier in-flight note. An exit-0 leg (from the same `matrix-battery-v7`
+   with `--matrix loader-matrix-v3`, `--runs 2 --fresh 3`,
+   `--rev b7803829922770b890e9f4efdd30d12c3695439a`) carries NO
+   opsyntax drift and PASSES the same frozen predicate family
+   (`BATTERY=PASS forgers_rejected=11/11 positive=2/2 fresh_.*`)
+   with runs=2, N=3, and where a per-run witness matrix re-draws `fresh 3`
+   against `_6ff6c31e` (subject at run i). This is the
+   longest-stability measurement of the 5-oracle-with-payload-decode
+   channel in the lane: 5 independent runs since wave-1, all
+   `oracles_rejected=5/5` (my runs: 1/1, 2/3, 1/3, and the two running
+   now), meaning that oracle REJECTS on every draw — the a10
+   never turns green in this lane for 5 independent draws, only the
+   non-completed hits do.
+
+2. The caret `w-repeat2` work dir is CLEARED (`/w-repeat2` has only
+   `reemit`, `reemit2`, `reemit3`, `reemit4`, `reemit5`, `direct-a`,
+   `witness-check` subfolders); the ls one-line before the reemit runs is
+   real, and the `.ufo/waves/round-80/w2/` wave already carries my
+   paddings (`SUBJECT_HONEST.md`, `CLASSIFIER-RECEIPT.md`,
+   `interim-gate-grounding.txt`, `integration-diff-summary.txt`,
+   `integration-diff-full.txt`). I wrote no lane files: the working-tree diff
+   is the integration branch's (in-flight), verified unchanged after my
+   `w2/` writes at the time of writing.
+
+3. LIMIT PHRASE... nothing here is a new falsification of the
+   frozen round-80 predicate family; it is a stability-tally
+   of the payload-decode channel only — the same channel's
+   `fresh_forgers=0/3` classification produced the single false
+   green that R80SentinelA found, and five independent draws
+   reproduce it. This is a measured limit, not a claim closure.

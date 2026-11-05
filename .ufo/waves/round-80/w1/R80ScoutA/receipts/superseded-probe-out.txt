@@ -1,0 +1,45 @@
+==============================================================================
+A. SUPERSEDED branch: S171 is superseded by S176 in SOURCES.md.
+   Is the branch reachable for S171 at all?
+==============================================================================
+--- GATE-RECORD for S176 (the superseder) only  (scratch 33c6264612f8, since=79)
+    LANE_REV=33c6264612f87ec43e3e69997e4c88bbf9221afa SINCE_ROUND=79 TIPS=191 AUDITED=4
+    ROW S176 record=ok quote_words=9 location=corpus/evidence/round70/controls/before-g08-selftest-partial.txt:65@b78038299227 words=9 verdict=OK
+    ROW S196 record=none quote_words=- location=- verdict=UNRESOLVED
+    ROW S197 record=none quote_words=- location=- verdict=UNRESOLVED
+    ROW S198 record=none quote_words=- location=- verdict=UNRESOLVED
+    GATE_GROUNDING=FAIL unresolved=3 superseded_resolved=0 audited=S176,S196,S197,S198
+    exit=1
+
+--- same, but ALSO a '- Admit S171' bullet so S171 enters `decided`  (scratch 0bd2eb1f1356, since=79)
+    LANE_REV=0bd2eb1f1356ce2c230f0435b4e7e912d4db8859 SINCE_ROUND=79 TIPS=191 AUDITED=4
+    ROW S176 record=ok quote_words=9 location=corpus/evidence/round70/controls/before-g08-selftest-partial.txt:65@b78038299227 words=9 verdict=OK
+    ROW S196 record=none quote_words=- location=- verdict=UNRESOLVED
+    ROW S197 record=none quote_words=- location=- verdict=UNRESOLVED
+    ROW S198 record=none quote_words=- location=- verdict=UNRESOLVED
+    SUPERSEDED S171 by S176 record=ok verdict=RESOLVED
+    GATE_GROUNDING=FAIL unresolved=3 superseded_resolved=1 audited=S176,S196,S197,S198
+    exit=1
+
+==============================================================================
+B. Is S171 in the counter's `decided` set at --since-round 1?
+   (its only lesson decision is a TABLE row in round-70.md)
+==============================================================================
+   since=79: GATE_GROUNDING=FAIL unresolved=3 superseded_resolved=0 audited=S196,S197,S198
+   since=60: GATE_GROUNDING=FAIL unresolved=17 superseded_resolved=0 audited=S182,S183,S184,S185,S186,S187,S188,S189,S190,S191,S192,S193,S194,S195,S196,S197,S198
+   since=1: GATE_GROUNDING=FAIL unresolved=17 superseded_resolved=0 audited=S182,S183,S184,S185,S186,S187,S188,S189,S190,S191,S192,S193,S194,S195,S196,S197,S198
+   (S171 never appears in any audited= list: it is a PARENT row,
+    and the SUPERSEDED branch requires rid in decided, which the
+    DECIDED regex never satisfies for a table-row decision.)
+==============================================================================
+C. The three rows the counter CAN reach today, and their real defects
+==============================================================================
+--- S196/S197/S198 with their lesson quotes and stated counts  (scratch 59e911c4b8ce, since=79)
+    LANE_REV=59e911c4b8ceb3fac2925f091f87e55cb086e04d SINCE_ROUND=79 TIPS=191 AUDITED=3
+    ROW S196 record=bad quote_words=25 location=R4 quote is 27 words, record says 25 verdict=UNRESOLVED
+    ROW S197 record=bad quote_words=24 location=R4 quote is 25 words, record says 24 verdict=UNRESOLVED
+    ROW S198 record=bad quote_words=10 location=R3 quote absent from .ufo/waves/round-78/w1/R78ReviewB/atkB2-new-block-window.txt:9 verdict=UNRESOLVED
+    GATE_GROUNDING=FAIL unresolved=3 superseded_resolved=0 audited=S196,S197,S198
+    exit=1
+
+scratch clone reset to BASE: True

@@ -1,0 +1,105 @@
+# instrument: M8-r2-drop
+# script: corpus/evidence/round80/m80-M8-r2-drop.py
+# script sha256: e3a7ab9a4a413982a8434abe6cd8aa6e7c2bbd9733ea2c0a250a3d6293441a3c
+# fixture: committed AFTER state at e3820839 + one defect per state (commits in the scratch clone)
+# command: python3 -B corpus/evidence/round80/m80-M8-r2-drop.py --rev <state>   (cwd /fast/scratch/hyaku/chousa-r80/R80MutationA/lane)
+
+## state=real-clean rev=e3820839d67e44d1344c8dd4730b16b5fd39b706 exit=0
+LANE_REV=e3820839d67e44d1344c8dd4730b16b5fd39b706 SINCE_ROUND=79 TIPS=192 AUDITED=4
+ROW S199 record=ok quote_words=12 location=corpus/lessons/round-79-verifier-spotcheck.md:222@b78038299227 words=12 verdict=OK
+ROW S200 record=ok quote_words=20 location=corpus/QUALITY.md:1056@b78038299227 words=20 verdict=OK
+ROW S201 record=ok quote_words=25 location=corpus/QUALITY.md:1054@b78038299227 words=25 verdict=OK
+ROW S202 record=ok quote_words=2 location=.ufo/waves/round-78/w1/R78ReviewB/atkB2-new-block-window.txt:11@3eb4a3cad8fe words=2 verdict=OK
+SUPERSEDED S196 by S200 record=ok verdict=RESOLVED
+SUPERSEDED S197 by S201 record=ok verdict=RESOLVED
+SUPERSEDED S198 by S202 record=ok verdict=RESOLVED
+GATE_GROUNDING=PASS unresolved=0 superseded_resolved=3 audited=S199,S200,S201,S202
+
+## state=real-tree-rev rev=35df892957cb4528ecba0fa0a6d0fd674c021da7 exit=1
+LANE_REV=35df892957cb4528ecba0fa0a6d0fd674c021da7 SINCE_ROUND=79 TIPS=192 AUDITED=4
+ROW S199 record=ok quote_words=12 location=corpus/lessons/round-79-verifier-spotcheck.md:222@b78038299227 words=12 verdict=OK
+ROW S200 record=ok quote_words=20 location=corpus/QUALITY.md:1056@b78038299227 words=20 verdict=OK
+ROW S201 record=bad quote_words=25 location=R1 revision 8bff97f27d98 does not resolve verdict=UNRESOLVED
+ROW S202 record=ok quote_words=2 location=.ufo/waves/round-78/w1/R78ReviewB/atkB2-new-block-window.txt:11@3eb4a3cad8fe words=2 verdict=OK
+SUPERSEDED S196 by S200 record=ok verdict=RESOLVED
+SUPERSEDED S197 by S201 record=bad verdict=UNRESOLVED
+SUPERSEDED S198 by S202 record=ok verdict=RESOLVED
+GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+
+## state=real-prefix-rev rev=531daa92b1202432d46aa4f14c9ee28572b72f3b exit=1
+LANE_REV=531daa92b1202432d46aa4f14c9ee28572b72f3b SINCE_ROUND=79 TIPS=192 AUDITED=4
+ROW S199 record=ok quote_words=12 location=corpus/lessons/round-79-verifier-spotcheck.md:222@b78038299227 words=12 verdict=OK
+ROW S200 record=ok quote_words=20 location=corpus/QUALITY.md:1056@b78038299227 words=20 verdict=OK
+ROW S201 record=bad quote_words=25 location=R1 revision b78038299227 does not resolve verdict=UNRESOLVED
+ROW S202 record=ok quote_words=2 location=.ufo/waves/round-78/w1/R78ReviewB/atkB2-new-block-window.txt:11@3eb4a3cad8fe words=2 verdict=OK
+SUPERSEDED S196 by S200 record=ok verdict=RESOLVED
+SUPERSEDED S197 by S201 record=bad verdict=UNRESOLVED
+SUPERSEDED S198 by S202 record=ok verdict=RESOLVED
+GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+
+## state=real-absent-quote rev=312fa533135806a20f25ca706604ffd48d6bdfc6 exit=1
+LANE_REV=312fa533135806a20f25ca706604ffd48d6bdfc6 SINCE_ROUND=79 TIPS=192 AUDITED=4
+ROW S199 record=ok quote_words=12 location=corpus/lessons/round-79-verifier-spotcheck.md:222@b78038299227 words=12 verdict=OK
+ROW S200 record=ok quote_words=20 location=corpus/QUALITY.md:1056@b78038299227 words=20 verdict=OK
+ROW S201 record=bad quote_words=25 location=R3 quote absent from corpus/QUALITY.md:1054 verdict=UNRESOLVED
+ROW S202 record=ok quote_words=2 location=.ufo/waves/round-78/w1/R78ReviewB/atkB2-new-block-window.txt:11@3eb4a3cad8fe words=2 verdict=OK
+SUPERSEDED S196 by S200 record=ok verdict=RESOLVED
+SUPERSEDED S197 by S201 record=bad verdict=UNRESOLVED
+SUPERSEDED S198 by S202 record=ok verdict=RESOLVED
+GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+
+## state=real-off-by-one rev=a43e4ae413a9e006315dd0c0ef685b88a1cc95fa exit=1
+LANE_REV=a43e4ae413a9e006315dd0c0ef685b88a1cc95fa SINCE_ROUND=79 TIPS=192 AUDITED=4
+ROW S199 record=ok quote_words=12 location=corpus/lessons/round-79-verifier-spotcheck.md:222@b78038299227 words=12 verdict=OK
+ROW S200 record=ok quote_words=20 location=corpus/QUALITY.md:1056@b78038299227 words=20 verdict=OK
+ROW S201 record=bad quote_words=25 location=R3 quote absent from corpus/QUALITY.md:1055 verdict=UNRESOLVED
+ROW S202 record=ok quote_words=2 location=.ufo/waves/round-78/w1/R78ReviewB/atkB2-new-block-window.txt:11@3eb4a3cad8fe words=2 verdict=OK
+SUPERSEDED S196 by S200 record=ok verdict=RESOLVED
+SUPERSEDED S197 by S201 record=bad verdict=UNRESOLVED
+SUPERSEDED S198 by S202 record=ok verdict=RESOLVED
+GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+
+## state=real-wordcount rev=7f6aa835c229ee76182c3ca881123756f705119a exit=1
+LANE_REV=7f6aa835c229ee76182c3ca881123756f705119a SINCE_ROUND=79 TIPS=192 AUDITED=4
+ROW S199 record=ok quote_words=12 location=corpus/lessons/round-79-verifier-spotcheck.md:222@b78038299227 words=12 verdict=OK
+ROW S200 record=ok quote_words=20 location=corpus/QUALITY.md:1056@b78038299227 words=20 verdict=OK
+ROW S201 record=bad quote_words=24 location=R4 quote is 25 words, record says 24 verdict=UNRESOLVED
+ROW S202 record=ok quote_words=2 location=.ufo/waves/round-78/w1/R78ReviewB/atkB2-new-block-window.txt:11@3eb4a3cad8fe words=2 verdict=OK
+SUPERSEDED S196 by S200 record=ok verdict=RESOLVED
+SUPERSEDED S197 by S201 record=bad verdict=UNRESOLVED
+SUPERSEDED S198 by S202 record=ok verdict=RESOLVED
+GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+
+## state=real-bound-27 rev=00c7112ce50652317486338d5c3808df5a42237c exit=1
+LANE_REV=00c7112ce50652317486338d5c3808df5a42237c SINCE_ROUND=79 TIPS=192 AUDITED=4
+ROW S199 record=ok quote_words=12 location=corpus/lessons/round-79-verifier-spotcheck.md:222@b78038299227 words=12 verdict=OK
+ROW S200 record=ok quote_words=20 location=corpus/QUALITY.md:1056@b78038299227 words=20 verdict=OK
+ROW S201 record=bad quote_words=27 location=R4 quote is 27 words (contract bound is 25) verdict=UNRESOLVED
+ROW S202 record=ok quote_words=2 location=.ufo/waves/round-78/w1/R78ReviewB/atkB2-new-block-window.txt:11@3eb4a3cad8fe words=2 verdict=OK
+SUPERSEDED S196 by S200 record=ok verdict=RESOLVED
+SUPERSEDED S197 by S201 record=bad verdict=UNRESOLVED
+SUPERSEDED S198 by S202 record=ok verdict=RESOLVED
+GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+
+## state=real-no-record rev=c2731774301403ac228ed26aa722d41fe1642e11 exit=1
+LANE_REV=c2731774301403ac228ed26aa722d41fe1642e11 SINCE_ROUND=79 TIPS=192 AUDITED=4
+ROW S199 record=ok quote_words=12 location=corpus/lessons/round-79-verifier-spotcheck.md:222@b78038299227 words=12 verdict=OK
+ROW S200 record=ok quote_words=20 location=corpus/QUALITY.md:1056@b78038299227 words=20 verdict=OK
+ROW S201 record=none quote_words=- location=- verdict=UNRESOLVED
+ROW S202 record=ok quote_words=2 location=.ufo/waves/round-78/w1/R78ReviewB/atkB2-new-block-window.txt:11@3eb4a3cad8fe words=2 verdict=OK
+SUPERSEDED S196 by S200 record=ok verdict=RESOLVED
+SUPERSEDED S197 by S201 record=none verdict=UNRESOLVED
+SUPERSEDED S198 by S202 record=ok verdict=RESOLVED
+GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+
+## state=real-tip-defect rev=baa3c8ce83f55b7703caa420fb92a52791f46c7a exit=1
+LANE_REV=baa3c8ce83f55b7703caa420fb92a52791f46c7a SINCE_ROUND=79 TIPS=192 AUDITED=4
+ROW S199 record=bad quote_words=12 location=R3 quote absent from corpus/lessons/round-79-verifier-spotcheck.md:222 verdict=UNRESOLVED
+ROW S200 record=ok quote_words=20 location=corpus/QUALITY.md:1056@b78038299227 words=20 verdict=OK
+ROW S201 record=ok quote_words=25 location=corpus/QUALITY.md:1054@b78038299227 words=25 verdict=OK
+ROW S202 record=ok quote_words=2 location=.ufo/waves/round-78/w1/R78ReviewB/atkB2-new-block-window.txt:11@3eb4a3cad8fe words=2 verdict=OK
+SUPERSEDED S196 by S200 record=ok verdict=RESOLVED
+SUPERSEDED S197 by S201 record=ok verdict=RESOLVED
+SUPERSEDED S198 by S202 record=ok verdict=RESOLVED
+GATE_GROUNDING=FAIL unresolved=1 superseded_resolved=3 audited=S199,S200,S201,S202
+

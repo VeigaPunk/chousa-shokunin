@@ -3631,7 +3631,10 @@ enumerate:
    (the 27-word quote at `corpus/QUALITY.md:1056@b7803829`, the eleven-line span of
    `atkB2-new-block-window.txt@3eb4a3ca`) instead of counting a new row's existence, and that refuses
    a second `GATE-RECORD` for one id (`records_at()` currently keeps the last one silently).
-3. **carried debt** — round-79 routed defect 7 (the surviving payload-decoding channel) and defect 8
+3. **carried debt** — the twelve defective Gate records the round-80 scout measured beyond S196/S197/S198
+   (S170, S171, S173, S174, S175, S176, S178, S179, S182, S183, S191, S193: `.ufo/waves/round-80/w1/R80ScoutA/survey.md`
+   §1) closed by append-only supersession through the round-80 record grammar; round-79 routed defect 7
+   (the surviving payload-decoding channel) and defect 8
    (no `--selftest` on `matrix-battery-v7.py`, `forge-battery.py`, `selfcheck-v2.py`; `work-contract.py`
    never compares Case A's matrix exit) stay open and unclaimed until a control can fail without the
    fix.

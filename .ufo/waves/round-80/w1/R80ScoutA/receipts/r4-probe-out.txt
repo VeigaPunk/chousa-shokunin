@@ -1,0 +1,119 @@
+==============================================================================
+1. Can the counter EVER audit a row whose decision is a table row
+   (rounds 26-73)?  Plant S168 (a round-70 table decision).
+==============================================================================
+--- S168 with a GATE-RECORD   (scratch commit 9b3dd4db7782)
+    LANE_REV=9b3dd4db778222321dba67060aa2f40d0a3b2048 SINCE_ROUND=79 TIPS=191 AUDITED=4
+    ROW S168 record=ok quote_words=16 location=corpus/lessons/round-69-verifier-spotcheck.md:91@b78038299227 words=16 verdict=OK
+    ROW S196 record=none quote_words=- location=- verdict=UNRESOLVED
+    ROW S197 record=none quote_words=- location=- verdict=UNRESOLVED
+    ROW S198 record=none quote_words=- location=- verdict=UNRESOLVED
+    GATE_GROUNDING=FAIL unresolved=3 superseded_resolved=0 audited=S168,S196,S197,S198
+    exit=1
+
+==============================================================================
+2. R3: is the lesson's own quote string accepted for S193?
+==============================================================================
+--- S193 lesson quote (backticks stripped from SKILL.md)   (scratch commit b1ff85fc998c)
+    LANE_REV=b1ff85fc998c948f49cedd95672ac8f6d446e0b0 SINCE_ROUND=79 TIPS=191 AUDITED=4
+    ROW S193 record=bad quote_words=11 location=R3 quote absent from corpus/lessons/round-77-verifier-spotcheck.md:156 verdict=UNRESOLVED
+    ROW S196 record=none quote_words=- location=- verdict=UNRESOLVED
+    ROW S197 record=none quote_words=- location=- verdict=UNRESOLVED
+    ROW S198 record=none quote_words=- location=- verdict=UNRESOLVED
+    GATE_GROUNDING=FAIL unresolved=4 superseded_resolved=0 audited=S193,S196,S197,S198
+    exit=1
+
+--- S193 file's real string (backticked SKILL.md)   (scratch commit d87207c3cdef)
+    LANE_REV=d87207c3cdef986122d71badbc15d1a8cbfdfe23 SINCE_ROUND=79 TIPS=191 AUDITED=4
+    ROW S193 record=ok quote_words=11 location=corpus/lessons/round-77-verifier-spotcheck.md:156@53dbd512d0ab words=11 verdict=OK
+    ROW S196 record=none quote_words=- location=- verdict=UNRESOLVED
+    ROW S197 record=none quote_words=- location=- verdict=UNRESOLVED
+    ROW S198 record=none quote_words=- location=- verdict=UNRESOLVED
+    GATE_GROUNDING=FAIL unresolved=3 superseded_resolved=0 audited=S193,S196,S197,S198
+    exit=1
+
+==============================================================================
+3. R3 with a quote that spans two lines of the source file
+==============================================================================
+--- S174 quote spans lines 308-309 of the receipt   (scratch commit 3ae4c6d81801)
+    LANE_REV=3ae4c6d81801d558f49ad9f0f8f90af7116d7fba SINCE_ROUND=79 TIPS=191 AUDITED=4
+    ROW S174 record=bad quote_words=22 location=R3 quote absent from corpus/evidence/round70/controls/after-battery-completes-r70.txt:308 verdict=UNRESOLVED
+    ROW S196 record=none quote_words=- location=- verdict=UNRESOLVED
+    ROW S197 record=none quote_words=- location=- verdict=UNRESOLVED
+    ROW S198 record=none quote_words=- location=- verdict=UNRESOLVED
+    GATE_GROUNDING=FAIL unresolved=4 superseded_resolved=0 audited=S174,S196,S197,S198
+    exit=1
+
+--- S191 quote spans lines 163-164 of the spot-check   (scratch commit 357723faa85a)
+    LANE_REV=357723faa85a60efe7b9e9a14dd016c6179e5a94 SINCE_ROUND=79 TIPS=191 AUDITED=4
+    ROW S191 record=bad quote_words=11 location=R3 quote absent from corpus/lessons/round-76-verifier-spotcheck.md:163 verdict=UNRESOLVED
+    ROW S196 record=none quote_words=- location=- verdict=UNRESOLVED
+    ROW S197 record=none quote_words=- location=- verdict=UNRESOLVED
+    ROW S198 record=none quote_words=- location=- verdict=UNRESOLVED
+    GATE_GROUNDING=FAIL unresolved=4 superseded_resolved=0 audited=S191,S196,S197,S198
+    exit=1
+
+==============================================================================
+4. R4: the S196 / S197 word counts, corrected vs stated
+==============================================================================
+--- S196 words=27 (corrected) and S197 words=25 (corrected)   (scratch commit 58174046d9d6)
+    LANE_REV=58174046d9d62d6a6e2422d37bb09b9f28ee3ee8 SINCE_ROUND=79 TIPS=191 AUDITED=3
+    ROW S196 record=bad quote_words=27 location=R4 quote is 27 words (contract bound is 25) verdict=UNRESOLVED
+    ROW S197 record=ok quote_words=25 location=corpus/QUALITY.md:1054@ee70e6df19fe words=25 verdict=OK
+    ROW S198 record=none quote_words=- location=- verdict=UNRESOLVED
+    GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=0 audited=S196,S197,S198
+    exit=1
+
+--- S196 words=25 and S197 words=24 (the lesson's stated counts)   (scratch commit 4c414711ee18)
+    LANE_REV=4c414711ee18a56dd0e7250a87239285efbe802f SINCE_ROUND=79 TIPS=191 AUDITED=3
+    ROW S196 record=bad quote_words=25 location=R4 quote is 27 words, record says 25 verdict=UNRESOLVED
+    ROW S197 record=bad quote_words=24 location=R4 quote is 25 words, record says 24 verdict=UNRESOLVED
+    ROW S198 record=none quote_words=- location=- verdict=UNRESOLVED
+    GATE_GROUNDING=FAIL unresolved=3 superseded_resolved=0 audited=S196,S197,S198
+    exit=1
+
+--- S196 words=27 but a >25-word quote (R4 bound)   (scratch commit 88cd6a6a2cd2)
+    LANE_REV=88cd6a6a2cd2357495ad2a65945943ffb247c560 SINCE_ROUND=79 TIPS=191 AUDITED=3
+    ROW S196 record=bad quote_words=27 location=R3 quote absent from corpus/QUALITY.md:1056 verdict=UNRESOLVED
+    ROW S197 record=none quote_words=- location=- verdict=UNRESOLVED
+    ROW S198 record=none quote_words=- location=- verdict=UNRESOLVED
+    GATE_GROUNDING=FAIL unresolved=3 superseded_resolved=0 audited=S196,S197,S198
+    exit=1
+
+==============================================================================
+5. R3 for S198 (the quote absent from its cited receipt)
+==============================================================================
+--- S198 with its lesson quote   (scratch commit e5e8963dfa01)
+    LANE_REV=e5e8963dfa011b731a5e9cd3a116c5c994beb55c SINCE_ROUND=79 TIPS=191 AUDITED=3
+    ROW S196 record=none quote_words=- location=- verdict=UNRESOLVED
+    ROW S197 record=none quote_words=- location=- verdict=UNRESOLVED
+    ROW S198 record=bad quote_words=10 location=R3 quote absent from .ufo/waves/round-78/w1/R78ReviewB/atkB2-new-block-window.txt:9 verdict=UNRESOLVED
+    GATE_GROUNDING=FAIL unresolved=3 superseded_resolved=0 audited=S196,S197,S198
+    exit=1
+
+==============================================================================
+6. R4 for S170 / S173 / S178 with the lesson's stated counts vs measured
+==============================================================================
+--- S170=10, S173=21, S178=11 (lesson stated)   (scratch commit 12ec23509e0a)
+    LANE_REV=12ec23509e0a38fb581ff1dab87d4af43251e6d8 SINCE_ROUND=79 TIPS=191 AUDITED=6
+    ROW S170 record=bad quote_words=10 location=R4 quote is 6 words, record says 10 verdict=UNRESOLVED
+    ROW S173 record=bad quote_words=21 location=R4 quote is 20 words, record says 21 verdict=UNRESOLVED
+    ROW S178 record=bad quote_words=11 location=R4 quote is 13 words, record says 11 verdict=UNRESOLVED
+    ROW S196 record=none quote_words=- location=- verdict=UNRESOLVED
+    ROW S197 record=none quote_words=- location=- verdict=UNRESOLVED
+    ROW S198 record=none quote_words=- location=- verdict=UNRESOLVED
+    GATE_GROUNDING=FAIL unresolved=6 superseded_resolved=0 audited=S170,S173,S178,S196,S197,S198
+    exit=1
+
+--- S170=6, S173=20, S178=13 (measured)   (scratch commit c09f1d5d571c)
+    LANE_REV=c09f1d5d571ce84943e930dccc2eeebf350b8b0a SINCE_ROUND=79 TIPS=191 AUDITED=6
+    ROW S170 record=ok quote_words=6 location=tools/research-gate.sh:7904@1db6babf5286 words=6 verdict=OK
+    ROW S173 record=ok quote_words=20 location=corpus/lessons/round-70-verifier-spotcheck.md:84@11b51988d387 words=20 verdict=OK
+    ROW S178 record=ok quote_words=13 location=corpus/lessons/round-71-verifier-spotcheck.md:87@7851c4ce29ef words=13 verdict=OK
+    ROW S196 record=none quote_words=- location=- verdict=UNRESOLVED
+    ROW S197 record=none quote_words=- location=- verdict=UNRESOLVED
+    ROW S198 record=none quote_words=- location=- verdict=UNRESOLVED
+    GATE_GROUNDING=FAIL unresolved=3 superseded_resolved=0 audited=S170,S173,S178,S196,S197,S198
+    exit=1
+
+scratch clone reset to BASE: True

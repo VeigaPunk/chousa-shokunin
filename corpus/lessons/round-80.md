@@ -132,6 +132,17 @@ after-state.
    table's coverage — the predicate's `oracles_rejected=5/5` says nothing about an oracle the round
    did not name. `R80CriticA` finding F4.
 
+## Scope of the record class (measured, not closed)
+
+`R80ScoutA` re-opened every located quote in the `## Gate` blocks of lessons 70–79 at its cited
+revision: **33 records, 17 ok, 10 count-mismatched, 5 quote-absent, 1 stating no quote**
+(`.ufo/waves/round-80/w1/R80ScoutA/survey.md` §1). This round closed **three** of the fifteen
+defective records (S196/S197/S198) and landed the machine check that finds the rest; the other
+twelve (S170, S171, S173, S174, S175, S176, S178, S179, S182, S183, S191, S193) stay open and are
+routed to round 81's plan. Five of the "absent" verdicts are line-wrapped fragments that are
+contiguous only after whitespace normalisation (the survey states this limit itself), so the class
+counts, not each row, are the finding.
+
 ## Mistakes
 
 | class | evidence | captured-by | fix |

@@ -1,0 +1,84 @@
+====================================================================================================
+A. FRAGMENT PROVENANCE: each extracted quote must appear verbatim in its lesson's ## Gate block
+====================================================================================================
+  PROVENANCE-FAIL r71 S177: 'the battery completes and prints `RESEARCH_GATE_SELFTEST: FAIL (k/N ca' not in lesson Gate block
+  PROVENANCE-FAIL r78 S193: 'SKILL.md registry row `round77 order-and-content battery` is missing i' not in lesson Gate block
+  PROVENANCE-FAIL r78 S194: 'An outer battery prints no invertible answer key, no strippable subjec' not in lesson Gate block
+  PROVENANCE-FAIL r79 S196: 'A subject-identity salt is defeated by any normalizer that knows its m' not in lesson Gate block
+  PROVENANCE-FAIL r79 S197: 'A self-assessment counter validates each resolution line against the b' not in lesson Gate block
+  all fragments verbatim in their lesson Gate block: False
+
+====================================================================================================
+B. THE TABLE: re-open the cited path at the cited revision, grep -c the quote, wc -w it
+====================================================================================================
+row    les  stated  meas  grep  cited_lines verdict       path
+--------------------------------------------------------------
+S168   70        4     4     1  12          ok            .ufo/waves/round-69/preflight-final.txt
+S169   70       15    15     2  3970-3971   ok            tools/research-gate.sh
+S170   70       10    11    11  7904-7905   mismatch      tools/research-gate.sh
+S171   70       10     9     0  -           absent        corpus/evidence/round70/controls/recon-run-r70.txt
+S172   70       16    16     1  -           ok            corpus/lessons/round-69-verifier-spotcheck.md
+S173   71       21    20     1  -           mismatch      corpus/lessons/round-70-verifier-spotcheck.md
+S174   71       22    22     0  -           absent        corpus/evidence/round70/controls/after-battery-compl
+S175   71        6     5     3  -           mismatch      corpus/evidence/round71/controls/probe-timeout-capab
+S176   71       10     9     1  -           mismatch      corpus/evidence/round70/controls/before-g08-selftest
+S177   71       12    12     1  83          ok            SKILL.md
+S178   72       11    13     1  -           mismatch      corpus/lessons/round-71-verifier-spotcheck.md
+S179   72        6     5     3  -           mismatch      corpus/evidence/round72/controls/probe-r72-sizing.tx
+S180   73     None    11     1  90          ok            corpus/lessons/round-72-verifier-spotcheck.md
+S181   73     None    14     1  1           ok            corpus/evidence/round72/controls/after-r72-correctio
+S182   74       18    16     1  -           mismatch      corpus/lessons/round-73-verifier-spotcheck.md
+S183   74       13    11     1  163         mismatch      corpus/evidence/round73/c2-count.py
+S184a  75       20    20     1  73          ok            corpus/lessons/round-74-verifier-spotcheck.md
+S184b  75       13    13     1  74          ok            corpus/lessons/round-74-verifier-spotcheck.md
+S185   75     None  None     0  1002        no-quote-statedcorpus/QUALITY.md
+S186a  75       13    13     1  3           ok            .ufo/waves/round-74/w1/R74Critic/forge-order-oracle.
+S186b  75        2     2     1  11          ok            .ufo/waves/round-74/w1/R74Critic/forge-order-oracle.
+S187   76       14    14     1  125         ok            corpus/lessons/round-75-verifier-spotcheck.md
+S188   76       16    16     1  130         ok            corpus/lessons/round-75-verifier-spotcheck.md
+S189   76     None     3     2  27          ok            corpus/evidence/round76/claims.md
+S190   77       10    10     1  150         ok            corpus/lessons/round-76-verifier-spotcheck.md
+S191   77       11    11     0  163-164     absent        corpus/lessons/round-76-verifier-spotcheck.md
+S192   77     None    13     1  1           ok            corpus/evidence/round77/claims.md
+S193   78       11    11     0  156         absent        corpus/lessons/round-77-verifier-spotcheck.md
+S194   78       20    20     1  1046        ok            corpus/QUALITY.md
+S195   78     None     3     1  9           ok            corpus/evidence/round78/controls/forge-battery-after
+S196   79       25    27     1  1056        mismatch      corpus/QUALITY.md
+S197   79       24    25     1  1054        mismatch      corpus/QUALITY.md
+S198   79     None    10     0  1-20        absent        .ufo/waves/round-78/w1/R78ReviewB/atkB2-new-block-wi
+
+====================================================================================================
+C. DEFECTIVE RECORDS BEYOND S196/S197/S198
+====================================================================================================
+  [NEW] S170 (lesson round-70): mismatch  stated=10 measured=11 grep_c=11 hits=[6188, 6268, 6269, 6288, 6289, 6712, 6713, 7316, 7904, 7905, 8047]
+        path=tools/research-gate.sh @ 1db6babf5286 cited_lines=[7904, 7905]
+  [NEW] S171 (lesson round-70): absent  stated=10 measured=9 grep_c=0 hits=[]
+        path=corpus/evidence/round70/controls/recon-run-r70.txt @ b2f88eccf603 cited_lines=None
+  [NEW] S173 (lesson round-71): mismatch  stated=21 measured=20 grep_c=1 hits=[84]
+        path=corpus/lessons/round-70-verifier-spotcheck.md @ 11b51988d387 cited_lines=None
+  [NEW] S174 (lesson round-71): absent  stated=22 measured=22 grep_c=0 hits=[]
+        path=corpus/evidence/round70/controls/after-battery-completes-r70.txt @ 11b51988d387 cited_lines=None
+  [NEW] S175 (lesson round-71): mismatch  stated=6 measured=5 grep_c=3 hits=[5, 10, 16]
+        path=corpus/evidence/round71/controls/probe-timeout-capability-r71.txt @ 58232b27d1ea cited_lines=None
+  [NEW] S176 (lesson round-71): mismatch  stated=10 measured=9 grep_c=1 hits=[65]
+        path=corpus/evidence/round70/controls/before-g08-selftest-partial.txt @ 11b51988d387 cited_lines=None
+  [NEW] S178 (lesson round-72): mismatch  stated=11 measured=13 grep_c=1 hits=[87]
+        path=corpus/lessons/round-71-verifier-spotcheck.md @ 7851c4ce29ef cited_lines=None
+  [NEW] S179 (lesson round-72): mismatch  stated=6 measured=5 grep_c=3 hits=[6, 11, 16]
+        path=corpus/evidence/round72/controls/probe-r72-sizing.txt @ 97b6ea754b23 cited_lines=None
+  [NEW] S182 (lesson round-74): mismatch  stated=18 measured=16 grep_c=1 hits=[67]
+        path=corpus/lessons/round-73-verifier-spotcheck.md @ 8a28732b3c15 cited_lines=None
+  [NEW] S183 (lesson round-74): mismatch  stated=13 measured=11 grep_c=1 hits=[163]
+        path=corpus/evidence/round73/c2-count.py @ 8a28732b3c15 cited_lines=[163]
+  [NEW] S191 (lesson round-77): absent  stated=11 measured=11 grep_c=0 hits=[]
+        path=corpus/lessons/round-76-verifier-spotcheck.md @ 6defa58dbdc4 cited_lines=[163, 164]
+  [NEW] S193 (lesson round-78): absent  stated=11 measured=11 grep_c=0 hits=[]
+        path=corpus/lessons/round-77-verifier-spotcheck.md @ 53dbd512d0ab cited_lines=[156]
+  [KNOWN (r79 closure)] S196 (lesson round-79): mismatch  stated=25 measured=27 grep_c=1 hits=[1056]
+        path=corpus/QUALITY.md @ ee70e6df19fe cited_lines=[1056]
+  [KNOWN (r79 closure)] S197 (lesson round-79): mismatch  stated=24 measured=25 grep_c=1 hits=[1054]
+        path=corpus/QUALITY.md @ ee70e6df19fe cited_lines=[1054]
+  [KNOWN (r79 closure)] S198 (lesson round-79): absent  stated=None measured=10 grep_c=0 hits=[]
+        path=.ufo/waves/round-78/w1/R78ReviewB/atkB2-new-block-window.txt @ 3eb4a3cad8fe cited_lines=[1, 20]
+
+wrote /fast/scratch/hyaku/chousa-r80/R80ScoutA/table.json

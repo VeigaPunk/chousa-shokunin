@@ -1,0 +1,109 @@
+# gate-grounding-check.py mutation grid (instrument 1)
+# pristine sha256: d9e426216665a098cd90adf8fbf5e5dd62e02dc7b5b707c322b404b3eb55c553
+# fixture: scratch clone /fast/scratch/hyaku/chousa-r80/R80MutationA/lane (git clone --shared of the lane)
+# states: {"clean": "0b2494f76de5dd35095dc862441a9aedd7eee672", "tree-rev": "1afe4afaa6bca2d4718d9899f09bf307d7f59930", "prefix-rev": "02f53c23eec8e42087a34eee4f890ccb8c8015b1", "absent-quote": "552bf7ada2ef3f6616a7840c26e617d3aff72107", "off-by-one": "ca1bab5029ebab1caab0e7199f8aa9e2b872ec96", "wordcount": "eb1f935ddb9a30db2fed636884f4da1e98b38b89", "bound-27": "15f3bca9f43bed34af8f25578cb5aab79ca6fc46", "no-record": "02d6ded630910a1e16f0f1878c605f522ffef3d8", "tip-defect": "41b570d4deb0b5823ea0a42a49bd33bb81e55144"}
+# columns: clean tree-rev prefix-rev absent-quote off-by-one wordcount bound-27 no-record tip-defect
+
+## exit code grid (0=PASS line printed, 1=FAIL)
+state                             clean     tree-rev   prefix-rev  absent-quot   off-by-one    wordcount     bound-27    no-record   tip-defect
+PRISTINE                              0            1            1            1            1            1            1            1            1
+M1-r1-drop                            0            0            1            1            1            1            1            1            1
+M2-prefix-resolves                    0            0            0            1            1            1            1            1            1
+M3-r3-substring-skip                  0            1            1            0            0            1            1            1            1
+M4-line-off-by-one                    1            1            1            1            1            1            1            1            1
+M5-words-equality-drop                0            1            1            1            1            0            1            1            1
+M6-bound-drop                         0            1            1            1            1            1            0            1            1
+M7-audited-empty                      0            1            1            1            1            1            1            1            0
+M8-r2-drop                            0            1            1            1            1            1            1            1            1
+
+## predicate line per (instrument, state)
+-- PRISTINE
+   clean        exit=0 GATE_GROUNDING=PASS unresolved=0 superseded_resolved=3 audited=S199,S200,S201,S202
+   tree-rev     exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   prefix-rev   exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   absent-quote exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   off-by-one   exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   wordcount    exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   bound-27     exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   no-record    exit=1 GATE_GROUNDING=FAIL unresolved=1 superseded_resolved=2 audited=S199,S200,S202
+   tip-defect   exit=1 GATE_GROUNDING=FAIL unresolved=1 superseded_resolved=3 audited=S199,S200,S201,S202
+-- M1-r1-drop
+   clean        exit=0 GATE_GROUNDING=PASS unresolved=0 superseded_resolved=3 audited=S199,S200,S201,S202
+   tree-rev     exit=0 GATE_GROUNDING=PASS unresolved=0 superseded_resolved=3 audited=S199,S200,S201,S202
+   prefix-rev   exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   absent-quote exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   off-by-one   exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   wordcount    exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   bound-27     exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   no-record    exit=1 GATE_GROUNDING=FAIL unresolved=1 superseded_resolved=2 audited=S199,S200,S202
+   tip-defect   exit=1 GATE_GROUNDING=FAIL unresolved=1 superseded_resolved=3 audited=S199,S200,S201,S202
+-- M2-prefix-resolves
+   clean        exit=0 GATE_GROUNDING=PASS unresolved=0 superseded_resolved=3 audited=S199,S200,S201,S202
+   tree-rev     exit=0 GATE_GROUNDING=PASS unresolved=0 superseded_resolved=3 audited=S199,S200,S201,S202
+   prefix-rev   exit=0 GATE_GROUNDING=PASS unresolved=0 superseded_resolved=3 audited=S199,S200,S201,S202
+   absent-quote exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   off-by-one   exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   wordcount    exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   bound-27     exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   no-record    exit=1 GATE_GROUNDING=FAIL unresolved=1 superseded_resolved=2 audited=S199,S200,S202
+   tip-defect   exit=1 GATE_GROUNDING=FAIL unresolved=1 superseded_resolved=3 audited=S199,S200,S201,S202
+-- M3-r3-substring-skip
+   clean        exit=0 GATE_GROUNDING=PASS unresolved=0 superseded_resolved=3 audited=S199,S200,S201,S202
+   tree-rev     exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   prefix-rev   exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   absent-quote exit=0 GATE_GROUNDING=PASS unresolved=0 superseded_resolved=3 audited=S199,S200,S201,S202
+   off-by-one   exit=0 GATE_GROUNDING=PASS unresolved=0 superseded_resolved=3 audited=S199,S200,S201,S202
+   wordcount    exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   bound-27     exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   no-record    exit=1 GATE_GROUNDING=FAIL unresolved=1 superseded_resolved=2 audited=S199,S200,S202
+   tip-defect   exit=1 GATE_GROUNDING=FAIL unresolved=1 superseded_resolved=3 audited=S199,S200,S201,S202
+-- M4-line-off-by-one
+   clean        exit=1 GATE_GROUNDING=FAIL unresolved=7 superseded_resolved=0 audited=S199,S200,S201,S202
+   tree-rev     exit=1 GATE_GROUNDING=FAIL unresolved=7 superseded_resolved=0 audited=S199,S200,S201,S202
+   prefix-rev   exit=1 GATE_GROUNDING=FAIL unresolved=7 superseded_resolved=0 audited=S199,S200,S201,S202
+   absent-quote exit=1 GATE_GROUNDING=FAIL unresolved=7 superseded_resolved=0 audited=S199,S200,S201,S202
+   off-by-one   exit=1 GATE_GROUNDING=FAIL unresolved=7 superseded_resolved=0 audited=S199,S200,S201,S202
+   wordcount    exit=1 GATE_GROUNDING=FAIL unresolved=7 superseded_resolved=0 audited=S199,S200,S201,S202
+   bound-27     exit=1 GATE_GROUNDING=FAIL unresolved=7 superseded_resolved=0 audited=S199,S200,S201,S202
+   no-record    exit=1 GATE_GROUNDING=FAIL unresolved=6 superseded_resolved=0 audited=S199,S200,S202
+   tip-defect   exit=1 GATE_GROUNDING=FAIL unresolved=7 superseded_resolved=0 audited=S199,S200,S201,S202
+-- M5-words-equality-drop
+   clean        exit=0 GATE_GROUNDING=PASS unresolved=0 superseded_resolved=3 audited=S199,S200,S201,S202
+   tree-rev     exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   prefix-rev   exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   absent-quote exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   off-by-one   exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   wordcount    exit=0 GATE_GROUNDING=PASS unresolved=0 superseded_resolved=3 audited=S199,S200,S201,S202
+   bound-27     exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   no-record    exit=1 GATE_GROUNDING=FAIL unresolved=1 superseded_resolved=2 audited=S199,S200,S202
+   tip-defect   exit=1 GATE_GROUNDING=FAIL unresolved=1 superseded_resolved=3 audited=S199,S200,S201,S202
+-- M6-bound-drop
+   clean        exit=0 GATE_GROUNDING=PASS unresolved=0 superseded_resolved=3 audited=S199,S200,S201,S202
+   tree-rev     exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   prefix-rev   exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   absent-quote exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   off-by-one   exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   wordcount    exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   bound-27     exit=0 GATE_GROUNDING=PASS unresolved=0 superseded_resolved=3 audited=S199,S200,S201,S202
+   no-record    exit=1 GATE_GROUNDING=FAIL unresolved=1 superseded_resolved=2 audited=S199,S200,S202
+   tip-defect   exit=1 GATE_GROUNDING=FAIL unresolved=1 superseded_resolved=3 audited=S199,S200,S201,S202
+-- M7-audited-empty
+   clean        exit=0 GATE_GROUNDING=PASS unresolved=0 superseded_resolved=3 audited=
+   tree-rev     exit=1 GATE_GROUNDING=FAIL unresolved=1 superseded_resolved=2 audited=
+   prefix-rev   exit=1 GATE_GROUNDING=FAIL unresolved=1 superseded_resolved=2 audited=
+   absent-quote exit=1 GATE_GROUNDING=FAIL unresolved=1 superseded_resolved=2 audited=
+   off-by-one   exit=1 GATE_GROUNDING=FAIL unresolved=1 superseded_resolved=2 audited=
+   wordcount    exit=1 GATE_GROUNDING=FAIL unresolved=1 superseded_resolved=2 audited=
+   bound-27     exit=1 GATE_GROUNDING=FAIL unresolved=1 superseded_resolved=2 audited=
+   no-record    exit=1 GATE_GROUNDING=FAIL unresolved=1 superseded_resolved=2 audited=
+   tip-defect   exit=0 GATE_GROUNDING=PASS unresolved=0 superseded_resolved=3 audited=
+-- M8-r2-drop
+   clean        exit=0 GATE_GROUNDING=PASS unresolved=0 superseded_resolved=3 audited=S199,S200,S201,S202
+   tree-rev     exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   prefix-rev   exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   absent-quote exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   off-by-one   exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   wordcount    exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   bound-27     exit=1 GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+   no-record    exit=1 GATE_GROUNDING=FAIL unresolved=1 superseded_resolved=2 audited=S199,S200,S202
+   tip-defect   exit=1 GATE_GROUNDING=FAIL unresolved=1 superseded_resolved=3 audited=S199,S200,S201,S202
