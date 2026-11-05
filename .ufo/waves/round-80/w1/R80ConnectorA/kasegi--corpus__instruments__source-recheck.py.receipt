@@ -1,0 +1,418 @@
+COMMAND git -C /home/vgpnk/Projects/shokunin/kasegi-shokunin show 3cc8cd45cb6f8ca49a292f3b2647c5bddac71486:corpus/instruments/source-recheck.py
+EXIT 0
+SHA256 fd2e01e88c8c45a949f48d67b3154ae87a95aeba0b6a9c42fbf64641b5b9c003
+1: #!/usr/bin/env python3
+2: """Recheck pinned quotes against checked-in source snapshots.
+3: 
+4: Usage: python3 corpus/instruments/source-recheck.py --manifest PATH [--source ID]
+5:        python3 corpus/instruments/source-recheck.py --selftest
+6: 
+7: Manifest paths are relative to the manifest directory. This instrument reads
+8: only local files; a successful check verifies captured bytes, not current
+9: upstream availability or freshness.
+10: 
+11: Round-30 Q9 enforcement (C1 B1/B2):
+12: - B1: every record's `path` stem must equal its `id`
+13:   (reason=stem-mismatch, exit 1).
+14: - B2: a quote whose normalized text occurs more than once passes only when
+15:   its declared `anchor` line verifies (anchor=N-ok); a missing, out-of-range,
+16:   or broken anchor fails with reason=occurrence-not-unique /
+17:   reason=anchor-out-of-range / reason=anchor-broken (exit 1).
+18: """
+19: import argparse
+20: import hashlib
+21: import json
+22: import os
+23: import re
+24: import subprocess
+25: import sys
+26: import tempfile
+27: from pathlib import Path
+28: 
+29: SCHEMA_VERSION = 1
+30: ID_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*\Z")
+31: SHA256_RE = re.compile(r"[0-9a-f]{64}\Z")
+32: MARKUP_RE = re.compile(r"</?u>")
+33: MIN_QUOTE_CHARS = 12   # normalized minimum: a shorter "quote" matches any capture
+34: 
+35: 
+36: def normalize(text):
+37:     """Collapse whitespace and drop capture markup (<u>/</u>) before matching."""
+38:     return " ".join(MARKUP_RE.sub("", text).split())
+39: 
+40: 
+41: def emit(out, stable_id, status, detail=""):
+42:     line = f"{stable_id} {status}"
+43:     if detail:
+44:         line += f" {detail}"
+45:     print(line, file=out)
+46: 
+47: 
+48: def valid_id(value):
+49:     return isinstance(value, str) and ID_RE.fullmatch(value) is not None
+50: 
+51: 
+52: def load_manifest(path, out):
+53:     try:
+54:         manifest_path = Path(path).resolve(strict=True)
+55:         raw = manifest_path.read_bytes()
+56:         data = json.loads(raw.decode("utf-8"))
+57:     except FileNotFoundError:
+58:         emit(out, "manifest", "UNAVAILABLE", "reason=missing")
+59:         return None, None
+60:     except (OSError, UnicodeError, json.JSONDecodeError):
+61:         emit(out, "manifest", "UNAVAILABLE", "reason=unreadable-or-invalid")
+62:         return None, None
+63: 
+64:     if not isinstance(data, dict) or type(data.get("schema_version")) is not int or data["schema_version"] != SCHEMA_VERSION:
+65:         emit(out, "manifest", "UNAVAILABLE", "reason=unsupported-schema")
+66:         return None, None
+67:     records = data.get("sources")
+68:     if not isinstance(records, list) or not records:
+69:         emit(out, "manifest", "UNAVAILABLE", "reason=missing-sources")
+70:         return None, None
+71: 
+72:     seen = set()
+73:     for index, record in enumerate(records, start=1):
+74:         if not isinstance(record, dict) or not valid_id(record.get("id")):
+75:             emit(out, f"manifest:record-{index}", "UNAVAILABLE", "reason=invalid-source-id")
+76:             return None, None
+77:         if record["id"] in seen:
+78:             emit(out, "manifest", "UNAVAILABLE", "reason=duplicate-source-id")
+79:             return None, None
+80:         seen.add(record["id"])
+81: 
+82:     return manifest_path, records
+83: 
+84: 
+85: def anchor_verdict(assertion, raw_lines, occurrences):
+86:     """Return (note, verdict) for one assertion (QUALITY Q9).
+87: 
+88:     note is the receipt's anchor note; verdict is one of:
+89:       "unique"        — quote occurs once; no anchor required
+90:       "ok"           — declared anchor verifies (anchor=N-ok)
+91:       "missing"       — non-unique quote carries no anchor
+92:       "out-of-range"  — declared anchor outside the snapshot
+93:       "broken"        — declared anchor does not hold the normalized quote
+94: 
+95:     A quote that occurs more than once must carry an `anchor` line number: the
+96:     pin is verified against the raw snapshot, so a non-unique quote names where
+97:     it is meant to be read instead of relying on substring presence. A unique
+98:     quote needs no anchor and reports no note; a declared anchor that does not
+99:     hold the quote is reported as `anchor=N-BROKEN`. The caller decides whether
+100:     the verdict is fatal (B2: any verdict other than "ok" on a non-unique
+101:     quote is a failure).
+102:     """
+103:     anchor = assertion.get("anchor")
+104:     if anchor is None:
+105:         if occurrences <= 1:
+106:             return "", "unique"
+107:         return " anchor=MISSING", "missing"
+108:     if type(anchor) is not int or anchor < 1 or anchor > len(raw_lines):
+109:         return " anchor=OUT-OF-RANGE", "out-of-range"
+110:     window = " ".join(raw_lines[max(0, anchor - 1):anchor + 3])
+111:     expected = normalize(assertion["quote"])
+112:     if expected and expected in normalize(window):
+113:         return " anchor=%d-ok" % anchor, "ok"
+114:     return " anchor=%d-BROKEN" % anchor, "broken"
+115: 
+116: 
+117: def check_source(manifest_path, record, out):
+118:     source_id = record["id"]
+119:     path = record.get("path")
+120:     if not isinstance(path, str) or not path or Path(path).is_absolute():
+121:         emit(out, f"{source_id}:manifest", "UNAVAILABLE", "reason=invalid-path")
+122:         return 2
+123:     # B1: the capture file stem must equal the record id (QUALITY Q9).
+124:     if Path(path).stem != source_id:
+125:         emit(out, f"{source_id}:manifest", "MISMATCH", "reason=stem-mismatch")
+126:         return 1
+127: 
+128:     expected = record.get("sha256")
+129:     if not isinstance(expected, str) or SHA256_RE.fullmatch(expected) is None:
+130:         emit(out, f"{source_id}:manifest", "UNAVAILABLE", "reason=invalid-sha256")
+131:         return 2
+132: 
+133:     quotes = record.get("quotes")
+134:     if not isinstance(quotes, list) or not quotes:
+135:         emit(out, f"{source_id}:manifest", "UNAVAILABLE", "reason=missing-quotes")
+136:         return 2
+137:     quote_ids = set()
+138:     for index, assertion in enumerate(quotes, start=1):
+139:         if not isinstance(assertion, dict) or not valid_id(assertion.get("id")):
+140:             emit(out, f"{source_id}:quote-{index}", "UNAVAILABLE", "reason=invalid-quote-id")
+141:             return 2
+142:         if assertion["id"] in quote_ids:
+143:             emit(out, f"{source_id}:manifest", "UNAVAILABLE", "reason=duplicate-quote-id")
+144:             return 2
+145:         quote_ids.add(assertion["id"])
+146:         if not isinstance(assertion.get("quote"), str) or not assertion["quote"]:
+147:             emit(out, f"{source_id}:{assertion['id']}", "UNAVAILABLE", "reason=empty-quote")
+148:             return 2
+149:         # A quote with no substance after normalization (' ', '<u></u>') matched
+150:         # any capture and would pass silently (r24 RevC1Control forgery route).
+151:         if len(normalize(assertion["quote"])) < MIN_QUOTE_CHARS:
+152:             emit(out, f"{source_id}:{assertion['id']}", "UNAVAILABLE",
+153:                  "reason=quote-too-short-to-be-evidence")
+154:             return 2
+155: 
+156:     base = manifest_path.parent
+157:     try:
+158:         base = base.resolve(strict=True)
+159:         resolved = (base / path).resolve(strict=True)
+160:         if os.path.commonpath((str(base), str(resolved))) != str(base):
+161:             emit(out, f"{source_id}:source", "UNAVAILABLE", "reason=outside-manifest-directory")
+162:             return 2
+163:         source_bytes = resolved.read_bytes()
+164:     except FileNotFoundError:
+165:         emit(out, f"{source_id}:source", "UNAVAILABLE", "reason=missing")
+166:         return 2
+167:     except (OSError, RuntimeError, ValueError):
+168:         emit(out, f"{source_id}:source", "UNAVAILABLE", "reason=unreadable")
+169:         return 2
+170: 
+171:     actual = hashlib.sha256(source_bytes).hexdigest()
+172:     if actual != expected:
+173:         emit(out, f"{source_id}:sha256", "MISMATCH", f"expected={expected} actual={actual}")
+174:         return 1
+175: 
+176:     try:
+177:         source_text = source_bytes.decode("utf-8")
+178:     except UnicodeDecodeError:
+179:         emit(out, f"{source_id}:source", "UNAVAILABLE", "reason=not-utf8")
+180:         return 2
+181: 
+182:     emit(out, f"{source_id}:sha256", "OK")
+183:     status = 0
+184:     normalized_source = normalize(source_text)
+185:     raw_lines = source_text.splitlines()
+186:     for assertion in sorted(quotes, key=lambda item: item["id"]):
+187:         quote_id = assertion["id"]
+188:         occurrences = normalized_source.count(normalize(assertion["quote"]))
+189:         anchor_note, anchor_verdict_result = anchor_verdict(assertion, raw_lines, occurrences)
+190:         # B2: a non-unique quote passes only when its anchor verifies; a
+191:         # missing, out-of-range, or broken anchor is a failure (QUALITY Q9).
+192:         if occurrences > 1 and anchor_verdict_result != "ok":
+193:             anchor_reasons = {
+194:                 "missing": "reason=occurrence-not-unique",
+195:                 "out-of-range": "reason=anchor-out-of-range",
+196:                 "broken": "reason=anchor-broken",
+197:             }
+198:             emit(out, f"{source_id}:{quote_id}", "MISMATCH", anchor_reasons[anchor_verdict_result])
+199:             status = 1
+200:             continue
+201:         if assertion["quote"] in source_text:
+202:             emit(out, f"{source_id}:{quote_id}", "OK",
+203:                  "occurrences=%d%s" % (occurrences, anchor_note))
+204:         elif occurrences:
+205:             # Declared normalization (considerthese/2026-10-24 proposal 1):
+206:             # reader captures carry markup such as <u>…</u>; the receipt names
+207:             # the transformation instead of forcing the entry to quote tags.
+208:             emit(out, f"{source_id}:{quote_id}", "OK",
+209:                  "normalized=markup-whitespace occurrences=%d%s" % (occurrences, anchor_note))
+210:         else:
+211:             emit(out, f"{source_id}:{quote_id}", "MISMATCH", "reason=quote-not-found")
+212:             status = 1
+213:     return status
+214: 
+215: 
+216: def recheck(manifest_arg, source_id, out=sys.stdout):
+217:     if source_id is not None and not valid_id(source_id):
+218:         emit(out, "manifest:selection", "UNAVAILABLE", "reason=invalid-source-id")
+219:         return 2
+220: 
+221:     manifest_path, records = load_manifest(manifest_arg, out)
+222:     if records is None:
+223:         return 2
+224: 
+225:     if source_id is not None:
+226:         records = [record for record in records if record["id"] == source_id]
+227:         if not records:
+228:             emit(out, f"{source_id}:source", "UNAVAILABLE", "reason=not-listed")
+229:             return 2
+230: 
+231:     status = 0
+232:     for record in sorted(records, key=lambda item: item["id"]):
+233:         result = check_source(manifest_path, record, out)
+234:         if result == 2:
+235:             status = 2
+236:         elif result == 1 and status == 0:
+237:             status = 1
+238:     return status
+239: 
+240: 
+241: def selftest(out=sys.stdout):
+242:     script = Path(__file__).resolve()
+243:     payload = b"Captured fixture supports a verifiable local rule.\n"
+244:     snapshot_digest = hashlib.sha256(payload).hexdigest()
+245: 
+246:     # Double-occurrence capture: the normalized quote appears on lines 6 and 10,
+247:     # so anchor=6 verifies, anchor=2 is broken, anchor=99 is out of range.
+248:     double_payload = (
+249:         b"filler start A A A\n"
+250:         b"filler B B B\n"
+251:         b"filler C C C\n"
+252:         b"filler D D D\n"
+253:         b"filler E E E\n"
+254:         b"a verifiable local rule occurrence\n"
+255:         b"filler F F F\n"
+256:         b"filler G G G\n"
+257:         b"filler H H H\n"
+258:         b"a verifiable local rule again\n"
+259:         b"filler I I I\n"
+260:     )
+261: 
+262:     with tempfile.TemporaryDirectory(prefix="source-recheck-") as directory:
+263:         root = Path(directory)
+264:         manifest_path = root / "manifest.json"
+265:         source_path = root / "S900.txt"
+266:         source_path.write_bytes(payload)
+267:         manifest = {
+268:             "schema_version": SCHEMA_VERSION,
+269:             "sources": [{
+270:                 "id": "S900",
+271:                 "path": source_path.name,
+272:                 "sha256": snapshot_digest,
+273:                 "quotes": [{
+274:                     "id": "Q1",
+275:                     "quote": "verifiable local rule",
+276:                     "location": "fixture line 1",
+277:                 }],
+278:             }],
+279:         }
+280:         manifest_path.write_text(json.dumps(manifest, sort_keys=True) + "\n", encoding="utf-8")
+281: 
+282:         cases = []
+283: 
+284:         def make_manifest(name, source_id, quotes, capture=payload, capture_name=None):
+285:             path = root / (name + ".json")
+286:             if capture_name is None:
+287:                 capture_name = source_id + ".txt"
+288:             (root / capture_name).write_bytes(capture)
+289:             doc = {
+290:                 "schema_version": SCHEMA_VERSION,
+291:                 "sources": [{
+292:                     "id": source_id,
+293:                     "path": capture_name,
+294:                     "sha256": hashlib.sha256(capture).hexdigest(),
+295:                     "quotes": quotes,
+296:                 }],
+297:             }
+298:             path.write_text(json.dumps(doc, sort_keys=True) + "\n", encoding="utf-8")
+299:             return path
+300: 
+301:         def run_case(name, manifest_arg, expected_status, expected_ids,
+302:                      source_id="S900", expected_substr=None):
+303:             try:
+304:                 result = subprocess.run(
+305:                     [sys.executable, str(script), "--manifest", str(manifest_arg), "--source", source_id],
+306:                     cwd=str(root),
+307:                     stdout=subprocess.PIPE,
+308:                     stderr=subprocess.PIPE,
+309:                     text=True,
+310:                     check=False,
+311:                 )
+312:                 observed_ids = [line.split(maxsplit=1)[0] for line in result.stdout.splitlines() if line.strip()]
+313:                 passed = (
+314:                     result.returncode == expected_status
+315:                     and observed_ids == expected_ids
+316:                     and not result.stderr
+317:                     and (expected_substr is None or expected_substr in result.stdout)
+318:                 )
+319:                 observed_status = result.returncode
+320:             except OSError:
+321:                 passed = False
+322:                 observed_ids = []
+323:                 observed_status = "unavailable"
+324:             state = "PASS" if passed else "FAIL"
+325:             print(
+326:                 f"SELFTEST {name} {state} expected-exit={expected_status} observed-exit={observed_status} "
+327:                 f"expected-ids={','.join(expected_ids)} observed-ids={','.join(observed_ids)}",
+328:                 file=out,
+329:             )
+330:             cases.append(passed)
+331: 
+332:         run_case("clean", manifest_path, 0, ["S900:sha256", "S900:Q1"])
+333: 
+334:         source_path.write_bytes(payload + b"corruption\n")
+335:         run_case("corrupt", manifest_path, 1, ["S900:sha256"])
+336: 
+337:         source_path.unlink()
+338:         run_case("missing-source", manifest_path, 2, ["S900:source"])
+339: 
+340:         run_case("missing-manifest", root / "absent.json", 2, ["manifest"])
+341: 
+342:         stem_manifest = make_manifest(
+343:             "stem",
+344:             "S901",
+345:             [{"id": "Q1", "quote": "verifiable local rule", "location": "fixture line 1"}],
+346:             capture_name="S900.txt",
+347:         )
+348:         run_case(
+349:             "stem-mismatch", stem_manifest, 1, ["S901:manifest"],
+350:             source_id="S901", expected_substr="reason=stem-mismatch",
+351:         )
+352: 
+353:         q9_quote = {"id": "Q1", "quote": "verifiable local rule"}
+354:         double_missing = make_manifest("double-missing", "S900", [dict(q9_quote)], capture=double_payload)
+355:         run_case(
+356:             "double-occurrence", double_missing, 1, ["S900:sha256", "S900:Q1"],
+357:             expected_substr="reason=occurrence-not-unique",
+358:         )
+359: 
+360:         double_ok = make_manifest("double-ok", "S900", [dict(q9_quote, anchor=6)], capture=double_payload)
+361:         run_case(
+362:             "double-occurrence-anchored", double_ok, 0, ["S900:sha256", "S900:Q1"],
+363:             expected_substr="anchor=6-ok",
+364:         )
+365: 
+366:         double_range = make_manifest("double-range", "S900", [dict(q9_quote, anchor=99)], capture=double_payload)
+367:         run_case(
+368:             "double-occurrence-out-of-range", double_range, 1, ["S900:sha256", "S900:Q1"],
+369:             expected_substr="reason=anchor-out-of-range",
+370:         )
+371: 
+372:         double_broken = make_manifest("double-broken", "S900", [dict(q9_quote, anchor=2)], capture=double_payload)
+373:         run_case(
+374:             "double-occurrence-broken", double_broken, 1, ["S900:sha256", "S900:Q1"],
+375:             expected_substr="reason=anchor-broken",
+376:         )
+377: 
+378:         # Round-31: the final `else` (a quote absent from the capture) had no
+379:         # failing case, so accepting a not-found quote survived the selftest
+380:         # (MutSRExisting M5). This case pins that rejection path.
+381:         absent_quote = make_manifest(
+382:             "quote-absent", "S900",
+383:             [{"id": "Q1", "quote": "absent from the fixture capture"}],
+384:         )
+385:         run_case(
+386:             "quote-absent", absent_quote, 1, ["S900:sha256", "S900:Q1"],
+387:             expected_substr="S900:Q1 MISMATCH reason=quote-not-found",
+388:         )
+389: 
+390:     failed = sum(1 for passed in cases if not passed)
+391:     print(f"selftest cases={len(cases)} failures={failed}", file=out)
+392:     return 0 if failed == 0 else 1
+393: 
+394: 
+395: def main(argv=None):
+396:     parser = argparse.ArgumentParser(description="Recheck exact quotes in pinned local source snapshots.")
+397:     parser.add_argument("--manifest", help="JSON manifest with local source paths, SHA-256 pins, and quote assertions")
+398:     parser.add_argument("--source", help="check one source ID from the manifest")
+399:     parser.add_argument("--selftest", action="store_true",
+400:                         help="run isolated controls: clean/corrupt/missing plus B1 stem, B2 anchor and quote-absent limbs")
+401:     args = parser.parse_args(argv)
+402: 
+403:     if args.selftest:
+404:         if args.manifest is not None or args.source is not None:
+405:             emit(sys.stdout, "manifest:selection", "UNAVAILABLE", "reason=selftest-takes-no-manifest-or-source")
+406:             return 2
+407:         return selftest()
+408:     if args.manifest is None:
+409:         emit(sys.stdout, "manifest", "UNAVAILABLE", "reason=missing-required-argument")
+410:         return 2
+411:     return recheck(args.manifest, args.source)
+412: 
+413: 
+414: if __name__ == "__main__":
+415:     sys.exit(main())

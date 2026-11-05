@@ -1,0 +1,27 @@
+# DUPLICATION — the four before-controls in pairs
+$ diff grounding-before.txt grounding-before-r80.txt
+1c1
+< # round-80 C2 before receipt: the gate-grounding counter at the round-79 lane tip
+---
+> # round-80 C2 before receipt, re-run at the round-80 base revision
+# exit=1
+$ diff oracle-structure-v6-accepted.txt oracle-before-r80.txt
+1,2c1,2
+< # round-80 C1 do-nothing control: the round-79 battery v6 with the structure-identity oracle
+< # command: python3 -B corpus/evidence/round80/oracle-check.py --battery corpus/evidence/round79/matrix-battery-v6.py --oracle .ufo/waves/round-79/w1/R79ExecC/matrix-structure-identity.py --work <scratch> --runs 1
+---
+> # round-80 C1 do-nothing control, re-run at the round-80 base revision
+> # command: python3 -B corpus/evidence/round80/oracle-check.py --battery corpus/evidence/round79/matrix-battery-v6.py --oracle .ufo/waves/round-79/w1/R79ExecC/matrix-structure-identity.py --work /fast/scratch/hyaku/chousa-r80/l1/oracle --runs 1
+# exit=1
+
+# structure-identity oracle: every run line for that oracle
+17
+17
+$ grep -n "^ORACLE structure-identity"
+180:ORACLE structure-identity REJECTED positive=0/2 forger=0/11 fresh_positive=0/2 fresh_forger=0/2
+$ grep -n "^ORACLE " (aggregate lines of all five oracles)
+75:ORACLE summary-only REJECTED positive=0/2 forger=0/11 fresh_positive=0/2 fresh_forger=0/2
+110:ORACLE contract-table REJECTED positive=1/2 forger=8/11 fresh_positive=0/2 fresh_forger=2/2
+145:ORACLE block-position REJECTED positive=1/2 forger=9/11 fresh_positive=1/2 fresh_forger=2/2
+180:ORACLE structure-identity REJECTED positive=0/2 forger=0/11 fresh_positive=0/2 fresh_forger=0/2
+215:ORACLE payload-decode REJECTED positive=2/2 forger=11/11 fresh_positive=2/2 fresh_forger=0/2

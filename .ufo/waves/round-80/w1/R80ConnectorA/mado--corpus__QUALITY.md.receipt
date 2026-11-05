@@ -1,0 +1,1033 @@
+COMMAND git -C /home/vgpnk/Projects/shokunin/mado-shokunin show f72bba01928efe80cfa1a7907fe3aaa9eba1cfd7:corpus/QUALITY.md
+EXIT 0
+SHA256 41e45759711a2ad793bbc9ec268517b47f824df6ec41f5d57d9289a77d48b509
+1: # Admission bar (probation draft)
+2: 
+3: 1. Every claim falsifiable or marked opinion.
+4: 2. Every claim carries a source: a measured anchor (path:line, command,
+5:    evidence id) — never oral knowledge.
+6: 3. Observation, inference, and unknown stay separate.
+7: 4. Errata are append-only blocks.
+8: 5. A rejection is kept, not silently dropped.
+9: 
+10: ## Criteria from mined mistakes (round 12)
+11: 
+12: 6. Publish each pinned value with a re-derivation command and named revision; any shortened hash must be a true suffix, with corrections preserving old and new values. (lesson: lessons/round-12.md#mistakes M1; lessons/round-10.md:82-97)
+13: 7. Hash committed artifacts from `git show <commit>:<path>`; label work-window hashes provisional and bind them again at the commit. (lesson: lessons/round-12.md#mistakes M2; lessons/round-10.md:98-107)
+14: 8. Treat a path as landed or as a recheck target only after confirming it exists at the named commit; label predicted names as planned. (lesson: lessons/round-12.md#mistakes M3; lessons/round-10.md:108-118)
+15: 9. Bind each audit verdict to a commit or frozen-copy sha; label mid-edit failures in-flight, never as settled defects. (lesson: lessons/round-12.md#mistakes M6; lessons/round-10.md:98-107)
+16: 10. Report each count as `<n> — <command> <date>` and rederive it from the named revision instead of transcribing a prior summary. (lesson: lessons/round-12.md#mistakes M7; LOG.md:138-141,253-256)
+17: 11. An absence claim about a tool includes its own `--help`/man/source sweep, pinned version, and matching locations; do not infer behavior from a verb name. (lesson: lessons/round-12.md#mistakes M8)
+18: 12. An `[x]` requires a named non-author verifier and its dispatching lane; a lane-dispatched seat remains `[~]`, not independent clearance. (lesson: lessons/round-12.md#mistakes M9; lessons/round-1.md:19-22)
+19: 13. Evidence meant to outlive a round is a committed path or quoted lines plus sha; `/tmp` records provenance only. (lesson: lessons/round-12.md#mistakes M11; lessons/round-10.md:74-78)
+20: 14. A census compares expected and observed sets and names both missing and extra members; pin module membership where it is a claim. (lesson: lessons/round-12.md#mistakes M13)
+21: 15. Label every protocol or config inference by layer, phase, and version/era; do not substitute protocol status, documentation syntax, or tool layer for host behavior. (lesson: lessons/round-12.md#inference-traps M01-M07)
+22: 16. Upstream documentation and releases support only dated `[INF-docs]`; never promote them to installed-host or end-to-end facts without independent host measurement. (lesson: lessons/round-12.md#inference-traps M03/M05/M06/M07)
+23: 
+24: Source tiers and the registry live in SOURCES.md (contract v1); this bar governs claim admission only.
+25: 
+26: Provenance notes (round 12, post-integration review — `.ufo/evidence/round-12/l2-postcritic.md`, `l2-postreviewer.md`):
+27: criteria 6–14 are grounded in lane incidents; 15–16 are grounded in external inference traps
+28: (`lessons/round-12.md` § Inference traps), not lane incidents, despite the block heading. Criterion 8's
+29: secondary citation `lessons/round-10.md:108-118` grounds record debt (M4), not planned paths; its
+30: grounding is `lessons/round-12.md#mistakes M3` alone.
+31: 
+32: ## Criterion from the outside S030 disagreement (round 13)
+33: 
+34: 17. Before source-fragment renumbering/merge, screen repeated canonical URLs across active rows even when scope wording differs. Review overlapping scope explicitly; reject/merge duplicates or append a genuine superseding row with a resolvable prior id. Preserve rejected history, and send distinct-scope reuse to human review rather than claiming URL equality proves semantic duplication. A warning-only shared census is not this review. (lesson: lessons/round-13.md#mistakes M1; outside finding: lessons/round-12-verifier-spotcheck.md)
+35: 
+36: The lane-local collision screen is a conservative merge-review trigger,
+37: not a new source-tier scheme or an automatic knowledge-admission authority.
+38: Its red-before case uses the actual admitted S017/S030 pair, not merely a
+39: synthetic same-scope duplicate; its green state preserves rejected S030.
+40: 
+41: ## Criteria from regular-target and retained-data mistakes (round 14)
+42: 
+43: 18. A declared source target is not validated by existence alone: direct
+44:     targets and every matched glob member must be regular files, following
+45:     file symlinks. Name non-regular versus unresolved targets separately.
+46:     Exercise mixed-glob rejection without misclassifying its regular member;
+47:     preserve source-set/order as separate invariants. This is the lane's
+48:     strict supported-source policy, not an assertion that Hyprland itself
+49:     rejects every skipped target. (lesson: lessons/round-14.md#mistakes M4)
+50: 19. Scope retained-data statements to the actual field or record class.
+51:     If global records are projected to interface/version pairs but the
+52:     enclosing artifact retains sanitized package/probe/session metadata,
+53:     name both; “only headers” must not describe the entire artifact.
+54:     Keep diagnostic requests, retained evidence and behavioral conclusions
+55:     separate. (lesson: lessons/round-14.md#mistakes M1; outside R13-V1)
+56: 
+57: R13-V2/V3 use existing criteria 7, 9 and 13: a within-run boundary
+58: receipt does not establish cross-revision output equality, and future
+59: standalone selftest receipts carry their resolved commit and raw gate
+60: digest locally. No duplicate provenance criterion or generic wrapper is
+61: introduced; the lesson records the rejected implementation candidate.
+62: 
+63: ## Round 15 — receipt application and host-install safety
+64: 
+65: R14-V1 applies existing criteria 7, 9 and 13: preserve provisional historical
+66: headers; append their exact derived-target relation to committed bytes.
+67: Never stamp a later full-gate measured commit onto a pre-commit mutation run.
+68: The lesson's M1 and standing-use erratum name the boundary and red/green
+69: static correction audit; no generic execution wrapper or duplicate
+70: provenance criterion is introduced.
+71: 
+72: 20. Before a future tool install, obtain `pacman -Sp --print-format '%n %v' <pkgs>`
+73:     and compare every planned package name (including dependencies) with the
+74:     installed-name set. The plan must contain only not-already-installed
+75:     packages; any overlap goes to L0 instead. Helpful-tool authorization does
+76:     not permit a partial upgrade. Round 15 performs no further pacman operation,
+77:     rollback/downgrade or restart. (lesson: lessons/round-15.md#mistakes M2;
+78:     orchestrator ruling on the actual libinput transaction)
+79: 
+80: ## Round 16 — outside rejected-harmed follow-through
+81: 
+82: 21. Host-install pause and declared-plan evidence boundary (lesson: lessons/round-16.md#mistakes M1/M2). Supersedes criterion 20's prospective install route **while the
+83:     operator's host-wide pause holds**: no package transaction or host
+84:     service/compositor mutation is permitted, including installing a tool
+85:     merely to read its help. Use already available source/documentation;
+86:     source examples are data, not execution permission. Carry the pause and
+87:     this round's no-live-probe scope into every seat context. A static
+88:     action-plan classifier must return nonzero on the literal libinput
+89:     incident argv, listed argv[0] basenames even when path-prefixed or
+90:     mislabeled, unknown kind and malformed action, with a source-read
+91:     control. Unlisted wrappers/operands are not screened. Its verdict is
+92:     not tool interception, credential/privacy/probe safety, host immutability,
+93:     a real package dry run or remediation. After explicit operator lift,
+94:     criterion 20's complete real-plan/installed-name comparison still applies; a
+95:     hard-coded new-only fixture never proves it ran.
+96:     Even a real new-only name comparison is necessary, not clearance:
+97:     stale sync state, dependencies, replacements, hooks and running-process
+98:     compatibility remain operator decisions. No filtered fixture authorizes
+99:     a transaction, and editing the lane policy cannot lift the host pause.
+100:     (lesson: lessons/round-16.md#mistakes M1/M2; outside
+101:     lessons/round-15-verifier-spotcheck.md R15-V1/V2)
+102: 
+103: The runnable check and its failure evidence are registered in SKILL.md.
+104: The unresolved host-recovery decision stays with the operator. No safety
+105: trade is erased by this criterion or a green configuration gate.
+106: 
+107: 22. Re-derive every active, non-retired axis under its recorded counting rule before selecting the lowest axis; do not compare coverage only with the hermetic-suite pass fraction while a lower calibration row remains active. Report literal versus semantic citation counters separately rather than silently changing the rubric. (lesson: lessons/round-16.md#mistakes M3; PlanningWalk is a lane-dispatched adviser, not an outside reviewer)
+108: 
+109: ## Round 17 — receipt-label precision (outside R16-V1)
+110: 
+111: 23. A sentence that attributes a verdict token to a receipt must cite a receipt whose recorded outcome is that token at the revision the sentence describes (lesson: lessons/round-17.md#mistakes M1; outside lessons/round-16-verifier-spotcheck.md R16-V1).
+112:     Outcome means the verdict word on a `MADO_<NAME>:` line, a `finding`
+113:     value, or the got-side of a selftest row — never want-side text, a fixture
+114:     name, or `matched_exit` alone (exit 2 is shared by `frozen_error` and
+115:     `snapshot_tampered`). When the receipt records a `measured_commit`, the
+116:     sentence's revision must match it. A superseded receipt is named as
+117:     superseded and keeps its true token; corrections append and never relabel.
+118:     This specifies criterion 9's commit binding at token level; it did not
+119:     bite on round-16 line 131-132 because 9 binds the commit, not the token.
+120:     Runnable check: `python3 -I .ufo/waves/round-17/label-check.py`
+121:     (seven declared claims including the R16-V1 red line, a want-side-only
+122:     mutant and a wrong-revision mutant; `EXPECT_SUMMARY` must be 7/7).
+123: 
+124: ## Round 18 — producer identity, instrument bite, producer status (outside R17-V1/V2/V5, JjAuditMado F10)
+125: 
+126: The round-14/15 rulings ("no duplicate provenance criterion") stand for
+127: input binding and commit binding, which criteria 7, 9, 13 and 23 already
+128: carry. Criterion 24 adds only what those leave open: the identity of the
+129: *producer* bytes that ran, and receipt-borne evidence for a re-cut claim.
+130: 
+131: 24. A sentence that relies on a scan, selftest, measure or replay receipt cites one whose own bytes name its producer (`tool_sha256=` equal to `git show <measured_commit>:<tool> | sha256sum`, read with the producer status checked) and its `measured_commit`; a claimed re-cut is a committed receipt with those fields, never a narrated rerun; a report labels every tool sha with the revision it belongs to (lesson: lessons/round-18.md#mistakes M1; outside lessons/round-17-verifier-spotcheck.md R17-V1/V2).
+132:     Runnable check: `python3 -I .ufo/waves/round-18/receipt-check.py`
+133:     (claims `.ufo/waves/round-18/receipt-claims.json`). Red: the six
+134:     round-17 real-transcript receipts read at `d9a5a18` print
+135:     `MISSING_PROVENANCE` (they carry input digests only); a fixture bound
+136:     to the `f71ccbe` tool sha read at a later tool prints `SHA_MISMATCH`.
+137:     Green: the round-18 re-cut receipts and the frozen-replay receipt.
+138: 25. An instrument tightening counts as biting only with a committed mutant receipt in which the pre-change instrument credits a committed mutant and the post-change instrument rejects it, both instruments named by sha256 and each mutant by its diff digest; a seat or `/tmp` lab run is provenance, not credit (lesson: lessons/round-18.md#mistakes M2; outside lessons/round-17-verifier-spotcheck.md R17-V5).
+139:     Runnable check: `python3 -I .ufo/waves/round-18/measure-mutants.py`
+140:     → `.ufo/waves/round-18/evidence/measure-mutants.json` (`no_bite` lists
+141:     any tightening the loose instrument already rejects). Red at `d9a5a18`:
+142:     no committed mutant receipt exists for any of the six round-17
+143:     tightenings, so round-17 M3's "shown to bite" has no credit under 25.
+144: 26. A digest, count or identity taken through a pipe or command substitution carries the producer's exit status; when the producer fails the result is UNKNOWN, never a value (`e3b0c44298fc1c14…` is the sha256 of empty input, not of a file) (lesson: lessons/round-18.md#mistakes M3; outside /home/vgpnk/Projects/shokunin/.ufo/waves/hyaku/jj-w1/reports/JjAuditMado.md F10).
+145:     Runnable check (behavioural, the bite): `bash tools/mado-verify.sh
+146:     --selftest` scenarios OM9/OM10 (stub `git show`/`describe`/`rev-parse`
+147:     exit 128 must read UNKNOWN with `rc=128`, never `local edit`); red
+148:     before at `d9a5a18`: `.ufo/waves/round-18/evidence/gate-rc-redbefore.txt`
+149:     §1. Screen only (not proof — pipefail alone does not consume the rc):
+150:     `python3 -I .ufo/waves/round-18/pipe-rc-census.py REV` lists unchecked
+151:     producer sites; at `d9a5a18` it flags nine, of which only `:3406` was a
+152:     verdict-bearing hazard (the others are fixture or display values).
+153:     `${PIPESTATUS[0]}` read after `x=$(…)` is the assignment's status, not
+154:     the producer's; capture inside the substitution.
+155: 
+156: Round-18 wave-2 correction (append-only): criterion 24's red-fixture sentence
+157: above says a fixture bound to the `f71ccbe` tool sha read at a later tool prints
+158: `SHA_MISMATCH`; the hardened checker (ReceiptCheckFix) prints `STALE` for that
+159: stale-but-consistent shape; `receipt-fixtures/stale-rev-receipt.txt` remains the
+160: `SHA_MISMATCH` control. Green arm: `EXPECT_SUMMARY: 21/21`, exit 0, with the
+161: round-18 re-cut, frozen and measure receipts as `ok` claims.
+162: 
+163: ## Round 19 — durable anchors, supersession sweep (outside R18-V1/V3/V4); R18-V2 applies criterion 24
+164: 
+165: Not restatements: criteria 7 and 13 bind a digest to committed bytes, and a
+166: committed digest of a rotating GitHub tree page satisfies both; 27 asks whether the
+167: upstream an anchor names can be re-obtained to the same bytes. Criterion 6 asks for
+168: a named revision; 28 is a property of the owned file set after a supersession,
+169: which passes 6 and 9 untouched. R18-V2 (criterion 26's own red-before receipt has
+170: no producer header) is not a new criterion: it is criterion 24 applied to the
+171: lane's own criterion evidence (outside critic CriticC1, round-19 w1), recorded in
+172: the note after 28.
+173: 
+174: 27. A credited source row's anchor is reproducible — tag- or commit-pinned bytes with their sha256, a content-addressed object id, or a registry checksum; a digest that committed receipts show rotating between fetches never anchors a row, and an unversioned alias (`latest`, `main`, `master`, `HEAD`) never serves as version-specific support without a pin in the anchor; the superseding row names the replaced id (lesson: lessons/round-19.md#mistakes M1/M2; outside lessons/round-18-verifier-spotcheck.md R18-V1/R18-V4).
+175:     Runnable check: `python3 -I .ufo/waves/round-19/anchor-durability.py REV`
+176:     (mined rows only; PER_FETCH_DIGEST needs ≥2 distinct committed 200
+177:     digests for a URL the anchor credits; a single-digest page digest prints
+178:     `durable — … not shown to rotate`). Red at `9c54c56`: `FLAGGED S084 S094`
+179:     (S084 UNPINNED_ALIAS, S094 PER_FETCH_DIGEST, 5 receipts / 5 digests),
+180:     exit 1. Green at `df84807`: `flagged=0`, exit 0 (S094 → S097, S084 → S098,
+181:     both old rows `rejected`). Limit: it reads the anchor text; it cannot tell a
+182:     reproducible page that has never been fetched twice.
+183: 28. When a present-tense value is superseded, every owned file that still states the old value carries, in the same round, an in-file pointer naming the new value and the SOURCES row that superseded it; a SKILL erratum or one note does not discharge the sweep for the other files (lesson: lessons/round-19.md#mistakes M3; outside lessons/round-18-verifier-spotcheck.md R18-V3).
+184:     Runnable check: `python3 -I .ufo/waves/round-19/supersede-sweep.py REV`
+185:     (ledger `.ufo/waves/round-19/supersessions.json`: `2.17.0` → `2.17.2`,
+186:     rows S090/S096; scope knowledge notes, corpus/README.md, SKILL.md,
+187:     PROVINCE.md, tools/*). Red at `9c54c56`: `files=13 pointed=2 stale=11`,
+188:     exit 1. Green at `df84807`: `pointed=13 stale=0`, exit 0. Limit (CriticC1):
+189:     file-level — one pointer line clears a file with other untouched mentions;
+190:     a reviewer reads each pointer, the check only proves none is missing.
+191: 
+192: Round-19 application of criterion 24 to criterion 26's evidence (R18-V2,
+193: append-only; no new number): criterion 26's red-before
+194: `.ufo/waves/round-18/evidence/gate-rc-redbefore.txt` and `regression-recut.txt`
+195: read `MISSING_PROVENANCE` under `python3 -I .ufo/waves/round-18/receipt-check.py
+196: .ufo/waves/round-19/receipt-claims.json`. The header-bound re-cut is
+197: `.ufo/waves/round-19/evidence/gate-swap-receipt.txt` (`tool_sha256=6e6782c3…` =
+198: the committed fixture `evidence/gate-swap-d9a5a18.sh`, `measured_commit=df84807`):
+199: `383 passed, 6 failed` — five OM9 assertions plus `R10` (the fixture's own
+200: `PIN_MADO` self-pin moves with any gate edit); round 18's "383/389, five OM9"
+201: omitted R10. Criterion 25's runnable command now needs an explicit lane receipt:
+202: `python3 -I .ufo/waves/round-18/measure-mutants.py --out
+203: .ufo/waves/round-18/evidence/measure-mutants.json --force-lane-receipt` (a bare
+204: run prints JSON to stdout and writes nothing; w1 MeasureMutantsOut).
+205: 
+206: Round-19 wave-2 limits (append-only; CriticC1W2, RerunC1): criterion 27's checker
+207: prints `durable` when no rule fires — not proof of reproducibility. It reads any
+208: `N.N` in the anchor as a pin (even an unrelated or superseded version), knows only
+209: the alias words `latest`/`main`/`master`/`HEAD`, does not check that a registry
+210: checksum is present, and does not exercise "the superseding row names the replaced
+211: id" (true by reading for S097/S098). Access-date-only anchors (S032–S035) print
+212: `durable`. Criterion 28's ledger now also carries the S094→S097 and S084→S098
+213: supersessions; its walker entry is the C2 file set, so 28's green there is not
+214: independent of C2. The line rule credits `corpus/README.md:44` (a round-18 row with
+215: `Walker v2.17.2` and the span S072–S091) and `walker-route-r18.md:1` (its source
+216: list) at `9c54c56`: substantively the pre-state held 0 dated pointers, not 2.
+217: Wave-2 correction (append-only; w2 RerunGateSwap): round 18 did not omit R10 everywhere —
+218: `.ufo/waves/round-18/w3/reports/W3CriticC1Final.md:188` lists "R10 (pin drift, expected)";
+219: only the round-18 SCORECARD fragment "(383/389, five OM9 failures …)" left it out. The
+220: round-19 gate-swap receipt is a new red run on a hybrid fixture (the d9a5a18 block inside
+221: the 17661e0 gate), header-bound; criterion 26's original red-before file still reads
+222: `MISSING_PROVENANCE`.
+223: More criterion-27 checker limits (w2 RerunAnchor): `accessed on <date>` counts as a date
+224: pin, licence/protocol versions (`Apache-2.0`, `HTTP/1.1`) count as version pins, a 40-hex
+225: tree id counts as a commit, `develop`/`trunk` branch URLs are not aliases, a GitHub release
+226: HTML page at a tag reads as raw bytes, and a row made malformed by a literal `|` drops out
+227: of evaluation. The red at `9c54c56` and green at the tip stand; a `durable` line is a screen
+228: result, and the closure reads the anchor.
+229: 
+230: ## Round 20 — fail-closed isolation and detector precision (outside R19-V3, R19-V4)
+231: 
+232: 29. An isolation harness fails closed: every setup step (namespace creation, each bind or mount, each post-mount verification that the target now holds the stub) is tested on its own, and any failure — or a missing target or stub — aborts before the payload starts; `set -e` with a non-final `&&` member is not a gate, and a harness that exits 0 without running its payload under a forced failure counts as failing open (lesson: lessons/round-20.md#mistakes M2; outside lessons/round-19-verifier-spotcheck.md R19-V4).
+233:     Runnable check: `bash .ufo/waves/round-20/isolation-check.sh HARNESS` — forces six
+234:     setup failures (mount non-zero, `unshare` refused, mount exits 0 without binding,
+235:     partial arm over two targets, missing target, missing stub) through PATH stubs over
+236:     `/tmp` targets only, with a payload that only writes a `/tmp` canary, plus a positive
+237:     control. Red: `.ufo/waves/round-20/evidence/inns-r19-shape.sh` (the round-19
+238:     `[ -e ] && mount && echo` shape, SentinelGatePath §Incident) reads `FAIL_OPEN` in five
+239:     of six modes, exit 1 (`evidence/crit29-inns-r19-shape.txt`). Green:
+240:     `.ufo/waves/round-20/isolate.sh` reads `FAIL_CLOSED` in all six and
+241:     `POSITIVE_CONTROL_OK`, exit 0 (`evidence/crit29-isolate.txt`); four single-point
+242:     mutants of it (`evidence/isolation-mutants/`) each read `FAIL_OPEN` in the mode they
+243:     break. Sources: bash 5.3 `set -e` exceptions (S110), util-linux unshare/mount and the
+244:     namespace capability rules (S109, S112). Limit: a harness that resolves `mount` or
+245:     `unshare` by absolute path bypasses the stubs and reads `COULD_NOT_EVALUATE`, never a
+246:     pass; fail-closed setup is not containment — `isolate.sh` passes the environment
+247:     through and the compositor and session-bus sockets stay reachable inside it
+248:     (w1 SentinelPause20 H3), so it is no licence to run a host probe while the pause binds.
+249: 30. A detector change credited for recall is admitted only beside its precision evidence: committed negatives of the shapes the new rule could misread (pure data, formatters, names bound or shadowed in the text), each read at the pre-change and the changed tool; a whole-corpus diff against the pre-change tool that lists every added and relabelled row; and a machine-readable marker on every row the detector cannot tie to a visible execution path (`evidence: lead`), never the shape of an observed row (lesson: lessons/round-20.md#mistakes M1; outside lessons/round-19-verifier-spotcheck.md R19-V3).
+250:     Runnable check: `python3 -I .ufo/waves/round-20/tw-precision.py REV` (suite pinned at
+251:     `f3da504`), read for families P (pure data → no row) and L (invisible body → `lead`).
+252:     Red at `1f7f995` (tool `367be947…`): P 7/66, L 1/18 — the closure's data-only
+253:     `BLOCK=frozenset([...])` artifact is case `P-CasePureBuiltins-frozenset-closure`,
+254:     an unmarked ordinary `package_query` row. Green at `28c6837` (tool `9613f510…`): P
+255:     66/66, L 17/18 (`.ufo/waves/round-20/evidence/precision-*.txt`). Its green is not
+256:     independent of the round-20 C1 repair (it reads the same counter). Limit: the suite
+257:     was written in the same round as the fix (blind authors, but one contract); a
+258:     held-out set (`precision-heldout/`, 12 cases outside the contract) reads 0/12 before
+259:     and after, and the corpus diff is the out-of-suite evidence.
+260: 
+261: Round-20 application of criterion 10 to round-19 tallies (R19-V2, R19-V4, R19-V5;
+262: append-only, no new number — registered criterion 30 "re-derive stated counts" was
+263: withdrawn as a restatement of 10, SCORECARD "Round-20 pre-measurement corrections"):
+264: `python3 -I .ufo/waves/round-20/tally-check.py .ufo/waves/round-20/tally-claims.json`
+265: re-derives each registered round-19 count under its named counting rule from committed
+266: bytes. Red: "155 round-19 transcripts" (lesson round-19 :124) → 154 receipt files;
+267: "5/13 name S096" (SCORECARD :1167, lesson :108, LOG :1324) → 6/13 first-matching line
+268: (8/13 any matching line; the 5 was RerunC2's cited-as-evidence reading at `01b8094`);
+269: "the ten old OM10 assertions" (SCORECARD :1225) → nine labeled occurrences, eight
+270: distinct. Green entries are the round-20 correction sentences. Limit: it reads only
+271: registered statements; a stale sentence left beside its correction is not flagged.
+272: 
+273: Round-20 attempt-2 corrections (append-only; 2026-10-21; no new number):
+274: - Criterion 10's application above: the bare invocation exits 2 (green entries read at a
+275:   revision; w2 RevCrit10Application F1). The runnable form is `python3 -I
+276:   .ufo/waves/round-20/tally-check.py .ufo/waves/round-20/tally-claims.json --set all --rev
+277:   REV --expect` (at `a8960de`: `TALLY_SUMMARY n=9 match=4 mismatch=5`, `EXPECT_SUMMARY:
+278:   9/9`, exit 0).
+279: - Criterion 29's check was rebuilt by attempt 1 (`f8576f7`: controls not exported, an
+280:   execution witness, stat identity, a scrubbed environment) after w2 RevQuality29 showed
+281:   a harness could read the leaked controls and mask itself green. Its six modes are four
+282:   PATH-stub injections and two real missing target/stub paths (w2 RevKnowledgeNote3). Re-run
+283:   at `a8960de` (`a2/evidence/iso/crit29-*.txt`): red `inns-r19-shape` 5/6 `FAIL_OPEN`, exit 1;
+284:   green `isolate.sh` 6/6 `FAIL_CLOSED`, exit 0; the four adversarial harnesses
+285:   (masked, env-aware, fake-cmp, canary-deleter3) and the four mutants each read
+286:   `FAIL_OPEN` in at least one mode, exit 1.
+287: - Criterion 30's green at `28c6837` held on its three legs and still admitted a recall
+288:   loss: w2 found 52 out-of-suite real-execution shapes the older tools reported and the
+289:   repair dropped without a row (lessons/round-20.md#mistakes M9). The legs bound what a
+290:   detector adds, not what it removes. At `a8960de` the legs read P 66/66, L 17/18, corpus
+291:   diff from `9c54c56` 0 lost; the recall-loss evidence that caught M9 is the attempt-2
+292:   guard (`a2/a2-guards.py`, `recall_lost` 52 → 0). A criterion requiring a removal-side
+293:   population for every detector change is a candidate for round 21, not registered here:
+294:   adding it after measurement would move this round's C2 target.
+295: 
+296: ## Round 21 — residual-resource guard and assessment applications
+297: 
+298: 31. A detector no-harm claim includes bounded resource evidence on independently frozen wide/shallow as well as recursive/deep inputs. A call-descent limit is not a retained-memory bound: snapshot storage must not grow quadratically with unrelated literal assignments. Register input recipes, expected semantic outcomes, process concurrency, memory/time caps and the exact API/CLI entry path before measurement. A harness cap, timeout, allocation failure or unparsed/error verdict is not a clean result; retain it with input/tool/runner digests and status. Do not reproduce an unsafe historical memory load to confirm it. Ground: `lessons/round-21.md#mistakes` M2 and outside `lessons/round-20-verifier-spotcheck.md:42,78`; resource source cause in `.ufo/waves/round-20/a2/review/ReviewRuntimeV3.md:38`. Runnable bounded evidence producer: `python3 -I .ufo/waves/round-21/resource/measure.py --tool TOOL --mode module-main` (384-MiB address-space cap, 15-second timeout, sequential children); its own zero exit means receipt production, not that children passed. The same CLI mode separately exposes the old 512-MiB thread-reservation issue and is not mislabelled quadratic-memory evidence. Red/green results count only when actually committed.
+299: 
+300: Applications, not new numbered criteria: criteria 7/9/13/24 bind frozen oracle/corpus/runner bytes and measured revisions; 3/28 require the in-entry residual correction; 12 and the canonical SHONEN contract require assessment of the actual four subjects. Criterion 30's old positive guard did not cover removal-side true-finding loss, so round21 explicitly adjudicates removed/relabelled rows on its entire frozen committed fixture population. It does not equate that population with the old private mutable session corpus. Round20's criterion30-prime count remains coupled to C1, never an independent C2 pass.
+301: 
+302: Registration integrity is scoped honestly: C2's separate artifact-only assessment gate may reject declared late/unbound/inconsistent evidence, but self-authored timestamp strings or Git ancestry cannot prove that nobody measured an unrecorded sandbox earlier. Commit independent expectations before implementation and preserve runner receipts; disclose the evidence boundary rather than convert a 20-case selftest into twenty criteria or absolute chronology proof. Ground: round21 M3/M5/M6 and w1/reports/CriticRegistration.md, ConnIndependence.md. No criterion-count improvement is claimed this round.
+303: 
+304: Round-21 applications after W2 (no new numbered criterion): criterion12's named-verifier condition requires a complete non-absence identifier, not the `N` prefix of `N/A` or an explicitly author-only assessment. The gate still validates assertions rather than authenticating identity/dispatching lane; it cannot supply promotion clearance (lesson round21 M10; `w2/reports/GateShonenXWithoutNonauthor.md`). Criterion15's version/era check rejects an eager-definition annotation argument when the declared source profile is CPython3.14.8: S120 and the corrected `AtkClassAnnotation`/`AtkReturnAnnotation` reports distinguish lazy expressions from forced annotation evaluation (M11). Criterion31's demonstrated resource claim is the frozen assignment-only population, not a proof that every eager-call workload has linear retained storage; the bounded call-heavy observation and remaining complexity limit are retained in `w2/reports/ResourceMemory.md`.
+305: 
+306: 32. A claimed binding repair separates lifetime, scope and callable identity: captured factory arguments/locals are bound at closure creation, module globals remain late-bound, a returned name follows the last executed local rebinding, and unresolved factory arguments never fall through to same-named globals as observed values. Synthetic helper state must not shadow a legal source identifier. Include independently specified stored/cross-cell lifetime, unknown-argument and reserved-name-collision counterexamples before claiming general repair; a finite direct-literal fixture pass is insufficient. Ground: lesson round21 M13, `residual/FinalBindingReview.md` F1–F5 and its six inert fixtures. This criterion is added after final falsification, supplies no retroactive pass and no numeric C2/criterion-count credit; delivered C1 fails it and remains harmed.
+307: 
+308: ## Round 22 — applying existing lifetime and evidence criteria
+309: 
+310: No new numbered criterion or count credit. Criterion32's “bound at closure creation” means the enclosing factory frame and argument objects, not a deep-copy of every lexical value or the module namespace. S121 and `lessons/round-22.md` M1–M3 distinguish a caller name rebound later from an enclosing cell rebound before return, later nonlocal/object mutation, and a free global read at invocation. Preserve both literal and callable halves of the lexical overlay; an unknown parameter must shadow a same-named module callable as well as a literal. Renaming a synthetic key to another legal source identifier does not satisfy the hygiene bar.
+311: 
+312: Criteria30/31 and the original no-harm requirement cover added findings, removed findings, evidence relabels, per-file unparsed counters and bounded closure-heavy as well as assignment-only resources. A borrowed argv relabelled `lead` is still invented binding evidence. A definitely invalid factory invocation is not the same as dynamically unknown arguments; the independently sealed oracle must state whether a signal is semantically required before measurement.
+313: 
+314: Criteria7/9/10/24 and `lessons/round-22.md` M4 bind finding-row versus incident-line arithmetic and actual artifact labels. The markerless r19 raw receipt cannot be silently enriched or made green by treating missing evidence as observed. Later10-observed/1-lead rows or a6-line5/1 projection must name their derivation and never replace the original receipt, its rejection or the strict registered target. An artifact-only audit checks consistency, not the truth of a detector's marker, semantic precision, authenticated chronology or outside-lane admission.
+315: 
+316: ## Criteria from the round-23 outside spot-check (round 24; routed defect 3)
+317: 
+318: 33. A detector or gate repair earns no-harm credit only against discovery attacks frozen before the patch, not only the existing corpus, precision suite, oracles and selftests: base-versus-tip cases for global-store silent misses, recall shapes where base reports a lead and the candidate reports nothing, and frame or scope reuse, each kept with its outcome at both revisions. Check: `python3 -I .ufo/waves/round-24/quality/check-registration-order.py --round N` exits 1 when a `tools/` change precedes the first registered discovery population of round N (red on round 23, receipt `.ufo/waves/round-24/quality/m23-4-7-red-green.txt`). (lesson: lessons/round-23.md#mistakes M23-4)
+319: 34. A scratch measurement receipt counts only when writer and reader use the same absolute result paths, prior results are removed before each run, and the receipt names the sha256 of the tool bytes measured. Check: `python3 -I .ufo/waves/round-24/quality/check-receipt-provenance.py RECEIPT` exits 1 on a receipt with a relative result path or no measured-tool sha256 (red/green receipt `.ufo/waves/round-24/quality/m23-5-red-green.txt`). (lesson: lessons/round-23.md#mistakes M23-5)
+320: 35. A fixture first discovered after a patch is never credited as a pre-patch guard: register it, withdraw the affected production change to base, and assess a new patch only after registration. The round-23 wave-2 regression fixtures are registered at `.ufo/waves/round-24/carry/` (28 fixtures, manifest sha256 per file). Check: the same `check-registration-order.py --round N`. (lesson: lessons/round-23.md#final-c1-disposition-withdrawn-to-base-bytes-honest-stop M23-7)
+321: 
+322: ## Criterion from the round-24 outside spot-check (round 25; routed defects 1–2)
+323: 
+324: 36. A claim's counter is admitted only after controls that skip the claimed work have been built and scored under the frozen counter, and their receipts are committed before any data seat is created: the receipts name the shortcut shapes the closures have seen meet a counter (do-nothing, all-false/empty, junk, server echo, label- or fixture-keyed, no-reader), and a counter whose expected value the lane computes with its own model is replaced by an independent oracle or declared to measure only agreement with that model. Check: `python3 -I .ufo/waves/round-25/quality/check-control-receipts.py --round N --data-registry <data-wave registry>` exits 1 when the first control-receipt commit is not earlier than the data wave's `createdAt` or a named shape has no receipt; red on round 24 (`.ufo/waves/round-25/quality/q36-red-round24.txt`: receipts 1083 s after wave 1 was created). (lesson: lessons/round-24.md#mistakes M24-2, M24-5; lessons/round-25.md#mistakes)
+325: 
+326: ## Criterion from the round-25 outside spot-check (round 26; routed defect 3, M25-4)
+327: 
+328: 37. A predicate's population and its counter's population are one number: for every `PRED-<id> ... cases_pass=N/T` summary a receipt prints, the receipt's denominator T, its count of `CASE ` lines and the total T stated for the same `PRED-<id>` sentence in the registration must be equal, and a receipt naming a predicate with no registered total never counts as measuring that population. Check: `python3 -I .ufo/waves/round-26/quality/check-population.py --registration .ufo/waves/round-26/registration.md RECEIPT` exits 1 on any disagreement and 2 when the registration or a receipt cannot be read; green on both committed round-26 base receipts (C1 41 `CASE` lines at `cases_pass=0/41`, C2 51 at `cases_pass=22/51`) and on a synthetic 41-case receipt, red on fixtures dropping one `CASE` line, changing the printed denominator, changing the registration total and shrinking to a self-consistent `40/40` (`.ufo/waves/round-26/quality/q37-population-red-green.txt`). (lesson: lessons/round-25-verifier-spotcheck.md#7-routed-defects-lane-fixes-next-round item 3)
+329: 
+330: ## Criteria from the round-28 lesson (M28-1, M28-2, M28-3)
+331: 
+332: 38. A composite counter is smoke-run once at freeze, before any data seat is created, and its full output is committed: a guard pin that never matches committed bytes (M28-1, `count.py:100` pinned count-v4.py at `3d7d301f…` vs committed `635ae788…`) makes a leg vacuously dead inside the composite while the same leg passes standalone; the smoke receipt is the only cheap catch. Check: run the composite at its freeze commit; any leg printing `missing`/SETUP_ERROR without its declared command failing is a freeze defect, not data.
+333: 
+334: 39. A claim leg that depends on ephemeral bytes (sealed private held-outs, scratch-resident oracles) either commits those bytes or names, in the frozen registration, the committed receipt that serves as its verification basis when the bytes are gone (M28-2: H1's directory was cleaned before closure; leg 1 verified from the committed `ReviewerSuiteMonotone.md` receipt). The preserved-bytes decision and its owner are recorded at data time, not at closure.
+335: 
+336: 40. Held-out mutant rows are authored against the suite's actual probe discriminators, not against prior receipts' class labels: a row can share a named class with a killed mutant yet survive because the discriminators differ (M28-3: `ref-chk-no-anchor` survived; `ref-chk-unreadable-exit-one` in the same round was killed). Check: read the suite probe list first; score every draft set under the frozen counter before sealing.
+337: 
+338: ## Grounding repair (round 30; every active criterion must resolve a `lessons/` citation)
+339: 
+340: The literal rubric (`grep -cE '^[0-9]+\\. .*lessons/'` over `^[0-9]+\\. `) reads
+341: 28/40; the resolved-active rubric reads 31/39 (counter
+342: `.ufo/waves/round-30/c2/count.py`). Criteria 1–5 carry no citation; 18, 19 and
+343: 32 cite a lesson outside the numbered line; 38–40 cite only bare `M28-x` ids.
+344: Each superseding row below restates its rule verbatim and supplies the
+345: canonical citation; corrections land as new rows, never rewrites.
+346: 
+347: 41. Every claim falsifiable or marked opinion. Supersedes criterion 1. The probation-seed bar's lesson is not a corpus `lessons/` file: its grounds are `MINT.md` (the mint evidence: two unplaceable demand instances, the fleet's failure to name a lane that could absorb them) and `corpus/lessons/round-30.md#mistakes M30-1` (this round's audit finding the seed criteria citation-less). (lesson: lessons/round-30.md#mistakes M30-1)
+348: 42. Every claim carries a source: a measured anchor (path:line, command, evidence id) — never oral knowledge. Supersedes criterion 2. Same seed-uncitation ground as criterion 41. (lesson: lessons/round-30.md#mistakes M30-1)
+349: 43. Observation, inference, and unknown stay separate. Supersedes criterion 3. Same seed-uncitation ground. (lesson: lessons/round-30.md#mistakes M30-1)
+350: 44. Errata are append-only blocks. Supersedes criterion 4. Same seed-uncitation ground. (lesson: lessons/round-30.md#mistakes M30-1)
+351: 45. A rejection is kept, not silently dropped. Supersedes criterion 5. Same seed-uncitation ground. (lesson: lessons/round-30.md#mistakes M30-1)
+352: 46. A declared source target is not validated by existence alone: direct targets and every matched glob member must be regular files, following file symlinks. Name non-regular versus unresolved targets separately. Exercise mixed-glob rejection without misclassifying its regular member; preserve source-set/order as separate invariants. This is the lane's strict supported-source policy, not an assertion that Hyprland itself rejects every skipped target. Supersedes criterion 18; the citation moves from the continuation line onto the numbered line. (lesson: lessons/round-14.md#mistakes M4)
+353: 47. Scope retained-data statements to the actual field or record class. If global records are projected to interface/version pairs but the enclosing artifact retains sanitized package/probe/session metadata, name both; “only headers” must not describe the entire artifact. Keep diagnostic requests, retained evidence and behavioral conclusions separate. Supersedes criterion 19; the citation moves from the continuation line onto the numbered line. (lesson: lessons/round-14.md#mistakes M1; outside lessons/round-13-verifier-spotcheck.md R13-V1)
+354: 48. A claimed binding repair separates lifetime, scope and callable identity: captured factory arguments/locals are bound at closure creation, module globals remain late-bound, a returned name follows the last executed local rebinding, and unresolved factory arguments never fall through to same-named globals as observed values. Synthetic helper state must not shadow a legal source identifier. Include independently specified stored/cross-cell lifetime, unknown-argument and reserved-name-collision counterexamples before claiming general repair; a finite direct-literal fixture pass is insufficient. Supersedes criterion 32; the `lesson round21` spelling becomes the canonical path. This criterion is added after final falsification, supplies no retroactive pass and no numeric C2/criterion-count credit; delivered C1 fails it and remains harmed. (lesson: lessons/round-21.md#mistakes M13; residual/FinalBindingReview.md F1–F5 and its six inert fixtures)
+355: 49. A composite counter is smoke-run once at freeze, before any data seat is created, and its full output is committed: a guard pin that never matches committed bytes makes a leg vacuously dead inside the composite while the same leg passes standalone; the smoke receipt is the only cheap catch. Check: run the composite at its freeze commit; any leg printing `missing`/SETUP_ERROR without its declared command failing is a freeze defect, not data. Supersedes criterion 38; the bare M-id becomes a canonical citation. (lesson: lessons/round-28.md#mistakes M28-1)
+356: 50. A claim leg that depends on ephemeral bytes (sealed private held-outs, scratch-resident oracles) either commits those bytes or names, in the frozen registration, the committed receipt that serves as its verification basis when the bytes are gone. The preserved-bytes decision and its owner are recorded at data time, not at closure. Supersedes criterion 39. (lesson: lessons/round-28.md#mistakes M28-2)
+357: 51. Held-out mutant rows are authored against the suite's actual probe discriminators, not against prior receipts' class labels: a row can share a named class with a killed mutant yet survive because the discriminators differ. Check: read the suite probe list first; score every draft set under the frozen counter before sealing. Supersedes criterion 40. (lesson: lessons/round-28.md#mistakes M28-3)
+358: 52. A sweep that surfaces an inherited defect records it and routes it forward — the repair of the gap is a declared claim with its own counter, never a silent patch inside the discovering round's sweep row. The record and the repair are separate evidence: the sweep names the gap's class, pointer and disposition; the claim names its own predicate, control and measured revision. (lesson: lessons/round-29.md — the navigation counter reading 41/43 at base and tip alike, recorded not repaired, routed to round 30; lessons/round-30.md#mistakes M30-2)
+359: 53. A claimed binding repair separates lifetime, scope and callable identity: captured factory arguments/locals are bound at closure creation, module globals remain late-bound, a returned name follows the last executed local rebinding, and unresolved factory arguments never fall through to same-named globals as observed values. Synthetic helper state must not shadow a legal source identifier. Include independently specified stored/cross-cell lifetime, unknown-argument and reserved-name-collision counterexamples before claiming general repair; a finite direct-literal fixture pass is insufficient. Supersedes criterion 48; grounds the M23-7 id in `## Mistakes`, the heading that carries it — criterion 48 cited it under `## Mistakes`, a different section of the same file, which the r30 counter could not distinguish. (lesson: lessons/round-23.md#final-c1-disposition-withdrawn-to-base-bytes-honest-stop M23-7)
+360: 54. A recheck command that references an anchor in a named file resolves the anchor against the named file only: a matching heading elsewhere in the repository does not satisfy it. The round-30 rubric required `lessons/round-<num>.md#<heading>` for spell-form citations; this criterion declares the matching rule for every `file#anchor` form so future counters cannot read a miss as a citation. (lesson: lessons/round-30.md#mistakes M30-1; lessons/round-29-verifier-spotcheck.md — the spotcheck that routed it)
+361: 55. A claim whose counter reads tree *shape* names the cribs that fake its result, not only the cribs that skip the work criterion 36 already requires. Two families, each with a committed `TARGET_MISSED` receipt beside a regular-data control that meets the same spec: (a) *indirection* — a symlink at the claimed path, a symlinked parent component, a hardlinked claimed file, a fetch-tree or overlay path that reaches the claimed bytes without holding them at the claimed path; (b) *content* — a shape-only tree whose rows and gate-quote lines are present while the prose is absent, and a fabricated-payload tree whose receipt files carry the right names and lengths but not the frozen bytes. A counter that pins a receipt digest but never binds it to the bytes it read has a dead clause, not a defence. Round-35 application: `controls/c1-entry-symlink.txt` reads `TARGET_MISSED`, and the two content cribs are committed — `controls-content/c1-shape-only/` and `controls-content/c1-fabricated-payload/` each print `verdict=TARGET_MET` exit 0 against `PRED-C1-r35-v1`, which is the finding that produced this criterion. The repair is demonstrated, not asserted: a scratch copy with one added conjunct (`and digest == receipt["sha256"]`, which the frozen predicate's own wording already requires of the anchor cell) keeps the real root and `controls/golden` at `TARGET_MET` and turns both cribs to `TARGET_MISSED closed_entries=0 closed_rows=0 open_cites=8` exit 1. The round-35 predicate was frozen before data and is not amended; the repair is a round-36 claim. Extends criterion 36; 36's shapes skip the claimed work, this adds shapes that fake its result. Limit: the clause names the modes the lane knows; a mode no control exercises stays a `captured-by: none` hole and must be recorded as one. (lesson: lessons/round-35.md#mistakes M35-2)
+362: 56. Every live clause of a frozen counter is named in a committed clause ledger and counts only as controlled or declared: *controlled* means the clause names a control whose committed receipt records a `TARGET_MISSED` verdict for which that clause is the load-bearing check; *declared* means the clause carries an explicit `not-load-bearing` line with a reason (TOCTOU-only, dead under its own spec). A clause that cannot fail under the counter's own frozen spec is dead code and is recorded retired or declared, never silently counted as load-bearing. Round-35 application: `c1/clauses.json` names nine controlled live clauses, one declared clause (`o-nofollow-open`, TOCTOU-only) and one retired clause (`r34-word-bound-1-25`); `controls/c2-donothing.txt` reads `uncovered=1 TARGET_MISSED`. Extends criterion 25; 25 credits a tightening shown to bite on a mutant, this requires per-clause accounting of every clause before its first data. Limit: a `not-load-bearing` reason is a declared status, not evidence — a clause declared TOCTOU-only can still be wrong code. (lesson: lessons/round-35.md#mistakes M35-2; lessons/round-34.md#mistakes instrument — the 1–25 word bound dead under `found == quote`)
+363: 
+364: 57. A control whose receipt records `TARGET_MISSED` proves only that some clause closed it. When a counter gains a clause that fires on every legacy fixture, each existing control is re-scored from a copy that removes only the competing clause, and the attribution is committed as its own receipt beside the control receipts. Check: run the counter on the fixture as frozen and on the competing-clause-free copy; a control whose two verdicts differ in which cite is open carries an attribution defect. (lesson: lessons/round-36.md#mistakes M36-3)
+365: 58. A counter that scores a *document* parses that document's own table and computes any pinned revision by one stated rule; a substring test over prose is not an observable, and a declared digest is compared to the bytes actually read at the claimed path. Check: mutate one copy of the pinned revision, one table row's id and the receipt payload in place; each must turn the verdict to `TARGET_MISSED`. (lesson: lessons/round-36.md#mistakes M36-2)
+366: 59. Every fixture keeps the accept control's ability to resolve whatever the counter reads *besides* the mutated input: a mutation fixture that fails because its environment is missing is a vacuous control, not a kill. Check: score the fixture under the accept control's own environment first; a reject control that reads `TARGET_MISSED` for a setup reason is not counted. (lesson: lessons/round-36.md#mistakes M36-4)
+367: 60. Every round report states the lane's last-30-commit domain-versus-meta ratio with its command, and a lane that goes two or more rounds without a domain-facing change says so plainly in that section. Domain-facing means `tools/`, `corpus/knowledge/`, `PROVINCE.md` or `SKILL.md`; records and instruments are meta. Ground: `considerthese/2026-10-24.md` proposal 1 (2026-10-24), measured this round at 3 domain / 27 meta. (lesson: lessons/round-36.md#mistakes M36-5)
+368: 
+369: 61. Every command a registration names is run verbatim at the freeze and its output committed with the registration, or the registration writes the arguments the command actually requires; a freeze document's command is read as runnable by every later reader. Check: copy each command out of the registration and run it unchanged; a `SETUP_ERROR`/exit 2 is a freeze defect, not a reader error. (lesson: lessons/round-36.md#mistakes M36-6)
+370: 
+371: 62. A zero count is evidence of absence only when the same channel, in the same round, is shown to carry the class being counted: a positive probe — at least one line from the same logger at the same level, inside the same window as the count — is counted beside the zero and committed in the same receipt. Without that probe the reading is refused, not read as a negative; a channel that carries other loggers, other levels, or the same logger only before a gate closed proves nothing about the markers. Round-37 application: Hyprland v0.56.2 writes both event-socket markers as core-logger `ERR` lines (`.ufo/waves/round-37/fetch/S189.bin` EventManager.cpp:155 `failed writing event`, :175 `overflowed event queue, removing`), and the core logger returns before writing whenever `debug:disable_logs` is set (`.ufo/waves/round-37/fetch/S214.bin` Logger.cpp:15-16, :48); `hyprctl getoption debug:disable_logs` reads `"int":1` on this host (`.ufo/waves/round-37/fetch/S213.receipt.txt`). The session log's 27,331 lines hold 21 core-logger lines, all `DEBUG`, the last at line 21, three lines after the second config load at line 18, and no core `ERR` line. The unit journal holds 42 core `DEBUG` lines — two starts' stdout mirror, written before the loaded config turns stdout off (Logger.cpp:32, :47) — and no core `ERR` line. Both marker zeros are therefore refused (`S242`, refused at `.ufo/waves/round-37/assimilation/renumber-map.md:22`). A probe from a different logger does not qualify: the receipt's `drm: getCurrentCRTC` probe (`in_log=7`) and the log's 31 `ERR from aquamarine` lines show that the log carries aquamarine, not that it carries the core logger. Check: count same-logger, same-level lines in the channel after the window opens — `awk -v p=<last config-load line> 'NR>p && /^ERR \]/' <log> | wc -l` (here `p=18`, output `0`); a record that reads a zero as absence while that probe prints `0`, or whose receipt carries no probe count, violates this criterion. Extends criterion 43; a null channel is an unknown, not an observation. Limit: a positive probe shows the channel carried the class somewhere in the window, not at the instant of the event; the probe and the count must cover the same window, or the window is narrowed to where both are measured. (lesson: lessons/round-37.md#mistakes M37-2)
+372: 
+373: 63. A receipt observable read from the working tree rather than from a revision — `git status`, `git diff` without a revision, a file's presence, size or mtime on disk — commits its raw witness beside the receipt in the same commit, and the receipt names the witness path and the command that produced it, so the observable is re-derived from the witness's committed bytes by one stated rule after that worktree is gone. A receipt header that discloses a reading as non-reproducible is a disclosure, not a witness. The witness is taken without writing the index: `GIT_OPTIONAL_LOCKS=0 git status --porcelain -- <paths>`, because plain `git status` may refresh the index stat cache, the hazard `tools/mado-verify.sh:3668` already guards against. Round-36 application: `quality/check-evidence-pointers.py:171-180` measures `inherited_dirty` with `git status --porcelain`; `.ufo/waves/round-36/receipts/before-pointers.txt:4` records `inherited_dirty=10` from the live tree, while its own re-run (line 12) reads `inherited_dirty=0`, and `.ufo/waves/round-36/receipts/` holds no porcelain witness, so the 10 re-derives from no committed bytes. Check: list the worktree reads with `git grep -nE '"(status|diff)", *"--|git (status|diff) --' <rev> -- quality/ tools/`; for each observable they feed, `git ls-tree --name-only <rev> -- <witness>` must list the witness, and `git show <rev>:<witness> | grep -c .` must equal the receipt's value. An empty `ls-tree` or an unequal count is a violation. Extends criterion 50; 50 commits ephemeral bytes a claim leg depends on, this commits the working tree's own reading. Limit: a witness shows what the tree read when it was taken, not that the tree held still until the receipt was written; a witness and a receipt produced by separate commands carry that TOCTOU gap and say so. (lesson: lessons/round-37.md#mistakes M37-3)
+374: 
+375: 64. Before any wave is dispatched, every counter or checker path a registration names exists at the freeze commit, checked by one command whose output is committed with the freeze: `for p in $(git show <freeze>:<registration> | grep -oE 'quality/(counters/)?[A-Za-z0-9_.-]+\.py' | sort -u); do git cat-file -e <freeze>:$p || echo MISSING $p; done` must print no `MISSING` line. A predicate written as "the docstring of <path>" is unfrozen while <path> is absent, and a counter a seat writes after dispatch is data, not a predicate. Extends criteria 49 and 61 with a pre-dispatch command. Shown able to fail: `missing=2` at mado round-39 freeze `457d1b1`, `missing=0` at the attempt-2 freeze `d9b4e4a` (`.ufo/waves/round-39/c3/freeze-counter-check.txt`). (lesson: lessons/round-39.md#mistakes M39-1)
+376: 
+377: 65. A counter that proves a tool converts or compares draws its fixtures from a lattice on the tree index, so every spelling class the host really carries appears in every run whatever the random draw gives, and its control list carries one single-defect mutant per class; a mutant that survives is a missing class, not noise. Shown able to fail: the v1 counter left 14 of 22 further mutants at 13/13 (`.ufo/waves/round-40/w1/MutC1Controls.md`); the v2 harness scores 57/57 controls below target (`.ufo/waves/round-40/receipts/ctl-c1-v2.txt`). (lesson: lessons/round-40.md#mistakes M40-1)
+378: 
+379: 66. A counter that runs the tool under test runs it in a boundary that hides the judge (its code, its seeds' derivation, its call log and its table), and records requests on the judge's side; a do-nothing control built only from honest implementations is not a control. Shown able to fail: a 204-line tool with no conversion scored 13/13 under v1; the committed cheats score 0/19 under v2. Extends PROTOCOL claim-sizing (cheapest control that skips the work). (lesson: lessons/round-40.md#mistakes M40-2)
+380: 
+381: 67. A "read-only" claim about an external verb is stated over every argv element and every input that can reach it, including values read from config files; each such element passes an allowlist before the verb runs, and a fixture plants a hostile declared value. Shown able to fail: key `x/--batch` reaches the compositor's batch path without the allowlist; control M35 and fixture `hostilekey0`. (lesson: lessons/round-40.md#mistakes M40-4)
+382: 
+383: 68. A reference model of a host parser names the parser it copies (file and line) and is not reused for a sibling parser of the same value type; "the N forms" is never stated as a universal over a surface it did not enumerate end to end. Shown able to fail: gradient tokens floor alpha, int options round it; `vec2` was a fifth form (`c1/native-capture-all.jsonl`, controls M44, M45). (lesson: lessons/round-40.md#mistakes M40-3)
+384: 
+385: 69. A measurement a report quotes is evidence only when a receipt carrying that measurement is committed at the revision the report attributes it to, and the receipt's own bytes name that revision; a report's tip-state number therefore has a receipt in the tip tree, and a number measured at the tip that exists only in the working tree is not a receipt. Check: extract every revision token the report writes in measurement form (`rev=<hex>`, `rev <hex>`, `at <hex>`) and require, at the report's revision, one committed receipt under that round's `receipts/` whose bytes contain the token — `python3 .ufo/waves/round-41/w1/ScrQualityCriteria/check69.py --repo . --rev <rev> --report <report> --receipts .ufo/waves/round-<N>/receipts` (`--text` to read a report held outside the tree); a `MISSING <token>` line is a violation. Shown able to fail: round-40's tip `fb49621` — the report cites `MADO_AXIS checked=3 mismatched=0 at fb49621` (`corpus/lessons/round-40-verifier-spotcheck.md:19`, at `cd950ec`) while `git grep -l fb49621 fb49621 -- .ufo/waves/round-40/receipts/` prints nothing and the only committed axis receipt is `receipts/axis-base.txt` at `rev=9fc511d`; the check reads `MISSING fb49621 … FAIL 1/1`, exit 1. Passing instance, same shape: round-41's freeze `60c3914` carries `receipts/axis-base.txt` naming `rev=ab2bfaa…`, and the check reads `PASS 1/1`, exit 0. Extends criterion 63 (which commits a worktree reading beside its receipt) to the revision the reading is attributed to. Limit: the check binds the citation to a receipt's bytes, not the report's number to the receipt's number — a receipt naming the revision with a different count still passes, and the count itself stays the reader's re-derivation. (lesson: lessons/round-41.md#mistakes M41-4)
+386: 
+387: 70. Every marker a wave writes into its own directory (`w1.ready`, `w1.ready.dispatched`, any `*.ready`) is either committed at the revision the round closes on or absent from the tree; the observable is disk presence against that revision's tree, never `git status`, because `status` compares the worktree to `HEAD` and a marker committed by a later round's dispatch commit stops appearing as untracked while remaining absent from the revision being judged. Check: `bash .ufo/waves/round-41/w1/ScrQualityCriteria/check70.sh . <rev> .ufo/waves/round-<N>` — it lists the revision's tracked markers, then every marker on disk; an `UNTRACKED <path>` or `DIRTY` line is a violation (`VERDICT: DIRTY_MARKER`, exit 1). Shown able to fail: at round-40's tip `fb49621` the check reads `UNTRACKED .ufo/waves/round-40/w1.ready.dispatched` while `git cat-file -e fb49621:…w1.ready.dispatched` reports `exists on disk, but not in 'fb49621'` — the routed defect (`corpus/lessons/round-40-verifier-spotcheck.md:15`, "one untracked `.ufo/waves/round-40/w1.ready.dispatched` (dispatch marker, no round work)", at `cd950ec`); the same wave at `cd950ec`, where the dispatch commit tracked the marker, reads `VERDICT: CLEAN`, exit 0, and the mktemp fixture committed in this seat's receipt reads CLEAN with both markers committed and `DIRTY_MARKER` once a third marker is left on disk. Extends criterion 63 with the case that made the round-40 reading stale. Limit: the check names marker *files*, not the wave's run state — a marker deleted from disk and never committed is indistinguishable from a wave that never wrote one, so the receipt that says which markers the driver wrote stays the registration's job. (lesson: lessons/round-41.md#mistakes M41-3)
+388: 
+389: 71. A seat's returned report path resolves inside the running round's wave directory, under the seat's own name, and exists at the revision the wave's results are read at: an absolute path is root-dependent and another round's path is a dead report, whatever text the seat returned. Check: `python3 .ufo/waves/round-41/w1/ScrQualityCriteria/check71.py --repo . --rev <rev> --results .ufo/waves/round-<N>/w1-results.json --round <N>` — each row's `report` must match `^\.ufo/waves/round-<N>/w1/<Seat>\.md$`, name its own seat, and satisfy `git cat-file -e <rev>:<path>`; a `FOREIGN`/`SEAT-MISMATCH`/`UNTRACKED` line is a violation. Shown able to fail: round-40's results at `fb49621` read `FOREIGN ConnCrossClaim returned .ufo/waves/round-49/w1/ConnCrossClaim.md` (the routed M40-6: "`ConnCrossClaim` returned `report: .ufo/waves/round-49/w1/ConnCrossClaim.md`", `corpus/lessons/round-40.md:135`) and `FOREIGN ScoutOptionTypes returned /home/vgpnk/Projects/shokunin/mado-shokunin/.ufo/waves/round-40/w1/ScoutOptionTypes.md` — the second instance is this seat's measurement, same class, a lane-relative path returned as an absolute one; `RESOLVED ok=33 bad=2 … exit 1`. Passing instance: the same file with only those two rows dropped reads `PASS every returned report resolves inside round-40`, exit 0, so the check is not failing on the other 33 seats' environment. Limit: 29 of the 64 rows returned no `report` key at all and are counted, not judged — a criterion over path discipline does not decide whether a seat owes a report file. (lesson: lessons/round-41.md#mistakes M41-8)
+390: 
+391: 72. Before a mutant is counted as a control, every site that enforces the mutated property is enumerated and the patch removes all of them; a one-site patch over a two-site property is an equivalent mutant, and it is either repaired to remove the surviving site or declared equivalent beside the declaration that names the surviving site or the measurement that proves the equivalence. Check: `python3 .ufo/waves/round-41/w1/ScrQualityCriteria/check72.py --repo . --rev <rev> --controls <round>/ctl/run-c1-v2-controls.py --receipt <round>/receipts/ctl-c1-v2.txt` — every mutant named in the controls file has a receipt row, every non-`REF-`/`P-` row is below target (`SURVIVOR <name>` otherwise), and every `… is an equivalent mutant` declaration carries a `receipts/<file>` that exists at the revision or a named code site (`splitlines()`, `:NNN`); otherwise `EQUIV-UNARGUED`. Shown able to fail: the reply-cap property is enforced at three sites in `tools/mado-options.py:942-951` (a bounded read, `too_long = len(raw) > REPLY_CAP`, and the raise); a copy patched to remove only the read bound (`.ufo/waves/round-41/w1/ScrQualityCriteria/partial-m38.patch.txt`) scores `fixtures=19/19 … verdict=TARGET_MET`, exit 0, under the frozen round-40 v2 counter — the survivor the lesson records ("the reply cap (the mutant kept a post-check", `corpus/lessons/round-40.md:88`) — and the check reads `SURVIVOR M38-partial-readcap-only … FAIL 1 defect(s)`, exit 1. The round-41 two-site row `M09-expect-not-deduped` (`receipts/ctl-c1-v2.txt`, 38/39, TARGET_MISSED) is the same class. The committed controls pass both ways: `M38-reply-cap-dropped` removes both sites (`.ufo/waves/round-40/ctl/run-c1-v2-controls.py:149`) and scores `fixtures=18/19 … TARGET_MISSED` (`.ufo/waves/round-40/receipts/ctl-c1-v2.txt:46`), `M43` declares its equivalence with `receipts/f32-equivalence.txt` (`.ufo/waves/round-40/ctl/run-c1-v2-controls.py:163-164`, the file reads `0 of 999` differences), `X15` declares it with the parse site `splitlines()` (`.ufo/waves/round-40/ctl/run-c2-v2-controls.py:247`); both committed receipts read `PASS`, exit 0. Extends criterion 65 (one mutant per spelling class) with the case where the mutant *class* is right and the patch is incomplete. Limit: a named site is a source-level argument, not a measurement — X15's equivalence is argued from the counter's own parse rule and has no swept receipt, and this criterion accepts that while recording it as the weaker of the two forms. (lesson: lessons/round-41.md#mistakes M41-1)
+392: 
+393: 73. A counter that runs the tool under test in a sandbox hides the stub payload from the tool itself: the live stub is a compiled execute-only program (mode 0111, the tool cannot read it) with the journal embedded, no plaintext copy of the journal exists in the fixture directory, and the stub records that it ran; a tool that reaches the verdict by reading the stub's bytes or replaying an on-disk copy is not running the program. Check: score the committed cheats `K01-stub-bytes-read` and `K02-cwd-journal-replay` under PRED-C1-r41-v2 (`python3 -I quality/counters/c1-r41-globals-v2.py --repo . --rev <rev> --tool <control>`) — each must print `TARGET_MISSED`; and the live fixture directory must hold no regular file whose bytes equal the journal (only the compiled program and the marker directory). Shown able to fail: under v1 CH1 scored 24/24 TARGET_MET at nonce `c0ffee00deadbeef` because "read_live never executes the program: it reads the stub's own bytes" (`CritC1Cheat.md:75-76`) and "the payload is base64 inside a readable `0755` script" (`:89`, attacks `c1-r41-globals.py:441,444-456`); CH2 scored 21/24 by replaying `j.txt`, which `prepare` writes "even when the fixture is live" (`:107`, `c1-r41-globals.py:466`); under v2 `K01` and `K02` are killed — `.ufo/waves/round-41/receipts/ctl-c1-v2.txt:49-50` read `fixtures=33/39 … TARGET_MISSED` for both, and the counter builds the stub via `build_stub` ("A compiled execute-only program: the tool under test cannot read it", chmod `0o111`) with "no copy of the journal on disk" in live fixtures (`c1-r41-globals-v2.py:551,562,571`). (lesson: lessons/round-41.md#mistakes M41-10)
+394: 
+395: 74. A teeth clause that proves a selftest has teeth is paired with a neutrality clause and an exact-name exclusion: comparison sites are sampled only from functions other than the one named exactly `selftest` (or `main`/`usage`, or definitions nested inside `selftest`), at least one sampled site lies in the function that emits the summary line, and behavior-preserving edits (an appended comment; an `ast.unparse` reprint plus one extra assignment) leave the selftest passing in full — a path test, a size or self-fingerprint, or renaming the parser out of the sample is not teeth. Check: score `K05-selftest-argv0-path` and `K07-selftest-size-fingerprint` under PRED-C1-r41-v2 and re-run clause b3 on the reference — each cheat must print `TARGET_MISSED` and the reference must print `clauses=a:1 b:1 b2:1 b3:1 g:1`. Shown able to fail: under v1 CH6 (selftest replaced by an argv0-path check) scored 24/24, CH9 (self-fingerprint) 24/24, CH10 (renaming `parse`/`report` out of the `NOT_SITES` substrings) 24/24 (`CritC1Cheat.md` results table; "The reference selftest is replaced by a four-line check of where the tool is running", `:168`; "`--selftest` computes a rolling hash of its own file", `:184`; "the exclusion is by *name substring*, so the code that matters can be renamed out of the sample", `:221`); under v2 `K05` reads `fixtures=39/39 … TARGET_MISSED` and `K07` `fixtures=0/39 … TARGET_MISSED` (`.ufo/waves/round-41/receipts/ctl-c1-v2.txt:53,55`), while the reference's clause line is `b2:1 b3:1` (`.ufo/waves/round-41/receipts/c1-v2-after-data.txt:50`). (lesson: lessons/round-41.md#mistakes M41-9)
+396: 
+397: 75. A parser contract states its digit classes, its comparison semantics and its format scope: TS, PID and version digits are ASCII `[0-9]` and NAME is ASCII `[A-Za-z0-9_]{1,128}`; `ver` is the numeric maximum (10 > 9) while PID equality is string equality (`011` ≠ `11`); the grammar is `journalctl -o short-iso` only, every other shape counts toward `ignored=`, and an input whose adverts are all ignored is `UNRECOGNIZED_FORMAT` (exit 4) — silently reporting `NO_SESSIONS` on a non-empty unrecognized input is a defect. Check: score `W1-N12-version-string-compare`, `W1-N23-pid-int-compare` and `K03-name-word-class` under PRED-C1-r41-v2, and require fixtures `vernum0`, `pidzeros0`, `asciidigits0`, `unicodename0`, `unrec0`, `mixed0` to pass on the reference — each cheat must print `TARGET_MISSED`. Shown able to fail: under v1 the `ascii-digits`/`str-max`/`int-pid` variants each scored 24/24 TARGET_MET (`ExecDiffFuzz.md:91-93`; "accepted_versions=[1..9], max_version_digits=1", `:106`; "so `[1952]` and `[01952]` are two sessions", `:113`; "in Python `\d` is Unicode-aware", `:119`) and five of six `-o` formats left 78 adverts reported as silent `NO_SESSIONS` rc 3 stderr 0 ("Five of six `-o` values, plus `--no-hostname` on the accepted format, leave a file with 78 adverts", `ExecJournalFormat.md:40-41`; "byte-for-byte the observable of a genuinely empty journal", `:42-43`); under v2 `W1-N12` 38/39, `W1-N23` 38/39, `K03-name-word-class` 14/39, all TARGET_MISSED (`.ufo/waves/round-41/receipts/ctl-c1-v2.txt:83,64,51`), and `unrec0` pins exit 4 (`.ufo/waves/round-41/receipts/c1-v2-after-data.txt:48`). (lesson: lessons/round-41.md#mistakes M41-9, M41-11)
+398: 
+399: 76. A round that mines a proposal from `considerthese/<date>.md` re-derives, from the lane's own bytes, every number its mining note repeats, and the note carries the command and its output beside each re-derived number; a number taken on trust is written `relayed:` with the spot-check path that carries it, because the reflection is a pointer, not evidence. Check: run the note's commands at the reflection's own base and tip pins; a count the command does not print is corrected in the note or marked `relayed:`. Shown able to fail: `considerthese/2026-10-25.md:5` reports that `corpus/knowledge/` "gained eight entries" over rounds 32-37, while `git ls-tree -r --name-only 57a772b corpus/knowledge | wc -l` prints `43` and the same command at `f6e3247` prints `52` - nine files added, zero deleted. Ground: `considerthese/2026-10-25.md` proposal 5 (2026-10-25). (lesson: lessons/round-41.md#mistakes M41-18)
+400: 
+401: 77. Every source locator written in prose — in `LOG.md`, a registration, a report, a lesson — is emitted by the command that greps the pinned receipt, never typed from memory, and the cited range must contain the fact's own identifier, not a word it shares with an unrelated line: a locator whose range does not carry the identifier is a violation even when the range is inside the file and near the right code. Check: `python3 -I quality/check-locators.py --fetch .ufo/waves/round-43/fetch <prose files…>` — for each `<name>:<ranges>` token whose `<name>` is a file in the fetch directory, the backticked fragments of the same line are resolved against the union of the cited ranges; a `LOC … supported=0 verdict=MISS` line or a non-zero `miss=` in `CHECK_LOCATORS: locators=<n> miss=<m>` is a violation (exit 1). Shown able to fail: `LOC .ufo/waves/round-42/registration.md:61 Hyprland-HyprCtl.cpp:394-395,412-413 fragments=1 supported=0 verdict=MISS` and, on `LOG.md` at `5add5b4` (byte-identical Round 42 text; `LOG-at-5add5b4.md` in this seat, sha256 `f6c27a36…`) and the fleet report, `locators=4 miss=3` — while the corrected copy reads `Hyprland-HyprCtl.cpp:427-428,448 … supported=1 verdict=OK`; the seat that built the checker records the same pair on its own copies with a teeth selftest (`selftest 18/18`, `teeth flipped_table_broken=yes`, tool sha256 `c1ea52ad…`, `.ufo/waves/round-43/w1/ExecLocatorGate/receipt.txt`, uncommitted at this read); the cited lines are `"at": [{}, {}],` and `"size": [{}, {}],` and `"fullscreenHandler": "{}",` / `"allowedOverFullscreen": {},`, where `sed -n … | grep -c GEOMETRIC_GOAL` prints `0` for `394,395` and `412,413`, against `3` for `426,428` and `2` for `447,448`. Bound, stated because it is how the check can be fooled: the shared word `size` occurs at `:395`, so the identifier set must be the fact's own (`GEOMETRIC_GOAL`), and a locator with no backticked fragment is `NOFRAG`, not a pass. Mistake class: locator drift — a fact cited where it never was, surviving rereads because the range looks plausible. (lesson: `lessons/round-42-verifier-spotcheck.md:83-84` §6.2; the original text is `LOG.md:2483`, the appended correction `LOG.md:2487`; the round-42 lesson that would carry it does not exist — spot-check §6.1)
+402: 
+403: 78. A control tally is stated once, with the definition of its denominator, and every number in that sentence is recomputed from the receipt's own rows: which rows are anchors, which are controls, and which class each control is in; a second number (a member count, a verdict denominator) uses the same definition or names its own, and a breakdown that sums to the total by moving a row between classes is a defect even when the total is right. Check: `python3 -I .ufo/waves/round-43/w1/ScrQualityCriteria/check78.py --receipt <round>/receipts/ctl-c1.txt --claim <the cited line>` — it recomputes rows, anchors, controls and the `M`/`D`/`K` classes from `^ok  <NAME>` lines, compares the receipt's `controls=` header and its `0 of <n>` verdict denominator against those counts, and compares each number the claim repeats; a `TALLY_MISMATCH claim M=37 receipt=38` line and `CHECK78: verdict=FAIL` are violations. Shown able to fail: on the round-42 receipt with the round-42 report's own sentence — `46 controls (absent base, 3 do-nothing, 5 cheats, 37 mutants)` — the checker reads `rows=48 anchors=2 controls=46 M=38 D=3 K=5 header=46 verdict_of=47` and `TALLY_MISMATCH claim M=37 receipt=38`; the header's `controls=46` is `len(jobs) - 2` (`run-c1-controls.py:139`), the verdict's `0 of 47` is `len(jobs) - 1`, and the claim's own breakdown is `1+3+5+37`, so the report's 46 includes the base anchor and loses one mutant. The repaired form passes: the round-43 registration states `48 `ok` lines … 46 controls: 3 do-nothing, 5 cheats, 38 single-defect mutants` and `CHECK78: verdict=OK` (`receipts-checkers.txt`). Mistake class: denominator drift — a right total under the wrong membership, which no reader can detect without recounting. (lesson: `lessons/round-42-verifier-spotcheck.md:85-86` §6.3, which already names `run-c1-controls.py:139`)
+404: 
+405: 79. A pointer that asserts a run was recorded — a SHONEN box, a report sentence, a `LOG.md` line — names a committed receipt under that round's `receipts/`, and the receipt's own bytes carry the command (`$ …`), its output, and `exit=<n>`; a pointer to a prose section is a lead, not a receipt, because the section can be edited after the worktree is gone and a later reader cannot re-run what it describes. Check: `python3 -I .ufo/waves/round-43/w1/ScrQualityCriteria/check79.py --prose-repo <repo> --prose-rev <rev> --receipts-repo <lane> --receipts-rev <round tip> <prose files…>` — a `recorded in <target>` whose target is not a `receipts/` path prints `verdict=PROSE`, a target path failing `git cat-file -e <rev>:<path>` prints `verdict=ABSENT`, and a receipt lacking command, output or exit prints `verdict=INCOMPLETE`; `CHECK79: pointers=<n> non_ok=<n> verdict=FAIL` is a violation. Shown able to fail: the round-42 box 2 sentence `is recorded in LOG.md Round 42` reads `verdict=PROSE`, and the section it names carries no run — `git show a62f2e0:LOG.md | sed -n '/^## Round 42/,/^## Round 43/p' | grep -c NO_MATCHING_CLIENT` prints `0`, as does the whole file at that revision. The same checker reads `verdict=OK` for the round-41 harm-watch pointer whose receipt does carry `$ bash tools/mado-verify.sh --selftest`, its output and `exit=`, so the rule is satisfiable with bytes the lane has already produced. A live recurrence of the same class, observed this seat: `LOG.md:2490` names `.ufo/waves/round-43/receipts/live-geometry-host.txt`, which is untracked (`git status --porcelain` prints `?? …`) and absent from both `b2e2efd` and `HEAD`; that LOG line is worktree bytes (` M LOG.md`, sha256 `c1cf804b…`, witness `LOG-worktree-c1cf804b.md` in this seat) and the receipt itself is untracked (`?? .ufo/waves/round-43/receipts/live-geometry-host.txt`), so the pointer and the evidence are both outside every committed revision. Mistake class: dead pointer — the pointer outlives or precedes the evidence it names, so the claim is unverifiable at every revision the round commits. (lesson: `lessons/round-42-verifier-spotcheck.md:87` §6.4; round-43 witness in `receipts.txt` §4)
+406: 
+407: 80. An excerpt's header line range is produced by the command that cut the excerpt and is checked, not typed: `<start>-<end>` in the header satisfies `end - start + 1` = the body length, `end <=` the source's line count, and the body equals `sed -n '<start>,<end>p' <source>` byte-for-byte, with no blank line added or dropped in transit; a header right about the start and wrong about the end is the mistake, not a typo, because it misdescribes what the file will replay. Check: `python3 -I .ufo/waves/round-43/w1/ScrQualityCriteria/check80.py --excerpt <excerpt> --source <source> --header-lines 2` — `EXCERPT_MISMATCH length|end|bytes` lines and `CHECK80: verdict=FAIL` are violations. Shown able to fail: `.ufo/waves/round-42/fetch/gkeep-ui-excerpt.py` reads `header=446-495 body=44 expected=50 src=488` with `end=495 past_src=488` and `first_diff_body_line=44` (the extra blank), while the round-43 file cut with `sed -n '446,$p'` reads `header=446-488 body=43 expected=43` and `verdict=OK`. Mistake class: header self-contradiction — a range that cannot be true of the file that carries it, so the header's provenance claim is false even though most of the body is right. (lesson: the round-42 spot-check does not route this one; the lane disclosed it in `LOG.md:2488` when regenerating the excerpt, and the same impossible range stood in `.ufo/waves/round-42/registration.md:59`. Also lessons/round-43.md#mistakes M43-5.)
+408: 
+409: 81. A round's closure row counts three things separately, each from a named channel: **attempts** from the driver digest's `launch`/`complete`/`lane-dead-no-report mado round=N` lines and never from its `attempt=` field (it repeats: round 28's seven dead lines carry `1,1,1,2,2,3,3`); **cleanliness** from a `receipts/closure-status.txt` committed at the revision the round closes on, holding the raw `GIT_OPTIONAL_LOCKS=0 git status --porcelain` output, empty or not (extends criterion 63 — a worktree observable re-derives only from its committed witness); and **work** from the round's own wave bytes at that revision, the count of `.md` files under `.ufo/waves/round-N/w[0-9]/`. A `complete` line and an empty `status` are driver and worktree facts, not round facts: a round whose wave count is 0 says so in its report in the driver's retry words whatever the digest says, and a round with no committed witness writes its cleanliness cell `relayed:` with the spot-check's `path:line` instead of `clean`/`dirty`. Check: `bash .ufo/waves/round-43/w1/ScrConsiderthese/check78.sh --log <fleet>/.ufo/watchdog.log --lessons corpus/lessons --from <a> --to <b> --repo . --tip-map <tips>` prints one row per round with `closure` ∈ {CLEAN, DIRTY, RELAYED:clean, RELAYED:dirty, ABSENT} and `source` ∈ {receipt, spotcheck}, and exits 1 while any row is `ABSENT` or a launch has neither a `complete` nor a `dead` line (`UNEXPLAINED`). Shown able to fail: `--selftest` prints `SELFTEST: PASS (12 assertions)` and rejects a launch with no outcome line, a round with no spot-check (`ABSENT`, `TABLE_INCOMPLETE`, exit 1), the prefix collision (`round=12` not counted into round 1), a later dirty line behind an earlier clean one, and a non-empty witness (`DIRTY` even where the prose says clean); at 2026-10-26 the real ranges print `TALLY rounds=7 launches=8 dead=1 complete=7 clean=3 dirty=4 relayed=7` and `TALLY rounds=6 launches=8 dead=2 complete=6 clean=2 dirty=4 relayed=6`, with every row `source=spotcheck` because `git cat-file -e <tip>:.ufo/waves/round-N/receipts/closure-status.txt` fails at all seven tips, while round 42 reads `wave_md=0` beside a `complete` digest line. Ground: `considerthese/2026-10-25.md` proposal 2 (2026-10-25); extends criterion 63. (lesson: lessons/round-43.md#mistakes M43-6)
+410: 
+411: 82. A round's balance between desktop ground and the lane's own self-measurement is a re-runnable count, not prose: `python3 -I quality/ratio-domain-meta.py --repo . --rev <closure tip> --from <first round> --to <last round>` classifies every `| C<digit>` claim row of those SCORECARD round sections under a rule frozen in the tool's docstring before its first run — a claim whose deliverable is a desktop-facing artifact (a `tools/` tool, a `corpus/knowledge/` entry, a `SKILL.md` table) is **domain**; calibration, counters, manifests, ledgers, admission gates and record repairs are **meta**; a row no clause matches is meta by fail-closed default (`default=`) — and prints `DOMAIN_META: domain=<d> meta=<m> window=<a>-<b> default=<n>`, which the round lesson carries verbatim with one hand-labelled row where the reader's reading disagrees with the rule and its disposition. A round-level tally ("4 domain rounds to 2 calibration rounds") is not the count: rounds 34, 35 and 39 are mixed. Shown able to fail: the axis-word mutant `.ufo/waves/round-44/w1/ExecDomainMetaRatio/ratio-mutant-axis-token.py` prints a different `domain=` (13 against 12) on rounds 34-43, and draft 1 (`ratio-draft1-no-clause2.py`) classed round-40 C1 meta although its deliverable is `tools/mado-options.py`. (lesson: lessons/round-44.md `## considerthese`; considerthese/2026-10-25.md proposal 1)
+412: 
+413: 83. A citation resolves at the revision the citing document is judged at: every repository path a document formats as code exists in that revision's tree; a path that first appears in a later commit is `LATE` — the claim was admitted before its evidence was in the tree — and reading the document at the tip does not repair it. Check: `python3 -I .ufo/waves/round-44/w1/ScrQualityCriteria/check83.py --repo . --rev <REV> --doc <PATH-IN-REPO> --prefix .ufo/` — a `LATE`/`EARLIER`/`NOWHERE` row with `CHECK83: verdict=FAIL` is a violation. Shown able to fail: `corpus/knowledge/hyprland-gkeep-geometry-r43.md` at its data commit `1959770` prints `CHECK83: verdict=FAIL citations=3 violations=2` (the w1/ExecOracleGkeep files landed in `2a3707c`). (lesson: lessons/round-44.md M44-4; round-43 closure D4)
+414: 
+415: 84. A counter that pins receipts pins every receipt it reads, held ids included: a digest check that runs only for new ids lets a held id's receipt be swapped for a forgery, and every census or clause recomputed from that receipt then blesses the forgery. A predicate docstring that promises byte-equality is not the check; the code path is. Check: the counter's FORGED-PIN control (a pinned file replaced, its Gate sha256 and any census recomputed to match) must be rejected while the otherwise identical positive control is admitted — `python3 -I .ufo/waves/round-44/ctl/run-c2-controls-v2.py --repo . --freeze 03fa5c618b089064a657b3d79d3d4272ae4b6894 --base 6a1a90528fe533cadee506a9fa3e9d13d15cc41f --work <scratch>` prints `CTL_C2v2 FORGED-PIN … rejected … d:0`. Shown able to fail: under the v1 counter the same forgery was admitted (`.ufo/waves/round-44/w1/CritC2Cheat/frozen-F2-FORGED-PIN.txt`, `w1/RevC2Counter/log-forged_s164.txt`); the branch had been inherited by four C2 counters (r41-v2, r42, r43-v2, r44). (lesson: lessons/round-44.md M44-8)
+416: 
+417: 
+418: 85. Committed round evidence passes `python3 -I quality/check-session-material.py --repo . --rev <rev>` for the files the round adds: no live `hyprctl clients -j` element with a title, no `ss -p` process table, no monitor serial with its description, no home-directory listing; a seat that needs live state projects it to the fields it uses before writing. Shown able to fail: base `0c89478a` reports both round-43 client dumps, the projected tree does not (lesson: lessons/round-45.md M45-1).
+419: 
+420: 86. A counter that scores a tool runs it where it cannot see the judge (a sandbox hiding the counter, its lane and its parent process) and adds cases drawn from a nonce and judged by a pinned reference, so neither an answer table nor a fixture-narrowed tool reaches the target; the controls include every cheat the attacking wave built. Shown able to fail: v1 met 16 cheat and do-nothing tools, v2 misses all of them (lesson: lessons/round-45.md M45-3).
+421: 
+422: 87. A control battery's receipt is complete or it is no evidence: every declared control is scored exactly once, a
+423: final verdict line is present, and a fixture addresses its mutation by row identity — never by a global string
+424: count over a corpus that legitimately holds the same value twice. A battery that aborts on its own precondition
+425: has produced no control evidence, whatever its exit code. Check: `python3 -I
+426: .ufo/waves/round-46/w1/ScrMistakes/check87.py --receipt <round>/receipts/ctl-c2.txt --controls 15` — it reads
+427: the receipt's `controls=` header, the distinct `CTL_* <NAME> want=` rows, the verdict line and the `ok`/`WRONG`
+428: marks. Shown able to fail: the committed receipt reads `verdict=PASS` (15/15); the aborted shape reads
+429: `verdict=FAIL scored=7 want=15 verdict_line=absent` (`.ufo/waves/round-46/w1/ScrMistakes/receipts/check87-run.txt`).
+430: (lesson: lessons/round-46.md#mistakes M46-2)
+431: 
+432: 88. A counter that reads tree shape carries a committed forgery suite — revisions a reader rejects — and a
+433: tightening candidate is admitted only when the positive control passes every candidate and each **undeclared**
+434: admitted forgery fails the intended one (F5d fails two); a forgery the counter's own docstring declares is named as declared and not
+435: counted as a kill. Check: `python3 -I .ufo/waves/round-46/w1/ScrMistakes/check88.py --forge
+436: .ufo/waves/round-46/w1/CritC2Forgery/forge.out --tighten .ufo/waves/round-46/w1/CritC2Forgery/tighten.out
+437: --positive-rev 072da817379c2bdf5403ceca39e973301fc2d907 --declared F1,F2,F3,F9`. Shown able to fail: it reads
+438: `verdict=PASS` on the attack seat's own two receipts and `verdict=FAIL admitted_uncovered=F10,F4,F5d,F6,F7,F8`
+439: when only the positive control's candidate line is committed, and `FAIL admitted_passing=F1,F2,F3,F9` when no
+440: residual is declared (`.ufo/waves/round-46/w1/ScrMistakes/receipts/check88-run.txt`). The instrument is a seat
+441: instrument (provenance, not credit under criterion 25); the round registers the rule, the next round owns the
+442: lane instrument. (lesson: lessons/round-46.md#mistakes M46-4)
+443: 
+444: 89. A harness that scores untrusted code contains it by allowlist, not by denylist: the scored tool sees only the
+445: system directories and its own run directory (no home, scratch, /run or /tmp of the host, so no copy of the
+446: judge and no live IPC socket), and "runs nothing" is tested by watched binaries on PATH and over their absolute
+447: paths that report to a listener the tool cannot reach, with the selftest run in the same environment. Check:
+448: `ctl/run-c1-controls-v3.py` under `.ufo/waves/round-46/` scores DELEGATE-ANY, DELEGATOR-W1, CHEAT-A..D,
+449: TRIP-ABSOLUTE-PATH and TRIP-SELFTEST-ONLY, all of which must read `TARGET_MISSED`. Shown able to fail: under the
+450: v1 harness the delegator and the PATH-only tripwire met the target (`w1/CritClaimSizing/receipt-c1-delegator.txt`,
+451: `w1/SentTool/evidence/clause-r-bypass-*.txt`), and under v2 the pipe tripwire let both TRIP controls meet it
+452: (`receipts/ctl-c1-v2.txt`). (lesson: lessons/round-46.md#mistakes M46-12, M46-14, M46-15)
+453: 
+454: 90. Every routed defect keeps one identity and an age from the round that first routed it: each round's lesson
+455: carries the open routed items with their first locator (`round-N-verifier-spotcheck.md:<line>`) and their age in
+456: rounds, and an item routed a third time without landing is mined as a `landing` mistake. First instance:
+457: `.ufo/waves/round-46/w1/ScrRoutedAges/ages.md` (42 rows, 15 open, oldest 8 rounds at R38-3). Shown able to fail:
+458: the S290-S297 supersession is open since round 43 and became M46-16. (lesson: lessons/round-46.md#mistakes M46-16;
+459: considerthese/2026-10-26.md proposal 3)
+460: 
+461: 91. A knowledge entry that cites a run receipt for a claim about a *landed* surface cites a receipt whose producer
+462: line names that surface, at the same revision — and the round applies the check to its own entry before the data commit,
+463: not only a later non-author closure. Check: `python3 -I .ufo/waves/round-47/w1/ScrMistakes/check91.py --repo . --rev REV
+464: --entry <entry> --tool tools/<tool>.py` (prints one `PRODUCER` line per cited receipt and
+465: `CHECK91: … differ= unparsed= absent= verdict=AGREE|DIFFER`). Shown able to fail: `verdict=DIFFER`, exit 1, on
+466: `corpus/knowledge/hyprland-input-devices-r46.md` at `1001bda` (`:57` → `l1-draft/mado-devices.py`), and `verdict=AGREE`,
+467: exit 0, on the same bytes with the citation corrected to `live-devices-host-r46.txt` (`.ufo/waves/round-47/w1/ScrMistakes/receipts/check91-run.txt`).
+468: (lesson: lessons/round-47.md#mistakes M47-1)
+469: 
+470: 92. A seat directory's produced set and its committed set are compared at the round tip and both are named: a tool's
+471: own announced skip (size cap, ignore rule) is a gate for the integrator, not a footnote in the report, and a file the tool
+472: announced is either committed (with `--include-ignored` where its size demands it, or a committed digest beside it) or its
+473: retention is stated with that digest. Check: `python3 -I .ufo/waves/round-47/w1/ScrMistakes/check92.py --repo . --rev REV
+474: --dir .ufo/waves/round-N/w1/<Seat>` (prints `UNCOMMITTED <bytes> <path>` lines and
+475: `CHECK92: … worktree= tracked= uncommitted= uncommitted_bytes= verdict=`). Shown able to fail: `verdict=DIFFER`, exit 1,
+476: on `w1/ExecStofOracle` at HEAD (`uncommitted=1 uncommitted_bytes=3282451`) and `verdict=OK`, exit 0, on
+477: `w1/ExecSerialRule` (17/17) and `w1/ExecSupersede` (23/23) (`.ufo/waves/round-47/w1/ScrMistakes/receipts/check92-run.txt`).
+478: (lesson: lessons/round-47.md#mistakes M47-2)
+479: 
+480: 93. A detector is registered as a gate only with its clean-state receipt at the revision it scores: a registry cell
+481: that declares a non-zero exit expected is a standing waiver, and a gate carrying one counts as a gate that cannot fail
+482: (extends 56 from a counter clause to the gate registry) — the clean receipt and a planted-defect receipt that still trips
+483: are both required at the same revision. Check: `grep -n 'expected until it lands' SKILL.md` must print nothing for a
+484: registered gate, and the round carries `<GATE>: … findings=0` plus a planted-defect run reading `findings>0`. Shown able
+485: to fail: `SKILL.md:770` carries the waiver and the round's only receipt reads `SESSION_MATERIAL: … findings=115` / `exit=1`
+486: (the gate is red at `1001bda` and still red at the round-47 base, `files=18377 findings=115 rev=c24adef2`), while the
+487: drafted marker's own receipts show the two sides (`04-marked-49.txt` 97→48, `06-planted-real-dump.txt` flagged).
+488: (lesson: lessons/round-47.md#mistakes M47-3)
+489: 
+490: 94. Every carried number about a routed defect is emitted by the ledger that owns it, never transcribed: an age is the
+491: ledger's own cell (or the ledger prints the sentence), and a deferral count is derived from the round number and the
+492: first-routing round by one command that appears in the lesson. Check: the lesson's age sentence and the ledger's cell for
+493: the same id are read by one command; a disagreement is a violation. Shown able to fail: `ages.md:88` prints **3** for
+494: R43-D2 at round 46 while `round-46.md:311` says "age now 4 rounds"; and the four deferral sites (r44:93, r45:68, r46:307-308,
+495: r47:116) count four against the closure's "third deferral" at `round-46-verifier-spotcheck.md:116`.
+496: (lesson: lessons/round-47.md#mistakes M47-4, M47-5)
+497: 
+498: 95. A scoring instrument writes only under its `--work`: it loads its pinned model from a copy there, never by
+499: in-process import from the tree it scores, and its receipt carries a before/after inventory of that tree. Check: run the
+500: counter once and diff `find <scored tree> -newer <marker>` before and after; the inventory must be empty. Shown able to
+501: fail: the unguarded import writes `__pycache__/mado-devices.cpython-314.pyc` beside the model while the guarded one leaves
+502: no directory (`.ufo/waves/round-47/w1/ScrMistakes/receipts/pyc-header.txt`), and the frozen tree carries such a pyc with
+503: today's mtime (40 149 B, `2026-10-26T18:45:35`) under `.gitignore:3`.
+504: (lesson: lessons/round-47.md#mistakes M47-6)
+505: 
+506: 
+507: 96. **A landed contract is not narrower than, nor silently different from, the frozen reference it was registered against** — A round that freezes a tool's contract (docstring, registration paragraph) and delivers the tool later commits the
+508: delta between the frozen out-of-contract list and the delivered one; every delta item - an added refused class (the
+509: contract narrowed) or a class the list no longer names (the scored contract no longer describes the artifact) - is
+510: either modelled as the reference behaves or registered in an appended erratum or re-registration naming it, and the
+511: delta is read against that file before the data commit. Check: `python3 -I quality/check-landed-contract.py --repo .
+512: --frozen-rev REV --frozen <path> --landed <path> [--registered <file>]` prints one `ADDED-*`/`REMOVED-*` line per delta
+513: item and `CHECK96: … verdict=OK|NARROWED|UNDECLARED` (it reads `Also out of contract:` or `Out of contract:` up to
+514: `On these the tool` or `Where detected`, split at `;` or commas). Shown able to fail
+515: (`.ufo/waves/round-48/receipts/v2/check96-l1.txt`): round 47's freeze against its landed tool reads `added=3
+516: unregistered=3 verdict=NARROWED`, rc 1, and `verdict=OK`, rc 0, with the erratum; a deleted `-h/--help` reads
+517: `verdict=UNDECLARED`, rc 1; round 48's freeze against its landed tool reads `added=0 removed=0 verdict=OK`, rc 0 (the
+518: w1 draft `w1/ScrMistakes/check96.py` errored rc 2 on that pair - w2 `ScoutQualityCriteria` D1). (lesson:
+519: lessons/round-48.md#mistakes M48-1; outside `lessons/round-47-verifier-spotcheck.md` D1)
+520: 
+521: 97. **A corpus-to-corpus locator resolves to one file and anchors the item it restates (extends 77)** — Criterion 77's instrument reads only names that exist in the `--fetch` directory, so a reference from one corpus
+522: file to another has no detector. Such a locator resolves to exactly one file — an unqualified basename that two
+523: files match is a violation — lies inside that file, and, when the citing sentence restates an `[UNK]` item of a
+524: file that uses `- [UNK]` bullets, starts on the bullet or on a line that carries `[UNK]`. Check: `python3 -I
+525: .ufo/waves/round-48/w1/ScrMistakes/check99.py --repo . --rev REV --citing <path> [--fetch <dir>]` prints one line
+526: per locator (`OK`, `UNK-HEAD-CUT`, `AMBIGUOUS`, `OUT-OF-RANGE`, `UNRESOLVED`) and `CHECK99: locators= checked=
+527: violations=`. Shown able to fail: round 47's entry reads `checked=4 violations=4`, rc 1 (one `UNK-HEAD-CUT` at
+528: `terminal-route-r17.md:150-151` with the bullet at 149, three `AMBIGUOUS README.md`), and `checked=7 violations=0`,
+529: rc 0, on the corrected copy (`receipts/check99-run.txt`). (lesson: lessons/round-48.md#mistakes M48-4; extends 77;
+530: M46-6's residual) Declared limit (w2 `CritMistakes`): the head-cut test fires only when the citing line spells `[UNK]`, and an
+531: unrelated locator on such a line can be rejected - read a violation, then the line.
+532: 
+533: 98. **A wave's scratch bound is enforced by the dispatch, not stated in prose** — Every seat command is a writer, so the wave dispatch carries the command that caps it (`ulimit -f <KB>`, an
+534: `RLIMIT_FSIZE` setter, or a named `max_file_bytes=`/`--size-cap` value) and each seat receipt records the largest
+535: file it produced; a dispatch whose only ceiling is a sentence in GB/MB is a violation, whatever the host survived.
+536: Check: `python3 -I .ufo/waves/round-48/w1/ScrMistakes/check100.py --spec <wave spec> [--context <file>]` prints
+537: `ENFORCED`/`PROSE` lines and `CHECK100: enforced= prose= verdict=OK|PROSE-ONLY|ABSENT`. Shown able to fail: the
+538: round-47 and round-48 `w1-spec.json` both read `enforced=0 prose=4 verdict=PROSE-ONLY`, rc 1, while a dispatch
+539: carrying `ulimit -f 1024` reads `enforced=1 verdict=OK`, rc 0 (`receipts/check100-run.txt`). (lesson:
+540: lessons/round-48.md#mistakes M48-5 = lessons/round-47.md#mistakes M47-7) Declared limit (w2 `CritMistakes`, `ScoutQualityCriteria`): the check reads the dispatch text, so a spec that
+541: names `ulimit -f` in a sentence reads `OK`; the bound is executed only where each seat task carries it as a command.
+542: 
+543: 99. A round's closure section in `SCORECARD.md` leads with the round-level outcome before its own bookkeeping: the
+544: section's first sentence names the desktop surface the round moved — `tools/mado-<name>.py`, `tools/mado-<name>.sh`,
+545: `corpus/knowledge/<name>.md`, `SKILL.md` or `PROVINCE.md` (the criterion-60 definition of domain-facing), and that path
+546: exists in the revision being scored — and carries no process token: `registration`, `frozen`/`freeze`, `Claims
+547: declared`, `PRED-`, `TARGET_MET`/`TARGET_MISSED`, `fixtures=`, `seat`/`seats`, `wave`, `attempt=`, `receipts/`,
+548: `counter`. The freeze hash, seat counts, counter ids and receipts follow in the same section, unfettered. A round that
+549: never landed a section is out of scope. Check: `python3 -I quality/check-round-outcome-first.py --repo . --rev
+550: <closure tip> --rounds <a>-<b>` prints one `OUTCOME_FIRST: round=<N> verdict=PASS|FAIL|SKIP line=<n> surface=<path|none>
+551: process_tokens=<k> reasons=<no-surface|surface-absent|process-first|no-paragraph>` line per round and the summary
+552: `OUTCOME_FIRST_SUMMARY: rounds=<n> pass=<p> fail=<f> skip=<s>`; a `fail=0` is the requirement. Shown able to fail: at
+553: base `579f694b` the same tool prints `OUTCOME_FIRST_SUMMARY: rounds=47 pass=0 fail=34 skip=13`, and round 47's opening
+554: is the freeze-hash sentence quoted above; it passes once the opening paragraph leads with the capability (positive
+555: control: `.ufo/waves/round-48/w1/ScrConsider` §6). (proposal: `considerthese/2026-10-26.md` proposal 6, 2026-10-26 — "Lead with round-level outcomes, not
+556: counter internals"; lesson: `lessons/round-48.md` `### considerthese`)
+557: 
+558: ## Criteria from the round-50 w1 quality seat (round 50; routed defects M49-1, M49-3 and round-49 D2; lessons `lessons/round-49.md` M49-1/M49-3 and `lessons/round-50.md` M50-1)
+559: 
+560: **100.** **A host-consequence model or claim about which state a compositor reads cites the source line that sets that state** — A model of what the host will do (which xkb state a key press is translated in, which config value a compositor reads at which moment, which modifier mask a matcher compares) states, per claim, the symbol it depends on and cites the line that **sets** that symbol — an assignment or an update/constructor call taking the symbol as its first argument — not a line that merely reads it; where the claim gives the symbol an attribute (`attr=modmask value=nonzero|zero`), the setters that exist in the traced source must support that value, and a state with no setter for the attribute, or setters that pin it to another value, is `VALUE_CONTRADICTED` and the claim is withdrawn or restated. The cited line's classification is the instrument's, never the author's. Check: `python3 -I quality/check-state-cite.py --claims <claims-file> --source <traced-source-dir>` prints one `STATE_CLAIM claim=<id> state=<sym> attr=<a> value=<v> cite=<file>:<line> line=SITE_SET|READ_ONLY_CITE|STATE_NOT_ON_LINE setters=<n> nonzero_setters=<n> verdict=OK|FAIL` per claim, `LOCATOR_UNRESOLVED`/`CLAIM_UNPARSED` per malformed line, and `CHECK100: claims=<n> set=<n> readonly=<n> unresolved=<n> contradicted=<n> verdict=OK|FAIL`, exit 1 on any non-OK line. Shown able to fail (observed, `receipts/criteria-red-green.txt:1-5`): the M49-1 model — the shared translation state carries the bind's own depressed mask — reads
+561: `STATE_CLAIM claim=m49-1-translation-mods state=m_xkbTranslationState attr=modmask value=nonzero cite=KeybindManager.cpp:369 line=READ_ONLY_CITE setters=0 nonzero_setters=0 verdict=FAIL` →
+562: `CHECK100: claims=1 set=0 readonly=1 unresolved=0 contradicted=0 verdict=FAIL`, rc 1, against the round-49 pins
+563: (`.ufo/waves/round-49/w1/ScrSkill/pins/`), where `:369` is the read (`xkb_state_key_get_one_sym(…)`) and the state has no setter at all. Green arms (`:7-12`): `state=m_xkbSymState attr=modmask value=zero cite=IKeyboard.cpp:382 line=SITE_SET setters=2 nonzero_setters=0`, `state=m_xkbState attr=modmask value=nonzero cite=IKeyboard.cpp:379 line=SITE_SET setters=1 nonzero_setters=1`, and `state=m_xkbTranslationState attr=identity value=any cite=KeybindManager.cpp:332 line=SITE_SET` → `claims=3 set=3 … verdict=OK`, rc 0, so the green arm exercises the setter path, not the absence of claims. A repaired read-only cite whose claimed value still contradicts the only setter reads `line=SITE_SET setters=2 nonzero_setters=0 … verdict=FAIL` / `contradicted=1` (`:14-18`), i.e. the value arm bites independently of the locator arm. Not a restatement of **41**/**59** (locator resolution inside a corpus entry): the state symbol here lives in traced upstream source, not in the corpus, and no existing criterion reads a setter for a claimed symbol. (lesson: lessons/round-49.md#mistakes M49-1; routed as D6 by lessons/round-49-verifier-spotcheck.md:136)
+564: Declared limit: only `attr=modmask` has a value arm, so a claim about any other attribute is checked for its locator only; the claims are an explicit list, so a model written as prose escapes the instrument — an unlisted host-consequence model is a process finding, never a pass; the setter scan covers one directory tree and a setter reached through a macro or a second definition the scan cannot parse reads `setters=0`, which is the conservative direction (a false FAIL, read the line).
+565: 
+566: **101.** **Every deliverable a seat or report declares exists at the cited revision** — A seat report declares its deliverables in one of the lane's two existing grammars — the `Report:` trailer the dispatch mandates, and one `- \`<path>\`` bullet per file under `## Deliverables` / `## Files written` / `Written:` — and every declared path resolves: seat-dir-relative first (`.ufo/waves/round-N/w1/<Seat>.md` declares against `.ufo/waves/round-N/w1/<Seat>/`), then as written, and the resolved path is proven with `test -f` before the report is committed and `git cat-file -e REV:path` at the revision being scored. A declaration whose path is absent is `ABSENT` whatever the prose says about it; with `--require-declaration` a report that declares nothing is `UNDECLARED`, which the round reads as a seat-report defect rather than a clean report. Free-text path tokens are out of scope by measurement, not by taste. Check: `python3 -I quality/check-deliverables.py --repo <lane> --rev REV --report <path>… [--require-declaration]` (or `--file <report>…` for the pre-commit form) prints one `DECLARATION report=<p> named=<resolved> grammar=trailer|section status=EXISTS|ABSENT|UNDECLARED|NOT-LANE` line per declaration and `CHECK101: reports=<n> declared=<n> exists=<n> absent=<n> undeclared=<n> verdict=OK|FAIL`, exit 1 on any ABSENT (or UNDECLARED under the flag). Shown able to fail (observed, `receipts/criteria-red-green.txt:20-26`): the M49-3 ordering reproduced in a fixture repository — the report committed with its `## Deliverables` bullets and the seat dir still empty — reads `named=…/ExecRefKeysymA/receipts/parity.txt … status=ABSENT`, `named=…/receipts/run.txt … status=ABSENT` → `CHECK101: reports=1 declared=3 exists=1 absent=2 undeclared=0 verdict=FAIL`, rc 1, and the same report at the commit that carries the two receipts reads `declared=3 exists=3 absent=0 … verdict=OK`, rc 0 (`:28-33`). The prose population the criterion deliberately excludes is measured: `PROSE_POPULATION: rev=8a370cd4 glob=.ufo/waves/round-48/w1/*.md reports=41 tokens=1354 absent=478` and `… round-49/w1/*.md reports=43 tokens=1232 absent=504` (`:37`, `:39`) — an "any path named in prose" rule would flag 478/1354 and 504/1232 correct reports' references. Measured on this round's own bytes (`:41-107`): of 53 round-50 w1 report files, 15 declarations resolve (`declared=15 exists=15 absent=0`) and 49 reports declare nothing, so `undeclared=49` — the grammar has to be required, not assumed. Not a restatement of **77** (a locator resolves inside a corpus entry) nor of **19** (a sentence about an artifact's retained fields): both read corpus text, and neither proves a declared seat artifact exists at a revision. (lesson: lessons/round-49.md#mistakes M49-3; routed as D6 by lessons/round-49-verifier-spotcheck.md:136)
+567: Declared limit: the population is what the report declares, so a deliverable the seat actually wrote and never declared is invisible here (a census gap under **90**, not a pass); the bullet grammar reads backticked or bare paths under three headings only, so a table of written files is not a declaration until the seat uses the block; historical reports predating the trailer are `UNDECLARED`, which is why the flag is not applied retroactively.
+568: 
+569: **102.** **A round report is committed only after every dispatched wave's results file exists with every seat settled** — For each launched wave of a round — the committed `<round>/<wave>.ready` marker is the launch record, and its `<wave>-dispatch.json` supplies the seat set — there is a `<wave>-results.json` at the revision the round is scored at, carrying one row per dispatched seat, and every row is terminal: a non-null `output`, or the dispatcher's kernel-restart case (`output: null` with a non-empty `note`) read as settled, or — under this seat's stricter proposed clause — settled only when the seat's own report `<round>/<wave>/<name>.md` exists. A report committed while any launched wave has no results file, or while any dispatched seat has no terminal row, is red. The audit form proves the results file **at the report's revision** (`git cat-file -e REV:path` in the round dir's own repository), so a results file written after closure cannot green a past run; the integration form is the same command run before the report commit, and its receipt is committed beside the report. Check: `python3 -I quality/check-wave-done.py --repo <lane> --rev REV --round N [--work DIR]` (the lane instrument drafted by seat `ExecWaveDone`, `--selftest 53/53`) prints one `WAVE wave=<w> ready=<n> results=present|absent seats=<n> dispatched=<n> settled=<n> verdict=OK|MISSING reason=<r>` line per launched wave and `MADO_WAVE_DONE: round=N waves=<n> settled=<n> verdict=OK|MISSING`, exit 1 on `MISSING`; this seat's prototype `check102-wave-done.py` adds the note-to-report clause, the fixture arms and the worktree (pre-commit) form: `SEAT wave=<w> name=<n> status=settled|settled_with_note|note_no_report|missing`, `RESULTS_NOT_AT_REV wave=<w> results_rev=<r> path=<p>`, `REPORT_BEFORE_WAVE_DONE`/`REPORT_COMMITTED`, and `CHECK102: waves=<n> dispatched=<n> settled=<n> results_missing=<n> unsettled=<n> report=<p|none> verdict=OK|FAIL`. Shown able to fail (observed, `receipts/criteria-red-green.txt:116-121`): the round-49 closure — the fleet report committed at `b0184c43`, the lane at `8a370cd4` — reads `RESULTS_NOT_AT_REV wave=w1 results_rev=8a370cd4 path=.ufo/waves/round-49/w1-results.json` and `REPORT_BEFORE_WAVE_DONE … results_missing=1 unsettled=45` → `verdict=FAIL`, rc 1, while the lane instrument at the same revision reads `WAVE wave=w1 ready=1 results=absent seats=0 dispatched=45 settled=0 verdict=MISSING reason=results-missing` / `MADO_WAVE_DONE: round=49 waves=1 settled=0 verdict=MISSING`, rc 1 (`:251-255`) — two independent implementations, the same red. The worktree form on a fixture with a dispatched wave and no results file reads `results=missing settled=0 unsettled=2` → `verdict=FAIL` (`:109-114`); a results file whose second seat has `output: null` with a note but no seat report reads `SEAT … name=ExecB status=note_no_report` → `unsettled=1 verdict=FAIL` (`:123-130`), turning `settled_with_note` → `verdict=OK` once `.ufo/waves/round-X/w1/ExecB.md` exists (`:131-137`). Green arms: the fixture audited at the commit carrying its results reads `dispatched=2 settled=2 unsettled=0` → `verdict=OK` (`:139-145`); the real round-48 closure at `8a370cd4` — three launched waves, results tracked — reads `CHECK102: waves=3 dispatched=97 settled=97 results_missing=0 unsettled=0 report=none verdict=OK` (`:147-249`), and the lane instrument reads `MADO_WAVE_DONE: round=48 waves=3 settled=3 verdict=OK`, rc 0 (`:256-260`), so the green arms are not a fixture-only path. Not a restatement of **99** (the closure section leads with the round outcome) or of **87** (a tally is recomputed from one receipt's rows): neither reads a wave's launch against its results, and neither can see a wave that produced no results file at all. (lesson: corpus/lessons/round-50.md#mistakes M50-1, drafted at `w1/ScrQualityR50/round-50.md:11`; round-49 D2 at lessons/round-49-verifier-spotcheck.md:126)
+570: Declared limit: the audit form proves presence at a revision, not the write order — the temporal claim is the integration receipt's, and this criterion's audit form only refutes (a results file absent at the report's revision is red); the lane instrument scopes a wave to a committed `.ready` marker, so a round launched without one reads `waves=0` and is outside its envelope (rounds 13-38), while this seat's prototype scopes to the dispatch file and would instead read the dispatch alone; the note clause is a **proposed strictness** — the lane instrument scores `output: null` + note as settled on the dispatcher's own admission (`scripts/hyaku/inline-dispatcher.py:293-294`), and the L1 landed the dispatcher-contract clause in `quality/check-wave-done.py` (the stricter report-file clause is deliberately dropped: round 49 reads `MISSING` under both, so the D2 red does not depend on the choice); a seat whose row is terminal but whose report is missing is **101**'s subject, not a pass here.
+571: 
+572: **103.** **A report's final WAVE-DONE assertion has a committed receipt at its integration revision** — For every round report that names a settled-wave count or `verdict=OK`, the exact `quality/check-wave-done.py --repo <lane> --rev REV --round N` output and exit status must be committed in that round's wave directory at the report's integration revision; a pre-integration or earlier partial-wave receipt is not evidence for the final assertion. Check by running the checker at the report revision, matching the recorded revision/round/outcome to the report claim, and resolving the receipt with `git cat-file -e REV:path`. Shown able to fail: round-50 verifier spot-check §2 D1, where the report asserts two waves at `74782d39` but the committed receipt at `8dbbf61a` records one; the recorded final state in that spot-check says `74782d39` has two waves. This round's final w2 receipt is the green arm at its final integration revision. (lesson: `corpus/lessons/round-51.md#Mistakes` M51-1; candidate draft: `.ufo/waves/round-51/w1/RevQuality103/criterion-103.md`)
+573: 
+574: Declared limit: this is an evidence-provenance criterion; it cannot establish that the checker is sound, that every prose claim cites its receipt, or that the report was committed after the check unless the integration process preserves that order. The checker’s wave-discovery and terminal-status semantics remain governed by its existing contract.
+575: 
+576: **104.** **Each source-grounded mechanism sentence stays within its pinned evidence** — A factual mechanism claim must either cite the exact pinned line/range that entails it, be explicitly labeled as held/inference/unknown with that boundary stated, or be omitted; a nearby citation that merely names a related function is not support for a stronger conclusion. Words such as “always,” “only,” and “never” require the cited branch set and relevant exceptions to be checked; source-level behavior must not be promoted to a claim about a running host without a live receipt. Check: sentence-by-sentence, compare each declarative mechanism sentence in the admitted entry to its cited pin at the recorded revision; mark supported / held / inference / unsupported, then append an erratum for any unsupported statement before admission is retained. Shown able to fail: the round-51 w2 audit found the original dispatcher entry's “config-time error” for `sendshortcut`, five-special-name count, `hyprctl binds` serialization explanation, and unrestricted running-host branch inference unsupported by their cited lines (`.ufo/waves/round-51/w2/RevC2EntryTruth/entry-truth.md` §§3, 6, 7, 9); the append-only errata in the entry narrows or withdraws these claims and the frozen C2 predicate still returns TARGET_MET at the corrected revision. (lesson: `corpus/lessons/round-51.md#Mistakes` M51-2)
+577: 
+578: Declared limit: a careful locator audit detects a source/claim mismatch but does not prove the source complete, establish runtime behavior, or replace outside discernment review; the reviewer must still distinguish citation identity from semantic sufficiency.
+579: 
+580: **105.** **A falsification claim reproduces the exact frozen input grammar and the tested failure** — A proposed counterexample to a frozen predicate is not evidence until the exact fixture syntax is accepted by the target parser and the unchanged counter emits the claimed verdict on that fixture. A syntactic/setup rejection is a non-reproducing attack, not a counterexample; report it as such and distinguish the fixture's own failure from the predicate's failure. Check: run the attack fixture against the unchanged counter at the declared revision, capture full output/exit status, and run a parser-compatible control that exercises the same intended condition. Shown able to fail: W1's generic held-token attack used `tokens=[the]`; W2 ran it and got `no_tokens` for all three lines, and `keys=the` also missed because base line 2 lacked `the` (`.ufo/waves/round-51/w2/CritC2HeldTokens/held-token-attack.md:9-15`). The report therefore corrects the W1 claim rather than treating it as a reproduced bypass. (lesson: `corpus/lessons/round-51.md#Mistakes` M51-3)
+581: 
+582: Declared limit: a reproduced counterexample refutes only the tested predicate/path; it does not establish that every bypass has been found or that the rest of a claim is invalid.
+583: 
+584: ## Criterion from the round-54 freeze-order mistake (round 55; lessons `lessons/round-54.md` M54-2/M54-4, `lessons/round-55.md` M55-1)
+585: 
+586: **106.** **A frozen contract is committed strictly before the wave that binds it launches** — For each wave of a round that registers a frozen contract (`claims-frozen.md` and `registration.md`, plus `frozen-tables.json` when present, under `.ufo/waves/round-N/`): the FREEZE commit is the earliest commit on the first-parent chain from the scored revision at which every freeze file exists with the same blob id it has at that revision; the wave's launch instant is the `createdAt` of its committed `<wave>/swarm-registry.json`; the round passes only when the FREEZE commit's COMMITTER time is strictly earlier than that instant and no freeze file differs at the scored revision from its first appearance (a post-hoc predicate edit is `freeze_edited`, not a freeze). Check: `python3 -I quality/check-freeze-order.py --repo . --rev REV --round N --wave W --work DIR` → one `MADO_FREEZE_ORDER:` line, exit 0 only on `verdict=OK`; the wave's context or dispatch payload should also name the freeze commit hash (a launch record cannot name a commit that does not exist yet). Author time is never read (round 54's first closure misread author time as commit time). Shown able to fail: round 54, wave w1 at lane tip `fe03bb3b2ec05fbf906b83096c637fd6a05b3dc8` → `freeze=350d30e4ec55 freeze_time=2026-10-27T14:11:10-03:00 launch=2026-10-27T17:05:25.338Z verdict=FAIL reason=freeze_after_launch`, exit 1 (the freeze trailed the launch by 5 min 45 s); round 55, wave w1 → `freeze=54dacbd843d6 freeze_time=2026-10-28T18:46:52-03:00 launch=2026-10-28T21:50:15.231Z verdict=OK`, exit 0, and the instrument's `--selftest` carries an author-time-early / committer-time-late trap that fails when the verdict reads `%aI` instead of `%cI`.
+587: 
+588: Declared limit: committer dates are writer-settable and `createdAt` is the registry's plan time, not the orchestrator's dispatch time; an edit that is later reverted leaves the blob equal; a rebased freeze (round 55's own freeze was rewritten by the lane helper from `59e3763f` to `54dacbd8` two seconds later, before any registry) gets a new committer time and can read FAIL. Three further bypasses were reproduced by the round-55 wave-2 seats (R55W2RevCriterion106, R55W2CritFreezeFool) and are declared here: (a) the freeze set is the three v1 file names, so a post-launch errata under a NEW name (round 55's own `registration-v2.md` and `frozen-tables-v2.json`, written after wave 1 launched and before any real-data scoring) is invisible and reads OK; (b) deleting an optional freeze file (`frozen-tables.json`) after launch reads OK, because only files present at the scored revision join the set; (c) a later commit that rewrites the registry's `createdAt` is read at the tip and reads OK. The check refutes a late freeze on honest dates; it does not prove an honest one, and it says nothing about whether the frozen predicate is sound (round 55's registration needed a v2 errata because frozen text was unsatisfiable: `.ufo/waves/round-55/registration-v2.md`).
+589: 
+590: ## Criterion from the round-55 scope mistake (round 56; lesson `lessons/round-56.md` M56-1, mined from round 55 K14/K17)
+591: 
+592: **107.** **A registry row cited by a knowledge entry's evidence row has a unique anchor that names the row's upstream file, covers the quoted line, and stays within that file's length (extends 77 and 97).**
+593: 
+594: Scope. Every evidence row of a knowledge entry, any row class: a table row, outside fenced code and HTML comments, whose third cell is a registry id `S` followed by three or more digits. A row of that shape whose fourth cell is not exactly `<file>:<N>` (one decimal number; no range, no list, no second file) is a violation `reason=malformed-pin`. It is never skipped.
+595: 
+596: For each such row, let R be the registry row whose first cell is that id in `corpus/SOURCES.md` at the checked revision:
+597: 
+598: (1) Uniqueness. R must be the only row with that id. Zero rows reads `reason=no-registry-row`; two or more read `reason=dup-id`, whatever their content.
+599: (2) NAME. The last path component of the last `http(s)://` token in R's source cell (cell 2), with trailing `).,;` removed. If NAME contains `#` or `?`, the row reads `reason=no-name` and must be read by hand.
+600: (3) Bounded occurrence. An occurrence of `NAME:` in R's anchor cell (cell 6) counts only when the character before it is absent or is not in `[A-Za-z0-9_]`. A hyphen or a slash before it is allowed; `OldConfigWatcher.cpp:` does not contain an occurrence of `ConfigWatcher.cpp:`.
+601: (4) Locator list. Right after `NAME:` comes a comma-separated list of locators. Each locator is `N` or `N-M`, decimal, with N at least 1. One optional space may follow a comma. The list continues only while the next item starts with a digit. A locator with M less than N denotes no line and covers nothing.
+602: (5) Cover. Some locator of some counted occurrence has N <= L <= M, where L is the quoted line. A single `N` means N = L.
+603: (6) Length. If the anchor cell names its pin as `pin <path>`, the blob at that path at the checked revision is read, and every locator of the counted occurrence must have max(N, M) <= the blob's line count (the number of `\n`-separated pieces). A locator past the end of the file reads `reason=past-eof` for every row of that pin. An anchor with no named pin reads `eof=unchecked` in the output.
+604: 
+605: Output: one line per evidence row, `ANCHOR_COVER: row=<id> sid=<S###> line=<N> name=<NAME> locators=<list|none> eof=checked|unchecked verdict=OK|MISS [reason=...]`, then `CHECK107: rows=<n> covered=<k> miss=<m> verdict=OK|FAIL`. The requirement is `miss=0` with `rows>0`. Exit 0 on OK, 1 on FAIL, 2 on setup error with empty stdout. The check reads git objects at `<rev>` only and writes only under `--work`.
+606: 
+607: Shown able to fail, on the committed round-55 entry `corpus/knowledge/hyprland-keyboard-repeat-numlock-r55.md` at `63f48dc1`: the K rows K14 and K17 fail the round-56 counter's `scope_covers` (`.ufo/waves/round-56/receipts/scope-replay-r55.txt`; seat replay `w2/R56W2CritScopeFix/receipts/replay-r55.out`), and the round-56 draft checker over all row classes reports rows=32 covered=25 miss=7 on that entry (`w2/R56W2CritScopeFix/receipts/draft-r55.out`). Each registry mutant named in `R56W2CritScopeFix/receipts/` (widen past EOF, narrow below a K row, drop the name, reversed range, identifier-prefixed name, malformed pin cell, duplicate id) fails under this text on the row or rows it names; the EOF, boundary, reversed-range, malformed-pin and duplicate-id clauses are the ones the round-56 draft lacked.
+608: 
+609: Fix path (registry rows are append-only, CORPUS rule 2): a supersession row with a new id and a widened anchor, then a re-cite in the entry. Each change is logged in the round lesson.
+610: 
+611: Declared limits.
+612: - The check reads the anchor text, not the upstream file's statement at the line. An anchor that names the right file, with a range whose lines carry another statement, passes; the sentence-to-pin audit of criterion 104 carries that.
+613: - Identity is by basename. `legacy/ConfigManager.cpp` and `ConfigManager.cpp` are the same name to this check; an anchor that names the basename of a different directory's file passes. The directory is not checked.
+614: - A source URL whose last component is not the file the anchor names (a rename) reads MISS and must be read before it is treated as a violation.
+615: - Without a named `pin <path>` the length bound is unchecked for that row (`eof=unchecked`), and the row is listed in the round report, not passed silently.
+616: - An entry with no evidence rows reads `rows=0 verdict=FAIL`, so an empty entry is not vacuously green.
+617: 
+618: Enforcement at landing: the round-56 C1 counter's `scope:<id>` leg covers K rows only (30/30 at the final revision); the draft all-row-class checker `.ufo/waves/round-56/w1/R56RevQuality/check-anchor-cover.py` reported `rows=39 covered=39 miss=0` on the round-56 entry at `b70f6a2c` after the E rows were re-pointed at supplementary rows S392-S395, but it lacks the EOF, reversed-range, duplicate-id and malformed-pin clauses of this text (`w2/R56W2CritScopeFix.md` item 3), so it is a draft instrument, not the gate of this criterion.
+619: 
+620: ## Criterion from round-65 child-status residue (round 66)
+621: 
+622: **108. Aggregate a child verdict only with its own contract marker and actual exit status.**
+623: Read the marker spelling from the child source/output. A genuine rc=1 red marker is a finding;
+624: a crash, absent marker, inconsistent marker or missing executable is ERROR, not RED or GREEN.
+625: ERROR dominates RED. The standing landing script requires explicit `--round N` for default
+626: scope; empty navigation and empty citation evidence cannot yield GREEN.
+627: Ground: `lessons/round-66.md` M66-3/M66-5 and the prior non-author
+628: `lessons/round-65-verifier-spotcheck.md` routed defect 3.
+629: 
+630: Shown able to fail: unchanged base instruments score 1/4 on the four named C2 controls
+631: in `.ufo/waves/round-66/w1/R66ExecHarness/evidence/`; the skipped child, crash and
+632: missing-sibling controls expose rc-only aggregation. Recheck with
+633: `python3 .ufo/waves/round-66/check-controls.py --repo . --rev REV --claim c2 --scratch-root DIR`.
+634: This harness also requires the committed driver's selftest and real four-leg landing.
+635: Limits: marker consistency does not authenticate a child, establish source truth or contain
+636: a malicious child. The finite control set is not universal fault coverage.
+637: 
+638: ## Criterion from the round-67 replacement-ref coverage repair (round 67)
+639: 
+640: **109. A guard is established only by a control that plants the hazard, at the layer that reads the bytes.**
+641: A parent-exported environment guard does not reach a child that constructs its own environment: each
+642: git-reading child must set the guard itself, and a control must plant the hazard (`refs/replace` on a
+643: blob, tree or commit the child reads) and require the child's verdict unchanged. A guard whose removal
+644: no committed case detects is untested, and a coverage repair reports the pre-change instrument crediting
+645: the forged state. Shown able to fail: at `0b28ffb4` the used-by and ledger children build git env
+646: whitelists without `GIT_NO_REPLACE_OBJECTS` and read a planted replacement (`control-baseline-r67.txt`:
+647: `usedby_guard=0 ledger_guard=0`, `child_env_read=forged guarded_read=real`, `killed=0/2`); the r67
+648: control kills both named mutants (`killed=2/2`). Recheck:
+649: `python3 quality/counters/c2-r67-landing-controls.py --repo . --rev REV --scratch-root DIR`.
+650: Limits: exactly the named mutants; the guard is presence-tested (`GIT_NO_REPLACE_OBJECTS=0` also
+651: disables), it does not protect a repository already rewritten, authenticate objects, or prove state
+652: truth. Ground: `corpus/lessons/round-67.md` M67-2.
+653: 
+654: ## Criterion from the round-68 freeze and self-credit defects (round 68)
+655: 
+656: **110. A counter is frozen only after its declared command is run verbatim, and an instrument that
+657: credits a kill or a pass must have a committed test that drives the decision code.**
+658: (a) The pre-freeze receipt records the counter's own advertised invocation, character for
+659: character, against the base revision and its exit status: a command that dies on an argument the
+660: instrument does not accept (`rc 2`, "unrecognized arguments") is a freeze defect, not a setup
+661: detail to be worked around in the report. (b) A harness that reports `killed=n/m` or `pass`
+662: credits it from a decision path; a hermetic test that never executes that path leaves a
+663: forced-credit mutation green and the credit unevidenced. The test must drive the real body with
+664: scripted inputs, and the frozen mutation recipes must target the exact committed texts.
+665: Shown able to fail: the round-68 C2 counter committed at `e0727cda` exits 2 on the declared
+666: command while the same command prints its contract line after the fix
+667: (`.ufo/waves/round-68/c2-command-erratum-r68.txt`, red-before `rc=2`); the round-67 harness's
+668: selftest stays green (47/47) under all three forced-credit recipes while the round-68 harness's
+669: selftest goes red on each (51/52, 51/52, 50/52; `quality/counters/c1-r68-selfmutants.py`).
+670: Ground: `corpus/lessons/round-68.md` M68-1 and M68-2.
+671: Limits: the parity check proves the declared argument set parses, not that the command's
+672: semantics are right; the scripted cases are stubs, so the test proves the decision code is
+673: exercised, not that real children behave as scripted. Neither clause covers a counter whose
+674: measurement is simply false for reasons both tests miss.
+675: 
+676: ## Criterion from the round-69 equivalence and dominance defects (round 69)
+677: 
+678: **111. A frozen defect recipe must change a printed observable, and a guard mention is not a
+679: guard unless it is a key that reaches the read.**
+680: (a) Before a mutation recipe enters a frozen denominator, its mutant is run against a scripted
+681: case of the scored instrument and must change the printed line; a recipe whose mutant prints an
+682: identical line is an *equivalent* mutant, is excluded from the denominator, and the exclusion is
+683: recorded with the probe. (b) A guard census counts a key only in *key position* of an environment
+684: mapping and only when that environment reaches the launched child (inline `env=`, an env-named
+685: binding or local producer used at the call with no intervening unguarded rebinding, or a one-hop
+686: argument bound to the callee's env-named parameter); a value-position string, a dead-branch
+687: construction, an uncalled helper and an overwritten environment are not guards.
+688: Shown able to fail: the round-68 reviewer's recipe **L** (`mz_killed = mz_rc != 0` →
+689: `or mz_rc is None`) is an equivalent mutant — the text sits after `mz_rc = r.returncode`
+690: (`quality/counters/c1-r68-landing-controls.py:435,439`), and the mutant keeps a green 59/59
+691: selftest (`.ufo/waves/round-69/control-baseline-r69.txt` § L probe). The round-68 classifier
+692: accepts `{"LABEL": "GIT_NO_REPLACE_OBJECTS"}` and three dead/unused constructions, scoring
+693: `controls=7/11` on the frozen set while the round-69 rule scores `11/11` (`control-baseline-r69.txt`
+694: § C2); six implementation defects against the same frozen sentence were repaired red-before to
+695: green-after in `.ufo/waves/round-69/c2-classifier-repair-r69.txt` (7 pre-fix violations, 8/8
+696: post-fix cases).
+697: Ground: `corpus/lessons/round-69.md` M69-1 and M69-2.
+698: Limits: the scripted-case probe proves the recipe changes a synthetic line, not that a real
+699: detector would catch the defect; the dominance rule is a bounded syntactic approximation (one
+700: module, one hop, no alias/attribute/container flow, no path-sensitivity beyond a literal-false
+701: branch) and does not interpret the guard's value.
+702: 
+703: ## Criteria from the round-70 real-children credit and the round-69 record defects (round 70)
+704: 
+705: **112. An append-only record edit is anchored to the round whose heading it sits under, and a
+706: round's commit list is complete against the range it claims.**
+707: (a) A block appended to `LOG.md` or `SCORECARD.md` must sit under the heading of the round that
+708: produced it; an insertion that lands inside another round's entry is an organization defect even
+709: when no prior byte is deleted, because it misattributes one round's facts to another. (b) A
+710: round's Landed-changes table is complete iff the number of enumerated content commits equals
+711: `git rev-list --count <base>..<round tip>`, so a reader can re-derive the list with one command
+712: rather than trusting prose.
+713: Shown able to fail: the round-69 spot-check (defects 1–2) found the same 10-line block inside the
+714: Round 67 entry (`LOG.md:3257-3266`) and the Round 68 entry (`LOG.md:3314-3323`) as well as its own
+715: (`LOG.md:3396-3405`), all introduced by `139f4801`, and found `b9b70a09` in no report, LOG or
+716: SCORECARD row (`grep -rn b9b70a09` → rc 1). The round-70 sweep is the command below; at the
+717: round-70 tip it prints one block per round heading.
+718: Limits: the count rule proves that every commit in range is enumerated, not that each is
+719: attributed to the right round; a commit that changes no listed path still counts.
+720: 
+721: **113. A kill credit rests on a parsed failed assertion, not on an exit status, and its
+722: real-children leg is scored with real child processes.**
+723: (a) An instrument that credits a mutation ("killed", "pass") from a child's exit status alone is
+724: crediting a process outcome, not the check: the credit requires the child's own summary line to
+725: parse and to report at least one failed assertion; a crash (no summary), a garbled summary and a
+726: summary reporting no failure earn no credit, and the leg then reports a miss. (b) The
+727: real-children leg is scored with real child processes in at least the crash and unparseable
+728: positions; scripted stand-ins alone leave the hazard unevidenced.
+729: Shown able to fail: the frozen round-69 harness credits `mz=pass` for a crash (rc 2, no summary)
+730: and for a garbled summary (rc 1, `???`) on the three real-child scenarios —
+731: `base_correct=1/3` in `.ufo/waves/round-70/control-baseline-r70.txt` § C1 — while the round-70
+732: harness scores `cases=3 correct=3` at `5adba5a9` (`measurement-r70.txt`).
+733: Recheck: `python3 -I quality/counters/c1-r70-real-children.py --repo . --rev REV --base-rev
+734: b37a5aec4ea03f2223d8e09dd5d386d055c24179 --scratch-root DIR`.
+735: Limits: the three scenarios are named ones, not fault coverage; the fixture lane is the counter's
+736: own instrument; a summary that parses with `p < n` is credited even if the failing assertion is
+737: unrelated to the frozen recipe; a harness whose decisions merely agree on these three inputs is
+738: not distinguished from a correct one.
+739: 
+740: ## Criteria from the round-71 inherited-record and wave-evidence defects (round 71)
+741: 
+742: **114. A wave's seat-written files are committed before the round's report lands, and
+743: lane-authored files inherited from an earlier round are committed or reverted by the next
+744: round before its freeze.**
+745: (a) A seat report under `.ufo/waves/**` that the seat or the L1 revised after the round's last
+746: content commit is round work: the next round commits it under its own entry (or reverts it)
+747: before freezing claims, so the working tree is clean against the previous round's closure.
+748: (b) A wave's seats write their reports into the wave dir; anything the wave produced that the
+749: L1 integrates must be committed in the same round that cites it.
+750: Shown able to fail: the round-70 closure left four seat-report files modified in the lane
+751: working tree (`round-70-verifier-spotcheck.md` step-1 defect); round 71 committed them under
+752: its entry at `c354f4d4` before its freeze — the failure this criterion shows is
+753: `git status --porcelain` listing a wave file after a round's report has landed.
+754: Limits: the criterion governs lane-authored round work only; aggregator-owned
+755: `round-*-aggregator-*.md` files and operator sweeps stay outside it; a clean tree does not
+756: prove the *content* was reviewed, only that no work sits unlanded.
+757: 
+758: **115. A wave seat names its written report path in its final output, and a wave whose seats
+759: return empty outputs is an evidence gap the round must disclose, never fill.**
+760: (a) Every wave item's prompt requires the seat to end with one line naming the file it wrote
+761: (`Report: <repo-relative path>`); a seat whose final output carries no report path and whose
+762: seat directory holds no file is an evidence gap. (b) The round report states, per seat, what
+763: was observed: a delivered report, an empty output with no file, or a dead seat — missing
+764: deliverables are never backfilled by the L1 prose or counted as if delivered.
+765: Shown able to fail: round 71's w1 wave settled 13/13 `status: ok` while 11 seats carried
+766: empty `output` cells and no seat files (`.ufo/waves/round-71/w1-results.json`; only
+767: `w1/R71RevC1.md` and `w1/R71RevC2.md` exist) — the gap is visible in the results file and is
+768: reported as a gap, not silently treated as verification.
+769: Limits: the results file's `status` field reflects settlement, not deliverables; a report
+770: path named in the output can still point at an unwritten file, so (b)'s per-seat check is the
+771: binding half; this criterion does not retroactively resurrect round-71's missing seats.
+772: 
+773: ## Criteria from the round-72 instrument-rule work (round 72)
+774: 
+775: **116. A credit rule counts a subject's own failure only when the subject's own detail backs
+776: its summary, and the round ships the control in which the held rule credits what it must not.**
+777: (a) A landing/counting rule that credits a child on a summary line must require the failure
+778: detail the child itself printed (the `SELFTEST FAIL` count, the failed-assertion rows) to agree
+779: with that summary; a bare, replayed or mismatched summary line earns no credit unless the rule's
+780: declared limit says why not. (b) The round that changes such a rule carries a pre-freeze
+781: red-before receipt: the held rule scored on the new control set, crediting at least one shape
+782: the frozen predicate refuses.
+783: Shown able to fail: round 72's held round-71 harness credits `bare-failing` and
+784: `mismatch-detail` on the eight-mode set (`correct=6/8`), while the successor scores 8/8 —
+785: `.ufo/waves/round-72/{control-baseline-c1-r72.txt,measurement-c1-r72.txt}`; the failure this
+786: criterion shows is a counter whose base leg already equals its target.
+787: Limits: the rule bounds the summary to the run's own detail, it does not authenticate a captured
+788: report replayed with matching detail; a finite control set is not fault coverage.
+789: 
+790: **117. A verdict reads the subject's own report; a process status is recorded as evidence, never
+791: as the gate, and any summary/status contradiction policy is declared.** (a) A harness that greens
+792: or reds a run must derive the verdict from the subject's own parsed summary (or result object),
+793: and print the status as evidence; a missing or garbled summary is not a pass. (b) Where the
+794: summary and the status disagree, the rule says which one wins, in the frozen predicate and in
+795: the printed receipt.
+796: Shown able to fail: round 72's held round-71 `outcome_verdict(selftest_rc, killed)` is wrong on
+797: four of eight frozen cases in both directions (`failing-summary-exit0` green,
+798: `green-summary-exit2` red) — `.ufo/waves/round-72/{control-baseline-c2-r72.txt,measurement-c2-r72.txt}`;
+799: the successor scores 8/8. A verdict whose receipt does not state which input decided it cannot
+800: be re-derived by a reader.
+801: Limits: this governs the lane's own instruments; it is not a claim that every child prints a
+802: summary, nor that a summary cannot be forged.
+803: 
+804: 
+805: ## Criteria from the round-73 control-set and census work (round 73)
+806: 
+807: **118. A frozen declaration's counting command is replayed verbatim before the receipt is filed,
+808: and every required argument is named in the declaration itself.** (a) A declaration that prints a
+809: counting command must print the exact argv the receipt will run, flags included; (b) the round
+810: replays that line once before the instrument's receipt lands, and a usage error is a defect of the
+811: declaration, not of the counter.
+812: Shown able to fail: round 73's §C1 line omits `--controls`; replaying it exits 2 with
+813: `--repo, --rev and --controls are required` and no contract line (the wave's `R73RevC1` F1), while
+814: the corrected invocation prints `killed=4 base_killed=2 verdict=TARGET_MET` rc 0 — the defect and
+815: its repair are erratum E1 in `.ufo/waves/round-73/claims-declaration-r73.md` and M73-1 in
+816: `corpus/lessons/round-73.md`.
+817: Limits: a replay proves the argv parses and the arguments are present; it does not prove the
+818: counter's verdict and it is not a substitute for the do-nothing control.
+819: 
+820: **119. A regression fixture's expected label is derived from the rule's declared bound, not from
+821: the behaviour the author wishes the rule had; a label that assumes a stronger rule must fail the
+822: harness selftest.**
+823: Shown able to fail: the first `r73-global-rebind-after-use` case in
+824: `quality/counters/c2-r73-shapes.py` labelled a store-then-later-call program `(True, False)` while
+825: the line-order classifier answers `(True, True)`; the selftest printed
+826: `FAIL: review regression r73-global-rebind-after-use is (True, False)` until the case was replaced
+827: by `r73-global-rebind-replaced-between`, which the declared bound does refuse (M73-2 in
+828: `corpus/lessons/round-73.md`).
+829: Limits: the embedded table is the lane's own, not an independent control set; the selftest checks
+830: that the label and the classifier agree, not that the declared bound is the right approximation.
+831: 
+832: **120. A fixture lane is the mutated lane: a counter that scores a harness's rule must build the
+833: subject through that harness's mutation, asserting the mutation applies exactly once, before any
+834: case runs.**
+835: Shown able to fail: round 74's first prototype ran the landing-counter fixture with the
+836: zero-citation clause still in place, so three carried modes took the other branch and the held
+837: rule scored `9/12` with three false rejections (`receipts/m74-1-red.txt`); the committed
+838: `build_lane` asserts the marker occurs once and deletes it, and the held leg scores the declared
+839: `8/12` (`control-baseline-r74.txt`).
+840: Limits: the assertion proves the marker was present and removed once; it does not prove the
+841: mutation is the harness's only delta.
+842: 
+843: **121. Every frozen control-case label is scored by the do-nothing control before the freeze, and
+844: a disagreement is resolved by re-cutting the label or the rule — never by proceeding.**
+845: Shown able to fail: round 74's first C2 draft labelled `environ-alias-not-environ` and
+846: `environ-alias-deleted` as negatives; the held classifier answers `(True, True)` for both
+847: (`receipts/m74-2-red.txt`) — one because the key really is in the handed mapping, the other
+848: because the generic flow does not model `del`. The set was re-cut before the freeze and the gap
+849: named as a declared limit.
+850: Limits: the prototype shares the held rule's blind spots; agreement is a lower bound on the
+851: label, not proof the case is load-bearing.
+852: 
+853: **122. A fetched artifact's digest is re-derived from the committed fetch before its row lands,
+854: and a wrong digest is corrected by a superseding row, never by an edit.**
+855: Shown able to fail: round 73 recorded S448's sha256 as a value sharing only its first 16 hex
+856: characters with the bytes; round 74's three fetches all hash to
+857: `2d0f2892676e1cf9547be2bd94cfe2a6221dddea82d52cb2475d4a3d819b2ae5` and S452 supersedes S448
+858: (append-only, CORPUS rule 2).
+859: Limits: a digest proves byte identity of the fetch, not the source's authority or stability.
+860: 
+861: **123. An admission criterion lands at the contract path (`corpus/QUALITY.md`); a root fragment
+862: is never the bar.**
+863: Shown able to fail: round 73's criteria 118–119 landed in the root `QUALITY.md`, so a reader
+864: following `corpus/README.md`'s pointer found the bar ending at 117 (round-73 closure D4);
+865: `grep -c '^118\.' corpus/QUALITY.md` printed 0 before the round-74 append and 1 after.
+866: Limits: this governs placement; it does not judge a criterion's content.
+867: 
+868: ## Criteria from the round-75 harness wiring and repairs
+869: 
+870: **124. A freeze declaration's no-harm list and its routed-defect dispositions are checked against
+871: each other before the freeze: an instrument named as byte-identical cannot be the instrument the
+872: same round amends.** Shown able to fail: round 75 named `tools/mado-verify.sh` in both the
+873: no-harm list and the D5 disposition; the report and SCORECARD declare the amendment and the
+874: `PIN_MADO` re-cut (`367ff5ec…` → `49567a0f…`) rather than claiming byte-identity, and the gate is
+875: re-measured 460/460 at the amended bytes (`corpus/lessons/round-75.md` M75-1).
+876: Limits: the check compares two declarations; it does not judge whether the amendment is worth
+877: making.
+878: 
+879: **125. A change to a scored instrument is exercised through the claim's counter before a receipt
+880: is filed; a passing instrument selftest is not evidence the pipeline runs.** Shown able to fail:
+881: round 75's hardening change (a private `mkdtemp` generation directory) ran before the validated
+882: scratch root existed, so the C1 counter scored `correct=0/11` at `f75afbf6…` while the selftest
+883: passed 20/20; the fix plus a counter run at `4527fcae…` restored `correct=11/11`
+884: (`corpus/lessons/round-75.md` M75-2).
+885: Limits: one counter run proves the pipeline for that content and those fixtures, not every
+886: caller.
+887: 
+888: **126. A frozen fixture whose source cannot execute as written is labelled a syntactic-ordering
+889: case in the entry, and the successor shape must initialise the state it deletes.** Shown able to
+890: fail: round 75's `del-before-store` case deletes a key its mapping never had (`KeyError` before
+891: any launch), so the label pins the ordering rule, not a reachable runtime state; the case is not
+892: re-cut and the limit is stated (`corpus/lessons/round-75.md` M75-3).
+893: Limits: this governs labelling; it does not require every fixture to be a runnable program.
+894: 
+895: **127. A frozen separator must be deterministically reachable by the rule it separates; a
+896: probabilistic oracle is disclosed with its probability.** Shown able to fail: round 75's
+897: `uppercase-echo` separator accepts a challenge that is all decimal digits, where uppercasing is a
+898: no-op, so a correct implementation can miss the label through no defect (probability
+899: `(10/16)^16 ≈ 5.4e-4`; the deterministic challenge `1234567890123456` reproduces the miss in the
+900: critic's receipt). The frozen label stands and the disclosure is in the entry.
+901: Limits: the probability bound depends on the challenge's alphabet; a different generator needs
+902: its own bound.
+903: 
+904: ## Criteria from the round-76 outcome-field and interprocedural census
+905: 
+906: **128. A frozen case label is re-derived from the scored instrument's own evidence lines
+907: before it is frozen; the contract row it produces is never the derivation source.** Shown able
+908: to fail: round 76's label set v1 modelled the harness's `verdict=` as summary-green only, and
+909: the first measurement scored `correct=12/15`, with `right`, `liar-success` and `green-mutant`
+910: all disagreeing with their labels; the v3 labels are re-derived from
+911: `MADO_R76_SELFTEST ... green=` and `MADO_R76_MUTANT M-Z/M-R ... killed=`
+912: (`.ufo/waves/round-76/receipts/label-derivation-r76.txt`).
+913: Limits: this governs the derivation source; it does not prove the derivation is right, only
+914: that it is independent of the counter's own output.
+915: 
+916: **129. A frozen separator must be reachable through the field it is scored through; a mutation
+917: that produces an identical field on every reachable case is a negative result, not a control.**
+918: Shown able to fail: round 76's first successor design scored an echo-dropping outcome mutation
+919: through `verdict=`, but that field is green only when `killed == 2` and the M-Z kill already
+920: requires the echo, so the mutant scored 16/16 on every reachable case
+921: (`corpus/lessons/round-76.md` M76-2); the claim moved to four observable outcome-rule
+922: mutations and the impossibility is recorded in the entry.
+923: Limits: reachability is judged against the fixture set built for the claim, not against every
+924: program the instrument could see.
+925: 
+926: **130. A control leg that parses no row at all fails loudly instead of reporting a zero
+927: score.** Shown able to fail: round 76's pre-freeze control anchored its row regex to
+928: end-of-line while the row carries a trailing `sha256=`, so four mutants scored `0/15` and were
+929: reported as killed by a rule that had observed nothing; both regexes now search the parsed
+930: line and the per-mutant score is printed (`corpus/lessons/round-76.md` M76-3).
+931: Limits: a per-leg score exposes a dead leg; it does not prove the leg measured the intended
+932: field.
+933: 
+934: **131. Every quoted number in a round artifact names whether it was re-executed this round or
+935: evidence-verified from committed bytes.** Shown able to fail: round 76's first measurement
+936: receipt and the pre-freeze control are both quoted in the lesson and report, and only the
+937: receipt carries the command that produced it; the report's provenance crosswalk names
+938: `re-executed` or `evidence-verified` per number, and a number with neither label is a defect.
+939: Source: `considerthese/2026-10-28.md` proposal 5 (relayed vs re-measured), opened 2026-11-04.
+940: Limits: this is a labelling bar; it does not judge whether the evidence class is strong enough
+941: for the claim.
+942: 
+943: **132. A registry row carries the table's own column count, and the append is gated by the
+944: table's census, never by the shape of the row above it by eye.** Shown able to fail: round 77's
+945: first two append batches wrote a 12-field row (a separate quote column) into the 11-column
+946: registry and the frozen census flagged `E01 fields=12` on every new row
+947: (`/fast/scratch/hyaku/mado-r77/census2.txt`); rewriting the rows with the quote in `teaches` and
+948: re-running the census exited 0. Source: round-77 M77-1.
+949: Limits: the census checks the row shape and id/status vocabulary; it cannot tell whether the
+950: quote supports the lesson the row claims.
+951: 
+952: **133. A join across two reply planes names the unit and the space each plane reports before it
+953: compares them.** Shown able to fail: round 77's bar-footprint join treated `hyprctl monitors -j`
+954: `width`/`height` (pixel size) as the logical box that layer geometry uses; a scale-2 fixture
+955: produced a false `box=DIFFER` until the tool refused any monitor whose `scale` is not 1 or whose
+956: `transform` is not 0 (`receipts/repair-r77-tool-refusals.txt`, rc 1 before → rc 3 after). Source:
+957: round-77 wave scout F1.
+958: Limits: the refusal keeps the join honest on unscaled hosts; it does not model scaled or
+959: transformed outputs.
+960: 
+961: **134. A frozen fixture's geometry must be internally consistent with the monitor it declares,
+962: or the case scores the fixture's impossibility instead of the instrument.** Shown able to fail:
+963: round 77's `left-vertical` case paired a 40x1440 live layer with a 1080-high monitor, so the
+964: correct tool reported `DIFFER` and the case scored `correct=no` until the fixture was corrected
+965: to 40x1080 (round-77 M77-5). Source: round-77 lesson M77-5.
+966: Limits: consistency catches impossible sizes; a wrong-but-possible value still needs a source
+967: derivation.
+968: 
+969: **135. A probe matches only when it exits zero and produces the stated outcome; empty output
+970: from a failed command is not a pass.** Shown able to fail: round 77's C2 matcher ignored the exit
+971: status, so an `empty` expectation accepted rc=127 with "command not found" and an `exact` accepted
+972: its value on a failing command (`receipts/repair-r77-c2-rc-guard.txt`: before `matched=True` for
+973: rc=127 and rc=1, after `matched=False`). Source: round-77 mutation-tester finding.
+974: Limits: the guard makes a failed probe fail; it does not make a passing probe's expected value
+975: stronger (the mutant's shape-only rows are carried to round 78).
+976: 
+977: **136. A frozen instrument's self-description is a measurement, not a label: its version constant
+978: and its printed contract example are re-derived from the measured bytes in the round that measures
+979: them, and the frozen bytes are never rewritten to make a label true.** Shown able to fail: round 78
+980: left `tools/mado-barfoot.py` describing itself `r78-v1` while the report called the repaired bytes
+981: `r78-v2`, and the frozen `quality/counters/c1-r78-margins.py:15` contract example printed
+982: `tool_selftest=22/22` while the same bytes print `28/28` (round-78 closure D1; round-79
+983: `receipts/control-c1-r79-at-base.txt` prints `28/28` at those bytes). The fix bumps the living
+984: tool's constant and prints the measured tally; the frozen counter keeps its bytes and the example is
+985: recorded as time-bound (round-79 M79-3). Source: `corpus/lessons/round-79.md` M79-3.
+986: Limits: this is a labelling rule; it does not judge whether the instrument's own checks are strong
+987: enough, and a frozen instrument's printed example can only be corrected forward, never in place.
+988: 
+989: ## Round-83 mutation population lesson
+990: 
+991: **137. A mutant target equals the actual enumerated mutation list before scoring.**
+992: Shown able to fail: dbc09269's round83 C1 receipt reports 38 declared mutants and 39 kills,
+993: so correct=58/58 still yields TARGET_MISSED. Correcting the successor constant to 39 yields
+994: TARGET_MET with the same tool and cases; the original frozen verdict remains missed.
+995: Source: `corpus/lessons/round-83.md`, number-drift row. Limits: matching list length does
+996: not show that each mutation is distinct or load-bearing.
+997: 
+998: ## Round-84 producer-status and registry lessons
+999: 
+1000: **138. A pipeline probe states how producer failure reaches its observed status.**
+1001: Shown able to fail: `corpus/lessons/round-84.md` M84-1 and
+1002: `.ufo/waves/round-84/receipts/control-c2-r84-unguarded.txt`: a producer exits7 after plausible
+1003: stdout while its unguarded tail exits0. An rc-aware text matcher cannot restore the lost status.
+1004: The guard and contained failing-producer case are the fix; neither proves producer honesty.
+1005: 
+1006: **139. A new gate is registered at SKILL.md, not only in an instrument ledger.**
+1007: Shown able to fail: `corpus/lessons/round-83-verifier-spotcheck.md` R1 finds four r82/r83 counters
+1008: in the ledger but absent from the registry home. Round84 adds those rows plus its two successors.
+1009: Source: `corpus/lessons/round-84.md` M84-2. Limits: registry completeness does not certify gates.
+1010: 
+1011: ## Round85 — discriminator and documentation boundaries
+1012: 
+1013: **140. A mutant that deletes a conjunct cannot be certified killed solely by a perfect-positive case score.**
+1014: Shown able to fail: `corpus/lessons/round-85.md` and round85 `w1/R85ReviewerC2.md`:
+1015: dropping negative/churn loops still yields36/36. Preserve these survivors; a future detector
+1016: must observe the relevant calls or independently test counter discrimination. Never add a
+1017: contradictory negative that makes the correct implementation fail just to kill the deletion.
+1018: Limits: this criterion rejects an invalid proof; it does not supply a new frozen detector.
+1019: 
+1020: **141. Bind a refusal cause at its own record and include a negative observation.**
+1021: Round85 `w1/R85ReviewerC1.md` shows all-cause flooding scores72/72 cases, although the full
+1022: mutation gate rejects that demonstrated tool. Its wrong-negative-allocation cause also
+1023: scores72/72 cases because the carried expectation binds only stage. Source:
+1024: `corpus/lessons/round-85.md`. Distinguish case-score holes from full-gate survivors.
+1025: 
+1026: **142. A shell-encoded number is not independent evidence of how a child terminated.**
+1027: Round85 `w1/R85ReviewerC2.md` shows exact141 and signal13 accept the same status.
+1028: Bash documents128+N; POSIX does not mandate that encoding. The lane must not infer the
+1029: converse or advertise unbound Markdown outcome/status cells as authenticated.
+1030: Source: `corpus/lessons/round-85.md`, S488/S489/S490.

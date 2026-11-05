@@ -1,0 +1,917 @@
+COMMAND git -C /home/vgpnk/Projects/shokunin/kumitate-shokunin show 7218699cfbdec702ba42f35ceac0a8e52d1bd564:scripts/receipt-attest.mjs
+EXIT 0
+SHA256 ba5139b1290b204054c043df3140554757116e6fbaf19783b502a24ed1b2ce31
+1: #!/usr/bin/env node
+2: /**
+3:  * receipt-attest.mjs — capability `receipt-attest` (contract `kumitate-receipt-attest-v3`).
+4:  *
+5:  * Records an invocation (argv, exit code, stdout/stderr hashes, a 128-bit nonce, UTC wall
+6:  * clocks and a monotonic span) in a canonical JSON body. Its inner digest binds every body
+7:  * field; a GNU sha256sum text-mode sidecar binds the complete receipt including its prelude.
+8:  * v3 is the round-53 ledger-evidence extension (routed defects R52-9 + R52-10): the nonce
+9:  * ledger scans the WHOLE ledger directory — every entry is examined, whatever its filename
+10:  * extension — so a nonce-colliding forgery can no longer hide by being stored under a
+11:  * non-`.txt` name. v1/v2 receipt formats and verdicts are unchanged.
+12:  *
+13:  *   node scripts/receipt-attest.mjs run --out <base> [--stdin] -- <cmd...>
+14:  *   node scripts/receipt-attest.mjs verify [--ledger <dir>] <file>
+15:  *   node scripts/receipt-attest.mjs --selftest
+16:  *
+17:  * Receipt bytes are exactly two lines plus a trailing newline:
+18:  *   run-at: <UTC ISO prelude>
+19:  *   {canonical JSON, keys sorted}
+20:  * The prelude is sidecar-bound; semantic fields are digest-bound. Verdicts and the v1 exit
+21:  * map are unchanged: VALID 0; REPLAY/TAMPERED 1; UNREADABLE 2; USAGE 64.
+22:  *
+23:  * With `verify --ledger`, every entry of the ledger directory is examined — the evidence
+24:  * set is the whole directory, NOT a `*.txt` subset (R52-9: a nonce-colliding forgery stored
+25:  * under any other extension is evidence and is caught). A prior entry counts only when it
+26:  * is an attested receipt: sidecar present, GNU text-mode, name-matching, hash-covering,
+27:  * shape-valid, inner digest valid, clocks finite round-trippers. Entries that are not
+28:  * attested receipts — sidecars, foreign files, directories, anything else — are skipped,
+29:  * each with a printed `receipt-attest: ledger skipped ... not an attested receipt` note;
+30:  * they are never treated as evidence of nonce reuse. The subject and byte-identical
+31:  * duplicates (the same record digest under any name) are exempt. A nonce reused by a
+32:  * different attested record — whatever filename that record wears — reads REPLAY.
+33:  *
+34:  * `run --stdin` creates the nonce before spawning, writes its 32 UTF-8 hex bytes to child
+35:  * stdin, closes stdin, and records stdin_sha256. Without --stdin, the v1 run behavior is
+36:  * preserved. Spawn failures are recorded with exit 127. No environment or plaintext child
+37:  * output is recorded. Digests use node:crypto; no external digest executable is invoked.
+38:  */
+39: import { spawnSync } from 'node:child_process';
+40: import { createHash, randomBytes } from 'node:crypto';
+41: import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
+42: import { basename, dirname, join, resolve } from 'node:path';
+43: import { constants as osConstants, tmpdir } from 'node:os';
+44: import { fileURLToPath } from 'node:url';
+45: 
+46: const CONTRACT = 'kumitate-receipt-attest-v3';
+47: const SELF = fileURLToPath(import.meta.url);
+48: const NONCE_BYTES = 16;
+49: const PRELUDE_SLACK_MS = 60_000;
+50: const out = (s) => process.stdout.write(s);
+51: const err = (s) => process.stderr.write(s);
+52: const sha256 = (buf) => createHash('sha256').update(buf).digest('hex');
+53: const usage = (why) => {
+54:   err(`receipt-attest: USAGE ${why} (contract ${CONTRACT}: run --out <base> [--stdin] -- <cmd...> | verify [--ledger <dir>] <file> | --selftest)\n`);
+55:   process.exit(64);
+56: };
+57: const unreadable = (why) => {
+58:   err(`receipt-attest: UNREADABLE ${why}\n`);
+59:   process.exit(2);
+60: };
+61: 
+62: const sortKeys = (value) => {
+63:   if (Array.isArray(value)) return value.map(sortKeys);
+64:   if (value && typeof value === 'object') {
+65:     return Object.fromEntries(Object.keys(value).sort().map((k) => [k, sortKeys(value[k])]));
+66:   }
+67:   return value;
+68: };
+69: const canonical = (value) => JSON.stringify(sortKeys(value));
+70: const digestOf = (record) => {
+71:   const copy = { ...record };
+72:   delete copy.digest;
+73:   return sha256(canonical(copy));
+74: };
+75: const NONCE_RE = /^[0-9a-f]{32}$/;
+76: const HASH_RE = /^[0-9a-f]{64}$/;
+77: const ISO_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
+78: 
+79: /** Require exactly the prelude line, one JSON line and the final newline. */
+80: function splitReceipt(text) {
+81:   if (!text.endsWith('\n')) return { error: 'receipt is missing its trailing newline' };
+82:   const lines = text.split('\n');
+83:   if (lines.length !== 3 || lines[2] !== '') return { error: `expected exactly 2 lines plus trailing newline, got ${lines.length - 1} lines` };
+84:   if (!lines[0].startsWith('run-at: ')) return { error: 'first line is not a `run-at: ` prelude' };
+85:   const runAt = lines[0].slice('run-at: '.length);
+86:   if (!ISO_RE.test(runAt)) return { error: 'prelude is not a UTC ISO instant with milliseconds' };
+87:   if (!lines[1].startsWith('{')) return { error: 'second line is not a JSON object' };
+88:   let record;
+89:   try {
+90:     record = JSON.parse(lines[1]);
+91:   } catch (e) {
+92:     return { error: `JSON line does not parse: ${String(e.message).split('\n')[0]}` };
+93:   }
+94:   if (record === null || typeof record !== 'object' || Array.isArray(record)) return { error: 'JSON line is not an object' };
+95:   return { runAt, record, jsonLine: lines[1] };
+96: }
+97: 
+98: const SEMANTIC_FIELDS = ['argv', 'exit', 'mono_span_ms', 'nonce', 'stderr_sha256', 'stdout_sha256', 'wall_end', 'wall_start'];
+99: const ALLOWED_FIELDS = new Set([...SEMANTIC_FIELDS, 'digest', 'stdin_sha256']);
+100: function shapeError(record) {
+101:   const keys = Object.keys(record);
+102:   if (keys.some((k) => !ALLOWED_FIELDS.has(k))) return 'record contains a field outside the v2 whitelist';
+103:   if (!Array.isArray(record.argv) || record.argv.some((a) => typeof a !== 'string')) return 'argv is not a string array';
+104:   if (typeof record.exit !== 'number' || !Number.isInteger(record.exit)) return 'exit is not an integer';
+105:   // A negative duration remains a CLOCK verdict, as in v1.
+106:   if (typeof record.mono_span_ms !== 'number' || !Number.isInteger(record.mono_span_ms)) return 'mono_span_ms is not an integer';
+107:   if (typeof record.nonce !== 'string' || !NONCE_RE.test(record.nonce)) return 'nonce is not 32 lowercase hex characters';
+108:   if (typeof record.stdout_sha256 !== 'string' || !HASH_RE.test(record.stdout_sha256)) return 'stdout_sha256 is not a sha256 hex';
+109:   if (typeof record.stderr_sha256 !== 'string' || !HASH_RE.test(record.stderr_sha256)) return 'stderr_sha256 is not a sha256 hex';
+110:   if (typeof record.wall_start !== 'string' || !ISO_RE.test(record.wall_start)) return 'wall_start is not an ISO instant';
+111:   if (typeof record.wall_end !== 'string' || !ISO_RE.test(record.wall_end)) return 'wall_end is not an ISO instant';
+112:   if (Object.hasOwn(record, 'stdin_sha256') && (typeof record.stdin_sha256 !== 'string' || !HASH_RE.test(record.stdin_sha256))) return 'stdin_sha256 is not a sha256 hex';
+113:   return null;
+114: }
+115: function validClock(value) {
+116:   const ms = Date.parse(value);
+117:   return Number.isFinite(ms) && new Date(ms).toISOString() === value;
+118: }
+119: const sidecarPath = (file) => `${file}.sha256`;
+120: const escapeName = (name) => name.replaceAll('\\', '\\\\').replaceAll('\n', '\\n');
+121: const sidecarLine = (hash, name) => {
+122:   const escaped = /[\\\n]/.test(name);
+123:   return `${escaped ? '\\' : ''}${hash}  ${escaped ? escapeName(name) : name}\n`;
+124: };
+125: /** Parse a GNU text-mode sidecar, including GNU's escaped-name form. */
+126: const parseSidecar = (text) => {
+127:   if (!text.endsWith('\n')) return null;
+128:   const line = text.slice(0, -1);
+129:   if (line.includes('\n') || line.includes('\r')) return null;
+130:   const escaped = line.startsWith('\\');
+131:   const body = escaped ? line.slice(1) : line;
+132:   const m = /^([0-9a-f]{64})  (.*)$/.exec(body);
+133:   if (!m) return null;
+134:   let name = m[2];
+135:   if (escaped) {
+136:     let decoded = '';
+137:     for (let i = 0; i < name.length; i += 1) {
+138:       if (name[i] !== '\\') { decoded += name[i]; continue; }
+139:       const next = name[++i];
+140:       if (next === '\\') decoded += '\\';
+141:       else if (next === 'n') decoded += '\n';
+142:       else return null;
+143:     }
+144:     name = decoded;
+145:   }
+146:   return { hash: m[1], name };
+147: };
+148: 
+149: function doRun(args) {
+150:   let base = null;
+151:   let useStdin = false;
+152:   const cmd = [];
+153:   let seenSep = false;
+154:   for (let i = 0; i < args.length; i += 1) {
+155:     const a = args[i];
+156:     if (!seenSep) {
+157:       if (a === '--') { seenSep = true; continue; }
+158:       if (a === '--stdin') { useStdin = true; continue; }
+159:       if (a === '--out') { base = args[i + 1] ?? null; i += 1; continue; }
+160:       if (a.startsWith('--out=')) { base = a.slice('--out='.length); continue; }
+161:       usage(`unexpected argument ${JSON.stringify(a)} in run mode`);
+162:     }
+163:     cmd.push(a);
+164:   }
+165:   if (!seenSep) usage('run mode needs `-- <cmd...>`');
+166:   if (base === null || base === '') usage('run mode needs --out <base>');
+167:   if (cmd.length === 0) usage('run mode needs a command after `--`');
+168: 
+169:   const nonce = randomBytes(NONCE_BYTES).toString('hex');
+170:   const stdinBytes = useStdin ? Buffer.from(nonce, 'utf8') : null;
+171:   const wallStartMs = Date.now();
+172:   const wallStart = new Date(wallStartMs).toISOString();
+173:   const monoStart = process.hrtime.bigint();
+174:   const spawnOptions = { encoding: 'buffer', maxBuffer: 64 << 20 };
+175:   if (useStdin) spawnOptions.input = stdinBytes;
+176:   const r = spawnSync(cmd[0], cmd.slice(1), spawnOptions);
+177:   const monoEnd = process.hrtime.bigint();
+178:   const wallEndMs = Date.now();
+179:   const wallEnd = new Date(wallEndMs).toISOString();
+180: 
+181:   let stdout = r.stdout ?? Buffer.alloc(0);
+182:   let stderr = r.stderr ?? Buffer.alloc(0);
+183:   let exitCode;
+184:   if (r.error) {
+185:     stderr = Buffer.from(`receipt-attest: spawn failed: ${r.error.message}\n`, 'utf8');
+186:     stdout = Buffer.alloc(0);
+187:     exitCode = 127;
+188:     out(`receipt-attest: spawn failed: ${r.error.message}\n`);
+189:   } else if (typeof r.status === 'number') {
+190:     exitCode = r.status;
+191:   } else {
+192:     const signum = (r.signal && osConstants.signals[r.signal]) || 0;
+193:     exitCode = 128 + signum;
+194:     out(`receipt-attest: command killed by signal ${r.signal}\n`);
+195:   }
+196:   const record = {
+197:     argv: cmd,
+198:     exit: exitCode,
+199:     mono_span_ms: Number((monoEnd - monoStart) / 1_000_000n),
+200:     nonce,
+201:     stderr_sha256: sha256(stderr),
+202:     stdout_sha256: sha256(stdout),
+203:     wall_end: wallEnd,
+204:     wall_start: wallStart,
+205:   };
+206:   if (useStdin) record.stdin_sha256 = sha256(stdinBytes);
+207:   record.digest = digestOf(record);
+208: 
+209:   const receiptText = `run-at: ${wallStart}\n${canonical(record)}\n`;
+210:   const receiptBytes = Buffer.from(receiptText, 'utf8');
+211:   const file = `${base}.txt`;
+212:   const side = sidecarPath(file);
+213:   try {
+214:     mkdirSync(dirname(file), { recursive: true });
+215:     writeFileSync(file, receiptBytes);
+216:     writeFileSync(side, sidecarLine(sha256(receiptBytes), basename(file)));
+217:   } catch (e) {
+218:     try { rmSync(file, { force: true }); } catch { /* best-effort half-pair cleanup */ }
+219:     try { rmSync(side, { force: true }); } catch { /* best-effort half-pair cleanup */ }
+220:     unreadable(`cannot write receipt pair (${e.code ?? e.message})`);
+221:   }
+222:   out(`receipt-attest: wrote ${file}\n`);
+223:   out(`receipt-attest: sidecar ${side}\n`);
+224:   out(`receipt-attest: receipt-sha256 ${sha256(receiptBytes)}\n`);
+225:   out(`receipt-attest: command-exit ${exitCode}\n`);
+226:   process.exit(0);
+227: }
+228: 
+229: /** Only attested prior receipts count as ledger evidence. */
+230: function attestationState(file) {
+231:   let bytes;
+232:   try { bytes = readFileSync(file); }
+233:   catch (e) { return { attested: false, why: `unreadable (${e.code ?? e.message})` }; }
+234:   let sideText;
+235:   try { sideText = readFileSync(sidecarPath(file), 'utf8'); }
+236:   catch (e) { return { attested: false, why: `sidecar absent (${e.code ?? e.message})` }; }
+237:   const side = parseSidecar(sideText);
+238:   if (!side) return { attested: false, why: 'sidecar is not a GNU sha256sum line' };
+239:   if (side.name !== basename(file)) return { attested: false, why: 'sidecar name does not match receipt basename' };
+240:   if (side.hash !== sha256(bytes)) return { attested: false, why: 'sidecar hash mismatch' };
+241:   const parts = splitReceipt(bytes.toString('utf8'));
+242:   if (parts.error) return { attested: false, why: parts.error };
+243:   const shape = shapeError(parts.record);
+244:   if (shape) return { attested: false, why: shape };
+245:   if (digestOf(parts.record) !== parts.record.digest) return { attested: false, why: 'inner digest mismatch' };
+246:   if (!validClock(parts.record.wall_start) || !validClock(parts.record.wall_end)) return { attested: false, why: 'wall clock is not a finite round-tripping ISO instant' };
+247:   return { attested: true, nonce: parts.record.nonce, digest: parts.record.digest, record: parts.record };
+248: }
+249: 
+250: function doVerify(args) {
+251:   let ledgerDir = null;
+252:   const positional = [];
+253:   for (let i = 0; i < args.length; i += 1) {
+254:     const a = args[i];
+255:     if (a === '--ledger') { ledgerDir = args[i + 1] ?? null; i += 1; continue; }
+256:     if (a.startsWith('--ledger=')) { ledgerDir = a.slice('--ledger='.length); continue; }
+257:     if (a.startsWith('-')) usage(`unexpected flag ${JSON.stringify(a)} in verify mode`);
+258:     positional.push(a);
+259:   }
+260:   if (positional.length !== 1) usage('verify mode needs exactly one <file>');
+261:   const file = positional[0];
+262:   if (ledgerDir !== null && !existsSync(ledgerDir)) unreadable(`ledger directory ${ledgerDir} does not exist`);
+263:   let bytes;
+264:   try { bytes = readFileSync(file); }
+265:   catch (e) { unreadable(`cannot read receipt ${file} (${e.code ?? e.message})`); }
+266:   const parts = splitReceipt(bytes.toString('utf8'));
+267:   if (parts.error) unreadable(`malformed receipt ${file}: ${parts.error}`);
+268:   const { record, runAt } = parts;
+269:   const shape = shapeError(record);
+270:   if (shape) unreadable(`malformed receipt ${file}: ${shape}`);
+271: 
+272:   const digest = digestOf(record);
+273:   if (digest !== record.digest) {
+274:     out(`receipt-attest: inner digest mismatch: recomputed ${digest}, recorded ${record.digest}\n`);
+275:     out('RECEIPT: REPLAY\n');
+276:     process.exit(1);
+277:   }
+278: 
+279:   const sidePath = sidecarPath(file);
+280:   let sideText;
+281:   try { sideText = readFileSync(sidePath, 'utf8'); }
+282:   catch (e) {
+283:     out(`receipt-attest: sidecar ${sidePath} is absent (${e.code ?? e.message}): the receipt bytes are not vouched for\n`);
+284:     out('RECEIPT: TAMPERED\n');
+285:     process.exit(1);
+286:   }
+287:   const parsed = parseSidecar(sideText);
+288:   if (!parsed) {
+289:     out(`receipt-attest: sidecar ${sidePath} is not a GNU sha256sum line\n`);
+290:     out('RECEIPT: TAMPERED\n');
+291:     process.exit(1);
+292:   }
+293:   if (parsed.name !== basename(file)) {
+294:     out(`receipt-attest: sidecar name ${JSON.stringify(parsed.name)} does not match receipt basename ${JSON.stringify(basename(file))}\n`);
+295:     out('RECEIPT: TAMPERED\n');
+296:     process.exit(1);
+297:   }
+298:   const actual = sha256(bytes);
+299:   if (parsed.hash !== actual) {
+300:     out(`receipt-attest: sidecar mismatch: sidecar ${parsed.hash}, actual ${actual}\n`);
+301:     out('RECEIPT: TAMPERED\n');
+302:     process.exit(1);
+303:   }
+304: 
+305:   const startMs = Date.parse(record.wall_start);
+306:   const endMs = Date.parse(record.wall_end);
+307:   if (!Number.isFinite(startMs) || new Date(startMs).toISOString() !== record.wall_start
+308:       || !Number.isFinite(endMs) || new Date(endMs).toISOString() !== record.wall_end) {
+309:     out(`receipt-attest: wall clock is not a finite round-tripping ISO instant: start ${record.wall_start}, end ${record.wall_end}\n`);
+310:     out('RECEIPT: TAMPERED\n');
+311:     process.exit(1);
+312:   }
+313:   if (endMs < startMs) {
+314:     out(`receipt-attest: wall clock order violated: start ${record.wall_start}, end ${record.wall_end}\n`);
+315:     out('RECEIPT: TAMPERED\n');
+316:     process.exit(1);
+317:   }
+318:   if (record.mono_span_ms < 0) {
+319:     out(`receipt-attest: monotonic span is negative: ${record.mono_span_ms}\n`);
+320:     out('RECEIPT: TAMPERED\n');
+321:     process.exit(1);
+322:   }
+323: 
+324:   if (ledgerDir !== null) {
+325:     let names = [];
+326:     try { names = readdirSync(ledgerDir); }
+327:     catch (e) { unreadable(`cannot list ledger directory ${ledgerDir} (${e.code ?? e.message})`); }
+328:     const selfPath = resolve(file);
+329:     for (const name of names.sort()) {
+330:       const other = join(ledgerDir, name);
+331:       if (resolve(other) === selfPath) continue;
+332:       // v3 (R52-9): the evidence set is the whole directory, not a `*.txt` subset. Only
+333:       // regular files are read; directories, FIFOs, sockets and devices are skipped with
+334:       // the same printed note (fail closed on exotic kinds, never block on a FIFO read).
+335:       let st = null;
+336:       try { st = statSync(other); } catch { st = null; }
+337:       if (!st || !st.isFile()) {
+338:         out(`receipt-attest: ledger skipped ${name}: not an attested receipt (not a regular file)\n`);
+339:         continue;
+340:       }
+341:       const state = attestationState(other);
+342:       if (!state.attested) {
+343:         out(`receipt-attest: ledger skipped ${name}: not an attested receipt (${state.why})\n`);
+344:         continue;
+345:       }
+346:       if (state.nonce === record.nonce && state.digest !== record.digest) {
+347:         out(`receipt-attest: nonce ${record.nonce} already bound to a different record in ${name}\n`);
+348:         out('RECEIPT: REPLAY\n');
+349:         process.exit(1);
+350:       }
+351:     }
+352:   }
+353: 
+354:   const preludeMs = Date.parse(runAt);
+355:   const lowMs = Math.min(startMs, endMs) - PRELUDE_SLACK_MS;
+356:   const highMs = Math.max(startMs, endMs) + PRELUDE_SLACK_MS;
+357:   if (!Number.isFinite(preludeMs) || preludeMs < lowMs || preludeMs > highMs) {
+358:     out(`receipt-attest: prelude ${runAt} is outside the recorded wall window [${record.wall_start}, ${record.wall_end}]\n`);
+359:     out('RECEIPT: TAMPERED\n');
+360:     process.exit(1);
+361:   }
+362:   out('RECEIPT: VALID\n');
+363:   process.exit(0);
+364: }
+365: 
+366: /* ------------------------------------------------------------------ selftest */
+367: const SELFTEST_CASES = [];
+368: const case_ = (name, fn) => SELFTEST_CASES.push({ name, fn });
+369: const tool = (args, opts = {}) => spawnSync(process.execPath, [SELF, ...args], { encoding: 'utf8', maxBuffer: 64 << 20, ...opts });
+370: const lastLine = (r) => `${r.stdout || ''}${r.stderr || ''}`.trim().split('\n').filter(Boolean).pop() || '';
+371: function makeReceipt(dir, name, cmd) {
+372:   const base = join(dir, name);
+373:   const run = tool(['run', '--out', base, '--', ...cmd]);
+374:   return { base, file: `${base}.txt`, side: `${base}.txt.sha256`, run };
+375: }
+376: const NODE_ECHO = (text) => [process.execPath, '-e', `process.stdout.write(${JSON.stringify(text)})`];
+377: function rewriteConsistently(rec, mutate) {
+378:   const lines = readFileSync(rec.file, 'utf8').split('\n');
+379:   const body = JSON.parse(lines[1]);
+380:   mutate(body, lines);
+381:   body.digest = digestOf(body);
+382:   lines[1] = canonical(body);
+383:   const bytes = Buffer.from(lines.join('\n'), 'utf8');
+384:   writeFileSync(rec.file, bytes);
+385:   writeFileSync(rec.side, sidecarLine(sha256(bytes), basename(rec.file)));
+386: }
+387: function verdict(r, status, line) {
+388:   if (r.status !== status) return `exit ${r.status} (want ${status}): ${(r.stderr || '').trim()}`;
+389:   if (line && lastLine(r) !== line) return `verdict line is ${JSON.stringify(lastLine(r))} (want ${line})`;
+390:   return null;
+391: }
+392: 
+393: // The following 27 cases are the complete receipt-attest v1 selftest corpus, retained in v2.
+394: case_('run-writes-receipt-and-sidecar', (d) => {
+395:   const rec = makeReceipt(d, 'r1', NODE_ECHO('hello'));
+396:   if (rec.run.status !== 0) return `run exit ${rec.run.status}`;
+397:   if (!existsSync(rec.file)) return 'receipt absent';
+398:   if (!existsSync(rec.side)) return 'sidecar absent';
+399:   return null;
+400: });
+401: case_('receipt-shape-is-prelude-plus-json-line', (d) => {
+402:   const rec = makeReceipt(d, 'r2', NODE_ECHO('x'));
+403:   const lines = readFileSync(rec.file, 'utf8').split('\n');
+404:   if (lines.length !== 3 || lines[2] !== '') return `expected 2 lines + trailing newline, got ${JSON.stringify(lines)}`;
+405:   if (!/^run-at: \d{4}-\d{2}-\d{2}T/.test(lines[0])) return `prelude malformed: ${JSON.stringify(lines[0])}`;
+406:   if (!lines[1].startsWith('{')) return 'second line is not JSON';
+407:   return null;
+408: });
+409: case_('sidecar-is-gnu-text-mode-basename', (d) => {
+410:   const rec = makeReceipt(d, 'r3', NODE_ECHO('y'));
+411:   const side = parseSidecar(readFileSync(rec.side, 'utf8'));
+412:   if (!side) return 'sidecar is not a GNU text-mode line';
+413:   if (side.hash !== sha256(readFileSync(rec.file))) return 'sidecar hash does not cover receipt bytes';
+414:   if (side.name !== basename(rec.file)) return `sidecar names ${side.name}, expected ${basename(rec.file)}`;
+415:   return null;
+416: });
+417: case_('sidecar-hash-is-computed-with-node-crypto', (d) => {
+418:   const rec = makeReceipt(d, 'r3b', NODE_ECHO('y'));
+419:   const side = parseSidecar(readFileSync(rec.side, 'utf8'));
+420:   if (!side || !HASH_RE.test(side.hash)) return 'sidecar hash is not plain lowercase hex';
+421:   if (side.hash !== sha256(readFileSync(rec.file))) return 'sidecar hash is not in-process sha256';
+422:   return null;
+423: });
+424: case_('nonce-is-128-bit-hex-and-unique-per-run', (d) => {
+425:   const a = makeReceipt(d, 'n1', NODE_ECHO('a'));
+426:   const b = makeReceipt(d, 'n2', NODE_ECHO('b'));
+427:   const na = JSON.parse(readFileSync(a.file, 'utf8').split('\n')[1]).nonce;
+428:   const nb = JSON.parse(readFileSync(b.file, 'utf8').split('\n')[1]).nonce;
+429:   if (!NONCE_RE.test(na)) return `nonce ${na} is not 32 lowercase hex characters`;
+430:   if (na === nb) return `two runs share nonce ${na}`;
+431:   return null;
+432: });
+433: case_('verify-genuine-receipt-reads-valid', (d) => {
+434:   const rec = makeReceipt(d, 'v1', NODE_ECHO('v'));
+435:   return verdict(tool(['verify', rec.file]), 0, 'RECEIPT: VALID');
+436: });
+437: case_('flake-injection-doctored-body-reads-replay', (d) => {
+438:   const rec = makeReceipt(d, 'f1', NODE_ECHO('f'));
+439:   const lines = readFileSync(rec.file, 'utf8').split('\n');
+440:   const body = JSON.parse(lines[1]);
+441:   body.exit = body.exit === 0 ? 1 : 0;
+442:   lines[1] = canonical(body);
+443:   writeFileSync(rec.file, lines.join('\n'));
+444:   return verdict(tool(['verify', rec.file]), 1, 'RECEIPT: REPLAY');
+445: });
+446: case_('digest-field-corrupted-with-recomputed-sidecar-reads-replay', (d) => {
+447:   const rec = makeReceipt(d, 'fd', NODE_ECHO('fd'));
+448:   const lines = readFileSync(rec.file, 'utf8').split('\n');
+449:   const body = JSON.parse(lines[1]);
+450:   body.digest = 'f'.repeat(64);
+451:   lines[1] = canonical(body);
+452:   const bytes = Buffer.from(lines.join('\n'), 'utf8');
+453:   writeFileSync(rec.file, bytes);
+454:   writeFileSync(rec.side, sidecarLine(sha256(bytes), basename(rec.file)));
+455:   return verdict(tool(['verify', rec.file]), 1, 'RECEIPT: REPLAY');
+456: });
+457: case_('sidecar-mismatch-reads-tampered', (d) => {
+458:   const rec = makeReceipt(d, 't1', NODE_ECHO('t'));
+459:   const side = readFileSync(rec.side, 'utf8');
+460:   const flipped = side[0] === '0' ? '1' : '0';
+461:   writeFileSync(rec.side, `${flipped}${side.slice(1)}`);
+462:   return verdict(tool(['verify', rec.file]), 1, 'RECEIPT: TAMPERED');
+463: });
+464: case_('missing-sidecar-reads-tampered', (d) => {
+465:   const rec = makeReceipt(d, 't2', NODE_ECHO('t'));
+466:   rmSync(rec.side);
+467:   return verdict(tool(['verify', rec.file]), 1, 'RECEIPT: TAMPERED');
+468: });
+469: case_('prelude-only-rewrite-reads-tampered', (d) => {
+470:   const rec = makeReceipt(d, 'm2', NODE_ECHO('m'));
+471:   const lines = readFileSync(rec.file, 'utf8').split('\n');
+472:   lines[0] = 'run-at: 2020-01-01T00:00:00.000Z';
+473:   writeFileSync(rec.file, lines.join('\n'));
+474:   return verdict(tool(['verify', rec.file]), 1, 'RECEIPT: TAMPERED');
+475: });
+476: case_('prelude-rewrite-with-forged-sidecar-reads-replay', (d) => {
+477:   const orig = makeReceipt(d, 'm3-orig', NODE_ECHO('m'));
+478:   const rec = makeReceipt(d, 'm3', NODE_ECHO('m'));
+479:   const body = JSON.parse(readFileSync(orig.file, 'utf8').split('\n')[1]);
+480:   const forged = { ...body, argv: [...body.argv, 'forged'] };
+481:   forged.digest = digestOf(forged);
+482:   const lines = readFileSync(rec.file, 'utf8').split('\n');
+483:   lines[0] = 'run-at: 2020-01-01T00:00:00.000Z';
+484:   lines[1] = canonical(forged);
+485:   const bytes = Buffer.from(lines.join('\n'), 'utf8');
+486:   writeFileSync(rec.file, bytes);
+487:   writeFileSync(rec.side, sidecarLine(sha256(bytes), basename(rec.file)));
+488:   return verdict(tool(['verify', '--ledger', d, rec.file]), 1, 'RECEIPT: REPLAY');
+489: });
+490: case_('ledger-detects-a-nonce-reused-by-a-different-record', (d) => {
+491:   const orig = makeReceipt(d, 'dup1', NODE_ECHO('dup'));
+492:   const body = JSON.parse(readFileSync(orig.file, 'utf8').split('\n')[1]);
+493:   const forged = { ...body, argv: [...body.argv, 'other-record'] };
+494:   forged.digest = digestOf(forged);
+495:   const file = join(d, 'dup2.txt');
+496:   const bytes = Buffer.from(`run-at: ${body.wall_start}\n${canonical(forged)}\n`, 'utf8');
+497:   writeFileSync(file, bytes);
+498:   writeFileSync(`${file}.sha256`, sidecarLine(sha256(bytes), basename(file)));
+499:   return verdict(tool(['verify', '--ledger', d, file]), 1, 'RECEIPT: REPLAY');
+500: });
+501: case_('ledger-exempt-a-byte-identical-duplicate', (d) => {
+502:   const orig = makeReceipt(d, 'same1', NODE_ECHO('same'));
+503:   const copy = join(d, 'same2.txt');
+504:   writeFileSync(copy, readFileSync(orig.file));
+505:   writeFileSync(`${copy}.sha256`, sidecarLine(sha256(readFileSync(copy)), basename(copy)));
+506:   return verdict(tool(['verify', '--ledger', d, copy]), 0, 'RECEIPT: VALID');
+507: });
+508: case_('ledger-ignores-an-unattested-copy', (d) => {
+509:   const rec = makeReceipt(d, 'orig', NODE_ECHO('o'));
+510:   const copy = join(d, 'forged.txt');
+511:   const lines = readFileSync(rec.file, 'utf8').split('\n');
+512:   lines[0] = 'run-at: 2020-01-01T00:00:00.000Z';
+513:   writeFileSync(copy, lines.join('\n'));
+514:   writeFileSync(`${copy}.sha256`, readFileSync(rec.side, 'utf8'));
+515:   return verdict(tool(['verify', '--ledger', d, rec.file]), 0, 'RECEIPT: VALID');
+516: });
+517: case_('usage-errors-exit-64', (d) => {
+518:   const problems = [];
+519:   for (const args of [[], ['run'], ['run', '--out', join(d, 'x')], ['verify'], ['verify', 'a', 'b'], ['bogus']]) {
+520:     const r = tool(args);
+521:     if (r.status !== 64) problems.push(`${JSON.stringify(args)} exit ${r.status} (want 64)`);
+522:   }
+523:   return problems.length ? problems.join('; ') : null;
+524: });
+525: case_('missing-receipt-reads-unreadable-exit-2', (d) => {
+526:   const r = tool(['verify', join(d, 'absent.txt')]);
+527:   if (r.status !== 2) return `exit ${r.status} (want 2)`;
+528:   if (/RECEIPT: (VALID|REPLAY|TAMPERED)/.test(`${r.stdout || ''}${r.stderr || ''}`)) return 'printed a verdict';
+529:   return null;
+530: });
+531: case_('malformed-receipt-reads-unreadable-exit-2', (d) => {
+532:   const file = join(d, 'garbage.txt');
+533:   writeFileSync(file, 'this is not a receipt\n');
+534:   const r = tool(['verify', file]);
+535:   if (r.status !== 2) return `exit ${r.status} (want 2)`;
+536:   if (/RECEIPT: (VALID|REPLAY|TAMPERED)/.test(`${r.stdout || ''}${r.stderr || ''}`)) return 'printed a verdict';
+537:   return null;
+538: });
+539: case_('clock-order-violation-reads-tampered', (d) => {
+540:   const rec = makeReceipt(d, 'clk', NODE_ECHO('c'));
+541:   rewriteConsistently(rec, (body) => { body.wall_end = '2000-01-01T00:00:00.000Z'; });
+542:   return verdict(tool(['verify', rec.file]), 1, 'RECEIPT: TAMPERED');
+543: });
+544: case_('negative-monotonic-span-reads-tampered', (d) => {
+545:   const rec = makeReceipt(d, 'mono', NODE_ECHO('m'));
+546:   rewriteConsistently(rec, (body) => { body.mono_span_ms = -1; });
+547:   return verdict(tool(['verify', rec.file]), 1, 'RECEIPT: TAMPERED');
+548: });
+549: case_('prelude-outside-the-wall-window-reads-tampered', (d) => {
+550:   const rec = makeReceipt(d, 'pre', NODE_ECHO('p'));
+551:   const lines = readFileSync(rec.file, 'utf8').split('\n');
+552:   lines[0] = 'run-at: 2020-01-01T00:00:00.000Z';
+553:   const bytes = Buffer.from(lines.join('\n'), 'utf8');
+554:   writeFileSync(rec.file, bytes);
+555:   writeFileSync(rec.side, sidecarLine(sha256(bytes), basename(rec.file)));
+556:   return verdict(tool(['verify', rec.file]), 1, 'RECEIPT: TAMPERED');
+557: });
+558: case_('inner-digest-covers-every-semantic-field', (d) => {
+559:   const rec = makeReceipt(d, 'bind', NODE_ECHO('b'));
+560:   const original = JSON.parse(readFileSync(rec.file, 'utf8').split('\n')[1]);
+561:   const mutations = {
+562:     argv: ['/bin/other'], exit: original.exit === 0 ? 1 : 0, mono_span_ms: 123456,
+563:     nonce: 'f'.repeat(32), stderr_sha256: 'a'.repeat(64), stdout_sha256: 'b'.repeat(64),
+564:     wall_end: '2030-01-01T00:00:00.000Z', wall_start: '2029-01-01T00:00:00.000Z',
+565:   };
+566:   const problems = [];
+567:   for (const field of SEMANTIC_FIELDS) {
+568:     const body = { ...original, [field]: mutations[field] };
+569:     const bytes = Buffer.from(`run-at: ${body.wall_start}\n${canonical(body)}\n`, 'utf8');
+570:     const file = join(d, `bind-${field}.txt`);
+571:     writeFileSync(file, bytes);
+572:     writeFileSync(`${file}.sha256`, sidecarLine(sha256(bytes), basename(file)));
+573:     const r = tool(['verify', file]);
+574:     if (r.status !== 1 || lastLine(r) !== 'RECEIPT: REPLAY') problems.push(`${field}: exit ${r.status} ${JSON.stringify(lastLine(r))}`);
+575:   }
+576:   return problems.length ? problems.join('; ') : null;
+577: });
+578: case_('canonical-json-is-sorted-and-stable', (d) => {
+579:   const rec = makeReceipt(d, 'canon', NODE_ECHO('c'));
+580:   const line = readFileSync(rec.file, 'utf8').split('\n')[1];
+581:   const parsed = JSON.parse(line);
+582:   if (canonical(parsed) !== line) return 're-serialising the parsed record does not reproduce the line';
+583:   const keys = Object.keys(parsed);
+584:   if (JSON.stringify(keys) !== JSON.stringify([...keys].sort())) return `keys are not sorted: ${keys.join(',')}`;
+585:   return null;
+586: });
+587: case_('receipt-records-no-environment', (d) => {
+588:   const sentinel = 'kumitate-receipt-sentinel-9f3a';
+589:   process.env.KUMITATE_RECEIPT_SENTINEL = sentinel;
+590:   try {
+591:     const rec = makeReceipt(d, 'env', [process.execPath, '-e', 'process.stdout.write(process.env.KUMITATE_RECEIPT_SENTINEL || "")']);
+592:     const text = readFileSync(rec.file, 'utf8');
+593:     if (text.includes(sentinel)) return 'the sentinel value appears in the receipt';
+594:     if (/\bPATH=/.test(text)) return 'an environment assignment appears in the receipt';
+595:     return null;
+596:   } finally { delete process.env.KUMITATE_RECEIPT_SENTINEL; }
+597: });
+598: case_('run-records-the-command-exit-code', (d) => {
+599:   const rec = makeReceipt(d, 'ec', [process.execPath, '-e', 'process.exit(3)']);
+600:   const body = JSON.parse(readFileSync(rec.file, 'utf8').split('\n')[1]);
+601:   if (body.exit !== 3) return `recorded exit ${body.exit} (want 3)`;
+602:   if (!Array.isArray(body.argv) || body.argv.length !== 3) return `argv not recorded: ${JSON.stringify(body.argv)}`;
+603:   const r = tool(['verify', rec.file]);
+604:   if (r.status !== 0) return `verify exit ${r.status}`;
+605:   return null;
+606: });
+607: case_('run-records-output-hashes-not-output', (d) => {
+608:   const marker = 'kumitate-plaintext-marker-1122';
+609:   const rec = makeReceipt(d, 'hash', [process.execPath, '-e', "process.stdout.write(['kumitate','plaintext','marker','1122'].join('-'))"]);
+610:   const text = readFileSync(rec.file, 'utf8');
+611:   if (text.includes(marker)) return 'the captured output leaks into the receipt';
+612:   const body = JSON.parse(text.split('\n')[1]);
+613:   if (body.stdout_sha256 !== sha256(Buffer.from(marker, 'utf8'))) return 'stdout_sha256 does not hash captured stdout';
+614:   return null;
+615: });
+616: case_('verify-resolves-the-sidecar-next-to-the-receipt', (d) => {
+617:   const rec = makeReceipt(d, 'rel', NODE_ECHO('r'));
+618:   const elsewhere = mkdtempSync(join(tmpdir(), 'receipt-attest-cwd.'));
+619:   try { return verdict(tool(['verify', rec.file], { cwd: elsewhere }), 0, 'RECEIPT: VALID'); }
+620:   finally { try { rmSync(elsewhere, { recursive: true, force: true }); } catch { /* tmpfs reaps */ } }
+621: });
+622: 
+623: // v2 SHAPE, CLOCK, STDIN, LEDGER and R52-6 truncation arms.
+624: case_('v2-unknown-field-is-unreadable', (d) => {
+625:   const rec = makeReceipt(d, 'unknown', NODE_ECHO('u'));
+626:   rewriteConsistently(rec, (body) => { body.extra = 'not allowed'; });
+627:   return verdict(tool(['verify', rec.file]), 2);
+628: });
+629: case_('v2-blank-line-is-unreadable', (d) => {
+630:   const rec = makeReceipt(d, 'blank', NODE_ECHO('b'));
+631:   const body = readFileSync(rec.file, 'utf8').split('\n')[1];
+632:   const bytes = Buffer.from(`run-at: ${JSON.parse(body).wall_start}\n\n${body}\n`, 'utf8');
+633:   writeFileSync(rec.file, bytes);
+634:   writeFileSync(rec.side, sidecarLine(sha256(bytes), basename(rec.file)));
+635:   return verdict(tool(['verify', rec.file]), 2);
+636: });
+637: case_('v2-missing-trailing-newline-is-unreadable', (d) => {
+638:   const rec = makeReceipt(d, 'newline', NODE_ECHO('n'));
+639:   const bytes = readFileSync(rec.file).subarray(0, -1);
+640:   writeFileSync(rec.file, bytes);
+641:   writeFileSync(rec.side, sidecarLine(sha256(bytes), basename(rec.file)));
+642:   return verdict(tool(['verify', rec.file]), 2);
+643: });
+644: case_('v2-zone-less-prelude-is-unreadable', (d) => {
+645:   const rec = makeReceipt(d, 'zone', NODE_ECHO('z'));
+646:   const lines = readFileSync(rec.file, 'utf8').split('\n');
+647:   lines[0] = lines[0].slice(0, -1);
+648:   const bytes = Buffer.from(lines.join('\n'), 'utf8');
+649:   writeFileSync(rec.file, bytes);
+650:   writeFileSync(rec.side, sidecarLine(sha256(bytes), basename(rec.file)));
+651:   return verdict(tool(['verify', rec.file]), 2);
+652: });
+653: case_('v2-sidecar-recorded-name-must-match-basename', (d) => {
+654:   const rec = makeReceipt(d, 'side-name', NODE_ECHO('s'));
+655:   writeFileSync(rec.side, sidecarLine(sha256(readFileSync(rec.file)), 'different.txt'));
+656:   return verdict(tool(['verify', rec.file]), 1, 'RECEIPT: TAMPERED');
+657: });
+658: case_('v2-sidecar-escaped-basename-round-trips', (d) => {
+659:   const specialName = `escaped${String.fromCharCode(92)}${String.fromCharCode(10)}name`;
+660:   const rec = makeReceipt(d, specialName, NODE_ECHO('e'));
+661:   const side = parseSidecar(readFileSync(rec.side, 'utf8'));
+662:   if (!side || side.name !== basename(rec.file)) return 'escaped sidecar basename did not round-trip';
+663:   return verdict(tool(['verify', rec.file]), 0, 'RECEIPT: VALID');
+664: });
+665: case_('v2-clock-month-rollover-is-tampered', (d) => {
+666:   const rec = makeReceipt(d, 'month', NODE_ECHO('m'));
+667:   rewriteConsistently(rec, (body) => { body.wall_start = '2026-13-01T00:00:00.000Z'; body.wall_end = body.wall_start; });
+668:   return verdict(tool(['verify', rec.file]), 1, 'RECEIPT: TAMPERED');
+669: });
+670: case_('v2-clock-day-rollover-is-tampered', (d) => {
+671:   const rec = makeReceipt(d, 'day', NODE_ECHO('d'));
+672:   rewriteConsistently(rec, (body) => { body.wall_start = '2026-02-30T00:00:00.000Z'; body.wall_end = body.wall_start; });
+673:   return verdict(tool(['verify', rec.file]), 1, 'RECEIPT: TAMPERED');
+674: });
+675: case_('v2-nonfinite-clock-is-tampered', (d) => {
+676:   const rec = makeReceipt(d, 'nonfinite', NODE_ECHO('x'));
+677:   rewriteConsistently(rec, (body) => { body.wall_start = '2026-99-01T00:00:00.000Z'; body.wall_end = body.wall_start; });
+678:   return verdict(tool(['verify', rec.file]), 1, 'RECEIPT: TAMPERED');
+679: });
+680: case_('v2-sidecar-write-failure-removes-half-receipt', (d) => {
+681:   const base = join(d, 'half');
+682:   mkdirSync(`${base}.txt.sha256`);
+683:   const r = tool(['run', '--out', base, '--', ...NODE_ECHO('h')]);
+684:   if (r.status !== 2) return `run exit ${r.status} (want 2)`;
+685:   if (existsSync(`${base}.txt`)) return 'half-written receipt remains after sidecar failure';
+686:   return null;
+687: });
+688: case_('v2-spawn-failure-is-recorded-as-127', (d) => {
+689:   const rec = makeReceipt(d, 'spawn-fail', ['/no/such/receipt-attest-command']);
+690:   if (rec.run.status !== 0) return `run exit ${rec.run.status}`;
+691:   const body = JSON.parse(readFileSync(rec.file, 'utf8').split('\n')[1]);
+692:   if (body.exit !== 127) return `recorded exit ${body.exit} (want 127)`;
+693:   return verdict(tool(['verify', rec.file]), 0, 'RECEIPT: VALID');
+694: });
+695: case_('v2-stdin-binds-32-nonce-bytes-and-child-output', (d) => {
+696:   const base = join(d, 'stdin');
+697:   const run = tool(['run', '--out', base, '--stdin', '--', '/bin/cat']);
+698:   if (run.status !== 0) return `run exit ${run.status}`;
+699:   const file = `${base}.txt`;
+700:   const body = JSON.parse(readFileSync(file, 'utf8').split('\n')[1]);
+701:   const nonceBytes = Buffer.from(body.nonce, 'utf8');
+702:   if (nonceBytes.length !== 32) return `stdin nonce is ${nonceBytes.length} bytes (want 32)`;
+703:   if (body.stdin_sha256 !== sha256(nonceBytes)) return 'stdin_sha256 does not bind the nonce bytes';
+704:   if (body.stdout_sha256 !== sha256(nonceBytes)) return '/bin/cat stdout hash does not bind its real stdin output';
+705:   return verdict(tool(['verify', file]), 0, 'RECEIPT: VALID');
+706: });
+707: case_('v2-ledger-prints-damaged-prior-skip-note', (d) => {
+708:   const rec = makeReceipt(d, 'ledger-current', NODE_ECHO('l'));
+709:   const damaged = join(d, 'damaged.txt');
+710:   writeFileSync(damaged, 'not an attested receipt\n');
+711:   writeFileSync(`${damaged}.sha256`, sidecarLine('0'.repeat(64), basename(damaged)));
+712:   const r = tool(['verify', '--ledger', d, rec.file]);
+713:   if (r.status !== 0 || lastLine(r) !== 'RECEIPT: VALID') return `exit ${r.status}: ${lastLine(r)}`;
+714:   if (!r.stdout.includes('ledger skipped damaged.txt: not an attested receipt')) return 'damaged-prior skip note is absent';
+715:   return null;
+716: });
+717: case_('nonce-change-with-stale-digest-is-replay', (d) => {
+718:   const rec = makeReceipt(d, 'nonce-trunc', NODE_ECHO('n'));
+719:   const lines = readFileSync(rec.file, 'utf8').split('\n');
+720:   const body = JSON.parse(lines[1]);
+721:   const flip = body.nonce[4] === '0' ? '1' : '0';
+722:   body.nonce = `${body.nonce.slice(0, 4)}${flip}${body.nonce.slice(5)}`;
+723:   lines[1] = canonical(body);
+724:   writeFileSync(rec.file, lines.join('\n'));
+725:   return verdict(tool(['verify', rec.file]), 1, 'RECEIPT: REPLAY');
+726: });
+727: case_('r52-6-ledger-nonce-16bit-prefix-not-reuse', (d) => {
+728:   const a = makeReceipt(d, 'n02-a', NODE_ECHO('n02-a'));
+729:   const b = makeReceipt(d, 'n02-b', NODE_ECHO('n02-b'));
+730:   const prefix = randomBytes(2).toString('hex');
+731:   const na = `${prefix}${randomBytes(14).toString('hex')}`;
+732:   const nb = `${prefix}${randomBytes(14).toString('hex')}`;
+733:   if (na === nb) return 'test construction failed: the two nonces are identical';
+734:   rewriteConsistently(a, (body) => { body.nonce = na; });
+735:   rewriteConsistently(b, (body) => { body.nonce = nb; });
+736:   const problems = [];
+737:   for (const rec of [a, b]) {
+738:     const r = tool(['verify', '--ledger', d, rec.file]);
+739:     if (r.status !== 0 || lastLine(r) !== 'RECEIPT: VALID') {
+740:       problems.push(`${basename(rec.file)}: exit ${r.status} ${JSON.stringify(lastLine(r))}`);
+741:     }
+742:   }
+743:   return problems.length ? problems.join('; ') : null;
+744: });
+745: case_('r52-6-ledger-digest-16bit-prefix-collision-reads-replay', (d) => {
+746:   const a = makeReceipt(d, 'ld16-a', NODE_ECHO('ld16-a'));
+747:   const bodyA = JSON.parse(readFileSync(a.file, 'utf8').split('\n')[1]);
+748:   let bodyB = null;
+749:   for (let i = 0; i < 1_000_000; i += 1) {
+750:     const candidate = { ...bodyA, argv: [...bodyA.argv, `ledger-digest-prefix-${i}`] };
+751:     const candidateDigest = digestOf(candidate);
+752:     if (candidateDigest.slice(0, 4) === bodyA.digest.slice(0, 4) && candidateDigest !== bodyA.digest) {
+753:       candidate.digest = candidateDigest;
+754:       bodyB = candidate;
+755:       break;
+756:     }
+757:   }
+758:   if (!bodyB) return 'test construction failed: no digest with the matching 16-bit prefix';
+759:   const bFile = join(d, 'ld16-b.txt');
+760:   const bytes = Buffer.from(`run-at: ${bodyA.wall_start}\n${canonical(bodyB)}\n`, 'utf8');
+761:   writeFileSync(bFile, bytes);
+762:   writeFileSync(`${bFile}.sha256`, sidecarLine(sha256(bytes), basename(bFile)));
+763:   const problems = [];
+764:   for (const file of [a.file, bFile]) {
+765:     const r = tool(['verify', '--ledger', d, file]);
+766:     if (r.status !== 1 || lastLine(r) !== 'RECEIPT: REPLAY') {
+767:       problems.push(`${basename(file)}: exit ${r.status} ${JSON.stringify(lastLine(r))}`);
+768:     }
+769:   }
+770:   return problems.length ? problems.join('; ') : null;
+771: });
+772: case_('r52-6-inner-digest-16bit-prefix-collision-reads-replay', (d) => {
+773:   const rec = makeReceipt(d, 'digest-prefix', NODE_ECHO('d16-digest-prefix'));
+774:   const lines = readFileSync(rec.file, 'utf8').split('\n');
+775:   const body = JSON.parse(lines[1]);
+776:   body.exit = body.exit === 0 ? 1 : 0;
+777:   const correct = digestOf(body);
+778:   body.digest = `${correct.slice(0, 4)}${'0'.repeat(60)}`;
+779:   if (body.digest === correct) return 'test construction failed: forged digest equals the correct one';
+780:   lines[1] = canonical(body);
+781:   const bytes = Buffer.from(lines.join('\n'), 'utf8');
+782:   writeFileSync(rec.file, bytes);
+783:   writeFileSync(rec.side, sidecarLine(sha256(bytes), basename(rec.file)));
+784:   return verdict(tool(['verify', rec.file]), 1, 'RECEIPT: REPLAY');
+785: });
+786: case_('r52-6-sidecar-difference-after-16-bit-prefix-is-not-valid', (d) => {
+787:   const rec = makeReceipt(d, 'side-trunc', NODE_ECHO('s'));
+788:   const actual = sha256(readFileSync(rec.file));
+789:   const flip = actual[4] === '0' ? '1' : '0';
+790:   const forged = `${actual.slice(0, 4)}${flip}${actual.slice(5)}`;
+791:   writeFileSync(rec.side, sidecarLine(forged, basename(rec.file)));
+792:   return verdict(tool(['verify', rec.file]), 1, 'RECEIPT: TAMPERED');
+793: });
+794: case_('ledger-prior-recorded-digest-16bit-collision-is-skipped-not-reuse', (d) => {
+795:   const rec = makeReceipt(d, 'ld14', NODE_ECHO('ld14'));
+796:   const body = JSON.parse(readFileSync(rec.file, 'utf8').split('\n')[1]);
+797:   const prior = { ...body, argv: [...body.argv, 'prior-forged'] };
+798:   const correct = digestOf(prior);
+799:   prior.digest = `${correct.slice(0, 4)}${'0'.repeat(60)}`;
+800:   const bytes = Buffer.from(`run-at: ${body.wall_start}\n${canonical(prior)}\n`, 'utf8');
+801:   const pfile = join(d, 'prior.txt');
+802:   writeFileSync(pfile, bytes);
+803:   writeFileSync(`${pfile}.sha256`, sidecarLine(sha256(bytes), basename(pfile)));
+804:   const r = tool(['verify', '--ledger', d, rec.file]);
+805:   if (r.status !== 0) return `exit ${r.status} (want 0): ${JSON.stringify(lastLine(r))}`;
+806:   if (!/ledger skipped prior\.txt: not an attested receipt \(inner digest mismatch\)/.test(`${r.stdout || ''}`)) return 'no skip note for the unattested prior';
+807:   if (lastLine(r) !== 'RECEIPT: VALID') return `verdict line is ${JSON.stringify(lastLine(r))}`;
+808:   return null;
+809: });
+810: 
+811: // v3 LEDGER arms (round 53, routed defects R52-9 + R52-10): the evidence set is the whole
+812: // ledger directory — attested receipts count whatever their filename extension, and the
+813: // same-digest exemption is extension-independent.
+814: case_('v3-ledger-catches-nonce-reuse-hidden-under-a-non-txt-name', (d) => {
+815:   const orig = makeReceipt(d, 'r52-9-orig', NODE_ECHO('r52-9'));
+816:   const body = JSON.parse(readFileSync(orig.file, 'utf8').split('\n')[1]);
+817:   const forged = { ...body, argv: [...body.argv, 'r52-9-evil'] };
+818:   forged.digest = digestOf(forged);
+819:   const bytes = Buffer.from(`run-at: ${body.wall_start}\n${canonical(forged)}\n`, 'utf8');
+820:   // The R52-9 evasion name: NOT a .txt file. Under v2 the ledger never opened it.
+821:   const hidden = join(d, 'attest-run-1-forged.receipt');
+822:   writeFileSync(hidden, bytes);
+823:   writeFileSync(`${hidden}.sha256`, sidecarLine(sha256(bytes), basename(hidden)));
+824:   const r = tool(['verify', '--ledger', d, orig.file]);
+825:   if (r.status !== 1 || lastLine(r) !== 'RECEIPT: REPLAY') return `exit ${r.status} ${JSON.stringify(lastLine(r))}`;
+826:   if (!/already bound to a different record in .*attest-run-1-forged\.receipt/.test(`${r.stdout || ''}`)) return 'REPLAY does not name the hidden file';
+827:   return null;
+828: });
+829: case_('v3-ledger-counts-an-attested-receipt-under-any-extension', (d) => {
+830:   const scratch = mkdtempSync(join(tmpdir(), 'receipt-attest-v3anyext.'));
+831:   try {
+832:     const prior = makeReceipt(scratch, 'prior', NODE_ECHO('prior'));
+833:     const body = JSON.parse(readFileSync(prior.file, 'utf8').split('\n')[1]);
+834:     const ledger = join(d, 'ledger-anyext');
+835:     mkdirSync(ledger);
+836:     // Re-key the attested prior under an extension-free name; the sidecar name follows.
+837:     const anyName = join(ledger, 'witness.log');
+838:     writeFileSync(anyName, readFileSync(prior.file));
+839:     writeFileSync(`${anyName}.sha256`, sidecarLine(sha256(readFileSync(anyName)), basename(anyName)));
+840:     const subject = makeReceipt(d, 'subject-anyext', NODE_ECHO('subject'));
+841:     rewriteConsistently(subject, (b) => { b.nonce = body.nonce; });
+842:     const r = tool(['verify', '--ledger', ledger, subject.file]);
+843:     if (r.status !== 1 || lastLine(r) !== 'RECEIPT: REPLAY') return `exit ${r.status} ${JSON.stringify(lastLine(r))}`;
+844:     if (!/already bound to a different record in witness\.log/.test(`${r.stdout || ''}`)) return 'REPLAY does not name witness.log';
+845:     return null;
+846:   } finally { try { rmSync(scratch, { recursive: true, force: true }); } catch { /* tmpfs reaps */ } }
+847: });
+848: case_('v3-ledger-exempts-a-byte-identical-duplicate-under-a-different-name', (d) => {
+849:   const orig = makeReceipt(d, 'same-name-a', NODE_ECHO('same-bytes'));
+850:   const copy = join(d, 'same-bytes.receipt');
+851:   writeFileSync(copy, readFileSync(orig.file));
+852:   writeFileSync(`${copy}.sha256`, sidecarLine(sha256(readFileSync(copy)), basename(copy)));
+853:   return verdict(tool(['verify', '--ledger', d, copy]), 0, 'RECEIPT: VALID');
+854: });
+855: case_('v3-ledger-skips-directories-and-foreign-files', (d) => {
+856:   const rec = makeReceipt(d, 'amid-junk', NODE_ECHO('j'));
+857:   const sub = join(d, 'nested-dir');
+858:   mkdirSync(sub);
+859:   writeFileSync(join(d, 'notes.json'), '{"not":"a receipt"}\n');
+860:   writeFileSync(join(d, 'stray.sha256'), `${'0'.repeat(64)}  stray\n`);
+861:   const r = tool(['verify', '--ledger', d, rec.file]);
+862:   if (r.status !== 0 || lastLine(r) !== 'RECEIPT: VALID') return `exit ${r.status} ${JSON.stringify(lastLine(r))}`;
+863:   const text = `${r.stdout || ''}`;
+864:   if (!/ledger skipped nested-dir: not an attested receipt \(not a regular file\)/.test(text)) return 'directory skip note absent';
+865:   if (!/ledger skipped notes\.json: not an attested receipt/.test(text)) return 'foreign-file skip note absent';
+866:   if (!/ledger skipped stray\.sha256: not an attested receipt/.test(text)) return 'sidecar skip note absent';
+867:   return null;
+868: });
+869: case_('v3-ledger-scan-finds-no-evidence-in-an-empty-directory', (d) => {
+870:   const rec = makeReceipt(d, 'solo', NODE_ECHO('solo'));
+871:   const empty = join(d, 'empty-ledger');
+872:   mkdirSync(empty);
+873:   return verdict(tool(['verify', '--ledger', empty, rec.file]), 0, 'RECEIPT: VALID');
+874: });
+875: 
+876: function selftest() {
+877:   const root = mkdtempSync(join(tmpdir(), 'receipt-attest-selftest.'));
+878:   let passed = 0;
+879:   let failed = 0;
+880:   const failures = [];
+881:   try {
+882:     for (let i = 0; i < SELFTEST_CASES.length; i += 1) {
+883:       const c = SELFTEST_CASES[i];
+884:       const d = mkdtempSync(join(root, `case.${i}`));
+885:       let why = null;
+886:       try { why = c.fn(d); }
+887:       catch (e) { why = `threw ${String(e && e.message).split('\n')[0]}`; }
+888:       if (why === null) { passed += 1; out(`case ${c.name}: PASS\n`); }
+889:       else { failed += 1; failures.push(`${c.name}: ${why}`); out(`case ${c.name}: FAIL (${why})\n`); }
+890:       try { rmSync(d, { recursive: true, force: true }); } catch { /* tmpfs reaps */ }
+891:     }
+892:   } finally { try { rmSync(root, { recursive: true, force: true }); } catch { /* tmpfs reaps */ } }
+893:   if (failed) {
+894:     for (const failure of failures) err(`receipt-attest: SELFTEST FAIL ${failure}\n`);
+895:     out('ATTEST_SELFTEST: FAIL\n');
+896:     process.exit(1);
+897:   }
+898:   out(`ATTEST_SELFTEST: PASS (${passed}/${SELFTEST_CASES.length})\n`);
+899:   process.exit(0);
+900: }
+901: 
+902: const argv = process.argv.slice(2);
+903: if (argv.length === 1 && (argv[0] === '--selftest' || argv[0] === '-t')) selftest();
+904: if (argv.length === 0) usage('no subcommand');
+905: const mode = argv[0];
+906: const rest = argv.slice(1);
+907: if (mode === 'run') doRun(rest);
+908: else if (mode === 'verify') doVerify(rest);
+909: else if (mode === '--help' || mode === '-h') {
+910:   out('usage: receipt-attest.mjs run --out <base> [--stdin] -- <cmd...>\n');
+911:   out('       receipt-attest.mjs verify [--ledger <dir>] <file>\n');
+912:   out('       receipt-attest.mjs --selftest\n');
+913:   process.exit(0);
+914: } else usage(`unknown subcommand ${JSON.stringify(mode)}`);

@@ -1,0 +1,77 @@
+COMMAND git -C /home/vgpnk/Projects/shokunin/mado-shokunin show f72bba01928efe80cfa1a7907fe3aaa9eba1cfd7:corpus/knowledge/harness-witness-credit-r75.md
+EXIT 0
+SHA256 2b8a35f8016ec02186d88b11a74b31a882b08666f559d07131b9c836b6a4eb30
+1: ---
+2: source: own-work — `.ufo/waves/round-75/{claims-declaration-r75.md,controls/c1-harness-cases-r75.json,control-baseline-r75.txt,measurement-c1-r75-final.txt}`; `quality/counters/{c1-r75-landing-controls.py,c1-r75-harness-witness.py,c1-r72-landing-controls.py}`; external witness ground S450 (`secrets.token_hex`)
+3: verified-at: `4527fcae6a8619e890172ca0a616ae8a3e20fd87` (the final measured content; freeze body `def73656c94f0e88bd671cfb4a65124338261722`)
+4: recheck: `python3 -I quality/counters/c1-r75-harness-witness.py --repo . --rev <rev> --base-rev b149d2ece1a6d75f5738aa8bf4a9493f1a9c7da6 --controls .ufo/waves/round-75/controls/c1-harness-cases-r75.json --scratch-root DIR` — `cases=11 correct=11 base_correct=6 verdict=TARGET_MET`
+5: ---
+6: 
+7: # Witness credit wired into the landing harness (round 75, C1)
+8: 
+9: ## 1. The gap this closes
+10: 
+11: The round-74 rule left its own wiring open: "the rule ships as a standalone instrument and is
+12: not yet wired into the frozen round-72 harness" (`corpus/lessons/round-74.md` § C1). The held
+13: round-72 harness (`quality/counters/c1-r72-landing-controls.py`, sha256 `b6108c86…`) credits the
+14: M-Z zero-citation mutant on arithmetic alone: the last parsed
+15: `MADO_LANDING_COUNTERS_SELFTEST: p/n` has `n > 0` and `p < n`, and the run's own `SELFTEST FAIL`
+16: lines number exactly `n - p`. A captured report with matching detail lines therefore earns the
+17: same credit as a current run.
+18: 
+19: ## 2. The successor harness
+20: 
+21: `quality/counters/c1-r75-landing-controls.py` is a generation, not a rewrite. It loads the
+22: frozen round-72 bytes from the measured repository at `--rev`, refuses any bytes whose sha256 is
+23: not the pin, writes them into a private unpredictable directory under the validated scratch root
+24: with `O_NOFOLLOW`, and installs the round-75 rule into that generation's own globals. The
+25: extraction list, the extracted instrument's selftest, the M-Z clause deletion and the M-R
+26: replacement-ref leg are the round-72 code unchanged.
+27: 
+28: One `secrets.token_hex(8)` challenge is drawn per run and handed to the child in
+29: `MADO_LANDING_NONCE` (the round-74 ground, S450). The M-Z kill is credited only when the held
+30: arithmetic holds **and** the child's last parsed `MADO_LANDING_WITNESS: <16 hex>` line equals the
+31: challenge byte-exactly (either hex case is accepted as a value; equality does not normalise it).
+32: The contract outcome is green only under the same echo, with both mutants killed. The standing
+33: instrument `quality/landing-counters.sh` echoes a well-formed challenge after its summary; with no
+34: challenge in the environment it prints nothing and every held caller keeps its output (verified
+35: 62/62 on the amended instrument, critic receipt).
+36: 
+37: ## 3. The eleven frozen fixture modes
+38: 
+39: Each mode is a real `bash` fixture lane committed into its own scratch git fixture, measured
+40: through the actual harness pipeline; the scored value is the **M-Z credit decision**.
+41: 
+42: | mode | expected credit | held r72 | successor | what separates it |
+43: |---|---|---|---|---|
+44: | `right` | pass | pass | pass | failing summary, matching detail, exact echo |
+45: | `liar-success` | pass | pass | pass | exit 0 does not override failing arithmetic (same rule-visible path as `right`) |
+46: | `uppercase-echo` | fail | pass | fail | uppercased echo is not byte-exact |
+47: | `stale-witness` | fail | pass | fail | captured old witness |
+48: | `absent-witness` | fail | pass | fail | no parsed witness |
+49: | `wrong-witness` | fail | pass | fail | wrong token |
+50: | `last-wins-wrong` | fail | pass | fail | last parsed witness overrides an earlier exact echo |
+51: | `crash` | fail | fail | fail | no summary |
+52: | `zero-denominator` | fail | fail | fail | `0/0` is not a kill |
+53: | `mismatch-detail` | fail | fail | fail | detail count ≠ summary shortfall |
+54: | `green-mutant` | fail | fail | fail | `2/2` reports no failed assertion |
+55: 
+56: Measured at `4527fcae`: `cases=11 correct=11 base_correct=6`. The held leg misses exactly the
+57: five witness separators. The pre-freeze do-nothing receipt (`control-baseline-r75.txt`) records
+58: the same 6/11 from the frozen harness alone.
+59: 
+60: ## 4. What the challenge does not authenticate
+61: 
+62: - It authenticates the **run's echo**, not the truth of the assertions: a child can echo the
+63:   current challenge and invent matching detail lines, and the arithmetic still accepts them.
+64: - A fixed captured witness collides with a fresh 64-bit challenge with probability `2^-64`; the
+65:   separation is probabilistic in that sense, not logical impossibility.
+66: - The frozen modes are separators, not fault coverage. `right` and `liar-success` have the same
+67:   rule-visible behaviour (they differ only in exit status, which the rule does not read), so
+68:   eleven modes carry ten distinct behaviours.
+69: - The `uppercase-echo` separator is probabilistic as an oracle: `token_hex(8)` can draw sixteen
+70:   decimal digits (probability `(10/16)^16 ≈ 5.4e-4` per draw), uppercasing which is a no-op; a
+71:   later denominator should force a case-changing challenge. The frozen label was not re-cut.
+72: - The counter scores the M-Z decision only. The outcome clause is implemented and inspected
+73:   (`green_with_witness`), but the frozen eleven-case denominator does not certify it; a successor
+74:   predicate must score the outcome field itself.

@@ -2309,3 +2309,59 @@ calibration.
   (unmarshal the payload, canonicalise the fresh identifier table) is a recorded limit, measured by
   the wave, because re-emission preserves behaviour. C2's kill rule names the hollow repair and the
   newer-block window; both are refused. The non-author closure still rules on admission.
+
+## Round 80 — the scored set is drawn per run, and a Gate record becomes a line a counter re-opens (2026-11-04)
+
+Base `b7803829922770b890e9f4efdd30d12c3695439a` (round-79 tip, closed `ok` /
+`rejected-honest-stop`). Wave-spec freeze commit `0d253c95732c0ed19a9fa414e5d17769ddefa48d`; its
+parent `0f59b985933b2fe9b0b6a754d908ac6ae47399e6` carries the instruments, the claims text and the
+two do-nothing controls (the round-80 attempt-1 L1 died on a provider failure and the orchestrator
+preserved its in-flight work in that commit; this attempt re-ran and re-committed every control it
+cites). Integration `44d09edfc20dba26ee8d58a93d365989916a2692`; QUALITY/SKILL/erratum
+`5ba30d87172e94dd76a49e1a94294561e90f6cbd`.
+- C1 operability (lowest scored non-retired axis, the historical 3/10 held): round 79's battery
+  scored a committed subject table, and the round-79 structure-identity matrix reached its PASS
+  line without scoring one (`controls/oracle-before-r80.txt`: `BATTERY_EXIT=0 BATTERY_VERDICT=PASS
+  RECEIPT_LINES=113`, `ORACLE=ACCEPTED`, exit 1). The successor `matrix-battery-v7.py` draws the
+  scored set per run (`--fresh N`) and prints `BATTERY=PASS forgers_rejected=11/11 positive=2/2
+  fresh_positive=2/2 fresh_forgers=2/2 oracles_rejected=5/5`, exit 0, in 97.3 s on this host
+  (`controls/v7-legit-matrix-r80.txt`) — but the same bytes print `BATTERY=FAIL … fresh_positive=1/2
+  fresh_forgers=1/2` on the next draw and `BATTERY=FAIL … 0/3 0/3` at `--fresh 3`
+  (`R80ExecA/r80a-after-v7-run1.txt`, `r80d-v7-run2.txt`, `r80d-v7-run3-fresh3.txt`), because a drawn
+  positive and a drawn forger share one name and `score()` is keyed by name. **C1 fires its own kill
+  rule ("the legitimate matrix is refused") and does not verify**; the drawn leg still discriminates
+  the two known forged matrices that v6 accepted (`a10-as-matrix-fresh2`: `BATTERY=FAIL … fresh_forgers=0/2`).
+  QUALITY 156, 157 and 159 carry the three defects.
+- C2 calibration (sourced on S199): round 79's Gate records were prose nothing re-opened — S196
+  stated 25 words for a 27-word quote, S197 stated 24 for 25, S198's quote occurs nowhere in its
+  eleven-line receipt. The successor `gate-grounding-check.py` reads `GATE-RECORD` lines and
+  re-opens each one on committed bytes: `GATE_GROUNDING=FAIL unresolved=3 superseded_resolved=0
+  audited=S196,S197,S198` at the base (`controls/grounding-before-r80.txt`) →
+  `GATE_GROUNDING=PASS unresolved=0 superseded_resolved=3 audited=S199,S200,S201,S202` at
+  `44d09edf` (`controls/grounding-after.txt`), the three superseded rows resolving only through
+  their replacements' passing records.
+- Registry 198 → 202 rows: S199 admitted (own-work B, the round-79 spot-check's payload/structure
+  finding), S200/S201/S202 supersede S196/S197/S198 with measured counts (12/20/25/2 words) and a
+  corrected anchor span (11 lines, not 20). No existing `status`/`recheck`/`used-by` cell changed.
+  Census exit 0 at both ends, same five pre-existing W04 warnings.
+- QUALITY 152–154 (machine-checkable gate record; a control receipt names the revision it measured;
+  a located quote is re-opened, `grep -c`'d and `wc -w`'d before the row is written); the SKILL Gates
+  table gains the round-80 counter and battery rows; `corpus/lessons/round-79-erratum.md` corrects
+  the round-79 closure's D2/D3/D5 record defects.
+- Frontier: S199–S202 opened by `git show` at pinned revisions; no URL fetched. Assimilation: none
+  (`merge/chousa/` id drift still unrenumbered). `considerthese/2026-10-26.md` opened; one proposal
+  (lane-vs-verifier disagreements) recorded in the lesson, not implemented.
+- No-harm: `bash tools/research-gate.sh --selftest` → `PASS (275 cases, 0 skipped)`;
+  `corpus/evidence/round79/selfcheck-v2.py --rev 5ba30d87` → `SELFCHECK2=PASS unresolved=0/3`.
+
+### Correction to the round-79 entry (append-only, routed defect 4 of the round-79 spot-check)
+
+The round-79 entry above says "C2's kill rule names the hollow repair and the newer-block window;
+both are refused". The second clause is false on the committed receipt:
+`.ufo/waves/round-79/w1/R79CriticA/selfcheck2-duplicate116-head.txt` prints
+`SELFCHECK2=PASS unresolved=0/3` at exit 0 for a tree whose newer `## Round-<n> addition` block
+re-uses criterion number `116.`, so the newer-block window fired the kill rule and C2 did **not**
+verify as written. The round-79 SCORECARD row, lesson and report all record the firing; only this
+entry said otherwise. The round-79 bytes stay as filed; the round-80 lesson carries the class as a
+mined mistake and QUALITY 152 now requires a superseded record to resolve through its replacement's
+passing record rather than through prose.

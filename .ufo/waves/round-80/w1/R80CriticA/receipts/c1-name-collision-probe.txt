@@ -1,0 +1,17 @@
+### C1 name-collision probe: matrix-battery-v7.py score() keyed by subject NAME
+### instrument: corpus/evidence/round80/matrix-battery-v7.py sha256=35351b2328bb6a284da13e61240a6ec598f39a148b8d8948d4e3d60dd78d914d
+### score() signature lines 500-545; the dict is line 508: results = {name: [] for _group, name, _src, _pre in entries}
+### fresh names are built at line 624: f"{base_name}#{i}" -- a fresh POSITIVE and a fresh FORGER for the same slot i and the same base share one name
+
+# drawn: POSITIVE base=successor-counter path=7ff0a9e1917d7b70
+# drawn: FORGER   base=ref-counter path=ee1a0f58144ffa4d
+SOLO RUN FORGER F#0 0 matrix_exit=1 marks=0/12/FAIL content=ok
+SOLO RUN POSITIVE P#0 0 matrix_exit=0 marks=12/12/PASS content=ok
+SOLO SUBJECT POSITIVE P#0 ACCEPTED
+SOLO SUBJECT FORGER F#0 REJECTED
+# SOLO  fresh_positive=1/1 fresh_forger=1/1
+SAME RUN POSITIVE X#0 0 matrix_exit=0 marks=12/12/PASS content=ok
+SAME RUN FORGER X#0 0 matrix_exit=1 marks=0/12/FAIL content=ok
+SAME SUBJECT POSITIVE X#0 MISS
+SAME SUBJECT FORGER X#0 MISS
+# SAME  fresh_positive=0/1 fresh_forger=0/1

@@ -1,0 +1,8 @@
+### C2 negative control: R4 must fire on a 26-word quote (the counter is not vacuously permissive)
+### commit: 1315120c350eb123a8e482b408782aa8cc22eb0d
+### the line: GATE-RECORD S199 ... words=26 quote=a b c ... z  (26 words)
+### command: python3 -B corpus/evidence/round80/gate-grounding-check.py --rev 1315120c350eb123a8e482b408782aa8cc22eb0d
+ROW S199 record=bad quote_words=26 location=R3 quote absent from corpus/SOURCES.md:1 verdict=UNRESOLVED
+SUPERSEDED S196 by S199 record=bad verdict=UNRESOLVED
+GATE_GROUNDING=FAIL unresolved=2 superseded_resolved=2 audited=S199,S200,S201,S202
+# exit: 1

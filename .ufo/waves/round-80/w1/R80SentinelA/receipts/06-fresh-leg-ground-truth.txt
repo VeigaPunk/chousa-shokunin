@@ -1,0 +1,72 @@
+# ITEM 4b / C1 — the fresh leg's ground truth is the same file as the subject under test
+$ grep -n "WITNESS = " corpus/evidence/round80/matrix-battery-v7.py
+125:WITNESS = LANE / "corpus/evidence/round76/loader-matrix-v3.py"
+$ sed -n "437,455p" corpus/evidence/round80/matrix-battery-v7.py    # _witness_out + group label
+    """Run the committed witness matrix; return (rc, marks, case cells) or None."""
+    work.mkdir(parents=True, exist_ok=True)
+    env = dict(os.environ, LOADER_MATRIX_CHILD_TIMEOUT=WITNESS_TIMEOUT,
+               LOADER_MATRIX_LANE=str(LANE))
+    try:
+        p = subprocess.run([sys.executable, "-B", str(WITNESS), "--counter", str(subject),
+                            "--work", str(work)], stdin=subprocess.DEVNULL,
+                           capture_output=True, text=True, timeout=timeout, env=env)
+    except subprocess.TimeoutExpired:
+        return None
+    marks = None
+    for line in p.stdout.splitlines():
+        m = MATRIX_LINE.match(line)
+        if m:
+            marks = (int(m.group(1)), int(m.group(2)), m.group(3))
+    # the matrix emits its twelve cases in a per-run order; compare them as a set
+    cells = tuple(sorted(line for line in p.stdout.splitlines() if CASE_LINE.match(line)))
+    return p.returncode, marks, cells
+
+$ sed -n "470,495p" corpus/evidence/round80/matrix-battery-v7.py    # draw_fresh: label from the witness
+                continue
+        else:
+            fired = 0
+            for _ in range(2):
+                match, fn = MUTATION_OPS[secrets.randbelow(len(MUTATION_OPS))]
+                fired += _apply(tree, match, fn)
+            if not fired:
+                continue
+        copy = _emit_tree(tree, work)
+        base_copy = _emit_tree(ast.parse(base_path.read_text()), work)
+        wb = _witness_out(base_copy, copy.parent / "wb", timeout)
+        wc = _witness_out(copy, copy.parent / "wc", timeout)
+        shutil.rmtree(base_copy.parent, ignore_errors=True)
+        if wb is None or wc is None:
+            shutil.rmtree(copy.parent, ignore_errors=True)
+            continue
+        if any("timeout=True" in cell for cell in wb[2] + wc[2]):
+            shutil.rmtree(copy.parent, ignore_errors=True)
+            continue
+        group = "POSITIVE" if (wb[0] == wc[0] and wb[1] == wc[1] and wb[2] == wc[2]) else "FORGER"
+        if group == want:
+            return copy, base_name, group
+        shutil.rmtree(copy.parent, ignore_errors=True)
+    return None, None, None
+
+
+
+$ grep -n "MATRIX_PATH\|MATRIX_SHA256" corpus/evidence/round80/controls/v7-legit-matrix-r80.txt | head -3
+3:MATRIX_PATH=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round76/loader-matrix-v3.py
+4:MATRIX_SHA256=b79d6441057a01b27eb465c6b0625cd46502114f8b622b370c2cd2805c81913f
+$ sha256sum corpus/evidence/round76/loader-matrix-v3.py
+b79d6441057a01b27eb465c6b0625cd46502114f8b622b370c2cd2805c81913f  corpus/evidence/round76/loader-matrix-v3.py
+
+$ grep -n "witness" corpus/evidence/round80/claims.md
+25:(fresh forgers) of the two committed positives, ground-truthed by the committed witness matrix — and
+53:**Limits recorded, not claimed closed.** The fresh leg's ground truth is the committed witness
+54:matrix, so a witness wrong about a case makes both legs wrong together; the eleven committed
+
+# the frozen counting command (claims.md) and the witness path it resolves:
+35:**Counting command (after).**
+36-
+37-```
+38-python3 -B corpus/evidence/round80/matrix-battery-v7.py \
+--
+71:**Counting command (after).**
+72-
+73-```
+74-python3 -B corpus/evidence/round80/gate-grounding-check.py --rev REV

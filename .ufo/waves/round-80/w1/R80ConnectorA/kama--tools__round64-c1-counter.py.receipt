@@ -1,0 +1,2062 @@
+COMMAND git -C /home/vgpnk/Projects/shokunin/kama-shokunin show d05f6d01a4b39d1ef60043ab123a7ef50085f5b0:tools/round64-c1-counter.py
+EXIT 0
+SHA256 1ffea590bcb4a2db3e1183221ebe1f2dd9841f4811c9bcd54de80f2484b817d9
+1: #!/usr/bin/env python3
+2: """Round-64 C1 counter: the process that answers is the pinned llama-server.
+3: 
+4: Usage: python3 tools/round64-c1-counter.py --repo REPO --tip REV --work DIR
+5: 
+6: Predicate as amended (AMENDMENT 1, .ufo/waves/round-64/controls/freeze.txt;
+7: the original sentence is kept there verbatim):
+8:   C1-r64: at the tip, the byte-pinned tools/kama-completion-live.py (schema
+9:   kama-completion-live/v3) runs one counter-opened hold-mode live request-
+10:   plane lifecycle on the pinned llama.cpp fixture, sending the request
+11:   (prompt, n_predict, seed) the counter drew for this run, and the counter -
+12:   from procfs and its own code alone, loading nothing from the tip - binds
+13:   the process that answers to the pinned server: every holder of the
+14:   run-port listener is the hold pid, its /proc/<pid>/exe re-hashes to the
+15:   pinned llama-server digest at the server path the counter chose, its argv
+16:   is exactly the tool's argv, its initial environment holds only the
+17:   counter's own PATH/HOME/LANG/LC_ALL values, its mapped files are the
+18:   pinned set, it shares the counter's namespaces, is not traced and is not
+19:   stopped, it is a descendant of the tool process started after the tool
+20:   did, the hold.json is fresh, and teardown (the holder gone, the port
+21:   closed) is observed by the counter after the counter's own release; the
+22:   held child's answers to two outside probes drawn at random per run
+23:   (prompt length and n_predict), and the receipt's own request and answer,
+24:   agree with a reference pinned server the counter itself starts; and all
+25:   91 targeted controls - including live forged tools (the round-63
+26:   forgeries replayed, a detached server, a forwarding proxy, a canned
+27:   answerer, stale holds, a preload, a path-copied server, a replayed
+28:   receipt) - are each rejected by the check each names, family by family
+29:   at the declared counts, and the counter's own evaluator judges all 8
+30:   planted cases correctly, errors=0.
+31: 
+32: The counter never trusts receipt-claimed results and imports nothing from
+33: the tip. A control counts as rejected only when the failure set of its
+34: re-score contains the named check and stays within the cap (5; 30 for the
+35: envelope break; 14 for a live patched-tool forgery); a live fake tool that
+36: holds a genuine receipt copy has no cap but must show no receipt-level
+37: failure. Output: one line, exit 0 iff met; a --work that already holds
+38: files exits 2 (`work-reused`). Every scratch path is under --work.
+39: """
+40: import argparse
+41: import hashlib
+42: import json
+43: import math
+44: import os
+45: import random
+46: import re
+47: import shutil
+48: import signal
+49: import socket
+50: import subprocess
+51: import sys
+52: import time
+53: import urllib.error
+54: import urllib.request
+55: 
+56: MODEL_SHA = '270cba1bd5109f42d03350f60406024560464db173c0e387d91f0426d3bd256d'
+57: SERVER_SHA = 'b6a31a8e97615a2a1445aeba51e6411e7b02f0a5fa554559347239ee860cd804'
+58: ALIAS = 'kama-completion-probe'
+59: FP_RE = re.compile(r'^b\d+-[0-9a-f]{9,40}$')
+60: SCHEMA = 'kama-completion-live/v3'
+61: PROMPT = 'The cat sat on the'   # the tool's default prompt (round-63 value)
+62: EXPECT_EVAL_SELFTEST = 8
+63: MAX_COLLATERAL = 5      # failing checks a one-field control may cause
+64: ENVELOPE_CAP = 30       # an envelope failure legitimately cascades
+65: SCENARIO_CAP = 14       # a live forged tool cascades through its run
+66: EXPECT_FAMILIES = {
+67:     'stale': 1, 'log': 1, 'tamper': 8, 'predead': 1, 'sigterm': 1,
+68:     'hold': 1, 'outside': 1, 'hdr': 2, 'trunc': 2, 'timing': 4,
+69:     'shape': 4, 'idcr': 3, 'ptok': 2, 'reqbind': 2, 'listener': 1,
+70:     'digest': 1, 'schema': 1, 'witness': 5,
+71:     # round-64 families
+72:     'bind': 30, 'runfield': 4, 'detach': 1, 'forge': 3, 'proxy': 1,
+73:     'canned': 1, 'stalehold': 2, 'preload': 1, 'pathcopy': 1, 'relabel': 1,
+74:     'receiptbind': 4, 'replay': 1,
+75: }
+76: EXPECT_CONTROLS = sum(EXPECT_FAMILIES.values())
+77: STORED = {
+78:     'health_ready', 'models_alias_id', 'props_alias', 'completion_envelope',
+79:     'completion_headers', 'completion_untruncated', 'completion_choice_shape',
+80:     'completion_finish_reason', 'completion_model_id',
+81:     'completion_fingerprint', 'completion_id_created', 'completion_usage',
+82:     'completion_timings', 'completion_prompt_tokens',
+83:     'completion_request_bound', 'completion_deterministic',
+84:     'bad_request_graded', 'listener_owned', 'listener_holders_pinned',
+85:     'model_digest', 'server_digest', 'hold_released', 'teardown_clean',
+86:     'teardown_port_closed'}
+87: RECEIPT_LEVEL = STORED | {'schema', 'nonce_match', 'verdict'}
+88: RECEIPT_BIND = {'receipt_req', 'receipt_ref_text', 'receipt_ref_usage'}
+89: # sha256 of every library file in the pinned llama.cpp b11755 release
+90: # directory (the server's own mappings must be members of this table)
+91: LIBS = {
+92:     'libggml-base.so.0.27.0':
+93:         '574946133f3fd58a87cf4c7b70955a51fe71a6b7841b75eb419074d56b791e2f',
+94:     'libggml-cpu-alderlake.so':
+95:         '147bafeeb86639404750bcd20823cfd46520790dcffe72b03ae92211adc4a0a1',
+96:     'libggml-cpu-cannonlake.so':
+97:         'ecf0a02e19adc1e9996cd0bc0dde60de132470a2ecd326aa53223951705757ef',
+98:     'libggml-cpu-cascadelake.so':
+99:         '81cafe6a6ce3023f12a0d6bfea5581ba21bfaaf31ce2404a9e81bca874497b6b',
+100:     'libggml-cpu-cooperlake.so':
+101:         '3a7cc9d0711ce5699a4b7941fef6031ebc52bc6735200cd80848f8b7f029f4df',
+102:     'libggml-cpu-haswell.so':
+103:         '476b43e924d1b956a8e0b41b399d57a1a52cadfb8b6d4e23efa9e2806389d356',
+104:     'libggml-cpu-icelake.so':
+105:         'aec99e3c63c781ecc33a4531933781c2eeeac30178eb480c79c5d76aeb715623',
+106:     'libggml-cpu-ivybridge.so':
+107:         'a4f945a8472a47259d2995cac73bb7f9616cf24003e7a0e7a7470e4f7d345c53',
+108:     'libggml-cpu-piledriver.so':
+109:         'ffe1ff67e508a82a796174ee8179ddabaf0796fc433bab5c866942987da3cd83',
+110:     'libggml-cpu-sandybridge.so':
+111:         'e30b3764002a27237c3fdca7daff26459e4545e904a443ed0eee998348aad08b',
+112:     'libggml-cpu-sapphirerapids.so':
+113:         '084aa87d46db0b252416b10ce82248441408b0617c8d302610c732ad38fb22d2',
+114:     'libggml-cpu-skylakex.so':
+115:         '89b02a4e0eaa40a165d1ac30b2e6342f3dd302cc17dca07188c6e02795e37d07',
+116:     'libggml-cpu-sse42.so':
+117:         'ca3dd82f297aa34907cb6f979c17af240bcd9e4eb886da7319a1a1394a736bdd',
+118:     'libggml-cpu-x64.so':
+119:         '6643e910752ae8724d967824c1834bf8bcfa3b08ff614f6826085f07bc6cc96d',
+120:     'libggml-cpu-zen4.so':
+121:         '65f7908e0fa582ef863a629e3b450f48e604a57ed69fc9f62cb3c74d7afef475',
+122:     'libggml-rpc.so':
+123:         'e28139e2d982fb057b88d243e5b2e9d72c52f8b98ae910b1cf751240ef1f9803',
+124:     'libggml.so.0.27.0':
+125:         '8643a58bb37af6fb153e2ea98b48efa227855725ee51c05f4ca76b9867956463',
+126:     'libllama-batched-bench-impl.so':
+127:         'a69a1abbca090c7ab3fa286adcb9fa51b710730c7950c02796a9a84197ef00c7',
+128:     'libllama-bench-impl.so':
+129:         'e4ca59722bb4c5567fde2d5e07deb2116211e88d6d1afc43deabc5278a575ddb',
+130:     'libllama-cli-impl.so':
+131:         '085ffb43408aac8202d35dcd24e0fb3800e1d952925f862c0de3d6fd2f13bb82',
+132:     'libllama-common.so.0.7.0':
+133:         '3270bc668b9377617bad776d64712b3ee1bc22f1539a4cc143b546988e5fe37e',
+134:     'libllama-completion-impl.so':
+135:         '0d3d7ae4cdeafbce5d765f9027371506f5205eeb3203553e463035bc4babae23',
+136:     'libllama-fit-params-impl.so':
+137:         '397ce456786d0c161b14dd0ee225378d1f1ff875cbc428d32fda7dcaf15e306b',
+138:     'libllama-perplexity-impl.so':
+139:         '357dc3ef0ebe6fe69b35c965db701452f44cc08a01f77a22c609b4aa96afbca9',
+140:     'libllama-quantize-impl.so':
+141:         '8dd43c1fb15f2e6096237a5cc3aa52694b04978c176f10db28c27d15d6c1adcc',
+142:     'libllama-server-impl.so':
+143:         'e404b91a81c9ab65756b6a57b97b42115a5f429c5060c4b7f0d717ca595b59ed',
+144:     'libllama.so.0.7.0':
+145:         '983e1a2a037c6e6a393848e3be9f5e6e00d7ee3022aca4c2f17ed093de819fb6',
+146:     'libmtmd.so.0.7.0':
+147:         'adbb5fce4dcdcd60abfca9d80a2245251cf71aaa0045937f2a6f1be9f9b94721',
+148:     'llama-server': SERVER_SHA,
+149: }
+150: SYSTEM_PREFIXES = ('/usr/lib/', '/lib/', '/usr/lib64/', '/lib64/')
+151: SYSTEM_FILES = ('/etc/ld.so.cache',)
+152: VOCAB = ('river stone lamp cloud garden window paper silver copper forest '
+153:          'bridge candle mirror harbor meadow thunder velvet anchor ribbon '
+154:          'lantern orchard pebble quartz saddle tunnel violet whistle').split()
+155: NONCE = ''
+156: TOOL_REQ = {}   # the request the counter told the tool to send (per run)
+157: _OPENER = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+158: _HASH_CACHE = {}
+159: _TOOL_ENV_KEYS = ('PATH', 'HOME', 'LANG', 'LC_ALL', 'TMPDIR')
+160: # the keys the tool's server child may inherit (tools/kama-completion-live.py
+161: # filters its own environment; the counter passes none of the others)
+162: TOOL_CHILD_ENV = ('PATH', 'HOME', 'LANG', 'LC_ALL')
+163: 
+164: 
+165: def git(repo, *args):
+166:     env = {k: v for k, v in os.environ.items() if not k.startswith('GIT_')}
+167:     return subprocess.run(['git', '-C', str(repo), *args],
+168:                           capture_output=True, env=env)
+169: 
+170: 
+171: def blob(repo, rev, path):
+172:     p = git(repo, 'show', f'{rev}:{path}')
+173:     return p.stdout if p.returncode == 0 else None
+174: 
+175: 
+176: def sha256_b(b):
+177:     return hashlib.sha256(b).hexdigest()
+178: 
+179: 
+180: def sha256_path(path, cache=False):
+181:     """sha256 of a file, hashed afresh on every call (wave-b RV02 D9: a
+182:     path-keyed cache returned the old digest after the file was replaced).
+183:     `cache` is accepted for call-site compatibility and ignored."""
+184:     try:
+185:         h = hashlib.sha256()
+186:         with open(path, 'rb') as f:
+187:             for chunk in iter(lambda: f.read(1 << 20), b''):
+188:                 h.update(chunk)
+189:         return h.hexdigest()
+190:     except (OSError, TypeError):
+191:         return None
+192: 
+193: 
+194: def jbody(cap):
+195:     try:
+196:         return json.loads((cap or {}).get('body', ''))
+197:     except (ValueError, TypeError):
+198:         return None
+199: 
+200: 
+201: def is_int(v):
+202:     return isinstance(v, int) and not isinstance(v, bool)
+203: 
+204: 
+205: def is_num(v):
+206:     return (isinstance(v, (int, float)) and not isinstance(v, bool)
+207:             and math.isfinite(v))
+208: 
+209: 
+210: def ctype_json(headers):
+211:     ct = (headers or {}).get('content-type') or ''
+212:     return ct.split(';')[0].strip().lower() == 'application/json'
+213: 
+214: 
+215: def http(port, path, payload=None, timeout=10.0):
+216:     """One loopback request on the proxy-free opener. Returns
+217:     (status|None, headers, body_text, request_bytes|None)."""
+218:     data = None if payload is None else json.dumps(payload).encode('utf-8')
+219:     req = urllib.request.Request(
+220:         f'http://127.0.0.1:{port}{path}', data=data,
+221:         headers={'Content-Type': 'application/json'} if data else {},
+222:         method='POST' if data is not None else 'GET')
+223:     try:
+224:         with _OPENER.open(req, timeout=timeout) as r:
+225:             return (r.status, {k.lower(): v for k, v in r.headers.items()},
+226:                     r.read().decode('utf-8', 'replace'), data)
+227:     except urllib.error.HTTPError as e:
+228:         return (e.code, {k.lower(): v for k, v in (e.headers or {}).items()},
+229:                 e.read().decode('utf-8', 'replace'), data)
+230:     except Exception as e:
+231:         return None, {}, type(e).__name__, data
+232: 
+233: 
+234: # ----------------------------------------------------------- procfs plane #
+235: # Everything below is the counter's own procfs reading (proc_pid_fd(5),
+236: # proc_net_tcp rst, proc_pid_exe(5), proc_pid_maps(5), proc_pid_stat(5),
+237: # proc_pid_environ(5), proc_pid_cmdline(5)); nothing is imported from the
+238: # tree under judgment.
+239: 
+240: def _hex_loopback(addr_hex):
+241:     a = addr_hex.upper()
+242:     if len(a) == 8:
+243:         return a == '0100007F'
+244:     if len(a) == 32:
+245:         return a in ('00000000000000000000000001000000',
+246:                      '0000000000000000FFFF00000100007F')
+247:     return False
+248: 
+249: 
+250: def listeners(port):
+251:     """[(inode, loopback)] for every LISTEN socket on `port` (any address)."""
+252:     out = []
+253:     for path in ('/proc/net/tcp', '/proc/net/tcp6'):
+254:         try:
+255:             with open(path, encoding='ascii') as fh:
+256:                 next(fh, None)
+257:                 for line in fh:
+258:                     f = line.split()
+259:                     if len(f) < 10 or f[3] != '0A':
+260:                         continue
+261:                     addr, _, p = f[1].partition(':')
+262:                     if int(p, 16) != port:
+263:                         continue
+264:                     out.append((int(f[9]), _hex_loopback(addr)))
+265:         except (OSError, ValueError, IndexError):
+266:             continue
+267:     return out
+268: 
+269: 
+270: def holder_pids(inodes, retries=4):
+271:     """(pids holding a socket:[inode] fd, pids whose fd table stayed
+272:     unreadable, any uid). A process in the middle of execve is briefly
+273:     unreadable, so an unreadable table is re-read a few times before the
+274:     caller grades it (host churn made a single read flake). Unreadable
+275:     tables that persist are graded by the caller."""
+276:     wanted = {f'socket:[{i}]' for i in inodes}
+277: 
+278:     def scan(pid):
+279:         """True: holds it; False: readable, does not; None: unreadable;
+280:         False for a pid that vanished."""
+281:         try:
+282:             fds = os.listdir(f'/proc/{pid}/fd')
+283:         except PermissionError:
+284:             return None
+285:         except OSError:
+286:             return False
+287:         for fd in fds:
+288:             try:
+289:                 if os.readlink(f'/proc/{pid}/fd/{fd}') in wanted:
+290:                     return True
+291:             except OSError:
+292:                 continue
+293:         return False
+294: 
+295:     pids, unreadable = set(), set()
+296:     for name in os.listdir('/proc'):
+297:         if not name.isdigit():
+298:             continue
+299:         pid = int(name)
+300:         r = scan(pid)
+301:         if r is True:
+302:             pids.add(pid)
+303:         elif r is None:
+304:             unreadable.add(pid)
+305:     for _ in range(retries):
+306:         if not unreadable:
+307:             break
+308:         time.sleep(0.05)
+309:         for pid in sorted(unreadable):
+310:             r = scan(pid)
+311:             if r is True:
+312:                 pids.add(pid)
+313:                 unreadable.discard(pid)
+314:             elif r is False:
+315:                 unreadable.discard(pid)
+316:     return pids, unreadable
+317: 
+318: 
+319: def stat_fields(pid):
+320:     """(ppid, starttime_ticks) from /proc/<pid>/stat, (None, None) if gone."""
+321:     try:
+322:         s = open(f'/proc/{pid}/stat', encoding='ascii').read()
+323:         rest = s[s.rindex(')') + 2:].split()
+324:         return int(rest[1]), int(rest[19])
+325:     except (OSError, ValueError, IndexError):
+326:         return None, None
+327: 
+328: 
+329: def ppid_chain(pid, limit=8):
+330:     chain = []
+331:     cur = pid
+332:     for _ in range(limit):
+333:         pp, _ = stat_fields(cur)
+334:         if pp is None or pp <= 0:
+335:             break
+336:         chain.append(pp)
+337:         cur = pp
+338:     return chain
+339: 
+340: 
+341: def read_maps(pid, server_dir):
+342:     """Distinct file-backed mappings of a process: path, deleted flag and
+343:     sha256 of the file when it lies under the server directory."""
+344:     out, seen = [], set()
+345:     try:
+346:         lines = open(f'/proc/{pid}/maps', encoding='utf-8',
+347:                      errors='replace').read().splitlines()
+348:     except OSError:
+349:         return None
+350:     for ln in lines:
+351:         parts = ln.split(None, 5)
+352:         if len(parts) < 6:
+353:             continue
+354:         path = parts[5].strip()
+355:         if path in seen:
+356:             continue
+357:         seen.add(path)
+358:         deleted = path.endswith(' (deleted)')
+359:         real = path[:-len(' (deleted)')] if deleted else path
+360:         sha = None
+361:         if (not deleted and real.startswith('/')
+362:                 and os.path.realpath(real).startswith(
+363:                     server_dir.rstrip('/') + '/')):
+364:             sha = sha256_path(os.path.realpath(real))
+365:         out.append({'path': path, 'deleted': deleted, 'sha256': sha,
+366:                     'dev': parts[3], 'inode': parts[4]})
+367:     return out
+368: 
+369: 
+370: REF_FILES = []   # file-backed mappings of the counter's reference server
+371: 
+372: 
+373: def file_set(ms):
+374:     """Sorted (path, dev, inode) of every file-backed mapping."""
+375:     return sorted({(m['path'], m.get('dev'), m.get('inode'))
+376:                    for m in ms or [] if str(m.get('path', '')).startswith('/')})
+377: 
+378: 
+379: NS_NAMES = ('mnt', 'pid', 'net', 'user', 'ipc', 'uts')
+380: 
+381: 
+382: def ns_of(pid):
+383:     """Namespace identities of a process (proc_pid_ns links), None when
+384:     unreadable."""
+385:     try:
+386:         return {n: os.readlink(f'/proc/{pid}/ns/{n}') for n in NS_NAMES}
+387:     except OSError:
+388:         return None
+389: 
+390: 
+391: def holder_record(pid, server_dir):
+392:     """One holder's procfs record. None fields mean unreadable."""
+393:     rec = {'pid': pid}
+394:     try:
+395:         rec['exe'] = os.readlink(f'/proc/{pid}/exe')
+396:         rec['exe_sha256'] = sha256_path(f'/proc/{pid}/exe')
+397:     except OSError:
+398:         rec['exe'] = rec['exe_sha256'] = None
+399:     try:
+400:         raw = open(f'/proc/{pid}/cmdline', 'rb').read()
+401:         rec['cmdline'] = [a.decode('utf-8', 'replace')
+402:                           for a in raw.split(b'\0') if a != b'']
+403:     except OSError:
+404:         rec['cmdline'] = None
+405:     try:
+406:         raw = open(f'/proc/{pid}/environ', 'rb').read()
+407:         env = {}
+408:         for e in raw.split(b'\0'):
+409:             if e:
+410:                 k, _, v = e.partition(b'=')
+411:                 env[k.decode('utf-8', 'replace')] = v.decode(
+412:                     'utf-8', 'replace')
+413:         rec['environ'] = env
+414:     except OSError:
+415:         rec['environ'] = None
+416:     try:
+417:         st = open(f'/proc/{pid}/status', encoding='utf-8',
+418:                   errors='replace').read()
+419:         m = re.search(r'^State:\s+(\S)', st, re.M)
+420:         rec['state'] = m.group(1) if m else None
+421:         m = re.search(r'^TracerPid:\s+(\d+)', st, re.M)
+422:         rec['tracer_pid'] = int(m.group(1)) if m else None
+423:     except OSError:
+424:         rec['state'] = rec['tracer_pid'] = None
+425:     rec['ns'] = ns_of(pid)
+426:     rec['maps'] = read_maps(pid, server_dir)
+427:     pp, ticks = stat_fields(pid)
+428:     rec['ppid'] = pp
+429:     rec['start_ticks'] = ticks
+430:     rec['ppids'] = ppid_chain(pid)
+431:     return rec
+432: 
+433: 
+434: def collect(port, hold_doc, hold_mtime_ns, t0_ns, tool_pid, tool_ticks,
+435:             server_path, model_path):
+436:     """The counter's own snapshot of who holds the run-port listener."""
+437:     ls = listeners(port)
+438:     pids, unreadable = holder_pids([i for i, _ in ls])
+439:     sdir = os.path.dirname(server_path)
+440:     return {
+441:         'port': port, 'hold_pid': (hold_doc or {}).get('pid'),
+442:         'hold_port': (hold_doc or {}).get('port'),
+443:         'hold_schema': (hold_doc or {}).get('schema'),
+444:         'hold_mtime_ns': hold_mtime_ns, 't0_ns': t0_ns,
+445:         'collected_ns': time.time_ns(),
+446:         'tool_pid': tool_pid, 'tool_start_ticks': tool_ticks,
+447:         'server_path': server_path, 'model_path': model_path,
+448:         'self_ns': ns_of(os.getpid()),
+449:         'expect_env': {k: os.environ[k] for k in TOOL_CHILD_ENV
+450:                        if k in os.environ},
+451:         'listeners': [{'inode': i, 'loopback': lo} for i, lo in ls],
+452:         'unreadable_own': sorted(
+453:             p for p in unreadable
+454:             if (start_ticks_of(p) or 0) >= (tool_ticks or 0)),
+455:         'unreadable_old': len(unreadable),
+456:         'holders': [holder_record(p, sdir) for p in sorted(pids)],
+457:     }
+458: 
+459: 
+460: def _flag_values(argv, flag):
+461:     out = []
+462:     for i, a in enumerate(argv or []):
+463:         if a == flag and i + 1 < len(argv):
+464:             out.append(argv[i + 1])
+465:         elif a.startswith(flag + '='):
+466:             out.append(a.split('=', 1)[1])
+467:     return out
+468: 
+469: 
+470: def grade_binding(raw):
+471:     """Pure function of a raw procfs snapshot -> {check: bool}."""
+472:     if not isinstance(raw, dict):
+473:         return {k: False for k in BIND_CHECKS}
+474:     hs = raw.get('holders') or []
+475:     sp = raw.get('server_path')
+476:     mp = raw.get('model_path')
+477:     sdir = os.path.dirname(sp) if sp else ''
+478:     out = {}
+479:     ls = raw.get('listeners') or []
+480:     out['bind_listener'] = bool(ls) and all(
+481:         isinstance(x, dict) and x.get('loopback') is True for x in ls)
+482:     hp = raw.get('hold_pid')
+483:     out['bind_holders'] = bool(
+484:         hs and is_int(hp) and {h.get('pid') for h in hs} == {hp}
+485:         and not raw.get('unreadable_own')
+486:         and raw.get('hold_port') == raw.get('port'))
+487:     out['bind_exe'] = bool(hs) and all(
+488:         h.get('exe') == sp and h.get('exe_sha256') == SERVER_SHA
+489:         for h in hs)
+490: 
+491:     def argv_ok(h):
+492:         a = h.get('cmdline')
+493:         return (isinstance(a, list)
+494:                 and a == expected_argv(sp, mp, raw.get('port'))
+495:                 and sha256_path(mp) == MODEL_SHA)
+496:     out['bind_argv'] = bool(hs) and all(argv_ok(h) for h in hs)
+497: 
+498:     def env_ok(h):
+499:         e = h.get('environ')
+500:         ex = raw.get('expect_env') or {}
+501:         return isinstance(e, dict) and all(
+502:             k in ex and e[k] == ex[k] for k in e)
+503:     out['bind_env'] = bool(hs) and all(env_ok(h) for h in hs)
+504:     sn = raw.get('self_ns')
+505:     out['bind_ns'] = bool(hs and sn) and all(
+506:         h.get('ns') == sn for h in hs)
+507:     out['bind_trace'] = bool(hs) and all(
+508:         h.get('tracer_pid') == 0 for h in hs)
+509:     out['bind_state'] = bool(hs) and all(
+510:         h.get('state') in ('S', 'R', 'D') for h in hs)
+511: 
+512:     def maps_ok(h):
+513:         ms = h.get('maps')
+514:         if not ms:
+515:             return False
+516:         for m in ms:
+517:             p = m.get('path') or ''
+518:             if m.get('deleted') or p.endswith('(deleted)'):
+519:                 return False
+520:             if p.startswith('['):
+521:                 continue
+522:             if p == '':
+523:                 continue
+524:             if p in SYSTEM_FILES or p.startswith(SYSTEM_PREFIXES):
+525:                 continue
+526:             real = os.path.realpath(p)
+527:             if real == mp:
+528:                 continue
+529:             if sdir and real.startswith(sdir.rstrip('/') + '/'):
+530:                 if LIBS.get(os.path.basename(real)) == m.get('sha256') \
+531:                         and m.get('sha256'):
+532:                     continue
+533:                 return False
+534:             return False
+535:         return True
+536:     out['bind_maps'] = bool(hs) and all(maps_ok(h) for h in hs)
+537:     tp = raw.get('tool_pid')
+538:     out['bind_ancestry'] = bool(hs) and all(
+539:         tp in (h.get('ppids') or []) for h in hs)
+540:     tt = raw.get('tool_start_ticks')
+541:     mt = raw.get('hold_mtime_ns')
+542:     t0 = raw.get('t0_ns')
+543:     now = raw.get('collected_ns')
+544:     out['hold_fresh'] = bool(
+545:         hs and is_int(mt) and is_int(t0) and mt > t0 and is_int(tt)
+546:         and is_int(now) and mt <= now + 1_000_000_000
+547:         and all(is_int(h.get('start_ticks')) and h['start_ticks'] >= tt
+548:                 for h in hs)
+549:         and raw.get('hold_schema') == 'kama-completion-hold/v1')
+550:     return out
+551: 
+552: 
+553: def expected_argv(server_path, model_path, port):
+554:     """The tool's exact child argv (tools/kama-completion-live.py, run())."""
+555:     return [server_path, '--model', model_path, '--alias', ALIAS,
+556:             '--port', str(port), '--host', '127.0.0.1', '-c', '512',
+557:             '-t', '1']
+558: 
+559: 
+560: BIND_CHECKS = ('bind_listener', 'bind_holders', 'bind_exe', 'bind_argv',
+561:                'bind_env', 'bind_ns', 'bind_trace', 'bind_state',
+562:                'bind_maps', 'bind_ancestry', 'hold_fresh')
+563: 
+564: 
+565: def holders_signature(raw):
+566:     return sorted((h.get('pid'), h.get('start_ticks'), h.get('exe_sha256'))
+567:                   for h in (raw or {}).get('holders') or [])
+568: 
+569: 
+570: # ---------------------------------------------------------------- grading #
+571: 
+572: def grade(receipt):
+573:     """Recompute every receipt check from captured bytes and re-hashed
+574:     files. Returns (recomputed {name: bool}, inconsistent [str])."""
+575:     caps = receipt.get('captures') or {}
+576:     td = receipt.get('teardown') or {}
+577:     hold = receipt.get('hold') or {}
+578:     stored = receipt.get('checks') or {}
+579:     out = {}
+580: 
+581:     def cap(name):
+582:         c = caps.get(name)
+583:         if not isinstance(c, dict):
+584:             return None
+585:         body = c.get('body')
+586:         if not isinstance(body, str):
+587:             return None
+588:         if sha256_b(body.encode()) != c.get('body_sha256'):
+589:             return None
+590:         return c
+591: 
+592:     out['schema'] = receipt.get('schema') == SCHEMA
+593:     h = cap('health')
+594:     out['health_ready'] = (h is not None and h.get('status') == 200
+595:                            and h.get('body') == '{"status":"ok"}')
+596:     m = cap('models')
+597:     mj = jbody(m) if m else None
+598:     ids = ([d.get('id') for d in mj.get('data') or [] if isinstance(d, dict)]
+599:            if isinstance(mj, dict) else None)
+600:     out['models_alias_id'] = (m is not None and m.get('status') == 200
+601:                               and ids == [ALIAS])
+602:     pr = cap('props')
+603:     prj = jbody(pr) if pr else None
+604:     out['props_alias'] = (isinstance(prj, dict)
+605:                           and prj.get('model_alias') == ALIAS)
+606:     c = cap('completion')
+607:     cj = jbody(c) if c else None
+608:     chs = cj.get('choices') if isinstance(cj, dict) else None
+609:     ch0 = chs[0] if isinstance(chs, list) and chs and isinstance(
+610:         chs[0], dict) else {}
+611:     env = (c is not None and c.get('status') == 200
+612:            and isinstance(cj, dict) and cj.get('object') == 'text_completion'
+613:            and isinstance(chs, list) and len(chs) >= 1
+614:            and isinstance(ch0.get('text'), str))
+615:     out['completion_envelope'] = bool(env)
+616:     out['completion_headers'] = bool(env and ctype_json(c.get('headers')))
+617:     cl = (c.get('headers') or {}).get('content-length') if c else None
+618:     out['completion_untruncated'] = bool(
+619:         env and c.get('body_truncated') is False
+620:         and is_int(c.get('body_bytes'))
+621:         and c['body_bytes'] == len(c['body'].encode())
+622:         and (cl is None or (str(cl).isdigit() and int(cl) == c['body_bytes'])))
+623:     out['completion_choice_shape'] = bool(
+624:         env and len(chs) == 1 and ch0.get('index') == 0
+625:         and not isinstance(ch0.get('index'), bool)
+626:         and ch0.get('text') != '' and ch0.get('logprobs') is None)
+627:     out['completion_finish_reason'] = bool(
+628:         env and ch0.get('finish_reason') in ('length', 'stop'))
+629:     out['completion_model_id'] = bool(env and cj.get('model') == ALIAS)
+630:     fp = cj.get('system_fingerprint') if isinstance(cj, dict) else None
+631:     out['completion_fingerprint'] = bool(
+632:         env and isinstance(fp, str) and FP_RE.match(fp))
+633:     out['completion_id_created'] = bool(
+634:         env and isinstance(cj.get('id'), str) and cj['id'] != ''
+635:         and is_int(cj.get('created')) and cj['created'] > 1_000_000_000)
+636:     u = (cj.get('usage') if isinstance(cj, dict) else None) or {}
+637:     pd = u.get('prompt_tokens_details')
+638:     out['completion_usage'] = bool(
+639:         env and is_int(u.get('completion_tokens'))
+640:         and is_int(u.get('prompt_tokens')) and is_int(u.get('total_tokens'))
+641:         and u['completion_tokens'] >= 1 and u['prompt_tokens'] >= 1
+642:         and u['total_tokens'] == u['completion_tokens'] + u['prompt_tokens']
+643:         and isinstance(pd, dict) and is_int(pd.get('cached_tokens'))
+644:         and 0 <= pd['cached_tokens'] <= u['prompt_tokens'])
+645:     t = (cj.get('timings') if isinstance(cj, dict) else None) or {}
+646:     out['completion_timings'] = bool(
+647:         env and isinstance(t, dict) and is_int(t.get('predicted_n'))
+648:         and t['predicted_n'] == u.get('completion_tokens')
+649:         and is_int(t.get('cache_n')) and t['cache_n'] >= 0
+650:         and is_int(t.get('prompt_n')) and t['prompt_n'] >= 0
+651:         and is_num(t.get('predicted_ms')) and t['predicted_ms'] >= 0)
+652:     tk = cap('tokenize')
+653:     tkj = jbody(tk) if tk else None
+654:     toks = tkj.get('tokens') if isinstance(tkj, dict) else None
+655:     out['completion_prompt_tokens'] = bool(
+656:         env and tk is not None and tk.get('status') == 200
+657:         and isinstance(toks, list) and len(toks) >= 1
+658:         and u.get('prompt_tokens') == len(toks))
+659:     rb = c.get('request_body') if c else None
+660:     try:
+661:         rj = json.loads(rb) if isinstance(rb, str) else None
+662:     except ValueError:
+663:         rj = None
+664:     out['completion_request_bound'] = bool(
+665:         env and isinstance(rj, dict) and isinstance(rb, str)
+666:         and sha256_b(rb.encode()) == c.get('request_sha256')
+667:         and rj.get('prompt') == TOOL_REQ.get('prompt'))
+668:     c2 = cap('completion2')
+669:     c2j = jbody(c2) if c2 else None
+670:     c2c = c2j.get('choices') if isinstance(c2j, dict) else None
+671:     ch02 = c2c[0] if isinstance(c2c, list) and c2c and isinstance(
+672:         c2c[0], dict) else {}
+673:     out['completion_deterministic'] = bool(
+674:         env and c2 is not None and c2.get('status') == 200
+675:         and ch02.get('text') == ch0.get('text')
+676:         and ch0.get('text') not in (None, '')
+677:         and c2.get('request_sha256') == c.get('request_sha256'))
+678:     b = cap('bad_request')
+679:     bj = jbody(b) if b else None
+680:     out['bad_request_graded'] = bool(
+681:         b is not None and b.get('status') in (400, 500)
+682:         and isinstance(bj, dict) and isinstance(bj.get('error'), dict))
+683:     mdl = receipt.get('model') or {}
+684:     srv = receipt.get('server') or {}
+685:     out['model_digest'] = bool(
+686:         mdl.get('sha256') == MODEL_SHA
+687:         and sha256_path(mdl.get('path')) == MODEL_SHA)
+688:     out['server_digest'] = bool(
+689:         srv.get('sha256') == SERVER_SHA
+690:         and sha256_path(srv.get('path')) == SERVER_SHA)
+691:     rh = receipt.get('listener_holders')
+692:     out['listener_holders_pinned'] = bool(
+693:         isinstance(rh, list) and len(rh) == 1 and isinstance(rh[0], dict)
+694:         and rh[0].get('pid') == receipt.get('child_pid')
+695:         and rh[0].get('exe') == srv.get('path')
+696:         and rh[0].get('exe_sha256') == SERVER_SHA)
+697:     if 'hold_released' in stored:
+698:         out['hold_released'] = bool(hold.get('released'))
+699:     out['teardown_clean'] = bool(not td.get('child_pre_dead')
+700:                                  and td.get('returncode') in (0, -15))
+701:     out['teardown_port_closed'] = td.get('port_closed') is True
+702:     out['nonce_match'] = bool(NONCE) and receipt.get('nonce') == NONCE
+703: 
+704:     inconsistent = [k for k, v in out.items()
+705:                     if k in stored and stored[k].get('passed') is not None
+706:                     and stored[k].get('passed') != v]
+707:     if not STORED.issubset(stored):
+708:         inconsistent.append('missing-checks')
+709:     if set(stored) - STORED:
+710:         inconsistent.append('unexpected-checks')
+711:     return out, inconsistent
+712: 
+713: 
+714: def probe_fails(p, ref, idx):
+715:     """Failing live_* names for one outside probe against the reference
+716:     server's answer to the same request."""
+717:     f = set()
+718:     if not isinstance(p, dict):
+719:         return {f'live_probe{idx}'}
+720:     if p.get('status') != 200:
+721:         f.add('live_status')
+722:     if not ctype_json(p.get('headers')):
+723:         f.add('live_ctype')
+724:     if p.get('object') != 'text_completion':
+725:         f.add('live_object')
+726:     if not (p.get('model') == ALIAS):
+727:         f.add('live_model')
+728:     if not (isinstance(p.get('text'), str) and p['text'] != ''):
+729:         f.add('live_text')
+730:     if not (is_int(p.get('created')) and p['created'] > 1e9
+731:             and isinstance(p.get('id'), str) and p['id'] != ''):
+732:         f.add('live_created')
+733:     if not (isinstance(p.get('fingerprint'), str)
+734:             and FP_RE.match(p['fingerprint'])):
+735:         f.add('live_fp_shape')
+736:     up, tc = p.get('usage_prompt_tokens'), p.get('tokenize_count')
+737:     if not (is_int(up) and is_int(tc) and up == tc >= 1):
+738:         f.add('live_ptok')
+739:     n = p.get('n_predict')
+740:     uc = p.get('usage_completion_tokens')
+741:     pn, cn = p.get('timings_prompt_n'), p.get('timings_cache_n')
+742:     if not (is_int(uc) and is_int(n) and 1 <= uc <= n
+743:             and (p.get('finish_reason') != 'length' or uc == n)
+744:             and p.get('timings_predicted_n') == uc
+745:             and is_int(pn) and is_int(cn) and is_int(up)
+746:             and pn + cn == up):
+747:         f.add('live_run_field')
+748:     r = ref[idx] if isinstance(ref, list) and idx < len(ref) else None
+749:     if not (isinstance(r, dict) and p.get('text') == r.get('text')
+750:             and isinstance(p.get('text'), str)):
+751:         f.add('live_ref_text')
+752:     if not (isinstance(r, dict) and p.get('usage_prompt_tokens')
+753:             == r.get('usage_prompt_tokens')
+754:             and p.get('usage_completion_tokens')
+755:             == r.get('usage_completion_tokens')):
+756:         f.add('live_ref_usage')
+757:     return f
+758: 
+759: 
+760: def score(receipt, witness, binding):
+761:     """Re-score a receipt against the counter's outside witness and its own
+762:     procfs binding. Returns {'met': bool, 'fails': set of check names}."""
+763:     recomputed, inconsistent = grade(receipt)
+764:     fails = {k for k, v in recomputed.items() if v is not True}
+765:     fails |= {'inconsistent:' + i for i in inconsistent}
+766:     if receipt.get('verdict') != 'REQUEST_OK':
+767:         fails.add('verdict')
+768:     stored = receipt.get('checks') or {}
+769:     if (stored.get('listener_owned') or {}).get('passed') is not True:
+770:         fails.add('listener_owned')
+771:     w = witness or {}
+772:     bnd = binding or {}
+773:     caps = receipt.get('captures') or {}
+774:     ccj = jbody(caps.get('completion') or {})
+775:     cfp = ccj.get('system_fingerprint') if isinstance(ccj, dict) else None
+776:     probes = w.get('probes') or []
+777:     if len(probes) != 2:
+778:         fails.add('live_probes')
+779:     ref = w.get('ref') or []
+780:     for i, p in enumerate(probes):
+781:         fails |= probe_fails(p, ref, i)
+782:     p0 = probes[0] if probes and isinstance(probes[0], dict) else {}
+783:     if not (isinstance(cfp, str) and p0.get('fingerprint') == cfp):
+784:         fails.add('live_fp_capture')
+785:     if not (len(probes) == 2 and isinstance(probes[1], dict)
+786:             and (p0.get('n_predict'), p0.get('sent_prompt'))
+787:             != (probes[1].get('n_predict'), probes[1].get('sent_prompt'))):
+788:         fails.add('live_probes')
+789:     if not (w.get('server_sha256') == SERVER_SHA
+790:             and (receipt.get('server') or {}).get('sha256') == SERVER_SHA):
+791:         fails.add('live_server_sha')
+792:     if w.get('model_sha256') != MODEL_SHA:
+793:         fails.add('live_model_sha')
+794:     if not (w.get('hold_pid') is not None
+795:             and w.get('hold_pid') == receipt.get('child_pid')):
+796:         fails.add('live_pid')
+797:     if not (w.get('hold_port') is not None
+798:             and w.get('hold_port') == receipt.get('port')):
+799:         fails.add('live_port')
+800:     # the receipt's own request/answer must be this run's: the counter chose
+801:     # the tool's prompt, n_predict and seed, and its reference server
+802:     # answered the same request (wave-b MT13/RV02 D1: a genuine child with a
+803:     # replayed receipt passed a counter that bound only the live probes)
+804:     tr = w.get('tool_req') or {}
+805:     rt = w.get('ref_tool') or {}
+806:     ccap = caps.get('completion') or {}
+807:     try:
+808:         rjs = json.loads(ccap.get('request_body') or '')
+809:     except ValueError:
+810:         rjs = None
+811:     if not (isinstance(rjs, dict) and tr
+812:             and rjs.get('prompt') == tr.get('prompt')
+813:             and rjs.get('n_predict') == tr.get('n_predict')
+814:             and rjs.get('seed') == tr.get('seed')):
+815:         fails.add('receipt_req')
+816:     chs0 = (ccj.get('choices') or [{}])[0] if isinstance(
+817:         ccj, dict) and isinstance(ccj.get('choices'), list) else {}
+818:     rtext = chs0.get('text') if isinstance(chs0, dict) else None
+819:     if not (isinstance(rtext, str) and rtext != ''
+820:             and rtext == rt.get('text')):
+821:         fails.add('receipt_ref_text')
+822:     ru = (ccj.get('usage') if isinstance(ccj, dict) else None) or {}
+823:     if not (rt and ru.get('prompt_tokens') == rt.get('usage_prompt_tokens')
+824:             and ru.get('completion_tokens')
+825:             == rt.get('usage_completion_tokens')):
+826:         fails.add('receipt_ref_usage')
+827:     raw_a, raw_b = bnd.get('raw_a'), bnd.get('raw_b')
+828:     for k, v in grade_binding(raw_a).items():
+829:         if v is not True:
+830:             fails.add(k)
+831:     # the held child maps exactly the files (path, device, inode) the
+832:     # counter's own reference server maps: a bind-mounted or copied model,
+833:     # a swapped library or a dlopen-injected pinned-but-unloaded library
+834:     # differs (wave-b MT06)
+835:     rf = w.get('ref_files')
+836:     hs_a = (raw_a or {}).get('holders') or []
+837:     if not (rf and hs_a and all(
+838:             [list(x) for x in file_set(h.get('maps'))] == rf
+839:             for h in hs_a)):
+840:         fails.add('bind_ref_files')
+841:     gb = grade_binding(raw_b)
+842:     for k in ('bind_state', 'bind_trace'):
+843:         if gb.get(k) is not True:
+844:             fails.add(k)
+845:     if holders_signature(raw_a) != holders_signature(raw_b) or not raw_b:
+846:         fails.add('bind_stable')
+847:     rh = receipt.get('listener_holders')
+848:     mine = sorted((h.get('pid'), h.get('exe'), h.get('exe_sha256'))
+849:                   for h in (raw_a or {}).get('holders') or [])
+850:     theirs = sorted((h.get('pid'), h.get('exe'), h.get('exe_sha256'))
+851:                     for h in (rh if isinstance(rh, list) else [])
+852:                     if isinstance(h, dict))
+853:     if mine != theirs:
+854:         fails.add('bind_claim')
+855:     td = bnd.get('teardown') or {}
+856:     if not (td.get('gone') is True and td.get('port_closed') is True):
+857:         fails.add('teardown_observed')
+858:     return {'met': not fails, 'fails': fails}
+859: 
+860: 
+861: # ------------------------------------------------------- live run + probes #
+862: 
+863: def free_port():
+864:     s = socket.socket()
+865:     s.bind(('127.0.0.1', 0))
+866:     p = s.getsockname()[1]
+867:     s.close()
+868:     return p
+869: 
+870: 
+871: def start_ticks_of(pid):
+872:     return stat_fields(pid)[1]
+873: 
+874: 
+875: def draw_requests(rng, nonce):
+876:     """Three requests drawn per run (prompt length, n_predict, seed): two
+877:     outside probes for the held child and the request the counter tells the
+878:     tool to send. All distinct; the nonce is in every prompt."""
+879:     out, used = [], set()
+880:     while len(out) < 3:
+881:         k = rng.randint(2, 24)
+882:         n = rng.randint(3, 9)
+883:         if (k, n) in used:
+884:             continue
+885:         used.add((k, n))
+886:         words = ' '.join(rng.choice(VOCAB) for _ in range(k))
+887:         out.append({'prompt': f'{nonce} {words}', 'n_predict': n,
+888:                     'seed': rng.randint(1, 9999)})
+889:     return out[:2], out[2]
+890: 
+891: 
+892: def probe(port, req):
+893:     payload = {'prompt': req['prompt'], 'n_predict': req['n_predict'],
+894:                'temperature': 0.0, 'seed': req['seed'],
+895:                'timings_per_token': False}
+896:     st, hdr, body, raw = http(port, '/v1/completions', payload)
+897:     try:
+898:         wj = json.loads(body)
+899:     except ValueError:
+900:         wj = {}
+901:     if not isinstance(wj, dict):
+902:         wj = {}
+903:     sent = json.loads(raw.decode())['prompt']
+904:     chs = wj.get('choices')
+905:     ch0 = chs[0] if isinstance(chs, list) and chs and isinstance(
+906:         chs[0], dict) else {}
+907:     tst, _, tbody, _ = http(port, '/tokenize',
+908:                             {'content': sent, 'add_special': True})
+909:     try:
+910:         tj = json.loads(tbody)
+911:     except ValueError:
+912:         tj = {}
+913:     toks = tj.get('tokens') if isinstance(tj, dict) else None
+914:     usage = wj.get('usage') if isinstance(wj.get('usage'), dict) else {}
+915:     tim = wj.get('timings') if isinstance(wj.get('timings'), dict) else {}
+916:     return {
+917:         'status': st, 'headers': hdr, 'object': wj.get('object'),
+918:         'model': wj.get('model'), 'fingerprint': wj.get('system_fingerprint'),
+919:         'text': ch0.get('text'), 'finish_reason': ch0.get('finish_reason'),
+920:         'created': wj.get('created'), 'id': wj.get('id'),
+921:         'sent_prompt': sent, 'n_predict': req['n_predict'],
+922:         'usage_prompt_tokens': usage.get('prompt_tokens'),
+923:         'usage_completion_tokens': usage.get('completion_tokens'),
+924:         'timings_prompt_n': tim.get('prompt_n'),
+925:         'timings_cache_n': tim.get('cache_n'),
+926:         'timings_predicted_n': tim.get('predicted_n'),
+927:         'tokenize_count': (len(toks) if tst == 200
+928:                            and isinstance(toks, list) else None),
+929:     }
+930: 
+931: 
+932: def reference_run(server, model, reqs, work):
+933:     """The counter's own pinned server: same flags as the tool, its own
+934:     port, the same probe requests. Returns [probe dict | None]."""
+935:     port = free_port()
+936:     log = open(os.path.join(work, 'ref-server.log'), 'wb')
+937:     proc = subprocess.Popen(
+938:         [server, '--model', model, '--alias', ALIAS, '--port', str(port),
+939:          '--host', '127.0.0.1', '-c', '512', '-t', '1'],
+940:         stdout=log, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL,
+941:         env={k: v for k, v in os.environ.items() if k in _TOOL_ENV_KEYS})
+942:     out = []
+943:     try:
+944:         t0 = time.monotonic()
+945:         ok = False
+946:         while time.monotonic() - t0 < 60:
+947:             st, _, body, _ = http(port, '/health', timeout=2.0)
+948:             if st == 200 and body == '{"status":"ok"}':
+949:                 ok = True
+950:                 break
+951:             if proc.poll() is not None:
+952:                 break
+953:             time.sleep(0.2)
+954:         if ok:
+955:             for r in reqs:
+956:                 out.append(probe(port, r))
+957:             REF_FILES[:] = file_set(read_maps(proc.pid, os.path.dirname(
+958:                 server)))
+959:     finally:
+960:         if proc.poll() is None:
+961:             proc.send_signal(signal.SIGTERM)
+962:             try:
+963:                 proc.wait(timeout=15)
+964:             except subprocess.TimeoutExpired:
+965:                 proc.kill()
+966:                 proc.wait(timeout=10)
+967:         log.close()
+968:     return out
+969: 
+970: 
+971: def pid_gone(pid, ticks):
+972:     """True when the pid no longer exists, was reused (different start
+973:     ticks), or is a zombie / dead entry (its sockets are closed; only the
+974:     exit status is pending). Unknown start ticks fail closed: not gone."""
+975:     pp, tk = stat_fields(pid)
+976:     if pp is None:
+977:         return True
+978:     if ticks is None:
+979:         return False
+980:     if tk != ticks:
+981:         return True
+982:     try:
+983:         s = open(f'/proc/{pid}/stat', encoding='ascii').read()
+984:         return s[s.rindex(')') + 2] in 'ZX'
+985:     except (OSError, ValueError, IndexError):
+986:         return False
+987: 
+988: 
+989: def kill_if_same(pid, ticks):
+990:     """SIGKILL a recorded pid only while it is still the observed process."""
+991:     if ticks is None or pid_gone(pid, ticks):
+992:         return
+993:     try:
+994:         os.kill(pid, signal.SIGKILL)
+995:     except OSError:
+996:         pass
+997: 
+998: 
+999: def witness_run(work, label, tool_path, server_path, model_path, reqs,
+1000:                 tool_req, extra_env=None):
+1001:     """Run one tool (the tip tool or a planted forger) in hold mode. The
+1002:     counter creates the hold dir, owns hold.json's freshness, tells the tool
+1003:     which request to send, probes the listener, releases, and observes
+1004:     teardown itself; every holder it saw and the tool's process group are
+1005:     killed on the way out. Returns
+1006:     (receipt|None, witness|None, binding|None, nonce, notes)."""
+1007:     wd = os.path.join(work, label)
+1008:     os.makedirs(wd)       # a reused directory is refused, never tolerated
+1009:     hold = os.path.join(wd, 'hold')
+1010:     os.makedirs(hold, mode=0o700)
+1011:     nonce = 'r64-' + hashlib.sha256(os.urandom(16)).hexdigest()[:10]
+1012:     out_path = os.path.join(wd, 'receipt.json')
+1013:     env = {k: v for k, v in os.environ.items() if k in _TOOL_ENV_KEYS}
+1014:     env.update(extra_env or {})
+1015:     notes = []
+1016:     t0_ns = time.time_ns()
+1017:     proc = subprocess.Popen(
+1018:         [sys.executable, tool_path, '--nonce', nonce,
+1019:          '--work', os.path.join(wd, 'tool-work'), '--server', server_path,
+1020:          '--model', model_path, '--model-sha256', MODEL_SHA,
+1021:          '--server-sha256', SERVER_SHA, '--alias', ALIAS,
+1022:          '--prompt', tool_req['prompt'],
+1023:          '--n-predict', str(tool_req['n_predict']),
+1024:          '--seed', str(tool_req['seed']),
+1025:          '--hold-dir', hold, '--hold-timeout', '90', '--out', out_path],
+1026:         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=env,
+1027:         start_new_session=True)
+1028:     tool_ticks = start_ticks_of(proc.pid)
+1029:     witness = binding = None
+1030:     seen = {}
+1031:     receipt = None
+1032:     try:
+1033:         t0 = time.monotonic()
+1034:         hp = os.path.join(hold, 'hold.json')
+1035:         while time.monotonic() - t0 < 120:
+1036:             if os.path.exists(hp):
+1037:                 try:
+1038:                     hold_doc = json.load(open(hp))
+1039:                     mtime = os.stat(hp).st_mtime_ns
+1040:                 except (ValueError, OSError):
+1041:                     time.sleep(0.2)
+1042:                     continue
+1043:                 if not isinstance(hold_doc, dict):
+1044:                     break
+1045:                 port = hold_doc.get('port')
+1046:                 if not is_int(port):
+1047:                     notes.append('hold.json without an int port')
+1048:                     break
+1049:                 raw_a = collect(port, hold_doc, mtime, t0_ns, proc.pid,
+1050:                                 tool_ticks, server_path, model_path)
+1051:                 for h in raw_a['holders']:
+1052:                     seen[h['pid']] = h.get('start_ticks')
+1053:                 probes = [probe(port, r) for r in reqs]
+1054:                 raw_b = collect(port, hold_doc, mtime, t0_ns, proc.pid,
+1055:                                 tool_ticks, server_path, model_path)
+1056:                 for h in raw_b['holders']:
+1057:                     seen[h['pid']] = h.get('start_ticks')
+1058:                 witness = {
+1059:                     'probes': probes, 'hold_pid': hold_doc.get('pid'),
+1060:                     'hold_port': port, 'server_sha256':
+1061:                     hold_doc.get('server_sha256'),
+1062:                     'model_sha256': hold_doc.get('model_sha256'),
+1063:                     'alias': hold_doc.get('alias'), 'tool_req': tool_req}
+1064:                 binding = {'raw_a': raw_a, 'raw_b': raw_b}
+1065:                 break
+1066:             if proc.poll() is not None:
+1067:                 notes.append('tool exited before hold.json')
+1068:                 break
+1069:             time.sleep(0.1)
+1070:         # counter-owned release, then counter-observed teardown
+1071:         open(os.path.join(hold, 'release'), 'w').write('go\n')
+1072:         if binding is not None:
+1073:             hs = (binding['raw_a'] or {}).get('holders') or []
+1074:             gone = port_closed = False
+1075:             deadline = time.monotonic() + 30
+1076:             while time.monotonic() < deadline:
+1077:                 gone = bool(hs) and all(
+1078:                     pid_gone(h['pid'], h.get('start_ticks')) for h in hs)
+1079:                 port_closed = not listeners(witness['hold_port'])
+1080:                 if gone and port_closed:
+1081:                     break
+1082:                 time.sleep(0.2)
+1083:             binding['teardown'] = {'gone': gone, 'port_closed': port_closed}
+1084:         try:
+1085:             proc.wait(timeout=60)
+1086:         except subprocess.TimeoutExpired:
+1087:             proc.kill()
+1088:             proc.wait(timeout=10)
+1089:         try:
+1090:             receipt = json.load(open(out_path))
+1091:         except (ValueError, OSError):
+1092:             pass
+1093:     finally:
+1094:         for pid, ticks in seen.items():
+1095:             kill_if_same(pid, ticks)
+1096:         try:
+1097:             os.killpg(proc.pid, signal.SIGKILL)
+1098:         except OSError:
+1099:             pass
+1100:         if proc.poll() is None:
+1101:             proc.kill()
+1102:             try:
+1103:                 proc.wait(timeout=10)
+1104:             except subprocess.TimeoutExpired:
+1105:                 pass
+1106:     return receipt, witness, binding, nonce, notes
+1107: 
+1108: 
+1109: # --------------------------------------------------------- planted forgers #
+1110: 
+1111: FAKE_COMMON = r'''
+1112: import argparse, json, os, signal, socket, subprocess, sys, time
+1113: import http.server, threading, urllib.request, urllib.error
+1114: ap = argparse.ArgumentParser()
+1115: for a in ('--nonce', '--work', '--server', '--model', '--model-sha256',
+1116:           '--server-sha256', '--alias', '--hold-dir', '--hold-timeout',
+1117:           '--out', '--prompt', '--n-predict', '--seed'):
+1118:     ap.add_argument(a)
+1119: A = ap.parse_args()
+1120: TPL = json.load(open(os.environ['KAMA_FAKE_TEMPLATE']))
+1121: MODE = os.environ['KAMA_FAKE_MODE']
+1122: os.makedirs(A.work, exist_ok=True)
+1123: def free_port():
+1124:     s = socket.socket(); s.bind(('127.0.0.1', 0)); p = s.getsockname()[1]
+1125:     s.close(); return p
+1126: def spawn_real(port, extra_env=None, exe=None):
+1127:     env = {k: v for k, v in os.environ.items()
+1128:            if k in ('PATH', 'HOME', 'LANG', 'LC_ALL')}
+1129:     env.update(extra_env or {})
+1130:     return subprocess.Popen(
+1131:         [exe or A.server, '--model', A.model, '--alias', A.alias,
+1132:          '--port', str(port), '--host', '127.0.0.1', '-c', '512', '-t', '1'],
+1133:         stdout=open(os.path.join(A.work, 'srv.log'), 'wb'),
+1134:         stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL, env=env)
+1135: def wait_health(port, t=60):
+1136:     import urllib.request
+1137:     t0 = time.time()
+1138:     while time.time() - t0 < t:
+1139:         try:
+1140:             r = urllib.request.urlopen(
+1141:                 f'http://127.0.0.1:{port}/health', timeout=2)
+1142:             if r.status == 200: return True
+1143:         except Exception:
+1144:             pass
+1145:         time.sleep(0.2)
+1146:     return False
+1147: def hold_and_release(doc):
+1148:     hp = os.path.join(A.hold_dir, 'hold.json')
+1149:     json.dump(doc, open(hp, 'w'))
+1150:     t0 = time.time()
+1151:     while time.time() - t0 < float(A.hold_timeout):
+1152:         if os.path.exists(os.path.join(A.hold_dir, 'release')): break
+1153:         time.sleep(0.1)
+1154:     try: os.unlink(hp)
+1155:     except OSError: pass
+1156: def write_receipt(child_pid, port, holders):
+1157:     r = json.loads(json.dumps(TPL))
+1158:     r['nonce'] = A.nonce
+1159:     r['child_pid'] = child_pid
+1160:     r['port'] = port
+1161:     r['listener_holders'] = holders
+1162:     r['hold'] = {'dir': A.hold_dir, 'released': True}
+1163:     json.dump(r, open(A.out, 'w'))
+1164: def hold_doc(pid, port):
+1165:     return {'schema': 'kama-completion-hold/v1', 'port': port, 'pid': pid,
+1166:             'alias': A.alias, 'model_sha256': A.model_sha256,
+1167:             'server_sha256': A.server_sha256, 'prompt': 'x',
+1168:             'at': '2026-10-28T00:00:00Z'}
+1169: def good_holders(pid):
+1170:     return [{'pid': pid, 'exe': A.server, 'exe_sha256': A.server_sha256}]
+1171: class Fwd(http.server.BaseHTTPRequestHandler):
+1172:     protocol_version = 'HTTP/1.0'
+1173:     target = 0
+1174:     def _go(self, body):
+1175:         import urllib.request
+1176:         req = urllib.request.Request(
+1177:             f'http://127.0.0.1:{Fwd.target}{self.path}', data=body,
+1178:             method=self.command, headers={'Content-Type': 'application/json'})
+1179:         op = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+1180:         try:
+1181:             r = op.open(req, timeout=30)
+1182:             code, data, ct = r.status, r.read(), r.headers.get('Content-Type')
+1183:         except urllib.error.HTTPError as e:
+1184:             code, data, ct = e.code, e.read(), e.headers.get('Content-Type')
+1185:         self.send_response(code)
+1186:         self.send_header('Content-Type', ct or 'application/json')
+1187:         self.send_header('Content-Length', str(len(data)))
+1188:         self.end_headers(); self.wfile.write(data)
+1189:     def do_GET(self): self._go(None)
+1190:     def do_POST(self):
+1191:         n = int(self.headers.get('Content-Length') or 0)
+1192:         self._go(self.rfile.read(n))
+1193:     def log_message(self, *a): pass
+1194: def serve(handler, port):
+1195:     srv = http.server.ThreadingHTTPServer(('127.0.0.1', port), handler)
+1196:     threading.Thread(target=srv.serve_forever, daemon=True).start()
+1197:     return srv
+1198: '''
+1199: 
+1200: FAKE_MODES = {
+1201:     # a pinned server that is not a descendant of the tool (double fork)
+1202:     'detach': r'''
+1203: port = free_port()
+1204: pid_file = os.path.join(A.work, 'detached.pid')
+1205: if os.fork() == 0:
+1206:     if os.fork() == 0:
+1207:         os.setsid()
+1208:         p = spawn_real(port)
+1209:         open(pid_file, 'w').write(str(p.pid)); p.wait(); os._exit(0)
+1210:     os._exit(0)
+1211: wait_health(port)
+1212: time.sleep(0.5)
+1213: pid = int(open(pid_file).read())
+1214: hold_and_release(hold_doc(pid, port))
+1215: os.kill(pid, signal.SIGTERM)
+1216: write_receipt(pid, port, good_holders(pid))
+1217: ''',
+1218:     # a forwarding proxy in front of the real child on the advertised port
+1219:     'proxy': r'''
+1220: real = free_port(); front = free_port()
+1221: p = spawn_real(real); wait_health(real)
+1222: Fwd.target = real
+1223: srv = serve(Fwd, front)
+1224: hold_and_release(hold_doc(p.pid, front))
+1225: srv.shutdown(); p.terminate(); p.wait()
+1226: write_receipt(p.pid, front, good_holders(p.pid))
+1227: ''',
+1228:     # a canned answerer: the held pid is a sleeper, the listener is ours
+1229:     'canned': r'''
+1230: front = free_port()
+1231: sleeper = subprocess.Popen([sys.executable, '-c',
+1232:                             'import time; time.sleep(600)'])
+1233: class Canned(Fwd):
+1234:     def _go(self, body):
+1235:         import json as j
+1236:         b = j.dumps({'status': 'ok'}).encode()
+1237:         self.send_response(200); self.send_header('Content-Type',
+1238:             'application/json'); self.send_header('Content-Length', str(len(b)))
+1239:         self.end_headers(); self.wfile.write(b)
+1240: srv = serve(Canned, front)
+1241: hold_and_release(hold_doc(sleeper.pid, front))
+1242: srv.shutdown(); sleeper.kill(); sleeper.wait()
+1243: write_receipt(sleeper.pid, front, good_holders(sleeper.pid))
+1244: ''',
+1245:     # a hold.json copied from an earlier run, mtime pushed into the past
+1246:     'stale_old': r'''
+1247: old = json.load(open(os.environ['KAMA_FAKE_STALE']))
+1248: hp = os.path.join(A.hold_dir, 'hold.json')
+1249: json.dump(old, open(hp, 'w'))
+1250: os.utime(hp, (1, 1))
+1251: t0 = time.time()
+1252: while time.time() - t0 < float(A.hold_timeout):
+1253:     if os.path.exists(os.path.join(A.hold_dir, 'release')): break
+1254:     time.sleep(0.1)
+1255: os.unlink(hp)
+1256: write_receipt(old['pid'], old['port'], good_holders(old['pid']))
+1257: ''',
+1258:     # the same stale hold.json with the mtime pushed into the future
+1259:     'stale_future': r'''
+1260: old = json.load(open(os.environ['KAMA_FAKE_STALE']))
+1261: hp = os.path.join(A.hold_dir, 'hold.json')
+1262: json.dump(old, open(hp, 'w'))
+1263: fut = time.time() + 3600
+1264: os.utime(hp, (fut, fut))
+1265: t0 = time.time()
+1266: while time.time() - t0 < float(A.hold_timeout):
+1267:     if os.path.exists(os.path.join(A.hold_dir, 'release')): break
+1268:     time.sleep(0.1)
+1269: os.unlink(hp)
+1270: write_receipt(old['pid'], old['port'], good_holders(old['pid']))
+1271: ''',
+1272:     # the pinned server started under LD_PRELOAD
+1273:     'preload': r'''
+1274: port = free_port()
+1275: p = spawn_real(port, {'LD_PRELOAD': '/usr/lib/libm.so.6'})
+1276: wait_health(port)
+1277: hold_and_release(hold_doc(p.pid, port))
+1278: p.terminate(); p.wait()
+1279: write_receipt(p.pid, port, good_holders(p.pid))
+1280: ''',
+1281:     # a genuine pinned child holds the port and answers, but the receipt is
+1282:     # a copy of an earlier run's (the counter asked for a new request)
+1283:     'replay': r'''
+1284: port = free_port()
+1285: p = spawn_real(port)
+1286: wait_health(port)
+1287: hold_and_release(hold_doc(p.pid, port))
+1288: p.terminate(); p.wait()
+1289: write_receipt(p.pid, port, good_holders(p.pid))
+1290: ''',
+1291:     # the pinned bytes copied to another path (same sha256, not the path
+1292:     # the counter chose)
+1293:     'pathcopy': r'''
+1294: import shutil
+1295: d = os.path.join(A.work, 'copy'); os.makedirs(d, exist_ok=True)
+1296: src = os.path.dirname(A.server)
+1297: for n in os.listdir(src):
+1298:     sp = os.path.join(src, n)
+1299:     dp = os.path.join(d, n)
+1300:     if os.path.exists(dp) or os.path.lexists(dp): continue
+1301:     if os.path.islink(sp): os.symlink(os.readlink(sp), dp)
+1302:     elif n == 'llama-server': shutil.copy2(sp, dp)
+1303:     elif n.startswith('lib'): os.symlink(sp, dp)
+1304: exe = os.path.join(d, 'llama-server')
+1305: port = free_port()
+1306: p = spawn_real(port, exe=exe); wait_health(port)
+1307: hold_and_release(hold_doc(p.pid, port))
+1308: p.terminate(); p.wait()
+1309: write_receipt(p.pid, port, [{'pid': p.pid, 'exe': A.server,
+1310:                              'exe_sha256': A.server_sha256}])
+1311: ''',
+1312: }
+1313: 
+1314: 
+1315: def write_fake(work, mode):
+1316:     path = os.path.join(work, f'fake-{mode}.py')
+1317:     with open(path, 'w') as f:
+1318:         f.write(FAKE_COMMON + FAKE_MODES[mode])
+1319:     return path
+1320: 
+1321: 
+1322: def apply_patch(tip_tool_text, patch_text, workdir, name):
+1323:     """Apply a unified diff to the tool text with `patch`. Returns
+1324:     (patched text | None, reason). A dry run must succeed and the real
+1325:     run must report no fuzz (offsets are accepted, a fuzzed hunk is not)."""
+1326:     d = os.path.join(workdir, name)
+1327:     os.makedirs(os.path.join(d, 'tools'), exist_ok=True)
+1328:     tp = os.path.join(d, 'tools', 'kama-completion-live.py')
+1329:     with open(tp, 'w') as f:
+1330:         f.write(tip_tool_text)
+1331:     pp = os.path.join(d, 'x.patch')
+1332:     with open(pp, 'w') as f:
+1333:         f.write(patch_text)
+1334:     dry = subprocess.run(['patch', '-p1', '--dry-run', '-i', pp, '-d', d],
+1335:                          capture_output=True, text=True)
+1336:     if dry.returncode != 0 or 'fuzz' in dry.stdout.lower():
+1337:         return None, 'dry-run failed or fuzzed: ' + dry.stdout[-200:]
+1338:     r = subprocess.run(['patch', '-p1', '-i', pp, '-d', d],
+1339:                        capture_output=True, text=True)
+1340:     if r.returncode != 0 or 'fuzz' in r.stdout.lower():
+1341:         return None, 'patch failed or fuzzed: ' + r.stdout[-200:]
+1342:     return open(tp).read(), ''
+1343: 
+1344: 
+1345: def splice_before_main(text, code):
+1346:     """Insert `code` before the tool's `if __name__ == '__main__':` guard
+1347:     so it is defined before main() runs. None when the guard is absent."""
+1348:     marker = "\nif __name__ == '__main__':"
+1349:     i = text.rfind(marker)
+1350:     if i < 0:
+1351:         return None
+1352:     return text[:i] + '\n' + code + text[i:]
+1353: 
+1354: 
+1355: # The forger fabricates the tool's own holder bookkeeping so the tool-side
+1356: # check cannot be what rejects it: structurally (a Popen recorder and a
+1357: # replacement `_proc_holders`), independent of the tool's source text.
+1358: FORGE_CLAIM = '''
+1359: _FP_LAST = {}
+1360: _FP_POPEN = subprocess.Popen
+1361: class _FPopen(_FP_POPEN):
+1362:     def __init__(self, *a, **k):
+1363:         super().__init__(*a, **k)
+1364:         _FP_LAST['p'] = self
+1365: subprocess.Popen = _FPopen
+1366: def _proc_holders(port):
+1367:     p = _FP_LAST.get('p')
+1368:     srv = os.path.realpath(sys.argv[sys.argv.index('--server') + 1])
+1369:     return [{'pid': p.pid, 'exe': srv, 'exe_sha256': DEFAULT_SERVER_SHA}]
+1370: '''
+1371: 
+1372: # A v3-schema tool whose receipt is v2-shaped: the holder bookkeeping is
+1373: # removed from what it writes.
+1374: RELABEL_WRAP = '''
+1375: _orig_run = run
+1376: def run(args):
+1377:     r, rc = _orig_run(args)
+1378:     r.pop('listener_holders', None)
+1379:     r['checks'].pop('listener_holders_pinned', None)
+1380:     return r, rc
+1381: '''
+1382: 
+1383: 
+1384: def forge_variants(repo, tip, work):
+1385:     """Planted forged tools: the round-63 patches replayed on the tip tool
+1386:     (A: canned fake behind the real child's inherited listener; B: no
+1387:     llama-server at all) and each with the tool's own holder bookkeeping
+1388:     fabricated. Returns ({name: tool text}, [error strings])."""
+1389:     tool = blob(repo, tip, 'tools/kama-completion-live.py')
+1390:     pa = blob(repo, tip,
+1391:               '.ufo/waves/round-64/controls/forge-A-realchild.patch')
+1392:     pb = blob(repo, tip,
+1393:               '.ufo/waves/round-64/controls/forge-B-sleeper-delta.patch')
+1394:     if not (tool and pa and pb):
+1395:         return {}, ['forge patch or tool blob missing at the tip']
+1396:     errs = []
+1397:     a, why = apply_patch(tool.decode(), pa.decode(), work, 'forgeA-build')
+1398:     if a is None:
+1399:         return {}, ['forge A: ' + why]
+1400:     ab, why = apply_patch(a, pb.decode(), work, 'forgeAB-build')
+1401:     if ab is None:
+1402:         errs.append('forge B: ' + why)
+1403:     out = {'forgeA': a}
+1404:     a2 = splice_before_main(a, FORGE_CLAIM)
+1405:     if a2 is None:
+1406:         errs.append('forge A2: no main guard to splice before')
+1407:     else:
+1408:         out['forgeA2'] = a2
+1409:     if ab is not None:
+1410:         b2 = splice_before_main(ab, FORGE_CLAIM)
+1411:         if b2 is None:
+1412:             errs.append('forge B2: no main guard to splice before')
+1413:         else:
+1414:             out['forgeB2'] = b2
+1415:     return out, errs
+1416: 
+1417: 
+1418: # --------------------------------------------------------------- controls #
+1419: 
+1420: def clone(o):
+1421:     return json.loads(json.dumps(o))
+1422: 
+1423: 
+1424: def reseal(c):
+1425:     c['body_sha256'] = sha256_b(c['body'].encode())
+1426:     c['body_bytes'] = len(c['body'].encode())
+1427: 
+1428: 
+1429: def edit_body(rcpt, name, fn):
+1430:     """Mutate the JSON body of one capture and re-seal its hash, so the
+1431:     mutation is rejected by the grader and not by the hash comparison."""
+1432:     m = clone(rcpt)
+1433:     c = m['captures'][name]
+1434:     obj = json.loads(c['body'])
+1435:     fn(obj)
+1436:     c['body'] = json.dumps(obj, separators=(',', ':'))
+1437:     reseal(c)
+1438:     if 'content-length' in c.get('headers', {}):
+1439:         c['headers']['content-length'] = str(c['body_bytes'])
+1440:     return m
+1441: 
+1442: 
+1443: def edit(rcpt, fn):
+1444:     m = clone(rcpt)
+1445:     fn(m)
+1446:     return m
+1447: 
+1448: 
+1449: def is_hit(s, expect, cap=MAX_COLLATERAL):
+1450:     """Credit only when the re-score rejects, the named check is among the
+1451:     failures and the failure set stays within the cap."""
+1452:     return (not s['met']) and expect in s['fails'] and len(
+1453:         s['fails']) <= cap
+1454: 
+1455: 
+1456: def build_controls(receipt, witness, binding, work):
+1457:     """(family, receipt, witness, binding, expected fail name, cap) tuples
+1458:     of offline mutations of the genuine run."""
+1459:     decoy = os.path.join(work, 'decoy-model.bin')
+1460:     with open(decoy, 'wb') as f:
+1461:         f.write(b'not-the-pinned-model')
+1462:     ctl = []
+1463: 
+1464:     def add(fam, expect, m=None, wm=None, bm=None, cap=MAX_COLLATERAL):
+1465:         ctl.append((fam, m if m is not None else receipt, wm, bm, expect,
+1466:                     cap))
+1467: 
+1468:     add('stale', 'nonce_match',
+1469:         edit(receipt, lambda m: m.update({'nonce': 'r60-dead'})))
+1470:     add('log', 'health_ready', edit(receipt, lambda m: m['captures'][
+1471:         'health'].update({'body': '{"status":"OK"}'})))
+1472:     add('tamper', 'completion_envelope', edit_body(
+1473:         receipt, 'completion', lambda o: o.update(
+1474:             {'object': 'chat.completion'})), cap=ENVELOPE_CAP)
+1475:     add('tamper', 'hold_released', edit(receipt, lambda m: m['hold'].update(
+1476:         {'released': False})))
+1477:     add('tamper', 'teardown_clean', edit(receipt, lambda m: m[
+1478:         'teardown'].update({'child_pre_dead': True})))
+1479:     add('tamper', 'teardown_clean', edit(receipt, lambda m: m[
+1480:         'teardown'].update({'returncode': 137})))
+1481:     add('tamper', 'teardown_port_closed', edit(receipt, lambda m: m[
+1482:         'teardown'].update({'port_closed': False})))
+1483:     add('tamper', 'verdict', edit(receipt,
+1484:                                   lambda m: m.update({'verdict': 'FAIL'})))
+1485: 
+1486:     def swap_text(o):
+1487:         o['choices'][0]['text'] = o['choices'][0]['text'] + '!'
+1488:     add('tamper', 'completion_deterministic',
+1489:         edit_body(receipt, 'completion2', swap_text))
+1490:     add('tamper', 'model_digest', edit(receipt, lambda m: (
+1491:         m['model'].update({'sha256': '0' * 64}),
+1492:         m['server'].update({'sha256': '0' * 64}))))
+1493:     add('predead', 'teardown_clean', edit(receipt, lambda m: m[
+1494:         'teardown'].update({'child_pre_dead': True})))
+1495:     add('sigterm', 'teardown_clean', edit(receipt, lambda m: m[
+1496:         'teardown'].update({'returncode': -9})))
+1497:     add('hold', 'hold_released', edit(receipt, lambda m: m['hold'].update(
+1498:         {'released': False})))
+1499:     add('outside', 'completion_model_id', edit_body(
+1500:         receipt, 'completion', lambda o: o.update({'model': 'other-alias'})))
+1501:     add('hdr', 'completion_headers', edit(receipt, lambda m: m['captures'][
+1502:         'completion']['headers'].update({'content-type': 'text/plain'})))
+1503:     add('hdr', 'completion_headers', edit(receipt, lambda m: m['captures'][
+1504:         'completion']['headers'].pop('content-type')))
+1505:     add('trunc', 'completion_untruncated', edit(
+1506:         receipt, lambda m: m['captures']['completion'].update(
+1507:             {'body_truncated': True})))
+1508:     add('trunc', 'completion_untruncated', edit(
+1509:         receipt, lambda m: m['captures']['completion']['headers'].update(
+1510:             {'content-length': str(
+1511:                 m['captures']['completion']['body_bytes'] + 1)})))
+1512: 
+1513:     def timing(**kw):
+1514:         return lambda o: o['timings'].update(kw)
+1515:     add('timing', 'completion_timings', edit_body(
+1516:         receipt, 'completion', timing(predicted_ms=-1.0)))
+1517:     add('timing', 'completion_timings', edit_body(
+1518:         receipt, 'completion', timing(predicted_ms=True)))
+1519:     add('timing', 'completion_timings', edit_body(
+1520:         receipt, 'completion', timing(predicted_ms=float('inf'))))
+1521:     add('timing', 'completion_timings', edit_body(
+1522:         receipt, 'completion', lambda o: o['timings'].pop('cache_n')))
+1523:     add('shape', 'completion_choice_shape', edit_body(
+1524:         receipt, 'completion',
+1525:         lambda o: o['choices'].append(dict(o['choices'][0]))))
+1526:     add('shape', 'completion_choice_shape', edit_body(
+1527:         receipt, 'completion', lambda o: o['choices'][0].update(
+1528:             {'index': 1})))
+1529:     add('shape', 'completion_choice_shape', edit_body(
+1530:         receipt, 'completion', lambda o: o['choices'][0].update(
+1531:             {'text': ''})))
+1532:     add('shape', 'completion_choice_shape', edit_body(
+1533:         receipt, 'completion', lambda o: o['choices'][0].update(
+1534:             {'logprobs': {}})))
+1535:     add('idcr', 'completion_id_created', edit_body(
+1536:         receipt, 'completion', lambda o: o.update({'id': ''})))
+1537:     add('idcr', 'completion_id_created', edit_body(
+1538:         receipt, 'completion', lambda o: o.update({'created': True})))
+1539:     add('idcr', 'completion_id_created', edit_body(
+1540:         receipt, 'completion', lambda o: o.update({'created': 5})))
+1541: 
+1542:     def ptok(o):
+1543:         o['usage']['prompt_tokens'] += 1
+1544:         o['usage']['total_tokens'] += 1
+1545:     add('ptok', 'completion_prompt_tokens',
+1546:         edit_body(receipt, 'completion', ptok))
+1547:     add('ptok', 'completion_prompt_tokens', edit_body(
+1548:         receipt, 'tokenize', lambda o: o['tokens'].append(7)))
+1549: 
+1550:     def req_prompt(m):
+1551:         c = m['captures']['completion']
+1552:         c['request_body'] = c['request_body'].replace(
+1553:             TOOL_REQ['prompt'], 'Other text')
+1554:         c['request_sha256'] = sha256_b(c['request_body'].encode())
+1555:     add('reqbind', 'completion_request_bound', edit(receipt, req_prompt))
+1556:     add('reqbind', 'completion_request_bound', edit(
+1557:         receipt, lambda m: m['captures']['completion'].update(
+1558:             {'request_sha256': '0' * 64})))
+1559:     add('listener', 'listener_owned', edit(
+1560:         receipt, lambda m: m['checks']['listener_owned'].update(
+1561:             {'passed': False})))
+1562:     add('digest', 'model_digest', edit(
+1563:         receipt, lambda m: m['model'].update({'path': decoy})))
+1564:     add('schema', 'schema', edit(
+1565:         receipt, lambda m: m.update({'schema': 'kama-completion-live/v2'})))
+1566: 
+1567:     # ---- witness mutations (the receipt is the genuine one) ------------ #
+1568:     def wm(i, **kw):
+1569:         def f(w):
+1570:             w = clone(w)
+1571:             w['probes'][i].update(kw)
+1572:             return w
+1573:         return f
+1574:     add('witness', 'live_fp_capture', wm=wm(0, fingerprint='b1-aaaaaaaaa'))
+1575:     add('witness', 'live_ptok', wm=lambda w: wm(
+1576:         0, usage_prompt_tokens=w['probes'][0]['usage_prompt_tokens'] + 1)(w))
+1577:     add('witness', 'live_object', wm=wm(0, object='chat.completion'))
+1578:     add('witness', 'live_text', wm=wm(0, text=''))
+1579:     add('witness', 'live_pid', wm=lambda w: {**clone(w), 'hold_pid': 1})
+1580:     # ---- run-field: the answer must carry this run's fields ------------ #
+1581:     def swap_answer(w):
+1582:         w = clone(w)
+1583:         keep = ('sent_prompt', 'n_predict')
+1584:         a, b = w['probes'][0], w['probes'][1]
+1585:         w['probes'][1] = {**a, **{k: b[k] for k in keep}}
+1586:         return w
+1587:     add('runfield', 'live_ref_text', wm=swap_answer)
+1588:     add('runfield', 'live_run_field', wm=wm(1, usage_completion_tokens=99))
+1589:     add('runfield', 'live_run_field', wm=lambda w: wm(
+1590:         1, timings_prompt_n=w['probes'][1]['timings_prompt_n'] + 1)(w))
+1591:     add('runfield', 'live_ref_usage', wm=lambda w: wm(
+1592:         0, usage_prompt_tokens=w['probes'][0]['usage_prompt_tokens'] + 1,
+1593:         tokenize_count=w['probes'][0]['tokenize_count'] + 1,
+1594:         timings_prompt_n=w['probes'][0]['timings_prompt_n'] + 1)(w))
+1595:     # ---- binding mutations of the counter's own procfs snapshot -------- #
+1596:     def bm(fn):
+1597:         def f(b):
+1598:             b = clone(b)
+1599:             fn(b['raw_a'])
+1600:             return b
+1601:         return f
+1602:     add('bind', 'bind_exe', bm=bm(
+1603:         lambda r: r['holders'][0].update({'exe_sha256': '0' * 64})))
+1604:     add('bind', 'bind_exe', bm=bm(
+1605:         lambda r: r['holders'][0].update({'exe': '/usr/bin/python3'})))
+1606:     add('bind', 'bind_holders', bm=bm(
+1607:         lambda r: r['holders'].append({**r['holders'][0], 'pid': 1})))
+1608:     add('bind', 'bind_holders', bm=bm(
+1609:         lambda r: r.update({'hold_pid': r['hold_pid'] + 1})))
+1610:     add('bind', 'bind_holders', bm=bm(
+1611:         lambda r: r.update({'unreadable_own': [999999]})))
+1612:     add('bind', 'bind_listener', bm=bm(
+1613:         lambda r: r['listeners'][0].update({'loopback': False})))
+1614:     add('bind', 'bind_argv', bm=bm(
+1615:         lambda r: r['holders'][0].update({'cmdline': [
+1616:             r['holders'][0]['cmdline'][0], '--port', '1']})))
+1617:     add('bind', 'bind_argv', bm=bm(lambda r: r['holders'][0].update(
+1618:         {'cmdline': r['holders'][0]['cmdline'] + ['--port', '2']})))
+1619:     add('bind', 'bind_argv', bm=bm(lambda r: r['holders'][0].update(
+1620:         {'cmdline': r['holders'][0]['cmdline'] + ['--model', decoy]})))
+1621:     add('bind', 'bind_argv', bm=bm(lambda r: r['holders'][0].update(
+1622:         {'cmdline': r['holders'][0]['cmdline'] + ['-c', '4096']})))
+1623:     add('bind', 'bind_argv', bm=bm(lambda r: r['holders'][0].update(
+1624:         {'cmdline': r['holders'][0]['cmdline'] + ['-m', decoy]})))
+1625: 
+1626:     def envp(fn):
+1627:         return bm(lambda r: r['holders'][0].update(
+1628:             {'environ': fn(dict(r['holders'][0]['environ']))}))
+1629:     add('bind', 'bind_env', bm=envp(
+1630:         lambda e: {**e, 'LD_PRELOAD': '/x.so'}))
+1631:     add('bind', 'bind_env', bm=envp(
+1632:         lambda e: {**e, 'GLIBC_TUNABLES': 'glibc.malloc.check=3'}))
+1633:     add('bind', 'bind_env', bm=bm(
+1634:         lambda r: r['holders'][0].update({'environ': None})))
+1635:     add('bind', 'bind_env', bm=envp(
+1636:         lambda e: {**e, 'LLAMA_ARG_MODEL': '/other.gguf'}))
+1637:     add('bind', 'bind_env', bm=envp(
+1638:         lambda e: {**e, 'PATH': '/evil:' + e.get('PATH', '')}))
+1639:     add('bind', 'bind_ns', bm=bm(lambda r: r['holders'][0].update(
+1640:         {'ns': {**r['holders'][0]['ns'], 'mnt': 'mnt:[1]'}})))
+1641:     add('bind', 'bind_trace', bm=bm(
+1642:         lambda r: r['holders'][0].update({'tracer_pid': 4242})))
+1643:     add('bind', 'bind_state', bm=bm(
+1644:         lambda r: r['holders'][0].update({'state': 'T'})))
+1645:     add('bind', 'bind_maps', bm=bm(lambda r: r['holders'][0]['maps'].append(
+1646:         {'path': '/memfd:evil (deleted)', 'deleted': True, 'sha256': None})))
+1647:     add('bind', 'bind_maps', bm=bm(lambda r: r['holders'][0]['maps'].append(
+1648:         {'path': '/tmp/evil.so', 'deleted': False, 'sha256': '0' * 64})))
+1649:     add('bind', 'bind_maps', bm=bm(lambda r: next(
+1650:         m for m in r['holders'][0]['maps']
+1651:         if m.get('sha256') and m['path'].endswith('.so.0.7.0')).update(
+1652:         {'sha256': '1' * 64})))
+1653:     add('bind', 'bind_ancestry', bm=bm(
+1654:         lambda r: r.update({'tool_pid': 999999999})))
+1655:     add('bind', 'hold_fresh', bm=bm(
+1656:         lambda r: r.update({'hold_mtime_ns': r['t0_ns'] - 1})))
+1657:     add('bind', 'hold_fresh', bm=bm(lambda r: r['holders'][0].update(
+1658:         {'start_ticks': r['tool_start_ticks'] - 1})))
+1659:     add('bind', 'teardown_observed', bm=lambda b: {
+1660:         **clone(b), 'teardown': {'gone': False, 'port_closed': True}})
+1661:     add('bind', 'bind_stable', bm=lambda b: {**clone(b), 'raw_b': {
+1662:         **clone(b['raw_b']), 'holders': []}})
+1663:     add('bind', 'hold_fresh', bm=bm(lambda r: r.update(
+1664:         {'hold_mtime_ns': r['collected_ns'] + 10_000_000_000})))
+1665: 
+1666:     def ref_wm(fn):
+1667:         def f(w):
+1668:             w = clone(w)
+1669:             fn(w['ref_files'])
+1670:             return w
+1671:         return f
+1672:     add('bind', 'bind_ref_files', wm=ref_wm(
+1673:         lambda rf: rf[0].__setitem__(2, '1')))
+1674:     add('bind', 'bind_ref_files', bm=bm(lambda r: r['holders'][0][
+1675:         'maps'].append({
+1676:             'path': os.path.join(os.path.dirname(r['server_path']),
+1677:                                  'libllama-cli-impl.so'),
+1678:             'deleted': False, 'dev': '00:2e', 'inode': '4242',
+1679:             'sha256': LIBS['libllama-cli-impl.so']})))
+1680: 
+1681:     # ---- the receipt's own request and answer must be this run's ------ #
+1682:     def both(fn):
+1683:         def f(m):
+1684:             for n in ('completion', 'completion2'):
+1685:                 c = m['captures'][n]
+1686:                 o = json.loads(c['body'])
+1687:                 fn(o)
+1688:                 c['body'] = json.dumps(o, separators=(',', ':'))
+1689:                 reseal(c)
+1690:                 if 'content-length' in c.get('headers', {}):
+1691:                     c['headers']['content-length'] = str(c['body_bytes'])
+1692:         return f
+1693:     add('receiptbind', 'receipt_ref_text', edit(receipt, both(
+1694:         lambda o: o['choices'][0].update({'text': ' FABRICATED BY TOOL'}))))
+1695: 
+1696:     def usage_plus(m):
+1697:         both(lambda o: (o['usage'].update(
+1698:             {'prompt_tokens': o['usage']['prompt_tokens'] + 1,
+1699:              'total_tokens': o['usage']['total_tokens'] + 1})))(m)
+1700:         tk = m['captures']['tokenize']
+1701:         o = json.loads(tk['body'])
+1702:         o['tokens'].append(7)
+1703:         tk['body'] = json.dumps(o, separators=(',', ':'))
+1704:         reseal(tk)
+1705:     add('receiptbind', 'receipt_ref_usage', edit(receipt, usage_plus))
+1706: 
+1707:     def other_prompt(m):
+1708:         for n in ('completion', 'completion2'):
+1709:             c = m['captures'][n]
+1710:             o = json.loads(c['request_body'])
+1711:             o['prompt'] = o['prompt'] + ' again'
+1712:             c['request_body'] = json.dumps(o)
+1713:             c['request_sha256'] = sha256_b(c['request_body'].encode())
+1714:     add('receiptbind', 'receipt_req', edit(receipt, other_prompt))
+1715: 
+1716:     def other_n(m):
+1717:         for n in ('completion', 'completion2'):
+1718:             c = m['captures'][n]
+1719:             o = json.loads(c['request_body'])
+1720:             o['n_predict'] = o['n_predict'] + 1
+1721:             c['request_body'] = json.dumps(o)
+1722:             c['request_sha256'] = sha256_b(c['request_body'].encode())
+1723:     add('receiptbind', 'receipt_req', edit(receipt, other_n))
+1724:     return ctl
+1725: 
+1726: 
+1727: def tool_files(repo, tip, work):
+1728:     """Write the tip's tool + dependency to work/tip. Returns tool path or
+1729:     None; errors via the second value."""
+1730:     tool_blob = blob(repo, tip, 'tools/kama-completion-live.py')
+1731:     if not tool_blob:
+1732:         return None, 'tools/kama-completion-live.py absent at tip'
+1733:     root = os.path.join(work, 'tip')
+1734:     os.makedirs(os.path.join(root, 'tools'), exist_ok=True)
+1735:     os.makedirs(os.path.join(root, 'registry'), exist_ok=True)
+1736:     tp = os.path.join(root, 'tools', 'kama-completion-live.py')
+1737:     with open(tp, 'wb') as f:
+1738:         f.write(tool_blob)
+1739:     dep = blob(repo, tip, 'tools/kama-llamacpp-live.py')
+1740:     if not dep:
+1741:         return None, 'tip lacks tools/kama-llamacpp-live.py'
+1742:     with open(os.path.join(root, 'tools', 'kama-llamacpp-live.py'),
+1743:               'wb') as f:
+1744:         f.write(dep)
+1745:     reg = blob(repo, tip, 'registry/endpoint-consumers.tsv')
+1746:     if reg:
+1747:         with open(os.path.join(root, 'registry',
+1748:                                'endpoint-consumers.tsv'), 'wb') as f:
+1749:             f.write(reg)
+1750:     return tp, None
+1751: 
+1752: 
+1753: def pick_server():
+1754:     cand = shutil.which('llama-server')
+1755:     paths = [os.path.realpath(cand)] if cand else []
+1756:     paths.append(os.path.expanduser(
+1757:         '~/.local/opt/llama-b11755/llama-server'))
+1758:     for p in paths:
+1759:         if sha256_path(p) == SERVER_SHA:
+1760:             return p
+1761:     return None
+1762: 
+1763: 
+1764: def families_match(tot, ok):
+1765:     """Every family present at exactly its declared count, credited in full."""
+1766:     return tot == EXPECT_FAMILIES and ok == EXPECT_FAMILIES
+1767: 
+1768: 
+1769: def credit_rule(s, expect, cap, clean_receipt=False):
+1770:     """One control's credit: rejected, the named check among the failures,
+1771:     within the cap; a fake tool holding a genuine receipt copy must in
+1772:     addition show no receipt-level failure (a garbled receipt is a crashed
+1773:     fake, not the named reason). Declared in freeze.txt AMENDMENT 1."""
+1774:     hit = is_hit(s, expect, cap)
+1775:     if hit and clean_receipt:
+1776:         hit = not any(k in RECEIPT_LEVEL or k in RECEIPT_BIND
+1777:                       or k.startswith('inconsistent:') for k in s['fails'])
+1778:     return hit
+1779: 
+1780: 
+1781: def main(argv=None):
+1782:     ap = argparse.ArgumentParser()
+1783:     ap.add_argument('--repo', required=True)
+1784:     ap.add_argument('--tip', required=True)
+1785:     ap.add_argument('--work', required=True)
+1786:     args = ap.parse_args(argv)
+1787:     work = os.path.abspath(args.work)
+1788:     if os.path.isdir(work) and os.listdir(work):
+1789:         print('error: work-reused: --work already holds files; the counter '
+1790:               'refuses a reused scratch directory (pass a fresh one)',
+1791:               file=sys.stderr)
+1792:         print('tool_present=0 live_ok=0/1 controls_targeted=0/0 '
+1793:               'work_reused=1 errors=1 met=False')
+1794:         return 2
+1795:     os.makedirs(work, exist_ok=True)
+1796:     errors = []
+1797:     global NONCE
+1798: 
+1799:     server = pick_server()
+1800:     model = os.path.realpath(os.path.expanduser(
+1801:         '~/.cache/kama-shokunin/models/stories260K.gguf'))
+1802:     if server is None:
+1803:         errors.append('no llama-server with the pinned sha256 found')
+1804:     if sha256_path(model) != MODEL_SHA:
+1805:         errors.append('fixture model absent or not the pinned sha256')
+1806:     tool_path, err = tool_files(args.repo, args.tip, work)
+1807:     tool_present = 1 if tool_path else 0
+1808:     if err:
+1809:         errors.append(err)
+1810:     receipt = witness = binding = None
+1811:     live_ok = 0
+1812:     st = 0
+1813:     fam_tot, fam_ok, detail = {}, {}, []
+1814:     probe_nonce = reqs = None
+1815:     if not errors:
+1816:         rng = random.Random(int.from_bytes(os.urandom(8), 'big'))
+1817:         probe_nonce = 'r64p' + hashlib.sha256(os.urandom(8)).hexdigest()[:8]
+1818:         ref_all = []
+1819:         for _attempt in range(8):
+1820:             reqs, tool_req = draw_requests(rng, probe_nonce)
+1821:             ref_all = reference_run(server, model, reqs + [tool_req], work)
+1822:             texts = [(r or {}).get('text') for r in ref_all]
+1823:             if (len(ref_all) == 3 and all(isinstance(t, str) and t
+1824:                                           for t in texts)
+1825:                     and len(set(texts)) == 3):
+1826:                 break
+1827:         else:
+1828:             errors.append('no draw gave three distinct reference answers')
+1829:         if not errors:
+1830:             TOOL_REQ.clear()
+1831:             TOOL_REQ.update(tool_req)
+1832:             receipt, witness, binding, nonce, notes = witness_run(
+1833:                 work, 'live', tool_path, server, model, reqs, tool_req)
+1834:             NONCE = nonce
+1835:             if receipt is None or witness is None or binding is None:
+1836:                 errors.append('live: no receipt/witness produced '
+1837:                               + '; '.join(notes))
+1838:             else:
+1839:                 witness['ref'] = ref_all[:2]
+1840:                 witness['ref_tool'] = ref_all[2]
+1841:                 witness['ref_files'] = [list(x) for x in REF_FILES]
+1842:                 s = score_run(receipt, witness, binding, probe_nonce)
+1843:                 live_ok = 1 if s['met'] else 0
+1844:                 if not s['met']:
+1845:                     errors.append('live: ' + json.dumps(sorted(s['fails'])))
+1846:     if live_ok == 1:
+1847:         run_controls(args, work, tool_path, server, model, receipt,
+1848:                      witness, binding, reqs, probe_nonce, rng, fam_tot,
+1849:                      fam_ok, detail, errors)
+1850:         st = eval_selftest_run(receipt, witness, binding, probe_nonce)
+1851:     total = sum(fam_tot.values())
+1852:     rejected = sum(fam_ok.values())
+1853:     fam_match = families_match(fam_tot, fam_ok)
+1854:     met = (tool_present == 1 and live_ok == 1 and fam_match
+1855:            and st == EXPECT_EVAL_SELFTEST and not errors)
+1856:     fams = ' '.join(f'{k}={fam_ok.get(k, 0)}/{v}'
+1857:                     for k, v in sorted(fam_tot.items()))
+1858:     missing = sorted(set(EXPECT_FAMILIES) - set(fam_tot))
+1859:     print(f'tool_present={tool_present} live_ok={live_ok}/1 '
+1860:           f'controls_targeted={rejected}/{total} of {EXPECT_CONTROLS} '
+1861:           f'families_exact={int(fam_match)} missing_families={missing} '
+1862:           f'eval_selftest={st}/{EXPECT_EVAL_SELFTEST} '
+1863:           f'errors={len(errors)} met={met} families[{fams}]')
+1864:     for e in errors[:8] + detail[:12]:
+1865:         print(f'error: {e}', file=sys.stderr)
+1866:     return 0 if met else 1
+1867: 
+1868: 
+1869: def score_run(receipt, witness, binding, probe_nonce, nonce=None):
+1870:     """score() under this run's globals: the tool nonce (nonce_match), the
+1871:     request the counter asked of the tool (completion_request_bound), and
+1872:     the per-run probe nonce every outside probe prompt must carry."""
+1873:     global NONCE
+1874:     saved_n, saved_t = NONCE, dict(TOOL_REQ)
+1875:     if nonce is not None:
+1876:         NONCE = nonce
+1877:     tr = (witness or {}).get('tool_req')
+1878:     if tr:
+1879:         TOOL_REQ.clear()
+1880:         TOOL_REQ.update(tr)
+1881:     try:
+1882:         s = score(receipt, witness, binding)
+1883:     finally:
+1884:         NONCE = saved_n
+1885:         TOOL_REQ.clear()
+1886:         TOOL_REQ.update(saved_t)
+1887:     if not all(probe_nonce in ((p or {}).get('sent_prompt') or '')
+1888:                for p in (witness or {}).get('probes') or []):
+1889:         s['fails'].add('live_nonce')
+1890:     s['met'] = not s['fails']
+1891:     return s
+1892: 
+1893: 
+1894: def eval_selftest_run(receipt, witness, binding, probe_nonce):
+1895:     """Eight planted cases the evaluator must judge correctly: three that
+1896:     must NOT be credited (wrong reason, over-cap cascade, a passing check
+1897:     named), three that MUST be (a one-field break, the envelope break at its
+1898:     cap, a missing probe nonce), the clean-receipt veto, and a misfiled
+1899:     family table. Returns the number judged correctly (expected 8)."""
+1900:     n = 0
+1901:     stale = edit(receipt, lambda m: m.update({'nonce': 'r60-dead'}))
+1902:     n += int(not is_hit(score_run(stale, witness, binding, probe_nonce),
+1903:                         'live_ptok'))
+1904:     env = edit_body(receipt, 'completion',
+1905:                     lambda o: o.update({'object': 'chat.completion'}))
+1906:     n += int(not is_hit(score_run(env, witness, binding, probe_nonce),
+1907:                         'completion_envelope'))
+1908:     n += int(not is_hit(score_run(receipt, witness, binding, probe_nonce),
+1909:                         'nonce_match'))
+1910:     health = edit(receipt, lambda m: m['captures']['health'].update(
+1911:         {'body': '{"status":"OK"}'}))
+1912:     n += int(is_hit(score_run(health, witness, binding, probe_nonce),
+1913:                     'health_ready'))
+1914:     n += int(is_hit(score_run(env, witness, binding, probe_nonce),
+1915:                     'completion_envelope', ENVELOPE_CAP))
+1916:     nonce_w = clone(witness)
+1917:     nonce_w['probes'][0]['sent_prompt'] = 'no nonce here'
+1918:     n += int(is_hit(score_run(receipt, nonce_w, binding, probe_nonce),
+1919:                     'live_nonce'))
+1920:     n += int(not credit_rule(
+1921:         {'met': False, 'fails': {'bind_exe', 'health_ready'}},
+1922:         'bind_exe', 99, clean_receipt=True))
+1923:     bad_tot = dict(EXPECT_FAMILIES)
+1924:     bad_tot['stale'] = 0
+1925:     bad_tot['log'] = EXPECT_FAMILIES['log'] + 1
+1926:     n += int(not families_match(bad_tot, bad_tot))
+1927:     return n
+1928: 
+1929: 
+1930: def run_controls(args, work, tool_path, server, model, receipt, witness,
+1931:                  binding, reqs, probe_nonce, rng, fam_tot, fam_ok, detail,
+1932:                  errors):
+1933:     tool_req = witness['tool_req']
+1934:     ref = witness['ref']
+1935:     ref_tool = witness['ref_tool']
+1936: 
+1937:     def credit(fam, s, expect, cap, label, clean_receipt=False):
+1938:         hit = credit_rule(s, expect, cap, clean_receipt)
+1939:         fam_tot[fam] = fam_tot.get(fam, 0) + 1
+1940:         fam_ok[fam] = fam_ok.get(fam, 0) + int(hit)
+1941:         if not hit:
+1942:             detail.append(f'escape {fam}/{label} expect={expect} '
+1943:                           f'met={s["met"]} nfails={len(s["fails"])} '
+1944:                           f'fails={sorted(s["fails"])[:8]}')
+1945: 
+1946:     def scenario(fam, label, expect, cap, clean, tool, treq=None, tref=None,
+1947:                  extra_env=None):
+1948:         """One live forged-tool run scored through the same path as the
+1949:         genuine run; a run that cannot be scored counts as a control that
+1950:         was not rejected (and is reported)."""
+1951:         treq = treq or tool_req
+1952:         tref = tref or ref_tool
+1953:         try:
+1954:             r, w, b, nonce, notes = witness_run(
+1955:                 work, label, tool, server, model, reqs, treq, extra_env)
+1956:         except Exception as e:  # a control that cannot run is not credit
+1957:             errors.append(f'{label}: {type(e).__name__}: {e}')
+1958:             fam_tot[fam] = fam_tot.get(fam, 0) + 1
+1959:             return
+1960:         if r is None or w is None or b is None:
+1961:             detail.append(f'{label}: no receipt/witness {notes}')
+1962:             fam_tot[fam] = fam_tot.get(fam, 0) + 1
+1963:             return
+1964:         w['ref'] = ref
+1965:         w['ref_tool'] = tref
+1966:         w['ref_files'] = witness['ref_files']
+1967:         credit(fam, score_run(r, w, b, probe_nonce, nonce=nonce), expect,
+1968:                cap, label, clean)
+1969: 
+1970:     for fam, m, wm, bm, expect, cap in build_controls(
+1971:             receipt, witness, binding, work):
+1972:         w = wm(witness) if wm else witness
+1973:         b = bm(binding) if bm else binding
+1974:         credit(fam, score_run(m, w, b, probe_nonce), expect, cap, expect)
+1975: 
+1976:     # live forged tools, all through the same witness_run + score path
+1977:     tpl = os.path.join(work, 'genuine-receipt.json')
+1978:     with open(tpl, 'w') as f:
+1979:         json.dump(receipt, f)
+1980:     stale_doc = os.path.join(work, 'stale-hold.json')
+1981:     with open(stale_doc, 'w') as f:
+1982:         json.dump({'schema': 'kama-completion-hold/v1',
+1983:                    'port': witness.get('hold_port'),
+1984:                    'pid': witness.get('hold_pid'),
+1985:                    'alias': ALIAS, 'model_sha256': MODEL_SHA,
+1986:                    'server_sha256': SERVER_SHA, 'prompt': PROMPT,
+1987:                    'at': '2026-10-28T00:00:00Z'}, f)
+1988:     env_base = {'KAMA_FAKE_TEMPLATE': tpl, 'KAMA_FAKE_STALE': stale_doc}
+1989:     plan = [('detach', 'detach', 'detach', 'bind_ancestry'),
+1990:             ('proxy', 'proxy', 'proxy', 'bind_holders'),
+1991:             ('canned', 'canned', 'canned', 'bind_exe'),
+1992:             ('stale_old', 'stalehold', 'stale_old', 'hold_fresh'),
+1993:             ('stale_future', 'stalehold', 'stale_future', 'hold_fresh'),
+1994:             ('preload', 'preload', 'preload', 'bind_env'),
+1995:             ('pathcopy', 'pathcopy', 'pathcopy', 'bind_exe')]
+1996:     for mode, fam, label, expect in plan:
+1997:         fake = write_fake(work, mode)
+1998:         scenario(fam, 'fake-' + label, expect, 99, True, fake,
+1999:                  extra_env=dict(env_base, KAMA_FAKE_MODE=mode))
+2000: 
+2001:     # replay: a genuine pinned child holds the port but the tool writes a
+2002:     # receipt from an earlier run; the counter asked for a NEW request
+2003:     texts = {(r or {}).get('text') for r in [*ref, ref_tool]}
+2004:     ref2 = []
+2005:     for _try in range(8):
+2006:         _, tool_req2 = draw_requests(rng, probe_nonce)
+2007:         ref2 = reference_run(server, model, [tool_req2], work)
+2008:         if len(ref2) == 1 and ref2[0].get('text') not in texts \
+2009:                 and ref2[0].get('text'):
+2010:             break
+2011:     else:
+2012:         ref2 = []
+2013:     if len(ref2) == 1:
+2014:         fake = write_fake(work, 'replay')
+2015:         scenario('replay', 'fake-replay', 'receipt_ref_text', SCENARIO_CAP,
+2016:                  False, fake, treq=tool_req2, tref=ref2[0],
+2017:                  extra_env=dict(env_base, KAMA_FAKE_MODE='replay'))
+2018:     else:
+2019:         errors.append('replay: no draw with a new reference answer')
+2020:         fam_tot['replay'] = fam_tot.get('replay', 0) + 1
+2021: 
+2022:     tool_text = (blob(args.repo, args.tip, 'tools/kama-completion-live.py')
+2023:                  or b'').decode()
+2024:     forged, ferrs = forge_variants(args.repo, args.tip, work)
+2025:     errors.extend(ferrs)
+2026:     root = os.path.dirname(os.path.dirname(tool_path))
+2027: 
+2028:     def planted_tool(name, text):
+2029:         d = os.path.join(work, 'planted-' + name)
+2030:         os.makedirs(os.path.join(d, 'tools'))
+2031:         os.makedirs(os.path.join(d, 'registry'))
+2032:         shutil.copy(os.path.join(root, 'tools', 'kama-llamacpp-live.py'),
+2033:                     os.path.join(d, 'tools', 'kama-llamacpp-live.py'))
+2034:         rg = os.path.join(root, 'registry', 'endpoint-consumers.tsv')
+2035:         if os.path.exists(rg):
+2036:             shutil.copy(rg, os.path.join(d, 'registry',
+2037:                                          'endpoint-consumers.tsv'))
+2038:         fp = os.path.join(d, 'tools', 'kama-completion-live.py')
+2039:         with open(fp, 'w') as f:
+2040:             f.write(text)
+2041:         return fp
+2042: 
+2043:     for name in ('forgeA', 'forgeA2', 'forgeB2'):
+2044:         if name not in forged:
+2045:             fam_tot['forge'] = fam_tot.get('forge', 0) + 1
+2046:             continue
+2047:         scenario('forge', 'forged-' + name, 'bind_holders', SCENARIO_CAP,
+2048:                  False, planted_tool(name, forged[name]))
+2049:     relabelled = splice_before_main(tool_text, RELABEL_WRAP)
+2050:     if relabelled is None:
+2051:         errors.append('relabel: no main guard to splice before')
+2052:         fam_tot['relabel'] = fam_tot.get('relabel', 0) + 1
+2053:     else:
+2054:         scenario('relabel', 'relabel-run', 'bind_claim', SCENARIO_CAP,
+2055:                  False, planted_tool('relabel', relabelled))
+2056: 
+2057: 
+2058: if __name__ == '__main__':
+2059:     sys.exit(main())

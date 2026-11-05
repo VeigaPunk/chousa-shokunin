@@ -2325,7 +2325,7 @@ called a fabrication on absent evidence; nothing is adopted.
 | axis | verdict | evidence (before → after) |
 |---|---|---|
 | operability | **improved** (C1) | the slice and the examination are one committed command; three controls (positive, negative, mutant) hold; the do-nothing control fails |
-| calibration | **improved** (C2) | 24/24 verdicts, each with a reason and a flip condition, graded by an independent re-examination; the flipped-row control fails at 23/24 |
+| calibration | **improved narrowly, claim falsified** (C2) | 24/24 verdicts, each with a reason and a flip condition, graded by an independent re-examination; the flipped-row control fails at 23/24 |
 | depth | **improved narrowly** | `corpus/lessons/round-42.md`: the frozen decision rule, the capture-form ground (S077), the two failure modes the `absent` class spans, four mined mistakes |
 | coverage | **improved narrowly** | a new measured surface: the lane's quarantine scope (24 rows, 43 quotes) now has a command, a receipt and a per-row verdict — a surface the lane did not hold at all |
 | freshness | **improved narrowly** | S077 opened this round from an installed copy (sha256 recorded); the register and every consulted capture are digested by `tools/quarantine-check.py digests` |
@@ -3041,7 +3041,7 @@ Sourced claim: C2's entry `corpus/knowledge/self-claim-audit-r63.md` cites S146�
 | axis | verdict | evidence |
 |---|---|---|
 | operability | **improved** (C1) | 9/9 exhibits rejected, landed tool BATTERY=PASS ×3 + PREFLIGHT=8/8; G04/G05 false positives fixed and pinned as benign legs |
-| calibration | **improved** (C2) | the erratum class has a committed checker with committed detections; the round's own claims were audited pre-freeze |
+| calibration | **improved narrowly, claim falsified** (C2) | the erratum class has a committed checker with committed detections; the round's own claims were audited pre-freeze |
 | depth | **unchanged** | the new entry states its classes and limits; no existing entry deepened |
 | coverage | **unchanged** | no new province surface; the checker audits the lane's own artifacts |
 | freshness | **unchanged** | no fetch; local pages only |
@@ -3226,7 +3226,7 @@ No numeric axis score changed; no capability row (the repertoire already entered
 | axis | verdict | evidence |
 |---|---|---|
 | operability | **improved** (C1) | the routed receipt defect is closed with a re-issued, digest-re-derivable, explicit-rc receipt a verifier can re-run and compare line for line; lowest non-retired axis obligation met |
-| calibration | **improved** (C2) | the recorded mechanism now matches the parser bytes, demonstrated by a measured control; the superseded wording is named, not rewritten |
+| calibration | **improved narrowly, claim falsified** (C2) | the recorded mechanism now matches the parser bytes, demonstrated by a measured control; the superseded wording is named, not rewritten |
 | depth | **unchanged** | no externally-grounded entry this round; both rows are own-work tier B records |
 | freshness | **unchanged** | no drift surface measured; both rows are on-release own-work records |
 | coverage | **unchanged** | PROVINCE.md untouched; both fixes live inside the lane's own records |
@@ -3252,7 +3252,7 @@ No numeric axis score changed; no capability row (C1's repairs are host-portabil
 | axis | verdict | evidence |
 |---|---|---|
 | operability | **honest-stop** (C1) | the receipt debt closes (a full-run receipt exists, red, no skips) and the repair demonstrably works in the transcript, but the frozen completing-verdict-line predicate was not met — no improvement is claimed on the axis; the defect record is committed and routed |
-| calibration | **improved** (C2) | the residual's bar is now an executable protocol with a committed, falsifiable checker; the request is on record; the packet's own limits keep the judgment with the non-author |
+| calibration | **improved narrowly, claim falsified** (C2) | the residual's bar is now an executable protocol with a committed, falsifiable checker; the request is on record; the packet's own limits keep the judgment with the non-author |
 | depth | **unchanged** | no externally-grounded entry this round; all five rows are own-work tier B records |
 | freshness | **unchanged** | no drift surface measured; S168/S169/S170 are pinned to the base revision with `on-release` rechecks |
 | coverage | **unchanged** | PROVINCE.md untouched; the repairs live inside the lane's own gate/records ground |
@@ -3280,7 +3280,7 @@ No numeric axis score changed; no capability row (C1's repair is a bound on an e
 | axis | verdict | evidence |
 |---|---|---|
 | operability | **honest-stop** (C1) | the bound lands and is unit-verified, but the frozen completing predicate (battery verdict line + preflight `SKIPPED=none`) was not met inside the round — no improvement claimed; the defect record and the measured route are committed |
-| calibration | **improved** (C2) | five routed record defects corrected append-only with counted before/after evidence; an over-asserting registry row corrected in place after measurement; a rejection surfaced (S177) where r70 had none |
+| calibration | **improved narrowly, claim falsified** (C2) | five routed record defects corrected append-only with counted before/after evidence; an over-asserting registry row corrected in place after measurement; a rejection surfaced (S177) where r70 had none |
 | depth | **unchanged** | no externally-grounded entry; all five rows are own-work tier B/C records |
 | freshness | **unchanged** | no drift surface measured; S173–S177 are own-work `on-release` records |
 | coverage | **unchanged** | PROVINCE.md untouched; the repair stays inside the lane's own gate/records ground |
@@ -3310,7 +3310,7 @@ No numeric axis score changed; no capability row (C1 is the measurement of an ex
 | axis | verdict | evidence |
 |---|---|---|
 | operability | **honest-stop** (C1) | the deepest run ever (the r70 stall passed, the r71 bound production-proven) still ended before the verdict line at a newly-reachable crash site; no improvement claimed on the axis; the defect record is committed with the crash site byte-located and the completing route measured |
-| calibration | **improved** (C2) | four routed defects corrected append-only with counted before/after evidence across every restating file (QUALITY 9); the disqualified SHONEN assessment re-filed under the heading; a non-re-derivable count replaced by per-receipt counts |
+| calibration | **improved narrowly, claim falsified** (C2) | four routed defects corrected append-only with counted before/after evidence across every restating file (QUALITY 9); the disqualified SHONEN assessment re-filed under the heading; a non-re-derivable count replaced by per-receipt counts |
 | depth | **unchanged** | no externally-grounded entry; both new rows are own-work tier B records |
 | freshness | **unchanged** | no drift surface measured; S178–S179 are own-work `on-release` records |
 | coverage | **unchanged** | PROVINCE.md untouched; the work stays inside the lane's own gate/records ground |
@@ -3378,7 +3378,7 @@ No numeric axis score changed; no capability row (C1 is a discrimination repair 
 | axis | verdict | evidence |
 |---|---|---|
 | operability | **improved** (C1) | the candidate-running matrix now has a committed detection-forger battery that passes it before the claim is bound (QUALITY 126), the surviving order oracle is rejected, and real committed appends/deletions run through the public loader path |
-| calibration | **improved** (C2) | a recorded count that contradicted its own quoted bytes is corrected append-only and re-derived by one command; the round's own slips are mined with a committed guard that can fail |
+| calibration | **improved narrowly, claim falsified** (C2) | a recorded count that contradicted its own quoted bytes is corrected append-only and re-derived by one command; the round's own slips are mined with a committed guard that can fail |
 | depth | **unchanged** | no externally-grounded knowledge entry this round; all three rows are own-work tier B/C records |
 | freshness | **unchanged** | no drift surface measured; S184–S186 are revision-pinned own-work records with `on-release` rechecks |
 | coverage | **unchanged** | PROVINCE.md untouched; the work stays inside the lane's own gate/evidence ground |
@@ -3611,3 +3611,56 @@ the round by its own attack seats, with receipts, and the disagreement became QU
 Wave: one v1 wave, 12 seats (3 executor, 1 scout, 1 scribe, 1 connector, 2 reviewer, 2 critic,
 1 mutation-tester, 1 sentinel = 5 attack seats, 42%), L1 holding the canonical planner seat, no
 residual call.
+
+## Planned — round 81 (frozen at that round's commit A; this block is the intent, not a predicate)
+
+Round 81 intends two claims, both from round-80 wave findings that the frozen predicates do not
+enumerate:
+
+1. **operability (lowest scored non-retired axis)** — close the two HIGH defects the round-80 wave
+   measured in `matrix-battery-v7.py`: (a) the fresh leg's ground truth is the subject under test
+   (`WITNESS` == `--matrix`), so the leg proves reactivity and not correctness — a second,
+   independent witness or a guard refusing `--matrix == WITNESS` with an explicit verdict; (b)
+   `_rename` leaves `ast.Attribute.attr` unrenamed, so the structure-identity oracle crashes and one
+   of the five counted `oracles_rejected` is a packaging error — rename attributes consistently and
+   count a no-marks run as `oracle_error`, never `oracle_ok`. Counting command: the round-81 battery
+   prints the predicate line with `oracles_error=0` and names a witness sha distinct from
+   `MATRIX_SHA256`, plus a receipt showing the structure-identity oracle reaching its own PASS line
+   before it is scored.
+2. **calibration** — a counter that re-derives each superseded record's defect from the OLD bytes
+   (the 27-word quote at `corpus/QUALITY.md:1056@b7803829`, the eleven-line span of
+   `atkB2-new-block-window.txt@3eb4a3ca`) instead of counting a new row's existence, and that refuses
+   a second `GATE-RECORD` for one id (`records_at()` currently keeps the last one silently).
+3. **carried debt** — round-79 routed defect 7 (the surviving payload-decoding channel) and defect 8
+   (no `--selftest` on `matrix-battery-v7.py`, `forge-battery.py`, `selfcheck-v2.py`; `work-contract.py`
+   never compares Case A's matrix exit) stay open and unclaimed until a control can fail without the
+   fix.
+
+Assimilation stays closed until the `merge/chousa/` id drift is renumbered in scratch (111 of 114
+staged ids collided with the live registry at round 78).
+
+## Round 80 verdict — the drawn set keeps the answer key out of the subject table, and a Gate record becomes a line a counter re-opens (2026-11-04)
+
+Base `b7803829922770b890e9f4efdd30d12c3695439a`; instruments and the two do-nothing controls
+`0f59b985933b2fe9b0b6a754d908ac6ae47399e6` (round-80 attempt 1, preserved); wave-spec freeze
+`0d253c95732c0ed19a9fa414e5d17769ddefa48d`; registry + Gate records `44d09edfc20dba26ee8d58a93d365989916a2692`;
+QUALITY/SKILL/erratum and the after receipt `5ba30d87172e94dd76a49e1a94294561e90f6cbd`.
+
+| claim / axis | before → after | counting command / evidence | verdict |
+|---|---|---|---|
+| C1 operability (lowest scored non-retired axis; the historical 3/10 held) | `BATTERY_EXIT=0 BATTERY_VERDICT=PASS RECEIPT_LINES=113` + `ORACLE=ACCEPTED` exit 1 on v6 (a structure-identity matrix passes without scoring) → `BATTERY=PASS forgers_rejected=11/11 positive=2/2 fresh_positive=2/2 fresh_forgers=2/2 oracles_rejected=5/5` exit 0 on v7, 97.3 s | `python3 -B corpus/evidence/round80/matrix-battery-v7.py --matrix corpus/evidence/round76/loader-matrix-v3.py --work DIR --runs 1 --fresh 2 --rev b7803829922770b890e9f4efdd30d12c3695439a`; `controls/oracle-before-r80.txt`, `controls/v7-legit-matrix-r80.txt` | **falsified by its own kill rule — honest stop** — the predicate line holds on some draws and fails on others: `BATTERY=FAIL … fresh_positive=1/2 fresh_forgers=1/2` (run 1) and `BATTERY=FAIL … fresh_positive=0/3 fresh_forgers=0/3` (fresh-3) refuse the legitimate matrix, because a drawn positive and forger share one name; two further HIGH defects hollow the clause (the fresh leg's witness is the subject under test; one counted oracle rejection is a `_rename` crash) |
+| C2 calibration (sourced on S199) | `GATE_GROUNDING=FAIL unresolved=3 superseded_resolved=0 audited=S196,S197,S198` exit 1 → `GATE_GROUNDING=PASS unresolved=0 superseded_resolved=3 audited=S199,S200,S201,S202` exit 0 | `python3 -B corpus/evidence/round80/gate-grounding-check.py --rev 44d09edfc20dba26ee8d58a93d365989916a2692`; `controls/grounding-before-r80.txt`, `controls/grounding-after.txt` | **falsified by its own kill rule — honest stop** — the predicate line holds on the landed bytes and the three defects are closed by append-only supersession, but the wave fired the frozen third clause (a record naming bytes the counter never opened while `unresolved=0`, `.ufo/waves/round-80/w1/R80CriticA/receipts/c2-unopened-superseded-record.txt`) and a one-word hollow record reaches PASS (`c2-donothing-control.txt`); QUALITY 155 carries the successor rule |
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved narrowly, claim falsified** (C1) | the frozen predicate line and its exit are reproduced on this host; the two HIGH wave defects and the draw-instability are QUALITY-routed, recorded in `corpus/lessons/round-80.md` `## Instrument limits`, and carried into the round-81 plan rather than repaired after scoring |
+| calibration | **improved narrowly, claim falsified** (C2) | three defective records superseded with measured counts (12/20/25/2 words) and a corrected anchor span; the counter's before and after states both re-derived from committed bytes; QUALITY 152–154 land the rule |
+| depth | **unchanged** | no `corpus/knowledge/` entry; S199–S202 are own-work tier B/C records |
+| freshness | **unchanged** | no drift surface measured; every new row rechecks `on-release` |
+| coverage | **unchanged** | `PROVINCE.md` untouched; the work stays inside the lane's gate/record ground |
+| adjacency | **unchanged** | `R80ConnectorA` compares seven sibling revisions read-only (souji's receipt/instrument equality, kama's drawn-request binding are stronger provenance components) and absorbs none |
+
+No axis harmed: the lane gate selftest is `PASS (275 cases, 0 skipped)`, the round-79 counter is
+`SELFCHECK2=PASS unresolved=0/3` at the integration revision, the source census is exit 0 at both
+ends, and every change to a frozen artifact is append-only. Admission is the operator's after
+non-author verification.

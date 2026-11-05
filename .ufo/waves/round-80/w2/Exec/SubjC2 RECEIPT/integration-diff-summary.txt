@@ -1,0 +1,28 @@
+# R80ExecC — integration diff snapshot (read at the time of writing, not produced by me)
+
+`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin rev-parse HEAD` → `5ba30d87172e94dd76a49e1a94294561e90f6cbd`
+`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin rev-parse master` → same hash.
+
+`git -C /home/vgpnk/Projects/shokunin/chousa-shokunin status --porcelain` at read time:
+
+    M LOG.md
+    M SCORECARD.md
+    M corpus/QUALITY.md
+    M corpus/lessons/round-80.md
+    ?? .ufo/waves/round-80/w1.ready
+    ?? .ufo/waves/round-80/w1.ready.dispatched
+    ?? .ufo/waves/round-80/w1/
+    ?? .ufo/waves/round-80/w2/
+    ?? corpus/evidence/round80/controls/v7-draw-instability.txt
+    ?? corpus/evidence/round80/controls/v7-draw-pass-e.txt
+
+Uncommitted working-tree diff (`git diff --stat`): LOG.md 56/0, SCORECARD.md 67-3/67? (67 changed
+lines incl. 10 deletions), corpus/QUALITY.md 5/0 (criteria 155–159), corpus/lessons/round-80.md
+117+/3-. Full diff kept by me at <this dir>/integration-diff-full.txt (snapshot copy; no lane file
+touched). The in-flight uncommitted work is the integration edit updating the Round-80 LOG entry,
+SCORECARD verdict table, QUALITY 155-159 and the lesson's claim-outcome block — visible in
+integration-diff-full.txt with the C1/C2 verdict rows carrying `falsified by its own kill rule —
+honest stop` on both counts, plus the planned round-81 block.
+
+Note: I again did NOT write this diff — I only observed it. THIS receipt file is my own wave-2
+artifact; nothing in it alters lane state (append-record only outside the tree).

@@ -1,0 +1,45 @@
+# PROVENANCE — v7 receipts: command/exit/instrument identity
+$ for f in controls/v7-*.txt; do head -5; tail -2; done
+## corpus/evidence/round80/controls/v7-legit-matrix-prefreeze.txt  (lines=218)
+  head:
+    # round-80 C1 prefreeze measurement: v7 with the legitimate matrix (worktree at the base revision)
+    # command: python3 -B corpus/evidence/round80/matrix-battery-v7.py --matrix corpus/evidence/round76/loader-matrix-v3.py --work DIR --runs 1 --fresh 2
+    MATRIX_PATH=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round76/loader-matrix-v3.py
+    MATRIX_SHA256=b79d6441057a01b27eb465c6b0625cd46502114f8b622b370c2cd2805c81913f
+    LANE_REV=b7803829922770b890e9f4efdd30d12c3695439a
+  tail:
+    RECEIPT_LINES=216
+    BATTERY=PASS forgers_rejected=11/11 positive=2/2 fresh_positive=2/2 fresh_forgers=2/2 oracles_rejected=5/5
+## corpus/evidence/round80/controls/v7-legit-matrix-after.txt  (lines=216)
+  head:
+    MATRIX_PATH=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round76/loader-matrix-v3.py
+    MATRIX_SHA256=b79d6441057a01b27eb465c6b0625cd46502114f8b622b370c2cd2805c81913f
+    LANE_REV=b7803829922770b890e9f4efdd30d12c3695439a
+    RUNS=1 CHILD_TIMEOUT=6 MATRIX_TIMEOUT=300 PERMUTE=True CONTENT=True FRESH=2
+    MATRIX RUN FORGER subject-map 0 matrix_exit=1 marks=4/12/FAIL content=ok
+  tail:
+    RECEIPT_LINES=216
+    BATTERY=PASS forgers_rejected=11/11 positive=2/2 fresh_positive=2/2 fresh_forgers=2/2 oracles_rejected=5/5
+## corpus/evidence/round80/controls/v7-legit-matrix-r80.txt  (lines=219)
+  head:
+    # round-80 C1 after measurement, re-run on this host at the base revision
+    # command: python3 -B corpus/evidence/round80/matrix-battery-v7.py --matrix corpus/evidence/round76/loader-matrix-v3.py --work /fast/scratch/hyaku/chousa-r80/l1/v7 --runs 1 --fresh 2 --rev b7803829922770b890e9f4efdd30d12c3695439a
+    MATRIX_PATH=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round76/loader-matrix-v3.py
+    MATRIX_SHA256=b79d6441057a01b27eb465c6b0625cd46502114f8b622b370c2cd2805c81913f
+    LANE_REV=b7803829922770b890e9f4efdd30d12c3695439a
+  tail:
+    BATTERY=PASS forgers_rejected=11/11 positive=2/2 fresh_positive=2/2 fresh_forgers=2/2 oracles_rejected=5/5
+    # exit: 0
+
+$ diff <(tail -n +3 prefreeze) after
+IDENTICAL_BODY (exit 0)
+
+$ grep -n "instrument|battery sha" controls/*.txt
+corpus/evidence/round80/controls/oracle-before-r80.txt:4:BATTERY_SHA256=bb91406e9130d9a1960d99226c69380435fc933385db79e0e6ea6b5542a61e1d
+corpus/evidence/round80/controls/oracle-structure-v6-accepted.txt:4:BATTERY_SHA256=bb91406e9130d9a1960d99226c69380435fc933385db79e0e6ea6b5542a61e1d
+
+$ git cat-file -e b7803829:corpus/evidence/round80/matrix-battery-v7.py    # does the named revision contain the instrument?
+fatal: path 'corpus/evidence/round80/matrix-battery-v7.py' exists on disk, but not in 'b7803829922770b890e9f4efdd30d12c3695439a'
+# exit=128
+$ git log --oneline --diff-filter=A -- corpus/evidence/round80/matrix-battery-v7.py
+0f59b985 chousa r80: preserve in-flight work at hyaku run-15 wrap-up (L1 died on provider failure; not a landed round)

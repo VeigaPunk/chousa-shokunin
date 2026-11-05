@@ -1,0 +1,32 @@
+# sweep 1: instrument sha256 at the tip vs claims.md table
+bb91406e9130d9a1960d99226c69380435fc933385db79e0e6ea6b5542a61e1d  corpus/evidence/round79/matrix-battery-v6.py
+b79d6441057a01b27eb465c6b0625cd46502114f8b622b370c2cd2805c81913f  corpus/evidence/round76/loader-matrix-v3.py
+2614b11692367393ba1b339aa707c714a06ce72589b347075cbdb3c4f06428db  .ufo/waves/round-79/w1/R79ExecC/matrix-structure-identity.py
+35351b2328bb6a284da13e61240a6ec598f39a148b8d8948d4e3d60dd78d914d  corpus/evidence/round80/matrix-battery-v7.py
+580233adaa1cf23b3a24012d05d7e5a2e313f7f4628d382f245433117c5e0289  corpus/evidence/round80/oracle-check.py
+d9e426216665a098cd90adf8fbf5e5dd62e02dc7b5b707c322b404b3eb55c553  corpus/evidence/round80/gate-grounding-check.py
+3cb234be36a3d0d5d5523f16e5b7bb6926bbd0be8d0701d6229f0d8690ca9f64  corpus/evidence/round80/forgers/a10-payload-decode.py
+# exit: 0
+# sweep 2: control receipt shape (exit trailer / REV= / LANE_REV= / first line) at tip 44d09edf
+corpus/evidence/round80/controls/grounding-before-r80.txt exit_trailer=1 REV_key=0 LANE_REV_key=1 first=[# round-80 C2 before receipt, re-run at the round-80 base re]
+corpus/evidence/round80/controls/grounding-before.txt exit_trailer=1 REV_key=0 LANE_REV_key=1 first=[# round-80 C2 before receipt: the gate-grounding counter at ]
+corpus/evidence/round80/controls/oracle-before-r80.txt exit_trailer=1 REV_key=0 LANE_REV_key=0 first=[# round-80 C1 do-nothing control, re-run at the round-80 bas]
+corpus/evidence/round80/controls/oracle-structure-v6-accepted.txt exit_trailer=1 REV_key=0 LANE_REV_key=0 first=[# round-80 C1 do-nothing control: the round-79 battery v6 wi]
+corpus/evidence/round80/controls/v7-legit-matrix-after.txt exit_trailer=0 REV_key=0 LANE_REV_key=1 first=[MATRIX_PATH=/home/vgpnk/Projects/shokunin/chousa-shokunin/co]
+corpus/evidence/round80/controls/v7-legit-matrix-prefreeze.txt exit_trailer=0 REV_key=0 LANE_REV_key=1 first=[# round-80 C1 prefreeze measurement: v7 with the legitimate ]
+corpus/evidence/round80/controls/v7-legit-matrix-r80.txt exit_trailer=1 REV_key=0 LANE_REV_key=1 first=[# round-80 C1 after measurement, re-run on this host at the ]
+# exit: 0
+# sweep 3: /tmp paths in committed round-80 evidence at tip (expect none)
+# exit: 0 (git grep exits 1 on no match)
+# sweep 4: CJK-quoting SOURCES rows added by round 79 (ee70e6df..acca2449)
+0
+# exit: 1
+# sweep 5: S200 claim count vs record
+claims.md:
+62:27-word
+90:15-word
+lesson GATE-RECORD at 44d09edf:
+S200	words=20
+S201	words=25
+S202	words=2
+# exit: 0

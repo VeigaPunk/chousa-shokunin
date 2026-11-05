@@ -1,0 +1,381 @@
+COMMAND git -C /home/vgpnk/Projects/shokunin/kotoba-shokunin show 760e1c5edfdefb4767420f711d08f669952de013:verifiers/check_gate_registry.py
+EXIT 0
+SHA256 01b8ad1b1a2d9f7568dc6b970cd5c9ec621bf58af411973f001fa3ad0c35ddce
+1: #!/usr/bin/env python3
+2: r"""check_gate_registry.py -- frozen counter for the round-54 C2 (consistency) claim.
+3: 
+4: Round 54, claim C2 (axis: consistency, the calibration sub-axis this lane
+5: owns): the lane's registry home, `SKILL.md` (PROTOCOL.md § Gate standard,
+6: Registry), has no `## Gate registry` table, so the lane's own description of
+7: its gates and the scripts in `verifiers/` cannot be compared.  Round 54 adds
+8: the table; this counter counts how many of the lane's verifier scripts have a
+9: registry row that agrees with the repository at the measured revision.
+10: 
+11: This counter is frozen at the round-54 plan commit.  The heading, the header,
+12: the universe rule, the allowed kinds and verdict classes and the owner are
+13: pinned here and never read from the revision measured.  A later change is a
+14: second measurement, never the declared one (corpus/QUALITY.md Q28).
+15: 
+16: Universe (M): every blob directly under `verifiers/` at the revision whose
+17: name ends in `.py` or `.sh` (`git ls-tree`, no recursion; `__pycache__` and
+18: `fixtures/` are trees and never count).
+19: 
+20: A verifier `verifiers/F` is CONFORMANT iff exactly one row of the first table
+21: under the heading `## Gate registry` in SKILL.md (header cells, lower-cased,
+22: backticks stripped: `name | kind | entry command | verdict map | self-test |
+23: pinned values | write scope | owner`) has name cell `verifiers/F`, and:
+24:   * kind cell is `gate` or `probe`;
+25:   * the entry-command cell contains the text `verifiers/F`;
+26:   * the verdict-map cell declares at least one `<code>=<class>` pair
+27:     (`=`, `->` or `→`; class one of clean, failed, could-not-evaluate), no
+28:     code twice; a `gate` declares `0=clean` and `1=failed`;
+29:   * the self-test cell is `none` or names one or more backticked flags (`--x`).
+30:     Each named flag must be an exact active handler in the file: a Python
+31:     `add_argument` call with that exact string argument, or a shell `case` arm
+32:     whose exact pattern is that flag. Comments and longer lookalike flags do
+33:     not count. A `gate` may not say `none`.
+34:   * a `probe` is rejected if its verdict map declares `1=failed` or its source
+35:     has an exact active `--self-test` handler. This check reads only the row's
+36:     verdict pairs and the script's Python AST `add_argument` string arguments
+37:     or shell `case` arms; it does not run the script. This is a narrow
+38:     failure-capability rule, not a proof of all possible exit behavior (Q31).
+39:   * the pinned-values cell is `none`, `in-file`, or one or more backticked
+40:     repo-relative paths each of which exists at the revision (`git cat-file -e
+41:     <rev>:<path>`); a `gate` may not say `none`;
+42:   * the write-scope cell is non-empty and not a dash;
+43:   * the owner cell is `kotoba`.
+44: 
+45: A row whose name cell is a `verifiers/...` path outside the universe is a
+46: PHANTOM row. The counter does not run verifier scripts or prove their actual
+47: exit statuses; reviewers remain responsible for the limits of the checks
+48: above (Q31).
+49: 
+50: Output: `gate registry rows conformant <K> of <M> lane verifiers; phantom <P>`.
+51: Exit 0 iff K == M and P == 0, 1 otherwise, 2 = could not evaluate.
+52: 
+53: Usage:
+54:   python3 -B verifiers/check_gate_registry.py --rev <rev> [--json]
+55:   python3 -B verifiers/check_gate_registry.py --self-test
+56: """
+57: from __future__ import annotations
+58: 
+59: import ast
+60: import argparse
+61: import json
+62: import re
+63: import subprocess
+64: import sys
+65: from pathlib import Path
+66: 
+67: LANE = Path(__file__).resolve().parent.parent
+68: HEADING = "## Gate registry"
+69: HEADER = ("name", "kind", "entry command", "verdict map", "self-test",
+70:           "pinned values", "write scope", "owner")
+71: KINDS = ("gate", "probe")
+72: CLASSES = ("clean", "failed", "could-not-evaluate")
+73: OWNER = "kotoba"
+74: PAIR_RE = re.compile(r"(\d+)\s*(?:=|->|\u2192)\s*(clean|failed|could-not-evaluate)\b")
+75: FLAG_RE = re.compile(r"`(--[A-Za-z0-9][A-Za-z0-9-]*)`")
+76: PATH_RE = re.compile(r"`([^`\s]+)`")
+77: 
+78: def has_flag_handler(path: str, src: bytes, flag: str) -> bool:
+79:     if path.endswith(".py"):
+80:         try:
+81:             tree = ast.parse(src.decode("utf-8"))
+82:         except (SyntaxError, UnicodeDecodeError):
+83:             return False
+84:         return any(
+85:             isinstance(node, ast.Call)
+86:             and isinstance(node.func, ast.Attribute)
+87:             and node.func.attr == "add_argument"
+88:             and any(isinstance(arg, ast.Constant) and arg.value == flag
+89:                     for arg in node.args)
+90:             for node in ast.walk(tree)
+91:         )
+92:     if path.endswith(".sh"):
+93:         in_case = False
+94:         for line in src.decode("utf-8", errors="replace").splitlines():
+95:             if re.match(r"^\s*#", line):
+96:                 continue
+97:             if re.match(r"^\s*case\b.*\bin\b", line):
+98:                 in_case = True
+99:                 continue
+100:             if in_case and re.match(r"^\s*esac(?:\s|$)", line):
+101:                 in_case = False
+102:                 continue
+103:             if in_case and re.match(r"^\s*" + re.escape(flag) + r"\)(?:\s|$)", line):
+104:                 return True
+105:     return False
+106: 
+107: 
+108: def git(rev_args: list[str]) -> subprocess.CompletedProcess:
+109:     return subprocess.run(["git", "-C", str(LANE)] + rev_args, capture_output=True)
+110: 
+111: 
+112: class Tree:
+113:     """Read access to one revision of the lane."""
+114: 
+115:     def __init__(self, rev: str):
+116:         self.rev = rev
+117: 
+118:     def universe(self) -> list[str]:
+119:         r = git(["ls-tree", "-z", self.rev, "verifiers/"])
+120:         if r.returncode != 0:
+121:             raise RuntimeError("git ls-tree failed: %s" % r.stderr.decode(errors="replace").strip())
+122:         out = []
+123:         for rec in r.stdout.decode("utf-8").split("\0"):
+124:             if not rec:
+125:                 continue
+126:             meta, _, path = rec.partition("\t")
+127:             if meta.split()[1] == "blob" and (path.endswith(".py") or path.endswith(".sh")):
+128:                 out.append(path)
+129:         return sorted(out)
+130: 
+131:     def read(self, path: str) -> bytes | None:
+132:         r = git(["show", "%s:%s" % (self.rev, path)])
+133:         return r.stdout if r.returncode == 0 else None
+134: 
+135:     def exists(self, path: str) -> bool:
+136:         return git(["cat-file", "-e", "%s:%s" % (self.rev, path.rstrip("/"))]).returncode == 0
+137: 
+138: 
+139: def cells(line: str) -> list[str]:
+140:     s = line.strip()
+141:     if not (s.startswith("|") and s.endswith("|")) or len(s) < 2:
+142:         return []
+143:     return [c.strip() for c in s[1:-1].split("|")]
+144: 
+145: 
+146: def clean(cell: str) -> str:
+147:     return re.sub(r"[`*]", "", cell).strip().lower()
+148: 
+149: 
+150: def registry_rows(text: str) -> list[list[str]]:
+151:     rows, in_sec, header_ok, done = [], False, False, False
+152:     for ln in text.splitlines():
+153:         m = re.match(r"^(#{1,6})\s+", ln)
+154:         if m:
+155:             if ln.rstrip() == HEADING:
+156:                 in_sec, header_ok = True, False
+157:                 continue
+158:             if in_sec and len(m.group(1)) <= 2:
+159:                 in_sec = False
+160:             continue
+161:         if not in_sec or done:
+162:             continue
+163:         c = cells(ln)
+164:         if not c:
+165:             if header_ok and rows:
+166:                 done = True
+167:             continue
+168:         if not header_ok:
+169:             if tuple(clean(x) for x in c[:len(HEADER)]) == HEADER:
+170:                 header_ok = True
+171:             continue
+172:         if all(re.fullmatch(r":?-{3,}:?", x) for x in c):
+173:             continue
+174:         rows.append(c + [""] * (len(HEADER) - len(c)))
+175:     return rows
+176: 
+177: 
+178: def judge_row(r: list[str], path: str, src: bytes, exists) -> list[str]:
+179:     why = []
+180:     kind = clean(r[1])
+181:     if kind not in KINDS:
+182:         why.append("kind %r" % r[1])
+183:     if path not in r[2]:
+184:         why.append("entry command lacks %s" % path)
+185:     pairs = PAIR_RE.findall(r[3])
+186:     codes = [p[0] for p in pairs]
+187:     if not pairs:
+188:         why.append("verdict map declares no code=class pair")
+189:     if len(codes) != len(set(codes)):
+190:         why.append("verdict map declares a code twice")
+191:     if kind == "gate" and not (("0", "clean") in pairs and ("1", "failed") in pairs):
+192:         why.append("gate verdict map lacks 0=clean and 1=failed")
+193:     if kind == "probe":
+194:         if ("1", "failed") in pairs:
+195:             why.append("probe verdict map declares 1=failed")
+196:         if has_flag_handler(path, src, "--self-test"):
+197:             why.append("probe script has an exact --self-test handler")
+198:     st = r[4].strip()
+199:     if clean(st) == "none":
+200:         if kind == "gate":
+201:             why.append("gate with self-test none")
+202:     else:
+203:         flags = FLAG_RE.findall(st)
+204:         if not flags:
+205:             why.append("self-test cell names no backticked flag")
+206:         for f in flags:
+207:             if not has_flag_handler(path, src, f):
+208:                 why.append("self-test flag %s lacks an exact handler" % f)
+209:     pv = r[5].strip()
+210:     if clean(pv) == "none":
+211:         if kind == "gate":
+212:             why.append("gate with pinned values none")
+213:     elif clean(pv) != "in-file":
+214:         paths = PATH_RE.findall(pv)
+215:         if not paths:
+216:             why.append("pinned-values cell names no backticked path")
+217:         for p in paths:
+218:             if p.startswith("/") or ".." in p.split("/") or not exists(p):
+219:                 why.append("pinned path %s does not exist" % p)
+220:     if clean(r[6]) in ("", "-", "\u2014", "\u2013"):
+221:         why.append("write scope empty")
+222:     if clean(r[7]) != OWNER:
+223:         why.append("owner %r" % r[7])
+224:     return why
+225: 
+226: 
+227: def judge(skill: str, universe: list[str], read, exists) -> tuple[list[dict], list[str]]:
+228:     rows = registry_rows(skill)
+229:     report = []
+230:     for path in universe:
+231:         mine = [r for r in rows if clean(r[0]) == path.lower()]
+232:         if len(mine) != 1:
+233:             report.append({"verifier": path, "conformant": False,
+234:                            "why": ["registry rows naming it: %d (need 1)" % len(mine)]})
+235:             continue
+236:         src = read(path) or b""
+237:         why = judge_row(mine[0], path, src, exists)
+238:         report.append({"verifier": path, "conformant": not why, "why": why})
+239:     uni = {p.lower() for p in universe}
+240:     phantom = [clean(r[0]) for r in rows
+241:                if clean(r[0]).startswith("verifiers/") and clean(r[0]) not in uni]
+242:     return report, phantom
+243: 
+244: 
+245: def self_test() -> int:
+246:     assertions = 0
+247:     failures = 0
+248: 
+249:     def check(name: str, actual: object, expected: object) -> None:
+250:         nonlocal assertions, failures
+251:         assertions += 1
+252:         if actual != expected:
+253:             failures += 1
+254:             print("FAIL %s: got %r, expected %r" % (name, actual, expected))
+255: 
+256:     files = {"verifiers/a.py": b"import argparse\nap=argparse.ArgumentParser()\n"
+257:              b"ap.add_argument('--self-test')", "verifiers/b.sh": b"echo",
+258:              "verifiers/base.json": b"{}"}
+259:     uni = ["verifiers/a.py", "verifiers/b.sh"]
+260:     head = ("# s\n\n## Gate registry\n\n| Name | Kind | Entry command | Verdict map | Self-test |"
+261:             " Pinned values | Write scope | Owner |\n|---|---|---|---|---|---|---|---|\n")
+262:     row_a = ("| `verifiers/a.py` | gate | `python3 -B verifiers/a.py` | 0=clean, 1=failed, "
+263:              "2=could-not-evaluate | `--self-test` | `verifiers/base.json` | none (read-only) | kotoba |\n")
+264:     row_b = ("| `verifiers/b.sh` | probe | `bash verifiers/b.sh` | 0=clean | none | none |"
+265:              " tmp clones | kotoba |\n")
+266:     skill = head + row_a + row_b + "\n## Next\n"
+267: 
+268:     def ok(sk=skill, u=uni, fs=files):
+269:         rep, ph = judge(sk, u, fs.get, lambda p: p in fs)
+270:         return [r["verifier"] for r in rep if r["conformant"]], ph
+271: 
+272:     check("base world: both conformant", ok(), (["verifiers/a.py", "verifiers/b.sh"], []))
+273:     check("missing row", ok(sk=head + row_a), (["verifiers/a.py"], []))
+274:     check("duplicate row", ok(sk=head + row_a + row_a + row_b), (["verifiers/b.sh"], []))
+275:     check("phantom row", ok(sk=skill.replace("## Next", "") + row_b.replace("b.sh", "c.sh")),
+276:           (["verifiers/a.py", "verifiers/b.sh"], []))
+277:     check("phantom row counted when inside the table",
+278:           ok(sk=head + row_a + row_b + row_b.replace("b.sh", "c.sh")),
+279:           (["verifiers/a.py", "verifiers/b.sh"], ["verifiers/c.sh"]))
+280:     check("self-test flag absent from file",
+281:           ok(sk=skill.replace("`--self-test`", "`--selftest`")), (["verifiers/b.sh"], []))
+282:     borrowed = (b"import argparse\nap=argparse.ArgumentParser()\n"
+283:                 b"ap.add_argument('--other')\n# --self-test is handled elsewhere\n")
+284:     check("self-test flag borrowed in a comment",
+285:           ok(fs={**files, "verifiers/a.py": borrowed}), (["verifiers/b.sh"], []))
+286:     check("shell exact case arm",
+287:           has_flag_handler("verifiers/b.sh",
+288:                            b'case "$1" in\n  --self-test) SELFTEST=1 ;;\nesac\n',
+289:                            "--self-test"), True)
+290:     check("shell lookalike case arm",
+291:           has_flag_handler("verifiers/b.sh",
+292:                            b'case "$1" in\n  --self-testing) SELFTEST=1 ;;\nesac\n',
+293:                            "--self-test"), False)
+294:     check("shell comment is not a case arm",
+295:           has_flag_handler("verifiers/b.sh",
+296:                            b'case "$1" in\n  # --self-test) SELFTEST=1 ;;\nesac\n',
+297:                            "--self-test"), False)
+298:     check("gate with self-test none", ok(sk=skill.replace("`--self-test`", "none")),
+299:           (["verifiers/b.sh"], []))
+300:     check("gate lacking 1=failed", ok(sk=skill.replace("1=failed, ", "")), (["verifiers/b.sh"], []))
+301:     check("gate mapping 1 to clean", ok(sk=skill.replace("1=failed", "1=clean")),
+302:           (["verifiers/b.sh"], []))
+303:     check("code declared twice", ok(sk=skill.replace("2=could-not-evaluate", "1=could-not-evaluate")),
+304:           (["verifiers/b.sh"], []))
+305:     check("arrow form accepted", ok(sk=skill.replace("0=clean, 1=failed", "0 \u2192 clean, 1 -> failed")),
+306:           (["verifiers/a.py", "verifiers/b.sh"], []))
+307:     check("pinned path missing", ok(sk=skill.replace("`verifiers/base.json`", "`verifiers/gone.json`")),
+308:           (["verifiers/b.sh"], []))
+309:     check("pinned path climbing out", ok(sk=skill.replace("`verifiers/base.json`", "`../x/base.json`")),
+310:           (["verifiers/b.sh"], []))
+311:     check("gate pinned none", ok(sk=skill.replace("`verifiers/base.json`", "none")),
+312:           (["verifiers/b.sh"], []))
+313:     check("in-file pinned accepted", ok(sk=skill.replace("`verifiers/base.json`", "in-file")),
+314:           (["verifiers/a.py", "verifiers/b.sh"], []))
+315:     check("bad kind", ok(sk=skill.replace("| probe |", "| tool |")), (["verifiers/a.py"], []))
+316:     check("entry command not naming file", ok(sk=skill.replace("`bash verifiers/b.sh`", "`bash b.sh`")),
+317:           (["verifiers/a.py"], []))
+318:     check("wrong owner", ok(sk=skill.replace("tmp clones | kotoba", "tmp clones | kake")),
+319:           (["verifiers/a.py"], []))
+320:     check("empty write scope", ok(sk=skill.replace("tmp clones", "\u2014")), (["verifiers/a.py"], []))
+321:     check("table under another heading not read", ok(sk=skill.replace("## Gate registry", "## Gates")),
+322:           ([], []))
+323:     check("wrong header not read", ok(sk=skill.replace("| Owner |", "| Who |")), ([], []))
+324:     check("probe without any pair", ok(sk=skill.replace("| 0=clean | none |", "| exits | none |")),
+325:           (["verifiers/a.py"], []))
+326:     probe_failed = row_b.replace("| 0=clean |", "| 0=clean, 1=failed |")
+327:     check("probe with failed verdict is rejected",
+328:           ok(sk=head + row_a + probe_failed), (["verifiers/a.py"], []))
+329:     probe_none = (row_a.replace("| gate |", "| probe |")
+330:                   .replace("0=clean, 1=failed, 2=could-not-evaluate", "0=clean")
+331:                   .replace("| `--self-test` | `verifiers/base.json` |", "| none | none |"))
+332:     check("all-probe/none table rejects script with self-test handler",
+333:           ok(sk=head + probe_none + row_b), (["verifiers/b.sh"], []))
+334: 
+335:     print("self-test: %d failure(s) over %d assertions" % (failures, assertions))
+336:     return 1 if failures else 0
+337: 
+338: 
+339: def main(argv: list[str] | None = None) -> int:
+340:     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+341:     ap.add_argument("--rev")
+342:     ap.add_argument("--json", action="store_true")
+343:     ap.add_argument("--self-test", action="store_true")
+344:     args = ap.parse_args(argv)
+345:     if args.self_test:
+346:         if args.rev or args.json:
+347:             ap.error("--self-test cannot be combined with --rev or --json")
+348:         return self_test()
+349:     if not args.rev:
+350:         ap.error("--rev is required")
+351:     try:
+352:         t = Tree(args.rev)
+353:         universe = t.universe()
+354:         raw = t.read("SKILL.md")
+355:         if raw is None:
+356:             raise RuntimeError("SKILL.md absent at %s" % args.rev)
+357:         skill = raw.decode("utf-8")
+358:         report, phantom = judge(skill, universe, t.read, t.exists)
+359:     except (RuntimeError, UnicodeDecodeError, OSError) as e:
+360:         print("could-not-evaluate: %s" % e, file=sys.stderr)
+361:         return 2
+362:     k = sum(1 for r in report if r["conformant"])
+363:     if args.json:
+364:         print(json.dumps({"conformant": k, "of": len(universe), "phantom": phantom,
+365:                           "verifiers": report}, indent=1))
+366:     else:
+367:         for r in report:
+368:             print("%-44s %s %s" % (r["verifier"], "OK" if r["conformant"] else "no",
+369:                                    "; ".join(r["why"])))
+370:         for p in phantom:
+371:             print("PHANTOM %s" % p)
+372:     print("gate registry rows conformant %d of %d lane verifiers; phantom %d"
+373:           % (k, len(universe), len(phantom)))
+374:     return 0 if k == len(universe) and not phantom else 1
+375: 
+376: 
+377: if __name__ == "__main__":
+378:     sys.exit(main())

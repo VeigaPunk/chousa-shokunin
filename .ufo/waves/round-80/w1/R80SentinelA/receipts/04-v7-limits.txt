@@ -1,0 +1,77 @@
+# ITEM 4 — declared instrument limits of corpus/evidence/round80/matrix-battery-v7.py (sha 35351b2328bb6a284da13e61240a6ec598f39a148b8d8948d4e3d60dd78d914d)
+$ grep -nE "mkdtemp|TemporaryDirectory|tempfile|TMPDIR" corpus/evidence/round80/matrix-battery-v7.py
+# exit=1 (1 = no match)
+
+$ grep -nE "\"/[A-Za-z]|'/[A-Za-z]" corpus/evidence/round80/matrix-battery-v7.py      # absolute path literals
+# exit=1 (1 = no match)
+
+$ grep -nE "/home/|/fast/|/tmp/" corpus/evidence/round80/matrix-battery-v7.py
+# exit=1 (1 = no match)
+
+$ grep -n "HERE = \|LANE = \|WITNESS = " corpus/evidence/round80/matrix-battery-v7.py
+100:HERE = pathlib.Path(__file__).resolve().parent
+101:LANE = HERE.parents[2]
+125:WITNESS = LANE / "corpus/evidence/round76/loader-matrix-v3.py"
+
+$ grep -n "add_argument" corpus/evidence/round80/matrix-battery-v7.py
+551:    ap.add_argument("--matrix", default=None)
+552:    ap.add_argument("--work", required=True)
+553:    ap.add_argument("--runs", type=int, default=2)
+554:    ap.add_argument("--matrix-timeout", type=int, default=300)
+555:    ap.add_argument("--fresh", type=int, default=2,
+557:    ap.add_argument("--no-fresh", action="store_true",
+559:    ap.add_argument("--rev", default=None,
+561:    ap.add_argument("--no-permute", action="store_true")
+562:    ap.add_argument("--no-content", action="store_true")
+563:    ap.add_argument("--print-order", action="store_true",
+565:    ap.add_argument("--reemit-only", action="store_true",
+
+$ grep -n "reemit(\|_emit_tree(\|work.mkdir\|write_text" corpus/evidence/round80/matrix-battery-v7.py   # every write target
+193:    work.mkdir(parents=True, exist_ok=True)
+284:def _emit_tree(tree: ast.Module, work: pathlib.Path) -> pathlib.Path:
+302:    target.write_text(WRAPPER.format(payload=payload))
+306:def reemit(source: pathlib.Path, work: pathlib.Path) -> pathlib.Path:
+313:    return _emit_tree(ast.parse(source.read_text()), work)
+438:    work.mkdir(parents=True, exist_ok=True)
+478:        copy = _emit_tree(tree, work)
+479:        base_copy = _emit_tree(ast.parse(base_path.read_text()), work)
+518:            subject = source if pre else reemit(source, work)
+573:        work.mkdir(parents=True, exist_ok=True)
+590:            copy = reemit(source, run)
+632:            copy = reemit(source, run)
+
+$ sed -n "285,305p" corpus/evidence/round80/matrix-battery-v7.py    # _emit_tree: where copies are written
+    """Write one marshalled-wrapper copy of `tree` under a fresh directory."""
+    _drop_docstrings(tree)
+    _rename(tree)
+    pad = "_" + secrets.token_hex(5)
+    stmt = ast.parse(f"{pad} = {secrets.randbelow(10 ** 9)}\n").body[0]
+    futures = [n.lineno for n in tree.body
+               if isinstance(n, ast.ImportFrom) and n.module == "__future__"]
+    floor = max(futures) if futures else 0
+    anchors = [i for i, n in enumerate(tree.body) if n.lineno > floor]
+    pos = anchors[secrets.randbelow(len(anchors))] if anchors else len(tree.body)
+    tree.body.insert(pos, stmt)
+    ast.fix_missing_locations(tree)
+    code = compile(tree, "<" + secrets.token_hex(6) + ">", "exec")
+    payload = base64.b85encode(marshal.dumps(code)).decode()
+    d = work / secrets.token_hex(8)
+    d.mkdir(parents=True)
+    target = d / "subject.py"
+    target.write_text(WRAPPER.format(payload=payload))
+    return target
+
+
+
+$ grep -n "git\", \"-C" corpus/evidence/round80/matrix-battery-v7.py     # git subprocess in the battery
+657:        p = subprocess.run(["git", "-C", str(LANE), "rev-parse", "master"],
+
+$ sed -n "655,662p" corpus/evidence/round80/matrix-battery-v7.py     # _lane_rev: which revision it names
+def _lane_rev() -> str:
+    try:
+        p = subprocess.run(["git", "-C", str(LANE), "rev-parse", "master"],
+                           capture_output=True, text=True, timeout=20)
+    except (OSError, subprocess.TimeoutExpired):
+        return "unavailable"
+    return p.stdout.strip() or "unavailable"
+

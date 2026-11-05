@@ -1,0 +1,12 @@
+# 153 full text
+153. **A control receipt names the lane revision it was measured at, and a revision it names must resolve.** Round 79's `corpus/evidence/round79/controls/selfcheck2-after.txt` printed `REV=worktree`, 
+so the after value was not re-derivable from a pinned revision (`corpus/lessons/round-79-verifier-spotcheck.md` routed defect 6). Round 80's receipts carry a `# command:` line and a `LANE_REV=`/`--rev
+ <40-hex>` naming, and the after value is re-measured at the rev that carries the landed bytes (`corpus/evidence/round80/controls/grounding-after.txt`, `v7-legit-matrix-r80.txt`). Check: `grep -L 'REV
+=[0-9a-f]\{40\}\|LANE_REV=[0-9a-f]\{40\}' corpus/evidence/round80/controls/*.txt` names every unstamped receipt, and every named revision answers `git cat-file -e <rev>^{commit}`.
+# 154 full text
+154. **A located quote is re-opened, `grep -c`'d at the named location and `wc -w`'d before the row is written, and a row's anchor span is checked against the cited file's length.** Round 79 wrote thr
+ee records whose stated facts its own bytes contradicted: a word count off by two, a count off by one, and an anchor ("lines 1-20") naming a span longer than the eleven-line file it cited, with the qu
+ote absent from it (`corpus/lessons/round-79-verifier-spotcheck.md` section 3, routed defect 1). Round 80 measured all four new records before writing them (12/20/25/2 words; spans of 286, 1067, 1067 
+and 11 lines) and the counter re-derives each. Check: for every new row, `git show <anchor rev>:<path> | wc -l` bounds the anchor span, `grep -c` of the quote on the named line is at least 1, and `len
+(quote.split())` equals the recorded count; a count the bytes contradict is a record defect closed by an append-only row whose `teaches` opens `supersedes S### —`.
+# exit: 0

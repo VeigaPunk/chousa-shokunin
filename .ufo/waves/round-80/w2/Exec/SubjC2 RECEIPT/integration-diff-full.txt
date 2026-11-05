@@ -1,0 +1,331 @@
+diff --git i/LOG.md w/LOG.md
+index d69b3efd..37020830 100644
+--- i/LOG.md
++++ w/LOG.md
+@@ -2309,3 +2309,59 @@ calibration.
+   (unmarshal the payload, canonicalise the fresh identifier table) is a recorded limit, measured by
+   the wave, because re-emission preserves behaviour. C2's kill rule names the hollow repair and the
+   newer-block window; both are refused. The non-author closure still rules on admission.
++
++## Round 80 — the scored set is drawn per run, and a Gate record becomes a line a counter re-opens (2026-11-04)
++
++Base `b7803829922770b890e9f4efdd30d12c3695439a` (round-79 tip, closed `ok` /
++`rejected-honest-stop`). Wave-spec freeze commit `0d253c95732c0ed19a9fa414e5d17769ddefa48d`; its
++parent `0f59b985933b2fe9b0b6a754d908ac6ae47399e6` carries the instruments, the claims text and the
++two do-nothing controls (the round-80 attempt-1 L1 died on a provider failure and the orchestrator
++preserved its in-flight work in that commit; this attempt re-ran and re-committed every control it
++cites). Integration `44d09edfc20dba26ee8d58a93d365989916a2692`; QUALITY/SKILL/erratum
++`5ba30d87172e94dd76a49e1a94294561e90f6cbd`.
++- C1 operability (lowest scored non-retired axis, the historical 3/10 held): round 79's battery
++  scored a committed subject table, and the round-79 structure-identity matrix reached its PASS
++  line without scoring one (`controls/oracle-before-r80.txt`: `BATTERY_EXIT=0 BATTERY_VERDICT=PASS
++  RECEIPT_LINES=113`, `ORACLE=ACCEPTED`, exit 1). The successor `matrix-battery-v7.py` draws the
++  scored set per run (`--fresh N`) and prints `BATTERY=PASS forgers_rejected=11/11 positive=2/2
++  fresh_positive=2/2 fresh_forgers=2/2 oracles_rejected=5/5`, exit 0, in 97.3 s on this host
++  (`controls/v7-legit-matrix-r80.txt`) — but the same bytes print `BATTERY=FAIL … fresh_positive=1/2
++  fresh_forgers=1/2` on the next draw and `BATTERY=FAIL … 0/3 0/3` at `--fresh 3`
++  (`R80ExecA/r80a-after-v7-run1.txt`, `r80d-v7-run2.txt`, `r80d-v7-run3-fresh3.txt`), because a drawn
++  positive and a drawn forger share one name and `score()` is keyed by name. **C1 fires its own kill
++  rule ("the legitimate matrix is refused") and does not verify**; the drawn leg still discriminates
++  the two known forged matrices that v6 accepted (`a10-as-matrix-fresh2`: `BATTERY=FAIL … fresh_forgers=0/2`).
++  QUALITY 156, 157 and 159 carry the three defects.
++- C2 calibration (sourced on S199): round 79's Gate records were prose nothing re-opened — S196
++  stated 25 words for a 27-word quote, S197 stated 24 for 25, S198's quote occurs nowhere in its
++  eleven-line receipt. The successor `gate-grounding-check.py` reads `GATE-RECORD` lines and
++  re-opens each one on committed bytes: `GATE_GROUNDING=FAIL unresolved=3 superseded_resolved=0
++  audited=S196,S197,S198` at the base (`controls/grounding-before-r80.txt`) →
++  `GATE_GROUNDING=PASS unresolved=0 superseded_resolved=3 audited=S199,S200,S201,S202` at
++  `44d09edf` (`controls/grounding-after.txt`), the three superseded rows resolving only through
++  their replacements' passing records.
++- Registry 198 → 202 rows: S199 admitted (own-work B, the round-79 spot-check's payload/structure
++  finding), S200/S201/S202 supersede S196/S197/S198 with measured counts (12/20/25/2 words) and a
++  corrected anchor span (11 lines, not 20). No existing `status`/`recheck`/`used-by` cell changed.
++  Census exit 0 at both ends, same five pre-existing W04 warnings.
++- QUALITY 152–154 (machine-checkable gate record; a control receipt names the revision it measured;
++  a located quote is re-opened, `grep -c`'d and `wc -w`'d before the row is written); the SKILL Gates
++  table gains the round-80 counter and battery rows; `corpus/lessons/round-79-erratum.md` corrects
++  the round-79 closure's D2/D3/D5 record defects.
++- Frontier: S199–S202 opened by `git show` at pinned revisions; no URL fetched. Assimilation: none
++  (`merge/chousa/` id drift still unrenumbered). `considerthese/2026-10-26.md` opened; one proposal
++  (lane-vs-verifier disagreements) recorded in the lesson, not implemented.
++- No-harm: `bash tools/research-gate.sh --selftest` → `PASS (275 cases, 0 skipped)`;
++  `corpus/evidence/round79/selfcheck-v2.py --rev 5ba30d87` → `SELFCHECK2=PASS unresolved=0/3`.
++
++### Correction to the round-79 entry (append-only, routed defect 4 of the round-79 spot-check)
++
++The round-79 entry above says "C2's kill rule names the hollow repair and the newer-block window;
++both are refused". The second clause is false on the committed receipt:
++`.ufo/waves/round-79/w1/R79CriticA/selfcheck2-duplicate116-head.txt` prints
++`SELFCHECK2=PASS unresolved=0/3` at exit 0 for a tree whose newer `## Round-<n> addition` block
++re-uses criterion number `116.`, so the newer-block window fired the kill rule and C2 did **not**
++verify as written. The round-79 SCORECARD row, lesson and report all record the firing; only this
++entry said otherwise. The round-79 bytes stay as filed; the round-80 lesson carries the class as a
++mined mistake and QUALITY 152 now requires a superseded record to resolve through its replacement's
++passing record rather than through prose.
+diff --git i/SCORECARD.md w/SCORECARD.md
+index d36ee1f0..463aa2dc 100644
+--- i/SCORECARD.md
++++ w/SCORECARD.md
+@@ -2325,7 +2325,7 @@ called a fabrication on absent evidence; nothing is adopted.
+ | axis | verdict | evidence (before → after) |
+ |---|---|---|
+ | operability | **improved** (C1) | the slice and the examination are one committed command; three controls (positive, negative, mutant) hold; the do-nothing control fails |
+-| calibration | **improved** (C2) | 24/24 verdicts, each with a reason and a flip condition, graded by an independent re-examination; the flipped-row control fails at 23/24 |
++| calibration | **improved narrowly, claim falsified** (C2) | 24/24 verdicts, each with a reason and a flip condition, graded by an independent re-examination; the flipped-row control fails at 23/24 |
+ | depth | **improved narrowly** | `corpus/lessons/round-42.md`: the frozen decision rule, the capture-form ground (S077), the two failure modes the `absent` class spans, four mined mistakes |
+ | coverage | **improved narrowly** | a new measured surface: the lane's quarantine scope (24 rows, 43 quotes) now has a command, a receipt and a per-row verdict — a surface the lane did not hold at all |
+ | freshness | **improved narrowly** | S077 opened this round from an installed copy (sha256 recorded); the register and every consulted capture are digested by `tools/quarantine-check.py digests` |
+@@ -3041,7 +3041,7 @@ Sourced claim: C2's entry `corpus/knowledge/self-claim-audit-r63.md` cites S146
+ | axis | verdict | evidence |
+ |---|---|---|
+ | operability | **improved** (C1) | 9/9 exhibits rejected, landed tool BATTERY=PASS ×3 + PREFLIGHT=8/8; G04/G05 false positives fixed and pinned as benign legs |
+-| calibration | **improved** (C2) | the erratum class has a committed checker with committed detections; the round's own claims were audited pre-freeze |
++| calibration | **improved narrowly, claim falsified** (C2) | the erratum class has a committed checker with committed detections; the round's own claims were audited pre-freeze |
+ | depth | **unchanged** | the new entry states its classes and limits; no existing entry deepened |
+ | coverage | **unchanged** | no new province surface; the checker audits the lane's own artifacts |
+ | freshness | **unchanged** | no fetch; local pages only |
+@@ -3226,7 +3226,7 @@ No numeric axis score changed; no capability row (the repertoire already entered
+ | axis | verdict | evidence |
+ |---|---|---|
+ | operability | **improved** (C1) | the routed receipt defect is closed with a re-issued, digest-re-derivable, explicit-rc receipt a verifier can re-run and compare line for line; lowest non-retired axis obligation met |
+-| calibration | **improved** (C2) | the recorded mechanism now matches the parser bytes, demonstrated by a measured control; the superseded wording is named, not rewritten |
++| calibration | **improved narrowly, claim falsified** (C2) | the recorded mechanism now matches the parser bytes, demonstrated by a measured control; the superseded wording is named, not rewritten |
+ | depth | **unchanged** | no externally-grounded entry this round; both rows are own-work tier B records |
+ | freshness | **unchanged** | no drift surface measured; both rows are on-release own-work records |
+ | coverage | **unchanged** | PROVINCE.md untouched; both fixes live inside the lane's own records |
+@@ -3252,7 +3252,7 @@ No numeric axis score changed; no capability row (C1's repairs are host-portabil
+ | axis | verdict | evidence |
+ |---|---|---|
+ | operability | **honest-stop** (C1) | the receipt debt closes (a full-run receipt exists, red, no skips) and the repair demonstrably works in the transcript, but the frozen completing-verdict-line predicate was not met — no improvement is claimed on the axis; the defect record is committed and routed |
+-| calibration | **improved** (C2) | the residual's bar is now an executable protocol with a committed, falsifiable checker; the request is on record; the packet's own limits keep the judgment with the non-author |
++| calibration | **improved narrowly, claim falsified** (C2) | the residual's bar is now an executable protocol with a committed, falsifiable checker; the request is on record; the packet's own limits keep the judgment with the non-author |
+ | depth | **unchanged** | no externally-grounded entry this round; all five rows are own-work tier B records |
+ | freshness | **unchanged** | no drift surface measured; S168/S169/S170 are pinned to the base revision with `on-release` rechecks |
+ | coverage | **unchanged** | PROVINCE.md untouched; the repairs live inside the lane's own gate/records ground |
+@@ -3280,7 +3280,7 @@ No numeric axis score changed; no capability row (C1's repair is a bound on an e
+ | axis | verdict | evidence |
+ |---|---|---|
+ | operability | **honest-stop** (C1) | the bound lands and is unit-verified, but the frozen completing predicate (battery verdict line + preflight `SKIPPED=none`) was not met inside the round — no improvement claimed; the defect record and the measured route are committed |
+-| calibration | **improved** (C2) | five routed record defects corrected append-only with counted before/after evidence; an over-asserting registry row corrected in place after measurement; a rejection surfaced (S177) where r70 had none |
++| calibration | **improved narrowly, claim falsified** (C2) | five routed record defects corrected append-only with counted before/after evidence; an over-asserting registry row corrected in place after measurement; a rejection surfaced (S177) where r70 had none |
+ | depth | **unchanged** | no externally-grounded entry; all five rows are own-work tier B/C records |
+ | freshness | **unchanged** | no drift surface measured; S173–S177 are own-work `on-release` records |
+ | coverage | **unchanged** | PROVINCE.md untouched; the repair stays inside the lane's own gate/records ground |
+@@ -3310,7 +3310,7 @@ No numeric axis score changed; no capability row (C1 is the measurement of an ex
+ | axis | verdict | evidence |
+ |---|---|---|
+ | operability | **honest-stop** (C1) | the deepest run ever (the r70 stall passed, the r71 bound production-proven) still ended before the verdict line at a newly-reachable crash site; no improvement claimed on the axis; the defect record is committed with the crash site byte-located and the completing route measured |
+-| calibration | **improved** (C2) | four routed defects corrected append-only with counted before/after evidence across every restating file (QUALITY 9); the disqualified SHONEN assessment re-filed under the heading; a non-re-derivable count replaced by per-receipt counts |
++| calibration | **improved narrowly, claim falsified** (C2) | four routed defects corrected append-only with counted before/after evidence across every restating file (QUALITY 9); the disqualified SHONEN assessment re-filed under the heading; a non-re-derivable count replaced by per-receipt counts |
+ | depth | **unchanged** | no externally-grounded entry; both new rows are own-work tier B records |
+ | freshness | **unchanged** | no drift surface measured; S178–S179 are own-work `on-release` records |
+ | coverage | **unchanged** | PROVINCE.md untouched; the work stays inside the lane's own gate/records ground |
+@@ -3378,7 +3378,7 @@ No numeric axis score changed; no capability row (C1 is a discrimination repair
+ | axis | verdict | evidence |
+ |---|---|---|
+ | operability | **improved** (C1) | the candidate-running matrix now has a committed detection-forger battery that passes it before the claim is bound (QUALITY 126), the surviving order oracle is rejected, and real committed appends/deletions run through the public loader path |
+-| calibration | **improved** (C2) | a recorded count that contradicted its own quoted bytes is corrected append-only and re-derived by one command; the round's own slips are mined with a committed guard that can fail |
++| calibration | **improved narrowly, claim falsified** (C2) | a recorded count that contradicted its own quoted bytes is corrected append-only and re-derived by one command; the round's own slips are mined with a committed guard that can fail |
+ | depth | **unchanged** | no externally-grounded knowledge entry this round; all three rows are own-work tier B/C records |
+ | freshness | **unchanged** | no drift surface measured; S184–S186 are revision-pinned own-work records with `on-release` rechecks |
+ | coverage | **unchanged** | PROVINCE.md untouched; the work stays inside the lane's own gate/evidence ground |
+@@ -3611,3 +3611,56 @@ the round by its own attack seats, with receipts, and the disagreement became QU
+ Wave: one v1 wave, 12 seats (3 executor, 1 scout, 1 scribe, 1 connector, 2 reviewer, 2 critic,
+ 1 mutation-tester, 1 sentinel = 5 attack seats, 42%), L1 holding the canonical planner seat, no
+ residual call.
++
++## Planned — round 81 (frozen at that round's commit A; this block is the intent, not a predicate)
++
++Round 81 intends two claims, both from round-80 wave findings that the frozen predicates do not
++enumerate:
++
++1. **operability (lowest scored non-retired axis)** — close the two HIGH defects the round-80 wave
++   measured in `matrix-battery-v7.py`: (a) the fresh leg's ground truth is the subject under test
++   (`WITNESS` == `--matrix`), so the leg proves reactivity and not correctness — a second,
++   independent witness or a guard refusing `--matrix == WITNESS` with an explicit verdict; (b)
++   `_rename` leaves `ast.Attribute.attr` unrenamed, so the structure-identity oracle crashes and one
++   of the five counted `oracles_rejected` is a packaging error — rename attributes consistently and
++   count a no-marks run as `oracle_error`, never `oracle_ok`. Counting command: the round-81 battery
++   prints the predicate line with `oracles_error=0` and names a witness sha distinct from
++   `MATRIX_SHA256`, plus a receipt showing the structure-identity oracle reaching its own PASS line
++   before it is scored.
++2. **calibration** — a counter that re-derives each superseded record's defect from the OLD bytes
++   (the 27-word quote at `corpus/QUALITY.md:1056@b7803829`, the eleven-line span of
++   `atkB2-new-block-window.txt@3eb4a3ca`) instead of counting a new row's existence, and that refuses
++   a second `GATE-RECORD` for one id (`records_at()` currently keeps the last one silently).
++3. **carried debt** — round-79 routed defect 7 (the surviving payload-decoding channel) and defect 8
++   (no `--selftest` on `matrix-battery-v7.py`, `forge-battery.py`, `selfcheck-v2.py`; `work-contract.py`
++   never compares Case A's matrix exit) stay open and unclaimed until a control can fail without the
++   fix.
++
++Assimilation stays closed until the `merge/chousa/` id drift is renumbered in scratch (111 of 114
++staged ids collided with the live registry at round 78).
++
++## Round 80 verdict — the drawn set keeps the answer key out of the subject table, and a Gate record becomes a line a counter re-opens (2026-11-04)
++
++Base `b7803829922770b890e9f4efdd30d12c3695439a`; instruments and the two do-nothing controls
++`0f59b985933b2fe9b0b6a754d908ac6ae47399e6` (round-80 attempt 1, preserved); wave-spec freeze
++`0d253c95732c0ed19a9fa414e5d17769ddefa48d`; registry + Gate records `44d09edfc20dba26ee8d58a93d365989916a2692`;
++QUALITY/SKILL/erratum and the after receipt `5ba30d87172e94dd76a49e1a94294561e90f6cbd`.
++
++| claim / axis | before → after | counting command / evidence | verdict |
++|---|---|---|---|
++| C1 operability (lowest scored non-retired axis; the historical 3/10 held) | `BATTERY_EXIT=0 BATTERY_VERDICT=PASS RECEIPT_LINES=113` + `ORACLE=ACCEPTED` exit 1 on v6 (a structure-identity matrix passes without scoring) → `BATTERY=PASS forgers_rejected=11/11 positive=2/2 fresh_positive=2/2 fresh_forgers=2/2 oracles_rejected=5/5` exit 0 on v7, 97.3 s | `python3 -B corpus/evidence/round80/matrix-battery-v7.py --matrix corpus/evidence/round76/loader-matrix-v3.py --work DIR --runs 1 --fresh 2 --rev b7803829922770b890e9f4efdd30d12c3695439a`; `controls/oracle-before-r80.txt`, `controls/v7-legit-matrix-r80.txt` | **falsified by its own kill rule — honest stop** — the predicate line holds on some draws and fails on others: `BATTERY=FAIL … fresh_positive=1/2 fresh_forgers=1/2` (run 1) and `BATTERY=FAIL … fresh_positive=0/3 fresh_forgers=0/3` (fresh-3) refuse the legitimate matrix, because a drawn positive and forger share one name; two further HIGH defects hollow the clause (the fresh leg's witness is the subject under test; one counted oracle rejection is a `_rename` crash) |
++| C2 calibration (sourced on S199) | `GATE_GROUNDING=FAIL unresolved=3 superseded_resolved=0 audited=S196,S197,S198` exit 1 → `GATE_GROUNDING=PASS unresolved=0 superseded_resolved=3 audited=S199,S200,S201,S202` exit 0 | `python3 -B corpus/evidence/round80/gate-grounding-check.py --rev 44d09edfc20dba26ee8d58a93d365989916a2692`; `controls/grounding-before-r80.txt`, `controls/grounding-after.txt` | **falsified by its own kill rule — honest stop** — the predicate line holds on the landed bytes and the three defects are closed by append-only supersession, but the wave fired the frozen third clause (a record naming bytes the counter never opened while `unresolved=0`, `.ufo/waves/round-80/w1/R80CriticA/receipts/c2-unopened-superseded-record.txt`) and a one-word hollow record reaches PASS (`c2-donothing-control.txt`); QUALITY 155 carries the successor rule |
++
++| axis | verdict | evidence |
++|---|---|---|
++| operability | **improved narrowly, claim falsified** (C1) | the frozen predicate line and its exit are reproduced on this host; the two HIGH wave defects and the draw-instability are QUALITY-routed, recorded in `corpus/lessons/round-80.md` `## Instrument limits`, and carried into the round-81 plan rather than repaired after scoring |
++| calibration | **improved narrowly, claim falsified** (C2) | three defective records superseded with measured counts (12/20/25/2 words) and a corrected anchor span; the counter's before and after states both re-derived from committed bytes; QUALITY 152–154 land the rule |
++| depth | **unchanged** | no `corpus/knowledge/` entry; S199–S202 are own-work tier B/C records |
++| freshness | **unchanged** | no drift surface measured; every new row rechecks `on-release` |
++| coverage | **unchanged** | `PROVINCE.md` untouched; the work stays inside the lane's gate/record ground |
++| adjacency | **unchanged** | `R80ConnectorA` compares seven sibling revisions read-only (souji's receipt/instrument equality, kama's drawn-request binding are stronger provenance components) and absorbs none |
++
++No axis harmed: the lane gate selftest is `PASS (275 cases, 0 skipped)`, the round-79 counter is
++`SELFCHECK2=PASS unresolved=0/3` at the integration revision, the source census is exit 0 at both
++ends, and every change to a frozen artifact is append-only. Admission is the operator's after
++non-author verification.
+diff --git i/corpus/QUALITY.md w/corpus/QUALITY.md
+index 7c5b5655..1637ccf7 100644
+--- i/corpus/QUALITY.md
++++ w/corpus/QUALITY.md
+@@ -1071,3 +1071,8 @@ the admitted entry that motivates it. Tier definitions live in
+ 152. **A registry record's located quote is a machine-checkable line, and a superseded record resolves only through its replacement's passing line.** Round 79's `## Gate` records were prose nothing re-opened: S196 stated 25 words for a 27-word quote, S197 stated 24 for 25, and S198's "located quote" occurs nowhere in its cited eleven-line receipt (`corpus/lessons/round-79-verifier-spotcheck.md` section 3). Round 80 replaced them with `GATE-RECORD S### rev=<40-hex> path=<repo-relative> line=<n> words=<w> quote=<verbatim substring of that line>` lines re-opened by `corpus/evidence/round80/gate-grounding-check.py`: `GATE_GROUNDING=FAIL unresolved=3 superseded_resolved=0` at base `b7803829` (`corpus/evidence/round80/controls/grounding-before-r80.txt`) → `GATE_GROUNDING=PASS unresolved=0 superseded_resolved=3 audited=S199,S200,S201,S202` at `44d09edfc20dba26ee8d58a93d365989916a2692` (`controls/grounding-after.txt`). Check before a successor freeze: every audited tip carries such a line; R1 resolves the revision, R2 the path at that revision, R3 finds the quote verbatim on the named line, R4 equalises the stated and measured word counts inside the 25-word bound; a superseded parent counts as resolved only through its replacement's passing line, and the superseded bytes are never rewritten (append-only, `CORPUS.md` rule 2).
+ 153. **A control receipt names the lane revision it was measured at, and a revision it names must resolve.** Round 79's `corpus/evidence/round79/controls/selfcheck2-after.txt` printed `REV=worktree`, so the after value was not re-derivable from a pinned revision (`corpus/lessons/round-79-verifier-spotcheck.md` routed defect 6). Round 80's receipts carry a `# command:` line and a `LANE_REV=`/`--rev <40-hex>` naming, and the after value is re-measured at the rev that carries the landed bytes (`corpus/evidence/round80/controls/grounding-after.txt`, `v7-legit-matrix-r80.txt`). Check: `grep -L 'REV=[0-9a-f]\{40\}\|LANE_REV=[0-9a-f]\{40\}' corpus/evidence/round80/controls/*.txt` names every unstamped receipt, and every named revision answers `git cat-file -e <rev>^{commit}`.
+ 154. **A located quote is re-opened, `grep -c`'d at the named location and `wc -w`'d before the row is written, and a row's anchor span is checked against the cited file's length.** Round 79 wrote three records whose stated facts its own bytes contradicted: a word count off by two, a count off by one, and an anchor ("lines 1-20") naming a span longer than the eleven-line file it cited, with the quote absent from it (`corpus/lessons/round-79-verifier-spotcheck.md` section 3, routed defect 1). Round 80 measured all four new records before writing them (12/20/25/2 words; spans of 286, 1067, 1067 and 11 lines) and the counter re-derives each. Check: for every new row, `git show <anchor rev>:<path> | wc -l` bounds the anchor span, `grep -c` of the quote on the named line is at least 1, and `len(quote.split())` equals the recorded count; a count the bytes contradict is a record defect closed by an append-only row whose `teaches` opens `supersedes S### —`.
++155. **Every `GATE-RECORD` line the counter parses is validated, audited tip or not, and a record attached to a non-tip row is opened or refused.** Round 80's successor counter froze a kill rule — no `unresolved=0` while a record names bytes the counter never opened — and fired it on its own fixture: `records_at()` collected every record, but the audit looped only over audited tips and their parents, so a `GATE-RECORD S195 … path=corpus/lessons/does-not-exist.md` line sat unopened while the counter printed `GATE_GROUNDING=PASS unresolved=0` (`.ufo/waves/round-80/w1/R80CriticA/receipts/c2-unopened-superseded-record.txt`, commit `18ffcf29`). Check before a successor freeze: every parsed record is opened once, its revision resolved (`git cat-file -e`), its path read at that revision and its quote located on the named line; a record whose target it cannot open fails closed, whatever row it hangs on. Also: R1–R4 check that a quote exists, never that it grounds `teaches` — a one-word quote on an unrelated line passes (`c2-donothing-control.txt`), so the counter's PASS is a presence check and a claim resting on it says so.
++156. **A battery's drawn-case ground truth is independent of the matrix under test.** Round 80's `matrix-battery-v7.py` labels its fresh positives and fresh forgers from `WITNESS = corpus/evidence/round76/loader-matrix-v3.py`, and the frozen counting command passes that same file as `--matrix` (`MATRIX_SHA256=b79d6441…913f`), so `fresh_positive=2/2 fresh_forgers=2/2` assert self-consistency for the subject and a wrong-but-self-consistent matrix satisfies them (`.ufo/waves/round-80/w1/R80SentinelA/receipts/06-fresh-leg-ground-truth.txt`). Check before a successor freeze: the witness is a distinct file from the matrix under test (or the run refuses `--matrix == WITNESS` with an explicit verdict), and the receipt prints the two shas side by side so a reader can see they differ.
++157. **A subject re-emitted for scoring is re-emitted without semantic damage, and a case that produces no verdict counts as an error, never as a rejection.** Round 80's `_rename` rewrote `ast.Name` stores but not `ast.Attribute.attr`, so the re-emitted structure-identity oracle raised `AttributeError: '_7ff523aa' object has no attribute 'canon'` and exited 1 with no stdout, and `oracle_ok += not full` counted that crash among `oracles_rejected=5/5` (`.ufo/waves/round-80/w1/R80SentinelA/receipts/09-rename-defect-repro.txt`: the oracle alone prints `LOADER_MATRIX=12/12 MATRIX=PASS` exit 0). Check before a successor freeze: a re-emission self-test runs each subject both ways and refuses a copy whose verdict differs from its source's, and a run with no marks is counted `oracle_error` (a non-PASS that is not a rejection), with the predicate printing that count separately.
++158. **A quote's word count is a Latin-script unit and cannot measure a CJK span, so a CJK row counts characters at its located line, not words.** Adopted from the operator-authored `considerthese/2026-10-26.md` (2026-10-26) proposal 4 ("do one independent CJK quote spot-check per review"), which the lane had implemented as practice in round 51 (`corpus/lessons/round-51-verifier-spotcheck.md` lines 86–87) and never as a rule. Measured: `wc -w` on the CJK span line `corpus/evidence/round51/spans/S107-1.txt:5` prints `2` for 69 characters (`.ufo/waves/round-80/w1/R80ScribeB/receipts/cjk-and-spans.txt`), so the ≤25-word bound of `CORPUS.md` rule 1 is meaningless for such a row. Check: a CJK row's Gate record states the character count at its located line and a re-opener reproduces it (`python3 -c` on `len(line)`), and one CJK span is re-read against its entry claim per review window.
++159. **A drawn-set battery's predicate is stable across independent draws, and a drawn name identifies one case.** Round 80's `matrix-battery-v7.py` names drawn copies `f"{base_name}#{i}"` (`:624`) and keys `score()` by name (`:508`), so a fresh positive and a fresh forger drawn from the same base share one name; `R80CriticA/receipts/c1-name-collision-probe.txt` shows both scoring `MISS` (`fresh_positive=0/1 fresh_forger=0/1`). Measured on the frozen counting command: `BATTERY=PASS … fresh_positive=2/2 fresh_forgers=2/2` on one run and `BATTERY=FAIL … fresh_positive=0/3 fresh_forgers=0/3` on another (`.ufo/waves/round-80/w1/R80ExecA/r80d-v7-run3-fresh3.txt`, `r80a-after-v7-run1.txt`), i.e. the legitimate matrix is refused on some draws. Check before a successor freeze: a drawn case's name carries its ground-truth label so no two cases can collide, and the counting command is run k>=5 times with the drawn seed printed; every run must print the same predicate line and the same exit, and any run that refuses the legitimate matrix is a verdict, never a retry.
+diff --git i/corpus/lessons/round-80.md w/corpus/lessons/round-80.md
+index d6ddb276..daf82392 100644
+--- i/corpus/lessons/round-80.md
++++ w/corpus/lessons/round-80.md
+@@ -58,6 +58,122 @@ GATE-RECORD S202 rev=3eb4a3cad8febf75698a017cb6c4441f763b3454 path=.ufo/waves/ro
+ - Assimilation: none. The `merge/chousa/` package stays closed (round 78 measured 111 of 114 staged
+   ids colliding with the live registry; the id drift is not renumbered in scratch). No package
+   bytes read into the lane, no campaign tool run, no shokuknow write.
+-- `considerthese/` was opened (`2026-10-26.md` is the newest); nothing was implemented this round —
+-  the claim cap went to C1/C2 and the file's live proposals are recorded in the wave's scribe draft,
+-  not adopted.
++- `considerthese/2026-10-26.md` (2026-10-26, the newest) was opened; **proposal 4 — one independent
++  CJK quote spot-check per review — is adopted** as QUALITY 158, because `wc -w` prints 2 for a
++  69-character CJK span line, so the ≤25-word bound cannot measure such a row. Proposals 1 (stable
++  ids) and 2 (recurring-weakness streaks, already running as `corpus/evidence/round53|55|62/recurring.tsv`)
++  and 3 (lane-vs-verifier disagreement list, partly covered by QUALITY 14) were not picked, one
++  proposal per round.
++7. **The oracle enumeration is a fixed five-tuple.** `ORACLES` in `matrix-battery-v7.py` is a
++   literal five-entry table, `--fresh` draws subjects only and the instrument takes no `--oracle`
++   argument, so a sixth oracle written today is rejected only if it happens to fall inside the
++   table's coverage — the predicate's `oracles_rejected=5/5` says nothing about an oracle the round
++   did not name. `R80CriticA` finding F4.
++
++## Claim outcomes (measured on committed bytes)
++
++| claim / axis | before → after | counting command / evidence | verdict |
++|---|---|---|---|
++| C1 operability (lowest scored non-retired axis; the historical 3/10 held) | a committed subject table that a structure-identity matrix passes without scoring (before: `BATTERY_EXIT=0 BATTERY_VERDICT=PASS RECEIPT_LINES=113`, `ORACLE=ACCEPTED`, exit 1) → a per-run drawn set with the fresh positive/forger legs and the five enumerated oracles scored (after: `BATTERY=PASS forgers_rejected=11/11 positive=2/2 fresh_positive=2/2 fresh_forgers=2/2 oracles_rejected=5/5`, exit 0, 97.3 s) | `python3 -B corpus/evidence/round80/matrix-battery-v7.py --matrix corpus/evidence/round76/loader-matrix-v3.py --work DIR --runs 1 --fresh 2 --rev b7803829922770b890e9f4efdd30d12c3695439a`; `controls/{oracle-before-r80,v7-legit-matrix-r80}.txt` | **falsified by its own kill rule — honest stop**: the legitimate matrix is refused on some draws (`BATTERY=FAIL … fresh_positive=1/2 fresh_forgers=1/2`, `… fresh_positive=0/3 fresh_forgers=0/3`), and two HIGH defects hollow the clause (below) |
++| C2 calibration (sourced on S199) | three prose Gate records nothing re-opened (`GATE_GROUNDING=FAIL unresolved=3 superseded_resolved=0 audited=S196,S197,S198`, exit 1) → four machine-checkable records re-opened on committed bytes, the three superseded rows resolving through their replacements (`GATE_GROUNDING=PASS unresolved=0 superseded_resolved=3 audited=S199,S200,S201,S202`, exit 0) | `python3 -B corpus/evidence/round80/gate-grounding-check.py --rev 44d09edfc20dba26ee8d58a93d365989916a2692`; `controls/{grounding-before-r80,grounding-after}.txt` | **improved**, with three instrument limits recorded (below) |
++
++Do-nothing controls: at the base the v6 battery accepts the structure-identity oracle
++(`controls/oracle-before-r80.txt`) and the C2 counter prints `unresolved=3` with `record=none` on all
++three rows (`controls/grounding-before-r80.txt`). A round that does nothing cannot reach either
++after-state.
++
++## Instrument limits (measured by the wave, recorded, not repaired after scoring)
++
++1. **The fresh leg's ground truth is the subject under test.** `matrix-battery-v7.py:125` sets
++   `WITNESS = LANE/corpus/evidence/round76/loader-matrix-v3.py`, and the frozen counting command
++   passes that same path as `--matrix`; `MATRIX_SHA256=b79d6441…913f` in
++   `controls/v7-legit-matrix-r80.txt` equals `sha256sum corpus/evidence/round76/loader-matrix-v3.py`.
++   `draw_fresh` labels its re-emitted copies from the witness's own rc/marks/cells, so
++   `fresh_positive=2/2 fresh_forgers=2/2` assert self-consistency for that subject (a
++   wrong-but-self-consistent matrix satisfies them); a constant-verdict matrix is still caught (no
++   FORGER can be drawn). Receipt: `.ufo/waves/round-80/w1/R80SentinelA/receipts/06-fresh-leg-ground-truth.txt`.
++2. **One of the five counted oracle rejections never produced a verdict.** All 17
++   `ORACLE:structure-identity RUN` lines in `controls/v7-legit-matrix-r80.txt` read
++   `matrix_exit=1 marks=none content=bad`, and line 180 counts the oracle `REJECTED`:
++   `_rename` (`matrix-battery-v7.py:231-282`) renames class-body `Name` stores but not
++   `ast.Attribute.attr`, so the re-emitted oracle raises `AttributeError: '_7ff523aa' object has no
++   attribute 'canon'` and exits 1 with no stdout. `oracle_ok += not full` cannot tell "missed" from
++   "never ran", so `oracles_rejected=5/5` overstates the anchor and the strongest known adversary is
++   destroyed before it can be measured. Reproduced independently by the seat
++   (`R80SentinelA/receipts/09-rename-defect-repro.txt`: the oracle alone prints
++   `LOADER_MATRIX=12/12 MATRIX=PASS` exit 0).
++3. **The record grammar's four rules are discriminating only within their own scope.** R3 tests a
++   substring of one named line, so an enormous line can host an unrelated quote that passes; R4
++   bounds the count, not the substance; a superseded parent is counted resolved through its
++   replacement's passing record, which is a re-filing and not a proof that the parent's defect is
++   gone; and the audit window is `--since-round`, so a row whose only `- Admit`/`- Reject` bullet sits
++   in an older lesson is never audited. Measured by `R80ReviewerB` and `R80CriticA` (receipts under
++   `.ufo/waves/round-80/w1/`).
++4. **Revision labels.** `matrix-battery-v7.py:657` prints `git rev-parse master` as `LANE_REV`, and
++   the instrument first exists at `0f59b985`, not at the `b7803829` it prints
++   (`git cat-file -e b7803829:corpus/evidence/round80/matrix-battery-v7.py` → `fatal: … exists on
++   disk, but not in 'b7803829…'`). The bytes measured are the worktree bytes whose sha256 is pinned in
++   `claims.md`; the label is a token, not a binding. `R80SentinelA` F5.
++5. **A frozen claims-file count the landed record contradicts.** `claims.md:90` calls S200's quote
++   "15-word"; the landed record measures 20 (`wc -w` on `corpus/QUALITY.md:1056@b7803829`) and the
++   counter confirms `quote_words=20`. No counter reads `claims.md`, so the frozen 15 is re-opened by
++   nothing; the file is not amended (freeze is freeze) and the landed record is the measured one.
++   `R80ScribeB` F6.
++6. **A frozen claims-file description the landed row does not match.** `claims.md` describes S199 as
++   "own-work A: the round-79 structure-identity receipts"; the landed row S199 is tier B and cites the
++   spot-check's §4 payload line (222), which grounds the same requirement one channel out. The frozen
++   file is not amended; the row that landed is the one the counter audits. `R80ScribeA` F5.
++
++## Mistakes
++
++| class | evidence | captured-by | fix |
++|---|---|---|---|
++| a round-80 attempt died mid-work and the orchestrator preserved its instruments, controls and claims text in one commit, so the round's controls-before-freeze ordering is shown by commit order only | `git show --stat 0f59b985933b2fe9b0b6a754d908ac6ae47399e6` lists `claims.md`, both control receipts and the four instruments in a single commit; the freeze evidence for this attempt is `0d253c95732c0ed19a9fa414e5d17769ddefa48d` | nothing: no criterion bound the preservation commit's shape, and the round-close sweep is the orchestrator's, not the lane's | recorded here and in the report; the next round writes `claims.md` only in its own freeze commit, and QUALITY 153 makes every receipt name the revision it measured so a preserved attempt's receipts stay re-derivable |
++| the inherited attempt left about 2.1 GB of clones under `/tmp` (`r80-base`, `r80-decl`, `r80-tip`), outside `$HYAKU_SCRATCH` | `scripts/hyaku/disk-guard.sh status` lists `/tmp/r80-tip 698.7M`, `/tmp/r80-decl 688.0M`, `/tmp/r80-base 687.3M` at 2026-11-04T23:55 | the §7 scratch rule names `$HYAKU_SCRATCH` but nothing fails when a seat ignores it; the reaper only deletes idle entries, so these survived the attempt | this attempt kept every clone, work dir and receipt under `/fast/scratch/hyaku/chousa-r80/` and removed the tree at landing; the receipts name the scratch root they were produced in |
++| a QUALITY criterion cited a receipt that was not yet committed, and the round-79 counter caught it | `python3 -B corpus/evidence/round79/selfcheck-v2.py --lane .` printed `CHECK S2-quality-pointers FAIL criteria=55 missing=[116, 152, 153] unresolved=['152:controls/grounding-after.txt', '153:corpus/evidence/round80/controls/grounding-after.txt']` until the receipt landed in `5ba30d87172e94dd76a49e1a94294561e90f6cbd`, after which it prints `S2-quality-pointers ok … unresolved=[]` | the round-79 counter's S2 leg (a prior round's gate caught this round's slip) | land the receipt before the criterion that cites it, and re-run S2 at the integration revision before the report |
++| the C2 predicate is satisfied by rows this round added, so it measures that the record became machine-checkable and not that the three old defects were discovered | `claims.md` C2 predicate: `superseded_resolved=3 audited=S199,S200,S201,S202`, and all four audited ids are new at `44d09edf`; the base bytes carried the defects, not the counter | `R80CriticA`'s do-nothing mirror (base bytes + four rows that say `supersedes` + four records) | recorded, not repaired after scoring: the next counter must re-derive each old defect from the old bytes (the 27-word quote, the eleven-line span) instead of counting the new rows' existence |
++
++## Kill-rule outcomes (frozen before data; reported, never repaired)
++
++- **C2 fires its own kill rule (third clause).** The frozen rule says the claim does not verify "if
++  the counter reports `unresolved=0` while a `GATE-RECORD` line names bytes it never opened".
++  `R80CriticA/receipts/c2-unopened-superseded-record.txt` shows exactly that: a `GATE-RECORD S195
++  rev=b7803829… path=corpus/lessons/does-not-exist.md line=9999 words=1 quote=x` line sits in the
++  tree at `18ffcf29`, `git cat-file -e b7803829:corpus/lessons/does-not-exist.md` returns 128, and
++  the counter prints `GATE_GROUNDING=PASS unresolved=0 superseded_resolved=4`. Cause, read from the
++  source: `records_at()` collects every record, but the audit loops only over `audited` tips and
++  `parents`, so a record attached to a non-tip row is parsed and never opened. **C2 as written does
++  not verify**; the mechanism still lands and the three defects are genuinely closed, and QUALITY 155
++  carries the successor rule.
++- **A hollow record passes the counter.** `R80CriticA/receipts/c2-donothing-control.txt`: base bytes
++  plus four rows whose `teaches` says `supersedes` plus four records quoting the single word `S` on
++  `corpus/SOURCES.md:1` reach `GATE_GROUNDING=PASS unresolved=0 superseded_resolved=3`. R1–R4 check
++  that a quote exists on a named line, not that it grounds `teaches`: the predicate measures that the
++  record became machine-checkable, never entailment. The landed records are grounded because this
++  lane measured each quote against its line, not because the counter can tell.
++- **C1 fires its own kill rule ("or if the legitimate matrix is refused").** The frozen counting
++  command is draw-dependent: the same bytes print `BATTERY=PASS … fresh_positive=2/2 fresh_forgers=2/2`
++  on one run and `BATTERY=FAIL … fresh_positive=1/2 fresh_forgers=1/2` on the next
++  (`R80ExecA/r80a-after-v7-run1.txt`, `r80d-v7-run2.txt`), and `--fresh 3` prints `BATTERY=FAIL …
++  fresh_positive=0/3 fresh_forgers=0/3` (`r80d-v7-run3-fresh3.txt`). Cause, measured:
++  `f"{base_name}#{i}"` names a fresh positive and a fresh forger identically when they share a base,
++  and `score()` is keyed by name, so both score `MISS` (`R80CriticA/receipts/c1-name-collision-probe.txt`:
++  `fresh_positive=0/1 fresh_forger=0/1`). **C1 as written does not verify**; QUALITY 159 carries the
++  successor rule (a drawn name carries its label; the command is run k>=5 times and every run must
++  print the same line).
++- **C1's remaining content stands.** The structure-identity and payload-decode matrices do **not**
++  reach the PASS line on the drawn set (`a10-as-matrix-fresh2`: `BATTERY=FAIL … fresh_forgers=0/2`),
++  where round 79's v6 accepted both, so the drawn leg discriminates the two known forged matrices
++  even while its own naming is unstable.
++- **C1: the predicate line holds; two clauses are hollowed.** The literal kill rule (any enumerated
++  forger/positive/fresh case/oracle `is a MISS`, or the legitimate matrix refused) did not fire: all
++  eleven forgers, both positives, both drawn legs and all five oracle slots are counted as the
++  predicate says. But the wave measured that one of those five counted oracle rejections
++  (`ORACLE structure-identity REJECTED positive=0/2 forger=0/11`) is a `_rename` crash that produced
++  no verdict at all, and that the drawn legs' witness is the subject under test — so the predicate's
++  `oracles_rejected=5/5` clause is not substantiated for that oracle. **Reported as a narrowed
++  improvement, not as a clean pass**; the two repairs are QUALITY 156–157 and the round-81 plan.
++- **A fresh-leg name collision fails closed.** `R80CriticA/receipts/c1-name-collision-probe.txt`:
++  when a fresh positive and a fresh forger share one drawn name (`X#0`), `score()` keyed by name
++  reports both `MISS` and prints `fresh_positive=0/1 fresh_forger=0/1` — a false negative, not a
++  false green, so the collision costs a re-run rather than a bad admission.

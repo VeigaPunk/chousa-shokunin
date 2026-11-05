@@ -1,0 +1,19 @@
+### C2 probe: a GATE-RECORD line that the counter never opens, while unresolved=0
+### commit: 18ffcf29edebe87ec0722ff5c90fe28ca74d1a62
+### the unopened line: GATE-RECORD S195 rev=b7803829... path=corpus/lessons/does-not-exist.md line=9999 words=1 quote=x
+### absent at that rev? git cat-file -e -> rc:
+fatal: path 'corpus/lessons/does-not-exist.md' does not exist in 'b7803829922770b890e9f4efdd30d12c3695439a'
+rc=128
+### command: python3 -B corpus/evidence/round80/gate-grounding-check.py --rev 18ffcf29edebe87ec0722ff5c90fe28ca74d1a62
+LANE_REV=18ffcf29edebe87ec0722ff5c90fe28ca74d1a62 SINCE_ROUND=79 TIPS=192 AUDITED=5
+ROW S199 record=ok quote_words=1 location=corpus/SOURCES.md:1@b78038299227 words=1 verdict=OK
+ROW S200 record=ok quote_words=1 location=corpus/SOURCES.md:1@b78038299227 words=1 verdict=OK
+ROW S201 record=ok quote_words=1 location=corpus/SOURCES.md:1@b78038299227 words=1 verdict=OK
+ROW S202 record=ok quote_words=1 location=corpus/SOURCES.md:1@b78038299227 words=1 verdict=OK
+ROW S203 record=ok quote_words=1 location=corpus/SOURCES.md:1@b78038299227 words=1 verdict=OK
+SUPERSEDED S195 by S203 record=ok verdict=RESOLVED
+SUPERSEDED S196 by S199 record=ok verdict=RESOLVED
+SUPERSEDED S197 by S200 record=ok verdict=RESOLVED
+SUPERSEDED S198 by S201 record=ok verdict=RESOLVED
+GATE_GROUNDING=PASS unresolved=0 superseded_resolved=4 audited=S199,S200,S201,S202,S203
+# exit: 0

@@ -1,0 +1,73 @@
+# ITEM 1 — leak / scope scan over corpus/evidence/round80/ and .ufo/waves/round-80/census-start.txt
+# revision: 44d09edfc20dba26ee8d58a93d365989916a2692
+
+$ grep -rnE "/tmp/|/var/tmp/" corpus/evidence/round80/ .ufo/waves/round-80/census-start.txt
+# exit=1
+
+$ grep -rnE "\b(urllib|requests|httpx|curl|wget|socket)\b" corpus/evidence/round80/ .ufo/waves/round-80/census-start.txt
+.ufo/waves/round-80/census-start.txt:2:chousa	W04	S053 duplicate url docs.python.org/3/library/socket.html across scopes
+# exit=0
+
+$ grep -rnE "git (commit|push)|jj (commit|push|new|describe)|subprocess" corpus/evidence/round80/ .ufo/waves/round-80/census-start.txt
+corpus/evidence/round80/gate-grounding-check.py:44:import subprocess
+corpus/evidence/round80/gate-grounding-check.py:56:def git(*args: str) -> subprocess.CompletedProcess:
+corpus/evidence/round80/gate-grounding-check.py:57:    return subprocess.run(["git", "-C", str(LANE), *args],
+corpus/evidence/round80/matrix-battery-v7.py:97:import subprocess
+corpus/evidence/round80/matrix-battery-v7.py:197:        p = subprocess.run([sys.executable, "-B", str(matrix), "--counter", str(subject),
+corpus/evidence/round80/matrix-battery-v7.py:199:                           stdin=subprocess.DEVNULL, capture_output=True, text=True,
+corpus/evidence/round80/matrix-battery-v7.py:201:    except subprocess.TimeoutExpired:
+corpus/evidence/round80/matrix-battery-v7.py:442:        p = subprocess.run([sys.executable, "-B", str(WITNESS), "--counter", str(subject),
+corpus/evidence/round80/matrix-battery-v7.py:443:                            "--work", str(work)], stdin=subprocess.DEVNULL,
+corpus/evidence/round80/matrix-battery-v7.py:445:    except subprocess.TimeoutExpired:
+corpus/evidence/round80/matrix-battery-v7.py:657:        p = subprocess.run(["git", "-C", str(LANE), "rev-parse", "master"],
+corpus/evidence/round80/matrix-battery-v7.py:659:    except (OSError, subprocess.TimeoutExpired):
+corpus/evidence/round80/oracle-check.py:26:import subprocess
+corpus/evidence/round80/oracle-check.py:57:        p = subprocess.run([sys.executable, "-B", str(battery), "--matrix", str(oracle),
+corpus/evidence/round80/oracle-check.py:59:                           stdin=subprocess.DEVNULL, capture_output=True, text=True,
+corpus/evidence/round80/oracle-check.py:61:    except subprocess.TimeoutExpired:
+# exit=0
+
+$ grep -rnE "BEGIN .*PRIVATE KEY|ghp_|sk-[A-Za-z0-9]|op://|AKIA[0-9A-Z]{16}|token[ _-]?literal" corpus/evidence/round80/ .ufo/waves/round-80/census-start.txt
+# exit=1
+
+$ grep -rnE "Projects/shokunin/(scripts|\.ufo/state|MANIFEST)|tsukuroi-|kasegi-|souji-|kama-|mado-|kotoba-|kumitate-" corpus/evidence/round80/
+# exit=1
+
+$ grep -rn "/fast/scratch" corpus/evidence/round80/
+corpus/evidence/round80/controls/oracle-before-r80.txt:2:# command: python3 -B corpus/evidence/round80/oracle-check.py --battery corpus/evidence/round79/matrix-battery-v6.py --oracle .ufo/waves/round-79/w1/R79ExecC/matrix-structure-identity.py --work /fast/scratch/hyaku/chousa-r80/l1/oracle --runs 1
+corpus/evidence/round80/controls/v7-legit-matrix-r80.txt:2:# command: python3 -B corpus/evidence/round80/matrix-battery-v7.py --matrix corpus/evidence/round76/loader-matrix-v3.py --work /fast/scratch/hyaku/chousa-r80/l1/v7 --runs 1 --fresh 2 --rev b7803829922770b890e9f4efdd30d12c3695439a
+corpus/evidence/round80/forgers/a10-payload-decode.py:6:table root to a scratch clone (`/fast/scratch/hyaku/chousa-r79/R79CriticA/lane`), which
+# exit=0
+
+$ grep -nE "open\(|write_text|write_bytes|mkdir|rmtree" corpus/evidence/round80/*.py corpus/evidence/round80/forgers/*.py
+corpus/evidence/round80/matrix-battery-v7.py:193:    work.mkdir(parents=True, exist_ok=True)
+corpus/evidence/round80/matrix-battery-v7.py:300:    d.mkdir(parents=True)
+corpus/evidence/round80/matrix-battery-v7.py:302:    target.write_text(WRAPPER.format(payload=payload))
+corpus/evidence/round80/matrix-battery-v7.py:438:    work.mkdir(parents=True, exist_ok=True)
+corpus/evidence/round80/matrix-battery-v7.py:482:        shutil.rmtree(base_copy.parent, ignore_errors=True)
+corpus/evidence/round80/matrix-battery-v7.py:484:            shutil.rmtree(copy.parent, ignore_errors=True)
+corpus/evidence/round80/matrix-battery-v7.py:487:            shutil.rmtree(copy.parent, ignore_errors=True)
+corpus/evidence/round80/matrix-battery-v7.py:492:        shutil.rmtree(copy.parent, ignore_errors=True)
+corpus/evidence/round80/matrix-battery-v7.py:526:                shutil.rmtree(subject.parent, ignore_errors=True)
+corpus/evidence/round80/matrix-battery-v7.py:573:        work.mkdir(parents=True, exist_ok=True)
+corpus/evidence/round80/matrix-battery-v7.py:588:        run.mkdir()
+corpus/evidence/round80/matrix-battery-v7.py:604:        run.mkdir()
+corpus/evidence/round80/matrix-battery-v7.py:639:            shutil.rmtree(copy.parent, ignore_errors=True)
+corpus/evidence/round80/matrix-battery-v7.py:641:        shutil.rmtree(run, ignore_errors=True)
+corpus/evidence/round80/oracle-check.py:48:        work.mkdir(parents=True, exist_ok=True)
+
+$ grep -n "os.environ" corpus/evidence/round80/*.py corpus/evidence/round80/forgers/*.py
+corpus/evidence/round80/matrix-battery-v7.py:194:    env = dict(os.environ, LOADER_MATRIX_CHILD_TIMEOUT=CHILD_TIMEOUT,
+corpus/evidence/round80/matrix-battery-v7.py:439:    env = dict(os.environ, LOADER_MATRIX_CHILD_TIMEOUT=WITNESS_TIMEOUT,
+corpus/evidence/round80/forgers/a10-payload-decode.py:34:LANE = pathlib.Path(os.environ.get("LOADER_MATRIX_LANE")
+
+$ grep -nE "import (socket|urllib|http|requests)|urllib\.|requests\.|socket\.|curl |wget " corpus/evidence/round80/*.py corpus/evidence/round80/forgers/*.py
+# exit=1 (1 = no import or call)
+
+$ grep -n "POSITIVES = \|^FORGERS = \|^ORACLES = \|^R76F = \|^R79F = \|^R80F = " corpus/evidence/round80/matrix-battery-v7.py
+103:POSITIVES = [("successor-counter", LANE / "corpus/evidence/round74/correction-count.py"),
+105:R76F = LANE / "corpus/evidence/round76/forgers"
+106:FORGERS = [("constant-pass", R76F / "forge-constant-pass.py"),
+117:R79F = LANE / "corpus/evidence/round79/forgers"
+118:R80F = HERE / "forgers"
+119:ORACLES = [("summary-only", R79F / "forge-order-matrix.py"),

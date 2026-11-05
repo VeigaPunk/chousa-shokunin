@@ -1,0 +1,26 @@
+# F2 REPRODUCTION — the re-emission wrapper breaks the round-79 structure-identity oracle
+# scratch: /fast/scratch/hyaku/chousa-r80/R80SentinelA (deleted before yield); no write outside it
+
+$ python3 -B corpus/evidence/round79/../round79/w1... <oracle> --counter corpus/evidence/round74/correction-count.py --work $S/direct
+CASE case-11-dup-card-heading PASS expected_rc=1 actual_rc=1 timeout=False failed=none expected_failed=C2-4
+LOADER_MATRIX=12/12 MATRIX=PASS
+# exit=0
+
+$ python3 -B - <<PY   # reemit the ORACLE exactly as v7 does (v7:632 copy = reemit(source, run))
+/fast/scratch/hyaku/chousa-r80/R80SentinelA/oracle-reemit/e9dac84c44d112df/subject.py
+
+$ python3 -B /fast/scratch/hyaku/chousa-r80/R80SentinelA/oracle-reemit/e9dac84c44d112df/subject.py --counter corpus/evidence/round74/correction-count.py --work /fast/scratch/hyaku/chousa-r80/R80SentinelA/ow2
+# exit=1
+# stdout lines=0
+# stderr tail:
+  File "<c386def657fa>", line 265, in <module>
+  File "<c386def657fa>", line 256, in _2eadd207
+  File "<c386def657fa>", line 237, in _cac791d1
+  File "<c386def657fa>", line 218, in _0fbfab2c
+  File "<c386def657fa>", line 204, in _685ef79a
+AttributeError: '_7ff523aa' object has no attribute 'canon'
+
+# the same applied to the legit matrix for contrast (v7:518 reemits every committed subject):
+REEMITTED_MATRIX /fast/scratch/hyaku/chousa-r80/R80SentinelA/mx/a9f52edc3b0e5ad7/subject.py
+LOADER_MATRIX=12/12 MATRIX=PASS
+# exit=0

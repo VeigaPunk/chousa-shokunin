@@ -1,0 +1,97 @@
+# ITEM 5 — wave scope: write targets named by committed files under .ufo/waves/round-80/
+$ git ls-tree -r --name-only HEAD -- .ufo/waves/round-80
+.ufo/waves/round-80/build_spec.py
+.ufo/waves/round-80/census-start.txt
+.ufo/waves/round-80/w1-dispatch.json
+.ufo/waves/round-80/w1-spec.json
+.ufo/waves/round-80/w1-validate.err
+
+$ python3 -c "json.load(w1-spec.json) -> reportDir, per-seat names/roles"
+wave: chousa-r80-w1
+reportDir: .ufo/waves/round-80/w1
+  0 R80ExecA executor
+  1 R80ExecB executor
+  2 R80ExecC executor
+  3 R80ScoutA scout
+  4 R80ScribeA scribe
+  5 R80ScribeB scribe
+  6 R80ReviewerA reviewer
+  7 R80ReviewerB reviewer
+  8 R80CriticA critic
+  9 R80MutationA mutation-tester
+  10 R80SentinelA sentinel
+  11 R80ConnectorA connector
+
+$ grep -rnoE "/home/[A-Za-z0-9._/-]+" build_spec.py census-start.txt w1-spec.json w1-dispatch.json w1-validate.err | sort | uniq -c | sort -rn
+      6 .ufo/waves/round-80/w1-spec.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round80/gate-grounding-check.py
+      6 .ufo/waves/round-80/w1-dispatch.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round80/gate-grounding-check.py
+      4 .ufo/waves/round-80/w1-spec.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round80/matrix-battery-v7.py
+      4 .ufo/waves/round-80/w1-dispatch.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round80/matrix-battery-v7.py
+      3 .ufo/waves/round-80/w1-spec.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round80/
+      3 .ufo/waves/round-80/w1-spec.json /home/vgpnk/Projects/shokunin/chousa-shokunin
+      3 .ufo/waves/round-80/w1-dispatch.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round80/
+      3 .ufo/waves/round-80/w1-dispatch.json /home/vgpnk/Projects/shokunin/chousa-shokunin
+      2 .ufo/waves/round-80/w1-spec.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-79-verifier-spotcheck.md
+      2 .ufo/waves/round-80/w1-spec.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round80/forgers/a10-payload-decode.py
+      2 .ufo/waves/round-80/w1-spec.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round80/claims.md
+      2 .ufo/waves/round-80/w1-spec.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round79/matrix-battery-v6.py
+      2 .ufo/waves/round-80/w1-spec.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round76/loader-matrix-v3.py
+      2 .ufo/waves/round-80/w1-spec.json /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-79/w1/R79ExecC/matrix-structure-identity.py
+      2 .ufo/waves/round-80/w1-dispatch.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-79-verifier-spotcheck.md
+      2 .ufo/waves/round-80/w1-dispatch.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round80/forgers/a10-payload-decode.py
+      2 .ufo/waves/round-80/w1-dispatch.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round80/claims.md
+      2 .ufo/waves/round-80/w1-dispatch.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round79/matrix-battery-v6.py
+      2 .ufo/waves/round-80/w1-dispatch.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round76/loader-matrix-v3.py
+      2 .ufo/waves/round-80/w1-dispatch.json /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-79/w1/R79ExecC/matrix-structure-identity.py
+      1 .ufo/waves/round-80/w1-spec.json /home/vgpnk/Projects/shokunin/scripts
+      1 .ufo/waves/round-80/w1-spec.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-79.md
+      1 .ufo/waves/round-80/w1-spec.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/
+      1 .ufo/waves/round-80/w1-spec.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round80/oracle-check.py
+      1 .ufo/waves/round-80/w1-spec.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round80/forgers/
+      1 .ufo/waves/round-80/w1-spec.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round80/controls/grounding-before.txt
+      1 .ufo/waves/round-80/w1-spec.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round80/controls/
+      1 .ufo/waves/round-80/w1-spec.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round79/
+      1 .ufo/waves/round-80/w1-spec.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md
+      1 .ufo/waves/round-80/w1-spec.json /home/vgpnk/Projects/shokunin/chousa-shokunin/considerthese/2026-10-26.md
+      1 .ufo/waves/round-80/w1-spec.json /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-80/w1/
+      1 .ufo/waves/round-80/w1-spec.json /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-80/census-start.txt
+      1 .ufo/waves/round-80/w1-spec.json /home/vgpnk/Projects/shokunin/chousa-shokunin/
+      1 .ufo/waves/round-80/w1-spec.json /home/vgpnk/Projects/shokunin/.ufo/state
+      1 .ufo/waves/round-80/w1-spec.json /home/vgpnk/Projects/shokunin/
+      1 .ufo/waves/round-80/w1-spec.json /home/vgpnk/.omp/agent/RULES.md
+      1 .ufo/waves/round-80/w1-dispatch.json /home/vgpnk/Projects/shokunin/scripts
+      1 .ufo/waves/round-80/w1-dispatch.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/round-79.md
+      1 .ufo/waves/round-80/w1-dispatch.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/lessons/
+      1 .ufo/waves/round-80/w1-dispatch.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round80/oracle-check.py
+      1 .ufo/waves/round-80/w1-dispatch.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round80/forgers/
+      1 .ufo/waves/round-80/w1-dispatch.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round80/controls/grounding-before.txt
+      1 .ufo/waves/round-80/w1-dispatch.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round80/controls/
+      1 .ufo/waves/round-80/w1-dispatch.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round79/
+      1 .ufo/waves/round-80/w1-dispatch.json /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md
+      1 .ufo/waves/round-80/w1-dispatch.json /home/vgpnk/Projects/shokunin/chousa-shokunin/considerthese/2026-10-26.md
+      1 .ufo/waves/round-80/w1-dispatch.json /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-80/w1/
+      1 .ufo/waves/round-80/w1-dispatch.json /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-80/census-start.txt
+      1 .ufo/waves/round-80/w1-dispatch.json /home/vgpnk/Projects/shokunin/chousa-shokunin/
+      1 .ufo/waves/round-80/w1-dispatch.json /home/vgpnk/Projects/shokunin/.ufo/state
+      1 .ufo/waves/round-80/w1-dispatch.json /home/vgpnk/Projects/shokunin/
+      1 .ufo/waves/round-80/w1-dispatch.json /home/vgpnk/.omp/agent/RULES.md
+      1 .ufo/waves/round-80/census-start.txt /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md
+      1 .ufo/waves/round-80/build_spec.py /home/vgpnk/Projects/shokunin/scripts
+      1 .ufo/waves/round-80/build_spec.py /home/vgpnk/Projects/shokunin/chousa-shokunin
+      1 .ufo/waves/round-80/build_spec.py /home/vgpnk/Projects/shokunin/.ufo/state
+      1 .ufo/waves/round-80/build_spec.py /home/vgpnk/Projects/shokunin/
+      1 .ufo/waves/round-80/build_spec.py /home/vgpnk/.omp/agent/RULES.md
+
+$ grep -nEi "(write|create|commit|push|land)[^.]{0,60}(fleet|sibling|/home/vgpnk/Projects/shokunin/(scripts|\.ufo/state)|MANIFEST)" <committed wave files>
+.ufo/waves/round-80/build_spec.py:14:Leaf only: no task tool, no subagents, no agent://all, no network, no production edits, no lane or fleet git/jj mutation, no commits or pushes, no edits to /home/vgpnk/Projects/shokunin/scripts, /home/vgpnk/Projects/shokuni
+.ufo/waves/round-80/build_spec.py:181:1. Scan `{LANE}/corpus/evidence/round80/` (all files) and `{LANE}/.ufo/waves/round-80/census-start.txt` for: absolute `/tmp/` or `/var/tmp/` paths (a `/tmp` path is never citable evidence), writes outside `$HYAKU_SCRATCH`,
+.ufo/waves/round-80/w1-spec.json:4:  "context": "Lane chousa round 80, L1 ChousaR80 holds the canonical planner seat and integration. Root /home/vgpnk/Projects/shokunin/chousa-shokunin; base revision (round-79 lane tip, closed `ok` / `rejected-honest-stop`): b
+.ufo/waves/round-80/w1-spec.json:59:      "prompt": "You are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim \u2014 let the frontier walk itself.*
+.ufo/waves/round-80/w1-dispatch.json:109:    "context": "Lane chousa round 80, L1 ChousaR80 holds the canonical planner seat and integration. Root /home/vgpnk/Projects/shokunin/chousa-shokunin; base revision (round-79 lane tip, closed `ok` / `rejected-honest-s
+.ufo/waves/round-80/w1-dispatch.json:164:        "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the f
+
+$(grep -n "Search the sibling lane repos" build_spec.py) — read-only search instruction:
+196:2. Search the sibling lane repos under `/home/vgpnk/Projects/shokunin/` (tsukuroi-shokunin, kasegi-shokunin, souji-shokunin, kama-shokunin, mado-shokunin, kotoba-shokunin, kumitate-shokunin) for t
+
+$ cat w1-validate.err
+# validate.err bytes=0

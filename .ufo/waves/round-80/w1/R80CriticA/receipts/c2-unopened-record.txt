@@ -1,0 +1,18 @@
+### C2 kill-rule (iii) probe: one GATE-RECORD for a non-audited tip naming absent bytes
+### fixture commit: 722525eae60721ebbe85bd9d0c6589ca29bc4551
+### added line: GATE-RECORD S195 rev=b7803829... path=corpus/lessons/does-not-exist.md line=9999 words=1 quote=x
+### path exists at that rev?
+fatal: path 'corpus/lessons/does-not-exist.md' does not exist in 'b7803829922770b890e9f4efdd30d12c3695439a'
+cat-file rc=128
+### command: python3 -B corpus/evidence/round80/gate-grounding-check.py --rev 722525eae60721ebbe85bd9d0c6589ca29bc4551
+LANE_REV=722525eae60721ebbe85bd9d0c6589ca29bc4551 SINCE_ROUND=79 TIPS=192 AUDITED=5
+ROW S195 record=bad quote_words=1 location=R2 corpus/lessons/does-not-exist.md absent at b78038299227 verdict=UNRESOLVED
+ROW S199 record=ok quote_words=1 location=corpus/SOURCES.md:1@b78038299227 words=1 verdict=OK
+ROW S200 record=ok quote_words=1 location=corpus/SOURCES.md:1@b78038299227 words=1 verdict=OK
+ROW S201 record=ok quote_words=1 location=corpus/SOURCES.md:1@b78038299227 words=1 verdict=OK
+ROW S202 record=ok quote_words=1 location=corpus/SOURCES.md:1@b78038299227 words=1 verdict=OK
+SUPERSEDED S196 by S199 record=ok verdict=RESOLVED
+SUPERSEDED S197 by S200 record=ok verdict=RESOLVED
+SUPERSEDED S198 by S201 record=ok verdict=RESOLVED
+GATE_GROUNDING=FAIL unresolved=1 superseded_resolved=3 audited=S195,S199,S200,S201,S202
+# exit: 1

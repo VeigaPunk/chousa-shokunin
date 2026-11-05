@@ -1,0 +1,206 @@
+COMMAND git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 0d253c95732c0ed19a9fa414e5d17769ddefa48d:corpus/evidence/round80/gate-grounding-check.py
+EXIT 0
+SHA256 d9e426216665a098cd90adf8fbf5e5dd62e02dc7b5b707c322b404b3eb55c553
+1: #!/usr/bin/env python3
+2: """Round-80 gate-grounding counter — every Gate record names bytes that carry its quote.
+3: 
+4: Round 79's non-author spot-check found three registry rows whose `## Gate` record did
+5: not survive re-opening: a quote one word over the ≤25-word bound (S196, 27 words while
+6: the lesson said 25), a stated count off by one (S197, 25 words while the lesson said
+7: 24), and a "located quote" that occurs nowhere in the file it cites (S198). The defect
+8: class is that a Gate record is prose: nothing re-opens it.
+9: 
+10: This counter makes the record machine-checkable. A row is grounded when its round
+11: lesson carries a record line of the form
+12: 
+13:   GATE-RECORD <id> rev=<40-hex> path=<repo-relative> line=<n> words=<n> quote=<text>
+14: 
+15: and the counter, reading only committed bytes at `--rev`, finds:
+16: 
+17:   R1  `<rev>` resolves in the lane repository;
+18:   R2  `path` exists at `<rev>`;
+19:   R3  line `<n>` of that file contains `quote` (substring, non-empty);
+20:   R4  `quote` word count equals `words` and is ≤ 25 (CORPUS.md contract v1).
+21: 
+22: Family rule (append-only registry): a row whose `teaches` cell opens `supersedes S###`
+23: replaces that row for the audit. The audit set is the family TIPS a recent Gate decides:
+24: a row enters it when a lesson for a round at or after `--since-round` (default 79, the
+25: round whose Gate records the round-79 spot-check found defective) either carries a
+26: `GATE-RECORD <id>` line or a `- Admit <id>` / `- Reject <id>` bullet for it. So the
+27: audit grows with each round instead of demanding a retrofit of the whole registry, and a
+28: row merely mentioned in prose does not enter it. A defective row that has a grounded
+29: superseder is counted `superseded_resolved`, never silently dropped: the audit prints
+30: every tip it read and every superseded row it resolved.
+31: 
+32: Counting command (same sentence as `corpus/evidence/round80/claims.md`):
+33: 
+34:   `python3 -B corpus/evidence/round80/gate-grounding-check.py --rev REV`
+35:   prints `GATE_GROUNDING=PASS unresolved=0` and exits 0.
+36: 
+37: Exit: 0 every audited tip is grounded · 1 at least one tip is unresolved · 2 usage/env.
+38: """
+39: from __future__ import annotations
+40: 
+41: import argparse
+42: import pathlib
+43: import re
+44: import subprocess
+45: import sys
+46: 
+47: LANE = pathlib.Path(__file__).resolve().parents[3]
+48: ROW = re.compile(r"^\|[ \t]*(S\d{3,})[ \t]*\|")
+49: RECORD = re.compile(
+50:     r"^GATE-RECORD (S\d{3,}) rev=([0-9a-f]{40}) path=(\S+) line=(\d+) words=(\d+) quote=(.+)$")
+51: SUPERSEDES = re.compile(r"^supersedes (S\d{3,})\b")
+52: LESSON = re.compile(r"corpus/lessons/round-(\d+)\.md")
+53: DECIDED = re.compile(r"^- (?:Admit|Reject) (S\d{3,})\b")
+54: 
+55: 
+56: def git(*args: str) -> subprocess.CompletedProcess:
+57:     return subprocess.run(["git", "-C", str(LANE), *args],
+58:                           capture_output=True, text=True, timeout=120)
+59: 
+60: 
+61: def show(rev: str, path: str) -> str | None:
+62:     p = git("show", f"{rev}:{path}")
+63:     return p.stdout if p.returncode == 0 else None
+64: 
+65: 
+66: def rows_at(rev: str) -> dict[str, dict[str, str]]:
+67:     text = show(rev, "corpus/SOURCES.md")
+68:     if text is None:
+69:         return {}
+70:     rows: dict[str, dict[str, str]] = {}
+71:     for line in text.splitlines():
+72:         m = ROW.match(line)
+73:         if not m:
+74:             continue
+75:         cells = line.split("|")
+76:         if len(cells) < 13:
+77:             continue
+78:         rows[m.group(1)] = {
+79:             "teaches": cells[7].strip(),
+80:             "status": cells[8].strip(),
+81:             "opened": cells[9].strip(),
+82:             "used-by": cells[11].strip(),
+83:         }
+84:     return rows
+85: 
+86: 
+87: def records_at(rev: str) -> dict[str, dict[str, str]]:
+88:     """id -> last GATE-RECORD for it across the committed lessons at `rev`."""
+89:     p = git("ls-tree", "-r", "--name-only", rev, "--", "corpus/lessons")
+90:     if p.returncode != 0:
+91:         return {}
+92:     out: dict[str, dict[str, str]] = {}
+93:     for path in p.stdout.splitlines():
+94:         if not path.endswith(".md"):
+95:             continue
+96:         text = show(rev, path)
+97:         if text is None:
+98:             continue
+99:         for line in text.splitlines():
+100:             m = RECORD.match(line.strip())
+101:             if not m:
+102:                 continue
+103:             out[m.group(1)] = {"rev": m.group(2), "path": m.group(3), "line": m.group(4),
+104:                                "words": m.group(5), "quote": m.group(6).strip(),
+105:                                "lesson": path}
+106:     return out
+107: 
+108: 
+109: def check(record: dict[str, str]) -> tuple[bool, str]:
+110:     """Apply R1-R4; return (ok, detail)."""
+111:     if git("cat-file", "-e", record["rev"] + "^{commit}").returncode != 0:
+112:         return False, f"R1 revision {record['rev'][:12]} does not resolve"
+113:     text = show(record["rev"], record["path"])
+114:     if text is None:
+115:         return False, f"R2 {record['path']} absent at {record['rev'][:12]}"
+116:     lines = text.splitlines()
+117:     try:
+118:         idx = int(record["line"]) - 1
+119:     except ValueError:
+120:         return False, f"R2 line {record['line']} is not an integer"
+121:     if idx < 0 or idx >= len(lines):
+122:         return False, f"R3 line {record['line']} outside {record['path']} ({len(lines)} lines)"
+123:     if not record["quote"] or record["quote"] not in lines[idx]:
+124:         return False, f"R3 quote absent from {record['path']}:{record['line']}"
+125:     words = len(record["quote"].split())
+126:     if words != int(record["words"]):
+127:         return False, f"R4 quote is {words} words, record says {record['words']}"
+128:     if words > 25:
+129:         return False, f"R4 quote is {words} words (contract bound is 25)"
+130:     return True, f"{record['path']}:{record['line']}@{record['rev'][:12]} words={words}"
+131: 
+132: 
+133: def main() -> int:
+134:     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+135:     ap.add_argument("--rev", default="master")
+136:     ap.add_argument("--since-round", type=int, default=79)
+137:     a = ap.parse_args()
+138:     rev = a.rev
+139:     p = git("rev-parse", rev)
+140:     if p.returncode != 0:
+141:         print(f"gate-grounding: cannot resolve --rev {rev}", file=sys.stderr)
+142:         return 2
+143:     rev = p.stdout.strip()
+144:     rows = rows_at(rev)
+145:     if not rows:
+146:         print(f"gate-grounding: no registry rows readable at {rev}", file=sys.stderr)
+147:         return 2
+148:     records = records_at(rev)
+149:     parents: dict[str, str] = {}
+150:     for rid, row in rows.items():
+151:         m = SUPERSEDES.match(row["teaches"])
+152:         if m and m.group(1) in rows:
+153:             parents[m.group(1)] = rid
+154:     tips = [rid for rid in rows if rid not in parents]
+155:     decided: set[str] = set()
+156:     lp = git("ls-tree", "-r", "--name-only", rev, "--", "corpus/lessons")
+157:     for path in (lp.stdout.splitlines() if lp.returncode == 0 else []):
+158:         m = LESSON.search(path)
+159:         if not m or int(m.group(1)) < a.since_round or not path.endswith(".md"):
+160:             continue
+161:         text = show(rev, path) or ""
+162:         for line in text.splitlines():
+163:             hit = DECIDED.match(line.strip()) or RECORD.match(line.strip())
+164:             if hit:
+165:                 decided.add(hit.group(1))
+166:     audited = sorted(rid for rid in tips if rid in decided)
+167:     print(f"LANE_REV={rev} SINCE_ROUND={a.since_round} TIPS={len(tips)} "
+168:           f"AUDITED={len(audited)}")
+169:     unresolved = 0
+170:     resolved = 0
+171:     for rid in audited:
+172:         record = records.get(rid)
+173:         if record is None:
+174:             unresolved += 1
+175:             print(f"ROW {rid} record=none quote_words=- location=- verdict=UNRESOLVED")
+176:             continue
+177:         ok, detail = check(record)
+178:         if ok:
+179:             print(f"ROW {rid} record=ok quote_words={record['words']} location={detail} "
+180:                   f"verdict=OK")
+181:         else:
+182:             unresolved += 1
+183:             print(f"ROW {rid} record=bad quote_words={record['words']} location={detail} "
+184:                   f"verdict=UNRESOLVED")
+185:     for rid, tip in sorted(parents.items()):
+186:         if rid in audited or rid not in decided:
+187:             continue
+188:         record = records.get(tip)
+189:         if record is not None and check(record)[0]:
+190:             resolved += 1
+191:             print(f"SUPERSEDED {rid} by {tip} record=ok verdict=RESOLVED")
+192:         else:
+193:             unresolved += 1
+194:             print(f"SUPERSEDED {rid} by {tip} record={records.get(tip) and 'bad' or 'none'} "
+195:                   f"verdict=UNRESOLVED")
+196:     verdict = "PASS" if unresolved == 0 else "FAIL"
+197:     print(f"GATE_GROUNDING={verdict} unresolved={unresolved} "
+198:           f"superseded_resolved={resolved} audited={','.join(audited)}")
+199:     return 0 if unresolved == 0 else 1
+200: 
+201: 
+202: if __name__ == "__main__":
+203:     sys.exit(main())

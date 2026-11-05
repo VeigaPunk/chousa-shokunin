@@ -1,0 +1,461 @@
+COMMAND git -C /home/vgpnk/Projects/shokunin/souji-shokunin show c7228424c3919ecf142bab1aec8181722d86467b:census/round-58/c2-gate.py
+EXIT 0
+SHA256 56f2a31163035726f1190db3e6b827fc121602377e187d16a54a6ae8f15af543
+1: #!/usr/bin/env python3
+2: """C2 gate (souji round 58): receipt path confinement, revision typing, header conflict.
+3: 
+4: Derivation: census/round-57/c2-counter.py (frozen bytes, never edited). Predicate:
+5: census/round-58/preregistration.txt claim C2, freeze commit
+6: e7f64f30324e8ddb3f2266302daa9066054cdbb3. This gate repairs five independently
+7: discriminated refusal cases of the r57 receipt interface and preserves the three
+8: honest r57 after-manifest receipts clean:
+9: 
+10:   absolute receipt path            -> RECEIPT-PATH-UNCONFINED (refused before read)
+11:   ../ traversal                    -> RECEIPT-PATH-UNCONFINED (refused before read)
+12:   intermediate symlink escape      -> RECEIPT-PATH-UNCONFINED (refused before read)
+13:   exact OID whose cat-file type is tag
+14:                                    -> RECEIPT-REV-ABSENT
+15:   conflicting standalone rev headers -> RECEIPT-REV-CONFLICT; identical duplicate
+16:                                    headers allowed. SUMMARY rev fields are body
+17:                                    data. If no standalone header exists, the
+18:                                    legacy whitespace-token grammar is retained.
+19: 
+20: Preserved r57 behaviour: RECEIPT-REV-MISSING / RECEIPT-REV-SHORT /
+21: RECEIPT-REV-NOT-FULL40 / RECEIPT-REV-ABSENT (missing object) /
+22: RECEIPT-REV-KEEP-ONLY (refs/jj/keep only) / RECEIPT-SYMLINK (final component,
+23: never read through one) / RECEIPT-MISSING / RECEIPT-EXIT-MISSING /
+24: RECEIPT-INSTRUMENT-PIN-MISSING / RECEIPT-INSTRUMENT-DIGEST-MISMATCH /
+25: RECEIPT-INSTRUMENT-NAME-MISMATCH. Commits reachable from refs/heads, refs/tags
+26: or refs/remotes stay accepted; only the exact tag OBJECT OID is refused.
+27: 
+28: Selftest: --selftest --work DIR [--expected TSV] rebuilds the synthetic
+29: repository and receipt fixtures in a uniquely created directory under --work.
+30: Only that created directory is cleaned in finally; caller subtrees are untouched.
+31: asserts, per case: exit code AND the full ordered canonical finding list, plus
+32: exact case-set identity between fixtures and the expected TSV. Findings are
+33: canonicalised for comparison: the fixtures directory prefix becomes <work> and
+34: every hex run of 7..64 chars becomes <hex>, so the expected TSV is host
+35: independent. A do-nothing stub (always rc=0, no findings) is scored over the
+36: same cases: it must fail at least one case or the fixture set cannot
+37: discriminate (`control=FALSE-GREEN-ACCEPTED` is the failure outcome).
+38: 
+39: Exit 0: clean (or passing selftest). Exit 1: any finding (or failed selftest).
+40: Exit 2: could-not-evaluate. Read-only over the named repositories (git plumbing
+41: only, scrubbed environment, fsmonitor/hooks neutralised). Writes nothing outside
+42: --work (selftest only). No network.
+43: """
+44: import argparse
+45: import hashlib
+46: import os
+47: import re
+48: import shutil
+49: import subprocess
+50: import sys
+51: import tempfile
+52: import zlib
+53: from pathlib import Path, PurePosixPath
+54: 
+55: HERE = Path(__file__).resolve().parent
+56: DEFAULT_EXPECTED = HERE / 'c2-selftest-expected.tsv'
+57: REV_RE = re.compile(r'(?:^|\s)rev=([^\s]+)(?=\s|$)')
+58: HEADER_REV_RE = re.compile(r'(?m)^[ \t]*rev=([^\s]+)[ \t]*\r?$')
+59: PIN_RE = re.compile(r'(?:^|\s)instrument_sha256=([0-9a-f]{64})(?=\s|$)')
+60: INSTR_RE = re.compile(r'(?:^|\s)instrument=([^\s]+)(?=\s|$)')
+61: EXIT_RE = re.compile(r'(?m)^EXIT=(\d+)\s*$')
+62: FULL40 = re.compile(r'[0-9a-f]{40}')
+63: HEXISH = re.compile(r'[0-9A-Za-z._/\-]+')
+64: HEXRUN = re.compile(r'[0-9a-f]{7,64}')
+65: 
+66: 
+67: def git_env():
+68:     return {
+69:         'PATH': os.environ.get('PATH', '/usr/bin:/bin'), 'LC_ALL': 'C',
+70:         'GIT_CONFIG_NOSYSTEM': '1', 'GIT_CONFIG_GLOBAL': os.devnull,
+71:         'GIT_CONFIG_SYSTEM': os.devnull, 'GIT_NO_REPLACE_OBJECTS': '1',
+72:         'GIT_OPTIONAL_LOCKS': '0', 'GIT_NO_LAZY_FETCH': '1',
+73:         'GIT_TERMINAL_PROMPT': '0',
+74:     }
+75: 
+76: 
+77: def git(root, *args):
+78:     return subprocess.run(['git', '-C', str(root),
+79:                            '-c', 'core.fsmonitor=false', '-c', 'core.hooksPath=/dev/null']
+80:                           + list(args), capture_output=True, env=git_env(), timeout=120)
+81: 
+82: 
+83: def sha256(data):
+84:     return hashlib.sha256(data).hexdigest()
+85: 
+86: 
+87: def path_finding(root_real: str, rel: str):
+88:     """Confinement verdict BEFORE any content read. None when confined."""
+89:     try:
+90:         if not rel:
+91:             return 'RECEIPT-PATH-UNCONFINED %s' % rel
+92:         pp = PurePosixPath(rel)
+93:         if pp.is_absolute() or rel.startswith('/'):
+94:             return 'RECEIPT-PATH-UNCONFINED %s' % rel
+95:         parts = pp.parts
+96:         if any(part == '..' for part in parts):
+97:             return 'RECEIPT-PATH-UNCONFINED %s' % rel
+98:         cur = root_real
+99:         for i, part in enumerate(parts):
+100:             cur = os.path.join(cur, part)
+101:             if os.path.islink(cur):
+102:                 if i == len(parts) - 1:
+103:                     return 'RECEIPT-SYMLINK %s' % rel
+104:                 real = os.path.realpath(cur)
+105:                 if real != root_real and not real.startswith(root_real + os.sep):
+106:                     return 'RECEIPT-PATH-UNCONFINED %s' % rel
+107:         real = os.path.realpath(cur)
+108:         if real != root_real and not real.startswith(root_real + os.sep):
+109:             return 'RECEIPT-PATH-UNCONFINED %s' % rel
+110:     except (OSError, ValueError):
+111:         return 'RECEIPT-PATH-UNCONFINED %s' % rel
+112:     return None
+113: 
+114: 
+115: def durable_kind(root, rev):
+116:     """'branch' when the exact object is a commit reachable from a non-jj ref;
+117:     'keep-only' when reachable from refs/jj/keep only; 'absent' when the object
+118:     is missing or is not a commit object (an annotated tag object OID names no
+119:     commit: RECEIPT-REV-ABSENT by the r58 contract)."""
+120:     t = git(root, 'cat-file', '-t', rev)
+121:     if t.returncode:
+122:         return 'absent'
+123:     if t.stdout.decode('utf-8', 'replace').strip() != 'commit':
+124:         return 'absent'
+125:     refs = git(root, 'for-each-ref', '--format=%(refname)',
+126:                'refs/heads', 'refs/tags', 'refs/remotes').stdout.decode().split()
+127:     for r in refs:
+128:         if git(root, 'merge-base', '--is-ancestor', rev, r).returncode == 0:
+129:             return 'branch'
+130:     keeps = git(root, 'for-each-ref', '--format=%(refname)', 'refs/jj/keep').stdout.decode().split()
+131:     for r in keeps:
+132:         if git(root, 'merge-base', '--is-ancestor', rev, r).returncode == 0:
+133:             return 'keep-only'
+134:     return 'absent'
+135: 
+136: 
+137: 
+138: 
+139: def check_receipt(root_real: str, rel: str, instrument: str):
+140:     unconfined = path_finding(root_real, rel)
+141:     if unconfined:
+142:         return [unconfined]                    # refused BEFORE reading
+143:     p = Path(root_real) / rel
+144:     if p.is_symlink():
+145:         return ['RECEIPT-SYMLINK %s' % rel]    # never read through one
+146:     if not p.is_file():
+147:         return ['RECEIPT-MISSING %s' % rel]
+148:     text = p.read_bytes().decode('utf-8', 'replace')
+149:     toks = []
+150:     matches = list(HEADER_REV_RE.finditer(text)) or list(REV_RE.finditer(text))
+151:     for m in matches:
+152:         if m.group(1) not in toks:
+153:             toks.append(m.group(1))
+154:     if not toks:
+155:         return ['RECEIPT-REV-MISSING %s' % rel]
+156:     if len(toks) > 1:
+157:         return ['RECEIPT-REV-CONFLICT %s rev=%s' % (rel, '|'.join(toks))]
+158:     tok = toks[0]
+159:     findings = []
+160:     if FULL40.fullmatch(tok):
+161:         kind = durable_kind(root_real, tok)
+162:         if kind == 'absent':
+163:             findings.append('RECEIPT-REV-ABSENT %s rev=%s' % (rel, tok))
+164:         elif kind == 'keep-only':
+165:             findings.append('RECEIPT-REV-KEEP-ONLY %s rev=%s' % (rel, tok))
+166:     elif HEXISH.fullmatch(tok) and re.fullmatch(r'[0-9a-f]{1,39}', tok):
+167:         findings.append('RECEIPT-REV-SHORT %s rev=%s' % (rel, tok))
+168:     else:
+169:         findings.append('RECEIPT-REV-NOT-FULL40 %s rev=%s' % (rel, tok))
+170:     if not EXIT_RE.search(text):
+171:         findings.append('RECEIPT-EXIT-MISSING %s' % rel)
+172:     if instrument and instrument != '-' and FULL40.fullmatch(tok):
+173:         pm = PIN_RE.search(text)
+174:         if not pm:
+175:             findings.append('RECEIPT-INSTRUMENT-PIN-MISSING %s instrument=%s' % (rel, instrument))
+176:         else:
+177:             blocked = git(root_real, 'show', '%s:%s' % (tok, instrument))
+178:             if blocked.returncode:
+179:                 findings.append('RECEIPT-INSTRUMENT-PIN-MISSING %s instrument=%s absent at rev'
+180:                                 % (rel, instrument))
+181:             else:
+182:                 got = sha256(blocked.stdout)
+183:                 if got != pm.group(1):
+184:                     findings.append('RECEIPT-INSTRUMENT-DIGEST-MISMATCH %s instrument=%s '
+185:                                     'pin=%s committed=%s' % (rel, instrument, pm.group(1), got))
+186:             im = INSTR_RE.search(text)
+187:             if im and im.group(1) != instrument:
+188:                 findings.append('RECEIPT-INSTRUMENT-NAME-MISMATCH %s receipt=%s manifest=%s'
+189:                                 % (rel, im.group(1), instrument))
+190:     return findings
+191: 
+192: 
+193: def run_manifest(root: Path, manifest: Path, out):
+194:     rows = []
+195:     try:
+196:         lines = manifest.read_text().splitlines()
+197:     except OSError as exc:
+198:         out.append('CANNOT-EVALUATE manifest unreadable: %s' % exc)
+199:         return 2
+200:     if not lines or not lines[0].strip():
+201:         out.append('CANNOT-EVALUATE empty manifest')
+202:         return 2
+203:     for n, ln in enumerate(lines[1:], 2):
+204:         if not ln.strip():
+205:             continue
+206:         f = ln.split('\t')
+207:         if len(f) != 2:
+208:             out.append('CANNOT-EVALUATE manifest line %d: %d columns' % (n, len(f)))
+209:             return 2
+210:         rows.append((f[0].strip(), f[1].strip()))
+211:     root_real = os.path.realpath(str(root))
+212:     total = 0
+213:     for rel, instrument in rows:
+214:         for f in check_receipt(root_real, rel, instrument):
+215:             total += 1
+216:             out.append('FINDING ' + f)
+217:     out.append('SUMMARY receipts=%d findings=%d' % (len(rows), total))
+218:     return 0 if total == 0 else 1
+219: 
+220: 
+221: def build_fixtures(work: Path):
+222:     """Synthetic repository + receipts, rebuilt from scratch each call.
+223:     Returns (repo, base, {case: manifest})."""
+224:     base = work.resolve()
+225:     repo = base / 'repo'
+226:     repo.mkdir(exist_ok=True)
+227:     env = dict(git_env())
+228:     env['GIT_AUTHOR_DATE'] = '2026-11-01T00:00:00+0000'
+229:     env['GIT_COMMITTER_DATE'] = '2026-11-01T00:00:00+0000'
+230: 
+231:     def run(*args):
+232:         command = ['git', '-C', str(repo), '-c', 'core.hooksPath=/dev/null',
+233:                    '-c', 'core.fsmonitor=false'] + list(args[1:])
+234:         if args[1] != 'init':
+235:             top = subprocess.run(['git', '-C', str(repo), 'rev-parse', '--show-toplevel'],
+236:                                  capture_output=True, env=env, timeout=120)
+237:             if top.returncode or Path(top.stdout.decode().strip()).resolve() != repo:
+238:                 raise SystemExit('fixture toplevel mismatch')
+239:         p = subprocess.run(command, cwd=str(repo), capture_output=True, env=env, timeout=120)
+240:         if p.returncode:
+241:             raise SystemExit('fixture build failed: %r %s' % (args, p.stderr.decode()))
+242:         return p.stdout.decode().strip()
+243: 
+244:     run('git', 'init', '-q', '-b', 'main')
+245:     run('git', 'config', 'user.name', 'fixture')
+246:     run('git', 'config', 'user.email', 'fixture@example.invalid')
+247:     top = run('git', 'rev-parse', '--show-toplevel')
+248:     if os.path.realpath(top) != os.path.realpath(repo):
+249:         raise SystemExit('fixture build failed: toplevel %r is not %r' % (top, str(repo)))
+250:     (repo / 'tools').mkdir(exist_ok=True)
+251:     (repo / 'tools' / 'fixture-instrument.py').write_text('# fixture instrument v1\n')
+252:     run('git', 'add', 'tools/fixture-instrument.py')
+253:     run('git', 'commit', '-q', '-m', 'fixture base')
+254:     tip = run('git', 'rev-parse', 'HEAD')
+255:     instr_sha = sha256((repo / 'tools' / 'fixture-instrument.py').read_bytes())
+256:     # a second commit reachable only from a jj keep ref
+257:     (repo / 'tools' / 'fixture-instrument.py').write_text('# fixture instrument keep-only\n')
+258:     run('git', 'add', 'tools/fixture-instrument.py')
+259:     run('git', 'commit', '-q', '-m', 'keep-only commit')
+260:     keep = run('git', 'rev-parse', 'HEAD')
+261:     keepref = repo / '.git/refs/jj/keep/fixture'
+262:     keepref.parent.mkdir(parents=True, exist_ok=True)
+263:     keepref.write_text(keep + '\n')
+264:     (repo / '.git/refs/heads/main').write_text(tip + '\n')
+265:     # Construct the annotated tag as a loose Git object without tag/update-ref.
+266:     tagbody = ('object %s\ntype commit\ntag vannot\ntagger fixture '
+267:                '<fixture@example.invalid> 1793491200 +0000\n\nfixture tag\n' % tip).encode()
+268:     tagobject = b'tag ' + str(len(tagbody)).encode() + b'\0' + tagbody
+269:     tagoid = hashlib.sha1(tagobject).hexdigest()
+270:     objpath = repo / '.git/objects' / tagoid[:2] / tagoid[2:]
+271:     objpath.parent.mkdir(parents=True, exist_ok=True)
+272:     objpath.write_bytes(zlib.compress(tagobject))
+273:     (repo / '.git/refs/tags/vannot').write_text(tagoid + '\n')
+274:     absent = '0' * 40
+275:     short = tip[:12]
+276:     receipts = repo / 'receipts'
+277:     receipts.mkdir(exist_ok=True)
+278: 
+279:     def honest_body(rev):
+280:         return ('rev=%s\ninstrument=tools/fixture-instrument.py\ninstrument_sha256=%s\n'
+281:                 'SUMMARY fixture clean\nEXIT=0\n' % (rev, instr_sha))
+282: 
+283:     def receipt(name, body, instrument=True):
+284:         (receipts / name).write_text(body)
+285:         mf = base / (name + '.manifest.tsv')
+286:         col = 'tools/fixture-instrument.py' if instrument else '-'
+287:         mf.write_text('receipt\tinstrument\n%s\t%s\n' % ('receipts/' + name, col))
+288:         return mf
+289: 
+290:     honest = honest_body(tip)
+291:     cases = {}
+292:     cases['REV-OK'] = receipt('ok.txt', honest)
+293:     cases['MISSING-REV'] = receipt('missing.txt', honest.replace('rev=%s\n' % tip, ''))
+294:     cases['SHORT-REV'] = receipt('short.txt', honest.replace('rev=%s' % tip, 'rev=%s' % short))
+295:     cases['NOT-FULL40'] = receipt('head.txt', honest.replace('rev=%s' % tip, 'rev=HEAD'))
+296:     cases['ABSENT'] = receipt('absent.txt', honest.replace('rev=%s' % tip, 'rev=%s' % absent),
+297:                               instrument=False)
+298:     cases['KEEP-ONLY'] = receipt('keep.txt', honest.replace('rev=%s' % tip, 'rev=%s' % keep),
+299:                                  instrument=False)
+300:     cases['DIGEST-MISMATCH'] = receipt('digest.txt',
+301:                                        honest.replace('instrument_sha256=%s' % instr_sha,
+302:                                                       'instrument_sha256=%s' % ('f' * 64)))
+303:     cases['NO-EXIT'] = receipt('noexit.txt', honest.replace('EXIT=0\n', ''))
+304:     cases['TAG-OID'] = receipt('tagobj.txt', honest.replace('rev=%s' % tip, 'rev=%s' % tagoid),
+305:                                instrument=False)
+306:     cases['REV-CONFLICT'] = receipt('conflict.txt',
+307:                                     honest.replace('rev=%s' % tip,
+308:                                                    'rev=%s\nrev=%s' % (tip, absent)),
+309:                                     instrument=False)
+310:     dup = honest.replace('rev=%s\n' % tip, 'rev=%s\nrev=%s\n' % (tip, tip), 1)
+311:     cases['DUP-REV'] = receipt('dup.txt', dup)
+312:     # A SUMMARY short rev is body data, not another binding header.
+313:     prefix_dup = honest.replace('SUMMARY fixture clean', 'SUMMARY fixture clean rev=' + short)
+314:     cases['PREFIX-DUP'] = receipt('prefixdup.txt', prefix_dup)
+315:     # final-component symlink: refused without reading (r57 behaviour kept)
+316:     (receipts / 'ok-target.txt').write_text(honest)
+317:     os.symlink('ok-target.txt', receipts / 'sym.txt')
+318:     mf = base / 'sym.txt.manifest.tsv'
+319:     mf.write_text('receipt\tinstrument\nreceipts/sym.txt\ttools/fixture-instrument.py\n')
+320:     cases['SYMLINK'] = mf
+321:     # intermediate symlink resolving INSIDE the root: allowed
+322:     inner = receipts / 'inner'
+323:     inner.mkdir(exist_ok=True)
+324:     (inner / 'ok2.txt').write_text(honest)
+325:     os.symlink('inner', receipts / 'inlink')
+326:     mf = base / 'inlink.manifest.tsv'
+327:     mf.write_text('receipt\tinstrument\nreceipts/inlink/ok2.txt\ttools/fixture-instrument.py\n')
+328:     cases['LINK-INTERNAL'] = mf
+329:     # escapes OUTSIDE the root carrying honest content: a gate that reads them
+330:     # would return clean; the contract refuses them before reading
+331:     escape = base / 'escape'
+332:     escape.mkdir(exist_ok=True)
+333:     abs_target = escape / 'abs-target.txt'
+334:     abs_target.write_text(honest)
+335:     (escape / 'trav.txt').write_text(honest)
+336:     (escape / 'esc.txt').write_text(honest)
+337:     mf = base / 'abs.manifest.tsv'
+338:     mf.write_text('receipt\tinstrument\n%s\t-\n' % str(abs_target))
+339:     cases['ABSOLUTE-PATH'] = mf
+340:     mf = base / 'trav.manifest.tsv'
+341:     mf.write_text('receipt\tinstrument\n../escape/trav.txt\t-\n')
+342:     cases['TRAVERSAL'] = mf
+343:     os.symlink(str(escape), receipts / 'linkdir')
+344:     mf = base / 'linkdir.manifest.tsv'
+345:     mf.write_text('receipt\tinstrument\nreceipts/linkdir/esc.txt\t-\n')
+346:     cases['LINK-ESCAPE'] = mf
+347:     return repo, base, cases
+348: 
+349: 
+350: def canon(text: str, base: str) -> str:
+351:     return HEXRUN.sub('<hex>', text.replace(base, '<work>'))
+352: 
+353: 
+354: def run_selftest(work: Path, expected_path: Path, out):
+355:     work = work.resolve()
+356:     work.mkdir(parents=True, exist_ok=True)
+357:     base = Path(tempfile.mkdtemp(prefix='c2-fixtures-', dir=work))
+358:     try:
+359:         repo, base, cases = build_fixtures(base)
+360:         return score_selftest(repo, base, cases, expected_path, out)
+361:     finally:
+362:         shutil.rmtree(base)
+363: 
+364: 
+365: def score_selftest(repo, base, cases, expected_path, out):
+366:     observed = {}
+367:     for name in sorted(cases):
+368:         buf = []
+369:         rc = run_manifest(repo, cases[name], buf)
+370:         raw = [ln[len('FINDING '):] for ln in buf if ln.startswith('FINDING ')]
+371:         observed[name] = (rc, [canon(f, str(base)) for f in raw])
+372:     try:
+373:         rows = expected_path.read_text().splitlines()
+374:     except OSError as exc:
+375:         out.append('CANNOT-EVALUATE expected unreadable: %s' % exc)
+376:         return 2
+377:     exp = {}
+378:     for row in rows[1:]:
+379:         if not row.strip():
+380:             continue
+381:         f = row.split('\t')
+382:         if len(f) != 3:
+383:             out.append('CANNOT-EVALUATE expected line malformed: %r' % row)
+384:             return 2
+385:         if f[0] in exp:
+386:             out.append('CANNOT-EVALUATE duplicate expected case: ' + f[0])
+387:             return 2
+388:         want = [x for x in f[2].split(',') if x and x != '-']
+389:         try:
+390:             want_rc = int(f[1])
+391:         except ValueError:
+392:             out.append('CANNOT-EVALUATE expected rc malformed: %r' % f[1])
+393:             return 2
+394:         exp[f[0]] = (want_rc, want)
+395:     ok = True
+396:     extra = sorted(set(exp) - set(cases))
+397:     missing = sorted(set(cases) - set(exp))
+398:     if extra or missing:
+399:         ok = False
+400:     out.append('SELFTEST-EXPECTED-SET cases=%d expected=%d extra=%s missing=%s'
+401:                % (len(cases), len(exp), ','.join(extra) or '-', ','.join(missing) or '-'))
+402:     stub_meets = 0
+403:     for name in sorted(cases):
+404:         rc, got = observed[name]
+405:         want_rc, want = exp.get(name, (None, ['<missing-expected>']))
+406:         passed = (want_rc is not None and rc == want_rc and got == want)
+407:         ok = ok and passed
+408:         if want_rc == 0 and not want:
+409:             stub_meets += 1
+410:         out.append('SELFTEST-CASE %s %s rc=%d want_rc=%s findings=%s want_findings=%s'
+411:                    % (name, 'pass' if passed else 'fail', rc, want_rc,
+412:                       ','.join(got) or '-', ','.join(want) or '-'))
+413:     # the do-nothing stub (rc=0, no findings) must fail at least one case,
+414:     # otherwise the fixture set cannot discriminate the gate from a stub
+415:     if stub_meets == len(cases):
+416:         ok = False
+417:         out.append('SELFTEST control=FALSE-GREEN-ACCEPTED stub_meets=%d cases=%d'
+418:                    % (stub_meets, len(cases)))
+419:     else:
+420:         out.append('SELFTEST control=FALSE-GREEN-REJECTED stub_meets=%d discriminated=%d cases=%d'
+421:                    % (stub_meets, len(cases) - stub_meets, len(cases)))
+422:     out.append('SELFTEST %s cases=%d' % ('pass' if ok else 'fail', len(cases)))
+423:     return 0 if ok else 1
+424: 
+425: 
+426: def main():
+427:     ap = argparse.ArgumentParser(description=__doc__)
+428:     ap.add_argument('--root')
+429:     ap.add_argument('--manifest')
+430:     ap.add_argument('--selftest', action='store_true')
+431:     ap.add_argument('--work', default=None)
+432:     ap.add_argument('--scratch', default=None, help='alias of --work')
+433:     ap.add_argument('--expected', default=None)
+434:     ns = ap.parse_args()
+435:     out = []
+436:     if ns.selftest:
+437:         work = ns.work or ns.scratch
+438:         if not work:
+439:             print('CANNOT-EVALUATE --selftest requires --work (or --scratch)', file=sys.stderr)
+440:             return 2
+441:         exp = Path(ns.expected) if ns.expected else DEFAULT_EXPECTED
+442:         rc = run_selftest(Path(work), exp, out)
+443:     else:
+444:         missing = [a for a, v in (('--root', ns.root), ('--manifest', ns.manifest)) if not v]
+445:         if missing:
+446:             print('CANNOT-EVALUATE missing required args: %s' % ', '.join(missing), file=sys.stderr)
+447:             return 2
+448:         root = Path(ns.root).resolve()
+449:         if not root.is_dir():
+450:             print('CANNOT-EVALUATE --root is not a directory: %s' % root, file=sys.stderr)
+451:             return 2
+452:         rc = run_manifest(root, Path(ns.manifest), out)
+453:     print('\n'.join(out))
+454:     return rc
+455: 
+456: 
+457: if __name__ == '__main__':
+458:     sys.exit(main())

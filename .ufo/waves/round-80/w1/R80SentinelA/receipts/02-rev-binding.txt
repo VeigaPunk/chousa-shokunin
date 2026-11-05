@@ -1,0 +1,61 @@
+# ITEM 2 — revision binding of every control receipt (HEAD 44d09edfc20dba26ee8d58a93d365989916a2692)
+$ ls corpus/evidence/round80/controls/
+grounding-before-r80.txt
+grounding-before.txt
+oracle-before-r80.txt
+oracle-structure-v6-accepted.txt
+v7-legit-matrix-after.txt
+v7-legit-matrix-prefreeze.txt
+v7-legit-matrix-r80.txt
+
+## corpus/evidence/round80/controls/grounding-before-r80.txt
+$ grep -nE "^[A-Z_]*(REV|LANE_REV)=" corpus/evidence/round80/controls/grounding-before-r80.txt
+4:LANE_REV=b7803829922770b890e9f4efdd30d12c3695439a SINCE_ROUND=79 TIPS=191 AUDITED=3
+  40-hex tokens: b7803829922770b890e9f4efdd30d12c3695439a 
+  REV=worktree occurrences: 0
+  lines=9  exit-trailers=1  command-headers=1
+## corpus/evidence/round80/controls/grounding-before.txt
+$ grep -nE "^[A-Z_]*(REV|LANE_REV)=" corpus/evidence/round80/controls/grounding-before.txt
+4:LANE_REV=b7803829922770b890e9f4efdd30d12c3695439a SINCE_ROUND=79 TIPS=191 AUDITED=3
+  40-hex tokens: b7803829922770b890e9f4efdd30d12c3695439a 
+  REV=worktree occurrences: 0
+  lines=9  exit-trailers=1  command-headers=1
+## corpus/evidence/round80/controls/oracle-before-r80.txt
+$ grep -nE "^[A-Z_]*(REV|LANE_REV)=" corpus/evidence/round80/controls/oracle-before-r80.txt
+  NO REV/LANE_REV LINE (grep exit=1)
+  40-hex tokens: 
+  REV=worktree occurrences: 0
+  lines=9  exit-trailers=1  command-headers=1
+## corpus/evidence/round80/controls/oracle-structure-v6-accepted.txt
+$ grep -nE "^[A-Z_]*(REV|LANE_REV)=" corpus/evidence/round80/controls/oracle-structure-v6-accepted.txt
+  NO REV/LANE_REV LINE (grep exit=1)
+  40-hex tokens: 
+  REV=worktree occurrences: 0
+  lines=9  exit-trailers=1  command-headers=1
+## corpus/evidence/round80/controls/v7-legit-matrix-after.txt
+$ grep -nE "^[A-Z_]*(REV|LANE_REV)=" corpus/evidence/round80/controls/v7-legit-matrix-after.txt
+3:LANE_REV=b7803829922770b890e9f4efdd30d12c3695439a
+  40-hex tokens: b7803829922770b890e9f4efdd30d12c3695439a 
+  REV=worktree occurrences: 0
+  lines=216  exit-trailers=0  command-headers=0
+## corpus/evidence/round80/controls/v7-legit-matrix-prefreeze.txt
+$ grep -nE "^[A-Z_]*(REV|LANE_REV)=" corpus/evidence/round80/controls/v7-legit-matrix-prefreeze.txt
+5:LANE_REV=b7803829922770b890e9f4efdd30d12c3695439a
+  40-hex tokens: b7803829922770b890e9f4efdd30d12c3695439a 
+  REV=worktree occurrences: 0
+  lines=218  exit-trailers=0  command-headers=1
+## corpus/evidence/round80/controls/v7-legit-matrix-r80.txt
+$ grep -nE "^[A-Z_]*(REV|LANE_REV)=" corpus/evidence/round80/controls/v7-legit-matrix-r80.txt
+5:LANE_REV=b7803829922770b890e9f4efdd30d12c3695439a
+  40-hex tokens: b7803829922770b890e9f4efdd30d12c3695439a 
+  REV=worktree occurrences: 0
+  lines=219  exit-trailers=1  command-headers=1
+
+# receipts with a 40-hex REV/LANE_REV line:
+  YES corpus/evidence/round80/controls/grounding-before-r80.txt
+  YES corpus/evidence/round80/controls/grounding-before.txt
+  NO  corpus/evidence/round80/controls/oracle-before-r80.txt
+  NO  corpus/evidence/round80/controls/oracle-structure-v6-accepted.txt
+  YES corpus/evidence/round80/controls/v7-legit-matrix-after.txt
+  YES corpus/evidence/round80/controls/v7-legit-matrix-prefreeze.txt
+  YES corpus/evidence/round80/controls/v7-legit-matrix-r80.txt

@@ -1,0 +1,11 @@
+### C1 latent re-emitter defect: v7 renames FunctionDef.name but never Attribute.attr
+### instrument sha256=35351b2328bb6a284da13e61240a6ec598f39a148b8d8948d4e3d60dd78d914d
+### grep: which node types _rename touches
+264:            node.id = name_for(node.id)
+266:            node.arg = name_for(node.arg)
+268:            node.name = name_for(node.name)
+270:            node.name = name_for(node.name)
+276:                node.name = name_for(rest)
+
+# original : rc=0 out='OK x' err=''
+# re-emitted: rc=1 out='' err="AttributeError: '_23ff6e79' object has no attribute 'canon'"

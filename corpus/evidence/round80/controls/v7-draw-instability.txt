@@ -1,0 +1,13 @@
+# round-80 C1: the frozen counting command is draw-dependent — five runs of the same bytes
+# command: python3 -B corpus/evidence/round80/matrix-battery-v7.py --matrix corpus/evidence/round76/loader-matrix-v3.py --work DIR --runs 1 --fresh 2 --rev b7803829922770b890e9f4efdd30d12c3695439a
+# instrument sha256: 35351b2328bb6a284da13e61240a6ec598f39a148b8d8948d4e3d60dd78d914d
+# A = controls/v7-legit-matrix-r80.txt (exit captured by the lane)
+# B-D = the same command three times in a loop (the loop's '# exit:' was the grep pipeline's; the seat receipt .ufo/waves/round-80/w1/R80ExecA/r80a-after-v7-run1.txt carries EXIT=1 for the same FAIL line)
+# E = controls/v7-draw-pass-e.txt (exit captured by the lane)
+## A  BATTERY=PASS forgers_rejected=11/11 positive=2/2 fresh_positive=2/2 fresh_forgers=2/2 oracles_rejected=5/5  exit 0
+## B  BATTERY=FAIL forgers_rejected=11/11 positive=2/2 fresh_positive=1/2 fresh_forgers=1/2 oracles_rejected=5/5  (134.19 s)
+## C  BATTERY=FAIL forgers_rejected=11/11 positive=2/2 fresh_positive=1/2 fresh_forgers=1/2 oracles_rejected=5/5  (116.74 s)
+## D  BATTERY=FAIL forgers_rejected=11/11 positive=2/2 fresh_positive=0/2 fresh_forgers=0/2 oracles_rejected=5/5  (124.52 s)
+## E  BATTERY=PASS forgers_rejected=11/11 positive=2/2 fresh_positive=2/2 fresh_forgers=2/2 oracles_rejected=5/5  exit 0
+# ALSO: --fresh 3 prints BATTERY=FAIL … fresh_positive=0/3 fresh_forgers=0/3 (seat receipt r80d-v7-run3-fresh3.txt, EXIT=1)
+DRAW_VERDICT=UNSTABLE pass=2 fail=3 of five runs on identical bytes

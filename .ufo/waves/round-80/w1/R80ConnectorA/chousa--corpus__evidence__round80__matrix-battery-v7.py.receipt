@@ -1,0 +1,668 @@
+COMMAND git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 0d253c95732c0ed19a9fa414e5d17769ddefa48d:corpus/evidence/round80/matrix-battery-v7.py
+EXIT 0
+SHA256 35351b2328bb6a284da13e61240a6ec598f39a148b8d8948d4e3d60dd78d914d
+1: #!/usr/bin/env python3
+2: """Round-80 matrix battery v7 — the subject set is drawn per run, so no digest table
+3: built from committed bytes maps it (QUALITY 152 successor to round 79's limit).
+4: 
+5: Unit under test: a MATRIX program that takes `--counter PATH --work DIR` and exits 0
+6: iff a candidate counter satisfies every case it declares. The battery runs the matrix
+7: against re-emitted copies of two positives and eleven forgers (the round-76 subject
+8: set, referenced byte-identically from `corpus/evidence/round76/forgers/`), three
+9: forged matrices, and the two round-79 oracles that identified a subject without
+10: scoring it, under the round-78 legs plus the round-78 successor requirement, and adds
+11: the round-80 FRESH LEG:
+12: 
+13:   ORDER LEG      The subject list is permuted per run with a fresh 64-bit seed
+14:                  (`secrets.randbits`). The permutation is never printed and no digest
+15:                  of it is printed.
+16:   QUIET LEG      No per-subject line is printed while subjects are running; every
+17:                  `MATRIX RUN`/`SUBJECT` line is buffered and flushed after the scoring
+18:                  loop ends.
+19:   CONTENT LEG    Every matrix run must print the twelve `CASE` lines of the frozen
+20:                  contract with cells equal to the battery's own independently stated
+21:                  contract map, and a summary count equal to the number of `PASS` lines.
+22:   IDENTITY LEG   **Re-emission, not salting.** Round 78 inserted an inert statement into
+23:                  the source text, so a four-line normalizer deleted the `_r78<hex>`
+24:                  family and recovered every subject byte-for-byte (`R78L1/a8-normalizer.py`).
+25:                  v6 never writes the source text: it parses the subject, drops every
+26:                  docstring, renames every bound identifier through a fresh per-copy table
+27:                  (imports, keyword-argument names, builtins and dunders excluded), inserts
+28:                  one random-named integer assignment after the last `__future__` import at a
+29:                  random top-level position, compiles the tree under a random file name and
+30:                  writes a wrapper that `exec`s the marshalled code object. No 40-byte window
+31:                  of the committed source occurs in the copy.
+32:   RECEIPT LEG    The verdict is bound to the process exit code and to a `RECEIPT_LINES`
+33:                  trailer printed immediately before the predicate line.
+34: 
+35:   FRESH LEG      Per run the battery draws `--fresh N` fresh positives and N fresh
+36:                  forgers from the two committed positives by AST rewrite (semantics-
+37:                  preserving: comparison-operand swap, if/else inversion, integer
+38:                  constant folding) or AST mutation (operator flip, constant shift,
+39:                  condition negation, branch swap). Ground truth is MEASURED, not
+40:                  assumed: the committed witness matrix (`round76/loader-matrix-v3.py`)
+41:                  runs the base copy and the candidate, and the candidate is a POSITIVE
+42:                  only when verdict, marks and all twelve case cells are identical;
+43:                  otherwise it is a FORGER. The matrix under test must accept every
+44:                  fresh positive and reject every fresh forger. The drawn set is scored
+45:                  by the matrix under test AND by every enumerated oracle, so an oracle
+46:                  whose table was built from committed bytes cannot reach the PASS line.
+47:                  No digest table built from committed bytes maps these subjects.
+48: 
+49: Predicate (same sentence as `corpus/evidence/round80/claims.md`):
+50: 
+51:   `python3 -B corpus/evidence/round80/matrix-battery-v7.py --matrix MATRIX --work DIR
+52:    --fresh 2` exits 0 and prints exactly
+53:   `BATTERY=PASS forgers_rejected=11/11 positive=2/2 fresh_positive=2/2 fresh_forgers=2/2 oracles_rejected=5/5`.
+54: 
+55: A forger is REJECTED only when both runs exit 1 with fewer than full marks; a positive
+56: is ACCEPTED only when both runs exit 0 with full marks, `MATRIX=PASS`, and a valid
+57: contract table. An exit of 2 is never scored in the matrix's favour. The five
+58: enumerated oracles are the three committed forged matrices, the round-79
+59: structure-identity matrix and the round-79 payload-decode forger re-pointed at the
+60: committed lane; each must be REJECTED.
+61: 
+62: Closure-removal twins (mutation evidence, never the predicate): `--no-permute` runs the
+63: fixed round-76 subject order, `--no-content` drops the contract-table requirement,
+64: `--print-order` re-enables the round-77 `ORDER <i> <digest>` line, and `--no-fresh`
+65: drops the fresh leg (the round-79 behaviour). `--reemit-only` emits one copy of each
+66: committed subject into `--work` and exits 0 (the `derivative-check.py` entry point),
+67: never scoring anything.
+68: 
+69: Limits (recorded, not closed): the fresh leg's ground truth is the committed witness
+70: matrix, so a witness that is wrong about a case makes both legs wrong together; the
+71: eleven committed forgers and the five oracles are the independent anchor. A classifier
+72: that knows this generator's rewrite operators can still separate fresh positives from
+73: fresh forgers statically; that channel is measured by the round-80 critic seat and
+74: recorded, not certified closed. Line-count detection closes append; a forger that
+75: truncates the receipt is not detected by it (the caller's exit code remains
+76: authoritative).
+77: 
+78: Usage: python3 corpus/evidence/round80/matrix-battery-v7.py --matrix PATH --work DIR
+79:        [--runs N] [--matrix-timeout S] [--fresh N] [--no-fresh] [--rev REV]
+80:        [--no-permute] [--no-content] [--print-order] [--reemit-only]
+81: Exit: 0 BATTERY=PASS · 1 BATTERY=FAIL · 2 usage/env.
+82: """
+83: from __future__ import annotations
+84: 
+85: import argparse
+86: import ast
+87: import base64
+88: import builtins
+89: import hashlib
+90: import marshal
+91: import os
+92: import pathlib
+93: import random
+94: import re
+95: import secrets
+96: import shutil
+97: import subprocess
+98: import sys
+99: 
+100: HERE = pathlib.Path(__file__).resolve().parent
+101: LANE = HERE.parents[2]
+102: 
+103: POSITIVES = [("successor-counter", LANE / "corpus/evidence/round74/correction-count.py"),
+104:              ("ref-counter", LANE / "corpus/evidence/round75/ref-counter.py")]
+105: R76F = LANE / "corpus/evidence/round76/forgers"
+106: FORGERS = [("constant-pass", R76F / "forge-constant-pass.py"),
+107:            ("constant-fail", R76F / "forge-constant-fail.py"),
+108:            ("order-twelve", R76F / "forge-order-twelve.py"),
+109:            ("diff-only", R76F / "forge-diff-only.py"),
+110:            ("naive-grep", R76F / "forge-naive-grep.py"),
+111:            ("subject-map", R76F / "forge-subject-map.py"),
+112:            ("tree-identity", R76F / "forge-tree-identity.py"),
+113:            ("size-map", R76F / "forge-size-map.py"),
+114:            ("harness-source", R76F / "forge-harness-source.py"),
+115:            ("seed-leak", R76F / "forge-seed-leak.py"),
+116:            ("hang", R76F / "forge-hang.py")]
+117: R79F = LANE / "corpus/evidence/round79/forgers"
+118: R80F = HERE / "forgers"
+119: ORACLES = [("summary-only", R79F / "forge-order-matrix.py"),
+120:            ("contract-table", R79F / "forge-order-matrix-table.py"),
+121:            ("block-position", R79F / "forge-order-matrix-block.py"),
+122:            ("structure-identity",
+123:             LANE / ".ufo/waves/round-79/w1/R79ExecC/matrix-structure-identity.py"),
+124:            ("payload-decode", R80F / "a10-payload-decode.py")]
+125: WITNESS = LANE / "corpus/evidence/round76/loader-matrix-v3.py"
+126: 
+127: # The twelve-case contract, stated here independently of the matrix's own CASES table
+128: # (QUALITY 128: an expected root is independently stated, never inferred from the
+129: # subject's own assertion). name -> (expected_rc, expected_failed set).
+130: CONTRACT = {
+131:     "case-00-unchanged": (0, ""),
+132:     "case-01-append": (0, ""),
+133:     "case-02-append": (0, ""),
+134:     "case-03-append": (0, ""),
+135:     "case-04-delete": (1, "C2-6"),
+136:     "case-05-delete": (1, "C2-6"),
+137:     "case-06-delete": (1, "C2-6"),
+138:     "case-07-replace-equal": (1, "C2-6"),
+139:     "case-08-receipt-change": (1, "C2-7"),
+140:     "case-09-dup-log-heading": (1, "C2-1,C2-2"),
+141:     "case-10-dup-lesson-heading": (1, "C2-3,C2-5"),
+142:     "case-11-dup-card-heading": (1, "C2-4"),
+143: }
+144: 
+145: MATRIX_LINE = re.compile(r"^LOADER_MATRIX=(\d+)/(\d+) (?:MATRIX|C1)=(PASS|FAIL)$")
+146: CASE_LINE = re.compile(r"^CASE (\S+) (PASS|FAIL) expected_rc=(-?\d+) actual_rc=(-?\d+) "
+147:                        r"timeout=(True|False) failed=(\S+) expected_failed=(\S+)$")
+148: CHILD_TIMEOUT = "6"   # v7: raised from 3s; the fleet runs ~60 seats and a
+149:                      # 3s child bound timed out intermittently (measured this round)
+150: 
+151: WRAPPER = '''#!/usr/bin/env python3
+152: import base64 as _b, marshal as _m
+153: exec(_m.loads(_b.b85decode({payload!r})), {{"__name__": "__main__", "__file__": __file__}})
+154: '''
+155: 
+156: _LINES = 0
+157: 
+158: 
+159: def emit(text: str = "") -> None:
+160:     """Write one receipt line and count it (the RECEIPT_LINES trailer is bound to this)."""
+161:     global _LINES
+162:     print(text)
+163:     _LINES += 1
+164: 
+165: 
+166: def contract_table_ok(out: str, marks) -> bool:
+167:     """Content leg: the twelve contract lines, their expected cells, and a consistent count."""
+168:     seen: dict[str, tuple[str, str]] = {}
+169:     for line in out.splitlines():
+170:         m = CASE_LINE.match(line)
+171:         if not m:
+172:             continue
+173:         name = m.group(1)
+174:         if name in seen:
+175:             return False
+176:         seen[name] = (m.group(3), m.group(7))
+177:     if set(seen) != set(CONTRACT):
+178:         return False
+179:     for name, (expected_rc, expected_failed) in CONTRACT.items():
+180:         rc_cell, failed_cell = seen[name]
+181:         if rc_cell != str(expected_rc) or failed_cell != (expected_failed or "none"):
+182:             return False
+183:     if marks is None:
+184:         return False
+185:     passed = sum(1 for line in out.splitlines()
+186:                  if CASE_LINE.match(line) and CASE_LINE.match(line).group(2) == "PASS")
+187:     return passed == marks[0]
+188: 
+189: 
+190: def run_matrix(matrix: pathlib.Path, subject: pathlib.Path, work: pathlib.Path,
+191:                matrix_timeout: int, content: bool):
+192:     """Return (rc_or_None, marks_or_None, content_ok)."""
+193:     work.mkdir(parents=True, exist_ok=True)
+194:     env = dict(os.environ, LOADER_MATRIX_CHILD_TIMEOUT=CHILD_TIMEOUT,
+195:                LOADER_MATRIX_LANE=str(LANE))
+196:     try:
+197:         p = subprocess.run([sys.executable, "-B", str(matrix), "--counter", str(subject),
+198:                             "--work", str(work)],
+199:                            stdin=subprocess.DEVNULL, capture_output=True, text=True,
+200:                            timeout=matrix_timeout, env=env)
+201:     except subprocess.TimeoutExpired:
+202:         return None, None, False
+203:     marks = None
+204:     for line in p.stdout.splitlines():
+205:         m = MATRIX_LINE.match(line)
+206:         if m:
+207:             marks = (int(m.group(1)), int(m.group(2)), m.group(3))
+208:     ok = contract_table_ok(p.stdout, marks) if content else True
+209:     return p.returncode, marks, ok
+210: 
+211: 
+212: def _drop_docstrings(tree: ast.Module) -> None:
+213:     for node in ast.walk(tree):
+214:         if not isinstance(node, (ast.Module, ast.FunctionDef, ast.AsyncFunctionDef,
+215:                                  ast.ClassDef)):
+216:             continue
+217:         body = node.body
+218:         if (body and isinstance(body[0], ast.Expr)
+219:                 and isinstance(body[0].value, ast.Constant)
+220:                 and isinstance(body[0].value.value, str)):
+221:             node.body = body[1:] or [ast.Pass()]
+222: 
+223: 
+224: def _fresh(taken: set[str]) -> str:
+225:     while True:
+226:         name = "_" + secrets.token_hex(4)
+227:         if name not in taken:
+228:             return name
+229: 
+230: 
+231: def _rename(tree: ast.Module) -> dict[str, str]:
+232:     """Rename every bound identifier through a fresh per-copy table.
+233: 
+234:     A single string-keyed map applied to every `Name`, parameter, def/class name,
+235:     handler and global/nonlocal name preserves shadowing exactly. Excluded: imported
+236:     names (their binding is an alias node), keyword-argument names (a caller passes
+237:     them by spelling), builtins and dunders.
+238:     """
+239:     excluded: set[str] = set(dir(builtins))
+240:     for node in ast.walk(tree):
+241:         if isinstance(node, ast.Import):
+242:             for alias in node.names:
+243:                 excluded.add(alias.asname or alias.name.split(".")[0])
+244:         elif isinstance(node, ast.ImportFrom):
+245:             for alias in node.names:
+246:                 excluded.add(alias.asname or alias.name)
+247:         elif isinstance(node, ast.keyword) and node.arg:
+248:             excluded.add(node.arg)
+249:     mapping: dict[str, str] = {}
+250: 
+251:     def name_for(old: str) -> str:
+252:         if old in mapping:
+253:             return mapping[old]
+254:         if old in excluded or old.startswith("__"):
+255:             mapping[old] = old
+256:             return old
+257:         new = _fresh(excluded)
+258:         excluded.add(new)
+259:         mapping[old] = new
+260:         return new
+261: 
+262:     for node in ast.walk(tree):
+263:         if isinstance(node, ast.Name):
+264:             node.id = name_for(node.id)
+265:         elif isinstance(node, ast.arg):
+266:             node.arg = name_for(node.arg)
+267:         elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+268:             node.name = name_for(node.name)
+269:         elif isinstance(node, ast.ExceptHandler) and node.name:
+270:             node.name = name_for(node.name)
+271:         elif isinstance(node, (ast.Global, ast.Nonlocal)):
+272:             node.names = [name_for(n) for n in node.names]
+273:         elif type(node).__name__ in ("MatchAs", "MatchStar"):
+274:             rest = getattr(node, "name", None)
+275:             if rest:
+276:                 node.name = name_for(rest)
+277:         elif type(node).__name__ == "MatchMapping":
+278:             rest = getattr(node, "rest", None)
+279:             if rest:
+280:                 node.rest = name_for(rest)
+281:     return mapping
+282: 
+283: 
+284: def _emit_tree(tree: ast.Module, work: pathlib.Path) -> pathlib.Path:
+285:     """Write one marshalled-wrapper copy of `tree` under a fresh directory."""
+286:     _drop_docstrings(tree)
+287:     _rename(tree)
+288:     pad = "_" + secrets.token_hex(5)
+289:     stmt = ast.parse(f"{pad} = {secrets.randbelow(10 ** 9)}\n").body[0]
+290:     futures = [n.lineno for n in tree.body
+291:                if isinstance(n, ast.ImportFrom) and n.module == "__future__"]
+292:     floor = max(futures) if futures else 0
+293:     anchors = [i for i, n in enumerate(tree.body) if n.lineno > floor]
+294:     pos = anchors[secrets.randbelow(len(anchors))] if anchors else len(tree.body)
+295:     tree.body.insert(pos, stmt)
+296:     ast.fix_missing_locations(tree)
+297:     code = compile(tree, "<" + secrets.token_hex(6) + ">", "exec")
+298:     payload = base64.b85encode(marshal.dumps(code)).decode()
+299:     d = work / secrets.token_hex(8)
+300:     d.mkdir(parents=True)
+301:     target = d / "subject.py"
+302:     target.write_text(WRAPPER.format(payload=payload))
+303:     return target
+304: 
+305: 
+306: def reemit(source: pathlib.Path, work: pathlib.Path) -> pathlib.Path:
+307:     """Write a behaviour-preserving re-emission of `source` and return its path.
+308: 
+309:     QUALITY 147: a salt family is only ever one normalizer away from being stripped.
+310:     v6 writes no source text at all — the copy is a wrapper around a marshalled code
+311:     object built from a renamed, docstring-free AST under a random file name.
+312:     """
+313:     return _emit_tree(ast.parse(source.read_text()), work)
+314: 
+315: 
+316: # ---- round-80 fresh-subject generation -------------------------------------
+317: # Every operator below is a single AST edit applied once. The FRESH LEG never
+318: # assumes which side an edit lands on: the committed witness matrix measures the
+319: # candidate's twelve case cells and its verdict, and the candidate is a POSITIVE
+320: # only when they are identical to its base copy's.
+321: 
+322: WITNESS_TIMEOUT = "20"   # ground truth only: a timed-out witness run is not evidence
+323: 
+324: # Rewrite operators must be semantics-preserving; mutation operators must not be.
+325: # A single-op comparison is only swappable when the swap keeps the relation: `x < n`
+326: # is `n > x`, but `x == n` is not `n != x` (measured this round: an Eq in the swap map
+327: # turned the successor counter from 12/12 into 0/12).
+328: _CMP_SWAP = {ast.Lt: ast.Gt, ast.Gt: ast.Lt, ast.LtE: ast.GtE, ast.GtE: ast.LtE}
+329: _CMP_ANY = dict(_CMP_SWAP, Eq=ast.NotEq, NotEq=ast.Eq)
+330: 
+331: 
+332: def _is_single_cmp(node) -> bool:
+333:     return isinstance(node, ast.Compare) and len(node.ops) == 1 and type(node.ops[0]) in _CMP_SWAP
+334: 
+335: 
+336: def _is_single_cmp_any(node) -> bool:
+337:     return isinstance(node, ast.Compare) and len(node.ops) == 1 and type(node.ops[0]) in _CMP_ANY
+338: 
+339: 
+340: def _is_if_else(node) -> bool:
+341:     return isinstance(node, ast.If) and bool(node.orelse)
+342: 
+343: 
+344: def _is_small_int(node) -> bool:
+345:     return (isinstance(node, ast.Constant) and type(node.value) is int
+346:             and 2 <= abs(node.value) < 10 ** 6)
+347: 
+348: 
+349: def _op_swap_cmp(node):
+350:     node.left, node.comparators = node.comparators[0], [node.left]
+351:     node.ops = [_CMP_SWAP[type(node.ops[0])]()]
+352:     return node
+353: 
+354: 
+355: def _op_invert_if(node):
+356:     node.test = ast.UnaryOp(op=ast.Not(), operand=node.test)
+357:     node.body, node.orelse = node.orelse, node.body
+358:     return node
+359: 
+360: 
+361: def _op_fold_int(node):
+362:     v = node.value
+363:     new = ast.BinOp(left=ast.Constant(v // 2), op=ast.Add(), right=ast.Constant(v - v // 2))
+364:     return ast.copy_location(new, node)
+365: 
+366: 
+367: def _op_flip_cmp(node):
+368:     node.ops = [_CMP_ANY[type(node.ops[0])]()]
+369:     return node
+370: 
+371: 
+372: def _op_shift_int(node):
+373:     node.value = node.value + 1
+374:     return node
+375: 
+376: 
+377: def _op_negate(node):
+378:     node.test = ast.UnaryOp(op=ast.Not(), operand=node.test)
+379:     return node
+380: 
+381: 
+382: def _op_swap_branches(node):
+383:     node.body, node.orelse = node.orelse, node.body
+384:     return node
+385: 
+386: 
+387: def _is_return(node) -> bool:
+388:     return isinstance(node, ast.Return) and node.value is not None
+389: 
+390: 
+391: def _op_return_const(node):
+392:     node.value = ast.Constant(secrets.randbelow(2))
+393:     return node
+394: 
+395: 
+396: def _is_str_const(node) -> bool:
+397:     return (isinstance(node, ast.Constant) and isinstance(node.value, str)
+398:             and 0 < len(node.value) < 80)
+399: 
+400: 
+401: def _op_str_shift(node):
+402:     node.value = node.value + "x"
+403:     return node
+404: 
+405: 
+406: REWRITE_OPS = [(_is_single_cmp, _op_swap_cmp),
+407:                (_is_if_else, _op_invert_if),
+408:                (_is_small_int, _op_fold_int)]
+409: MUTATION_OPS = [(_is_single_cmp_any, _op_flip_cmp),
+410:                 (_is_small_int, _op_shift_int),
+411:                 (_is_if_else, _op_negate),
+412:                 (_is_if_else, _op_swap_branches),
+413:                 (_is_return, _op_return_const),
+414:                 (_is_str_const, _op_str_shift)]
+415: 
+416: 
+417: class _Once(ast.NodeTransformer):
+418:     """Apply `fn` to the first node `match` accepts; record whether it fired."""
+419: 
+420:     def __init__(self, match, fn):
+421:         self.match, self.fn, self.fired = match, fn, False
+422: 
+423:     def visit(self, node):
+424:         if not self.fired and self.match(node):
+425:             self.fired = True
+426:             return self.fn(node)
+427:         return super().visit(node)
+428: 
+429: 
+430: def _apply(tree: ast.Module, match, fn) -> bool:
+431:     tr = _Once(match, fn)
+432:     tr.visit(tree)
+433:     return tr.fired
+434: 
+435: 
+436: def _witness_out(subject: pathlib.Path, work: pathlib.Path, timeout: int):
+437:     """Run the committed witness matrix; return (rc, marks, case cells) or None."""
+438:     work.mkdir(parents=True, exist_ok=True)
+439:     env = dict(os.environ, LOADER_MATRIX_CHILD_TIMEOUT=WITNESS_TIMEOUT,
+440:                LOADER_MATRIX_LANE=str(LANE))
+441:     try:
+442:         p = subprocess.run([sys.executable, "-B", str(WITNESS), "--counter", str(subject),
+443:                             "--work", str(work)], stdin=subprocess.DEVNULL,
+444:                            capture_output=True, text=True, timeout=timeout, env=env)
+445:     except subprocess.TimeoutExpired:
+446:         return None
+447:     marks = None
+448:     for line in p.stdout.splitlines():
+449:         m = MATRIX_LINE.match(line)
+450:         if m:
+451:             marks = (int(m.group(1)), int(m.group(2)), m.group(3))
+452:     # the matrix emits its twelve cases in a per-run order; compare them as a set
+453:     cells = tuple(sorted(line for line in p.stdout.splitlines() if CASE_LINE.match(line)))
+454:     return p.returncode, marks, cells
+455: 
+456: 
+457: def draw_fresh(work: pathlib.Path, timeout: int, want: str, attempts: int = 40):
+458:     """Draw a fresh subject whose ground truth is measured; return (copy, base, group)."""
+459:     for _ in range(attempts):
+460:         base_name, base_path = POSITIVES[secrets.randbelow(len(POSITIVES))]
+461:         tree = ast.parse(base_path.read_text())
+462:         _drop_docstrings(tree)   # a mutation must not land in a docstring that is dropped
+463:         if want == "POSITIVE":
+464:             ops = list(REWRITE_OPS)
+465:             random.Random(secrets.randbits(64)).shuffle(ops)
+466:             fired = False
+467:             for match, fn in ops[:2]:
+468:                 fired = _apply(tree, match, fn) or fired
+469:             if not fired:
+470:                 continue
+471:         else:
+472:             fired = 0
+473:             for _ in range(2):
+474:                 match, fn = MUTATION_OPS[secrets.randbelow(len(MUTATION_OPS))]
+475:                 fired += _apply(tree, match, fn)
+476:             if not fired:
+477:                 continue
+478:         copy = _emit_tree(tree, work)
+479:         base_copy = _emit_tree(ast.parse(base_path.read_text()), work)
+480:         wb = _witness_out(base_copy, copy.parent / "wb", timeout)
+481:         wc = _witness_out(copy, copy.parent / "wc", timeout)
+482:         shutil.rmtree(base_copy.parent, ignore_errors=True)
+483:         if wb is None or wc is None:
+484:             shutil.rmtree(copy.parent, ignore_errors=True)
+485:             continue
+486:         if any("timeout=True" in cell for cell in wb[2] + wc[2]):
+487:             shutil.rmtree(copy.parent, ignore_errors=True)
+488:             continue
+489:         group = "POSITIVE" if (wb[0] == wc[0] and wb[1] == wc[1] and wb[2] == wc[2]) else "FORGER"
+490:         if group == want:
+491:             return copy, base_name, group
+492:         shutil.rmtree(copy.parent, ignore_errors=True)
+493:     return None, None, None
+494: 
+495: 
+496: def score(matrix: pathlib.Path, subjects, runs: int, work: pathlib.Path,
+497:           matrix_timeout: int, permute: bool, content: bool, label: str,
+498:           print_order: bool, fresh=()):
+499:     """Run every committed and every pre-emitted fresh subject `runs` times.
+500: 
+501:     `fresh` entries are (group, name, copy) with the copy already emitted under `work`;
+502:     they are scored exactly like committed subjects but never re-emitted or removed here,
+503:     so the same drawn set is scored by the matrix under test and by every oracle.
+504:     Returns {positive|forger|fresh_positive|fresh_forger: [ok, all]}.
+505:     """
+506:     entries = [(group, name, source, False) for group, name, source in subjects]
+507:     entries += [(group, name, copy, True) for group, name, copy in fresh]
+508:     results = {name: [] for _group, name, _src, _pre in entries}
+509:     buffered: list[str] = []
+510:     for i in range(runs):
+511:         order = list(entries)
+512:         if permute:
+513:             random.Random(secrets.randbits(64)).shuffle(order)
+514:         if print_order:
+515:             buffered.append(f"{label} ORDER {i} " + hashlib.sha256(
+516:                 "|".join(name for _g, name, _s, _p in order).encode()).hexdigest())
+517:         for group, name, source, pre in order:
+518:             subject = source if pre else reemit(source, work)
+519:             rc, marks, ok = run_matrix(matrix, subject, subject.parent / "w", matrix_timeout, content)
+520:             results[name].append((rc, marks, ok))
+521:             buffered.append(f"{label} RUN {group} {name} {i} matrix_exit="
+522:                             f"{'timeout' if rc is None else rc} "
+523:                             f"marks={'/'.join(str(x) for x in marks) if marks else 'none'} "
+524:                             f"content={'ok' if ok else 'bad'}")
+525:             if not pre:
+526:                 shutil.rmtree(subject.parent, ignore_errors=True)
+527:     counts = {"positive": [0, 0], "forger": [0, 0],
+528:               "fresh_positive": [0, 0], "fresh_forger": [0, 0]}
+529:     for group, name, _source, pre in entries:
+530:         observed = results[name]
+531:         key = ("fresh_" if pre else "") + group.lower()
+532:         if group == "POSITIVE":
+533:             ok = all(rc == 0 and marks is not None and marks[0] == marks[1]
+534:                      and marks[2] == "PASS" and content_ok for rc, marks, content_ok in observed)
+535:             counts[key][0] += ok
+536:             counts[key][1] += 1
+537:             buffered.append(f"{label} SUBJECT {group} {name} {'ACCEPTED' if ok else 'MISS'}")
+538:         else:
+539:             ok = all(rc == 1 and marks is not None and marks[0] < marks[1] and content_ok
+540:                      for rc, marks, content_ok in observed)
+541:             counts[key][0] += ok
+542:             counts[key][1] += 1
+543:             buffered.append(f"{label} SUBJECT {group} {name} {'REJECTED' if ok else 'MISS'}")
+544:     for line in buffered:
+545:         emit(line)
+546:     return counts
+547: 
+548: 
+549: def main() -> int:
+550:     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+551:     ap.add_argument("--matrix", default=None)
+552:     ap.add_argument("--work", required=True)
+553:     ap.add_argument("--runs", type=int, default=2)
+554:     ap.add_argument("--matrix-timeout", type=int, default=300)
+555:     ap.add_argument("--fresh", type=int, default=2,
+556:                     help="fresh positives and fresh forgers drawn per run (default 2)")
+557:     ap.add_argument("--no-fresh", action="store_true",
+558:                     help="drop the fresh leg (round-79 behaviour; comparison only)")
+559:     ap.add_argument("--rev", default=None,
+560:                     help="lane revision named in the receipt (default: master tip)")
+561:     ap.add_argument("--no-permute", action="store_true")
+562:     ap.add_argument("--no-content", action="store_true")
+563:     ap.add_argument("--print-order", action="store_true",
+564:                     help="re-enable the round-77 ORDER digest line (comparison only)")
+565:     ap.add_argument("--reemit-only", action="store_true",
+566:                     help="emit one copy of every subject into --work and exit 0")
+567:     a = ap.parse_args()
+568:     work = pathlib.Path(a.work).resolve()
+569:     if a.runs < 1 or a.matrix_timeout < 1:
+570:         print("matrix-battery-v6: --runs and --matrix-timeout must be >= 1", file=sys.stderr)
+571:         return 2
+572:     try:
+573:         work.mkdir(parents=True, exist_ok=True)
+574:     except OSError as exc:
+575:         print(f"matrix-battery-v6: cannot create --work {work}: {exc}", file=sys.stderr)
+576:         return 2
+577:     if not work.is_dir():
+578:         print(f"matrix-battery-v6: --work {work} is not a directory", file=sys.stderr)
+579:         return 2
+580:     subjects = ([("POSITIVE", n, p) for n, p in POSITIVES]
+581:                 + [("FORGER", n, p) for n, p in FORGERS])
+582:     for _group, _name, source in subjects:
+583:         if not pathlib.Path(source).resolve().is_file():
+584:             print(f"matrix-battery-v6: missing subject {source}", file=sys.stderr)
+585:             return 2
+586:     if a.reemit_only:
+587:         run = work / ("r79-emit-" + secrets.token_hex(8))
+588:         run.mkdir()
+589:         for _group, name, source in subjects:
+590:             copy = reemit(source, run)
+591:             print(f"EMIT {name} {copy}")
+592:         return 0
+593:     if not a.matrix:
+594:         print("matrix-battery-v6: --matrix is required unless --reemit-only", file=sys.stderr)
+595:         return 2
+596:     matrix = pathlib.Path(a.matrix).resolve()
+597:     if not matrix.is_file():
+598:         print(f"matrix-battery-v6: missing matrix {matrix}", file=sys.stderr)
+599:         return 2
+600:     permute = not a.no_permute
+601:     content = not a.no_content
+602:     run = work / ("r79-" + secrets.token_hex(8))
+603:     try:
+604:         run.mkdir()
+605:     except OSError as exc:
+606:         print(f"matrix-battery-v6: cannot create {run}: {exc}", file=sys.stderr)
+607:         return 2
+608:     emit("MATRIX_PATH=" + str(matrix))
+609:     emit("MATRIX_SHA256=" + hashlib.sha256(matrix.read_bytes()).hexdigest())
+610:     rev = a.rev or _lane_rev()
+611:     emit(f"LANE_REV={rev}")
+612:     emit(f"RUNS={a.runs} CHILD_TIMEOUT={CHILD_TIMEOUT} MATRIX_TIMEOUT={a.matrix_timeout} "
+613:          f"PERMUTE={permute} CONTENT={content} FRESH={0 if a.no_fresh else a.fresh}")
+614:     fresh_n = 0 if a.no_fresh else a.fresh
+615:     try:
+616:         fresh_list = []
+617:         for i in range(fresh_n):
+618:             for want in ("POSITIVE", "FORGER"):
+619:                 copy, base_name, group = draw_fresh(run, a.matrix_timeout, want)
+620:                 if copy is None:
+621:                     print(f"matrix-battery-v7: cannot draw a fresh {want} in 40 attempts",
+622:                           file=sys.stderr)
+623:                     return 2
+624:                 fresh_list.append((group, f"{base_name}#{i}", copy))
+625:         counts = score(matrix, subjects, a.runs, run, a.matrix_timeout,
+626:                        permute, content, "MATRIX", a.print_order, fresh_list)
+627:         oracle_ok = 0
+628:         for name, source in ORACLES:
+629:             if not source.is_file():
+630:                 print(f"matrix-battery-v7: missing oracle {source}", file=sys.stderr)
+631:                 return 2
+632:             copy = reemit(source, run)
+633:             o = score(copy, subjects, a.runs, copy.parent / "w", a.matrix_timeout,
+634:                       permute, content, f"ORACLE:{name}", a.print_order, fresh_list)
+635:             full = all(o[key][0] == o[key][1] for key in o)
+636:             oracle_ok += not full
+637:             emit(f"ORACLE {name} {'REJECTED' if not full else 'MISS'} "
+638:                  + " ".join(f"{key}={v[0]}/{v[1]}" for key, v in o.items()))
+639:             shutil.rmtree(copy.parent, ignore_errors=True)
+640:     finally:
+641:         shutil.rmtree(run, ignore_errors=True)
+642:     verdict = (all(counts[key][0] == counts[key][1] for key in counts)
+643:                and oracle_ok == len(ORACLES))
+644:     summary = (f"forgers_rejected={counts['forger'][0]}/{counts['forger'][1]} "
+645:                f"positive={counts['positive'][0]}/{counts['positive'][1]} "
+646:                f"fresh_positive={counts['fresh_positive'][0]}/{counts['fresh_positive'][1]} "
+647:                f"fresh_forgers={counts['fresh_forger'][0]}/{counts['fresh_forger'][1]} "
+648:                f"oracles_rejected={oracle_ok}/{len(ORACLES)}")
+649:     emit(summary)
+650:     emit(f"RECEIPT_LINES={_LINES + 2}")
+651:     emit(f"BATTERY={'PASS' if verdict else 'FAIL'} {summary}")
+652:     return 0 if verdict else 1
+653: 
+654: 
+655: def _lane_rev() -> str:
+656:     try:
+657:         p = subprocess.run(["git", "-C", str(LANE), "rev-parse", "master"],
+658:                            capture_output=True, text=True, timeout=20)
+659:     except (OSError, subprocess.TimeoutExpired):
+660:         return "unavailable"
+661:     return p.stdout.strip() or "unavailable"
+662: 
+663: 
+664: if __name__ == "__main__":
+665:     sys.exit(main())
