@@ -1,9 +1,8 @@
 # Round 79 frozen claims — the subject copy stops being a textual derivative; the self-assessment counter validates its own repairs
 
 Frozen 2026-11-04, before any seat scored anything. Base revision
-`ee70e6df19fe43b1b384166cf5d360c3b99dafe2` (round-78 lane tip). Pre-freeze instruments and
-controls commit: the commit that adds `corpus/evidence/round79/` (named in `LOG.md` and in the
-round report). Two claims, distinct axes, each causally separable: C1 changes the outer
+`ee70e6df19fe43b1b384166cf5d360c3b99dafe2` (round-78 lane tip). Pre-freeze instruments, controls
+and the digest-bearing repairs: `e2bf2bbb5ca66f06b6571cbcaa15554d1a74a67c`. Two claims, distinct axes, each causally separable: C1 changes the outer
 battery's copy mechanism and needs only those bytes; C2 changes one counter and three
 append-only repair lines.
 
