@@ -228,4 +228,8 @@ mandated detector noticing, and its own name key (F1) can fail the legitimate ma
 * Ten of the 36 v7 detector receipts are repetitions of two baselines (five legitimate-matrix runs,
   seven oracle runs, counting the first of each); they exist to measure the draw's variance and are
   cited as such, not as independent confirmations.
+* Some receipts in this folder were committed by the lane mid-flight (`b20af227` landed the w1
+  folder while this seat was still running), so a handful show as worktree modifications. This seat
+  wrote only this folder and never committed; `MANIFEST.txt` hashes the current worktree bytes, which
+  are the authoritative receipts.
 * No tool was installed or upgraded, so there is no tooling line to record.
