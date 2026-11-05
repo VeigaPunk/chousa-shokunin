@@ -140,3 +140,5 @@ literal text and the mined mistake is easy to miss. Routed by
 `corpus/lessons/round-77-verifier-spotcheck.md` routed defect 4. The filed bytes above are not
 rewritten (append-only): this line is the correction entry that names the stranded row, and
 `python3 -B corpus/evidence/round78/selfcheck.py --lane .` check S3 re-derives its position.
+
+erratum: round-77.md:73 digest=7f2d54a7eb33df54 — round-79 successor: the stranded row's exact bytes are as asserted, so this erratum is bound to the line it names and not to its position alone; `python3 -B corpus/evidence/round79/selfcheck-v2.py --lane .` check S3 re-derives the digest.
