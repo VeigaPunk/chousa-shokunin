@@ -1,0 +1,18 @@
+# PROBE W — a newer '## Round-80 addition' block appended; criterion 116 gains an unresolvable pointer
+# mirror: /fast/scratch/hyaku/chousa-r79/R79ScribeA/probeW (copy of the lane clone at b58a02db)
+# --- v1 (round-78 predecessor) ---
+# command: python3 -B corpus/evidence/round78/selfcheck.py --lane .
+LANE=/fast/scratch/hyaku/chousa-r79/R79ScribeA/probeW REV=worktree
+CHECK S1-skill-registry ok
+CHECK S2-quality-pointers ok
+CHECK S3-lesson-mistakes ok
+SELFCHECK=PASS unresolved=0/3
+# exit: 0
+# --- v2 (round-79 successor) ---
+# command: python3 -B corpus/evidence/round79/selfcheck-v2.py --lane .
+LANE=/fast/scratch/hyaku/chousa-r79/R79ScribeA/probeW REV=worktree
+CHECK S1-skill-registry ok header_cells=8 malformed=[168] repairs=[168] unresolved=[]
+CHECK S2-quality-pointers FAIL criteria=50 missing=[116] superseders={116: [149]} unresolved=['116:corpus/evidence/round59/probeW-absent.md']
+CHECK S3-lesson-mistakes ok mistakes_width=4 stranded=[73] errata=[73] unresolved=[]
+SELFCHECK2=FAIL unresolved=1/3
+# exit: 1

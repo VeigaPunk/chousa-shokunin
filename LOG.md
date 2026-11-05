@@ -2267,3 +2267,45 @@ calibration.
   round's admission is false on them. QUALITY 146–147 carry the successor requirements; the wave's
   remaining findings (settle race, same-count rewrite, digest-keyed UUT battery, the weaker
   sibling comparisons, `work-contract.py` never reading `rc_a`) are recorded as limits.
+
+## Round 79 — the subject copy stops being a textual derivative; the counter validates its own repairs (2026-11-04)
+
+Base `ee70e6df19fe43b1b384166cf5d360c3b99dafe2` (round-78 lane tip); prefreeze instruments,
+controls and repairs `e2bf2bbb5ca66f06b6571cbcaa15554d1a74a67c`; claims freeze
+`b58a02dbc8876dd1ad7647d88ca2c9cb2ae51ff9`. Two claims, distinct axes, frozen before any seat
+scored: C1 operability (lowest scored non-retired axis, the historical 3/10 held) and C2
+calibration.
+- C1 operability: round 78's subject copy is a textual derivative of a committed file — one
+  four-line normalizer deletes the `_r78<hex>` salt family and recovers every subject
+  byte-for-byte, so `a8` reaches the exact predicate line
+  (`controls/forge-battery-before-v5.txt`: `FORGE_BATTERY=FAIL forgers_handled=5/6 positive=1/1`,
+  exit 1; `controls/derivative-before-v5.txt`: `DERIVATIVE_COPIES=13/13 MAX_WINDOW=4096`, exit 1).
+  The successor `matrix-battery-v6.py` writes no source text: it parses the subject, drops every
+  docstring, renames every bound identifier through a fresh per-copy table (imports,
+  keyword-argument names, builtins and dunders excluded), inserts one random-named integer
+  assignment after the last `__future__` import and compiles the tree under a random file name into
+  a wrapper that `exec`s the marshalled code object.
+  `controls/forge-battery-after-v6.txt` is `FORGE_BATTERY=PASS forgers_handled=6/6 positive=1/1`,
+  exit 0, with the legitimate matrix still ACCEPTED; `controls/derivative-after-v6.txt` is
+  `DERIVATIVE_COPIES=0/13 MAX_WINDOW=23`, exit 0. The battery's own predicate reproduces
+  `BATTERY=PASS forgers_rejected=11/11 positive=2/2 oracle=REJECTED`, exit 0.
+- C2 calibration: round 78's counter accepts presence-only repair lines and audits only the newest
+  `## Round-<n> addition` block, so the base bytes print `SELFCHECK2=FAIL unresolved=3/3` exit 1
+  under the successor (`controls/selfcheck2-before.txt`) while round 78's counter prints
+  `SELFCHECK=PASS unresolved=0/3` exit 0 on the same bytes
+  (`controls/selfcheck-v1-before.txt`). The controls reproduce both false greens and both refusals
+  (`controls/selfcheck-control-before.txt`: `CONTROL=PASS cases=4 v1_false_greens=2/2
+  v2_refusals=2/2`). After the three digest-bearing append-only repairs — `correction:
+  SKILL.md:168 cells=7 digest=…`, a new criterion 149 carrying `supersedes: 116 digest=…`, and
+  `erratum: round-77.md:73 digest=…` — `controls/selfcheck2-after.txt` is
+  `SELFCHECK2=PASS unresolved=0/3`, exit 0.
+- QUALITY 149 appended (supersedes 116 with a digest, audits every block); SKILL registers the v6
+  battery, the six-forger battery and the v2 counter, and carries the digest-bearing row-168
+  correction. No knowledge entry added or changed; no numeric score moved; no capability row.
+- Frontier: S196/S197 admitted (mined, own-work B, QUALITY 147 and 146 at the base), S198 rejected
+  (the round-78 hollow-mirror receipt as a source); registry 195 → 198; census exit 0 at both ends.
+- Outcome: both frozen predicates hold on the committed bytes. C1's kill rule names the textual
+  channel and no copy shares a 40-byte window with its source; the structure-identity channel
+  (unmarshal the payload, canonicalise the fresh identifier table) is a recorded limit, measured by
+  the wave, because re-emission preserves behaviour. C2's kill rule names the hollow repair and the
+  newer-block window; both are refused. The non-author closure still rules on admission.

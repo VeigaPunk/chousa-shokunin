@@ -1,0 +1,12 @@
+diff --git c/corpus/QUALITY.md w/corpus/QUALITY.md
+index 49919f9e..bba60e17 100644
+--- c/corpus/QUALITY.md
++++ w/corpus/QUALITY.md
+@@ -1056,3 +1056,7 @@ the admitted entry that motivates it. Tier definitions live in
+ 147. **A subject-identity salt is defeated by any normalizer that knows its marker family, so the closure is a per-channel measurement and not a property of the salt.** Round 78's interior-statement salt was removed by a four-line normalizer that deletes `import os as _r78<hex>` and `_r78<hex> = <int>` lines, after which the two public positive digests classified every subject and the successor battery printed `BATTERY=PASS forgers_rejected=11/11 positive=2/2 oracle=REJECTED` at exit 0 while scoring nothing (`R78L1/a8-normalizer-v5.txt`); the same normalizer is refused by the round-77 battery (`R78L1/a8-normalizer-v4.txt`, whose summary line reads positive=0/2, exit 1), so the two salts are defeated by different normalizers and neither is a property of "salting". Check before a successor freeze: the subject bytes must not be a textual derivative of a public file at all (a behaviour-preserving re-emission with a fresh identifier table, or a wrapper that never exposes the original text), and the forge battery carries one normalizer per salt family with an honest control pair.
+ 
+ 148. **A harness that shells out to a toolchain maps a missing or failing tool to its could-not-evaluate exit.** Round 78's `forge-battery.py` builds `forgers/perm.c` with `cc -O2 -fopenmp -lcrypto` and, with no `cc` on `PATH`, raises a traceback and exits 1 — a verdict-shaped failure for an environment problem (`R78SentinelA/battery.stderr`, finding F1). Check before a successor freeze: the compile step's failure path exits 2 with a one-line diagnostic naming the missing tool, the receipt records the compiler it used, and a pre-existing permutation binary inside the work directory is not trusted without recompiling (finding O2). `work-contract.py` already maps its `--work` setup failures this way; this criterion carries the same rule to the toolchain leg.
++
++## Round-79 addition (review fixture R79ReviewB)
++
++149. **Pointer hygiene probe (review fixture R79ReviewB).** The criteria added by a round addition block cite only committed paths; this probe's own pointer token, `corpus/QUALITY.md`, resolves.

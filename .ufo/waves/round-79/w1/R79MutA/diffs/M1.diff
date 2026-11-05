@@ -1,0 +1,52 @@
+--- matrix-battery-v6.py	2026-11-04 21:23:45.544961720 -0300
++++ matrix-battery-v6-M1.py	2026-11-04 21:28:17.092565668 -0300
+@@ -260,25 +260,33 @@
+     v6 writes no source text at all — the copy is a wrapper around a marshalled code
+     object built from a renamed, docstring-free AST under a random file name.
+     """
+-    text = source.read_text()
+-    tree = ast.parse(text)
+-    _drop_docstrings(tree)
+-    _rename(tree)
+-    pad = "_" + secrets.token_hex(5)
+-    stmt = ast.parse(f"{pad} = {secrets.randbelow(10 ** 9)}\n").body[0]
+-    futures = [n.lineno for n in tree.body
+-               if isinstance(n, ast.ImportFrom) and n.module == "__future__"]
+-    floor = max(futures) if futures else 0
+-    anchors = [i for i, n in enumerate(tree.body) if n.lineno > floor]
+-    pos = anchors[secrets.randbelow(len(anchors))] if anchors else len(tree.body)
+-    tree.body.insert(pos, stmt)
+-    ast.fix_missing_locations(tree)
+-    code = compile(tree, "<" + secrets.token_hex(6) + ">", "exec")
+-    payload = base64.b85encode(marshal.dumps(code)).decode()
+     d = work / secrets.token_hex(8)
+     d.mkdir(parents=True)
+     target = d / "subject.py"
+-    target.write_text(WRAPPER.format(payload=payload))
++    text = source.read_text()
++    lines = text.splitlines(keepends=True)
++    if lines and not lines[-1].endswith("\n"):
++        lines[-1] += "\n"
++    name = "_r78" + secrets.token_hex(6)
++    if secrets.randbits(1):
++        inserted = f"import os as {name}\n"
++    else:
++        inserted = f"{name} = {secrets.randbelow(10 ** 6)}\n"
++    anchors = []
++    try:
++        body = ast.parse(text).body
++        futures = [n.lineno for n in body
++                   if isinstance(n, ast.ImportFrom) and n.module == "__future__"]
++        floor = max(futures) if futures else 0
++        anchors = [n.lineno for n in body
++                   if n.lineno > floor
++                   and not (isinstance(n, ast.Expr) and isinstance(n.value, ast.Constant)
++                            and isinstance(n.value.value, str))]
++    except SyntaxError:
++        anchors = []
++    pos = anchors[secrets.randbelow(len(anchors))] - 1 if anchors else len(lines)
++    lines.insert(pos, inserted)
++    target.write_text("".join(lines))
+     return target
+ 
+ 

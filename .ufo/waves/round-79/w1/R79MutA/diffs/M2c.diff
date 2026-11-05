@@ -1,0 +1,34 @@
+--- matrix-battery-v6.py	2026-11-04 21:23:45.544961720 -0300
++++ matrix-battery-v6-M2c.py	2026-11-04 21:33:09.567995626 -0300
+@@ -293,13 +293,13 @@
+         if permute:
+             random.Random(secrets.randbits(64)).shuffle(order)
+         if print_order:
+-            buffered.append(f"{label} ORDER {i} " + hashlib.sha256(
++            emit(f"{label} ORDER {i} " + hashlib.sha256(
+                 "|".join(name for _g, name, _s in order).encode()).hexdigest())
+         for group, name, source in order:
+             subject = reemit(source, work)
+             rc, marks, ok = run_matrix(matrix, subject, subject.parent / "w", matrix_timeout, content)
+             results[name].append((rc, marks, ok))
+-            buffered.append(f"{label} RUN {group} {name} {i} matrix_exit="
++            emit(f"{label} RUN {group} {name} {i} matrix_exit="
+                             f"{'timeout' if rc is None else rc} "
+                             f"marks={'/'.join(str(x) for x in marks) if marks else 'none'} "
+                             f"content={'ok' if ok else 'bad'}")
+@@ -312,13 +312,13 @@
+                      and marks[2] == "PASS" and content_ok for rc, marks, content_ok in observed)
+             pos_ok += ok
+             pos_all += 1
+-            buffered.append(f"{label} SUBJECT {group} {name} {'ACCEPTED' if ok else 'MISS'}")
++            emit(f"{label} SUBJECT {group} {name} {'ACCEPTED' if ok else 'MISS'}")
+         else:
+             ok = all(rc == 1 and marks is not None and marks[0] < marks[1] and content_ok
+                      for rc, marks, content_ok in observed)
+             forg_ok += ok
+             forg_all += 1
+-            buffered.append(f"{label} SUBJECT {group} {name} {'REJECTED' if ok else 'MISS'}")
++            emit(f"{label} SUBJECT {group} {name} {'REJECTED' if ok else 'MISS'}")
+     for line in buffered:
+         emit(line)
+     return pos_ok, pos_all, forg_ok, forg_all

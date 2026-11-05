@@ -1,0 +1,17 @@
+### PROBE 1: does the re-emitted legit matrix still expose the module-level CASES?
+   original: rc=0 out='HAS_CASES True\nDOC "Round-76 successor loader matrix — twelve public-CLI cases, answer-ke' err=''
+   copy: rc=2 out='' err='probe_import.py: error: the following arguments are required: --counter, --work'
+
+### PROBE 2: __doc__ under the WRAPPER's exec (module docstring dropped)
+   original: rc=0 out="DOC= 'My docstring line one.\\nline two.'" err=''
+   copy: rc=0 out='DOC= "Built-in functions, types, exceptions, and other objects.\\n\\nThis module provides direct access to all \'built-in\'\\nidentifiers of Python; for example, builtins.len is\\nthe full name for the built-in function len().\\n\\nThis module is not normally accessed explicitly by most\\napplications, but can be useful in modules that provide\\nobjects with the same name as a built-in value, but in\\nwhich the built-in of that name is also needed."' err=''
+
+### PROBE 3: __file__ rebinding (the copy's file NAME and PATH change)
+   original: rc=0 out='FILE= /fast/scratch/hyaku/chousa-r79/R79ScoutA/scratch/deepwork/fileid.py\nBASE= fileid.py\nARGV0= /fast/scratch/hyaku/chousa-r79/R79ScoutA/scratch/deepwork/fileid.py' err=''
+   copy: rc=0 out='FILE= /fast/scratch/hyaku/chousa-r79/R79ScoutA/scratch/deepwork/5e9dd85d9e711424/subject.py\nBASE= subject.py\nARGV0= /fast/scratch/hyaku/chousa-r79/R79ScoutA/scratch/deepwork/5e9dd85d9e711424/subject.py' err=''
+
+### PROBE 4: the legit matrix's own argparse idiom  description=__doc__.splitlines()[0]
+   re-emitted legit matrix: rc=2 err='loader-matrix: missing counter /nonexistent'
+   stdout head: []
+   original legit matrix:   rc=2 err='loader-matrix: missing counter /nonexistent'
+   stdout head: []

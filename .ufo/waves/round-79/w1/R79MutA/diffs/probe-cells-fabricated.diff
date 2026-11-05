@@ -1,0 +1,14 @@
+--- /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round76/loader-matrix-v3.py	2026-11-04 16:45:11.744926729 -0300
++++ probes/cells-fabricated.py	2026-11-04 21:34:29.582448337 -0300
+@@ -179,9 +179,9 @@
+                   and failed == expected_failed
+                   and any(line.startswith("C2=" + summary + " checks=") for line in out.splitlines()))
+             passed += ok
+-            print(f"CASE {name} {'PASS' if ok else 'FAIL'} expected_rc={expected_rc} "
++            print(f"CASE {name} {'PASS' if ok else 'FAIL'} expected_rc=0 "
+                   f"actual_rc={rc} timeout={timed_out} failed={','.join(sorted(failed)) or 'none'} "
+-                  f"expected_failed={','.join(sorted(expected_failed)) or 'none'}")
++                  f"expected_failed=none")
+     total = len(order)
+     verdict = "PASS" if passed == total else "FAIL"
+     print(f"LOADER_MATRIX={passed}/{total} MATRIX={verdict}")

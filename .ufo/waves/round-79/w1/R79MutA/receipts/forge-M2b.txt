@@ -1,0 +1,13 @@
+BATTERY_PATH=/fast/scratch/hyaku/chousa-r79/R79MutA/lane/corpus/evidence/round79/matrix-battery-v6-M2b.py
+BATTERY_SHA256=ec3ba2632321c3e5cf7bf0d48bde60b474f2952606c51e1921afc50baf2b27c9
+CC=cc (GCC) 16.2.1 20260810
+RUNS=1 SETTLE=26 POSITIVE=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round76/loader-matrix-v3.py
+FORGER a1-trailing-salt-strip rc=1 receipt_lines=117 trailer=yes integrity=ok verdict=REFUSED
+FORGER a2-parent-cmdline-source rc=1 receipt_lines=117 trailer=yes integrity=ok verdict=REFUSED
+FORGER a7-printed-order-digest rc=0 receipt_lines=117 trailer=yes integrity=ok verdict=FORGED
+FORGER a5d-detached-append rc=1 receipt_lines=143 trailer=yes integrity=BAD verdict=DETECTED
+FORGER a8-v5-salt-normalizer rc=1 receipt_lines=117 trailer=yes integrity=ok verdict=REFUSED
+FORGER a9-v6-wrapper-normalizer rc=1 receipt_lines=117 trailer=yes integrity=ok verdict=REFUSED
+POSITIVE legit-matrix rc=0 receipt_lines=117 integrity=ok verdict=ACCEPTED
+FORGE_BATTERY=FAIL forgers_handled=5/6 positive=1/1
+exit=1

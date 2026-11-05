@@ -1,0 +1,10 @@
+--- matrix-battery-v6.py	2026-11-04 21:23:45.544961720 -0300
++++ matrix-battery-v6-M5.py	2026-11-04 21:28:17.092933258 -0300
+@@ -403,7 +403,6 @@
+     verdict = (p_ok == p_all and f_ok == f_all and oracle_ok == len(ORACLES))
+     emit(f"forgers_rejected={f_ok}/{f_all} positive={p_ok}/{p_all} "
+          f"oracle={'REJECTED' if oracle_ok == len(ORACLES) else 'MISS'}")
+-    emit(f"RECEIPT_LINES={_LINES + 2}")
+     emit(f"BATTERY={'PASS' if verdict else 'FAIL'} forgers_rejected={f_ok}/{f_all} "
+          f"positive={p_ok}/{p_all} oracle={'REJECTED' if oracle_ok == len(ORACLES) else 'MISS'}")
+     return 0 if verdict else 1

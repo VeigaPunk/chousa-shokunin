@@ -3568,3 +3568,46 @@ two claims and one carried debt:
 
 Assimilation stays closed until the `merge/chousa/` id drift is renumbered in scratch (111 of 114
 staged ids collide with the live registry at round 78).
+
+
+## Round 79 verdict — the copy stops being a textual derivative, and a decoding forger still identifies every subject (2026-11-04)
+
+Base `ee70e6df19fe43b1b384166cf5d360c3b99dafe2`; prefreeze instruments, controls and repairs
+`e2bf2bbb5ca66f06b6571cbcaa15554d1a74a67c`; claims freeze
+`b58a02dbc8876dd1ad7647d88ca2c9cb2ae51ff9`. Instruments unchanged from the controls commit
+through the landing: `matrix-battery-v6.py` `bb91406e…a61e1d`, `forge-battery.py`
+`5761edc5…fc936`, `derivative-check.py` `af6fbe72…397bc1`, `selfcheck-v2.py` `b99ccee5…ffeed2`,
+`selfcheck-control.py` `00cf811a…f4499d`, `a8` `65f590af…73c953`, `a9` `851222ed…b306c5`.
+
+| claim / axis | before → after | counting command / evidence | verdict |
+|---|---|---|---|
+| C1 operability (lowest scored non-retired axis; the historical 3/10 held) | round-78's copy is a textual derivative (one four-line normalizer recovers 13/13 subjects) → round-79's copy is a wrapper around a marshalled, docstring-free, identifier-renamed AST and no 40-byte window survives (0/13), with the legitimate matrix still accepted | `python3 -B corpus/evidence/round79/forge-battery.py --battery <v5\|v6> --work DIR`; `controls/forge-battery-before-v5.txt` `FORGE_BATTERY=FAIL forgers_handled=5/6 positive=1/1` exit 1 → `controls/forge-battery-after-v6.txt` `FORGE_BATTERY=PASS forgers_handled=6/6 positive=1/1` exit 0; `controls/derivative-{before-v5,after-v6}.txt` `13/13 MAX_WINDOW=4096` exit 1 → `0/13 MAX_WINDOW=23` exit 0 | **falsified by its own kill rule** — `.ufo/waves/round-79/w1/R79CriticA/a10-receipt.txt` prints `BATTERY=PASS forgers_rejected=11/11 positive=2/2 oracle=REJECTED` exit 0 from a forger that only decodes the wrapper's base85 literal, unmarshals the code object and matches surviving string constants; the kill rule says "if any forger is FORGED" while the predicate counts six |
+| C2 calibration (sourced on S197) | round-78's counter accepts presence-only repairs and audits the newest block only → the successor validates the three repair shapes by digest and audits every criterion, and both round-78 false greens are refused | `python3 -B corpus/evidence/round79/selfcheck-v2.py --lane .`; `controls/selfcheck2-before.txt` `SELFCHECK2=FAIL unresolved=3/3` exit 1 → `controls/selfcheck2-after.txt` `SELFCHECK2=PASS unresolved=0/3` exit 0; `controls/selfcheck-control-before.txt` `CONTROL=PASS cases=4 v1_false_greens=2/2 v2_refusals=2/2` | **falsified by its own kill rule** — a newer `## Round-<n> addition` block re-using criterion number `116.` overwrites the earlier body in `criteria()` and hides the live dead pointer, printing `SELFCHECK2=PASS unresolved=0/3` exit 0 (`.ufo/waves/round-79/w1/R79CriticA/selfcheck2-duplicate116-head.txt`); the kill rule names exactly that event |
+
+Both predicates hold on the bytes they count; both kill rules fired on inputs the predicates do not
+enumerate. The round's admission is therefore **false on the rules declared before data**, and the
+operator rules. Supporting measurement, not the predicate: `DERIVATIVE_COPIES=0/13 MAX_WINDOW=23`
+(the 23 shared bytes are the shebang line, `R79ReviewA/receipts/maxwin.out`), and the structure
+channel is a full forgery of *both* batteries (`R79ExecC/receipt-v6-structure-matrix.txt`,
+`receipt-v5-structure-matrix.txt`), which the claim records as a limit but which the carve-out
+described more narrowly than the attack.
+
+Recorded limits, not repaired after scoring: re-emission preserves behaviour, so any decoder that
+reads the payload identifies the subject by its surviving constants or its canonicalised structure;
+`a9` is a text-level normalizer whose remainder is empty on every v6 copy
+(`R79CriticA/a9-empty-normalisation.txt`); `RECEIPT_LINES` exposes an append and not a truncation;
+the `--work` and toolchain legs sit outside the frozen predicate; a digest binds a repair line to
+bytes, not to the truth of its prose. QUALITY 150 and 151 carry the three audit-window gaps and the
+decoding channel forward.
+
+Numeric score delta 0 (operability stays the historical 3/10); no capability row. Depth, freshness,
+coverage and adjacency unchanged: no knowledge entry, no `corpus/README.md` frontier row, no
+`PROVINCE.md` edit, no sibling absorption (`R79ConnectorA` finds no sibling holding a stronger form
+of either move and absorbs none). Trends: expansion unchanged; quality improved narrowly (both
+round-78 false greens are closed with before receipts and controls, and the two remaining channels
+are measured rather than asserted); discernment improved (both frozen claims were falsified inside
+the round by its own attack seats, with receipts, and the disagreement became QUALITY 150–151).
+
+Wave: one v1 wave, 12 seats (3 executor, 1 scout, 1 scribe, 1 connector, 2 reviewer, 2 critic,
+1 mutation-tester, 1 sentinel = 5 attack seats, 42%), L1 holding the canonical planner seat, no
+residual call.

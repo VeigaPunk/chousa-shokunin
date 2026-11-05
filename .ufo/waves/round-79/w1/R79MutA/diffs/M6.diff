@@ -1,0 +1,10 @@
+--- matrix-battery-v6.py	2026-11-04 21:23:45.544961720 -0300
++++ matrix-battery-v6-M6.py	2026-11-04 21:28:17.092995558 -0300
+@@ -263,7 +263,6 @@
+     text = source.read_text()
+     tree = ast.parse(text)
+     _drop_docstrings(tree)
+-    _rename(tree)
+     pad = "_" + secrets.token_hex(5)
+     stmt = ast.parse(f"{pad} = {secrets.randbelow(10 ** 9)}\n").body[0]
+     futures = [n.lineno for n in tree.body
