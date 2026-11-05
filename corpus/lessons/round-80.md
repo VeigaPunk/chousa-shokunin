@@ -121,7 +121,12 @@ after-state.
    spot-check's §4 payload line (222), which grounds the same requirement one channel out. The frozen
    file is not amended; the row that landed is the one the counter audits. `R80ScribeA` F5.
 
-7. **The oracle enumeration is a fixed five-tuple.** `ORACLES` in `matrix-battery-v7.py` is a
+7. **A second `GATE-RECORD` for one id is a silent overwrite, and the verdict follows tree order.**
+   `records_at()` overwrites `out[id]` per id, so the last record in `git ls-tree` order wins: a
+   defective S200 record in `round-79.md` is invisible next to the good one in `round-80.md`
+   (`R80ReviewerB/60-f5-last-wins-hides-defect.txt`) and surfaces when it sorts later
+   (`60b-f5b-sort-order-escape.txt`). QUALITY 160 carries the successor rule.
+8. **The oracle enumeration is a fixed five-tuple.** `ORACLES` in `matrix-battery-v7.py` is a
    literal five-entry table, `--fresh` draws subjects only and the instrument takes no `--oracle`
    argument, so a sixth oracle written today is rejected only if it happens to fall inside the
    table's coverage — the predicate's `oracles_rejected=5/5` says nothing about an oracle the round
