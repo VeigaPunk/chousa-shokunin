@@ -1373,3 +1373,14 @@ Left open:
 
 - `lessons/round-81.md` — S203–S207 admit, S208 reject (HTTP 403); both claims honest stops (C1 filler control and K3 spirit; C2 K2); post-scoring entry repairs.
 - Frontier note: base row S120's capture already cited TARCiS and a MECIR errata/retraction check (`R81ScoutNovelty.md` §1.4); this round moved that ground into entries. S028 (Crossmark, queued, no capture) is still undispositioned.
+
+## Round82 coverage and frontier (2026-11-06)
+
+| Note | Holds | Sources |
+|---|---|---|
+| `knowledge/question-framing-frames-r82.md` | question framing: PCC for mapping questions, PICO/PECO when a map precedes a systematic review, the three PICO stages (eligibility, each synthesis, what included sources investigated), eligibility derived per frame element, protocol deviations reported with justification | S008, S209, S210, S211 |
+
+- `knowledge/correction-retraction-status-r81.md` gains a round-82 Crossmark addendum (S028 queued → mined).
+- `lessons/round-82.md` — S008 re-opened (queued → mined), S209–S211 admitted, S028 dispositioned; gate fix for the round-81 K2 forms.
+- Frontier: S009 (MECIR risk-of-bias), S017 (PRISMA 2020) and S019 (updating a review) stay queued.
+

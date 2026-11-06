@@ -134,7 +134,15 @@
 # sweeps verdict-bearing. Every ## Rejections row needs a non-empty reason and
 # a non-empty flip-condition (a flip/flip_condition column, or any column whose
 # name contains flip/falsif/reversal); a rejection missing either is
-# SWEEP_REJECTION_INCOMPLETE and counts incomplete (drift).
+# SWEEP_REJECTION_INCOMPLETE and counts incomplete (drift). Round 82: rows
+# under any `##` heading containing "reject" (e.g. `## Rejected sources`) are
+# read the same way, and a placeholder cell (sweep_is_placeholder: `-`, `n/a`,
+# `none`, `TBD`, `?`, `unknown`, … after case/backtick/period folding) counts
+# as absent (reason=placeholder / flip=placeholder) and is never a location.
+# A ## Claims row of kind negative must resolve to a sweep row this mode
+# re-ran (its sweep cell names a declared sweep id, or a sweep row's claim_id
+# or a Negatives sweep row's id is the claim's id); otherwise
+# SWEEP_NEGATIVE_UNRESOLVED (drift).
 # Every negative sweep — a ## Sweeps row, or a Negatives row carrying a
 # where/looked_at/… column or a clean sweep cell — must name where it looked.
 # A local path set (a whitespace-free comma/semicolon list of paths/globs) is
@@ -149,7 +157,8 @@
 #   SWEEP id=… where=… looked=local|source-ids|non-local|exempt|unnamed
 #     hits=… at=… observed=verified|hit|exempt|refused|invalid
 #     verdict=match|mismatch|exempt|refused|invalid
-#   REJECTION id=… ref=… reason=present|absent flip=present|absent
+#   REJECTION id=… ref=… reason=present|absent|placeholder
+#     flip=present|absent|placeholder
 #     observed=complete|incomplete verdict=match|mismatch
 # Summary: VERIFIED_SWEEPS=N/M REJECTIONS_OK=K/L — N sweeps re-verified empty
 # of M sweep items read (exempt counted); K complete rejections of L read.
@@ -2683,6 +2692,23 @@ sweep_has_bad_char() { # TOKEN -> rc0: carries a byte a path token cannot name
   return 1
 }
 
+sweep_is_placeholder() { # VALUE -> rc0: a cell that names nothing (round 82)
+  # Round-81 C2 K2: `-`, `n/a`, `none`, `TBD` read as present flip/reason cells and
+  # `n/a` as a local path. Normalize (lower-case; drop backticks, quotes, `*`, `_`;
+  # collapse whitespace; strip trailing periods) and compare with a closed list.
+  local v=${1,,} w
+  local -a ws=()
+  v=${v//\`/}; v=${v//\"/}; v=${v//\'/}; v=${v//\*/}; v=${v//_/}
+  read -r -a ws <<<"$v"
+  v="${ws[*]+"${ws[*]}"}"
+  while [[ $v == *. ]]; do v=${v%.}; done
+  case "$v" in
+    ''|-|--|---|'—'|'–'|n/a|na|n.a|none|nil|null|tbd|tba|todo|'?'|'??'|'…'|x|unknown|'not applicable'|same|ditto|'see above'|idem)
+      return 0 ;;
+  esac
+  return 1
+}
+
 sweep_looks_path() { # TOKEN -> rc0: path- or glob-shaped naming
   local t=$1
   [[ -n $t ]] || return 1
@@ -2695,6 +2721,7 @@ sweep_looks_path() { # TOKEN -> rc0: path- or glob-shaped naming
 sweep_token_class() { # TOKEN -> local|nonlocal|sourceid|junk on stdout
   local t=$1
   [[ -n $t ]] || { printf 'junk'; return 0; }
+  if sweep_is_placeholder "$t"; then printf 'junk'; return 0; fi
   if is_url_ptr "$t" || is_ephemeral_ptr "$t"; then printf 'nonlocal'; return 0; fi
   case "$t" in
     external|external:*|web|web:*|live|live:*|chat|chat:*|session|session:*|non-local|nonlocal)
@@ -2866,7 +2893,18 @@ verify_sweeps() {
   local hits first p m i2 listed l
   local have_local have_nonlocal have_sid have_junk refused
 
-  if [[ -n ${SEC_BODY[Rejections]+x} ]]; then
+  # Round 82: a rejection kept under any `##` heading containing "reject" (e.g.
+  # `## Rejected sources`) is read like `## Rejections`, and a placeholder
+  # reason/flip cell (sweep_is_placeholder) counts as absent.
+  local rsec
+  local -A REJ_SEEN=()
+  local -a REJ_SECS=()
+  for rsec in "${SEC_ORDER[@]+"${SEC_ORDER[@]}"}"; do
+    [[ ${rsec,,} == *reject* ]] || continue
+    [[ -n ${REJ_SEEN[$rsec]+x} ]] && continue
+    REJ_SEEN[$rsec]=1; REJ_SECS+=("$rsec")
+  done
+  for rsec in "${REJ_SECS[@]+"${REJ_SECS[@]}"}"; do
     while IFS= read -r rrow; do
       [[ -z $rrow ]] && continue
       N_REJ=$((N_REJ + 1))
@@ -2874,20 +2912,23 @@ verify_sweeps() {
       rref=$(cell "$rrow" ref)
       rreason=$(cell "$rrow" reason)
       rflip=$(sweep_flip_cell "$rrow")
-      if [[ -n $rreason ]]; then rp=present; else rp=absent; fi
-      if [[ -n $rflip ]]; then fp=present; else fp=absent; fi
+      if [[ -z $rreason ]]; then rp=absent; elif sweep_is_placeholder "$rreason"; then rp=placeholder; else rp=present; fi
+      if [[ -z $rflip ]]; then fp=absent; elif sweep_is_placeholder "$rflip"; then fp=placeholder; else fp=present; fi
       miss=''
-      [[ $rp == absent ]] && miss=reason
-      [[ $fp == absent ]] && miss="${miss:+$miss,}flip"
+      [[ $rp != present ]] && miss=reason
+      [[ $fp != present ]] && miss="${miss:+$miss,}flip"
       if [[ -z $miss ]]; then
         N_REJ_OK=$((N_REJ_OK + 1))
         REJECTION_LINES+=("REJECTION id=$rid ref=$(chain_disp "$rref") reason=present flip=present observed=complete verdict=match")
       else
-        emit_finding SWEEP_REJECTION_INCOMPLETE warn sweeps "id=$rid missing=$miss"
+        local robs="id=$rid missing=$miss"
+        [[ $rp == placeholder || $fp == placeholder ]] && robs+=" placeholder=reason:$rp,flip:$fp"
+        [[ $rsec != Rejections ]] && robs+=" section=$(chain_disp "$rsec")"
+        emit_finding SWEEP_REJECTION_INCOMPLETE warn sweeps "$robs"
         REJECTION_LINES+=("REJECTION id=$rid ref=$(chain_disp "$rref") reason=$rp flip=$fp observed=incomplete verdict=mismatch")
       fi
-    done < <(table_rows Rejections)
-  fi
+    done < <(table_rows "$rsec")
+  done
 
   if [[ -n ${SEC_BODY[Sweeps]+x} ]]; then
     while IFS= read -r row; do
@@ -3009,6 +3050,42 @@ verify_sweeps() {
     N_SW_EX=$((N_SW_EX + 1))
     SWEEP_LINES+=("SWEEP id=$sid where=$(chain_disp "$whr") looked=$looked hits=- at=- observed=exempt verdict=exempt")
   done
+
+  # Round 82: a negative claim must resolve to a sweep row this mode re-ran — a
+  # declared `## Sweeps` row whose id its sweep cell names or whose claim_id names
+  # it, or a `## Negatives` sweep row carrying its id. A sweep cell naming an
+  # undeclared id, a placeholder, or nothing, with no such row, is
+  # SWEEP_NEGATIVE_UNRESOLVED (round-81 C2 K2: `VERIFIED_SWEEPS=0/0` was CLEAN).
+  local N_NEG=0 ncid nkind ncell nres ntok
+  local -A SW_IDS=() SW_CLAIMS=()
+  for row in "${SWEEP_ROWS[@]+"${SWEEP_ROWS[@]}"}"; do
+    ntok=$(cell "$row" id); [[ -n $ntok ]] && SW_IDS[$ntok]=1
+    ntok=$(cell "$row" claim_id); [[ -n $ntok ]] && SW_CLAIMS[$ntok]=1
+  done
+  if [[ -n ${SEC_BODY[Claims]+x} ]]; then
+    while IFS= read -r row; do
+      [[ -z $row ]] && continue
+      nkind=$(cell "$row" kind | tr 'A-Z' 'a-z')
+      [[ $nkind == negative ]] || continue
+      N_NEG=$((N_NEG + 1))
+      ncid=$(cell "$row" id); [[ -z $ncid ]] && ncid="N$N_NEG"
+      ncell=$(cell "$row" sweep)
+      nres=0
+      [[ -n ${SW_CLAIMS[$ncid]+x} ]] && nres=1
+      [[ $nres -eq 0 && -n ${SW_IDS[$ncid]+x} ]] && nres=1
+      if [[ $nres -eq 0 ]]; then
+        local -a ntoks=()
+        read -r -a ntoks <<<"${ncell//[,;]/ }"
+        for ntok in "${ntoks[@]+"${ntoks[@]}"}"; do
+          ntok=$(sweep_trim_token "$ntok")
+          [[ -n $ntok && -n ${SW_IDS[$ntok]+x} ]] && { nres=1; break; }
+        done
+      fi
+      if [[ $nres -eq 0 ]]; then
+        emit_finding SWEEP_NEGATIVE_UNRESOLVED warn sweeps "claim=$ncid sweep=$(chain_disp "${ncell:--}") names no sweep row this mode re-ran"
+      fi
+    done < <(table_rows Claims)
+  fi
 
   printf 'research-gate %s — ts=%s — mode=sweeps — record=%s\n' "$VERSION" "$TS_UTC" "$record"
   for l in "${SWEEP_LINES[@]+"${SWEEP_LINES[@]}"}"; do printf '%s\n' "$l"; done
@@ -5477,6 +5554,87 @@ EOF
     'RESEARCH_GATE: CLEAN' \
     'SWEEP id=N1 where=lib/ghost.md looked=local hits=0 at=- observed=verified verdict=match' \
     'VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1'
+
+  # r82: placeholder reason/flip cells, a rejection kept under another
+  # "reject" heading, a placeholder `where`, and a negative claim naming an
+  # undeclared sweep id all drift; prose that merely contains a placeholder
+  # word still passes.
+  write_rec sweeps-fail-placeholder-cells <<'EOF'
+# research-record v1
+## Rejections
+| id | ref | reason | flip |
+|---|---|---|---|
+| R1 | noise/a.md | reason recorded here | `N/A` |
+| R2 | noise/b.md | TBD. | a fresh attestation would flip this |
+EOF
+  tsweeps sweeps-fail-placeholder-cells 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING SWEEP_REJECTION_INCOMPLETE severity=warn' \
+    'placeholder=reason:present,flip:placeholder' 'placeholder=reason:placeholder,flip:present' \
+    'REJECTION id=R1 ref=noise/a.md reason=present flip=placeholder observed=incomplete verdict=mismatch' \
+    'VERIFIED_SWEEPS=0/0 REJECTIONS_OK=0/2'
+
+  write_rec sweeps-fail-rejected-heading <<'EOF'
+# research-record v1
+## Rejected sources
+| id | ref | reason | flip |
+|---|---|---|---|
+| R1 | noise/a.md | reason recorded here | |
+EOF
+  tsweeps sweeps-fail-rejected-heading 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING SWEEP_REJECTION_INCOMPLETE severity=warn' \
+    'missing=flip' 'VERIFIED_SWEEPS=0/0 REJECTIONS_OK=0/1'
+
+  write_rec sweeps-fail-where-placeholder <<'EOF'
+# research-record v1
+## Sweeps
+| id | claim_id | where | status |
+|---|---|---|---|
+| SW1 | N1 | n/a | swept |
+## Rejections
+| id | ref | reason | flip |
+|---|---|---|---|
+| R1 | (none) | no source was rejected | a source row appearing would flip this |
+EOF
+  tsweeps sweeps-fail-where-placeholder 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING SWEEP_LOCATION_ABSENT severity=warn' \
+    'VERIFIED_SWEEPS=0/1 REJECTIONS_OK=1/1'
+
+  write_rec sweeps-fail-negative-unresolved <<'EOF'
+# research-record v1
+## Claims
+| id | kind | text | pointer | status | sweep |
+|---|---|---|---|---|---|
+| N1 | negative | no ghost source exists | lib/primary.md:1 | observed | SW9 |
+## Sweeps
+| id | claim_id | where | status |
+|---|---|---|---|
+| SW1 | N2 | lib/ghost*.md | swept |
+## Rejections
+| id | ref | reason | flip |
+|---|---|---|---|
+| R1 | (none) | no source was rejected | a source row appearing would flip this |
+EOF
+  tsweeps sweeps-fail-negative-unresolved 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING SWEEP_NEGATIVE_UNRESOLVED severity=warn' 'claim=N1' \
+    'VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1'
+
+  write_rec sweeps-pass-prose-with-placeholder-word <<'EOF'
+# research-record v1
+## Claims
+| id | kind | text | pointer | status | sweep |
+|---|---|---|---|---|---|
+| N1 | negative | no ghost source exists | lib/primary.md:1 | observed | SW1 |
+## Sweeps
+| id | claim_id | where | status |
+|---|---|---|---|
+| SW1 | N1 | lib/ghost*.md | swept |
+## Rejections
+| id | ref | reason | flip |
+|---|---|---|---|
+| R1 | noise/a.md | none of its spans quote a primary source | n/a today; a primary quote in it would flip this |
+EOF
+  tsweeps sweeps-pass-prose-with-placeholder-word 0 \
+    'RESEARCH_GATE: CLEAN' 'VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1'
 
   tsetup sweeps-no-path 2 verify-sweeps
   tsetup sweeps-missing-file 2 verify-sweeps "$WORK/no-such-record.md"

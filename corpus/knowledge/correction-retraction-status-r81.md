@@ -1,6 +1,6 @@
 # Correction and retraction status of a cited work — check it before reuse (round 81)
 
-source: S205, S206, S207
+source: S205, S206, S207, S028
 verified-at: 2026-11-06 (round 81; captures `371c55117727d526805f030d`, `f221c90f69188f775e32cd34`, `43a45b49723f7677d6446c92`)
 recheck: 365d
 
@@ -57,3 +57,20 @@ and the date it looked. The three sources describe where status is published; no
 As landed at `7e2da96a`, the version row said "cite the version read", contradicting S206's "The citation should be to
 the most recent version." (`R81ReviewerEntries.md` item 1). The row now follows S206; the round's claim verdict is
 unchanged by this repair (`corpus/lessons/round-81.md`).
+
+## Addendum (round 82): Crossmark, the publisher-side status signal
+
+S028 (queued since round 21) was re-opened on 2026-11-06 (capture `dedff231d5c3d3cdb0b4f8e3`) and is mined here. Crossref
+describes Crossmark as a member-maintained status link placed on the item itself:
+
+> "Crossmark lets readers know when a substantial change affecting the citation or interpretation has occurred" — S028
+
+> "Members place the Crossmark button close to the title of an item on their web pages and in PDFs." — S028
+
+| Observation about a cited work | Reading | Do | Never |
+|---|---|---|---|
+| The article page or PDF carries a Crossmark button | the publisher has committed to report updates for that record (S028) | open the Crossmark status and record what it shows (and the date) beside the other status checks | treat an absent Crossmark button as "no correction or retraction" — it shows only that the publisher did not deposit the signal |
+
+The "never" clause is the lane's reading of S028's "Members place the Crossmark button…": the signal exists only where a
+member placed it; S028 does not itself state what an absent button means.
+
