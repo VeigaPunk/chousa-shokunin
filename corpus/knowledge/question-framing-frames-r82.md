@@ -32,13 +32,13 @@ transfers — the frame decides what counts as in scope, and the record keeps th
 
 | Situation | Do | Never | Warrant |
 |---|---|---|---|
-| The question asks what exists on a topic (a map, not a test of an effect) | frame it as population, concept and context, and say it is hypothesis-generating | force an intervention, comparator and outcome onto a mapping question | Q6, Q7 (S210) |
+| The question asks what exists on a topic (a map, not a test of an effect) | frame it as population, concept and context, and say it is hypothesis-generating | treat the map as a test of an effect | Q6, Q7 (S210) |
 | The map is meant to feed a later systematic review or a structured gap analysis | consider a PICO or PECO frame instead, and record why that format was chosen | assume PCC is the only admissible frame for a mapping question | Q8 (S210) |
 | Inclusion and exclusion criteria are being written | break each element of the chosen frame into an include line and an exclude line | write a criterion that no element of the frame produces | Q10 (S211) |
 | The frame is being fixed before searching | name the planned frame as the eligibility boundary, and state separately the question each planned comparison or synthesis answers | use one frame statement for both what is eligible and what each comparison answers | Q1, Q2 (S008) |
 | Findings are being written up | report what the included sources actually investigated, beside the planned frame | present the planned frame as if it described the included sources | Q1, Q3 (S008) |
 | Some frame elements matter more to the question than others | define each element only as precisely as the question needs | pad every element to the same level of detail | Q4 (S008) |
-| No relevant source has been read yet | read some sources relevant to the topic before fixing the final question | freeze the final question before any relevant source is known | Q5 (S008) |
+| No relevant source has been read yet | read some sources relevant to the topic before fixing the final question | expect, as a rule, to fix the final question before any relevant source is known | Q5 (S008) |
 | The question cannot be stated clearly | rewrite it until it can be, before eligibility or search are set | start eligibility or search on an unclear question | Q9 (S210) |
 | The frame or criteria change after the protocol was written | record each deviation and its justification in the final write-up | report the changed frame as though it had been planned | Q11 (S209) |
 
@@ -55,3 +55,13 @@ itself a finding. For this lane that maps onto the existing claim-vs-source spli
   as PROGRESS-Plus) is not taken.
 - S209 (JBI 10.2.2) is now titled "Developing your protocol"; the URL slug still reads "Developing the title and
   question". The quote is from the page as served on 2026-11-06.
+
+## Correction (round 82, after scoring)
+
+As landed at `b4a41d25`, row 1's Never read "force an intervention, comparator and outcome onto a mapping question".
+`R82ReviewerEntry` (`.ufo/waves/round-82/w1/R82ReviewerEntry.md`) found it unsupported by Q6/Q7 — a suggestion and a
+description, not a prohibition — and contradicted in part by the same S210 paragraph's Q8, which admits PICO/PECO for a
+map that feeds a structured gap analysis or a systematic review. The Never now states only what Q7 supports (a map is
+hypothesis-generating, not a test); row 2 carries the PICO/PECO case. Row 7's Never restores Q5's "generally" hedge. The
+round's C2 verdict (falsified by its own kill rule K3) is unchanged by this repair.
+

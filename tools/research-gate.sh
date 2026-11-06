@@ -2767,7 +2767,9 @@ sweep_where_tokens() { # RAW -> location tokens, one per line; empty = unnamed
     local IFS=',;'
     for tok in $raw; do
       tok=$(sweep_trim_token "$tok")
-      [[ -n $tok ]] && out+=("$tok")
+      # round-82 repair: a placeholder token in a set that also names a real
+      # location is dropped, not junk (`n/a,lib/x.md` names lib/x.md)
+      [[ -n $tok ]] && ! sweep_is_placeholder "$tok" && out+=("$tok")
     done
     set +f
   fi
@@ -2896,13 +2898,34 @@ verify_sweeps() {
   # Round 82: a rejection kept under any `##` heading containing "reject" (e.g.
   # `## Rejected sources`) is read like `## Rejections`, and a placeholder
   # reason/flip cell (sweep_is_placeholder) counts as absent.
-  local rsec
-  local -A REJ_SEEN=()
+  # Round-82 repairs (after scoring, R82ExecForms/R82ReviewerGate/R82CriticClaims):
+  # a repeated `##` heading keeps only its last body in load_sections, so a
+  # duplicate rejections/claims/sweeps/negatives section is refused outright
+  # (SWEEP_SECTION_DUPLICATE); a heading other than `Rejections` is read only
+  # when its table carries a reason-like or flip-like column, and `why`/
+  # `rationale` stand in for `reason` there.
+  local rsec dsec
+  local -A REJ_SEEN=() SEC_N=()
   local -a REJ_SECS=()
+  for dsec in "${SEC_ORDER[@]+"${SEC_ORDER[@]}"}"; do
+    SEC_N[$dsec]=$(( ${SEC_N[$dsec]:-0} + 1 ))
+    if [[ ${SEC_N[$dsec]} -eq 2 ]]; then
+      case "${dsec,,}" in
+        claims|sweeps|negatives|*reject*)
+          emit_finding SWEEP_SECTION_DUPLICATE warn sweeps "section=$(chain_disp "$dsec") repeated; only its last body would be read" ;;
+      esac
+    fi
+  done
   for rsec in "${SEC_ORDER[@]+"${SEC_ORDER[@]}"}"; do
     [[ ${rsec,,} == *reject* ]] || continue
     [[ -n ${REJ_SEEN[$rsec]+x} ]] && continue
-    REJ_SEEN[$rsec]=1; REJ_SECS+=("$rsec")
+    REJ_SEEN[$rsec]=1
+    if [[ $rsec != Rejections ]]; then
+      local rhead
+      rhead=$(table_rows "$rsec" | head -n 1 | tr '\t' '\n' | sed 's/=.*//')
+      grep -Eqi '^(reason|why|rationale)$|flip|falsif|reversal|counter' <<<"$rhead" || continue
+    fi
+    REJ_SECS+=("$rsec")
   done
   for rsec in "${REJ_SECS[@]+"${REJ_SECS[@]}"}"; do
     while IFS= read -r rrow; do
@@ -2911,6 +2934,9 @@ verify_sweeps() {
       rid=$(cell "$rrow" id); [[ -z $rid ]] && rid="R$N_REJ"
       rref=$(cell "$rrow" ref)
       rreason=$(cell "$rrow" reason)
+      if [[ -z $rreason && $rsec != Rejections ]]; then
+        rreason=$(cell "$rrow" why); [[ -n $rreason ]] || rreason=$(cell "$rrow" rationale)
+      fi
       rflip=$(sweep_flip_cell "$rrow")
       if [[ -z $rreason ]]; then rp=absent; elif sweep_is_placeholder "$rreason"; then rp=placeholder; else rp=present; fi
       if [[ -z $rflip ]]; then fp=absent; elif sweep_is_placeholder "$rflip"; then fp=placeholder; else fp=present; fi
@@ -3062,6 +3088,15 @@ verify_sweeps() {
     ntok=$(cell "$row" id); [[ -n $ntok ]] && SW_IDS[$ntok]=1
     ntok=$(cell "$row" claim_id); [[ -n $ntok ]] && SW_CLAIMS[$ntok]=1
   done
+  # round-82 repair: a `## Negatives` row that names where it looked carries
+  # its claim even when `## Sweeps` has rows (R82ReviewerGate F3)
+  if [[ -n ${SEC_BODY[Negatives]+x} ]]; then
+    while IFS= read -r row; do
+      [[ -z $row ]] && continue
+      [[ -n $(sweep_raw_where "$row") ]] || continue
+      ntok=$(cell "$row" id); [[ -n $ntok ]] && SW_IDS[$ntok]=1
+    done < <(table_rows Negatives)
+  fi
   if [[ -n ${SEC_BODY[Claims]+x} ]]; then
     while IFS= read -r row; do
       [[ -z $row ]] && continue
@@ -3071,8 +3106,14 @@ verify_sweeps() {
       ncid=$(cell "$row" id); [[ -z $ncid ]] && ncid="N$N_NEG"
       ncell=$(cell "$row" sweep)
       nres=0
-      [[ -n ${SW_CLAIMS[$ncid]+x} ]] && nres=1
-      [[ $nres -eq 0 && -n ${SW_IDS[$ncid]+x} ]] && nres=1
+      if [[ -n $ncell ]] && sweep_is_placeholder "$ncell"; then
+        # round-82 repair: a non-empty placeholder sweep cell names no sweep,
+        # whatever back-reference a sweep row carries (R82ExecRepro/R82CriticClaims K2(a))
+        nres=0
+      else
+        [[ -n ${SW_CLAIMS[$ncid]+x} ]] && nres=1
+        [[ $nres -eq 0 && -n ${SW_IDS[$ncid]+x} ]] && nres=1
+      fi
       if [[ $nres -eq 0 ]]; then
         local -a ntoks=()
         read -r -a ntoks <<<"${ncell//[,;]/ }"
@@ -5635,6 +5676,71 @@ EOF
 EOF
   tsweeps sweeps-pass-prose-with-placeholder-word 0 \
     'RESEARCH_GATE: CLEAN' 'VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1'
+
+  # r82 repairs (after scoring): a duplicated rejections heading is refused,
+  # a placeholder claim sweep cell is unresolved despite a claim_id
+  # back-reference, a placeholder token beside a real path is dropped, a
+  # Negatives carrier resolves its claim beside a non-empty ## Sweeps, and a
+  # "reject" heading over a table with no reason/flip column is not read.
+  write_rec sweeps-fail-duplicate-rejections <<'EOF'
+# research-record v1
+## Rejections
+| id | ref | reason | flip |
+|---|---|---|---|
+| R1 | noise/a.md | reason recorded here | |
+## Rejections
+| id | ref | reason | flip |
+|---|---|---|---|
+| R2 | noise/b.md | reason recorded here | a fresh attestation would flip this |
+EOF
+  tsweeps sweeps-fail-duplicate-rejections 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING SWEEP_SECTION_DUPLICATE severity=warn'
+
+  write_rec sweeps-fail-claim-cell-placeholder <<'EOF'
+# research-record v1
+## Claims
+| id | kind | text | pointer | status | sweep |
+|---|---|---|---|---|---|
+| N1 | negative | no ghost source exists | lib/primary.md:1 | observed | n/a |
+## Sweeps
+| id | claim_id | where | status |
+|---|---|---|---|
+| SW1 | N1 | lib/ghost*.md | swept |
+## Rejections
+| id | ref | reason | flip |
+|---|---|---|---|
+| R1 | (none) | no source was rejected | a source row appearing would flip this |
+EOF
+  tsweeps sweeps-fail-claim-cell-placeholder 1 \
+    'RESEARCH_GATE: DRIFT' 'FINDING SWEEP_NEGATIVE_UNRESOLVED severity=warn' 'claim=N1'
+
+  write_rec sweeps-pass-repairs <<'EOF'
+# research-record v1
+## Claims
+| id | kind | text | pointer | status | sweep |
+|---|---|---|---|---|---|
+| N1 | negative | no ghost source exists | lib/primary.md:1 | observed | SW1 |
+| N2 | negative | no planted twin exists | lib/primary.md:1 | observed | |
+## Sweeps
+| id | claim_id | where | status |
+|---|---|---|---|
+| SW1 | N1 | n/a,lib/ghost*.md | swept |
+## Negatives
+| id | text | where |
+|---|---|---|
+| N2 | no planted twin exists | lib/twin*.md |
+## Rejected claims
+| claim | status |
+|---|---|
+| C9 | withdrawn by its author |
+## Rejections
+| id | ref | reason | flip |
+|---|---|---|---|
+| R1 | (none) | no source was rejected | a source row appearing would flip this |
+EOF
+  tsweeps sweeps-pass-repairs 0 \
+    'RESEARCH_GATE: CLEAN' 'VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1' \
+    'SWEEP id=SW1 where=lib/ghost*.md looked=local hits=0 at=- observed=verified verdict=match'
 
   tsetup sweeps-no-path 2 verify-sweeps
   tsetup sweeps-missing-file 2 verify-sweeps "$WORK/no-such-record.md"

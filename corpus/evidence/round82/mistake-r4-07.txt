@@ -1,0 +1,8 @@
+# mined mistake check: does the gate's per-row output show the defect R81ReviewerC2 described for r4-07 ('reason present, flip empty')?
+# cmd: bash tools/research-gate.sh verify-sweeps .ufo/waves/round-81/w1/R81ReviewerC2/records/r4-07-alt-section.md --root . | grep '^REJECTION'; then grep -c 'flip=absent'
+REJECTION id=R1 ref=corpus/fixtures/sweeps-r5.md reason=present flip=present observed=complete verdict=match
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+described_form_present=0 (0 = the description does not match the bytes: check FAILS)
+# control: the r82-built record that does carry the described form
+REJECTION id=R1 ref=corpus/fixtures/sweeps-r5.md reason=present flip=absent observed=incomplete verdict=mismatch
+described_form_present=1 (1 = check PASSES)
