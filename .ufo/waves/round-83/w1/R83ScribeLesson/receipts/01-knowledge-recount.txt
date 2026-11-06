@@ -1,0 +1,28 @@
+# knowledge entry recount: .md files vs all files
+# SCORECARD.md:3756 claims 'knowledge 94 -> 95'; round-82-verifier-spotcheck.md:24 names the .gitkeep
+
+$ git -C /home/vgpnk/Projects/shokunin/chousa-shokunin ls-tree -r --name-only 142b6f0c08e645ef9507f6d880be44e518c39043 corpus/knowledge | grep -c '\.md$'
+93
+rc=0
+$ git -C /home/vgpnk/Projects/shokunin/chousa-shokunin ls-tree -r --name-only 142b6f0c08e645ef9507f6d880be44e518c39043 corpus/knowledge | wc -l
+94
+rc=0
+$ git -C /home/vgpnk/Projects/shokunin/chousa-shokunin ls-tree -r --name-only 142b6f0c08e645ef9507f6d880be44e518c39043 corpus/knowledge | grep -c 'gitkeep'
+1
+rc=0
+
+$ git -C /home/vgpnk/Projects/shokunin/chousa-shokunin ls-tree -r --name-only 03b586d1 corpus/knowledge | grep -c '\.md$'
+94
+rc=0
+$ git -C /home/vgpnk/Projects/shokunin/chousa-shokunin ls-tree -r --name-only 03b586d1 corpus/knowledge | wc -l
+95
+rc=0
+$ git -C /home/vgpnk/Projects/shokunin/chousa-shokunin ls-tree -r --name-only 03b586d1 corpus/knowledge | grep -c 'gitkeep'
+1
+rc=0
+
+# discriminator: claimed count vs .md count (MATCH/MISMATCH)
+RECOUNT_CHECK rev=142b6f0c claimed=94 md=93 MISMATCH
+RECOUNT_CHECK rev=142b6f0c claimed=93 md=93 MATCH
+RECOUNT_CHECK rev=03b586d1 claimed=95 md=94 MISMATCH
+RECOUNT_CHECK rev=03b586d1 claimed=94 md=94 MATCH

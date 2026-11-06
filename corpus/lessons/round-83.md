@@ -51,8 +51,8 @@ Gate addendum for the non-author spot-check (drafted by seat `R83ScribeLesson`,
 
 | claim | predicate at `81b81173` | kill rules | verdict |
 |---|---|---|---|
-| C1 depth (S009, S212, S213) | `DEPTH_R83 entries=1 ok_entries=1 rows=10 located_quotes=16 fresh_sources=3` PASS rc 0 (`corpus/evidence/round83/after/c1-after.txt`) | K1 held (`R83ExecRepro`); K2 held — 16/16 quotes in committed captures and on three HTTP 200 live re-opens byte-identical to the raw captures (`R83ExecReopen`); K3 held — all 10 rows supported, no contradicting sentence in the full paragraphs (`R83ReviewerEntry`, `R83CriticClaims` §2.2); K4 held — no base entry cites S009/S212/S213 or their URLs (`R83CriticClaims` §2.3, `R83ExecRepro`) | **verified** (measured) |
-| C2 operability, capability `tools/gate-records.py` | (a) `TOOL=present POSITIVE=15/15 FORGED_REFUSED=198/198 EXPECTED_CODE=198/198 EMPTY_REFUSED=1/1 RC=3/3` PASS rc 0 (`after/c2-after.txt`); (b) round-83 lesson `records=3 ok=3` rc 0 | K1 held; K4 held (`R83ExecHarm`); **K2 fired** — `line=2٢٢` (ASCII 2 + Arabic-Indic digits) prints `OK` because `INT_RE` used Python's Unicode `\d` (`R83ExecForge` Finding 1, `forge/c052-line-arabic-222.md`); **K3 fired** — a genuine rev record whose quote begins with `"` is refused `FAIL PARSE` by an undocumented guard (`R83ExecHarm` 06b, `R83CriticClaims` §1.1) | **falsified by its own kill rules — honest stop** |
+| C1 depth (S009, S212, S213) | `DEPTH_R83 entries=1 ok_entries=1 rows=10 located_quotes=16 fresh_sources=3` PASS rc 0 (`corpus/evidence/round83/after/c1-after.txt`) | K1 held (`R83ExecRepro`); K2 held — 16/16 quotes in committed captures and on three HTTP 200 live re-opens byte-identical to the raw captures (`R83ExecReopen`); K3 held — all 10 rows supported, no contradicting sentence in the full paragraphs (`R83ReviewerEntry`, `R83CriticClaims` §2.2); K4 held — no base entry cites S009/S212/S213 or their URLs (`R83CriticClaims` §2.3, `R83ExecRepro`, `R83ScoutNovelty`) | **verified** (measured) |
+| C2 operability, capability `tools/gate-records.py` | (a) `TOOL=present POSITIVE=15/15 FORGED_REFUSED=198/198 EXPECTED_CODE=198/198 EMPTY_REFUSED=1/1 RC=3/3` PASS rc 0 (`after/c2-after.txt`); (b) round-83 lesson `records=3 ok=3` rc 0 | K1 held; K4 held (`R83ExecHarm`, `R83ReviewerTool` F5); **K2 fired** — `line=2٢٢` (ASCII 2 + Arabic-Indic digits) prints `OK` because `INT_RE` used Python's Unicode `\d` (`R83ExecForge` Finding 1, `forge/c052-line-arabic-222.md`; `R83ReviewerTool` F3 found no other K2); **K3 fired** — a genuine rev record whose quote begins with `"` is refused `FAIL PARSE` by an undocumented guard (`R83ExecHarm` 06b, `R83CriticClaims` §1.1, `R83ReviewerTool` F1); a second K3 reading, a genuine rev record for a committed path containing a space, cannot be expressed in the space-separated form (`R83ReviewerTool` F2, routed) | **falsified by its own kill rules — honest stop** |
 
 ## Post-scoring repair (does not rescue C2)
 
@@ -96,3 +96,19 @@ none — the `merge/chousa` collision file from round 78 still lists 111 collisi
 5. Entry residuals (not K3 rows): the Inference's "non-author closure = second independent judgment" drops the
    independence condition; row 8's Limits could also scope against the S213 two-part "No information" antecedent
    (`R83ReviewerEntry` R-1, R-2).
+6. Paths containing a space cannot be written in the rev form (`R83ReviewerTool` F2): define an escape or a quoted
+   `path=` before the form is relied on for such files.
+7. The gate emits `SWEEP_SECTION_DUPLICATE` (round-82 repair) but SKILL.md item 2/4 does not document it; the round-82
+   record `G-two-sweeps-first-bad` is newly refused by it (`R83ScoutNovelty` §2.6).
+
+## Round-82 routed defects — disposition
+
+1. The out-of-class record newly refused at the r82 tip is `F-control-claimid-binds`; it is byte-identical to
+   `R82CriticClaims/attack-k2a-record.md`, an in-class K2(a) form (placeholder claim-sweep cell) — the refusal is
+   correct, not harm (`.ufo/waves/round-83/w1/R83ScoutNovelty.md` §2.5, receipts `R83ScoutNovelty/r82-defect1-ruling.txt`,
+   `r83-corroboration.txt` §H). Read-only ruling; no gate byte changed this round.
+2. Receipts pinned to a revision: every round-83 after/repair receipt starts with a `# rev <hash>` line
+   (`corpus/evidence/round83/after/`, `repair/`). Round-82 receipts are history and stay as committed.
+3. Knowledge counted with `grep -c '\.md$'` (this lesson's `## Mistakes`, row 3).
+4. Not taken: round 83 did not reclaim the gate; the duplicate-heading/fenced/commented-table control set waits for the
+   next gate claim.

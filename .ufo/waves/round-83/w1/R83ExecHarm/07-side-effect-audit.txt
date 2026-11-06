@@ -1,0 +1,40 @@
+Side-effect audit of the landed tool (blob 2a59aca7bb50f86f14c44a8293f728c829888a46) at aca2a781.
+Command traced (strace 7.2, full syscall set, -f, -s 4096):
+  strace -f -s 4096 -o strace.all python3 tools/gate-records.py verify --root <archive-tree> --repo <lane> corpus/lessons/round-80.md corpus/lessons/round-81.md corpus/lessons/round-83.md
+Observed: GATE_RECORDS files=3 records=18 ok=18 fail=0, rc=0 (18 records: 4 rev + 13 admit + 1 unreach).
+
+A. network syscalls (anchored to syscall lines):
+0
+B. every open not O_RDONLY:
+     12 openat(AT_FDCWD, "/dev/null", O_RDWR) = 3
+   (context: /dev/null O_RDWR belongs to each git child, opened and closed before exec: lines 1803/2153/2494 etc.)
+C. unlink/rename/mkdir/chmod/utime/truncate/link/symlink/mknod:
+  none present
+D. successful execve argv, unique:
+execve("/usr/bin/git", ["git", "-C", "/home/vgpnk/Projects/shokunin/chousa-shokunin", "cat-file", "blob", "3eb4a3cad8febf75698a017cb6c4441f763b3454:.ufo/waves/round-78/w1/R78ReviewB/atkB2-new-block-window.txt"]
+execve("/usr/bin/git", ["git", "-C", "/home/vgpnk/Projects/shokunin/chousa-shokunin", "cat-file", "blob", "b7803829922770b890e9f4efdd30d12c3695439a:corpus/lessons/round-79-verifier-spotcheck.md"]
+execve("/usr/bin/git", ["git", "-C", "/home/vgpnk/Projects/shokunin/chousa-shokunin", "cat-file", "blob", "b7803829922770b890e9f4efdd30d12c3695439a:corpus/QUALITY.md"]
+execve("/usr/bin/git", ["git", "-C", "/home/vgpnk/Projects/shokunin/chousa-shokunin", "cat-file", "-t", "3eb4a3cad8febf75698a017cb6c4441f763b3454^{commit}"]
+execve("/usr/bin/git", ["git", "-C", "/home/vgpnk/Projects/shokunin/chousa-shokunin", "cat-file", "-t", "3eb4a3cad8febf75698a017cb6c4441f763b3454:.ufo/waves/round-78/w1/R78ReviewB/atkB2-new-block-window.txt"]
+execve("/usr/bin/git", ["git", "-C", "/home/vgpnk/Projects/shokunin/chousa-shokunin", "cat-file", "-t", "b7803829922770b890e9f4efdd30d12c3695439a^{commit}"]
+execve("/usr/bin/git", ["git", "-C", "/home/vgpnk/Projects/shokunin/chousa-shokunin", "cat-file", "-t", "b7803829922770b890e9f4efdd30d12c3695439a:corpus/lessons/round-79-verifier-spotcheck.md"]
+execve("/usr/bin/git", ["git", "-C", "/home/vgpnk/Projects/shokunin/chousa-shokunin", "cat-file", "-t", "b7803829922770b890e9f4efdd30d12c3695439a:corpus/QUALITY.md"]
+execve("/usr/bin/python3", ["python3", "tools/gate-records.py", "verify", "--root", "/fast/scratch/hyaku/chousa-r83/R83ExecHarm/tree", "--repo", "/home/vgpnk/Projects/shokunin/chousa-shokunin", "corpus/lessons/round-80.md", "corpus/lessons/round-81.md", "corpus/lessons/round-83.md"]
+E. git subcommands:
+     12 cat-file
+F. write() fd histogram:
+     59 1
+   (all writes are fd 1: the tool stdout plus each git child pipe under capture_output=True)
+
+Source audit (tools/gate-records.py):
+175:        t = subprocess.run(["git", "-C", repo, "cat-file", "-t", rev + "^{commit}"], capture_output=True, text=True)
+179:        t = subprocess.run(["git", "-C", repo, "cat-file", "-t", spec], capture_output=True, text=True)
+182:        b = subprocess.run(["git", "-C", repo, "cat-file", "blob", spec], capture_output=True)
+53:import argparse
+54:import hashlib
+55:import os
+56:import re
+57:import subprocess
+58:import sys
+59:import unicodedata
+=> three subprocess.run calls, all git ... cat-file; imports are argparse/hashlib/os/re/subprocess/sys/unicodedata only.

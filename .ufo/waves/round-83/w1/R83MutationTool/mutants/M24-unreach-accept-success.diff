@@ -1,0 +1,9 @@
+--- tools/gate-records.py
++++ M24-unreach-accept-success.py
+@@ -229,5 +229,5 @@
+             codes.append("QUOTE_ABSENT")
+     elif form == "unreach":
+-        success = kv["curl_rc"] == "0" and kv["http"].startswith("2")
++        success = False
+         ok = (not success) and any(r[0] == sid and r[1] == url and r[4] == kv["fetched"] and r[5] == kv["curl_rc"]
+                                    and r[6] == kv["http"] for r in refetch)

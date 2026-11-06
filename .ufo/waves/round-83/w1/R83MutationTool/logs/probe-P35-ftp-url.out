@@ -1,0 +1,11 @@
+# probe P35-ftp-url vs mutant M35-drop-url-regex
+## input
+GATE-RECORD S113 url=ftp://example.org/x fetched=2026-10-27T08:30:59Z tier=B decision=admit capture=corpus/captures/453d492becd9a2f4632cb8dd.txt capture_sha256=6e2577b00e711bbbcc0170b6f598f08c39ce6cdc4ea2cb59cad5c4bc78e04186 words=12 quote="内分泌 普通内科 消化 呼吸 神经科 传染科 精神心理 肾内科 风湿免疫 血液科 老年医学 外科"
+## landed rc=1
+GATE_RECORD /fast/scratch/hyaku/chousa-r83/R83MutationTool/probes/P35-ftp-url.md:1 S113 FAIL PARSE
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+
+## mutant rc=1
+GATE_RECORD /fast/scratch/hyaku/chousa-r83/R83MutationTool/probes/P35-ftp-url.md:1 S113 FAIL CAPTURE_KEY,REFETCH
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+

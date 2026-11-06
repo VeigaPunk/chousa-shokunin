@@ -1,0 +1,14 @@
+# egress ordering and md count at the round-82 landing
+$ git log -1 --format='%h %cI' 8fff80ee43fbb99fb391c0f4751dbfd47c722744
+8fff80ee 2026-11-06T17:53:00-03:00
+$ grep -c 'cochrane.org' corpus/evidence/round83/egress-approval.md
+3
+$ grep -n 'chapter-07\|chapter-08\|assessing-risk-bias-included-studies-c52-c60' corpus/evidence/round83/egress-approval.md | cut -c1-150
+28:| S009 (re-open) | https://www.cochrane.org/authors/handbooks-and-manuals/mecir-manual/standards-conduct-new-cochrane-intervention-reviews-c1-c75/p
+29:| new | https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-07 | duplicate independent assessment, disagreement process
+30:| new | https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-08 | supporting each risk-of-bias judgement with recorded j
+
+$ git -C ... ls-tree -r --name-only b4a41d251b488f06b4a6ab01a11bc12ce72edd20 corpus/knowledge | grep -c '\.md$'
+94
+$ ... | wc -l
+95

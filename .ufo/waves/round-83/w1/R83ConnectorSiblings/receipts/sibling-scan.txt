@@ -1,0 +1,102 @@
+# sibling-overlap sweep, round 83, seat R83ConnectorSiblings (2026-11-06T21:12:02Z)
+
+## S1 live sibling corpora citing any of the three C1 URLs
+$ grep -rn "assessing-risk-bias-included-studies-c52-c60" */corpus/ 2>/dev/null | grep -v "^chousa"
+rc=1 (1 = no match)
+
+$ grep -rn "handbook/current/chapter-0[78]" */corpus/ 2>/dev/null | grep -v "^chousa"
+rc=1 (1 = no match)
+
+## S2 sibling knowledge entries on the appraisal-recording craft
+$ grep -rn -i -e "support for judgement" -e "signalling questions" -e "independent duplicate" */corpus/knowledge/ | grep -v "^chousa"
+rc=1 (1 = no match)
+
+## S3 sibling tools/scripts containing the record token or the three capture keys
+$ grep -rn -e "GATE-RECORD" -e "capture_sha256" -e "refetch.tsv" */tools/ */scripts/ | grep -v "^chousa"
+tsukuroi-shokunin/tools/check-kernel-taint.py:553:                   'findings': findings, 'capture_sha256_observed': observed_sha}
+tsukuroi-shokunin/tools/check-kernel-taint.py:866:                  'capture_sha256_observed': observed_sha}
+tsukuroi-shokunin/tools/check-memory-pressure.py:569:                   'capture_sha256_observed': observed_sha}
+tsukuroi-shokunin/tools/check-memory-pressure.py:786:                  'capture_sha256_observed': observed_sha}
+tsukuroi-shokunin/tools/check-pause-gate.py:10:gate's `capture_sha256`; no pointer may name the gate files themselves. All
+tsukuroi-shokunin/tools/check-pause-gate.py:94:                  and hashlib.sha256(capture_text.encode('utf-8', 'surrogateescape')).hexdigest() == gate.get('capture_sha256'))
+tsukuroi-shokunin/tools/check-pause-gate.py:183:        body = {'schema': SCHEMA, 'capture': CAPTURE, 'capture_sha256': capture_sha, 'premises': premises}
+tsukuroi-shokunin/tools/check-pause-gate.py:206:        ('capture-hash-mismatch', gate(mutate=lambda b: b.__setitem__('capture_sha256', '0' * 64)), 1, 0),
+tsukuroi-shokunin/tools/check-storage-health.py:532:                   'findings': findings, 'capture_sha256_observed': observed_sha}
+tsukuroi-shokunin/tools/check-storage-health.py:839:                  'capture_sha256_observed': observed_sha}
+rc=0 (1 = no match)
+
+## S4 sibling tools that read SOURCES.md and corpus/captures/ together
+$ for f in */tools/*.py */scripts/*.py; do grep -q SOURCES.md $f && grep -q "captures/" $f && echo $f; done
+(no output = none)
+
+## S5 lane-local S-id reuse (the entry cites S009, S212, S213)
+S009 lanes: audio-shokunin chousa-shokunin game-dev-2d-shokunin game-dev-3d-shokunin kagi-shokunin kaidoku-shokunin kake-shokunin kama-shokunin kasegi-shokunin kengaku-shokunin kotoba-shokunin kotodama-shokunin kumitate-shokunin lore-shokunin mado-shokunin mori-shokunin revenger-shokunin souji-shokunin tabi-shokunin tameshi-shokunin tsukuroi-shokunin 
+S212 lanes: chousa-shokunin kengaku-shokunin kotoba-shokunin kotodama-shokunin kumitate-shokunin mado-shokunin mori-shokunin revenger-shokunin souji-shokunin tsukuroi-shokunin 
+S213 lanes: chousa-shokunin kengaku-shokunin kotoba-shokunin kotodama-shokunin kumitate-shokunin mado-shokunin mori-shokunin revenger-shokunin souji-shokunin tsukuroi-shokunin 
+
+## S6 tool-name collisions
+chousa-shokunin/tools/gate-records.py
+chousa-shokunin/tools/gate-records.py
+chousa-shokunin/tools/research-gate.sh
+chousa-shokunin/tools/store-record-audit.py
+kama-shokunin/tools/gate-registry-check.py
+kama-shokunin/tools/pre-report-gate.py
+kama-shokunin/tools/round33-gate-receipts.py
+kama-shokunin/tools/round76-selfrecord-facts.py
+kama-shokunin/tools/round77-selfrecord-round76.py
+kama-shokunin/tools/round78-selfrecord-round77.py
+kama-shokunin/tools/round79-selfrecord-round78.py
+kama-shokunin/tools/round80-selfrecord-round79.py
+kama-shokunin/tools/round81-selfrecord-round80.py
+kama-shokunin/tools/round82-selfrecord-round81.py
+kama-shokunin/tools/round83-selfrecord-round82.py
+kama-shokunin/tools/round84-selfrecord-round83.py
+kama-shokunin/tools/round87-gate-arm-faults.py
+kotodama-shokunin/tools/check-cited-records.py
+kotodama-shokunin/tools/check-gate-battery.py
+kotodama-shokunin/tools/check-gate-captures.py
+kotodama-shokunin/tools/check-gate-quotes.py
+kotodama-shokunin/tools/check-gate-registry.py
+mori-shokunin/tools/mori-gate-registry.py
+mori-shokunin/tools/mori-record-sweep.py
+mori-shokunin/tools/mori-retention-gate.py
+souji-shokunin/tools/souji-gate-check.py
+souji-shokunin/tools/souji-landing-gate.py
+souji-shokunin/tools/souji-pre-report-gate.sh
+souji-shokunin/tools/souji-record-agreement.py
+souji-shokunin/tools/souji-record-contract.py
+tameshi-shokunin/tools/receipt-revision-gate.py
+tsukuroi-shokunin/tools/check-gate-standard-r79.py
+tsukuroi-shokunin/tools/check-pause-gate.py
+tsukuroi-shokunin/tools/check-scrub-record-r42.py
+tsukuroi-shokunin/tools/check-scrub-record-r43.py
+tsukuroi-shokunin/tools/check-scrub-record-r44.py
+tsukuroi-shokunin/tools/resume-gate-battery-r84.py
+tsukuroi-shokunin/tools/resume-gate-battery-r85.py
+tsukuroi-shokunin/tools/resume-gate-battery-r86.py
+
+kotodama-shokunin/tools/gates:
+argot-derivation-gate.py
+costume-era-consistency-gate.py
+d4-assembly-check-gate.py
+d4-typed-labels-check-gate.py
+expected
+fixtures
+frozen
+handoff-packet-check.py
+lexicon-coverage-audit.py
+myth-consistency-gate.py
+naming-collision-gate.py
+phonology-sanity-gate.py
+provenance-audit.py
+register-law-gate.py
+typed-pipeline-gate.py
+typed-pipelines.json
+
+## S4b recursive re-run (all extensions, every sibling tools/ and scripts/ tree)
+$ for d in */tools */scripts; do grep -rl "SOURCES\.md" "$d" | while read f; do grep -q "captures/" "$f" && echo "$f"; done; done
+(no output = none)
+
+## S7 sibling tools named *gate*/*record* (name-collision census, recursive)
+$ ls */tools/*gate* */tools/*record* 2>/dev/null | wc -l
+57

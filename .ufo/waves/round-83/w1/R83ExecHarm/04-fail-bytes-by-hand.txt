@@ -1,0 +1,71 @@
+Byte-level determination for every FAIL printed at aca2a781 (19 lines, 92 records, 31 files; rc=1).
+Each entry: the record line as committed, the code printed, and the bytes that decide it.
+
+== F1 .ufo/.../fixture/round-80.real-absent-quote.md:21 S201 FAIL LINE ==
+GATE-RECORD S201 rev=b7803829922770b890e9f4efdd30d12c3695439a path=corpus/QUALITY.md line=1054 words=25 quote=A self-assessment counter validates each resolution line against the bytez it claims to repair, and its audit window covers every block rather than the newest.
+-- words=25 matches 25 tokens, quote says "bytez"; blob b7803829:corpus/QUALITY.md line 1054 says "bytes":
+against the bytes it claims to repair
+-> genuine defect: quote not present in the named line (LINE correct).
+
+== F2 .ufo/.../fixture/round-80.real-bound-27.md:21 S201 FAIL QUOTE_LEN ==
+GATE-RECORD S201 rev=b7803829922770b890e9f4efdd30d12c3695439a path=corpus/QUALITY.md line=1054 words=27 quote=146. **A self-assessment counter validates each resolution line against the bytes it claims to repair, and its audit window covers every block rather than the newest.** Round
+-- quote tokens = 27 (words=27 matches, QUOTE_LEN fires at >25)
+-> genuine defect: 27-word quote against the documented 1-25 bound (QUOTE_LEN correct).
+
+== F3 .ufo/.../fixture/round-80.real-off-by-one.md:21 S201 FAIL LINE ==
+GATE-RECORD S201 rev=b7803829922770b890e9f4efdd30d12c3695439a path=corpus/QUALITY.md line=1055 words=25 quote=A self-assessment counter validates each resolution line against the bytes it claims to repair, and its audit window covers every block rather than the newest.
+-- blob b7803829:corpus/QUALITY.md line 1055 (octets/length):
+0000000  \n
+0000001
+-- line 1054 carries the quote:
+146. **A self-assessment counter validates each resolution line against the byte
+-> genuine defect: line=1055 points at a blank line; the quote lives on 1054 (LINE correct).
+
+== F4 .ufo/.../fixture/round-80.real-prefix-rev.md:21 S201 FAIL LINE,REV ==
+GATE-RECORD S201 rev=b780382992270000000000000000000000000000 path=corpus/QUALITY.md line=1054 words=25 quote=A self-assessment counter validates each resolution line against the bytes it claims to repair, and its audit window covers every block rather than the newest.
+-- git cat-file -t b780382992270000000000000000000000000000:
+fatal: git cat-file: could not get object info
+rc=128
+-> genuine defect: rev is 40 hex but not an object (REV correct; LINE is appended by the same branch).
+
+== F5 .ufo/.../fixture/round-80.real-tip-defect.md:19 S199 FAIL LINE ==
+GATE-RECORD S199 rev=b7803829922770b890e9f4efdd30d12c3695439a path=corpus/lessons/round-79-verifier-spotcheck.md line=222 words=12 quote=the battery is recording forgeable through the payload channel on **both** batteries
+-- blob b7803829:corpus/lessons/round-79-verifier-spotcheck.md line 222 says "is fully forgeable", not "is recording":
+the round also shows the battery is fully forgeable
+-> genuine defect: one word altered (LINE correct).
+
+== F6 .ufo/.../fixture/round-80.real-tree-rev.md:21 S201 FAIL LINE,REV ==
+GATE-RECORD S201 rev=8bff97f27d9806c15a9d821f576782e0e9c04c92 path=corpus/QUALITY.md line=1054 words=25 quote=A self-assessment counter validates each resolution line against the bytes it claims to repair, and its audit window covers every block rather than the newest.
+-- git cat-file -t 8bff97f27d9806c15a9d821f576782e0e9c04c92:
+tree
+rc=0
+-> genuine defect: rev names a tree, not a commit (REV correct; LINE appended by the same branch).
+
+== F7 .ufo/.../fixture/round-80.real-wordcount.md:21 S201 FAIL WORDS ==
+GATE-RECORD S201 rev=b7803829922770b890e9f4efdd30d12c3695439a path=corpus/QUALITY.md line=1054 words=24 quote=A self-assessment counter validates each resolution line against the bytes it claims to repair, and its audit window covers every block rather than the newest.
+-- quote tokens = 25 against words=24
+-> genuine defect: words off by one (WORDS correct).
+
+== F8 .ufo/waves/round-80/w1/R80CriticA.md:336 S195 FAIL LINE,REV ==
+GATE-RECORD S195 rev=b7803829… path=corpus/lessons/does-not-exist.md line=9999 words=1 quote=x
+-- rev literal is the 9-char prefix "b7803829…" (not 40 hex); path does-not-exist.md does not exist at any rev:
+fatal: path 'corpus/lessons/does-not-exist.md' does not exist in 'b7803829922770b890e9f4efdd30d12c3695439a'
+rc=128
+-> genuine defect: a deliberately planted bogus record from the round-80 battery (REV,LINE correct). Real catch.
+
+== F9-F18 PARSE (11 lines): 10 usage templates and 1 prose paragraph line, none a record ==
+corpus/evidence/round80/gate-grounding-check.py:13    GATE-RECORD <id> rev=<40-hex> path=<repo-relative> line=<n> words=<n> quote=<text>
+.ufo/waves/round-80/w1/R80ConnectorA/chousa--corpus__evidence__round80__gate-grounding-check.py.blob:13    GATE-RECORD <id> rev=<40-hex> path=<repo-relative> line=<n> words=<n> quote=<text>
+.ufo/waves/round-80/w1/R80MutationA/mutants/m80-M1-r1-drop.py:13    GATE-RECORD <id> rev=<40-hex> path=<repo-relative> line=<n> words=<n> quote=<text>
+.ufo/waves/round-80/w1/R80MutationA/mutants/m80-M2-prefix-resolves.py:13    GATE-RECORD <id> rev=<40-hex> path=<repo-relative> line=<n> words=<n> quote=<text>
+.ufo/waves/round-80/w1/R80MutationA/mutants/m80-M3-r3-substring-skip.py:13    GATE-RECORD <id> rev=<40-hex> path=<repo-relative> line=<n> words=<n> quote=<text>
+.ufo/waves/round-80/w1/R80MutationA/mutants/m80-M4-line-off-by-one.py:13    GATE-RECORD <id> rev=<40-hex> path=<repo-relative> line=<n> words=<n> quote=<text>
+.ufo/waves/round-80/w1/R80MutationA/mutants/m80-M5-words-equality-drop.py:13    GATE-RECORD <id> rev=<40-hex> path=<repo-relative> line=<n> words=<n> quote=<text>
+.ufo/waves/round-80/w1/R80MutationA/mutants/m80-M6-bound-drop.py:13    GATE-RECORD <id> rev=<40-hex> path=<repo-relative> line=<n> words=<n> quote=<text>
+.ufo/waves/round-80/w1/R80MutationA/mutants/m80-M7-audited-empty.py:13    GATE-RECORD <id> rev=<40-hex> path=<repo-relative> line=<n> words=<n> quote=<text>
+.ufo/waves/round-80/w1/R80MutationA/mutants/m80-M8-r2-drop.py:13    GATE-RECORD <id> rev=<40-hex> path=<repo-relative> line=<n> words=<n> quote=<text>
+.ufo/waves/round-80/w1/R80ReviewerB.md:124  GATE-RECORD in the round-80 lesson is audited (tested by the same fixture with the record in
+-> PARSE correct: the S-id slot holds the literal "<id>" or the line is prose; the docstring classes these as checked, never skipped.
+
+== the 15 claimed positives + the round-83 three, at tip ==
+GATE_RECORDS files=4 records=18 ok=18 fail=0

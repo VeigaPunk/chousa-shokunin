@@ -1,0 +1,1 @@
+GATE-RECORD S200 rev=b7803829922770b890e9f4efdd30d12c3695439a path=corpus/QUALITY.md line=845 words=26 quote=80. **A capability counter that recognises its own perturbations is paired with a nonce leg and an exclusive output set.** The frozen round-50 C1 counter searches

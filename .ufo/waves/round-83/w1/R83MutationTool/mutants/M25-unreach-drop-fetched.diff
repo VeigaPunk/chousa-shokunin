@@ -1,0 +1,9 @@
+--- tools/gate-records.py
++++ M25-unreach-drop-fetched.py
+@@ -230,5 +230,5 @@
+     elif form == "unreach":
+         success = kv["curl_rc"] == "0" and kv["http"].startswith("2")
+-        ok = (not success) and any(r[0] == sid and r[1] == url and r[4] == kv["fetched"] and r[5] == kv["curl_rc"]
++        ok = (not success) and any(r[0] == sid and r[1] == url and r[5] == kv["curl_rc"]
+                                    and r[6] == kv["http"] for r in refetch)
+         if not ok:

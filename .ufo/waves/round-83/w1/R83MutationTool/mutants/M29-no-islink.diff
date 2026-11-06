@@ -1,0 +1,9 @@
+--- tools/gate-records.py
++++ M29-no-islink.py
+@@ -207,5 +207,5 @@
+         cap = os.path.join(root, kv["capture"]) if cm else None
+         capdir = os.path.realpath(os.path.join(root, "corpus", "captures"))
+-        if (cap is None or os.path.islink(cap) or not os.path.isfile(cap)
++        if (cap is None or not os.path.isfile(cap)
+                 or os.path.dirname(os.path.realpath(cap)) != capdir):
+             codes.append("CAPTURE_PATH")

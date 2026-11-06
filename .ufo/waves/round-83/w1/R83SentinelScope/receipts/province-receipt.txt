@@ -1,0 +1,26 @@
+# R83SentinelScope province receipt (item 2)
+# cmd: grep -n "Owns:\|Refuses:" chousa-shokunin/PROVINCE.md
+5:**Owns:** question framing; source hierarchy (primary / secondary / aggregator /
+10:**Refuses:** bounty-program scope and claim packages (→ kasegi); model-quality
+rc=0
+
+# cmd: grep -n "claim-vs-source\|proposed judgment\|machine-learning tool" corpus/knowledge/appraisal-judgment-records-r83.md
+9:The lane's method ends in a judgment: a claim is supported by its source or not (`PROVINCE.md` "claim-vs-source
+48:| A rule or checklist proposes a judgment automatically | verify the proposed judgment, change it where appropriate, and give the reason for any departure | depart from the proposed judgment without recording a reason | Q12, Q13 (S213) |
+55:For this lane a "judgment" is a claim-vs-source verdict (`supported`, `contradicted`, `not-found`) and the
+56:"proposed judgment" of row 7 is a gate's or counter's verdict. Read that way, the rows describe practice the lane already
+70:  articles "could be assessed by just one reviewer" when a machine-learning tool is used; that is a study finding, not the
+rc=0
+
+# cmd: grep -n "committed lane bytes\|never writes\|never runs" tools/gate-records.py
+2:"""gate-records.py — verify a lesson's `GATE-RECORD` lines against committed lane bytes (round 83).
+9:reading only committed lane bytes: `corpus/SOURCES.md`, `corpus/captures/`, `corpus/evidence/round57/refetch.tsv`
+11:It never fetches, never writes a file and never runs a mutating git command.
+rc=0
+
+# cmd: git diff base tip | grep -inE "kengaku|kasegi|kumitate|kagi|model[- ]quality|bounty|orchestrat|secret"
+5594:+lane's province refuses *live-target* research (bounty or system targets); a GET of a public research-method document is
+rc=0
+
+# cmd: grep -inE "secret|kagi|kengaku|kasegi|kumitate" on entry, tool, lesson
+rc=1 (1 = no match)

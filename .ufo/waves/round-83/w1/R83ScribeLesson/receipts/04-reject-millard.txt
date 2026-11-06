@@ -1,0 +1,28 @@
+# reject candidate: the Millard et al. study result quoted inside S212
+# lesson text: 'the Millard et al. finding quoted inside S212 (one reviewer for about one-third of articles
+#   with a machine-learning tool) - reject as support for any row'
+
+## hand location of the reject's quote in the S212 capture
+FOUND
+rc=0
+11
+
+## capture line 622 (the paragraph, first 700 chars)
+ Novel methods for assessing risk of bias are emerging, including machine learning systems designed to semi-automate risk-of-bias assessment (Marshall et al 2016, Millard et al 2016). These methods involve using a sample of previous risk-of-bias assessments to train machine learning models to predict risk of bias from PDFs of study reports, and extract supporting text for the judgements. Some of these approaches showed good performance for identifying relevant sentences to identify information pertinent to risk of bias from the full-text content of research articles describing clinical trials. A study showed that about one-third of articles could be assessed by just one reviewer if such a to
+
+## capture line 611 (the chapter's own standard, the S212 record quote)
+ Risk-of-bias assessments in Cochrane reviews should be performed independently by at least two people ( MECIR Box 7.3.a ). Doing so can minimize errors in assessments and ensure that the judgement is not influenced by a single person’s preconceptions. Review authors should also define in advance the process for resolving disagreements. For example, both assessors may attempt to resolve disagreeme
+
+## is the reject in class as a GATE-RECORD? (tool sees 3 records, not 4)
+GATE_RECORD corpus/lessons/round-83.md:19 S009 OK
+GATE_RECORD corpus/lessons/round-83.md:20 S212 OK
+GATE_RECORD corpus/lessons/round-83.md:21 S213 OK
+GATE_RECORDS files=1 records=3 ok=3 fail=0
+RC=0
+
+## the entry's own limit note (lines 69-70)
+- Row 1 states the Cochrane standard (at least two people). S212 also reports a study in which about one-third of
+  articles "could be assessed by just one reviewer" when a machine-learning tool is used; that is a study finding, not the
+
+## does the entry cite Millard anywhere in a decision row? (0 = no)
+0

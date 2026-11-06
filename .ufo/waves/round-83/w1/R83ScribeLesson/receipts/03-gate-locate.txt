@@ -1,0 +1,32 @@
+# hand location command, round-82 form
+# LOC=import sys;t=" ".join(open(sys.argv[1],encoding="utf-8",errors="replace").read().split());print("FOUND" if " ".join(sys.argv[2].split()) in t else "ABSENT")
+
+## S009 capture ea16817cb78993196ea1a095
+$ python3 -c "$LOC" corpus/captures/ea16817cb78993196ea1a095.txt '<quote>'
+FOUND
+rc=0
+24
+
+## S212 capture 708022d401fd771fc59bd1d9
+FOUND
+rc=0
+14
+
+## S213 capture 963807d173af711593fd1c45
+FOUND
+rc=0
+16
+
+## capture sha256 vs record prefixes (full digests)
+3dfd10e567809633e762ecc81806697ac95842859c887a7eb2bae1b1674c5ed6  corpus/captures/ea16817cb78993196ea1a095.txt
+3b57cb03552f141decadf36a5a0e306385944ded9bce6e44ab3fb736eb9683da  corpus/captures/708022d401fd771fc59bd1d9.txt
+f5dae335fb45d593c7c6cf7d663bdddb50338b2ef0f127d73df6d05aed316234  corpus/captures/963807d173af711593fd1c45.txt
+## refetch rows for the three keys
+157:S009	https://www.cochrane.org/authors/handbooks-and-manuals/mecir-manual/standards-conduct-new-cochrane-intervention-reviews-c1-c75/performing-review-c24-c75/assessing-risk-bias-included-studies-c52-c60	ea16817cb78993196ea1a095	1	2026-11-06T20:53:06Z	0	200
+158:S212	https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-07	708022d401fd771fc59bd1d9	1	2026-11-06T20:53:07Z	0	200	60c8ba69b4417596b1b377345d77d9f9d3b70fda6ad6f383cf01a8cb6de4f31b	3b57cb03552f141decadf36a5a0e306385944ded9bce6e44a
+159:S213	https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-08	963807d173af711593fd1c45	1	2026-11-06T20:53:08Z	0	200	342b82c4204bc1ba57b6c66c3acac523a5e055f375603d368a9688dcddae3527	f5dae335fb45d593c7c6cf7d663bdddb50338b2ef0f127d73
+
+## S009 refetch row, full (no cut)
+$ sed -n '157p' corpus/evidence/round57/refetch.tsv
+S009	https://www.cochrane.org/authors/handbooks-and-manuals/mecir-manual/standards-conduct-new-cochrane-intervention-reviews-c1-c75/performing-review-c24-c75/assessing-risk-bias-included-studies-c52-c60	ea16817cb78993196ea1a095	1	2026-11-06T20:53:06Z	0	200	e01497f87315171ee56b35c64bb8cb468278a0744df4ae0f33e57ea3ad49e7c5	3dfd10e567809633e762ecc81806697ac95842859c887a7eb2bae1b1674c5ed6
+rc=0

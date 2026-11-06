@@ -1,0 +1,10 @@
+--- tools/gate-records.py
++++ M21-parse-fail-ok.py
+@@ -289,5 +289,6 @@
+                 if rec is None:
+                     sm = SID_RE.search(ln)
+-                    print(f"GATE_RECORD {f}:{i} {sm.group(0) if sm else '?'} FAIL PARSE")
++                    ok += 1
++                    print(f"GATE_RECORD {f}:{i} {sm.group(0) if sm else '?'} OK")
+                     continue
+                 codes = check(rec, root, repo, reg, refetch)

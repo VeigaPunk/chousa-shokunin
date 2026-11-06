@@ -1,0 +1,1 @@
+GATE-RECORD S209 url=https://jbi-global.atlassian.net/wiki/spaces/MANUAL/pages/355862667/10.2.2+Developing+the+title+and+question fetched=2026-11-06T19:42:05Z tier=A decision=admit capture=corpus/captures/213237301753814b95b24684.txt capture_sha256=8581ca1827f4ae13… words=12 quote="The Cochrane Collaboration's tool for assessing risk of bias in randomised trials."

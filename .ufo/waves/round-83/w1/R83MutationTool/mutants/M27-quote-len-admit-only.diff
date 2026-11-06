@@ -1,0 +1,9 @@
+--- tools/gate-records.py
++++ M27-quote-len-admit-only.py
+@@ -196,5 +196,5 @@
+         if kv["words"] != str(n):
+             codes.append("WORDS")
+-        if not 1 <= n <= 25:
++        if form == "admit" and not 1 <= n <= 25:
+             codes.append("QUOTE_LEN")
+     if form in ("admit", "unreach"):

@@ -1,0 +1,1 @@
+GATE-RECORD S113 url=https://www.medsci.cn/guideline/show_article.do?id=23e481c0052069d3 fetched=2026-10-27T08:30:59Z tier=B decision=admit capture=corpus/captures/453d492becd9a2f4632cb8dd.txt capture_sha256=6e2577b00e711bbbcc0170b6f598f08c39ce6cdc4ea2cb59cad5c4bc78e04186 words=012 quote="内分泌 普通内科 消化 呼吸 神经科 传染科 精神心理 肾内科 风湿免疫 血液科 老年医学 外科"

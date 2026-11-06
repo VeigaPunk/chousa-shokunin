@@ -1,0 +1,9 @@
+--- tools/gate-records.py
++++ M11-rev-short.py
+@@ -236,5 +236,5 @@
+     elif form == "rev":
+         blob = None
+-        if HEX40_RE.fullmatch(kv["rev"]):
++        if re.fullmatch(r"[0-9a-f]{4,40}", kv["rev"]):
+             blob = git_blob(repo, kv["rev"], kv["path"])
+         if blob is None:

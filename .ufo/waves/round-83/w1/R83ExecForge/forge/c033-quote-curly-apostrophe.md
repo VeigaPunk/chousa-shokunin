@@ -1,0 +1,1 @@
+GATE-RECORD S212 url=https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-07 fetched=2026-11-06T20:53:07Z tier=A decision=admit capture=corpus/captures/708022d401fd771fc59bd1d9.txt capture_sha256=3b57cb03552f141d… words=12 quote="The Cochrane Collaboration’s tool for assessing risk of bias in randomised trials."

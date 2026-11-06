@@ -1,0 +1,43 @@
+# R83SentinelScope residuals receipt (out-of-class boundary observations)
+# R1: tools/gate-records.py docstring says "committed lane bytes"; implementation opens root-relative worktree paths
+# cmd: grep -n "committed lane bytes" tools/gate-records.py
+2:"""gate-records.py — verify a lesson's `GATE-RECORD` lines against committed lane bytes (round 83).
+9:reading only committed lane bytes: `corpus/SOURCES.md`, `corpus/captures/`, `corpus/evidence/round57/refetch.tsv`
+rc=0
+# cmd: grep -n "regp = \|refp = \|sha256_file(cap)\|open(cap" tools/gate-records.py
+215:        capsha = sha256_file(cap) if cap else None
+224:            with open(cap, encoding="utf-8", errors="replace") as fh:
+269:    regp = os.path.join(root, "corpus", "SOURCES.md")
+270:    refp = os.path.join(root, "corpus", "evidence", "round57", "refetch.tsv")
+rc=0
+# cmd: git -C lane status --porcelain -- corpus/SOURCES.md corpus/captures corpus/evidence/round57/refetch.tsv
+rc=0 (empty output = clean worktree for the three byte sources)
+
+# R2: capture-fetch.py does not pass curl -q, so a ~/.curlrc or $CURL_HOME/.curlrc would be honoured
+# cmd: grep -n "cmd = " tools/capture-fetch.py
+137:    cmd = ["curl", "-fsSL", "--compressed", "--max-time", "15", "-A", UA,
+rc=0
+# cmd: existence check of curlrc candidates
+absent /home/vgpnk/.curlrc
+absent /home/vgpnk/.config/curlrc
+absent /nonexistent/.curlrc
+absent ./.curlrc
+
+# R3: gate-records-r83.py --work default prefers TMPDIR over HYAKU_SCRATCH
+# cmd: grep -n "work = a.work" corpus/evidence/round83/gate-records-r83.py
+162:    work = a.work or os.environ.get("TMPDIR") or os.environ.get("HYAKU_SCRATCH") or "/fast/scratch/hyaku"
+rc=0
+
+# R4: run-controls-r83.sh scratch path is not seat-scoped and is rm -rf-ed at start/exit
+# cmd: grep -n "SCR=\|rm -rf -- .*SCR" corpus/evidence/round83/run-controls-r83.sh
+9:SCR=${HYAKU_SCRATCH:-/fast/scratch/hyaku}/chousa-r83/controls
+10:rm -rf -- "$SCR"; mkdir -p "$SCR" "$OUT"
+11:trap 'rm -rf -- "$SCR"' EXIT
+rc=0
+
+# R5: gate-records.py git cat-file subprocesses have no timeout
+# cmd: grep -n "subprocess.run" tools/gate-records.py
+175:        t = subprocess.run(["git", "-C", repo, "cat-file", "-t", rev + "^{commit}"], capture_output=True, text=True)
+179:        t = subprocess.run(["git", "-C", repo, "cat-file", "-t", spec], capture_output=True, text=True)
+182:        b = subprocess.run(["git", "-C", repo, "cat-file", "blob", spec], capture_output=True)
+rc=0

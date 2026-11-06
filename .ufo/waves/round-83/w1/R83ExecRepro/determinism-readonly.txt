@@ -1,0 +1,13 @@
+# (g) determinism and read-only behaviour at tip aca2a7812
+depth run1 rc=0 run2 rc=0
+depth stdout IDENTICAL
+gate-counter run1 rc=0 run2 rc=0
+gate-counter stdout IDENTICAL
+tool on round-83 lesson rc=0
+tree manifest diff (empty = tool/counters wrote nothing in the tree):
+TREE UNCHANGED
+scratch writes by the gate counter (outside the tree, permitted):
+total 3880
+drwxr-xr-x  7 vgpnk vgpnk    4096 Nov  6 18:08 .
+drwxr-xr-x 14 vgpnk vgpnk    4096 Nov  6 18:07 ..
+-rw-r--r--  1 vgpnk vgpnk 1962402 Nov  6 18:08 after.manifest

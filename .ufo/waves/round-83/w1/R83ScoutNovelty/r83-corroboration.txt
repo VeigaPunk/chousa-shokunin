@@ -1,0 +1,116 @@
+# R83ScoutNovelty receipt 5 - corroboration for the K4 ruling and the defect-1 class ruling
+# repo=/home/vgpnk/Projects/shokunin/chousa-shokunin  date=2026-11-06   (read-only)
+
+## A. frozen depth counter at the landing revision 81b81173 (extracted to scratch)
+cmd: git archive 81b81173 | tar -x -C $S/tree-landing ; python3 -B $S/tree-landing/corpus/evidence/round83/depth-r83.py --root $S/tree-landing
+ENTRY appraisal-judgment-records-r83.md ok=yes rows=10 quotes=16/16 fails=-
+DEPTH_R83 entries=1 ok_entries=1 rows=10 located_quotes=16 fresh_sources=3
+DEPTH_R83=PASS
+rc=0
+(E7 = 'new ground': no S-id on the source: line is named on the source: line of any base-list entry, and its URL appears in no base-list entry -> fails=- means E7 passed)
+
+## B. the frozen r82 K2 class text vs F-control-claimid-binds: which cell differs from the baseline
+cmd: diff -u corpus/evidence/round82/c1-records/item2-pass.md .ufo/waves/round-82/w1/R82ExecForms/records/F-control-claimid-binds.md
+--- /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round82/c1-records/item2-pass.md	2026-11-06 16:43:55.810106569 -0300
++++ /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-82/w1/R82ExecForms/records/F-control-claimid-binds.md	2026-11-06 17:06:34.192873867 -0300
+@@ -21,7 +21,7 @@
+ 
+ | id | kind | text | pointer | status | sweep |
+ |---|---|---|---|---|---|
+-| N1 | negative | no pre-round knowledge entry file is named for the TARCiS statement | corpus/fixtures/sweeps-r5.md | observed-in-dump | W1 |
++| N1 | negative | no pre-round knowledge entry file is named for the TARCiS statement | corpus/fixtures/sweeps-r5.md | observed-in-dump | n/a |
+ 
+ ## Rejections
+ 
+diff_rc=1  (exactly one cell differs: the claim-sweep cell, W1 -> n/a)
+is 'n/a' in the frozen declared placeholder vocabulary? claims.md:46 = collapsing whitespace and stripping trailing periods, a cell equal to one of: empty, `-`, `--`, `---`, `—`, `–`, `n/a`,
+
+## C. G-two-sweeps-first-bad: cells differing from the baseline
+cmd: diff -u corpus/evidence/round82/c1-records/item2-pass.md .ufo/waves/round-82/w1/R82ExecForms/records/G-two-sweeps-first-bad.md
+--- /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round82/c1-records/item2-pass.md	2026-11-06 16:43:55.810106569 -0300
++++ /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-82/w1/R82ExecForms/records/G-two-sweeps-first-bad.md	2026-11-06 17:06:34.193649248 -0300
+@@ -21,7 +21,7 @@
+ 
+ | id | kind | text | pointer | status | sweep |
+ |---|---|---|---|---|---|
+-| N1 | negative | no pre-round knowledge entry file is named for the TARCiS statement | corpus/fixtures/sweeps-r5.md | observed-in-dump | W1 |
++| N1 | negative | no pre-round knowledge entry file is named for the TARCiS statement | corpus/fixtures/sweeps-r5.md | observed-in-dump | W2 |
+ 
+ ## Rejections
+ 
+@@ -33,7 +33,13 @@
+ 
+ | id | claim_id | where | observed |
+ |---|---|---|---|
+-| W1 | N1 | corpus/knowledge/*tarcis-r80*,corpus/knowledge/*tarcis-pre-r81* | zero matches |
++| W1 | N1 | n/a | zero matches |
++
++## Sweeps
++
++| id | claim_id | where | observed |
++|---|---|---|---|
++| W2 | N1 | corpus/knowledge/*tarcis-r80* | zero matches |
+ 
+ ## Approval
+ 
+diff_rc=1  (two cells differ: claim-sweep W1->W2, and W1's where -> n/a, plus a second ## Sweeps section)
+
+## D. the wave's own classification of the two records (committed .ufo/waves/round-82/w1/R82ExecForms/receipts/classification.tsv)
+record	item	class	why	rc	findings	counts
+F-control-claimid-binds	2	out	positive control: K2(c) excludes claims a Sweeps row's claim_id names	0	-	VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+G-two-sweeps-first-bad	2	amb	the where cell `n/a` is a declared value (K2(a) form) but it sits in a same-name `## Sweeps` section the parser drops, so it is not a one-cell difference	0	-	VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+
+## E. SKILL.md item-2 documented contract, landing b4a41d25 == round-83 base tip a46534a5 (diff_rc=0 above)
+Round 82: a negative claim whose sweep cell names no sweep row the mode re-ran (an undeclared id, a header-only `## Sweeps`, a placeholder) is `SWEEP_NEGATIVE_UNRESOLVED`, and a placeholder `where` (`-`, `n/a`, `TBD`, …) is `SWEEP_LOCATION_ABSENT`, exit 1 (the round-81 C2 K2 forms; measured by `python3 -B corpus/evidence/round82/k2-gate-r82.py --root .`). The placeholder list is closed (`sweep_is_placeholder` in the gate): a vacuous prose location outside it still needs a reader.
+
+## F. repair tree identity: the committed rerun-repaired.txt is headed 'working tree gate (post-scoring repairs)';
+    re-running the same Run lines against the COMMITTED tree 51a5dee8 reproduced its exact tallies (see receipt 2 section B).
+
+## G. item-2 Run line (SKILL.md item 2) on the two flipped records, at landing and at repairs
+cmd: f=<record>; ! bash tools/research-gate.sh verify "$f" --root . | grep -q '^FINDING NEGATIVE_WITHOUT_SWEEP' && bash tools/research-gate.sh verify-sweeps "$f" --root .
+(each Run line executed with errexit disabled so the exit code is captured; item2_rc is the Run line's own exit code)
+--- tree=tree-b4a41d25 record=F-control-claimid-binds
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+RESEARCH_GATE: CLEAN (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=1 findings=0 drift=0)
+item2_rc=0
+--- tree=tree-b4a41d25 record=G-two-sweeps-first-bad
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+RESEARCH_GATE: CLEAN (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=1 findings=0 drift=0)
+item2_rc=0
+--- tree=tree-51a5dee8 record=F-control-claimid-binds
+FINDING SWEEP_NEGATIVE_UNRESOLVED severity=warn surface=sweeps obs=claim=N1 sweep=n/a names no sweep row this mode re-ran
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+RESEARCH_GATE: DRIFT (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=1 findings=1 drift=1)
+item2_rc=1
+--- tree=tree-51a5dee8 record=G-two-sweeps-first-bad
+FINDING SWEEP_SECTION_DUPLICATE severity=warn surface=sweeps obs=section=Sweeps repeated; only its last body would be read
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+RESEARCH_GATE: DRIFT (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=1 findings=1 drift=1)
+item2_rc=1
+
+## H. DECISIVE: the lane's own critic filed a BYTE-IDENTICAL record as an in-class attack
+cmd: cmp .ufo/waves/round-82/w1/R82ExecForms/records/F-control-claimid-binds.md .ufo/waves/round-82/w1/R82CriticClaims/attack-k2a-record.md
+cmp_rc=0
+e417981c3c362be0accd77bdaaca1d5217b67b04ce116ac38e2fca462cd0e85e  /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-82/w1/R82ExecForms/records/F-control-claimid-binds.md
+e417981c3c362be0accd77bdaaca1d5217b67b04ce116ac38e2fca462cd0e85e  /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-82/w1/R82CriticClaims/attack-k2a-record.md
+
+--- the committed r82 repair-rerun receipt, EXTRA line for the critic's identical record:
+/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round82/repair/rerun-landing.txt:10:EXTRA R82CriticClaims/attack-k2a-record.md item=2 expect=refuse rc=0 bad
+/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round82/repair/rerun-repaired.txt:7:EXTRA R82CriticClaims/attack-k2a-record.md item=2 expect=refuse rc=1 ok
+  (landing: expect=refuse rc=0 bad  ->  repaired: expect=refuse rc=1 ok)
+
+--- the critic seat's own classification of that identical record (R82CriticClaims.md):
+96:### 4.1 K2(a) — claim-`sweep` placeholder accepted through a `claim_id` back-reference (kill)
+98:Record: `item2-pass.md` with exactly one cell changed, the `N1` claim's `sweep` cell `W1` → `n/a` (`attack-k2a-record.md`;
+110:K2(a) says: any record differing from `item2-pass.md` in one claim-`sweep` cell set to a declared-vocabulary value on
+133:one could argue the record is substantively resolved — but K2(a) as frozen has no such exception, and the declared class is
+259:VERDICT: R82CriticClaims C1 fired — kill rule K2(a): `item2-pass.md` with exactly one claim-`sweep` cell set to `n/a` exits 0 under the frozen item-2 Run line at landing because a ` ## Sweeps` row's `claim_id` resolves the claim; 36/36 tested cell strings (the 26 declared values plus decorated variants, including the empty cell) pass in that position, and the same 36 are refused once the back-reference is remov
+
+--- and R82ExecForms' classification of the same bytes (classification.tsv):
+record	item	class	why	rc	findings	counts
+F-control-claimid-binds	2	out	positive control: K2(c) excludes claims a Sweeps row's claim_id names	0	-	VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+
+=> two wave seats filed byte-identical records and gave OPPOSITE expectations
+   (critic: in-class K2(a), expect refuse; ExecForms: 'out', positive control that must pass).
+   The tip's refusal therefore implements the critic's expectation, and the
+   'out' label in classification.tsv is the outlier.

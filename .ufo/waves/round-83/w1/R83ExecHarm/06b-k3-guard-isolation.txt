@@ -1,0 +1,79 @@
+K3 edge battery: documented-form genuine records built from committed bytes (rev form, --repo real lane)
+tool blob at landing/tip: 2a59aca7bb50f86f14c44a8293f728c829888a46
+
+== fixture bytes ==
+rev-quote-leading-dq.md  GATE-RECORD S199 rev=aca2a781ef2db375881c21bf407e153f786ac61f path=corpus/README.md line=490 words=9 quote="modulo documented integrity findings" prediction measured out to zero
+rev-quote-control.md     GATE-RECORD S199 rev=aca2a781ef2db375881c21bf407e153f786ac61f path=corpus/README.md line=490 words=9 quote=modulo documented integrity findings" prediction measured out to zero
+rev-reordered.md         GATE-RECORD S199 words=12 line=222 path=corpus/lessons/round-79-verifier-spotcheck.md rev=b7803829922770b890e9f4efdd30d12c3695439a quote=the battery is fully forgeable through the payload channel on **both** batteries
+admit-reordered.md       GATE-RECORD S213 words=16 tier=A url=https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-08 fetched=2026-11-06T20:53:08Z decision=admit capture=corpus/captures/963807d173af711593fd1c45.txt capture_sha256=f5dae335fb45d593… quote="Answers to signalling questions and judgements about risk of bias should be supported by written justifications."
+admit-fullsha.md         GATE-RECORD S213 url=https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-08 fetched=2026-11-06T20:53:08Z tier=A decision=admit capture=corpus/captures/963807d173af711593fd1c45.txt capture_sha256=f5dae335fb45d593c7c6cf7d663bdddb50338b2ef0f127d73df6d05aed316234 words=16 quote="Answers to signalling questions and judgements about risk of bias should be supported by written justifications."
+admit-1word.md           GATE-RECORD S213 url=https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-08 fetched=2026-11-06T20:53:08Z tier=A decision=admit capture=corpus/captures/963807d173af711593fd1c45.txt capture_sha256=f5dae335fb45d593… words=1 quote="Chapter"
+admit-25words.md         GATE-RECORD S213 url=https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-08 fetched=2026-11-06T20:53:08Z tier=A decision=admit capture=corpus/captures/963807d173af711593fd1c45.txt capture_sha256=f5dae335fb45d593… words=25 quote="of the review and the questions it will address Chapter 3: Defining the criteria for including studies and how they will be grouped for the"
+admit-26words.md         GATE-RECORD S213 url=https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-08 fetched=2026-11-06T20:53:08Z tier=A decision=admit capture=corpus/captures/963807d173af711593fd1c45.txt capture_sha256=f5dae335fb45d593… words=26 quote="of the review and the questions it will address Chapter 3: Defining the criteria for including studies and how they will be grouped for the synthesis"
+rev-crlf.md              GATE-RECORD S199 rev=b7803829922770b890e9f4efdd30d12c3695439a path=corpus/lessons/round-79-verifier-spotcheck.md line=222 words=12 quote=the battery is fully forgeable through the payload channel on **both** batteries
+rev-trailing-spaces.md   GATE-RECORD S199 rev=b7803829922770b890e9f4efdd30d12c3695439a path=corpus/lessons/round-79-verifier-spotcheck.md line=222 words=12 quote=the battery is fully forgeable through the payload channel on **both** batteries   
+
+== committed line named by the record (aca2a78) ==
+"modulo documented integrity findings" prediction measured out to zero$
+
+== landed tool on each fixture ==
+### rev-quote-control.md
+GATE_RECORD rev-quote-control.md:1 S199 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+rc=0
+### rev-quote-leading-dq.md
+GATE_RECORD rev-quote-leading-dq.md:1 S199 FAIL PARSE
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+rc=1
+### rev-reordered.md
+GATE_RECORD rev-reordered.md:1 S199 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+rc=0
+### admit-reordered.md
+GATE_RECORD admit-reordered.md:1 S213 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+rc=0
+### admit-fullsha.md
+GATE_RECORD admit-fullsha.md:1 S213 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+rc=0
+### admit-1word.md
+GATE_RECORD admit-1word.md:1 S213 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+rc=0
+### admit-25words.md
+GATE_RECORD admit-25words.md:1 S213 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+rc=0
+### admit-26words.md
+GATE_RECORD admit-26words.md:1 S213 FAIL QUOTE_LEN
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+rc=1
+### rev-crlf.md
+GATE_RECORD rev-crlf.md:1 S199 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+rc=0
+### rev-trailing-spaces.md
+GATE_RECORD rev-trailing-spaces.md:1 S199 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+rc=0
+
+== isolation: scratch copy with ONLY the undeclared guard removed ==
+--- /fast/scratch/hyaku/chousa-r83/R83ExecHarm/tree/tools/gate-records.py	2026-11-06 18:04:13.000000000 -0300
++++ /fast/scratch/hyaku/chousa-r83/R83ExecHarm/tool-patched.py	2026-11-06 18:13:01.681218047 -0300
+@@ -114,7 +114,7 @@
+     if keys == set(REV_KEYS):
+         form = "rev"
+         quote = qraw.rstrip()
+-        if not quote or quote.startswith('"'):
++        if not quote:
+             return None
+     elif keys == set(URL_ADMIT):
+         form = "admit"
+-- patched on rev-quote-leading-dq.md
+GATE_RECORD rev-quote-leading-dq.md:1 S199 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+rc=0
+-- patched on all 18 committed lesson records (unchanged: 18/18 OK)
+GATE_RECORDS files=4 records=18 ok=18 fail=0
+rc=0

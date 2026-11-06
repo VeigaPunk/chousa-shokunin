@@ -1,0 +1,48 @@
+# anchor spot-check: does each registry anchor name what its capture carries?
+
+## S009 anchor claims 'standards C52-C59 table rows'
+$ grep -n '^ C5[2-9] ' corpus/captures/ea16817cb78993196ea1a095.txt
+485: C52 Assessing risk of bias Mandatory 
+487: C53 Assessing risk of bias in duplicate Mandatory 
+491: C54 Supporting judgements of risk of bias Mandatory 
+493: C55 Providing sources of information for risk of bias assessments Mandatory 
+495: C56 Summarizing risk-of-bias assessments. Highly desirable 
+497: C57 Addressing risk of bias in the synthesis. Highly desirable 
+499: C58 Incorporating assessments of risk of bias. Mandatory 
+501: C59 Addressing conflicts of interest in included trials. Highly desirable 
+rc=0
+$ grep -n '^ C60 ' corpus/captures/ea16817cb78993196ea1a095.txt
+503: C60 Not applicable 
+rc=0
+=> C52-C59 are rows; C60 is also a row ('Not applicable'), so the anchor's range stops one row short of the page's title range C52-C60.
+
+## S212 anchor claims 'section 7.3.2 ... (MECIR Boxes 7.3.a, 7.3.b) and 7.8.6'
+497: 7.3.2 Performing assessments of risk of bias 
+510: 7.8.6 Judgement of notable concern about conflict of interest 
+610: 7.3.2 Performing assessments of risk of bias
+611: Risk-of-bias assessments in Cochrane reviews should be performed independently by at least two people ( MECIR Box 7.3.a ). Doing so can
+612: MECIR Box 7.3.a Relevant expectations for conduct of intervention reviews
+615: The process for reaching risk-of-bias judgements should be transparent. In other words, readers should be able to discern why a particu
+616: MECIR Box 7.3.b Relevant expectations for conduct of intervention reviews
+710: 7.8.6 Judgement of notable concern about conflict of interest
+rc=0
+
+## S213 anchor claims 'Key Points and section 8.2 (signalling questions, No information response, algorithm-proposed judgements, free-text support)'
+489: 8.2 Overview of RoB 2 
+538: Key Points:
+551: 8.2 Overview of RoB 2
+590: No information.
+592: The ‘No information’ response should be used only when both (1) insufficient details are reported to permit a response of ‘Yes’
+593: The implications of a ‘No information’ response to a signalling question differ according to the purpose of the question. If the qu
+600: The RoB 2 tool includes algorithms that map responses to signalling questions to a proposed risk-of-bias judgement for each domain (see
+rc=0
+
+## registry diff a46534a5..81b81173 for the three rows
+-| S009 | Cochrane MECIR, Assessing risk of bias in included studies C52-C60 — https://www.cochrane.org/authors/handbooks-and-manuals/mecir-manual/standards-conduct-new-cochrane-intervention-reviews
++| S009 | Cochrane MECIR, Assessing risk of bias in included studies C52-C60 — https://www.cochrane.org/authors/handbooks-and-manuals/mecir-manual/standards-conduct-new-cochrane-intervention-reviews
++| S212 | Cochrane Handbook ch.7, Considering bias and conflicts of interest among the included studies (Boutron et al.) — https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/cha
++| S213 | Cochrane Handbook ch.8, Assessing risk of bias in a randomized trial (Higgins et al.) — https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-08 | docs | A | how 
+rc=0
+
+## numstat
+3	1	corpus/SOURCES.md

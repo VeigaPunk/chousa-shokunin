@@ -1,0 +1,32 @@
+# cmd: python3 - <<PY (imports land/corpus/evidence/round83/gate-records-r83.py, calls mutations() over the 15 positives, prints label/code counts)
+# composition of the frozen 198 forgeries (counter mutations() over the 15 positives)
+total_forged=198
+CAPTURE_KEY: M03-other-capturex10, M13-url-changedx10
+CAPTURE_PATH: M04-capture-traversalx10
+CAPTURE_SHA: M05-sha-flipx10, M06-sha-shortx10
+LINE: R01-line-nextx4, R04-quote-wordx4, R06-line-farx4
+PARSE: M15-no-quote-keyx10, M16-dup-keyx10, U04-admit-without-capturex1
+QUOTE_ABSENT: M08-quote-wordx10, M14-indented-bad-quotex10
+QUOTE_LEN: M11-quote-26x10, M12-quote-emptyx10
+REFETCH: M07-fetchedx10, M17-id-swapx10, U01-success-claimedx1, U02-fetchedx1, U03-httpx1
+REGISTRY: M01-unknown-idx10
+REV: R02-rev-zerox4, R03-path-absentx4
+TIER: M02-tierx10
+WORDS: M09-words-plusx10, M10-quote-drop-lastx10, R05-words-plusx4
+
+# docstring checks and the forgery labels that produce each code
+PARSE: M15-no-quote-key, M16-dup-key, U04-admit-without-capture (missing/duplicate key only)
+REGISTRY: M01-unknown-id (absent row only)
+TIER: M02-tier
+CAPTURE_PATH: M04-capture-traversal (path traversal only; no symlink/non-regular case)
+CAPTURE_KEY: M03-other-capture, M13-url-changed
+CAPTURE_SHA: M05-sha-flip, M06-sha-short (no non-hex or >64 case)
+REFETCH: M07-fetched, M17-id-swap, U01-U03 (record-side only; no tsv curl_rc/http/txt_sha mismatch case)
+WORDS: M09-words-plus, M10-quote-drop-last, R05-words-plus
+QUOTE_LEN: M11-quote-26, M12-quote-empty
+QUOTE_ABSENT: M08-quote-word, M14-indented-bad-quote
+REV: R02-rev-zero, R03-path-absent
+LINE: R01-line-next, R04-quote-word, R06-line-far
+
+# expected-code check is a subset test: c2-f2 stub-refuse receipt prints
+# POSITIVE=0/15 FORGED_REFUSED=198/198 EXPECTED_CODE=198/198 (all codes printed for every refusal)

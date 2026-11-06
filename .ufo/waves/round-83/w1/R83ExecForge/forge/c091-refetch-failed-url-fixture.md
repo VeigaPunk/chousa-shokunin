@@ -1,0 +1,1 @@
+GATE-RECORD S209 url=https://www.bmj.com/content/387/bmj.q2458.full.txt fetched=2026-11-06T19:42:05Z tier=A decision=admit capture=corpus/captures/5802b641e7092ed5c07e36e4.txt capture_sha256=4a000571b737af94b3c765d5… words=10 quote="the failed-attempt row is the only row for this url."

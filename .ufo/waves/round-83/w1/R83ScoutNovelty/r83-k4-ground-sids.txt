@@ -1,0 +1,82 @@
+# R83ScoutNovelty receipt 1 - C1 K4 ground check (read-only)
+# repo=/home/vgpnk/Projects/shokunin/chousa-shokunin   date=2026-11-06
+
+## A. base-knowledge.txt (round83) vs corpus/knowledge listing at base rev a46534a5
+diff_rc=0  listed_count=94  actual_count=94
+
+## B. S-id greps over corpus/knowledge (superset of base list)
+--- REV=a46534a51756f7e7d9bb55dd9a275156d908d84c
+cmd: git -C $R grep -n -F S009 a46534a51756f7e7d9bb55dd9a275156d908d84c -- corpus/knowledge   rc=1
+cmd: git -C $R grep -n -F S212 a46534a51756f7e7d9bb55dd9a275156d908d84c -- corpus/knowledge   rc=1
+cmd: git -C $R grep -n -F S213 a46534a51756f7e7d9bb55dd9a275156d908d84c -- corpus/knowledge   rc=1
+--- REV=81b81173f19d175e2b2a6b409b2a496d09d0b258
+cmd: git -C $R grep -n -F S009 81b81173f19d175e2b2a6b409b2a496d09d0b258 -- corpus/knowledge   rc=0
+    81b81173f19d175e2b2a6b409b2a496d09d0b258:corpus/knowledge/appraisal-judgment-records-r83.md:3:source: S009, S212, S213
+    81b81173f19d175e2b2a6b409b2a496d09d0b258:corpus/knowledge/appraisal-judgment-records-r83.md:21:| Q1 | S009 | "Justify judgements of risk of bias (high, low and some concerns) and provide this information in the risk-of-bias tables (as 'Support for judgement')." |
+    81b81173f19d175e2b2a6b409b2a496d09d0b258:corpus/knowledge/appraisal-judgment-records-r83.md:22:| Q2 | S009 | "Collect the source of information for each risk of bias judgement (e.g. quotation, summary of information from a trial report, correspondence with investigator etc.)." |
+    81b81173f19d175e2b2a6b409b2a496d09d0b258:corpus/knowledge/appraisal-judgment-records-r83.md:23:| Q3 | S009 | "Where judgements are based on assumptions made on the basis of information provided outside publicly available documents, this should be stated." |
+    81b81173f19d175e2b2a6b409b2a496d09d0b258:corpus/knowledge/appraisal-judgment-records-r83.md:44:| A judgment is entered in the record | write the support for that judgment beside it, so the reader can see why it was made | enter a bare judgment with no written support | Q1 (S009), Q11 (S213) |
+    81b81173f19d175e2b2a6b409b2a496d09d0b258:corpus/knowledge/appraisal-judgment-records-r83.md:46:| The source behind a judgment is being recorded | name the source and the precise location within the document that informed the judgment | cite a document without saying where in it the support was found | Q8 (S212), Q2 (S009) |
+    81b81173f19d175e2b2a6b409b2a496d09d0b258:corpus/knowledge/appraisal-judgment-records-r83.md:47:| A judgment rests on assumptions drawn from information outside publicly available documents | state in the record that the judgment rests on such information | present the judgment as if public documents alone supported it | Q3 (S009) |
+cmd: git -C $R grep -n -F S212 81b81173f19d175e2b2a6b409b2a496d09d0b258 -- corpus/knowledge   rc=0
+    81b81173f19d175e2b2a6b409b2a496d09d0b258:corpus/knowledge/appraisal-judgment-records-r83.md:3:source: S009, S212, S213
+    81b81173f19d175e2b2a6b409b2a496d09d0b258:corpus/knowledge/appraisal-judgment-records-r83.md:24:| Q4 | S212 | "Risk-of-bias assessments in Cochrane reviews should be performed independently by at least two people" |
+    81b81173f19d175e2b2a6b409b2a496d09d0b258:corpus/knowledge/appraisal-judgment-records-r83.md:25:| Q5 | S212 | "Doing so can minimize errors in assessments and ensure that the judgement is not influenced by a single person's preconceptions." |
+    81b81173f19d175e2b2a6b409b2a496d09d0b258:corpus/knowledge/appraisal-judgment-records-r83.md:26:| Q6 | S212 | "Review authors should also define in advance the process for resolving disagreements." |
+    81b81173f19d175e2b2a6b409b2a496d09d0b258:corpus/knowledge/appraisal-judgment-records-r83.md:27:| Q7 | S212 | "For example, both assessors may attempt to resolve disagreements via discussion, and if that fails, call on another author to adjudicate the final judgement." |
+    81b81173f19d175e2b2a6b409b2a496d09d0b258:corpus/knowledge/appraisal-judgment-records-r83.md:28:| Q8 | S212 | "Cochrane review authors are expected to record the source of information (including the precise location within a document) that informed each risk-of-bias judgement" |
+    81b81173f19d175e2b2a6b409b2a496d09d0b258:corpus/knowledge/appraisal-judgment-records-r83.md:29:| Q9 | S212 | "A judgement of 'notable concern about conflict of interest' should be based on reflected assessment of identified conflicts of interest." |
+    81b81173f19d175e2b2a6b409b2a496d09d0b258:corpus/knowledge/appraisal-judgment-records-r83.md:30:| Q10 | S212 | "A hypothetical possibility for undeclared conflicts of interest is, as a rule of thumb, not considered sufficient reason for 'notable concern'." |
+cmd: git -C $R grep -n -F S213 81b81173f19d175e2b2a6b409b2a496d09d0b258 -- corpus/knowledge   rc=0
+    81b81173f19d175e2b2a6b409b2a496d09d0b258:corpus/knowledge/appraisal-judgment-records-r83.md:3:source: S009, S212, S213
+    81b81173f19d175e2b2a6b409b2a496d09d0b258:corpus/knowledge/appraisal-judgment-records-r83.md:31:| Q11 | S213 | "Answers to signalling questions and judgements about risk of bias should be supported by written justifications." |
+    81b81173f19d175e2b2a6b409b2a496d09d0b258:corpus/knowledge/appraisal-judgment-records-r83.md:32:| Q12 | S213 | "The algorithms provide proposed judgements, but review authors should verify these and change them if they feel this is appropriate." |
+    81b81173f19d175e2b2a6b409b2a496d09d0b258:corpus/knowledge/appraisal-judgment-records-r83.md:33:| Q13 | S213 | "It is important that reasons are provided for any judgements that do not follow the algorithms." |
+    81b81173f19d175e2b2a6b409b2a496d09d0b258:corpus/knowledge/appraisal-judgment-records-r83.md:34:| Q14 | S213 | "Brief, direct quotations from the text of the study report should be used whenever possible." |
+    81b81173f19d175e2b2a6b409b2a496d09d0b258:corpus/knowledge/appraisal-judgment-records-r83.md:35:| Q15 | S213 | "If the question seeks to identify evidence of a problem, then 'No information' corresponds to no evidence of that problem." |
+    81b81173f19d175e2b2a6b409b2a496d09d0b258:corpus/knowledge/appraisal-judgment-records-r83.md:36:| Q16 | S213 | "concerns should be expressed only about issues that are likely to affect the ability to draw reliable conclusions from the study." |
+    81b81173f19d175e2b2a6b409b2a496d09d0b258:corpus/knowledge/appraisal-judgment-records-r83.md:44:| A judgment is entered in the record | write the support for that judgment beside it, so the reader can see why it was made | enter a bare judgment with no written support | Q1 (S009), Q11 (S213) |
+--- REV=aca2a781ef2db375881c21bf407e153f786ac61f
+cmd: git -C $R grep -n -F S009 aca2a781ef2db375881c21bf407e153f786ac61f -- corpus/knowledge   rc=0
+    aca2a781ef2db375881c21bf407e153f786ac61f:corpus/knowledge/appraisal-judgment-records-r83.md:3:source: S009, S212, S213
+    aca2a781ef2db375881c21bf407e153f786ac61f:corpus/knowledge/appraisal-judgment-records-r83.md:21:| Q1 | S009 | "Justify judgements of risk of bias (high, low and some concerns) and provide this information in the risk-of-bias tables (as 'Support for judgement')." |
+    aca2a781ef2db375881c21bf407e153f786ac61f:corpus/knowledge/appraisal-judgment-records-r83.md:22:| Q2 | S009 | "Collect the source of information for each risk of bias judgement (e.g. quotation, summary of information from a trial report, correspondence with investigator etc.)." |
+    aca2a781ef2db375881c21bf407e153f786ac61f:corpus/knowledge/appraisal-judgment-records-r83.md:23:| Q3 | S009 | "Where judgements are based on assumptions made on the basis of information provided outside publicly available documents, this should be stated." |
+    aca2a781ef2db375881c21bf407e153f786ac61f:corpus/knowledge/appraisal-judgment-records-r83.md:44:| A judgment is entered in the record | write the support for that judgment beside it, so the reader can see why it was made | enter a bare judgment with no written support | Q1 (S009), Q11 (S213) |
+    aca2a781ef2db375881c21bf407e153f786ac61f:corpus/knowledge/appraisal-judgment-records-r83.md:46:| The source behind a judgment is being recorded | name the source and the precise location within the document that informed the judgment | cite a document without saying where in it the support was found | Q8 (S212), Q2 (S009) |
+    aca2a781ef2db375881c21bf407e153f786ac61f:corpus/knowledge/appraisal-judgment-records-r83.md:47:| A judgment rests on assumptions drawn from information outside publicly available documents | state in the record that the judgment rests on such information | present the judgment as if public documents alone supported it | Q3 (S009) |
+cmd: git -C $R grep -n -F S212 aca2a781ef2db375881c21bf407e153f786ac61f -- corpus/knowledge   rc=0
+    aca2a781ef2db375881c21bf407e153f786ac61f:corpus/knowledge/appraisal-judgment-records-r83.md:3:source: S009, S212, S213
+    aca2a781ef2db375881c21bf407e153f786ac61f:corpus/knowledge/appraisal-judgment-records-r83.md:24:| Q4 | S212 | "Risk-of-bias assessments in Cochrane reviews should be performed independently by at least two people" |
+    aca2a781ef2db375881c21bf407e153f786ac61f:corpus/knowledge/appraisal-judgment-records-r83.md:25:| Q5 | S212 | "Doing so can minimize errors in assessments and ensure that the judgement is not influenced by a single person's preconceptions." |
+    aca2a781ef2db375881c21bf407e153f786ac61f:corpus/knowledge/appraisal-judgment-records-r83.md:26:| Q6 | S212 | "Review authors should also define in advance the process for resolving disagreements." |
+    aca2a781ef2db375881c21bf407e153f786ac61f:corpus/knowledge/appraisal-judgment-records-r83.md:27:| Q7 | S212 | "For example, both assessors may attempt to resolve disagreements via discussion, and if that fails, call on another author to adjudicate the final judgement." |
+    aca2a781ef2db375881c21bf407e153f786ac61f:corpus/knowledge/appraisal-judgment-records-r83.md:28:| Q8 | S212 | "Cochrane review authors are expected to record the source of information (including the precise location within a document) that informed each risk-of-bias judgement" |
+    aca2a781ef2db375881c21bf407e153f786ac61f:corpus/knowledge/appraisal-judgment-records-r83.md:29:| Q9 | S212 | "A judgement of 'notable concern about conflict of interest' should be based on reflected assessment of identified conflicts of interest." |
+    aca2a781ef2db375881c21bf407e153f786ac61f:corpus/knowledge/appraisal-judgment-records-r83.md:30:| Q10 | S212 | "A hypothetical possibility for undeclared conflicts of interest is, as a rule of thumb, not considered sufficient reason for 'notable concern'." |
+cmd: git -C $R grep -n -F S213 aca2a781ef2db375881c21bf407e153f786ac61f -- corpus/knowledge   rc=0
+    aca2a781ef2db375881c21bf407e153f786ac61f:corpus/knowledge/appraisal-judgment-records-r83.md:3:source: S009, S212, S213
+    aca2a781ef2db375881c21bf407e153f786ac61f:corpus/knowledge/appraisal-judgment-records-r83.md:31:| Q11 | S213 | "Answers to signalling questions and judgements about risk of bias should be supported by written justifications." |
+    aca2a781ef2db375881c21bf407e153f786ac61f:corpus/knowledge/appraisal-judgment-records-r83.md:32:| Q12 | S213 | "The algorithms provide proposed judgements, but review authors should verify these and change them if they feel this is appropriate." |
+    aca2a781ef2db375881c21bf407e153f786ac61f:corpus/knowledge/appraisal-judgment-records-r83.md:33:| Q13 | S213 | "It is important that reasons are provided for any judgements that do not follow the algorithms." |
+    aca2a781ef2db375881c21bf407e153f786ac61f:corpus/knowledge/appraisal-judgment-records-r83.md:34:| Q14 | S213 | "Brief, direct quotations from the text of the study report should be used whenever possible." |
+    aca2a781ef2db375881c21bf407e153f786ac61f:corpus/knowledge/appraisal-judgment-records-r83.md:35:| Q15 | S213 | "If the question seeks to identify evidence of a problem, then 'No information' corresponds to no evidence of that problem." |
+    aca2a781ef2db375881c21bf407e153f786ac61f:corpus/knowledge/appraisal-judgment-records-r83.md:36:| Q16 | S213 | "concerns should be expressed only about issues that are likely to affect the ability to draw reliable conclusions from the study." |
+    aca2a781ef2db375881c21bf407e153f786ac61f:corpus/knowledge/appraisal-judgment-records-r83.md:44:| A judgment is entered in the record | write the support for that judgment beside it, so the reader can see why it was made | enter a bare judgment with no written support | Q1 (S009), Q11 (S213) |
+
+## C. three URLs over corpus/knowledge
+cmd: git -C $R grep -n -F 'https://www.cochrane.org/authors/handbooks-and-manuals/mecir-manual/standards-conduct-new-cochrane-intervention-reviews-c1-c75/performing-review-c24-c75/assessing-risk-bias-included-studies-c52-c60' a46534a51756f7e7d9bb55dd9a275156d908d84c -- corpus/knowledge   rc=1
+cmd: git -C $R grep -n -F 'https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-07' a46534a51756f7e7d9bb55dd9a275156d908d84c -- corpus/knowledge   rc=1
+cmd: git -C $R grep -n -F 'https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-08' a46534a51756f7e7d9bb55dd9a275156d908d84c -- corpus/knowledge   rc=1
+cmd: git -C $R grep -n -F 'https://www.cochrane.org/authors/handbooks-and-manuals/mecir-manual/standards-conduct-new-cochrane-intervention-reviews-c1-c75/performing-review-c24-c75/assessing-risk-bias-included-studies-c52-c60' 81b81173f19d175e2b2a6b409b2a496d09d0b258 -- corpus/knowledge   rc=1
+cmd: git -C $R grep -n -F 'https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-07' 81b81173f19d175e2b2a6b409b2a496d09d0b258 -- corpus/knowledge   rc=1
+cmd: git -C $R grep -n -F 'https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-08' 81b81173f19d175e2b2a6b409b2a496d09d0b258 -- corpus/knowledge   rc=1
+cmd: git -C $R grep -n -F 'https://www.cochrane.org/authors/handbooks-and-manuals/mecir-manual/standards-conduct-new-cochrane-intervention-reviews-c1-c75/performing-review-c24-c75/assessing-risk-bias-included-studies-c52-c60' aca2a781ef2db375881c21bf407e153f786ac61f -- corpus/knowledge   rc=1
+cmd: git -C $R grep -n -F 'https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-07' aca2a781ef2db375881c21bf407e153f786ac61f -- corpus/knowledge   rc=1
+cmd: git -C $R grep -n -F 'https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-08' aca2a781ef2db375881c21bf407e153f786ac61f -- corpus/knowledge   rc=1
+
+## D. partial-URL forms over corpus/knowledge at base (chapter-07/chapter-08/c52-c60)
+cmd: git -C $R grep -n -i -E 'chapter-07' a46534a5 -- corpus/knowledge   rc=1
+cmd: git -C $R grep -n -i -E 'chapter-08' a46534a5 -- corpus/knowledge   rc=1
+cmd: git -C $R grep -n -i -E 'c52-c60' a46534a5 -- corpus/knowledge   rc=1
+cmd: git -C $R grep -n -i -E 'c52-c75' a46534a5 -- corpus/knowledge   rc=1

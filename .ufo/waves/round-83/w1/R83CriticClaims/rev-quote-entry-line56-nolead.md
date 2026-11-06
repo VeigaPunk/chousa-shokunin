@@ -1,0 +1,1 @@
+GATE-RECORD S199 rev=81b81173f19d175e2b2a6b409b2a496d09d0b258 path=corpus/knowledge/appraisal-judgment-records-r83.md line=56 words=21 quote=proposed judgment" of row 7 is a gate's or counter's verdict. Read that way, the rows describe practice the lane already

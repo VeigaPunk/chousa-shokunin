@@ -1,0 +1,9 @@
+--- tools/gate-records.py
++++ M07-words-off-by-one.py
+@@ -194,5 +194,5 @@
+     if form in ("admit", "rev"):
+         n = len(quote.split())
+-        if kv["words"] != str(n):
++        if kv["words"] not in (str(n), str(n + 1)):
+             codes.append("WORDS")
+         if not 1 <= n <= 25:

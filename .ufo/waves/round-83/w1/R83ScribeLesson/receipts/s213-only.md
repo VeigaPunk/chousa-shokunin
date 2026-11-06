@@ -1,0 +1,1 @@
+GATE-RECORD S213 url=https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-08 fetched=2026-11-06T20:53:08Z tier=A decision=admit capture=corpus/captures/963807d173af711593fd1c45.txt capture_sha256=f5dae335fb45d593… words=16 quote="Answers to signalling questions and judgements about risk of bias should be supported by written justifications."

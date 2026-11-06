@@ -1,0 +1,9 @@
+--- tools/gate-records.py
++++ M03-drop-refetch-txtsha.py
+@@ -218,5 +218,5 @@
+             codes.append("CAPTURE_SHA")
+         ok = any(r[0] == sid and r[1] == url and r[2] == key and r[4] == kv["fetched"] and r[5] == "0"
+-                 and re.fullmatch(r"2\d\d", r[6]) and capsha is not None and r[8] == capsha for r in refetch)
++                 and re.fullmatch(r"2\d\d", r[6]) and capsha is not None for r in refetch)
+         if not ok:
+             codes.append("REFETCH")

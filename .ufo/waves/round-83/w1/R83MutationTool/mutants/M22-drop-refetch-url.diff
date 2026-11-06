@@ -1,0 +1,9 @@
+--- tools/gate-records.py
++++ M22-drop-refetch-url.py
+@@ -217,5 +217,5 @@
+         if not sm or capsha is None or not capsha.startswith(sm.group(1)):
+             codes.append("CAPTURE_SHA")
+-        ok = any(r[0] == sid and r[1] == url and r[2] == key and r[4] == kv["fetched"] and r[5] == "0"
++        ok = any(r[0] == sid and r[2] == key and r[4] == kv["fetched"] and r[5] == "0"
+                  and re.fullmatch(r"2\d\d", r[6]) and capsha is not None and r[8] == capsha for r in refetch)
+         if not ok:

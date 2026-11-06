@@ -1,0 +1,19 @@
+INT_RE = 0|[1-9]\d{0,6}
+token='222'        fullmatch=True  int=222
+token='2٢٢'        fullmatch=True  int=222
+token='2٠'         fullmatch=True  int=20
+token='٢٢٢'        fullmatch=False int=222
+token='011'        fullmatch=False int=11
+token='+20'        fullmatch=False int=20
+token='20'         fullmatch=True  int=20
+
+str(20) == '2\u0660' -> False
+len(quote.split()) for the S209 quote = 20
+
+git cat-file -t B780...^{commit}:
+  stdout='commit' rc=0
+  stdout='blob' rc=0
+  '..' path stdout='' rc=128
+
+tool sha256: d38443769fe7c2ba014ec9d7861c4078cec24d0a193eeadb2cd5222d0d392687
+tree rev: 81b81173f19d175e2b2a6b409b2a496d09d0b258  tree: 038256a22bada0aa0cb35f8e0206ad46a9baa80c

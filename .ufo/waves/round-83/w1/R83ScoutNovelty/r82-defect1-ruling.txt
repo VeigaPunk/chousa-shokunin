@@ -1,0 +1,74 @@
+# R83ScoutNovelty receipt 4 - defect-1 ruling evidence (read-only; no selftest run)
+# repo=/home/vgpnk/Projects/shokunin/chousa-shokunin  date=2026-11-06
+
+## A. the same two records at three gate revisions (item-4 Run line: bash tools/research-gate.sh verify-sweeps <record> --root .)
+--- base-gate 5d792e1e (r82 pre-base) | record=F-control-claimid-binds
+REJECTION id=R1 ref=corpus/fixtures/sweeps-r5.md reason=present flip=present observed=complete verdict=match
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+RESEARCH_GATE: CLEAN (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=1 findings=0 drift=0)
+rc=0
+--- base-gate 5d792e1e (r82 pre-base) | record=G-two-sweeps-first-bad
+REJECTION id=R1 ref=corpus/fixtures/sweeps-r5.md reason=present flip=present observed=complete verdict=match
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+RESEARCH_GATE: CLEAN (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=1 findings=0 drift=0)
+rc=0
+--- landing b4a41d25 (r82 scored landing) | record=F-control-claimid-binds
+REJECTION id=R1 ref=corpus/fixtures/sweeps-r5.md reason=present flip=present observed=complete verdict=match
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+RESEARCH_GATE: CLEAN (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=1 findings=0 drift=0)
+rc=0
+--- landing b4a41d25 (r82 scored landing) | record=G-two-sweeps-first-bad
+REJECTION id=R1 ref=corpus/fixtures/sweeps-r5.md reason=present flip=present observed=complete verdict=match
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+RESEARCH_GATE: CLEAN (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=1 findings=0 drift=0)
+rc=0
+--- repairs 51a5dee8 (post-scoring repair) | record=F-control-claimid-binds
+REJECTION id=R1 ref=corpus/fixtures/sweeps-r5.md reason=present flip=present observed=complete verdict=match
+FINDING SWEEP_NEGATIVE_UNRESOLVED severity=warn surface=sweeps obs=claim=N1 sweep=n/a names no sweep row this mode re-ran
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+RESEARCH_GATE: DRIFT (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=1 findings=1 drift=1)
+rc=1
+--- repairs 51a5dee8 (post-scoring repair) | record=G-two-sweeps-first-bad
+REJECTION id=R1 ref=corpus/fixtures/sweeps-r5.md reason=present flip=present observed=complete verdict=match
+FINDING SWEEP_SECTION_DUPLICATE severity=warn surface=sweeps obs=section=Sweeps repeated; only its last body would be read
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+RESEARCH_GATE: DRIFT (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=1 findings=1 drift=1)
+rc=1
+--- round-83 base tip a46534a5 | record=F-control-claimid-binds
+REJECTION id=R1 ref=corpus/fixtures/sweeps-r5.md reason=present flip=present observed=complete verdict=match
+FINDING SWEEP_NEGATIVE_UNRESOLVED severity=warn surface=sweeps obs=claim=N1 sweep=n/a names no sweep row this mode re-ran
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+RESEARCH_GATE: DRIFT (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=1 findings=1 drift=1)
+rc=1
+--- round-83 base tip a46534a5 | record=G-two-sweeps-first-bad
+REJECTION id=R1 ref=corpus/fixtures/sweeps-r5.md reason=present flip=present observed=complete verdict=match
+FINDING SWEEP_SECTION_DUPLICATE severity=warn surface=sweeps obs=section=Sweeps repeated; only its last body would be read
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+RESEARCH_GATE: DRIFT (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=1 findings=1 drift=1)
+rc=1
+
+## B. the subject's own documented contract (SKILL.md item-2) at the r82 landing b4a41d25
+Round 82: a negative claim whose sweep cell names no sweep row the mode re-ran (an undeclared id, a header-only `## Sweeps`, a placeholder) is `SWEEP_NEGATIVE_UNRESOLVED`, and a placeholder `where` (`-`, `n/a`, `TBD`, …) is `SWEEP_LOCATION_ABSENT`, exit 1 (the round-81 C2 K2 forms; measured by `python3 -B corpus/evidence/round82/k2-gate-r82.py --root .`). The placeholder list is closed (`sweep_is_placeholder` in the gate): a vacuous prose location outside it still needs a reader.
+
+## C. same clause at the round-83 base tip a46534a5 (unchanged?)
+Round 82: a negative claim whose sweep cell names no sweep row the mode re-ran (an undeclared id, a header-only `## Sweeps`, a placeholder) is `SWEEP_NEGATIVE_UNRESOLVED`, and a placeholder `where` (`-`, `n/a`, `TBD`, …) is `SWEEP_LOCATION_ABSENT`, exit 1 (the round-81 C2 K2 forms; measured by `python3 -B corpus/evidence/round82/k2-gate-r82.py --root .`). The placeholder list is closed (`sweep_is_placeholder` in the gate): a vacuous prose location outside it still needs a reader.
+diff of SKILL.md item-2 line, landing b4a41d25 vs base tip a46534a5:
+diff_rc=0
+
+## D. finding ids the base-tip gate can emit for these records vs SKILL.md documentation
+SWEEP_SECTION_DUPLICATE occurrences in SKILL.md: 0
+SWEEP_SECTION_DUPLICATE occurrences in corpus/lessons/round-82.md: 2
+SWEEP_NEGATIVE_UNRESOLVED occurrences in SKILL.md: 1
+
+## E. r82 claims.md K2(c) and K3 text (the class and harm rules the closure applied)
+**Kill rules (frozen):**
+- K1: the predicate is not met at the landing revision.
+- K2 (generalization): any record, authored by anyone, that (a) differs from `item2-pass.md`, `item4-pass.md` or
+  `sweeps-r5.md` in one reason, flip-condition, `where` or claim-`sweep` cell set to a declared-vocabulary value, or (b)
+  keeps a rejection with an empty or declared-vocabulary reason or flip under a `##` heading whose text contains
+  `reject` (case-insensitive), or (c) carries a `negative` claim whose sweep cell names no declared `## Sweeps` row id
+  while no `## Sweeps` row's `claim_id` names that claim (and no `## Negatives` sweep row carries it), on which the frozen
+  item-2 or item-4 Run line exits 0 at the landing revision → C1 falsified.
+- K3 (harm): a record that the base gate (`5d792e1e`) passes under a Run line and that carries none of K2's forms, which
+  the landed gate refuses under the same Run line → C1 falsified.
+- K4: the selftest at landing is not PASS, or skips a case, or has fewer than 275 cases.

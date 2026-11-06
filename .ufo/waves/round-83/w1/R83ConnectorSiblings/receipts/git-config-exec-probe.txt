@@ -1,0 +1,16 @@
+== fixture /fast/scratch/hyaku/chousa-r83/R83ConnectorSiblings/gitfix.MIqlgq toplevel=/fast/scratch/hyaku/chousa-r83/R83ConnectorSiblings/gitfix.MIqlgq
+== (1) repo-local core.fsmonitor, inherited env
+commit
+rc=0 marker=ABSENT
+== (2) hostile GIT_CONFIG_GLOBAL (fsmonitor/pager/sshCommand/filter)
+commit
+rc=0 marker=ABSENT
+== (3) hostile GIT_CONFIG_GLOBAL + GIT_PAGER + GIT_EXTERNAL_DIFF
+commit
+rc=0 marker=ABSENT
+== (4) control: git status with the same hostile config (proves the fixture fires)
+warning: Empty last update token.
+rc=0 marker=PRESENT
+== (5) control: same, scrubbed env (souji GIT_ENV shape)
+warning: Empty last update token.
+rc=0 marker=PRESENT

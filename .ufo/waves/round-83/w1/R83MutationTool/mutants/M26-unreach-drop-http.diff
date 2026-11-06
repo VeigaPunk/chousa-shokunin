@@ -1,0 +1,9 @@
+--- tools/gate-records.py
++++ M26-unreach-drop-http.py
+@@ -231,5 +231,5 @@
+         success = kv["curl_rc"] == "0" and kv["http"].startswith("2")
+         ok = (not success) and any(r[0] == sid and r[1] == url and r[4] == kv["fetched"] and r[5] == kv["curl_rc"]
+-                                   and r[6] == kv["http"] for r in refetch)
++                                   for r in refetch)
+         if not ok:
+             codes.append("REFETCH")

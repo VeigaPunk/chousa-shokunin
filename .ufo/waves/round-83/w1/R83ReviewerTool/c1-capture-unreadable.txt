@@ -1,0 +1,21 @@
+# I/O: capture chmod 000
+$ /usr/bin/python3 -B /fast/scratch/hyaku/chousa-r83/R83ReviewerTool/tree/tools/gate-records.py verify --root /fast/scratch/hyaku/chousa-r83/R83ReviewerTool/tree --repo /home/vgpnk/Projects/shokunin/chousa-shokunin /fast/scratch/hyaku/chousa-r83/R83ReviewerTool/fx/c1.md
+
+--- stdout ---
+
+--- stderr ---
+Traceback (most recent call last):
+  File "/fast/scratch/hyaku/chousa-r83/R83ReviewerTool/tree/tools/gate-records.py", line 304, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/fast/scratch/hyaku/chousa-r83/R83ReviewerTool/tree/tools/gate-records.py", line 293, in main
+    codes = check(rec, root, repo, reg, refetch)
+  File "/fast/scratch/hyaku/chousa-r83/R83ReviewerTool/tree/tools/gate-records.py", line 215, in check
+    capsha = sha256_file(cap) if cap else None
+             ~~~~~~~~~~~^^^^^
+  File "/fast/scratch/hyaku/chousa-r83/R83ReviewerTool/tree/tools/gate-records.py", line 89, in sha256_file
+    with open(path, "rb") as fh:
+         ~~~~^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: '/fast/scratch/hyaku/chousa-r83/R83ReviewerTool/tree/corpus/captures/f2489455cc311a4de981e926.txt'
+
+--- exit code: 1 ---

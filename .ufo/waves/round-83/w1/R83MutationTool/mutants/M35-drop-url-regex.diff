@@ -1,0 +1,9 @@
+--- tools/gate-records.py
++++ M35-drop-url-regex.py
+@@ -133,5 +133,5 @@
+         return None
+     if form in ("admit", "unreach"):
+-        if not re.fullmatch(r"https?://\S+", kv["url"]) or not TS_RE.fullmatch(kv["fetched"]):
++        if not TS_RE.fullmatch(kv["fetched"]):
+             return None
+         if kv["tier"] not in ("A", "B", "C") or kv["decision"] not in ("admit", "reject"):

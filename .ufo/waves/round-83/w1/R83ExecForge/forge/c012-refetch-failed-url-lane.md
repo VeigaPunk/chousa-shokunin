@@ -1,0 +1,1 @@
+GATE-RECORD S209 url=https://www.bmj.com/content/387/bmj.q2458.full.txt fetched=2026-11-06T19:42:05Z tier=A decision=admit capture=corpus/captures/213237301753814b95b24684.txt capture_sha256=8581ca1827f4ae13… words=20 quote="If changes are made, deviations from the protocol with supporting justification should be made transparent within the final scoping review"

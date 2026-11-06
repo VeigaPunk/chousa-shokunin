@@ -1,0 +1,20 @@
+# (e) C2 K4 exit contract
+## e1: file with no in-class record
+# cmd: python3 tools/gate-records.py verify --root /fast/scratch/hyaku/chousa-r83/R83ExecRepro/tree-tip /fast/scratch/hyaku/chousa-r83/R83ExecRepro/k4/none.md
+GATE_RECORDS files=1 records=0 ok=0 fail=0
+rc=1
+## e2: one OK record plus one FAIL record
+# cmd: python3 tools/gate-records.py verify --root /fast/scratch/hyaku/chousa-r83/R83ExecRepro/tree-tip /fast/scratch/hyaku/chousa-r83/R83ExecRepro/k4/mixed.md
+GATE_RECORD /fast/scratch/hyaku/chousa-r83/R83ExecRepro/k4/mixed.md:3 S009 OK
+GATE_RECORD /fast/scratch/hyaku/chousa-r83/R83ExecRepro/k4/mixed.md:4 S009 FAIL WORDS
+GATE_RECORDS files=1 records=2 ok=1 fail=1
+rc=1
+## e3: missing FILE argument
+# cmd: python3 tools/gate-records.py verify --root .
+usage: gate-records.py verify [-h] --root ROOT [--repo REPO] files [files ...]
+gate-records.py verify: error: the following arguments are required: files
+rc=2
+## e3b: nonexistent FILE path
+# cmd: python3 tools/gate-records.py verify --root . /fast/scratch/hyaku/chousa-r83/R83ExecRepro/does-not-exist.md
+GATE_RECORDS_ERROR missing /fast/scratch/hyaku/chousa-r83/R83ExecRepro/does-not-exist.md
+rc=2

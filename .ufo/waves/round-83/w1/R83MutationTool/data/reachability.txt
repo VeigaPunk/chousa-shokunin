@@ -1,0 +1,14 @@
+# reachability of survivor kill-classes against committed corpus/evidence/round57/refetch.tsv + corpus/captures/
+# tree 81b81173f19d175e2b2a6b409b2a496d09d0b258
+data rows: 158  captures: 76
+A. rows whose key != sha256(url)[:24]: 0 (M22 kill class needs one)
+B. rows curl_rc!=0 AND http 2xx: 13 ; of those with a real txt_sha256: 0 (M05 kill class needs one)
+C. rows http non-2xx: 26 ; of those with a real txt_sha256: 0 (M06 kill class needs one)
+D. rows with a capture file whose sha256 != row txt_sha256 (M03 kill class):
+    S100 fetched 2026-10-27T08:05:22Z rc 28 http 000 row_txt - capture_sha ce30e73574e7b5c82c58d41a421d52bdb1c94ad7d57f0359e492e82f1b360046
+    S103 fetched 2026-10-27T08:05:52Z rc 28 http 200 row_txt - capture_sha 32a5907e701fadee0138ba71899090c5b68848075ad34c9564d893c99c6dd616
+    S106 fetched 2026-10-27T08:06:27Z rc 28 http 200 row_txt - capture_sha c799044be4e0e6e62ccf96175edc6f56490e5872569633eebf2a1606fdb694c6
+    S113 fetched 2026-10-27T08:07:08Z rc 0 http 200 row_txt cc79e6bff9683d30fd138291aa5aa4bbfc8d8404b416eb876aadbe3ef132b194 capture_sha 6e2577b00e711bbbcc0170b6f598f08c39ce6cdc4ea2cb59cad5c4bc78e04186
+    S114 fetched 2026-10-27T08:07:11Z rc 0 http 200 row_txt c28ea898a8d7c01b5d1b53adf5013d58114192d2faec511050a0b3c7b8810d32 capture_sha 3006510c0696d4664926428ab79cb7614db0fabd974602ac15962f5ba3a96466
+    S133 fetched 2026-10-27T08:32:34Z rc 28 http 000 row_txt - capture_sha ceef80d97d95a143c297ff636234550f0b4aaaf07afed8252c94d117e8a9a7a0
+E. captures on disk that are symlinks: 0 (M29 kill class needs one)

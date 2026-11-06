@@ -1,0 +1,25 @@
+# independent hand-built C2 mutation battery at tip tree aca2a7812 (second run, R1 expectation corrected: URL change keeps the S-id, so CAPTURE_KEY/REFETCH — not REGISTRY — is the right expectation)
+# cmd: python3 -B /fast/scratch/hyaku/chousa-r83/R83ExecRepro/indep-c2.py /fast/scratch/hyaku/chousa-r83/R83ExecRepro/tree-tip /home/vgpnk/Projects/shokunin/chousa-shokunin /fast/scratch/hyaku/chousa-r83/R83ExecRepro/k4/mut
+CASE R0-genuine-admit expected=OK -> observed=OK match=yes
+CASE R0b-genuine-rev expected=OK -> observed=OK match=yes
+CASE R1-url-changed expected=CAPTURE_KEY -> observed=FAIL:CAPTURE_KEY,REFETCH match=yes
+CASE R2-tier expected=TIER -> observed=FAIL:TIER match=yes
+CASE R3-capture-path-traversal expected=CAPTURE_PATH -> observed=FAIL:CAPTURE_PATH,CAPTURE_SHA,QUOTE_ABSENT,REFETCH match=yes
+CASE R4-capture-key-other-file expected=CAPTURE_KEY -> observed=FAIL:CAPTURE_KEY,CAPTURE_SHA,QUOTE_ABSENT,REFETCH match=yes
+CASE R5-capture-sha-flip expected=CAPTURE_SHA -> observed=FAIL:CAPTURE_SHA match=yes
+CASE R6-refetch-fetched expected=REFETCH -> observed=FAIL:REFETCH match=yes
+CASE R7-words expected=WORDS -> observed=FAIL:WORDS match=yes
+CASE R8-quote-len expected=QUOTE_LEN -> observed=FAIL:QUOTE_ABSENT,QUOTE_LEN match=yes
+CASE R9-quote-absent expected=QUOTE_ABSENT -> observed=FAIL:QUOTE_ABSENT match=yes
+CASE R10-parse-unknown-key expected=PARSE -> observed=FAIL:PARSE match=yes
+CASE R11-rev-bogus-commit expected=REV -> observed=FAIL:LINE,REV match=yes
+CASE R12-line-off expected=LINE -> observed=FAIL:LINE match=yes
+CASE R13-unknown-sid expected=REGISTRY -> observed=FAIL:REFETCH,REGISTRY match=yes
+CASE C1-BOM-prefixed-genuine expected=OK -> observed=OK match=yes
+CASE C2-ZWSP-prefixed-forged expected=QUOTE_ABSENT -> observed=FAIL:QUOTE_ABSENT match=yes
+CASE C3-tab-separated expected=PARSE -> observed=FAIL:PARSE match=yes
+CASE C4-bare-token expected=PARSE -> observed=FAIL:PARSE match=yes
+PROSE file observed: MISSING (MISSING = no in-class record, as the class requires)
+SUMMARY lines: GATE_RECORDS files=20 records=19 ok=3 fail=16
+tool rc=1 cases=19 mismatched=0
+rc=0

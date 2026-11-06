@@ -1,0 +1,9 @@
+--- tools/gate-records.py
++++ M10-skip-indented.py
+@@ -283,5 +283,5 @@
+         with open(f, encoding="utf-8", errors="replace") as fh:
+             for i, ln in enumerate(fh, 1):
+-                if not REC_RE.match(lead_strip(ln)):
++                if ln[:1].isspace() or not REC_RE.match(lead_strip(ln)):
+                     continue
+                 n += 1

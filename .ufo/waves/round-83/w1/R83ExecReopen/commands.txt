@@ -1,0 +1,60 @@
+# R83ExecReopen — commands run (round 83, C1 kill rule K2 located)
+
+All paths absolute; scratch /fast/scratch/hyaku/chousa-r83/R83ExecReopen (deleted before yield).
+Lane root: /home/vgpnk/Projects/shokunin/chousa-shokunin
+Output: /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-83/w1/R83ExecReopen/
+
+## 0. tree at the landing revision
+
+    mkdir -p /fast/scratch/hyaku/chousa-r83/R83ExecReopen
+    cd /home/vgpnk/Projects/shokunin/chousa-shokunin
+    git archive 81b81173f19d175e2b2a6b409b2a496d09d0b258 | tar -x -C /fast/scratch/hyaku/chousa-r83/R83ExecReopen
+
+## 1. committed-capture location (16 quotes)
+
+    python3 -B locate_quotes.py \
+      --root /fast/scratch/hyaku/chousa-r83/R83ExecReopen \
+      --json committed.json
+    # -> committed-locate.txt   (SUMMARY quotes=16 found=16 absent=0, EXIT=0)
+
+    # same quotes against the committed .raw through the same stripper
+    python3 -B ... > raw-locate.txt        # 16/16 FOUND, EXIT=0
+
+    # per-quote capture line + word counts
+    python3 -B ... > committed-detail.txt
+
+    # wc -w and python split per quote
+    python3 -B ... > word-counts.txt
+
+    # table parse integrity + capture key derivation
+    python3 -B ... > parse-integrity.txt
+
+## 2. live re-open (one GET per URL)
+
+    curl -sS -L --compressed --max-time 20 \
+      -A 'Mozilla/5.0 (chousa r83 reopen)' -o S009.html -w '%{http_code}' <S009 url>
+    curl -sS -L --compressed --max-time 20 \
+      -A 'Mozilla/5.0 (chousa r83 reopen)' -o S212.html -w '%{http_code}' <S212 url>
+    curl -sS -L --compressed --max-time 20 \
+      -A 'Mozilla/5.0 (chousa r83 reopen)' -o S213.html -w '%{http_code}' <S213 url>
+    # S009 http=200 bytes=82846 ; S212 http=200 bytes=179334 ; S213 http=200 bytes=159403
+
+    python3 -B reopen_check.py \
+      --root /fast/scratch/hyaku/chousa-r83/R83ExecReopen \
+      --scratch /fast/scratch/hyaku/chousa-r83/R83ExecReopen \
+      --json live.json
+    # -> live-locate.txt   (SUMMARY quotes=16 found=16 absent=0, EXIT=0)
+
+    sha256sum S009.html S212.html S213.html > live-sha256.txt
+
+## 3. supporting checks
+
+    python3 -B ... > extra-fragments.txt   # the three quoted fragments outside the table
+    python3 -B ... > live-excerpts.txt     # live context around each quote
+
+## 4. cleanup
+
+    rm -rf /fast/scratch/hyaku/chousa-r83/R83ExecReopen
+
+No pacman, no installs, no upgrades. No git write command of any kind was run against the lane
+or any fixture (read-only `git archive`, `git show`, `git diff`, `git rev-parse` only).

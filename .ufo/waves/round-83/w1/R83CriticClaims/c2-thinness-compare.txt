@@ -1,0 +1,80 @@
+# cmd: sed -n '31,38p' land/corpus/lessons/round-81.md; sed -n '64,71p' land/corpus/lessons/round-82.md; sed -n '1,30p' land/tools/quote-reopen.py; sed -n '20,45p' land/tools/gate-records.py
+# hand Location command, corpus/lessons/round-81.md:31-38
+**Location command** (one per admitted row; `<key>` and `<quote>` are the record's `capture` file name and
+quote, `wc -w` is run on the quote alone):
+
+```sh
+LOC='import sys;t=" ".join(open(sys.argv[1],encoding="utf-8",errors="replace").read().split());print("FOUND" if " ".join(sys.argv[2].split()) in t else "ABSENT")'
+python3 -c "$LOC" corpus/captures/<key>.txt '<quote>'    # → FOUND, exit 0
+printf '%s\n' '<quote>' | wc -w                         # → the words= value in the record
+```
+
+# hand Location command, corpus/lessons/round-82.md:64-71
+**Location command** (one per record; `<key>` and `<quote>` are the record's `capture` file name and quote,
+`wc -w` is run on the quote alone):
+
+```sh
+LOC='import sys;t=" ".join(open(sys.argv[1],encoding="utf-8",errors="replace").read().split());print("FOUND" if " ".join(sys.argv[2].split()) in t else "ABSENT")'
+python3 -c "$LOC" corpus/captures/<key>.txt '<quote>'    # → FOUND, exit 0
+printf '%s\n' '<quote>' | wc -w                         # → the words= value in the record
+```
+
+# tools/quote-reopen.py docstring (live re-open; not an offline record verifier)
+#!/usr/bin/env python3
+"""Re-open located quotes against the live source named by the lane registry.
+
+Usage:
+    python3 tools/quote-reopen.py verify --items ITEMS.tsv [--registry SOURCES.md]
+
+The tool reads a tab-separated item file with the header `id<TAB>source_id<TAB>quote`,
+looks each `source_id` up in the lane registry (`corpus/SOURCES.md` by default, that is
+the file named by `--registry`), fetches each registry URL once per run, extracts the
+page text (the head ends at `</head>`, `<body>`, the first start tag that cannot appear
+in `head`, or character data that is not only whitespace; `title`, `script`, `style`,
+`noscript` and `template` content is dropped) and reports one verdict per item:
+
+    QUOTE_REOPEN<TAB><id><TAB><VERDICT><TAB><detail>
+
+followed by one summary line:
+
+    QUOTE_REOPEN_SUMMARY verbatim=<n> absent=<n> too_long=<n> no_source=<n> unreachable=<n>
+
+Verdicts, in the order they are checked: NO_SOURCE, TOO_LONG, UNREACHABLE, then
+VERBATIM or ABSENT. Exit status is 0 when every item is VERBATIM, 1 when any item
+carries another verdict, and 2 on a usage or input/output error.
+
+Fetch bounds: registry URLs only, GET only, http and https only for the request and
+for every redirect hop, a fragment removed, no userinfo, no cookies and no
+credentials, a `DEADLINE`-second total deadline per URL (default 30) shared with the
+single retry and enforced by a watchdog that shuts the socket down when it passes,
+and a cap of 8 MiB on both the wire bytes and the inflated bytes. Each hop's host is
+resolved once; if any returned address is not global the hop is refused, otherwise
+the connection goes to a validated address while the host name is still used for the
+
+# tools/gate-records.py docstring check list
+  url/unreach GATE-RECORD S<id> url=<url> fetched=<ts> tier=<A|B|C> decision=reject capture=none curl_rc=<n>
+              http=<nnn> words=0 quote=none
+  rev         GATE-RECORD S<id> rev=<40 hex> path=<repo-relative path> line=<n> words=<n> quote=<text to end of line>
+
+Keys appear once each, in any order, before `quote=`; `quote=` is last. Checks (codes, all reported):
+
+  PARSE         the line fits none of the three forms (unknown/missing/duplicate key, bad value, extra text)
+  REGISTRY      S<id> has no 11-column Registry row in corpus/SOURCES.md (0-3 leading spaces accepted, as the census)
+  TIER          url forms: tier differs from the registry row's tier cell
+  CAPTURE_PATH  capture is not corpus/captures/<24 hex>.txt, or is not a regular (non-symlink) file inside LANE
+  CAPTURE_KEY   the capture key is not sha256(url)[:24] (the content-addressed key capture-fetch.py writes)
+  CAPTURE_SHA   capture_sha256 is shorter than 16 hex digits or is not a prefix of sha256(capture bytes)
+  REFETCH       url/admit: no refetch.tsv row with this id, url, key and fetched time, curl_rc 0, http 2xx and
+                txt_sha256 equal to sha256(capture bytes); url/unreach: no row with this id, url and fetched time
+                whose curl_rc and http equal the record's, or the record's curl_rc/http denote a success
+  WORDS         words differs from the number of whitespace-separated tokens of the quote
+  QUOTE_LEN     a quoted record (url/admit, rev) has fewer than 1 or more than 25 words
+  QUOTE_ABSENT  url/admit: the quote, normalized, does not occur in the normalized capture text
+  REV           rev form: rev is not a commit in GITDIR or path is not a blob at rev
+  LINE          rev form: line is outside the blob, or the normalized quote does not occur in that one line
+
+Normalization (quote and text alike): U+2018/U+2019 -> ', U+201C/U+201D -> ", then whitespace runs (Python
+str.split) collapse to one space. Matching is otherwise exact (case, punctuation and markup are kept).
+
+Output, one line per record, then a summary:
+    GATE_RECORD <file>:<line> <S-id|?> OK

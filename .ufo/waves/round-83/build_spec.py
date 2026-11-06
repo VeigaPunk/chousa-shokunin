@@ -1,0 +1,149 @@
+#!/usr/bin/env python3
+"""Build the round-83 v1 wave spec (12 seats, one batched spawn handoff)."""
+import json
+import pathlib
+
+LANE = "/home/vgpnk/Projects/shokunin/chousa-shokunin"
+SCRATCH = "/fast/scratch/hyaku/chousa-r83"
+BASE = "a46534a51756f7e7d9bb55dd9a275156d908d84c"
+EGRESS = "8fff80ee43fbb99fb391c0f4751dbfd47c722744"
+CONTROLS = "1b9b2ff8955190a3e5cd42800009d13d6b8e4e04"
+FREEZE = "3fbf8d1227a8aa317a036604edad93d7b20a149f"
+LANDING = "81b81173f19d175e2b2a6b409b2a496d09d0b258"
+TIP = "aca2a781ef2db375881c21bf407e153f786ac61f"
+W = f"{LANE}/.ufo/waves/round-83/w1"
+E = "corpus/evidence/round83"
+ENTRY = "corpus/knowledge/appraisal-judgment-records-r83.md"
+TOOL = "tools/gate-records.py"
+
+CONTEXT = f"""Lane chousa round 83, L1 ChousaR83 holds the canonical planner seat and integration. Root {LANE}. Revisions: base {BASE} (round-82 tip, closed rejected-honest-stop); egress table committed before any fetch {EGRESS}; prefreeze instruments + fixtures + stubs + captures {CONTROLS}; claim freeze (claims + prefreeze control receipts, 8/8 as expected) {FREEZE}; candidate landing {LANDING} (the bytes you attack); current tip {TIP} (adds the round-83 lesson Gate block).
+Frozen predicate set: {LANE}/{E}/claims.md — read it FIRST, including every kill rule. Two claims: C1 depth — one new entry `{ENTRY}` on registry rows S009 (re-opened), S212, S213 (Cochrane MECIR C52-C60, Handbook ch.7 and ch.8), counted by `{E}/depth-r83.py`; C2 operability (capability acquisition) — a new tool `{TOOL}` (`verify --root LANE [--repo GITDIR] FILE...`) that checks every `GATE-RECORD` line of a lesson against committed lane bytes, counted by `{E}/gate-records-r83.py` (15 positives from corpus/lessons/round-80/81/82.md, 198 derived forgeries, one empty file). Before receipts: `{E}/controls/receipts/`; after receipts: `{E}/after/`. The claims are frozen: you never amend them, their counters, fixtures or receipts; you measure, attack and report. A kill-rule firing is a finding to report plainly, with the exact bytes that fire it and whether they are in the frozen class; out-of-class findings are residuals, listed separately.
+Every `Report:` trailer path is relative to {LANE} — write it at {LANE}/<that path>.
+
+Leaf only: no task tool, no subagents, no agent://all, no production edits, no lane or fleet git/jj mutation, no commits or pushes, no edits to /home/vgpnk/Projects/shokunin/scripts, /home/vgpnk/Projects/shokunin/.ufo/state, MANIFEST.json, considerthese/ or any sibling repo. The only files you write are under your own output folder {W}/<seat>/ plus your scratch dir. Network: none, except a seat whose item names a re-open (one GET per URL that has a 2026-11-06T20:53Z row in `corpus/evidence/round57/refetch.tsv`, into your scratch; never write `corpus/captures/` or `refetch.tsv`) — `{E}/egress-approval.md` is the table.
+
+Scratch: every clone, archive tree, work dir and fixture lives under {SCRATCH}/<your seat name>/; create it with mkdir -p, pass it explicitly (TMPDIR=... HYAKU_SCRATCH=... --work ...), delete it before you yield (`trap 'rm -rf -- "$S"' EXIT` in shell, `finally: shutil.rmtree` in Python), and copy every receipt you cite into your wave output folder first. Never write under /tmp (the reaper deletes it; a /tmp path is never citable evidence). Use `git -C {LANE} archive <rev> | tar -x -C <scratch dir>` for a tree at a revision; any fixture git repo is `D=$(mktemp -d -p {SCRATCH}/<seat>) && test -n "$D" && git -C "$D" init -q`, every later git call names `-C "$D"` and you assert `git -C "$D" rev-parse --show-toplevel` equals "$D" before any mutating git command; never pass an empty or unchecked variable to `git -C`. Never mutate host sysctls or services.
+
+Counter that binds you: every finding names the exact command, the receipt path you wrote and the observed line plus exit code. An unrun check has not passed; a deviation from an expected value is a finding, never something to hide. End your report with one line `VERDICT: <seat> <claim> fired|held|n/a — <one sentence>` per claim you touched (plain text, not JSON).
+
+Tooling authorization (operator, 2026-10-19): you may install or upgrade tools that help the task; read /home/vgpnk/.omp/agent/RULES.md first (official channels only; record tool/version/channel/reason in your report). pacman guard (orchestrator ruling 2026-10-20): all pacman transactions are PAUSED host-wide — install via `uv tool`/`npx`/an official binary in ~/.local/bin, or not at all; never `pacman -Sy`, `-Syu`, `-U`, `-R`, never downgrade, never restart a host service.
+"""
+
+GODSPEED = """/skill:godspeed
+
+You are a Godspeed-enabled subagent.
+
+1. **Name the axes.**
+2. **Iterate cheap, in parallel.**
+3. **Keep moves that improve any axis and harm none.**
+4. **Don't aim — let the frontier walk itself.**
+
+## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.
+"""
+
+items = []
+
+
+def add(name, role, body):
+    items.append({"name": name, "role": role, "prompt": GODSPEED + "\n" + body.strip() + "\n"})
+
+
+add("R83ExecRepro", "executor", f"""
+Reproduce both frozen claims from committed bytes, before and after (C1 K1, C2 K1, C2 K4).
+(a) Instrument identity: `git -C {LANE} show <rev>:<path> | sha256sum` for every path in `{E}/instrument-pins.txt` at {CONTROLS}, {FREEZE}, {LANDING} and {TIP}; all must equal the pins.
+(b) BEFORE/AFTER: archive {CONTROLS} and {LANDING} into scratch; in each run `python3 -B <tree>/{E}/depth-r83.py --root <tree>` and `python3 -B <tree>/{E}/gate-records-r83.py --root <tree> --repo {LANE} --work {SCRATCH}/R83ExecRepro`. Expected before: `DEPTH_R83 entries=0` FAIL rc 1 and `TOOL=absent ...` FAIL rc 1; after: the exact predicate lines in claims.md, rc 0. Repeat the after runs at {TIP}.
+(c) Re-run the committed control driver: from {LANE} run `HYAKU_SCRATCH={SCRATCH}/R83ExecRepro bash {E}/run-controls-r83.sh {CONTROLS} {W}/R83ExecRepro/controls-rerun` and compare its summary.tsv with `{E}/controls/receipts/summary.tsv` (expect `CONTROLS_AS_EXPECTED=8/8`).
+(d) C2 predicate (b): at {TIP} run `python3 tools/gate-records.py verify --root . corpus/lessons/round-83.md` from an archived tree (with `--repo {LANE}`); expect 3 OK, exit 0.
+(e) C2 K4: run the tool on a file with no record, on a file with one OK record plus one FAIL record, and with a missing FILE argument; report each rc (expected 1, 1, 2).
+Receipts in {W}/R83ExecRepro/.
+""")
+
+add("R83ExecForge", "executor", f"""
+Fire-or-hold C2 kill rule K2 (spec generalization): author NEW in-class forged `GATE-RECORD` lines the frozen battery does not contain, each violating one check of the docstring of `{TOOL}` at {LANDING}, and run the landed tool on them.
+Work in an archive of {LANDING} in scratch; put each forged line in its own file under `<tree>/forge/`; run `python3 tools/gate-records.py verify --root <tree> --repo {LANE} <files>` from the tree root.
+Start from the 15 genuine records (`{E}/c2-positives.tsv`) and the 3 round-83 records (`corpus/lessons/round-83.md` at {TIP}). Cover at least: upper-case or mixed-case sha prefix; `…` vs `...` vs no suffix; sha of the .raw file instead of the .txt; a refetch row of a FAILED attempt for the same url; a refetch row with matching url but a different id; url with trailing slash / fragment / http vs https; tier lower-case; decision values other than admit|reject; words with leading zero, plus sign or unicode digits; quote with NBSP, tab, zero-width space, curly vs straight quotes, HTML entities, a quote spanning a line break in the capture; quote that is located only in a DIFFERENT capture; rev form with short rev, tag name, `HEAD`, a tree hash, path with `..`, `./` prefix or trailing slash, line=0 or 00; CRLF line endings; BOM or zero-width space before GATE-RECORD; a second ` quote=` inside the quote; keys after quote=; duplicated id lines; extra unknown key.
+For each forged line: which docstring check it violates (or `none` — then it is not a forgery), in-class per claims.md K2 (yes/no and why), tool output line and rc. Any in-class line violating a check on which the tool prints `OK` FIRES K2 — say so. Also list any line that meets every check but is refused (K3 harm candidate).
+Receipts + forged files in {W}/R83ExecForge/.
+""")
+
+add("R83ExecHarm", "executor", f"""
+Fire-or-hold C2 kill rule K3 (harm) and K4 on real lane history, plus a side-effect audit.
+(1) In an archive of {TIP}, run `python3 tools/gate-records.py verify --root <tree> --repo {LANE} <file>` on every file under `corpus/lessons/` and on every other committed file containing a line whose first text is `GATE-RECORD` (`git -C {LANE} grep -n -E '^[[:space:]]*GATE-RECORD' {TIP}`). Tabulate records, OK, FAIL per file.
+(2) For every FAIL, decide by hand from bytes whether the record really violates the docstring check named (show the bytes: registry row, capture sha256, refetch row, quote location command `python3 -c 'import sys;t=" ".join(open(sys.argv[1],encoding="utf-8",errors="replace").read().split());print(" ".join(sys.argv[2].split()) in t)' <capture> '<quote>'`, or `git -C {LANE} show <rev>:<path> | sed -n '<line>p'`). A FAIL on a record that meets every check FIRES K3. A genuine defect in an old record is a real catch — list it.
+(3) Side effects: run the tool once under `strace -f -e trace=network,openat,unlink,rename,write -o <file>` if strace exists (else say so and use `ltrace`/`inotifywait` or a before/after `find <tree> -newer` listing): report any socket call, any file opened for writing, any git subcommand other than `cat-file` (also grep the source for subprocess calls). Any write, network or mutating git FIRES K3.
+Receipts in {W}/R83ExecHarm/.
+""")
+
+add("R83ExecReopen", "executor", f"""
+Fire-or-hold C1 kill rule K2 (located). Network allowed for exactly three GETs (one per URL), the S009/S212/S213 URLs with 2026-11-06T20:53Z rows in `corpus/evidence/round57/refetch.tsv`.
+(1) For each of the 16 quotes in `{ENTRY}` at {LANDING} (`## Located quotes`), check it in the committed capture of its S-id (`corpus/captures/<sha256(url)[:24]>.txt`) after whitespace collapse with curly quotes folded to ASCII; record FOUND/ABSENT and the capture line number.
+(2) Re-open each URL once: `curl -fsSL --compressed --max-time 20 -A 'Mozilla/5.0 (chousa r83 reopen)' <url> -o {SCRATCH}/R83ExecReopen/<id>.html`; tag-strip (drop script/style), unescape HTML entities, collapse whitespace, fold curly quotes; check every quote. Record HTTP status, byte count, FOUND/ABSENT per quote. An ABSENT quote on a 200 page FIRES K2; an unreachable page is recorded, not a kill.
+(3) Count words of each quote (`wc -w` and Python split); flag any outside 8..25.
+Receipts (not the HTML bodies) in {W}/R83ExecReopen/.
+""")
+
+add("R83ReviewerEntry", "reviewer", f"""
+Fire-or-hold C1 kill rule K3 (warrant) on `{ENTRY}` at {LANDING}. Read claims.md K3 exactly.
+For EACH of the 10 decision-table rows: (a) does the Do follow from the cited quotes (state what the quote says and what the Do adds); (b) does the Never follow (the Never must be the negation of something the quotes require, within their hedges); (c) read the FULL paragraph and section around each cited quote in the committed capture (`corpus/captures/ea16817cb78993196ea1a095.txt` S009, `708022d401fd771fc59bd1d9.txt` S212, `963807d173af711593fd1c45.txt` S213) and quote, with capture line number, any sentence of the same source that contradicts the row's Do or Never. Also judge the entry's `## Inference` and `## Limits` sections for overreach (these are not K3 rows; report as residuals).
+Be strict but exact: a finding must name the row, the word(s) in the row, and the located sentence or the missing support. A row that is merely narrower than the source is not a K3 firing. Verdict per row: held / fired (a) / fired (b) and why.
+Report at {W}/R83ReviewerEntry.md (and receipts under {W}/R83ReviewerEntry/).
+""")
+
+add("R83ReviewerTool", "reviewer", f"""
+Code review of `{TOOL}` at {LANDING} against its own docstring (the C2 spec) and claims.md C2 K2/K3/K4.
+(1) For each documented check (PARSE, REGISTRY, TIER, CAPTURE_PATH, CAPTURE_KEY, CAPTURE_SHA, REFETCH, WORDS, QUOTE_LEN, QUOTE_ABSENT, REV, LINE) read the implementing code and state whether it enforces exactly what the docstring says; find any input on which the code prints OK while the docstring check is violated (build it, run it in an archive of {LANDING} in scratch with `--repo {LANE}`, record output — that FIRES K2 if in class) and any input meeting every check that is refused (K3).
+(2) Parsing: key order, duplicate keys, empty values, `quote=` placement, trailing whitespace, CRLF, unicode, record-line detection (`lead_strip`, REC_RE) vs the declared record class in claims.md.
+(3) Exit contract (K4), error handling (unreadable capture, invalid UTF-8, missing refetch log), and any code path that writes, fetches or mutates git.
+(4) Note every docstring/claims.md inconsistency.
+Report at {W}/R83ReviewerTool.md with receipts under {W}/R83ReviewerTool/.
+""")
+
+add("R83CriticClaims", "critic", f"""
+Adversarial critic of both frozen claims (claims.md at {FREEZE}) as claims, not code.
+(1) Controls adequacy: is there a control cheaper than the claimed work that meets either predicate? Build and score it with the frozen counters (in an archive of {LANDING} in scratch: for C2 a tool that is not the landed one, e.g. one that keys on the forgery construction, on the file name pattern `f\\d{{3}}.md`, on the presence of `Zyzzyva`, or that only checks registry+refetch; for C1 an entry with content-free rows — the declared B1 boundary — or a re-landed old entry with fresh rows). Report each control's counter lines and rc. A cheap control that PASSes C2's counter shows the battery is gameable: say whether the claim text then still verifies.
+(2) Claim–predicate alignment: does the C2 predicate measure the claim sentence (all docstring checks)? Which docstring checks have no forgery in the 198 (coverage gap)? Does the C1 predicate measure "teaches how to record a judgment"?
+(3) Thinness: is C2 a real capability (compare with what the lessons' hand Location command and `tools/quote-reopen.py` already did; is any check redundant with an existing lane tool or gate)? Is C1 new ground (K4; compare with `corpus/knowledge/claim-support-test-r37.md`, `claim-support-states-r24.md`)?
+(4) Freeze discipline: compare commit times and contents of {CONTROLS}, {FREEZE}, {LANDING}; claims.md discloses the tool was drafted in scratch before the freeze — judge whether any predicate or counter byte changed after scoring.
+Report at {W}/R83CriticClaims.md with receipts under {W}/R83CriticClaims/.
+""")
+
+add("R83MutationTool", "mutation-tester", f"""
+Mutation test `{TOOL}` against the frozen counter `{E}/gate-records-r83.py` (C2). In an archive of {LANDING} in scratch, generate at least 20 single-point mutants of the tool (remove or invert each check, relax `{{16,64}}` to `{{1,64}}`, drop the key check, drop `r[8] == capsha`, drop `r[4] == fetched`, accept curl_rc != 0, accept non-2xx, words off-by-one, QUOTE_LEN bounds 0..26, skip lead_strip, skip indented lines, REV accepting short revs, LINE checking the whole blob instead of the line, exit 0 on zero records, exit 0 with FAIL lines, etc.). For each mutant run `python3 -B <tree>/{E}/gate-records-r83.py --root <tree> --repo {LANE} --tool <mutant> --work {SCRATCH}/R83MutationTool` and record the counter lines and rc. A mutant the counter still scores PASS is a SURVIVOR: list each with the exact diff and the forged input class that would kill it. Survivors are battery blind spots (routed defects), not by themselves a C2 kill; but if a survivor shows the LANDED tool also lets an in-class violation through, build that input and report it as a K2 candidate.
+Report at {W}/R83MutationTool.md with mutants and receipts under {W}/R83MutationTool/.
+""")
+
+add("R83ScoutNovelty", "scout", f"""
+Read-only reconnaissance, two surfaces.
+(1) C1 K4 (ground): at {BASE} and at {LANDING}, does any file in `corpus/evidence/round83/base-knowledge.txt`'s list (under `corpus/knowledge/`) cite S009, S212 or S213 on a `source:` line, or contain any of the three URLs (`git -C {LANE} grep -n -F '<url>' <rev> -- corpus/knowledge`)? Does any held entry already teach duplicate independent judgment, a predefined disagreement process, or recording the source location of a judgment (grep for `independent`, `two people`, `adjudicat`, `disagree`, `support for judgement`, `precise location`)? Quote what you find with file:line and say whether it is the same ground.
+(2) Round-82 routed defect 1: the round-82 closure found one out-of-class record newly refused at the r82 tip (`corpus/evidence/round82/repair/rerun-landing.txt` out-of-class refused 8 → `rerun-repaired.txt` 9). Identify that record by diffing the two receipts, show its bytes, and say whether it carries a defect (in-class after all) or is a false refusal (harm) — read-only analysis; do not run the gate selftest.
+Report at {W}/R83ScoutNovelty.md.
+""")
+
+add("R83ConnectorSiblings", "connector", f"""
+Sibling-overlap scan (read-only). Sibling lanes live at /home/vgpnk/Projects/shokunin/<lane>-shokunin (e.g. kengaku, kasegi, kumitate, kagi, tameshi, kaidoku, mori, tabi, souji, kotoba, kotodama, revenger, tsukuroi, kama, kake, mado). (1) Does any sibling hold a knowledge entry on appraisal-judgment recording (duplicate independent judgment, disagreement process, support for judgment, Cochrane MECIR C52-C60 or Handbook ch.7/ch.8 URLs)? `grep -rl` over each `corpus/knowledge/` and `corpus/SOURCES.md`. (2) Does any sibling hold a tool that verifies lesson Gate records / located quotes against committed captures (grep tools/ and scripts/ for `GATE-RECORD`, `capture_sha256`, `refetch.tsv`)? (3) Does the new entry or tool touch sibling province (`{LANE}/PROVINCE.md` refuses kengaku model-quality claims, kasegi bounty scope, kumitate orchestration, kagi secrets)? Report overlaps with paths and line numbers, and say what (if anything) chousa should absorb or refer to — never edit a sibling.
+Report at {W}/R83ConnectorSiblings.md.
+""")
+
+add("R83ScribeLesson", "scribe", f"""
+Draft (do not land) sections for `corpus/lessons/round-83.md` (current Gate block at {TIP}; study `{LANE}/corpus/lessons/round-82.md` for format).
+(1) `## Mistakes`: mine ONE mistake from an earlier round in the form `class · evidence pointer · captured-by · fix`. Candidate: round-82 report counted knowledge entries 94 → 95 including `corpus/knowledge/.gitkeep` (closure `corpus/lessons/round-82-verifier-spotcheck.md:24-25`; recount `git -C {LANE} ls-tree -r --name-only 142b6f0c corpus/knowledge | grep -c '\\.md$'` vs `| wc -l` at 142b6f0c and 03b586d1). Show the fix can fail: run both commands and paste outputs. If you find a better-evidenced mistake, use it and say why.
+(2) `## considerthese`: read `{LANE}/considerthese/` newest files (never edit); name at most ONE still-unimplemented proposal and whether this round implements it (with evidence) or not (with reason).
+(3) `## Assimilation`: `none` with the reason (re-count `{LANE}/.ufo/waves/round-78/assimilation/collisions` lines).
+(4) A `## Gate` addendum: one admit and one reject for the non-author spot-check, drawn from the existing Gate block at {TIP} (verify each with `python3 tools/gate-records.py verify` and the hand location command).
+Deliver at {W}/R83ScribeLesson/lesson-draft.md.
+""")
+
+add("R83SentinelScope", "sentinel", f"""
+Boundary and safety sentinel for round 83. Read-only.
+(1) Egress: `{E}/egress-approval.md` was committed at {EGRESS} — compare `git -C {LANE} log -1 --format=%cI {EGRESS}` (convert to UTC) with every refetch.tsv row dated 2026-11-06 after 20:00Z; every fetch a GET of a URL in the table's intended-targets list, no credentials (read `tools/capture-fetch.py`).
+(2) Province: does the new entry or tool absorb sibling province (kengaku model quality, kasegi bounty scope, kumitate orchestration, kagi secrets)? Quote `PROVINCE.md` and the entry lines.
+(3) Secrets: scan `git -C {LANE} diff {BASE} {TIP}` and the three new captures for credential-shaped strings (tokens, keys, cookies, session ids) — shape only, never print a value.
+(4) Misroot: `git -C /home/vgpnk/Projects/shokunin status --porcelain` — list any untracked fleet-root file whose content names chousa round 83 (do not move or delete anything; report paths).
+(5) Scratch: `du -sh {SCRATCH} 2>/dev/null; ls /tmp | grep -i r83` — report leftovers.
+Report at {W}/R83SentinelScope/sentinel.md.
+""")
+
+spec = {"wave": "chousa-r83-w1", "reportDir": ".ufo/waves/round-83/w1", "context": CONTEXT, "items": items}
+out = pathlib.Path(f"{LANE}/.ufo/waves/round-83/w1-spec.json")
+out.write_text(json.dumps(spec, indent=2) + "\n")
+print(f"wrote {out} with {len(items)} items; roles={sorted(i['role'] for i in items)}")

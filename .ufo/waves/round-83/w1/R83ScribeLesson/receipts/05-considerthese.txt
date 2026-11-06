@@ -1,0 +1,36 @@
+# considerthese newest files, read-only
+-rw-r--r-- 1 vgpnk vgpnk 4770 Oct 25 09:24 2026-10-25.md
+-rw-r--r-- 1 vgpnk vgpnk 5942 Oct 26 20:00 2026-10-26.md
+-rw-r--r-- 1 vgpnk vgpnk 8247 Nov  6 15:47 2026-11-05.md
+-rw-r--r-- 1 vgpnk vgpnk 6957 Nov  6 15:47 2026-11-06.md
+0e4db2da4deb701f227d17d2cbd4c88c  considerthese/2026-11-05.md
+06f8df13ee12c9b3cf5ffd9d4aacf0ad  considerthese/2026-11-06.md
+
+## proposal named: 2026-11-06 'One open Gate-record S-id per daily review'
+## ScoutA remainder ids: S170 S171 S173 S174 S175 S176 S178 S179 S182 S183 S191 S193
+$ grep -rhoE 'S170|S171|S173|S174|S175|S176|S178|S179|S182|S183|S191|S193' corpus/evidence/round83/ corpus/lessons/round-83.md .ufo/waves/round-83/ | wc -l
+60
+
+## ids the round-83 Gate block actually touches
+GATE-RECORD S009
+GATE-RECORD S212
+GATE-RECORD S213
+
+## proposal->adoption ledger rows and any 2026-11-05/06 row
+36 corpus/evidence/round54/considerthese-ledger.tsv
+0
+rc=1
+CT-20261026-4	FMT	-	independent reader outside the lane; lane analogue quote-substance-check.py
+
+## CORRECTION: the 60 above is a self-reference artifact
+## the first pass wrote this receipt file, which itself lists the twelve ids; the only files that hit are this seat's own:
+.ufo/waves/round-83/w1/R83ScribeLesson/receipts/05-considerthese.txt
+.ufo/waves/round-83/w1/R83ScribeLesson/run-receipts.sh
+
+## corrected count, excluding this seat's folder:
+$ grep -rhoE 'S170|...|S193' corpus/evidence/round83/ corpus/lessons/round-83.md .ufo/waves/round-83/ | grep -v R83ScribeLesson | wc -l
+0
+(that pipeline is wrong by construction; the file-list form below is the measurement)
+$ grep -rlE ... | grep -v R83ScribeLesson | wc -l
+0
+rc=0

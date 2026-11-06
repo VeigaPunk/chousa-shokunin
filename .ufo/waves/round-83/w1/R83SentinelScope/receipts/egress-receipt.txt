@@ -1,0 +1,57 @@
+# R83SentinelScope egress receipt (item 1)
+# cmd: git -C chousa-shokunin log -1 --format=%H|%aI|%cI|%ct 8fff80ee43fbb99fb391c0f4751dbfd47c722744
+8fff80ee43fbb99fb391c0f4751dbfd47c722744|2026-11-06T17:49:13-03:00|2026-11-06T17:53:00-03:00|1793998380
+rc=0
+
+# cmd: python3 (committer->UTC; rows dated 2026-11-06 after 20:00Z; delta seconds)
+committer_utc 2026-11-06T20:53:00+00:00
+author_utc    2026-11-06T20:49:13+00:00
+S009 2026-11-06T20:53:06Z rc=0 http=200 attempt=1 delta_s=6 after_commit= True
+S212 2026-11-06T20:53:07Z rc=0 http=200 attempt=1 delta_s=7 after_commit= True
+S213 2026-11-06T20:53:08Z rc=0 http=200 attempt=1 delta_s=8 after_commit= True
+rc=0
+
+# cmd: sha256sum corpus/captures/<key>.raw|.txt  (compare with refetch raw_sha256/txt_sha256)
+e01497f87315171ee56b35c64bb8cb468278a0744df4ae0f33e57ea3ad49e7c5  /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/captures/ea16817cb78993196ea1a095.raw
+3dfd10e567809633e762ecc81806697ac95842859c887a7eb2bae1b1674c5ed6  /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/captures/ea16817cb78993196ea1a095.txt
+60c8ba69b4417596b1b377345d77d9f9d3b70fda6ad6f383cf01a8cb6de4f31b  /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/captures/708022d401fd771fc59bd1d9.raw
+3b57cb03552f141decadf36a5a0e306385944ded9bce6e44ab3fb736eb9683da  /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/captures/708022d401fd771fc59bd1d9.txt
+342b82c4204bc1ba57b6c66c3acac523a5e055f375603d368a9688dcddae3527  /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/captures/963807d173af711593fd1c45.raw
+f5dae335fb45d593c7c6cf7d663bdddb50338b2ef0f127d73df6d05aed316234  /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/captures/963807d173af711593fd1c45.txt
+rc=0
+
+# cmd: python3 exact-cell URL compare + key check
+S009 exact_url_cell= True key_ok= True
+S212 exact_url_cell= True key_ok= True
+S213 exact_url_cell= True key_ok= True
+table_urls= 3
+rc=0
+
+# cmd: git show 8fff80ee:corpus/evidence/round57/refetch.tsv | grep -c 2026-11-06T20:53   (rows at egress commit)
+0
+rc=1
+# cmd: git show 1b9b2ff8:corpus/evidence/round57/refetch.tsv | grep -c 2026-11-06T20:53   (rows at prefreeze commit)
+3
+rc=0
+# cmd: git merge-base --is-ancestor 8fff80ee 1b9b2ff8; echo rc
+rc=0
+
+# cmd: grep -n "cmd = " -A2 tools/capture-fetch.py   (GET, no credentials)
+137:    cmd = ["curl", "-fsSL", "--compressed", "--max-time", "15", "-A", UA,
+138-           "-o", str(out), "-w", "%{http_code}", url]
+139-    try:
+rc=0
+# cmd: curlrc candidates existence (no credential injection path present)
+absent /home/vgpnk/.curlrc
+absent /home/vgpnk/.config/curlrc
+absent /nonexistent/.curlrc
+absent ./.curlrc
+
+# cmd: tail -3 /fast/scratch/hyaku/chousa-r57/fetch/refetch.append | cut -f1,4,5,6,7   (tool scratch corroboration)
+S009	1	2026-11-06T20:53:06Z	0	200
+S212	1	2026-11-06T20:53:07Z	0	200
+S213	1	2026-11-06T20:53:08Z	0	200
+rc=0
+# cmd: wc -l /fast/scratch/hyaku/chousa-r57/fetch/refetch.append
+14 /fast/scratch/hyaku/chousa-r57/fetch/refetch.append
+rc=0

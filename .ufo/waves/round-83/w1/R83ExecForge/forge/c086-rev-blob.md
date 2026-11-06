@@ -1,0 +1,1 @@
+GATE-RECORD S199 rev=e688309308e22480b7aff28e30f9b87c1682df67 path=corpus/lessons/round-79-verifier-spotcheck.md line=222 words=12 quote=the battery is fully forgeable through the payload channel on **both** batteries

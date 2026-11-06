@@ -1,0 +1,30 @@
+# whole lesson
+$ python3 tools/gate-records.py verify --root . corpus/lessons/round-83.md
+GATE_RECORD corpus/lessons/round-83.md:19 S009 OK
+GATE_RECORD corpus/lessons/round-83.md:20 S212 OK
+GATE_RECORD corpus/lessons/round-83.md:21 S213 OK
+GATE_RECORDS files=1 records=3 ok=3 fail=0
+RC=0
+
+# per-record extract (S213) in scratch
+1 /fast/scratch/hyaku/chousa-r83/R83ScribeLesson/s213-only.md
+$ python3 tools/gate-records.py verify --root . /fast/scratch/hyaku/chousa-r83/R83ScribeLesson/s213-only.md
+GATE_RECORD /fast/scratch/hyaku/chousa-r83/R83ScribeLesson/s213-only.md:1 S213 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+RC=0
+
+# per-record extract (S009) in scratch
+$ python3 tools/gate-records.py verify --root . /fast/scratch/hyaku/chousa-r83/R83ScribeLesson/s009-only.md
+GATE_RECORD /fast/scratch/hyaku/chousa-r83/R83ScribeLesson/s009-only.md:1 S009 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+RC=0
+
+# per-record extracts preserved beside this receipt (scratch is deleted at yield)
+$ python3 tools/gate-records.py verify --root . .ufo/waves/round-83/w1/R83ScribeLesson/receipts/s009-only.md
+GATE_RECORD .ufo/waves/round-83/w1/R83ScribeLesson/receipts/s009-only.md:1 S009 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+RC=0
+$ python3 tools/gate-records.py verify --root . .ufo/waves/round-83/w1/R83ScribeLesson/receipts/s213-only.md
+GATE_RECORD .ufo/waves/round-83/w1/R83ScribeLesson/receipts/s213-only.md:1 S213 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+RC=0

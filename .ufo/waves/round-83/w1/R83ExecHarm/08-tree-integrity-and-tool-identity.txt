@@ -1,0 +1,31 @@
+Tree/repo integrity around all tool runs.
+-- archive tree: aca2a781ef2db375881c21bf407e153f786ac61f extracted to /fast/scratch/hyaku/chousa-r83/R83ExecHarm/tree
+-- content hash after runs   = fbfcd6b350a56025e3b551a73c268d5a366dc16a611caf8be87d9633d6b253c4
+-- content hash fresh extract = fbfcd6b350a56025e3b551a73c268d5a366dc16a611caf8be87d9633d6b253c4
+   (equal => no byte of the archive tree changed during the runs)
+-- lane .git files newer than the pre-run marker: 2
+-- archive tree files newer than the pre-run marker: 0
+-- lane working files newer than the pre-run marker (excluding my output dir): 412
+
+Tool identity:
+-- landing 81b81173:tools/gate-records.py blob = 2a59aca7bb50f86f14c44a8293f728c829888a46
+-- tip     aca2a781:tools/gate-records.py blob = 2a59aca7bb50f86f14c44a8293f728c829888a46
+-- diff landing..tip for the tool: 0 lines of diffstat
+
+Predicate (b) exact form (root . inside the archive tree):
+GATE_RECORD corpus/lessons/round-83.md:19 S009 OK
+GATE_RECORD corpus/lessons/round-83.md:20 S212 OK
+GATE_RECORD corpus/lessons/round-83.md:21 S213 OK
+GATE_RECORDS files=1 records=3 ok=3 fail=0
+rc=0
+
+== CONCURRENT LANE ACTIVITY (not authored by this seat; observed while auditing) ==
+The lane is live: other round-83 seats wrote 400+ files under .ufo/waves/round-83/w1/ after this seat's marker, e.g.
+  R83MutationTool=150 R83ExecForge=102 R83CriticClaims=36 R83ReviewerTool=33 R83ScribeLesson=13 ...
+  9 files are this seat's own receipts under .ufo/waves/round-83/w1/R83ExecHarm/.
+The working copy tools/gate-records.py (mtime 18:16:00) now differs from committed tip blob 2a59aca7:
+  working sha256 = 8d4ac12523f3bcceca028acd671cd7fdd8adb64b560d3b9b9ada84ac218b5899
+  tip blob sha256 = d38443769fe7c2ba014ec9d7861c4078cec24d0a193eeadb2cd5222d0d392687
+.git/index (mtime 18:14:52) was written by a concurrent seat's index operation; the traced tool run
+executes only git cat-file, which never writes the index, and opened no file for writing in the lane.
+This seat wrote only .ufo/waves/round-83/w1/R83ExecHarm/ (9 files) and its /fast scratch.

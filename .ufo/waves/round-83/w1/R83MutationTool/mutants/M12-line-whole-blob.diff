@@ -1,0 +1,9 @@
+--- tools/gate-records.py
++++ M12-line-whole-blob.py
+@@ -246,5 +246,5 @@
+                 lines.pop()
+             i = int(kv["line"])
+-            if i > len(lines) or not quote.strip() or norm(quote) not in norm(lines[i - 1]):
++            if i > len(lines) or not quote.strip() or norm(quote) not in norm("\n".join(lines)):
+                 codes.append("LINE")
+     return sorted(set(codes))
