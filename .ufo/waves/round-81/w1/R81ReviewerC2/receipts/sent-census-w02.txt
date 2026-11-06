@@ -1,0 +1,14 @@
+# census W02 code (scripts/sources-census.sh)
+--- lines 668-675 ---
+        if (tier=="A" && kind=="community") printf "%s\tE10\t%s community-at-A\n",lane,id
+        if (tier=="C" && status=="mined" && usedby!="—")
+          printf "%s\tW01\t%s tierC mined used-by=%s\n",lane,id,usedby
+        if (status=="rejected" && length(teaches)<8)
+          printf "%s\tW02\t%s thin reject reason\n",lane,id
+        if (status=="mined" && usedby=="—")
+          printf "%s\tW03\t%s mined but unused\n",lane,id
+      } else if (mode=="overdue") {
+--- grep -n -i flip (expect none) ---
+(no matches)
+--- line 31 header comment ---
+#             W01 tier-C mined with non-— used-by   W02 rejected row, thin teaches

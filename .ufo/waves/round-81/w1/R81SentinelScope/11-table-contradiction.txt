@@ -1,0 +1,44 @@
+# receipt 11 (v2) — the seat row cannot be satisfied as written
+# claim: the seat row's method cell ('as the first row' = 'by the L1 only, through tools/capture-fetch.py')
+#        names a tool whose mandatory writes are the two paths the SAME row's 'not allowed' cell forbids.
+
+=== capture-fetch.py writes: store + record ===
+     1	    with REC.open("a", encoding="utf-8") as f:
+     2	        (STORE / f"{k}.raw").write_bytes(raw)
+     3	        (STORE / f"{k}.txt").write_bytes(txt if txt is not None else b"")
+  (quoted: REC.open('a') appends to corpus/evidence/round57/refetch.tsv;
+            (STORE/f'{k}.raw').write_bytes(...) and (STORE/f'{k}.txt').write_bytes(...) write corpus/captures/)
+50:REC = EVID / "refetch.tsv"
+51:STORE = LANE / "corpus" / "captures"
+
+=== the two tables' seat rows, verbatim ===
+--- round 81 (corpus/evidence/round81/egress-approval.md:22) ---
+| open of a public research-method document (reporting guideline, bibliographic-database policy page, registry documentation) located by a search | yes | one `curl -fsSL --compressed --max-time 15 -A <campaign UA>` GET per attempt, by the L1 only, through `tools/capture-fetch.py` | POST, cookies, credentials, anything behind a login, paywall or captcha, crawling links, more than 3 attempts per URL | `corpus/evidence/round57/refetch.tsv` row per attempt; bytes in `corpus/captures/` |
+| seats of this round's wave | read-only re-open of a URL already in `refetch.tsv` for this round, into the seat's own scratch, only when its item names it (`tools/quote-reopen.py verify` or a single curl GET) | as the first row | writing `corpus/captures/` or `refetch.tsv` | the seat's report |
+--- round 57 (corpus/evidence/round57/egress-approval.md:17) ---
+| re-open of a URL already registered in `corpus/SOURCES.md` and pinned by a committed spans manifest | yes | one `curl -fsSL --compressed --max-time 15 -A <campaign UA>` GET per attempt (the campaign recipe), by the L1 only, through `tools/capture-fetch.py` | POST, cookies, credentials, query rewriting, crawling links, more than 3 attempts per URL | `corpus/evidence/round57/refetch.tsv` row per attempt; bytes in `corpus/captures/<key>.raw/.txt` |
+| seats of this round's wave | read-only re-open of a URL already in `refetch.tsv`, into the seat's own scratch, only when its item names it | as the first row | writing `corpus/captures/` or `refetch.tsv` | the seat's report |
+
+=== SKILL.md rule both tables cite ===
+- **Refuses external live-target research without operator approval.** A window
+  without an approval table is loopback-only. The approval table is itself a
+  chousa deliverable.
+
+=== round-57 table is window-scoped, and its row 1 needs prior SOURCES.md registration ===
+deliverable." This is the table for round 57's window. It does not answer L0 `8d77e6c1` (fetch scope in general);
+it records the narrower direction under which this round fetched.
+registration status of the six ids at base 378fda82:
+  S203 NOT registered
+  S204 NOT registered
+  S205 NOT registered
+  S206 NOT registered
+  S207 NOT registered
+  S208 NOT registered
+
+=== consequence ===
+round57 row1: needs prior registration + committed spans pin -> NOT met (all six unregistered at base)
+round57 row2: needs a REGISTERED source citing the document by name -> NOT met (located by search)
+round81 row : covers 'located by a search' -> but table mtime 18:47:52Z is AFTER the last fetch 18:44:31Z
+seat row    : method cell (L1-only, capture-fetch.py) contradicts allowed cell (seat, quote-reopen.py/curl)
+              and the tool's mandatory writes are exactly the paths that row forbids.
+rc=0

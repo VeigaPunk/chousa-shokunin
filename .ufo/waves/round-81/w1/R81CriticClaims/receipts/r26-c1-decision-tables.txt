@@ -1,0 +1,46 @@
+# seat: R81CriticClaims
+
+# C1 K3 read: decision-table rows and their Warrant cells, as committed at 7e2da96a
+
+# file: corpus/knowledge/citation-searching-tarcis-r81.md
+## Decision table
+
+| Situation | Do | Never | Warrant |
+|---|---|---|---|
+| The review team judges its topic difficult to search for with database queries | run backward **and** forward citation searching as a supplement to the database search | rely on the database search alone without saying why | S203 recommendation 2 |
+| The search must aim at completeness of recall | database search first; citation searching only as a supplement | stand-alone citation searching | S203 recommendation 9 |
+| Choosing the forward-link source | combine two citation indexes when access allows | trust one index to hold every seed and every citing record | S203 recommendation 6; S204 §4.2.2 |
+| Results arrive from several directions and indexes | deduplicate before screening | screen the same record twice and count it twice | S203 recommendation 7 |
+| A citation-searching round finds new eligible records | run another iteration with them as seeds | stop after one pass without saying so | S203 recommendation 8 |
+| Writing the methods | state seeds, directionality, dates, iterations and indexes/tools | report "references were checked" | S203 recommendation 10 |
+| Citing a TARCiS recommendation's exact wording | cite the version of record and check its erratum (rec 5 was corrected) | cite the accepted-manuscript wording as final | S208 (rejected, unreachable) — lane inference |
+
+The recommendations, located:
+
+> "backward and forward citation searching should be seriously considered as supplementary search techniques." — S203
+
+> "Stand-alone citation searching should not be used for literature searches that aim at completeness of recall." — S203
+
+> "Using the combined coverage of two citation indexes for citation searching to achieve more extensive coverage should be considered if access is available." — S203
+
+> "Before screening, the results of supplementary backward and forward citation searching should be deduplicated." — S203
+
+> "If citation searching finds additional eligible records, another iteration of citation searching should be considered using these records as new seed references." — S203
+
+> "the directionality of searching (backward, forward, co-cited, co-citing)," — S203
+
+
+# file: corpus/knowledge/correction-retraction-status-r81.md
+## Decision table
+
+| Observation about a cited work | Reading | Do | Never |
+|---|---|---|---|
+| PubMed record carries Publication Type Retracted Publication | retracted (S205) | record the claim's support as withdrawn; cite the retraction notice beside the work | count the work as support because the anchor still opens |
+| PubMed record links an erratum notice | corrected (S205) | open the erratum and re-check the quoted span against the corrected text | quote the uncorrected wording as current |
+| A newer article version exists (journal's version note) | superseded wording (S206) | cite the version read, with its date, and say whether a newer one exists | cite a version-less "the article says" |
+| Retraction Watch data show no retraction | absence of a retraction record only (S207) | record the check (source, date) as a negative sweep | read it as "no correction or expression of concern either" — S207 says those types are less comprehensive |
+| The notice cannot be read (host refuses the fetch) | status unknown | keep the source, mark the status check unresolved, name the notice | treat unreachable as "no notice" |
+
+The last row is this round's own case: the TARCiS correction BMJ 2024;387:q2458 answered HTTP 403 (S208, rejected,
+unreachable) — `corpus/knowledge/citation-searching-tarcis-r81.md` records the consequence.
+

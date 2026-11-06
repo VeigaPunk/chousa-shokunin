@@ -1,0 +1,45 @@
+# seat: R81CriticClaims
+
+# C2 K2: negative claim whose sweep cell names W1 while the Sweeps table has no W1 row (well-formed record otherwise). Landed item-2 Run line exits 0.
+
+# landed run line (verbatim from SKILL.md at 7e2da96a): f=<record.md>; ! bash tools/research-gate.sh verify "$f" --root . | grep -q '^FINDING NEGATIVE_WITHOUT_SWEEP' && bash tools/research-gate.sh verify-sweeps "$f" --root .
+
+# cmd: diff -u /fast/scratch/hyaku/chousa-r81/R81CriticClaims/land/corpus/evidence/round81/checklist-fixtures/item2-pass.md /fast/scratch/hyaku/chousa-r81/R81CriticClaims/variants/v2-sweep-id-missing.md
+--- /fast/scratch/hyaku/chousa-r81/R81CriticClaims/land/corpus/evidence/round81/checklist-fixtures/item2-pass.md	2026-11-06 15:51:48.000000000 -0300
++++ /fast/scratch/hyaku/chousa-r81/R81CriticClaims/variants/v2-sweep-id-missing.md	2026-11-06 15:58:48.656866160 -0300
+@@ -33,7 +33,7 @@
+ 
+ | id | claim_id | where | observed |
+ |---|---|---|---|
+-| W1 | N1 | corpus/knowledge/*tarcis-r80*,corpus/knowledge/*tarcis-pre-r81* | zero matches |
++| W2 | N9 | corpus/knowledge/*tarcis-r80* | zero matches |
+ 
+ ## Approval
+ 
+
+
+# cmd: cd /fast/scratch/hyaku/chousa-r81/R81CriticClaims/land && f=/fast/scratch/hyaku/chousa-r81/R81CriticClaims/variants/v2-sweep-id-missing.md; ! bash tools/research-gate.sh verify "$f" --root . | grep -q '^FINDING NEGATIVE_WITHOUT_SWEEP' && bash tools/research-gate.sh verify-sweeps "$f" --root .
+research-gate v2 — ts=2026-11-06T19:01:20Z — mode=sweeps — record=/fast/scratch/hyaku/chousa-r81/R81CriticClaims/variants/v2-sweep-id-missing.md
+SWEEP id=W2 where=corpus/knowledge/*tarcis-r80* looked=local hits=0 at=- observed=verified verdict=match
+REJECTION id=R1 ref=corpus/fixtures/sweeps-r5.md reason=present flip=present observed=complete verdict=match
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+RESEARCH_GATE: CLEAN (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=1 findings=0 drift=0)
+
+
+rc=0
+
+# raw: bash tools/research-gate.sh verify /fast/scratch/hyaku/chousa-r81/R81CriticClaims/variants/v2-sweep-id-missing.md --root .
+research-gate v2 — ts=2026-11-06T19:01:20Z — mode=verify — record=/fast/scratch/hyaku/chousa-r81/R81CriticClaims/variants/v2-sweep-id-missing.md
+FINDING CHAIN_ABSENT severity=warn surface=chain obs=claims present but ## Chain missing
+RESEARCH_GATE: DRIFT (findings=1 drift=1 questions=1 sources=1 chains=0 claims=1 negatives=1 rejections=1 approvals=1)
+
+rc=1
+
+# raw: bash tools/research-gate.sh verify-sweeps /fast/scratch/hyaku/chousa-r81/R81CriticClaims/variants/v2-sweep-id-missing.md --root .
+research-gate v2 — ts=2026-11-06T19:01:20Z — mode=sweeps — record=/fast/scratch/hyaku/chousa-r81/R81CriticClaims/variants/v2-sweep-id-missing.md
+SWEEP id=W2 where=corpus/knowledge/*tarcis-r80* looked=local hits=0 at=- observed=verified verdict=match
+REJECTION id=R1 ref=corpus/fixtures/sweeps-r5.md reason=present flip=present observed=complete verdict=match
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+RESEARCH_GATE: CLEAN (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=1 findings=0 drift=0)
+
+rc=0

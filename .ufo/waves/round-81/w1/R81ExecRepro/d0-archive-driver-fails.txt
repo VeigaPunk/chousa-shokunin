@@ -1,0 +1,26 @@
+# seat: R81ExecRepro — literal instruction (d) 'driver from an archive of f7929f87' cannot run
+# when: 2026-11-06T18:59:17Z
+# tree: /fast/scratch/hyaku/chousa-r81/R81ExecRepro/prefreeze  (git archive f7929f87 | tar -x; no .git)
+# cmd: HYAKU_SCRATCH=/fast/scratch/hyaku bash /fast/scratch/hyaku/chousa-r81/R81ExecRepro/prefreeze/corpus/evidence/round81/run-controls.sh 378fda82dc2cbcc555a0565052cc408121813cef /fast/scratch/hyaku/chousa-r81/R81ExecRepro/probe-archive-run
+# fatal: not a git repository (or any parent up to mount point /)
+# Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+# tar: This does not look like a tar archive
+# tar: Exiting with failure status due to previous errors
+# cp: cannot create regular file '/fast/scratch/hyaku/chousa-r81/controls/k0/corpus/evidence/round57/refetch.tsv': No such file or directory
+# cp: target '/fast/scratch/hyaku/chousa-r81/controls/k0/corpus/captures/': No such file or directory
+# c1-k0-donothing expect_rc=1 got_rc=2 
+# c2-k0-donothing expect_rc=1 got_rc=2 
+# fatal: not a git repository (or any parent up to mount point /)
+# Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+# tar: This does not look like a tar archive
+# tar: Exiting with failure status due to previous errors
+# rc of the driver: 0 (it reports control results, not tree failures)
+# every control receipt it produced carries rc=2 (or an empty verdict) instead of the pinned rc:
+# control: c1-k0-donothing
+# expect_rc: 1
+# cmd: python3 -B /fast/scratch/hyaku/chousa-r81/R81ExecRepro/prefreeze/corpus/evidence/round81/depth-r81.py --root /fast/scratch/hyaku/chousa-r81/controls/k0
+DEPTH_R81 error: no corpus/SOURCES.md under --root
+rc=2
+# cause: run-controls.sh derives LANE=$(cd $(dirname $0)/../../.. && pwd) = the archive root, then runs
+#   git -C "$LANE" archive "$BASE" — an archive tree has no .git, so the snap() tree is empty.
+# correct reproduction used below: a git clone of the lane checked out at f7929f87 (full object store, base rev reachable).

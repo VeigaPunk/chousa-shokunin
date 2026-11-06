@@ -1,0 +1,30 @@
+# K2 re-open — PDF row S203 (7 counted quote lines)
+# GET: curl -fsSL --compressed --max-time 30 -A 'Mozilla/5.0 (X11; Linux x86_64)' -o s203.pdf https://eprints.whiterose.ac.uk/id/eprint/214348/8/Hirt_etal_BMJ_Guidances_On_Terminology_AAM.pdf
+# observed: http=200 size=1061064 curl rc=0
+# sha256(live s203.pdf) = eea13440d89c7b273709a7e8e6a3ad009066eb766a89e978486bebf51583debd
+# committed corpus/captures/f2489455cc311a4de981e926.raw = eea13440d89c7b273709a7e8e6a3ad009066eb766a89e978486bebf51583debd (1061064 bytes) -> IDENTICAL
+# refetch.tsv S203 raw_sha256 = eea13440d89c7b273709a7e8e6a3ad009066eb766a89e978486bebf51583debd -> IDENTICAL
+# pdftotext version: pdftotext version 26.10.0
+# pdftotext s203.pdf s203-nolayout.txt ; rc=0 ; sha256=a4b2be642432a329a11853eaa9ae2914c86b8b9dba1c496e31bf89001cdd5995 (173013 chars)
+# pdftotext -layout s203.pdf s203-layout.txt ; rc=0 ; sha256=31493aa66bfd66259cc954fe1af3453331c5de4b64c637fcacef3322af8cdb3c (190444 chars)
+# committed corpus/captures/f2489455cc311a4de981e926.txt = 31493aa66bfd66259cc954fe1af3453331c5de4b64c637fcacef3322af8cdb3c (190627 bytes)
+# cmp -s s203-layout.txt committed.txt -> IDENTICAL (the committed .txt is the -layout extraction)
+# cmp -s s203-nolayout.txt committed.txt -> DIFFERS (expected: different extraction mode)
+# --- per-quote presence after whitespace collapse (NFKC, quote folding), both modes ---
+S203 quotes: 7
+--- mode=nolayout chars=173013
+  q1 words=13 plain=PRESENT dehyph=PRESENT :: Backward and forward citation searching are known as direct 
+  q2 words=13 plain=PRESENT dehyph=PRESENT :: backward and forward citation searching should be seriously 
+  q3 words=16 plain=PRESENT dehyph=PRESENT :: Stand-alone citation searching should not be used for litera
+  q4 words=23 plain=PRESENT dehyph=PRESENT :: Using the combined coverage of two citation indexes for cita
+  q5 words=14 plain=PRESENT dehyph=PRESENT :: Before screening, the results of supplementary backward and 
+  q6 words=22 plain=PRESENT dehyph=PRESENT :: If citation searching finds additional eligible records, ano
+  q7 words=8 plain=PRESENT dehyph=PRESENT :: the directionality of searching (backward, forward, co-cited
+--- mode=layout chars=190444
+  q1 words=13 plain=PRESENT dehyph=PRESENT :: Backward and forward citation searching are known as direct 
+  q2 words=13 plain=PRESENT dehyph=PRESENT :: backward and forward citation searching should be seriously 
+  q3 words=16 plain=PRESENT dehyph=PRESENT :: Stand-alone citation searching should not be used for litera
+  q4 words=23 plain=PRESENT dehyph=PRESENT :: Using the combined coverage of two citation indexes for cita
+  q5 words=14 plain=PRESENT dehyph=PRESENT :: Before screening, the results of supplementary backward and 
+  q6 words=22 plain=PRESENT dehyph=PRESENT :: If citation searching finds additional eligible records, ano
+  q7 words=8 plain=PRESENT dehyph=PRESENT :: the directionality of searching (backward, forward, co-cited

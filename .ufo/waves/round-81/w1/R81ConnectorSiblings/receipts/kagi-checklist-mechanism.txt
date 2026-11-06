@@ -1,0 +1,39 @@
+# NOTE: kagi executable-checklist mechanism (declaration TSV + runner + ratio floor + bijection)
+# CWD: /home/vgpnk/Projects/shokunin
+
+=== kagi-shokunin/PROVINCE.md:71-71 ===
+71:- `corpus/checklist-run.sh` — the credential-hygiene checklist as executable rows: `corpus/checklist.tsv` holds one row per SKILL.md checklist item (8 columns: `id class lead check expect_exit expect_last reason note`), each either `runnable` (a command + expected exit + expected last output line) or `by-hand` (a closed class + a unique ≥24-char reason). The `lead` ERE is a bijection over the 16 items, so an item with no row, a row with no item, a duplicated lead/item, a below-floor runnable ratio (`ceil(items/2)`) and a repeated by-hand reason are all defects. A `check` naming a denied surface (`op.env`, `op run|read|inject`, handler start/stop/run, `claim-ledger.sh`) is `POLICY`, exit 2 — 
+
+=== kagi-shokunin/SKILL.md:41-41 ===
+41:| Run the credential-hygiene checklist | `bash corpus/checklist-run.sh` (one row per item in `corpus/checklist.tsv`; `--list` maps them, `--only ID` runs one) | reading the checklist as prose and calling the machine-checkable half "done"; trusting a by-hand row as verified — it is a declared gap | exit 0 `CHECKLIST_RUN: CLEAN (items=16 runnable=9 by_hand=7 failed=0)` + `CHECKLIST_RATIO: runnable=9/16 floor=8 by_hand=7`; 1 `ITEM-FAIL`/`ITEM-LASTLINE` (named id + exit/last line) or `UNDECLARED`/`EXTRA`/`UNMATCHED-ITEM`/`DUPLICATE-ITEM`/`UNMATCHED-LEAD`/`DUPLICATE-LEAD`/`DUPLICATE-REASON`/`RATIO`; 2 `POLICY`/`SETUP`. A `lead` ERE binds each row to the item it declares, so an item with no row fa
+
+=== kagi-shokunin/corpus/checklist-run.sh:27-28 ===
+27:# Verdicts  OK:  `CHECKLIST_RUN: CLEAN (items=N runnable=K by_hand=M failed=0)`
+28:#                `CHECKLIST_RATIO: runnable=K/N floor=F by_hand=M delegated=D direct=K-D`
+
+=== kagi-shokunin/corpus/knowledge/checklist-execution.md:13-20 ===
+13:## 1. The gap this closes
+14:
+15:Before round 15 the checklist was 16 `- [ ]` bullets and nothing else: no
+16:command mapped an item to an outcome, so "the checklist is done" was a claim
+17:with no artefact, and the split between *checked* and *judged* items was
+18:asserted in prose (the round-9/10/11 scorecard said "12 checklist items are
+19:still operator judgement" — a number no gate measured, and one that was already
+20:wrong when written, since ≥3 items name a live gate and the list held 14 items
+
+=== kagi-shokunin/corpus/knowledge/checklist-execution.md:47-50 ===
+47:| Line | Exit | Meaning and reader action |
+48:|---|---|---|
+49:| `CHECKLIST_RUN: CLEAN (items=N runnable=K by_hand=M failed=0)` | 0 | every row executed and matched, and the declaration is complete |
+50:| `CHECKLIST_RATIO: runnable=K/N floor=F by_hand=M delegated=D direct=K-D` | — | the number this axis is measured by (`floor = ceil(items/2)`), split into what was already delegated to an existing gate and what this file newly asserts |
+
+=== kagi-shokunin/corpus/knowledge/checklist-execution.md:110-118 ===
+110:
+111:## 6. Bounds
+112:
+113:1. **Premise, not duty** — see §5; every runnable row's `note` names what it
+114:   does not cover, and the ratio counts premises, not duties.
+115:2. **Nothing schedules this gate** (or any other in this repo): it is a
+116:   run-on-demand artifact. `systemctl --user list-timers` / `crontab -l` show no
+117:   entry for any `corpus/*.sh`; the operability ceiling is therefore unchanged
+118:   and this round does not claim it.

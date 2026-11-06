@@ -1,0 +1,20 @@
+# receipt 06 — misroot check (egress item 4). Read-only: nothing moved or deleted.
+# cmd: git -C /home/vgpnk/Projects/shokunin status --porcelain -uall
+#      then grep -c -i -E 'chousa|round[ -]?81|r81' on each untracked file
+
+=== fleet root porcelain (-uall) ===
+ M .scratch/run15-state.json
+?? versions.html
+?? w4lines.txt
+porcelain_line_count=3
+
+=== untracked files: content match against chousa/round-81/r81 ===
+  versions.html  r81_name_matches=0
+0  bytes=2466
+  w4lines.txt  r81_name_matches=0
+0  bytes=119
+
+=== observation: the one MODIFIED tracked fleet-root file (not untracked, host-owned, untouched by this seat) ===
+ M .scratch/run15-state.json
+  r81_name_matches_in_.scratch/run15-state.json=4
+rc=0

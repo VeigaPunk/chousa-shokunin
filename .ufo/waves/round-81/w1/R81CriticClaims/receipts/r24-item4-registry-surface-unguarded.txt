@@ -1,0 +1,27 @@
+# seat: R81CriticClaims
+
+# item 4 text: 'A rejected source is kept with its rejection reason and flip-condition.'
+
+# The lane keeps rejected sources as corpus/SOURCES.md rows (S208 in this round, claims.md 'Sourced claim').
+
+# The landed item-4 Run line checks research records only; SKILL.md itself says a rejected SOURCES.md row is not checked.
+
+# cmd: cd /fast/scratch/hyaku/chousa-r81/R81CriticClaims/land && bash tools/research-gate.sh verify-sweeps /fast/scratch/hyaku/chousa-r81/R81CriticClaims/registry-missing-flip.md --root .
+research-gate v2 — ts=2026-11-06T19:02:53Z — mode=sweeps — record=/fast/scratch/hyaku/chousa-r81/R81CriticClaims/registry-missing-flip.md
+VERIFIED_SWEEPS=0/0 REJECTIONS_OK=0/0
+RESEARCH_GATE: CLEAN (sweeps=0 verified=0 exempt=0 hit=0 refused=0 invalid=0 rejections=0 rejections-ok=0 findings=0 drift=0)
+
+rc=0
+
+# cmd: cd /fast/scratch/hyaku/chousa-r81/R81CriticClaims/land && bash tools/research-gate.sh verify-sweeps corpus/SOURCES.md --root .
+research-gate v2 — ts=2026-11-06T19:02:53Z — mode=sweeps — record=corpus/SOURCES.md
+VERIFIED_SWEEPS=0/0 REJECTIONS_OK=0/0
+RESEARCH_GATE: CLEAN (sweeps=0 verified=0 exempt=0 hit=0 refused=0 invalid=0 rejections=0 rejections-ok=0 findings=0 drift=0)
+
+rc=0
+
+# Registry used:
+| id | source | tier | class | teaches | anchor | quote | status | opened | recheck | used-by |
+|---|---|---|---|---|---|---|---|---|---|---|
+| S999 | https://example.invalid/x | paper | B | a source with no flip condition | anchor | quoted bytes | rejected | 2026-11-06 | 30d | - |
+

@@ -1,0 +1,66 @@
+# NOTE: residual checks cited in scan.md §1, §2, §3.1
+# CWD: /home/vgpnk/Projects/shokunin
+
+$ ls audio-shokunin/corpus/knowledge/*.md game-dev-2d-shokunin/corpus/knowledge/*.md game-dev-3d-shokunin/corpus/knowledge/*.md kagi-shokunin/corpus/knowledge/*.md kaidoku-shokunin/corpus/knowledge/*.md kake-shokunin/corpus/knowledge/*.md kama-shokunin/corpus/knowledge/*.md kasegi-shokunin/corpus/knowledge/*.md kengaku-shokunin/corpus/knowledge/*.md kotoba-shokunin/corpus/knowledge/*.md kotodama-shokunin/corpus/knowledge/*.md kumitate-shokunin/corpus/knowledge/*.md lore-shokunin/corpus/knowledge/*.md mado-shokunin/corpus/knowledge/*.md mori-shokunin/corpus/knowledge/*.md revenger-shokunin/corpus/knowledge/*.md souji-shokunin/corpus/knowledge/*.md tabi-shokunin/corpus/knowledge/*.md tameshi-shokunin/corpus/knowledge/*.md tsukuroi-shokunin/corpus/knowledge/*.md 2>/dev/null | wc -l
+1288   (rc=0)
+
+$ grep -rl 'chousa-shokunin/PROVINCE.md' --include=*.md audio-shokunin game-dev-2d-shokunin game-dev-3d-shokunin kagi-shokunin kaidoku-shokunin kake-shokunin kama-shokunin kasegi-shokunin kengaku-shokunin kotoba-shokunin kotodama-shokunin kumitate-shokunin lore-shokunin mado-shokunin mori-shokunin revenger-shokunin souji-shokunin tabi-shokunin tameshi-shokunin tsukuroi-shokunin 2>/dev/null | wc -l
+160   (rc=0)
+
+$ grep -rl 'chousa-shokunin/PROVINCE.md' --include=*.md audio-shokunin game-dev-2d-shokunin game-dev-3d-shokunin kagi-shokunin kaidoku-shokunin kake-shokunin kama-shokunin kasegi-shokunin kengaku-shokunin kotoba-shokunin kotodama-shokunin kumitate-shokunin lore-shokunin mado-shokunin mori-shokunin revenger-shokunin souji-shokunin tabi-shokunin tameshi-shokunin tsukuroi-shokunin 2>/dev/null | grep -c '/\.ufo/'
+154   (rc=0)
+
+$ grep -rln 'S576' mori-shokunin/corpus/knowledge/ ; echo "[grep_rc=$?]"
+[grep_rc=1]   (rc=0)
+
+$ grep -rn '^- Run:' audio-shokunin game-dev-2d-shokunin game-dev-3d-shokunin kagi-shokunin kaidoku-shokunin kake-shokunin kama-shokunin kasegi-shokunin kengaku-shokunin kotoba-shokunin kotodama-shokunin kumitate-shokunin lore-shokunin mado-shokunin mori-shokunin revenger-shokunin souji-shokunin tabi-shokunin tameshi-shokunin tsukuroi-shokunin/SKILL.md 2>/dev/null ; echo "[grep_rc=$?]"
+game-dev-2d-shokunin/reports/r47-reconnect-scout.md:9:- Run: `godot --headless --path . --script slider_adjust.gd` from that scratch directory. The script injects the same nine parsed events as r44/r46, checks GUI focus owner before each edge and numeric/signal receipts/label after it. After edge0 assertions, it disconnects and checks `is_connected == false`; after edge3 assertions, reconnects and checks `is_connected == true`.
+kaidoku-shokunin/.ufo/waves/luna-round-5/XB1.md:6:- Run: `cd /home/vgpnk/Projects/shokunin/kaidoku-shokunin && REV=HEAD bash .ufo/waves/luna-round-5/receipts/census-pre.sh` → stdout+stderr to `receipts/census-pre.out` (sha256 `b03c04ed09b9c20711f96f8b341abd9b6369c5b31fccc14c73cc1d5d13c78389`), exit 1 in `receipts/census-pre.exit`.
+kaidoku-shokunin/.ufo/waves/luna-round-6/BC4.md:10:- Run: exit 0, stderr empty; STDOUT_SHA256 75ea5a8f6a735fb820a1759b47a7c3a0ef39323417d1261edfff9d4668fbc32e = CB6.md's FINDINGS transcript hash, byte-for-byte.
+kaidoku-shokunin/.ufo/waves/luna-round-7/CB7.md:11:- Run: extract the marker-pair block and execute from the repo root; `CB7_REV` overrides HEAD, `CB7_STRICT_README=0` downgrades C7, `CB7_SELFTEST=1` runs the matrix.
+kaidoku-shokunin/.ufo/waves/round-23/w2/DartEntry.md:132:- Run: argv `npx -y rea-agents@6.5.0 inspect-dart-aot <abs apk> --format json --full-output`. `argv[4]` equals `subject.local_path`. Exit 0. Empty stderr. The envelope bytes equal run stdout (87293 bytes, byte-equal).
+kake-shokunin/.ufo/waves/round-21/w1/CurrentToolEntry.md:25:- Run: `node scripts/freshness-sweep.mjs --offline` → `VERDICT: DRIFT — §paths: 3 unannotated miss · 0 NOT in pins.pathsMissSet (exit 1, partial: offline)`. JSON: `counts.drift 3`, `missSet 55`, `newMissing 0`, `complete true` for §paths.
+kake-shokunin/.ufo/waves/round-26/w1/RecheckCounter.md:12:- Run: `python3 -B .ufo/waves/round-26/sandbox-counter/measure.py --root . --revision <40- or 64-hex commit>`
+kake-shokunin/.ufo/waves/round-28/w1a3/RunEdgeProbes.md:36:- Run: `TMPDIR=… python3 -B …/run_probes.py` — exit 0; full per-probe table in `…/probe-results.json` (sha256 `ade164ee6eb373076fa9283c9d5cdab2e9b0dbd3d3401fdb6a3150247ff27810`).
+kake-shokunin/.ufo/waves/round-48/assimilation/validate/.ufo/waves/round-21/w1/CurrentToolEntry.md:25:- Run: `node scripts/freshness-sweep.mjs --offline` → `VERDICT: DRIFT — §paths: 3 unannotated miss · 0 NOT in pins.pathsMissSet (exit 1, partial: offline)`. JSON: `counts.drift 3`, `missSet 55`, `newMissing 0`, `complete true` for §paths.
+kake-shokunin/.ufo/waves/round-48/assimilation/validate/.ufo/waves/round-26/w1/RecheckCounter.md:12:- Run: `python3 -B .ufo/waves/round-26/sandbox-counter/measure.py --root . --revision <40- or 64-hex commit>`
+kake-shokunin/.ufo/waves/round-48/assimilation/validate/.ufo/waves/round-28/w1a3/RunEdgeProbes.md:36:- Run: `TMPDIR=… python3 -B …/run_probes.py` — exit 0; full per-probe table in `…/probe-results.json` (sha256 `ade164ee6eb373076fa9283c9d5cdab2e9b0dbd3d3401fdb6a3150247ff27810`).
+kama-shokunin/.ufo/waves/round-29/w2/VerifyRefPaste.md:9:- Run: `python3 .ufo/waves/round-29/count-c1.py --repo <clone> --tip 513eba3b… --out receipt.json --list` → exit 0, stdout `statements 69 mismatched_at_base 11 append_only True valid_corrections 11 false_corrections 0 unresolved 0 met True tip 513eba3ba51a` (matches inherited receipt byte-for-byte).
+kama-shokunin/.ufo/waves/round-52/w1/out/X3Teardown.md:11:- Run: `--work <S>/w2 --out <S>/r2.json --witness-dir <S>/wd2 --witness-timeout 300`, started in the background under the prescribed invoker:
+kasegi-shokunin/.ufo/waves/round-46/wave1/R46MutC1b.md:19:- Run: `python3 mutate_c1.py` (full matrix, 95 counter runs, wall 615.9 s), output `run3.txt` (scratch, deleted). Quoted lines below are verbatim.
+kengaku-shokunin/.ufo/waves/round-27/build/SrcInspectJson.md:22:- Run: `PYTHONDONTWRITEBYTECODE=1 venv/bin/python /tmp/kengaku-r27-SrcInspectJson/probe_inspect.py` → `SUMMARY checked=27 ok=27 diff=0`, exit 0. Expectations were written from source reading before the run.
+kengaku-shokunin/.ufo/waves/round-28/scratch/KengakuR28.FRegistryS049/baseline-export/.ufo/waves/round-27/build/SrcInspectJson.md:22:- Run: `PYTHONDONTWRITEBYTECODE=1 venv/bin/python /tmp/kengaku-r27-SrcInspectJson/probe_inspect.py` → `SUMMARY checked=27 ok=27 diff=0`, exit 0. Expectations were written from source reading before the run.
+kengaku-shokunin/.ufo/waves/round-28/scratch/FSeparability/s038-only-control/.ufo/waves/round-27/build/SrcInspectJson.md:22:- Run: `PYTHONDONTWRITEBYTECODE=1 venv/bin/python /tmp/kengaku-r27-SrcInspectJson/probe_inspect.py` → `SUMMARY checked=27 ok=27 diff=0`, exit 0. Expectations were written from source reading before the run.
+kengaku-shokunin/.ufo/waves/round-93/w1/MutTesterGate/report.md:13:- Run: `python3 plans/round93_c2_counter.py --lane $S/lane --rev 22972a31… --work $S/w-<id> --tool-file mutants/<id>.py` (receipts `receipts/<id>.txt`, each ends with `rc=`).
+kengaku-shokunin/.ufo/waves/round-93/w1/MutTesterGate.md:13:- Run: `python3 plans/round93_c2_counter.py --lane $S/lane --rev 22972a31… --work $S/w-<id> --tool-file mutants/<id>.py` (receipts `receipts/<id>.txt`, each ends with `rc=`).
+kotoba-shokunin/.ufo/waves/round-47/build/SrcCensusDryRun.md:10:- Run: 2026-10-21, 15:58–16:03 UTC. `--today` default = `date -u +%F` = 2026-10-21.
+kotoba-shokunin/.ufo/waves/round-64/w1/MutSpanArms.md:445:- Run: `cd /tmp/mutspan64/tree && python3 -B verifiers/check_scoped_rules_v32.py --self-test`.
+kotodama-shokunin/reports/round-9/baselines/naming-collision-gate/author.md:32:- Run: `python3 tools/gates/naming-collision-gate.py reports/round-9/baselines/naming-collision-gate/packet.yml`
+kotodama-shokunin/.ufo/waves/round-52/build/CriticAccessRegex.md:183:- Run: the harness on the original and six variants; `--selftest` for each; a read-only lane
+kotodama-shokunin/.ufo/waves/round-71/w2/Filler35.md:17:- Run: `bash cmd.sh > out.txt 2> err.txt; echo EXIT=$?`, using GNU Awk 5.4.1.
+kotodama-shokunin/.ufo/waves/round-75/w2/ScribeSkillFinal.md:182:- Run: `TMPDIR=<scratch> GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_NOSYSTEM=1 GIT_AUTHOR_*… python3 -B
+kumitate-shokunin/.ufo/waves/round-70/w1/K70AttackSourceDrift.md:78:- Run: needle counterexample (exit 0, output stored), env-inheritance demo, silent-skip demos, byte-identity checks of frozen bytes and committed receipts.
+lore-shokunin/reports/round-85/r85-verifier.md:56:- Run: exit 1, **2** violations, stderr empty:
+mado-shokunin/.ufo/waves/round-37/w1/reports/CritC1Cheap.md:45:- Run: `cd /dev/shm/mado37-CritC1Cheap && python3 -B <scratch>/cribs.py > run2.txt`. Exit 0,
+mori-shokunin/.ufo/waves/round-47/w2/MutV2Exact.md:31:- Run: `TMPDIR=<scratch> python3 .scratch/r47w2-MutV2Exact/mut-a-startswith.py --selftest` → rc=1
+mori-shokunin/.ufo/waves/round-47/w2/MutV2Exact.md:49:- Run: `TMPDIR=<scratch> python3 .scratch/r47w2-MutV2Exact/mut-b-nodup.py --selftest` → rc=1
+mori-shokunin/.ufo/waves/round-47/w2/MutV2Exact.md:66:- Run: `TMPDIR=<scratch> python3 .scratch/r47w2-MutV2Exact/mut-c-casesens.py --selftest` → rc=0
+mori-shokunin/.ufo/waves/round-48/w1/ExecQuoteFinderMan.md:15:- Run: `TMPDIR=/home/vgpnk/Projects/shokunin/mori-shokunin/.scratch/r48-ExecQuoteFinderMan python3
+tabi-shokunin/reports/r4-aud-tab1.md:32:- Run: `bash driver.sh 1` → exit 0, 16:20:17→16:20:19Z, 2.2 s wall.
+tabi-shokunin/.ufo/waves/round-17/w2/ReRunLiar.md:25:- Run: exit 0, `verdict=pass`, 30.5 s, stdout identical to the committed `run.stdout.txt`:
+tabi-shokunin/.ufo/waves/round-28/scratch/Exec12/dnclone/.ufo/waves/round-17/w2/ReRunLiar.md:25:- Run: exit 0, `verdict=pass`, 30.5 s, stdout identical to the committed `run.stdout.txt`:
+tabi-shokunin/.ufo/waves/round-28/scratch/Exec12/dnclone/reports/r4-aud-tab1.md:32:- Run: `bash driver.sh 1` → exit 0, 16:20:17→16:20:19Z, 2.2 s wall.
+tabi-shokunin/.ufo/waves/round-29/w1/RevC2Diff.md:36:- Run:
+tabi-shokunin/.ufo/waves/round-32/w2/CritEntry.md:203:- Run: one live gate at REV and three live sessions against my forged fixture (all gate-spawned
+tameshi-shokunin/.ufo/waves/round-57/w1/T57W1MutGate.md:35:- Run: base selftest; 8 mutant selftests; 3 spec rows at base and at each of the 8 mutants (24 row runs); ast parse of each mutant; `sha256sum` of staged fixtures.
+[grep_rc=0]   (rc=0)
+
+$ ls -l kagi-shokunin/corpus/checklist.tsv kagi-shokunin/corpus/checklist-run.sh
+-rwxr-xr-x 1 vgpnk vgpnk 24697 Oct 13 16:51 kagi-shokunin/corpus/checklist-run.sh
+-rw-r--r-- 1 vgpnk vgpnk 11694 Oct 13 16:51 kagi-shokunin/corpus/checklist.tsv   (rc=0)
+
+$ wc -l kagi-shokunin/corpus/knowledge/checklist-execution.md
+206 kagi-shokunin/corpus/knowledge/checklist-execution.md   (rc=0)
+
+$ wc -l kotodama-shokunin/reports/round-24/cold-run-a.md
+168 kotodama-shokunin/reports/round-24/cold-run-a.md   (rc=0)

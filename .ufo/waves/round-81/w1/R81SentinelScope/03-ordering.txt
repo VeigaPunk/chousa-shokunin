@@ -1,0 +1,29 @@
+# receipt 03 — ordering disclosure accuracy (egress item 1)
+# cmd: fetch times from corpus/evidence/round57/refetch.tsv rows dated 2026-11-06;
+#      table commit: git log -1 --format=%cI f7929f877e6fd54f4dc5ce7f993da46bc7df43f9;
+#      table mtime: stat -c %y corpus/evidence/round81/egress-approval.md
+--- fetch times (UTC, verbatim from refetch.tsv) ---
+S203	2026-11-06T18:44:29Z
+S204	2026-11-06T18:44:29Z
+S205	2026-11-06T18:44:30Z
+S206	2026-11-06T18:44:30Z
+S207	2026-11-06T18:44:31Z
+S208	2026-11-06T18:44:31Z
+--- table's own commit (f7929f8), ISO-8601 with offset ---
+2026-11-06T15:47:58-03:00
+--- same instant in UTC ---
+2026-11-06T15:47:58-03:00
+--- table file mtime ---
+2026-11-06 15:47:52.195914854 -0300
+--- delta: last fetch 18:44:31Z -> table mtime / commit ---
+mtime  - last_fetch = 0:03:21.195914
+commit - last_fetch = 0:03:27
+disclosure_claim = fetches ran before the file was written; consistent = True
+--- does corpus/lessons/round-81.md exist at the landing revision? ---
+ABSENT at landing (git cat-file rc=128)
+--- has it ever existed in any commit? ---
+commits_touching_that_path=0
+--- every reference to that path in the tree ---
+./.ufo/waves/round-81/build_spec.py:117:Draft (do not land) `corpus/lessons/round-81.md` sections in the lane's lesson format (study `{LANE}/corpus/lessons/round-80.md`).
+./corpus/evidence/round81/egress-approval.md:14:**Ordering disclosure (recorded as a `## Mistakes` row in `corpus/lessons/round-81.md`):** the six fetches below ran at
+rc=0

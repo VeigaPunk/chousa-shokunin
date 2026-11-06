@@ -17,8 +17,8 @@ manuscript (S203), not the version of record; see *Version caveat*.
 > "Backward and forward citation searching are known as direct citation searching (Figure 1)." — S203
 
 Backward = screen what the seed cites; forward = screen what cites the seed. Indirect methods are co-citing
-(shares cited references with the seed) and co-cited (shares citing references with the seed). A second,
-independent guide uses the same split:
+(shares cited references with the seed) and co-cited (shares citing references with the seed). A Campbell methods guide uses the same split (it cites Hirt et al. 2024, so
+it is not independent of S203):
 
 > "by searching the references of identified relevant studies (backwards citation searching) or by searching for studies that cite relevant papers" — S204
 
@@ -30,13 +30,13 @@ and names where forward links live:
 
 | Situation | Do | Never | Warrant |
 |---|---|---|---|
-| The review team judges its topic difficult to search for with database queries | run backward **and** forward citation searching as a supplement to the database search | rely on the database search alone without saying why | S203 recommendation 2 |
+| The review team judges its topic difficult to search for with database queries | seriously consider backward **and** forward citation searching as a supplement to the database search | drop citation searching without recording why | S203 recommendation 2 |
 | The search must aim at completeness of recall | database search first; citation searching only as a supplement | stand-alone citation searching | S203 recommendation 9 |
-| Choosing the forward-link source | combine two citation indexes when access allows | trust one index to hold every seed and every citing record | S203 recommendation 6; S204 §4.2.2 |
+| Choosing the forward-link source | combine two citation indexes when access allows | trust one index to hold every seed and every citing record | S203 recommendation 6 (S204 §4.2.2 only defines an index) |
 | Results arrive from several directions and indexes | deduplicate before screening | screen the same record twice and count it twice | S203 recommendation 7 |
-| A citation-searching round finds new eligible records | run another iteration with them as seeds | stop after one pass without saying so | S203 recommendation 8 |
+| A citation-searching round finds new eligible records | consider another iteration with them as seeds | stop after one pass without saying so | S203 recommendation 8 |
 | Writing the methods | state seeds, directionality, dates, iterations and indexes/tools | report "references were checked" | S203 recommendation 10 |
-| Citing a TARCiS recommendation's exact wording | cite the version of record and check its erratum (rec 5 was corrected) | cite the accepted-manuscript wording as final | S208 (rejected, unreachable) — lane inference |
+| Citing a TARCiS recommendation's exact wording | cite the version of record and check its correction (a search snippet, recorded in `corpus/lessons/round-81.md` `## Gate`, says rec 5 was corrected) | cite the accepted-manuscript wording as final | S208 (rejected, unreachable) — lane inference |
 
 The recommendations, located:
 
@@ -66,3 +66,9 @@ this entry cites no recommendation-5 wording at all.
   records through citation links, not verifying them.
 - `corpus/knowledge/search-log-method-r39.md` — what a search log records; recommendation 10's items are the
   citation-searching rows such a log needs.
+
+## Correction (round 81, after scoring)
+
+Repaired after the wave (`R81ReviewerEntries.md` items 2–5): S204 is not independent of S203; the two-index row rests on
+S203 rec 6 alone; recs 2 and 8 say "consider", not "run"; the rec-5 row names its snippet warrant. The round's claim
+verdict is unchanged by this repair.

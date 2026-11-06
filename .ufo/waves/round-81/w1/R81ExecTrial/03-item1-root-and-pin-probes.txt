@@ -1,0 +1,23 @@
+$ cd /fast/scratch/hyaku/chousa-r81/R81ExecTrial/tree ; bash tools/research-gate.sh verify-claims corpus/evidence/round81/trial/claims.jsonl --root ..
+research-gate v2 — ts=2026-11-06T19:02:55Z — mode=claims — claims=corpus/evidence/round81/trial/claims.jsonl
+CLAIM id=C1 expected=supported observed=supported source=corpus/captures/f2489455cc311a4de981e926.txt at=line:789 verdict=match
+CLAIM id=C2 expected=supported observed=supported source=corpus/captures/371c55117727d526805f030d.txt at=line:323 verdict=match
+CLAIM id=C3 expected=supported observed=supported source=corpus/captures/f2489455cc311a4de981e926.txt at=line:134 verdict=match
+VERDICT_BEARING_CLAIMS=3/3
+RESEARCH_GATE: CLEAN (claims=3 supported=3 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)
+rc=0
+$ (cd corpus/evidence/round81/trial && bash /fast/scratch/hyaku/chousa-r81/R81ExecTrial/tree/tools/research-gate.sh verify-claims claims.jsonl --root ..)
+research-gate v2 — ts=2026-11-06T19:02:56Z — mode=claims — claims=claims.jsonl
+CLAIM id=C1 expected=supported observed=supported source=corpus/captures/f2489455cc311a4de981e926.txt at=line:789 verdict=match
+CLAIM id=C2 expected=supported observed=supported source=corpus/captures/371c55117727d526805f030d.txt at=line:323 verdict=match
+CLAIM id=C3 expected=supported observed=supported source=corpus/captures/f2489455cc311a4de981e926.txt at=line:134 verdict=match
+VERDICT_BEARING_CLAIMS=3/3
+RESEARCH_GATE: CLEAN (claims=3 supported=3 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)
+rc=0
+$ bash tools/research-gate.sh verify-claims corpus/evidence/round81/trial/claims-nopin.jsonl --root .
+research-gate v2 — ts=2026-11-06T19:02:56Z — mode=claims — claims=corpus/evidence/round81/trial/claims-nopin.jsonl
+CLAIM id=C1 expected=supported observed=supported source=corpus/captures/f2489455cc311a4de981e926.txt at=line:789 verdict=match
+CLAIM id=C2 expected=supported observed=supported source=corpus/captures/371c55117727d526805f030d.txt at=line:323 verdict=match
+VERDICT_BEARING_CLAIMS=2/2
+RESEARCH_GATE: CLEAN (claims=2 supported=2 contradicted=0 unsupported=0 mismatched=0 unproven=0 refused=0 invalid=0 findings=0 drift=0)
+rc=0

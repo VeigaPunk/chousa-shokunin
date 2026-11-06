@@ -1363,3 +1363,13 @@ Left open:
 - `lessons/round-74.md` — S182 admit/S183 reject; real committed-input controls prevent the helper-only blind spot routed by the r73 closure.
 - `evidence/round74/correction-count.py` is a distinct successor; `evidence/round73/c2-count.py` remains immutable and known invalid. `evidence/round74/loader-matrix.py --counter COUNTER --work DIR` exercises nine public-CLI Git cases. Historical findings and rejections are not replaced.
 - Existing evidence-verification ground only: no new knowledge entry or frontier coverage-map surface is claimed. Substring semantic checks and fabricated-counter detection remain limitations, not certified capability.
+
+## Round81 coverage and frontier (2026-11-06)
+
+| Note | Holds | Sources |
+|---|---|---|
+| `knowledge/citation-searching-tarcis-r81.md` | citation *searching* as a retrieval method (backward/forward/co-citation terms, when to supplement a database search, two indexes, deduplication, iteration, reporting items) per the TARCiS accepted manuscript; distinct from chain verification (`citation-chain-fidelity-r24.md`); the version-of-record correction is unread (S208 rejected) | S203, S204 |
+| `knowledge/correction-retraction-status-r81.md` | checking a cited work's erratum/retraction/expression-of-concern status and article version before reuse: PubMed linking and Retracted Publication [PT], ICMJE version control (cite the most recent version), Retraction Watch coverage limits | S205, S206, S207 |
+
+- `lessons/round-81.md` — S203–S207 admit, S208 reject (HTTP 403); both claims honest stops (C1 filler control and K3 spirit; C2 K2); post-scoring entry repairs.
+- Frontier note: base row S120's capture already cited TARCiS and a MECIR errata/retraction check (`R81ScoutNovelty.md` §1.4); this round moved that ground into entries. S028 (Crossmark, queued, no capture) is still undispositioned.

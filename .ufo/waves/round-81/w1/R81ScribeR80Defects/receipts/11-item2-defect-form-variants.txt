@@ -1,0 +1,7 @@
+probe A: kind cell capitalised 'Negative', sweep cell empty
+$ f=/fast/scratch/hyaku/chousa-r81/R81ScribeR80Defects/negA-capitalised.md; ! bash tools/research-gate.sh verify "$f" --root . | grep -q '^FINDING NEGATIVE_WITHOUT_SWEEP' && bash tools/research-gate.sh verify-sweeps "$f" --root .
+RC=1
+
+probe B: claim row with the sweep cell dropped (5 columns)
+$ f=/fast/scratch/hyaku/chousa-r81/R81ScribeR80Defects/negA-5col.md; ! bash tools/research-gate.sh verify "$f" --root . | grep -q '^FINDING NEGATIVE_WITHOUT_SWEEP' && bash tools/research-gate.sh verify-sweeps "$f" --root .
+RC=1

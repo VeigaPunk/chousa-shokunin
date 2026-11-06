@@ -1,0 +1,32 @@
+# receipt 10 — the seat's GET flags vs the method the table's seat row imports ('as the first row')
+# cmd: sed of the campaign UA constant and argv in tools/capture-fetch.py; sed of the seat's recorded curl
+
+=== the campaign UA the table's method row names (capture-fetch.py) ===
+65:UA = ("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+66-      "(KHTML, like Gecko) Chrome/124.0 Safari/537.36")
+67-
+
+=== the method row's flag set (capture-fetch.py argv) ===
+    cmd = ["curl", "-fsSL", "--compressed", "--max-time", "15", "-A", UA,
+           "-o", str(out), "-w", "%{http_code}", url]
+
+=== the curl the re-open seat actually recorded ===
+2:# GET: curl -fsSL --compressed --max-time 30 -A 'Mozilla/5.0 (X11; Linux x86_64)' -o s203.pdf https://eprints.whiterose.ac.uk/id/eprint/214348/8/Hirt_etal_BMJ_Guidances_On_Terminology_AAM.pdf
+2:# GETs: curl -fsSL --compressed --max-time 30 -A 'Mozilla/5.0 (X11; Linux x86_64)' -o live-<id>.raw <url>
+
+=== the seat's prose claim about its UA ===
+`corpus/evidence/round81/egress-approval.md` seat row allows "`tools/quote-reopen.py verify` **or** a single curl GET".
+This seat's item (4) requires both a verify run and a curl GET per HTML row for the sha256 comparison, so each of the
+four HTML URLs received **two** GETs (one by the tool, one by curl), and S203 received one. All GETs: `-fsSL
+--compressed --max-time 30`, campaign UA, no POST, no cookies, no credentials, no redirect off the registry URL, bytes
+into scratch only. Nothing written to `corpus/captures/` or `refetch.tsv`. Total: 5 URLs, 9 GETs.
+
+
+=== diff: --max-time and -A tokens, table method vs seat command ===
+table_method:  --max-time 15  -A <campaign UA: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36'>
+seat_command:  --max-time 30  -A 'Mozilla/5.0 (X11; Linux x86_64)'
+
+=== GET budget: table allowed cell says 'a single curl GET'; observed per URL ===
+S203 1 GET (curl only); S204/S205/S206/S207 2 GETs each (quote-reopen verify + curl sha compare)
+seat_total=9 GETs over 5 URLs
+rc=0

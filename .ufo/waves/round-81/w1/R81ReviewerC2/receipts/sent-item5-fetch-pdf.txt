@@ -1,0 +1,64 @@
+# quote-reopen fetch mechanism (tools/quote-reopen.py)
+36:import http.client
+265:    conn_cls = http.client.HTTPSConnection if context is not None else http.client.HTTPConnection
+296:    object is captured at dial time: http.client clears `conn.sock` when the
+353:        except (http.client.HTTPException, OSError, ValueError):
+444:def fetch_page(url):
+455:        except (http.client.HTTPException, http.client.InvalidURL, OSError, ValueError,
+
+# quote-reopen PDF handling (expect none)
+(no matches)
+
+# capture-fetch.py PDF handling
+def recipe_txt(raw: bytes, tmp: pathlib.Path) -> str:
+    """The frozen campaign text recipe (same as c2-count.recipe_txt)."""
+    if raw[:5] == b"%PDF-":
+        p = tmp / "r.pdf"
+        p.write_bytes(raw)
+        r = subprocess.run(["pdftotext", "-layout", str(p), "-"],
+                           capture_output=True, timeout=120)
+        txt = r.stdout.decode("utf-8", "replace")
+        p.unlink()
+        if txt.strip():
+
+# quote-reopen verify exit logic
+def verify(items_path, registry_path):
+    """Verify every item and print one verdict line per item, then the summary line."""
+    rows = registry_rows(registry_path)
+    items = load_items(items_path)
+    cache = {}
+    counts = {"VERBATIM": 0, "ABSENT": 0, "TOO_LONG": 0, "NO_SOURCE": 0, "UNREACHABLE": 0}
+    out = []
+    for item_id, source_id, quote in items:
+        cell = rows.get(source_id)
+        url = registry_url(cell)
+        if url is None:
+            detail = ("no registry row %s" % source_id if cell is None
+                      else "registry row %s has no http(s) URL" % source_id)
+            verdict = "NO_SOURCE"
+        elif len(norm(quote).split()) > MAX_WORDS:
+            verdict = "TOO_LONG"
+            detail = "%d words, limit %d" % (len(norm(quote).split()), MAX_WORDS)
+        else:
+            if url not in cache:
+                cache[url] = fetch_page(url)
+            status, ctype, text, detail = cache[url]
+            if text is None:
+                verdict = "UNREACHABLE"
+                detail = detail or "unreachable"
+            elif found(text, quote):
+                verdict = "VERBATIM"
+                detail = "matched in normalized page text"
+            else:
+                verdict = "ABSENT"
+                detail = "no match in normalized page text"
+        counts[verdict] += 1
+        out.append((item_id, verdict, detail))
+    for item_id, verdict, detail in out:
+        sys.stdout.write("QUOTE_REOPEN\t%s\t%s\t%s\n" % (item_id, verdict, detail.replace("\t", " ")))
+    sys.stdout.write("QUOTE_REOPEN_SUMMARY verbatim=%d absent=%d too_long=%d no_source=%d unreachable=%d\n"
+                     % (counts["VERBATIM"], counts["ABSENT"], counts["TOO_LONG"],
+                        counts["NO_SOURCE"], counts["UNREACHABLE"]))
+    return 0 if counts["VERBATIM"] == len(items) else 1
+
+

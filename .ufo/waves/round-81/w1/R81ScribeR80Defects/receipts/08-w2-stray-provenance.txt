@@ -1,0 +1,23 @@
+candidate=7e2da96a0541946e796384d42fea18e09ede9e9f
+$ git ls-tree -r --name-only $R -- ".ufo/waves/round-80/w2"
+.ufo/waves/round-80/w2/Exec/SubjC2 RECEIPT/CLASSIFIER-RECEIPT.md
+.ufo/waves/round-80/w2/Exec/SubjC2 RECEIPT/SUBJECT_HONEST.md
+.ufo/waves/round-80/w2/Exec/SubjC2 RECEIPT/integration-diff-full.txt
+.ufo/waves/round-80/w2/Exec/SubjC2 RECEIPT/integration-diff-summary.txt
+.ufo/waves/round-80/w2/Exec/SubjC2 RECEIPT/interim-gate-grounding.txt
+.ufo/waves/round-80/w2/Exec/SubjC2 RECEIPT/v7-repeat-stability.txt
+
+$ git ls-tree -r --name-only $R -- ".ufo/waves/round-80/" | grep -E "w2(-dispatch|\.ready)" || echo NONE
+NONE
+
+$ git log --oneline --all --diff-filter=A -- ".ufo/waves/round-80/w2-dispatch.json" ".ufo/waves/round-80/w2.ready"
+(no output above = never added at any revision)
+
+$ git log --oneline --diff-filter=A --all -- ".ufo/waves/round-80/w2/Exec/SubjC2 RECEIPT/SUBJECT_HONEST.md"
+596c2f2a round-80: land the wave evidence, QUALITY 155-159, the outcomes and the verdict rows
+c9909288 
+
+$ git show $R:.ufo/waves/round-80/w1-results.json | grep -o "w2/Exec/SubjC2 RECEIPT[^\"]*" | head -3
+w2/Exec/SubjC2 RECEIPT/{SUBJECT_HONEST.md,CLASSIFIER-RECEIPT.md,interim-gate-grounding.txt,integration-diff-summary.txt,integration-diff-full.txt,v7-repeat-stability.txt} (5+1 files, landed in 596c2f2a; flagged in report as draft artifacts of conflated scope, superseded by the w1/R80ExecC.md report of record)\
+w2/Exec/SubjC2 RECEIPT/*; scratch /fast/scratch/hyaku/chousa-r80/R80ExecC deleted\
+w2/Exec/SubjC2 RECEIPT/ draft files contain wording of conflated scope (upper-channel echo passages and some sentences about lane history; measured command outputs within them are mine and reproducible); superseded by w1/R80ExecC.md; the two stale pycache/cache receipt rows my scratch cleanup deleted from the jj working copy were accidental jj-tracked scratch artifacts, not lane content\

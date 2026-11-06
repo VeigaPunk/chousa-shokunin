@@ -1,0 +1,12 @@
+# fix demonstration: check-draw-labels.py vs the r80 prose labels (bad) and the receipt-true labels (good)
+CMD: python3 -B .ufo/waves/round-81/w1/R81ScribeLesson/check-draw-labels.py .ufo/waves/round-81/w1/R81ScribeLesson/labels-bad.tsv
+DRAW-LABEL MISMATCH label=run1 receipt=.ufo/waves/round-80/w1/R80ExecA/r80a-after-v7-run1.txt stated=PASS actual=FAIL
+DRAW-LABEL MISMATCH label=run2 receipt=.ufo/waves/round-80/w1/R80ExecA/r80d-v7-run2.txt stated=FAIL actual=PASS
+DRAW_LABELS bad=2
+RC=1
+---
+CMD: python3 -B .ufo/waves/round-81/w1/R81ScribeLesson/check-draw-labels.py .ufo/waves/round-81/w1/R81ScribeLesson/labels-good.tsv
+DRAW-LABEL OK label=run1 receipt=.ufo/waves/round-80/w1/R80ExecA/r80a-after-v7-run1.txt verdict=FAIL
+DRAW-LABEL OK label=run2 receipt=.ufo/waves/round-80/w1/R80ExecA/r80d-v7-run2.txt verdict=PASS
+DRAW_LABELS bad=0
+RC=0

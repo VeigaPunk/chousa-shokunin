@@ -1,0 +1,64 @@
+# considerthese check: is the 2026-11-06 'one open Gate-record S-id per daily review' proposal implemented this round?
+CMD: git diff 378fda82 7e2da96a --stat
+ .ufo/waves/round-81/census-start.txt               |    7 +
+ SKILL.md                                           |    3 +
+ considerthese/2026-11-05.md                        |   52 +
+ considerthese/2026-11-06.md                        |   42 +
+ corpus/SOURCES.md                                  |    6 +
+ corpus/captures/371c55117727d526805f030d.raw       |  425 ++
+ corpus/captures/371c55117727d526805f030d.txt       |  542 +++
+ corpus/captures/43a45b49723f7677d6446c92.raw       |  248 +
+ corpus/captures/43a45b49723f7677d6446c92.txt       |  467 ++
+ corpus/captures/c52a1f15884a78028febcf43.raw       | 4712 +++++++++++++++++++
+ corpus/captures/c52a1f15884a78028febcf43.txt       | 4922 ++++++++++++++++++++
+ corpus/captures/f221c90f69188f775e32cd34.raw       |  311 ++
+ corpus/captures/f221c90f69188f775e32cd34.txt       |  425 ++
+ corpus/captures/f2489455cc311a4de981e926.raw       |  Bin 0 -> 1061064 bytes
+ corpus/captures/f2489455cc311a4de981e926.txt       | 2616 +++++++++++
+ corpus/evidence/round57/refetch.tsv                |    6 +
+ .../round81/checklist-fixtures/item2-fail.md       |   42 +
+ .../round81/checklist-fixtures/item2-pass.md       |   42 +
+ .../round81/checklist-fixtures/item4-fail.md       |   42 +
+ .../round81/checklist-fixtures/item4-pass.md       |   42 +
+ .../round81/checklist-fixtures/item5-fail.tsv      |    2 +
+ corpus/evidence/round81/checklist-run.py           |  138 +
+ corpus/evidence/round81/claims.md                  |   93 +
+ .../round81/controls/c1-f1-unregistered-id.txt     |    8 +
+ .../round81/controls/c1-f2-altered-quote.txt       |    8 +
+ .../round81/controls/c1-f3-stale-opened-date.txt   |    8 +
+ .../round81/controls/c1-f4-duplicate-entry.txt     |    8 +
+ .../controls/c1-f5-capture-not-recorded.txt        |    8 +
+ .../evidence/round81/controls/c1-f6-no-table.txt   |    8 +
+ .../round81/controls/c1-f7-overlong-quote.txt      |    8 +
+ .../evidence/round81/controls/c1-k0-donothing.txt  |    6 +
+ .../round81/controls/c1-pos-two-entries.txt        |    8 +
+ .../round81/controls/c2-candidate-SKILL.md         |  783 ++++
+ .../round81/controls/c2-g1-true-forger.txt         |   12 +
+ .../round81/controls/c2-g2-or-true-forger.txt      |   12 +
+ .../round81/controls/c2-g3-no-placeholder.txt      |   12 +
+ .../round81/controls/c2-g4-item-deleted.txt        |    5 +
+ .../evidence/round81/controls/c2-g5-wrong-mode.txt |   12 +
+ .../evidence/round81/controls/c2-k0-donothing.txt  |   12 +
+ .../evidence/round81/controls/c2-pos-candidate.txt |   12 +
+ corpus/evidence/round81/depth-r81.py               |  207 +
+ corpus/evidence/round81/egress-approval.md         |   35 +
+ corpus/evidence/round81/negA-probe.md              |   37 +
+ corpus/evidence/round81/run-controls.sh            |  115 +
+ corpus/knowledge/citation-searching-tarcis-r81.md  |   68 +
+ .../knowledge/correction-retraction-status-r81.md  |   50 +
+ 46 files changed, 16627 insertions(+)
+CMD: grep -rn 'S170\|S171\|S173\|S174\|S175\|S176\|S178\|S179\|S182\|S183\|S191\|S193' corpus/evidence/round81/ .ufo/waves/round-81/
+.ufo/waves/round-81/w1/R81ScribeLesson/lesson-draft.md:156:(S170, S171, S173–S176, S178, S179, S182, S183, S191, S193), `git show <rev>:<path>`, re-count the
+.ufo/waves/round-81/w1/R81ScribeLesson/lesson-draft.md:160:wave (excluding this seat's own folder): `grep -rn 'S170\|S171\|…' corpus/evidence/round81/ .ufo/waves/round-81/ --exclude-dir=R81ScribeLesson | wc -l`
+.ufo/waves/round-81/w1/R81ScribeLesson/receipts/09-considerthese-check.txt:50:CMD: grep -rn 'S170\|S171\|S173\|S174\|S175\|S176\|S178\|S179\|S182\|S183\|S191\|S193' corpus/evidence/round81/ .ufo/waves/round-81/
+RC=0
+CMD: same grep, excluding this seat's own output dir (a receipt that lists the ids matches itself)
+0
+RC=0
+CMD: grep -c '^| S20[3-8] ' corpus/SOURCES.md  (registry rows this round's Gate covers)
+6
+CMD: ls corpus/lessons/round-81.md 2>&1
+ls: cannot access 'corpus/lessons/round-81.md': No such file or directory
+RC=2
+CMD: find /home/vgpnk/Projects/shokunin -maxdepth 4 -type d -name merge | wc -l
+0

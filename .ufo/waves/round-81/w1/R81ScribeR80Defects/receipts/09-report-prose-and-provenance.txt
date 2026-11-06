@@ -1,0 +1,27 @@
+fleet report: /home/vgpnk/Projects/shokunin/.ufo/reports/round-80/chousa.md
+$ git -C /home/vgpnk/Projects/shokunin status --porcelain -- .ufo/reports/round-80/chousa.md
+(empty = file clean)
+$ git -C /home/vgpnk/Projects/shokunin log -1 --format=%H -- .ufo/reports/round-80/chousa.md
+023ae03e47e3b815acd2733fdffc51ce8e318740
+
+$ grep -nF -e "run1" -e "run2" /home/vgpnk/Projects/shokunin/.ufo/reports/round-80/chousa.md
+6:`blocked/.chousa.run15-20261105-provider-failure-*` at 2026-11-05T02:20-03:00). The round is
+70:  fresh_forgers=1/2 oracles_rejected=5/5` — a FAIL draw, matching the recorded run2/r80d
+74:  orchestrator's `.scratch/run15-state.json` only — no seat wrote into the fleet root).
+117:- verdict: **falsified by its own kill rule — honest stop.** The predicate is draw-dependent: run1
+118:  PASS 2/2+2/2, run2 FAIL 1/2+1/2, `--fresh 3` FAIL 0/3+0/3 (wave receipts
+119:  `R80ExecA/r80a-after-v7-run1.txt`, `r80d-v7-run2.txt`, `r80d-v7-run3-fresh3.txt`; cause: the
+
+$ sed -n "117,119p" /home/vgpnk/Projects/shokunin/.ufo/reports/round-80/chousa.md
+- verdict: **falsified by its own kill rule — honest stop.** The predicate is draw-dependent: run1
+  PASS 2/2+2/2, run2 FAIL 1/2+1/2, `--fresh 3` FAIL 0/3+0/3 (wave receipts
+  `R80ExecA/r80a-after-v7-run1.txt`, `r80d-v7-run2.txt`, `r80d-v7-run3-fresh3.txt`; cause: the
+
+$ grep -nF "Stray inherited artifact" /home/vgpnk/Projects/shokunin/.ufo/reports/round-80/chousa.md
+75:- Stray inherited artifact: `.ufo/waves/round-80/w2/Exec/SubjC2 RECEIPT/` (committed) — a wave-2
+$ sed -n "76,80p" /home/vgpnk/Projects/shokunin/.ufo/reports/round-80/chousa.md
+  directory the inherited attempt staged but never validated or dispatched (no `w2-dispatch.json`,
+  no `w2.ready` ever existed). Its receipts (R80ExecC's subject-honest C2 reading and a 5-run v7
+  stability note) are retained as committed evidence; no wave-2 counts toward this round.
+
+## Landed changes

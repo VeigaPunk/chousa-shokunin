@@ -1,0 +1,38 @@
+# seat: R81CriticClaims
+
+# C2 K2: kept rejection recorded as a bullet with reason and no flip-condition. Landed item-4 Run line exits 0 (REJECTIONS_OK=0/0).
+
+# landed run line (verbatim from SKILL.md at 7e2da96a): bash tools/research-gate.sh verify-sweeps <record.md> --root .
+
+# cmd: diff -u /fast/scratch/hyaku/chousa-r81/R81CriticClaims/land/corpus/evidence/round81/checklist-fixtures/item4-pass.md /fast/scratch/hyaku/chousa-r81/R81CriticClaims/variants/v4-bullet-rejection.md
+--- /fast/scratch/hyaku/chousa-r81/R81CriticClaims/land/corpus/evidence/round81/checklist-fixtures/item4-pass.md	2026-11-06 15:51:48.000000000 -0300
++++ /fast/scratch/hyaku/chousa-r81/R81CriticClaims/variants/v4-bullet-rejection.md	2026-11-06 15:58:48.656967160 -0300
+@@ -25,9 +25,7 @@
+ 
+ ## Rejections
+ 
+-| id | ref | reason | flip_condition |
+-|---|---|---|---|
+-| R1 | corpus/fixtures/sweeps-r5.md | a round-5 fixture is test data, not a source on citation searching | a fixture that quoted a citation-searching standard verbatim would flip this rejection |
++- R1: corpus/fixtures/sweeps-r5.md — reason: a round-5 fixture is test data, not a source on citation searching
+ 
+ ## Sweeps
+ 
+
+
+# cmd: cd /fast/scratch/hyaku/chousa-r81/R81CriticClaims/land && bash tools/research-gate.sh verify-sweeps /fast/scratch/hyaku/chousa-r81/R81CriticClaims/variants/v4-bullet-rejection.md --root .
+research-gate v2 — ts=2026-11-06T19:01:22Z — mode=sweeps — record=/fast/scratch/hyaku/chousa-r81/R81CriticClaims/variants/v4-bullet-rejection.md
+SWEEP id=W1 where=corpus/knowledge/*tarcis-r80*,corpus/knowledge/*tarcis-pre-r81* looked=local hits=0 at=- observed=verified verdict=match
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=0/0
+RESEARCH_GATE: CLEAN (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=0 rejections-ok=0 findings=0 drift=0)
+
+
+rc=0
+
+# raw: bash tools/research-gate.sh verify-sweeps /fast/scratch/hyaku/chousa-r81/R81CriticClaims/variants/v4-bullet-rejection.md --root .
+research-gate v2 — ts=2026-11-06T19:01:22Z — mode=sweeps — record=/fast/scratch/hyaku/chousa-r81/R81CriticClaims/variants/v4-bullet-rejection.md
+SWEEP id=W1 where=corpus/knowledge/*tarcis-r80*,corpus/knowledge/*tarcis-pre-r81* looked=local hits=0 at=- observed=verified verdict=match
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=0/0
+RESEARCH_GATE: CLEAN (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=0 rejections-ok=0 findings=0 drift=0)
+
+rc=0

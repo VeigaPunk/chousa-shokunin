@@ -1,0 +1,15 @@
+# seat R81ExecRepro — does the control driver depend on UNCOMMITTED bytes?
+# the six paths run-controls.sh snap() copies out of the lane working tree:
+wt=e6bb2baa821eb7dd cand=e6bb2baa821eb7dd prefreeze=e6bb2baa821eb7dd base=fb2fc5aa998cafae  corpus/evidence/round57/refetch.tsv
+wt=31493aa66bfd6625 cand=31493aa66bfd6625 prefreeze=31493aa66bfd6625 base=e3b0c44298fc1c14  corpus/captures/f2489455cc311a4de981e926.txt
+wt=b905aae1afc0b798 cand=b905aae1afc0b798 prefreeze=b905aae1afc0b798 base=e3b0c44298fc1c14  corpus/captures/c52a1f15884a78028febcf43.txt
+wt=08b4b3c0ad9215b0 cand=08b4b3c0ad9215b0 prefreeze=08b4b3c0ad9215b0 base=e3b0c44298fc1c14  corpus/captures/371c55117727d526805f030d.txt
+wt=e1251d472cd517b5 cand=e1251d472cd517b5 prefreeze=e1251d472cd517b5 base=e3b0c44298fc1c14  corpus/captures/f221c90f69188f775e32cd34.txt
+wt=72a5a93d456ee798 cand=72a5a93d456ee798 prefreeze=72a5a93d456ee798 base=e3b0c44298fc1c14  corpus/captures/43a45b49723f7677d6446c92.txt
+# git status --porcelain for those paths (empty == no uncommitted change):
+(end status; empty)
+# reading: wt == cand == prefreeze for all six; base lacks the five captures entirely (empty hash) and refetch.tsv has 145 rows vs 151.
+# => no control depends on uncommitted bytes; every control does depend on refetch.tsv + 5 captures that are committed at prefreeze/f7929f87 and candidate/7e2da96a but absent from base/378fda82.
+# the k0 verdict is unaffected: depth-r81.py on the PURE base archive prints the same line (see b1-depth-before-lanecopy.txt):
+DEPTH_R81=FAIL
+rc=1

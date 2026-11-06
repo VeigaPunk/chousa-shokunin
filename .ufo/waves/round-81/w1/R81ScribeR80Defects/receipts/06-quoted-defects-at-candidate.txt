@@ -1,0 +1,29 @@
+candidate=7e2da96a0541946e796384d42fea18e09ede9e9f (all greps below read committed bytes at this revision)
+$ git show $R:SCORECARD.md | grep -nF "C2 calibration (sourced on S199)"
+3655:| C2 calibration (sourced on S199) | `GATE_GROUNDING=FAIL unresolved=3 superseded_resolved=0 audited=S196,S197,S198` exit 1 → `GATE_GROUNDING=PASS unresolved=0 superseded_resolved=3 audited=S199,S200,S201,S202` exit 0 | `python3 -B corpus/evidence/round80/gate-grounding-check.py --rev 44d09edfc20dba26ee8d58a93d365989916a2692`; `controls/grounding-before-r80.txt`, `controls/grounding-after.txt` | **falsified by its own kill rule — honest stop** — the predicate line holds on the landed bytes and the three defects are closed by append-only supersession, but the wave fired the frozen third clause (a record naming bytes the counter never opened while `unresolved=0`, `.ufo/waves/round-80/w1/R80CriticA/receipts/c2-unopened-superseded-record.txt`) and a one-word hollow record reaches PASS (`c2-donothing-control.txt`); QUALITY 155 carries the successor rule |
+
+$ git show $R:corpus/lessons/round-80.md | grep -nF -e "C2 calibration (sourced on S199)" -e "**improved**, with three instrument limits recorded"
+73:| C2 calibration (sourced on S199) | three prose Gate records nothing re-opened (`GATE_GROUNDING=FAIL unresolved=3 superseded_resolved=0 audited=S196,S197,S198`, exit 1) → four machine-checkable records re-opened on committed bytes, the three superseded rows resolving through their replacements (`GATE_GROUNDING=PASS unresolved=0 superseded_resolved=3 audited=S199,S200,S201,S202`, exit 0) | `python3 -B corpus/evidence/round80/gate-grounding-check.py --rev 44d09edfc20dba26ee8d58a93d365989916a2692`; `controls/{grounding-before-r80,grounding-after}.txt` | **improved**, with three instrument limits recorded (below) |
+
+$ git show $R:corpus/evidence/round80/claims.md | grep -nF -e "sourced on S200" -e "15-word"
+59:## C2 — calibration (sourced on S200)
+90:`b7803829`, the corrected 15-word located quote that supersedes S196). Both rows carry a
+
+$ git show $R:LOG.md | grep -nF "C2 calibration (sourced on S199)"
+2335:- C2 calibration (sourced on S199): round 79's Gate records were prose nothing re-opened — S196
+
+$ git show $R:corpus/lessons/round-80.md | grep -nF "GATE-RECORD S200"
+20:GATE-RECORD S200 rev=b7803829922770b890e9f4efdd30d12c3695439a path=corpus/QUALITY.md line=1056 words=20 quote=A subject-identity salt is defeated by any normalizer that knows its marker family, so the closure is a per-channel measurement
+
+$ git show $R:corpus/lessons/round-80.md | grep "GATE-RECORD S200" | sed "s/.*quote=//" | wc -w
+20
+
+$ git show $R:corpus/lessons/round-80.md | grep -nF "Mistakes"; sed -n "154,156p"
+7:carries the instruments, the claims text and the two do-nothing controls (see `## Mistakes`, row 1:
+146:## Mistakes
+
+| seven earlier rounds' verdict rows were relabelled in place while this round's verdict block was w
+
+
+$ git show $R:.ufo/waves/round-80/w1-results.json | grep -c "w2"
+1

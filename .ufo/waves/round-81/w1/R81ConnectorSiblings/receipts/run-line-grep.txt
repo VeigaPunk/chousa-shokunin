@@ -1,0 +1,15 @@
+# NOTE: '- Run:' in sibling SKILL.md — CORRECTED (two siblings have no SKILL.md; the earlier
+#       malformed command suffixed only the last path and recursed the other 19 repo trees).
+#       audio-shokunin and game-dev-2d-shokunin have no SKILL.md, so they are excluded.
+# CWD: /home/vgpnk/Projects/shokunin
+# SKILL.md present in 18 of 20 sibling repos
+
+$ grep -n '^- Run:' game-dev-3d-shokunin/SKILL.md kagi-shokunin/SKILL.md kaidoku-shokunin/SKILL.md kake-shokunin/SKILL.md kama-shokunin/SKILL.md kasegi-shokunin/SKILL.md kengaku-shokunin/SKILL.md kotoba-shokunin/SKILL.md kotodama-shokunin/SKILL.md kumitate-shokunin/SKILL.md lore-shokunin/SKILL.md mado-shokunin/SKILL.md mori-shokunin/SKILL.md revenger-shokunin/SKILL.md souji-shokunin/SKILL.md tabi-shokunin/SKILL.md tameshi-shokunin/SKILL.md tsukuroi-shokunin/SKILL.md ; echo "[grep_rc=$?]"
+[grep_rc=1]   (rc=0)
+
+$ grep -n 'Run:' game-dev-3d-shokunin/SKILL.md kagi-shokunin/SKILL.md kaidoku-shokunin/SKILL.md kake-shokunin/SKILL.md kama-shokunin/SKILL.md kasegi-shokunin/SKILL.md kengaku-shokunin/SKILL.md kotoba-shokunin/SKILL.md kotodama-shokunin/SKILL.md kumitate-shokunin/SKILL.md lore-shokunin/SKILL.md mado-shokunin/SKILL.md mori-shokunin/SKILL.md revenger-shokunin/SKILL.md souji-shokunin/SKILL.md tabi-shokunin/SKILL.md tameshi-shokunin/SKILL.md tsukuroi-shokunin/SKILL.md ; echo "[grep_rc=$?]"
+[grep_rc=1]   (rc=0)
+
+$ for d in audio-shokunin game-dev-2d-shokunin; do [ -f $d/SKILL.md ] && echo "PRESENT $d" || echo "ABSENT $d"; done
+ABSENT audio-shokunin
+ABSENT game-dev-2d-shokunin   (rc=0)

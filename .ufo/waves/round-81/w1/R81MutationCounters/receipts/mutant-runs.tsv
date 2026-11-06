@@ -1,0 +1,36 @@
+mutant	file	verdict	killing_controls	crash_controls	mutant_sha16	pristine_sha16	restored_sha16	description
+d01	depth-r81.py	SURVIVED			c02139e6c435539c	10c989c0a59f94d8	10c989c0a59f94d8	P1: minimum fresh rows 2 -> 1
+d02	depth-r81.py	KILLED	c1-f3-stale-opened-date		1fb139616dddcdfb	10c989c0a59f94d8	10c989c0a59f94d8	P1: drop registry opened==--date conjunct
+d03	depth-r81.py	SURVIVED			ce78efa6add4df1a	10c989c0a59f94d8	10c989c0a59f94d8	P1: drop used_by names-entry binding
+d04	depth-r81.py	SURVIVED			712f9b09794f2ba6	10c989c0a59f94d8	10c989c0a59f94d8	P1: drop status==mined conjunct
+d05	depth-r81.py	SURVIVED			05b7c46f56a16f80	10c989c0a59f94d8	10c989c0a59f94d8	P2: minimum quote lines 3 -> 1
+d06	depth-r81.py	SURVIVED			7e3ee797a236a247	10c989c0a59f94d8	10c989c0a59f94d8	P2: drop the 25-word cap (and the w<1 floor)
+d07	depth-r81.py	SURVIVED		c1-f1-unregistered-id.txt	6b68b9f599ea4a41	10c989c0a59f94d8	10c989c0a59f94d8	P2: drop membership of the quoted sid in the fresh set
+d07b	depth-r81.py	SURVIVED			5ad28381a2d11230	10c989c0a59f94d8	10c989c0a59f94d8	P2: weaken sid membership to any id on the source line
+d08	depth-r81.py	SURVIVED			97f9f72f32466a2d	10c989c0a59f94d8	10c989c0a59f94d8	P2: distinct cited fresh rows 2 -> 1
+d09	depth-r81.py	KILLED	c1-f5-capture-not-recorded		902adc1576fe04b8	10c989c0a59f94d8	10c989c0a59f94d8	P2: drop the entire refetch.tsv row binding
+d10	depth-r81.py	SURVIVED			574a42530aefffdb	10c989c0a59f94d8	10c989c0a59f94d8	P2: drop refetch fetched_utc == --date conjunct
+d11	depth-r81.py	KILLED	c1-f5-capture-not-recorded		84d9bc1271215684	10c989c0a59f94d8	10c989c0a59f94d8	P2: drop refetch txt_sha256 == capture sha256 conjunct
+d12	depth-r81.py	KILLED	c1-f2-altered-quote		820ccb22e4410d60	10c989c0a59f94d8	10c989c0a59f94d8	P2: drop the needle check (quote must occur in capture text)
+d13	depth-r81.py	KILLED	c1-f6-no-table		17fb8ea43d7fb02c	10c989c0a59f94d8	10c989c0a59f94d8	P3: drop the Markdown table requirement
+d14	depth-r81.py	SURVIVED			509f75882b560584	10c989c0a59f94d8	10c989c0a59f94d8	P4: drop the duplicate-bytes branch
+d15	depth-r81.py	SURVIVED			e16631b6a05597c4	10c989c0a59f94d8	10c989c0a59f94d8	P4: drop the shared-quote branch
+d16	depth-r81.py	KILLED	c1-f1-unregistered-id,c1-f2-altered-quote,c1-f3-stale-opened-date,c1-f4-duplicate-entry,c1-f6-no-table,c1-f7-overlong-quote		8ec139bdeebe9ebd	10c989c0a59f94d8	10c989c0a59f94d8	threshold: entries >= 2 -> >= 1 (label and exit code)
+d17	depth-r81.py	SURVIVED			bf0d092328a8faf9	10c989c0a59f94d8	10c989c0a59f94d8	P2: drop refetch curl_rc==0 and http 2xx conjuncts
+c01	checklist-run.py	KILLED	c2-g1-true-forger,c2-g2-or-true-forger,c2-g3-no-placeholder,c2-g5-wrong-mode,c2-k0-donothing,c2-pos-candidate		ccfad419c8726173	66ca8c97c597f4b4	66ca8c97c597f4b4	denominator: refuse any count != 6 -> refuse only 0
+c02	checklist-run.py	KILLED	c2-g2-or-true-forger,c2-g5-wrong-mode		d7891dc67e369069	66ca8c97c597f4b4	66ca8c97c597f4b4	legs: ignore the observed exit code
+c03	checklist-run.py	KILLED	c2-pos-candidate		af0d0f022f34599c	66ca8c97c597f4b4	66ca8c97c597f4b4	item2: swap the pass/fail expected rc
+c04	checklist-run.py	KILLED	c2-pos-candidate		81289531c090d6df	66ca8c97c597f4b4	66ca8c97c597f4b4	item4: swap the pass/fail expected rc
+c05	checklist-run.py	SURVIVED			aa7ed1dad3539b66	66ca8c97c597f4b4	66ca8c97c597f4b4	item5: drop the no_source=1 needle
+c06	checklist-run.py	SURVIVED			b1a103fd353bab34	66ca8c97c597f4b4	66ca8c97c597f4b4	legs: never evaluate the needle branch
+c07	checklist-run.py	SURVIVED		c2-k0-donothing.txt	6653391ce52d3c3f	66ca8c97c597f4b4	66ca8c97c597f4b4	runnable: count every item runnable
+c08	checklist-run.py	KILLED	c2-pos-candidate		8ae3246823e774fe	66ca8c97c597f4b4	66ca8c97c597f4b4	legs: drop all discrimination legs
+c09	checklist-run.py	SURVIVED			f1585aa97920f875	66ca8c97c597f4b4	66ca8c97c597f4b4	verdict: drop the runnable==6 conjunct
+c10	checklist-run.py	SURVIVED			9eca750f69611559	66ca8c97c597f4b4	66ca8c97c597f4b4	legs: drop the no-placeholder refusal
+c11	checklist-run.py	SURVIVED			8bd24499c68307d1	66ca8c97c597f4b4	66ca8c97c597f4b4	substitution: every placeholder gets the fixture path (not just the first)
+c12	checklist-run.py	KILLED	c2-pos-candidate		66a835722d75828d	66ca8c97c597f4b4	66ca8c97c597f4b4	legs: invert the rc comparison
+c13	checklist-run.py	KILLED	c2-pos-candidate		c60acf74f7e8058a	66ca8c97c597f4b4	66ca8c97c597f4b4	item numbering: 1-based -> 0-based (legs hit the wrong items)
+c14	checklist-run.py	SURVIVED			4ed677caacb180d9	66ca8c97c597f4b4	66ca8c97c597f4b4	fixtures: drop the missing-fixture guard
+c15	checklist-run.py	SURVIVED			e1bba6e058a0d037	66ca8c97c597f4b4	66ca8c97c597f4b4	run selection: first Run command -> last
+c16	checklist-run.py	SURVIVED			ff2f7ec534f7bc3c	66ca8c97c597f4b4	66ca8c97c597f4b4	item5: accept any QUOTE_REOPEN_SUMMARY line
+c01b	checklist-run.py	KILLED	c2-g4-item-deleted		507e9ac28bd5a276	66ca8c97c597f4b4	66ca8c97c597f4b4	denominator: accept any non-zero item count

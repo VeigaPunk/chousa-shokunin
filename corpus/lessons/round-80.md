@@ -198,3 +198,61 @@ counts, not each row, are the finding.
   when a fresh positive and a fresh forger share one drawn name (`X#0`), `score()` keyed by name
   reports both `MISS` and prints `fresh_positive=0/1 fresh_forger=0/1` — a false negative, not a
   false green, so the collision costs a re-run rather than a bad admission.
+
+## Corrections — round 81 (append-only; filed bytes unchanged)
+
+Routed defects 1–6 of `corpus/lessons/round-80-verifier-spotcheck.md` §6 are closed by this block.
+No filed byte above is rewritten; each correction names the frozen authority and the corrected value.
+
+1. **C2 sourcing label (defect 1).** The outcome table at line 73 opens
+   `| C2 calibration (sourced on S199) |`. Frozen authority: `corpus/evidence/round80/claims.md:59`
+   (`## C2 — calibration (sourced on S200)`, frozen at `0d253c95732c0ed19a9fa414e5d17769ddefa48d`)
+   and `:88–90` (`C2's landing cites **S200**`). Corrected value: **S200**; `S199` is C1's evidence
+   row (`claims.md:88`: `C1's evidence cites **S199**`). The same label at `SCORECARD.md:3655` is
+   corrected by the round-81 SCORECARD block, and at `LOG.md:2335` by this note. Both rows are new
+   this round, so the sourced-claim duty was met either way.
+2. **C2 outcome cell (defect 2).** The same row's verdict cell reads
+   `**improved**, with three instrument limits recorded (below)`. Frozen authority: the frozen
+   claims.md kill rule's third clause and this lesson's own `## Kill-rule outcomes` ("**C2 as written
+   does not verify**", citing
+   `.ufo/waves/round-80/w1/R80CriticA/receipts/c2-unopened-superseded-record.txt`), corroborated by
+   `SCORECARD.md:3655` (`**falsified by its own kill rule — honest stop**`). Corrected value:
+   **falsified by its own kill rule — honest stop**, with the three instrument limits recorded below.
+   The cell's bytes stay as filed; the operative value is the honest stop.
+3. **Frozen claims.md "15-word" (defect 3).** `corpus/evidence/round80/claims.md:90` reads `the
+   corrected 15-word located quote that supersedes S196`. Measured value: **20 words** — this file's
+   line 20 carries `GATE-RECORD S200 rev=b7803829922770b890e9f4efdd30d12c3695439a
+   path=corpus/QUALITY.md line=1056 words=20 …`; `wc -w` of that record's quote text prints `20`
+   (round-81 receipt `receipts/06-quoted-defects-at-candidate.txt`); the counter prints
+   `ROW S200 record=ok quote_words=20 location=corpus/QUALITY.md:1056@b78038299227 words=20
+   verdict=OK` (`.ufo/waves/round-80/w1/R80CriticA/receipts/c2-after-repro.txt:6`). The frozen file
+   is not amended (freeze is freeze); `## Instrument limits` item 5 above already records the class.
+   Corrected value: **20**, quoted from `corpus/QUALITY.md:1056@b7803829`.
+4. **Draw labels vs receipt names (defect 4).** The round-80 report
+   (`/home/vgpnk/Projects/shokunin/.ufo/reports/round-80/chousa.md`, fleet commit
+   `023ae03e47e3b815acd2733fdffc51ce8e318740`, lines 117–118) reads `run1 PASS 2/2+2/2, run2 FAIL
+   1/2+1/2`. Frozen authority: the committed receipts —
+   `.ufo/waves/round-80/w1/R80ExecA/r80a-after-v7-run1.txt:216` =
+   `BATTERY=FAIL forgers_rejected=11/11 positive=2/2 fresh_positive=1/2 fresh_forgers=1/2
+   oracles_rejected=5/5`, and `.ufo/waves/round-80/w1/R80ExecA/r80d-v7-run2.txt:216` =
+   `BATTERY=PASS forgers_rejected=11/11 positive=2/2 fresh_positive=2/2 fresh_forgers=2/2
+   oracles_rejected=5/5`. Corrected value: the ordinal labels are inverted relative to the receipt
+   names; cite a draw by receipt path, never by ordinal. The falsification is unaffected — both draws
+   are committed, and `r80d-v7-run3-fresh3.txt:240` is `BATTERY=FAIL … fresh_positive=0/3
+   fresh_forgers=0/3`.
+5. **Stray wave-2 directory — dead evidence (defect 5).** `.ufo/waves/round-80/w2/Exec/SubjC2
+   RECEIPT/` holds six committed files (`git ls-tree -r` at the round-80 tip and at `7e2da96a`),
+   added in `596c2f2a` (an ancestor of the candidate); no `w2-dispatch.json` and no `w2.ready` exists at any revision
+   (`git log --all --diff-filter=A` over both paths is empty), so no seat was dispatched, no
+   validate ran, and no wave-2 output is counted toward round 80. The round's own
+   `w1-results.json` records the directory as "draft artifacts of conflated scope … superseded by
+   the w1/R80ExecC.md report of record", and the round-80 report disclosed it at lines 75–78.
+   Disposition: the six files are **dead evidence** — retained for provenance only, never cited as a
+   round-80 wave-2 result, never counted in any seat tally, and superseded by
+   `.ufo/waves/round-80/w1/R80ExecC.md`. A future reader who needs the subject-honest C2 reading or
+   the 5-run v7 stability note reads them as an inherited attempt's draft, not as dispatched output.
+6. **Mistakes-table formatting (defect 6).** Line 154 is blank and line 155 begins
+   `| seven earlier rounds' verdict rows were relabelled in place …` without a repeated header, so in
+   GitHub-flavoured Markdown that row renders outside the table. Corrected reading: line 155 is the
+   fifth `## Mistakes` row (the relabel mistake already corrected in `SCORECARD.md` §Correction). No
+   filed byte is rewritten; any restatement of this row repeats the header line.

@@ -1,0 +1,40 @@
+# seat: R81CriticClaims
+
+# C2 K2: negative claim with sweep cell W1 and no Sweeps section at all. Landed item-2 Run line exits 0.
+
+# landed run line (verbatim from SKILL.md at 7e2da96a): f=<record.md>; ! bash tools/research-gate.sh verify "$f" --root . | grep -q '^FINDING NEGATIVE_WITHOUT_SWEEP' && bash tools/research-gate.sh verify-sweeps "$f" --root .
+
+# cmd: diff -u /fast/scratch/hyaku/chousa-r81/R81CriticClaims/land/corpus/evidence/round81/checklist-fixtures/item2-pass.md /fast/scratch/hyaku/chousa-r81/R81CriticClaims/variants/v2-dangling-sweep.md
+--- /fast/scratch/hyaku/chousa-r81/R81CriticClaims/land/corpus/evidence/round81/checklist-fixtures/item2-pass.md	2026-11-06 15:51:48.000000000 -0300
++++ /fast/scratch/hyaku/chousa-r81/R81CriticClaims/variants/v2-dangling-sweep.md	2026-11-06 15:58:48.656799980 -0300
+@@ -29,12 +29,6 @@
+ |---|---|---|---|
+ | R1 | corpus/fixtures/sweeps-r5.md | a round-5 fixture is test data, not a source on citation searching | a fixture that quoted a citation-searching standard verbatim would flip this rejection |
+ 
+-## Sweeps
+-
+-| id | claim_id | where | observed |
+-|---|---|---|---|
+-| W1 | N1 | corpus/knowledge/*tarcis-r80*,corpus/knowledge/*tarcis-pre-r81* | zero matches |
+-
+ ## Approval
+ 
+ | target | state |
+
+
+# cmd: cd /fast/scratch/hyaku/chousa-r81/R81CriticClaims/land && f=/fast/scratch/hyaku/chousa-r81/R81CriticClaims/variants/v2-dangling-sweep.md; ! bash tools/research-gate.sh verify "$f" --root . | grep -q '^FINDING NEGATIVE_WITHOUT_SWEEP' && bash tools/research-gate.sh verify-sweeps "$f" --root .
+research-gate v2 — ts=2026-11-06T19:01:21Z — mode=sweeps — record=/fast/scratch/hyaku/chousa-r81/R81CriticClaims/variants/v2-dangling-sweep.md
+REJECTION id=R1 ref=corpus/fixtures/sweeps-r5.md reason=present flip=present observed=complete verdict=match
+VERIFIED_SWEEPS=0/0 REJECTIONS_OK=1/1
+RESEARCH_GATE: CLEAN (sweeps=0 verified=0 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=1 findings=0 drift=0)
+
+
+rc=0
+
+# raw: bash tools/research-gate.sh verify-sweeps /fast/scratch/hyaku/chousa-r81/R81CriticClaims/variants/v2-dangling-sweep.md --root .
+research-gate v2 — ts=2026-11-06T19:01:21Z — mode=sweeps — record=/fast/scratch/hyaku/chousa-r81/R81CriticClaims/variants/v2-dangling-sweep.md
+REJECTION id=R1 ref=corpus/fixtures/sweeps-r5.md reason=present flip=present observed=complete verdict=match
+VERIFIED_SWEEPS=0/0 REJECTIONS_OK=1/1
+RESEARCH_GATE: CLEAN (sweeps=0 verified=0 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=1 findings=0 drift=0)
+
+rc=0

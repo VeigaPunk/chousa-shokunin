@@ -2365,3 +2365,16 @@ verify as written. The round-79 SCORECARD row, lesson and report all record the 
 entry said otherwise. The round-79 bytes stay as filed; the round-80 lesson carries the class as a
 mined mistake and QUALITY 152 now requires a superseded record to resolve through its replacement's
 passing record rather than through prose.
+
+## Round 81 — fresh start: citation searching and correction status as knowledge; the checklist gains Run lines (2026-11-06)
+
+- Fresh-start reads: MANIFEST 1288/1294/1314 and the r78–r80 spot-checks; the ten-round battery race is left.
+- Sources opened (egress table `corpus/evidence/round81/egress-approval.md`, written after the fetches — a recorded
+  mistake): S203 TARCiS AAM, S204 Campbell searching guide, S205 NLM errata policy, S206 ICMJE version control,
+  S207 Crossref Retraction Watch docs; S208 BMJ correction rejected (HTTP 403).
+- C1 depth: two entries; counter PASS at `7e2da96a`; honest stop (filler control passes; K3 spirit). Entries repaired
+  after scoring per `R81ReviewerEntries.md`.
+- C2 operability: checklist items 2/4/5 gain Run lines; counter PASS; K2 fired — honest stop.
+- r80 routed defects 1–6 closed append-only; QUALITY 161–162; README round-81 coverage section (G02 restored).
+- Re-verification: 14/14 counted quotes re-opened live (`R81ExecReopen.md`); census exit 0 start and end.
+

@@ -1,0 +1,19 @@
+# seat: R81CriticClaims
+
+# corpus/evidence/round81/negA-probe.md was added in the landing commit (after the claim freeze);
+
+# its Meta note says 'item 2 pass', but its Claims table gives the negative claim an empty sweep cell.
+
+# cmd: grep -n 'item 2 pass\|N1 | negative' corpus/evidence/round81/negA-probe.md
+8:| note | round-81 checklist fixture (item 2 pass: the negative claim's sweep names where it looked) |
+24:| N1 | negative | no pre-round knowledge entry file is named for the TARCiS statement | corpus/fixtures/sweeps-r5.md | observed-in-dump | |
+
+rc=0
+
+# cmd: bash tools/research-gate.sh verify corpus/evidence/round81/negA-probe.md --root .
+research-gate v2 — ts=2026-11-06T19:01:41Z — mode=verify — record=corpus/evidence/round81/negA-probe.md
+FINDING NEGATIVE_WITHOUT_SWEEP severity=warn surface=negatives obs=claim=N1 negative without sweep
+FINDING CHAIN_ABSENT severity=warn surface=chain obs=claims present but ## Chain missing
+RESEARCH_GATE: DRIFT (findings=2 drift=2 questions=1 sources=1 chains=0 claims=1 negatives=1 rejections=1 approvals=1)
+
+rc=1

@@ -1,0 +1,42 @@
+# receipt 01 — egress argv of the fetch tool (round-81 egress item 1)
+# cmd: grep -n -A25 'def fetch_one' tools/capture-fetch.py ; grep -n 'curl' tools/capture-fetch.py
+134:def fetch_one(scratch: pathlib.Path, sid: str, url: str, attempt: int) -> None:
+135-    out = scratch / f"{key(url)}.{attempt}.out"
+136-    code_file = scratch / f"{key(url)}.{attempt}.code"
+137-    cmd = ["curl", "-fsSL", "--compressed", "--max-time", "15", "-A", UA,
+138-           "-o", str(out), "-w", "%{http_code}", url]
+139-    try:
+140-        r = subprocess.run(cmd, capture_output=True, timeout=25, text=True)
+141-        http = (r.stdout or "").strip() or "000"
+142-        rc = r.returncode
+143-    except subprocess.TimeoutExpired:
+144-        http, rc = "000", 28
+145-    raw: bytes | None = None
+146-    txt: bytes | None = None
+147-    if rc == 0 and out.is_file() and out.stat().st_size > 0:
+148-        try:
+149-            code = int(http)
+150-        except ValueError:
+151-            code = 0
+152-        if 200 <= code <= 299:
+153-            raw = out.read_bytes()
+154-            tmp = scratch / "recipe"
+155-            tmp.mkdir(parents=True, exist_ok=True)
+156-            txt = recipe_txt(raw, tmp).encode("utf-8")
+157-    append_row(scratch, sid, url, attempt, rc, http, raw, txt)
+158-    out.unlink(missing_ok=True)
+159-    code_file.unlink(missing_ok=True)
+---
+6:one `curl -fsSL --compressed --max-time 15 -A <campaign UA>` GET per
+10:On a successful attempt (curl_rc == 0, http_code 200-299, non-empty body)
+17:  id  url  key  attempt  fetched_utc  curl_rc  http_code  raw_sha256  txt_sha256
+24:Scratch for curl's temp output honours $HYAKU_SCRATCH
+62:HEADER = ["id", "url", "key", "attempt", "fetched_utc", "curl_rc", "http_code",
+137:    cmd = ["curl", "-fsSL", "--compressed", "--max-time", "15", "-A", UA,
+188:            fails = sum(1 for r in rs if r["curl_rc"] != "0")
+--- literal argv line (line 137-138) ---
+    cmd = ["curl", "-fsSL", "--compressed", "--max-time", "15", "-A", UA,
+           "-o", str(out), "-w", "%{http_code}", url]
+--- credential/upload flags present? ---
+UPLOAD_OR_AUTH_FLAG=ABSENT (GET only)
+rc=0

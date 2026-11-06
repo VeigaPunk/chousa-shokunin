@@ -1,0 +1,41 @@
+# receipt: r07-dup-url-scan
+# date_utc: 2026-11-06T19:03:46Z
+# cwd: /home/vgpnk/Projects/shokunin
+# command: python3 - <<'EOF'
+import re,collections
+txt=open('/fast/scratch/hyaku/chousa-r81/R81ScoutNovelty/SOURCES-landing.md',encoding='utf-8').read()
+rows=[]
+for line in txt.split('\n'):
+    if re.match(r'^ {0,3}\|\s*S\d{3,}\s*\|', line):
+        cells=[c.strip() for c in line.strip().strip('|').split('|')]
+        if len(cells)==11: rows.append((cells[0],cells[1],cells[7],cells[8],cells[10]))
+print('parseable rows:',len(rows))
+url_re=re.compile(r'https?://[^\s|)\]>]+')
+m=collections.defaultdict(list)
+for sid,src,status,opened,ub in rows:
+    mm=url_re.search(src)
+    if mm: m[mm.group(0)].append((sid,status,opened))
+dups={k:v for k,v in m.items() if len(v)>1}
+print('duplicate-URL groups:',len(dups))
+for k,v in sorted(dups.items()): print(' DUP',k,v)
+newrows=[r for r in rows if r[0] in ('S203','S204','S205','S206','S207','S208','S028')]
+for sid,src,status,opened,ub in newrows:
+    print('NEWROW',sid,'status=',status,'opened=',opened,'used_by=',ub)
+EOF
+# ---- output ----
+parseable rows: 208
+duplicate-URL groups: 6
+ DUP https://docs.python.org/3/library/hashlib.html [('S059', 'mined', '2026-10-23'), ('S074', 'rejected', '2026-10-24')]
+ DUP https://pubmed.ncbi.nlm.nih.gov/17638714/ [('S021', 'queued', '2026-10-21'), ('S032', 'queued', '2026-10-21')]
+ DUP https://pubmed.ncbi.nlm.nih.gov/28912002/ [('S022', 'queued', '2026-10-21'), ('S030', 'queued', '2026-10-21')]
+ DUP https://schema.org/lastReviewed [('S024', 'queued', '2026-10-21'), ('S031', 'queued', '2026-10-21')]
+ DUP https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-iv [('S019', 'queued', '2026-10-21'), ('S029', 'mined', '2026-10-21')]
+ DUP https://www.w3.org/TR/2013/REC-prov-o-20130430/ [('S020', 'queued', '2026-10-21'), ('S033', 'mined', '2026-10-21')]
+NEWROW S028 status= queued opened= 2026-10-21 used_by= —
+NEWROW S203 status= mined opened= 2026-11-06 used_by= corpus/knowledge/citation-searching-tarcis-r81.md
+NEWROW S204 status= mined opened= 2026-11-06 used_by= corpus/knowledge/citation-searching-tarcis-r81.md
+NEWROW S205 status= mined opened= 2026-11-06 used_by= corpus/knowledge/correction-retraction-status-r81.md
+NEWROW S206 status= mined opened= 2026-11-06 used_by= corpus/knowledge/correction-retraction-status-r81.md
+NEWROW S207 status= mined opened= 2026-11-06 used_by= corpus/knowledge/correction-retraction-status-r81.md
+NEWROW S208 status= rejected opened= 2026-11-06 used_by= —
+# ---- exit code: 0 ----

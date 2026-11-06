@@ -14,7 +14,8 @@ descriptions of how that status is published.
 
 ## How the status is published (observations)
 
-NLM (PubMed) links notices to the article they concern, in both directions:
+NLM (PubMed) links notices to the article they concern, in both directions. For an erratum that corrects a part of
+the article not carried in the NLM citation (text, graphs, tables):
 
 > "the erratum notice is simply linked to the citation for the corrected article." — S205
 
@@ -26,6 +27,8 @@ ICMJE asks journals to keep the version trail readable:
 
 > "Previous electronic versions should prominently note that there are more recent versions of the article" — S206
 
+> "The citation should be to the most recent version." — S206
+
 Crossref distributes the Retraction Watch database, with a stated coverage limit:
 
 > "Some other update types, such as expressions of concern and corrections, are also included in the data, but these are not as comprehensive as retractions." — S207
@@ -36,7 +39,7 @@ Crossref distributes the Retraction Watch database, with a stated coverage limit
 |---|---|---|---|
 | PubMed record carries Publication Type Retracted Publication | retracted (S205) | record the claim's support as withdrawn; cite the retraction notice beside the work | count the work as support because the anchor still opens |
 | PubMed record links an erratum notice | corrected (S205) | open the erratum and re-check the quoted span against the corrected text | quote the uncorrected wording as current |
-| A newer article version exists (journal's version note) | superseded wording (S206) | cite the version read, with its date, and say whether a newer one exists | cite a version-less "the article says" |
+| A newer article version exists (journal's version note) | the read wording may be superseded (S206) | cite the most recent version and re-check the quoted span against it; if only an earlier version was read, say which and that a newer one exists | cite an earlier version as current, or a version-less "the article says" |
 | Retraction Watch data show no retraction | absence of a retraction record only (S207) | record the check (source, date) as a negative sweep | read it as "no correction or expression of concern either" — S207 says those types are less comprehensive |
 | The notice cannot be read (host refuses the fetch) | status unknown | keep the source, mark the status check unresolved, name the notice | treat unreachable as "no notice" |
 
@@ -48,3 +51,9 @@ unreachable) — `corpus/knowledge/citation-searching-tarcis-r81.md` records the
 A status check is a negative claim ("no retraction found"), so under this lane's checklist it carries a sweep naming
 where it looked (PubMed publication types and linked notices, the journal's version note, the Retraction Watch data)
 and the date it looked. The three sources describe where status is published; none of them states this checklist rule.
+
+## Correction (round 81, after scoring)
+
+As landed at `7e2da96a`, the version row said "cite the version read", contradicting S206's "The citation should be to
+the most recent version." (`R81ReviewerEntries.md` item 1). The row now follows S206; the round's claim verdict is
+unchanged by this repair (`corpus/lessons/round-81.md`).

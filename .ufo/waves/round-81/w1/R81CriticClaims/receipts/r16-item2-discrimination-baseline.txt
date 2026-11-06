@@ -1,0 +1,26 @@
+# seat: R81CriticClaims
+
+# discrimination baseline: landed item-2 run line on the frozen pair and on negA-probe.md
+
+# cmd: cd /fast/scratch/hyaku/chousa-r81/R81CriticClaims/land && f=/fast/scratch/hyaku/chousa-r81/R81CriticClaims/land/corpus/evidence/round81/checklist-fixtures/item2-pass.md; ! bash tools/research-gate.sh verify "$f" --root . | grep -q '^FINDING NEGATIVE_WITHOUT_SWEEP' && bash tools/research-gate.sh verify-sweeps "$f" --root .
+research-gate v2 — ts=2026-11-06T19:01:39Z — mode=sweeps — record=/fast/scratch/hyaku/chousa-r81/R81CriticClaims/land/corpus/evidence/round81/checklist-fixtures/item2-pass.md
+SWEEP id=W1 where=corpus/knowledge/*tarcis-r80*,corpus/knowledge/*tarcis-pre-r81* looked=local hits=0 at=- observed=verified verdict=match
+REJECTION id=R1 ref=corpus/fixtures/sweeps-r5.md reason=present flip=present observed=complete verdict=match
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+RESEARCH_GATE: CLEAN (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=1 findings=0 drift=0)
+
+rc=0
+
+# cmd: cd /fast/scratch/hyaku/chousa-r81/R81CriticClaims/land && f=/fast/scratch/hyaku/chousa-r81/R81CriticClaims/land/corpus/evidence/round81/checklist-fixtures/item2-fail.md; ! bash tools/research-gate.sh verify "$f" --root . | grep -q '^FINDING NEGATIVE_WITHOUT_SWEEP' && bash tools/research-gate.sh verify-sweeps "$f" --root .
+research-gate v2 — ts=2026-11-06T19:01:40Z — mode=sweeps — record=/fast/scratch/hyaku/chousa-r81/R81CriticClaims/land/corpus/evidence/round81/checklist-fixtures/item2-fail.md
+SWEEP id=W1 where=- looked=unnamed hits=- at=- observed=invalid verdict=invalid
+REJECTION id=R1 ref=corpus/fixtures/sweeps-r5.md reason=present flip=present observed=complete verdict=match
+FINDING SWEEP_LOCATION_ABSENT severity=warn surface=sweeps obs=id=W1 no location named
+VERIFIED_SWEEPS=0/1 REJECTIONS_OK=1/1
+RESEARCH_GATE: DRIFT (sweeps=1 verified=0 exempt=0 hit=0 refused=0 invalid=1 rejections=1 rejections-ok=1 findings=1 drift=1)
+
+rc=1
+
+# cmd: cd /fast/scratch/hyaku/chousa-r81/R81CriticClaims/land && f=/fast/scratch/hyaku/chousa-r81/R81CriticClaims/land/corpus/evidence/round81/negA-probe.md; ! bash tools/research-gate.sh verify "$f" --root . | grep -q '^FINDING NEGATIVE_WITHOUT_SWEEP' && bash tools/research-gate.sh verify-sweeps "$f" --root .
+
+rc=1

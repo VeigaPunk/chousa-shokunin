@@ -1,0 +1,12 @@
+$ git diff --stat 0f59b985933b2fe9b0b6a754d908ac6ae47399e6 0d253c95732c0ed19a9fa414e5d17769ddefa48d -- corpus/evidence/round80/claims.md
+RC=0 (empty diff above = identical bytes)
+
+$ git show 0d253c95732c0ed19a9fa414e5d17769ddefa48d:corpus/evidence/round80/claims.md | grep -nF -e "sourced on S200" -e "15-word"
+59:## C2 — calibration (sourced on S200)
+90:`b7803829`, the corrected 15-word located quote that supersedes S196). Both rows carry a
+RC=0
+
+$ git show 0d253c95732c0ed19a9fa414e5d17769ddefa48d:corpus/evidence/round80/claims.md | sha256sum
+06086ba2a62375c917b903db84c14d6f48422011f54079bbae8bf553da3ea29a  -
+$ git show 0f59b985933b2fe9b0b6a754d908ac6ae47399e6:corpus/evidence/round80/claims.md | sha256sum
+06086ba2a62375c917b903db84c14d6f48422011f54079bbae8bf553da3ea29a  -

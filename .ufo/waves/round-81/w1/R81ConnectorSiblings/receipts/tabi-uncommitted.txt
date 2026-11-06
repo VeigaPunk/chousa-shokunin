@@ -1,0 +1,14 @@
+# NOTE: tabi PROVINCE.md chousa row is UNCOMMITTED worktree bytes — not citable
+# CWD: /home/vgpnk/Projects/shokunin
+
+$ git -C tabi-shokunin status --porcelain -- PROVINCE.md
+ M PROVINCE.md   (rc=0)
+
+$ git -C tabi-shokunin show HEAD:PROVINCE.md | wc -l
+169   (rc=0)
+
+$ git -C tabi-shokunin show HEAD:PROVINCE.md | grep -n 'chousa'
+[grep_rc=1]   (rc=0)
+
+$ ... | sed -n '186p' | wc -c
+0   (line 186 does not exist at HEAD; rc=0)

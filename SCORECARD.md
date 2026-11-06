@@ -3684,3 +3684,55 @@ token, and they are this round's own cells. Recorded as a `## Mistakes` row in
 `corpus/lessons/round-80.md`; the check that would have caught it (diff a verdict row's text against
 the prior tip's, fails on any changed cell outside the new round's own block) is named there.
 
+
+### Correction 2 — 2026-11-06, round-81 closure: routed defects 1 and 2 (append-only; filed bytes unchanged)
+
+The frozen claims file is authoritative for the C2 sourcing label. `corpus/evidence/round80/claims.md`
+(frozen at `0d253c95732c0ed19a9fa414e5d17769ddefa48d`; byte-identical to the preserved attempt-1 copy
+`0f59b985933b2fe9b0b6a754d908ac6ae47399e6`, `git diff --stat` empty; both blobs
+`06086ba2a62375c917b903db84c14d6f48422011f54079bbae8bf553da3ea29a`) reads at line 59
+`## C2 — calibration (sourced on S200)` and at lines 88–90 `C2's landing cites **S200**`. The C2 row
+above opens `| C2 calibration (sourced on S199) |` (line 3655); the `S199` label is corrected here to
+**S200**, and `S199` is C1's evidence row (`claims.md:88`: `C1's evidence cites **S199**`). Both rows
+are new this round, so the sourced-claim duty was met either way; the label is what is corrected. The
+filed cell text is not rewritten. The same label at `corpus/lessons/round-80.md:73` and `LOG.md:2335`
+is superseded by this note and by the round-81 correction block appended to `corpus/lessons/round-80.md`
+(defect 1).
+
+The C2 verdict cell in the row above — `**falsified by its own kill rule — honest stop**` — is the
+operative value and is confirmed, not corrected: `corpus/lessons/round-80.md` `## Kill-rule outcomes`
+states "**C2 as written does not verify**" and cites the committed receipt
+`.ufo/waves/round-80/w1/R80CriticA/receipts/c2-unopened-superseded-record.txt`; the outcome table's
+`**improved**` cell at `corpus/lessons/round-80.md:73` is corrected to this value by defect 2 of the
+round-81 block appended to that file.
+
+## Round 81 verdict — fresh start off the battery surface: two entries land, both claims honest-stop (2026-11-06)
+
+Base `378fda82dc2cbcc555a0565052cc408121813cef`; prefreeze controls `f7929f877e6fd54f4dc5ce7f993da46bc7df43f9`;
+freeze `bb54e7f89da9ba4213aec9d976c13f3f4ba548fb` (`corpus/evidence/round81/claims.md`); scored landing
+`7e2da96a0541946e796384d42fea18e09ede9e9f`; wave `.ufo/waves/round-81/w1/` (12 seats, 0 dead).
+
+| claim / axis | before → after | counting command / evidence | verdict |
+|---|---|---|---|
+| C1 depth (sourced on S203–S207) | `DEPTH_R81 entries=0` `FAIL` rc 1 (`controls/c1-k0-donothing.txt`) → `entries=2 fresh_rows=5 located_quotes=14` `PASS` rc 0 at `7e2da96a` | `D=$(mktemp -d -p /fast/scratch/hyaku) && git archive 7e2da96a \| tar -x -C "$D" && python3 -B corpus/evidence/round81/depth-r81.py --root "$D"` | **honest stop** — K1/K2 held (14/14 live re-opens); the counter passes two filler entries (`R81CriticClaims/receipts/r09-c1-filler-entries.txt`), and a decision-table row contradicted its cited source's next sentence (K3 on its spirit, `R81ReviewerEntries.md` item 1; repaired after scoring) |
+| C2 operability (lowest scored non-retired axis; historical 3/10 held) | `CHECKLIST_RUN=3/6 DISCRIMINATE=0/3` rc 1 → `6/6 3/3` `PASS` rc 0 at `7e2da96a` | `python3 -B corpus/evidence/round81/checklist-run.py --root <tree>` | **falsified by its own kill rule (K2) — honest stop** — item-4 line passes flip `-`/`n/a`/`none`; item-2 line passes an undeclared sweep id and `n/a` locations (`R81ReviewerC2/attack.md`) |
+
+| axis | verdict | evidence |
+|---|---|---|
+| depth | **improved narrowly, claim not verified** | knowledge 92 → 94 with two reviewed, repaired entries on ground held only as an S120 capture citation before; measurement not admissible as depth (QUALITY 162) |
+| operability | **improved narrowly, claim falsified** | six of six checklist items now carry a Run line; their pass-through forms are written into SKILL.md |
+| calibration | unchanged | r80 routed defects 1–6 closed append-only (corrections in this file and `corpus/lessons/round-80.md`); QUALITY 161–162 |
+| coverage | unchanged | `PROVINCE.md` untouched; README round-81 section indexes the entries (G02 PASS restored) |
+| freshness | unchanged | no drift surface measured |
+| adjacency | unchanged | `R81ConnectorSiblings.md`: no sibling entry on either topic; kagi's checklist runner noted, absorbed nothing |
+
+No axis harmed at the final landing: the lane's G02 knowledge-index gate failed at `7e2da96a` (2 unindexed) and passes
+after the README section; census exit 0 at start and end; SCORECARD/LOG/QUALITY/lesson changes append-only.
+
+## Planned — round 82 (intent, not a predicate)
+
+1. **operability (lowest)** — make the item-2/item-4 Run lines refuse the round-81 K2 forms through the gate itself
+   (`verify-sweeps`: placeholder flip/reason cells, undeclared sweep ids, `n/a` locations), with those eleven records as
+   frozen fail controls and `corpus/fixtures/sweeps-r5.md` as a pass control.
+2. **depth** — a successor depth counter with content conditions (each table row cites a quote line, quotes ≥ 8 words,
+   Warrant cell names the quote's S-id) frozen with the `r09` filler entries as a control; disposition S028 (Crossmark).
