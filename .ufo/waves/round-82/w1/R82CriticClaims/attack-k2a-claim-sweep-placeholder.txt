@@ -1,0 +1,40 @@
+# attack: item2-pass.md with exactly one claim-sweep cell changed W1 -> n/a
+# diff:
+--- /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round82/c1-records/item2-pass.md	2026-11-06 16:43:55.810106569 -0300
++++ /fast/scratch/hyaku/chousa-r82/R82CriticClaims/attack-k2a.md	2026-11-06 17:09:05.627305059 -0300
+@@ -21,7 +21,7 @@
+ 
+ | id | kind | text | pointer | status | sweep |
+ |---|---|---|---|---|---|
+-| N1 | negative | no pre-round knowledge entry file is named for the TARCiS statement | corpus/fixtures/sweeps-r5.md | observed-in-dump | W1 |
++| N1 | negative | no pre-round knowledge entry file is named for the TARCiS statement | corpus/fixtures/sweeps-r5.md | observed-in-dump | n/a |
+ 
+ ## Rejections
+ 
+# cmd (frozen Run line, landing b4a41d25 tree):
+research-gate v2 — ts=2026-11-06T20:09:05Z — mode=sweeps — record=/fast/scratch/hyaku/chousa-r82/R82CriticClaims/attack-k2a.md
+SWEEP id=W1 where=corpus/knowledge/*tarcis-r80*,corpus/knowledge/*tarcis-pre-r81* looked=local hits=0 at=- observed=verified verdict=match
+REJECTION id=R1 ref=corpus/fixtures/sweeps-r5.md reason=present flip=present observed=complete verdict=match
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+RESEARCH_GATE: CLEAN (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=1 findings=0 drift=0)
+rc=0
+
+# second minimal case: the claim-sweep cell EMPTY (a declared-vocabulary value) with the Sweeps row claim_id=N1
+--- /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round82/c1-records/item2-pass.md	2026-11-06 16:43:55.810106569 -0300
++++ /fast/scratch/hyaku/chousa-r82/R82CriticClaims/attack-k2a-empty.md	2026-11-06 17:17:44.015971424 -0300
+@@ -21,7 +21,7 @@
+ 
+ | id | kind | text | pointer | status | sweep |
+ |---|---|---|---|---|---|
+-| N1 | negative | no pre-round knowledge entry file is named for the TARCiS statement | corpus/fixtures/sweeps-r5.md | observed-in-dump | W1 |
++| N1 | negative | no pre-round knowledge entry file is named for the TARCiS statement | corpus/fixtures/sweeps-r5.md | observed-in-dump |  |
+ 
+ ## Rejections
+ 
+# cmd (frozen item-2 Run line, landing tree):
+research-gate v2 — ts=2026-11-06T20:17:44Z — mode=sweeps — record=/fast/scratch/hyaku/chousa-r82/R82CriticClaims/attack-k2a-empty.md
+SWEEP id=W1 where=corpus/knowledge/*tarcis-r80*,corpus/knowledge/*tarcis-pre-r81* looked=local hits=0 at=- observed=verified verdict=match
+REJECTION id=R1 ref=corpus/fixtures/sweeps-r5.md reason=present flip=present observed=complete verdict=match
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+RESEARCH_GATE: CLEAN (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=1 findings=0 drift=0)
+rc=0

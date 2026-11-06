@@ -1,0 +1,15 @@
+# R11 — does the landed S008 anchor cell cover where each S008 quote of the new entry actually sits?
+python3 - <<'PY'
+import pathlib,re
+t=pathlib.Path('/fast/scratch/hyaku/chousa-r82/R82ScoutNovelty/tree/corpus/captures/fd7eed5e0e6c64e22bc1470c.txt').read_text(encoding='utf-8')
+lines=t.splitlines()
+qs={"Q1":"The review PICO (planned at the protocol stage)","Q2":"The PICO for each synthesis","Q3":"The PICO of the included studies","Q4":"Equal emphasis in addressing","Q5":"It is generally not possible to formulate an answerable question"}
+for qid,q in qs.items():
+    for i,l in enumerate(lines):
+        if q in l:
+            head="(no 2.x heading found)"
+            for j in range(i,max(0,i-80),-1):
+                m=re.match(r'^\s*(2\.\d(\.\d)?)\s+(\S.*)',lines[j])
+                if m: head=f"{m.group(1)} {m.group(2)} (line {j+1})"; break
+            print(f"{qid}: line {i+1}  nearest 2.x heading: {head}")
+PY

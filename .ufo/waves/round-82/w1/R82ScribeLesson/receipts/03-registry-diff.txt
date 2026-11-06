@@ -1,0 +1,93 @@
+# registry diff base 142b6f0c -> landing b4a41d25, corpus/SOURCES.md
+$ git diff --numstat 142b6f0c08e645ef9507f6d880be44e518c39043 b4a41d251b488f06b4a6ab01a11bc12ce72edd20 -- corpus/SOURCES.md
+5	2	corpus/SOURCES.md
+
+# rows at base (status/anchor/recheck/used-by cells), one line each:
+-- S008 base:
+| S008 | Cochrane Handbook ch.2, Determining the scope of the review and the questions it will address — https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-02 | docs | A | the Handbook's own guidance on framing review scope and questions | sections 2.1 rationale and 2.3 three PICO levels; last updated August 2023, Handbook v6.5 | Frame an answerable question first and keep review PICO, synthesis PICO, and included-study PICO distinct | queued | 2026-10-19 | on-release | — |
+-- S008 landing:
+| S008 | Cochrane Handbook ch.2, Determining the scope of the review and the questions it will address — https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-02 | docs | A | the Handbook's own guidance on framing review scope and questions | sections 2.1 Key Points and 2.3 (the three PICO stages: review PICO, PICO for each synthesis, PICO of the included studies) as served 2026-11-06 (capture key fd7eed5e0e6c64e22bc1470c); Handbook v6.5 | Frame an answerable question first and keep review PICO, synthesis PICO, and included-study PICO distinct | mined | 2026-10-19 | on-release | corpus/knowledge/question-framing-frames-r82.md |
+-- S028 base:
+| S028 | Crossref Crossmark — https://www.crossref.org/services/crossmark/ | docs | A | Crossref's own description of the Crossmark update/correction/retraction status service | introductory text before Benefits of Crossmark | A cited work's update, correction or retraction status is published metadata a reader can check, a recheck trigger | queued | 2026-10-21 | 180d | — |
+-- S028 landing:
+| S028 | Crossref Crossmark — https://www.crossref.org/services/crossmark/ | docs | A | Crossref's own description of the Crossmark update/correction/retraction status service | introductory text before Benefits of Crossmark and the How Crossmark works paragraph, as served 2026-11-06 (capture key dedff231d5c3d3cdb0b4f8e3) | A cited work's update, correction or retraction status is published metadata a reader can check, a recheck trigger | mined | 2026-10-21 | 180d | corpus/knowledge/correction-retraction-status-r81.md |
+
+# new rows at base (expect 0 hits, rc 1):
+0
+rc=1
+# new rows at landing (expect 3):
+3
+
+# any other added/deleted/edited registry line? full diff:
+diff --git a/corpus/SOURCES.md b/corpus/SOURCES.md
+index 40ab8a56..418c5f5b 100644
+--- a/corpus/SOURCES.md
++++ b/corpus/SOURCES.md
+@@ -15,7 +15,7 @@ its author opened the source and judged its tier for the stated scope only.
+ | S005 | Chen, Teplitskiy, Jurgens, The Noisy Path from Source to Citation — https://aclanthology.org/2025.acl-long.1534/ | paper | A | what this study measured about scholarly citation fidelity | Abstract; section 4 "Measuring Citation Fidelity"; section 6 "Telephone Effect in Citation"; Figure 1 footnote 1; ACL 2025, pages 31786-31802, DOI 10.18653/v1/2025.acl-long.1534 | Citation fidelity varies measurably and low fidelity at one hop predicts lower fidelity downstream — the telephone effect | mined | 2026-10-19 | 365d | corpus/knowledge/citation-chain-fidelity-r24.md |
+ | S006 | Onweller et al., Cited but Not Verified — https://arxiv.org/html/2605.06635v1 | paper | A | the evaluation framework this preprint defines (its own dimensions), not its results about evaluated systems | section 3.3 Evaluation dimensions (3.3.1 Link Works, 3.3.2 Relevant Content, 3.3.3 Fact Check); arXiv:2605.06635v1, 2026-05-07 | Split citation checks into link accessibility, topical relevance, and factual support — three separately failable checks | mined | 2026-10-19 | 90d | corpus/knowledge/claim-support-states-r24.md |
+ | S007 | Li et al., DeepResearch Bench II — https://arxiv.org/html/2601.08536v3 | paper | A | what this paper itself states, including its section 2.1 statement of what citation-accuracy measurement does and does not establish; not its benchmark results | section 2.1 passage noting support does not confirm correctness; arXiv:2601.08536v3, 2026-09-10 | Whether a citation supports a claim is separate from whether the cited information is correct | mined | 2026-10-19 | 90d | corpus/knowledge/claim-support-states-r24.md |
+-| S008 | Cochrane Handbook ch.2, Determining the scope of the review and the questions it will address — https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-02 | docs | A | the Handbook's own guidance on framing review scope and questions | sections 2.1 rationale and 2.3 three PICO levels; last updated August 2023, Handbook v6.5 | Frame an answerable question first and keep review PICO, synthesis PICO, and included-study PICO distinct | queued | 2026-10-19 | on-release | — |
++| S008 | Cochrane Handbook ch.2, Determining the scope of the review and the questions it will address — https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-02 | docs | A | the Handbook's own guidance on framing review scope and questions | sections 2.1 Key Points and 2.3 (the three PICO stages: review PICO, PICO for each synthesis, PICO of the included studies) as served 2026-11-06 (capture key fd7eed5e0e6c64e22bc1470c); Handbook v6.5 | Frame an answerable question first and keep review PICO, synthesis PICO, and included-study PICO distinct | mined | 2026-10-19 | on-release | corpus/knowledge/question-framing-frames-r82.md |
+ | S009 | Cochrane MECIR, Assessing risk of bias in included studies C52-C60 — https://www.cochrane.org/authors/handbooks-and-manuals/mecir-manual/standards-conduct-new-cochrane-intervention-reviews-c1-c75/performing-review-c24-c75/assessing-risk-bias-included-studies-c52-c60 | spec | A | the MECIR conduct standards for risk-of-bias judgments | standards C53, C54, C55 table rows; page as served 2026-10-19 | Require independent duplicate judgments, a predefined disagreement process, and recorded support for each judgment | queued | 2026-10-19 | 365d | — |
+ | S010 | Xu et al., CiteEval: Principle-Driven Citation Evaluation for Source Attribution — https://aclanthology.org/2025.acl-long.1574/ | paper | A | what this framework proposes and measured on citation evaluation | Abstract; ACL 2025, pages 32759-32778, DOI 10.18653/v1/2025.acl-long.1574 | NLI-style binary support is a suboptimal proxy; evaluate citations across the full query, retrieval, and generated-answer context | queued | 2026-10-19 | 365d | — |
+ | S011 | Upadhyay et al., Overview of the TREC 2025 Retrieval Augmented Generation Track — https://trec.nist.gov/pubs/trec34/papers/Overview_rag.pdf | paper | A | what the track ran and how it layered evaluation | section 3 Evaluation (relevance, response, support, agreement layers); TREC 34, arXiv:2603.09891v1 | Assess relevance, answer coverage, per-sentence citation support, and assessor agreement as separate layers | queued | 2026-10-19 | 365d | — |
+@@ -35,7 +35,7 @@ its author opened the source and judged its tier for the stated scope only.
+ | S025 | RFC 9111, HTTP Caching — https://www.rfc-editor.org/rfc/rfc9111 | spec | C | a general rule for research-record staleness or knowledge-entry metadata policy | section 4.2 Freshness; Standards Track, June 2022 | REJECTED: a standard for HTTP-cache freshness, not authority for research-record validity; flip: use as an explicitly labelled analogy and pair it with a directly relevant method source | rejected | 2026-10-21 | on-release | — |
+ | S026 | GO FAIR Foundation, R1.2 (meta)data are associated with detailed provenance — https://www.gofair.foundation/r1-2 | docs | A | the Foundation's own interpretation of FAIR sub-principle R1.2 | Interpretation of R1.2, first paragraph | Detailed provenance names how, why, by whom and under what conditions a resource was generated | queued | 2026-10-21 | 180d | — |
+ | S027 | Wikipedia:As of — https://en.wikipedia.org/wiki/Wikipedia:As_of | community | C | Wikipedia editors' guidance for dating time-sensitive statements; never sole support | Usage guidelines section; revision 1342587259 as served 2026-10-21 | Date time-sensitive statements and, when the next update is predictable, mark when it is due | queued | 2026-10-21 | 90d | — |
+-| S028 | Crossref Crossmark — https://www.crossref.org/services/crossmark/ | docs | A | Crossref's own description of the Crossmark update/correction/retraction status service | introductory text before Benefits of Crossmark | A cited work's update, correction or retraction status is published metadata a reader can check, a recheck trigger | queued | 2026-10-21 | 180d | — |
++| S028 | Crossref Crossmark — https://www.crossref.org/services/crossmark/ | docs | A | Crossref's own description of the Crossmark update/correction/retraction status service | introductory text before Benefits of Crossmark and the How Crossmark works paragraph, as served 2026-11-06 (capture key dedff231d5c3d3cdb0b4f8e3) | A cited work's update, correction or retraction status is published metadata a reader can check, a recheck trigger | mined | 2026-10-21 | 180d | corpus/knowledge/correction-retraction-status-r81.md |
+ | S029 | Cochrane Handbook ch. IV, Updating a review — https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-iv | docs | A | the Handbook's own guidance on periodically deciding whether and how to update a Cochrane review | Chapter IV section IV.1 Introduction; Handbook v6.5, August 2023 | supersedes S019 — Cochrane reviews should be assessed periodically to decide whether an update is needed; this sentence does not prescribe a recorded schedule | mined | 2026-10-21 | on-release | corpus/knowledge/metadata-screen-r25.md, corpus/knowledge/recheck-due-r26.md |
+ | S030 | Elliott et al. 2017, Living systematic review: 1. Introduction — https://pubmed.ncbi.nlm.nih.gov/28912002/ | paper | A | the paper's own living-systematic-review definition and rationale; not metadata design | Abstract, living-systematic-review definition; J Clin Epidemiol 2017;91:23-30 | supersedes S022 — defines living systematic reviews as continually updated to incorporate relevant new evidence as it becomes available; recheck-cadence comparison is a lane inference | queued | 2026-10-21 | 365d | — |
+ | S031 | Schema.org property lastReviewed — https://schema.org/lastReviewed | spec | A | Schema.org's own definition and declared use of lastReviewed | lastReviewed property definition paragraph; Schema.org page served 2026-10-21 | supersedes S024 — lastReviewed records the date a web page was last reviewed for accuracy and/or completeness; no comparison to other date properties claimed | queued | 2026-10-21 | 365d | — |
+@@ -218,6 +218,9 @@ its author opened the source and judged its tier for the stated scope only.
+ | S206 | ICMJE Recommendations — Corrections, Retractions, Republications and Version Control — https://www.icmje.org/recommendations/browse/publishing-and-editorial-issues/corrections-and-version-control.html | spec | A | what ICMJE asks journals to do when a published article is corrected, retracted or re-versioned | correction minimum standards and version-control paragraph (capture key f221c90f69188f775e32cd34) | journals archive prior versions and mark earlier electronic versions as superseded, so a reader can tell which version was cited | mined | 2026-11-06 | 365d | corpus/knowledge/correction-retraction-status-r81.md |
+ | S207 | Crossref documentation — Retraction Watch — https://www.crossref.org/documentation/retrieve-metadata/retraction-watch/ | docs | A | what the Crossref-distributed Retraction Watch data cover and how completely | the paragraph on update cadence and update types (capture key 43a45b49723f7677d6446c92) | the data are updated every working day; expressions of concern and corrections are included but less comprehensively than retractions, so a no-hit is weaker for them | mined | 2026-11-06 | 365d | corpus/knowledge/correction-retraction-status-r81.md |
+ | S208 | BMJ correction to the TARCiS statement, BMJ 2024;387:q2458 — https://www.bmj.com/content/387/bmj.q2458.full.txt | paper | A | the corrected wording of TARCiS recommendation 5 | none located: capture-fetch attempt 1, 2026-11-06T18:44:31Z, curl rc 22, HTTP 403 | REJECTED (unreachable, not fabrication): the host refused the lane's GET, so no quote was located and nothing is taught from it; flip: a readable copy of the correction (publisher page or an index record carrying its text) opened and its recommendation-5 wording located | rejected | 2026-11-06 | 30d | — |
++| S209 | JBI Manual for Evidence Synthesis, 10.2.2 Developing your protocol (Phillips; page slug "Developing the title and question") — https://jbi-global.atlassian.net/wiki/spaces/MANUAL/pages/355862667/10.2.2+Developing+the+title+and+question | docs | A | what JBI asks of a scoping-review protocol and of changes made after it | the protocol paragraph on deviations, as served 2026-11-06 (capture key 213237301753814b95b24684) | a protocol is fixed before the review; deviations from it are reported with their justification in the final review | mined | 2026-11-06 | on-release | corpus/knowledge/question-framing-frames-r82.md |
++| S210 | JBI Manual for Evidence Synthesis, 10.2.3 Defining and aligning the objective/s and question/s (Phillips) — https://jbi-global.atlassian.net/wiki/spaces/MANUAL/pages/355862687 | docs | A | how JBI frames a scoping-review question and when another question format fits | paragraphs on PCC, hypothesis-generating questions and PICO/PECO alternatives, as served 2026-11-06 (capture key bcb4a695b2aa019305121cff) | scoping questions use population, concept and context; PICO or PECO may fit when the map precedes a systematic review; an unclear question leaves the review incoherent | mined | 2026-11-06 | on-release | corpus/knowledge/question-framing-frames-r82.md |
++| S211 | JBI Manual for Evidence Synthesis, 10.2.4 Developing and aligning the eligibility criteria with the objective/s and question/s (Phillips) — https://jbi-global.atlassian.net/wiki/spaces/MANUAL/pages/355862707 | docs | A | how JBI derives eligibility criteria from the question frame | opening paragraphs and the Population/Concept/Context headings, as served 2026-11-06 (capture key 97223722748a928c3c6912b5) | each element of the question frame is broken into what the review includes and excludes | mined | 2026-11-06 | on-release | corpus/knowledge/question-framing-frames-r82.md |
+ 
+ ## Paths
+ 
+
+# S008 anchor check: the new cell says "sections 2.1 Key Points and 2.3"
+$ grep -n "Key Points\|^ 2\.1 \|^ 2\.3 \|2\.1 Rationale" corpus/captures/fd7eed5e0e6c64e22bc1470c.txt
+488: 2.1 Rationale for well-formulated questions 
+490: 2.3 Defining the scope of a review question 
+531: Key Points:
+538: 2.1 Rationale for well-formulated questions
+556: 2.3 Defining the scope of a review question
+
+$ awk "NR>=531 && NR<=560" ... (context: Key Points box, 2.1 heading, 2.3 heading, Q1)
+531:  Key Points:
+532:  Systematic reviews should address answerable questions and fill important gaps in knowledge.
+533:  Developing good review questions takes time, expertise and engagement with intended users of the re
+534:  Cochrane reviews can focus on broad questions, or be more narrowly defined. There are advantages an
+535:  Logic models are a way of documenting how interventions, particularly complex interventions, are in
+536:  Using priority-setting exercises, involving relevant stakeholders, and ensuring that the review tak
+537:  Cite this chapter as: Thomas J, Kneale D, McKenzie JE, Brennan SE, Bhaumik S. Chapter 2: Determinin
+538:  2.1 Rationale for well-formulated questions
+539:  As with any research, the first and most important decision in preparing a systematic review is to 
+540:  Well-formulated questions will guide many aspects of the review process, including determining elig
+541:  The FINER criteria have been proposed as encapsulating the issues that should be addressed when dev
+542:  A feasible review is one that asks a question that the author team is capable of addressing using t
+543:  Embarking on a review that authors are interested in is important because reviews are a significant
+544:  A novel review will address a genuine gap in knowledge, so review authors should be aware of any re
+545:  Given the opportunity cost involved in undertaking an activity as demanding as a systematic review,
+546:  Consideration of opportunity costs is also relevant in terms of the ethics of conducting a review, 
+547:  MECIR Box 2.1.a Relevant expectations for conduct of intervention reviews
+548:  C1: Formulating review questions ( Mandatory ) 
+549:  Ensure that the review question and particularly the outcomes of interest, address issues that are 
+550:  C3: Considering potential adverse effects ( Mandatory ) 
+551:  Consider any important potential adverse effects of the intervention(s) and ensure that they are ad
+552:  
+553:  2.2 Aims of reviews of interventions
+554:  Systematic reviews can address any question that can be answered by a primary research study. This 
+555:  As well as looking at the balance of benefit and harm that can be attributed to a given interventio
+556:  2.3 Defining the scope of a review question
+557:  Studies comparing healthcare interventions, notably randomized trials, use the outcomes of particip
+558:  A statement of the review’s objectives should begin with a precise statement of the primary objecti
+559:  Throughout the Handbook we make a distinction between three different stages in the review at which
+560:  The review PICO (planned at the protocol stage) is the PICO on which eligibility of studies is base

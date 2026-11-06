@@ -2378,3 +2378,20 @@ passing record rather than through prose.
 - r80 routed defects 1–6 closed append-only; QUALITY 161–162; README round-81 coverage section (G02 restored).
 - Re-verification: 14/14 counted quotes re-opened live (`R81ExecReopen.md`); census exit 0 start and end.
 
+
+## Round 82 — gate refuses the placeholder class; question framing lands as knowledge; both claims honest-stop (2026-11-06)
+
+- Fresh-start reads: r79–r81 spot-checks; every predicate a fixed command over committed bytes; 14 prefreeze controls
+  (do-nothing, blanket-refuse, keyed-finding, keyed-Run-line, filler, fabricated, stale, duplicate, short, placeholder,
+  unregistered, positive, salad boundary) executed and committed before freeze (`corpus/evidence/round82/controls/`).
+- Egress table committed at `5d792e1e` (19:41:56Z) before the first fetch (19:42:03Z): S008 (re-open), S209, S210,
+  S211, S028 — all HTTP 200 (round-81 routed defect 3 closed).
+- C1 operability: `tools/research-gate.sh` verify-sweeps refuses placeholder reason/flip/where cells, reads
+  reject-headed sections, and requires a negative claim to resolve to a re-run sweep row; counter PASS at `b4a41d25`;
+  K2 (duplicate headings, back-referenced placeholder cell) and K3 (four K2-free shapes) fired — honest stop.
+- C2 depth: `corpus/knowledge/question-framing-frames-r82.md` (S008, S209–S211); counter PASS; K3 fired on row 1 —
+  honest stop. S028 mined into the round-81 correction entry (routed defect 6 closed).
+- Post-scoring repairs `51a5dee8`: gate closes every wave firing (in-class 185/185; 8/8), selftest 283; entry rows 1/7.
+- Mined mistake: the round-81 seat record r4-07 described as "flip empty" carries a complete rejection (QUALITY 163).
+- Trial: `R82ExecTrial` ran a question-framing research record through checklist items 1, 2, 4 and verify-all CLEAN;
+  its three mutated twins were refused with the expected finding ids.

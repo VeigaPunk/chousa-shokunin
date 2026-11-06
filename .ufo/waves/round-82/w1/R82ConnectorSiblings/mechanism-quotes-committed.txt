@@ -1,0 +1,84 @@
+
+=== kotoba check_gate_registry.py:40-43 ===
+    40	    repo-relative paths each of which exists at the revision (`git cat-file -e
+    41	    <rev>:<path>`); a `gate` may not say `none`;
+    42	  * the write-scope cell is non-empty and not a dash;
+    43	  * the owner cell is `kotoba`.
+
+=== kotoba check_gate_registry.py:219-222 ===
+   219	                why.append("pinned path %s does not exist" % p)
+   220	    if clean(r[6]) in ("", "-", "\u2014", "\u2013"):
+   221	        why.append("write scope empty")
+   222	    if clean(r[7]) != OWNER:
+
+=== kotoba check_gate_registry.py:319-321 ===
+   319	          (["verifiers/a.py"], []))
+   320	    check("empty write scope", ok(sk=skill.replace("tmp clones", "\u2014")), (["verifiers/a.py"], []))
+   321	    check("table under another heading not read", ok(sk=skill.replace("## Gate registry", "## Gates")),
+
+=== revenger lint_entry.py:118-127 ===
+   118	The payload begins `4d616e69666573742d` — ASCII `Manifest-` (9 bytes) at commit `aaaaaaa`.
+   119	
+   120	## §Q-map
+   121	
+   122	| criterion | decision | basis |
+   123	|---|---|---|
+   124	| Q01 | pass | x |
+   125	| Q02 | n/a | y |
+   126	"""
+   127	
+
+=== kaidoku c2-record.py:881-889 ===
+   881	        if not (re.match(r'(?:python3?|bash|sh)\s+(?:-\S+\s+)*(?:\./)?' + re.escape(p) +
+   882	                         r'\b.*--selftest', st)
+   883	                or re.match(r'none\s*[\u2014\-:;,]\s*\S+(?:\s+\S+){2,}', st)):
+   884	            out.append('%s: self-test cell is neither `<interpreter> %s ... --selftest` nor `none \u2014 <reason>`' % (p, p))
+   885	        pin = cs[4]
+   886	        if not (re.match(r'none\s*[\u2014\-:;,]\s*\S+(?:\s+\S+){1,}', pin)
+   887	                or re.search(r'[\w.\-]+/[\w./\-]*|\b[\w\-]+\.(?:json|tsv|md|py|sh|txt|html)\b', pin)):
+   888	            out.append('%s: pinned-value cell names no path and is not `none \u2014 <reason>`' % p)
+   889	    return out
+
+=== kaidoku settle-gate.py:150-158 ===
+   150	            raise Unevaluable("ledger row %d: utc %r is not ISO-8601 Zulu" % (n, row["utc"]))
+   151	        sha = row["report_sha256"].lower()
+   152	        if sha in ("", "-"):
+   153	            sha = None
+   154	        elif not SHA256_RE.match(sha):
+   155	            raise Unevaluable("ledger row %d: report_sha256 %r is not a sha256" % (n, row["report_sha256"]))
+   156	        if row["status"] == "returned" and sha is None:
+   157	            raise Unevaluable("ledger row %d: returned row for %s records no report_sha256" % (n, name))
+   158	        note = row.get("note", "")
+
+=== kengaku round97_gate_selftest_census.py:18-25 ===
+    18	  ROW-REMOVED     a row name present at BASE is absent at REV
+    19	  ROW-DUPLICATE   a row name occurs twice at REV
+    20	  CELL-CHANGED    a BASE row differs at REV in any cell other than `kind`
+    21	  DEMOTED         a row that is `gate` at BASE and `probe` at REV although its script HAS a
+    22	                  self-test spelling (over-correction: blanket retyping is not calibration)
+    23	  SCRIPT-CHANGED  the entry script of a row that is a no-spelling gate at BASE differs at REV
+    24	                  (a spelling added to a closed round's instrument is Q79 harm, not a repair)
+    25	  MISMATCH        a `gate` row at REV whose script has no self-test spelling
+
+=== kumitate harm-matrix.mjs:9-20 ===
+     9	 * Why it exists. The admission rule is "every claim verifies and no axis is harmed" (AXES.md). Until round 65 the harm
+    10	 * check was a seat's hand-run list of gates at two revisions (round 64: K64R2ExecHarmBattery). This tool runs a
+    11	 * registry of the lane's gates at BASE and at TIP, each revision in its own sandbox clone (hooks and git config off, the
+    12	 * origin remote removed, the tree reset and cleaned before every gate), and prints one row per gate with the transition:
+    13	 *   HELD (clean -> clean) · REPAIRED (not clean -> clean) · HARM (clean -> not clean) · HARM_ABSENT (clean -> gate gone)
+    14	 *   NEW_OK / NEW_RED (gate absent at base, clean / not clean at tip) · GONE (a not-clean gate removed)
+    15	 *   CARRIED (not clean -> not clean, same normalised reading) · CARRIED_MOVED (not clean -> not clean, different reading)
+    16	 *   ABSENT_BOTH (gate present at neither revision; not counted).
+    17	 * A gate is CLEAN only when its exit code is in `ok_exit` AND the LAST line (stdout and stderr interleaved in write
+    18	 * order) matching `verdict` carries a word in `clean`; a hyphen-extended word (CLEAN-STALE, FAIL-CLOSED) is its own
+    19	 * word. A missing verdict line, invalid UTF-8 on the verdict line, output over 64 MiB, a signal death, a spawn error
+    20	 * or an escaping/ non-file `needs` path is FAIL_CLOSED, never clean; a gate that outlives `timeout` is TIMEOUT.
+
+=== kumitate gate-mutants.mjs:5-11 ===
+     5	 *
+     6	 * K43: a mutant is KILLED iff its run is evaluable (no timeout, no overflow, clean process group,
+     7	 * no spawn error, a parseable case summary whose total equals the control's), the selftest exits
+     8	 * with a numeric non-zero status, stdout carries the exact line `VERDICT: FAIL`, and an immediate
+     9	 * second run of the same mutated bytes meets the same conditions with the same sorted FAIL case
+    10	 * names. An evaluable run that is not killed is SURVIVED; a disagreeing second run is UNSTABLE
+    11	 * (exit-2 class). Each control is re-run after the mutants and must pass again.

@@ -1,0 +1,44 @@
+# described-form check, shown able to fail — seat R82ScribeLesson
+# cwd: lane root; checker: .ufo/waves/round-82/w1/R82ScribeLesson/check-described-form.py
+
+## FAILING leg: the round-81 seat description "reason present, flip empty" applied to its own record
+$ python3 .ufo/waves/round-82/w1/R82ScribeLesson/check-described-form.py .ufo/waves/round-81/w1/R81ReviewerC2/records/r4-07-alt-section.md --reason present --flip absent
+RECORD .ufo/waves/round-81/w1/R81ReviewerC2/records/r4-07-alt-section.md
+REJECTIONS rows under a reject heading: 1
+  id=R1 heading='## Rejected sources' reason_present=1 flip_present=1
+  DESCRIBED-FORM OK id=R1 leg=reason described=present
+  DESCRIBED-FORM MISMATCH id=R1 leg=flip described=absent bytes=present
+DESCRIBED_FORM bad=1
+RC=1
+rc=1
+
+## PASSING leg: the same description applied to the record the form was built into (r4-07b, round-82)
+$ python3 .ufo/waves/round-82/w1/R82ScribeLesson/check-described-form.py corpus/evidence/round82/c1-records/r4-07b-alt-section-noflip.md --reason present --flip absent
+RECORD corpus/evidence/round82/c1-records/r4-07b-alt-section-noflip.md
+REJECTIONS rows under a reject heading: 1
+  id=R1 heading='## Rejected sources' reason_present=1 flip_present=0
+  DESCRIBED-FORM OK id=R1 leg=reason described=present
+  DESCRIBED-FORM OK id=R1 leg=flip described=absent
+DESCRIBED_FORM bad=0
+RC=0
+rc=0
+
+## third leg: the description that DOES match r4-07 bytes (section renamed, cells complete)
+$ python3 .ufo/waves/round-82/w1/R82ScribeLesson/check-described-form.py .ufo/waves/round-81/w1/R81ReviewerC2/records/r4-07-alt-section.md --reason present --flip present
+RECORD .ufo/waves/round-81/w1/R81ReviewerC2/records/r4-07-alt-section.md
+REJECTIONS rows under a reject heading: 1
+  id=R1 heading='## Rejected sources' reason_present=1 flip_present=1
+  DESCRIBED-FORM OK id=R1 leg=reason described=present
+  DESCRIBED-FORM OK id=R1 leg=flip described=present
+DESCRIBED_FORM bad=0
+RC=0
+rc=0
+
+## the round-81 closure counted this record among eleven K2 fail controls
+$ grep -n "eleven K2" corpus/lessons/round-81-verifier-spotcheck.md
+103:2. Checklist items 2 and 4: `verify-sweeps` treats `-`/`n/a`/`none`/`TBD` flip and reason cells as present and accepts `n/a` sweep locations. Reproduced here. The gate must refuse these forms, with the eleven K2 records as frozen fail controls.
+$ grep -c "| F2-" .ufo/waves/round-81/w1/R81ReviewerC2/attack.md; grep -c "| F4-" ...
+6
+5
+$ grep -c "^| F4-5 " .ufo/waves/round-81/w1/R81ReviewerC2/attack.md
+1

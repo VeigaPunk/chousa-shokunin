@@ -1,0 +1,30 @@
+# R82ExecForms harness — exact commands
+
+Tree under test
+  mkdir -p /fast/scratch/hyaku/chousa-r82/R82ExecForms/tree
+  git -C /home/vgpnk/Projects/shokunin/chousa-shokunin archive b4a41d251b488f06b4a6ab01a11bc12ce72edd20 \
+    | tar -x -C /fast/scratch/hyaku/chousa-r82/R82ExecForms/tree
+  (archive has no .git; the gate needs none — every run below produced a verdict)
+
+Records
+  authored into <tree>/corpus/evidence/round82/r82-forms/ (233 .md)
+  copies at ../records/ ; sha256 at records-sha256.txt
+  generation: gen.py (vocabulary + decoration families), gen2.py (heading/claims), gen3.py
+  (sweeps-r5 base + duplicate-section), gen4 inline (prose rejections, status-column control)
+
+Run lines (byte-identical to SKILL.md ## Checklist (executable), items 2 and 4 at b4a41d25)
+  item 2: f=<record>; ! bash tools/research-gate.sh verify "$f" --root . \
+            | grep -q '^FINDING NEGATIVE_WITHOUT_SWEEP' && bash tools/research-gate.sh verify-sweeps "$f" --root .
+  item 4: bash tools/research-gate.sh verify-sweeps <record> --root .
+  cwd = tree root for every run; <record> = absolute path (shlex-quoted), the same substitution
+  corpus/evidence/round82/k2-gate-r82.py makes.
+
+Base comparison (K3 context only, not the assigned rule)
+  git -C /home/vgpnk/Projects/shokunin/chousa-shokunin archive 5d792e1e953649e801d9bf1f64093b1f0d4dac8c \
+    | tar -x -C /fast/scratch/hyaku/chousa-r82/R82ExecForms/base
+  same two Run lines, base tree root; receipt base-gate.txt
+
+Counts
+  records=233  in-class=185 (refuse 182, pass 3)  ambiguous=16 (refuse 4, pass 12)
+  out-of-class=32 (refuse 8, pass 24; includes 6 positive controls)
+  no run exited 2 or timed out; no record was skipped.

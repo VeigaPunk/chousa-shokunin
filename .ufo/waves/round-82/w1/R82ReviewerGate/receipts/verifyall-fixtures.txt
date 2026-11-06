@@ -1,0 +1,55 @@
+# verify-all fixture matrix — captured output of the pre/post comparison loop
+# cmd (cwd=trees/post/corpus/fixtures, per fixture f):
+#   bash $TREES_PRE/tools/research-gate.sh  verify-all "$f" --root .   -> rc_pre, SECTION sweeps line
+#   bash $TREES_POST/tools/research-gate.sh verify-all "$f" --root .   -> rc_post, SECTION sweeps line
+# SAME = identical SECTION sweeps line and equal rc across trees.
+sweeps-r5.md                                         SAME rc=1/1
+  post-sweeps: SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/2 REJECTIONS_OK=3/3
+  pre-sweeps:  SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/2 REJECTIONS_OK=3/3
+sweeps-r5-broken.md                                  SAME rc=1/1
+  post-sweeps: SECTION sweeps state=run verdict=DRIFT findings=1 drift=1 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=0/1
+  pre-sweeps:  SECTION sweeps state=run verdict=DRIFT findings=1 drift=1 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=0/1
+sweeps-r5-hit.md                                     SAME rc=1/1
+  post-sweeps: SECTION sweeps state=absent
+  pre-sweeps:  SECTION sweeps state=absent
+archives-r9/A-r9.md                                  SAME rc=1/1
+  post-sweeps: SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=4/4
+  pre-sweeps:  SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=4/4
+archives-r9/B-r9.md                                  SAME rc=1/1
+  post-sweeps: SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=3/3
+  pre-sweeps:  SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=3/3
+archives-r9/C-r9.md                                  SAME rc=1/1
+  post-sweeps: SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=4/4
+  pre-sweeps:  SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=4/4
+archives-r9/controls/A-r9-anchor-missing.md          SAME rc=1/1
+  post-sweeps: SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=4/4
+  pre-sweeps:  SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=4/4
+archives-r9/controls/B-r9-false-sweep.md             SAME rc=1/1
+  post-sweeps: SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=3/3
+  pre-sweeps:  SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=3/3
+archives-r9/controls/B-r9-rejection-missing-flip.md  SAME rc=1/1
+  post-sweeps: SECTION sweeps state=run verdict=DRIFT findings=1 drift=1 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=2/3
+  pre-sweeps:  SECTION sweeps state=run verdict=DRIFT findings=1 drift=1 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=2/3
+archives-r9/controls/C-r9-dangling-ref.md            SAME rc=1/1
+  post-sweeps: SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=4/4
+  pre-sweeps:  SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=4/4
+archives-r9/controls/C-r9-structure-break.md         SAME rc=1/1
+  post-sweeps: SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=4/4
+  pre-sweeps:  SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=4/4
+full-r6.md                                           SAME rc=1/1
+  post-sweeps: SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/2 REJECTIONS_OK=2/2
+  pre-sweeps:  SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/2 REJECTIONS_OK=2/2
+full-r6-absent.md                                    SAME rc=1/1
+  post-sweeps: SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=0/0 REJECTIONS_OK=1/1
+  pre-sweeps:  SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=0/0 REJECTIONS_OK=1/1
+full-r6-broken.md                                    SAME rc=1/1
+  post-sweeps: SECTION sweeps state=run verdict=DRIFT findings=1 drift=1 tally=VERIFIED_SWEEPS=1/2 REJECTIONS_OK=1/2
+  pre-sweeps:  SECTION sweeps state=run verdict=DRIFT findings=1 drift=1 tally=VERIFIED_SWEEPS=1/2 REJECTIONS_OK=1/2
+integrity-r7.md                                      SAME rc=1/1
+  post-sweeps: SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=2/3 REJECTIONS_OK=2/2
+  pre-sweeps:  SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=2/3 REJECTIONS_OK=2/2
+integrity-r7-broken.md                               SAME rc=1/1
+  post-sweeps: SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=2/3 REJECTIONS_OK=2/2
+  pre-sweeps:  SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=2/3 REJECTIONS_OK=2/2
+# 16/16 fixtures: composed sweeps-section verdict, tally and rc unchanged by the patch.
+# rc=1 on all fixtures is pre-existing (other sections fail these fixtures identically at both trees).

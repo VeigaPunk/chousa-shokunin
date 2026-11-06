@@ -1,0 +1,58 @@
+# control c1-f3-keyed-runline (expected FAIL) at REV ec3b41b29f1fde4ceca51ecafd4e1a7d0dbcfb42
+# cmd: c1 /fast/scratch/hyaku/chousa-r82/R82MutationGate/drvtmp/MD3-drop-E6/chousa-r82/controls/c1-f3
+MANIFEST_SHA256=16ab568268947a738354f894b59a6b46cb7687792bb388842accf9c044c8a799 RECORDS_DIGEST=7dc17486ed99c0e0a0410cb5970cf8595c235c18c9c7cf05ea12ca608f8e1bf7 rows=50
+RUNLINE item=2 found=yes cmd=f=<record.md>; ! bash tools/research-gate.sh verify "$f" --root . | grep -q '^FINDING NEGATIVE_WITHOUT_SWEEP' && bash tools/research-gate.sh verify-sweeps "$f" --root .
+RUNLINE item=4 found=changed cmd=grep -q pass <record.md> || { echo "FINDING SWEEP_REJECTION_INCOMPLETE"; false; }
+K2CASE id=F2-1 group=k2 item=2 expect=refuse need=SWEEP_NEGATIVE_UNRESOLVED rc=0 findings=CHAIN_ABSENT verdict=bad
+K2CASE id=F2-2 group=k2 item=2 expect=refuse need=SWEEP_NEGATIVE_UNRESOLVED rc=0 findings=CHAIN_ABSENT verdict=bad
+K2CASE id=F2-3 group=k2 item=2 expect=refuse need=SWEEP_LOCATION_ABSENT rc=0 findings=CHAIN_ABSENT verdict=bad
+K2CASE id=F2-4 group=k2 item=2 expect=refuse need=SWEEP_NEGATIVE_UNRESOLVED rc=0 findings=CHAIN_ABSENT verdict=bad
+K2CASE id=F2-5 group=k2 item=2 expect=refuse need=SWEEP_NEGATIVE_UNRESOLVED rc=0 findings=CHAIN_ABSENT verdict=bad
+K2CASE id=F2-6 group=k2 item=2 expect=refuse need=SWEEP_LOCATION_ABSENT rc=0 findings=CLAIM_TABLE_ABSENT verdict=bad
+K2CASE id=F4-1 group=k2 item=4 expect=refuse rc=- verdict=bad why=no-runline
+K2CASE id=F4-2 group=k2 item=4 expect=refuse rc=- verdict=bad why=no-runline
+K2CASE id=F4-3 group=k2 item=4 expect=refuse rc=- verdict=bad why=no-runline
+K2CASE id=F4-4 group=k2 item=4 expect=refuse rc=- verdict=bad why=no-runline
+K2CASE id=F4-5 group=k2 item=4 expect=refuse rc=- verdict=bad why=no-runline
+K2CASE id=H2-03 group=hold item=2 expect=refuse need=NEGATIVE_WITHOUT_SWEEP rc=1 findings=CHAIN_ABSENT,NEGATIVE_WITHOUT_SWEEP verdict=ok
+K2CASE id=H2-04 group=hold item=2 expect=refuse need=SWEEP_LOCATION_ABSENT rc=1 findings=CHAIN_ABSENT,SWEEP_LOCATION_ABSENT verdict=ok
+K2CASE id=H2-05 group=hold item=2 expect=refuse need=SWEEP_LOCATION_ABSENT rc=1 findings=CHAIN_ABSENT,SWEEP_LOCATION_ABSENT verdict=ok
+K2CASE id=H2-07 group=hold item=2 expect=refuse need=SWEEP_LOCATION_ABSENT rc=1 findings=CHAIN_ABSENT,SWEEP_LOCATION_ABSENT verdict=ok
+K2CASE id=H2-08 group=hold item=2 expect=refuse need=SWEEP_LOCATION_UNRESOLVED rc=1 findings=CHAIN_ABSENT,SWEEP_LOCATION_UNRESOLVED verdict=ok
+K2CASE id=H2-11 group=hold item=2 expect=refuse need=NEGATIVE_WITHOUT_SWEEP rc=1 findings=CHAIN_ABSENT,NEGATIVE_WITHOUT_SWEEP verdict=ok
+K2CASE id=H2-12 group=hold item=2 expect=refuse need=SWEEP_CLAIM_FALSE rc=1 findings=CHAIN_ABSENT,SWEEP_CLAIM_FALSE verdict=ok
+K2CASE id=H4-01 group=hold item=4 expect=refuse rc=- verdict=bad why=no-runline
+K2CASE id=H4-05 group=hold item=4 expect=refuse rc=- verdict=bad why=no-runline
+K2CASE id=V4F-tbd-upper group=class item=4 expect=refuse rc=- verdict=bad why=no-runline
+K2CASE id=V4F-na-upper group=class item=4 expect=refuse rc=- verdict=bad why=no-runline
+K2CASE id=V4F-emdash group=class item=4 expect=refuse rc=- verdict=bad why=no-runline
+K2CASE id=V4F-none-dot group=class item=4 expect=refuse rc=- verdict=bad why=no-runline
+K2CASE id=V4F-na-backtick group=class item=4 expect=refuse rc=- verdict=bad why=no-runline
+K2CASE id=V4F-qmark group=class item=4 expect=refuse rc=- verdict=bad why=no-runline
+K2CASE id=V4F-unknown group=class item=4 expect=refuse rc=- verdict=bad why=no-runline
+K2CASE id=V4F-not-applicable group=class item=4 expect=refuse rc=- verdict=bad why=no-runline
+K2CASE id=V4F-todo group=class item=4 expect=refuse rc=- verdict=bad why=no-runline
+K2CASE id=V4F-ellipsis group=class item=4 expect=refuse rc=- verdict=bad why=no-runline
+K2CASE id=V4R-na-upper group=class item=4 expect=refuse rc=- verdict=bad why=no-runline
+K2CASE id=V4R-tbd group=class item=4 expect=refuse rc=- verdict=bad why=no-runline
+K2CASE id=V4R-none-upper group=class item=4 expect=refuse rc=- verdict=bad why=no-runline
+K2CASE id=V4S-rejected group=class item=4 expect=refuse rc=- verdict=bad why=no-runline
+K2CASE id=V4S-kept-rejections group=class item=4 expect=refuse rc=- verdict=bad why=no-runline
+K2CASE id=V2W-na-upper group=class item=2 expect=refuse need=SWEEP_LOCATION_ABSENT rc=0 findings=CHAIN_ABSENT verdict=bad
+K2CASE id=V2W-tbd group=class item=2 expect=refuse need=SWEEP_LOCATION_ABSENT rc=1 findings=CHAIN_ABSENT,SWEEP_LOCATION_ABSENT verdict=ok
+K2CASE id=V2W-endash group=class item=2 expect=refuse need=SWEEP_LOCATION_ABSENT rc=1 findings=CHAIN_ABSENT,SWEEP_LOCATION_ABSENT verdict=ok
+K2CASE id=V2W-na-dot group=class item=2 expect=refuse need=SWEEP_LOCATION_ABSENT rc=0 findings=CHAIN_ABSENT verdict=bad
+K2CASE id=V2C-tbd group=class item=2 expect=refuse need=SWEEP_NEGATIVE_UNRESOLVED rc=0 findings=CHAIN_ABSENT verdict=bad
+K2CASE id=V2C-na-upper group=class item=2 expect=refuse need=SWEEP_NEGATIVE_UNRESOLVED rc=0 findings=CHAIN_ABSENT verdict=bad
+K2CASE id=V2C-emdash group=class item=2 expect=refuse need=SWEEP_NEGATIVE_UNRESOLVED rc=0 findings=CHAIN_ABSENT verdict=bad
+K2CASE id=V2C-undeclared-w9 group=class item=2 expect=refuse need=SWEEP_NEGATIVE_UNRESOLVED rc=0 findings=CHAIN_ABSENT verdict=bad
+K2CASE id=V2C-undeclared-w9-withsec group=class item=2 expect=refuse need=SWEEP_NEGATIVE_UNRESOLVED rc=0 findings=CHAIN_ABSENT verdict=bad
+K2CASE id=P2-item2-pass group=positive item=2 expect=pass need=REJECTIONS_OK=1/1 rc=0 findings=- verdict=ok
+K2CASE id=P4-item4-pass group=positive item=4 expect=pass rc=- verdict=bad why=no-runline
+K2CASE id=P2-sweeps-r5 group=positive item=2 expect=pass need=REJECTIONS_OK=3/3 rc=0 findings=- verdict=ok
+K2CASE id=P4-sweeps-r5 group=positive item=4 expect=pass rc=- verdict=bad why=no-runline
+K2CASE id=P4-alt-section-complete group=positive item=4 expect=pass rc=- verdict=bad why=no-runline
+K2CASE id=P4-flip-prose-with-na group=positive item=4 expect=pass rc=- verdict=bad why=no-runline
+RUNLINES=1/2 K2_REFUSED=0/11 HOLD_REFUSED=7/9 CLASS_REFUSED=2/24 POSITIVE=2/6
+K2_GATE=FAIL
+rc=1

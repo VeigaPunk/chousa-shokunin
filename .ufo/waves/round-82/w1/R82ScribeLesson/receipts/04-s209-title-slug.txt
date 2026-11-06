@@ -1,0 +1,53 @@
+# S209 title-vs-slug question — seat R82ScribeLesson
+$ git show b4a41d25:corpus/SOURCES.md | grep "^| S209 |"
+| S209 | JBI Manual for Evidence Synthesis, 10.2.2 Developing your protocol (Phillips; page slug "Developing the title and question") — https://jbi-global.atlassian.net/wiki/spaces/MANUAL/pages/355862667/10.2.2+Developing+the+title+and+question | docs | A | what JBI asks of a scoping-review protocol and of changes made after it | the protocol paragraph on deviations, as served 2026-11-06 (capture key 213237301753814b95b24684) | a protocol is fixed before the review; deviations from it are reported with their justification in the final review | mined | 2026-11-06 | on-release | corpus/knowledge/question-framing-frames-r82.md |
+
+$ grep -n "10.2.2" corpus/captures/213237301753814b95b24684.txt | head -5
+189: 10.2.2 Developing your protocol - JBI Manual for Evidence Synthesis - Confluence 
+503: 10.2.2 Developing your protocol 
+715: 10.2.2 Developing your protocol
+733: 10.2.2 Developing your protocol
+
+# served <title> and the h1/meta line:
+189: 10.2.2 Developing your protocol - JBI Manual for Evidence Synthesis - Confluence 
+503: 10.2.2 Developing your protocol 
+715: 10.2.2 Developing your protocol
+733: 10.2.2 Developing your protocol
+
+# Confluence page id in capture (URL carries 355862667):
+0
+$ grep -n "355862667" corpus/captures/213237301753814b95b24684.txt | head -3
+
+# slug (URL as recorded in refetch.tsv) contains "Developing+the+title+and+question":
+1
+
+# same check for S210 / S211 (page ids 355862687 / 355862707):
+0
+0
+
+# the capture also carries a navigation sidebar listing sibling section titles (10.2.1-10.2.11);
+# the served page own title is the one at the content breadcrumb/h1, not the nav entries:
+$ grep -n -o "10\\.2\\.[0-9]\\+[^|]\\{0,40\\}" corpus/captures/213237301753814b95b24684.txt | sort -u
+189:10.2.2 Developing your protocol - JBI Manual f
+495:10.2.1 Team and resources needed for a JBI sco
+503:10.2.2 Developing your protocol 
+511:10.2.3 Defining and aligning the objective/s a
+519:10.2.4 Developing and aligning the eligibility
+527:10.2.5 Describing the planned approach to evid
+535:10.2.6 Searching for the evidence 
+543:10.2.7 Selecting the evidence 
+551:10.2.8 Critical appraisal or risk-of-bias asse
+559:10.2.9 Extracting the evidence 
+567:10.2.10 Analysing the evidence 
+575:10.2.11 Presentation of the results 
+583:10.2.12 Summarising the evidence 
+715:10.2.2 Developing your protocol
+733:10.2.2 Developing your protocol
+
+$ awk "NR>=699 && NR<=734" ... (content area: breadcrumb and h1)
+712:  JBI Manual for Evidence Synthesis
+714:  /
+715:  10.2.2 Developing your protocol
+718:  Updated Aug 31 
+724:  More actions 
+733:  10.2.2 Developing your protocol

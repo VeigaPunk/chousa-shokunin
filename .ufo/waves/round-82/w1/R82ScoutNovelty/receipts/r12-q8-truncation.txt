@@ -1,0 +1,12 @@
+# R12 — S210 quote Q8 as declared in the entry vs the sentence in the capture (context read)
+python3 - <<'PY'
+import pathlib,subprocess
+t=pathlib.Path('/fast/scratch/hyaku/chousa-r82/R82ScoutNovelty/tree/corpus/captures/bcb4a695b2aa019305121cff.txt').read_text(encoding='utf-8')
+i=t.find('there may be a compelling argument to use a different question format')
+print("CAPTURE SENTENCE:")
+print(repr(t[i:i+430]))
+ent=subprocess.run(['git','show','b4a41d251b488f06b4a6ab01a11bc12ce72edd20:corpus/knowledge/question-framing-frames-r82.md'],capture_output=True,text=True).stdout
+for ln in ent.splitlines():
+    if ln.startswith('| Q8') or ln.startswith('| The map is meant') or ln.startswith('| The question asks'):
+        print("ENTRY:",ln)
+PY

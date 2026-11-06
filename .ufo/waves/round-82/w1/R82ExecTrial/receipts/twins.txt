@@ -1,0 +1,76 @@
+########## twin-rejection-flip-tbd
+--- diff vs record.md
+50c50
+< | R1 | corpus/captures/dedff231d5c3d3cdb0b4f8e3.txt | the page describes a citation-metadata service for a cited work's update, correction or retraction status, so it speaks to source currency, not to how a review question is framed or aligned with its objective and criteria | a paragraph on that page stating a rule for framing or aligning a research question would flip this rejection |
+---
+> | R1 | corpus/captures/dedff231d5c3d3cdb0b4f8e3.txt | the page describes a citation-metadata service for a cited work's update, correction or retraction status, so it speaks to source currency, not to how a review question is framed or aligned with its objective and criteria | TBD |
+diff_rc=1
+--- item2: verify
+verify_rc=0
+RESEARCH_GATE: CLEAN (findings=0 drift=0 questions=1 sources=2 chains=5 claims=9 negatives=1 rejections=1 approvals=1)
+NEGATIVE_WITHOUT_SWEEP_count=0
+--- item2: verify-sweeps
+verify_sweeps_rc=1
+research-gate v2 — ts=2026-11-06T20:04:26Z — mode=sweeps — record=corpus/evidence/round82/trial/twins/twin-rejection-flip-tbd.md
+SWEEP id=SW1 where=corpus/knowledge/*question-frame*.md,corpus/knowledge/*question*-r[1-9].md,corpu looked=local hits=0 at=- observed=verified verdict=match
+REJECTION id=R1 ref=corpus/captures/dedff231d5c3d3cdb0b4f8e3.txt reason=present flip=placeholder observed=incomplete verdict=mismatch
+FINDING SWEEP_REJECTION_INCOMPLETE severity=warn surface=sweeps obs=id=R1 missing=flip placeholder=reason:present,flip:placeholder
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=0/1
+RESEARCH_GATE: DRIFT (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=0 findings=1 drift=1)
+--- item4: verify-sweeps (same Run line, rejection leg)
+REJECTION id=R1 ref=corpus/captures/dedff231d5c3d3cdb0b4f8e3.txt reason=present flip=placeholder observed=incomplete verdict=mismatch
+FINDING SWEEP_REJECTION_INCOMPLETE severity=warn surface=sweeps obs=id=R1 missing=flip placeholder=reason:present,flip:placeholder
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=0/1
+RESEARCH_GATE: DRIFT (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=0 findings=1 drift=1)
+########## twin-sweepcell-undeclared
+--- diff vs record.md
+44c44
+< | N1 | negative | no knowledge entry named for a question frame exists under corpus/knowledge/ at a base revision before round 82 | corpus/evidence/round82/base-knowledge.txt | observed-in-dump | SW1 |
+---
+> | N1 | negative | no knowledge entry named for a question frame exists under corpus/knowledge/ at a base revision before round 82 | corpus/evidence/round82/base-knowledge.txt | observed-in-dump | W9 |
+56c56
+< | SW1 | N1 | corpus/knowledge/*question-frame*.md,corpus/knowledge/*question*-r[1-9].md,corpus/knowledge/*question*-r[1-7][0-9].md,corpus/knowledge/*question*-r8[01].md | zero matches: the only question-named entry under corpus/knowledge/ is the round-82 one, which none of the four base-revision globs matches |
+---
+> | SW1 | N9 | corpus/knowledge/*question-frame*.md,corpus/knowledge/*question*-r[1-9].md,corpus/knowledge/*question*-r[1-7][0-9].md,corpus/knowledge/*question*-r8[01].md | zero matches: the only question-named entry under corpus/knowledge/ is the round-82 one, which none of the four base-revision globs matches |
+diff_rc=1
+--- item2: verify
+verify_rc=0
+RESEARCH_GATE: CLEAN (findings=0 drift=0 questions=1 sources=2 chains=5 claims=9 negatives=1 rejections=1 approvals=1)
+NEGATIVE_WITHOUT_SWEEP_count=0
+--- item2: verify-sweeps
+verify_sweeps_rc=1
+research-gate v2 — ts=2026-11-06T20:04:30Z — mode=sweeps — record=corpus/evidence/round82/trial/twins/twin-sweepcell-undeclared.md
+SWEEP id=SW1 where=corpus/knowledge/*question-frame*.md,corpus/knowledge/*question*-r[1-9].md,corpu looked=local hits=0 at=- observed=verified verdict=match
+REJECTION id=R1 ref=corpus/captures/dedff231d5c3d3cdb0b4f8e3.txt reason=present flip=present observed=complete verdict=match
+FINDING SWEEP_NEGATIVE_UNRESOLVED severity=warn surface=sweeps obs=claim=N1 sweep=W9 names no sweep row this mode re-ran
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+RESEARCH_GATE: DRIFT (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=1 findings=1 drift=1)
+--- item4: verify-sweeps (same Run line, rejection leg)
+REJECTION id=R1 ref=corpus/captures/dedff231d5c3d3cdb0b4f8e3.txt reason=present flip=present observed=complete verdict=match
+FINDING SWEEP_NEGATIVE_UNRESOLVED severity=warn surface=sweeps obs=claim=N1 sweep=W9 names no sweep row this mode re-ran
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+RESEARCH_GATE: DRIFT (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=1 findings=1 drift=1)
+########## twin-where-na
+--- diff vs record.md
+56c56
+< | SW1 | N1 | corpus/knowledge/*question-frame*.md,corpus/knowledge/*question*-r[1-9].md,corpus/knowledge/*question*-r[1-7][0-9].md,corpus/knowledge/*question*-r8[01].md | zero matches: the only question-named entry under corpus/knowledge/ is the round-82 one, which none of the four base-revision globs matches |
+---
+> | SW1 | N1 | N/A | zero matches: the only question-named entry under corpus/knowledge/ is the round-82 one, which none of the four base-revision globs matches |
+diff_rc=1
+--- item2: verify
+verify_rc=0
+RESEARCH_GATE: CLEAN (findings=0 drift=0 questions=1 sources=2 chains=5 claims=9 negatives=1 rejections=1 approvals=1)
+NEGATIVE_WITHOUT_SWEEP_count=0
+--- item2: verify-sweeps
+verify_sweeps_rc=1
+research-gate v2 — ts=2026-11-06T20:04:34Z — mode=sweeps — record=corpus/evidence/round82/trial/twins/twin-where-na.md
+SWEEP id=SW1 where=N/A looked=unnamed hits=- at=- observed=invalid verdict=invalid
+REJECTION id=R1 ref=corpus/captures/dedff231d5c3d3cdb0b4f8e3.txt reason=present flip=present observed=complete verdict=match
+FINDING SWEEP_LOCATION_ABSENT severity=warn surface=sweeps obs=id=SW1 unclassifiable location naming
+VERIFIED_SWEEPS=0/1 REJECTIONS_OK=1/1
+RESEARCH_GATE: DRIFT (sweeps=1 verified=0 exempt=0 hit=0 refused=0 invalid=1 rejections=1 rejections-ok=1 findings=1 drift=1)
+--- item4: verify-sweeps (same Run line, rejection leg)
+REJECTION id=R1 ref=corpus/captures/dedff231d5c3d3cdb0b4f8e3.txt reason=present flip=present observed=complete verdict=match
+FINDING SWEEP_LOCATION_ABSENT severity=warn surface=sweeps obs=id=SW1 unclassifiable location naming
+VERIFIED_SWEEPS=0/1 REJECTIONS_OK=1/1
+RESEARCH_GATE: DRIFT (sweeps=1 verified=0 exempt=0 hit=0 refused=0 invalid=1 rejections=1 rejections-ok=1 findings=1 drift=1)

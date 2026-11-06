@@ -1,0 +1,146 @@
+
+=== kotodama handoff-packet-check.py:485-510 (blob 6920bc449f7c09f2ceb82d52f8ec1b63b5575952) ===
+   485	        entry = fields.get(name)
+   486	        if entry is None:
+   487	            findings.append(
+   488	                _finding(
+   489	                    "HO-MISSING",
+   490	                    "FAIL",
+   491	                    f"required field/section `{name}` absent — the contract §4 handoff envelope names it, "
+   492	                    "and a required field is not satisfied by silence",
+   493	                )
+   494	            )
+   495	        elif _is_placeholder(entry["value"]):
+   496	            findings.append(
+   497	                _finding(
+   498	                    "HO-EMPTY",
+   499	                    "FAIL",
+   500	                    f"required field `{name}` is present at {entry['where']} but carries only a "
+   501	                    "blank/placeholder value (contract §4 required content; §11: unknowns are not blank cells)",
+   502	                )
+   503	            )
+   504	        else:
+   505	            supplied += 1
+   506	
+   507	    baseline = fields.get("baseline_bible_ref")
+   508	    if baseline and _norm_cell(baseline["value"]).lower() == "none":
+   509	        # §4: "`none` only for a deliberately unbound research packet" — the
+   510	        # declaration is read on one line, or inside the baseline value itself.
+
+=== kotodama handoff-packet-check.py placeholder defs ===
+30:only a placeholder counts as absent evidence, not as compliance.
+55:  HO-EMPTY         FAIL  a required field is present but blank/placeholder
+78:non-placeholder occurrence wins. Known limit, stated rather than guessed:
+144:PLACEHOLDERS = {
+153:    "tbd",
+155:    "todo",
+197:def _is_placeholder(value):
+198:    return _norm_cell(value).lower() in PLACEHOLDERS
+312:        chosen = next((entry for entry in entries if not _is_placeholder(entry["value"])), entries[0])
+413:            if _is_placeholder(cell):
+495:        elif _is_placeholder(entry["value"]):
+501:                    "blank/placeholder value (contract §4 required content; §11: unknowns are not blank cells)",
+
+=== kotodama fixture handoff-packet-check.md:1-20 ===
+     1	# Handoff packet — F-toy fixture with planted defects (non-canon; gate fixture)
+     2	
+     3	Fixture for `tools/gates/handoff-packet-check.py`. Synthetic; it asserts no
+     4	world fact and records no canon. It exists only to drive the planted
+     5	findings listed in `handoff-packet-check.expected`, so the defects below are
+     6	marked `(planted)` and are not house style.
+     7	
+     8	Planted defects (the expected file lists the same IDs):
+     9	- HO-MISSING ×2 — the `validation` and `open_questions` sections are omitted
+    10	  entirely.
+    11	- HO-EMPTY ×1 — `subject_refs` is `TBD` instead of namespaced candidate IDs.
+    12	- HO-BASELINE ×1 — `baseline_bible_ref` is `none` while the packet supplies no
+    13	  unbound-packet statement.
+    14	- HO-CONTRACT-REF ×1 — `contract_ref` names no revision and no digest.
+    15	- HO-MANIFEST-DIGEST ×1 — the manifest names no file digests.
+    16	- HO-DEP-FLOAT ×1 — the dependency manifest floats a `latest` reference.
+    17	- HO-CANON-MARKER ×1 — the packet never carries the contract's non-canon
+    18	  standing statement.
+    19	- HO-CANON-CLAIM ×1 — the canon_standing line issues a producer-side
+    20	  certification.
+
+=== kotodama handoff-packet-check.py:140-200 ===
+   140	
+   141	# Values that mean "no evidence supplied". `none` is deliberately absent:
+   142	# §4 accepts `none` for baseline_bible_ref (routed to HO-BASELINE), and an
+   143	# explicit "no open questions" is content.
+   144	PLACEHOLDERS = {
+   145	    "",
+   146	    "-",
+   147	    "--",
+   148	    "—",
+   149	    "–",
+   150	    "n/a",
+   151	    "na",
+   152	    "n.a.",
+   153	    "tbd",
+   154	    "t.b.d.",
+   155	    "todo",
+   156	    "unknown",
+   157	    "(to-verify)",
+   158	    "to-verify",
+   159	    "?",
+   160	}
+   161	
+   162	# §4: "file digests" / §1: the pinned digest. Hex-anchored so the word
+   163	# "digest" alone is not mistaken for a delivered digest.
+   164	DIGEST_RE = re.compile(
+   165	    r"(?i)(?:sha-?256|sha-?1|digest)\s*[:=]?\s*[0-9a-f]{8,}\b"
+   166	    r"|\b[0-9a-f]{32,}\b"
+   167	)
+   168	REVISION_RE = re.compile(r"\b\d+\.\d+\.\d+\b")
+   169	
+   170	# §6 canon standing: "otherwise `not canonized`"; §8.7: "not yet canonized".
+   171	CANON_MARKER_RE = re.compile(r"(?i)\bnot[-\s]+(?:yet[-\s]+)?canon(?:ized)?\b")
+   172	
+   173	# glossary-registry-format.md §4 licenses exactly these status values.
+   174	ETYM_STATUSES = ("attested", "reconstructed", "constructed", "contested", "unknown")
+   175	
+   176	GLOSSARY_ID_HEADERS = ("entry_id", "lexeme_id", "sense_id", "form_id", "entry", "term", "id")
+   177	GLOSSARY_CONTENT_HEADERS = ("gloss", "meaning", "form", "lemma", "definition")
+   178	
+   179	
+   180	def _finding(fid, level, message):
+   181	    return {"id": fid, "level": level, "message": message}
+   182	
+   183	
+   184	def format_finding(finding):
+   185	    return f"FINDING {finding['id']}: {finding['level']} — {finding['message']}"
+   186	
+   187	
+   188	# --------------------------------------------------------------------------
+   189	# Markdown structure
+   190	# --------------------------------------------------------------------------
+   191	
+   192	
+   193	def _norm_cell(text):
+   194	    return text.strip().strip("`*").strip()
+   195	
+   196	
+   197	def _is_placeholder(value):
+   198	    return _norm_cell(value).lower() in PLACEHOLDERS
+   199	
+   200	
+
+=== kotodama provenance-audit.py:310-326 (blob 428c5b15fedf66ae36bddf2fdcd97d70d49d0d0b) ===
+   310	    present, content = field_block(lines, "sources")
+   311	    if not present:
+   312	        findings["missing-sources"] = "no '- sources:' header line"
+   313	    elif is_empty_value(content):
+   314	        findings["empty-sources"] = (
+   315	            "'- sources:' names no source (blank or placeholder value only)"
+   316	        )
+   317	
+   318	    present, content = field_block(lines, "couples")
+   319	    if not present:
+   320	        findings["missing-couples"] = "no '- couples:' header line"
+   321	    elif is_empty_value(content):
+   322	        findings["empty-couples"] = (
+   323	            "'- couples:' names nothing it connects (blank or placeholder value only)"
+   324	        )
+   325	
+   326	    if not CALIB_WORD_RE.search(text):

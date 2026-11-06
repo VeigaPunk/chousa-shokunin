@@ -1,0 +1,40 @@
+# R82SentinelScope receipt 04 — frozen-instrument integrity (freeze 57c0d167, prefreeze 38f5af82, landing b4a41d25)
+$ mkdir -p $S/c1recs && git archive 38f5af82 corpus/evidence/round82/c1-records | tar -x -C $S/c1recs
+$ ( cd $S/c1recs/corpus/evidence/round82/c1-records && sha256sum * | sha256sum )
+f3e5dca727b1560650e856b1434a69e95d5a5da5ba8e956c26566fda74aea7a5  -
+$ grep c1-records corpus/evidence/round82/instrument-pins.txt
+f3e5dca727b1560650e856b1434a69e95d5a5da5ba8e956c26566fda74aea7a5  corpus/evidence/round82/c1-records/* (sha256sum * | sha256sum)
+$ python3 (compare each pin: git show <rev>:<path> | sha256sum, at 38f5af82 and b4a41d25)
+corpus/evidence/round82/k2-gate-r82.py pin_match_prefreeze=True pin_match_landing=True landing_changed=False
+corpus/evidence/round82/depth-r82.py pin_match_prefreeze=True pin_match_landing=True landing_changed=False
+corpus/evidence/round82/run-controls-r82.sh pin_match_prefreeze=True pin_match_landing=True landing_changed=False
+corpus/evidence/round82/c1-manifest.tsv pin_match_prefreeze=True pin_match_landing=True landing_changed=False
+corpus/evidence/round82/base-knowledge.txt pin_match_prefreeze=True pin_match_landing=True landing_changed=False
+tools/research-gate.sh pin_match_prefreeze=True pin_match_landing=False landing_changed=True
+SKILL.md pin_match_prefreeze=True pin_match_landing=False landing_changed=True
+$ git diff --stat 142b6f0c b4a41d25 -- corpus/evidence/round82/controls corpus/evidence/round82/claims.md
+ corpus/evidence/round82/claims.md                  | 106 +++++++++++++++++++++
+ .../round82/controls/c1-f1-blanket-refuse.txt      |  58 +++++++++++
+ .../round82/controls/c1-f2-wrong-finding-keyed.txt |  58 +++++++++++
+ .../round82/controls/c1-f3-keyed-runline.txt       |  58 +++++++++++
+ .../evidence/round82/controls/c1-k0-donothing.txt  |  58 +++++++++++
+ .../round82/controls/c2-b1-salad-boundary.txt      |   6 ++
+ .../evidence/round82/controls/c2-d0-donothing.txt  |   5 +
+ .../evidence/round82/controls/c2-d1-r81-filler.txt |   7 ++
+ .../round82/controls/c2-d2-fabricated-quotes.txt   |   6 ++
+ .../round82/controls/c2-d3-stale-r81-sources.txt   |   6 ++
+ .../round82/controls/c2-d4-duplicate-cells.txt     |   6 ++
+ .../evidence/round82/controls/c2-d5-four-rows.txt  |   6 ++
+ .../round82/controls/c2-d6-placeholder-cells.txt   |   6 ++
+ .../round82/controls/c2-d7-unregistered.txt        |   6 ++
+ .../evidence/round82/controls/c2-p1-positive.txt   |   6 ++
+ corpus/evidence/round82/controls/summary.tsv       |  14 +++
+ 16 files changed, 412 insertions(+)
+# exit 0
+$ git diff --stat 57c0d167 b4a41d25 -- corpus/evidence/round82/controls corpus/evidence/round82/claims.md corpus/evidence/round82/instrument-pins.txt corpus/evidence/round82/run-controls-r82.sh corpus/evidence/round82/c1-manifest.tsv corpus/evidence/round82/c1-records; echo "rc=$?"  # freeze -> landing: must be empty
+rc=0
+$ git diff --stat 142b6f0c b4a41d25 -- corpus/evidence/round82/refetch.tsv corpus/captures  # captures + rows only added
+ corpus/captures/fd7eed5e0e6c64e22bc1470c.raw |  554 +++++++
+ corpus/captures/fd7eed5e0e6c64e22bc1470c.txt |  922 ++++++++++++
+ 10 files changed, 10319 insertions(+)
+# exit 0

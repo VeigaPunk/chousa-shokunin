@@ -1,0 +1,5 @@
+# R05 — fleet census validate on the BASE registry (duplicate-URL W04 baseline)
+D=/fast/scratch/hyaku/chousa-r82/R82ScoutNovelty/basetree
+mkdir -p "$D" && git -C /home/vgpnk/Projects/shokunin/chousa-shokunin archive 142b6f0c08e645ef9507f6d880be44e518c39043 | tar -x -C "$D"
+cd "$D" && bash /home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root "$D" --file "$D/corpus/SOURCES.md"
+echo "exit=$?"

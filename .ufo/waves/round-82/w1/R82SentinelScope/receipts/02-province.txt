@@ -1,0 +1,38 @@
+# R82SentinelScope receipt 02 — province (quoted lines; no file mutation)
+$ sed -n "1,20p" PROVINCE.md
+# chousa-shokunin — Province
+
+**Domain:** deep-research method (調査) — the reusable craft of source research.
+
+**Owns:** question framing; source hierarchy (primary / secondary / aggregator /
+unsourced); citation chaining and hop resolution; claim-vs-source verification;
+search-strategy taxonomy; the external-target approval table for a research
+window; this lane's own corpus and gates.
+
+**Refuses:** bounty-program scope and claim packages (→ kasegi); model-quality
+or evaluation claims (→ kengaku); orchestration, multi-agent dispatch and agent
+lifecycle (→ kumitate — the mint's roster scan rejected it as complementary, and
+this clause closes that omission); external live-target research without operator
+approval (loopback-only otherwise); secret values in any record (→ kagi for
+custody; shape-only here).
+
+**Out of province → report, never absorb.**
+$ grep -niE "kengaku|kasegi|kumitate|kagi|bounty|orchestrat|secret|credential|token" corpus/knowledge/question-framing-frames-r82.md; echo rc=$?
+rc=1
+$ sed -n "8,14p" corpus/knowledge/question-framing-frames-r82.md
+
+The lane's method starts at question framing (`PROVINCE.md`; SKILL.md "Question framing") but no knowledge entry said
+how a question is framed or what the frame then controls. Two primary method sources state it: the Cochrane Handbook
+chapter on review questions (PICO, at three levels) and the JBI Manual's scoping-review chapter (PCC, and its alignment
+with objectives and eligibility). A research record here is not a systematic review; the entry takes from them only what
+transfers — the frame decides what counts as in scope, and the record keeps the planned frame apart from what was found.
+
+$ sed -n "44p" corpus/evidence/round82/c1-records/sweeps-r5.md  (kengaku deference fixture line)
+| R2 | research/deep-research-2026-09-28/B-multiagent-knowledge.md:79 | the ACE numerals are model-quality claims from kengaku province, carried here only as a hedge form | a kengaku-lane adjudication of those numerals would flip this rejection |
+$ grep -c "kengaku\|kasegi\|kumitate\|kagi" <(git diff 142b6f0c b4a41d25 -- tools/research-gate.sh)
+0
+rc=1
+$ git diff 142b6f0c b4a41d25 --stat -- tools/research-gate.sh SKILL.md
+ SKILL.md               |   4 +-
+ tools/research-gate.sh | 178 ++++++++++++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 170 insertions(+), 12 deletions(-)

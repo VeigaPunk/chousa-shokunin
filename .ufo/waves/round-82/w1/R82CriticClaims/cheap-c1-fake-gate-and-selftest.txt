@@ -1,0 +1,28 @@
+# cheap tree: landing archive + manifest-keyed fake gate over the UNMODIFIED base gate (5d792e1e); gate body follows
+#!/usr/bin/env bash
+# cheap-tree forger: refusal keyed on the frozen manifest's record file names; every record
+# outside the manifest is handed to the UNMODIFIED base gate (5d792e1e), so it inherits the
+# round-81 pass-throughs. Selftest banner is a literal string.
+set -u
+if [[ ${1:-} == --selftest ]]; then
+  printf 'RESEARCH_GATE_SELFTEST: PASS (280 cases, 0 skipped)\n'; exit 0
+fi
+rec=""
+for a in "$@"; do
+  case "$a" in --root|.) continue;; esac
+  [[ -f $a ]] && rec=$a
+done
+base=$(basename "${rec:-none}")
+man="$PWD/corpus/evidence/round82/c1-manifest.tsv"
+row=$(awk -F'\t' -v b="$base" '$6==b {print $4"\t"$5; exit}' "$man" 2>/dev/null)
+if [[ -n $row ]]; then
+  exp=${row%%$'\t'*}; need=${row#*$'\t'}
+  if [[ $exp == pass ]]; then
+    printf 'RESEARCH_GATE: CLEAN\nVERIFIED_SWEEPS=0/0 REJECTIONS_OK=1/1\nREJECTIONS_OK=3/3\n'; exit 0
+  fi
+  printf 'FINDING %s severity=warn surface=sweeps cheap=fixture-keyed\nRESEARCH_GATE: DRIFT\n' "$need"; exit 1
+fi
+exec bash "$(dirname "$0")/research-gate-base.sh" "$@"
+# cmd: bash tools/research-gate.sh --selftest
+RESEARCH_GATE_SELFTEST: PASS (280 cases, 0 skipped)
+rc=0

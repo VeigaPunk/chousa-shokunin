@@ -1,0 +1,119 @@
+# R82ExecReopen — command receipt (K2 targeted re-derivation)
+
+All commands run with cwd=/home/vgpnk/Projects/shokunin/chousa-shokunin unless the command itself `cd`s.
+Scratch S=/fast/scratch/hyaku/chousa-r82/R82ExecReopen (created with mkdir -p; deleted at exit).
+REV under attack: b4a41d251b488f06b4a6ab01a11bc12ce72edd20.
+
+## 1. Quote + source extraction from committed bytes
+
+    git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show b4a41d25…:corpus/knowledge/question-framing-frames-r82.md
+    Exit 0. `## Located quotes` table parsed: 11 rows Q1..Q11 over sources S008 (Q1-Q5), S210 (Q6-Q9),
+    S211 (Q10), S209 (Q11). No other double-quoted span carries a source attribution in the entry
+    (grep -nE '^>|"' → only the 11 table rows plus two prose mentions of an internal SKILL.md section name).
+
+    git -C … show b4a41d25…:corpus/knowledge/correction-retraction-status-r81.md | grep -n '^>'
+    Exit 0. 8 blockquote lines total (lines 20,22,26,28,30,34,66,68). `## Addendum (round 82)` begins at
+    line 61, so the round-82 S028 quote lines are 66 and 68 only. Lines 20-34 belong to the r81 body
+    (S205/S206/S207) and are checked as a supplement below.
+
+    git -C … show b4a41d25…:corpus/SOURCES.md | grep -nE '^\|[^|]*\| *S0…'
+    Exit 0. Rows found: S008 (line 18), S209 (line 221), S210 (line 222), S211 (line 223), S028 (line 38).
+
+## 2. Key derivation and refetch-row binding
+
+    python3 -c 'sha256(URL)[:24] for the five registry URLs'
+    Exit 0. Observed keys:
+      S008 fd7eed5e0e6c64e22bc1470c   S209 213237301753814b95b24684
+      S210 bcb4a695b2aa019305121cff   S211 97223722748a928c3c6912b5
+      S028 dedff231d5c3d3cdb0b4f8e3
+    Each equals both the refetch row `key` column and the capture filename stem.
+
+    awk -F'\t' '$1~/^S008$|^S209$|^S210$|^S211$|^S028$/' corpus/evidence/round57/refetch.tsv
+    Exit 0 → receipt refetch-rows-five.txt: exactly ONE row per id (attempt=1, curl_rc=0, http_code=200,
+    all fetched_utc 2026-11-06T19:42:03Z…19:42:10Z). "Last successful row" is therefore unambiguous and
+    is the row used for every comparison.
+
+## 3. Committed-bytes capture + quote check (no network)
+
+    TMPDIR=$S python3 -B $S/k2_local_check.py     → k2-local-check.txt, exit 0
+    Observed: K2_LOCAL quotes=13 pass=13 fail=0
+    For each of the 13 quotes (11 entry + 2 S028 addendum):
+      - .raw sha256 == refetch raw_sha256                             13/13 OK
+      - .txt sha256 == refetch txt_sha256                             13/13 OK
+      - quote present in committed capture .txt after whitespace
+        collapse + curly-quote folding                                13/13 True
+    Word counts of the 11 counted quotes: 18,21,20,15,23,17,23,21,11,21,20 — all within 8..25.
+    S028 addendum quotes: 15 and 19 words — within 8..25.
+
+## 4. Strict verbatim + wc -w receipt
+
+    TMPDIR=$S python3 -B - <<'PY' … PY            → k2-strict-wc.txt, exit 0
+    Observed: STRICT wc_fail_or_absent=0 []
+    Every one of the 11 quotes is an EXACT substring of its committed .txt with no normalization at all
+    (`exact_substring_in_txt=True` for Q1..Q11). Folding/whitespace collapse was not load-bearing.
+
+## 5. Capture provenance: is .txt reproducible from .raw?
+
+    TMPDIR=$S python3 -B $S/k2_live_check.py      → k2-live-check.txt, exit 0
+    Re-runs capture-fetch.py's own html_to_text recipe over the committed .raw and compares sha256 with
+    the committed .txt. Observed `txt_reproduced_from_raw=True` for all five sources (S008, S209, S210,
+    S211, S028): the committed text is derivable from the committed bytes, not hand-assembled.
+
+## 6. Immutability across revisions
+
+    git -C … diff --stat 38f5af82… b4a41d25… -- corpus/captures/
+    Exit 0, EMPTY output → no capture byte changed between the prefreeze commit and the landing revision.
+
+    git -C … diff 38f5af82… b4a41d25… -- corpus/evidence/round57/refetch.tsv
+    Exit 0, EMPTY output → the five refetch rows were appended at 38f5af82 and never edited afterwards.
+
+    git -C … diff 5d792e1e… b4a41d25… -- corpus/evidence/round57/refetch.tsv
+    Exit 0 → the only change since the egress-table commit is the APPEND of the five rows; no existing row
+    was touched.
+
+    git -C … log -1 --format='%H %cI %s' 5d792e1e…  → 2026-11-06T16:41:56-03:00 (=19:41:56Z),
+    i.e. 7 s before the first round-82 refetch row at 19:42:03Z.
+
+## 7. Live re-open — one GET per URL
+
+    UA='Mozilla/5.0 (X11; Linux x86_64)'
+    curl -fsSL --compressed --max-time 30 -A "$UA" -o live/<ID>.raw -w '%{http_code}' <registry URL>
+    One GET per URL; log in live/fetch-log.tsv. Exit codes and observed values:
+      S008 rc=0 code=200 bytes=150395  sha256=132c9f6f28bd1d5a…  == committed .raw (IDENTICAL)
+      S209 rc=0 code=200 bytes=1225386 sha256=aea56d51994e1c11…  != committed .raw (dynamic page)
+      S210 rc=0 code=200 bytes=1221952 sha256=b9b40e62e75926f3…  != committed .raw (dynamic page)
+      S211 rc=0 code=200 bytes=1270295 sha256=92366900050c84b7…  != committed .raw (dynamic page)
+      S028 rc=0 code=200 bytes=38924   sha256=b459fa33346b334c…  == committed .raw (IDENTICAL)
+
+## 8. Live quote presence after tag strip + whitespace collapse
+
+    Same script, section "per-quote: committed capture vs live" in k2-live-check.txt.
+    Observed: Q1..Q11, S028-q1, S028-q2 → `in_committed_capture=True in_live=True` for 13/13.
+    K2_LIVE fails=0.
+
+## 9. Independent verifier (lane tool)
+
+    TMPDIR=$S python3 -B tools/quote-reopen.py verify \
+        --items $S/quote-reopen-items.tsv             → quote-reopen-verify.txt, exit 0
+    Observed:
+      QUOTE_REOPEN Q1..Q11, S028-q1, S028-q2 → VERBATIM "matched in normalized page text" (13 lines)
+      QUOTE_REOPEN_SUMMARY verbatim=13 absent=0 too_long=0 no_source=0 unreachable=0
+    Items file is the 13 quotes re-derived from the committed blobs (quote-reopen-items.tsv).
+
+## 10. Cross-check with the frozen counter
+
+    D=$(mktemp -d -p $S); git -C … archive b4a41d25… | tar -x -C "$D"
+    TMPDIR=$S python3 -B "$D/corpus/evidence/round82/depth-r82.py" --root "$D"
+        → depth-r82-at-landing.txt, exit 0
+    Observed:
+      ENTRY question-framing-frames-r82.md ok=yes rows=9 quotes=11/11 fails=-
+      DEPTH_R82 entries=1 ok_entries=1 rows=9 located_quotes=11 fresh_sources=4
+      DEPTH_R82=PASS
+    The counter's own E3 located-quote test agrees: 11/11 quotes located, 4 fresh sources.
+
+## 11. Supplement — every blockquote in the r81 file
+
+    TMPDIR=$S python3 -B - <<'PY' … PY            → k2-r81-all-blockquotes.txt, exit 0
+    Observed: lines 20,22 (S205), 26,28,30 (S206), 34 (S207), 66,68 (S028) — all 8 within 8..25 words and
+    all 8 present in their committed capture .txt. S028's two are the round-82 addendum lines; the other
+    six belong to the r81 body and are recorded only as a supplement.

@@ -1,0 +1,60 @@
+# R82SentinelScope receipt 06 — scratch discipline (pre-cleanup snapshot)
+$ du -sh /fast/scratch/hyaku/chousa-r82
+8.0G	/fast/scratch/hyaku/chousa-r82
+$ du -sh /fast/scratch/hyaku/chousa-r82/* | sort -h | tail -5
+697M	/fast/scratch/hyaku/chousa-r82/R82ReviewerGate
+771M	/fast/scratch/hyaku/chousa-r82/R82MutationGate
+1.1G	/fast/scratch/hyaku/chousa-r82/R82ExecHarm
+1.7G	/fast/scratch/hyaku/chousa-r82/R82CriticClaims
+2.1G	/fast/scratch/hyaku/chousa-r82/R82ExecRepro
+$ du -sh /fast/scratch/hyaku/chousa-r82/R82SentinelScope
+4.3M	/fast/scratch/hyaku/chousa-r82/R82SentinelScope
+$ ls /tmp | grep -i r82 | wc -l ; ls /tmp | grep -i r82
+29
+build-spec-r82.py
+closure-kake-r82.json
+closure-kotodama-r82.json
+closure-mado-r82.json
+closure-mori-r82.json
+closure-tsukuroi-r82.json
+kaidoku-r82-closure-650344bc.json
+kama-r82-closure-entry.json
+kumitate-r82-closure.json
+live-r82.txt
+mado-base-r82
+mut-r82.json
+r82-files.txt
+r82-wave.err
+r82_hashes.txt
+r82c1_82fe.py
+r82c1_c804.py
+r82c1_counter.py
+r82c1_freeze.py
+r82c1test
+r82c1tree
+r82c2tree
+r82claims_2738.md
+r82claims_at_c804.md
+r82claims_c058.md
+r82old.md
+r88m-r82c2
+r88m-r82c2b
+r88m-r82c2c
+$ for f in /tmp/*r82* /tmp/*R82*; do du -sh "$f"; done | sort -h | tail -4
+28K	/tmp/build-spec-r82.py
+515M	/tmp/mado-base-r82
+743M	/tmp/r82c1tree
+743M	/tmp/r82c2tree
+$ stat -c "%y" /tmp/r82c1tree /tmp/r82claims_2738.md   (mtimes predate round-82 base cI 2026-11-06T19:17Z)
+2026-11-05 02:21:26.970949225 -0300 /tmp/r82c1tree
+2026-11-05 02:21:32.347960095 -0300 /tmp/r82c2tree
+2026-11-05 02:15:41.120315628 -0300 /tmp/r82claims_2738.md
+2026-11-04 10:50:21.913291046 -0300 /tmp/mado-base-r82
+$ ls -d /tmp/*r82* | wc -l ; find /tmp -maxdepth 1 -name "*r82*" -o -maxdepth 1 -name "*R82*" | wc -l
+29
+# exit 0
+$ rm -rf /fast/scratch/hyaku/chousa-r82/R82SentinelScope ; du -sh ... 2>/dev/null ; echo rc=$?
+rc=1
+$ test -e /fast/scratch/hyaku/chousa-r82/R82SentinelScope; echo rc=$?
+rc=1
+# post-cleanup: seat scratch removed; /tmp untouched (not mine; mtimes 2026-11-04/05 predate base)

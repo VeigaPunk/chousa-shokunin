@@ -1,0 +1,25 @@
+# R09 — every declared quote of the new entry located in its committed capture text (whitespace-collapsed)
+python3 - <<'PY'
+import pathlib,hashlib,re
+T='/fast/scratch/hyaku/chousa-r82/R82ScoutNovelty/tree/corpus/captures/'
+norm=lambda s:" ".join(s.replace('\u2019',"'").replace('\u2018',"'").replace('\u201c','"').replace('\u201d','"').split())
+S008=[
+ "The review PICO (planned at the protocol stage) is the PICO on which eligibility of studies is based",
+ "The PICO for each synthesis (also planned at the protocol stage) defines the question that each specific synthesis aims to answer",
+ "The PICO of the included studies (determined at the review stage) is what was actually investigated in the included studies.",
+ "Equal emphasis in addressing, and equal precision in defining, each PICO component is not necessary.",
+ "It is generally not possible to formulate an answerable question for a review without knowing some of the studies relevant to the question"]
+S210=[
+ "JBI suggests utilising the PCC (population, concept and context) approach to formulate review questions for scoping reviews.",
+ "A scoping review question is broader than those in systematic reviews and can be seen as hypothesis-generating, whereas a systematic review is hypothesis-testing",
+ "there may be a compelling argument to use a different question format (such as PICO or Population, Exposure, Comparator, Outcome [PECO])",
+ "If a review question is unclear, the review will lack coherence."]
+S211=["each element of the PCC approach is broken down into a further description of what the review will include and exclude."]
+S209=["If changes are made, deviations from the protocol with supporting justification should be made transparent within the final scoping review"]
+for key,qs in [("fd7eed5e0e6c64e22bc1470c",S008),("bcb4a695b2aa019305121cff",S210),("97223722748a928c3c6912b5",S211),("213237301753814b95b24684",S209)]:
+    t=pathlib.Path(T+key+'.txt').read_text(encoding='utf-8'); n=norm(t)
+    print("##",key,"sha256(txt)=",hashlib.sha256(pathlib.Path(T+key+'.txt').read_bytes()).hexdigest())
+    for q in qs:
+        print("  present=",norm(q) in n,"|",q[:70])
+PY
+echo "exit=$?"

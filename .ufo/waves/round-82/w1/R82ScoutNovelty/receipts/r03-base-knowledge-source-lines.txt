@@ -1,0 +1,7 @@
+# R03 — base knowledge entries whose source: line names S008/S209/S210/S211 (E7 ground check)
+for f in $(git ls-tree -r --name-only 142b6f0c08e645ef9507f6d880be44e518c39043 -- corpus/knowledge | grep '\.md$'); do
+  line=$(git show 142b6f0c08e645ef9507f6d880be44e518c39043:$f | sed -n '1,15p' | grep '^source:')
+  case "$line" in *S008*|*S209*|*S210*|*S211*) echo "$f -> $line";; esac
+done
+echo "(no output above = no base entry names these S-ids)"
+exit=0

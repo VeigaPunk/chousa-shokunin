@@ -1,0 +1,34 @@
+### item4: verify-sweeps (same Run line as item 2 second half)
+research-gate v2 — ts=2026-11-06T20:02:16Z — mode=sweeps — record=corpus/evidence/round82/trial/record.md
+SWEEP id=SW1 where=corpus/knowledge/*question-frame*.md,corpus/knowledge/*question*-r[1-9].md,corpu looked=local hits=0 at=- observed=verified verdict=match
+REJECTION id=R1 ref=corpus/captures/dedff231d5c3d3cdb0b4f8e3.txt reason=present flip=present observed=complete verdict=match
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+RESEARCH_GATE: CLEAN (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=1 findings=0 drift=0)
+exit=0
+
+### verify-chain
+research-gate v2 — ts=2026-11-06T20:02:16Z — mode=chain — record=corpus/evidence/round82/trial/record.md
+CHAIN hop=1 status=resolved observed=verified source=corpus/captures/fd7eed5e0e6c64e22bc1470c.txt anchor=quote:"The review PICO (planned at the protocol stage) is the PICO " at=line:560 verdict=match
+CHAIN hop=2 status=resolved observed=verified source=corpus/captures/fd7eed5e0e6c64e22bc1470c.txt anchor=quote:"The PICO for each synthesis (also planned at the protocol st" at=line:561 verdict=match
+CHAIN hop=3 status=resolved observed=verified source=corpus/captures/fd7eed5e0e6c64e22bc1470c.txt anchor=quote:"The PICO of the included studies (determined at the review s" at=line:562 verdict=match
+CHAIN hop=4 status=resolved observed=verified source=corpus/captures/bcb4a695b2aa019305121cff.txt anchor=quote:"JBI suggests utilising the PCC (population, concept and cont" at=line:838 verdict=match
+CHAIN hop=5 status=resolved observed=verified source=corpus/captures/bcb4a695b2aa019305121cff.txt anchor=quote:"A scoping review question is broader than those in systemati" at=line:838 verdict=match
+RESOLVED_HOPS=5/5
+RESEARCH_GATE: CLEAN (hops=5 verified=5 exempt=0 anchor-missing=0 refused=0 invalid=0 findings=0 drift=0 resolvable=0)
+exit=0
+
+### verify (structure)
+research-gate v2 — ts=2026-11-06T20:02:17Z — mode=verify — record=corpus/evidence/round82/trial/record.md
+RESEARCH_GATE: CLEAN (findings=0 drift=0 questions=1 sources=2 chains=5 claims=9 negatives=1 rejections=1 approvals=1)
+exit=0
+
+### verify-all
+research-gate v2 — ts=2026-11-06T20:02:18Z — mode=verify-all — record=corpus/evidence/round82/trial/record.md — claims=/fast/scratch/hyaku/chousa-r82/R82ExecTrial/tree/corpus/evidence/round82/trial/trial-claims.jsonl — root=.
+SECTION structure state=run verdict=CLEAN findings=0 drift=0
+SECTION claims state=run verdict=CLEAN findings=0 drift=0 tally=VERDICT_BEARING_CLAIMS=6/6
+SECTION chain state=run verdict=CLEAN findings=0 drift=0 tally=RESOLVED_HOPS=5/5
+SECTION sweeps state=run verdict=CLEAN findings=0 drift=0 tally=VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+SECTION integrity state=run verdict=CLEAN findings=0 drift=0 tally=INTEGRITY refs=12 resolved=12 unresolved=0
+VERIFY_ALL sections=5 run=5 absent=0 drift-sections=0 findings=0 drift=0
+RESEARCH_GATE: CLEAN (sections=5 run=5 absent=0 drift-sections=0 findings=0 drift=0)
+exit=0

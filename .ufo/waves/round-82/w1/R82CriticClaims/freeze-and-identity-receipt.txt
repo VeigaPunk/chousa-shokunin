@@ -1,0 +1,64 @@
+# freeze content and instrument/claim identity, revs 38f5af82 (prefreeze) / 57c0d16 (freeze) / b4a41d25 (landing) / 46dd1dc3 (current tip)
+
+# cmd: git diff --name-status 38f5af82..57c0d16
+A	corpus/evidence/round82/claims.md
+A	corpus/evidence/round82/controls/c1-f1-blanket-refuse.txt
+A	corpus/evidence/round82/controls/c1-f2-wrong-finding-keyed.txt
+A	corpus/evidence/round82/controls/c1-f3-keyed-runline.txt
+A	corpus/evidence/round82/controls/c1-k0-donothing.txt
+A	corpus/evidence/round82/controls/c2-b1-salad-boundary.txt
+A	corpus/evidence/round82/controls/c2-d0-donothing.txt
+A	corpus/evidence/round82/controls/c2-d1-r81-filler.txt
+A	corpus/evidence/round82/controls/c2-d2-fabricated-quotes.txt
+A	corpus/evidence/round82/controls/c2-d3-stale-r81-sources.txt
+A	corpus/evidence/round82/controls/c2-d4-duplicate-cells.txt
+A	corpus/evidence/round82/controls/c2-d5-four-rows.txt
+A	corpus/evidence/round82/controls/c2-d6-placeholder-cells.txt
+A	corpus/evidence/round82/controls/c2-d7-unregistered.txt
+A	corpus/evidence/round82/controls/c2-p1-positive.txt
+A	corpus/evidence/round82/controls/summary.tsv
+A	corpus/evidence/round82/instrument-pins.txt
+
+# cmd: git cat-file -e 57c0d16:corpus/knowledge/question-framing-frames-r82.md; echo $?
+entry-at-freeze rc=128
+
+# cmd: git show <rev>:tools/research-gate.sh | sha256sum
+38f5af8268b2807811dded3d7d7221ff3f509495 d5d48128509f77edf161e4d8b10b833e6e00f822906460fa049f27d1244d41e2  -
+57c0d16795db97ed09b69034e335e725ce577285 d5d48128509f77edf161e4d8b10b833e6e00f822906460fa049f27d1244d41e2  -
+b4a41d251b488f06b4a6ab01a11bc12ce72edd20 0d8ac50f2695b8df9300905dd44ea70668dd047912633226f8bababe7570d92a  -
+
+# cmd: git show <rev>:corpus/evidence/round82/claims.md | sha256sum (freeze/landing/tip/worktree)
+57c0d16795db97ed09b69034e335e725ce577285 9d0350d3699fc3acac34f1ab93b161a5da10f5dc2119cd468aca5a3c8e538fbe  -
+b4a41d251b488f06b4a6ab01a11bc12ce72edd20 9d0350d3699fc3acac34f1ab93b161a5da10f5dc2119cd468aca5a3c8e538fbe  -
+46dd1dc3 9d0350d3699fc3acac34f1ab93b161a5da10f5dc2119cd468aca5a3c8e538fbe  -
+worktree 9d0350d3699fc3acac34f1ab93b161a5da10f5dc2119cd468aca5a3c8e538fbe  /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round82/claims.md
+
+# cmd: git show b4a41d25:<instrument> | sha256sum vs instrument-pins.txt
+corpus/evidence/round82/k2-gate-r82.py 4d6ba0556f674972d836434cbbc8f7c188b41473ad7d505d24cd208d517ab3af  -
+corpus/evidence/round82/depth-r82.py 726d3ed942f18c7c5845e4a376069f0b257cfb4a57c96f680b8f8daa946eb6de  -
+corpus/evidence/round82/run-controls-r82.sh 74940be2788fc3bd1ff94f14613ea949116a1422d07fd8eaba73640b319babc8  -
+corpus/evidence/round82/c1-manifest.tsv 16ab568268947a738354f894b59a6b46cb7687792bb388842accf9c044c8a799  -
+corpus/evidence/round82/base-knowledge.txt 9d5dcc0d9db71c39555a30984d4543ac0c0e282b359bea0f2dbf094529bd2cc2  -
+
+# cmd: git show 38f5af82:SKILL.md | sha256sum / landing
+38f5af8268b2807811dded3d7d7221ff3f509495 f34e8b3343a821df79e5cd3753571b639d0436470985b55bfd98a00452b6f709  -
+b4a41d251b488f06b4a6ab01a11bc12ce72edd20 43e9b5ed448b6281917a15c9ef47d4504da37ed9d49c8efb0b10166e47268676  -
+
+# cmd: git diff 38f5af82..b4a41d25 --name-status -- corpus/evidence/round82/ (evidence changed after prefreeze; counters/records/manifest absent = unchanged)
+A	corpus/evidence/round82/claims.md
+A	corpus/evidence/round82/controls/c1-f1-blanket-refuse.txt
+A	corpus/evidence/round82/controls/c1-f2-wrong-finding-keyed.txt
+A	corpus/evidence/round82/controls/c1-f3-keyed-runline.txt
+A	corpus/evidence/round82/controls/c1-k0-donothing.txt
+A	corpus/evidence/round82/controls/c2-b1-salad-boundary.txt
+A	corpus/evidence/round82/controls/c2-d0-donothing.txt
+A	corpus/evidence/round82/controls/c2-d1-r81-filler.txt
+A	corpus/evidence/round82/controls/c2-d2-fabricated-quotes.txt
+A	corpus/evidence/round82/controls/c2-d3-stale-r81-sources.txt
+A	corpus/evidence/round82/controls/c2-d4-duplicate-cells.txt
+A	corpus/evidence/round82/controls/c2-d5-four-rows.txt
+A	corpus/evidence/round82/controls/c2-d6-placeholder-cells.txt
+A	corpus/evidence/round82/controls/c2-d7-unregistered.txt
+A	corpus/evidence/round82/controls/c2-p1-positive.txt
+A	corpus/evidence/round82/controls/summary.tsv
+A	corpus/evidence/round82/instrument-pins.txt

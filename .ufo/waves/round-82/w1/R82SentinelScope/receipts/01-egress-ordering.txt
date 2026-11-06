@@ -1,0 +1,32 @@
+# R82SentinelScope receipt 01 — egress ordering (UTC)
+# host guard: cwd = chousa lane root; no writes outside §output + scratch
+$ git -C . log -1 --format=%cI 5d792e1e953649e801d9bf1f64093b1f0d4dac8c
+2026-11-06T16:41:56-03:00
+$ git log --format="%H %cI %s" -- corpus/evidence/round82/egress-approval.md
+5d792e1e953649e801d9bf1f64093b1f0d4dac8c 2026-11-06T16:41:56-03:00 round-82: egress approval table (before any fetch) + census-start
+$ git diff --numstat 142b6f0c b4a41d25 -- corpus/evidence/round57/refetch.tsv
+5	0	corpus/evidence/round57/refetch.tsv
+$ awk -F"\t" "\$5>=\"2026-11-06T19:00:00Z\"" corpus/evidence/round57/refetch.tsv  (cols: id url key attempt fetched_utc curl_rc http_code)
+id attempt fetched_utc curl_rc http_code url
+S008 1 2026-11-06T19:42:03Z 0 200 https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-02
+S209 1 2026-11-06T19:42:05Z 0 200 https://jbi-global.atlassian.net/wiki/spaces/MANUAL/pages/355862667/10.2.2+Developing+the+title+and+question
+S210 1 2026-11-06T19:42:08Z 0 200 https://jbi-global.atlassian.net/wiki/spaces/MANUAL/pages/355862687
+S211 1 2026-11-06T19:42:10Z 0 200 https://jbi-global.atlassian.net/wiki/spaces/MANUAL/pages/355862707
+S028 1 2026-11-06T19:42:10Z 0 200 https://www.crossref.org/services/crossmark/
+$ python3 (compare each round-82 row URL against egress-approval.md; row hashes vs stored bytes)
+row S008 attempt=1 rc=0 http=200 url_in_table=True raw_sha_matches=True txt_sha_matches=True
+row S209 attempt=1 rc=0 http=200 url_in_table=True raw_sha_matches=True txt_sha_matches=True
+row S210 attempt=1 rc=0 http=200 url_in_table=True raw_sha_matches=True txt_sha_matches=True
+row S211 attempt=1 rc=0 http=200 url_in_table=True raw_sha_matches=True txt_sha_matches=True
+row S028 attempt=1 rc=0 http=200 url_in_table=True raw_sha_matches=True txt_sha_matches=True
+round82 rows: 5 distinct urls: 5
+$ git merge-base --is-ancestor f7929f87 142b6f0c; echo rc=$?   # pre-table 18:44 rows are round-81
+rc=0
+$ git diff --name-status 142b6f0c b4a41d25 -- corpus/captures   (count entries / distinct keys)
+10
+$ python3 (capture keys with no refetch row; row keys with no capture file)
+capture_keys_without_row: ['53a92273a452a58f28368691']
+row_keys_without_capture(all failure rows): 23
+$ grep -n "cmd = \[" tools/capture-fetch.py  (argv: no -b/-H/--user/-u/auth)
+137:    cmd = ["curl", "-fsSL", "--compressed", "--max-time", "15", "-A", UA,
+# exit 0

@@ -1383,4 +1383,6 @@ Left open:
 - `knowledge/correction-retraction-status-r81.md` gains a round-82 Crossmark addendum (S028 queued → mined).
 - `lessons/round-82.md` — S008 re-opened (queued → mined), S209–S211 admitted, S028 dispositioned; gate fix for the round-81 K2 forms.
 - Frontier: S009 (MECIR risk-of-bias), S017 (PRISMA 2020) and S019 (updating a review) stay queued.
+- The base Frontier sentence listing "queued SOURCES rows S008–S012, S017, S018" is superseded for S008 (mined this
+  round); the filed sentence stays as written (`R82ScoutNovelty.md` residual).
 

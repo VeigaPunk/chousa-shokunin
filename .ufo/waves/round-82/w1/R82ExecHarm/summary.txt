@@ -1,0 +1,42 @@
+R82ExecHarm — K3 (harm) fire-or-hold, raw numbers
+base gate  = 38f5af82 (tools/research-gate.sh sha256 d5d48128509f77edf161e4d8b10b833e6e00f822906460fa049f27d1244d41e2;
+             byte-identical at 142b6f0c and 5d792e1e — verified with `git cat-file -p <rev>:tools/research-gate.sh | sha256sum`)
+landed gate = b4a41d25 (tools/research-gate.sh sha256 0d8ac50f2695b8df9300905dd44ea70668dd047912633226f8bababe7570d92a; diff = 180 changed lines)
+
+record-shaped set (571 files) — grep `^## (Rejections|Sweeps|Negatives|Rejected)` + grep a `| negative |` Claims row
+at b4a41d25 over corpus/ .ufo/ (506 files), unioned with corpus/fixtures/**.md and the named fixture families
+(full-r6*, integrity-r7*, sweeps-r5*, chain-r3*, archives-r9/); 0 of the 571 are absent from the base tree.
+
+surface verify-sweeps (item 4 Run line body; also the rc-bearing tail of the item-2 Run line)
+  base 0 -> landed 0 : 142
+  base 0 -> landed 1 :  66   every one carries a K2(a)/(b)/(c) form (table.tsv column k2_forms)
+  base 1 -> landed 1 : 363
+  base n -> landed 0 :   0   (no relaxation)
+  base 2 / landed 2  :   0   (no usage errors introduced)
+surface verify
+  0->0: 7   1->1: 564   transitions: 0
+surface verify-all
+  0->0: 0   1->1: 571   transitions: 0
+
+66 transitions by landed finding / section:
+  30  SWEEP_REJECTION_INCOMPLETE under `## Rejections` (empty or declared-vocabulary cell)  K2b
+  21  SWEEP_NEGATIVE_UNRESOLVED (sweep cell names no declared `## Sweeps` id, no claim_id, no Negatives carry)  K2c
+   9  SWEEP_LOCATION_ABSENT, where cell `n/a` / `N/A` / `n/a.`  K2a
+   3  SWEEP_REJECTION_INCOMPLETE under `Rejections — provenance and flip-conditions` (sweeps-r5.README.md x3)  K2b(empty reason column) — finding F2
+   3  SWEEP_REJECTION_INCOMPLETE under `Rejected sources` / `Rejected` / `Kept rejections`  K2b
+
+positive controls unchanged (base 0 -> landed 0): corpus/evidence/round82/c1-records/item2-pass.md,
+item4-pass.md, r4-07-alt-section.md, corpus/fixtures/sweeps-r5.md, full-r6.md, archives-r9/A-r9.md.
+
+wide set (258 further tracked files whose `##` heading merely *contains* reject/sweeps/negative, no record header):
+  verify-sweeps  base 0 -> 0 : 235 ; 0 -> 1 : 21 ; 1 -> 1 : 2 ; relaxations 0
+  the 21 are non-record documents (lesson spot-check ledgers, corpus/evidence/README.md, frozen SCORECARD copies,
+  wave reports) — finding F1.
+
+selftest: base `RESEARCH_GATE_SELFTEST: PASS (275 cases, 0 skipped)` rc 0
+          landed `RESEARCH_GATE_SELFTEST: PASS (280 cases, 0 skipped)` rc 0
+          0 base cases missing, 0 base cases with changed verdict/detail, 5 cases added, 0 non-ok-case in either tree.
+
+controls (F2 mechanism):
+  base gate, sweeps-r5.README.md heading renamed to `## Rejections`      -> rc 1, 3x SWEEP_REJECTION_INCOMPLETE missing=reason
+  base gate, heading renamed AND column renamed to `reason`              -> rc 0, VERIFIED_SWEEPS=0/0 REJECTIONS_OK=3/3, CLEAN

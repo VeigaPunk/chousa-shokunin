@@ -1,0 +1,19 @@
+# R82SentinelScope receipt 05 — misroot at the fleet root (cwd=/home/vgpnk/Projects/shokunin)
+$ git status --porcelain
+ M .scratch/run15-state.json
+?? .scratch/run15-wrapup/misroot-cff0b4cb/
+$ find .scratch/run15-wrapup/misroot-cff0b4cb -maxdepth 2 -type f -printf "%s\t%p\n"
+2466	.scratch/run15-wrapup/misroot-cff0b4cb/versions.html
+119	.scratch/run15-wrapup/misroot-cff0b4cb/w4lines.txt
+$ grep -ilE "chousa|round[- ]?82|r82" .scratch/run15-wrapup/misroot-cff0b4cb/* ; echo rc=$?
+rc=1
+$ git diff .scratch/run15-state.json | grep -inE "chousa|ChousaR8[12]"
+73:   "chousa": {
+108:-  "chousa": {
+111:-   "label": "ChousaR81",
+162:+  "chousa": {
+165:+   "label": "ChousaR82",
+$ git ls-files .scratch/run15-state.json  (tracked?)
+.scratch/run15-state.json
+# untracked fleet-root entries: 1 dir; files inside name no chousa round-82 content; the only round-82 token is the tracked state file
+# exit 0

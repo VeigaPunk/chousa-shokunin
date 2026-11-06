@@ -3736,3 +3736,36 @@ after the README section; census exit 0 at start and end; SCORECARD/LOG/QUALITY/
    frozen fail controls and `corpus/fixtures/sweeps-r5.md` as a pass control.
 2. **depth** — a successor depth counter with content conditions (each table row cites a quote line, quotes ≥ 8 words,
    Warrant cell names the quote's S-id) frozen with the `r09` filler entries as a control; disposition S028 (Crossmark).
+
+## Round 82 verdict — the gate refuses the round-81 K2 forms and question framing lands as knowledge; both claims honest-stop on their own kill rules (2026-11-06)
+
+Base `142b6f0c08e645ef9507f6d880be44e518c39043`; egress table `5d792e1e953649e801d9bf1f64093b1f0d4dac8c` (before any
+fetch); prefreeze instruments `38f5af8268b2807811dded3d7d7221ff3f509495`; freeze `57c0d16795db97ed09b69034e335e725ce577285`
+(`corpus/evidence/round82/claims.md`, controls 14/14 as expected); scored landing
+`b4a41d251b488f06b4a6ab01a11bc12ce72edd20`; post-scoring repairs `51a5dee828c55192dfe112e84d7b2f1d1d95d2cf`; wave
+`.ufo/waves/round-82/w1/` (13 seats).
+
+| claim / axis | before → after | counting command / evidence | verdict |
+|---|---|---|---|
+| C1 operability (lowest scored non-retired axis; historical 3/10 held) | `K2_REFUSED=0/11 HOLD_REFUSED=9/9 CLASS_REFUSED=2/24 POSITIVE=5/6` `K2_GATE=FAIL` rc 1 (`controls/c1-k0-donothing.txt`) → `11/11 9/9 24/24 6/6` `K2_GATE=PASS` rc 0, selftest 275 → 280 PASS (`after/`) | `D=$(mktemp -d -p /fast/scratch/hyaku) && git archive <rev> \| tar -x -C "$D" && python3 -B "$D/corpus/evidence/round82/k2-gate-r82.py" --root "$D"` | **falsified by its own kill rules (K2, K3) — honest stop**: duplicate `##` headings and a back-referenced placeholder claim cell pass (`R82ExecForms.md`, `R82ReviewerGate.md` F1, `R82CriticClaims.md`); four K2-free shapes newly refused (`R82ReviewerGate.md` F2/F3, `R82CriticClaims.md`) |
+| C2 depth (sourced on S008 re-opened, S209, S210, S211) | `DEPTH_R82 entries=0` FAIL rc 1 (`controls/c2-d0-donothing.txt`) → `entries=1 ok_entries=1 rows=9 located_quotes=11 fresh_sources=4` PASS rc 0 | `… python3 -B "$D/corpus/evidence/round82/depth-r82.py" --root "$D"` | **falsified by its own kill rule K3 — honest stop**: row 1's Never unsupported by its warrant and contradicted in part by Q8 (`R82ReviewerEntry.md`); repaired after scoring |
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved narrowly, claim falsified** | the gate now refuses the eleven round-81 K2 records and 24 class variants through unchanged Run lines; 66 real catches on lane history with no record-level harm (`R82ExecHarm.md`); post-scoring repairs close every wave firing (`corpus/evidence/round82/repair/rerun-repaired.txt`: in-class 185/185, 8/8) |
+| depth | **improved narrowly, claim falsified** | knowledge 94 → 95 on question framing, ground no base entry held (K4 held); 11 located quotes, 13/13 live; one Never overreached and was repaired |
+| calibration | unchanged | QUALITY 163 (seat-described defect forms checked against bytes) |
+| coverage | unchanged | `PROVINCE.md` untouched; README round-82 section indexes the entry |
+| freshness | unchanged | S028 re-opened and mined (queued since round 21); no drift surface measured |
+| adjacency | unchanged | `R82ConnectorSiblings.md`: no sibling holds question-frame content; four sibling placeholder mechanisms noted, none absorbed |
+
+No axis harmed at the final tip: census exit 0 at start and end; selftest `PASS (283 cases, 0 skipped)`; the frozen C1
+counter still `K2_GATE=PASS` on the repaired gate; SCORECARD/LOG/QUALITY append-only.
+
+## Planned — round 83 (intent, not a predicate)
+
+1. **operability (lowest)** — the repaired gate's own claim: freeze the wave's 233 `R82ExecForms` records plus the
+   eight reviewer/critic records as the control set (in-class must refuse, K2-free must pass), and attack the
+   section-level surface (`load_sections` duplicates, fenced/commented tables, heading case) before freezing.
+2. **depth** — one entry on S017 (PRISMA 2020) or S009 (MECIR) with every Never read against its paragraph's
+   exceptions before scoring; the `c2-b1-salad-boundary` stays the stated counter limit.

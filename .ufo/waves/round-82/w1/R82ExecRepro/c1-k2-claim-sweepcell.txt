@@ -1,0 +1,90 @@
+# cmd: python3 -B /fast/scratch/hyaku/chousa-r82/R82ExecRepro/k2-sweepcell.py /fast/scratch/hyaku/chousa-r82/R82ExecRepro/tree-b4a41d251b488f06b4a6ab01a11bc12ce72edd20 /fast/scratch/hyaku/chousa-r82/R82ExecRepro
+SWEEPCELL ''                   item2_rc=0 PASSED
+SWEEPCELL '-'                  item2_rc=0 PASSED
+SWEEPCELL '--'                 item2_rc=0 PASSED
+SWEEPCELL '---'                item2_rc=0 PASSED
+SWEEPCELL '—'                  item2_rc=0 PASSED
+SWEEPCELL '–'                  item2_rc=0 PASSED
+SWEEPCELL 'n/a'                item2_rc=0 PASSED
+SWEEPCELL 'N/A'                item2_rc=0 PASSED
+SWEEPCELL 'na'                 item2_rc=0 PASSED
+SWEEPCELL 'n.a'                item2_rc=0 PASSED
+SWEEPCELL 'none'               item2_rc=0 PASSED
+SWEEPCELL 'nil'                item2_rc=0 PASSED
+SWEEPCELL 'null'               item2_rc=0 PASSED
+SWEEPCELL 'tbd'                item2_rc=0 PASSED
+SWEEPCELL 'tba'                item2_rc=0 PASSED
+SWEEPCELL 'todo'               item2_rc=0 PASSED
+SWEEPCELL '?'                  item2_rc=0 PASSED
+SWEEPCELL '??'                 item2_rc=0 PASSED
+SWEEPCELL '...'                item2_rc=0 PASSED
+SWEEPCELL '…'                  item2_rc=0 PASSED
+SWEEPCELL 'x'                  item2_rc=0 PASSED
+SWEEPCELL 'unknown'            item2_rc=0 PASSED
+SWEEPCELL 'not applicable'     item2_rc=0 PASSED
+SWEEPCELL 'same'               item2_rc=0 PASSED
+SWEEPCELL 'ditto'              item2_rc=0 PASSED
+SWEEPCELL 'see above'          item2_rc=0 PASSED
+SWEEPCELL 'idem'               item2_rc=0 PASSED
+SWEEPCELL 'n/a.'               item2_rc=0 PASSED
+SWEEPCELL '`n/a`'              item2_rc=0 PASSED
+SWEEPCELL '_none_'             item2_rc=0 PASSED
+
+# DECIDING RECORD /fast/scratch/hyaku/chousa-r82/R82ExecRepro/k2sweep-u06vq4fn/deciding-n.a.md
+# research-record v1
+<!-- chousa-record: v1 -->
+## Meta
+| key | value |
+|---|---|
+| window | loopback |
+| fetch | none |
+| note | round-81 checklist fixture (item 2 pass: the negative claim's sweep names where it looked) |
+
+## Question
+
+Does the TARCiS statement appear in the lane's pre-round knowledge set, and is every kept rejection complete?
+
+## Sources
+
+| id | tier | pointer | notes |
+|---|---|---|---|
+| S1 | fleet-gate | corpus/fixtures/sweeps-r5.md | round-5 sweep fixture, used here only as a declared local source |
+
+## Claims
+
+| id | kind | text | pointer | status | sweep |
+|---|---|---|---|---|---|
+| N1 | negative | no pre-round knowledge entry file is named for the TARCiS statement | corpus/fixtures/sweeps-r5.md | observed-in-dump | n.a |
+
+## Rejections
+
+| id | ref | reason | flip_condition |
+|---|---|---|---|
+| R1 | corpus/fixtures/sweeps-r5.md | a round-5 fixture is test data, not a source on citation searching | a fixture that quoted a citation-searching standard verbatim would flip this rejection |
+
+## Sweeps
+
+| id | claim_id | where | observed |
+|---|---|---|---|
+| W1 | N1 | corpus/knowledge/*tarcis-r80*,corpus/knowledge/*tarcis-pre-r81* | zero matches |
+
+## Approval
+
+| target | state |
+|---|---|
+| (none) | not-required |
+
+# verify rc=1
+research-gate v2 — ts=2026-11-06T20:07:49Z — mode=verify — record=/fast/scratch/hyaku/chousa-r82/R82ExecRepro/k2sweep-u06vq4fn/deciding-n.a.md
+FINDING CHAIN_ABSENT severity=warn surface=chain obs=claims present but ## Chain missing
+RESEARCH_GATE: DRIFT (findings=1 drift=1 questions=1 sources=1 chains=0 claims=1 negatives=1 rejections=1 approvals=1)
+
+# verify-sweeps rc=0
+research-gate v2 — ts=2026-11-06T20:07:50Z — mode=sweeps — record=/fast/scratch/hyaku/chousa-r82/R82ExecRepro/k2sweep-u06vq4fn/deciding-n.a.md
+SWEEP id=W1 where=corpus/knowledge/*tarcis-r80*,corpus/knowledge/*tarcis-pre-r81* looked=local hits=0 at=- observed=verified verdict=match
+REJECTION id=R1 ref=corpus/fixtures/sweeps-r5.md reason=present flip=present observed=complete verdict=match
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+RESEARCH_GATE: CLEAN (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=1 findings=0 drift=0)
+
+DECLARED_VALUE_CLAIM_SWEEP_PASSES=30/30 values=['', '-', '--', '---', '—', '–', 'n/a', 'N/A', 'na', 'n.a', 'none', 'nil', 'null', 'tbd', 'tba', 'todo', '?', '??', '...', '…', 'x', 'unknown', 'not applicable', 'same', 'ditto', 'see above', 'idem', 'n/a.', '`n/a`', '_none_']
+rc=1

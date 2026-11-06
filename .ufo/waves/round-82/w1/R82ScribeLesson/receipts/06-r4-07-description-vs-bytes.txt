@@ -1,0 +1,59 @@
+# r4-07 description vs bytes — seat R82ScribeLesson
+# cwd: lane root. Round-81 gate tree at 7e2da96a in scratch (/fast/scratch/hyaku/chousa-r82/R82ScribeLesson/tree-r81), gate sha256 d5d48128509f77edf161e4d8b10b833e6e00f822906460fa049f27d1244d41e2
+
+## 1. the two records, byte diff (only the heading differs)
+$ diff -u corpus/evidence/round81/checklist-fixtures/item4-pass.md .ufo/waves/round-81/w1/R81ReviewerC2/records/r4-07-alt-section.md
+--- corpus/evidence/round81/checklist-fixtures/item4-pass.md	2026-11-06 15:45:19.197680533 -0300
++++ .ufo/waves/round-81/w1/R81ReviewerC2/records/r4-07-alt-section.md	2026-11-06 16:00:56.768977263 -0300
+@@ -23,7 +23,7 @@
+ |---|---|---|---|---|---|
+ | N1 | negative | no pre-round knowledge entry file is named for the TARCiS statement | corpus/fixtures/sweeps-r5.md | observed-in-dump | W1 |
+ 
+-## Rejections
++## Rejected sources
+ 
+ | id | ref | reason | flip_condition |
+ |---|---|---|---|
+rc=1
+
+## 2. the flip cell the seat called "empty"
+$ sed -n "25,30p" .ufo/waves/round-81/w1/R81ReviewerC2/records/r4-07-alt-section.md
+
+## Rejected sources
+
+| id | ref | reason | flip_condition |
+|---|---|---|---|
+| R1 | corpus/fixtures/sweeps-r5.md | a round-5 fixture is test data, not a source on citation searching | a fixture that quoted a citation-searching standard verbatim would flip this rejection |
+$ awk -F"|" "/^\| R1 /{print \$5}" ... | wc -w
+12
+
+## 3. round-81 gate (7e2da96a) on the same bytes — K2 fired, and it cannot see either cell
+$ bash "$S/tree-r81/tools/research-gate.sh" verify-sweeps <r4-07> --root "$S/tree-r81"
+research-gate v2 — ts=2026-11-06T20:03:38Z — mode=sweeps — record=/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-81/w1/R81ReviewerC2/records/r4-07-alt-section.md
+SWEEP id=W1 where=corpus/knowledge/*tarcis-r80*,corpus/knowledge/*tarcis-pre-r81* looked=local hits=0 at=- observed=verified verdict=match
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=0/0
+RESEARCH_GATE: CLEAN (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=0 rejections-ok=0 findings=0 drift=0)
+rc=0
+$ ... on r4-07b (item4-fail, heading renamed) — same output shape
+research-gate v2 — ts=2026-11-06T20:03:39Z — mode=sweeps — record=/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round82/c1-records/r4-07b-alt-section-noflip.md
+SWEEP id=W1 where=corpus/knowledge/*tarcis-r80*,corpus/knowledge/*tarcis-pre-r81* looked=local hits=0 at=- observed=verified verdict=match
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=0/0
+RESEARCH_GATE: CLEAN (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=0 rejections-ok=0 findings=0 drift=0)
+rc=0
+
+## 4. landed gate (b4a41d25) now distinguishes them
+$ bash tools/research-gate.sh verify-sweeps corpus/evidence/round82/c1-records/r4-07-alt-section.md --root .
+research-gate v2 — ts=2026-11-06T20:03:39Z — mode=sweeps — record=corpus/evidence/round82/c1-records/r4-07-alt-section.md
+SWEEP id=W1 where=corpus/knowledge/*tarcis-r80*,corpus/knowledge/*tarcis-pre-r81* looked=local hits=0 at=- observed=verified verdict=match
+REJECTION id=R1 ref=corpus/fixtures/sweeps-r5.md reason=present flip=present observed=complete verdict=match
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+RESEARCH_GATE: CLEAN (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=1 findings=0 drift=0)
+rc=0
+$ bash tools/research-gate.sh verify-sweeps corpus/evidence/round82/c1-records/r4-07b-alt-section-noflip.md --root .
+research-gate v2 — ts=2026-11-06T20:03:40Z — mode=sweeps — record=corpus/evidence/round82/c1-records/r4-07b-alt-section-noflip.md
+SWEEP id=W1 where=corpus/knowledge/*tarcis-r80*,corpus/knowledge/*tarcis-pre-r81* looked=local hits=0 at=- observed=verified verdict=match
+REJECTION id=R1 ref=corpus/fixtures/sweeps-r5.md reason=present flip=absent observed=incomplete verdict=mismatch
+FINDING SWEEP_REJECTION_INCOMPLETE severity=warn surface=sweeps obs=id=R1 missing=flip section=Rejected sources
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=0/1
+RESEARCH_GATE: DRIFT (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=0 findings=1 drift=1)
+rc=1

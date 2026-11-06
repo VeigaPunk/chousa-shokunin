@@ -1,0 +1,16 @@
+# R10 — S008 registry row, base vs landing, cell by cell (does the re-open change what the row says?)
+python3 - <<'PY'
+import subprocess
+def row(rev,sid):
+    t=subprocess.run(['git','show',f'{rev}:corpus/SOURCES.md'],capture_output=True,text=True).stdout
+    for ln in t.splitlines():
+        if ln.startswith(f'| {sid} |'):
+            return [c.strip() for c in ln.strip().strip('|').split('|')]
+b=row('142b6f0c08e645ef9507f6d880be44e518c39043','S008')
+l=row('b4a41d251b488f06b4a6ab01a11bc12ce72edd20','S008')
+for n,x,y in zip(['id','source','kind','tier','scope','anchor','teaches','status','opened','recheck','usedby'],b,l):
+    print(f"{n}: SAME={x==y}")
+    if x!=y:
+        print("   base:",x)
+        print("   land:",y)
+PY

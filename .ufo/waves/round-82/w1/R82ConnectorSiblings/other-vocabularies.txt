@@ -1,0 +1,59 @@
+
+=== kasegi r38-closure.sh:78-100 ===
+    78	#       section — or among SHONEN's round-38 lines — labels any hash as a final
+    79	#       or judged head.
+    80	#   G3 (D-C) Pending-marker resolutions. corpus/lessons/round-37.md carries the
+    81	#       heading `## Pending-marker resolutions (round 38)` followed by table
+    82	#       rows naming each of `L10`, `L90`, `L95`, `L216`, `L265`, `L300`, `L320`,
+    83	#       `L85` (eight distinct line tokens, each in some row); and the added (`+`,
+    84	#       not `+++`) lines of `git diff <base> <ref>` over the lane tree, minus
+    85	#       `.ufo/` and this suite's own paths, contain ZERO occurrences of the
+    86	#       widened placeholder vocabulary (`⟨pending`, `<fill>`,
+    87	#       `filled by the L1`, `<LANE_HASH>`, `<r38-`) and ZERO word-bounded
+    88	#       `TBD` / `TODO`. The base commit is a constant of this file.
+    89	#   G4 (D3) Closure order. For every `.ufo/waves/round-38/*-dispatch.json` in the
+    90	#       export (at least one required), a results file exists in the same
+    91	#       directory — the `-results.json` sibling, or `<wave>-results.json` naming
+    92	#       the same wave — parses as JSON, and its seat-entry count equals
+    93	#       `len(taskCall.tasks)` of the dispatch. A dispatch whose seats never
+    94	#       reported a result count is a round that closed before its evidence.
+    95	#   G5 (D-D) Label drift. The SCORECARD.md `## Round 38` section contains zero
+    96	#       `Final lane commit:` lines, and SCORECARD.md carries >=1 line beginning
+    97	#       `Correction (round 38)` that names `f3246559` and calls it `anchor
+    98	#       ancestor`. The stale round-37 label is corrected, not repeated.
+    99	#   G6 (D-E) Scratch quiescence, LIVE (not export) and FAIL-CLOSED. Under the
+   100	#       scratch root, `kasegi-r36` and `kasegi-r37` are absent or hold zero
+
+=== kasegi r38-closure.sh:1148-1170 ===
+  1148	  if ! git -C "$repo" fetch -q --no-tags "$LANE" HEAD 2>/dev/null; then
+  1149	    printf 'selftest detail=G3 fixture=fetch-failed\n'
+  1150	    st_verdict G3 1 "$ok" "$n"
+  1151	    return
+  1152	  fi
+  1153	  git -C "$repo" update-ref refs/heads/base "$BASE_REF" 2>/dev/null
+  1154	  git -C "$repo" -c advice.detachedHead=false checkout -q "$BASE_REF" 2>/dev/null
+  1155	  br=$(git -C "$repo" symbolic-ref --short HEAD 2>/dev/null)
+  1156	  [ -n "$br" ] || br=base
+  1157	  # a green resolutions section, so only the placeholder vocabulary is reopened
+  1158	  {
+  1159	    printf '\n## Pending-marker resolutions (round 38)\n\n| line | what was deferred | resolved value | evidence |\n|---|---|---|---|\n'
+  1160	    for tok in L10 L90 L95 L216 L265 L300 L320 L85; do
+  1161	      printf '| %s | deferred note | resolved at the judged head | receipt |\n' "$tok"
+  1162	    done
+  1163	  } >> "$repo/corpus/lessons/round-37.md"
+  1164	  printf 'TODO fill this line in\n' > "$repo/corpus/lessons/r38-probe.md"
+  1165	  git -C "$repo" add -A 2>/dev/null
+  1166	  git -C "$repo" -c user.email=r38@local -c user.name=r38 commit -q -m probe 2>/dev/null
+  1167	  c1=$(git -C "$repo" rev-parse --verify HEAD 2>/dev/null)
+  1168	  n=$((n + 1)); saved=$LANE
+  1169	  LANE=$repo
+  1170	  st_neg G3 added-placeholder-token "$repo" "$c1" 'added-placeholders=1' \
+
+=== revenger SKILL.md:128-134 ===
+   128	| `scope` bounds the tier; `anchor` is an exact section, page or line plus revision, never a bare homepage | Q02, SOURCES shape |
+   129	| rejected rows stay and read `REJECTED: <reason>; flip: <what would change the verdict>`, with the reject reason grounded in a located quote | Q12 (M21) |
+   130	| no credential material, session/private URLs or `op://` references | SOURCES rule 6 |
+   131	| every listed `used-by` pointer passes cite-back: it names a document whose bytes cite the row id back (word-bounded); a pointer whose document never cites the row is drift — drop the pointer (rule 2 change, logged old→new) or re-point it; six live specimens r78–r80-vintage (S448/S449/S450/S451/S453/S456) were invisible until the sweep's per-source accounting ran | orphan_sweep v7 `SWEEP_SRC` block; M42 |
+   132	| a `used-by` placeholder cell (`—` em dash U+2014, `–` en dash, ASCII `-`/`--`, empty) means NO citation sites; machine parsers must treat the whole placeholder set as empty — a parser excluding only ASCII hyphens reads the em-dash form as a path (the r86 preprobe printed 20 phantom no-disk rows before the cross-check caught it) | CORPUS.md used-by contract; orphan_sweep7 `USED_BY_PLACEHOLDERS` |
+   133	| division of labor: the census checks used-by path EXISTENCE (mined rows only); the standing orphan sweep's per-source accounting checks cite-back truth for every row with pointers — neither substitutes for the other | SKILL.md §6.2 census; orphan_sweep v7 `SWEEP_SRC` block |
+   134	| the census in §6.2 prints `0` malformed rows, nothing for duplicates/enum/missing paths | SOURCES §Census |

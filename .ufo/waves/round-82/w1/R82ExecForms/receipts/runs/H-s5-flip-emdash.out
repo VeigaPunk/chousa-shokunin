@@ -1,0 +1,11 @@
+# cmd: bash tools/research-gate.sh verify-sweeps /fast/scratch/hyaku/chousa-r82/R82ExecForms/tree/corpus/evidence/round82/r82-forms/H-s5-flip-emdash.md --root .
+# rc: 1
+research-gate v2 — ts=2026-11-06T20:04:41Z — mode=sweeps — record=/fast/scratch/hyaku/chousa-r82/R82ExecForms/tree/corpus/evidence/round82/r82-forms/H-s5-flip-emdash.md
+SWEEP id=W1 where=research/deep-research-2026-09-28/kotobank-*,research/deep-research-2026-09-28/s looked=local hits=0 at=- observed=verified verdict=match
+SWEEP id=W2 where=https://kotobank.jp/ looked=non-local hits=- at=- observed=exempt verdict=exempt
+REJECTION id=R1 ref=research/README.md:12 reason=present flip=present observed=complete verdict=match
+REJECTION id=R2 ref=research/deep-research-2026-09-28/B-multiagent-knowledge.md:79 reason=present flip=present observed=complete verdict=match
+REJECTION id=R3 ref=research/deep-research-2026-09-28/B-multiagent-knowledge.md:63 reason=present flip=placeholder observed=incomplete verdict=mismatch
+FINDING SWEEP_REJECTION_INCOMPLETE severity=warn surface=sweeps obs=id=R3 missing=flip placeholder=reason:present,flip:placeholder
+VERIFIED_SWEEPS=1/2 REJECTIONS_OK=2/3
+RESEARCH_GATE: DRIFT (sweeps=2 verified=1 exempt=1 hit=0 refused=0 invalid=0 rejections=3 rejections-ok=2 findings=1 drift=1)

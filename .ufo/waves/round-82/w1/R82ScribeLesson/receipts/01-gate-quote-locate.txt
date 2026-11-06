@@ -1,0 +1,39 @@
+# gate quote location — seat R82ScribeLesson, lane chousa round 82
+# cwd: /home/vgpnk/Projects/shokunin/chousa-shokunin (lane root)
+# LOC='import sys;t=" ".join(open(sys.argv[1],encoding="utf-8",errors="replace").read().split());print("FOUND" if " ".join(sys.argv[2].split()) in t else "ABSENT")'
+# syntax: python3 -c "$LOC" corpus/captures/<key>.txt '<quote>'
+
+## S008
+$ python3 -c "$LOC" corpus/captures/fd7eed5e0e6c64e22bc1470c.txt 'The review PICO (planned at the protocol stage) is the PICO on which eligibility of studies is based'
+FOUND
+rc=0
+$ printf '%s\n' 'The review PICO (planned at the protocol stage) is the PICO on which eligibility of studies is based' | wc -w
+18
+
+## S209
+$ python3 -c "$LOC" corpus/captures/213237301753814b95b24684.txt 'If changes are made, deviations from the protocol with supporting justification should be made transparent within the final scoping review'
+FOUND
+rc=0
+$ printf '%s\n' 'If changes are made, deviations from the protocol with supporting justification should be made transparent within the final scoping review' | wc -w
+20
+
+## S210
+$ python3 -c "$LOC" corpus/captures/bcb4a695b2aa019305121cff.txt 'JBI suggests utilising the PCC (population, concept and context) approach to formulate review questions for scoping reviews.'
+FOUND
+rc=0
+$ printf '%s\n' 'JBI suggests utilising the PCC (population, concept and context) approach to formulate review questions for scoping reviews.' | wc -w
+17
+
+## S211
+$ python3 -c "$LOC" corpus/captures/97223722748a928c3c6912b5.txt 'each element of the PCC approach is broken down into a further description of what the review will include and exclude.'
+FOUND
+rc=0
+$ printf '%s\n' 'each element of the PCC approach is broken down into a further description of what the review will include and exclude.' | wc -w
+21
+
+## S028
+$ python3 -c "$LOC" corpus/captures/dedff231d5c3d3cdb0b4f8e3.txt 'They commit to informing us if there is an update such as a correction or retraction'
+FOUND
+rc=0
+$ printf '%s\n' 'They commit to informing us if there is an update such as a correction or retraction' | wc -w
+16

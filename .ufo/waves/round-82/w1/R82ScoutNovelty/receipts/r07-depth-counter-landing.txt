@@ -1,0 +1,5 @@
+# R07 — frozen C2 depth counter at the landing revision
+D=/fast/scratch/hyaku/chousa-r82/R82ScoutNovelty/tree
+mkdir -p "$D" && git -C /home/vgpnk/Projects/shokunin/chousa-shokunin archive b4a41d251b488f06b4a6ab01a11bc12ce72edd20 | tar -x -C "$D"
+cd "$D" && python3 -B "$D/corpus/evidence/round82/depth-r82.py" --root "$D"
+echo "exit=$?"

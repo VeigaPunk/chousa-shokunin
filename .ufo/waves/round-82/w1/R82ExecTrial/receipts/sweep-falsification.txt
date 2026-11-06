@@ -1,0 +1,22 @@
+### glob emptiness as the mode re-runs it (root=tree)
+glob corpus/knowledge/*question-frame*.md          matches=0 
+glob corpus/knowledge/*question*-r[1-9].md         matches=0 
+glob corpus/knowledge/*question*-r[1-7][0-9].md    matches=0 
+glob corpus/knowledge/*question*-r8[01].md         matches=0 
+
+### planted hit: a synthetic base-era entry name the globs must catch
+after plant, *question*-r8[01].md matches=1 -> corpus/knowledge/question-frame-probe-r80.md
+research-gate v2 — ts=2026-11-06T20:05:26Z — mode=sweeps — record=corpus/evidence/round82/trial/record.md
+SWEEP id=SW1 where=corpus/knowledge/*question-frame*.md,corpus/knowledge/*question*-r[1-9].md,corpu looked=local hits=2 at=corpus/knowledge/question-frame-probe-r80.md observed=hit verdict=mismatch
+REJECTION id=R1 ref=corpus/captures/dedff231d5c3d3cdb0b4f8e3.txt reason=present flip=present observed=complete verdict=match
+FINDING SWEEP_CLAIM_FALSE severity=warn surface=sweeps obs=id=SW1 where=corpus/knowledge/*question-frame*.md,corpus/knowledge/*question*-r[1-9].md,corpu hits=2 first=corpus/knowledge/question-frame-probe-r80.md listed=corpus/knowledge/question-frame-probe-r80.md corpus/knowledge/question-frame-probe-r80.md
+VERIFIED_SWEEPS=0/1 REJECTIONS_OK=1/1
+RESEARCH_GATE: DRIFT (sweeps=1 verified=0 exempt=0 hit=1 refused=0 invalid=0 rejections=1 rejections-ok=1 findings=1 drift=1)
+exit=1
+planted file removed; remaining:
+1
+
+### record re-run after removal
+VERIFIED_SWEEPS=1/1 REJECTIONS_OK=1/1
+RESEARCH_GATE: CLEAN (sweeps=1 verified=1 exempt=0 hit=0 refused=0 invalid=0 rejections=1 rejections-ok=1 findings=0 drift=0)
+exit=0

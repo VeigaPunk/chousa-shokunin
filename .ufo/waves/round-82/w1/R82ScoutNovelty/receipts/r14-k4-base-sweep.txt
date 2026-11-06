@@ -1,0 +1,18 @@
+# R14 — C2 K4 sweep: does any BASE knowledge entry hold a decision table/list on a review question frame?
+L=/home/vgpnk/Projects/shokunin/chousa-shokunin
+B=142b6f0c08e645ef9507f6d880be44e518c39043
+echo "--- (a) every base knowledge entry with a Decision heading:"
+git -C $L grep -n -E '^#+.*[Dd]ecision' $B -- corpus/knowledge
+echo "--- (b) base knowledge files containing PICO (any case):"
+git -C $L grep -l -i 'PICO' $B -- corpus/knowledge
+echo "--- (c) base knowledge files containing PCC / PECO / SPIDER:"
+git -C $L grep -l -i -E '\bPCC\b|SPIDER|\bPECO\b' $B -- corpus/knowledge; echo "(grep rc=$? ; 1 = none)"
+echo "--- (d) base corpus/README.md: PICO/PCC/PECO/SPIDER:"
+git -C $L grep -n -i -E 'PICO|PCC|PECO|SPIDER' $B -- corpus/README.md; echo "(grep rc=$? ; 1 = none)"
+echo "--- (e) base corpus/README.md: Decision headings:"
+git -C $L grep -n -E '^#+.*[Dd]ecision' $B -- corpus/README.md; echo "(grep rc=$? ; 1 = none)"
+echo "--- (f) base PROVINCE.md / SKILL.md / QUALITY.md / MINT.md frame hits:"
+git -C $L grep -n -i -E 'question fram|PICO|PCC|PECO|eligib' $B -- PROVINCE.md SKILL.md corpus/QUALITY.md corpus/MINT.md
+echo "--- (g) base registry: the already-queued S008 teaches cell + Paths bullet:"
+git -C $L show $B:corpus/SOURCES.md | sed -n '18p' | cut -c1-400
+git -C $L show $B:corpus/SOURCES.md | sed -n '224,227p'
