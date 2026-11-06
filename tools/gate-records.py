@@ -21,7 +21,9 @@ prose, not a record. Every record must parse into exactly one of three forms:
               http=<nnn> words=0 quote=none
   rev         GATE-RECORD S<id> rev=<40 hex> path=<repo-relative path> line=<n> words=<n> quote=<text to end of line>
 
-Keys appear once each, in any order, before `quote=`; `quote=` is last. Checks (codes, all reported):
+Keys appear once each, in any order, before `quote=`; `quote=` is last. Every digit (S-id, `words`, `line`, `curl_rc`,
+`http`, `fetched`) is ASCII 0-9, and `words`, `line` and `curl_rc` carry no leading zero (round-83 post-scoring repair:
+Python's Unicode digit class had admitted `line=2٢٢` as line 222, `R83ExecForge` Finding 1). Checks (codes, all reported):
 
   PARSE         the line fits none of the three forms (unknown/missing/duplicate key, bad value, extra text)
   REGISTRY      S<id> has no 11-column Registry row in corpus/SOURCES.md (0-3 leading spaces accepted, as the census)
@@ -58,8 +60,8 @@ import subprocess
 import sys
 import unicodedata
 
-SID_RE = re.compile(r"S\d{3,}")
-TS_RE = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z")
+SID_RE = re.compile(r"S[0-9]{3,}")
+TS_RE = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z")
 HEX40_RE = re.compile(r"[0-9a-f]{40}")
 CAP_RE = re.compile(r"corpus/captures/([0-9a-f]{24})\.txt")
 SHA_RE = re.compile(r"([0-9a-f]{16,64})(?:…|\.\.\.)?")
@@ -72,8 +74,10 @@ def lead_strip(line):
     while i < len(line) and (line[i].isspace() or unicodedata.category(line[i]) == "Cf"):
         i += 1
     return line[i:]
-ROW_RE = re.compile(r"^ {0,3}\|\s*(S\d{3,})\s*\|")
-INT_RE = re.compile(r"0|[1-9]\d{0,6}")
+
+
+ROW_RE = re.compile(r"^ {0,3}\|\s*(S[0-9]{3,})\s*\|")
+INT_RE = re.compile(r"0|[1-9][0-9]{0,6}")
 
 URL_ADMIT = ("url", "fetched", "tier", "decision", "capture", "capture_sha256", "words")
 URL_UNREACH = ("url", "fetched", "tier", "decision", "capture", "curl_rc", "http", "words")
@@ -92,7 +96,7 @@ def sha256_file(path):
 
 def parse(line):
     """Return (sid, kv, quote, form) or None when the line fits no form."""
-    m = re.match(r"^GATE-RECORD (S\d{3,}) (.*)$", lead_strip(line).rstrip("\r\n"))
+    m = re.match(r"^GATE-RECORD (S[0-9]{3,}) (.*)$", lead_strip(line).rstrip("\r\n"))
     if not m:
         return None
     sid, rest = m.group(1), m.group(2)
@@ -114,7 +118,7 @@ def parse(line):
     if keys == set(REV_KEYS):
         form = "rev"
         quote = qraw.rstrip()
-        if not quote or quote.startswith('"'):
+        if not quote:
             return None
     elif keys == set(URL_ADMIT):
         form = "admit"
@@ -137,7 +141,7 @@ def parse(line):
         if kv["tier"] not in ("A", "B", "C") or kv["decision"] not in ("admit", "reject"):
             return None
     if form == "unreach":
-        if not INT_RE.fullmatch(kv["curl_rc"]) or not re.fullmatch(r"\d{3}", kv["http"]):
+        if not INT_RE.fullmatch(kv["curl_rc"]) or not re.fullmatch(r"[0-9]{3}", kv["http"]):
             return None
     if form == "rev":
         if not INT_RE.fullmatch(kv["line"]) or kv["line"] == "0":
@@ -217,7 +221,7 @@ def check(rec, root, repo, reg, refetch):
         if not sm or capsha is None or not capsha.startswith(sm.group(1)):
             codes.append("CAPTURE_SHA")
         ok = any(r[0] == sid and r[1] == url and r[2] == key and r[4] == kv["fetched"] and r[5] == "0"
-                 and re.fullmatch(r"2\d\d", r[6]) and capsha is not None and r[8] == capsha for r in refetch)
+                 and re.fullmatch(r"2[0-9][0-9]", r[6]) and capsha is not None and r[8] == capsha for r in refetch)
         if not ok:
             codes.append("REFETCH")
         if cap is not None:
