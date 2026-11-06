@@ -1386,3 +1386,12 @@ Left open:
 - The base Frontier sentence listing "queued SOURCES rows S008–S012, S017, S018" is superseded for S008 (mined this
   round); the filed sentence stays as written (`R82ScoutNovelty.md` residual).
 
+
+## Round83 coverage and frontier (2026-11-06)
+
+| Note | Holds | Sources |
+|---|---|---|
+| `knowledge/appraisal-judgment-records-r83.md` | making and recording an appraisal judgment: two independent judges, a disagreement rule fixed in advance, written support with a brief direct quotation and the precise location of its source, assumptions beyond public documents stated, proposed (automatic) judgments verified and departures reasoned, "no information" as no evidence of a problem, concerns only when material, conflict-of-interest concern on identified conflicts | S009, S212, S213 |
+
+- `lessons/round-83.md` — S009 re-opened (queued since round 1 → mined), S212–S213 admitted; new tool `tools/gate-records.py` checks a lesson's `GATE-RECORD` lines against committed bytes.
+- Frontier: S017 (PRISMA 2020) and S019 (updating a review) stay queued.
