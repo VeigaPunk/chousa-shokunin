@@ -3769,3 +3769,37 @@ counter still `K2_GATE=PASS` on the repaired gate; SCORECARD/LOG/QUALITY append-
    section-level surface (`load_sections` duplicates, fenced/commented tables, heading case) before freezing.
 2. **depth** — one entry on S017 (PRISMA 2020) or S009 (MECIR) with every Never read against its paragraph's
    exceptions before scoring; the `c2-b1-salad-boundary` stays the stated counter limit.
+
+## Round 83 verdict — appraisal-judgment recording lands as knowledge (C1 verified); the Gate-record verifier's claim honest-stops on its own kill rules (2026-11-06)
+
+Base `a46534a51756f7e7d9bb55dd9a275156d908d84c`; egress table `8fff80ee43fbb99fb391c0f4751dbfd47c722744` (before any
+fetch); prefreeze instruments `1b9b2ff8955190a3e5cd42800009d13d6b8e4e04`; freeze `3fbf8d1227a8aa317a036604edad93d7b20a149f`
+(`corpus/evidence/round83/claims.md`, controls 8/8 as expected); scored landing
+`81b81173f19d175e2b2a6b409b2a496d09d0b258`; post-scoring repair `c7d29e1c6b9c6e11f2ec738a1d913aafb5f012d9`; wave
+`.ufo/waves/round-83/w1/` (12 seats).
+
+| claim / axis | before → after | counting command / evidence | verdict |
+|---|---|---|---|
+| C1 depth (sourced on S009 re-opened, S212, S213) | `DEPTH_R83 entries=0` FAIL rc 1 (`controls/receipts/c1-d0-donothing.txt`) → `entries=1 ok_entries=1 rows=10 located_quotes=16 fresh_sources=3` PASS rc 0 (`after/c1-after.txt`) | `D=$(mktemp -d -p /fast/scratch/hyaku) && git archive <rev> \| tar -x -C "$D" && python3 -B "$D/corpus/evidence/round83/depth-r83.py" --root "$D"` | **verified** — K1–K4 held (`R83ExecRepro`, `R83ExecReopen`, `R83ReviewerEntry`, `R83CriticClaims`) |
+| C2 operability (lowest scored non-retired axis; historical 3/10 held) — capability `tools/gate-records.py` | `TOOL=absent POSITIVE=0/15 FORGED_REFUSED=0/198` FAIL rc 1 (`controls/receipts/c2-k0-donothing.txt`) → `TOOL=present POSITIVE=15/15 FORGED_REFUSED=198/198 EXPECTED_CODE=198/198 EMPTY_REFUSED=1/1 RC=3/3` PASS rc 0 (`after/c2-after.txt`); lesson `records=3 ok=3` | `… python3 -B "$D/corpus/evidence/round83/gate-records-r83.py" --root "$D" --repo /home/vgpnk/Projects/shokunin/chousa-shokunin --work /fast/scratch/hyaku` | **falsified by its own kill rules (K2, K3) — honest stop**: `line=2٢٢` prints OK (`R83ExecForge` Finding 1); a rev quote beginning with `"` is refused (`R83ExecHarm`, `R83CriticClaims`) |
+
+| axis | verdict | evidence |
+|---|---|---|
+| depth | **improved** | knowledge `.md` 94 → 95 (`git ls-tree -r --name-only <rev> corpus/knowledge \| grep -c '\.md$'` at `a46534a5` → `81b81173`); one entry on recording appraisal judgments, 10 rows, 16 located quotes, 3 fresh sources, no unsupported row |
+| operability | **improved narrowly, claim falsified** | new tool runs and refuses 198/198 frozen forgeries; two wave findings fire K2/K3; repair `c7d29e1c` closes both with the frozen counter still PASS (`corpus/evidence/round83/repair/`). No capability row enters the table: the claim did not verify |
+| calibration | unchanged | QUALITY 164–165 (mined mistakes); no calibration measurement |
+| coverage | unchanged | `PROVINCE.md` untouched |
+| freshness | unchanged | S009 queued since round 1 → mined; no drift surface measured |
+| adjacency | unchanged | `R83ConnectorSiblings.md`: no sibling holds the ground or a Gate-record verifier |
+
+No axis harmed: census exit 0 at start and end; SCORECARD/LOG/QUALITY append-only; the gate (`tools/research-gate.sh`)
+untouched; the new tool reads only (no network, zero writes, read-only `git cat-file`, `R83ExecHarm` 07).
+
+## Planned — round 84 (intent, not a predicate)
+
+1. **operability (lowest)** — the repaired `tools/gate-records.py` under a successor battery that a whitelist tool
+   cannot pass (fresh positives built in the counter from committed captures, not listed in advance), the nine
+   lane-killable mutation survivors of `R83MutationTool` as frozen kills, a non-ASCII numeral per numeric field, and
+   setup errors (non-git `--repo`) reported as exit 2.
+2. **depth** — S017 (PRISMA 2020) or S019 (updating a review), with the r83 practice kept: each Never read against its
+   quote's full paragraph before landing.

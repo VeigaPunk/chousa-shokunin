@@ -2395,3 +2395,23 @@ passing record rather than through prose.
 - Mined mistake: the round-81 seat record r4-07 described as "flip empty" carries a complete rejection (QUALITY 163).
 - Trial: `R82ExecTrial` ran a question-framing research record through checklist items 1, 2, 4 and verify-all CLEAN;
   its three mutated twins were refused with the expected finding ids.
+
+
+## Round 83 — appraisal-judgment recording lands as knowledge (C1 verified); a Gate-record verifier lands but its claim honest-stops (2026-11-06)
+
+- Fresh-start reads: r80–r82 spot-checks; kill rules written as the subject's own documented contract; every Never read
+  against its quote's full paragraph before landing (the r82 K3 cause).
+- Egress table `8fff80ee` (20:53:00Z) before the first fetch (20:53:06Z): S009 re-opened (queued since round 1),
+  S212 Handbook ch.7, S213 Handbook ch.8 — all HTTP 200.
+- Prefreeze `1b9b2ff8` and freeze `3fbf8d12`: eight controls as expected (do-nothing, r81 filler, re-landed r82 entry,
+  salad boundary; tool absent, blanket-accept, blanket-refuse, quote-only "Location command" stub).
+- C1 depth: `corpus/knowledge/appraisal-judgment-records-r83.md`, 10 rows, 16 located quotes; counter PASS at
+  `81b81173`; K1–K4 held under the wave (live re-opens byte-identical to the captures; reviewer and critic found no
+  unsupported or contradicted row) — verified.
+- C2 operability: `tools/gate-records.py verify` checks every `GATE-RECORD` line (registry, tier, capture path/key/sha,
+  refetch row, quote location and words, rev blob line); counter PASS 15/15, 198/198; K2 (Unicode `\d` admits
+  `line=2٢٢`) and K3 (rev quote starting with `"` refused) fired — honest stop. Repair `c7d29e1c` closes both.
+- Mined mistakes: Unicode digit class in a parser (QUALITY 164); content guard without a boundary positive (QUALITY
+  165); the round-82 `.gitkeep` knowledge count.
+- Motivating evidence: the r80–r82 Gate blocks were checked by a hand "Location command" covering quote and words only;
+  the quote-only stub control refuses 71/198 forgeries (`corpus/evidence/round83/controls/receipts/c2-f3-stub-quote-only.txt`).
