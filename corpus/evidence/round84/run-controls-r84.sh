@@ -4,7 +4,7 @@
 # REV. Scratch lives under $HYAKU_SCRATCH (default /fast/scratch/hyaku)/chousa-r84/controls and is removed on exit.
 # Receipts: OUTDIR/<id>.txt, each ending in `rc=<n>`, plus OUTDIR/summary.tsv (id expected observed).
 set -u
-REV=${1:?REV}; OUT=${2:?OUTDIR}; BASE_REV=${3:-408ae68f9e445fc911f713d5bbb3a64dda1ab9fe}
+REV=${1:?REV}; OUT=${2:?OUTDIR}; BASE_REV=${3:-3b616420b2dcc1f8a24a1cb9db4198c7adc8929b}
 LANE=$(cd "$(dirname "$0")/../../.." && pwd)
 SCR=${HYAKU_SCRATCH:-/fast/scratch/hyaku}/chousa-r84/controls
 rm -rf -- "$SCR"; mkdir -p "$SCR" "$OUT"
