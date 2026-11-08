@@ -1,0 +1,148 @@
+{
+ "round": 94,
+ "lane": "chousa",
+ "l1": "ChousaR94",
+ "base": "0f3f84dab3a094ec0a2fe8ae9ae59d3326e1a9b6",
+ "shape": "three claims, three axes (operability, calibration, freshness), no exploratory claim",
+ "freeze": "corpus/evidence/round94/ and .ufo/waves/round-94/claims.md carried at freeze F; receipts and the pins table at carrier C",
+ "C1": {
+  "id": "C1-DRIVER-R94",
+  "axis": "operability",
+  "type": "repair (successor control driver with a role column; capability retained)",
+  "sentence": "At the landing revision corpus/evidence/round94/control-driver-r94.py verify --root . --repo . --rev F --receipts-rev C --work <scratch> prints CONTROL_DRIVER_R94=PASS (exit 0) with COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 RECEIPT_PINS=6/6, PINNED_FILES=n/n and PIN_ROLES_OK=m/m (n the data rows of the committed pins table, m its non-driver rows), and RECEIPT SELF_PIN OK; PASS requires findings==0, all four row counts full, checked==len(pins), rchecked==rtotal>0, and no role codes. The role column is checked in both directions: role=instrument is exactly the executed instrument set, role=expectation the expectations file, role=receipt the committed receipts, role=claims the round's two claims files. corpus/evidence/round94/forgeries-r94.py prints FORGERIES=PASS FORGERY_REFUSED=4/4 PRIOR_ACCEPTED=4/4 SCHEMA_REFUSED=1/1 SCHEMA_PRIOR_ACCEPTED=1/1 CARRIED_REFUSED=2/2 POSITIVE=pass.",
+  "predicate": {
+   "verify_fields": [
+    "COMMITTED_OK=6/6",
+    "EXACT_OK=6/6",
+    "PIN_OK=6/6",
+    "FRESH_OK=6/6",
+    "RECEIPT_PINS=6/6"
+   ],
+   "verify_ratios": [
+    "PINNED_FILES=n/n",
+    "PIN_ROLES_OK=m/m"
+   ],
+   "verify_stdout": [
+    "CONTROL_DRIVER_R94=PASS",
+    "RECEIPT SELF_PIN OK rev="
+   ],
+   "forgeries_stdout": [
+    "FORGERY_REFUSED=4/4",
+    "PRIOR_ACCEPTED=4/4",
+    "SCHEMA_REFUSED=1/1",
+    "SCHEMA_PRIOR_ACCEPTED=1/1",
+    "CARRIED_REFUSED=2/2",
+    "POSITIVE=pass"
+   ],
+   "exit": 0
+  },
+  "counting_command": [
+   "python3 -B corpus/evidence/round94/control-driver-r94.py verify --root . --repo . --rev <F> --receipts-rev <C> --work <scratch>",
+   "python3 -B corpus/evidence/round94/forgeries-r94.py --root . --repo . --rev <F> --receipts-rev <C> --work <scratch>"
+  ],
+  "kill_rules": {
+   "K1": "predicate not met at the landing revision",
+   "K2": "a role forgery accepted by r94, the positive refused, or the r93 projection refusing any of the four fixtures for a reason other than the role",
+   "K3": "a genuine row moves under the pin walk, or verify writes under the receipts or claims directories",
+   "K4": "the PASS skips the work: a role leg reading a constant, driver rows counted as covered members, or the role check passing on an empty executed set"
+  },
+  "named_limits": [
+   "a coherent joint edit of instrument, pin row, receipt and expectation row survives",
+   "driver rows are byte-checked but not coverage-checked: the harness is not a case instrument",
+   "roles are membership claims about the table, not about what a file reads",
+   "the role enum is closed in the driver: a new artefact kind needs a code change in the same commit"
+  ],
+  "sources": [
+   "S070",
+   "S221"
+  ]
+ },
+ "C2": {
+  "id": "C2-CURATION-R94",
+  "axis": "calibration",
+  "type": "repair (successor curation counter; one named class added)",
+  "sentence": "At the landing revision corpus/evidence/round94/curation-r94.py --root . prints CURATION_R94=PASS (exit 0) with LEGS_MEASURED=16/16 Q_SHAPE_FAIL=0 Q_WSQUOT=0 Q_PUNCTQUOT=0 Q_ROWS=20 WARRANT_OK=17/17 TFREQ_OK=17/17 DUP_QIDS=0 and VERDICT fields_hold=1 legs_ok=16/16 DETECTOR_WITNESS=17/17, and corpus/evidence/round94/curation-controls-r94.py --root . --work <scratch> prints CONTROLS=PASS CARRIED_REFUSED_BOTH=4/4 WS_NAMED=2/2 PUNCT_NAMED=2/2 PUNCT_SHAPE_GREEN_R93=1/1 PRIOR_REGRESSION=7/7 (exit 0). Classification claim: r93 fails both punctuation trees downstream with Q_SHAPE_FAIL=0 and cannot name the class.",
+  "predicate": {
+   "fields": [
+    "CURATION_R94=PASS",
+    "LEGS_MEASURED=16/16",
+    "Q_SHAPE_FAIL=0",
+    "Q_PUNCTQUOT=0",
+    "DETECTOR_WITNESS=17/17"
+   ],
+   "controls": [
+    "CONTROLS=PASS",
+    "CARRIED_REFUSED_BOTH=4/4",
+    "WS_NAMED=2/2",
+    "PUNCT_NAMED=2/2",
+    "PUNCT_SHAPE_GREEN_R93=1/1",
+    "PRIOR_REGRESSION=7/7"
+   ],
+   "exit": 0
+  },
+  "counting_command": [
+   "python3 -B corpus/evidence/round94/curation-r94.py --root .",
+   "python3 -B corpus/evidence/round94/curation-controls-r94.py --root . --work <scratch>"
+  ],
+  "kill_rules": {
+   "K1": "predicate not met at the landing revision",
+   "K2": "a punctuation tree whose shape leg stays green under r94, the positive refused, or DETECTOR_WITNESS not full",
+   "K3": "a genuine entry moves (located quotes, warranted decision rows or floors)",
+   "K4": "the new leg is vacuous: it must count the row on both forged trees and stay 0 on the clean tree, and deleting it must change the verdict through the named LEG_FAIL ARITY line"
+  },
+  "named_limits": [
+   "Q_PUNCTQUOT counts every three-cell quote row before source resolution, so an unresolvable-source punctuation row also fails FLOOR",
+   "the leg shares its expression with the shape branch (punct_quote_cell): a second witness, not an independent detector; its verdict force is the arity tripwire",
+   "locates() refuses the class by rule wherever it appears, including a future entry quoting a punctuation-only source",
+   "the decision-width print is observability; the WARRANT conjunct is unchanged"
+  ],
+  "sources": [
+   "S001"
+  ]
+ },
+ "C3": {
+  "id": "C3-TALLY-R94",
+  "axis": "freshness",
+  "type": "repair (successor tally counter; tail set bound to owning headings)",
+  "sentence": "At the landing revision corpus/evidence/round94/skill-tally-r94.py --root . --selftest corpus/evidence/round94/controls/selftest-r94.txt prints SKILL_TALLY_R94=PASS (exit 0) with LEGS=4/4 TAIL_OK=1 TAIL_OWNED_OK=2/2 TAIL_TALLIES=2 TALLY_ROWS=8 STALE_TALLIES=0/8 HIST_DERIVED=2/2 HIST_PRESENT=2/2 CASE_RANGE_OK=2/2 MISLABELED=0, and corpus/evidence/round94/skill-tally-r94-controls.py --root . --work <scratch> prints CONTROLS=PASS CARRIED_REFUSED=6/6 MOVED_REFUSED=2/2 MOVED_PRIOR_ACCEPTED=2/2 DOUBLE_REFUSED=1/1 HEADING_ALIAS_ACCEPTED=1/1 (exit 0).",
+  "predicate": {
+   "fields": [
+    "SKILL_TALLY_R94=PASS",
+    "LEGS=4/4",
+    "TAIL_OK=1",
+    "TAIL_OWNED_OK=2/2",
+    "HIST_DERIVED=2/2",
+    "HIST_PRESENT=2/2",
+    "CASE_RANGE_OK=2/2",
+    "MISLABELED=0"
+   ],
+   "controls": [
+    "CONTROLS=PASS",
+    "CARRIED_REFUSED=6/6",
+    "MOVED_REFUSED=2/2",
+    "MOVED_PRIOR_ACCEPTED=2/2",
+    "DOUBLE_REFUSED=1/1"
+   ],
+   "exit": 0
+  },
+  "counting_command": [
+   "python3 -B corpus/evidence/round94/skill-tally-r94.py --root . --selftest corpus/evidence/round94/controls/selftest-r94.txt",
+   "python3 -B corpus/evidence/round94/skill-tally-r94-controls.py --root . --work <scratch>"
+  ],
+  "kill_rules": {
+   "K1": "predicate not met at the landing revision",
+   "K2": "the positive tree refused, or r93 refusing either moved tree",
+   "K3": "a historical, tail or head tally moves on the clean tree",
+   "K4": "the derivation is vacuous: a declared owner never read, TAIL_OWNED_OK computed from the declarations instead of the observed headings, or the tail compared by count only"
+  },
+  "named_limits": [
+   "the owner declaration binds a heading substring; a heading containing the declared string satisfies it (HEADING_ALIAS_ACCEPTED measures this)",
+   "the nearest preceding heading is any column-0 ATX line, not a full ATX parse of setext or indented headings",
+   "a tally inside a fenced block that follows a heading is attributed to that heading",
+   "the declarations are measured pairs: a third legitimate tail tally must be declared in the same commit"
+  ],
+  "sources": [
+   "S001"
+  ]
+ }
+}
