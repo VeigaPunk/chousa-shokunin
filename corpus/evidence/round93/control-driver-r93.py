@@ -333,7 +333,7 @@ def pin_at_rev(repo, rev, rels):
     return drift
 
 
-def self_pin(repo, root, rev, receipts_rev, expected, receipts, pins):
+def self_pin(repo, root, rev, receipts_rev, expected, receipts, pins_rows, pins_path):
     """R4/R5/T3: scoring bytes equal their blobs; each pin is checked at the base it is read from.
 
     `--rev` carries the instruments and the expectations file; `--receipts-rev` carries the committed
@@ -356,15 +356,15 @@ def self_pin(repo, root, rev, receipts_rev, expected, receipts, pins):
     # The pins file's own pin is the minus-self digest (S5), not the whole-file sha, so it must not go
     # through pin_at_rev's whole-blob comparison. Every other row does, at the base that carries it.
     receipts_rel = rel_for(root, receipts)
-    pins_rel = rel_for(root, pins)
-    at_rev = {rel: sha for rel, sha in pins.items()
+    pins_rel = rel_for(root, pins_path)
+    at_rev = {rel: sha for rel, sha in pins_rows.items()
               if rel != pins_rel and not rel.startswith(receipts_rel + os.sep)}
-    at_carrier = {rel: sha for rel, sha in pins.items()
+    at_carrier = {rel: sha for rel, sha in pins_rows.items()
                   if rel != pins_rel and rel.startswith(receipts_rel + os.sep)}
     drift += [f"{rel}@{rev}" for rel in pin_at_rev(repo, rev, at_rev)]
     drift += [f"{rel}@{receipts_rev}" for rel in pin_at_rev(repo, receipts_rev, at_carrier)]
     # S5 revival check: the blob at the carrier must satisfy the stored minus-self digest too.
-    if pins_rel in pins:
+    if pins_rel in pins_rows:
         blob = subprocess.run(["git", "-C", repo, "show", f"{receipts_rev}:{pins_rel}"], capture_output=True)
         if blob.returncode != 0:
             drift.append(f"{pins_rel}@{receipts_rev}")
@@ -375,7 +375,7 @@ def self_pin(repo, root, rev, receipts_rev, expected, receipts, pins):
                 if ln.endswith(pins_rel.encode()):
                     continue
                 h.update(ln + b"\n")
-            if h.hexdigest() != pins[pins_rel]:
+            if h.hexdigest() != pins_rows[pins_rel]:
                 drift.append(f"{pins_rel}@{receipts_rev}")
     return drift
 
@@ -510,7 +510,7 @@ def main():
               f"RECEIPT_PINS_OK={rchecked}/{rtotal}")
 
     if a.repo:
-        drift = self_pin(a.repo, root, a.rev, a.receipts_rev or a.rev, a.expected, a.receipts, pins)
+        drift = self_pin(a.repo, root, a.rev, a.receipts_rev or a.rev, a.expected, a.receipts, pins, a.pins)
         if drift:
             findings += 1
             print("RECEIPT SELF_PIN FINDING SELF_DRIFT " + ",".join(drift))
