@@ -4,7 +4,7 @@
 # REV. Scratch lives under $HYAKU_SCRATCH (default /fast/scratch/hyaku)/chousa-r84/controls and is removed on exit.
 # Receipts: OUTDIR/<id>.txt, each ending in `rc=<n>`, plus OUTDIR/summary.tsv (id expected observed).
 set -u
-REV=${1:?REV}; OUT=${2:?OUTDIR}
+REV=${1:?REV}; OUT=${2:?OUTDIR}; BASE_REV=${3:-408ae68f9e445fc911f713d5bbb3a64dda1ab9fe}
 LANE=$(cd "$(dirname "$0")/../../.." && pwd)
 SCR=${HYAKU_SCRATCH:-/fast/scratch/hyaku}/chousa-r84/controls
 rm -rf -- "$SCR"; mkdir -p "$SCR" "$OUT"
@@ -15,6 +15,10 @@ CTL=corpus/evidence/round84/c1-controls
 mk() { # NAME -> tree path on stdout
   local t=$SCR/$1
   mkdir -p "$t" && git -C "$LANE" archive "$REV" | tar -x -C "$t" && printf '%s' "$t"
+}
+mkbase() { # NAME -> tree path on stdout (base rev)
+  local t=$SCR/$1
+  mkdir -p "$t" && git -C "$LANE" archive "$BASE_REV" | tar -x -C "$t" && printf '%s' "$t"
 }
 rec() { # ID EXPECTED(PASS|FAIL) CMD...
   local id=$1 exp=$2; shift 2
@@ -48,7 +52,7 @@ PY
 }
 
 # ---- C1 depth ----
-T=$(mk c1-d0); rec c1-d0-donothing FAIL c1 "$T"
+T=$(mkbase c1-d0); rec c1-d0-donothing FAIL c1 "$T"
 T=$(mk c1-d1); overlay "$T" "$LANE/$CTL/D1-r81-filler"; rec c1-d1-r81-filler FAIL c1 "$T"
 T=$(mk c1-d3); overlay "$T" "$LANE/$CTL/D3-r82-entry-relanded"; rec c1-d3-r82-entry-relanded FAIL c1 "$T"
 T=$(mk c1-b1); overlay "$T" "$LANE/$CTL/B1-salad-boundary"; rec c1-b1-salad-boundary PASS c1 "$T"

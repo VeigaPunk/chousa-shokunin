@@ -13,7 +13,7 @@ source: S214, S018, S023
 | Q5 | S018 | "aiming to link model outputs to supporting evidence to ensure traceability and verifiability" |
 | Q6 | S018 | "Thereby, we focus on approaches that use citations, attribution, or quotations for evidence-based text generation." |
 | Q7 | S023 | "A related resource from which the described resource is derived." |
-| Q8 | S023 | "Date on which the resource was changed." |
+| Q8 | S023 | "Recommended practice is to describe the date, date/time, or period of time as recommended for the property Date, of which this is a subproperty." |
 
 ## Decision table
 
