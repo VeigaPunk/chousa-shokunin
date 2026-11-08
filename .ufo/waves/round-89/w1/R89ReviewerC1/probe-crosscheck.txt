@@ -1,0 +1,22 @@
+TOOL: ok=True exp=True MATCH note=TOOL=present want=present
+POSITIVE: ok=True exp=True MATCH note=POSITIVE=15/15
+FRESH: ok=True exp=True MATCH note=FRESH_POSITIVE=5/5
+FORGED: ok=True exp=True MATCH note=FORGED_REFUSED=362/362
+CODES: ok=True exp=True MATCH note=EXPECTED_CODE=362/362
+EMPTY: ok=True exp=True MATCH note=EMPTY_REFUSED=1/1
+RC: ok=True exp=True MATCH note=RC=4/4
+SETUP: ok=True exp=True MATCH note=SETUP=1/1
+D1_WIDTH: ok=True exp=True MATCH note=D1_FORGES=3 D1_EXPECTED=3 DIV3=3 pin=3/3
+D1_REFUSED: ok=True exp=True MATCH note=D1_REFUSED=3/3
+D2_WIDTH: ok=True exp=True MATCH note=D2_FORGES=3 D1_EXPECTED=3 DIV3=3 pin=3/3
+D2_REFUSED: ok=True exp=True MATCH note=D2_REFUSED=3/3
+MUT_ADMIT: ok=True exp=True MATCH note=MUT_ADMIT_DERIVED=1 MUT_ADMIT_KILLED=1
+MUT_UNREACH: ok=True exp=True MATCH note=MUT_UNREACH_DERIVED=1 MUT_UNREACH_KILLED=1
+DERIVE_NEG: ok=True exp=True MATCH note=DERIVE_NEG=1
+
+--- vacuity: change one summary field at a time ---
+Traceback (most recent call last):
+  File "/fast/scratch/hyaku/chousa-r89/R89ReviewerC1/probe2.py", line 61, in <module>
+    else: bad[k]=str(int(v)+1)
+                     ~~~^^^
+ValueError: invalid literal for int() with base 10: 'present'

@@ -1,0 +1,27 @@
+# (d) fleet-root stray check
+# command: git -C /home/vgpnk/Projects/shokunin status --porcelain
+ M .scratch/goal-20261103-hyaku-run15.md
+ M .scratch/run15-state.json
+ M .ufo/l0-questions.md
+?? .scratch/closure-tabi-r83-entry.json
+?? .scratch/run15-wrapup/misroot-cff0b4cb/
+?? .ufo/reports/round-89/chousa.md
+
+--- fleet root .gitignore line 1 ---
+*-shokunin/
+--- is the lane tracked by the fleet root? ---
+git ls-files chousa-shokunin count: 0
+(the lane directory is gitignored at the fleet root: '*shokunin/'; the lane's own repo is the only tracker)
+
+--- does any fleet-root modification mention the chousa lane's round-89 artifacts? ---
+-  "chousa": {
+-   "label": "ChousaR81",
++  "chousa": {
++   "label": "ChousaR89",
+(the only chousa mention is the fleet scheduler's own label field 'ChousaR81' -> 'ChousaR89', written by the dispatcher)
+
+--- the three modified fleet-root files: mtimes and owner attribution ---
+.scratch/goal-20261103-hyaku-run15.md  mtime=2026-11-07 03:38:33.547632287 -0300
+.scratch/run15-state.json  mtime=2026-11-08 05:47:43.866081947 -0300
+.ufo/l0-questions.md  mtime=2026-11-08 02:18:33.877495937 -0300
+(all three are fleet-scheduler state files; the .ufo/l0-questions.md diff adds tsukuroi round-92 lines, not chousa)

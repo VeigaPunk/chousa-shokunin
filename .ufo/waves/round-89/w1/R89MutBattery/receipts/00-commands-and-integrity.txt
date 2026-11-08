@@ -1,0 +1,286 @@
+# R89MutBattery — exact commands, exit codes and byte integrity
+
+## live lane tree (the claim counting commands)
+### c1-counter
+cmd: python3 -B /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round89/gate-records-r89.py --root /home/vgpnk/Projects/shokunin/chousa-shokunin --repo /home/vgpnk/Projects/shokunin/chousa-shokunin --work /fast/scratch/hyaku/chousa-r89/R89MutBattery/bat/live-c1w
+TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=362/362 EXPECTED_CODE=362/362 EMPTY_REFUSED=1/1 RC=4/4 SETUP=1/1 D1_EXPECTED=3 D1_FORGES=3 DIV3=3 D1_REFUSED=3/3 D2_FORGES=3 D2_REFUSED=3/3 MUT_ADMIT_DERIVED=1 MUT_ADMIT_KILLED=1 MUT_UNREACH_DERIVED=1 MUT_UNREACH_KILLED=1 DERIVE_NEG=1 LEGS_MEASURED=15/15
+LEG_REREAD=16/16 RECONCILED=16/16 CROSSCHECK=15/15 LEGS_APPENDED=16
+GATE_RECORDS_R89=PASS
+rc: 0
+
+### c1-mutants
+cmd: python3 -B /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round89/mutate-r89.py --root /home/vgpnk/Projects/shokunin/chousa-shokunin --repo /home/vgpnk/Projects/shokunin/chousa-shokunin --work /fast/scratch/hyaku/chousa-r89/R89MutBattery/bat/live-mutw
+KILLED T4-record-keyed rc=1 GATE_RECORDS_R89=FAIL
+  LEG_FAIL FRESH 0/5 FRESH_BUILD=FAILED admits=2 revs=2 unreach=0
+  LEG_FAIL RC 3/4
+KILLED T4-truncate rc=1 GATE_RECORDS_R89=FAIL
+  LEG_FAIL D1_WIDTH 1/3/3 pin3
+  LEG_FAIL D2_WIDTH 1/3/3 pin3
+KILLED M2-credit-mutant rc=1 GATE_RECORDS_R89=FAIL
+  LEG_FAIL MUT_ADMIT derived=0 killed=0
+  LEG_FAIL MUT_UNREACH derived=0 killed=0
+KILLED M5-drop-setup rc=1 GATE_RECORDS_R89=FAIL
+  UNRECONCILED SUMMARY detail=14/14 receipt_ok=False rederived=True
+  LEG_FAIL SUMMARY 14/14
+KILLED E1-joint-narrow rc=1 GATE_RECORDS_R89=FAIL
+  LEG_FAIL D1_WIDTH 1/3/3 pin3
+  LEG_FAIL D2_WIDTH 1/3/3 pin3
+KILLED E4-setup-detached rc=1 GATE_RECORDS_R89=FAIL
+  LEG_FAIL SETUP 0/1
+KILLED E7c-width-detached rc=1 GATE_RECORDS_R89=FAIL
+  UNRECONCILED D1_WIDTH detail=3/3/1 pin3 receipt_ok=True rederived=False
+  UNRECONCILED D2_WIDTH detail=3/3/1 pin3 receipt_ok=True rederived=False
+KILLED E7b-mutant-detached rc=1 GATE_RECORDS_R89=FAIL
+  UNRECONCILED MUT_ADMIT detail=derived=0 killed=0 receipt_ok=True rederived=False
+  UNRECONCILED MUT_UNREACH detail=derived=0 killed=0 receipt_ok=True rederived=False
+KILLED E7d-width-detail-forged rc=1 GATE_RECORDS_R89=FAIL
+  UNCROSSCHECKED D1_WIDTH detail=3/3/3 pin3 D1_FORGES=3 D1_EXPECTED=3 DIV3=1 pin=3/3
+  UNCROSSCHECKED D2_WIDTH detail=3/3/3 pin3 D2_FORGES=3 D1_EXPECTED=3 DIV3=1 pin=3/3
+  LEG_FAIL SUMMARY 13/15
+KILLED E7f-summary-field-forged rc=1 GATE_RECORDS_R89=FAIL
+  UNCROSSCHECKED D1_WIDTH detail=3/3/3 pin3 D1_FORGES=3 D1_EXPECTED=4 DIV3=3 pin=3/3
+  UNCROSSCHECKED D2_WIDTH detail=3/3/3 pin3 D2_FORGES=3 D1_EXPECTED=4 DIV3=3 pin=3/3
+  LEG_FAIL SUMMARY 13/15
+KILLED E7g-receipt-removed rc=1 GATE_RECORDS_R89=FAIL
+  UNRECONCILED SUMMARY detail=14/14 receipt_ok=False rederived=True
+  LEG_FAIL SUMMARY 14/14
+CAUGHT T4-record-keyed-tool rc=1 GATE_RECORDS_R89=FAIL
+  LEG_FAIL POSITIVE 4/15
+  LEG_FAIL FRESH 0/5
+  LEG_FAIL FORGED 44/362
+  LEG_FAIL CODES 44/362
+  LEG_FAIL RC 2/4
+  LEG_FAIL D1_REFUSED 0/3
+  LEG_FAIL D2_REFUSED 0/3
+  LEG_FAIL MUT_ADMIT derived=1 killed=0
+  LEG_FAIL MUT_UNREACH derived=1 killed=0
+CAUGHT admit-2xx-tool rc=1 GATE_RECORDS_R89=FAIL
+  LEG_FAIL POSITIVE 4/15
+  LEG_FAIL FRESH 0/5
+  LEG_FAIL FORGED 44/362
+  LEG_FAIL CODES 44/362
+  LEG_FAIL RC 2/4
+  LEG_FAIL D1_REFUSED 0/3
+  LEG_FAIL D2_REFUSED 0/3
+  LEG_FAIL MUT_ADMIT derived=0 killed=0
+  LEG_FAIL MUT_UNREACH derived=1 killed=0
+MUTANTS_KILLED=11/11 TOOL_MUTANTS_CAUGHT=2/2 EQUIVALENT_ON_TREE=0/0 TOTAL=13/13
+rc: 0
+
+### c1-harm
+cmd: bash -c mkdir -p '/fast/scratch/hyaku/chousa-r89/R89MutBattery/bat/harm' && git -C '/home/vgpnk/Projects/shokunin/chousa-shokunin' show master:tools/gate-records.py > '/fast/scratch/hyaku/chousa-r89/R89MutBattery/bat/harm/base-tool.py' && python3 -B '/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round89/harm-recheck.py' --root '/home/vgpnk/Projects/shokunin/chousa-shokunin' --repo '/home/vgpnk/Projects/shokunin/chousa-shokunin' --base-tool '/fast/scratch/hyaku/chousa-r89/R89MutBattery/bat/harm/base-tool.py'
+HARM_RECHECK files=14 records=31 moved=0 base_rc=0 r88_rc=0
+rc: 0
+
+### c2-counter
+cmd: python3 -B /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round89/curation-r89.py --root /home/vgpnk/Projects/shokunin/chousa-shokunin
+SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20 Q_FLOORS=search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7 WARRANT_OK=17/17 DUP_QIDS=0 TEACHES_CHECKED=1 TEACHES_FLAGGED=1 TEACHES_UNRESOLVED=0 SUP_CLAUSE_CHECKED=0 SUP_UNRESOLVED=0 LEGS_MEASURED=8/8
+TEACHES_FLAGGED S024 terms=publication,modification disposition=superseded by S031
+CURATION_R89=PASS
+rc: 0
+
+### c2-controls
+cmd: python3 -B /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round89/curation-r89-controls.py --root /home/vgpnk/Projects/shokunin/chousa-shokunin --work /fast/scratch/hyaku/chousa-r89/R89MutBattery/bat/live-c2cw
+OK POSITIVE: positive accepted by both
+  r89: rc=0 CURATION_R89=PASS
+  prior: rc=0 CURATION_R87=PASS
+OK A1c-junk-substitute: refused by r89 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R87=PASS
+OK A1d-truncate: refused by r89 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R87=PASS
+OK caseG-relabel: refused by r89 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R87=PASS
+OK F2-rejected-superseder: refused by r89 (LEG_FAIL TEACHES checked=1 flagged=1 unresolved=1 sup_unresolved=0), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R87=PASS
+OK B1b-padding-qid: refused by r89 (LEG_FAIL WARRANT 16/17), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R87=PASS
+OK D1-duplicate-qid: refused by r89 (LEG_FAIL DUPQID provenance-recording-r85.md Naming what a resource derives from warrant=Q1, Q1 (S215)), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R88=PASS
+OK SUP-clause-mirror: refused by r89 (LEG_FAIL TEACHES checked=2 flagged=2 unresolved=0 sup_unresolved=1), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R88=PASS
+FORGERY_REFUSED=7/7 PRIOR_ACCEPTED_FORGERY=7/7
+CONTROLS=PASS
+rc: 0
+
+### c2-mutants
+cmd: python3 -B /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round89/curation-r89-mutants.py --root /home/vgpnk/Projects/shokunin/chousa-shokunin --work /fast/scratch/hyaku/chousa-r89/R89MutBattery/bat/live-c2mw
+KILLED M1-dead-teaches tree=base rc=1 CURATION_R89=FAIL
+  LEG_FAIL TEACHES checked=1 flagged=0 unresolved=0 sup_unresolved=0
+  LEG_FAIL VERDICT fields_hold=0 legs_ok=7/8
+KILLED M2-detached-leg tree=s031-queued rc=1 CURATION_R89=FAIL
+  LEG_FAIL VERDICT fields_hold=0 legs_ok=8/8
+KILLED M3-verdict-legs tree=s031-queued rc=1 CURATION_R89=FAIL
+  LEG_FAIL VERDICT fields_hold=0 legs_ok=8/8
+KILLED M4a-dup-leg-forced tree=dup-qid rc=1 CURATION_R89=FAIL
+  LEG_FAIL VERDICT fields_hold=0 legs_ok=8/8
+KILLED M4b-dup-field-dropped tree=dup-qid rc=1 CURATION_R89=FAIL
+  LEG_FAIL DUPQID provenance-recording-r85.md Naming what a resource derives from warrant=Q1, Q1 (S215)
+  LEG_FAIL VERDICT fields_hold=1 legs_ok=7/8
+KILLED M5-lowercase-clause tree=sup-mirror detector=battery rc=1
+  CASE_DEVIATION SUP-clause-mirror: NOT refused by r89 or NOT accepted by the prior counter
+MUTANTS_KILLED=6/6 COUNTER_DETECTED=5 BATTERY_DETECTED=1
+rc: 0
+
+
+## ac0a0892 extraction tree (the mutation trees)
+### c1-counter-extraction
+cmd: python3 -B /fast/scratch/hyaku/chousa-r89/R89MutBattery/tree-land/corpus/evidence/round89/gate-records-r89.py --root /fast/scratch/hyaku/chousa-r89/R89MutBattery/tree-land --repo /home/vgpnk/Projects/shokunin/chousa-shokunin --work /fast/scratch/hyaku/chousa-r89/R89MutBattery/bat/ext-c1w
+TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=362/362 EXPECTED_CODE=362/362 EMPTY_REFUSED=1/1 RC=4/4 SETUP=1/1 D1_EXPECTED=3 D1_FORGES=3 DIV3=3 D1_REFUSED=3/3 D2_FORGES=3 D2_REFUSED=3/3 MUT_ADMIT_DERIVED=1 MUT_ADMIT_KILLED=1 MUT_UNREACH_DERIVED=1 MUT_UNREACH_KILLED=1 DERIVE_NEG=1 LEGS_MEASURED=15/15
+LEG_REREAD=16/16 RECONCILED=16/16 CROSSCHECK=15/15 LEGS_APPENDED=16
+GATE_RECORDS_R89=PASS
+rc: 0
+
+### c1-mutants-extraction
+cmd: python3 -B /fast/scratch/hyaku/chousa-r89/R89MutBattery/tree-land/corpus/evidence/round89/mutate-r89.py --root /fast/scratch/hyaku/chousa-r89/R89MutBattery/tree-land --repo /home/vgpnk/Projects/shokunin/chousa-shokunin --work /fast/scratch/hyaku/chousa-r89/R89MutBattery/bat/ext-mutw
+KILLED T4-record-keyed rc=1 GATE_RECORDS_R89=FAIL
+  LEG_FAIL FRESH 0/5 FRESH_BUILD=FAILED admits=2 revs=2 unreach=0
+  LEG_FAIL RC 3/4
+KILLED T4-truncate rc=1 GATE_RECORDS_R89=FAIL
+  LEG_FAIL D1_WIDTH 1/3/3 pin3
+  LEG_FAIL D2_WIDTH 1/3/3 pin3
+KILLED M2-credit-mutant rc=1 GATE_RECORDS_R89=FAIL
+  LEG_FAIL MUT_ADMIT derived=0 killed=0
+  LEG_FAIL MUT_UNREACH derived=0 killed=0
+KILLED M5-drop-setup rc=1 GATE_RECORDS_R89=FAIL
+  UNRECONCILED SUMMARY detail=14/14 receipt_ok=False rederived=True
+  LEG_FAIL SUMMARY 14/14
+KILLED E1-joint-narrow rc=1 GATE_RECORDS_R89=FAIL
+  LEG_FAIL D1_WIDTH 1/3/3 pin3
+  LEG_FAIL D2_WIDTH 1/3/3 pin3
+KILLED E4-setup-detached rc=1 GATE_RECORDS_R89=FAIL
+  LEG_FAIL SETUP 0/1
+KILLED E7c-width-detached rc=1 GATE_RECORDS_R89=FAIL
+  UNRECONCILED D1_WIDTH detail=3/3/1 pin3 receipt_ok=True rederived=False
+  UNRECONCILED D2_WIDTH detail=3/3/1 pin3 receipt_ok=True rederived=False
+KILLED E7b-mutant-detached rc=1 GATE_RECORDS_R89=FAIL
+  UNRECONCILED MUT_ADMIT detail=derived=0 killed=0 receipt_ok=True rederived=False
+  UNRECONCILED MUT_UNREACH detail=derived=0 killed=0 receipt_ok=True rederived=False
+KILLED E7d-width-detail-forged rc=1 GATE_RECORDS_R89=FAIL
+  UNCROSSCHECKED D1_WIDTH detail=3/3/3 pin3 D1_FORGES=3 D1_EXPECTED=3 DIV3=1 pin=3/3
+  UNCROSSCHECKED D2_WIDTH detail=3/3/3 pin3 D2_FORGES=3 D1_EXPECTED=3 DIV3=1 pin=3/3
+  LEG_FAIL SUMMARY 13/15
+KILLED E7f-summary-field-forged rc=1 GATE_RECORDS_R89=FAIL
+  UNCROSSCHECKED D1_WIDTH detail=3/3/3 pin3 D1_FORGES=3 D1_EXPECTED=4 DIV3=3 pin=3/3
+  UNCROSSCHECKED D2_WIDTH detail=3/3/3 pin3 D2_FORGES=3 D1_EXPECTED=4 DIV3=3 pin=3/3
+  LEG_FAIL SUMMARY 13/15
+KILLED E7g-receipt-removed rc=1 GATE_RECORDS_R89=FAIL
+  UNRECONCILED SUMMARY detail=14/14 receipt_ok=False rederived=True
+  LEG_FAIL SUMMARY 14/14
+CAUGHT T4-record-keyed-tool rc=1 GATE_RECORDS_R89=FAIL
+  LEG_FAIL POSITIVE 4/15
+  LEG_FAIL FRESH 0/5
+  LEG_FAIL FORGED 44/362
+  LEG_FAIL CODES 44/362
+  LEG_FAIL RC 2/4
+  LEG_FAIL D1_REFUSED 0/3
+  LEG_FAIL D2_REFUSED 0/3
+  LEG_FAIL MUT_ADMIT derived=1 killed=0
+  LEG_FAIL MUT_UNREACH derived=1 killed=0
+CAUGHT admit-2xx-tool rc=1 GATE_RECORDS_R89=FAIL
+  LEG_FAIL POSITIVE 4/15
+  LEG_FAIL FRESH 0/5
+  LEG_FAIL FORGED 44/362
+  LEG_FAIL CODES 44/362
+  LEG_FAIL RC 2/4
+  LEG_FAIL D1_REFUSED 0/3
+  LEG_FAIL D2_REFUSED 0/3
+  LEG_FAIL MUT_ADMIT derived=0 killed=0
+  LEG_FAIL MUT_UNREACH derived=1 killed=0
+MUTANTS_KILLED=11/11 TOOL_MUTANTS_CAUGHT=2/2 EQUIVALENT_ON_TREE=0/0 TOTAL=13/13
+rc: 0
+
+### c2-counter-extraction
+cmd: python3 -B /fast/scratch/hyaku/chousa-r89/R89MutBattery/tree-land/corpus/evidence/round89/curation-r89.py --root /fast/scratch/hyaku/chousa-r89/R89MutBattery/tree-land
+SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20 Q_FLOORS=search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7 WARRANT_OK=17/17 DUP_QIDS=0 TEACHES_CHECKED=1 TEACHES_FLAGGED=1 TEACHES_UNRESOLVED=0 SUP_CLAUSE_CHECKED=0 SUP_UNRESOLVED=0 LEGS_MEASURED=8/8
+TEACHES_FLAGGED S024 terms=publication,modification disposition=superseded by S031
+CURATION_R89=PASS
+rc: 0
+
+### c2-controls-extraction
+cmd: python3 -B /fast/scratch/hyaku/chousa-r89/R89MutBattery/tree-land/corpus/evidence/round89/curation-r89-controls.py --root /fast/scratch/hyaku/chousa-r89/R89MutBattery/tree-land --work /fast/scratch/hyaku/chousa-r89/R89MutBattery/bat/ext-c2cw
+OK POSITIVE: positive accepted by both
+  r89: rc=0 CURATION_R89=PASS
+  prior: rc=0 CURATION_R87=PASS
+OK A1c-junk-substitute: refused by r89 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R87=PASS
+OK A1d-truncate: refused by r89 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R87=PASS
+OK caseG-relabel: refused by r89 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R87=PASS
+OK F2-rejected-superseder: refused by r89 (LEG_FAIL TEACHES checked=1 flagged=1 unresolved=1 sup_unresolved=0), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R87=PASS
+OK B1b-padding-qid: refused by r89 (LEG_FAIL WARRANT 16/17), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R87=PASS
+OK D1-duplicate-qid: refused by r89 (LEG_FAIL DUPQID provenance-recording-r85.md Naming what a resource derives from warrant=Q1, Q1 (S215)), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R88=PASS
+OK SUP-clause-mirror: refused by r89 (LEG_FAIL TEACHES checked=2 flagged=2 unresolved=0 sup_unresolved=1), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R88=PASS
+FORGERY_REFUSED=7/7 PRIOR_ACCEPTED_FORGERY=7/7
+CONTROLS=PASS
+rc: 0
+
+### c2-mutants-extraction
+cmd: python3 -B /fast/scratch/hyaku/chousa-r89/R89MutBattery/tree-land/corpus/evidence/round89/curation-r89-mutants.py --root /fast/scratch/hyaku/chousa-r89/R89MutBattery/tree-land --work /fast/scratch/hyaku/chousa-r89/R89MutBattery/bat/ext-c2mw
+KILLED M1-dead-teaches tree=base rc=1 CURATION_R89=FAIL
+  LEG_FAIL TEACHES checked=1 flagged=0 unresolved=0 sup_unresolved=0
+  LEG_FAIL VERDICT fields_hold=0 legs_ok=7/8
+KILLED M2-detached-leg tree=s031-queued rc=1 CURATION_R89=FAIL
+  LEG_FAIL VERDICT fields_hold=0 legs_ok=8/8
+KILLED M3-verdict-legs tree=s031-queued rc=1 CURATION_R89=FAIL
+  LEG_FAIL VERDICT fields_hold=0 legs_ok=8/8
+KILLED M4a-dup-leg-forced tree=dup-qid rc=1 CURATION_R89=FAIL
+  LEG_FAIL VERDICT fields_hold=0 legs_ok=8/8
+KILLED M4b-dup-field-dropped tree=dup-qid rc=1 CURATION_R89=FAIL
+  LEG_FAIL DUPQID provenance-recording-r85.md Naming what a resource derives from warrant=Q1, Q1 (S215)
+  LEG_FAIL VERDICT fields_hold=1 legs_ok=7/8
+KILLED M5-lowercase-clause tree=sup-mirror detector=battery rc=1
+  CASE_DEVIATION SUP-clause-mirror: NOT refused by r89 or NOT accepted by the prior counter
+MUTANTS_KILLED=6/6 COUNTER_DETECTED=5 BATTERY_DETECTED=1
+rc: 0
+
+
+## pins, revisions, hashes
+# R89MutBattery integrity — 2026-11-08T09:00:33Z
+
+## revisions
+ac0a0892c15de11fb28d3208f2b287687c00477e
+commit
+
+## instrument pins (committed pin file vs extracted landing tree)
+OK corpus/evidence/round89/gate-records-r89.py f34f59c87c08c11d762a1ae702251183eb72a27f7728504882e64ce24e6d2103
+OK corpus/evidence/round89/curation-r89.py 2c063f8bfab6922d199546494d2545f495b05ab9350a7379e1b7f4cde8939f4b
+OK corpus/evidence/round89/mutate-r89.py 10b43d8a69bfd56308320c7843291c2f425562a35d89aa9a360478d5b284c8eb
+OK corpus/evidence/round89/curation-r89-controls.py fd54ab3cbc1c0ef9d64e7c586db6068e3afb3675d6274328e34c32b2bbf20d4b
+OK corpus/evidence/round89/curation-r89-mutants.py 8b4f56b6fda1c0f6189c1c29f1fbe8f431c0e1a720e21cba4858ac1e47d63899
+OK corpus/evidence/round89/harm-recheck.py 3c3768ad1efd4bfc0be0e768dd0fa49310f76caab7610edef6d5563951d252d6
+OK corpus/evidence/round89/controls/expected.tsv d5f58452769eb492fa1304c5d49ae39f0b7a7477c1fc61d0b79e17cafe9199e7
+OK corpus/evidence/round89/controls/run-controls.sh 974007a8a4db58638a0b6dd8f68593bc0807dbfb39b28cf5b7d5ec40270ae8c3
+OK corpus/evidence/round89/c1-positives.tsv 8c089828981bb0c8b5a0ab253bb4ec5f1537825cb84cea8964497310bb01f3c6
+OK tools/gate-records.py 905f9da2fdf233b3a599f079a4c40ace730e3acf5464a2b80e1f93a616242d60
+PIN_MISMATCH=0
+
+## subject tool sha256 at both revisions (extracted trees)
+905f9da2fdf233b3a599f079a4c40ace730e3acf5464a2b80e1f93a616242d60  /fast/scratch/hyaku/chousa-r89/R89MutBattery/tree-base/tools/gate-records.py
+905f9da2fdf233b3a599f079a4c40ace730e3acf5464a2b80e1f93a616242d60  /fast/scratch/hyaku/chousa-r89/R89MutBattery/tree-land/tools/gate-records.py
+
+## lane repo instrument bytes unchanged by this seat (before/after comparison vs HEAD blobs)
+UNCHANGED corpus/evidence/round89/gate-records-r89.py f34f59c87c08c11d762a1ae702251183eb72a27f7728504882e64ce24e6d2103
+UNCHANGED corpus/evidence/round89/mutate-r89.py 10b43d8a69bfd56308320c7843291c2f425562a35d89aa9a360478d5b284c8eb
+UNCHANGED corpus/evidence/round89/curation-r89.py 2c063f8bfab6922d199546494d2545f495b05ab9350a7379e1b7f4cde8939f4b
+UNCHANGED corpus/evidence/round89/curation-r89-controls.py fd54ab3cbc1c0ef9d64e7c586db6068e3afb3675d6274328e34c32b2bbf20d4b
+UNCHANGED corpus/evidence/round89/curation-r89-mutants.py 8b4f56b6fda1c0f6189c1c29f1fbe8f431c0e1a720e21cba4858ac1e47d63899
+UNCHANGED tools/gate-records.py 905f9da2fdf233b3a599f079a4c40ace730e3acf5464a2b80e1f93a616242d60

@@ -1,0 +1,33 @@
+# PROBE (b-2): is the COMMITTED receipt the artifact the driver checks?
+# method (all inside the scratch tree, never the live lane):
+#   1. tamper the committed scratch copy of c1-landing.txt: GATE_RECORDS_R89=PASS -> FAIL
+#   2. re-run: cd $T && bash corpus/evidence/round89/controls/run-controls.sh $T $S/ctl
+# driver source (relevant lines):
+#   HERE=$(cd "$(dirname "$0")" && pwd)
+#   REC="$HERE/receipts"
+#   mkdir -p "$REC" "$WORK"
+#     [ -z "${case_id:-}" ] && continue
+#     out="$REC/$case_id.txt"
+#     # shellcheck disable=SC2086
+
+--- step 1: tampered committed receipt ---
+#   GATE_RECORDS_R89=FAIL
+
+--- step 2: driver stdout ---
+#   RECEIPT_OK c1-landing exit=0
+#   RECEIPT_OK c1-prior-instrument exit=0
+#   RECEIPT_OK c1-mutants exit=0
+#   RECEIPT_OK c1-harm exit=0
+#   RECEIPT_OK c2-landing exit=0
+#   RECEIPT_OK c2-prior-instrument exit=0
+#   RECEIPT_OK c2-controls exit=0
+#   RECEIPT_OK c2-mutants exit=0
+#   CONTROL_RECEIPTS=PASS
+#   driver exit code: 0
+
+--- receipt content AFTER the driver run (regenerated, PASS restored) ---
+#   GATE_RECORDS_R89=PASS
+
+FINDING: the driver writes each control's output to $REC/$case_id.txt (REC=$HERE/receipts, i.e. inside the
+source tree) BEFORE it greps that file. It therefore validates the receipt it just generated, never the
+committed receipt bytes. A committed receipt whose content contradicts expected.tsv is silently overwritten.

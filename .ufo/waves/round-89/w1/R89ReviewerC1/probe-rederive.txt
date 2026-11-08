@@ -1,0 +1,24 @@
+rederive('3/3/3 pin3') -> ok=True nums=(3, 3, 3, 3) exp=True MATCH
+rederive('3/3/1 pin3') -> ok=False nums=(3, 3, 1, 3) exp=False MATCH
+rederive('3/3/3 pin9') -> ok=False nums=(3, 3, 3, 9) exp=False MATCH
+rederive('3/3/3 pin9x') -> ok=True nums=(3, 3) exp=None DIFF
+rederive('3/3') -> ok=True nums=(3, 3) exp=True MATCH
+rederive('2/3') -> ok=False nums=(2, 3) exp=False MATCH
+rederive('3/3 and more') -> ok=True nums=(3, 3) exp=True MATCH
+rederive('derived=1 killed=1') -> ok=True nums=(1, 1) exp=True MATCH
+rederive('derived=0 killed=0') -> ok=False nums=(0, 0) exp=False MATCH
+rederive('derived=1 killed=0') -> ok=False nums=(1, 0) exp=False MATCH
+rederive('derived=0 killed=1') -> ok=False nums=(0, 1) exp=False MATCH
+rederive('tool present') -> ok=True nums=() exp=True MATCH
+rederive('garbage') -> ok=None nums=None exp=None MATCH
+rederive('1/1') -> ok=True nums=(1, 1) exp=True MATCH
+rederive('0/1') -> ok=False nums=(0, 1) exp=False MATCH
+rederive('1/1 evil') -> ok=True nums=(1, 1) exp=True MATCH
+tool present + absent tool -> (False, ())
+DERIVE_NEG 1/1 -> (True, (1, 1))
+DERIVE_NEG 0/1 -> (False, (0, 1))
+SUMMARY 15/15 -> (True, (15, 15))
+SUMMARY 14/14 -> (True, (14, 14))
+FRESH '5/5' -> (True, (5, 5))
+FRESH '5/5 FRESH_BUILD=FAILED' -> (True, (5, 5))
+FRESH '0/5 FRESH_BUILD=FAILED' -> (False, (0, 5))

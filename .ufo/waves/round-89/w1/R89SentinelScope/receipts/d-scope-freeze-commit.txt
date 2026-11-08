@@ -1,0 +1,76 @@
+# (d) scope: the freeze commit's paths
+# command: git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show --stat ac0a0892c15de11fb28d3208f2b287687c00477e
+commit ac0a0892c15de11fb28d3208f2b287687c00477e
+Author: chousa-shokunin <chousa@shokunin.local>
+Date:   Sun Nov 8 05:30:44 2026 -0300
+
+    round-89: freeze — two claims (per-format leg reconciliation + summary cross-check; field-derived curation verdict with duplicate-qid guard and a live superseder clause), six instruments, controls+driver, expectations, receipts, pins, S216/S218 used-by
+
+ .ufo/waves/round-89/census-start.txt               |   6 +
+ .ufo/waves/round-89/claims.json                    | 112 +++
+ corpus/SOURCES.md                                  |   4 +-
+ corpus/evidence/round89/after/c1-after.txt         |   3 +
+ corpus/evidence/round89/after/c2-after.txt         |   3 +
+ corpus/evidence/round89/c1-positives.tsv           |  15 +
+ corpus/evidence/round89/claims.md                  | 145 ++++
+ corpus/evidence/round89/controls/expected.tsv      |   9 +
+ .../evidence/round89/controls/receipts/c1-harm.txt |   1 +
+ .../round89/controls/receipts/c1-landing.txt       |   3 +
+ .../round89/controls/receipts/c1-mutants.txt       |  55 ++
+ .../controls/receipts/c1-prior-instrument.txt      |   3 +
+ .../round89/controls/receipts/c2-controls.txt      |  26 +
+ .../round89/controls/receipts/c2-landing.txt       |   3 +
+ .../round89/controls/receipts/c2-mutants.txt       |  15 +
+ .../controls/receipts/c2-prior-instrument.txt      |   3 +
+ corpus/evidence/round89/controls/run-controls.sh   |  40 ++
+ corpus/evidence/round89/curation-r89-controls.py   | 253 +++++++
+ corpus/evidence/round89/curation-r89-mutants.py    | 182 +++++
+ corpus/evidence/round89/curation-r89.py            | 327 +++++++++
+ corpus/evidence/round89/gate-records-r89.py        | 750 +++++++++++++++++++++
+ corpus/evidence/round89/harm-recheck.py            |  60 ++
+ corpus/evidence/round89/instrument-pins.txt        |  12 +
+ corpus/evidence/round89/mutate-r89.py              | 206 ++++++
+ plans/round-89.md                                  |  41 ++
+ 25 files changed, 2275 insertions(+), 2 deletions(-)
+
+--- full path list ---
+corpus/evidence/round89/after/c1-after.txt
+corpus/evidence/round89/after/c2-after.txt
+corpus/evidence/round89/c1-positives.tsv
+corpus/evidence/round89/claims.md
+corpus/evidence/round89/controls/expected.tsv
+corpus/evidence/round89/controls/receipts/c1-harm.txt
+corpus/evidence/round89/controls/receipts/c1-landing.txt
+corpus/evidence/round89/controls/receipts/c1-mutants.txt
+corpus/evidence/round89/controls/receipts/c1-prior-instrument.txt
+corpus/evidence/round89/controls/receipts/c2-controls.txt
+corpus/evidence/round89/controls/receipts/c2-landing.txt
+corpus/evidence/round89/controls/receipts/c2-mutants.txt
+corpus/evidence/round89/controls/receipts/c2-prior-instrument.txt
+corpus/evidence/round89/controls/run-controls.sh
+corpus/evidence/round89/curation-r89-controls.py
+corpus/evidence/round89/curation-r89-mutants.py
+corpus/evidence/round89/curation-r89.py
+corpus/evidence/round89/gate-records-r89.py
+corpus/evidence/round89/harm-recheck.py
+corpus/evidence/round89/instrument-pins.txt
+corpus/evidence/round89/mutate-r89.py
+corpus/SOURCES.md
+plans/round-89.md
+.ufo/waves/round-89/census-start.txt
+.ufo/waves/round-89/claims.json
+
+--- paths outside the lane root? (all paths are repo-relative; the repo IS the lane) ---
+lane root: /home/vgpnk/Projects/shokunin/chousa-shokunin
+path count outside lane: 0 (git show lists repo-relative paths only; no ../ or absolute path appears)
+
+--- the two registry cells changed (the ONLY registry change) ---
+-| S216 | RFC 9110, HTTP Semantics — https://www.rfc-editor.org/rfc/rfc9110.html | spec | A | the status-code registry's own definition of
++| S216 | RFC 9110, HTTP Semantics — https://www.rfc-editor.org/rfc/rfc9110.html | spec | A | the status-code registry's own definition of
+-| S218 | chousa corpus contract v1 rule 2 and QUALITY criterion 178 — corpus/QUALITY.md, CORPUS.md | own-work | A | the lane's own rules 
++| S218 | chousa corpus contract v1 rule 2 and QUALITY criterion 178 — corpus/QUALITY.md, CORPUS.md | own-work | A | the lane's own rules 
+
+--- subject tool blob identity across base and freeze ---
+f8fa55ec -> tools/gate-records.py blob dc7a4176129a42dc711ae62ceb72ba281fc5595d
+ac0a0892 -> tools/gate-records.py blob dc7a4176129a42dc711ae62ceb72ba281fc5595d
+master -> tools/gate-records.py blob dc7a4176129a42dc711ae62ceb72ba281fc5595d

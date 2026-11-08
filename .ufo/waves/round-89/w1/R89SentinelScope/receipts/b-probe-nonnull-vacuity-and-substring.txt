@@ -1,0 +1,15 @@
+# PROBE (b): is the driver's check non-vacuous? (a synthetic failing row is refused)
+# command: append a row to the scratch expected.tsv whose instrument exits 1 and lacks the required token
+RECEIPT_MISMATCH zprobe-failing: exit=1 want=0 missing[PASS_TOKEN_NOT_PRESENT]
+CONTROL_RECEIPTS=FAIL
+driver_exit=1
+
+# PROBE (b): does the required_fields check reject a PREFIX-MATCHED value?
+# command: synthetic row printing 'D1_REFUSED=3/30 LEG_REREAD=16/160 MUT_ADMIT_KILLED=1x' with required tokens
+#          D1_REFUSED=3/3 LEG_REREAD=16/16 MUT_ADMIT_KILLED=1
+RECEIPT_OK zprobe-substr exit=0
+CONTROL_RECEIPTS=PASS
+driver_exit=0
+
+FINDING: required_fields are matched with 'grep -qF' (fixed-string SUBSTRING), not field-boundary equality.
+A receipt printing D1_REFUSED=3/30 (wrong denominator), LEG_REREAD=16/160, or MUT_ADMIT_KILLED=1x satisfies the check.

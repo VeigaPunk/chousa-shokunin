@@ -1,0 +1,57 @@
+# C2-N7 quote-locate-relaxed — all three detectors
+# command: counter on out/c2/trees/nv ; control battery --counter mutant ; committed curation-r89-mutants.py with the mutant counter
+
+--- counter on the nv tree
+SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20 Q_FLOORS=search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7 WARRANT_OK=17/17 DUP_QIDS=0 TEACHES_CHECKED=1 TEACHES_FLAGGED=1 TEACHES_UNRESOLVED=0 SUP_CLAUSE_CHECKED=0 SUP_UNRESOLVED=0 LEGS_MEASURED=8/8
+TEACHES_FLAGGED S024 terms=publication,modification disposition=superseded by S031
+CURATION_R89=PASS
+
+--- control battery with --counter mutant
+OK POSITIVE: positive accepted by both
+  r89: rc=0 CURATION_R89=PASS
+  prior: rc=0 CURATION_R87=PASS
+OK A1c-junk-substitute: refused by r89 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R87=PASS
+OK A1d-truncate: refused by r89 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R87=PASS
+OK caseG-relabel: refused by r89 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R87=PASS
+OK F2-rejected-superseder: refused by r89 (LEG_FAIL TEACHES checked=1 flagged=1 unresolved=1 sup_unresolved=0), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R87=PASS
+OK B1b-padding-qid: refused by r89 (LEG_FAIL WARRANT 16/17), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R87=PASS
+OK D1-duplicate-qid: refused by r89 (LEG_FAIL DUPQID provenance-recording-r85.md Naming what a resource derives from warrant=Q1, Q1 (S215)), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R88=PASS
+OK SUP-clause-mirror: refused by r89 (LEG_FAIL TEACHES checked=2 flagged=2 unresolved=0 sup_unresolved=1), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R88=PASS
+FORGERY_REFUSED=7/7 PRIOR_ACCEPTED_FORGERY=7/7
+CONTROLS=PASS
+
+--- committed mutant battery with the mutant counter
+KILLED M1-dead-teaches tree=base rc=1 CURATION_R89=FAIL
+  LEG_FAIL TEACHES checked=1 flagged=0 unresolved=0 sup_unresolved=0
+  LEG_FAIL VERDICT fields_hold=0 legs_ok=7/8
+KILLED M2-detached-leg tree=s031-queued rc=1 CURATION_R89=FAIL
+  LEG_FAIL VERDICT fields_hold=0 legs_ok=8/8
+KILLED M3-verdict-legs tree=s031-queued rc=1 CURATION_R89=FAIL
+  LEG_FAIL VERDICT fields_hold=0 legs_ok=8/8
+KILLED M4a-dup-leg-forced tree=dup-qid rc=1 CURATION_R89=FAIL
+  LEG_FAIL VERDICT fields_hold=0 legs_ok=8/8
+KILLED M4b-dup-field-dropped tree=dup-qid rc=1 CURATION_R89=FAIL
+  LEG_FAIL DUPQID provenance-recording-r85.md Naming what a resource derives from warrant=Q1, Q1 (S215)
+  LEG_FAIL VERDICT fields_hold=1 legs_ok=7/8
+KILLED M5-lowercase-clause tree=sup-mirror detector=battery rc=1
+  CASE_DEVIATION SUP-clause-mirror: NOT refused by r89 or NOT accepted by the prior counter
+MUTANTS_KILLED=6/6 COUNTER_DETECTED=5 BATTERY_DETECTED=1
+
+--- exit codes of the runs above (observed)
+counter on the nv tree: rc=0 (CURATION_R89=PASS)
+control battery --counter mutant: rc=0 (CONTROLS=PASS FORGERY_REFUSED=7/7)
+committed mutant battery with the mutant counter: rc=0 (MUTANTS_KILLED=6/6)
