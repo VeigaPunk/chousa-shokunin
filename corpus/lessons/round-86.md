@@ -114,3 +114,9 @@ integration commit that carries `.ufo/waves/round-86/w1-results.json`. Measured 
    rule instead: a superseded row's frozen `teaches` is not evidence — the superseding row's is (QUALITY 178). Routed:
    the next round that touches curation checks registry `teaches` cells against their captures, not only entry cells.
    Evidence: `R86ReviewerEntry` §2.6.
+6. **The S023 re-open carried no record line; it does now.** `S023` is an existing `mined` row, so §2b's "every new
+   row" rule did not require one — but the `modified` Definition that C2's `Q13` rests on was opened this round and
+   deserves its access date in the same form as the other rows. The record verifies against the committed capture
+   (`gate-records.py verify` → `S023 OK`):
+
+   GATE-RECORD S023 url=https://www.dublincore.org/specifications/dublin-core/dcmi-terms/ fetched=2026-11-08T06:00:11Z tier=A decision=admit capture=corpus/captures/f5545a194c06ab421875b047.txt capture_sha256=20dc0c3ab7724e1f… words=7 quote="Date on which the resource was changed."
