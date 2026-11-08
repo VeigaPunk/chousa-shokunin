@@ -31,7 +31,7 @@ import subprocess
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-LANE = os.path.dirname(os.path.dirname(HERE))
+LANE = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
 NEW = os.path.join(HERE, "control-driver-r93.py")
 OLD = os.path.join(os.path.dirname(HERE), "round92", "control-driver-r92.py")
 UNEXECUTED = "corpus/evidence/round93/curation-controls-r93.py"
@@ -126,8 +126,9 @@ def main():
     # --root derivation scores the same archive normally.
     rc_old_d, out_old_d = run(OLD, pristine, os.path.join(work, "w92-derive"), a.rev, a.receipts_rev,
                               explicit=False)
+    # the dispatch form: the LANE's driver scored against a foreign root, with --repo naming the lane
     rc_new_d, out_new_d = run(NEW, pristine, os.path.join(work, "w93-derive"), a.rev, a.receipts_rev,
-                              explicit=False, repo=pristine)
+                              explicit=False, repo=LANE)
     derive_ok = rc_old_d != 0 and "escapes base" in out_old_d and rc_new_d == 0 \
         and "CONTROL_DRIVER_R93=PASS" in out_new_d
     print(f"{'OK' if derive_ok else 'FAIL'} derive-from-root: r92 rc={rc_old_d} "
@@ -136,15 +137,42 @@ def main():
         print("  r92 derive:", " | ".join(out_old_d.strip().splitlines()[-3:]))
         print("  r93 derive:", " | ".join(out_new_d.strip().splitlines()[-3:]))
 
+    # Regression classes found by the wave's own reviewer (R93ReviewerC1 H2/M1): deleting the pins table's
+    # self row, and a pin row naming a path outside --root, must both be refused at the tree.
+    def regression(name, mutate, code):
+        tree = fresh(name)
+        mutate(tree)
+        rc, out = run(NEW, tree, os.path.join(work, "w93-" + name), a.rev, a.receipts_rev,
+                      repo=tree, in_tree=True)
+        ok = rc == 1 and code in out
+        print(f"{'OK' if ok else 'FAIL'} {name}: r93 rc={rc} ({code})")
+        if not ok:
+            print("  last:", " | ".join(out.strip().splitlines()[-3:]))
+        return ok
+
+    pins_rel = "corpus/evidence/round93/instrument-pins.txt"
+    reg_self = regression(
+        "self-row-deleted",
+        lambda t: open(os.path.join(t, pins_rel), "w").write(
+            "".join(ln for ln in open(os.path.join(t, pins_rel), encoding="utf-8")
+                    if not ln.strip().endswith(pins_rel))),
+        "PIN_SELF_ROW_ABSENT")
+    reg_outside = regression(
+        "row-outside-root",
+        lambda t: open(os.path.join(t, pins_rel), "a").write(
+            "0" * 64 + "  /etc/hostname\n"),
+        "PIN_ROW_OUTSIDE")
+
     (rc_old_p, out_old_p), (rc_new_p, out_new_p) = both(pristine)
     positive = rc_old_p == 0 and rc_new_p == 0
     print(f"{'OK' if positive else 'FAIL'} positive: r92 rc={rc_old_p} r93 rc={rc_new_p}")
 
     refused_n = sum(1 for r in results if r)
     prior_n = refused_n  # each refused forgery was accepted by r92 in its own run above
-    ok = refused_n == 2 and derive_ok and positive
+    reg_n = int(reg_self) + int(reg_outside)
+    ok = refused_n == 2 and derive_ok and positive and reg_n == 2
     print(f"FORGERY_REFUSED={refused_n}/2 PRIOR_ACCEPTED={prior_n}/2 DERIVE_OK={int(derive_ok)}/1 "
-          f"POSITIVE={'pass' if positive else 'fail'}")
+          f"REGRESSION_REFUSED={reg_n}/2 POSITIVE={'pass' if positive else 'fail'}")
     return 0 if ok else 1
 
 

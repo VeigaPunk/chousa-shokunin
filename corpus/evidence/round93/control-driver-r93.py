@@ -301,7 +301,15 @@ def pin_report(rows, root, expected, pins_path, receipts_dir):
         if rel not in pins:
             codes.append(f"INSTRUMENT_UNPINNED:{rel}")
     checked = 0
+    # H2/M1 (R93ReviewerC1): the self row must exist (it is the table's only carrier binding), and a pin row
+    # may not name a path outside `--root` — a row for `/etc/hostname` or `../x` is not a tree byte.
+    if pins_rel not in pins:
+        codes.append(f"PIN_SELF_ROW_ABSENT path={pins_rel}")
     for rel in sorted(pins):
+        parts = rel.replace(os.sep, "/").split("/")
+        if os.path.isabs(rel) or ".." in parts:
+            codes.append(f"PIN_ROW_OUTSIDE path={rel}")
+            continue
         disk = os.path.join(os.path.abspath(root), rel)
         if not os.path.isfile(disk):
             codes.append(f"PIN_MISSING path={rel}")
