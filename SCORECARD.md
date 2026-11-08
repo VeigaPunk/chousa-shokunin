@@ -4047,3 +4047,51 @@ tip.
    test; then a successor claim that names those classes.
 3. **freshness** — bind the case-range prose to the tool's own case names and delete the r90 unentailed double-count
    loop (Amendment 8's sibling; `R90ReviewerC2` F5).
+
+## Round 91 verdict — receipt headers are single-valued and the instruments pinned; the quote table is counted by shape, source status and term frequency; the case range re-derives from the tool's names (2026-11-08)
+
+Base `265b8633`; freeze `4d00d751` (F3); receipts carrier `67954adc` (C3); two earlier freeze/carrier pairs were
+superseded before any scored run and before the wave (`160b658b`/`d02a950f`, `37831ce8`/`b8fc99a1`; plan
+§§Pre-wave freeze repair 1–2). Three claims, three axes, no exploratory claim. One v1 wave, 12 seats (8 attack),
+0 dead. The wave fired on all three claims; 24 amendments narrow each sentence to the instrument's measured
+behaviour. No predicate token, target or number moved after the freeze.
+
+| claim | axis | before | after | verdict |
+|---|---|---|---|---|
+| C1 `C1-DRIVER-R91` | operability (lowest, historical 3/10) | r90 driver accepts all six classes (`PRIOR_ACCEPTED=6/6`); headers last-wins, instrument unpinned, `expected_exit` unread, unscored receipts invisible | `CONTROL_DRIVER_R91=PASS` with `COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6`, `SELF_PIN OK rev=F3 receipts_rev=C3`; `FORGERY_REFUSED=6/6 PRIOR_ACCEPTED=6/6 POSITIVE=pass` | **verified on the wording narrowed by Amendments 7, 9, 10 and 15–21** |
+| C2 `C2-CURATION-R91` | calibration | r90 prints `CURATION_R90=PASS` on four forged trees, `PRIOR_ACCEPTED=4/4`; one unentailed row appended twice (`UNENTAILED_TERM=2`) | `CURATION_R91=PASS`, `LEGS_MEASURED=13/13 Q_ROWS=20 Q_SHAPE_FAIL=0 SOURCE_STATUS_OK=20/20 USED_BY_OK=20/20 TFREQ_OK=17/17 TFREQ_MAX_DF=3 UNENTAILED_TERM=0 WARRANT_OK=17/17`; controls `FORGERY_REFUSED=4/4 PRIOR_ACCEPTED=4/4 DUPCOUNT_R90=2 DUPCOUNT_R91=1 PRIOR_REGRESSION=7/7` | **verified on the wording narrowed by Amendments 1–6 and 14** |
+| C3 `C3-TALLY-R91` | freshness | r90 prints `SKILL_TALLY_R90=PASS` on the base prose (`bash-pin-override cases 276–283`); six of those cases carry other names | `SKILL_TALLY_R91=PASS`, `TALLY_ROWS=9 STALE_TALLIES=0/9 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 LEGS=2/2`; controls `OLDPROSE_REFUSED=1/1 PRIOR_ACCEPTED=1/1 STALE_REFUSED_BOTH=1/1` | **verified on the wording narrowed by Amendments 8 and 11–13** |
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** | six forgery classes refused where r90 accepts all six; the driver now reads committed headers once-per-key, pins every executed script and the expectations file, names both revisions, and refuses unscored receipts. The stub/instrument substitution class is closed by the external pre-step of Amendment 10 (routed r92: move it into the procedure text). |
+| calibration | **improved** | the quote table is counted by shape (QSHAPE), the cited source's status and `used-by` are read, the warrant share is guarded by a measured document-frequency bound, and one (row, term) is one record; four tree forgeries and the double count are killed with the prior counter accepting each. |
+| freshness | **improved** | the Gates-row case-range prose re-derives: `bash-pin-override` is 282–283 (six indices the prose claimed are other cases), `bashenv` is 273–275; the one-clause repair moves no tally and no historical quote. |
+| depth | unchanged | no new `corpus/knowledge/` entry (no source was admitted; S221 failed to fetch). |
+| coverage | unchanged | registry 219 → 219 rows; `PROVINCE.md` untouched; no frontier row advanced. |
+| adjacency | unchanged | the connector seat's sibling scan is read-only; nothing absorbed; no cross-domain claim. |
+
+Trends: expansion **unchanged** (219 rows, no new entry); quality **improved** (three instruments hardened with
+red-before witnesses, two before classes re-derived by an independent seat, ten criteria mined); discernment
+**improved** (24 amendments published before filing, a freeze re-cut twice before the wave, and the wave's HIGH
+findings — stub substitution, pins file unpinned, per-row read order, pin-lexical rule, prefix rename — recorded as
+named limits instead of being filed over).
+
+No axis harmed: `tools/research-gate.sh` and `tools/gate-records.py` are byte-identical at base and landing
+(`git diff --quiet 265b8633 <landing> -- tools/`), the registry diff is empty, and the SKILL.md diff is the one
+case-range clause.
+
+## Planned — round 92 (intent, not a predicate)
+
+1. **operability (lowest)** — the C1 repairs the wave routed: gate `passed` on `EXACT_OK`; strip leading whitespace in
+   the header test; pin the executed script (a `script=` column in `controls/expected.tsv`, or execute only the pinned
+   path); make `instrument-pins.txt` self-pinned and read `--expected`/`--receipts`/`__file__` against the base they
+   are read from; add `--work` with a `TMPDIR` default; move Amendment 10's external pre-step into the procedure text.
+2. **calibration** — the C2 repairs: let every pipe-leading line reach QSHAPE; pin decision-row width and count per
+   entry; tokenise the `used-by` cell; add two-directional `source_link` assertions; correct the docstring df numbers
+   (5 and 8 under 24 units).
+3. **freshness** — the C3 repairs: scope both regexes to the Gates-table cell; pin the historical multiset so a
+   deleted quote changes the verdict; bind exact names and the case count; make the controls accept any landing
+   clause the claim names.
+4. carried debt: the round-74 "source-blind order oracle", QUALITY 173's successful-refused record form, the r80
+   backlog Gate ids.

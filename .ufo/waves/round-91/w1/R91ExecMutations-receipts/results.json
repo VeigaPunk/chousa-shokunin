@@ -1,0 +1,248 @@
+[
+ {
+  "mutant": "M1",
+  "instrument": "control-driver-r91.py",
+  "family": "c1",
+  "edits": [
+   {
+    "old": "        if len(vals) > 1:\n            codes.append(f\"HEADER_DUPLICATE:",
+    "new": "        if len(vals) > 1 and False:\n            codes.append(f\"HEADER_DUPLICATE:"
+   }
+  ],
+  "sha_pristine": "49102204fa9698df97f2f8ac467468ee57dff1a358e934d52654821cd880b40c",
+  "sha_mutant": "d6c0cc863675810978dd7c7993ba241b3960a559b2ebcdcba50da69155fe8595",
+  "sha_restored": "49102204fa9698df97f2f8ac467468ee57dff1a358e934d52654821cd880b40c",
+  "detector_cmd": "/usr/bin/python3 -B /fast/scratch/hyaku/chousa-r91/R91ExecMutations/mut/M1/corpus/evidence/round91/control-forgeries-r91.py --work /fast/scratch/hyaku/chousa-r91/R91ExecMutations/w/M1",
+  "detector_rc": 1,
+  "detector_ok": false,
+  "verdict": "killed",
+  "detector_out": "FAIL dup-header-exit: r91 rc=0 (HEADER_DUPLICATE:exit), r90 rc=0\n  r91 out: RECEIPT fx-one OK committed+exact+pin+fresh | RECEIPT fx-two OK committed+exact+pin+fresh | RECEIPT PINS OK 3/3 pinned files byte-identical | COMMITTED_OK=2/2 EXACT_OK=2/2 PIN_OK=2/2 FRESH_OK=2/2 PINNED_FILES=3 CONTROL_DRIVER_R91=PASS\n  r90 out: RECEIPT fx-one OK committed+exact+pin+fresh | RECEIPT fx-two OK committed+exact+pin+fresh | COMMITTED_OK=2/2 EXACT_OK=2/2 PIN_OK=2/2 FRESH_OK=2/2 CONTROL_DRIVER_R90=PASS\nFAIL dup-header-computed: r91 rc=1 (HEADER_DUPLICATE:computed_against), r90 rc=0\n  r91 out: RECEIPT fx-one FINDING PIN_MISMATCH:0000000000000000000000000000000000000000,265b8633b7e5d1da49da6fb948df9707373fb15c | RECEIPT fx-two OK committed+exact+pin+fresh | RECEIPT PINS OK 3/3 pinned files byte-identical | COMMITTED_OK=2/2 EXACT_OK=2/2 PIN_OK=1/2 FRESH_OK=2/2 PINNED_FILES=3 CONTROL_DRIVER_R91=FAIL\n  r90 out: RECEIPT fx-one OK committed+exact+pin+fresh | RECEIPT fx-two OK committed+exact+pin+fresh | COMMITTED_OK=2/2 EXACT_OK=2/2 PIN_OK=2/2 FRESH_OK=2/2 CONTROL_DRIVER_R90=PASS\nOK instrument-stub: r91 rc=1 (INSTRUMENT_PIN_MISMATCH:fx-tool.sh), r90 rc=0\nOK expected-swap: r91 rc=1 (INSTRUMENT_PIN_MISMATCH:expected.tsv), r90 rc=0\nOK missing-expected_exit: r91 rc=1 (MISSING_HEADER:expected_exit), r90 rc=0\nOK extra-receipt: r91 rc=1 (UNSCORED_RECEIPT), r90 rc=0\nOK positive: r90 rc=0 r91 rc=0\nFORGERY_REFUSED=4/6 PRIOR_ACCEPTED=4/6 POSITIVE=pass\n",
+  "direct_cmd": "/usr/bin/python3 -B /fast/scratch/hyaku/chousa-r91/R91ExecMutations/mut/M1/corpus/evidence/round91/control-driver-r91.py verify --root /fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo --work /fast/scratch/hyaku/chousa-r91/R91ExecMutations/w/M1-v --rev 4d00d7519290569879f853d7122b82a927cda1f3 --receipts-rev 67954adc599bd605705d94a1ea7abb582491a907 --expected /fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo/corpus/evidence/round91/controls/expected.tsv --receipts /fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo/corpus/evidence/round91/controls/receipts --pins /fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo/corpus/evidence/round91/instrument-pins.txt",
+  "direct_rc": 0,
+  "direct_out": "BASES root=/fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo repo=/fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo\nRECEIPT c1-gate-r89 OK committed+exact+pin+fresh\nRECEIPT c1-mutants-r89 OK committed+exact+pin+fresh\nRECEIPT c1-harm OK committed+exact+pin+fresh\nRECEIPT c1-harm-setup OK committed+exact+pin+fresh\nRECEIPT c2-prior-landing OK committed+exact+pin+fresh\nRECEIPT c2-prior-controls OK committed+exact+pin+fresh\nRECEIPT PINS OK 6/16 pinned files byte-identical\nCOMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 PINNED_FILES=6 CONTROL_DRIVER_R91=PASS\n"
+ },
+ {
+  "mutant": "M2",
+  "instrument": "control-driver-r91.py",
+  "family": "c1",
+  "edits": [
+   {
+    "old": "    \"\"\"R3/R6: every instrument a row executes, and the expectations file, are pinned and unchanged on disk.\"\"\"\n    codes = []",
+    "new": "    \"\"\"R3/R6: every instrument a row executes, and the expectations file, are pinned and unchanged on disk.\"\"\"\n    return [], 0\n    codes = []"
+   }
+  ],
+  "sha_pristine": "49102204fa9698df97f2f8ac467468ee57dff1a358e934d52654821cd880b40c",
+  "sha_mutant": "ddd2b8ae27e5567e1203dc3b9d01312c268c1c3a49ef5b3ca38b08f5a5626a0a",
+  "sha_restored": "49102204fa9698df97f2f8ac467468ee57dff1a358e934d52654821cd880b40c",
+  "detector_cmd": "/usr/bin/python3 -B /fast/scratch/hyaku/chousa-r91/R91ExecMutations/mut/M2/corpus/evidence/round91/control-forgeries-r91.py --work /fast/scratch/hyaku/chousa-r91/R91ExecMutations/w/M2",
+  "detector_rc": 1,
+  "detector_ok": false,
+  "verdict": "killed",
+  "detector_out": "OK dup-header-exit: r91 rc=1 (HEADER_DUPLICATE:exit), r90 rc=0\nOK dup-header-computed: r91 rc=1 (HEADER_DUPLICATE:computed_against), r90 rc=0\nFAIL instrument-stub: r91 rc=0 (INSTRUMENT_PIN_MISMATCH:fx-tool.sh), r90 rc=0\n  r91 out: RECEIPT fx-one OK committed+exact+pin+fresh | RECEIPT fx-two OK committed+exact+pin+fresh | RECEIPT PINS OK 0/3 pinned files byte-identical | COMMITTED_OK=2/2 EXACT_OK=2/2 PIN_OK=2/2 FRESH_OK=2/2 PINNED_FILES=0 CONTROL_DRIVER_R91=PASS\n  r90 out: RECEIPT fx-one OK committed+exact+pin+fresh | RECEIPT fx-two OK committed+exact+pin+fresh | COMMITTED_OK=2/2 EXACT_OK=2/2 PIN_OK=2/2 FRESH_OK=2/2 CONTROL_DRIVER_R90=PASS\nFAIL expected-swap: r91 rc=0 (INSTRUMENT_PIN_MISMATCH:expected.tsv), r90 rc=0\n  r91 out: RECEIPT fx-one OK committed+exact+pin+fresh | RECEIPT fx-two OK committed+exact+pin+fresh | RECEIPT PINS OK 0/3 pinned files byte-identical | COMMITTED_OK=2/2 EXACT_OK=2/2 PIN_OK=2/2 FRESH_OK=2/2 PINNED_FILES=0 CONTROL_DRIVER_R91=PASS\n  r90 out: RECEIPT fx-one OK committed+exact+pin+fresh | RECEIPT fx-two OK committed+exact+pin+fresh | COMMITTED_OK=2/2 EXACT_OK=2/2 PIN_OK=2/2 FRESH_OK=2/2 CONTROL_DRIVER_R90=PASS\nOK missing-expected_exit: r91 rc=1 (MISSING_HEADER:expected_exit), r90 rc=0\nOK extra-receipt: r91 rc=1 (UNSCORED_RECEIPT), r90 rc=0\nOK positive: r90 rc=0 r91 rc=0\nFORGERY_REFUSED=4/6 PRIOR_ACCEPTED=4/6 POSITIVE=pass\n",
+  "direct_cmd": "/usr/bin/python3 -B /fast/scratch/hyaku/chousa-r91/R91ExecMutations/mut/M2/corpus/evidence/round91/control-driver-r91.py verify --root /fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo --work /fast/scratch/hyaku/chousa-r91/R91ExecMutations/w/M2-v --rev 4d00d7519290569879f853d7122b82a927cda1f3 --receipts-rev 67954adc599bd605705d94a1ea7abb582491a907 --expected /fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo/corpus/evidence/round91/controls/expected.tsv --receipts /fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo/corpus/evidence/round91/controls/receipts --pins /fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo/corpus/evidence/round91/instrument-pins.txt",
+  "direct_rc": 0,
+  "direct_out": "BASES root=/fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo repo=/fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo\nRECEIPT c1-gate-r89 OK committed+exact+pin+fresh\nRECEIPT c1-mutants-r89 OK committed+exact+pin+fresh\nRECEIPT c1-harm OK committed+exact+pin+fresh\nRECEIPT c1-harm-setup OK committed+exact+pin+fresh\nRECEIPT c2-prior-landing OK committed+exact+pin+fresh\nRECEIPT c2-prior-controls OK committed+exact+pin+fresh\nRECEIPT PINS OK 0/16 pinned files byte-identical\nCOMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 PINNED_FILES=0 CONTROL_DRIVER_R91=PASS\n"
+ },
+ {
+  "mutant": "M3",
+  "instrument": "control-driver-r91.py",
+  "family": "c1",
+  "edits": [
+   {
+    "old": "    for f in sorted(os.listdir(a.receipts)):\n        if not f.endswith(\".txt\") or f[:-4] in scored:",
+    "new": "    for f in ():\n        if not f.endswith(\".txt\") or f[:-4] in scored:"
+   }
+  ],
+  "sha_pristine": "49102204fa9698df97f2f8ac467468ee57dff1a358e934d52654821cd880b40c",
+  "sha_mutant": "80cc62e535bd89a8c676d4556cc0da19db749bd7b7cb3c3a307059f9e457298c",
+  "sha_restored": "49102204fa9698df97f2f8ac467468ee57dff1a358e934d52654821cd880b40c",
+  "detector_cmd": "/usr/bin/python3 -B /fast/scratch/hyaku/chousa-r91/R91ExecMutations/mut/M3/corpus/evidence/round91/control-forgeries-r91.py --work /fast/scratch/hyaku/chousa-r91/R91ExecMutations/w/M3",
+  "detector_rc": 1,
+  "detector_ok": false,
+  "verdict": "killed",
+  "detector_out": "OK dup-header-exit: r91 rc=1 (HEADER_DUPLICATE:exit), r90 rc=0\nOK dup-header-computed: r91 rc=1 (HEADER_DUPLICATE:computed_against), r90 rc=0\nOK instrument-stub: r91 rc=1 (INSTRUMENT_PIN_MISMATCH:fx-tool.sh), r90 rc=0\nOK expected-swap: r91 rc=1 (INSTRUMENT_PIN_MISMATCH:expected.tsv), r90 rc=0\nOK missing-expected_exit: r91 rc=1 (MISSING_HEADER:expected_exit), r90 rc=0\nFAIL extra-receipt: r91 rc=0 (UNSCORED_RECEIPT), r90 rc=0\n  r91 out: RECEIPT fx-one OK committed+exact+pin+fresh | RECEIPT fx-two OK committed+exact+pin+fresh | RECEIPT PINS OK 3/3 pinned files byte-identical | COMMITTED_OK=2/2 EXACT_OK=2/2 PIN_OK=2/2 FRESH_OK=2/2 PINNED_FILES=3 CONTROL_DRIVER_R91=PASS\n  r90 out: RECEIPT fx-one OK committed+exact+pin+fresh | RECEIPT fx-two OK committed+exact+pin+fresh | COMMITTED_OK=2/2 EXACT_OK=2/2 PIN_OK=2/2 FRESH_OK=2/2 CONTROL_DRIVER_R90=PASS\nOK positive: r90 rc=0 r91 rc=0\nFORGERY_REFUSED=5/6 PRIOR_ACCEPTED=5/6 POSITIVE=pass\n",
+  "direct_cmd": "/usr/bin/python3 -B /fast/scratch/hyaku/chousa-r91/R91ExecMutations/mut/M3/corpus/evidence/round91/control-driver-r91.py verify --root /fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo --work /fast/scratch/hyaku/chousa-r91/R91ExecMutations/w/M3-v --rev 4d00d7519290569879f853d7122b82a927cda1f3 --receipts-rev 67954adc599bd605705d94a1ea7abb582491a907 --expected /fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo/corpus/evidence/round91/controls/expected.tsv --receipts /fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo/corpus/evidence/round91/controls/receipts --pins /fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo/corpus/evidence/round91/instrument-pins.txt",
+  "direct_rc": 0,
+  "direct_out": "BASES root=/fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo repo=/fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo\nRECEIPT c1-gate-r89 OK committed+exact+pin+fresh\nRECEIPT c1-mutants-r89 OK committed+exact+pin+fresh\nRECEIPT c1-harm OK committed+exact+pin+fresh\nRECEIPT c1-harm-setup OK committed+exact+pin+fresh\nRECEIPT c2-prior-landing OK committed+exact+pin+fresh\nRECEIPT c2-prior-controls OK committed+exact+pin+fresh\nRECEIPT PINS OK 6/16 pinned files byte-identical\nCOMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 PINNED_FILES=6 CONTROL_DRIVER_R91=PASS\n"
+ },
+ {
+  "mutant": "M4",
+  "instrument": "control-driver-r91.py",
+  "family": "c1",
+  "edits": [
+   {
+    "old": "HEADER_KEYS = (\"case\", \"expected_exit\", \"exit\", \"computed_against\")",
+    "new": "HEADER_KEYS = (\"case\", \"exit\", \"computed_against\")"
+   }
+  ],
+  "sha_pristine": "49102204fa9698df97f2f8ac467468ee57dff1a358e934d52654821cd880b40c",
+  "sha_mutant": "73837f88f0a4b7f1d10036ebbffd0d123800812d671d794a14ba7cdd81701d52",
+  "sha_restored": "49102204fa9698df97f2f8ac467468ee57dff1a358e934d52654821cd880b40c",
+  "detector_cmd": "/usr/bin/python3 -B /fast/scratch/hyaku/chousa-r91/R91ExecMutations/mut/M4/corpus/evidence/round91/control-forgeries-r91.py --work /fast/scratch/hyaku/chousa-r91/R91ExecMutations/w/M4",
+  "detector_rc": 1,
+  "detector_ok": false,
+  "verdict": "killed",
+  "detector_out": "OK dup-header-exit: r91 rc=1 (HEADER_DUPLICATE:exit), r90 rc=0\nOK dup-header-computed: r91 rc=1 (HEADER_DUPLICATE:computed_against), r90 rc=0\nOK instrument-stub: r91 rc=1 (INSTRUMENT_PIN_MISMATCH:fx-tool.sh), r90 rc=0\nOK expected-swap: r91 rc=1 (INSTRUMENT_PIN_MISMATCH:expected.tsv), r90 rc=0\nFAIL missing-expected_exit: r91 rc=0 (MISSING_HEADER:expected_exit), r90 rc=0\n  r91 out: RECEIPT fx-one OK committed+exact+pin+fresh | RECEIPT fx-two OK committed+exact+pin+fresh | RECEIPT PINS OK 3/3 pinned files byte-identical | COMMITTED_OK=2/2 EXACT_OK=2/2 PIN_OK=2/2 FRESH_OK=2/2 PINNED_FILES=3 CONTROL_DRIVER_R91=PASS\n  r90 out: RECEIPT fx-one OK committed+exact+pin+fresh | RECEIPT fx-two OK committed+exact+pin+fresh | COMMITTED_OK=2/2 EXACT_OK=2/2 PIN_OK=2/2 FRESH_OK=2/2 CONTROL_DRIVER_R90=PASS\nOK extra-receipt: r91 rc=1 (UNSCORED_RECEIPT), r90 rc=0\nOK positive: r90 rc=0 r91 rc=0\nFORGERY_REFUSED=5/6 PRIOR_ACCEPTED=5/6 POSITIVE=pass\n",
+  "direct_cmd": "/usr/bin/python3 -B /fast/scratch/hyaku/chousa-r91/R91ExecMutations/mut/M4/corpus/evidence/round91/control-driver-r91.py verify --root /fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo --work /fast/scratch/hyaku/chousa-r91/R91ExecMutations/w/M4-v --rev 4d00d7519290569879f853d7122b82a927cda1f3 --receipts-rev 67954adc599bd605705d94a1ea7abb582491a907 --expected /fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo/corpus/evidence/round91/controls/expected.tsv --receipts /fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo/corpus/evidence/round91/controls/receipts --pins /fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo/corpus/evidence/round91/instrument-pins.txt",
+  "direct_rc": 0,
+  "direct_out": "BASES root=/fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo repo=/fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo\nRECEIPT c1-gate-r89 OK committed+exact+pin+fresh\nRECEIPT c1-mutants-r89 OK committed+exact+pin+fresh\nRECEIPT c1-harm OK committed+exact+pin+fresh\nRECEIPT c1-harm-setup OK committed+exact+pin+fresh\nRECEIPT c2-prior-landing OK committed+exact+pin+fresh\nRECEIPT c2-prior-controls OK committed+exact+pin+fresh\nRECEIPT PINS OK 6/16 pinned files byte-identical\nCOMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 PINNED_FILES=6 CONTROL_DRIVER_R91=PASS\n"
+ },
+ {
+  "mutant": "M5",
+  "instrument": "curation-r91.py",
+  "family": "c2",
+  "edits": [
+   {
+    "old": "    \"\"\"None when a Located-quotes row is `Qn | S-id | non-empty quote`, else the reason (R1).\"\"\"\n    if len(cells) != 3:",
+    "new": "    \"\"\"None when a Located-quotes row is `Qn | S-id | non-empty quote`, else the reason (R1).\"\"\"\n    return None\n    if len(cells) != 3:"
+   }
+  ],
+  "sha_pristine": "c607c15cb9b9103bf90bef34a120f5430ac02d208cc120ad4bf8b251a2ba425e",
+  "sha_mutant": "f8ad994df86727576f553c6250dee622520207a1eddb675cc9faf0a38d8403a0",
+  "sha_restored": "c607c15cb9b9103bf90bef34a120f5430ac02d208cc120ad4bf8b251a2ba425e",
+  "detector_cmd": "/usr/bin/python3 -B /fast/scratch/hyaku/chousa-r91/R91ExecMutations/mut/M5/corpus/evidence/round91/curation-r91-controls.py --root /fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo --work /fast/scratch/hyaku/chousa-r91/R91ExecMutations/w/M5",
+  "detector_rc": 1,
+  "detector_ok": false,
+  "verdict": "killed",
+  "detector_out": "FAIL positive: r90 CURATION_R90=PASS r91 CURATION_R91=FAIL\nFAIL nonq-row: r91 CURATION_R91=FAIL (LEG_FAIL QSHAPE), r90 CURATION_R90=PASS\n  r91 fails: LEG_FAIL TFREQ 16/17 max_df=3<=3 | LEG_FAIL WITNESS 9/11 bad=2 | LEG_FAIL VERDICT fields_hold=0 legs_ok=9/12\n  fields old: {'UNENTAILED_TERM': '0'} new: {'UNENTAILED_TERM': '0', 'Q_SHAPE_FAIL': '0', 'SOURCE_STATUS_OK': '21/21', 'USED_BY_OK': '21/21', 'TFREQ_OK': '16/17'}\nOK status-rejected: r91 CURATION_R91=FAIL (LEG_FAIL SOURCE), r90 CURATION_R90=PASS\nOK used-by-blank: r91 CURATION_R91=FAIL (LEG_FAIL SOURCE), r90 CURATION_R90=PASS\nOK ubiquitous-warrant: r91 CURATION_R91=FAIL (LEG_FAIL TFREQ), r90 CURATION_R90=PASS\nOK duplicate-count: r90 UNENTAILED_TERM=2 r91 UNENTAILED_TERM=1\nFAIL regression: FORGERY_REFUSED=7/7 PRIOR_REGRESSION=7/7 rc=1\nCONTROLS=FAIL FORGERY_REFUSED=3/4 PRIOR_ACCEPTED=3/4 DUPCOUNT_R90=2 DUPCOUNT_R91=1 PRIOR_REGRESSION=FAIL\n",
+  "direct_cmd": "/usr/bin/python3 -B /fast/scratch/hyaku/chousa-r91/R91ExecMutations/mut/M5/corpus/evidence/round91/curation-r91.py --root /fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo",
+  "direct_rc": 1,
+  "direct_out": "SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20 Q_ROWS=20 Q_SHAPE_FAIL=0 SOURCE_STATUS_OK=20/20 USED_BY_OK=20/20 Q_FLOORS=search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7 WARRANT_OK=17/17 TFREQ_OK=17/17 TFREQ_MAX_DF=3 DUP_QIDS=0 TEACHES_CHECKED=1 TEACHES_FLAGGED=1 TEACHES_UNRESOLVED=0 SUP_CLAUSE_CHECKED=0 SUP_UNRESOLVED=0 LEGS_MEASURED=11/13\nTEACHES_FLAGGED S024 terms=publication,modification disposition=superseded by S031\nVERDICT fields_hold=0 legs_ok=11/13 DETECTOR_WITNESS=9/11\nLEG_FAIL WITNESS 9/11 bad=2\nLEG_FAIL VERDICT fields_hold=0 legs_ok=11/12\nCURATION_R91=FAIL\n"
+ },
+ {
+  "mutant": "M6",
+  "instrument": "curation-r91.py",
+  "family": "c2",
+  "edits": [
+   {
+    "old": "    cells = reg.get(sid)\n    if cells is None:\n        return False, False",
+    "new": "    cells = reg.get(sid)\n    return True, True\n    if cells is None:\n        return False, False"
+   }
+  ],
+  "sha_pristine": "c607c15cb9b9103bf90bef34a120f5430ac02d208cc120ad4bf8b251a2ba425e",
+  "sha_mutant": "332480c967fa731e2f595972bba279031a3cc8991c732bd380e0f67d99c5a22f",
+  "sha_restored": "c607c15cb9b9103bf90bef34a120f5430ac02d208cc120ad4bf8b251a2ba425e",
+  "detector_cmd": "/usr/bin/python3 -B /fast/scratch/hyaku/chousa-r91/R91ExecMutations/mut/M6/corpus/evidence/round91/curation-r91-controls.py --root /fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo --work /fast/scratch/hyaku/chousa-r91/R91ExecMutations/w/M6",
+  "detector_rc": 1,
+  "detector_ok": false,
+  "verdict": "killed",
+  "detector_out": "OK positive: r90 CURATION_R90=PASS r91 CURATION_R91=PASS\nOK nonq-row: r91 CURATION_R91=FAIL (LEG_FAIL QSHAPE), r90 CURATION_R90=PASS\nFAIL status-rejected: r91 CURATION_R91=PASS (LEG_FAIL SOURCE), r90 CURATION_R90=PASS\n  r91 fails: \n  fields old: {'UNENTAILED_TERM': '0'} new: {'UNENTAILED_TERM': '0', 'Q_SHAPE_FAIL': '0', 'SOURCE_STATUS_OK': '20/20', 'USED_BY_OK': '20/20', 'TFREQ_OK': '17/17'}\nFAIL used-by-blank: r91 CURATION_R91=PASS (LEG_FAIL SOURCE), r90 CURATION_R90=PASS\n  r91 fails: \n  fields old: {'UNENTAILED_TERM': '0'} new: {'UNENTAILED_TERM': '0', 'Q_SHAPE_FAIL': '0', 'SOURCE_STATUS_OK': '20/20', 'USED_BY_OK': '20/20', 'TFREQ_OK': '17/17'}\nOK ubiquitous-warrant: r91 CURATION_R91=FAIL (LEG_FAIL TFREQ), r90 CURATION_R90=PASS\nOK duplicate-count: r90 UNENTAILED_TERM=2 r91 UNENTAILED_TERM=1\nFAIL regression: FORGERY_REFUSED=7/7 PRIOR_REGRESSION=7/7 rc=1\nCONTROLS=FAIL FORGERY_REFUSED=2/4 PRIOR_ACCEPTED=2/4 DUPCOUNT_R90=2 DUPCOUNT_R91=1 PRIOR_REGRESSION=FAIL\n",
+  "direct_cmd": "/usr/bin/python3 -B /fast/scratch/hyaku/chousa-r91/R91ExecMutations/mut/M6/corpus/evidence/round91/curation-r91.py --root /fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo",
+  "direct_rc": 0,
+  "direct_out": "SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20 Q_ROWS=20 Q_SHAPE_FAIL=0 SOURCE_STATUS_OK=20/20 USED_BY_OK=20/20 Q_FLOORS=search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7 WARRANT_OK=17/17 TFREQ_OK=17/17 TFREQ_MAX_DF=3 DUP_QIDS=0 TEACHES_CHECKED=1 TEACHES_FLAGGED=1 TEACHES_UNRESOLVED=0 SUP_CLAUSE_CHECKED=0 SUP_UNRESOLVED=0 LEGS_MEASURED=13/13\nTEACHES_FLAGGED S024 terms=publication,modification disposition=superseded by S031\nVERDICT fields_hold=1 legs_ok=13/13 DETECTOR_WITNESS=11/11\nCURATION_R91=PASS\n"
+ },
+ {
+  "mutant": "M7",
+  "instrument": "curation-r91.py",
+  "family": "c2",
+  "edits": [
+   {
+    "old": "DF_MAX = 3",
+    "new": "DF_MAX = 99"
+   }
+  ],
+  "sha_pristine": "c607c15cb9b9103bf90bef34a120f5430ac02d208cc120ad4bf8b251a2ba425e",
+  "sha_mutant": "a80fb8fde0fce8f156ba7cbe4513ee568f28e98ee59a64c5eb637385ed8c7f91",
+  "sha_restored": "c607c15cb9b9103bf90bef34a120f5430ac02d208cc120ad4bf8b251a2ba425e",
+  "detector_cmd": "/usr/bin/python3 -B /fast/scratch/hyaku/chousa-r91/R91ExecMutations/mut/M7/corpus/evidence/round91/curation-r91-controls.py --root /fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo --work /fast/scratch/hyaku/chousa-r91/R91ExecMutations/w/M7",
+  "detector_rc": 1,
+  "detector_ok": false,
+  "verdict": "killed",
+  "detector_out": "OK positive: r90 CURATION_R90=PASS r91 CURATION_R91=PASS\nOK nonq-row: r91 CURATION_R91=FAIL (LEG_FAIL QSHAPE), r90 CURATION_R90=PASS\nOK status-rejected: r91 CURATION_R91=FAIL (LEG_FAIL SOURCE), r90 CURATION_R90=PASS\nOK used-by-blank: r91 CURATION_R91=FAIL (LEG_FAIL SOURCE), r90 CURATION_R90=PASS\nFAIL ubiquitous-warrant: r91 CURATION_R91=PASS (LEG_FAIL TFREQ), r90 CURATION_R90=PASS\n  r91 fails: \n  fields old: {'UNENTAILED_TERM': '0'} new: {'UNENTAILED_TERM': '0', 'Q_SHAPE_FAIL': '0', 'SOURCE_STATUS_OK': '20/20', 'USED_BY_OK': '20/20', 'TFREQ_OK': '18/18'}\nOK duplicate-count: r90 UNENTAILED_TERM=2 r91 UNENTAILED_TERM=1\nFAIL regression: FORGERY_REFUSED=7/7 PRIOR_REGRESSION=7/7 rc=1\nCONTROLS=FAIL FORGERY_REFUSED=3/4 PRIOR_ACCEPTED=3/4 DUPCOUNT_R90=2 DUPCOUNT_R91=1 PRIOR_REGRESSION=FAIL\n",
+  "direct_cmd": "/usr/bin/python3 -B /fast/scratch/hyaku/chousa-r91/R91ExecMutations/mut/M7/corpus/evidence/round91/curation-r91.py --root /fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo",
+  "direct_rc": 0,
+  "direct_out": "SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20 Q_ROWS=20 Q_SHAPE_FAIL=0 SOURCE_STATUS_OK=20/20 USED_BY_OK=20/20 Q_FLOORS=search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7 WARRANT_OK=17/17 TFREQ_OK=17/17 TFREQ_MAX_DF=3 DUP_QIDS=0 TEACHES_CHECKED=1 TEACHES_FLAGGED=1 TEACHES_UNRESOLVED=0 SUP_CLAUSE_CHECKED=0 SUP_UNRESOLVED=0 LEGS_MEASURED=13/13\nTEACHES_FLAGGED S024 terms=publication,modification disposition=superseded by S031\nVERDICT fields_hold=1 legs_ok=13/13 DETECTOR_WITNESS=11/11\nCURATION_R91=PASS\n"
+ },
+ {
+  "mutant": "M8",
+  "instrument": "curation-r91.py",
+  "family": "c2",
+  "edits": [
+   {
+    "old": "            for term in unentailed_terms(cells, joined):\n                unentailed.append((rel, cells[0], term))",
+    "new": "            for term in DEFECT_TERMS:\n                if unentailed_terms(cells, joined):\n                    unentailed.append((rel, cells[0], term))"
+   }
+  ],
+  "sha_pristine": "c607c15cb9b9103bf90bef34a120f5430ac02d208cc120ad4bf8b251a2ba425e",
+  "sha_mutant": "14a01d55e8f1034b65c0d2ae20c2f3145f44cb5cac315e384c879b8ef10d4814",
+  "sha_restored": "c607c15cb9b9103bf90bef34a120f5430ac02d208cc120ad4bf8b251a2ba425e",
+  "detector_cmd": "/usr/bin/python3 -B /fast/scratch/hyaku/chousa-r91/R91ExecMutations/mut/M8/corpus/evidence/round91/curation-r91-controls.py --root /fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo --work /fast/scratch/hyaku/chousa-r91/R91ExecMutations/w/M8",
+  "detector_rc": 1,
+  "detector_ok": false,
+  "verdict": "killed",
+  "detector_out": "OK positive: r90 CURATION_R90=PASS r91 CURATION_R91=PASS\nOK nonq-row: r91 CURATION_R91=FAIL (LEG_FAIL QSHAPE), r90 CURATION_R90=PASS\nOK status-rejected: r91 CURATION_R91=FAIL (LEG_FAIL SOURCE), r90 CURATION_R90=PASS\nOK used-by-blank: r91 CURATION_R91=FAIL (LEG_FAIL SOURCE), r90 CURATION_R90=PASS\nOK ubiquitous-warrant: r91 CURATION_R91=FAIL (LEG_FAIL TFREQ), r90 CURATION_R90=PASS\nFAIL duplicate-count: r90 UNENTAILED_TERM=2 r91 UNENTAILED_TERM=2\nFAIL regression: FORGERY_REFUSED=7/7 PRIOR_REGRESSION=7/7 rc=1\nCONTROLS=FAIL FORGERY_REFUSED=4/4 PRIOR_ACCEPTED=4/4 DUPCOUNT_R90=2 DUPCOUNT_R91=2 PRIOR_REGRESSION=FAIL\n",
+  "direct_cmd": "/usr/bin/python3 -B /fast/scratch/hyaku/chousa-r91/R91ExecMutations/mut/M8/corpus/evidence/round91/curation-r91.py --root /fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo",
+  "direct_rc": 0,
+  "direct_out": "SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20 Q_ROWS=20 Q_SHAPE_FAIL=0 SOURCE_STATUS_OK=20/20 USED_BY_OK=20/20 Q_FLOORS=search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7 WARRANT_OK=17/17 TFREQ_OK=17/17 TFREQ_MAX_DF=3 DUP_QIDS=0 TEACHES_CHECKED=1 TEACHES_FLAGGED=1 TEACHES_UNRESOLVED=0 SUP_CLAUSE_CHECKED=0 SUP_UNRESOLVED=0 LEGS_MEASURED=13/13\nTEACHES_FLAGGED S024 terms=publication,modification disposition=superseded by S031\nVERDICT fields_hold=1 legs_ok=13/13 DETECTOR_WITNESS=11/11\nCURATION_R91=PASS\n"
+ },
+ {
+  "mutant": "M9",
+  "instrument": "skill-tally-r91.py",
+  "family": "c3",
+  "edits": [
+   {
+    "old": "    derived_env = (min(bashenv), max(bashenv)) if bashenv else None\n    derived_ovr = (min(bashpin), max(bashpin)) if bashpin else None",
+    "new": "    derived_env = claimed_env if claimed_env is not None else ((min(bashenv), max(bashenv)) if bashenv else None)\n    derived_ovr = claimed_ovr if claimed_ovr is not None else ((min(bashpin), max(bashpin)) if bashpin else None)"
+   }
+  ],
+  "sha_pristine": "cc2d5c3b946c503f3dfa060802796a24e0491ea3744528ed5c37af8fc3e9e513",
+  "sha_mutant": "774e5ef93365ae4d88719b0a4cfc734cf857cb7a008b5d8ae8429bc15f0087eb",
+  "sha_restored": "cc2d5c3b946c503f3dfa060802796a24e0491ea3744528ed5c37af8fc3e9e513",
+  "detector_cmd": "/usr/bin/python3 -B /fast/scratch/hyaku/chousa-r91/R91ExecMutations/mut/M9/corpus/evidence/round91/skill-tally-r91-controls.py --root /fast/scratch/hyaku/chousa-r91/R91ExecMutations/fix/landing --work /fast/scratch/hyaku/chousa-r91/R91ExecMutations/w/M9",
+  "detector_rc": 1,
+  "detector_ok": false,
+  "verdict": "killed",
+  "detector_out": "FAIL old-prose: r90 TALLY_ROWS=9 STALE_TALLIES=0/9 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=3 SKILL_TALLY_R90=PASS, r91 SKILL_TALLY_R91=PASS\n  r91: CASE_RANGE_FINDING MISLABELED=6 indices=276,277,278,279,280,281 | TALLY_ROWS=9 STALE_TALLIES=0/9 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=3 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=276-283 CASE_RANGE_OK=2/2 MISLABELED=6 LEGS=2/2\nOK stale-tally: r90 TALLY_ROWS=9 STALE_TALLIES=1/9 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=3 SKILL_TALLY_R90=FAIL (rc=1), r91 SKILL_TALLY_R91=FAIL (rc=1)\nCONTROLS=FAIL OLDPROSE_REFUSED=0/1 PRIOR_ACCEPTED=1/1 STALE_REFUSED_BOTH=1/1\n",
+  "direct_cmd": "/usr/bin/python3 -B /fast/scratch/hyaku/chousa-r91/R91ExecMutations/mut/M9/corpus/evidence/round91/skill-tally-r91.py --root /fast/scratch/hyaku/chousa-r91/R91ExecMutations/fix/landing --selftest /fast/scratch/hyaku/chousa-r91/R91ExecMutations/fix/landing/corpus/evidence/round91/controls/selftest-r91.txt",
+  "direct_rc": 0,
+  "direct_out": "TALLY_ROWS=9 STALE_TALLIES=0/9 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=3 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 LEGS=2/2\nSKILL_TALLY_R91=PASS\n"
+ },
+ {
+  "mutant": "M10",
+  "instrument": "skill-tally-r91.py",
+  "family": "c3",
+  "edits": [
+   {
+    "old": "    ok_ranges = not range_codes and claimed_env == derived_env and claimed_ovr == derived_ovr",
+    "new": "    ok_ranges = True"
+   }
+  ],
+  "sha_pristine": "cc2d5c3b946c503f3dfa060802796a24e0491ea3744528ed5c37af8fc3e9e513",
+  "sha_mutant": "509625cb5bffb9c925766ede3b9b502844bdb78e49c75dc0ab4ff0422db3974a",
+  "sha_restored": "cc2d5c3b946c503f3dfa060802796a24e0491ea3744528ed5c37af8fc3e9e513",
+  "detector_cmd": "/usr/bin/python3 -B /fast/scratch/hyaku/chousa-r91/R91ExecMutations/mut/M10/corpus/evidence/round91/skill-tally-r91-controls.py --root /fast/scratch/hyaku/chousa-r91/R91ExecMutations/fix/landing --work /fast/scratch/hyaku/chousa-r91/R91ExecMutations/w/M10",
+  "detector_rc": 1,
+  "detector_ok": false,
+  "verdict": "killed",
+  "detector_out": "FAIL old-prose: r90 TALLY_ROWS=9 STALE_TALLIES=0/9 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=3 SKILL_TALLY_R90=PASS, r91 SKILL_TALLY_R91=PASS\n  r91: ash-pin-override claimed=276-283 derived=282-283 | CASE_RANGE_FINDING MISLABELED=6 indices=276,277,278,279,280,281 | TALLY_ROWS=9 STALE_TALLIES=0/9 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=3 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=1/2 MISLABELED=6 LEGS=2/2\nOK stale-tally: r90 TALLY_ROWS=9 STALE_TALLIES=1/9 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=3 SKILL_TALLY_R90=FAIL (rc=1), r91 SKILL_TALLY_R91=FAIL (rc=1)\nCONTROLS=FAIL OLDPROSE_REFUSED=0/1 PRIOR_ACCEPTED=1/1 STALE_REFUSED_BOTH=1/1\n",
+  "direct_cmd": "/usr/bin/python3 -B /fast/scratch/hyaku/chousa-r91/R91ExecMutations/mut/M10/corpus/evidence/round91/skill-tally-r91.py --root /fast/scratch/hyaku/chousa-r91/R91ExecMutations/fix/landing --selftest /fast/scratch/hyaku/chousa-r91/R91ExecMutations/fix/landing/corpus/evidence/round91/controls/selftest-r91.txt",
+  "direct_rc": 0,
+  "direct_out": "TALLY_ROWS=9 STALE_TALLIES=0/9 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=3 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 LEGS=2/2\nSKILL_TALLY_R91=PASS\n"
+ },
+ {
+  "mutant": "M11",
+  "instrument": "control-driver-r91.py",
+  "family": "c1",
+  "edits": [
+   {
+    "old": "    normlines = [\" \".join(ln.split()) for ln in lines]",
+    "new": "    normalized_lines = [\" \".join(ln.split()) for ln in lines]"
+   },
+   {
+    "old": "            if not any(phrase in ln for ln in normlines):",
+    "new": "            if not any(phrase in ln for ln in normalized_lines):"
+   }
+  ],
+  "sha_pristine": "49102204fa9698df97f2f8ac467468ee57dff1a358e934d52654821cd880b40c",
+  "sha_mutant": "5007c7982693b1d41cc1ac510e76eef2bb11caeaad5edd1a71256f08b18d02b4",
+  "sha_restored": "49102204fa9698df97f2f8ac467468ee57dff1a358e934d52654821cd880b40c",
+  "detector_cmd": "/usr/bin/python3 -B /fast/scratch/hyaku/chousa-r91/R91ExecMutations/mut/M11/corpus/evidence/round91/control-forgeries-r91.py --work /fast/scratch/hyaku/chousa-r91/R91ExecMutations/w/M11",
+  "detector_rc": 0,
+  "detector_ok": true,
+  "verdict": "survived",
+  "detector_out": "OK dup-header-exit: r91 rc=1 (HEADER_DUPLICATE:exit), r90 rc=0\nOK dup-header-computed: r91 rc=1 (HEADER_DUPLICATE:computed_against), r90 rc=0\nOK instrument-stub: r91 rc=1 (INSTRUMENT_PIN_MISMATCH:fx-tool.sh), r90 rc=0\nOK expected-swap: r91 rc=1 (INSTRUMENT_PIN_MISMATCH:expected.tsv), r90 rc=0\nOK missing-expected_exit: r91 rc=1 (MISSING_HEADER:expected_exit), r90 rc=0\nOK extra-receipt: r91 rc=1 (UNSCORED_RECEIPT), r90 rc=0\nOK positive: r90 rc=0 r91 rc=0\nFORGERY_REFUSED=6/6 PRIOR_ACCEPTED=6/6 POSITIVE=pass\n",
+  "direct_cmd": "/usr/bin/python3 -B /fast/scratch/hyaku/chousa-r91/R91ExecMutations/mut/M11/corpus/evidence/round91/control-driver-r91.py verify --root /fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo --work /fast/scratch/hyaku/chousa-r91/R91ExecMutations/w/M11-v --rev 4d00d7519290569879f853d7122b82a927cda1f3 --receipts-rev 67954adc599bd605705d94a1ea7abb582491a907 --expected /fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo/corpus/evidence/round91/controls/expected.tsv --receipts /fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo/corpus/evidence/round91/controls/receipts --pins /fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo/corpus/evidence/round91/instrument-pins.txt",
+  "direct_rc": 0,
+  "direct_out": "BASES root=/fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo repo=/fast/scratch/hyaku/chousa-r91/R91ExecMutations/repo\nRECEIPT c1-gate-r89 OK committed+exact+pin+fresh\nRECEIPT c1-mutants-r89 OK committed+exact+pin+fresh\nRECEIPT c1-harm OK committed+exact+pin+fresh\nRECEIPT c1-harm-setup OK committed+exact+pin+fresh\nRECEIPT c2-prior-landing OK committed+exact+pin+fresh\nRECEIPT c2-prior-controls OK committed+exact+pin+fresh\nRECEIPT PINS OK 6/16 pinned files byte-identical\nCOMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 PINNED_FILES=6 CONTROL_DRIVER_R91=PASS\n"
+ }
+]

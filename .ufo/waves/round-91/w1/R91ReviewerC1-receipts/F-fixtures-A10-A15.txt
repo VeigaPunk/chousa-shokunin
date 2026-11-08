@@ -1,0 +1,59 @@
+    git toplevel check: /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/restore == /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/restore -> True
+    X = 162374ba2156a544c31578d3f266151909296bc4  Y = 6875338dfca61e441363ee4fa35731e2ab1fc441
+    committed b.txt: '# case=b\n# expected_exit=0\n# exit=0\n# computed_against=162374ba2156a544c31578d3f266151909296bc4\nB=0\nmarker=committed\n'
+
+### A10a-with-repo-restore: exit=0
+    BASES root=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/restore repo=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/restore
+    RECEIPT a OK committed+exact+pin+fresh
+    RECEIPT b OK committed+exact+pin+fresh
+    RECEIPT PINS OK 3/3 pinned files byte-identical
+    RECEIPT SELF_PIN OK rev=162374ba2156a544c31578d3f266151909296bc4 receipts_rev=6875338dfca61e441363ee4fa35731e2ab1fc441
+    COMMITTED_OK=2/2 EXACT_OK=1/2 PIN_OK=2/2 FRESH_OK=2/2 PINNED_FILES=3 CONTROL_DRIVER_R91=PASS
+    final b.txt equals committed bytes: True
+    git toplevel check: /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/norestore == /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/norestore -> True
+    X = 94203fbee1ce05ce1fa11f79037fa227dc45e79c  Y = c006cc671f6c49a67bbe5205ca4c19afb07373b7
+    committed b.txt: '# case=b\n# expected_exit=0\n# exit=0\n# computed_against=94203fbee1ce05ce1fa11f79037fa227dc45e79c\nB=0\nmarker=committed\n'
+
+### A10b-with-repo-norestore: exit=1
+    BASES root=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/norestore-with-repo repo=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/norestore-with-repo
+    RECEIPT a OK committed+exact+pin+fresh
+    RECEIPT b OK committed+exact+pin+fresh
+    RECEIPT PINS OK 3/3 pinned files byte-identical
+    RECEIPT SELF_PIN FINDING SELF_DRIFT corpus/evidence/round91/controls/receipts/b.txt@c006cc671f6c49a67bbe5205ca4c19afb07373b7
+    COMMITTED_OK=2/2 EXACT_OK=2/2 PIN_OK=2/2 FRESH_OK=2/2 PINNED_FILES=3 CONTROL_DRIVER_R91=FAIL
+    cp b.txt after with-repo run says B= ['B=1']
+
+### A10c-without-repo-norestore: exit=0
+    BASES root=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/norestore-no-repo repo=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/norestore-no-repo
+    RECEIPT a OK committed+exact+pin+fresh
+    RECEIPT b OK committed+exact+pin+fresh
+    RECEIPT PINS OK 3/3 pinned files byte-identical
+    COMMITTED_OK=2/2 EXACT_OK=2/2 PIN_OK=2/2 FRESH_OK=2/2 PINNED_FILES=3 CONTROL_DRIVER_R91=PASS
+    cp2 b.txt after without-repo run says B= ['B=1']
+
+### A15-exact-gap-no-repo: exit=0
+    BASES root=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/exact-gap repo=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/exact-gap
+    RECEIPT a OK committed+exact+pin+fresh
+    RECEIPT b OK committed+exact+pin+fresh
+    RECEIPT PINS OK 3/3 pinned files byte-identical
+    COMMITTED_OK=2/2 EXACT_OK=1/2 PIN_OK=2/2 FRESH_OK=2/2 PINNED_FILES=3 CONTROL_DRIVER_R91=PASS
+    b.txt after run says B= ['B=0']
+    instrument_rel(row) = data.py
+
+### A13a-data-operand-first: exit=0
+    BASES root=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/data-first repo=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/data-first
+    RECEIPT c1-x OK committed+exact+pin+fresh
+    RECEIPT PINS OK 2/2 pinned files byte-identical
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 PINNED_FILES=2 CONTROL_DRIVER_R91=PASS
+
+### A13b-executed-script-substituted: real.sh 41d483d63a16.. -> 579d4abd5742.. exit=0
+    BASES root=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/data-first repo=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/data-first
+    RECEIPT c1-x OK committed+exact+pin+fresh
+    RECEIPT PINS OK 2/2 pinned files byte-identical
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 PINNED_FILES=2 CONTROL_DRIVER_R91=PASS
+
+### A14-computed-against-other-rev: exit=1
+    BASES root=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/pin-mismatch repo=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/pin-mismatch
+    RECEIPT c1-x FINDING PIN_MISMATCH:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+    RECEIPT PINS OK 2/2 pinned files byte-identical
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=0/1 FRESH_OK=1/1 PINNED_FILES=2 CONTROL_DRIVER_R91=FAIL

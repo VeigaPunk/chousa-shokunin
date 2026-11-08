@@ -1,0 +1,27 @@
+seat: R91ExecC1Repro
+scratch: /fast/scratch/hyaku/chousa-r91/R91ExecC1Repro (deleted at yield)
+clone: /fast/scratch/hyaku/chousa-r91/R91ExecC1Repro/repo at 67954adc599bd605705d94a1ea7abb582491a907
+
+a) cd $S/repo && python3 -B corpus/evidence/round91/control-driver-r91.py verify --root . --repo . --rev 4d00d7519290569879f853d7122b82a927cda1f3 --receipts-rev 67954adc599bd605705d94a1ea7abb582491a907 --work $S/verify
+   exit: 0
+   receipt: a-verify-both-bases-clean-clone.stdout
+
+b) cd $S/repo && python3 -B corpus/evidence/round91/control-forgeries-r91.py --work $S/forge
+   exit: 0
+   receipt: b-forgeries.stdout
+
+c-literal) cd $S/repo && python3 -B corpus/evidence/round91/control-driver-r91.py verify --root /home/vgpnk/Projects/shokunin/chousa-shokunin --repo $S/repo --rev 4d00d7519290569879f853d7122b82a927cda1f3 --receipts-rev 67954adc599bd605705d94a1ea7abb582491a907 --work $S/verify2
+   exit: 1
+   receipt: c-literal-command.stdout
+
+c-intent) cd $S/repo && python3 -B /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round91/control-driver-r91.py verify --root /home/vgpnk/Projects/shokunin/chousa-shokunin --repo $S/repo --rev 4d00d7519290569879f853d7122b82a927cda1f3 --receipts-rev 67954adc599bd605705d94a1ea7abb582491a907 --work $S/verify-c2
+   exit: 0
+   receipt: c-intent-lane-driver.stdout, c-intent-lane-driver-cwd-clone.stdout
+
+matrix-b) cd $S/repo && python3 -B /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/evidence/round91/control-driver-r91.py verify --root /home/vgpnk/Projects/shokunin/chousa-shokunin --repo /home/vgpnk/Projects/shokunin/chousa-shokunin --rev 4d00d7519290569879f853d7122b82a927cda1f3 --receipts-rev 67954adc599bd605705d94a1ea7abb582491a907 --work $S/verify-B
+   exit: 0
+
+matrix-e) cd $S/repo && python3 -B $S/repo/corpus/evidence/round91/control-driver-r91.py verify --root $S/repo --repo /home/vgpnk/Projects/shokunin/chousa-shokunin --rev 4d00d7519290569879f853d7122b82a927cda1f3 --receipts-rev 67954adc599bd605705d94a1ea7abb582491a907 --work $S/verify-E
+   exit: 0
+
+d) sha256sum corpus/evidence/round91/controls/receipts/*.txt before/after (a); diff exit 0

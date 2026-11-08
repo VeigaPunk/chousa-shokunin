@@ -2609,3 +2609,41 @@ passing record rather than through prose.
   required `--work`; a dispatch command form whose `--repo` base breaks `self_pin`. QUALITY 196–202 cite them.
 - Gate selftest `PASS (283 cases, 0 skipped)`; `PREFLIGHT=8/8 FAILED=none ENV=none SKIPPED=none`;
   `tools/research-gate.sh` and `tools/gate-records.py` byte-identical at base and tip.
+## Round 91 — receipt headers are single-valued and the instruments pinned; the quote table is counted by shape, source status and term frequency; the case range re-derives from the tool's names (2026-11-08)
+
+- Input: round 90's non-author spot-check routed seven items (`corpus/lessons/round-90-verifier-spotcheck.md`); this
+  round closes 1 (C2 reclaim: non-`Q`/duplicate rows, source status, term-frequency warrant), 2 (C1 residues: duplicate
+  headers, instrument pins, `SELF_PIN` revisions, path base), 3 (harm base-vs-head delta), 5 (freeze-pin plan entry),
+  6 (citation precision) and 7 (clause (a) per row); item 4's ledger classification is carried into this round's
+  ledger. §10 assimilation: none — no `merge/chousa/` byte was adopted; `considerthese/2026-11-07.md` proposal 1 is
+  applied to the receipt HEADER surface and the quote-row shape.
+- Base `265b8633`; freeze `4d00d751` (F3); receipts carrier `67954adc` (C3). Two earlier freeze/carrier pairs
+  (`160b658b`/`d02a950f`, `37831ce8`/`b8fc99a1`) were superseded before any scored run and before the wave — a
+  transcribed `--repo` loss, an unscored-receipt parse test, and two C1 clauses wider than the code
+  (plan §§Pre-wave freeze repair 1–2, lesson Mistakes 1–2 and 8).
+- Before: the r90 driver accepts all six forgery classes (`PRIOR_ACCEPTED=6/6`); the r90 curation counter accepts
+  four tree forgeries (`PRIOR_ACCEPTED=4/4`) and appends one unentailed row twice (`UNENTAILED_TERM=2`); r90 prints
+  `SKILL_TALLY_R90=PASS` on the base prose whose `bash-pin-override` range (276–283) names six cases that are not in
+  that family.
+- After: C1 `CONTROL_DRIVER_R91=PASS` (`COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6`, `SELF_PIN OK
+  rev=F3 receipts_rev=C3`) and `FORGERY_REFUSED=6/6 PRIOR_ACCEPTED=6/6 POSITIVE=pass`; C2 `CURATION_R91=PASS`
+  (`LEGS_MEASURED=13/13 Q_ROWS=20 Q_SHAPE_FAIL=0 SOURCE_STATUS_OK=20/20 USED_BY_OK=20/20 TFREQ_OK=17/17
+  TFREQ_MAX_DF=3 UNENTAILED_TERM=0 WARRANT_OK=17/17`) and `CONTROLS=PASS FORGERY_REFUSED=4/4 PRIOR_ACCEPTED=4/4
+  DUPCOUNT_R90=2 DUPCOUNT_R91=1 PRIOR_REGRESSION=7/7`; C3 `SKILL_TALLY_R91=PASS` (`TALLY_ROWS=9 STALE_TALLIES=0/9
+  CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 LEGS=2/2`) and
+  `CONTROLS=PASS OLDPROSE_REFUSED=1/1 PRIOR_ACCEPTED=1/1 STALE_REFUSED_BOTH=1/1`. Each claim verifies on the wording
+  narrowed by the wave's 21 amendments (`plans/round-91.md`). Raw receipts under `corpus/evidence/round91/after/`.
+- SKILL.md: one clause repaired — `r39 bash-pin cases 273–275 (pin-bashenv, drift-bashenv) and r82 pin-override cases
+  276–283, of which bash-pin-override cases 282–283`. No other SKILL.md line moves.
+- Registry: 219 → 219 rows; S070 re-opened (installed `sha256sum(1)`, digest unchanged), S001 re-opened with a rev-form
+  Gate record, S221 attempted and refused (`curl rc 28`, no bytes; no row). Census exit 0 at start and end with the
+  same five pre-existing `W04` warnings.
+- Wave w1: 12 seats (3 executor, 3 reviewer, 1 critic, 1 mutation-tester, 1 sentinel, 1 connector, 1 scout,
+  1 revenger; attack share 8/12 = 67%), 0 dead; results and the falsification ledger under
+  `.ufo/waves/round-91/`. The wave fired on all three claims; the load-bearing findings are the instrument
+  substitution and the unpinned pins file (C1), the first-cell filter/`used-by` substring/df number (C2), and the
+  prefix rename/document-wide clause (C3) — all published as named limits and routed, not filed over.
+- Mined mistakes: a lost `--repo` in a frozen row; an unscored-receipt test that flagged raw evidence; a frequency
+  guard whose document set could not fail it; a dead summary expression; a verdict parser keyed on line start; a prior
+  battery's parser treated as an interface; a placeholder detail expression; two clauses wider than the code; a quote
+  word count miscounted again; a frozen command missing `--work`; a last-wins pin table and an unpinned pins file.

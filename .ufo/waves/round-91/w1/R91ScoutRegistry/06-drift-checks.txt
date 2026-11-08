@@ -1,0 +1,91 @@
+# R91ScoutRegistry receipt 6 - drift checks on the S070 citation path and the plan's S221 receipt
+# repo clone: /fast/scratch/hyaku/chousa-r91/R91ScoutRegistry/repo @ 67954adc599bd605705d94a1ea7abb582491a907
+
+## D1: does any mined row supersede S070?
+$ grep -n 'supersedes S070' corpus/SOURCES.md
+83:| S073 | GNU coreutils `sha256sum(1)` manual — `/usr/share/man/man1/sha256sum.1.gz` (canonical URL `https://www.gnu.org/software/coreutils/manual/coreutils.html#cksum-c`, printed as the roff tty-link at the anchored line; not fetched) | docs | A | the documented digest text and `--check` semantics of the installed coreutils `sha256sum` — the same scope as S070; this row corrects S070's anchor label only | `supersedes S070 —` the `-c, --check` entry is a DESCRIPTION `.TP` item, not a SYNOPSIS line: `.SH SYNOPSIS` line 5 (body 6–7, no option entries), `.SH DESCRIPTION` line 8, `-c, --check` at decompressed lines 19–20 (quote at line 20); coreutils 9.12 (September 2026), installed `coreutils 9.12-2`; file SHA-256 `93c17dffe9f25d56291113d566a7de3ff65c29f8cc32c381801c49cf27e8403f` (re-opened locally 2026-10-24) | supersedes S070 — the anchor label `SYNOPSIS -c, --check` is wrong; lines 19–20 sit under DESCRIPTION. Offsets and quote unchanged: "read checksums from the FILEs and check them" (8 words at line 20). | mined | 2026-10-24 | on-release | corpus/knowledge/receipt-binding-r38.md |
+exit=0
+
+## D2: S073's cells (the superseding row)
+  cell[0] id: S073
+  cell[1] source: GNU coreutils `sha256sum(1)` manual — `/usr/share/man/man1/sha256sum.1.gz` (canonical URL `https://www.gnu.org/software/coreutils/manual/coreutils.html#cksum-c`, printed as the roff tty-link at the anchored line; not fetched)
+  cell[2] kind: docs
+  cell[3] tier: A
+  cell[4] scope: the documented digest text and `--check` semantics of the installed coreutils `sha256sum` — the same scope as S070; this row corrects S070's anchor label only
+  cell[5] anchor: `supersedes S070 —` the `-c, --check` entry is a DESCRIPTION `.TP` item, not a SYNOPSIS line: `.SH SYNOPSIS` line 5 (body 6–7, no option entries), `.SH DESCRIPTION` line 8, `-c, --check` at decompressed lines 19–20 (quote at line 20); coreutils 9.12 (September 2026), installed `coreutils 9.12-2`; file SHA-256 `93c17dff
+  cell[6] teaches: supersedes S070 — the anchor label `SYNOPSIS -c, --check` is wrong; lines 19–20 sit under DESCRIPTION. Offsets and quote unchanged: "read checksums from the FILEs and check them" (8 words at line 20).
+  cell[7] status: mined
+  cell[8] opened: 2026-10-24
+  cell[9] recheck: on-release
+  cell[10] used-by: corpus/knowledge/receipt-binding-r38.md
+exit=0
+
+## D3: supersession edges and the S-ids the claims files cite
+$ grep -oE 'supersedes S[0-9]+' corpus/SOURCES.md | sort -u
+supersedes S019 supersedes S020 supersedes S021 supersedes S022 supersedes S024 supersedes S070 supersedes S171 supersedes S196 supersedes S197 supersedes S198
+exit=0
+$ grep -ohE '\bS[0-9]{3}\b' corpus/evidence/round{8,9}*/claims.md | sort -u
+S008 S009 S017 S018 S021 S023 S024 S026 S028 S031 S070 S196 S197 S198 S199 S200 S201 S202 S203 S204 S205 S206 S207 S208 S209 S210 S211 S212 S213 S214 S215 S216 S218 S220 S901 S904 S999
+exit=0
+
+## D4: S070's used-by cell vs the round-91 claims file that cites it
+  S070 used-by cell[10] = 'corpus/knowledge/engine-swap-canary-r36.md, corpus/knowledge/claim-pin-provenance-r37.md'
+exit=0
+$ grep -n 'S070' corpus/evidence/round91/claims.md
+33:Source: **S070** (the installed `sha256sum(1)` page, re-opened this round, quote "Print or check SHA256 (256-bit)
+exit=0
+  precedent rows whose used-by names a citing claims file:
+    S166 -> corpus/evidence/round69/claims.md
+    S167 -> corpus/evidence/round69/claims.md
+    S168 -> corpus/evidence/round70/claims.md
+    S169 -> corpus/evidence/round70/claims.md
+    S170 -> corpus/evidence/round70/claims.md
+    S171 -> corpus/evidence/round70/claims.md
+    S172 -> corpus/evidence/round70/claims.md
+    S173 -> corpus/evidence/round71/claims.md
+    S174 -> corpus/evidence/round71/claims.md
+    S175 -> corpus/evidence/round71/claims.md
+    S176 -> corpus/lessons/round-70.md, corpus/evidence/round71/claims.md
+    S178 -> corpus/evidence/round72/claims.md
+    S179 -> corpus/evidence/round72/claims.md
+    S216 -> corpus/evidence/round86/claims.md, corpus/evidence/round87/claims.md, corpus/evidence/round89/claims.md
+    S218 -> corpus/evidence/round87/claims.md, corpus/evidence/round89/claims.md
+    S220 -> corpus/evidence/round90/claims.md
+exit=0
+  counter-examples (rows cited by an earlier claims file whose used-by omits it):
+    S023 status= 'mined' used-by = 'corpus/knowledge/search-transparency-reporting-r84.md'
+    S031 status= 'mined' used-by = 'corpus/knowledge/provenance-recording-r85.md'
+    S215 status= 'mined' used-by = 'corpus/knowledge/provenance-recording-r85.md'
+exit=0
+
+## D5: the plan's cited refetch.tsv row, at the freeze and at the carrier
+$ git show 4d00d751:corpus/evidence/round57/refetch.tsv | grep -c 'S221'   (freeze F3)
+0   (grep exit=1; 1 = no match)
+$ git show 67954adc:corpus/evidence/round57/refetch.tsv | grep -c 'S221'   (carrier C3)
+0   (grep exit=1; 1 = no match)
+$ grep -n 'S221' plans/round-91.md
+31:"Print or check SHA256 (256-bit) checksums.") grounds C1's digest-pin rule; the planned new row S221 (the IR
+33:`S221 … 28 000 - -`), so no S221 row is written. One sourced claim: C1 cites S070.
+55:fact — the attempted S221 row failed to fetch); the round-74 order oracle, QUALITY 173's record form and the r80
+exit=0
+
+## D6: egress table commit vs the fetch timestamp (order)
+egress commit 7b19dd0b96f69a2167cb17e31cb998643d1a1b8d 2026-11-08T08:05:08-03:00
+exit=0
+fetch row fetched_utc: 2026-11-08T11:05:29Z (lane working tree refetch.tsv line 189)
+
+## D7: S070 quote word count (the lesson says 7 words)
+$ zcat /usr/share/man/man1/sha256sum.1.gz | sed -n '11p' | wc -w
+6 (exit=0)
+$ printf '%s\n' 'Print or check SHA256 (256-bit) checksums.' | wc -w
+6 (exit=0)
+$ grep -n '7 words' corpus/lessons/round-91.md
+18:  locally 2026-11-08; decompressed line 11 reads "Print or check SHA256 (256-bit) checksums." (7 words). It grounds
+exit=0
+
+## D8: gate-records.py on the round-91 lesson (committed-tree tool, lesson is working-tree)
+$ python3 tools/gate-records.py verify --root . corpus/lessons/round-91.md
+GATE_RECORD corpus/lessons/round-91.md:14 S001 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+stderr: 
+exit=0

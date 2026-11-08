@@ -1,0 +1,129 @@
+#!/usr/bin/env python3
+"""Independent DF_MAX probe for round-91 C2 (seat R91ExecC2Repro).
+
+Read-only. Does NOT import or shell out to curation-r91.py: it re-parses the two routed entries from markdown and
+recomputes, for every legitimate decision row, the minimum document frequency among the terms its warrant quote
+shares with the row's Do/Never cells. Documents = the entry's located-quote texts + its decision rows' Do/Never
+cells (claims.md C2 named limit 2: the entry's own units).
+
+Two term sets are measured so the stopword list cannot hide the result:
+  raw       every [a-z]{5,} token of the Do/Never cells
+  filtered  raw minus the counter's fixed stopword list (sensitivity check)
+
+Usage: probe-df.py ROOT
+"""
+import os
+import re
+import sys
+
+ENTRIES = [
+    "corpus/knowledge/search-transparency-reporting-r84.md",
+    "corpus/knowledge/provenance-recording-r85.md",
+]
+STOP = set(
+    "state record recording report describe present specify using used resource content date dates which when where "
+    "that this with without from into their them they there these those than then only also have been were will would "
+    "must should never always".split()
+)
+TERM = re.compile(r"[a-z]{5,}")
+
+
+def norm(s):
+    return " ".join(s.replace("\u2019", "'").split())
+
+
+def section(lines, heading):
+    on = False
+    for ln in lines:
+        if ln.startswith("## "):
+            on = ln.strip() == "## " + heading
+            continue
+        if on:
+            yield ln
+
+
+def cells(ln):
+    return [c.strip() for c in ln.strip().strip("|").split("|")]
+
+
+def data(lines):
+    for ln in lines:
+        if not ln.lstrip().startswith("|"):
+            continue
+        c = cells(ln)
+        if c and (c[0] in ("Situation", "qid", "") or set(c[0]) <= set("-: ")):
+            continue
+        yield ln, c
+
+
+def main():
+    root = os.path.abspath(sys.argv[1])
+    table = []
+    max_raw = max_filt = max_counter_shape = 0
+    df_source = []
+    ndocs = {}
+    for rel in ENTRIES:
+        text = open(os.path.join(root, rel), encoding="utf-8").read().split("\n")
+        quotes = {}
+        for _ln, c in data(section(text, "Located quotes")):
+            if len(c) == 3 and re.match(r"Q\d+$", c[0]) and re.match(r"S\d{3,}$", c[1]):
+                q = c[2].strip().strip('"')
+                if q:
+                    quotes[c[0]] = norm(q)
+        drows = [c for _ln, c in data(section(text, "Decision table")) if len(c) == 4]
+        docs = list(quotes.values()) + [c[1] + " " + c[2] for c in drows]
+        ndocs[os.path.basename(rel)] = (len(quotes), len(drows))
+        df = {}
+        for d in docs:
+            for w in set(TERM.findall(d.lower())):
+                df[w] = df.get(w, 0) + 1
+        df_source.append(df.get("source"))
+        for c in drows:
+            qids = re.findall(r"Q\d+", c[3])
+            resolved = [q for q in qids if q in quotes]
+            raw = set(TERM.findall((c[1] + " " + c[2]).lower()))
+            filt = raw - STOP
+            q_min_raw, q_min_filt, q_min_counter = [], [], []
+            argmin = ""
+            for q in resolved:
+                qt = set(TERM.findall(quotes[q].lower()))
+                sh = raw & qt
+                if sh:
+                    best = min(sh, key=lambda w: (df[w], w))
+                    q_min_raw.append(df[best])
+                    if best and not argmin:
+                        argmin = f"{best}(df={df[best]})"
+                else:
+                    q_min_raw.append(None)
+                shf = filt & qt
+                q_min_filt.append(min(df[w] for w in shf) if shf else None)
+                # counter's own per-qid update: min over good (0 < df <= 99) of the filtered shared terms
+                good = [df[w] for w in shf if df[w] > 0]
+                q_min_counter.append(min(good) if good else None)
+            row_raw = max(q_min_raw) if q_min_raw and None not in q_min_raw else None
+            row_filt = max(q_min_filt) if q_min_filt and None not in q_min_filt else None
+            row_ctr = max(q_min_counter) if q_min_counter and None not in q_min_counter else None
+            if row_raw is not None:
+                max_raw = max(max_raw, row_raw)
+            if row_filt is not None:
+                max_filt = max(max_filt, row_filt)
+            if row_ctr is not None:
+                max_counter_shape = max(max_counter_shape, row_ctr)
+            table.append((os.path.basename(rel), c[0], c[3], row_raw, row_filt, argmin,
+                          len(raw & set().union(*(set(TERM.findall(quotes[q].lower())) for q in resolved)))
+                          if resolved else 0))
+    print(f"LICENSE_ROW term=source df_per_entry={df_source} (counter comment claims df 7)")
+    print(f"{'entry':44s} {'situation':44s} {'warrant':10s} {'min_df_raw':>10s} {'min_df_fil':>10s} "
+          f"{'argmin':>18s} {'shared':>6s}")
+    for rel, sit, war, raw, filt, argmin, nshared in table:
+        print(f"{rel:44s} {sit[:44]:44s} {war:10s} {str(raw):>10s} {str(filt):>10s} {argmin:>18s} {nshared:>6d}")
+    print(f"ROWS={len(table)}")
+    print(f"MAX_OF_ROW_MINIMA_RAW={max_raw} MAX_OF_ROW_MINIMA_FILTERED={max_filt} "
+          f"MAX_PER_QID_COUNTER_SHAPE={max_counter_shape}")
+    ok = max_raw is not None and max_raw <= 3 and max_filt is not None and max_filt <= 3
+    print(f"PROBE_D2_DF_MAX={'3' if ok and max_raw == 3 else max_raw if ok else 'FAIL'}")
+    return 0 if ok else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

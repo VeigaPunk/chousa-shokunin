@@ -1,0 +1,72 @@
+=== A1-four-cell
+  note: claim: 'every data row ... exactly three cells' -> QSHAPE must fire
+  exit=1 CURATION_R91=FAIL Q_SHAPE_FAIL=1 Q_ROWS=20 UNENTAILED_TERM=0 WARRANT_OK=17/17 TFREQ_OK=17/17 TFREQ_MAX_DF=3 LEGS=11/13
+  LEG_FAIL QSHAPE provenance-recording-r85.md cells=4
+  LEG_FAIL VERDICT fields_hold=0 legs_ok=11/12
+  Q_SHAPE provenance-recording-r85.md cells=4 row=| Q14 | S023 | "Date on which the resource was changed." | extra |
+
+=== A2-prose-pipe
+  note: is a non-table `|`-leading prose line counted as a data row?
+  exit=1 CURATION_R91=FAIL Q_SHAPE_FAIL=1 Q_ROWS=20 UNENTAILED_TERM=0 WARRANT_OK=17/17 TFREQ_OK=17/17 TFREQ_MAX_DF=3 LEGS=11/13
+  LEG_FAIL QSHAPE provenance-recording-r85.md cells=1
+  LEG_FAIL VERDICT fields_hold=0 legs_ok=11/12
+  Q_SHAPE provenance-recording-r85.md cells=1 row=| see Q3 above for the derivation wording
+
+=== A2b-empty-qid
+  note: empty first cell: data_lines skips it before QSHAPE - is it seen at all?
+  exit=0 CURATION_R91=PASS Q_SHAPE_FAIL=0 Q_ROWS=20 UNENTAILED_TERM=0 WARRANT_OK=17/17 TFREQ_OK=17/17 TFREQ_MAX_DF=3 LEGS=13/13
+
+=== A2c-dash-source
+  note: dash source cell: registry-shaped source must be refused
+  exit=1 CURATION_R91=FAIL Q_SHAPE_FAIL=1 Q_ROWS=20 UNENTAILED_TERM=0 WARRANT_OK=17/17 TFREQ_OK=17/17 TFREQ_MAX_DF=3 LEGS=11/13
+  LEG_FAIL QSHAPE provenance-recording-r85.md source=---
+  LEG_FAIL VERDICT fields_hold=0 legs_ok=11/12
+  Q_SHAPE provenance-recording-r85.md source=--- row=| Q14 | --- | "Date on which the resource was changed." |
+
+  S031 before: S031 mined | used_by= corpus/knowledge/provenance-recording-r85.md
+  S031 after used_by=corpus/knowledge/stale/provenance-recording-r85.md (different file, same basename)
+=== A3-sibling-used-by
+  note: used-by names a stale COPY of the entry, not the entry -> SOURCE must refuse
+  exit=0 CURATION_R91=PASS Q_SHAPE_FAIL=0 Q_ROWS=20 UNENTAILED_TERM=0 WARRANT_OK=17/17 TFREQ_OK=17/17 TFREQ_MAX_DF=3 LEGS=13/13
+
+=== A3b-negated-used-by
+  note: used-by says the entry does NOT use it -> SOURCE must refuse
+  exit=0 CURATION_R91=PASS Q_SHAPE_FAIL=0 Q_ROWS=20 UNENTAILED_TERM=0 WARRANT_OK=17/17 TFREQ_OK=17/17 TFREQ_MAX_DF=3 LEGS=13/13
+
+=== A7-five-cell-decision
+  note: 5-cell decision row carrying both defect terms is dropped by table_rows(width=4)
+  exit=0 CURATION_R91=PASS Q_SHAPE_FAIL=0 Q_ROWS=20 UNENTAILED_TERM=0 WARRANT_OK=17/17 TFREQ_OK=17/17 TFREQ_MAX_DF=3 LEGS=13/13
+
+=== A8-three-cell-decision
+  note: 3-cell decision row carrying 'modified' is dropped by table_rows
+  exit=0 CURATION_R91=PASS Q_SHAPE_FAIL=0 Q_ROWS=20 UNENTAILED_TERM=0 WARRANT_OK=17/17 TFREQ_OK=17/17 TFREQ_MAX_DF=3 LEGS=13/13
+
+=== A4-source-only-warrant
+  note: row whose only shared term with Q6 is `source` -> TFREQ must fire for that qid
+  exit=0 CURATION_R91=PASS Q_SHAPE_FAIL=0 Q_ROWS=20 UNENTAILED_TERM=0 WARRANT_OK=18/18 TFREQ_OK=18/18 TFREQ_MAX_DF=3 LEGS=13/13
+
+=== A5-both-terms
+  note: one row carrying both defect terms -> how many UNENTAILED records?
+  exit=1 CURATION_R91=FAIL Q_SHAPE_FAIL=0 Q_ROWS=20 UNENTAILED_TERM=2 WARRANT_OK=17/18 TFREQ_OK=17/17 TFREQ_MAX_DF=3 LEGS=10/13
+  LEG_FAIL UNENTAILED provenance-recording-r85.md Recording a modified resource term=modification; provenance-recording-r85.md Recording a modified resource term=modified
+  LEG_FAIL WARRANT 17/18
+  LEG_FAIL VERDICT fields_hold=0 legs_ok=10/12
+  WARRANT_UNLINKED corpus/knowledge/provenance-recording-r85.md row=Recording a modified resource warrant=Q13 (S023) resolved=0/1
+  UNENTAILED provenance-recording-r85.md row=Recording a modified resource term=modification
+  UNENTAILED provenance-recording-r85.md row=Recording a modified resource term=modified
+
+=== A6-unresolved-qid
+  note: row citing an unresolved qid: is it counted in TFREQ denominator?
+  exit=1 CURATION_R91=FAIL Q_SHAPE_FAIL=0 Q_ROWS=20 UNENTAILED_TERM=0 WARRANT_OK=16/17 TFREQ_OK=16/16 TFREQ_MAX_DF=3 LEGS=11/13
+  LEG_FAIL WARRANT 16/17
+  LEG_FAIL VERDICT fields_hold=0 legs_ok=11/12
+  WARRANT_UNLINKED corpus/knowledge/provenance-recording-r85.md row=Recording when content was last reviewed warrant=Q7 (S031), Q99 (S031) resolved=1/2
+
+=== A9-row-deleted
+  note: a curated decision row deleted outright -> any pinned count?
+  exit=0 CURATION_R91=PASS Q_SHAPE_FAIL=0 Q_ROWS=20 UNENTAILED_TERM=0 WARRANT_OK=16/16 TFREQ_OK=16/16 TFREQ_MAX_DF=3 LEGS=13/13
+
+=== A10-row-outside-table
+  note: decision row moved under ## Inference -> counted anywhere?
+  exit=0 CURATION_R91=PASS Q_SHAPE_FAIL=0 Q_ROWS=20 UNENTAILED_TERM=0 WARRANT_OK=17/17 TFREQ_OK=17/17 TFREQ_MAX_DF=3 LEGS=13/13
+

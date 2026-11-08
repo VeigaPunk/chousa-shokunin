@@ -1,0 +1,103 @@
+SEAT R91ReviewerC1 | fixtures A1-A9, A11, A12 (harness.py)
+Full output. (The A10 block in the raw harness transcript was superseded by a fixture path bug;
+the corrected A10 is in F-fixtures-A10-A15.txt.)
+REV(fixture)= aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+
+### A1-dup-expected_exit-equal: exit=1
+    BASES root=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/dup-eq repo=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/dup-eq
+    RECEIPT c1-x FINDING HEADER_DUPLICATE:expected_exit=0
+    RECEIPT PINS OK 2/2 pinned files byte-identical
+    COMMITTED_OK=0/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 PINNED_FILES=2 CONTROL_DRIVER_R91=FAIL
+
+### A2-exit-plus-zero: exit=1
+    BASES root=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/plus-zero repo=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/plus-zero
+    RECEIPT c1-x FINDING EXIT_MISMATCH:+0!=0
+    RECEIPT PINS OK 2/2 pinned files byte-identical
+    COMMITTED_OK=0/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 PINNED_FILES=2 CONTROL_DRIVER_R91=FAIL
+
+### A2b-exit-space-zero: exit=0
+    BASES root=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/space-zero repo=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/space-zero
+    RECEIPT c1-x OK committed+exact+pin+fresh
+    RECEIPT PINS OK 2/2 pinned files byte-identical
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 PINNED_FILES=2 CONTROL_DRIVER_R91=PASS
+
+### A3-two-scripts-pin-first: exit=0
+    BASES root=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/two-scripts repo=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/two-scripts
+    RECEIPT c1-x OK committed+exact+pin+fresh
+    RECEIPT PINS OK 2/2 pinned files byte-identical
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 PINNED_FILES=2 CONTROL_DRIVER_R91=PASS
+
+### A3b-two-scripts-pin-second: exit=1
+    BASES root=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/two-scripts-rev repo=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/two-scripts-rev
+    RECEIPT c1-x OK committed+exact+pin+fresh
+    RECEIPT PINS FINDING INSTRUMENT_UNPINNED:first.sh
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 PINNED_FILES=1 CONTROL_DRIVER_R91=FAIL
+
+### A4a-data-file-pristine: exit=0
+    BASES root=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/data-file repo=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/data-file
+    RECEIPT c1-x OK committed+exact+pin+fresh
+    RECEIPT PINS OK 2/2 pinned files byte-identical
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 PINNED_FILES=2 CONTROL_DRIVER_R91=PASS
+
+### A4b-data-file-edited-unpinned: exit=0
+    BASES root=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/data-file repo=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/data-file
+    RECEIPT c1-x OK committed+exact+pin+fresh
+    RECEIPT PINS OK 2/2 pinned files byte-identical
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 PINNED_FILES=2 CONTROL_DRIVER_R91=PASS
+
+### A5-script-no-extension: exit=1
+    BASES root=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/no-suffix repo=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/no-suffix
+    RECEIPT c1-x OK committed+exact+pin+fresh
+    RECEIPT PINS FINDING INSTRUMENT_UNPINNED:c1-x
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 PINNED_FILES=1 CONTROL_DRIVER_R91=FAIL
+
+### A6a-indented-token: exit=0
+    BASES root=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/indented-token repo=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/indented-token
+    RECEIPT c1-x OK committed+exact+pin+fresh
+    RECEIPT PINS OK 2/2 pinned files byte-identical
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 PINNED_FILES=2 CONTROL_DRIVER_R91=PASS
+
+### A6b-column0-comment-token: exit=1
+    BASES root=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/column0-token repo=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/column0-token
+    RECEIPT c1-x FINDING TOKEN_MISSING:FOO,FRESH_TOKEN_MISSING:FOO
+    RECEIPT PINS OK 2/2 pinned files byte-identical
+    COMMITTED_OK=0/1 EXACT_OK=0/1 PIN_OK=1/1 FRESH_OK=0/1 PINNED_FILES=2 CONTROL_DRIVER_R91=FAIL
+
+### A7-indented-duplicate-exit: exit=0
+    BASES root=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/indented-dup-header repo=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/indented-dup-header
+    RECEIPT c1-x OK committed+exact+pin+fresh
+    RECEIPT PINS OK 2/2 pinned files byte-identical
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 PINNED_FILES=2 CONTROL_DRIVER_R91=PASS
+
+### A8a-unscored-two-space-case: exit=0
+    BASES root=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/unscored-spacing repo=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/unscored-spacing
+    RECEIPT c1-x OK committed+exact+pin+fresh
+    RECEIPT PINS OK 2/2 pinned files byte-identical
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 PINNED_FILES=2 CONTROL_DRIVER_R91=PASS
+    header_multi(evil) = {'case': ['evil'], 'expected_exit': ['0'], 'exit': ['0'], 'computed_against': ['aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa']}
+
+### A8b-raw-mention-flagged: exit=1
+    BASES root=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/unscored-false-positive repo=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/unscored-false-positive
+    RECEIPT c1-x OK committed+exact+pin+fresh
+    RECEIPT raw FINDING UNSCORED_RECEIPT
+    RECEIPT PINS OK 2/2 pinned files byte-identical
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 PINNED_FILES=2 CONTROL_DRIVER_R91=FAIL
+    header_multi(raw) = {}
+
+### A9-work-inside-receipts: exit=0
+    BASES root=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/work-in-receipts repo=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/work-in-receipts
+    RECEIPT c1-x OK committed+exact+pin+fresh
+    RECEIPT PINS OK 2/2 pinned files byte-identical
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 PINNED_FILES=2 CONTROL_DRIVER_R91=PASS
+    receipts/w contents after verify = ['fresh-c1-x.out']
+
+
+[superseded A10 block omitted]
+### A11-pins-trimmed-on-disk: exit=0
+    RECEIPT PINS OK 6/7 pinned files byte-identical
+    RECEIPT SELF_PIN OK rev=4d00d7519290569879f853d7122b82a927cda1f3 receipts_rev=67954adc599bd605705d94a1ea7abb582491a907
+    COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 PINNED_FILES=6 CONTROL_DRIVER_R91=PASS
+
+### A12-no-repo: exit=0
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 PINNED_FILES=2 CONTROL_DRIVER_R91=PASS
+    SELF_PIN present in output: False

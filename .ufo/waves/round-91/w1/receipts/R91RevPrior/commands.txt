@@ -1,0 +1,41 @@
+# R91RevPrior — commands run, receipt written, exit code
+# S=/fast/scratch/hyaku/chousa-r91/R91RevPrior   (all commands below name absolute paths)
+
+## setup
+git clone --shared /home/vgpnk/Projects/shokunin/chousa-shokunin $S/base
+git -C $S/base checkout -q 265b8633b7e5d1da49da6fb948df9707373fb15c
+git clone --shared /home/vgpnk/Projects/shokunin/chousa-shokunin $S/carrier
+git -C $S/carrier checkout -q 67954adc599bd605705d94a1ea7abb582491a907
+   -> pins-and-blobs.txt (toplevels, HEADs, clean status, blob equality, python3 3.14.8)
+
+## (a) C1 before
+cd $S/carrier && python3 -B corpus/evidence/round91/control-forgeries-r91.py --work "$S/forge"            -> c1-forgeries.txt            rc=0
+python3 -B $S/carrier/corpus/evidence/round90/control-driver-r90.py verify --root $S/forge/<tree> \
+        --work $S/a-direct/w-<tree> --rev 265b8633b7e5d1da49da6fb948df9707373fb15c \
+        --expected $S/forge/<tree>/expected.tsv --receipts $S/forge/<tree>/receipts
+        for <tree> in positive dup-header-exit dup-header-computed instrument-stub expected-swap \
+                      missing-expected_exit extra-receipt                                                      -> c1-r90-direct.txt          rc=0 each
+python3 -B corpus/evidence/round91/control-driver-r91.py verify --root $S/forge/positive --work $S/a-direct/w-r91-positive \
+        --rev 265b8633b7e5d1da49da6fb948df9707373fb15c --expected $S/forge/positive/expected.tsv \
+        --receipts $S/forge/positive/receipts --pins $S/forge/positive/pins.txt                              -> c1-r91-positive.txt        rc=0
+python3 - (import r90 header_fields / r91 header_multi over $S/forge/<tree>/receipts/fx-one.txt)            -> c1-header-maps.txt         rc=0
+
+## (b) C2 before
+cd $S/carrier && python3 -B corpus/evidence/round91/curation-r91-controls.py --root . --work "$S/cur2"      -> c2-controls.txt            rc=0
+python3 -B $S/carrier/corpus/evidence/round90/curation-r90.py --root $S/cur2/<tree>                         -> c2-direct.txt   (r90 rc=0 / r91 rc=1)
+python3 -B $S/carrier/corpus/evidence/round91/curation-r91.py --root $S/cur2/<tree>                         -> c2-direct.txt
+        for <tree> in pristine nonq-row status-rejected used-by-blank ubiquitous-warrant duplicate-count
+
+## (c) C3 before
+python3 -B $S/carrier/corpus/evidence/round90/skill-tally-r90.py --root $S/base \
+        --selftest $S/carrier/corpus/evidence/round91/controls/selftest-r91.txt                             -> c3-tally-base.txt          rc=0
+python3 -B $S/carrier/corpus/evidence/round91/skill-tally-r91.py --root $S/base \
+        --selftest $S/carrier/corpus/evidence/round91/controls/selftest-r91.txt                             -> c3-tally-base.txt          rc=1
+python3 - (write $S/c3fix/SKILL.md = base SKILL.md with the frozen OLD_CLAUSE substituted for BAD_CLAUSE)    -> (fixture; constants from skill-tally-r91-controls.py lines 31-34)
+python3 -B $S/carrier/corpus/evidence/round90/skill-tally-r90.py --root $S/c3fix --selftest <receipt>       -> c3-tally-repaired.txt      rc=0
+python3 -B $S/carrier/corpus/evidence/round91/skill-tally-r91.py --root $S/c3fix --selftest <receipt>       -> c3-tally-repaired.txt      rc=0
+python3 -B $S/carrier/corpus/evidence/round91/skill-tally-r91-controls.py --root $S/c3fix --work $S/c3ctl   -> c3-controls-repaired.txt   rc=0
+python3 -B $S/carrier/corpus/evidence/round91/skill-tally-r91-controls.py --root $S/carrier --work $S/c3ctl-carrier -> c3-controls-carrier-setup.txt rc=2
+
+## (d) comparison
+sha256sum + cmp of the three committed before receipts against this seat's runs                               -> d-receipt-diffs.txt        c1/c2/c3 cmp rc=0

@@ -1,0 +1,7 @@
+SEAT R91ReviewerC1 | finding F6, duplicate pin rows are last-wins
+FIXTURE: fx3/dup-pin (one row c1-x, tool.sh pinned twice)
+B1 pins.txt: 0*64 tool.sh  /  <correct> tool.sh  /  <correct> expected.tsv
+  COMMAND: python3 -B <DRV> verify --root <FIX> --work <W> --rev aaaa... --expected <FIX>/expected.tsv --receipts <FIX>/receipts --pins <FIX>/pins.txt
+  EXIT: 0 ; PINNED_FILES=2 CONTROL_DRIVER_R91=PASS (the wrong first row is silently ignored)
+B2 pins.txt: <correct> tool.sh  /  0*64 tool.sh  /  <correct> expected.tsv
+  EXIT: 1 ; RECEIPT PINS FINDING INSTRUMENT_PIN_MISMATCH:tool.sh

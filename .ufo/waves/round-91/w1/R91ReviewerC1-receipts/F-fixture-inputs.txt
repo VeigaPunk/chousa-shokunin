@@ -1,0 +1,507 @@
+SEAT R91ReviewerC1 | fixture inputs and exact invocation templates
+All fixtures were built and run by the harness scripts copied under harness/. The driver is the
+frozen one (sha256 49102204fa9698df97f2f8ac467468ee57dff1a358e934d52654821cd880b40c).
+Exact verify argv for a non-git fixture (A1-A9, A12-A15, B1-B4):
+  python3 -B <DRV> verify --root <FIX> --work <S>/work/<tag> --rev <40-hex> \
+    --expected <FIX>/expected.tsv --receipts <FIX>/receipts --pins <FIX>/pins.txt
+Exact verify argv for a git fixture (A10, C1 unscored, C1 indented):
+  python3 -B <FIX>/corpus/evidence/round91/control-driver-r91.py verify --root . --repo . \
+    --rev <X> --receipts-rev <Y> --expected <FIX>/corpus/evidence/round91/controls/expected.tsv \
+    --receipts <FIX>/corpus/evidence/round91/controls/receipts \
+    --pins <FIX>/instrument-pins.txt --work <S>/work/<tag>   (cwd = <FIX>)
+The observed output and exit code for each tag are in F-fixtures-*.txt.
+Scratch roots are deleted at yield; the contents below are the fixture inputs.
+
+==============================================================================
+## A1 dup expected_exit equal
+==============================================================================
+FIXTURE: /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/dup-eq
+COMMAND: python3 -B <DRV> verify --root <FIX> --work <W> --rev aaaa... --expected <FIX>/expected.tsv --receipts <FIX>/receipts --pins <FIX>/pins.txt
+
+--- expected.tsv ---
+case	instrument	expected_exit	required	predicates	source_of_expectation
+c1-x	bash @ROOT@/tool.sh	0	TOK=1	-	the fixture row
+
+--- pins.txt ---
+41d483d63a1640563f570560bc946a542ae33fe827f8fd7ec34919706560de8d  tool.sh
+a66f6d54cc564f9f226ace34fcb3b5bd1d676fb17779970aca28f42104107500  expected.tsv
+
+--- receipts/c1-x.txt ---
+# case=c1-x
+# expected_exit=0
+# exit=0
+# computed_against=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+# expected_exit=0
+TOK=1
+
+--- tool.sh ---
+#!/bin/sh
+printf 'TOK=1\n'
+
+==============================================================================
+## A2a exit=+0 / A2b exit= 0
+==============================================================================
+FIXTURE: /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/plus-zero
+A2b sibling fx/space-zero:
+--- receipts/c1-x.txt ---
+# case=c1-x
+# expected_exit=0
+# exit= 0
+# computed_against=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+TOK=1
+
+--- receipts/c1-x.txt ---
+# case=c1-x
+# expected_exit=0
+# exit=+0
+# computed_against=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+TOK=1
+
+==============================================================================
+## A3 two scripts
+==============================================================================
+FIXTURE: /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/two-scripts
+A3b sibling fx/two-scripts-rev pins only real.py:
+--- pins.txt ---
+b3eef721eb855f76243050a0ee4cb16e8389b439c28166b3eaf3a05e059e9192  real.py
+197c178644284eed397a9621d59bb110ec2e7e65ff74369a5e0fecfea9592647  expected.tsv
+COMMAND: python3 -B <DRV> verify --root <FIX> --work <W> --rev aaaa... --expected <FIX>/expected.tsv --receipts <FIX>/receipts --pins <FIX>/pins.txt
+
+--- expected.tsv ---
+case	instrument	expected_exit	required	predicates	source_of_expectation
+c1-x	bash @ROOT@/first.sh && python3 -B @ROOT@/real.py	0	TOK=3	NUM>=1	the fixture row
+
+--- pins.txt ---
+9ab8fabc8c72bfa0416414631e26bd71b01f9dfae98dcf4656b1e2d78307876a  first.sh
+197c178644284eed397a9621d59bb110ec2e7e65ff74369a5e0fecfea9592647  expected.tsv
+
+--- first.sh ---
+#!/bin/sh
+true
+
+--- real.py ---
+print('TOK=3')
+print('NUM=4')
+
+==============================================================================
+## A4 pinned script reads unpinned data
+==============================================================================
+FIXTURE: /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/data-file
+data.txt was then rewritten to 'EXTRA=2\n' and the same command re-run.
+
+--- expected.tsv ---
+case	instrument	expected_exit	required	predicates	source_of_expectation
+c1-x	bash @ROOT@/tool.sh	0	TOK=1	-	the fixture row
+
+--- pins.txt ---
+87f22b52c54b08cc388086199a41e98af06c36bc3ba86a4f9d6fcf1c431c350a  tool.sh
+a66f6d54cc564f9f226ace34fcb3b5bd1d676fb17779970aca28f42104107500  expected.tsv
+
+--- tool.sh ---
+#!/bin/sh
+printf 'TOK=1\n'
+cat data.txt
+
+--- receipts/c1-x.txt ---
+# case=c1-x
+# expected_exit=0
+# exit=0
+# computed_against=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+TOK=1
+EXTRA=1
+
+--- data.txt ---
+EXTRA=2
+
+==============================================================================
+## A5 script without .py/.sh
+==============================================================================
+FIXTURE: /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/no-suffix
+
+--- expected.tsv ---
+case	instrument	expected_exit	required	predicates	source_of_expectation
+c1-x	bash @ROOT@/fx-tool	0	TOK=1	-	the fixture row
+
+--- pins.txt ---
+41d483d63a1640563f570560bc946a542ae33fe827f8fd7ec34919706560de8d  fx-tool
+786fc78a4ca4d3a2d278965669e7d846280a2c979861b7c596cd0748f0120357  expected.tsv
+
+--- fx-tool ---
+#!/bin/sh
+printf 'TOK=1\n'
+
+--- receipts/c1-x.txt ---
+# case=c1-x
+# expected_exit=0
+# exit=0
+# computed_against=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+TOK=1
+
+==============================================================================
+## A6a indented token / A6b column-0
+==============================================================================
+FIXTURE: /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/indented-token
+A6b sibling fx/column0-token:
+--- tool.sh ---
+#!/bin/sh
+printf '# FOO=1\n'
+--- receipts/c1-x.txt ---
+# case=c1-x
+# expected_exit=0
+# exit=0
+# computed_against=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+# FOO=1
+
+--- expected.tsv ---
+case	instrument	expected_exit	required	predicates	source_of_expectation
+c1-x	bash @ROOT@/tool.sh	0	FOO=1	-	the fixture row
+
+--- pins.txt ---
+8ea1929a743bfcc3ee76a42de9b4203440caa5e651d0935aea7e3d10b601b965  tool.sh
+df6960940a6e28cde8e637282d7f29cfee697e5412a3e057f87b757ec7ada6fb  expected.tsv
+
+--- tool.sh ---
+#!/bin/sh
+printf '   # FOO=1\n'
+
+--- receipts/c1-x.txt ---
+# case=c1-x
+# expected_exit=0
+# exit=0
+# computed_against=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+   # FOO=1
+
+==============================================================================
+## A7 indented duplicate exit
+==============================================================================
+FIXTURE: /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/indented-dup-header
+
+--- expected.tsv ---
+case	instrument	expected_exit	required	predicates	source_of_expectation
+c1-x	bash @ROOT@/tool.sh	0	TOK=1	-	the fixture row
+
+--- pins.txt ---
+41d483d63a1640563f570560bc946a542ae33fe827f8fd7ec34919706560de8d  tool.sh
+a66f6d54cc564f9f226ace34fcb3b5bd1d676fb17779970aca28f42104107500  expected.tsv
+
+--- receipts/c1-x.txt ---
+# case=c1-x
+# expected_exit=0
+# exit=0
+# computed_against=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+ # exit=1
+TOK=1
+
+==============================================================================
+## A8a evil two-space case / A8b raw mention
+==============================================================================
+FIXTURE: /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/unscored-spacing
+A8b sibling fx/unscored-false-positive:
+--- receipts/raw.txt ---
+raw instrument evidence
+note # case=fake here
+
+--- expected.tsv ---
+case	instrument	expected_exit	required	predicates	source_of_expectation
+c1-x	bash @ROOT@/tool.sh	0	TOK=1	-	the fixture row
+
+--- pins.txt ---
+41d483d63a1640563f570560bc946a542ae33fe827f8fd7ec34919706560de8d  tool.sh
+a66f6d54cc564f9f226ace34fcb3b5bd1d676fb17779970aca28f42104107500  expected.tsv
+
+--- receipts/c1-x.txt ---
+# case=c1-x
+# expected_exit=0
+# exit=0
+# computed_against=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+TOK=1
+
+--- receipts/evil.txt ---
+#  case=evil
+# expected_exit=0
+# exit=0
+# computed_against=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+X=1
+
+==============================================================================
+## A10 read order (restore)
+==============================================================================
+FIXTURE: /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/restore
+X=162374ba2156a544c31578d3f266151909296bc4 Y=6875338dfca61e441363ee4fa35731e2ab1fc441
+COMMAND: python3 -B <FIX>/corpus/evidence/round91/control-driver-r91.py verify --root . --repo . --rev X --receipts-rev Y --expected <FIX>/corpus/evidence/round91/controls/expected.tsv --receipts <FIX>/corpus/evidence/round91/controls/receipts --pins <FIX>/instrument-pins.txt --work <W>
+
+--- r1.sh ---
+#!/bin/sh
+printf 'A=1\n'
+rev=$(sed -n 's/^# computed_against=//p' corpus/evidence/round91/controls/receipts/a.txt)
+printf '# case=b\n# expected_exit=0\n# exit=0\n# computed_against=%s\nB=1\n' "$rev" > corpus/evidence/round91/controls/receipts/b.txt
+
+--- r2.sh ---
+#!/bin/sh
+printf 'B=1\n'
+cp b_committed.dat corpus/evidence/round91/controls/receipts/b.txt
+
+--- b_committed.dat ---
+# case=b
+# expected_exit=0
+# exit=0
+# computed_against=162374ba2156a544c31578d3f266151909296bc4
+B=0
+marker=committed
+
+--- corpus/evidence/round91/controls/expected.tsv ---
+case	instrument	expected_exit	required	predicates	source_of_expectation
+a	bash @ROOT@/r1.sh	0	A=1	-	the overwriter row
+b	bash @ROOT@/r2.sh	0	B=1	-	the overwritten row
+
+--- corpus/evidence/round91/controls/receipts/a.txt ---
+# case=a
+# expected_exit=0
+# exit=0
+# computed_against=162374ba2156a544c31578d3f266151909296bc4
+A=1
+
+--- corpus/evidence/round91/controls/receipts/b.txt ---
+# case=b
+# expected_exit=0
+# exit=0
+# computed_against=162374ba2156a544c31578d3f266151909296bc4
+B=0
+marker=committed
+
+--- instrument-pins.txt ---
+032756512fa24fcaede69511e05d3d678cf8e61d441c6e503d59908fc7ddaa30  r1.sh
+7e95407210daf95c813fa1e4329f462b04398ccc339926ea79d006d3213f7d74  r2.sh
+93cd949ce28515e5ec9f2c6f35a0eeeb6342ec50d9a432d0e5152311bd5f962c  corpus/evidence/round91/controls/expected.tsv
+
+==============================================================================
+## A10b/A10c read order (no restore)
+==============================================================================
+FIXTURE: /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/norestore
+X=94203fbee1ce05ce1fa11f79037fa227dc45e79c Y=c006cc671f6c49a67bbe5205ca4c19afb07373b7
+A10b (with --repo, run on a copy fx2/norestore-with-repo):
+  python3 -B corpus/evidence/round91/control-driver-r91.py verify --root . --repo . --rev 94203fbee1ce05ce1fa11f79037fa227dc45e79c --receipts-rev c006cc671f6c49a67bbe5205ca4c19afb07373b7 --expected corpus/evidence/round91/controls/expected.tsv --receipts corpus/evidence/round91/controls/receipts --pins instrument-pins.txt --work <S>/work2/A10b-with-repo-norestore
+A10c (no --repo, run on a copy fx2/norestore-no-repo):
+  python3 -B corpus/evidence/round91/control-driver-r91.py verify --root . --rev 94203fbee1ce05ce1fa11f79037fa227dc45e79c --expected corpus/evidence/round91/controls/expected.tsv --receipts corpus/evidence/round91/controls/receipts --pins instrument-pins.txt --work <S>/work2/A10c-without-repo-norestore
+
+--- r1.sh ---
+#!/bin/sh
+printf 'A=1\n'
+rev=$(sed -n 's/^# computed_against=//p' corpus/evidence/round91/controls/receipts/a.txt)
+printf '# case=b\n# expected_exit=0\n# exit=0\n# computed_against=%s\nB=1\n' "$rev" > corpus/evidence/round91/controls/receipts/b.txt
+
+--- r2.sh ---
+#!/bin/sh
+printf 'B=1\n'
+
+--- b_committed.dat ---
+# case=b
+# expected_exit=0
+# exit=0
+# computed_against=94203fbee1ce05ce1fa11f79037fa227dc45e79c
+B=0
+marker=committed
+
+--- corpus/evidence/round91/controls/expected.tsv ---
+case	instrument	expected_exit	required	predicates	source_of_expectation
+a	bash @ROOT@/r1.sh	0	A=1	-	the overwriter row
+b	bash @ROOT@/r2.sh	0	B=1	-	the overwritten row
+
+--- corpus/evidence/round91/controls/receipts/a.txt ---
+# case=a
+# expected_exit=0
+# exit=0
+# computed_against=94203fbee1ce05ce1fa11f79037fa227dc45e79c
+A=1
+
+--- corpus/evidence/round91/controls/receipts/b.txt ---
+# case=b
+# expected_exit=0
+# exit=0
+# computed_against=94203fbee1ce05ce1fa11f79037fa227dc45e79c
+B=0
+marker=committed
+
+--- instrument-pins.txt ---
+032756512fa24fcaede69511e05d3d678cf8e61d441c6e503d59908fc7ddaa30  r1.sh
+b90432af86be9daba23927d7b279f99eca45a355b9946dcfdbf65b7eb84a5e3a  r2.sh
+93cd949ce28515e5ec9f2c6f35a0eeeb6342ec50d9a432d0e5152311bd5f962c  corpus/evidence/round91/controls/expected.tsv
+
+==============================================================================
+## A15 exact gap
+==============================================================================
+FIXTURE: /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/exact-gap
+COMMAND: python3 -B <FIX>/corpus/evidence/round91/control-driver-r91.py verify --root . --work <W> --rev aaaa... --expected <FIX>/corpus/evidence/round91/controls/expected.tsv --receipts <FIX>/corpus/evidence/round91/controls/receipts --pins <FIX>/instrument-pins.txt
+
+--- r1.sh ---
+#!/bin/sh
+printf 'A=1\n'
+printf '# case=b\n# expected_exit=0\n# exit=0\n# computed_against=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\nB=1\n' > corpus/evidence/round91/controls/receipts/b.txt
+
+--- r2.sh ---
+#!/bin/sh
+printf 'B=1\n'
+cp b_committed.dat corpus/evidence/round91/controls/receipts/b.txt
+
+--- b_committed.dat ---
+# case=b
+# expected_exit=0
+# exit=0
+# computed_against=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+B=0
+marker=committed
+
+--- corpus/evidence/round91/controls/expected.tsv ---
+case	instrument	expected_exit	required	predicates	source_of_expectation
+a	bash @ROOT@/r1.sh	0	A=1	-	the overwriter row
+b	bash @ROOT@/r2.sh	0	B=1	-	the restored row
+
+--- corpus/evidence/round91/controls/receipts/a.txt ---
+# case=a
+# expected_exit=0
+# exit=0
+# computed_against=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+A=1
+
+--- corpus/evidence/round91/controls/receipts/b.txt ---
+# case=b
+# expected_exit=0
+# exit=0
+# computed_against=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+B=0
+marker=committed
+
+--- instrument-pins.txt ---
+c9d7cc97c3f44d9ec9f77e33038a0080938205ea02129abb0d4a4217cb3c9fc3  r1.sh
+7e95407210daf95c813fa1e4329f462b04398ccc339926ea79d006d3213f7d74  r2.sh
+04e829ded9bab81eb143584c859129b0f701951f8a1ef2d7a54f765addf0fee9  corpus/evidence/round91/controls/expected.tsv
+
+==============================================================================
+## A13 data operand first
+==============================================================================
+FIXTURE: /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/data-first
+real.sh BEFORE substitution sha256=41d483d63a16..., content:
+#!/bin/sh
+printf 'TOK=1\n'
+
+real.sh was then replaced by a same-output stub (sha256=579d4abd5742...) and the same
+command re-run with a fresh --work.
+COMMAND: python3 -B <DRV> verify --root <FIX> --work <W> --rev aaaa... --expected <FIX>/expected.tsv --receipts <FIX>/receipts --pins <FIX>/pins.txt
+
+--- expected.tsv ---
+case	instrument	expected_exit	required	predicates	source_of_expectation
+c1-x	cat @ROOT@/data.py && bash @ROOT@/real.sh	0	TOK=1	-	the data-first row
+
+--- pins.txt ---
+744172a84bc46165e64f36418111370c20aa95490f9e76b62bd5710775016c7e  data.py
+1c890bbd3dc5c4d39e7f0409a7f362729e043c87c00993cb5715e193ee3543ff  expected.tsv
+
+--- data.py ---
+DATA=1
+
+--- real.sh ---
+#!/bin/sh
+# substituted stub, same output
+printf 'TOK=1\n'
+
+--- receipts/c1-x.txt ---
+# case=c1-x
+# expected_exit=0
+# exit=0
+# computed_against=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+DATA=1
+TOK=1
+
+==============================================================================
+## B1-B4 duplicate pins / K4 legs
+==============================================================================
+FIXTURE: /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx3/dup-pin
+B1/B2 pins.txt contents are in F6-duplicate-pins.txt.
+B3 fx3/substring receipt:
+# case=c1-x
+# expected_exit=0
+# exit=0
+# computed_against=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+TOK=10
+NUM=0
+B4 fx3/missing has no receipts/c1-x.txt.
+
+--- expected.tsv ---
+case	instrument	expected_exit	required	predicates	source_of_expectation
+c1-x	bash @ROOT@/tool.sh	0	TOK=1	-	the row
+
+--- receipts/c1-x.txt ---
+# case=c1-x
+# expected_exit=0
+# exit=0
+# computed_against=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+TOK=1
+
+--- pins.txt ---
+41d483d63a1640563f570560bc946a542ae33fe827f8fd7ec34919706560de8d  tool.sh
+0000000000000000000000000000000000000000000000000000000000000000  tool.sh
+ddfd9fdd0ea7a5435d141008b2aa77e36a53f02f8000f2ab4473ddc025aca7d9  expected.tsv
+
+--- tool.sh ---
+#!/bin/sh
+printf 'TOK=1\n'
+
+==============================================================================
+## C1 unscored committed at carrier
+==============================================================================
+FIXTURE: /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx5/unscored-committed
+X=e9ae8990e7f2ac368190eae4a6c77a6c6dad57a7 Y=1ba52d2d8a4819a8da0a4ee6adfcd1f8c8660666
+COMMAND: python3 -B <FIX>/corpus/evidence/round91/control-driver-r91.py verify --root . --repo . --rev X --receipts-rev Y --expected <FIX>/corpus/evidence/round91/controls/expected.tsv --receipts <FIX>/corpus/evidence/round91/controls/receipts --pins <FIX>/instrument-pins.txt --work <W>
+
+--- instrument-pins.txt ---
+41d483d63a1640563f570560bc946a542ae33fe827f8fd7ec34919706560de8d  tool.sh
+ddfd9fdd0ea7a5435d141008b2aa77e36a53f02f8000f2ab4473ddc025aca7d9  corpus/evidence/round91/controls/expected.tsv
+
+--- tool.sh ---
+#!/bin/sh
+printf 'TOK=1\n'
+
+--- corpus/evidence/round91/controls/expected.tsv ---
+case	instrument	expected_exit	required	predicates	source_of_expectation
+c1-x	bash @ROOT@/tool.sh	0	TOK=1	-	the row
+
+--- corpus/evidence/round91/controls/receipts/c1-x.txt ---
+# case=c1-x
+# expected_exit=0
+# exit=0
+# computed_against=e9ae8990e7f2ac368190eae4a6c77a6c6dad57a7
+TOK=1
+
+--- corpus/evidence/round91/controls/receipts/evil.txt ---
+#  case=evil
+# expected_exit=0
+# exit=0
+# computed_against=e9ae8990e7f2ac368190eae4a6c77a6c6dad57a7
+X=1
+
+==============================================================================
+## C1 indented lines full form
+==============================================================================
+FIXTURE: /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx6/indented-lines
+X=69473cbe4d23459e1c2cbbbcb941fe08fa93a4ae Y=05fad6eb1acbc58d8e50c776810df582707631b9
+COMMAND: python3 -B <FIX>/corpus/evidence/round91/control-driver-r91.py verify --root . --repo . --rev X --receipts-rev Y --expected <FIX>/corpus/evidence/round91/controls/expected.tsv --receipts <FIX>/corpus/evidence/round91/controls/receipts --pins <FIX>/instrument-pins.txt --work <W>
+
+--- instrument-pins.txt ---
+8ea1929a743bfcc3ee76a42de9b4203440caa5e651d0935aea7e3d10b601b965  tool.sh
+7d19449b5200c6c45b6ac1a59d3696826c71839842a098ae2bce7850c72afa6a  corpus/evidence/round91/controls/expected.tsv
+
+--- tool.sh ---
+#!/bin/sh
+printf '   # FOO=1\n'
+
+--- corpus/evidence/round91/controls/expected.tsv ---
+case	instrument	expected_exit	required	predicates	source_of_expectation
+c1-x	bash @ROOT@/tool.sh	0	FOO=1	-	the indented-comment row
+
+--- corpus/evidence/round91/controls/receipts/c1-x.txt ---
+# case=c1-x
+# expected_exit=0
+# exit=0
+# computed_against=69473cbe4d23459e1c2cbbbcb941fe08fa93a4ae
+ # exit=1
+   # FOO=1

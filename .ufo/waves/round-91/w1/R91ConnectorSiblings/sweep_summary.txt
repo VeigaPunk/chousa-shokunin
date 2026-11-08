@@ -1,0 +1,21 @@
+# SIBLING OVERLAP SCAN: EXHAUSTIVE SWEEP SUMMARY
+Total sibling lanes scanned: 20 (audio, game-dev-2d, game-dev-3d, kagi, kaidoku, kake, kama, kasegi, kengaku, kotoba, kotodama, kumitate, lore, mado, mori, revenger, souji, tabi, tameshi, tsukuroi)
+
+1. CLASS 1 (LAST-WINS PARSING OF REPEATED KEYS/HEADERS/SECTIONS/REGISTRIES):
+   - Found across 7 sibling lanes (souji, tsukuroi, kagi, mado, mori, game-dev-2d, tameshi).
+   - Variations observed:
+     * First-wins guards (kotodama reports/round-76/counters/capture-evidence.py:1886; revenger corpus/training/bounty-triage/check_package.py:84)
+     * Ordered sequence checking (souji tools/souji-receipt-run.py:318)
+     * Last-wins overwriting (souji, tsukuroi, kagi, mado, mori, game-dev-2d, tameshi)
+   - NOT found: none of the 20 sibling lanes implemented full multi-value header capture and duplicate rejection (like chousa's header_multi() and check_headers() requiring len(values) == 1).
+   - Internal chousa finding: read_pins() in control-driver-r91.py:83 itself employs last-wins dict assignment on repeated file paths in instrument-pins.txt.
+
+2. CLASS 2 (WARRANT / TERM-FREQUENCY / DOCUMENT-FREQUENCY LOGIC AND DUP-QID GUARDS):
+   - Term-frequency / Document-frequency (TF/DF) logic:
+     * 0 occurrences found across all 20 sibling lanes.
+     * Neither DF_MAX, tfreq, document frequency, nor distinctive content word filtering on warrants exists in any sibling lane.
+   - Duplicate QID guards (dup_qid / Q\d+ repeat checks):
+     * 0 occurrences found across all 20 sibling lanes.
+     * No sibling checks for repeated Q<n> tokens in decision row warrant cells.
+   - Duplicate row guards:
+     * Found in 5 sibling lanes (tsukuroi, kake, tabi, mori, game-dev-2d), but only for table rows, TSV lines, or member paths, not for quote citations or warrant entailment.

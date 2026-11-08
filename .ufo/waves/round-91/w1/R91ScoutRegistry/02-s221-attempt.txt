@@ -1,0 +1,67 @@
+# R91ScoutRegistry receipt 2 — the planned S221 attempt (exit codes captured exactly)
+# repo clone: /fast/scratch/hyaku/chousa-r91/R91ScoutRegistry/repo @ 67954adc599bd605705d94a1ea7abb582491a907  (C3)
+
+$ git log --oneline -- corpus/evidence/round91/egress.tsv
+7b19dd0b round-91: egress table committed before the first fetch
+exit=0
+
+$ git show -s --format='%H %cI %s' 7b19dd0b
+7b19dd0b96f69a2167cb17e31cb998643d1a1b8d 2026-11-08T08:05:08-03:00 round-91: egress table committed before the first fetch
+exit=0
+
+$ cat corpus/evidence/round91/egress.tsv
+# round-91 external-target egress table (chousa)
+# Authority: corpus/evidence/round57/egress-approval.md — credential-free GET of public documents only, through
+# tools/capture-fetch.py, one attempt per call, no retry inside the tool, every attempt recorded in
+# corpus/evidence/round57/refetch.tsv. This table is committed before the first fetch of the round.
+# scope	url	reason	method
+open	https://nlp.stanford.edu/IR-book/html/htmledition/tf-idf-term-weighting-1.html	the primary textbook chapter that defines document frequency, for C2's TFREQ warrant guard (S221)	curl -fsSL --compressed --max-time 15 GET via tools/capture-fetch.py
+exit=0
+
+--- committed-at-C3 refetch.tsv S221 count ---
+0
+grep_exit=0
+
+--- the S221 attempt row is UNCOMMITTED at C3: lane working tree only ---
+189:S221	https://nlp.stanford.edu/IR-book/html/htmledition/tf-idf-term-weighting-1.html	64fdb4143cc4f628a805cf0a	1	2026-11-08T11:05:29Z	28	000	-	-
+exit=0
+
+$ git -C lane diff 67954adc -- corpus/evidence/round57/refetch.tsv
+diff --git c/corpus/evidence/round57/refetch.tsv w/corpus/evidence/round57/refetch.tsv
+index 144e88a9..0716553f 100644
+--- c/corpus/evidence/round57/refetch.tsv
++++ w/corpus/evidence/round57/refetch.tsv
+@@ -186,3 +186,4 @@ S216	https://www.rfc-editor.org/rfc/rfc9110.html	b1b13a12aee75c6ecc20fb91	2	2026
+ S219	https://www.gnu.org/software/grep/manual/html_node/Matching-Control.html	d00017f70dae196331f06e4c	1	2026-11-08T09:44:25Z	28	000	-	-
+ S219	https://man7.org/linux/man-pages/man1/grep.1.html	e6ec761219e8044b0e9e067a	1	2026-11-08T09:44:57Z	0	200	d6f07a7f75c6275f6986df2501d355ebd22fa1475ce50dc6039f1fb028d6a3c2	5a5e69c56413ba682b1609cba2baacafb393ff6821d5b752938efc390fd12823
+ S220	https://man7.org/linux/man-pages/man1/grep.1.html	e6ec761219e8044b0e9e067a	1	2026-11-08T09:52:31Z	0	200	d6f07a7f75c6275f6986df2501d355ebd22fa1475ce50dc6039f1fb028d6a3c2	5a5e69c56413ba682b1609cba2baacafb393ff6821d5b752938efc390fd12823
++S221	https://nlp.stanford.edu/IR-book/html/htmledition/tf-idf-term-weighting-1.html	64fdb4143cc4f628a805cf0a	1	2026-11-08T11:05:29Z	28	000	-	-
+exit=0
+
+--- '| S221 |' row count in corpus/SOURCES.md (clone @ C3) ---
+0
+exit=0
+--- '| S221 |' row count in corpus/SOURCES.md (lane working tree) ---
+0
+exit=0
+
+--- capture key derivation, verified against the committed S023 row ---
+f5545a194c06ab421875b047
+# committed refetch.tsv S023 row key: f5545a194c06ab421875b047 (match)
+
+b7190f9643e4d85be1bcfe57
+key=64fdb4143cc4f628a805cf0a  (matches the refetch.tsv row's key column)
+
+$ ls corpus/captures/$K.raw corpus/captures/$K.txt
+ls: cannot access 'corpus/captures/64fdb4143cc4f628a805cf0a.raw': No such file or directory
+ls: cannot access 'corpus/captures/64fdb4143cc4f628a805cf0a.txt': No such file or directory
+exit=0
+
+$ ls corpus/captures/ | wc -l
+183
+
+$ grep -rl 'document frequency' corpus/captures/
+corpus/captures/44be8711b50a9daae2865b02.raw
+corpus/captures/44be8711b50a9daae2865b02.txt
+exit=0
+# (the only hit is S093's arXiv capture 44be8711b50a9daae2865b02 - not the IR-book URL)

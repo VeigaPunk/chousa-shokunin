@@ -1,0 +1,52 @@
+# R91ScoutRegistry receipt 5 — registry census (validate exit code + row count)
+
+$ bash /home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa
+chousa	W04	S051 duplicate url www.w3.org/TR/2017/REC-html52-20171214/syntax.html across scopes
+chousa	W04	S053 duplicate url docs.python.org/3/library/socket.html across scopes
+chousa	W04	S073 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+chousa	W04	S074 duplicate url docs.python.org/3/library/hashlib.html across scopes
+chousa	W04	S075 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+chousa	ok	/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md
+EXIT=0
+
+$ bash /home/vgpnk/Projects/shokunin/scripts/sources-census.sh census --root /home/vgpnk/Projects/shokunin | grep -i chousa
+chousa	rows	219
+chousa	tier.A	140
+chousa	tier.B	59
+chousa	tier.C	20
+chousa	status.mined	183
+chousa	status.queued	12
+chousa	status.rejected	24
+EXIT=0
+
+# the row-count command named in the seat spec, run verbatim:
+$ grep -cE '^ (0, 3)\|[[:space:]]*S[0-9](3,)' corpus/SOURCES.md
+0
+EXIT=1 (grep found no match; the ERE as written matches no registry row shape)
+# -> the registry rows are '| S### | ...'; the real row count, same file, same tree:
+$ grep -cE '^ *\| S[0-9]{3,} \|' corpus/SOURCES.md
+219
+EXIT=0
+
+# the census reads chousa-shokunin/corpus/SOURCES.md; confirm it is byte-identical to the C3 blob:
+$ sha256sum corpus/SOURCES.md ; git show 67954adc:corpus/SOURCES.md | sha256sum
+7a2f6d53fe47ac9dc8c8931f8e21619862f0b919ecea0cd387e7f92544f5c1c1  corpus/SOURCES.md
+7a2f6d53fe47ac9dc8c8931f8e21619862f0b919ecea0cd387e7f92544f5c1c1  -
+
+# the round's own census receipts (working tree, uncommitted) for comparison:
+# re-derived for the committed receipt; the round-start run (before any edit) printed the same rows and exit 0
+chousa	W04	S051 duplicate url www.w3.org/TR/2017/REC-html52-20171214/syntax.html across scopes
+chousa	W04	S053 duplicate url docs.python.org/3/library/socket.html across scopes
+chousa	W04	S073 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+chousa	W04	S074 duplicate url docs.python.org/3/library/hashlib.html across scopes
+chousa	W04	S075 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+chousa	ok	/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md
+exit=0
+---
+chousa	W04	S051 duplicate url www.w3.org/TR/2017/REC-html52-20171214/syntax.html across scopes
+chousa	W04	S053 duplicate url docs.python.org/3/library/socket.html across scopes
+chousa	W04	S073 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+chousa	W04	S074 duplicate url docs.python.org/3/library/hashlib.html across scopes
+chousa	W04	S075 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+chousa	ok	/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md
+exit=0

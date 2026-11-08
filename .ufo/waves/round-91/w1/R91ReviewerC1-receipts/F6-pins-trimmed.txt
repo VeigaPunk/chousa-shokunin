@@ -1,0 +1,19 @@
+SEAT R91ReviewerC1 | finding F6, on-disk pins table is not blob-bound
+FIXTURE: copy of the C3 clone; corpus/evidence/round91/instrument-pins.txt rewritten to 7 rows
+(the 5 row instruments + expected.tsv + the driver), dropping claims.md, claims.json,
+plans/round-91.md, the selftest receipt, the 4 other r91 instruments and the 2 other r89 counters.
+TRIMMED instrument-pins.txt CONTENT:
+49102204fa9698df97f2f8ac467468ee57dff1a358e934d52654821cd880b40c  corpus/evidence/round91/control-driver-r91.py
+f62921b60ceed00fe147350d433c16fe18a17c00af369e7416030592f06562d7  corpus/evidence/round91/controls/expected.tsv
+f34f59c87c08c11d762a1ae702251183eb72a27f7728504882e64ce24e6d2103  corpus/evidence/round89/gate-records-r89.py
+10b43d8a69bfd56308320c7843291c2f425562a35d89aa9a360478d5b284c8eb  corpus/evidence/round89/mutate-r89.py
+4967755433f19b8ca5f070dcae377ba23989ae6c7971afa4d9936b06c3b3d3c8  corpus/evidence/round90/harm-recheck-r90.py
+2c063f8bfab6922d199546494d2545f495b05ab9350a7379e1b7f4cde8939f4b  corpus/evidence/round89/curation-r89.py
+fd54ab3cbc1c0ef9d64e7c586db6068e3afb3675d6274328e34c32b2bbf20d4b  corpus/evidence/round89/curation-r89-controls.py
+COMMAND (cwd = the copy):
+  python3 -B corpus/evidence/round91/control-driver-r91.py verify --root . --repo . --rev 4d00d7519290569879f853d7122b82a927cda1f3 --receipts-rev 67954adc599bd605705d94a1ea7abb582491a907 --work <scratch>/work/A11
+EXIT: 0
+OBSERVED TAIL:
+  RECEIPT PINS OK 6/7 pinned files byte-identical
+  RECEIPT SELF_PIN OK rev=4d00d751... receipts_rev=67954adc...
+  COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 PINNED_FILES=6 CONTROL_DRIVER_R91=PASS

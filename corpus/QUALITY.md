@@ -1282,3 +1282,46 @@ the admitted entry that motivates it. Tier definitions live in
     `SELF_DRIFT`) on correct bytes (`R90SentinelScope` F1). Check: a path-resolution helper takes its base
     explicitly, and the command forms in a dispatch are executed verbatim on correct bytes before the wave is
     written. — `lessons/round-90.md` Mistakes 6.
+
+## Round-91 additions (criteria 1–202 unchanged)
+
+203. **A frozen expectation row is executed verbatim before the freeze.** Round 91's first `c1-harm-setup` row lost
+    `--repo` between round 90's row and this round's copy; the first emit scored argparse's usage error as the tool's
+    own setup error (`TOKEN_MISSING:HARM_RECHECK_ERROR` in the body). Check: run each expected row's instrument once
+    before the freeze and require the required token to appear in the emitted body, not merely the expected exit.
+    — `lessons/round-91.md` Mistakes 1.
+
+204. **A file in a receipts directory is an unscored receipt only when it parses as one.** Round 91's first
+    `UNSCORED_RECEIPT` leg flagged the three raw evidence files beside the receipts. Check: the leg requires a
+    `# case=` header; the forged extra receipt carries one and is still refused. — `lessons/round-91.md` Mistakes 2.
+
+205. **A frequency threshold is measured against a document set in which a legitimate row can fail.** Round 91's
+    first TFREQ measured document frequency over the located quotes only: every non-stopword term there has df ≤ 2,
+    and the first forgery (`resource`) failed the prior counter too because `resource` is a stopword — the guard
+    proved nothing. Check: build the forgery first, require the prior instrument to accept it, then measure the
+    threshold on a document set (here quotes plus decision rows) where the forgery's term is above it.
+    — `lessons/round-91.md` Mistakes 3.
+
+206. **A control forgery must be accepted by the prior instrument it claims to discriminate from.** A forgery the
+    prior counter also refuses is prior work, not a new catch (`PRIOR_ACCEPTED=0/1`). Check: the battery prints
+    `PRIOR_ACCEPTED=n/n` and a zero count blocks the freeze. — `lessons/round-91.md` Mistakes 3.
+
+207. **A counter's verdict token printed inside a summary line is matched by the token, not the line prefix.** Round
+    91's C3 controls read `no-verdict` from a `startswith("SKILL_TALLY_R91=")` filter. Check: parse the token
+    anywhere in the line, and bind both the standalone verdict line and the summary line. — `lessons/round-91.md`
+    Mistakes 5.
+
+208. **A prior battery's line parser is not an interface; score a successor through a token-renaming alias and say
+    so.** `curation-r90-controls.py --counter <r91>` printed `no-verdict` for every case because it only recognises
+    `CURATION_R9[0-8]=`. Check: the regression leg writes an alias that runs the successor and renames only its
+    verdict token, records the alias path in the battery header, and never edits the frozen battery.
+    — `lessons/round-91.md` Mistakes 6.
+
+209. **A summary expression is exercised before the freeze.** Round 91's first C3 summary raised `TypeError` on
+    `sum((a)+(b))`. Check: the counter is run once end to end before its bytes are pinned, and the summary line's
+    arithmetic is part of that run. — `lessons/round-91.md` Mistakes 4.
+
+210. **A count printed by a verifier is described by the count it actually checked.** Round 91's `PINS OK 6/16`
+    reports six checked files out of sixteen pinned; a report that reads it as "all sixteen checked" overstates the
+    leg. Check: the claim names the checked set (the files a row executes plus the expectations file), and the
+    printed denominator is explained. — `lessons/round-91.md` Claim outcomes C1.

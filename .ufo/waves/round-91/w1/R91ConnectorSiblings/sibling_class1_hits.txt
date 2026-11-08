@@ -1,0 +1,15 @@
+# SIBLING OVERLAP SCAN: CLASS 1 (LAST-WINS PARSING OF REPEATED KEYS/HEADERS/SECTIONS/REGISTRIES)
+
+Lane                   Path:Line                                                  Reading                                                      Same as C1 R1?
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+souji-shokunin         census/round-26/waves/w1/report-assemble.py:133            header[key.strip()] = value.strip()                          YES: last-wins dict assignment on repeated receipt header key in parse_receipt()
+souji-shokunin         census/round-26/waves/w1/report-assemble.py:245            sections[match.group(1)] = text[match.end():end].strip('\n') YES: last-wins section overwrite on repeated markdown heading in parse_sections()
+souji-shokunin         census/round-56/c2-counter.py:206                          header_kv[m.group(1)] = m.group(2)                           YES: last-wins assignment on repeated header keys in evidence reader
+tsukuroi-shokunin      tools/count-mount-rows-r81.py:86                           rows[cells[0]] = {'kind': cells[2], 'tier': cells[3], 'source': cells[1]} YES: last-wins dict assignment on repeated source id in registry_rows()
+tsukuroi-shokunin      tools/count-mount-rows-r81.py:102                          digests[parts[1]] = parts[0]                                 YES: last-wins dict assignment on repeated filename in snapshot manifest parser
+kagi-shokunin          corpus/recheck-replay.py:133                               rows[m.group(1)] = line                                      YES: last-wins dict assignment on repeated source id S\d+ in registry_rows()
+mado-shokunin          quality/check-session-material.py:832                      entries[path] = (digest, frozenset(rulelist), kind_match.group(1)) YES: last-wins dict assignment on repeated file path in waiver load_registry()
+mori-shokunin          .ufo/waves/round-85/count-c2.py:109                        fields[name] = value                                         YES: last-wins dict assignment on repeated header line in parse_receipt()
+game-dev-2d-shokunin   reports/round-102/mutations/mut03_retarget_s02.py:94       fields[k] = v                                                YES: last-wins dict assignment on repeated k=v token in receipt_fields()
+tameshi-shokunin       tools/conjunct-disposition.py:62                           conj[k] = (v.strip() == 'true')                              YES: last-wins dict assignment on repeated conjunct key in receipt_conjuncts()
+chousa-shokunin (internal) corpus/evidence/round91/control-driver-r91.py:83           pins[parts[1].strip()] = parts[0]                            YES: latent last-wins dict assignment on repeated path in read_pins()

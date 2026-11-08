@@ -1,0 +1,90 @@
+R91ReviewerC1 — exact verify/forgery commands behind every finding and held attempt.
+Driver under review (frozen, sha256 49102204fa9698df97f2f8ac467468ee57dff1a358e934d52654821cd880b40c):
+  /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/repo/corpus/evidence/round91/control-driver-r91.py
+Scratch roots were deleted at yield; inputs are copied into F-fixture-inputs.txt and F-fixtures-*.txt.
+Non-git fixtures use the literal revision aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa (40 hex, no --repo).
+
+A1  (duplicate expected_exit, equal value)
+  python3 -B <DRV> verify --root /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/dup-eq --work /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/work/A1-dup-expected_exit-equal --rev aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --expected /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/dup-eq/expected.tsv --receipts /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/dup-eq/receipts --pins /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/dup-eq/pins.txt
+
+A2  (exit=+0)
+  python3 -B <DRV> verify --root /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/plus-zero --work /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/work/A2-exit-plus-zero --rev aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --expected /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/plus-zero/expected.tsv --receipts /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/plus-zero/receipts --pins /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/plus-zero/pins.txt
+
+A2b (exit= 0)
+  python3 -B <DRV> verify --root /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/space-zero --work /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/work/A2b-exit-space-zero --rev aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --expected /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/space-zero/expected.tsv --receipts /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/space-zero/receipts --pins /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/space-zero/pins.txt
+
+A3/A3b (two scripts; pins first vs pins second)
+  python3 -B <DRV> verify --root /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/two-scripts --work /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/work/A3-two-scripts-pin-first --rev aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --expected /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/two-scripts/expected.tsv --receipts /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/two-scripts/receipts --pins /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/two-scripts/pins.txt
+  python3 -B <DRV> verify --root /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/two-scripts-rev --work /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/work/A3b-two-scripts-pin-second --rev aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --expected /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/two-scripts-rev/expected.tsv --receipts /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/two-scripts-rev/receipts --pins /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/two-scripts-rev/pins.txt
+
+A4a/A4b (pinned script reads unpinned data.txt; data.txt edited between runs)
+  python3 -B <DRV> verify --root /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/data-file --work /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/work/A4a-data-file-pristine --rev aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --expected /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/data-file/expected.tsv --receipts /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/data-file/receipts --pins /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/data-file/pins.txt
+  python3 -B <DRV> verify --root /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/data-file --work /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/work/A4b-data-file-edited-unpinned --rev aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --expected /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/data-file/expected.tsv --receipts /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/data-file/receipts --pins /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/data-file/pins.txt
+
+A5  (script without .py/.sh suffix)
+  python3 -B <DRV> verify --root /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/no-suffix --work /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/work/A5-script-no-extension --rev aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --expected /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/no-suffix/expected.tsv --receipts /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/no-suffix/receipts --pins /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/no-suffix/pins.txt
+
+A6a/A6b (token on an indented '# ...' line vs a column-0 '# ...' line)
+  python3 -B <DRV> verify --root /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/indented-token --work /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/work/A6a-indented-token --rev aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --expected /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/indented-token/expected.tsv --receipts /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/indented-token/receipts --pins /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/indented-token/pins.txt
+  python3 -B <DRV> verify --root /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/column0-token --work /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/work/A6b-column0-comment-token --rev aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --expected /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/column0-token/expected.tsv --receipts /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/column0-token/receipts --pins /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/column0-token/pins.txt
+
+A7  (indented duplicate ' # exit=1')
+  python3 -B <DRV> verify --root /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/indented-dup-header --work /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/work/A7-indented-duplicate-exit --rev aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --expected /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/indented-dup-header/expected.tsv --receipts /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/indented-dup-header/receipts --pins /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/indented-dup-header/pins.txt
+
+A8a/A8b (unscored ' #  case=' evasion; off-column '# case=' false positive)
+  python3 -B <DRV> verify --root /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/unscored-spacing --work /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/work/A8a-unscored-two-space-case --rev aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --expected /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/unscored-spacing/expected.tsv --receipts /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/unscored-spacing/receipts --pins /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/unscored-spacing/pins.txt
+  python3 -B <DRV> verify --root /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/unscored-false-positive --work /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/work/A8b-raw-mention-flagged --rev aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --expected /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/unscored-false-positive/expected.tsv --receipts /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/unscored-false-positive/receipts --pins /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/unscored-false-positive/pins.txt
+
+A9  (--work inside the receipts dir)
+  python3 -B <DRV> verify --root /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/work-in-receipts --work /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/work-in-receipts/receipts/w --rev aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --expected /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/work-in-receipts/expected.tsv --receipts /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/work-in-receipts/receipts --pins /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/work-in-receipts/pins.txt
+
+A10a (git: row a overwrites b.txt, row b's fresh run restores the committed bytes; with --repo)
+  cwd=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/restore
+  python3 -B corpus/evidence/round91/control-driver-r91.py verify --root . --repo . --rev 162374ba2156a544c31578d3f266151909296bc4 --receipts-rev 6875338dfca61e441363ee4fa35731e2ab1fc441 --expected corpus/evidence/round91/controls/expected.tsv --receipts corpus/evidence/round91/controls/receipts --pins instrument-pins.txt --work /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/work2/A10a-with-repo-restore
+
+A10b (git: no restore; with --repo)
+  cwd=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/norestore-with-repo
+  python3 -B corpus/evidence/round91/control-driver-r91.py verify --root . --repo . --rev 94203fbee1ce05ce1fa11f79037fa227dc45e79c --receipts-rev c006cc671f6c49a67bbe5205ca4c19afb07373b7 --expected corpus/evidence/round91/controls/expected.tsv --receipts corpus/evidence/round91/controls/receipts --pins instrument-pins.txt --work /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/work2/A10b-with-repo-norestore
+
+A10c (git: no restore; without --repo)
+  cwd=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/norestore-no-repo
+  python3 -B corpus/evidence/round91/control-driver-r91.py verify --root . --rev 94203fbee1ce05ce1fa11f79037fa227dc45e79c --expected corpus/evidence/round91/controls/expected.tsv --receipts corpus/evidence/round91/controls/receipts --pins instrument-pins.txt --work /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/work2/A10c-without-repo-norestore
+
+A11 (pins table trimmed on disk; full --repo form)
+  cwd=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/pins-trim
+  python3 -B corpus/evidence/round91/control-driver-r91.py verify --root . --repo . --rev 4d00d7519290569879f853d7122b82a927cda1f3 --receipts-rev 67954adc599bd605705d94a1ea7abb582491a907 --work /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/work/A11
+
+A12 (no --repo)
+  python3 -B <DRV> verify --root /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/no-repo-print --work /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/work/A12-no-repo --rev aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --expected /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/no-repo-print/expected.tsv --receipts /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/no-repo-print/receipts --pins /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx/no-repo-print/pins.txt
+
+A13a/A13b (data operand named first; executed real.sh substituted)
+  python3 -B <DRV> verify --root /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/data-first --work /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/work2/A13a --rev aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --expected /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/data-first/expected.tsv --receipts /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/data-first/receipts --pins /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/data-first/pins.txt
+  python3 -B <DRV> verify --root /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/data-first --work /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/work2/A13b --rev aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --expected /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/data-first/expected.tsv --receipts /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/data-first/receipts --pins /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/data-first/pins.txt
+
+A14 (computed_against names another revision)
+  python3 -B <DRV> verify --root /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/pin-mismatch --work /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/work2/A14 --rev aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --expected /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/pin-mismatch/expected.tsv --receipts /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/pin-mismatch/receipts --pins /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/pin-mismatch/pins.txt
+
+A15 (PASS with EXACT_OK=1/2; no --repo)
+  python3 -B /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/exact-gap/corpus/evidence/round91/control-driver-r91.py verify --root /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/exact-gap --work /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/work2/A15-exact-gap-no-repo --rev aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --expected /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/exact-gap/corpus/evidence/round91/controls/expected.tsv --receipts /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/exact-gap/corpus/evidence/round91/controls/receipts --pins /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx2/exact-gap/instrument-pins.txt
+
+B1/B2 (duplicate pin rows: wrong-then-right / right-then-wrong)
+  python3 -B <DRV> verify --root /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx3/dup-pin --work /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/work3/B1-wrong-then-right --rev aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --expected /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx3/dup-pin/expected.tsv --receipts /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx3/dup-pin/receipts --pins /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx3/dup-pin/pins.txt
+  python3 -B <DRV> verify --root /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx3/dup-pin --work /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/work3/B2-right-then-wrong --rev aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --expected /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx3/dup-pin/expected.tsv --receipts /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx3/dup-pin/receipts --pins /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx3/dup-pin/pins.txt
+
+B3 (TOK=10 vs required TOK=1; NUM=0 vs NUM>=1)
+  python3 -B <DRV> verify --root /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx3/substring --work /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/work3/B3-substring-and-predicate --rev aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --expected /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx3/substring/expected.tsv --receipts /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx3/substring/receipts --pins /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx3/substring/pins.txt
+
+B4 (missing committed receipt)
+  python3 -B <DRV> verify --root /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx3/missing --work /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/work3/B4-missing-receipt --rev aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --expected /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx3/missing/expected.tsv --receipts /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx3/missing/receipts --pins /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx3/missing/pins.txt
+
+C1-unscored (git: ' #  case=evil' committed at the carrier; full --repo form)
+  cwd=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx5/unscored-committed
+  python3 -B corpus/evidence/round91/control-driver-r91.py verify --root . --repo . --rev e9ae8990e7f2ac368190eae4a6c77a6c6dad57a7 --receipts-rev 1ba52d2d8a4819a8da0a4ee6adfcd1f8c8660666 --expected corpus/evidence/round91/controls/expected.tsv --receipts corpus/evidence/round91/controls/receipts --pins instrument-pins.txt --work /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/work5
+
+C1-indented (git: indented duplicate header + indented required token; full --repo form)
+  cwd=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx6/indented-lines
+  python3 -B corpus/evidence/round91/control-driver-r91.py verify --root . --repo . --rev 69473cbe4d23459e1c2cbbbcb941fe08fa93a4ae --receipts-rev 05fad6eb1acbc58d8e50c776810df582707631b9 --expected corpus/evidence/round91/controls/expected.tsv --receipts corpus/evidence/round91/controls/receipts --pins instrument-pins.txt --work /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/work6
+
+F7 stub-r90 (copy of the C3 clone with corpus/evidence/round90/control-driver-r90.py = "import sys; sys.exit(0)")
+  cwd=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx4/stub-r90
+  python3 -B corpus/evidence/round91/control-forgeries-r91.py --work /fast/scratch/hyaku/chousa-r91/R91ReviewerC1/work4/w

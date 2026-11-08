@@ -1,0 +1,55 @@
+# R91ScoutRegistry receipt 8 - corroboration of the C2 surface counts on the C3 clone
+# clone: /fast/scratch/hyaku/chousa-r91/R91ScoutRegistry/repo @ 67954adc599bd605705d94a1ea7abb582491a907
+
+## E1: the C2 counter on the C3 clone (read-only, --root .)
+$ python3 -B corpus/evidence/round91/curation-r91.py --root .
+SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20 Q_ROWS=20 Q_SHAPE_FAIL=0 SOURCE_STATUS_OK=20/20 USED_BY_OK=20/20 Q_FLOORS=search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7 WARRANT_OK=17/17 TFREQ_OK=17/17 TFREQ_MAX_DF=3 DUP_QIDS=0 TEACHES_CHECKED=1 TEACHES_FLAGGED=1 TEACHES_UNRESOLVED=0 SUP_CLAUSE_CHECKED=0 SUP_UNRESOLVED=0 LEGS_MEASURED=13/13
+TEACHES_FLAGGED S024 terms=publication,modification disposition=superseded by S031
+VERDICT fields_hold=1 legs_ok=13/13 DETECTOR_WITNESS=11/11
+CURATION_R91=PASS
+exit=0
+
+## E2: is the C1 source quote a contiguous string in the claims file?
+$ grep -cF 'Print or check SHA256 (256-bit) checksums.' corpus/evidence/round91/claims.md
+0   (exit=1; 1 = no match)
+   the quote is split across two source lines:
+Source: **S070** (the installed `sha256sum(1)` page, re-opened this round, quote "Print or check SHA256 (256-bit)$
+checksums.") grounds rule 5's digest check: the page's own text says the tool prints or checks a digest, which is$
+exit=0
+
+## E3: the same quote against the installed man page, raw bytes
+$ zcat /usr/share/man/man1/sha256sum.1.gz | grep -cF 'Print or check SHA256 (256-bit) checksums.'
+0   (exit=1; 1 = no match)
+$ zcat ... | grep -cF 'Print or check SHA256 (256\-bit) checksums.'   (roff-escaped form)
+1   (exit=0; 0 = match)
+
+## E4: does the S073 superseder carry the line-11 quote C1 relies on?
+  S073 teaches cell[6] = 'supersedes S070 — the anchor label `SYNOPSIS -c, --check` is wrong; lines 19–20 sit under DESCRIPTION. Offsets and quote unchanged: "read checksums from the FILEs and check them" (8 words at line 20).'
+  S073 anchor  cell[5] = '`supersedes S070 —` the `-c, --check` entry is a DESCRIPTION `.TP` item, not a SYNOPSIS line: `.SH SYNOPSIS` line 5 (body 6–7, no option entries), `.SH DESCRIPTION` line 8, `-c, --check` at decompressed lines 19–20 (quote at line 20); coreutils 9.12 (September 2026), installed `coreutils 9.12-2`; file SHA-256 `93c17dffe9f25d56291113d566a7de3ff65c29f8cc32c381801c49cf27e8403f` (re-opened locally 2026-10-24)'
+  S073 status  cell[7] = 'mined'
+  contains the line-11 quote: False
+exit=0
+
+## E5: S073's own quoted sentence, re-measured on the installed page
+$ zcat /usr/share/man/man1/sha256sum.1.gz | sed -n '20p'
+read checksums from the FILEs and check them
+exit=0
+$ printf '%s\n' 'read checksums from the FILEs and check them' | wc -w
+8 (exit=0)
+
+## E6: the anchor spans S070 records, re-measured on the installed page
+$ zcat /usr/share/man/man1/sha256sum.1.gz | sed -n '4,11p;19,20p;54,56p'
+     1	sha256sum \- compute and check SHA256 message digest
+     2	.SH SYNOPSIS
+     3	.B sha256sum
+     4	[\fI\,OPTION\/\fR]... [\fI\,FILE\/\fR]...
+     5	.SH DESCRIPTION
+     6	.\" Add any additional description here
+     7	.PP
+     8	Print or check SHA256 (256\-bit) checksums.
+     9	\X'tty: link https://www.gnu.org/software/coreutils/manual/coreutils.html#cksum-c'\fB\-c, \-\-check\fP\X'tty: link'
+    10	read checksums from the FILEs and check them
+    11	The sums are computed as described in FIPS\-180\-2.
+    12	When checking, the input should be a former output of this program.
+    13	The default mode is to print a line with: checksum, a space,
+exit=0

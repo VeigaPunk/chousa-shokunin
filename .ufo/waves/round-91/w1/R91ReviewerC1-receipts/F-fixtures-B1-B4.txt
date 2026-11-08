@@ -1,0 +1,24 @@
+
+### B1-wrong-then-right: exit=0
+    BASES root=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx3/dup-pin repo=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx3/dup-pin
+    RECEIPT c1-x OK committed+exact+pin+fresh
+    RECEIPT PINS OK 2/2 pinned files byte-identical
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 PINNED_FILES=2 CONTROL_DRIVER_R91=PASS
+
+### B2-right-then-wrong: exit=1
+    BASES root=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx3/dup-pin repo=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx3/dup-pin
+    RECEIPT c1-x OK committed+exact+pin+fresh
+    RECEIPT PINS FINDING INSTRUMENT_PIN_MISMATCH:tool.sh
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 PINNED_FILES=1 CONTROL_DRIVER_R91=FAIL
+
+### B3-substring-and-predicate: exit=1
+    BASES root=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx3/substring repo=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx3/substring
+    RECEIPT c1-x FINDING TOKEN_DETACHED:TOK=10,PREDICATE_SHORT:NUM=0<1,FRESH_TOKEN_DETACHED:TOK=10,FRESH_PREDICATE_SHORT:NUM=0<1
+    RECEIPT PINS OK 2/2 pinned files byte-identical
+    COMMITTED_OK=0/1 EXACT_OK=0/1 PIN_OK=1/1 FRESH_OK=0/1 PINNED_FILES=2 CONTROL_DRIVER_R91=FAIL
+
+### B4-missing-receipt: exit=1
+    BASES root=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx3/missing repo=/fast/scratch/hyaku/chousa-r91/R91ReviewerC1/fx3/missing
+    RECEIPT c1-x FINDING MISSING_RECEIPT,MISSING_HEADER:case,MISSING_HEADER:expected_exit,MISSING_HEADER:exit,MISSING_HEADER:computed_against,PIN_MISSING
+    RECEIPT PINS OK 2/2 pinned files byte-identical
+    COMMITTED_OK=0/1 EXACT_OK=0/1 PIN_OK=0/1 FRESH_OK=1/1 PINNED_FILES=2 CONTROL_DRIVER_R91=FAIL

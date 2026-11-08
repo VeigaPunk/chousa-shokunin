@@ -1,0 +1,33 @@
+# cmd: grep '^ok-case' corpus/evidence/round91/controls/selftest-r91.txt | awk '$2>=270 && $2<=283'
+ok-case  270 claims-sha-path-shim         exit=1
+ok-case  271 claims-sha-cut-shim          exit=1
+ok-case  272 claims-sha-stdin-hold        exit=0
+ok-case  273 pin-bashenv-echo             exit=0
+ok-case  274 drift-bashenv-echo           exit=0
+ok-case  275 pin-bashenv-root             exit=0
+ok-case  276 pin-env-fn-echo-scrub        exit=0
+ok-case  277 pin-env-fn-suppress          exit=0
+ok-case  278 pin-env-fn-root              exit=0
+ok-case  279 env-pin-override-missing     exit=2
+ok-case  280 env-pin-override-fake        exit=2
+ok-case  281 pin-bash-path-shim           exit=0
+ok-case  282 bash-pin-override-missing    exit=2
+ok-case  283 bash-pin-override-fake       exit=2
+# family containing 'bashenv' (whole receipt):
+273 pin-bashenv-echo
+274 drift-bashenv-echo
+275 pin-bashenv-root
+# family with prefix 'bash-pin-override' (whole receipt):
+282 bash-pin-override-missing
+283 bash-pin-override-fake
+# non-bashenv within claimed bashenv range 273-275:
+# non-bash-pin-override within claimed override range 276-283:
+276 pin-env-fn-echo-scrub
+277 pin-env-fn-suppress
+278 pin-env-fn-root
+279 env-pin-override-missing
+280 env-pin-override-fake
+281 pin-bash-path-shim
+# verdict line:
+RESEARCH_GATE_SELFTEST: PASS (283 cases, 0 skipped)
+# counts: bashenv=3 override_prefix=2 rows=283
