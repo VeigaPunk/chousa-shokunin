@@ -3,9 +3,11 @@
 
 A search record (PRISMA-S, `knowledge/search-rerun-record-r95.md`) files each search's strategy "copied and
 pasted exactly as run" (item 8), the date it ran (item 13) and the number of records it identified (item 15).
-The lane's `research-gate verify-sweeps` re-checks only that a NEGATIVE sweep's named glob set is empty; nothing
-re-executes a recorded expression or compares the count it recorded. This tool does, for local searches over
-committed lane files:
+In this lane, `research-gate verify-sweeps` re-checks only that a NEGATIVE sweep's named glob set is empty; no
+lane instrument re-executes a recorded expression or compares the count it recorded (sibling lanes hold
+count re-checks of their own — tameshi `tools/count-recheck.py`, kagi `corpus/recheck-replay.py` — which re-run one
+pinned command; this tool reads a search record's table). This tool does, for local searches over committed lane
+files:
 
   - it re-runs every recorded expression at the revision the record says it ran against (`rev`) and compares the
     number of matching files and the set of matching paths with the recorded `hits` and `hit_set`. A difference
@@ -22,16 +24,22 @@ Record form — a section headed exactly `## Searches` holding one Markdown tabl
 
   id          `Q<n>`, unique in the record
   engine      `fixed` (the expression is a literal byte string, as `grep -F`) or `regex` (a Python `re` pattern,
-              compared with `grep -P`); both match line by line (a line is the bytes between `\\n`), and a file
-              is a hit when at least one of its lines matches, as `grep -l`
-  where       comma-separated globs relative to ROOT; `*` and `?` stay inside one path segment and `**` spans
-              segments (Python `PurePosixPath.full_match`); no absolute path, no `..`, no backslash
-  expression  wrapped in one pair of backticks; `\\|` stands for `|`; never empty
+              compared with `grep -P`); both match line by line, as GNU grep does on text: a line is the bytes
+              between `\\n`, and a final `\\n` ends the last line rather than opening an empty one (an empty file
+              has no lines); a file is a hit when at least one of its lines matches, as `grep -l`
+  where       comma-separated globs relative to ROOT, matched segment by segment as bash matches them without
+              `globstar`: `*`, `?` and `[...]` stay inside one segment and never match a leading `.` (a dotfile is
+              matched only by a segment that itself starts with `.`); `**` is refused (it is not a bash glob
+              without globstar); no absolute path, no `..`, no `.`, no empty segment, no backslash
+  expression  wrapped in one pair of backticks; never empty. A `|` inside the cell is written `\\|` (the Markdown
+              table escape): the bytes run are the cell with every `\\|` read as `|`, so a record can file an
+              alternation but not a literal backslash-pipe
   rev         the full 40-hex commit the search ran against
   searched    the date the search ran, `YYYY-MM-DD`
   hits        the number of matching files, decimal
-  hit_set     `-` when hits is 0; otherwise the comma-separated matching paths, or `sha256:<64 hex>` of the
-              sorted matching paths each followed by `\\n` (what `grep -l … | LC_ALL=C sort | sha256sum` prints)
+  hit_set     `-` when hits is 0; otherwise the comma-separated matching paths (a path containing a comma cannot
+              be listed — use the digest), or `sha256:<64 hex>` of the matching paths as bytes, byte-sorted, each
+              followed by `\\n` (what `grep -l … | LC_ALL=C sort | sha256sum` prints)
 
 Usage:
     python3 tools/search-rerun.py verify RECORD [--root LANE] [--strict]
@@ -42,25 +50,34 @@ Output, one line per search, then a summary and a verdict:
     SEARCH_RERUN: CLEAN | DRIFT
 Exit: 0 every search matches at its rev (tree changes allowed unless --strict); 1 any COUNT_DRIFT or SET_DRIFT
 (or TREE_CHANGED under --strict); 2 setup — `SEARCH_RERUN_ERROR <code> <detail>` on stderr for a missing or
-unreadable record, no `## Searches` section, a wrong header, a malformed or duplicate row, an unknown engine, an
-empty or uncompilable expression, an unsafe glob, a rev that is not a commit of ROOT's repository, a symlink or
-non-regular file matched by a glob, or a ROOT that is not a git toplevel.
+unreadable record, no `## Searches` section, a wrong header, a malformed or duplicate row, a table line after the
+first table ends (a second table, or a row after a blank line), an unknown engine, an empty or uncompilable
+expression, a regex using a POSIX bracket class (`[[:alpha:]]` — PCRE syntax that Python reads as a different
+set), an unsafe glob, a rev that is not a commit of ROOT's repository, a symlink or non-regular file matched by a
+glob, or a ROOT that is not a git toplevel.
 
-Named limits: the regex engine is Python `re`, not PCRE — a pattern whose meaning differs between them is
-compared under Python's meaning; a match never spans a newline; the tree re-run reads the files on disk,
-tracked or not; the tool proves the record agrees with what the expression finds, not that the expression was
-the right one to run (recall is not measured).
+Named limits: the regex engine is Python `re`, not PCRE — beyond the refused POSIX classes, a pattern whose
+meaning differs between them is compared under Python's meaning, and PCRE-only syntax Python cannot compile
+(e.g. `\\K`) is a setup refusal; `\\w`, `\\s` and `\\b` follow Python's Unicode rules, which agree with GNU grep
+under a UTF-8 locale and not under `LC_ALL=C`; a file containing NUL bytes is matched as text, while GNU grep
+switches to binary mode on it and may split lines differently; a match never spans a newline; the tree re-run reads
+the files on disk, tracked or not; the tool proves the record agrees with what the expression finds, not that the
+expression was the right one to run (recall is not measured).
 
-Reads only ROOT's files and its git objects (read-only `git ls-tree`/`git cat-file`). No network, no writes.
+Reads the RECORD named on the command line (a relative RECORD is resolved against ROOT; a symlinked RECORD is
+refused, `RECORD_TYPE`), ROOT's files under each glob's static directory, and ROOT's git objects through read-only
+`git ls-tree`/`git cat-file` run with every caller `GIT_*` variable removed, replace refs off and lazy fetch off —
+so a partial clone's missing blob is a setup error, not a network fetch. Objects reached through ROOT's own
+`objects/info/alternates` (a `--shared` clone) are ROOT's objects by its own configuration. No writes.
 Python 3.13+ standard library only.
 """
 import argparse
+import fnmatch
 import hashlib
 import os
 import re
 import subprocess
 import sys
-from pathlib import PurePosixPath
 
 HEADER = ["id", "engine", "where", "expression", "rev", "searched", "hits", "hit_set"]
 ENGINES = ("fixed", "regex")
@@ -70,6 +87,7 @@ DATE_RE = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}\Z")
 HITS_RE = re.compile(r"(0|[1-9][0-9]*)\Z")
 DIGEST_RE = re.compile(r"sha256:[0-9a-f]{64}\Z")
 SPLIT_RE = re.compile(r"(?<!\\)\|")
+POSIX_CLASS_RE = re.compile(r"\[:[A-Za-z]+:\]")
 
 
 class Setup(Exception):
@@ -79,8 +97,18 @@ class Setup(Exception):
         self.detail = detail
 
 
+def git_env():
+    """The caller's environment without any GIT_* variable (GIT_DIR, GIT_OBJECT_DIRECTORY, GIT_ALTERNATE_OBJECT_
+    DIRECTORIES, GIT_CONFIG_* … would point the re-run at another object store), with replace refs and lazy
+    (promisor) fetches switched off: a missing object is a setup error, never a network fetch into ROOT
+    (round 95, R95SentinelScope findings 1, 2, 4)."""
+    env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
+    env.update({"GIT_NO_REPLACE_OBJECTS": "1", "GIT_NO_LAZY_FETCH": "1", "GIT_TERMINAL_PROMPT": "0"})
+    return env
+
+
 def git(root, *args):
-    p = subprocess.run(["git", "-C", root, *args], capture_output=True)
+    p = subprocess.run(["git", "-C", root, *args], capture_output=True, env=git_env())
     return p.returncode, p.stdout
 
 
@@ -93,6 +121,8 @@ def cells(line):
 
 def parse_record(path):
     try:
+        if os.path.islink(path):
+            raise Setup("RECORD_TYPE", f"{path}: the record must be a regular file, not a symlink")
         with open(path, encoding="utf-8") as fh:
             lines = fh.read().split("\n")
     except (OSError, UnicodeDecodeError) as exc:
@@ -109,6 +139,11 @@ def parse_record(path):
         i += 1
     if len(table) < 3:
         raise Setup("TABLE", "the section holds no table with a header, a separator and at least one row")
+    while i < len(lines) and not lines[i].startswith("## "):
+        if lines[i].strip().startswith("|"):
+            raise Setup("TABLE", f"line {i + 1}: a table line after the first table ends (a second table or a row "
+                                 "after a break would never be re-run)")
+        i += 1
     head = cells(table[0])
     if head != HEADER:
         raise Setup("HEADER", f"columns {head!r} != {HEADER!r}")
@@ -131,6 +166,8 @@ def parse_record(path):
             raise Setup("EXPRESSION", f"{r['id']}: expression must be one backtick-wrapped non-empty span")
         r["expr"] = e[1:-1]
         if r["engine"] == "regex":
+            if POSIX_CLASS_RE.search(r["expr"]):
+                raise Setup("EXPRESSION", f"{r['id']}: POSIX bracket class (PCRE syntax Python reads differently)")
             try:
                 r["pattern"] = re.compile(r["expr"])
             except re.error as exc:
@@ -162,18 +199,39 @@ def parse_record(path):
             parts = g.split("/")
             if not g or g.startswith("/") or "\\" in g or ".." in parts or "" in parts or "." in parts:
                 raise Setup("WHERE", f"{r['id']}: unsafe or empty glob {g!r}")
+            if "**" in g:
+                raise Setup("WHERE", f"{r['id']}: '**' is not a bash glob without globstar: {g!r}")
         r["globs"] = globs
         rows.append(r)
     return rows
 
 
+def seg_match(name, pat):
+    """One path segment against one glob segment, as bash without dotglob: a leading `.` is never wildcard-matched."""
+    if name.startswith(".") and not pat.startswith("."):
+        return False
+    return fnmatch.fnmatchcase(name, pat)
+
+
 def matches(path, globs):
-    pp = PurePosixPath(path)
-    return any(pp.full_match(g) for g in globs)
+    segs = path.split("/")
+    for g in globs:
+        pats = g.split("/")
+        if len(pats) == len(segs) and all(seg_match(s, p) for s, p in zip(segs, pats)):
+            return True
+    return False
+
+
+def lines_of(data):
+    """GNU grep's text lines: a final newline ends the last line; an empty file has none."""
+    lines = data.split(b"\n")
+    if lines and lines[-1] == b"":
+        lines.pop()
+    return lines
 
 
 def hit(data, r):
-    for line in data.split(b"\n"):
+    for line in lines_of(data):
         if r["engine"] == "fixed":
             if r["needle"] in line:
                 return True
@@ -204,7 +262,7 @@ def files_at_rev(root, rev, cache):
 def blob(root, obj, blobs):
     """One read-only `git cat-file blob` per distinct object per run; the bytes are shared by every search."""
     if obj not in blobs:
-        p = subprocess.run(["git", "-C", root, "cat-file", "blob", obj], capture_output=True)
+        p = subprocess.run(["git", "-C", root, "cat-file", "blob", obj], capture_output=True, env=git_env())
         if p.returncode != 0:
             raise Setup("REV", f"blob {obj} unreadable")
         blobs[obj] = p.stdout
@@ -272,7 +330,10 @@ def run_on_tree(root, r, listing):
 
 
 def digest(paths):
-    return hashlib.sha256("".join(p + "\n" for p in sorted(paths)).encode("utf-8")).hexdigest()
+    """sha256 of the paths as bytes, byte-sorted, each followed by a newline: what `LC_ALL=C sort | sha256sum` prints
+    for `grep -l` output, also for a path that is not valid UTF-8 (read with surrogateescape)."""
+    keys = sorted(p.encode("utf-8", "surrogateescape") for p in paths)
+    return hashlib.sha256(b"".join(k + b"\n" for k in keys)).hexdigest()
 
 
 def verify(record, root, strict):
@@ -323,7 +384,9 @@ def main(argv):
     v.add_argument("--strict", action="store_true")
     a = ap.parse_args(argv)
     try:
-        return verify(a.record, os.path.abspath(a.root), a.strict)
+        root = os.path.abspath(a.root)
+        record = a.record if os.path.isabs(a.record) else os.path.join(root, a.record)
+        return verify(record, root, a.strict)
     except Setup as exc:
         print(f"SEARCH_RERUN_ERROR {exc.code} {exc.detail}", file=sys.stderr)
         return 2

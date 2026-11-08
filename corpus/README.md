@@ -1432,3 +1432,14 @@ and the nine current `SKILL.md` selftest tallies re-derive to the tool's 283-cas
 grounds the whole-token rule. Frontier ground is unchanged: no knowledge entry landed, so `S220` grounds an instrument
 rule and not a domain fact, and the round-74 source-blind order oracle, the r80 Gate-id backlog and QUALITY 173's
 successful-refused record form remain carried.
+
+## Round95 coverage and frontier (2026-11-08)
+
+| Note | Holds | Sources |
+|---|---|---|
+| `knowledge/search-rerun-record-r95.md` | what a search record must file so the search can be re-run — the strategy exactly as run, its limits, its updates, the date of the last search, the records identified per source — and what a re-run with a different count means (an error in the reported search, or a change to the database), with the lane's two-revision reading for a committed corpus marked as the lane's | S222 |
+| `../tools/search-rerun.py` | Round-95 capability: re-runs each recorded local search expression at the recorded revision (`COUNT_DRIFT`/`SET_DRIFT` = the record is wrong) and over the current tree (`TREE_CHANGED` = the corpus moved); record `fixtures/search-rerun-r95.md` (8 searches, `rev_match=8/8`) | S222; `.ufo/waves/round-95/claims.md`; `corpus/evidence/round95/after/` |
+
+- `lessons/round-95.md` — S222 admitted (JMLA publisher PDF; the Europe PMC route answered 500 and is a url/unreach Gate record), six mined mistakes; the entry carries 13 located quotes after the wave-forced Amendment 1.
+- Frontier advanced: the gap `corpus/README.md:398-399` names — "the sweep re-run is a glob/existence check over the named locations, never the recorded command" — is closed for local searches over committed lane files: a record filing its expression, revision, count and set is re-executed. It stays open for non-local targets (no external database is re-run) and for recall (whether the expression was the right search). The pointer `corpus/README.md:390-391` in the round-50 frontier bullet (line 1108) is stale for the same sentence; the sentence is at 398-399.
+- Left open: PRISMA-S item 14 (search peer review) and item 16 (deduplication) are read in the capture but not held as rows of the entry; the Systematic Reviews co-publication of PRISMA-S was not opened.

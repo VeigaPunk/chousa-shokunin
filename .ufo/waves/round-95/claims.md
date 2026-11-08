@@ -64,3 +64,55 @@ with it). K3 a quote is located only by joining text across the two columns of t
 normalization; Q6–Q9 are single column-line fragments, and that Q7–Q9 form one sentence is read from layout.
 (b) The decision rows' `Do`/`Never` wording is the lane's paraphrase of the quote; the instruments check that a
 warrant exists, not that the paraphrase is faithful — that is the wave's reviewer item.
+
+## Amendments after the freeze — re-frozen at F2 (wave-forced; the text above stays as the F record)
+
+Every amendment below is forced by a named wave artifact under `.ufo/waves/round-95/w1/`; reasons and the
+artifact for each are in `plans/round-95.md` § Amendments. The claims are judged at F2 on the amended sentences
+and predicates; the F-text above is retained, not deleted.
+
+### C1 amended sentence (F2)
+
+The lane can re-run a recorded local search expression at the revision the record names — matching line by line
+as GNU grep does on text and globbing as bash does without `globstar`, with Python `re` as the regex engine — and
+refuse a record whose filed count or hit set differs from what the expression finds there (`COUNT_DRIFT`,
+`SET_DRIFT`, exit 1), while reporting separately whether the current tree moved since that revision
+(`TREE_CHANGED`, exit 0 unless `--strict`). On the committed 8-search record every search matches at its revision.
+The lane's nearest prior instrument, `research-gate verify-sweeps`, returns CLEAN on all 10 one-cell forgeries the
+new tool refuses — vacuously: it reads no `## Searches` section.
+
+**C1 amended predicate (F2):** (1) unchanged; (2) `rerun-controls-r95.py` → exit 0, `POSITIVE=1/1 STRICT_TREE=1/1
+FORGERY_REFUSED=10/10 PRIOR_ACCEPTED=10/10 SETUP_REFUSED=12/12 CLONE_TREE=2/2 GREP_AGREE=4/4 CONTAINMENT=2/2
+DO_NOTHING_REFUSED=1/1 ORACLES_REJECTED=4/4`, `RERUN_CONTROLS=PASS`; (3, new) `python3 -B
+corpus/evidence/round95/mutants-r95.py --root . --work <scratch>` → exit 0, `MUTANTS_KILLED=10/10`.
+
+**C1 amended named limits (replace (a)–(f)):** (a) Python `re`, not PCRE: POSIX bracket classes are refused,
+PCRE-only syntax Python cannot compile is refused, any other divergence is read under Python's meaning; agreement
+with GNU grep is measured on the 8 record expressions and the 6 `GREP_AGREE` probes only. (b) `\w`/`\s`/`\b` agree
+with GNU grep under a UTF-8 locale, not under `LC_ALL=C`. (c) A file containing NUL bytes is matched as text; GNU
+grep switches to binary mode on it. (d) A match never spans a newline. (e) The tree re-run reads files on disk
+under each glob's static directory, tracked or not. (f) Agreement proves the record matches what its expression
+finds, not that it was the right search (recall unmeasured). (g) An expression cannot contain a backtick, and a `|`
+is filed as `\|` (Markdown escape), so a literal backslash-pipe cannot be filed. (h) A list-form `hit_set` cannot
+hold a path containing a comma (use the digest form). (i) Objects reached through ROOT's own alternates are read as
+ROOT's objects. (j) Only lane-local committed files; no external database is re-run.
+
+### C2 amended sentence (F2)
+
+The lane holds `corpus/knowledge/search-rerun-record-r95.md`, whose 13 located PRISMA-S quotes (`S222`, opened this
+round) are each located (gate-records normalization) in the committed `.txt` capture of the publisher PDF and equal
+the Located-quotes table one-to-one; each of its 7 decision rows names located-quote qids in its Warrant cell whose
+quotes share a content word with the row's `Do` cell, and carries a non-empty `Lane` cell. That a row's `Do`/`Never`
+says no more than its quotes, and that every `Lane` cell is phrased as the lane's reading, is the reviewer's
+judgment (R95ReviewerC2), not an instrument's; its four non-faithful cells were repaired at Amendment 1.
+
+**C2 amended predicate (F2):** (1) `gate-records.py verify` → exit 0, `GATE_RECORDS files=1 records=13 ok=13
+fail=0`; (2) unchanged; (3) `entry-controls-r95.py` → exit 0, `POSITIVE=1/1 FORGERY_REFUSED=8/8 BINDING_REFUSED=3/3
+DO_NOTHING_REFUSED=1/1 ORACLE_REJECTED=1/1` with `LQ_BOUND=13/13 WARRANTS_OK=7/7 WARRANT_TERMS=7/7
+LANE_FILLED=7/7`, `ENTRY_CONTROLS=PASS`.
+
+**C2 amended named limits:** (a) Located means present in the `pdftotext -layout` text after gate-records
+normalization; Q6–Q11 and Q13 are single column-line fragments; in reading order Q7, Q10, Q11 are one ITEM 15
+sentence and Q13, Q8, Q9 the next (not one sentence, as the F text said — `R95ExecC2Repro` F1). (b)
+`WARRANT_TERMS` is a lexical floor (one shared content word), not entailment: a fluent misreading that reuses a
+quote's word passes it.

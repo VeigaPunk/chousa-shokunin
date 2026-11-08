@@ -33,18 +33,19 @@ import subprocess
 import sys
 
 BASE = "7b2373586fb70f0ead6446c671fcc8b546d3e687"
+CARRIER = "d27e9891ba6d2bae8b1f6060f7c01bf13a1a6ea1"
 RECORD = "corpus/fixtures/search-rerun-r95.md"
 TOOL = "tools/search-rerun.py"
 
 
-def run(cmd, cwd=None):
-    p = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True)
+def run(cmd, cwd=None, env=None):
+    p = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, env=env)
     return p.returncode, p.stdout, p.stderr
 
 
-def tool_run(tool, record, root, strict=False):
+def tool_run(tool, record, root, strict=False, env=None):
     cmd = [sys.executable, "-B", tool, "verify", record, "--root", root] + (["--strict"] if strict else [])
-    return run(cmd)
+    return run(cmd, env=env)
 
 
 def edit_row(text, qid, col, value):
@@ -108,6 +109,11 @@ def battery(tool, root, work, base_text, prior_rev, emit):
         ("f6-engine", "Q6", "engine", "fixed", {"COUNT_DRIFT", "SET_DRIFT"}),
         ("f7-rev", "Q2", "rev", prior_rev, None),
         ("f8-where", "Q1", "where", "corpus/captures/0*.txt", None),
+        # Amendment 3 (R95MutantsC1 m13, m16): list-form count and a duplicated path.
+        ("f9-list-count", "Q2", "hits", "3", {"COUNT_DRIFT"}),
+        ("f10-dup-path", "Q2", "hit_set",
+         "corpus/captures/c52a1f15884a78028febcf43.txt, corpus/captures/c9d1e74c3ac8d9eb332c9770.txt, "
+         "corpus/captures/c9d1e74c3ac8d9eb332c9770.txt", {"SET_DRIFT"}),
     ]
     for name, qid, col, value, want in forgeries:
         path = write(os.path.join(work, "forge", name + ".md"), edit_row(base_text, qid, col, value))
@@ -118,6 +124,8 @@ def battery(tool, root, work, base_text, prior_rev, emit):
         others = [ln for ln in out.splitlines() if ln.startswith("SEARCH_RERUN Q") and not ln.startswith(
             f"SEARCH_RERUN {qid} ")]
         ok = ok and len(others) == 7 and all("rev=MATCH" in ln for ln in others)
+        # Amendment 3 (R95MutantsC1 m14): the printed tally must agree with the per-search lines.
+        ok = ok and "rev_match=7/8" in out
         emit(f"CASE {name} rc={rc} expect=1 codes={sorted(got)} want={sorted(want) if want else 'any-rev-code'}"
              f" {'ok' if ok else 'FAIL'}")
         tally("FORGERY", ok)
@@ -164,9 +172,17 @@ def battery(tool, root, work, base_text, prior_rev, emit):
         run(["git", "-C", clone, "checkout", "-q", "--detach", BASE])
         with open(os.path.join(clone, "corpus/captures/62be15a474e866e4bef6c9d5.txt"), "ab") as fh:
             fh.write("\nPRISMA-S\n".encode())
+        # Amendment 3 (R95MutantsC1 m15): move Q4's only hit to another file — same count, different set.
+        p62 = os.path.join(clone, "corpus/captures/62be15a474e866e4bef6c9d5.txt")
+        data = open(p62, "rb").read()
+        open(p62, "wb").write(data.replace("検索者".encode(), b"---"))
+        with open(os.path.join(clone, "corpus/captures/001287c436f0e6b1d166ae8d.txt"), "ab") as fh:
+            fh.write("\n検索者\n".encode())
     rc, out, err = tool_run(tool, rec, clone)
     q1 = next((ln for ln in out.splitlines() if ln.startswith("SEARCH_RERUN Q1 ")), "")
-    ok = rc == 0 and "rev=MATCH tree=CHANGED recorded=7 at_rev=7 at_tree=8" in q1 and "rev_match=8/8" in out
+    q4 = next((ln for ln in out.splitlines() if ln.startswith("SEARCH_RERUN Q4 ")), "")
+    ok = (rc == 0 and "rev=MATCH tree=CHANGED recorded=7 at_rev=7 at_tree=8" in q1 and "rev_match=8/8" in out
+          and "rev=MATCH tree=CHANGED recorded=1 at_rev=1 at_tree=1" in q4)
     rc2, out2, _ = tool_run(tool, rec, clone, strict=True)
     ok = ok and rc2 == 1
     emit(f"CASE clone-edit rc={rc}/{rc2} expect=0/1 {'ok' if ok else 'FAIL'}")
@@ -179,6 +195,70 @@ def battery(tool, root, work, base_text, prior_rev, emit):
     emit(f"CASE clone-symlink rc={rc} expect=2 {'ok' if ok else 'FAIL'}")
     tally("CLONE_TREE", ok)
     os.unlink(link)
+
+    # GREP_AGREE (Amendment 2, R95ExecEngine F1-F3/F5, R95ReviewerC1 F1/F3): a scratch fixture repo whose files sit on
+    # the classes where a naive per-line matcher and GNU grep over a bash glob disagree. The expected values are
+    # GNU grep's own output, taken at run time over a bash glob (the recording engine), never written by hand.
+    fx = os.path.join(work, "grepfix")
+    if not os.path.isdir(fx):
+        os.makedirs(os.path.join(fx, "data", "sub"))
+        files = {"data/a.txt": b"token\nline\n", "data/.x.txt": b"token\n", "data/empty.txt": b"",
+                 "data/crlf.txt": b"world\r\n", "data/sub/c.txt": b"token\n",
+                 "data/\xff\xfe.txt": b"token\n", "data/nl.txt": b"ab\ncd\n"}
+        for rel, data in files.items():
+            with open(os.path.join(fx.encode(), rel.encode("latin-1")), "wb") as fh:
+                fh.write(data)
+        run(["git", "-C", fx, "init", "-q"])
+        top = run(["git", "-C", fx, "rev-parse", "--show-toplevel"])[1].strip()
+        if os.path.realpath(top) != os.path.realpath(fx):
+            raise SystemExit(f"SETUP grepfix toplevel {top!r}")
+        run(["git", "-C", fx, "add", "-A"])
+        run(["git", "-C", fx, "-c", "user.name=fixture", "-c", "user.email=fixture@invalid", "commit", "-q",
+             "-m", "fixture"])
+    frev = run(["git", "-C", fx, "rev-parse", "HEAD"])[1].strip()
+    rows = []
+    for qid, eng, expr in (("Q1", "fixed", "token"), ("Q2", "regex", "^$"), ("Q3", "regex", "."),
+                           ("Q4", "regex", "d$"), ("Q5", "regex", r"b\sc"), ("Q6", "fixed", "Token")):
+        flag = "-F" if eng == "fixed" else "-P"
+        g = subprocess.run(["bash", "-c", f"/usr/bin/grep -l {flag} -e \"$1\" data/*.txt | LC_ALL=C sort", "_", expr],
+                           cwd=fx, capture_output=True)
+        paths = [p for p in g.stdout.split(b"\n") if p]
+        dg = __import__("hashlib").sha256(b"".join(p + b"\n" for p in paths)).hexdigest()
+        hs = "-" if not paths else "sha256:" + dg
+        rows.append(f"| {qid} | {eng} | data/*.txt | `{expr}` | {frev} | 2026-11-08 | {len(paths)} | {hs} |")
+    rec_text = ("## Searches\n\n| id | engine | where | expression | rev | searched | hits | hit_set |\n"
+                "|---|---|---|---|---|---|---|---|\n" + "\n".join(rows) + "\n")
+    gp = write(os.path.join(work, "grepfix-record.md"), rec_text)
+    rc, out, err = tool_run(tool, gp, fx)
+    ok = rc == 0 and "rev_match=6/6" in out and "SEARCH_RERUN: CLEAN" in out
+    emit(f"CASE grep-agree rc={rc} expect=0 rows={';'.join(r.split('|')[7].strip() for r in rows)}"
+         f" {'ok' if ok else 'FAIL'}")
+    tally("GREP_AGREE", ok)
+    for name, text, code in (
+            ("globstar", rec_text.replace("| data/*.txt |", "| data/**/*.txt |", 1), "WHERE"),
+            ("posix-class", rec_text.replace("`d$`", "`[[:alpha:]]`"), "EXPRESSION"),
+            ("second-table", rec_text + "\n| id | engine | where | expression | rev | searched | hits | hit_set |\n"
+             "|---|---|---|---|---|---|---|---|\n" + rows[0].replace("| Q1 |", "| Q9 |") + "\n", "TABLE")):
+        p = write(os.path.join(work, f"grepfix-{name}.md"), text)
+        rc, out, err = tool_run(tool, p, fx)
+        ok = rc == 2 and f"SEARCH_RERUN_ERROR {code} " in err
+        emit(f"CASE grep-agree-{name} rc={rc} expect=2 code={code} {'ok' if ok else 'FAIL'}")
+        tally("GREP_AGREE", ok)
+
+    # CONTAINMENT (Amendment 4, R95SentinelScope findings 1-4): a caller GIT_DIR pointing at another repository
+    # must not redirect the rev re-run, and a symlinked record is refused.
+    env = dict(os.environ, GIT_DIR=os.path.join(fx, ".git"))
+    rc, out, err = tool_run(tool, rec, root, env=env)
+    ok = rc == 0 and "rev_match=8/8" in out and "SEARCH_RERUN: CLEAN" in out
+    emit(f"CASE containment-git-dir rc={rc} expect=0 {'ok' if ok else 'FAIL'}")
+    tally("CONTAINMENT", ok)
+    link = os.path.join(work, "record-link.md")
+    if not os.path.islink(link):
+        os.symlink(rec, link)
+    rc, out, err = tool_run(tool, link, root)
+    ok = rc == 2 and "SEARCH_RERUN_ERROR RECORD_TYPE " in err
+    emit(f"CASE containment-record-symlink rc={rc} expect=2 {'ok' if ok else 'FAIL'}")
+    tally("CONTAINMENT", ok)
     return t
 
 
@@ -226,7 +306,12 @@ def main(argv):
                               "findings=0')\nprint('SEARCH_RERUN: CLEAN')\nsys.exit(0)\n",
             "count-only": src.replace('codes.append("SET_DRIFT")', "pass"),
             "rev-blind": src.replace("at_rev = run_at_rev(root, r, cache)", "at_rev = run_on_tree(root, r, listing)"),
+            # Amendment 2: the tool as frozen at carrier C (before the grep-alignment repair) must fail GREP_AGREE.
+            "carrier-c-tool": run(["git", "-C", root, "show", f"{CARRIER}:{TOOL}"])[1],
         }
+        if not stubs["carrier-c-tool"].startswith("#!/usr/bin/env python3"):
+            print("SETUP oracle carrier-c-tool not readable at the carrier revision")
+            return 2
         rejected = 0
         for name, body in stubs.items():
             if name != "constant-clean" and body == src:
@@ -241,8 +326,8 @@ def main(argv):
             rejected += 0 if full else 1
         t["ORACLES_REJECTED"] = (rejected, len(stubs))
 
-        order = ["POSITIVE", "STRICT_TREE", "FORGERY", "PRIOR", "SETUP", "CLONE_TREE", "DO_NOTHING",
-                 "ORACLES_REJECTED"]
+        order = ["POSITIVE", "STRICT_TREE", "FORGERY", "PRIOR", "SETUP", "CLONE_TREE", "GREP_AGREE", "CONTAINMENT",
+                 "DO_NOTHING", "ORACLES_REJECTED"]
         names = {"FORGERY": "FORGERY_REFUSED", "PRIOR": "PRIOR_ACCEPTED", "SETUP": "SETUP_REFUSED",
                  "DO_NOTHING": "DO_NOTHING_REFUSED"}
         print(" ".join(f"{names.get(g, g)}={t[g][0]}/{t[g][1]}" for g in order))

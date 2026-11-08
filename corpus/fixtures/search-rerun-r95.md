@@ -17,6 +17,11 @@ program and was not used):
     ... | wc -l                                                                         # hits
     ... | sha256sum                                                                     # hit_set digest form
 
+In the table below a `|` inside an expression cell is written `\|`, the Markdown table escape; the bytes passed to
+grep (and re-run by the tool) are the cell with every `\|` read as `|`. Q6 ran as
+`/usr/bin/grep -l -P -e '[Ss]earch(es)? (was|were) (run|conducted)' corpus/captures/*.txt` — an alternation, not a
+literal backslash-pipe (with the backslashes, PCRE matches a literal `|` and the search finds nothing).
+
 The recording engine (GNU grep) is not the re-running engine (Python in `tools/search-rerun.py`), so a match
 between them is two programs agreeing, not one program agreeing with itself.
 

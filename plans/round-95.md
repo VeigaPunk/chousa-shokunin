@@ -70,4 +70,38 @@ successful-refused record form, the r80 backlog Gate ids.
 
 ## Amendments after the freeze
 
-(none yet)
+Re-frozen at F2. Every amendment cites the wave artifact that forced it; the F text of `claims.md` is kept, the F2
+sentences and predicates are appended there. No amendment widens a claim; each narrows a sentence to what the
+instrument enforces or repairs the instrument so the sentence holds, and each repair is covered by a new
+battery leg that the F-state fails (C1 `carrier-c-tool` oracle; C2 `BINDING` group).
+
+1. **C2 entry repaired** (`R95ExecC2Repro` F1, `R95ReviewerC2` F1–F4, rows 2/3/4/5/6 and the prose): Q7–Q9 are two
+   sentences, not one (reading-order text form); row 5's "nearly the same … timeframe" was carried by an unlocated
+   line, now located as Q10/Q11; row 2 omitted item 9's justification duty, now Q12; row 6's "indicative of errors"
+   now Q13 and the Do reads "errors in the published (reported) search"; row 3's Lane now marks the
+   revision-as-slice reading as the lane's analogy (Q6 is about date limits); row 4's Never no longer imports item
+   16; "title only" for S120/S204 narrowed to "neither contains that sentence". Records 9 → 13; `N_RECORDS` 13.
+2. **C1 grep alignment** (`R95ExecEngine` F1–F3, F5): a final newline no longer opens a phantom empty line; `*`/`?`
+   no longer match a leading dot; `**` is refused; POSIX bracket classes are refused. Battery group `GREP_AGREE`
+   (expected values are GNU grep's own output over a bash glob, taken at run time); the F tool fails it
+   (`oracle-carrier-c-tool`). Locale (F4) and NUL/binary (F6) are named limits (b), (c).
+3. **C1 battery coverage** (`R95MutantsC1` m10, m11, m13–m17): forgeries f9 (list-form count) and f10 (duplicated
+   path), the printed `rev_match` cross-checked on every forgery, a same-count file swap in the clone, and
+   `GREP_AGREE` rows for whole-file and case-folding; `mutants-r95.py` rebuilds the survivors against the amended
+   tool and must kill all of them.
+4. **C1 containment** (`R95SentinelScope` F1–F4): every git call runs with the caller's `GIT_*` removed,
+   `GIT_NO_REPLACE_OBJECTS=1`, `GIT_NO_LAZY_FETCH=1`; a relative record is resolved against `--root`; a symlinked
+   record is refused (`RECORD_TYPE`). Battery group `CONTAINMENT`. The docstring's "reads only ROOT … no network"
+   now states what is read.
+5. **C1 record parsing** (`R95ReviewerC1` F1, F3, F2, F4): the digest is over byte-sorted path bytes (a non-UTF-8
+   name no longer crashes); a table line after the first table is a setup refusal (`TABLE`); the record's "As run"
+   section and the docstring state that `\|` is the Markdown escape for `|` (Q6 ran as an alternation); a comma in
+   a path is a named limit of the list form.
+6. **C1 sentence narrowed** (`R95ConnectorSiblings` P1, `R95RevenPrior` F2, `R95CriticClaims` C1 clauses 1, 4):
+   "the nearest prior instrument" → "the lane's nearest prior instrument" (tameshi `count-recheck.py` and kagi
+   `recheck-replay.py` re-run one pinned command in sibling lanes — routed, not absorbed); the prior's acceptance is
+   stated as vacuous; the engine qualifier is in the sentence.
+7. **C2 sentence narrowed and instrumented** (`R95CriticClaims` C2 clauses 2, 5): "each warranted" → each names
+   located-quote qids whose quotes share a content word with the Do (`WARRANT_TERMS`, a lexical floor), plus
+   `LANE_FILLED`; faithfulness stays the reviewer's judgment, said so in the sentence. The C2 battery gains a
+   constant-gate `ORACLE`.

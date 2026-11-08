@@ -11,7 +11,8 @@
    "type": "capability acquisition (tools/search-rerun.py)",
    "counting_command": [
     "python3 -B tools/search-rerun.py verify corpus/fixtures/search-rerun-r95.md --root .",
-    "python3 -B corpus/evidence/round95/rerun-controls-r95.py --root . --work <scratch>"
+    "python3 -B corpus/evidence/round95/rerun-controls-r95.py --root . --work <scratch>",
+    "python3 -B corpus/evidence/round95/mutants-r95.py --root . --work <scratch>"
    ],
    "predicate": {
     "verify_stdout": [
@@ -20,15 +21,25 @@
     ],
     "verify_exit": 0,
     "controls_stdout": [
-     "POSITIVE=1/1 STRICT_TREE=1/1 FORGERY_REFUSED=8/8 PRIOR_ACCEPTED=8/8 SETUP_REFUSED=12/12 CLONE_TREE=2/2 DO_NOTHING_REFUSED=1/1 ORACLES_REJECTED=3/3",
+     "POSITIVE=1/1 STRICT_TREE=1/1 FORGERY_REFUSED=10/10 PRIOR_ACCEPTED=10/10 SETUP_REFUSED=12/12 CLONE_TREE=2/2 GREP_AGREE=4/4 CONTAINMENT=2/2 DO_NOTHING_REFUSED=1/1 ORACLES_REJECTED=4/4",
      "RERUN_CONTROLS=PASS"
     ],
-    "controls_exit": 0
+    "controls_exit": 0,
+    "mutants_stdout": [
+     "MUTANTS_KILLED=10/10"
+    ],
+    "mutants_exit": 0
    },
    "before": "corpus/evidence/round95/before/c1-base.txt (exit 2, tool absent)",
    "sources": [
     "S222"
-   ]
+   ],
+   "predicate_at_F": {
+    "controls_stdout": [
+     "POSITIVE=1/1 STRICT_TREE=1/1 FORGERY_REFUSED=8/8 PRIOR_ACCEPTED=8/8 SETUP_REFUSED=12/12 CLONE_TREE=2/2 DO_NOTHING_REFUSED=1/1 ORACLES_REJECTED=3/3",
+     "RERUN_CONTROLS=PASS"
+    ]
+   }
   },
   "C2": {
    "id": "C2-ENTRY-R95",
@@ -41,7 +52,7 @@
    ],
    "predicate": {
     "gate_stdout": [
-     "GATE_RECORDS files=1 records=9 ok=9 fail=0"
+     "GATE_RECORDS files=1 records=13 ok=13 fail=0"
     ],
     "gate_exit": 0,
     "metadata_stdout": [
@@ -50,9 +61,11 @@
     ],
     "metadata_exit": 0,
     "controls_stdout": [
-     "POSITIVE=1/1 FORGERY_REFUSED=8/8 DO_NOTHING_REFUSED=1/1",
-     "LQ_BOUND=9/9",
+     "POSITIVE=1/1 FORGERY_REFUSED=8/8 BINDING_REFUSED=3/3 DO_NOTHING_REFUSED=1/1 ORACLE_REJECTED=1/1",
+     "LQ_BOUND=13/13",
      "WARRANTS_OK=7/7",
+     "WARRANT_TERMS=7/7",
+     "LANE_FILLED=7/7",
      "ENTRY_CONTROLS=PASS"
     ],
     "controls_exit": 0
@@ -60,8 +73,20 @@
    "before": "corpus/evidence/round95/before/c2-base.txt (exit 2, entry absent)",
    "sources": [
     "S222"
-   ]
+   ],
+   "predicate_at_F": {
+    "gate_stdout": [
+     "GATE_RECORDS files=1 records=9 ok=9 fail=0"
+    ],
+    "controls_stdout": [
+     "POSITIVE=1/1 FORGERY_REFUSED=8/8 DO_NOTHING_REFUSED=1/1",
+     "LQ_BOUND=9/9",
+     "WARRANTS_OK=7/7",
+     "ENTRY_CONTROLS=PASS"
+    ]
+   }
   }
  },
- "sentences": ".ufo/waves/round-95/claims.md"
+ "sentences": ".ufo/waves/round-95/claims.md",
+ "amended_at": "F2 (wave-forced amendments 1-7, plans/round-95.md; F text kept in claims.md)"
 }
