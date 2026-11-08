@@ -1,0 +1,42 @@
+# 03 — registry row S070 vs superseding row S073
+# cmd: grep '^| S070 ' corpus/SOURCES.md | tr '|' '\n' | cat -n
+     1	
+     2	 S070 
+     3	 GNU coreutils `sha256sum(1)` manual — `/usr/share/man/man1/sha256sum.1.gz` 
+     4	 docs 
+     5	 A 
+     6	 the documented digest text and `--check` input of the installed coreutils `sha256sum`; not a validation policy (the 64-lowercase-hex rule is this lane's choice) 
+     7	 NAME/DESCRIPTION and SYNOPSIS `-c, --check` (decompressed lines 4–11, 19–20, 54–56; quote at line 11); coreutils 9.12-2; file SHA-256 `93c17dffe9f25d56291113d566a7de3ff65c29f8cc32c381801c49cf27e8403f` (opened locally 2026-10-23) 
+     8	 `sha256sum` prints or checks SHA256 (256-bit) checksums, and `--check` reads checksums from files rather than computing a policy. 
+     9	 mined 
+    10	 2026-10-23 
+    11	 on-release 
+    12	 corpus/knowledge/engine-swap-canary-r36.md, corpus/knowledge/claim-pin-provenance-r37.md 
+    13	
+
+# cmd: grep '^| S073 ' corpus/SOURCES.md | tr '|' '\n' | cat -n
+     1	
+     2	 S073 
+     3	 GNU coreutils `sha256sum(1)` manual — `/usr/share/man/man1/sha256sum.1.gz` (canonical URL `https://www.gnu.org/software/coreutils/manual/coreutils.html#cksum-c`, printed as the roff tty-link at the anchored line; not fetched) 
+     4	 docs 
+     5	 A 
+     6	 the documented digest text and `--check` semantics of the installed coreutils `sha256sum` — the same scope as S070; this row corrects S070's anchor label only 
+     7	 `supersedes S070 —` the `-c, --check` entry is a DESCRIPTION `.TP` item, not a SYNOPSIS line: `.SH SYNOPSIS` line 5 (body 6–7, no option entries), `.SH DESCRIPTION` line 8, `-c, --check` at decompressed lines 19–20 (quote at line 20); coreutils 9.12 (September 2026), installed `coreutils 9.12-2`; file SHA-256 `93c17dffe9f25d56291113d566a7de3ff65c29f8cc32c381801c49cf27e8403f` (re-opened locally 2026-10-24) 
+     8	 supersedes S070 — the anchor label `SYNOPSIS -c, --check` is wrong; lines 19–20 sit under DESCRIPTION. Offsets and quote unchanged: "read checksums from the FILEs and check them" (8 words at line 20). 
+     9	 mined 
+    10	 2026-10-24 
+    11	 on-release 
+    12	 corpus/knowledge/receipt-binding-r38.md 
+    13	
+
+# cmd: git diff --stat base..C5 -- corpus/SOURCES.md   (registry unchanged this round)
+exit=0
+# cmd: git log -1 --format='%h %ad %s' --date=iso -- corpus/SOURCES.md
+8d9893b4 2026-11-08 06:44:51 -0300 round-90: freeze — three claims (control-receipt driver discipline; printed curation verdict + detector witnesses; SKILL tally freshness), instruments, expectations, before receipts, S220 row
+# cmd: git ls-tree F5 / C5 corpus/lessons/round-92.md   (round-92 lesson absent at the carrier)
+exit=0
+exit=0
+# cmd: grep -rn 'S070' corpus/evidence/round92/ plans/round-92.md .ufo/waves/round-92/
+corpus/evidence/round92/claims.md:37:Source: **S070** (the installed `sha256sum(1)` page, re-opened this round, quote "Print or check SHA256 (256-bit)
+corpus/evidence/round92/egress.tsv:3:# (none — no fetch this round; S070 is a local installed page opened from disk, not a fetch)
+.ufo/waves/round-92/claims.json:49:   "S070"

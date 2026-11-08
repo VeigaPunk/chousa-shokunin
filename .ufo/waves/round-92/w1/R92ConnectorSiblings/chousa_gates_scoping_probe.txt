@@ -1,0 +1,18 @@
+# command: python3 -c '<chousa_gates_scoping>'
+# exit: 0
+# stdout:
+SNIPPET:
+    # T1: scope the tally and case-range searches to the `## Gates` section (up to the next `## `).
+    gates_start = text.find("## Gates")
+    gates_text = ""
+    if gates_start >= 0:
+        nxt = text.find("\n## ", gates_start + 1)
+        gates_text = text[gates_start:] if nxt < 0 else text[gates_start:nxt]
+    if not gates_text:
+        print("SKILL_TALLY_R92=SETUP no ## Gates section in SKILL.md")
+        return 2
+
+    def current(line):
+
+SCOPED_TO_GATES=True
+

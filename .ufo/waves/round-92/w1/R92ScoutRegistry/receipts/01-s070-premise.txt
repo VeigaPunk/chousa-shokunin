@@ -1,0 +1,31 @@
+# 01 — S070 premise re-opened from committed bytes
+# cmd: sha256sum /usr/share/man/man1/sha256sum.1.gz
+93c17dffe9f25d56291113d566a7de3ff65c29f8cc32c381801c49cf27e8403f  /usr/share/man/man1/sha256sum.1.gz
+exit=0
+# registry row S070 anchor cell (corpus/SOURCES.md:80)
+cell[5] anchor:  the documented digest text and `--check` input of the installed coreutils `sha256sum`; not a validation policy (the 64-lowercase-hex rule is this lane's choice) 
+cell[6] teaches:  NAME/DESCRIPTION and SYNOPSIS `-c, --check` (decompressed lines 4–11, 19–20, 54–56; quote at line 11); coreutils 9.12-2; file SHA-256 `93c17dffe9f25d56291113d566a7de3ff65c29f8cc32c381801c49cf27e8403f` (opened locally 2026-10-23) 
+cell[7] status:  `sha256sum` prints or checks SHA256 (256-bit) checksums, and `--check` reads checksums from files rather than computing a policy. 
+cell[8] opened:  mined 
+cell[9] recheck:  2026-10-23 
+cell[10] used-by:  on-release 
+# cmd: zcat /usr/share/man/man1/sha256sum.1.gz | grep -n 'Print or check SHA256'
+11:Print or check SHA256 (256\-bit) checksums.
+exit=0
+# cmd: zcat ... | sed -n '11p' | od -c   (raw roff bytes of the quote line)
+0000000   P   r   i   n   t       o   r       c   h   e   c   k       S
+0000020   H   A   2   5   6       (   2   5   6   \   -   b   i   t   )
+0000040       c   h   e   c   k   s   u   m   s   .  \n
+0000054
+# cmd: zcat ... | sed -n '4p;5p;11p;19p;20p;54p;55p;56p'   (S070 anchor spans)
+     1	sha256sum \- compute and check SHA256 message digest
+     2	.SH SYNOPSIS
+     3	Print or check SHA256 (256\-bit) checksums.
+     4	\X'tty: link https://www.gnu.org/software/coreutils/manual/coreutils.html#cksum-c'\fB\-c, \-\-check\fP\X'tty: link'
+     5	read checksums from the FILEs and check them
+     6	The sums are computed as described in FIPS\-180\-2.
+     7	When checking, the input should be a former output of this program.
+     8	The default mode is to print a line with: checksum, a space,
+# cmd: coreutils installed version
+sha256sum (GNU coreutils) 9.12
+Version         : 9.12-2

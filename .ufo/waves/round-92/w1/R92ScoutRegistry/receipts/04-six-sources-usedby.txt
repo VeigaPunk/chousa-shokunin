@@ -1,0 +1,32 @@
+# 04 — six routed sources: status + used-by token join (re-derived, independent of the counter)
+# cmd: python3 - <<'PY'  (parse corpus/SOURCES.md rows; tokenise used-by exactly as curation-r92.py used_by_tokens)
+registry rows parsed (11 cells): 219
+S214: status='mined' tier='A' used-by-tokens=['corpus/knowledge/search-transparency-reporting-r84.md'] exact-token-names=['corpus/knowledge/search-transparency-reporting-r84.md']
+S018: status='mined' tier='B' used-by-tokens=['corpus/knowledge/search-transparency-reporting-r84.md'] exact-token-names=['corpus/knowledge/search-transparency-reporting-r84.md']
+S023: status='mined' tier='A' used-by-tokens=['corpus/knowledge/search-transparency-reporting-r84.md'] exact-token-names=['corpus/knowledge/search-transparency-reporting-r84.md']
+S215: status='mined' tier='A' used-by-tokens=['corpus/knowledge/provenance-recording-r85.md'] exact-token-names=['corpus/knowledge/provenance-recording-r85.md']
+S026: status='mined' tier='A' used-by-tokens=['corpus/knowledge/provenance-recording-r85.md'] exact-token-names=['corpus/knowledge/provenance-recording-r85.md']
+S031: status='mined' tier='A' used-by-tokens=['corpus/knowledge/provenance-recording-r85.md'] exact-token-names=['corpus/knowledge/provenance-recording-r85.md']
+
+--- all 219 rows token-joined to either entry ---
+  S018 status='mined' names=search-transparency-reporting-r84.md
+  S023 status='mined' names=search-transparency-reporting-r84.md
+  S026 status='mined' names=provenance-recording-r85.md
+  S031 status='mined' names=provenance-recording-r85.md
+  S214 status='mined' names=search-transparency-reporting-r84.md
+  S215 status='mined' names=provenance-recording-r85.md
+
+--- substring-only mentions (would be a false join) ---
+  substring-only count: 0
+
+--- reverse direction: mined rows naming an entry but not cited by it ---
+  corpus/knowledge/search-transparency-reporting-r84.md: cited=['S018', 'S023', 'S214'] naming=['S018', 'S023', 'S214'] mined-but-uncited=[]
+  corpus/knowledge/provenance-recording-r85.md: cited=['S026', 'S031', 'S215'] naming=['S026', 'S031', 'S215'] mined-but-uncited=[]
+
+--- capture presence for the six (capture_text key = sha256(url)[:24]) ---
+  S214 key=a640b15abf781e5c583d7088 present=True
+  S018 key=248b43277f376e437a356909 present=True
+  S023 key=f5545a194c06ab421875b047 present=True
+  S215 key=6e48bcc4a04d13b7b3ebb68e present=True
+  S026 key=67983a3dbbd1d690aa648744 present=True
+  S031 key=11d6cc56bb24adfc61eea2b4 present=True

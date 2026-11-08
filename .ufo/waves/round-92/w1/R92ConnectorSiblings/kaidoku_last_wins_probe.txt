@@ -1,0 +1,19 @@
+# command: python3 -c '<kaidoku_last_wins>'
+# exit: 0
+# stdout:
+SNIPPET:
+    # ---- five cells exactly as the round-79 parser extracts them -------------
+    pins = {}
+    for name, pin, pointer in RE_PIN.findall(text):
+        pins[name] = (pin, pointer)  # last-wins, mirrors round 79
+    cells = []
+    for client, cid in (("Devin", "devin-pin"), ("OMP", "omp-pin"), ("Kimi", "kimi-pin")):
+        pin, pointer = pins[client]
+        m = RE_PIN.search(text)
+        # find the specific match for this client (last one, matching round-79 last-wins)
+        mm = [m for m in RE_PIN.finditer(text) if m.group(1) == client][-1]
+        cells.append({"id": cid, "client": client,
+                      "cell_text": f"{client} `rea-agents@{pin}` (`{pointer}`)",
+
+EXPLICIT_LAST_WINS_COMMENT=True
+

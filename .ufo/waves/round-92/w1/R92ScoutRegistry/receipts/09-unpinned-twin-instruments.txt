@@ -1,0 +1,32 @@
+# 09 — the two unpinned twin instruments (dead weight at C5)
+# cmd: ls corpus/evidence/round92/*.py
+corpus/evidence/round92/control-driver-r92.py
+corpus/evidence/round92/curation-controls-r92.py
+corpus/evidence/round92/curation-r92.py
+corpus/evidence/round92/forgeries-r92.py
+corpus/evidence/round92/skill-tally-r92-controls.py
+corpus/evidence/round92/skill-tally-r92.py
+corpus/evidence/round92/tally-controls-r92.py
+corpus/evidence/round92/tally-r92.py
+
+# cmd: sha256sum of the four tally files
+ac5bf5475becb81a9095174dbc2a07206246edc9323ad32b31a68cd59e9a4b1d  corpus/evidence/round92/skill-tally-r92.py
+ac5bf5475becb81a9095174dbc2a07206246edc9323ad32b31a68cd59e9a4b1d  corpus/evidence/round92/tally-r92.py
+3eb7918e6d1c0e8fb773fc1d468943ed733bc412123545642bd405996d22e743  corpus/evidence/round92/skill-tally-r92-controls.py
+3eb7918e6d1c0e8fb773fc1d468943ed733bc412123545642bd405996d22e743  corpus/evidence/round92/tally-controls-r92.py
+
+# cmd: diff -q the twin pairs
+tally-r92.py IDENTICAL to skill-tally-r92.py
+tally-controls-r92.py IDENTICAL to skill-tally-r92-controls.py
+
+# cmd: grep the pins table for the twin paths
+5:ac5bf5475becb81a9095174dbc2a07206246edc9323ad32b31a68cd59e9a4b1d  corpus/evidence/round92/skill-tally-r92.py
+6:3eb7918e6d1c0e8fb773fc1d468943ed733bc412123545642bd405996d22e743  corpus/evidence/round92/skill-tally-r92-controls.py
+# -> the twins are NOT in the pins table; only the skill-tally-* names are pinned.
+
+# cmd: git log --all --oneline --diff-filter=A -- corpus/evidence/round92/skill-tally-r92.py
+487b8f25 round-92: freeze F2 — canonical script names, plans/round-92 F2 note, instrument-pins (minus-self)
+# cmd: git log --all --oneline --diff-filter=A -- corpus/evidence/round92/tally-r92.py
+bf12c30e round-92: freeze F — three successor instruments, expected rows, claims, plan, egress table
+# cmd: git log --all --oneline --diff-filter=D -- corpus/evidence/round92/tally-r92.py corpus/evidence/round92/tally-controls-r92.py
+(no D line = the twins were never deleted; they were duplicated, not renamed)

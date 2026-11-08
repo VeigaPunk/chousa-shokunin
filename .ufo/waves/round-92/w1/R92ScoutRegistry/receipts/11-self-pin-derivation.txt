@@ -1,0 +1,21 @@
+# 11 — S070's self-pin / minus-self digest, re-derived independently of the driver's print
+# the driver's rule (control-driver-r92.py:179-190 pins_file_sha_minus_self):
+#   sha256 over the pins file's non-comment, non-blank lines, SKIPPING the line whose 2nd field == the pins path.
+# cmd: python3 (reimplementation of that rule + the raw-bytes-minus-row variant)
+driver-algorithm minus-self sha256: 5f288597d4bad803cbd3ba511d06e362c99911c30782742f378a872977f03275
+recorded self row                  : 5f288597d4bad803cbd3ba511d06e362c99911c30782742f378a872977f03275
+MATCH: True
+raw-bytes-minus-row-line sha256    : 5f288597d4bad803cbd3ba511d06e362c99911c30782742f378a872977f03275
+
+# cmd: the driver's own print of the same leg:
+BASES root=/fast/scratch/hyaku/chousa-r92/R92ScoutRegistry/repo repo=/fast/scratch/hyaku/chousa-r92/R92ScoutRegistry/repo
+RECEIPT c1-gate-r89 OK committed+exact+pin+fresh
+RECEIPT c1-mutants-r89 OK committed+exact+pin+fresh
+RECEIPT c1-harm OK committed+exact+pin+fresh
+RECEIPT c1-harm-setup OK committed+exact+pin+fresh
+RECEIPT c2-prior-landing OK committed+exact+pin+fresh
+RECEIPT c2-prior-controls OK committed+exact+pin+fresh
+RECEIPT PINS OK 7/16 pinned files byte-identical
+RECEIPT SELF_PIN OK rev=42e0337822a508208800f98faa3a63c6af9f8c27 receipts_rev=16ccf7693c61b8ffe392fc757352304f239bfcad
+COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 PINNED_FILES=7 CONTROL_DRIVER_R92=PASS
+EXIT=0

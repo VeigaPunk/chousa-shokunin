@@ -1,0 +1,15 @@
+# command: python3 -c '<mori_unscoped_literal>'
+# exit: 0
+# stdout:
+SNIPPET:
+            for number, line in enumerate(text.splitlines(), 1):
+                for literal in literals:
+                    for _ in range(line.count(literal)):
+                        mismatches.append(('stale', carrier, number, repr(literal)))
+        for name, expected in tallies.items():
+            if not name.startswith('tools/'):
+                raise ValueError('pinned tally is not a lane tool: ' + name)
+            path = lane_path(root, name)
+
+HAS_DOC_WIDE_LITERAL_COUNT=True
+

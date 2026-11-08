@@ -1,0 +1,21 @@
+# command: python3 -c '<kotodama_unscoped>'
+# exit: 0
+# stdout:
+SNIPPET:
+    sk = os.path.join(root, 'SKILL.md')
+    if os.path.isfile(sc) and os.path.isfile(sk):
+        in_cap, rows = False, 0
+        for l in open(sc, encoding='utf-8', errors='replace'):
+            if l.startswith('## '):
+                in_cap = l.startswith('## Capabilities')
+            elif in_cap and l.lstrip().startswith('|') and 'check-table-support.py' in l:
+                rows += 1
+        skn = open(sk, encoding='utf-8', errors='replace').read().count('check-table-support.py')
+        ok = rows >= 1 and skn >= 1
+        detail = f'scorecard-capability-rows={rows} skill-mentions={skn}'
+    else:
+        detail = 'SCORECARD.md or SKILL.md missing'
+    leg('O5', ok, detail)
+
+HAS_FONT_WIDE_SKILL_COUNT=True
+

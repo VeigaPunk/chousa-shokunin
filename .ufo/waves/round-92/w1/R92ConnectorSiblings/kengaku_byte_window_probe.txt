@@ -1,0 +1,20 @@
+# command: python3 -c '<kengaku_byte_window>'
+# exit: 0
+# stdout:
+SNIPPET:
+def leg_v2(reader: Reader) -> tuple[str, str]:
+    skill = visible(reader.get(SKILL))
+    if "round76-c1-surface-resolver" not in skill:
+        return "pending", "round-76 SKILL rows absent"
+    tail = skill[skill.index("round76-c1-surface-resolver"):]
+    tail = tail[: tail.index("round76-c2-defect-discharge") + 4000] if "round76-c2-defect-discharge" in tail else tail[:4000]
+    need = ["cases=12 red=11", "9/9", "cases=14 red=13", "12/12"]
+    missing = [n for n in need if n not in tail]
+    if missing:
+        return "fail", f"missing tallies {missing}"
+    classes = ["NONLOCAL-ANCHOR", "ESCAPE-ANCHOR", "OVERFLOW-ANCHOR", "MALFORMED-DATE",
+               "DUPLICATE-SURFACE", "MANIFEST-DRIFT", "EMPTY-SCOPE", "LEG-PENDING",
+               "NEGATED-DISCHARGE"]
+
+HAS_ARBITRARY_BYTE_WINDOW=True
+

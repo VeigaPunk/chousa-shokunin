@@ -1,0 +1,19 @@
+--- emit WITHOUT --receipts (claims.md rule 8 says: exit 2, 'emit requires an explicit --receipts') ---
+EMIT c1-gate-r89 exit=1 want=0 MISMATCH
+EMIT c1-mutants-r89 exit=0 want=0 OK
+EMIT c1-harm exit=128 want=0 MISMATCH
+EMIT c1-harm-setup exit=2 want=2 OK
+EMIT c2-prior-landing exit=0 want=0 OK
+EMIT c2-prior-controls exit=0 want=0 OK
+EMITTED=6 MISMATCH=2
+EXIT=1
+--- did it write under controls/receipts/ ? ---
+total 40
+drwxr-xr-x 2 vgpnk vgpnk   156 Nov  8 09:39 .
+drwxr-xr-x 3 vgpnk vgpnk    66 Nov  8 09:39 ..
+-rw-r--r-- 1 vgpnk vgpnk 13145 Nov  8 10:19 c1-gate-r89.txt
+-rw-r--r-- 1 vgpnk vgpnk   213 Nov  8 10:19 c1-harm-setup.txt
+-rw-r--r-- 1 vgpnk vgpnk   243 Nov  8 10:19 c1-harm.txt
+-rw-r--r-- 1 vgpnk vgpnk  5866 Nov  8 10:19 c1-mutants-r89.txt
+-rw-r--r-- 1 vgpnk vgpnk  1767 Nov  8 10:19 c2-prior-controls.txt
+-rw-r--r-- 1 vgpnk vgpnk   530 Nov  8 10:19 c2-prior-landing.txt

@@ -1,0 +1,39 @@
+
+### R1 committed TOK=1, fresh prints TOK=9 (re-pinned), pins all pass
+  exit=1 verdict=FAIL counts=COMMITTED_OK=1/1 EXACT_OK=1/1
+    RECEIPT fx-one FINDING FRESH_TOKEN_DETACHED:TOK=9
+
+### R2 same as R1 variant
+  exit=1 verdict=FAIL counts=COMMITTED_OK=1/1 EXACT_OK=1/1
+    RECEIPT fx-one FINDING FRESH_TOKEN_MISSING:TOK
+
+### R3 committed full vs fresh exit=3
+  exit=1 verdict=FAIL counts=COMMITTED_OK=1/1 EXACT_OK=1/1
+    RECEIPT fx-one FINDING FRESH_EXIT:3
+
+### R5 committed TOK=8 vs fresh TOK=9, NUM ok both
+  exit=1 verdict=FAIL counts=COMMITTED_OK=0/1 EXACT_OK=0/1
+    RECEIPT fx-one FINDING TOKEN_DETACHED:TOK=8,FRESH_TOKEN_DETACHED:TOK=9
+
+### D chained verify after repin (run 2 of deleter chain reused)
+  exit=1 verdict=FAIL counts=COMMITTED_OK=1/1 EXACT_OK=1/1
+    RECEIPT fx-one FINDING FRESH_TOKEN_DETACHED:TOK=2
+
+### H1 case=WRONG alone
+  exit=1 verdict=FAIL counts=COMMITTED_OK=0/1 EXACT_OK=1/1
+    RECEIPT fx-one FINDING HEADER_CASE:WRONG
+    RAW: RECEIPT fx-one FINDING HEADER_CASE:WRONG
+
+### H2 detached 'TOK =1' token
+  exit=1 verdict=FAIL counts=COMMITTED_OK=0/1 EXACT_OK=0/1
+    RECEIPT fx-one FINDING TOKEN_MISSING:TOK
+  T4 receipt bytes (escaped): 
+
+### T4 detached token, headers intact
+  exit=1 verdict=FAIL counts=COMMITTED_OK=0/1 EXACT_OK=0/1
+    RECEIPT fx-one FINDING MISSING_HEADER:case,MISSING_HEADER:expected_exit,MISSING_HEADER:exit,MISSING_HEADER:computed_against,PIN_MISSING
+  emit rc=0 out=EMIT fx-one exit=0 want=0 OK
+EMITTED=1 MISMATCH=0
+
+### T2 pinned x.sh calls unpinned y.sh internally (receipt present)
+  exit=0 verdict=PASS counts=COMMITTED_OK=1/1 EXACT_OK=1/1

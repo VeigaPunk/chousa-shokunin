@@ -1,0 +1,21 @@
+
+### U indented BODY token '  TOK=1' (body_tokens skips only ln.startswith('#'))
+  exit=0 verdict=PASS counts=COMMITTED_OK=1/1 EXACT_OK=1/1
+
+### U2 duplicated identical case header
+  exit=1 verdict=FAIL counts=COMMITTED_OK=0/1 EXACT_OK=0/1
+    RECEIPT fx-one FINDING MISSING_HEADER:case,MISSING_HEADER:expected_exit,MISSING_HEADER:exit,MISSING_HEADER:computed_against,PIN_MISSING
+
+### U3 space before '=' in header
+  exit=0 verdict=PASS counts=COMMITTED_OK=1/1 EXACT_OK=1/1
+
+### U4 tab + 4-space indented headers
+  exit=0 verdict=PASS counts=COMMITTED_OK=1/1 EXACT_OK=1/1
+
+### T2-mutate y.sh runs unpinned but output token still satisfied (fresh prints TOK=1)
+  exit=0 verdict=PASS counts=COMMITTED_OK=1/1 EXACT_OK=1/1
+  y.sh unpinned; a bad y.sh exit code would surface only via FRESH_EXIT if it exited nonzero
+
+### X self row with 3 spaces before pins.txt
+  exit=0 verdict=PASS counts=COMMITTED_OK=1/1 EXACT_OK=1/1
+  read_pins: parts=ln.split(None,1) tolerates; minus-self: parts[1].strip()==self_rel tolerates

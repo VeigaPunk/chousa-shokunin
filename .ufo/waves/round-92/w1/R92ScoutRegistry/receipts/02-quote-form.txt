@@ -1,0 +1,18 @@
+# 02 — quote form: literal vs rendered
+# cmd: zcat man > work/man.txt ; grep -c 'Print or check SHA256 (256-bit) checksums\.'
+0
+exit=1
+# cmd: grep -c 'Print or check SHA256 (256\\-bit) checksums\.'
+1
+exit=0
+# cmd: man --nh --nj -P cat <man> | grep -n 'Print or check'   (rendered page)
+10:     Print or check SHA256 (256-bit) checksums.  Legacy interface to the
+exit=0
+# cmd: printf '%s\n' 'Print or check SHA256 (256-bit) checksums.' | wc -w
+6
+# committed r91 spot-check wording (base d7780fef): corpus/lessons/round-91-verifier-spotcheck.md:67
+| S070 re-open (`sha256sum(1)`) | admit [~ short, scored through Gate] | `/usr/share/man/man1/sha256sum.1.gz` (sha256 `93c17dff…` re-measured `sha256sum` identical); decompressed line 11 `Print or check SHA256 (256\-bit) checksums.`; rendered 7-word quote "Print or check SHA256 (256-bit) checksums." | agree | row's anchor (decompressed line 11, rendered form) resolves verbatim to the installed page; tier A for the digest-print/check scope holds; ≤25-word quote verified |
+# committed r91 lesson wording: corpus/lessons/round-91.md:17-19
+  `93c17dffe9f25d56291113d566a7de3ff65c29f8cc32c381801c49cf27e8403f` (unchanged from the row's recorded sha), opened
+  locally 2026-11-08; decompressed line 11 is `Print or check SHA256 (256\-bit) checksums.` and its rendered
+  form is "Print or check SHA256 (256-bit) checksums." (7 words; the quote is the rendered form, not a literal

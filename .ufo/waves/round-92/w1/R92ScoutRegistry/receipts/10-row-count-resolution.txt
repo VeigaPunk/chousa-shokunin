@@ -1,0 +1,23 @@
+# 10 — registry census contract shape (NF=13) and the seat-spec grep, resolved
+# cmd: grep -cE '^ (0, 3)\|[[:space:]]*S[0-9](3,)' corpus/SOURCES.md
+0
+EXIT=1
+# cmd: grep -cE '^[[:space:]]*\| S[0-9]{3,} ' corpus/SOURCES.md
+219
+EXIT=0
+# cmd: grep -cE '^[[:space:]]*\|' corpus/SOURCES.md   (all pipe-leading lines)
+221
+EXIT=0
+# cmd: awk -F'|' NF==13 count
+221
+# census 'rows' metric:
+file	rows	219
+FLEET	rows	219
+
+# the census contract comment (11 columns => NF=13):
+#!/usr/bin/env bash
+# sources-census.sh — fleet-wide corpus/SOURCES.md census, validation, recheck queue.
+# Conforms to SOURCES-CONTRACT-v1: one registry table, 11 columns => NF=13,
+# statuses queued|mined|rejected ("watch" is NOT a status; recheck carries cadence),
+# community is never tier A.
+# Read-only: parses shokunin.conf LANES rows textually (never sources the conf),

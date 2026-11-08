@@ -1,0 +1,17 @@
+# command: python3 -c '<tsukuroi_last_wins>'
+# exit: 0
+# stdout:
+SNIPPET:
+    for line in sums.splitlines():
+        parts = line.split()
+        if len(parts) == 2:
+            digests[parts[1]] = parts[0]
+    if not digests:
+        raise CannotEvaluate('snapshot-manifest-empty')
+    snapshots = {}
+    for name, want in digests.items():
+        try:
+            data = read(SNAPDIR + '/' + name)
+
+HAS_LAST_WINS_DIGESTS=True
+

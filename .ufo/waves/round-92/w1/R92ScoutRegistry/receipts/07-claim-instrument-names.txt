@@ -1,0 +1,56 @@
+# 07 — instrument path names in the frozen claims vs the tree at C5
+# cmd: grep -o 'corpus/evidence/round92/[a-z0-9.-]*\.py' corpus/evidence/round92/claims.md | sort | uniq -c
+      1 corpus/evidence/round92/control-driver-r92.py
+      1 corpus/evidence/round92/control-forgeries-r92.py
+      1 corpus/evidence/round92/curation-r92-controls.py
+      1 corpus/evidence/round92/curation-r92.py
+      1 corpus/evidence/round92/skill-tally-r92-controls.py
+      1 corpus/evidence/round92/skill-tally-r92.py
+
+# cmd: for each claim-named path: test -f
+EXISTS  corpus/evidence/round92/control-driver-r92.py
+MISSING corpus/evidence/round92/control-forgeries-r92.py
+EXISTS  corpus/evidence/round92/curation-r92.py
+MISSING corpus/evidence/round92/curation-r92-controls.py
+EXISTS  corpus/evidence/round92/skill-tally-r92.py
+EXISTS  corpus/evidence/round92/skill-tally-r92-controls.py
+
+# cmd: ls corpus/evidence/round92/*.py  (what the tree actually carries)
+corpus/evidence/round92/control-driver-r92.py
+corpus/evidence/round92/curation-controls-r92.py
+corpus/evidence/round92/curation-r92.py
+corpus/evidence/round92/forgeries-r92.py
+corpus/evidence/round92/skill-tally-r92-controls.py
+corpus/evidence/round92/skill-tally-r92.py
+corpus/evidence/round92/tally-controls-r92.py
+corpus/evidence/round92/tally-r92.py
+
+# cmd: git log --all --diff-filter=A -- 'corpus/evidence/round92/control-forgeries-r92.py' 'corpus/evidence/round92/curation-r92-controls.py'
+EXIT=0 (empty output = the two names never existed at any revision)
+
+# cmd: run the claim's literal C1/C2 command lines
+control-forgeries-r92.py EXIT=2
+python3: can't open file '/fast/scratch/hyaku/chousa-r92/R92ScoutRegistry/repo/corpus/evidence/round92/control-forgeries-r92.py': [Errno 2] No such file or directory
+curation-r92-controls.py EXIT=2
+python3: can't open file '/fast/scratch/hyaku/chousa-r92/R92ScoutRegistry/repo/corpus/evidence/round92/curation-r92-controls.py': [Errno 2] No such file or directory
+
+# cmd: run the tree's actual instruments (same predicate)
+forgeries-r92.py EXIT=0
+OK dup-pin-path: r92 rc=1 (PIN_DUPLICATE), r91 mechanism proven=True
+OK second-script-unpinned: r92 rc=1 (INSTRUMENT_UNPINNED:elsewhere.sh), r91 mechanism proven=True
+OK pins-rewrite: r92 rc=1 (INSTRUMENT_PIN_MISMATCH:pins.txt), r91 mechanism proven=True
+OK positive: r92 rc=0 (r91 verify is not run: the prior pin-checks against the real table, so a fixture PASS is unclaimable)
+FORGERY_REFUSED=3/3 POSITIVE=pass
+curation-controls-r92.py EXIT=0
+  r92 fails: LEG_FAIL SOURCE status_fail=0 used_by_fail=5 rows=20 | LEG_FAIL VERDICT fields_hold=0 legs_ok=12/13
+  fields old: {'UNENTAILED_TERM': '0', 'Q_SHAPE_FAIL': '0', 'SOURCE_STATUS_OK': '20/20', 'USED_BY_OK': '15/20', 'TFREQ_OK': '17/17'} new: {'UNENTAILED_TERM': '0', 'Q_SHAPE_FAIL': '0', 'SOURCE_STATUS_OK': '20/20', 'USED_BY_OK': '15/20', 'TFREQ_OK': '17/17'}
+FAIL ubiquitous-warrant: r92 CURATION_R92=FAIL (LEG_FAIL TFREQ), r91 CURATION_R91=FAIL
+  r92 fails: LEG_FAIL WARRANT 18/18 width_fail=0 count_bad=1 | LEG_FAIL TFREQ 17/18 max_df=3<=3 | LEG_FAIL VERDICT fields_hold=0 legs_ok=11/13
+  fields old: {'UNENTAILED_TERM': '0', 'Q_SHAPE_FAIL': '0', 'SOURCE_STATUS_OK': '20/20', 'USED_BY_OK': '20/20', 'TFREQ_OK': '17/18'} new: {'UNENTAILED_TERM': '0', 'Q_SHAPE_FAIL': '0', 'SOURCE_STATUS_OK': '20/20', 'USED_BY_OK': '20/20', 'TFREQ_OK': '17/18'}
+OK s1-forged-header-row: r92 CURATION_R92=FAIL (LEG_FAIL QSHAPE), r91 CURATION_R91=PASS
+OK s2-wide-decision-row: r92 CURATION_R92=FAIL (LEG_FAIL WARRANT), r91 CURATION_R91=PASS
+OK s3-substring-usedby: r92 CURATION_R92=FAIL (LEG_FAIL SOURCE), r91 CURATION_R91=PASS
+OK s4-unlinked-usedby: r92 CURATION_R92=FAIL (LEG_FAIL USED_BY), r91 CURATION_R91=PASS
+OK duplicate-count: r91 UNENTAILED_TERM=1 r92 UNENTAILED_TERM=1
+OK regression: FORGERY_REFUSED=7/7 PRIOR_REGRESSION=7/7 rc=1
+CONTROLS=PASS FORGERY_REFUSED=4/4 PRIOR_ACCEPTED=4/4 CARRIED_F1_F4=refused-by-both DUPCOUNT_R91=1 DUPCOUNT_R92=1 PRIOR_REGRESSION=4/4

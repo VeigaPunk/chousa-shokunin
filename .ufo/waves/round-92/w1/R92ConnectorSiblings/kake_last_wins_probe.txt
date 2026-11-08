@@ -1,0 +1,20 @@
+# command: python3 -c '<kake_last_wins>'
+# exit: 0
+# stdout:
+SNIPPET:
+    src = os.path.join(root, REALRUN_DIR)
+    sums = {}
+    for line in open(os.path.join(src, "SHA256SUMS"), encoding="utf-8"):
+        digest, path = line.split(None, 1)
+        sums[path.strip().lstrip("*")] = digest
+    for rel, digest in sums.items():
+        data = open(os.path.join(src, rel), "rb").read()
+        if hashlib.sha256(data).hexdigest() != digest:
+            raise CannotEvaluate("real-run input %s sha256 mismatch" % rel)
+        dest = os.path.join(cd, rel)
+        os.makedirs(os.path.dirname(dest), exist_ok=True)
+        with open(dest, "wb") as fh:
+
+HAS_LAST_WINS_DICT=True
+HAS_DUP_CHECK=False
+

@@ -1,0 +1,12 @@
+(i) read_pins: entries=1 fx-tool.sh=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+    -> duplicate path collapses to ONE entry, value=bbbbbbbb (last wins, first 'aaaa...' lost)
+(ii) instrument_rel(two-script command) -> 'fx-tool.sh'
+     elsewhere.sh NOT returned; only first matching token is pinned
+(iii) pin_report wanted-set lines:
+    """R3/R6: every instrument a row executes, and the expectations file, are pinned and unchanged on disk."""
+    wanted[rel] = row["case"]
+    wanted[rel_for(root, expected)] = "expectations"
+    'instrument-pins' in pin_report body: False; in pins-file row: False
+    -> no wanted entry for the pins file itself; a rewritten table with coherent rows passes
+    read_pins source has duplicate guard: False
+    DEFAULT_PINS defined but used only as path: True

@@ -1,0 +1,46 @@
+  [build aa-a] receipt 113 bytes: b'# case=fx-one\n# expected_exit=0\n# exit=0\n# computed_against=d7780feff6e39ae74a2fd77fc9773c671b33da95\nTOK=1\nNUM=3\n'
+
+### aa-pristine
+  exit=0
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 PINNED_FILES=3 CONTROL_DRIVER_R92=PASS
+  [build ab-a] receipt 113 bytes: b'# case=fx-one\n# expected_exit=0\n# exit=0\n# computed_against=d7780feff6e39ae74a2fd77fc9773c671b33da95\nTOK=1\nNUM=3\n'
+  before: b'# case=fx-one\n# expected_exit=0\n# exit=0\n# computed_against=d7780feff6e39ae74a2fd77fc9773c671b33da95\nTOK=1\nNUM=3\n'
+  after:  b'# case=fx-one\n# expected_exit=0\n# exit=0\n# computed_against=d7780feff6e39ae74a2fd77fc9773c671b33da95\nTOK 1\nNUM=3\n'
+
+### ab-detached
+  exit=1
+    RECEIPT fx-one FINDING TOKEN_MISSING:TOK
+    COMMITTED_OK=0/1 EXACT_OK=0/1 PIN_OK=1/1 FRESH_OK=1/1 PINNED_FILES=3 CONTROL_DRIVER_R92=FAIL
+  post-verify receipt bytes: b'# case=fx-one\n# expected_exit=0\n# exit=0\n# computed_against=d7780feff6e39ae74a2fd77fc9773c671b33da95\nTOK 1\nNUM=3\n'
+  [build ac-a] receipt 113 bytes: b'# case=fx-one\n# expected_exit=0\n# exit=0\n# computed_against=d7780feff6e39ae74a2fd77fc9773c671b33da95\nTOK=1\nNUM=3\n'
+  after:  b''
+
+### ac-dupcase
+  exit=1
+    RECEIPT fx-one FINDING MISSING_HEADER:case,MISSING_HEADER:expected_exit,MISSING_HEADER:exit,MISSING_HEADER:computed_against,PIN_MISSING
+    COMMITTED_OK=0/1 EXACT_OK=0/1 PIN_OK=0/1 FRESH_OK=1/1 PINNED_FILES=3 CONTROL_DRIVER_R92=FAIL
+  post-verify receipt bytes: b''
+  [build ad-a] receipt 113 bytes: b'# case=fx-one\n# expected_exit=0\n# exit=0\n# computed_against=d7780feff6e39ae74a2fd77fc9773c671b33da95\nTOK=1\nNUM=3\n'
+  after:  '  # case=fx-one\n  # expected_exit=0\n  # exit=0\n  # computed_against=d7780feff6e39ae74a2fd77fc9773c671b33da95\nTOK=1\nNUM=3\n'
+
+### ad-indented
+  exit=0
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 PINNED_FILES=3 CONTROL_DRIVER_R92=PASS
+  post-verify receipt bytes: b'  # case=fx-one\n  # expected_exit=0\n  # exit=0\n  # computed_against=d7780feff6e39ae74a2fd77fc9773c671b33da95\nTOK=1\nNUM=3\n'
+  [build ae-a] receipt 113 bytes: b'# case=fx-one\n# expected_exit=0\n# exit=0\n# computed_against=d7780feff6e39ae74a2fd77fc9773c671b33da95\nTOK=1\nNUM=3\n'
+
+### ae-selfdigest
+  exit=1
+    RECEIPT PINS FINDING INSTRUMENT_PIN_MISMATCH:pins.txt
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 PINNED_FILES=2 CONTROL_DRIVER_R92=FAIL
+  [build af-a] receipt 113 bytes: b'# case=fx-one\n# expected_exit=0\n# exit=0\n# computed_against=d7780feff6e39ae74a2fd77fc9773c671b33da95\nTOK=1\nNUM=3\n'
+
+### af-pincomment
+  exit=1
+    RECEIPT PINS FINDING INSTRUMENT_UNPINNED:expected.tsv,INSTRUMENT_UNPINNED:fx-tool.sh,INSTRUMENT_UNPINNED:pins.txt
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 PINNED_FILES=0 CONTROL_DRIVER_R92=FAIL
+  [build ag-a] receipt 113 bytes: b'# case=fx-one\n# expected_exit=0\n# exit=0\n# computed_against=d7780feff6e39ae74a2fd77fc9773c671b33da95\nTOK=1\nNUM=3\n'
+
+### ag-duppin
+  exit=1
+    SETUP PIN_DUPLICATE path=fx-tool.sh

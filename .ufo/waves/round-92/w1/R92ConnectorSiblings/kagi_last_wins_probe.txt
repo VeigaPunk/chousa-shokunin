@@ -1,0 +1,20 @@
+# command: python3 -c '<kagi_last_wins>'
+# exit: 0
+# stdout:
+SNIPPET:
+        pins: dict[str, str] = {}
+        for ln in txt.splitlines():
+            m = INSTRUMENT_RE.match(ln)
+            if m:
+                pins[m.group(2)] = m.group(1)
+        ctrl = [CONTROLS_RE.match(ln) for ln in txt.splitlines() if ln.startswith("CONTROLS:")]
+        ctrl = [c for c in ctrl if c]
+        last = ctrl[-1] if ctrl else None
+        pins_ok = all(pins.get(f) == shas[f] for f in INSTRUMENT_FILES)
+        ctrl_ok = bool(last) and int(last.group(2)) == 0 and int(last.group(1)) >= 13
+        tried.append(f"{os.path.basename(rp)}:pins={'ok' if pins_ok else 'bad'}"
+                     f":controls={'ok' if ctrl_ok else 'bad'}")
+
+HAS_LAST_WINS_DICT=True
+HAS_DUP_CHECK=False
+

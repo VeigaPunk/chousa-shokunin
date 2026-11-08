@@ -1,0 +1,52 @@
+# 06 — registry census validate (the command named in the seat spec)
+# cmd: bash /home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa
+chousa	W04	S051 duplicate url www.w3.org/TR/2017/REC-html52-20171214/syntax.html across scopes
+chousa	W04	S053 duplicate url docs.python.org/3/library/socket.html across scopes
+chousa	W04	S073 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+chousa	W04	S074 duplicate url docs.python.org/3/library/hashlib.html across scopes
+chousa	W04	S075 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+chousa	ok	/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md
+EXIT=0
+
+# cmd: same census against the CLONE's committed SOURCES.md (byte-identical to C5), --file form
+7a2f6d53fe47ac9dc8c8931f8e21619862f0b919ecea0cd387e7f92544f5c1c1  corpus/SOURCES.md
+7a2f6d53fe47ac9dc8c8931f8e21619862f0b919ecea0cd387e7f92544f5c1c1  -
+file	W04	S051 duplicate url www.w3.org/TR/2017/REC-html52-20171214/syntax.html across scopes
+file	W04	S053 duplicate url docs.python.org/3/library/socket.html across scopes
+file	W04	S073 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+file	W04	S074 duplicate url docs.python.org/3/library/hashlib.html across scopes
+file	W04	S075 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+file	ok	/fast/scratch/hyaku/chousa-r92/R92ScoutRegistry/repo/corpus/SOURCES.md
+EXIT=0
+
+# cmd: census mode (row counts)
+file	rows	219
+file	tier.A	140
+file	tier.B	59
+file	tier.C	20
+file	status.mined	183
+file	status.queued	12
+file	status.rejected	24
+FLEET	rows	219
+FLEET	tier.A	140
+FLEET	tier.B	59
+FLEET	tier.C	20
+FLEET	tier.invalid	0
+FLEET	status.queued	12
+FLEET	status.mined	183
+FLEET	status.rejected	24
+FLEET	status.invalid	0
+FLEET	missing	0
+EXIT=0
+
+# cmd: grep -cE '^ (0, 3)\|[[:space:]]*S[0-9](3,)' corpus/SOURCES.md   (the seat spec's row-count grep, verbatim)
+0
+EXIT=1
+# NOTE: that pattern is a literal ' (0, 3)|' or 'S<digit>(3,)' match; it matches nothing in this registry.
+# cmd: grep -cE '^[[:space:]]*\| S[0-9]{3,} ' corpus/SOURCES.md   (the registry's data rows)
+219
+EXIT=0
+# cmd: awk -F'|' 'NF==13' count   (the census contract's 11-column shape => NF=13)
+221
+# cmd: python parse of rows with exactly 11 cells and a unique S-id
+rows= 219 unique= 219

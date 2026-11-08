@@ -1,0 +1,70 @@
+# 05 — located-quote rows and decision rows re-derived from raw bytes
+# cmd: python3 — section split on '## ', every pipe-leading line, cells = split('|')
+===== corpus/knowledge/search-transparency-reporting-r84.md
+  Located quotes: pipe-leading lines=15
+    L 20 w=3 HEADER first='qid'
+    L 21 w=3 SEP first='---'
+    L 22 w=3 DATA first='Q1'
+    L 23 w=3 DATA first='Q2'
+    L 24 w=3 DATA first='Q3'
+    L 25 w=3 DATA first='Q4'
+    L 26 w=3 DATA first='Q5'
+    L 27 w=3 DATA first='Q6'
+    L 28 w=3 DATA first='Q7'
+    L 29 w=3 DATA first='Q8'
+    L 30 w=3 DATA first='Q9'
+    L 31 w=3 DATA first='Q10'
+    L 32 w=3 DATA first='Q11'
+    L 33 w=3 DATA first='Q12'
+    L 34 w=3 DATA first='Q13'
+    -> DATA rows=13 widths=[3]
+  Decision table: pipe-leading lines=13
+    L 38 w=4 HEADER first='Situation'
+    L 39 w=4 SEP first='---'
+    L 40 w=4 DATA first='Reporting which sources were searched'
+    L 41 w=4 DATA first='Reporting when a source was searched'
+    L 42 w=4 DATA first='Reporting the search method'
+    L 43 w=4 DATA first='Reporting how studies were selected'
+    L 44 w=4 DATA first='Reporting the search outcome'
+    L 45 w=4 DATA first='Linking a claim to its source'
+    L 46 w=4 DATA first='Comparing evidence-based generation appr'
+    L 47 w=4 DATA first='Recording what a resource derives from'
+    L 48 w=4 DATA first='Recording when a resource changed'
+    L 49 w=4 DATA first='Recording when a resource is valid'
+    L 50 w=4 DATA first='Recording when a resource became availab'
+    -> DATA rows=11 widths=[4]
+===== corpus/knowledge/provenance-recording-r85.md
+  Located quotes: pipe-leading lines=9
+    L 20 w=3 HEADER first='qid'
+    L 21 w=3 SEP first='---'
+    L 22 w=3 DATA first='Q1'
+    L 23 w=3 DATA first='Q2'
+    L 24 w=3 DATA first='Q3'
+    L 25 w=3 DATA first='Q4'
+    L 26 w=3 DATA first='Q5'
+    L 27 w=3 DATA first='Q6'
+    L 28 w=3 DATA first='Q7'
+    -> DATA rows=7 widths=[3]
+  Decision table: pipe-leading lines=8
+    L 32 w=4 HEADER first='Situation'
+    L 33 w=4 SEP first='---'
+    L 34 w=4 DATA first='Naming what a resource derives from'
+    L 35 w=4 DATA first="Recording a derivation's direction"
+    L 36 w=4 DATA first="Recording the bounds of an entity's exis"
+    L 37 w=4 DATA first="Recording a resource's provenance"
+    L 38 w=4 DATA first='Recording the source behind a resource'
+    L 39 w=4 DATA first='Recording when content was last reviewed'
+    -> DATA rows=6 widths=[4]
+
+# cmd: grep -n 'DECISION_COUNTS' -A4 corpus/evidence/round92/curation-r92.py   (the pinned counts)
+74:DECISION_COUNTS = {
+75-    "corpus/knowledge/search-transparency-reporting-r84.md": 11,
+76-    "corpus/knowledge/provenance-recording-r85.md": 6,
+77-}
+78-DECISION_WIDTH = 4
+# cmd: grep -n -A4 '^FLOORS' corpus/evidence/round92/curation-r92.py   (the pinned quote floors)
+69:FLOORS = {
+70-    "corpus/knowledge/search-transparency-reporting-r84.md": 13,
+71-    "corpus/knowledge/provenance-recording-r85.md": 7,
+72-}
+73-# S2: decision-row count per entry, pinned at the frozen tree (11 + 6 = 17 warrant rows).

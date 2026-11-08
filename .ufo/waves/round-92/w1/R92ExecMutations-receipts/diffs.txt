@@ -1,0 +1,144 @@
+=== M1 control-driver-r92.py ===
+--- repo/corpus/evidence/round92/control-driver-r92.py	2026-11-08 09:46:07.656848604 -0300
++++ mut/M1/control-driver-r92.py	2026-11-08 09:45:39.096733181 -0300
+@@ -111,8 +111,6 @@
+             if len(parts) != 2 or not SHA_RE.fullmatch(parts[0]):
+                 raise SystemExit(f"SETUP malformed pin row: {ln!r}")
+             path = parts[1].strip()
+-            if path in pins:
+-                raise SystemExit(f"SETUP PIN_DUPLICATE path={path}")
+             pins[path] = parts[0]
+     return pins
+ 
+=== M2 control-driver-r92.py ===
+--- repo/corpus/evidence/round92/control-driver-r92.py	2026-11-08 09:46:07.656848604 -0300
++++ mut/M2/control-driver-r92.py	2026-11-08 09:45:39.108733230 -0300
+@@ -159,7 +159,7 @@
+             rel = rel_for(root, t)
+             if not rel.startswith(".."):
+                 rels.append(rel)
+-    return rels
++    return rels[:1]
+ 
+ 
+ def instrument_rel(row, root):
+=== M3 control-driver-r92.py ===
+--- repo/corpus/evidence/round92/control-driver-r92.py	2026-11-08 09:46:07.656848604 -0300
++++ mut/M3/control-driver-r92.py	2026-11-08 09:45:39.117733266 -0300
+@@ -286,7 +286,6 @@
+         for rel in rels:
+             wanted[rel] = row["case"]
+     wanted[rel_for(root, expected)] = "expectations"
+-    wanted[rel_for(root, pins_path)] = "pins"
+     checked = 0
+     for rel in sorted(wanted):
+         disk = os.path.join(os.path.abspath(root), rel)
+=== M4 curation-r92.py ===
+--- repo/corpus/evidence/round92/curation-r92.py	2026-11-08 09:46:50.626820235 -0300
++++ mut/M4/curation-r92.py	2026-11-08 09:45:39.123733290 -0300
+@@ -311,7 +311,7 @@
+         located = 0
+         total = 0
+         qids_seen = []
+-        for ln, cells in quote_lines(section_lines(text, "Located quotes")):
++        for ln, cells in data_lines(section_lines(text, "Located quotes")):
+             bad = q_shape_violation(cells)
+             if bad is not None:
+                 shape_violations.append((rel, ln.strip(), bad))
+=== M5 curation-r92.py ===
+--- repo/corpus/evidence/round92/curation-r92.py	2026-11-08 09:46:50.626820235 -0300
++++ mut/M5/curation-r92.py	2026-11-08 09:45:39.131733323 -0300
+@@ -337,7 +337,6 @@
+         rows = []
+         for ln, cells in decision_lines:
+             if len(cells) != DECISION_WIDTH:
+-                decision_width.append((rel, ln.strip(), f"cells={len(cells)}"))
+                 continue
+             rows.append(cells)
+         decision_counts_seen[rel] = len(rows)
+=== M6 curation-r92.py ===
+--- repo/corpus/evidence/round92/curation-r92.py	2026-11-08 09:46:50.626820235 -0300
++++ mut/M6/curation-r92.py	2026-11-08 09:45:39.137733347 -0300
+@@ -237,7 +237,7 @@
+         return False, False
+     entry = os.path.basename(entry_rel)
+     tokens = used_by_tokens(cells[10])
+-    return cells[7] == "mined", (entry in tokens or entry_rel in tokens)
++    return cells[7] == "mined", (entry in cells[10] or entry_rel in cells[10])
+ 
+ 
+ def witness():
+=== M8 curation-r92.py ===
+--- repo/corpus/evidence/round92/curation-r92.py	2026-11-08 09:46:50.626820235 -0300
++++ mut/M8/curation-r92.py	2026-11-08 09:45:39.143779515 -0300
+@@ -461,8 +461,7 @@
+             if entry in tokens or rel in tokens:
+                 if sid not in cited.get(rel, set()):
+                     used_by_unlinked.append((sid, rel))
+-    legs.append(("USED_BY", not used_by_unlinked,
+-                 "; ".join(f"{sid} not cited by {os.path.basename(r)}" for sid, r in used_by_unlinked) or "0"))
++    legs.append(("USED_BY", True, "0"))
+     legs.append(("SETUP", True, "registry+entries present"))
+     legs.append(("DUPQID", not dup_qids,
+                  "; ".join(f"{os.path.basename(r)} {s} warrant={w}" for r, s, w in dup_qids) or "0"))
+=== M9 skill-tally-r92.py ===
+--- repo/corpus/evidence/round92/skill-tally-r92.py	2026-11-08 09:47:08.489094439 -0300
++++ mut/M9/skill-tally-r92.py	2026-11-08 09:45:39.150805771 -0300
+@@ -84,7 +84,7 @@
+         return lead.startswith("| `research-gate") or "Selftest `PASS (" in line
+ 
+     rows, other = [], 0
+-    for ln in gates_text.splitlines():
++    for ln in text.splitlines():
+         for mm in TALLY_RE.finditer(ln):
+             if current(ln):
+                 rows.append((mm.group(1), mm.group(2)))
+@@ -94,7 +94,7 @@
+     # T2: the historical (non-current) tally multiset is pinned: deleting one changes the verdict.
+     EXPECTED_OTHERS = {("161", "0"): 1, ("256", "0"): 1}
+     other_counts = {}
+-    for ln in gates_text.splitlines():
++    for ln in text.splitlines():
+         for mm in TALLY_RE.finditer(ln):
+             if not current(ln):
+                 other_counts[(mm.group(1), mm.group(2))] = other_counts.get((mm.group(1), mm.group(2)), 0) + 1
+=== M10 skill-tally-r92.py ===
+--- repo/corpus/evidence/round92/skill-tally-r92.py	2026-11-08 09:47:08.489094439 -0300
++++ mut/M10/skill-tally-r92.py	2026-11-08 09:45:39.157054986 -0300
+@@ -98,7 +98,7 @@
+         for mm in TALLY_RE.finditer(ln):
+             if not current(ln):
+                 other_counts[(mm.group(1), mm.group(2))] = other_counts.get((mm.group(1), mm.group(2)), 0) + 1
+-    others_ok = other_counts == EXPECTED_OTHERS
++    others_ok = True
+     if not rows:
+         print("SKILL_TALLY_R92=FAIL no tally row in SKILL.md")
+         return 1
+=== M11 skill-tally-r92.py ===
+--- repo/corpus/evidence/round92/skill-tally-r92.py	2026-11-08 09:47:08.489094439 -0300
++++ mut/M11/skill-tally-r92.py	2026-11-08 09:45:39.164855382 -0300
+@@ -93,12 +93,12 @@
+     stale = [(n, s) for n, s in rows if (int(n), int(s)) != (cases, skipped)]
+     # T2: the historical (non-current) tally multiset is pinned: deleting one changes the verdict.
+     EXPECTED_OTHERS = {("161", "0"): 1, ("256", "0"): 1}
+-    other_counts = {}
++    prior_counts = {}
+     for ln in gates_text.splitlines():
+         for mm in TALLY_RE.finditer(ln):
+             if not current(ln):
+-                other_counts[(mm.group(1), mm.group(2))] = other_counts.get((mm.group(1), mm.group(2)), 0) + 1
+-    others_ok = other_counts == EXPECTED_OTHERS
++                prior_counts[(mm.group(1), mm.group(2))] = prior_counts.get((mm.group(1), mm.group(2)), 0) + 1
++    others_ok = prior_counts == EXPECTED_OTHERS
+     if not rows:
+         print("SKILL_TALLY_R92=FAIL no tally row in SKILL.md")
+         return 1
+@@ -147,7 +147,7 @@
+     if not ok_ranges:
+         print("LEG_FAIL CASE-RANGE")
+     if not others_ok:
+-        print(f"LEG_FAIL OTHERS expected={EXPECTED_OTHERS} observed={other_counts}")
++        print(f"LEG_FAIL OTHERS expected={EXPECTED_OTHERS} observed={prior_counts}")
+     print(f"SKILL_TALLY_R92={'PASS' if passed else 'FAIL'}")
+     return 0 if passed else 1
+ 

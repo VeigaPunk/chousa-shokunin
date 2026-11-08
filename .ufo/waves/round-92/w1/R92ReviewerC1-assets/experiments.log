@@ -1,0 +1,78 @@
+  [build t1-pristine] emit rc=0
+
+### T1-control pristine receipt
+  exit=0 verdict=PASS counts=COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 
+    RECEIPT fx-one OK committed+exact+pin+fresh
+  --- indented receipt bytes ---
+      # case=fx-one
+      # expected_exit=0
+      # exit=0
+      # computed_against=d7780feff6e39ae74a2fd77fc9773c671b33da95
+    TOK=1
+    NUM=3
+
+### T1 two-space-indented headers (sentence says stripped)
+  exit=0 verdict=PASS counts=COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 
+    RECEIPT fx-one OK committed+exact+pin+fresh
+
+### T1b '#exit=0' no-space headers
+  exit=1 verdict=FAIL counts=COMMITTED_OK=0/1 EXACT_OK=1/1 PIN_OK=0/1 FRESH_OK=1/1 
+    RECEIPT fx-one FINDING MISSING_HEADER:case,MISSING_HEADER:expected_exit,MISSING_HEADER:exit,MISSING_HEADER:computed_against,PIN_MISSING
+
+### T2 pinned x.sh calls unpinned y.sh internally (one .sh token in command)
+  exit=1 verdict=FAIL counts=COMMITTED_OK=0/1 EXACT_OK=0/1 PIN_OK=0/1 FRESH_OK=1/1 
+    RECEIPT fx-one FINDING MISSING_RECEIPT,MISSING_HEADER:case,MISSING_HEADER:expected_exit,MISSING_HEADER:exit,MISSING_HEADER:computed_against,PIN_MISSING
+  (y.sh has NO pin row; instrument_rels sees only x.sh)
+  [build t3-pristine] emit rc=0
+
+### T3-D1 only self-row digest changed (self-pin must refuse)
+  exit=1 verdict=FAIL counts=COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 
+    RECEIPT fx-one OK committed+exact+pin+fresh
+    RECEIPT PINS FINDING INSTRUMENT_PIN_MISMATCH:pins.txt
+
+### T3-D2 comment+blank added to pins file (wording: sha of file minus its own row)
+  exit=0 verdict=PASS counts=COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 
+    RECEIPT fx-one OK committed+exact+pin+fresh
+
+### T3-restored pins file
+  exit=0 verdict=PASS counts=COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 
+    RECEIPT fx-one OK committed+exact+pin+fresh
+  [build t4-pristine] emit rc=0
+
+### T4 detached token (exact-short candidate)
+  exit=1 verdict=FAIL counts=COMMITTED_OK=0/1 EXACT_OK=0/1 PIN_OK=0/1 FRESH_OK=1/1 
+    RECEIPT fx-one FINDING MISSING_HEADER:case,MISSING_HEADER:expected_exit,MISSING_HEADER:exit,MISSING_HEADER:computed_against,PIN_MISSING
+  code lines 491-492: passed needs exact_only==len(rows); see I-run for committed-full/exact-short
+
+### T5a emit WITHOUT --receipts (clause 8 says exits 2 'emit requires an explicit --receipts')
+  exit=0
+  stdout=EMIT fx-one exit=0 want=0 OK
+EMITTED=1 MISMATCH=0
+  stderr=
+  default receipts dir contents after emit: ['fx-one.txt']
+
+### T5b emit with --receipts under scratch tree
+  exit=0
+  receipt exists=True
+  [build t5c-pristine] emit rc=0
+
+### T5c verify with read-only receipt (prove no write)
+  exit=0 verdict=PASS counts=COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 
+    RECEIPT fx-one OK committed+exact+pin+fresh
+  mtimes before=[('fx-one.txt', 1794141890086939176)] after=[('fx-one.txt', 1794141890086939176)] unchanged=True
+  [build g-pristine] emit rc=0
+
+### G duplicate pin path (clause 6 says 'SETUP PIN_DUPLICATE exit 2')
+  exit=1 verdict=NO_TOKEN counts=NO_COUNTS 
+    SETUP PIN_DUPLICATE path=fx-tool.sh
+  exit=1 (claim says 2)
+  [build h-pristine] emit rc=0
+
+### H case header value != row case (code name?)
+  exit=1 verdict=FAIL counts=COMMITTED_OK=0/1 EXACT_OK=0/1 PIN_OK=0/1 FRESH_OK=1/1 
+    RECEIPT fx-one FINDING MISSING_HEADER:case,MISSING_HEADER:expected_exit,MISSING_HEADER:exit,MISSING_HEADER:computed_against,PIN_MISSING
+
+### I fresh instrument deletes receipt mid-verify (read-before-run + exact-short shape)
+  exit=1 verdict=FAIL counts=COMMITTED_OK=1/1 EXACT_OK=0/1 PIN_OK=1/1 FRESH_OK=1/1 
+    RECEIPT fx-one OK committed+exact+pin+fresh
+  receipt file exists after: False

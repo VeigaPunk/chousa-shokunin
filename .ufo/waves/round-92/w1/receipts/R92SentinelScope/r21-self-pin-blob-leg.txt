@@ -1,0 +1,4 @@
+=== does the SELF_PIN blob-at-rev leg cover the unchecked pins? ===
+339:    pinned = {rel: sha for rel, sha in pins.items() if rel != rel_for(root, __file__).replace("control-driver-r92.py", "instrument-pins.txt") and not rel.endswith("instrument-pins.txt")}
+340:    drift += [f"{rel}@{rev}" for rel in pin_at_rev(repo, rev, pinned)]
+--- note: 'pinned' excludes the driver and the pins file itself ---

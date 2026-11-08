@@ -1,0 +1,45 @@
+# 08 — the C2 counter and battery on the committed C5 bytes (clone)
+# cmd: python3 -B corpus/evidence/round92/curation-r92.py --root .
+SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20 Q_ROWS=20 Q_SHAPE_FAIL=0 SOURCE_STATUS_OK=20/20 USED_BY_OK=20/20 Q_FLOORS=search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7 WARRANT_OK=17/17 TFREQ_OK=17/17 TFREQ_MAX_DF=3 DUP_QIDS=0 TEACHES_CHECKED=1 TEACHES_FLAGGED=1 TEACHES_UNRESOLVED=0 SUP_CLAUSE_CHECKED=0 SUP_UNRESOLVED=0 LEGS_MEASURED=14/14
+TEACHES_FLAGGED S024 terms=publication,modification disposition=superseded by S031
+VERDICT fields_hold=1 legs_ok=14/14 DETECTOR_WITNESS=11/11
+CURATION_R92=PASS
+EXIT=0
+
+# cmd: python3 -B corpus/evidence/round92/curation-controls-r92.py --root . --work $W/ctl
+OK positive: r91 CURATION_R91=PASS r92 CURATION_R92=PASS
+FAIL nonq-row: r92 CURATION_R92=FAIL (LEG_FAIL QSHAPE), r91 CURATION_R91=FAIL
+  r92 fails: LEG_FAIL QSHAPE search-transparency-reporting-r84.md qid=note | LEG_FAIL VERDICT fields_hold=0 legs_ok=12/13
+  fields old: {'UNENTAILED_TERM': '0', 'Q_SHAPE_FAIL': '1', 'SOURCE_STATUS_OK': '20/20', 'USED_BY_OK': '20/20', 'TFREQ_OK': '17/17'} new: {'UNENTAILED_TERM': '0', 'Q_SHAPE_FAIL': '1', 'SOURCE_STATUS_OK': '20/20', 'USED_BY_OK': '20/20', 'TFREQ_OK': '17/17'}
+FAIL status-rejected: r92 CURATION_R92=FAIL (LEG_FAIL SOURCE), r91 CURATION_R91=FAIL
+  r92 fails: LEG_FAIL SOURCE status_fail=5 used_by_fail=0 rows=20 | LEG_FAIL VERDICT fields_hold=0 legs_ok=12/13
+  fields old: {'UNENTAILED_TERM': '0', 'Q_SHAPE_FAIL': '0', 'SOURCE_STATUS_OK': '15/20', 'USED_BY_OK': '20/20', 'TFREQ_OK': '17/17'} new: {'UNENTAILED_TERM': '0', 'Q_SHAPE_FAIL': '0', 'SOURCE_STATUS_OK': '15/20', 'USED_BY_OK': '20/20', 'TFREQ_OK': '17/17'}
+FAIL used-by-blank: r92 CURATION_R92=FAIL (LEG_FAIL SOURCE), r91 CURATION_R91=FAIL
+  r92 fails: LEG_FAIL SOURCE status_fail=0 used_by_fail=5 rows=20 | LEG_FAIL VERDICT fields_hold=0 legs_ok=12/13
+  fields old: {'UNENTAILED_TERM': '0', 'Q_SHAPE_FAIL': '0', 'SOURCE_STATUS_OK': '20/20', 'USED_BY_OK': '15/20', 'TFREQ_OK': '17/17'} new: {'UNENTAILED_TERM': '0', 'Q_SHAPE_FAIL': '0', 'SOURCE_STATUS_OK': '20/20', 'USED_BY_OK': '15/20', 'TFREQ_OK': '17/17'}
+FAIL ubiquitous-warrant: r92 CURATION_R92=FAIL (LEG_FAIL TFREQ), r91 CURATION_R91=FAIL
+  r92 fails: LEG_FAIL WARRANT 18/18 width_fail=0 count_bad=1 | LEG_FAIL TFREQ 17/18 max_df=3<=3 | LEG_FAIL VERDICT fields_hold=0 legs_ok=11/13
+  fields old: {'UNENTAILED_TERM': '0', 'Q_SHAPE_FAIL': '0', 'SOURCE_STATUS_OK': '20/20', 'USED_BY_OK': '20/20', 'TFREQ_OK': '17/18'} new: {'UNENTAILED_TERM': '0', 'Q_SHAPE_FAIL': '0', 'SOURCE_STATUS_OK': '20/20', 'USED_BY_OK': '20/20', 'TFREQ_OK': '17/18'}
+OK s1-forged-header-row: r92 CURATION_R92=FAIL (LEG_FAIL QSHAPE), r91 CURATION_R91=PASS
+OK s2-wide-decision-row: r92 CURATION_R92=FAIL (LEG_FAIL WARRANT), r91 CURATION_R91=PASS
+OK s3-substring-usedby: r92 CURATION_R92=FAIL (LEG_FAIL SOURCE), r91 CURATION_R91=PASS
+OK s4-unlinked-usedby: r92 CURATION_R92=FAIL (LEG_FAIL USED_BY), r91 CURATION_R91=PASS
+OK duplicate-count: r91 UNENTAILED_TERM=1 r92 UNENTAILED_TERM=1
+OK regression: FORGERY_REFUSED=7/7 PRIOR_REGRESSION=7/7 rc=1
+CONTROLS=PASS FORGERY_REFUSED=4/4 PRIOR_ACCEPTED=4/4 CARRIED_F1_F4=refused-by-both DUPCOUNT_R91=1 DUPCOUNT_R92=1 PRIOR_REGRESSION=4/4
+EXIT=0
+
+# the claim's C2 controls field list vs the actual summary line
+# claim (corpus/evidence/round92/claims.md, C2 statement):
+CONTROLS=PASS FORGERY_REFUSED=4/4 PRIOR_ACCEPTED=4/4 DUPCOUNT_R91=1 DUPCOUNT_R92=1 PRIOR_REGRESSION=7/7
+# actual final line:
+CONTROLS=PASS FORGERY_REFUSED=4/4 PRIOR_ACCEPTED=4/4 CARRIED_F1_F4=refused-by-both DUPCOUNT_R91=1 DUPCOUNT_R92=1 PRIOR_REGRESSION=4/4
+# token presence in the whole stdout:
+  CONTROLS=PASS -> 1
+  FORGERY_REFUSED=4/4 -> 1
+  PRIOR_ACCEPTED=4/4 -> 1
+  DUPCOUNT_R91=1 -> 1
+  DUPCOUNT_R92=1 -> 1
+  PRIOR_REGRESSION=7/7 -> 1
+  PRIOR_REGRESSION=4/4 -> 1
+  CARRIED_F1_F4=refused-by-both -> 1
