@@ -2543,3 +2543,31 @@ passing record rather than through prose.
 - Mined mistakes: a reconciliation that re-derived only one detail format; a claim clause that is dead code in its own instrument; a counter that prints PASS over honestly-printed failures; a freeze receipt filed under a failing expectation. No new QUALITY criterion mined this round — the four repairs are plan amendments until a round-89 counter lands; QUALITY 182–189 stand as the round-87 carry (the lesson's `## Corrections` row corrects the "five criteria mined" sentence to the real three / two / three split).
 - Routed defects closed: the SCORECARD 13→12 seat count, the eight-criteria count and the S218 ≤25-word Gate quote (11 words, verified `GATE_RECORD S218 OK`); the template-misquote correction recorded.
 - Gate selftest `PASS (283 cases, 0 skipped)`; census exit 0 at start and end (five pre-existing W04). `tools/gate-records.py` itself is unchanged this round (sha256 `905f9da2…` at base and freeze).
+
+## Round 89 — per-format leg reconciliation and a field-derived curation verdict; the round-88 wave's four survivor shapes close (2026-11-08)
+
+- Input: round 88's non-author spot-check routed eight defects (`corpus/lessons/round-88-verifier-spotcheck.md`
+  §Routed defects 1–8); this round closes 1–7 (8 is operator-owned). §10 assimilation: none — no `merge/chousa/`
+  package byte was consumed and no `considerthere/` proposal was opened this round (the package still collides; the
+  scout re-measures the collision read-only and the count is in its report).
+- Freeze `ac0a0892`: two claims (C1 operability — per-format leg re-derivation plus a printed-summary cross-check;
+  C2 calibration — verdict derived from printed fields, duplicate-qid guard, raw-cell superseder clause), the six
+  instruments, `controls/expected.tsv`, the receipt-vs-expectation driver, the eight pre-freeze receipts,
+  `instrument-pins.txt`, `.ufo/waves/round-89/claims.json` (the layout the pre-file gate reads) and the two registry
+  `used-by` cell extensions.
+- Pre-freeze controls: `c1-prior-instrument` PASS (the round-88 battery on the same tree — the do-nothing control, no
+  `CROSSCHECK` field), `c1-mutants` `MUTANTS_KILLED=11/11 TOOL_MUTANTS_CAUGHT=2/2` including the four round-88
+  survivors `E7b`/`E7c`/`E7d`/`E7f`, `c1-harm` `moved=0`, `c2-prior-instrument` `CURATION_R88=PASS`,
+  `c2-controls` `FORGERY_REFUSED=7/7 PRIOR_ACCEPTED_FORGERY=7/7`, `c2-mutants`
+  `MUTANTS_KILLED=6/6 COUNTER_DETECTED=5 BATTERY_DETECTED=1`.
+- After: `GATE_RECORDS_R89=PASS` (`LEG_REREAD=16/16 RECONCILED=16/16 CROSSCHECK=15/15 LEGS_APPENDED=16`, every
+  round-88 field unchanged) and `CURATION_R89=PASS` (`DUP_QIDS=0 WARRANT_OK=17/17 QUOTES_LOCATED=20/20
+  TEACHES_FLAGGED=1 TEACHES_UNRESOLVED=0 SUP_CLAUSE_CHECKED=0 SUP_UNRESOLVED=0`, `VERDICT fields_hold=1`).
+- Registry: 218 → 218 rows; S216 and S218 `used-by` extended with `corpus/evidence/round89/claims.md` (old→new in the
+  lesson `## Gate`); no other cell moved; census exit 0 at start and end with the same five pre-existing `W04`
+  warnings.
+- Mined mistakes: a single-point mutant on a healthy tree proves nothing (the round-88 `A3`/`E4` shape); a mirror
+  fixture id that collides with a real registry row and silently loses last-wins; a summary field printed before the
+  leg that completes it existed (`LEGS=15/16` beside `PASS`); a battery diagnostic naming a summary key that does not
+  exist. Each fix is shown able to fail in this round's own receipts.
+- Gate selftest `PASS (283 cases, 0 skipped)`; `tools/gate-records.py` unchanged (sha256 `905f9da2…`).

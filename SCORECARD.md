@@ -3963,3 +3963,45 @@ selftest-free change is covered by that sweep.
    `supersedes` edges (a superseding row's `teaches` should be readable in its capture too) and measure over-fire on
    the 218-row registry.
 3. carried debt: the `S217` successful-refused record form (QUALITY 173), the r80 backlog Gate ids, the D1 fixture form.
+
+## Planned — round 89 (intent, not a predicate)
+
+1. **operability (lowest)** — the four round-88 survivor shapes: re-derive each leg's receipt detail in its own
+   grammar (width `len/d1/div3 pinN`, mutant `derived=killed=1`, `tool present`) and cross-check every leg's numbers
+   against the summary fields printed for it; ship multi-point mutants, because a single-point healthy-tree mutant
+   proves nothing.
+2. **calibration** — derive the curation verdict from the printed fields, guard the duplicate-qid cite, and make the
+   superseder-own-read clause match the raw cell with a battery mirror as its non-vacuity witness.
+3. carried debt: the round-74 "source-blind order oracle" (a different instrument, not touched this round), the `S217`
+   successful-refused record form (QUALITY 173), the r80 backlog Gate ids.
+
+## Round 89 verdict — the wave's four survivor shapes die; both claims verify on narrowed wording, with the control discipline routed (2026-11-08)
+
+Freeze `ac0a0892c15de11fb28d3208f2b287687c00477e`; base `f8fa55ec` (round-88 landing + its non-author spot-check).
+Two claims, two axes, no exploratory claim. Round 88's spot-check routed eight defects; this round closes 1–7.
+
+| claim | axis | before | after | verdict |
+|---|---|---|---|---|
+| C1 `C1-BATTERY-R89` | operability (lowest, historical 3/10) | round-88 battery: `PASS`, no `CROSSCHECK` field, accepts all four survivor shapes | `GATE_RECORDS_R89=PASS`, `LEG_REREAD=16/16 RECONCILED=16/16 CROSSCHECK=15/15 LEGS_APPENDED=16`; mutants `MUTANTS_KILLED=11/11 TOOL_MUTANTS_CAUGHT=2/2`; `E7c`/`E7b` die on `UNRECONCILED`, `E7d`/`E7f` on `UNCROSSCHECKED`; harm `moved=0` over `records=29` | **verified as stated on the wording narrowed by Amendments 4–5** |
+| C2 `C2-CURATION-R89` | calibration | round-88 counter: `PASS`, no `DUPQID` leg, verdict `all(ok)`, dead superseder clause; accepts 7/7 forgeries | `CURATION_R89=PASS`, `DUP_QIDS=0 WARRANT_OK=17/17 QUOTES_LOCATED=20/20 TEACHES_FLAGGED=1 TEACHES_UNRESOLVED=0 SUP_CLAUSE_CHECKED=0 SUP_UNRESOLVED=0`; controls `FORGERY_REFUSED=7/7`; mutants `MUTANTS_KILLED=6/6` | **verified as stated on the wording narrowed by Amendments 1 and 8** |
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** | per-format leg re-derivation plus a printed-summary cross-check close the four shapes round 88's wave left alive, each killed with a named line; the subject tool is unchanged so no domain record can move (`moved=0`). |
+| calibration | **improved** | the curation verdict follows the measured tallies, the duplicate-qid cite is refused, and the superseder-own-read clause is reachable with a measured mirror while its vacuity on the real registry (`SUP_CLAUSE_CHECKED=0`) is stated rather than implied. |
+| depth | unchanged | `corpus/knowledge/*.md` 97 → 97; no new entry. |
+| coverage | unchanged | registry 218 → 218 rows; two `used-by` cells extended, no row added; `PROVINCE.md` untouched. |
+| freshness | unchanged | no fetch this round; the refetch ledger's newest row is still round 87's `2026-11-08T06:50:40Z`; no capture newer than the freeze. |
+| adjacency | unchanged | the connector's sibling scan reports zero ownership overlap; nothing absorbed. |
+
+Trends: expansion **unchanged** (97 knowledge files, 218 rows at both revisions), quality **improved** (seven routed
+repairs with failable witnesses; four criteria mined, QUALITY 190–195), discernment **improved** (the wave fired the
+*sentence* twice — Amendments 1 and 5 — and the control discipline three times — Amendments 7 and 8; the lane published
+each, refuted one reviewer finding against committed bytes (Amendment 3), and routed every repair it did not make
+before scoring).
+
+No axis harmed: `git diff f8fa55ec ac0a0892 -- corpus/knowledge/` is empty, the registry diff is the two `used-by`
+cells, `tools/gate-records.py` is byte-identical at both revisions, and every committed `GATE-RECORD` line holds its
+verdict. Carried debt, named not repaired backwards: the round-74 source-blind order oracle, QUALITY 173's successful-
+refused record form, the r80 backlog Gate ids, and this round's own control-discipline package (Amendment 7) plus the
+unbound-`LEGS_MEASURED` and `VERDICT`-token repairs (Amendments 4 and 8) — all routed to round 90.

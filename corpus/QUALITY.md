@@ -1193,3 +1193,44 @@ the admitted entry that motivates it. Tier definitions live in
     archive — but the ordering claim had no evidence. Check: every receipt in a before/after pair carries
     `# computed_against=<40-hex or tag>`, the two files are committed in the same landing that cites them, and a
     "before" value obtained from a historical revision says so in its own header. — `lessons/round-87.md` Mistakes 7.
+
+## Round-89 additions (criteria 1–189 unchanged)
+
+190. **A mutant that breaks a measurement without detaching the leg that hides it proves nothing.** Round 89's first
+    `E7c`/`E7b` mutants replaced only a leg's `ok` with `True` on a healthy tree, so each detail still re-derived
+    `True` and all three survived — the round-88 `A3` shape (constants on an honest tree), not a detachment. The
+    load-bearing mutant carries a list of edits: a broken measurement **plus** the detachment. Check:
+    `mutate-r89.py` prints `UNRECONCILED D1_WIDTH detail=3/3/1 pin3 receipt_ok=True rederived=False` and
+    `UNRECONCILED MUT_ADMIT detail=derived=0 killed=0`, and re-applying the single-point form still survives. —
+    `lessons/round-89.md` Mistakes 1.
+
+191. **A mirror fixture asserts that its chosen registry id is unused; last-wins discards a colliding row silently.**
+    Round 89's superseder mirror inserted `S099` while the real registry already carried S099 as an ERIC record
+    further down `corpus/SOURCES.md`, so `parse_registry`'s `reg[cells[0]] = cells` kept the real row and the mirror's
+    disposal edge vanished; the battery then deviated for the wrong reason. Check: the mirror id is absent from
+    `corpus/SOURCES.md` before the fixture is written (`grep -c '^| S<id> |'` → 0), and the fixture's expected verdict
+    fails if the edge is missing. — `lessons/round-89.md` Mistakes 2.
+
+192. **A summary field never reports a total that includes items appended after it.** Round 89's first landing run
+    printed `LEGS=15/16` beside `PASS`, because the completing `SUMMARY` leg is appended after the summary string is
+    built. A summary prints the measured count over the items that exist when it is built, and the verdict line
+    carries the appended total; the completing leg is itself receipted, re-read and reconciled. Check:
+    `E7g-receipt-removed` prints `LEG_FAIL SUMMARY 14/14` and `UNRECONCILED SUMMARY`. — `lessons/round-89.md`
+    Mistakes 3.
+
+193. **A diagnostic line names the value it compared, never a placeholder key.** Round 89's `UNCROSSCHECKED` line
+    printed `summary_fields=-` because it looked up the leg name in a dictionary keyed by summary fields, so every
+    failure — intended or not — read as "no summary field". The fixed note names the cells and their values
+    (`D1_FORGES=3 D1_EXPECTED=3 DIV3=1 pin=3/3`). Check: every failure line in a battery receipt contains at least one
+    `key=value` pair drawn from the compared surface. — `lessons/round-89.md` Mistakes 4.
+
+194. **Every printed summary cell is either cross-checked against the leg it summarises or declared unbound in the
+    claim.** Round 89's `LEGS_MEASURED` was the one of 19 printed cells outside the cross-check map, so a one-point
+    edit forged it to `0/15` while `PASS` held and the `SUMMARY` receipt read `15/15`. Check: enumerate the summary's
+    printed keys against the cross-check map and require each key either to have a comparator or to be named in the
+    claim's named limits. — `lessons/round-89.md` Mistakes 5.
+195. **A frozen claim's counting command is run verbatim before the freeze, with the scratch directory empty.** Round
+    89's C1 command omitted the step that writes `$W/base-tool.py`, so run verbatim it reported `moved=31`, exit 1,
+    while the `expected.tsv` row produced `moved=0`. Check: execute the exact text of the claim's command block in a
+    fresh work dir and require the stated value; a command that needs a preparatory step carries that step. —
+    `lessons/round-89.md` Mistakes 6.
