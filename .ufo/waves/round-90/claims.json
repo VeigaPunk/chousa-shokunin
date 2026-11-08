@@ -1,0 +1,138 @@
+{
+  "round": 90,
+  "lane": "chousa",
+  "l1": "ChousaR90",
+  "base": "f54a45ed197dd475af50d82e43a22df3d2e99782",
+  "shape": "three claims, three axes (operability, calibration, freshness), no exploratory claim",
+  "C1": {
+    "id": "C1-DRIVER-R90",
+    "axis": "operability",
+    "type": "repair (successor control driver; capability retained)",
+    "sentence": "At the landing revision corpus/evidence/round90/control-driver-r90.py verify --root . --repo . --rev <freeze> --receipts-rev <receipts-carrier> prints CONTROL_DRIVER_R90=PASS (exit 0) with COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 over the six committed receipts; each receipt is read before any fresh run, # exit= equals the row exit, every required K=V equals one whole body token (a differing token with the same key is TOKEN_DETACHED), every key>=N predicate holds (harm records>=1), a key repeated with different values is DUPLICATE_KEY, # computed_against= equals --rev with the scoring bytes byte-identical at their carrier revisions, and the re-run agrees with the committed receipt; and corpus/evidence/round90/control-forgeries-r90.py prints FORGERY_REFUSED=6/6 PRIOR_ACCEPTED=6/6 POSITIVE=pass, each forgery refused by r90 and accepted by the unchanged r89 driver on the same fixture.",
+    "predicate": {
+      "verify_stdout": [
+        "CONTROL_DRIVER_R90=PASS"
+      ],
+      "verify_fields": [
+        "COMMITTED_OK=6/6",
+        "EXACT_OK=6/6",
+        "PIN_OK=6/6",
+        "FRESH_OK=6/6"
+      ],
+      "forgeries_stdout": [
+        "FORGERY_REFUSED=6/6",
+        "PRIOR_ACCEPTED=6/6",
+        "POSITIVE=pass"
+      ],
+      "exit": 0
+    },
+    "counting_command": [
+      "python3 -B corpus/evidence/round90/control-driver-r90.py verify --root . --repo . --rev <freeze> --receipts-rev <receipts>",
+      "python3 -B corpus/evidence/round90/control-forgeries-r90.py --root . --work <scratch> --rev <freeze>"
+    ],
+    "kill_rules": {
+      "K1": "predicate not met at the landing revision",
+      "K2": "a forgery accepted by r90, the positive refused, or the r89 driver refuses a forgery",
+      "K3": "a genuine row moved or silently rewritten by the verification path (FINDING on the committed set, or a receipts-dir write)",
+      "K4": "the pass skips the work: missing receipt accepted, committed receipt not read, substring token match, or the pin minted in verify"
+    },
+    "named_limits": [
+      "a coherent joint edit of instrument, receipt and expectation row survives (that edit is the harness)",
+      "whole-token matching binds one field per token, not its semantic role",
+      "the self-pin detects a moved byte inside a named commit, not a rewritten history"
+    ],
+    "sources": [
+      "S220"
+    ],
+    "before": "receipts/c1-prior-driver.txt + the forgery battery's prior rc=0 lines; spot-check r89 \u00a7Amendment 7"
+  },
+  "C2": {
+    "id": "C2-CURATION-R90",
+    "axis": "calibration",
+    "type": "repair (successor curation counter; capability retained)",
+    "sentence": "At the landing revision corpus/evidence/round90/curation-r90.py --root . prints CURATION_R90=PASS (exit 0) with LEGS_MEASURED=10/10, an output line containing VERDICT fields_hold=1, DETECTOR_WITNESS=8/8, and DUP_QIDS=0 WARRANT_OK=17/17 QUOTES_LOCATED=20/20 TEACHES_FLAGGED=1 TEACHES_UNRESOLVED=0 SUP_CLAUSE_CHECKED=0 SUP_UNRESOLVED=0; the verdict leg is appended before the summary and is one of the ten legs passed requires, so the passing path prints the token pair Amendment 8 said was unprinted; curation-r90-mutants.py prints MUTANTS_KILLED=10/10 COUNTER_DETECTED=9 BATTERY_DETECTED=1 PRIOR_R89_SURVIVORS=2/2, the two constant-substituted detectors surviving r89 and dying on LEG_FAIL WITNESS; and curation-r90-controls.py prints CONTROLS=PASS FORGERY_REFUSED=7/7 PRIOR_REGRESSION=7/7.",
+    "predicate": {
+      "counter_stdout": [
+        "CURATION_R90=PASS"
+      ],
+      "counter_fields": [
+        "LEGS_MEASURED=10/10",
+        "fields_hold=1",
+        "DETECTOR_WITNESS=8/8",
+        "DUP_QIDS=0",
+        "WARRANT_OK=17/17",
+        "QUOTES_LOCATED=20/20",
+        "TEACHES_FLAGGED=1",
+        "TEACHES_UNRESOLVED=0",
+        "SUP_UNRESOLVED=0"
+      ],
+      "counter_line": [
+        "VERDICT fields_hold=1"
+      ],
+      "mutants_stdout": [
+        "MUTANTS_KILLED=10/10",
+        "COUNTER_DETECTED=9",
+        "BATTERY_DETECTED=1",
+        "PRIOR_R89_SURVIVORS=2/2"
+      ],
+      "controls_stdout": [
+        "CONTROLS=PASS",
+        "FORGERY_REFUSED=7/7",
+        "PRIOR_REGRESSION=7/7"
+      ],
+      "exit": 0
+    },
+    "counting_command": [
+      "python3 -B corpus/evidence/round90/curation-r90.py --root .",
+      "python3 -B corpus/evidence/round90/curation-r90-mutants.py --root . --work <scratch>",
+      "python3 -B corpus/evidence/round90/curation-r90-controls.py --root . --work <scratch>"
+    ],
+    "kill_rules": {
+      "K1": "predicate not met at the landing revision",
+      "K2": "a listed mutant survives, the positive mirror is refused, or a tree forgery is accepted",
+      "K3": "harm: a curated entry's verdict moves, or the registry diff exceeds the S220 row plus its used-by cell",
+      "K4": "the verdict or witness is satisfied by constants rather than the detector bodies"
+    },
+    "named_limits": [
+      "MIN_TOKENS=7 is a measured floor, not a content check",
+      "the qid-set pin guards label identity, not quote content",
+      "the witness tests each detector function on synthetic strings; a caller that bypasses the function is not witnessed",
+      "the superseder-own-read clause is vacuous on the real registry (SUP_CLAUSE_CHECKED=0); the battery mirror carries non-vacuity"
+    ],
+    "sources": [],
+    "before": "receipts/c2-prior-landing.txt (no VERDICT token on the passing path), receipts/c2-subst-before.txt (both substitutions survive r89)"
+  },
+  "C3": {
+    "id": "C3-TALLY-R90",
+    "axis": "freshness",
+    "type": "repair (Gate-standard registry freshness, routed defect 5)",
+    "sentence": "At the landing revision python3 -B corpus/evidence/round90/skill-tally-r90.py --root . prints SKILL_TALLY_R90=PASS (exit 0) with TALLY_ROWS=9 STALE_TALLIES=0/9 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=3: every current PASS (<n> cases, <m> skipped) tally in SKILL.md (the eight Gates-table rows whose first cell names research-gate, plus the Selftest host-note statement) re-derives to the subject tool's own printed selftest verdict; the three historical occurrences are counted and not bound.",
+    "predicate": {
+      "stdout": [
+        "SKILL_TALLY_R90=PASS"
+      ],
+      "fields": [
+        "TALLY_ROWS=9",
+        "STALE_TALLIES=0/9",
+        "EXPECTED_CASES=283",
+        "EXPECTED_SKIPPED=0",
+        "OTHER_OCCURRENCES=3"
+      ],
+      "exit": 0
+    },
+    "counting_command": [
+      "python3 -B corpus/evidence/round90/skill-tally-r90.py --root ."
+    ],
+    "kill_rules": {
+      "K1": "predicate not met at the landing revision",
+      "K2": "the check passes with no tally row, or matches against a stale number instead of the tool's live verdict",
+      "K3": "harm: SKILL.md moves outside the tally cells and the case-range note"
+    },
+    "named_limits": [
+      "the check binds the numbers in each current cell; it does not verify which cases 276-283 are",
+      "historical occurrences are recognised by shallower structure than the binding rule; a rewritten line that looks current would be bound"
+    ],
+    "sources": [],
+    "before": "receipts/c3-before.txt (STALE_TALLIES=9/9, EXPECTED_CASES=283)"
+  }
+}
