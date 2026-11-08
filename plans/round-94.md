@@ -112,3 +112,38 @@ declaration. (b) Named limit 2's wording was wider than the code: the heading re
 `^#{1,6} ` line (ATX with a space), not every ATX form. (c) The `moved-to-heading` case renamed the owner
 heading rather than moving the tally; it is now `heading-alias` and says so. (d) `TAIL_OWNED_OK` is printed
 observability: the verdict force is the owner codes feeding `TAIL_OK`, and the kill rule says that instead.
+
+**Amendment 4 (R94ReviewerC1 F1, R94ExecC1Repro F1, R94ScoutSources F1, R94SentinelScope F1,
+R94ExecMutations C1) — C1's battery case `s1-schema-two-column` was unsatisfiable.** It wrote the valid
+three-column table and then demanded `SETUP PIN_SCHEMA` from the same table, so `FORGERIES=PASS` was
+unreachable on every tree the driver accepts; the aggregate `SCHEMA_REFUSED` (read from `s0`) stayed green,
+which is why only the `FORGERIES=` token moved. Fix at F2: `s1` dropped; the do-nothing measurement is
+`s0-schema-prior` (r93 scores the two-column table, r94 refuses it). Residual: the wave's verdicts about the
+C1 battery are about `C`'s bytes, and `after/c1-forgeries.txt` at F2/C2 is the green run.
+
+**Amendment 5 (R94ReviewerC1 F2) — the expectation role's code vocabulary.** The sentence promised
+`PIN_ROLE_DANGLING` / `PIN_ROLE_MISSING` for every covered role; the single-member `expectation` branch emits
+`PIN_ROLE_MISMATCH` on either direction. The sentence now names that. The set relation itself is correct.
+
+**Amendment 6 (R94ReviewerC1 F4, R94CriticClaims) — `PIN_ROLES_OK` is a ratio, not the gate, and a deleted
+`driver` row is unobserved.** The verdict force is the role codes; the ratio is over the table's own
+non-driver rows, so a deleted row shrinks both sides and can print `13/13` while the run FAILs. Named limit 2
+no longer claims a `PIN_MISSING`-class code for a deleted `driver` row: the walk iterates the table, not the
+tree, so that row is unobserved.
+
+**Amendment 7 (R94ReviewerC1 F3, R94ExecC1Repro F2) — prior acceptance is its own measurement.** The first
+F battery derived `PRIOR_ACCEPTED` from the same dict as `FORGERY_REFUSED` (over all 16 result sets the two
+numbers never differed). At F2 each fixture records its r93 exit code (`old_rcs`) and `PRIOR_ACCEPTED` counts
+those, so the two ratios can disagree.
+
+**Amendment 8 (R94SentinelScope F2/F5/F6/F7) — containment and validation.** `--work` equal to a system root
+is refused before any `rmtree`; a pin row whose real path leaves `--root` is `PIN_ROW_OUTSIDE` (symlink
+included); `--expected`/`--pins` (and `--receipts` in verify) must resolve inside `--root` or the run is
+`SETUP`; `--receipts-rev` is validated as 40-hex like `--rev`.
+
+**Amendment 9 (R94SentinelScope F3/F4/F8/F9/F10) — host paths and leftovers.** `expected.tsv` no longer sets
+`HOME=/home/vgpnk` (the driver's own scrub supplies the tree root) and the setup row passes a *relative*
+`--base-tool`, so `receipts/c1-harm-setup.txt` no longer embeds the emitter's scratch path; the forgeries
+battery removes its clone before exit. Still unobserved, declared: an instrument's unpinned inputs (F9), and a
+setup-class failure inside an executed instrument surfacing as that instrument's exit rather than a `SETUP`
+line (F10) — both are round-95 plan items.

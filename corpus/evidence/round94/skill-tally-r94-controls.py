@@ -52,6 +52,14 @@ ALIEN = "### Round 36 — the engine-swap canary and per-record attribution (202
 ALIEN2 = "### Round 35 — the pinned binary, the routing witness, and two survivors (2026-10-23)"
 
 
+def refuse_work_root(work):
+    """R94SentinelScope F2: every battery rmtree()s --work, so a system root is refused, never deleted."""
+    bad = ("/", "/home", "/tmp", "/var/tmp", os.path.expanduser("~"), os.path.expanduser("~/"))
+    if os.path.abspath(work) in bad:
+        print(f"SETUP --work is not a scratch path: {work}")
+        raise SystemExit(2)
+
+
 def run(counter, tree, receipt=RECEIPT):
     p = subprocess.run([sys.executable, "-B", counter, "--root", tree, "--selftest", receipt],
                        capture_output=True, text=True)
@@ -90,6 +98,7 @@ def main():
     a = ap.parse_args()
     root = os.path.abspath(a.root)
     work = os.path.abspath(a.work)
+    refuse_work_root(work)
     if not os.path.isfile(RECEIPT):
         print(f"SETUP missing selftest receipt {RECEIPT}")
         return 2

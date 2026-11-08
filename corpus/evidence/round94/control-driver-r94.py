@@ -363,6 +363,11 @@ def pin_report(rows, root, expected, pins_path, receipts_dir):
             codes.append(f"PIN_ROW_OUTSIDE path={rel}")
             continue
         disk = os.path.join(os.path.abspath(root), rel)
+        # R94SentinelScope F5: a row naming an in-tree symlink must not read bytes outside the tree.
+        real = os.path.realpath(disk)
+        if not real.startswith(os.path.realpath(root) + os.sep):
+            codes.append(f"PIN_ROW_OUTSIDE path={rel}")
+            continue
         if not os.path.isfile(disk):
             codes.append(f"PIN_MISSING path={rel}")
             continue
@@ -470,6 +475,23 @@ def main():
     if not REV_RE.fullmatch(a.rev):
         print("CONTROL_DRIVER_R94=SETUP --rev is not a 40-hex revision")
         return 2
+    # R94SentinelScope F7: --receipts-rev is validated like --rev.
+    if a.receipts_rev is not None and not REV_RE.fullmatch(a.receipts_rev):
+        print("CONTROL_DRIVER_R94=SETUP --receipts-rev is not a 40-hex revision")
+        return 2
+    # R94SentinelScope F2: the batteries rmtree --work, so a work path that is a system root is refused.
+    if work in ("/", "/home", "/tmp", "/var/tmp", os.path.expanduser("~"), os.path.expanduser("~/")):
+        print(f"CONTROL_DRIVER_R94=SETUP --work is not a scratch path: {work}")
+        return 2
+    # R94SentinelScope F6: every named input is resolved inside --root before it is opened.
+    contained = [("--expected", a.expected), ("--pins", a.pins)]
+    if a.mode == "verify":
+        contained.append(("--receipts", a.receipts))
+    for label, path in contained:
+        rel = os.path.relpath(os.path.abspath(path), root)
+        if rel == ".." or rel.startswith(".." + os.sep):
+            print(f"CONTROL_DRIVER_R94=SETUP {label} outside --root: {path}")
+            return 2
     if not os.path.isfile(a.expected):
         print(f"CONTROL_DRIVER_R94=SETUP missing {a.expected}")
         return 2

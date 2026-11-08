@@ -27,8 +27,11 @@ instruments imports another.
 directions: `role=instrument` is exactly the instruments the expected rows execute, `role=expectation` is
 exactly the expectations file, `role=receipt` is exactly the committed receipts, and both claims files carry
 `role=claims`. A two-column row is `SETUP PIN_SCHEMA` (exit 2), an unknown role `SETUP PIN_ROLE_UNKNOWN`
-(exit 2), and a dangling or missing member of a covered role is `PIN_ROLE_DANGLING` / `PIN_ROLE_MISSING`
-(exit 1). `driver` rows are byte-checked but carry no coverage invariant (named limit 2).
+(exit 2); a dangling or missing member of a multi-member covered role is `PIN_ROLE_DANGLING` /
+`PIN_ROLE_MISSING` (exit 1), and the single-member `expectation` role reports `PIN_ROLE_MISMATCH` on either
+direction (Amendment 5, R94ReviewerC1 F2). `driver` rows are byte-checked but carry no coverage invariant
+(named limit 2). The refusal is carried by the role codes; `PIN_ROLES_OK` is a ratio over the table's own
+non-driver rows, so a deleted row shrinks both sides (Amendment 6, R94ReviewerC1 F4).
 
 **Counting command** (from the lane root, `<F>` the freeze and `<C>` the carrier the receipts pin):
 
@@ -47,7 +50,9 @@ python3 -B corpus/evidence/round94/forgeries-r94.py --root . --repo . --rev <F> 
 `RECEIPT SELF_PIN OK rev=<F> receipts_rev=<C>`. PASS requires `findings==0`, every row
 committed/exact/pin/fresh, `checked==len(pins)`, `rchecked==rtotal>0`, and `role_codes` empty. The battery
 prints `FORGERIES=PASS FORGERY_REFUSED=4/4 PRIOR_ACCEPTED=4/4 SCHEMA_REFUSED=1/1
-SCHEMA_PRIOR_ACCEPTED=1/1 CARRIED_REFUSED=2/2 POSITIVE=pass` (exit 0), where the four refusals are the
+SCHEMA_PRIOR_ACCEPTED=1/1 CARRIED_REFUSED=2/2 POSITIVE=pass` (exit 0), where `PRIOR_ACCEPTED` reads each
+fixture's own r93 exit code, not the r94 result re-counted (Amendment 7, R94ReviewerC1 F3), and the four
+refusals are the
 dangling-instrument, missing-claims, mis-role-expectation and unknown-role fixtures, each scored PASS by the
 r93 driver on the two-column projection of the same rows, and the do-nothing form is the whole table written
 in the r93 two-column shape (`SCHEMA_PRIOR_ACCEPTED`, r93 rc 0 → r94 `PIN_SCHEMA` rc 2).
@@ -60,10 +65,14 @@ covered members, or the role check passing when the executed set is empty.
 
 **Named limits.** (1) A coherent joint edit of an instrument, its pin row, its receipt and its expectation
 row survives; that edit is the harness. (2) `driver` rows (the driver, the batteries, the leg table, the
-selftest capture) are byte-checked but not coverage-checked: the harness is not a case instrument, so a
-deleted driver row is `PIN_MISSING`-class only. (3) Roles are a claim about the table's own membership, not
-about what a file does: a script that reads another file is invisible to the role leg. (4) The role names
-are a closed enum in this file; a new kind of pinned artefact needs a code change in the same commit.
+selftest capture) are byte-checked but not coverage-checked: the harness is not a case instrument, and a
+**deleted** `driver` row is unobserved (the walk iterates the table, not the tree; Amendment 6,
+R94CriticClaims). (3) Roles are a claim about the table's own membership, not about what a file does: a
+script that reads another file (including the tools it executes) is invisible to the role leg, so a pinned
+row whose inputs drift unpinned is unobserved (R94SentinelScope F9; round-95 plan item 1). (4) The role names
+are a closed enum in this file; a new kind of pinned artefact needs a code change in the same commit. (5) A
+setup-class failure inside an executed instrument still surfaces as the instrument's own exit, not as a
+`SETUP` line (R94SentinelScope F10).
 
 **Sources.** `S070` (installed `sha256sum(1)`, re-opened: the digest text the pin discipline rests on);
 `S221` (installed `git-clone(1)`, opened this round: a `--shared` clone "starts out without any object of
@@ -93,8 +102,9 @@ python3 -B corpus/evidence/round94/curation-controls-r94.py --root . --work "$HY
 ```
 
 **Predicate.** The counter prints `CURATION_R94=PASS` (exit 0) with `LEGS_MEASURED=16/16 Q_SHAPE_FAIL=0
-Q_WSQUOT=0 Q_PUNCTQUOT=0 Q_ROWS=20 WARRANT_OK=17/17 TFREQ_OK=17/17 DUP_QIDS=0` and
-`VERDICT fields_hold=1 legs_ok=16/16 DETECTOR_WITNESS=18/18`. The controls print `CONTROLS=PASS
+Q_WSQUOT=0 Q_PUNCTQUOT=0 Q_ROWS=20 WARRANT_OK=17/17 TFREQ_OK=17/17 DUP_QIDS=0` on its summary line and
+`VERDICT fields_hold=1 legs_ok=16/16 DETECTOR_WITNESS=18/18` on its verdict line (two lines; Amendment 2(c),
+R94CriticClaims). The controls print `CONTROLS=PASS
 CARRIED_REFUSED_BOTH=4/4 WS_NAMED=2/2 PUNCT_NAMED=2/2 PUNCT_SHAPE_GREEN_R93=1/1 CJK_SILENT=1/1
 PRIOR_REGRESSION=7/7`
 (exit 0), where `PUNCT_NAMED` are the dash and dots trees: r94 refuses each at the shape leg with

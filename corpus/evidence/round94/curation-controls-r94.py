@@ -48,6 +48,14 @@ DUP = '| Recording a modified resource | state the modified value | leave the mo
 LEGS = (("round93", "controls", "legs.txt"), ("round94", "controls", "legs.txt"))
 
 
+def refuse_work_root(work):
+    """R94SentinelScope F2: every battery rmtree()s --work, so a system root is refused, never deleted."""
+    bad = ("/", "/home", "/tmp", "/var/tmp", os.path.expanduser("~"), os.path.expanduser("~/"))
+    if os.path.abspath(work) in bad:
+        print(f"SETUP --work is not a scratch path: {work}")
+        raise SystemExit(2)
+
+
 def mirror(root, dst):
     os.makedirs(os.path.join(dst, "corpus", "knowledge"), exist_ok=True)
     os.makedirs(os.path.join(dst, "corpus", "evidence"), exist_ok=True)
@@ -94,6 +102,7 @@ def main():
     a = ap.parse_args()
     root = os.path.abspath(a.root)
     work = os.path.abspath(a.work)
+    refuse_work_root(work)
     shutil.rmtree(work, ignore_errors=True)
     os.makedirs(work, exist_ok=True)
     pristine = mirror(root, os.path.join(work, "pristine"))

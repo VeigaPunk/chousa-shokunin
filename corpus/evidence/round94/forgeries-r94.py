@@ -46,6 +46,14 @@ RECEIPTS_REL = "corpus/evidence/round94/controls/receipts"
 CLAIMS = (".ufo/waves/round-94/claims.json", ".ufo/waves/round-94/claims.md")
 
 
+def refuse_work_root(work):
+    """R94SentinelScope F2: every battery rmtree()s --work, so a system root is refused, never deleted."""
+    bad = ("/", "/home", "/tmp", "/var/tmp", os.path.expanduser("~"), os.path.expanduser("~/"))
+    if os.path.abspath(work) in bad:
+        print(f"SETUP --work is not a scratch path: {work}")
+        raise SystemExit(2)
+
+
 def sha256_file(path):
     h = hashlib.sha256()
     with open(path, "rb") as fh:
@@ -101,6 +109,7 @@ def main():
     a = ap.parse_args()
     root = os.path.abspath(a.root)
     work = os.path.abspath(a.work)
+    refuse_work_root(work)
     pins = os.path.join(root, PINS_REL)
     if not os.path.isfile(pins):
         print(f"SETUP missing pins table {pins}")
@@ -215,6 +224,7 @@ def main():
     prior = sum(1 for n in role_names if old_rcs.get(n) == 0)
     carried = sum(1 for n in ("c1-carried-instrument", "c2-carried-receipt") if results.get(n))
     ok = all(results.values())
+    shutil.rmtree(tree, ignore_errors=True)
     print(f"FORGERIES={'PASS' if ok else 'FAIL'} FORGERY_REFUSED={role_forgeries}/4 PRIOR_ACCEPTED={prior}/4 "
           f"SCHEMA_REFUSED={int(schema_ok)}/1 SCHEMA_PRIOR_ACCEPTED={int(schema_ok)}/1 "
           f"CARRIED_REFUSED={carried}/2 POSITIVE={'pass' if pos_ok else 'FAIL'}")
