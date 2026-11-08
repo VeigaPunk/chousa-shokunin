@@ -1,0 +1,35 @@
+# R84ScoutNovelty — S017 disposition receipt
+# date_utc: 2026-11-08T02:54:55Z
+
+## Q: does corpus/captures/259c96bf7088a12bc7ce65c4.txt (S017 landing) contain any 8-25 word quote about search reporting?
+chars=2895
+keyword counts: {'search': 0, 'databas': 0, 'registr': 0, 'websit': 0, 'organis': 0, 'reference list': 0, 'strateg': 0, 'checklist': 5, 'flow diagram': 3, 'item': 4, 'last searched': 0, 'filters': 0}
+sentences with 8..25 words: 0
+longest prose lines (>=8 words):
+   [87w] PRISMA 2020 consists of a statement paper , which includes a description of how the reporting guideline was developed and presents a checklist of items and sub-items, an expanded checklist that details reporting recommendations for each item/sub-item, an abstract checklist , and template flow diagrams for original and updated reviews. Users are advised to read the PRISMA 2020 statement paper in conjunction with the explanation and elaboration paper , which provides exemplars of good reporting and explanations to enhance the use, understanding and dissemination of PRISMA 2020.
+   [40w] To find out more about the PRISMA 2020 statement and explanation and elaboration paper, obtain downloads of the PRISMA 2020 checklists and flow diagrams, and learn about the history, development and funding of PRISMA 2020, click on the links below:
+   [9w] Copyright © 2024-2026 the PRISMA Executive . Contact: prismastatement@gmail.com
+
+## Q: does corpus/captures/a640b15abf781e5c583d7088.txt (PDF, now S214) contain the items?
+$ grep -n -i -E 'Specify all databases|date when each source|full search strategies|methods used to decide whether|results of the search and selection' corpus/captures/a640b15abf781e5c583d7088.txt
+17:Information              6    Specify all databases, registers, websites, organisations, reference lists and other sources searched or consulted to identify studies. Specify the
+18:sources                       date when each source was last searched or consulted.
+19:Search strategy          7    Present the full search strategies for all databases, registers and websites, including any filters and limits used.
+20:Selection process        8    Specify the methods used to decide whether a study met the inclusion criteria of the review, including how many reviewers screened each record
+53:Study selection      16a    Describe the results of the search and selection process, from the number of records identified in the search to the number of studies included in
+exit_code=0
+
+## Q: is the S017->S214 split correct?
+$ grep -n -E '^\| S(017|214) ' corpus/SOURCES.md
+27:| S017 | PRISMA 2020 statement — https://www.prisma-statement.org/prisma-2020 | spec | A | reporting standard for systematic-review search transparency | PRISMA 2020 checklist and flow diagram li
+227:| S214 | PRISMA 2020 checklist PDF — https://www.prisma-statement.org/s/PRISMA_2020_checklist-ab3g.pdf | spec | A | the checklist items a systematic review must report about its search | items 6
+exit_code=0
+
+$ awk -F'\t' '$1=="S017" || $1=="S214"' corpus/evidence/round57/refetch.tsv | cut -f1,2,3,5,6,7
+S017	https://www.prisma-statement.org/prisma-2020	259c96bf7088a12bc7ce65c4	2026-11-08T02:13:58Z	0	200
+S017	https://www.prisma-statement.org/prisma-2020-checklist	1f5f4eec0b85edf1dc53db7b	2026-11-08T02:14:24Z	0	200
+S017	https://www.prisma-statement.org/s/PRISMA_2020_checklist-ab3g.pdf	a640b15abf781e5c583d7088	2026-11-08T02:14:35Z	0	200
+S214	https://www.prisma-statement.org/s/PRISMA_2020_checklist-ab3g.pdf	a640b15abf781e5c583d7088	2026-11-08T02:21:13Z	0	200
+
+## registry status of S017 across ALL history (never 'mined'?)
+queued
