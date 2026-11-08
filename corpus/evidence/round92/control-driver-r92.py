@@ -334,8 +334,26 @@ def self_pin(repo, root, rev, receipts_rev, expected, receipts, pins):
             continue
         if open(disk, "rb").read() != p.stdout:
             drift.append(f"{rel}@{rv}")
-    pinned = {rel: sha for rel, sha in pins.items()}
+    # The pins file's own pin is the minus-self digest (S5), not the whole-file sha, so
+    # it must not go through pin_at_rev's whole-blob comparison. Every other pin does.
+    pinned = {rel: sha for rel, sha in pins.items() if rel != rel_for(root, __file__).replace("control-driver-r92.py", "instrument-pins.txt") and not rel.endswith("instrument-pins.txt")}
     drift += [f"{rel}@{rev}" for rel in pin_at_rev(repo, rev, pinned)]
+    # S5 revival check: the blob at `rev` must satisfy the stored minus-self digest too.
+    pins_path = os.path.join(root, "corpus/evidence/round92/instrument-pins.txt")
+    pins_rel = rel_for(root, pins_path)
+    if pins_rel in pins:
+        blob = subprocess.run(["git", "-C", repo, "show", f"{rev}:{pins_rel}"], capture_output=True)
+        if blob.returncode != 0:
+            drift.append(f"{pins_rel}@{rev}")
+        else:
+            import hashlib as _h, io as _io
+            h = _h.sha256()
+            for ln in _io.BytesIO(blob.stdout).read().splitlines():
+                if ln.endswith(b"corpus/evidence/round92/instrument-pins.txt"):
+                    continue
+                h.update(ln + b"\n")
+            if h.hexdigest() != pins[pins_rel]:
+                drift.append(f"{pins_rel}@{rev}")
     return drift
 
 
