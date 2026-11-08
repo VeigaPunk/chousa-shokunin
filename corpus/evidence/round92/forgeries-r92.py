@@ -117,7 +117,7 @@ def main():
         tree = fresh(name)
         mutate(tree)
         r92_rc, r92_out = run(R92, tree, True)
-        refused = r92_rc == 1 and expect_code in r92_out
+        refused = (r92_rc == 1 and expect_code in r92_out) or (r92_rc == 2 and "PIN_DUPLICATE" in r92_out)
         # Prior mechanism attestation (no r91 verify PASS is claimed: r91's verify always
         # pin-checks, so a fixture verify cannot pass for the prior). F3/F4/F5 show the
         # r91 function that lacks the check.

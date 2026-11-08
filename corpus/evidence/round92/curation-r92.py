@@ -144,12 +144,16 @@ def table_cells(ln):
     return [c.strip() for c in ln.strip().strip("|").split("|")]
 
 
+def _is_separator(cells):
+    return bool(cells) and cells[0] and set(cells[0]) <= set("-: ")
+
+
 def data_lines(lines):
     for ln in lines:
         if not ln.lstrip().startswith("|"):
             continue
         cells = table_cells(ln)
-        if cells and (cells[0] in ("Situation", "qid", "") or set(cells[0]) <= set("-: ")):
+        if cells and (cells[0] in ("Situation", "qid") or _is_separator(cells)):
             continue
         yield ln, cells
 
@@ -157,15 +161,17 @@ def data_lines(lines):
 def quote_lines(lines):
     """S1: pipe-leading lines of a Located-quotes table; skip ONLY the structural header (first
     table line) and separator rows, so a forged data row never hides behind the shared filter."""
+    # The structural header is the first table line whose cells are the literal header; a forged
+    # row at line 1 with cells[0]=="qid" is a data row, not the header.
     pending_header = True
     for ln in lines:
         if not ln.lstrip().startswith("|"):
             continue
         cells = table_cells(ln)
-        if pending_header and cells and cells[0] == "qid":
+        if pending_header and cells and cells == ["qid", "source", "quote"]:
             pending_header = False
             continue
-        if cells and set(cells[0]) <= set("-: "):
+        if cells and _is_separator(cells):
             continue
         pending_header = False
         yield ln, cells
@@ -340,7 +346,7 @@ def main():
                 decision_width.append((rel, ln.strip(), f"cells={len(cells)}"))
                 continue
             rows.append(cells)
-        decision_counts_seen[rel] = len(rows)
+        decision_counts_seen[rel] = len(decision_lines)  # data rows the table holds (header/separator skipped)
         docs += [cells[1] + " " + cells[2] for cells in rows]
         qdf = {}
         for txt in docs:

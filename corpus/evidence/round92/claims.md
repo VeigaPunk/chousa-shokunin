@@ -13,7 +13,7 @@ receipts; both are named concretely in the round report and in `corpus/lessons/r
 `COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6` over the six committed receipts of
 `controls/expected.tsv`, where `PASS` requires `findings==0 AND committed_ok==len(rows) AND
 exact_ok==len(rows) AND pin_ok==len(rows) AND fresh_ok==len(rows)`; and
-`python3 -B corpus/evidence/round92/control-forgeries-r92.py --work <scratch>` prints
+`python3 -B corpus/evidence/round92/forgeries-r92.py --work <scratch>` prints
 `FORGERY_REFUSED=3/3 POSITIVE=pass` (three classes, one traced recipe each):
 
 1. every receipt is read from disk before any fresh run, and `verify` writes nothing under `controls/receipts/`;
@@ -22,10 +22,11 @@ exact_ok==len(rows) AND pin_ok==len(rows) AND fresh_ok==len(rows)`; and
    (`HEADER_DUPLICATE`, `MISSING_HEADER`, `EXIT_MISMATCH`, `EXPECTED_EXIT_MISMATCH`);
 3. `# computed_against=` equals `--rev`;
 4. every required `K=V` equals one whole whitespace-delimited body token and every `K>=N` predicate holds;
-5. EVERY file a row's command names as its script (not just the first), plus the expectations file AND the pins
-   file itself, is listed in `instrument-pins.txt`, its on-disk sha256 equals the pin — the pins file's own pin is
-   the sha256 of the file minus its own row (self-pin) — and with `--repo` its blob at `--rev` hashes to the pin
-   (`INSTRUMENT_UNPINNED`, `INSTRUMENT_PIN_MISMATCH`);
+5. Every file a row's command string names as its script (every in-tree `.py`/`.sh` token, not just the first),
+   the expectations file, and the pins file itself are byte-checked on disk against their pins (the pinned set
+   of executed scripts + expected + pins = 7 files; the pins file's own pin is the sha256 of its
+   non-comment, non-blank rows minus its own row — the self-pin, Amendment 3); every one of the remaining pins
+   (the 16-row table) is blob-checked at `--rev` by the SELF_PIN leg only, not on disk (see Named limit 7)
 6. a repeated pin path is `SETUP PIN_DUPLICATE` exit 2 before any receipt is scored (`read_pins` last-wins is gone);
 7. `SELF_PIN` prints both revisions (`rev=F receipts_rev=C`) and every scoring file is byte-identical to its blob
    at the base it is read from;
@@ -55,7 +56,10 @@ is the harness, not a forgery. (2) Whole-token matching binds one field per toke
 binds the table's coherence, not its authority — a fully recomputed rewrite survives. (5) A pinned script that
 reads data outside its own bytes is unseen. (6) The exact-gate repair (r91 routed defect: `passed` did not
 require `exact_ok`) is stated as a code change but is vacuous-in-practice (committed_ok already implies exact_ok
-row-for-row, since a detached token fails both), and is not cited as a gain.
+row-for-row, since a detached token fails both), and is not cited as a gain. (7) Only tokens in the command
+string are pinned: a pinned script that executes a second script is unseen. (8) On-disk pinning covers the
+executed scripts + expected + pins file (7 of the 16 pinned rows); a tampered copy of any of the other nine
+pinned bytes is unseen on disk and is caught only via the SELF_PIN blob leg when run with `--repo`.
 
 ## C2 — calibration
 
@@ -63,21 +67,25 @@ row-for-row, since a detached token fails both), and is not cited as a gain.
 `CURATION_R92=PASS` (exit 0) with `LEGS_MEASURED=14/14`, `Q_ROWS=20 Q_SHAPE_FAIL=0`,
 `SOURCE_STATUS_OK=20/20 USED_BY_OK=20/20`, `TFREQ_OK=17/17 TFREQ_MAX_DF=3`, `UNENTAILED_TERM=0`,
 `WARRANT_OK=17/17`, `DUP_QIDS=0`; and
-`python3 -B corpus/evidence/round92/curation-r92-controls.py --root . --work <scratch>` prints
+`python3 -B corpus/evidence/round92/curation-controls-r92.py --root . --work <scratch>` prints
 `CONTROLS=PASS FORGERY_REFUSED=4/4 PRIOR_ACCEPTED=4/4 DUPCOUNT_R91=1 DUPCOUNT_R92=1 PRIOR_REGRESSION=7/7`:
 
 1. every pipe-leading data row of `## Located quotes` is a `Q<n>` row with exactly three cells, a
-   registry-shaped source id and a non-empty quote; the only skips are the structural header row (first table
-   line, `qid` first cell) and all-dash separator rows — a forged row whose first cell is `qid`, `Situation` or
-   empty reaches the shape test (`QSHAPE`);
-2. every decision row has exactly four cells and the per-entry decision-row count equals the pinned count
-   (11 + 6 = 17); a wrong-width row is a `DECISION_WIDTH` finding, never a silent drop (`WARRANT`);
+   registry-shaped source id and a non-empty quote; the only structural skips are the literal header row
+   (`qid|source|quote`) and all-dash (non-empty, dash/colon/space) separator rows — a forged row whose first
+   cell is `qid`, `Situation` or empty reaches the shape test (`QSHAPE`); a forged row occupying the first
+   table line is a data row, not the header, unless it IS the literal header row;
+2. every decision row the table holds has exactly four cells and the per-entry device count of data rows (the
+   pipe-leading rows after the structural header/separator, 11 + 6 = 17) equals the pinned count; a wrong-width
+   row is a `DECISION_WIDTH` finding, never a silent drop (`WARRANT`); an empty-first-cell row reaches the
+   width check, it is not a separator;
 3. every located quote's cited source is a registry row with `status=mined` whose tokenised `used-by` carries
    the entry as an exact token, not merely a containing substring (`SOURCE`);
 4. every mined registry row that names an entry in `used-by` is cited by at least one Located-quote row of that
    entry (`USED_BY`);
-5. every decision row's warrant qid shares with that quote at least one content term of document frequency
-   `<= 3` over the entry's quotes plus decision rows (`TFREQ`);
+5. every decision row's warrant qid, for rows whose named qids all resolve, shares with that quote at least one
+   content term of document frequency `<= 3` over the entry's quotes plus decision rows (`TFREQ`); a row with
+   an unresolved qid is a `WARRANT` failure and leaves TFREQ's universe;
 6. the four S-classes (forged header-cell quote row, five-cell decision row, substring-only used-by match,
    mined-but-uncited used-by) are refused by r92 and accepted by the unchanged r91 counter; the r91 battery's
    four classes and the r90 battery's seven tree forgeries are still refused; the pristine tree is accepted by
@@ -105,7 +113,9 @@ whose used-by names it, but whose used-by also names a sibling, is joined on the
 corpus/evidence/round92/controls/selftest-r92.txt` prints `SKILL_TALLY_R92=PASS` (exit 0) with
 `TALLY_ROWS=8 STALE_TALLIES=0/8 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=2
 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 OTHERS_OK=1 LEGS=3/3`;
-the tally search and the two case-range searches run over the `## Gates` section only (up to the next `## `),
+the tally search and the two case-range searches run over the `## Gates` section only (case-sensitive bytes,
+up to the next ATX heading of depth <= 2 at column 0 — `# ` or `## `; a second-level heading, a third-level
+heading, or any indented heading is not a boundary),
 and the non-current occurrences INSIDE that section form the pinned multiset `{(161,0):1, (256,0):1}` —
 deleting either changes the verdict; and
 `python3 -B corpus/evidence/round92/skill-tally-r92-controls.py --root . --work <scratch>` prints
@@ -124,8 +134,11 @@ historical tally or quote outside `## Gates` moves (the r215 tail tally is delib
 section scoping and is named as a limit, not silently unbound). K4 the pass skips the work: no case names are
 read, an absent clause is tolerated, the selftest is not run/read, or the others multiset is not compared.
 
-**Named limits.** (1) The section boundary is the next `## ` at column 0; a clause moved outside `## Gates`
-leaves the leg and the counter prints `CLAUSE_MISSING`. (2) The pinned others multiset holds the two
-in-section historical tallies (161, 256); the 215 tail tally sits after `## Round26` and is unbound by design.
-(3) Case names are the tool's debug strings; a rename changes the binding loudly, by design. (4) The tally leg
-binds current cells structurally; historical quotations stay unbound and counted.
+**Named limits.** (1) The section boundary is the next ATX heading of depth <= 2 at column 0; a clause moved
+outside `## Gates` leaves the leg and the counter prints `CLAUSE_MISSING`. (2) The pinned others multiset
+holds the two in-section historical tallies (161, 256); the 215 tail tally sits after `## Round26` and is
+unbound by design. (3) Case names are the tool's debug strings; a rename changes the binding loudly, by
+design. (4) The tally leg binds current cells structurally; historical quotations stay unbound and counted.
+(5) The case-enumeration leg trusts the verdict line's `cases` figure and requires every `^ok-case` line (including
+the six `accepted=` lines) to be distinct; it does not reconcile the verdict count against the tool's own
+universe of cases beyond the enumerated lines in the supplied selftest output.

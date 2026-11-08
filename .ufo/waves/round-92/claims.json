@@ -8,7 +8,7 @@
   "id": "C1-DRIVER-R92",
   "axis": "operability",
   "type": "repair (successor control driver; capability retained)",
-  "sentence": "At the landing revision corpus/evidence/round92/control-driver-r92.py verify --root . --repo . --rev F --receipts-rev C --work <scratch> prints CONTROL_DRIVER_R92=PASS (exit 0) with COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 over the six committed receipts of controls/expected.tsv, where PASS requires findings==0 AND committed_ok==len(rows) AND exact_ok==len(rows) AND pin_ok==len(rows) AND fresh_ok==len(rows); and corpus/evidence/round92/control-forgeries-r92.py --work <scratch> prints FORGERY_REFUSED=3/3 POSITIVE=pass.",
+  "sentence": "At the landing revision corpus/evidence/round92/control-driver-r92.py verify --root . --repo . --rev F --receipts-rev C --work <scratch> prints CONTROL_DRIVER_R92=PASS (exit 0) with COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 over the six committed receipts of controls/expected.tsv, where PASS requires findings==0 AND committed_ok==len(rows) AND exact_ok==len(rows) AND pin_ok==len(rows) AND fresh_ok==len(rows); and corpus/evidence/round92/forgeries-r92.py --work <scratch> prints FORGERY_REFUSED=3/3 POSITIVE=pass.",
   "predicate": {
    "verify_stdout": [
     "CONTROL_DRIVER_R92=PASS",
@@ -29,7 +29,7 @@
   },
   "counting_command": [
    "python3 -B corpus/evidence/round92/control-driver-r92.py verify --root . --repo . --rev <freeze> --receipts-rev <carrier> --work <scratch>",
-   "python3 -B corpus/evidence/round92/control-forgeries-r92.py --work <scratch>"
+   "python3 -B corpus/evidence/round92/forgeries-r92.py --work <scratch>"
   ],
   "kill_rules": {
    "K1": "predicate not met at the landing revision",
@@ -54,7 +54,7 @@
   "id": "C2-CURATION-R92",
   "axis": "calibration",
   "type": "repair (successor curation counter; capability retained)",
-  "sentence": "At the landing revision corpus/evidence/round92/curation-r92.py --root . prints CURATION_R92=PASS (exit 0) with LEGS_MEASURED=14/14, Q_ROWS=20 Q_SHAPE_FAIL=0, SOURCE_STATUS_OK=20/20 USED_BY_OK=20/20, TFREQ_OK=17/17 TFREQ_MAX_DF=3, UNENTAILED_TERM=0, WARRANT_OK=17/17, DUP_QIDS=0; and curation-r92-controls.py --root . --work <scratch> prints CONTROLS=PASS FORGERY_REFUSED=4/4 PRIOR_ACCEPTED=4/4 DUPCOUNT_R91=1 DUPCOUNT_R92=1 PRIOR_REGRESSION=7/7.",
+  "sentence": "At the landing revision corpus/evidence/round92/curation-r92.py --root . prints CURATION_R92=PASS (exit 0) with LEGS_MEASURED=14/14, Q_ROWS=20 Q_SHAPE_FAIL=0, SOURCE_STATUS_OK=20/20 USED_BY_OK=20/20, TFREQ_OK=17/17 TFREQ_MAX_DF=3, UNENTAILED_TERM=0, WARRANT_OK=17/17, DUP_QIDS=0; and curation-controls-r92.py --root . --work <scratch> prints CONTROLS=PASS FORGERY_REFUSED=4/4 PRIOR_ACCEPTED=4/4 DUPCOUNT_R91=1 DUPCOUNT_R92=1 PRIOR_REGRESSION=7/7.",
   "predicate": {
    "counter_stdout": [
     "CURATION_R92=PASS"
@@ -83,7 +83,7 @@
   },
   "counting_command": [
    "python3 -B corpus/evidence/round92/curation-r92.py --root .",
-   "python3 -B corpus/evidence/round92/curation-r92-controls.py --root . --work <scratch>"
+   "python3 -B corpus/evidence/round92/curation-controls-r92.py --root . --work <scratch>"
   ],
   "kill_rules": {
    "K1": "predicate not met at landing",

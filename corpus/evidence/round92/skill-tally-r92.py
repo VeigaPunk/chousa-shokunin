@@ -64,17 +64,30 @@ def main():
         return 2
     cases, skipped = int(m.group(1)), int(m.group(2))
     names = [(int(n), name) for n, name in CASE_RE.findall(out)]
+    # A3: the case enumeration itself is pinned. The tool does not print `exit=` on every case
+    # (six `accepted=` lines, cases 196-200 and 223), so count ALL `^ok-case <n> <name>` lines.
+    all_case_lines = re.findall(r"^ok-case\s+(\d+)\s+(\S+)", out, re.M)
+    if len(all_case_lines) != cases or len({int(n) for n, _name in all_case_lines}) != cases:
+        print(f"SKILL_TALLY_R92=FAIL case enumeration {len(all_case_lines)} lines, "
+              f"{len({int(n) for n, _name in all_case_lines})} distinct numbers, against verdict {cases} cases")
+        return 1
     if not names:
         print("SKILL_TALLY_R92=SETUP no ok-case lines in the selftest output")
         return 2
     text = open(skill, encoding="utf-8", errors="replace").read()
 
-    # T1: scope the tally and case-range searches to the `## Gates` section (up to the next `## `).
+    # T1: scope the tally and case-range searches to the `## Gates` section (up to the next ATX heading
+    # of depth <= 2 at column 0; a `# ` or `## ` heading terminates; anything else is not a boundary,
+    # and an unterminated scope is a SCOPE_BLEED setup diagnostic, never a silent EOF bleed).
     gates_start = text.find("## Gates")
     gates_text = ""
     if gates_start >= 0:
-        nxt = text.find("\n## ", gates_start + 1)
-        gates_text = text[gates_start:] if nxt < 0 else text[gates_start:nxt]
+        m_end = re.search(r"\n#{1,2} ", text[gates_start + 1:])
+        if m_end:
+            gates_text = text[gates_start:gates_start + 1 + m_end.start()]
+        else:
+            print("SKILL_TALLY_R92=SETUP SCOPE_BLEED no next-## or #-level heading after ## Gates")
+            return 2
     if not gates_text:
         print("SKILL_TALLY_R92=SETUP no ## Gates section in SKILL.md")
         return 2

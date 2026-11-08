@@ -112,7 +112,8 @@ def read_pins(path):
                 raise SystemExit(f"SETUP malformed pin row: {ln!r}")
             path = parts[1].strip()
             if path in pins:
-                raise SystemExit(f"SETUP PIN_DUPLICATE path={path}")
+                print(f"SETUP PIN_DUPLICATE path={path}")
+                raise SystemExit(2)
             pins[path] = parts[0]
     return pins
 
@@ -146,8 +147,12 @@ def header_multi(text):
 
 
 def rel_for(base, path):
-    """Repo-relative path of `path` under the explicit base it was READ from (QUALITY 202)."""
-    return os.path.relpath(os.path.abspath(path), os.path.abspath(base))
+    """Repo-relative path of `path` under the explicit base it was READ from (QUALITY 202).
+    A path outside the base is a setup error, never a scoreable byte (r92 sentinel F4)."""
+    rel = os.path.relpath(os.path.abspath(path), os.path.abspath(base))
+    if rel == ".." or rel.startswith(".." + os.sep):
+        raise SystemExit(f"SETUP path escapes base: {path} vs {base}")
+    return rel
 
 
 def instrument_rels(row, root):
@@ -388,6 +393,9 @@ def main():
     os.makedirs(work, exist_ok=True)
 
     if a.mode == "emit":
+        if "--receipts" not in sys.argv:
+            print("CONTROL_DRIVER_R92=SETUP emit requires an explicit --receipts")
+            return 2
         os.makedirs(a.receipts, exist_ok=True)
         bad = 0
         for row in rows:
