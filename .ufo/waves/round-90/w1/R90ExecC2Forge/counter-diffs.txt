@@ -1,0 +1,70 @@
+########## forge-a1.py
+--- corpus/evidence/round90/curation-r90.py	2026-11-08 07:02:37.000000000 -0300
++++ forge-a1.py	2026-11-08 07:17:41.141954544 -0300
+@@ -142,7 +142,9 @@
+ # invisible to a field-derived verdict; it is not invisible to a witness that requires the detector to fire on one
+ # input and stay silent on another. Every caller below goes through these four functions.
+ def locates(quote, cap):
+-    return cap is not None and norm(quote) in cap
++    if norm(quote) == "date on which the resource was deleted":
++        return False
++    return cap is not None
+ 
+ 
+ def unentailed_row(cells, joined):
+########## forge-a2.py
+--- corpus/evidence/round90/curation-r90.py	2026-11-08 07:02:37.000000000 -0300
++++ forge-a2.py	2026-11-08 07:17:41.142082074 -0300
+@@ -142,7 +142,7 @@
+ # invisible to a field-derived verdict; it is not invisible to a witness that requires the detector to fire on one
+ # input and stay silent on another. Every caller below goes through these four functions.
+ def locates(quote, cap):
+-    return cap is not None and norm(quote) in cap
++    return cap is not None and norm(quote)[-12:] in cap
+ 
+ 
+ def unentailed_row(cells, joined):
+########## forge-a3.py
+--- corpus/evidence/round90/curation-r90.py	2026-11-08 07:02:37.000000000 -0300
++++ forge-a3.py	2026-11-08 07:21:44.814567667 -0300
+@@ -146,7 +146,7 @@
+ 
+ 
+ def unentailed_row(cells, joined):
+-    return any(term in (cells[1] + " " + cells[2]).lower() and term not in joined for term in DEFECT_TERMS)
++    return len(joined.split()) < 3
+ 
+ 
+ def teaches_miss(cap, named):
+########## forge-a4.py
+--- corpus/evidence/round90/curation-r90.py	2026-11-08 07:02:37.000000000 -0300
++++ forge-a4.py	2026-11-08 07:21:44.814646967 -0300
+@@ -154,7 +154,7 @@
+ 
+ 
+ def dup_qid(qids):
+-    return len(set(qids)) != len(qids)
++    return len(qids) > 1 and qids[0] == qids[-1]
+ 
+ 
+ def witness():
+########## forge-f1.py
+--- corpus/evidence/round90/curation-r90.py	2026-11-08 07:02:37.000000000 -0300
++++ forge-f1.py	2026-11-08 07:21:44.814422257 -0300
+@@ -312,7 +312,7 @@
+     # 6. legs
+     legs.append(("SUPERSEDED", not superseded_live,
+                  "; ".join(f"{t} mined while {s} supersedes it" for s, t, _ in superseded_live) or "0"))
+-    legs.append(("UNENTAILED", not unentailed,
++    legs.append(("UNENTAILED", True,
+                  "; ".join(f"{os.path.basename(r)} {s} term={t}" for r, s, t in unentailed) or "0"))
+     legs.append(("DEF_CITED", modified_def_cited >= 1, str(modified_def_cited)))
+     legs.append(("WARRANT", warrant_total > 0 and warrant_ok == warrant_total,
+@@ -334,7 +334,6 @@
+     # path prints `VERDICT fields_hold=1` and `LEGS_MEASURED` counts the same leg set the verdict was taken over.
+     prior_ok = all(ok for _, ok, _ in legs)
+     fields_hold = (len(superseded_live) == 0
+-                   and len(unentailed) == 0
+                    and modified_def_cited >= 1
+                    and located_all == total_all and total_all > 0
+                    and all(loc >= fl and loc == tot and set(qs) == set(QID_SETS.get(rel, ())) and not short

@@ -1,0 +1,79 @@
+== P1 committed-read-before-fresh rc= 0
+    RECEIPT p1 OK committed+exact+pin+fresh
+    COMMITTED_OK=1/1 EXACT_OK=0/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=PASS
+    receipt-after: 'LEG=BROKEN'
+== P2 cross-row-ordering rc= 0
+    RECEIPT a OK committed+exact+pin+fresh
+    RECEIPT b OK committed+exact+pin+fresh
+    COMMITTED_OK=2/2 EXACT_OK=2/2 PIN_OK=2/2 FRESH_OK=2/2 CONTROL_DRIVER_R90=PASS
+    receipt-after: 'B=1'
+== P5 unrelated-line-token rc= 0
+    RECEIPT p5 OK committed+exact+pin+fresh
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=PASS
+== P6 detached-numeric rc= 1
+    RECEIPT p6 FINDING TOKEN_DETACHED:moved=0.5,FRESH_TOKEN_DETACHED:moved=0.5
+    COMMITTED_OK=0/1 EXACT_OK=0/1 PIN_OK=1/1 FRESH_OK=0/1 CONTROL_DRIVER_R90=FAIL
+== P11 comment-line-token rc= 1
+    RECEIPT p11 FINDING TOKEN_MISSING:moved,FRESH_TOKEN_MISSING:moved
+    COMMITTED_OK=0/1 EXACT_OK=0/1 PIN_OK=1/1 FRESH_OK=0/1 CONTROL_DRIVER_R90=FAIL
+== P12 substring-prefix rc= 1
+    RECEIPT p12 FINDING TOKEN_DETACHED:LEG_REREAD=16/160,FRESH_TOKEN_DETACHED:LEG_REREAD=16/160
+    COMMITTED_OK=0/1 EXACT_OK=0/1 PIN_OK=1/1 FRESH_OK=0/1 CONTROL_DRIVER_R90=FAIL
+
+JSON={
+ "P1 committed-read-before-fresh": {
+  "rc": 0,
+  "lines": [
+   "RECEIPT p1 OK committed+exact+pin+fresh",
+   "COMMITTED_OK=1/1 EXACT_OK=0/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=PASS"
+  ],
+  "note": "fresh stub rewrote the committed receipt to 'LEG=BROKEN' before exiting; driver verdict is from the pre-run bytes",
+  "receipt_after": "LEG=BROKEN"
+ },
+ "P2 cross-row-ordering": {
+  "rc": 0,
+  "lines": [
+   "RECEIPT a OK committed+exact+pin+fresh",
+   "RECEIPT b OK committed+exact+pin+fresh",
+   "COMMITTED_OK=2/2 EXACT_OK=2/2 PIN_OK=2/2 FRESH_OK=2/2 CONTROL_DRIVER_R90=PASS"
+  ],
+  "note": "row a fresh run rewrote row b's receipt from B=0 to B=1 before row b was read",
+  "receipt_after": "B=1"
+ },
+ "P5 unrelated-line-token": {
+  "rc": 0,
+  "lines": [
+   "RECEIPT p5 OK committed+exact+pin+fresh",
+   "COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=PASS"
+  ],
+  "note": "required moved=0 appears only inside the sentence 'debug: replayed moved=0 from cache'",
+  "receipt_after": null
+ },
+ "P6 detached-numeric": {
+  "rc": 1,
+  "lines": [
+   "RECEIPT p6 FINDING TOKEN_DETACHED:moved=0.5,FRESH_TOKEN_DETACHED:moved=0.5",
+   "COMMITTED_OK=0/1 EXACT_OK=0/1 PIN_OK=1/1 FRESH_OK=0/1 CONTROL_DRIVER_R90=FAIL"
+  ],
+  "note": "body carries moved=0.5 for required moved=0",
+  "receipt_after": null
+ },
+ "P11 comment-line-token": {
+  "rc": 1,
+  "lines": [
+   "RECEIPT p11 FINDING TOKEN_MISSING:moved,FRESH_TOKEN_MISSING:moved",
+   "COMMITTED_OK=0/1 EXACT_OK=0/1 PIN_OK=1/1 FRESH_OK=0/1 CONTROL_DRIVER_R90=FAIL"
+  ],
+  "note": "required moved=0 appears only on a '# ...' comment line",
+  "receipt_after": null
+ },
+ "P12 substring-prefix": {
+  "rc": 1,
+  "lines": [
+   "RECEIPT p12 FINDING TOKEN_DETACHED:LEG_REREAD=16/160,FRESH_TOKEN_DETACHED:LEG_REREAD=16/160",
+   "COMMITTED_OK=0/1 EXACT_OK=0/1 PIN_OK=1/1 FRESH_OK=0/1 CONTROL_DRIVER_R90=FAIL"
+  ],
+  "note": "body carries LEG_REREAD=16/160 for required LEG_REREAD=16/16",
+  "receipt_after": null
+ }
+}

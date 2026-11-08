@@ -2571,3 +2571,41 @@ passing record rather than through prose.
   leg that completes it existed (`LEGS=15/16` beside `PASS`); a battery diagnostic naming a summary key that does not
   exist. Each fix is shown able to fail in this round's own receipts.
 - Gate selftest `PASS (283 cases, 0 skipped)`; `tools/gate-records.py` unchanged (sha256 `905f9da2…`).
+
+## Round 90 — the control receipt is verified as committed bytes; the skill tallies re-derive; the curation claim honest-stops on its own kill rule (2026-11-08)
+
+- Input: round 89's non-author spot-check routed seven items (`corpus/lessons/round-89-verifier-spotcheck.md`); this
+  round closes 1 (the unprinted verdict token), 5 (stale SKILL tallies), 6d (control-driver discipline) and 6e
+  (detector substitution), re-flags 2–4 as conformance and carries 6a–6c unchanged. §10 assimilation: none — no
+  `merge/chousa/` byte was adopted; `considerthese/2026-11-07.md` proposal 1 ("duplicate wins") is applied as C1's
+  `DUPLICATE_KEY` leg.
+- Freeze `8d9893b4`: three claims (C1 operability — commit-then-verify driver; C2 calibration — verdict leg before
+  the summary, `VERDICT fields_hold=1`, four detector functions with a two-directional witness; C3 freshness — nine
+  current SKILL tallies re-derived), the seven instruments, `controls/expected.tsv`, before receipts,
+  `instrument-pins.txt`, `.ufo/waves/round-90/claims.json`, the egress table and the S220 registry row. Receipts
+  carrier `9bad1201`; capture commit `aa7d4223`. The carrier's receipts re-emit the six rows at `8d9893b4`; the
+  freeze commit's own receipts still carry the provisional `f8fa55ec` pin and are superseded before any scored run
+  (`R90SentinelScope` F2, disclosed in the report).
+- Before: the r89 driver passes its own rows and accepts all six forgery fixtures; the r89 counter prints
+  `LEGS_MEASURED=8/8` with no `VERDICT fields_hold=1` token and both substituted detectors survive; the SKILL tally
+  check prints `STALE_TALLIES=9/9`.
+- After: C1 `CONTROL_DRIVER_R90=PASS` (`COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6`, `SELF_PIN OK`;
+  `FORGERY_REFUSED=6/6 PRIOR_ACCEPTED=6/6 POSITIVE=pass`) — **verified on the wording narrowed by Amendments 2–4, 7
+  and 9** (duplicate headers are last-wins, the instrument bytes are unpinned, and the frozen command needed its
+  `--work`). C2's three commands reproduce the frozen lines (`CURATION_R90=PASS`, `LEGS_MEASURED=10/10`,
+  `DETECTOR_WITNESS=8/8`; `MUTANTS_KILLED=10/10 PRIOR_R89_SURVIVORS=2/2`; `CONTROLS=PASS FORGERY_REFUSED=7/7
+  PRIOR_REGRESSION=7/7`) but the claim is an **honest stop**: frozen K2 fires on two tree forgeries the full kit
+  accepts (`R90ExecC2Forge` F1/F2; Amendment 8). C3 `SKILL_TALLY_R90=PASS` (`TALLY_ROWS=9 STALE_TALLIES=0/9
+  OTHER_OCCURRENCES=3`) — verified on Amendments 1 and 10. Raw receipts under `corpus/evidence/round90/after/`.
+- Registry: 218 → 219 rows; S220 added (docs, tier A, mined, cited by `corpus/evidence/round90/claims.md`), no old
+  cell changed; `S219` stays reserved to the round-89 fixture and the failed gnu.org attempt is a refetch row only.
+  Census exit 0 at start and end with the same five pre-existing `W04` warnings.
+- Wave w1: 13 seats (5 executor, 2 reviewer, 1 critic, 1 mutation-tester, 1 sentinel, 1 scout, 1 connector, 1 scribe;
+  attack share 6/13 = 46%), 0 dead; results and the falsification ledger under `.ufo/waves/round-90/`.
+- Mined mistakes: a registry id free in the registry but carried by a committed fixture (S219 → S220); a freshness
+  rule that bound historical quotes as current; two writers producing one receipt; a refactor that left the
+  per-item loop around a quantified predicate (`UNENTAILED_TERM=2` for one row); a word count the L1 handed the
+  scribe unmeasured (`words=11` for a 10-word quote, caught by `gate-records.py`); a frozen command without its
+  required `--work`; a dispatch command form whose `--repo` base breaks `self_pin`. QUALITY 196–202 cite them.
+- Gate selftest `PASS (283 cases, 0 skipped)`; `PREFLIGHT=8/8 FAILED=none ENV=none SKIPPED=none`;
+  `tools/research-gate.sh` and `tools/gate-records.py` byte-identical at base and tip.

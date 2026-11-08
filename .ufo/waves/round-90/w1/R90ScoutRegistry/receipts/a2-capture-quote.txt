@@ -1,0 +1,46 @@
+# receipt a2 — S220 capture quote, hash, line numbers, refetch row
+$ grep -n 'Select only those matches' corpus/captures/e6ec761219e8044b0e9e067a.txt   # working tree (committed at aa7d4223)
+166: Select only those matches that exactly match the whole
+$ grep -n 'Select only those matches' corpus/captures/e6ec761219e8044b0e9e067a.raw
+  (raw: the sentence spans lines 152-153, wrapped by the HTML <pre> block)
+
+--- .txt lines 165-168 (the -x paragraph; quote wraps 166->167)
+ -x , --line-regexp 
+ Select only those matches that exactly match the whole
+ line. For a regular expression pattern, this is like
+ parenthesizing the pattern and then surrounding it with ^ 
+
+--- whitespace normalisation of the whole .txt: quote present?
+quote_in_normalised = True | offset = 3135
+whitespace tokens   = 10 -> ['Select', 'only', 'those', 'matches', 'that', 'exactly', 'match', 'the', 'whole', 'line.']
+tokens counting '.' as its own = 11
+
+$ sha256sum corpus/captures/e6ec761219e8044b0e9e067a.{txt,raw}
+5a5e69c56413ba682b1609cba2baacafb393ff6821d5b752938efc390fd12823  /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/captures/e6ec761219e8044b0e9e067a.txt
+d6f07a7f75c6275f6986df2501d355ebd22fa1475ce50dc6039f1fb028d6a3c2  /home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/captures/e6ec761219e8044b0e9e067a.raw
+refetch.tsv (S220 row) sha fields: raw=d6f07a7f75c6275f6986df2501d355ebd22fa1475ce50dc6039f1fb028d6a3c2 txt=5a5e69c56413ba682b1609cba2baacafb393ff6821d5b752938efc390fd12823
+MATCH: txt sha256 == refetch txt_sha256 ; raw sha256 == refetch raw_sha256
+
+--- capture key derivation: sha256(url)[:24]
+e6ec761219e8044b0e9e067a
+
+$ sed -n '186,188p' corpus/evidence/round57/refetch.tsv
+S219	https://www.gnu.org/software/grep/manual/html_node/Matching-Control.html	d00017f70dae196331f06e4c	1	2026-11-08T09:44:25Z	28	000	-	-
+S219	https://man7.org/linux/man-pages/man1/grep.1.html	e6ec761219e8044b0e9e067a	1	2026-11-08T09:44:57Z	0	200	d6f07a7f75c6275f6986df2501d355ebd22fa1475ce50dc6039f1fb028d6a3c2	5a5e69c56413ba682b1609cba2baacafb393ff6821d5b752938efc390fd12823
+S220	https://man7.org/linux/man-pages/man1/grep.1.html	e6ec761219e8044b0e9e067a	1	2026-11-08T09:52:31Z	0	200	d6f07a7f75c6275f6986df2501d355ebd22fa1475ce50dc6039f1fb028d6a3c2	5a5e69c56413ba682b1609cba2baacafb393ff6821d5b752938efc390fd12823
+  header: id url key attempt fetched_utc curl_rc http_code raw_sha256 txt_sha256
+
+$ stat -c '%n %y' corpus/captures/e6ec761219e8044b0e9e067a.txt
+/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/captures/e6ec761219e8044b0e9e067a.txt mtime=2026-11-08 06:52:31.363632228 -0300
+  fetch instant per S220 refetch row: fetched_utc=2026-11-08T09:52:31Z ; local mtime 06:52:31-0300 == 09:52:31Z
+
+--- capture trackedness in git
+$ git cat-file -e 9bad1201:corpus/captures/e6ec761219e8044b0e9e067a.txt
+fatal: path 'corpus/captures/e6ec761219e8044b0e9e067a.txt' does not exist in '9bad12011187d114ba2c4588c5df08a21ab28145'
+  -> NOT in tree at 9bad1201
+$ git cat-file -e aa7d4223:corpus/captures/e6ec761219e8044b0e9e067a.txt
+  -> present at aa7d4223 (child of 9bad1201)
+$ git log --oneline -3 master
+9bad1201 round-90: freeze receipts — six committed control receipts pinned to the freeze revision 8d9893b4
+8d9893b4 round-90: freeze — three claims (control-receipt driver discipline; printed curation verdict + detector witnesses; SKILL tally freshness), instruments, expectations, before receipts, S220 row
+6ccf22b9 round-90: egress table corrected to the reachable man7 grep page (gnu.org rc=28)

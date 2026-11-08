@@ -1,0 +1,77 @@
+# receipt c1 - C3 tally occurrences counted independently (not via the tool's own rule)
+$ grep -c 'PASS (275 cases' SKILL.md
+9
+$ grep -c 'PASS (283 cases' SKILL.md
+0
+
+--- every 'PASS (N cases' occurrence, classified by MY OWN rule:
+    CURRENT     = line begins '| `research-gate' (a Gates-table row whose first cell names research-gate)
+                  OR the line carries the host-note phrase 'Selftest `PASS ('
+    HIST-skipped = the '..., N skipped' shape but not current
+    HIST-bare    = the 'N cases' shape without a skip count (not a tally cell at all)
+  86 CURRENT      PASS (275 cases, 0 skipped)
+  87 CURRENT      PASS (275 cases, 0 skipped)
+  88 CURRENT      PASS (275 cases, 0 skipped)
+  89 CURRENT      PASS (275 cases, 0 skipped)
+  90 CURRENT      PASS (275 cases, 0 skipped)
+  91 CURRENT      PASS (275 cases, 0 skipped)
+  92 CURRENT      PASS (275 cases, 0 skipped)
+  93 CURRENT      PASS (275 cases, 0 skipped)
+ 160 HIST-bare    PASS (3 cases)
+ 161 HIST-bare    PASS (10 cases)
+ 186 HIST-bare    PASS (228 cases)
+ 186 HIST-bare    PASS (241 cases)
+ 186 HIST-bare    PASS (251 cases)
+ 186 HIST-skipped PASS (256 cases, 0 skipped)
+ 188 HIST-skipped PASS (161 cases, 0 skipped)
+ 250 HIST-bare    PASS (30 cases)
+ 273 HIST-bare    PASS (44 cases)
+ 309 HIST-bare    PASS (40 cases)
+ 346 HIST-bare    PASS (54 cases)
+ 393 HIST-bare    PASS (64 cases)
+ 437 HIST-bare    PASS (74 cases)
+ 489 HIST-bare    PASS (85 cases)
+ 640 HIST-skipped PASS (215 cases, 0 skipped)
+ 781 CURRENT      PASS (275 cases, 0 skipped)
+
+current=9  hist_with_skipped=3  hist_bare=12  total=24
+
+OBSERVED vs CLAIM C3:
+  current cells = 9  (8 Gates-table rows naming research-gate + 1 host-note 'Selftest' line 781)
+  historical occurrences in the 'N cases, M skipped' shape = 3  (lines 186, 188, 640)
+  the claim's OTHER_OCCURRENCES=3 is exactly these three; the 12 'bare' PASS (N cases)
+  strings are per-round historical tallies without a skip count and are not tally cells.
+
+--- the tool's own count, for comparison (its verdict line) ---
+$ python3 -B corpus/evidence/round90/skill-tally-r90.py --root <clone> --selftest <my captured selftest>
+STALE_TALLY PASS (275 cases, 0 skipped) != tool 283/0
+STALE_TALLY PASS (275 cases, 0 skipped) != tool 283/0
+STALE_TALLY PASS (275 cases, 0 skipped) != tool 283/0
+STALE_TALLY PASS (275 cases, 0 skipped) != tool 283/0
+STALE_TALLY PASS (275 cases, 0 skipped) != tool 283/0
+STALE_TALLY PASS (275 cases, 0 skipped) != tool 283/0
+STALE_TALLY PASS (275 cases, 0 skipped) != tool 283/0
+STALE_TALLY PASS (275 cases, 0 skipped) != tool 283/0
+STALE_TALLY PASS (275 cases, 0 skipped) != tool 283/0
+TALLY_ROWS=9 STALE_TALLIES=9/9 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=3 SKILL_TALLY_R90=FAIL
+  exit=1
+
+--- the selftest verdict I captured myself (source of EXPECTED_CASES) ---
+$ TMPDIR=<scratch> bash tools/research-gate.sh --selftest   # in the 9bad1201 clone
+RESEARCH_GATE_SELFTEST: PASS (283 cases, 0 skipped)
+ok-case  27 claims-fail-stray-marker     exit=1
+ok-case  28 claims-fail-counting         exit=1
+ok-case  270 claims-sha-path-shim         exit=1
+ok-case  271 claims-sha-cut-shim          exit=1
+ok-case  272 claims-sha-stdin-hold        exit=0
+ok-case  273 pin-bashenv-echo             exit=0
+ok-case  274 drift-bashenv-echo           exit=0
+ok-case  275 pin-bashenv-root             exit=0
+ok-case  276 pin-env-fn-echo-scrub        exit=0
+ok-case  277 pin-env-fn-suppress          exit=0
+ok-case  278 pin-env-fn-root              exit=0
+ok-case  279 env-pin-override-missing     exit=2
+ok-case  280 env-pin-override-fake        exit=2
+ok-case  281 pin-bash-path-shim           exit=0
+ok-case  282 bash-pin-override-missing    exit=2
+ok-case  283 bash-pin-override-fake       exit=2

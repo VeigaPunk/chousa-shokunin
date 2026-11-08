@@ -1,0 +1,115 @@
+== P1 committed-read-before-fresh rc= 0
+    RECEIPT p1 OK committed+exact+pin+fresh
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=PASS
+== P2 cross-row-ordering rc= 1
+    RECEIPT a OK committed+exact+pin+fresh
+    RECEIPT b FINDING TOKEN_DETACHED:B=0
+    COMMITTED_OK=1/2 EXACT_OK=1/2 PIN_OK=2/2 FRESH_OK=2/2 CONTROL_DRIVER_R90=FAIL
+== P3 duplicate-exit-header rc= 0
+    RECEIPT p3 OK committed+exact+pin+fresh
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=PASS
+== P4 duplicate-pin-header rc= 0
+    RECEIPT p4 OK committed+exact+pin+fresh
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=PASS
+== P5 unrelated-line-token rc= 1
+    RECEIPT p5 FINDING FRESH_TOKEN_MISSING:moved
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=0/1 CONTROL_DRIVER_R90=FAIL
+== P6 detached-numeric rc= 1
+    RECEIPT p6 FINDING TOKEN_DETACHED:moved=0.5,FRESH_TOKEN_MISSING:moved
+    COMMITTED_OK=0/1 EXACT_OK=0/1 PIN_OK=1/1 FRESH_OK=0/1 CONTROL_DRIVER_R90=FAIL
+== P7 missing-receipt rc= 1
+    RECEIPT p7 FINDING MISSING_RECEIPT,MISSING_HEADER:case,MISSING_HEADER:exit,PIN_MISSING
+    COMMITTED_OK=0/1 EXACT_OK=0/1 PIN_OK=0/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=FAIL
+== P8 non-required-divergence rc= 0
+    RECEIPT p8 OK committed+exact+pin+fresh
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=PASS
+== P9 duplicate-same-value rc= 0
+    RECEIPT p9 OK committed+exact+pin+fresh
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=PASS
+== P10 predicate-operator-token rc= 1
+    RECEIPT p10 FINDING PREDICATE_MISSING:records,FRESH_PREDICATE_MISSING:records
+    COMMITTED_OK=0/1 EXACT_OK=0/1 PIN_OK=1/1 FRESH_OK=0/1 CONTROL_DRIVER_R90=FAIL
+
+JSON={
+ "P1 committed-read-before-fresh": {
+  "rc": 0,
+  "tail": [
+   "RECEIPT p1 OK committed+exact+pin+fresh",
+   "COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=PASS"
+  ],
+  "note": "stub rewrote the receipt during the fresh run; verdict still from pre-run bytes; receipt after='LEG=1'"
+ },
+ "P2 cross-row-ordering": {
+  "rc": 1,
+  "tail": [
+   "RECEIPT a OK committed+exact+pin+fresh",
+   "RECEIPT b FINDING TOKEN_DETACHED:B=0",
+   "COMMITTED_OK=1/2 EXACT_OK=1/2 PIN_OK=2/2 FRESH_OK=2/2 CONTROL_DRIVER_R90=FAIL"
+  ],
+  "note": "row b committed said B=0 (detached); row a fresh run rewrote it to B=1 before b was read"
+ },
+ "P3 duplicate-exit-header": {
+  "rc": 0,
+  "tail": [
+   "RECEIPT p3 OK committed+exact+pin+fresh",
+   "COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=PASS"
+  ],
+  "note": "receipt carries '# exit=1' then '# exit=0'"
+ },
+ "P4 duplicate-pin-header": {
+  "rc": 0,
+  "tail": [
+   "RECEIPT p4 OK committed+exact+pin+fresh",
+   "COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=PASS"
+  ],
+  "note": "receipt carries a wrong pin then the right pin"
+ },
+ "P5 unrelated-line-token": {
+  "rc": 1,
+  "tail": [
+   "RECEIPT p5 FINDING FRESH_TOKEN_MISSING:moved",
+   "COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=0/1 CONTROL_DRIVER_R90=FAIL"
+  ],
+  "note": "required moved=0 only appears inside a diagnostic sentence"
+ },
+ "P6 detached-numeric": {
+  "rc": 1,
+  "tail": [
+   "RECEIPT p6 FINDING TOKEN_DETACHED:moved=0.5,FRESH_TOKEN_MISSING:moved",
+   "COMMITTED_OK=0/1 EXACT_OK=0/1 PIN_OK=1/1 FRESH_OK=0/1 CONTROL_DRIVER_R90=FAIL"
+  ],
+  "note": "body carries moved=0.5 for required moved=0"
+ },
+ "P7 missing-receipt": {
+  "rc": 1,
+  "tail": [
+   "RECEIPT p7 FINDING MISSING_RECEIPT,MISSING_HEADER:case,MISSING_HEADER:exit,PIN_MISSING",
+   "COMMITTED_OK=0/1 EXACT_OK=0/1 PIN_OK=0/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=FAIL"
+  ],
+  "note": "receipt file removed"
+ },
+ "P8 non-required-divergence": {
+  "rc": 0,
+  "tail": [
+   "RECEIPT p8 OK committed+exact+pin+fresh",
+   "COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=PASS"
+  ],
+  "note": "committed body says COUNTER=999, fresh says COUNTER=2; COUNTER is not in the row"
+ },
+ "P9 duplicate-same-value": {
+  "rc": 0,
+  "tail": [
+   "RECEIPT p9 OK committed+exact+pin+fresh",
+   "COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=PASS"
+  ],
+  "note": "records=3 carried twice with the same value"
+ },
+ "P10 predicate-operator-token": {
+  "rc": 1,
+  "tail": [
+   "RECEIPT p10 FINDING PREDICATE_MISSING:records,FRESH_PREDICATE_MISSING:records",
+   "COMMITTED_OK=0/1 EXACT_OK=0/1 PIN_OK=1/1 FRESH_OK=0/1 CONTROL_DRIVER_R90=FAIL"
+  ],
+  "note": "body carries the literal token records>=1 (KEYVAL_RE cannot parse it)"
+ }
+}

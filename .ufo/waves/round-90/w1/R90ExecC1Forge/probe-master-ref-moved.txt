@@ -1,0 +1,16 @@
+# probe: the c1-harm row's base tool is whatever refs/heads/master names, not a pinned blob
+$ git -C <clone@9bad1201> update-ref refs/heads/master f54a45ed197dd475af50d82e43a22df3d2e99782   # assert toplevel first
+$ git -C <clone> show master:tools/gate-records.py | sha256sum
+905f9da2fdf233b3a599f079a4c40ace730e3acf5464a2b80e1f93a616242d60  -
+$ sha256sum <clone>/tools/gate-records.py
+905f9da2fdf233b3a599f079a4c40ace730e3acf5464a2b80e1f93a616242d60  /fast/scratch/hyaku/chousa-r90/R90ExecC1Forge/refclone/tools/gate-records.py
+$ python3 -B <clone>/corpus/evidence/round90/control-driver-r90.py verify --root <clone> --repo <clone> --rev 8d9893b... --receipts-rev 9bad1201... --work $S/work/refmove
+RECEIPT c1-gate-r89 OK committed+exact+pin+fresh
+RECEIPT c1-mutants-r89 OK committed+exact+pin+fresh
+RECEIPT c1-harm OK committed+exact+pin+fresh
+RECEIPT c1-harm-setup OK committed+exact+pin+fresh
+RECEIPT c2-prior-landing OK committed+exact+pin+fresh
+RECEIPT c2-prior-controls OK committed+exact+pin+fresh
+RECEIPT SELF_PIN OK all scoring bytes equal their blobs at --rev
+COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 CONTROL_DRIVER_R90=PASS
+rc=0

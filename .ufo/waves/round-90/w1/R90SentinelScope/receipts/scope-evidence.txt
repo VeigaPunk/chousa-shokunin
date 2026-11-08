@@ -1,0 +1,108 @@
+# R90SentinelScope evidence — lane chousa-shokunin, tree 9bad12011187d114ba2c4588c5df08a21ab28145 (base f54a45ed, freeze 8d9893b42eb22690ea5f920ab87fd7e1810b847a)
+# scratch: /fast/scratch/hyaku/chousa-r90/R90SentinelScope (deleted at yield)
+
+== (a) CONTROL DISCIPLINE: the six committed receipts ==
+  c1-gate-r89          identical_to_carrier_blob=True pin=8d9893b42eb22690ea5f920ab87fd7e1810b847a exit=0 expected_exit_row=0 exit_matches_row=True
+  c1-mutants-r89       identical_to_carrier_blob=True pin=8d9893b42eb22690ea5f920ab87fd7e1810b847a exit=0 expected_exit_row=0 exit_matches_row=True
+  c1-harm              identical_to_carrier_blob=True pin=8d9893b42eb22690ea5f920ab87fd7e1810b847a exit=0 expected_exit_row=0 exit_matches_row=True
+  c1-harm-setup        identical_to_carrier_blob=True pin=8d9893b42eb22690ea5f920ab87fd7e1810b847a exit=2 expected_exit_row=2 exit_matches_row=True
+  c2-prior-landing     identical_to_carrier_blob=True pin=8d9893b42eb22690ea5f920ab87fd7e1810b847a exit=0 expected_exit_row=0 exit_matches_row=True
+  c2-prior-controls    identical_to_carrier_blob=True pin=8d9893b42eb22690ea5f920ab87fd7e1810b847a exit=0 expected_exit_row=0 exit_matches_row=True
+  ALL SIX: pin == freeze rev: True
+  ALL SIX: byte-identical to their blob at the carrier: True
+
+  MISMATCH at the FREEZE (the pin the freeze-commit receipts actually carried):
+    c1-gate-r89: # computed_against=f8fa55ec94cb34e7b572a9d87d7f62d88bc80bf8
+    c1-mutants-r89: # computed_against=f8fa55ec94cb34e7b572a9d87d7f62d88bc80bf8
+    c1-harm: # computed_against=f8fa55ec94cb34e7b572a9d87d7f62d88bc80bf8
+    corpus/evidence/round89/ file count at f8fa55ec94cb34e7b572a9d87d7f62d88bc80bf8 = 0  (the instrument the receipts measure did not exist there)
+    freeze->carrier receipt rewrite:
+ corpus/evidence/round90/controls/receipts/c1-gate-r89.txt       | 2 +-
+ corpus/evidence/round90/controls/receipts/c1-harm-setup.txt     | 4 ++--
+ corpus/evidence/round90/controls/receipts/c1-harm.txt           | 2 +-
+ corpus/evidence/round90/controls/receipts/c1-mutants-r89.txt    | 2 +-
+ corpus/evidence/round90/controls/receipts/c2-prior-controls.txt | 2 +-
+ corpus/evidence/round90/controls/receipts/c2-prior-landing.txt  | 2 +-
+ 6 files changed, 7 insertions(+), 7 deletions(-)
+
+== (b) EGRESS: refetch.tsv rows added this round ==
+ S217	https://www.dublincore.org/documents/dcmi-namespace/	52db06f9e0e2eaf35bbdb3
+ S031	https://schema.org/lastReviewed	11d6cc56bb24adfc61eea2b4	1	2026-11-08T06:00:10Z	0	200	2131240d87e2a80a20fdc41e59d72774a515aaa8c3360901227604d3cf47f70e	97fe1a6adbd2ded492b77f9c97ba56dff3acbca583ecfc424ff9ac15a45f1ce5
+ S023	https://www.dublincore.org/specifications/dublin-core/dcmi-terms/	f5545a194c06ab421875b047	3	2026-11-08T06:00:11Z	0	200	fb32e12fa9bee1379acc0cf921ba7e79a6b85bd46253d993db0898847b9870a1	20dc0c3ab7724e1f4be59217c190fa796a66c29b7a653e8d707d64f5fac43a79
+ S216	https://www.rfc-editor.org/rfc/rfc9110.html	b1b13a12aee75c6ecc20fb91	2	2026-11-08T06:50:40Z	0	200	d431760660ea44e130f6e919dab216df2d0b3a490567a98089267523368fe1e5	ec14fa3499c2dfbcf3f08f5e50cb623fa268bd1066d34e5ea710c23f0a46794e
++S219	https://www.gnu.org/software/grep/manual/html_node/Matching-Control.html	d00017f70dae196331f06e4c	1	2026-11-08T09:44:25Z	28	000	-	-
++S219	https://man7.org/linux/man-pages/man1/grep.1.html	e6ec761219e8044b0e9e067a	1	2026-11-08T09:44:57Z	0	200	d6f07a7f75c6275f6986df2501d355ebd22fa1475ce50dc6039f1fb028d6a3c2	5a5e69c56413ba682b1609cba2baacafb393ff6821d5b752938efc390fd12823
++S220	https://man7.org/linux/man-pages/man1/grep.1.html	e6ec761219e8044b0e9e067a	1	2026-11-08T09:52:31Z	0	200	d6f07a7f75c6275f6986df2501d355ebd22fa1475ce50dc6039f1fb028d6a3c2	5a5e69c56413ba682b1609cba2baacafb393ff6821d5b752938efc390fd12823
+  committed egress table at the carrier (2 rows):
+id	url	purpose	access
+S219	https://www.gnu.org/software/grep/manual/html_node/Matching-Control.html	reserved id + failed attempt: curl rc=28 (timeout), no bytes; no registry row written under S219 (that id is the round-89 control fixture's mirror row)	2026-11-08T09:44:25Z
+S220	https://man7.org/linux/man-pages/man1/grep.1.html	man7.org GNU grep(1) manual page, Matching Control `-x` wording; row written only after the quote was located	2026-11-08T09:52:31Z
+  registry rows under id S219: 0   under id S220: 1
+  registry row count base=218 carrier=219
+
+== (c) SCOPE: diff base..carrier --stat ==
+ .ufo/waves/round-90/build_spec.py                  | 259 ++++++++++++++
+ .ufo/waves/round-90/claims.json                    | 138 ++++++++
+ .ufo/waves/round-90/egress.tsv                     |   3 +
+ corpus/SOURCES.md                                  |   1 +
+ corpus/evidence/round57/refetch.tsv                |   3 +
+ corpus/evidence/round90/census-start.txt           |   6 +
+ corpus/evidence/round90/claims.md                  | 124 +++++++
+ corpus/evidence/round90/control-driver-r90.py      | 306 +++++++++++++++++
+ corpus/evidence/round90/control-forgeries-r90.py   | 157 +++++++++
+ corpus/evidence/round90/controls/expected.tsv      |   7 +
+ .../round90/controls/receipts/c1-gate-r89.txt      |   7 +
+ .../round90/controls/receipts/c1-harm-setup.txt    |   5 +
+ .../evidence/round90/controls/receipts/c1-harm.txt |   5 +
+ .../round90/controls/receipts/c1-mutants-r89.txt   |  59 ++++
+ .../round90/controls/receipts/c1-prior-driver.txt  |   9 +
+ .../controls/receipts/c2-prior-controls.txt        |  30 ++
+ .../round90/controls/receipts/c2-prior-landing.txt |   7 +
+ .../round90/controls/receipts/c2-subst-before.txt  |  30 ++
+ .../round90/controls/receipts/c3-before.txt        |  10 +
+ corpus/evidence/round90/curation-r90-controls.py   | 257 ++++++++++++++
+ corpus/evidence/round90/curation-r90-mutants.py    | 229 +++++++++++++
+ corpus/evidence/round90/curation-r90.py            | 376 +++++++++++++++++++++
+ corpus/evidence/round90/harm-recheck-r90.py        |  78 +++++
+ corpus/evidence/round90/instrument-pins.txt        |  11 +
+ corpus/evidence/round90/skill-tally-r90.py         |  80 +++++
+ plans/round-90.md                                  |  71 ++++
+ 26 files changed, 2268 insertions(+)
+  paths touched: 26
+  any path outside the lane root? none
+  tools/ changed?  False
+  SKILL.md changed base..carrier? False
+
+== (d) ATTRIBUTION: author/committer of every round-90 commit ==
+9bad1201  A=chousa-shokunin <chousa@shokunin.local>  C=chousa-shokunin <chousa@shokunin.local>  round-90: freeze receipts — six committed control receipts pinned to the freeze revision 8d9893b4
+8d9893b4  A=chousa-shokunin <chousa@shokunin.local>  C=chousa-shokunin <chousa@shokunin.local>  round-90: freeze — three claims (control-receipt driver discipline; printed curation verdict + detector witnesses; SKILL tally freshness), instruments, expectations, before receipts, S220 row
+6ccf22b9  A=chousa-shokunin <chousa@shokunin.local>  C=chousa-shokunin <chousa@shokunin.local>  round-90: egress table corrected to the reachable man7 grep page (gnu.org rc=28)
+af71d0a1  A=chousa-shokunin <chousa@shokunin.local>  C=chousa-shokunin <chousa@shokunin.local>  round-90: egress table for S219 (committed before the first fetch)
+
+== (e) CREDENTIAL SHAPE: tightened scan over every file changed base..carrier ==
+  .ufo/waves/round-90/build_spec.py                          hits=0 
+  .ufo/waves/round-90/claims.json                            hits=0 
+  .ufo/waves/round-90/egress.tsv                             hits=0 
+  corpus/SOURCES.md                                          hits=0 
+  corpus/evidence/round57/refetch.tsv                        hits=0 
+  corpus/evidence/round90/census-start.txt                   hits=0 
+  corpus/evidence/round90/claims.md                          hits=0 
+  corpus/evidence/round90/control-driver-r90.py              hits=0 
+  corpus/evidence/round90/control-forgeries-r90.py           hits=0 
+  corpus/evidence/round90/controls/expected.tsv              hits=0 
+  corpus/evidence/round90/controls/receipts/c1-gate-r89.txt  hits=0 
+  corpus/evidence/round90/controls/receipts/c1-harm-setup.txt hits=0 
+  corpus/evidence/round90/controls/receipts/c1-harm.txt      hits=0 
+  corpus/evidence/round90/controls/receipts/c1-mutants-r89.txt hits=0 
+  corpus/evidence/round90/controls/receipts/c1-prior-driver.txt hits=0 
+  corpus/evidence/round90/controls/receipts/c2-prior-controls.txt hits=0 
+  corpus/evidence/round90/controls/receipts/c2-prior-landing.txt hits=0 
+  corpus/evidence/round90/controls/receipts/c2-subst-before.txt hits=0 
+  corpus/evidence/round90/controls/receipts/c3-before.txt    hits=0 
+  corpus/evidence/round90/curation-r90-controls.py           hits=0 
+  corpus/evidence/round90/curation-r90-mutants.py            hits=0 
+  corpus/evidence/round90/curation-r90.py                    hits=0 
+  corpus/evidence/round90/harm-recheck-r90.py                hits=0 
+  corpus/evidence/round90/instrument-pins.txt                hits=0 
+  corpus/evidence/round90/skill-tally-r90.py                 hits=0 
+  plans/round-90.md                                          hits=0 

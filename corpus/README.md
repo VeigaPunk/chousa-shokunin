@@ -1423,3 +1423,12 @@ Left open:
 | `lessons/round-86.md` | Round-86 lesson: the 200-only class moved inside the battery's predicate, the R86 mutant derived from the subject bytes, the S024/S031 inversion closed, four corrections to its own narrative, QUALITY 173–181 | `corpus/evidence/round86/`; `.ufo/waves/round-86/w1-results.json` |
 | `lessons/round-87.md` | Round-87 lesson: Gate (S216 re-open, S218 new `own-work`), both claim outcomes, six mined mistakes, an eight-row `## Spot-check intake` for round 86's eight routed and conformance items, trends and corrections | `corpus/evidence/round87/` |
 | `SOURCES.md` | Where the lane learns (contract v1): 218 registry rows after this round (S218 appended `own-work`; S216 `used-by` extended); census command in the report | `bash /home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa` |
+
+Round 90 closed round 89's control-driver and curation-verdict defects: the control receipt is verified as committed
+bytes (whole-token fields with `TOKEN_DETACHED`, duplicate-key refusal, a revision pin plus a self-pin of the scoring
+bytes, a non-empty harm population and a setup negative), the curation counter prints `VERDICT fields_hold=1` on the
+passing path and adds a two-directional witness that kills the two constant-substituted detectors round 89 left alive,
+and the nine current `SKILL.md` selftest tallies re-derive to the tool's 283-case verdict. `S220` (GNU grep(1) `-x`)
+grounds the whole-token rule. Frontier ground is unchanged: no knowledge entry landed, so `S220` grounds an instrument
+rule and not a domain fact, and the round-74 source-blind order oracle, the r80 Gate-id backlog and QUALITY 173's
+successful-refused record form remain carried.

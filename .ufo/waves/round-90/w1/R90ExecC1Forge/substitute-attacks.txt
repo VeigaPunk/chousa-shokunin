@@ -1,0 +1,38 @@
+== variant S: static stub as harm-recheck-r90.py (clean working tree, no commit) ==
+  doctored instrument sha256=5b6068697412bf63d709dd8522d509895206bbced6125b5e1db3a7ebd6737fee
+  instrument-pins.txt      =4967755433f19b8ca5f070dcae377ba23989ae6c7971afa4d9936b06c3b3d3c8
+  sha matches pin: False
+  RECEIPT c1-gate-r89 OK committed+exact+pin+fresh
+  RECEIPT c1-mutants-r89 OK committed+exact+pin+fresh
+  RECEIPT c1-harm OK committed+exact+pin+fresh
+  RECEIPT c1-harm-setup FINDING FRESH_EXIT:0,FRESH_TOKEN_MISSING:HARM_RECHECK_ERROR
+  RECEIPT c2-prior-landing OK committed+exact+pin+fresh
+  RECEIPT c2-prior-controls OK committed+exact+pin+fresh
+  RECEIPT SELF_PIN OK all scoring bytes equal their blobs at --rev
+  COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=5/6 CONTROL_DRIVER_R90=FAIL
+  rc=1
+
+== variant D: --work-state-dependent harm-recheck-r90.py ==
+  doctored instrument sha256=ba2452b391d7cd6de9f5f7ae774cb5a04190f6fa7a3bcc816acf8f78db21fcb3
+  [clean --work]
+  RECEIPT c1-gate-r89 OK committed+exact+pin+fresh
+  RECEIPT c1-mutants-r89 OK committed+exact+pin+fresh
+  RECEIPT c1-harm FINDING FRESH_EXIT:2,FRESH_TOKEN_MISSING:moved,FRESH_PREDICATE_MISSING:records
+  RECEIPT c1-harm-setup OK committed+exact+pin+fresh
+  RECEIPT c2-prior-landing OK committed+exact+pin+fresh
+  RECEIPT c2-prior-controls OK committed+exact+pin+fresh
+  RECEIPT SELF_PIN OK all scoring bytes equal their blobs at --rev
+  COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=5/6 CONTROL_DRIVER_R90=FAIL
+  rc=1
+  [pre-seeded --work/harm/fresh.count]
+  RECEIPT c1-gate-r89 OK committed+exact+pin+fresh
+  RECEIPT c1-mutants-r89 OK committed+exact+pin+fresh
+  RECEIPT c1-harm FINDING FRESH_EXIT:2,FRESH_TOKEN_MISSING:moved,FRESH_PREDICATE_MISSING:records
+  RECEIPT c1-harm-setup OK committed+exact+pin+fresh
+  RECEIPT c2-prior-landing OK committed+exact+pin+fresh
+  RECEIPT c2-prior-controls OK committed+exact+pin+fresh
+  RECEIPT SELF_PIN OK all scoring bytes equal their blobs at --rev
+  COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=5/6 CONTROL_DRIVER_R90=FAIL
+  rc=1
+
+== receipt files written ==

@@ -1,0 +1,62 @@
+# receipt d1 - fleet census at the attack revision
+$ bash /home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa
+chousa	W04	S051 duplicate url www.w3.org/TR/2017/REC-html52-20171214/syntax.html across scopes
+chousa	W04	S053 duplicate url docs.python.org/3/library/socket.html across scopes
+chousa	W04	S073 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+chousa	W04	S074 duplicate url docs.python.org/3/library/hashlib.html across scopes
+chousa	W04	S075 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+chousa	ok	/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md
+VALIDATE_EXIT=0
+
+$ bash /home/vgpnk/Projects/shokunin/scripts/sources-census.sh census --root /home/vgpnk/Projects/shokunin chousa
+chousa	rows	219
+chousa	tier.A	140
+chousa	tier.B	59
+chousa	tier.C	20
+chousa	status.mined	183
+chousa	status.queued	12
+chousa	status.rejected	24
+FLEET	rows	219
+FLEET	tier.A	140
+FLEET	tier.B	59
+FLEET	tier.C	20
+FLEET	tier.invalid	0
+FLEET	status.queued	12
+FLEET	status.mined	183
+FLEET	status.rejected	24
+FLEET	status.invalid	0
+FLEET	missing	0
+CENSUS_EXIT=0
+
+ROW COUNT = 219 (census 'rows' metric; FLEET.rows=219). Exit 0, no E-code, no missing registry.
+
+--- same census against the 9bad1201 clone's registry (--file), to pin the count to the attacked tree ---
+$ bash scripts/sources-census.sh census --file <clone>/corpus/SOURCES.md
+file	rows	219
+file	tier.A	140
+file	tier.B	59
+file	tier.C	20
+file	status.mined	183
+file	status.queued	12
+file	status.rejected	24
+FLEET	rows	219
+FLEET	tier.A	140
+FLEET	tier.B	59
+FLEET	tier.C	20
+FLEET	tier.invalid	0
+FLEET	status.queued	12
+FLEET	status.mined	183
+FLEET	status.rejected	24
+FLEET	status.invalid	0
+FLEET	missing	0
+EXIT=0
+
+--- the lane's working-tree corpus/SOURCES.md vs the attacked revision 9bad1201 ---
+$ git -C <lane> diff --stat 9bad1201 -- corpus/SOURCES.md
+(empty = identical)
+--- and vs master HEAD aa7d4223 (the capture commit) ---
+$ git -C <lane> diff --stat 9bad1201 aa7d4223 -- corpus/SOURCES.md
+(empty = identical)
+
+--- the only W-codes are W04 duplicate-url warnings (warnings do not change status);
+    the lane line ends 'ok' and the exit code is 0 ---

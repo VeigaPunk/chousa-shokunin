@@ -4005,3 +4005,45 @@ cells, `tools/gate-records.py` is byte-identical at both revisions, and every co
 verdict. Carried debt, named not repaired backwards: the round-74 source-blind order oracle, QUALITY 173's successful-
 refused record form, the r80 backlog Gate ids, and this round's own control-discipline package (Amendment 7) plus the
 unbound-`LEGS_MEASURED` and `VERDICT`-token repairs (Amendments 4 and 8) — all routed to round 90.
+## Round 90 verdict — the committed receipt is what the driver verifies; the skill tallies re-derive; the curation claim honest-stops on its own kill rule (2026-11-08)
+
+Base `f54a45ed`; freeze `8d9893b4`; receipts carrier `9bad1201`; capture commit `aa7d4223`; wave
+`.ufo/waves/round-90/w1/` (13 seats, 6 attack, 0 dead). Three claims, three axes, no exploratory claim. Round 89's
+spot-check routed seven items; this round closes 1, 5, 6d and 6e, re-flags 2–4 as conformance, and carries 6a–6c
+unchanged.
+
+| claim | axis | before | after | verdict |
+|---|---|---|---|---|
+| C1 `C1-DRIVER-R90` | operability (lowest, historical 3/10) | r89 driver passes its own rows and accepts all six forgery fixtures (`FORGERY_REFUSED=0/6`; `c1-prior-driver.txt`) | `CONTROL_DRIVER_R90=PASS`, `COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6`, `SELF_PIN OK`; `FORGERY_REFUSED=6/6 PRIOR_ACCEPTED=6/6 POSITIVE=pass` (`after/c1-*.txt`) | **verified on the wording narrowed by Amendments 2–4, 7 and 9** — the wave falsified the un-narrowed header/pin/fresh clauses for duplicate headers and an instrument substitution, which are now named limits 4–6 |
+| C2 `C2-CURATION-R90` | calibration | r89 counter: `LEGS_MEASURED=8/8`, no `VERDICT fields_hold=1` token on the passing path; both substitutions survive (`PRIOR_R89_SURVIVORS=2/2`) | `CURATION_R90=PASS LEGS_MEASURED=10/10` with `VERDICT fields_hold=1` and `DETECTOR_WITNESS=8/8`; mutants `MUTANTS_KILLED=10/10 PRIOR_R89_SURVIVORS=2/2`; controls `CONTROLS=PASS FORGERY_REFUSED=7/7 PRIOR_REGRESSION=7/7` | **honest stop** — frozen K2 fires: `R90ExecC2Forge` F1/F2 tree forgeries are accepted by all three commands at exit 0. Enforceable property and round-91 repairs in Amendment 8 |
+| C3 `C3-TALLY-R90` | freshness | `SKILL_TALLY_R90=FAIL`, `TALLY_ROWS=9 STALE_TALLIES=9/9 EXPECTED_CASES=283` | `SKILL_TALLY_R90=PASS`, `STALE_TALLIES=0/9 OTHER_OCCURRENCES=3` (`after/c3-after.txt`) | **verified on the wording narrowed by Amendments 1 and 10** (historical labels corrected; the expected-number clause is bound by the before+landing pair) |
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** | the driver reads the committed receipt before any fresh run, binds whole body tokens, refuses duplicate body keys and predicates, pins the revision and self-pins the scoring bytes, requires a non-empty harm population and a setup negative; six forgery classes accepted by r89 are refused with named codes; the positive still passes |
+| calibration | unchanged | C2 honest-stopped; the counter improvements (printed verdict, two-directional witness, two round-89 survivors killed) are reported but not admitted |
+| freshness | **improved** | nine current `SKILL.md` tallies re-derive to the tool's own 283-case verdict; three historical quotes are counted and unchanged |
+| depth | unchanged | no new `corpus/knowledge/` entry; S220 grounds an instrument rule |
+| coverage | unchanged | registry 218 → 219 (one mined row); `PROVINCE.md` untouched |
+| adjacency | unchanged | the connector reports sibling overlap read-only; nothing absorbed |
+
+Trends: expansion **unchanged** (knowledge entries unchanged; one mined registry row cited by the claims file);
+quality **improved** (C1 and C3 verified with red-before witnesses; QUALITY 196–202 mined from this round's own
+errors); discernment **improved** (the wave fired C1's overstatement, C2's kill rule and two defects the clean tree
+hid; the lane narrowed C1/C3 and honest-stopped C2 rather than filing the wider sentence).
+
+No axis harmed at the tip: `bash tools/research-gate.sh --selftest` `PASS (283 cases, 0 skipped)`; preflight
+`PREFLIGHT=8/8 FAILED=none ENV=none SKIPPED=none`; census exit 0 (218 → 219); `tools/gate-records.py verify` OK over
+this lesson; the subject tools `tools/research-gate.sh` and `tools/gate-records.py` are byte-identical at base and
+tip.
+
+## Planned — round 91 (intent, not a predicate)
+
+1. **operability** — C1's Amendments 4/9 residues: refuse duplicate header keys, bind the instrument bytes a row
+   executes to a pin, make `SELF_PIN` name both revisions, and add fixtures for the fresh-divergence and empty-body
+   states (`R90MutBattery` M6/M8).
+2. **calibration** — C2's Amendment 8 repairs: count or refuse a `## Located quotes` row outside the `Q`/3-cell
+   shape, cross-check every cited source's `status`/`used-by`, and guard the warrant share with a term-frequency
+   test; then a successor claim that names those classes.
+3. **freshness** — bind the case-range prose to the tool's own case names and delete the r90 unentailed double-count
+   loop (Amendment 8's sibling; `R90ReviewerC2` F5).

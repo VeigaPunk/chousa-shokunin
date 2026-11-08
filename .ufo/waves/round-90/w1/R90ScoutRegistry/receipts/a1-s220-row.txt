@@ -1,0 +1,28 @@
+# receipt a1 — S220 registry row and registry size
+$ git show 9bad12011187d114ba2c4588c5df08a21ab28145:corpus/SOURCES.md | sed -n '232p'
+| S220 | GNU grep(1) manual page, Matching Control, `-x`/`--line-regexp` — https://man7.org/linux/man-pages/man1/grep.1.html | docs | A | GNU grep's whole-line match semantics (`-x`), for a receipt field checked as one token; not regex anchoring and not this lane's driver | Matching Control, `-x , --line-regexp` paragraph; man7.org page read 2026-11-08, capture key e6ec761219e8044b0e9e067a | `-x` selects only matches that exactly match the whole line, so a required receipt value must equal a whole token rather than occur inside a longer one | mined | 2026-11-08 | 180d | corpus/evidence/round90/claims.md |
+
+$ grep -c '^| S[0-9]\{3\} ' corpus/SOURCES.md   # at 9bad1201
+219
+$ git show f54a45ed:corpus/SOURCES.md | grep -c '^| S[0-9]\{3\} '   # base
+218
+$ git show 8d9893b4:corpus/SOURCES.md | grep -c '^| S[0-9]\{3\} '   # freeze
+219
+
+$ git diff --stat f54a45ed 8d9893b4 -- corpus/SOURCES.md
+ corpus/SOURCES.md | 1 +
+ 1 file changed, 1 insertion(+)
+$ git diff f54a45ed 8d9893b4 -- corpus/SOURCES.md | grep '^+|' | cut -c1-120
++| S220 | GNU grep(1) manual page, Matching Control, `-x`/`--line-regexp` — https://man7.org/linux/man-pages/man1/grep
+
+$ grep -c '^| S219 ' corpus/SOURCES.md   # must be 0 (S219 reserved to the r89 fixture)
+0
+last ids:
+S216
+S217
+S218
+S220
+S220 used-by cell:
+  used-by =  corpus/evidence/round90/claims.md 
+used-by path exists at 9bad1201:
+  yes

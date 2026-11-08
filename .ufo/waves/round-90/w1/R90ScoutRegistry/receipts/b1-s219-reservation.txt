@@ -1,0 +1,131 @@
+# receipt b1 — S219/S220 id reservation re-derived
+Method: scratch copy of the 9bad1201 tree, S220 renamed to S219 (one row), then the
+unchanged r89 control battery re-run against that copy. Copy reverted afterwards.
+
+$ cp -a <clone> <scratch>/tree-s219 ; python3 (rename '| S220 | GNU grep(1)' -> '| S219 | GNU grep(1)')
+  rows after rename: S219=0 total=219
+
+$ python3 -B corpus/evidence/round89/curation-r89-controls.py --root <scratch>/tree-s219 --work <scratch>/work
+--- PRISTINE baseline (no real S219 row) ---
+OK POSITIVE: positive accepted by both
+  r89: rc=0 CURATION_R89=PASS
+  prior: rc=0 CURATION_R87=PASS
+OK A1c-junk-substitute: refused by r89 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R87=PASS
+OK A1d-truncate: refused by r89 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R87=PASS
+OK caseG-relabel: refused by r89 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R87=PASS
+OK F2-rejected-superseder: refused by r89 (LEG_FAIL TEACHES checked=1 flagged=1 unresolved=1 sup_unresolved=0), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R87=PASS
+OK B1b-padding-qid: refused by r89 (LEG_FAIL WARRANT 16/17), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R87=PASS
+OK D1-duplicate-qid: refused by r89 (LEG_FAIL DUPQID provenance-recording-r85.md Naming what a resource derives from warrant=Q1, Q1 (S215)), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R88=PASS
+OK SUP-clause-mirror: refused by r89 (LEG_FAIL TEACHES checked=2 flagged=2 unresolved=0 sup_unresolved=1), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R88=PASS
+FORGERY_REFUSED=7/7 PRIOR_ACCEPTED_FORGERY=7/7
+CONTROLS=PASS
+--- WITH a real S219 row (collision) ---
+OK POSITIVE: positive accepted by both
+  r89: rc=0 CURATION_R89=PASS
+  prior: rc=0 CURATION_R87=PASS
+OK A1c-junk-substitute: refused by r89 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R87=PASS
+OK A1d-truncate: refused by r89 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R87=PASS
+OK caseG-relabel: refused by r89 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R87=PASS
+OK F2-rejected-superseder: refused by r89 (LEG_FAIL TEACHES checked=1 flagged=1 unresolved=1 sup_unresolved=0), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R87=PASS
+OK B1b-padding-qid: refused by r89 (LEG_FAIL WARRANT 16/17), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R87=PASS
+OK D1-duplicate-qid: refused by r89 (LEG_FAIL DUPQID provenance-recording-r85.md Naming what a resource derives from warrant=Q1, Q1 (S215)), accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=0 CURATION_R88=PASS
+CASE_DEVIATION SUP-clause-mirror: NOT refused by r89 or NOT accepted by the prior counter
+  r89: rc=1 CURATION_R89=FAIL
+  prior: rc=1 CURATION_R88=FAIL
+FORGERY_REFUSED=7/7 PRIOR_ACCEPTED_FORGERY=6/7
+CONTROLS=FAIL
+
+OBSERVED: the case that stops being accepted by the prior counter is SUP-clause-mirror.
+  pristine: prior (r88) rc=0 CURATION_R88=PASS  -> forgery accepted by prior
+  collision: prior (r88) rc=1 CURATION_R88=FAIL  -> forgery NO LONGER accepted by prior
+  and the battery line changes PRIOR_ACCEPTED_FORGERY=7/7 -> 6/7 ; CONTROLS=PASS -> CONTROLS=FAIL
+
+--- mechanism, isolated per counter (mirror tree, one SUP-clause fixture) ---
+$ python3 -B corpus/evidence/round89/curation-r89.py --root <scratch>/work/sup-base
+SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20 Q_FLOORS=search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7 WARRANT_OK=17/17 DUP_QIDS=0 TEACHES_CHECKED=2 TEACHES_FLAGGED=2 TEACHES_UNRESOLVED=0 SUP_CLAUSE_CHECKED=1 SUP_UNRESOLVED=1 LEGS_MEASURED=7/8
+TEACHES_FLAGGED S024 terms=publication,modification disposition=superseded by S031
+TEACHES_FLAGGED S031 terms=publication disposition=superseded by S219
+TEACHES_SUP_UNRESOLVED S031 terms=publication
+LEG_FAIL TEACHES checked=2 flagged=2 unresolved=0 sup_unresolved=1
+LEG_FAIL VERDICT fields_hold=0 legs_ok=7/8
+CURATION_R89=FAIL
+  rc=0
+$ python3 -B corpus/evidence/round88/curation-r88.py --root <scratch>/work/sup-base
+SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20 Q_FLOORS=search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7 WARRANT_OK=17/17 TEACHES_CHECKED=2 TEACHES_FLAGGED=2 TEACHES_UNRESOLVED=0 LEGS=7/7
+TEACHES_FLAGGED S024 terms=publication,modification disposition=superseded by S031
+TEACHES_FLAGGED S031 terms=publication disposition=superseded by S219
+CURATION_R88=PASS
+$ python3 -B corpus/evidence/round89/curation-r89.py --root <scratch>/work/sup-s219   # registry has a real S219
+SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20 Q_FLOORS=search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7 WARRANT_OK=17/17 DUP_QIDS=0 TEACHES_CHECKED=2 TEACHES_FLAGGED=2 TEACHES_UNRESOLVED=1 SUP_CLAUSE_CHECKED=1 SUP_UNRESOLVED=1 LEGS_MEASURED=7/8
+TEACHES_FLAGGED S024 terms=publication,modification disposition=superseded by S031
+TEACHES_FLAGGED S031 terms=publication disposition=UNRESOLVED
+TEACHES_SUP_UNRESOLVED S031 terms=publication
+LEG_FAIL TEACHES checked=2 flagged=2 unresolved=1 sup_unresolved=1
+LEG_FAIL VERDICT fields_hold=0 legs_ok=7/8
+CURATION_R89=FAIL
+$ python3 -B corpus/evidence/round88/curation-r88.py --root <scratch>/work/sup-s219
+SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20 Q_FLOORS=search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7 WARRANT_OK=17/17 TEACHES_CHECKED=2 TEACHES_FLAGGED=2 TEACHES_UNRESOLVED=1 LEGS=6/7
+TEACHES_FLAGGED S024 terms=publication,modification disposition=superseded by S031
+TEACHES_FLAGGED S031 terms=publication disposition=UNRESOLVED
+LEG_FAIL TEACHES checked=2 flagged=2 unresolved=1 sup_unresolved=0
+CURATION_R88=FAIL
+
+MECHANISM (last-wins registry parse, curation-r89.py:80-90, reg[cells[0]] = cells):
+  the fixture's mirror row is '| S219 | ... supersedes S031 - mirror disposal row | mined |'.
+  A real S219 registry row (also mined, with a different teaches) comes LATER in the file,
+  so parse_registry's dict keeps the LAST S219 seen -> the mirror's disposal edge is lost.
+  Effect: 'TEACHES_FLAGGED S031 ... disposition=UNRESOLVED' (base: 'disposition=superseded by S219'),
+  TEACHES_UNRESOLVED=1, and r88 refuses too.  Same defect class as corpus/lessons/round-89.md item 2
+  (the S099 collision), which is why the fixture id S219 was chosen to be unused.
+
+--- r90 controls battery against the same S219 copy (frame check) ---
+  r90: rc=1 CURATION_R90=FAIL
+  prior: rc=1 CURATION_R89=FAIL
+FORGERY_REFUSED=7/7 PRIOR_REGRESSION=7/7
+CONTROLS=PASS
+  (r90's PRIOR_REGRESSION frame needs both counters to refuse, so it does not detect the id collision;
+   the r89 frame's PRIOR_ACCEPTED leg is what exposes it.)
+
+--- revert of the scratch copy ---
+$ diff -q <scratch>/tree-s219/corpus/SOURCES.md <clone>/corpus/SOURCES.md
+  IDENTICAL_TO_PRISTINE
+$ grep -c '^| S219 ' <scratch>/tree-s219/corpus/SOURCES.md ; grep -c '^| S220 ' ...
+0
+1
+
+--- where S219 is reserved (committed bytes at 9bad1201) ---
+9bad12011187d114ba2c4588c5df08a21ab28145:corpus/evidence/round89/curation-r89-controls.py:41:S219_ROW = ("| S219 | mirror row (own-work) — corpus/SO
+9bad12011187d114ba2c4588c5df08a21ab28145:corpus/evidence/round89/curation-r89-controls.py:218:                    out.append(S219_ROW)
+9bad12011187d114ba2c4588c5df08a21ab28145:corpus/evidence/round89/curation-r89-mutants.py:36:MIRROR_ROW = ("| S219 | mirror row (own-work) — corpus/S
+9bad12011187d114ba2c4588c5df08a21ab28145:corpus/evidence/round89/curation-r89-mutants.py:109:            out.append(MIRROR_ROW)
+9bad12011187d114ba2c4588c5df08a21ab28145:corpus/evidence/round90/curation-r90-controls.py:42:S219_ROW = ("| S219 | mirror row (own-work) — corpus/SO
+9bad12011187d114ba2c4588c5df08a21ab28145:corpus/evidence/round90/curation-r90-controls.py:219:                    out.append(S219_ROW)
+9bad12011187d114ba2c4588c5df08a21ab28145:corpus/evidence/round90/curation-r90-mutants.py:36:MIRROR_ROW = ("| S219 | mirror row (own-work) — corpus/S
+9bad12011187d114ba2c4588c5df08a21ab28145:corpus/evidence/round90/curation-r90-mutants.py:136:            out.append(MIRROR_ROW)
+S219	https://www.gnu.org/software/grep/manual/html_node/Matching-Control.html	reserved id + failed attempt: curl rc=28 (timeout), no bytes; no registry row written under S219 (that id is the round-89 control fixture's mirror row)	2026-11-08T09:44:25Z

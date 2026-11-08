@@ -1,0 +1,38 @@
+# receipt a3 — located capture line numbers, word count, access instant
+
+--- .txt (text capture), lines 163-169 with numbers ---
+ 163|  -x is also specified.
+ 164| 
+ 165|  -x , --line-regexp 
+ 166|  Select only those matches that exactly match the whole
+ 167|  line. For a regular expression pattern, this is like
+ 168|  parenthesizing the pattern and then surrounding it with ^ 
+ 169|  and $ .
+
+--- .raw (html capture), lines 149-156 with numbers ---
+ 149|               <b>-x </b>is also specified.
+ 150| 
+ 151|        <b>-x</b>, <b>--line-regexp</b>
+ 152|               Select only those matches that exactly match the whole
+ 153|               line.  For a regular expression pattern, this is like
+ 154|               parenthesizing the pattern and then surrounding it with <b>^</b>
+ 155|               and <b>$</b>.
+ 156| 
+
+LOCATED LINE NUMBERS (the sentence is soft-wrapped in BOTH captures):
+  .txt : line 166 begins the sentence, line 167 carries 'line.' -> the quote spans lines 166-167
+  .raw : line 152 begins the sentence, line 153 carries 'line.' -> the quote spans lines 152-153
+  the '-x , --line-regexp' option label (the row's anchor) is .txt line 165 / .raw line 151
+
+--- word count of the quote, three ways ---
+  quote: Select only those matches that exactly match the whole line.
+  whitespace-delimited tokens (split())      = 10  -> ['Select', 'only', 'those', 'matches', 'that', 'exactly', 'match', 'the', 'whole', 'line.']
+  tokens counting the sentence-final '.' as its own = 11
+  NOTE: the brief's '11 words' holds only under the second count; the whitespace-token
+        count of the quote as written is 10. The quote text itself is byte-exact either way.
+
+--- access instant vs the refetch row's fetched_utc ---
+  file mtime (UTC)      = 2026-11-08T09:52:31Z
+  S220 refetch fetched_utc = 2026-11-08T09:52:31Z   -> EQUAL (second precision)
+  S219 refetch fetched_utc (same key, same hashes) = 2026-11-08T09:44:57Z -> 8m34s earlier
+  (the committed bytes are the later S220 access; both rows carry identical sha256s)

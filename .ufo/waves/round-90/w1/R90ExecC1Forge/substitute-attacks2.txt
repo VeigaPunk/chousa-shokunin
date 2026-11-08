@@ -1,0 +1,35 @@
+== S2: setup-aware static substitution (no committed byte changes) ==
+  doctored sha256 = 752fa802323f0e523d3135e8319d33ad60a39ed45411c8b5941e2eec8dc34673
+  pinned sha256   = 4967755433f19b8ca5f070dcae377ba23989ae6c7971afa4d9936b06c3b3d3c8 | match: False
+  RECEIPT c1-gate-r89 OK committed+exact+pin+fresh
+  RECEIPT c1-mutants-r89 OK committed+exact+pin+fresh
+  RECEIPT c1-harm OK committed+exact+pin+fresh
+  RECEIPT c1-harm-setup OK committed+exact+pin+fresh
+  RECEIPT c2-prior-landing OK committed+exact+pin+fresh
+  RECEIPT c2-prior-controls OK committed+exact+pin+fresh
+  RECEIPT SELF_PIN OK all scoring bytes equal their blobs at --rev
+  COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 CONTROL_DRIVER_R90=PASS
+  rc= 0
+
+== D2: --work-state-dependent substitution ==
+  doctored sha256 = 48145ff59854ef9be5671537baa590a25a4a585f1aa682013f18273857e54db2
+  [clean --work]
+  RECEIPT c1-gate-r89 OK committed+exact+pin+fresh
+  RECEIPT c1-mutants-r89 OK committed+exact+pin+fresh
+  RECEIPT c1-harm FINDING FRESH_PREDICATE_SHORT:records=0<1
+  RECEIPT c1-harm-setup OK committed+exact+pin+fresh
+  RECEIPT c2-prior-landing OK committed+exact+pin+fresh
+  RECEIPT c2-prior-controls OK committed+exact+pin+fresh
+  RECEIPT SELF_PIN OK all scoring bytes equal their blobs at --rev
+  COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=5/6 CONTROL_DRIVER_R90=FAIL
+  rc= 1
+  [--work pre-seeded with harm/armed]
+  RECEIPT c1-gate-r89 OK committed+exact+pin+fresh
+  RECEIPT c1-mutants-r89 OK committed+exact+pin+fresh
+  RECEIPT c1-harm FINDING FRESH_PREDICATE_SHORT:records=0<1
+  RECEIPT c1-harm-setup OK committed+exact+pin+fresh
+  RECEIPT c2-prior-landing OK committed+exact+pin+fresh
+  RECEIPT c2-prior-controls OK committed+exact+pin+fresh
+  RECEIPT SELF_PIN OK all scoring bytes equal their blobs at --rev
+  COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=5/6 CONTROL_DRIVER_R90=FAIL
+  rc= 1

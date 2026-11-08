@@ -1234,3 +1234,51 @@ the admitted entry that motivates it. Tier definitions live in
     while the `expected.tsv` row produced `moved=0`. Check: execute the exact text of the claim's command block in a
     fresh work dir and require the stated value; a command that needs a preparatory step carries that step. —
     `lessons/round-89.md` Mistakes 6.
+
+## Round-90 additions (criteria 1–195 unchanged)
+
+196. **An identifier for a new registry row is checked against committed fixture literals, not only against the
+    registry.** Round 90's first row id (`S219`) was free in `corpus/SOURCES.md` but was the round-89 control
+    battery's mirror-row id; adding a real row at that id displaced the mirror inside the parsed registry and one
+    case stopped being accepted by the prior counter (`PRIOR_ACCEPTED_FORGERY=6/7`, measured by `R90ScoutRegistry`).
+    Check: before writing a row, `grep -RInE '\| S<id> \|' <lane>/corpus/evidence <lane>/.ufo/waves` → no hit, and
+    the row is renumbered rather than the fixture. — `lessons/round-90.md` Mistakes 1.
+
+197. **A freshness check over a document separates current expected-value cells from historical quotations by
+    structure, prints what it did not bind, and never rewrites history.** Round 90's first `skill-tally-r90.py`
+    counted 12 occurrences; three were deliberate historical quotes (256/161/215 cases) and would have been
+    "repaired" false. Check: the rule names the structural carriers of current values (Gates-table first cell; the
+    host-note phrase), prints `OTHER_OCCURRENCES=<n>`, and the before/after diff touches only the current cells. —
+    `lessons/round-90.md` Mistakes 2.
+
+198. **A receipt is evidence only when its lines are one run.** Two writers aimed at one receipt path produced a file
+    carrying `TALLY_ROWS=9` and `TALLY_ROWS=12` lines; the mixed file is neither run's output and cannot be cited.
+    Check: a receipt with two different summary lines (same key, different value) is discarded and re-run alone. —
+    `lessons/round-90.md` Mistakes 3.
+
+199. **A receipt field carried twice with different values is refused.** "Last one wins" was the class named in
+    `considerthese/2026-11-07.md` proposal 1 (r80 records, r82 `load_sections`); the round-90 driver refuses a
+    required body key with two values (`DUPLICATE_KEY`) where `grep -F` accepts it, and the C1 forgery battery
+    carries the case. Check: `C-duplicate-key` prints `records=0` then `records=5`; r90 refuses, the r89 driver
+    accepts. — `lessons/round-90.md` Claim outcomes C1.
+
+200. **A claim that names a printed token requires that token on the passing path.** Round 89's C2 named
+    `VERDICT fields_hold=1` but the counter printed the pair only on the failure path, so the observable was unbound
+    (r89 Amendment 8). Check: the verdict leg is appended before the summary and is one of the counted legs; the
+    passing transcript contains the pair; `grep -c` is 2 at landing and 0 at the prior revision. —
+    `lessons/round-90.md` Claim outcomes C2.
+
+201. **After replacing a per-item loop with a quantified predicate, delete the loop.** Round 90 rewrote the
+    unentailed test as `unentailed_row(cells, joined)` but left the `for term in DEFECT_TERMS:` loop around the
+    append, so one matching row is appended once per term with the loop's label regardless of which term matched
+    (`R90ReviewerC2` F5: `UNENTAILED_TERM=2` for one row, first label `modification` for a row containing
+    `modified`). The frozen value is 0 on the clean tree, so no scored field moved — which is why the defect is
+    invisible to the claim's counter. Check: after such a refactor, a probe tree with one offending row prints that
+    row once, with the term it actually contains. — `lessons/round-90.md` Mistakes 4.
+
+202. **A verifier that reads one tree and pins against another names both bases.** Round 90's `self_pin()` computed
+    each scoring file's path relative to `--repo` while the files were read from `--root`; the round's own dispatch
+    text named `--root <lane> --repo <clone>`, and that form printed `CONTROL_DRIVER_R90=FAIL` (every scoring file
+    `SELF_DRIFT`) on correct bytes (`R90SentinelScope` F1). Check: a path-resolution helper takes its base
+    explicitly, and the command forms in a dispatch are executed verbatim on correct bytes before the wave is
+    written. — `lessons/round-90.md` Mistakes 6.

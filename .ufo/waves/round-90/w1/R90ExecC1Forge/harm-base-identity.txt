@@ -1,0 +1,12 @@
+# probe: the c1-harm row's base tool is byte-identical to the head tool it is compared with
+$ git -C <clone@9bad1201> show master:tools/gate-records.py | sha256sum
+905f9da2fdf233b3a599f079a4c40ace730e3acf5464a2b80e1f93a616242d60  -
+$ sha256sum tools/gate-records.py
+905f9da2fdf233b3a599f079a4c40ace730e3acf5464a2b80e1f93a616242d60  tools/gate-records.py
+$ mkdir -p $WORK/harm && git -C . show master:tools/gate-records.py > $WORK/harm/base-tool.py
+extract rc=0
+$ sha256sum $WORK/harm/base-tool.py
+905f9da2fdf233b3a599f079a4c40ace730e3acf5464a2b80e1f93a616242d60  /fast/scratch/hyaku/chousa-r90/R90ExecC1Forge/work/harmprobe/harm/base-tool.py
+$ python3 -B corpus/evidence/round90/harm-recheck-r90.py --root . --repo . --base-tool $WORK/harm/base-tool.py
+HARM_RECHECK files=15 records=31 moved=0 base_rc=0 head_rc=0
+exit=0

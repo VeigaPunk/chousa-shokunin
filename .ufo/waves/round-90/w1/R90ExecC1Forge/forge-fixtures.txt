@@ -1,0 +1,79 @@
+### G0-positive expect_pass=True -> printed=PASS (ACCEPTED) rc=0
+    RECEIPT G0-positive OK committed+exact+pin+fresh
+    RECEIPT SELF_PIN OK all scoring bytes equal their blobs at --rev
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=PASS
+
+### G1-exit-duplicate expect_pass=True -> printed=PASS (ACCEPTED) rc=0
+    RECEIPT G1-exit-duplicate OK committed+exact+pin+fresh
+    RECEIPT SELF_PIN OK all scoring bytes equal their blobs at --rev
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=PASS
+
+### G2-pin-duplicate expect_pass=True -> printed=PASS (ACCEPTED) rc=0
+    RECEIPT G2-pin-duplicate OK committed+exact+pin+fresh
+    RECEIPT SELF_PIN OK all scoring bytes equal their blobs at --rev
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=PASS
+
+### G3-token-unrelated-line expect_pass=True -> printed=PASS (ACCEPTED) rc=0
+    RECEIPT G3-token-unrelated-line OK committed+exact+pin+fresh
+    RECEIPT SELF_PIN OK all scoring bytes equal their blobs at --rev
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=PASS
+
+### G4-line-in-comment expect_pass=False -> printed=FAIL (REFUSED) rc=1
+    RECEIPT G4-line-in-comment FINDING LINE_MISSING:VERDICT,TOKEN_MISSING:fields_hold,FRESH_LINE_MISSING:VERDICT,FRESH_TOKEN_MISSING:fields_hold
+    RECEIPT SELF_PIN OK all scoring bytes equal their blobs at --rev
+    COMMITTED_OK=0/1 EXACT_OK=0/1 PIN_OK=1/1 FRESH_OK=0/1 CONTROL_DRIVER_R90=FAIL
+
+### G5-line-unrelated expect_pass=True -> printed=PASS (ACCEPTED) rc=0
+    RECEIPT G5-line-unrelated OK committed+exact+pin+fresh
+    RECEIPT SELF_PIN OK all scoring bytes equal their blobs at --rev
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=PASS
+
+### G6-harm-unrelated-records expect_pass=True -> printed=PASS (ACCEPTED) rc=0
+    RECEIPT G6-harm-unrelated-records OK committed+exact+pin+fresh
+    RECEIPT SELF_PIN OK all scoring bytes equal their blobs at --rev
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=PASS
+
+### G7-harm-glued expect_pass=False -> printed=FAIL (REFUSED) rc=1
+    RECEIPT G7-harm-glued FINDING PREDICATE_SHORT:records=1;<1,FRESH_PREDICATE_SHORT:records=1;<1
+    RECEIPT SELF_PIN OK all scoring bytes equal their blobs at --rev
+    COMMITTED_OK=0/1 EXACT_OK=0/1 PIN_OK=1/1 FRESH_OK=0/1 CONTROL_DRIVER_R90=FAIL
+
+### G8-harm-dup expect_pass=False -> printed=FAIL (REFUSED) rc=1
+    RECEIPT G8-harm-dup FINDING DUPLICATE_KEY:records,FRESH_DUPLICATE_KEY:records
+    RECEIPT SELF_PIN OK all scoring bytes equal their blobs at --rev
+    COMMITTED_OK=0/1 EXACT_OK=0/1 PIN_OK=1/1 FRESH_OK=0/1 CONTROL_DRIVER_R90=FAIL
+
+### G9-bodied-fresh-divergence-pinned expect_pass=False -> printed=FAIL (REFUSED) rc=1
+    RECEIPT G9-bodied-fresh-divergence-pinned FINDING FRESH_TOKEN_DETACHED:files=0
+    RECEIPT SELF_PIN OK all scoring bytes equal their blobs at --rev
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=0/1 CONTROL_DRIVER_R90=FAIL
+
+### G9b-fresh-body-divergence expect_pass=True -> printed=PASS (ACCEPTED) rc=0
+    RECEIPT G9b-fresh-body-divergence OK committed+exact+pin+fresh
+    RECEIPT SELF_PIN OK all scoring bytes equal their blobs at --rev
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=PASS
+
+### G10-expected-exit-ignored expect_pass=True -> printed=PASS (ACCEPTED) rc=0
+    RECEIPT G10-expected-exit-ignored OK committed+exact+pin+fresh
+    RECEIPT SELF_PIN OK all scoring bytes equal their blobs at --rev
+    COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=PASS
+
+### G11-case-duplicate expect_pass=None -> printed=FAIL (FAIL) rc=1
+    RECEIPT G11-case-duplicate FINDING HEADER_CASE
+    RECEIPT SELF_PIN OK all scoring bytes equal their blobs at --rev
+    COMMITTED_OK=0/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=FAIL
+
+== TABLE ==
+G0-positive	expected_pass=True	printed=PASS	ACCEPTED	rc=0	COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=PASS
+G1-exit-duplicate	expected_pass=True	printed=PASS	ACCEPTED	rc=0	COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=PASS
+G2-pin-duplicate	expected_pass=True	printed=PASS	ACCEPTED	rc=0	COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=PASS
+G3-token-unrelated-line	expected_pass=True	printed=PASS	ACCEPTED	rc=0	COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=PASS
+G4-line-in-comment	expected_pass=False	printed=FAIL	REFUSED	rc=1	COMMITTED_OK=0/1 EXACT_OK=0/1 PIN_OK=1/1 FRESH_OK=0/1 CONTROL_DRIVER_R90=FAIL
+G5-line-unrelated	expected_pass=True	printed=PASS	ACCEPTED	rc=0	COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=PASS
+G6-harm-unrelated-records	expected_pass=True	printed=PASS	ACCEPTED	rc=0	COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=PASS
+G7-harm-glued	expected_pass=False	printed=FAIL	REFUSED	rc=1	COMMITTED_OK=0/1 EXACT_OK=0/1 PIN_OK=1/1 FRESH_OK=0/1 CONTROL_DRIVER_R90=FAIL
+G8-harm-dup	expected_pass=False	printed=FAIL	REFUSED	rc=1	COMMITTED_OK=0/1 EXACT_OK=0/1 PIN_OK=1/1 FRESH_OK=0/1 CONTROL_DRIVER_R90=FAIL
+G9-bodied-fresh-divergence-pinned	expected_pass=False	printed=FAIL	REFUSED	rc=1	COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=0/1 CONTROL_DRIVER_R90=FAIL
+G9b-fresh-body-divergence	expected_pass=True	printed=PASS	ACCEPTED	rc=0	COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=PASS
+G10-expected-exit-ignored	expected_pass=True	printed=PASS	ACCEPTED	rc=0	COMMITTED_OK=1/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=PASS
+G11-case-duplicate	expected_pass=None	printed=FAIL	FAIL	rc=1	COMMITTED_OK=0/1 EXACT_OK=1/1 PIN_OK=1/1 FRESH_OK=1/1 CONTROL_DRIVER_R90=FAIL

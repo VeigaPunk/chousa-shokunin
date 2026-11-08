@@ -1,0 +1,46 @@
+===== status-rejected
+--- trees2/base/corpus/SOURCES.md	2026-11-08 07:02:37.000000000 -0300
++++ trees2/t-status-rejected/corpus/SOURCES.md	2026-11-08 07:21:51.420492587 -0300
+@@ -30,7 +30,7 @@
+ | S020 | PROV-O: The PROV Ontology, W3C Recommendation 2013-04-30 — https://www.w3.org/TR/2013/REC-prov-o-20130430/ | spec | A | PROV terms for derivation (prov:wasDerivedFrom) and entity generation/invalidation times; not a recheck or verification policy | section 3.1 Starting Point Terms (prov:wasDerivedFrom); section 3.2 Expanded Terms, entity-lifetime paragraph | Provenance is recorded as a derivation link plus time bounds on an entity's validity, so source and as-of time are separate recorded facts | queued | 2026-10-21 | 365d | — |
+ | S021 | Shojania et al. 2007, How quickly do systematic reviews go out of date? A survival analysis — https://pubmed.ncbi.nlm.nih.gov/17638714/ | paper | A | the study's measured update-signal timing in its sample of 100 quantitative systematic reviews; not a rule for all records | Abstract, Results (PubMed record; Ann Intern Med 2007;147(4):224-233) | Findings that need updating appear early for a sizable minority of reviews (23% within 2 years), so recheck intervals matter | queued | 2026-10-21 | 365d | — |
+ | S022 | Elliott et al. 2017, Living systematic review: 1. Introduction — https://pubmed.ncbi.nlm.nih.gov/28912002/ | paper | A | the paper's own living-systematic-review definition and rationale; not metadata design | Abstract, LSR definition clause (J Clin Epidemiol 2017;91:23-30, DOI 10.1016/j.jclinepi.2017.08.010) | A living review is continually updated as new evidence appears, the limit case of a short recheck cadence | queued | 2026-10-21 | 365d | — |
+-| S023 | DCMI Metadata Terms — https://www.dublincore.org/specifications/dublin-core/dcmi-terms/ | spec | A | DCMI's definitions of dcterms:source, dcterms:modified and dcterms:valid; not a freshness or verification policy | section 2, /terms/ namespace entries source, modified, valid; DCMI Recommendation issued 2020-01-20; capture `f5545a194c06ab421875b047` | Source (what a resource derives from) and its dates (modified, valid) are distinct metadata properties | mined | 2026-11-08 | 365d | corpus/knowledge/search-transparency-reporting-r84.md |
++| S023 | DCMI Metadata Terms — https://www.dublincore.org/specifications/dublin-core/dcmi-terms/ | spec | A | DCMI's definitions of dcterms:source, dcterms:modified and dcterms:valid; not a freshness or verification policy | section 2, /terms/ namespace entries source, modified, valid; DCMI Recommendation issued 2020-01-20; capture `f5545a194c06ab421875b047` | Source (what a resource derives from) and its dates (modified, valid) are distinct metadata properties | rejected | 2026-11-08 | 365d | corpus/knowledge/search-transparency-reporting-r84.md |
+ | S024 | Schema.org property lastReviewed — https://schema.org/lastReviewed | spec | A | Schema.org's own definition and declared use of lastReviewed | page heading lastReviewed, definition paragraph | A last-reviewed date for accuracy is a property separate from publication or modification dates | queued | 2026-10-21 | 365d | — |
+ | S025 | RFC 9111, HTTP Caching — https://www.rfc-editor.org/rfc/rfc9111 | spec | C | a general rule for research-record staleness or knowledge-entry metadata policy | section 4.2 Freshness; Standards Track, June 2022 | REJECTED: a standard for HTTP-cache freshness, not authority for research-record validity; flip: use as an explicitly labelled analogy and pair it with a directly relevant method source | rejected | 2026-10-21 | on-release | — |
+ | S026 | GO FAIR Foundation, R1.2 (meta)data are associated with detailed provenance — https://www.gofair.foundation/r1-2 | docs | A | the Foundation's own interpretation of FAIR sub-principle R1.2 | Interpretation of R1.2, provenance facets paragraph (capture key 67983a3dbbd1d690aa648744) | Detailed provenance includes facets such as how the resource was generated, why it was generated, by whom, under what conditions, and the starting data or source resource, ownership and credit | mined | 2026-11-08 | 180d | corpus/knowledge/provenance-recording-r85.md |
+===== nonq-row
+--- trees2/base/corpus/knowledge/search-transparency-reporting-r84.md	2026-11-08 07:02:37.000000000 -0300
++++ trees2/t-nonq-row/corpus/knowledge/search-transparency-reporting-r84.md	2026-11-08 07:21:54.958290261 -0300
+@@ -32,6 +32,7 @@
+ | Q11 | S023 | "Date (often a range) of validity of a resource." |
+ | Q12 | S023 | "Date that the resource became or will become available." |
+ | Q13 | S023 | "Date on which the resource was changed." |
++| X1 | S023 | "A sentence that no captured page contains, invented for this fixture." |
+ 
+ ## Decision table
+ 
+===== fourcell-row
+--- trees2/base/corpus/knowledge/search-transparency-reporting-r84.md	2026-11-08 07:02:37.000000000 -0300
++++ trees2/t-fourcell-row/corpus/knowledge/search-transparency-reporting-r84.md	2026-11-08 07:21:58.453704941 -0300
+@@ -32,6 +32,7 @@
+ | Q11 | S023 | "Date (often a range) of validity of a resource." |
+ | Q12 | S023 | "Date that the resource became or will become available." |
+ | Q13 | S023 | "Date on which the resource was changed." |
++| Q14 | S023 | "Another invented sentence absent from every capture." | note |
+ 
+ ## Decision table
+ 
+===== pad-q1
+--- trees2/base/corpus/knowledge/provenance-recording-r85.md	2026-11-08 07:02:37.000000000 -0300
++++ trees2/t-pad-q1/corpus/knowledge/provenance-recording-r85.md	2026-11-08 07:22:02.487582571 -0300
+@@ -32,7 +32,7 @@
+ | Situation | Do | Never | Warrant |
+ |---|---|---|---|
+ | Naming what a resource derives from | form the provenance chain with the derivation property where the chain's entities are set | record a resource with no derivation link when the chain's entities are known | Q1 (S215) |
+-| Recording a derivation's direction | state the transformation from one entity into another | call two unrelated entities a derivation | Q2 (S215) |
++| Recording a derivation's direction | state the transformation from one entity into another | call two unrelated entities a derivation | Q2, Q1 (S215) |
+ | Recording the bounds of an entity's existence | state the generation moment and the invalidation moment that bound it | describe an entity as atemporal, with no generation or invalidation moment | Q4 (S215) |
+ | Recording a resource's provenance | state how the resource was generated, why it was generated, by whom, and under what conditions | ship data with no record of how it came to be | Q5 (S026) |
+ | Recording the source behind a resource | state the starting data or source resource, and who owns the data and should be given credit | omit the starting data, the owner or the credit from the provenance record | Q6 (S026) |
