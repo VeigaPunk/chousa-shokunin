@@ -2,8 +2,8 @@
 
 Base `d7780feff6e39ae74a2fd77fc9773c671b33da95` (round-91 landing + its non-author spot-check, admitted). Frozen
 claims in `corpus/evidence/round92/claims.md` and `.ufo/waves/round-92/claims.json`; plan, pre-freeze repairs and amendments in `plans/round-92.md`.
-Freeze F6 `95bbbd0f2a61c3ed8312e5a1ee6f5af8186d430f` (instruments, claims, pins); carrier C6 `2a9d1773a5a4f386edde01a46f3aa06da43582d3` (six committed control receipts + before receipts
-at the freeze tree). Five earlier freeze/carrier pairs (`bf12c30e`/`ddb5fdf4`, `85a2eeef`/`9722365f`,
+Freeze F7 `7901eb238a8adc9b8d438dee7779140e28da6e62` (instruments, claims, pins); carrier C8 `9ab1dbece238ec162fde2a1c63d57c2371b6a35d` (six committed scored receipts + before receipts
+at the freeze tree). Six earlier freeze/carrier pairs (incl. `bf12c30e`/`ddb5fdf4`, `85a2eeef`/`9722365f`,
 `dc7056c4`/`e40bce1a`, `007d7ea7`/`d818f090`, `42e03378`/`16ccf769`) were superseded before any settled
 scoring — their defects are Mistakes 1–2 and 7–10 in `plans/round-92.md` (§§Pre-wave freeze repair 1–2).
 One v1 wave, 12 seats, see §Wave settlement.
@@ -16,7 +16,7 @@ The S070 source was re-opened from the installed page this round (registry row S
 the file sha; the on-disk sha verified identical). It is not a lane-revision record, so it carries no
 `rev=` field — see the bullet below for the located quote (`line=11 words=7`).
 
-GATE-RECORD S001 rev=95bbbd0f2a61c3ed8312e5a1ee6f5af8186d430f path=tools/research-gate.sh line=9010 words=4 quote=RESEARCH_GATE_SELFTEST: PASS (%d cases%s)
+GATE-RECORD S001 rev=7901eb238a8adc9b8d438dee7779140e28da6e62 path=tools/research-gate.sh line=9010 words=4 quote=RESEARCH_GATE_SELFTEST: PASS (%d cases%s)
 
 - **S070 re-opened** (`sha256sum(1)`, tier A, the installed page): `/usr/share/man/man1/sha256sum.1.gz`, sha256
   `93c17dffe9f25d56291113d566a7de3ff65c29f8cc32c381801c49cf27e8403f` — identical to the row's recorded sha; re-opened
@@ -36,14 +36,14 @@ GATE-RECORD S001 rev=95bbbd0f2a61c3ed8312e5a1ee6f5af8186d430f path=tools/researc
 
 - **C1 operability — verified on the wording narrowed by Amendments 1–4.** `control-driver-r92.py verify` prints
   `CONTROL_DRIVER_R92=PASS` with `COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6` and
-  `SELF_PIN OK rev=95bbbd0f receipts_rev=2a9d1773` (evidence: `after/c1-verify.txt`); the battery prints
+  `SELF_PIN OK rev=7901eb23 receipts_rev=9ab1dbec` (evidence: `after/c1-verify.txt`); the battery prints
   `FORGERY_REFUSED=3/3 POSITIVE=pass` (`after/c1-forgeries.txt`). Repairs over r91: `emit` without `--receipts`
   exits 2 (`emit requires an explicit --receipts` — previously exited 0 and overwrote the committed receipts),
   `PIN_DUPLICATE` prints `SETUP PIN_DUPLICATE` to stdout and exits 2 (previously exit 1 on stderr),
   `rel_for` refuses paths escaping the base, and the pins file self-pins by its minus-self digest
   (`R92ReviewerC2` F1/F2, `R92ReviewerC1` F1/F4, `R92SentinelScope` F2/F3; seeded by `R92ExecMutations` M1–M3
   kills and `R92SentinelScope` F4/F5). Before: the r91 driver has no such guard (emit defaulted silently,
-  `PIN_DUPLICATE` exited 1) — see `controls/receipts/c1-before.txt`.
+  `PIN_DUPLICATE` exited 1) — see `evidence-before/c1-before.txt`.
 - **C2 calibration — verified on the wording narrowed by Amendments 1, 5–7.** `CURATION_R92=PASS` with
   `LEGS_MEASURED=14/14 Q_SHAPE_FAIL=0 SOURCE_STATUS_OK=20/20 USED_BY_OK=20/20 TFREQ_OK=17/17 TFREQ_MAX_DF=3
   UNENTAILED_TERM=0 WARRANT_OK=17/17 DUP_QIDS=0` (`after/c2-counter.txt`); controls print
@@ -53,7 +53,7 @@ GATE-RECORD S001 rev=95bbbd0f2a61c3ed8312e5a1ee6f5af8186d430f path=tools/researc
   first-cell `""` now reaches QSHAPE; a first-position forged row is a data row unless it IS the literal
   `qid|source|quote` header), and decision rows are counted as the pipe-leading data rows the table holds
   (`R92ReviewerC2` F2–F4; seeded by `R92ExecMutations` M4/M5/M6/M8 kills). Before: the r91 counter prints
-  `CURATION_R91=PASS` on all four S trees (`controls/receipts/c2-before.txt`).
+  `CURATION_R91=PASS` on all four S trees (`evidence-before/c2-before.txt`).
 - **C3 freshness — verified on the wording narrowed by Amendments 8–9.** `SKILL_TALLY_R92=PASS` with
   `TALLY_ROWS=8 STALE_TALLIES=0/8 OTHER_OCCURRENCES=2 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283
   CASE_RANGE_OK=2/2 MISLABELED=0 OTHERS_OK=1 LEGS=3/3` (`after/c3-counter.txt`); controls print
@@ -62,7 +62,7 @@ GATE-RECORD S001 rev=95bbbd0f2a61c3ed8312e5a1ee6f5af8186d430f path=tools/researc
   `SCOPE_BLEED` setup diagnostic on an unterminated scope, and the case enumeration itself is pinned
   (`len(^ok-case lines) == cases` with distinct numbers — the six `accepted=` lines included)
   (`R92ReviewerC3` A1/A3, `R92ConnectorSiblings.md` §5). Before: the r91 counter prints `SKILL_TALLY_R91=PASS`
-  on the deleted-161 tree, document-wide and unpinned (`controls/receipts/c3-before.txt`).
+  on the deleted-161 tree, document-wide and unpinned (`evidence-before/c3-before.txt`).
 
 ## Mistakes
 

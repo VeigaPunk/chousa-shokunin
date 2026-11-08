@@ -4098,7 +4098,7 @@ case-range clause.
 
 ## Round 92 verdict — the pins file is pinned like any other instrument, empty cells are not separators, and the tally scope is an ATX boundary (2026-11-08)
 
-Base `d7780fef`; freeze `95bbbd0f` (F6); carrier `2a9d1773` (C6); five earlier freeze/carrier pairs superseded
+Base `d7780fef`; freeze `7901eb23` (F7); carrier `9ab1dbec` (C8); five earlier freeze/carrier pairs superseded
 before any settled scoring (plan §§Pre-wave freeze repair 1–2). Three claims, three axes, no exploratory claim.
 One v1 wave, 12 seats (8 attack), 0 dead. Nine amendments narrow each sentence to the instruments' measured
 behaviour recorded before filing (Amendment 1: battery filenames corrected to the committed names `forgeries-r92.py`
@@ -4108,7 +4108,7 @@ stated, TFREQ universe narrowed; Amendments 8–9: the ATX boundary and the case
 
 | claim | axis | before | after | verdict |
 |---|---|---|---|---|
-| C1 `C1-DRIVER-R92` | operability (lowest, historical 3/10) | r91 driver on the S fixtures: `read_pins` last-wins, `instrument_rel` first-token-only, pins file absent from the pin set, `emit` without `--receipts` exits 0 and writes defaults | `CONTROL_DRIVER_R92=PASS` with `COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6`, `SELF_PIN OK rev=95bbbd0f receipts_rev=2a9d1773`; `FORGERY_REFUSED=3/3 POSITIVE=pass` | **verified on the wording narrowed by Amendments 1–4** |
+| C1 `C1-DRIVER-R92` | operability (lowest, historical 3/10) | r91 driver on the S fixtures: `read_pins` last-wins, `instrument_rel` first-token-only, pins file absent from the pin set, `emit` without `--receipts` exits 0 and writes defaults | `CONTROL_DRIVER_R92=PASS` with `COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6`, `SELF_PIN OK rev=7901eb23 receipts_rev=9ab1dbec`; `FORGERY_REFUSED=3/3 POSITIVE=pass` | **verified on the wording narrowed by Amendments 1–4** |
 | C2 `C2-CURATION-R92` | calibration | r91 prints `CURATION_R91=PASS` on all four S trees (empty-first-cell drop, width drop, substring join, no reverse leg) | `CURATION_R92=PASS` with `LEGS_MEASURED=14/14 Q_SHAPE_FAIL=0 SOURCE_STATUS_OK=20/20 USED_BY_OK=20/20 TFREQ_OK=17/17 TFREQ_MAX_DF=3 UNENTAILED_TERM=0 WARRANT_OK=17/17 DUP_QIDS=0`; controls `FORGERY_REFUSED=4/4 PRIOR_ACCEPTED=4/4 DUPCOUNT_R91=1 DUPCOUNT_R92=1`; regression `FORGERY_REFUSED=7/7 PRIOR_REGRESSION=7/7` on the r90 battery's regression line | **verified on the wording narrowed by Amendments 1, 5–7** |
 | C3 `C3-TALLY-R92` | freshness | r91 prints `SKILL_TALLY_R91=PASS` on the deleted-161 tree (document-wide, unpinned) | `SKILL_TALLY_R92=PASS` with `TALLY_ROWS=8 STALE_TALLIES=0/8 OTHER_OCCURRENCES=2 CASE_RANGE_OK=2/2 MISLABELED=0 OTHERS_OK=1 LEGS=3/3` over `## Gates` to the next ATX heading of depth ≤ 2; controls `CONTROLS=PASS OLDPROSE_REFUSED=1/1 PRIOR_ACCEPTED=1/1 STALE_REFUSED_BOTH=1/1` | **verified on the wording narrowed by Amendments 8–9** |
 
