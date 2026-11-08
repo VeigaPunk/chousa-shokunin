@@ -1,0 +1,38 @@
+{
+ "lane": "chousa",
+ "round": 87,
+ "base": "6495ef88",
+ "freeze": null,
+ "amendment": null,
+ "scoredLanding": null,
+ "frozenAt": "2026-11-08T13:10Z, before any scored run of the round-87 candidates; pre-freeze controls: c1-k0-donothing FAIL (D2_REFUSED=0/3, MUT_UNREACH_DERIVED=0, LEGS=11/15), c1-k0b-frozen-instrument (round-86 instrument, D1_FORGES=1, no D2_ field), c1-mutants 4/4 killed + 2/2 tool mutants caught, c1-harm moved=0 over 27 committed records, c2-controls FORGERY_REFUSED=4/4 R86_ACCEPTED_FORGERY=4/4",
+ "claims": {
+  "C1": {
+   "axis": "operability (lowest scored non-retired axis, historical 3/10) — capability acquisition + repair",
+   "type": "successor battery: the 203 class is every qualifying committed refetch row (3), the reject-form 203 class is added, the verdict is leg-accounted so a dropped leg or a credited-but-unrun mutant fails, and both mutant tools are derived from the subject tool's bytes and killed",
+   "predicate": "GATE_RECORDS_R87=PASS with TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED==EXPECTED_CODE==total EMPTY_REFUSED=1/1 RC=4/4 SETUP=1/1 D1_EXPECTED=3 D1_FORGES=3 D1_REFUSED=3/3 D2_FORGES=3 D2_REFUSED=3/3 MUT_ADMIT_DERIVED=1 MUT_ADMIT_KILLED=1 MUT_UNREACH_DERIVED=1 MUT_UNREACH_KILLED=1 DERIVE_NEG=1 LEGS=15/15",
+   "countingCommand": "python3 -B corpus/evidence/round87/gate-records-r87.py --root DIR --repo GITDIR [--tool PATH] --work DIR",
+   "killRules": {
+    "K1": "predicate not met at the landing revision",
+    "K2": "an in-class forged record accepted, or refused with a code outside its frozen expected set (D1/D2 both expect REFETCH)",
+    "K3": "harm: a genuine committed record accepted by the pre-round tool is refused at landing; the 27 committed lines across 10 lessons move no verdict",
+    "K4": "a mutant not derived from the subject tool's bytes, or credited without being run, while the frozen predicate still prints PASS; repairs after scoring do not rescue"
+   },
+   "namedLimit": "a counter edit that executes a leg and misreports its printed value survives; DERIVE_NEG, the do-nothing control and the wave mutation seat are the cover, and a wave finding on this class is reported",
+   "source": "corpus/evidence/round87/claims.md; S216 (RFC 9110 203, re-opened this round)"
+  },
+  "C2": {
+   "axis": "calibration",
+   "type": "successor curation counter: per-entry located-quote floors (13/7) so a deleted or truncated table fails, a warrant-linkage leg over all 17 decision rows, and a registry-teaches-vs-own-capture leg whose flagged row must be disposed as superseded",
+   "predicate": "CURATION_R87=PASS with SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20 WARRANT_OK=17/17 TEACHES_FLAGGED=1 TEACHES_UNRESOLVED=0 LEGS=7/7, and the control battery prints FORGERY_REFUSED=4/4",
+   "countingCommand": "python3 -B corpus/evidence/round87/curation-r87.py --root DIR; python3 -B corpus/evidence/round87/curation-r87-controls.py --root DIR --work DIR",
+   "killRules": {
+    "K1": "predicate not met at the landing revision",
+    "K2": "a quote counted located is not verbatim (normalized) in the capture of the registry row's own URL",
+    "K3": "a control forgery the round-86 counter accepted is still accepted (E5b, E5c2, E6, T-teaches)",
+    "K4": "the TEACHES leg is satisfied by flagging nothing (a dead detector)"
+   },
+   "source": "corpus/evidence/round87/claims.md; S216 (re-opened) and S218 (own-work, new)"
+  }
+ }
+}

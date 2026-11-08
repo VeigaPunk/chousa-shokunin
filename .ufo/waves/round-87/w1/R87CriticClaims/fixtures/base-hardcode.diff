@@ -1,0 +1,23 @@
+--- /fast/scratch/hyaku/chousa-r87/R87CriticClaims/landed/corpus/evidence/round87/gate-records-r87.py	2026-11-08 03:52:30.000000000 -0300
++++ /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-87/w1/R87CriticClaims/fixtures/base-hardcode.py	2026-11-08 04:02:13.106597293 -0300
+@@ -356,7 +356,7 @@
+     ap.add_argument("--work")
+     a = ap.parse_args()
+     root, repo = os.path.abspath(a.root), os.path.abspath(a.repo)
+-    tool = os.path.abspath(a.tool) if a.tool else os.path.join(root, "tools", "gate-records.py")
++    tool = os.path.abspath(a.tool) if a.tool else os.path.join(os.path.dirname(root), "base", "tools", "gate-records.py")
+     legs = []
+     work = a.work or os.environ.get("TMPDIR") or os.environ.get("HYAKU_SCRATCH") or "/fast/scratch/hyaku"
+     os.makedirs(work, exist_ok=True)
+@@ -533,6 +533,11 @@
+             derive_neg = 1 if (not build_mutant(noliteral, neg_a, ADMIT_LITERAL, 'r[6].startswith("2")')
+                                and not build_mutant(noliteral, neg_b, UNREACH_LITERAL, 'kv["http"] == "200"')) else 0
+ 
++            refused = total_forged
++            exp = total_forged
++            d1_refused = len(d1)
++            d2_refused = len(d2)
++            mut_unreach_derived = mut_unreach_killed = 1
+             legs += [
+                 ("POSITIVE", p_ok == len(pos) and bool(pos), f"{p_ok}/{len(pos)}"),
+                 ("FRESH", fresh_ok == 5 and not fresh_err, f"{fresh_ok}/5 {fresh_err}".strip()),

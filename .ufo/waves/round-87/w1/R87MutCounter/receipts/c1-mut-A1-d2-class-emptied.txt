@@ -1,0 +1,25 @@
+mutant: A1-d2-class-emptied
+file: corpus/evidence/round87/gate-records-r87.py
+anchor-replaced:
+---
+        d2 = build_d2_203_rejects(root)
+---
+with:
+---
+        d2 = []
+---
+cmd: python3 -B /fast/scratch/hyaku/chousa-r87/R87MutCounter/drive-970qfckr/c1-A1-d2-class-emptied/gate-records-r87.py --root /fast/scratch/hyaku/chousa-r87/R87MutCounter/land --repo /home/vgpnk/Projects/shokunin/chousa-shokunin --work /fast/scratch/hyaku/chousa-r87/R87MutCounter/drive-970qfckr/w1-A1-d2-class-emptied
+rc=1
+verdict=GATE_RECORDS_R87=FAIL
+field-deviations=['FORGED_REFUSED: want 362/362 got 359/359', 'EXPECTED_CODE: want 362/362 got 359/359', 'D2_FORGES: want 3 got 0', 'D2_REFUSED: want 3/3 got 0/0', 'MUT_UNREACH_KILLED: want 1 got 0', 'LEGS: want 15/15 got 12/15']
+leg-fails:
+LEG_FAIL D2_WIDTH 0/3 floor3
+LEG_FAIL D2_REFUSED 0/0
+LEG_FAIL MUT_UNREACH derived=1 killed=0
+stdout-tail:
+LEG_FAIL D2_REFUSED 0/0
+LEG_FAIL MUT_UNREACH derived=1 killed=0
+GATE_RECORDS_R87=FAIL
+stderr-tail:
+
+mutant-sha256=9c5b858233dc633ef097897ac7b2e65a9057a4ef9d860229a51d677ea4a533b4

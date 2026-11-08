@@ -1,0 +1,12 @@
+=== test 1: normal 203 ===
+ _qual: [('S001', '203')] count: 1
+=== test 2: http=0203 (4 digits) ===
+ _qual len: 1 count: 0
+ _qual http values: ['0203']
+=== test 3: duplicate (sid,url) rows (attempt 1+2 identical) ===
+ _qual len (dup rows): 2 count (deduped): 1
+ D1 forges: 2 D2 forges: 2
+=== test 4: committed S021/S032 duplicate url distinct sid ===
+ _qual len: 2 count: 1
+=== test 5: http=20 (2 digits) ===
+ _qual len: 1 count: 0

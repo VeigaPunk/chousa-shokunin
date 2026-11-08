@@ -1,0 +1,11 @@
+--- /fast/scratch/hyaku/chousa-r87/R87CriticClaims/landed/tools/gate-records.py	2026-11-08 03:52:30.000000000 -0300
++++ /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-87/w1/R87CriticClaims/fixtures/tool-rephrased.py	2026-11-08 04:02:13.106765953 -0300
+@@ -249,7 +249,7 @@
+         # round-87 repair: the unreach form records a FAILED transfer, so any 2xx status is a successful response and
+         # cannot ground it (round-86 F1: `curl_rc=0 http=203` was accepted; S216 §15.3.4: a 203 is "the request was
+         # successful"). Only a non-2xx status or a non-zero curl exit denotes a failure.
+-        success = kv["curl_rc"] == "0" and 200 <= int(kv["http"]) < 300
++        success = kv["curl_rc"] == "0" and kv["http"][0] == "2"
+         ok = (not success) and any(r[0] == sid and r[1] == url and r[4] == kv["fetched"] and r[5] == kv["curl_rc"]
+                                    and r[6] == kv["http"] for r in refetch)
+         if not ok:

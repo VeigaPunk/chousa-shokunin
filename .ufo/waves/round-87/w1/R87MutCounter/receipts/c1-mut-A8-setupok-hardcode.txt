@@ -1,0 +1,22 @@
+mutant: A8-setupok-hardcode
+file: corpus/evidence/round87/gate-records-r87.py
+anchor-replaced:
+---
+            setup_ok = 1 if (p.returncode == 2 and "GATE_RECORDS_ERROR" in p.stderr) else 0
+---
+with:
+---
+            setup_ok = 1
+---
+cmd: python3 -B /fast/scratch/hyaku/chousa-r87/R87MutCounter/drive-970qfckr/c1-A8-setupok-hardcode/gate-records-r87.py --root /fast/scratch/hyaku/chousa-r87/R87MutCounter/land --repo /home/vgpnk/Projects/shokunin/chousa-shokunin --work /fast/scratch/hyaku/chousa-r87/R87MutCounter/drive-970qfckr/w1-A8-setupok-hardcode
+rc=0
+verdict=GATE_RECORDS_R87=PASS
+field-deviations=[]
+leg-fails:
+
+stdout-tail:
+TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=362/362 EXPECTED_CODE=362/362 EMPTY_REFUSED=1/1 RC=4/4 SETUP=1/1 D1_EXPECTED=3 D1_FORGES=3 D1_REFUSED=3/3 D2_FORGES=3 D2_REFUSED=3/3 MUT_ADMIT_DERIVED=1 MUT_ADMIT_KILLED=1 MUT_UNREACH_DERIVED=1 MUT_UNREACH_KILLED=1 DERIVE_NEG=1 LEGS=15/15
+GATE_RECORDS_R87=PASS
+stderr-tail:
+
+mutant-sha256=5879dfd07ad1991f5600c69472c0001a122ca95dc0383da5e211d16f91c3875d

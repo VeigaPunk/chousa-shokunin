@@ -1,0 +1,1 @@
+GATE-RECORD S216 url=https://www.rfc-editor.org/rfc/rfc9110.html fetched=2026-11-08T06:50:40Z tier=A decision=admit capture=corpus/captures/b1b13a12aee75c6ecc20fb91.txt capture_sha256=ec14fa3499c2dfbc… words=22 quote="indicates that the request was successful but the enclosed content has been modified from that of the origin server's 200 (OK) response"

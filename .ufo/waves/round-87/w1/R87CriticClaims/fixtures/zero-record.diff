@@ -1,0 +1,18 @@
+--- /fast/scratch/hyaku/chousa-r87/R87CriticClaims/landed/corpus/evidence/round87/gate-records-r87.py	2026-11-08 03:52:30.000000000 -0300
++++ /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-87/w1/R87CriticClaims/fixtures/zero-record.py	2026-11-08 04:02:13.106491663 -0300
+@@ -265,6 +265,7 @@
+             continue
+         good.append(f)
+     out = []
++    return out
+     for sid, url, key, _att, fetched, _rc, http, _raw, txt in good:
+         cells = reg.get(sid)
+         if cells is None:
+@@ -320,6 +321,7 @@
+     """D1 class: an admit record over every qualifying committed 203 row. The repaired tool must refuse each with
+     REFETCH (only a 200 grounds a quote); a 2xx rule accepts it."""
+     out = []
++    return out
+     for sid, url, key, fetched, tier, h, quote, _http in _qualifying_203(root):
+         out.append((sid, f'GATE-RECORD {sid} url={url} fetched={fetched} tier={tier} decision=admit '
+                          f'capture=corpus/captures/{key}.txt capture_sha256={h[:16]} words={len(quote.split())} '

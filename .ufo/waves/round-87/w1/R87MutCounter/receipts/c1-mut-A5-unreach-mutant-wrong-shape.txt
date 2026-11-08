@@ -1,0 +1,23 @@
+mutant: A5-unreach-mutant-wrong-shape
+file: corpus/evidence/round87/gate-records-r87.py
+anchor-replaced:
+---
+if build_mutant(tool, mu, UNREACH_LITERAL, 'kv["http"] == "200"'):
+---
+with:
+---
+if build_mutant(tool, mu, UNREACH_LITERAL, 'kv["http"] != "200"'):
+---
+cmd: python3 -B /fast/scratch/hyaku/chousa-r87/R87MutCounter/drive-970qfckr/c1-A5-unreach-mutant-wrong-shape/gate-records-r87.py --root /fast/scratch/hyaku/chousa-r87/R87MutCounter/land --repo /home/vgpnk/Projects/shokunin/chousa-shokunin --work /fast/scratch/hyaku/chousa-r87/R87MutCounter/drive-970qfckr/w1-A5-unreach-mutant-wrong-shape
+rc=1
+verdict=GATE_RECORDS_R87=FAIL
+field-deviations=['MUT_UNREACH_KILLED: want 1 got 0', 'LEGS: want 15/15 got 14/15']
+leg-fails:
+LEG_FAIL MUT_UNREACH derived=1 killed=0
+stdout-tail:
+TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=362/362 EXPECTED_CODE=362/362 EMPTY_REFUSED=1/1 RC=4/4 SETUP=1/1 D1_EXPECTED=3 D1_FORGES=3 D1_REFUSED=3/3 D2_FORGES=3 D2_REFUSED=3/3 MUT_ADMIT_DERIVED=1 MUT_ADMIT_KILLED=1 MUT_UNREACH_DERIVED=1 MUT_UNREACH_KILLED=0 DERIVE_NEG=1 LEGS=14/15
+LEG_FAIL MUT_UNREACH derived=1 killed=0
+GATE_RECORDS_R87=FAIL
+stderr-tail:
+
+mutant-sha256=a544832d98ddf4506d9057240a2e8492f5936515b715894caad282f80313ee8e

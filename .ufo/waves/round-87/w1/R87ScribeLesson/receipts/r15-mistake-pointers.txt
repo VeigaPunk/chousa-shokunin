@@ -1,0 +1,44 @@
+# r15-mistake-pointers — the evidence pointers the lesson's Mistakes 1-4 name, checked against committed bytes
+--- M1: 'SURVIVOR N-deny-width' anywhere in the lane's committed prose/receipts
+corpus/QUALITY.md:1135:    the width leg (`1/3 floor3`). Shown able to fail: the self-referential variant prints `SURVIVOR N-deny-width` in the
+corpus/lessons/round-87.md:69:   `SURVIVOR N-deny-width` on the self-referential variant, and the design review before that run. **Captured-by:** the
+.ufo/waves/round-87/w1/R87ScribeLesson.md:96:| 1 | counter whose "independent" second derivation calls the same helper | the first `mutate-r87.py` run — `SURVIVOR N-deny-width` on the self-referential variant, and the design review before that run | round-86 critic's `T4` finding; no criterion covered the two-derivations rule | `count_203_rows` parses the two committed files on its own path (QUALITY 182), and `mutate-r87.py`'s `T4-truncate` shows the width leg failing `1/3 floor3` | **`mutate-r87.py`'s `T4-truncate`** → `LEG_FAIL D1_WIDTH 1/3 floor3` (committed receipt `controls/receipts/c1-mutants.txt`). **Can fail** ✓ |
+.ufo/waves/round-87/w1/R87ScribeLesson.md:110:printed `SURVIVOR N-deny-width`; that string exists in `corpus/QUALITY.md:1135` and in this lesson, and in **no
+.ufo/waves/round-87/w1/R87ScribeLesson.md:111:receipt** — `grep -rn "SURVIVOR N-deny-width" corpus/` returns only the two prose files (receipt
+.ufo/waves/round-87/w1/R87ScribeLesson.md:113:`## Findings` below). QUALITY 182's "Shown able to fail: the self-referential variant prints `SURVIVOR N-deny-width`
+.ufo/waves/round-87/w1/R87ScribeLesson.md:270:| M1 | Item 1's pointer cites `SURVIVOR N-deny-width`, a string no receipt contains; the committed receipt prints `EQUIVALENT_ON_TREE N-deny-width rc=0 …=PASS` for that mutant id, and the instrument labels it `EQUIVALENT`. QUALITY 182's "Shown able to fail" line rests on the same unbacked string. | claim-vs-bytes | `corpus/evidence/round87/controls/receipts/c1-mutants.txt`; `corpus/evidence/round87/mutate-r87.py:57-60,133` |
+.ufo/waves/round-87/w1/R87ScribeLesson/receipts/r15-mistake-pointers.txt:2:--- M1: 'SURVIVOR N-deny-width' anywhere in the lane's committed prose/receipts
+(the two hits are prose: QUALITY.md and the lesson itself — no receipt contains it)
+--- what the committed receipt prints for that mutant id
+corpus/evidence/round87/controls/receipts/c1-mutants.txt:13:EQUIVALENT_ON_TREE N-deny-width rc=0 GATE_RECORDS_R87=PASS
+corpus/evidence/round87/after/c1-mutants-after.txt:12:EQUIVALENT_ON_TREE N-deny-width rc=0 GATE_RECORDS_R87=PASS
+--- how the instrument classifies it
+11:  N-deny-width      `d1_expected` taken from the builder itself, so the width leg compares a value to itself
+57:    ("N-deny-width", 'expected derivation',
+# `d1_expected` agrees with an independent count and the width leg has nothing to catch. Its purpose is demonstrated by
+# T4-truncate and T4-record-keyed, which narrow the builder and are both killed.
+EQUIVALENT = [
+    ("N-deny-width", 'expected derivation',
+     '        d1_expected = count_203_rows(root)',
+     '        d1_expected = len(build_d1_203_admits(root))'),
+]
+--- M2: does plans/round-87.md contain '12' anywhere?
+grep exit=1
+--- M2: does the plan's Pre-freeze repair 7 list rows?
+7. **The `teaches` leg skips superseded rows by contract, not by name.** A row whose id appears as the target of
+   another row's `teaches` `supersedes S0NN —` prefix is not live (CORPUS rule 2 / QUALITY 178: the superseding row's
+   `teaches` is the evidence), so the leg reads only live rows and requires 0 rows whose `teaches` names a
+   date-property term their own capture does not contain. `S024` is therefore neither edited nor counted.
+
+## Freeze
+--- M4: QUALITY 184's back-reference vs the lesson's mistake numbering at e6e920a4
+1136:    first mutation run, and the two-path version prints `KILLED T4-truncate`. — `lessons/round-87.md` Mistakes 1.
+1145:    `unresolved=1`. — `lessons/round-87.md` Mistakes 2.
+1151:    produces. — `lessons/round-87.md` Mistakes 3.
+1158:    that executes and misreports its value is a different class). — `lessons/round-87.md`; round-86 spot-check routed
+1166:    committed record moving (`c1-harm-unreach.txt` `moved=0` over 27 records). — `lessons/round-87.md`; S216, S218.
+--- lesson mistake headings at e6e920a4
+66:1. **Class: a counter whose "independent" second derivation calls the same helper.** The first `count_203_rows` was
+73:2. **Class: a rule scoped by vocabulary over-fires.** The first `TEACHES` leg flagged any live row whose `teaches`
+79:3. **Class: a capture-identity sentence written from the attempt number instead of the hashes.** The first draft of
+86:4. **Class: a battery's parse of `--tool` output attributed a stale expected code to the wrong class.** The first

@@ -1,0 +1,1 @@
+GATE-RECORD S106 url=https://rwxy.seu.edu.cn/_upload/article/58/cc/5a2fdc1940cfa2522e82ba8b5d81/fb75a598-a343-48f2-bb42-5c6c411506bc.pdf fetched=2026-10-27T08:06:27Z tier=B decision=reject capture=none curl_rc=28 http=200 words=0 quote=none

@@ -1,0 +1,11 @@
+--- /fast/scratch/hyaku/chousa-r87/R87CriticClaims/landed/corpus/evidence/round87/gate-records-r87.py	2026-11-08 03:52:30.000000000 -0300
++++ /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-87/w1/R87CriticClaims/fixtures/counter-narrow-tworow.py	2026-11-08 04:04:46.128398645 -0300
+@@ -267,7 +267,7 @@
+     out = []
+     for sid, url, key, _att, fetched, _rc, http, _raw, txt in good:
+         cells = reg.get(sid)
+-        if cells is None:
++        if cells is None or sid not in ("S021", "S032"):
+             continue
+         if hashlib.sha256(url.encode()).hexdigest()[:24] != key:
+             continue

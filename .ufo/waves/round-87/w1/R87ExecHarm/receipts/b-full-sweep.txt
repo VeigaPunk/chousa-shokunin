@@ -1,0 +1,27 @@
+# Full-tree sweep (part b) — exact commands
+
+$ git -C /home/vgpnk/Projects/shokunin/chousa-shokunin grep -rn ^GATE-RECORD e6e920a4 -- . | wc -l
+459
+
+files with >=1 line:
+369
+
+lessons+plans lines:
+27
+
+plans lines:
+0
+
+verdicts (base vs landed, every file, one run per 50 files):
+FILES=368 BASE_RECS=458 LANDED_RECS=458
+BASE OK=170 FAIL=288 ; LANDED OK=164 FAIL=294 ; MOVED=6 (all OK->FAIL REFETCH)
+
+THE SIX:
+ .ufo/waves/round-85/w1/R85ExecForge/forge/n02-unreach-203-s021.md:1 OK -> FAIL REFETCH
+ .ufo/waves/round-85/w1/R85MutationTool/receipts/witnesses/W-M31-203-unreach.md:1 OK -> FAIL REFETCH
+ .ufo/waves/round-86/w1/R86ExecForge/records/c03-reject-success-203.md:1 OK -> FAIL REFETCH
+ .ufo/waves/round-86/w1/R86ExecForge/records/c06-reject-203-S022.md:1 OK -> FAIL REFETCH
+ .ufo/waves/round-86/w1/R86ExecForge/records/c08-reject-203-S032.md:1 OK -> FAIL REFETCH
+ .ufo/waves/round-86/w1/R86ScribeLesson/receipts/12-record-forms-probed.txt:60 OK -> FAIL REFETCH
+
+GENUINE (corpus/lessons + plans): 28 records, 28 OK both tools, moved=0

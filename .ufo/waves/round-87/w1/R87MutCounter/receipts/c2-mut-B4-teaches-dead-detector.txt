@@ -1,0 +1,21 @@
+mutant: B4-teaches-dead-detector
+file: corpus/evidence/round87/curation-r87.py
+anchor-replaced:
+---
+        miss = [t for t in named if cap is None or t not in cap.lower()]
+---
+with:
+---
+        miss = []
+---
+cmd: python3 -B /fast/scratch/hyaku/chousa-r87/R87MutCounter/drive-970qfckr/c2-B4-teaches-dead-detector/curation-r87.py --root /fast/scratch/hyaku/chousa-r87/R87MutCounter/land
+rc=1
+verdict=CURATION_R87=FAIL
+field-deviations=['TEACHES_FLAGGED: want 1 got 0', 'LEGS: want 7/7 got 6/7']
+leg-fails:
+LEG_FAIL TEACHES checked=1 flagged=0 unresolved=0
+stdout:
+SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20 Q_FLOORS=search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7 WARRANT_OK=17/17 TEACHES_CHECKED=1 TEACHES_FLAGGED=0 TEACHES_UNRESOLVED=0 LEGS=6/7
+LEG_FAIL TEACHES checked=1 flagged=0 unresolved=0
+CURATION_R87=FAIL
+

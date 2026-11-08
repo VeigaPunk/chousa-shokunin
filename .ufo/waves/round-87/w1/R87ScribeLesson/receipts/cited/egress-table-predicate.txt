@@ -1,0 +1,8 @@
+# receipt r87-egress-03 — the table's OWN closure predicate, read literally
+# command: python3 -c 'rows with fetched_utc >= <threshold as written>'
+fetched_utc >= 2026-11-08T1           -> 0 rows []
+fetched_utc >= 2026-11-08T06          -> 5 rows [('S216', '2026-11-08T06:00:10Z'), ('S217', '2026-11-08T06:00:10Z'), ('S031', '2026-11-08T06:00:10Z'), ('S023', '2026-11-08T06:00:11Z'), ('S216', '2026-11-08T06:50:40Z')]
+fetched_utc >= 2026-11-08T06:50       -> 1 rows [('S216', '2026-11-08T06:50:40Z')]
+header: id	url	key	attempt	fetched_utc	curl_rc	http_code	raw_sha256	txt_sha256
+r87 table says column: fetched  (TSV column is fetched_utc)
+exit=0

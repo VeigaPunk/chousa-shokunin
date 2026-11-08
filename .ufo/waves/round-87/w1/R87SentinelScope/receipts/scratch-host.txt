@@ -1,0 +1,25 @@
+# receipt r87-scratch-01 — hardcoded /tmp, host sysctl, sudo, service in the round's committed tools
+--- grep -n '/tmp' corpus/evidence/round87/*.py ---
+grep exit=1 (1 = no hits)
+--- grep -niE 'sysctl|sudo|systemctl|service |restart|swapoff|swapon' ---
+grep exit=1 (1 = no hits)
+--- added lines of the whole round diff ---
+grep exit=1 (1 = no hits)
+--- where each tool writes: tempfile.mkdtemp(dir=...) ---
+corpus/evidence/round87/curation-r87-controls.py:79:    work = a.work or os.environ.get("TMPDIR") or "/fast/scratch/hyaku"
+corpus/evidence/round87/curation-r87-controls.py:81:    tmp = tempfile.mkdtemp(prefix="cur87-", dir=work)
+corpus/evidence/round87/gate-records-r87.py:361:    work = a.work or os.environ.get("TMPDIR") or os.environ.get("HYAKU_SCRATCH") or "/fast/scratch/hyaku"
+corpus/evidence/round87/gate-records-r87.py:363:    tmp = tempfile.mkdtemp(prefix="gr87-", dir=work)
+corpus/evidence/round87/mutate-r87.py:87:    work = a.work or os.environ.get("TMPDIR") or "/fast/scratch/hyaku"
+corpus/evidence/round87/mutate-r87.py:89:    tmp = tempfile.mkdtemp(prefix="mut87-", dir=work)
+--- git verbs used (must be read-only) ---
+corpus/evidence/round87/gate-records-r87.py:223:    out = subprocess.run(["git", "-C", repo, "grep", "-h", "-E", "^GATE-RECORD S[0-9]+ rev=", "--", "corpus/lessons"],
+tools/gate-records.py:186:        t = subprocess.run(["git", "-C", repo, "cat-file", "-t", rev + "^{commit}"], capture_output=True, text=True)
+tools/gate-records.py:190:        t = subprocess.run(["git", "-C", repo, "cat-file", "-t", spec], capture_output=True, text=True)
+tools/gate-records.py:193:        b = subprocess.run(["git", "-C", repo, "cat-file", "blob", spec], capture_output=True)
+tools/gate-records.py:293:        p = subprocess.run(["git", "-C", a.repo, "rev-parse", "--git-dir"], capture_output=True, text=True)
+--- mutating git verbs ---
+tools/gate-records.py:187:        if t.returncode != 0 or t.stdout.strip() != "commit":
+grep exit=0 (1 = none)
+--- does tools/gate-records.py write any file? ---
+grep exit=1 (1 = none)

@@ -1,0 +1,35 @@
+# receipt r87-mutation-01 — zero-mutation proof: all four round-87 tools leave the tree they check byte-identical
+# command: find $T -type f -exec sha256sum {} + | sort -k2 > before.sums ; run 4 tools ; find ... > after.sums ; diff before.sums after.sums
+c1 exit=0
+c2 exit=0
+controls exit=0
+mutate exit=0
+--- diff before.sums after.sums (empty = zero mutation) ---
+diff exit=0 (0 = identical)
+--- residue under the scratch root (must be only the --work dirs) ---
+a7.sums
+a8.sums
+after.sums
+b7.sums
+b8.sums
+base-gate-records.py
+before.sums
+c1-run.txt
+c2-controls-run.txt
+c2-run.txt
+harm-run.txt
+newfiles.txt
+tree.1S5b
+tree.path
+tree8.i0Ly
+w7
+w7b
+w7c
+w8
+w8b
+w8c
+w8d
+w8e
+work
+work2
+work3

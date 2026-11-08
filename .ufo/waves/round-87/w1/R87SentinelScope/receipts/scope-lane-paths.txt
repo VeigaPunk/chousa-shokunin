@@ -1,0 +1,74 @@
+# receipt r87-scope-01 — does any new file in this round write outside the lane root?
+# command: git show --stat e6e920a4 ; git diff --name-only 6495ef88 e6e920a4 | grep -E '^(/|\.\.)'
+commit e6e920a4e6988287c31e89b3e920a118b569ae52
+Author: chousa-shokunin <chousa@shokunin.local>
+Date:   Sun Nov 8 03:52:29 2026 -0300
+
+    round-87: landing — unreach refuses any 2xx, S216 used-by and S218 row, lesson with Gate/Mistakes/Spot-check intake, QUALITY 182-186, SCORECARD, LOG, coverage rows, after receipts
+
+ LOG.md                                             |  20 ++++
+ SCORECARD.md                                       |  40 +++++++
+ corpus/QUALITY.md                                  |  40 +++++++
+ corpus/README.md                                   |  10 ++
+ corpus/SOURCES.md                                  |   3 +-
+ corpus/evidence/round57/refetch.tsv                |   1 +
+ .../evidence/round87/after/c1-after-candidate.txt  |   5 +
+ corpus/evidence/round87/after/c1-mutants-after.txt |  34 ++++++
+ .../evidence/round87/after/c2-after-candidate.txt  |   6 +
+ .../evidence/round87/after/c2-controls-after.txt   |  19 ++++
+ corpus/lessons/round-87.md                         | 121 +++++++++++++++++++++
+ 11 files changed, 298 insertions(+), 1 deletion(-)
+--- paths changed base..landing (all must be lane-relative) ---
+LOG.md
+SCORECARD.md
+corpus/QUALITY.md
+corpus/README.md
+corpus/SOURCES.md
+corpus/evidence/round57/refetch.tsv
+corpus/evidence/round87/after/c1-after-candidate.txt
+corpus/evidence/round87/after/c1-mutants-after.txt
+corpus/evidence/round87/after/c2-after-candidate.txt
+corpus/evidence/round87/after/c2-controls-after.txt
+corpus/evidence/round87/c1-positives.tsv
+corpus/evidence/round87/claims.json
+corpus/evidence/round87/claims.md
+corpus/evidence/round87/controls/expected.tsv
+corpus/evidence/round87/controls/receipts/c1-harm-unreach.txt
+corpus/evidence/round87/controls/receipts/c1-k0-donothing.txt
+corpus/evidence/round87/controls/receipts/c1-k0b-frozen-instrument.txt
+corpus/evidence/round87/controls/receipts/c1-mutants.txt
+corpus/evidence/round87/controls/receipts/c2-controls.txt
+corpus/evidence/round87/controls/receipts/c2-d0-donothing.txt
+corpus/evidence/round87/curation-r87-controls.py
+corpus/evidence/round87/curation-r87.py
+corpus/evidence/round87/egress-approval.md
+corpus/evidence/round87/gate-records-r87.py
+corpus/evidence/round87/harm-recheck.py
+corpus/evidence/round87/instrument-pins.txt
+corpus/evidence/round87/mutate-r87.py
+corpus/lessons/round-87.md
+plans/round-87.md
+tools/gate-records.py
+--- any absolute or parent-escaping path in the changed set? ---
+grep exit=1 (1 = none)
+--- fleet root porcelain ---
+ M .scratch/goal-20261103-hyaku-run15.md
+ M .scratch/run15-state.json
+ M .ufo/l0-questions.md
+?? .scratch/closure-tabi-r83-entry.json
+?? .scratch/run15-wrapup/misroot-cff0b4cb/
+?? .ufo/reports/round-100/mado.md
+--- lane repo porcelain ---
+ M corpus/QUALITY.md
+ M corpus/lessons/round-87.md
+ M plans/round-87.md
+?? .ufo/waves/round-87/claims.json
+?? .ufo/waves/round-87/w1-dispatch.err
+?? .ufo/waves/round-87/w1.ready.dispatched
+?? .ufo/waves/round-87/w1/
+?? corpus/evidence/round87/after/c1-after.txt
+?? corpus/evidence/round87/after/c1-mutants-landing.txt
+?? corpus/evidence/round87/after/c2-after.txt
+?? corpus/evidence/round87/after/c2-controls-landing.txt
+?? corpus/evidence/round87/census-end.txt
+?? corpus/evidence/round87/census-start.txt

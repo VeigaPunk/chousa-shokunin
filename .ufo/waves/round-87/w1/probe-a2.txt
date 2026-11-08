@@ -1,0 +1,12 @@
+(a) definition divergences enumerated; live divergence on landing bytes: none (3==3).
+ Divergences:
+  D-A: count dedups (sid,url); _qual does not dedup. Integer width can disagree if a
+       (sid,url) repeats among qualifying rows (e.g. same sid+url at two fetched times).
+  D-B: count requires len(http)==3; _qual accepts any digit-string != 200 (e.g. 0203, 20).
+       A 4-digit http row enters _qual (D2 http=0203) but is dropped by count.
+  D-C: _qual stores the row's http verbatim into the D2 line; a 3-digit non-2xx non-203
+       http (e.g. 404 with rc=0+txt sha) would also qualify! Check: _qual filter is
+       curl_rc=0 AND http !=200 AND txt sha matches AND quotable. There is no 203-only
+       or non-2xx-exclusion filter. So catch: any committed rc=0 txt-matched row with
+       http in {201,202,204...} or {404,...} with a valid capture would join the class.
+       On landing bytes only 203 rows qualify - but the predicate SAYS 203, code says non-200.

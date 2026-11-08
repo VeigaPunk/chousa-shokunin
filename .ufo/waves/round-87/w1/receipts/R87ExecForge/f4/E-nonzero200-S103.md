@@ -1,0 +1,1 @@
+GATE-RECORD S103 url=https://library.um.edu.mo/upload/databases/c1b0fa89e2809581b12c79b9c60ea1af.pdf fetched=2026-10-27T08:05:52Z tier=B decision=reject capture=none curl_rc=28 http=200 words=0 quote=none

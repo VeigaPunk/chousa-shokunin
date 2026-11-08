@@ -1,0 +1,11 @@
+--- /fast/scratch/hyaku/chousa-r87/R87CriticClaims/landed/tools/gate-records.py	2026-11-08 03:52:30.000000000 -0300
++++ /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-87/w1/R87CriticClaims/fixtures/tool-t4-onerow.py	2026-11-08 04:02:13.106666833 -0300
+@@ -235,7 +235,7 @@
+         sm = SHA_RE.fullmatch(kv["capture_sha256"])
+         if not sm or capsha is None or not capsha.startswith(sm.group(1)):
+             codes.append("CAPTURE_SHA")
+-        ok = any(r[0] == sid and r[1] == url and r[2] == key and r[4] == kv["fetched"] and r[5] == "0" and r[6] == "200" and capsha is not None and r[8] == capsha for r in refetch)
++        ok = any(r[0] == sid and r[1] == url and r[2] == key and r[4] == kv["fetched"] and r[5] == "0" and r[6] == "200" if sid == "S021" else r[6].startswith("2") and capsha is not None and r[8] == capsha for r in refetch)
+         if not ok:
+             codes.append("REFETCH")
+         if cap is not None:

@@ -1,0 +1,13 @@
+# r08-harm — harm-recheck at the landing tree, with and without --base-tool
+--- with --base-tool
+HARM_RECHECK files=11 records=28 moved=0 base_rc=0 r87_rc=0
+exit=0
+--- without --base-tool (argparse)
+usage: harm-recheck.py [-h] --root ROOT --repo REPO --base-tool BASE_TOOL
+harm-recheck.py: error: the following arguments are required: --base-tool
+exit=2
+--- with a nonexistent --base-tool (the ABSENT() -> OK() mode the seat describes)
+HARM /fast/scratch/hyaku/chousa-r87/R87ScribeLesson/tree/corpus/lessons/round-86.md:122 ABSENT() -> OK()
+HARM /fast/scratch/hyaku/chousa-r87/R87ScribeLesson/tree/corpus/lessons/round-87.md:13 ABSENT() -> OK()
+HARM_RECHECK files=11 records=28 moved=28 base_rc=2 r87_rc=0
+exit=1

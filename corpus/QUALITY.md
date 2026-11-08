@@ -1132,8 +1132,10 @@ the admitted entry that motivates it. Tier definitions live in
     mutation narrowing that helper to one record moved both sides of the width comparison and the round-86 critic's
     `T4` shape (a general rule plus a record-keyed exception) would have passed. Check: the two sides of every width or
     count comparison are computed by functions that share no extraction code; `mutate-r87.py`'s `T4-truncate` must fail
-    the width leg (`1/3 floor3`). Shown able to fail: the self-referential variant prints `SURVIVOR N-deny-width` in the
-    first mutation run, and the two-path version prints `KILLED T4-truncate`. — `lessons/round-87.md` Mistakes 1.
+    the width leg (`1/3 floor3`). Shown able to fail: `mutate-r87.py` `T4-truncate` prints
+    `KILLED T4-truncate … LEG_FAIL D1_WIDTH 1/3 floor3`. The self-referential variant cannot be distinguished on a tree
+    whose builder already returns the whole class: it is labelled `EQUIVALENT_ON_TREE` in the committed receipt, and
+    `R87ReviewerC1` §(b) `E1` measures that equivalence independently. — `lessons/round-87.md` Mistakes 1.
 
 183. **A registry-cell rule is scoped by a phrase, not by a vocabulary, and a flagged row needs a disposition.** The
     first round-87 `TEACHES` leg flagged any live row whose `teaches` named a date term absent from its capture: 12 rows
@@ -1148,7 +1150,7 @@ the admitted entry that motivates it. Tier definitions live in
     differentiator was first generated for every positive record, so on an admit record it produced a `url/unreach`
     shape the parser refuses as `PARSE`, and the battery would have counted a parse refusal as a class kill. Check: the
     differentiator is emitted only from the `unreach` branch, and its expected code is the one the class's own rule
-    produces. — `lessons/round-87.md` Mistakes 3.
+    produces. — `lessons/round-87.md` Mistakes 4.
 
 185. **A verdict is accounted, not conjoined.** A predicate written as a conjunction of booleans that a correct run
     already makes true is met by a counter that stopped doing the work: round 86's `M2` (mutant credited, never built)
@@ -1164,3 +1166,30 @@ the admitted entry that motivates it. Tier definitions live in
     failed-transfer record; a 203 is "the request was successful" (S216 §15.3.4). Check: the unreach branch refuses
     `200 <= http < 300`, the `D2` class covers every qualifying committed row, and the harm sweep shows no genuine
     committed record moving (`c1-harm-unreach.txt` `moved=0` over 27 records). — `lessons/round-87.md`; S216, S218.
+
+187. **A leg-accounting claim states whether the count guards appends or executions, and scores the tautology family
+    before filing.** Round 87's C1 sentence said the verdict "accounts … executed legs" and that a counter that
+    "deletes a leg … fails the predicate instead of passing on printed fields". `LEGS` counts *appends*: `R87ReviewerC1`
+    §(b) shows `E4` (a SETUP `ok` expression tautologised) and `E7` (every list leg tautologised) printing
+    `LEGS=15/15 PASS` at exit 0, `E5` (a kill expression hardcoded after a real mutant run) passing, and `E1` (both
+    width sides narrowed together) passing; only a deleted append (`E8` → `LEGS=14/15`) and a one-sided narrowing fail.
+    Check: a claim whose verdict is a leg count names the guarded unit in the sentence, and the round's own wave scores a
+    tautologised-`ok` mutant before the report is filed; a survivor is either the claim's named limit at its measured
+    width or an amendment. — `lessons/round-87.md` Mistakes 5; plan Amendment 4.
+
+188. **An artefact that claims a machine-checkable closure carries the literal command, and the command is run once
+    against the artefact's own data.** Round 87's egress table asserted that its commit precedes every refetch row
+    "whose `fetched` is `2026-11-08T1` or later": the column is `fetched_utc`, and the bound selects zero rows of a
+    ledger whose values all read `2026-11-08T0x`, so the closure would have reported green while checking nothing
+    (`R87SentinelScope` F2; `>= …T1` 0 rows, `>= …T01` 26, `>= …T06` 5). Check: the sentence names the column as the
+    file spells it, and `awk -F'\t' '$5 >= "<bound>"' <ledger> | wc -l` returns a non-zero count that includes the
+    round's own row before the artefact is committed. — `lessons/round-87.md` Mistakes 6.
+
+189. **A before/after receipt pair states the revision each side is computed against, and a "before" receipt taken after
+    the change is labelled as derived, not as captured.** Round 87's census pair was written in end-then-start order
+    after the landing commit and left untracked while the lesson asserted "census exit 0 before and after"
+    (`R87ScribeLesson` G3; `R87SentinelScope` F5: `census-end` mtime `03:53:49`, `census-start` `03:55:05`, landing
+    `03:52:30`). The start value was correct by construction — it recomputes the base registry from the `6495ef88`
+    archive — but the ordering claim had no evidence. Check: every receipt in a before/after pair carries
+    `# computed_against=<40-hex or tag>`, the two files are committed in the same landing that cites them, and a
+    "before" value obtained from a historical revision says so in its own header. — `lessons/round-87.md` Mistakes 7.

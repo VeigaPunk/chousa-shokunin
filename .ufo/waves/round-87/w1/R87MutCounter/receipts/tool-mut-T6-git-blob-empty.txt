@@ -1,0 +1,21 @@
+tool-mutant: T6-git-blob-empty
+file: tools/gate-records.py
+anchor-replaced:
+---
+        return b.stdout if b.returncode == 0 else None
+---
+with:
+---
+        return b""
+---
+cmd: python3 -B /fast/scratch/hyaku/chousa-r87/R87MutCounter/land/corpus/evidence/round87/gate-records-r87.py --root /fast/scratch/hyaku/chousa-r87/R87MutCounter/land --repo /home/vgpnk/Projects/shokunin/chousa-shokunin --tool /fast/scratch/hyaku/chousa-r87/R87MutCounter/drive-970qfckr/t-T6-git-blob-empty/gate-records.py --work /fast/scratch/hyaku/chousa-r87/R87MutCounter/drive-970qfckr/wt-T6-git-blob-empty
+rc=1
+verdict=GATE_RECORDS_R87=FAIL
+field-deviations=['POSITIVE: want 15/15 got 11/15', 'FRESH_POSITIVE: want 5/5 got 3/5', 'RC: want 4/4 got 2/4', 'MUT_ADMIT_KILLED: want 1 got 0', 'MUT_UNREACH_KILLED: want 1 got 0', 'LEGS: want 15/15 got 10/15']
+leg-fails:
+LEG_FAIL POSITIVE 11/15
+LEG_FAIL FRESH 3/5
+LEG_FAIL RC 2/4
+LEG_FAIL MUT_ADMIT derived=1 killed=0
+LEG_FAIL MUT_UNREACH derived=1 killed=0
+mutant-sha256=b9e6499d4be9a3b36e2c7ac5d023ffd510feb7b4bbaeb5b0d10a4c023d5ccc5e

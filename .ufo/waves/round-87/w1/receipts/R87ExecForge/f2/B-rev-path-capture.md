@@ -1,0 +1,1 @@
+GATE-RECORD S199 rev=b7803829922770b890e9f4efdd30d12c3695439a path=corpus/captures/58725f5e0ac436166546a5ec.txt line=222 words=12 quote=the battery is fully forgeable through the payload channel on **both** batteries
