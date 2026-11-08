@@ -42,7 +42,20 @@ The F1 commit `bf12c30e` froze the instruments and the claims but did not carry
 `16332cc0`→`f6a05a2e`. F2 adds the pins table (generated from the F1 blobs, then carried in this commit) and
 supersedes F1 as the freeze revision **before any scored run**. No claim sentence, predicate, kill rule or
 target changed; the pins table is data, and its contents are re-derived from the F1 blobs below (the same
-instrument-pins generation procedure as r91).
+instrument-pins generation procedure as r91). F2's pins table pinned the F1 blobs and therefore
+matched the F1 tree, but `pin_at_rev` compares each pinned digest against the blob at `--rev`: at `rev=F2`
+the pins file is the file the F2 commit carries, whose self row is the minus-self digest of the F1 rows —
+the F2 pins table and the F2 tree agree, so F2 self-pinned cleanly under `pin_at_rev(F2)` **except** for the
+driver file itself, whose bytes at F2 differ from the pinned F1 sha (the F2 commit changed nothing in the
+driver — the sha mismatch came from the *plans/round-92.md* edit that F2 also carried, whose sha is pinned).
+F3 repairs exactly this: the pins table is regenerated from the F3 tree (not the F1 tree), and the driver is
+unchanged between F2 and F3 except for the S5 self-pin exclusion already frozen. Two amendments to the
+process (not to any claim): (a) the driver now excludes the pins file from `pin_at_rev`'s whole-blob leg and
+checks its own digest by the minus-self rule against the blob at `--rev`; (b) the pins table is generated from
+the commit it will be checked against, so both legs compare the same tree. Superseded freeze/carrier pairs
+`bf12c30e`/`ddb5fdf4` (receipts against the F2 pins) and `85a2eeef`/`9722365f` are superseded **before any
+scored run and before the wave**; their defects are in §Pre-wave freeze repair 2. No claim sentence, predicate,
+kill rule or target changed.
 
 ## Damages found while building (before the freeze)
 
