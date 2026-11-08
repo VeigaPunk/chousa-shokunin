@@ -1,0 +1,30 @@
+# receipt 07 — Gate addendum evidence (non-author spot-check)
+# tree: git archive 03bbb458 | tar -x -C <scratch>/landing ; lane checkout for --repo
+
+## A. public CLI on the lesson Gate block (round-84.md at the landing rev)
+GATE_RECORD corpus/lessons/round-84.md:18 S214 OK
+GATE_RECORD corpus/lessons/round-84.md:19 S018 OK
+GATE_RECORD corpus/lessons/round-84.md:20 S023 OK
+GATE_RECORDS files=1 records=3 ok=3 fail=0
+rc=0
+
+## B. hand location command (round-81/82 form), S214 quote in its capture
+FOUND
+17:Information              6    Specify all databases, registers, websites, organisations
+17
+capture sha256:
+4cbf8881578dbc7b32df2f51024e155769a4e2f4b96774ad880f6bd7b391aa33  corpus/captures/a640b15abf781e5c583d7088.txt
+refetch row for S214 (id, url, key, fetched, curl_rc, http, txt_sha256):
+
+## B2. refetch.tsv rows for the three lesson records (id, url, key, attempt, fetched, curl_rc, http, txt_sha256)
+S017	https://www.prisma-statement.org/prisma-2020	259c96bf7088a12bc7ce65c4	1	2026-11-08T02:13:58Z	0	200	14798e528552f668e4dd5fb0f401c1d131d5e8c831ff6214415a6d421f579d87	79ce93c929d6805403b53b9e44e279c505f2d66c2f2c54d4f2b0c21bb10c68d0
+S017	https://www.prisma-statement.org/prisma-2020-checklist	1f5f4eec0b85edf1dc53db7b	1	2026-11-08T02:14:24Z	0	200	bb363bc79b85efd415f3d34b1dd8b89b0fc1b49990d000391d2bb1ecd7213475	a4a7bd64cd28759ea818352dd1acfa8ad63b1a2372387db14d816fe56075fd92
+S017	https://www.prisma-statement.org/s/PRISMA_2020_checklist-ab3g.pdf	a640b15abf781e5c583d7088	1	2026-11-08T02:14:35Z	0	200	2eedbd5452741f9615307a0bce21a8198c0597ce2a0a8a0fd7e140d64b08c625	4cbf8881578dbc7b32df2f51024e155769a4e2f4b96774ad880f6bd7b391aa33
+S018	https://aclanthology.org/2026.acl-long.1430/	248b43277f376e437a356909	1	2026-11-08T02:15:05Z	0	200	2a812275e1a7fab8e7e91116965ad9a7397726e283e1cb0cdd45ec18d21a3322	0640edfc82212389a03b448e7fa12909d914338e0985d0530df4397a37afed25
+S023	https://www.dublincore.org/specifications/dublin-core/dcmi-terms/	f5545a194c06ab421875b047	1	2026-11-08T02:16:27Z	0	200	fb32e12fa9bee1379acc0cf921ba7e79a6b85bd46253d993db0898847b9870a1	20dc0c3ab7724e1f4be59217c190fa796a66c29b7a653e8d707d64f5fac43a79
+S214	https://www.prisma-statement.org/s/PRISMA_2020_checklist-ab3g.pdf	a640b15abf781e5c583d7088	1	2026-11-08T02:21:13Z	0	200	2eedbd5452741f9615307a0bce21a8198c0597ce2a0a8a0fd7e140d64b08c625	4cbf8881578dbc7b32df2f51024e155769a4e2f4b96774ad880f6bd7b391aa33
+
+## B3. the three captures' sha256 prefixes vs the lesson's capture_sha256 cells
+a640b15abf781e5c583d7088 4cbf8881578dbc7b MATCH (lesson cell 4cbf8881578dbc7b…)
+248b43277f376e437a356909 0640edfc82212389 MATCH (lesson cell 0640edfc82212389…)
+f5545a194c06ab421875b047 20dc0c3ab7724e1f MATCH (lesson cell 20dc0c3ab7724e1f…)
