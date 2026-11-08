@@ -1,0 +1,153 @@
+{
+ "round": 92,
+ "lane": "chousa",
+ "l1": "ChousaR92",
+ "base": "d7780feff6e39ae74a2fd77fc9773c671b33da95",
+ "shape": "three claims, three axes (operability, calibration, freshness), no exploratory claim",
+ "C1": {
+  "id": "C1-DRIVER-R92",
+  "axis": "operability",
+  "type": "repair (successor control driver; capability retained)",
+  "sentence": "At the landing revision corpus/evidence/round92/control-driver-r92.py verify --root . --repo . --rev F --receipts-rev C --work <scratch> prints CONTROL_DRIVER_R92=PASS (exit 0) with COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 over the six committed receipts of controls/expected.tsv, where PASS requires findings==0 AND committed_ok==len(rows) AND exact_ok==len(rows) AND pin_ok==len(rows) AND fresh_ok==len(rows); and corpus/evidence/round92/control-forgeries-r92.py --work <scratch> prints FORGERY_REFUSED=3/3 POSITIVE=pass.",
+  "predicate": {
+   "verify_stdout": [
+    "CONTROL_DRIVER_R92=PASS",
+    "RECEIPT SELF_PIN OK rev=",
+    "receipts_rev="
+   ],
+   "verify_fields": [
+    "COMMITTED_OK=6/6",
+    "EXACT_OK=6/6",
+    "PIN_OK=6/6",
+    "FRESH_OK=6/6"
+   ],
+   "forgeries_stdout": [
+    "FORGERY_REFUSED=3/3",
+    "POSITIVE=pass"
+   ],
+   "exit": 0
+  },
+  "counting_command": [
+   "python3 -B corpus/evidence/round92/control-driver-r92.py verify --root . --repo . --rev <freeze> --receipts-rev <carrier> --work <scratch>",
+   "python3 -B corpus/evidence/round92/control-forgeries-r92.py --work <scratch>"
+  ],
+  "kill_rules": {
+   "K1": "predicate not met at the landing revision",
+   "K2": "a battery forgery accepted by r92, the positive refused, or r91 refuses a forgery (no discrimination)",
+   "K3": "a genuine row moved or the verification path wrote the receipts directory",
+   "K4": "the pass skips the work: missing receipt accepted, committed receipt not read, substring token match, duplicate pin path scored, or self-pin minted in verify"
+  },
+  "named_limits": [
+   "a coherent joint edit of instrument, pin, receipt and expectation row survives (that edit is the harness)",
+   "whole-token matching binds one field per token, not its semantic role",
+   "the self-pin detects a moved byte inside a named commit, not a rewritten history",
+   "the minus-self digest binds the table's coherence, not its authority",
+   "a pinned script that reads data outside its own bytes is unseen",
+   "the exact-gate repair is vacuous-in-practice (committed_ok implies exact_ok row-for-row) and is not cited as a gain"
+  ],
+  "sources": [
+   "S070"
+  ],
+  "before": "control-driver-r91.py read_pins last-wins, instrument_rel first-token-only, pins file not in wanted set; receipts/c1-before.txt (mechanism attestation, no r91 PASS claimed)"
+ },
+ "C2": {
+  "id": "C2-CURATION-R92",
+  "axis": "calibration",
+  "type": "repair (successor curation counter; capability retained)",
+  "sentence": "At the landing revision corpus/evidence/round92/curation-r92.py --root . prints CURATION_R92=PASS (exit 0) with LEGS_MEASURED=14/14, Q_ROWS=20 Q_SHAPE_FAIL=0, SOURCE_STATUS_OK=20/20 USED_BY_OK=20/20, TFREQ_OK=17/17 TFREQ_MAX_DF=3, UNENTAILED_TERM=0, WARRANT_OK=17/17, DUP_QIDS=0; and curation-r92-controls.py --root . --work <scratch> prints CONTROLS=PASS FORGERY_REFUSED=4/4 PRIOR_ACCEPTED=4/4 DUPCOUNT_R91=1 DUPCOUNT_R92=1 PRIOR_REGRESSION=7/7.",
+  "predicate": {
+   "counter_stdout": [
+    "CURATION_R92=PASS"
+   ],
+   "counter_fields": [
+    "LEGS_MEASURED=14/14",
+    "Q_ROWS=20",
+    "Q_SHAPE_FAIL=0",
+    "SOURCE_STATUS_OK=20/20",
+    "USED_BY_OK=20/20",
+    "TFREQ_OK=17/17",
+    "TFREQ_MAX_DF=3",
+    "UNENTAILED_TERM=0",
+    "WARRANT_OK=17/17",
+    "DUP_QIDS=0"
+   ],
+   "controls_stdout": [
+    "CONTROLS=PASS",
+    "FORGERY_REFUSED=4/4",
+    "PRIOR_ACCEPTED=4/4",
+    "DUPCOUNT_R91=1",
+    "DUPCOUNT_R92=1",
+    "PRIOR_REGRESSION=7/7"
+   ],
+   "exit": 0
+  },
+  "counting_command": [
+   "python3 -B corpus/evidence/round92/curation-r92.py --root .",
+   "python3 -B corpus/evidence/round92/curation-r92-controls.py --root . --work <scratch>"
+  ],
+  "kill_rules": {
+   "K1": "predicate not met at landing",
+   "K2": "any of the four S-forgeries accepted by r92, the positive refused, or r91 refuses one",
+   "K3": "the clean tree's PASS changes or the counter writes the tree",
+   "K4": "the pass skips the work: a non-structural pipe-leading row is dropped, a substring used-by match is accepted, a mined row naming an entry is left uncited, or a wrong-width decision row is dropped"
+  },
+  "named_limits": [
+   "the two routed entries and their pinned qid/decision-count sets only",
+   "document frequency is measured over the entry's own units, not the world",
+   "the stopword list is a fixed list",
+   "a verbatim-located quote used for the wrong proposition still passes",
+   "a coherent joint edit of entry, registry and capture survives"
+  ],
+  "sources": [],
+  "before": "curation-r91.py accepts all four S-classes (qid-first-cell drop, width drop, substring join, no reverse leg); receipts/c2-before.txt"
+ },
+ "C3": {
+  "id": "C3-TALLY-R92",
+  "axis": "freshness",
+  "type": "repair (Gates-scoped tallies, pinned others multiset)",
+  "sentence": "At the landing revision corpus/evidence/round92/skill-tally-r92.py --root . --selftest corpus/evidence/round92/controls/selftest-r92.txt prints SKILL_TALLY_R92=PASS (exit 0) with TALLY_ROWS=8 STALE_TALLIES=0/8 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=2 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 OTHERS_OK=1 LEGS=3/3 over the ## Gates section only; and skill-tally-r92-controls.py --root . --work <scratch> prints CONTROLS=PASS OLDPROSE_REFUSED=1/1 PRIOR_ACCEPTED=1/1 STALE_REFUSED_BOTH=1/1, with deleting one in-section historical occurrence refused by r92 (LEG_FAIL OTHERS) and accepted by r91.",
+  "predicate": {
+   "counter_stdout": [
+    "SKILL_TALLY_R92=PASS"
+   ],
+   "counter_fields": [
+    "TALLY_ROWS=8",
+    "STALE_TALLIES=0/8",
+    "EXPECTED_CASES=283",
+    "EXPECTED_SKIPPED=0",
+    "OTHER_OCCURRENCES=2",
+    "CASE_RANGE_BASHENV=273-275",
+    "CASE_RANGE_BASH_PIN=282-283",
+    "CASE_RANGE_OK=2/2",
+    "MISLABELED=0",
+    "OTHERS_OK=1",
+    "LEGS=3/3"
+   ],
+   "controls_stdout": [
+    "CONTROLS=PASS",
+    "OLDPROSE_REFUSED=1/1",
+    "PRIOR_ACCEPTED=1/1",
+    "STALE_REFUSED_BOTH=1/1"
+   ],
+   "exit": 0
+  },
+  "counting_command": [
+   "python3 -B corpus/evidence/round92/skill-tally-r92.py --root . --selftest corpus/evidence/round92/controls/selftest-r92.txt",
+   "python3 -B corpus/evidence/round92/skill-tally-r92-controls.py --root . --work <scratch>"
+  ],
+  "kill_rules": {
+   "K1": "predicate not met at landing",
+   "K2": "r92 accepts the deleted-other forgery, refuses the clean tree, or derives a bound from SKILL.md prose rather than the tool's own ok-case names",
+   "K3": "a historical tally or quote outside ## Gates moves (the r215 tail tally is deliberately out of scope)",
+   "K4": "the pass skips the work: no case names read, an absent clause tolerated, the selftest not run/read, or the others multiset not compared"
+  },
+  "named_limits": [
+   "the section boundary is the next ## at column 0",
+   "the pinned others multiset holds the two in-section historical tallies (161, 256); the 215 tail tally is unbound by design",
+   "case names are the tool's debug strings; a rename changes the binding loudly",
+   "the tally leg binds current cells structurally; historical quotations stay unbound and counted"
+  ],
+  "sources": [],
+  "before": "skill-tally-r91.py document-wide, unpinned others: deleting the 161 occurrence leaves it PASS; receipts/c3-before.txt"
+ }
+}
