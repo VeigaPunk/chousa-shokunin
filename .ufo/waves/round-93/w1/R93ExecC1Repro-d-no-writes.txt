@@ -1,0 +1,37 @@
+R93ExecC1Repro — (d) verify writes nothing under the receipts directory (or the tree)
+
+Run: the (a) clean-tree verify (receipt R93ExecC1Repro-a-verify.stdout.txt, exit 0).
+
+1) Receipt digests before and after the (a) run:
+   $ cd $S/repo && sha256sum corpus/evidence/round93/controls/receipts/*.txt > $S/receipts-before.sha
+   ... run (a) ...
+   $ cd $S/repo && sha256sum corpus/evidence/round93/controls/receipts/*.txt > $S/receipts-after.sha
+   $ diff $S/receipts-before.sha $S/receipts-after.sha && echo RECEIPTS_BYTE_STABLE=yes
+   RECEIPTS_BYTE_STABLE=yes
+   (the six rows are reproduced verbatim in R93ExecC1Repro-d-receipts-before.sha.txt and
+    R93ExecC1Repro-d-receipts-after.sha.txt)
+
+2) Working tree state after the (a) run:
+   $ cd $S/repo && git status --porcelain | wc -l
+   0
+   Clean carrier clone at 754b62fb6adc60e44e12375af5461a0ebe302994: no tracked or untracked change.
+
+3) Receipt mtimes after the (a) run (clone time preserved; verify ran later):
+   -rw-r--r-- 1 vgpnk vgpnk  513 2026-11-08 11:10:17.766764315 -0300 c1-gate-r89.txt
+   -rw-r--r-- 1 vgpnk vgpnk  201 2026-11-08 11:10:17.766787085 -0300 c1-harm-setup.txt
+   -rw-r--r-- 1 vgpnk vgpnk  163 2026-11-08 11:10:17.766787085 -0300 c1-harm.txt
+   -rw-r--r-- 1 vgpnk vgpnk 2565 2026-11-08 11:10:17.766787085 -0300 c1-mutants-r89.txt
+   -rw-r--r-- 1 vgpnk vgpnk 1767 2026-11-08 11:10:17.766787085 -0300 c2-prior-controls.txt
+   -rw-r--r-- 1 vgpnk vgpnk  530 2026-11-08 11:10:17.766787085 -0300 c2-prior-landing.txt
+
+4) Files written by the (a) run are only under --work ($S/verify):
+   $ find $S/verify -maxdepth 2 -type f
+   fresh-c1-gate-r89.out
+   fresh-c1-mutants-r89.out
+   harm/base-tool.py
+   fresh-c1-harm.out
+   fresh-c1-harm-setup.out
+   fresh-c2-prior-landing.out
+   fresh-c2-prior-controls.out
+   (the driver's fresh legs write work/fresh-<case>.out and the c1-harm instrument writes
+    work/harm/base-tool.py; nothing is written under --receipts)

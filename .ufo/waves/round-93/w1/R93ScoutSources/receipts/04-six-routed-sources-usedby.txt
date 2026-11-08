@@ -1,0 +1,28 @@
+# 04 — the six routed sources: status cell, used-by cell, exact-token join to the citing entry
+# (tokeniser: re.split(r'[^A-Za-z0-9._/-]+', used_by) — the counter's used_by_tokens rule)
+
+# cmd: python3 (own parser over corpus/SOURCES.md; prints id | status | used-by cell | tokenised used-by | entry named)
+S214 | status=mined | used-by=corpus/knowledge/search-transparency-reporting-r84.md | tokens=['corpus/knowledge/search-transparency-reporting-r84.md'] | names=['corpus/knowledge/search-transparency-reporting-r84.md']
+S018 | status=mined | used-by=corpus/knowledge/search-transparency-reporting-r84.md | tokens=['corpus/knowledge/search-transparency-reporting-r84.md'] | names=['corpus/knowledge/search-transparency-reporting-r84.md']
+S023 | status=mined | used-by=corpus/knowledge/search-transparency-reporting-r84.md | tokens=['corpus/knowledge/search-transparency-reporting-r84.md'] | names=['corpus/knowledge/search-transparency-reporting-r84.md']
+S215 | status=mined | used-by=corpus/knowledge/provenance-recording-r85.md | tokens=['corpus/knowledge/provenance-recording-r85.md'] | names=['corpus/knowledge/provenance-recording-r85.md']
+S026 | status=mined | used-by=corpus/knowledge/provenance-recording-r85.md | tokens=['corpus/knowledge/provenance-recording-r85.md'] | names=['corpus/knowledge/provenance-recording-r85.md']
+S031 | status=mined | used-by=corpus/knowledge/provenance-recording-r85.md | tokens=['corpus/knowledge/provenance-recording-r85.md'] | names=['corpus/knowledge/provenance-recording-r85.md']
+
+# two-sided check over all registry rows
+# cmd: python3 (for every mined row whose used-by tokens name an entry, is it cited by >=1 Located-quote row of that entry?)
+corpus/knowledge/search-transparency-reporting-r84.md: located-quote (qid,source) pairs = [('S018', 'Q6'), ('S018', 'Q7'), ('S018', 'Q8'), ('S023', 'Q10'), ('S023', 'Q11'), ('S023', 'Q12'), ('S023', 'Q13'), ('S023', 'Q9'), ('S214', 'Q1'), ('S214', 'Q2'), ('S214', 'Q3'), ('S214', 'Q4'), ('S214', 'Q5')]
+corpus/knowledge/provenance-recording-r85.md: located-quote (qid,source) pairs = [('S026', 'Q5'), ('S026', 'Q6'), ('S031', 'Q7'), ('S215', 'Q1'), ('S215', 'Q2'), ('S215', 'Q3'), ('S215', 'Q4')]
+mined rows whose used-by tokens name one of the two entries: [('S018', 'corpus/knowledge/search-transparency-reporting-r84.md'), ('S023', 'corpus/knowledge/search-transparency-reporting-r84.md'), ('S026', 'corpus/knowledge/provenance-recording-r85.md'), ('S031', 'corpus/knowledge/provenance-recording-r85.md'), ('S214', 'corpus/knowledge/search-transparency-reporting-r84.md'), ('S215', 'corpus/knowledge/provenance-recording-r85.md')]
+  S018 -> corpus/knowledge/search-transparency-reporting-r84.md: cited by a Located-quote row? YES
+  S023 -> corpus/knowledge/search-transparency-reporting-r84.md: cited by a Located-quote row? YES
+  S026 -> corpus/knowledge/provenance-recording-r85.md: cited by a Located-quote row? YES
+  S031 -> corpus/knowledge/provenance-recording-r85.md: cited by a Located-quote row? YES
+  S214 -> corpus/knowledge/search-transparency-reporting-r84.md: cited by a Located-quote row? YES
+  S215 -> corpus/knowledge/provenance-recording-r85.md: cited by a Located-quote row? YES
+mined-and-named-but-uncited rows: []
+substring-only mentions (basename present but not an exact token): []
+
+# every source id appearing in each entry's Located-quotes table
+corpus/knowledge/search-transparency-reporting-r84.md: ['S018', 'S023', 'S214']
+corpus/knowledge/provenance-recording-r85.md: ['S026', 'S031', 'S215']

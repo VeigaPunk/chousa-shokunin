@@ -1,0 +1,42 @@
+## variant: sub215
+$ cd /fast/scratch/hyaku/chousa-r93/R93ExecC3Repro/repo
+$ python3 -B corpus/evidence/round93/skill-tally-r93.py --root /fast/scratch/hyaku/chousa-r93/R93ExecC3Repro/mini/sub215 --selftest /fast/scratch/hyaku/chousa-r93/R93ExecC3Repro/mini/sub215/selftest.txt
+HIST_SCOPE_BLEED line=216 cases tally=PASS (216 cases, 0 skipped)
+TALLY_ROWS=8 STALE_TALLIES=0/8 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=2 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 HIST_DERIVED=2/2 HIST_PRESENT=2/2 TAIL_TALLIES=2 OTHERS_OK=1 TAIL_OK=0 LEGS=3/4
+LEG_FAIL TAIL declared={('215', '0'): 1, ('283', '0'): 1} observed={('216', '0'): 1, ('283', '0'): 1}
+SKILL_TALLY_R93=FAIL
+EXIT=1
+
+$ cd /fast/scratch/hyaku/chousa-r93/R93ExecC3Repro/repo
+$ python3 -B corpus/evidence/round92/skill-tally-r92.py --root /fast/scratch/hyaku/chousa-r93/R93ExecC3Repro/mini/sub215 --selftest /fast/scratch/hyaku/chousa-r93/R93ExecC3Repro/mini/sub215/selftest.txt
+TALLY_ROWS=8 STALE_TALLIES=0/8 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=2 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 OTHERS_OK=1 LEGS=3/3
+SKILL_TALLY_R92=PASS
+EXIT=0
+
+## variant: noscopebound
+$ cd /fast/scratch/hyaku/chousa-r93/R93ExecC3Repro/repo
+$ python3 -B corpus/evidence/round93/skill-tally-r93.py --root /fast/scratch/hyaku/chousa-r93/R93ExecC3Repro/mini/noscopebound --selftest /fast/scratch/hyaku/chousa-r93/R93ExecC3Repro/mini/noscopebound/selftest.txt
+SKILL_TALLY_R93=SETUP SCOPE_BLEED no next-## or #-level heading after ## Gates
+EXIT=2
+
+$ cd /fast/scratch/hyaku/chousa-r93/R93ExecC3Repro/repo
+$ python3 -B corpus/evidence/round92/skill-tally-r92.py --root /fast/scratch/hyaku/chousa-r93/R93ExecC3Repro/mini/noscopebound --selftest /fast/scratch/hyaku/chousa-r93/R93ExecC3Repro/mini/noscopebound/selftest.txt
+SKILL_TALLY_R92=SETUP SCOPE_BLEED no next-## or #-level heading after ## Gates
+EXIT=2
+
+## variant: nohist
+$ cd /fast/scratch/hyaku/chousa-r93/R93ExecC3Repro/repo
+$ python3 -B corpus/evidence/round93/skill-tally-r93.py --root /fast/scratch/hyaku/chousa-r93/R93ExecC3Repro/mini/nohist --selftest /fast/scratch/hyaku/chousa-r93/R93ExecC3Repro/mini/nohist/selftest.txt
+HIST_FINDING HIST_MISSING PASS (161 cases, 0 skipped)
+TALLY_ROWS=8 STALE_TALLIES=0/8 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=1 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 HIST_DERIVED=2/2 HIST_PRESENT=1/2 TAIL_TALLIES=2 OTHERS_OK=0 TAIL_OK=1 LEGS=3/4
+LEG_FAIL OTHERS declared={('161', '0'): 1, ('256', '0'): 1} observed={('256', '0'): 1} codes=HIST_MISSING PASS (161 cases, 0 skipped)
+SKILL_TALLY_R93=FAIL
+EXIT=1
+
+$ cd /fast/scratch/hyaku/chousa-r93/R93ExecC3Repro/repo
+$ python3 -B corpus/evidence/round92/skill-tally-r92.py --root /fast/scratch/hyaku/chousa-r93/R93ExecC3Repro/mini/nohist --selftest /fast/scratch/hyaku/chousa-r93/R93ExecC3Repro/mini/nohist/selftest.txt
+TALLY_ROWS=8 STALE_TALLIES=0/8 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=1 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 OTHERS_OK=0 LEGS=2/3
+LEG_FAIL OTHERS expected={('161', '0'): 1, ('256', '0'): 1} observed={('256', '0'): 1}
+SKILL_TALLY_R92=FAIL
+EXIT=1
+

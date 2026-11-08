@@ -1,0 +1,27 @@
+# 03 — S070 registry row cells (corpus/SOURCES.md), exact text
+
+# cmd: grep -n -E '^\| S070 \|' corpus/SOURCES.md
+# desc: the S070 row, verbatim
+80:| S070 | GNU coreutils `sha256sum(1)` manual — `/usr/share/man/man1/sha256sum.1.gz` | docs | A | the documented digest text and `--check` input of the installed coreutils `sha256sum`; not a validation policy (the 64-lowercase-hex rule is this lane's choice) | NAME/DESCRIPTION and SYNOPSIS `-c, --check` (decompressed lines 4–11, 19–20, 54–56; quote at line 11); coreutils 9.12-2; file SHA-256 `93c17dffe9f25d56291113d566a7de3ff65c29f8cc32c381801c49cf27e8403f` (opened locally 2026-10-23) | `sha256sum` prints or checks SHA256 (256-bit) checksums, and `--check` reads checksums from files rather than computing a policy. | mined | 2026-10-23 | on-release | corpus/knowledge/engine-swap-canary-r36.md, corpus/knowledge/claim-pin-provenance-r37.md |
+exit=0
+
+# cmd: grep -n -E '^\| S073 \|' corpus/SOURCES.md
+# desc: S073 (supersedes S070 — anchor-label correction only)
+83:| S073 | GNU coreutils `sha256sum(1)` manual — `/usr/share/man/man1/sha256sum.1.gz` (canonical URL `https://www.gnu.org/software/coreutils/manual/coreutils.html#cksum-c`, printed as the roff tty-link at the anchored line; not fetched) | docs | A | the documented digest text and `--check` semantics of the installed coreutils `sha256sum` — the same scope as S070; this row corrects S070's anchor label only | `supersedes S070 —` the `-c, --check` entry is a DESCRIPTION `.TP` item, not a SYNOPSIS line: `.SH SYNOPSIS` line 5 (body 6–7, no option entries), `.SH DESCRIPTION` line 8, `-c, --check` at decompressed lines 19–20 (quote at line 20); coreutils 9.12 (September 2026), installed `coreutils 9.12-2`; file SHA-256 `93c17dffe9f25d56291113d566a7de3ff65c29f8cc32c381801c49cf27e8403f` (re-opened locally 2026-10-24) | supersedes S070 — the anchor label `SYNOPSIS -c, --check` is wrong; lines 19–20 sit under DESCRIPTION. Offsets and quote unchanged: "read checksums from the FILEs and check them" (8 words at line 20). | mined | 2026-10-24 | on-release | corpus/knowledge/receipt-binding-r38.md |
+exit=0
+
+# cmd: git show 754b62fb6adc60e44e12375af5461a0ebe302994:corpus/SOURCES.md | grep -E '^\| S070 \|'
+# desc: S070 row at the carrier C2
+| S070 | GNU coreutils `sha256sum(1)` manual — `/usr/share/man/man1/sha256sum.1.gz` | docs | A | the documented digest text and `--check` input of the installed coreutils `sha256sum`; not a validation policy (the 64-lowercase-hex rule is this lane's choice) | NAME/DESCRIPTION and SYNOPSIS `-c, --check` (decompressed lines 4–11, 19–20, 54–56; quote at line 11); coreutils 9.12-2; file SHA-256 `93c17dffe9f25d56291113d566a7de3ff65c29f8cc32c381801c49cf27e8403f` (opened locally 2026-10-23) | `sha256sum` prints or checks SHA256 (256-bit) checksums, and `--check` reads checksums from files rather than computing a policy. | mined | 2026-10-23 | on-release | corpus/knowledge/engine-swap-canary-r36.md, corpus/knowledge/claim-pin-provenance-r37.md |
+exit=0
+
+# cmd: git diff --stat 206226dc9d9baef620e7d3d30bdac5f9194a459f 754b62fb6adc60e44e12375af5461a0ebe302994 -- corpus/SOURCES.md
+# desc: SOURCES.md diff base..carrier (empty = row untouched this round)
+exit=0
+
+# cmd: sha256sum corpus/SOURCES.md; git show 754b62fb6adc60e44e12375af5461a0ebe302994:corpus/SOURCES.md | sha256sum
+# desc: working-tree vs committed SOURCES.md sha256
+7a2f6d53fe47ac9dc8c8931f8e21619862f0b919ecea0cd387e7f92544f5c1c1  corpus/SOURCES.md
+7a2f6d53fe47ac9dc8c8931f8e21619862f0b919ecea0cd387e7f92544f5c1c1  -
+exit=0
+

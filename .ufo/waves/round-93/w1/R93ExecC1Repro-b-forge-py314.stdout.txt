@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "/fast/scratch/hyaku/chousa-r93/R93ExecC1Repro/repo/corpus/evidence/round93/forgeries-r93.py", line 144, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/fast/scratch/hyaku/chousa-r93/R93ExecC1Repro/repo/corpus/evidence/round93/forgeries-r93.py", line 80, in main
+    pristine = archive(repo, a.receipts_rev, os.path.join(work, "pristine"))
+  File "/fast/scratch/hyaku/chousa-r93/R93ExecC1Repro/repo/corpus/evidence/round93/forgeries-r93.py", line 51, in archive
+    tf.extractall(dest)
+    ~~~~~~~~~~~~~^^^^^^
+  File "/usr/lib/python3.14/tarfile.py", line 2483, in extractall
+    tarinfo, unfiltered = self._get_extract_tarinfo(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        member, filter_function, path)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/tarfile.py", line 2573, in _get_extract_tarinfo
+    self._handle_fatal_error(e)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/usr/lib/python3.14/tarfile.py", line 2571, in _get_extract_tarinfo
+    filtered = filter_function(unfiltered, path)
+  File "/usr/lib/python3.14/tarfile.py", line 900, in data_filter
+    new_attrs = _get_filtered_attrs(member, dest_path, True)
+  File "/usr/lib/python3.14/tarfile.py", line 867, in _get_filtered_attrs
+    raise AbsoluteLinkError(member)
+tarfile.AbsoluteLinkError: '.ufo/waves/round-35/w2/MutGrepShimPath/shims/b/grep' is a link to an absolute path

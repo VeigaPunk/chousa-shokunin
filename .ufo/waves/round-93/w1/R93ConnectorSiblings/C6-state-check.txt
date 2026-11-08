@@ -1,0 +1,49 @@
+== C6 driver: floor / self-row / receipt filter ==
+178:    disk_files = sorted(f for f in os.listdir(receipts_dir) if f.endswith(".txt"))
+307:        codes.append(f"PIN_SELF_ROW_ABSENT path={pins_rel}")
+357:             for f in sorted(os.listdir(receipts)) if f.endswith(".txt")]
+506:        if not f.endswith(".txt") or f[:-4] in scored:
+540:              and checked == len(pins) and rchecked == rtotal and rtotal > 0)
+
+== C6 claims C1 predicate ==
+instruments its six expected rows execute plus the expectations and pins files —
+`RECEIPT PINS OK 7/16 pinned files byte-identical`, `PINNED_FILES=7` — and its pins table pins no receipt.
+In the tree-only `verify` form (`--repo` absent, the default form) a tampered copy of an unexecuted pinned
+instrument and a tampered receipt body each verify `CONTROL_DRIVER_R92=PASS` (rc 0,
+`corpus/evidence/round93/evidence-before/c1-prior-accepts.txt`); with `--repo` it binds the receipts to the
+named revision but still pins none of them in the table, and it resolves its own inputs from the driver's
+directory, so `--root <other tree>` without explicit paths exits with `SETUP path escapes base`.
+
+**After** (`corpus/evidence/round93/control-driver-r93.py`): `CONTROL_DRIVER_R93=PASS` (exit 0) with
+`COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 PINNED_FILES=22/22 RECEIPT_PINS=6/6` and
+`RECEIPT SELF_PIN OK rev=F4 receipts_rev=C5`, where PASS requires `findings==0`, every row
+committed/exact/pin/fresh, `checked==len(pins)` AND `rchecked==rtotal>0`. The pins table is the population:
+each of its 22 rows is byte-checked on disk (`PIN_DISK_MISMATCH path=<rel>` per row, `PIN_MISSING path=<rel>`
+for an absent file, `RECEIPT_MISMATCH <case>` / `RECEIPT_UNPINNED <case>` for the six receipt rows), the
+pins file's own row stays the minus-self digest. `--expected`, `--receipts` and `--pins` derive from
+`--root`; the driver's own bytes are resolved against `--repo` (the tree the driver lives in), so the
+dispatch form `--root <clone> --repo <lane>` scores normally instead of refusing.
+
+**Counting command** (from the lane root):
+
+```bash
+python3 -B corpus/evidence/round93/control-driver-r93.py verify --root . --repo . \
+  --rev <F4> --receipts-rev <C5> --work "$HYAKU_SCRATCH/chousa-r93/c1/verify"
+python3 -B corpus/evidence/round93/forgeries-r93.py --root . --repo . --rev <F4> --receipts-rev <C5> \
+  --work "$HYAKU_SCRATCH/chousa-r93/c1/forgeries"
+```
+
+**Predicate.** The verify command prints `CONTROL_DRIVER_R93=PASS` with those fields and exits 0; the
+battery prints `FORGERY_REFUSED=2/2 PRIOR_ACCEPTED=2/2 DERIVE_OK=1/1 POSITIVE=pass` and exits 0, where the
+two refusals are `PIN_DISK_MISMATCH` on an unexecuted pinned instrument and `RECEIPT_MISMATCH` on a receipt
+body, each accepted (rc 0) by the r92 driver in the tree-only form on the same bytes, and `DERIVE_OK` is
+the r92 driver refusing the derived-default form (`escapes base`) that the r93 driver scores normally.
+
+**Kill rules.** K1 the predicate not met at the landing revision. K2 a battery forgery accepted by the r93
+driver, the positive refused, or the r92 driver refusing both forgeries. K3 a genuine row moved by the pin
+walk, or `verify` writing under the receipts directory. K4 the PASS skips the work: a pin row equal to
+itself by construction, a receipt counted without its pin row, or `--root` ignored in favour of the
+driver's directory.
+
+**Named limits.** (1) A coherent joint edit of an instrument, its pin row, its receipt and its expectation
+row survives — that edit is the harness. (2) The minus-self digest binds the table's coherence, not its

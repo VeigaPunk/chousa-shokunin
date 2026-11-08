@@ -1,0 +1,110 @@
+# Population evidence for the hand derivation (d). The hand derivation itself is in the report;
+# these are the raw byte-level reads of SKILL.md that it is checked against.
+
+$ cd /fast/scratch/hyaku/chousa-r93/R93ExecC3Repro/repo
+$ grep -n '^## Gates' SKILL.md
+82:## Gates
+EXIT=0
+
+$ cd /fast/scratch/hyaku/chousa-r93/R93ExecC3Repro/repo
+$ grep -n -E '^#{1,2} ' SKILL.md
+6:# chousa-shokunin — deep-research method (調査)
+13:## Decision table
+41:## Error patterns
+55:## Boundaries (hard)
+67:## Checklist (executable)
+82:## Gates
+576:## Round26 metadata options and resource qualification
+581:# cwd: this lane root. All reads remain local; no entry text is executed.
+EXIT=0
+
+$ cd /fast/scratch/hyaku/chousa-r93/R93ExecC3Repro/repo
+$ grep -n -o 'PASS ([0-9]* cases, [0-9]* skipped)' SKILL.md
+86:PASS (283 cases, 0 skipped)
+87:PASS (283 cases, 0 skipped)
+88:PASS (283 cases, 0 skipped)
+89:PASS (283 cases, 0 skipped)
+90:PASS (283 cases, 0 skipped)
+91:PASS (283 cases, 0 skipped)
+92:PASS (283 cases, 0 skipped)
+93:PASS (283 cases, 0 skipped)
+186:PASS (256 cases, 0 skipped)
+188:PASS (161 cases, 0 skipped)
+640:PASS (215 cases, 0 skipped)
+781:PASS (283 cases, 0 skipped)
+EXIT=0
+
+$ cd /fast/scratch/hyaku/chousa-r93/R93ExecC3Repro/repo
+$ grep -n -o 'PASS ([0-9]* cases)' SKILL.md
+160:PASS (3 cases)
+161:PASS (10 cases)
+186:PASS (228 cases)
+186:PASS (241 cases)
+186:PASS (251 cases)
+250:PASS (30 cases)
+273:PASS (44 cases)
+309:PASS (40 cases)
+346:PASS (54 cases)
+393:PASS (64 cases)
+437:PASS (74 cases)
+489:PASS (85 cases)
+EXIT=0
+
+$ cd /fast/scratch/hyaku/chousa-r93/R93ExecC3Repro/repo
+$ awk 'NR>=86 && NR<=93 {print NR": "substr($0,1,32)}' SKILL.md
+86: | `research-gate` | gate | `bash
+87: | `research-gate verify-claims` 
+88: | `research-gate verify-chain` |
+89: | `research-gate verify-sweeps` 
+90: | `research-gate verify-integrit
+91: | `research-gate verify-all` | g
+92: | `research-gate verify-metadata
+93: | `research-gate --pin / --drift
+EXIT=0
+
+$ cd /fast/scratch/hyaku/chousa-r93/R93ExecC3Repro/repo
+$ grep -n 'PASS (161 cases, 0 skipped)' corpus/evidence/round25-final-measure.log
+53:RESEARCH_GATE_SELFTEST: PASS (161 cases, 0 skipped)
+EXIT=0
+
+$ cd /fast/scratch/hyaku/chousa-r93/R93ExecC3Repro/repo
+$ grep -n 'PASS (256 cases, 0 skipped)' corpus/evidence/round34/audit-dispositions.md
+5:skill-tally-256 | fixed at integration (SKILL.md rows 77-84 and :92 cite the gate exact banner form PASS (256 cases, 0 skipped); found by wave seat ScoutSkillTally)
+EXIT=0
+
+$ cd /fast/scratch/hyaku/chousa-r93/R93ExecC3Repro/repo
+$ wc -l SKILL.md
+785 SKILL.md
+EXIT=0
+
+## non-skipped `PASS (N cases)` forms (outside TALLY_RE)
+
+$ cd /fast/scratch/hyaku/chousa-r93/R93ExecC3Repro/repo
+$ grep -oE 'PASS \([0-9]+ cases\)' SKILL.md | wc -l
+12
+EXIT=0
+
+$ cd /fast/scratch/hyaku/chousa-r93/R93ExecC3Repro/repo
+$ awk 'NR>=82 && NR<=575' SKILL.md | grep -oE 'PASS \([0-9]+ cases\)' | wc -l
+12
+EXIT=0
+
+$ cd /fast/scratch/hyaku/chousa-r93/R93ExecC3Repro/repo
+$ grep -nE 'PASS \([0-9]+ cases\)' SKILL.md
+160:| `claims-audit` (r63 attempt 2) | gate | `python3 tools/claims-audit.py --claims FILE --audit TSV [--root DIR]` — a rule TSV (id, rule, anchor, target, expect, note) anchors machine-checkable statements of a frozen claims file; seven classes (`json-count`, `section-contains`, `section-contains-at`, `git-first-commit`, `file-kind`, `verbatim-heading`, `scope-narrower`); prints `FLAG <id> <class> <detail>` per false statement, `AUDIT_STALE <id>` when an anchor is absent, one summary `FLAGGED=k/n AUDIT=PASS|FAIL` | `0` clean (no rule fired) · `1` FAIL (some rule fired — the detections) · `2` usage/IO or a stale anchor | `python3 tools/claims-audit.py --selftest` → `AUDIT_SELFTEST=PASS (3 cases)` exit 0 (contradicted and corrected fixture sets plus a scratch git repo, under TMPDIR) | erratum rows: `corpus/evidence/round63/audit/audit-r62.tsv` (`FLAGGED=2/2`) and `audit-r63.tsv` (`FLAGGED=4/4`); probe `corpus/evidence/round63/audit-probe.py` → `PROBE_FACTS=11/11` (`audit-probe.txt`); entry `corpus/knowledge/self-claim-audit-r63.md` (S146-S148, S149 rejected) | read-only (selftest and probe use their own TMPDIR fixtures; git access is read-only) | chousa |
+161:| `claims-audit-v2` (r64; v1 retained as immutable historical comparison) | gate | `python3 tools/claims-audit-v2.py --claims FILE --audit TSV --root DIR` — same seven rule classes with ten selftest cases | 0 clean, 1 detected false statement or selftest fault, 2 usage/IO/stale anchor | `python3 tools/claims-audit-v2.py --selftest` prints `AUDIT_SELFTEST=PASS (10 cases)`; `--selftest --selftest-fault 1` exits 1, FAULT captured on stdout in the revision-bound L1 receipt; Counter04's channel label disagrees (claims-erratum item 6) | `corpus/evidence/round64/gen-audit-mutants.py`, `c2-mutrun.py`; frozen mutation result 9/12, not the 12/12 target (Counter02) | reads named source tree; selftest writes isolated fixtures under TMPDIR | chousa |
+186:**Historical — Round-25 final registry correction.** (Round 31: the rows above now read `PASS (228 cases)`; round 32: `PASS (241 cases)`; round 33: `PASS (251 cases)`; round 34: they now read `PASS (256 cases, 0 skipped)`; the rest of this paragraph is the round-25 tally, not the current one.) The shared `154 cases` tally in the
+250:no fetch attempt. `--selftest` is `PASS (30 cases)` with the round-1 20 case
+273:rule in both modes: `--selftest` is `PASS (44 cases)` with cases 1–40
+309:`--selftest` is `PASS (40 cases)` with cases 1–30 byte-identical to the
+346:hole). `--selftest` is `PASS (54 cases)` with the first 44 lines
+393:refused as a manifest path). `--selftest` is `PASS (64 cases)` with cases 1–54
+437:`VERDICT_BEARING_CLAIMS=3/3`). `--selftest` is `PASS (74 cases)` with cases
+489:`PASS (85 cases)` exit 0 with cases 1–74 byte-identical to the round-7 run —
+EXIT=0
+
+$ cd /fast/scratch/hyaku/chousa-r93/R93ExecC3Repro/repo
+$ grep -nE '^\| `research-gate' SKILL.md | awk -F: '$1>=82 && $1<=575' | wc -l
+12
+EXIT=0
+

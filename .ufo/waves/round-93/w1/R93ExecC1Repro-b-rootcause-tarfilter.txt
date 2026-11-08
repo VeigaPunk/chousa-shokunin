@@ -1,0 +1,39 @@
+R93ExecC1Repro — (b) root cause 1: Python 3.14 tarfile default data filter vs a committed absolute symlink
+
+Host interpreter used by the frozen command `python3 -B ...`:
+  $ python3 -VV
+  Python 3.14.8 (main, Oct  2 2026, 10:23:31) [GCC 16.2.1 20260810]
+
+The battery's archive() does `tf.extractall(dest)` with no filter (forgeries-r93.py line 51).
+In Python 3.14, TarFile.extraction_filter is None and _get_filter_function(None) returns data_filter
+(observed source lines: /usr/lib/python3.14/tarfile.py:2444-2448), so extractall applies the 'data'
+filter, which raises AbsoluteLinkError on an absolute symlink.
+
+Direct probe on the exact archive the battery builds (git archive of 754b62fb, written to
+$S/tree.tar):
+
+  command:
+    git -C $S/repo archive 754b62fb6adc60e44e12375af5461a0ebe302994 > $S/tree.tar
+    python3 - <<'PY'   # extractall with filter=None / 'tar' / 'data'
+    ...
+  observed:
+    archive_rc=0 size=362618880
+    filter=None: FAIL AbsoluteLinkError: '.ufo/waves/round-35/w2/MutGrepShimPath/shims/b/grep' is a link to an absolute path
+    filter='tar': OK
+    filter='data': FAIL AbsoluteLinkError: '.ufo/waves/round-35/w2/MutGrepShimPath/shims/b/grep' is a link to an absolute path
+
+The three symlinks committed at C2 (git ls-tree -r 754b62fb | awk '$1 == "120000"'; 3 rows):
+  120000 blob c7a00b4d... .ufo/waves/round-29/build/MutateCounter/report.md      -> ../MutateCounter.md   (relative)
+  120000 blob 274d1de9... .ufo/waves/round-35/w2/MutGrepShimPath/shims/b/grep    -> /bin/false             (absolute)
+  120000 blob 46812490... .ufo/waves/round-84/w1/R84ExecForge/forge/linkcap.txt -> /fast/scratch/hyaku/chousa-r84/... (absolute)
+
+The frozen battery command on the host default interpreter therefore dies at setup, before any
+forgery is attempted:
+
+  $ cd $S/repo && python3 -B corpus/evidence/round93/forgeries-r93.py --root . --repo . \
+      --rev b7241252c2358613d3b22b7d0454d98c56dab373 --receipts-rev 754b62fb6adc60e44e12375af5461a0ebe302994 \
+      --work $S/forge
+  EXIT=1
+  tarfile.AbsoluteLinkError: '.ufo/waves/round-35/w2/MutGrepShimPath/shims/b/grep' is a link to an absolute path
+
+Full traceback: R93ExecC1Repro-b-forge-py314.stdout.txt.

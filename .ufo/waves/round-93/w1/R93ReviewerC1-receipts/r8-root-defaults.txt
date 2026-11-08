@@ -1,0 +1,10 @@
+== --root decides the default input paths (driver always invoked from `tree`) ==
+$ # copy t-def1: instrument-pins.txt moved out
+CONTROL_DRIVER_R93=SETUP missing /fast/scratch/hyaku/chousa-r93/R93ReviewerC1/t-def1/corpus/evidence/round93/instrument-pins.txt
+rc=2
+$ # copy t-def2: expected.tsv moved out (pins intact)
+CONTROL_DRIVER_R93=SETUP missing /fast/scratch/hyaku/chousa-r93/R93ReviewerC1/t-def2/corpus/evidence/round93/controls/expected.tsv
+rc=2
+$ # explicit --expected overrides the derived default
+CONTROL_DRIVER_R93=SETUP missing /nonexistent
+rc=2

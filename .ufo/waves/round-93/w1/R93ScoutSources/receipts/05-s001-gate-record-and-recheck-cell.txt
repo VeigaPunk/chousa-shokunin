@@ -1,0 +1,84 @@
+# 05 — S001 (own-work chain row): the tool line its Gate names, and the recheck cell
+
+# cmd: grep -n -E '^\| S001 \|' corpus/SOURCES.md
+# desc: S001 registry row, verbatim
+11:| S001 | chousa research gate — tools/research-gate.sh (verify-all --json manifest append) | own-work | A | this lane's gate behavior at the round-24 landing revision (gate sha recorded once, in corpus/knowledge/json-delimiter-r24.md) | setup check "manifest unreadable", manifest-append block opening "A manifest whose last byte is not", and selftest cases 134-136 (json-unterminated-, json-nul-terminated-, json-unreadable-manifest) in tools/research-gate.sh; round-24 landing commit | An appending writer must terminate an unterminated last line before appending, or the JSONL glues two objects onto one invalid line | mined | 2026-10-19 | on-release | corpus/knowledge/json-delimiter-r24.md |
+exit=0
+
+# cmd: grep -n -E '^GATE-RECORD S001 ' corpus/lessons/round-92.md
+# desc: the committed S001 Gate record (rev form) at C2
+19:GATE-RECORD S001 rev=7901eb238a8adc9b8d438dee7779140e28da6e62 path=tools/research-gate.sh line=9010 words=4 quote=RESEARCH_GATE_SELFTEST: PASS (%d cases%s)
+exit=0
+
+# cmd: sed -n '9010p' tools/research-gate.sh
+# desc: the tool line the Gate names (tools/research-gate.sh line 9010) at C2
+    printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"
+exit=0
+
+# cmd: git show 206226dc9d9baef620e7d3d30bdac5f9194a459f:tools/research-gate.sh | sed -n '9010p'
+# desc: same line at base 206226dc
+    printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"
+exit=0
+
+# cmd: git show b7241252c2358613d3b22b7d0454d98c56dab373:tools/research-gate.sh | sed -n '9010p'
+# desc: same line at freeze F2
+    printf 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)\n' "$cases" "${SKIPPED:+, $SKIPPED skipped}"
+exit=0
+
+# cmd: printf '%s\n' 'RESEARCH_GATE_SELFTEST: PASS (%d cases%s)' | wc -w
+# desc: word count of the Gate record quote (records say words=4)
+4
+exit=0
+
+# cmd: python3 tools/gate-records.py verify --root . --repo . corpus/lessons/round-92.md
+# desc: mechanical verification of the committed S001 Gate record at C2
+GATE_RECORD corpus/lessons/round-92.md:19 S001 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+exit=0
+
+# cmd: git show 206226dc9d9baef620e7d3d30bdac5f9194a459f:corpus/SOURCES.md | grep -E '^\| S001 \|' | awk -F'|' '{print "base  recheck=["$11"]"}'
+# desc: S001 recheck cell at base
+base  recheck=[ on-release ]
+exit=0
+
+# cmd: git show b7241252c2358613d3b22b7d0454d98c56dab373:corpus/SOURCES.md | grep -E '^\| S001 \|' | awk -F'|' '{print "F2    recheck=["$11"]"}'
+# desc: S001 recheck cell at freeze F2
+F2    recheck=[ on-release ]
+exit=0
+
+# cmd: grep -E '^\| S001 \|' corpus/SOURCES.md | awk -F'|' '{print "C2    recheck=["$11"]"}'
+# desc: S001 recheck cell at carrier C2
+C2    recheck=[ on-release ]
+exit=0
+
+# cmd: grep -E '^\| S[0-9]{3} ' corpus/SOURCES.md | awk -F'|' '{v=$11; gsub(/^ +| +$/,"",v); print v}' | sort -u
+# desc: every distinct recheck value in the registry (does any name a round?)
+180d
+30d
+365d
+90d
+on-release
+on-round
+exit=0
+
+# cmd: grep -E '^\| S[0-9]{3} ' corpus/SOURCES.md | awk -F'|' '{v=$11; gsub(/^ +| +$/,"",v); if (v ~ /92|93/) print $2" -> ["v"]"}'
+# desc: registry rows whose recheck cell contains 92 or 93
+exit=0
+
+# cmd: for c in $(git log --format=%H -- corpus/SOURCES.md); do git show $c:corpus/SOURCES.md 2>/dev/null | grep -E '^\| S001 \|' | awk -F'|' '{v=$11; gsub(/^ +| +$/,"",v); print v}'; done | sort | uniq -c
+# desc: every value the S001 recheck cell has EVER held across all commits touching corpus/SOURCES.md
+     89 on-release
+exit=0
+
+# cmd: ls corpus/lessons/ | tail -3
+# desc: round-93 lesson presence at C2
+round-91-verifier-spotcheck.md
+round-92.md
+round-92-verifier-spotcheck.md
+exit=0
+
+# cmd: git ls-tree -r 754b62fb6adc60e44e12375af5461a0ebe302994 --name-only | grep -c 'corpus/lessons/round-93'
+# desc: round-93 lesson committed at C2 (0 = absent)
+0
+exit=1
+

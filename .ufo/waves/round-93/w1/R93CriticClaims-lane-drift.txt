@@ -1,0 +1,33 @@
+$ git log --format=%ci %h %s -6
+2026-11-08 11:25:01 -0300 881a541f round-93: carrier C5 — receipts at F4 plus the completed pins table
+2026-11-08 11:24:24 -0300 596eabc9 round-93: freeze F4 — wave findings applied (WSQUOTE witness + named ARITY, tally head scan, range index sets, claims narrowed)
+2026-11-08 11:20:06 -0300 94fbf892 round-93: carrier C4 — receipts at F3 plus the completed pins table
+2026-11-08 11:18:57 -0300 d5c19c54 round-93: freeze F3 — driver resolves its own bytes against the repo; battery runs each driver from the tree it scores
+2026-11-08 11:12:06 -0300 d740760e round-93: carrier C3 — the forgery battery runs on shared clones (fresh legs need a git dir) and the pins table is refreshed
+2026-11-08 11:05:54 -0300 754b62fb round-93: carrier C2 — receipts at F2 plus the completed 22-row pins table
+
+$ sha256sum .ufo/waves/round-93/claims.md .ufo/waves/round-93/claims.json   # lane working tree at HEAD 881a541f
+a09f70dbc363738b7afce2bdf8fba400a282283707d2bb9e0f81a86f3e72f997  .ufo/waves/round-93/claims.md
+dd979af060f37e1a58a25b41c15bbe513df4fd746f229be6e9db75985e8760cd  .ufo/waves/round-93/claims.json
+
+$ git show 754b62fb:.ufo/waves/round-93/claims.md | sha256sum   # assigned freeze C2
+bc2bc360a08baf48c314eb4b6f2e8673b17a46a632bf3cd7356187f60ed75af5  -
+$ git show 754b62fb:.ufo/waves/round-93/claims.json | sha256sum
+db82f98cb7b7b089c7a569cf7ebc77540484c84c9eb399998e108bc9faf9f894  -
+
+$ git diff --stat 754b62fb 881a541f -- .ufo/waves/round-93/ claims corpus/evidence/round93
+ .ufo/waves/round-93/claims.json                    |  53 +++--
+ .ufo/waves/round-93/claims.md                      | 225 +++++++++++----------
+ corpus/evidence/round93/control-driver-r93.py      |   5 +-
+ .../round93/controls/receipts/c1-gate-r89.txt      |   2 +-
+ .../round93/controls/receipts/c1-harm-setup.txt    |   4 +-
+ .../evidence/round93/controls/receipts/c1-harm.txt |   4 +-
+ .../round93/controls/receipts/c1-mutants-r89.txt   |   2 +-
+ .../controls/receipts/c2-prior-controls.txt        |   2 +-
+ .../round93/controls/receipts/c2-prior-landing.txt |   2 +-
+ corpus/evidence/round93/curation-r93.py            |  17 +-
+ corpus/evidence/round93/forgeries-r93.py           |  50 +++--
+ corpus/evidence/round93/instrument-pins.txt        |  28 +--
+ .../evidence/round93/skill-tally-r93-controls.py   |  26 ++-
+ corpus/evidence/round93/skill-tally-r93.py         |  36 +++-
+ 14 files changed, 268 insertions(+), 188 deletions(-)

@@ -1,0 +1,14 @@
+# 01 — S070 premise re-opened from the installed page (host bytes)
+# cmd: sha256sum /usr/share/man/man1/sha256sum.1.gz
+93c17dffe9f25d56291113d566a7de3ff65c29f8cc32c381801c49cf27e8403f  /usr/share/man/man1/sha256sum.1.gz
+exit=0
+# expected by seat spec: 93c17dffe9f25d56291113d566a7de3ff65c29f8cc32c381801c49cf27e8403f
+# cmd: pacman -Qi coreutils | grep -E '^(Name|Version)'
+Name            : coreutils
+Version         : 9.12-2
+exit=0
+# cmd: sha256sum --version | head -1
+sha256sum 0.8.0
+# cmd: zcat /usr/share/man/man1/sha256sum.1.gz | grep -n 'Print or check SHA256'
+11:Print or check SHA256 (256\-bit) checksums.
+exit=0

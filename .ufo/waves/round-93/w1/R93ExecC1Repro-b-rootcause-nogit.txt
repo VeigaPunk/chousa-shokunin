@@ -1,0 +1,47 @@
+R93ExecC1Repro — (b) root cause 2: the battery's extracted archive is not a git repository
+
+archive() writes `git archive <receipts-rev>` and extracts it to <work>/pristine. The drivers are
+then run with `--root <tree>` and WITHOUT --repo (forgeries-r93.py run(): args carry only --root,
+--work, --rev, --receipts-rev and the three explicit fixture paths). The expected rows' instruments
+receive @ROOT@ = the extracted tree, and two of them use that path as a git repository:
+
+  c1-gate-r89     python3 -B @ROOT@/corpus/evidence/round89/gate-records-r89.py --root @ROOT@ --repo @ROOT@ ...
+  c1-harm         ... HOME=/home/vgpnk git -C @ROOT@ show 265b8633...:tools/gate-records.py > @WORK@/harm/base-tool.py && ...
+
+Observed (python3.13.16 run, work outside any git repository; each directory probed individually):
+
+  $ git -C $S/forge313/pristine rev-parse HEAD
+  fatal: not a git repository (or any parent up to mount point /)
+  Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+  $ ls -d $S/forge313/pristine/.git
+  ls: cannot access '.../forge313/pristine/.git': No such file or directory
+
+Ambient-git probes (no enclosing repository anywhere above the scratch --work):
+  /fast/scratch                                   -> fatal: not a git repository ...
+  /fast/scratch/hyaku                             -> fatal: not a git repository ...
+  /fast/scratch/hyaku/chousa-r93                  -> fatal: not a git repository ...
+  /fast/scratch/hyaku/chousa-r93/R93ExecC1Repro   -> fatal: not a git repository ...
+  /fast/scratch/hyaku/chousa-r93/R93ExecC1Repro/forge313 -> fatal: not a git repository ...
+
+Fresh-leg evidence from the battery's positive control ($S/forge313/w93-positive/):
+  fresh-c1-gate-r89.out  tail: GATE_RECORDS_R89=FAIL   (direct rerun on the same archive tree:
+                                GATE_EXIT=1, GATE_RECORDS_R89=FAIL; its own tail is
+                                LEG_FAIL RC 0/4 | LEG_FAIL D1_REFUSED 0/3 | LEG_FAIL D2_REFUSED 0/3 |
+                                LEG_FAIL MUT_ADMIT derived=1 killed=0 | LEG_FAIL MUT_UNREACH derived=1 killed=0)
+  fresh-c1-harm.out      head: fatal: not a git repository (or any parent up to mount point /)
+                                Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+  fresh-c1-mutants-r89.out tail: MUTANTS_KILLED=11/11 TOOL_MUTANTS_CAUGHT=2/2 EQUIVALENT_ON_TREE=0/0 TOTAL=13/13
+                                (direct rerun on the same archive tree exits MUT_EXIT=0, so this leg passes)
+  fresh-c1-harm-setup.out tail: HARM_RECHECK_ERROR base-tool missing: .../absent-tool.py   (expected exit 2)
+  fresh-c2-prior-landing.out tail: CURATION_R89=PASS
+  fresh-c2-prior-controls.out tail: CONTROLS=PASS
+
+Consequence: BOTH drivers score FRESH_OK=4/6 on the archive tree (the c1-gate-r89 and c1-harm legs
+fail), so neither the pristine positive control nor the r92 "prior accepted" conjunct can be true.
+The r93 forgery refusals themselves are correct on the archive tree (PIN_DISK_MISMATCH and
+RECEIPT_MISMATCH appear in the per-forgery r93 lines), but forgeries-r93.py only prints its summary
+line when `prior` (r92 rc 0 and CONTROL_DRIVER_R92=PASS), the positive control and derive all hold:
+
+  FORGERY_REFUSED=0/2 PRIOR_ACCEPTED=0/2 DERIVE_OK=0/1 POSITIVE=fail   (EXIT=1)
+
+Full stdout: R93ExecC1Repro-b-forge-py313.stdout.txt.

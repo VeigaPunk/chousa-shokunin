@@ -1,0 +1,79 @@
+# seat R93RevPrior static checks; tree = committed C2 clone /fast/scratch/hyaku/chousa-r93/R93RevPrior/repo (HEAD 754b62fb6adc60e44e12375af5461a0ebe302994)
+
+$ grep -c receipt_pins corpus/evidence/round92/control-driver-r92.py
+0 (grep rc=1)
+
+$ grep -c "PIN_DISK_MISMATCH\|RECEIPT_MISMATCH\|RECEIPT_UNPINNED\|RECEIPT_PINS" corpus/evidence/round92/control-driver-r92.py
+0
+
+$ grep -c Q_WSQUOT corpus/evidence/round92/curation-r92.py
+0
+
+$ grep -n "DEFAULT_" corpus/evidence/round92/control-driver-r92.py
+71:DEFAULT_EXPECTED = os.path.join(HERE, "controls", "expected.tsv")
+72:DEFAULT_RECEIPTS = os.path.join(HERE, "controls", "receipts")
+73:DEFAULT_PINS = os.path.join(HERE, "instrument-pins.txt")
+374:    ap.add_argument("--expected", default=DEFAULT_EXPECTED)
+375:    ap.add_argument("--receipts", default=DEFAULT_RECEIPTS)
+376:    ap.add_argument("--pins", default=DEFAULT_PINS)
+
+$ grep -n "def pin_report|wanted[rel_for|base += [(rel_for(root, os.path.join(receipts|escapes base" corpus/evidence/round92/control-driver-r92.py
+154:        raise SystemExit(f"SETUP path escapes base: {path} vs {base}")
+279:def pin_report(rows, root, expected, pins_path):
+293:    wanted[rel_for(root, expected)] = "expectations"
+294:    wanted[rel_for(root, pins_path)] = "pins"
+331:    base += [(rel_for(root, os.path.join(receipts, f)), receipts_rev)
+
+$ grep -n "EXPECTED_OTHERS = " corpus/evidence/round92/skill-tally-r92.py
+108:    EXPECTED_OTHERS = {("161", "0"): 1, ("256", "0"): 1}
+
+$ grep -n "PASS (215 cases, 0 skipped)" SKILL.md
+640:`PASS (215 cases, 0 skipped)` under the host UTF-8 locale; original187
+
+$ grep -n "### Round27" SKILL.md
+634:### Round27 repair/status correction — 2026-10-21
+
+$ grep -n "PASS (283 cases, 0 skipped)" SKILL.md | tail -1
+781:  userns exists). Selftest `PASS (283 cases, 0 skipped)` on this host.
+
+$ git -C /fast/scratch/hyaku/chousa-r93/R93RevPrior/repo cat-file -e b7241252c2358613d3b22b7d0454d98c56dab373:corpus/evidence/round93/controls/receipts/c2-prior-landing.txt
+exists-at-F2 (rc=0)
+
+$ git -C /fast/scratch/hyaku/chousa-r93/R93RevPrior/repo diff --stat b7241252c2358613d3b22b7d0454d98c56dab373 754b62fb6adc60e44e12375af5461a0ebe302994
+ corpus/evidence/round93/controls/receipts/c1-gate-r89.txt       | 2 +-
+ corpus/evidence/round93/controls/receipts/c1-harm-setup.txt     | 4 ++--
+ corpus/evidence/round93/controls/receipts/c1-harm.txt           | 2 +-
+ corpus/evidence/round93/controls/receipts/c1-mutants-r89.txt    | 2 +-
+ corpus/evidence/round93/controls/receipts/c2-prior-controls.txt | 2 +-
+ corpus/evidence/round93/controls/receipts/c2-prior-landing.txt  | 2 +-
+ corpus/evidence/round93/instrument-pins.txt                     | 8 +++++++-
+ 7 files changed, 14 insertions(+), 8 deletions(-)
+
+$ git -C /home/vgpnk/Projects/shokunin/chousa-shokunin status --porcelain corpus/evidence/round93/evidence-before
+?? corpus/evidence/round93/evidence-before/
+
+$ git -C /home/vgpnk/Projects/shokunin/chousa-shokunin log --all --oneline -- 'corpus/evidence/round93/evidence-before/*'
+(commit count: 0)
+
+$ git -C /fast/scratch/hyaku/chousa-r93/R93RevPrior/repo ls-tree -r --name-only HEAD corpus/evidence/round93/evidence-before
+(tree count at C2: 0)
+
+$ ls -A corpus/evidence/round93/evidence-before (lane working tree)
+c2-prior-accepts.txt
+c3-prior-accepts.txt
+.keep
+
+$ cat corpus/evidence/round93/evidence-before/.keep
+placeholder
+
+$ git -C /fast/scratch/hyaku/chousa-r93/R93RevPrior/repo ls-tree -r --name-only HEAD corpus/evidence/round92/evidence-before
+corpus/evidence/round92/evidence-before/c1-before.txt
+corpus/evidence/round92/evidence-before/c2-before.txt
+corpus/evidence/round92/evidence-before/c3-before.txt
+
+$ python3 -B shape-probe (r92 vs r93 q_shape_violation on the same cell)
+  cell='" "' r92=None r93='quote=<whitespace>'
+  cell='"\t"' r92=None r93='quote=<whitespace>'
+  cell='""' r92='quote=<empty>' r93='quote=<empty>'
+
+# done

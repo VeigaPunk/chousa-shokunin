@@ -1,0 +1,56 @@
+R93ExecC1Repro — (c) tamper provenance
+
+Clean carrier clone:
+  S=/fast/scratch/hyaku/chousa-r93/R93ExecC1Repro
+  git clone --shared /home/vgpnk/Projects/shokunin/chousa-shokunin $S/repo
+  git -C $S/repo checkout 754b62fb6adc60e44e12375af5461a0ebe302994
+  git -C $S/repo rev-parse HEAD
+    754b62fb6adc60e44e12375af5461a0ebe302994
+  git -C $S/repo rev-parse --show-toplevel
+    /fast/scratch/hyaku/chousa-r93/R93ExecC1Repro/repo
+  git -C $S/repo status --porcelain | wc -l
+    0
+
+Tamper tree 1 (unexecuted pinned instrument):
+  cp -a $S/repo $S/tamper-clone
+  git -C $S/tamper-clone rev-parse --show-toplevel
+    /fast/scratch/hyaku/chousa-r93/R93ExecC1Repro/tamper-clone
+  appended to corpus/evidence/round93/curation-controls-r93.py:
+    \n# tamper: one appended byte-or-line beyond C2\n
+  instrument-pins.txt row:
+    fe7dceba3a60d00f752da0c95e4f08020bddd03eeafe918d2f1e2d9cc5acfeda  corpus/evidence/round93/curation-controls-r93.py
+  tampered disk sha256:
+    cb0f274fda0eeddda893c8347dd9f0bb1893b8e015d0115ba76c0cc9100af988
+  The instrument is not executed by any expected.tsv row (expected rows name gate-records-r89.py,
+  mutate-r89.py, harm-recheck-r90.py, curation-r89.py, curation-r89-controls.py only).
+
+Tamper tree 2 (committed receipt body):
+  cp -a $S/repo $S/tamper2-clone
+  git -C $S/tamper2-clone rev-parse --show-toplevel
+    /fast/scratch/hyaku/chousa-r93/R93ExecC1Repro/tamper2-clone
+  appended to corpus/evidence/round93/controls/receipts/c2-prior-landing.txt:
+    \n# tamper: appended comment in a committed receipt\n
+  instrument-pins.txt row:
+    b336ba2e97f2d012d893291a77fe501cb1428a889a969dc37e31ad8fe52d1406  corpus/evidence/round93/controls/receipts/c2-prior-landing.txt
+  tampered disk sha256:
+    da343517b3e188949a3191827a290c4ab7e14c9e1fc0d24954c9a2a0dc3153ce
+
+Commands (each from its tree; every git call names -C <fixture> above before any mutation):
+  cd $S/tamper-clone && python3 -B corpus/evidence/round93/control-driver-r93.py verify --root . \
+    --repo . --rev b7241252c2358613d3b22b7d0454d98c56dab373 \
+    --receipts-rev 754b62fb6adc60e44e12375af5461a0ebe302994 --work $S/w93-inst
+  cd $S/tamper-clone && python3 -B corpus/evidence/round92/control-driver-r92.py verify --root . \
+    --work $S/w92-inst --rev b7241252c2358613d3b22b7d0454d98c56dab373 \
+    --receipts-rev 754b62fb6adc60e44e12375af5461a0ebe302994 \
+    --expected corpus/evidence/round93/controls/expected.tsv \
+    --receipts corpus/evidence/round93/controls/receipts \
+    --pins corpus/evidence/round93/instrument-pins.txt
+  cd $S/tamper2-clone && python3 -B corpus/evidence/round93/control-driver-r93.py verify --root . \
+    --repo . --rev b7241252c2358613d3b22b7d0454d98c56dab373 \
+    --receipts-rev 754b62fb6adc60e44e12375af5461a0ebe302994 --work $S/w93-rcpt
+  cd $S/tamper2-clone && python3 -B corpus/evidence/round92/control-driver-r92.py verify --root . \
+    --work $S/w92-rcpt --rev b7241252c2358613d3b22b7d0454d98c56dab373 \
+    --receipts-rev 754b62fb6adc60e44e12375af5461a0ebe302994 \
+    --expected corpus/evidence/round93/controls/expected.tsv \
+    --receipts corpus/evidence/round93/controls/receipts \
+    --pins corpus/evidence/round93/instrument-pins.txt

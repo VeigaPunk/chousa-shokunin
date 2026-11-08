@@ -1,0 +1,11 @@
+# command: python3 -B skill-tally-r93.py --root <hole-in-claimed-range> --selftest <hole-in-claimed-range/selftest.txt>
+# fixture: SKILL.md prose claims 'bash-pin-override cases 281-283'; receipt: 281 renamed bash-pin-override-x,
+#          282 (was bash-pin-override-missing) renamed pin-other-missing -> family {281,283}, hole at 282
+# exit=0
+CASE_RANGE_FINDING MISLABELED=1 indices=282
+TALLY_ROWS=8 STALE_TALLIES=0/8 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=2 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=281-283 CASE_RANGE_OK=2/2 MISLABELED=1 HIST_DERIVED=2/2 HIST_PRESENT=2/2 TAIL_TALLIES=2 OTHERS_OK=1 TAIL_OK=1 LEGS=4/4
+SKILL_TALLY_R93=PASS
+# family check: 281/282/283 lines in fixture receipt:
+#   ok-case  281 bash-pin-override-x           exit=0
+#   ok-case  282 pin-other-missing    exit=2
+#   ok-case  283 bash-pin-override-fake       exit=2

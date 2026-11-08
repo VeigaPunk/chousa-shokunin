@@ -1,0 +1,16 @@
+# command: python3 -B skill-tally-r93.py --root <U-unterminated-scope> --selftest selftest-r93.txt
+# fixture: SKILL.md truncated at the boundary newline (no next heading)
+# exit=2
+SKILL_TALLY_R93=SETUP SCOPE_BLEED no next-## or #-level heading after ## Gates
+
+# command: python3 -B skill-tally-r93.py --root <F-fenced-comment> --selftest selftest-r93.txt
+# fixture: a column-0 '# not a heading' line inserted inside ## Gates before the historical tallies
+# exit=1
+HIST_SCOPE_BLEED line=161 cases tally=PASS (161 cases, 0 skipped)
+HIST_SCOPE_BLEED line=256 cases tally=PASS (256 cases, 0 skipped)
+HIST_FINDING HIST_MISSING PASS (161 cases, 0 skipped)
+HIST_FINDING HIST_MISSING PASS (256 cases, 0 skipped)
+TALLY_ROWS=8 STALE_TALLIES=0/8 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=0 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 HIST_DERIVED=2/2 HIST_PRESENT=0/2 TAIL_TALLIES=4 OTHERS_OK=0 TAIL_OK=0 LEGS=2/4
+LEG_FAIL OTHERS declared={('161', '0'): 1, ('256', '0'): 1} observed={} codes=HIST_MISSING PASS (161 cases, 0 skipped),HIST_MISSING PASS (256 cases, 0 skipped)
+LEG_FAIL TAIL declared={('215', '0'): 1, ('283', '0'): 1} observed={('256', '0'): 1, ('161', '0'): 1, ('215', '0'): 1, ('283', '0'): 1}
+SKILL_TALLY_R93=FAIL

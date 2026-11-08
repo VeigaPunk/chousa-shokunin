@@ -1,0 +1,30 @@
+# 09 — S001 anchor resolution at the revision the anchor names (r24 landing commit 6572827a)
+# cmd: git show 6572827a:tools/research-gate.sh | grep -n "manifest unreadable\|A manifest whose last byte is not"
+2376:      die_usage "manifest unreadable: $JSON_ARG (--json; its last byte decides the delimiter)"
+2490:    # A manifest whose last byte is not '\n' (hand-edited, truncated, or
+5192:    r24_case json-unreadable-manifest '{"prior":true}' 2 0 1 'manifest unreadable'
+exit=0
+
+# cmd: git show 6572827a:corpus/evidence/json-r24-20261019T213117Z-selftest.log | grep -n 'json-unterminated-manifest\|json-nul-terminated-manifest\|json-unreadable-manifest'
+134:ok-case  134 json-unterminated-manifest   exit=0
+135:ok-case  135 json-nul-terminated-manifest exit=0
+136:ok-case  136 json-unreadable-manifest     exit=2
+exit=0
+
+# cmd: git show 6572827a:tools/research-gate.sh | sha256sum   (the gate sha the row's scope cell points at, via corpus/knowledge/json-delimiter-r24.md '752e4e38…')
+752e4e382ed77c06ac5030ce2179c7ca524934f86fd2a6b25ef946ab027ac553  -
+exit=0
+
+# cmd: grep -o '752e4e38…' corpus/knowledge/json-delimiter-r24.md
+752e4e38…
+752e4e38…
+exit=0
+
+# cmd: git log --format='%h %ad %s' --date=short --all | grep -i 'round-24' | head -8   (which commit is the r24 landing)
+d730ae4c 2026-10-19 round-24 verifier spot-check (integrator, kaika): non-author admit/reject sample + adjudication
+095b90c5 2026-10-19 round-24: erratum — falsifier for citation-chain-fidelity-r24
+6572827a 2026-10-19 round-24: --json delimiter edge closed (cases 134-136), source registry + 3 current-art method entries, mistakes mined into QUALITY 6-12
+098f5e63 2026-10-19 round-24: claim correction — --json delimiter edge (not --drift truncation, which is not a defect)
+798b37db 2026-10-19 round-24 opening (loop 2 r1): drift truncated-baseline claims, before-receipts, opencode-go-7 dispatch
+exit=0
+

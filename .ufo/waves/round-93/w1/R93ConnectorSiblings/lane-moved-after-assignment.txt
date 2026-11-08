@@ -1,0 +1,33 @@
+$ git -C LANE rev-parse HEAD
+881a541fc3fcfb8717959a47331720d8ebf6f892
+rc=0
+$ git -C LANE log --oneline -4
+881a541f round-93: carrier C5 — receipts at F4 plus the completed pins table
+596eabc9 round-93: freeze F4 — wave findings applied (WSQUOTE witness + named ARITY, tally head scan, range index sets, claims narrowed)
+94fbf892 round-93: carrier C4 — receipts at F3 plus the completed pins table
+d5c19c54 round-93: freeze F3 — driver resolves its own bytes against the repo; battery runs each driver from the tree it scores
+rc=0
+$ git -C LANE diff --stat C2..HEAD
+ .../round93/controls/receipts/c1-gate-r89.txt      |   2 +-
+ .../round93/controls/receipts/c1-harm-setup.txt    |   4 +-
+ .../evidence/round93/controls/receipts/c1-harm.txt |   4 +-
+ .../round93/controls/receipts/c1-mutants-r89.txt   |   2 +-
+ .../controls/receipts/c2-prior-controls.txt        |   2 +-
+ .../round93/controls/receipts/c2-prior-landing.txt |   2 +-
+ corpus/evidence/round93/curation-r93.py            |  17 +-
+ corpus/evidence/round93/forgeries-r93.py           |  50 +++--
+ corpus/evidence/round93/instrument-pins.txt        |  28 +--
+ .../evidence/round93/skill-tally-r93-controls.py   |  26 ++-
+ corpus/evidence/round93/skill-tally-r93.py         |  36 +++-
+ 14 files changed, 268 insertions(+), 188 deletions(-)
+rc=0
+$ sha256sum corpus/evidence/round93/instrument-pins.txt   (worktree)
+d44e63b137d01f961520e2cea035d5ee21fe9f60434d44bd2d7326c614ddf883  corpus/evidence/round93/instrument-pins.txt
+$ git show C2:corpus/evidence/round93/instrument-pins.txt | sha256sum   (carrier blob)
+09e85ae0017d2942938d99a7e06de057fe9b4bfb196870fa5259f692a4146b5e  -
+$ tail -1 <worktree pins>
+6c8771a3ace9fb7d54389578471314b884f8ceea24cef724ea9fc8d70ebb8fcc  corpus/evidence/round93/instrument-pins.txt
+$ git show C2:<pins> | tail -1
+2733d5725672efa00e05c7f18cce8c6809081eb9277ae42032629a9ab7e27364  corpus/evidence/round93/instrument-pins.txt
+$ stat -c '%y %s' <worktree pins>
+2026-11-08 11:25:00.254834922 -0300 2500

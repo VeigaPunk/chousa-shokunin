@@ -1,0 +1,92 @@
+# seat R93ReviewerC2 — C2 whitespace-population probes (scratch harness /fast/scratch/hyaku/chousa-r93/R93ReviewerC2/probe.py)
+# tree: carrier C2 754b62fb6adc60e44e12375af5461a0ebe302994; each case is a mirror of the two routed
+# entries + corpus/SOURCES.md + captures; mutation then scored with curation-r93.py
+== E1 clean (control) ==
+--- e1-clean: rc=0 {'Q_WSQUOT': '0', 'Q_SHAPE_FAIL': '0', 'Q_ROWS': '20', 'LEGS_MEASURED': '15/15\nTEACHES_FLAGGED', 'WARRANT_OK': '17/17', 'UNENTAILED_TERM': '0'}
+    VERDICT fields_hold=1 legs_ok=15/15 DETECTOR_WITNESS=11/11
+    CURATION_R93=PASS
+== E2 ws quote (space) ==
+--- e2-ws-space: rc=1 {'Q_WSQUOT': '1', 'Q_SHAPE_FAIL': '1', 'Q_ROWS': '19', 'LEGS_MEASURED': '10/15\nTEACHES_FLAGGED', 'WARRANT_OK': '16/17', 'UNENTAILED_TERM': '0'}
+    Q_SHAPE search-transparency-reporting-r84.md quote=<whitespace> row=| Q2 | S214 | " " |
+    VERDICT fields_hold=0 legs_ok=10/15 DETECTOR_WITNESS=11/11
+    LEG_FAIL FLOOR search-transparency-reporting-r84.md=12/12 floor13,provenance-recording-r85.md=7/7 floor7
+    LEG_FAIL QSHAPE search-transparency-reporting-r84.md quote=<whitespace>
+    LEG_FAIL WARRANT 16/17 width_fail=0 count_bad=0
+    LEG_FAIL WSQUOTE search-transparency-reporting-r84.md Q2
+    LEG_FAIL VERDICT fields_hold=0 legs_ok=10/14
+    CURATION_R93=FAIL
+== E3 empty quote cell ==
+--- e3-empty-cell: rc=1 {'Q_WSQUOT': '1', 'Q_SHAPE_FAIL': '1', 'Q_ROWS': '19', 'LEGS_MEASURED': '10/15\nTEACHES_FLAGGED', 'WARRANT_OK': '16/17', 'UNENTAILED_TERM': '0'}
+    Q_SHAPE search-transparency-reporting-r84.md quote=<empty> row=| Q2 | S214 |  |
+    VERDICT fields_hold=0 legs_ok=10/15 DETECTOR_WITNESS=11/11
+    LEG_FAIL FLOOR search-transparency-reporting-r84.md=12/12 floor13,provenance-recording-r85.md=7/7 floor7
+    LEG_FAIL QSHAPE search-transparency-reporting-r84.md quote=<empty>
+    LEG_FAIL WARRANT 16/17 width_fail=0 count_bad=0
+    LEG_FAIL WSQUOTE search-transparency-reporting-r84.md Q2
+    LEG_FAIL VERDICT fields_hold=0 legs_ok=10/14
+    CURATION_R93=FAIL
+== E4 bare quote mark ==
+--- e4-bare-quote: rc=1 {'Q_WSQUOT': '1', 'Q_SHAPE_FAIL': '1', 'Q_ROWS': '19', 'LEGS_MEASURED': '10/15\nTEACHES_FLAGGED', 'WARRANT_OK': '16/17', 'UNENTAILED_TERM': '0'}
+    Q_SHAPE search-transparency-reporting-r84.md quote=<empty> row=| Q2 | S214 | " |
+    VERDICT fields_hold=0 legs_ok=10/15 DETECTOR_WITNESS=11/11
+    LEG_FAIL FLOOR search-transparency-reporting-r84.md=12/12 floor13,provenance-recording-r85.md=7/7 floor7
+    LEG_FAIL QSHAPE search-transparency-reporting-r84.md quote=<empty>
+    LEG_FAIL WARRANT 16/17 width_fail=0 count_bad=0
+    LEG_FAIL WSQUOTE search-transparency-reporting-r84.md Q2
+    LEG_FAIL VERDICT fields_hold=0 legs_ok=10/14
+    CURATION_R93=FAIL
+== E5 four-cell whitespace row ==
+--- e5-ws-4cell: rc=1 {'Q_WSQUOT': '0', 'Q_SHAPE_FAIL': '1', 'Q_ROWS': '19', 'LEGS_MEASURED': '11/15\nTEACHES_FLAGGED', 'WARRANT_OK': '16/17', 'UNENTAILED_TERM': '0'}
+    Q_SHAPE search-transparency-reporting-r84.md cells=4 row=| Q2 | S214 | " " | extra |
+    VERDICT fields_hold=0 legs_ok=11/15 DETECTOR_WITNESS=11/11
+    LEG_FAIL FLOOR search-transparency-reporting-r84.md=12/12 floor13,provenance-recording-r85.md=7/7 floor7
+    LEG_FAIL QSHAPE search-transparency-reporting-r84.md cells=4
+    LEG_FAIL WARRANT 16/17 width_fail=0 count_bad=0
+    LEG_FAIL VERDICT fields_hold=0 legs_ok=11/14
+    CURATION_R93=FAIL
+== E6 ws quote with unresolvable source ==
+--- e6-ws-unresolved: rc=1 {'Q_WSQUOT': '1', 'Q_SHAPE_FAIL': '1', 'Q_ROWS': '19', 'LEGS_MEASURED': '10/15\nTEACHES_FLAGGED', 'WARRANT_OK': '16/17', 'UNENTAILED_TERM': '0'}
+    Q_SHAPE search-transparency-reporting-r84.md quote=<whitespace> row=| Q2 | S999 | " " |
+    VERDICT fields_hold=0 legs_ok=10/15 DETECTOR_WITNESS=11/11
+    LEG_FAIL FLOOR search-transparency-reporting-r84.md=12/12 floor13,provenance-recording-r85.md=7/7 floor7
+    LEG_FAIL QSHAPE search-transparency-reporting-r84.md quote=<whitespace>
+    LEG_FAIL WARRANT 16/17 width_fail=0 count_bad=0
+    LEG_FAIL WSQUOTE search-transparency-reporting-r84.md Q2
+    LEG_FAIL VERDICT fields_hold=0 legs_ok=10/14
+    CURATION_R93=FAIL
+== E7 zero-width-space quote ==
+--- e7-zwsp: rc=1 {'Q_WSQUOT': '0', 'Q_SHAPE_FAIL': '0', 'Q_ROWS': '19', 'LEGS_MEASURED': '12/15\nTEACHES_FLAGGED', 'WARRANT_OK': '16/17', 'UNENTAILED_TERM': '0'}
+    VERDICT fields_hold=0 legs_ok=12/15 DETECTOR_WITNESS=11/11
+    LEG_FAIL FLOOR search-transparency-reporting-r84.md=12/13 floor13,provenance-recording-r85.md=7/7 floor7
+    LEG_FAIL WARRANT 16/17 width_fail=0 count_bad=0
+    LEG_FAIL VERDICT fields_hold=0 legs_ok=12/14
+    CURATION_R93=FAIL
+== E8 non-breaking-space quote ==
+--- e8-nbsp: rc=1 {'Q_WSQUOT': '1', 'Q_SHAPE_FAIL': '1', 'Q_ROWS': '19', 'LEGS_MEASURED': '10/15\nTEACHES_FLAGGED', 'WARRANT_OK': '16/17', 'UNENTAILED_TERM': '0'}
+    Q_SHAPE search-transparency-reporting-r84.md quote=<whitespace> row=| Q2 | S214 | " " |
+    VERDICT fields_hold=0 legs_ok=10/15 DETECTOR_WITNESS=11/11
+    LEG_FAIL FLOOR search-transparency-reporting-r84.md=12/12 floor13,provenance-recording-r85.md=7/7 floor7
+    LEG_FAIL QSHAPE search-transparency-reporting-r84.md quote=<whitespace>
+    LEG_FAIL WARRANT 16/17 width_fail=0 count_bad=0
+    LEG_FAIL WSQUOTE search-transparency-reporting-r84.md Q2
+    LEG_FAIL VERDICT fields_hold=0 legs_ok=10/14
+    CURATION_R93=FAIL
+== E9 five-cell decision row ==
+--- e9-width: rc=1 {'Q_WSQUOT': '0', 'Q_SHAPE_FAIL': '0', 'Q_ROWS': '20', 'LEGS_MEASURED': '13/15\nTEACHES_FLAGGED', 'WARRANT_OK': '16/16', 'UNENTAILED_TERM': '0'}
+    DECISION_WIDTH search-transparency-reporting-r84.md row=| Recording when a resource changed | state the date on which the resource was changed | record that the resource changed without the date on which it changed | Q13 (S023) | extra | cells=5
+    VERDICT fields_hold=0 legs_ok=13/15 DETECTOR_WITNESS=11/11
+    LEG_FAIL WARRANT 16/16 width_fail=1 count_bad=0
+    LEG_FAIL VERDICT fields_hold=0 legs_ok=13/14
+    CURATION_R93=FAIL
+== E10 padded legitimate quote (clean row, content intact) ==
+--- e10-padded-clean: rc=0 {'Q_WSQUOT': '0', 'Q_SHAPE_FAIL': '0', 'Q_ROWS': '20', 'LEGS_MEASURED': '15/15\nTEACHES_FLAGGED', 'WARRANT_OK': '17/17', 'UNENTAILED_TERM': '0'}
+    VERDICT fields_hold=1 legs_ok=15/15 DETECTOR_WITNESS=11/11
+    CURATION_R93=PASS
+== E11 non-Q 3-cell row with empty third cell inside the section ==
+--- e11-nonq-empty: rc=1 {'Q_WSQUOT': '1', 'Q_SHAPE_FAIL': '1', 'Q_ROWS': '20', 'LEGS_MEASURED': '12/15\nTEACHES_FLAGGED', 'WARRANT_OK': '17/17', 'UNENTAILED_TERM': '0'}
+    Q_SHAPE search-transparency-reporting-r84.md qid=note row=| note | S214 |  |
+    VERDICT fields_hold=0 legs_ok=12/15 DETECTOR_WITNESS=11/11
+    LEG_FAIL QSHAPE search-transparency-reporting-r84.md qid=note
+    LEG_FAIL WSQUOTE search-transparency-reporting-r84.md note
+    LEG_FAIL VERDICT fields_hold=0 legs_ok=12/14
+    CURATION_R93=FAIL

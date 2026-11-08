@@ -1,0 +1,59 @@
+# seat R93ReviewerC2 — C2 'Before' evidence path presence at F and C
+# freeze F = b7241252c2358613d3b22b7d0454d98c56dab373; carrier C = 754b62fb6adc60e44e12375af5461a0ebe302994
+# command: git -C /fast/scratch/hyaku/chousa-r93/R93ReviewerC2/repo ls-tree -r --name-only <rev> -- corpus/evidence/round93/
+--- at F:
+corpus/evidence/round93/control-driver-r93.py
+corpus/evidence/round93/controls/expected.tsv
+corpus/evidence/round93/controls/receipts/c1-gate-r89.txt
+corpus/evidence/round93/controls/receipts/c1-harm-setup.txt
+corpus/evidence/round93/controls/receipts/c1-harm.txt
+corpus/evidence/round93/controls/receipts/c1-mutants-r89.txt
+corpus/evidence/round93/controls/receipts/c2-prior-controls.txt
+corpus/evidence/round93/controls/receipts/c2-prior-landing.txt
+corpus/evidence/round93/controls/selftest-r93.txt
+corpus/evidence/round93/curation-controls-r93.py
+corpus/evidence/round93/curation-r93.py
+corpus/evidence/round93/forgeries-r93.py
+corpus/evidence/round93/instrument-pins.txt
+corpus/evidence/round93/skill-tally-r93-controls.py
+corpus/evidence/round93/skill-tally-r93.py
+--- at C:
+corpus/evidence/round93/control-driver-r93.py
+corpus/evidence/round93/controls/expected.tsv
+corpus/evidence/round93/controls/receipts/c1-gate-r89.txt
+corpus/evidence/round93/controls/receipts/c1-harm-setup.txt
+corpus/evidence/round93/controls/receipts/c1-harm.txt
+corpus/evidence/round93/controls/receipts/c1-mutants-r89.txt
+corpus/evidence/round93/controls/receipts/c2-prior-controls.txt
+corpus/evidence/round93/controls/receipts/c2-prior-landing.txt
+corpus/evidence/round93/controls/selftest-r93.txt
+corpus/evidence/round93/curation-controls-r93.py
+corpus/evidence/round93/curation-r93.py
+corpus/evidence/round93/forgeries-r93.py
+corpus/evidence/round93/instrument-pins.txt
+corpus/evidence/round93/skill-tally-r93-controls.py
+corpus/evidence/round93/skill-tally-r93.py
+# command: git -C /fast/scratch/hyaku/chousa-r93/R93ReviewerC2/repo log --all --oneline -- 'corpus/evidence/round93/evidence-before/*'
+# (empty above: no commit on any ref carries evidence-before)
+# --- lane working tree (NOT the carrier):
+# command: git -C /home/vgpnk/Projects/shokunin/chousa-shokunin status --porcelain corpus/evidence/round93/evidence-before/ ; git -C /home/vgpnk/Projects/shokunin/chousa-shokunin ls-files corpus/evidence/round93/evidence-before/
+?? corpus/evidence/round93/evidence-before/
+# (status shows '??' untracked; ls-files empty: the file the claim cites is uncommitted)
+# --- as-found lane bytes, copied verbatim:
+# BEFORE receipt (round 93, C2): the r92 curation counter on a whitespace-quote tree
+# r92 exit=1
+r92: SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20 Q_ROWS=20 Q_SHAPE_FAIL=0 SOURCE_STATUS_OK=20/20 USED_BY_OK=20/20 Q_FLOORS=search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7 WARRANT_OK=16/17 TFREQ_OK=16/17 TFREQ_MAX_DF=3 DUP_QIDS=0 TEACHES_CHECKED=1 TEACHES_FLAGGED=1 TEACHES_UNRESOLVED=0 SUP_CLAUSE_CHECKED=0 SUP_UNRESOLVED=0 LEGS_MEASURED=10/14
+r92: LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7
+r92: LEG_FAIL WARRANT 16/17 width_fail=0 count_bad=0
+r92: LEG_FAIL TFREQ 16/17 max_df=3<=3
+r92: LEG_FAIL VERDICT fields_hold=0 legs_ok=10/13
+r92: CURATION_R92=FAIL
+# r93 exit=1
+r93: SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=19/19 Q_ROWS=19 Q_SHAPE_FAIL=1 Q_WSQUOT=1 SOURCE_STATUS_OK=19/19 USED_BY_OK=19/19 Q_FLOORS=search-transparency-reporting-r84.md=12/12 floor13,provenance-recording-r85.md=7/7 floor7 WARRANT_OK=16/17 TFREQ_OK=16/16 TFREQ_MAX_DF=3 DUP_QIDS=0 TEACHES_CHECKED=1 TEACHES_FLAGGED=1 TEACHES_UNRESOLVED=0 SUP_CLAUSE_CHECKED=0 SUP_UNRESOLVED=0 LEGS_MEASURED=10/15
+r93: Q_SHAPE search-transparency-reporting-r84.md quote=<whitespace> row=| Q2 | S214 | " " |
+r93: LEG_FAIL FLOOR search-transparency-reporting-r84.md=12/12 floor13,provenance-recording-r85.md=7/7 floor7
+r93: LEG_FAIL QSHAPE search-transparency-reporting-r84.md quote=<whitespace>
+r93: LEG_FAIL WARRANT 16/17 width_fail=0 count_bad=0
+r93: LEG_FAIL WSQUOTE search-transparency-reporting-r84.md Q2
+r93: LEG_FAIL VERDICT fields_hold=0 legs_ok=10/14
+r93: CURATION_R93=FAIL

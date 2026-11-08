@@ -1,0 +1,53 @@
+# seat R93ReviewerC2 — C2 machine form vs instrument stdout
+# carrier C2 754b62fb6adc60e44e12375af5461a0ebe302994; claims.json sha db82f98cb7b7b089c7a569cf7ebc77540484c84c9eb399998e108bc9faf9f894
+# command: python3 -c "import json; print(json.dumps(json.load(open('.ufo/waves/round-93/claims.json'))['C2'], indent=1))"
+{
+ "id": "C2-CURATION-R93",
+ "axis": "calibration",
+ "type": "repair (successor curation counter)",
+ "sentence": "At the landing revision corpus/evidence/round93/curation-r93.py --root . prints CURATION_R93=PASS (exit 0) with LEGS_MEASURED=15/15 Q_SHAPE_FAIL=0 Q_WSQUOT=0 over the 20 located quotes and 17 warranted decision rows, and corpus/evidence/round93/curation-controls-r93.py --root . --work <scratch> prints CONTROLS=PASS FORGERY_REFUSED=4/4 PRIOR_ACCEPTED=4/4 with the r90 regression line FORGERY_REFUSED=7/7.",
+ "predicate": {
+  "fields": [
+   "CURATION_R93=PASS",
+   "LEGS_MEASURED=15/15",
+   "Q_SHAPE_FAIL=0",
+   "Q_WSQUOT=0"
+  ],
+  "controls": [
+   "CONTROLS=PASS",
+   "FORGERY_REFUSED=4/4",
+   "PRIOR_ACCEPTED=4/4",
+   "FORGERY_REFUSED=7/7"
+  ],
+  "exit": 0
+ },
+ "counting_command": [
+  "python3 -B corpus/evidence/round93/curation-r93.py --root .",
+  "python3 -B corpus/evidence/round93/curation-controls-r93.py --root . --work <scratch>"
+ ],
+ "kill_rules": {
+  "K1": "predicate not met at the landing revision",
+  "K2": "a forgery accepted by r93, the positive refused, or r92 refusing a forgery",
+  "K3": "a genuine entry moves (located quotes, warranted rows or floors)",
+  "K4": "the new leg is vacuous (counts rows the shape test already dropped, or can be deleted without a verdict change)"
+ },
+ "named_limits": [
+  "Q_WSQUOT reads the located-quote population, so an unresolvable whitespace quote is FLOOR's report",
+  "the decision-width print is observability, not a new gate",
+  "the leg vocabulary is the r92 set plus WSQUOTE"
+ ],
+ "sources": [
+  "S001"
+ ]
+}
+# --- token presence in curation-controls-r93.py:
+# command: grep -n 'FORGERY_REFUSED\|PRIOR_ACCEPTED' corpus/evidence/round93/curation-controls-r93.py
+165:    line = [ln for ln in p.stdout.splitlines() if ln.startswith("FORGERY_REFUSED=")]
+166:    reg_ok = bool(line) and line[0].startswith("FORGERY_REFUSED=7/7")
+# grep exit=0
+# --- token presence in the captured controls stdout:
+# command: grep -c 'FORGERY_REFUSED=4/4' / .../R93ReviewerC2-c2-controls.txt ; grep -c 'PRIOR_ACCEPTED=4/4' ...
+0
+0
+# CONTROLS line actually printed:
+CONTROLS=PASS CARRIED_REFUSED_BOTH=4/4 WS_NAMED=2/2 WS_SHAPE_GREEN_R92=1/1 DUPCOUNT_1=1/1 PRIOR_REGRESSION=7/7

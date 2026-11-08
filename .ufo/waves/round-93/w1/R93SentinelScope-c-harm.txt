@@ -1,0 +1,19 @@
+# R93SentinelScope — (2) harm: the subject tools, unchanged
+
+## tools/research-gate.sh --selftest  (clone at carrier C2, TMPDIR set into scratch)
+$ TMPDIR=$S/w bash tools/research-gate.sh --selftest
+observed tail:
+ok-case  283 bash-pin-override-fake       exit=2
+RESEARCH_GATE_SELFTEST: PASS (283 cases, 0 skipped)
+EXITCODE=0   (806 s wall; the r71 note on the unbounded locale-boundary case applies)
+
+## tools/gate-records.py verify — read-only mode over the round's lesson
+$ python3 -B tools/gate-records.py verify --root . --repo . corpus/lessons/round-93.md
+  (run in the LANE WORKTREE, where the uncommitted round-93 lesson exists)
+GATE_RECORD corpus/lessons/round-93.md:20 S001 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+EXITCODE=0
+
+$ python3 -B tools/gate-records.py verify --root . --repo . corpus/lessons/round-93.md   (clone at carrier C2)
+GATE_RECORDS_ERROR missing corpus/lessons/round-93.md
+EXITCODE=2

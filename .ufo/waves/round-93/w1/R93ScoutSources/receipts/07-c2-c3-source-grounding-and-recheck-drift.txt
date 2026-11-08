@@ -1,0 +1,57 @@
+# 07 — C2/C3 source grounding (S001 scope vs the claims' wording) and the plan's recheck-cell premise
+
+# cmd: grep -n -E '^\| S001 \|' corpus/SOURCES.md | awk -F'|' '{print "kind=["$4"] tier=["$5"] scope=["$6"] anchor=["$7"] teaches=["$8"]"}'
+# desc: S001 kind/tier/scope/anchor/teaches cells
+kind=[ own-work ] tier=[ A ] scope=[ this lane's gate behavior at the round-24 landing revision (gate sha recorded once, in corpus/knowledge/json-delimiter-r24.md) ] anchor=[ setup check "manifest unreadable", manifest-append block opening "A manifest whose last byte is not", and selftest cases 134-136 (json-unterminated-, json-nul-terminated-, json-unreadable-manifest) in tools/research-gate.sh; round-24 landing commit ] teaches=[ An appending writer must terminate an unterminated last line before appending, or the JSONL glues two objects onto one invalid line ]
+exit=0
+
+# cmd: sed -n '246p' corpus/SOURCES.md
+# desc: the Paths chain S001 → S013 (the 'own-work chain')
+- Lane mechanics — S001 → S013: the gate's own append rule and the JSON Lines
+exit=0
+
+# cmd: grep -n -A1 '\*\*Sources\.\*\* `S001`' .ufo/waves/round-93/claims.md
+# desc: the r93 frozen claims' S001 source lines (C2 at 111, C3 at 160)
+111:**Sources.** `S001` re-open (own-work chain row, tier A) — the counter's leg vocabulary rule.
+112-
+--
+160:**Sources.** `S001` (own-work chain row) — the selftest verdict line the tally legs read.
+161-
+exit=0
+
+# cmd: grep -n 'S001' corpus/QUALITY.md; echo '(no output = QUALITY cites no S001 row)'
+# desc: QUALITY criteria naming S001
+(no output = QUALITY cites no S001 row)
+exit=0
+
+# cmd: grep -rn 'S001' corpus/evidence/round93/ ; echo '(no output = no round-93 instrument names S001)'
+# desc: round-93 instruments naming S001
+(no output = no round-93 instrument names S001)
+exit=0
+
+# cmd: grep -n 'RESEARCH_GATE_SELFTEST' corpus/evidence/round93/skill-tally-r93.py
+# desc: the C3 counter's verdict regex (rendered form) vs the Gate record quote (printf template)
+34:VERDICT_RE = re.compile(r"^RESEARCH_GATE_SELFTEST: PASS \((\d+) cases, (\d+) skipped\)$", re.M)
+exit=0
+
+# cmd: grep -n 'RESEARCH_GATE_SELFTEST: PASS (283 cases, 0 skipped)' corpus/evidence/round93/controls/selftest-r93.txt
+# desc: the committed selftest receipt's rendered verdict line
+285:RESEARCH_GATE_SELFTEST: PASS (283 cases, 0 skipped)
+exit=0
+
+# cmd: grep -n -E '^\| S158 \|' corpus/SOURCES.md | awk -F'|' '{print "S148/S158-family recheck cell sample: ["$11"]"}'
+# desc: a row whose recheck cell is a symbolic cadence naming a round ('on-round')
+S148/S158-family recheck cell sample: [ on-release ]
+exit=0
+
+# cmd: grep -n 'recheck' .ufo/waves/round-93/claims.md
+# desc: the frozen claims' own recheck-cell wording (the plan's premise)
+173:  (the own-work chain row; its `recheck` cell moves round 92 → round 93, logged old→new in the
+exit=0
+
+# cmd: grep -c 'corpus/lessons/round-93.md' <(git ls-tree -r 754b62fb --name-only) 2>/dev/null; git ls-tree -r 754b62fb --name-only | grep -c 'corpus/lessons/round-93'
+# desc: round-93 lesson committed at C2 (0 = absent)
+0
+0
+exit=1
+

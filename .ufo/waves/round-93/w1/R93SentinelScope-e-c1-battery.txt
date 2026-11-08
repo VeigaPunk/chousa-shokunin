@@ -1,0 +1,26 @@
+# R93SentinelScope — C1 forgeries battery, both host pythons, at the attacked tree
+# tree: clone of chousa-shokunin at carrier C2 754b62fb6adc60e44e12375af5461a0ebe302994
+# command (scored form):
+#   python3 -B corpus/evidence/round93/forgeries-r93.py --root . --repo . \
+#     --rev b7241252c2358613d3b22b7d0454d98c56dab373 \
+#     --receipts-rev 754b62fb6adc60e44e12375af5461a0ebe302994 --work <scratch>
+
+## host default python3 (3.14.8), clone at C2
+$ cd $S/repo && python3 -B corpus/evidence/round93/forgeries-r93.py --root . --repo . --rev b7241252... --receipts-rev 754b62fb... --work $S/w/c1fg3
+  File "/usr/lib/python3.14/tarfile.py", line 867, in _get_filtered_attrs
+    raise AbsoluteLinkError(member)
+tarfile.AbsoluteLinkError: '.ufo/waves/round-35/w2/MutGrepShimPath/shims/b/grep' is a link to an absolute path
+  EXITCODE=1   (no FORGERY_REFUSED line printed at all)
+  cause: forgeries-r93.py:51  tf.extractall(dest)  — no filter= argument; 3.14 defaults to the 'data' filter
+  the offending member is a COMMITTED tree symlink: .ufo/waves/round-35/w2/MutGrepShimPath/shims/b/grep -> /bin/false
+
+## python3.13.16, clone at C2
+$ /home/vgpnk/.local/bin/python3.13 -B corpus/evidence/round93/forgeries-r93.py --root . --repo . --rev b7241252... --receipts-rev 754b62fb... --work $S/w/c1fg313
+FAIL receipt-body: r93 rc=1 (RECEIPT_MISMATCH:c2-prior-landing), r92 rc=1 accepted=False
+  r93 last: ... FRESH_OK=4/6 PINNED_FILES=21/22 RECEIPT_PINS=5/6 CONTROL_DRIVER_R93=FAIL
+FAIL derive-from-root: r92 rc=1 (escapes base), r93 rc=1
+FAIL positive: r92 rc=1 r93 rc=1
+FORGERY_REFUSED=0/2 PRIOR_ACCEPTED=0/2 DERIVE_OK=0/1 POSITIVE=fail
+  EXITCODE=1
+  cause: the extracted 'git archive' tree has no .git, so the fresh legs that need a git dir
+         (c1-gate-r89: gate-records-r89 --repo @ROOT@; c1-harm: git -C @ROOT@ show) fail: FRESH_OK=4/6

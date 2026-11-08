@@ -1,0 +1,61 @@
+# R93SentinelScope — (4) confinement of the round's new tools
+
+## 4a. does the driver's VERIFY path write outside --work?
+Code: the only write in verify mode is line 476 -> open(os.path.join(work, 'fresh-<case>.out'), 'w');
+      line 418 os.makedirs(work). Emit-mode writes (424/431) are behind the mode branch and are
+      guarded by the explicit --receipts check at 421-423.
+Empirical: file-tree mtime/inode snapshot before and after the scored verify run, in the clone:
+  (no diff => the clone tree was NOT modified by verify)
+  git status --porcelain after verify:
+  (empty => clean)
+
+## 4b. does emit refuse without --receipts?
+$ python3 -B corpus/evidence/round93/control-driver-r93.py emit --root . --work $S/w/emit1 --rev 754b62fb...
+  CONTROL_DRIVER_R93=SETUP emit requires an explicit --receipts
+  EXITCODE=2
+$ ... emit --receipts=$S/w/emit2/r   (the --opt=value form; argparse accepts it, the guard does not)
+  CONTROL_DRIVER_R93=SETUP emit requires an explicit --receipts
+  EXITCODE=2
+
+## 4c. does any NEW tool write under /tmp regardless of TMPDIR/--work?
+  grep for /tmp|tempfile|TMPDIR in the 6 new .py files:
+  corpus/evidence/round93/control-driver-r93.py:388:    ap.add_argument("--work", default=os.environ.get("TMPDIR") or "/fast/scratch/hyaku",
+  corpus/evidence/round93/control-driver-r93.py:389:                    help="scratch root for fresh-leg outputs (default: $TMPDIR, else /fast/scratch/hyaku)")
+  -> the only TMPDIR use is the driver's --work DEFAULT (control-driver-r93.py:388), whose fallback is
+     /fast/scratch/hyaku, never /tmp.
+  indirect path worth naming: skill-tally-r93.py:58 runs 'bash tools/research-gate.sh --selftest' when
+     --selftest is omitted, and that unchanged gate tool mktemps under ${TMPDIR:-/tmp}:
+    4259:  fx=$(mktemp -d "${TMPDIR:-/tmp}/chousa-gate-pin.XXXXXX") || {
+    4498:  WORK=$(mktemp -d "${TMPDIR:-/tmp}/chousa-research-gate-selftest.XXXXXX") \
+    4501:  OUTSIDE_FILE=$(mktemp "${TMPDIR:-/tmp}/chousa-gate-outside.XXXXXX") \
+  -> honours TMPDIR; falls back to /tmp only when TMPDIR is unset. The scored C3 command always passes
+     --selftest corpus/evidence/round93/controls/selftest-r93.txt, so that path is not taken.
+
+## 4d. write targets of the new tools (grep)
+  --- corpus/evidence/round93/forgeries-r93.py
+    46:    os.makedirs(os.path.dirname(dest), exist_ok=True)
+    47:    with open(tar, "wb") as fh:
+    49:    os.makedirs(dest, exist_ok=True)
+    78:    shutil.rmtree(work, ignore_errors=True)
+    79:    os.makedirs(work, exist_ok=True)
+    84:        shutil.copytree(pristine, d, symlinks=True)
+  --- corpus/evidence/round93/curation-controls-r93.py
+    51:    os.makedirs(os.path.join(dst, "corpus", "knowledge"), exist_ok=True)
+    52:    os.makedirs(os.path.join(dst, "corpus", "evidence"), exist_ok=True)
+    53:    shutil.copy2(os.path.join(root, "corpus", "SOURCES.md"), os.path.join(dst, "corpus", "SOURCES.md"))
+    55:        shutil.copy2(os.path.join(root, rel), os.path.join(dst, rel))
+    80:    open(path, "w", encoding="utf-8").write(text.replace(old, new, count))
+    90:    shutil.rmtree(work, ignore_errors=True)
+    91:    os.makedirs(work, exist_ok=True)
+    96:        shutil.copytree(pristine, d, symlinks=True)
+    157:    open(alias, "w", encoding="utf-8").write(
+  --- corpus/evidence/round93/skill-tally-r93-controls.py
+    70:    shutil.rmtree(work, ignore_errors=True)
+    71:    os.makedirs(work, exist_ok=True)
+    75:        os.makedirs(d, exist_ok=True)
+    76:        open(os.path.join(d, "SKILL.md"), "w", encoding="utf-8").write(body)
+    79:            os.makedirs(os.path.dirname(p), exist_ok=True)
+    81:                open(p, "w", encoding="utf-8").write(grounding)
+    83:                shutil.copy2(os.path.join(root, rel), p)
+  --- corpus/evidence/round93/curation-r93.py
+  --- corpus/evidence/round93/skill-tally-r93.py

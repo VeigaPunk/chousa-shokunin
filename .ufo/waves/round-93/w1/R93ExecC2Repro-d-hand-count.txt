@@ -1,0 +1,46 @@
+# seat=R93ExecC2Repro (round-93 C2 repro) — hand count of the two routed entries' tables
+# tree: clone at 754b62fb6adc60e44e12375af5461a0ebe302994, clean (git status --porcelain empty)
+# method: manual enumeration from the section dumps below; the counter was NOT consulted for these counts.
+# Cross-check only (not the source): awk pipe-leading line count per section reproduced the same totals.
+
+ENTRY A = corpus/knowledge/search-transparency-reporting-r84.md
+## Located quotes — data rows (pipe-leading lines minus header and separator row)
+  | Q1  | S214 |   | Q2  | S214 |   | Q3  | S214 |   | Q4  | S214 |   | Q5  | S214 |
+  | Q6  | S018 |   | Q7  | S018 |   | Q8  | S018 |   | Q9  | S023 |   | Q10 | S023 |
+  | Q11 | S023 |   | Q12 | S023 |   | Q13 | S023 |
+  COUNT = 13 data rows, each 3 cells (qid | source | quote)         -> claim 13, width 3  MATCH
+## Decision table — data rows (pipe-leading lines minus header and separator row)
+  1 Reporting which sources were searched
+  2 Reporting when a source was searched
+  3 Reporting the search method
+  4 Reporting how studies were selected
+  5 Reporting the search outcome
+  6 Linking a claim to its source
+  7 Comparing evidence-based generation approaches
+  8 Recording what a resource derives from
+  9 Recording when a resource changed
+ 10 Recording when a resource is valid
+ 11 Recording when a resource became available
+  COUNT = 11 data rows, each 4 cells (Situation | Do | Never | Warrant) -> claim 11, width 4  MATCH
+
+ENTRY B = corpus/knowledge/provenance-recording-r85.md
+## Located quotes — data rows
+  | Q1 | S215 |   | Q2 | S215 |   | Q3 | S215 |   | Q4 | S215 |
+  | Q5 | S026 |   | Q6 | S026 |   | Q7 | S031 |
+  COUNT = 7 data rows, each 3 cells                                   -> claim 7, width 3  MATCH
+## Decision table — data rows
+  1 Naming what a resource derives from
+  2 Recording a derivation's direction
+  3 Recording the bounds of an entity's existence
+  4 Recording a resource's provenance
+  5 Recording the source behind a resource
+  6 Recording when content was last reviewed
+  COUNT = 6 data rows, each 4 cells                                   -> claim 6, width 4  MATCH
+
+TOTALS: located-quote rows 13+7 = 20  (matches Q_ROWS=20 on the clean counter run)
+        decision rows      11+6 = 17  (matches WARRANT_OK=17/17 / TFREQ_OK=17/17 on the clean run)
+
+CROSS-CHECK COMMAND AND OUTPUT (corroboration only):
+  $ awk '/^## Located quotes/{s="quotes";next}/^## Decision table/{s="dec";next}/^## /{s=""} s&&/^\|/{n=gsub(/\|/,"|"); print s, n-1}' <entry>
+  entry A: 15 lines 'quotes 3' (13 data + header + separator), 13 lines 'dec 4' (11 data + header + separator)
+  entry B:  9 lines 'quotes 3' ( 7 data + header + separator),  8 lines 'dec 4' ( 6 data + header + separator)

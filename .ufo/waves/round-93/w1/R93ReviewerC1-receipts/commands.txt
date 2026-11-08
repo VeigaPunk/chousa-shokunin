@@ -1,0 +1,14 @@
+# R93ReviewerC1 commands (all from /fast/scratch/hyaku/chousa-r93/R93ReviewerC1; S=$PWD)
+# tree clone: git clone --shared /home/vgpnk/Projects/shokunin/chousa-shokunin repo
+#              git -C repo checkout 754b62fb6adc60e44e12375af5461a0ebe302994
+# archive:     git -C repo archive 754b62fb... | tar -x -C tree
+1) python3 -B repo/corpus/evidence/round93/control-driver-r93.py verify --root repo --repo repo --rev b7241252c2358613d3b22b7d0454d98c56dab373 --receipts-rev 754b62fb6adc60e44e12375af5461a0ebe302994 --work "$S/w-canon"   # r1, exit 0
+2) python3 -B repo/corpus/evidence/round93/forgeries-r93.py --root repo --repo repo --rev b7241252c2358613d3b22b7d0454d98c56dab373 --receipts-rev 754b62fb6adc60e44e12375af5461a0ebe302994 --work "$S/forg314"   # r0, exit 1 (tarfile.AbsoluteLinkError, python3.14.8)
+3) python3.13 -B repo/corpus/evidence/round93/forgeries-r93.py <same flags> --work "$S/forg313full"   # r4
+4) git clone -q --shared repo t3 && git -C t3 checkout 754b62fb...; grep -v "instrument-pins.txt$" t3/corpus/evidence/round93/instrument-pins.txt > new && mv; python3 -B t3/corpus/evidence/round93/control-driver-r93.py verify --root t3 --repo t3 --rev b7241252c2358613d3b22b7d0454d98c56dab373 --receipts-rev 754b62fb... --work "$S/w-t3"   # r5, exit 0
+5) same on clone t4 but drop the self row and the round-93 claims.md/claims.json rows, append a line to claims.md and add a key to claims.json; verify --root t4 --repo t4 ...   # r2, exit 0
+6) cp -a t3 t5; append "$(sha256sum /etc/hostname|cut -d" " -f1)  /etc/hostname" to t5 pins (22 rows); verify --root t5 (no --repo) ...   # r3, exit 0
+7) python3 -B probe_pins.py   # probe-pins.log
+8) git -C tree show 265b8633...:tools/gate-records.py (rc 128) vs git -C <lane>/.ufo/waves/round-93/w1 show ... (rc 0)   # r6
+9) setup-path probes: verify --root t-defaults with instrument-pins.txt / expected.tsv moved out  -> SETUP names the t-defaults path, exit 2
+10) python3 -B tree/.../control-driver-r93.py verify --root tree --expected /nonexistent ... -> "SETUP missing /nonexistent", exit 2

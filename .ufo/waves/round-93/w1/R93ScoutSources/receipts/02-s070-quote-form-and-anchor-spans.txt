@@ -1,0 +1,43 @@
+# 02 — S070 quote form and anchor span resolution (decompressed man page, /usr/share/man/man1/sha256sum.1.gz)
+
+# cmd: sed -n '4p;5p;8p;11p;19p;20p;54p;55p;56p' man.sha256sum.1 | cat -n
+# desc: S070 anchor span lines 4-11,19-20,54-56 plus line 8 (.SH DESCRIPTION)
+     1	sha256sum \- compute and check SHA256 message digest
+     2	.SH SYNOPSIS
+     3	.SH DESCRIPTION
+     4	Print or check SHA256 (256\-bit) checksums.
+     5	\X'tty: link https://www.gnu.org/software/coreutils/manual/coreutils.html#cksum-c'\fB\-c, \-\-check\fP\X'tty: link'
+     6	read checksums from the FILEs and check them
+     7	The sums are computed as described in FIPS\-180\-2.
+     8	When checking, the input should be a former output of this program.
+     9	The default mode is to print a line with: checksum, a space,
+exit=0
+
+# cmd: grep -c 'Print or check SHA256 (256-bit) checksums\.' man.sha256sum.1
+# desc: literal claim-quote string in the RAW roff bytes
+0
+exit=1
+
+# cmd: grep -c 'Print or check SHA256 (256\\-bit) checksums\.' man.sha256sum.1
+# desc: roff-escaped form of the same quote in the RAW roff bytes
+1
+exit=0
+
+# cmd: man --nh --nj -P cat /usr/share/man/man1/sha256sum.1.gz 2>/dev/null | grep -n 'Print or check'
+# desc: rendered page line carrying the quote
+10:     Print or check SHA256 (256-bit) checksums.  Legacy interface to the
+exit=0
+
+# cmd: printf '%s\n' 'Print or check SHA256 (256-bit) checksums.' | wc -w
+# desc: word count of the rendered quote (r91/r92 lessons say 7)
+6
+exit=0
+
+# cmd: sed -n '11p' man.sha256sum.1 | od -c
+# desc: raw roff bytes of decompressed line 11
+0000000   P   r   i   n   t       o   r       c   h   e   c   k       S
+0000020   H   A   2   5   6       (   2   5   6   \   -   b   i   t   )
+0000040       c   h   e   c   k   s   u   m   s   .  \n
+0000054
+exit=0
+

@@ -1,0 +1,71 @@
+# 06 — registry census and row count
+
+# cmd: bash /home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa
+# desc: the seat spec's census command (fleet root, live lane tree)
+chousa	W04	S051 duplicate url www.w3.org/TR/2017/REC-html52-20171214/syntax.html across scopes
+chousa	W04	S053 duplicate url docs.python.org/3/library/socket.html across scopes
+chousa	W04	S073 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+chousa	W04	S074 duplicate url docs.python.org/3/library/hashlib.html across scopes
+chousa	W04	S075 duplicate url www.gnu.org/software/coreutils/manual/coreutils.html across scopes
+chousa	ok	/home/vgpnk/Projects/shokunin/chousa-shokunin/corpus/SOURCES.md
+exit=0
+
+# cmd: grep -cE '^ (0, 3)\|[[:space:]]*S[0-9](3,)' corpus/SOURCES.md
+# desc: the seat spec's row-count grep, verbatim
+0
+exit=1
+
+# cmd: grep -cE '^[[:space:]]*\| S[0-9]{3,} ' corpus/SOURCES.md
+# desc: resolved row count (0-3 leading spaces, pipe, S-id)
+219
+exit=0
+
+# cmd: awk -F'|' 'NF==13' corpus/SOURCES.md | wc -l
+# desc: pipe-leading lines with 13 fields (data rows + header + separator)
+221
+exit=0
+
+# cmd: grep -oE '^\| S[0-9]{3} ' corpus/SOURCES.md | sort -u | wc -l
+# desc: unique registry ids
+219
+exit=0
+
+# cmd: bash /home/vgpnk/Projects/shokunin/scripts/sources-census.sh census --root /home/vgpnk/Projects/shokunin chousa
+# desc: census mode: rows/tier/status breakdown for the lane
+chousa	rows	219
+chousa	tier.A	140
+chousa	tier.B	59
+chousa	tier.C	20
+chousa	status.mined	183
+chousa	status.queued	12
+chousa	status.rejected	24
+FLEET	rows	219
+FLEET	tier.A	140
+FLEET	tier.B	59
+FLEET	tier.C	20
+FLEET	tier.invalid	0
+FLEET	status.queued	12
+FLEET	status.mined	183
+FLEET	status.rejected	24
+FLEET	status.invalid	0
+FLEET	missing	0
+exit=0
+
+# cmd: bash /home/vgpnk/Projects/shokunin/scripts/sources-census.sh overdue --root /home/vgpnk/Projects/shokunin --today 2026-11-08 chousa | grep -E 'S001|S070|S214|S018|S023|S215|S026|S031'
+# desc: overdue mode rows for the rows this seat re-opened
+chousa	cadence	S001 recheck=on-release opened=2026-10-19
+chousa	cadence	S018 recheck=365d opened=2026-11-08
+chousa	cadence	S023 recheck=365d opened=2026-11-08
+chousa	cadence	S026 recheck=180d opened=2026-11-08
+chousa	cadence	S031 recheck=365d opened=2026-10-21
+chousa	cadence	S070 recheck=on-release opened=2026-10-23
+chousa	cadence	S214 recheck=on-release opened=2026-11-08
+chousa	cadence	S215 recheck=365d opened=2026-11-08
+exit=0
+
+# cmd: sha256sum corpus/SOURCES.md; git show 754b62fb6adc60e44e12375af5461a0ebe302994:corpus/SOURCES.md | sha256sum
+# desc: working tree vs committed C2 SOURCES.md
+7a2f6d53fe47ac9dc8c8931f8e21619862f0b919ecea0cd387e7f92544f5c1c1  corpus/SOURCES.md
+7a2f6d53fe47ac9dc8c8931f8e21619862f0b919ecea0cd387e7f92544f5c1c1  -
+exit=0
+

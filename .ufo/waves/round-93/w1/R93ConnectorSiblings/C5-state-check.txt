@@ -1,0 +1,19 @@
+$ git show HEAD:.ufo/waves/round-93/claims.md | grep -n 'PINNED_FILES\|FORGERY_REFUSED\|K4'
+21:`RECEIPT PINS OK 7/16 pinned files byte-identical`, `PINNED_FILES=7` — and its pins table pins no receipt.
+29:`COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 PINNED_FILES=22/22 RECEIPT_PINS=6/6` and
+48:battery prints `FORGERY_REFUSED=2/2 PRIOR_ACCEPTED=2/2 DERIVE_OK=1/1 POSITIVE=pass` and exits 0, where the
+53:**Kill rules.** K1 the predicate not met at the landing revision. K2 a battery forgery accepted by the r93
+55:walk, or `verify` writing under the receipts directory. K4 the PASS skips the work: a pin row equal to
+104:**Kill rules.** K1 the predicate not met at the landing revision. K2 a whitespace tree whose shape leg
+107:revision. K4 the new leg is vacuous: it must count the row on both forged trees and stay 0 on the clean
+154:**Kill rules.** K1 the predicate not met at the landing revision. K2 the positive tree refused, or the r92
+156:clean tree. K4 the derivation is vacuous: the receipt is not opened, the located quote is not required in
+
+$ git show HEAD:corpus/evidence/round93/control-driver-r93.py | grep -n 'checked == len(pins)\|PIN_FLOOR\|MIN_PINS\|endswith(".txt")'
+178:    disk_files = sorted(f for f in os.listdir(receipts_dir) if f.endswith(".txt"))
+357:             for f in sorted(os.listdir(receipts)) if f.endswith(".txt")]
+506:        if not f.endswith(".txt") or f[:-4] in scored:
+540:              and checked == len(pins) and rchecked == rtotal and rtotal > 0)
+
+$ git show HEAD:corpus/evidence/round93/instrument-pins.txt | wc -l
+16

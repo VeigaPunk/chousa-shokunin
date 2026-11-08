@@ -1,0 +1,177 @@
+=== SECTION 0: landing bytes ===
+# command: git -C /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo rev-parse HEAD; sha256sum instruments
+# cwd: /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo
+754b62fb6adc60e44e12375af5461a0ebe302994 # exit=0
+e3ad820471aaf274457fa67cc897b2a555893434cca04949426fca03e8854989  corpus/evidence/round93/skill-tally-r93.py
+340541e65cfe39ad8babc0b96e14a4a22df3685bd00f4bcf39878f85be41953e  corpus/evidence/round93/skill-tally-r93-controls.py
+9c29428160768524c77407eedd711200be53a1074e2a22fe9bab814ad3f5bb37  corpus/evidence/round93/controls/selftest-r93.txt
+
+=== SECTION 1: grounding quotes ===
+# command: grep -n 'PASS (161 cases, 0 skipped)' corpus/evidence/round25-final-measure.log; grep -n 'PASS (256 cases, 0 skipped)' corpus/evidence/round34/audit-dispositions.md
+# cwd: /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo
+corpus/evidence/round25-final-measure.log:53: RESEARCH_GATE_SELFTEST: PASS (161 cases, 0 skipped)
+corpus/evidence/round34/audit-dispositions.md:5: skill-tally-256 | fixed at integration (SKILL.md rows 77-84 and :92 cite the gate exact banner form PASS (256 cases, 0 skipped); found by wave seat ScoutSkillTally)
+# command: python3 -B /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round93/skill-tally-r93.py --root <G-quote-line-removed> --selftest /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round93/controls/selftest-r93.txt
+# cwd: /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo
+# exit=1
+HIST_FINDING HIST_UNGROUNDED 161 quote='PASS (161 cases, 0 skipped)' receipt=corpus/evidence/round25-final-measure.log
+HIST_DERIVED=1/2
+TALLY_ROWS=8 STALE_TALLIES=0/8 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=2 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 HIST_DERIVED=1/2 HIST_PRESENT=2/2 TAIL_TALLIES=2 OTHERS_OK=0 TAIL_OK=1 LEGS=3/4
+LEG_FAIL OTHERS declared={('161', '0'): 1, ('256', '0'): 1} observed={('256', '0'): 1, ('161', '0'): 1} codes=HIST_UNGROUNDED 161 quote='PASS (161 cases, 0 skipped)' receipt=corpus/evidence/round25-final-measure.log
+SKILL_TALLY_R93=FAIL
+# command: python3 -B /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round93/skill-tally-r93.py --root <G-receipt-deleted> --selftest /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round93/controls/selftest-r93.txt
+# cwd: /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo
+# exit=1
+HIST_FINDING HIST_UNGROUNDED 161 receipt=corpus/evidence/round25-final-measure.log
+HIST_DERIVED=1/2
+TALLY_ROWS=8 STALE_TALLIES=0/8 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=2 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 HIST_DERIVED=1/2 HIST_PRESENT=2/2 TAIL_TALLIES=2 OTHERS_OK=0 TAIL_OK=1 LEGS=3/4
+LEG_FAIL OTHERS declared={('161', '0'): 1, ('256', '0'): 1} observed={('256', '0'): 1, ('161', '0'): 1} codes=HIST_UNGROUNDED 161 receipt=corpus/evidence/round25-final-measure.log
+SKILL_TALLY_R93=FAIL
+# command: python3 -B /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round93/skill-tally-r93.py --root <G-receipt-broken-symlink> --selftest /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round93/controls/selftest-r93.txt
+# cwd: /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo
+# exit=1
+HIST_FINDING HIST_UNGROUNDED 161 receipt=corpus/evidence/round25-final-measure.log
+HIST_DERIVED=1/2
+TALLY_ROWS=8 STALE_TALLIES=0/8 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=2 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 HIST_DERIVED=1/2 HIST_PRESENT=2/2 TAIL_TALLIES=2 OTHERS_OK=0 TAIL_OK=1 LEGS=3/4
+LEG_FAIL OTHERS declared={('161', '0'): 1, ('256', '0'): 1} observed={('256', '0'): 1, ('161', '0'): 1} codes=HIST_UNGROUNDED 161 receipt=corpus/evidence/round25-final-measure.log
+SKILL_TALLY_R93=FAIL
+# command: python3 -B /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round93/skill-tally-r93.py --root <G-receipt-symlink-outside> --selftest /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round93/controls/selftest-r93.txt
+# cwd: /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo
+# exit=0
+TALLY_ROWS=8 STALE_TALLIES=0/8 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=2 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 HIST_DERIVED=2/2 HIST_PRESENT=2/2 TAIL_TALLIES=2 OTHERS_OK=1 TAIL_OK=1 LEGS=4/4
+SKILL_TALLY_R93=PASS
+# command: python3 -B /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round93/skill-tally-r93.py --root <G-quote-relocated-20-lines> --selftest /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round93/controls/selftest-r93.txt
+# cwd: /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo
+# exit=0
+TALLY_ROWS=8 STALE_TALLIES=0/8 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=2 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 HIST_DERIVED=2/2 HIST_PRESENT=2/2 TAIL_TALLIES=2 OTHERS_OK=1 TAIL_OK=1 LEGS=4/4
+SKILL_TALLY_R93=PASS
+
+=== SECTION 2: scope and tail boundary ===
+gates_start_char=13071 gates_end_char=176266 boundary_heading_line=576
+# command: python3 -B /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round93/skill-tally-r93.py --root <S1-last-in-scope-line> --selftest /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round93/controls/selftest-r93.txt
+# cwd: /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo
+# exit=1
+TALLY_ROWS=8 STALE_TALLIES=0/8 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=3 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 HIST_DERIVED=2/2 HIST_PRESENT=2/2 TAIL_TALLIES=2 OTHERS_OK=0 TAIL_OK=1 LEGS=3/4
+LEG_FAIL OTHERS declared={('161', '0'): 1, ('256', '0'): 1} observed={('256', '0'): 1, ('161', '0'): 1, ('999', '0'): 1} codes=none
+SKILL_TALLY_R93=FAIL
+# command: python3 -B /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round93/skill-tally-r93.py --root <S2-boundary-heading-line> --selftest /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round93/controls/selftest-r93.txt
+# cwd: /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo
+# exit=1
+HIST_SCOPE_BLEED line=999 cases tally=PASS (999 cases, 0 skipped)
+TALLY_ROWS=8 STALE_TALLIES=0/8 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=2 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 HIST_DERIVED=2/2 HIST_PRESENT=2/2 TAIL_TALLIES=3 OTHERS_OK=1 TAIL_OK=0 LEGS=3/4
+LEG_FAIL TAIL declared={('215', '0'): 1, ('283', '0'): 1} observed={('999', '0'): 1, ('215', '0'): 1, ('283', '0'): 1}
+SKILL_TALLY_R93=FAIL
+# command: python3 -B /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round93/skill-tally-r93.py --root <S3-first-tail-body-line> --selftest /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round93/controls/selftest-r93.txt
+# cwd: /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo
+# exit=1
+HIST_SCOPE_BLEED line=999 cases tally=PASS (999 cases, 0 skipped)
+TALLY_ROWS=8 STALE_TALLIES=0/8 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=2 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 HIST_DERIVED=2/2 HIST_PRESENT=2/2 TAIL_TALLIES=3 OTHERS_OK=1 TAIL_OK=0 LEGS=3/4
+LEG_FAIL TAIL declared={('215', '0'): 1, ('283', '0'): 1} observed={('999', '0'): 1, ('215', '0'): 1, ('283', '0'): 1}
+SKILL_TALLY_R93=FAIL
+# command: python3 -B /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round93/skill-tally-r93.py --root <S4-move-161-in-scope-to-tail> --selftest /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round93/controls/selftest-r93.txt
+# cwd: /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo
+# exit=1
+HIST_SCOPE_BLEED line=161 cases tally=PASS (161 cases, 0 skipped)
+HIST_FINDING HIST_MISSING PASS (161 cases, 0 skipped)
+TALLY_ROWS=8 STALE_TALLIES=0/8 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=1 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 HIST_DERIVED=2/2 HIST_PRESENT=1/2 TAIL_TALLIES=3 OTHERS_OK=0 TAIL_OK=0 LEGS=2/4
+LEG_FAIL OTHERS declared={('161', '0'): 1, ('256', '0'): 1} observed={('256', '0'): 1} codes=HIST_MISSING PASS (161 cases, 0 skipped)
+LEG_FAIL TAIL declared={('215', '0'): 1, ('283', '0'): 1} observed={('215', '0'): 1, ('283', '0'): 1, ('161', '0'): 1}
+SKILL_TALLY_R93=FAIL
+# command: python3 -B /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round93/skill-tally-r93.py --root <S6-declare-777-above-Gates> --selftest /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round93/controls/selftest-r93.txt
+# cwd: /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo
+# exit=0
+TALLY_ROWS=8 STALE_TALLIES=0/8 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=2 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 HIST_DERIVED=2/2 HIST_PRESENT=2/2 TAIL_TALLIES=2 OTHERS_OK=1 TAIL_OK=1 LEGS=4/4
+SKILL_TALLY_R93=PASS
+# command: python3 -B <scratch>/tally-taildecl-patched.py --root <S5-moved-161-declared> --selftest /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round93/controls/selftest-r93.txt  # TAIL_DECLARED gains ('161','0')
+# cwd: /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo
+# exit=1
+HIST_FINDING HIST_MISSING PASS (161 cases, 0 skipped)
+TALLY_ROWS=8 STALE_TALLIES=0/8 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=1 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 HIST_DERIVED=2/2 HIST_PRESENT=1/2 TAIL_TALLIES=3 OTHERS_OK=0 TAIL_OK=1 LEGS=3/4
+LEG_FAIL OTHERS declared={('161', '0'): 1, ('256', '0'): 1} observed={('256', '0'): 1} codes=HIST_MISSING PASS (161 cases, 0 skipped)
+SKILL_TALLY_R93=FAIL
+215 tally file line=[640]
+# command: python3 -B /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round92/skill-tally-r92.py --root <S7-215-line-deleted> --selftest /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round93/controls/selftest-r93.txt
+# cwd: /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo
+# exit=0
+TALLY_ROWS=8 STALE_TALLIES=0/8 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=2 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 OTHERS_OK=1 LEGS=3/3
+SKILL_TALLY_R92=PASS
+# command: python3 -B /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round93/skill-tally-r93.py --root <S7-215-line-deleted> --selftest /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round93/controls/selftest-r93.txt
+# cwd: /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo
+# exit=1
+TALLY_ROWS=8 STALE_TALLIES=0/8 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=2 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 HIST_DERIVED=2/2 HIST_PRESENT=2/2 TAIL_TALLIES=1 OTHERS_OK=1 TAIL_OK=0 LEGS=3/4
+LEG_FAIL TAIL declared={('215', '0'): 1, ('283', '0'): 1} observed={('283', '0'): 1}
+SKILL_TALLY_R93=FAIL
+
+=== SECTION 3: case range leg ===
+-- landing (receipt as committed) --
+# command: python3 -B /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round93/skill-tally-r93.py --root /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo --selftest /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round93/controls/selftest-r93.txt
+# cwd: /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo
+# exit=0
+TALLY_ROWS=8 STALE_TALLIES=0/8 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=2 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 HIST_DERIVED=2/2 HIST_PRESENT=2/2 TAIL_TALLIES=2 OTHERS_OK=1 TAIL_OK=1 LEGS=4/4
+SKILL_TALLY_R93=PASS
+-- R2: interior bashenv case 274 renamed (endpoints 273/275 preserved) --
+# command: python3 -B /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round93/skill-tally-r93.py --root <R2-interior-274-renamed> --selftest <R2-interior-274-renamed/selftest.txt>
+# cwd: /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo
+# exit=0
+TALLY_ROWS=8 STALE_TALLIES=0/8 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=2 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 HIST_DERIVED=2/2 HIST_PRESENT=2/2 TAIL_TALLIES=2 OTHERS_OK=1 TAIL_OK=1 LEGS=4/4
+SKILL_TALLY_R93=PASS
+-- R3: no-exit accepted= case 223 renamed to a bashenv family name --
+# command: python3 -B /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round93/skill-tally-r93.py --root <R3-noexit-223-family-name> --selftest <R3-noexit-223-family-name/selftest.txt>
+# cwd: /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo
+# exit=0
+TALLY_ROWS=8 STALE_TALLIES=0/8 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=2 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 HIST_DERIVED=2/2 HIST_PRESENT=2/2 TAIL_TALLIES=2 OTHERS_OK=1 TAIL_OK=1 LEGS=4/4
+SKILL_TALLY_R93=PASS
+-- R4: endpoint bashenv case 273 renamed --
+# command: python3 -B /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round93/skill-tally-r93.py --root <R4-endpoint-273-renamed> --selftest <R4-endpoint-273-renamed/selftest.txt>
+# cwd: /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo
+# exit=1
+CASE_RANGE_FINDING RANGE_MISMATCH:bashenv claimed=273-275 derived=274-275
+TALLY_ROWS=8 STALE_TALLIES=0/8 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=2 CASE_RANGE_BASHENV=274-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=1/2 MISLABELED=0 HIST_DERIVED=2/2 HIST_PRESENT=2/2 TAIL_TALLIES=2 OTHERS_OK=1 TAIL_OK=1 LEGS=3/4
+LEG_FAIL CASE-RANGE
+SKILL_TALLY_R93=FAIL
+-- R5: enumeration count drop (282 lines vs 283 verdict) --
+# command: python3 -B /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo/corpus/evidence/round93/skill-tally-r93.py --root <R5-enumeration-drop> --selftest <R5-enumeration-drop/selftest.txt>
+# cwd: /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo
+# exit=1
+SKILL_TALLY_R93=FAIL case enumeration 282 lines, 282 distinct numbers, against verdict 283 cases
+
+=== SECTION 4: freeze artifacts ===
+# command: grep -n 'TAIL_REFUSED=' claims.json claims.md controls
+# cwd: /fast/scratch/hyaku/chousa-r93/R93ReviewerC3/repo
+.ufo/waves/round-93/claims.json:97:  "sentence": "At the landing revision corpus/evidence/round93/skill-tally-r93.py --root . --selftest corpus/evidence/round93/controls/selftest-r93.txt prints SKILL_TALLY_R93=PASS (exit 0) with LEGS=4/4 HIST_DERIVED=2/2 HIST_PRESENT=2/2 TAIL_OK=1 TALLY_ROWS=8 STALE_TALLIES=0/8, and corpus/evidence/round93/skill-tally-r93-controls.py --root . --work <scratch> prints CONTROLS=PASS OLDPROSE_REFUSED=1/1 PRIOR_ACCEPTED=1/1 STALE_REFUSED_BOTH=1/1 TAIL_REFUSED=1/1 TAIL_PRIOR_ACCEPTED=1/1.",
+.ufo/waves/round-93/claims.json:108:    "TAIL_REFUSED=1/1",
+.ufo/waves/round-93/claims.md:143:PRIOR_ACCEPTED=1/1 STALE_REFUSED_BOTH=1/1 HIST_REFUSED_BOTH=1/1 TAIL_REFUSED=2/2
+corpus/evidence/round93/skill-tally-r93-controls.py:121:          f"TAIL_REFUSED={int(results['deleted-tail'] + results['added-tail'])}/2 "
+ # exit=0
+-- claims.json C3 predicate.controls --
+['CONTROLS=PASS', 'TAIL_REFUSED=1/1', 'TAIL_PRIOR_ACCEPTED=1/1'] # exit=0
+-- evidence-before at C2 (committed?) --
+corpus/evidence/round93/control-driver-r93.py
+corpus/evidence/round93/controls
+corpus/evidence/round93/curation-controls-r93.py
+corpus/evidence/round93/curation-r93.py
+corpus/evidence/round93/forgeries-r93.py
+corpus/evidence/round93/instrument-pins.txt
+corpus/evidence/round93/skill-tally-r93-controls.py
+corpus/evidence/round93/skill-tally-r93.py
+ # exit=0
+c2-prior-accepts.txt
+c3-prior-accepts.txt
+?? corpus/evidence/round93/evidence-before/
+ # exit=0
+-- pins rows for C3 instruments and freeze docs --
+e3ad820471aaf274457fa67cc897b2a555893434cca04949426fca03e8854989  corpus/evidence/round93/skill-tally-r93.py
+340541e65cfe39ad8babc0b96e14a4a22df3685bd00f4bcf39878f85be41953e  corpus/evidence/round93/skill-tally-r93-controls.py
+9c29428160768524c77407eedd711200be53a1074e2a22fe9bab814ad3f5bb37  corpus/evidence/round93/controls/selftest-r93.txt
+bc2bc360a08baf48c314eb4b6f2e8673b17a46a632bf3cd7356187f60ed75af5  .ufo/waves/round-93/claims.md
+db82f98cb7b7b089c7a569cf7ebc77540484c84c9eb399998e108bc9faf9f894  .ufo/waves/round-93/claims.json
+ # exit=0
+-- F2 instrument bytes == C2 instrument bytes? --
+rc=0
+ # exit=0
+-- tools and SKILL.md unchanged base..C2 --
+rc=0
+ # exit=0
+-- claims.json/claims.md unchanged F2..C2 --
+rc=0
+ # exit=0

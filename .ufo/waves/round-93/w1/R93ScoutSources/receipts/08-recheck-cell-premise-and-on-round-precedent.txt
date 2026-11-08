@@ -1,0 +1,36 @@
+# 08 — the round-93 plan's recheck-cell premise for S001, and the one row whose recheck names a round
+
+# cmd: grep -n -E '^\| S158 \|' corpus/SOURCES.md | awk -F'|' '{print "S158 (id="$2") recheck=["$11"] used-by=["$12"]"}'
+# desc: the registry's one round-naming recheck cadence ('on-round')
+S158 (id= S158 ) recheck=[ on-release ] used-by=[ corpus/knowledge/host-source-resolution-r66.md ]
+exit=0
+
+# cmd: grep -E '^\| S[0-9]{3} ' corpus/SOURCES.md | awk -F'|' '{v=$11; gsub(/^ +| +$/,"",v); if (v=="on-round") print $2" recheck=["v"]"}'
+# desc: every row whose recheck cell is a round-naming symbolic cadence
+ S148  recheck=[on-round]
+exit=0
+
+# cmd: grep -E '^\| S[0-9]{3} ' corpus/SOURCES.md | awk -F'|' '{v=$11; gsub(/^ +| +$/,"",v); if (v ~ /round-?[0-9]+/) print $2" recheck=["v"]"}'
+# desc: rows whose recheck cell names a SPECIFIC round number
+exit=0
+
+# cmd: grep -n 'recheck' .ufo/waves/round-93/claims.md
+# desc: the frozen plan's recheck wording
+173:  (the own-work chain row; its `recheck` cell moves round 92 → round 93, logged old→new in the
+exit=0
+
+# cmd: git log --format=%H -- corpus/SOURCES.md | wc -l
+# desc: number of commits touching corpus/SOURCES.md (the S001 recheck history scanned)
+89
+exit=0
+
+# cmd: for c in $(git log --format=%H -- corpus/SOURCES.md); do git show $c:corpus/SOURCES.md 2>/dev/null | grep -E '^\| S001 \|' | awk -F'|' '{v=$11; gsub(/^ +| +$/,"",v); print v}'; done | sort | uniq -c
+# desc: every value S001's recheck cell has ever held
+     89 on-release
+exit=0
+
+# cmd: bash /home/vgpnk/Projects/shokunin/scripts/sources-census.sh overdue --root /home/vgpnk/Projects/shokunin --today 2026-11-08 chousa | grep -cE '^chousa[[:space:]]+cadence[[:space:]]+S0'
+# desc: how the census classifies S001 today (cadence, never overdue)
+99
+exit=0
+
