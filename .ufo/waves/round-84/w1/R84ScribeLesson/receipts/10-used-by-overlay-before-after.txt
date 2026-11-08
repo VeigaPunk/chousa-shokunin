@@ -1,0 +1,24 @@
+# receipt 10 — the mined mistake: a control overlay that replaces a registry row's used-by cell
+#          also erases the REAL entry's used-by, so the counter stops seeing the real entry as fresh.
+# tree: landing = git archive 03bbb458 | tar -x -C <scratch>/landing ; counter = frozen depth-r84.py from that tree
+
+## ROOT IN AN EARLIER ROUND — round 83's B1-salad-boundary overlay wrote a single used-by:
+#   git show 3b616420:corpus/evidence/round83/c1-controls/B1-salad-boundary/replace.txt
+#   | S009 | control row for S009 — https://www.cochrane.org/authors/handbooks-and-manuals/mecir-manual/standards-conduct-new-cochrane-intervention-reviews-c1-c75/performing-review-c24-c75/assessing-risk-bias-included-studies-c52-c60 | spec | A | control scope | control anchor | control teaches cell | mined | 2026-11-06 | 365d | corpus/knowledge/ctl-entry-r83.md |
+# and at round 83's own control rev the real r83 entry did not exist yet, so the defect was latent:
+#   fatal: path 'corpus/knowledge/appraisal-judgment-records-r83.md' exists on disk, but not in '1b9b2ff8955190a3e5cd42800009d13d6b8e4e04'
+#   (cat-file rc=128 => absent at 1b9b2ff8; the r83 control receipt shows entries=1, the control entry only)
+
+## BEFORE (fix absent) — round-83-shaped overlay, single used-by, applied to the landing tree:
+ENTRY ctl-entry-r84.md ok=yes rows=8 quotes=8/8 fails=-
+ENTRY search-transparency-reporting-r84.md ok=no rows=11 quotes=0/12 fails=E3,E6
+DEPTH_R84 entries=2 ok_entries=1 rows=19 located_quotes=8 fresh_sources=3
+DEPTH_R84=FAIL
+rc=1
+
+## AFTER (fix present) — the committed fixed overlay (comma-separated used-by), same landing tree:
+ENTRY ctl-entry-r84.md ok=yes rows=8 quotes=8/8 fails=-
+ENTRY search-transparency-reporting-r84.md ok=yes rows=11 quotes=12/12 fails=-
+DEPTH_R84 entries=2 ok_entries=2 rows=19 located_quotes=20 fresh_sources=3
+DEPTH_R84=PASS
+rc=0

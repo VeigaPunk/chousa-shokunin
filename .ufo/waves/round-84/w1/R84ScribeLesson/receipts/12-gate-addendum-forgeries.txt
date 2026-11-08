@@ -1,0 +1,35 @@
+# receipt 12 — forged-record probes used by the Gate addendum (public CLI, landing tree)
+# tree: git archive 03bbb458 | tar -x -C <scratch>/landing ; --repo = lane checkout
+
+## A. forged S017 admit record (url = landing page, capture = landing-page capture, checklist quote)
+#   GATE-RECORD S017 url=https://www.prisma-statement.org/prisma-2020 fetched=2026-11-08T02:13:58Z tier=A decision=admit capture=corpus/captures/259c96bf7088a12bc7ce65c4.txt capture_sha256=79ce93c929d6805403b53b9e4 words=17 quote="Specify all databases, registers, websites, organisations, reference lists and other sources searched or consulted to identify studies."
+GATE_RECORD /fast/scratch/hyaku/chousa-r84/R84ScribeLesson/fixtures/s017-landing-forge.md:1 S017 FAIL QUOTE_ABSENT
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+rc=1
+
+## B. forged S020 admit record (claims a capture that was never written; S020 got HTTP 403 x3)
+#   GATE-RECORD S020 url=https://www.w3.org/TR/2013/REC-prov-o-20130430/ fetched=2026-11-08T02:16:08Z tier=A decision=admit capture=corpus/captures/fc127d142427c83cc805fe67.txt capture_sha256=0000000000000000 words=10 quote="A derivation is a transformation from one entity into another."
+GATE_RECORD /fast/scratch/hyaku/chousa-r84/R84ScribeLesson/fixtures/s020-forge.md:1 S020 FAIL CAPTURE_PATH,CAPTURE_SHA,QUOTE_ABSENT,REFETCH
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+rc=1
+
+## C. well-formed url/unreach record for S020 (curl_rc 22, http 403) — the rejected fetch, recorded
+#   GATE-RECORD S020 url=https://www.w3.org/TR/2013/REC-prov-o-20130430/ fetched=2026-11-08T02:16:08Z tier=A decision=reject capture=none curl_rc=22 http=403 words=0 quote=none
+GATE_RECORD /fast/scratch/hyaku/chousa-r84/R84ScribeLesson/fixtures/unreach-s020.md:1 S020 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+rc=0
+
+## D. same form for S021 (curl_rc 0, http 203 — the PubMed cookie wall)
+#   GATE-RECORD S021 url=https://pubmed.ncbi.nlm.nih.gov/17638714/ fetched=2026-11-08T02:15:39Z tier=A decision=reject capture=none curl_rc=0 http=203 words=0 quote=none
+GATE_RECORD /fast/scratch/hyaku/chousa-r84/R84ScribeLesson/fixtures/unreach-s021.md:1 S021 FAIL REFETCH
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+rc=1
+
+## E. the two PubMed captures' full text (190 bytes each)
+#   58725f5e0ac436166546a5ec: pubmed.ncbi.nlm.nih.gov Cookies must be enabled Enable cookies for pubmed.ncbi.nlm.nih.gov and reload this page to continue. HHS Vulnerability Disclosure
+#   ff9013bd7d9387e45cd6e000: pubmed.ncbi.nlm.nih.gov Cookies must be enabled Enable cookies for pubmed.ncbi.nlm.nih.gov and reload this page to continue. HHS Vulnerability Disclosure
+#   'survival analysis' / 'living systematic review' in either capture:
+#   58725f5e0ac436166546a5ec survival-analysis: ABSENT
+#   58725f5e0ac436166546a5ec living-systematic-review: ABSENT
+#   ff9013bd7d9387e45cd6e000 survival-analysis: ABSENT
+#   ff9013bd7d9387e45cd6e000 living-systematic-review: ABSENT

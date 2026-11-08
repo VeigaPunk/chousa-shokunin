@@ -1,0 +1,18 @@
+# receipt 09 — setup leg of the public CLI at the scored landing rev (independent reproduction)
+# tree: git archive 03bbb458 | tar -x -C <scratch>/landing ; --repo for the first run is a scratch dir with no git history
+
+## A. rev record with a NON-GIT --repo (frozen expectation: exit 2 + GATE_RECORDS_ERROR on stderr)
+GATE_RECORD /fast/scratch/hyaku/chousa-r84/R84ScribeLesson/fixtures/rev-ok.md:1 S214 FAIL LINE,REV
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+rc=1
+## A2. stderr of the same run:
+(no STDERR line above = stderr empty)
+
+## B. the same record against the real lane repo (control: the record itself is genuine)
+GATE_RECORD /fast/scratch/hyaku/chousa-r84/R84ScribeLesson/fixtures/rev-ok.md:1 S214 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+rc=0
+
+## C. tool / environment versions used by this seat
+Python 3.14.8
+git version 2.56.0

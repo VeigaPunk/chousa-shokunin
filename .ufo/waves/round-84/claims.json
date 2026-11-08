@@ -1,0 +1,36 @@
+{
+ "lane": "chousa",
+ "round": 84,
+ "base": "408ae68f9e445fc911f713d5bbb3a64dda1ab9db4198c7adc8929b",
+ "freeze": "3b616420b2dcc1f8a24a1cb9db4198c7adc8929b",
+ "scoredLanding": "03bbb4580b39b442be69f998fae2db48d64b8c93",
+ "frozenAt": "2026-11-08, before any post-freeze scored run; pre-freeze gates green: controls 9/9 at d047cd8d; counters PASS at landing 03bbb458",
+ "claims": {
+  "C1": {
+   "axis": "operability (lowest scored non-retired axis, historical 3/10) \u2014 capability acquisition",
+   "type": "successor battery for repaired tools/gate-records.py verify (post-scoring repair c7d29e1c: ASCII digit classes, rev-quote boundary)",
+   "predicate": "GATE_RECORDS_R84=PASS",
+   "countingCommand": "python3 -B corpus/evidence/round84/gate-records-r84.py --root DIR --repo GITDIR --work DIR",
+   "killRules": {
+    "K1": "predicate not met at landing revision",
+    "K2": "in-class forgery accepted or refused with code outside frozen EXPECTED_CODE set; setup leg (non-git --repo exit 2 GATE_RECORDS_ERROR vs FAIL LINE,REV exit 1) counts as K2 if misreported; repairs after scoring do not rescue",
+    "K3": "harm: genuine committed record accepted before this round refused at landing (15 frozen positives + 5 fresh positives must be OK); refusal closing a genuine K2 in-class form at base is not harm",
+    "K4": "whitelist: tool accepting the 15 frozen lines and refusing everything else passes the counter"
+   },
+   "source": "corpus/evidence/round84/claims.md"
+  },
+  "C2": {
+   "axis": "depth",
+   "type": "new knowledge entry search-transparency-reporting-r84.md teaching PRISMA 2020 search-reporting requirements, grounded on S214/S018/S023 opened this round",
+   "predicate": "DEPTH_R84=PASS",
+   "countingCommand": "D=$(mktemp -d -p /fast/scratch/hyaku) && git archive <rev> | tar -x -C \"$D\" && python3 -B \"$D/corpus/evidence/round84/depth-r84.py\" --root \"$D\"",
+   "killRules": {
+    "K1": "predicate not met at landing revision",
+    "K2": "located: declared quote absent from committed capture (whitespace-collapsed, curly quotes folded) or absent from live page on HTTP-200 tag-stripped re-open; unreachable re-open recorded not killed",
+    "K3": "warrant: non-author reviewer shows a decision-table row's Do/Never states something its cited quotes do not state or entail, or a same-source sentence contradicts it; one such row falsifies C2; repairs after scoring do not rescue",
+    "K4": "ground: a base-list entry cites S214, S018, or S023 or contains their URLs"
+   },
+   "source": "corpus/evidence/round84/claims.md"
+  }
+ }
+}
