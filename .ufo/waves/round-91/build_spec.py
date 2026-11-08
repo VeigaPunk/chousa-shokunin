@@ -7,9 +7,9 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 LANE = "/home/vgpnk/Projects/shokunin/chousa-shokunin"
 SCRATCH = "/fast/scratch/hyaku/chousa-r91"
 BASE = "265b8633b7e5d1da49da6fb948df9707373fb15c"
-FREEZE = "37831ce889e9a445d96cecd2948e4f302553a2a0"
-CARRIER = "b8fc99a188ab60aa9a981f930877c502775eb502"
-SUPERSEDED = "160b658bffa2d2bee8bbf469537f1e512b6712c5 / d02a950f0f22a79dd0898a4ea463550ee6dc407f"
+FREEZE = "4d00d7519290569879f853d7122b82a927cda1f3"
+CARRIER = "67954adc599bd605705d94a1ea7abb582491a907"
+SUPERSEDED = "160b658b / d02a950f and 37831ce8 / b8fc99a1"
 
 GODSPEED = """/skill:godspeed
 
@@ -24,10 +24,10 @@ You are a Godspeed-enabled subagent.
 """
 
 CONTEXT = f"""Lane chousa round 91, L1 ChousaR91 holds the canonical planner seat, the freeze and the integration. Root {LANE}.
-Revisions: base {BASE} (round-90 landing + its non-author spot-check); claim freeze F2 {FREEZE}; the tree you attack is
-carrier C2 {CARRIER} (the freeze plus the six committed control receipts; the receipts pin {FREEZE}). An earlier
-freeze/carrier pair ({SUPERSEDED}) was superseded before any scored run and before this wave — its two defects are
-recorded in {LANE}/plans/round-91.md §Pre-wave freeze repair 1; treat F2/C2 as the freeze.
+Revisions: base {BASE} (round-90 landing + its non-author spot-check); claim freeze F3 {FREEZE}; the tree you attack is
+carrier C3 {CARRIER} (the freeze plus the six committed control receipts; the receipts pin {FREEZE}). An earlier
+freeze/carrier pair ({SUPERSEDED}) were superseded before any scored run and before this wave — their defects are
+recorded in {LANE}/plans/round-91.md §§Pre-wave freeze repair 1-2; treat F3/C3 as the freeze.
 Frozen predicate set: {LANE}/corpus/evidence/round91/claims.md — read it FIRST, with every kill rule and every NAMED
 LIMIT — and {LANE}/plans/round-91.md. Machine form: {LANE}/.ufo/waves/round-91/claims.json.
 Three claims, three axes:
