@@ -1,0 +1,67 @@
+{
+ "round": 95,
+ "lane": "chousa",
+ "l1": "ChousaR95a2",
+ "base": "7b2373586fb70f0ead6446c671fcc8b546d3e687",
+ "shape": "two claims, two axes (operability capability acquisition, depth), no exploratory claim; both sourced on S222",
+ "claims": {
+  "C1": {
+   "id": "C1-RERUN-R95",
+   "axis": "operability",
+   "type": "capability acquisition (tools/search-rerun.py)",
+   "counting_command": [
+    "python3 -B tools/search-rerun.py verify corpus/fixtures/search-rerun-r95.md --root .",
+    "python3 -B corpus/evidence/round95/rerun-controls-r95.py --root . --work <scratch>"
+   ],
+   "predicate": {
+    "verify_stdout": [
+     "SEARCH_RERUN_SUMMARY searches=8 rev_match=8/8",
+     "SEARCH_RERUN: CLEAN"
+    ],
+    "verify_exit": 0,
+    "controls_stdout": [
+     "POSITIVE=1/1 STRICT_TREE=1/1 FORGERY_REFUSED=8/8 PRIOR_ACCEPTED=8/8 SETUP_REFUSED=12/12 CLONE_TREE=2/2 DO_NOTHING_REFUSED=1/1 ORACLES_REJECTED=3/3",
+     "RERUN_CONTROLS=PASS"
+    ],
+    "controls_exit": 0
+   },
+   "before": "corpus/evidence/round95/before/c1-base.txt (exit 2, tool absent)",
+   "sources": [
+    "S222"
+   ]
+  },
+  "C2": {
+   "id": "C2-ENTRY-R95",
+   "axis": "depth",
+   "type": "knowledge entry (corpus/knowledge/search-rerun-record-r95.md)",
+   "counting_command": [
+    "python3 -B tools/gate-records.py verify --root . corpus/knowledge/search-rerun-record-r95.md",
+    "bash tools/research-gate.sh verify-metadata corpus/knowledge/search-rerun-record-r95.md --root .",
+    "python3 -B corpus/evidence/round95/entry-controls-r95.py --root . --work <scratch>"
+   ],
+   "predicate": {
+    "gate_stdout": [
+     "GATE_RECORDS files=1 records=9 ok=9 fail=0"
+    ],
+    "gate_exit": 0,
+    "metadata_stdout": [
+     "METADATA_COMPLETE=1/1",
+     "RESEARCH_GATE: CLEAN"
+    ],
+    "metadata_exit": 0,
+    "controls_stdout": [
+     "POSITIVE=1/1 FORGERY_REFUSED=8/8 DO_NOTHING_REFUSED=1/1",
+     "LQ_BOUND=9/9",
+     "WARRANTS_OK=7/7",
+     "ENTRY_CONTROLS=PASS"
+    ],
+    "controls_exit": 0
+   },
+   "before": "corpus/evidence/round95/before/c2-base.txt (exit 2, entry absent)",
+   "sources": [
+    "S222"
+   ]
+  }
+ },
+ "sentences": ".ufo/waves/round-95/claims.md"
+}
