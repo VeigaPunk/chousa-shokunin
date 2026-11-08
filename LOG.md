@@ -2512,3 +2512,23 @@ passing record rather than through prose.
   and `S024`'s frozen `teaches` still states the refused comparison. QUALITY 177–181.
 - Gate selftest `PASS (283 cases, 0 skipped)`; preflight `PREFLIGHT=8/8`; census exit 0 (five pre-existing W04 rows).
 - Mined mistake: an instrument that cannot express a decision the round made (a 200-rejected row has no record form).
+
+## Round 87 — the 203 class is every committed row with an accounted verdict; the curation counter gains floors, warrant linkage and a teaches leg (2026-11-08)
+
+- Input: round 86's non-author spot-check routed five defects (`round-86-verifier-spotcheck.md` §Routed defects).
+- Egress table `b7db0714` committed before the first fetch; one GET (`S216` re-open, HTTP 200 `2026-11-08T06:50:40Z`,
+  recipe text form byte-identical to round 86). No URL outside the table.
+- Freeze `c033577b`: two claims (C1 operability — 203 class = every qualifying committed row, reject-form 203 class,
+  leg-accounted verdict, two mutants derived from the subject bytes; C2 calibration — per-entry quote floors, warrant
+  linkage, registry-`teaches`-against-capture), the two counters, three control batteries, `controls/expected.tsv`, the
+  pre-freeze receipts and `instrument-pins.txt`.
+- Pre-freeze controls: `c1-k0-donothing` FAIL (`D2_REFUSED=0/3 MUT_UNREACH_DERIVED=0 LEGS=11/15`), `c1-k0b` (round-86
+  instrument: `D1_FORGES=1`, no `D2_` field), `c1-mutants` 4/4 killed + 2/2 tool mutants caught + 1 named equivalent,
+  `c1-harm` `moved=0` over 27 committed records, `c2-controls` `FORGERY_REFUSED=4/4 R86_ACCEPTED_FORGERY=4/4`.
+- Landing: `tools/gate-records.py` unreach branch refuses any 2xx (the round-86 F1 defect); registry S216 `used-by`
+  gains this round's claims file and S218 (`own-work`, tier A) is appended (217 → 218 rows); lesson `## Gate`,
+  `## Mistakes` (three), `## Spot-check intake` (eight rows), `## Trends`; QUALITY 182–186.
+- After: `GATE_RECORDS_R87=PASS` (`362/362`, `D1_REFUSED=3/3`, `D2_REFUSED=3/3`, `LEGS=15/15`) and `CURATION_R87=PASS`
+  (`0 / 0 / 1 / 20/20 / 17/17 / TEACHES 1 flagged 0 unresolved / 7/7`).
+- Mined mistakes: a width comparison whose two sides called one helper; a vocabulary-only rule that over-fired on 12
+  rows; a forged differentiator appended in the wrong grammar branch.

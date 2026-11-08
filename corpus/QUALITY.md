@@ -1124,3 +1124,43 @@ the admitted entry that motivates it. Tier definitions live in
 180. **A class is as wide as the committed instances that instantiate it, not as wide as the first one found.** Round 86's D1 builder returns the first qualifying refetch row (`S021`), so a tool keyed to that one record (`r[6] == "200" if sid == "S021" else 2xx`) passes both D1 legs and the mutant leg; three committed rows (`S021`, `S032`, `S022`) instantiate the class. A battery that builds one instance certifies that instance and not the rule. Check: count the committed rows that qualify for a class and require the battery's `N` to equal it.
 
 181. **A record's identity fields are compared column-to-column; a URL-derived key is never a previous content hash.** Round 86's lesson compared `f5545a19…` (the capture key, `sha256(url)[:24]`) against `20dc0c3a…` (the content sha) and reported "different bytes" where the bytes had not moved. The `refetch.tsv` ledger separates `key` (column 3) from `txt_sha256` (column 9); a narrative that cites them interchangeably is falsified by its own bytes. Check: `sha256sum` the capture at both revisions before writing any sentence about capture identity.
+
+## Round-87 addition (criteria 1–181 unchanged)
+
+182. **Two derivations a counter compares are two code paths, not one helper called twice.** Round 87's first
+    `count_203_rows` returned `len(_qualifying_203(root))`, the same builder the record class came from, so a
+    mutation narrowing that helper to one record moved both sides of the width comparison and the round-86 critic's
+    `T4` shape (a general rule plus a record-keyed exception) would have passed. Check: the two sides of every width or
+    count comparison are computed by functions that share no extraction code; `mutate-r87.py`'s `T4-truncate` must fail
+    the width leg (`1/3 floor3`). Shown able to fail: the self-referential variant prints `SURVIVOR N-deny-width` in the
+    first mutation run, and the two-path version prints `KILLED T4-truncate`. — `lessons/round-87.md` Mistakes 1.
+
+183. **A registry-cell rule is scoped by a phrase, not by a vocabulary, and a flagged row needs a disposition.** The
+    first round-87 `TEACHES` leg flagged any live row whose `teaches` named a date term absent from its capture: 12 rows
+    on this registry, most because the capture is a stub or a different page, so the predicate was unreachable by
+    construction. The landed leg requires a contrast phrase (`separate from`, `no comparison`, `independent of`,
+    `distinct from`) *and* the term, and requires every flagged row to be disposed as superseded rather than requiring
+    a clean registry (a cell rule 2 freezes cannot be edited). Check: `curation-r87.py` prints `TEACHES_CHECKED=1
+    TEACHES_FLAGGED=1 TEACHES_UNRESOLVED=0` on this tree, and the `T-teaches-contrast` mirror makes it
+    `unresolved=1`. — `lessons/round-87.md` Mistakes 2.
+
+184. **A forged differentiator is appended in the branch whose grammar it fits.** Round 87's `D8-unreach-2xx-claimed`
+    differentiator was first generated for every positive record, so on an admit record it produced a `url/unreach`
+    shape the parser refuses as `PARSE`, and the battery would have counted a parse refusal as a class kill. Check: the
+    differentiator is emitted only from the `unreach` branch, and its expected code is the one the class's own rule
+    produces. — `lessons/round-87.md` Mistakes 3.
+
+185. **A verdict is accounted, not conjoined.** A predicate written as a conjunction of booleans that a correct run
+    already makes true is met by a counter that stopped doing the work: round 86's `M2` (mutant credited, never built)
+    and `M5` (SETUP conjunct deleted) both printed the frozen line and `PASS`. The landed shape appends one leg record
+    per check and requires `len(legs) == EXPECTED_LEGS` and every leg ok, so a deleted leg changes the verdict. Check:
+    `mutate-r87.py` `KILLED M2-credit-mutant` and `KILLED M5-drop-setup`, and the named limit in `claims.md` C1 (a leg
+    that executes and misreports its value is a different class). — `lessons/round-87.md`; round-86 spot-check routed
+    defect 2.
+
+186. **A form that records a failure refuses every success status, and the status class is the source's, not the
+    round's.** Round 86 accepted `decision=reject capture=none curl_rc=0 http=203` because the `url/unreach` success
+    test asked for `http == "200"` rather than for a 2xx class, so a *successful* 203 response could ground a
+    failed-transfer record; a 203 is "the request was successful" (S216 §15.3.4). Check: the unreach branch refuses
+    `200 <= http < 300`, the `D2` class covers every qualifying committed row, and the harm sweep shows no genuine
+    committed record moving (`c1-harm-unreach.txt` `moved=0` over 27 records). — `lessons/round-87.md`; S216, S218.

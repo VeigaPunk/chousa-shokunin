@@ -3923,3 +3923,43 @@ No axis harmed at the tip: `tools/research-gate.sh --selftest` `PASS (283 cases,
 2. **calibration** — a check over registry `teaches` cells against their captures (the `S024` frozen cell; QUALITY 178),
    and the live-citation form `R86CriticClaims` V1 passes.
 3. carried debt: the `S217` policy source when it serves prose; the r80 backlog Gate ids; the D1 fixture form.
+
+## Round 87 verdict — the 203 class is every committed row with an accounted verdict; the curation counter gains floors, warrant linkage and a teaches leg (2026-11-08)
+
+Base `6495ef88`; egress table `b7db07140791ab071de49743687e6d330edabc2e` (committed before the first fetch); freeze
+`c033577b4fb840553f3e10e40aa77c724abe0bca`; wave `.ufo/waves/round-87/w1/` (13 seats). Instruments pinned in
+`corpus/evidence/round87/instrument-pins.txt`.
+
+| claim / axis | before → after | counting command / evidence | verdict |
+|---|---|---|---|
+| C1 operability (lowest scored non-retired axis; historical 3/10 held) | pre-round-87 tool: `D2_REFUSED=0/3 … MUT_UNREACH_DERIVED=0 LEGS=11/15` `FAIL` exit 1; round-86 instrument: `D1_FORGES=1`, no `D2_` field → landing: `POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=362/362 EXPECTED_CODE=362/362 D1_EXPECTED=3 D1_FORGES=3 D1_REFUSED=3/3 D2_FORGES=3 D2_REFUSED=3/3 MUT_ADMIT_KILLED=1 MUT_UNREACH_KILLED=1 DERIVE_NEG=1 LEGS=15/15` `PASS` exit 0 | `python3 -B corpus/evidence/round87/gate-records-r87.py --root DIR --repo GITDIR --work DIR`; `controls/receipts/c1-k0-donothing.txt` → `after/c1-after.txt`; mutants `controls/receipts/c1-mutants.txt` | **verified as stated** — every clause re-derived at the landing revision; the four refused counter shapes and the two caught tool shapes are in `c1-mutants.txt` |
+| C2 calibration | round-86 counter accepts all four routed forgeries (`FORGERY_REFUSED=4/4 R86_ACCEPTED_FORGERY=4/4`) → landing: `SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20 WARRANT_OK=17/17 TEACHES_FLAGGED=1 TEACHES_UNRESOLVED=0 LEGS=7/7` `PASS`, controls `FORGERY_REFUSED=4/4` | `python3 -B corpus/evidence/round87/curation-r87.py --root DIR`; `python3 -B corpus/evidence/round87/curation-r87-controls.py --root DIR --work DIR`; `controls/receipts/c2-controls.txt` → `after/c2-after.txt` | **verified as stated** |
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** | three routed battery defects close on committed bytes: the class is every qualifying 203 row with an independent width count, the reject form refuses any 2xx, and the verdict is leg-accounted so the `M2`/`M5` shapes change it. 362 forgeries refused with expected codes; no genuine record moves over 27 committed lines. |
+| calibration | **improved** | per-entry quote floors (13/7) refuse the delete-row and truncate-table gaming the round-86 counter passed; 17/17 decision rows carry a resolvable, term-linked warrant; the `TEACHES` leg fires once on `S024` and requires its supersession disposition. Five criteria mined (QUALITY 182–186), three from this round's own pre-freeze findings. |
+| depth | **unchanged** | no new knowledge entry (97 → 97); the one new registry row is `own-work` (S218), the contract the `TEACHES` leg enforces, not a domain fact. |
+| coverage | **unchanged** | `PROVINCE.md` untouched; registry 217 → 218 rows (one `own-work`), census exit 0 before and after with the same five pre-existing `W04` warnings. |
+| freshness | **unchanged** | one URL re-opened (`S216`, HTTP 200 at `2026-11-08T06:50:40Z`); the recipe text form is byte-identical to round 86, so its located line and word count hold. No drift detector added. |
+| adjacency | **unchanged** | the connector seat's sibling-overlap finding is reported read-only; nothing absorbed (see the report's Sources & frontier). |
+
+Trends: expansion **unchanged** (97 knowledge files before and after; one `own-work` registry row) — the round's
+capability gain is in the instruments, and the lesson says so instead of counting a row as ground; quality **improved**
+(six routed repairs across two instruments, four forgeries now refused with named legs, five criteria mined); discernment
+**improved** (two defects in the round's own first instruments were found by pre-freeze probes and published as
+`## Mistakes` rather than quietly fixed; the misreporting-leg limit is in the claim, not the appendix).
+
+No axis harmed at the tip: the 27 committed `GATE-RECORD` lines across 10 lessons move no verdict
+(`c1-harm-unreach.txt` `moved=0`), the 15 frozen positives and 5 fresh positives stay OK, and `tools/gate-records.py`
+selftest-free change is covered by that sweep.
+
+## Planned — round 88 (intent, not a predicate)
+
+1. **operability (lowest)** — the named limit from C1: make a misreporting leg detectable, e.g. by having each leg
+   write its own one-line receipt under `--work` and re-reading the count and names from that file rather than from the
+   in-memory list (the wave's mutation seat is expected to attack exactly this).
+2. **operability/depth** — the `TEACHES` leg's contrast vocabulary is four phrases; extend it to the registered
+   `supersedes` edges (a superseding row's `teaches` should be readable in its capture too) and measure over-fire on
+   the 218-row registry.
+3. carried debt: the `S217` successful-refused record form (QUALITY 173), the r80 backlog Gate ids, the D1 fixture form.

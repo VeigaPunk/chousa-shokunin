@@ -1413,3 +1413,13 @@ Left open:
 
 - `lessons/round-85.md` — S215 registered (W3C alternate PROV-O URL; the canonical REC URL answers 403), S026 and S024 mined from queued; `tools/gate-records.py` repaired (setup exit 2, REFETCH success exactly 200, calendar-valid `fetched`) under a successor battery.
 - Frontier: S020's canonical PROV-O URL is dead for this lane (six 403 rows) — disposition to the operator; S017/S019/S021/S022/S032/S027/S031 stay queued.
+
+## Round-86 / round-87 coverage appended 2026-11-08 (the frontier prose above is left as written)
+
+| Note | Holds | Sources |
+|---|---|---|
+| `../corpus/evidence/round87/gate-records-r87.py` | Round-87 capability: the record battery whose 203 class is every qualifying committed refetch row (3), whose reject-form class covers the same rows, and whose verdict is a count of executed legs, so a dropped leg or a credited-but-unrun mutant changes the verdict; two mutant tools derived from the subject tool's own bytes and killed; a derivation-negative probe | `corpus/evidence/round87/{claims.md,controls/,after/}`; `corpus/lessons/round-87.md` |
+| `../corpus/evidence/round87/curation-r87.py` | Round-87 capability: the curation counter with per-entry located-quote floors (13 and 7), a warrant-linkage leg over 17 decision rows, and a registry-`teaches`-against-own-capture leg whose flagged row must be disposed as superseded | `corpus/evidence/round87/{claims.md,controls/,after/}` |
+| `lessons/round-86.md` | Round-86 lesson: the 200-only class moved inside the battery's predicate, the R86 mutant derived from the subject bytes, the S024/S031 inversion closed, four corrections to its own narrative, QUALITY 173–181 | `corpus/evidence/round86/`; `.ufo/waves/round-86/w1-results.json` |
+| `lessons/round-87.md` | Round-87 lesson: Gate (S216 re-open, S218 new `own-work`), both claim outcomes, four mined mistakes, the two-sentence spot-check intake for round 86's eight routed and conformance items, trends | `corpus/evidence/round87/` |
+| `SOURCES.md` | Where the lane learns (contract v1): 218 registry rows after this round (S218 appended `own-work`; S216 `used-by` extended); census command in the report | `bash /home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa` |
