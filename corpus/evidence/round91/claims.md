@@ -18,10 +18,11 @@ committed receipts of `controls/expected.tsv`, and each of these holds:
 3. `# computed_against=` equals `--rev`;
 4. every required `K=V` equals one whole whitespace-delimited body token (a differing value under the same key is
    `TOKEN_DETACHED`) and every `K>=N` predicate holds (`DUPLICATE_KEY` for one key with two values);
-5. every file a row's command names as its script, and the expectations file, is listed in `instrument-pins.txt`,
-   its on-disk sha256 equals the pin, and (with `--repo`) its blob at `--rev` hashes to the pin
+5. the first file each row's command names as its script, and the expectations file, is listed in
+   `instrument-pins.txt`, its on-disk sha256 equals the pin, and (with `--repo`) its blob at `--rev` hashes to the pin
    (`INSTRUMENT_UNPINNED`, `INSTRUMENT_PIN_MISMATCH`);
-6. a `.txt` receipt that no expected row scores is `UNSCORED_RECEIPT`;
+6. a `.txt` file that parses as a receipt (a `# case=` header) and that no expected row scores is
+   `UNSCORED_RECEIPT`;
 7. `SELF_PIN` prints both revisions (`rev=F receipts_rev=C`) and every scoring file is byte-identical to its blob
    at the base it is read from (`--root` for reads, `--repo` for blobs);
 8. `python3 -B corpus/evidence/round91/control-forgeries-r91.py --work <scratch>` prints

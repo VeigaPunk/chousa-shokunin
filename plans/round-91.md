@@ -105,6 +105,20 @@ wave:
 The freeze is re-cut as `F2` (this commit) and the receipts re-emitted at `F2` as carrier `C2`. No scored run of a
 candidate preceded `F2`; the wave is dispatched only after the `F2`/`C2` verify prints `CONTROL_DRIVER_R91=PASS`.
 
+## Pre-wave freeze repair 2 (2026-11-08, before any scored run and before the wave)
+
+Two clauses of C1's sentence were wider than the code, found by reading the code against the sentence before the
+wave (no seat had scored anything):
+
+1. "every file a row's command names as its script" -> "the first file each row's command names as its script". The
+   driver's `instrument_rel()` takes the first `.py`/`.sh` token; C1's named limit 3 already says a second unpinned
+   script is not seen.
+2. "a `.txt` receipt that no expected row scores" -> "a `.txt` file that parses as a receipt (a `# case=` header)
+   and that no expected row scores" — the R6 repair after freeze attempt 1 made the header the parse test.
+
+The predicate, counters and kill rules are unchanged. The freeze is re-cut as `F3`/`C3`; `F2`/`C2` stay in history,
+and the wave is dispatched only after the `F3`/`C3` verify prints `CONTROL_DRIVER_R91=PASS`.
+
 ## Amendments after the freeze
 
 An amendment is written here only when a wave artifact falsifies a claim's stated wording (addendum §8,
