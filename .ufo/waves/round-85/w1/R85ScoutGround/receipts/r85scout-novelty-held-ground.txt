@@ -1,0 +1,373 @@
+# R85ScoutGround — receipt 2: novelty vs held ground (four named entries, full text at landing)
+# lane=/home/vgpnk/Projects/shokunin/chousa-shokunin  host=7.2.11-arch1-1  date=2026-11-08
+# revs: base=43c3f7284eee4889cdcc6ac1626573f6579cd533 landing=64803d33362f50cf9094e91fc3a4a07216c563ca
+
+######## corpus/knowledge/metadata-screen-r25.md  (rc=0, 134 lines)
+cmd: git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 64803d33362f50cf9094e91fc3a4a07216c563ca:corpus/knowledge/metadata-screen-r25.md
+# `verify-metadata` — the knowledge-entry metadata screen (round 25)
+
+source: S029 https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-iv §IV.1 (periodic currency assessment → a scheduled `recheck:`); S033 https://www.w3.org/TR/2013/REC-prov-o-20130430/ §3.1 `prov:wasDerivedFrom` and §3.2 entity-lifetime paragraph (derivation and as-of time are separate facts → `source:` and `verified-at:`); gate `tools/research-gate.sh` `verify_metadata` and selftest cases 137–154 at the round-25 landing; spec v1 `corpus/evidence/round25-claims.md` (Claim 1)
+verified-at: 2026-10-21 (round 25; mode run over the frozen 28-entry population and the 27-file fixture set; differential gate vs hand table vs independent oracle `AGREE=54/54`; S029/S033 opened by round-25 scout seats and quoted in `lessons/round-25.md` `## Gate`)
+recheck: 90d (`bash tools/research-gate.sh --selftest` — cases 137–208 and 210–215 pin the arms (range corrected round 34, E3); `bash corpus/evidence/round25-meta-differential.sh` → `AGREE=54/54`; re-open S029 §IV.1 on a Handbook release)
+
+## Claim
+
+`QUALITY.md` criterion 6 asks every admitted `knowledge/` entry for three
+header facts: where it came from (`source:`), when and what was checked
+(`verified-at:`), and when it is due again (`recheck:`). Until round 25 no mode
+read them, so an entry missing one was invisible. `verify-metadata PATH`
+screens one entry or a directory of entries and names each missing or malformed
+key; on the lane's 28 entries at the round-25 base it reports
+`METADATA_COMPLETE=25/28`, exit 1, naming `archives-verified-r9.md`,
+`audit-r11.md` and `gate-baseline-r8.md` (`META_RECHECK_ABSENT` each) — the
+three legacy headers `lessons/round-24.md` M-13 listed. Observation:
+`corpus/evidence/round25-measure-after.log`.
+
+Why these three keys (inference from S029 and S033, each within its row's
+scope): the Cochrane Handbook calls for periodic currency assessment
+(S029, "All Cochrane reviews should be assessed periodically to determine
+whether an update is needed"), which a record can only support if it says when
+its next check is due; PROV-O records derivation (`prov:wasDerivedFrom`) and
+entity-lifetime times (`prov:generatedAtTime` / `prov:invalidatedAtTime`) as separate
+facts (S033), which is the split between `source:` and `verified-at:`. Neither
+source prescribes this header; the header is the lane's own convention.
+
+## The move
+
+- Header region: lines before the first `## ` heading outside a fenced block;
+  trailing `\r` stripped. Key lines `source:`, `verified-at:`, `recheck:` at
+  column 0, outside fences; a value runs to a blank line, another key line or
+  the header end. Only those three keys end a value (a continuation line such
+  as `note: …` stays inside it — selftest case 153).
+- Findings (surface `metadata`): `META_SOURCE_ABSENT`,
+  `META_VERIFIED_AT_ABSENT`, `META_VERIFIED_AT_UNDATED` (value does not begin
+  `YYYY-MM-DD`), `META_RECHECK_ABSENT` — warn; `META_RECHECK_UNSCHEDULED` (first
+  token not an ISO date, `<N>d` or `on-release`) and `META_RECHECK_ROOT_PARENT`
+  (the value passes `--root ..`) — info, drift only under `CHOUSA_STRICT=1`;
+  `META_ENTRY_REFUSED` crit for an entry that is denylisted (raw or canonical
+  path) or over 8 MiB (refused unread), or NUL-bearing (read for the NUL probe,
+  refused unparsed) — all still counted in N/M.
+  The refusal is a post-registration hardening from the round-25 sentinel seat
+  (`.ufo/waves/round-25/build/SentinelMetaPaths.md`), disclosed here; it does
+  not change the population result.
+- Output: one `META entry=… source=… verified_at=… recheck=… verdict=…` line
+  per entry, the findings, `METADATA_COMPLETE=N/M`, one `RESEARCH_GATE:` line;
+  exit 0 / 1 / 2 (no path, missing path, directory without `.md`).
+- Not composed into `verify-all`; the `--pin`/`--drift` canonical invocation is
+  unchanged (`GATE_DRIFT: none` vs the r12 baseline at the landing).
+
+## Evidence
+
+- Population run: `bash corpus/evidence/round25-measure.sh <tree>` claim-1
+  block — base `verify-metadata rc=2` (mode absent); landing `rc=1`,
+  `METADATA_COMPLETE=25/28`, `RESEARCH_GATE: DRIFT (entries=28 complete=25
+  findings=33 drift=3)`; the 30 info findings are 21 command-first rechecks
+  and 9 `--root ..` rechecks.
+- Three derivations agree on 27 fixtures × {normal, strict}: the hand table
+  `fixtures/metadata-r25/README.md`, the gate, and the stdlib oracle
+  `evidence/round25-meta-oracle.py` written from the spec without reading the
+  gate — `evidence/round25-meta-differential.log` `AGREE=54/54` after two
+  derivation errors were adjudicated against the spec text (one table row, one
+  oracle tokenizer bug; the gate matched the spec in every cell).
+- Selftest `PASS (154 cases, 0 skipped)`; cases 1–136 byte-identical to the
+  base run.
+
+## Limits
+
+- It screens key presence and value shape, not criterion 6 itself: it does not
+  check that a cited `S###` row exists, is `mined` and names the entry in
+  `used-by` (round-24's `EXPANSION_ADMITTED` check did that for three entries);
+  it does not check that `verified-at:` says what was checked, or that a
+  source supports the entry (`knowledge/claim-support-states-r24.md`).
+- It applies to every entry it is pointed at, while criterion 6 binds entries
+  admitted from round 24 on; the three named drifts are pre-round-24 entries,
+  so they are criterion-9/one-home debts, not criterion-6 violations.
+- A command-first `recheck:` is info, so a default run passes it although
+  criterion 6 calls a command-only recheck uncomputable (21 of 28 entries).
+- Prose placed in the header at column 0 as `source: …` satisfies the key.
+- `META_RECHECK_ROOT_PARENT` sees only the literal `--root ..`, not other
+  placement-dependent forms (`QUALITY.md` criterion 13).
+
+## Source-precision erratum (same round, after the falsify wave)
+
+The initial header cited S019 and located its exact sentence in Key Points.
+Fresh re-openers located it in §IV.1, and found “recorded”/“on a schedule” in
+the old registry teaching stronger than the source. S029 supersedes S019
+with the exact narrower teaching; the current header and source uses now
+name S029. A scheduled recheck remains the lane's labelled inference from
+periodic assessment, not a direct Cochrane requirement. The original S019
+row is retained queued, no longer used-by this entry; the lesson logs the
+old→new status and used-by change.
+
+S033 supersedes S020's teaching: PROV times bound an entity's existence,
+not whether a research claim is true or when an analyst checked it. Using
+separate source/time fields for verification is explicitly a lane inference,
+not PROV-O's definition of verification. S020's historical row remains queued.
+
+## Final-reader correction (same round, after falsification)
+
+The 154-case results above belong to the integration checkpoint. Final
+reader controls are safe symlink154, multilink155, stat failure156,
+calendar157, literal heading158, token non-disclosure159 and held object160;
+the usage case moved to161. Final `PASS (161 cases, 0 skipped)` and the unchanged
+`METADATA_COMPLETE=25/28` are recorded in
+`corpus/evidence/round25-final-measure.log`; the legacy-output battery
+`round25-final-holds.log` exits 0, including cases 1–136 byte-identically.
+The original hand-table/oracle differential is still `AGREE=54/54`
+(`round25-final-differential.log`), not a claim that those 27 fixtures cover
+every new refusal branch.
+
+This supersedes the earlier reader description: canonical path, regular-file
+type, link count and size are checked against an opened fd before one bounded
+snapshot read. Failed stat or multilinked entries are `META_ENTRY_REFUSED`;
+NUL content is refused unparsed. A pathname substitution after opening cannot
+redirect that fd. Concurrent same-inode content writes can still produce an
+inconsistent snapshot, and initial opening/path checks remain subject to
+filesystem races; no general immutable-file or all-races guarantee is made.
+Only literal `## ` ends the header; scheduled recheck dates must be
+calendar-valid (`verified-at` stays date-shape-only). Duplicate keys are
+last-key-wins and empty `source:` remains presence-only.
+The source/time field mapping is a lane inference, not PROV-O's definition
+of verification; the header convention is not prescribed by either source.
+
+Recheck execution context: run the header's two shell commands from the
+chousa lane root (`/home/vgpnk/Projects/shokunin/chousa-shokunin` in this
+deployment). Final selftest coverage is cases 137–161; the header's 137–154
+range names the original checkpoint controls, not the final total.
+Structured-result paths are shell-quoted; shared usage errors and shell open
+diagnostics may still emit raw pathnames. The result-record escaping fix is
+not a universal stderr-sanitization claim (residual-final-meta review).
+
+######## corpus/knowledge/recheck-due-r26.md  (rc=0, 64 lines)
+cmd: git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 64803d33362f50cf9094e91fc3a4a07216c563ca:corpus/knowledge/recheck-due-r26.md
+source: S035 — tools/research-gate.sh verify-metadata --as-of; corpus/evidence/round26-claims.md Claim2. S037 — https://resources.cochrane.org/sites/resources.cochrane.org/files/uploads/inline-files/Transform/201912_LSR_Revised_Guidance.pdf, Version December2019, section4.3.4 p19, fixed-interval updates. S038 — https://docs.python.org/3/library/datetime.html, Python3.15.0 date.toordinal and date arithmetic note1, proleptic Gregorian calendar-day arithmetic. S029 — https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-iv, Handbook v6.5, IV.1 periodic currency assessment (reopened this round).
+verified-at: 2026-10-21 — checked the declared due-date model against the spec, the frozen29 header oracle and six planted controls; measured revision and results are owned by SCORECARD.md Round26.
+recheck: 90d — cwd=lane root; `bash corpus/evidence/round26-measure.sh "$PWD" c2`; for current notes, `bash tools/research-gate.sh verify-metadata corpus/knowledge --root . --as-of YYYY-MM-DD` with an explicit calendar date (never execute a recorded recheck command from entry text).
+
+# A due date schedules assessment, not truth
+
+## Source-grounded distinction
+
+Cochrane says its reviews should be assessed periodically to decide whether
+an update is needed (S029, IV.1). Its LSR guidance distinguishes searching
+from publishing updates and allows a fixed-interval update schedule in the
+specified setting (S037, §4.3.4). Neither source prescribes generic research
+note fields or a universal90-day cadence.
+
+The following is **this lane's policy**, not a Cochrane rule [INFERENCE]:
+use an entry's declared schedule to compute when an assessment is due.
+Python's `date`/`timedelta` arithmetic represents the proleptic Gregorian
+calendar and addition of calendar days (S038); the independent oracle uses
+those semantics. Adopting them for the Bash checker is a lane design choice.
+
+## Decision table
+
+| recheck first token | verified-at | due | freshness at explicit as-of |
+|---|---|---|---|
+| calendar-validYYYY-MM-DD | any | explicit recheck date | overdue iff as-of>due, otherwise current |
+| Nd (decimal calendar days) | valid leading ISO date | verified-at+N days | same strict comparison; equality is current |
+| on-release | any | on-release | event; no inferred calendar deadline |
+| command-only, absent, invalid, or out-of-range result | any | unknown | unknown, never silently current |
+
+`--as-of` is opt-in. Without it the metadata screen retains its old output.
+The new warning `META_RECHECK_OVERDUE` means the **declared schedule** passed;
+it is not a finding that the entry is false. `freshness=current` means only
+that the recorded deadline has not passed, not that sources were reopened.
+`event` does not certify that releases were monitored. Unknown is honest
+missing scheduling information; command-only legacy rechecks stay unknown.
+
+## Recheck method
+
+At a real due point, open the source and named anchor again, compare the
+claim with what the source states, and record what was checked. A date alone
+is not the re-verification (QUALITY6/8). Do not change a cadence solely to
+turn an overdue report green. The frozen29 distribution and controls are
+owned by the final measurement receipt; no row-count increase is asserted
+as expanded domain understanding by itself.
+
+## Withdrawal of implementation admission — 2026-10-21 (append-only)
+
+The source-grounded distinction and declared policy above remain proposals
+with explicit scope, but **the Round26 implementation is not admitted**.
+Its measured target is `0e9784bd52eca456b24d0bc40921480a47f91a2b`.
+The inherited frozen run matches29/29 oracle cases and6/6 controls
+(`evidence/round26-inherited-after.log`); these do not cover the independent
+input-domain counterexamples in `.ufo/waves/round-26/falsify/`:
+`FDateHugeCadence.md` records process termination rather than unknown;
+`FDateAsOfUsage.md` records locale-dependent invalid-argument exit1 instead
+of setup/usage exit2. Repeated-option behavior is separately observed in
+`FDateExplicitDate.md`, not silently adopted as a new specification.
+
+The shared selftest also fails3/187 (`FNoTrade.md`). No failed check was
+rerun merely to confirm it during recovery. Do not use this candidate mode's
+absence of findings as a reliable freshness verdict. SCORECARD records C2
+harmed/falsified and the round not admitted; source-row mining is not
+implementation validation or truth certification.
+
+######## corpus/knowledge/search-transparency-reporting-r84.md  (rc=0, 70 lines)
+cmd: git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 64803d33362f50cf9094e91fc3a4a07216c563ca:corpus/knowledge/search-transparency-reporting-r84.md
+# Search transparency — what a search record must report and how to record its sources (round 84)
+
+source: S214, S018, S023
+verified-at: 2026-11-08 (round 84; captures `a640b15abf781e5c583d7088`, `248b43277f376e437a356909`, `f5545a194c06ab421875b047`)
+recheck: on-release
+
+## What this entry governs
+
+The lane's method searches sources, captures them, and registers what was found (`PROTOCOL.md` §4–§6). Held entries
+say how a query is built (`search-query-exposure-r51.md`, `search-query-templates-r54.md`) and how a search log records
+each attempt (`search-log-method-r39.md`, `search-tracking-record-r40.md`); none says what a *report of the search itself*
+must contain so that a reader can audit it. PRISMA 2020's checklist states the reporting items for systematic-review
+searches; a 2026 survey of evidence-based text generation states why linking output to supporting evidence matters; and
+DCMI's metadata terms define the properties a record can use to name its source and its dates. The rows below keep only
+what each quote states about reporting a search and recording its provenance; the checklist items for other review
+sections are not taken.
+
+## Located quotes
+
+| qid | source | quote |
+|---|---|---|
+| Q1 | S214 | "Specify all databases, registers, websites, organisations, reference lists and other sources searched or consulted to identify studies." |
+| Q2 | S214 | "date when each source was last searched or consulted." |
+| Q3 | S214 | "Present the full search strategies for all databases, registers and websites, including any filters and limits used." |
+| Q4 | S214 | "Specify the methods used to decide whether a study met the inclusion criteria of the review" |
+| Q5 | S214 | "Describe the results of the search and selection process, from the number of records identified" |
+| Q6 | S018 | "aiming to link model outputs to supporting evidence to ensure traceability and verifiability" |
+| Q7 | S018 | "Thereby, we focus on approaches that use citations, attribution, or quotations for evidence-based text generation." |
+| Q8 | S018 | "However, the field is fragmented due to inconsistent terminology, isolated evaluation practices, and a lack of unified benchmarks." |
+| Q9 | S023 | "A related resource from which the described resource is derived." |
+| Q10 | S023 | "Recommended practice is to describe the date, date/time, or period of time as recommended for the property Date, of which this is a subproperty." |
+| Q11 | S023 | "Date (often a range) of validity of a resource." |
+| Q12 | S023 | "Date that the resource became or will become available." |
+
+## Decision table
+
+| Situation | Do | Never | Warrant |
+|---|---|---|---|
+| Reporting which sources were searched | name every database, register, website, organisation, reference list, and other source consulted | report only the sources that returned results and omit those that returned none | Q1 (S214) |
+| Reporting when a source was searched | state the date each source was last searched or consulted | report the search without dating it, so the reader cannot tell how current it is | Q2 (S214) |
+| Reporting the search method | present the full search strategy for each source, including filters and limits | summarize the strategy in prose when the full strategy can be stated | Q3 (S214) |
+| Reporting how studies were selected | state the methods used to decide whether a study met the inclusion criteria | report the selected studies without the selection method | Q4 (S214) |
+| Reporting the search outcome | describe the results from records identified to studies included, ideally with a flow diagram | report only the final count without the identification-to-inclusion path | Q5 (S214) |
+| Linking a claim to its source | cite, attribute, or quote the supporting evidence so the link is traceable | assert a claim without linking it to the evidence that supports it | Q6, Q7 (S018) |
+| Comparing evidence-based generation approaches | use a shared taxonomy and unified benchmarks rather than isolated evaluation practices | compare approaches that use different terminologies and metrics without noting the fragmentation | Q8 (S018) |
+| Recording what a resource derives from | name the related resource from which the described resource is derived | record a resource without naming its source | Q9 (S023) |
+| Recording when a resource changed | state the date on which the resource was changed | record a modification without its date | Q10 (S023) |
+| Recording when a resource is valid | state the date or range of validity of the resource | record a validity period without its dates | Q11 (S023) |
+| Recording when a resource became available | state the date the resource became or will become available | record availability without its date | Q12 (S023) |
+
+## Inference (lane's, not stated by the sources)
+
+For this lane a "search record" is a committed search log or report (`corpus/logs/`), a "source" is a registry row
+(`SOURCES.md`), and a "claim" is a lane claim or entry row. Read that way, the rows describe practice the lane already
+runs in part — searches are logged with query and result (`search-log-method-r39.md`), sources are registered with
+status and dates (`SOURCES.md`), and claims cite `S-ids` and `Q-ids` (`claims.md`, entry decision tables). The sources
+state none of this mapping; it is the lane's reading, to be tested by future rounds.
+
+## Limits
+
+- PRISMA 2020 is written for systematic reviews of intervention studies; the checklist items govern review reporting,
+  not general web search. The rows keep only the search-transparency items (6, 7, 8, 16a); eligibility criteria,
+  risk-of-bias, synthesis, and reporting-bias items are not taken.
+- The S018 survey is about evidence-based text generation with LLMs, not systematic reviews; its taxonomy and metrics
+  are for model evaluation, not for search reporting. The rows keep only the attribution/traceability motivation.
+- DCMI's terms are general metadata properties; they define what `source`, `modified`, `valid`, and `available` mean,
+  not when or how often to set them. The rows keep only the definitions; no freshness or verification policy is implied.
+- Row 8's Never assumes the related resource can be named; when the source is unknown or unavailable, the row does not
+  apply.
+
+######## corpus/knowledge/correction-retraction-status-r81.md  (rc=0, 77 lines)
+cmd: git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 64803d33362f50cf9094e91fc3a4a07216c563ca:corpus/knowledge/correction-retraction-status-r81.md
+# Correction and retraction status of a cited work — check it before reuse (round 81)
+
+source: S205, S206, S207, S028
+verified-at: 2026-11-06 (round 81; captures `371c55117727d526805f030d`, `f221c90f69188f775e32cd34`, `43a45b49723f7677d6446c92`)
+recheck: 365d
+
+## What this entry governs
+
+The lane's claim check runs claim → source → the source's own evidence. A source that has since been corrected,
+retracted or flagged with an expression of concern can still open, stay on topic and state the claim at a named
+anchor — every one of the four support states in `corpus/knowledge/claim-support-states-r24.md` — while no longer
+standing behind it. This entry adds the status check that has to precede reuse, read from three primary
+descriptions of how that status is published.
+
+## How the status is published (observations)
+
+NLM (PubMed) links notices to the article they concern, in both directions. For an erratum that corrects a part of
+the article not carried in the NLM citation (text, graphs, tables):
+
+> "the erratum notice is simply linked to the citation for the corrected article." — S205
+
+> "The Publication Type Retracted Publication [PT] is assigned to the retracted article." — S205
+
+ICMJE asks journals to keep the version trail readable:
+
+> "The journal should archive all prior versions of the article." — S206
+
+> "Previous electronic versions should prominently note that there are more recent versions of the article" — S206
+
+> "The citation should be to the most recent version." — S206
+
+Crossref distributes the Retraction Watch database, with a stated coverage limit:
+
+> "Some other update types, such as expressions of concern and corrections, are also included in the data, but these are not as comprehensive as retractions." — S207
+
+## Decision table
+
+| Observation about a cited work | Reading | Do | Never |
+|---|---|---|---|
+| PubMed record carries Publication Type Retracted Publication | retracted (S205) | record the claim's support as withdrawn; cite the retraction notice beside the work | count the work as support because the anchor still opens |
+| PubMed record links an erratum notice | corrected (S205) | open the erratum and re-check the quoted span against the corrected text | quote the uncorrected wording as current |
+| A newer article version exists (journal's version note) | the read wording may be superseded (S206) | cite the most recent version and re-check the quoted span against it; if only an earlier version was read, say which and that a newer one exists | cite an earlier version as current, or a version-less "the article says" |
+| Retraction Watch data show no retraction | absence of a retraction record only (S207) | record the check (source, date) as a negative sweep | read it as "no correction or expression of concern either" — S207 says those types are less comprehensive |
+| The notice cannot be read (host refuses the fetch) | status unknown | keep the source, mark the status check unresolved, name the notice | treat unreachable as "no notice" |
+
+The last row is this round's own case: the TARCiS correction BMJ 2024;387:q2458 answered HTTP 403 (S208, rejected,
+unreachable) — `corpus/knowledge/citation-searching-tarcis-r81.md` records the consequence.
+
+## Inference (lane's, not stated by the sources)
+
+A status check is a negative claim ("no retraction found"), so under this lane's checklist it carries a sweep naming
+where it looked (PubMed publication types and linked notices, the journal's version note, the Retraction Watch data)
+and the date it looked. The three sources describe where status is published; none of them states this checklist rule.
+
+## Correction (round 81, after scoring)
+
+As landed at `7e2da96a`, the version row said "cite the version read", contradicting S206's "The citation should be to
+the most recent version." (`R81ReviewerEntries.md` item 1). The row now follows S206; the round's claim verdict is
+unchanged by this repair (`corpus/lessons/round-81.md`).
+
+## Addendum (round 82): Crossmark, the publisher-side status signal
+
+S028 (queued since round 21) was re-opened on 2026-11-06 (capture `dedff231d5c3d3cdb0b4f8e3`) and is mined here. Crossref
+describes Crossmark as a member-maintained status link placed on the item itself:
+
+> "Crossmark lets readers know when a substantial change affecting the citation or interpretation has occurred" — S028
+
+> "Members place the Crossmark button close to the title of an item on their web pages and in PDFs." — S028
+
+| Observation about a cited work | Reading | Do | Never |
+|---|---|---|---|
+| The article page or PDF carries a Crossmark button | the publisher has committed to report updates for that record (S028) | open the Crossmark status and record what it shows (and the date) beside the other status checks | treat an absent Crossmark button as "no correction or retraction" — it shows only that the publisher did not deposit the signal |
+
+The "never" clause is the lane's reading of S028's "Members place the Crossmark button…": the signal exists only where a
+member placed it; S028 does not itself state what an absent button means.
+
+== grep of the four files for the r85 topic terms (case-insensitive) ==
+-- pattern 'prov:wasDerivedFrom'  rc=0
+   64803d33362f50cf9094e91fc3a4a07216c563ca:corpus/knowledge/metadata-screen-r25.md:3:source: S029 https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-iv §IV.1 (periodic currency assessment → a scheduled `recheck:`); S033 https://www.w3.org/TR/2013/REC-prov-o-20130430/ §3.1 `prov:wasDerivedFrom` and §3.2 entity-lifetime paragraph (derivation and as-of time are separate facts → `source:` and `verified-at:`); gate `tools/research-gate.sh` `verify_metadata` and selftest cases 137–154 at the round-25 landing; spec v1 `corpus/evidence/round25-claims.md` (Claim 1)
+   64803d33362f50cf9094e91fc3a4a07216c563ca:corpus/knowledge/metadata-screen-r25.md:24:its next check is due; PROV-O records derivation (`prov:wasDerivedFrom`) and
+-- pattern 'generatedAtTime'  rc=0
+   64803d33362f50cf9094e91fc3a4a07216c563ca:corpus/knowledge/metadata-screen-r25.md:25:entity-lifetime times (`prov:generatedAtTime` / `prov:invalidatedAtTime`) as separate
+-- pattern 'invalidatedAtTime'  rc=0
+   64803d33362f50cf9094e91fc3a4a07216c563ca:corpus/knowledge/metadata-screen-r25.md:25:entity-lifetime times (`prov:generatedAtTime` / `prov:invalidatedAtTime`) as separate
+-- pattern 'FAIR'  rc=1
+   (no output)
+-- pattern 'R1.2'  rc=1
+   (no output)
+-- pattern 'lastReviewed'  rc=1
+   (no output)
+-- pattern 'provenance'  rc=0
+   64803d33362f50cf9094e91fc3a4a07216c563ca:corpus/knowledge/search-transparency-reporting-r84.md:15:what each quote states about reporting a search and recording its provenance; the checklist items for other review
+

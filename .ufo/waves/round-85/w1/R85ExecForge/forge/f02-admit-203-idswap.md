@@ -1,0 +1,1 @@
+GATE-RECORD S032 url=https://pubmed.ncbi.nlm.nih.gov/17638714/ fetched=2026-11-08T02:15:39Z tier=A decision=admit capture=corpus/captures/58725f5e0ac436166546a5ec.txt capture_sha256=7070b59c3434b677… words=4 quote="Cookies must be enabled"

@@ -2450,3 +2450,38 @@ passing record rather than through prose.
 - Mined mistakes: QUALITY 166 (post-freeze predicate amendment), 167 (mutation-coverage vs enumeration),
   168 (egress intended-targets scope).
 - Census end exit 0 (5 pre-existing W04 warnings). Misroot sweep clean (only orchestrator `.scratch/` paths).
+
+## Round 85 — record-checker repairs land and are witnessed; both frozen claims honest-stop on their own rules (2026-11-08)
+
+- Fresh-start reads: r81–r83 lessons + spot-checks, r84 lesson and its verifier spot-check; claims frozen at
+  `5d0b9413` with two claims (C1 the round-85 repair of `tools/gate-records.py verify`; C2 depth entry
+  `provenance-recording-r85.md`), amended pre-data at `02df67db` after the first candidate scored `E6,E7`.
+- Egress table committed at the freeze before any fetch; census start exit 0. Fetches 2026-11-08T03:54–04:16Z:
+  S023 DCMI re-open 200; S215 PROV-O alternate URL 403×2 then 200 (plain UA; campaign UA refused); S026 GO FAIR
+  R1.2 200; S024 Schema.org lastReviewed 200. Disclosed defects: S026/S024 outside the table's intended list
+  (amendment 6), four GETs on the alternate URL, one id/url mismatch row (S033) in the ledger.
+- Landing `64803d33`: tool repairs (non-git/empty `--repo` → setup exit 2; REFETCH success exactly 200;
+  calendar-valid `fetched`), entry, registry S215 (new) / S026 / S024 (mined), lesson, plan, claims.json.
+  Post-scoring repairs in the integration commit: `admit` requires `decision=admit`; `--repo ''` refuses; entry
+  rows 1/5 warrants narrowed.
+- Controls: `c1-k0-donothing` FAIL `SETUP=0/1`; `c2-d0-donothing` FAIL `entries=0`; accept/refuse/whitelist stubs
+  FAIL. After: `GATE_RECORDS_R85=PASS` `354/354 EXPECTED_CODE=354/354 SETUP=1/1`; `DEPTH_R85=PASS`
+  `entries=1 rows=6 located_quotes=7 fresh_sources=3`.
+- Wave w1: 12 seats (4 executor, 2 reviewer, 1 critic, 1 mutation-tester, 1 revenger, 1 scout, 1 connector,
+  1 scribe; attack share 5/12 ≈ 42%), 0 dead; `w1-results.json` 12 entries.
+- C1: predicate PASS, but **K2-class wording fire** — the frozen battery enumerates a 200-only class with zero
+  forgeries (`R85CriticClaims`), and `M17-refetch-http-2xx-accepted` survives all legs (`R85MutationTool`);
+  `R85ReviewerTool` holds docstring-vs-code with two minor setup deviations (both repaired post-scoring);
+  `R85ExecHarm` 0 harm (354 records); `R85RevCalendar` holds the calendar gate; `R85ExecForge` finds the 203
+  accept-boundary (base `OK` → landing `FAIL REFETCH`) and 58 new in-class forgeries all refused. Narrowed
+  claim verified: setup + calendar leg in-battery, 200-only by `forge-203.py` (amendments 7/7b).
+- C2: **K3 fired** on rows 1 and 5 Never cells (`R85ReviewerEntry`); **novelty narrowed** — S215 is the S033
+  document and `metadata-screen-r25.md` already teaches the PROV derivation/lifetime split, three quotes also sit
+  in `corpus/lessons/round-25.md` (`R85ScoutGround`, amendment 9); the amendment also lowered the row/quote floors
+  though the prefreeze floors were reachable (`R85ScribeLesson` receipt 04, amendment 10). `R85ExecReopen` K2 held
+  (7/7 quotes in captures and live 200 pages). Honest stop.
+- Mined mistakes: QUALITY 169–172 (pre-freeze ground/floors vs counter rules; freeze-integrity + egress-set
+  discipline with this round's own defects; a class without a forgery is not load-bearing; floors not relaxed
+  beside their ground / a cited receipt must exist).
+- Ledger: `PREFILE-FALSIFICATION: pass claims=2 rows=13 attack_seats=6 findings=0`.
+- Census end exit 0 (same five W04 warnings). Gate selftest `PASS (283 cases, 0 skipped)`; preflight G01–G07 PASS.

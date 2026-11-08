@@ -1,0 +1,17 @@
+# receipt 09 — round-85 refetch rows, and whether the canonical PROV-O URL was fetched this round
+# command: awk -F'\t' 'NR>1 && $5>"2026-11-08T03:54:30Z"{print NR": "$1" "$2" attempt="$4" fetched="$5" rc="$6" http="$7}' corpus/evidence/round57/refetch.tsv
+# freeze commit time 5d0b9413 = 2026-11-08T00:54:30-03:00 = 03:54:30Z
+# date: 2026-11-08
+174: S023 https://www.dublincore.org/specifications/dublin-core/dcmi-terms/ attempt=2 fetched=2026-11-08T03:54:40Z rc=0 http=200
+175: S020 https://www.w3.org/TR/prov-o/ attempt=1 fetched=2026-11-08T03:54:43Z rc=22 http=403
+176: S020 https://www.w3.org/TR/prov-o/ attempt=2 fetched=2026-11-08T03:54:47Z rc=22 http=403
+177: S215 https://www.w3.org/TR/prov-o/ attempt=3 fetched=2026-11-08T03:55:52Z rc=0 http=200
+178: S026 https://www.gofair.foundation/r1-2 attempt=1 fetched=2026-11-08T04:14:51Z rc=0 http=200
+179: S033 https://www.w3.org/TR/prov-o/ attempt=1 fetched=2026-11-08T04:15:56Z rc=22 http=403
+180: S024 https://schema.org/lastReviewed attempt=1 fetched=2026-11-08T04:16:13Z rc=0 http=200
+--- rows carrying the CANONICAL prov-o URL, all rounds:
+167:S020	https://www.w3.org/TR/2013/REC-prov-o-20130430/	fc127d142427c83cc805fe67	1	2026-11-08T02:16:01Z	22	403	-	-
+168:S020	https://www.w3.org/TR/2013/REC-prov-o-20130430/	fc127d142427c83cc805fe67	2	2026-11-08T02:16:03Z	22	403	-	-
+169:S020	https://www.w3.org/TR/2013/REC-prov-o-20130430/	fc127d142427c83cc805fe67	3	2026-11-08T02:16:08Z	22	403	-	-
+--- round-85 rows carrying the canonical URL:
+[no row listed under the last heading = the canonical URL was NOT fetched in round 85]

@@ -1,0 +1,21 @@
+=== GATE_RECORCE probe bundle ===
+--- --repo '' on rev record ---
+GATE_RECORD revtest.md:1 S199 FAIL LINE,REV
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+rc=1
+--- non-git --repo (bare dir) ---
+GATE_RECORDS_ERROR not a git repo: /fast/scratch/hyaku/chousa-r85/R85ReviewerTool/tmprs1vphs8
+rc=2
+--- admit decision=reject (docstring form decision=<admit|reject>) ---
+GATE_RECORD t6.md:1 S203 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+rc=0
+--- cases: quote=1word/26words, LEAD/tab/CRLF/quote-equals/empty-repo ---
+== t5.md ==
+GATE_RECORD t5.md:1 S203 FAIL PARSE
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+rc=1
+== z.md ==
+GATE_RECORD z.md:1 S199 FAIL LINE,REV
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+rc=1

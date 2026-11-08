@@ -1,0 +1,1 @@
+GATE-RECORD S208 url=https://www.bmj.com/content/387/bmj.q2458.full.txt fetched=2026-02-29T18:44:31Z tier=A decision=reject capture=none curl_rc=22 http=403 words=0 quote=none

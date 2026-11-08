@@ -145,6 +145,8 @@ def parse(line):
             return None
         if kv["tier"] not in ("A", "B", "C") or kv["decision"] not in ("admit", "reject"):
             return None
+        if form == "admit" and kv["decision"] != "admit":
+            return None
     if form == "unreach":
         if not INT_RE.fullmatch(kv["curl_rc"]) or not re.fullmatch(r"[0-9]{3}", kv["http"]):
             return None
@@ -281,10 +283,13 @@ def main():
         ap.print_usage(sys.stderr)
         return 2
     root = os.path.abspath(a.root)
-    if a.repo:
+    if a.repo is not None:
+        if a.repo == "" or not os.path.isdir(a.repo):
+            print(f"GATE_RECORDS_ERROR --repo is not a directory: {a.repo!r}", file=sys.stderr)
+            return 2
         p = subprocess.run(["git", "-C", a.repo, "rev-parse", "--git-dir"], capture_output=True, text=True)
         if p.returncode != 0:
-            print(f"GATE_RECORDS_ERROR not a git repo: {a.repo}", file=sys.stderr)
+            print(f"GATE_RECORDS_ERROR not a git repo: {a.repo!r}", file=sys.stderr)
             return 2
     repo = os.path.abspath(a.repo) if a.repo else root
     # calendar validity for fetched timestamps

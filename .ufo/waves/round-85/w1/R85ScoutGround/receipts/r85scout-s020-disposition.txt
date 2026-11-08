@@ -1,0 +1,43 @@
+# R85ScoutGround — receipt 3: S020 disposition data (refetch rows for both PROV-O URLs, S033 row)
+# lane=/home/vgpnk/Projects/shokunin/chousa-shokunin  host=7.2.11-arch1-1  date=2026-11-08
+# revs: base=43c3f7284eee4889cdcc6ac1626573f6579cd533 landing=64803d33362f50cf9094e91fc3a4a07216c563ca
+
+cmd: git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 64803d33362f50cf9094e91fc3a4a07216c563ca:corpus/evidence/round57/refetch.tsv | grep -n -E 'prov-o|w3.org/TR'
+header: id	url	key	attempt	fetched_utc	curl_rc	http_code	raw_sha256	txt_sha256
+167: S020	https://www.w3.org/TR/2013/REC-prov-o-20130430/	fc127d142427c83cc805fe67	1	2026-11-08T02:16:01Z	22	403	-	-
+168: S020	https://www.w3.org/TR/2013/REC-prov-o-20130430/	fc127d142427c83cc805fe67	2	2026-11-08T02:16:03Z	22	403	-	-
+169: S020	https://www.w3.org/TR/2013/REC-prov-o-20130430/	fc127d142427c83cc805fe67	3	2026-11-08T02:16:08Z	22	403	-	-
+175: S020	https://www.w3.org/TR/prov-o/	6e48bcc4a04d13b7b3ebb68e	1	2026-11-08T03:54:43Z	22	403	-	-
+176: S020	https://www.w3.org/TR/prov-o/	6e48bcc4a04d13b7b3ebb68e	2	2026-11-08T03:54:47Z	22	403	-	-
+177: S215	https://www.w3.org/TR/prov-o/	6e48bcc4a04d13b7b3ebb68e	3	2026-11-08T03:55:52Z	0	200	6b96671ab84faf12ce3f041aca12c3f93a6df2ed242348810743179a68e69555	8c9aeabb466fb6d133c6a83cfc546a49336af782d0b7f2fccebcc55c2eb1f2a4
+179: S033	https://www.w3.org/TR/prov-o/	6e48bcc4a04d13b7b3ebb68e	1	2026-11-08T04:15:56Z	22	403	-	-
+
+== same rows at BASE rev 43c3f7284eee4889cdcc6ac1626573f6579cd533 ==
+167: S020	https://www.w3.org/TR/2013/REC-prov-o-20130430/	fc127d142427c83cc805fe67	1	2026-11-08T02:16:01Z	22	403	-	-
+168: S020	https://www.w3.org/TR/2013/REC-prov-o-20130430/	fc127d142427c83cc805fe67	2	2026-11-08T02:16:03Z	22	403	-	-
+169: S020	https://www.w3.org/TR/2013/REC-prov-o-20130430/	fc127d142427c83cc805fe67	3	2026-11-08T02:16:08Z	22	403	-	-
+
+== registry rows S020/S033/S215/S024/S026/S031 ==
+SOURCES.md:30 id=S020 status=queued opened=2026-10-21 usedby=—
+    url=PROV-O: The PROV Ontology, W3C Recommendation 2013-04-30 — https://www.w3.org/TR/2013/REC-prov-o-20130430/
+SOURCES.md:34 id=S024 status=mined opened=2026-11-08 usedby=corpus/knowledge/provenance-recording-r85.md
+    url=Schema.org property lastReviewed — https://schema.org/lastReviewed
+SOURCES.md:36 id=S026 status=mined opened=2026-11-08 usedby=corpus/knowledge/provenance-recording-r85.md
+    url=GO FAIR Foundation, R1.2 (meta)data are associated with detailed provenance — https://www.gofair.foundation/r1-2
+SOURCES.md:41 id=S031 status=queued opened=2026-10-21 usedby=—
+    url=Schema.org property lastReviewed — https://schema.org/lastReviewed
+SOURCES.md:43 id=S033 status=mined opened=2026-10-21 usedby=corpus/knowledge/metadata-screen-r25.md
+    url=PROV-O: The PROV Ontology, W3C Recommendation 2013-04-30 — https://www.w3.org/TR/2013/REC-prov-o-20130430/
+SOURCES.md:228 id=S215 status=mined opened=2026-11-08 usedby=corpus/knowledge/provenance-recording-r85.md
+    url=PROV-O: The PROV Ontology, W3C Recommendation 2013-04-30 (alternate URL) — https://www.w3.org/TR/prov-o/
+
+== capture for https://www.w3.org/TR/2013/REC-prov-o-20130430/ ==
+   key=sha256(url)[:24]=fc127d142427c83cc805fe67  capture .txt present=False  txt_sha256=None
+== capture for https://www.w3.org/TR/prov-o/ ==
+   key=sha256(url)[:24]=6e48bcc4a04d13b7b3ebb68e  capture .txt present=True  txt_sha256=8c9aeabb466fb6d133c6a83cfc546a49336af782d0b7f2fccebcc55c2eb1f2a4
+   capture line 36: This version: http://www.w3.org/TR/2013/REC-prov-o-20130430/ Latest published version: http://www.w3.org/TR/prov-o/ Implementation report: http://www.w3.org/TR/2013/NOTE-prov-implementations-20130430/ Previous version: http://www.w3.org/TR/2013/PR-prov-o-20130312/
+   probe present=True line=1021 : The properties prov:generatedAtTime and prov:invalidatedAtTime can be used to bound the starting and ending mo
+   probe present=True line=779 : Provenance chains comprising only Entities can be formed using the prov:wasDerivedFrom property.
+   probe present=True line=780 : A derivation is a transformation of one entity into another.
+   probe present=True line=781 : then we can say that the bar chart prov:wasDerivedFrom the dataset.
+

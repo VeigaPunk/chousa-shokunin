@@ -1,0 +1,29 @@
+=== (e1) file with no record, landing tool (expect rc 1) ===
+GATE_RECORDS files=1 records=0 ok=0 fail=0
+rc=1
+=== (e1) same, base tool (expect rc 1) ===
+GATE_RECORDS files=1 records=0 ok=0 fail=0
+rc=1
+=== (e2) one OK + one FAIL record, landing tool (expect rc 1) ===
+GATE_RECORD /fast/scratch/hyaku/chousa-r85/R85ExecRepro/exit/ok-plus-fail.md:1 S215 OK
+GATE_RECORD /fast/scratch/hyaku/chousa-r85/R85ExecRepro/exit/ok-plus-fail.md:2 S215 FAIL CAPTURE_SHA
+GATE_RECORDS files=1 records=2 ok=1 fail=1
+rc=1
+=== (e3) missing FILE arg, landing tool (expect rc 2) ===
+usage: gate-records.py verify [-h] --root ROOT [--repo REPO] files [files ...]
+gate-records.py verify: error: the following arguments are required: files
+rc=2
+=== (e3) missing FILE arg, base tool (expect rc 2) ===
+usage: gate-records.py verify [-h] --root ROOT [--repo REPO] files [files ...]
+gate-records.py verify: error: the following arguments are required: files
+rc=2
+=== (e4) non-git --repo, landing tool (expect rc 2 + GATE_RECORDS_ERROR stderr) ===
+GATE_RECORDS_ERROR not a git repo: /fast/scratch/hyaku/chousa-r85/R85ExecRepro/notgit
+rc=2
+=== (e4) non-git --repo, base tool (observe: expect rc 1 FAIL REV,LINE, rc!=2) ===
+GATE_RECORD /fast/scratch/hyaku/chousa-r85/R85ExecRepro/exit/rev.md:1 S001 FAIL LINE,REV
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+rc=1
+=== (e4) non-git --repo, landing tool, one-OK file (setup check precedes file check) ===
+GATE_RECORDS_ERROR not a git repo: /fast/scratch/hyaku/chousa-r85/R85ExecRepro/notgit
+rc=2

@@ -31,11 +31,11 @@ only what each quote states about naming a source and its dates.
 
 | Situation | Do | Never | Warrant |
 |---|---|---|---|
-| Naming what a resource derives from | form the provenance chain with the derivation property where the chain's entities are set | deliver a resource that passes for a primary when it derives from an identified earlier entity | Q1, Q3 (S215) |
+| Naming what a resource derives from | form the provenance chain with the derivation property where the chain's entities are set | record a resource with no derivation link when the chain's entities are known | Q1, Q3 (S215) |
 | Recording a derivation's direction | state the transformation from one entity into another | call two unrelated entities a derivation | Q2 (S215) |
 | Recording the bounds of an entity's existence | state the generation moment and the invalidation moment that bound it | describe an entity as atemporal, with no generation or invalidation moment | Q4 (S215) |
 | Recording a resource's provenance | state how the resource was generated, why it was generated, by whom, and under what conditions | ship data with no record of how it came to be | Q5 (S026) |
-| Recording the source behind a resource | state the starting data or source resource, and who owns the data and should be given credit | cite a tool by name alone, without version or step | Q6 (S026) |
+| Recording the source behind a resource | state the starting data or source resource, and who owns the data and should be given credit | omit the starting data, the owner or the credit from the provenance record | Q6 (S026) |
 | Recording when content was last reviewed | state the date the content was last reviewed for accuracy and completeness | pass a record off as reviewed when only its modification date is known | Q7 (S024) |
 
 ## Inference (lane's, not stated by the sources)

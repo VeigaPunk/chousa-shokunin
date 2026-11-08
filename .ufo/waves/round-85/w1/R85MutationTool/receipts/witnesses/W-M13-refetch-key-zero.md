@@ -1,0 +1,1 @@
+GATE-RECORD S008 url=https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-02 fetched=2026-11-06T19:42:03Z tier=A decision=admit capture=corpus/captures/fd7eed5e0e6c64e22bc1470c.txt capture_sha256=598abc098b574159 words=12 quote="Chapter 2: Determining the scope of the review and the questions it"

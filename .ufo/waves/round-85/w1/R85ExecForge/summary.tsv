@@ -1,0 +1,82 @@
+name	predicted_landed	in_class_claims_md_K2	landed_status	landed_codes	base43c3f728_status	base_codes	violated_check
+c01-curly-apos-fold	none	no	OK		OK		Normalization folds U+2019 -> ' so this IS in the capture; meets every check.
+c02-nbsp	none	no	OK		OK		Normalization (str.split collapse) treats NBSP as whitespace, so normalized quote still in capture. Meets every check.
+c03-zwsp	QUOTE_ABSENT+WORDS	yes (marginal)	FAIL	QUOTE_ABSENT,WORDS	FAIL	QUOTE_ABSENT,WORDS	QUOTE_ABSENT+WORDS: ZWSP glues token; tool also reports WORDS — inspect: quote.split() counts glued as 1 so count same 13?
+c04-tab-in-quote	none	no	OK		OK		Whitespace runs collapse (str.split) so tab == space after norm. Meets every check.
+c05-html-entity	QUOTE_ABSENT+WORDS	yes	FAIL	QUOTE_ABSENT,WORDS	FAIL	QUOTE_ABSENT,WORDS	QUOTE_ABSENT+WORDS: entity glues tokens.
+c06-cross-line-admit	none	no	OK		OK		Quote spanning a line break in the capture: normalized capture collapses newlines too, so the joined text IS present. Meets every check.
+c07-padded-quote	none	no	OK		OK		Lead strip? Parse does not strip inner quote; norm collapses leading whitespace to 0 tokens effect; quote.split() still 13. Meets every check.
+c08-diff-capture	QUOTE_ABSENT	yes	FAIL	QUOTE_ABSENT	FAIL	QUOTE_ABSENT	QUOTE_ABSENT: quote located only in a DIFFERENT capture (S204), not in S203 capture.
+c09-curly-delimiters	PARSE	yes	FAIL	PARSE	FAIL	PARSE	PARSE: quote= must be straight-double-quoted; curly delimiters fail q.startswith('"').
+d01-tier-lower	PARSE	yes	FAIL	PARSE	FAIL	PARSE	PARSE: tier=A|B|C (uppercase only).
+d02-decision-upper	PARSE	yes	FAIL	PARSE	FAIL	PARSE	PARSE: decision=admit|reject.
+d03-decision-maybe	PARSE	yes	FAIL	PARSE	FAIL	PARSE	PARSE: decision=admit|reject.
+d04-unreach-decision-admit	PARSE	yes	FAIL	PARSE	FAIL	PARSE	PARSE: unreach form requires decision=reject.
+d05-admit-reject-with-capture	none	no	OK		OK		no per-check code: decision=reject is allowed for url/admit form; REFETCH/QUOTE etc still pass; prior 2xx/200 checks unchanged. So this line meets every check except the lesson's intent to claim admit.
+f01-admit-203-s021	REFETCH	yes	FAIL	REFETCH	OK		REFETCH: admit needs a refetch row with http exactly 200; 203 cookie-challenge page carries no quotable body (docstring)
+f02-admit-203-idswap	REFETCH	yes	FAIL	REFETCH	FAIL	REFETCH	REFETCH: no refetch row with this id+url+time at http 200
+f03-stale-fetch-admit	REFETCH	yes	FAIL	REFETCH	FAIL	REFETCH	REFETCH: fetched stamp is S205's, not S203's genuine 18:44:29Z.
+k01-sid-num04	REGISTRY+REFETCH	yes	FAIL	REFETCH,REGISTRY	FAIL	REFETCH,REGISTRY	S0203 has no Registry row -> REGISTRY; also refetch row id S0203 absent.
+k02-sid-prefix-S0	PARSE	yes	FAIL	PARSE	FAIL	PARSE	PARSE: S-id must be S[0-9]{3,}.
+k03-unknown-key	PARSE	yes	FAIL	PARSE	FAIL	PARSE	PARSE: key set must be exactly the admit set.
+k04-zwsp-prefix	none	no	OK		OK		lead_strip drops Cf (ZWSP) so the line IS detected as a record and then checked normally; every other check passes.
+k05-lowercase-head	n/a (not a record)	no	(no line)		(no line)		No check: REC_RE requires uppercase GATE-RECORD, so the line is not a record at all; with no other record, output has records=0 exit 1 (no records is not a pass).
+k06-key-order	none	no	OK		OK		No check: keys may appear in any order (docstring). Tier still A. Should be OK.
+k07-regtier-check	TIER	yes	FAIL	TIER	FAIL	TIER	TIER: registry says A.
+k08-tab-separated	PARSE	no	FAIL	PARSE	FAIL	PARSE	Detected as a record (REC_RE accepts \s) but parse() requires a single literal space -> PARSE. Borderline harm candidate.
+k09-double-space	PARSE	no	FAIL	PARSE	FAIL	PARSE	Two spaces after GATE-RECORD -> detected, then PARSE. Borderline harm candidate.
+n01-unreach-http201	REFETCH	yes (marginal)	FAIL	REFETCH	FAIL	REFETCH	REFETCH: success test is curl 0 + http 200; a (0,201) record denotes success by the 200-only rule but with http=201 here. Actual rows: no (0,201) row for S208 -> REFETCH anyway.
+n02-unreach-203-s021	none	no	OK		FAIL	REFETCH	No check violated: non-success (not 200) + matching row exists + tier A matches registry + words 0 + capture none. Meets every check.
+n03-unreach-http299	REFETCH	yes	FAIL	REFETCH	FAIL	REFETCH	REFETCH: 299 is not 200; no matching row. Same literal as the 203 leg.
+n04-unreach-curl28-http200	REFETCH	yes	FAIL	REFETCH	FAIL	REFETCH	(28,200): success needs curl 0+200; no committed row matches -> REFETCH.
+r01-rev-39	REV	yes	FAIL	LINE,REV	FAIL	LINE,REV	REV: 40 hex required; short rev class
+r02-rev-upper	REV	yes	FAIL	LINE,REV	FAIL	LINE,REV	REV: lowercase hex only (HEX40_RE [0-9a-f]).
+r03-rev-tagname	REV	yes	FAIL	LINE,REV	FAIL	LINE,REV	REV: HEAD not 40 hex.
+r04-rev-tagword	REV	yes	FAIL	LINE,REV	FAIL	LINE,REV	REV: tag name form.
+r05-rev-suffix	REV	yes	FAIL	LINE,REV	FAIL	LINE,REV	REV: rev^{commit} text after hex inflates past 40 -> not HEX40.
+r06-rev-tree	REV	yes	FAIL	LINE,REV	FAIL	LINE,REV	REV: a tree object id, not a commit; git_blob requires commit type.
+r07-rev-line1-wrong	LINE	yes	FAIL	LINE	FAIL	LINE	LINE: normalized quote does not occur in that one line (line 1 of the blob).
+r08-rev-line0	PARSE	yes	FAIL	PARSE	FAIL	PARSE	PARSE: line=0 explicitly invalid.
+r09-rev-quote26-real	QUOTE_LEN	yes	FAIL	QUOTE_LEN	FAIL	QUOTE_LEN	QUOTE_LEN: 26 words exceeds 25 even though quote is exactly the first 26 words of line 222 (present in blob line).
+r10-rev-quote25-ext	none	no	OK		OK		No check violated: 25 words present in line 222, words=25.
+r11-rev-words000	PARSE	yes	FAIL	PARSE	FAIL	PARSE	PARSE: leading zeros.
+r12-rev-quote-trailing	WORDS+QUOTE_LEN	yes	FAIL	QUOTE_LEN,WORDS	FAIL	QUOTE_LEN,WORDS	LINE: words=12 but normalized 91-word tail — normalized string not substring of line? Actually it IS substring of line (contiguous slice) but words says 12 while tokens = 91 -> WORDS + QUOTE_LEN.
+r13-rev-path-traversal	REV	yes	FAIL	LINE,REV	FAIL	LINE,REV	REV: path resolved as rev:../corpus/QUALITY.md — not a blob in that tree.
+r14-rev-path-abs	REV	yes	FAIL	LINE,REV	FAIL	LINE,REV	REV: leading slash not a repo-relative blob path.
+r15-rev-line-boundary	LINE	yes	FAIL	LINE	FAIL	LINE	6-digit line=999999 is within INT_RE but beyond the blob -> LINE.
+s01-sha-upper	CAPTURE_SHA	yes (maybe PARSE? verify)	FAIL	CAPTURE_SHA	FAIL	CAPTURE_SHA	CAPTURE_SHA: sha must be lowercase hex prefix of sha256(capture bytes); also SHA_RE [0-9a-f] so PARSE side? check SHA_RE.fullmatch on upper fails -> CAPTURE_SHA not PARSE (hex not validated in parse()).
+s02-sha-threedots	none(OK)	no	OK		OK		No check: code SHA_RE allows ... suffix; docstring [...] ambiguous — not a forgery.
+s03-sha-dual-suffix	CAPTURE_SHA	yes	FAIL	CAPTURE_SHA	FAIL	CAPTURE_SHA	CAPTURE_SHA grammar: single […] suffix; code SHA_RE allows only one (?:…|\.\.\.)? so …… fails fullmatch -> CAPTURE_SHA.
+s04-sha-raw	CAPTURE_SHA	yes	FAIL	CAPTURE_SHA	FAIL	CAPTURE_SHA	CAPTURE_SHA: sha of the .raw file instead of the .txt capture bytes (docstring: sha256(capture bytes)=.txt).
+s05-sha-full64	none	no	OK		OK		no check
+s06-sha-65hex	CAPTURE_SHA	yes	FAIL	CAPTURE_SHA	FAIL	CAPTURE_SHA	CAPTURE_SHA: >64 hex fails SHA_RE.
+s07-sha-garbage-suffix	CAPTURE_SHA	yes	FAIL	CAPTURE_SHA	FAIL	CAPTURE_SHA	CAPTURE_SHA grammar: trailing junk after suffix.
+s08-sha-15hex	CAPTURE_SHA	yes	FAIL	CAPTURE_SHA	FAIL	CAPTURE_SHA	CAPTURE_SHA: shorter than 16 hex.
+s09-sha-nosuffix-16	none	no	OK		OK		Bare 16-hex prefix, optional suffix omitted; documented grammar.
+s10-sha-nosuffix-20	none	no	OK		OK		Bare 20-hex prefix; documented grammar.
+s11-sha-mixed-case	CAPTURE_SHA	yes	FAIL	CAPTURE_SHA	FAIL	CAPTURE_SHA	Mixed-case hex fails SHA_RE [0-9a-f].
+t01-month13	PARSE	yes	FAIL	PARSE	FAIL	REFETCH	fetched must be a real calendar instant (docstring)
+t02-day32	PARSE	yes	FAIL	PARSE	FAIL	REFETCH	fetched must be a real calendar instant
+t03-hour24	PARSE	yes	FAIL	PARSE	FAIL	REFETCH	fetched must be a real calendar instant
+t04-min60	PARSE	yes	FAIL	PARSE	FAIL	REFETCH	fetched must be a real calendar instant
+t05-sec60	PARSE	yes	FAIL	PARSE	FAIL	REFETCH	fetched must be a real calendar instant
+t06-feb29-nonleap	PARSE	yes	FAIL	PARSE	FAIL	REFETCH	fetched must be a real calendar instant
+t07-apr31	PARSE	yes	FAIL	PARSE	FAIL	REFETCH	fetched must be a real calendar instant
+t08-unreach-month13	PARSE	yes	FAIL	PARSE	FAIL	REFETCH	fetched must be a real calendar instant (unreach form)
+t09-unreach-feb29	PARSE	yes	FAIL	PARSE	FAIL	REFETCH	fetched must be a real calendar instant (unreach form)
+t10-leap-second	PARSE	no	FAIL	PARSE	FAIL	REFETCH	Leap second 2016-12-31T23:59:60Z is a real UTC instant, strptime rejects :60. Borderline harm candidate (no committed row has :60).
+u01-url-trailslash	CAPTURE_KEY+REFETCH	yes	FAIL	CAPTURE_KEY,REFETCH	FAIL	CAPTURE_KEY,REFETCH	CAPTURE_KEY/REFETCH: url differs from committed refetch row (exact string match).
+u02-url-fragment	CAPTURE_KEY+REFETCH	yes	FAIL	CAPTURE_KEY,REFETCH	FAIL	CAPTURE_KEY,REFETCH	CAPTURE_KEY/REFETCH: fragment changes the exact url string.
+u03-url-https2http	CAPTURE_KEY+REFETCH	yes	FAIL	CAPTURE_KEY,REFETCH	FAIL	CAPTURE_KEY,REFETCH	CAPTURE_KEY/REFETCH: http vs https changes exact url string/key.
+u04-url-uppercase-host	CAPTURE_KEY+REFETCH	yes	FAIL	CAPTURE_KEY,REFETCH	FAIL	CAPTURE_KEY,REFETCH	CAPTURE_KEY/REFETCH: case-sensitive url/key match.
+u05-url-no-scheme	PARSE	yes	FAIL	PARSE	FAIL	PARSE	PARSE: url must be http(s)://..
+u06-url-doublequery	CAPTURE_KEY+REFETCH	yes	FAIL	CAPTURE_KEY,REFETCH	FAIL	CAPTURE_KEY,REFETCH	CAPTURE_KEY/REFETCH
+w01-words-plus	PARSE	yes	FAIL	PARSE	FAIL	PARSE	PARSE: digits only ASCII, no sign (INT_RE).
+w02-words-space	PARSE	yes	FAIL	PARSE	FAIL	PARSE	PARSE: kv token with space splits into two toks -> second tok has no = -> PARSE.
+w03-words-fullwidth	PARSE	yes	FAIL	PARSE	FAIL	PARSE	PARSE: ASCII 0-9 only (INT_RE).
+w04-line-plus-rev	PARSE	yes	FAIL	PARSE	FAIL	PARSE	PARSE: INT_RE digits only.
+w05-curlrc-plus	PARSE	yes	FAIL	PARSE	FAIL	PARSE	PARSE: INT_RE.
+w06-line-7digits	LINE	yes	FAIL	LINE	FAIL	LINE	LINE: 7-digit line within INT_RE (1+6=7 digits) but beyond blob length.
+w07-line-embedded	PARSE	yes	FAIL	PARSE	FAIL	PARSE	PARSE: INT_RE fullmatch.
+w08-words-00lead	PARSE	yes	FAIL	PARSE	FAIL	PARSE	PARSE: leading zero (INT_RE 0|[1-9][0-9]{0,6}).
+x01-nul-capture	CAPTURE_PATH,CAPTURE_SHA,QUOTE_ABSENT,REFETCH	yes	FAIL	CAPTURE_PATH,CAPTURE_SHA,QUOTE_ABSENT,REFETCH	FAIL	CAPTURE_PATH,CAPTURE_SHA,QUOTE_ABSENT,REFETCH	Embedded NUL in capture value; os.path.isfile returns False (no crash), so CAPTURE_PATH and the dependent codes.

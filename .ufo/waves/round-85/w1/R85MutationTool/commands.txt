@@ -1,0 +1,55 @@
+# R85MutationTool — exact commands (executed; scratch root /fast/scratch/hyaku/chousa-r85/R85MutationTool, deleted after receipts were copied)
+
+## 0. tree extraction (landing) and base extraction (k0 reproduction)
+mkdir -p /fast/scratch/hyaku/chousa-r85/R85MutationTool/{tree,receipts,mutants,work}
+git -C /home/vgpnk/Projects/shokunin/chousa-shokunin archive 64803d33362f50cf9094e91fc3a4a07216c563ca | tar -x -C /fast/scratch/hyaku/chousa-r85/R85MutationTool/tree
+mkdir -p /fast/scratch/hyaku/chousa-r85/R85MutationTool/tree-base
+git -C /home/vgpnk/Projects/shokunin/chousa-shokunin archive 43c3f7284eee4889cdcc6ac1626573f6579cd533 | tar -x -C /fast/scratch/hyaku/chousa-r85/R85MutationTool/tree-base
+
+## 1. baseline — frozen r85 counter on the unmutated landing tool
+python3 -B /fast/scratch/hyaku/chousa-r85/R85MutationTool/tree/corpus/evidence/round85/gate-records-r85.py \
+  --root /fast/scratch/hyaku/chousa-r85/R85MutationTool/tree \
+  --repo /home/vgpnk/Projects/shokunin/chousa-shokunin \
+  --work /fast/scratch/hyaku/chousa-r85/R85MutationTool/work/base-r85
+# observed last lines: predicate line + GATE_RECORDS_R85=PASS, rc 0 (receipts/baseline-r85.txt)
+
+## 2. cross-round — frozen r84 counter on the unmutated landing tool
+python3 -B /fast/scratch/hyaku/chousa-r85/R85MutationTool/tree/corpus/evidence/round84/gate-records-r84.py \
+  --root /fast/scratch/hyaku/chousa-r85/R85MutationTool/tree \
+  --repo /home/vgpnk/Projects/shokunin/chousa-shokunin \
+  --work /fast/scratch/hyaku/chousa-r85/R85MutationTool/work/base-r84
+# observed: ... SETUP=unscored, GATE_RECORDS_R84=PASS, rc 0 (receipts/baseline-r84.txt)
+
+## 3. mutant generation (31 single-point substitutions, each anchored exactly once, compiled)
+python3 /fast/scratch/hyaku/chousa-r85/R85MutationTool/gen_mutants.py
+# observed: GENERATED=31 SRC_SHA=2de79722... (receipts via mutants/manifest.json)
+
+## 4. mutant sweep — one frozen-counter run per mutant (receipts/Mxx-*.txt)
+python3 /fast/scratch/hyaku/chousa-r85/R85MutationTool/run_sweep.py
+# per-mutant command recorded at the head of each receipt:
+# python3 -B <tree>/corpus/evidence/round85/gate-records-r85.py --root <tree> --repo <lane> \
+#   --tool <mutants>/<Mxx>/gate-records.py --work <work>/<Mxx>
+
+## 5. k0 control reproduction (pinned landing counter against the base revision tree and base tool)
+python3 -B /fast/scratch/hyaku/chousa-r85/R85MutationTool/tree/corpus/evidence/round85/gate-records-r85.py \
+  --root /fast/scratch/hyaku/chousa-r85/R85MutationTool/tree-base \
+  --repo /home/vgpnk/Projects/shokunin/chousa-shokunin \
+  --tool /fast/scratch/hyaku/chousa-r85/R85MutationTool/tree-base/tools/gate-records.py \
+  --work /fast/scratch/hyaku/chousa-r85/R85MutationTool/work/repro-k0
+# observed: FORGED_REFUSED=354/354 EXPECTED_CODE=342/354 EMPTY_REFUSED=1/1 RC=4/4 SETUP=0/1, GATE_RECORDS_R85=FAIL, rc 1
+# committed receipt c1-k0-donothing.txt prints FORGED_REFUSED=354/378 EXPECTED_CODE=342/378 (see report finding F2)
+
+## 6. survivor witnesses (record built in scratch; landing tool vs surviving mutant)
+python3 /fast/scratch/hyaku/chousa-r85/R85MutationTool/witnesses.py
+# per-witness output: receipts/witnesses/summary.txt; witness records receipts/witnesses/W-*.md
+
+## 7. data analysis of committed bytes (fresh positives, D1 vacuity, 203/stale/rc rows)
+# (read-only script; output) receipts/analysis-data.txt
+
+## 8. hash / integrity checks (all read-only)
+sha256sum <tree>/tools/gate-records.py            # 2de79722...  == instrument-pins.txt
+sha256sum <tree>/corpus/evidence/round85/gate-records-r85.py  # 62496d36... == instrument-pins.txt
+sha256sum <tree>/corpus/evidence/round84/gate-records-r84.py  # 3777249c...
+sha256sum <tree>/corpus/evidence/round57/refetch.tsv          # 26236067... == git show 64803d3:...refetch.tsv
+git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 5d0b9413:corpus/evidence/round85/gate-records-r85.py | sha256sum
+# 931b5ed7... (freeze counter) vs 62496d36... at landing (pin re-pointed at 64803d33)

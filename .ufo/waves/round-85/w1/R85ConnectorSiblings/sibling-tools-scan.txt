@@ -1,0 +1,32 @@
+=== SIBLING TOOLS AND SCRIPTS SCAN ===
+Target terms: GATE-RECORD, capture_sha256, refetch.tsv
+
+HIT: tsukuroi-shokunin/tools/check-kernel-taint.py keywords=['capture_sha256']
+HIT: tsukuroi-shokunin/tools/check-memory-pressure.py keywords=['capture_sha256']
+HIT: tsukuroi-shokunin/tools/check-pause-gate.py keywords=['capture_sha256']
+HIT: tsukuroi-shokunin/tools/check-storage-health.py keywords=['capture_sha256']
+
+=== DETAILED INSPECTION OF TSUKUROI CAPTURE_SHA256 USAGE ===
+
+--- File: tsukuroi-shokunin/tools/check-pause-gate.py ---
+  Line 10: gate's `capture_sha256`; no pointer may name the gate files themselves. All
+  Line 94: and hashlib.sha256(capture_text.encode('utf-8', 'surrogateescape')).hexdigest() == gate.get('capture_sha256'))
+  Line 183: body = {'schema': SCHEMA, 'capture': CAPTURE, 'capture_sha256': capture_sha, 'premises': premises}
+  Line 206: ('capture-hash-mismatch', gate(mutate=lambda b: b.__setitem__('capture_sha256', '0' * 64)), 1, 0),
+
+--- File: tsukuroi-shokunin/tools/check-kernel-taint.py ---
+  Line 553: 'findings': findings, 'capture_sha256_observed': observed_sha}
+  Line 866: 'capture_sha256_observed': observed_sha}
+
+--- File: tsukuroi-shokunin/tools/check-memory-pressure.py ---
+  Line 569: 'capture_sha256_observed': observed_sha}
+  Line 786: 'capture_sha256_observed': observed_sha}
+
+--- File: tsukuroi-shokunin/tools/check-storage-health.py ---
+  Line 532: 'findings': findings, 'capture_sha256_observed': observed_sha}
+  Line 839: 'capture_sha256_observed': observed_sha}
+
+=== CALENDAR-VALID TIMESTAMP AND HTTP 200 RULE AUDIT ===
+No sibling tool verifies lesson GATE-RECORD lines or parses refetch.tsv.
+In kake-shokunin/scripts/source_recheck.py, terminal HTTP status 200 is checked for recorded hops, but no calendar timestamp validation is performed.
+In tsukuroi tools, capture_sha256 is checked against host diagnostic captures or pause-gate JSON schemas, with no calendar or refetch logic.

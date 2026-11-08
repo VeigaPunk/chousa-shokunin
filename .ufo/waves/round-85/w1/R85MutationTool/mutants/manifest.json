@@ -1,0 +1,343 @@
+[
+ {
+  "name": "M01-registry-check-removed",
+  "why": "REGISTRY check removed: regrow None no longer appends REGISTRY",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M01-registry-check-removed/gate-records.py",
+  "sha256": "47d82bc5a0e929e91f78e02e8a1dce6358c19c9490378672a0359966018bd6a4",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": "    regrow = reg.get(sid)\n    if regrow is None:\n        codes.append(\"REGISTRY\")\n",
+   "new": "    regrow = reg.get(sid)\n"
+  }
+ },
+ {
+  "name": "M02-tier-check-removed",
+  "why": "TIER check removed",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M02-tier-check-removed/gate-records.py",
+  "sha256": "2e5469d0d4f54baba4538e6c42bfc8a6a6893126b77b19695e5e0ab404f8f5b4",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": "        if regrow is not None and regrow[3] != kv[\"tier\"]:\n            codes.append(\"TIER\")\n",
+   "new": ""
+  }
+ },
+ {
+  "name": "M03-capture-path-check-removed",
+  "why": "CAPTURE_PATH append removed",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M03-capture-path-check-removed/gate-records.py",
+  "sha256": "451fa0f39502f42b5d76a26f120d2c3b6625123b494c32ec94614ad6780ca1b4",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": "            codes.append(\"CAPTURE_PATH\")\n",
+   "new": "            pass  # CAPTURE_PATH check removed\n"
+  }
+ },
+ {
+  "name": "M04-capture-key-check-removed",
+  "why": "CAPTURE_KEY check removed (capture key != sha256(url)[:24] accepted)",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M04-capture-key-check-removed/gate-records.py",
+  "sha256": "5b64d6b4d9760ca800c6a4e2d989aa6a18bc11f31cbb4364d61ef3267fa59581",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": "        if cm and cm.group(1) != key:\n            codes.append(\"CAPTURE_KEY\")\n",
+   "new": ""
+  }
+ },
+ {
+  "name": "M05-capture-sha-check-removed",
+  "why": "CAPTURE_SHA check removed",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M05-capture-sha-check-removed/gate-records.py",
+  "sha256": "9b17dddd94ffe4119674af0ab553bb659cfb36c421e606af1e43f24176d1217b",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": "        if not sm or capsha is None or not capsha.startswith(sm.group(1)):\n            codes.append(\"CAPTURE_SHA\")\n",
+   "new": ""
+  }
+ },
+ {
+  "name": "M06-admit-refetch-check-removed",
+  "why": "admit REFETCH check removed (ok forced True)",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M06-admit-refetch-check-removed/gate-records.py",
+  "sha256": "cdea432e83964399ed9c542777a2a094e2f8172c98607d667d4926e6521cb2c3",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": "        ok = any(r[0] == sid and r[1] == url and r[2] == key and r[4] == kv[\"fetched\"] and r[5] == \"0\" and r[6] == \"200\" and capsha is not None and r[8] == capsha for r in refetch)\n",
+   "new": "        ok = True  # REFETCH check removed\n"
+  }
+ },
+ {
+  "name": "M07-words-check-removed",
+  "why": "WORDS check removed",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M07-words-check-removed/gate-records.py",
+  "sha256": "0ade35d8810fca1f52ca6cf816bce86a16a0290c94cff90b30223c642a18eb62",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": "        if kv[\"words\"] != str(n):\n            codes.append(\"WORDS\")\n",
+   "new": ""
+  }
+ },
+ {
+  "name": "M08-quote-len-check-removed",
+  "why": "QUOTE_LEN check removed",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M08-quote-len-check-removed/gate-records.py",
+  "sha256": "ef7c020883a083fd789a3b111283a2f22932a4f69522aca3e2f66b4d768da7bf",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": "        if not 1 <= n <= 25:\n            codes.append(\"QUOTE_LEN\")\n",
+   "new": ""
+  }
+ },
+ {
+  "name": "M09-quote-absent-check-removed",
+  "why": "QUOTE_ABSENT check removed when capture exists",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M09-quote-absent-check-removed/gate-records.py",
+  "sha256": "6c24ff33ceecc6a7cc1120dcb18de5377b96a950330cd9fb6f336c78d4edca7c",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": "            if not quote.strip() or norm(quote) not in text:\n                codes.append(\"QUOTE_ABSENT\")\n",
+   "new": "            if False:  # QUOTE_ABSENT check removed\n                codes.append(\"QUOTE_ABSENT\")\n"
+  }
+ },
+ {
+  "name": "M10-rev-code-removed",
+  "why": "REV code removed from missing-blob branch (LINE kept)",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M10-rev-code-removed/gate-records.py",
+  "sha256": "317b7f052017864e3f0a5b3f702352875d6c89029667f4a882f3a9a24870cbf0",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": "            codes.append(\"REV\")\n",
+   "new": "            pass  # REV check removed\n"
+  }
+ },
+ {
+  "name": "M11-line-check-removed",
+  "why": "LINE check removed from rev branch",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M11-line-check-removed/gate-records.py",
+  "sha256": "f0c0a22d228f1fdb128475d96b894308d1d9a0a9bfaf49ac645f750345e91c3a",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": "            if i > len(lines) or not quote.strip() or norm(quote) not in norm(lines[i - 1]):\n                codes.append(\"LINE\")\n",
+   "new": ""
+  }
+ },
+ {
+  "name": "M12-sha-regex-16-64-to-1-64",
+  "why": "SHA_RE relaxed {16,64} -> {1,64}",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M12-sha-regex-16-64-to-1-64/gate-records.py",
+  "sha256": "a60923876a06226b307d35f3b3e1c1c4a32cbce8c3bd3f7b29a1df6013cc145b",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": "SHA_RE = re.compile(r\"([0-9a-f]{16,64})(?:\u2026|\\.\\.\\.)?\")",
+   "new": "SHA_RE = re.compile(r\"([0-9a-f]{1,64})(?:\u2026|\\.\\.\\.)?\")"
+  }
+ },
+ {
+  "name": "M13-refetch-key-conjunct-dropped",
+  "why": "admit REFETCH no longer requires row key == sha256(url)[:24]",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M13-refetch-key-conjunct-dropped/gate-records.py",
+  "sha256": "11e8d6ab4d4f3f2326f623700677cae2bd2c58dd6fc8757e87d2a3d4f4ac2dfc",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": "r[0] == sid and r[1] == url and r[2] == key and r[4] == kv[\"fetched\"]",
+   "new": "r[0] == sid and r[1] == url and r[4] == kv[\"fetched\"]"
+  }
+ },
+ {
+  "name": "M14-refetch-txtsha-conjunct-dropped",
+  "why": "admit REFETCH no longer requires r[8] == sha256(capture)",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M14-refetch-txtsha-conjunct-dropped/gate-records.py",
+  "sha256": "e2a7b2aa3a5e77bf112bb5d2e5c9165e7a6d3f4c3da511bdabc5fb295a94a15a",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": " and capsha is not None and r[8] == capsha for r in refetch",
+   "new": " and capsha is not None for r in refetch"
+  }
+ },
+ {
+  "name": "M15-refetch-fetched-conjunct-dropped",
+  "why": "admit REFETCH no longer requires r[4] == fetched time",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M15-refetch-fetched-conjunct-dropped/gate-records.py",
+  "sha256": "69ec304f0979551bdd243ff2ddb962b76add849f6567ba5236f7be9a55c31958",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": "r[2] == key and r[4] == kv[\"fetched\"] and r[5] == \"0\"",
+   "new": "r[2] == key and r[5] == \"0\""
+  }
+ },
+ {
+  "name": "M16-refetch-curlrc-accepted",
+  "why": "admit REFETCH accepts any curl_rc",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M16-refetch-curlrc-accepted/gate-records.py",
+  "sha256": "9cea69549e024d74ef7124aab734213f0cc899e0d69d30ed644d84782527d6e5",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": "r[4] == kv[\"fetched\"] and r[5] == \"0\" and r[6] == \"200\"",
+   "new": "r[4] == kv[\"fetched\"] and r[6] == \"200\""
+  }
+ },
+ {
+  "name": "M17-refetch-http-2xx-accepted",
+  "why": "admit REFETCH accepts any 2xx (base-tool semantics)",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M17-refetch-http-2xx-accepted/gate-records.py",
+  "sha256": "22e1c3d2c8d878bce2ceebbdf1cb295793ceff128937e5e221024fed2b441655",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": "r[6] == \"200\" and capsha is not None and r[8] == capsha for r in refetch",
+   "new": "r[6].startswith(\"2\") and capsha is not None and r[8] == capsha for r in refetch"
+  }
+ },
+ {
+  "name": "M18-calendar-gate-removed",
+  "why": "calendar check removed from parse condition (TS_RE only)",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M18-calendar-gate-removed/gate-records.py",
+  "sha256": "a4082ecba7c2857963389647678167270ffda843bb1d5675776c32f0b1c04c1d",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": " or not TS_RE.fullmatch(kv[\"fetched\"]) or not _valid_ts(kv[\"fetched\"]):",
+   "new": " or not TS_RE.fullmatch(kv[\"fetched\"]):"
+  }
+ },
+ {
+  "name": "M19-calendar-accepts-invalid",
+  "why": "_valid_ts always True (calendar-invalid dates accepted)",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M19-calendar-accepts-invalid/gate-records.py",
+  "sha256": "bdac9cad029e9dde1c9350a6b1be08508063b2d3c4e38293389d324a2582d5a1",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": "def _valid_ts(s):\n    try:\n        datetime.datetime.strptime(s, \"%Y-%m-%dT%H:%M:%SZ\")\n        return True\n    except ValueError:\n        return False\n",
+   "new": "def _valid_ts(s):\n    return True\n"
+  }
+ },
+ {
+  "name": "M20-lead-strip-skipped",
+  "why": "record detection matches raw line, not lead_strip(line)",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M20-lead-strip-skipped/gate-records.py",
+  "sha256": "61b89dda6d949fb523cf629b782348577ea4a5b36b8002062a1d68380a342247",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": "                if not REC_RE.match(lead_strip(ln)):",
+   "new": "                if not REC_RE.match(ln):"
+  }
+ },
+ {
+  "name": "M21-indented-lines-skipped",
+  "why": "indented GATE-RECORD lines treated as prose and skipped",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M21-indented-lines-skipped/gate-records.py",
+  "sha256": "b47d2579ba6cf164f015d35c8d2dceddadd8bad6e9f37b7efc287685f0654396",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": "                if not REC_RE.match(lead_strip(ln)):",
+   "new": "                if ln[:1].isspace() or not REC_RE.match(lead_strip(ln)):"
+  }
+ },
+ {
+  "name": "M22-rev-short-revs-accepted",
+  "why": "rev accepts 4..40 hex abbrevs (git resolves them) instead of exactly 40",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M22-rev-short-revs-accepted/gate-records.py",
+  "sha256": "b9768e8c22839a9c8944f8b900407107f298c5ee74d750fba56fcfb5b5cb8d1b",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": "        if HEX40_RE.fullmatch(kv[\"rev\"]):",
+   "new": "        if re.fullmatch(r\"[0-9a-f]{4,40}\", kv[\"rev\"]):"
+  }
+ },
+ {
+  "name": "M23-line-check-whole-blob",
+  "why": "rev LINE check searches the whole blob instead of the named line",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M23-line-check-whole-blob/gate-records.py",
+  "sha256": "594e95c98a101f71590a49f63ee29199faadef7669839ef9bfb87c397d7169d6",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": "norm(quote) not in norm(lines[i - 1])",
+   "new": "norm(quote) not in norm(\"\\n\".join(lines))"
+  }
+ },
+ {
+  "name": "M24-exit0-on-zero-records",
+  "why": "exit 0 when no records found",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M24-exit0-on-zero-records/gate-records.py",
+  "sha256": "dcb6360be783b92a8c659cc6c9c8d8ffc1f93e91434cff087765fbe46004fa8c",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": "    return 0 if n >= 1 and ok == n else 1",
+   "new": "    return 0 if ok == n else 1"
+  }
+ },
+ {
+  "name": "M25-exit0-with-fail-lines",
+  "why": "exit 0 whenever at least one record exists, FAIL lines notwithstanding",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M25-exit0-with-fail-lines/gate-records.py",
+  "sha256": "d2d7bac9fb793c731adefc369517c07eea1c6284edf9d9c08b7971db22426a8a",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": "    return 0 if n >= 1 and ok == n else 1",
+   "new": "    return 0 if n >= 1 else 1"
+  }
+ },
+ {
+  "name": "M26-int-ascii-class-relaxed-unicode",
+  "why": "INT_RE [0-9] relaxed to Unicode \\d (words/line/curl_rc)",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M26-int-ascii-class-relaxed-unicode/gate-records.py",
+  "sha256": "6f7a9ef05a53fc599698205eef0a8f51ba2742e12dc126c0c3b16b4d2e97ef1d",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": "INT_RE = re.compile(r\"0|[1-9][0-9]{0,6}\")",
+   "new": "INT_RE = re.compile(r\"0|[1-9]\\d{0,6}\")"
+  }
+ },
+ {
+  "name": "M27-quote-boundary-guard-removed",
+  "why": "admit quote no longer required to start and end with a double quote",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M27-quote-boundary-guard-removed/gate-records.py",
+  "sha256": "f0d67e2539618fdf082328afcfbb715b5ced81373bf3d26cc3611f32a2f2f55d",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": "if len(q) < 2 or not (q.startswith('\"') and q.endswith('\"')):",
+   "new": "if len(q) < 2:"
+  }
+ },
+ {
+  "name": "M28-setup-probe-removed",
+  "why": "non-git --repo probe removed",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M28-setup-probe-removed/gate-records.py",
+  "sha256": "5cdee4814cc620f0edd4aba283a540b87ee2c748da9133052901816cf2024e82",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": "    if a.repo:\n        p = subprocess.run([\"git\", \"-C\", a.repo, \"rev-parse\", \"--git-dir\"], capture_output=True, text=True)\n        if p.returncode != 0:\n            print(f\"GATE_RECORDS_ERROR not a git repo: {a.repo}\", file=sys.stderr)\n            return 2\n",
+   "new": ""
+  }
+ },
+ {
+  "name": "M29-setup-probe-inverted",
+  "why": "setup probe exits 2 on a VALID git repo",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M29-setup-probe-inverted/gate-records.py",
+  "sha256": "22e0a964e13bf917f90b8fee64526d7fc9ad9c79f83ed9ec876b0d8bf859dc15",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": "        if p.returncode != 0:\n            print(f\"GATE_RECORDS_ERROR not a git repo: {a.repo}\", file=sys.stderr)",
+   "new": "        if p.returncode == 0:\n            print(f\"GATE_RECORDS_ERROR not a git repo: {a.repo}\", file=sys.stderr)"
+  }
+ },
+ {
+  "name": "M30-ts-regex-unicode-relaxed",
+  "why": "TS_RE [0-9] every field relaxed to Unicode \\d (any month digit)",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M30-ts-regex-unicode-relaxed/gate-records.py",
+  "sha256": "8e35e5737df0c81b46da985d502bf8a78820526b8ac5735768836056ad3f61d7",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": "TS_RE = re.compile(r\"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z\")",
+   "new": "TS_RE = re.compile(r\"\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z\")"
+  }
+ },
+ {
+  "name": "M31-unreach-success-2xx",
+  "why": "unreach success definition relaxed to 2xx (a 203 page counts as success)",
+  "path": "/fast/scratch/hyaku/chousa-r85/R85MutationTool/mutants/M31-unreach-success-2xx/gate-records.py",
+  "sha256": "7bf211de0fa361b343993f8f5290381358ea574ff69921089c3760629de72502",
+  "src_sha256": "2de79722150ae41bbededdf5d2f67501ae3cb352efed71191667628c97703beb",
+  "diff_lines": {
+   "old": "        success = kv[\"curl_rc\"] == \"0\" and kv[\"http\"] == \"200\"",
+   "new": "        success = kv[\"curl_rc\"] == \"0\" and kv[\"http\"].startswith(\"2\")"
+  }
+ }
+]

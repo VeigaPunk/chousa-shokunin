@@ -1,0 +1,1 @@
+GATE-RECORD S204 url=https://pmc.ncbi.nlm.nih.gov/articles/PMC11386270/ fetched=2026-11-06T18:44:29Z tier=B decision=admit capture=corpus/captures/c52a1f15884a78028febcf43.txt capture_sha256=b905aae1afc0b798… words=15 quote="Citation indexes are bibliographic databases that record citations in addition to the usual article record."

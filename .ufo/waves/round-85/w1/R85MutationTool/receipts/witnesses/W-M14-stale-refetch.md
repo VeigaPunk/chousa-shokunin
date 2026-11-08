@@ -1,0 +1,1 @@
+GATE-RECORD S113 url=https://www.medsci.cn/guideline/show_article.do?id=23e481c0052069d3 fetched=2026-10-27T08:07:08Z tier=B decision=admit capture=corpus/captures/453d492becd9a2f4632cb8dd.txt capture_sha256=6e2577b00e711bbb words=12 quote="系统评价/Meta分析中文献检索报告清单（PRISMA-S）解读 -指南&解读指南-MedSci.cn 资讯 内科 心血管 肿瘤 内分泌 普通内科 消化 呼吸 神经科 传染科"

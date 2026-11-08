@@ -1,0 +1,151 @@
+# R85ScoutGround — receipt 5: same-document identity, nearest-neighbour rows, claim-text diff
+# lane=/home/vgpnk/Projects/shokunin/chousa-shokunin  date=2026-11-08
+
+== A. the alternate-URL capture declares the canonical URL ==
+corpus/captures/6e48bcc4a04d13b7b3ebb68e.txt:4: PROV-O: The PROV Ontology
+corpus/captures/6e48bcc4a04d13b7b3ebb68e.txt:34: PROV-O: The PROV Ontology
+corpus/captures/6e48bcc4a04d13b7b3ebb68e.txt:35: W3C Recommendation 30 April 2013
+corpus/captures/6e48bcc4a04d13b7b3ebb68e.txt:36: This version: http://www.w3.org/TR/2013/REC-prov-o-20130430/ Latest published version: http://www.w3.org/TR/prov-o/ Implementation report: http://www.w3.org/TR/2013/NOTE-prov-implementations-20130430/ Previous version: http://www.w3.org/TR/2013/PR-prov-o-20130312/
+
+== B. round-25 canonical-URL quote (S020/S033, canonical URL) present in the new capture? ==
+corpus/lessons/round-25.md:69: | S020 mined (SrcProvO) | https://www.w3.org/TR/2013/REC-prov-o-20130430/ | §3.2 entity lifetime: “The properties prov:generatedAtTime and prov:invalidatedAtTime can be used to bound the starting and ending moments of an Entity's existence.” |
+corpus/lessons/round-25.md:73: | S024 queued (SrcSchemaReviewed) | https://schema.org/lastReviewed | Definition: “Date on which the content on this web page was last reviewed for accuracy and/or completeness.” |
+corpus/lessons/round-25.md:75: | S026 queued (SrcFairR12) | https://www.gofair.foundation/r1-2 | Interpretation of R1.2, first paragraph: “Detailed provenance includes facets such as how the resource was generated, why it was generated, by whom, under what conditions” |
+corpus/lessons/round-25.md:197: | S031 / S024 | https://schema.org/lastReviewed | Definition: “Date on which the content on this web page was last reviewed for accuracy and/or completeness.” |
+corpus/lessons/round-25.md:199: | S033 / S020 | https://www.w3.org/TR/2013/REC-prov-o-20130430/ | §3.2 entity lifetime: “The properties prov:generatedAtTime and prov:invalidatedAtTime can be used to bound the starting and ending moments of an Entity's existence.” |
+
+probe: The properties prov:generatedAtTime and prov:invalidatedAtTime can be used to bound the starting and ending moments of a
+   located at: corpus/captures/6e48bcc4a04d13b7b3ebb68e.txt:1021
+probe: Detailed provenance includes facets such as how the resource was generated, why it was generated, by whom, under what co
+   located at: corpus/captures/67983a3dbbd1d690aa648744.txt:453
+probe: Date on which the content on this web page was last reviewed for accuracy and/or completeness.
+   located at: corpus/captures/11d6cc56bb24adfc61eea2b4.txt:211
+
+== C. nearest-neighbour rows (base entries) vs the new entry's rows ==
+corpus/knowledge/metadata-screen-r25.md:3: source: S029 https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-iv §IV.1 (periodic currency assessment → a scheduled `recheck:`); S033 https://www.w3.org/TR/2013/REC-prov-o-20130430/ §3.1 `prov:wasDerivedFrom` and §3.2 entity-lifetime paragraph (derivation and as-of time are separate facts → `source:` and `verified-at:`); gate `tools/research-gate.sh` `verify_metadata` and selftest cases 
+corpus/knowledge/metadata-screen-r25.md:24: its next check is due; PROV-O records derivation (`prov:wasDerivedFrom`) and
+corpus/knowledge/metadata-screen-r25.md:25: entity-lifetime times (`prov:generatedAtTime` / `prov:invalidatedAtTime`) as separate
+corpus/knowledge/metadata-screen-r25.md:26: facts (S033), which is the split between `source:` and `verified-at:`. Neither
+corpus/knowledge/metadata-screen-r25.md:96: S033 supersedes S020's teaching: PROV times bound an entity's existence,
+corpus/knowledge/metadata-screen-r25.md:97: not whether a research claim is true or when an analyst checked it. Using
+corpus/knowledge/metadata-screen-r25.md:98: separate source/time fields for verification is explicitly a lane inference,
+corpus/knowledge/metadata-screen-r25.md:99: not PROV-O's definition of verification. S020's historical row remains queued.
+
+corpus/knowledge/search-transparency-reporting-r84.md:30: | Q9 | S023 | "A related resource from which the described resource is derived." |
+corpus/knowledge/search-transparency-reporting-r84.md:46: | Recording what a resource derives from | name the related resource from which the described resource is derived | record a resource without naming its source | Q9 (S023) |
+corpus/knowledge/search-transparency-reporting-r84.md:47: | Recording when a resource changed | state the date on which the resource was changed | record a modification without its date | Q10 (S023) |
+
+corpus/knowledge/provenance-recording-r85.md:22: | Q1 | S215 | "Provenance chains comprising only Entities can be formed using the prov:wasDerivedFrom property." |
+corpus/knowledge/provenance-recording-r85.md:25: | Q4 | S215 | "The properties prov:generatedAtTime and prov:invalidatedAtTime can be used to bound the starting and ending moments of an Entity's existence." |
+corpus/knowledge/provenance-recording-r85.md:34: | Naming what a resource derives from | form the provenance chain with the derivation property where the chain's entities are set | deliver a resource that passes for a primary when it derives from an identified earlier entity | Q1, Q3 (S215) |
+corpus/knowledge/provenance-recording-r85.md:36: | Recording the bounds of an entity's existence | state the generation moment and the invalidation moment that bound it | describe an entity as atemporal, with no generation or invalidation moment | Q4 (S215) |
+corpus/knowledge/provenance-recording-r85.md:39: | Recording when content was last reviewed | state the date the content was last reviewed for accuracy and completeness | pass a record off as reviewed when only its modification date is known | Q7 (S024) |
+
+== D. claims.md K4 text: freeze vs amendment ==
+cmd: git -C /home/vgpnk/Projects/shokunin/chousa-shokunin diff 5d0b94139ae8baf60d6f630715bc495f0a93b448 02df67db4f9ad39f8ebc73984ce50ea1fbea315f -- corpus/evidence/round85/claims.md   rc=0
+diff --git a/corpus/evidence/round85/claims.md b/corpus/evidence/round85/claims.md
+index 71b8373e..3f9aaf05 100644
+--- a/corpus/evidence/round85/claims.md
++++ b/corpus/evidence/round85/claims.md
+@@ -1,8 +1,10 @@
+ # chousa round 85 — frozen claims
+ 
+-Base (round-84 tip + verifier spot-check, closed rejected-honest-stop): `43c3f7284eee4889cdcc6ac1626573f6579cd533` (HEAD before this freeze).
+-Egress table: `corpus/evidence/round85/egress-approval.md`, committed before any fetch (this file's commit precedes every
+-round-85 refetch row; closure compares commit time with `fetched_utc`).
++Base: `43c3f7284eee4889cdcc6ac1626573f6579cd533` (round-84 tip + verifier spot-check, closed rejected-honest-stop).
++Egress table `corpus/evidence/round85/egress-approval.md` and this claims file were committed at the freeze
++`5d0b94139ae8baf60d6f630715bc495f0a93b448` before any fetch; any refetch row dated after the freeze commit's
++committer time is round-85. (The counter's ROUND_START is the freeze, so every round-85 fetch it sees was made
++after the freeze.)
+ 
+ Fresh-start reads (done before this file, per Amendment 58 fresh-start binding + §9 do-nothing control): round-81/82/83
+ verifier spot-checks, `corpus/lessons/round-81.md`, `round-82.md`, `round-83.md`, and round-84 spot-check
+@@ -79,13 +81,14 @@ accepted); `c1-f1-stub-accept` (blanket-accept stub → FAIL); `c1-f2-stub-refus
+   that closes a genuine K2 in-class form at the base revision is not harm.
+ - K4 (whitelist): a tool that accepts the 15 frozen lines and refuses everything else passes the counter.
+ 
+-## C2 — depth (sourced on S023 re-opened plus the landed S023 `modified` Definition, plus S020 PROV-O via alternate URL committed this round)
++## C2 — depth (sourced on S215 PROV-O alternate URL, S026 GO FAIR R1.2, S024 Schema.org lastReviewed — all opened this round)
+ 
+ **Claim.** One new knowledge entry teaches provenance recording — what a record must write to name its derivation
+-and its dates (`dcterms:source`, `dcterms:modified`, `dcterms:valid`, `prov:wasDerivedFrom`) so a reader can tell
+-where a record came from and when it changed — on ground no base entry cites (S023 re-opened with its Definition
+-quote located this round, and S020 PROV-O opened via its alternate W3C URL committed this round; S020's
+-superseding row S033 stays queued-superseded for the old `REC-prov-o-20130430` URL).
++and its provenance (`prov:wasDerivedFrom`, `prov:generatedAtTime`/`prov:invalidatedAtTime`, FAIR R1.2 provenance
++facets, Schema.org `lastReviewed`) so a reader can tell where a record came from, when it stood and when it was
++reviewed — on ground no base entry cites (S215 registered this round for the W3C alternate URL; S026 and S024 mined
++from queued this round; S023's `modified` Definition repair stands as the prior entry's correction, not re-quoted,
++to keep the new entry's quotes novel and its ground new).
+ 
+ **Counting command (frozen; sha256 in `instrument-pins.txt`):**
+ `D=$(mktemp -d -p /fast/scratch/hyaku) && git archive <rev> | tar -x -C "$D" && python3 -B "$D/corpus/evidence/round85/depth-r85.py" --root "$D"`
+@@ -93,8 +96,8 @@ superseding row S033 stays queued-superseded for the old `REC-prov-o-20130430` U
+ **Before** (`controls/receipts/c1-d0-donothing.txt`, tree at base): `DEPTH_R85 entries=0 ok_entries=0 rows=0
+ located_quotes=0 fresh_sources=0`, `DEPTH_R85=FAIL`, rc 1.
+ 
+-**Predicate (target).** At the landing revision the counting command prints `entries=1 ok_entries=1`, `rows=` ≥ 7,
+-`located_quotes=` ≥ 8, `fresh_sources=2`, and `DEPTH_R85=PASS`, rc 0.
++**Predicate (target).** At the landing revision the counting command prints `entries=1 ok_entries=1`, `rows=` ≥ 6,
++`located_quotes=` ≥ 7, `fresh_sources=3`, and `DEPTH_R85=PASS`, rc 0.
+ 
+ **Controls (executed, committed):** `c2-d0-donothing` FAIL; `c2-f1-salad-boundary` (located quotes under
+ content-free rows) PASS — the stated counter limit: the counter does not judge whether a row follows from its quote;
+@@ -104,26 +107,23 @@ kill rule K3 does; `c2-d3-r84-entry-relanded` (round-84 entry re-landed under a
+ - K1: the predicate is not met at the landing revision.
+ - K2 (located): a declared quote of the entry does not occur (whitespace-collapsed, curly quotes folded) in its
+   committed capture, or occurs there but is absent from the live page when a non-author re-open gets HTTP 200 and
+-  tag-strips it. An unreachable re-open is recorded, not a kill. A quote that is a Definition of `modified` in the
+-  S023 capture must occur with `modified` in the same definition block (the row-9 K3 repair — non-unique
+-  "Recommended practice" comment text does not uniquely locate `modified`).
++  tag-strips it. An unreachable re-open is recorded, not a kill.
+ - K3 (warrant): a non-author reviewer shows, for any decision-table row, (a) that its Do or Never states something
+   its cited quotes do not state or entail, or (b) a sentence of the same cited source (located in the committed
+   capture, quoted by line) that contradicts the row's Do or Never. One such row falsifies C2. Repairs after
+   scoring do not rescue.
+-- K4 (ground): a base-list entry (`base-knowledge.txt`) cites S023 or the S020 alternate URL, or contains its URL.
+-  S020's superseded row S033 (old URL) is not ground: it is a forward-looking supersession, not a held derivation entry.
++- K4 (ground): a base-list entry (`base-knowledge.txt`) cites S215, S026 or S024, or contains their URLs.
+ 
+ ## Frontier step (inside the claim cap, not a third claim)
+ 
+ - Census before: `/home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa`
+   at round start (paste output + exit). Census after at round end; exit 0 required.
+-- Curate `corpus/SOURCES.md` in contract v1 shape: one row per source opened this round (S020 alternate URL
+-  PROV-O; S023 re-open appends the `modified` Definition anchor and stays `mined`), each with URL, access date,
++- Curate `corpus/SOURCES.md` in contract v1 shape: one row per source opened this round (S215 PROV-O alternate
++  URL registered, S026 GO FAIR R1.2 mined, S024 Schema.org lastReviewed mined), each with URL, access date,
+   ≤25-word located quote in the lesson `## Gate`. Rejections stay as rows with reason + flip.
+ - Mine one mistake into `corpus/lessons/round-85.md` `## Mistakes` (class · evidence · captured-by · fix, where the
+   fix must be shown able to fail), or paste the sweep that found none.
+-- Sourced claim: C2 rests on S023 re-opened and S020 alternate URL, opened this round.
++- Sourced claim: C2 rests on S215, S026, S024, opened this round.
+ - Assimilation: `Assimilation: none` in the report unless a theme from `merge/chousa/` is adopted in scratch and
+   validated per §10 (read-only campaign bytes, scratch collision check, re-grounding).
+ 
+
+== E. registry rows for the Schema.org lastReviewed pair (S024 / S031) ==
+corpus/SOURCES.md:34: | S024 | Schema.org property lastReviewed — https://schema.org/lastReviewed | spec | A | Schema.org's own definition and declared use of lastReviewed | lastReviewed property definition paragraph (capture key 11d6cc56bb24adfc61eea2b4) | A last-reviewed date for accuracy is a property separate from publication or modification dates | mined | 2026-11-08 | 365d | corpus/knowledge/provenance-recording-
+corpus/SOURCES.md:41: | S031 | Schema.org property lastReviewed — https://schema.org/lastReviewed | spec | A | Schema.org's own definition and declared use of lastReviewed | lastReviewed property definition paragraph; Schema.org page served 2026-10-21 | supersedes S024 — lastReviewed records the date a web page was last reviewed for accuracy and/or completeness; no comparison to other date properties claimed | queued |
+
+== F. attempts per PROV-O URL in refetch.tsv (round-85 rows only) ==
+-- https://www.w3.org/TR/2013/REC-prov-o-20130430/ : 3 rows total, 0 dated >= 2026-11-08T03:54:30Z (round-85)
+   id=S020 attempt=1 fetched=2026-11-08T02:16:01Z curl_rc=22 http=403 txt_sha256=-
+   id=S020 attempt=2 fetched=2026-11-08T02:16:03Z curl_rc=22 http=403 txt_sha256=-
+   id=S020 attempt=3 fetched=2026-11-08T02:16:08Z curl_rc=22 http=403 txt_sha256=-
+-- https://www.w3.org/TR/prov-o/ : 4 rows total, 4 dated >= 2026-11-08T03:54:30Z (round-85)
+   id=S020 attempt=1 fetched=2026-11-08T03:54:43Z curl_rc=22 http=403 txt_sha256=-
+   id=S020 attempt=2 fetched=2026-11-08T03:54:47Z curl_rc=22 http=403 txt_sha256=-
+   id=S215 attempt=3 fetched=2026-11-08T03:55:52Z curl_rc=0 http=200 txt_sha256=8c9aeabb466fb6d133c6a83cfc546a49336af782d0b7f2fccebcc55c2eb1f2a4
+   id=S033 attempt=1 fetched=2026-11-08T04:15:56Z curl_rc=22 http=403 txt_sha256=-
+   (canonical URL capture present in corpus/captures: False)
+   (canonical capture tracked in git history: False)
+
+== G. S020 / S033 disposition at landing ==
+base     corpus/SOURCES.md:30 id=S020 status=queued opened=2026-10-21 usedby=— url=PROV-O: The PROV Ontology, W3C Recommendation 2013-04-30 — https://www.w3.org/TR/2013/REC-
+base     corpus/SOURCES.md:43 id=S033 status=mined opened=2026-10-21 usedby=corpus/knowledge/metadata-screen-r25.md url=PROV-O: The PROV Ontology, W3C Recommendation 2013-04-30 — https://www.w3.org/TR/2013/REC-
+landing  corpus/SOURCES.md:30 id=S020 status=queued opened=2026-10-21 usedby=— url=PROV-O: The PROV Ontology, W3C Recommendation 2013-04-30 — https://www.w3.org/TR/2013/REC-
+landing  corpus/SOURCES.md:43 id=S033 status=mined opened=2026-10-21 usedby=corpus/knowledge/metadata-screen-r25.md url=PROV-O: The PROV Ontology, W3C Recommendation 2013-04-30 — https://www.w3.org/TR/2013/REC-
+   base entry citing S033: corpus/knowledge/metadata-screen-r25.md (source: line 3, body lines 96-99)
+

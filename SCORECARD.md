@@ -3843,3 +3843,44 @@ untouched; `tools/gate-records.py` untouched this round (the r83 repair `c7d29e1
    kengaku-adjacent Q8 row; consider S020 PROV-O via alternate URL or PubMed API.
 3. Egress discipline: intended-targets table must equal the fetch set; record locating query per URL; treat
    link-followed fetches as such.
+
+## Round 85 verdict — the record checker's setup/203/calendar repairs land and are witnessed; both frozen claims honest-stop on their own rules (2026-11-08)
+
+Base `43c3f7284eee4889cdcc6ac1626573f6579cd533`; egress table and claims freeze
+`5d0b94139ae8baf60d6f630715bc495f0a93b448`; pre-data amendment `02df67db4f9ad39f8ebc73984ce50ea1fbea315f`
+(C2 ground re-pointed to S215/S026/S024, depth-counter parser repaired, C1 setup leg moved into the counter);
+scored landing `64803d33362f50cf9094e91fc3a4a07216c563ca`; post-scoring repairs (tool `--repo ''`/`admit+reject`
+guards, entry rows 1/5 warrants) in the integration commit; wave `.ufo/waves/round-85/w1/` (12 seats, 0 dead).
+
+| claim / axis | before → after | counting command / evidence | verdict |
+|---|---|---|---|
+| C1 operability (lowest scored non-retired axis; historical 3/10 held) | base tool: `FORGED_REFUSED=354/354 EXPECTED_CODE=342/354 SETUP=0/1` FAIL rc 1 → landing tool: `354/354 EXPECTED_CODE=354/354 SETUP=1/1` PASS rc 0 | `python3 -B corpus/evidence/round85/gate-records-r85.py --root <tree> --repo <lane> --work DIR`; `controls/receipts/c1-k0-donothing.txt` → `after/c1-after.txt` | **honest stop on the frozen sentence, verified on the narrowed property** — the frozen wording claimed a load-bearing forgery per enumerated class, and the 200-only class has zero forgeries in the battery (critic) with `M17-refetch-http-2xx-accepted` surviving (mutation); amendments 7/7b narrow it to the three witnessed legs, the third by `corpus/evidence/round85/forge-203.py` (base `OK` → landing `FAIL REFETCH`) |
+| C2 depth (sourced on S215/S026/S024 as amended; freeze named S020/S023) | `DEPTH_R85 entries=0` FAIL rc 1 (`controls/receipts/c2-d0-donothing.txt`) → `entries=1 ok_entries=1 rows=6 located_quotes=7 fresh_sources=3` PASS rc 0 | `... python3 -B "$D/corpus/evidence/round85/depth-r85.py" --root "$D"`; `after/c2-after.txt` | **honest stop** — K3 fired on rows 1 and 5 Never cells (`R85ReviewerEntry`); the ground claim is narrower than the sentence because S215 is the S033 document already taught by `metadata-screen-r25.md` (`R85ScoutGround`); and the amendment lowered the row/quote floors although the prefreeze floors were reachable (`R85ScribeLesson` receipt 04). Repairs to rows 1/5 landed post-scoring, disclosed, not counted |
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved narrowly, claim not admitted as written** | the setup leg exits 2 with `GATE_RECORDS_ERROR` (mutants M28/M29 killed), REFETCH success is exactly 200 (203 cookie-challenge admit refused, `forge-203.py` + `R85ExecForge` f01), `fetched` is calendar-validated (M18/M19 killed); 354/354 forgeries refused with expected codes; harm held (354 committed records, 0 moved to FAIL, `R85ExecHarm`); zero network/writes (`R85ExecHarm` strace) |
+| depth | **improved narrowly, claim falsified** | knowledge `.md` 96 → 97; entry on FAIR R1.2 provenance facets and Schema.org `lastReviewed` (new ground) with the PROV rows re-emitting the S033 document; 7 located quotes, 7/7 live (`R85ExecReopen`) |
+| calibration | **improved** | QUALITY 169 (pre-freeze ground/floors scored against the counter's rules), 170 (freeze-integrity and egress-set discipline, with this round's own defects disclosed), 171 (a class without a forgery is not load-bearing; survivors name the next fixture), 172 (floors not relaxed beside their ground; a criterion's receipt must exist); ledger `PREFILE-FALSIFICATION: pass claims=2 rows=13 attack_seats=6 findings=0` |
+| coverage | unchanged | `PROVINCE.md` untouched; the entry stays inside research-method scope |
+| freshness | unchanged | no drift surface measured; S023 re-opened (anchor note), S020 canonical URL dead (403 ×6) and routed |
+| adjacency | unchanged | `R85ConnectorSiblings`: no sibling holds FAIR R1.2/lastReviewed ground; kotodama's PROV-O citation-format entry reported read-only, nothing absorbed; kotodama `check-gate-captures.py` false-green stays routed |
+
+Trends: expansion **improved narrowly** (97 `.md`, registry 215, S026/S024 newly mined; the PROV half re-emits
+S033's document — the narrowed reading in amendment 9); quality **improved narrowly** (three real repairs, the
+instrument's own defect fixed, four criteria mined; both claims still falsified as stated); discernment
+**improved** (the wave falsified both claims with receipts and the ledger reconciles every attack seat; the lane
+published its own freeze/egress/floor defects rather than hiding them).
+
+No axis harmed at the final tip: gate selftest `PASS (283 cases, 0 skipped)`; preflight G01–G07 PASS; census exit
+0 at start and end (five pre-existing W04 warnings); r83/r84 counters still PASS on the repaired tool.
+
+## Planned — round 86 (intent, not a predicate)
+
+1. **operability (lowest)** — add the 200-only forgery inside the counter (a 203-row admit built from the committed
+S021 capture), kill `M17` in the frozen battery, and pin the counter in the freeze commit alone (no landing-commit
+re-pin).
+2. **depth** — repair `search-transparency-reporting-r84.md` row 9 (cite the `modified` Definition at S023 capture
+L8776-8777) and decide the S020 disposition (mark S215 as superseding, or keep both).
+3. carried debt: the D1 fixture, the twelve r80 backlog Gate ids, and the r85 scribe's "one backlog id per day"
+proposal.

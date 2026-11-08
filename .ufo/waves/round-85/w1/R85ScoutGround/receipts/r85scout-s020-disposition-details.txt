@@ -1,0 +1,75 @@
+# R85ScoutGround — receipt 6: S020 canonical-URL attempt provenance; opened-date and superseded-row discrepancies
+# lane=/home/vgpnk/Projects/shokunin/chousa-shokunin  date=2026-11-08
+
+== 1. commit times (freeze boundary) ==
+   43c3f7284eee4889cdcc6ac1626573f6579cd533 2026-11-08T00:30:55-03:00 round-84 verifier spot-check (integrator, hyaku): non-author admit/reject
+   5d0b94139ae8baf60d6f630715bc495f0a93b448 2026-11-08T00:54:30-03:00 round-85: prefreeze — frozen claims, counters, controls, egress table
+   02df67db4f9ad39f8ebc73984ce50ea1fbea315f 2026-11-08T01:17:16-03:00 round-85: prefreeze amendment — align claims with measured ground (S215/S026/S024), repair depth counter section parser
+   64803d33362f50cf9094e91fc3a4a07216c563ca 2026-11-08T01:31:25-03:00 round-85: landing — tool repair (setup exit 2, 200-only refetch, calendar fetched), provenance entry, registry S215/S026/S024, lesson, plan, claims.json
+   (claims.md: a refetch row dated after the freeze commit's committer time is round-85;
+    depth-r85.py ROUND_START = '2026-11-08T03:54:30Z' == freeze commit time 03:54:30Z)
+
+== 2. canonical-URL rows: added in which commit? ==
+   cmd: git log --all --oneline -S'fc127d142427c83cc805fe67' -- corpus/evidence/round57/refetch.tsv
+   rc=0
+   3a17f4da round-84: fetch S214/S018/S023, land search-transparency entry, fix controls
+   b03a8409 
+   5524ae3c 
+   dd427edf 
+   cmd: git diff 43c3f728 64803d33 -- corpus/evidence/round57/refetch.tsv  (rows ADDED this round)
+   +S023	https://www.dublincore.org/specifications/dublin-core/dcmi-terms/	f5545a194c06ab421875b047	2	2026-11-08T03:54:40Z	0	200	fb32e12fa9bee1379acc0cf921ba7e79a6b85bd46253d993db0898847b9870a1	20dc0c3ab7724e1f4be59217c190fa796a66c29b7a653e8d707d64f5fac43a79
+   +S020	https://www.w3.org/TR/prov-o/	6e48bcc4a04d13b7b3ebb68e	1	2026-11-08T03:54:43Z	22	403	-	-
+   +S020	https://www.w3.org/TR/prov-o/	6e48bcc4a04d13b7b3ebb68e	2	2026-11-08T03:54:47Z	22	403	-	-
+   +S215	https://www.w3.org/TR/prov-o/	6e48bcc4a04d13b7b3ebb68e	3	2026-11-08T03:55:52Z	0	200	6b96671ab84faf12ce3f041aca12c3f93a6df2ed242348810743179a68e69555	8c9aeabb466fb6d133c6a83cfc546a49336af782d0b7f2fccebcc55c2eb1f2a4
+   +S026	https://www.gofair.foundation/r1-2	67983a3dbbd1d690aa648744	1	2026-11-08T04:14:51Z	0	200	803e4c1eb520982b8609fbc7597d0ffc1c85c4b64a92f03cf8dd724d6fb59aa0	27ee75739788bd9ad18a35c085212868903d6676587a11d4a99db46bacff9851
+   +S033	https://www.w3.org/TR/prov-o/	6e48bcc4a04d13b7b3ebb68e	1	2026-11-08T04:15:56Z	22	403	-	-
+   +S024	https://schema.org/lastReviewed	11d6cc56bb24adfc61eea2b4	1	2026-11-08T04:16:13Z	0	200	2131240d87e2a80a20fdc41e59d72774a515aaa8c3360901227604d3cf47f70e	97fe1a6adbd2ded492b77f9c97ba56dff3acbca583ecfc424ff9ac15a45f1ce5
+   => no row for https://www.w3.org/TR/2013/REC-prov-o-20130430/ was added between base and landing;
+      the three 403 rows for that URL are pre-freeze (2026-11-08T02:16:0xZ) and present at BASE.
+
+== 3. 403-row split per PROV-O URL ==
+   https://www.w3.org/TR/2013/REC-prov-o-20130430/ : rows=3  http403=3  http200=0  round85_rows=0
+      id=S020 attempt=1 2026-11-08T02:16:01Z curl_rc=22 http=403
+      id=S020 attempt=2 2026-11-08T02:16:03Z curl_rc=22 http=403
+      id=S020 attempt=3 2026-11-08T02:16:08Z curl_rc=22 http=403
+   https://www.w3.org/TR/prov-o/ : rows=4  http403=3  http200=1  round85_rows=4
+      id=S020 attempt=1 2026-11-08T03:54:43Z curl_rc=22 http=403
+      id=S020 attempt=2 2026-11-08T03:54:47Z curl_rc=22 http=403
+      id=S215 attempt=3 2026-11-08T03:55:52Z curl_rc=0 http=200
+      id=S033 attempt=1 2026-11-08T04:15:56Z curl_rc=22 http=403
+   lesson round-85.md routed item 2 calls the canonical URL dead with 'six 403 rows'; the canonical URL has 3.
+   total 403 rows across BOTH PROV-O URLs = 6 (3 canonical + 3 alternate).
+
+== 4. lesson round-85.md statements about the canonical URL and opened dates ==
+   corpus/lessons/round-85.md:23: S215 is the W3C's alternate PROV-O URL; the canonical `REC-prov-o-20130430` URL answered HTTP 403 on three attempts in
+   corpus/lessons/round-85.md:24: round 84 and again this round (rows in `refetch.tsv`, `curl_rc=22`), so the alternate URL carries the row.
+   corpus/lessons/round-85.md:28: - S215: new row, `mined`, opened 2026-11-08, recheck `365d`, used-by `corpus/knowledge/provenance-recording-r85.md`.
+   corpus/lessons/round-85.md:29: - S026: status `queued` → `mined`; anchor gains the capture key `67983a3dbbd1d690aa648744`; `teaches` rewritten to
+   corpus/lessons/round-85.md:30:   the located quote's facets; opened date 2026-10-21 kept (first open), used-by `—` → the new entry.
+   corpus/lessons/round-85.md:31: - S024: status `queued` → `mined`; anchor gains the capture key `11d6cc56bb24adfc61eea2b4`; opened date 2026-10-21
+   corpus/lessons/round-85.md:36: - S020: unchanged (`queued`). Its canonical URL was retried three times (403) — the alternate-URL row S215 carries
+   corpus/lessons/round-85.md:72: 2. S020's canonical URL is dead for this lane (six 403 rows); decide whether S215 supersedes it (a registry append,
+
+== 5. registry `opened` cell, base vs landing (S024 / S026) ==
+   base    id=S024 status=queued opened=2026-10-21 recheck=365d usedby=—
+   base    id=S026 status=queued opened=2026-10-21 recheck=180d usedby=—
+   landing id=S024 status=mined opened=2026-11-08 recheck=365d usedby=corpus/knowledge/provenance-recording-r85.md
+   landing id=S026 status=mined opened=2026-11-08 recheck=180d usedby=corpus/knowledge/provenance-recording-r85.md
+   round-25 lesson records first open 2026-10-21 for both:
+   corpus/lessons/round-25.md:73: | S024 queued (SrcSchemaReviewed) | https://schema.org/lastReviewed | Definition: “Date on which the content on this web page was last reviewed for accuracy and/or completeness.” |
+   corpus/lessons/round-25.md:75: | S026 queued (SrcFairR12) | https://www.gofair.foundation/r1-2 | Interpretation of R1.2, first paragraph: “Detailed provenance includes facets such as how the resource was generated, why it was generated, by whom, under what conditions” |
+
+== 6. S024 vs its superseding row S031 ==
+   corpus/SOURCES.md:41: | S031 | Schema.org property lastReviewed — https://schema.org/lastReviewed | spec | A | Schema.org's own definition and declared use of lastReviewed | lastReviewed property definition paragraph; Schema.org page served 2026-10-21 | supersedes S024 — lastReviewed records the date a web page was last reviewed for accuracy and/or c
+   corpus/lessons/round-25.md:197: | S031 / S024 | https://schema.org/lastReviewed | Definition: “Date on which the content on this web page was last reviewed for accuracy and/or completeness.” |
+   corpus/lessons/round-25.md:199: | S033 / S020 | https://www.w3.org/TR/2013/REC-prov-o-20130430/ | §3.2 entity lifetime: “The properties prov:generatedAtTime and prov:invalidatedAtTime can be used to bound the starting and ending moments of an Entity's existence.” |
+
+== 7. S033 (superseding row for the canonical URL) status ==
+   corpus/SOURCES.md:30 id=S020 status=queued opened=2026-10-21 usedby=— url=PROV-O: The PROV Ontology, W3C Recommendation 2013-04-30 — https://www.w3.org/TR/2013/REC-prov-o-20130430/
+   corpus/SOURCES.md:43 id=S033 status=mined opened=2026-10-21 usedby=corpus/knowledge/metadata-screen-r25.md url=PROV-O: The PROV Ontology, W3C Recommendation 2013-04-30 — https://www.w3.org/TR/2013/REC-prov-o-20130430/
+   corpus/knowledge/metadata-screen-r25.md:3: source: S029 https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-iv §IV.1 (periodic currency assessment → a scheduled `recheck:`); S033 https://www.w3.org/TR/2013/REC-prov-o-20130430/ §3.1 `prov:wasDerivedFrom` and §3.2 entity-lifetime paragraph (derivation and as-of time are separate facts → `source:` and `ver
+   corpus/knowledge/metadata-screen-r25.md:96: S033 supersedes S020's teaching: PROV times bound an entity's existence,
+   corpus/knowledge/metadata-screen-r25.md:97: not whether a research claim is true or when an analyst checked it. Using
+   corpus/knowledge/metadata-screen-r25.md:98: separate source/time fields for verification is explicitly a lane inference,
+   corpus/knowledge/metadata-screen-r25.md:99: not PROV-O's definition of verification. S020's historical row remains queued.
+

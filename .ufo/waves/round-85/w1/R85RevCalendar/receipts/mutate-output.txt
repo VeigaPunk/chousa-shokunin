@@ -1,0 +1,120 @@
+has import datetime: True
+mutated written: /fast/scratch/hyaku/chousa-r85/R85RevCalendar/gate-records-noimports.py
+
+TOOL /fast/scratch/hyaku/chousa-r85/R85RevCalendar/tools/gate-records.py: rc=1
+stdout: GATE_RECORD /fast/scratch/hyaku/chousa-r85/R85RevCalendar/d4-test.md:1 S203 FAIL PARSE
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+stderr: 
+
+TOOL /fast/scratch/hyaku/chousa-r85/R85RevCalendar/gate-records-noimports.py: rc=1
+stdout: 
+stderr: Traceback (most recent call last):
+  File "/fast/scratch/hyaku/chousa-r85/R85RevCalendar/gate-records-noimports.py", line 325, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/fast/scratch/hyaku/chousa-r85/R85RevCalendar/gate-records-noimports.py", line 309, in main
+    rec = parse(ln)
+  File "/fast/scratch/hyaku/chousa-r85/R85RevCalendar/gate-records-noimports.py", line 143, in parse
+    if not re.fullmatch(r"https?://\S+", kv["url"]) or not TS_RE.fullmatch(kv["fetched"]) or not _valid_ts(kv["fetched"]):
+                                                                                                 ~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/fast/scratch/hyaku/chousa-r85/R85RevCalendar/gate-records-noimports.py", line 198, in _valid_ts
+    datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ")
+    ^^^^^^^^
+NameError: name 'datetime' is not defined. Did you forget to import 'datetime'?
+
+--- COUNTER with mutated (no datetime) tool ---
+rc= 1
+NOT_REFUSED g0044.md M01-unknown-id S203
+NOT_REFUSED g0045.md M02-tier S203
+NOT_REFUSED g0046.md M03-other-capture S203
+NOT_REFUSED g0047.md M04-capture-traversal S203
+NOT_REFUSED g0048.md M05-sha-flip S203
+NOT_REFUSED g0049.md M06-sha-short S203
+NOT_REFUSED g0050.md M07-fetched S203
+NOT_REFUSED g0051.md M08-quote-word S203
+NOT_REFUSED g0052.md M09-words-plus S203
+NOT_REFUSED g0053.md M10-quote-drop-last S203
+NOT_REFUSED g0054.md M11-quote-26 S203
+NOT_REFUSED g0055.md M12-quote-empty S203
+NOT_REFUSED g0056.md M13-url-changed S203
+NOT_REFUSED g0057.md M14-indented-bad-quote S203
+NOT_REFUSED g0058.md M15-no-quote-key S203
+NOT_REFUSED g0059.md M16-dup-key S203
+NOT_REFUSED g0060.md M17-id-swap S203
+NOT_REFUSED g0061.md M18-words-arabic-indic S203
+NOT_REFUSED g0062.md M21-fetched-arabic-indic S203
+NOT_REFUSED g0063.md D5-leading-zero-words S203
+NOT_REFUSED g0064.md D6-unterminated-quote S203
+NOT_REFUSED g0065.md D7-nonhttp-url S203
+NOT_REFUSED g0066.md D4-non-timestamp-fetched S203
+NOT_REFUSED g0067.md M01-unknown-id S204
+NOT_REFUSED g0068.md M02-tier S204
+NOT_REFUSED g0069.md M03-other-capture S204
+NOT_REFUSED g0070.md M04-capture-traversal S204
+NOT_REFUSED g0071.md M05-sha-flip S204
+NOT_REFUSED g0072.md M06-sha-short S204
+NOT_REFUSED g0073.md M07-fetched S204
+NOT_REFUSED g0074.md M08-quote-word S204
+NOT_REFUSED g0075.md M09-words-plus S204
+NOT_REFUSED g0076.md M10-quote-drop-last S204
+NOT_REFUSED g0077.md M11-quote-26 S204
+NOT_REFUSED g0078.md M12-quote-empty S204
+NOT_REFUSED g0079.md M13-url-changed S204
+NOT_REFUSED g0080.md M14-indented-bad-quote S204
+NOT_REFUSED g0081.md M15-no-quote-key S204
+NOT_REFUSED g0082.md M16-dup-key S204
+NOT_REFUSED g0083.md M17-id-swap S204
+NOT_REFUSED g0084.md M18-words-arabic-indic S204
+NOT_REFUSED g0085.md M21-fetched-arabic-indic S204
+NOT_REFUSED g0086.md D5-leading-zero-words S204
+NOT_REFUSED g0087.md D6-unterminated-quote S204
+NOT_REFUSED g0088.md D7-nonhttp-url S204
+NOT_REFUSED g0089.md D4-non-timestamp-fetched S204
+NOT_REFUSED g0090.md M01-unknown-id S205
+NOT_REFUSED g0091.md M02-tier S205
+NOT_REFUSED g0092.md M03-other-capture S205
+NOT_REFUSED g0093.md M04-capture-traversal S205
+NOT_REFUSED g0094.md M05-sha-flip S205
+NOT_REFUSED g0095.md M06-sha-short S205
+NOT_REFUSED g0096.md M07-fetched S205
+NOT_REFUSED g0097.md M08-quote-word S205
+NOT_REFUSED g0098.md M09-words-plus S205
+NOT_REFUSED g0099.md M10-quote-drop-last S205
+NOT_REFUSED g0100.md M11-quote-26 S205
+NOT_REFUSED g0101.md M12-quote-empty S205
+NOT_REFUSED g0102.md M13-url-changed S205
+NOT_REFUSED g0103.md M14-indented-bad-quote S205
+NOT_REFUSED g0104.md M15-no-quote-key S205
+NOT_REFUSED g0105.md M16-dup-key S205
+NOT_REFUSED g0106.md M17-id-swap S205
+NOT_REFUSED g0107.md M18-words-arabic-indic S205
+NOT_REFUSED g0108.md M21-fetched-arabic-indic S205
+NOT_REFUSED g0109.md D5-leading-zero-words S205
+NOT_REFUSED g0110.md D6-unterminated-quote S205
+NOT_REFUSED g0111.md D7-nonhttp-url S205
+NOT_REFUSED g0112.md D4-non-timestamp-fetched S205
+NOT_REFUSED g0113.md M01-unknown-id S206
+NOT_REFUSED g0114.md M02-tier S206
+NOT_REFUSED g0115.md M03-other-capture S206
+NOT_REFUSED g0116.md M04-capture-traversal S206
+NOT_REFUSED g0117.md M05-sha-flip S206
+NOT_REFUSED g0118.md M06-sha-short S206
+NOT_REFUSED g0119.md M07-fetched S206
+NOT_REFUSED g0120.md M08-quote-word S206
+NOT_REFUSED g0121.md M09-words-plus S206
+NOT_REFUSED g0122.md M10-quote-drop-last S206
+NOT_REFUSED g0123.md M11-quote-26 S206
+NOT_REFUSED g0124.md M12-quote-empty S206
+NOT_REFUSED g0125.md M13-url-changed S206
+NOT_REFUSED g0126.md M14-indented-bad-quote S206
+NOT_REFUSED g0127.md M15-no-quote-key S206
+NOT_REFUSED g0128.md M16-dup-key S206
+NOT_REFUSED g0129.md M17-id-swap S206
+NOT_REFUSED g0130.md M18-words-arabic-indic S206
+NOT_REFUSED g0131.md M21-fetched-arabic-indic S206
+NOT_REFUSED g0132.md D5-leading-zero-words S206
+NOT_REFUSED g0133.md D6-unterminated-quote S206
+NOT_REFUSED g0134.md D7-nonhttp-url S206
+NOT_REFUSED g0135.md D4-non-timestamp-fetched S206
+NOT_REFUSED g0136.md M01-unknown
+stderr: 

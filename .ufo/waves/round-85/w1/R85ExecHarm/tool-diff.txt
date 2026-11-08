@@ -1,0 +1,99 @@
+--- /fast/scratch/hyaku/chousa-r85/R85ExecHarm/tree-base/tools/gate-records.py	2026-11-08 00:30:55.000000000 -0300
++++ /fast/scratch/hyaku/chousa-r85/R85ExecHarm/tree/tools/gate-records.py	2026-11-08 01:31:25.000000000 -0300
+@@ -13,7 +13,8 @@
+ A record is any line whose first text, after leading whitespace and invisible format characters (Unicode category
+ Cf, e.g. a BOM or a zero-width space), is the word `GATE-RECORD` followed by whitespace or the end of the line; such a
+ line is checked, never skipped. A mention elsewhere in a line (inline code, list item, blockquote, HTML comment) is
+-prose, not a record. Every record must parse into exactly one of three forms:
++prose, not a record. A `fetched` timestamp must also be a real calendar instant (round-85 repair: `TS_RE` alone
++accepted `2026-13-40T00:00:00Z`). Every record must parse into exactly one of three forms:
+ 
+   url/admit   GATE-RECORD S<id> url=<http(s) url> fetched=<YYYY-MM-DDTHH:MM:SSZ> tier=<A|B|C> decision=<admit|reject>
+               capture=corpus/captures/<24 hex>.txt capture_sha256=<>=16 hex>[…] words=<n> quote="<text>"
+@@ -31,9 +32,11 @@
+   CAPTURE_PATH  capture is not corpus/captures/<24 hex>.txt, or is not a regular (non-symlink) file inside LANE
+   CAPTURE_KEY   the capture key is not sha256(url)[:24] (the content-addressed key capture-fetch.py writes)
+   CAPTURE_SHA   capture_sha256 is shorter than 16 hex digits or is not a prefix of sha256(capture bytes)
+-  REFETCH       url/admit: no refetch.tsv row with this id, url, key and fetched time, curl_rc 0, http 2xx and
+-                txt_sha256 equal to sha256(capture bytes); url/unreach: no row with this id, url and fetched time
+-                whose curl_rc and http equal the record's, or the record's curl_rc/http denote a success
++  REFETCH       url/admit: no refetch.tsv row with this id, url, key and fetched time, curl_rc 0, http exactly
++                200 and txt_sha256 equal to sha256(capture bytes); url/unreach: no row with this id, url and
++                fetched time whose curl_rc and http equal the record's, or the record's curl_rc/http denote a
++                success (round-85 repair: a 203 cookie-challenge page carries no quotable body, so only 200
++                counts, matching capture-fetch.py's own 200..299 store rule narrowed to 200)
+   WORDS         words differs from the number of whitespace-separated tokens of the quote
+   QUOTE_LEN     a quoted record (url/admit, rev) has fewer than 1 or more than 25 words
+   QUOTE_ABSENT  url/admit: the quote, normalized, does not occur in the normalized capture text
+@@ -48,11 +51,13 @@
+     GATE_RECORD <file>:<line> <S-id|?> FAIL <CODE>[,<CODE>...]
+     GATE_RECORDS files=<f> records=<n> ok=<k> fail=<m>
+ Exit: 0 when records >= 1 and every record is OK; 1 when any record fails or no record is found; 2 on usage or I/O
+-error (missing FILE, missing registry or refetch log).
++error (missing FILE, missing registry or refetch log, or `--repo` naming a directory that is not a git repository —
++round-85 repair: a non-git GITDIR is a setup error, not a per-record FAIL REV,LINE).
+ 
+ Python 3 standard library only.
+ """
+ import argparse
++import datetime
+ import hashlib
+ import os
+ import re
+@@ -136,7 +141,7 @@
+     if "words" in kv and not INT_RE.fullmatch(kv["words"]):
+         return None
+     if form in ("admit", "unreach"):
+-        if not re.fullmatch(r"https?://\S+", kv["url"]) or not TS_RE.fullmatch(kv["fetched"]):
++        if not re.fullmatch(r"https?://\S+", kv["url"]) or not TS_RE.fullmatch(kv["fetched"]) or not _valid_ts(kv["fetched"]):
+             return None
+         if kv["tier"] not in ("A", "B", "C") or kv["decision"] not in ("admit", "reject"):
+             return None
+@@ -189,6 +194,14 @@
+         return None
+ 
+ 
++def _valid_ts(s):
++    try:
++        datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ")
++        return True
++    except ValueError:
++        return False
++
++
+ def check(rec, root, repo, reg, refetch):
+     sid, kv, quote, form = rec
+     codes = []
+@@ -220,8 +233,7 @@
+         sm = SHA_RE.fullmatch(kv["capture_sha256"])
+         if not sm or capsha is None or not capsha.startswith(sm.group(1)):
+             codes.append("CAPTURE_SHA")
+-        ok = any(r[0] == sid and r[1] == url and r[2] == key and r[4] == kv["fetched"] and r[5] == "0"
+-                 and re.fullmatch(r"2[0-9][0-9]", r[6]) and capsha is not None and r[8] == capsha for r in refetch)
++        ok = any(r[0] == sid and r[1] == url and r[2] == key and r[4] == kv["fetched"] and r[5] == "0" and r[6] == "200" and capsha is not None and r[8] == capsha for r in refetch)
+         if not ok:
+             codes.append("REFETCH")
+         if cap is not None:
+@@ -232,7 +244,7 @@
+         else:
+             codes.append("QUOTE_ABSENT")
+     elif form == "unreach":
+-        success = kv["curl_rc"] == "0" and kv["http"].startswith("2")
++        success = kv["curl_rc"] == "0" and kv["http"] == "200"
+         ok = (not success) and any(r[0] == sid and r[1] == url and r[4] == kv["fetched"] and r[5] == kv["curl_rc"]
+                                    and r[6] == kv["http"] for r in refetch)
+         if not ok:
+@@ -269,7 +281,13 @@
+         ap.print_usage(sys.stderr)
+         return 2
+     root = os.path.abspath(a.root)
++    if a.repo:
++        p = subprocess.run(["git", "-C", a.repo, "rev-parse", "--git-dir"], capture_output=True, text=True)
++        if p.returncode != 0:
++            print(f"GATE_RECORDS_ERROR not a git repo: {a.repo}", file=sys.stderr)
++            return 2
+     repo = os.path.abspath(a.repo) if a.repo else root
++    # calendar validity for fetched timestamps
+     regp = os.path.join(root, "corpus", "SOURCES.md")
+     refp = os.path.join(root, "corpus", "evidence", "round57", "refetch.tsv")
+     for p in (regp, refp):
