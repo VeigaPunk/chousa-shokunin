@@ -3803,3 +3803,43 @@ untouched; the new tool reads only (no network, zero writes, read-only `git cat-
    setup errors (non-git `--repo`) reported as exit 2.
 2. **depth** — S017 (PRISMA 2020) or S019 (updating a review), with the r83 practice kept: each Never read against its
    quote's full paragraph before landing.
+
+## Round 84 verdict — search-transparency entry lands (C2 counter-verified, K3-fired); gate-records successor battery honest-stops on K2 setup leg (2026-11-08)
+
+Base `408ae68f9e445fc911f713d5bbb3a64dda1ab9fe`; egress table `corpus/evidence/round84/egress-approval.md`
+(committed before any fetch); freeze `3b616420b2dcc1f8a24a1cb9db4198c7adc8929b`
+(`corpus/evidence/round84/claims.md`, controls 9/9 as expected at `d047cd8d`); scored landing
+`03bbb4580b39b442be69f998fae2db48d64b8c93`; post-freeze amendment `3a17f4da` (claims.md + control receipts
+rewritten in the fetch commit — sentinel Finding 1); wave `.ufo/waves/round-84/w1/` (12 seats, 0 dead).
+
+| claim / axis | before → after | counting command / evidence | verdict |
+|---|---|---|---|
+| C1 operability (lowest scored non-retired axis; historical 3/10 held) — successor battery for repaired `tools/gate-records.py` | `TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=288/288 EXPECTED_CODE=288/288 EMPTY_REFUSED=1/1 RC=4/4` PASS rc 0 at `03bbb458` and at HEAD `26505dbe` | `python3 -B corpus/evidence/round84/gate-records-r84.py --root . --repo /home/vgpnk/Projects/shokunin/chousa-shokunin --work /fast/scratch/hyaku/chousa-r84/postwave` | **falsified by its own kill rules (K2) — honest stop**: setup leg non-git `--repo` prints `FAIL LINE,REV` rc 1 where frozen K2 requires `GATE_RECORDS_ERROR` rc 2 (`R84ExecRepro`, `R84ExecForge`, `R84CriticClaims`, `R84ReviewerTool`, `R84SentinelScope`, `R84ScribeLesson`); mutation seat: counter PASSes 11/34 single-point mutants, 6 accept real forgeries incl. claims' own stale-refetch/short-rev class-1 items, 7/8 enumerated r83 classes absent from the 288 (`R84MutationTool`). K3 held (21/21 lesson records OK, zero side effects, `R84ExecHarm`); K4 held (whitelist stub FAILs) |
+| C2 depth — `search-transparency-reporting-r84.md` on S214/S018/S023 | `DEPTH_R84 entries=0 ok_entries=0` FAIL rc 1 at base → `entries=1 ok_entries=1 rows=11 located_quotes=12 fresh_sources=3` PASS rc 0 at `03bbb458` and at HEAD `26505dbe` | `python3 -B corpus/evidence/round84/depth-r84.py --root .` | **falsified by its own kill rules (K3) — honest stop**: decision-table row 9's Do/Never do not follow from Q10 alone; required `modified` Definition unique at S023 capture ~L8786 never quoted (`R84ReviewerEntry`; corroborated `R84ConnectorSiblings`). K2 held (12/12 quotes in captures and on 3 HTTP-200 re-opens byte-identical, `R84ExecReopen`); K4 held (`R84ScoutNovelty`). Sentinel process findings: post-freeze claims.md amendment, 9/10 fetched URLs outside egress intended-targets, forbidden link chain, HTTP-203 cookie wall certified OK, S021 ledger orphan |
+
+| axis | verdict | evidence |
+|---|---|---|
+| depth | **improved narrowly, claim falsified** | knowledge `.md` 95 → 96; one entry on PRISMA 2020 search-transparency reporting, 11 rows, 12 located quotes, 3 fresh sources; row 9 warrant defect is a one-quote fix next round |
+| operability | **improved narrowly, claim falsified** | successor battery exists and passes its predicate, but the setup leg misreports and the counter's mutation coverage is thinner than its enumeration (QUALITY 166–167); no capability row enters |
+| calibration | unchanged | QUALITY 166–168 (mined mistakes); no calibration measurement |
+| coverage | unchanged | `PROVINCE.md` untouched; one Q8/S018 row is kengaku-adjacent, reported out (`R84SentinelScope` Finding 7) |
+| freshness | unchanged | S214/S018/S023 mined; S017 reverted to queued (landing page carries no quotable checklist text); S020/S021/S022/S032 stay queued |
+| adjacency | unchanged | `R84ConnectorSiblings.md`: 0 quote overlaps across 20 sibling lanes; no sibling tool reads `GATE-RECORD`/`refetch.tsv`; cross-lane false-green finding against `kotodama/check-gate-captures.py` (exits 0 on chousa's round-84 lesson while selecting 0 rows) |
+
+No axis harmed: census exit 0 at start and end; SCORECARD/LOG/QUALITY append-only; `tools/research-gate.sh`
+untouched; `tools/gate-records.py` untouched this round (the r83 repair `c7d29e1c` is in base).
+
+## Planned — round 85 (intent, not a predicate)
+
+1. **operability (lowest)** — repair the K2 setup leg (`git -C <repo> rev-parse --git-dir` probe →
+   `GATE_RECORDS_ERROR` exit 2 on non-repo) and the HTTP-203 acceptance class (narrow `REFETCH` success from
+   `2xx` to `200`; `capture-fetch.py` admits only 200 as a quotable body); extend the forgery battery so every
+   enumerated class has a load-bearing forgery (stale-refetch `txt_sha256` drift, short-rev, rev 26-word quote,
+   non-timestamp `fetched`, leading-zero `words`, unterminated quote, non-http url); pin `claims.md` in the
+   freeze commit itself.
+2. **depth** — repair entry row 9's warrant to cite the `modified` Definition (S023 capture ~L8786) or replace
+   Q10 with the uniquely-locating quote; add per-quote locators (36/95 base entries already carry them; sibling
+   `mori-anchor-check.py` locates all three PRISMA quotes at capture lines 17/18/19); drop or restate the
+   kengaku-adjacent Q8 row; consider S020 PROV-O via alternate URL or PubMed API.
+3. Egress discipline: intended-targets table must equal the fetch set; record locating query per URL; treat
+   link-followed fetches as such.

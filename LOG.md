@@ -2415,3 +2415,38 @@ passing record rather than through prose.
   165); the round-82 `.gitkeep` knowledge count.
 - Motivating evidence: the r80–r82 Gate blocks were checked by a hand "Location command" covering quote and words only;
   the quote-only stub control refuses 71/198 forgeries (`corpus/evidence/round83/controls/receipts/c2-f3-stub-quote-only.txt`).
+
+
+## Round 84 — search-transparency entry lands (C2 counter-verified, K3-fired); gate-records successor battery honest-stops on K2 setup leg (2026-11-08)
+
+- Fresh-start reads: r81–r83 verifier spot-checks and lessons; claims frozen at `3b616420` with two claims
+  (C1 operability successor battery for repaired `tools/gate-records.py`; C2 depth entry
+  `search-transparency-reporting-r84.md` on S214/S018/S023).
+- Egress table `corpus/evidence/round84/egress-approval.md` committed before any fetch; census start exit 0.
+- Fetches 2026-11-08T02:13–02:21Z: S017 landing/checklist/PDF chain, S214 PRISMA 2020 checklist PDF, S018 ACL
+  2026 survey abstract, S023 DCMI terms — all HTTP 200; S020 PROV-O 403 ×3, S021/S022/S032 PubMed 203 cookie
+  walls, S022 Cochrane news 404 left queued.
+- Freeze `3b616420`; landing `03bbb458` (`instrument-pins.txt`, after receipts); controls 9/9 at `d047cd8d`.
+- Post-freeze amendment `3a17f4da` rewrote `claims.md` and all control receipts in the fetch commit
+  (fresh positives 6→5, RC 3/3→4/4, C2 sources S017→S214/S018/S023, c2-k0 semantics tool-absent→pre-repair) —
+  sentinel Finding 1; counters byte-identical, rulebook not.
+- Wave w1: 12 seats (4 executor, 2 reviewer, 1 critic, 1 mutation-tester, 1 scout, 1 connector, 1 scribe,
+  1 sentinel; attack share 6/12 = 50%), 0 dead.
+- C1 operability: counter PASS at landing (`POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=288/288
+  EXPECTED_CODE=288/288 EMPTY_REFUSED=1/1 RC=4/4`) but **K2 fired** — non-git `--repo` prints `FAIL LINE,REV`
+  rc 1 instead of `GATE_RECORDS_ERROR` rc 2 (R84ExecRepro, R84ExecForge, R84CriticClaims, R84ReviewerTool,
+  R84SentinelScope, R84ScribeLesson); mutation seat showed counter PASSes 11/34 single-point mutants, 6 accepting
+  real forgeries incl. claims' own stale-refetch and short-rev class-1 items; 7/8 enumerated r83 classes absent
+  from the 288. Harm held (21/21 lesson records OK, zero side effects).
+- C2 depth: counter PASS (`entries=1 ok_entries=1 rows=11 located_quotes=12 fresh_sources=3`) but **K3 fired** —
+  decision-table row 9's Do/Never do not follow from Q10 alone; the needed `modified` Definition is unique at
+  S023 capture ~L8786 and uncited (R84ReviewerEntry; corroborated by R84ConnectorSiblings occurrence counts).
+  K2 held (all 12 quotes located in captures and on 3 HTTP-200 re-opens, byte-identical). K4 held (no base entry
+  cites S214/S018/S023).
+- Sentinel process findings: freeze-integrity amendment (above); 9/10 fetched URLs absent from egress
+  intended-targets; PRISMA fetches followed forbidden link chain; HTTP-203 cookie wall certified OK as admitted
+  quoted source (capture-fetch and gate-records both treat 2xx as success); S021 ledger row's raw_sha256 has no
+  capture file (same-URL re-fetch overwrote first body); one Q8/S018 row kengaku-adjacent (report out).
+- Mined mistakes: QUALITY 166 (post-freeze predicate amendment), 167 (mutation-coverage vs enumeration),
+  168 (egress intended-targets scope).
+- Census end exit 0 (5 pre-existing W04 warnings). Misroot sweep clean (only orchestrator `.scratch/` paths).
