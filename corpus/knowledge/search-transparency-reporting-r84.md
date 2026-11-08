@@ -31,6 +31,7 @@ sections are not taken.
 | Q10 | S023 | "Recommended practice is to describe the date, date/time, or period of time as recommended for the property Date, of which this is a subproperty." |
 | Q11 | S023 | "Date (often a range) of validity of a resource." |
 | Q12 | S023 | "Date that the resource became or will become available." |
+| Q13 | S023 | "Date on which the resource was changed." |
 
 ## Decision table
 
@@ -44,7 +45,7 @@ sections are not taken.
 | Linking a claim to its source | cite, attribute, or quote the supporting evidence so the link is traceable | assert a claim without linking it to the evidence that supports it | Q6, Q7 (S018) |
 | Comparing evidence-based generation approaches | use a shared taxonomy and unified benchmarks rather than isolated evaluation practices | compare approaches that use different terminologies and metrics without noting the fragmentation | Q8 (S018) |
 | Recording what a resource derives from | name the related resource from which the described resource is derived | record a resource without naming its source | Q9 (S023) |
-| Recording when a resource changed | state the date on which the resource was changed | record a modification without its date | Q10 (S023) |
+| Recording when a resource changed | state the date on which the resource was changed | record that the resource changed without the date on which it changed | Q13 (S023) |
 | Recording when a resource is valid | state the date or range of validity of the resource | record a validity period without its dates | Q11 (S023) |
 | Recording when a resource became available | state the date the resource became or will become available | record availability without its date | Q12 (S023) |
 
