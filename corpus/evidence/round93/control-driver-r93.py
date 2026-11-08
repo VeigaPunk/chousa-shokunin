@@ -341,7 +341,10 @@ def self_pin(repo, root, rev, receipts_rev, expected, receipts, pins_rows, pins_
     carrier). Receipt rows are compared at `receipts_rev`, never at `rev` — the r92 driver would report a
     receipt as drifted at a revision that never held it.
     """
-    base = [(rel_for(root, __file__), rev), (rel_for(root, expected), rev)]
+    # T3b: the driver's own bytes are resolved against the tree it lives in (the repo), not against --root:
+    # the dispatch form `--root <clone> --repo <lane>` runs a driver that lives in the lane, and rel_for(root,
+    # __file__) would call that a setup escape on correct bytes.
+    base = [(rel_for(repo, __file__), rev), (rel_for(root, expected), rev)]
     base += [(rel_for(root, os.path.join(receipts, f)), receipts_rev)
              for f in sorted(os.listdir(receipts)) if f.endswith(".txt")]
     drift = []

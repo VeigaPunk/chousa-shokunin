@@ -31,6 +31,7 @@ import subprocess
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+LANE = os.path.dirname(os.path.dirname(HERE))
 NEW = os.path.join(HERE, "control-driver-r93.py")
 OLD = os.path.join(os.path.dirname(HERE), "round92", "control-driver-r92.py")
 UNEXECUTED = "corpus/evidence/round93/curation-controls-r93.py"
@@ -49,7 +50,13 @@ def clone(repo, rev, dest):
     return dest
 
 
-def run(driver, root, work, rev, receipts_rev, explicit=True, repo=None):
+def run(driver, root, work, rev, receipts_rev, explicit=True, repo=None, in_tree=False):
+    """`in_tree` runs the copy of the driver the tree carries (the `--root <tree> --repo <tree>` form);
+    otherwise the lane's copy runs against a foreign root (the dispatch form the DERIVE case measures)."""
+    if in_tree:
+        cand = os.path.join(root, os.path.relpath(driver, LANE))
+        if os.path.isfile(cand):
+            driver = cand
     args = [sys.executable, "-B", driver, "verify", "--root", root, "--work", work, "--rev", rev,
             "--receipts-rev", receipts_rev]
     if repo:
@@ -84,9 +91,10 @@ def main():
     def both(tree):
         # r92 is scored without --repo: its self_pin would compare the receipt rows (which r93 added to the
         # table) at --rev, a revision that never held them — a harness artefact, not the class under test.
-        return (run(OLD, tree, os.path.join(work, "w92-" + os.path.basename(tree)), a.rev, a.receipts_rev),
+        return (run(OLD, tree, os.path.join(work, "w92-" + os.path.basename(tree)), a.rev, a.receipts_rev,
+                    in_tree=True),
                 run(NEW, tree, os.path.join(work, "w93-" + os.path.basename(tree)), a.rev, a.receipts_rev,
-                    repo=tree))
+                    repo=tree, in_tree=True))
 
     results = []
 
