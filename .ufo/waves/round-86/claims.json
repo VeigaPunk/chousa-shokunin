@@ -1,0 +1,37 @@
+{
+ "lane": "chousa",
+ "round": 86,
+ "base": "3bfb6885958ad4a674ad1896f70d1e836be609e4",
+ "freeze": null,
+ "amendment": null,
+ "scoredLanding": null,
+ "frozenAt": "2026-11-08T06:04Z, before any scored run of the round-86 candidates; pre-freeze controls: c1-k0-donothing FAIL (D1_REFUSED=0/1 MUT17_KILLED=0/1), c1-k0b-frozen-instrument PASS with zero D1 class, c2-d0-donothing FAIL (SUPERSEDED_LIVE=1 UNENTAILED_TERM=2 MODIFIED_DEF_CITED=0)",
+ "claims": {
+  "C1": {
+   "axis": "operability (lowest scored non-retired axis, historical 3/10) — capability acquisition",
+   "type": "successor battery that generates the round-85 D1 (200-only) class inside the predicate and computes the M17 mutant from the subject tool's bytes, so the battery kills M17",
+   "predicate": "GATE_RECORDS_R86=PASS with TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED==EXPECTED_CODE==total EMPTY_REFUSED=1/1 RC=4/4 SETUP=1/1 D1_FORGES=1 D1_REFUSED=1/1 MUT17_KILLED=1/1",
+   "countingCommand": "python3 -B corpus/evidence/round86/gate-records-r86.py --root DIR --repo GITDIR [--tool PATH] --work DIR",
+   "killRules": {
+    "K1": "predicate not met at the landing revision",
+    "K2": "an in-class forged record accepted, or refused with a code outside its frozen expected set (D1 expects REFETCH)",
+    "K3": "harm: a genuine committed record accepted by the pre-round tool is refused at landing (15 frozen + 5 fresh positives)",
+    "K4": "the mutant leg is not derived from the subject tool's bytes (hard-coded or underived mutant prints MUT17_KILLED=0/1); repairs after scoring do not rescue"
+   },
+   "source": "corpus/evidence/round86/claims.md; S216 (RFC 9110 203, opened this round)"
+  },
+  "C2": {
+   "axis": "calibration",
+   "type": "the two routed curation defects closed: supersession inversion (S024 mined vs S031 queued) resolved, and the two routed entries' decision-table cells no longer carry the frozen defect terms without a located quote carrying them; the round-84 row 9 cites the S023 modified Definition",
+   "predicate": "CURATION_R86=PASS with SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED==total and total>=19",
+   "countingCommand": "python3 -B corpus/evidence/round86/curation-r86.py --root DIR",
+   "killRules": {
+    "K1": "predicate not met at the landing revision",
+    "K2": "a quote counted located is not verbatim (normalized) in the capture of the registry row's own URL",
+    "K3": "a repaired row's Do/Never states something its warrant quote does not state or entail, or a same-source sentence contradicts it",
+    "K4": "the round-84 repair cites a quote not from S023, or the round-85 entry cites the superseded S024 instead of S031"
+   },
+   "source": "corpus/evidence/round86/claims.md; S023 and S031 (both re-opened this round)"
+  }
+ }
+}

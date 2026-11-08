@@ -1,0 +1,24 @@
+# receipt N1_skip_supersession
+pristine=curation-r86.py sha256=84a64ad48d77e63095919942ac113bbb1b54b4e7d9acd21ef85a4f58e545c5d4
+mutant_sha256=d2a3c3eb123b28c34ac1e826927a373e548d8553fdb32eaa41beb44a05d98229
+mutant_path(scratch)=$S/mut/N1_skip_supersession/curation-r86.py
+
+## tree=land rev=667a5d091dc46168ed95eda0ae7f19a9bcf139a2
+cmd: python3 -B $S/mut/N1_skip_supersession/curation-r86.py --root $S/land
+exit=0
+stdout:
+SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20
+CURATION_R86=PASS
+stderr:
+<empty>
+
+## tree=base rev=3bfb6885958ad4a674ad1896f70d1e836be609e4
+cmd: python3 -B $S/mut/N1_skip_supersession/curation-r86.py --root $S/base
+exit=1
+stdout:
+SUPERSEDED_LIVE=0 UNENTAILED_TERM=2 MODIFIED_DEF_CITED=0 QUOTES_LOCATED=19/19
+UNENTAILED corpus/knowledge/search-transparency-reporting-r84.md row=Recording when a resource changed term=modification
+UNENTAILED corpus/knowledge/provenance-recording-r85.md row=Recording when content was last reviewed term=modification
+CURATION_R86=FAIL
+stderr:
+<empty>

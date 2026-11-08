@@ -1,0 +1,47 @@
+# receipt r86rev-capture-identity — is the S023 capture the 'newer body' the round-86 lesson claims?
+## date: 2026-11-08T06:14:49Z
+
+## (a) the lesson claim, verbatim
+$ grep -n "20dc0c3a\|newer body" corpus/lessons/round-86.md
+27:  re-fetch of the same URL produced different bytes (txt sha `20dc0c3ab772…`, previously `f5545a19…` stored under the
+28:  same key), so the capture is the newer body and the line number is the one measured on it.
+
+## (b) the committed bytes at the landing revision
+$ sha256sum corpus/captures/f5545a194c06ab421875b047.txt ; wc -c -l corpus/captures/f5545a194c06ab421875b047.txt
+20dc0c3ab7724e1f4be59217c190fa796a66c29b7a653e8d707d64f5fac43a79  corpus/captures/f5545a194c06ab421875b047.txt
+ 22755 148784 corpus/captures/f5545a194c06ab421875b047.txt
+
+## (c) f5545a19… is sha256(URL)[:24] (the capture key), not a content hash
+$ printf '%s' '<S023 URL>' | sha256sum | cut -c1-24
+f5545a194c06ab421875b047
+
+## (d) every commit that ever touched that capture file
+$ git log --all --oneline -- corpus/captures/f5545a194c06ab421875b047.txt
+3a17f4da round-84: fetch S214/S018/S023, land search-transparency entry, fix controls
+b03a8409 
+
+## (e) any change to it between base 3bfb6885 and landing 667a5d09
+$ git diff 3bfb6885 667a5d09 --stat -- corpus/captures/
+ corpus/captures/52db06f9e0e2eaf35bbdb321.raw |     9 +
+ corpus/captures/52db06f9e0e2eaf35bbdb321.txt |     9 +
+ corpus/captures/b1b13a12aee75c6ecc20fb91.raw | 19014 ++++++++++++++++++++++
+ corpus/captures/b1b13a12aee75c6ecc20fb91.txt | 21414 +++++++++++++++++++++++++
+ 4 files changed, 40446 insertions(+)
+$ git log --oneline 3bfb6885..667a5d09 -- corpus/captures/f5545a194c06ab421875b047.txt
+(no output above = the file is unchanged across the round)
+
+## (f) the file is byte-identical at base and landing
+$ git show 3bfb6885:corpus/captures/f5545a194c06ab421875b047.txt | sha256sum
+20dc0c3ab7724e1f4be59217c190fa796a66c29b7a653e8d707d64f5fac43a79  -
+
+## (g) the refetch table records key and txt_sha256 as separate columns; all three round-86 S023 attempts agree
+$ head -1 corpus/evidence/round57/refetch.tsv ; grep -n "S023" corpus/evidence/round57/refetch.tsv
+id	url	key	attempt	fetched_utc	curl_rc	http_code	raw_sha256	txt_sha256
+172:S023	https://www.dublincore.org/specifications/dublin-core/dcmi-terms/	f5545a194c06ab421875b047	1	2026-11-08T02:16:27Z	0	200	fb32e12fa9bee1379acc0cf921ba7e79a6b85bd46253d993db0898847b9870a1	20dc0c3ab7724e1f4be59217c190fa796a66c29b7a653e8d707d64f5fac43a79
+174:S023	https://www.dublincore.org/specifications/dublin-core/dcmi-terms/	f5545a194c06ab421875b047	2	2026-11-08T03:54:40Z	0	200	fb32e12fa9bee1379acc0cf921ba7e79a6b85bd46253d993db0898847b9870a1	20dc0c3ab7724e1f4be59217c190fa796a66c29b7a653e8d707d64f5fac43a79
+184:S023	https://www.dublincore.org/specifications/dublin-core/dcmi-terms/	f5545a194c06ab421875b047	3	2026-11-08T06:00:11Z	0	200	fb32e12fa9bee1379acc0cf921ba7e79a6b85bd46253d993db0898847b9870a1	20dc0c3ab7724e1f4be59217c190fa796a66c29b7a653e8d707d64f5fac43a79
+
+## reading: column 3 = key (f5545a19…, = sha256(url)[:24]); column 9 = txt_sha256 (20dc0c3a…).
+## The lesson compares column 9 against column 3 and calls the key a "previous" content sha.
+## All three attempts (02:16:27Z, 03:54:40Z, 06:00:11Z) and the committed file share txt_sha256 20dc0c3a…,
+## so no re-fetch produced different bytes and no capture write occurs in the round (see (e)).

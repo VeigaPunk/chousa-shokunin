@@ -1,0 +1,33 @@
+# --- rebuild the tree these receipts were computed on (the seat's scratch dir is deleted per the round's rule):
+#   S=/fast/scratch/hyaku/chousa-r86/R86ScoutRegistry; mkdir -p $S
+#   git -C /home/vgpnk/Projects/shokunin/chousa-shokunin archive 667a5d091dc46168ed95eda0ae7f19a9bcf139a2 | tar -x -C $S
+#   python3 -B $S/work/<script>.py    # the work/ copies are the scripts archived beside this receipt
+
+==============================================================================
+M1_revert_S024_to_mined
+  stdout: SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20 | CURATION_R86=PASS
+  exit  : 0 (0 = CURATION_R86=PASS, 1 = FAIL)
+==============================================================================
+M2_r85_entry_cites_S024
+  stdout: SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20 | CURATION_R86=PASS
+  exit  : 0 (0 = CURATION_R86=PASS, 1 = FAIL)
+==============================================================================
+M3_drop_supersedes_marker
+  stdout: SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20 | CURATION_R86=PASS
+  exit  : 0 (0 = CURATION_R86=PASS, 1 = FAIL)
+==============================================================================
+M4_reword_supersedes_marker
+  stdout: SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20 | CURATION_R86=PASS
+  exit  : 0 (0 = CURATION_R86=PASS, 1 = FAIL)
+==============================================================================
+M5_drop_Q13_modified_definition
+  stdout: SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=0 QUOTES_LOCATED=19/19 | CURATION_R86=FAIL
+  exit  : 1 (0 = CURATION_R86=PASS, 1 = FAIL)
+==============================================================================
+M6_unentailed_modification_term
+  stdout: SUPERSEDED_LIVE=0 UNENTAILED_TERM=1 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20 | UNENTAILED corpus/knowledge/provenance-recording-r85.md row=Recording when content was last reviewed term=modification | CURATION_R86=FAIL
+  exit  : 1 (0 = CURATION_R86=PASS, 1 = FAIL)
+==============================================================================
+M7_r85_inversion_restored
+  stdout: SUPERSEDED_LIVE=1 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20 | SUPERSEDED_STILL_LIVE S024 is mined while S031 supersedes it and is queued | CURATION_R86=FAIL
+  exit  : 1 (0 = CURATION_R86=PASS, 1 = FAIL)

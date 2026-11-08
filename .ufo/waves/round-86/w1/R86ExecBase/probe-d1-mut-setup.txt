@@ -1,0 +1,16 @@
+== D1 record built by the frozen counter from the landing tree ==
+D1_BUILT=True
+D1_SID=S021 D1_EXPECTED=REFETCH
+D1_RECORD GATE-RECORD S021 url=https://pubmed.ncbi.nlm.nih.gov/17638714/ fetched=2026-11-08T02:15:39Z tier=A decision=admit capture=corpus/captures/58725f5e0ac436166546a5ec.txt capture_sha256=7070b59c3434b677 words=10 quote="Enable cookies for pubmed.ncbi.nlm.nih.gov and reload this page to continue."
+QUOTE_LOCATED_IN_CAPTURE=True QUOTE_WORDS=10 CAPTURE=corpus/captures/58725f5e0ac436166546a5ec.txt
+
+== M17 derivability from each subject tool's bytes ==
+base85-round84-tip sha256=6e7a76f8862f6faaefaf1bccd54cabd79dfd05b43da45178afc640f9368e4c58 derives=False delta_bytes=0 rule_lines=['and re.fullmatch(r"2[0-9][0-9]", r[6]) and capsha is not None and r[8] == capsha for r in refetch)']
+base86-round85-tip sha256=fe204539b9b549ef1c6092a3963d73c7772946b027ab07da19c89961817aa287 derives=True delta_bytes=7 rule_lines=['ok = any(r[0] == sid and r[1] == url and r[2] == key and r[4] == kv["fetched"] and r[5] == "0" and r[6] == "200" and capsha is not None and r[8] == capsha for r in refetch)']
+landing-667a5d0 sha256=fe204539b9b549ef1c6092a3963d73c7772946b027ab07da19c89961817aa287 derives=True delta_bytes=7 rule_lines=['ok = any(r[0] == sid and r[1] == url and r[2] == key and r[4] == kv["fetched"] and r[5] == "0" and r[6] == "200" and capsha is not None and r[8] == capsha for r in refetch)']
+
+== SETUP leg probe: non-git --repo with a fresh rev record ==
+FRESH_RECORD GATE-RECORD S200 rev=b7803829922770b890e9f4efdd30d12c3695439a path=corpus/QUALITY.md line=1056 words=20 quote=A subject-identity salt is defeated by any normalizer that knows its marker family, so the closure is a per-channel measurement
+base85: rc=1 stdout='GATE_RECORD /fast/scratch/hyaku/chousa-r86/R86ExecBase/setup-probe-record.md:1 S200 FAIL LINE,REV\nGATE_RECORDS files=1 records=1 ok=0 fail=1' stderr='' setup_ok=0
+landing: rc=2 stdout='' stderr="GATE_RECORDS_ERROR not a git repo: '/fast/scratch/hyaku/chousa-r86/R86ExecBase/notgit-probe'" setup_ok=1
+exit: 0

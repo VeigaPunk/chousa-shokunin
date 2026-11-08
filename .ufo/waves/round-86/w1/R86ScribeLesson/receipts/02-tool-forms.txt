@@ -1,0 +1,66 @@
+# 02 — item (2): the tool's own docstring on record forms, and the parse()/check() code that implements them
+# file: /home/vgpnk/Projects/shokunin/chousa-shokunin/tools/gate-records.py (sha256 fe204539b9b549ef1c6092a3963d73c7772946b027ab07da19c89961817aa287)
+# --- docstring, forms section ---
+accepted `2026-13-40T00:00:00Z`). Every record must parse into exactly one of three forms:
+
+  url/admit   GATE-RECORD S<id> url=<http(s) url> fetched=<YYYY-MM-DDTHH:MM:SSZ> tier=<A|B|C> decision=<admit|reject>
+              capture=corpus/captures/<24 hex>.txt capture_sha256=<>=16 hex>[…] words=<n> quote="<text>"
+  url/unreach GATE-RECORD S<id> url=<url> fetched=<ts> tier=<A|B|C> decision=reject capture=none curl_rc=<n>
+              http=<nnn> words=0 quote=none
+  rev         GATE-RECORD S<id> rev=<40 hex> path=<repo-relative path> line=<n> words=<n> quote=<text to end of line>
+
+Keys appear once each, in any order, before `quote=`; `quote=` is last. Every digit (S-id, `words`, `line`, `curl_rc`,
+`http`, `fetched`) is ASCII 0-9, and `words`, `line` and `curl_rc` carry no leading zero (round-83 post-scoring repair:
+Python's Unicode digit class had admitted `line=2٢٢` as line 222, `R83ExecForge` Finding 1). Checks (codes, all reported):
+
+  PARSE         the line fits none of the three forms (unknown/missing/duplicate key, bad value, extra text)
+  REGISTRY      S<id> has no 11-column Registry row in corpus/SOURCES.md (0-3 leading spaces accepted, as the census)
+# --- code: form key tuples (lines 88-90) ---
+87:URL_ADMIT = ("url", "fetched", "tier", "decision", "capture", "capture_sha256", "words")
+88:URL_UNREACH = ("url", "fetched", "tier", "decision", "capture", "curl_rc", "http", "words")
+89:REV_KEYS = ("rev", "path", "line", "words")
+# --- code: parse() branch structure (lines 130-145) ---
+        q = qraw.rstrip()
+        if len(q) < 2 or not (q.startswith('"') and q.endswith('"')):
+            return None
+        quote = q[1:-1]
+    elif keys == set(URL_UNREACH):
+        form = "unreach"
+        if qraw.rstrip() != "none" or kv["capture"] != "none" or kv["words"] != "0" or kv["decision"] != "reject":
+            return None
+        quote = None
+    else:
+        return None
+    if "words" in kv and not INT_RE.fullmatch(kv["words"]):
+        return None
+    if form in ("admit", "unreach"):
+        if not re.fullmatch(r"https?://\S+", kv["url"]) or not TS_RE.fullmatch(kv["fetched"]) or not _valid_ts(kv["fetched"]):
+            return None
+# --- code: parse() admit/unreach constraints (lines 146-156) ---
+        if kv["tier"] not in ("A", "B", "C") or kv["decision"] not in ("admit", "reject"):
+            return None
+        if form == "admit" and kv["decision"] != "admit":
+            return None
+    if form == "unreach":
+        if not INT_RE.fullmatch(kv["curl_rc"]) or not re.fullmatch(r"[0-9]{3}", kv["http"]):
+            return None
+    if form == "rev":
+        if not INT_RE.fullmatch(kv["line"]) or kv["line"] == "0":
+            return None
+    return sid, kv, quote, form
+# --- code: check() REFETCH rules (lines 236-244 and 258-263) ---
+        if not sm or capsha is None or not capsha.startswith(sm.group(1)):
+            codes.append("CAPTURE_SHA")
+        ok = any(r[0] == sid and r[1] == url and r[2] == key and r[4] == kv["fetched"] and r[5] == "0" and r[6] == "200" and capsha is not None and r[8] == capsha for r in refetch)
+        if not ok:
+            codes.append("REFETCH")
+        if cap is not None:
+            with open(cap, encoding="utf-8", errors="replace") as fh:
+                text = norm(fh.read())
+            if not quote.strip() or norm(quote) not in text:
+        if blob is None:
+            codes.append("REV")
+            codes.append("LINE")
+        else:
+            lines = blob.decode("utf-8", errors="replace").split("\n")
+            if lines and lines[-1] == "":

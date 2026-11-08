@@ -1,0 +1,35 @@
+# 07 — the lesson's S023 byte-drift sentence vs committed bytes
+
+### 7a. the lesson's sentence (round-86.md, Gate block)
+- **S023** (re-opened, no row change): the `modified` Definition is at capture `f5545a194c06ab421875b047.txt` line 8786
+  ("Date on which the resource was changed."); it is the warrant the round-84 row 9 needed and did not cite. The
+  re-fetch of the same URL produced different bytes (txt sha `20dc0c3ab772…`, previously `f5545a19…` stored under the
+  same key), so the capture is the newer body and the line number is the one measured on it.
+
+### 7b. every S023 refetch row: key (col 3) and txt_sha256 (col 9)
+attempt=1  fetched=2026-11-08T02:16:27Z  http=200  key=f5545a194c06ab421875b047  txt_sha256=20dc0c3ab7724e1f4be59217c190fa796a66c29b7a653e8d707d64f5fac43a79
+attempt=2  fetched=2026-11-08T03:54:40Z  http=200  key=f5545a194c06ab421875b047  txt_sha256=20dc0c3ab7724e1f4be59217c190fa796a66c29b7a653e8d707d64f5fac43a79
+attempt=3  fetched=2026-11-08T06:00:11Z  http=200  key=f5545a194c06ab421875b047  txt_sha256=20dc0c3ab7724e1f4be59217c190fa796a66c29b7a653e8d707d64f5fac43a79
+
+### 7c. content sha256 of the capture at three revisions (unchanged => no drift)
+3a17f4da 20dc0c3ab7724e1f4be59217c190fa796a66c29b7a653e8d707d64f5fac43a79  -
+3bfb6885958ad4a674ad1896f70d1e836be609e4 20dc0c3ab7724e1f4be59217c190fa796a66c29b7a653e8d707d64f5fac43a79  -
+667a5d091dc46168ed95eda0ae7f19a9bcf139a2 20dc0c3ab7724e1f4be59217c190fa796a66c29b7a653e8d707d64f5fac43a79  -
+git log of that capture file:
+3a17f4da round-84: fetch S214/S018/S023, land search-transparency entry, fix controls
+
+### 7d. f5545a19... is sha256(url)[:24] (the key), not a content digest
+f5545a194c06ab421875b047
+
+### 7e. the located definition is on the committed capture, line 8786
+ Date on which the resource was changed. 
+
+### 7f. no GATE-RECORD line anywhere carries fetched=2026-11-08T06:00:11Z (S023's round-86 re-open)
+NONE FOUND
+### existing S023 record (round-84 lesson, earlier attempt)
+20:GATE-RECORD S023 url=https://www.dublincore.org/specifications/dublin-core/dcmi-terms/ fetched=2026-11-08T02:16:27Z tier=A decision=admit capture=c
+### round-86 lesson carries no 'Check command' line (rounds 83-85 do):
+round-83: 1
+round-84: 1
+round-85: 1
+round-86: 0

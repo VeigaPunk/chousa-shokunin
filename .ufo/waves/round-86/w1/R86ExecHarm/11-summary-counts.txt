@@ -1,0 +1,64 @@
+# authoritative counts for the harm leg — command, observed line, exit
+
+## (a) coarse committed-record line count at landing 667a5d09
+cmd: git -C /home/vgpnk/Projects/shokunin/chousa-shokunin grep -c -E '^[[:space:]]*GATE-RECORD' 667a5d091dc46168ed95eda0ae7f19a9bcf139a2
+observed files: 362
+cmd: git -C /home/vgpnk/Projects/shokunin/chousa-shokunin grep -h -E '^[[:space:]]*GATE-RECORD' 667a5d091dc46168ed95eda0ae7f19a9bcf139a2 | wc -l
+observed lines: 445
+exit: 0 (per-file counts in 01-grep-counts.txt)
+
+## (b) tool-grammar scan of the landing extract (lead_strip + REC_RE, every line of every file)
+cmd: python3 -B /fast/scratch/hyaku/chousa-r86/R86ExecHarm/scan_records.py /fast/scratch/hyaku/chousa-r86/R86ExecHarm/landing
+## files=366 records=449
+exit: 0 (per-file counts in 02-tool-detected-records.txt)
+
+## (c) both tools over the landing tree, same 366 files, same --root
+cmd: python3 -B <landing tool> verify --root <landing extract> --repo <lane repo> <02b-files-landing.txt>
+GATE_RECORDS files=366 records=449 ok=163 fail=286
+GATE_RECORDS files=366 records=449 ok=165 fail=284
+exit: 1,1 (any per-record FAIL makes the tool exit 1; see 03 receipt)
+
+## (d) per-record verdict diff
+observed: keys=449 OK->FAIL=4 FAIL->OK=2 (03b-verdict-diff.tsv)
+
+## (e) frozen 15 positives (landing tree)
+cmd: python3 -B <tool> verify --root <landing extract> --repo <lane repo> corpus/lessons/round-80.md corpus/lessons/round-81.md corpus/lessons/round-82.md
+GATE_RECORDS files=3 records=15 ok=15 fail=0
+GATE_RECORDS files=3 records=15 ok=15 fail=0
+exit: 0,0 (receipt 04)
+
+## (f) fresh 5 positives + D1 (built by the frozen round-86 builders)
+GATE_RECORDS files=5 records=5 ok=5 fail=0
+GATE_RECORDS files=5 records=5 ok=5 fail=0
+GATE_RECORD d1-record.md:1 S021 FAIL REFETCH
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+GATE_RECORD d1-record.md:1 S021 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+exit: fresh 0,0; D1 landing 1, pre 0 (receipt 05)
+
+## (g) pre-round tree (43c3f728 extract), 276 files
+GATE_RECORDS files=276 records=355 ok=140 fail=215
+GATE_RECORDS files=276 records=355 ok=141 fail=214
+observed diff: keys=355 OK->FAIL=1 FAIL->OK=0 (07b)
+exit: 1,1 (receipt 07)
+
+## (h) cross-tree matrix
+COMMON_KEYS=355 O2F=1 F2O=0
+LANDING_TREE_INSTRUMENT_DELTA_ON_COMMON O2F=1 F2O=0
+
+## (i) scratch-clone object-store control
+# landing tool with --repo scratch clone (/fast/scratch/hyaku/chousa-r86/R86ExecHarm/tmp.GKok0g1W7D); stdout vs real-repo run: IDENTICAL
+# pre-round-85 tool with --repo scratch clone; stdout vs real-repo run: IDENTICAL
+
+## (j) forged-battery total
+POS_FROZEN=15
+FRESH=5 admits=2 revs=2 unreach=1
+D1_BUILD=present sid=S021 code=REFETCH
+FORGED_TOTAL=355
+D1_203_IN_TOTAL=1
+
+## (k) tool bytes
+fe204539b9b549ef1c6092a3963d73c7772946b027ab07da19c89961817aa287  tools/gate-records.py at 667a5d09 (landing)
+fe204539b9b549ef1c6092a3963d73c7772946b027ab07da19c89961817aa287  tools/gate-records.py at 3bfb6885 (round-86 base)
+6e7a76f8862f6faaefaf1bccd54cabd79dfd05b43da45178afc640f9368e4c58  tools/gate-records.py at 43c3f728 (pre-round-85)
+no tool bytes changed this round.

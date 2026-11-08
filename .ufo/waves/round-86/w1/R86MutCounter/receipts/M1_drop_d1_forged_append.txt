@@ -1,0 +1,34 @@
+# receipt M1_drop_d1_forged_append
+pristine=gate-records-r86.py sha256=20bc1a733bd6c79f428a16c564cdc49555d8f02c389307eb2c6a28ceeb106d66
+mutant_sha256=b2cae7136655cdffb77bfb51034084b272c579c900699386ec2f542c56f857ff
+mutant_path(scratch)=$S/mut/M1_drop_d1_forged_append/gate-records-r86.py
+
+## tree=land rev=667a5d091dc46168ed95eda0ae7f19a9bcf139a2
+cmd: python3 -B $S/mut/M1_drop_d1_forged_append/gate-records-r86.py --root $S/land --repo $S/repo/land.git --work $S/work/M1_drop_d1_forged_append/land
+exit=1
+stdout:
+
+stderr:
+Traceback (most recent call last):
+  File "/fast/scratch/hyaku/chousa-r86/R86MutCounter/mut/M1_drop_d1_forged_append/gate-records-r86.py", line 464, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/fast/scratch/hyaku/chousa-r86/R86MutCounter/mut/M1_drop_d1_forged_append/gate-records-r86.py", line 444, in main
+    d1_fp = ffiles[[lbl for lbl, _, _, _ in forged].index(d1_label)]
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+ValueError: list.index(x): x not in list
+
+## tree=base rev=3bfb6885958ad4a674ad1896f70d1e836be609e4
+cmd: python3 -B $S/mut/M1_drop_d1_forged_append/gate-records-r86.py --root $S/base --repo $S/repo/base.git --work $S/work/M1_drop_d1_forged_append/base
+exit=1
+stdout:
+
+stderr:
+Traceback (most recent call last):
+  File "/fast/scratch/hyaku/chousa-r86/R86MutCounter/mut/M1_drop_d1_forged_append/gate-records-r86.py", line 464, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/fast/scratch/hyaku/chousa-r86/R86MutCounter/mut/M1_drop_d1_forged_append/gate-records-r86.py", line 444, in main
+    d1_fp = ffiles[[lbl for lbl, _, _, _ in forged].index(d1_label)]
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+ValueError: list.index(x): x not in list

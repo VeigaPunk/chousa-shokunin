@@ -1,0 +1,69 @@
+# 12 - which record forms does tools/gate-records.py accept, and can a 200-refused row be expressed?
+
+### 12a. the tool's docstring on the three forms (lines 17-27)
+accepted `2026-13-40T00:00:00Z`). Every record must parse into exactly one of three forms:
+
+  url/admit   GATE-RECORD S<id> url=<http(s) url> fetched=<YYYY-MM-DDTHH:MM:SSZ> tier=<A|B|C> decision=<admit|reject>
+              capture=corpus/captures/<24 hex>.txt capture_sha256=<>=16 hex>[…] words=<n> quote="<text>"
+  url/unreach GATE-RECORD S<id> url=<url> fetched=<ts> tier=<A|B|C> decision=reject capture=none curl_rc=<n>
+              http=<nnn> words=0 quote=none
+  rev         GATE-RECORD S<id> rev=<40 hex> path=<repo-relative path> line=<n> words=<n> quote=<text to end of line>
+
+Keys appear once each, in any order, before `quote=`; `quote=` is last. Every digit (S-id, `words`, `line`, `curl_rc`,
+`http`, `fetched`) is ASCII 0-9, and `words`, `line` and `curl_rc` carry no leading zero (round-83 post-scoring repair:
+Python's Unicode digit class had admitted `line=2٢٢` as line 222, `R83ExecForge` Finding 1). Checks (codes, all reported):
+
+### 12b. the code's form key tuples and the admit/reject constraint
+87:URL_ADMIT = ("url", "fetched", "tier", "decision", "capture", "capture_sha256", "words")
+88:URL_UNREACH = ("url", "fetched", "tier", "decision", "capture", "curl_rc", "http", "words")
+89:REV_KEYS = ("rev", "path", "line", "words")
+148:        if form == "admit" and kv["decision"] != "admit":
+19:  url/admit   GATE-RECORD S<id> url=<http(s) url> fetched=<YYYY-MM-DDTHH:MM:SSZ> tier=<A|B|C> decision=<admit|reject>
+21:  url/unreach GATE-RECORD S<id> url=<url> fetched=<ts> tier=<A|B|C> decision=reject capture=none curl_rc=<n>
+87:URL_ADMIT = ("url", "fetched", "tier", "decision", "capture", "capture_sha256", "words")
+88:URL_UNREACH = ("url", "fetched", "tier", "decision", "capture", "curl_rc", "http", "words")
+136:        if qraw.rstrip() != "none" or kv["capture"] != "none" or kv["words"] != "0" or kv["decision"] != "reject":
+146:        if kv["tier"] not in ("A", "B", "C") or kv["decision"] not in ("admit", "reject"):
+148:        if form == "admit" and kv["decision"] != "admit":
+
+### 12c. docstring says url/admit permits decision=<admit|reject>; the code admits only decision=admit
+docstring admit form line:
+19:  url/admit   GATE-RECORD S<id> url=<http(s) url> fetched=<YYYY-MM-DDTHH:MM:SSZ> tier=<A|B|C> decision=<admit|reject>
+code guard line:
+148:        if form == "admit" and kv["decision"] != "admit":
+
+### 12d. probe A - url/admit shape with decision=reject over the S217 200 fetch
+GATE-RECORD S217 url=https://www.dublincore.org/documents/dcmi-namespace/ fetched=2026-11-08T06:00:10Z tier=A decision=reject capture=corpus/captures/52db06f9e0e2eaf35bbdb321.txt capture_sha256=9384e034d8fc6e38a36c695c280cca256e799209541b9d86bea61ad20e423731 words=9 quote="https://www.dublincore.org/specifications/dublin-core/dcmi-namespace/"
+GATE_RECORD /fast/scratch/hyaku/chousa-r86/R86ScribeLesson/probe/probe-s217-admit-reject.md:5 S217 FAIL PARSE
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+exit: 1
+
+### 12e. probe B - url/unreach shape over the same 200 fetch (curl_rc=0 http=200)
+GATE-RECORD S217 url=https://www.dublincore.org/documents/dcmi-namespace/ fetched=2026-11-08T06:00:10Z tier=A decision=reject capture=none curl_rc=0 http=200 words=0 quote=none
+GATE_RECORD /fast/scratch/hyaku/chousa-r86/R86ScribeLesson/probe/probe-s217-unreach-200.md:5 S217 FAIL REFETCH
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+exit: 1
+
+### 12f. probe C - rev shape naming S217 (no url/fetched/tier/decision keys)
+GATE-RECORD S217 rev=667a5d091dc46168ed95eda0ae7f19a9bcf139a2 path=corpus/SOURCES.md line=230 words=17 quote=REJECTED: the registered URL redirects to /specifications/dublin-core/dcmi-namespace/ and both served a 9-line stub with no policy prose
+GATE_RECORD /fast/scratch/hyaku/chousa-r86/R86ScribeLesson/probe/probe-rev.md:5 S217 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+exit: 0
+
+### 12g. probe D - url/admit shape with decision=admit over the same S217 200 stub
+GATE-RECORD S217 url=https://www.dublincore.org/documents/dcmi-namespace/ fetched=2026-11-08T06:00:10Z tier=A decision=admit capture=corpus/captures/52db06f9e0e2eaf35bbdb321.txt capture_sha256=9384e034d8fc6e38a36c695c280cca256e799209541b9d86bea61ad20e423731 words=1 quote="https://www.dublincore.org/specifications/dublin-core/dcmi-namespace/"
+GATE_RECORD /fast/scratch/hyaku/chousa-r86/R86ScribeLesson/probe/probe-s217-admit.md:5 S217 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+exit: 0
+
+### 12h. probe E - the SAME unreach shape over the S021 203 fetch (a non-200 non-success)
+GATE-RECORD S021 url=https://pubmed.ncbi.nlm.nih.gov/17638714/ fetched=2026-11-08T02:15:39Z tier=A decision=reject capture=none curl_rc=0 http=203 words=0 quote=none
+GATE_RECORD /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-86/w1/R86ExecForge/records/c03-reject-success-203.md:1 S021 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+exit: 0
+
+### 12i. what a minimal parse() repair would allow (scratch copy of the tool, not the committed bytes)
+scratch copy written with the single parse() guard widened
+GATE_RECORD /fast/scratch/hyaku/chousa-r86/R86ScribeLesson/probe/probe-s217-admit-reject.md:5 S217 FAIL WORDS
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+exit: 1

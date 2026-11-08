@@ -1,0 +1,55 @@
+# 09 — instrument pins, the round-85 counter's bytes, and defect-2 closure
+
+### 9a. instrument-pins.txt (landing tree)
+# instrument pins — round 86 (freeze)
+frozen_utc=2026-11-08T06:04:35Z
+base=3bfb6885958ad4a674ad1896f70d1e836be609e4
+20bc1a733bd6c79f428a16c564cdc49555d8f02c389307eb2c6a28ceeb106d66  corpus/evidence/round86/gate-records-r86.py
+84a64ad48d77e63095919942ac113bbb1b54b4e7d9acd21ef85a4f58e545c5d4  corpus/evidence/round86/curation-r86.py
+8c089828981bb0c8b5a0ab253bb4ec5f1537825cb84cea8964497310bb01f3c6  corpus/evidence/round86/c2-positives.tsv
+fe204539b9b549ef1c6092a3963d73c7772946b027ab07da19c89961817aa287  tools/gate-records.py
+54219d2c9a1d2f8c919b6bb09479e1a2d0f154d6cbbda40926b2fc4992fc7d91  corpus/evidence/round86/controls/receipts/c1-k0-donothing.txt
+6ed57748d21f18927f402caa66c778083c6ea993f30ab2df5aea7a9d88b96d3f  corpus/evidence/round86/controls/receipts/c1-k0b-frozen-instrument.txt
+b3e6c6ad05a381f9a55d412dee184adf5be86c05a6774aa34e8a7f741724e06c  corpus/evidence/round86/controls/receipts/c2-d0-donothing.txt
+
+### 9b. is the round-85 counter (c1-k0b's instrument) pinned?
+NO ENTRY for corpus/evidence/round85/gate-records-r85.py
+r85 counter sha256 now:
+62496d36f69249456c2a3eb451e8badd16e793310266ef08f4b74a868c3a1d22  /fast/scratch/hyaku/chousa-r86/R86ScribeLesson/tree/corpus/evidence/round85/gate-records-r85.py
+r85 counter changed base->landing?
+(empty diffstat above = unchanged)
+
+### 9c. the three control receipts, headers
+--- c1-k0-donothing.txt
+# c1-k0-donothing — the round-86 battery run against the PRE-ROUND-85 tool (REFETCH accepted 2xx)
+# tree: corpus/ at the round-86 base (lane tip 3bfb6885958ad4a674ad1896f70d1e836be609e4)
+# tool: git archive 43c3f7284eee4889cdcc6ac1626573f6579cd533 tools/gate-records.py (the 2xx rule)
+# command: python3 -B corpus/evidence/round86/gate-records-r86.py --root . --repo . --tool /fast/scratch/hyaku/chousa-r86/l1/base/tools/gate-records.py --work /fast/scratch/hyaku/chousa-r86/l1
+--- c1-k0b-frozen-instrument.txt
+# c1-k0b-frozen-instrument — the PRE-ROUND-86 instrument (round-85 counter bytes) on the same tree/tool
+# shows the before: the r85 battery prints PASS with zero D1 class and no mutant leg (M17 unmeasured)
+# command: python3 -B corpus/evidence/round85/gate-records-r85.py --root . --repo . --work /fast/scratch/hyaku/chousa-r86/l1
+TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=354/354 EXPECTED_CODE=354/354 EMPTY_REFUSED=1/1 RC=4/4 SETUP=1/1
+--- c2-d0-donothing.txt
+# c2-d0-donothing — the C2 counter on the round-86 base tree (lane tip 3bfb6885), before any repair
+# command: python3 -B corpus/evidence/round86/curation-r86.py --root /fast/scratch/hyaku/chousa-r86/l1/base86
+SUPERSEDED_LIVE=1 UNENTAILED_TERM=2 MODIFIED_DEF_CITED=0 QUOTES_LOCATED=19/19
+SUPERSEDED_STILL_LIVE S024 is mined while S031 supersedes it and is queued
+
+### 9d. lesson's defect-2 closure sentence (round-86.md)
+55:- Round-85 routed defect 2 (control receipts produced by a different instrument than the post value) is closed for this
+56-  round's own controls by construction: every receipt in `corpus/evidence/round86/controls/receipts/` names the command
+57-  and the tree it ran on, and the instrument bytes are pinned in `instrument-pins.txt` beside them.
+
+### 9e. 'D1' occurrences in the round-85 counter
+3
+261:        # D1 stale-refetch txt_sha256 drift: a forge on the fresh admit whose refetch row is a FAILED attempt —
+287:        # D1: for admits whose url has a FAILED-attempt txt_sha, forge capture_sha256 to that failed txt sha
+291:                forged.append(("D1-stale-refetch-txt-sha-drift", p[2],
+### 'D1-203' occurrences in the round-85 counter
+0
+
+### 9f. the lesson's 'zero D1 lines' sentence
+41:  Before: the round-85 counter prints `354/354` with zero D1 lines in its bytes (grep count 0, receipt
+### the frozen claims.md equivalent sentence
+45:`FORGED_REFUSED=354/354 … SETUP=1/1` / `GATE_RECORDS_R85=PASS` with **zero** `D1-203-admit` or mutant lines in its

@@ -1,0 +1,43 @@
+# 14 - can a 200-fetch-refused-on-content row be recorded at all? (three shapes)
+
+### 14a. the S217 capture body (the only quotable text the 200 fetch returned)
+ $
+ $
+ $
+ https://www.dublincore.org/specifications/dublin-core/dcmi-namespace/ $
+ $
+ $
+ $
+ $
+ $
+
+### 14b. reject-over-capture with a CAPTURE-located quote, against a scratch tool whose single
+###      parse() guard is widened to accept decision=reject (the committed tool is untouched)
+GATE-RECORD S217 url=https://www.dublincore.org/documents/dcmi-namespace/ fetched=2026-11-08T06:00:10Z tier=A decision=reject capture=corpus/captures/52db06f9e0e2eaf35bbdb321.txt capture_sha256=9384e034d8fc6e38a36c695c280cca256e799209541b9d86bea61ad20e423731 words=1 quote="https://www.dublincore.org/specifications/dublin-core/dcmi-namespace/"
+--- committed tool:
+GATE_RECORD /fast/scratch/hyaku/chousa-r86/R86ScribeLesson/probe/probe-s217-reject-capture2.md:5 S217 FAIL PARSE
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+exit: 1
+--- scratch tool with the widened guard:
+GATE_RECORD /fast/scratch/hyaku/chousa-r86/R86ScribeLesson/probe/probe-s217-reject-capture2.md:5 S217 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+exit: 0
+
+### 14c. the rev form over the SAME decision (SOURCES.md row 230 at the landing rev)
+GATE-RECORD S217 rev=667a5d091dc46168ed95eda0ae7f19a9bcf139a2 path=corpus/SOURCES.md line=230 words=17 quote=REJECTED: the registered URL redirects to /specifications/dublin-core/dcmi-namespace/ and both served a 9-line stub with no policy prose
+GATE_RECORD /fast/scratch/hyaku/chousa-r86/R86ScribeLesson/probe/probe-rev.md:5 S217 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+exit: 0
+
+### 14d. the admit form over the SAME 200 stub (decision=admit) - what the round refused to write
+GATE-RECORD S217 url=https://www.dublincore.org/documents/dcmi-namespace/ fetched=2026-11-08T06:00:10Z tier=A decision=admit capture=corpus/captures/52db06f9e0e2eaf35bbdb321.txt capture_sha256=9384e034d8fc6e38a36c695c280cca256e799209541b9d86bea61ad20e423731 words=1 quote="https://www.dublincore.org/specifications/dublin-core/dcmi-namespace/"
+GATE_RECORD /fast/scratch/hyaku/chousa-r86/R86ScribeLesson/probe/probe-s217-admit.md:5 S217 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+exit: 0
+
+### 14e. the unreach form over the SAME 200 fetch - the tool's own 'success' definition
+249:        success = kv["curl_rc"] == "0" and kv["http"] == "200"
+250:        ok = (not success) and any(r[0] == sid and r[1] == url and r[4] == kv["fetched"] and r[5] == kv["curl_rc"]
+GATE_RECORD /fast/scratch/hyaku/chousa-r86/R86ScribeLesson/probe/probe-s217-unreach-200.md:5 S217 FAIL REFETCH
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+exit: 1

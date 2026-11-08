@@ -1,0 +1,23 @@
+# --- rebuild the tree these receipts were computed on (the seat's scratch dir is deleted per the round's rule):
+#   S=/fast/scratch/hyaku/chousa-r86/R86ScoutRegistry; mkdir -p $S
+#   git -C /home/vgpnk/Projects/shokunin/chousa-shokunin archive 667a5d091dc46168ed95eda0ae7f19a9bcf139a2 | tar -x -C $S
+#   python3 -B $S/work/<script>.py    # the work/ copies are the scripts archived beside this receipt
+
+# R86ScoutRegistry §4 receipt — rows whose 'opened' date is later than the first entry that cites them
+# command: python3 -B /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-86/w1/R86ScoutRegistry/receipts/s4.py  (registry 'used-by' is the citing-entry pointer;
+#   entry date = the entry's own 'verified-at:' header when present, else the file's first UTC commit date)
+
+rows whose opened > earliest citing-entry date (UTC, verified-at preferred): 0
+
+rows with no derivable date for any citing entry: 0
+
+--- variant: same check using ONLY the raw git author-date (%as, local tz), which is what a naive reader sees ---
+paths: 91 dated: 91
+rows where opened > first citing entry's first-commit date: 7
+  S018 opened=2026-11-08  first citing entry=corpus/knowledge/search-transparency-reporting-r84.md (first commit 2026-11-07)  all=[('2026-11-07', 'corpus/knowledge/search-transparency-reporting-r84.md')]
+  S023 opened=2026-11-08  first citing entry=corpus/knowledge/search-transparency-reporting-r84.md (first commit 2026-11-07)  all=[('2026-11-07', 'corpus/knowledge/search-transparency-reporting-r84.md')]
+  S046 opened=2026-10-23  first citing entry=corpus/knowledge/quote-reopen-r29.md (first commit 2026-10-22)  all=[('2026-10-22', 'corpus/knowledge/quote-reopen-r29.md')]
+  S047 opened=2026-10-23  first citing entry=corpus/knowledge/quote-reopen-r29.md (first commit 2026-10-22)  all=[('2026-10-22', 'corpus/knowledge/quote-reopen-r29.md')]
+  S048 opened=2026-10-23  first citing entry=corpus/knowledge/quote-reopen-r29.md (first commit 2026-10-22)  all=[('2026-10-22', 'corpus/knowledge/quote-reopen-r29.md')]
+  S049 opened=2026-10-23  first citing entry=corpus/knowledge/quote-reopen-r29.md (first commit 2026-10-22)  all=[('2026-10-22', 'corpus/knowledge/quote-reopen-r29.md')]
+  S214 opened=2026-11-08  first citing entry=corpus/knowledge/search-transparency-reporting-r84.md (first commit 2026-11-07)  all=[('2026-11-07', 'corpus/knowledge/search-transparency-reporting-r84.md')]

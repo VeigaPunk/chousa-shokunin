@@ -1,0 +1,15 @@
+# receipt r86rev-registry-parse — does SUPERSEDED_LIVE=0 see every registry row?
+## date: 2026-11-08T06:15:34Z
+$ grep -cE "^\| S[0-9]{3,} \|" corpus/SOURCES.md   # row-shaped lines
+217
+$ python3 — apply the counter's own parse_registry regex/cell-count and list rows it drops
+row-shaped: 217  parsed(11 cells): 217
+dropped: none
+
+## multi-URL source cells among the rows the two entries cite (capture_text takes urls[-1])
+S018: 1 url(s) -> uses https://aclanthology.org/2026.acl-long.1430/
+S023: 1 url(s) -> uses https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
+S026: 1 url(s) -> uses https://www.gofair.foundation/r1-2
+S031: 1 url(s) -> uses https://schema.org/lastReviewed
+S214: 1 url(s) -> uses https://www.prisma-statement.org/s/PRISMA_2020_checklist-ab3g.pdf
+S215: 1 url(s) -> uses https://www.w3.org/TR/prov-o/

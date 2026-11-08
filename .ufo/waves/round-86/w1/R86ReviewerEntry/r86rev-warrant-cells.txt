@@ -1,0 +1,42 @@
+# receipt r86rev-warrant-cells — the two repaired rows, their quotes, and the capture lines
+## date: 2026-11-08T06:14:37Z  lane root: /home/vgpnk/Projects/shokunin/chousa-shokunin  revision under attack: 667a5d091dc46168ed95eda0ae7f19a9bcf139a2
+
+## (1) r84 row "Recording when a resource changed" + Q13
+$ grep -n "Recording when a resource changed\|^| Q13 |" corpus/knowledge/search-transparency-reporting-r84.md
+34:| Q13 | S023 | "Date on which the resource was changed." |
+48:| Recording when a resource changed | state the date on which the resource was changed | record that the resource changed without the date on which it changed | Q13 (S023) |
+
+$ grep -n "Date on which the resource was changed" corpus/captures/f5545a194c06ab421875b047.txt
+8786: Date on which the resource was changed. 
+
+$ sed -n "8724,8800p" corpus/captures/f5545a194c06ab421875b047.txt | grep -n "Label\|Definition\|Comment\|^ Date Modified\|Date on which\|Recommended practice"
+52: Label 
+53: Date Modified 
+62: Definition 
+63: Date on which the resource was changed. 
+72: Comment 
+73: Recommended practice is to describe the date, date/time, or period of time as recommended for the property Date, of which this is a subproperty. 
+
+## (2) r85 row "Recording when content was last reviewed" + Q7
+$ grep -n "Recording when content was last reviewed\|^| Q7 |\|^source:" corpus/knowledge/provenance-recording-r85.md
+3:source: S215, S026, S031
+28:| Q7 | S031 | "Date on which the content on this web page was last reviewed for accuracy and/or completeness." |
+39:| Recording when content was last reviewed | state the date the content was last reviewed for accuracy and completeness | record a review date for content that was not reviewed for accuracy or completeness | Q7 (S031) |
+
+$ grep -n "last reviewed for accuracy" corpus/captures/11d6cc56bb24adfc61eea2b4.txt
+211: Date on which the content on this web page was last reviewed for accuracy and/or completeness.
+
+$ sed -n "195,250p" corpus/captures/11d6cc56bb24adfc61eea2b4.txt | grep -v "^ *$"
+ Canonical URL: https://schema.org/lastReviewed 
+ Check for open issues. 
+ Date on which the content on this web page was last reviewed for accuracy and/or completeness.
+ Values expected to be one of these types
+ Date 
+ Used on these types
+ WebPage 
+
+## (3) the registry rows C2 clause (a) rests on
+$ grep -nE "^\| S(023|024|031) \|" corpus/SOURCES.md
+33:| S023 | DCMI Metadata Terms — https://www.dublincore.org/specifications/dublin-core/dcmi-terms/ | spec | A | DCMI's definitions of dcterms:source, dcterms:modified and dcterms:valid; not a freshness or verification policy | section 2, /terms/ namespace entries source, modified, valid; DCMI Recommendation issued 2020-01-20; capture `f5545a194c06ab421875b047` | Source (what a resource derives from) and its dates (modified, valid) are distinct metadata properties | mined | 2026-11-08 | 365d | corpus/knowledge/search-transparency-reporting-r84.md |
+34:| S024 | Schema.org property lastReviewed — https://schema.org/lastReviewed | spec | A | Schema.org's own definition and declared use of lastReviewed | page heading lastReviewed, definition paragraph | A last-reviewed date for accuracy is a property separate from publication or modification dates | queued | 2026-10-21 | 365d | — |
+41:| S031 | Schema.org property lastReviewed — https://schema.org/lastReviewed | spec | A | Schema.org's own definition and declared use of lastReviewed | lastReviewed property definition paragraph; page re-opened 2026-11-08 (capture `11d6cc56bb24adfc61eea2b4`, `Date on which the content on this web page was last reviewed for accuracy and/or completeness.`) | supersedes S024 — lastReviewed records the date a web page was last reviewed for accuracy and/or completeness; no comparison to other date properties claimed | mined | 2026-10-21 | 365d | corpus/knowledge/provenance-recording-r85.md |

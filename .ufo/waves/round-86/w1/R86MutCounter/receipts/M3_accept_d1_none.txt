@@ -1,0 +1,22 @@
+# receipt M3_accept_d1_none
+pristine=gate-records-r86.py sha256=20bc1a733bd6c79f428a16c564cdc49555d8f02c389307eb2c6a28ceeb106d66
+mutant_sha256=74a4c73cd94c45511b8fce7259513eb308d3520bdef944b0a9972d9167fbec7b
+mutant_path(scratch)=$S/mut/M3_accept_d1_none/gate-records-r86.py
+
+## tree=land rev=667a5d091dc46168ed95eda0ae7f19a9bcf139a2
+cmd: python3 -B $S/mut/M3_accept_d1_none/gate-records-r86.py --root $S/land --repo $S/repo/land.git --work $S/work/M3_accept_d1_none/land
+exit=0
+stdout:
+TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=355/355 EXPECTED_CODE=355/355 EMPTY_REFUSED=1/1 RC=4/4 SETUP=1/1 D1_FORGES=1 D1_REFUSED=1/1 MUT17_KILLED=1/1
+GATE_RECORDS_R86=PASS
+stderr:
+<empty>
+
+## tree=base rev=3bfb6885958ad4a674ad1896f70d1e836be609e4
+cmd: python3 -B $S/mut/M3_accept_d1_none/gate-records-r86.py --root $S/base --repo $S/repo/base.git --work $S/work/M3_accept_d1_none/base
+exit=0
+stdout:
+TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=355/355 EXPECTED_CODE=355/355 EMPTY_REFUSED=1/1 RC=4/4 SETUP=1/1 D1_FORGES=1 D1_REFUSED=1/1 MUT17_KILLED=1/1
+GATE_RECORDS_R86=PASS
+stderr:
+<empty>

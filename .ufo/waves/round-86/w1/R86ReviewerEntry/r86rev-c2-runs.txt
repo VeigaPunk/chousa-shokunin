@@ -1,0 +1,16 @@
+# receipt r86rev-c2-runs — curation-r86.py on landing and base trees
+## date: 2026-11-08T06:13:29Z  host: Linux 7.2.11-arch1-1
+## trees: landing 667a5d091dc46168ed95eda0ae7f19a9bcf139a2 -> /fast/scratch/hyaku/chousa-r86/R86ReviewerEntry/tree ; base 3bfb6885958ad4a674ad1896f70d1e836be609e4 -> /fast/scratch/hyaku/chousa-r86/R86ReviewerEntry/base (git archive | tar -x)
+
+$ python3 -B $LANDING/corpus/evidence/round86/curation-r86.py --root $LANDING
+SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20
+CURATION_R86=PASS
+EXIT=0
+
+$ python3 -B $LANDING/corpus/evidence/round86/curation-r86.py --root $BASE
+SUPERSEDED_LIVE=1 UNENTAILED_TERM=2 MODIFIED_DEF_CITED=0 QUOTES_LOCATED=19/19
+SUPERSEDED_STILL_LIVE S024 is mined while S031 supersedes it and is queued
+UNENTAILED corpus/knowledge/search-transparency-reporting-r84.md row=Recording when a resource changed term=modification
+UNENTAILED corpus/knowledge/provenance-recording-r85.md row=Recording when content was last reviewed term=modification
+CURATION_R86=FAIL
+EXIT=1

@@ -1,0 +1,47 @@
+# receipt r86rev-instrument-attacks — variants of the landing tree, curation-r86.py run on each
+# date: 2026-11-08T06:13:39Z
+# seed tree: /fast/scratch/hyaku/chousa-r86/R86ReviewerEntry/tree = git archive 667a5d09 | tar -x; each variant is a full copytree of that seed
+# command per variant: python3 -B <variant>/corpus/evidence/round86/curation-r86.py --root <variant>
+
+## E3 — delete the blacklisted word, leave the claim unentailed
+# mutation: r84 row 9 Do/Never replaced by a wholly unentailed statement about licensing, warranted by the unchanged Q13 ('Date on which the resource was changed.'); no 'modified'/'modification' substring remains
+SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20
+CURATION_R86=PASS
+EXIT=0
+
+## E4 — the exact round-85 routed defect Nevers, restored on landing bytes
+# mutation: r85 row 1 Never = round-85 wording ('passes for a primary'); r85 row 5 Never = round-85 wording ('cite a tool by name alone, without version or step'); nothing else changed
+SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20
+CURATION_R86=PASS
+EXIT=0
+
+## E5a — one quote paraphrased (not verbatim)
+# mutation: r85 Q7 quote reworded so it no longer occurs in 11d6cc56bb24adfc61eea2b4.txt
+SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=19/20
+CURATION_R86=FAIL
+EXIT=1
+
+## E5b — delete the offending quote row instead of repairing it
+# mutation: same paraphrase as E5a, then the whole Q7 row removed: denominator drops with the numerator
+SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=19/19
+CURATION_R86=PASS
+EXIT=0
+
+## E5c2 — 18 of 20 located-quote rows deleted, the stated 'total >= 19' floor
+# mutation: only Q13 (r84) and Q7 (r85) kept; both locate, so located==total while total=2
+SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=2/2
+CURATION_R86=PASS
+EXIT=0
+
+## E6 — Q13 present but row 9's warrant cell re-pointed at Q10
+# mutation: r84 row 9 Warrant 'Q13 (S023)' -> 'Q10 (S023)'; MODIFIED_DEF_CITED still 1 because the check is entry-scoped presence, not warrant linkage
+SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20
+CURATION_R86=PASS
+EXIT=0
+
+## E7b — an unrelated located quote clears any row's blacklisted term
+# mutation: new located quote Q14 'Date Modified' (capture f5545a19 line 8776) added; validity row's Never gains 'modified' while still warranted by Q11
+SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=21/21
+CURATION_R86=PASS
+EXIT=0
+

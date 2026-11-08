@@ -1,0 +1,118 @@
+# 08 — the lesson's S024 restoration: which cells changed and which were logged
+
+### 8a. lesson's S024 bullet
+  pre-round-85 bytes. The `opened` change round 85 made was outside `CORPUS.md` rule 2 (only `status`, `recheck` and
+  `used-by` change in place); the restoration is itself a change, logged here old→new as rule 2 requires.
+- **S023** (re-opened, no row change): the `modified` Definition is at capture `f5545a194c06ab421875b047.txt` line 8786
+
+### 8b. cell-by-cell base(3bfb6885) vs landing(667a5d0) vs pre-round-85(43c3f72)
+--- S024 : base(3bfb6885) vs landing(667a5d0), vs pre-round-85(43c3f72)
+same     ==pre-r85  id:
+     base   : S024
+     landing: S024
+same     ==pre-r85  name:
+     base   : Schema.org property lastReviewed — https://schema.org/lastReviewed
+     landing: Schema.org property lastReviewed — https://schema.org/lastReviewed
+same     ==pre-r85  kind:
+     base   : spec
+     landing: spec
+same     ==pre-r85  tier:
+     base   : A
+     landing: A
+same     ==pre-r85  scope:
+     base   : Schema.org's own definition and declared use of lastReviewed
+     landing: Schema.org's own definition and declared use of lastReviewed
+CHANGED  ==pre-r85  anchor:
+     base   : lastReviewed property definition paragraph (capture key 11d6cc56bb24adfc61eea2b4)
+     landing: page heading lastReviewed, definition paragraph
+same     ==pre-r85  teaches:
+     base   : A last-reviewed date for accuracy is a property separate from publication or modification dates
+     landing: A last-reviewed date for accuracy is a property separate from publication or modification dates
+CHANGED  ==pre-r85  status:
+     base   : mined
+     landing: queued
+CHANGED  ==pre-r85  opened:
+     base   : 2026-11-08
+     landing: 2026-10-21
+same     ==pre-r85  recheck:
+     base   : 365d
+     landing: 365d
+CHANGED  ==pre-r85  used-by:
+     base   : corpus/knowledge/provenance-recording-r85.md
+     landing: —
+
+--- S031 : base(3bfb6885) vs landing(667a5d0), vs pre-round-85(43c3f72)
+same     ==pre-r85  id:
+     base   : S031
+     landing: S031
+same     ==pre-r85  name:
+     base   : Schema.org property lastReviewed — https://schema.org/lastReviewed
+     landing: Schema.org property lastReviewed — https://schema.org/lastReviewed
+same     ==pre-r85  kind:
+     base   : spec
+     landing: spec
+same     ==pre-r85  tier:
+     base   : A
+     landing: A
+same     ==pre-r85  scope:
+     base   : Schema.org's own definition and declared use of lastReviewed
+     landing: Schema.org's own definition and declared use of lastReviewed
+CHANGED  anchor:
+     base   : lastReviewed property definition paragraph; Schema.org page served 2026-10-21
+     landing: lastReviewed property definition paragraph; page re-opened 2026-11-08 (capture `11d6cc56bb24adfc61eea2b4`, `Date on which the content on this web page was last reviewed for accuracy and/or completeness.`)
+same     ==pre-r85  teaches:
+     base   : supersedes S024 — lastReviewed records the date a web page was last reviewed for accuracy and/or completeness; no comparison to other date properties claimed
+     landing: supersedes S024 — lastReviewed records the date a web page was last reviewed for accuracy and/or completeness; no comparison to other date properties claimed
+CHANGED  status:
+     base   : queued
+     landing: mined
+same     ==pre-r85  opened:
+     base   : 2026-10-21
+     landing: 2026-10-21
+same     ==pre-r85  recheck:
+     base   : 365d
+     landing: 365d
+CHANGED  used-by:
+     base   : —
+     landing: corpus/knowledge/provenance-recording-r85.md
+
+--- S023 : base(3bfb6885) vs landing(667a5d0), vs pre-round-85(43c3f72)
+same     ==pre-r85  id:
+     base   : S023
+     landing: S023
+same     ==pre-r85  name:
+     base   : DCMI Metadata Terms — https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
+     landing: DCMI Metadata Terms — https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
+same     ==pre-r85  kind:
+     base   : spec
+     landing: spec
+same     ==pre-r85  tier:
+     base   : A
+     landing: A
+same     ==pre-r85  scope:
+     base   : DCMI's definitions of dcterms:source, dcterms:modified and dcterms:valid; not a freshness or verification policy
+     landing: DCMI's definitions of dcterms:source, dcterms:modified and dcterms:valid; not a freshness or verification policy
+same     ==pre-r85  anchor:
+     base   : section 2, /terms/ namespace entries source, modified, valid; DCMI Recommendation issued 2020-01-20; capture `f5545a194c06ab421875b047`
+     landing: section 2, /terms/ namespace entries source, modified, valid; DCMI Recommendation issued 2020-01-20; capture `f5545a194c06ab421875b047`
+same     ==pre-r85  teaches:
+     base   : Source (what a resource derives from) and its dates (modified, valid) are distinct metadata properties
+     landing: Source (what a resource derives from) and its dates (modified, valid) are distinct metadata properties
+same     ==pre-r85  status:
+     base   : mined
+     landing: mined
+same     ==pre-r85  opened:
+     base   : 2026-11-08
+     landing: 2026-11-08
+same     ==pre-r85  recheck:
+     base   : 365d
+     landing: 365d
+same     ==pre-r85  used-by:
+     base   : corpus/knowledge/search-transparency-reporting-r84.md
+     landing: corpus/knowledge/search-transparency-reporting-r84.md
+
+### 8c. CORPUS.md rule 2 (fleet root, read-only)
+2. **Append-only.** Only `status`, `recheck` and `used-by` change in place, and each change
+   is logged old→new in the round lesson. A correction is a new row whose `teaches` opens
+   `supersedes S0NN —`.
+3. **No second method.** Claim admission stays in `corpus/QUALITY.md`; the research method

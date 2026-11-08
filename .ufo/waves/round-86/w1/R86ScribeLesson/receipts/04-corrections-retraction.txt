@@ -1,0 +1,41 @@
+# 04 — item (3): round-85 'verified' still stands, retracted by round-86, round-85 file not edited
+
+### 4a. round-85.md blob identity at base and landing (not edited)
+be4a746936e8a626728855b1365daf3bb19cd012
+be4a746936e8a626728855b1365daf3bb19cd012
+git diff --stat base..landing -- corpus/lessons/round-85.md:
+(empty diffstat = byte-identical)
+
+### 4b. round-85.md '## Claim outcomes' rows (still say verified)
+46:| C1 operability (`tools/gate-records.py` round-85 repair) | `TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=354/354 EXPECTED_CODE=354/354 EMPTY_REFUSED=1/1 RC=4/4 SETUP=1/1`, `GATE_RECORDS_R85=PASS` rc 0 | K1 met; K2–K4 decided by the wave | **verified** (measured at the landing revision) |
+47:| C2 depth (`provenance-recording-r85.md`) | `DEPTH_R85 entries=1 ok_entries=1 rows=6 located_quotes=7 fresh_sources=3`, `DEPTH_R85=PASS` rc 0 | K1 met; K2–K4 decided by the wave | **verified** (counter) |
+
+### 4c. round-86.md blob at landing + the retraction block
+c79c4deba4f5c16047969b3e6d339d59d5dab8c5
+48:## Corrections to round-85 records (routed defect 4)
+## Corrections to round-85 records (routed defect 4)
+
+- `corpus/lessons/round-85.md` `## Claim outcomes` printed **"verified"** for C1 and C2 while the filed verdict was an
+  honest stop. This entry retracts that column: **C1 and C2 of round 85 did not verify as stated** (the 200-only class
+  had no forgery in the battery and mutant M17 survived; K3 fired on rows 1 and 5 and the ground was narrower than the
+  sentence). The superseding statement is this paragraph plus round-85's own amendments 7–10; the round-85 file is not
+  edited (append-only discipline).
+- Round-85 routed defect 2 (control receipts produced by a different instrument than the post value) is closed for this
+  round's own controls by construction: every receipt in `corpus/evidence/round86/controls/receipts/` names the command
+  and the tree it ran on, and the instrument bytes are pinned in `instrument-pins.txt` beside them.
+- Round-85 routed defect 3 (add the 200-only forge to the battery) is C1 here: the forgery is built inside the counter
+  from the committed `S021` row, not beside it.
+
+
+### 4d. round-85's own amendments the retraction points at (plans/round-85.md)
+17:## Amendment 1 — C2 ground re-pointed from S020/S023 to S215/S026/S024 (commit `02df67db`)
+35:## Amendment 2 — depth counter section-parser repair, before any scored data (same commit `02df67db`)
+44:## Amendment 3 — C1 setup-leg scoring moved into the counter (same commit `02df67db`)
+56:## Amendment 4 — the C1 counter's `kv_set` returned a line for an absent key (landing commit `64803d33`)
+68:## Amendment 5 — `tools/gate-records.py` docstring updated with the repairs (same landing commit)
+75:## Amendment 6 — egress scope exceeded: S026 and S024 were fetched although the table's intended-targets list named only S023 and S020 (process defect, disclosed)
+87:## Amendment 7 — C1 honest stop: the 200-only REFETCH class is not witnessed by the frozen predicate (wave artifacts `R85CriticClaims`, `R85MutationTool`)
+105:## Amendment 8 — C2 honest stop: two decision-table rows overreach their quotes (wave artifact `R85ReviewerEntry`)
+118:## Amendment 9 — C2's ground claim is narrower than the frozen sentence: S215 is the S033 document (wave artifact `R85ScoutGround`)
+133:## Amendment 7b — C1's surviving property (the narrowing of amendment 7, stated as the claim that may verify)
+150:## Amendment 10 — C2's floors were relaxed beside the ground change although the old floors were reachable (wave artifact `R85ScribeLesson`)

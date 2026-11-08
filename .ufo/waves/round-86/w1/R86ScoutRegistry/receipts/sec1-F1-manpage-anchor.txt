@@ -1,0 +1,37 @@
+# --- these checks read committed bytes of the landing revision 667a5d091dc46168ed95eda0ae7f19a9bcf139a2
+#     (tree via: git -C /home/vgpnk/Projects/shokunin/chousa-shokunin archive 667a5d09 | tar -x -C $S)
+#     and the host's own /usr/share/man/man1/sha256sum.1.gz, whose SHA-256 both registry rows pin)
+
+# R86ScoutRegistry §1 F-1 receipt — S070/S073 anchor vs the pinned man page
+# command: sha256sum /usr/share/man/man1/sha256sum.1.gz ; gzip -dc ... | awk '{printf "%d\t%s\n", NR, $0}' | sed -n '1,25p'
+
+93c17dffe9f25d56291113d566a7de3ff65c29f8cc32c381801c49cf27e8403f  /usr/share/man/man1/sha256sum.1.gz
+
+3	.SH NAME
+4	sha256sum \- compute and check SHA256 message digest
+5	.SH SYNOPSIS
+6	.B sha256sum
+7	[\fI\,OPTION\/\fR]... [\fI\,FILE\/\fR]...
+8	.SH DESCRIPTION
+9	.\" Add any additional description here
+10	.PP
+11	Print or check SHA256 (256\-bit) checksums.
+12	Legacy interface to the \fBcksum\fP(1) utility.
+13	.PP
+14	With no FILE, or when FILE is \-, read standard input.
+15	.TP
+16	\X'tty: link https://www.gnu.org/software/coreutils/manual/coreutils.html#cksum-b'\fB\-b, \-\-binary\fP\X'tty: link'
+17	read in binary mode
+18	.TP
+19	\X'tty: link https://www.gnu.org/software/coreutils/manual/coreutils.html#cksum-c'\fB\-c, \-\-check\fP\X'tty: link'
+20	read checksums from the FILEs and check them
+21	.TP
+22	\X'tty: link https://www.gnu.org/software/coreutils/manual/coreutils.html#cksum--tag'\fB\-\-tag\fP\X'tty: link'
+
+# word counts: line 11 vs line 20
+line 11: 6
+line 20: 8
+
+# registry rows S070 / S073:
+| S070 | GNU coreutils `sha256sum(1)` manual — `/usr/share/man/man1/sha256sum.1.gz` | docs | A | the documented digest text and `--check` input of the installed coreutils `sha256sum`; not a validation policy (the 64-lowercase-hex rule is this lane's choice) | NAME/DESCRIPTION and SYNOPSIS `-c, --check` (decompressed lines 4–11, 19–20, 54–56; quote at line 11); coreutils 9.12-2; file SHA-256 `93c17dffe9f25d56291113d566a7de3ff65c29f8cc32c381801c49cf27e8403f` (opened locally 2026-10-23) | `sha256sum` prints or checks SHA256 (256-bit) checksums, and `--check` reads checksums from files rather than computing a policy. | mined | 2026-10-23 | on-release | corpus/knowledge/engine-swap-canary-r36.md, corpus/knowledge/claim-pin-provenance-r37.md |
+| S073 | GNU coreutils `sha256sum(1)` manual — `/usr/share/man/man1/sha256sum.1.gz` (canonical URL `https://www.gnu.org/software/coreutils/manual/coreutils.html#cksum-c`, printed as the roff tty-link at the anchored line; not fetched) | docs | A | the documented digest text and `--check` semantics of the installed coreutils `sha256sum` — the same scope as S070; this row corrects S070's anchor label only | `supersedes S070 —` the `-c, --check` entry is a DESCRIPTION `.TP` item, not a SYNOPSIS line: `.SH SYNOPSIS` line 5 (body 6–7, no option entries), `.SH DESCRIPTION` line 8, `-c, --check` at decompressed lines 19–20 (quote at line 20); coreutils 9.12 (September 2026), installed `coreutils 9.12-2`; file SHA-256 `93c17dffe9f25d56291113d566a7de3ff65c29f8cc32c381801c49cf27e8403f` (re-opened locally 2026-10-24) | supersedes S070 — the anchor label `SYNOPSIS -c, --check` is wrong; lines 19–20 sit under DESCRIPTION. Offsets and quote unchanged: "read checksums from the FILEs and

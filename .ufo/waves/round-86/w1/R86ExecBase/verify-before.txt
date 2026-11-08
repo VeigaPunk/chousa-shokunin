@@ -1,0 +1,33 @@
+== instrument / subject-tool hashes ==
+20bc1a733bd6c79f428a16c564cdc49555d8f02c389307eb2c6a28ceeb106d66  land/corpus/evidence/round86/gate-records-r86.py
+84a64ad48d77e63095919942ac113bbb1b54b4e7d9acd21ef85a4f58e545c5d4  land/corpus/evidence/round86/curation-r86.py
+8c089828981bb0c8b5a0ab253bb4ec5f1537825cb84cea8964497310bb01f3c6  land/corpus/evidence/round86/c2-positives.tsv
+fe204539b9b549ef1c6092a3963d73c7772946b027ab07da19c89961817aa287  land/tools/gate-records.py
+fe204539b9b549ef1c6092a3963d73c7772946b027ab07da19c89961817aa287  base86/tools/gate-records.py
+6e7a76f8862f6faaefaf1bccd54cabd79dfd05b43da45178afc640f9368e4c58  base85/tools/gate-records.py
+549829c9ca9752cf880b28a5cb073e593a12355f068a0a7d1da7963cb74c7aac  land/corpus/evidence/round86/instrument-pins.txt
+549829c9ca9752cf880b28a5cb073e593a12355f068a0a7d1da7963cb74c7aac  freeze/corpus/evidence/round86/instrument-pins.txt
+54219d2c9a1d2f8c919b6bb09479e1a2d0f154d6cbbda40926b2fc4992fc7d91  land/corpus/evidence/round86/controls/receipts/c1-k0-donothing.txt
+6ed57748d21f18927f402caa66c778083c6ea993f30ab2df5aea7a9d88b96d3f  land/corpus/evidence/round86/controls/receipts/c1-k0b-frozen-instrument.txt
+b3e6c6ad05a381f9a55d412dee184adf5be86c05a6774aa34e8a7f741724e06c  land/corpus/evidence/round86/controls/receipts/c2-d0-donothing.txt
+54219d2c9a1d2f8c919b6bb09479e1a2d0f154d6cbbda40926b2fc4992fc7d91  freeze/corpus/evidence/round86/controls/receipts/c1-k0-donothing.txt
+b3e6c6ad05a381f9a55d412dee184adf5be86c05a6774aa34e8a7f741724e06c  freeze/corpus/evidence/round86/controls/receipts/c2-d0-donothing.txt
+
+== derivation strings in subject tool bytes ==
+base85/tools/gate-records.py: count_200_rule=0 count_2xx_rule=0 mutant_differs=False mutant_bytes=13309
+base86/tools/gate-records.py: count_200_rule=1 count_2xx_rule=0 mutant_differs=True mutant_bytes=14515
+land/tools/gate-records.py: count_200_rule=1 count_2xx_rule=0 mutant_differs=True mutant_bytes=14515
+
+== refetch row backing D1 (S021) in landing tree ==
+ROW	S021	https://pubmed.ncbi.nlm.nih.gov/17638714/	58725f5e0ac436166546a5ec	1	2026-11-08T02:15:39Z	0	203	f88609906ec38d641445dce464067ce1a297576fff5296b009f7a93ebd4782ab	7070b59c3434b67711f6a6ad723834ee1fce7a82230ac6970c1b12844c042a00
+keycheck sha256(url)[:24]=58725f5e0ac436166546a5ec rowkey=58725f5e0ac436166546a5ec match=True
+capture corpus/captures/58725f5e0ac436166546a5ec.txt sha256=7070b59c3434b67711f6a6ad723834ee1fce7a82230ac6970c1b12844c042a00 row_txt_sha=7070b59c3434b67711f6a6ad723834ee1fce7a82230ac6970c1b12844c042a00 match=True bytes=190
+
+== S216 registry row in landing tree ==
+| S216 | RFC 9110, HTTP Semantics — https://www.rfc-editor.org/rfc/rfc9110.html | spec | A | the status-code registry's own definition of 203 Non-Authoritative Information and of 200 OK; not a capture-store policy | section 15.3.4, first paragraph of 203 Non-Authoritative Information (capture key b1b13a12aee75c6ecc20fb91) | 203 means a transforming proxy modified the enclosed content from the origin server's 200 response, so a 203 body is not the origin's representation | mined | 2026-11-08 | 365d | corpus/evidence/round86/claims.md |
+
+== committed control receipt vs reproduction (body lines, '#' headers stripped) ==
+C1: identical=True ref_lines=16 got_lines=16 ref_sha256=54219d2c9a1d2f8c919b6bb09479e1a2d0f154d6cbbda40926b2fc4992fc7d91 got_sha256=5484e20dca11d8f46b7d12a6612e4dd5b14cbcd0f992d399a0bcdcf80d6dbb01
+C1-landroot: identical=True ref_lines=16 got_lines=16 ref_sha256=54219d2c9a1d2f8c919b6bb09479e1a2d0f154d6cbbda40926b2fc4992fc7d91 got_sha256=d9291433fd4b643d18bd81a0e84c1d8efe6a68650e0af24e34b5ba1915694bfb
+C2: identical=True ref_lines=6 got_lines=6 ref_sha256=b3e6c6ad05a381f9a55d412dee184adf5be86c05a6774aa34e8a7f741724e06c got_sha256=ce6ea4047b1797e5ccaa717405a73999f06b5d60a7e823cdc1254e30dbb49848
+exit: 0

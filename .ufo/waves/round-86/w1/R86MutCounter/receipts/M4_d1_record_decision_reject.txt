@@ -1,0 +1,26 @@
+# receipt M4_d1_record_decision_reject
+pristine=gate-records-r86.py sha256=20bc1a733bd6c79f428a16c564cdc49555d8f02c389307eb2c6a28ceeb106d66
+mutant_sha256=ae5c97b8545e162230bd7070bab9d95dc795c75e269cb3aa9f3a29a19d1b1740
+mutant_path(scratch)=$S/mut/M4_d1_record_decision_reject/gate-records-r86.py
+
+## tree=land rev=667a5d091dc46168ed95eda0ae7f19a9bcf139a2
+cmd: python3 -B $S/mut/M4_d1_record_decision_reject/gate-records-r86.py --root $S/land --repo $S/repo/land.git --work $S/work/M4_d1_record_decision_reject/land
+exit=1
+stdout:
+WRONG_CODE g0354.md D1-203-admit S021 expected=REFETCH got=PARSE
+MUT17_NOT_RELAXED the mutant still refuses the D1 record
+TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=355/355 EXPECTED_CODE=354/355 EMPTY_REFUSED=1/1 RC=4/4 SETUP=1/1 D1_FORGES=1 D1_REFUSED=0/1 MUT17_KILLED=0/1
+GATE_RECORDS_R86=FAIL
+stderr:
+<empty>
+
+## tree=base rev=3bfb6885958ad4a674ad1896f70d1e836be609e4
+cmd: python3 -B $S/mut/M4_d1_record_decision_reject/gate-records-r86.py --root $S/base --repo $S/repo/base.git --work $S/work/M4_d1_record_decision_reject/base
+exit=1
+stdout:
+WRONG_CODE g0354.md D1-203-admit S021 expected=REFETCH got=PARSE
+MUT17_NOT_RELAXED the mutant still refuses the D1 record
+TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=355/355 EXPECTED_CODE=354/355 EMPTY_REFUSED=1/1 RC=4/4 SETUP=1/1 D1_FORGES=1 D1_REFUSED=0/1 MUT17_KILLED=0/1
+GATE_RECORDS_R86=FAIL
+stderr:
+<empty>

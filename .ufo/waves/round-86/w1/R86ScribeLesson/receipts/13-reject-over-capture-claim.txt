@@ -1,0 +1,35 @@
+# 13 - the 'no record form for a 200-refused row' claim, tested at the tool's own boundaries
+
+### 13a. the docstring already declares decision=<admit|reject> on the url/admit form
+19:  url/admit   GATE-RECORD S<id> url=<http(s) url> fetched=<YYYY-MM-DDTHH:MM:SSZ> tier=<A|B|C> decision=<admit|reject>
+### 13b. parse() rejects it anyway (one guard)
+148:        if form == "admit" and kv["decision"] != "admit":
+
+### 13c. the S217 refetch row the REFETCH check would consult (http=200, txt_sha == capture sha)
+sid=S217 url=https://www.dublincore.org/documents/dcmi-namespace/ key=52db06f9e0e2eaf35bbdb321 attempt=1 fetched=2026-11-08T06:00:10Z curl_rc=0 http=200 txt_sha256=9384e034d8fc6e38a36c695c280cca256e799209541b9d86bea61ad20e423731
+capture sha256:
+9384e034d8fc6e38a36c695c280cca256e799209541b9d86bea61ad20e423731  /fast/scratch/hyaku/chousa-r86/R86ScribeLesson/tree/corpus/captures/52db06f9e0e2eaf35bbdb321.txt
+
+### 13d. a reject-over-capture record with the CORRECT word count (17)
+GATE-RECORD S217 url=https://www.dublincore.org/documents/dcmi-namespace/ fetched=2026-11-08T06:00:10Z tier=A decision=reject capture=corpus/captures/52db06f9e0e2eaf35bbdb321.txt capture_sha256=9384e034d8fc6e38a36c695c280cca256e799209541b9d86bea61ad20e423731 words=17 quote="REJECTED: the registered URL redirects to /specifications/dublin-core/dcmi-namespace/ and both served a 9-line stub with no policy prose"
+words: 17
+
+### 13e. committed tool (parse guard as shipped):
+GATE_RECORD /fast/scratch/hyaku/chousa-r86/R86ScribeLesson/probe/probe-s217-reject-capture.md:5 S217 FAIL PARSE
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+exit: 1
+
+### 13f. scratch copy with the single parse() guard widened to admit decision=reject:
+GATE_RECORD /fast/scratch/hyaku/chousa-r86/R86ScribeLesson/probe/probe-s217-reject-capture.md:5 S217 FAIL QUOTE_ABSENT
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+exit: 1
+
+### 13g. the same record against the UNREACH-shaped row (no capture, quote=none):
+GATE_RECORD /fast/scratch/hyaku/chousa-r86/R86ScribeLesson/probe/probe-s217-unreach-200.md:5 S217 FAIL REFETCH
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+exit: 1
+
+### 13h. the rev form carries no url/fetched/tier/decision at all
+89:REV_KEYS = ("rev", "path", "line", "words")
+153:    if form == "rev":
+254:    elif form == "rev":

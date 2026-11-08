@@ -1,0 +1,140 @@
+{
+ "d1_sid": "S021",
+ "d1_quote": "Enable cookies for pubmed.ncbi.nlm.nih.gov and reload this page to continue.",
+ "d1_words": 10,
+ "d1_expected_code": "REFETCH",
+ "d1_line_sha256": "264389ac9588bef02d2cc198c334b3e7ff374e8ac037eb5c02db5e47b9b0d03f",
+ "s021_rows": [
+  [
+   "S021",
+   "https://pubmed.ncbi.nlm.nih.gov/17638714/",
+   "58725f5e0ac436166546a5ec",
+   "1",
+   "2026-11-08T02:15:39Z",
+   "0",
+   "203",
+   "f88609906ec38d641445dce464067ce1a297576fff5296b009f7a93ebd4782ab",
+   "7070b59c3434b67711f6a6ad723834ee1fce7a82230ac6970c1b12844c042a00"
+  ]
+ ],
+ "s021_200_rows": [],
+ "capture_sha256": "7070b59c3434b67711f6a6ad723834ee1fce7a82230ac6970c1b12844c042a00",
+ "tool_sha256": "fe204539b9b549ef1c6092a3963d73c7772946b027ab07da19c89961817aa287",
+ "counter_sha256": "20bc1a733bd6c79f428a16c564cdc49555d8f02c389307eb2c6a28ceeb106d66",
+ "both_status_groups": [],
+ "results": [
+  {
+   "candidate": "c01-d1-exact",
+   "desc": "admit over the S021 203 row, exactly as the counter builds it",
+   "record": "GATE-RECORD S021 url=https://pubmed.ncbi.nlm.nih.gov/17638714/ fetched=2026-11-08T02:15:39Z tier=A decision=admit capture=corpus/captures/58725f5e0ac436166546a5ec.txt capture_sha256=7070b59c3434b677 words=10 quote=\"Enable cookies for pubmed.ncbi.nlm.nih.gov and reload this page to continue.\"",
+   "rc": 1,
+   "verdict": "GATE_RECORD /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-86/w1/R86ExecForge/records/c01-d1-exact.md:1 S021 FAIL REFETCH",
+   "codes": [
+    "REFETCH"
+   ],
+   "status": "FAIL",
+   "expected": "REFETCH",
+   "expected_present": true,
+   "accepted": false,
+   "stderr": "",
+   "tail": "GATE_RECORDS files=1 records=1 ok=0 fail=1"
+  },
+  {
+   "candidate": "c02-d1-quote-absent",
+   "desc": "D1 with an absent quote (words kept consistent)",
+   "record": "GATE-RECORD S021 url=https://pubmed.ncbi.nlm.nih.gov/17638714/ fetched=2026-11-08T02:15:39Z tier=A decision=admit capture=corpus/captures/58725f5e0ac436166546a5ec.txt capture_sha256=7070b59c3434b677 words=12 quote=\"This sentence appears nowhere in the stored S021 capture body at all\"",
+   "rc": 1,
+   "verdict": "GATE_RECORD /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-86/w1/R86ExecForge/records/c02-d1-quote-absent.md:1 S021 FAIL QUOTE_ABSENT,REFETCH",
+   "codes": [
+    "QUOTE_ABSENT",
+    "REFETCH"
+   ],
+   "status": "FAIL",
+   "expected": "QUOTE_ABSENT",
+   "expected_present": true,
+   "accepted": false,
+   "stderr": "",
+   "tail": "GATE_RECORDS files=1 records=1 ok=0 fail=1"
+  },
+  {
+   "candidate": "c03-reject-success-203",
+   "desc": "reject/none form, curl_rc=0, http=203",
+   "record": "GATE-RECORD S021 url=https://pubmed.ncbi.nlm.nih.gov/17638714/ fetched=2026-11-08T02:15:39Z tier=A decision=reject capture=none curl_rc=0 http=203 words=0 quote=none",
+   "rc": 0,
+   "verdict": "GATE_RECORD /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-86/w1/R86ExecForge/records/c03-reject-success-203.md:1 S021 OK",
+   "codes": [],
+   "status": "OK",
+   "expected": "REFETCH",
+   "expected_present": false,
+   "accepted": true,
+   "stderr": "",
+   "tail": "GATE_RECORDS files=1 records=1 ok=1 fail=0"
+  },
+  {
+   "candidate": "c04a-admit-curlrc-nonzero",
+   "desc": "admit shape + curl_rc=7",
+   "record": "GATE-RECORD S021 url=https://pubmed.ncbi.nlm.nih.gov/17638714/ fetched=2026-11-08T02:15:39Z curl_rc=7 tier=A decision=admit capture=corpus/captures/58725f5e0ac436166546a5ec.txt capture_sha256=7070b59c3434b677 words=10 quote=\"Enable cookies for pubmed.ncbi.nlm.nih.gov and reload this page to continue.\"",
+   "rc": 1,
+   "verdict": "GATE_RECORD /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-86/w1/R86ExecForge/records/c04a-admit-curlrc-nonzero.md:1 S021 FAIL PARSE",
+   "codes": [
+    "PARSE"
+   ],
+   "status": "FAIL",
+   "expected": "REFETCH|PARSE",
+   "expected_present": true,
+   "accepted": false,
+   "stderr": "",
+   "tail": "GATE_RECORDS files=1 records=1 ok=0 fail=1"
+  },
+  {
+   "candidate": "c04b-reject-curlrc-nonzero",
+   "desc": "reject/none + curl_rc=7, http=203",
+   "record": "GATE-RECORD S021 url=https://pubmed.ncbi.nlm.nih.gov/17638714/ fetched=2026-11-08T02:15:39Z tier=A decision=reject capture=none curl_rc=7 http=203 words=0 quote=none",
+   "rc": 1,
+   "verdict": "GATE_RECORD /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-86/w1/R86ExecForge/records/c04b-reject-curlrc-nonzero.md:1 S021 FAIL REFETCH",
+   "codes": [
+    "REFETCH"
+   ],
+   "status": "FAIL",
+   "expected": "REFETCH|PARSE",
+   "expected_present": true,
+   "accepted": false,
+   "stderr": "",
+   "tail": "GATE_RECORDS files=1 records=1 ok=0 fail=1"
+  },
+  {
+   "candidate": "c05-d1-words-plus-one",
+   "desc": "D1 exact + words=(n+1)",
+   "record": "GATE-RECORD S021 url=https://pubmed.ncbi.nlm.nih.gov/17638714/ fetched=2026-11-08T02:15:39Z tier=A decision=admit capture=corpus/captures/58725f5e0ac436166546a5ec.txt capture_sha256=7070b59c3434b677 words=11 quote=\"Enable cookies for pubmed.ncbi.nlm.nih.gov and reload this page to continue.\"",
+   "rc": 1,
+   "verdict": "GATE_RECORD /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-86/w1/R86ExecForge/records/c05-d1-words-plus-one.md:1 S021 FAIL REFETCH,WORDS",
+   "codes": [
+    "REFETCH",
+    "WORDS"
+   ],
+   "status": "FAIL",
+   "expected": "WORDS",
+   "expected_present": true,
+   "accepted": false,
+   "stderr": "",
+   "tail": "GATE_RECORDS files=1 records=1 ok=0 fail=1"
+  },
+  {
+   "candidate": "h01-d1-absent-quote-check",
+   "desc": "same as c02: subset test on the expected set",
+   "record": "GATE-RECORD S021 url=https://pubmed.ncbi.nlm.nih.gov/17638714/ fetched=2026-11-08T02:15:39Z tier=A decision=admit capture=corpus/captures/58725f5e0ac436166546a5ec.txt capture_sha256=7070b59c3434b677 words=12 quote=\"This sentence appears nowhere in the stored S021 capture body at all\"",
+   "rc": 1,
+   "verdict": "GATE_RECORD /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-86/w1/R86ExecForge/records/h01-d1-absent-quote-check.md:1 S021 FAIL QUOTE_ABSENT,REFETCH",
+   "codes": [
+    "QUOTE_ABSENT",
+    "REFETCH"
+   ],
+   "status": "FAIL",
+   "expected": "REFETCH",
+   "expected_present": true,
+   "accepted": false,
+   "stderr": "",
+   "tail": "GATE_RECORDS files=1 records=1 ok=0 fail=1"
+  }
+ ]
+}

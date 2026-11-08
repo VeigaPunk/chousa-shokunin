@@ -1,0 +1,25 @@
+# receipt N2_modified_def_raw_case
+pristine=curation-r86.py sha256=84a64ad48d77e63095919942ac113bbb1b54b4e7d9acd21ef85a4f58e545c5d4
+mutant_sha256=dd79e79fcc8b7f314a55c807c552f6b2c487950811003112f9368647819301ac
+mutant_path(scratch)=$S/mut/N2_modified_def_raw_case/curation-r86.py
+
+## tree=land rev=667a5d091dc46168ed95eda0ae7f19a9bcf139a2
+cmd: python3 -B $S/mut/N2_modified_def_raw_case/curation-r86.py --root $S/land
+exit=1
+stdout:
+SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=0 QUOTES_LOCATED=20/20
+CURATION_R86=FAIL
+stderr:
+<empty>
+
+## tree=base rev=3bfb6885958ad4a674ad1896f70d1e836be609e4
+cmd: python3 -B $S/mut/N2_modified_def_raw_case/curation-r86.py --root $S/base
+exit=1
+stdout:
+SUPERSEDED_LIVE=1 UNENTAILED_TERM=2 MODIFIED_DEF_CITED=0 QUOTES_LOCATED=19/19
+SUPERSEDED_STILL_LIVE S024 is mined while S031 supersedes it and is queued
+UNENTAILED corpus/knowledge/search-transparency-reporting-r84.md row=Recording when a resource changed term=modification
+UNENTAILED corpus/knowledge/provenance-recording-r85.md row=Recording when content was last reviewed term=modification
+CURATION_R86=FAIL
+stderr:
+<empty>

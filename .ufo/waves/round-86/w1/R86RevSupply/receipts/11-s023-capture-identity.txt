@@ -1,0 +1,12 @@
+# command: for r in 3a17f4da 3bfb6885958ad4a674ad1896f70d1e836be609e4 667a5d091dc46168ed95eda0ae7f19a9bcf139a2; do printf '%s raw_sha=' $r; git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show $r:corpus/captures/f5545a194c06ab421875b047.raw | sha256sum | cut -c1-32; done; printf 'line8786@base='; git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 3bfb6885958ad4a674ad1896f70d1e836be609e4:corpus/captures/f5545a194c06ab421875b047.txt | sed -n '8786p'; printf 'line8786@landing='; git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 667a5d091dc46168ed95eda0ae7f19a9bcf139a2:corpus/captures/f5545a194c06ab421875b047.txt | sed -n '8786p'; echo '--- history ---'; git -C /home/vgpnk/Projects/shokunin/chousa-shokunin log --oneline --all -- corpus/captures/f5545a194c06ab421875b047.raw
+# cwd: /home/vgpnk/Projects/shokunin/chousa-shokunin
+# exit: 0
+--- stdout ---
+3a17f4da raw_sha=fb32e12fa9bee1379acc0cf921ba7e79
+3bfb6885958ad4a674ad1896f70d1e836be609e4 raw_sha=fb32e12fa9bee1379acc0cf921ba7e79
+667a5d091dc46168ed95eda0ae7f19a9bcf139a2 raw_sha=fb32e12fa9bee1379acc0cf921ba7e79
+line8786@base= Date on which the resource was changed. 
+line8786@landing= Date on which the resource was changed. 
+--- history ---
+3a17f4da round-84: fetch S214/S018/S023, land search-transparency entry, fix controls
+b03a8409 

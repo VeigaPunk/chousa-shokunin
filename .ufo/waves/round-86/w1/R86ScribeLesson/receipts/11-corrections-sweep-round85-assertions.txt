@@ -1,0 +1,41 @@
+# 11 - the corrections sweep: round-85.md bytes vs the landing bytes
+
+### 11a. round-85.md is byte-identical at base and landing (not edited)
+be4a746936e8a626728855b1365daf3bb19cd012
+be4a746936e8a626728855b1365daf3bb19cd012
+round-86.md blob at landing:
+c79c4deba4f5c16047969b3e6d339d59d5dab8c5
+
+### 11b. what round-85.md still asserts about S024 (Gate block + registry changes)
+6:(alignment to the measured ground: S215/S026/S024, not S023 re-quote).
+16:GATE-RECORD S024 url=https://schema.org/lastReviewed fetched=2026-11-08T04:16:13Z tier=A decision=admit capture=corpus/captures/11d6cc56bb24adfc61eea2b4.txt capture_sha256=97fe1a6adbd2ded4… words=16 quote="Date on which the content on this web page was last
+22:since round 21 with its URL; the page was opened this round) and "schema.org lastReviewed property" (S024, same).
+31:- S024: status `queued` → `mined`; anchor gains the capture key `11d6cc56bb24adfc61eea2b4`; opened date 2026-10-21
+53:| `vacuous` — the prefreeze C2 fixed the *instrument* (S023) before the ground was measured: the depth counter's E6 requires three fresh source ids and E7 excludes ground a base entry already cites, so an entry citing S023 as its second source could never p
+
+### 11c. what the landing registry row for S024 actually says
+| S024 | Schema.org property lastReviewed — https://schema.org/lastReviewed | spec | A | Schema.org's own definition and declared use of lastReviewed | page heading lastReviewed, definition paragraph | A last-reviewed date for accuracy is a property separate f
+
+### 11d. round-85.md's own Correction blocks: do they retract the 'verified' column?
+88:## Corrections (appended after the wave; the filed text above is not rewritten)
+105:## Corrections (second block — wave `R85ScribeLesson`)
+46:| C1 operability (`tools/gate-records.py` round-85 repair) | `TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=354/354 EXPECTED_CODE=354/354 EMPTY_REFUSED=1/1 RC=4/4 SETUP=1/1`, `GATE_
+47:| C2 depth (`provenance-recording-r85.md`) | `DEPTH_R85 entries=1 ok_entries=1 rows=6 located_quotes=7 fresh_sources=3`, `DEPTH_R85=PASS` rc 0 | K1 met; K2–K4 decided by the wave | **verified** (co
+82:| 1 | (operability) K2 setup leg misreports a non-git `--repo`; REFETCH accepts 2xx/203; per-class forgeries missing | **fixed in part, carried in part** — the setup leg now exits 2 with `GATE_RECO
+
+### 11e. where round-86.md retracts it
+## Corrections to round-85 records (routed defect 4)
+
+- `corpus/lessons/round-85.md` `## Claim outcomes` printed **"verified"** for C1 and C2 while the filed verdict was an
+  honest stop. This entry retracts that column: **C1 and C2 of round 85 did not verify as stated** (the 200-only class
+  had no forgery in the battery and mutant M17 survived; K3 fired on rows 1 and 5 and the ground was narrower than the
+
+### 11f. round-85.md's S024 GATE-RECORD still verifies OK at the landing tree (tool checks tier, not status)
+GATE_RECORD /fast/scratch/hyaku/chousa-r86/R86ScribeLesson/tree/corpus/lessons/round-85.md:14 S215 OK
+GATE_RECORD /fast/scratch/hyaku/chousa-r86/R86ScribeLesson/tree/corpus/lessons/round-85.md:15 S026 OK
+GATE_RECORD /fast/scratch/hyaku/chousa-r86/R86ScribeLesson/tree/corpus/lessons/round-85.md:16 S024 OK
+GATE_RECORDS files=1 records=3 ok=3 fail=0
+exit: 0
+
+### 11g. the tool's check() reads only the registry tier cell (no status) for url forms
+220:        if regrow is not None and regrow[3] != kv["tier"]:

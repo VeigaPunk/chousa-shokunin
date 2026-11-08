@@ -1,0 +1,1 @@
+GATE-RECORD S022 url=https://pubmed.ncbi.nlm.nih.gov/28912002/ fetched=2026-11-08T02:16:21Z tier=A decision=admit capture=corpus/captures/ff9013bd7d9387e45cd6e000.txt capture_sha256=7070b59c3434b677 words=10 quote="Enable cookies for pubmed.ncbi.nlm.nih.gov and reload this page to continue."

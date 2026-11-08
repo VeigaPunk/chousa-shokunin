@@ -1,0 +1,60 @@
+# 05 — item (4): each QUALITY 173-176 cited artifact exists and says what the criterion claims
+
+### 5a. the criteria themselves (landing tree corpus/QUALITY.md lines 1110-1116)
+## Round-86 addition (criteria 1–172 unchanged)
+
+173. **A record schema that has no form for a decision the round actually made is a named gap, not a silent omission.** Round 86 refused `S217` after an HTTP-200 fetch whose body was a 9-line stub; `tools/gate-records.py` models only `url/admit` (success + capture + quote) and `url/unreach` (failure), so "opened successfully, refused on content" had no record form and no `GATE-RECORD` line could be written for it. The lesson names the gap and routes the missing form; the registry row carries the reason and flip condition. Check: every registry row the round touched is either recorded in a `GATE-RECORD` line or the lesson names the schema gap that prevents one.
+
+174. **A row that a later row supersedes is not the live citation while the superseding row is unadopted.** Round 85 mined `S024` (same URL, same scope as `S031`) while `S031`, whose `teaches` opens `supersedes S024 —` and refuses the comparison `S024` asserts, stayed `queued`. `CORPUS.md` rule 2 makes the correction the new row; adopting the superseded row inverts it. Two-row histories where both rows are `mined` are legitimate; the defect is the live-vs-unadopted pair. Check: `curation-r86.py`'s `SUPERSEDED_LIVE=0`.
+
+175. **A decision-table cell's distinguishing term must occur in a located quote of the same entry, or the cell is an import.** Rounds 84 and 85 both wrote `modification` into a `Never` cell whose warrant quote never used the term (`Q10` was the `date` subproperty recommendation; `Q7` is the `lastReviewed` definition, and the lane's own `S031` row refuses the comparison). A cell may be wider than its quote in prose, but not in the property it names. Check: `curation-r86.py`'s `UNENTAILED_TERM=0` over the frozen term set.
+
+176. **A mutant that is not derived from the subject's own bytes does not witness the rule it relaxes.** Round 85's battery left `M17-refetch-http-2xx-accepted` alive, so the REFETCH repair was witnessed only by a fixture beside the predicate. Round 86 computes the mutant by rewriting the subject tool's `r[6] == "200"` to `r[6].startswith("2")`, requires it to accept every positive and the class record, and reports `MUT17_KILLED=1/1` inside the predicate; a counter that cannot derive the mutant reports `0/1` and cannot pass. Check: pass the base tool to `--tool` and confirm `D1_REFUSED=0/1 MUT17_KILLED=0/1` (`controls/receipts/c1-k0-donothing.txt`).
+
+### 5b. 173 cited artifact A — the tool's own form inventory (docstring + code)
+accepted `2026-13-40T00:00:00Z`). Every record must parse into exactly one of three forms:
+
+  url/admit   GATE-RECORD S<id> url=<http(s) url> fetched=<YYYY-MM-DDTHH:MM:SSZ> tier=<A|B|C> decision=<admit|reject>
+              capture=corpus/captures/<24 hex>.txt capture_sha256=<>=16 hex>[…] words=<n> quote="<text>"
+  url/unreach GATE-RECORD S<id> url=<url> fetched=<ts> tier=<A|B|C> decision=reject capture=none curl_rc=<n>
+              http=<nnn> words=0 quote=none
+  rev         GATE-RECORD S<id> rev=<40 hex> path=<repo-relative path> line=<n> words=<n> quote=<text to end of line>
+
+87:URL_ADMIT = ("url", "fetched", "tier", "decision", "capture", "capture_sha256", "words")
+88:URL_UNREACH = ("url", "fetched", "tier", "decision", "capture", "curl_rc", "http", "words")
+89:REV_KEYS = ("rev", "path", "line", "words")
+-> criterion 173 says 'models only url/admit ... and url/unreach'; the tool documents THREE forms (url/admit, url/unreach, rev).
+
+### 5c. 173 cited artifact B — the S217 registry row (reason + flip condition)
+230:| S217 | DCMI Namespace Policy — https://www.dublincore.org/documents/dcmi-namespace/ | spec | A | how DCMI says it maintains and supersedes terms in its namespaces | — | REJECTED: the registered URL redirects to /specifications/dublin-core/dcmi-namespace/ and both served a 9-line stub with no policy prose, so no quotable sentence grounds a row; flip: re-open when that page or a mirrored policy document serves the supersession prose and a clause can be quoted | rejected | 2026-11-08 | on-release | — |
+
+### 5d. 174/175 cited artifact — curation-r86.py, run at the landing tree
+SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20
+CURATION_R86=PASS
+exit: 0
+
+### 5e. 176 cited artifact — controls/receipts/c1-k0-donothing.txt
+# c1-k0-donothing — the round-86 battery run against the PRE-ROUND-85 tool (REFETCH accepted 2xx)
+# tree: corpus/ at the round-86 base (lane tip 3bfb6885958ad4a674ad1896f70d1e836be609e4)
+# tool: git archive 43c3f7284eee4889cdcc6ac1626573f6579cd533 tools/gate-records.py (the 2xx rule)
+# command: python3 -B corpus/evidence/round86/gate-records-r86.py --root . --repo . --tool /fast/scratch/hyaku/chousa-r86/l1/base/tools/gate-records.py --work /fast/scratch/hyaku/chousa-r86/l1
+WRONG_CODE g0066.md D4-non-timestamp-fetched S203 expected=PARSE got=REFETCH
+WRONG_CODE g0089.md D4-non-timestamp-fetched S204 expected=PARSE got=REFETCH
+WRONG_CODE g0112.md D4-non-timestamp-fetched S205 expected=PARSE got=REFETCH
+WRONG_CODE g0135.md D4-non-timestamp-fetched S206 expected=PARSE got=REFETCH
+WRONG_CODE g0158.md D4-non-timestamp-fetched S207 expected=PARSE got=REFETCH
+WRONG_CODE g0187.md D4-non-timestamp-fetched S008 expected=PARSE got=REFETCH
+WRONG_CODE g0210.md D4-non-timestamp-fetched S209 expected=PARSE got=REFETCH
+WRONG_CODE g0233.md D4-non-timestamp-fetched S210 expected=PARSE got=REFETCH
+WRONG_CODE g0256.md D4-non-timestamp-fetched S211 expected=PARSE got=REFETCH
+WRONG_CODE g0279.md D4-non-timestamp-fetched S028 expected=PARSE got=REFETCH
+WRONG_CODE g0302.md D4-non-timestamp-fetched S082 expected=PARSE got=REFETCH
+WRONG_CODE g0325.md D4-non-timestamp-fetched S083 expected=PARSE got=REFETCH
+NOT_REFUSED g0354.md D1-203-admit S021
+TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=354/355 EXPECTED_CODE=342/355 EMPTY_REFUSED=1/1 RC=4/4 SETUP=0/1 D1_FORGES=1 D1_REFUSED=0/1 MUT17_KILLED=0/1
+GATE_RECORDS_R86=FAIL
+exit: 1
+
+### 5f. 176 claim — the subject tool really contains the literal the mutant rewrites
+238:        ok = any(r[0] == sid and r[1] == url and r[2] == key and r[4] == kv["fetched"] and r[5] == "0" and r[6] == "200" and capsha is not None and r[8] == capsha for r in refetch)
+287:    mutant = src.replace('r[6] == "200"', 'r[6].startswith("2")')

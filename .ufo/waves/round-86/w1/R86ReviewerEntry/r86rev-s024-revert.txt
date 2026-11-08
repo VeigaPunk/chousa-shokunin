@@ -1,0 +1,12 @@
+# receipt r86rev-s024-revert — is the S024 row byte-identical to its pre-round-85 state?
+## date: 2026-11-08T06:15:26Z
+$ git show 3a17f4da:corpus/SOURCES.md | grep -E "^\\| S024 \\|" ; git show 667a5d09:corpus/SOURCES.md | grep -E "^\\| S024 \\|"
+| S024 | Schema.org property lastReviewed — https://schema.org/lastReviewed | spec | A | Schema.org's own definition and declared use of lastReviewed | page heading lastReviewed, definition paragraph | A last-reviewed date for accuracy is a property separate from publication or modification dates | queued | 2026-10-21 | 365d | — |
+| S024 | Schema.org property lastReviewed — https://schema.org/lastReviewed | spec | A | Schema.org's own definition and declared use of lastReviewed | page heading lastReviewed, definition paragraph | A last-reviewed date for accuracy is a property separate from publication or modification dates | queued | 2026-10-21 | 365d | — |
+
+$ diff <(git show 3a17f4da:corpus/SOURCES.md | grep -E "^\\| S024 \\|") <(git show 667a5d09:corpus/SOURCES.md | grep -E "^\\| S024 \\|") ; echo EXIT=$?
+EXIT=0
+
+## the intermediate round-85 state, for the old→new the lesson logs
+$ git show 02df67db:corpus/SOURCES.md | grep -E "^\\| S024 \\|"
+| S024 | Schema.org property lastReviewed — https://schema.org/lastReviewed | spec | A | Schema.org's own definition and declared use of lastReviewed | lastReviewed property definition paragraph (capture key 11d6cc56bb24adfc61eea2b4) | A last-reviewed date for accuracy is a property separate from publication or modification dates | mined | 2026-11-08 | 365d | corpus/knowledge/provenance-recording-r85.md |

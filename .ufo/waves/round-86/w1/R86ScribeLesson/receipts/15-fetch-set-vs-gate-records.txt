@@ -1,0 +1,42 @@
+# 15 - the lesson's Gate block: four declared fetches, two GATE-RECORD lines
+
+### 15a. the lesson's own words about the fetch set
+Intended-targets table `corpus/evidence/round86/egress-approval.md`, committed at `e4468752` before the first fetch.
+Fetches `2026-11-08T06:00:10–11Z`, one `capture-fetch.py` GET each, all HTTP 200, no URL outside the table:
+
+GATE-RECORD S216 url=https://www.rfc-editor.org/rfc/rfc9110.html fetched=2026-11-08T06:00:10Z tier=A decision=admit capt
+GATE-RECORD S031 url=https://schema.org/lastReviewed fetched=2026-11-08T06:00:10Z tier=A decision=admit capture=corpus/c
+
+
+### 15b. every refetch row the round made (fetched 06:00:*)
+sid=S216  url=https://www.rfc-editor.org/rfc/rfc9110.html  attempt=1  fetched=2026-11-08T06:00:10Z  curl_rc=0  http=200
+sid=S217  url=https://www.dublincore.org/documents/dcmi-namespace/  attempt=1  fetched=2026-11-08T06:00:10Z  curl_rc=0  http=200
+sid=S031  url=https://schema.org/lastReviewed  attempt=1  fetched=2026-11-08T06:00:10Z  curl_rc=0  http=200
+sid=S023  url=https://www.dublincore.org/specifications/dublin-core/dcmi-terms/  attempt=3  fetched=2026-11-08T06:00:11Z  curl_rc=0  http=200
+
+### 15c. every GATE-RECORD line in corpus/lessons/ that carries a 06:00 timestamp
+/fast/scratch/hyaku/chousa-r86/R86ScribeLesson/tree/corpus/lessons/round-86.md:12:GATE-RECORD S216 url=https:/...
+/fast/scratch/hyaku/chousa-r86/R86ScribeLesson/tree/corpus/lessons/round-86.md:13:GATE-RECORD S031 url=https:/...
+
+### 15d. the S023 admit record the round did NOT write (re-open 06:00:11Z, modified Definition)
+GATE-RECORD S023 url=https://www.dublincore.org/specifications/dublin-core/dcmi-terms/ fetched=2026-11-08T06:00:11Z tier=A decision=admit capture=corpus/captures/f5545a194c06ab421875b047.txt capture_sha256=20dc0c3ab7724e1f4be59217c190fa796a66c29b7a653e8d707d64f5fac43a79 words=7 quote="Date on which the resource was changed."
+GATE_RECORD /fast/scratch/hyaku/chousa-r86/R86ScribeLesson/probe/probe-s023-admit.md:5 S023 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+exit: 0
+
+### 15e. the S023 record that DOES exist (round-84 lesson, earlier attempt 02:16:27Z)
+20:GATE-RECORD S023 url=https://www.dublincore.org/specifications/dublin-core/dcmi-terms/ fetched=2026-11-08T02:16:27Z tier=A decision=admit capture=corpus/capt
+GATE_RECORD /fast/scratch/hyaku/chousa-r86/R86ScribeLesson/tree/corpus/lessons/round-84.md:18 S214 OK
+GATE_RECORD /fast/scratch/hyaku/chousa-r86/R86ScribeLesson/tree/corpus/lessons/round-84.md:19 S018 OK
+GATE_RECORD /fast/scratch/hyaku/chousa-r86/R86ScribeLesson/tree/corpus/lessons/round-84.md:20 S023 OK
+GATE_RECORDS files=1 records=3 ok=3 fail=0
+exit: 0
+
+### 15f. the S023 refetch rows, with txt_sha256 (all three attempts, and the capture's content sha)
+attempt=1  fetched=2026-11-08T02:16:27Z  http=200  txt_sha256=20dc0c3ab7724e1f4be59217c190fa796a66c29b7a653e8d707d64f5fac43a79
+attempt=2  fetched=2026-11-08T03:54:40Z  http=200  txt_sha256=20dc0c3ab7724e1f4be59217c190fa796a66c29b7a653e8d707d64f5fac43a79
+attempt=3  fetched=2026-11-08T06:00:11Z  http=200  txt_sha256=20dc0c3ab7724e1f4be59217c190fa796a66c29b7a653e8d707d64f5fac43a79
+20dc0c3ab7724e1f4be59217c190fa796a66c29b7a653e8d707d64f5fac43a79  /fast/scratch/hyaku/chousa-r86/R86ScribeLesson/tree/corpus/captures/f5545a194c06ab421875b047.txt
+
+### 15g. the capture's content sha at the round-84 land commit (3a17f4da) - same bytes?
+20dc0c3ab7724e1f4be59217c190fa796a66c29b7a653e8d707d64f5fac43a79  -

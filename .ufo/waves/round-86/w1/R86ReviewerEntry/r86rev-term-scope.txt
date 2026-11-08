@@ -1,0 +1,46 @@
+# receipt r86rev-term-scope — what UNENTAILED_TERM can and cannot see
+## date: 2026-11-08T06:14:43Z
+
+## the frozen term set and the scanned scope, from the pinned counter bytes (sha 84a64ad4…)
+$ grep -n "DEFECT_TERMS\|^ENTRIES\|MODIFIED_DEF =" corpus/evidence/round86/curation-r86.py
+28:ENTRIES = [
+32:DEFECT_TERMS = ("modification", "modified")
+33:MODIFIED_DEF = "date on which the resource was changed"
+137:            for term in DEFECT_TERMS:
+
+$ sed -n "28,32p" corpus/evidence/round86/curation-r86.py
+ENTRIES = [
+    "corpus/knowledge/search-transparency-reporting-r84.md",
+    "corpus/knowledge/provenance-recording-r85.md",
+]
+DEFECT_TERMS = ("modification", "modified")
+
+## occurrence counts in the two repaired sources' committed captures
+modified      S023/f5545a19=4  S031/11d6cc56=0
+modification  S023/f5545a19=0  S031/11d6cc56=0
+primary       S023/f5545a19=0  S031/11d6cc56=0
+tool          S023/f5545a19=3  S031/11d6cc56=0
+version       S023/f5545a19=16  S031/11d6cc56=1
+step          S023/f5545a19=0  S031/11d6cc56=0
+
+## occurrence counts in the two entries at landing (whole file, all sections)
+modified      r84=1  r85=0
+modification  r84=0  r85=0
+primary       r84=0  r85=0
+tool          r84=0  r85=0
+version       r84=0  r85=0
+step          r84=0  r85=0
+
+## the r85 routed words the round-85 spot-check named, and where they now occur
+$ grep -in "primary\|tool\|version\|step" corpus/knowledge/provenance-recording-r85.md
+(no hits)
+
+## a registry cell still carrying the refused comparison, outside the counter's ENTRIES scope
+$ sed -n "34p" corpus/SOURCES.md
+| S024 | Schema.org property lastReviewed — https://schema.org/lastReviewed | spec | A | Schema.org's own definition and declared use of lastReviewed | page heading lastReviewed, definition paragraph | A last-reviewed date for accuracy is a property separate from publication or modification dates | queued | 2026-10-21 | 365d | — |
+
+## S024 teaches-cell words "modification dates": count in its own source capture
+S031/11d6cc56 "modification" count = 0 ; "modified" count = 0
+
+## usage note: the counter only ever reads ENTRIES (two knowledge files) and corpus/SOURCES.md statuses;
+## it never inspects a registry teaches cell, an Inference/Limits section, or any other entry.

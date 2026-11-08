@@ -1,0 +1,9 @@
+# command: printf 'parent_count='; git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 0fc037e6^:corpus/SOURCES.md | grep -c '^| S024 |'; printf 'parent_grep_exit=%s\n' "$?"; printf 'add_count='; git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show 0fc037e6 -- corpus/SOURCES.md | grep -c '^+| S024'; printf 'add_grep_exit=%s\n' "$?"; git -C /home/vgpnk/Projects/shokunin/chousa-shokunin merge-base --is-ancestor 0fc037e6 3bfb6885958ad4a674ad1896f70d1e836be609e4; printf 'ancestor_of_base_exit=%s\n' "$?"
+# cwd: /home/vgpnk/Projects/shokunin/chousa-shokunin
+# exit: 0
+--- stdout ---
+parent_count=0
+parent_grep_exit=1
+add_count=1
+add_grep_exit=0
+ancestor_of_base_exit=0

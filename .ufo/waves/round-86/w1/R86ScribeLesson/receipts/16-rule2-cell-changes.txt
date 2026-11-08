@@ -1,0 +1,34 @@
+# 16 - CORPUS.md rule 2 (which cells may change in place) vs the landing commit's cell edits
+
+### 16a. the rule as the round-86 lesson itself cites it (fleet root CORPUS.md line 116-118)
+2. **Append-only.** Only `status`, `recheck` and `used-by` change in place, and each change
+   is logged old→new in the round lesson. A correction is a new row whose `teaches` opens
+   `supersedes S0NN —`.
+
+### 16b. the lesson's S024 bullet: the change log it prints
+- **S024** (status `mined` → `queued`, `used-by` → `—`, `opened` `2026-11-08` → `2026-10-21`): restores the row to its
+  pre-round-85 bytes. The `opened` change round 85 made was outside `CORPUS.md` rule 2 (only `status`, `recheck` and
+  `used-by` change in place); the restoration is itself a change, logged here old→new as rule 2 requires.
+
+### 16c. the cells the landing commit actually changed, per row (base 3bfb6885 -> landing 667a5d0)
+--- S024 : base(3bfb6885) vs landing(667a5d0), vs pre-round-85(43c3f72)
+CHANGED  ==pre-r85  anchor:
+CHANGED  ==pre-r85  status:
+CHANGED  ==pre-r85  opened:
+CHANGED  ==pre-r85  used-by:
+--- S031 : base(3bfb6885) vs landing(667a5d0), vs pre-round-85(43c3f72)
+CHANGED  anchor:
+CHANGED  status:
+CHANGED  used-by:
+--- S023 : base(3bfb6885) vs landing(667a5d0), vs pre-round-85(43c3f72)
+
+### 16d. cells NOT among rule 2's three (status/recheck/used-by):
+S024: opened 2026-11-08 -> 2026-10-21 ; anchor 'lastReviewed property definition paragraph (capture key 11d6cc56bb24adfc61eea2b4)' -> 'page heading lastReviewed, definition paragraph'
+S031: anchor 'lastReviewed property definition paragraph; Schema.org page served 2026-10-21' -> 'lastReviewed property definition paragraph; page re-opened 2026-11-08 (capture 11d6cc56bb24adfc61eea2b4, Date on which the content on this web page was last reviewed for accuracy and/or completeness.)'
+
+### 16e. does the lesson log the anchor edits old->new?
+19:- **S031** (status `queued` → `mined`, `used-by` `—` → `corpus/knowledge/provenance-recording-r85.md`, anchor gains the
+
+### 16f. is S024's landing row byte-identical to the pre-round-85 row (43c3f72)?
+identical to 43c3f72: True
+identical to base  3bfb6885: False

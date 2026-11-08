@@ -1,0 +1,52 @@
+# 06 — item (5): the round-86 lesson Gate section — access date, URL, <=25-word located quote for S216, S217 reason
+
+### 6a. the Gate block verbatim
+## Gate
+
+Intended-targets table `corpus/evidence/round86/egress-approval.md`, committed at `e4468752` before the first fetch.
+Fetches `2026-11-08T06:00:10–11Z`, one `capture-fetch.py` GET each, all HTTP 200, no URL outside the table:
+
+GATE-RECORD S216 url=https://www.rfc-editor.org/rfc/rfc9110.html fetched=2026-11-08T06:00:10Z tier=A decision=admit capture=corpus/captures/b1b13a12aee75c6ecc20fb91.txt capture_sha256=ec14fa3499c2dfbc… words=19 quote="the enclosed content has been modified from that of the origin server's 200 (OK) response by a transforming proxy"
+GATE-RECORD S031 url=https://schema.org/lastReviewed fetched=2026-11-08T06:00:10Z tier=A decision=admit capture=corpus/captures/11d6cc56bb24adfc61eea2b4.txt capture_sha256=97fe1a6adbd2ded4… words=16 quote="Date on which the content on this web page was last reviewed for accuracy and/or completeness."
+
+- **S216** (new, `mined`): RFC 9110 §15.3.4, the 203 clause quoted above; capture key `b1b13a12aee75c6ecc20fb91` =
+  `sha256(url)[:24]`, capture sha equals the refetch row's `txt_sha256`. Tier A: a standards-track specification for
+  its own status-code semantics. It grounds C1's class — a 203 body is a transforming proxy's representation, so it is
+  not the origin's and cannot ground a registered quote.
+- **S031** (status `queued` → `mined`, `used-by` `—` → `corpus/knowledge/provenance-recording-r85.md`, anchor gains the
+  re-open date and the located definition): the round-85 inversion is closed by citing the superseding row, not the
+  superseded one.
+- **S024** (status `mined` → `queued`, `used-by` → `—`, `opened` `2026-11-08` → `2026-10-21`): restores the row to its
+  pre-round-85 bytes. The `opened` change round 85 made was outside `CORPUS.md` rule 2 (only `status`, `recheck` and
+  `used-by` change in place); the restoration is itself a change, logged here old→new as rule 2 requires.
+- **S023** (re-opened, no row change): the `modified` Definition is at capture `f5545a194c06ab421875b047.txt` line 8786
+  ("Date on which the resource was changed."); it is the warrant the round-84 row 9 needed and did not cite. The
+  re-fetch of the same URL produced different bytes (txt sha `20dc0c3ab772…`, previously `f5545a19…` stored under the
+  same key), so the capture is the newer body and the line number is the one measured on it.
+- **S217** (new, `rejected`): the DCMI Namespace Policy URL redirects to `/specifications/dublin-core/dcmi-namespace/`
+  and both served a 9-line stub with no policy prose, so no ≤25-word quote grounds a row. Reason and flip condition are
+  in the registry row; no `GATE-RECORD` line is possible (see `## Mistakes` item 1).
+
+
+### 6b. the S216 quote located verbatim in the committed capture
+quote words: 19
+
+### 6c. the S217 body is a stub (9 lines, no policy prose)
+9 /fast/scratch/hyaku/chousa-r86/R86ScribeLesson/tree/corpus/captures/52db06f9e0e2eaf35bbdb321.txt
+ $
+ $
+ $
+ https://www.dublincore.org/specifications/dublin-core/dcmi-namespace/ $
+ $
+ $
+ $
+ $
+ $
+
+### 6d. every fetch this round vs the egress table's intended targets
+181:S216	https://www.rfc-editor.org/rfc/rfc9110.html	b1b13a12aee75c6ecc20fb91	1	2026-11-08T06:00:10Z	0
+182:S217	https://www.dublincore.org/documents/dcmi-namespace/	52db06f9e0e2eaf35bbdb321	1	2026-11-08T06:00:10Z	0
+183:S031	https://schema.org/lastReviewed	11d6cc56bb24adfc61eea2b4	1	2026-11-08T06:00:10Z	0
+184:S023	https://www.dublincore.org/specifications/dublin-core/dcmi-terms/	f5545a194c06ab421875b047	3	2026-11-08T06:00:11Z	0
+26:| S216 | https://www.rfc-editor.org/rfc/rfc9110.html | RFC 9110 §15.3.4 `203 Non-Autho
+27:| S217 | https://www.dublincore.org/documents/dcmi-namespace/ | DCMI Namespace Policy: 

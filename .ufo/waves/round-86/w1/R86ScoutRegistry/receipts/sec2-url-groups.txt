@@ -1,0 +1,123 @@
+# --- rebuild the tree these receipts were computed on (the seat's scratch dir is deleted per the round's rule):
+#   S=/fast/scratch/hyaku/chousa-r86/R86ScoutRegistry; mkdir -p $S
+#   git -C /home/vgpnk/Projects/shokunin/chousa-shokunin archive 667a5d091dc46168ed95eda0ae7f19a9bcf139a2 | tar -x -C $S
+#   python3 -B $S/work/<script>.py    # the work/ copies are the scripts archived beside this receipt
+
+# R86ScoutRegistry §2 receipt — normalized-URL groups (>=2 rows) and teaches-cell contradiction scan
+# command: python3 -B /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-86/w1/R86ScoutRegistry/receipts/s2.py
+
+groups total: 207 multi: 9
+==========================================================================================
+cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-iv ['S019', 'S029']
+  S019 status=queued opened=2026-10-21
+     scope: the Handbook's own guidance on periodically deciding whether and how to update a Cochrane review
+     teaches: A review's currency is assessed on a schedule, not only when someone notices; deciding to update is a recorded, periodic act
+  S029 status=mined opened=2026-10-21
+     scope: the Handbook's own guidance on periodically deciding whether and how to update a Cochrane review
+     teaches: supersedes S019 — Cochrane reviews should be assessed periodically to decide whether an update is needed; this sentence does not prescribe a recorded schedule
+==========================================================================================
+docs.python.org/3/library/hashlib.html ['S059', 'S074']
+  S059 status=mined opened=2026-10-23
+     scope: Python hashlib's SHA-256 digest and hexadecimal representation for bytes fed to a hash object; not a general SHA-256 text-encoding standard, lowercase-output requirement, or the lane's revision-pin co
+     teaches: A `sha256()` object digests the concatenation of data fed through `update()`; `hexdigest()` returns a string twice the digest's byte length with hexadecimal digits, but the docs do not specify output letter case
+  S074 status=rejected opened=2026-10-24
+     scope: duplicate row proposal for Python digest-input semantics already held by S059; not a distinct source or source scope
+     teaches: REJECTED: S059 already holds this page and digest-input scope; flip: open a primary source that grounds a distinct receipt-input property not stated in S059.
+==========================================================================================
+docs.python.org/3/library/socket.html ['S052', 'S053']
+  S052 status=mined opened=2026-10-23
+     scope: Python timeout-mode semantics for blocking socket operations; not a total fetch-deadline guarantee
+     teaches: A socket timeout bounds each blocking operation, so a separate elapsed-time deadline is needed to bound a whole transfer
+  S053 status=mined opened=2026-10-23
+     scope: documented create_connection behavior for a host name; not a guarantee of DNS pinning or per-hop validation
+     teaches: create_connection resolves a host name itself and tries each address, so an earlier address check does not pin the later connection
+==========================================================================================
+gnu.org/software/coreutils/manual/coreutils.html ['S071', 'S073', 'S075']
+  S071 status=mined opened=2026-10-23
+     scope: the `-u`/`--unset` option semantics of the installed coreutils `env` (the tool the gate's pin capture uses to scrub inherited variables); not the gate's capture policy
+     teaches: `env -u NAME` removes NAME from the environment of the invoked command, so a variable scrub reaches the child.
+  S073 status=mined opened=2026-10-24
+     scope: the documented digest text and `--check` semantics of the installed coreutils `sha256sum` — the same scope as S070; this row corrects S070's anchor label only
+     teaches: supersedes S070 — the anchor label `SYNOPSIS -c, --check` is wrong; lines 19–20 sit under DESCRIPTION. Offsets and quote unchanged: "read checksums from the FILEs and check them" (8 words at line 20).
+  S075 status=mined opened=2026-10-24
+     scope: the documented safe-creation contract of the installed coreutils `mktemp` — the binary the capture's fixture dir depends on; not a uniqueness or hostile-path guarantee
+     teaches: `mktemp -d` creates a directory safely and prints its name; the page documents creation semantics only — a printed path the caller did not request is outside the documented contract
+==========================================================================================
+pubmed.ncbi.nlm.nih.gov/17638714 ['S021', 'S032']
+  S021 status=queued opened=2026-10-21
+     scope: the study's measured update-signal timing in its sample of 100 quantitative systematic reviews; not a rule for all records
+     teaches: Findings that need updating appear early for a sizable minority of reviews (23% within 2 years), so recheck intervals matter
+  S032 status=queued opened=2026-10-21
+     scope: the study's measured update-signal timing in its sample of 100 quantitative systematic reviews; not a rule for all records
+     teaches: supersedes S021 — in this study a signal potentially warranting an update occurred within 2 years for 23% of reviews; a signal is not itself an update
+==========================================================================================
+pubmed.ncbi.nlm.nih.gov/28912002 ['S022', 'S030']
+  S022 status=queued opened=2026-10-21
+     scope: the paper's own living-systematic-review definition and rationale; not metadata design
+     teaches: A living review is continually updated as new evidence appears, the limit case of a short recheck cadence
+  S030 status=queued opened=2026-10-21
+     scope: the paper's own living-systematic-review definition and rationale; not metadata design
+     teaches: supersedes S022 — defines living systematic reviews as continually updated to incorporate relevant new evidence as it becomes available; recheck-cadence comparison is a lane inference
+==========================================================================================
+schema.org/lastReviewed ['S024', 'S031']
+  S024 status=queued opened=2026-10-21
+     scope: Schema.org's own definition and declared use of lastReviewed
+     teaches: A last-reviewed date for accuracy is a property separate from publication or modification dates
+  S031 status=mined opened=2026-10-21
+     scope: Schema.org's own definition and declared use of lastReviewed
+     teaches: supersedes S024 — lastReviewed records the date a web page was last reviewed for accuracy and/or completeness; no comparison to other date properties claimed
+==========================================================================================
+w3.org/TR/2013/REC-prov-o-20130430 ['S020', 'S033']
+  S020 status=queued opened=2026-10-21
+     scope: PROV terms for derivation (prov:wasDerivedFrom) and entity generation/invalidation times; not a recheck or verification policy
+     teaches: Provenance is recorded as a derivation link plus time bounds on an entity's validity, so source and as-of time are separate recorded facts
+  S033 status=mined opened=2026-10-21
+     scope: PROV terms for derivation (prov:wasDerivedFrom) and entity generation/invalidation times; not a recheck or verification policy
+     teaches: supersedes S020 — PROV-O records derivation and entity generation/invalidation times separately; these are entity-lifetime facts, not verification time or truth-validity
+==========================================================================================
+w3.org/TR/2017/REC-html52-20171214/syntax.html ['S050', 'S051']
+  S050 status=mined opened=2026-10-23
+     scope: what the HTML 5.2 Recommendation text (a dated 2017 snapshot) states about omitting the head end tag; not the current WHATWG HTML Standard, which was not opened
+     teaches: A page may omit the head end tag, so a text extractor cannot rely on </head> to end the head
+  S051 status=mined opened=2026-10-23
+     scope: the HTML 5.2 tree-construction rules of the in head insertion mode; the head boundary only, not fetch behavior or quote verification
+     teaches: Whitespace stays in head; the listed head start tags are handled there; any other token pops the head element and is reprocessed outside it
+
+# ---- manual contradiction classification per group (read-only, no tooling) ----
+GROUP: cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-iv
+   S019 [queued] teaches: A review's currency is assessed on a schedule, not only when someone notices; deciding to update is a recorded, periodic act
+   S029 [mined] teaches: supersedes S019 — Cochrane reviews should be assessed periodically to decide whether an update is needed; this sentence does not prescribe a recorded 
+
+GROUP: docs.python.org/3/library/hashlib.html
+   S059 [mined] teaches: A `sha256()` object digests the concatenation of data fed through `update()`; `hexdigest()` returns a string twice the digest's byte length with hexad
+   S074 [rejected] teaches: REJECTED: S059 already holds this page and digest-input scope; flip: open a primary source that grounds a distinct receipt-input property not stated i
+
+GROUP: docs.python.org/3/library/socket.html
+   S052 [mined] teaches: A socket timeout bounds each blocking operation, so a separate elapsed-time deadline is needed to bound a whole transfer
+   S053 [mined] teaches: create_connection resolves a host name itself and tries each address, so an earlier address check does not pin the later connection
+
+GROUP: gnu.org/software/coreutils/manual/coreutils.html
+   S071 [mined] teaches: `env -u NAME` removes NAME from the environment of the invoked command, so a variable scrub reaches the child.
+   S073 [mined] teaches: supersedes S070 — the anchor label `SYNOPSIS -c, --check` is wrong; lines 19–20 sit under DESCRIPTION. Offsets and quote unchanged: "read checksums fr
+   S075 [mined] teaches: `mktemp -d` creates a directory safely and prints its name; the page documents creation semantics only — a printed path the caller did not request is 
+
+GROUP: pubmed.ncbi.nlm.nih.gov/17638714
+   S021 [queued] teaches: Findings that need updating appear early for a sizable minority of reviews (23% within 2 years), so recheck intervals matter
+   S032 [queued] teaches: supersedes S021 — in this study a signal potentially warranting an update occurred within 2 years for 23% of reviews; a signal is not itself an update
+
+GROUP: pubmed.ncbi.nlm.nih.gov/28912002
+   S022 [queued] teaches: A living review is continually updated as new evidence appears, the limit case of a short recheck cadence
+   S030 [queued] teaches: supersedes S022 — defines living systematic reviews as continually updated to incorporate relevant new evidence as it becomes available; recheck-caden
+
+GROUP: schema.org/lastReviewed
+   S024 [queued] teaches: A last-reviewed date for accuracy is a property separate from publication or modification dates
+   S031 [mined] teaches: supersedes S024 — lastReviewed records the date a web page was last reviewed for accuracy and/or completeness; no comparison to other date properties 
+
+GROUP: w3.org/TR/2013/REC-prov-o-20130430
+   S020 [queued] teaches: Provenance is recorded as a derivation link plus time bounds on an entity's validity, so source and as-of time are separate recorded facts
+   S033 [mined] teaches: supersedes S020 — PROV-O records derivation and entity generation/invalidation times separately; these are entity-lifetime facts, not verification tim
+
+GROUP: w3.org/TR/2017/REC-html52-20171214/syntax.html
+   S050 [mined] teaches: A page may omit the head end tag, so a text extractor cannot rely on </head> to end the head
+   S051 [mined] teaches: Whitespace stays in head; the listed head start tags are handled there; any other token pops the head element and is reprocessed outside it
+
