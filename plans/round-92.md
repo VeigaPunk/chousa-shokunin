@@ -103,9 +103,40 @@ or target changed in F2–F4.**
 
 ## Amendments
 
-*(None yet — amendments are added here when a wave artifact fires on a claim's wording; each names the
-artifact, the constraint, and the narrower property it narrows to. The closure reads this file for `narrowing`
-pointers.)*
+Wave settles at F5/C5. Amendments 1–9; each names its artifact and the enforceable property the claim now states.
+
+1. **Instrument filename correction** (artifact: `R92SentinelScope.md` F1, `R92ReviewerC2.md` F1,
+   `R92ExecC1Repro.md` F1). The frozen battery names were `control-forgeries-r92.py` and
+   `curation-r92-controls.py`; the committed pinned names are `forgeries-r92.py` and
+   `curation-controls-r92.py`. `claims.md`/`claims.json` now name the committed files. No predicate token
+   moved. *Narrowing: the path strings.*
+2. **`emit` guard** (artifact: `R92ReviewerC1.md` F1, `R92ExecC1Repro.md` §(c)(ii), `R92SentinelScope.md`
+   F2). Rule 8 said `emit` without `--receipts` exits 2; the driver had a silent default: `emit` ran exit 0
+   and rewrote the committed receipts. The guard is now wired (`CONTROL_DRIVER_R92=SETUP emit requires an
+   explicit --receipts`, exit 2). Verified at C6.
+3. **On-disk pin scope narrowed** (artifact: `R92ReviewerC1.md` F2/F3, `R92SentinelScope.md` F5). Rule 5
+   read as "every pinned file is byte-checked". Enforced: the executed scripts (all tokens) + expected + pins
+   file (7 of 16 pinned rows) are byte-checked on disk; the other nine pins are blob-checked at `--rev` by
+   SELF_PIN. The minus-self digest is over the non-comment, non-blank rows. Named limits 7–8 record the
+   remainder. *Narrowing: rule 5 + limits 7–8.*
+4. **`PIN_DUPLICATE` exit code** (artifact: `R92ReviewerC1.md` F4, `R92SentinelScope.md` F3). The raise was
+   `SystemExit(message)` → exit 1 on stderr. Rule 6 said exit 2. The raise now prints
+   `SETUP PIN_DUPLICATE path=…` to stdout and raises `SystemExit(2)`; the battery asserts `rc=2` for this
+   class. Verified at C6 (`OK dup-pin-path: r92 rc=2`).
+5. **Empty-first-cell and structural-header filtering** (artifact: `R92ReviewerC2.md` F2–F4). `data_lines`
+   and `quote_lines` skipped empty-first-cell rows as separators; the quote header was swallowed
+   positionally. An empty cell is no longer a separator (only all-dash/colon/space non-empty cells are),
+   and the quote-header skip now requires the literal `qid|source|quote` row. A first-line forged row is a
+   data row and reaches QSHAPE.
+6. **Decision-row device count stated** (artifact: `R92ReviewerC2.md` F4): the pin counts pipe-leading data
+   rows the table holds (11+6); wrong-width rows are `DECISION_WIDTH`, never a drop.
+7. **TFREQ universe narrowed** (artifact: `R92ReviewerC2.md` F5): TFREQ covers decision rows whose named
+   qids all resolve; an unresolved row is a `WARRANT` failure.
+8. **Tally boundary regex** (artifact: `R92ReviewerC3.md` A1, `R92ConnectorSiblings.md` §5): the section
+   boundary is now the next ATX heading of depth ≤ 2 at column 0 (`# ` or `## `), with a `SCOPE_BLEED`
+   setup diagnostic when unterminated.
+9. **Case-enumeration pin** (artifact: `R92ReviewerC3.md` A3): the counter requires `len(^ok-case lines) ==
+   cases` with distinct case numbers (the six `accepted=` lines included).
 
 ## Do-nothing control (must not reach the after-state)
 
