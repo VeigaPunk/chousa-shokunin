@@ -40,8 +40,8 @@ GROUND = ("corpus/evidence/round25-final-measure.log",
 GROUND161 = GROUND[0]
 
 
-def run(counter, tree):
-    p = subprocess.run([sys.executable, "-B", counter, "--root", tree, "--selftest", RECEIPT],
+def run(counter, tree, receipt=RECEIPT):
+    p = subprocess.run([sys.executable, "-B", counter, "--root", tree, "--selftest", receipt],
                        capture_output=True, text=True)
     out = p.stdout or ""
     verdict = [ln for ln in out.splitlines() if "SKILL_TALLY_R9" in ln]
@@ -86,10 +86,10 @@ def main():
     results = {}
     pristine_docs = tree("positive", text)
 
-    def case(name, body, expect_old, expect_new, needle_new="", grounding=None):
+    def case(name, body, expect_old, expect_new, needle_new="", grounding=None, receipt=RECEIPT):
         d = tree(name, body, grounding)
-        rc_old, v_old, _o = run(OLD, d)
-        rc_new, v_new, out_new = run(NEW, d)
+        rc_old, v_old, _o = run(OLD, d, receipt)
+        rc_new, v_new, out_new = run(NEW, d, receipt)
         ok = (rc_old == expect_old) and (rc_new == expect_new) and (needle_new in out_new if needle_new else True)
         results[name] = ok
         print(f"{'OK' if ok else 'FAIL'} {name}: r92 rc={rc_old} ({v_old}), r93 rc={rc_new} ({v_new})")
@@ -111,6 +111,19 @@ def main():
     tail_cases += 1
     case("ungrounded-historical", text, 0, 1, "HIST_DERIVED=1/2",
          grounding="legacy selftest output, no verdict line\n")
+    # D4 (R93ReviewerC3 F2): a tally planted ABOVE `## Gates` — r92 never reads the head, r93 declares it empty.
+    head_text = text.replace("## Gates", "Historical `PASS (777 cases, 0 skipped)` above the section.\n\n## Gates", 1)
+    case("head-tally", head_text, 0, 1, "HIST_SCOPE_BLEED head")
+    # D5 (R93ReviewerC3 F3): an interior hole in the bashenv family — endpoints preserved, name foreign.
+    # r92 derives endpoints only and checks the override family only, so it stays green; r93 requires the
+    # claimed range to be exactly the family's index set.
+    hole_receipt = os.path.join(work, "receipt-interior-hole.txt")
+    body = open(RECEIPT, encoding="utf-8").read()
+    if "drift-bashenv-echo" not in body:
+        print(f"SETUP expected case name drift-bashenv-echo absent from {RECEIPT}")
+        return 2
+    open(hole_receipt, "w", encoding="utf-8").write(body.replace("drift-bashenv-echo", "drift-other-echo", 1))
+    case("interior-hole", text, 0, 1, "CASE_RANGE", receipt=hole_receipt)
 
     ok = all(results.values())
     print(f"CONTROLS={'PASS' if ok else 'FAIL'} "
@@ -121,7 +134,8 @@ def main():
           f"TAIL_REFUSED={int(results['deleted-tail'] + results['added-tail'])}/2 "
           f"TAIL_PRIOR_ACCEPTED={int(results['deleted-tail'] and results['added-tail'])}/1 "
           f"TAIL_ADDED_REFUSED={int(results['added-tail'])}/1 "
-          f"HIST_UNGROUNDED_REFUSED={int(results['ungrounded-historical'])}/1")
+          f"HIST_UNGROUNDED_REFUSED={int(results['ungrounded-historical'])}/1 "
+          f"HEAD_REFUSED={int(results['head-tally'])}/1 INTERIOR_REFUSED={int(results['interior-hole'])}/1")
     return 0 if ok else 1
 
 

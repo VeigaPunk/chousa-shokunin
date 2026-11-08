@@ -50,8 +50,11 @@ counter edit that deletes a leg changes the verdict):
  11 DUPQID    a qid cited twice on one warrant cell is not two warrants
  12 USED_BY   every mined registry row that names an entry in `used-by` is cited by at least one
               Located-quote row of that entry (S4)
- 13 WITNESS   each detector fires when it must and stays silent when it must (two directions each)
+ 13 WITNESS   each detector fires when it must and stays silent when it must (two directions each, WSQUOTE included)
  14 VERDICT   the printed verdict is the tally it was taken over, appended before the summary
+ 15 WSQUOTE   every three-cell Located-quotes row whose quote strips to empty is counted (Q_WSQUOT) and refused;
+              the class is the same expression the shape branch uses (ws_quote_cell), so the leg is a second
+              witness of the class and its verdict-bearing force is the EXPECTED_LEGS arity check
 
 Usage: python3 -B corpus/evidence/round93/curation-r93.py --root DIR
 Exit 0 PASS, 1 FAIL, 2 setup. No network, no writes.
@@ -218,6 +221,11 @@ def dup_qid(qids):
     return len(set(qids)) != len(qids)
 
 
+def ws_quote_cell(cells):
+    """The one whitespace-quote test the shape branch, the WSQUOTE leg and `witness()` share."""
+    return len(cells) == 3 and not cells[2].strip().strip('"').strip()
+
+
 def q_shape_violation(cells):
     """None when a Located-quotes row is `Qn | S-id | non-empty quote`, else the reason (R1)."""
     if len(cells) != 3:
@@ -264,6 +272,9 @@ def witness():
         ("qshape-silent", q_shape_violation(["Q1", "S214", '"a quote"']) is None),
         ("qshape-fire", q_shape_violation(["note", "S214", '"a quote"']) == "qid=note"),
         ("qshape-width", q_shape_violation(["Q1", "S214"]) == "cells=2"),
+        # WSQUOTE class, both directions: the class test the leg and the shape branch share.
+        ("wsquote-fire", ws_quote_cell(["Q1", "S214", '" "']) is True),
+        ("wsquote-silent", ws_quote_cell(["Q1", "S214", '"a real quote"']) is False),
     ]
     bad = [n for n, ok in rows if not ok]
     return bad, f"{len(rows) - len(bad)}/{len(rows)}"
@@ -322,7 +333,7 @@ def main():
         for ln, cells in quote_lines(section_lines(text, "Located quotes")):
             # WSQUOTE population: counted on every three-cell quote row BEFORE the shape filter, so the
             # class is measured independently of the leg that refuses it (r92 drops it before counting).
-            if len(cells) == 3 and not cells[2].strip().strip('"').strip():
+            if ws_quote_cell(cells):
                 ws_quote_rows.append((rel, cells[0]))
             bad = q_shape_violation(cells)
             if bad is not None:
@@ -540,6 +551,8 @@ def main():
     for name, ok, detail in legs:
         if not ok:
             print(f"LEG_FAIL {name} {detail}")
+    if len(legs) != EXPECTED_LEGS:
+        print(f"LEG_FAIL ARITY expected={EXPECTED_LEGS} measured={len(legs)}")
     print(f"CURATION_R93={'PASS' if passed else 'FAIL'}")
     return 0 if passed else 1
 

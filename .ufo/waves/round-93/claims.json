@@ -4,7 +4,7 @@
  "l1": "ChousaR93",
  "base": "206226dc9d9baef620e7d3d30bdac5f9194a459f",
  "shape": "two claims, two axes (operability, calibration), plus one freshness claim \u2014 three claims, three axes, no exploratory claim",
- "freeze": "corpus/evidence/round93/claims.md (carried at the freeze commit F)",
+ "freeze": "corpus/evidence/round93/claims.md (carried at freeze F4)",
  "C1": {
   "id": "C1-DRIVER-R93",
   "axis": "operability",
@@ -37,7 +37,7 @@
   ],
   "kill_rules": {
    "K1": "predicate not met at the landing revision",
-   "K2": "a forgery accepted by r93, the positive refused, or r92 refusing both forgeries",
+   "K2": "a battery forgery accepted by the r93 driver, the positive refused, or the r92 driver refusing both forgeries",
    "K3": "a genuine row moved by the pin walk, or verify writing under the receipts directory",
    "K4": "the PASS skips the work: self-referential pin row, receipt counted without its pin row, or --root ignored"
   },
@@ -45,7 +45,8 @@
    "a coherent joint edit of instrument, pin, receipt and expectation row survives",
    "the minus-self digest binds table coherence, not authority",
    "pinned bytes are compared at F/C; a script reading outside its own bytes is unseen",
-   "a receipt added after C is RECEIPT_UNPINNED; a removed receipt row stops being scored with its expected row"
+   "a receipt added after C is RECEIPT_UNPINNED; a removed receipt row stops being scored with its expected row",
+   "PRIOR_ACCEPTED is measured in the tree-only r92 form; a --repo r92 run binds receipts to a revision, which is a different mechanism"
   ],
   "sources": [
    "S070"
@@ -55,19 +56,21 @@
   "id": "C2-CURATION-R93",
   "axis": "calibration",
   "type": "repair (successor curation counter)",
-  "sentence": "At the landing revision corpus/evidence/round93/curation-r93.py --root . prints CURATION_R93=PASS (exit 0) with LEGS_MEASURED=15/15 Q_SHAPE_FAIL=0 Q_WSQUOT=0 over the 20 located quotes and 17 warranted decision rows, and corpus/evidence/round93/curation-controls-r93.py --root . --work <scratch> prints CONTROLS=PASS FORGERY_REFUSED=4/4 PRIOR_ACCEPTED=4/4 with the r90 regression line FORGERY_REFUSED=7/7.",
+  "sentence": "At the landing revision corpus/evidence/round93/curation-r93.py --root . prints CURATION_R93=PASS (exit 0) with LEGS_MEASURED=15/15 Q_SHAPE_FAIL=0 Q_WSQUOT=0 Q_ROWS=20 WARRANT_OK=17/17 TFREQ_OK=17/17 DUP_QIDS=0 and VERDICT fields_hold=1 legs_ok=15/15 DETECTOR_WITNESS=13/13, and corpus/evidence/round93/curation-controls-r93.py --root . --work <scratch> prints CONTROLS=PASS CARRIED_REFUSED_BOTH=4/4 WS_NAMED=2/2 WS_SHAPE_GREEN_R92=1/1 DUPCOUNT_1=1/1 PRIOR_REGRESSION=7/7 (exit 0). The claim is a classification claim: r92 fails the same trees downstream with Q_SHAPE_FAIL=0.",
   "predicate": {
    "fields": [
     "CURATION_R93=PASS",
     "LEGS_MEASURED=15/15",
     "Q_SHAPE_FAIL=0",
-    "Q_WSQUOT=0"
+    "Q_WSQUOT=0",
+    "DETECTOR_WITNESS=13/13"
    ],
    "controls": [
     "CONTROLS=PASS",
-    "FORGERY_REFUSED=4/4",
-    "PRIOR_ACCEPTED=4/4",
-    "FORGERY_REFUSED=7/7"
+    "CARRIED_REFUSED_BOTH=4/4",
+    "WS_NAMED=2/2",
+    "WS_SHAPE_GREEN_R92=1/1",
+    "PRIOR_REGRESSION=7/7"
    ],
    "exit": 0
   },
@@ -77,14 +80,15 @@
   ],
   "kill_rules": {
    "K1": "predicate not met at the landing revision",
-   "K2": "a forgery accepted by r93, the positive refused, or r92 refusing a forgery",
+   "K2": "a whitespace tree whose shape leg stays green under r93, the positive refused, or DETECTOR_WITNESS not full",
    "K3": "a genuine entry moves (located quotes, warranted rows or floors)",
-   "K4": "the new leg is vacuous (counts rows the shape test already dropped, or can be deleted without a verdict change)"
+   "K4": "the new leg is vacuous: it must count the row on both forged trees and stay 0 on the clean tree, and deleting it must change the verdict through the named LEG_FAIL ARITY line"
   },
   "named_limits": [
-   "Q_WSQUOT reads the located-quote population, so an unresolvable whitespace quote is FLOOR's report",
-   "the decision-width print is observability, not a new gate",
-   "the leg vocabulary is the r92 set plus WSQUOTE"
+   "Q_WSQUOT counts every three-cell quote row before source resolution, so an unresolvable-source whitespace row is counted and also fails FLOOR",
+   "the leg shares its expression with the shape branch (ws_quote_cell): a second witness, whose own verdict force is the EXPECTED_LEGS arity tripwire",
+   "the decision-width print is observability; the WARRANT conjunct is unchanged",
+   "witness() covers locates, unentailed_terms, teaches_miss, dup_qid, q_shape_violation and the WSQUOTE class, not used_by_tokens or decision width"
   ],
   "sources": [
    "S001"
@@ -94,19 +98,25 @@
   "id": "C3-TALLY-R93",
   "axis": "freshness",
   "type": "repair (successor tally counter)",
-  "sentence": "At the landing revision corpus/evidence/round93/skill-tally-r93.py --root . --selftest corpus/evidence/round93/controls/selftest-r93.txt prints SKILL_TALLY_R93=PASS (exit 0) with LEGS=4/4 HIST_DERIVED=2/2 HIST_PRESENT=2/2 TAIL_OK=1 TALLY_ROWS=8 STALE_TALLIES=0/8, and corpus/evidence/round93/skill-tally-r93-controls.py --root . --work <scratch> prints CONTROLS=PASS OLDPROSE_REFUSED=1/1 PRIOR_ACCEPTED=1/1 STALE_REFUSED_BOTH=1/1 TAIL_REFUSED=1/1 TAIL_PRIOR_ACCEPTED=1/1.",
+  "sentence": "At the landing revision corpus/evidence/round93/skill-tally-r93.py --root . --selftest corpus/evidence/round93/controls/selftest-r93.txt prints SKILL_TALLY_R93=PASS (exit 0) with LEGS=4/4 HIST_DERIVED=2/2 HIST_PRESENT=2/2 TAIL_OK=1 TALLY_ROWS=8 STALE_TALLIES=0/8 CASE_RANGE_OK=2/2 MISLABELED=0, and corpus/evidence/round93/skill-tally-r93-controls.py --root . --work <scratch> prints CONTROLS=PASS OLDPROSE_REFUSED=1/1 PRIOR_ACCEPTED=1/1 STALE_REFUSED_BOTH=1/1 HIST_REFUSED_BOTH=1/1 TAIL_REFUSED=2/2 TAIL_PRIOR_ACCEPTED=1/1 TAIL_ADDED_REFUSED=1/1 HIST_UNGROUNDED_REFUSED=1/1 HEAD_REFUSED=1/1 INTERIOR_REFUSED=1/1 (exit 0).",
   "predicate": {
    "fields": [
     "SKILL_TALLY_R93=PASS",
     "LEGS=4/4",
     "HIST_DERIVED=2/2",
     "HIST_PRESENT=2/2",
-    "TAIL_OK=1"
+    "TAIL_OK=1",
+    "CASE_RANGE_OK=2/2",
+    "MISLABELED=0"
    ],
    "controls": [
     "CONTROLS=PASS",
-    "TAIL_REFUSED=1/1",
-    "TAIL_PRIOR_ACCEPTED=1/1"
+    "TAIL_REFUSED=2/2",
+    "TAIL_PRIOR_ACCEPTED=1/1",
+    "TAIL_ADDED_REFUSED=1/1",
+    "HIST_UNGROUNDED_REFUSED=1/1",
+    "HEAD_REFUSED=1/1",
+    "INTERIOR_REFUSED=1/1"
    ],
    "exit": 0
   },
@@ -116,14 +126,15 @@
   ],
   "kill_rules": {
    "K1": "predicate not met at the landing revision",
-   "K2": "the positive refused, or the r92 counter refusing the tail-deleted tree",
+   "K2": "the positive tree refused, or the r92 counter refusing any of the four discriminating trees",
    "K3": "a historical or tail tally moves on the clean tree",
    "K4": "the derivation is vacuous: receipt not opened, quote not required, tally presence not required, or tail compared by count only"
   },
   "named_limits": [
-   "the two grounding receipts are historical captures; a rewrite is caught by the quote test, not a digest",
-   "the tail set is declared, not derived",
-   "the ## Gates scope is the r92 ATX boundary"
+   "the two grounding receipts are historical captures: a rewrite is caught by the quote test, not by a digest, and the 256 quote is a round-34 disposition sentence naming the banner form",
+   "no line binding: the quote must appear in the receipt, not at a named line, and a symlink at the receipt path passes",
+   "the declarations are measured sets, not derivations: a third legitimate tally on either side must be declared in the same commit",
+   "the scope boundary is any column-0 #/## line (the r92 ATX form), not a full ATX parser"
   ],
   "sources": [
    "S001"

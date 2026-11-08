@@ -142,12 +142,22 @@ def main():
     # Two tail tallies are declared today: SKILL.md:640 (the Round27 215-case checkpoint) and
     # SKILL.md:781 (the 283-case host line). Both sit outside the Gates scope by design; an
     # undeclared third one is the boundary finding.
+    # The head (everything before `## Gates`) is scanned too: r92's wording claimed "outside the Gates scope"
+    # while only the tail was read, so a tally planted above the section was silently accepted (R93ReviewerC3 F2).
+    HEAD_DECLARED = {}
+    head_counts = {}
+    for ln in text[:gates_start].splitlines():
+        for mm in TALLY_RE.finditer(ln):
+            head_counts[(mm.group(1), mm.group(2))] = head_counts.get((mm.group(1), mm.group(2)), 0) + 1
+    head_ok = head_counts == HEAD_DECLARED
+    for tally in sorted(set(head_counts) - set(HEAD_DECLARED)):
+        print(f"HIST_SCOPE_BLEED head line={tally[0]} cases tally=PASS ({tally[0]} cases, {tally[1]} skipped)")
     TAIL_DECLARED = {("215", "0"): 1, ("283", "0"): 1}
     tail_counts = {}
     for ln in text[gates_end:].splitlines():
         for mm in TALLY_RE.finditer(ln):
             tail_counts[(mm.group(1), mm.group(2))] = tail_counts.get((mm.group(1), mm.group(2)), 0) + 1
-    tail_ok = tail_counts == TAIL_DECLARED
+    tail_ok = tail_counts == TAIL_DECLARED and head_ok
     for tally in sorted(set(tail_counts) - set(TAIL_DECLARED)):
         print(f"HIST_SCOPE_BLEED line={tally[0]} cases tally=PASS ({tally[0]} cases, {tally[1]} skipped)")
     if not rows:
@@ -162,8 +172,11 @@ def main():
 
 
     # 2. case-range prose against the tool's own case names
-    bashenv = [n for n, name in names if "bashenv" in name]
-    bashpin = [n for n, name in names if name.startswith("bash-pin-override")]
+    # The family population is EVERY `ok-case` line, not only the ones that print `exit=` (the six
+    # `accepted=` lines carry no exit=, so the exit= regex silently excluded them — R93ReviewerC3 F3).
+    names_all = [(int(n), name) for n, name in all_case_lines]
+    bashenv = [n for n, name in names_all if "bashenv" in name]
+    bashpin = [n for n, name in names_all if name.startswith("bash-pin-override")]
     mb = BASHENV_RE.search(gates_text)
     mo = OVERRIDE_RE.search(gates_text)
     range_codes = []
@@ -181,10 +194,21 @@ def main():
     if claimed_ovr is not None and derived_ovr is not None and claimed_ovr != derived_ovr:
         range_codes.append(f"RANGE_MISMATCH:bash-pin-override claimed={claimed_ovr[0]}-{claimed_ovr[1]} "
                            f"derived={derived_ovr[0]}-{derived_ovr[1]}")
+    # Interior holes and foreign names: the claimed range must be exactly the family's index set, for BOTH
+    # ranges (r92 checked endpoints only, and only the override family — R93ReviewerC3 F3).
     mislabeled = []
-    if claimed_ovr is not None and derived_ovr is not None:
-        mislabeled = [n for n in range(claimed_ovr[0], claimed_ovr[1] + 1) if n not in bashpin]
-    ok_ranges = not range_codes and claimed_env == derived_env and claimed_ovr == derived_ovr
+    for claimed, family in ((claimed_env, bashenv), (claimed_ovr, bashpin)):
+        if claimed is None:
+            continue
+        mislabeled += [n for n in range(claimed[0], claimed[1] + 1) if n not in set(family)]
+    interior_ok = True
+    for claimed, family in ((claimed_env, bashenv), (claimed_ovr, bashpin)):
+        if claimed is None or not family:
+            interior_ok = False
+            continue
+        interior_ok = interior_ok and set(range(claimed[0], claimed[1] + 1)) == set(family)
+    ok_ranges = (not range_codes and claimed_env == derived_env and claimed_ovr == derived_ovr
+                 and not mislabeled and interior_ok)
     for code in range_codes:
         print(f"CASE_RANGE_FINDING {code}")
     if mislabeled:
