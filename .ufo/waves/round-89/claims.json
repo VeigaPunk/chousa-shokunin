@@ -1,0 +1,112 @@
+{
+  "round": 89,
+  "lane": "chousa",
+  "l1": "ChousaR89",
+  "base": "f8fa55ec94cb34e7b572a9d87d7f62d88bc80bf8",
+  "shape": "two claims, two axes (operability, calibration), no exploratory claim",
+  "C1": {
+    "id": "C1-BATTERY-R89",
+    "axis": "operability",
+    "type": "repair (successor battery; capability retained)",
+    "sentence": "At the landing revision corpus/evidence/round89/gate-records-r89.py prints GATE_RECORDS_R89=PASS (exit 0) with LEG_REREAD=16/16 RECONCILED=16/16 CROSSCHECK=15/15 LEGS_APPENDED=16 and every round-88 field unchanged (POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=EXPECTED_CODE=362/362, D1_REFUSED=3/3, D2_REFUSED=3/3, MUT_ADMIT_KILLED=1, MUT_UNREACH_KILLED=1, DERIVE_NEG=1); each leg's receipt detail is re-derived in its own grammar (n/m; len/d1/div3 pinN with all four equal and pin == ROWS_203; derived=x killed=y with both 1; tool present) and each leg's re-derived numbers equal the fields the summary printed for it; and mutate-r89.py prints MUTANTS_KILLED=11/11 TOOL_MUTANTS_CAUGHT=2/2, with the four round-88 survivor shapes dying on a named UNRECONCILED or UNCROSSCHECKED line.",
+    "predicate": {
+      "battery_stdout": [
+        "GATE_RECORDS_R89=PASS"
+      ],
+      "battery_fields": [
+        "LEG_REREAD=16/16",
+        "RECONCILED=16/16",
+        "CROSSCHECK=15/15",
+        "LEGS_APPENDED=16",
+        "FORGED_REFUSED=362/362",
+        "EXPECTED_CODE=362/362",
+        "D1_REFUSED=3/3",
+        "D2_REFUSED=3/3",
+        "MUT_ADMIT_KILLED=1",
+        "MUT_UNREACH_KILLED=1",
+        "DERIVE_NEG=1"
+      ],
+      "mutants_stdout": [
+        "MUTANTS_KILLED=11/11",
+        "TOOL_MUTANTS_CAUGHT=2/2",
+        "TOTAL=13/13"
+      ],
+      "harm_stdout": [
+        "moved=0"
+      ],
+      "exit": 0
+    },
+    "counting_command": [
+      "python3 -B corpus/evidence/round89/gate-records-r89.py --root . --repo . --work <scratch>",
+      "python3 -B corpus/evidence/round89/mutate-r89.py --root . --repo . --work <scratch>",
+      "python3 -B corpus/evidence/round89/harm-recheck.py --root . --repo . --base-tool <scratch>/base-tool.py"
+    ],
+    "kill_rules": {
+      "K1": "the predicate is not met at the landing revision",
+      "K2": "a listed mutant survives, a subject-tool mutant is not caught, or a forged record is accepted or refused with a code outside its frozen expected set",
+      "K3": "a genuine committed GATE-RECORD line moves verdict (moved > 0), or a frozen/fresh positive is refused",
+      "K4": "the predicate is met by an instrument that skips the claimed work: a printer replacement (checked by the instrument sha256 pins), a detached ok beside an honest detail, or a summary field that disagrees with its leg"
+    },
+    "named_limits": [
+      "a joint rewrite of the leg writer, the receipts and the reconciliation survives (that edit is the counter)",
+      "TOOL has no numeric witness: its re-derivation is os.path.isfile, and an absent tool fails on LEG_REREAD",
+      "the reconciliation guards receipt-vs-detail agreement, not the truth of the measurement expression that produced both"
+    ],
+    "sources": [
+      "S216"
+    ],
+    "before": "controls/receipts/c1-prior-instrument.txt (GATE_RECORDS_R88=PASS, no CROSSCHECK field); non-vacuity in controls/receipts/c1-mutants.txt"
+  },
+  "C2": {
+    "id": "C2-CURATION-R89",
+    "axis": "calibration",
+    "type": "repair (successor counter; capability retained)",
+    "sentence": "At the landing revision corpus/evidence/round89/curation-r89.py prints CURATION_R89=PASS (exit 0) with nine legs, DUP_QIDS=0, WARRANT_OK=17/17, QUOTES_LOCATED=20/20, TEACHES_FLAGGED=1 TEACHES_UNRESOLVED=0, SUP_CLAUSE_CHECKED=0 SUP_UNRESOLVED=0 and a verdict computed from the printed fields (VERDICT fields_hold=1); the control battery prints CONTROLS=PASS FORGERY_REFUSED=7/7 PRIOR_ACCEPTED_FORGERY=7/7 (five round-87 classes against r87 plus the duplicate-qid and superseder-clause classes against r88); and curation-r89-mutants.py prints MUTANTS_KILLED=6/6, five through the field-derived verdict and the clause-death mutant through the battery's SUP mirror.",
+    "predicate": {
+      "counter_stdout": [
+        "CURATION_R89=PASS"
+      ],
+      "counter_fields": [
+        "DUP_QIDS=0",
+        "WARRANT_OK=17/17",
+        "QUOTES_LOCATED=20/20",
+        "TEACHES_FLAGGED=1",
+        "TEACHES_UNRESOLVED=0",
+        "SUP_UNRESOLVED=0"
+      ],
+      "controls_stdout": [
+        "CONTROLS=PASS",
+        "FORGERY_REFUSED=7/7",
+        "PRIOR_ACCEPTED_FORGERY=7/7"
+      ],
+      "mutants_stdout": [
+        "MUTANTS_KILLED=6/6",
+        "COUNTER_DETECTED=5",
+        "BATTERY_DETECTED=1"
+      ],
+      "exit": 0
+    },
+    "counting_command": [
+      "python3 -B corpus/evidence/round89/curation-r89.py --root .",
+      "python3 -B corpus/evidence/round89/curation-r89-controls.py --root . --work <scratch>",
+      "python3 -B corpus/evidence/round89/curation-r89-mutants.py --root . --work <scratch>"
+    ],
+    "kill_rules": {
+      "K1": "the predicate is not met at the landing revision",
+      "K2": "any of the seven battery forgeries is accepted at landing, or a located quote is not verbatim in its own row's committed capture",
+      "K3": "harm: the two admitted entries' verdicts move, the registry diff exceeds the two used-by cell changes, or a control mirror that should pass is refused",
+      "K4": "the counter prints PASS over its own honestly-printed failure fields (a dead detector, a detached leg, or a verdict that no longer follows from the printed tallies)"
+    },
+    "named_limits": [
+      "MIN_TOKENS=7 is a measured floor, not a content check: a >=7-token verbatim substitution sharing a distinctive term passes",
+      "the qid-set pin guards label identity, not content: swapping two pinned rows' quote texts passes",
+      "row reorder passes (benign)",
+      "the superseder-own-read clause is vacuous on the real registry (SUP_CLAUSE_CHECKED=0); its non-vacuity is the battery's SUP-clause-mirror"
+    ],
+    "sources": [
+      "S218",
+      "S216"
+    ],
+    "before": "controls/receipts/c2-prior-instrument.txt (CURATION_R88=PASS, no DUPQID leg, no field-derived verdict); controls/receipts/c2-controls.txt (PRIOR_ACCEPTED_FORGERY=7/7)"
+  }
+}
