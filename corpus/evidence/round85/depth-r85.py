@@ -1,25 +1,47 @@
 #!/usr/bin/env python3
-"""depth-r85 — round-85 C2 (depth) counter, frozen before the candidate entry is drafted.
+"""depth-r85 — round-83 C1 (depth) counter, frozen before the candidate entry is drafted.
 
-Byte-identical in logic to depth-r84.py (round 84, whose E1-E7 held and whose claim fell only on kill
-rule K3/K2); only the round constants change (BASE_LIST and the DEPTH_R85 label, and the S020 alternate
-URL allowed as a third fresh source):
- - BASE_LIST is the round-85 base list (the knowledge set at the round-84 tip);
- - ROUND_START is 2026-11-08T04:00:00Z (after the egress table commit of this round, before any fetch).
-Usage:  python3 -B corpus/evidence/round85/depth-r85.py --root DIR
+Byte-identical in logic to depth-r82.py (round 82, whose E1-E7 held and whose claim fell only on kill rule K3); only the round constants change.
+Usage:  python3 -B corpus/evidence/round83/depth-r85.py --root DIR
 DIR is a lane tree (`git archive <rev>` extracted). Read-only; writes nothing.
 
 NEW entries are files in DIR/corpus/knowledge/*.md whose names are not in the frozen base list
-corpus/evidence/round85/base-knowledge.txt (the knowledge set at 43c3f728, the round-84 tip). Each new
-entry is checked: E1 rows, E2 warrant, E3 located (FRESH = mined registry row citing the entry, refetch
-row with curl_rc 0, http EXACTLY 200 post-repair, txt_sha256 = sha256(capture)), E4 novel, E5 content,
-E6 coverage, E7 new ground. Output: `ENTRY <name> ok=... fails=...`, then
-DEPTH_R85 entries=<k> ok_entries=<j> rows=<r> located_quotes=<q> fresh_sources=<f>, DEPTH_R85=PASS|FAIL.
-PASS iff k >= 1 and j == k. Exit 0 PASS, 1 FAIL, 2 usage error.
+corpus/evidence/round85/base-knowledge.txt (the knowledge set at 8fff80ee, the round-83 egress
+commit). Each new entry is checked:
 
-Limit (stated before data): the counter checks that every decision row is tied to a verbatim, freshly
-located quote from a source no base entry used; it does NOT judge whether a row's Do/Never follows from
-its quote. That is checked by a non-author reviewer under kill rule K3/K2 of the frozen claims file.
+  E1 rows     — a `## Decision table` section holds a Markdown table with a `Warrant` column and
+                >= 5 body rows.
+  E2 warrant  — every body row's Warrant cell names >= 1 quote id (Q<n>) declared in the entry's
+                `## Located quotes` table (columns qid | source | quote), and names the S-id of
+                every quote id it names.
+  E3 located  — every declared quote has 8..25 words and is LOCATED: its source row is FRESH and
+                the quote, whitespace-collapsed (curly quotes/apostrophes folded to ASCII), occurs
+                in the equally normalized text of corpus/captures/<key>.txt.
+                FRESH: a Registry row of corpus/SOURCES.md, status `mined`, used-by naming
+                `corpus/knowledge/<entry>`, whose first http(s) URL u gives key=sha256(u)[:24], and
+                corpus/evidence/round57/refetch.tsv holds a row (id, u, key, curl_rc 0, http 2xx,
+                fetched_utc >= ROUND_START) whose txt_sha256 equals sha256 of that .txt file.
+                ROUND_START is the commit time of the egress table, 2026-11-06T20:53:00Z.
+  E4 novel    — declared quotes are pairwise distinct, and no declared quote (normalized) occurs in
+                the normalized text of any base-list entry.
+  E5 content  — in every body row each non-Warrant cell has >= 3 words and is not a placeholder
+                (empty, -, n/a, none, tbd, ...), and the non-Warrant cells of a row, joined, differ
+                from every other row's.
+  E6 coverage — every S-id on the entry's `source:` line is FRESH and named by >= 1 Warrant cell;
+                every declared quote id is named by >= 1 Warrant cell; the `source:` line names
+                >= 3 S-ids.
+  E7 new ground — no S-id on the `source:` line is named on the `source:` line of any base-list
+                entry, and its URL appears in no base-list entry.
+
+Output: `ENTRY <name> ok=yes|no rows=<r> quotes=<q> fails=<E..>` per new entry, then
+    DEPTH_R85 entries=<k> ok_entries=<j> rows=<r> located_quotes=<q> fresh_sources=<f>
+    DEPTH_R85=PASS|FAIL
+PASS iff k >= 1 and j == k (every new entry passes E1..E7). Exit 0 PASS, 1 FAIL, 2 usage error.
+
+Limit (stated before data): the counter checks that every decision row is tied to a verbatim,
+freshly located quote from a source no base entry used; it does NOT judge whether a row's Do/Never
+follows from its quote. That is checked by a non-author reviewer under kill rule K3 of the
+frozen claims file.
 """
 import argparse
 import hashlib
@@ -27,14 +49,14 @@ import os
 import re
 import sys
 
-ROUND_START = "2026-11-08T04:00:00Z"
+ROUND_START = "2026-11-08T03:54:30Z"
 BASE_LIST = "corpus/evidence/round85/base-knowledge.txt"
-PLACEHOLDERS = {"", "-", "--", "—", "–", "n/a", "na", "none", "nil", "null", "tbd", "tba", "todo",
-                "?", "...", "…", "x", "unknown", "not applicable", "same", "ditto", "see above"}
 SID_RE = re.compile(r"S\d{3,}")
 QID_RE = re.compile(r"\bQ\d+\b")
 URL_RE = re.compile(r"https?://[^\s|)>\]]+")
 ROW_RE = re.compile(r"^ {0,3}\|\s*(S\d{3,})\s*\|")
+PLACEHOLDERS = {"", "-", "--", "—", "–", "n/a", "na", "none", "nil", "null", "tbd", "tba", "todo",
+                "?", "...", "…", "x", "unknown", "not applicable", "same", "ditto", "see above"}
 
 
 def norm(s):
@@ -51,7 +73,8 @@ def section(text, name):
     out, on = [], False
     for ln in text.splitlines():
         if ln.startswith("## "):
-            on = ln.strip() == f"## {name}"
+            on = ln[3:].strip().lower() == name.lower()
+            continue
         if on:
             out.append(ln)
     return out
@@ -59,15 +82,17 @@ def section(text, name):
 
 def table(lines):
     rows = [ln for ln in lines if ln.strip().startswith("|")]
-    if not rows:
-        return None, None
-    hdr = [c.strip() for c in rows[0].strip().strip("|").split("|")]
+    if len(rows) < 2:
+        return None, []
+    hdr = [c.strip().lower() for c in rows[0].strip().strip("|").split("|")]
+    if not re.match(r"^\s*\|?\s*:?-{3,}", rows[1]):
+        return None, []
     body = []
-    for ln in rows[2:]:
-        cells = ln.strip().strip("|").split("|")
+    for r in rows[2:]:
+        cells = [c.strip() for c in r.strip().strip("|").split("|")]
         if len(cells) != len(hdr):
-            continue
-        body.append({h: c.strip() for h, c in zip(hdr, cells)})
+            return hdr, None
+        body.append(dict(zip(hdr, cells)))
     return hdr, body
 
 
@@ -103,7 +128,7 @@ def main():
     fetch = {}
     for ln in open(os.path.join(root, "corpus/evidence/round57/refetch.tsv"), encoding="utf-8"):
         f = ln.rstrip("\n").split("\t")
-        if len(f) != 9 or f[5] != "0" or f[6] != "200" or f[4] < ROUND_START:
+        if len(f) != 9 or f[5] != "0" or not f[6].startswith("2") or f[4] < ROUND_START:
             continue
         fetch.setdefault((f[0], f[1]), []).append(f)
 

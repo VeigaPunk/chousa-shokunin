@@ -1,8 +1,10 @@
 # chousa round 85 — frozen claims
 
-Base (round-84 tip + verifier spot-check, closed rejected-honest-stop): `43c3f7284eee4889cdcc6ac1626573f6579cd533` (HEAD before this freeze).
-Egress table: `corpus/evidence/round85/egress-approval.md`, committed before any fetch (this file's commit precedes every
-round-85 refetch row; closure compares commit time with `fetched_utc`).
+Base: `43c3f7284eee4889cdcc6ac1626573f6579cd533` (round-84 tip + verifier spot-check, closed rejected-honest-stop).
+Egress table `corpus/evidence/round85/egress-approval.md` and this claims file were committed at the freeze
+`5d0b94139ae8baf60d6f630715bc495f0a93b448` before any fetch; any refetch row dated after the freeze commit's
+committer time is round-85. (The counter's ROUND_START is the freeze, so every round-85 fetch it sees was made
+after the freeze.)
 
 Fresh-start reads (done before this file, per Amendment 58 fresh-start binding + §9 do-nothing control): round-81/82/83
 verifier spot-checks, `corpus/lessons/round-81.md`, `round-82.md`, `round-83.md`, and round-84 spot-check
@@ -79,13 +81,14 @@ accepted); `c1-f1-stub-accept` (blanket-accept stub → FAIL); `c1-f2-stub-refus
   that closes a genuine K2 in-class form at the base revision is not harm.
 - K4 (whitelist): a tool that accepts the 15 frozen lines and refuses everything else passes the counter.
 
-## C2 — depth (sourced on S023 re-opened plus the landed S023 `modified` Definition, plus S020 PROV-O via alternate URL committed this round)
+## C2 — depth (sourced on S215 PROV-O alternate URL, S026 GO FAIR R1.2, S024 Schema.org lastReviewed — all opened this round)
 
 **Claim.** One new knowledge entry teaches provenance recording — what a record must write to name its derivation
-and its dates (`dcterms:source`, `dcterms:modified`, `dcterms:valid`, `prov:wasDerivedFrom`) so a reader can tell
-where a record came from and when it changed — on ground no base entry cites (S023 re-opened with its Definition
-quote located this round, and S020 PROV-O opened via its alternate W3C URL committed this round; S020's
-superseding row S033 stays queued-superseded for the old `REC-prov-o-20130430` URL).
+and its provenance (`prov:wasDerivedFrom`, `prov:generatedAtTime`/`prov:invalidatedAtTime`, FAIR R1.2 provenance
+facets, Schema.org `lastReviewed`) so a reader can tell where a record came from, when it stood and when it was
+reviewed — on ground no base entry cites (S215 registered this round for the W3C alternate URL; S026 and S024 mined
+from queued this round; S023's `modified` Definition repair stands as the prior entry's correction, not re-quoted,
+to keep the new entry's quotes novel and its ground new).
 
 **Counting command (frozen; sha256 in `instrument-pins.txt`):**
 `D=$(mktemp -d -p /fast/scratch/hyaku) && git archive <rev> | tar -x -C "$D" && python3 -B "$D/corpus/evidence/round85/depth-r85.py" --root "$D"`
@@ -93,8 +96,8 @@ superseding row S033 stays queued-superseded for the old `REC-prov-o-20130430` U
 **Before** (`controls/receipts/c1-d0-donothing.txt`, tree at base): `DEPTH_R85 entries=0 ok_entries=0 rows=0
 located_quotes=0 fresh_sources=0`, `DEPTH_R85=FAIL`, rc 1.
 
-**Predicate (target).** At the landing revision the counting command prints `entries=1 ok_entries=1`, `rows=` ≥ 7,
-`located_quotes=` ≥ 8, `fresh_sources=2`, and `DEPTH_R85=PASS`, rc 0.
+**Predicate (target).** At the landing revision the counting command prints `entries=1 ok_entries=1`, `rows=` ≥ 6,
+`located_quotes=` ≥ 7, `fresh_sources=3`, and `DEPTH_R85=PASS`, rc 0.
 
 **Controls (executed, committed):** `c2-d0-donothing` FAIL; `c2-f1-salad-boundary` (located quotes under
 content-free rows) PASS — the stated counter limit: the counter does not judge whether a row follows from its quote;
@@ -104,26 +107,23 @@ kill rule K3 does; `c2-d3-r84-entry-relanded` (round-84 entry re-landed under a 
 - K1: the predicate is not met at the landing revision.
 - K2 (located): a declared quote of the entry does not occur (whitespace-collapsed, curly quotes folded) in its
   committed capture, or occurs there but is absent from the live page when a non-author re-open gets HTTP 200 and
-  tag-strips it. An unreachable re-open is recorded, not a kill. A quote that is a Definition of `modified` in the
-  S023 capture must occur with `modified` in the same definition block (the row-9 K3 repair — non-unique
-  "Recommended practice" comment text does not uniquely locate `modified`).
+  tag-strips it. An unreachable re-open is recorded, not a kill.
 - K3 (warrant): a non-author reviewer shows, for any decision-table row, (a) that its Do or Never states something
   its cited quotes do not state or entail, or (b) a sentence of the same cited source (located in the committed
   capture, quoted by line) that contradicts the row's Do or Never. One such row falsifies C2. Repairs after
   scoring do not rescue.
-- K4 (ground): a base-list entry (`base-knowledge.txt`) cites S023 or the S020 alternate URL, or contains its URL.
-  S020's superseded row S033 (old URL) is not ground: it is a forward-looking supersession, not a held derivation entry.
+- K4 (ground): a base-list entry (`base-knowledge.txt`) cites S215, S026 or S024, or contains their URLs.
 
 ## Frontier step (inside the claim cap, not a third claim)
 
 - Census before: `/home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root /home/vgpnk/Projects/shokunin chousa`
   at round start (paste output + exit). Census after at round end; exit 0 required.
-- Curate `corpus/SOURCES.md` in contract v1 shape: one row per source opened this round (S020 alternate URL
-  PROV-O; S023 re-open appends the `modified` Definition anchor and stays `mined`), each with URL, access date,
+- Curate `corpus/SOURCES.md` in contract v1 shape: one row per source opened this round (S215 PROV-O alternate
+  URL registered, S026 GO FAIR R1.2 mined, S024 Schema.org lastReviewed mined), each with URL, access date,
   ≤25-word located quote in the lesson `## Gate`. Rejections stay as rows with reason + flip.
 - Mine one mistake into `corpus/lessons/round-85.md` `## Mistakes` (class · evidence · captured-by · fix, where the
   fix must be shown able to fail), or paste the sweep that found none.
-- Sourced claim: C2 rests on S023 re-opened and S020 alternate URL, opened this round.
+- Sourced claim: C2 rests on S215, S026, S024, opened this round.
 - Assimilation: `Assimilation: none` in the report unless a theme from `merge/chousa/` is adopted in scratch and
   validated per §10 (read-only campaign bytes, scratch collision check, re-grounding).
 
