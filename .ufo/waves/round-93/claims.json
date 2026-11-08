@@ -1,0 +1,132 @@
+{
+ "round": 93,
+ "lane": "chousa",
+ "l1": "ChousaR93",
+ "base": "206226dc9d9baef620e7d3d30bdac5f9194a459f",
+ "shape": "two claims, two axes (operability, calibration), plus one freshness claim \u2014 three claims, three axes, no exploratory claim",
+ "freeze": "corpus/evidence/round93/claims.md (carried at the freeze commit F)",
+ "C1": {
+  "id": "C1-DRIVER-R93",
+  "axis": "operability",
+  "type": "repair (successor control driver; capability retained)",
+  "sentence": "At the landing revision corpus/evidence/round93/control-driver-r93.py verify --root . --repo . --rev F --receipts-rev C --work <scratch> prints CONTROL_DRIVER_R93=PASS (exit 0) with COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 PINNED_FILES=22/22 RECEIPT_PINS=6/6 and RECEIPT SELF_PIN OK; PASS requires findings==0 AND all four row counts full AND checked==len(pins) AND rchecked==rtotal>0. corpus/evidence/round93/forgeries-r93.py prints FORGERY_REFUSED=2/2 PRIOR_ACCEPTED=2/2 DERIVE_OK=1/1 POSITIVE=pass.",
+  "predicate": {
+   "verify_fields": [
+    "COMMITTED_OK=6/6",
+    "EXACT_OK=6/6",
+    "PIN_OK=6/6",
+    "FRESH_OK=6/6",
+    "PINNED_FILES=22/22",
+    "RECEIPT_PINS=6/6"
+   ],
+   "verify_stdout": [
+    "CONTROL_DRIVER_R93=PASS",
+    "RECEIPT SELF_PIN OK rev="
+   ],
+   "forgeries_stdout": [
+    "FORGERY_REFUSED=2/2",
+    "PRIOR_ACCEPTED=2/2",
+    "DERIVE_OK=1/1",
+    "POSITIVE=pass"
+   ],
+   "exit": 0
+  },
+  "counting_command": [
+   "python3 -B corpus/evidence/round93/control-driver-r93.py verify --root . --repo . --rev <F> --receipts-rev <C> --work <scratch>",
+   "python3 -B corpus/evidence/round93/forgeries-r93.py --root . --repo . --rev <F> --receipts-rev <C> --work <scratch>"
+  ],
+  "kill_rules": {
+   "K1": "predicate not met at the landing revision",
+   "K2": "a forgery accepted by r93, the positive refused, or r92 refusing both forgeries",
+   "K3": "a genuine row moved by the pin walk, or verify writing under the receipts directory",
+   "K4": "the PASS skips the work: self-referential pin row, receipt counted without its pin row, or --root ignored"
+  },
+  "named_limits": [
+   "a coherent joint edit of instrument, pin, receipt and expectation row survives",
+   "the minus-self digest binds table coherence, not authority",
+   "pinned bytes are compared at F/C; a script reading outside its own bytes is unseen",
+   "a receipt added after C is RECEIPT_UNPINNED; a removed receipt row stops being scored with its expected row"
+  ],
+  "sources": [
+   "S070"
+  ]
+ },
+ "C2": {
+  "id": "C2-CURATION-R93",
+  "axis": "calibration",
+  "type": "repair (successor curation counter)",
+  "sentence": "At the landing revision corpus/evidence/round93/curation-r93.py --root . prints CURATION_R93=PASS (exit 0) with LEGS_MEASURED=15/15 Q_SHAPE_FAIL=0 Q_WSQUOT=0 over the 20 located quotes and 17 warranted decision rows, and corpus/evidence/round93/curation-controls-r93.py --root . --work <scratch> prints CONTROLS=PASS FORGERY_REFUSED=4/4 PRIOR_ACCEPTED=4/4 with the r90 regression line FORGERY_REFUSED=7/7.",
+  "predicate": {
+   "fields": [
+    "CURATION_R93=PASS",
+    "LEGS_MEASURED=15/15",
+    "Q_SHAPE_FAIL=0",
+    "Q_WSQUOT=0"
+   ],
+   "controls": [
+    "CONTROLS=PASS",
+    "FORGERY_REFUSED=4/4",
+    "PRIOR_ACCEPTED=4/4",
+    "FORGERY_REFUSED=7/7"
+   ],
+   "exit": 0
+  },
+  "counting_command": [
+   "python3 -B corpus/evidence/round93/curation-r93.py --root .",
+   "python3 -B corpus/evidence/round93/curation-controls-r93.py --root . --work <scratch>"
+  ],
+  "kill_rules": {
+   "K1": "predicate not met at the landing revision",
+   "K2": "a forgery accepted by r93, the positive refused, or r92 refusing a forgery",
+   "K3": "a genuine entry moves (located quotes, warranted rows or floors)",
+   "K4": "the new leg is vacuous (counts rows the shape test already dropped, or can be deleted without a verdict change)"
+  },
+  "named_limits": [
+   "Q_WSQUOT reads the located-quote population, so an unresolvable whitespace quote is FLOOR's report",
+   "the decision-width print is observability, not a new gate",
+   "the leg vocabulary is the r92 set plus WSQUOTE"
+  ],
+  "sources": [
+   "S001"
+  ]
+ },
+ "C3": {
+  "id": "C3-TALLY-R93",
+  "axis": "freshness",
+  "type": "repair (successor tally counter)",
+  "sentence": "At the landing revision corpus/evidence/round93/skill-tally-r93.py --root . --selftest corpus/evidence/round93/controls/selftest-r93.txt prints SKILL_TALLY_R93=PASS (exit 0) with LEGS=4/4 HIST_DERIVED=2/2 HIST_PRESENT=2/2 TAIL_OK=1 TALLY_ROWS=8 STALE_TALLIES=0/8, and corpus/evidence/round93/skill-tally-r93-controls.py --root . --work <scratch> prints CONTROLS=PASS OLDPROSE_REFUSED=1/1 PRIOR_ACCEPTED=1/1 STALE_REFUSED_BOTH=1/1 TAIL_REFUSED=1/1 TAIL_PRIOR_ACCEPTED=1/1.",
+  "predicate": {
+   "fields": [
+    "SKILL_TALLY_R93=PASS",
+    "LEGS=4/4",
+    "HIST_DERIVED=2/2",
+    "HIST_PRESENT=2/2",
+    "TAIL_OK=1"
+   ],
+   "controls": [
+    "CONTROLS=PASS",
+    "TAIL_REFUSED=1/1",
+    "TAIL_PRIOR_ACCEPTED=1/1"
+   ],
+   "exit": 0
+  },
+  "counting_command": [
+   "python3 -B corpus/evidence/round93/skill-tally-r93.py --root . --selftest corpus/evidence/round93/controls/selftest-r93.txt",
+   "python3 -B corpus/evidence/round93/skill-tally-r93-controls.py --root . --work <scratch>"
+  ],
+  "kill_rules": {
+   "K1": "predicate not met at the landing revision",
+   "K2": "the positive refused, or the r92 counter refusing the tail-deleted tree",
+   "K3": "a historical or tail tally moves on the clean tree",
+   "K4": "the derivation is vacuous: receipt not opened, quote not required, tally presence not required, or tail compared by count only"
+  },
+  "named_limits": [
+   "the two grounding receipts are historical captures; a rewrite is caught by the quote test, not a digest",
+   "the tail set is declared, not derived",
+   "the ## Gates scope is the r92 ATX boundary"
+  ],
+  "sources": [
+   "S001"
+  ]
+ }
+}
