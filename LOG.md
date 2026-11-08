@@ -2681,3 +2681,29 @@ falsification gate passes (`PREFILE-FALSIFICATION: pass claims=3 rows=24 attack_
   membership filter eating empty cells; a section boundary written as a string search; battery filenames drifted
   from the frozen claim text; a plan edit 2 commits after its pins generation; a whole-file-hash self-pin
   considered and rejected.
+
+## Round 93 — 2026-11-08
+
+Lane `chousa`, round 93. Base `206226dc`; freeze `3789608d` (F6); carrier `9d033185` (C7). Three claims, three
+axes, no exploratory claim. One v1 wave, 12 seats (8 attack), see the round report. Three earlier pairs were
+superseded before filing: F `84998563` (never carried), F2/C2 `b7241252`/`754b62fb` (the pair the wave
+attacked) and F3–F5 with their carriers, each landing a wave finding (Mistakes 2–6 in the lesson,
+`corpus/evidence/round93/amendments.md` for the sentence-level record).
+
+- Before: the r92 driver byte-checks only the instruments its expected rows execute (`PINNED_FILES=7` of 16) and
+  pins no receipt; the r92 curation counter reports `Q_SHAPE_FAIL=0` on a whitespace-only quote (it fails the tree
+  downstream at FLOOR/WARRANT/TFREQ); the r92 tally counter freezes the historical multiset as a literal and never
+  looks outside `## Gates`, so a changed or added tail tally leaves it green.
+- After: `CONTROL_DRIVER_R93=PASS` (`COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 PINNED_FILES=23/23
+  RECEIPT_PINS=6/6`) with `FORGERY_REFUSED=2/2 PRIOR_ACCEPTED=2/2 DERIVE_OK=1/1 REGRESSION_REFUSED=2/2
+  POSITIVE=pass`; `CURATION_R93=PASS`
+  (`LEGS_MEASURED=15/15 Q_SHAPE_FAIL=0 Q_WSQUOT=0 DETECTOR_WITNESS=13/13`) with the whitespace class refused at
+  the shape leg by name, the leg vocabulary a pinned side table, and
+  `CONTROLS=PASS CARRIED_REFUSED_BOTH=4/4 WS_NAMED=2/2 WS_SHAPE_GREEN_R92=1/1`; `SKILL_TALLY_R93=PASS`
+  (`LEGS=4/4 HIST_DERIVED=2/2 HIST_PRESENT=2/2 TAIL_OK=1`) with tail *and head* changes refused, an interior
+  case-range hole refused, and an ungrounded receipt refused at `HIST_DERIVED=1/2`. Raw receipts under `corpus/evidence/round93/after/` and the before-state receipts
+  under `corpus/evidence/round93/evidence-before/`.
+- Registry: 219 → 219 rows; `corpus/SOURCES.md` byte-identical to base. S070 re-opened (installed `sha256sum(1)`,
+  sha and line 11 quote re-verified) and S001 re-opened with the rev-form Gate record in the lesson; census exit 0
+  at start and end.
+- Subject tools untouched: `git diff 206226dc <landing> -- tools/ SKILL.md` is empty.

@@ -1,0 +1,175 @@
+{
+  "schema": "ufo-swarm-wave-dispatch-v1",
+  "wave": "chousa-r93-w1",
+  "policy": {
+    "source": "config",
+    "maxLanes": 256,
+    "minLanes": 8,
+    "waveMinLanes": 8,
+    "waveMaxLanes": 16,
+    "declaredMaxLanes": null,
+    "hardCeiling": 256,
+    "rampBatchSize": 5,
+    "rampIntervalMs": 700,
+    "globalRunnerCeiling": 1056
+  },
+  "counts": {
+    "spawn": 12,
+    "resume": 0,
+    "total": 12
+  },
+  "registry": {
+    "schema": "ufo-swarm-registry-v1",
+    "path": ".ufo/waves/round-93/w1/swarm-registry.json",
+    "reportDir": ".ufo/waves/round-93/w1",
+    "members": {
+      "R93ExecC1Repro": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": null
+      },
+      "R93ExecC2Repro": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": null
+      },
+      "R93ExecC3Repro": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "executor",
+        "item": null
+      },
+      "R93ExecMutations": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "mutation-tester",
+        "item": null
+      },
+      "R93RevPrior": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "revenger",
+        "item": null
+      },
+      "R93ReviewerC1": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": null
+      },
+      "R93ReviewerC2": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": null
+      },
+      "R93ReviewerC3": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "reviewer",
+        "item": null
+      },
+      "R93CriticClaims": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "critic",
+        "item": null
+      },
+      "R93SentinelScope": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "sentinel",
+        "item": null
+      },
+      "R93ConnectorSiblings": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "connector",
+        "item": null
+      },
+      "R93ScoutSources": {
+        "kind": "spawn",
+        "agentId": null,
+        "role": "scout",
+        "item": null
+      }
+    }
+  },
+  "compaction": {
+    "applied": false,
+    "mechanism": null,
+    "reason": null,
+    "savedBytes": 0,
+    "payloadBytesBefore": 0,
+    "payloadBytesAfter": 0
+  },
+  "taskCall": {
+    "context": "Lane chousa round 93, L1 ChousaR93 holds the canonical planner seat, the freeze and the integration. Root /home/vgpnk/Projects/shokunin/chousa-shokunin.\nRevisions: base 206226dc9d9baef620e7d3d30bdac5f9194a459f (round-92 landing + its non-author spot-check, admitted); claim freeze F2 b7241252c2358613d3b22b7d0454d98c56dab373; the\ntree you attack is carrier C2 754b62fb6adc60e44e12375af5461a0ebe302994 (the freeze plus the six committed control receipts; the receipts pin\nb7241252c2358613d3b22b7d0454d98c56dab373). One earlier freeze/carrier pair (84998563 / (emitted at 84998563, never carried)) was superseded before any scored run and before this\nwave (its defect: self_pin took the pin dict for the pins path); treat F2/C2 as the freeze. The pins table has\n22 rows: the 15 instrument/expectation/claims rows, six receipt rows, and the self row (minus-self digest).\nFrozen predicate set: /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-93/claims.md — read it FIRST, with every kill rule and every\nNAMED LIMIT. Machine form: /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-93/claims.json.\nThree claims, three axes:\nC1 operability (lowest scored, historical 3/10): `python3 -B corpus/evidence/round93/control-driver-r93.py verify\n--root . --repo . --rev b7241252c2358613d3b22b7d0454d98c56dab373 --receipts-rev 754b62fb6adc60e44e12375af5461a0ebe302994 --work <scratch>` prints `CONTROL_DRIVER_R93=PASS`\nwith `COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 PINNED_FILES=22/22 RECEIPT_PINS=6/6`; the battery\n`forgeries-r93.py --root . --repo . --rev b7241252c2358613d3b22b7d0454d98c56dab373 --receipts-rev 754b62fb6adc60e44e12375af5461a0ebe302994 --work <scratch>` prints\n`FORGERY_REFUSED=2/2 PRIOR_ACCEPTED=2/2 DERIVE_OK=1/1 POSITIVE=pass`. Source S070 (installed sha256sum(1),\nre-opened this round, quote \"Print or check SHA256 (256-bit) checksums.\") grounds the digest-pin rule including\nthe minus-self self-pin.\nC2 calibration: `python3 -B corpus/evidence/round93/curation-r93.py --root .` prints `CURATION_R93=PASS` with\n`LEGS_MEASURED=15/15 Q_SHAPE_FAIL=0 Q_WSQUOT=0 Q_ROWS=20 WARRANT_OK=17/17 TFREQ_OK=17/17 DUP_QIDS=0`\nand `curation-controls-r93.py --root . --work <scratch>` prints `CONTROLS=PASS CARRIED_REFUSED_BOTH=4/4\nWS_NAMED=2/2 WS_SHAPE_GREEN_R92=1/1 DUPCOUNT_1=1/1 PRIOR_REGRESSION=7/7`. This claim is CLASSIFICATION, not a\nrefusal r92 lacks: r92 fails the whitespace trees downstream with `Q_SHAPE_FAIL=0`.\nC3 freshness: `python3 -B corpus/evidence/round93/skill-tally-r93.py --root . --selftest\ncorpus/evidence/round93/controls/selftest-r93.txt` prints `SKILL_TALLY_R93=PASS` with `LEGS=4/4\nHIST_DERIVED=2/2 HIST_PRESENT=2/2 TAIL_OK=1 TALLY_ROWS=8 STALE_TALLIES=0/8 CASE_RANGE_OK=2/2 MISLABELED=0`;\n`skill-tally-r93-controls.py --root . --work <scratch>` prints `CONTROLS=PASS OLDPROSE_REFUSED=1/1\nPRIOR_ACCEPTED=1/1 STALE_REFUSED_BOTH=1/1 HIST_REFUSED_BOTH=1/1 TAIL_REFUSED=2/2 TAIL_PRIOR_ACCEPTED=1/1\nTAIL_ADDED_REFUSED=1/1 HIST_UNGROUNDED_REFUSED=1/1`.\n`tools/research-gate.sh` and `tools/gate-records.py` are UNCHANGED this round; SKILL.md is unchanged.\n\nEvery `Report:` trailer path is relative to /home/vgpnk/Projects/shokunin/chousa-shokunin — write it at /home/vgpnk/Projects/shokunin/chousa-shokunin/<that path>. Copy every receipt you cite\ninto your wave output folder before you yield.\nLeaf only: no task tool, no subagents, no agent://all, no production edits, no lane or fleet git/jj mutation, no\ncommits or pushes, no edits to /home/vgpnk/Projects/shokunin/scripts, /home/vgpnk/Projects/shokunin/.ufo/state,\nMANIFEST.json, considerthese/ or any sibling repo. The only files you write are under\n/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-93/w1/ plus your scratch dir. Network: none this round except a re-open an item names;\nevery other check reads committed bytes (an unrequested GET is a finding). Never mutate a host sysctl, never run\nsudo, never restart a host service.\nScratch: every tree, work dir and fixture lives under /fast/scratch/hyaku/chousa-r93/<your seat name>/; create it with `mkdir -p`,\npass it explicitly (`--work`, `TMPDIR=`), delete it before you yield (`trap 'rm -rf -- \"$S\"' EXIT` in shell,\n`finally: shutil.rmtree` in Python). Never write under /tmp. For pin/self-pin checks you need history, so\n`git clone --shared /home/vgpnk/Projects/shokunin/chousa-shokunin <scratch>/repo` and `git -C <scratch>/repo checkout 754b62fb6adc60e44e12375af5461a0ebe302994`. Any fixture git repo\nis `D=$(mktemp -d -p /fast/scratch/hyaku/chousa-r93/<seat>) && test -n \"$D\" && git -C \"$D\" init -q`, every later git call names\n`-C \"$D\"`, and you assert `git -C \"$D\" rev-parse --show-toplevel` equals `$D` before any mutating git command.\nCounter that binds you: every finding names the exact command, the receipt path you wrote and the observed line\nplus exit code. An unrun check has not passed; a deviation from an expected value is a finding, never something\nto hide.\nEnd your report with one line per claim you touched: `VERDICT: <seat> <C1|C2|C3> fired|held|n/a — <one sentence>`\n(plain text, not JSON). A seat that ships no `VERDICT:` trailer is tallied as a seat-discipline finding.\n\nTooling authorization (operator, 2026-10-19): you may install or upgrade tools that help the task; read\n/home/vgpnk/.omp/agent/RULES.md first (official channels only; record tool/version/channel/reason in your report).\npacman guard (orchestrator ruling 2026-10-20): all pacman transactions are PAUSED host-wide — install via `uv tool`/\n`npx`/an official binary in ~/.local/bin, or not at all; never `pacman -Sy`, `-Syu`, `-U`, `-R`, never downgrade.\n",
+    "tasks": [
+      {
+        "name": "R93ExecC1Repro",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\nReproduce frozen C1 from a clean tree. `S=/fast/scratch/hyaku/chousa-r93/R93ExecC1Repro`; `git clone --shared /home/vgpnk/Projects/shokunin/chousa-shokunin $S/repo`\nthen `git -C $S/repo checkout 754b62fb6adc60e44e12375af5461a0ebe302994`. Run, from `$S/repo`:\n(a) `python3 -B corpus/evidence/round93/control-driver-r93.py verify --root . --repo . --rev b7241252c2358613d3b22b7d0454d98c56dab373 --receipts-rev 754b62fb6adc60e44e12375af5461a0ebe302994 --work $S/verify`\n→ record full stdout, the `CONTROL_DRIVER_R93=` line and the exit code; expected `COMMITTED_OK=6/6 EXACT_OK=6/6\nPIN_OK=6/6 FRESH_OK=6/6 PINNED_FILES=22/22 RECEIPT_PINS=6/6` and `RECEIPT SELF_PIN OK rev=b7241252c2358613d3b22b7d0454d98c56dab373 receipts_rev=754b62fb6adc60e44e12375af5461a0ebe302994`.\n(b) `python3 -B corpus/evidence/round93/forgeries-r93.py --root . --repo . --rev b7241252c2358613d3b22b7d0454d98c56dab373 --receipts-rev 754b62fb6adc60e44e12375af5461a0ebe302994 --work $S/forge`\n→ expected `FORGERY_REFUSED=2/2 PRIOR_ACCEPTED=2/2 DERIVE_OK=1/1 POSITIVE=pass`; record each forgery line.\n(c) prove the pin walk is not self-satisfying: take a byte-appended copy of an UNEXECUTED pinned instrument\n(`corpus/evidence/round93/curation-controls-r93.py`) inside a scratch clone and show `PIN_DISK_MISMATCH path=...`\nplus exit 1, while the same tamper is invisible to `corpus/evidence/round92/control-driver-r92.py --expected ...\n--receipts ... --pins ...` on the same tree (rc 0). Then show a tampered receipt body fires `RECEIPT_MISMATCH`.\n(d) prove `verify` writes nothing: `sha256sum corpus/evidence/round93/controls/receipts/*.txt` before and after (a).\nCopy each receipt into your report folder. VERDICT trailer required.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\n\nReport: write your scoped findings to .ufo/waves/round-93/w1/R93ExecC1Repro.md"
+      },
+      {
+        "name": "R93ExecC2Repro",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\nReproduce frozen C2 from a clean tree. `S=/fast/scratch/hyaku/chousa-r93/R93ExecC2Repro`; clone at `754b62fb6adc60e44e12375af5461a0ebe302994`.\nRun, from `$S/repo`:\n(a) `python3 -B corpus/evidence/round93/curation-r93.py --root .` → record stdout + exit; expected `CURATION_R93=PASS`\nwith `LEGS_MEASURED=15/15 Q_ROWS=20 Q_SHAPE_FAIL=0 Q_WSQUOT=0 SOURCE_STATUS_OK=20/20 USED_BY_OK=20/20\nTFREQ_OK=17/17 UNENTAILED_TERM=0 WARRANT_OK=17/17 DUP_QIDS=0`.\n(b) `python3 -B corpus/evidence/round93/curation-controls-r93.py --root . --work $S/ctl` → expected `CONTROLS=PASS\nCARRIED_REFUSED_BOTH=4/4 WS_NAMED=2/2 WS_SHAPE_GREEN_R92=1/1 DUPCOUNT_1=1/1 PRIOR_REGRESSION=7/7`.\n(c) independently measure the WSQUOTE class claim: build your OWN whitespace-quote tree (do not reuse the\ncontrols' helper) by copying the two routed entries plus `corpus/SOURCES.md` and symlinking `corpus/captures`,\nreplace one Located-quotes quote cell with a single space, then run the R92 counter and the R93 counter on it.\nReport: r92 `Q_SHAPE_FAIL=` value and its `LEG_FAIL` lines; r93 `Q_SHAPE_FAIL=`, `Q_WSQUOT=`, the named\n`quote=<whitespace>` shape line and its `LEG_FAIL` lines. The claim is classification, so also say which legs\nrefused the tree in each counter.\n(d) count the two routed entries' Located-quote rows (13 and 7, width 3) and Decision-table rows (11 and 6, width 4)\nby hand, independent of the counter; report the tables.\nCopy receipts into your report folder. VERDICT trailer required.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\n\nReport: write your scoped findings to .ufo/waves/round-93/w1/R93ExecC2Repro.md"
+      },
+      {
+        "name": "R93ExecC3Repro",
+        "agent": "executor",
+        "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\nReproduce frozen C3 from a clean tree. `S=/fast/scratch/hyaku/chousa-r93/R93ExecC3Repro`; clone at `754b62fb6adc60e44e12375af5461a0ebe302994`.\nRun, from `$S/repo`:\n(a) `python3 -B corpus/evidence/round93/skill-tally-r93.py --root . --selftest corpus/evidence/round93/controls/selftest-r93.txt`\n→ expected `SKILL_TALLY_R93=PASS` with `TALLY_ROWS=8 STALE_TALLIES=0/8 CASE_RANGE_OK=2/2 MISLABELED=0\nHIST_DERIVED=2/2 HIST_PRESENT=2/2 TAIL_TALLIES=2 OTHERS_OK=1 TAIL_OK=1 LEGS=4/4`.\n(b) `python3 -B corpus/evidence/round93/skill-tally-r93-controls.py --root . --work $S/ctl` → expected `CONTROLS=PASS\nOLDPROSE_REFUSED=1/1 PRIOR_ACCEPTED=1/1 STALE_REFUSED_BOTH=1/1 HIST_REFUSED_BOTH=1/1 TAIL_REFUSED=2/2\nTAIL_PRIOR_ACCEPTED=1/1 TAIL_ADDED_REFUSED=1/1 HIST_UNGROUNDED_REFUSED=1/1`.\n(c) prove the derivation is not decorative, independently of the controls battery: copy `SKILL.md` plus the two\ngrounding receipts into scratch, (i) change the `161` tally's grounding line in\n`corpus/evidence/round25-final-measure.log` → expect `HIST_DERIVED=1/2` and exit 1; (ii) delete the `215` tail\ntally from the copy → expect `TAIL_OK=0` and exit 1 while the r92 counter still exits 0; (iii) append an\nundeclared tail tally → expect `HIST_SCOPE_BLEED` and exit 1 while r92 exits 0.\n(d) re-derive the multiset by hand from `SKILL.md` alone (`## Gates` to the next depth<=2 heading; non-current\n`PASS (N cases, M skipped)` cells) and list every tally inside and outside the scope with its line number.\nCopy receipts into your report folder. VERDICT trailer required.\n\nLane bounds: leaf member — no subagent dispatch except your single labrat.\n\nReport: write your scoped findings to .ufo/waves/round-93/w1/R93ExecC3Repro.md"
+      },
+      {
+        "name": "R93ExecMutations",
+        "agent": "mutation-tester",
+        "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\nMutation battery on the three r93 instruments. `S=/fast/scratch/hyaku/chousa-r93/R93ExecMutations`; `git clone --shared /home/vgpnk/Projects/shokunin/chousa-shokunin $S/repo`;\ncheckout `754b62fb6adc60e44e12375af5461a0ebe302994`. Mutate COPIES under `$S` only; never edit the lane.\nFor each mutant, copy the instrument into `$S/mut/<id>/`, apply one textual change, run the matching counter on\n`$S/repo` (with `--selftest` for C3, and `--root . --repo . --rev b7241252c2358613d3b22b7d0454d98c56dab373 --receipts-rev 754b62fb6adc60e44e12375af5461a0ebe302994` for C1),\nand record the verdict line + exit code.\nC1 mutants: M1 `pin_report` skips rows whose path it cannot resolve (silent `continue`); M2 `receipt_pins` counts a\nreceipt without comparing its bytes; M3 `self_pin` compares receipt rows at `rev` instead of `receipts_rev`;\nM4 the `--root` derivation is reverted to `HERE`-based defaults.\nC2 mutants: M5 `q_shape_violation` restores the r92 ordering (strip whitespace before quotes only);\nM6 the WSQUOTE leg is deleted while `EXPECTED_LEGS` stays 15; M7 `Q_WSQUOT` counts only rows that passed shape;\nM8 `EXPECTED_LEGS` is lowered to 14 with the leg deleted (the r92 hole).\nC3 mutants: M9 the historical multiset is a frozen literal again (`('161', '0')` / `('256', '0')`); M10 the\nreceipt grounding check is deleted (`HIST_DERIVED` always 2/2); M11 the tail scan is deleted (`TAIL_OK` always 1).\nAlso one control: M12 a mutant that only renames a local variable (must SURVIVE and be reported as a survivor,\nproving the battery is not a blanket refusal). Report `MUTANTS_KILLED=n/12 SURVIVORS=m/12` with the exact command,\nobserved verdict and exit per mutant. VERDICT trailer required.\n\nLane bounds: leaf member — no subagent dispatch.\n\nReport: write your scoped findings to .ufo/waves/round-93/w1/R93ExecMutations.md"
+      },
+      {
+        "name": "R93RevPrior",
+        "agent": "revenger",
+        "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\nIndependently reproduce the BEFORE state the three claims rest on, from committed bytes only.\n`S=/fast/scratch/hyaku/chousa-r93/R93RevPrior`; `git clone --shared /home/vgpnk/Projects/shokunin/chousa-shokunin $S/repo` and `git -C $S/repo checkout 754b62fb6adc60e44e12375af5461a0ebe302994`.\n(a) C1 before, by executing the r92 driver's own functions on the r93 pins table: show (i) `pin_report`'s wanted\nset covers only the six executed instruments plus expectations and pins (cite the lines, print `PINNED_FILES=7`),\n(ii) `receipt_pins` does not exist in r92 and receipts are read but unpinned (show a tampered receipt accepted,\nrc 0, on a scratch copy), (iii) the r92 `--expected/--receipts/--pins` defaults are `HERE`-relative\n(`DEFAULT_*` lines) and a `--root <archive>` run without explicit paths exits non-zero with `escapes base`.\n(b) C2 before: on a whitespace-quote tree you build yourself, show r92 prints `Q_SHAPE_FAIL=0` and refuses only\ndownstream; state which legs fired. Also show r92 has no `Q_WSQUOT` field anywhere in its source (`grep -c`).\n(c) C3 before: show r92's `EXPECTED_OTHERS` is a frozen literal (cite the line) and that a tail-tally change\n(`215` → `214`) leaves r92 at rc 0.\n(d) Compare your findings with `corpus/evidence/round93/claims.md`'s Before paragraphs and report any disagreement\nwith the exact line. VERDICT trailer required.\n\nLane bounds: leaf member — no subagent dispatch.\n\nReport: write your scoped findings to .ufo/waves/round-93/w1/R93RevPrior.md"
+      },
+      {
+        "name": "R93ReviewerC1",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\nAttack C1's frozen sentence against the committed code and receipts. `S=/fast/scratch/hyaku/chousa-r93/R93ReviewerC1`;\nclone at `754b62fb6adc60e44e12375af5461a0ebe302994`, read `corpus/evidence/round93/control-driver-r93.py`, `forgeries-r93.py`,\n`corpus/evidence/round93/instrument-pins.txt` and `/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-93/claims.md` C1.\nFindings must be concrete: (1) does `PINNED_FILES=22/22` really cover all 22 rows, or does some row escape the\nwalk (e.g. a row whose file is the pins file, a path outside `--root`, a directory)? (2) Is the self row's\nminus-self digest actually load-bearing (can a rewrite of another row keep it green)? (3) Can a receipt be\ncounted as pinned while its row is stale? (4) Does `passed` really require `checked == len(pins)` and\n`rchecked == rtotal`? (5) Is the `--root` derivation genuinely `--root`-relative in every branch (emit and\nverify), or does any branch still read `HERE`? (6) Are the two forgeries in the battery the *cheapest*\ninteresting ones, or does an easier class survive (e.g. an expected row deleted, a pin row for an absent file)?\nFor each: name the line, the command you ran, the observed output and whether it FIRES or HOLDS. Do not edit the\nlane. VERDICT trailer required.\n\nLane bounds: leaf member — no subagent dispatch.\n\nReport: write your scoped findings to .ufo/waves/round-93/w1/R93ReviewerC1.md"
+      },
+      {
+        "name": "R93ReviewerC2",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\nAttack C2's frozen sentence against the committed code and receipts. `S=/fast/scratch/hyaku/chousa-r93/R93ReviewerC2`;\nclone at `754b62fb6adc60e44e12375af5461a0ebe302994`, read `curation-r93.py`, `curation-controls-r93.py` and claims C2.\nFindings must be concrete: (1) is `Q_WSQUOT` counting the intended population (three-cell rows whose quote\nstrips to empty) and can it be made to fire on a CLEAN registry-shaped row? (2) Does the WSQUOTE leg fail for the\nright reason on each of the two whitespace trees, and would a four-cell whitespace row be counted? (3) Is\n`EXPECTED_LEGS=15` actually load-bearing (delete the leg from a copy and show the verdict changes)? (4) Does the\n`DECISION_WIDTH` print line fire for a wrong-width row, and is it only observability (i.e. does the verdict\nalready fail without it)? (5) Does the controls battery's `WS_SHAPE_GREEN_R92` assertion hold if r92's shape test\nchanges? (6) Is the \"classification not refusal\" framing honest — i.e. does any part of the claim still imply\nr92 accepts those trees? Quote the claim line and say so.\nFor each: name the line, the command, the observed output and FIRES or HOLDS. Do not edit the lane. VERDICT\ntrailer required.\n\nLane bounds: leaf member — no subagent dispatch.\n\nReport: write your scoped findings to .ufo/waves/round-93/w1/R93ReviewerC2.md"
+      },
+      {
+        "name": "R93ReviewerC3",
+        "agent": "reviewer",
+        "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\nAttack C3's frozen sentence against the committed code and receipts. `S=/fast/scratch/hyaku/chousa-r93/R93ReviewerC3`;\nclone at `754b62fb6adc60e44e12375af5461a0ebe302994`, read `skill-tally-r93.py`, `skill-tally-r93-controls.py` and claims C3.\nFindings must be concrete: (1) do the two grounding quotes really appear in the named receipts at the named\nlines, and does the counter require the *quote* (not just the file)? (2) Can `HIST_DERIVED` be 2/2 while a\ngrounding receipt is absent (path resolution, symlink, `--root` escape)? (3) Does `HIST_PRESENT` really require\nthe tally inside the Gates scope, and is `declared` the derived multiset (not a literal)? (4) Does the tail scan\nstart exactly at the scope end offset (no off-by-one, no duplicate-line blindness)? (5) Would a tally moved from\ninside the scope to outside it be refused (i.e. is `TAIL_DECLARED` not a loophole)? (6) Does `case-range` still\nbind at the landing bytes, and does the enumeration pin still hold at 283 cases?\nFor each: name the line, the command, the observed output and FIRES or HOLDS. Do not edit the lane. VERDICT\ntrailer required.\n\nLane bounds: leaf member — no subagent dispatch.\n\nReport: write your scoped findings to .ufo/waves/round-93/w1/R93ReviewerC3.md"
+      },
+      {
+        "name": "R93CriticClaims",
+        "agent": "critic",
+        "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\nFalsify the three claims as *claims*: freeze integrity, control discipline, sizing. `S=/fast/scratch/hyaku/chousa-r93/R93CriticClaims`;\nclone at `754b62fb6adc60e44e12375af5461a0ebe302994`.\n(1) Freeze integrity: recompute every sha256 in `corpus/evidence/round93/instrument-pins.txt` against the blobs at\n`b7241252c2358613d3b22b7d0454d98c56dab373` and `754b62fb6adc60e44e12375af5461a0ebe302994` (which rows belong to which revision, per the driver's own rule), and the minus-self\ndigest from the committed file. Report any row whose base is wrong or whose digest cannot be re-derived.\n(2) Does any claim assert a value its counter does not print? Check each numeric token in claims C1/C2/C3 against\nthe counter source's printed fields (quote the print statement). \n(3) Is any claim reachable by a do-nothing control? For each claim, describe the cheapest control that does no\nwork and say whether it meets the after-state; C2 is explicitly a classification claim, so say whether its\nafter-state (`Q_SHAPE_FAIL=1 Q_WSQUOT=1` named) is reachable without the landed code.\n(4) Are the claims causally separable — is each verifiable with the others' instruments absent or reverted?\n(5) Any universal clause (\"all\", \"every\", \"no ... anywhere\") that the counting command does not enumerate?\n(6) Does the round's own §9 discipline hold: predicate frozen before scoring, no target narrowed after landing?\nQuote the claim line for every finding. VERDICT trailer required.\n\nLane bounds: leaf member — no subagent dispatch.\n\nReport: write your scoped findings to .ufo/waves/round-93/w1/R93CriticClaims.md"
+      },
+      {
+        "name": "R93SentinelScope",
+        "agent": "sentinel",
+        "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\nPerimeter and harm review of the round's committed surface. `S=/fast/scratch/hyaku/chousa-r93/R93SentinelScope`; clone at `754b62fb6adc60e44e12375af5461a0ebe302994`.\n(1) Scope: list every path in `git diff --name-only 206226dc9d9baef620e7d3d30bdac5f9194a459f..754b62fb6adc60e44e12375af5461a0ebe302994` and say whether each is inside the lane's\nwrite scope (lane repo files only); flag anything touching `tools/`, `corpus/SOURCES.md`,\n`corpus/knowledge/`, `SKILL.md`, `MANIFEST.json`, sibling repos, the fleet root, `.scratch/`, `.ufo/state/`.\n(2) Harm: run the subject tools unchanged — `bash tools/research-gate.sh --selftest` tail (expect\n`PASS (283 cases, 0 skipped)`) and `python3 -B tools/gate-records.py verify` if it has a read-only mode over the\nround's lesson; report exit codes. Confirm `git diff 206226dc9d9baef620e7d3d30bdac5f9194a459f..754b62fb6adc60e44e12375af5461a0ebe302994 -- tools/` is empty.\n(3) Credential/secret shape: scan the new files for material that looks like a live credential, private key,\ntoken or absolute home path outside the lane (report file:line; do not print any suspect value in full).\n(4) Confinement: does the driver's `verify` path ever write outside `--work`? Does `emit` refuse without\n`--receipts`? Does any new tool write under `/tmp` regardless of TMPDIR/`--work`?\n(5) Host safety: confirm no new file mutates sysctls, runs sudo, or restarts a service.\nReport findings with file:line and observed command output; FIRES/HOLDS per item. VERDICT trailer required.\n\nLane bounds: leaf member — no subagent dispatch.\n\nReport: write your scoped findings to .ufo/waves/round-93/w1/R93SentinelScope.md"
+      },
+      {
+        "name": "R93ConnectorSiblings",
+        "agent": "connector",
+        "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\nSibling-overlap scan, read-only. `S=/fast/scratch/hyaku/chousa-r93/R93ConnectorSiblings`; no writes outside your scratch dir and\n`/home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-93/w1/`.\n(1) Scan the sibling lane repos under `/home/vgpnk/Projects/shokunin/*-shokunin/corpus/evidence/` for a\npins-table walk, a receipt-pin mechanism, a whitespace-quote shape rule, or a historical-tally derivation that\nthis round re-invents. Report the closest match per pattern with path:line, and say whether chousa's version is\ndistinct or a duplicate of a sibling's (a duplicate is a finding).\n(2) Cross-lane checkpoint ledger convention: does any sibling record an evidence-directory-wide pin table with a\nminus-self row? Quote it.\n(3) Report any sibling rule that chousa's new instruments violate (e.g. a shared QUALITY criterion about\n`--root`-relative defaults or about evidence naming). Read-only: change nothing in a sibling repo.\nVERDICT trailer required.\n\nLane bounds: leaf member — no subagent dispatch.\n\nReport: write your scoped findings to .ufo/waves/round-93/w1/R93ConnectorSiblings.md"
+      },
+      {
+        "name": "R93ScoutSources",
+        "agent": "scout",
+        "task": "/skill:godspeed\n\nYou are a Godspeed-enabled subagent.\n\n1. **Name the axes.**\n2. **Iterate cheap, in parallel.**\n3. **Keep moves that improve any axis and harm none.**\n4. **Don't aim — let the frontier walk itself.**\n\n## IMMEDIATELY STOP ASKING CLARIFYING QUESTIONS. Execute tool calls concurrently in large batches. Do not serialize what can run in parallel. Do not output philosophical reasoning or verbose plans. Act directly via tool calls.\nPer-surface reconnaissance of the registry and the sources the claims cite. `S=/fast/scratch/hyaku/chousa-r93/R93ScoutSources`;\nclone at `754b62fb6adc60e44e12375af5461a0ebe302994`.\n1. Re-open S070's premise from committed bytes and the installed page: `/usr/share/man/man1/sha256sum.1.gz`\n   sha256 (expect `93c17dffe9f25d56291113d566a7de3ff65c29f8cc32c381801c49cf27e8403f`), the exact line carrying\n   \"Print or check SHA256 (256-bit) checksums.\", and the registry row's anchor and `teaches` cells. Report match or\n   drift with the exact cell text.\n2. Re-open S001 (own-work chain row): find the tool line its Gate names, quote it, and report whether the row's\n   `recheck` cell names round 92 or round 93 (the round plans to move it 92 → 93; report the current value).\n3. Verify every source cited by the two routed entries' Located-quotes rows: S214, S018, S023, S215, S026, S031 —\n   `status=mined` and `used-by` token-naming the citing entry; report any drift with the exact cell.\n4. Census: `bash /home/vgpnk/Projects/shokunin/scripts/sources-census.sh validate --root\n   /home/vgpnk/Projects/shokunin chousa` → exit code; row count via\n   `grep -cE '^ (0, 3)\\|[[:space:]]*S[0-9](3,)' corpus/SOURCES.md`; list the W04 warnings.\nReport commands, lines, exits; no edits. VERDICT trailer required.\n\nLane bounds: leaf member — no subagent dispatch.\n\nReport: write your scoped findings to .ufo/waves/round-93/w1/R93ScoutSources.md"
+      }
+    ]
+  },
+  "resumeSends": [],
+  "note": "Issue exactly one batched task call with taskCall ({context, tasks}); never split a wave into multiple task calls (one-swarm-per-wave). Then one hub send per resumeSends entry: hub send --to <entry.resume> --message <entry.message> (entry.name is bookkeeping, not a hub field)."
+}

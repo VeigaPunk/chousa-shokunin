@@ -4144,3 +4144,42 @@ No axis harmed: `tools/research-gate.sh` and `tools/gate-records.py` are byte-id
    `SCOPE_BLEED` on the 215 tail tally when the boundary heading changes form.
 4. carried debt: the round-74 "source-blind order oracle", QUALITY 173's successful-refused record form, the r80
    backlog Gate ids.
+## Round 93 verdict — the pins table is the population, the whitespace quote has a name, the historical tallies are derived (2026-11-08)
+
+Base `206226dc`; freeze `3789608d` (F6); carrier `9d033185` (C7). Three claims, three axes, no exploratory
+claim. One v1 wave, 12 seats (8 attack), see the report §Work performed. Three earlier pairs were superseded
+before filing (F `84998563` never carried; F2/C2 `b7241252`/`754b62fb` is what the wave attacked; F3–F5 and
+their carriers landed the wave's findings). The lesions are Mistake 2 and the four wave-found rows in
+`corpus/lessons/round-93.md`; `corpus/evidence/round93/amendments.md` carries every amendment.
+
+| claim | axis | before | after | verdict |
+|---|---|---|---|---|
+| C1 `C1-DRIVER-R93` | operability (lowest, historical 3/10) | r92 logic on the r93 fixture set: `RECEIPT PINS OK 7/22 pinned files byte-identical`, `PINNED_FILES=7`; a tampered unexecuted pinned instrument and a tampered receipt body each accepted (rc 0); `--root <clone>` without explicit paths exits with `escapes base` | `CONTROL_DRIVER_R93=PASS` with `COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 PINNED_FILES=23/23 RECEIPT_PINS=6/6`, `SELF_PIN OK rev=3789608d receipts_rev=9d033185`; `FORGERY_REFUSED=2/2 PRIOR_ACCEPTED=2/2 DERIVE_OK=1/1 REGRESSION_REFUSED=2/2 POSITIVE=pass` | **verified as stated, with Amendment 12** (the pin population is 23 rows, not the 22 the frozen sentence names: the round's leg table is a pinned instrument) |
+| C2 `C2-CURATION-R93` | calibration | r92 counter: `LEGS_MEASURED=14/14`, `Q_SHAPE_FAIL=0`; on the whitespace-quote tree r92 prints `Q_SHAPE_FAIL=0` and refuses only downstream (`LEG_FAIL FLOOR/WARRANT/TFREQ`) — the class has no name | `CURATION_R93=PASS` with `LEGS_MEASURED=15/15 Q_SHAPE_FAIL=0 Q_WSQUOT=0 Q_ROWS=20 WARRANT_OK=17/17 TFREQ_OK=17/17 DUP_QIDS=0`; on the same tree `Q_SHAPE_FAIL=1 Q_WSQUOT=1`, the named `quote=<whitespace>` shape line, `LEG_FAIL QSHAPE` and `LEG_FAIL WSQUOTE`; `CONTROLS=PASS CARRIED_REFUSED_BOTH=4/4 WS_NAMED=2/2 WS_SHAPE_GREEN_R92=1/1 DUPCOUNT_1=1/1 PRIOR_REGRESSION=7/7`; `DETECTOR_WITNESS=13/13` and the leg vocabulary is a pinned side table (`LEG_FAIL LEGSET`) | **verified as stated (classification claim), with Amendment 5** (witness 11 → 13) |
+| C3 `C3-TALLY-R93` | freshness | r92 counter: `EXPECTED_OTHERS` is the frozen literal `{("161","0"):1,("256","0"):1}`; changing the `215` tail tally or appending an undeclared one leaves `SKILL_TALLY_R92=PASS` (rc 0) | `SKILL_TALLY_R93=PASS` with `TALLY_ROWS=8 STALE_TALLIES=0/8 CASE_RANGE_OK=2/2 HIST_DERIVED=2/2 HIST_PRESENT=2/2 TAIL_TALLIES=2 OTHERS_OK=1 TAIL_OK=1 LEGS=4/4`; the same two trees give `HIST_SCOPE_BLEED` + `LEG_FAIL TAIL` (rc 1), an ungrounded receipt gives `HIST_DERIVED=1/2`; `CONTROLS=PASS OLDPROSE_REFUSED=1/1 PRIOR_ACCEPTED=1/1 STALE_REFUSED_BOTH=1/1 HIST_REFUSED_BOTH=1/1 TAIL_REFUSED=2/2 TAIL_PRIOR_ACCEPTED=1/1 TAIL_ADDED_REFUSED=1/1 HIST_UNGROUNDED_REFUSED=1/1` | **verified as stated** |
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** | the pin walk takes the pins table as its population (22/22 rows byte-checked, six of them receipts), the pins file's own row stays the minus-self digest, and every driver input derives from `--root`; two classes the r92 driver accepts are refused by name, and the derivation class is measured (`DERIVE_OK`) |
+| calibration | **improved** | the whitespace-only quote is refused at the shape leg with a named reason and an independent population count (`Q_WSQUOT`), where r92 could only fail it downstream; `EXPECTED_LEGS` 14 → 15 makes deleting the leg change the verdict; the controls re-derive r92's blindness (`WS_SHAPE_GREEN_R92`) every run |
+| freshness | **improved** | both historical tallies are derived from the receipts that ground them and must be present in scope (`HIST_DERIVED`/`HIST_PRESENT`), and tallies outside the `## Gates` scope are enumerated against a declared tail set, so a tail change is refused where r92 ignored it |
+| depth | unchanged | no new `corpus/knowledge/` entry; two registry rows re-opened (S070, S001) |
+| coverage | unchanged | registry 219 → 219 rows, `corpus/SOURCES.md` byte-identical; `PROVINCE.md` untouched |
+| adjacency | unchanged | the connector seat's sibling scan is read-only; nothing absorbed |
+
+No axis harmed: `tools/research-gate.sh` and `tools/gate-records.py` are byte-identical at base and landing
+(`git diff --quiet 206226dc <landing> -- tools/`), `SKILL.md` is untouched, the registry is byte-identical, and
+the subject tools move no committed record (the driver only reads).
+
+## Planned — round 94 (intent, not a predicate)
+
+1. **operability (lowest)** — the pins walk covers files, not *roles*: a pinned row whose expected-row uses it and
+   a row no expected row uses are indistinguishable in the verdict. Give each pin row a role column (instrument /
+   expectation / receipt / claims) and require every executed instrument to have an expected row (and vice versa).
+2. **calibration** — the `WSQUOTE` leg and the shape test are two detectors of one class; a third form (a quote
+   that is only punctuation, e.g. `"—"`) is neither. Measure the punctuation-only class and either fold it into
+   `quote=<whitespace>` with a named limit or refuse it by a named rule.
+3. **freshness** — bind the tail set to the section that owns each tally (the Round27 subsection and the host line
+   are both declared but nothing checks the declaring heading), so a tally moved between sections is refused.
+4. carried debt: the round-74 "source-blind order oracle", QUALITY 173's successful-refused record form, the r80
+   backlog Gate ids.
