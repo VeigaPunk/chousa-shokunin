@@ -1,0 +1,56 @@
+# R88SentinelScope — receipt C: scope — freeze commit contents and fleet-root porcelain
+# cmd: git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show --stat 4ea9d008abfd2e09cb51649a42678a78f52ac530
+commit 4ea9d008abfd2e09cb51649a42678a78f52ac530
+Author: chousa-shokunin <chousa@shokunin.local>
+Date:   Sun Nov 8 04:29:32 2026 -0300
+
+    round-88: freeze — two claims (203 binding + receipt reconciliation, curation four-leg close), counters, control batteries, expectations, pre-freeze receipts, pins, provenance row repair
+
+ corpus/evidence/round88/c1-positives.tsv           |  15 +
+ corpus/evidence/round88/census-start.txt           |   8 +
+ corpus/evidence/round88/claims.md                  | 113 ++++
+ corpus/evidence/round88/controls/expected.tsv      |   8 +
+ .../evidence/round88/controls/receipts/c1-harm.txt |   1 +
+ .../round88/controls/receipts/c1-k0-donothing.txt  |   3 +
+ .../controls/receipts/c1-k0b-frozen-instrument.txt |   2 +
+ .../round88/controls/receipts/c1-mutants.txt       |  36 ++
+ .../round88/controls/receipts/c2-controls.txt      |  20 +
+ .../round88/controls/receipts/c2-d0-donothing.txt  |   3 +
+ corpus/evidence/round88/curation-r88-controls.py   | 217 +++++++
+ corpus/evidence/round88/curation-r88.py            | 299 ++++++++++
+ corpus/evidence/round88/gate-records-r88.py        | 639 +++++++++++++++++++++
+ corpus/evidence/round88/harm-recheck.py            |  60 ++
+ corpus/evidence/round88/instrument-pins.txt        |  16 +
+ corpus/evidence/round88/mutate-r88.py              | 175 ++++++
+ corpus/knowledge/provenance-recording-r85.md       |   2 +-
+ plans/round-88.md                                  |  82 +++
+ 18 files changed, 1698 insertions(+), 1 deletion(-)
+# exit=0
+
+# cmd: git -C /home/vgpnk/Projects/shokunin/chousa-shokunin show --name-only --format= 4ea9d008abfd2e09cb51649a42678a78f52ac530 | grep -v '^corpus/\|^plans/'
+# exit=1 (1 = every path under corpus/ or plans/)
+
+# cmd: git -C /home/vgpnk/Projects/shokunin status --porcelain
+ M .scratch/goal-20261103-hyaku-run15.md
+ M .scratch/run15-state.json
+ M .ufo/l0-questions.md
+?? .scratch/closure-tabi-r83-entry.json
+?? .scratch/run15-wrapup/misroot-cff0b4cb/
+?? .ufo/reports/round-100/mado.md
+?? corpus/
+# exit=0
+
+# cmd: git -C /home/vgpnk/Projects/shokunin/chousa-shokunin status --porcelain   (lane worktree)
+?? .ufo/waves/round-88/
+# exit=0
+
+# cmd: git -C /home/vgpnk/Projects/shokunin check-ignore -v chousa-shokunin
+.gitignore:1:*-shokunin/	chousa-shokunin
+# exit=0
+
+# cmd: git -C /home/vgpnk/Projects/shokunin/chousa-shokunin log -1 --format='AUTHOR:%an <%ae>%nCOMMITTER:%cn <%ce>%nDATE:%aI%nCDATE:%cI' 4ea9d008
+AUTHOR:chousa-shokunin <chousa@shokunin.local>
+COMMITTER:chousa-shokunin <chousa@shokunin.local>
+DATE:2026-11-08T04:29:32-03:00
+CDATE:2026-11-08T04:47:02-03:00
+# exit=0

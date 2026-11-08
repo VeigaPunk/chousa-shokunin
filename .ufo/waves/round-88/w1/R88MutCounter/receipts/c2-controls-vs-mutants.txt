@@ -1,0 +1,86 @@
+controls battery (curation-r88-controls.py) with each M-mutant in place of curation-r88.py
+one run per mutant on one scratch tree layout: <mut>/curation-r88.py, <mut>/curation-r88-controls.py,
+ctl/round87/curation-r87.py; --root is the lane checkout. Each mutant keeps the landing tree PASS; only the
+forgery case that exercises the deleted leg deviates (and r87 still accepts 5/5), so the controls battery,
+not the counter's own predicate, is the leg's detector.
+source: /home/vgpnk/Projects/shokunin/chousa-shokunin/.ufo/waves/round-88/w1/R88MutCounter/mutate-r88-ext.py
+
+== M1-WARRANT-any  rc=1
+OK POSITIVE: positive accepted by both
+OK A1c-junk-substitute: refused by r88 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by r87
+OK A1d-truncate: refused by r88 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by r87
+OK caseG-relabel: refused by r88 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by r87
+OK F2-rejected-superseder: refused by r88 (LEG_FAIL TEACHES checked=1 flagged=1 unresolved=1 sup_unresolved=0), accepted by r87
+CASE_DEVIATION B1b-padding-qid: NOT refused by r88 or NOT accepted by r87
+FORGERY_REFUSED=4/5 R87_ACCEPTED_FORGERY=5/5
+CONTROLS=FAIL
+
+== M2-FLOOR-qidset-drop  rc=1
+OK POSITIVE: positive accepted by both
+OK A1c-junk-substitute: refused by r88 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by r87
+OK A1d-truncate: refused by r88 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by r87
+CASE_DEVIATION caseG-relabel: NOT refused by r88 or NOT accepted by r87
+OK F2-rejected-superseder: refused by r88 (LEG_FAIL TEACHES checked=1 flagged=1 unresolved=1 sup_unresolved=0), accepted by r87
+OK B1b-padding-qid: refused by r88 (LEG_FAIL WARRANT 16/17), accepted by r87
+FORGERY_REFUSED=4/5 R87_ACCEPTED_FORGERY=5/5
+CONTROLS=FAIL
+
+== M3-MIN-TOKENS-1  rc=1
+OK POSITIVE: positive accepted by both
+OK A1c-junk-substitute: refused by r88 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by r87
+CASE_DEVIATION A1d-truncate: NOT refused by r88 or NOT accepted by r87
+OK caseG-relabel: refused by r88 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by r87
+OK F2-rejected-superseder: refused by r88 (LEG_FAIL TEACHES checked=1 flagged=1 unresolved=1 sup_unresolved=0), accepted by r87
+OK B1b-padding-qid: refused by r88 (LEG_FAIL WARRANT 16/17), accepted by r87
+FORGERY_REFUSED=4/5 R87_ACCEPTED_FORGERY=5/5
+CONTROLS=FAIL
+
+== M4-FLOOR-floor-drop  rc=0
+OK POSITIVE: positive accepted by both
+OK A1c-junk-substitute: refused by r88 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by r87
+OK A1d-truncate: refused by r88 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by r87
+OK caseG-relabel: refused by r88 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by r87
+OK F2-rejected-superseder: refused by r88 (LEG_FAIL TEACHES checked=1 flagged=1 unresolved=1 sup_unresolved=0), accepted by r87
+OK B1b-padding-qid: refused by r88 (LEG_FAIL WARRANT 16/17), accepted by r87
+FORGERY_REFUSED=5/5 R87_ACCEPTED_FORGERY=5/5
+CONTROLS=PASS
+
+== M5-TEACHES-any-superseder  rc=1
+OK POSITIVE: positive accepted by both
+OK A1c-junk-substitute: refused by r88 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by r87
+OK A1d-truncate: refused by r88 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by r87
+OK caseG-relabel: refused by r88 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by r87
+CASE_DEVIATION F2-rejected-superseder: NOT refused by r88 or NOT accepted by r87
+OK B1b-padding-qid: refused by r88 (LEG_FAIL WARRANT 16/17), accepted by r87
+FORGERY_REFUSED=4/5 R87_ACCEPTED_FORGERY=5/5
+CONTROLS=FAIL
+
+== M6-DEF-CITED-forced  rc=0
+OK POSITIVE: positive accepted by both
+OK A1c-junk-substitute: refused by r88 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by r87
+OK A1d-truncate: refused by r88 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by r87
+OK caseG-relabel: refused by r88 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by r87
+OK F2-rejected-superseder: refused by r88 (LEG_FAIL TEACHES checked=1 flagged=1 unresolved=1 sup_unresolved=0), accepted by r87
+OK B1b-padding-qid: refused by r88 (LEG_FAIL WARRANT 16/17), accepted by r87
+FORGERY_REFUSED=5/5 R87_ACCEPTED_FORGERY=5/5
+CONTROLS=PASS
+
+== M7-UNENTAILED-dead  rc=0
+OK POSITIVE: positive accepted by both
+OK A1c-junk-substitute: refused by r88 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by r87
+OK A1d-truncate: refused by r88 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by r87
+OK caseG-relabel: refused by r88 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by r87
+OK F2-rejected-superseder: refused by r88 (LEG_FAIL TEACHES checked=1 flagged=1 unresolved=1 sup_unresolved=0), accepted by r87
+OK B1b-padding-qid: refused by r88 (LEG_FAIL WARRANT 16/17), accepted by r87
+FORGERY_REFUSED=5/5 R87_ACCEPTED_FORGERY=5/5
+CONTROLS=PASS
+
+== M8-SUPERSEDED-dead  rc=0
+OK POSITIVE: positive accepted by both
+OK A1c-junk-substitute: refused by r88 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by r87
+OK A1d-truncate: refused by r88 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by r87
+OK caseG-relabel: refused by r88 (LEG_FAIL FLOOR search-transparency-reporting-r84.md=13/13 floor13,provenance-recording-r85.md=7/7 floor7), accepted by r87
+OK F2-rejected-superseder: refused by r88 (LEG_FAIL TEACHES checked=1 flagged=1 unresolved=1 sup_unresolved=0), accepted by r87
+OK B1b-padding-qid: refused by r88 (LEG_FAIL WARRANT 16/17), accepted by r87
+FORGERY_REFUSED=5/5 R87_ACCEPTED_FORGERY=5/5
+CONTROLS=PASS

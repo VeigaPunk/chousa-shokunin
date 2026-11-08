@@ -1,0 +1,27 @@
+# R88SentinelScope — receipt H: control receipt <-> controls/expected.tsv mapping
+# cmd: awk -F'\t' 'NR>1{print $1}' corpus/evidence/round88/controls/expected.tsv
+c1-do-nothing
+c1-frozen-instrument
+c1-landing
+c1-mutants
+c1-harm
+c2-controls
+c2-landing
+# --- shipped receipts ---
+c1-harm.txt
+c1-k0-donothing.txt
+c1-k0b-frozen-instrument.txt
+c1-mutants.txt
+c2-controls.txt
+c2-d0-donothing.txt
+# cmd: grep -c 'c2-do-nothing\|c2-d0' corpus/evidence/round88/controls/expected.tsv
+0
+# exit=1 (1 = no row for the shipped c2-d0-donothing.txt receipt)
+# cmd: grep -n -A2 'Before (committed controls)' corpus/evidence/round88/claims.md
+56:**Before (committed controls).** `controls/receipts/c1-k0-donothing.txt`: the round-88 battery pointed at the
+57-pre-round-88 tool … plus the round-87 battery, which cannot bind the class to 203 (its derivations accept non-200).
+58-Measured at the freeze below.
+--
+98:**Before (committed controls).** `controls/receipts/c2-controls.txt`: `FORGERY_REFUSED=5/5 R87_ACCEPTED_FORGERY=5/5` —
+99-each forgery is refused by `curation-r88.py` with a named `LEG_FAIL` and accepted by the frozen `curation-r87.py`.
+100-`controls/receipts/c2-d0-donothing.txt`: the round-87 counter on the round-88 tree prints `CURATION_R87=PASS` — the

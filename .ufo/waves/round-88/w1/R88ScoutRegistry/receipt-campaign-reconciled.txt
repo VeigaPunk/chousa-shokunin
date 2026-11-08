@@ -1,0 +1,11 @@
+RECONCILED over 113 well-formed campaign rows (+1 malformed S097 with 13 fields):
+  A same_id + same_url (harmless duplicate)          = 4  ['S100', 'S101', 'S102', 'S103']
+  B same_id different_source, url also in lane under other id = 57
+  C same_id different_source, url NOT in lane        = 52
+  D id not in lane                                   = 0
+  A+B+C+D = 113
+  => HARD ID COLLISIONS (same id, different source) = B+C = 109
+  => URL-LEVEL CONTENT OVERLAP (campaign url already in lane) = 61 of 113 = 54.0%
+  => campaign rows whose source is NEW to the lane  = 52
+  => CAMPAIGN-ONLY ids (would extend the S-space)  = 0
+  campaign id range S082..S195; lane range S001..S218; lane already holds 218 rows

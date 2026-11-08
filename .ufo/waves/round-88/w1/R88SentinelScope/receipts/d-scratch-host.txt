@@ -1,0 +1,47 @@
+# R88SentinelScope — receipt D: scratch and host surface of the round-88 committed tools
+# cmd: grep -rn -E '/tmp|tempfile|mktemp' corpus/evidence/round88/*.py
+corpus/evidence/round88/curation-r88-controls.py:25:import tempfile
+corpus/evidence/round88/curation-r88-controls.py:82:    tmp = tempfile.mkdtemp(prefix="cur88-", dir=work)
+corpus/evidence/round88/gate-records-r88.py:48:import tempfile
+corpus/evidence/round88/gate-records-r88.py:402:    tmp = tempfile.mkdtemp(prefix="gr88-", dir=work)
+corpus/evidence/round88/mutate-r88.py:34:import tempfile
+corpus/evidence/round88/mutate-r88.py:94:    tmp = tempfile.mkdtemp(prefix="mut87-", dir=work)
+# exit=0
+# (no literal /tmp path: every temp dir is mkdtemp(dir=work); the work default is TMPDIR or /fast/scratch/hyaku)
+
+# cmd: grep -rn -E 'sysctl|sudo|systemctl|service |/etc/init|shutdown|reboot' corpus/evidence/round88/*.py
+# exit=0 (1 = no match: no host sysctl, no sudo, no service control)
+
+# cmd: grep -rn -E 'urllib|requests\.|socket|urlopen|http[s]?://' corpus/evidence/round88/*.py
+# exit=0 (1 = no network primitive: no GET capability in any round-88 instrument)
+
+# cmd: grep -rn -E '"(commit|add|checkout|reset|update-index|apply|clone|pull|push|fetch)"' corpus/evidence/round88/*.py
+# exit=0 (1 = no mutating git verb in any round-88 instrument)
+
+# cmd: grep -rn -E 'subprocess.run' corpus/evidence/round88/*.py  (argv of every child process)
+corpus/evidence/round88/curation-r88-controls.py:67:    p = subprocess.run([sys.executable, "-B", counter, "--root", root], capture_output=True, text=True)
+corpus/evidence/round88/curation-r88-controls.py-68-    lines = p.stdout.splitlines()
+corpus/evidence/round88/gate-records-r88.py:169:    p = subprocess.run([sys.executable, "-B", tool, "verify", "--root", root, "--repo", repo] + files,
+corpus/evidence/round88/gate-records-r88.py-170-                       capture_output=True, text=True)
+--
+corpus/evidence/round88/gate-records-r88.py:237:    out = subprocess.run(["git", "-C", repo, "grep", "-h", "-E", "^GATE-RECORD S[0-9]+ rev=", "--", "corpus/lessons"],
+corpus/evidence/round88/gate-records-r88.py-238-                         capture_output=True, text=True)
+--
+corpus/evidence/round88/gate-records-r88.py:524:            p = subprocess.run([sys.executable, "-B", tool, "verify", "--root", root, "--repo", sp, rp],
+corpus/evidence/round88/gate-records-r88.py-525-                               capture_output=True, text=True)
+corpus/evidence/round88/harm-recheck.py:20:    p = subprocess.run([sys.executable, "-B", tool, "verify", "--root", root, "--repo", repo] + files,
+corpus/evidence/round88/harm-recheck.py-21-                       capture_output=True, text=True)
+corpus/evidence/round88/mutate-r88.py:111:            p = subprocess.run([sys.executable, "-B", mp, "--root", root, "--repo", repo, "--work", exe],
+corpus/evidence/round88/mutate-r88.py-112-                               capture_output=True, text=True)
+--
+corpus/evidence/round88/mutate-r88.py:135:            p = subprocess.run([sys.executable, "-B", mp, "--root", root, "--repo", repo, "--work", exe],
+corpus/evidence/round88/mutate-r88.py-136-                               capture_output=True, text=True)
+--
+corpus/evidence/round88/mutate-r88.py:155:            p = subprocess.run([sys.executable, "-B", COUNTER, "--root", root, "--repo", repo,
+corpus/evidence/round88/mutate-r88.py-156-                                "--tool", mtp, "--work", exe], capture_output=True, text=True)
+
+# TMPDIR in this environment: <unset>;  HYAKU_SCRATCH: <unset>
+# the work default honours TMPDIR before /fast/scratch/hyaku (gate-records-r88.py:398, mutate-r88.py:92, curation-r88-controls.py:80)
+# cmd: ls /fast/scratch/hyaku/legs
+ls: cannot access '/fast/scratch/hyaku/legs': No such file or directory
+# exit=2

@@ -1,0 +1,70 @@
+REGISTRY_ROWS=218
+
+=== (a) SUPERSESSION GRAPH: every 'supersedes S0NN —' edge with both statuses ===
+EDGE S029 -> S019 | superseder_status=mined (MINED) | target_status=queued
+EDGE S030 -> S022 | superseder_status=queued (NON-MINED) | target_status=queued
+EDGE S031 -> S024 | superseder_status=mined (MINED) | target_status=queued
+EDGE S032 -> S021 | superseder_status=queued (NON-MINED) | target_status=queued
+EDGE S033 -> S020 | superseder_status=mined (MINED) | target_status=queued
+EDGE S073 -> S070 | superseder_status=mined (MINED) | target_status=mined
+EDGE S176 -> S171 | superseder_status=mined (MINED) | target_status=mined
+EDGE S200 -> S196 | superseder_status=mined (MINED) | target_status=mined
+EDGE S201 -> S197 | superseder_status=mined (MINED) | target_status=mined
+EDGE S202 -> S198 | superseder_status=rejected (NON-MINED) | target_status=rejected
+EDGES_TOTAL=10
+EDGES_WITH_NON_MINED_SUPERSEDER=3 -> [('S030', 'S022'), ('S032', 'S021'), ('S202', 'S198')]
+SUPERSEDED_LIVE=0 []
+MINED_SUPERSEDER_MAP={'S019': ['S029'], 'S024': ['S031'], 'S020': ['S033'], 'S070': ['S073'], 'S171': ['S176'], 'S196': ['S200'], 'S197': ['S201']}
+
+=== (b) TEACHES DETECTOR: rows whose teaches carries a contrast phrase AND a date term ===
+TEACHES_CHECKED=1
+FLAGGED S024 named_terms=['publication', 'modification'] missing_in_own_capture=['publication', 'modification'] | mined_superseder=['S031']
+FLAGGED_COUNT=1
+FLAGGED_WITH_MINED_SUPERSEDER=1
+
+--- superseding rows that themselves carry a contrast phrase + date term ---
+SUPERSEDERS_WITH_CONTRAST_AND_DATE_TERM=0 SUP_UNRESOLVED=0 []
+
+--- ALL superseding rows: own teaches terms read in own capture ---
+
+=== (c) QID-SET PIN + TOKEN FLOOR ===
+ENTRY corpus/knowledge/search-transparency-reporting-r84.md carried_qids=13 located=13 pinned=13
+  carried_set=['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8', 'Q9', 'Q10', 'Q11', 'Q12', 'Q13']
+  pinned_set =['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8', 'Q9', 'Q10', 'Q11', 'Q12', 'Q13']
+  set_equal=True missing_from_entry=[] extra_in_entry=[]
+  token_counts={'Q1': 17, 'Q2': 9, 'Q3': 17, 'Q4': 16, 'Q5': 15, 'Q6': 13, 'Q7': 15, 'Q8': 18, 'Q9': 10, 'Q10': 24, 'Q11': 9, 'Q12': 9, 'Q13': 7}
+  min_tokens=7 below_floor={}
+ENTRY corpus/knowledge/provenance-recording-r85.md carried_qids=7 located=7 pinned=7
+  carried_set=['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7']
+  pinned_set =['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7']
+  set_equal=True missing_from_entry=[] extra_in_entry=[]
+  token_counts={'Q1': 12, 'Q2': 10, 'Q3': 11, 'Q4': 19, 'Q5': 20, 'Q6': 17, 'Q7': 16}
+  min_tokens=10 below_floor={}
+TOTAL_LOCATED=20
+LOCATED_QUOTES=20
+MIN_TOKEN_QUOTES:
+  search-transparency-reporting-r84.md Q13 tokens=7 'Date on which the resource was changed.'
+  search-transparency-reporting-r84.md Q2 tokens=9 'date when each source was last searched or consulted.'
+  search-transparency-reporting-r84.md Q11 tokens=9 'Date (often a range) of validity of a resource.'
+  search-transparency-reporting-r84.md Q12 tokens=9 'Date that the resource became or will become available.'
+  search-transparency-reporting-r84.md Q9 tokens=10 'A related resource from which the described resource is derived.'
+BELOW_FLOOR_ANY=[]
+
+--- warrant leg: per-row qid resolution and term sharing (independent re-derivation) ---
+ROW search-transparency-reporting-r84.md Reporting which sources were searched warrant=Q1 (S214) resolved=1/1 ok=True shared={'Q1': ['consulted', 'other', 'reference', 'sources']}
+ROW search-transparency-reporting-r84.md Reporting when a source was searched warrant=Q2 (S214) resolved=1/1 ok=True shared={'Q2': ['consulted', 'searched', 'source']}
+ROW search-transparency-reporting-r84.md Reporting the search method warrant=Q3 (S214) resolved=1/1 ok=True shared={'Q3': ['filters', 'including', 'limits', 'search']}
+ROW search-transparency-reporting-r84.md Reporting how studies were selected warrant=Q4 (S214) resolved=1/1 ok=True shared={'Q4': ['criteria', 'decide', 'inclusion', 'methods', 'study', 'whether']}
+ROW search-transparency-reporting-r84.md Reporting the search outcome warrant=Q5 (S214) resolved=1/1 ok=True shared={'Q5': ['identified', 'records', 'results']}
+ROW search-transparency-reporting-r84.md Linking a claim to its source warrant=Q6, Q7 (S018) resolved=2/2 ok=True shared={'Q6': ['evidence', 'supporting'], 'Q7': ['evidence']}
+ROW search-transparency-reporting-r84.md Comparing evidence-based generation approaches warrant=Q8 (S018) resolved=1/1 ok=True shared={'Q8': ['benchmarks', 'evaluation', 'isolated', 'practices', 'unified']}
+ROW search-transparency-reporting-r84.md Recording what a resource derives from warrant=Q9 (S023) resolved=1/1 ok=True shared={'Q9': ['derived', 'described', 'related']}
+ROW search-transparency-reporting-r84.md Recording when a resource changed warrant=Q13 (S023) resolved=1/1 ok=True shared={'Q13': ['changed']}
+ROW search-transparency-reporting-r84.md Recording when a resource is valid warrant=Q11 (S023) resolved=1/1 ok=True shared={'Q11': ['range', 'validity']}
+ROW search-transparency-reporting-r84.md Recording when a resource became available warrant=Q12 (S023) resolved=1/1 ok=True shared={'Q12': ['available', 'became', 'become']}
+ROW provenance-recording-r85.md Naming what a resource derives from warrant=Q1 (S215) resolved=1/1 ok=True shared={'Q1': ['entities', 'property', 'provenance']}
+ROW provenance-recording-r85.md Recording a derivation's direction warrant=Q2 (S215) resolved=1/1 ok=True shared={'Q2': ['another', 'derivation', 'entity', 'transformation']}
+ROW provenance-recording-r85.md Recording the bounds of an entity's existence warrant=Q4 (S215) resolved=1/1 ok=True shared={'Q4': ['bound', 'entity']}
+ROW provenance-recording-r85.md Recording a resource's provenance warrant=Q5 (S026) resolved=1/1 ok=True shared={'Q5': ['conditions', 'generated', 'under']}
+ROW provenance-recording-r85.md Recording the source behind a resource warrant=Q6 (S026) resolved=1/1 ok=True shared={'Q6': ['credit', 'given', 'source', 'starting']}
+ROW provenance-recording-r85.md Recording when content was last reviewed warrant=Q7 (S031) resolved=1/1 ok=True shared={'Q7': ['accuracy', 'completeness', 'reviewed']}

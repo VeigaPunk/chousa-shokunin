@@ -1,0 +1,16 @@
+probe: a committed refetch row with curl_rc=0 http=204 (P1 mirror; S022 demoted from 203 to 204)
+record file: /fast/scratch/hyaku/chousa-r88/R88MutCounter/run/probes/T1b-204-record.md
+the pristine tool treats any 2xx as a successful response and refuses the unreach claim; the T1b tool
+(unreach success = http == "203") treats 204 as a failed transfer and accepts it.
+
+== pristine tool ==
+$ python3 -B /fast/scratch/hyaku/chousa-r88/R88MutCounter/run/probes/P1-narrow-203/tools/gate-records.py verify --root /fast/scratch/hyaku/chousa-r88/R88MutCounter/run/probes/P1-narrow-203 --repo /home/vgpnk/Projects/shokunin/chousa-shokunin /fast/scratch/hyaku/chousa-r88/R88MutCounter/run/probes/T1b-204-record.md
+GATE_RECORD /fast/scratch/hyaku/chousa-r88/R88MutCounter/run/probes/T1b-204-record.md:1 S022 FAIL REFETCH
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+rc=1
+
+== T1b mutant tool ==
+$ python3 -B /fast/scratch/hyaku/chousa-r88/R88MutCounter/run/t-T1b-unreach-203-only-literal-kept/gate-records.py verify --root /fast/scratch/hyaku/chousa-r88/R88MutCounter/run/probes/P1-narrow-203 --repo /home/vgpnk/Projects/shokunin/chousa-shokunin /fast/scratch/hyaku/chousa-r88/R88MutCounter/run/probes/T1b-204-record.md
+GATE_RECORD /fast/scratch/hyaku/chousa-r88/R88MutCounter/run/probes/T1b-204-record.md:1 S022 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+rc=0

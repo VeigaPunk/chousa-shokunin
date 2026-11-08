@@ -1,0 +1,35 @@
+Routed defect 1 (round-87 spot-check): SCORECARD.md round-87 header seat count.
+$ grep -n 'round-87/w1/' SCORECARD.md
+3930:`c033577b4fb840553f3e10e40aa77c724abe0bca`; wave `.ufo/waves/round-87/w1/` (13 seats). Instruments pinned in
+$ python3 -c 'import json;print(len(json.load(open(".ufo/waves/round-87/w1-spec.json"))["items"]))'
+w1-spec.json items = 12
+w1-dispatch.json counts.spawn = 12
+w1-results.json results = 12
+
+Routed defect 2 (mined-criteria count):
+$ grep -cE '^18[2-9]\. ' corpus/QUALITY.md
+8
+$ grep -n 'criteria mined' corpus/lessons/round-87.md SCORECARD.md
+corpus/lessons/round-87.md:172:| quality | improved | two instruments carry three routed repairs each; the four round-86 forgeries are refused with named legs; 
+SCORECARD.md:3871:instrument's own defect fixed, four criteria mined; both claims still falsified as stated); discernment
+SCORECARD.md:3902:| calibration | **improved** | four routed defects closed (r85 §Routed 1–4) — the S024/S031 inversion, the two imported warrant cells, th
+SCORECARD.md:3910:entry warrants repaired, four of five criteria mined from the round's own findings); discernment **improved** (the wave
+SCORECARD.md:3941:| calibration | **improved** | per-entry quote floors (13/7) refuse the delete-row and truncate-table gaming the round-86 counter passed; 17/1
+SCORECARD.md:3949:(six routed repairs across two instruments, four forgeries now refused with named legs, five criteria mined); discernment
+
+Plan-vs-freeze (R88SentinelScope F4): promised claims.json / egress table.
+$ git ls-tree 4ea9d008 corpus/evidence/round88/ --name-only
+corpus/evidence/round88/c1-positives.tsv
+corpus/evidence/round88/census-start.txt
+corpus/evidence/round88/claims.md
+corpus/evidence/round88/controls
+corpus/evidence/round88/curation-r88-controls.py
+corpus/evidence/round88/curation-r88.py
+corpus/evidence/round88/gate-records-r88.py
+corpus/evidence/round88/harm-recheck.py
+corpus/evidence/round88/instrument-pins.txt
+corpus/evidence/round88/mutate-r88.py
+$ grep -n 'claims.json\|egress' plans/round-88.md
+4:defects are this round's input). The frozen claims are in `corpus/evidence/round88/claims.json` (machine form) and
+74:`corpus/evidence/round88/claims.md`, `claims.json`, both counters, the control batteries, their receipts, the
+75:instrument pins and the egress table are committed together as the freeze, before the landing commit and before any
