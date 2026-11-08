@@ -55,7 +55,7 @@ T=$(mk c1-b1); overlay "$T" "$LANE/$CTL/B1-salad-boundary"; rec c1-b1-salad-boun
 
 # ---- C2 gate records ----
 S=$LANE/corpus/evidence/round84/controls
-T=$(mk c2-k0); rec c2-k0-donothing FAIL c2 "$T"
+T=$(mk c2-k0); git -C "$LANE" show 81b81173:tools/gate-records.py > "$T/tools/gate-records.py"; rec c2-k0-donothing FAIL c2 "$T"
 T=$(mk c2-f1); rec c2-f1-stub-accept FAIL c2 "$T" --tool "$S/stub-accept.py"
 T=$(mk c2-f2); rec c2-f2-stub-refuse FAIL c2 "$T" --tool "$S/stub-refuse.py"
 T=$(mk c2-f3); rec c2-f3-stub-quote-only FAIL c2 "$T" --tool "$S/stub-quote-only.py"
