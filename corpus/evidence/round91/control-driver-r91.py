@@ -372,9 +372,13 @@ def main():
     # R6: a receipt that no expected row scores is a finding, not an invisible file.
     scored = {row["case"] for row in rows}
     for f in sorted(os.listdir(a.receipts)):
-        if f.endswith(".txt") and f[:-4] not in scored:
-            findings += 1
-            print(f"RECEIPT {f[:-4]} FINDING UNSCORED_RECEIPT")
+        if not f.endswith(".txt") or f[:-4] in scored:
+            continue
+        body = open(os.path.join(a.receipts, f), encoding="utf-8", errors="replace").read()
+        if "# case=" not in body:
+            continue  # raw instrument evidence, not a receipt
+        findings += 1
+        print(f"RECEIPT {f[:-4]} FINDING UNSCORED_RECEIPT")
     # R3/R6 at the tree: instruments and the expectations file are pinned; with --repo also at --rev.
     pcodes, checked = pin_report(rows, root, a.expected, a.pins)
     if pcodes:

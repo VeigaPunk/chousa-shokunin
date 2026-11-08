@@ -89,6 +89,22 @@ Gate-id backlog (carried debt, no instrument in this round touches them).
 before any scored run of the round-91 candidates and before the wave. The receipts are emitted at the freeze
 revision and carried by the next commit (the carrier); `--rev` names the freeze and `--receipts-rev` the carrier.
 
+## Pre-wave freeze repair 1 (2026-11-08, before any scored run and before the wave)
+
+`F` = `160b658bffa2d2bee8bbf469537f1e512b6712c5` and `C` = `d02a950f0f22a79dd0898a4ea463550ee6dc407f` are
+superseded and stay in history. Two defects were measured by the first emit/verify against `F` and fixed before the
+wave:
+
+1. `controls/expected.tsv`'s `c1-harm-setup` row omitted `--repo`, so argparse exited 2 before the tool printed
+   `HARM_RECHECK_ERROR` (the round-90 row carries `--repo`; this round's transcription dropped it). The instrument
+   is unchanged; the row now names `--repo @ROOT@`.
+2. `UNSCORED_RECEIPT` flagged every raw `.txt` evidence file in the receipts directory. A file is an unscored
+   receipt only when it carries a `# case=` header; the six forged classes'receipt still does, and the before
+   receipts do not. The `extra-receipt` forgery remains refused.
+
+The freeze is re-cut as `F2` (this commit) and the receipts re-emitted at `F2` as carrier `C2`. No scored run of a
+candidate preceded `F2`; the wave is dispatched only after the `F2`/`C2` verify prints `CONTROL_DRIVER_R91=PASS`.
+
 ## Amendments after the freeze
 
 An amendment is written here only when a wave artifact falsifies a claim's stated wording (addendum §8,
