@@ -99,6 +99,10 @@ STOPWORDS = set(
     "must should never always".split()
 )
 EXPECTED_LEGS = 15
+# The leg VOCABULARY is a committed side table, not a constant in this file (R93ExecMutations M8: deleting a
+# leg while lowering EXPECTED_LEGS used to pass). `controls/legs.txt` is pinned by the round's pin table, so a
+# mutant that also rewrites this file is caught by that walk; the counter refuses a missing table.
+LEGS_PATH = os.path.join("corpus", "evidence", "round93", "controls", "legs.txt")
 
 
 def norm(s):
@@ -285,6 +289,14 @@ def main():
     ap.add_argument("--root", required=True)
     a = ap.parse_args()
     root = os.path.abspath(a.root)
+    legs_file = os.path.join(root, LEGS_PATH)
+    if not os.path.isfile(legs_file):
+        print(f"CURATION_R93=SETUP missing {legs_file}")
+        return 2
+    leg_names = frozenset(ln.strip() for ln in open(legs_file, encoding="utf-8") if ln.strip())
+    if len(leg_names) != EXPECTED_LEGS:
+        print(f"CURATION_R93=SETUP leg table holds {len(leg_names)} names, EXPECTED_LEGS={EXPECTED_LEGS}")
+        return 2
     reg = parse_registry(root)
     if reg is None:
         print("CURATION_R93=SETUP missing corpus/SOURCES.md")
@@ -547,12 +559,17 @@ def main():
         print(f"UNENTAILED {os.path.basename(rel)} row={s} term={t}")
     print(f"VERDICT fields_hold={1 if fields_hold else 0} legs_ok={sum(1 for _, ok, _ in legs if ok)}/{len(legs)} "
           f"DETECTOR_WITNESS={witness_detail}")
-    passed = (len(legs) == EXPECTED_LEGS and all(ok for _, ok, _ in legs) and fields_hold)
+    legset = {n for n, _ok, _d in legs}
+    legset_ok = len(legs) == len(leg_names) and legset == leg_names
+    passed = (len(legs) == EXPECTED_LEGS and legset_ok and all(ok for _, ok, _ in legs) and fields_hold)
     for name, ok, detail in legs:
         if not ok:
             print(f"LEG_FAIL {name} {detail}")
     if len(legs) != EXPECTED_LEGS:
         print(f"LEG_FAIL ARITY expected={EXPECTED_LEGS} measured={len(legs)}")
+    if not legset_ok:
+        print(f"LEG_FAIL LEGSET missing={','.join(sorted(leg_names - legset)) or 'none'} "
+              f"extra={','.join(sorted(legset - leg_names)) or 'none'}")
     print(f"CURATION_R93={'PASS' if passed else 'FAIL'}")
     return 0 if passed else 1
 

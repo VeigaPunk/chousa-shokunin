@@ -51,6 +51,11 @@ def mirror(root, dst):
     os.makedirs(os.path.join(dst, "corpus", "knowledge"), exist_ok=True)
     os.makedirs(os.path.join(dst, "corpus", "evidence"), exist_ok=True)
     shutil.copy2(os.path.join(root, "corpus", "SOURCES.md"), os.path.join(dst, "corpus", "SOURCES.md"))
+    # the counter's committed leg-vocabulary table travels with every mirror
+    legs_dst = os.path.join(dst, "corpus", "evidence", "round93", "controls")
+    os.makedirs(legs_dst, exist_ok=True)
+    shutil.copy2(os.path.join(root, "corpus", "evidence", "round93", "controls", "legs.txt"),
+                 os.path.join(legs_dst, "legs.txt"))
     for rel in (ENTRY_A, ENTRY_B):
         shutil.copy2(os.path.join(root, rel), os.path.join(dst, rel))
     for rel in (os.path.join("corpus", "captures"), os.path.join("corpus", "evidence", "round57")):
@@ -70,7 +75,7 @@ def run(counter, root):
         m = re.search(rf"(?:^| ){k}=([^ ]+)", out)
         if m:
             fields[k] = m.group(1)
-    return p.returncode, (verdict[0] if verdict else "no-verdict"), fails, fields
+    return p.returncode, (verdict[0] if verdict else "no-verdict"), fails, fields, out
 
 
 def edit(path, old, new, count=1):
@@ -98,13 +103,16 @@ def main():
 
     results = {}
 
-    def case(name, mutate, expect_old, expect_new, needle=""):
+    def case(name, mutate, expect_old, expect_new, needle="", needles=()):
         tree = fresh(name)
         if mutate is not None:
             mutate(tree)
-        rc_old, v_old, _f, fl_old = run(OLD, tree)
-        rc_new, v_new, fails, fl_new = run(NEW, tree)
-        ok = rc_old == expect_old and rc_new == expect_new and (needle in " ".join(fails) or not needle)
+        rc_old, v_old, _f, fl_old, _o = run(OLD, tree)
+        rc_new, v_new, fails, fl_new, out_new = run(NEW, tree)
+        # needles are bound against the FULL stdout, not only the LEG_FAIL lines: `Q_WSQUOT=1` is a field.
+        ok = (rc_old == expect_old and rc_new == expect_new
+              and (needle in " ".join(fails) or not needle)
+              and all(n in out_new for n in needles))
         results[name] = ok
         print(f"{'OK' if ok else 'FAIL'} {name}: r92 rc={rc_old} ({v_old}), r93 rc={rc_new} ({v_new})"
               f" shapes old={fl_old.get('Q_SHAPE_FAIL')} new={fl_new.get('Q_SHAPE_FAIL')}"
@@ -114,10 +122,13 @@ def main():
         return ok
 
     case("positive", None, 0, 0, "")
+    # The field is the claim's distinguishing token, so it is bound here: a counter whose WSQUOTE population is
+    # stubbed (R93ExecMutations M7 / R93CriticClaims C2) prints Q_WSQUOT=0 and must fail this battery.
+    WS_NEEDLES = ("Q_WSQUOT=1", "LEG_FAIL WSQUOTE")
     case("ws-space", lambda t: edit(os.path.join(t, ENTRY_A), QUOTE_ROW, '| Q2 | S214 | " " |'), 1, 1,
-         "quote=<whitespace>")
+         "quote=<whitespace>", needles=WS_NEEDLES)
     case("ws-tab", lambda t: edit(os.path.join(t, ENTRY_A), QUOTE_ROW, '| Q2 | S214 | "\t" |'), 1, 1,
-         "quote=<whitespace>")
+         "quote=<whitespace>", needles=WS_NEEDLES)
     case("c1-nonq-row", lambda t: edit(os.path.join(t, ENTRY_A), "| Q13 | S023 |", NONQ + "\n| Q13 | S023 |"),
          1, 1, "LEG_FAIL QSHAPE")
     case("c2-status-rejected",
@@ -138,7 +149,7 @@ def main():
     ws_shape_green = True
     for name in ("ws-space", "ws-tab"):
         tree = os.path.join(work, name)
-        _rc, _v, _f, fl = run(OLD, tree)
+        _rc, _v, _f, fl, _o = run(OLD, tree)
         ws_shape_green = ws_shape_green and fl.get("Q_SHAPE_FAIL") == "0"
     print(f"{'OK' if ws_shape_green else 'FAIL'} ws-classification: r92 Q_SHAPE_FAIL=0 on both "
           f"whitespace trees (the class the r93 shape leg names)")
@@ -146,8 +157,8 @@ def main():
 
     dup_tree = fresh("duplicate-count")
     edit(os.path.join(dup_tree, ENTRY_A), "## Inference", DUP + "\n\n## Inference")
-    _rc_old, _v_old, _f, fl_old = run(OLD, dup_tree)
-    _rc_new, _v_new, _f, fl_new = run(NEW, dup_tree)
+    _rc_old, _v_old, _f, fl_old, _o = run(OLD, dup_tree)
+    _rc_new, _v_new, _f, fl_new, _o2 = run(NEW, dup_tree)
     dup_ok = fl_old.get("UNENTAILED_TERM") == "1" and fl_new.get("UNENTAILED_TERM") == "1"
     print(f"{'OK' if dup_ok else 'FAIL'} duplicate-count: r92 UNENTAILED_TERM={fl_old.get('UNENTAILED_TERM')} "
           f"r93 UNENTAILED_TERM={fl_new.get('UNENTAILED_TERM')}")
