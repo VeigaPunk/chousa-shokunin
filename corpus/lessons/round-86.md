@@ -83,3 +83,34 @@ integration commit that carries `.ufo/waves/round-86/w1-results.json`. Measured 
    round-85 non-author check's routed defect 1; the round-86 counter's `UNENTAILED_TERM=2` at base. **Captured-by:**
    the round-85 spot-check (a non-author reading), not any criterion the lane held. **Fix:** QUALITY 174/175; both rows
    repaired and the round-84 entry now cites the `modified` Definition itself.
+
+## Corrections (from the round's own wave; append-only — the paragraphs above are not edited)
+
+1. **The S023 capture-identity sentence is false.** `## Gate` says the re-fetch "produced different bytes (txt sha
+   `20dc0c3ab772…`, previously `f5545a19…` stored under the same key)". `f5545a19…` is not a previous content hash: it
+   is the capture **key** (`sha256(url)[:24]`). Every S023 refetch row in `corpus/evidence/round57/refetch.tsv` records
+   the same `key` and the same `txt_sha256=20dc0c3ab772…`, and the capture file's bytes are identical at `3bfb6885` and
+   at `667a5d09` (content sha `20dc0c3ab772…`, 148784 bytes; no capture write between the two revisions). The
+   substantive conclusion stands — `Q13` is at capture line 8786 — but the account of how it got there compared column 9
+   of the ledger against column 3. Evidence: `R86ReviewerEntry` §4 (`r86rev-capture-identity.txt`).
+2. **The S024 restoration also touched two cells `CORPUS.md` rule 2 calls immutable.** The round restored `status`
+   (`mined`→`queued`) and `used-by` (allowed) and also `anchor` and `opened` to their round-25 bytes. Both restorations
+   are disclosed here old→new: `opened` `2026-11-08`→`2026-10-21` (round 85's in-place edit) and `anchor`
+   `lastReviewed property definition paragraph (capture key 11d6cc56bb24adfc61eea2b4)`→`page heading lastReviewed,
+   definition paragraph`. Rule 2 would have kept round 85's bytes and recorded the correction in a new row; the round
+   chose restoration because the superseding row (`S031`) is the correction and the row must return to `queued`. Named
+   as QUALITY 177. Evidence: `R86RevSupply` cell table.
+3. **The S031 `anchor` edit was reverted.** The landing commit had appended the re-open date and the located definition
+   to `S031`'s `anchor` cell (also immutable under rule 2). It now carries its base bytes again; the re-open is recorded
+   in `corpus/evidence/round57/refetch.tsv` (row `S031`, `2026-11-08T06:00:10Z`, HTTP 200) and in this lesson's Gate
+   block, which is the correct place for it. Evidence: `R86RevSupply` (named rule-2 deviation).
+4. **The S217 rejection cell overstated its evidence.** It said the registered URL and its redirect target "both served
+   a 9-line stub". Only the registered URL was fetched; its stored body is the redirect target's 9-line stub (capture
+   `52db06f9e0e2eaf35bbdb321`). The registry cell now states what the capture shows. Evidence: `R86RevSupply`
+   (ungrounded sub-claim).
+5. **The registry still carries the refused comparison, in a frozen cell.** `S024`'s `teaches` asserts `lastReviewed`
+   is "separate from publication or modification dates"; `S031`'s teaches refuses that comparison, and the S031 capture
+   contains `modified`/`modification` 0 times. Rule 2 forbids editing `teaches`, so the round leaves it and records the
+   rule instead: a superseded row's frozen `teaches` is not evidence — the superseding row's is (QUALITY 178). Routed:
+   the next round that touches curation checks registry `teaches` cells against their captures, not only entry cells.
+   Evidence: `R86ReviewerEntry` §2.6.

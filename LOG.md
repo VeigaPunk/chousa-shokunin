@@ -2485,3 +2485,30 @@ passing record rather than through prose.
   beside their ground / a cited receipt must exist).
 - Ledger: `PREFILE-FALSIFICATION: pass claims=2 rows=13 attack_seats=6 findings=0`.
 - Census end exit 0 (same five W04 warnings). Gate selftest `PASS (283 cases, 0 skipped)`; preflight G01–G07 PASS.
+
+## Round 86 — the battery carries the 200-only class and kills its mutant; the routed curation defects close (2026-11-08)
+
+- Fresh-start reads: r85 lesson + `round-85-verifier-spotcheck.md` (six routed defects); claims frozen at `d0b1bd06`
+  with two claims (C1 operability — successor battery `gate-records-r86.py` generating the round-85 `D1` class from
+  the committed `S021` 203 row and deriving `M17` from the subject tool's bytes; C2 calibration — `curation-r86.py` on
+  the S024/S031 inversion and the two imported warrant cells).
+- Egress table `e4468752` committed before the first fetch; four GETs `2026-11-08T06:00:10–11Z`, all HTTP 200, all
+  inside the table (S216 RFC 9110, S217 DCMI Namespace Policy, S031 re-open, S023 re-open).
+- Pre-freeze repairs (`plans/round-86.md` 1–3): the supersession predicate narrowed to the live-vs-unadopted form, the
+  `MODIFIED_DEF_CITED` case bug fixed, the D1 quote derived from the capture.
+- Landing `667a5d09`: S216 (new, tier A, mined), S217 (new, rejected — 9-line stub), S031 `queued`→`mined` with `used-by`
+  to the r85 entry, S024 restored to `queued`/`—`/`2026-10-21`, r84 row 9 cites the S023 `modified` Definition (Q13 at
+  capture line 8786), r85 row 6 cites S031 and drops the refused comparison, lesson, QUALITY 173–176.
+- Controls: `c1-k0-donothing` FAIL (`D1_REFUSED=0/1 MUT17_KILLED=0/1`), `c1-k0b-frozen-instrument` PASS with zero D1
+  class, `c2-d0-donothing` FAIL (`SUPERSEDED_LIVE=1 UNENTAILED_TERM=2 MODIFIED_DEF_CITED=0`). After:
+  `GATE_RECORDS_R86=PASS` (`355/355`, `D1_REFUSED=1/1`, `MUT17_KILLED=1/1`) and `CURATION_R86=PASS`
+  (`0 / 0 / 1 / 20/20`).
+- Wave w1: 12 seats (4 executor, 2 reviewer, 1 critic, 1 mutation-tester, 1 revenger, 1 scout, 1 connector, 1 scribe;
+  attack share 7/12 ≈ 58%). C1 held on every clause; C2's published predicate was falsified by the wave (the `total ≥ 19`
+  floor was never implemented; `MODIFIED_DEF_CITED` is presence, not warrant linkage) and narrowed in plan amendment 11
+  with the class closure moved to review; amendment 12 routes C1's three residuals.
+- Corrections (lesson, append-only): the S023 capture-identity sentence was false (key vs content sha), the S024 restore
+  also touched two immutable cells, the S031 `anchor` edit was reverted, S217's rejection cell overstated its evidence,
+  and `S024`'s frozen `teaches` still states the refused comparison. QUALITY 177–181.
+- Gate selftest `PASS (283 cases, 0 skipped)`; preflight `PREFLIGHT=8/8`; census exit 0 (five pre-existing W04 rows).
+- Mined mistake: an instrument that cannot express a decision the round made (a 200-rejected row has no record form).

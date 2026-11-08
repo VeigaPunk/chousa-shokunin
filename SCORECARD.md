@@ -3884,3 +3884,42 @@ re-pin).
 L8776-8777) and decide the S020 disposition (mark S215 as superseding, or keep both).
 3. carried debt: the D1 fixture, the twelve r80 backlog Gate ids, and the r85 scribe's "one backlog id per day"
 proposal.
+
+## Round 86 verdict — the battery carries the 200-only class and kills its own mutant; the routed curation defects close (2026-11-08)
+
+Base `3bfb6885958ad4a674ad1896f70d1e836be609e4`; egress table `e446875260a11e3489a0d78344d71d7fbb006a42` (committed
+before the first fetch); freeze `d0b1bd06872cdf0eeb03eccd099ff69ae6704307`; landed bytes `667a5d091dc46168ed95eda0ae7f19a9bcf139a2`;
+wave `.ufo/waves/round-86/w1/` (12 seats). Instruments pinned in `corpus/evidence/round86/instrument-pins.txt`.
+
+| claim / axis | before → after | counting command / evidence | verdict |
+|---|---|---|---|
+| C1 operability (lowest scored non-retired axis; historical 3/10 held) | round-85 instrument: `FORGED_REFUSED=354/354 … SETUP=1/1 GATE_RECORDS_R85=PASS` with **zero** D1/mutant lines in its bytes; round-86 battery on the pre-round-85 tool: `FORGED_REFUSED=354/355 … D1_REFUSED=0/1 MUT17_KILLED=0/1` `FAIL` exit 1 → landing: `POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=355/355 EXPECTED_CODE=355/355 EMPTY_REFUSED=1/1 RC=4/4 SETUP=1/1 D1_FORGES=1 D1_REFUSED=1/1 MUT17_KILLED=1/1` `PASS` exit 0 | `python3 -B corpus/evidence/round86/gate-records-r86.py --root DIR --repo GITDIR --work DIR`; `controls/receipts/c1-k0-donothing.txt`, `controls/receipts/c1-k0b-frozen-instrument.txt` → `after/c1-after.txt` | **verified as stated** — every clause held under the wave (`R86ReviewerClaims` clause table; `R86ExecRepro`, `R86ExecBase`, `R86ExecHarm` over 449 committed records with no genuine record moving, `R86ExecForge` no in-class accept). Residuals routed (plan amendment 12): D1 is one record wide where three rows qualify (`R86CriticClaims` T4 passes), derivation/SETUP are fields not verdict conjuncts (`R86MutCounter` M2/M5) |
+| C2 calibration | base: `SUPERSEDED_LIVE=1 UNENTAILED_TERM=2 MODIFIED_DEF_CITED=0 QUOTES_LOCATED=19/19` `FAIL` exit 1 → landing: `SUPERSEDED_LIVE=0 UNENTAILED_TERM=0 MODIFIED_DEF_CITED=1 QUOTES_LOCATED=20/20` `PASS` exit 0 | `python3 -B corpus/evidence/round86/curation-r86.py --root DIR`; `controls/receipts/c2-d0-donothing.txt` → `after/c2-after.txt` | **verified on the narrowed property (amendment 11)** — the published floor `total ≥ 19` was never implemented (`R86ReviewerEntry` E5, `R86CriticClaims` V4) and `MODIFIED_DEF_CITED` is presence, not warrant linkage (E6); the amendment withdraws the floor and moves the class closure to review. Review-verified: both repaired rows state only what their located quotes state (`Q13` S023:8786, `Q7` S031:211); entry-wide `primary`/`tool`/`version`/`step` = 0 |
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** | the battery generates the round-85 `D1` class from committed bytes inside the predicate and derives `M17` from the subject tool's own bytes, so the 200-only repair is now load-bearing inside the verdict rather than beside it; 355/355 forgeries refused with expected codes; harm held over 449 committed records (`R86ExecHarm`) |
+| calibration | **improved** | four routed defects closed (r85 §Routed 1–4) — the S024/S031 inversion, the two imported warrant cells, the stale r85 "verified" row retracted here, and the control-receipt instrument question; five criteria mined (QUALITY 177–181), four of them from this round's own wave findings |
+| depth | **unchanged** | no new knowledge entry this round; the one candidate source (`S217`) was refused on content (9-line stub) and recorded `rejected` |
+| coverage | **unchanged** | `PROVINCE.md` untouched; registry 215→217 rows (one mined tier-A spec, one rejected) |
+| freshness | **unchanged** | four URLs re-opened/re-opened at `2026-11-08T06:00:10–11Z`, all HTTP 200; S023's capture bytes confirmed unchanged at base and landing (lesson correction 1) |
+| adjacency | **unchanged** | `R86ConnectorSiblings` reconfirms the kotodama `check-gate-captures.py` false-green and reports it read-only; no sibling holds RFC 9110 203 semantics |
+
+Trends: expansion **unchanged** (97 knowledge `.md` before and after; registry +2 rows, one refused) — the round's
+capability gain is in the instrument, not the corpus; quality **improved** (the battery's coverage defect closed, two
+entry warrants repaired, four of five criteria mined from the round's own findings); discernment **improved** (the wave
+falsified the published C2 predicate — the floor and the warrant-linkage clause — and the lane narrowed the claim and
+published its own three registry/lesson deviations instead of filing the wider sentence).
+
+No axis harmed at the tip: `tools/research-gate.sh --selftest` `PASS (283 cases, 0 skipped)`; preflight
+`PREFLIGHT=8/8 FAILED=none ENV=none`; census exit 0; `tools/gate-records.py verify` over the round's lesson 2/2 OK.
+
+## Planned — round 87 (intent, not a predicate)
+
+1. **operability (lowest)** — widen `D1` to every qualifying committed 203 row (`S021`, `S032`, `S022`) and require
+   `D1_REFUSED=N/N`, which kills the record-keyed exception (`R86CriticClaims` T4); add a verdict conjunct for the
+   mutant-derivation and SETUP duties (`R86MutCounter` M2/M5); give C2's `QUOTES_LOCATED` an implemented floor and a
+   warrant-linkage leg (amendment 11 routed items).
+2. **calibration** — a check over registry `teaches` cells against their captures (the `S024` frozen cell; QUALITY 178),
+   and the live-citation form `R86CriticClaims` V1 passes.
+3. carried debt: the `S217` policy source when it serves prose; the r80 backlog Gate ids; the D1 fixture form.
