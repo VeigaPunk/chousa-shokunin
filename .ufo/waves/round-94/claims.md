@@ -78,11 +78,12 @@ r93 prints `Q_SHAPE_FAIL=0`, has no `Q_PUNCTQUOT` field, and refuses the tree on
 substring, so `"—"` "locates" any capture that contains an em dash.
 
 **After** (`corpus/evidence/round94/curation-r94.py`): `q_shape_violation` refuses a quote cell with no
-alphanumeric character as `quote=<punctuation>`; the class is counted on the located-quote population before
-the shape filter (`Q_PUNCTQUOT`); `locates()` returns False for a punctuation-only quote; and leg 16
+alphanumeric character as `quote=<punctuation>`; the class is counted on every three-cell quote row before
+the shape filter (`Q_PUNCTQUOT`; pre-qid, pre-source, pre-location, and Unicode-aware via
+`str.isalnum`, so a CJK quote is not the class); `locates()` returns False for a punctuation-only quote; and leg 16
 (`PUNCTQUOT`) makes deleting the class change the verdict through the `EXPECTED_LEGS` arity tripwire
-(15 → 16). `witness()` grows to 17 rows with both directions of the class plus `locates("—", "before — after")
-is False`.
+(15 → 16). `witness()` grows to 18 rows with both directions of the class, the CJK silence direction, and
+`locates("—", "before — after") is False`.
 
 **Counting command** (from the lane root):
 
@@ -93,11 +94,13 @@ python3 -B corpus/evidence/round94/curation-controls-r94.py --root . --work "$HY
 
 **Predicate.** The counter prints `CURATION_R94=PASS` (exit 0) with `LEGS_MEASURED=16/16 Q_SHAPE_FAIL=0
 Q_WSQUOT=0 Q_PUNCTQUOT=0 Q_ROWS=20 WARRANT_OK=17/17 TFREQ_OK=17/17 DUP_QIDS=0` and
-`VERDICT fields_hold=1 legs_ok=16/16 DETECTOR_WITNESS=17/17`. The controls print `CONTROLS=PASS
-CARRIED_REFUSED_BOTH=4/4 WS_NAMED=2/2 PUNCT_NAMED=2/2 PUNCT_SHAPE_GREEN_R93=1/1 PRIOR_REGRESSION=7/7`
+`VERDICT fields_hold=1 legs_ok=16/16 DETECTOR_WITNESS=18/18`. The controls print `CONTROLS=PASS
+CARRIED_REFUSED_BOTH=4/4 WS_NAMED=2/2 PUNCT_NAMED=2/2 PUNCT_SHAPE_GREEN_R93=1/1 CJK_SILENT=1/1
+PRIOR_REGRESSION=7/7`
 (exit 0), where `PUNCT_NAMED` are the dash and dots trees: r94 refuses each at the shape leg with
 `quote=<punctuation>`, `Q_PUNCTQUOT=1` and `LEG_FAIL PUNCTQUOT`, while r93 reports `Q_SHAPE_FAIL=0` on the
-same bytes (`PUNCT_SHAPE_GREEN_R93`, re-derived every run). This is a classification claim: r93 fails those
+same bytes (`PUNCT_SHAPE_GREEN_R93`, re-derived every run), and `CJK_SILENT` shows a CJK quote is refused
+downstream as a short quote, never as the punctuation class. This is a classification claim: r93 fails those
 trees too, but it cannot name the cause.
 
 **Kill rules.** K1 the predicate not met at the landing revision. K2 a punctuation tree whose shape leg stays
@@ -106,13 +109,15 @@ located quotes, the 17 warranted decision rows and the two quote floors must hol
 vacuous: it must count the row on both forged trees and stay 0 on the clean tree, and deleting it must
 change the verdict through the named `LEG_FAIL ARITY` line.
 
-**Named limits.** (1) `Q_PUNCTQUOT` counts every three-cell quote row before source resolution, so an
-unresolvable-source punctuation row is counted and also fails FLOOR. (2) The leg shares its expression with
+**Named limits.** (1) `Q_PUNCTQUOT` counts every three-cell quote row before qid/source/location resolution,
+so an unresolvable-source punctuation row is counted and also fails FLOOR — the count is the class
+population, not the located population (Amendment 2, R94ReviewerC2 F1). (2) The leg shares its expression with
 the shape branch (`punct_quote_cell`): a second witness, not an independent detector; its own verdict force
-is the arity tripwire. (3) `locates()` is line-agnostic: a punctuation-only quote is refused wherever it
-appears, including in a future entry that quotes a punctuation-only source (the class is refused by rule,
-not by measurement of that source). (4) The decision-width print is observability; the WARRANT conjunct is
-unchanged.
+is the arity tripwire. (3) `locates()`'s guard is defense in depth: on the two routed entries the shape leg
+refuses the class first, so the guard's force is only measured by `witness()` (Amendment 2, R94ReviewerC2 F4).
+(4) A digits-only quote passes the shape leg (digits are alphanumeric) and is refused downstream as short;
+the class is exactly "no alphanumeric character" (R94ExecC2Repro measured this). (5) The decision-width print
+is observability; the WARRANT conjunct is unchanged.
 
 **Sources.** `S001` (own-work chain row, re-opened: the leg vocabulary and its arity rule).
 
@@ -125,8 +130,10 @@ of its Round27 section into the Round 36 section — same count, same file, same
 
 **After** (`corpus/evidence/round94/skill-tally-r94.py`): each tail tally is declared with the substring of
 the heading that owns it (`TAIL_OWNED`), the nearest preceding ATX heading of every occurrence is recorded,
-and a moved tally fires `TAIL_OWNER_MISMATCH` (a duplicated or deleted one `TAIL_OWNER_COUNT`), so
-`TAIL_OK` now requires both the multiset and the owners. `TAIL_OWNED_OK` prints the ratio.
+and a moved tally fires `TAIL_OWNER_MISMATCH` (a duplicated or deleted one `TAIL_OWNER_COUNT`, a declared
+tally with no owner entry `TAIL_OWNER_UNMAPPED`), so `TAIL_OK` now requires both the multiset and the owners.
+`TAIL_OWNED_OK` is printed observability over the same codes; the verdict force is `owner_codes → TAIL_OK`
+(Amendment 3, R94ReviewerC3 F4).
 
 **Counting command** (from the lane root):
 
@@ -140,8 +147,7 @@ TAIL_TALLIES=2 TALLY_ROWS=8 STALE_TALLIES=0/8 HIST_DERIVED=2/2 HIST_PRESENT=2/2 
 MISLABELED=0`. The controls print `CONTROLS=PASS CARRIED_REFUSED=6/6 MOVED_REFUSED=2/2
 MOVED_PRIOR_ACCEPTED=2/2 DOUBLE_REFUSED=1/1 HEADING_ALIAS_ACCEPTED=1/1` (exit 0): the two moved trees are
 refused by r94 and accepted by r93 on the same bytes, `double-tail-215` fires `TAIL_OWNER_COUNT`, and the
-`moved-to-heading` tree measures named limit 1 (a heading that contains the declared owner string satisfies
-it).
+`heading-alias` fixture (it RENAMES the owner heading, it does not move the tally) measures named limit 1.
 
 **Kill rules.** K1 the predicate not met at the landing revision. K2 the positive tree refused, or r93
 refusing either moved tree (that would make the discrimination vacuous). K3 a historical, tail or head tally
@@ -150,7 +156,8 @@ from the declarations instead of the observed headings, or the tail compared by 
 
 **Named limits.** (1) The owner declaration binds a heading *substring*: a heading that contains the
 declared string satisfies it (`HEADING_ALIAS_ACCEPTED` measures this, it is not hidden). (2) The nearest
-preceding heading is any column-0 `#`…`######` line, not a full ATX parse of setext or indented headings.
+preceding heading is a column-0 line matching `^#{1,6} ` (ATX with a space), not a full ATX parse of setext,
+indented or space-less `##X` headings (R94ReviewerC3 F2: the wording, not the code, was wider).
 (3) A tally inside a fenced code block that follows a heading is attributed to that heading. (4) The
 declarations are measured pairs, not derivations: a third legitimate tail tally must be declared in the same
 commit.

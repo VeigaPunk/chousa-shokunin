@@ -83,5 +83,32 @@ planner seat; the scout carries the bounded planning data-walk. Spec, dispatch a
 
 ## Amendments
 
-*(none yet — every amendment the wave forces is appended below with the artifact that forced it, before
-`C`)*
+Each is a narrowing or a wired guard forced by the wave, applied before `C2`; the artifact that forced it
+is named with its seat. The frozen sentence before → after is recorded in `claims.md` and the
+claim-falsification ledger.
+
+**Amendment 1 (R94RevPrior F1) — the C1 before-state basis.** §Damages 1 above says the r93 driver "refuses
+the three-column row as `SETUP malformed pin row`". Measured: the committed r93 driver splits the row on the
+first whitespace run, so the path becomes `instrument corpus/…`, the file is absent, and the run ends
+`PINNED_FILES=0/…` at exit 1 — a mis-parse, not a setup refusal. The before state is therefore measured on
+the **two-column projection** of the same rows (which is what `forgeries-r94.py` does and what
+`evidence-before/c1-prior-accepts.txt` records); the sentence above is superseded by this paragraph, and no
+claim sentence changes (it never relied on the malformed-row form).
+
+**Amendment 2 (R94ReviewerC2 F1/F2/F3/F4) — C2 wording and class domain.** (a) `Q_PUNCTQUOT` is the
+population of every three-cell quote row *before* qid/source/location resolution; the earlier phrase
+"located-quote population" was wider than the code, and `claims.md` now says what the code counts. (b) The
+class test was ASCII-only (`[A-Za-z0-9]`) while the sentence said "no alphanumeric character": a CJK quote
+was refused as punctuation. The test is now `any(ch.isalnum() for ch in inner)` (Unicode), `witness()` gains
+`punct-cjk-silent`, the battery gains `x3-cjk-quote` (a CJK quote must NOT be the class, and is refused
+downstream as short), and `DETECTOR_WITNESS` is 18/18. (c) The predicate values are printed across two lines
+(the summary line and the `VERDICT` line); the sentence now names both. (d) `locates()`'s guard is defense in
+depth — the shape leg refuses the class first on the routed entries — and is declared as such in the named
+limits; its force is measured by `witness()` only.
+
+**Amendment 3 (R94ReviewerC3 F1–F4) — C3 coverage and wording.** (a) A tally declared in `TAIL_DECLARED`
+with no `TAIL_OWNED` entry could be moved freely: `TAIL_OWNER_UNMAPPED` now binds the two halves of the
+declaration. (b) Named limit 2's wording was wider than the code: the heading recognizer is a column-0
+`^#{1,6} ` line (ATX with a space), not every ATX form. (c) The `moved-to-heading` case renamed the owner
+heading rather than moving the tally; it is now `heading-alias` and says so. (d) `TAIL_OWNED_OK` is printed
+observability: the verdict force is the owner codes feeding `TAIL_OK`, and the kill rule says that instead.

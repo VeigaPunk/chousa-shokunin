@@ -123,6 +123,7 @@ def main():
     shutil.copy2(tpins, selftree_pins)
 
     results = {}
+    old_rcs = {}
 
     def case(name, rows_mutator, want_r94_rc, want_needles, expect_r93_rc=0):
         rows = [list(r) for r in base_rows]
@@ -135,6 +136,7 @@ def main():
         new_ok = rc_new == want_r94_rc and all(n in out_new for n in want_needles)
         old_ok = rc_old == expect_r93_rc
         results[name] = new_ok and old_ok
+        old_rcs[name] = rc_old
         print(f"{'OK' if results[name] else 'FAIL'} {name}: r93 rc={rc_old} r94 rc={rc_new}"
               f" needles={'+'.join(want_needles) if want_needles else '-'}")
         if not results[name]:
@@ -168,7 +170,6 @@ def main():
     case("d3-mis-role-expectation", relabel("expectation", "receipt"), 1,
          ["PIN_ROLE_MISMATCH role=expectation"])
     case("d4-unknown-role", unknown_role, 2, ["SETUP PIN_ROLE_UNKNOWN"])
-    case("s1-schema-two-column", None, 2, ["SETUP PIN_SCHEMA"])
 
     # The do-nothing form: the r93-shaped table (the schema the round would keep without the role work).
     write_r93(tpins, base_rows, PINS_REL)
@@ -207,10 +208,11 @@ def main():
     results["positive"] = pos_ok
     print(f"{'OK' if pos_ok else 'FAIL'} positive: r94 rc={rc_p}")
 
-    role_forgeries = sum(1 for n in ("d1-dangling-instrument", "d2-missing-claims",
-                                     "d3-mis-role-expectation", "d4-unknown-role") if results.get(n))
-    prior = sum(1 for n in ("d1-dangling-instrument", "d2-missing-claims",
-                            "d3-mis-role-expectation", "d4-unknown-role") if results.get(n))
+    role_names = ("d1-dangling-instrument", "d2-missing-claims", "d3-mis-role-expectation", "d4-unknown-role")
+    role_forgeries = sum(1 for n in role_names if results.get(n))
+    # Prior acceptance is its own measurement (R94ExecC1Repro F2): the r93 run's rc on the projected table,
+    # not the r94 case's result printed twice.
+    prior = sum(1 for n in role_names if old_rcs.get(n) == 0)
     carried = sum(1 for n in ("c1-carried-instrument", "c2-carried-receipt") if results.get(n))
     ok = all(results.values())
     print(f"FORGERIES={'PASS' if ok else 'FAIL'} FORGERY_REFUSED={role_forgeries}/4 PRIOR_ACCEPTED={prior}/4 "

@@ -107,7 +107,6 @@ STOPWORDS = set(
     "must should never always".split()
 )
 EXPECTED_LEGS = 16
-PUNCT_RE = re.compile(r"[A-Za-z0-9]")
 # The leg VOCABULARY is a committed side table, not a constant in this file (R93ExecMutations M8: deleting a
 # leg while lowering EXPECTED_LEGS used to pass). `controls/legs.txt` is pinned by the round's pin table, so a
 # mutant that also rewrites this file is caught by that walk; the counter refuses a missing table.
@@ -193,15 +192,6 @@ def quote_lines(lines):
         yield ln, cells
 
 
-def table_rows(lines, width):
-    out = []
-    for _ln, cells in data_lines(lines):
-        if len(cells) != width:
-            continue
-        out.append(cells)
-    return out
-
-
 def distinctive(cells):
     words = set()
     for c in cells:
@@ -219,7 +209,7 @@ def quote_terms(quote):
 def locates(quote, cap):
     """A punctuation-only quote is never a located quote (round 94): it is a substring of nearly every
     capture, so `"—" in cap` would 'locate' a source the quote says nothing about."""
-    return cap is not None and bool(PUNCT_RE.search(quote)) and norm(quote) in cap
+    return cap is not None and any(ch.isalnum() for ch in quote) and norm(quote) in cap
 
 
 def unentailed_terms(cells, joined):
@@ -237,11 +227,15 @@ def dup_qid(qids):
 
 
 def punct_quote_cell(cells):
-    """Round 94: a three-cell quote whose content carries no alphanumeric character (`"—"`, `"..."`)."""
+    """Round 94: a three-cell quote whose content carries no alphanumeric character (`"—"`, `"..."`).
+
+    Unicode-aware (`str.isalnum`), so a CJK or accented quote is NOT this class; the ASCII-only first
+    draft refused every non-Latin quote (R94ReviewerC2 F2).
+    """
     if len(cells) != 3:
         return False
     inner = cells[2].strip().strip('"').strip()
-    return bool(inner) and not PUNCT_RE.search(inner)
+    return bool(inner) and not any(ch.isalnum() for ch in inner)
 
 
 def ws_quote_cell(cells):
@@ -260,7 +254,7 @@ def q_shape_violation(cells):
     inner = cells[2].strip().strip('"').strip()
     if not inner:
         return "quote=<empty>" if not cells[2].strip().strip('"') else "quote=<whitespace>"
-    if not PUNCT_RE.search(inner):
+    if not any(ch.isalnum() for ch in inner):
         return "quote=<punctuation>"
     return None
 
@@ -306,6 +300,8 @@ def witness():
         ("punct-silent", punct_quote_cell(["Q1", "S214", '"a \u2014 real quote"']) is False),
         ("punct-shape", q_shape_violation(["Q1", "S214", '"\u2014"']) == "quote=<punctuation>"),
         ("punct-locate-silent", locates("\u2014", "before \u2014 after") is False),
+        # Unicode direction (R94ReviewerC2 F2): a CJK quote is NOT the punctuation class.
+        ("punct-cjk-silent", punct_quote_cell(["Q1", "S214", "\"\u6570\u636e\u5e93\u68c0\u7d22\""]) is False),
     ]
     bad = [n for n, ok in rows if not ok]
     return bad, f"{len(rows) - len(bad)}/{len(rows)}"

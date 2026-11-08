@@ -167,10 +167,11 @@ def main():
     case("moved-tail-283", move(text, TAIL283_LINE, OWNER283, ALIEN2),
          0, 1, "TAIL_OWNER_MISMATCH")
     case("double-tail-215", text.replace(TAIL215_LINE, TAIL215_LINE + "\n\n" + TAIL215_LINE, 1), 1, 1, "TAIL_OWNER_COUNT")
-    # Named limit: the declaration binds a heading SUBSTRING, so a heading that contains the declared
-    # owner string satisfies it. Measured, not hidden.
+    # Named limit (R94ReviewerC3 F3: this case RENAMES the owner heading, it does not move the tally):
+    # the declaration binds a heading SUBSTRING, so a heading that contains the declared owner string
+    # satisfies it. Measured, not hidden.
     alias_heading = OWNER215 + " (alias)"
-    case("moved-to-heading", text.replace(OWNER215, alias_heading, 1), 0, 0, "SKILL_TALLY_R94=PASS")
+    case("heading-alias", text.replace(OWNER215, alias_heading, 1), 0, 0, "SKILL_TALLY_R94=PASS")
 
     ok = all(results.values())
     moved_names = ("moved-tail-215", "moved-tail-283")
@@ -183,7 +184,7 @@ def main():
           f"CARRIED_REFUSED={carried}/6 "
           f"MOVED_REFUSED={moved}/2 MOVED_PRIOR_ACCEPTED={prior}/2 "
           f"DOUBLE_REFUSED={int(results.get('double-tail-215', False))}/1 "
-          f"HEADING_ALIAS_ACCEPTED={int(results.get('moved-to-heading', False))}/1 "
+          f"HEADING_ALIAS_ACCEPTED={int(results.get('heading-alias', False))}/1 "
           f"STALE_REFUSED_BOTH={int(results.get('stale-tally', False))}/1 "
           f"TAIL_ADDED_REFUSED={int(results.get('added-tail', False))}/1 "
           f"HIST_UNGROUNDED_REFUSED={int(results.get('ungrounded-historical', False))}/1")

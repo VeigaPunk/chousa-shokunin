@@ -105,7 +105,7 @@ def main():
 
     results = {}
 
-    def case(name, mutate, expect_old, expect_new, needle="", needles=()):
+    def case(name, mutate, expect_old, expect_new, needle="", needles=(), forbid=()):
         tree = fresh(name)
         if mutate is not None:
             mutate(tree)
@@ -113,7 +113,8 @@ def main():
         rc_new, v_new, fails, fl_new, out_new = run(NEW, tree)
         ok = (rc_old == expect_old and rc_new == expect_new
               and (needle in " ".join(fails) or not needle)
-              and all(n in out_new for n in needles))
+              and all(n in out_new for n in needles)
+              and not any(f in out_new for f in forbid))
         results[name] = ok
         print(f"{'OK' if ok else 'FAIL'} {name}: r93 rc={rc_old} ({v_old}), r94 rc={rc_new} ({v_new})"
               f" shapes old={fl_old.get('Q_SHAPE_FAIL')} new={fl_new.get('Q_SHAPE_FAIL')}"
@@ -151,6 +152,11 @@ def main():
          1, 1, "LEG_FAIL QSHAPE", needles=PUNCT_NEEDLES)
     case("x2-punct-dots", lambda t: edit(os.path.join(t, ENTRY_A), QUOTE_ROW, '| Q2 | S214 | "..." |'),
          1, 1, "LEG_FAIL QSHAPE", needles=PUNCT_NEEDLES)
+    # x3 is the Unicode direction the ASCII-only first draft got wrong (R94ReviewerC2 F2): a CJK quote is a
+    # legitimate short quote, refused downstream, NEVER as the punctuation class.
+    case("x3-cjk-quote", lambda t: edit(os.path.join(t, ENTRY_A), QUOTE_ROW,
+                                        '| Q2 | S214 | "数据库检索与报告" |'),
+         1, 1, "LEG_FAIL FLOOR", needles=("Q_PUNCTQUOT=0",), forbid=("quote=<punctuation>", "LEG_FAIL PUNCTQUOT"))
 
     # classification assertion: on both punctuation trees r93 must report the shape leg GREEN.
     punct_shape_green = True
@@ -195,10 +201,12 @@ def main():
                   if results.get(n))
     ws_named = sum(1 for n in ("ws-space", "ws-tab") if results.get(n))
     punct_named = sum(1 for n in ("x1-punct-dash", "x2-punct-dots") if results.get(n))
-    ok = (carried == 4 and ws_named == 2 and punct_named == 2 and punct_shape_green and dup_ok
-          and reg_ok and results.get("positive"))
+    cjk_ok = int(results.get("x3-cjk-quote", False))
+    ok = (carried == 4 and ws_named == 2 and punct_named == 2 and cjk_ok == 1 and punct_shape_green
+          and dup_ok and reg_ok and results.get("positive"))
     print(f"CONTROLS={'PASS' if ok else 'FAIL'} CARRIED_REFUSED_BOTH={carried}/4 WS_NAMED={ws_named}/2 "
           f"PUNCT_NAMED={punct_named}/2 PUNCT_SHAPE_GREEN_R93={int(punct_shape_green)}/1 "
+          f"CJK_SILENT={cjk_ok}/1 "
           f"DUPCOUNT_{fl_old.get('UNENTAILED_TERM') or 'x'}={int(dup_ok)}/1 "
           f"PRIOR_REGRESSION={'7/7' if reg_ok else 'FAIL'}")
     return 0 if ok else 1

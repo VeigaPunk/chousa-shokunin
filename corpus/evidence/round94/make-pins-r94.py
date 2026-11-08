@@ -34,6 +34,7 @@ DRIVERS = (
     "corpus/evidence/round94/curation-controls-r94.py",
     "corpus/evidence/round94/skill-tally-r94-controls.py",
     "corpus/evidence/round94/make-pins-r94.py",
+    "scripts/measure-all-r94.sh",
     "corpus/evidence/round94/controls/legs.txt",
     "corpus/evidence/round94/controls/selftest-r94.txt",
     "corpus/evidence/round94/evidence-before/c1-prior-accepts.txt",

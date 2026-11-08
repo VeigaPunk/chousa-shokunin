@@ -150,12 +150,6 @@ def instrument_rels(row, root):
     return rels
 
 
-def instrument_rel(row, root):
-    """The first source file a row executes (kept for compatibility; pinning uses instrument_rels)."""
-    rels = instrument_rels(row, root)
-    return rels[0] if rels else None
-
-
 def sha256_file(path):
     h = hashlib.sha256()
     with open(path, "rb") as fh:
@@ -287,7 +281,7 @@ def check_headers(row, header):
     return codes
 
 
-def role_report(executed, root, pins, roles, expected, receipts_dir):
+def role_report(executed, root, roles, expected, receipts_dir):
     """R94: the pins table's role column is a set relation, checked in both directions.
 
     instrument == the expected rows' executed set; expectation == the expectations file; receipt == the
@@ -382,7 +376,7 @@ def pin_report(rows, root, expected, pins_path, receipts_dir):
         checked += 1
     rcodes, rchecked, rtotal = receipt_pins(root, receipts_dir, pins)
     codes += rcodes
-    role_codes, role_ok, role_total = role_report(executed, root, pins, roles, expected, receipts_dir)
+    role_codes, role_ok, role_total = role_report(executed, root, roles, expected, receipts_dir)
     codes += role_codes
     return codes, checked, rchecked, rtotal, role_codes, role_ok, role_total
 

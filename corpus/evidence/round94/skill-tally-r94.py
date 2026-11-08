@@ -139,7 +139,7 @@ def main():
             continue
         hist_derived += 1
     hist_present = sum(1 for tally, _r, _q in HIST_SOURCES if other_counts.get(tally, 0) >= 1)
-    for tally, receipt, _q in HIST_SOURCES:
+    for tally, _receipt, _q in HIST_SOURCES:
         if other_counts.get(tally, 0) < 1:
             hist_codes.append(f"HIST_MISSING {'PASS (' + tally[0] + ' cases, ' + tally[1] + ' skipped)'}")
     others_ok = other_counts == declared and not hist_codes
@@ -189,6 +189,11 @@ def main():
                                    f"({tally[0]} cases, {tally[1]} skipped) owner={h} declared={owner}")
         if len(seen) == count and all(owner in h for h in seen):
             owned_ok += 1
+    # Coverage (R94ReviewerC3 F1): every declared tail tally must have an owner entry, so a new declaration
+    # cannot be added to TAIL_DECLARED and moved freely. The two tables are one declaration in two halves.
+    for tally in sorted(set(TAIL_DECLARED) - {t for t, _c, _o in TAIL_OWNED}):
+        owner_codes.append(f"TAIL_OWNER_UNMAPPED tally={tally[0]} cases tally=PASS "
+                           f"({tally[0]} cases, {tally[1]} skipped)")
     tail_ok = tail_counts == TAIL_DECLARED and head_ok and not owner_codes
     for tally in sorted(set(tail_counts) - set(TAIL_DECLARED)):
         print(f"HIST_SCOPE_BLEED line={tally[0]} cases tally=PASS ({tally[0]} cases, {tally[1]} skipped)")
