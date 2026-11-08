@@ -1,0 +1,15 @@
+# R94ReviewerC1 C1 receipt - forgeries-r94.py case s1-schema-two-column is unsatisfiable at C
+# tree: shared clone at 352924bbea624caf3771ef291be98fd4ec679dda (carrier C), clean working tree
+## the fixture: forgeries-r94.py:171  case("s1-schema-two-column", None, 2, ["SETUP PIN_SCHEMA"])
+##   rows_mutator=None -> rows are the committed rows; write_r94() rewrites them; r94 must exit 2.
+## command:
+##   python3 -  (imports forgeries-r94.py's own write_r94/parse_rows, writes the s1 table, hashes it)
+## observed:
+COMMITTED_SHA 6b2c5579794e0dc797671b49ef43b84b3848b7be2acac763501c1ebad294f1c4
+WRITTEN_SHA   6b2c5579794e0dc797671b49ef43b84b3848b7be2acac763501c1ebad294f1c4
+S1_FIXTURE_TABLE_IDENTICAL_TO_COMMITTED True
+S1_EXPECTS rc=2 needles=['SETUP PIN_SCHEMA']
+## and the canonical verify on exactly those bytes (see R94ReviewerC1-verify-canonical.txt):
+##   rc=0, CONTROL_DRIVER_R94=PASS, no "SETUP PIN_SCHEMA" anywhere
+## => case() scores new_ok=False, results["s1-schema-two-column"]=False,
+##    ok=all(results.values())=False => FORGERIES=FAIL, exit 1 (observed in R94ReviewerC1-forgeries-canonical.txt)

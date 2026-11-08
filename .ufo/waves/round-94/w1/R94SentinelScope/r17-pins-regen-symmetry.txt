@@ -1,0 +1,29 @@
+# seat=R94SentinelScope Q5/F9 make-pins-r94.py read/pin symmetry
+$ python3 -B corpus/evidence/round94/make-pins-r94.py --root . --out /fast/scratch/hyaku/chousa-r94/R94SentinelScope/regen-pins2.txt
+PINS_WRITTEN=34 roles=instrument=5,expectation=1,receipt=6,claims=2,driver=19
+# exit=0
+$ diff <(sort regen) <(sort committed/instrument-pins.txt)
+11c11
+< 498873a97c523fe89b9298c4fbf80387f60c106add0d32d2dcd08e8a7f80c2ee  driver  ../regen-pins2.txt
+---
+> 498873a97c523fe89b9298c4fbf80387f60c106add0d32d2dcd08e8a7f80c2ee  driver  corpus/evidence/round94/instrument-pins.txt
+# the single difference is the self row path introduced by --out outside the tree;
+# with --out at the default in-tree path the table is byte-identical.
+
+=== which files does make-pins open? (read set == pin set) ===
+54:def sha256_file(path):
+56:    with open(path, "rb") as fh:
+65:    with open(rows_path, encoding="utf-8") as fh:
+94:        rows.append((sha256_file(disk), role, rel))
+100:    for f in sorted(os.listdir(receipts)):
+112:    with open(out, "w", encoding="utf-8") as fh:
+
+=== files the EXECUTED instruments read that no pin row covers ===
+tools/gate-records.py                                NOT_PINNED
+tools/research-gate.sh                               NOT_PINNED
+corpus/evidence/round90/curation-r90-controls.py     NOT_PINNED
+corpus/SOURCES.md                                    NOT_PINNED
+SKILL.md                                             NOT_PINNED
+
+=== maker has no containment check on --out ===
+86:    out = a.out or os.path.join(root, PINS_REL)

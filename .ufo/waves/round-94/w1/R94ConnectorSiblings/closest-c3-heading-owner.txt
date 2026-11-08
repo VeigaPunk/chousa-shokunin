@@ -1,0 +1,65 @@
+$ grep -nE '^[a-z_]+ +[0-9a-f]{64}  ' audio-shokunin/corpus/live/r84-scribe/commit-pin.txt
+36:worktree     21b39e3ceeac7a1cbbb1d8444be89b9b2ec6ad11a91eac9073141b55d1f8fbb8  corpus/fixtures/__pycache__/measure_audio.cpython-314.pyc
+
+[exit=0]
+
+$ sed -n '514,527p' kake-shokunin/.ufo/waves/round-60/c60_quote_truth.py
+                    if any(q in t for q in spans for t in others) or any(text.count(q) != 1 for q in spans):
+                        c5.append(f"{sid}: a Gate quote occurs more than once in its own body or also in another retained body (not page-unique)")
+                    # L1 ruling 2026-10-27: each page-unique Gate quote is anchored by its nearest preceding article heading.
+                    if anchors.get(sid):
+                        for q in spans:
+                            if TOPIC[sid] not in q or not in_content(text, q, sid) or text.count(q) != 1:
+                                continue
+                            at = text.find(q)
+                            prev = [h for h in article_heading_positions(text, sid) if h[0] < at]
+                            got = prev[-1][1] if prev else None
+                            if got != anchors[sid]:
+                                c5.append(f"{sid}: Gate quote {q[:40]!r}… has nearest preceding heading {got!r}, "
+                                          f"not row anchor {anchors[sid]!r}")
+                    if ROW_URL[sid] not in line:
+
+[exit=0]
+
+$ sed -n '1012,1016p' kake-shokunin/.ufo/waves/round-60/c60_quote_truth.py
+            need(win is not None and win[0] < at < win[1], f"{sid} Gate span in article block")
+            prev = [h for h in heads if h[0] < at]
+            need(bool(prev), f"{sid} heading preceding Gate span")
+            need(heading.get(sid) in (None, prev[-1][1]), f"{sid} Gate spans share one preceding heading")
+            heading[sid] = prev[-1][1]
+
+[exit=0]
+
+$ grep -n 'fail_gate_quote_in_other_section\|fail_anchor_heading_inside_code_sample' kake-shokunin/.ufo/waves/round-60/c60_quote_truth.py
+1198:    @case("fail_gate_quote_in_other_section", "C5_quote_truth", "nearest preceding heading")
+1303:    @case("fail_anchor_heading_inside_code_sample", "C5_quote_truth", "nearest preceding heading", extra=("C6_receipt_pins",))
+
+[exit=0]
+
+$ sed -n '318,321p' kake-shokunin/scripts/doc_quote_truth.py
+def sections(text: str, title_re: re.Pattern) -> list[tuple[int, list[tuple[int, str]]]]:
+    """Bodies of level-two headings whose title matches `title_re` at position 0.
+    A body ends at the next heading of level <= 2 (nested headings stay inside)."""
+    lines = text.splitlines()
+
+[exit=0]
+
+$ grep -n 'from the .## Gate. heading up to' kotodama-shokunin/tools/check-gate-quotes.py
+15:  * Only the `## Gate` section of each file: from the `## Gate` heading up to
+
+[exit=0]
+
+$ grep -rc 'TAIL_OWNED\|TAIL_OWNER' chousa-shokunin/corpus/evidence/round94/skill-tally-r94.py
+8
+
+[exit=0]
+
+$ grep -rn 'TAIL_OWNED\|TAIL_OWNER' --include='*.py' . | grep -v '/chousa-shokunin/' || echo 'NO SIBLING TAIL-OWNER'
+NO SIBLING TAIL-OWNER
+
+[exit=0]
+
+$ grep -o 'each PROVINCE.md sibling ownership pointer anchored by exact heading[^|]*' tsukuroi-shokunin/SCORECARD.md | head -1
+each PROVINCE.md sibling ownership pointer anchored by exact heading + ≤25-word quote + pinned sibling commit/blob digest, published in an appended PROVINCE section) and `inbound_classified` 0 → 114 (every line-numbered sibling pointer into tsukuroi files classified RESOLVES/DRIFTED/UNRESOLVABLE against the lane tip, operative drifts packaged as owner handoffs); `python3 tools/check-adjacency-anchors.py --revision <REV> [--registry-from <TARGET>]` 
+
+[exit=0]

@@ -1,0 +1,12 @@
+FAIL d1-dangling-instrument: r93 rc=0 r94 rc=0 needles=PIN_ROLE_DANGLING role=instrument
+  r94: RECEIPT PINS OK 34/34 pinned files byte-identical RECEIPT_PINS_OK=6/6
+OK d2-missing-claims: r93 rc=0 r94 rc=1 needles=PIN_ROLE_MISSING role=claims
+OK d3-mis-role-expectation: r93 rc=0 r94 rc=1 needles=PIN_ROLE_MISMATCH role=expectation
+OK d4-unknown-role: r93 rc=0 r94 rc=2 needles=SETUP PIN_ROLE_UNKNOWN
+FAIL s1-schema-two-column: r93 rc=0 r94 rc=0 needles=SETUP PIN_SCHEMA
+  r94: RECEIPT PINS OK 34/34 pinned files byte-identical RECEIPT_PINS_OK=6/6
+OK s0-schema-prior: r93 rc=0 (two-column table scores) r94 rc=2 (PIN_SCHEMA)
+OK c1-carried-instrument: r94 rc=1 (PIN_DISK_MISMATCH)
+OK c2-carried-receipt: r94 rc=1 (RECEIPT_MISMATCH)
+OK positive: r94 rc=0
+FORGERIES=FAIL FORGERY_REFUSED=3/4 PRIOR_ACCEPTED=3/4 SCHEMA_REFUSED=1/1 SCHEMA_PRIOR_ACCEPTED=1/1 CARRIED_REFUSED=2/2 POSITIVE=pass

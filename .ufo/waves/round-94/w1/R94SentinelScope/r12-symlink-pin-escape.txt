@@ -1,0 +1,19 @@
+# seat=R94SentinelScope F5 symlink pin-row escape
+=== A: pins row names an in-tree symlink to an out-of-tree file; hash == the OUTSIDE file ===
+$ sha256sum /fast/scratch/hyaku/chousa-r94/R94SentinelScope/sym3/secret.txt -> 16f533ee5d4d016d633acb331baf98844476af32d99e2431960023f16232ef52
+$ printf '%s  driver  corpus/evidence/round94/link.txt' $GOOD >> pins-full.txt   (rows=35)
+$ python3 -B .../control-driver-r94.py verify --root . --repo . --rev F --receipts-rev C --work /fast/scratch/hyaku/chousa-r94/R94SentinelScope/sym3/work --pins pins-full.txt
+RECEIPT PINS FINDING PIN_SELF_ROW_ABSENT path=pins-full.txt,PIN_DISK_MISMATCH path=corpus/evidence/round94/instrument-pins.txt
+COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 PINNED_FILES=34/35 RECEIPT_PINS=6/6 PIN_ROLES_OK=14/14 CONTROL_DRIVER_R94=FAIL
+# exit=1
+  -> the symlink row counted as verified (PINNED_FILES 34/35; the only miss is the self row
+     because this table is a copy). No PIN_ROW_OUTSIDE: the row is lexically inside the tree.
+
+=== B: same row, hash != the outside file ===
+RECEIPT PINS FINDING PIN_SELF_ROW_ABSENT path=pins-bad.txt,PIN_DISK_MISMATCH path=corpus/evidence/round94/instrument-pins.txt,PIN_DISK_MISMATCH path=corpus/evidence/round94/link.txt
+COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 PINNED_FILES=33/35 RECEIPT_PINS=6/6 PIN_ROLES_OK=14/14 CONTROL_DRIVER_R94=FAIL
+# exit=1
+  -> PIN_DISK_MISMATCH on link.txt proves the OUTSIDE bytes were opened and hashed.
+
+=== for contrast: a '..' row IS refused lexically ===
+368:        if os.path.isabs(rel) or ".." in parts:

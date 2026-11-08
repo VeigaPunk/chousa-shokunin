@@ -1,0 +1,23 @@
++ echo '# seat=R94SentinelScope finding=F1 c1-forgeries at C'
+# seat=R94SentinelScope finding=F1 c1-forgeries at C
++ echo '# root=/fast/scratch/hyaku/chousa-r94/R94SentinelScope/repo rev=41038ed7c40cffc4cf86d649a6ba433c4b9eec1a receipts_rev=352924bbea624caf3771ef291be98fd4ec679dda'
+# root=/fast/scratch/hyaku/chousa-r94/R94SentinelScope/repo rev=41038ed7c40cffc4cf86d649a6ba433c4b9eec1a receipts_rev=352924bbea624caf3771ef291be98fd4ec679dda
++ echo '$ python3 -B corpus/evidence/round94/forgeries-r94.py --root . --repo . --rev 41038ed7c40cffc4cf86d649a6ba433c4b9eec1a --receipts-rev 352924bbea624caf3771ef291be98fd4ec679dda --work /fast/scratch/hyaku/chousa-r94/R94SentinelScope/r02-forg'
+$ python3 -B corpus/evidence/round94/forgeries-r94.py --root . --repo . --rev 41038ed7c40cffc4cf86d649a6ba433c4b9eec1a --receipts-rev 352924bbea624caf3771ef291be98fd4ec679dda --work /fast/scratch/hyaku/chousa-r94/R94SentinelScope/r02-forg
++ python3 -B corpus/evidence/round94/forgeries-r94.py --root . --repo . --rev 41038ed7c40cffc4cf86d649a6ba433c4b9eec1a --receipts-rev 352924bbea624caf3771ef291be98fd4ec679dda --work /fast/scratch/hyaku/chousa-r94/R94SentinelScope/r02-forg
+OK d1-dangling-instrument: r93 rc=0 r94 rc=1 needles=PIN_ROLE_DANGLING role=instrument
+OK d2-missing-claims: r93 rc=0 r94 rc=1 needles=PIN_ROLE_MISSING role=claims
+OK d3-mis-role-expectation: r93 rc=0 r94 rc=1 needles=PIN_ROLE_MISMATCH role=expectation
+OK d4-unknown-role: r93 rc=0 r94 rc=2 needles=SETUP PIN_ROLE_UNKNOWN
+FAIL s1-schema-two-column: r93 rc=0 r94 rc=0 needles=SETUP PIN_SCHEMA
+  r94: RECEIPT PINS OK 34/34 pinned files byte-identical RECEIPT_PINS_OK=6/6
+OK s0-schema-prior: r93 rc=0 (two-column table scores) r94 rc=2 (PIN_SCHEMA)
+OK c1-carried-instrument: r94 rc=1 (PIN_DISK_MISMATCH)
+OK c2-carried-receipt: r94 rc=1 (RECEIPT_MISMATCH)
+OK positive: r94 rc=0
+FORGERIES=FAIL FORGERY_REFUSED=4/4 PRIOR_ACCEPTED=4/4 SCHEMA_REFUSED=1/1 SCHEMA_PRIOR_ACCEPTED=1/1 CARRIED_REFUSED=2/2 POSITIVE=pass
+# exit=1        (independently reproduced: run #1 RC=1; run #2 FORG_RC=1)
+# du_after=399M  tree_clone=398M  tree_own_objects=4.0K
+# alternates=/fast/scratch/hyaku/chousa-r94/R94SentinelScope/repo/./.git/objects   (shared clone; never repack it)
+# note: the run itself completed; this trailer was appended after the capture job was
+#       interrupted, from the two independently observed exit codes of the same command.

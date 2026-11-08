@@ -1,0 +1,46 @@
+# seat=R94SentinelScope F8/F10 leftovers and failing-exit behaviour
+=== F8: failing exit of forgeries-r94.py (bogus receipts-rev) ===
+$ python3 -B corpus/evidence/round94/forgeries-r94.py --root . --repo . --rev F --receipts-rev 0000000000000000000000000000000000000000 --work /fast/scratch/hyaku/chousa-r94/R94SentinelScope/r13-fail
+SETUP git checkout 0000000000000000000000000000000000000000 failed: fatal: unable to read tree (0000000000000000000000000000000000000000)
+
+# exit=2
+# du after=398M
+# contents after:
+/fast/scratch/hyaku/chousa-r94/R94SentinelScope/r13-fail/tree
+# clone own objects=4.0K  alternates=/fast/scratch/hyaku/chousa-r94/R94SentinelScope/repo/./.git/objects
+
+=== F8: normal-exit leftovers (from the r02 capture work dir) ===
+# du=400M  tree=398M
+
+=== F10: setup-class failure surfaces as a traceback, exit 1 ===
+$ python3 -B corpus/evidence/round94/curation-controls-r94.py --root /fast/scratch/hyaku/chousa-r94/R94SentinelScope/r13-tree --work /fast/scratch/hyaku/chousa-r94/R94SentinelScope/r13-c
+  File "/usr/lib/python3.14/shutil.py", line 313, in copyfile
+    with open(src, 'rb') as fsrc:
+         ~~~~^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/fast/scratch/hyaku/chousa-r94/R94SentinelScope/r13-tree/corpus/evidence/round93/controls/legs.txt'
+# exit=1
+# (no 'SETUP ...' line; exit 1 where the counters' convention is SETUP + exit 2)
+
+=== F9: regeneration symmetry of make-pins-r94.py ===
+$ python3 -B corpus/evidence/round94/make-pins-r94.py --root . --out /fast/scratch/hyaku/chousa-r94/R94SentinelScope/regen-pins.txt
+PINS_WRITTEN=34 roles=instrument=5,expectation=1,receipt=6,claims=2,driver=19
+# exit=0
+$ diff <(sort regen) <(sort committed)
+11c11
+< 498873a97c523fe89b9298c4fbf80387f60c106add0d32d2dcd08e8a7f80c2ee  driver  ../regen-pins.txt
+---
+> 498873a97c523fe89b9298c4fbf80387f60c106add0d32d2dcd08e8a7f80c2ee  driver  corpus/evidence/round94/instrument-pins.txt
+
+=== F9: make-pins has no containment check on --out (self row becomes a '..' path) ===
+86:    out = a.out or os.path.join(root, PINS_REL)
+
+=== F9/Q6: credential-shape + absolute-host-path sweep over pinned artefacts ===
+CREDENTIAL_SHAPE_HIT(1): corpus/evidence/round94/controls/selftest-r94.txt -> 16:ok-case  16 fail-secret-shaped           exit=1
+# (the single hit is a selftest case NAME: 16:ok-case  16 fail-secret-shaped           exit=1 — false positive)
+
+--- absolute host paths in pinned artefacts ---
+corpus/evidence/round94/controls/expected.tsv:4:/home/vgpnk
+corpus/evidence/round94/controls/receipts/c1-harm-setup.txt:5:/fast/scratch/hyaku/chousa-r94/l1/emit/absent-tool.py
+
+--- after/ is empty at C ---
+# git ls-tree -r C -- corpus/evidence/round94/after/ | wc -l = 0

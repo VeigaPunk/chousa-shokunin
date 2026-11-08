@@ -4183,3 +4183,46 @@ the subject tools move no committed record (the driver only reads).
    are both declared but nothing checks the declaring heading), so a tally moved between sections is refused.
 4. carried debt: the round-74 "source-blind order oracle", QUALITY 173's successful-refused record form, the r80
    backlog Gate ids.
+
+## Round 94 verdict — the pins table learns what each row is, the punctuation quote gets a name, the tail set gets an owner (2026-11-08)
+
+Base `0f3f84da`; freeze `41038ed7` (F), carrier `352924bb` (C); wave-forced re-freezes `4cbaed6c` (F2) and
+`ebbcbe39` (F3) with carriers `f276d7fb` (C2) and `d13c2ff2` (C3) — the landing measurement is F3/C3, and every
+number below is from `after/*.txt` at those revisions. Three claims, three axes, no exploratory claim. One v1
+wave, 12 seats (7 attack), see the report §Work performed. Frozen sentences:
+`.ufo/waves/round-94/claims.md`; plan and amendments 1–9: `plans/round-94.md`.
+
+**Correction, append-only (round-93 spot-check D2).** The round-93 block's *operability* bullet above says "22/22
+rows byte-checked". That sentence is superseded: the round-93 landing population is 23 rows (`PINNED_FILES=23/23`,
+Amendment 12 of that round). The round-93 block is not rewritten; this line and the C1 row below are the record.
+
+| claim | axis | before | after | verdict |
+|---|---|---|---|---|
+| C1 `C1-DRIVER-R94` | operability (lowest, historical 3/10) | r93 driver on the same pin population: no role column at all (`awk 'NF==3'` over its table → 0 rows), 18 of 23 rows carry no role, and deleting the two claims rows still prints `PINNED_FILES=21/21 CONTROL_DRIVER_R93=PASS` (`corpus/evidence/round94/evidence-before/c1-prior-accepts.txt`) | `CONTROL_DRIVER_R94=PASS` with `COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 PINNED_FILES=35/35 RECEIPT_PINS=6/6 PIN_ROLES_OK=14/14`, `RECEIPT SELF_PIN OK rev=ebbcbe39 receipts_rev=d13c2ff2`; role sets both directions (`instrument`=5 executed, `expectation`=1, `receipt`=6, `claims`=2); battery `FORGERY_REFUSED=4/4 PRIOR_ACCEPTED=4/4 SCHEMA_REFUSED=1/1 SCHEMA_PRIOR_ACCEPTED=1/1 CARRIED_REFUSED=2/2 POSITIVE=pass` | **verified as stated** |
+| C2 `C2-CURATION-R94` | calibration | r93 counter on the dash tree: `Q_SHAPE_FAIL=0`, no `Q_PUNCTQUOT` field, refusal only downstream (`LEG_FAIL FLOOR`, `LEG_FAIL WARRANT`); its `locates()` has no punctuation guard (`corpus/evidence/round94/evidence-before/c2-prior-accepts.txt`) | `CURATION_R94=PASS` with `LEGS_MEASURED=16/16 Q_PUNCTQUOT=0 Q_ROWS=20 WARRANT_OK=17/17 TFREQ_OK=17/17 DUP_QIDS=0 DETECTOR_WITNESS=18/18`; on both punctuation trees `Q_SHAPE_FAIL=1 Q_PUNCTQUOT=1`, `quote=<punctuation>`, `LEG_FAIL QSHAPE`, `LEG_FAIL PUNCTQUOT`; `CONTROLS=PASS CARRIED_REFUSED_BOTH=4/4 WS_NAMED=2/2 PUNCT_NAMED=2/2 PUNCT_SHAPE_GREEN_R93=1/1 CJK_SILENT=1/1 PRIOR_REGRESSION=7/7` | **verified as stated (classification claim)** |
+| C3 `C3-TALLY-R94` | freshness | r93 counter on the moved-tail tree (215 tally moved into another section, same bytes and count): `TAIL_OK=1`, `SKILL_TALLY_R93=PASS` (`corpus/evidence/round94/evidence-before/c3-prior-accepts.txt`) | `SKILL_TALLY_R94=PASS` with `LEGS=4/4 TAIL_OK=1 TAIL_OWNED_OK=2/2 TAIL_TALLIES=2 TALLY_ROWS=8 STALE_TALLIES=0/8 HIST_DERIVED=2/2 HIST_PRESENT=2/2 CASE_RANGE_OK=2/2 MISLABELED=0`; both moved trees refused with `TAIL_OWNER_MISMATCH` where r93 exits 0; `CONTROLS=PASS CARRIED_REFUSED=6/6 MOVED_REFUSED=2/2 MOVED_PRIOR_ACCEPTED=2/2 DOUBLE_REFUSED=1/1 HEADING_ALIAS_ACCEPTED=1/1` | **verified as stated** |
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** | the pins table is now a typed population: role sets hold in both directions (`PIN_ROLES_OK=14/14`), a deleted claims row is `PIN_ROLE_MISSING role=claims` where r93 stays green at 21/21, a dangling instrument row is `PIN_ROLE_DANGLING`, an unknown role and a two-column table are setup refusals |
+| calibration | **improved** | the punctuation-only quote class is named at the shape leg and counted independently (`Q_PUNCTQUOT`), and `locates()` refuses it; r93 cannot name it on the same bytes (`PUNCT_SHAPE_GREEN_R93=1/1`) |
+| freshness | **improved** | each tail tally is bound to the heading that owns it, so a moved tally fires `TAIL_OWNER_MISMATCH` where r93 prints `TAIL_OK=1` |
+| depth | unchanged | no new `corpus/knowledge/` entry; S070/S001 re-opened, S221 added |
+| coverage | unchanged | registry 219 → 220 rows (`S221`), `PROVINCE.md` untouched |
+| adjacency | unchanged | the connector seat's sibling scan is read-only; nothing absorbed |
+
+No axis harmed: `git diff --quiet 0f3f84da <landing> -- tools/ SKILL.md PROVINCE.md` is empty; the registry diff is
+the single appended `S221` row; the round's instruments are new files under `corpus/evidence/round94/`.
+
+## Planned — round 95 (intent, not a predicate)
+
+1. **operability (lowest)** — the role leg covers membership, not behaviour: a pinned `driver` row may read any
+   file it likes. Bind a declare-then-read check (each instrument declares the inputs it opens) so a script that
+   reads an unpinned file is a finding.
+2. **calibration** — the punctuation class is refused by rule, not measured against sources: build a small
+   fixture where a source's only quotable content IS punctuation and either admit it with a named exemption or
+   keep refusing with the measured reason.
+3. **freshness** — the owner binding uses heading substrings; make it exact (full heading line equality with a
+   declared line number) so `HEADING_ALIAS_ACCEPTED` becomes a refusal, not a named limit.
+4. carried debt: the round-74 "source-blind order oracle", the r82 clip range, QUALITY 173's successful-refused
+   record form, the r80 backlog Gate ids.

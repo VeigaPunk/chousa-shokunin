@@ -1,0 +1,51 @@
+# R94ReviewerC1 C1 receipt - PIN_ROLES_OK=13/14 construction, ratio-conjunct redundancy, aggregate identity
+# tree: shared clone at 352924bbea624caf3771ef291be98fd4ec679dda, clean; mutations restored with git checkout
+# M14 fixture: expectation row's path -> plans/round-94.md (truthful digest), self row recomputed
+================ probe-ratio.out (batch 2; M14 victim legs.txt collided with a driver row -> PIN_DUPLICATE, superseded by batch 3) ================
+M14_13of14 rc=2
+SETUP PIN_DUPLICATE path=corpus/evidence/round94/controls/legs.txt|
+601:    roles_ok = not role_codes and role_total > 0
+base-unpatched rc=0
+COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 PINNED_FILES=34/34 RECEIPT_PINS=6/6 PIN_ROLES_OK=14/14 CONTROL_DRIVER_R94=PASS
+
+base-patched rc=0
+COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 PINNED_FILES=34/34 RECEIPT_PINS=6/6 PIN_ROLES_OK=14/14 CONTROL_DRIVER_R94=PASS
+
+m14-unpatched rc=2
+SETUP PIN_DUPLICATE path=corpus/evidence/round94/controls/legs.txt|
+m14-patched rc=2
+SETUP PIN_DUPLICATE path=corpus/evidence/round94/controls/legs.txt|
+Traceback (most recent call last):
+  File "<stdin>", line 10, in <module>
+  File "<string>", line 1
+    role_forgeries = sum(1 for n in ("d1-dangling-instrument", "d2-missing-claims",
+IndentationError: unexpected indent
+    prior = sum(1 for n in ("d1-dangling-instrument", "d2-missing-claims",
+                            "d3-mis-role-expectation", "d4-unknown-role") if results.get(n))
+    carried = sum(1 for n in ("c1-carried-instrument", "c2-carried-receipt") if results.get(n))
+PROBES2_DONE
+
+================ probe-ratio2.out (batch 3, final) ================
+M14 rc=1
+COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 PINNED_FILES=34/34 RECEIPT_PINS=6/6 PIN_ROLES_OK=13/14 CONTROL_DRIVER_R94=FAIL
+PIN_ROLE_FINDING PIN_ROLE_MISMATCH role=expectation pins=plans/round-94.md expected=corpus/evidence/round94/controls/expected.tsv|RECEIPT PINS FINDING PIN_ROLE_MISMATCH role=expectation pins=plans/round-94.md expected=corpus/evidence/round94/controls/expected.tsv|
+m14-unpatched rc=1
+COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 PINNED_FILES=34/34 RECEIPT_PINS=6/6 PIN_ROLES_OK=13/14 CONTROL_DRIVER_R94=FAIL
+PIN_ROLE_FINDING PIN_ROLE_MISMATCH role=expectation pins=plans/round-94.md expected=corpus/evidence/round94/controls/expected.tsv|RECEIPT PINS FINDING PIN_ROLE_MISMATCH role=expectation pins=plans/round-94.md expected=corpus/evidence/round94/controls/expected.tsv|
+m14-patched rc=1
+COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 PINNED_FILES=34/34 RECEIPT_PINS=6/6 PIN_ROLES_OK=13/14 CONTROL_DRIVER_R94=FAIL
+PIN_ROLE_FINDING PIN_ROLE_MISMATCH role=expectation pins=plans/round-94.md expected=corpus/evidence/round94/controls/expected.tsv|RECEIPT PINS FINDING PIN_ROLE_MISMATCH role=expectation pins=plans/round-94.md expected=corpus/evidence/round94/controls/expected.tsv|
+--- committed forgeries-r94.py lines 210-214 ---
+    role_forgeries = sum(1 for n in ("d1-dangling-instrument", "d2-missing-claims",
+                                     "d3-mis-role-expectation", "d4-unknown-role") if results.get(n))
+    prior = sum(1 for n in ("d1-dangling-instrument", "d2-missing-claims",
+                            "d3-mis-role-expectation", "d4-unknown-role") if results.get(n))
+    carried = sum(1 for n in ("c1-carried-instrument", "c2-carried-receipt") if results.get(n))
+OVER_16_RESULT_SETS_DIFFER=0
+PROBES3_DONE
+
+================ per-run summary lines ================
+m14-13of14.txt                                               COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 PINNED_FILES=34/34 RECEIPT_PINS=6/6 PIN_ROLES_OK=13/14 CONTROL_DRIVER_R94=FAIL
+m14-patched.txt                                              COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 PINNED_FILES=34/34 RECEIPT_PINS=6/6 PIN_ROLES_OK=13/14 CONTROL_DRIVER_R94=FAIL
+m14-unpatched.txt                                            COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 PINNED_FILES=34/34 RECEIPT_PINS=6/6 PIN_ROLES_OK=13/14 CONTROL_DRIVER_R94=FAIL
+redundancy.txt                                               

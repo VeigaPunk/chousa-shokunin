@@ -1,0 +1,23 @@
+# seat=R94SentinelScope Q4 network: all three predicates inside an empty network namespace
+# $ unshare -rn bash -c '…'   (only lo exists, and it is DOWN: no route off the host)
+=== interfaces visible inside the namespace ===
+1: lo: <LOOPBACK> mtu 65536 qdisc noop state DOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+
+=== C1 verify ===
+RECEIPT SELF_PIN OK rev=41038ed7c40cffc4cf86d649a6ba433c4b9eec1a receipts_rev=352924bbea624caf3771ef291be98fd4ec679dda
+COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 PINNED_FILES=34/34 RECEIPT_PINS=6/6 PIN_ROLES_OK=14/14 CONTROL_DRIVER_R94=PASS
+# exit=0
+
+=== C2 ===
+CURATION_R94=PASS
+CONTROLS=PASS CARRIED_REFUSED_BOTH=4/4 WS_NAMED=2/2 PUNCT_NAMED=2/2 PUNCT_SHAPE_GREEN_R93=1/1 DUPCOUNT_1=1/1 PRIOR_REGRESSION=7/7
+# exit=0
+
+=== C3 ===
+SKILL_TALLY_R94=PASS
+CONTROLS=PASS CARRIED_REFUSED=6/6 MOVED_REFUSED=2/2 MOVED_PRIOR_ACCEPTED=2/2 DOUBLE_REFUSED=1/1 HEADING_ALIAS_ACCEPTED=1/1 STALE_REFUSED_BOTH=1/1 TAIL_ADDED_REFUSED=1/1 HIST_UNGROUNDED_REFUSED=1/1
+# exit=0
+
+=== static sweep: no network primitive in any round-94 instrument ===
+# no network primitive

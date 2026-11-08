@@ -1,0 +1,31 @@
+# seat=R94SentinelScope Q1 write-scope: strace of the whole C1 predicate
+# $ strace -f -qq -e trace=openat,creat,mkdir,mkdirat,unlink,unlinkat,rename,renameat -o strace-c1.txt python3 -B corpus/evidence/round94/control-driver-r94.py verify --root . --repo . --rev 41038ed7c40cffc4cf86d649a6ba433c4b9eec1a --receipts-rev 352924bbea624caf3771ef291be98fd4ec679dda --work /fast/scratch/hyaku/chousa-r94/R94SentinelScope/strace-work/c1
+# write-mode opens inside the repo tree:
+#   count=0
+# write-mode opens under /home/vgpnk or /etc:
+#   count=0
+# all write-mode opens outside <work> and /dev/null:
+3445251 mkdir("/fast", 0777)            = -1 EEXIST (File exists)
+3445251 mkdir("scratch", 0777)          = -1 EEXIST (File exists)
+3445251 mkdir("hyaku", 0777)            = -1 EEXIST (File exists)
+3445251 mkdir("chousa-r94", 0777)       = -1 EEXIST (File exists)
+3445251 mkdir("R94SentinelScope", 0777) = -1 EEXIST (File exists)
+3445251 mkdir("c1", 0777)               = -1 EEXIST (File exists)
+3445251 mkdir("harm", 0777)             = 0
+#   count=7
+# total traced write ops=7783
+
+# NOTE: the 7 'relative' mkdir entries are GNU mkdir -p chdir-ing component-wise
+# (mkdir("/fast"); chdir("/fast"); mkdir("scratch"); chdir("scratch"); ...).
+# They land inside --work: the final mkdir("harm") is <work>/c1/harm, and the file
+# written next is <work>/c1/harm/base-tool.py (absolute, O_WRONLY|O_CREAT).
+# Verified: ls -ld $WORK/c1/harm exists; no 'harm' or other stray dir anywhere outside work;
+#           git status --porcelain in the clone is empty.
+drwxr-xr-x 2 vgpnk vgpnk 26 Nov  8 12:36 /fast/scratch/hyaku/chousa-r94/R94SentinelScope/strace-work/c1/harm
+# demonstration of the mkdir -p chdir behaviour:
+mkdir("/fast", 0777)                    = -1 EEXIST (File exists)
+chdir("/fast")                          = 0
+mkdir("scratch", 0777)                  = -1 EEXIST (File exists)
+chdir("scratch")                        = 0
+mkdir("hyaku", 0777)                    = -1 EEXIST (File exists)
+chdir("hyaku")                          = 0

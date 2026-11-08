@@ -1,0 +1,24 @@
+# seat=R94SentinelScope F2 --work is rmtree'd unconditionally
+=== the three call sites ===
+corpus/evidence/round94/forgeries-r94.py:108:    shutil.rmtree(work, ignore_errors=True)
+corpus/evidence/round94/curation-controls-r94.py:97:    shutil.rmtree(work, ignore_errors=True)
+corpus/evidence/round94/skill-tally-r94-controls.py:111:    shutil.rmtree(work, ignore_errors=True)
+=== any containment guard anywhere in the three files? ===
+NO_GUARD
+
+=== demo 1: curation-controls-r94.py --work <a dir holding user data> ===
+$ before: 1 file(s): data.txt
+$ python3 -B corpus/evidence/round94/curation-controls-r94.py --root . --work /fast/scratch/hyaku/chousa-r94/R94SentinelScope/victim
+OK positive: r93 rc=0 (CURATION_R93=PASS), r94 rc=0 (CURATION_R94=PASS) shapes old=0 new=0 punct new=0
+OK ws-space: r93 rc=1 (CURATION_R93=FAIL), r94 rc=1 (CURATION_R94=FAIL) shapes old=1 new=1 punct new=0
+# exit=1
+$ after: 20 file(s); contents: positive pristine ws-space ws-tab 
+# USER_DATA_DELETED
+
+=== demo 2: skill-tally-r94-controls.py --work <a dir holding a checkout> ===
+$ before: 1 file(s)
+OK positive: r93 rc=0 (SKILL_TALLY_R93=PASS), r94 rc=0 (SKILL_TALLY_R94=PASS)
+OK old-prose-carried: r93 rc=1 (SKILL_TALLY_R93=FAIL), r94 rc=1 (SKILL_TALLY_R94=FAIL)
+# exit=1
+$ after: 9 file(s)
+# USER_DATA_DELETED

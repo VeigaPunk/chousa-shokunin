@@ -1,0 +1,13 @@
+# R94ExecC3Repro — exact commands, all run inside /fast/scratch/hyaku/chousa-r94/R94ExecC3Repro
+# scratch created: mkdir -p /fast/scratch/hyaku/chousa-r94/R94ExecC3Repro
+# clone (S221: --shared; never repacked): git clone --shared /home/vgpnk/Projects/shokunin/chousa-shokunin repo
+#   git -C repo rev-parse --show-toplevel  -> /fast/scratch/hyaku/chousa-r94/R94ExecC3Repro/repo
+#   git -C repo checkout 352924bbea624caf3771ef291be98fd4ec679dda  -> HEAD=352924bbea624caf3771ef291be98fd4ec679dda
+#   (a) cd repo && python3 -B corpus/evidence/round94/skill-tally-r94.py --root . --selftest corpus/evidence/round94/controls/selftest-r94.txt
+#   (b) cd repo && python3 -B corpus/evidence/round94/skill-tally-r94-controls.py --root . --work /fast/scratch/hyaku/chousa-r94/R94ExecC3Repro/ctl
+#   (c) cd repo && python3 -B /fast/scratch/hyaku/chousa-r94/R94ExecC3Repro/owner_binding.py
+#   (d) python3 -B /fast/scratch/hyaku/chousa-r94/R94ExecC3Repro/scope.py <fixture>/SKILL.md  (carrier + 4 fixtures)
+#   invariants: git diff --stat base..C -- SKILL.md tools/research-gate.sh tools/gate-records.py
+#               git diff --stat F..C -- corpus/evidence/round94/skill-tally-r94.py corpus/evidence/round94/skill-tally-r94-controls.py corpus/evidence/round94/controls/selftest-r94.txt
+# TMPDIR was /fast/scratch/hyaku/chousa-r94/R94ExecC3Repro/tmp for every counter run.
+# No network, no sudo, no pacman; no tool installed or upgraded.

@@ -1,0 +1,9 @@
+210:def locates(quote, cap):
+211-    return cap is not None and norm(quote) in cap
+212-
+213-
+219:def locates(quote, cap):
+220-    """A punctuation-only quote is never a located quote (round 94): it is a substring of nearly every
+221-    capture, so `"—" in cap` would 'locate' a source the quote says nothing about."""
+222-    return cap is not None and bool(PUNCT_RE.search(quote)) and norm(quote) in cap
+223-

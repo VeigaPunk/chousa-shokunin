@@ -1,0 +1,42 @@
+trace c2ctl: 391 distinct opened paths
+trace c3ctl: 190 distinct opened paths
+trace curation: 144 distinct opened paths
+trace driver: 6250 distinct opened paths
+trace tally: 147 distinct opened paths
+
+instrument   corpus/evidence/round89/curation-r89-controls.py                       read_by=driver
+instrument   corpus/evidence/round89/curation-r89.py                                read_by=driver
+instrument   corpus/evidence/round89/gate-records-r89.py                            read_by=driver
+instrument   corpus/evidence/round89/mutate-r89.py                                  read_by=driver
+instrument   corpus/evidence/round90/harm-recheck-r90.py                            read_by=driver
+expectation  corpus/evidence/round94/controls/expected.tsv                          read_by=driver
+receipt      corpus/evidence/round94/controls/receipts/c1-gate-r89.txt              read_by=driver
+receipt      corpus/evidence/round94/controls/receipts/c1-harm-setup.txt            read_by=driver
+receipt      corpus/evidence/round94/controls/receipts/c1-harm.txt                  read_by=driver
+receipt      corpus/evidence/round94/controls/receipts/c1-mutants-r89.txt           read_by=driver
+receipt      corpus/evidence/round94/controls/receipts/c2-prior-controls.txt        read_by=driver
+receipt      corpus/evidence/round94/controls/receipts/c2-prior-landing.txt         read_by=driver
+claims       .ufo/waves/round-94/claims.json                                        read_by=driver
+claims       .ufo/waves/round-94/claims.md                                          read_by=driver
+driver       corpus/evidence/round94/control-driver-r94.py                          read_by=driver
+driver       corpus/evidence/round94/curation-r94.py                                read_by=c2ctl,curation,driver
+driver       corpus/evidence/round94/skill-tally-r94.py                             read_by=c3ctl,driver,tally
+driver       corpus/evidence/round94/forgeries-r94.py                               read_by=driver
+driver       corpus/evidence/round94/curation-controls-r94.py                       read_by=c2ctl,driver
+driver       corpus/evidence/round94/skill-tally-r94-controls.py                    read_by=c3ctl,driver
+driver       corpus/evidence/round94/make-pins-r94.py                               read_by=driver
+driver       corpus/evidence/round94/controls/legs.txt                              read_by=c2ctl,curation,driver
+driver       corpus/evidence/round94/controls/selftest-r94.txt                      read_by=c3ctl,driver
+driver       corpus/evidence/round94/evidence-before/c1-prior-accepts.txt           read_by=driver
+driver       corpus/evidence/round94/evidence-before/c2-prior-accepts.txt           read_by=driver
+driver       corpus/evidence/round94/evidence-before/c3-prior-accepts.txt           read_by=driver
+driver       corpus/evidence/round93/control-driver-r93.py                          read_by=driver
+driver       corpus/evidence/round93/curation-r93.py                                read_by=c2ctl,driver
+driver       corpus/evidence/round93/skill-tally-r93.py                             read_by=c3ctl,driver
+driver       corpus/evidence/round93/forgeries-r93.py                               read_by=driver
+driver       corpus/evidence/round93/curation-controls-r93.py                       read_by=driver
+driver       corpus/evidence/round93/skill-tally-r93-controls.py                    read_by=driver
+driver       corpus/evidence/round93/controls/legs.txt                              read_by=c2ctl,driver
+driver       corpus/evidence/round94/instrument-pins.txt                            read_by=driver
+
+PINNED FILES NEVER OPENED BY ANY INSTRUMENT TRACE: 0

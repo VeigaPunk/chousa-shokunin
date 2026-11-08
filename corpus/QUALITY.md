@@ -1359,3 +1359,24 @@ the admitted entry that motivates it. Tier definitions live in
     renames the cause `LEG_FAIL OTHERS`. Check: the boundary is a heading regex (ATX depth ≤ 2 at column 0)
     with a `SCOPE_BLEED` setup diagnostic when unterminated, named in the claim as a limit, not a pass.
     — `lessons/round-92.md` Mistakes 7.
+
+217. **A prior-state measurement uses the prior instrument's own input shape.** When a successor changes a data
+    format, running the old instrument on the new format measures a schema difference, not the defect the claim
+    is about: round 94's first C1 draft ran the r93 driver on the three-column pins table and got `SETUP
+    malformed pin row`, which says nothing about the role defect. Check: the battery writes the prior instrument's
+    format from the same population (re-digesting any self-binding row under the prior instrument's rule) and
+    reports the prior verdict on it; the contrast line names both verdicts, and a prior refusal for an unrelated
+    reason is reported as such, never as a before state. — `lessons/round-94.md` Mistakes 1.
+
+218. **A leg that lives in one path is exercised by every battery that mirrors the tree.** The round-90 regression
+    battery mirrors only the round-93 leg table, so a successor whose legs live at `round94/controls/legs.txt`
+    fails two cases with `SETUP missing …` and the regression line still prints its `FORGERY_REFUSED=7/7` prefix.
+    Check: the alias shim writes the successor's leg table into the mirrored tree before invoking the counter, and
+    the regression assertion binds `CONTROLS=PASS` as well as the refusal count. — `lessons/round-94.md`
+    Mistakes 2.
+
+219. **A new detector needs a code for every way its population can move.** Round 94's owner leg fired
+    `TAIL_OWNER_MISMATCH` only for a moved tally; a duplicated tally changed the multiset and left the owner leg
+    silent, so the new check was decorative for that class. Check: for each way the population can change (moved,
+    duplicated, deleted) the detector names a code, and the battery binds each code to its case. —
+    `lessons/round-94.md` Mistakes 3.

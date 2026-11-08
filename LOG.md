@@ -2707,3 +2707,31 @@ attacked) and F3–F5 with their carriers, each landing a wave finding (Mistakes
   sha and line 11 quote re-verified) and S001 re-opened with the rev-form Gate record in the lesson; census exit 0
   at start and end.
 - Subject tools untouched: `git diff 206226dc <landing> -- tools/ SKILL.md` is empty.
+
+## Round 94 — 2026-11-08
+
+Lane `chousa`, round 94. Base `0f3f84da`; freeze `41038ed7` (F); carrier `352924bb` (C). Three claims, three
+axes (operability, calibration, freshness), no exploratory claim. One v1 wave, 12 seats (7 attack), see the round
+report §Work performed. Frozen sentences: `.ufo/waves/round-94/claims.md`; plan and amendments:
+`plans/round-94.md`; lesson: `corpus/lessons/round-94.md`.
+
+- Before (all three measured from committed bytes before any scored run,
+  `corpus/evidence/round94/evidence-before/`): the r93 pin table has no role column at all, so 18 of 23 rows say
+  nothing about what they are and deleting the round's two claims rows still prints `PINNED_FILES=21/21
+  CONTROL_DRIVER_R93=PASS`; the r93 curation counter reports `Q_SHAPE_FAIL=0` on a `"—"` quote and refuses the
+  tree only downstream (FLOOR/WARRANT), with no field that names the class; the r93 tally counter's tail set is a
+  multiset, so the `215` tally moved into another section keeps `TAIL_OK=1` and `SKILL_TALLY_R93=PASS`.
+- After: `CONTROL_DRIVER_R94=PASS` (`COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 PINNED_FILES=34/34
+  RECEIPT_PINS=6/6 PIN_ROLES_OK=14/14`, `RECEIPT SELF_PIN OK rev=41038ed7 receipts_rev=352924bb`) with the role
+  sets checked in both directions and `FORGERY_REFUSED=4/4 PRIOR_ACCEPTED=4/4 SCHEMA_REFUSED=1/1
+  SCHEMA_PRIOR_ACCEPTED=1/1 CARRIED_REFUSED=2/2 POSITIVE=pass`; `CURATION_R94=PASS`
+  (`LEGS_MEASURED=16/16 Q_PUNCTQUOT=0 Q_SHAPE_FAIL=0 DETECTOR_WITNESS=17/17`) with the punctuation class named at
+  the shape leg and `CONTROLS=PASS PUNCT_NAMED=2/2 PUNCT_SHAPE_GREEN_R93=1/1 PRIOR_REGRESSION=7/7`;
+  `SKILL_TALLY_R94=PASS` (`LEGS=4/4 TAIL_OWNED_OK=2/2 TAIL_OK=1 HIST_DERIVED=2/2`) with both moved tails refused
+  (`MOVED_REFUSED=2/2 MOVED_PRIOR_ACCEPTED=2/2`).
+- Frontier: `corpus/SOURCES.md` 219 → 220 rows, one row added (`S221`, installed `git-clone(1)`, tier A, the
+  `--shared` body); `S001` and `S070` re-opened, cells unchanged; census exit 0 before and after
+  (`corpus/evidence/round94/census-{start,end}.txt`).
+- Measured revisions: the driver walks the pins table at `C` and pins non-receipt rows at `F`; every scored
+  receipt in `corpus/evidence/round94/after/` prints `computed_against`. Tools untouched:
+  `git diff --quiet 0f3f84da <landing> -- tools/ SKILL.md PROVINCE.md` is empty.

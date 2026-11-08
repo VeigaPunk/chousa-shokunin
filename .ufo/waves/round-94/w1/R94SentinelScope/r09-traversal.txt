@@ -1,0 +1,36 @@
+# seat=R94SentinelScope Q2 path containment probes (F5,F6,F7)
+=== T1 --pins /etc/hostname ===
+$ python3 -B corpus/evidence/round94/control-driver-r94.py verify --root . --repo . --rev F --receipts-rev C --work /fast/scratch/hyaku/chousa-r94/R94SentinelScope/t1 --pins /etc/hostname
+BASES root=/fast/scratch/hyaku/chousa-r94/R94SentinelScope/repo repo=/fast/scratch/hyaku/chousa-r94/R94SentinelScope/repo
+SETUP PIN_SCHEMA row is not `<sha256>  <role>  <path>`: 'plazir27'
+# exit=2
+
+=== T2 --pins ../../etc/hostname ===
+CONTROL_DRIVER_R94=SETUP missing ../../etc/hostname
+# exit=2
+
+=== T3 --root /etc ===
+CONTROL_DRIVER_R94=SETUP missing /etc/corpus/evidence/round94/controls/expected.tsv
+# exit=2
+
+=== T4 --pins <scratch>/outside/pins.txt (valid 3-col table outside the tree) ===
+RECEIPT c2-prior-landing OK committed+exact+pin+fresh
+RECEIPT c2-prior-controls OK committed+exact+pin+fresh
+SETUP path escapes base: /fast/scratch/hyaku/chousa-r94/R94SentinelScope/outside/pins.txt vs /fast/scratch/hyaku/chousa-r94/R94SentinelScope/repo
+# exit=1
+
+=== T5 --receipts-rev '--output=/tmp/x' ===
+                             {emit,verify}
+control-driver-r94.py: error: argument --receipts-rev: expected one argument
+# exit=2
+
+=== T6 --receipts-rev '41038ed7...:/etc' ===
+RECEIPT SELF_PIN FINDING SELF_DRIFT corpus/evidence/round94/controls/receipts/c1-gate-r89.txt@41038ed7c40cffc4cf86d649a6ba433c4b9eec1a:/etc,corpus/evidence/round94/controls/receipts/c1-harm-setup.txt@41038ed7c40cffc4cf86d649a6ba433c4b9eec1a:/etc,corpus/evidence/round94/controls/receipts/c1-harm.txt@
+COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 PINNED_FILES=34/34 RECEIPT_PINS=6/6 PIN_ROLES_OK=14/14 CONTROL_DRIVER_R94=FAIL
+# exit=1
+
+=== T7 git refuses '../..' and absolute paths in rev:path ===
+$ git show 41038ed7...:../../../../etc/hostname
+fatal: '../../../../etc/hostname' is outside repository at '/fast/scratch/hyaku/chousa-r94/R94SentinelScope/repo'
+$ git show 41038ed7...:/etc/hostname
+fatal: path '/etc/hostname' exists on disk, but not in '41038ed7c40cffc4cf86d649a6ba433c4b9eec1a'

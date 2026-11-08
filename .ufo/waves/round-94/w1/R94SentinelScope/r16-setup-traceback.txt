@@ -1,0 +1,15 @@
+# seat=R94SentinelScope F10 setup-class failure surfaces as a traceback with exit 1
+$ python3 -B corpus/evidence/round94/curation-controls-r94.py --root /fast/scratch/hyaku/chousa-r94/R94SentinelScope/r16-tree --work /fast/scratch/hyaku/chousa-r94/R94SentinelScope/r16-c
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/shutil.py", line 529, in copy2
+    copyfile(src, dst, follow_symlinks=follow_symlinks)
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/shutil.py", line 313, in copyfile
+    with open(src, 'rb') as fsrc:
+         ~~~~^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/fast/scratch/hyaku/chousa-r94/R94SentinelScope/r16-tree/corpus/evidence/round93/controls/legs.txt'
+# exit=1
+# contrast: the counters' own convention is a 'SETUP missing <path>' line and exit 2
+$ python3 -B corpus/evidence/round94/curation-r94.py --root /nonexistent
+CURATION_R94=SETUP missing /nonexistent/corpus/evidence/round94/controls/legs.txt
+# exit=2

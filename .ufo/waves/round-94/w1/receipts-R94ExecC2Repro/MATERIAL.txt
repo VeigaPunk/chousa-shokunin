@@ -1,0 +1,20 @@
+clone HEAD = 352924bbea624caf3771ef291be98fd4ec679dda
+git status --porcelain lines = 0
+
+sha256 4b9ce115e3700a7ec998c77128ad176b326ac6c126a0019709fad46eb29df144  corpus/evidence/round94/curation-r94.py
+sha256 79b76fdc14e9bc4c24e5b36e4b0076a4f0547b8a0f4afe3d81df4d0d9de0378f  corpus/evidence/round94/curation-controls-r94.py
+sha256 6c3c58df40b0023c7344137b36279e3f329eb695f1f5f964937823c4752101d8  corpus/evidence/round93/curation-r93.py
+sha256 2e99e3faa44f2f470317fd382c3ccc7b24adb00530e2fc12b8f0fbcca366ea4f  corpus/SOURCES.md
+sha256 c03774389e483de7d2d64d44b71291c5cfae3ff4df62a5e33de092d9b89f3142  corpus/evidence/round93/controls/legs.txt
+sha256 98731d3a9036e6806d72b6cf99550067f247b6321450e9f2b48a02ff63ac7cf9  corpus/evidence/round94/controls/legs.txt
+
+(a) cd repo && python3 -B corpus/evidence/round94/curation-r94.py --root .
+(b) cd repo && python3 -B corpus/evidence/round94/curation-controls-r94.py --root . --work <S>/ctl2
+(c/d) independent tree: copies of corpus/knowledge/search-transparency-reporting-r84.md, provenance-recording-r85.md, corpus/SOURCES.md; symlink corpus/captures -> repo captures; copies of corpus/evidence/round9{3,4}/controls/legs.txt
+   v0-clean   no mutation
+   v1-dash-S214   | Q2 | S214 | "—" |
+   v2-dash-S018   | Q2 | S018 | "—" |   (S018 capture contains an em dash)
+   v3-digits-S214 | Q2 | S214 | "2026" |
+   v4-digits-S018 | Q2 | S018 | "2026" |  (S018 capture contains 2026)
+   each: python3 -B corpus/evidence/round93/curation-r93.py --root <tree> ; python3 -B corpus/evidence/round94/curation-r94.py --root <tree>
+(d) direct probe: importlib load of the two counters; q_shape_violation / punct_quote_cell / locates on the two captures

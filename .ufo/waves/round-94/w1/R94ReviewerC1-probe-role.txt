@@ -1,0 +1,36 @@
+# R94ReviewerC1 C1 receipt - role-leg probes (committed table + one-row mutations), carrier C tree
+# each probe: python3 -B corpus/evidence/round94/control-driver-r94.py verify --root . --repo . --rev 41038ed7 --receipts-rev 352924bb --work <scratch>/work/probes/w-<name>
+# NOTE: the mutations in this batch did NOT recompute the table self row, so each mutated run also
+#       reports INSTRUMENT_PIN_MISMATCH:corpus/evidence/round94/instrument-pins.txt. The probe3 receipt
+#       recomputes it; the role codes are unaffected.
+m0-baseline                  rc=0  
+m1-drop-claims-row           rc=1  PIN_ROLE_FINDING PIN_ROLE_MISSING role=claims path=.ufo/waves/round-94/claims.md|RECEIPT PINS FINDING INSTRUMENT_PIN_MISMATCH:corpus/evidence/round94/instrument-pins.txt,PIN_ROLE_MISSING role=claims path=.ufo/waves/round-94/claims.md|
+m2-drop-expectation          rc=1  PIN_ROLE_FINDING PIN_ROLE_MISMATCH role=expectation pins=none expected=corpus/evidence/round94/controls/expected.tsv|RECEIPT PINS FINDING INSTRUMENT_PIN_MISMATCH:corpus/evidence/round94/instrument-pins.txt,PIN_ROLE_MISMATCH role=expectation pins=none expected=
+m3-drop-instrument-row       rc=1  PIN_ROLE_FINDING PIN_ROLE_MISSING role=instrument path=corpus/evidence/round89/gate-records-r89.py|RECEIPT PINS FINDING INSTRUMENT_UNPINNED:corpus/evidence/round89/gate-records-r89.py,INSTRUMENT_PIN_MISMATCH:corpus/evidence/round94/instrument-pins.txt,PIN_ROLE
+m4-instrument-to-driver      rc=1  PIN_ROLE_FINDING PIN_ROLE_MISSING role=instrument path=corpus/evidence/round89/gate-records-r89.py|RECEIPT PINS FINDING INSTRUMENT_PIN_MISMATCH:corpus/evidence/round94/instrument-pins.txt,PIN_ROLE_MISSING role=instrument path=corpus/evidence/round89/gate-recor
+m5-drop-receipt-row          rc=1  PIN_ROLE_FINDING PIN_ROLE_MISSING role=receipt path=corpus/evidence/round94/controls/receipts/c1-harm.txt|RECEIPT PINS FINDING INSTRUMENT_PIN_MISMATCH:corpus/evidence/round94/instrument-pins.txt,RECEIPT_UNPINNED:c1-harm,PIN_ROLE_MISSING role=receipt path=corpu
+m6-expectation-to-receipt    rc=1  PIN_ROLE_FINDING PIN_ROLE_MISMATCH role=expectation pins=none expected=corpus/evidence/round94/controls/expected.tsv|PIN_ROLE_FINDING PIN_ROLE_DANGLING role=receipt path=corpus/evidence/round94/controls/expected.tsv|RECEIPT PINS FINDING INSTRUMENT_PIN_MISMATCH
+m7-extra-claims-row          rc=1  PIN_ROLE_FINDING PIN_ROLE_DANGLING role=claims path=plans/round-94.md|RECEIPT PINS FINDING INSTRUMENT_PIN_MISMATCH:corpus/evidence/round94/instrument-pins.txt,PIN_ROLE_DANGLING role=claims path=plans/round-94.md|
+m8-extra-receipt-row         rc=2  SETUP PIN_DUPLICATE path=corpus/evidence/round94/evidence-before/c1-prior-accepts.txt|
+m9-flip-nonself-sha          rc=1  RECEIPT PINS FINDING PIN_DISK_MISMATCH path=corpus/evidence/round94/curation-r94.py,INSTRUMENT_PIN_MISMATCH:corpus/evidence/round94/instrument-pins.txt|
+m10-flip-self-sha            rc=1  RECEIPT PINS FINDING INSTRUMENT_PIN_MISMATCH:corpus/evidence/round94/instrument-pins.txt|
+m11-drop-self-row            rc=1  RECEIPT PINS FINDING PIN_SELF_ROW_ABSENT path=corpus/evidence/round94/instrument-pins.txt|
+m12-ghost-driver-row         rc=1  RECEIPT PINS FINDING PIN_MISSING path=corpus/evidence/round94/ghost.py,INSTRUMENT_PIN_MISMATCH:corpus/evidence/round94/instrument-pins.txt|
+m13-duplicate-path           rc=2  SETUP PIN_DUPLICATE path=corpus/evidence/round89/curation-r89-controls.py|
+PROBES_DONE
+
+## ratios from the saved per-probe outputs:
+m0-baseline                PINNED_FILES=34/34 RECEIPT_PINS=6/6 PIN_ROLES_OK=14/14 CONTROL_DRIVER_R94=PASS
+m1-drop-claims-row         PINNED_FILES=32/33 RECEIPT_PINS=6/6 PIN_ROLES_OK=12/13 CONTROL_DRIVER_R94=FAIL
+m2-drop-expectation        PINNED_FILES=32/33 RECEIPT_PINS=6/6 PIN_ROLES_OK=13/13 CONTROL_DRIVER_R94=FAIL
+m3-drop-instrument-row     PINNED_FILES=32/33 RECEIPT_PINS=6/6 PIN_ROLES_OK=9/13 CONTROL_DRIVER_R94=FAIL
+m4-instrument-to-driver    PINNED_FILES=33/34 RECEIPT_PINS=6/6 PIN_ROLES_OK=9/13 CONTROL_DRIVER_R94=FAIL
+m5-drop-receipt-row        PINNED_FILES=32/33 RECEIPT_PINS=5/6 PIN_ROLES_OK=8/13 CONTROL_DRIVER_R94=FAIL
+m6-expectation-to-receipt  PINNED_FILES=33/34 RECEIPT_PINS=6/6 PIN_ROLES_OK=7/14 CONTROL_DRIVER_R94=FAIL
+m7-extra-claims-row        PINNED_FILES=34/35 RECEIPT_PINS=6/6 PIN_ROLES_OK=12/15 CONTROL_DRIVER_R94=FAIL
+m8-extra-receipt-row       SETUP PIN_DUPLICATE path=corpus/evidence/round94/evidence-before/c1-prior-accepts.txt
+m9-flip-nonself-sha        PINNED_FILES=32/34 RECEIPT_PINS=6/6 PIN_ROLES_OK=14/14 CONTROL_DRIVER_R94=FAIL
+m10-flip-self-sha          PINNED_FILES=33/34 RECEIPT_PINS=6/6 PIN_ROLES_OK=14/14 CONTROL_DRIVER_R94=FAIL
+m11-drop-self-row          PINNED_FILES=33/33 RECEIPT_PINS=6/6 PIN_ROLES_OK=14/14 CONTROL_DRIVER_R94=FAIL
+m12-ghost-driver-row       PINNED_FILES=33/35 RECEIPT_PINS=6/6 PIN_ROLES_OK=14/14 CONTROL_DRIVER_R94=FAIL
+m13-duplicate-path         SETUP PIN_DUPLICATE path=corpus/evidence/round89/curation-r89-controls.py

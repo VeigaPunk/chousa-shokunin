@@ -1,0 +1,96 @@
+$ grep -nE 'extra_member|unregistered|member_missing|member_changed|label_invalid|duplicate_row|row_incomplete' kake-shokunin/.ufo/waves/round-60/c60_gate_status.py | head -12
+9:                blob with the SAME blob id it has at the base revision — else member_missing /
+10:                member_changed and the member is not evaluated. A file matching the population regex
+12:                48 <= N <= 59) that is not in the frozen set -> extra_member. `members` counts frozen
+17:                -> `unregistered`; >1 counted rows, or the path in any OTHER rendered table row
+18:                (any table, any cell) -> `duplicate_row`. The row needs exactly 8 non-empty cells
+20:                `row_incomplete`.
+22:                holds the words `never met`, else `live`; both -> `label_invalid`.
+99:CLASS_ORDER = ["member_missing", "member_changed", "extra_member", "unregistered", "duplicate_row",
+100:               "row_incomplete", "label_invalid", "unpinned", "pin_not_ancestor",
+435:        res["classes"] = ["unregistered"]
+440:        res["classes"] = ["duplicate_row"]
+447:        res["classes"] = ["row_incomplete"]
+
+[exit=0]
+
+$ grep -n 'rapezoid\|^  population\|population    the 28\|label (A5)\|row (A6)' kake-shokunin/.ufo/waves/round-60/c60_gate_status.py | head -8
+8:  population    the 28 frozen member paths below (A4): at --revision each must exist as a regular
+14:  row (A6)      one rendered Markdown table row of SKILL.md — not inside fenced/indented code or an
+21:  label (A5)    `historical` if the Kind cell holds the ASCII word `historical`, `never-met` if it
+825:        # c58_c's path also appears in a row of a different table -> duplicate_row (A6).
+
+[exit=0]
+
+$ sed -n '1,8p' kasegi-shokunin/.ufo/waves/round-69/controls/pins-r69.txt
+# round-69 freeze pins (written with claims.json, same commit)
+counter eb254588976f783008ff333f07b775de2a50c827bc22c7a2fe53477ed2f1d618  .ufo/waves/round-69/controls/c1-probe-run-r69.py
+base_gate 10c8710080078fe07534eae8fcc1344ade9ae852be500e66a2804eb68b74fee8  .ufo/waves/round-69/controls/base-gate-656272cf.py
+forgery_gate ceea2a13a665461f41178ea4d0bd511adc528fa8f132e63a71bbeaec93b57e0c  .ufo/waves/round-69/controls/forgery-blanket-refusal-gate.py
+candidate_trial_gate c09b0fb1a95b770e5a858ed88b005ec3530486d57dd721cbed2ec6386d882bde (working copy, not committed before this freeze)
+s103_capture c531c1e9b3eb9b4443e9851edc479e137eff772fb41dca3db16d697ac514344f  corpus/source-snapshots/round-69/S103.txt
+s103_manifest 7de5742a5fbb09318e3780b1b70c3cc07127c5401e40b3cb679f5d7e1de11b0f  corpus/source-snapshots/round-69/manifest.json
+
+[exit=0]
+
+$ grep -rn 'pins-r69' kasegi-shokunin --include='*.py' || echo 'NO MACHINE CONSUMER'
+NO MACHINE CONSUMER
+
+[exit=0]
+
+$ sed -n '25,32p;150,158p' kama-shokunin/.ufo/waves/round-80/w1/MT01Mutation/pristine-copy/round80-engine-pin-relations.py
+    engine  ref  kind  role  relation  newer  newest  receipt  dated
+
+  engine    an engine named by registry/engine-pins.tsv
+  ref       the pinned tag, or a 40-hex commit anchor
+  kind      tag | commit
+  role      where the ref is held (engine-pins.tsv, a source row, a cross-lane row)
+  relation  current | behind | tag:<name> | not-a-release-tag
+  newer     release tags with a greater version key than the ref, or `-`
+        engine, ref, kind, role, relation, newer, newest, receipt, dated = (c.strip() for c in row)
+        detail = f"line {number} {engine} {ref}"
+        if engine not in by_engine:
+            findings.append(f"PIN_RELATIONS_FINDING unknown-engine {detail}")
+            continue
+        if not role:
+            findings.append(f"PIN_RELATIONS_FINDING empty-role {detail}")
+            continue
+        if not DATE.fullmatch(dated):
+
+[exit=0]
+
+$ cut -f4 kama-shokunin/registry/engine-pin-relations.tsv | sort | uniq -c
+      1 cross-lane kengaku S178
+      3 engine-pins.tsv
+      1 role
+      1 source-row S553
+
+[exit=0]
+
+$ sed -n '1,4p' kagi-shokunin/corpus/anchor-pins.tsv
+id	anchor_sha256
+S034	5e10a867bd3954bd1d771d4f1efc96197edd8dceee66f43933095db96d443811
+S035	0ddd47c09377c066d75f6912e643246e742853c9746d73953e7482551683d33a
+S039	772e58b25951bca52d8e5ac195906a8b7411be224bb8f02634cf71167fef4230
+
+[exit=0]
+
+$ grep -n 'Ceiling\|selftest\|DRIFT <id>' kagi-shokunin/corpus/anchor-pins.sh | head -8
+4:# (M39-12 F1, F2, F3, F6) and a --selftest mode with committed expected findings.
+9:#   the pin records; any other value, or no such row, prints `DRIFT <id>` and the run exits 1.
+11:# Round-40 additions (red-witnessed by --selftest):
+12:#   F1  a duplicate registry row for a pinned id            -> DRIFT <id> dup
+13:#   F2  a tab-indented or >3-space-indented registry row    -> DRIFT <id> shape
+15:#   F3  a matched registry row whose column count is not 12 -> DRIFT <id> schema
+24:#   anchor-pins.sh --selftest      scratch fixtures; exit 0 PASS, 1 FAIL, 2 setup
+26:# Ceiling: the pin file and the registry row are checked against each other in committed
+
+[exit=0]
+
+$ grep -n '^| \(Name\|Instrument\|Kind\)' chousa-shokunin/SKILL.md | head -5
+
+[exit=0]
+
+$ grep -n 'Verdict map' chousa-shokunin/SKILL.md | head -3
+
+[exit=0]

@@ -1,0 +1,40 @@
+# R94ScoutSources a2 — S221 git-clone(1) --shared, installed page
+# command: sha256sum /usr/share/man/man1/git-clone.1.gz ; zcat ... | cat -n | sed -n '96,124p'
+---- file sha256 ----
+b3fd695ca3aeb5b315c0f87071972bfbebacc3cfaeb9a920075953dbded3802a  /usr/share/man/man1/git-clone.1.gz
+---- decompressed lines 96-124 (numbered: option head, body sentence, NOTE) ----
+    96	\fB\-s\fR, \fB\-\-shared\fR
+    97	.RS 4
+    98	When the repository to clone is on the local machine, instead of using hard links, automatically setup
+    99	\fB\&.git/objects/info/alternates\fR
+   100	to share the objects with the source repository\&. The resulting repository starts out without any object of its own\&.
+   101	.if n \{\
+   102	.sp
+   103	.\}
+   104	.RS 4
+   105	.it 1 an-trap
+   106	.nr an-no-space-flag 1
+   107	.nr an-break-flag 1
+   108	.br
+   109	.ps +1
+   110	\fBNote\fR
+   111	.ps -1
+   112	.br
+   113	this is a possibly dangerous operation; do
+   114	\fBnot\fR
+   115	use it unless you understand what it does\&. If you clone your repository using this option and then delete branches (or use any other Git command that makes any existing commit unreferenced) in the source repository, some objects may become unreferenced (or dangling)\&. These objects may be removed by normal Git operations (such as
+   116	\fBgit\fR
+   117	\fBcommit\fR) which automatically call
+   118	\fBgit\fR
+   119	\fBmaintenance\fR
+   120	\fBrun\fR
+   121	\fB\-\-auto\fR\&. (See
+   122	\fBgit-maintenance\fR(1)\&.) If these objects are removed and were referenced by the cloned repository, then the cloned repository will become corrupt\&.
+   123	.sp .5v
+   124	.RE
+---- located sentence and its decompressed line ----
+100:to share the objects with the source repository\&. The resulting repository starts out without any object of its own\&.
+---- word count of the quoted sentence ----
+11
+---- the lane's GATE-RECORD for S221 (corpus/lessons/round-94.md:15) ----
+GATE-RECORD S221 path=/usr/share/man/man1/git-clone.1.gz sha256=b3fd695ca3aeb5b315c0f87071972bfbebacc3cfaeb9a920075953dbded3802a opened=2026-11-08 words=10 quote=The resulting repository starts out without any object of its own

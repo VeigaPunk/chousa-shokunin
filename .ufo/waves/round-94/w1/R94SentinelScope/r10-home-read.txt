@@ -1,0 +1,65 @@
+# seat=R94SentinelScope Q4 $HOME read (F3) + necessity of the override
+=== opens of $HOME in the driver's own trace ===
+$ grep -oE 'openat\(AT_FDCWD, "/home/vgpnk[^"]*"' strace-c1.txt | sort | uniq -c
+    129 openat(AT_FDCWD, "/home/vgpnk/.config/git/config"
+      2 openat(AT_FDCWD, "/home/vgpnk/.local/lib/python3.14/site-packages"
+      1 openat(AT_FDCWD, "/home/vgpnk/Projects/shokunin/chousa-shokunin/.git/objects/01/1e075884a4b912129b7ffb75665c1d637a2236"
+# total /home/vgpnk opens=14379
+
+=== the credential helper line in the file that is read ===
+32:[credential "https://github.com"]
+34:	helper = !/home/vgpnk/.local/bin/gh auth git-credential
+35:[credential "https://gist.github.com"]
+37:	helper = !/home/vgpnk/.local/bin/gh auth git-credential
+38:[credential "https://origin.cursor.com/git"]
+40:	helper = !/home/vgpnk/.local/bin/origin credential-helper
+41:[credential "https://origin.cursor.com"]
+43:	helper = !/home/vgpnk/.local/bin/origin credential-helper
+49:[credential]
+50:	helper = /usr/lib/git-core/git-credential-libsecret
+
+=== necessity: the c1-harm leg with HOME=<tree root> vs HOME=/home/vgpnk ===
+$ HOME=$PWD bash -c '<c1-harm row with HOME=<tree>>'
+HARM_RECHECK files=22 records=36 moved=0 base_rc=1 head_rc=1
+# exit=0
+$ HOME=/home/vgpnk bash -c '<same command>'
+HARM_RECHECK files=22 records=36 moved=0 base_rc=1 head_rc=1
+# exit=0
+
+=== the committed row (role=expectation, pinned at C) ===
+c1-harm-setup	python3 -B @ROOT@/corpus/evidence/round90/harm-recheck-r90.py --root @ROOT@ --repo @ROOT@ --base-tool @WORK@/absent-tool.py	2	HARM_RECHECK_ERROR	-	the setup negative: an absent base tool
+
+=== the 129 $HOME opens, broken down ===
+   2236 /home/vgpnk/Projects/shokunin/chousa-shokunin/.git/objects/info/alternates
+   2055 /home/vgpnk/Projects/shokunin/chousa-shokunin/.git/objects/pack/multi-pack-index
+   2055 /home/vgpnk/Projects/shokunin/chousa-shokunin/.git/objects/pack
+   2003 /home/vgpnk/Projects/shokunin/chousa-shokunin/.git/objects/pack/pack-a603bf4b757e03553b51ea9b37ffd87eae1875da.pack
+   2003 /home/vgpnk/Projects/shokunin/chousa-shokunin/.git/objects/pack/pack-a603bf4b757e03553b51ea9b37ffd87eae1875da.idx
+
+=== the committed c1-harm row (expected.tsv line 4) ===
+c1-harm	mkdir -p @WORK@/harm && HOME=/home/vgpnk git -C @ROOT@ show 265b8633b7e5d1da49da6fb948df9707373fb15c:tools/gate-records.py > @WORK@/harm/base-tool.py && python3 -B @ROOT@/corpus/evidence/round90/harm-recheck-r90.py --root @ROOT@ --r
+
+=== the HOME override in that row ===
+HOME=/home/vgpnk
+
+=== what git actually loads from that HOME (the credential section) ===
+32:[credential "https://github.com"]
+33:	helper = 
+34:	helper = !/home/vgpnk/.local/bin/gh auth git-credential
+35:[credential "https://gist.github.com"]
+36:	helper = 
+37:	helper = !/home/vgpnk/.local/bin/gh auth git-credential
+38:[credential "https://origin.cursor.com/git"]
+39:	helper = 
+40:	helper = !/home/vgpnk/.local/bin/origin credential-helper
+41:[credential "https://origin.cursor.com"]
+42:	helper = 
+43:	helper = !/home/vgpnk/.local/bin/origin credential-helper
+49:[credential]
+50:	helper = /usr/lib/git-core/git-credential-libsecret
+
+=== the driver's own declared HOME policy ===
+def scrub_env(root):
+    """Minimal env for fresh legs: PATH from this process, HOME the tree root (no rc/profile reads)."""
+    env = {"PATH": os.environ.get("PATH", "/usr/bin:/bin"), "HOME": os.path.abspath(root)}
+    return env

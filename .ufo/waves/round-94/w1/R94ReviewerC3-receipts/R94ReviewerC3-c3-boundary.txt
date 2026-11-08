@@ -1,0 +1,20 @@
+Hypothesis 1: the first tail lines after ## Gates are the blank separator plus the scope-terminating heading; the tracker must own the first tally placed under it.
+### CASE A2 tally placed immediately under the first tail heading (## Round26 ...)
+CMD: /usr/bin/python3 -B /fast/scratch/hyaku/chousa-r94/R94ReviewerC3/repo/corpus/evidence/round94/skill-tally-r94.py --root /fast/scratch/hyaku/chousa-r94/R94ReviewerC3/work/fx/boundary-owner --selftest /fast/scratch/hyaku/chousa-r94/R94ReviewerC3/repo/corpus/evidence/round94/controls/selftest-r94.txt
+RC=1
+TAIL_OWNER_FINDING TAIL_OWNER_MISMATCH tally=215 cases tally=PASS (215 cases, 0 skipped) owner=## Round26 metadata options and resource qualification declared=Round27 repair/status correction
+TALLY_ROWS=8 STALE_TALLIES=0/8 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=2 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 HIST_DERIVED=2/2 HIST_PRESENT=2/2 TAIL_TALLIES=2 TAIL_OWNED_OK=1/2 OTHERS_OK=1 TAIL_OK=0 LEGS=3/4
+LEG_FAIL TAIL declared={('215', '0'): 1, ('283', '0'): 1} observed={('215', '0'): 1, ('283', '0'): 1}
+SKILL_TALLY_R94=FAIL
+
+### CASE A1 tally placed at the last line of the Gates scope (before the terminator)
+CMD: /usr/bin/python3 -B /fast/scratch/hyaku/chousa-r94/R94ReviewerC3/repo/corpus/evidence/round94/skill-tally-r94.py --root /fast/scratch/hyaku/chousa-r94/R94ReviewerC3/work/fx/boundary-gates-end --selftest /fast/scratch/hyaku/chousa-r94/R94ReviewerC3/repo/corpus/evidence/round94/controls/selftest-r94.txt
+RC=1
+TAIL_OWNER_FINDING TAIL_OWNER_COUNT tally=215 observed=0 declared=1
+TALLY_ROWS=8 STALE_TALLIES=0/8 EXPECTED_CASES=283 EXPECTED_SKIPPED=0 OTHER_OCCURRENCES=3 CASE_RANGE_BASHENV=273-275 CASE_RANGE_BASH_PIN=282-283 CASE_RANGE_OK=2/2 MISLABELED=0 HIST_DERIVED=2/2 HIST_PRESENT=2/2 TAIL_TALLIES=1 TAIL_OWNED_OK=1/2 OTHERS_OK=0 TAIL_OK=0 LEGS=2/4
+LEG_FAIL OTHERS declared={('161', '0'): 1, ('256', '0'): 1} observed={('256', '0'): 1, ('161', '0'): 1, ('215', '0'): 1} codes=none
+LEG_FAIL TAIL declared={('215', '0'): 1, ('283', '0'): 1} observed={('283', '0'): 1}
+SKILL_TALLY_R94=FAIL
+
+Expected A2: TAIL_OWNER_MISMATCH owner='## Round26 metadata options and resource qualification' proves the boundary heading is tracked (no <none>, no bleed back into Gates).
+Expected A1: LEG_FAIL OTHERS with 215 in observed= proves a last-Gates-line tally is caught by others_ok, and TAIL_OWNER_COUNT observed=0 proves the tail set sees it missing.

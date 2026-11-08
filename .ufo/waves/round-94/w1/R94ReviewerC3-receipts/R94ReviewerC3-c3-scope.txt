@@ -1,0 +1,28 @@
+CMD: git -C /fast/scratch/hyaku/chousa-r94/R94ReviewerC3/repo git diff --stat 41038ed7c40cffc4cf86d649a6ba433c4b9eec1a 352924bbea624caf3771ef291be98fd4ec679dda -- SKILL.md tools/research-gate.sh tools/gate-records.py  [shell]
+RC=0
+
+
+CMD: git -C /fast/scratch/hyaku/chousa-r94/R94ReviewerC3/repo git rev-parse 352924bbea624caf3771ef291be98fd4ec679dda:SKILL.md  [shell]
+RC=0
+743f3e3f4bb5f929e04deaf04ed14318e9cf4629
+
+CMD: git -C /fast/scratch/hyaku/chousa-r94/R94ReviewerC3/repo sha256sum SKILL.md  [shell]
+RC=0
+dcdf92341b25553ba84fd3f6c0178161fa2f0e6c74c76b8a7cc92bb1f1c789bc  SKILL.md
+
+CMD: git -C /fast/scratch/hyaku/chousa-r94/R94ReviewerC3/repo grep -c '^ok-case' corpus/evidence/round94/controls/selftest-r94.txt  [shell]
+RC=0
+283
+
+CMD: git -C /fast/scratch/hyaku/chousa-r94/R94ReviewerC3/repo grep -m1 '^RESEARCH_GATE_SELFTEST' corpus/evidence/round94/controls/selftest-r94.txt  [shell]
+RC=0
+RESEARCH_GATE_SELFTEST: PASS (283 cases, 0 skipped)
+
+CMD: git -C /fast/scratch/hyaku/chousa-r94/R94ReviewerC3/repo grep -n 'PASS (215 cases, 0 skipped)' SKILL.md  [shell]
+RC=0
+640:`PASS (215 cases, 0 skipped)` under the host UTF-8 locale; original187
+
+CMD: git -C /fast/scratch/hyaku/chousa-r94/R94ReviewerC3/repo grep -n 'PASS (283 cases, 0 skipped). on this host' SKILL.md  [shell]
+RC=0
+781:  userns exists). Selftest `PASS (283 cases, 0 skipped)` on this host.
+

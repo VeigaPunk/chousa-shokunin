@@ -1,0 +1,40 @@
+# seat=R94SentinelScope F1 remediation confirmation
+# Provenance: captured verbatim from background job bg_25224 (session R94SentinelScope), run in the
+# shared clone <S>/repo at carrier C, with the dead fixture line removed from the CLONE ONLY and the
+# file restored with `git checkout --` afterwards (trap EXIT). The lane was never touched.
+#
+# command sequence, exactly as executed:
+#   python3 - <<'PY'
+#   p="corpus/evidence/round94/forgeries-r94.py"
+#   src=open(p).read()
+#   dead='    case("s1-schema-two-column", None, 2, ["SETUP PIN_SCHEMA"])\n'
+#   assert dead in src
+#   open(p,"w").write(src.replace(dead,"",1))
+#   PY
+#   python3 -B corpus/evidence/round94/forgeries-r94.py --root . --repo . \
+#       --rev 41038ed7c40cffc4cf86d649a6ba433c4b9eec1a \
+#       --receipts-rev 352924bbea624caf3771ef291be98fd4ec679dda \
+#       --work /fast/scratch/hyaku/chousa-r94/R94SentinelScope/fix-forg
+#   git checkout -- corpus/evidence/round94/forgeries-r94.py
+
+--- run with the dead case removed ---
+OK d1-dangling-instrument: r93 rc=0 r94 rc=1 needles=PIN_ROLE_DANGLING role=instrument
+OK d2-missing-claims: r93 rc=0 r94 rc=1 needles=PIN_ROLE_MISSING role=claims
+OK d3-mis-role-expectation: r93 rc=0 r94 rc=1 needles=PIN_ROLE_MISMATCH role=expectation
+OK d4-unknown-role: r93 rc=0 r94 rc=2 needles=SETUP PIN_ROLE_UNKNOWN
+OK s0-schema-prior: r93 rc=0 (two-column table scores) r94 rc=2 (PIN_SCHEMA)
+OK c1-carried-instrument: r94 rc=1 (PIN_DISK_MISMATCH)
+OK c2-carried-receipt: r94 rc=1 (RECEIPT_MISMATCH)
+OK positive: r94 rc=0
+FORGERIES=PASS FORGERY_REFUSED=4/4 PRIOR_ACCEPTED=4/4 SCHEMA_REFUSED=1/1 SCHEMA_PRIOR_ACCEPTED=1/1 CARRIED_REFUSED=2/2 POSITIVE=pass
+FIXED_RC=0
+
+# Contrast with the committed battery at C (receipt r02-c1-forgeries-at-C.txt):
+#   FAIL s1-schema-two-column: r93 rc=0 r94 rc=0 needles=SETUP PIN_SCHEMA
+#   FORGERIES=FAIL ... POSITIVE=pass
+#   # exit=1
+#
+# The only delta between the two runs is the single fixture line. The lane working tree at
+# HEAD 6ae736ea already carries exactly that deletion, uncommitted:
+#   $ git diff corpus/evidence/round94/forgeries-r94.py
+#   -    case("s1-schema-two-column", None, 2, ["SETUP PIN_SCHEMA"])

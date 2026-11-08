@@ -1,0 +1,17 @@
+# R94ReviewerC1 C1 receipt - make-pins-r94.py reproduces the committed table byte-for-byte
+# tree: shared clone of chousa-shokunin at 352924bbea624caf3771ef291be98fd4ec679dda
+# cwd: /fast/scratch/hyaku/chousa-r94/R94ReviewerC1/repo
+## command: python3 -B corpus/evidence/round94/make-pins-r94.py --root .
+## git status --porcelain BEFORE:
+(empty above = clean)
+## output:
+PINS_WRITTEN=34 roles=instrument=5,expectation=1,receipt=6,claims=2,driver=19
+exit=0
+## git status --porcelain AFTER regeneration:
+(empty above = the regenerated file is byte-identical)
+## committed blob vs working file:
+HEAD blob   6b2c5579794e0dc797671b49ef43b84b3848b7be2acac763501c1ebad294f1c4  -
+working file 6b2c5579794e0dc797671b49ef43b84b3848b7be2acac763501c1ebad294f1c4  corpus/evidence/round94/instrument-pins.txt
+## row census:
+data rows (grep -cE '^[0-9a-f]{64}')      34
+non-driver rows                            14

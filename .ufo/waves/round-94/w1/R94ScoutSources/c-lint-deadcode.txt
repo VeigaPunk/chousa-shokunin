@@ -1,0 +1,79 @@
+# R94ScoutSources c - unused import / dead branch scan of the three r94 instruments
+# tools: pyflakes 4.0.3 (python 3.14.8); ruff 0.17.2; python -B AST scans
+# every command below prints its own rc on the following line
+
+## pyflakes per instrument
+$ ~/.local/bin/pyflakes corpus/evidence/round94/control-driver-r94.py
+rc=0
+$ ~/.local/bin/pyflakes corpus/evidence/round94/curation-r94.py
+rc=0
+$ ~/.local/bin/pyflakes corpus/evidence/round94/skill-tally-r94.py
+rc=0
+
+## pyflakes negative control (an unused import must be caught)
+$ ~/.local/bin/pyflakes /fast/scratch/hyaku/chousa-r94/R94ScoutSources/out/_probe.py
+/fast/scratch/hyaku/chousa-r94/R94ScoutSources/out/_probe.py:1:1: 'os' imported but unused
+rc=1
+
+## ruff, concise (F,B,SIM,PLE,RET,ARG,C4)
+$ ~/.local/bin/ruff check --no-cache --isolated --select F,B,SIM,PLE,RET,ARG,C4 --target-version py313 --output-format concise <3 files>
+corpus/evidence/round94/control-driver-r94.py:213:12: RET504 Unnecessary assignment to `env` before `return` statement
+corpus/evidence/round94/control-driver-r94.py:290:33: ARG001 Unused function argument: `pins`
+corpus/evidence/round94/control-driver-r94.py:425:12: SIM115 Use a context manager for opening files
+corpus/evidence/round94/control-driver-r94.py:528:20: SIM115 Use a context manager for opening files
+corpus/evidence/round94/control-driver-r94.py:568:16: SIM115 Use a context manager for opening files
+corpus/evidence/round94/control-driver-r94.py:598:51: SIM115 Use a context manager for opening files
+corpus/evidence/round94/curation-r94.py:105:5: SIM905 [*] Consider using a list literal instead of `str.split`
+corpus/evidence/round94/curation-r94.py:127:15: SIM115 Use a context manager for opening files
+corpus/evidence/round94/curation-r94.py:323:48: SIM115 Use a context manager for opening files
+corpus/evidence/round94/curation-r94.py:368:16: SIM115 Use a context manager for opening files
+corpus/evidence/round94/curation-r94.py:528:13: SIM102 Use a single `if` statement instead of nested `if` statements
+corpus/evidence/round94/skill-tally-r94.py:62:15: SIM115 Use a context manager for opening files
+corpus/evidence/round94/skill-tally-r94.py:84:12: SIM115 Use a context manager for opening files
+corpus/evidence/round94/skill-tally-r94.py:137:25: SIM115 Use a context manager for opening files
+corpus/evidence/round94/skill-tally-r94.py:142:16: B007 Loop control variable `receipt` not used within loop body
+Found 15 errors.
+[*] 1 fixable with `--fix` (1 unsafe fix available with `--fix --unsafe-fixes`).
+rc=1
+
+## ruff on the round-93 counterparts (inheritance baseline: same three rules)
+$ ~/.local/bin/ruff check --select F,B007,ARG001,RET504 --target-version py313 --output-format concise <r93 three>
+corpus/evidence/round93/control-driver-r93.py:201:12: RET504 Unnecessary assignment to `env` before `return` statement
+corpus/evidence/round93/skill-tally-r93.py:135:16: B007 Loop control variable `receipt` not used within loop body
+Found 2 errors.
+1 unsafe fix available with `--fix --unsafe-fixes`.
+rc=1
+
+## AST: module-level defs with 0 call sites (r94 vs r93) + metrics
+$ python3 -B <ast scan>
+corpus/evidence/round94/control-driver-r94.py
+   unused_imports            : none
+   zero-call module defs     : [('instrument_rel', 153)]
+   constant-condition If     : none
+   statements after a jump   : none
+corpus/evidence/round94/curation-r94.py
+   unused_imports            : none
+   zero-call module defs     : [('table_rows', 196)]
+   constant-condition If     : none
+   statements after a jump   : none
+corpus/evidence/round94/skill-tally-r94.py
+   unused_imports            : none
+   zero-call module defs     : none
+   constant-condition If     : none
+   statements after a jump   : none
+corpus/evidence/round93/control-driver-r93.py
+   unused_imports            : none
+   zero-call module defs     : [('instrument_rel', 141)]
+   constant-condition If     : none
+   statements after a jump   : none
+corpus/evidence/round93/curation-r93.py
+   unused_imports            : none
+   zero-call module defs     : [('table_rows', 187)]
+   constant-condition If     : none
+   statements after a jump   : none
+corpus/evidence/round93/skill-tally-r93.py
+   unused_imports            : none
+   zero-call module defs     : none
+   constant-condition If     : none
+   statements after a jump   : none
+rc=0

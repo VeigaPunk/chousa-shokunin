@@ -1,0 +1,78 @@
+$ sed -n '150,175p' kengaku-shokunin/.ufo/waves/round-36/build/R36GateD/pkg_gate.py
+    for line in data:
+        m = QUOTE_ROW.match(line)
+        (parsed if m else unparsed).append(m or line)
+    if unparsed:
+        return False, f"unparsed quote rows={len(unparsed)}: {str(unparsed[0])[:60]!r}"
+    rules, lo, hi = spec["entry_rules"], *spec["entry_rules"]["quote_words"]
+    cap, quotes, locs = root / spec["capture_dir"], set(), set()
+    for m in parsed:
+        quote, name, a, b = m.group(1), m.group(2), int(m.group(3)), int(m.group(4) or m.group(3))
+        words = len(quote.split())
+        if not lo <= words <= hi:
+            return False, f"quote has {words} words (want {lo}..{hi}): {quote[:40]!r}"
+        f = cap / name
+        if not f.is_file():
+            return False, f"quote cites missing capture {name}"
+        src = f.read_text().splitlines()
+        if not 1 <= a <= b <= len(src):
+            return False, f"citation {name}:{a}-{b} outside the capture"
+        if quote not in "\n".join(src[a - 1:b]):
+            return False, f"quote not verbatim on {name}:{a}-{b}: {quote[:40]!r}"
+        quotes.add(quote)
+        locs.add((name, a))
+    if len(quotes) < rules["min_quotes"] or len(locs) < rules["min_distinct_locations"]:
+        return False, (f"distinct quotes={len(quotes)} locations={len(locs)} below "
+                       f"{rules['min_quotes']}/{rules['min_distinct_locations']}")
+    return True, f"rows={len(parsed)} quotes={len(quotes)} locations={len(locs)}"
+
+[exit=0]
+
+$ sed -n '305,312p' kengaku-shokunin/.ufo/waves/round-36/build/R36GateD/pkg_gate.py
+        f"| `{rel}` | mini | S001 |\n\n## Coverage map\n\n- {rel} — mini\n")
+    (root / "receipt.txt").write_text("cases=1 mismatches=0\n")
+    (root / "probe.py").write_text("print('cases=1 mismatches=0')\n")
+    rules = {"verified_at": "2026-10-25", "min_quotes": 8, "min_distinct_locations": 8,
+             "quote_words": [3, 25], "min_teaches_words": 8, "row_opened": "2026-10-25",
+             "row_tier": "A", "row_status": "mined"}
+    spec = {"entry": "corpus/knowledge/mini.md", "capture_dir": "cap", "receipt": "receipt.txt",
+            "receipt_sha256": sha256(root / "receipt.txt"), "probe_cmd": ["probe.py"],
+
+[exit=0]
+
+$ grep -n 'quote_words\|3-25\|2 word\|two words' kengaku-shokunin/.ufo/waves/round-37/build/R37BatP23/battery/p23.py | head -6
+15:  p23-p3-two-word-quote    M08  one genuine quote cut to two words       -> P3
+111:    """M08: one genuine quote is cut to two words (below the spec's 3-word floor), still verbatim."""
+
+[exit=0]
+
+$ grep -n 'Punctuation-only tokens count\|punctuation-only' kotodama-shokunin/tools/check-gate-quotes.py | head -6
+37:    is one token, not three. Punctuation-only tokens count ("(39%)" is one word)
+154:    """Quoted spans grouped by punctuation-only gaps, with gap ellipses noted."""
+
+[exit=0]
+
+$ grep -n 'punctuation-only tokens counted' kagi-shokunin/corpus/lessons/round-49.md | head -3
+
+[exit=0]
+
+$ grep -n 'V13-next-action-punctuation-only' kama-shokunin/.ufo/waves/round-27/controls/KamaR27CtlContentFree/REPORT.md
+57:| V13-next-action-punctuation-only | next action differs by ONE trailing period | 2 | **2** | both `[]` |
+
+[exit=0]
+
+$ grep -rn 'PUNCTQUOT' --include='*.py' . | grep -v '/chousa-shokunin/' || echo 'NO SIBLING PUNCTQUOT'
+NO SIBLING PUNCTQUOT
+
+[exit=0]
+
+$ grep -rn 'no alphanumeric' --include='*.py' . | grep -v '/chousa-shokunin/' || echo 'NO SIBLING ALNUM-QUOTE RULE'
+./kengaku-shokunin/plans/battery37/p4.py:84:            raise RuntimeError("p4 fixture: the first quote has no alphanumeric character")
+./kengaku-shokunin/.ufo/waves/round-37/build/R37BatP4/battery/p4.py:84:            raise RuntimeError("p4 fixture: the first quote has no alphanumeric character")
+./mado-shokunin/.ufo/waves/round-46/w1/ExecSerialRule/gate.py:43:                 standing as a whole token (no alphanumeric neighbour on
+./mado-shokunin/.ufo/waves/round-55/w1/R55ExecC1CounterB/c1-r55-kbd-entry.py:211:    """True if `text` holds an S### token (S plus exactly three digits, no alphanumeric neighbours)."""
+./tsukuroi-shokunin/tools/lint-grounding-r51.py:311:                    prob.append(f'quote {sid} {base}:{n}: empty, blank or no alphanumeric content')
+./tsukuroi-shokunin/.ufo/waves/round-25/w1/MutMemPressurePlan/fixtures/run-mutations.py:424:            return False, ('capture line %d holds no alphanumeric run of 3 characters'
+./tsukuroi-shokunin/.ufo/waves/round-26/w1/ExecMemCheckerHarden/run-mutations.py:424:            return False, ('capture line %d holds no alphanumeric run of 3 characters'
+
+[exit=0]

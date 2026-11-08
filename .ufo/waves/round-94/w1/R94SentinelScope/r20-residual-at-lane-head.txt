@@ -1,0 +1,54 @@
+# seat=R94SentinelScope residual status at lane HEAD d13c2ff2 (assigned carrier was C=352924bb)
+
+=== F2 residual: refuse_work_root is a 6-entry denylist, not a containment check ===
+def refuse_work_root(work):
+    """R94SentinelScope F2: every battery rmtree()s --work, so a system root is refused, never deleted."""
+    bad = ("/", "/home", "/tmp", "/var/tmp", os.path.expanduser("~"), os.path.expanduser("~/"))
+    if os.path.abspath(work) in bad:
+        print(f"SETUP --work is not a scratch path: {work}")
+        raise SystemExit(2)
+
+
+
+$ mkdir -p <S>/v2/precious ; echo important > <S>/v2/precious/data.txt
+$ python3 -B <lane>/corpus/evidence/round94/curation-controls-r94.py --root <clip> --work <S>/v2
+OK regression: FORGERY_REFUSED=7/7 PRIOR_REGRESSION=7/7 rc=0
+CONTROLS=PASS CARRIED_REFUSED_BOTH=4/4 WS_NAMED=2/2 PUNCT_NAMED=2/2 PUNCT_SHAPE_GREEN_R93=1/1 CJK_SILENT=1/1 DUPCOUNT_1=1/1 PRIOR_REGRESSION=7/7
+# exit=0
+# USER_DATA_DELETED (F2 still live for any path outside the denylist)
+
+=== F6 residual: --pins /etc/hostname still read+echoed before containment ===
+CONTROL_DRIVER_R94=SETUP --pins outside --root: /etc/hostname
+# exit=2
+
+=== F7 closed: --receipts-rev now validated ===
+    if a.receipts_rev is not None and not REV_RE.fullmatch(a.receipts_rev):
+        print("CONTROL_DRIVER_R94=SETUP --receipts-rev is not a 40-hex revision")
+        return 2
+CONTROL_DRIVER_R94=SETUP --receipts-rev is not a 40-hex revision
+# exit=2
+
+=== F5 closed: realpath containment in the pin walk ===
+        disk = os.path.join(os.path.abspath(root), rel)
+        # R94SentinelScope F5: a row naming an in-tree symlink must not read bytes outside the tree.
+        real = os.path.realpath(disk)
+        if not real.startswith(os.path.realpath(root) + os.sep):
+            codes.append(f"PIN_ROW_OUTSIDE path={rel}")
+            continue
+        if not os.path.isfile(disk):
+            codes.append(f"PIN_MISSING path={rel}")
+
+=== F1 closed: s1 case gone from the lane ===
+0
+
+=== F8 residual: no finally; clone still left behind ===
+# NO_FINALLY (clone left under --work)
+
+=== F9 residual: tools still unpinned ===
+0
+
+=== F10 residual: setup traceback unchanged ===
+    with open(src, 'rb') as fsrc:
+         ~~~~^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/fast/scratch/hyaku/chousa-r94/R94SentinelScope/v2tree/corpus/evidence/round93/controls/legs.txt'
+# exit=1

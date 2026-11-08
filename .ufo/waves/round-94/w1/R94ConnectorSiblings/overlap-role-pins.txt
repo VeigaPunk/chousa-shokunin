@@ -1,0 +1,21 @@
+$ grep -rl 'instrument|expectation' --include='*pins*.txt' . || echo 'NO MATCH'
+NO MATCH
+
+[exit=0]
+
+$ grep -rlE '^[0-9a-f]{64}  [a-z_]+  ' --include='*pins*.txt' --include='*pin*.txt' --include='*pins*.tsv' . || echo 'NO MATCH'
+./chousa-shokunin/corpus/evidence/round94/instrument-pins.txt
+./chousa-shokunin/.ufo/waves/round-94/w1/R94ExecC1Repro-pins-census.txt
+
+[exit=0]
+
+$ find . -type f \( -name '*pin*.txt' -o -name '*pins*.txt' -o -name '*pin*.tsv' -o -name '*pins*.tsv' \) -not -path './chousa-shokunin/*' | wc -l
+1393
+
+[exit=0]
+
+$ find . -type f \( -name '*pin*.txt' -o -name '*pins*.txt' -o -name '*pin*.tsv' -o -name '*pins*.tsv' \) -not -path './chousa-shokunin/*' -print0 | xargs -0 grep -lE '^[a-z_]+ +[0-9a-f]{64}  ' 2>/dev/null || echo 'NO MATCH'
+./audio-shokunin/corpus/live/r84-scribe/commit-pin.txt
+./kasegi-shokunin/.ufo/waves/round-69/controls/pins-r69.txt
+
+[exit=0]

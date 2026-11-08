@@ -1,0 +1,21 @@
+# seat=R94SentinelScope F9 a byte drift in the UNPINNED tool the round scores is invisible
+$ printf '\n# noop-drift-probe\n' >> tools/gate-records.py
+# tools/gate-records.py sha256 before/after:
+905f9da2fdf233b3a599f079a4c40ace730e3acf5464a2b80e1f93a616242d60  -
+96204da7c5d3309799f352c87234bdee4d20b1fe0d0987050dd64715f904468a  tools/gate-records.py
+
+# is it in the pins table?
+# NOT_PINNED (no row)
+
+$ python3 -B corpus/evidence/round94/control-driver-r94.py verify --root . --repo . --rev F --receipts-rev C --work /fast/scratch/hyaku/chousa-r94/R94SentinelScope/drift1
+RECEIPT PINS OK 34/34 pinned files byte-identical RECEIPT_PINS_OK=6/6
+RECEIPT SELF_PIN OK rev=41038ed7c40cffc4cf86d649a6ba433c4b9eec1a receipts_rev=352924bbea624caf3771ef291be98fd4ec679dda
+COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6 PINNED_FILES=34/34 RECEIPT_PINS=6/6 PIN_ROLES_OK=14/14 CONTROL_DRIVER_R94=PASS
+# exit=0
+  -> a byte change to the tool whose records the C1 receipts score is NOT a pin finding:
+     the pin walk covers 34 named files and this tool is not one of them.
+
+# the C1 claim's sentence asserts these tools are UNCHANGED; git confirms it is currently true:
+$ git diff --stat F C -- tools/
+$ git diff --stat base C -- tools/
+# (empty = unchanged; the assertion is true but unenforced)

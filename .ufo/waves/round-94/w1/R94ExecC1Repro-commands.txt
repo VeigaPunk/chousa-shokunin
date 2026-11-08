@@ -1,0 +1,16 @@
+# Seat R94ExecC1Repro — exact commands (all from a clean shared clone at carrier C)
+# S=/fast/scratch/hyaku/chousa-r94/R94ExecC1Repro
+# clone:        git clone --shared /home/vgpnk/Projects/shokunin/chousa-shokunin $S/repo
+# checkout:     git -C $S/repo checkout 352924bbea624caf3771ef291be98fd4ec679dda   (HEAD verified)
+# pre-hashes:   sha256sum corpus/evidence/round94/controls/receipts/*.txt corpus/evidence/round94/instrument-pins.txt > $S/pre-hashes.txt
+# (a)           cd $S/repo && python3 -B corpus/evidence/round94/control-driver-r94.py verify --root . --repo . \
+#                 --rev 41038ed7c40cffc4cf86d649a6ba433c4b9eec1a \
+#                 --receipts-rev 352924bbea624caf3771ef291be98fd4ec679dda --work $S/verify
+# (b)           cd $S/repo && python3 -B corpus/evidence/round94/forgeries-r94.py --root . --repo . \
+#                 --rev 41038ed7c40cffc4cf86d649a6ba433c4b9eec1a \
+#                 --receipts-rev 352924bbea624caf3771ef291be98fd4ec679dda --work $S/forge
+# (c1)          python3 -B $S/rolecheck.py $S/repo
+# (c2)          python3 -B $S/rolectl.py $S/repo $S/role/tree $S/role/work
+# (d)           post-hashes + diff; find -newer; git status
+# extra         independent pin walk (inline python, WALK_PINNED=34/34)
+# cleanup:      rm -rf $S (seat scratch), nothing written under /tmp
