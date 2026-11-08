@@ -1,0 +1,37 @@
+{
+ "lane": "chousa",
+ "round": 85,
+ "base": "43c3f7284eee4889cdcc6ac1626573f6579cd533",
+ "freeze": "5d0b94139ae8baf60d6f630715bc495f0a93b448",
+ "amendment": "02df67db4f9ad39f8ebc73984ce50ea1fbea315f",
+ "scoredLanding": null,
+ "frozenAt": "2026-11-08, before any post-freeze scored run; pre-freeze controls: c1-k0-donothing FAIL (SETUP=0/1), c2-d0-donothing FAIL (entries=0), three stub controls FAIL",
+ "claims": {
+  "C1": {
+   "axis": "operability (lowest scored non-retired axis, historical 3/10) — capability acquisition",
+   "type": "round-85 repair of tools/gate-records.py verify (setup leg exit 2, REFETCH success exactly 200, calendar-valid fetched) under a successor battery",
+   "predicate": "GATE_RECORDS_R85=PASS",
+   "countingCommand": "python3 -B corpus/evidence/round85/gate-records-r85.py --root DIR --repo GITDIR --work DIR",
+   "killRules": {
+    "K1": "predicate not met at the landing revision (SETUP leg included)",
+    "K2": "in-class forgery accepted or refused with a code outside the frozen EXPECTED_CODE set, including the differentiated per-class forgeries; repairs after scoring do not rescue",
+    "K3": "harm: a genuine committed record accepted before this round refused at landing (15 frozen positives + 5 fresh positives must be OK)",
+    "K4": "whitelist: a tool accepting the 15 frozen lines and refusing everything else passes the counter"
+   },
+   "source": "corpus/evidence/round85/claims.md"
+  },
+  "C2": {
+   "axis": "depth",
+   "type": "new knowledge entry provenance-recording-r85.md teaching provenance recording, grounded on S215/S026/S024 opened this round",
+   "predicate": "DEPTH_R85=PASS",
+   "countingCommand": "D=$(mktemp -d -p /fast/scratch/hyaku) && git archive <rev> | tar -x -C \"$D\" && python3 -B \"$D/corpus/evidence/round85/depth-r85.py\" --root \"$D\"",
+   "killRules": {
+    "K1": "predicate not met at the landing revision",
+    "K2": "located: a declared quote absent from its committed capture, or absent from the live page on a HTTP-200 tag-stripped re-open; unreachable re-open recorded not killed",
+    "K3": "warrant: a non-author reviewer shows a decision-table row's Do/Never states something its cited quotes do not state or entail, or a same-source sentence contradicts it",
+    "K4": "ground: a base-list entry cites S215, S026 or S024, or contains their URLs"
+   },
+   "source": "corpus/evidence/round85/claims.md"
+  }
+ }
+}

@@ -40,6 +40,8 @@ def form_of(line):
 
 
 def kv_set(line, key, val):
+    if not re.search(r"(?<= )" + re.escape(key) + r"=\S+", line):
+        return None
     return re.sub(r"(?<= )" + re.escape(key) + r"=\S+", key + "=" + val, line, count=1)
 
 

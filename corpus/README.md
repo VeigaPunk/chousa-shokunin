@@ -1395,3 +1395,21 @@ Left open:
 
 - `lessons/round-83.md` — S009 re-opened (queued since round 1 → mined), S212–S213 admitted; new tool `tools/gate-records.py` checks a lesson's `GATE-RECORD` lines against committed bytes.
 - Frontier: S017 (PRISMA 2020) and S019 (updating a review) stay queued.
+
+## Round84 coverage and frontier (2026-11-08)
+
+| Note | Holds | Sources |
+|---|---|---|
+| `knowledge/search-transparency-reporting-r84.md` | search-transparency reporting: which sources were searched and when, the full strategy with filters and limits, selection methods, the identification-to-inclusion path, and the DCMI/S018 provenance and attribution definitions the lane records its own search with | S214, S018, S023 |
+
+- `lessons/round-84.md` — S214 admitted (PRISMA checklist PDF; S017 landing page reverted to queued), S018 and S023 mined; both claims honest-stop on their own kill rules (C1 K2 setup leg; C2 K3 row-9 warrant).
+- Frontier: S017 stays queued (landing page carries no quotable checklist text); S020/S021/S022/S032 stay queued behind 403/203/404 responses.
+
+## Round85 coverage and frontier (2026-11-08)
+
+| Note | Holds | Sources |
+|---|---|---|
+| `knowledge/provenance-recording-r85.md` | provenance recording: `prov:wasDerivedFrom` chains and derivation direction, `prov:generatedAtTime`/`prov:invalidatedAtTime` as the entity-lifetime bounds, FAIR R1.2's provenance facets (how/why/by whom/under what conditions, starting data, ownership and credit), and Schema.org `lastReviewed` as a review date distinct from a modification date | S215, S026, S024 |
+
+- `lessons/round-85.md` — S215 registered (W3C alternate PROV-O URL; the canonical REC URL answers 403), S026 and S024 mined from queued; `tools/gate-records.py` repaired (setup exit 2, REFETCH success exactly 200, calendar-valid `fetched`) under a successor battery.
+- Frontier: S020's canonical PROV-O URL is dead for this lane (six 403 rows) — disposition to the operator; S017/S019/S021/S022/S032/S027/S031 stay queued.
