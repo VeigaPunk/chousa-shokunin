@@ -36,6 +36,8 @@ to a section here.
 
 ## Pre-wave freeze repair 1 (F2) — pins content must exist at the freeze revision
 
+*Superseded by §Pre-wave freeze repair 2 (F4) before any scored run.*
+
 The F1 commit `bf12c30e` froze the instruments and the claims but did not carry
 `corpus/evidence/round92/instrument-pins.txt` (the pins are generated from the F1 commit's own blobs), so
 `SELF_PIN` at `rev=F1` would have named a file the revision does not carry — the same defect class as r91's
@@ -81,6 +83,23 @@ instrument.
 6. **C3's others multiset initially counted document-wide.** The 215 tail tally sits after `## Round26` (outside
    `## Gates`); the first draft pinned `{161,215,256}` and failed on the clean tree. The frozen multiset is the
    in-section two `{161,256}` and the 215 tally is a named limit.
+
+## Pre-wave freeze repair 2 (F4) — pin rows must be generated from the commit they are checked against
+
+F2's pins table pinned the F1 blobs and therefore matched the F1 tree, but `pin_at_rev` compares each pinned
+digest against the blob at `--rev`. F3 fixed the driver's self-pin leg (pins file excluded from the whole-blob
+comparison, checked by its minus-self digest against the blob at `--rev`) but kept the F1-era pins rows, so
+at `rev=F3` the plans row mismatched by exactly the plan-note edit the same commit carried. The pins were
+regenerated from the F3 tree; the same failure recurred because the new pins commit was checked at `rev=F3`
+with an older pins file. **F4 (freeze `007d7ea7`, carrier `d818f090`)** generates the pins table from the
+commit that will carry it: `007d7ea7` carries the pins file, the receipts were emitted against that commit,
+and the verify confirms `SELF_PIN OK` and `PIN_OK=6/6`. The three earlier pairs are superseded **before
+any scored run**: `bf12c30e`/`ddb5fdf4` (no pins file at the freeze), `85a2eeef`/`9722365f` (F1-era pins at
+the F2 tree), `dc7056c4`/`e40bce1a`/`007d7ea7` (plan row regenerated late). Defects: F1 — reuse of a pin
+basis two commits stale (never caught by a pre-freeze self-check, because the self-check itself compared the
+wrong revisions); F2/F3 — the same class twice. The fix: the pins-generation command pins the very commit
+named `--rev`, and the verify runs once before the carrier commit. **No claim sentence, predicate, kill rule
+or target changed in F2–F4.**
 
 ## Amendments
 
