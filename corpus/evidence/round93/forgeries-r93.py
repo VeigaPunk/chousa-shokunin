@@ -29,7 +29,6 @@ import os
 import shutil
 import subprocess
 import sys
-import tarfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 NEW = os.path.join(HERE, "control-driver-r93.py")
@@ -38,24 +37,23 @@ UNEXECUTED = "corpus/evidence/round93/curation-controls-r93.py"
 RECEIPT = "controls/receipts/c2-prior-landing.txt"
 
 
-def archive(repo, rev, dest):
-    p = subprocess.run(["git", "-C", repo, "archive", rev], capture_output=True)
+def clone(repo, rev, dest):
+    """A shared clone at `rev`: the fresh legs run instruments that need a git dir (`--repo @ROOT@`,
+    `git -C @ROOT@ show`), so a bare `git archive` tree cannot host them."""
+    p = subprocess.run(["git", "clone", "--shared", "--quiet", repo, dest], capture_output=True, text=True)
     if p.returncode != 0:
-        raise SystemExit(f"SETUP git archive {rev} failed: {p.stderr.decode(errors='replace')[:300]}")
-    tar = os.path.join(os.path.dirname(dest), "tree.tar")
-    os.makedirs(os.path.dirname(dest), exist_ok=True)
-    with open(tar, "wb") as fh:
-        fh.write(p.stdout)
-    os.makedirs(dest, exist_ok=True)
-    with tarfile.open(tar) as tf:
-        tf.extractall(dest)
-    os.remove(tar)
+        raise SystemExit(f"SETUP git clone failed: {p.stderr[:300]}")
+    p = subprocess.run(["git", "-C", dest, "checkout", "--quiet", rev], capture_output=True, text=True)
+    if p.returncode != 0:
+        raise SystemExit(f"SETUP git checkout {rev} failed: {p.stderr[:300]}")
     return dest
 
 
-def run(driver, root, work, rev, receipts_rev, explicit=True):
+def run(driver, root, work, rev, receipts_rev, explicit=True, repo=None):
     args = [sys.executable, "-B", driver, "verify", "--root", root, "--work", work, "--rev", rev,
             "--receipts-rev", receipts_rev]
+    if repo:
+        args += ["--repo", repo]
     if explicit:
         args += ["--expected", os.path.join(root, "corpus/evidence/round93/controls/expected.tsv"),
                  "--receipts", os.path.join(root, "corpus/evidence/round93/controls/receipts"),
@@ -77,16 +75,18 @@ def main():
     work = os.path.abspath(a.work)
     shutil.rmtree(work, ignore_errors=True)
     os.makedirs(work, exist_ok=True)
-    pristine = archive(repo, a.receipts_rev, os.path.join(work, "pristine"))
+    pristine = clone(repo, a.receipts_rev, os.path.join(work, "pristine"))
 
     def fresh(name):
-        d = os.path.join(work, name)
-        shutil.copytree(pristine, d, symlinks=True)
-        return d
+        # every forgery gets its own clone so the fresh legs keep a real git dir
+        return clone(repo, a.receipts_rev, os.path.join(work, name))
 
     def both(tree):
+        # r92 is scored without --repo: its self_pin would compare the receipt rows (which r93 added to the
+        # table) at --rev, a revision that never held them — a harness artefact, not the class under test.
         return (run(OLD, tree, os.path.join(work, "w92-" + os.path.basename(tree)), a.rev, a.receipts_rev),
-                run(NEW, tree, os.path.join(work, "w93-" + os.path.basename(tree)), a.rev, a.receipts_rev))
+                run(NEW, tree, os.path.join(work, "w93-" + os.path.basename(tree)), a.rev, a.receipts_rev,
+                    repo=tree))
 
     results = []
 
@@ -119,7 +119,7 @@ def main():
     rc_old_d, out_old_d = run(OLD, pristine, os.path.join(work, "w92-derive"), a.rev, a.receipts_rev,
                               explicit=False)
     rc_new_d, out_new_d = run(NEW, pristine, os.path.join(work, "w93-derive"), a.rev, a.receipts_rev,
-                              explicit=False)
+                              explicit=False, repo=pristine)
     derive_ok = rc_old_d != 0 and "escapes base" in out_old_d and rc_new_d == 0 \
         and "CONTROL_DRIVER_R93=PASS" in out_new_d
     print(f"{'OK' if derive_ok else 'FAIL'} derive-from-root: r92 rc={rc_old_d} "
@@ -128,7 +128,7 @@ def main():
         print("  r92 derive:", " | ".join(out_old_d.strip().splitlines()[-3:]))
         print("  r93 derive:", " | ".join(out_new_d.strip().splitlines()[-3:]))
 
-    (rc_old_p, out_old_p), (rc_new_p, out_new_p) = both(fresh("positive"))
+    (rc_old_p, out_old_p), (rc_new_p, out_new_p) = both(pristine)
     positive = rc_old_p == 0 and rc_new_p == 0
     print(f"{'OK' if positive else 'FAIL'} positive: r92 rc={rc_old_p} r93 rc={rc_new_p}")
 
