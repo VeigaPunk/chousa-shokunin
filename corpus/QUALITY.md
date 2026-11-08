@@ -1325,3 +1325,37 @@ the admitted entry that motivates it. Tier definitions live in
     reports six checked files out of sixteen pinned; a report that reads it as "all sixteen checked" overstates the
     leg. Check: the claim names the checked set (the files a row executes plus the expectations file), and the
     printed denominator is explained. — `lessons/round-91.md` Claim outcomes C1.
+
+211. **A bare string in `SystemExit` is exit 1, not a setup-class exit 2.** Round 92's driver raised
+    `SystemExit("SETUP PIN_DUPLICATE path=…")` and the frozen claim named exit 2; Python prints string
+    arguments to stderr and exits 1. Check: a setup refusal must `print` the line and `raise SystemExit(2)`
+    (or `sys.exit(2)`), and the battery must assert the same exit the claim states. — `lessons/round-92.md` Mistakes 2.
+
+212. **A silent path default is a guard the claim says exists but the code does not.** Round 92's claim froze
+    "`emit` without `--receipts` exits 2"; the driver had `default=DEFAULT_RECEIPTS` with no explicitness
+    check, so `emit` ran exit 0 and overwrote the committed receipts. Check: every guard the frozen sentence
+    states is wired in code before the freeze; a run of the guard's negative case is the frozen evidence.
+    — `lessons/round-92.md` Mistakes 2.
+
+213. **A pin basis stale by two commits passes its own self-check.** The pins table generated from the F1 commit's
+    blobs matched F1, but `pin_at_rev` compares against the *checked* revision: F2 pinned the F1 blobs checked
+    at F2. The self-check fixed it only when the table pinned the very commit named `--rev`. Check: the pins
+    generation command pins the very commit named `--rev`, and the verify runs once before the carrier commit.
+    — `lessons/round-92.md` Mistakes 1.
+
+214. **A verdict count is pinned by its enumeration, not its header.** Round 92's tally counter trusted the
+    verdict line's `cases` figure alone; 277 of the 283 `ok-case` lines carry `exit=` and six carry `accepted=`,
+    so the enumeration is the only way to see a duplicate or missing case line. Check: pin `len(^ok-case lines)
+    == cases` and distinctness over ALL case lines, not only those matching the family filter.
+    — `lessons/round-92.md` Mistakes 8.
+
+215. **An empty table cell is not a separator.** `set("") <= {"-", ":", " "}` is vacuously true, so every
+    vacuous membership filter treats an empty first cell as a separator; a forged row with one hides behind
+    it. Check: a separator test requires the cell to be non-empty; the "structural header" skip requires the
+    literal header row. — `lessons/round-92.md` Mistakes 4.
+
+216. **A section boundary written as a string search bleeds.** `text.find("\n## ")` returns silently to EOF when
+    the next heading is renamed to `# `, `##X`, or indented; the scope then swallows later sections and
+    renames the cause `LEG_FAIL OTHERS`. Check: the boundary is a heading regex (ATX depth ≤ 2 at column 0)
+    with a `SCOPE_BLEED` setup diagnostic when unterminated, named in the claim as a limit, not a pass.
+    — `lessons/round-92.md` Mistakes 7.

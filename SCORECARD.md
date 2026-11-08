@@ -4095,3 +4095,52 @@ case-range clause.
    clause the claim names.
 4. carried debt: the round-74 "source-blind order oracle", QUALITY 173's successful-refused record form, the r80
    backlog Gate ids.
+
+## Round 92 verdict — the pins file is pinned like any other instrument, empty cells are not separators, and the tally scope is an ATX boundary (2026-11-08)
+
+Base `d7780fef`; freeze `95bbbd0f` (F6); carrier `2a9d1773` (C6); five earlier freeze/carrier pairs superseded
+before any settled scoring (plan §§Pre-wave freeze repair 1–2). Three claims, three axes, no exploratory claim.
+One v1 wave, 12 seats (8 attack), 0 dead. Nine amendments narrow each sentence to the instruments' measured
+behaviour recorded before filing (Amendment 1: battery filenames corrected to the committed names `forgeries-r92.py`
+and `curation-controls-r92.py`; Amendments 2–4: the emit guard wired, on-disk pin scope narrowed to the executed set,
+`PIN_DUPLICATE` exit 2 wired; Amendments 5–7: the empty-cell and structural-header filters wired, device count
+stated, TFREQ universe narrowed; Amendments 8–9: the ATX boundary and the case-enumeration pin wired).
+
+| claim | axis | before | after | verdict |
+|---|---|---|---|---|
+| C1 `C1-DRIVER-R92` | operability (lowest, historical 3/10) | r91 driver on the S fixtures: `read_pins` last-wins, `instrument_rel` first-token-only, pins file absent from the pin set, `emit` without `--receipts` exits 0 and writes defaults | `CONTROL_DRIVER_R92=PASS` with `COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6`, `SELF_PIN OK rev=95bbbd0f receipts_rev=2a9d1773`; `FORGERY_REFUSED=3/3 POSITIVE=pass` | **verified on the wording narrowed by Amendments 1–4** |
+| C2 `C2-CURATION-R92` | calibration | r91 prints `CURATION_R91=PASS` on all four S trees (empty-first-cell drop, width drop, substring join, no reverse leg) | `CURATION_R92=PASS` with `LEGS_MEASURED=14/14 Q_SHAPE_FAIL=0 SOURCE_STATUS_OK=20/20 USED_BY_OK=20/20 TFREQ_OK=17/17 TFREQ_MAX_DF=3 UNENTAILED_TERM=0 WARRANT_OK=17/17 DUP_QIDS=0`; controls `FORGERY_REFUSED=4/4 PRIOR_ACCEPTED=4/4 DUPCOUNT_R91=1 DUPCOUNT_R92=1`; regression `FORGERY_REFUSED=7/7 PRIOR_REGRESSION=7/7` on the r90 battery's regression line | **verified on the wording narrowed by Amendments 1, 5–7** |
+| C3 `C3-TALLY-R92` | freshness | r91 prints `SKILL_TALLY_R91=PASS` on the deleted-161 tree (document-wide, unpinned) | `SKILL_TALLY_R92=PASS` with `TALLY_ROWS=8 STALE_TALLIES=0/8 OTHER_OCCURRENCES=2 CASE_RANGE_OK=2/2 MISLABELED=0 OTHERS_OK=1 LEGS=3/3` over `## Gates` to the next ATX heading of depth ≤ 2; controls `CONTROLS=PASS OLDPROSE_REFUSED=1/1 PRIOR_ACCEPTED=1/1 STALE_REFUSED_BOTH=1/1` | **verified on the wording narrowed by Amendments 8–9** |
+
+| axis | verdict | evidence |
+|---|---|---|
+| operability | **improved** | `emit` without `--receipts` now refuses (exit 2) instead of overwriting committed receipts; a duplicated pin path refuses at exit 2; paths escaping `--root` refuse at setup; the pins file self-pins by its minus-self digest (S5); the forgery battery refuses the three S classes where r91 accepts them by mechanism. |
+| calibration | **improved** | an empty first cell reaches the shape/width tests (no longer a separator); the structural header must be the literal `qid\|source\|quote` row; the decision count reads rows the table holds; TFREQ's universe (rows whose qids resolve) is stated; four S trees refused where r91 accepts each. |
+| freshness | **improved** | the tally scope stops at `# `/`## ` (any ATX heading ≤ 2 at column 0) with a `SCOPE_BLEED` setup diagnostic; the case enumeration is pinned against the verdict count (distinct numbers, six `accepted=` lines included); a deleted in-section historical tally is refused. |
+| depth | unchanged | no new `corpus/knowledge/` entry; S070 re-opened locally (installed man page, sha re-verified). |
+| coverage | unchanged | registry 219 → 219 rows; `PROVINCE.md` untouched; no frontier row advanced. |
+| adjacency | unchanged | the connector's 20-lane sibling scan is read-only; the two fleet-unique patterns (minus-self pin table, pinned multiset) are reported, nothing absorbed. |
+
+Trends: expansion **unchanged** (219 rows, no new entry); quality **improved** (three instruments re-frozen with
+guards ordered by ten falsification artifacts; mutation battery 9/9 kills + 1 surviving rename control proving
+behavioural detection, each repaired class with a red-before witness); discernment **improved** (the freeze was cut
+six times F1–F6 before any settled scoring, each superseded pair named in the plan; nine amendments were published
+before filing as narrowings or wired guards instead of filing the wider sentences; the summary-token swap and the
+missing-before-receipts sentence were named in the report rather than smoothed over).
+
+No axis harmed: `tools/research-gate.sh` and `tools/gate-records.py` are byte-identical at base and landing
+(`git diff --quiet d7780fef <landing> -- tools/`), the registry diff is empty, and SKILL.md is untouched.
+
+## Planned — round 93 (intent, not a predicate)
+
+1. **operability (lowest)** — close the residual on-disk pin gap: byte-check all 16 pinned rows on disk (or drop
+   the nine unpinned-at-disk rows from the table) so a tampered instrument copy verifies the same as a blob
+   change; derive `--expected`/`--receipts`/`--pins` from `--root` instead of the driver's directory so the
+   `rel_for` escape class disappears by construction.
+2. **calibration** — pin the decision-row width so an empty-first-cell row reaches the width test in the
+   Decision table too (it now does there); pin QSHAPE's quoted-whitespace gap (a `" "` quote passes shape and
+   only fails FLOOR — add a whitespace-only quote forgery to the battery).
+3. **freshness** — bind the r82 clip range or drop it (still unbound, per the carried routed item); emit a
+   `SCOPE_BLEED` on the 215 tail tally when the boundary heading changes form.
+4. carried debt: the round-74 "source-blind order oracle", QUALITY 173's successful-refused record form, the r80
+   backlog Gate ids.

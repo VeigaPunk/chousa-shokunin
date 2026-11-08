@@ -2647,3 +2647,37 @@ passing record rather than through prose.
   guard whose document set could not fail it; a dead summary expression; a verdict parser keyed on line start; a prior
   battery's parser treated as an interface; a placeholder detail expression; two clauses wider than the code; a quote
   word count miscounted again; a frozen command missing `--work`; a last-wins pin table and an unpinned pins file.
+
+## Round 92 — 2026-11-08
+
+Lane `chousa`, round 92. Base `d7780fef`; freeze `95bbbd0f` (F6); carrier `2a9d1773` (C6). Three claims, three
+axes, no exploratory claim. Wave: one v1 wave, 12 seats (8 attack, 0 dead). Nine amendments narrow each frozen
+sentence to the instruments' measured behaviour before filing (`plans/round-92.md` §Amendments); the pre-file
+falsification gate passes (`PREFILE-FALSIFICATION: pass claims=3 rows=24 attack_seats=8 findings=0`, exit 0).
+
+- Before: the r91 driver has no guards (emit without `--receipts` exits 0 and rewrites committed receipts;
+  `read_pins` last-wins; `instrument_rel` first-token-only; the pins file is absent from the pin set); the r91
+  curation counter accepts all four S trees (`CURATION_R91=PASS`); the r91 tally counter passes the deleted-161
+  tree (document-wide, unpinned).
+- After: C1 `CONTROL_DRIVER_R92=PASS` (`COMMITTED_OK=6/6 EXACT_OK=6/6 PIN_OK=6/6 FRESH_OK=6/6`,
+  `SELF_PIN OK rev=95bbbd0f receipts_rev=2a9d1773`) and `FORGERY_REFUSED=3/3 POSITIVE=pass`, the guards ordered
+  `emit` (exit 2 without `--receipts`) and `PIN_DUPLICATE` (exit 2) wired; C2 `CURATION_R92=PASS`
+  (`LEGS_MEASURED=14/14 Q_SHAPE_FAIL=0 SOURCE_STATUS_OK=20/20 USED_BY_OK=20/20 TFREQ_OK=17/17 TFREQ_MAX_DF=3
+  UNENTAILED_TERM=0 WARRANT_OK=17/17`) and `CONTROLS=PASS FORGERY_REFUSED=4/4 PRIOR_ACCEPTED=4/4`; C3
+  `SKILL_TALLY_R92=PASS` (`TALLY_ROWS=8 STALE_TALLIES=0/8 OTHER_OCCURRENCES=2 CASE_RANGE_OK=2/2 MISLABELED=0
+  OTHERS_OK=1 LEGS=3/3`) and `CONTROLS=PASS OLDPROSE_REFUSED=1/1 PRIOR_ACCEPTED=1/1 STALE_REFUSED_BOTH=1/1`. Raw
+  receipts under `corpus/evidence/round92/after/`.
+- Registry: 219 → 219 rows; S070 re-opened (installed `sha256sum(1)`, digest unchanged), S001 re-opened with a
+  rev-form Gate record in the lesson; census exit 0 at start and end with the same five pre-existing `W04`
+  warnings.
+- Wave w1: 12 seats (3 executor, 3 reviewer, 1 critic, 1 mutation-tester, 1 sentinel, 1 connector, 1 scout,
+  1 revenger; attack share 8/12 = 67%), 0 dead; results and the 24-row falsification ledger under
+  `.ufo/waves/round-92/`. The wave fired on all three claims; the load-bearing findings are the unwired emit
+  guard and the 7-of-16 on-disk pin scope (C1), the empty-cell separator skip and the positional header swallow
+  (C2), and the string-search scope bleed and the uncounted case enumeration (C3) — all published as
+  amendments or narrowings before filing, not filed over.
+- Mined mistakes: a SystemExit(string) taken for exit 2; a silent path default where the claim states a guard;
+  pins pinned two commits stale by construction; a verdict count trusted without its enumeration; a vacuous
+  membership filter eating empty cells; a section boundary written as a string search; battery filenames drifted
+  from the frozen claim text; a plan edit 2 commits after its pins generation; a whole-file-hash self-pin
+  considered and rejected.
