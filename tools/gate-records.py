@@ -246,7 +246,10 @@ def check(rec, root, repo, reg, refetch):
         else:
             codes.append("QUOTE_ABSENT")
     elif form == "unreach":
-        success = kv["curl_rc"] == "0" and kv["http"] == "200"
+        # round-87 repair: the unreach form records a FAILED transfer, so any 2xx status is a successful response and
+        # cannot ground it (round-86 F1: `curl_rc=0 http=203` was accepted; S216 §15.3.4: a 203 is "the request was
+        # successful"). Only a non-2xx status or a non-zero curl exit denotes a failure.
+        success = kv["curl_rc"] == "0" and 200 <= int(kv["http"]) < 300
         ok = (not success) and any(r[0] == sid and r[1] == url and r[4] == kv["fetched"] and r[5] == kv["curl_rc"]
                                    and r[6] == kv["http"] for r in refetch)
         if not ok:
