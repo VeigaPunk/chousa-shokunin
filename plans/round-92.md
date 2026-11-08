@@ -34,6 +34,16 @@ to a section here.
   so no PRIOR_ACCEPTED=6/6 is claimed for C1; `PRIOR_ACCEPTED=4/4` for C2; `PRIOR_ACCEPTED=1/1` + carried
   refusals for C3). Before receipts land in `corpus/evidence/round92/controls/receipts/c{1,2,3}-before.txt`.
 
+## Pre-wave freeze repair 1 (F2) — pins content must exist at the freeze revision
+
+The F1 commit `bf12c30e` froze the instruments and the claims but did not carry
+`corpus/evidence/round92/instrument-pins.txt` (the pins are generated from the F1 commit's own blobs), so
+`SELF_PIN` at `rev=F1` would have named a file the revision does not carry — the same defect class as r91's
+`16332cc0`→`f6a05a2e`. F2 adds the pins table (generated from the F1 blobs, then carried in this commit) and
+supersedes F1 as the freeze revision **before any scored run**. No claim sentence, predicate, kill rule or
+target changed; the pins table is data, and its contents are re-derived from the F1 blobs below (the same
+instrument-pins generation procedure as r91).
+
 ## Damages found while building (before the freeze)
 
 These were built and tested in scratch before anything was committed; no measurement was taken on an unfrozen
