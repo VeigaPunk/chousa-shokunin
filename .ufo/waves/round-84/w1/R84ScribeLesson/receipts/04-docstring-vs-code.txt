@@ -1,0 +1,43 @@
+# receipt 04 — round-84 depth counter: documented contract vs code constants
+# tree: git archive 03bbb4580b39b442be69f998fae2db48d64b8c93 | tar -x -C <scratch>/landing
+# scratch checker: <scratch>/check_docstring.py (docstring usage-path / base-list / ROUND_START vs the code's)
+# cmd A: python3 <scratch>/check_docstring.py corpus/evidence/round84/depth-r84.py   (the frozen round-84 counter)
+usage-path = corpus/evidence/round83/depth-r84.py
+docstring-base-list = corpus/evidence/round83/base-knowledge.txt
+docstring-round-start = 2026-11-06T20:53:00Z
+code-base-list = corpus/evidence/round84/base-knowledge.txt
+code-round-start = 2026-11-08T02:05:00Z
+usage-path-exists (corpus/evidence/round83/depth-r84.py) = False
+MISMATCH base-list: docstring corpus/evidence/round83/base-knowledge.txt != code corpus/evidence/round84/base-knowledge.txt
+MISMATCH round-start: docstring 2026-11-06T20:53:00Z != code 2026-11-08T02:05:00Z
+DOCSTRING_CHECK bad=3
+rc=1
+
+# cmd B: same checker on the copy source corpus/evidence/round83/depth-r83.py
+usage-path = corpus/evidence/round83/depth-r83.py
+docstring-base-list = corpus/evidence/round83/base-knowledge.txt
+docstring-round-start = 2026-11-06T20:53:00Z
+code-base-list = corpus/evidence/round83/base-knowledge.txt
+code-round-start = 2026-11-06T20:53:00Z
+usage-path-exists (corpus/evidence/round83/depth-r83.py) = True
+base-list agrees = corpus/evidence/round83/base-knowledge.txt
+round-start agrees = 2026-11-06T20:53:00Z
+DOCSTRING_CHECK bad=0
+rc=0
+
+# cmd C: same checker on corpus/evidence/round82/depth-r82.py
+usage-path = corpus/evidence/round82/depth-r82.py
+docstring-base-list = corpus/evidence/round82/base-knowledge.txt
+docstring-round-start = 2026-11-06T19:41:56Z
+code-base-list = corpus/evidence/round82/base-knowledge.txt
+code-round-start = 2026-11-06T19:41:56Z
+usage-path-exists (corpus/evidence/round82/depth-r82.py) = True
+base-list agrees = corpus/evidence/round82/base-knowledge.txt
+round-start agrees = 2026-11-06T19:41:56Z
+DOCSTRING_CHECK bad=0
+rc=0
+
+# cmd D: the counter's own documented Usage line, run verbatim in the landing tree
+#   python3 -B corpus/evidence/round83/depth-r84.py --root <scratch>/landing
+python3: can't open file '/fast/scratch/hyaku/chousa-r84/R84ScribeLesson/landing/corpus/evidence/round83/depth-r84.py': [Errno 2] No such file or directory
+rc=2

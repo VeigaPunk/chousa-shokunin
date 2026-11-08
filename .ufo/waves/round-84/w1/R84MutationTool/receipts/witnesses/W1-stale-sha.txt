@@ -1,0 +1,13 @@
+WITNESS: W1-stale-sha
+WHY: S113 row: rc0/2xx but txt_sha256 != sha256(capture)
+MUTANT: mut05-drop-refetch-sha
+PRISTINE_CMD: python3 -B tree/tools/gate-records.py verify --root tree --repo /home/vgpnk/Projects/shokunin/chousa-shokunin /fast/scratch/hyaku/chousa-r84/R84MutationTool/receipts/witnesses/W1-stale-sha.md
+PRISTINE_RC=1
+PRISTINE_STDOUT=GATE_RECORD /fast/scratch/hyaku/chousa-r84/R84MutationTool/receipts/witnesses/W1-stale-sha.md:1 S113 FAIL REFETCH
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+PRISTINE_STDERR=
+MUTANT_CMD: python3 -B mutants/mut05-drop-refetch-sha.py verify --root tree --repo /home/vgpnk/Projects/shokunin/chousa-shokunin /fast/scratch/hyaku/chousa-r84/R84MutationTool/receipts/witnesses/W1-stale-sha.md
+MUTANT_RC=0
+MUTANT_STDOUT=GATE_RECORD /fast/scratch/hyaku/chousa-r84/R84MutationTool/receipts/witnesses/W1-stale-sha.md:1 S113 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+MUTANT_STDERR=

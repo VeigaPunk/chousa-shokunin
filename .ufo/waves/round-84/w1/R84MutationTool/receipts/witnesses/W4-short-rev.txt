@@ -1,0 +1,13 @@
+WITNESS: W4-short-rev
+WHY: rev shortened to 12 hex (git resolves it; HEX40 gate is the only defense)
+MUTANT: mut15-rev-short-accepted
+PRISTINE_CMD: python3 -B tree/tools/gate-records.py verify --root tree --repo /home/vgpnk/Projects/shokunin/chousa-shokunin /fast/scratch/hyaku/chousa-r84/R84MutationTool/receipts/witnesses/W4-short-rev.md
+PRISTINE_RC=1
+PRISTINE_STDOUT=GATE_RECORD /fast/scratch/hyaku/chousa-r84/R84MutationTool/receipts/witnesses/W4-short-rev.md:1 S199 FAIL LINE,REV
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+PRISTINE_STDERR=
+MUTANT_CMD: python3 -B mutants/mut15-rev-short-accepted.py verify --root tree --repo /home/vgpnk/Projects/shokunin/chousa-shokunin /fast/scratch/hyaku/chousa-r84/R84MutationTool/receipts/witnesses/W4-short-rev.md
+MUTANT_RC=0
+MUTANT_STDOUT=GATE_RECORD /fast/scratch/hyaku/chousa-r84/R84MutationTool/receipts/witnesses/W4-short-rev.md:1 S199 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+MUTANT_STDERR=

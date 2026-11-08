@@ -1,0 +1,3 @@
+preamble prose, not a record
+GATE-RECORD S199 rev=8bff97f27d9806c15a9d821f576782e0e9c04c92 path=corpus/lessons/round-79-verifier-spotcheck.md line=222 words=12 quote=the battery is fully forgeable through the payload channel on **both** batteries
+postamble

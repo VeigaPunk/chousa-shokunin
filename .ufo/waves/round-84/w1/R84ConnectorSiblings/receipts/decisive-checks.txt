@@ -1,0 +1,62 @@
+# cmd: bash /fast/scratch/hyaku/chousa-r84/R84ConnectorSiblings/dec_body.sh
+# cwd: /home/vgpnk/Projects/shokunin/chousa-shokunin
+/fast/scratch/hyaku/chousa-r84/R84ConnectorSiblings/dec_body.sh: line 3: modified: command not found
+=== D1: is the  Definition unique in the capture? ===
+1
+=== D2: is Q10's sentence unique? ===
+8
+=== D3: mori anchor-check binds the modified Definition to its line ===
+anchor item=modified-Def span=8786 verdict=wordcount_mismatch located_on=8786 occurrences=1 words_counted=7 words_recorded=9
+anchor item=Q10-comment span=8796 verdict=wordcount_mismatch located_on=8796 occurrences=1 words_counted=24 words_recorded=22
+ANCHOR_CHECK: FAIL items=2 ok=0 mislocated=0 wordcount_mismatch=2 pin_sha256=20dc0c3ab7724e1f4be59217c190fa796a66c29b7a653e8d707d64f5fac43a79 pin_bytes=148784
+D3 rc=1
+
+=== D4: depth counter base_sids source ===
+103-    kdir = os.path.join(root, "corpus/knowledge")
+104-    for rel in (BASE_LIST, "corpus/SOURCES.md", "corpus/evidence/round57/refetch.tsv"):
+105-        if not os.path.isfile(os.path.join(root, rel)):
+106-            print(f"DEPTH_R84_ERROR missing {rel}")
+107-            return 2
+108-    base = [ln.strip() for ln in open(os.path.join(root, BASE_LIST)) if ln.strip()]
+109:    base_text, base_sids = "", set()
+110-    for b in base:
+111-        p = os.path.join(kdir, b)
+112-        if os.path.isfile(p):
+113-            t = open(p, encoding="utf-8", errors="replace").read()
+114-            base_text += "\n" + t
+115-            for ln in t.splitlines()[:15]:
+116-                if ln.startswith("source:"):
+117:                    base_sids |= set(SID_RE.findall(ln))
+118-    base_norm = norm(base_text)
+119-    reg = {}
+120-    for ln in open(os.path.join(root, "corpus/SOURCES.md"), encoding="utf-8"):
+121-        m = ROW_RE.match(ln)
+122-        if not m:
+123-            continue
+--
+197-            if any(len(v.split()) < 3 or norm(v).lower().strip("`.") in PLACEHOLDERS for v in other) or joined in seen:
+198-                fails.append("E5")
+199-            seen.add(joined)
+200-        if len(sids) < 3 or any(fr.get(s) is None or s not in named_s for s in sids) or set(quotes) - named_q:
+201-            fails.append("E6")
+202-        for s in sids:
+203:            if s in base_sids or (fr.get(s) and fr[s][0] in base_text):
+204-                fails.append("E7")
+205-        fails = sorted(set(fails))
+206-        ok = not fails and bool(quotes)
+207-        ok_n += ok
+208-        tot_rows += len(body)
+209-        tot_q += located
+
+=== D5: base SOURCES rows for S018/S023 ===
+| S018 | Schreieder, Schopf, Farber, Attribution, Citation, and Quotation survey — https://aclanthology.org/2026.acl-long.1430/ | paper | B | the taxonomy and metric map of evidence-based generation | Abstract; ACL 2026, pages 30956-31000, DOI 10.18653/v1/2026.acl-long.1430 | A survey of 134 papers and 300 metrics across seven dimensions — a lead index to primary sources, never sole support for a claim | queued | 2026-10-19 | 365d | — |
+| S023 | DCMI Metadata Terms — https://www.dublincore.org/specifications/dublin-core/dcmi-terms/ | spec | A | DCMI's definitions of dcterms:source, dcterms:modified and dcterms:valid; not a freshness or verification policy | section 2, /terms/ namespace entries source, modified, valid; DCMI Recommendation issued 2020-01-20 | Source (what a resource derives from) and its dates (modified, valid) are distinct metadata properties | queued | 2026-10-21 | 365d | — |
+
+=== D6: entry row 7 + the Limits sentence ===
+45:| Comparing evidence-based generation approaches | use a shared taxonomy and unified benchmarks rather than isolated evaluation practices | compare approaches that use different terminologies and metrics without noting the fragmentation | Q8 (S018) |
+64:- The S018 survey is about evidence-based text generation with LLMs, not systematic reviews; its taxonomy and metrics
+
+=== D7: kengaku province ===
+**Domain:** LLM/model research & evaluation — scopes ~/Projects/webzites/repos/llm-wiki, route telemetry
+DECISIVE-SCAN-COMPLETE
+# exit: 0

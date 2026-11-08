@@ -1,0 +1,52 @@
+# cmd: bash /fast/scratch/hyaku/chousa-r84/R84ConnectorSiblings/rf_body.sh
+# cwd: /home/vgpnk/Projects/shokunin
+=== RF1: does any sibling tool/script read chousa's refetch.tsv schema (curl_rc)? ===
+(empty above = no sibling reads the curl_rc/http/txt_sha256 refetch row schema)
+
+=== RF2: tabi f6-refetch contract (independent seat, computed verdict) ===
+//                   matches one of them.
+//   f6-refetch      an independent re-fetch record
+//                   corpus/evidence/round-29/release-pins/refetch/<id>.json
+//                   (schema {id, seat, fetched_at, files:[{path, tag, status,
+//                   sha256}]}) whose seat differs from entry.fetched_by lists
+//                   the same path at the stable tag with the receipt's
+//                   new_status and new_sha256. Copying old bytes in as new
+//                   bytes therefore fails wherever the file changed.
+// Verdict per file is computed, never read from the receipt: a 404 file
+// (old_status 404) holds iff new_status is 404 and the new bytes contain
+// NOT_FOUND; a 200 file holds iff every range's old lines (trimmed, inner
+// whitespace collapsed) occur as one contiguous block in the new lines, or,
+
+=== RF3: tabi f6-refetch mutation classes ===
+206:      "id": "pins-f6-refetch-seat",
+207-      "script": "scripts/check-release-pins.mjs",
+208-      "kind": "fault",
+209-      "find": "rf.seat !== entry.fetched_by &&",
+210-      "replace": "true &&",
+211-      "note": "MutC3 #10"
+212-    },
+
+=== RF4: kama refetch leg (live fetch must contain the frozen quotes) ===
+            exist, `quarantine-slice` is non-empty, `collisions` is empty or the
+            lesson names a renumber map, and `guard/` holds a file.
+  refetch   a live fetch of each api URL (`gh api`, else curl) contains that
+            source's frozen quotes and every quote the gate leg accepted for it
+            (whitespace-normalised) in `body`/`title`; a network
+            failure reads 0 (the counter cannot re-derive the quote).
+  census    `sources-census.sh validate --file <tip export>/corpus/SOURCES.md`
+    # refetch
+    ok = True
+    for k, v in SRC.items():
+        lt = live_text(v["api"])
+        if lt is None:
+            ok = False
+            d.append(f"detail: refetch: {v['api']} could not be fetched")
+            continue
+        for q in v["quotes"] + gate_q[k]:
+            if norm(q) not in lt:
+                ok = False
+                d.append(f"detail: refetch: quote absent from live {k}: {q[:60]!r}")
+    legs["refetch"] = int(ok)
+    # census
+RF-COMPLETE
+# exit: 0

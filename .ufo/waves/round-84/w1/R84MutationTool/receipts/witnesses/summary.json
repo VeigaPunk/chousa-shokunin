@@ -1,0 +1,92 @@
+[
+ {
+  "witness": "W1-stale-sha",
+  "why": "S113 row: rc0/2xx but txt_sha256 != sha256(capture)",
+  "mutant": "GATE_RECORD /fast/scratch/hyaku/chousa-r84/R84MutationTool/receipts/witnesses/W1-stale-sha.md:1 S113 OK\nGATE_RECORDS files=1 records=1 ok=1 fail=0",
+  "pristine_rc": 1,
+  "pristine": "GATE_RECORD /fast/scratch/hyaku/chousa-r84/R84MutationTool/receipts/witnesses/W1-stale-sha.md:1 S113 FAIL REFETCH\nGATE_RECORDS files=1 records=1 ok=0 fail=1",
+  "mutant_rc": 0
+ },
+ {
+  "witness": "W2-unreach-success",
+  "why": "refetch row rc0/2xx published as capture=none unreach record",
+  "mutant": "GATE_RECORD /fast/scratch/hyaku/chousa-r84/R84MutationTool/receipts/witnesses/W2-unreach-success.md:1 S082 OK\nGATE_RECORDS files=1 records=1 ok=1 fail=0",
+  "pristine_rc": 1,
+  "pristine": "GATE_RECORD /fast/scratch/hyaku/chousa-r84/R84MutationTool/receipts/witnesses/W2-unreach-success.md:1 S082 FAIL REFETCH\nGATE_RECORDS files=1 records=1 ok=0 fail=1",
+  "mutant_rc": 0
+ },
+ {
+  "witness": "W3-unreach-rc-mismatch",
+  "why": "unreach record curl_rc altered away from the committed row",
+  "mutant": "GATE_RECORD /fast/scratch/hyaku/chousa-r84/R84MutationTool/receipts/witnesses/W3-unreach-rc-mismatch.md:1 S100 OK\nGATE_RECORDS files=1 records=1 ok=1 fail=0",
+  "pristine_rc": 1,
+  "pristine": "GATE_RECORD /fast/scratch/hyaku/chousa-r84/R84MutationTool/receipts/witnesses/W3-unreach-rc-mismatch.md:1 S100 FAIL REFETCH\nGATE_RECORDS files=1 records=1 ok=0 fail=1",
+  "mutant_rc": 0
+ },
+ {
+  "witness": "W4-short-rev",
+  "why": "rev shortened to 12 hex (git resolves it; HEX40 gate is the only defense)",
+  "mutant": "GATE_RECORD /fast/scratch/hyaku/chousa-r84/R84MutationTool/receipts/witnesses/W4-short-rev.md:1 S199 OK\nGATE_RECORDS files=1 records=1 ok=1 fail=0",
+  "pristine_rc": 1,
+  "pristine": "GATE_RECORD /fast/scratch/hyaku/chousa-r84/R84MutationTool/receipts/witnesses/W4-short-rev.md:1 S199 FAIL LINE,REV\nGATE_RECORDS files=1 records=1 ok=0 fail=1",
+  "mutant_rc": 0
+ },
+ {
+  "witness": "W5-unquoted-quote",
+  "why": "admit quote without surrounding double quotes",
+  "mutant": "GATE_RECORD /fast/scratch/hyaku/chousa-r84/R84MutationTool/receipts/witnesses/W5-unquoted-quote.md:1 S203 OK\nGATE_RECORDS files=1 records=1 ok=1 fail=0",
+  "pristine_rc": 1,
+  "pristine": "GATE_RECORD /fast/scratch/hyaku/chousa-r84/R84MutationTool/receipts/witnesses/W5-unquoted-quote.md:1 S203 FAIL PARSE\nGATE_RECORDS files=1 records=1 ok=0 fail=1",
+  "mutant_rc": 0
+ },
+ {
+  "witness": "W6-non-http-url",
+  "why": "url scheme ftp://",
+  "mutant": "GATE_RECORD /fast/scratch/hyaku/chousa-r84/R84MutationTool/receipts/witnesses/W6-non-http-url.md:1 S203 FAIL CAPTURE_KEY,REFETCH\nGATE_RECORDS files=1 records=1 ok=0 fail=1",
+  "pristine_rc": 1,
+  "pristine": "GATE_RECORD /fast/scratch/hyaku/chousa-r84/R84MutationTool/receipts/witnesses/W6-non-http-url.md:1 S203 FAIL PARSE\nGATE_RECORDS files=1 records=1 ok=0 fail=1",
+  "mutant_rc": 1
+ },
+ {
+  "witness": "W7-fetched-nonshape",
+  "why": "fetched is not a timestamp at all",
+  "mutant": null,
+  "pristine_rc": 1,
+  "pristine": "GATE_RECORD /fast/scratch/hyaku/chousa-r84/R84MutationTool/receipts/witnesses/W7-fetched-nonshape.md:1 S203 FAIL PARSE\nGATE_RECORDS files=1 records=1 ok=0 fail=1",
+  "mutant_rc": null
+ },
+ {
+  "witness": "W8-leading-zero-words",
+  "why": "words with leading zero",
+  "mutant": null,
+  "pristine_rc": 1,
+  "pristine": "GATE_RECORD /fast/scratch/hyaku/chousa-r84/R84MutationTool/receipts/witnesses/W8-leading-zero-words.md:1 S203 FAIL PARSE\nGATE_RECORDS files=1 records=1 ok=0 fail=1",
+  "mutant_rc": null
+ },
+ {
+  "witness": "W9-unterminated-quote",
+  "why": "admit quote's closing double quote removed",
+  "mutant": null,
+  "pristine_rc": 1,
+  "pristine": "GATE_RECORD /fast/scratch/hyaku/chousa-r84/R84MutationTool/receipts/witnesses/W9-unterminated-quote.md:1 S203 FAIL PARSE\nGATE_RECORDS files=1 records=1 ok=0 fail=1",
+  "mutant_rc": null
+ },
+ {
+  "witness": "W11-leading-zero-words",
+  "why": "admit words=0<n> (leading zero); contract says PARSE",
+  "mutant": "mut33-accept-leading-zero",
+  "pristine_rc": 1,
+  "pristine": "GATE_RECORD receipts/witnesses/W11-leading-zero-words.md:1 S203 FAIL PARSE\nGATE_RECORDS files=1 records=1 ok=0 fail=1",
+  "mutant_rc": 1,
+  "mutant_out": "GATE_RECORD receipts/witnesses/W11-leading-zero-words.md:1 S203 FAIL WORDS\nGATE_RECORDS files=1 records=1 ok=0 fail=1"
+ },
+ {
+  "witness": "W12-rev-line-zero",
+  "why": "rev line=0 with the blob's last line as quote (corpus/lessons/round-79-verifier-spotcheck.md)",
+  "mutant": "mut34-drop-rev-line-zero-guard",
+  "pristine_rc": 1,
+  "pristine": "GATE_RECORD receipts/witnesses/W12-rev-line-zero.md:1 S199 FAIL PARSE\nGATE_RECORDS files=1 records=1 ok=0 fail=1",
+  "mutant_rc": 0,
+  "mutant_out": "GATE_RECORD receipts/witnesses/W12-rev-line-zero.md:1 S199 OK\nGATE_RECORDS files=1 records=1 ok=1 fail=0"
+ }
+]

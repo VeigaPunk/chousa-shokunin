@@ -1,0 +1,26 @@
+# cmd: bash /fast/scratch/hyaku/chousa-r84/R84ConnectorSiblings/f1.sh
+# cwd: /home/vgpnk/Projects/shokunin
+--- kotodama tools/check-gate-captures.py : contract line ---
+2:"""Check that each Gate-table row names the capture file its sha256 refers to.
+25:  * The header column named `capture file` (case-insensitive, whitespace-
+--- souji tools/souji-gate-check.py : the located-quote-vs-snapshot leg ---
+11:  4. every quoted span appears verbatim (whitespace-collapsed) in the committed
+13:     lives under --snapshot-dir;
+14:  5. every 'source: S<digits>' id cited in the entry resolves in corpus/SOURCES.md;
+212:def _entry(gate_body: str, sources="source: S109 — example\nsource: S110 — example\n") -> str:
+244:            "dangling-source": _entry(_gate(good_quote), sources="source: S999 — missing\n"),
+252:                     "source: S109 — example\n\n# synthetic staged entry (no Gate)\n\nbody\n")
+300:    ap.add_argument("--snapshot-dir", default="census/round-22/attempt2/sources")
+--- mori tools/mori-anchor-check.py : located-line + word-count leg ---
+2:"""mori-anchor-check — mechanical located-line and word-count verification of
+8::828->:829; D71-2: two recorded word-counts misstated, 22->26 and 17->15).
+12:  - a recorded (line, exact-quote) anchor LOCATES only if the exact quote text
+15:  - a recorded word-count MATCHES only if the recorded quote text's own
+36:  LABEL|LINE|-|TEXT        (WORDS "-" = no word-count check)
+--- kama tools/citation-provenance.py : revision-qualified citation vs git blob ---
+11:and verifies, for every required row in the registry, that (a) some document
+12:carries the exact token, and (b) `git cat-file` at `<rev>:<path>` yields a blob
+--- does ANY sibling tool read GATE-RECORD or refetch.tsv? ---
+(no line above = no sibling tool reads GATE-RECORD or refetch.tsv)
+F1-SCAN-COMPLETE
+# exit: 0

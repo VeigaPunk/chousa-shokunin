@@ -1,0 +1,21 @@
+# receipt 05 — the S017/S214 mistake: the depth counter's fresh() resolves a source's capture by the REGISTRY ROW'S URL
+# tree: landing = git archive 03bbb458 | tar -x -C <scratch>/landing ; prefix = copy of landing with the S214 registry row deleted
+
+# BEFORE — cmd: python3 -B <prefix>/corpus/evidence/round84/depth-r84.py --root <prefix>   (S214 row absent)
+ENTRY search-transparency-reporting-r84.md ok=no rows=11 quotes=7/12 fails=E3,E6
+DEPTH_R84 entries=1 ok_entries=0 rows=11 located_quotes=7 fresh_sources=2
+DEPTH_R84=FAIL
+rc=1
+
+# AFTER  — cmd: python3 -B <landing>/corpus/evidence/round84/depth-r84.py --root <landing>  (S214 row present, PDF url)
+ENTRY search-transparency-reporting-r84.md ok=yes rows=11 quotes=12/12 fails=-
+DEPTH_R84 entries=1 ok_entries=1 rows=11 located_quotes=12 fresh_sources=3
+DEPTH_R84=PASS
+rc=0
+
+# VARIANT — the S214 registry row kept but its URL pointed at the S017 LANDING PAGE (the wrong-capture shape)
+#   prefix2 = copy of landing with the S214 row's url replaced by https://www.prisma-statement.org/prisma-2020
+ENTRY search-transparency-reporting-r84.md ok=no rows=11 quotes=7/12 fails=E3,E6
+DEPTH_R84 entries=1 ok_entries=0 rows=11 located_quotes=7 fresh_sources=2
+DEPTH_R84=FAIL
+rc=1

@@ -1,0 +1,14 @@
+WITNESS: W12-rev-line-zero
+WHY: rev line=0 with the blob's last line as quote (corpus/lessons/round-79-verifier-spotcheck.md)
+MUTANT: mut34-drop-rev-line-zero-guard
+LINE=GATE-RECORD S199 rev=b7803829922770b890e9f4efdd30d12c3695439a path=corpus/lessons/round-79-verifier-spotcheck.md line=0 words=3 quote=round's honest result.
+PRISTINE_CMD: python3 -B tree/tools/gate-records.py verify --root tree --repo /home/vgpnk/Projects/shokunin/chousa-shokunin receipts/witnesses/W12-rev-line-zero.md
+PRISTINE_RC=1
+PRISTINE_STDOUT=GATE_RECORD receipts/witnesses/W12-rev-line-zero.md:1 S199 FAIL PARSE
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+PRISTINE_STDERR=
+MUTANT_CMD: python3 -B mutants/mut34-drop-rev-line-zero-guard.py verify --root tree --repo /home/vgpnk/Projects/shokunin/chousa-shokunin receipts/witnesses/W12-rev-line-zero.md
+MUTANT_RC=0
+MUTANT_STDOUT=GATE_RECORD receipts/witnesses/W12-rev-line-zero.md:1 S199 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+MUTANT_STDERR=

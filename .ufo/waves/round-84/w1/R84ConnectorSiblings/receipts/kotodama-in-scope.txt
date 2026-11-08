@@ -1,0 +1,61 @@
+# cmd: bash /fast/scratch/hyaku/chousa-r84/R84ConnectorSiblings/k_body.sh
+# cwd: /home/vgpnk/Projects/shokunin/kotodama-shokunin
+=== kotodama tool on an IN-SCOPE lesson (round-97, bare S-id rows) ===
+| S985 | https://journal.oraltradition.org/wp-content/uploads/files/articles/24i/04_24.1.pdf | 2026-11-05 | 200 | A | “A common view of verbal duels posits that they are a cathartic expression of aggression” (15 words; count 1) | `967e3cd4a33b2cc4…` | 1 |
+| S986 | https://archive.org/details/in.gov.ignca.2688 | 2026-11-05 | 200 | A | “Among the East Greenlanders song duels may be carried on for” (11 words; count 1) | `d786726a8213030a…` | 2 |
+--- run ---
+ROW S985 CAPTURE-MISSING -
+ROW S986 CAPTURE-MISSING -
+ROW S987 CAPTURE-MISSING -
+ROW S988 CAPTURE-MISSING -
+ROW S989 CAPTURE-MISSING -
+ROW S990 CAPTURE-MISSING -
+ROW S991 CAPTURE-MISSING -
+ROW S992 CAPTURE-MISSING -
+ROW S993 CAPTURE-MISSING -
+GATE-CAPTURES: 9 finding(s) in 9 row(s)
+rc=0
+
+=== the evidence dir the tool resolves under ===
+116-    return None
+117-
+118-
+119:def check_lesson(text, evidence_dir):
+120-    section = gate_section(text)
+121-    parsed_rows = []  # (id, hash_tuple|None, header_cells|None, cells|None)
+122-    header = None
+123-    header_cells = None
+124-    for _number, line in section:
+125-        cells = split_row(line)
+126-        if cells is None or is_separator(cells):
+127-            continue
+128-        norm = [c.strip().strip("`").casefold() for c in cells]
+129-        if header is None:
+130-            if "capture file" in norm:
+131-                header = "capture file"
+--
+161-        if "/" in capture_name or "\\" in capture_name or capture_name in (".", ".."):
+162-            results.append((sid, "CAPTURE-ABSENT", capture_name, kind, token))
+163-            continue
+164:        path = os.path.join(evidence_dir, capture_name)
+165-        if not os.path.isfile(path):
+166-            results.append((sid, "CAPTURE-ABSENT", capture_name, kind, token))
+167-            continue
+168-        digest = hashlib.sha256()
+169-        with open(path, "rb") as handle:
+170-            for chunk in iter(lambda: handle.read(65536), b""):
+171-                digest.update(chunk)
+172-        actual = digest.hexdigest()
+173-        if kind == "full":
+174-            ok = actual == token
+175-        else:
+176-            ok = actual.startswith(token)
+--
+179-
+180-
+181-def run(paths):
+182:    # paths: (lesson_path, evidence_dir)
+183-    if len(paths) != 2:
+184-        print("GATE_CAPTURES_ERROR: usage: check-gate-captures.py <lesson.md> <evidence-dir>", file=sys.stderr)
+KBODY-COMPLETE
+# exit: 0

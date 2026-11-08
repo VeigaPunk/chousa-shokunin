@@ -1,0 +1,13 @@
+# R84SentinelScope — an HTTP-203 cookie-challenge page is accepted as an ADMITTED, QUOTED source
+# landing rev 03bbb458, public CLI only; the forged record lives in scratch, not in the lane
+# target capture: corpus/captures/ff9013bd7d9387e45cd6e000.txt
+#   (refetch.tsv row S022: curl_rc=0 http=203 -- a PubMed 'Cookies must be enabled' interstitial)
+# quote 'Cookies must be enabled' is located verbatim in that capture's text
+
+forged record:
+GATE-RECORD S022 url=https://pubmed.ncbi.nlm.nih.gov/28912002/ fetched=2026-11-08T02:16:21Z tier=A decision=admit capture=corpus/captures/ff9013bd7d9387e45cd6e000.txt capture_sha256=7070b59c3434b677 w
+
+$ python3 $D/tools/gate-records.py verify --root $D --repo /home/vgpnk/Projects/shokunin/chousa-shokunin $D/forged.txt
+GATE_RECORD /fast/scratch/hyaku/chousa-r84/R84SentinelScope/exploit/tmp.pSCeoDwgue/forged.txt:1 S022 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+exit=0  <-- the tool prints OK: a cookie wall is certified as a quotable admitted source

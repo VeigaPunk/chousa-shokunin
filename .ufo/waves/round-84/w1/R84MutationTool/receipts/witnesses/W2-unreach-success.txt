@@ -1,0 +1,13 @@
+WITNESS: W2-unreach-success
+WHY: refetch row rc0/2xx published as capture=none unreach record
+MUTANT: mut28-drop-unreach-success-guard
+PRISTINE_CMD: python3 -B tree/tools/gate-records.py verify --root tree --repo /home/vgpnk/Projects/shokunin/chousa-shokunin /fast/scratch/hyaku/chousa-r84/R84MutationTool/receipts/witnesses/W2-unreach-success.md
+PRISTINE_RC=1
+PRISTINE_STDOUT=GATE_RECORD /fast/scratch/hyaku/chousa-r84/R84MutationTool/receipts/witnesses/W2-unreach-success.md:1 S082 FAIL REFETCH
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+PRISTINE_STDERR=
+MUTANT_CMD: python3 -B mutants/mut28-drop-unreach-success-guard.py verify --root tree --repo /home/vgpnk/Projects/shokunin/chousa-shokunin /fast/scratch/hyaku/chousa-r84/R84MutationTool/receipts/witnesses/W2-unreach-success.md
+MUTANT_RC=0
+MUTANT_STDOUT=GATE_RECORD /fast/scratch/hyaku/chousa-r84/R84MutationTool/receipts/witnesses/W2-unreach-success.md:1 S082 OK
+GATE_RECORDS files=1 records=1 ok=1 fail=0
+MUTANT_STDERR=

@@ -1,0 +1,569 @@
+[
+ {
+  "name": "mut01-drop-registry",
+  "intent": "REGISTRY check removed",
+  "rc": 1,
+  "verdict": "KILLED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=288/288 EXPECTED_CODE=276/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=FAIL"
+  ],
+  "n_not_refused": 0,
+  "n_wrong_code": 12,
+  "labels": [
+   "M01-unknown-id"
+  ],
+  "receipt": "receipts/mutants/mut01-drop-registry.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut02-drop-tier",
+  "intent": "TIER check removed",
+  "rc": 1,
+  "verdict": "KILLED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=276/288 EXPECTED_CODE=276/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=FAIL"
+  ],
+  "n_not_refused": 12,
+  "n_wrong_code": 0,
+  "labels": [
+   "M02-tier"
+  ],
+  "receipt": "receipts/mutants/mut02-drop-tier.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut03-drop-capture-key",
+  "intent": "CAPTURE_KEY check removed",
+  "rc": 1,
+  "verdict": "KILLED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=288/288 EXPECTED_CODE=264/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=FAIL"
+  ],
+  "n_not_refused": 0,
+  "n_wrong_code": 24,
+  "labels": [
+   "M03-other-capture",
+   "M13-url-changed"
+  ],
+  "receipt": "receipts/mutants/mut03-drop-capture-key.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut04-drop-capture-sha",
+  "intent": "CAPTURE_SHA keeps shape check only; prefix-of-file-sha dropped",
+  "rc": 1,
+  "verdict": "KILLED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=276/288 EXPECTED_CODE=276/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=FAIL"
+  ],
+  "n_not_refused": 12,
+  "n_wrong_code": 0,
+  "labels": [
+   "M05-sha-flip"
+  ],
+  "receipt": "receipts/mutants/mut04-drop-capture-sha.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut05-drop-refetch-sha",
+  "intent": "r[8]==capsha dropped from admit REFETCH",
+  "rc": 0,
+  "verdict": "SURVIVED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=288/288 EXPECTED_CODE=288/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=PASS"
+  ],
+  "n_not_refused": 0,
+  "n_wrong_code": 0,
+  "labels": [],
+  "receipt": "receipts/mutants/mut05-drop-refetch-sha.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut06-drop-refetch-fetched",
+  "intent": "r[4]==fetched dropped from admit REFETCH",
+  "rc": 1,
+  "verdict": "KILLED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=276/288 EXPECTED_CODE=276/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=FAIL"
+  ],
+  "n_not_refused": 12,
+  "n_wrong_code": 0,
+  "labels": [
+   "M07-fetched"
+  ],
+  "receipt": "receipts/mutants/mut06-drop-refetch-fetched.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut07-accept-curl-rc-nonzero",
+  "intent": "admit REFETCH accepts any curl_rc",
+  "rc": 0,
+  "verdict": "SURVIVED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=288/288 EXPECTED_CODE=288/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=PASS"
+  ],
+  "n_not_refused": 0,
+  "n_wrong_code": 0,
+  "labels": [],
+  "receipt": "receipts/mutants/mut07-accept-curl-rc-nonzero.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut08-accept-non-2xx",
+  "intent": "admit REFETCH accepts any 3-digit http",
+  "rc": 0,
+  "verdict": "SURVIVED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=288/288 EXPECTED_CODE=288/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=PASS"
+  ],
+  "n_not_refused": 0,
+  "n_wrong_code": 0,
+  "labels": [],
+  "receipt": "receipts/mutants/mut08-accept-non-2xx.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut09-words-unchecked",
+  "intent": "WORDS equality check removed",
+  "rc": 1,
+  "verdict": "KILLED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=258/288 EXPECTED_CODE=258/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=FAIL"
+  ],
+  "n_not_refused": 30,
+  "n_wrong_code": 0,
+  "labels": [
+   "M09-words-plus",
+   "M10-quote-drop-last",
+   "R05-words-plus"
+  ],
+  "receipt": "receipts/mutants/mut09-words-unchecked.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut10-words-off-by-one",
+  "intent": "WORDS off-by-one (n+1)",
+  "rc": 1,
+  "verdict": "KILLED",
+  "summary": [
+   "TOOL=present POSITIVE=1/15 FRESH_POSITIVE=1/5 FORGED_REFUSED=258/288 EXPECTED_CODE=258/288 EMPTY_REFUSED=1/1 RC=2/4 SETUP=unscored",
+   "GATE_RECORDS_R84=FAIL"
+  ],
+  "n_not_refused": 30,
+  "n_wrong_code": 0,
+  "labels": [
+   "M09-words-plus",
+   "M10-quote-drop-last",
+   "R05-words-plus"
+  ],
+  "receipt": "receipts/mutants/mut10-words-off-by-one.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut11-quote-len-26",
+  "intent": "QUOTE_LEN upper bound 25->26",
+  "rc": 1,
+  "verdict": "KILLED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=277/288 EXPECTED_CODE=276/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=FAIL"
+  ],
+  "n_not_refused": 11,
+  "n_wrong_code": 1,
+  "labels": [
+   "M11-quote-26"
+  ],
+  "receipt": "receipts/mutants/mut11-quote-len-26.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut12-quote-len-0-26",
+  "intent": "QUOTE_LEN bounds 0..26",
+  "rc": 1,
+  "verdict": "KILLED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=277/288 EXPECTED_CODE=264/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=FAIL"
+  ],
+  "n_not_refused": 11,
+  "n_wrong_code": 13,
+  "labels": [
+   "M11-quote-26",
+   "M12-quote-empty"
+  ],
+  "receipt": "receipts/mutants/mut12-quote-len-0-26.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut13-skip-lead-strip",
+  "intent": "lead_strip skipped (indented records invisible)",
+  "rc": 1,
+  "verdict": "KILLED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=276/288 EXPECTED_CODE=276/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=FAIL"
+  ],
+  "n_not_refused": 12,
+  "n_wrong_code": 0,
+  "labels": [
+   "M14-indented-bad-quote"
+  ],
+  "receipt": "receipts/mutants/mut13-skip-lead-strip.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut14-skip-indented",
+  "intent": "indented lines skipped explicitly",
+  "rc": 1,
+  "verdict": "KILLED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=276/288 EXPECTED_CODE=276/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=FAIL"
+  ],
+  "n_not_refused": 12,
+  "n_wrong_code": 0,
+  "labels": [
+   "M14-indented-bad-quote"
+  ],
+  "receipt": "receipts/mutants/mut14-skip-indented.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut15-rev-short-accepted",
+  "intent": "REV accepts short revs",
+  "rc": 0,
+  "verdict": "SURVIVED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=288/288 EXPECTED_CODE=288/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=PASS"
+  ],
+  "n_not_refused": 0,
+  "n_wrong_code": 0,
+  "labels": [],
+  "receipt": "receipts/mutants/mut15-rev-short-accepted.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut16-line-whole-blob",
+  "intent": "LINE searches whole blob instead of the one line",
+  "rc": 1,
+  "verdict": "KILLED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=276/288 EXPECTED_CODE=276/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=FAIL"
+  ],
+  "n_not_refused": 12,
+  "n_wrong_code": 0,
+  "labels": [
+   "R01-line-next",
+   "R06-line-far"
+  ],
+  "receipt": "receipts/mutants/mut16-line-whole-blob.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut17-exit0-zero-records",
+  "intent": "exit 0 on zero records",
+  "rc": 1,
+  "verdict": "KILLED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=288/288 EXPECTED_CODE=288/288 EMPTY_REFUSED=0/1 RC=3/4 SETUP=unscored",
+   "GATE_RECORDS_R84=FAIL"
+  ],
+  "n_not_refused": 0,
+  "n_wrong_code": 0,
+  "labels": [],
+  "receipt": "receipts/mutants/mut17-exit0-zero-records.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut18-exit0-on-fail",
+  "intent": "exit 0 even with FAIL lines",
+  "rc": 1,
+  "verdict": "KILLED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=288/288 EXPECTED_CODE=288/288 EMPTY_REFUSED=0/1 RC=2/4 SETUP=unscored",
+   "GATE_RECORDS_R84=FAIL"
+  ],
+  "n_not_refused": 0,
+  "n_wrong_code": 0,
+  "labels": [],
+  "receipt": "receipts/mutants/mut18-exit0-on-fail.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut19-ascii-digits-to-unicode",
+  "intent": "ASCII digit class relaxed to Unicode \\d",
+  "rc": 1,
+  "verdict": "KILLED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=288/288 EXPECTED_CODE=262/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=FAIL"
+  ],
+  "n_not_refused": 0,
+  "n_wrong_code": 26,
+  "labels": [
+   "M18-words-arabic-indic",
+   "R07-line-arabic-indic",
+   "R08-words-arabic-indic",
+   "U05-curl-rc-arabic-indic"
+  ],
+  "receipt": "receipts/mutants/mut19-ascii-digits-to-unicode.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut20-drop-quote-boundary-guard",
+  "intent": "admit quote boundary \" guard removed",
+  "rc": 0,
+  "verdict": "SURVIVED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=288/288 EXPECTED_CODE=288/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=PASS"
+  ],
+  "n_not_refused": 0,
+  "n_wrong_code": 0,
+  "labels": [],
+  "receipt": "receipts/mutants/mut20-drop-quote-boundary-guard.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut21-accept-dup-key",
+  "intent": "duplicate-key rejection removed",
+  "rc": 1,
+  "verdict": "KILLED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=276/288 EXPECTED_CODE=276/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=FAIL"
+  ],
+  "n_not_refused": 12,
+  "n_wrong_code": 0,
+  "labels": [
+   "M16-dup-key"
+  ],
+  "receipt": "receipts/mutants/mut21-accept-dup-key.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut22-sha-re-1-64",
+  "intent": "capture_sha256 length bound {16,64}->{1,64}",
+  "rc": 1,
+  "verdict": "KILLED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=276/288 EXPECTED_CODE=276/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=FAIL"
+  ],
+  "n_not_refused": 12,
+  "n_wrong_code": 0,
+  "labels": [
+   "M06-sha-short"
+  ],
+  "receipt": "receipts/mutants/mut22-sha-re-1-64.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut23-drop-capture-path",
+  "intent": "CAPTURE_PATH code suppressed (cap kept)",
+  "rc": 1,
+  "verdict": "KILLED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=288/288 EXPECTED_CODE=276/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=FAIL"
+  ],
+  "n_not_refused": 0,
+  "n_wrong_code": 12,
+  "labels": [
+   "M04-capture-traversal"
+  ],
+  "receipt": "receipts/mutants/mut23-drop-capture-path.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut24-drop-quote-absent",
+  "intent": "QUOTE_ABSENT (capture arm) removed",
+  "rc": 1,
+  "verdict": "KILLED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=264/288 EXPECTED_CODE=264/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=FAIL"
+  ],
+  "n_not_refused": 24,
+  "n_wrong_code": 0,
+  "labels": [
+   "M08-quote-word",
+   "M14-indented-bad-quote"
+  ],
+  "receipt": "receipts/mutants/mut24-drop-quote-absent.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut25-drop-quote-len",
+  "intent": "QUOTE_LEN check removed",
+  "rc": 1,
+  "verdict": "KILLED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=277/288 EXPECTED_CODE=264/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=FAIL"
+  ],
+  "n_not_refused": 11,
+  "n_wrong_code": 13,
+  "labels": [
+   "M11-quote-26",
+   "M12-quote-empty"
+  ],
+  "receipt": "receipts/mutants/mut25-drop-quote-len.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut26-accept-url-non-http",
+  "intent": "url scheme check removed",
+  "rc": 0,
+  "verdict": "SURVIVED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=288/288 EXPECTED_CODE=288/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=PASS"
+  ],
+  "n_not_refused": 0,
+  "n_wrong_code": 0,
+  "labels": [],
+  "receipt": "receipts/mutants/mut26-accept-url-non-http.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut27-accept-any-fetched",
+  "intent": "fetched timestamp shape relaxed to \\S+",
+  "rc": 1,
+  "verdict": "KILLED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=288/288 EXPECTED_CODE=276/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=FAIL"
+  ],
+  "n_not_refused": 0,
+  "n_wrong_code": 12,
+  "labels": [
+   "M21-fetched-arabic-indic"
+  ],
+  "receipt": "receipts/mutants/mut27-accept-any-fetched.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut28-drop-unreach-success-guard",
+  "intent": "unreach success guard removed",
+  "rc": 0,
+  "verdict": "SURVIVED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=288/288 EXPECTED_CODE=288/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=PASS"
+  ],
+  "n_not_refused": 0,
+  "n_wrong_code": 0,
+  "labels": [],
+  "receipt": "receipts/mutants/mut28-drop-unreach-success-guard.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut29-drop-unreach-curlrc-equality",
+  "intent": "unreach REFETCH stops comparing curl_rc",
+  "rc": 0,
+  "verdict": "SURVIVED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=288/288 EXPECTED_CODE=288/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=PASS"
+  ],
+  "n_not_refused": 0,
+  "n_wrong_code": 0,
+  "labels": [],
+  "receipt": "receipts/mutants/mut29-drop-unreach-curlrc-equality.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut30-drop-rev-code",
+  "intent": "REV code removed (LINE only)",
+  "rc": 1,
+  "verdict": "KILLED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=288/288 EXPECTED_CODE=276/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=FAIL"
+  ],
+  "n_not_refused": 0,
+  "n_wrong_code": 12,
+  "labels": [
+   "R02-rev-zero",
+   "R03-path-absent"
+  ],
+  "receipt": "receipts/mutants/mut30-drop-rev-code.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut31-drop-line-code",
+  "intent": "LINE check removed on rev form",
+  "rc": 1,
+  "verdict": "KILLED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=270/288 EXPECTED_CODE=270/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=FAIL"
+  ],
+  "n_not_refused": 18,
+  "n_wrong_code": 0,
+  "labels": [
+   "R01-line-next",
+   "R04-quote-word",
+   "R06-line-far"
+  ],
+  "receipt": "receipts/mutants/mut31-drop-line-code.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut32-drop-refetch-key",
+  "intent": "r[2]==key dropped from admit REFETCH",
+  "rc": 0,
+  "verdict": "SURVIVED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=288/288 EXPECTED_CODE=288/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=PASS"
+  ],
+  "n_not_refused": 0,
+  "n_wrong_code": 0,
+  "labels": [],
+  "receipt": "receipts/mutants/mut32-drop-refetch-key.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut33-accept-leading-zero",
+  "intent": "leading-zero numerals accepted (INT_RE no-leading-zero rule dropped)",
+  "rc": 0,
+  "verdict": "SURVIVED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=288/288 EXPECTED_CODE=288/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=PASS"
+  ],
+  "n_not_refused": 0,
+  "n_wrong_code": 0,
+  "labels": [],
+  "receipt": "receipts/mutants/mut33-accept-leading-zero.txt",
+  "stderr_head": ""
+ },
+ {
+  "name": "mut34-drop-rev-line-zero-guard",
+  "intent": "rev line=0 accepted (indexes lines[-1])",
+  "rc": 0,
+  "verdict": "SURVIVED",
+  "summary": [
+   "TOOL=present POSITIVE=15/15 FRESH_POSITIVE=5/5 FORGED_REFUSED=288/288 EXPECTED_CODE=288/288 EMPTY_REFUSED=1/1 RC=4/4 SETUP=unscored",
+   "GATE_RECORDS_R84=PASS"
+  ],
+  "n_not_refused": 0,
+  "n_wrong_code": 0,
+  "labels": [],
+  "receipt": "receipts/mutants/mut34-drop-rev-line-zero-guard.txt",
+  "stderr_head": ""
+ }
+]

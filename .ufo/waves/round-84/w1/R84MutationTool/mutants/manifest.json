@@ -1,0 +1,240 @@
+[
+ {
+  "name": "mut01-drop-registry",
+  "intent": "REGISTRY check removed",
+  "path": "mutants/mut01-drop-registry.py",
+  "old": "    if regrow is None:\n        codes.append(\"REGISTRY\")\n",
+  "new": "    pass\n"
+ },
+ {
+  "name": "mut02-drop-tier",
+  "intent": "TIER check removed",
+  "path": "mutants/mut02-drop-tier.py",
+  "old": "        if regrow is not None and regrow[3] != kv[\"tier\"]:\n            codes.append(\"TIER\")\n",
+  "new": "        pass\n"
+ },
+ {
+  "name": "mut03-drop-capture-key",
+  "intent": "CAPTURE_KEY check removed",
+  "path": "mutants/mut03-drop-capture-key.py",
+  "old": "        if cm and cm.group(1) != key:\n            codes.append(\"CAPTURE_KEY\")\n",
+  "new": "        pass\n"
+ },
+ {
+  "name": "mut04-drop-capture-sha",
+  "intent": "CAPTURE_SHA keeps shape check only; prefix-of-file-sha dropped",
+  "path": "mutants/mut04-drop-capture-sha.py",
+  "old": "        if not sm or capsha is None or not capsha.startswith(sm.group(1)):\n            codes.append(\"CAPTURE_SHA\")\n",
+  "new": "        if not sm:\n            codes.append(\"CAPTURE_SHA\")\n"
+ },
+ {
+  "name": "mut05-drop-refetch-sha",
+  "intent": "r[8]==capsha dropped from admit REFETCH",
+  "path": "mutants/mut05-drop-refetch-sha.py",
+  "old": " and capsha is not None and r[8] == capsha for r in refetch)",
+  "new": " and capsha is not None for r in refetch)"
+ },
+ {
+  "name": "mut06-drop-refetch-fetched",
+  "intent": "r[4]==fetched dropped from admit REFETCH",
+  "path": "mutants/mut06-drop-refetch-fetched.py",
+  "old": "r[1] == url and r[2] == key and r[4] == kv[\"fetched\"] and r[5] == \"0\"",
+  "new": "r[1] == url and r[2] == key and r[5] == \"0\""
+ },
+ {
+  "name": "mut07-accept-curl-rc-nonzero",
+  "intent": "admit REFETCH accepts any curl_rc",
+  "path": "mutants/mut07-accept-curl-rc-nonzero.py",
+  "old": "r[1] == url and r[2] == key and r[4] == kv[\"fetched\"] and r[5] == \"0\"",
+  "new": "r[1] == url and r[2] == key and r[4] == kv[\"fetched\"] and (r[5] or True)"
+ },
+ {
+  "name": "mut08-accept-non-2xx",
+  "intent": "admit REFETCH accepts any 3-digit http",
+  "path": "mutants/mut08-accept-non-2xx.py",
+  "old": "and re.fullmatch(r\"2[0-9][0-9]\", r[6])",
+  "new": "and re.fullmatch(r\"[0-9]{3}\", r[6])"
+ },
+ {
+  "name": "mut09-words-unchecked",
+  "intent": "WORDS equality check removed",
+  "path": "mutants/mut09-words-unchecked.py",
+  "old": "        if kv[\"words\"] != str(n):\n            codes.append(\"WORDS\")\n",
+  "new": "        pass\n"
+ },
+ {
+  "name": "mut10-words-off-by-one",
+  "intent": "WORDS off-by-one (n+1)",
+  "path": "mutants/mut10-words-off-by-one.py",
+  "old": "if kv[\"words\"] != str(n):",
+  "new": "if kv[\"words\"] != str(n + 1):"
+ },
+ {
+  "name": "mut11-quote-len-26",
+  "intent": "QUOTE_LEN upper bound 25->26",
+  "path": "mutants/mut11-quote-len-26.py",
+  "old": "if not 1 <= n <= 25:",
+  "new": "if not 1 <= n <= 26:"
+ },
+ {
+  "name": "mut12-quote-len-0-26",
+  "intent": "QUOTE_LEN bounds 0..26",
+  "path": "mutants/mut12-quote-len-0-26.py",
+  "old": "if not 1 <= n <= 25:",
+  "new": "if not 0 <= n <= 26:"
+ },
+ {
+  "name": "mut13-skip-lead-strip",
+  "intent": "lead_strip skipped (indented records invisible)",
+  "path": "mutants/mut13-skip-lead-strip.py",
+  "old": "if not REC_RE.match(lead_strip(ln)):",
+  "new": "if not REC_RE.match(ln):"
+ },
+ {
+  "name": "mut14-skip-indented",
+  "intent": "indented lines skipped explicitly",
+  "path": "mutants/mut14-skip-indented.py",
+  "old": "                if not REC_RE.match(lead_strip(ln)):\n                    continue",
+  "new": "                if ln[:1].isspace() or not REC_RE.match(lead_strip(ln)):\n                    continue"
+ },
+ {
+  "name": "mut15-rev-short-accepted",
+  "intent": "REV accepts short revs",
+  "path": "mutants/mut15-rev-short-accepted.py",
+  "old": "        if HEX40_RE.fullmatch(kv[\"rev\"]):",
+  "new": "        if re.fullmatch(r\"[0-9a-f]{7,40}\", kv[\"rev\"]):"
+ },
+ {
+  "name": "mut16-line-whole-blob",
+  "intent": "LINE searches whole blob instead of the one line",
+  "path": "mutants/mut16-line-whole-blob.py",
+  "old": "            if i > len(lines) or not quote.strip() or norm(quote) not in norm(lines[i - 1]):\n                codes.append(\"LINE\")",
+  "new": "            if not quote.strip() or norm(quote) not in norm(\"\\n\".join(lines)):\n                codes.append(\"LINE\")"
+ },
+ {
+  "name": "mut17-exit0-zero-records",
+  "intent": "exit 0 on zero records",
+  "path": "mutants/mut17-exit0-zero-records.py",
+  "old": "return 0 if n >= 1 and ok == n else 1",
+  "new": "return 0 if ok == n else 1"
+ },
+ {
+  "name": "mut18-exit0-on-fail",
+  "intent": "exit 0 even with FAIL lines",
+  "path": "mutants/mut18-exit0-on-fail.py",
+  "old": "return 0 if n >= 1 and ok == n else 1",
+  "new": "return 0"
+ },
+ {
+  "name": "mut19-ascii-digits-to-unicode",
+  "intent": "ASCII digit class relaxed to Unicode \\d",
+  "path": "mutants/mut19-ascii-digits-to-unicode.py",
+  "old": "INT_RE = re.compile(r\"0|[1-9][0-9]{0,6}\")",
+  "new": "INT_RE = re.compile(r\"0|[1-9]\\d{0,6}\")"
+ },
+ {
+  "name": "mut20-drop-quote-boundary-guard",
+  "intent": "admit quote boundary \" guard removed",
+  "path": "mutants/mut20-drop-quote-boundary-guard.py",
+  "old": "        if len(q) < 2 or not (q.startswith('\"') and q.endswith('\"')):",
+  "new": "        if len(q) < 2:"
+ },
+ {
+  "name": "mut21-accept-dup-key",
+  "intent": "duplicate-key rejection removed",
+  "path": "mutants/mut21-accept-dup-key.py",
+  "old": "        if not k or k in kv or not v:",
+  "new": "        if not k or not v:"
+ },
+ {
+  "name": "mut22-sha-re-1-64",
+  "intent": "capture_sha256 length bound {16,64}->{1,64}",
+  "path": "mutants/mut22-sha-re-1-64.py",
+  "old": "SHA_RE = re.compile(r\"([0-9a-f]{16,64})(?:\u2026|\\.\\.\\.)?\")",
+  "new": "SHA_RE = re.compile(r\"([0-9a-f]{1,64})(?:\u2026|\\.\\.\\.)?\")"
+ },
+ {
+  "name": "mut23-drop-capture-path",
+  "intent": "CAPTURE_PATH code suppressed (cap kept)",
+  "path": "mutants/mut23-drop-capture-path.py",
+  "old": "        if (cap is None or os.path.islink(cap) or not os.path.isfile(cap)\n                or os.path.dirname(os.path.realpath(cap)) != capdir):\n            codes.append(\"CAPTURE_PATH\")\n            cap = None",
+  "new": "        if (cap is None or os.path.islink(cap) or not os.path.isfile(cap)\n                or os.path.dirname(os.path.realpath(cap)) != capdir):\n            pass"
+ },
+ {
+  "name": "mut24-drop-quote-absent",
+  "intent": "QUOTE_ABSENT (capture arm) removed",
+  "path": "mutants/mut24-drop-quote-absent.py",
+  "old": "            if not quote.strip() or norm(quote) not in text:\n                codes.append(\"QUOTE_ABSENT\")",
+  "new": "            if False:\n                pass"
+ },
+ {
+  "name": "mut25-drop-quote-len",
+  "intent": "QUOTE_LEN check removed",
+  "path": "mutants/mut25-drop-quote-len.py",
+  "old": "        if not 1 <= n <= 25:\n            codes.append(\"QUOTE_LEN\")\n",
+  "new": "        pass\n"
+ },
+ {
+  "name": "mut26-accept-url-non-http",
+  "intent": "url scheme check removed",
+  "path": "mutants/mut26-accept-url-non-http.py",
+  "old": "if not re.fullmatch(r\"https?://\\S+\", kv[\"url\"]) or not TS_RE.fullmatch(kv[\"fetched\"]):",
+  "new": "if not re.fullmatch(r\"\\S+\", kv[\"url\"]) or not TS_RE.fullmatch(kv[\"fetched\"]):"
+ },
+ {
+  "name": "mut27-accept-any-fetched",
+  "intent": "fetched timestamp shape relaxed to \\S+",
+  "path": "mutants/mut27-accept-any-fetched.py",
+  "old": "TS_RE = re.compile(r\"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z\")",
+  "new": "TS_RE = re.compile(r\"\\S+\")"
+ },
+ {
+  "name": "mut28-drop-unreach-success-guard",
+  "intent": "unreach success guard removed",
+  "path": "mutants/mut28-drop-unreach-success-guard.py",
+  "old": "success = kv[\"curl_rc\"] == \"0\" and kv[\"http\"].startswith(\"2\")",
+  "new": "success = False"
+ },
+ {
+  "name": "mut29-drop-unreach-curlrc-equality",
+  "intent": "unreach REFETCH stops comparing curl_rc",
+  "path": "mutants/mut29-drop-unreach-curlrc-equality.py",
+  "old": "and r[5] == kv[\"curl_rc\"]\n                                   and r[6] == kv[\"http\"] for r in refetch)",
+  "new": "and r[6] == kv[\"http\"] for r in refetch)"
+ },
+ {
+  "name": "mut30-drop-rev-code",
+  "intent": "REV code removed (LINE only)",
+  "path": "mutants/mut30-drop-rev-code.py",
+  "old": "        if blob is None:\n            codes.append(\"REV\")\n            codes.append(\"LINE\")",
+  "new": "        if blob is None:\n            codes.append(\"LINE\")"
+ },
+ {
+  "name": "mut31-drop-line-code",
+  "intent": "LINE check removed on rev form",
+  "path": "mutants/mut31-drop-line-code.py",
+  "old": "            if i > len(lines) or not quote.strip() or norm(quote) not in norm(lines[i - 1]):\n                codes.append(\"LINE\")",
+  "new": "            if False:\n                pass"
+ },
+ {
+  "name": "mut32-drop-refetch-key",
+  "intent": "r[2]==key dropped from admit REFETCH",
+  "path": "mutants/mut32-drop-refetch-key.py",
+  "old": "r[1] == url and r[2] == key and r[4] == kv[\"fetched\"]",
+  "new": "r[1] == url and r[4] == kv[\"fetched\"]"
+ },
+ {
+  "name": "mut33-accept-leading-zero",
+  "intent": "leading-zero numerals accepted (INT_RE no-leading-zero rule dropped)",
+  "path": "mutants/mut33-accept-leading-zero.py",
+  "old": "INT_RE = re.compile(r\"0|[1-9][0-9]{0,6}\")",
+  "new": "INT_RE = re.compile(r\"[0-9]{1,7}\")"
+ },
+ {
+  "name": "mut34-drop-rev-line-zero-guard",
+  "intent": "rev line=0 accepted (indexes lines[-1])",
+  "path": "mutants/mut34-drop-rev-line-zero-guard.py",
+  "old": "        if not INT_RE.fullmatch(kv[\"line\"]) or kv[\"line\"] == \"0\":",
+  "new": "        if not INT_RE.fullmatch(kv[\"line\"]):"
+ }
+]

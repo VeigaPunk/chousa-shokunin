@@ -1,0 +1,14 @@
+WITNESS: W11-leading-zero-words
+WHY: admit words=0<n> (leading zero); contract says PARSE
+MUTANT: mut33-accept-leading-zero
+LINE=GATE-RECORD S203 url=https://eprints.whiterose.ac.uk/id/eprint/214348/8/Hirt_etal_BMJ_Guidances_On_Terminology_AAM.pdf fetched=2026-11-06T18:44:29Z tier=A decision=admit capture=corpus/captures/f2489455cc311a4de981e926.txt capture_sha256=31493aa66bfd6625… words=013 quote="Backward and forward citation searching are known as direct citation searching (Figure 1)."
+PRISTINE_CMD: python3 -B tree/tools/gate-records.py verify --root tree --repo /home/vgpnk/Projects/shokunin/chousa-shokunin receipts/witnesses/W11-leading-zero-words.md
+PRISTINE_RC=1
+PRISTINE_STDOUT=GATE_RECORD receipts/witnesses/W11-leading-zero-words.md:1 S203 FAIL PARSE
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+PRISTINE_STDERR=
+MUTANT_CMD: python3 -B mutants/mut33-accept-leading-zero.py verify --root tree --repo /home/vgpnk/Projects/shokunin/chousa-shokunin receipts/witnesses/W11-leading-zero-words.md
+MUTANT_RC=1
+MUTANT_STDOUT=GATE_RECORD receipts/witnesses/W11-leading-zero-words.md:1 S203 FAIL WORDS
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+MUTANT_STDERR=

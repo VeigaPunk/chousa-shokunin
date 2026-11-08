@@ -1,0 +1,127 @@
+# cmd: bash /fast/scratch/hyaku/chousa-r84/R84ConnectorSiblings/repro.sh
+# cwd: /home/vgpnk/Projects/shokunin/chousa-shokunin
+### R1a depth counter baseline on scratch copy
+$ python3 -B corpus/evidence/round84/depth-r84.py --root /fast/scratch/hyaku/chousa-r84/R84ConnectorSiblings/work/repro
+ENTRY search-transparency-reporting-r84.md ok=yes rows=11 quotes=12/12 fails=-
+DEPTH_R84 entries=1 ok_entries=1 rows=11 located_quotes=12 fresh_sources=3
+DEPTH_R84=PASS
+[exit=0]
+
+### R1b depth counter after locator column
+$ python3 -B corpus/evidence/round84/depth-r84.py --root /fast/scratch/hyaku/chousa-r84/R84ConnectorSiblings/work/repro
+ENTRY search-transparency-reporting-r84.md ok=yes rows=11 quotes=12/12 fails=-
+DEPTH_R84 entries=1 ok_entries=1 rows=11 located_quotes=12 fresh_sources=3
+DEPTH_R84=PASS
+[exit=0]
+
+### R2a modified Definition occurrence count
+$ grep -c -F Date on which the resource was changed. corpus/captures/f5545a194c06ab421875b047.txt
+1
+[exit=0]
+
+### R2b Q10 comment occurrence count
+$ grep -c -F Recommended practice is to describe the date, date/time, or period of time as recommended for the property Date, of which this is a subproperty. corpus/captures/f5545a194c06ab421875b047.txt
+8
+[exit=0]
+
+### R3 mori anchor-check on modified Definition
+$ python3 -B ../mori-shokunin/tools/mori-anchor-check.py --pin corpus/captures/f5545a194c06ab421875b047.txt --check modified-Def|8786|7|Date on which the resource was changed.
+anchor item=modified-Def span=8786 verdict=ok located_on=8786 occurrences=1 words_counted=7 words_recorded=7
+ANCHOR_CHECK: PASS items=1 ok=1 pin_sha256=20dc0c3ab7724e1f4be59217c190fa796a66c29b7a653e8d707d64f5fac43a79 pin_bytes=148784
+[exit=0]
+
+### R4a locator tokens in the new entry
+$ grep -cE char [0-9]+|line [0-9]+ corpus/knowledge/search-transparency-reporting-r84.md
+0
+[exit=1]
+
+### R4b base entries with a locator
+$ bash -c tot=0; withloc=0; while read -r e; do [ -f "corpus/knowledge/$e" ] || continue; tot=$((tot+1)); grep -qE "char [0-9]+|line [0-9]+" "corpus/knowledge/$e" && withloc=$((withloc+1)); done < corpus/evidence/round84/base-knowledge.txt; echo "base entries total=$tot with_locator=$withloc"
+base entries total=95 with_locator=36
+[exit=0]
+
+### R5a kotodama tool on chousa lesson (vacuous green)
+$ python3 -B kotodama-shokunin/tools/check-gate-captures.py chousa-shokunin/corpus/lessons/round-84.md chousa-shokunin/corpus/captures
+GATE-CAPTURES: 0 finding(s) in 0 row(s)
+[exit=0]
+
+### R5b chousa Gate markdown table row count
+$ bash -c awk '/^## Gate/{f=1} f&&/^## /&&!/^## Gate/{exit} f' corpus/lessons/round-84.md | grep -c '^|'
+0
+[exit=1]
+
+### R5c kotodama tool on an in-scope sibling lesson
+$ python3 -B kotodama-shokunin/tools/check-gate-captures.py kotodama-shokunin/corpus/lessons/round-97.md kotodama-shokunin/corpus
+ROW S985 CAPTURE-MISSING -
+ROW S986 CAPTURE-MISSING -
+ROW S987 CAPTURE-MISSING -
+ROW S988 CAPTURE-MISSING -
+ROW S989 CAPTURE-MISSING -
+ROW S990 CAPTURE-MISSING -
+ROW S991 CAPTURE-MISSING -
+ROW S992 CAPTURE-MISSING -
+ROW S993 CAPTURE-MISSING -
+GATE-CAPTURES: 9 finding(s) in 9 row(s)
+[exit=1]
+
+### R6 quote overlap vs every sibling knowledge tree
+$ python3 -c 
+import os,re
+new='corpus/knowledge/search-transparency-reporting-r84.md'
+t=open(new,encoding='utf-8').read()
+qs=re.findall(r'^\| (Q\d+) \| (S\d+) \| "(.+?)" \|$',t,re.M)
+def norm(s):
+    s=s.replace('\u2018',"'").replace('\u2019',"'").replace('\u201c','"').replace('\u201d','"')
+    return ' '.join(s.split())
+lanes=[d for d in sorted(os.listdir('..')) if d.endswith('-shokunin') and d!='chousa-shokunin']
+h=0
+for L in lanes:
+    kd=os.path.join('..',L,'corpus','knowledge')
+    if not os.path.isdir(kd): continue
+    for root,dirs,files in os.walk(kd):
+        dirs[:]=[x for x in dirs if x!='.git']
+        for f in files:
+            try: b=norm(open(os.path.join(root,f),encoding='utf-8',errors='replace').read())
+            except Exception: continue
+            for qid,sid,q in qs:
+                if norm(q) and norm(q) in b: print('OVERLAP',qid,sid,os.path.join(root,f)); h+=1
+print('quote-overlap hits:',h)
+quote-overlap hits: 0
+[exit=0]
+
+### R7 sibling tools+scripts referencing GATE-RECORD or refetch.tsv
+$ bash -c 
+for L in audio game-dev-2d game-dev-3d kagi kaidoku kake kama kasegi kengaku kotoba kotodama kumitate lore mado mori revenger souji tabi tameshi tsukuroi; do
+  d="$L-shokunin"; [ -d "$d/tools" ] || [ -d "$d/scripts" ] || continue
+  grep -rn -E "GATE-RECORD|refetch\.tsv" "$d/tools" "$d/scripts" 2>/dev/null | grep -v __pycache__
+done; echo "(no line above = none)"
+(no line above = none)
+[exit=0]
+
+### R8a sibling lane names in the new entry
+$ grep -n -i -E kagi|kasegi|kengaku|kumitate|kotoba|kotodama|revenger|souji|tabi|tameshi|tsukuroi|kaidoku|kake|kama|mori|mado|lore|audio|game-dev corpus/knowledge/search-transparency-reporting-r84.md
+[exit=1]
+
+### R8b sibling lane names in tools/gate-records.py
+$ grep -n -i -E kagi|kasegi|kengaku|kumitate|kotoba|kotodama|revenger|souji|tabi|tameshi|tsukuroi|kaidoku|kake|kama|mori|mado|lore tools/gate-records.py
+[exit=1]
+
+### R8c entry row 7 + Limits line 64
+$ grep -n -E Comparing evidence-based generation|The S018 survey is about corpus/knowledge/search-transparency-reporting-r84.md
+45:| Comparing evidence-based generation approaches | use a shared taxonomy and unified benchmarks rather than isolated evaluation practices | compare approaches that use different terminologies and metrics without noting the fragmentation | Q8 (S018) |
+64:- The S018 survey is about evidence-based text generation with LLMs, not systematic reviews; its taxonomy and metrics
+[exit=0]
+
+### R9 stray lane dir
+$ bash -c ls -ld kumitate-shokinin; ls kumitate-shokinin/corpus/knowledge 2>&1 | head -2
+drwxr-xr-x 1 vgpnk vgpnk 34 Oct 30 08:50 kumitate-shokinin
+ls: cannot access 'kumitate-shokinin/corpus/knowledge': No such file or directory
+[exit=0]
+
+### R10 frozen depth counter at landing
+$ python3 -B corpus/evidence/round84/depth-r84.py --root .
+ENTRY search-transparency-reporting-r84.md ok=yes rows=11 quotes=12/12 fails=-
+DEPTH_R84 entries=1 ok_entries=1 rows=11 located_quotes=12 fresh_sources=3
+DEPTH_R84=PASS
+[exit=0]
+

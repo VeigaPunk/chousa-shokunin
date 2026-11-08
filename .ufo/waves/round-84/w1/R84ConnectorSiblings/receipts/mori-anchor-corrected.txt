@@ -1,0 +1,40 @@
+# cmd: bash /fast/scratch/hyaku/chousa-r84/R84ConnectorSiblings/m_body.sh
+# cwd: /home/vgpnk/Projects/shokunin/chousa-shokunin
+=== M1: word count of the modified Definition ===
+Date on which the resource was changed. -> 7
+=== M2: mori anchor-check with the CORRECT word count (7) ===
+anchor item=modified-Def span=8786 verdict=ok located_on=8786 occurrences=1 words_counted=7 words_recorded=7
+ANCHOR_CHECK: PASS items=1 ok=1 pin_sha256=20dc0c3ab7724e1f4be59217c190fa796a66c29b7a653e8d707d64f5fac43a79 pin_bytes=148784
+M2 rc=0
+
+=== M3: does the depth counter check quote UNIQUENESS or only occurrence? (E3 source) ===
+17:  E3 located  — every declared quote has 8..25 words and is LOCATED: its source row is FRESH and
+187:                fails.append("E3")
+135:    def fresh(sid, entry):
+136-        r = reg.get(sid)
+137-        if not r or r["status"] != "mined" or f"corpus/knowledge/{entry}" not in r["usedby"]:
+138-            return None
+139-        m = URL_RE.search(r["source"])
+140-        if not m:
+141-            return None
+142-        url = m.group(0)
+143-        key = hashlib.sha256(url.encode()).hexdigest()[:24]
+144-        cap = os.path.join(root, "corpus/captures", key + ".txt")
+145-        if not os.path.isfile(cap):
+146-            return None
+147-        rows = [f for f in fetch.get((sid, url), []) if f[2] == key]
+148-        if not rows or rows[-1][8] != sha(cap):
+149-            return None
+150-        return url, norm(open(cap, encoding="utf-8", errors="replace").read())
+151-
+152-    new = sorted(f for f in os.listdir(kdir) if f.endswith(".md") and f not in set(base))
+153-    tot_rows = tot_q = ok_n = 0
+
+=== M4: kotodama tool on lessons whose Gate table has a BARE S-id first cell ===
+corpus/lessons/round-69.md bare_sid_rows=1
+corpus/lessons/round-94.md bare_sid_rows=5
+corpus/lessons/round-95.md bare_sid_rows=5
+corpus/lessons/round-96.md bare_sid_rows=10
+corpus/lessons/round-97.md bare_sid_rows=9
+M4-COMPLETE
+# exit: 0

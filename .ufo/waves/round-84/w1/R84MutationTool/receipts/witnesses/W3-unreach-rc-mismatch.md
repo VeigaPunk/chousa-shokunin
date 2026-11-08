@@ -1,0 +1,1 @@
+GATE-RECORD S100 url=https://www.zcmu.edu.cn/__local/2/33/FC/FFA702D0F9381C8224BD74CB435_0E777725_C3A00.doc?e=.doc fetched=2026-10-27T08:05:22Z tier=B decision=reject capture=none curl_rc=99 http=000 words=0 quote=none

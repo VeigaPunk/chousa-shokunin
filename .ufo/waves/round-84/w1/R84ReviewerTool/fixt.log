@@ -1,0 +1,17 @@
+=== f1-badutf8.md ===
+GATE_RECORDS files=1 records=0 ok=0 fail=0
+exit:1
+=== f2-unreadable.md ===
+Traceback (most recent call last):
+  File "/fast/scratch/hyaku/chousa-r84/R84ReviewerTool/root/tools/gate-records.py", line 308, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/fast/scratch/hyaku/chousa-r84/R84ReviewerTool/root/tools/gate-records.py", line 287, in main
+    with open(f, encoding="utf-8", errors="replace") as fh:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: '/fast/scratch/hyaku/chousa-r84/R84ReviewerTool/probes/f2-unreadable.md'
+exit:1
+=== f3-nul.md ===
+GATE_RECORD /fast/scratch/hyaku/chousa-r84/R84ReviewerTool/probes/f3-nul.md:1 S199 FAIL LINE,WORDS
+GATE_RECORDS files=1 records=1 ok=0 fail=1
+exit:1
